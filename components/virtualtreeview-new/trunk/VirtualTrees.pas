@@ -27074,6 +27074,9 @@ begin
   begin
     if X >= Header.Columns.GetVisibleFixedWidth then
       Inc(X, FEffectiveOffsetX);
+    //lclheader
+    if hoVisible in FHeader.Options then
+      Dec(Y, FHeader.Height);
     Inc(Y, -FOffsetY);
   end;
   HitInfo.HitPoint.X := X;
@@ -27082,17 +27085,6 @@ begin
   // If the point is in the tree area then check the nodes.
   if HitInfo.HitPositions = [] then
   begin
-    // Convert position into absolute coordinate if necessary.
-    if Relative then
-    begin
-      if X > Header.Columns.GetVisibleFixedWidth then
-        Inc(X, FEffectiveOffsetX);
-      //lclheader
-      if hoVisible in FHeader.Options then
-        Dec(Y, FHeader.Height);
-      Dec(Y, FOffsetY);
-    end;
-
     HitInfo.HitNode := InternalGetNodeAt(X, Y, False, NodeTop);
     if HitInfo.HitNode = nil then
       Include(HitInfo.HitPositions, hiNowhere)
