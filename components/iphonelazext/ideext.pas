@@ -48,7 +48,6 @@ type
     function ProjectOpened(Sender: TObject; AProject: TLazProject): TModalResult;
     //procedure OnProjOptionsChanged(Sender: TObject; Restore: Boolean);
   public
-    //isiPhoneMenu    :TIDEMenuCommand;
     constructor Create;
     procedure UpdateXcode(Sender: TObject);
     procedure SimRun(Sender: TObject);
@@ -258,9 +257,7 @@ begin
 
   RegisterIDEMenuCommand(itmProjectWindowSection, 'mnuiPhoneSeparator', '-', nil, nil);
 
-  //isiPhoneMenu:=RegisterIDEMenuCommand(itmProjectWindowSection, 'mnuiPhoneProject', striPhoneProject, @isProjectClicked, nil);
-
-  RegisterIDEMenuCommand(itmProjectWindowSection, 'mnuiPhoneToXCode', strStartAtXCode, @UpdateXCode, nil);
+  RegisterIDEMenuCommand(itmProjectWindowSection, 'mnuiPhoneToXCode', strStartAtXcode, @UpdateXcode, nil);
   RegisterIDEMenuCommand(itmProjectWindowSection, 'mnuiPhoneRunSim', strRunSimulator, @SimRun, nil);
 end;
 
@@ -284,7 +281,6 @@ function TiPhoneExtension.ProjectOpened(Sender: TObject; AProject: TLazProject):
 begin
   ProjOptions.Reset;
   ProjOptions.Load;
-  //isiPhoneMenu.Checked:=ProjOptions.isIPhoneApp;
   Result:=mrOk;
 end;
 
@@ -343,12 +339,6 @@ begin
   end;
 end;
 
-{
-procedure TiPhoneExtension.OnProjOptionsChanged(Sender: TObject; Restore: Boolean);
-begin
-  //isiPhoneMenu.Checked:=ProjOptions.isIPhoneApp;
-end;
-}
 procedure TiPhoneExtension.UpdateXcode(Sender: TObject);
 var
   templates : TStringList;

@@ -565,11 +565,13 @@ begin
 end;
 
 const
-  iPhoneOptions = 1;
+  iPhoneOptions = 10000; //todo: get it dynamically
 
 initialization
   {$I project_iphone_options.lrs}
-  RegisterIDEOptionsEditor(iPhonePrjGroup, TiPhoneProjectOptionsEditor, iPhoneOptions);
+  writeln('registering iPhone proj editor');
+  //RegisterIDEOptionsEditor(iPhonePrjGroup, TiPhoneProjectOptionsEditor, iPhoneOptions);
+  RegisterIDEOptionsEditor(GroupProject, TiPhoneProjectOptionsEditor, iPhoneOptions);
 
 finalization
 

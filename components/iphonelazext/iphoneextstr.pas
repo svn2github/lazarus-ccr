@@ -20,7 +20,7 @@ interface
 
 resourcestring
   striPhoneProject = 'iPhone Project';
-  strStartAtXCode  = 'Update XCode project';
+  strStartAtXcode  = 'Update Xcode project';
   strRunSimulator  = 'Run iPhone Simulator';
 
   strPrjOptTitle    = 'iPhone specific';

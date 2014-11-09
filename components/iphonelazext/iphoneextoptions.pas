@@ -30,7 +30,7 @@ type
 
   { TiPhoneProjectOptions }
 
-  TiPhoneProjectOptions = class(TAbstractIDEProjectOptions)
+  TiPhoneProjectOptions = class(TAbstractIDEOptions)
   private
     fisiPhone     : Boolean;
     fAppID        : String;
