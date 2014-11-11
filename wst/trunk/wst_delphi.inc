@@ -7,13 +7,17 @@
   {$ENDIF CompilerVersion}
   {$IF Not Declared(QWord) }
     QWord = type Int64;
-  {$IFEND
-  }  
+  {$IFEND}
     DWORD = LongWord;
-    PtrInt = Integer;
     PByteArray = ^ByteArray;
     ByteArray = array[0..$effffff] of Byte;
-    PtrUInt = Cardinal;
-    SizeInt = Longint;
+    {$IF Declared(NativeUInt)}
+      PtrInt  = NativeInt;
+      PtrUInt = NativeUInt;
+    {$ELSE} // old delphi
+      PtrInt = Integer;
+      PtrUInt = Cardinal;
+    {$IFEND}
+    SizeInt = PtrInt;
     UnicodeChar = WideChar;
 {$ENDIF DELPHI}
