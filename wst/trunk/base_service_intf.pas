@@ -1010,7 +1010,7 @@ type
   private
     FList : TObjectList;
   protected
-    function GetItem(AIndex : PtrInt) : TBaseRemotable;{$IFDEF USE_INLINE}inline;{$ENDIF}
+    function GetItem(AIndex : Integer) : TBaseRemotable;{$IFDEF USE_INLINE}inline;{$ENDIF}
     function GetLength() : Integer; override;
   public
     class procedure Save(
@@ -1034,15 +1034,15 @@ type
     function Equal(const ACompareTo : TBaseRemotable) : Boolean;override;
 
     function Add(): TBaseRemotable;{$IFDEF USE_INLINE}inline;{$ENDIF}
-    function AddAt(const APosition : PtrInt): TBaseRemotable;{$IFDEF USE_INLINE}inline;{$ENDIF}
-    function Extract(const AIndex : PtrInt): TBaseRemotable;{$IFDEF USE_INLINE}inline;{$ENDIF}
-    procedure Delete(const AIndex : PtrInt);{$IFDEF USE_INLINE}inline;{$ENDIF}
-    procedure Exchange(const Index1,Index2 : PtrInt);{$IFDEF USE_INLINE}inline;{$ENDIF}
+    function AddAt(const APosition : Integer): TBaseRemotable;{$IFDEF USE_INLINE}inline;{$ENDIF}
+    function Extract(const AIndex : Integer): TBaseRemotable;{$IFDEF USE_INLINE}inline;{$ENDIF}
+    procedure Delete(const AIndex : Integer);{$IFDEF USE_INLINE}inline;{$ENDIF}
+    procedure Exchange(const Index1,Index2 : Integer);{$IFDEF USE_INLINE}inline;{$ENDIF}
     procedure Clear();{$IFDEF USE_INLINE}inline;{$ENDIF}
-    function IndexOf(AObject : TBaseRemotable) : PtrInt;{$IFDEF USE_INLINE}inline;{$ENDIF}
+    function IndexOf(AObject : TBaseRemotable) : Integer;{$IFDEF USE_INLINE}inline;{$ENDIF}
 
     procedure SetLength(Const ANewSize : Integer);override;
-    property Item[AIndex:PtrInt] : TBaseRemotable read GetItem;default;
+    property Item[AIndex:Integer] : TBaseRemotable read GetItem;default;
   end;
 
   { TBaseSimpleTypeArrayRemotable }
@@ -3694,7 +3694,7 @@ end;
 
 { TObjectCollectionRemotable }
 
-function TObjectCollectionRemotable.GetItem(AIndex : PtrInt) : TBaseRemotable;
+function TObjectCollectionRemotable.GetItem(AIndex : Integer) : TBaseRemotable;
 begin
   Result := TBaseRemotable(FList[AIndex]);
 end;
@@ -3914,7 +3914,7 @@ begin
   end;
 end;
 
-function TObjectCollectionRemotable.AddAt(const APosition : PtrInt) : TBaseRemotable;
+function TObjectCollectionRemotable.AddAt(const APosition : Integer) : TBaseRemotable;
 begin
   FList.Insert(APosition,nil);
   try
@@ -3926,17 +3926,17 @@ begin
   FList[APosition] := Result;
 end;
 
-function TObjectCollectionRemotable.Extract(const AIndex : PtrInt) : TBaseRemotable;
+function TObjectCollectionRemotable.Extract(const AIndex : Integer) : TBaseRemotable;
 begin
   Result := TBaseRemotable(FList.Extract(FList[AIndex]));
 end;
 
-procedure TObjectCollectionRemotable.Delete(const AIndex : PtrInt);
+procedure TObjectCollectionRemotable.Delete(const AIndex : Integer);
 begin
   FList.Delete(AIndex);
 end;
 
-procedure TObjectCollectionRemotable.Exchange(const Index1, Index2 : PtrInt);
+procedure TObjectCollectionRemotable.Exchange(const Index1, Index2 : Integer);
 begin
   FList.Exchange(Index1,Index2);
 end;
@@ -3946,7 +3946,7 @@ begin
   FList.Clear();
 end;
 
-function TObjectCollectionRemotable.IndexOf(AObject : TBaseRemotable) : PtrInt;
+function TObjectCollectionRemotable.IndexOf(AObject : TBaseRemotable) : Integer;
 begin
   Result := FList.IndexOf(AObject);
 end;
