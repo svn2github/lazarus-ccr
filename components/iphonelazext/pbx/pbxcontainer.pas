@@ -23,6 +23,8 @@ unit pbxcontainer;
 *   for array of strings TPBXStringArray must be used                           *
 *   for key-value set use TPBXKeyValue class                                    *
 *   string and integer properties are supported... anything else?               *
+*   booleans are (always) written as 0 or 1 to the file
+*
 *                                                                               *
 * todo: add more documentions                                                   *
 *                                                                               *
@@ -450,6 +452,9 @@ begin
           tkInteger, tkInt64, tkQWord: begin
             SetInt64Prop(obj, p.Name, StrToIntDef(p.Value, GetInt64Prop(obj, p.Name)) );
           end;
+          tkBool: begin
+            SetOrdProp(obj, p.Name, StrToIntDef(p.Value, GetInt64Prop(obj, p.Name)) );
+          end;
         else
           SetStrProp(obj, p.Name, p.Value);
         end;
@@ -660,6 +665,9 @@ begin
       end else if p^[i].PropType.Kind in [tkInteger, tkInt64, tkQWord] then begin
         vl:=IntToStr(GetInt64Prop(pbx, p^[i]));
         isstr:=(vl<>'') or (WriteEmpty.indexOf(nm)>=0);
+      end else if p^[i].PropType.Kind = tkBool then begin
+        vl:=IntToStr(GetOrdProp(pbx, p^[i]));
+        isstr:=true;
       end;
 
       if isstr then begin

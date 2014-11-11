@@ -110,7 +110,7 @@ type
   private
     fbuildActionMask : Integer;
     ffiles: TPBXObjectsList;
-    frunOnlyForDeploymentPostprocessing: string;
+    frunOnlyForDeploymentPostprocessing: Boolean;
     fname: string;
   public
     constructor Create; override;
@@ -119,7 +119,7 @@ type
 	  property buildActionMask: Integer read fbuildActionMask write fbuildActionMask;
     property files: TPBXObjectsList read ffiles;
     property name: string read fname write fname;
-    property runOnlyForDeploymentPostprocessing: string read frunOnlyForDeploymentPostprocessing write frunOnlyForDeploymentPostprocessing;
+    property runOnlyForDeploymentPostprocessing: Boolean read frunOnlyForDeploymentPostprocessing write frunOnlyForDeploymentPostprocessing;
   end;
   { PBXFrameworksBuildPhase }
 
@@ -160,6 +160,7 @@ type
     constructor Create; override;
     destructor Destroy; override;
     function addSubGroup(const aname: string): PBXGroup;
+    function findGroup(const aname: string): PBXGroup;
   published
     property children: TPBXObjectsList read fchildren;
     property name: string read fname write fname;
@@ -226,7 +227,7 @@ type
     fattributes : TPBXKeyValue;
     fcompatibilityVersion : string;
     fdevelopmentRegion : string;
-    fhasScannedForEncodings: string;
+    fhasScannedForEncodings: Boolean;
     fmainGroup: PBXGroup;
     fknownRegions: TPBXStringArray;
     fproductRefGroup: PBXGroup;
@@ -245,7 +246,7 @@ type
     property buildConfigurationList: XCConfigurationList read fbuildConfigurationList write fbuildConfigurationList;
     property compatibilityVersion: string read fcompatibilityVersion write fcompatibilityVersion;
     property developmentRegion: string read fdevelopmentRegion write fdevelopmentRegion;
-    property hasScannedForEncodings: string read fhasScannedForEncodings write fhasScannedForEncodings;
+    property hasScannedForEncodings: Boolean read fhasScannedForEncodings write fhasScannedForEncodings;
     property knownRegions: TPBXStringArray read fknownRegions;
     property mainGroup: PBXGroup read fmainGroup write fmainGroup;
     property productRefGroup: PBXGroup read fproductRefGroup write fproductRefGroup;
@@ -254,12 +255,23 @@ type
     property targets: TPBXObjectsList read ftargets;
   end;
 
-function LoadProjectFromStream(st: TStream; var prj: PBXProject): Boolean;
-function LoadProjectFromFile(const fn: string; var prj: PBXProject): Boolean;
+function ProjectLoadFromStream(st: TStream; var prj: PBXProject): Boolean;
+function ProjectLoadFromFile(const fn: string; var prj: PBXProject): Boolean;
 
+// serializes a PBX project to the string, using PBXContainer structure
 function ProjectWrite(prj: PBXProject): string;
 
-function CreateMinProject: PBXProject;
+// creates a minimum possible project
+function ProjectCreateMin: PBXProject;
+
+// creates main group and product groups
+procedure ProjectDefaultGroups(prj: PBXProject);
+
+// adds necessary flags for Xcode3.2 not to throw any warnings
+procedure ProjectUpdateForXcode3_2(prj: PBXProject);
+// creates a minimum project, defaults the structure and sets Xcode 3.2 compat flags
+function ProjectCreate3_2: PBXProject;
+
 function ProjectAddTarget(prj: PBXProject; const ATargetName: string): PBXNativeTarget;
 
 const
@@ -274,15 +286,15 @@ const
   FILETYPE_EXEC   = 'compiled.mach-o.executable';
   FILETYPE_MACHO  = FILETYPE_EXEC;
 
-function CreateFileRef(const afilename: string; const filetype: string = ''): PBXFileReference;
+function FileRefCreate(const afilename: string; const filetype: string = ''): PBXFileReference;
 
 const
   GROUPSRC_ABSOLUTE = '<absolute>';
   GROUPSRC_GROUP    = '<group>';
 
-function CreateGroup(const aname: string; const srcTree: string = GROUPSRC_GROUP): PBXGroup;
+function GroupCreate(const aname: string; const srcTree: string = GROUPSRC_GROUP): PBXGroup;
 //todo: need a rountine to update the path whenever the project is saved
-function CreateRootGroup(const projectfolder: string): PBXGroup;
+function GroupCreateRoot(const projectfolder: string = ''): PBXGroup;
 
 const
   PRODTYPE_TOOL = 'com.apple.product-type.tool';
@@ -439,6 +451,21 @@ begin
   Result.sourceTree:=GROUPSRC_GROUP;
 end;
 
+function PBXGroup.findGroup(const aname: string): PBXGroup;
+var
+  i   : integer;
+  obj : TObject;
+begin
+  for i:=0 to fchildren.Count-1 do begin
+    obj:=fchildren[i];
+    if (obj is PBXGroup) and (PBXGroup(obj).name=aname) then begin
+      Result:=PBXGroup(obj);
+      Exit;
+    end;
+  end;
+  Result:=nil;
+end;
+
 { PBXBuildPhase }
 
 constructor PBXBuildPhase.Create;
@@ -452,7 +479,7 @@ begin
   ffiles.Free;
 end;
 
-function LoadProjectFromStream(st: TStream; var prj: PBXProject): Boolean;
+function ProjectLoadFromStream(st: TStream; var prj: PBXProject): Boolean;
 var
   c : TPBXContainer;
   info : TPBXFileInfo;
@@ -473,13 +500,13 @@ begin
   end;
 end;
 
-function LoadProjectFromFile(const fn: string; var prj: PBXProject): Boolean;
+function ProjectLoadFromFile(const fn: string; var prj: PBXProject): Boolean;
 var
   fs :TFileStream;
 begin
   fs:=TFileStream.Create(fn, fmOpenRead or fmShareDenyNone);
   try
-    Result:=LoadProjectFromStream(fs, prj);
+    Result:=ProjectLoadFromStream(fs, prj);
   finally
     fs.Free;
   end;
@@ -495,7 +522,7 @@ begin
   Result:=PBXWriteContainer(info);
 end;
 
-function CreateMinProject: PBXProject;
+function ProjectCreateMin: PBXProject;
 var
   p : PBXProject;
   cfg : XCBuildConfiguration;
@@ -506,7 +533,7 @@ begin
   p._headerComment:='Project object';
 
   p.buildConfigurationList:=XCConfigurationList.Create;
-  p.buildConfigurationList._headerComment:='Build configuration list';
+  p.buildConfigurationList._headerComment:='Build configuration list for PBXProject';
   p.buildConfigurationList.defaultConfigurationIsVisible:='0';
 
   cfg:=p.buildConfigurationList.addConfig('Default');
@@ -514,6 +541,37 @@ begin
   // default name must be present
   p.buildConfigurationList.defaultConfigurationName:='Release';
   Result:=p;
+end;
+
+procedure ProjectDefaultGroups(prj: PBXProject);
+var
+  prd : PBXGroup;
+begin
+  if not Assigned(prj) then Exit;
+  if not Assigned(prj.mainGroup) then
+    prj.mainGroup:=GroupCreateRoot;
+
+  if not Assigned(prj.productRefGroup) then begin
+    prd:=prj.mainGroup.findGroup('Products');
+    if not Assigned(prd) then
+      prd:=prj.mainGroup.addSubGroup('Products');
+    prj.productRefGroup:=prd;
+  end;
+end;
+
+procedure ProjectUpdateForXcode3_2(prj: PBXProject);
+begin
+  if not Assigned(prj) then Exit;
+  // without the attribute Xcode complains aboutt updating settings
+  prj.attributes.AddStr('LastUpgradeCheck','0600');
+  prj.compatibilityVersion:='Xcode 3.2';
+end;
+
+function ProjectCreate3_2: PBXProject;
+begin
+  Result:=ProjectCreateMin;
+  ProjectDefaultGroups(Result);
+  ProjectUpdateForXcode3_2(Result);
 end;
 
 function ProjectAddTarget(prj: PBXProject; const ATargetName: string): PBXNativeTarget;
@@ -533,7 +591,7 @@ begin
   atarget.buildPhases.Add(Result);
 end;
 
-function CreateFileRef(const afilename: string; const filetype: string ): PBXFileReference;
+function FileRefCreate(const afilename: string; const filetype: string ): PBXFileReference;
 begin
   Result:=PBXFileReference.Create;
   Result.path:=afilename;
@@ -541,7 +599,7 @@ begin
   Result.explicitFileType:=FILETYPE_EXEC;
 end;
 
-function CreateGroup(const aname, srcTree: string): PBXGroup;
+function GroupCreate(const aname, srcTree: string): PBXGroup;
 begin
   Result:=PBXGroup.Create;
   Result.name:=aname;
@@ -549,9 +607,9 @@ begin
   Result._headerComment:=aname;
 end;
 
-function CreateRootGroup(const projectfolder: string): PBXGroup;
+function GroupCreateRoot(const projectfolder: string): PBXGroup;
 begin
-  Result:=CreateGroup('', GROUPSRC_ABSOLUTE);
+  Result:=GroupCreate('', GROUPSRC_ABSOLUTE);
   Result.path:=projectfolder;
   Result._headerComment:=projectfolder;
 end;
