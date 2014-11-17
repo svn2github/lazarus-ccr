@@ -152,6 +152,7 @@ type
   { TRxCustomDBLookupCombo }
   TRxCustomDBLookupCombo = class (TCustomControl)
   private
+    FOnChangeData: TNotifyEvent;
     //
     FStopClick:boolean;
     //FDataLink:TFieldDataLink;
@@ -257,6 +258,7 @@ type
     procedure DoSetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
     procedure DoPositionButton; virtual;
     procedure DoChange; virtual;
+    procedure DoChangeData; virtual;
     procedure DoButtonClick(Sender: TObject); virtual;
     Procedure Loaded; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -282,6 +284,7 @@ type
     property NumGlyphs : Integer read GetNumGlyphs write SetNumGlyphs;
     property OnButtonClick : TNotifyEvent read FOnButtonClick write FOnButtonClick;
     property OnChange : TNotifyEvent read FOnChange write FOnChange;
+    property OnChangeData : TNotifyEvent read FOnChangeData write FOnChangeData;
     property ReadOnly:boolean read FReadOnly write SetReadOnly;
     property EmptyValue: string read FEmptyValue write SetEmptyValue stored StoreEmpty;
     property EmptyItemColor: TColor read FEmptyItemColor write SetEmptyItemColor default clWindow;
@@ -342,6 +345,7 @@ type
     property NumGlyphs;
     Property OnButtonClick;
     property OnChange;
+    property OnChangeData;
     property OnClick;
     property OnClosePopup;
     property OnDblClick;
@@ -1146,9 +1150,10 @@ end;
 procedure TRxCustomDBLookupCombo.NeedUpdateData;
 begin
   if FLookupDataLink.Active and Assigned(FDataField) then
-  begin                                            ;
+  begin
     if FKeyField.IsNull then FDataField.Clear
-    else FDataField.AsString:=FKeyField.AsString
+    else FDataField.AsString:=FKeyField.AsString;
+    DoChangeData;
   end;
 end;
 
@@ -1259,6 +1264,7 @@ begin
       UpdateKeyValue;
       if Assigned(FOnSelect) then
         FOnSelect(Self);
+      DoChangeData;
       Key:=0;
     end;
   end;
@@ -1299,8 +1305,8 @@ begin
                    FLookupDataLink.DataSet.Next;
       end;
       SetValueKey(FKeyField.AsString);
-    	if Assigned(FOnSelect) then
-	  		FOnSelect(Self);
+      if Assigned(FOnSelect) then
+        FOnSelect(Self);
       Key:=0;
     end
   end;
@@ -1349,6 +1355,12 @@ procedure TRxCustomDBLookupCombo.DoChange;
 begin
   if Assigned(FOnChange) then
     FOnChange(Self);
+end;
+
+procedure TRxCustomDBLookupCombo.DoChangeData;
+begin
+  if Assigned(FOnChangeData) then
+    FOnChangeData(Self)
 end;
 
 procedure TRxCustomDBLookupCombo.DoButtonClick(Sender: TObject);
@@ -1532,9 +1544,12 @@ begin
   if (Value <> FValue) then
   begin
     if FListActive and not ReadOnly and (FDataLink.DataSource <> nil) and FDataLink.Edit then
-      FDataField.AsString := Value
+    begin
+      FDataField.AsString := Value;
+      DoChangeData;
+    end
     else
-    SetValueKey(Value);
+      SetValueKey(Value);
     if Assigned(FOnSelect) then
       FOnSelect(Self);
   end;
