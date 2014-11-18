@@ -121,13 +121,13 @@ procedure TZeosDataSetSortEngine.Sort(FieldName: string; ADataSet: TDataSet;
   Asc: boolean; SortOptions: TRxSortEngineOptions);
 begin
   if not Assigned(ADataSet) then exit;
-  if ADataSet is TZAbstractDataset then
+  if ADataSet is TZAbstractRODataset then
   begin
-    TZAbstractDataset(ADataSet).SortedFields:=FieldName;
+    TZAbstractRODataset(ADataSet).SortedFields:=FieldName;
     if Asc then
-      TZAbstractDataset(ADataSet).SortType:=stAscending
+      TZAbstractRODataset(ADataSet).SortType:=stAscending
     else
-      TZAbstractDataset(ADataSet).SortType:=stDescending;
+      TZAbstractRODataset(ADataSet).SortType:=stDescending;
   end;
 end;
 
