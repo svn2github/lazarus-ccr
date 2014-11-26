@@ -79,8 +79,10 @@ type
     function GetPriorPageIndex(Page: Integer): Integer; virtual;
     function GetNextPageIndex(Page: Integer): Integer; virtual;
     procedure Loaded; override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
   public
-    constructor Create(AOwner: TComponent); virtual;
+    constructor Create(AOwner: TComponent); override;
     procedure CheckBtnEnabled;
     procedure NextPage;
     procedure PriorPage;
@@ -292,6 +294,32 @@ begin
   end;
 end;
 
+procedure TPageManager.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited Notification(AComponent, Operation);
+  if Operation = opRemove then
+  begin
+    if AComponent = FNextBtn then
+    begin
+      FNextBtn:=nil;
+      FSaveBtnNextClick:=nil;
+    end
+    else
+    if AComponent = FPriorBtn then
+    begin
+      FPriorBtn:=nil;
+      FSaveBtnPriorClick:=nil;
+    end
+    else
+    if AComponent = FPageOwner then
+      FPageOwner:=nil
+    else
+    if AComponent = FStatusControl then
+      FStatusControl:=nil;
+  end;
+end;
+
 constructor TPageManager.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -303,8 +331,10 @@ var
   P:integer;
 begin
   P:=PageIndex;
-  FNextBtn.Enabled:=GetNextPageIndex(P)>P;
-  FPriorBtn.Enabled:=GetPriorPageIndex(P)<P;
+  if Assigned(FNextBtn) then
+    FNextBtn.Enabled:=GetNextPageIndex(P)>P;
+  if Assigned(FPriorBtn) then
+    FPriorBtn.Enabled:=GetPriorPageIndex(P)<P;
 end;
 
 procedure TPageManager.NextPage;
