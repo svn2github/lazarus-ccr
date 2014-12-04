@@ -22,13 +22,13 @@ uses
   service_intf, imp_utils, base_service_intf, wst_types,
   client_utils, IdGlobal, IdHTTP, IdCookie;
 
+Const
+  sTRANSPORT_NAME = 'HTTP';
+
 {$UNDEF COOKIE_NAME_FIRST}
 {$IF Declared(gsIdVersionMajor)}
   {$DEFINE COOKIE_NAME_FIRST}
 {$IFEND}
-
-Const
-  sTRANSPORT_NAME = 'HTTP';
 
 Type
 
