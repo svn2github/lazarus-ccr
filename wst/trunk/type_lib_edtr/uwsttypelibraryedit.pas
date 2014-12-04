@@ -306,6 +306,7 @@ begin
   end;
   Result := TwstPasTreeContainer.Create();
   try
+    Result.CaseSensitive := False; // Pascal is Case Insensitive !
     DoNotify(mtInfo,Format('Parsing file %s ...',[AFileName]));
     CreateWstInterfaceSymbolTable(Result);
     ParseSource(Result,AFileName,s_ostype,'');
@@ -535,7 +536,8 @@ end;
 procedure GenerateWSDL_ToStream(
         ASymbol   : TwstPasTreeContainer;
         ADest     : TStream;
-  const ADestPath : string
+  const ADestPath : string;
+  const ANotifier : TOnParserMessage
 );
 var
   g : IGenerator;
@@ -547,6 +549,8 @@ begin
     g := TWsdlGenerator.Create(doc);
     locLocator := TFileDocumentLocator.Create(IncludeTrailingPathDelimiter(ADestPath));
     g.SetDocumentLocator(locLocator);
+    if Assigned(ANotifier) then
+      g.SetNotificationHandler(ANotifier);
     g.Execute(ASymbol,ASymbol.CurrentModule.Name);
     WriteXML(doc,ADest);
   finally
@@ -557,7 +561,8 @@ end;
 procedure GenerateXSD_ToStream(
         ASymbol   : TwstPasTreeContainer;
         ADest     : TStream;
-  const ADestPath : string
+  const ADestPath : string;
+  const ANotifier : TOnParserMessage
 );
 var
   g : IGenerator;
@@ -569,6 +574,8 @@ begin
     g := TXsdGenerator.Create(doc);
     locLocator := TFileDocumentLocator.Create(IncludeLeadingPathDelimiter(ADestPath));
     g.SetDocumentLocator(locLocator);
+    if Assigned(ANotifier) then
+      g.SetNotificationHandler(ANotifier);
     g.Execute(ASymbol,ASymbol.CurrentModule.Name);
     WriteXML(doc,ADest);
   finally
@@ -1234,7 +1241,9 @@ var
 begin
   mstrm := TMemoryStream.Create();
   try
-    GenerateWSDL_ToStream(FSymbolTable,mstrm,ExtractFilePath(FCurrentFileName));
+    GenerateWSDL_ToStream(
+      FSymbolTable,mstrm,ExtractFilePath(FCurrentFileName),@ShowStatusMessage
+    );
     mstrm.Position := 0;
     srcWSDL.Lines.LoadFromStream(mstrm);
   finally
@@ -1380,9 +1389,9 @@ begin
   mstrm := TMemoryStream.Create();
   try
     if SameText('.xsd',ExtractFileExt(AFileName)) then
-      GenerateXSD_ToStream(FSymbolTable,mstrm,ExtractFilePath(FCurrentFileName))
+      GenerateXSD_ToStream(FSymbolTable,mstrm,ExtractFilePath(FCurrentFileName),@ShowStatusMessage)
     else
-      GenerateWSDL_ToStream(FSymbolTable,mstrm,ExtractFilePath(FCurrentFileName));
+      GenerateWSDL_ToStream(FSymbolTable,mstrm,ExtractFilePath(FCurrentFileName),@ShowStatusMessage);
     mstrm.SaveToFile(AFileName);
   finally
     FreeAndNil(mstrm);

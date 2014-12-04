@@ -20,12 +20,16 @@ uses
 
 type
 
-  TMessageType = ( mtInfo, mtError );
+  TMessageType = ( mtInfo, mtWarning, mtError );
 
 const
-  MessageTypeNames : array[TMessageType] of string = ( 'Information', 'Error' );
+  MessageTypeNames : array[TMessageType] of string = (
+    'Information', 'Warning', 'Error'
+  );
 
 type
+
+  TOnLogMessageEvent = procedure (const AMsgType : TMessageType; const AMsg : string) of object;
 
   ILogger = interface
     ['{158C90B5-BAC3-40A1-B471-C9327692A3BF}']

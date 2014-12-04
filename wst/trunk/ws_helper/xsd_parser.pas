@@ -40,7 +40,7 @@ type
   EXsdInvalidElementDefinitionException = class(EXsdInvalidDefinitionException)
   end;
 
-  TOnParserMessage = procedure (const AMsgType : TMessageType; const AMsg : string) of object;
+  TOnParserMessage = TOnLogMessageEvent;
 
   IDocumentLocator = locators.IDocumentLocator;
 

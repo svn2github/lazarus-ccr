@@ -123,6 +123,7 @@
         <Filename Value="uprocedit.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="fProcEdit"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="uprocedit"/>
       </Unit13>
@@ -135,6 +136,7 @@
         <Filename Value="uargedit.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="fArgEdit"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="uargedit"/>
       </Unit15>
@@ -164,6 +166,7 @@
         <Filename Value="ufarrayedit.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="fArrayEdit"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ufarrayedit"/>
       </Unit19>
@@ -171,6 +174,7 @@
         <Filename Value="uftypealiasedit.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="fTypeAliasEdit"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="uftypealiasedit"/>
       </Unit20>
@@ -178,6 +182,7 @@
         <Filename Value="ufrecordedit.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="fRecordEdit"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ufrecordedit"/>
       </Unit21>

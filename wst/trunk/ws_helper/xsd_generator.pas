@@ -18,7 +18,7 @@ interface
 uses
   Classes, SysUtils, TypInfo,
   {$IFNDEF FPC}xmldom, wst_delphi_xml{$ELSE}DOM, wst_fpc_xml{$ENDIF},
-  pastree, pascal_parser_intf, locators;
+  pastree, pascal_parser_intf, locators, logger_intf;
   
 type
 
@@ -37,6 +37,8 @@ type
     );
     function GetDocumentLocator() : IDocumentLocator;
     procedure SetDocumentLocator(ALocator : IDocumentLocator);
+    function GetNotificationHandler() : TOnLogMessageEvent;
+    procedure SetNotificationHandler(const AValue : TOnLogMessageEvent);
   end;
 
   IXsdGenerator = interface(IGenerator)
@@ -91,11 +93,13 @@ type
     FOptions: TGeneratorOptions;
     FShortNames : TStrings;
     FDocumentLocator : IDocumentLocator;
+    FMessageHandler : TOnLogMessageEvent;
   protected
     procedure GenerateImports(
             ASymTable  : TwstPasTreeContainer;
             AModule    : TPasModule
     );
+    procedure NotifyMessage(const AMsgType : TMessageType; const AMsg : string);
   protected
     function GetSchemaNode(ADocument : TDOMDocument) : TDOMNode;virtual;abstract;
     procedure SetPreferedShortNames(const ALongName, AShortName : string);
@@ -106,6 +110,8 @@ type
       ASymTable   : TwstPasTreeContainer;
       AModuleName : string
     );
+    function GetNotificationHandler() : TOnLogMessageEvent;
+    procedure SetNotificationHandler(const AValue : TOnLogMessageEvent);
 
     procedure Prepare(
       ASymTable : TwstPasTreeContainer;
@@ -139,6 +145,7 @@ type
     FOwner : Pointer;
     FRegistry : IXsdTypeHandlerRegistry;
   protected
+    procedure NotifyMessage(const AMsgType : TMessageType; const AMsg : string);
     procedure Generate(
             AContainer    : TwstPasTreeContainer;
       const ASymbol       : TPasElement;
@@ -165,6 +172,9 @@ type
 
   function GetXsdTypeHandlerRegistry():IXsdTypeHandlerRegistry;
   function CreateElement(const ANodeName : DOMString; AParent : TDOMNode; ADoc : TDOMDocument):TDOMElement;{$IFDEF USE_INLINE}inline;{$ENDIF}
+
+resourcestring
+  SERR_SimpleTypeCannotHaveNotAttributeProp = 'Invalid type definition, a simple type cannot have "not attribute" properties : "%s.%s". Correction to Attribute done.';
 
 implementation
 uses
@@ -644,6 +654,18 @@ end;
 
 { TBaseTypeHandler }
 
+procedure TBaseTypeHandler.NotifyMessage(
+  const AMsgType : TMessageType;
+  const AMsg     : string
+);
+var
+  locEventHandler : TOnLogMessageEvent;
+begin
+  locEventHandler := GetOwner().GetNotificationHandler();
+  if Assigned(locEventHandler) then
+    locEventHandler(AMsgType,AMsg);
+end;
+
 function TBaseTypeHandler.GetOwner(): IXsdGenerator;
 begin
   Result := IXsdGenerator(FOwner);
@@ -760,8 +782,11 @@ begin
 {$ENDIF WST_HANDLE_DOC}
 
     trueDestType := typItm.DestType;
-    if trueDestType.InheritsFrom(TPasUnresolvedTypeRef) then
+    if trueDestType.InheritsFrom(TPasUnresolvedTypeRef) then begin
       trueDestType := AContainer.FindElement(AContainer.GetExternalName(typItm.DestType)) as TPasType;
+      if (trueDestType = nil) then
+        trueDestType := typItm.DestType;
+    end;
     baseUnitExternalName := GetTypeNameSpace(AContainer,trueDestType);
     s := GetNameSpaceShortName(baseUnitExternalName,defSchemaNode,GetOwner().GetPreferedShortNames());
     s := Format('%s:%s',[s,AContainer.GetExternalName(trueDestType)]);
@@ -857,9 +882,16 @@ procedure TClassTypeDefinition_TypeHandler.Generate(
           p := TPasProperty(AClassType.Members[k]);
           if not AContainer.IsAttributeProperty(p) then begin
             if ( ACategory = tcSimpleContent ) then begin
-              raise EXsdGeneratorException.CreateFmt('Invalid type definition, a simple type cannot have "not attribute" properties : "%s"',[AContainer.GetExternalName(AClassType)]);
+              AContainer.SetPropertyAsAttribute(p,True);
+              NotifyMessage(
+                mtWarning,
+                Format(
+                  SERR_SimpleTypeCannotHaveNotAttributeProp,
+                  [AContainer.GetExternalName(AClassType),AContainer.GetExternalName(p)])
+              );
+            end else begin;
+              Result := True;
             end;
-            Result := True;
           end;
         end;
       end;
@@ -970,7 +1002,8 @@ var
   begin
     p := AProp;
     if AnsiSameText(sWST_PROP_STORE_PREFIX,Copy(p.StoredAccessorName,1,Length(sWST_PROP_STORE_PREFIX))) or 
-       AnsiSameText('True',p.StoredAccessorName) 
+       AnsiSameText('True',p.StoredAccessorName)  or
+       (p.StoredAccessorName = '')
     then begin
       if AContainer.IsAttributeProperty(p) then begin
         s := Format('%s:%s',[s_xs_short,s_attribute]);
@@ -1371,6 +1404,16 @@ begin
   end;
 end;
 
+function TCustomXsdGenerator.GetNotificationHandler: TOnLogMessageEvent;
+begin
+  Result := FMessageHandler;
+end;
+
+procedure TCustomXsdGenerator.SetNotificationHandler(const AValue: TOnLogMessageEvent);
+begin
+  FMessageHandler := AValue;
+end;
+
 procedure TCustomXsdGenerator.Prepare(ASymTable : TwstPasTreeContainer; AModule : TPasModule);
 begin
 
@@ -1437,6 +1480,19 @@ begin
       resNode.SetAttribute(s_namespace,locNS);
       resNode.SetAttribute(s_schemaLocation,locFileName);
     end;
+  end;
+end;
+
+procedure TCustomXsdGenerator.NotifyMessage(
+  const AMsgType : TMessageType;
+  const AMsg     : string
+);
+begin
+  if Assigned(FMessageHandler) then begin
+    FMessageHandler(AMsgType,AMsg);
+  end else if IsConsole then begin
+    if HasLogger() then
+      GetLogger().Log(AMsgType, AMsg);
   end;
 end;
 

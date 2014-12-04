@@ -12,7 +12,7 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
   OnDropFiles = FormDropFiles
   OnShow = FormShow
   Position = poDesktopCenter
-  LCLVersion = '1.2.2.0'
+  LCLVersion = '1.2.5.0'
   object SB: TStatusBar
     Left = 0
     Height = 20

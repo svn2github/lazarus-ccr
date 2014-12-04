@@ -18,7 +18,7 @@ interface
 uses
   Classes, SysUtils, TypInfo,
   {$IFNDEF FPC}xmldom, wst_delphi_xml{$ELSE}DOM{$ENDIF},
-  pastree, pascal_parser_intf, xsd_generator, locators;
+  pastree, pascal_parser_intf, xsd_generator, locators, logger_intf;
 
 type
 
@@ -43,6 +43,7 @@ type
     FTypesNode : TDOMElement;
     FDefinitionsNode : TDOMElement;
     FDocumentLocator : IDocumentLocator;
+    FMessageHandler : TOnLogMessageEvent;
   private
     procedure GenerateTypes(ASymTable : TwstPasTreeContainer; AModule : TPasModule);
     procedure GenerateServiceMessages(
@@ -70,6 +71,8 @@ type
       ARootNode : TDOMElement
     );
   protected
+    function GetNotificationHandler() : TOnLogMessageEvent;
+    procedure SetNotificationHandler(const AValue : TOnLogMessageEvent);
     procedure Prepare(ASymTable : TwstPasTreeContainer; AModule : TPasModule);
     function GetDocumentLocator() : IDocumentLocator;
     procedure SetDocumentLocator(ALocator : IDocumentLocator);
@@ -174,6 +177,8 @@ begin
       locLocator := GetDocumentLocator();
       if (locLocator <> nil) then
         g.SetDocumentLocator(locLocator);
+      if not Assigned(g.GetNotificationHandler()) then
+        g.SetNotificationHandler(Self.GetNotificationHandler());
       for i := 0 to Pred(mdlLs.Count) do begin
         mdl := TPasModule(mdlLs[i]);
         if (mdl <> AModule) then begin
@@ -446,6 +451,16 @@ begin
   strBuf := Format('%s:%s',[s_soap_short_name,s_address]);
   soapAdrNode := CreateElement(strBuf,portNode,Document);
   soapAdrNode.SetAttribute(s_location,ABinding.Address);
+end;
+
+function TWsdlGenerator.GetNotificationHandler: TOnLogMessageEvent;
+begin
+  Result := FMessageHandler;
+end;
+
+procedure TWsdlGenerator.SetNotificationHandler(const AValue: TOnLogMessageEvent);
+begin
+  FMessageHandler := AValue;
 end;
 
 procedure TWsdlGenerator.Prepare(ASymTable : TwstPasTreeContainer; AModule : TPasModule);
