@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
@@ -17,14 +17,10 @@
         </SyntaxOptions>
       </Parsing>
       <Other>
-        <CompilerMessages>
-          <UseMsgFile Value="True"/>
-        </CompilerMessages>
         <CustomOptions Value="-dLAZ_POWERPDF"/>
-        <CompilerPath Value="$(CompPath)"/>
       </Other>
     </CompilerOptions>
-    <Version Minor="9" Release="10"/>
+    <Version Minor="9" Release="12"/>
     <Files Count="12">
       <Item1>
         <Filename Value="PdfTypes.pas"/>

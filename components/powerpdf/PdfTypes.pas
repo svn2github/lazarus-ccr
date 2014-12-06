@@ -305,6 +305,7 @@ type
   function _UTF8ToWinAnsi(const value:string; InvalidChar:char='?'): string;
   procedure PdfLazRegisterClassAlias(aClass: TPersistentClass; const Alias: string);
   function  PdfLazFindClass(const aClassName: string):TPersistentClass;
+  function _GetSpcCount(const Text: string): Integer;
 {$ENDIF}
 
 implementation
@@ -1234,6 +1235,19 @@ begin
   end;
   if not Assigned(Result) then
     raise EClassNotFound.CreateFmt('No class was found', [aClassName]);
+end;
+
+function _GetSpcCount(const Text: string): Integer;
+var
+  i: Integer;
+  W: widestring;
+begin
+  result := 0;
+  W := UTF8Decode(Text);
+  for i:=1 to Length(W) do begin
+    if W[i]=' ' then
+      inc(result);
+  end;
 end;
 
 initialization

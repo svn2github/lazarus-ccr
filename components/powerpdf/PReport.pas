@@ -47,7 +47,7 @@ interface
 
 uses
   {$IFDEF LAZ_POWERPDF}
-  LCLType, LMessages, LCLIntf, GraphType, FPCanvas, LCLProc,
+  LCLType, LMessages, LCLIntf, GraphType, FPCanvas, LazUTF8, LCLProc,
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
@@ -1722,10 +1722,11 @@ begin
   for i:=1 to UTF8Length(S) do begin
     Word := UTF8Copy(s, i, 1);
     Canvas.TextOut(Round(Pos), Y, Word);
-    with APdfCanvas do
+    with APdfCanvas do begin
       Pos := Pos + TextWidth(Word) + Attribute.CharSpace;
-    if Word=' ' then
-      Pos := Pos + FWordSpace
+      if Word=' ' then
+        Pos := Pos + Attribute.WordSpace;
+    end;
   end;
   result := Pos;
 end;
@@ -1866,6 +1867,9 @@ var
   tmpWidth: Single;
   tmpCharSpace: Single;
   CharCount: integer;
+  {$IFDEF LAZ_POWERPDF}
+  str: string;
+  {$ENDIF}
 begin
   // setting canvas attribute to the internal doc(to get font infomation).
   with ACanvas do
@@ -1876,6 +1880,15 @@ begin
     if AlignJustified then
     begin
       SetCharSpace(0);
+      {$IFDEF LAZ_POWERPDF}
+      str := UTF8Trim(Caption, [u8tKeepStart]);
+      tmpWidth := TextWidth(str);
+      CharCount := _GetSpcCount(str);
+      if CharCount>0 then begin
+        tmpCharSpace := (Self.Width - tmpWidth) / CharCount;
+        SetWordSpace(tmpCharSpace);
+      end;
+      {$ELSE}
       tmpWidth := TextWidth(Caption);
       CharCount := _GetCharCount(Caption);
       if CharCount > 1 then
@@ -1884,6 +1897,7 @@ begin
         tmpCharSpace := 0;
       if tmpCharSpace > 0 then
         SetCharSpace(tmpCharSpace);
+      {$ENDIF}
     end
     else
       SetCharSpace(CharSpace);
