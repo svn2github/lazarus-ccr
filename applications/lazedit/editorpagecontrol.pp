@@ -725,18 +725,15 @@ var
   SLen: Integer;
   OldSelMode: TSynSelectionMode;
 begin
-  {
-  //This method makes no sense when we are in Colomn selection mode
-  if SelAvail and (SelectionMode = smColumn) then Exit;
-  }
   //this only works with SelectionMode := scNormal
   OldSelMode := SelectionMode;
   SelectionMode := smNormal;
   //Using SelEnd - SelStart doesn't work correctly when selecting across lines
-  SLen := Utf8Length(Seltext); //SelStart - SelEnd;
+  //SynEdit internally works with byte positions, therefore use Length(), not Utf8Length()
+  SLen := {Utf8}Length(Seltext); //SelStart - SelEnd;
   SelText := Pre + SelText + Post;
   //SelStart now is after Post, place it before the original selection
-  SelStart := SelStart - Utf8Length(Post) - SLen;
+  SelStart := SelStart - {Utf8}Length(Post) - SLen;
   SelEnd := SelStart + SLen;
   SelectionMode :=  OldSelMode;
   SetFocus;
