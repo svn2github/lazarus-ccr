@@ -33,7 +33,7 @@ unit VirtualTrees;
 //   Anthony Mills, Alexander Egorushkin (BCB), Mathias Torell (BCB), Frank van den Bergh, Vadim Sedulin, Peter Evans,
 //   Milan Vandrovec (BCB), Steve Moss, Joe White, David Clark, Anders Thomsen, Igor Afanasyev, Eugene Programmer,
 //   Corbin Dunn, Richard Pringle, Uli Gerhardt, Azza, Igor Savkic, Daniel Bauten, Timo Tegtmeier, Dmitry Zegebart,
-//   Andreas Hausladen
+//   Andreas Hausladen, Joachim Marder
 // Beta testers:
 //   Freddy Ertl, Hans-J?rgen Schnorrenberg, Werner Lehmann, Jim Kueneman, Vadim Sedulin, Moritz Franckenstein,
 //   Wim van der Vegt, Franc v/d Westelaken
@@ -102,8 +102,8 @@ const
   {$endif}
 
   VTMajorVersion = 5;
-  VTMinorVersion = 3;
-  VTReleaseVersion = 2;
+  VTMinorVersion = 5;
+  VTReleaseVersion = 0;
   VTTreeStreamVersion = 2;
   VTHeaderStreamVersion = 6;    // The header needs an own stream version to indicate changes only relevant to the header.
 
@@ -168,6 +168,9 @@ const
 
   // Decoupling message for auto-adjusting the internal edit window.
   CM_AUTOADJUST = CM_BASE + 2005;
+
+
+  CM_UPDATE_VCLSTYLE_SCROLLBARS = CM_BASE + 2050;
 
   // VT's own clipboard formats,
   // Note: The reference format is used internally to allow to link to a tree reference
@@ -1978,6 +1981,7 @@ type
     FVertScrollBarUpButtonState: TThemedScrollBar;
     FVertScrollBarWindow: TVclStyleScrollBarWindow;
 
+    procedure CMUpdateVclStyleScrollbars(var Message: TMessage); message CM_UPDATE_VCLSTYLE_SCROLLBARS;
     procedure WMKeyDown(var Msg: TMessage); message WM_KEYDOWN;
     procedure WMKeyUp(var Msg: TMessage); message WM_KEYUP;
     procedure WMLButtonDown(var Msg: TWMMouse);  message WM_LBUTTONDOWN;
@@ -7179,8 +7183,10 @@ begin
       if not FCheckBox then
         HeaderGlyphSize := Point(FImages.Width, FImages.Height)
       else
-        with TBaseVirtualTree.GetCheckImageListFor(FHeader.Treeview.CheckImageKind) do
-          HeaderGlyphSize := Point(Width, Height)
+        with Self.Owner.Header.Treeview do begin
+          if Assigned(FCheckImages) then
+            HeaderGlyphSize := Point(FCheckImages.Width, FCheckImages.Height)
+        end
     else
       HeaderGlyphSize := Point(0, 0);
     if UseSortGlyph then
@@ -11770,7 +11776,7 @@ function TVTColors.GetNodeFontColor: TColor;
 begin
 // TODO:  Compilerversion On/Off < On >
   {$ifdef VCLStyleSupport}
-  if FOwner.FVclStyleEnabled then
+  if FOwner.VclStyleEnabled and  FOwner.FBackground.Bitmap.Empty then
     StyleServices.GetElementColor(StyleServices.GetElementDetails(ttItemNormal), ecTextColor, Result)
   else
 {$IFEND}
@@ -15772,6 +15778,7 @@ begin
         SetOffsetX(FOffsetX + RTLFactor * ScrollAmount);
       end;
     end;
+
   end;
   {$ifdef DEBUG_VTV}Logger.ExitMethod([lcScroll],'CMMouseWheel');{$endif}
 end;
@@ -16830,7 +16837,7 @@ begin
           // of checking for valid characters for incremental search.
           // This is available but would require to include a significant amount of Unicode character
           // properties, so we stick with the simple space check.
-          if (Shift * [ssCtrlOS, ssAlt] = []) and (CharCode >= 32) then
+          if (Shift * [ssCtrlOS, ssAlt] = []) or ((Shift * [ssCtrlOS, ssAlt] = [ssCtrlOS, ssAlt]))) and (CharCode >= 32) then
             DoStateChange([tsIncrementalSearchPending]);
           end;
         end;
@@ -16873,7 +16880,8 @@ begin
   inherited WMKillFocus(Msg);
 
   // Remove hint if shown currently.
-  Application.CancelHint;
+  if tsHint in Self.FStates then
+    Application.CancelHint;
 
   // Stop wheel panning if active.
   StopWheelPanning;
@@ -20208,8 +20216,8 @@ begin
   begin
     FOffsetX := Value.X;
     FOffsetY := Value.Y;
-
-    Application.CancelHint;
+    if tsHint in Self.FStates then
+      Application.CancelHint;
     if FUpdateCount = 0 then
     begin
       // The drag image from VCL controls need special consideration.
@@ -20327,6 +20335,7 @@ begin
       HandleHotTrack(P.X, P.Y);
 
     DoScroll(DeltaX, DeltaY);
+    Perform(CM_UPDATE_VCLSTYLE_SCROLLBARS,0,0);
   end;
   {$ifdef DEBUG_VTV}Logger.ExitMethod([lcScroll],'DoSetOffsetXY');{$endif}
 end;
@@ -22201,7 +22210,7 @@ begin
         Change(nil);
       end;
     end
-    else
+    else if not ((hiNowhere in HitInfo.HitPositions) and (toAlwaysSelectNode in Self.TreeOptions.SelectionOptions)) then // When clicking in the free space we don't want the selection to be cleared in case toAlwaysSelectNode is set
       ClearSelection;
   end;
 
@@ -22305,7 +22314,10 @@ begin
     if (tsToggleFocusedSelection in FStates) and (HitInfo.HitNode = FFocusedNode) and Assigned(HitInfo.HitNode) then //Prevent AV when dereferencing HitInfo.HitNode below, see bug #100
     begin
       if vsSelected in HitInfo.HitNode.States then
-        RemoveFromSelection(HitInfo.HitNode)
+      begin
+        if not (toAlwaysSelectNode in TreeOptions.SelectionOptions) or (Self.SelectedCount > 1) then
+          RemoveFromSelection(HitInfo.HitNode)
+      end
       else
         AddToSelection(HitInfo.HitNode);
       InvalidateNode(HitInfo.HitNode);
@@ -29782,6 +29794,10 @@ var
   CurrentNodeHeight: Integer;
   lUseSelectedBkColor: Boolean; // determines if the dotted grid lines need to be painted in selection color of background color
 
+  CellIsTouchingClientRight: Boolean;
+  CellIsInLastColumn: Boolean;
+  ColumnIsFixed: Boolean;
+
 begin
   {$ifdef DEBUG_VTV}Logger.EnterMethod([lcPaint],'PaintTree');{$endif}
   {$ifdef DEBUG_VTV}Logger.Send([lcPaint, lcHeaderOffset],'Window',Window);{$endif}
@@ -30118,6 +30134,7 @@ begin
                             end
                             else
                               DrawDottedHLine(PaintInfo, CellRect.Left, CellRect.Right, CellRect.Bottom - 1);
+
                             Dec(CellRect.Bottom);
                             Dec(ContentRect.Bottom);
                           end;
@@ -30125,19 +30142,38 @@ begin
                           if UseColumns then
                           begin
                             // Paint vertical grid line.
-                            // Don't draw if this is the last column and the header is in autosize mode.
-                            if (poGridLines in PaintOptions) and (toShowVertGridLines in FOptions.FPaintOptions) and
-                              (not (hoAutoResize in FHeader.FOptions) or (Position < TColumnPosition(Count - 1))) then
+                            if (poGridLines in PaintOptions) and (toShowVertGridLines in FOptions.FPaintOptions) then
                             begin
-                              if (BidiMode = bdLeftToRight) or not ColumnIsEmpty(Node, Column) then
+                              // These variables and the nested if conditions shall make the logic
+                              // easier to understand.
+                              CellIsTouchingClientRight := PaintInfo.CellRect.Right = Window.Right;
+                              CellIsInLastColumn := Position = TColumnPosition(Count - 1);
+                              ColumnIsFixed := coFixed in FHeader.FColumns[Column].Options;
+
+                              // Don't draw if this is the last column and the header is in autosize mode.
+                              if not ((hoAutoResize in FHeader.FOptions) and CellIsInLastColumn) then
                               begin
-                                Canvas.Font.Color := FColors.GridLineColor;
-                                lUseSelectedBkColor := (poDrawSelection in PaintOptions) and (toFullRowSelect in FOptions.FSelectionOptions) and
-                                                      (vsSelected in Node.States) and not (toUseBlendedSelection in FOptions.PaintOptions) and not
-                                                      (tsUseExplorerTheme in FStates);
-                                DrawDottedVLine(PaintInfo, CellRect.Top, CellRect.Bottom, CellRect.Right - 1, lUseSelectedBkColor);
-                              end;                              Dec(CellRect.Right);
-                              Dec(ContentRect.Right);
+                                // We have to take spanned cells into account which we determine
+                                // by checking if CellRect.Right equals the Window.Right.
+                                // But since the PaintTree procedure is called twice in
+                                // TBaseVirtualTree.Paint (i.e. for fixed columns and other columns.
+                                // CellIsTouchingClientRight does not work for fixed columns.)
+                                // we have to paint fixed column grid line anyway.
+                                if not CellIsTouchingClientRight or ColumnIsFixed then
+                                begin
+                                  if (BidiMode = bdLeftToRight) or not ColumnIsEmpty(Node, Column) then
+                                  begin
+                                    Canvas.Font.Color := FColors.GridLineColor;
+                                    lUseSelectedBkColor := (poDrawSelection in PaintOptions) and (toFullRowSelect in FOptions.FSelectionOptions) and
+                                                          (vsSelected in Node.States) and not (toUseBlendedSelection in FOptions.PaintOptions) and not
+                                                          (tsUseExplorerTheme in FStates);
+                                    DrawDottedVLine(PaintInfo, CellRect.Top, CellRect.Bottom, CellRect.Right - 1, lUseSelectedBkColor);
+                                  end;
+
+                                  Dec(CellRect.Right);
+                                  Dec(ContentRect.Right);
+                                end;
+                              end;
                             end;
                           end;
 
@@ -31083,8 +31119,7 @@ begin
   begin
     if ColumnRight > ClientWidth then
       NewOffset := FEffectiveOffsetX + (ColumnRight - ClientWidth)
-    else if (ColumnLeft < Header.Columns.GetVisibleFixedWidth) and
-            (ColumnRight > Header.Columns.GetVisibleFixedWidth) then
+    else if (ColumnLeft < Header.Columns.GetVisibleFixedWidth) then
       NewOffset := FEffectiveOffsetX - (Header.Columns.GetVisibleFixedWidth - ColumnLeft);
     if NewOffset <> FEffectiveOffsetX then
     begin
@@ -31502,7 +31537,8 @@ begin
           if (FUpdateCount = 0) and (toAnimatedToggle in FOptions.FAnimationOptions) and not
              (tsCollapsing in FStates) then
           begin
-            Application.CancelHint;
+            if tsHint in Self.FStates then
+              Application.CancelHint;
             UpdateWindow(Handle);
 
             // animated collapsing
@@ -31649,7 +31685,8 @@ begin
               if (ToggleData.R1.Top < ClientHeight) and ([tsPainting, tsExpanding] * FStates = []) and
                 (toAnimatedToggle in FOptions.FAnimationOptions)then
               begin
-                Application.CancelHint;
+                if tsHint in Self.FStates then
+                  Application.CancelHint;
                 UpdateWindow(Handle);
                 // animated expanding
                 with ToggleData do
@@ -31975,6 +32012,7 @@ begin
   begin
     UpdateVerticalScrollBar(DoRepaint);
     UpdateHorizontalScrollBar(DoRepaint);
+    Perform(CM_UPDATE_VCLSTYLE_SCROLLBARS,0,0);
   end;
 end;
 
@@ -33721,7 +33759,7 @@ begin
     // For customization by the application or descendants we use again the redirected font change event.
     RedirectFontChangeEvent(Canvas);
 
-    CellPadding := Format('padding-left:%dpx;padding-right:%0:dpx;', [FMargin]);
+    CellPadding := Format('padding-left: %dpx; padding-right: %0:dpx;', [FMargin]);
 
     IndentWidth := IntToStr(FIndent);
     AddHeader := ' ';
@@ -33732,7 +33770,7 @@ begin
       AddHeader := AddHeader + Format(' border="%d" frame=box', [BorderWidth + 1]);
 
     Buffer.Add('<META http-equiv="Content-Type" content="text/html; charset=utf-8">');
-      
+
     // Create HTML table based on the tree structure. To simplify formatting we use styles defined in a small CSS area.
     Buffer.Add('<style type="text/css">');
     Buffer.AddNewLine;
@@ -33749,40 +33787,42 @@ begin
       LineStyleText := 'dotted;';
     if toShowHorzGridLines in FOptions.FPaintOptions then
     begin
-      Buffer.Add('.noborder{border-style:');
+      Buffer.Add('.noborder{');
+      Buffer.Add(' border-bottom:1px; border-left: 0px; border-right: 0px; border-top: 1px;');
+      Buffer.Add('border-style:');
       Buffer.Add(LineStyleText);
-      Buffer.Add(' border-bottom:1;border-left:0;border-right:0; border-top:0;');
       Buffer.Add(CellPadding);
       Buffer.Add('}');
     end
     else
     begin
-      Buffer.Add('.noborder{border-style:none;');
+      Buffer.Add('.noborder{border-style: none;');
       Buffer.Add(CellPadding);
       Buffer.Add('}');
     end;
     Buffer.AddNewLine;
 
-    Buffer.Add('.normalborder {border-top:none; border-left:none; vertical-align:top;');
+    Buffer.Add('.normalborder {vertical-align: top; ');
     if toShowVertGridLines in FOptions.FPaintOptions then
-      Buffer.Add('border-right:1 ' + LineStyleText)
+      Buffer.Add('border-right: 1px; border-left: 1px; ')
     else
-      Buffer.Add('border-right:none;');
+      Buffer.Add('border-right: none; border-left:none; ');
     if toShowHorzGridLines in FOptions.FPaintOptions then
-      Buffer.Add('border-bottom:1 ' + LineStyleText)
+      Buffer.Add('border-top: 1px; border-bottom: 1px; ')
     else
-      Buffer.Add('border-bottom:none;');
+      Buffer.Add('border-top:none; border-bottom: none;');
+    Buffer.Add('border-style: ');
+    Buffer.Add(LineStyleText);
     Buffer.Add(CellPadding);
     Buffer.Add('}');
     Buffer.Add('</style>');
     Buffer.AddNewLine;
 
     // General table properties.
-    Buffer.Add('<table class="default" bgcolor=');
+    Buffer.Add('<table class="default" style="border-collapse: collapse;" bgcolor=');
     WriteColorAsHex(Color);
     Buffer.Add(AddHeader);
-    Buffer.Add(' cellspacing="0" cellpadding=');
-    Buffer.Add(IntToStr(FMargin) + '>');
+    Buffer.Add(' cellspacing="0">');
     Buffer.AddNewLine;
 
     Columns := nil;
@@ -33874,7 +33914,7 @@ begin
       if Assigned(FOnAfterHeaderExport) then
         FOnAfterHeaderExport(self, etHTML);
     end;
-  
+
     // Now go through the tree.
     Run := Save;
     while Assigned(Run) do
@@ -35261,6 +35301,12 @@ begin
   Handled := True;
 end;
 
+procedure TVclStyleScrollBarsHook.CMUpdateVclStyleScrollbars(var Message: TMessage);
+begin
+   CalcScrollBarsRect;
+   PaintScrollBars;
+end;
+
 procedure TVclStyleScrollBarsHook.WMKeyDown(var Msg: TMessage);
 begin
   CallDefaultProc(TMessage(Msg));
@@ -35836,6 +35882,3 @@ finalization
   end;
   {$endif}
 end.
-
-
-
