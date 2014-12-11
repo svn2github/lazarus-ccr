@@ -47,3 +47,4 @@
 {$ifdef CPU64}
   {$define PACKARRAYPASCAL}
 {$endif}
+{$define CompilerVersion := 19}

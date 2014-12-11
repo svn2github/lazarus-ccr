@@ -13,6 +13,7 @@
       </SearchPaths>
       <Parsing>
         <SyntaxOptions>
+          <CStyleMacros Value="True"/>
           <UseAnsiStrings Value="False"/>
         </SyntaxOptions>
       </Parsing>
