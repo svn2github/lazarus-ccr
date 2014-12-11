@@ -60,6 +60,9 @@
                 Scrolling a bit more "normal"
                 Writing input now an option
    02.25.2010 : Small changes to compile with FPC 2.4
+   01.12.2014 : Set key:=0 for arrow keys to prevent some interesting
+                component jumping behaviour.
+                Calculate the page height using "inherited height" now.
 
    Todo    : Input Masks
    Todo    : Docu
@@ -71,9 +74,8 @@ unit uCmdBox;
 
 interface
 
-uses Classes, SysUtils, ExtCtrls, ComCtrls, Controls, Graphics, StdCtrls,
-  Forms, LCLType, LCLIntf,
-  lmessages, lresources, ClipBrd, LCLProc;
+uses Classes, SysUtils, ExtCtrls, Controls, Graphics, Forms, LCLType, LCLIntf,
+     lmessages, lresources, ClipBrd, LCLProc;
 
 type
   TCaretType = (cartLine, cartSubBar, cartBigBar, cartUser);
@@ -103,14 +105,20 @@ type
   public
     constructor Create(AComponent: TComponent); override;
     destructor Destroy; override;
+    procedure EraseBackground(DC: HDC); override;
   protected
     procedure Paint; override;
     procedure Resize; override;
     procedure UTF8KeyPress(var Key: TUTF8Char); override;
     procedure KeyDown(var Key: word; Shift: TShiftState); override;
+    procedure KeyUp(var Key: word; Shift: TShiftState); override;
+    procedure KeyPress(var Key: char); override;
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
     procedure WMVScroll(var message: TLMVScroll); message LM_VSCROLL;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; x, y: integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; x, y: integer); override;
+    procedure MouseMove(Shift: TShiftState; x, y: integer); override;
   private
     FLock:      System.TRTLCriticalSection;
     FCaretTimer: TTimer;
@@ -194,14 +202,9 @@ type
     procedure SetHistoryMax(v: integer);
     procedure InsertHistory;
     procedure SetHistoryPos(v: integer);
-    procedure EraseBackground(DC: HDC); override;
     function GetHistory(i: integer): string;
     procedure DeleteHistoryEntry(i: integer);
     procedure MakeFirstHistoryEntry(i: integer);
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
-      x, y: integer); override;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; x, y: integer); override;
-    procedure MouseMove(Shift: TShiftState; x, y: integer); override;
     function MoveInputCaretTo(x, y: integer; chl: boolean): boolean;
     procedure SetSelection(Start, Ende: integer);
     procedure LeftSelection(Start, Ende: integer);
@@ -624,6 +627,9 @@ var
       Exit;
     end;
     SameColor := '';
+    SameForeColor := 0;
+    SameColorX := 0;
+    SameColorWidth := 0;
     ACanvas.Brush.Style := bsClear;
     // A thing for older versions!
     ACanvas.Font.GetTextWidth('%%%_$%_Hallo\\\\\\\\\32489738');
@@ -883,10 +889,7 @@ var
     SameColorX: integer;
     SameColorWidth: integer;
     LP:     integer;
-    CaretX: integer;
-    CaretW: integer;
     CW:     integer;
-    xp:     integer;
   begin
     if (AY <= -ACH) and (AY > ACanvas.Height) then
     begin
@@ -895,12 +898,14 @@ var
       Exit;
     end;
     SameColor := '';
+    SameBackColor := 0;
+    SameColorX := 0;
+    SameColorWidth := 0;
     ACanvas.Brush.Style := bsSolid;
     // A thing for older versions!
     ACanvas.Font.GetTextWidth('%%%_$%_Hallo\\\\\\\\\32489738');
     // End of shit
     LP     := LineStart;
-    CaretX := -1;
     while LineStart <> LineEnd + 1 do
     begin
       with FChars[LineStart] do
@@ -1086,11 +1091,6 @@ var
             SameBackColor := FBackColor;
             SameColorX    := AX;
           end;
-        end;
-        if LP = ACaretPos then
-        begin
-          CaretX := AX;
-          CaretW := FCharWidth;
         end;
         Inc(AX, CW);
         Inc(LP);
@@ -1732,6 +1732,7 @@ procedure TCmdBox.WriteStream(Stream: TStream);
 var
   c: WideString;
 begin
+  c:='';
   while Stream.Position < Stream.Size do
   begin
     // Not very efficient, but should work...
@@ -2018,14 +2019,6 @@ begin
     FillChar(ScrollInfo, SizeOf(ScrollInfo), 0);
     ScrollInfo.cbSize := SizeOf(ScrollInfo);
     ScrollInfo.fMask  := SIF_RANGE or SIF_PAGE or SIF_DISABLENOSCROLL;
-    // Dont't know, someone told me to kick it...so i did:P
-    //  {$ifdef Unix}
-{  ScrollInfo.fMask := ScrollInfo.fMask or SIF_UPDATEPOLICY;
-  if goThumbTracking in Options then
-   ScrollInfo.ntrackPos := SB_POLICY_CONTINUOUS
-  else
-   ScrollInfo.ntrackPos := SB_POLICY_DISCONTINUOUS;}
-    //  {$endif}}
     ScrollInfo.nMin   := 0;
     ScrollInfo.nMax   := ARange;
     if APage < 0 then
@@ -2078,12 +2071,12 @@ var
 begin
   FFont.Assign(F);
   Canvas.Font := FFont;
-  DC   := GetDC(0);
+{  DC   := GetDC(0);
   Save := SelectObject(DC, FFont.Handle);
   GetTextMetrics(DC, Metrics);
   SelectObject(DC, Save);
-  ReleaseDC(0, DC);
-  FCharHeight := Abs(Metrics.tmHeight) + 2;
+  ReleaseDC(0, DC);}
+  FCharHeight := abs(FFont.Height)+3;
   for i:=0 to FLineCount-1 do
   begin
     FLines[i].UpdateAll;
@@ -2099,21 +2092,26 @@ var
   y: integer;
 begin
   if not FAutoFollow then
+  begin
     Exit;
+  end;
   UpdateLineHeights;
-  y := FLineHeightSum[FInputY] + FInputBuffer.GetLineOfCaret(
-    FClientWidth, FCaretX, FCaretWidth);
-  if y >= FLineHeightSum[FTopLine] + FLineOfTopLine + FPageHeight then
+  y := FLineHeightSum[FInputY] + FInputBuffer.GetLineOfCaret(FClientWidth, FCaretX, FCaretWidth);
+  if y >= FLineHeightSum[FTopLine] + FLineOfTopLine + FPageHeight - 1 then
   begin
     while y >= FLineHeightSum[FTopLine] + FLineHeights[FTopLine] + FPageHeight - 1 do
+    begin
       Inc(FTopLine);
+    end;
     FLineOfTopLine := y - (FLineHeightSum[FTopLine] + FPageHeight) + 1;
   end
   else if y < FLineHeightSum[FTopLine] + FLineOfTopLine then
   begin
     FLineOfTopLine := 0;
     while y < FLineHeightSum[FTopLine] do
+    begin
       Dec(FTopLine);
+    end;
     FLineOfTopLine := y - FLineHeightSum[FTopLine];
   end;
   y := FLineHeightSUm[FTopLine] + FLineOfTopLine;
@@ -2173,11 +2171,8 @@ begin
     end;
     FInputBuffer.MaximumLength(FInputMinPos + FHistory[v].Length);
     FInputBuffer.OverWrite(FHistory[v], FInputMinPos);
-    if FInputPos > FInputBuffer.Length then
-    begin
-      FInputPos := FInputBuffer.Length;
-      FCaretX   := FInputX + FInputPos;
-    end;
+    FInputPos := FInputBuffer.Length;
+    FCaretX   := FInputX + FInputPos;
     FHistoryPos := v;
   end;
   if Assigned(FOnInputChange) then
@@ -2210,6 +2205,18 @@ begin
   if FInputVisible then
     Invalidate;
   inherited UTF8KeyPress(Key);
+end;
+
+procedure TCmdBox.KeyUp(var Key: word; Shift: TShiftState);
+begin
+  inherited KeyUp(key, shift);
+  key:=0;
+end;
+
+procedure TCmdBox.KeyPress(var Key: char);
+begin
+  inherited KeyPress(key);
+  key:=#0;
 end;
 
 procedure TCmdBox.KeyDown(var Key: word; Shift: TShiftState);
@@ -2252,6 +2259,7 @@ begin
     end;
     VK_LEFT:
     begin
+      key:=0;
       if (not (ssAlt in Shift)) and (FInput and (FInputPos > FInputMinPos)) then
       begin
         if not (ssShift in Shift) then
@@ -2266,6 +2274,7 @@ begin
     end;
     VK_UP:
     begin
+      key:=0;
       if (not (ssAlt in Shift)) and FInput then
       begin
         SetSelection(-1, 0);
@@ -2274,6 +2283,7 @@ begin
     end;
     VK_DOWN:
     begin
+      key:=0;
       if (not (ssAlt in Shift)) and FInput then
       begin
         SetSelection(-1, 0);
@@ -2282,6 +2292,7 @@ begin
     end;
     VK_RIGHT:
     begin
+      key:=0;
       if (not (ssAlt in Shift)) and FInput and (FInputPos < FInputBuffer.Length) then
       begin
         if not (ssShift in Shift) then
@@ -2593,15 +2604,12 @@ const
 procedure TCmdBox.IntWrite;
 var
   Pp:     integer;
-  SLen:   integer;
   l:      integer;
   s:      string;
-  EscString: string;
   EscPos: integer;
   EscSubMode: integer;
 begin
   S    := FCurrentString;
-  SLen := UTF8Length(S);
   Pp   := 1;
   while Pp <= Length(S) do
   begin
@@ -2809,13 +2817,6 @@ procedure TCmdBox.Resize;
 begin
   inherited Resize;
   AdjustScrollBars(True);
-{  if FVSBPos >= FVisibleLineCount - FPageHeight then
-  begin
-    FVSBPos := FVisibleLineCount - FPageHeight;
-    if FVSBPos < 0 then
-      FVSBPos := 0;
-  end;
-  TranslateScrollBarPosition;}
 end;
 
 function TCmdBox.AdjustLineHeight(i: integer;const Recalc:Boolean=False): integer;
@@ -2865,7 +2866,7 @@ var
   LH: integer;
 begin
   FClientWidth  := inherited ClientWidth;
-  FClientHeight := Height;
+  FClientHeight := inherited ClientHeight;
   FPageHeight   := FClientHeight div FCharHeight;
   FVisibleLines := FPageHeight + Ord(FClientHeight mod FCharHeight <> 0);
   LH            := UpdateLineHeights(Recalc);
@@ -2887,7 +2888,6 @@ begin
       ScrollBarPosition(SB_VERT, 0);
       ScrollBarRange(SB_VERT, 0, FPageHeight);
       ShowScrollBar(Handle, SB_VERT, True); { Disable the Scrollbar ! }
-      ShowScrollBar(Handle, SB_HORZ, False);
     end;
   end
   else
@@ -2896,7 +2896,6 @@ begin
     begin
       ScrollBarRange(SB_VERT, FVisibleLineCount, FPageHeight);
       ShowScrollBar(Handle, SB_VERT, True);
-      ShowScrollBar(Handle, SB_HORZ, False);
     end;
   end;
   Invalidate;
