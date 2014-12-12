@@ -1,7 +1,7 @@
 { EditorPageControl unit
 
   Copyright (C) 2012 by Bart Broersma & Flying Sheep Inc.
-  http://home.tiscali.nl/~knmg0017/
+  http://www.flyingsheep.nl/
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
