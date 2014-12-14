@@ -1,32 +1,3 @@
-{ Graphic functions for pyramidtiff.
-
-  Copyright (C) 2012  Mattias Gaertner  mattias@freepascal.org
-
-  This library is free software; you can redistribute it and/or modify it
-  under the terms of the GNU Library General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or (at your
-  option) any later version with the following modification:
-
-  As a special exception, the copyright holders of this library give you
-  permission to link this library with independent modules to produce an
-  executable, regardless of the license terms of these independent modules,and
-  to copy and distribute the resulting executable under terms of your choice,
-  provided that you also meet, for each linked independent module, the terms
-  and conditions of the license of that module. An independent module is a
-  module which is not derived from or based on this library. If you modify
-  this library, you may extend this exception to your version of the library,
-  but you are not obligated to do so. If you do not wish to do so, delete this
-  exception statement from your version.
-
-  This program is distributed in the hope that it will be useful, but WITHOUT
-  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  FITNESS FOR A PARTICULAR PURPOSE. See the GNU Library General Public License
-  for more details.
-
-  You should have received a copy of the GNU Library General Public License
-  along with this library; if not, write to the Free Software Foundation,
-  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-}
 program pyramidtiff;
 
 {$mode objfpc}{$H+}
@@ -35,30 +6,32 @@ uses
   {$IFDEF UNIX}{$IFDEF UseCThreads}
   cthreads,
   {$ENDIF}{$ENDIF}
-  Classes, SysUtils, math, LazFileUtils, CustApp,
-  FPimage, FPReadJPEG, FPReadPNG, FPReadBMP, FPImgCanv,
+  Classes, SysUtils, math, LazFileUtils, CodeToolsStructs, CustApp,
+  FPimage, FPReadJPEG, FPReadPNG, FPReadBMP, FPImgCanv, FPCanvas, MTProcs,
   PyTiGraphics, FPReadTiff, FPTiffCmn, FPWriteTiff;
 
 const
-  Version = '1.0';
+  Version = '1.1';
 type
 
   { TPyramidTiffer }
 
   TPyramidTiffer = class(TCustomApplication)
   private
+    FInputPath: string;
     FMinSize: Word;
+    FOutputPath: string;
     FQuiet: boolean;
     //FSkipCheck: boolean;
     FTileHeight: Word;
     FTileWidth: Word;
     FVerbose: boolean;
-    procedure LoadTiff(out Img: TPTMemImgBase;
+    procedure LoadTiff(out Img: TFPCompactImgBase;
       Reader: TFPReaderTiff; InStream: TMemoryStream;
       var ErrorMsg: string);
-    procedure LoadOther(out Img: TPTMemImgBase;
+    procedure LoadOther(out Img: TFPCompactImgBase;
       Reader: TFPCustomImageReader; InStream: TMemoryStream);
-    function ShrinkImage(LastImg: TPTMemImgBase): TPTMemImgBase;
+    function ShrinkImage(LastImg: TFPCompactImgBase): TFPCompactImgBase;
     procedure TiffReaderCreateImage(Sender: TFPReaderTiff; IFD: TTiffIFD);
   protected
     procedure DoRun; override;
@@ -66,18 +39,33 @@ type
     procedure ReadConfig;
     function CheckIfFileIsPyramidTiled(Filename: string; out ErrorMsg: string): boolean;
     function CheckIfStreamIsPyramidTiled(s: TStream; out ErrorMsg: string): boolean;
-    function Convert(InputFilename, OutputFilename: string; out ErrorMsg: string): boolean;
-    function Convert(Img: TPTMemImgBase; OutputFilename: string; out ErrorMsg: string): boolean;
+    function GetReaderClass(Filename: string): TFPCustomImageReaderClass;
+    function ConvertDir(InputDir, OutputDir: string; out ErrorMsg: string): boolean;
+    procedure ConvertFilesParallel(Index: PtrInt; Data: Pointer; {%H-}Item: TMultiThreadProcItem);
+    function ConvertFile(InputFilename, OutputFilename: string; out ErrorMsg: string): boolean;
+    function Convert(Img: TFPCompactImgBase; OutputFilename: string; out ErrorMsg: string): boolean;
   public
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
     procedure WriteHelp(WithHeader: boolean); virtual;
+
     property TileWidth: Word read FTileWidth write FTileWidth;
     property TileHeight: Word read FTileHeight write FTileHeight;
     property MinSize: Word read FMinSize write FMinSize;
     //property SkipCheck: boolean read FSkipCheck write FSkipCheck;
     property Verbose: boolean read FVerbose write FVerbose;
     property Quiet: boolean read FQuiet write FQuiet;
+    property InputPath: string read FInputPath write FInputPath;
+    property OutputPath: string read FOutputPath write FOutputPath;
+  end;
+
+  { TMyCanvas }
+
+  TMyCanvas = class(TFPImageCanvas)
+  protected
+    procedure DoCopyRect({%H-}x, {%H-}y: integer; {%H-}canvas: TFPCustomCanvas;
+      const {%H-}SourceRect: TRect); override;
+    procedure DoDraw({%H-}x, {%H-}y: integer; const {%H-}anImage: TFPCustomImage); override;
   end;
 
 function CompareIFDForSize(i1, i2: Pointer): integer;
@@ -87,8 +75,8 @@ var
   Size1: Int64;
   Size2: Int64;
 begin
-  Size1:=int64(IFD1.ImageWidth)*IFD1.ImageHeight;
-  Size2:=int64(IFD2.ImageWidth)*IFD2.ImageHeight;
+  Size1:=IFD1.ImageWidth*IFD1.ImageHeight;
+  Size2:=IFD2.ImageWidth*IFD2.ImageHeight;
   if Size1>Size2 then Result:=1
   else if Size1<Size2 then Result:=-1
   else Result:=0;
@@ -117,12 +105,25 @@ begin
   Result:=l;
 end;
 
+{ TMyCanvas }
+
+procedure TMyCanvas.DoCopyRect(x, y: integer; canvas: TFPCustomCanvas;
+  const SourceRect: TRect);
+begin
+
+end;
+
+procedure TMyCanvas.DoDraw(x, y: integer; const anImage: TFPCustomImage);
+begin
+
+end;
+
 { TMyApplication }
 
 procedure TPyramidTiffer.TiffReaderCreateImage(Sender: TFPReaderTiff;
   IFD: TTiffIFD);
 var
-  Desc: TPTMemImgDesc;
+  Desc: TFPCompactImgDesc;
 begin
   // free old image
   FreeAndNil(IFD.Img);
@@ -133,10 +134,10 @@ begin
                           IFD.GreenBits),
                           IFD.BlueBits),
                           IFD.GrayBits);
-  IFD.Img:=CreatePTMemImg(Desc,IFD.ImageWidth,IFD.ImageHeight);
+  IFD.Img:=CreateFPCompactImg(Desc,IFD.ImageWidth,IFD.ImageHeight);
 end;
 
-function TPyramidTiffer.ShrinkImage(LastImg: TPTMemImgBase): TPTMemImgBase;
+function TPyramidTiffer.ShrinkImage(LastImg: TFPCompactImgBase): TFPCompactImgBase;
 
   function Half(i: integer): integer;
   begin
@@ -147,16 +148,16 @@ function TPyramidTiffer.ShrinkImage(LastImg: TPTMemImgBase): TPTMemImgBase;
 var
   ImgCanvas: TFPImageCanvas;
 begin
-  Result:=TPTMemImgBase(CreatePTMemImg(LastImg.Desc, Half(LastImg.Width), Half(
+  Result:=TFPCompactImgBase(CreateFPCompactImg(LastImg.Desc, Half(LastImg.Width), Half(
     LastImg.Height)));
-  ImgCanvas:=TFPImageCanvas.create(Result);
+  ImgCanvas:=TMyCanvas.create(Result);
   ImgCanvas.Interpolation:=TLinearInterpolation.Create;
   ImgCanvas.StretchDraw(0, 0, Result.Width, Result.Height, LastImg);
   ImgCanvas.Interpolation.Free;
   ImgCanvas.Free;
 end;
 
-procedure TPyramidTiffer.LoadTiff(out Img: TPTMemImgBase;
+procedure TPyramidTiffer.LoadTiff(out Img: TFPCompactImgBase;
   Reader: TFPReaderTiff; InStream: TMemoryStream; var ErrorMsg: string);
 begin
   Reader.OnCreateImage:=@TiffReaderCreateImage;
@@ -165,23 +166,24 @@ begin
     ErrorMsg:='tiff has no image';
     exit;
   end;
-  Img:=Reader.GetBiggestImage.Img as TPTMemImgBase;
+  Img:=Reader.GetBiggestImage.Img as TFPCompactImgBase;
 end;
 
-procedure TPyramidTiffer.LoadOther(out Img: TPTMemImgBase;
+procedure TPyramidTiffer.LoadOther(out Img: TFPCompactImgBase;
   Reader: TFPCustomImageReader; InStream: TMemoryStream);
 begin
-  Img:=TPTMemImgRGBA8Bit.Create(0, 0);
+  Img:=TFPCompactImgRGB8Bit.Create(0, 0);
   Reader.ImageRead(InStream, Img);
-  Img:=GetMinimumPTMemImg(Img, true) as TPTMemImgBase;
+  Img:=GetMinimumFPCompactImg(Img, true) as TFPCompactImgBase;
 end;
 
 procedure TPyramidTiffer.DoRun;
 var
-  InputFilename: String;
-  OutputFilename: String;
   ErrorMsg: string;
 begin
+  if GetCurrentDir='' then
+    SetCurrentDir(GetEnvironmentVariable('PWD'));
+
   ReadConfig;
 
   if HasOption('min-size') then begin
@@ -206,10 +208,10 @@ begin
       ParamError('can not combine option -c and -i');
     if HasOption('o') then
       ParamError('can not combine option -c and -o');
-    InputFilename:=CleanAndExpandFilename(GetOptionValue('c'));
-    if not FileExistsUTF8(InputFilename) then
-      ParamError('check file not found: '+InputFilename);
-    if CheckIfFileIsPyramidTiled(InputFilename,ErrorMsg) then begin
+    InputPath:=CleanAndExpandFilename(GetOptionValue('c'));
+    if not FileExistsUTF8(InputPath) then
+      ParamError('check file not found: '+InputPath);
+    if CheckIfFileIsPyramidTiled(InputPath,ErrorMsg) then begin
       if not Quiet then
         writeln('ok');
     end else begin
@@ -224,17 +226,31 @@ begin
     if not HasOption('o') then
       ParamError('missing parameter -o');
 
-    InputFilename:=CleanAndExpandFilename(GetOptionValue('i'));
-    if not FileExistsUTF8(InputFilename) then
-      ParamError('input file not found: '+InputFilename);
-    OutputFilename:=CleanAndExpandFilename(GetOptionValue('o'));
-    if not DirectoryExistsUTF8(ExtractFilePath(OutputFilename)) then
-      ParamError('output directory not found: '+ExtractFilePath(OutputFilename));
-
-    if not Convert(InputFilename,OutputFilename,ErrorMsg) then begin
-      if not Quiet then
-        writeln('ERROR: ',ErrorMsg);
-      ExitCode:=1;
+    GetCurrentDirUTF8;
+    InputPath:=CleanAndExpandFilename(GetOptionValue('i'));
+    OutputPath:=CleanAndExpandFilename(GetOptionValue('o'));
+    if DirPathExists(InputPath) then begin
+      // convert whole directory
+      if not DirPathExists(OutputPath) then
+        ParamError('output directory not found: '+OutputPath);
+      if not ConvertDir(InputPath,OutputPath,ErrorMsg) then begin
+        if not Quiet then
+          writeln('ERROR: ',ErrorMsg);
+        ExitCode:=1;
+      end;
+    end else begin
+      // convert single file
+      if not FileExistsUTF8(InputPath) then
+        ParamError('input file not found: '+InputPath);
+      if not DirectoryExistsUTF8(ExtractFilePath(OutputPath)) then
+        ParamError('output directory not found: '+ExtractFilePath(OutputPath));
+      if DirPathExists(OutputPath) then
+        ParamError('output is a directory, but input is a file');
+      if not ConvertFile(InputPath,OutputPath,ErrorMsg) then begin
+        if not Quiet then
+          writeln('ERROR: ',ErrorMsg);
+        ExitCode:=1;
+      end;
     end;
   end;
 
@@ -362,7 +378,8 @@ begin
         end;
         if SmallerImg=nil then begin
           // this is the smallest image
-          if (Img.ImageWidth>DWord(MinSize)*2) or (Img.ImageHeight>DWord(MinSize)*2) then begin
+          if (Img.ImageWidth>MinSize*2)
+          or (Img.ImageHeight>MinSize*2) then begin
             ErrorMsg:='missing small scale step. min-size='+IntToStr(MinSize)+'.'
               +' Smallest image: '+IntToStr(Img.ImageWidth)+'x'+IntToStr(Img.ImageHeight);
             exit;
@@ -392,15 +409,101 @@ begin
   end;
 end;
 
-function TPyramidTiffer.Convert(InputFilename, OutputFilename: string; out
+function TPyramidTiffer.GetReaderClass(Filename: string
+  ): TFPCustomImageReaderClass;
+var
+  Ext: String;
+  i: Integer;
+begin
+  Result:=nil;
+  Ext:=lowercase(ExtractFileExt(Filename));
+  Delete(Ext,1,1); // delete '.'
+  if (Ext='tif') or (Ext='tiff') then
+    Result:=TFPReaderTiff
+  else begin
+    for i:=0 to ImageHandlers.Count-1 do begin
+      if Pos(Ext,ImageHandlers.Extentions[ImageHandlers.TypeNames[i]])<1
+      then continue;
+      Result:=ImageHandlers.ImageReader[ImageHandlers.TypeNames[i]];
+    end;
+  end;
+end;
+
+function TPyramidTiffer.ConvertDir(InputDir, OutputDir: string; out
+  ErrorMsg: string): boolean;
+var
+  FileInfo: TSearchRec;
+  Files: TFilenameToStringTree;
+  Item: PStringToStringTreeItem;
+  InputFile: String;
+  OutputFile: String;
+  FileList: TStringList;
+begin
+  Result:=false;
+  ErrorMsg:='';
+  InputDir:=AppendPathDelim(InputDir);
+  OutputDir:=AppendPathDelim(OutputDir);
+  Files:=TFilenameToStringTree.Create(false);
+  FileList:=TStringList.Create;
+  try
+    if FindFirstUTF8(InputDir+AllFilesMask,faAnyFile,FileInfo)=0 then begin
+      repeat
+        // skip special files
+        if (FileInfo.Name='.') or (FileInfo.Name='..') or (FileInfo.Name='') then
+          continue;
+        if GetReaderClass(FileInfo.Name)=nil then continue;
+        Files[FileInfo.Name]:='1';
+      until FindNextUTF8(FileInfo)<>0;
+    end;
+    FindCloseUTF8(FileInfo);
+    if CompareFilenames(InputDir,OutputDir)=0 then begin
+      // input and out dir are the same
+      // => remove output files from input list
+      for Item in Files do begin
+        InputFile:=Item^.Name;
+        if (CompareFileExt(InputFile,'tif',false)=0) then continue;
+        OutputFile:=ChangeFileExt(InputFile,'.tif');
+        Files.Remove(OutputFile);
+      end;
+    end;
+    // convert
+    for Item in Files do
+      FileList.Add(Item^.Name);
+    try
+      ProcThreadPool.DoParallel(@ConvertFilesParallel,0,FileList.Count-1,FileList);
+      Result:=true;
+    except
+      on E: Exception do
+        ErrorMsg:=E.Message;
+    end;
+  finally
+    FileList.Free;
+    Files.Free;
+  end;
+end;
+
+procedure TPyramidTiffer.ConvertFilesParallel(Index: PtrInt; Data: Pointer;
+  Item: TMultiThreadProcItem);
+var
+  Files: TStringList;
+  InputFilename: String;
+  OutputFilename: String;
+  ErrorMsg: string;
+begin
+  Files:=TStringList(Data);
+  InputFilename:=AppendPathDelim(InputPath)+Files[Index];
+  OutputFilename:=AppendPathDelim(OutputPath)+ChangeFileExt(Files[Index],'.tif');
+  if not ConvertFile(InputFilename,OutputFilename,ErrorMsg) then
+    raise Exception.Create(ErrorMsg+',input='+InputFilename+',output='+OutputFilename);
+end;
+
+function TPyramidTiffer.ConvertFile(InputFilename, OutputFilename: string; out
   ErrorMsg: string): boolean;
 var
   InStream: TMemoryStream;
-  Ext: String;
   ReaderClass: TFPCustomImageReaderClass;
   Reader: TFPCustomImageReader;
-  Img: TPTMemImgBase;
-  i: Integer;
+  Img: TFPCompactImgBase;
 begin
   Result:=false;
   ErrorMsg:='';
@@ -416,21 +519,9 @@ begin
       InStream.Position:=0;
 
       // get the right image type reader
-      Ext:=lowercase(ExtractFileExt(InputFilename));
-      Delete(Ext,1,1); // delete '.'
-      if (Ext='tif') or (Ext='tiff') then
-        ReaderClass:=TFPReaderTiff
-      else begin
-        for i:=0 to ImageHandlers.Count-1 do begin
-          if Pos(Ext,ImageHandlers.Extentions[ImageHandlers.TypeNames[i]])<1
-          then continue;
-          ReaderClass:=ImageHandlers.ImageReader[ImageHandlers.TypeNames[i]];
-          if Verbose then
-            writeln('reading ',ImageHandlers.TypeNames[i]);
-        end;
-      end;
+      ReaderClass:=GetReaderClass(InputFilename);
       if ReaderClass=nil then begin
-        ErrorMsg:='unknown file extension "'+Ext+'"';
+        ErrorMsg:='unknown file extension "'+ExtractFileExt(InputFilename)+'"';
         exit;
       end;
       Reader:=ReaderClass.Create;
@@ -459,16 +550,30 @@ begin
   end;
 end;
 
-function TPyramidTiffer.Convert(Img: TPTMemImgBase; OutputFilename: string; out
+function TPyramidTiffer.Convert(Img: TFPCompactImgBase; OutputFilename: string; out
   ErrorMsg: string): boolean;
+
+  procedure AddTiff(Writer: TFPWriterTiff; Img: TFPCustomImage;
+    PageNumber, PageCount, TileWidth, TileHeight: integer;
+    Desc: TFPCompactImgDesc);
+  begin
+    Img.Extra[TiffPageNumber]:=IntToStr(PageNumber);
+    Img.Extra[TiffPageCount]:=IntToStr(PageCount);
+    Img.Extra[TiffTileWidth]:=IntToStr(TileWidth);
+    Img.Extra[TiffTileLength]:=IntToStr(TileHeight);
+    SetFPImgExtraTiff(Desc,Img,false);
+    Img.Extra[TiffCompression]:=IntToStr(TiffCompressionDeflateZLib);
+    Writer.AddImage(Img);
+  end;
+
 var
   OutStream: TMemoryStream;
   Writer: TFPWriterTiff;
   Size: Int64;
   Count: Integer;
   Index: Integer;
-  LastImg: TPTMemImgBase;
-  NewImg: TPTMemImgBase;
+  LastImg: TFPCompactImgBase;
+  NewImg: TFPCompactImgBase;
 begin
   Result:=false;
   try
@@ -481,6 +586,8 @@ begin
     end;
 
     // create images
+    if Verbose then
+      writeln('Creating file "',OutputFilename,'"');
     OutStream:=TMemoryStream.Create;
     Writer:=nil;
     LastImg:=nil;
@@ -488,31 +595,14 @@ begin
     try
       Writer:=TFPWriterTiff.Create;
       Index:=0;
-      Img.Extra[TiffPageNumber]:=IntToStr(Index);
-      Img.Extra[TiffPageCount]:=IntToStr(Count);
-      Img.Extra[TiffTileWidth]:=IntToStr(TileWidth);
-      Img.Extra[TiffTileLength]:=IntToStr(TileHeight);
-      SetFPImgExtraTiff(Img.Desc,Img,false);
-      Img.Extra[TiffCompression]:=IntToStr(TiffCompressionDeflateZLib);
-      Writer.AddImage(Img);
-
+      AddTiff(Writer,Img,Index,Count,TileWidth,TileHeight,Img.Desc);
       // add smaller images
       LastImg:=Img;
       while Index+1<Count do begin
         Index+=1;
         // create next image with half the width and height
         NewImg:=ShrinkImage(LastImg);
-        // set tiff page number and count
-        NewImg.Extra[TiffPageNumber]:=IntToStr(Index);
-        NewImg.Extra[TiffPageCount]:=IntToStr(Count);
-        NewImg.Extra[TiffTileWidth]:=IntToStr(TileWidth);
-        NewImg.Extra[TiffTileLength]:=IntToStr(TileHeight);
-        SetFPImgExtraTiff(NewImg.Desc,NewImg,false);
-        Img.Extra[TiffCompression]:=IntToStr(TiffCompressionDeflateZLib);
-        // add image to tiff
-        if Verbose then
-          writeln('  adding image ',Index,'/',Count,', size=',NewImg.Width,'x',NewImg.Height);
-        Writer.AddImage(NewImg);
+        AddTiff(Writer,NewImg,Index,Count,TileWidth,TileHeight,NewImg.Desc);
         // free last step
         if LastImg<>Img then
           FreeAndNil(LastImg);
@@ -528,6 +618,8 @@ begin
 
       // save to file
       OutStream.SaveToFile(OutputFilename);
+      if Verbose then
+        writeln('Saved file "',OutputFilename,'"');
       Result:=true;
     finally
       if LastImg<>Img then
@@ -567,13 +659,13 @@ begin
   if WithHeader then begin
     writeln('Version ',Version);
     writeln;
-    writeln('pyramidtiff creates a tiff containing the original image, the image');
-    writeln('with half the width and half the height (rounded up), the image with');
-    writeln('quartered width/height (rounded up), ... and so forth.');
+    writeln('pyramidtiff creates a tiff containing multiple images:');
+    writeln('the original image,');
+    writeln('the image with half the width and half the height (rounded up),');
+    writeln('the image with quartered width/height (rounded up),');
+    writeln('... and so forth.');
     writeln;
   end;
-  writeln('-c <input file>');
-  writeln('   Check if file is a pyramid, tiled tif. 0 = yes, 1 = no.');
   writeln('-i <input file>');
   write('   Input image file can be a:');
   for i:=0 to ImageHandlers.Count-1 do begin
@@ -581,8 +673,14 @@ begin
     write(' ',ImageHandlers.Extentions[ImgType]);
   end;
   writeln;
+  writeln('   If input file is a directory then the -o must be a directory too.');
+  writeln('   All image files in the directory will be converted.');
   writeln('-o <output file>');
-  writeln('   Output image file. It will always be a tif file, no matter what extension it has.');
+  writeln('   Output image file. It will always be a tif file, no matter what');
+  writeln('   extension it has.');
+  writeln('-c <input file>');
+  writeln('   Check if file is a pyramid, tiled tif. 0 = yes, 1 = no.');
+  writeln('   You can not use both -c and -i');
   writeln('--width=<tilewidth>');
   writeln('   In pixel. Default=',TileWidth);
   writeln('--height=<tileheight>');

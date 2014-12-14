@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
     <Version Value="9"/>
@@ -29,19 +29,23 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <LaunchingApplication PathPlusParams="/usr/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="1">
+    <RequiredPackages Count="3">
       <Item1>
-        <PackageName Value="LazUtils"/>
+        <PackageName Value="MultiThreadProcsLaz"/>
       </Item1>
+      <Item2>
+        <PackageName Value="CodeTools"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="LazUtils"/>
+      </Item3>
     </RequiredPackages>
     <Units Count="1">
       <Unit0>
         <Filename Value="pyramidtiff.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="pyramidtiff"/>
       </Unit0>
     </Units>
   </ProjectOptions>
@@ -59,12 +63,6 @@
         <AllowLabel Value="False"/>
       </SyntaxOptions>
     </Parsing>
-    <Other>
-      <CompilerMessages>
-        <MsgFileName Value=""/>
-      </CompilerMessages>
-      <CompilerPath Value="$(CompPath)"/>
-    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">
