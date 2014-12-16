@@ -1,3 +1,8 @@
+{ Author: Mattias Gaertner mattias@freepascal.org
+
+  License:
+    Modified LGPL2 like FCL
+}
 program pyramidtiff;
 
 {$mode objfpc}{$H+}
@@ -6,13 +11,20 @@ uses
   {$IFDEF UNIX}{$IFDEF UseCThreads}
   cthreads,
   {$ENDIF}{$ENDIF}
-  Classes, SysUtils, math, LazFileUtils, CodeToolsStructs, CustApp,
+  Classes, SysUtils, math, LazFileUtils, AvgLvlTree, CustApp,
   FPimage, FPReadJPEG, FPReadPNG, FPReadBMP, FPImgCanv, FPCanvas, MTProcs,
   PyTiGraphics, FPReadTiff, FPTiffCmn, FPWriteTiff;
 
 const
   Version = '1.1';
 type
+
+  { TFilenameToStringTree }
+
+  TFilenameToStringTree = class(TStringToStringTree)
+  public
+    constructor Create;
+  end;
 
   { TPyramidTiffer }
 
@@ -22,7 +34,6 @@ type
     FMinSize: Word;
     FOutputPath: string;
     FQuiet: boolean;
-    //FSkipCheck: boolean;
     FTileHeight: Word;
     FTileWidth: Word;
     FVerbose: boolean;
@@ -39,11 +50,11 @@ type
     procedure ReadConfig;
     function CheckIfFileIsPyramidTiled(Filename: string; out ErrorMsg: string): boolean;
     function CheckIfStreamIsPyramidTiled(s: TStream; out ErrorMsg: string): boolean;
-    function GetReaderClass(Filename: string): TFPCustomImageReaderClass;
-    function ConvertDir(InputDir, OutputDir: string; out ErrorMsg: string): boolean;
-    procedure ConvertFilesParallel(Index: PtrInt; Data: Pointer; {%H-}Item: TMultiThreadProcItem);
-    function ConvertFile(InputFilename, OutputFilename: string; out ErrorMsg: string): boolean;
-    function Convert(Img: TFPCompactImgBase; OutputFilename: string; out ErrorMsg: string): boolean;
+    function GetReaderClass(Filename: string): TFPCustomImageReaderClass; // worker thread
+    function ConvertDir(InputDir, OutputDir: string; out ErrorMsg: string): boolean; // main thread
+    procedure ConvertFilesParallel(Index: PtrInt; Data: Pointer; {%H-}Item: TMultiThreadProcItem); // worker thread
+    function ConvertFile(InputFilename, OutputFilename: string; out ErrorMsg: string): boolean; // worker thread
+    function Convert(Img: TFPCompactImgBase; OutputFilename: string; out ErrorMsg: string): boolean; // worker thread
   public
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
@@ -52,7 +63,6 @@ type
     property TileWidth: Word read FTileWidth write FTileWidth;
     property TileHeight: Word read FTileHeight write FTileHeight;
     property MinSize: Word read FMinSize write FMinSize;
-    //property SkipCheck: boolean read FSkipCheck write FSkipCheck;
     property Verbose: boolean read FVerbose write FVerbose;
     property Quiet: boolean read FQuiet write FQuiet;
     property InputPath: string read FInputPath write FInputPath;
@@ -103,6 +113,26 @@ begin
     I:=J+1;
   end;
   Result:=l;
+end;
+
+function CompareFilenameAndFilenameToStringTreeItem(Key, Data: Pointer
+  ): integer;
+begin
+  Result:=CompareFilenames(String(Key),PStringToStringItem(Data)^.Name);
+end;
+
+function CompareFilenameToStringItems(Data1, Data2: Pointer): integer;
+begin
+  Result:=CompareFilenames(PStringToStringItem(Data1)^.Name,
+                           PStringToStringItem(Data2)^.Name);
+end;
+
+{ TFilenameToStringTree }
+
+constructor TFilenameToStringTree.Create;
+begin
+  SetCompareFuncs(@CompareFilenameToStringItems,
+                  @CompareFilenameAndFilenameToStringTreeItem,false);
 end;
 
 { TMyCanvas }
@@ -285,7 +315,7 @@ var
       ErrorMsg:=CheckOptions(ShortOpts,LongOptions,Opts,NonOpts);
       if ErrorMsg<>'' then begin
         ShowException(Exception.Create(ErrorMsg));
-        Halt;
+        Halt(1);
       end;
       for i:=0 to NonOpts.Count-1 do
         if NonOpts[i]<>'' then
@@ -306,13 +336,13 @@ begin
     // parse parameters
     if HasOption('h','help') then begin
       WriteHelp(true);
-      Halt;
+      Halt(1);
     end;
 
     // parse parameters
     if HasOption('V','version') then begin
       writeln(Version);
-      Halt;
+      Halt(0);
     end;
   finally
     LongOptions.Free;
@@ -433,8 +463,8 @@ function TPyramidTiffer.ConvertDir(InputDir, OutputDir: string; out
   ErrorMsg: string): boolean;
 var
   FileInfo: TSearchRec;
-  Files: TFilenameToStringTree;
-  Item: PStringToStringTreeItem;
+  Files: TStringToStringTree;
+  Item: PStringToStringItem;
   InputFile: String;
   OutputFile: String;
   FileList: TStringList;
@@ -443,7 +473,7 @@ begin
   ErrorMsg:='';
   InputDir:=AppendPathDelim(InputDir);
   OutputDir:=AppendPathDelim(OutputDir);
-  Files:=TFilenameToStringTree.Create(false);
+  Files:=TStringToStringTree.Create(false);
   FileList:=TStringList.Create;
   try
     if FindFirstUTF8(InputDir+AllFilesMask,faAnyFile,FileInfo)=0 then begin
