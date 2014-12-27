@@ -50,6 +50,10 @@ uses
   {$DEFINE StretchRGB32}
   RGBGTKRoutines,
 {$ENDIF}
+{$IFDEF LCLgtk3}
+   {$DEFINE StretchRGB32}
+    RGBGTK3Routines,
+{$ENDIF}
 {$IFDEF LCLcarbon}
   {$DEFINE StretchRGB32}
   RGBCarbonRoutines,
