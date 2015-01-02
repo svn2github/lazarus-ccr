@@ -11,13 +11,16 @@
     DWORD = LongWord;
     PByteArray = ^ByteArray;
     ByteArray = array[0..$effffff] of Byte;
-    {$IF Declared(NativeUInt)}
+  {$IFDEF CompilerVersion}
+    {$IF ( CompilerVersion > 19.0 )}   //Delphi 2007=18.5; Delphi 2009 = 20
       PtrInt  = NativeInt;
       PtrUInt = NativeUInt;
-    {$ELSE} // old delphi
+    {$IFEND}
+  {$ENDIF CompilerVersion}
+  {$IF Not Declared(PtrInt) }
       PtrInt = Integer;
       PtrUInt = Cardinal;
-    {$IFEND}
+  {$IFEND}
     SizeInt = PtrInt;
     UnicodeChar = WideChar;
 {$ENDIF DELPHI}
