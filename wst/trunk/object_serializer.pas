@@ -1313,7 +1313,7 @@ procedure TObjectSerializer.Prepare(ATypeRegistry : TTypeRegistry);
 var
   locObjTypeData : PTypeData;
   locTypeInfo : PTypeInfo;
-  c, i : PtrInt;
+  c, i : Integer;
   ppi : PPropInfo;
   cl : TClass;
   serArray : array of TPropSerializationInfo;
@@ -1477,7 +1477,7 @@ procedure TObjectSerializer.Read(
 );
 var
   oldSS : TSerializationStyle;
-  i, c : PtrInt;
+  i, c : Integer;
   locSerInfo : TPropSerializationInfo;
 begin
   oldSS := AStore.GetSerializationStyle();
@@ -1516,7 +1516,7 @@ procedure TObjectSerializer.Save(
 );
 var
   oldSS : TSerializationStyle;
-  i, c : PtrInt;
+  i, c : Integer;
   locSerInfo : TPropSerializationInfo;
 begin
   oldSS := AStore.GetSerializationStyle();
@@ -1616,7 +1616,7 @@ var
 var
   locObjTypeData : PTypeData;
   locTypeInfo : PTypeInfo;
-  c, i : PtrInt;
+  c, i : Integer;
   clPL : PPropList;
 begin
   FSerializationInfos.Clear();
@@ -1730,7 +1730,7 @@ procedure TSimpleContentObjectSerializer.Read(
 );
 var
   oldSS : TSerializationStyle;
-  i, c : PtrInt;
+  i, c : Integer;
   locSerInfo : TPropSerializationInfo;
 begin
   oldSS := AStore.GetSerializationStyle();
@@ -1769,7 +1769,7 @@ procedure TSimpleContentObjectSerializer.Save(
 );
 var
   oldSS : TSerializationStyle;
-  i, c : PtrInt;
+  i, c : Integer;
   locSerInfo : TPropSerializationInfo;
 begin
   oldSS := AStore.GetSerializationStyle();

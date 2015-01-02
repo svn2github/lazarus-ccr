@@ -102,7 +102,7 @@ function TClientHandlerThread.ReadInputBuffer(): Integer;
 var
   binBuff : TByteDynArray;
   bufferLen : LongInt;
-  i, j, c, readBufferLen : PtrInt;
+  i, j, c, readBufferLen : Integer;
 begin
   FInputStream.Size := 0;
   Result := 0;

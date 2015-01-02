@@ -110,7 +110,7 @@ end;
 
 procedure TJsonRpcFormatter.SetVersion(const AValue : string);
 var
-  i : PtrInt;
+  i : Integer;
 begin
   if ( FVersion = AValue ) then
     Exit;
@@ -157,7 +157,7 @@ var
   nameBuffer, strBuffer : string;
   rootObj : TJSONObject;
   tmpObj : TJSONData;
-  i : PtrInt;
+  i : Integer;
   paramsAsArray : Boolean;
 begin
   ClearStack();

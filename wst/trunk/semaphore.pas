@@ -67,7 +67,7 @@ implementation
 constructor TSemaphoreObject.Create(const ALimit: Integer);
 {$IFDEF FPC_TM}
 var
-  i : PtrInt;
+  i : Integer;
 {$ENDIF}  
 begin
   if ( ALimit < 1 ) then

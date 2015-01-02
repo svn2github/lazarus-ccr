@@ -157,7 +157,7 @@ end;
 procedure FillDataFromFile(const AFileName : string);
 var
   objArray : TUserArray;
-  i : PtrInt;
+  i : Integer;
   obj : TUser;
 begin
   objArray := TUserArray.Create();

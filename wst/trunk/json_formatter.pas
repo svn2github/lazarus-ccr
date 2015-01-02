@@ -110,7 +110,7 @@ end;
 
 procedure TJsonRpcFormatter.SetVersion(const AValue : string);
 var
-  i : PtrInt;
+  i : Integer;
 begin
   if ( FVersion = AValue ) then
     Exit;
@@ -175,7 +175,7 @@ Var
   e : EJsonRpcException;
   elt : TJSONData;
   remoteErr : TJSONObject;
-  i : PtrInt;
+  i : Integer;
 begin
   ClearStack();
   PushStack(GetRootData(),stObject);

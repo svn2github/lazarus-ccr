@@ -134,7 +134,7 @@ end;
 {$ELSE} // assume ENDIAN_LITTLE
 procedure ReverseBytes(var AData; const ALength : Integer);
 Var
-  i,j : PtrInt;
+  i,j : Integer;
   c : Byte;
   pDt : {$IFDEF FPC}^Byte{$ELSE}PByteArray{$ENDIF};
 begin
@@ -191,14 +191,14 @@ begin
 end;
 
 {$IFDEF ENDIAN_BIG}
-procedure Reverse_Array(var AValue; const AArrayLength, AItemSize : PtrInt);{$IFDEF USE_INLINE}inline;{$ENDIF}
+procedure Reverse_Array(var AValue; const AArrayLength, AItemSize : Integer);{$IFDEF USE_INLINE}inline;{$ENDIF}
 begin
 end;
 {$ELSE ENDIAN_BIG}
-procedure Reverse_Array(var AValue; const AArrayLength, AItemSize : PtrInt);
+procedure Reverse_Array(var AValue; const AArrayLength, AItemSize : Integer);
 var
   p : PByte;
-  i : PtrInt;
+  i : Integer;
 begin
   if ( AArrayLength > 0 ) and ( AItemSize > 1 ) then begin
     p := @AValue;

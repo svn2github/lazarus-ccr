@@ -1016,7 +1016,7 @@ var
   typItm, propTypItm : TTypeRegistryItem;
   s, prop_ns_shortName : string;
   defTypesNode, defSchemaNode, cplxNode, sqcNode, propNode : TDOMElement;
-  i : Integer;
+  i : PtrUInt;
   p : TRecordFieldInfo;
   objTypeData : PRecordTypeData;
   persistType : TPropStoreType;

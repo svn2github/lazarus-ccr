@@ -2240,7 +2240,7 @@ end;
 function TArrayStackItem.GetScopeItemNames(const AReturnList: TStrings): Integer;
 var
   locBuffer : PDataBufferList;
-  i : PtrInt;
+  i : Integer;
 begin
   AReturnList.Clear();
   if Assigned(ScopeObject) and ( ScopeObject^.ArrayData^.Count > 0 ) then begin

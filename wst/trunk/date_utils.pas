@@ -654,7 +654,7 @@ function xsd_TryStrToDuration(
 var
   pc : PChar;
   locIntBuffer : array[dpYear..dpFractionalSecond] of PtrUInt;
-  i, bufferLength, lastPos : PtrInt;
+  i, bufferLength, lastPos : Integer;
   localBuffer : string;
   part, oldPart : TDatePart;
   inTimePart : Boolean;

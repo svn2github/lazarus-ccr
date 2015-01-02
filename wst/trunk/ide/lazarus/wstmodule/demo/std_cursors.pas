@@ -33,8 +33,8 @@ type
   protected
     procedure Reset();
     function MoveNext() : Boolean;virtual;
-    function Clone():ICursor;
-    function GetCount() : PtrInt;
+    function Clone(): ICursor;
+    function GetCount() : Integer;
     function GetCurrent() : TObject;
   public
     constructor Create(ADataList : TObjectList);
@@ -73,7 +73,7 @@ begin
   Result := TObjectListCursor.Create(FList) as ICursor;
 end;
 
-function TObjectListCursor.GetCount() : PtrInt;
+function TObjectListCursor.GetCount() : Integer;
 begin
   Result := FList.Count;
 end;

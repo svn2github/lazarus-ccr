@@ -130,7 +130,7 @@ var
 {$ENDIF HAS_FORMAT_SETTINGS}
 function TranslateDotToDecimalSeperator(const Value: string) : string;
 var
-  i : PtrInt;
+  i : Integer;
 begin
   Result := Value;
   for i := 1 to length(Result) do begin
@@ -289,7 +289,7 @@ end;
 procedure TPublishedPropertyManager.SetProperties(const APropsStr: string);
 var
   lst : TStringList;
-  i : PtrInt;
+  i : Integer;
 begin
   If IsStrEmpty(APropsStr) Then
     Exit;

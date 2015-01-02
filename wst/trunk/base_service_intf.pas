@@ -1499,23 +1499,23 @@ type
     FCS : TCriticalSection;
     FLock : TSemaphoreObject;
     FFactory : IItemFactory;
-    FMin : PtrInt;
-    FMax : PtrInt;
+    FMin : Integer;
+    FMax : Integer;
   private
     function CreateNew(const AUsed : Boolean) : TIntfPoolItem;
-    function TryGet(const AIndex : PtrInt) : Boolean;
+    function TryGet(const AIndex: Integer): Boolean;
   public
     constructor Create(
-      const AMin, AMax : PtrInt;
+      const AMin, AMax : Integer;
             AFactory   : IItemFactory
     );
     destructor Destroy();override;
     function Get(const ATimeOut : Cardinal) : IInterface;
     procedure Release(const AItem : IInterface);
     procedure Discard(const AItem : IInterface);
-    function GetInstancesCount() : PtrInt;
-    property Min : PtrInt read FMin;
-    property Max : PtrInt read FMax;
+    function GetInstancesCount: Integer;
+    property Min : Integer read FMin;
+    property Max : Integer read FMax;
   end;
 
   { TSimpleItemFactoryEx }
@@ -1523,8 +1523,8 @@ type
   TSimpleItemFactoryEx = class(TSimpleItemFactory,IInterface,IItemFactory,IItemFactoryEx)
   private
     FPooled: Boolean;
-    FPoolMax: PtrInt;
-    FPoolMin: PtrInt;
+    FPoolMax: Integer;
+    FPoolMin: Integer;
     FPropertyNames : TStringList;
     FProperties : IInterfaceList;
     FPool : TIntfPool;
@@ -1532,8 +1532,8 @@ type
   private
     procedure PreparePool();{$IFDEF USE_INLINE}inline;{$ENDIF}
     procedure SetPooled(const AValue: Boolean);
-    procedure SetPoolMax(const AValue: PtrInt);
-    procedure SetPoolMin(const AValue: PtrInt);
+    procedure SetPoolMax(const AValue: Integer);
+    procedure SetPoolMin(const AValue: Integer);
   protected
     function CreateInstance():IInterface;override;
     procedure ReleaseInstance(const AInstance : IInterface);virtual;
@@ -1550,8 +1550,8 @@ type
     constructor Create(AItemClass : TSimpleFactoryItemClass);overload;
     destructor Destroy();override;
   published
-    property PoolMax : PtrInt read FPoolMax write SetPoolMax;
-    property PoolMin : PtrInt read FPoolMin write SetPoolMin;
+    property PoolMax : Integer read FPoolMax write SetPoolMax;
+    property PoolMin : Integer read FPoolMin write SetPoolMin;
     property Pooled : Boolean read FPooled write SetPooled;
     property TimeOut : PtrUInt read FTimeOut write FTimeOut;
   end;
@@ -2711,7 +2711,7 @@ end;
 procedure TBaseObjectArrayRemotable.Assign(Source: TPersistent);
 var
   src : TBaseObjectArrayRemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) then begin
     if Source.InheritsFrom(TBaseObjectArrayRemotable) then begin
@@ -2731,7 +2731,7 @@ end;
 
 function TBaseObjectArrayRemotable.Equal(const ACompareTo : TBaseRemotable) : Boolean;
 var
-  i, c : PtrInt;
+  i, c : Integer;
   dst : TBaseObjectArrayRemotable;
 begin
   if ( Self = ACompareTo ) then begin
@@ -2901,7 +2901,7 @@ begin
   FPooled := AValue;
 end;
 
-procedure TSimpleItemFactoryEx.SetPoolMax(const AValue: PtrInt);
+procedure TSimpleItemFactoryEx.SetPoolMax(const AValue: Integer);
 begin
   if ( FPoolMax = AValue ) then
     Exit;
@@ -2910,7 +2910,7 @@ begin
   FPoolMax := AValue;
 end;
 
-procedure TSimpleItemFactoryEx.SetPoolMin(const AValue: PtrInt);
+procedure TSimpleItemFactoryEx.SetPoolMin(const AValue: Integer);
 begin
   if ( FPoolMin = AValue ) then
     Exit;
@@ -3260,7 +3260,7 @@ end;
 
 procedure TTypeRegistryItem.RegisterObject(const APropName : string; const AObject : TObject);
 var
-  i : PtrInt;
+  i : Integer;
 begin
   i := IndexOfProp(APropName,pntInternalName);
   if ( i = -1 ) then begin
@@ -3322,7 +3322,7 @@ end;
 
 function TTypeRegistry.GetItemClassFor(const ATypeInfo : PTypeInfo) : TTypeRegistryItemClass;
 var
-  i, c : PtrInt;
+  i, c : Integer;
   locInitializer : TRemotableTypeInitializerClass;
 begin
   Result := TTypeRegistryItem;
@@ -3341,7 +3341,7 @@ end;
 {$IFDEF TRemotableTypeInitializer_Initialize}
 procedure TTypeRegistry.InitializeItem(AItem : TTypeRegistryItem);
 var
-  i, c : PtrInt;
+  i, c : Integer;
   locInitializer : TRemotableTypeInitializerClass;
 begin
   c := FInitializerList.Count;
@@ -3652,7 +3652,7 @@ end;
 procedure TArrayOfStringRemotable.Assign(Source: TPersistent);
 var
   src : TArrayOfStringRemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) and Source.InheritsFrom(TArrayOfStringRemotable) then begin
     src := TArrayOfStringRemotable(Source);
@@ -3670,7 +3670,7 @@ end;
 
 function TArrayOfStringRemotable.Equal(const ACompareTo : TBaseRemotable) : Boolean;
 var
-  i, c : Ptrint;
+  i, c : Integer;
   dst : TArrayOfStringRemotable;
 begin
   if ( Self = ACompareTo ) then begin
@@ -3816,7 +3816,7 @@ procedure TObjectCollectionRemotable.Assign(Source : TPersistent);
 var
   srcCol : TObjectCollectionRemotable;
   src : TBaseObjectArrayRemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) then begin
     if Source.InheritsFrom(TObjectCollectionRemotable) then begin
@@ -3845,7 +3845,7 @@ end;
 
 function TObjectCollectionRemotable.Equal(const ACompareTo : TBaseRemotable) : Boolean;
 var
-  i : PtrInt;
+  i : Integer;
   nativeCol : TObjectCollectionRemotable;
   nativeArray : TBaseObjectArrayRemotable;
   res : Boolean;
@@ -4036,7 +4036,7 @@ end;
 procedure TArrayOfBooleanRemotable.Assign(Source: TPersistent);
 var
   src : TArrayOfBooleanRemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) and Source.InheritsFrom(TArrayOfBooleanRemotable) then begin
     src := TArrayOfBooleanRemotable(Source);
@@ -4100,7 +4100,7 @@ end;
 procedure TArrayOfInt8URemotable.Assign(Source: TPersistent);
 var
   src : TArrayOfInt8URemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) and Source.InheritsFrom(TArrayOfInt8URemotable) then begin
     src := TArrayOfInt8URemotable(Source);
@@ -4164,7 +4164,7 @@ end;
 procedure TArrayOfInt8SRemotable.Assign(Source: TPersistent);
 var
   src : TArrayOfInt8SRemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) and Source.InheritsFrom(TArrayOfInt8SRemotable) then begin
     src := TArrayOfInt8SRemotable(Source);
@@ -4228,7 +4228,7 @@ end;
 procedure TArrayOfInt16SRemotable.Assign(Source: TPersistent);
 var
   src : TArrayOfInt16SRemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) and Source.InheritsFrom(TArrayOfInt16SRemotable) then begin
     src := TArrayOfInt16SRemotable(Source);
@@ -4292,7 +4292,7 @@ end;
 procedure TArrayOfInt16URemotable.Assign(Source: TPersistent);
 var
   src : TArrayOfInt16URemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) and Source.InheritsFrom(TArrayOfInt16URemotable) then begin
     src := TArrayOfInt16URemotable(Source);
@@ -4356,7 +4356,7 @@ end;
 procedure TArrayOfInt32URemotable.Assign(Source: TPersistent);
 var
   src : TArrayOfInt32URemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) and Source.InheritsFrom(TArrayOfInt32URemotable) then begin
     src := TArrayOfInt32URemotable(Source);
@@ -4420,7 +4420,7 @@ end;
 procedure TArrayOfInt32SRemotable.Assign(Source: TPersistent);
 var
   src : TArrayOfInt32SRemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) and Source.InheritsFrom(TArrayOfInt32SRemotable) then begin
     src := TArrayOfInt32SRemotable(Source);
@@ -4484,7 +4484,7 @@ end;
 procedure TArrayOfInt64SRemotable.Assign(Source: TPersistent);
 var
   src : TArrayOfInt64SRemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) and Source.InheritsFrom(TArrayOfInt64SRemotable) then begin
     src := TArrayOfInt64SRemotable(Source);
@@ -4548,7 +4548,7 @@ end;
 procedure TArrayOfInt64URemotable.Assign(Source: TPersistent);
 var
   src : TArrayOfInt64URemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) and Source.InheritsFrom(TArrayOfInt64URemotable) then begin
     src := TArrayOfInt64URemotable(Source);
@@ -4612,7 +4612,7 @@ end;
 procedure TArrayOfFloatSingleRemotable.Assign(Source: TPersistent);
 var
   src : TArrayOfFloatSingleRemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) and Source.InheritsFrom(TArrayOfFloatSingleRemotable) then begin
     src := TArrayOfFloatSingleRemotable(Source);
@@ -4676,7 +4676,7 @@ end;
 procedure TArrayOfFloatDoubleRemotable.Assign(Source: TPersistent);
 var
   src : TArrayOfFloatDoubleRemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) and Source.InheritsFrom(TArrayOfFloatDoubleRemotable) then begin
     src := TArrayOfFloatDoubleRemotable(Source);
@@ -4740,7 +4740,7 @@ end;
 procedure TArrayOfFloatExtendedRemotable.Assign(Source: TPersistent);
 var
   src : TArrayOfFloatExtendedRemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) and Source.InheritsFrom(TArrayOfFloatExtendedRemotable) then begin
     src := TArrayOfFloatExtendedRemotable(Source);
@@ -4804,7 +4804,7 @@ end;
 procedure TArrayOfFloatCurrencyRemotable.Assign(Source: TPersistent);
 var
   src : TArrayOfFloatCurrencyRemotable;
-  i, c : PtrInt;
+  i, c : Integer;
 begin
   if Assigned(Source) and Source.InheritsFrom(TArrayOfFloatCurrencyRemotable) then begin
     src := TArrayOfFloatCurrencyRemotable(Source);
@@ -6196,7 +6196,7 @@ begin
   end;
 end;
 
-function TIntfPool.TryGet(const AIndex: PtrInt): Boolean;
+function TIntfPool.TryGet(const AIndex: Integer): Boolean;
 var
   itm : TIntfPoolItem;
 begin
@@ -6212,12 +6212,9 @@ begin
   end;
 end;
 
-constructor TIntfPool.Create(
-  const AMin, AMax : PtrInt;
-        AFactory   : IItemFactory
-);
+constructor TIntfPool.Create(const AMin, AMax: Integer; AFactory: IItemFactory);
 var
-  i : PtrInt;
+  i : Integer;
 begin
   if not ( ( AMin >= 0 ) and ( AMax >= AMin ) and ( AFactory <> nil ) ) then
     raise Exception.CreateFmt(SERR_InvalidPoolParametersArgs,[AMin,AMax]);
@@ -6243,7 +6240,7 @@ end;
 
 function TIntfPool.Get(const ATimeOut : Cardinal): IInterface;
 var
-  i : PtrInt;
+  i : Integer;
 begin
   Result := nil;
   if ( FLock.WaitFor(ATimeOut) = wrSignaled ) then begin
@@ -6263,7 +6260,7 @@ end;
 
 procedure TIntfPool.Release(const AItem: IInterface);
 var
-  i : PtrInt;
+  i : Integer;
   a : IInterface;
 begin
   a := AItem as IInterface;
@@ -6278,7 +6275,7 @@ end;
 
 procedure TIntfPool.Discard(const AItem : IInterface);
 var
-  i : PtrInt;
+  i : Integer;
   a : IInterface;
   itm : TIntfPoolItem;
 begin
@@ -6294,7 +6291,7 @@ begin
   end;
 end;
 
-function TIntfPool.GetInstancesCount() : PtrInt;
+function TIntfPool.GetInstancesCount() : Integer;
 begin
   FCS.Acquire();
   try
@@ -6371,7 +6368,7 @@ class procedure TRemotableRecordEncoder.Save(
 var
   recStart, recFieldAddress : PByte;
   typData : PRecordTypeData;
-  i : PtrInt;
+  i : PtrUInt;
   pt : PTypeInfo;
   p : PRecordFieldInfo;
   oldSS,ss : TSerializationStyle;
@@ -6475,7 +6472,7 @@ class procedure TRemotableRecordEncoder.Load(
 var
   recStart, recFieldAddress : PByte;
   typData : PRecordTypeData;
-  i : PtrInt;
+  i : PtrUInt;
   pt : PTypeInfo;
   propName : String;
   p : PRecordFieldInfo;

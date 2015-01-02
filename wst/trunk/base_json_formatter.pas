@@ -132,7 +132,7 @@ type
 
   TArrayStackItem = class(TStackItem)
   private
-    FIndex : PtrInt;
+    FIndex : Integer;
   protected
     function GetDataObject() : TJSONArray;{$IFDEF USE_INLINE}inline;{$ENDIF}
   public
@@ -1668,7 +1668,7 @@ function TObjectStackItem.CreateStringBuffer(
 ) : TJSONData;
 var
   locObj : TJSONObject;
-  i : PtrInt;
+  i : Integer;
 begin
   locObj := GetDataObject();
   Result := FindObject(locObj,AName);
@@ -1686,7 +1686,7 @@ function TObjectStackItem.CreateIntBuffer(
 ) : TJSONData;
 var
   locObj : TJSONObject;
-  i : PtrInt;
+  i : Integer;
 begin
   locObj := GetDataObject();
   Result := FindObject(locObj,AName);
@@ -1705,7 +1705,7 @@ function TObjectStackItem.CreateInt64Buffer(
 {$IFDEF WST_HAS_JSON_INT64}     
 var
   locObj : TJSONObject;
-  i : PtrInt;
+  i : Integer;
 begin
   locObj := GetDataObject();
   Result := FindObject(locObj,AName);
@@ -1728,7 +1728,7 @@ function TObjectStackItem.CreateFloatBuffer(
 ) : TJSONData;
 var
   locObj : TJSONObject;
-  i : PtrInt;
+  i : Integer;
 begin
   locObj := GetDataObject();
   Result := FindObject(locObj,AName);
@@ -1746,7 +1746,7 @@ function TObjectStackItem.CreateBoolBuffer(
 ) : TJSONData;
 var
   locObj : TJSONObject;
-  i : PtrInt;
+  i : Integer;
 begin
   locObj := GetDataObject();
   Result := FindObject(locObj,AName);
@@ -1787,7 +1787,7 @@ end;
 
 function TObjectStackItem.NilItem(AItem : TJSONData) : TJSONData;
 var
-  locPos : PtrInt;
+  locPos : Integer;
 begin
   locPos := GetDataObject().IndexOf(AItem);
   if ( locPos < 0 ) then
@@ -1803,7 +1803,7 @@ end;
 
 function TObjectStackItem.GetScopeItemNames(const AReturnList : TStrings) : Integer;
 var
-  i, c : PtrInt;
+  i, c : Integer;
   locObj : TJSONObject;
 begin
   AReturnList.Clear();
@@ -1891,7 +1891,7 @@ end;
 
 function TArrayStackItem.NilItem(AItem : TJSONData) : TJSONData;
 var
-  locPos : PtrInt;
+  locPos : Integer;
 begin
   locPos := GetDataObject().IndexOf(AItem);
   if ( locPos < 0 ) then
@@ -1907,7 +1907,7 @@ end;
 
 function TArrayStackItem.GetScopeItemNames(const AReturnList : TStrings) : Integer;
 var
-  i : PtrInt;
+  i : Integer;
 begin
   AReturnList.Clear();
   for i := 1 to GetDataObject().Count do
