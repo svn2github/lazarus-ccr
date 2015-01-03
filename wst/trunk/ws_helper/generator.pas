@@ -722,22 +722,23 @@ Var
         elt := prm.ArgType;
         if elt.InheritsFrom(TPasUnresolvedTypeRef) then
           elt := SymbolTable.FindElement(SymbolTable.GetExternalName(elt));
-        if elt.InheritsFrom(TPasUnresolvedTypeRef) then begin
+
+        if SymbolTable.IsOfType(TPasType(elt),TPasClassType) or
+           SymbolTable.IsOfType(TPasType(elt),TPasArrayType)
+        then begin
+          Indent(); WriteLn('%s := %s.%s;',[sTEMP_OBJ,sINPUT_PARAM,prm.Name]);
+          Indent(); WriteLn('%s.%s := nil;',[sINPUT_PARAM,prm.Name]);
+          Indent(); WriteLn('%s.Free();',[sTEMP_OBJ]);
+        end else if SymbolTable.IsOfType(TPasType(elt),TPasUnresolvedTypeRef) then begin
+          WriteLn('{$IF SizeOf(%s) = SizeOf(Pointer)}',[elt.Name]);
           Indent(); WriteLn('if ( PTypeInfo(TypeInfo(%s))^.Kind = tkClass ) then begin',[elt.Name]);
             IncIndent();
               Indent(); WriteLn('%s := TObject(%s.%s);',[sTEMP_OBJ,sINPUT_PARAM,prm.Name]);
               Indent(); WriteLn('%s.Free();',[sTEMP_OBJ]);
               Indent(); WriteLn('TObject(%s.%s) := nil;',[sINPUT_PARAM,prm.Name]);
             DecIndent();
+            WriteLn('{$IFEND}');
             Indent(); WriteLn('end;');
-        end else begin
-          if SymbolTable.IsOfType(TPasType(elt),TPasClassType) or
-             SymbolTable.IsOfType(TPasType(elt),TPasArrayType)
-          then begin
-            Indent(); WriteLn('%s := %s.%s;',[sTEMP_OBJ,sINPUT_PARAM,prm.Name]);
-            Indent(); WriteLn('%s.%s := nil;',[sINPUT_PARAM,prm.Name]);
-            Indent(); WriteLn('%s.Free();',[sTEMP_OBJ]);
-          end;
         end;
         Indent(); WriteLn('%s.%s := %s;',[sINPUT_PARAM,prm.Name,prm.Name]);
       end;
@@ -941,12 +942,7 @@ Var
             if SymbolTable.IsOfType(resPrm.ResultType,TPasClassType) or
                SymbolTable.IsOfType(resPrm.ResultType,TPasArrayType)
             then begin
-              Indent();WriteLn('TObject(Result) := Nil;');
-            end else begin
-              Indent();WriteLn('If ( PTypeInfo(TypeInfo(%s))^.Kind in [tkClass,tkInterface] ) Then',[resPrm.ResultType.Name]);
-              IncIndent();
-                Indent();WriteLn('Pointer(Result) := Nil;');
-              DecIndent();
+              Indent();WriteLn('Result := Nil;');
             end;
           end;
           Indent();WriteLn('%s := %s;',[sPRM_NAME,QuotedStr(FSymbolTable.GetExternalName(resPrm))]);
@@ -960,12 +956,7 @@ Var
               if SymbolTable.IsOfType(prm.ArgType,TPasClassType) or
                  SymbolTable.IsOfType(prm.ArgType,TPasArrayType)
               then begin
-                Indent();WriteLn('TObject(%s) := Nil;',[prm.Name]);
-              end else begin
-                Indent();WriteLn('If ( PTypeInfo(TypeInfo(%s))^.Kind in [tkClass,tkInterface] ) Then',[prm.ArgType.Name]);
-                IncIndent();
-                  Indent();WriteLn('Pointer(%s) := Nil;',[prm.Name]);
-                DecIndent();
+                Indent();WriteLn('%s := Nil;',[prm.Name]);
               end;
             end;
           end;
@@ -1365,40 +1356,14 @@ Var
       WriteLn('callCtx := AContext;');
       if AMthd.InheritsFrom(TPasFunction) then begin
         resElt := TPasFunctionType(AMthd.ProcType).ResultEl;
-        if SymbolTable.IsInitNeed(resElt.ResultType) then begin
-          WriteLn('Fillchar(%s,SizeOf(%s),#0);',[RETURN_VAL_NAME,resElt.ResultType.Name]);
-          {if ( SymbolTable.IsOfType(resElt.ResultType,TPasClassType) and
-               ( TPasClassType(GetUltimeType(resElt.ResultType)).ObjKind = okClass )
-             ) or
-             SymbolTable.IsOfType(resElt.ResultType,TPasArrayType)
-          then begin
-            WriteLn('TObject(%s) := nil;',[RETURN_VAL_NAME]);
-          end else if SymbolTable.IsOfType(resElt.ResultType,TPasRecordType) then begin
-            WriteLn('Fillchar(%s,SizeOf(%s),#0);',[RETURN_VAL_NAME,resElt.ResultType.Name]);
-          end else begin
-            WriteLn('if ( PTypeInfo(TypeInfo(%s))^.Kind in [tkClass,tkInterface] ) then',[resElt.ResultType.Name]);
-            IncIndent();
-              WriteLn('Pointer(%s) := nil;',[RETURN_VAL_NAME]);
-            DecIndent();
-          end;}
-        end;
+        if SymbolTable.IsInitNeed(resElt.ResultType) then
+          WriteLn('%s := nil;',[RETURN_VAL_NAME]);
       end;
 
       for k := 0 to Pred(prmCnt) do begin
         prm := TPasArgument(prms[k]);
-        if SymbolTable.IsInitNeed(prm.ArgType) then begin
-          WriteLn('Fillchar(%s,SizeOf(%s),#0);',[prm.Name,prm.ArgType.Name]);
-          {if SymbolTable.IsOfType(prm.ArgType,TPasClassType) or
-             SymbolTable.IsOfType(prm.ArgType,TPasArrayType)
-          then begin
-            WriteLn('TObject(%s) := nil;',[prm.Name]);
-          end else begin
-            WriteLn('if ( PTypeInfo(TypeInfo(%s))^.Kind in [tkClass,tkObject,tkInterface] ) then',[prm.ArgType.Name]);
-            IncIndent();
-              WriteLn('Pointer(%s) := nil;',[prm.Name]);
-            DecIndent();
-          end;}
-        end;
+        if SymbolTable.IsInitNeed(prm.ArgType) then
+          WriteLn('%s := nil;',[RETURN_VAL_NAME]);
       end;
 
       NewLine();
@@ -1408,14 +1373,9 @@ Var
           WriteLn('AFormatter.Get(TypeInfo(%s),%s,%s);',[prm.ArgType.Name,sPRM_NAME,prm.Name]);
         if SymbolTable.IsInitNeed(prm.ArgType) then begin
           if SymbolTable.IsOfType(prm.ArgType,TPasClassType) or SymbolTable.IsOfType(prm.ArgType,TPasArrayType) then begin
-            WriteLn('if Assigned(Pointer(%s)) then',[prm.Name]);
+            WriteLn('if (%s <> nil) then',[prm.Name]);
             IncIndent();
-              WriteLn('callCtx.AddObjectToFree(TObject(%s));',[prm.Name]);
-            DecIndent();
-          end else begin
-            WriteLn('if ( PTypeInfo(TypeInfo(%s))^.Kind = tkClass ) and Assigned(Pointer(%s)) then',[prm.ArgType.Name,prm.Name]);
-            IncIndent();
-              WriteLn('callCtx.AddObjectToFree(TObject(%s));',[prm.Name]);
+              WriteLn('callCtx.AddObjectToFree(%s);',[prm.Name]);
             DecIndent();
           end;
         end;
@@ -1449,13 +1409,10 @@ Var
 
         if AMthd.InheritsFrom(TPasFunction) then begin
           if SymbolTable.IsInitNeed(resElt.ResultType) then begin
-            if SymbolTable.IsOfType(resElt.ResultType,TPasClassType) or SymbolTable.IsOfType(resElt.ResultType,TPasArrayType) then
-              WriteLn('if Assigned(TObject(%s)) then',[RETURN_VAL_NAME])
-            else
-              WriteLn('if ( PTypeInfo(TypeInfo(%s))^.Kind = tkClass ) and Assigned(Pointer(%s)) then',[resElt.ResultType.Name,RETURN_VAL_NAME]);
-            IncIndent();
-              WriteLn('callCtx.AddObjectToFree(TObject(%s));',[RETURN_VAL_NAME]);
-            DecIndent();
+              WriteLn('if (%s <> nil) then',[RETURN_VAL_NAME]);
+              IncIndent();
+                WriteLn('callCtx.AddObjectToFree(%s);',[RETURN_VAL_NAME]);
+              DecIndent();
           end;
         end;
         NewLine();
@@ -2203,9 +2160,7 @@ begin
   WriteLn('{$IFDEF FPC}');
   WriteLn('  {$mode objfpc} {$H+}');
   WriteLn('{$ENDIF}');
-  WriteLn('{$IFNDEF FPC}');
-  WriteLn('  {$DEFINE WST_RECORD_RTTI}');
-  WriteLn('{$ENDIF}');
+  WriteLn('{$DEFINE WST_RECORD_RTTI}');
   WriteLn('interface');
   WriteLn('');
   s := GenerateExtraUses();

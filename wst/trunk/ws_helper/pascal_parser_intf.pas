@@ -1005,9 +1005,7 @@ end;
 function TwstPasTreeContainer.IsInitNeed(AType : TPasType) : Boolean;
 begin
   Result := IsOfType(AType,TPasClassType) or
-            IsOfType(AType,TPasPointerType) or
-            IsOfType(AType,TPasArrayType) or
-            IsOfType(AType,TPasRecordType);
+            IsOfType(AType,TPasArrayType);
 end;
 
 procedure TwstPasTreeContainer.SetCurrentModule(AModule: TPasModule);

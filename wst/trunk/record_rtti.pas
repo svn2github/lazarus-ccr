@@ -139,7 +139,7 @@ end;
 
 procedure FreeRawTypeInfo(ARawTypeInfo : PTypeInfo);
 var
-  i : PtrInt;
+  i : Cardinal;
   delphiFT : PFieldTable;
   tmp : PByte;
   fieldInfo : PFieldInfo;
@@ -170,7 +170,7 @@ var
 begin
   tmp := PByte(ARawTypeInfo);
   Inc(tmp);
-  Inc(tmp,1 + Byte(ARawTypeInfo.Name[0]));
+  Inc(tmp,1 + Byte(ARawTypeInfo^.Name[0]));
   delphiFT := PFieldTable(tmp);
   count := delphiFT^.Count;
   {calc buffer size}
@@ -181,7 +181,7 @@ begin
     ( count * SizeOf(TRecordFieldInfo) ); // Fields: array [0..0] of TRecordFieldInfo;
   GetMem(resBuffer,bufferSize);
   FillChar(Pointer(resBuffer)^,bufferSize,#0);
-  resBuffer^.Name := PTypeInfo(ARawTypeInfo).Name;
+  resBuffer^.Name := PTypeInfo(ARawTypeInfo)^.Name;
   resBuffer^.RecordSize := delphiFT^.Size;
   resBuffer^.FieldCount := count;
   { Process elements }
@@ -196,7 +196,7 @@ begin
 end;
 {$ENDIF WST_RECORD_RTTI}
 
-{$IFDEF FPC}
+{$IFDEF FPC_XXXXXX}
 function aligntoptr(p : pointer) : pointer;inline;
    begin
 {$ifdef FPC_REQUIRES_PROPER_ALIGNMENT}
@@ -288,7 +288,7 @@ constructor TRecordRttiDataObject.Create(
 );
 var
   locData : PRecordTypeData;
-  i : PtrUInt;
+  i : Integer;
   ls, s : string;
 begin
   locData := AData;
@@ -318,7 +318,7 @@ end;
 
 function TRecordRttiDataObject.FindField(const AFieldName : shortstring) : PRecordFieldInfo;
 var
-  i : PtrInt;
+  i : Integer;
   locData : PRecordTypeData;
   locField : shortstring;
 begin

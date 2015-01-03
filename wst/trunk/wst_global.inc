@@ -16,6 +16,7 @@
     {$DEFINE HAS_BUILT_IN_64UINT}
     {$DEFINE HAS_TKBOOL}
     {$UNDEF WST_INTF_DOM}
+    {$DEFINE WST_RECORD_RTTI}
     //{$DEFINE USE_INLINE}
     {$IF Defined(FPC_VERSION) and 
          ( (FPC_VERSION > 2) or
