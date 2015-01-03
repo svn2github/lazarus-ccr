@@ -6,8 +6,9 @@ library mod_wst;
 {$ENDIF}
 
 uses
-  SysUtils,
-  httpd, apr, apriconv, aprutil, wst_apache_binding;
+  SysUtils, 
+  httpd, apr,
+  wst_apache_binding;
 
 var
  wst_module: module; {$ifdef Unix} public name 'wst_module'; {$endif}

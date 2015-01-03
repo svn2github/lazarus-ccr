@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
     <Version Value="9"/>
@@ -30,7 +30,7 @@
         <LaunchingApplication PathPlusParams="\usr\X11R6\bin\xterm -T 'Lazarus Run Output' -e $(LazarusDir)\tools\runwait.sh $(TargetCmdLine)"/>
       </local>
     </RunParams>
-    <Units Count="4">
+    <Units Count="3">
       <Unit0>
         <Filename Value="tcp_server.pas"/>
         <IsPartOfProject Value="True"/>
@@ -39,31 +39,23 @@
       <Unit1>
         <Filename Value="..\user_service_intf.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="user_service_intf"/>
       </Unit1>
       <Unit2>
-        <Filename Value="imp_helper.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="imp_helper"/>
-      </Unit2>
-      <Unit3>
         <Filename Value="..\..\server_service_xmlrpc.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="server_service_xmlrpc"/>
-      </Unit3>
+      </Unit2>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
-    <Version Value="9"/>
+    <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="tcp_server.exe"/>
+      <Filename Value="tcp_server"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="..\..;.."/>
-      <OtherUnitFiles Value="..;..\..;..\..\wst_rtti_filter;$(LazarusDir)\others_package\synapse"/>
+      <OtherUnitFiles Value="..;..\..;..\..\wst_rtti_filter"/>
       <UnitOutputDirectory Value="obj"/>
-      <SrcPath Value="$(LazarusDir)\others_package\synapse"/>
     </SearchPaths>
     <Parsing>
       <SyntaxOptions>
@@ -71,11 +63,7 @@
       </SyntaxOptions>
     </Parsing>
     <Other>
-      <CompilerMessages>
-        <UseMsgFile Value="True"/>
-      </CompilerMessages>
       <CustomOptions Value="-dINDY_10"/>
-      <CompilerPath Value="$(CompPath)"/>
     </Other>
   </CompilerOptions>
 </CONFIG>

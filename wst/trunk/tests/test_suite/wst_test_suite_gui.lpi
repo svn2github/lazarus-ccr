@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
     <Version Value="9"/>
@@ -43,7 +43,6 @@
       <Unit0>
         <Filename Value="wst_test_suite_gui.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="wst_test_suite_gui"/>
       </Unit0>
       <Unit1>
         <Filename Value="test_support.pas"/>
@@ -53,102 +52,82 @@
       <Unit2>
         <Filename Value="test_utilities.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="test_utilities"/>
       </Unit2>
       <Unit3>
         <Filename Value="testformatter_unit.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="testformatter_unit"/>
       </Unit3>
       <Unit4>
         <Filename Value="test_generators.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="test_generators"/>
       </Unit4>
       <Unit5>
         <Filename Value="testmetadata_unit.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="testmetadata_unit"/>
       </Unit5>
       <Unit6>
         <Filename Value="test_parsers.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="test_parsers"/>
       </Unit6>
       <Unit7>
         <Filename Value="test_basex_encode.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="test_basex_encode"/>
       </Unit7>
       <Unit8>
         <Filename Value="test_json.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="test_json"/>
       </Unit8>
       <Unit9>
         <Filename Value="test_suite_utils.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="test_suite_utils"/>
       </Unit9>
       <Unit10>
         <Filename Value="test_std_cursors.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="test_std_cursors"/>
       </Unit10>
       <Unit11>
         <Filename Value="test_rtti_filter.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="test_rtti_filter"/>
       </Unit11>
       <Unit12>
         <Filename Value="..\..\wst_rtti_filter\rtti_filters.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="rtti_filters"/>
       </Unit12>
       <Unit13>
         <Filename Value="..\..\wst_rtti_filter\wst_cursors.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="wst_cursors"/>
       </Unit13>
       <Unit14>
         <Filename Value="test_wst_cursors.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="test_wst_cursors"/>
       </Unit14>
       <Unit15>
         <Filename Value="test_registry.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="test_registry"/>
       </Unit15>
       <Unit16>
         <Filename Value="test_soap_specific.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="test_soap_specific"/>
       </Unit16>
       <Unit17>
         <Filename Value="test_generators_runtime.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="test_generators_runtime"/>
       </Unit17>
       <Unit18>
         <Filename Value="test_date_utils.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="test_date_utils"/>
       </Unit18>
       <Unit19>
         <Filename Value="..\..\config_objects.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="config_objects"/>
       </Unit19>
       <Unit20>
         <Filename Value="test_support_client.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="test_support_client"/>
       </Unit20>
       <Unit21>
         <Filename Value="..\..\wst_consts.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="wst_consts"/>
       </Unit21>
       <Unit22>
         <Filename Value="wst_tests_defines.inc"/>
@@ -162,7 +141,7 @@
     </Units>
   </ProjectOptions>
   <CompilerOptions>
-    <Version Value="9"/>
+    <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
       <Filename Value="wst_test_suite_gui"/>
@@ -182,12 +161,13 @@
       <Checks>
         <OverflowChecks Value="True"/>
       </Checks>
+      <TargetCPU Value="x86_64"/>
+      <TargetOS Value="win64"/>
     </CodeGeneration>
     <Linking>
       <Debugging>
-        <GenerateDebugInfo Value="True"/>
+        <DebugInfoType Value="dsStabs"/>
       </Debugging>
-      <LinkSmart Value="True"/>
       <Options>
         <Win32>
           <GraphicApplication Value="True"/>
@@ -195,6 +175,9 @@
       </Options>
     </Linking>
     <Other>
+      <CompilerMessages>
+        <UseMsgFile Value="True"/>
+      </CompilerMessages>
       <CompilerPath Value="$(CompPath)"/>
     </Other>
   </CompilerOptions>

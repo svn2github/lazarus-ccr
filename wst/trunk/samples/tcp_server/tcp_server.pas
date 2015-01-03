@@ -31,7 +31,7 @@ uses
   fpc_tcp_server,
   //synapse_tcp_server,
   //indy_tcp_server,    
-  user_service_intf, user_service_intf_binder, user_service_intf_imp , imp_helper,
+  user_service_intf, user_service_intf_binder, user_service_intf_imp ,
   server_service_xmlrpc;
 
 {$IFDEF WST_BLOCK_TYPE}

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
     <Version Value="9"/>
@@ -39,18 +39,17 @@
       <Unit1>
         <Filename Value="..\..\xmlrpc_formatter.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="xmlrpc_formatter"/>
       </Unit1>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
-    <Version Value="9"/>
+    <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="user_client_console.exe"/>
+      <Filename Value="user_client_console"/>
     </Target>
     <SearchPaths>
-      <OtherUnitFiles Value="..;..\..;$(LazarusDir)\others_package\synapse;$(LazarusDir)\others_package\indy-10.2.0.3\fpc"/>
+      <OtherUnitFiles Value="..;..\.."/>
       <UnitOutputDirectory Value="obj"/>
     </SearchPaths>
     <Parsing>
@@ -61,16 +60,10 @@
     </Parsing>
     <Linking>
       <Debugging>
-        <GenerateDebugInfo Value="True"/>
+        <DebugInfoType Value="dsStabs"/>
         <UseHeaptrc Value="True"/>
       </Debugging>
       <LinkSmart Value="True"/>
     </Linking>
-    <Other>
-      <CompilerMessages>
-        <UseMsgFile Value="True"/>
-      </CompilerMessages>
-      <CompilerPath Value="$(CompPath)"/>
-    </Other>
   </CompilerOptions>
 </CONFIG>

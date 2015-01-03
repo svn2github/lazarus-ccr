@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms
+  Forms, laz_synapse
   , umain, RunTimeTypeInfoControls, user_edit_imp;
 
 begin

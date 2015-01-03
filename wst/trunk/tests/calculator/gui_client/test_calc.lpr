@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms
+  Forms, laz_synapse
   { add your units here }, main_unit, calculator, calculator_proxy;
 
 begin
