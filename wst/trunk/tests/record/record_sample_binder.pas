@@ -2,7 +2,7 @@
 This unit has been produced by ws_helper.
   Input unit name : "record_sample".
   This unit name  : "record_sample_binder".
-  Date            : "26/08/2007 01:12:11".
+  Date            : "02/01/2015 23:42:08".
 }
 unit record_sample_binder;
 {$IFDEF FPC} {$mode objfpc}{$H+} {$ENDIF}
@@ -10,16 +10,17 @@ interface
 
 uses SysUtils, Classes, base_service_intf, server_service_intf, record_sample;
 
+
 type
-
-
   TRecordService_ServiceBinder = class(TBaseServiceBinder)
   protected
     procedure AddHandler(AFormatter : IFormatterResponse; AContext : ICallContext);
+    procedure AddRecHandler(AFormatter : IFormatterResponse; AContext : ICallContext);
   public
     constructor Create();
   end;
 
+type
   TRecordService_ServiceBinderFactory = class(TInterfacedObject,IItemFactory)
   private
     FInstance : IInterface;
@@ -43,17 +44,14 @@ var
   hasObjCntrl : Boolean;
   tmpObj : RecordService;
   callCtx : ICallContext;
-  strPrmName : string;
+  locStrPrmName : string;
   procName,trgName : string;
-  AValue : TRecordClass;
-  returnVal : Int64;
+  AValue : RecordA;
+  returnVal : RecordB;
 begin
   callCtx := AContext;
-  Fillchar(AValue,SizeOf(TRecordClass),#0);
   
-  strPrmName := 'AValue';  AFormatter.Get(TypeInfo(TRecordClass),strPrmName,AValue);
-  if Assigned(Pointer(AValue)) then
-    callCtx.AddObjectToFree(TObject(AValue));
+  locStrPrmName := 'AValue';  AFormatter.Get(TypeInfo(RecordA),locStrPrmName,AValue);
   
   tmpObj := Self.GetFactory().CreateInstance() as RecordService;
   if Supports(tmpObj,ICallControl,cllCntrl) then
@@ -68,7 +66,51 @@ begin
     trgName := AFormatter.GetCallTarget();
     AFormatter.Clear();
     AFormatter.BeginCallResponse(procName,trgName);
-      AFormatter.Put('result',TypeInfo(Int64),returnVal);
+      AFormatter.Put('result',TypeInfo(RecordB),returnVal);
+    AFormatter.EndCallResponse();
+    
+    callCtx := nil;
+  finally
+    if hasObjCntrl then
+      objCntrl.Deactivate();
+    Self.GetFactory().ReleaseInstance(tmpObj);
+  end;
+end;
+
+procedure TRecordService_ServiceBinder.AddRecHandler(AFormatter : IFormatterResponse; AContext : ICallContext);
+var
+  cllCntrl : ICallControl;
+  objCntrl : IObjectControl;
+  hasObjCntrl : Boolean;
+  tmpObj : RecordService;
+  callCtx : ICallContext;
+  locStrPrmName : string;
+  procName,trgName : string;
+  AA : RecordA;
+  AB : RecordB;
+  AC : RecordC;
+  returnVal : RecordC;
+begin
+  callCtx := AContext;
+  
+  locStrPrmName := 'AA';  AFormatter.Get(TypeInfo(RecordA),locStrPrmName,AA);
+  locStrPrmName := 'AB';  AFormatter.Get(TypeInfo(RecordB),locStrPrmName,AB);
+  locStrPrmName := 'AC';  AFormatter.Get(TypeInfo(RecordC),locStrPrmName,AC);
+  
+  tmpObj := Self.GetFactory().CreateInstance() as RecordService;
+  if Supports(tmpObj,ICallControl,cllCntrl) then
+    cllCntrl.SetCallContext(callCtx);
+  hasObjCntrl := Supports(tmpObj,IObjectControl,objCntrl);
+  if hasObjCntrl then
+    objCntrl.Activate();
+  try
+    returnVal := tmpObj.AddRec(AA,AB,AC);
+    
+    procName := AFormatter.GetCallProcedureName();
+    trgName := AFormatter.GetCallTarget();
+    AFormatter.Clear();
+    AFormatter.BeginCallResponse(procName,trgName);
+      AFormatter.Put('result',TypeInfo(RecordC),returnVal);
     AFormatter.EndCallResponse();
     
     callCtx := nil;
@@ -84,6 +126,7 @@ constructor TRecordService_ServiceBinder.Create();
 begin
   inherited Create(GetServiceImplementationRegistry().FindFactory('RecordService'));
   RegisterVerbHandler('Add',{$IFDEF FPC}@{$ENDIF}AddHandler);
+  RegisterVerbHandler('AddRec',{$IFDEF FPC}@{$ENDIF}AddRecHandler);
 end;
 
 

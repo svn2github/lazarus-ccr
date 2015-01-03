@@ -48,13 +48,16 @@ function TRecordService_ServiceImp.AddRec(
   const  AB : RecordB; 
   const  AC : RecordC
 ):RecordC;
+var
+  h,m,s,ms : Word;
 Begin
-  Result.RecordField.intField := 1234;
-  Result.RecordField.RecordField.fieldA := 0;
-  Result.RecordField.RecordField.fieldB := 0;
+  DecodeTime(Now(),h,m,s,ms);
+  Result.RecordField.intField := h;
+  Result.RecordField.RecordField.fieldA := m;
+  Result.RecordField.RecordField.fieldB := s;
   Result.intField := Trunc(AA.fieldA + AA.fieldB);
   Result.RecordField.singleField := AB.singleField + AB.intField;
-  Result.RecordField.comment := 'Computed in AddRec().';
+  Result.RecordField.RecordField.comment := 'Computed in AddRec().';
 End;
 
 

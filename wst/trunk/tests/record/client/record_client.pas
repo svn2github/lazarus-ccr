@@ -5,8 +5,7 @@ program record_client;
 uses
   Classes, SysUtils, {$IFDEF WINDOWS}ActiveX,{$ENDIF}
   soap_formatter,
-  synapse_http_protocol,
-  //indy_http_protocol,
+  fpc_http_protocol,
   metadata_repository,
   record_sample, record_sample_proxy;
 
@@ -52,14 +51,13 @@ var
   locService : RecordService;
   A : RecordA;
   B : RecordB;
-  C : RecordC;
+  D, C : RecordC;
 begin
 {$IFDEF WINDOWS}
   CoInitialize(nil);
   try
 {$ENDIF}
-  SYNAPSE_RegisterHTTP_Transport();
-  //INDY_RegisterHTTP_Transport();
+  FPC_RegisterHTTP_Transport();
   WriteLn('Web Services Toolkit Record sample');
   WriteLn('This sample demonstrates the Object Pascal "Record" support by WST');
   WriteLn();
@@ -86,16 +84,16 @@ begin
     WriteLn('  comment     : ',B.comment);
     WriteLn();
     WriteLn;
-    C := locService.AddRec(A,B,C);
+    D := locService.AddRec(A,B,C);
     WriteLn;
-    WriteLn('Response ( C ) : ');
-    WriteLn('  intField                : ',C.intField);
-    WriteLn('  RecordField.intField    : ',C.RecordField.intField);
-    WriteLn('  RecordField.singleField : ',C.RecordField.singleField);
-    WriteLn('  RecordField.singleField : ',C.RecordField.comment);
-    WriteLn('  RecordField.RecordField.fieldA : ',C.RecordField.RecordField.fieldA);
-    WriteLn('  RecordField.RecordField.fieldB : ',C.RecordField.RecordField.fieldB);
-    WriteLn('  RecordField.RecordField.comment : ',C.RecordField.RecordField.comment);
+    WriteLn('Response ( D ) : ');
+    WriteLn('  intField                : ',D.intField);
+    WriteLn('  RecordField.intField    : ',D.RecordField.intField);
+    WriteLn('  RecordField.singleField : ',D.RecordField.singleField);
+    WriteLn('  RecordField.singleField : ',D.RecordField.comment);
+    WriteLn('  RecordField.RecordField.fieldA : ',D.RecordField.RecordField.fieldA);
+    WriteLn('  RecordField.RecordField.fieldB : ',D.RecordField.RecordField.fieldB);
+    WriteLn('  RecordField.RecordField.comment : ',D.RecordField.RecordField.comment);
     WriteLn();
 
     if ( UpperCase(ReadEntryStr('Continue ( Y/N ) :'))[1] <> 'Y' ) then

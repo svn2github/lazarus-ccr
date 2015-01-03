@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Classes, SysUtils,
-  indy_http_server, metadata_service, server_listener,
+  fpc_http_server, metadata_service, server_listener,
   server_service_soap, server_binary_formatter, server_service_xmlrpc, config_objects,
   record_sample, record_sample_binder, record_sample_imp, record_rtti;
 
@@ -24,7 +24,7 @@ begin
 
   //wst_CreateDefaultFile(wst_GetConfigFileName(),nil);
 
-  AppObject := TwstIndyHttpListener.Create('127.0.0.1',20000);
+  AppObject := TwstFPHttpListener.Create('127.0.0.1',20000);
   try
     WriteLn('"Web Service Toolkit" HTTP Server sample listening at:');
     WriteLn('');

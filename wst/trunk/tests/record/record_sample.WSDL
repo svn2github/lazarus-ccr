@@ -1,33 +1,81 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <definitions name="urn:record_sample" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:record_sample" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="urn:record_sample">
   <types>
-    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:record_sample">
-      <xsd:complexType name="TRecordClass">
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:record_sample" xmlns:wst="urn:wst_base" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:record_sample">
+      <xsd:complexType name="RecordA" wst:wst_record="true">
         <xsd:sequence>
-          <xsd:element name="fieldA" type="xsd:int" maxOccurs="1" minOccurs="1"/>
-          <xsd:element name="fieldB" type="xsd:single" maxOccurs="1" minOccurs="1"/>
+          <xsd:element name="fieldA" type="xsd:int"/>
+          <xsd:element name="fieldB" type="xsd:float"/>
+          <xsd:element name="comment" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="RecordB" wst:wst_record="true">
+        <xsd:sequence>
+          <xsd:element name="singleField" type="xsd:float"/>
+          <xsd:element name="intField" type="xsd:int"/>
+          <xsd:element name="comment" type="xsd:string"/>
+          <xsd:element name="RecordField" type="tns:RecordA"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="RecordC" wst:wst_record="true">
+        <xsd:sequence>
+          <xsd:element name="intField" type="xsd:int"/>
+          <xsd:element name="RecordField" type="tns:RecordB"/>
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>
   </types>
-  <message name="Add"><part name="AValue" type="tns:TRecordClass"/></message>
-  <message name="AddResponse"><part name="result" type="xsd:long"/></message>
+  <message name="Add">
+    <part name="AValue" type="tns:RecordA"/>
+  </message>
+  <message name="AddResponse">
+    <part name="result" type="tns:RecordB"/>
+  </message>
+  <message name="AddRec">
+    <part name="AA" type="tns:RecordA"/>
+    <part name="AB" type="tns:RecordB"/>
+    <part name="AC" type="tns:RecordC"/>
+  </message>
+  <message name="AddRecResponse">
+    <part name="result" type="tns:RecordC"/>
+  </message>
   <portType name="RecordService">
-    <document><GUID value="{E42B7653-4B50-4956-88B4-FBCEC57B667A}"/></document>
+    <documentation>
+      <GUID value="{4CB555BD-B523-49BD-8861-496497B081DD}"/>
+    </documentation>
     <operation name="Add">
       <input message="tns:Add"/>
       <output message="tns:AddResponse"/>
+    </operation>
+    <operation name="AddRec">
+      <input message="tns:AddRec"/>
+      <output message="tns:AddRecResponse"/>
     </operation>
   </portType>
   <binding name="RecordServiceBinding" type="tns:RecordService">
     <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
     <operation name="Add">
       <soap:operation soapAction=""/>
-      <input><soap:body use="literal" namespace="urn:record_sample"/></input>
-      <output><soap:body use="literal" namespace="urn:record_sample"/></output>
+      <input>
+        <soap:body use="literal" namespace="urn:record_sample"/>
+      </input>
+      <output>
+        <soap:body use="literal" namespace="urn:record_sample"/>
+      </output>
+    </operation>
+    <operation name="AddRec">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal" namespace="urn:record_sample"/>
+      </input>
+      <output>
+        <soap:body use="literal" namespace="urn:record_sample"/>
+      </output>
     </operation>
   </binding>
   <service name="RecordService">
-    <port name="RecordServicePort" binding="tns:RecordServiceBinding"><soap:address location="http://127.0.0.1:20000"/></port>
+    <port name="RecordServicePort" binding="tns:RecordServiceBinding">
+      <soap:address location="http://127.0.0.1:20000"/>
+    </port>
   </service>
 </definitions>

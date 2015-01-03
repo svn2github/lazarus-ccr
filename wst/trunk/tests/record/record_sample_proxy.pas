@@ -2,7 +2,7 @@
 This unit has been produced by ws_helper.
   Input unit name : "record_sample".
   This unit name  : "record_sample_proxy".
-  Date            : "26/08/2007 01:12:11".
+  Date            : "02/01/2015 23:42:08".
 }
 
 Unit record_sample_proxy;
@@ -18,19 +18,29 @@ Type
   Protected
     class function GetServiceType() : PTypeInfo;override;
     function Add(
-      const  AValue : TRecordClass
-    ):Int64;
+      const  AValue : RecordA
+    ):RecordB;
+    function AddRec(
+      const  AA : RecordA; 
+      const  AB : RecordB; 
+      const  AC : RecordC
+    ):RecordC;
   End;
 
-  Function wst_CreateInstance_RecordService(const AFormat : string = 'SOAP:'; const ATransport : string = 'HTTP:'):RecordService;
+  Function wst_CreateInstance_RecordService(const AFormat : string = 'SOAP:'; const ATransport : string = 'HTTP:'; const AAddress : string = ''):RecordService;
 
 Implementation
 uses wst_resources_imp, metadata_repository;
 
 
-Function wst_CreateInstance_RecordService(const AFormat : string; const ATransport : string):RecordService;
+Function wst_CreateInstance_RecordService(const AFormat : string; const ATransport : string; const AAddress : string):RecordService;
+Var
+  locAdr : string;
 Begin
-  Result := TRecordService_Proxy.Create('RecordService',AFormat+GetServiceDefaultFormatProperties(TypeInfo(RecordService)),ATransport + 'address=' + GetServiceDefaultAddress(TypeInfo(RecordService)));
+  locAdr := AAddress;
+  if ( locAdr = '' ) then
+    locAdr := GetServiceDefaultAddress(TypeInfo(RecordService));
+  Result := TRecordService_Proxy.Create('RecordService',AFormat+GetServiceDefaultFormatProperties(TypeInfo(RecordService)),ATransport + 'address=' + locAdr);
 End;
 
 { TRecordService_Proxy implementation }
@@ -41,23 +51,55 @@ begin
 end;
 
 function TRecordService_Proxy.Add(
-  const  AValue : TRecordClass
-):Int64;
+  const  AValue : RecordA
+):RecordB;
 Var
   locSerializer : IFormatterClient;
-  strPrmName : string;
+  locCallContext : ICallContext;
+  locStrPrmName : string;
 Begin
+  locCallContext := Self as ICallContext;
   locSerializer := GetSerializer();
   Try
-    locSerializer.BeginCall('Add', GetTarget(),(Self as ICallContext));
-      locSerializer.Put('AValue', TypeInfo(TRecordClass), AValue);
+    locSerializer.BeginCall('Add', GetTarget(),locCallContext);
+      locSerializer.Put('AValue', TypeInfo(RecordA), AValue);
     locSerializer.EndCall();
 
     MakeCall();
 
-    locSerializer.BeginCallRead((Self as ICallContext));
-      strPrmName := 'result';
-      locSerializer.Get(TypeInfo(Int64), strPrmName, Result);
+    locSerializer.BeginCallRead(locCallContext);
+      locStrPrmName := 'result';
+      locSerializer.Get(TypeInfo(RecordB), locStrPrmName, Result);
+
+  Finally
+    locSerializer.Clear();
+  End;
+End;
+
+function TRecordService_Proxy.AddRec(
+  const  AA : RecordA; 
+  const  AB : RecordB; 
+  const  AC : RecordC
+):RecordC;
+Var
+  locSerializer : IFormatterClient;
+  locCallContext : ICallContext;
+  locStrPrmName : string;
+Begin
+  locCallContext := Self as ICallContext;
+  locSerializer := GetSerializer();
+  Try
+    locSerializer.BeginCall('AddRec', GetTarget(),locCallContext);
+      locSerializer.Put('AA', TypeInfo(RecordA), AA);
+      locSerializer.Put('AB', TypeInfo(RecordB), AB);
+      locSerializer.Put('AC', TypeInfo(RecordC), AC);
+    locSerializer.EndCall();
+
+    MakeCall();
+
+    locSerializer.BeginCallRead(locCallContext);
+      locStrPrmName := 'result';
+      locSerializer.Get(TypeInfo(RecordC), locStrPrmName, Result);
 
   Finally
     locSerializer.Clear();

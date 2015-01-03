@@ -3,8 +3,7 @@ program test_record;
 {$mode objfpc}{$H+}
 
 uses
-  Classes, SysUtils
-  ,TypInfo, record_rtti;
+  Classes, SysUtils, TypInfo, record_rtti;
 
 type
 
