@@ -34,13 +34,13 @@ type
   end;
 
   TDurationRec = packed record
-    Year : PtrUInt;
-    Month : PtrUInt;
-    Day : PtrUInt;
-    Hour : PtrUInt;
-    Minute : PtrUInt;
-    Second : PtrUInt;
-    FractionalSecond : PtrUInt;
+    Year : Cardinal;
+    Month : Cardinal;
+    Day : Cardinal;
+    Hour : Cardinal;
+    Minute : Cardinal;
+    Second : Cardinal;
+    FractionalSecond : Cardinal;
     Negative : Boolean;
   end;
 
