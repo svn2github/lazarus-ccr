@@ -3,6 +3,7 @@
   <Package Version="4">
     <PathDelim Value="\"/>
     <Name Value="wst_design"/>
+    <Type Value="DesignTime"/>
     <AddToProjectUsesSection Value="True"/>
     <Author Value="Inoussa OUEDRAOGO"/>
     <CompilerOptions>
@@ -16,14 +17,11 @@
       <Parsing>
         <SyntaxOptions>
           <CStyleOperator Value="False"/>
-          <UseAnsiStrings Value="True"/>
         </SyntaxOptions>
       </Parsing>
       <Other>
         <CustomOptions Value="-dWST_IDE
--dWST_HANDLE_DOC
-"/>
-        <CompilerPath Value="$(CompPath)"/>
+-dWST_HANDLE_DOC"/>
       </Other>
     </CompilerOptions>
     <Description Value="Web Services Toolkit Lazarus IDE design time package
@@ -60,8 +58,7 @@
         <UnitName Value="uabout"/>
       </Item7>
     </Files>
-    <Type Value="DesignTime"/>
-    <RequiredPkgs Count="5">
+    <RequiredPkgs Count="3">
       <Item1>
         <PackageName Value="wst_core"/>
       </Item1>
@@ -69,15 +66,8 @@
         <PackageName Value="SynEdit"/>
       </Item2>
       <Item3>
-        <PackageName Value="LCL"/>
-      </Item3>
-      <Item4>
         <PackageName Value="IDEIntf"/>
-      </Item4>
-      <Item5>
-        <PackageName Value="FCL"/>
-        <MinVersion Major="1" Valid="True"/>
-      </Item5>
+      </Item3>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>
