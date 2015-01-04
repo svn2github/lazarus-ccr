@@ -135,6 +135,8 @@ type
 
   TJvXPBarItemClass = class of TJvXPBarItem;
 
+  { TJvXPBarItem }
+
   TJvXPBarItem = class(TCollectionItem)
   private
     FActionLink: TJvXPBarItemActionLink;
@@ -189,6 +191,7 @@ type
     constructor Create(ACollection: TCollection); override;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
+    function GetNamePath: string; override;
     property Data: Pointer read FData write FData;
     property DataObject: TObject read FDataObject write FDataObject;
     property Images: TCustomImageList read GetImages;
@@ -873,6 +876,14 @@ begin
     end
   else
     inherited Assign(Source);
+end;
+
+function TJvXPBarItem.GetNamePath: string;
+begin
+  if FName <> '' then
+    Result := FWinXPBar.GetNamePath + '.' + FName
+  else
+    Result := inherited GetNamePath;
 end;
 
 function TJvXPBarItem.IsAutoCheckStored: Boolean;
