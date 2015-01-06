@@ -41,12 +41,8 @@ uses
 
 type
 
-  { TDBDateEdit }
-{$IFDEF DBDateEdit_OLD}
-  TDBDateEdit = class(TDateEdit)
-{$ELSE}
-  TDBDateEdit = class(TRxDateEdit)
-{$ENDIF}
+  { TRxDBDateEdit }
+  TRxDBDateEdit = class(TRxDateEdit)
   private
     FDataLink:TFieldDataLink;
     FDefaultToday: Boolean;
@@ -66,13 +62,8 @@ type
     procedure LMCut(var Message: TLMessage); message LM_CUT;
     procedure LMPaste(var Message: TLMessage); message LM_PASTE;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-{$IFDEF OLD_EDITBUTTON}
-    procedure Change; override;
-    procedure DoButtonClick (Sender: TObject); override;
-{$ELSE}
     procedure ButtonClick; override;
     procedure EditChange; override;
-{$ENDIF}
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure EditingDone; override;
     Procedure RunDialog; virtual;
@@ -109,11 +100,7 @@ type
     procedure LMCut(var Message: TLMessage); message LM_CUT;
     procedure LMPaste(var Message: TLMessage); message LM_PASTE;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-{$IFDEF OLD_EDITBUTTON}
-    procedure Change; override;
-{$ELSE}
     procedure EditChange; override;
-{$ENDIF}
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure EditingDone; override;
     Procedure RunDialog; override;
@@ -129,29 +116,29 @@ type
 implementation
 uses DateUtil;
 
-{ TDBDateEdit }
+{ TRxDBDateEdit }
 
-procedure TDBDateEdit.DoCheckEnable;
+procedure TRxDBDateEdit.DoCheckEnable;
 begin
   Enabled:=FDataLink.Active and (FDataLink.Field<>nil) and (not FDataLink.Field.ReadOnly);
 end;
 
-function TDBDateEdit.GetDataField: string;
+function TRxDBDateEdit.GetDataField: string;
 begin
   Result:=FDataLink.FieldName;
 end;
 
-function TDBDateEdit.GetDataSource: TDataSource;
+function TRxDBDateEdit.GetDataSource: TDataSource;
 begin
   Result:=FDataLink.DataSource;
 end;
 
-function TDBDateEdit.GetReadOnly: Boolean;
+function TRxDBDateEdit.GetReadOnly: Boolean;
 begin
   Result:=FDataLink.ReadOnly;
 end;
 
-procedure TDBDateEdit.SetDataField(const AValue: string);
+procedure TRxDBDateEdit.SetDataField(const AValue: string);
 begin
   try
     FDataLink.FieldName:=AValue;
@@ -160,19 +147,19 @@ begin
   end;
 end;
 
-procedure TDBDateEdit.SetDataSource(const AValue: TDataSource);
+procedure TRxDBDateEdit.SetDataSource(const AValue: TDataSource);
 begin
   FDataLink.DataSource:=AValue;
   DoCheckEnable;
 end;
 
-procedure TDBDateEdit.SetReadOnly(const AValue: Boolean);
+procedure TRxDBDateEdit.SetReadOnly(const AValue: Boolean);
 begin
   inherited ReadOnly:=AValue;
   FDataLink.ReadOnly:=AValue;
 end;
 
-procedure TDBDateEdit.CMExit(var Message: TLMessage);
+procedure TRxDBDateEdit.CMExit(var Message: TLMessage);
 begin
   try
     FDataLink.UpdateRecord;
@@ -184,19 +171,19 @@ begin
   inherited;
 end;
 
-procedure TDBDateEdit.LMCut(var Message: TLMessage);
+procedure TRxDBDateEdit.LMCut(var Message: TLMessage);
 begin
   FDataLink.Edit;
   inherited;
 end;
 
-procedure TDBDateEdit.LMPaste(var Message: TLMessage);
+procedure TRxDBDateEdit.LMPaste(var Message: TLMessage);
 begin
   FDataLink.Edit;
   inherited;
 end;
 
-procedure TDBDateEdit.KeyDown(var Key: Word; Shift: TShiftState);
+procedure TRxDBDateEdit.KeyDown(var Key: Word; Shift: TShiftState);
 begin
   inherited KeyDown(Key, Shift);
   if Key=VK_ESCAPE then
@@ -216,22 +203,14 @@ begin
   end;
 end;
 
-{$IFDEF OLD_EDITBUTTON}
-procedure TDBDateEdit.Change;
-{$ELSE}
-procedure TDBDateEdit.EditChange;
-{$ENDIF}
+procedure TRxDBDateEdit.EditChange;
 begin
   if Assigned(FDataLink) then
     FDataLink.Modified;
-{$IFDEF OLD_EDITBUTTON}
-  inherited Change;
-{$ELSE}
   inherited EditChange;
-{$ENDIF}
 end;
 
-procedure TDBDateEdit.Notification(AComponent: TComponent; Operation: TOperation
+procedure TRxDBDateEdit.Notification(AComponent: TComponent; Operation: TOperation
   );
 begin
   inherited Notification(AComponent, Operation);
@@ -245,39 +224,31 @@ begin
   end;
 end;
 
-procedure TDBDateEdit.EditingDone;
+procedure TRxDBDateEdit.EditingDone;
 begin
   inherited EditingDone;
   if FDataLink.CanModify then
     FDataLink.UpdateRecord;
 end;
 
-procedure TDBDateEdit.RunDialog;
+procedure TRxDBDateEdit.RunDialog;
 begin
   if FDataLink.CanModify then
     FDataLink.UpdateRecord;
 end;
 
-{$IFDEF OLD_EDITBUTTON}
-procedure TDBDateEdit.DoButtonClick(Sender: TObject);
-{$ELSE}
-procedure TDBDateEdit.ButtonClick;
-{$ENDIF}
+procedure TRxDBDateEdit.ButtonClick;
 begin
-  {$IFDEF OLD_EDITBUTTON}
-  inherited DoButtonClick(Sender);
-  {$ELSE}
   inherited ButtonClick;
-  {$ENDIF}
   RunDialog;
 end;
 
-procedure TDBDateEdit.ActiveChange(Sender: TObject);
+procedure TRxDBDateEdit.ActiveChange(Sender: TObject);
 begin
   DoCheckEnable;
 end;
 
-procedure TDBDateEdit.DataChange(Sender: TObject);
+procedure TRxDBDateEdit.DataChange(Sender: TObject);
 begin
   if Assigned(FDataLink.Field) and
     (FDataLink.Field is TDateTimeField) then
@@ -290,7 +261,7 @@ begin
   else Text:='';
 end;
 
-procedure TDBDateEdit.EditingChange(Sender: TObject);
+procedure TRxDBDateEdit.EditingChange(Sender: TObject);
 begin
   inherited ReadOnly := not FDataLink.Editing;
   if FDataLink.Editing and DefaultToday and (FDataLink.Field <> nil) and
@@ -298,7 +269,7 @@ begin
     FDataLink.Field.AsDateTime := SysUtils.Now;
 end;
 
-procedure TDBDateEdit.UpdateData(Sender: TObject);
+procedure TRxDBDateEdit.UpdateData(Sender: TObject);
 var
   D: TDateTime;
 begin
@@ -312,7 +283,7 @@ begin
   end;
 end;
 
-constructor TDBDateEdit.Create(AOwner: TComponent);
+constructor TRxDBDateEdit.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FDataLink:=TFieldDataLink.Create;
@@ -324,7 +295,7 @@ begin
   //UpdateMask;
 end;
 
-destructor TDBDateEdit.Destroy;
+destructor TRxDBDateEdit.Destroy;
 begin
   FreeAndNil(FDataLink);
   inherited Destroy;
@@ -454,18 +425,10 @@ begin
   end;
 end;
 
-{$IFDEF OLD_EDITBUTTON}
-procedure TRxDBCalcEdit.Change;
-{$ELSE}
 procedure TRxDBCalcEdit.EditChange;
-{$ENDIF}
 begin
   FDataLink.Modified;
-  {$IFDEF OLD_EDITBUTTON}
-  inherited Change;
-  {$ELSE}
   inherited EditChange;
-  {$ENDIF}
 end;
 
 procedure TRxDBCalcEdit.Notification(AComponent: TComponent;

@@ -1,4 +1,4 @@
-{ Free DB Manager
+{ Rx lib
 
   Copyright (C) 2005-2012 Lagunov Aleksey  alexs75 at hotbox.ru
 
@@ -80,6 +80,8 @@ type
     property MainPanel:TRxMDIPanel read FMainPanel write FMainPanel;
   published
     property Align;
+    property ShowHint;
+    property ParentShowHint;
   end;
 
   { TRxMDICloseButton }
@@ -138,6 +140,8 @@ type
     property Align;
     property BevelInner;
     property BevelOuter;
+    property ShowHint;
+    property ParentShowHint;
   end;
 
 implementation

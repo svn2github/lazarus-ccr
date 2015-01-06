@@ -992,11 +992,7 @@ type
     FGrid: TRxDBGrid;
     FCol, FRow: integer;
   protected
-{$IFDEF OLD_EDITBUTTON}
-    procedure Change; override;
-{$ELSE}
     procedure EditChange; override;
-{$ENDIF}
     procedure KeyDown(var Key: word; Shift: TShiftState); override;
 
     procedure WndProc(var TheMessage: TLMessage); override;
@@ -1403,19 +1399,11 @@ end;
 
 { TRxDBGridDateEditor }
 
-{$IFDEF OLD_EDITBUTTON}
-procedure TRxDBGridDateEditor.Change;
-{$ELSE}
 procedure TRxDBGridDateEditor.EditChange;
-{$ENDIF}
 var
   D:TDateTime;
 begin
-  {$IFDEF OLD_EDITBUTTON}
-  inherited Change;
-  {$ELSE}
   inherited EditChange;
-  {$ENDIF}
   if Assigned(FGrid) and FGrid.DatalinkActive and not FGrid.EditorIsReadOnly then
   begin
     if not (FGrid.DataSource.DataSet.State in dsEditModes) then

@@ -125,7 +125,7 @@ end;
 
 procedure RegisterUnitDBDateEdit;
 begin
-  RegisterComponents('RX DBAware',[TDBDateEdit, TRxDBCalcEdit, TRxDBCurrEdit]);
+  RegisterComponents('RX DBAware',[TRxDBDateEdit, TRxDBCalcEdit, TRxDBCurrEdit]);
 end;
 
 procedure RegisterRXLookup;

@@ -55,7 +55,6 @@ implementation
 uses rxmemds;
 
 type
-  THackRxMemoryData = class(TRxMemoryData);
   THackRxColumnFooter = class(TRxColumnFooter);
   THackDataLink = class(TDataLink);
   THackDataSet = class(TDataSet);

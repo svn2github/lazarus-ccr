@@ -106,21 +106,13 @@ type
     procedure HidePopup; virtual;
     procedure ShowPopup(AOrigin: TPoint); virtual;
     procedure ApplyDate(Value: TDateTime); virtual;
-{$IFDEF OLD_EDITBUTTON}
-    procedure Change; override;
-{$ELSE}
     procedure EditChange; override;
-{$ENDIF}
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure KeyPress(var Key: Char); override;
 
-{$IFDEF OLD_EDITBUTTON}
-    procedure DoButtonClick (Sender: TObject); override;
-{$ELSE}
     procedure ButtonClick; override;
     procedure EditKeyDown(var Key: word; Shift: TShiftState); override;
     procedure EditKeyPress( var Key: char); override;
-{$ENDIF}
 
     function GetDefaultGlyphName: String; override;
     function CreatePopupForm:TPopupCalendar;
@@ -548,11 +540,7 @@ procedure TCustomRxDateEdit.AcceptValue(const AValue: TDateTime);
 begin
   SetDate(AValue);
   if Modified then
-{$IFDEF OLD_EDITBUTTON}
-    inherited Change;
-{$ELSE}
     inherited EditChange;
-{$ENDIF}
 end;
 
 procedure TCustomRxDateEdit.UpdateFormat;
@@ -721,18 +709,10 @@ begin
   SelectAll;
 end;
 
-{$IFDEF OLD_EDITBUTTON}
-procedure TCustomRxDateEdit.Change;
-{$ELSE}
 procedure TCustomRxDateEdit.EditChange;
-{$ENDIF}
 begin
   if not FFormatting then
-  {$IFDEF OLD_EDITBUTTON}
-  inherited Change;
-  {$ELSE}
   inherited EditChange;
-  {$ENDIF}
 end;
 
 procedure TCustomRxDateEdit.KeyDown(var Key: Word; Shift: TShiftState);
@@ -788,7 +768,6 @@ begin
   inherited KeyPress(Key);
 end;
 
-{$IFNDEF OLD_EDITBUTTON}
 procedure TCustomRxDateEdit.EditKeyDown(var Key: word; Shift: TShiftState);
 begin
   if (Key in [VK_PRIOR, VK_NEXT, VK_LEFT, VK_UP, VK_RIGHT, VK_DOWN,
@@ -840,22 +819,13 @@ begin
   end;
   inherited EditKeyPress(Key);
 end;
-{$ENDIF}
 
-{$IFDEF OLD_EDITBUTTON}
-procedure TCustomRxDateEdit.DoButtonClick(Sender: TObject);
-{$ELSE}
 procedure TCustomRxDateEdit.ButtonClick;
-{$ENDIF}
 var
   D: TDateTime;
   A: Boolean;
 begin
-  {$IFDEF OLD_EDITBUTTON}
-  inherited DoButtonClick(Sender);
-  {$ELSE}
   inherited ButtonClick;
-  {$ENDIF}
   if CalendarStyle <> csDialog then
     PopupDropDown(True)
   else
