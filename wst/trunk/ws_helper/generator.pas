@@ -1363,7 +1363,7 @@ Var
       for k := 0 to Pred(prmCnt) do begin
         prm := TPasArgument(prms[k]);
         if SymbolTable.IsInitNeed(prm.ArgType) then
-          WriteLn('%s := nil;',[RETURN_VAL_NAME]);
+          WriteLn('%s := nil;',[prm.Name]);
       end;
 
       NewLine();
