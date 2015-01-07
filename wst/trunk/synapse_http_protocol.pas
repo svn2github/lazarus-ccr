@@ -19,7 +19,7 @@ interface
 
 uses
   Classes, SysUtils,
-  wst_types, service_intf, imp_utils, base_service_intf, client_utils,
+  service_intf, base_service_intf, client_utils,
   httpsend;
 
 Const

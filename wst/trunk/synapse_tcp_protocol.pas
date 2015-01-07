@@ -18,7 +18,7 @@ interface
 uses
   Classes, SysUtils,
   service_intf, base_service_intf, client_utils,
-  blcksock;
+  blcksock, synsock;
 
 //{$DEFINE WST_DBG}
 
@@ -57,8 +57,6 @@ Type
   procedure SYNAPSE_RegisterTCP_Transport();
 
 implementation
-uses
-  wst_types;
 
 { TTCPTransport }
 
@@ -66,7 +64,7 @@ procedure TTCPTransport.Connect();
 var
   locReconnect : Boolean;
 begin
-  if ( FConnection.Socket = NOT(0) ) then begin
+  if ( FConnection.Socket = INVALID_SOCKET ) then begin
     FConnection.Connect(Address,Port);
   end else begin
     locReconnect := False;
