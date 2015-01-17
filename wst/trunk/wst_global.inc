@@ -38,23 +38,10 @@
       {$DEFINE WST_TKHELPER}
     {$IFEND}   
 
-    {$IF Defined(FPC_VERSION) and (FPC_VERSION = 2)  }
-      {$IF Defined(FPC_RELEASE) }
-        {$IF Defined(FPC_VERSION) and (FPC_RELEASE > 0) }
-          {$define FPC_211}
-          {$IF Defined(FPC_RELEASE) and (FPC_RELEASE > 2) }
-            {$DEFINE WST_TKPROCVAR}
-            {$DEFINE WST_UNICODESTRING}  
-          {$IFEND}
-          {$IF Defined(FPC_RELEASE) and (FPC_RELEASE > 2) }
-            {$DEFINE TDOMNodeList_RELEASE_NOT_FREE}
-          {$IFEND}
-        {$IFEND}
-      {$IFEND}
-    {$IFEND}
-    {$IF Defined(FPC_211)}
-      {$DEFINE HAS_FORMAT_SETTINGS}
-    {$IFEND}
+    {$DEFINE WST_TKPROCVAR}
+    {$DEFINE WST_UNICODESTRING}
+    {$DEFINE TDOMNodeList_RELEASE_NOT_FREE}
+    {$DEFINE HAS_FORMAT_SETTINGS}
     {$IFDEF WINDOWS}
       {$DEFINE WST_SEMAPHORE_TIMEOUT}
     {$ENDIF WINDOWS}
