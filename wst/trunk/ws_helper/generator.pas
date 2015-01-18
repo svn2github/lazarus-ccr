@@ -2382,13 +2382,23 @@ var
     WriteLn('%s = class%s',[ASymbol.Name,decBuffer]);
   end;
 
-  procedure WritePropertyField(AProp : TPasProperty);
+  function GetTypeText(AProp : TPasProperty; AActualPropType : TPasType) : string;
+  var
+    m : TPasModule;
   begin
-    Indent();
-    WriteLn('F%s : %s;',[AProp.Name,FindActualType(AProp.VarType,SymbolTable).Name]);
-  End;
+    if AnsiSameText(AProp.Name,AActualPropType.Name) or
+       ( SymbolTable.IsOfType(AActualPropType,TPasClassType) and Assigned(FindMember(TPasClassType(ASymbol),AActualPropType.Name)) )
+    then begin
+      m := FindModule(AActualPropType);
+      if (m = nil) then
+        m := SymbolTable.CurrentModule;
+      Result := Format('%s.%s',[m.Name,AActualPropType.Name]);
+    end else begin
+      Result := AActualPropType.Name;
+    end;
+  end;
 
-  procedure WriteProperty(AProp : TPasProperty);
+  procedure WriteProperty(AProp : TPasProperty; AActualPropType : TPasType);
   var
     propName, locStore : string;
   begin
@@ -2399,7 +2409,7 @@ var
       locStore := Format(' stored %s',[AProp.StoredAccessorName]);
     end;
     Indent();
-    WriteLn('property %s : %s read F%s write F%s%s;',[propName,AProp.VarType.Name,propName,propName,locStore]);
+    WriteLn('property %s : %s read F%s write F%s%s;',[propName,GetTypeText(AProp,AActualPropType),propName,propName,locStore]);
     if not AnsiSameText(AProp.Name,SymbolTable.GetExternalName(AProp)) then begin
       FImpLastStream.Indent();
       FImpLastStream.WriteLn(
@@ -2417,7 +2427,8 @@ var
   var
     k : Integer;
     p : TPasProperty;
-    //pt : TPasElement;
+    //e : TPasElement;
+    pt : TPasType;
   begin
     if ( locPropCount > 0 ) then begin
       Indent();
@@ -2425,15 +2436,19 @@ var
       IncIndent();
         for k := 0 to Pred(locPropCount) do begin
           p := TPasProperty(locPropList[k]);
-          {if p.VarType.InheritsFrom(TPasUnresolvedTypeRef) then begin
-            pt := SymbolTable.FindElement(SymbolTable.GetExternalName(p.VarType));
-            if ( pt <> nil ) and pt.InheritsFrom(TPasType) and ( pt <> p.VarType ) then begin
+          pt := FindActualType(p.VarType,SymbolTable);
+          {if pt.InheritsFrom(TPasUnresolvedTypeRef) then begin
+            e := SymbolTable.FindElement(SymbolTable.GetExternalName(pt));
+            if (e <> nil) and e.InheritsFrom(TPasType) then
+              pt := e as TPasType;
+            if (pt <> nil) and pt.InheritsFrom(TPasType) and (pt <> p.VarType) then begin
               p.VarType.Release();
               p.VarType := pt as TPasType;
               p.VarType.AddRef();
             end;
           end;}
-          WritePropertyField(p);
+          Indent();
+          WriteLn('F%s : %s;',[p.Name,GetTypeText(p,pt)]);
         end;
         if locParentIsEnum then begin
           Indent();
@@ -2485,8 +2500,10 @@ var
       Indent();
       WriteLn('published');
       IncIndent();
-        For k := 0 To Pred(locPropCount) Do
-          WriteProperty(TPasProperty(locPropList[k]));
+        For k := 0 To Pred(locPropCount) Do begin
+          p := TPasProperty(locPropList[k]);
+          WriteProperty(p,FindActualType(p.VarType,SymbolTable));
+        end;
       DecIndent();
     end;
   end;
@@ -2495,7 +2512,6 @@ var
   var
     k : Integer;
     p : TPasProperty;
-    ss : string;
     pte : TPasElement;
     pt : TPasType;
   begin
@@ -2511,16 +2527,11 @@ var
           Indent(); WriteLn('inherited Create();');
           for k := 0 to Pred(locPropCount) do begin
             p := TPasProperty(locPropList[k]);
-            if SymbolTable.IsOfType(p.VarType,TPasClassType) or
-               SymbolTable.IsOfType(p.VarType,TPasArrayType)
-            then begin              
-              if AnsiSameText(p.Name,p.VarType.Name) or
-                 ( SymbolTable.IsOfType(p.VarType,TPasClassType) and Assigned(FindMember(TPasClassType(ASymbol),p.VarType.Name)) )
-              then
-                ss := Format('%s.%s',[SymbolTable.CurrentModule.Name,p.VarType.Name])
-              else
-                ss := p.VarType.Name;
-              Indent(); WriteLn('F%s := %s.Create();',[p.Name,ss{p.VarType.Name}]);
+            pt := FindActualType(p.VarType,SymbolTable);
+            if SymbolTable.IsOfType(pt,TPasClassType) or
+               SymbolTable.IsOfType(pt,TPasArrayType)
+            then begin
+              Indent(); WriteLn('F%s := %s.Create();',[p.Name,GetTypeText(p,pt)]);
             end;
           end;
         DecIndent();
@@ -2532,8 +2543,9 @@ var
         IncIndent();
           for k := 0 to Pred(locPropCount) do begin
             p := TPasProperty(locPropList[k]);
-            if SymbolTable.IsOfType(p.VarType,TPasClassType) or
-               SymbolTable.IsOfType(p.VarType,TPasArrayType)
+            pt := FindActualType(p.VarType,SymbolTable);
+            if SymbolTable.IsOfType(pt,TPasClassType) or
+               SymbolTable.IsOfType(pt,TPasArrayType)
             then begin
               Indent(); WriteLn('if Assigned(F%s) then',[p.Name]);
                 IncIndent();
@@ -2554,10 +2566,8 @@ var
         WriteLn('begin');
         IncIndent();
           Indent();
-          pte := FSymbolTable.FindElement(p.VarType.Name);
+          pte := FindActualType(p.VarType,FSymbolTable);
           if ( pte <> nil ) and pte.InheritsFrom(TPasType) then begin
-            if pte.InheritsFrom(TPasUnresolvedTypeRef) then
-              pte := SymbolTable.FindElement(SymbolTable.GetExternalName(pte));
             pt := pte as TPasType;
             pt := GetUltimeType(pt,SymbolTable);
             if pt.InheritsFrom(TPasEnumType) then begin
