@@ -349,7 +349,7 @@ end;
 
 procedure TfClassEdit.PrepareParentCombo();
 var
-  i : PtrInt;
+  i : Integer;
 begin
   edtParent.Items.BeginUpdate();
   try

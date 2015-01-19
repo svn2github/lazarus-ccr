@@ -154,7 +154,7 @@ procedure TWsdlGenerator.GenerateTypes(
    AModule   : TPasModule
 );
 var
-  i, c : PtrInt;
+  i, c : Integer;
   mdl : TPasModule;
   mdlLs : TList2;
   g : IGenerator;
@@ -505,7 +505,7 @@ procedure TWsdlGenerator.Execute(ASymTable : TwstPasTreeContainer; AModuleName :
 var
   locMainModule : TPasModule;
   decList : TList2;
-  j, c : PtrInt;
+  j, c : Integer;
   sym : TPasElement;
   ps : TPasClassType;
   bndg : TwstBinding;

@@ -137,7 +137,7 @@ end;
 
 function TWsdlParser.AddNameSpace(const AValue: string): TStrings;
 var
-  i : PtrInt;
+  i : Integer;
   s : string;
   ls : TStringList;
 begin
@@ -197,7 +197,7 @@ destructor TWsdlParser.Destroy();
 
   procedure FreeList(AList : TStrings);
   var
-    j : PtrInt;
+    j : Integer;
   begin
     if Assigned(AList) and (AList.Count > 0) then begin
       for j := Pred(AList.Count)  downto 0 do begin
@@ -262,7 +262,7 @@ end;
 
 function TWsdlParser.FindNameSpace(const AShortName: string; out AResult: string): Boolean;
 var
-  i : PtrInt;
+  i : Integer;
   ls : TStrings;
 begin
   AResult := '';
@@ -279,7 +279,7 @@ end;
 
 function TWsdlParser.FindShortNamesForNameSpace(const ANameSpace: string): TStrings;
 var
-  i : PtrInt;
+  i : Integer;
 begin
   i := FNameSpaceList.IndexOf(ANameSpace);
   if ( i >= 0 ) then
@@ -434,7 +434,7 @@ procedure TWsdlParser.Execute(const AMode: TParserMode; const AModuleName: strin
   procedure FixUsesList();
   var
     locPrs : IParserContext;
-    k : PtrInt;
+    k : Integer;
     locModule : TPasModule;
     locIntfUsesList : TList2;
   begin
@@ -720,10 +720,10 @@ function TWsdlParser.ParseOperation(
 
     procedure ParseOutputMessage();
     
-      function FindIndexOfResultArg(AArgList : TList2) : PtrInt;
+      function FindIndexOfResultArg(AArgList : TList2) : Integer;
       const RESULT_ARG_NAMES : array[0..5] of string = ( 'result', 'return', '_result', 'result_', '_return', 'return_' );
       var
-        p, q : PtrInt;
+        p, q : Integer;
         idx_found : Boolean;
         resItemName : string;
         arg : TPasArgument;
@@ -759,9 +759,9 @@ function TWsdlParser.ParseOperation(
       locProcType : TPasProcedureType;
       locFunc : TPasFunction;
       locFuncType : TPasFunctionType;
-      j : PtrInt;
+      j : Integer;
       arg_a, arg_b : TPasArgument;
-      resArgIndex : PtrInt;
+      resArgIndex : Integer;
       prmNameColisionWithInputParam : Boolean;
       prmTypeEntity : TPasType;
     begin
@@ -1333,7 +1333,7 @@ end;
 procedure TWsdlParser.ParseTypes();
 var
   locPrs : IXsdPaser;
-  i : PtrInt;
+  i : Integer;
 begin
   for i := 0 to Pred(FXsdParsers.Count) do begin
     locPrs := (FXsdParsers.Objects[i] as TIntfObjectRef).Intf as IXsdPaser;
@@ -1468,7 +1468,7 @@ end;
 
 function TWsdlParser.GetParser(const ANamespace: string): IXsdPaser;
 var
-  i : PtrInt;
+  i : Integer;
   p, p1 : IXsdPaser;
 begin
   Result := nil;

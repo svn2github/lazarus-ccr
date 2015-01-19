@@ -233,7 +233,7 @@ function DeduceEasyInterfaceForDocStyle(
     locProcType : TPasProcedureType;
     locElt : TPasElement;
     locRawInParam, locRawOutParam : TPasClassType;
-    k, q : PtrInt;
+    k, q : Integer;
     locProp, locResProp : TPasProperty;
     locArg : TPasArgument;
     locIsFunction : Boolean;
@@ -305,7 +305,7 @@ function DeduceEasyInterfaceForDocStyle(
 
 var
   locRes : TPasClassType;
-  i, c : PtrInt;
+  i, c : Integer;
   g : TGuid;
   e : TPasElement;
   procCount : Integer;
@@ -691,7 +691,7 @@ Var
 
     function HasObjectsArgs() : Boolean;
     var
-      k : PtrInt;
+      k : Integer;
       prm : TPasArgument;
       elt : TPasElement;
     begin
@@ -713,7 +713,7 @@ Var
     
     procedure AssignArguments();
     var
-      k : PtrInt;
+      k : Integer;
       prm : TPasArgument;
       elt : TPasElement;
     begin
@@ -746,7 +746,7 @@ Var
 
     procedure ClearArguments();
     var
-      k : PtrInt;
+      k : Integer;
       prm : TPasArgument;
       elt : TPasElement;
     begin
@@ -1890,7 +1890,7 @@ procedure TInftGenerator.WriteDocumentation(AElement : TPasElement);
 var
   pl : TStrings;
   docString : string;
-  i : PtrInt;
+  i : Integer;
 begin
   pl := FSymbolTable.Properties.FindList(AElement);
   if ( pl <> nil ) then begin
@@ -2747,7 +2747,7 @@ var
   procedure WriteDec();
   var
     itm : TPasVariable;
-    i : PtrInt;
+    i : Integer;
   begin
     SetCurrentStream(FDecStream);
     NewLine();
@@ -2773,7 +2773,7 @@ var
   procedure WriteRTTI();
   var
     itm : TPasVariable;
-    k, c : PtrInt;
+    k, c : Integer;
     offsetLine, typeLine : string;
   begin
     SetCurrentStream(FRttiFunc);
@@ -2821,7 +2821,7 @@ var
   procedure WriteAttributeProperties();
   var
     itm : TPasVariable;
-    k, c : PtrInt;
+    k, c : Integer;
   begin
     c := ASymbol.Members.Count;
     for k := 0 to Pred(c) do begin
@@ -2974,7 +2974,7 @@ procedure TInftGenerator.InternalExecute();
 
   procedure SortRecords(AList : TList2);
   var
-    j, k : PtrInt;
+    j, k : Integer;
     ordr_ls, mbrLs, locLs : TList2;
     locMemberType : TPasType;
     rec, locRec : TPasRecordType;
@@ -3066,7 +3066,7 @@ procedure TInftGenerator.InternalExecute();
   end;
 
 var
-  i,c, j, k : PtrInt;
+  i, c, j, k : Integer;
   clssTyp : TPasClassType;
   gnrClssLst : TObjectList;
   objLst : TObjectList;
@@ -3074,7 +3074,7 @@ var
   elt : TPasElement;
   classAncestor : TPasElement;
   tmpList : TList2;
-  intfCount : PtrInt;
+  intfCount : Integer;
   locBinding : TwstBinding;
 begin
   intfCount := 0;
@@ -3261,7 +3261,7 @@ end;
 procedure TInftGenerator.Execute();
 var
   oldCurrent, mdl : TPasModule;
-  i : PtrInt;
+  i : Integer;
   mdlList : TList2;
   oldCS : Boolean;
   oldNamesKinds : TElementNameKinds;

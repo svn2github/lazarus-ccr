@@ -293,7 +293,7 @@ destructor TCustomXsdSchemaParser.Destroy();
 
   procedure FreeList(AList : TStrings);
   var
-    j : PtrInt;
+    j : Integer;
   begin
     if Assigned(AList) and (AList.Count > 0) then begin
       for j := Pred(AList.Count)  downto 0 do begin
@@ -317,7 +317,7 @@ end;
 
 function TCustomXsdSchemaParser.FindParser(const ANamespace : string) : IXsdPaser; 
 var
-  i : PtrInt;
+  i : Integer;
   p, p1 : IXsdPaser;
 begin
   Prepare(True);
@@ -534,7 +534,7 @@ function TCustomXsdSchemaParser.FindNameSpace(
   out   AResult : string
 ) : Boolean;
 var
-  i : PtrInt;
+  i : Integer;
   ls : TStrings;
   pc : IParserContext;
 begin
@@ -632,7 +632,7 @@ end;
 
 function TCustomXsdSchemaParser.FindShortNamesForNameSpaceLocal(const ANameSpace: string): TStrings;
 var
-  i : PtrInt;
+  i : Integer;
 begin
   i := FNameSpaceList.IndexOf(ANameSpace);
   if ( i >= 0 ) then
@@ -1045,7 +1045,7 @@ var
   locAttCursor : IObjectCursor;
   prntCtx : IParserContext;
   nd : TDOMNode;
-  i : PtrInt;
+  i : Integer;
   ls : TStrings;
   ok : Boolean;
 begin

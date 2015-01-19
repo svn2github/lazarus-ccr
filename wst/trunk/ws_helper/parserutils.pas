@@ -434,7 +434,7 @@ end;
 
 function AddNameSpace(const AValue: string; ANameSpaceList : TStrings): TStrings;
 var
-  i : PtrInt;
+  i : Integer;
   s : string;
   ls : TStringList;
 begin
@@ -487,7 +487,7 @@ end;
 function TQualifiedNameObjectFilter.Evaluate(const AObject: TObject): Boolean;
 var
   locObj : TDOMNodeRttiExposer;
-  startPos, i : PtrInt;
+  startPos, i : Integer;
   shortNameSpace : string;
   locContinue : Boolean;
   tmpNode : TDOMNode;

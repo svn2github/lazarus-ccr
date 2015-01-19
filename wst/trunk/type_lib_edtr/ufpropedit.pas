@@ -132,7 +132,7 @@ end;
 
 procedure TfPropEdit.LoadFromObject();
 var
-  i : PtrInt;
+  i : Integer;
   ls : TStrings;
 begin
   edtName.Text := '';

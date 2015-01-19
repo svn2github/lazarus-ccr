@@ -1065,7 +1065,7 @@ procedure TwstPasTreeContainer.FreeProperties(AObject: TPasElement);
   procedure FreeClassProps(AObj : TPasClassType);
   var
     ls : TList2;
-    k : PtrInt;
+    k : Integer;
   begin
     ls := AObj.Members;
     for k := 0 to Pred(ls.Count) do begin
@@ -1076,7 +1076,7 @@ procedure TwstPasTreeContainer.FreeProperties(AObject: TPasElement);
   procedure FreeRecordFields(AObj : TPasRecordType);
   var
     ls : TList2;
-    k : PtrInt;
+    k : Integer;
   begin
     ls := AObj.Members;
     for k := 0 to Pred(ls.Count) do begin
@@ -1234,7 +1234,7 @@ end;
 
 procedure TPropertyHolder.FreeList(AObject: TObject);
 var
-  i : PtrInt;
+  i : Integer;
 begin
   i := FObjects.IndexOf(AObject);
   if ( i >= 0 ) then begin

@@ -171,7 +171,7 @@ procedure DrawDependencies(
 
   function FindNode(AType : TPasType) : TTreeNode;
   var
-    k : PtrInt;
+    k : Integer;
     nl : TTreeNodes;
   begin
     Result := nil;
@@ -184,7 +184,7 @@ procedure DrawDependencies(
   end;
 
 var
-  i : PtrInt;
+  i : Integer;
   e : TDependendyInfo;
   n : TTreeNode;
   s : string;
@@ -257,7 +257,7 @@ var
   
   procedure ScanClassType(AItem : TPasClassType);
   var
-    k : PtrInt;
+    k : Integer;
     pl : TList2;
     m : TPasElement;
     p : TPasProperty;
@@ -288,7 +288,7 @@ var
 
   procedure ScanRecordType(AItem : TPasRecordType);
   var
-    k : PtrInt;
+    k : Integer;
     pl : TList2;
     m : TPasElement;
     p : TPasVariable;
@@ -312,7 +312,7 @@ var
   end;
 
 var
-  i, c : PtrInt;
+  i, c : Integer;
   list : TList2;
   e : TPasType;
 begin

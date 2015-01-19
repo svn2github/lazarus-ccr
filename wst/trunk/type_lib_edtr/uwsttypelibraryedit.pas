@@ -204,7 +204,7 @@ type
     procedure trvSchemaSelectionChanged(Sender : TObject);
   private
     FSymbolTable : TwstPasTreeContainer;
-    FStatusMessageTag : PtrInt;
+    FStatusMessageTag : Integer;
     FCurrentFileName : string;
 {$IFDEF WST_IDE}
     FProjectLibrary : TLazProjectFile;

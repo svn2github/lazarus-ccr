@@ -618,7 +618,7 @@ const
 {$ENDIF WST_UNICODESTRING}
    );
 var
-  i : PtrInt;
+  i : Integer;
   locName : string;
 begin
   AHelper := nil;
@@ -757,7 +757,7 @@ var
   trueDestType : TPasType;
   typeHelper : IXsdSpecialTypeHelper;
 {$IFDEF WST_HANDLE_DOC}
-  i : PtrInt;
+  i : Integer;
   ls : TStrings;
 {$ENDIF WST_HANDLE_DOC}
 begin
@@ -872,7 +872,7 @@ procedure TClassTypeDefinition_TypeHandler.Generate(
 
   function TypeHasSequence(const AClassType : TPasClassType; const ACategory : TTypeCategory) : Boolean;
   var
-    k : PtrInt;
+    k : Integer;
     p : TPasProperty;
   begin
     Result := False;
@@ -902,7 +902,7 @@ procedure TClassTypeDefinition_TypeHandler.Generate(
   var
     ls : TStrings;
     line, ns, ns_short, localName, attName, attValue : string;
-    k, q : PtrInt;
+    k, q : Integer;
   begin
     ls := AContainer.Properties.GetList(AProp);
     if ( ls <> nil ) and ( ls.Count > 0 ) then begin
@@ -1299,7 +1299,7 @@ var
   unitExternalName : string;
   typeHelper : IXsdSpecialTypeHelper;
 {$IFDEF WST_HANDLE_DOC}
-  i : PtrInt;
+  i : Integer;
   ls : TStrings;
 {$ENDIF WST_HANDLE_DOC}
 begin

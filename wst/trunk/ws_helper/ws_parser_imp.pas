@@ -103,9 +103,9 @@ type
     constructor Create();
     destructor Destroy();override;
     function Add(AProp : TPasProperty) : TPropInfoReference;
-    function GetItem(const AIndex : PtrInt) : TPropInfoReference;{$IFDEF USE_INLINE}inline;{$ENDIF}
-    function IndexOf(const AProp : TPasProperty) : PtrInt;
-    function GetCount() : PtrInt;{$IFDEF USE_INLINE}inline;{$ENDIF}
+    function GetItem(const AIndex : Integer) : TPropInfoReference;{$IFDEF USE_INLINE}inline;{$ENDIF}
+    function IndexOf(const AProp : TPasProperty) : Integer;
+    function GetCount() : Integer;{$IFDEF USE_INLINE}inline;{$ENDIF}
   end;
   
   { TComplexTypeParser }
@@ -379,7 +379,7 @@ var
   tmpCursor : IObjectCursor;
   props : TStrings;
   docString : string;
-  i : PtrInt;
+  i : Integer;
   tempNode : TDOMNode;
 begin
   if FTypeNode.HasChildNodes() then begin
@@ -546,7 +546,7 @@ procedure TComplexTypeParser.ExtractExtendedMetadata(
 var
   ls : TDOMNamedNodeMap;
   e : TDOMNode;
-  k, q : PtrInt;
+  k, q : Integer;
   ns_short, ns_long, localName, locBuffer, locBufferNS, locBufferNS_long, locBufferLocalName : string;
 begin
   if ( ANode.Attributes <> nil ) and ( GetNodeListCount(ANode.Attributes) > 0 ) then begin
@@ -1899,7 +1899,7 @@ end;
 
 function TPropInfoReferenceList.Add(AProp : TPasProperty) : TPropInfoReference;
 var
-  i : PtrInt;
+  i : Integer;
 begin
   i := IndexOf(AProp);
   if ( i = -1 ) then begin
@@ -1911,14 +1911,14 @@ begin
   end;
 end;
 
-function TPropInfoReferenceList.GetItem(const AIndex : PtrInt) : TPropInfoReference;
+function TPropInfoReferenceList.GetItem(const AIndex: Integer): TPropInfoReference;
 begin
   Result := TPropInfoReference(FList[AIndex]);
 end;
 
-function TPropInfoReferenceList.IndexOf(const AProp : TPasProperty) : PtrInt;
+function TPropInfoReferenceList.IndexOf(const AProp: TPasProperty): Integer;
 var
-  i : PtrInt;
+  i : Integer;
 begin
   Result := -1;
   for i := 0 to Pred(FList.Count) do begin
@@ -1929,7 +1929,7 @@ begin
   end;
 end;
 
-function TPropInfoReferenceList.GetCount() : PtrInt;
+function TPropInfoReferenceList.GetCount: Integer;
 begin
   Result := FList.Count;
 end;
