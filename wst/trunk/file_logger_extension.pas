@@ -65,7 +65,7 @@ end;
 
 initialization
   StreamInstanceLock := TCriticalSection.Create();
-  GetServiceExtensionRegistry().Register('TFileLoggerServiceExtension',TSimpleItemFactory.Create(TFileLoggerServiceExtension) as IItemFactory);
+  GetServiceExtensionRegistry().Register('TFileLoggerServiceExtension',TSimpleItemFactory.Create(TFileLoggerServiceExtension));
   
 finalization
   FreeAndNil(StreamInstance);

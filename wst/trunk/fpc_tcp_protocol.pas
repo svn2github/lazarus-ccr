@@ -121,7 +121,7 @@ end;
 
 procedure FPC_RegisterTCP_Transport();
 begin
-  GetTransportRegistry().Register(sTRANSPORT_NAME,TSimpleItemFactory.Create(TTCPTransport) as IItemFactory);
+  GetTransportRegistry().Register(sTRANSPORT_NAME,TSimpleItemFactory.Create(TTCPTransport));
 end;
 
 end.

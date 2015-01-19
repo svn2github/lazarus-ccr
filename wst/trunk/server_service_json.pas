@@ -58,7 +58,7 @@ uses
 
 procedure Server_service_RegisterJsonFormat();
 begin
-  GetFormatterRegistry().Register(s_json,s_json_ContentType,TSimpleItemFactory.Create(TJsonRpcFormatter) as IItemFactory);
+  GetFormatterRegistry().Register(s_json,s_json_ContentType,TSimpleItemFactory.Create(TJsonRpcFormatter));
 end;
 
 {$IFDEF HAS_JSON_CLONE}

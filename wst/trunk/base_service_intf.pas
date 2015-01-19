@@ -1470,7 +1470,7 @@ type
 
   { TSimpleItemFactory }
 {$TYPEINFO ON}
-  TSimpleItemFactory = class(TInterfacedObject,IInterface,IItemFactory)
+  TSimpleItemFactory = class(TInterfacedObject,IItemFactory)
   private
     FItemClass : TSimpleFactoryItemClass;
   protected
@@ -1520,7 +1520,7 @@ type
 
   { TSimpleItemFactoryEx }
 
-  TSimpleItemFactoryEx = class(TSimpleItemFactory,IInterface,IItemFactory,IItemFactoryEx)
+  TSimpleItemFactoryEx = class(TSimpleItemFactory,IItemFactory,IItemFactoryEx)
   private
     FPooled: Boolean;
     FPoolMax: Integer;
@@ -2957,9 +2957,9 @@ begin
       Exit;
     i := FPropertyNames.Add(s);
     if ( s = '' ) then
-      FProperties.Add(TPublishedPropertyManager.Create(Self) as IInterface)
+      FProperties.Add(TPublishedPropertyManager.Create(Self))
     else
-      FProperties.Add(TStoredPropertyManager.Create() as IInterface);
+      FProperties.Add(TStoredPropertyManager.Create());
   end;
   Result := FProperties.Get(i) as IPropertyManager;
 end;
@@ -3116,7 +3116,7 @@ constructor TSimpleCallContext.Create();
 begin
   FHeaderList := TObjectList.Create(False);
   FFreeObjectList := TObjectList.Create(True);
-  FPropertyManager := TStoredPropertyManager.Create() as IPropertyManager;
+  FPropertyManager := TStoredPropertyManager.Create();
 end;
 
 destructor TSimpleCallContext.Destroy();

@@ -95,7 +95,7 @@ type
 
   { TDataFilterRegistry }
   
-  TDataFilterRegistry = class(TBaseFactoryRegistry,IInterface,IDataFilterRegistry)
+  TDataFilterRegistry = class(TBaseFactoryRegistry,IDataFilterRegistry)
   protected
     function Find(
       const AName : string;
@@ -121,7 +121,7 @@ var
 function GetDataFilterRegistry():IDataFilterRegistry;
 begin
   if not Assigned(DataFilterRegistryInst) then
-    DataFilterRegistryInst := TDataFilterRegistry.Create() as IDataFilterRegistry;// Lock!!!
+    DataFilterRegistryInst := TDataFilterRegistry.Create();// Lock!!!
   Result := DataFilterRegistryInst;
 end;
 

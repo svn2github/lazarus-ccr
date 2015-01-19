@@ -223,8 +223,8 @@ begin
   RegisterStdTypes();
   GetFormaterRegistry().Register(
     sPROTOCOL_NAME,
-    TSimpleItemFactory.Create(TXmlRpcFormatter) as IItemFactory,
-    TSimpleItemFactory.Create(TXmlRpcCallMaker) as IItemFactory
+    TSimpleItemFactory.Create(TXmlRpcFormatter),
+    TSimpleItemFactory.Create(TXmlRpcCallMaker)
   );
 end;
 

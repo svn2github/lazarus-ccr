@@ -248,8 +248,8 @@ begin
   RegisterStdTypes();
   GetFormaterRegistry().Register(
     sPROTOCOL_NAME,
-    TSimpleItemFactory.Create(TSOAPFormatter) as IItemFactory,
-    TSimpleItemFactory.Create(TSOAPCallMaker) as IItemFactory
+    TSimpleItemFactory.Create(TSOAPFormatter),
+    TSimpleItemFactory.Create(TSOAPCallMaker)
   );
 end;
 

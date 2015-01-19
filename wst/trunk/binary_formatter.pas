@@ -188,8 +188,8 @@ procedure RegisterBinaryProtocol();
 begin
   GetFormaterRegistry().Register(
     sPROTOCOL_NAME,
-    TSimpleItemFactory.Create(TBinaryFormatter) as IItemFactory,
-    TSimpleItemFactory.Create(TBinaryCallMaker) as IItemFactory
+    TSimpleItemFactory.Create(TBinaryFormatter),
+    TSimpleItemFactory.Create(TBinaryCallMaker)
   );
 end;
 

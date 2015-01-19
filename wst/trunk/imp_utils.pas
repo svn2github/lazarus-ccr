@@ -403,7 +403,7 @@ begin
   FParent := AParent;
   FHandleUnknownProps := AHandleUnknownProps;
   if FHandleUnknownProps then
-    FUnknownProps := TStoredPropertyManager.Create() as IPropertyManager;
+    FUnknownProps := TStoredPropertyManager.Create();
 end;
 
 

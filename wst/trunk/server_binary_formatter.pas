@@ -63,7 +63,7 @@ Type
 
 function TBinaryFormatterFactory.CreateInstance(): IInterface;
 begin
-  Result := TBinaryFormatter.Create() as IFormatterResponse;
+  Result := TBinaryFormatter.Create();
 end;
 
 
@@ -134,7 +134,7 @@ end;
 
 procedure Server_service_RegisterBinaryFormat();
 begin
-  GetFormatterRegistry().Register(sPROTOCOL_NAME,sBINARY_CONTENT_TYPE,TBinaryFormatterFactory.Create() as IItemFactory);
+  GetFormatterRegistry().Register(sPROTOCOL_NAME,sBINARY_CONTENT_TYPE,TBinaryFormatterFactory.Create());
 end;
 
 Initialization

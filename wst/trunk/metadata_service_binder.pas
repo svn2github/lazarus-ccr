@@ -52,7 +52,7 @@ begin
   Fillchar(returnVal,SizeOf(TArrayOfStringRemotable),#0);
   
   
-  tmpObj := Self.GetFactory().CreateInstance() as IWSTMetadataService;
+  tmpObj := GetFactory().CreateInstance() as IWSTMetadataService;
   if Supports(tmpObj,ICallControl,cllCntrl) then
     cllCntrl.SetCallContext(callCtx);
   hasObjCntrl := Supports(tmpObj,IObjectControl,objCntrl);
@@ -74,7 +74,7 @@ begin
   finally
     if hasObjCntrl then
       objCntrl.Deactivate();
-    Self.GetFactory().ReleaseInstance(tmpObj);
+    GetFactory().ReleaseInstance(tmpObj);
   end;
 end;
 
@@ -95,7 +95,7 @@ begin
   
   locStrPrmName := 'AName';  AFormatter.Get(TypeInfo(String),locStrPrmName,AName);
   
-  tmpObj := Self.GetFactory().CreateInstance() as IWSTMetadataService;
+  tmpObj := GetFactory().CreateInstance() as IWSTMetadataService;
   if Supports(tmpObj,ICallControl,cllCntrl) then
     cllCntrl.SetCallContext(callCtx);
   hasObjCntrl := Supports(tmpObj,IObjectControl,objCntrl);
@@ -117,7 +117,7 @@ begin
   finally
     if hasObjCntrl then
       objCntrl.Deactivate();
-    Self.GetFactory().ReleaseInstance(tmpObj);
+    GetFactory().ReleaseInstance(tmpObj);
   end;
 end;
 
@@ -139,7 +139,7 @@ end;
 
 constructor TWSTMetadataService_ServiceBinderFactory.Create();
 begin
-  FInstance := TWSTMetadataService_ServiceBinder.Create() as IInterface;
+  FInstance := TWSTMetadataService_ServiceBinder.Create();
 end;
 
 destructor TWSTMetadataService_ServiceBinderFactory.Destroy();
@@ -151,7 +151,7 @@ end;
 
 procedure Server_service_RegisterWSTMetadataServiceService();
 Begin
-  GetServerServiceRegistry().Register('IWSTMetadataService',TWSTMetadataService_ServiceBinderFactory.Create() as IItemFactory);
+  GetServerServiceRegistry().Register('IWSTMetadataService',TWSTMetadataService_ServiceBinderFactory.Create());
 End;
 
 initialization

@@ -517,7 +517,7 @@ type
 
   { TModuleMetadataMngr }
 
-  TModuleMetadataMngr = class(TInterfacedObject,IInterface,IModuleMetadataMngr)
+  TModuleMetadataMngr = class(TInterfacedObject,IModuleMetadataMngr)
   private
     FList : TStringList;
     FRepositories : array of PServiceRepository;
@@ -563,7 +563,7 @@ var
 function GetModuleMetadataMngr():IModuleMetadataMngr;
 begin
   if not Assigned(ModuleMetadataMngrInst) then
-    ModuleMetadataMngrInst := TModuleMetadataMngr.Create() as IModuleMetadataMngr;
+    ModuleMetadataMngrInst := TModuleMetadataMngr.Create();
   Result := ModuleMetadataMngrInst;
 end;
   

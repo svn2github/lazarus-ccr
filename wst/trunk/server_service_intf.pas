@@ -275,7 +275,7 @@ type
     property ContentType : string read FContentType;
   end;
   
-  TFormatterRegistry = class(TInterfacedObject,IInterface,IFormatterRegistry)
+  TFormatterRegistry = class(TInterfacedObject,IFormatterRegistry)
   private
     FList : TObjectList;
   private
@@ -540,7 +540,7 @@ end;
 
 function TBaseServiceBinder.CreateCallContext(): ICallContext;
 begin
-  Result := TSimpleCallContext.Create() as ICallContext;
+  Result := TSimpleCallContext.Create();
 end;
 
 procedure TBaseServiceBinder.DoProcessMessage(
@@ -618,7 +618,7 @@ Type
 
   { TServiceImplementationRegistry }
 
-  TServiceImplementationRegistry = class(TInterfacedObject,IInterface,IServiceImplementationRegistry)
+  TServiceImplementationRegistry = class(TInterfacedObject,IServiceImplementationRegistry)
   private
     FList : TObjectList;
   protected
@@ -849,14 +849,14 @@ end;
 procedure initialize_server_services_intf();
 begin
   if ( FormatterRegistryInst = nil ) then
-    FormatterRegistryInst := TFormatterRegistry.Create() as IFormatterRegistry;
+    FormatterRegistryInst := TFormatterRegistry.Create();
   if ( ServerServiceRegistryInst = nil ) then begin
-    ServerServiceRegistryInst := TServerServiceRegistry.Create() as IServerServiceRegistry;
+    ServerServiceRegistryInst := TServerServiceRegistry.Create();
   end;
   if ( ServiceImplementationRegistryInst = nil ) then
-    ServiceImplementationRegistryInst := TServiceImplementationRegistry.Create() As IServiceImplementationRegistry;
+    ServiceImplementationRegistryInst := TServiceImplementationRegistry.Create();
   if ( ServiceExtensionRegistryInst = nil ) then
-    ServiceExtensionRegistryInst := TServiceExtensionRegistry.Create() as IServiceExtensionRegistry;
+    ServiceExtensionRegistryInst := TServiceExtensionRegistry.Create();
 end;
 
 procedure finalize_server_services_intf();

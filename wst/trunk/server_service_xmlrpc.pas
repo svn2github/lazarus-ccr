@@ -175,7 +175,7 @@ end;
 
 procedure Server_service_RegisterXmlRpcFormat();
 begin
-  GetFormatterRegistry().Register(sPROTOCOL_NAME,sXMLRPC_CONTENT_TYPE,TSimpleItemFactory.Create(TXmlRpcFormatter) as IItemFactory);
+  GetFormatterRegistry().Register(sPROTOCOL_NAME,sXMLRPC_CONTENT_TYPE,TSimpleItemFactory.Create(TXmlRpcFormatter));
 end;
 
 end.

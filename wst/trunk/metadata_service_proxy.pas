@@ -49,18 +49,16 @@ end;
 function TWSTMetadataService_Proxy.GetRepositoryList():TArrayOfStringRemotable;
 Var
   locSerializer : IFormatterClient;
-  locCallContext : ICallContext;
   locStrPrmName : string;
 Begin
-  locCallContext := Self as ICallContext;
   locSerializer := GetSerializer();
   Try
-    locSerializer.BeginCall('GetRepositoryList', GetTarget(),locCallContext);
+    locSerializer.BeginCall('GetRepositoryList', GetTarget(),Self);
     locSerializer.EndCall();
 
     MakeCall();
 
-    locSerializer.BeginCallRead(locCallContext);
+    locSerializer.BeginCallRead(Self);
       TObject(Result) := Nil;
       locStrPrmName := 'Result';
       locSerializer.Get(TypeInfo(TArrayOfStringRemotable), locStrPrmName, Result);
@@ -75,19 +73,17 @@ function TWSTMetadataService_Proxy.GetRepositoryInfo(
 ):TWSTMtdRepository;
 Var
   locSerializer : IFormatterClient;
-  locCallContext : ICallContext;
   locStrPrmName : string;
 Begin
-  locCallContext := Self as ICallContext;
   locSerializer := GetSerializer();
   Try
-    locSerializer.BeginCall('GetRepositoryInfo', GetTarget(),locCallContext);
+    locSerializer.BeginCall('GetRepositoryInfo', GetTarget(),Self);
       locSerializer.Put('AName', TypeInfo(String), AName);
     locSerializer.EndCall();
 
     MakeCall();
 
-    locSerializer.BeginCallRead(locCallContext);
+    locSerializer.BeginCallRead(Self);
       TObject(Result) := Nil;
       locStrPrmName := 'Result';
       locSerializer.Get(TypeInfo(TWSTMtdRepository), locStrPrmName, Result);

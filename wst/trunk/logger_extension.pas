@@ -104,6 +104,6 @@ begin
 end;
 
 initialization
-  GetServiceExtensionRegistry().Register('TLoggerServiceExtension',TSimpleItemFactory.Create(TLoggerServiceExtension) as IItemFactory);
+  GetServiceExtensionRegistry().Register('TLoggerServiceExtension',TSimpleItemFactory.Create(TLoggerServiceExtension));
 
 end.

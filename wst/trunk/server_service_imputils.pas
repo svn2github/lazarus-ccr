@@ -109,7 +109,7 @@ begin
   FFormat        := AFormat;
   FContent       := AContent;
   FResponse      := AResponse;
-  FPropertyManager := TStoredPropertyManager.Create() as IPropertyManager;
+  FPropertyManager := TStoredPropertyManager.Create();
 end;
 
 

@@ -54,7 +54,7 @@ implementation
 procedure RegisterLogFilter();
 begin
   GetDataFilterRegistry().Register(
-    LOG_FILTER_NAME,TSimpleItemFactory.Create(TLogFilter) as IItemFactory
+    LOG_FILTER_NAME,TSimpleItemFactory.Create(TLogFilter)
   );
 end;
 

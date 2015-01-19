@@ -152,7 +152,7 @@ end;
 
 procedure LIB_Register_Transport();
 begin
-  GetTransportRegistry().Register(sTRANSPORT_NAME,TSimpleItemFactory.Create(TLIBTransport) as IItemFactory);
+  GetTransportRegistry().Register(sTRANSPORT_NAME,TSimpleItemFactory.Create(TLIBTransport));
 end;
 
 end.

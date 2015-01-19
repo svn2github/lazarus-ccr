@@ -258,7 +258,7 @@ end;
 
 procedure SYNAPSE_RegisterHTTP_Transport();
 begin
-  GetTransportRegistry().Register(sTRANSPORT_NAME,TSimpleItemFactory.Create(THTTPTransport) as IItemFactory);
+  GetTransportRegistry().Register(sTRANSPORT_NAME,TSimpleItemFactory.Create(THTTPTransport));
 end;
 
 { TSynapseCookieManager }

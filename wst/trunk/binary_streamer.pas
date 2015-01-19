@@ -288,12 +288,12 @@ Type
 
 function CreateBinaryWriter(AStream : TStream):IDataStore;
 begin
-  Result := TDataStore.Create(AStream) As IDataStore;
+  Result := TDataStore.Create(AStream);
 end;
 
 function CreateBinaryReader(AStream : TStream):IDataStoreReader;
 begin
-  Result := TDataStoreReader.Create(AStream) As IDataStoreReader;
+  Result := TDataStoreReader.Create(AStream);
 end;
 
 { TDataStore }

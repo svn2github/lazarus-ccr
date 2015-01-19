@@ -267,8 +267,8 @@ procedure RegisterJsonProtocol();
 begin
   GetFormaterRegistry().Register(
     s_json,
-    TSimpleItemFactory.Create(TJsonRpcFormatter) as IItemFactory,
-    TSimpleItemFactory.Create(TJsonRpcCallMaker) as IItemFactory
+    TSimpleItemFactory.Create(TJsonRpcFormatter),
+    TSimpleItemFactory.Create(TJsonRpcCallMaker)
   );
 end;
 

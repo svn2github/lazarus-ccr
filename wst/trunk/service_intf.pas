@@ -19,7 +19,7 @@ interface
 
 uses
   Classes, SysUtils, TypInfo, Contnrs,
-  base_service_intf, wst_types;
+  base_service_intf;
 
 Const
   sTARGET = 'target';
@@ -84,7 +84,7 @@ Type
 
   { TBaseProxy }
   (* The base class for service proxy *)
-  TBaseProxy = Class(TInterfacedObject,IInterface,ICallContext,IServiceProtocol)
+  TBaseProxy = Class(TInterfacedObject,ICallContext,IServiceProtocol)
   private
     FTarget : String;
     FProtocol : IServiceProtocol;
@@ -330,7 +330,7 @@ begin
   if ( AProtocol.GetTransport() = nil ) then
     raise EServiceConfigException.CreateFmt(SERR_InvalidParameter,['AProtocol.GetTransport()']);
 
-  FCallContext := TSimpleCallContext.Create() as ICallContext;
+  FCallContext := TSimpleCallContext.Create();
   FTarget := ATarget;
   FProtocol := AProtocol;
   FProtocol.GetSerializer().GetPropertyManager().SetProperty(sTARGET,FTarget);
@@ -389,7 +389,7 @@ Type
 
   { TServiceProtocol }
 
-  TServiceProtocol = class(TInterfacedObject,IInterface,IServiceProtocol)
+  TServiceProtocol = class(TInterfacedObject,IServiceProtocol)
   Private
     FFormatter     : IFormatterClient;
     FCallHandler  : ICallMaker;
@@ -426,7 +426,7 @@ Type
 
   { TFormatterRegistry }
   //Make it Threadsafe ???
-  TFormatterRegistry = class(TInterfacedObject,IInterface,IFormaterQueryRegistry)
+  TFormatterRegistry = class(TInterfacedObject,IFormaterQueryRegistry)
   private
     FList : TObjectList;
     function IndexOf(Const AName : string ):Integer;
@@ -507,7 +507,7 @@ Var
 function GetFormaterRegistry():IFormaterQueryRegistry;
 begin
   If Not Assigned(FormaterRegistryInst) Then
-    FormaterRegistryInst := TFormatterRegistry.Create() as IFormaterQueryRegistry;// Lock!!!
+    FormaterRegistryInst := TFormatterRegistry.Create();// Lock!!!
   Result := FormaterRegistryInst;
 end;
 
@@ -558,7 +558,7 @@ begin
     ARes := TServiceProtocol.Create(
       r.FormaterFactory.CreateInstance() as IFormatterClient,
       r.CallHandlerFactory.CreateInstance() as ICallMaker
-    ) as IServiceProtocol;
+    );
     ARes.GetSerializer().GetPropertyManager().SetProperties(initData);
     ARes.GetCallHandler().GetPropertyManager().SetProperties(initData);
   End;
@@ -595,7 +595,7 @@ end;
 Type
   { TTransportRegistry }
   //Make it Threadsafe ???
-  TTransportRegistry = class(TBaseFactoryRegistry,IInterface,ITransportRegistry)
+  TTransportRegistry = class(TBaseFactoryRegistry,ITransportRegistry)
   protected
     function Find(
       Const ATransportData : string;
@@ -609,7 +609,7 @@ Var
 function GetTransportRegistry():ITransportRegistry;
 begin
   If Not Assigned(TransportRegistryInst) Then
-    TransportRegistryInst := TTransportRegistry.Create() as ITransportRegistry;// Lock!!!
+    TransportRegistryInst := TTransportRegistry.Create();// Lock!!!
   Result := TransportRegistryInst;
 end;
 
@@ -633,8 +633,8 @@ begin
 end;
 
 initialization
-  TransportRegistryInst := TTransportRegistry.Create() as ITransportRegistry;
-  FormaterRegistryInst := TFormatterRegistry.Create() as IFormaterQueryRegistry;
+  TransportRegistryInst := TTransportRegistry.Create();
+  FormaterRegistryInst := TFormatterRegistry.Create();
   
 finalization
   FormaterRegistryInst := nil;

@@ -185,7 +185,7 @@ type
 
   { TWsdlTypeHandlerRegistry }
 
-  TWsdlTypeHandlerRegistry = class(TBaseFactoryRegistry,IInterface,IWsdlTypeHandlerRegistry)
+  TWsdlTypeHandlerRegistry = class(TBaseFactoryRegistry,IWsdlTypeHandlerRegistry)
   private
     FTypeRegistry : TTypeRegistry;
     FDefaultHandlerTable : Array[TTypeKind] of IItemFactory;
@@ -894,7 +894,7 @@ end;
 
 function CreateWsdlTypeHandlerRegistry(ATypeRegistry : TTypeRegistry):IWsdlTypeHandlerRegistry;
 begin
-  Result := TWsdlTypeHandlerRegistry.Create(ATypeRegistry) as IWsdlTypeHandlerRegistry;
+  Result := TWsdlTypeHandlerRegistry.Create(ATypeRegistry);
 end;
 
 procedure RegisterFondamentalTypesHandler(ARegistry : IWsdlTypeHandlerRegistry);
@@ -902,49 +902,49 @@ var
   r : IWsdlTypeHandlerRegistry;
 begin
   r := ARegistry;
-  r.RegisterDefaultHandler(tkInteger,TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.RegisterDefaultHandler(tkInt64,TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
+  r.RegisterDefaultHandler(tkInteger,TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.RegisterDefaultHandler(tkInt64,TSimpleItemFactory.Create(TFakeTypeHandler));
 
 {$IFDEF FPC}
-  r.RegisterDefaultHandler(tkQWord,TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.RegisterDefaultHandler(tkSString,TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.RegisterDefaultHandler(tkAString,TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.RegisterDefaultHandler(tkBool,TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
+  r.RegisterDefaultHandler(tkQWord,TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.RegisterDefaultHandler(tkSString,TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.RegisterDefaultHandler(tkAString,TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.RegisterDefaultHandler(tkBool,TSimpleItemFactory.Create(TFakeTypeHandler));
 {$ENDIF}
 
-  r.RegisterDefaultHandler(tkLString,TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.RegisterDefaultHandler(tkWString,TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
+  r.RegisterDefaultHandler(tkLString,TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.RegisterDefaultHandler(tkWString,TSimpleItemFactory.Create(TFakeTypeHandler));
 
-  r.RegisterDefaultHandler(tkWString,TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
+  r.RegisterDefaultHandler(tkWString,TSimpleItemFactory.Create(TFakeTypeHandler));
 
-  r.RegisterDefaultHandler(tkEnumeration,TSimpleItemFactory.Create(TEnumTypeHandler) as IItemFactory);
+  r.RegisterDefaultHandler(tkEnumeration,TSimpleItemFactory.Create(TEnumTypeHandler));
 
-  r.RegisterDefaultHandler(tkClass,TSimpleItemFactory.Create(TBaseComplexRemotable_TypeHandler) as IItemFactory);
+  r.RegisterDefaultHandler(tkClass,TSimpleItemFactory.Create(TBaseComplexRemotable_TypeHandler));
 
-  r.Register('TBaseArrayRemotable',TSimpleItemFactory.Create(TBaseArrayRemotable_TypeHandler) as IItemFactory);
+  r.Register('TBaseArrayRemotable',TSimpleItemFactory.Create(TBaseArrayRemotable_TypeHandler));
   
-  r.RegisterDefaultHandler(tkRecord,TSimpleItemFactory.Create(TRecord_TypeHandler) as IItemFactory);
+  r.RegisterDefaultHandler(tkRecord,TSimpleItemFactory.Create(TRecord_TypeHandler));
 
-{  r.Register('Integer',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.Register('LongWord',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
+{  r.Register('Integer',TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.Register('LongWord',TSimpleItemFactory.Create(TFakeTypeHandler));
 
-  r.Register('string',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.Register('shortstring',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.Register('ansistring',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.Register('boolean',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
+  r.Register('string',TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.Register('shortstring',TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.Register('ansistring',TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.Register('boolean',TSimpleItemFactory.Create(TFakeTypeHandler));
 
-  r.Register('Byte',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.Register('ShortInt',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.Register('Word',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.Register('SmallInt',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.Register('Int64',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.Register('QWord',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
+  r.Register('Byte',TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.Register('ShortInt',TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.Register('Word',TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.Register('SmallInt',TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.Register('Int64',TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.Register('QWord',TSimpleItemFactory.Create(TFakeTypeHandler));
 
-  r.Register('Single',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.Register('Currency',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.Register('Comp',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.Register('Double',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
-  r.Register('Extended',TSimpleItemFactory.Create(TFakeTypeHandler) as IItemFactory);
+  r.Register('Single',TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.Register('Currency',TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.Register('Comp',TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.Register('Double',TSimpleItemFactory.Create(TFakeTypeHandler));
+  r.Register('Extended',TSimpleItemFactory.Create(TFakeTypeHandler));
 }
 end;
 

@@ -76,7 +76,7 @@ end;
 
 procedure SAME_PROCESS_Register_Local_Transport();
 begin
-  GetTransportRegistry().Register(sTRANSPORT_NAME,TSimpleItemFactory.Create(TInProcessTransport) as IItemFactory);
+  GetTransportRegistry().Register(sTRANSPORT_NAME,TSimpleItemFactory.Create(TInProcessTransport));
 end;
 
 end.

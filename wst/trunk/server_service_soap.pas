@@ -196,7 +196,7 @@ end;
 
 procedure Server_service_RegisterSoapFormat();
 begin
-  GetFormatterRegistry().Register(sPROTOCOL_NAME,sSOAP_CONTENT_TYPE,TSimpleItemFactory.Create(TSOAPFormatter) as IItemFactory);
+  GetFormatterRegistry().Register(sPROTOCOL_NAME,sSOAP_CONTENT_TYPE,TSimpleItemFactory.Create(TSOAPFormatter));
   RegisterStdTypes();
 end;
 

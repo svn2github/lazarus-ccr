@@ -135,7 +135,7 @@ End;
 
 procedure RegisterWSTMetadataServiceImplementationFactory();
 Begin
-  GetServiceImplementationRegistry().Register('IWSTMetadataService',TImplementationFactory.Create(TWSTMetadataService_ServiceImp) as IServiceImplementationFactory);
+  GetServiceImplementationRegistry().Register('IWSTMetadataService',TImplementationFactory.Create(TWSTMetadataService_ServiceImp));
 End;
 
 End.

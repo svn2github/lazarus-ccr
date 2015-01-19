@@ -149,7 +149,7 @@ end;
 constructor TServerListnerThread.Create(AWorkerObject : TFPWorkerObject);
 begin
   FreeOnTerminate := True;
-  FWorkerObject := AWorkerObject as IObjectRef;
+  FWorkerObject := AWorkerObject;
   inherited Create(False);
 end;
 
@@ -342,7 +342,7 @@ constructor TwstFPHttpListener.Create(
 
 begin
   inherited Create();
-  FWorkerObjectRef := TFPWorkerObject.Create() as IObjectRef;
+  FWorkerObjectRef := TFPWorkerObject.Create();
   FWorkerObject := TFPWorkerObject(FWorkerObjectRef.GetObject());
   FWorkerObject.RootAddress := AServerIpAddress;
   FWorkerObject.ServerSoftware := AServerSoftware;

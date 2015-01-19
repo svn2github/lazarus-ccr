@@ -178,7 +178,7 @@ end;
 constructor TFilterExtension.Create;
 begin
   inherited;
-  FPropertyManager := TPublishedPropertyManager.Create(Self) as IPropertyManager;
+  FPropertyManager := TPublishedPropertyManager.Create(Self);
 end;
 
 function TFilterExtension.GetPropertyManager: IPropertyManager;
@@ -244,7 +244,7 @@ end;
 initialization
   GetServiceExtensionRegistry().Register(
     'TFilterExtension',
-    TSimpleItemFactory.Create(TFilterExtension) as IItemFactory
+    TSimpleItemFactory.Create(TFilterExtension)
   );
 
 end.
