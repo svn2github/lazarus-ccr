@@ -36,7 +36,7 @@ unit RxDBGridExportSpreadSheet;
 interface
 
 uses
-  Classes, SysUtils, rxdbgrid, DB, fpspreadsheet, Graphics;
+  Classes, SysUtils, rxdbgrid, DB, fpspreadsheet, Graphics, fpsTypes;
 
 type
   TRxDBGridExportSpreadSheetOption = (ressExportTitle,
