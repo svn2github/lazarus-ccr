@@ -671,7 +671,7 @@ end;
 
 procedure TCustomNumEdit.Clear;
 begin
-
+  Text:='';
 end;
 
 initialization
