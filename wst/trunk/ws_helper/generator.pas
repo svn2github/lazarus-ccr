@@ -2058,7 +2058,7 @@ begin
   WriteLn('procedure %s.Assign(Source: TPersistent);',[ASymbol.Name]);
   WriteLn('var');
   Indent();WriteLn('src : %s;',[ASymbol.Name]);
-  Indent();WriteLn('i, c : PtrInt;');
+  Indent();WriteLn('i, c : Integer;');
   WriteLn('begin');
     Indent();WriteLn('if Assigned(Source) and Source.InheritsFrom(%s) then begin',[ASymbol.Name]);
     IncIndent();
