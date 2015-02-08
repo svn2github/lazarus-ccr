@@ -805,7 +805,7 @@ var
     if hasInterName then begin
       internalName := '_' + internalName;
     end;
-    Result := TPasType(SymbolTable.CreateElement(TPasAliasType,internalName,SymbolTable.CurrentModule.InterfaceSection,visDefault,'',0));
+    Result := TPasType(SymbolTable.CreateElement(TPasAliasType,internalName,Self.Module.InterfaceSection,visDefault,'',0));
     SymbolTable.RegisterExternalAlias(Result,baseName);
     TPasAliasType(Result).DestType := ABase;
     ABase.AddRef();
@@ -897,9 +897,8 @@ begin
       end;
       sct.Declarations.Add(Result);
       sct.Types.Add(Result);
-      if Result.InheritsFrom(TPasClassType) then begin
+      if Result.InheritsFrom(TPasClassType) then
         sct.Classes.Add(Result);
-      end;
     end;
   except
     on e : EXsdTypeNotFoundException do begin
@@ -976,11 +975,13 @@ begin
                   s := ExtractIdentifier(s);
                   i := 1;
                   locName := s;
-                  while (FSymbols.FindModule(locName) <> nil) do begin
-                    locName := Format('%s%d',[s,i]); 
-                    Inc(i);
+                  if (locModule.Name <> locName) then begin
+                    while (FSymbols.FindModule(locName) <> nil) do begin
+                      locName := Format('%s%d',[s,i]);
+                      Inc(i);
+                    end;
+                    locModule.Name := locName;
                   end;
-                  locModule.Name := locName;                    
                   locModule.AddRef();
                   locUsesList.Add(locModule);
                   if (FSymbols.Properties.GetValue(locModule,sFILE_NAME) = '') then
@@ -1067,9 +1068,15 @@ begin
       FTargetNameSpace := prntCtx.GetTargetNameSpace();
       ok := True;
     end else begin
-      if not AMustSucceed then
-        exit;
-      raise EXsdParserAssertException.CreateFmt(SERR_SchemaNodeRequiredAttribute,[s_targetNamespace]);
+      if (prntCtx <> nil) then begin
+        FTargetNameSpace := prntCtx.GetTargetNameSpace();
+        ok := (FTargetNameSpace <> '');
+      end;
+      if not ok then begin
+        if not AMustSucceed then
+          exit;
+        raise EXsdParserAssertException.CreateFmt(SERR_SchemaNodeRequiredAttribute,[s_targetNamespace]);
+      end;
     end;
   end;
 

@@ -1913,7 +1913,10 @@ begin
 end;
 
 procedure TInftGenerator.WriteObjectArray(ASymbol : TPasArrayType);
+var
+  locElementTypeName : string;
 begin
+  locElementTypeName := FindActualType(ASymbol.ElType,SymbolTable).Name;
   SetCurrentStream(FDecStream);
   NewLine();
   WriteDocIfEnabled(ASymbol);
@@ -1922,10 +1925,10 @@ begin
   try
     WriteLn('%s = class(TBaseObjectArrayRemotable)',[ASymbol.Name]);
     WriteLn('private');
-      Indent();WriteLn('function GetItem(AIndex: Integer): %s;',[ASymbol.ElType.Name]);
+      Indent();WriteLn('function GetItem(AIndex: Integer): %s;',[locElementTypeName]);
     WriteLn('public');
       Indent();WriteLn('class function GetItemClass():TBaseRemotableClass;override;');
-      Indent();WriteLn('property Item[AIndex:Integer] : %s Read GetItem;Default;',[ASymbol.ElType.Name]);
+      Indent();WriteLn('property Item[AIndex:Integer] : %s Read GetItem;Default;',[locElementTypeName]);
     WriteLn('end;');
   finally
     EndAutoIndent();
@@ -1937,10 +1940,10 @@ begin
   WriteLn('{ %s }',[ASymbol.Name]);
 
   NewLine();
-  WriteLn('function %s.GetItem(AIndex: Integer): %s;',[ASymbol.Name,ASymbol.ElType.Name]);
+  WriteLn('function %s.GetItem(AIndex: Integer): %s;',[ASymbol.Name,locElementTypeName]);
   WriteLn('begin');
   IncIndent();
-    Indent();WriteLn('Result := %s(Inherited GetItem(AIndex));',[ASymbol.ElType.Name]);
+    Indent();WriteLn('Result := %s(Inherited GetItem(AIndex));',[locElementTypeName]);
   DecIndent();
   WriteLn('end;');
 
@@ -1948,13 +1951,16 @@ begin
   WriteLn('class function %s.GetItemClass(): TBaseRemotableClass;',[ASymbol.Name]);
   WriteLn('begin');
   IncIndent();
-    Indent();WriteLn('Result:= %s;',[ASymbol.ElType.Name]);
+    Indent();WriteLn('Result:= %s;',[locElementTypeName]);
   DecIndent();
   WriteLn('end;');
 end;
 
 procedure TInftGenerator.WriteSimpleTypeArray(ASymbol : TPasArrayType);
+var
+  locElementTypeName : string;
 begin
+  locElementTypeName := FindActualType(ASymbol.ElType,SymbolTable).Name;
   SetCurrentStream(FDecStream);
   NewLine();
   WriteDocIfEnabled(ASymbol);
@@ -1963,10 +1969,10 @@ begin
   try
     WriteLn('%s = class(TBaseSimpleTypeArrayRemotable)',[ASymbol.Name]);
     WriteLn('private');
-      Indent();WriteLn('FData : array of %s;',[ASymbol.ElType.Name]);
+      Indent();WriteLn('FData : array of %s;',[locElementTypeName]);
     WriteLn('private');
-      Indent();WriteLn('function GetItem(AIndex: Integer): %s;',[ASymbol.ElType.Name]);
-      Indent();WriteLn('procedure SetItem(AIndex: Integer; const AValue: %s);',[ASymbol.ElType.Name]);
+      Indent();WriteLn('function GetItem(AIndex: Integer): %s;',[locElementTypeName]);
+      Indent();WriteLn('procedure SetItem(AIndex: Integer; const AValue: %s);',[locElementTypeName]);
     WriteLn('protected');
       Indent();WriteLn('function GetLength():Integer;override;');
       Indent();WriteLn('procedure SaveItem(AStore : IFormatterBase;const AName : String;const AIndex : Integer);override;');
@@ -1975,7 +1981,7 @@ begin
       Indent();WriteLn('class function GetItemTypeInfo():PTypeInfo;override;');
       Indent();WriteLn('procedure SetLength(const ANewSize : Integer);override;');
       Indent();WriteLn('procedure Assign(Source: TPersistent); override;');
-      Indent();WriteLn('property Item[AIndex:Integer] : %s read GetItem write SetItem; default;',[ASymbol.ElType.Name]);
+      Indent();WriteLn('property Item[AIndex:Integer] : %s read GetItem write SetItem; default;',[locElementTypeName]);
     WriteLn('end;');
   finally
     EndAutoIndent();
@@ -1987,7 +1993,7 @@ begin
   WriteLn('{ %s }',[ASymbol.Name]);
 
   NewLine();
-  WriteLn('function %s.GetItem(AIndex: Integer): %s;',[ASymbol.Name,ASymbol.ElType.Name]);
+  WriteLn('function %s.GetItem(AIndex: Integer): %s;',[ASymbol.Name,locElementTypeName]);
   WriteLn('begin');
   IncIndent();
     Indent();WriteLn('CheckIndex(AIndex);');
@@ -1996,7 +2002,7 @@ begin
   WriteLn('end;');
 
   NewLine();
-  WriteLn('procedure %s.SetItem(AIndex: Integer;const AValue: %S);',[ASymbol.Name,ASymbol.ElType.Name]);
+  WriteLn('procedure %s.SetItem(AIndex: Integer;const AValue: %S);',[ASymbol.Name,locElementTypeName]);
   WriteLn('begin');
   IncIndent();
     Indent();WriteLn('CheckIndex(AIndex);');
@@ -2016,7 +2022,7 @@ begin
   WriteLn('procedure %s.SaveItem(AStore: IFormatterBase;const AName: String; const AIndex: Integer);',[ASymbol.Name]);
   WriteLn('begin');
   IncIndent();
-    Indent();WriteLn('AStore.Put(%s,TypeInfo(%s),FData[AIndex]);',[QuotedStr(SymbolTable.GetArrayItemName(ASymbol)),ASymbol.ElType.Name]);
+    Indent();WriteLn('AStore.Put(%s,TypeInfo(%s),FData[AIndex]);',[QuotedStr(SymbolTable.GetArrayItemName(ASymbol)),locElementTypeName]);
   DecIndent();
   WriteLn('end;');
 
@@ -2027,7 +2033,7 @@ begin
   Indent();WriteLn('sName : string;');
   WriteLn('begin');
     Indent();WriteLn('sName := %s;',[QuotedStr(SymbolTable.GetArrayItemName(ASymbol))]);
-    Indent();WriteLn('AStore.Get(TypeInfo(%s),sName,FData[AIndex]);',[ASymbol.ElType.Name]);
+    Indent();WriteLn('AStore.Get(TypeInfo(%s),sName,FData[AIndex]);',[locElementTypeName]);
   DecIndent();
   WriteLn('end;');
 
@@ -2035,7 +2041,7 @@ begin
   WriteLn('class function %s.GetItemTypeInfo(): PTypeInfo;',[ASymbol.Name]);
   WriteLn('begin');
   IncIndent();
-    Indent();WriteLn('Result := TypeInfo(%s);',[ASymbol.ElType.Name]);
+    Indent();WriteLn('Result := TypeInfo(%s);',[locElementTypeName]);
   DecIndent();
   WriteLn('end;');
 
@@ -2081,7 +2087,10 @@ begin
 end;
 
 procedure TInftGenerator.WriteObjectCollection(ASymbol : TPasArrayType);
+var
+  locElementTypeName : string;
 begin
+  locElementTypeName := FindActualType(ASymbol.ElType,SymbolTable).Name;
   SetCurrentStream(FDecStream);
   NewLine();
   WriteDocIfEnabled(ASymbol);
@@ -2090,12 +2099,12 @@ begin
   try
     WriteLn('%s = class(TObjectCollectionRemotable)',[ASymbol.Name]);
     WriteLn('private');
-      Indent();WriteLn('function GetItem(AIndex: Integer): %s;',[ASymbol.ElType.Name]);
+      Indent();WriteLn('function GetItem(AIndex: Integer): %s;',[locElementTypeName]);
     WriteLn('public');
       Indent();WriteLn('class function GetItemClass():TBaseRemotableClass;override;');
-      Indent();WriteLn('function Add(): %s; {$IFDEF USE_INLINE}inline;{$ENDIF}',[ASymbol.ElType.Name]);
-      Indent();WriteLn('function AddAt(const APosition : Integer) : %s; {$IFDEF USE_INLINE}inline;{$ENDIF}',[ASymbol.ElType.Name]);
-      Indent();WriteLn('property Item[AIndex:Integer] : %s Read GetItem;Default;',[ASymbol.ElType.Name]);
+      Indent();WriteLn('function Add(): %s; {$IFDEF USE_INLINE}inline;{$ENDIF}',[locElementTypeName]);
+      Indent();WriteLn('function AddAt(const APosition : Integer) : %s; {$IFDEF USE_INLINE}inline;{$ENDIF}',[locElementTypeName]);
+      Indent();WriteLn('property Item[AIndex:Integer] : %s Read GetItem;Default;',[locElementTypeName]);
     WriteLn('end;');
   finally
     EndAutoIndent();
@@ -2107,10 +2116,10 @@ begin
   WriteLn('{ %s }',[ASymbol.Name]);
 
   NewLine();
-  WriteLn('function %s.GetItem(AIndex: Integer): %s;',[ASymbol.Name,ASymbol.ElType.Name]);
+  WriteLn('function %s.GetItem(AIndex: Integer): %s;',[ASymbol.Name,locElementTypeName]);
   WriteLn('begin');
   IncIndent();
-    Indent();WriteLn('Result := %s(Inherited GetItem(AIndex));',[ASymbol.ElType.Name]);
+    Indent();WriteLn('Result := %s(Inherited GetItem(AIndex));',[locElementTypeName]);
   DecIndent();
   WriteLn('end;');
 
@@ -2118,23 +2127,23 @@ begin
   WriteLn('class function %s.GetItemClass(): TBaseRemotableClass;',[ASymbol.Name]);
   WriteLn('begin');
   IncIndent();
-    Indent();WriteLn('Result:= %s;',[ASymbol.ElType.Name]);
+    Indent();WriteLn('Result:= %s;',[locElementTypeName]);
   DecIndent();
   WriteLn('end;');
   
   NewLine();
-  WriteLn('function %s.Add() : %s;',[ASymbol.Name,ASymbol.ElType.Name]);
+  WriteLn('function %s.Add() : %s;',[ASymbol.Name,locElementTypeName]);
   WriteLn('begin');
   IncIndent();
-    Indent();WriteLn('Result := %s(inherited Add());',[ASymbol.ElType.Name]);
+    Indent();WriteLn('Result := %s(inherited Add());',[locElementTypeName]);
   DecIndent();
   WriteLn('end;');
   
   NewLine();
-  WriteLn('function %s.AddAt(const APosition : Integer) : %s;',[ASymbol.Name,ASymbol.ElType.Name]);
+  WriteLn('function %s.AddAt(const APosition : Integer) : %s;',[ASymbol.Name,locElementTypeName]);
   WriteLn('begin');
   IncIndent();
-    Indent();WriteLn('Result := %s(inherited AddAt(APosition));',[ASymbol.ElType.Name]);
+    Indent();WriteLn('Result := %s(inherited AddAt(APosition));',[locElementTypeName]);
   DecIndent();
   WriteLn('end;');
 end;
@@ -2702,9 +2711,8 @@ var
   eltType : TPasType;
 begin
   eltType := ASymbol.ElType;
-  if eltType.InheritsFrom(TPasUnresolvedTypeRef) then begin
-    eltType := SymbolTable.FindElement(SymbolTable.GetExternalName(eltType)) as TPasType;
-  end;
+  if eltType.InheritsFrom(TPasUnresolvedTypeRef) then
+    eltType := FindActualType(eltType,SymbolTable);
   classItemArray := SymbolTable.IsOfType(eltType,TPasClassType) or SymbolTable.IsOfType(eltType,TPasArrayType);
 
   if classItemArray then begin
