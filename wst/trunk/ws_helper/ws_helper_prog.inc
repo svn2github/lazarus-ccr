@@ -19,6 +19,8 @@ resourcestring
            '        C  : object arrays are generated as "collection" derived from TObjectCollectionRemotable' + sNEW_LINE +
            '        EP : enum type''s items are prefixed with the enum name' + sNEW_LINE +
            '        EN : enum type''s items are not prefixed with the enum name, the default' + sNEW_LINE +
+           '        SS : XSD''string type is mapped to Object Pascal'' String' + sNEW_LINE +
+           '        SU : XSD''string type is mapped to Object Pascal'' UnicodeString' + sNEW_LINE +
            '  -p  Generate service proxy' + sNEW_LINE +
            '  -b  Generate service binder' + sNEW_LINE +
            '  -i  Generate service minimal implementation. This will erase any existing implementation file!' + sNEW_LINE +
@@ -368,6 +370,8 @@ var
     raise Exception.Create(AMsg);
   end;
 
+var
+  tmpString : string;
 begin
 {$IFDEF FPC}
   {$IF Declared(SetHeapTraceOutput) }
@@ -393,6 +397,16 @@ begin
       end;
       symtable := TwstPasTreeContainer.Create();
       symtable.CaseSensitive := cloParserCaseSensitive in AppOptions;
+      if (cloStringMaping in AppOptions) then begin
+        tmpString := Trim(GetOptionArg(cloStringMaping));
+        tmpString := UpperCase(Copy(tmpString,2,Length(tmpString)));
+        if (tmpString = 'S') then
+          symtable.XsdStringMaping := xsmString
+        else if (tmpString = 'U') then
+          symtable.XsdStringMaping := xsmUnicodeString
+        else
+          Error('Invalid argument for "-gS" option: "' + tmpString + '".');
+      end;
       srcMngr := CreateSourceManager();
 
       if not GenerateSymbolTable() then begin

@@ -60,6 +60,8 @@ type
   TElementNameKinds = set of TElementNameKind;
 
   TBindingStyle = ( bsDocument, bsRPC, bsUnknown );
+
+  TXSDStringMaping = (xsmUnicodeString, xsmString);
   
 const
   BindingStyleNames : array[TBindingStyle] of string = ( 'Document', 'RPC', 'Unknown' );
@@ -120,6 +122,7 @@ type
     FProperties : TPropertyHolder;
     FCaseSensitive : Boolean;
     FDefaultSearchNameKinds: TElementNameKinds;
+    FXsdStringMaping: TXSDStringMaping;
   private
     function GetBinding(AIndex : Integer): TwstBinding;
     function GetBindingCount: Integer;
@@ -192,6 +195,7 @@ type
         read FDefaultSearchNameKinds
        write FDefaultSearchNameKinds
      default NAME_KINDS_DEFAULT;
+    property XsdStringMaping : TXSDStringMaping read FXsdStringMaping write FXsdStringMaping;
   end;
 
   TPasNativeModule = class(TPasModule)
@@ -253,7 +257,6 @@ type
   ) : TPasType;
   function MakeInternalSymbolNameFrom(const AName : string) : string ;
 
-
   function CreateWstInterfaceSymbolTable(AContainer : TwstPasTreeContainer) : TPasModule;
   procedure CreateDefaultBindingForIntf(ATree : TwstPasTreeContainer);
   
@@ -297,8 +300,9 @@ const
      );
 
 procedure AddSystemSymbol(
-  ADest : TPasModule;
-  AContainer : TwstPasTreeContainer
+  ADest      : TPasModule;
+  AContainer : TwstPasTreeContainer;
+  AXsdString : TXSDStringMaping
 );
 
   procedure RegisterSpecialSimpleTypes();
@@ -308,13 +312,34 @@ procedure AddSystemSymbol(
     syb : TPasNativeSpecialSimpleContentClassType;
     s : string;
     typlst : array[0..Pred(SPECIAL_SIMPLE_TYPES_COUNT)] of TPasNativeSpecialSimpleType;
+    typeOrders : array[0..Pred(SPECIAL_SIMPLE_TYPES_COUNT)] of Byte;
+    typeNameArray : array[0..Pred(SPECIAL_SIMPLE_TYPES_COUNT)] of array[0..2] of string;
   begin
-    for i := Low(SPECIAL_SIMPLE_TYPES) to High(SPECIAL_SIMPLE_TYPES) do begin
-      splTyp := TPasNativeSpecialSimpleType(AContainer.CreateElement(TPasNativeSpecialSimpleType,SPECIAL_SIMPLE_TYPES[i][0],ADest.InterfaceSection,visPublic,'',0));
+    typeOrders[0] := 0;
+    i := 1;
+{$IFDEF WST_UNICODESTRING}
+    if (AXsdString = xsmString) then begin
+      typeOrders[1] := 2;
+      typeOrders[2] := 1;
+    end else begin
+      typeOrders[1] := 1;
+      typeOrders[2] := 2;
+    end;
+    i := 3;
+{$ENDIF WST_UNICODESTRING}
+    for i := i to High(typeOrders) do
+      typeOrders[i] := i;
+    for i := Low(typeOrders) to High(typeOrders) do begin
+      typeNameArray[i][0] := SPECIAL_SIMPLE_TYPES[typeOrders[i]][0];
+      typeNameArray[i][1] := SPECIAL_SIMPLE_TYPES[typeOrders[i]][1];
+      typeNameArray[i][2] := SPECIAL_SIMPLE_TYPES[typeOrders[i]][2];
+    end;
+    for i := Low(typeNameArray) to High(typeNameArray) do begin
+      splTyp := TPasNativeSpecialSimpleType(AContainer.CreateElement(TPasNativeSpecialSimpleType,typeNameArray[i][0],ADest.InterfaceSection,visPublic,'',0));
       ADest.InterfaceSection.Declarations.Add(splTyp);
       ADest.InterfaceSection.Types.Add(splTyp);
       typlst[i] := splTyp;
-      s := SPECIAL_SIMPLE_TYPES[i][1];
+      s := typeNameArray[i][1];
       if not IsStrEmpty(s) then begin
         syb := AContainer.FindElementInModule(s,ADest) as TPasNativeSpecialSimpleContentClassType;
         if not Assigned(syb) then begin
@@ -325,12 +350,12 @@ procedure AddSystemSymbol(
         splTyp.SetExtendableType(syb);
       end;
     end;
-    for i := Low(SPECIAL_SIMPLE_TYPES) to High(SPECIAL_SIMPLE_TYPES) do begin
+    for i := Low(typeNameArray) to High(typeNameArray) do begin
       splTyp := typlst[i];
-      if not IsStrEmpty(SPECIAL_SIMPLE_TYPES[i][2]) then begin
-        AContainer.RegisterExternalAlias(splTyp,SPECIAL_SIMPLE_TYPES[i][2]);
+      if not IsStrEmpty(typeNameArray[i][2]) then begin
+        AContainer.RegisterExternalAlias(splTyp,typeNameArray[i][2]);
         if ( splTyp.ExtendableType <> nil ) then begin
-          AContainer.RegisterExternalAlias(splTyp.ExtendableType,SPECIAL_SIMPLE_TYPES[i][2]);
+          AContainer.RegisterExternalAlias(splTyp.ExtendableType,typeNameArray[i][2]);
         end;
       end;
     end;
@@ -415,6 +440,7 @@ begin
 end;
 
 function CreateWstInterfaceSymbolTable(AContainer : TwstPasTreeContainer) : TPasModule;
+
   function AddClassDef(
           ATable      : TPasModule;
     const AClassName,
@@ -463,7 +489,7 @@ begin
       AContainer.Package.Modules.Add(Result);
       AContainer.RegisterExternalAlias(Result,sXSD_NS);
       Result.InterfaceSection := TInterfaceSection(AContainer.CreateElement(TInterfaceSection,'',Result,visDefault,'',0));
-      AddSystemSymbol(Result,AContainer);
+      AddSystemSymbol(Result,AContainer,AContainer.XsdStringMaping);
       AddClassDef(Result,'TBaseRemotable','',TPasNativeClassType);
         AContainer.RegisterExternalAlias(AddClassDef(Result,'anyType_Type','TBaseRemotable',TPasNativeClassType),'anyType');
         AddClassDef(Result,'TAbstractSimpleRemotable','TBaseRemotable',TPasNativeClassType);

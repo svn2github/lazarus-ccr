@@ -24,7 +24,8 @@ Type
     cloInterface, cloProxy, cloImp, cloBinder, cloWsdl, cloXsd,
     cloOutPutDirRelative, cloOutPutDirAbsolute, cloHandleWrappedParameters,
     cloGenerateDocAsComments, cloGenerateObjectCollection,
-    cloFileRenaming, cloPrefixEnum, cloParserCaseSensitive
+    cloFileRenaming, cloPrefixEnum, cloParserCaseSensitive,
+    cloStringMaping
   );
   TComandLineOptions = set of TComandLineOption;
 
@@ -81,6 +82,9 @@ begin
           end else if ( Pos('E',OptArg) = 1 ) then begin
             Include(AAppOptions,cloPrefixEnum);
             OptionsArgsMAP[cloPrefixEnum] := OptArg;
+          end else if ( Pos('S',OptArg) = 1 ) then begin
+            Include(AAppOptions,cloStringMaping);
+            OptionsArgsMAP[cloStringMaping] := OptArg;
           end;
         end;
       'f' :
