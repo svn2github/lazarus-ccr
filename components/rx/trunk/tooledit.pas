@@ -116,6 +116,7 @@ type
 
     function GetDefaultGlyphName: String; override;
     function CreatePopupForm:TPopupCalendar;
+    procedure DoEnter; override;
 
     property BlanksChar: Char read FBlanksChar write SetBlanksChar default ' ';
     property DialogTitle:TCaption Read FDialogTitle Write FDialogTitle Stored IsStoreTitle;
@@ -865,6 +866,12 @@ begin
   Result.OnCloseUp := @PopupCloseUp;
   Result.Color := FPopupColor;
   TRxCalendarGrid(Result.Calendar).NotInThisMonthColor:=FNotInThisMonthColor;
+end;
+
+procedure TCustomRxDateEdit.DoEnter;
+begin
+  if Enabled then
+    inherited DoEnter;
 end;
 
 constructor TCustomRxDateEdit.Create(AOwner: TComponent);
