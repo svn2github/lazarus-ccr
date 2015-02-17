@@ -109,13 +109,16 @@ begin
 
   Vec := TvVectorialDocument.Create;
   try
+    // some formats like HTML need an input of control size to render themselves
+    Vec.Width := Drawer.Width;
+    Vec.Height := Drawer.Height;
+
     // If we desire, force a encoding for the read operation
     if comboEncoding.ItemIndex > 0 then
       Vec.ForcedEncodingOnRead := comboEncoding.Text
     else Vec.ForcedEncodingOnRead := '';
 
     Vec.ReadFromFile(editFileName.FileName);
-
     // Show document properties
     labelFileEncoding.Caption := 'File encoding: ' + Vec.Encoding;
 
@@ -157,6 +160,10 @@ begin
         spinScale.Value,
         -1 * spinScale.Value);
     Drawer.Invalidate;
+
+    // Show debug tokens
+    TokensTreeView.Items.Clear;
+    Vec.GenerateDebugTree(@FPVDebugAddItemProc);
   finally
     Vec.Free;
   end;
@@ -326,8 +333,13 @@ begin
 
   notebook.PageIndex := 1;
 
-  Vec := TvVectorialDocument.Create;
+  {Vec := TvVectorialDocument.Create;
   try
+    // some formats like HTML need an input of control size to render themselves
+    Vec.Width := Drawer.Width;
+    Vec.Height := Drawer.Height;
+
+    // read
     Vec.ReadFromFile(editFileName.FileName);
 
     // Generate the positioning info
@@ -341,7 +353,7 @@ begin
     Vec.GenerateDebugTree(@FPVDebugAddItemProc);
   finally
     Vec.Free;
-  end;
+  end; }
 end;
 
 procedure TfrmFPVViewer.buttonAdjustClick(Sender: TObject);

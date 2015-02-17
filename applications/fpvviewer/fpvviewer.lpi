@@ -14,7 +14,7 @@
     <VersionInfo>
       <StringTable ProductVersion=""/>
     </VersionInfo>
-    <BuildModes Count="3">
+    <BuildModes Count="4">
       <Item1 Name="default" Default="True"/>
       <Item2 Name="win32-console">
         <CompilerOptions>
@@ -26,12 +26,6 @@
             <IncludeFiles Value="$(ProjOutDir)"/>
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
-          <Other>
-            <CompilerMessages>
-              <UseMsgFile Value="True"/>
-            </CompilerMessages>
-            <CompilerPath Value="$(CompPath)"/>
-          </Other>
         </CompilerOptions>
       </Item2>
       <Item3 Name="qt">
@@ -55,16 +49,33 @@
               </Win32>
             </Options>
           </Linking>
-          <Other>
-            <CompilerMessages>
-              <UseMsgFile Value="True"/>
-            </CompilerMessages>
-            <CompilerPath Value="$(CompPath)"/>
-          </Other>
         </CompilerOptions>
       </Item3>
-      <SharedMatrixOptions Count="1">
+      <Item4 Name="cocoa">
+        <MacroValues Count="1">
+          <Macro2 Name="LCLWidgetType" Value="cocoa"/>
+        </MacroValues>
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="fpvviewer"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Linking>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item4>
+      <SharedMatrixOptions Count="2">
         <Item1 ID="669514139583" Modes="qt" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt"/>
+        <Item2 ID="166328276776" Modes="cocoa" Type="IDEMacro" MacroName="LCLWidgetType" Value="cocoa"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
@@ -96,7 +107,6 @@
       <Unit0>
         <Filename Value="fpvviewer.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="fpvviewer"/>
       </Unit0>
       <Unit1>
         <Filename Value="fpvv_mainform.pas"/>
@@ -109,17 +119,14 @@
       <Unit2>
         <Filename Value="dxftokentotree.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="dxftokentotree"/>
       </Unit2>
       <Unit3>
         <Filename Value="fpvv_drawer.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="fpvv_drawer"/>
       </Unit3>
       <Unit4>
         <Filename Value="coreconrec.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="CoreConRec"/>
       </Unit4>
     </Units>
   </ProjectOptions>
@@ -139,12 +146,6 @@
         </Win32>
       </Options>
     </Linking>
-    <Other>
-      <CompilerMessages>
-        <UseMsgFile Value="True"/>
-      </CompilerMessages>
-      <CompilerPath Value="$(CompPath)"/>
-    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">
