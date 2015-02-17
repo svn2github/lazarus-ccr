@@ -100,6 +100,7 @@ var
   CanvasSize: TPoint;
   lCurPage: TvVectorialPage;
   lPage: TvPage;
+  YAxisMultiplier: Double = -1;
 begin
   // First check the in input
   if editFileName.FileName = '' then Exit; // silent exit in this simple case
@@ -143,6 +144,7 @@ begin
     lPage := Vec.GetPage(0);
     if lPage = nil then
       Exception.Create('The document has no pages');
+    if lPage is TvTextPageSequence then YAxisMultiplier := 1.0;
     if checkForceWhiteBackground.Checked then lPage.BackgroundColor := colWhite;
     if not checkForceWhiteBackground.Checked then
       lPage.DrawBackground(Drawer.Drawing.Canvas);
@@ -151,14 +153,14 @@ begin
       FPVVIEWER_SPACE_FOR_NEGATIVE_COORDS + Drawer.PosX,
       Drawer.Drawing.Height - FPVVIEWER_SPACE_FOR_NEGATIVE_COORDS + Drawer.PosY,
       spinScale.Value,
-      -1 * spinScale.Value);
+      YAxisMultiplier * spinScale.Value);
     if checkShowPage.Checked then
       lPage.RenderPageBorder(
         Drawer.Drawing.Canvas,
         FPVVIEWER_SPACE_FOR_NEGATIVE_COORDS + Drawer.PosX,
         Drawer.Drawing.Height - FPVVIEWER_SPACE_FOR_NEGATIVE_COORDS + Drawer.PosY,
         spinScale.Value,
-        -1 * spinScale.Value);
+        YAxisMultiplier * spinScale.Value);
     Drawer.Invalidate;
 
     // Show debug tokens
