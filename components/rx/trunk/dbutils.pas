@@ -36,7 +36,7 @@ unit dbutils;
 interface
 
 uses
-  LCLType, LCLProc, LCLIntf, Registry, Classes, SysUtils, DB, IniFiles;
+  LCLType, LCLIntf, Registry, Classes, SysUtils, DB, IniFiles;
 
 const
   IntegerDataTypes = [ftSmallint, ftInteger, ftWord, ftLargeint];
@@ -164,7 +164,7 @@ procedure _DBError(const Msg: string);
 implementation
 
 uses Forms, Controls, Dialogs, RXDConst, VCLUtils, FileUtil,
-  AppUtils, RxAppUtils, RxStrUtils, Math, DateUtil;
+  AppUtils, RxAppUtils, RxStrUtils, Math, DateUtil, LazUTF8;
 
 { Utility routines }
 
