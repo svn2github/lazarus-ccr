@@ -121,8 +121,10 @@ var
   P:TToolbarItem;
   BtnRect:TRect;
   Cnv:TCanvas;
+  C: TColor;
 begin
   Cnv:=(Control as TListBox).Canvas;
+  C:=Cnv.Brush.Color;
   Cnv.FillRect(ARect);       { clear the rectangle }
   P:=TToolbarItem((Control as TListBox).Items.Objects[Index]);
   if Assigned(P) then
@@ -147,6 +149,7 @@ begin
         Offset:=BtnRect.Right;
       end;
       Offset := Offset + 6;
+      Cnv.Brush.Color:=C;
       Cnv.TextOut(ARect.Left + Offset, (ARect.Top + ARect.Bottom  - Cnv.TextHeight('W')) div 2, TCustomAction(P.Action).Caption);  { display the text }
     end;
   end;
