@@ -24,7 +24,7 @@ interface
 {$ifdef fpc}{$mode delphi}{$h+}{$endif}
 
 uses
-  Classes, SysUtils, TextParsingUtils;
+  Classes, SysUtils, TextParsingUtils, cconvlog;
 
 const
   Err_Ident   = 'Identifier';
@@ -244,6 +244,7 @@ type
   public
     Tokens  : array of TExpPart;
     Count   : Integer;
+
     procedure PushToken(const AToken: AnsiString; ATokenType: TTokenType);
   end;
 
@@ -293,7 +294,8 @@ var
 function ParseNextCEntity(AParser: TTextParser): TEntity; // default ParseNextEntity
 function ParseCNamePart(Parser: TTextParser): TNamePart;  // default ParseNamePart
 
-function ParseCExpression(AParser: TTextParser; var ExpS: AnsiString): Boolean;
+function ParseCExpression(AParser: TTextParser; var ExpS: AnsiString): Boolean; deprecated;
+function ParseCExpr(Parser: TTextParser; CommaIsEnd: Boolean=False): TExpression;
 procedure ParseCNumeric(const S: AnsiString; var idx: integer; var NumStr: AnsiSTring);
 function ParseCString(const S: AnsiString; var idx: Integer; var CStr: AnsiString): Boolean;
 function ParseCMacroParam(AParser: TTextParser; var ExpS: AnsiString): Boolean;
@@ -619,6 +621,7 @@ begin
   Result:=True;
 end;
 
+
 function ParseCExpression(AParser: TTextParser; var ExpS: AnsiString): Boolean;
 var
   i     : integer;
@@ -736,12 +739,14 @@ begin
 
     Result := Assigned(df);
     if Result then begin
+      log('preprocessor: (%d) %s for "%s"', [idx, df.ClassName, s]);
       Index:=i;
       Result := df.Parse(Self);
       Comments.Add(df);
       if Assigned(OnPrecompile) then OnPrecompile(Self, df);
-    end else
+    end else begin
       SetError('cannot handle preprocessor: "'+s+'"');
+    end;
 
   finally
     ProcessingMacro := false;
@@ -1171,13 +1176,30 @@ begin
     if not Result then Exit;
 
     if s = '"' then exp := '"'
-    else if s = '<' then exp := '>';
+    else if s = '<' then exp := '>'
+    else begin
+      Result:=false;
+      AParser.SetError('" is expected');
+      Exit;
+    end;
 
-    repeat
+    Included:=ScanTo(AParser.Buf, AParser.Index, [exp[1]]+ EoLnChars);
+    if (AParser.Index<=length(AParser.Buf)) and (AParser.Buf[AParser.Index] in EoLnChars) then begin
+      Result:=false;
+      AParser.SetError(exp+' is expected');
+      Exit;
+    end;
+    AParser.FindNextToken(s, tt);
+
+    {repeat
+
       AParser.FindNextToken(s, tt);
       if (s = '/') or (s = '\') or (tt = tt_Ident) then
         Included := Included + s;
-    until (tt =tt_Symbol) and ((s <> '\') or (s <> '/'));
+    until (tt =tt_Symbol) and ((s <> '\') or (s <> '/'));}
+
+    log('file: %s', [included]);
+
     Result := s = exp;
     SkipLine(AParser.buf, AParser.Index);
   finally
@@ -2096,6 +2118,7 @@ begin
   names.Free;
   inherited Destroy;
 end;
+
 
 initialization
   ParseNextEntity:=@ParseNextCEntity;

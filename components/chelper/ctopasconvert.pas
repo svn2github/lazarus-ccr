@@ -24,8 +24,8 @@ interface
 
 uses
   Classes, SysUtils,
-  cparsertypes, TextParsingUtils, codewriter, cparserutils,
-  objcparsing;
+  cparsertypes, TextParsingUtils, codewriter, cparserutils
+  ,objcparsing, cconvlog;
 
 var
   DoDebugEntities : Boolean = False; // write parsed entities names if no converter found!?
@@ -446,7 +446,9 @@ var
   c : Integer;
 begin
   c:=GetEmptyLinesCount(t, StartOfs, EndOfs);
-  for i:=1 to c do Result:=Result+LineEnding;
+  Result:='';
+  for i:=1 to c do
+    Result:=Result+LineEnding;
 end;
 
 function ConvertCode(const t: AnsiString; var endPoint: TPoint; AllText: Boolean; var ParseError: TErrorInfo; cfg: TConvertSettings): AnsiString;
@@ -473,7 +475,8 @@ begin
   try
     macros:=TCMacroHandler.Create;
 
-    if cfg.CustomDefines<>'' then PrepareMacros(cfg.CustomDefines, macros);
+    if cfg.CustomDefines<>'' then
+      PrepareMacros(cfg.CustomDefines, macros);
 
     cmt := TStopComment.Create;
     p := CreateCParser(t);
@@ -482,6 +485,7 @@ begin
     p.OnComment:=@cmt.OnComment;
     p.OnPrecompile:=@cmt.OnPrecompiler;
     cmtlist:=TList.Create;
+
     try
       repeat
         try
