@@ -1150,8 +1150,8 @@ procedure TRxCustomDBLookupCombo.CalculatePreferredSize(var PreferredWidth,
 var
   tmpCanvas: TCanvas;
 begin
-  inherited CalculatePreferredSize(PreferredWidth, PreferredHeight,
-    WithThemeSpace);
+  inherited CalculatePreferredSize(PreferredWidth, PreferredHeight, WithThemeSpace);
+
   // ignore width
   PreferredWidth:=0;
   tmpCanvas := GetWorkingCanvas(Canvas);

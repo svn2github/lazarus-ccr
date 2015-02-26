@@ -51,9 +51,6 @@ type
 
   TRxMemoryData = class(TDataSet)
   private
-    {$IFDEF FIX_TRxMemoryData_Filter}
-    FOnFilterRecordEx: TFilterRecordEvent;
-    {$ENDIF}
     FRecordPos: Integer;
     FRecordSize: Integer;
     FBookmarkOfs: Integer;
@@ -82,13 +79,11 @@ type
 
     function AddRecord: TMemoryRecord;
     procedure CopyRecord(RecordData, Buffer: PChar);
-    function GetOnFilterRecordEx: TFilterRecordEvent;
     function InsertRecord(Index: Integer): TMemoryRecord;
     function FindRecordID(ID: Integer): TMemoryRecord;
     procedure CreateIndexList(const FieldNames: string);
     procedure FreeIndexList;
     procedure QuickSort(L, R: Integer; Compare: TCompareRecords);
-    procedure SetOnFilterRecordEx(const AValue: TFilterRecordEvent);
     procedure Sort;
     function CalcRecordSize: Integer;
     function FindFieldData(Buffer: Pointer; Field: TField): Pointer;overload;
@@ -207,7 +202,6 @@ type
     property OnDeleteError;
     property OnEditError;
     property OnFilterRecord;
-    property OnFilterRecordEx: TFilterRecordEvent read GetOnFilterRecordEx write SetOnFilterRecordEx;
     property OnNewRecord;
     property OnPostError;
 
@@ -264,7 +258,7 @@ type
 implementation
 
 
-uses CustApp, rxdconst, LazUTF8, dbutils, dbconst, Variants, math;
+uses CustApp, rxdconst, LazUTF8, dbutils, dbconst, Variants, math, LResources;
 
 const
   ftBlobTypes = [ftBlob, ftMemo, ftGraphic, ftFmtMemo, ftParadoxOle,
@@ -520,15 +514,6 @@ end;
 function TRxMemoryData.AddRecord: TMemoryRecord;
 begin
   Result := TMemoryRecord.Create(Self);
-end;
-
-function TRxMemoryData.GetOnFilterRecordEx: TFilterRecordEvent;
-begin
-  {$IFDEF FIX_TRxMemoryData_Filter}
-  Result:=FOnFilterRecordEx;
-  {$ELSE}
-  Result:=OnFilterRecord;
-  {$ENDIF}
 end;
 
 function TRxMemoryData.FindRecordID(ID: Integer): TMemoryRecord;
@@ -1004,24 +989,15 @@ var
   SaveState: TDataSetState;
 begin
   Result := True;
-  {$IFDEF FIX_TRxMemoryData_Filter}
-  if Assigned(OnFilterRecordEx) then
-  {$ELSE}
   if Assigned(OnFilterRecord) then
-  {$ENDIF}
   begin
     if (FRecordPos >= 0) and (FRecordPos < RecordCount) then
     begin
       SaveState := SetTempState(dsFilter);
       try
         RecordToBuffer(Records[FRecordPos], TempBuffer);
-        {$IFDEF FIX_TRxMemoryData_Filter}
-        OnFilterRecordEx(Self, Result);
-        {$ELSE}
         OnFilterRecord(Self, Result);
-        {$ENDIF}
       except
-//        Application.HandleException(Self);
         CustomApplication.HandleException(Self);
       end;
       RestoreState(SaveState);
@@ -1722,16 +1698,6 @@ begin
   until I >= R;
 end;
 
-procedure TRxMemoryData.SetOnFilterRecordEx(const AValue: TFilterRecordEvent);
-begin
-  {$IFDEF FIX_TRxMemoryData_Filter}
-  CheckBiDirectional;
-  FOnFilterRecordEx:=AValue;
-  {$ELSE}
-  OnFilterRecord:=AValue;
-  {$ENDIF}
-end;
-
 function TRxMemoryData.CompareRecords(Item1, Item2: TMemoryRecord): Integer;
 var
   Data1, Data2: PChar;
@@ -2102,4 +2068,6 @@ begin
       Result := Length(GetBlobFromRecord(FField))
 end;
 
+initialization
+  RegisterPropertyToSkip(TRxMemoryData, 'OnFilterRecordEx', 'Old property', '');
 end.
