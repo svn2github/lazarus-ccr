@@ -18,20 +18,21 @@
 }
 program cconvert;
 
-{$mode objfpc}{$H+}
+{$mode delphi}{$H+}
 
 uses
   SysUtils,Classes,
-  ctopasconvert, cparsertypes, cparserutils, cconvconfig, objcparsing,
-  commonsrcgen;
+  ctopasconvert, cparsertypes, cparserutils, cconvconfig, objcparsing
+  , cconvlog;
 
 var
   ConfigFile    : AnsiString = '';
   OutputFile    : AnsiString = '';
   ConfigFileRO  : Boolean = false;
-  ParseAll      : Boolean = false;
+  ParseAll      : Boolean = true;
   ShowCodeSize  : Boolean = False; // show the size of code processed
   isPascalUnit  : Boolean = False; // convert to pascal unit
+  isPrintHelp   : Boolean = False;
 
 function StringFromFile(const FileName: AnsiString): AnsiString;
 var
@@ -56,8 +57,10 @@ var
   i   : Integer;
   p   : AnsiString;
   fn  : AnsiString;
+  vrb : Boolean;
 begin
   i:=1;
+  vrb:=false;
   while i<=Paramcount do begin
     p:=AnsiLowerCase(ParamStr(i));
     if p='-cfg' then begin
@@ -73,19 +76,27 @@ begin
     end else if p='-o' then begin
       inc(i);
       OutputFile:=ParamStr(i);
-    end else if p='-all' then begin
-      ParseAll:=True
-    end else if p='-pasunit' then
+    end else if p='-first' then begin
+      ParseAll:=false
+    end else if p='-pasunit' then begin
       isPascalUnit:=True;
+    end else if p='-verbose' then begin
+      vrb:=true;
+      // do not assign log now, wait until all params are done
+    end;
     inc(i);
   end;
+  if vrb then
+      _log:=_stdOutLog;
 end;
 
 procedure PrintHelp;
 begin
-  writeln('cconvert - c to pascal convert utility');
+  writeln('cconvert 1.1 - c to pascal convert utility by Dmitry Boyarintsev');
+  writeln('usage:');
+  writeln(' cconvert [options] %header_filename%');
   writeln('possible options:');
-  writeln(' -all              - convert the whole header to pascal, instead of a first entity');
+  writeln(' -first            - stops on the first first entity');
   writeln(' -o filename       - specify the output file. if not specified, outputs to stdout');
   writeln(' -ro               - prevent the configuration file from modifications (adding new types, etc)');
   writeln(' -cfg filename     - specifies the configuration file');
@@ -93,6 +104,7 @@ begin
   writeln(' -showunparsed     - writes out unprased entities by their classname (for debugging only)');
   writeln(' -codesize         - show two numbers of the code processed (used by Chelper)');
   writeln(' -pasunit          - generates a pascal unit');
+  //writeln(' -verbose          - verbose output');
 end;
 
 procedure ReadParams(var InputFileName: String);
@@ -100,15 +112,19 @@ var
   i : integer;
   s : string;
 begin
-  for i:=1 to ParamCount do begin
-    s:=LowerCase(ParamStr(i));
-    if (s='-h') or (s='-help') or (s='-?') then begin
-      PrintHelp;
-      Halt;
-    end else if s='-showunparsed' then
-      DoDebugEntities:=True;
+  if ParamCount=0 then
+    isPrintHelp:=true
+  else begin
+    for i:=1 to ParamCount do begin
+      s:=LowerCase(ParamStr(i));
+      if (s='-h') or (s='-help') or (s='-?') then begin
+        isPrintHelp:=true;
+        Break;
+      end else if s='-showunparsed' then
+        DoDebugEntities:=True;
+    end;
+    InputFileName:=ParamStr(ParamCount);
   end;
-  InputFileName:=ParamStr(ParamCount);
 end;
 
 
@@ -135,8 +151,12 @@ var
   err : TErrorInfo;
   fn  : String;
 begin
-  if ParamCount=0 then Exit;
   ReadParams(fn);
+  if isPrintHelp then begin
+    PrintHelp;
+    Exit;
+  end;
+
   if not FileExists(fn) then begin
     writeln('file doesn''t exist: ', fn);
     Exit;
@@ -151,6 +171,7 @@ begin
     InitSettings(cfg);
 
     inps.LoadFromFile(ParamStr(ParamCount));
+
     outs.Text:=ConvertCode(inps.Text, p, ParseAll, err, cfg);;
 
     if ShowCodeSize then outs.Insert(0, Format('%d %d', [p.Y,p.X]));
