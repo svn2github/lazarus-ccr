@@ -107,7 +107,6 @@ type
     TokenType     : TTokenType;
     TokenCode     : Integer;      // code for reserved tokens and symbols, otherwiser -1. 0 is EOF
 
-
     Index         : Integer;      // current index where text parsing goes on
     TokenPos      : Integer;      // position of currently found token by (FindTextToken)
     MacrosDelta   : Integer;      // the difference between Buf Index and Original Text index, caused by Macros substitution
@@ -149,6 +148,8 @@ type
     function DoParse(AParser: TTextParser): Boolean; virtual;
   public
     Offset      : Integer;
+    EndOffset   : Integer;
+    intComment  : TList; // nil!
     Specifiers  : TStringList;
     
     constructor Create(AOffset: Integer=-1); virtual;
@@ -287,10 +288,11 @@ type
   end;
 
 var
-  ParseNextEntity: function (AParser: TTextParser): TEntity = nil;
+  _ParseNextEntity: function (AParser: TTextParser): TEntity = nil;
   ParseNamePart: function (Parser: TTextParser): TNamePart = nil;
   ParsePreproc: function (AParser: TTextParser): TEntity = nil;
 
+function ParseNextEntity(AParser: TTextParser): TEntity;
 function ParseNextCEntity(AParser: TTextParser): TEntity; // default ParseNextEntity
 function ParseCNamePart(Parser: TTextParser): TNamePart;  // default ParseNamePart
 
@@ -386,8 +388,10 @@ type
   { TEnumType }
 
   TEnumType = class(TEntity)
-    Name    : AnsiString;
-    items   : array of TEnumItem;
+    Name      : AnsiString;
+    ElemType  : AnsiString;
+    ClassStr  : AnsiString;
+    items     : array of TEnumItem;
     function AddItem(const name: AnsiString; x: TExpression; Offset: Integer = -1): Integer;
   end;
 
@@ -1035,6 +1039,7 @@ end;
 
 destructor TEntity.Destroy;
 begin
+  intComment.Free;
   Specifiers.Free;
   inherited Destroy;
 end;
@@ -2038,6 +2043,24 @@ begin
       en.Name:=AParser.Token;
       AParser.NextToken;
     end;
+
+    // this is C++ enum that allows "type" definition of enumeration
+    (* see https://msdn.microsoft.com/en-us/library/2dzy4k6e.aspx
+       // unscoped enum:
+       enum [identifier] [: type]
+
+       {enum-list};
+
+       // scoped enum: <-- to be done!
+       enum [class|struct]
+       [identifier] [: type]
+       {enum-list};                                                 *)
+    if AParser.Token=':' then begin
+      AParser.NextToken;
+      en.ElemType:=AParser.Token;
+      AParser.NextToken;
+    end;
+
     if AParser.Token='{' then begin
       AParser.NextToken;
       while AParser.Token<>'}' do begin
@@ -2119,9 +2142,16 @@ begin
   inherited Destroy;
 end;
 
+function ParseNextEntity(AParser: TTextParser): TEntity;
+begin
+  Result:=nil;
+  if not Assigned(AParser) then Exit;
+  if Assigned(_ParseNextEntity) then  Result:=_ParseNextEntity(AParser);
+  if Assigned(Result) then Result.EndOffset:=AParser.Index;
+end;
 
 initialization
-  ParseNextEntity:=@ParseNextCEntity;
+  _ParseNextEntity:=@ParseNextCEntity;
   ParseNamePart:=@ParseCNamePart;
   ParsePreproc:=@ParseDefPreproc;
 

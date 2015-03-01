@@ -614,8 +614,8 @@ begin
 end;
 
 initialization
-  PrevParseNextEntity:=ParseNextEntity;
-  ParseNextEntity:=ParseNextObjCEntity;
+  PrevParseNextEntity:=_ParseNextEntity;
+  _ParseNextEntity:=@ParseNextObjCEntity;
 
   PrevNamePart:=ParseNamePart;
   ParseNamePart:=ParseObjCNamePart;
