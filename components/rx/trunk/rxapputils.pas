@@ -74,8 +74,36 @@ function IniReadInteger(IniFile: TObject; const Section, Ident:string;
   const Value: integer):integer;
 
 function GetDefaultIniRegKey: string;
+Function RxGetAppConfigDir(Global : Boolean) : String;
 implementation
-uses Registry, Forms, FileUtil, LazUTF8;
+uses
+  {$IFDEF WINDOWS}
+  windirs,
+  {$ENDIF}
+  Registry, Forms, FileUtil, LazUTF8;
+
+{$IFDEF WINDOWS}
+function RxGetAppConfigDir(Global: Boolean): String;
+begin
+  If Global then
+    Result:=GetWindowsSpecialDir(CSIDL_COMMON_APPDATA)
+  else
+    Result:=GetWindowsSpecialDir(CSIDL_LOCAL_APPDATA);
+  If (Result<>'') then
+    begin
+      if VendorName<>'' then
+        Result:=IncludeTrailingPathDelimiter(Result+ UTF8ToSys(VendorName));
+      Result:=IncludeTrailingPathDelimiter(Result+UTF8ToSys(ApplicationName));
+    end
+  else
+    Result:=ExcludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0))); //IncludeTrailingPathDelimiter(DGetAppConfigDir(Global));
+end;
+{$ELSE}
+function RxGetAppConfigDir(Global: Boolean): String;
+begin
+  Result:=GetAppConfigDir(Global);
+end;
+{$ENDIF}
 
 function GetDefaultSection(Component: TComponent): string;
 var
@@ -113,7 +141,8 @@ begin
   else
   begin
     Result := ExtractFileName(ChangeFileExt(Application.ExeName, '.ini'));
-    S:=SysToUTF8(GetAppConfigDir(false));
+    S:=RxGetAppConfigDir(false);
+    S:=SysToUTF8(S);
     ForceDirectoriesUTF8(S);
     Result:=S+Result;
   end;
