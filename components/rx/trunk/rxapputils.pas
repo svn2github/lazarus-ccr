@@ -75,7 +75,7 @@ function IniReadInteger(IniFile: TObject; const Section, Ident:string;
 
 function GetDefaultIniRegKey: string;
 implementation
-uses Registry, Forms, FileUtil;
+uses Registry, Forms, FileUtil, LazUTF8;
 
 function GetDefaultSection(Component: TComponent): string;
 var
@@ -113,8 +113,8 @@ begin
   else
   begin
     Result := ExtractFileName(ChangeFileExt(Application.ExeName, '.ini'));
-    S:=GetAppConfigDir(false);
-    ForceDirectory(S);
+    S:=SysToUTF8(GetAppConfigDir(false));
+    ForceDirectoriesUTF8(S);
     Result:=S+Result;
   end;
 end;
