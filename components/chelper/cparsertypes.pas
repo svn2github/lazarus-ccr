@@ -69,6 +69,7 @@ type
     MacroName   : AnsiString;
     MacroParams : TStringList;
     ReplaceText : AnsiString;
+    isVariableParams : Boolean;
 
     constructor Create;
     destructor Destroy; override;
@@ -168,6 +169,7 @@ type
   public
     Params    : TStringList;
     _Name     : AnsiString;
+    isVar     : Boolean;
     SubsText  : AnsiString;
     destructor Destroy; override;
   end;
@@ -804,6 +806,7 @@ begin
       comment := TComment.Create(idx);
       comment._Comment := cmt;
       comment.CommenType:=ct;
+      comment.EndOffset:=Index;
       Comments.Add(Comment);
     end;
     if (Assigned(OnComment)) then OnComment(Self, cmt);
@@ -1263,11 +1266,21 @@ procedure TCMacroHandler.AddParamMacro(const MacroStr,ReplaceStr:AnsiString;
 var
   cm  : TCMacroStruct;
   i   : Integer;
+
 begin
   cm := TCMacroStruct.Create;
   cm.MacroName := MacroStr;
   cm.ReplaceText := ReplaceStr;
-  if Assigned(Params) then cm.MacroParams.Assign(Params);
+  if Assigned(Params) then begin
+    cm.MacroParams.Assign(Params);
+    i:=cm.MacroParams.Count-1;
+    if i>=0 then begin
+      if (cm.MacroParams[i]='...') then begin
+        cm.isVariableParams:=true;
+        cm.MacroParams.Delete(i);
+      end;
+    end;
+  end;
 
   i := MacrosNames.IndexOf(MacroStr);
   if i >= 0 then begin
@@ -1338,6 +1351,10 @@ var
   //j   : Integer;
   cm    : TCMacroStruct;
   RVal  : TStringList;
+  va    : string;
+const
+  VaArgs = '__VA_ARGS__';
+
 begin
   Parser.FindNextToken(s, tt);
   i := MacrosNames.IndexOf(s);
@@ -1368,12 +1385,20 @@ begin
       while Parser.Token<>')' do begin
         ParseCMacroParam(Parser, x);
 
-        Result:=i<cm.MacroParams.Count;
+        Result:=(i<cm.MacroParams.Count) or cm.isVariableParams;
         if not Result then begin
           Parser.SetError('too many params for the Macro: '+ name);
           Exit;
         end;
-        RVal.Values [ cm.MacroParams[i]]:=x;
+
+        if i>=cm.MacroParams.Count  then begin
+          //todo: optimize. Values access is slow!
+          va:=RVal.Values[ VaArgs ];
+          if  va='' then va:=x
+          else va:=va+','+x;
+          RVal.Values[ VaArgs ]:=va;
+        end else
+          RVal.Values [ cm.MacroParams[i]]:=x;
 
         Parser.NextToken;
         if Parser.Token=',' then Parser.NextToken;
