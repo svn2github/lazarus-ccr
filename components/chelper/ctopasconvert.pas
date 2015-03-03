@@ -596,9 +596,9 @@ function ParseCEntities(const inp: TParseInput; entList: TList;
   var outputInfo: TParseOutput): Boolean;
 var
   p   : TTextParser;
-  cmt : TStopComment;
+  //cmt : TStopComment;
   ent : TEntity;
-  i   : Integer;
+  //i   : Integer;
 begin
   p:=inp.parser;
   //cmt:=inp.stopcmt;
@@ -608,11 +608,13 @@ begin
   outputInfo.error.ErrorPos.Y:=0;
   outputInfo.error.isError:=false;
 
+  ent:=nil;
   repeat
     try
-      p.NextToken;
-      //ent := ParseNextEntityOrComment(p, cmt, outputInfo.error);
+      if not (ent is TCPPSection) then
+        p.NextToken;
       ent := ParseNextEntity(p);
+
     except
       ent:=nil;
     end;
@@ -653,7 +655,6 @@ var
   cmtlist : TList;
   cnv     : TCodeConvertor;
   ofs     : Integer;
-  pas     : string;
 begin
   Result:='';
 
@@ -684,17 +685,10 @@ begin
       except
         on e: Exception do Result:=Result+LineEnding+ 'error while converting C code: ' + e.Message;
       end;
-      //Result := Result+GetEmptyLines(originText, ofs, ent.Offset);
+      Result := Result+GetEmptyLines(originText, ofs, ent.Offset);
       ofs:=ent.Offset;
     end;
 
-    //if Assigned(ent) and (p.Comments.IndexOf(ent)<0) then ent.Free;
-    //for i:=0 to p.Comments.Count-1 do TComment(p.Comments[i]).Free;
-    //p.Comments.Clear;
-    //cmt.Clear;
-    //until (ent=nil) or not AllText;
-
-    {OffsetToLinePos(t, succidx, endPoint);}
     Result:=cnv.wr.Text;
   finally
     cnv.Free;

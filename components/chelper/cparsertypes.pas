@@ -139,7 +139,7 @@ type
     function NextToken: Boolean;
     function FindNextToken(var AToken: AnsiString; var ATokenType: TTokenType): Boolean;
 
-    procedure SetError(const ErrorCmt: AnsiString);
+    procedure SetError(const ErrorCmt: AnsiString; const Context: string = '');
   end;
 
   { TEntity }
@@ -251,6 +251,16 @@ type
     procedure PushToken(const AToken: AnsiString; ATokenType: TTokenType);
   end;
 
+  TCPPSection = class(TEntity);
+
+  TCPPSectionOpen = class(TCPPSection) // an entity for: extern "C" { ... }
+  public
+    isCExtern  : Boolean;
+  end;
+
+  TCPPSectionClose = class(TCPPSection) // an entity for  just closing character }
+  end;
+
 const
   nk_Ident = 0;
   nk_Ref   = 1;
@@ -295,7 +305,7 @@ var
   ParsePreproc: function (AParser: TTextParser): TEntity = nil;
 
 function ParseNextEntity(AParser: TTextParser): TEntity;
-function ParseNextCEntity(AParser: TTextParser): TEntity; // default ParseNextEntity
+function ParseNextCEntity(AParser: TTextParser; ExpectCPPSection: Boolean = true): TEntity; // default ParseNextEntity
 function ParseCNamePart(Parser: TTextParser): TNamePart;  // default ParseNamePart
 
 function ParseCExpression(AParser: TTextParser; var ExpS: AnsiString): Boolean; deprecated;
@@ -321,8 +331,8 @@ function CreateCParser(const CHeaderText: AnsiString;
 type
   TCustomEntityProc = function (Parent: TEntity; Parser: TTextParser): TEntity;
 
-procedure ErrorExpect(Parser: TTextParser; const Expect: AnsiString);
-function ConsumeToken(Parser: TTextParser; const Token: AnsiString; const comment: string = ''): Boolean;
+procedure ErrorExpect(Parser: TTextParser; const Expect: AnsiString; const Comment: string = '' );
+function ConsumeToken(Parser: TTextParser; const Token: AnsiString; const Comment: string = ''): Boolean;
 function ConsumeIdentifier(Parser: TTextParser; var Id: AnsiString): Boolean;
 
 function ParseCType(Parser: TTextParser): TEntity;
@@ -939,8 +949,9 @@ begin
   end;
 end;
 
-procedure TTextParser.SetError(const ErrorCmt: AnsiString);
+procedure TTextParser.SetError(const ErrorCmt, Context: AnsiString);
 begin
+  if Context<>'' then Errors.Add('Error while '+ Context);
   Errors.Add(ErrorCmt);
 end;
 
@@ -1496,7 +1507,7 @@ begin
 end;
 
 
-procedure ParseSepcifiers(AParser: TTextParser; st: TStrings);
+procedure ParseSpecifiers(AParser: TTextParser; st: TStrings);
 begin
   while isSomeSpecifier(AParser.Token) do begin
     st.Add(AParser.Token);
@@ -1505,7 +1516,7 @@ begin
 end;
 
 
-function ParseNextCEntity(AParser: TTextParser): TEntity;
+function ParseNextCEntity(AParser: TTextParser; ExpectCPPSection: Boolean): TEntity;
 var
   s   : AnsiString;
   tp  : TEntity;
@@ -1517,10 +1528,20 @@ begin
   if s='' then Exit;
 
   if s = 'typedef' then begin
-    Result:=ParseTypeDef(AParser);
+    Result:=ParseTypeDef(AParser)
+  end else if (s = '}') and ExpectCPPSection then begin
+    Result:=TCPPSectionClose.Create;
+    AParser.NextToken;
+    // need to exit here, so it won't fail on ";"
+    Exit;
   end else begin
     v:=TVarFuncEntity.Create(AParser.TokenPos);
     ParseNames(AParser, tp, v.Names, [';']);
+    if (v.Names.Count=0) and (tp is TCPPSectionOpen) then begin
+      Result:=tp;
+      // need to exit here, so it won't fail on ";"
+      Exit;
+    end;
 
     // declarations like:
     // fn (int i);
@@ -1546,7 +1567,7 @@ begin
   if AParser.Token<>';' then begin
     Result.Free;
     Result:=nil;
-    ErrorExpect(AParser,';');
+    ErrorExpect(AParser,';', 'parsing C entity declaration');
   end;
 end;
 
@@ -1555,17 +1576,17 @@ begin
   Result:=nil;
 end;
 
-procedure ErrorExpect(Parser:TTextParser;const Expect:AnsiString);
+procedure ErrorExpect(Parser:TTextParser; const Expect, Comment: string);
 begin
   //todo: duplication ?
-  Parser.SetError( ErrExpectStr( Expect, Parser.Token) );
+  Parser.SetError( ErrExpectStr( Expect, Parser.Token ), Comment );
 end;
 
 function ConsumeToken(Parser:TTextParser;const Token: AnsiString; const comment: string):Boolean;
 begin
   Result:=Parser.Token=Token;
   if Result then Parser.NextToken
-  else Parser.SetError( ErrExpectStr( Token, Parser.Token)+comment);
+  else Parser.SetError( ErrExpectStr( Token, Parser.Token), Comment);
 end;
 
 function ConsumeIdentifier(Parser: TTextParser; var Id: AnsiString): Boolean;
@@ -1797,23 +1818,40 @@ var
   done  : Boolean;
   specs : TStringList;
   s     : AnsiString;
+
+  extOfs : Integer;
 begin
   specs:=TStringList.Create;
+  try
+    //todo: this should be outside in C++ specific parsing
+    extOfs :=Parser.Index; // used for extern "C" only
 
-  ParseSepcifiers(Parser, specs);
-  NameType:=ParseCType(Parser);
+    ParseSpecifiers(Parser, specs);
+    NameType:=ParseCType(Parser);
 
-  s:=isCallConv(Parser.Token);
-  if s<>'' then begin
-    specs.Add(s);
-    Parser.NextToken;
+    // cpp extern "C" {
+    if (Parser.TokenType=tt_String) and (Parser.Token='"C"') and (specs.Count=1) and (specs[0]='extern')then begin
+      Parser.NextToken;
+      if not ConsumeToken(Parser, '{', 'extern "C"') then Exit;
+      NameType:=TCPPSectionOpen.Create(extOfs);
+      TCPPSectionOpen(NameType).isCExtern:=true;
+      NameType.EndOffset:=Parser.Index;
+      Result:=true;
+      Exit;
+    end;
+
+    s:=isCallConv(Parser.Token);
+    if s<>'' then begin
+      specs.Add(s);
+      Parser.NextToken;
+    end;
+
+    Result:=Assigned(NameType);
+    if Result then NameType.Specifiers.Assign(specs)
+    else Exit;
+  finally
+    Specs.Free;
   end;
-
-  Result:=Assigned(NameType);
-  if Result then NameType.Specifiers.Assign(specs);
-  specs.Free;
-
-  if not Result then Exit;
 
   try
     Result:=False;
@@ -1827,7 +1865,7 @@ begin
       done:=isEndOfName(Parser, EndChars);
       if not done then begin
         if Parser.Token <> ',' then begin
-          ErrorExpect(Parser, ';');
+          ErrorExpect(Parser, ';', 'Parsing var/func declarations');
           Exit;
         end;
         Parser.NextToken;
