@@ -19,8 +19,12 @@
 program cconvert;
 
 {$mode delphi}{$H+}
+{.$define leaks}
 
 uses
+  {$ifdef leaks}
+  heaptrc,
+  {$endif}
   SysUtils,Classes,
   ctopasconvert, cparsertypes, cparserutils, cconvconfig, objcparsing
   , cconvlog;
@@ -33,6 +37,8 @@ var
   ShowCodeSize  : Boolean = False; // show the size of code processed
   isPascalUnit  : Boolean = False; // convert to pascal unit
   isPrintHelp   : Boolean = False;
+  isVerbose     : Boolean = false;
+  DoIncludes    : Boolean = true;
 
 function StringFromFile(const FileName: AnsiString): AnsiString;
 var
@@ -52,42 +58,10 @@ begin
   end;
 end;
 
-procedure InitSettings(cfg: TConvertSettings);
-var
-  i   : Integer;
-  p   : AnsiString;
-  fn  : AnsiString;
-  vrb : Boolean;
+function SafeParamStr(i: integer): string;
 begin
-  i:=1;
-  vrb:=false;
-  while i<=Paramcount do begin
-    p:=AnsiLowerCase(ParamStr(i));
-    if p='-cfg' then begin
-      inc(i);
-      fn:=Trim(Paramstr(i));
-      ConfigFile:=fn;
-      if FileExists(fn) then cconvconfig.LoadFromFile(fn, cfg);
-    end else if p='-ro' then
-      ConfigFileRO:=True
-    else if p='-defines' then begin
-      inc(i);
-      cfg.CustomDefines:=cfg.CustomDefines+' ' + StringFromFile(ParamStr(i));
-    end else if p='-o' then begin
-      inc(i);
-      OutputFile:=ParamStr(i);
-    end else if p='-first' then begin
-      ParseAll:=false
-    end else if p='-pasunit' then begin
-      isPascalUnit:=True;
-    end else if p='-verbose' then begin
-      vrb:=true;
-      // do not assign log now, wait until all params are done
-    end;
-    inc(i);
-  end;
-  if vrb then
-      _log:=_stdOutLog;
+  if (i>=0) and (i<=ParamCount) then Result:=ParamStr(i)
+  else Result:='';
 end;
 
 procedure PrintHelp;
@@ -104,27 +78,58 @@ begin
   writeln(' -showunparsed     - writes out unprased entities by their classname (for debugging only)');
   writeln(' -codesize         - show two numbers of the code processed (used by Chelper)');
   writeln(' -pasunit          - generates a pascal unit');
-  //writeln(' -verbose          - verbose output');
+  writeln(' -noinclude        - prevent processing of #include-ed or @import-ed files');
+  writeln(' -verbose          - verbose output');
 end;
 
-procedure ReadParams(var InputFileName: String);
+procedure ReadParams(files: TStrings; cfg: TConvertSettings);
 var
   i : integer;
   s : string;
+  ss : string;
+  fn  : AnsiString;
 begin
   if ParamCount=0 then
     isPrintHelp:=true
   else begin
-    for i:=1 to ParamCount do begin
-      s:=LowerCase(ParamStr(i));
+    i:=1;
+    while i<= ParamCount do begin
+      ss:=SafeParamStr(i);
+      s:=LowerCase(ss);
       if (s='-h') or (s='-help') or (s='-?') then begin
         isPrintHelp:=true;
         Break;
-      end else if s='-showunparsed' then
+      end else if s='-showunparsed' then begin
         DoDebugEntities:=True;
+      end else if s='-cfg' then begin
+        inc(i);
+        fn:=Trim(SafeParamStr(i));
+        ConfigFile:=fn;
+        if FileExists(fn) then cconvconfig.LoadFromFile(fn, cfg);
+      end else if s='-ro' then
+        ConfigFileRO:=True
+      else if s='-defines' then begin
+        inc(i);
+        cfg.CustomDefines:=cfg.CustomDefines+' ' + StringFromFile(SafeParamStr(i));
+      end else if s='-o' then begin
+        inc(i);
+        OutputFile:=SafeParamStr(i);
+      end else if s='-first' then begin
+        ParseAll:=false
+      end else if s='-pasunit' then begin
+        isPascalUnit:=True;
+      end else if s='-noinclude' then begin
+        DoIncludes:=false;
+      end else if s='-verbose' then begin
+        isVerbose:=true;
+        // do not assign log now, wait until all params are done
+      end else
+        files.Add(ss);
+      inc(i);
     end;
-    InputFileName:=ParamStr(ParamCount);
+    //InputFileName:=SafeParamStr(ParamCount);
   end;
+  if isVerbose then _log:=_stdOutLog;
 end;
 
 
@@ -143,61 +148,239 @@ begin
   outs.Add(      'end.');
 end;
 
+function GetIncludeFN(const fn: string): string;
+var
+ i : integer;
+begin
+  i:=length(fn);
+  while (i>0) and not (fn[i] in ['/','\']) do dec(i);
+  Result:=Copy(fn, i+1, length(fn));
+end;
+
+function SortByUsage(p1, p2: Pointer): integer;
+var
+  f1, f2: THeaderFile;
+begin
+  f1:=THeaderFile(p1);
+  f2:=THeaderFile(p2);
+  if (f1.usedBy=f2.usedBy) then begin
+    if f1.inclOrder=f2.inclOrder then Result:=0
+    else if f1.inclOrder<f2.inclOrder then Result:=-1
+    else Result:=1;
+  end else if (f1.usedBy<>0) then begin
+    if f1.usedBy<=f2.inclOrder then Result:=-1
+    else Result:=1;
+  end else if (f2.usedBy<>0) then begin
+    if f2.usedBy<=f1.inclOrder then Result:=1
+    else Result:=-1;
+  end;
+end;
+
+procedure ResortByUsage(files: TStrings);
+var
+  fl : TList;
+  i  : integer;
+begin
+  fl:=TList.Create;
+  try
+    for i:=0 to files.Count-1 do
+      fl.Add(files.Objects[i]);
+    fl.Sort(SortByUsage);
+    files.Clear;
+    for i:=0 to fl.Count-1 do
+      files.AddObject( THeaderFile(fl[i]).fn, fl[i] );
+  finally
+    fl.Free;
+  end;
+end;
+
+procedure TryParse(files: TStrings; cfg: TConvertSettings);
+var
+  inp   : TParseInput;
+  ot    : TParseOutput;
+  txt   : TSTringList;
+  res   : string;
+  fn    : string;
+  i     : integer;
+  j     : integer;
+  fi    : integer;
+  ic    : TCPrepInclude;
+  hdr   : THeaderFile;
+  hh    : THeaderFile;
+
+begin
+  InitCParserInput(inp, true);
+  try
+    LoadDefines(inp, cfg.CustomDefines);
+
+    i:=0;
+    while i<files.Count do begin
+      fn:=files[i];
+
+      hdr:=THeaderFile(files.Objects[i]);
+      if not Assigned(hdr) then begin
+        hdr:=THeaderFile.Create;
+        hdr.fn:=ExtractFileName(fn);
+        files.Objects[i]:=hdr;
+      end;
+      hdr.inclOrder:=i;
+
+      txt:=TStringList.Create;
+      try
+        txt.LoadFromFile(fn);
+        ResetText(inp, txt.Text);
+      finally
+        txt.Free;
+      end;
+
+      //writeln('parsing entities');
+      if not ParseCEntities(inp, hdr.ents, ot) then begin
+        //writeln('error:');
+        writeln('Parsing error at ', fn,' (',ot.error.ErrorPos.y,':',ot.error.ErrorPos.X,')');
+        writeln(ot.error.ErrorMsg);
+
+        ReleaseList(hdr.Ents);
+        inc(i);
+
+        Continue;
+      end;
+      hdr.text:=inp.parser.Buf;
+
+      // assing internal comments
+      //DebugEnList(ents);
+      AssignIntComments(hdr.ents);
+      //DebugEnList(ents);
+
+      //writeln('c to pas');
+      //res:=CEntitiesToPas(inp.parser.Buf, hdr.ents, cfg);
+      //writeln('done!');
+      //writeln(res);
+
+      if DoIncludes then
+        for j:=0 to hdr.ents.Count-1 do
+          if TObject(hdr.ents[j]) is TCPrepInclude then begin
+            ic:=TCPrepInclude(hdr.ents[j]);
+            if Pos('UIKit/', ic.Included) > 0 then begin
+              fn:='C:\fpc_laz\chelper\uikit\Headers\'+GetIncludeFN(ic.Included);
+              fi:=Files.IndexOf(fn);
+              if fi<0 then
+                // GetIncludeFN(ic.Included) is a hack not to add UIKit.h twice
+                fi:=Files.IndexOf( GetIncludeFN(ic.Included) );
+              if fi<0 then begin
+                log('adding: ', fn);
+                hh:=THeaderFile.Create;
+                hh.fn:=ExtractFileName(fn);
+                hh.usedBy:=hdr.inclOrder;
+                fi:=Files.AddObject(fn, hh);
+              end else begin
+                hh:=THeaderFile(Files.Objects[fi]);
+                // fi<>0 is a hack not to add reassing UIKit.h twice
+                if (hh.usedBy=0) and (fi<>0) then hh.usedBy:=i;
+              end;
+              inc(THeaderFile(Files.Objects[fi]).useCount);
+
+            end;
+          end;
+
+      inc(i);
+    end;
+
+    if isVerbose then begin
+      log('files count = ', files.Count);
+      log('original order');
+      DebugHeaders(files);
+    end;
+
+    log('files order after usage resolving');
+    ResortByUsage(files);
+    if isVerbose then DebugHeaders(files);
+
+    for i:=0 to files.Count-1 do begin
+      hdr:=THeaderFile(files.Objects[i]);
+      log('// '+files[i]+' ', hdr.ents.Count);
+      res:=CEntitiesToPas(hdr.text, hdr.ents, cfg);
+
+      writeln(res);
+    end;
+
+    {writeln('alphabet!');
+    TSTringList(files).Sort;
+    DebugHeaders(files);}
+
+
+  finally
+    FreeCParserInput(inp);
+  end;
+end;
+
+
+
 var
   inps, outs : TStringList;
   i   : Integer;
   p   : TPoint;
   cfg : TConvertSettings;
   err : TErrorInfo;
-  fn  : String;
+  fns : TStringList;
+
 begin
-  ReadParams(fn);
-  if isPrintHelp then begin
-    PrintHelp;
-    Exit;
-  end;
-
-  if not FileExists(fn) then begin
-    writeln('file doesn''t exist: ', fn);
-    Exit;
-  end;
-
-
-  inps := TStringList.Create;
-  outs := TStringList.Create;
+  {$ifdef leaks}
+  DeleteFile('leaks.txt');
+  SetHeapTraceOutput('leaks.txt');
+  {$endif}
 
   cfg:=TConvertSettings.Create;
+  fns:=TStringList.Create;
   try
-    InitSettings(cfg);
-
-    inps.LoadFromFile(ParamStr(ParamCount));
-
-    outs.Text:=ConvertCode(inps.Text, p, ParseAll, err, cfg);;
-
-    if ShowCodeSize then outs.Insert(0, Format('%d %d', [p.Y,p.X]));
-    if err.isError then outs.Insert(0, Format('error %d %d %s',[err.ErrorPos.Y, err.ErrorPos. X, err.ErrorMsg]) );
-
-    if isPascalUnit then begin
-      AddPascalUnit(outs, GetPascalUnitName(fn));
+    ReadParams(fns, cfg);
+    if isPrintHelp then begin
+      PrintHelp;
+      Exit;
     end;
 
+    if fns.Count=0 then begin
+      writeln('no input header files were specified');
+      Exit;
+    end;
 
-    if OutputFile<>'' then
-      outs.SaveToFile(OutputFile)
-    else
-      for i:=0 to outs.Count-1 do
-        writeln(outs[i]);
-  finally
-    if not ConfigFileRO and (ConfigFile<>'') then begin
-      ForceDirectories(ExtractFilePath(ConfigFile));
-      try
-        cconvconfig.SaveToFile(ConfigFile, cfg);
-      except
+    TryParse(fns, cfg);
+    Exit;
+
+    inps := TStringList.Create;
+    outs := TStringList.Create;
+
+    try
+      inps.LoadFromFile(ParamStr(ParamCount));
+
+      outs.Text:=ConvertCode(inps.Text, p, ParseAll, err, cfg);;
+
+      if ShowCodeSize then outs.Insert(0, Format('%d %d', [p.Y,p.X]));
+      if err.isError then outs.Insert(0, Format('error %d %d %s',[err.ErrorPos.Y, err.ErrorPos. X, err.ErrorMsg]) );
+
+      if isPascalUnit then begin
+        AddPascalUnit(outs, GetPascalUnitName(fns[0]));
       end;
+
+
+      if OutputFile<>'' then
+        outs.SaveToFile(OutputFile)
+      else
+        for i:=0 to outs.Count-1 do
+          writeln(outs[i]);
+    finally
+      if not ConfigFileRO and (ConfigFile<>'') then begin
+        ForceDirectories(ExtractFilePath(ConfigFile));
+        try
+          cconvconfig.SaveToFile(ConfigFile, cfg);
+        except
+        end;
+      end;
+      inps.Free;
+      outs.Free;
     end;
+  finally
     cfg.Free;
-    inps.Free;
-    outs.Free;
+    fns.Free;
   end;
 end.
 
