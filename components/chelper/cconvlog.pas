@@ -1,3 +1,4 @@
+
 unit cconvlog;
 
 interface
@@ -9,6 +10,8 @@ uses
 
 
 procedure log(const s: string); overload;
+procedure log(const s, s1: string); overload;
+procedure log(const s: string; i: Integer); overload;
 procedure log(const fmt: string; const params: array of const); overload;
 
 var
@@ -32,6 +35,18 @@ end;
 procedure log(const s: string); overload;
 begin
   if Assigned(_log) then _log(s);
+end;
+
+procedure log(const s, s1: string); overload;
+begin
+  if not Assigned(_log) then Exit;
+  log(s+s1);
+end;
+
+procedure log(const s: string; i: Integer); overload;
+begin
+  if not Assigned(_log) then Exit;
+  log(s+IntToStr(i));
 end;
 
 procedure log(const fmt: string; const params: array of const); overload;
