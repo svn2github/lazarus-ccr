@@ -71,6 +71,8 @@ type
   public
     scope  : TObjCScope;
     v      : TVarFuncEntity;
+    bits   : TExpression;
+    isbitted : Boolean;
     destructor Destroy; override;
   end;
 
@@ -179,6 +181,8 @@ var
   iv    : TObjCInstVar;
   s     : AnsiString;
   scope : TObjCScope;
+  isbitted : Boolean;
+  bits  : TExpression;
 begin
   Result:=True;
   if AParser.Token<>'{' then Exit;
@@ -201,10 +205,21 @@ begin
       AParser.NextToken;
     end else begin
       v:=TVarFuncEntity.Create(AParser.TokenPos);
-      if not ParseNames(AParser, v.RetType, v.Names, [';']) then Exit;
+      if not ParseNames(AParser, v.RetType, v.Names, [';',':']) then Exit;
+
+      if AParser.Token=':' then begin
+        AParser.NextToken;
+        isbitted:=True;
+        bits:=ParseCExpr(AParser);
+      end else begin
+        isbitted:=false;
+        bits:=nil;
+      end;
       iv:=TObjCInstVar.Create(v.Offset);
       iv.v:=v;
       iv.scope:=scope;
+      iv.isbitted:=isbitted;
+      iv.bits:=bits;
       Vars.Add(iv);
       if AParser.Token=';' then AParser.NextToken;
     end;
@@ -219,6 +234,7 @@ var
   itf : TObjCInterface;
   i   : Integer;
   nm  : AnsiString;
+  ent : TEntity;
 begin
   Result:=nil;
   if AParser.Token<>'@interface' then Exit;
@@ -257,6 +273,14 @@ begin
         end;
         AParser.NextToken;
       end;
+
+      { todo: typedef could be found within class
+      while APArser.Token='typedef' do begin
+        ent := ParseTypeDef(APArser );
+        if not Assigned(ent) then Exit;
+        itf.Vars.Add(ent);
+      end;
+      }
 
       ParseInstVars(AParser, itf.Vars);
     end;
@@ -428,6 +452,7 @@ begin
       if ConsumeToken(AParser,'...') then m.VarParams:=True
       else ErrorExpect(AParser, '...');
     end;
+
     if not ConsumeToken(AParser, ';') then Exit;
 
     Result:=m;
@@ -506,6 +531,7 @@ end;
 destructor TObjCInstVar.Destroy;
 begin
   v.Free;
+  bits.Free;
   inherited Destroy;
 end;
 

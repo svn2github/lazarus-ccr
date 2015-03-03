@@ -28,7 +28,7 @@ uses
 
 const
   Err_Ident   = 'Identifier';
-  Err_Expect  = '%s, excepted, but "%s" found';
+  Err_Expect  = 'Token "%s" excepted, but "%s" found';
   Err_BadPrecompile   = 'Bad precompile directive';
 
 type
@@ -322,7 +322,7 @@ type
   TCustomEntityProc = function (Parent: TEntity; Parser: TTextParser): TEntity;
 
 procedure ErrorExpect(Parser: TTextParser; const Expect: AnsiString);
-function ConsumeToken(Parser: TTextParser; const Token: AnsiString): Boolean;
+function ConsumeToken(Parser: TTextParser; const Token: AnsiString; const comment: string = ''): Boolean;
 function ConsumeIdentifier(Parser: TTextParser; var Id: AnsiString): Boolean;
 
 function ParseCType(Parser: TTextParser): TEntity;
@@ -424,6 +424,7 @@ end;
 
 function ErrExpectStr(const Expected, Found: AnsiString): AnsiString;
 begin
+  //todo: duplication ?
   Result := Format(Err_Expect, [Expected, Found]);
 end;
 
@@ -1556,14 +1557,15 @@ end;
 
 procedure ErrorExpect(Parser:TTextParser;const Expect:AnsiString);
 begin
-  Parser.SetError('expected: "'+ Expect + '" but "'+Parser.Token+'" found');
+  //todo: duplication ?
+  Parser.SetError( ErrExpectStr( Expect, Parser.Token) );
 end;
 
-function ConsumeToken(Parser:TTextParser;const Token:AnsiString):Boolean;
+function ConsumeToken(Parser:TTextParser;const Token: AnsiString; const comment: string):Boolean;
 begin
   Result:=Parser.Token=Token;
   if Result then Parser.NextToken
-  else Parser.SetError('Token expected: '+Token);
+  else Parser.SetError( ErrExpectStr( Token, Parser.Token)+comment);
 end;
 
 function ConsumeIdentifier(Parser: TTextParser; var Id: AnsiString): Boolean;
