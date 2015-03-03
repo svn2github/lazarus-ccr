@@ -18,7 +18,7 @@
 }
 unit ctopasconvert;
 
-{$mode objfpc}{$H+}
+{$mode delphi}{$H+}
 
 interface
 
@@ -109,8 +109,57 @@ type
     procedure Clear;
   end;
 
+
+  TMacrosMaker = class(TObject)
+  public
+    hnd : TCMacroHandler;
+    allowRedfine: Boolean;
+    constructor Create(AHandler: TCMacroHandler);
+    procedure Precompiler(Sender: TTextParser; PrecompEntity: TObject);
+  end;
+
 type
   TConvertCheck = function (ent: TEntity): Boolean;
+
+
+type
+  TParseInput = record
+    parser  : TTextParser;
+    mmaker  : TMacrosMaker;
+    //stopcmt : TStopComment;
+    alltext : Boolean;
+  end;
+
+  TParseOutput = record
+    endPoint : TPoint;
+    error    : TErrorInfo;
+  end;
+
+  { THeaderFile }
+
+  THeaderFile = class(TObject)
+    ents      : TList;
+    fn        : string;
+    inclOrder : Integer;
+    useCount  : Integer;
+    isCore    : Boolean;
+    usedBy    : Integer;
+    text      : string;
+    constructor Create;
+    destructor Destroy; override;
+  end;
+
+procedure InitCParserInput(var inp: TParseInput; parseAll: Boolean = true);
+procedure FreeCParserInput(var inp: TParseInput);
+procedure LoadDefines(inp: TParseInput; const definesCode: string);
+procedure ResetText(const inp: TParseInput; const txt: string);
+function ParseCEntities(const inp: TParseInput; entList: TList; var outputInfo: TParseOutput): Boolean;
+function CEntitiesToPas(const originText: string; entList: TList; cfg: TConvertSettings): AnsiString;
+procedure ReleaseList(enlist: TList);
+
+procedure AssignIntComments(SortedEnlist: TList);
+procedure DebugEnList(entlist: TList);
+procedure DebugHeaders(files: TStrings);
 
 implementation
 
@@ -378,16 +427,10 @@ begin
   wr.W(' of ');
 end;
 
-type
-  TMacrosMaker = class(TObject)
-  public
-    hnd : TCMacroHandler;
-    constructor Create(AHandler: TCMacroHandler);
-    procedure Precompiler(Sender: TTextParser; PrecompEntity: TObject);
-  end;
-
 constructor TMacrosMaker.Create(AHandler: TCMacroHandler);
 begin
+  inherited Create;
+  allowRedfine:=true;
   hnd:=AHandler;
 end;
 
@@ -398,6 +441,9 @@ begin
   if not (PrecompEntity is TCPrepDefine) then Exit;
 
   d:=TCPrepDefine(PrecompEntity);
+
+  if hnd.isMacroDefined(d._Name) and not allowRedfine then Exit;
+
   if not Assigned(d.Params) or (d.Params.Count=0) then begin
     hnd.AddSimpleMacro(d._Name, d.SubsText);
   end else begin
@@ -415,7 +461,7 @@ begin
 
   m := TMacrosMaker.Create(hnd);
   p:=CreateCParser(t, false);
-  p.OnPrecompile:=@m.Precompiler;
+  p.OnPrecompile:=m.Precompiler;
 
   while p.NextToken do ; // parse through
 
@@ -451,6 +497,222 @@ begin
     Result:=Result+LineEnding;
 end;
 
+procedure InitCParserInput(var inp: TParseInput; parseAll: Boolean );
+var
+  p   : TTextParser;
+begin
+  FillChar(inp, sizeof(inp), 0);
+
+  p := CreateCParser('', true);
+  p.UseCommentEntities := True;
+
+  //inp.stopcmt:=TStopComment.Create;
+
+  inp.mmaker := TMacrosMaker.Create(p.MacroHandler);
+  inp.mmaker.allowRedfine:=false; // todo: it should be true!
+  p.OnPrecompile:=inp.mmaker.Precompiler;
+
+  inp.parser:=p;
+  inp.alltext:=parseAll;
+end;
+
+procedure LoadDefines(inp: TParseInput; const definesCode: string);
+begin
+  if not Assigned(inp.parser) or not Assigned(inp.parser.MacroHandler) or (definesCode='') then Exit;
+  PrepareMacros(definesCode, inp.parser.MacroHandler);
+end;
+
+procedure ResetText(const inp: TParseInput; const txt: string);
+begin
+  inp.parser.Buf:=txt;
+  inp.parser.Index:=1;
+  inp.parser.Line:=1;
+  inp.parser.MacrosDelta:=0;
+  inp.parser.TokenPos:=1;
+  inp.parser.Errors.Clear;
+  inp.parser.Comments.Clear;
+end;
+
+function SortByOffset(p1, p2: Pointer): integer;
+var
+  e1, e2: TEntity;
+begin
+  e1:=TEntity(p1);
+  e2:=TEntity(p2);
+  if e1.Offset=e2.Offset then Result:=0
+  else if e1.Offset<e2.Offset then Result:=-1
+  else Result:=1
+end;
+
+procedure AssignIntComments(SortedEnlist: TList);
+var
+  i   : integer;
+  ent : TEntity;
+begin
+  i:=0;
+  while i<SortedEnlist.Count do begin
+    ent:=TEntity(SortedEnlist[i]);
+    inc(i);
+    if not Assigned(ent) or (ent is TComment) then Continue;
+
+    while (i<SortedEnlist.Count)
+      and (TObject(SortedEnList[i]) is TComment)
+      and (TComment(SortedEnList[i]).Offset >= ent.Offset)
+      and (TComment(SortedEnList[i]).Offset <= ent.EndOffset) do
+    begin
+      if not assigned(ent.intComment) then ent.intComment:=TList.Create;
+      ent.intComment.Add( TComment(SortedEnList[i]) );
+      SortedEnList[i]:=nil;
+      inc(i);
+    end;
+  end;
+  SortedEnList.Pack;
+end;
+
+procedure DebugEnList(entlist: TList);
+var
+  i : Integer;
+  ent : TEntity;
+begin
+  for i:=0 to entList.Count-1 do begin
+    ent := TEntity(entList[i]);
+    writeln(ent.Offset,'-',ent.EndOffset,' ',ent.ClassName);
+  end;
+end;
+
+procedure DebugHeaders(files: TStrings);
+var
+  hdr : THeaderFile;
+  i   : Integer;
+begin
+  log('hist,used,u-by, idx, name');
+  for i:=0 to files.Count-1 do begin
+    hdr:=THeaderFile(files.Objects[i]);
+    writeln(hdr.inclOrder:4,hdr.useCount:5,hdr.usedBy:5,i:5,'  ',files[i]);
+  end;
+end;
+
+function ParseCEntities(const inp: TParseInput; entList: TList;
+  var outputInfo: TParseOutput): Boolean;
+var
+  p   : TTextParser;
+  cmt : TStopComment;
+  ent : TEntity;
+  i   : Integer;
+begin
+  p:=inp.parser;
+  //cmt:=inp.stopcmt;
+
+  outputInfo.error.ErrorMsg:='';
+  outputInfo.error.ErrorPos.X:=0;
+  outputInfo.error.ErrorPos.Y:=0;
+  outputInfo.error.isError:=false;
+
+  repeat
+    try
+      p.NextToken;
+      //ent := ParseNextEntityOrComment(p, cmt, outputInfo.error);
+      ent := ParseNextEntity(p);
+    except
+      ent:=nil;
+    end;
+
+    if p.Errors.Count>0 then begin
+      outputInfo.error.isError:=true;
+      outputInfo.error.ErrorMsg:=p.Errors.Text;
+      outputInfo.error.ErrorPos.x:=p.Index;
+    end;
+
+    Result:=not outputInfo.error.isError;
+    if not Result then begin
+      OffsetToLinePos(p.Buf, outputinfo.error.ErrorPos.X + p.MacrosDelta, outputinfo.error.ErrorPos);
+      Break;
+    end;
+
+    if Assigned(ent) then entList.Add(ent);
+  until (ent=nil) or not inp.AllText;
+
+  entList.AddList( p.Comments );
+  p.Comments.Clear;
+  entList.Sort( SortByOffset );
+end;
+
+procedure FreeCParserInput(var inp: TParseInput);
+begin
+  inp.mmaker.Free;
+  inp.parser.MacroHandler.Free;
+  inp.parser.Free;
+  //inp.stopcmt.Free;
+end;
+
+function CEntitiesToPas(const originText: string;  entList: TList; cfg: TConvertSettings): AnsiString;
+var
+  i       : integer;
+  lastsec : string;
+  ent     : TEntity;
+  cmtlist : TList;
+  cnv     : TCodeConvertor;
+  ofs     : Integer;
+  pas     : string;
+begin
+  Result:='';
+
+  cnv := TCodeConvertor.Create(cfg);
+  cmtlist:=TList.Create;
+  try
+    lastsec:='';
+    cnv.wr.Section:=lastsec;
+    ofs:=1;
+    for i:=0 to entlist.Count-1 do begin
+      if not (TObject(entlist[i]) is TEntity) then Continue;
+      ent:=TEntity(entlist[i]);
+
+      //hack, based on knowledge of how enums writting works
+      if (ent is TEnumType) or ((ent is TTypeDef) and (TTypeDef(ent).origintype is TEnumType)) then
+      begin
+        if cfg.EnumsAsConst and (cnv.wr.Section='type') then begin
+          cnv.wr.DecIdent;
+          cnv.wr.Section:='';
+        end;
+      end;
+
+      cmtlist.Clear;
+
+      try
+        cnv.WriteCtoPas(ent, cmtlist, originText);
+        lastsec:=cnv.wr.Section;
+      except
+        on e: Exception do Result:=Result+LineEnding+ 'error while converting C code: ' + e.Message;
+      end;
+      //Result := Result+GetEmptyLines(originText, ofs, ent.Offset);
+      ofs:=ent.Offset;
+    end;
+
+    //if Assigned(ent) and (p.Comments.IndexOf(ent)<0) then ent.Free;
+    //for i:=0 to p.Comments.Count-1 do TComment(p.Comments[i]).Free;
+    //p.Comments.Clear;
+    //cmt.Clear;
+    //until (ent=nil) or not AllText;
+
+    {OffsetToLinePos(t, succidx, endPoint);}
+    Result:=cnv.wr.Text;
+  finally
+    cnv.Free;
+    cmtlist.Free;
+  end;
+
+end;
+
+procedure ReleaseList(enlist: TList);
+var
+  i : integer;
+begin
+  if not Assigned(enlist) then Exit;
+  for i:=0 to enlist.Count-1 do
+    TObject(enlist[i]).Free;
+  enlist.Clear;
+end;
+
 function ConvertCode(const t: AnsiString; var endPoint: TPoint; AllText: Boolean; var ParseError: TErrorInfo; cfg: TConvertSettings): AnsiString;
 var
   p         : TTextParser;
@@ -482,8 +744,8 @@ begin
     p := CreateCParser(t);
     p.MacroHandler:=macros;
     p.UseCommentEntities := True;
-    p.OnComment:=@cmt.OnComment;
-    p.OnPrecompile:=@cmt.OnPrecompiler;
+    p.OnComment:=cmt.OnComment;
+    p.OnPrecompile:=cmt.OnPrecompiler;
     cmtlist:=TList.Create;
 
     try
@@ -559,7 +821,7 @@ constructor TCodeConvertor.Create(ASettings:TConvertSettings);
 begin
   cfg:=ASettings;
   wr:=TCodeWriter.Create;
-  WriteFunc:=@DefFuncWrite;
+  WriteFunc:=DefFuncWrite;
   DebugEntities := DoDebugEntities;
 end;
 
@@ -1740,6 +2002,22 @@ begin
   end;
   Result:=Copy(Result, 1, length(Result)-1);
 end;
+
+{ THeaderFile }
+
+constructor THeaderFile.Create;
+begin
+  inherited Create;
+  ents := TList.Create;
+end;
+
+destructor THeaderFile.Destroy;
+begin
+  ReleaseList(ents);
+  ents.Free;
+  inherited Destroy;
+end;
+
 
 end.
 
