@@ -105,17 +105,21 @@ type
     PrecompEnd    : Integer;
 
     procedure OnComment(Sender: TObject; const Str: ansistring);
-    procedure OnPrecompiler(Sender: TTextParser; PrecompEntity: TObject);
+    procedure OnPrecompiler(Sender: TTextParser; PrecompEntity: TEntity);
     procedure Clear;
   end;
 
 
+  { TMacrosMaker }
+
   TMacrosMaker = class(TObject)
   public
-    hnd : TCMacroHandler;
-    allowRedfine: Boolean;
+    hnd          : TCMacroHandler;
+    allowRedfine : Boolean;   // default true
+    ifCondProc   : Boolean;   // default false
     constructor Create(AHandler: TCMacroHandler);
-    procedure Precompiler(Sender: TTextParser; PrecompEntity: TObject);
+    procedure Precompiler(AParser: TTextParser; PrecompEntity: TEntity);
+    procedure HandleIfCond(AParser: TTextParser; IfEntity: TEntity);
   end;
 
 type
@@ -161,7 +165,14 @@ procedure AssignIntComments(SortedEnlist: TList);
 procedure DebugEnList(entlist: TList);
 procedure DebugHeaders(files: TStrings);
 
+function PreprocDirectives(const buf: string; macro: TMacrosMaker; fs: TFileOffsets; ent: TList): string;
+
 implementation
+
+function PreprocDirectives(const buf: string; macro: TMacrosMaker; fs: TFileOffsets; ent: TList): string;
+begin
+  Result:=buf;
+end;
 
 type
   TFuncWriterProc = procedure (wr: TCodeWriter; const FunctName, FuncRetName: AnsiString;
@@ -336,7 +347,7 @@ begin
   CommentFound := True;
 end;
 
-procedure TStopComment.OnPrecompiler(Sender: TTextParser; PrecompEntity: TObject);
+procedure TStopComment.OnPrecompiler(Sender: TTextParser; PrecompEntity: TEntity);
 begin
   if not FirstComment and (PrecompEntity is TEntity) then
   begin
@@ -434,11 +445,16 @@ begin
   hnd:=AHandler;
 end;
 
-procedure TMacrosMaker.Precompiler(Sender: TTextParser; PrecompEntity: TObject);
+procedure TMacrosMaker.Precompiler(AParser: TTextParser; PrecompEntity: TEntity);
 var
   d : TCPrepDefine;
 begin
-  if not (PrecompEntity is TCPrepDefine) then Exit;
+  //writelN('precompiler: ', PrecompEntity.ClassName);
+  if (ifCondProc) and (PrecompEntity is TCPrepIf) then begin
+    HandleIfCond(AParser, PrecompEntity);
+    Exit;
+  end else if not (PrecompEntity is TCPrepDefine) then
+    Exit;
 
   d:=TCPrepDefine(PrecompEntity);
 
@@ -449,6 +465,75 @@ begin
   end else begin
     hnd.AddParamMacro(d._Name, d.SubsText, d.Params);
   end;
+end;
+
+procedure SkipPreproc(AParser: TTextParser);
+var
+  cnd : integer;
+  i   : Integer;
+begin
+  // skipping  until the end of line
+  i:=AParser.Index;
+  ScanTo(AParser.Buf, i, EoLnChars);
+  ScanWhile(AParser.Buf, i, EoLnChars);
+  // scan until preproc, comment line or end of line
+  ScanWhile(AParser.Buf, i, WhiteSpaceChars);
+  if i>length(AParser.Buf) then Exit;
+
+  if AParser.Buf[i] = '#' then begin
+    // precompiler!
+
+  end else begin
+    if (AParser.Buf[i]='/') and (AParser.Buf[i+1]='/') then begin
+      // skipping until the end of line
+      ScanTo(AParser.Buf, i, EoLnChars);
+    end else if (AParser.Buf[i]='/') and (AParser.Buf[i+1]='*') then begin
+      // skip until then close of '*
+    end;
+  end;
+end;
+
+procedure TMacrosMaker.HandleIfCond(AParser: TTextParser; IfEntity: TEntity);
+var
+  op   : string;
+  cond : string;
+  isCondMet : Boolean;
+  cnt       : integer;
+begin
+  writeln('if cond! ', IfEntity.ClassName);
+  op:='';
+  cond:='';
+  if IfEntity is TCPrepIf then begin
+    op := trim(TCPrepIf(IfEntity).IfOp);
+    cond := trim(TCPrepIf(IfEntity)._Cond);
+  end;
+
+  if ((op='ifndef') or (op = 'ifdef')) then begin
+    isCondMet := hnd.isMacroDefined(cond);
+    if (op='ifndef') then isCondMet:=not isCondMet;
+  end else begin
+    isCondMet := false;
+  end;
+
+  writeln('if op = "',op,'"');
+  writeln('cond  = "',cond,'"');
+  writeln('result = ', isCondMet);
+  writeln('processing macro: ', Aparser.ProcessingMacro);
+  exit;
+
+  cnt:=0;
+  if not isCondMet then begin
+    // let's skip! until the "end" or "else" or "elif"
+
+    AParser.OnPrecompile:=nil; //hack: this must not be HERE!
+    while AParser.Token<>'' do begin
+      AParser.NextToken;
+    end;
+
+    AParser.OnPrecompile:=Self.Precompiler; //hack: this must not be HERE!
+  end;
+
+  AParser.NextToken;
 end;
 
 procedure PrepareMacros(const t: AnsiString; hnd: TCMacroHandler);
@@ -509,6 +594,7 @@ begin
   //inp.stopcmt:=TStopComment.Create;
 
   inp.mmaker := TMacrosMaker.Create(p.MacroHandler);
+  inp.mmaker.ifCondProc:=true;
   inp.mmaker.allowRedfine:=false; // todo: it should be true!
   p.OnPrecompile:=inp.mmaker.Precompiler;
 

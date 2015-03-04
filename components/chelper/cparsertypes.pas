@@ -62,8 +62,9 @@ type
   end;
 
   TTextParser = class;
+  TEntity = class;
 
-  TPrecompilerEvent = procedure (Sender: TTextParser; PrecompEntity: TObject) of object;
+  TPrecompilerEvent = procedure (Sender: TTextParser; PrecompEntity: TEntity) of object;
 
   TCMacroStruct = class(TObject)
     MacroName   : AnsiString;
@@ -95,13 +96,14 @@ type
 
   TTextParser = class(TObject)
   protected
-    ProcessingMacro : Boolean;
     function HandlePrecomiler: Boolean; virtual;
     function HandleMacro(var MacroStr: AnsiString; var ReplaceStr: AnsiString): Boolean;
 
     function IsMultiLine: Boolean;
     procedure SkipSingleEoLnChars;
   public
+    ProcessingMacro : Boolean;
+
     Buf           : AnsiString;
 
     Token         : AnsiString;
@@ -412,7 +414,105 @@ function ParseUnion(AParser: TTextParser): TUnionType;
 function ParseTypeDef(AParser: TTextParser): TTypeDef;
 function ParseEnum(AParser: TTextParser): TEnumType;
 
+function PreprocGlobal(const buf: string; fs: TFileOffsets; ent: TList): string;
+
 implementation
+
+{function FindNextPreproc(const s: string; var i: integer;
+  var PreType: TPreprocType; var Name, Content: string): Boolean;
+var
+  j : integer;
+begin
+  Result:=false;
+  while i<=length(S) do begin
+    ScanTo(s, i, EoLnChars+['#','/']);
+    Result:=(i<=length(s));
+    if not Result then Exit;
+    if s[i] in EoLnChars then begin
+      ScanWhile(s, i, EoLnChars);
+    end else if s[i]='#' then begin // a directive?
+      j:=i;
+      ScanBackWhile(s, j, WhiteSpaceChars);
+      if (j=0) or (s[j] in EoLnChars) then begin
+        // directive!
+        inc(i);
+        ScanWhile(s, i, WhiteSpaceChars);
+        Name:='#'+ScanTo(s, i, EoLnChars+WhiteSpaceChars);
+        PreType:=ppDirective;
+      end else
+        inc(i);
+    end;
+  end;
+end;}
+
+
+function PreprocGlobal(const buf: string; fs: TFileOffsets; ent: TList): string;
+var
+  i : integer;
+  j : integer;
+  k : integer;
+  cmt : TComment;
+  t   : integer;
+
+  procedure Feed(ToIdx: Integer);
+  begin
+    if (ToIdx>=k) then begin
+      Result:=Result+Copy(buf, k, toIdx-k);
+      ToIdx:=k+1;
+    end;
+  end;
+
+  procedure SetFeedOfs(ToIdx: integer);
+  begin
+    k:=ToIdx;
+  end;
+
+  procedure FeedChar(ch: AnsiChar = #32);
+  begin
+    Result:=Result+ch;
+  end;
+
+begin
+  i:=1;
+  k:=1;
+  Result:='';
+  while (i<=length(buf)) do begin
+    if (buf[i]='\') and (i<length(buf)) and (buf[i+1] in [#10,#13]) then begin
+      Feed(i);
+      if (i+2<=length(buf)) and (buf[i+2] in [#10,#13]) and (buf[i+1]<>buf[i+2]) then begin
+        t:=3;
+      end else
+        t:=2;
+      if Assigned(fs) then fs.AddOffset(i, -t); // decreasing delta
+      inc(i, t);
+      SetFeedOfs(i);
+    end else if (buf[i]='/') and (i<length(buf)) and (buf[i+1] in ['*','/']) then begin
+      Feed(i);
+      j:=i;
+      inc(i,2);
+      if buf[i-1]='*' then begin
+        while (i<length(buf)) and (buf[i]<>'*') and (buf[i+1]<>'/') do inc(i);
+        if buf[i+1]='/' then // well formed comment
+          inc(i,2)
+        else
+          i:=length(buf)+1;
+      end else
+         ScanTo(buf, i, EoLnChars);
+
+      if Assigned(ent) then begin
+        cmt := TComment.Create(i);
+        cmt.EndOffset:=i;
+        cmt._Comment:=Copy(buf, j, i-j);
+      end;
+
+      if Assigned(fs) then fs.AddOffset(i, j-i-1); // decreasing delta
+      FeedChar;
+      SetFeedOfs(i);
+    end else
+      inc(I);
+  end;
+  Feed(i);
+end;
 
 function SkipEndOfLineChars(const Src: AnsiString; idx: integer): Integer;
 begin

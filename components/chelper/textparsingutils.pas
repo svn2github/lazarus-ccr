@@ -39,7 +39,9 @@ const
   AlphaNumChars  = AlphabetChars+NumericChars;
 
 function ScanWhile(const s: AnsiString; var index: Integer; const ch: TCharSet): AnsiString;
+function ScanBackWhile(const s: AnsiString; var index: Integer; const ch: TCharSet): AnsiString;
 function ScanTo(const s: AnsiString; var index: Integer; const ch: TCharSet): AnsiString;
+function ScanBackTo(const s: AnsiString; var index: Integer; const ch: TCharSet): AnsiString;
 function SkipToEoln(const s: AnsiString; var index: Integer): AnsiString;
 
 // returns #10, #13, #10#13 or #13#10, if s[index] is end-of-line sequence
@@ -84,6 +86,22 @@ type
     property Count: Integer read GetCount;
   end;
 
+type
+  TFileOfsInfo = record
+    origOfs : Integer; // original 1-based index in the file
+    delta   : Integer; // the new delta that should be used starting this file
+  end;
+
+  { TFileOffsets }
+
+  TFileOffsets = class(TObject)
+  public
+    Ofs   : array of TFileOfsInfo;
+    Count : Integer;
+    procedure AddOffset(origOfs, delta: integer);
+    function OrigOffset(tempOfs: integer): Integer;
+  end;
+
 implementation
 
 function ScanWhile(const s: AnsiString; var index: Integer; const ch: TCharSet): AnsiString;
@@ -101,6 +119,28 @@ begin
     end;
   Result := Copy(s, index, length(s) - index + 1);
   index := length(s) + 1;
+end;
+
+function ScanBackWhile(const s: AnsiString; var index: Integer; const ch: TCharSet): AnsiString;
+var
+  j : integer;
+begin
+  Result:='';
+  if (index <= 0) or (index > length(s)) then Exit;
+  j:=index;
+  while (index>0) and (s[index] in ch) do dec(index);
+  Result:=Copy(s, index+1, j-index);
+end;
+
+function ScanBackTo(const s: AnsiString; var index: Integer; const ch: TCharSet): AnsiString;
+var
+ j : integer;
+begin
+  Result:='';
+  if (index <= 0) or (index > length(s)) then Exit;
+  j:=index;
+  while (index>0) and not (s[index] in ch) do dec(index);
+  Result:=Copy(s, index+1, j-index);
 end;
 
 function ScanTo(const s: AnsiString; var index: Integer; const ch: TCharSet): AnsiString;
@@ -229,6 +269,30 @@ begin
   Name:=AName;
   Tag:=ATag;
 end;
+
+procedure TFileOffsets.AddOffset(origOfs, delta: integer);
+begin
+  if Count=length(Ofs) then begin
+    if Count=0 then SetLength(Ofs, 4)
+    else SetLength(Ofs, Count*2);
+  end;
+  Ofs[Count].origOfs:=origOfs;
+  Ofs[Count].delta:=delta;
+  inc(Count);
+end;
+
+function TFileOffsets.OrigOffset(tempOfs: integer): Integer;
+var
+  i : Integer;
+begin
+  Result:=tempOfs;
+  for i:=0 to Count-1 do begin
+    if (Ofs[i].origOfs <= tempOfs) then
+      inc(Result, Ofs[i].delta);
+  end;
+end;
+
+
 
 end.
 
