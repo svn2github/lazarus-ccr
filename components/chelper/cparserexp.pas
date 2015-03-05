@@ -30,6 +30,9 @@ const
 
 function ParseCExprEx(p: TTextParser): TExp;
 
+function ValuateIntExp(exp: TExp; macros: TCMacroHandler): Integer; overload;
+function ValuateIntExp(const exp: string; macros: TCMacroHandler): Integer; overload;
+
 implementation
 
 function Rotate(core: TExp): TExp;
@@ -410,5 +413,60 @@ begin
 end;
 
 
+function IntVal(exp: TExp): Integer;
+var
+  code  : Integer;
+  l, r  : Integer;
+const
+  IntRes : array [boolean] of integer = (0,1);
+begin
+  Result:=0;
+  if exp.dir = edInfix then begin
+    l:=IntVal(exp.left);
+    r:=IntVal(exp.right);
+    if exp.op = '+' then Result:=l+r
+    else if exp.op = '-' then Result:=l-r
+    else if exp.op = '/' then Result:=l div r
+    else if exp.op = '%' then Result:=l mod r
+    else if exp.op = '*' then Result:=l * r
+    else if exp.op = '&' then Result:=l and r
+    else if exp.op = '|' then Result:=l or r
+    else if exp.op = '<<' then Result:=l shr r
+    else if exp.op = '>>' then Result:=l shl r
+    else if exp.op = '==' then Result:=IntRes[l = r]
+    else if exp.op = '!=' then Result:=IntRes[l <> r]
+    else if exp.op = '>=' then Result:=IntRes[l >= r]
+    else if exp.op = '<=' then Result:=IntRes[l <= r]
+    else if exp.op = '>' then Result:=IntRes[l > r]
+    else if exp.op = '<' then Result:=IntRes[l < r];
+  end else begin
+    Val(exp.val, Result, code);
+  end;
+end;
+
+function ValuateIntExp(exp: TExp; macros: TCMacroHandler): Integer;
+begin
+  Result:=IntVal(Exp);
+end;
+
+function ValuateIntExp(const exp: string; macros: TCMacroHandler): Integer;
+var
+  prs : TTextParser;
+  expObj : TExp;
+begin
+  prs := CreateCParser(exp, false);
+  try
+    prs.MacroHandler:=macros;
+    if prs.NextToken then begin
+      expObj:=ParseCExprEx(prs);
+      if Assigned(expObj)
+        then Result:=ValuateIntExp(expObj, macros)
+        else Result:=0;
+    end else
+      Result:=0;
+  finally
+    prs.Free;
+  end;
+end;
 
 end.

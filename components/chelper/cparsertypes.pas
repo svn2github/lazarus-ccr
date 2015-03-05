@@ -161,7 +161,11 @@ type
   end;
   TEntityClass = class of TEntity;
 
-  TCPrepocessor = class(TEntity);
+  TCPrepocessor = class(TEntity)
+  public
+    _Directive : string;
+    _Value     : string;
+  end;
 
   { TCPrepDefine }
 
@@ -182,9 +186,9 @@ type
   protected
     function DoParse(AParser: TTextParser): Boolean; override;
   public
-    Params    : TStringList;
     Included  : AnsiString;
-    destructor Destroy; override;
+    isSysFile : Boolean;
+    isImport  : Boolean;
   end;
 
   TCPrepElse = class(TCPrepocessor)
@@ -197,6 +201,7 @@ type
 
   TCPrepIf = class(TCPrepocessor)
     _Cond   : AnsiString;
+    Exp     : TObject; // expression object
     IfOp    : AnsiString;
     function DoParse(AParser: TTextParser): Boolean; override;
   end;
@@ -217,16 +222,6 @@ type
   public
      CommenType : TCommentType;
      _Comment   : AnsiString; // in case sources are UTF8 or Unicode
-  end;
-
-  { TPrecompiler }
-
-  TPrecompiler = class(TEntity)
-  protected
-    function DoParse(AParser: TTextParser): Boolean; override;
-  public
-    _Directive : AnsiString;
-    _Params    : AnsiString;
   end;
 
 type
@@ -415,8 +410,76 @@ function ParseTypeDef(AParser: TTextParser): TTypeDef;
 function ParseEnum(AParser: TTextParser): TEnumType;
 
 function PreprocGlobal(const buf: string; fs: TFileOffsets; ent: TList): string;
+procedure ParseDirectives(const s: string; entList: TList);
+function PreprocessHeader(const s: string; entList: TList; macros: TCMacroHandler; fs: TFileOffsets): string;
+procedure CPrepDefineToMacrosHandler(def: TCPrepDefine; mh: TCMacroHandler);
+
+procedure DebugEnList(entlist: TList);
 
 implementation
+
+uses
+  cparserexp; // todo: expression parsing should in the same unit!
+
+procedure ParseDirectives(const s: string; entList: TList);
+var
+  i   : integer;
+  j   : integer;
+  nm  : string;
+  vl  : string;
+  ent : TCPrepocessor;
+  t   : integer;
+begin
+  i:=1;
+  while (i<=length(s)) do begin
+    SkipWhile(s, i, WhiteSpaceChars);
+    if (i<=length(s)) then begin
+      if (s[i]='#') then begin
+        j:=i;
+        inc(i);
+        SkipWhile(s, i, WhiteSpaceChars);
+        nm:=ScanTo(s, i, SpaceEolnChars);
+        SkipWhile(s, i, WhiteSpaceChars);
+        vl:=trim(ScanTo(s, i, EolnChars));
+        if (nm='if') or (nm='elif') then begin
+          ent:=TCPrepIf.Create(j);
+          TCPrepIf(ent).IfOp:=nm;
+          TCPrepIf(ent)._Cond:=vl;
+        end else if (nm='ifdef') or (nm='ifndef') then begin
+          ent:=TCPrepIf.Create(j);
+          TCPrepIf(ent)._Cond:=vl;
+          TCPrepIf(ent).IfOp:=nm;
+        end else if (nm='include') or (nm='import') then begin
+          ent:=TCPrepInclude.Create(j);
+          if (length(vl)>0) and (vl[1] in ['<','"'])then begin
+            t:=length(vl)-1;
+            if (vl[length(vl)] in ['>','"']) then dec(t);
+            TCPrepInclude(ent).Included:=Copy(vl, 2, t);
+            TCPrepInclude(ent).isSysFile:=vl[1]='<';
+          end;
+        end else if (nm='endif') then begin
+          ent:=TCPrepEndif.Create(j);
+        end else
+          ent:=TCPrepocessor.Create(j);
+        ent._Directive:=nm;
+        ent._Value:=vl;
+        ent.EndOffset:=i;
+        // consume 1 eoln
+        if (i<=length(s)) and (s[i] in [#10,#13]) then begin
+          inc(i);
+          inc(ent.EndOffset);
+          if (i<=length(s)) and (s[i] in [#10,#13]) and (s[i]<>s[i-1]) then begin
+            inc(i);
+            inc(ent.EndOffset);
+          end;
+        end;
+        entList.Add(ent);
+      end else
+        SkipToEoln(s, i);
+    end;
+    SkipWhile(s, i, SpaceEolnChars);
+  end;
+end;
 
 {function FindNextPreproc(const s: string; var i: integer;
   var PreType: TPreprocType; var Name, Content: string): Boolean;
@@ -458,7 +521,7 @@ var
   begin
     if (ToIdx>=k) then begin
       Result:=Result+Copy(buf, k, toIdx-k);
-      ToIdx:=k+1;
+      k:=ToIdx+1;
     end;
   end;
 
@@ -565,6 +628,8 @@ begin
   Result.AddSymbol('--');
   Result.AddSymbol('||');
   Result.AddSymbol('&&');
+  Result.AddSymbol('>=');
+  Result.AddSymbol('<=');
 
   Result.SpaceChars := EoLnChars + InvsChars;
   Result.Precompile := '#';
@@ -1172,27 +1237,6 @@ begin
   AParser.EndParse;
 end;
 
-
-{ TPrecompiler }
-
-function TPrecompiler.DoParse(AParser: TTextParser): Boolean;
-var
-  tt  : TTokenType;
-begin
-  Result := false;
-  if not AParser.FindNextToken(_Directive, tt) then begin
-    AParser.SetError('precompiler directive not found');
-    Exit;
-  end;
-  if (_Directive = '') or (_Directive[1] <> '#') then begin
-    AParser.Index := AParser.TokenPos;
-    AParser.SetError('identifier is not precompiler directive');
-    Exit;
-  end;
-  _Params := SkipLine(AParser.Buf, AParser.Index);
-  Result := true;
-end;
-
 { TComment }
 
 function TComment.DoParse(AParser: TTextParser): Boolean;
@@ -1284,7 +1328,7 @@ function TCPrepInclude.DoParse(AParser: TTextParser): Boolean;
 var
   s     : AnsiString;
   tt    : TTokenType;
-  exp   : AnsiString;
+  exp   : AnsiChar;
   chars : TCharSet;
 begin
   chars := AParser.TokenTable.Symbols;
@@ -1302,8 +1346,9 @@ begin
       AParser.SetError('" is expected');
       Exit;
     end;
+    isSysFile:=exp='>';
 
-    Included:=ScanTo(AParser.Buf, AParser.Index, [exp[1]]+ EoLnChars);
+    Included:=ScanTo(AParser.Buf, AParser.Index, [exp]+ EoLnChars);
     if (AParser.Index<=length(AParser.Buf)) and (AParser.Buf[AParser.Index] in EoLnChars) then begin
       Result:=false;
       AParser.SetError(exp+' is expected');
@@ -1327,11 +1372,6 @@ begin
   end;
 end;
 
-destructor TCPrepInclude.Destroy;
-begin
-  Params.Free;
-  inherited Destroy;
-end;
 
 { TCPrepElse }
 
@@ -2313,6 +2353,102 @@ begin
   if not Assigned(AParser) then Exit;
   if Assigned(_ParseNextEntity) then  Result:=_ParseNextEntity(AParser);
   if Assigned(Result) then Result.EndOffset:=AParser.Index;
+end;
+
+procedure ParseIfDef(const s: string; var idx: integer; ifdef: TCPrepIf);
+begin
+
+end;
+
+procedure DebugEnList(entlist: TList);
+var
+  i : Integer;
+  ent : TEntity;
+begin
+  for i:=0 to entList.Count-1 do begin
+    ent := TEntity(entList[i]);
+    writeln(ent.Offset,'-',ent.EndOffset,' ',ent.ClassName);
+  end;
+end;
+
+function PreprocessHeader(const s: string; entList: TList; macros: TCMacroHandler; fs: TFileOffsets): string;
+var
+  i   : integer;
+  ent : TEntity;
+  df  : TCPrepDefine;
+  dif : TCPrepIf;
+  isCondMet : Boolean;
+  lvl : Integer;
+
+  k   : Integer;
+
+  procedure Feed(ToIdx: Integer);
+  begin
+     if (ToIdx>=k) then begin
+       Result:=Result+Copy(s, k, toIdx-k);
+       k:=ToIdx+1;
+     end;
+  end;
+
+  procedure SetFeedOfs(ToIdx: integer);
+  begin
+    k:=ToIdx;
+  end;
+
+
+
+begin
+  i:=0;
+  k:=1;
+  Result:='';
+
+  while (i<entList.Count) do begin
+    ent:=TEntity(entList[i]);
+    if (ent is TCPrepDefine) then begin
+      Feed( ent.Offset );
+      SetFeedOfs( ent.EndOffset );
+      CPrepDefineToMacrosHandler( TCPrepDefine(ent), macros );
+      inc(i);
+    end else if ent is TCPrepIf then begin
+      Feed( ent.Offset );
+      dif := TCPrepIf(ent);
+      if (dif.IfOp='ifdef') or (dif.IfOp='ifndef') then begin
+        isCondMet:=macros.isMacroDefined(dif._Cond);
+        if (dif.IfOp='ifndef') then isCondMet:=not isCondMet;
+      end else if (dif.IfOp='if') or (dif.IfOp='elif') then begin
+        isCondMet:=ValuateIntExp(dif._Cond, macros)<>0;
+      end else
+        isCondMet:=false;
+      inc(i);
+
+      if not isCondMet then begin
+        lvl:=1;
+        while (i<entList.Count) and (lvl>0) do begin
+          ent:=TEntity(entList[i]);
+          if ent is TCPrepEndif then dec(lvl)
+          else if ent is TCPrepIf then inc(lvl);
+          inc(i);
+        end;
+        SetFeedOfs( ent.EndOffset );
+      end else
+        SetFeedOfs( ent.EndOffset );
+    end else begin
+      Feed( ent.Offset );
+      SetFeedOfs( ent.EndOffset );
+      inc(i);
+    end;
+  end;
+  Feed( length(s)+1);
+end;
+
+procedure CPrepDefineToMacrosHandler(def: TCPrepDefine; mh: TCMacroHandler);
+begin
+  if not Assigned(def) or not Assigned(mh) then Exit;
+
+  if not Assigned(def.Params) or (def.Params.Count=0) then
+    mh.AddSimpleMacro(def._Name, def.SubsText)
+  else
+    mh.AddParamMacro(def._Name, def.SubsText, def.Params);
 end;
 
 initialization

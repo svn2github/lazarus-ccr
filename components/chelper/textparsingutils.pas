@@ -38,11 +38,13 @@ const
   AlphabetChars  = ['a'..'z','A'..'Z'];
   AlphaNumChars  = AlphabetChars+NumericChars;
 
-function ScanWhile(const s: AnsiString; var index: Integer; const ch: TCharSet): AnsiString;
+function ScanWhile(const s: AnsiString; var index: Integer; const ch: TCharSet): AnsiString; overload;
 function ScanBackWhile(const s: AnsiString; var index: Integer; const ch: TCharSet): AnsiString;
 function ScanTo(const s: AnsiString; var index: Integer; const ch: TCharSet): AnsiString;
 function ScanBackTo(const s: AnsiString; var index: Integer; const ch: TCharSet): AnsiString;
-function SkipToEoln(const s: AnsiString; var index: Integer): AnsiString;
+procedure SkipTo(const s: AnsiString; var index: Integer; const ch: TCharSet);
+procedure SkipWhile(const s: AnsiString; var index: Integer; const ch: TCharSet);
+procedure SkipToEoln(const s: AnsiString; var index: Integer);
 
 // returns #10, #13, #10#13 or #13#10, if s[index] is end-of-line sequence
 // otherwise returns empty string
@@ -104,7 +106,8 @@ type
 
 implementation
 
-function ScanWhile(const s: AnsiString; var index: Integer; const ch: TCharSet): AnsiString;
+function ScanWhile(const s: AnsiString; var index: Integer; const ch: TCharSet
+  ): string;
 var
   i : Integer;
 begin
@@ -132,9 +135,21 @@ begin
   Result:=Copy(s, index+1, j-index);
 end;
 
+procedure SkipTo(const s: AnsiString; var index: Integer; const ch: TCharSet);
+begin
+  if (index <= 0) or (index > length(s)) then Exit;
+  while (index<=length(s)) and not (s[index] in ch) do inc(index);
+end;
+
+procedure SkipWhile(const s: AnsiString; var index: Integer; const ch: TCharSet);
+begin
+  if (index <= 0) or (index > length(s)) then Exit;
+  while (index<=length(s)) and (s[index] in ch) do inc(index);
+end;
+
 function ScanBackTo(const s: AnsiString; var index: Integer; const ch: TCharSet): AnsiString;
 var
- j : integer;
+  j : integer;
 begin
   Result:='';
   if (index <= 0) or (index > length(s)) then Exit;
@@ -172,9 +187,9 @@ begin
   end;
 end;
 
-function SkipToEoln(const s: AnsiString; var index: Integer): AnsiString;
+procedure SkipToEoln(const s: AnsiString; var index: Integer);
 begin
-  Result := ScanTo(s, index, EoLnChars);
+  SkipTo(s, index, EoLnChars);
 end;
 
 function IsSubStr(const sbs, s: AnsiString; index: Integer): Boolean;

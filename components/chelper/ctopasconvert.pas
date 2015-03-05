@@ -162,7 +162,6 @@ function CEntitiesToPas(const originText: string; entList: TList; cfg: TConvertS
 procedure ReleaseList(enlist: TList);
 
 procedure AssignIntComments(SortedEnlist: TList);
-procedure DebugEnList(entlist: TList);
 procedure DebugHeaders(files: TStrings);
 
 function PreprocDirectives(const buf: string; macro: TMacrosMaker; fs: TFileOffsets; ent: TList): string;
@@ -460,11 +459,7 @@ begin
 
   if hnd.isMacroDefined(d._Name) and not allowRedfine then Exit;
 
-  if not Assigned(d.Params) or (d.Params.Count=0) then begin
-    hnd.AddSimpleMacro(d._Name, d.SubsText);
-  end else begin
-    hnd.AddParamMacro(d._Name, d.SubsText, d.Params);
-  end;
+  CPrepDefineToMacrosHandler(d, hnd);
 end;
 
 procedure SkipPreproc(AParser: TTextParser);
@@ -653,17 +648,6 @@ begin
     end;
   end;
   SortedEnList.Pack;
-end;
-
-procedure DebugEnList(entlist: TList);
-var
-  i : Integer;
-  ent : TEntity;
-begin
-  for i:=0 to entList.Count-1 do begin
-    ent := TEntity(entList[i]);
-    writeln(ent.Offset,'-',ent.EndOffset,' ',ent.ClassName);
-  end;
 end;
 
 procedure DebugHeaders(files: TStrings);
