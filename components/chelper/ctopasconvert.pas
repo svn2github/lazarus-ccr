@@ -164,14 +164,7 @@ procedure ReleaseList(enlist: TList);
 procedure AssignIntComments(SortedEnlist: TList);
 procedure DebugHeaders(files: TStrings);
 
-function PreprocDirectives(const buf: string; macro: TMacrosMaker; fs: TFileOffsets; ent: TList): string;
-
 implementation
-
-function PreprocDirectives(const buf: string; macro: TMacrosMaker; fs: TFileOffsets; ent: TList): string;
-begin
-  Result:=buf;
-end;
 
 type
   TFuncWriterProc = procedure (wr: TCodeWriter; const FunctName, FuncRetName: AnsiString;

@@ -416,10 +416,23 @@ procedure CPrepDefineToMacrosHandler(def: TCPrepDefine; mh: TCMacroHandler);
 
 procedure DebugEnList(entlist: TList);
 
+procedure ParseDefine(const s: string; def: TCPrepDefine);
+
 implementation
 
 uses
   cparserexp; // todo: expression parsing should in the same unit!
+
+procedure ParseDefine(const s: string; def: TCPrepDefine);
+var
+  i : integer;
+begin
+  i:=1;
+  SkipWhile(s, i,WhiteSpaceChars);
+  def._Name:=ScanTo(s, i, WhiteSpaceChars+['(']);
+  //todo!
+  def.SubsText:=ScanTo(s, i, EoLnChars);
+end;
 
 procedure ParseDirectives(const s: string; entList: TList);
 var
@@ -457,8 +470,11 @@ begin
             TCPrepInclude(ent).Included:=Copy(vl, 2, t);
             TCPrepInclude(ent).isSysFile:=vl[1]='<';
           end;
-        end else if (nm='endif') then begin
-          ent:=TCPrepEndif.Create(j);
+        end else if (nm='endif') then ent:=TCPrepEndif.Create(j)
+        else if (nm='else') then ent:=TCPrepElse.Create(j)
+        else if (nm='define') then begin
+          ent:=TCPrepDefine.Create(j);
+          ParseDefine(vl, TCPrepDefine(ent));
         end else
           ent:=TCPrepocessor.Create(j);
         ent._Directive:=nm;
@@ -480,34 +496,6 @@ begin
     SkipWhile(s, i, SpaceEolnChars);
   end;
 end;
-
-{function FindNextPreproc(const s: string; var i: integer;
-  var PreType: TPreprocType; var Name, Content: string): Boolean;
-var
-  j : integer;
-begin
-  Result:=false;
-  while i<=length(S) do begin
-    ScanTo(s, i, EoLnChars+['#','/']);
-    Result:=(i<=length(s));
-    if not Result then Exit;
-    if s[i] in EoLnChars then begin
-      ScanWhile(s, i, EoLnChars);
-    end else if s[i]='#' then begin // a directive?
-      j:=i;
-      ScanBackWhile(s, j, WhiteSpaceChars);
-      if (j=0) or (s[j] in EoLnChars) then begin
-        // directive!
-        inc(i);
-        ScanWhile(s, i, WhiteSpaceChars);
-        Name:='#'+ScanTo(s, i, EoLnChars+WhiteSpaceChars);
-        PreType:=ppDirective;
-      end else
-        inc(i);
-    end;
-  end;
-end;}
-
 
 function PreprocGlobal(const buf: string; fs: TFileOffsets; ent: TList): string;
 var
@@ -554,7 +542,8 @@ begin
       j:=i;
       inc(i,2);
       if buf[i-1]='*' then begin
-        while (i<length(buf)) and (buf[i]<>'*') and (buf[i+1]<>'/') do inc(i);
+        while (i<length(buf)) and not ((buf[i]='*') and (buf[i+1]='/')) do
+          inc(i);
         if buf[i+1]='/' then // well formed comment
           inc(i,2)
         else
@@ -2355,11 +2344,6 @@ begin
   if Assigned(Result) then Result.EndOffset:=AParser.Index;
 end;
 
-procedure ParseIfDef(const s: string; var idx: integer; ifdef: TCPrepIf);
-begin
-
-end;
-
 procedure DebugEnList(entlist: TList);
 var
   i : Integer;
@@ -2373,14 +2357,10 @@ end;
 
 function PreprocessHeader(const s: string; entList: TList; macros: TCMacroHandler; fs: TFileOffsets): string;
 var
-  i   : integer;
-  ent : TEntity;
-  df  : TCPrepDefine;
-  dif : TCPrepIf;
   isCondMet : Boolean;
   lvl : Integer;
-
   k   : Integer;
+  procList : TList;
 
   procedure Feed(ToIdx: Integer);
   begin
@@ -2396,49 +2376,105 @@ var
   end;
 
 
+  procedure ProcEntities(stInd, endInd: integer);
+  var
+    i   : integer;
+    ent : TEntity;
+    dif : TCPrepIf;
+    stSub  : Integer;
+    endSub : integer;
+  begin
+    i:=stInd;
+    while (i<=endInd) do begin
+      ent:=TEntity(procList[i]);
+      if not Assigned(ent) then Continue;
 
+      if (ent is TCPrepDefine) then begin
+        Feed( ent.Offset );
+        SetFeedOfs( ent.EndOffset );
+        CPrepDefineToMacrosHandler( TCPrepDefine(ent), macros );
+        inc(i);
+      end else if ent is TCPrepIf then begin
+        Feed( ent.Offset );
+        dif := TCPrepIf(ent);
+        if (dif.IfOp='ifdef') or (dif.IfOp='ifndef') then begin
+          isCondMet:=macros.isMacroDefined(dif._Cond);
+          if (dif.IfOp='ifndef') then isCondMet:=not isCondMet;
+        end else if (dif.IfOp='if') or (dif.IfOp='elif') then begin
+          isCondMet:=ValuateIntExp(dif._Cond, macros)<>0;
+        end else
+          isCondMet:=false;
+
+        lvl:=0;
+        endSub:=-1;
+        if not isCondMet then stSub:=-1 else stSub:=i+1;
+        inc(i);
+
+        while (i<=endInd) and (lvl>=0) do begin
+          ent:=TEntity(procList[i]);
+
+          if (ent is TCPrepElse) and (lvl=0) then begin
+            if not isCondMet then stSub:=i+1
+            else endSub:=i-1;
+          end else if ent is TCPrepEndif then begin
+            // if stSub was initialized (by either if, ifdef or else)
+            // but no "endSub" is specified, then endSub is here before end!
+            if (lvl=0) and (stSub>=0) and (endSub<0) then
+              endSub:=i-1;
+
+            dec(lvl);
+          end else if (ent is TCPrepIf) then begin
+            if (TCPrepIf(ent).IfOp='elif') then begin
+              if (lvl=0) then begin // same level if - check cond
+                if not isCondMet then begin
+                  if ValuateIntExp(TCPrepIf(ent)._Cond, macros)=1 then begin
+                    isCondMet:=true;
+                    stSub:=i+1;
+                  end;
+                end else if (endSub<0) then
+                  endSub:=i-1;
+              end; // if elif, doesn't modify the level
+            end else
+              inc(lvl);
+          end;
+          inc(i);
+        end;
+
+        if (stSub>=0) and (endSub>=0) then begin
+          SetFeedOfs( TEntity(procList[stSub]).Offset );
+          ProcEntities(stSub, endSub);
+        end;
+
+        SetFeedOfs( ent.EndOffset );
+      end else begin
+        Feed( ent.Offset );
+        SetFeedOfs( ent.EndOffset );
+        inc(i);
+      end;
+    end;
+  end;
+
+var
+  i   : integer;
+  ent : TEntity;
 begin
   i:=0;
   k:=1;
   Result:='';
+  procList := TList.Create;
+  try
 
-  while (i<entList.Count) do begin
-    ent:=TEntity(entList[i]);
-    if (ent is TCPrepDefine) then begin
-      Feed( ent.Offset );
-      SetFeedOfs( ent.EndOffset );
-      CPrepDefineToMacrosHandler( TCPrepDefine(ent), macros );
-      inc(i);
-    end else if ent is TCPrepIf then begin
-      Feed( ent.Offset );
-      dif := TCPrepIf(ent);
-      if (dif.IfOp='ifdef') or (dif.IfOp='ifndef') then begin
-        isCondMet:=macros.isMacroDefined(dif._Cond);
-        if (dif.IfOp='ifndef') then isCondMet:=not isCondMet;
-      end else if (dif.IfOp='if') or (dif.IfOp='elif') then begin
-        isCondMet:=ValuateIntExp(dif._Cond, macros)<>0;
-      end else
-        isCondMet:=false;
-      inc(i);
-
-      if not isCondMet then begin
-        lvl:=1;
-        while (i<entList.Count) and (lvl>0) do begin
-          ent:=TEntity(entList[i]);
-          if ent is TCPrepEndif then dec(lvl)
-          else if ent is TCPrepIf then inc(lvl);
-          inc(i);
-        end;
-        SetFeedOfs( ent.EndOffset );
-      end else
-        SetFeedOfs( ent.EndOffset );
-    end else begin
-      Feed( ent.Offset );
-      SetFeedOfs( ent.EndOffset );
-      inc(i);
+    for i:=0 to entList.Count-1 do begin
+      ent:=TEntity(entList[i]);
+      if not (ent is TCPrepocessor) then Continue;
+      procList.Add(ent);
     end;
+    ProcEntities(0, procList.Count-1);
+    Feed( length(s)+1);
+
+  finally
+    procList.Free;
   end;
-  Feed( length(s)+1);
 end;
 
 procedure CPrepDefineToMacrosHandler(def: TCPrepDefine; mh: TCMacroHandler);
