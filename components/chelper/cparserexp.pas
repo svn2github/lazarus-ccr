@@ -80,6 +80,7 @@ begin
     if res then begin
       e:=TExp.Create(2, p.Token, edPostfix);
       e.left:=exp;
+      e.identtype:=it;
       exp:=e;
       p.NextToken;
       if it in [itField, itSubSel] then
@@ -413,17 +414,37 @@ begin
 end;
 
 
-function IntVal(exp: TExp): Integer;
+function IntVal(exp: TExp; m: TCMacroHandler): Integer;
 var
   code  : Integer;
   l, r  : Integer;
+  lt    : TExp;
+  rt    : TExp;
+  nm    : string;
+  s     : string;
 const
   IntRes : array [boolean] of integer = (0,1);
 begin
   Result:=0;
-  if exp.dir = edInfix then begin
-    l:=IntVal(exp.left);
-    r:=IntVal(exp.right);
+
+  if (exp.identtype = itFuncCall) and (exp.dir=edPostfix) then begin
+    if Assigned(exp.left)  and (exp.left.identtype=itIdent)  then nm:=exp.left.val
+    else nm:='';
+    if Assigned(exp.inner) and (exp.inner.identtype=itIdent) then s:=exp.inner.val
+    else s:='';
+    if (nm='defined') and Assigned(m) then Result:=IntRes[ m.isMacroDefined(s)]
+    else Result:=0;
+  end else if exp.dir = edPrefix then begin
+    r:=IntVal(exp.right, m);
+    //writeln('koko! ', PtrUInt(exp.right));
+    if exp.op='!' then begin
+      if r = 0 then Result:=1
+      else Result:=0;
+    end;
+    // it should be
+  end else if exp.dir = edInfix then begin
+    l:=IntVal(exp.left,m);
+    r:=IntVal(exp.right,m);
     if exp.op = '+' then Result:=l+r
     else if exp.op = '-' then Result:=l-r
     else if exp.op = '/' then Result:=l div r
@@ -433,6 +454,10 @@ begin
     else if exp.op = '|' then Result:=l or r
     else if exp.op = '<<' then Result:=l shr r
     else if exp.op = '>>' then Result:=l shl r
+    else if exp.op = '|' then Result:=l or r
+    else if exp.op = '&' then Result:=l and r
+    else if exp.op = '||' then Result:=IntRes[(l or r) > 0]
+    else if exp.op = '&&' then Result:=IntRes[(l and r) > 0]
     else if exp.op = '==' then Result:=IntRes[l = r]
     else if exp.op = '!=' then Result:=IntRes[l <> r]
     else if exp.op = '>=' then Result:=IntRes[l >= r]
@@ -446,7 +471,7 @@ end;
 
 function ValuateIntExp(exp: TExp; macros: TCMacroHandler): Integer;
 begin
-  Result:=IntVal(Exp);
+  Result:=IntVal(Exp, macros);
 end;
 
 function ValuateIntExp(const exp: string; macros: TCMacroHandler): Integer;
@@ -456,7 +481,8 @@ var
 begin
   prs := CreateCParser(exp, false);
   try
-    prs.MacroHandler:=macros;
+    //no macros are defined for pre-compiler, they would be used in evaluation instead!
+    //prs.MacroHandler:=macros;
     if prs.NextToken then begin
       expObj:=ParseCExprEx(prs);
       if Assigned(expObj)
