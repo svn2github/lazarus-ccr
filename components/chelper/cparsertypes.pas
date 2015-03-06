@@ -84,6 +84,9 @@ type
     constructor Create;
     destructor Destroy; override;
     function ParseMacro(const Parser: TTextParser; var MacroStr, ReplaceStr: AnsiString): Boolean;
+
+    function GetMacroReplaceStr(const Macro: AnsiString): String;
+
     function isMacroDefined(const Macro: AnsisTring): Boolean;
 
     procedure AddSimpleMacro(const MacroStr, ReplaceStr: AnsiString);
@@ -430,6 +433,7 @@ function PreprocessHeader(const s: string; entList: TList; macros: TCMacroHandle
 procedure CPrepDefineToMacrosHandler(def: TCPrepDefine; mh: TCMacroHandler);
 
 procedure DebugEnList(entlist: TList);
+procedure DebugMacros(macros: TCMacroHandler; showValues: Boolean = true);
 
 procedure ParseDefine(const s: string; def: TCPrepDefine);
 
@@ -1619,6 +1623,16 @@ begin
   end;
 end;
 
+function TCMacroHandler.GetMacroReplaceStr(const Macro: AnsiString): String;
+var
+  i: Integer;
+begin
+  Result:='';
+  i := MacrosNames.IndexOf(Macro);
+  if i<0 then Exit;
+  Result:=TCMacroStruct(MacrosNames.Objects[i]).ReplaceText;
+end;
+
 { TCMacroStruct }
 
 constructor TCMacroStruct.Create;
@@ -2410,6 +2424,22 @@ begin
   end;
 end;
 
+procedure DebugMacros(macros: TCMacroHandler; showValues: Boolean = true);
+var
+  i  : integer;
+  cm : TCMacroStruct;
+begin
+  if not Assigned(macros) then Exit;
+  for i:=0 to macros.MacrosNames.Count-1 do begin
+    cm := TCMacroStruct(macros.MacrosNames.Objects[i]);
+    if (cm.ReplaceText<>'') and showValues then
+      writeln(cm.MacroName,' = ', cm.ReplaceText)
+    else
+      writeln(cm.MacroName);
+  end;
+
+end;
+
 function PreprocessHeader(const s: string; entList: TList; macros: TCMacroHandler; fs: TFileOffsets): string;
 var
   isCondMet : Boolean;
@@ -2456,7 +2486,7 @@ var
           isCondMet:=macros.isMacroDefined(dif._Cond);
           if (dif.IfOp='ifndef') then isCondMet:=not isCondMet;
         end else if (dif.IfOp='if') or (dif.IfOp='elif') then begin
-          isCondMet:=ValuateIntExp(dif._Cond, macros)<>0;
+          isCondMet:=ValuatePreprocExp(dif._Cond, macros)<>0;
         end else
           isCondMet:=false;
 
@@ -2482,7 +2512,7 @@ var
             if (TCPrepIf(ent).IfOp='elif') then begin
               if (lvl=0) then begin // same level if - check cond
                 if not isCondMet then begin
-                  if ValuateIntExp(TCPrepIf(ent)._Cond, macros)=1 then begin
+                  if ValuatePreprocExp(TCPrepIf(ent)._Cond, macros)=1 then begin
                     isCondMet:=true;
                     stSub:=i+1;
                   end;

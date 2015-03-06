@@ -3,7 +3,7 @@ unit cparserexp;
 interface
 
 uses
-  cparsertypes;
+  SysUtils, cparsertypes;
 
 type
   TIdentType = (itIdent, itIndex, itFuncCall, itField, itSubSel);
@@ -39,8 +39,8 @@ const
 
 function ParseCExprEx(p: TTextParser): TExp;
 
-function ValuateIntExp(exp: TExp; macros: TCMacroHandler): Integer; overload;
-function ValuateIntExp(const exp: string; macros: TCMacroHandler): Integer; overload;
+function ValuatePreprocExp(exp: TExp; macros: TCMacroHandler): Integer; overload;
+function ValuatePreprocExp(const exp: string; macros: TCMacroHandler): Integer; overload;
 
 function isCTypeCast(exp: TExp; tinfo: TCTypeInfo): Boolean;
 
@@ -96,7 +96,7 @@ begin
   else Result:=false;
 end;
 
-function level2(p: TTextParser; NameOnly: Boolean = false): TExp;
+function level2(p: TTextParser): TExp;
 var
   exp : TExp;
   res : Boolean;
@@ -121,7 +121,7 @@ begin
       exp:=e;
       p.NextToken;
       if it in [itField, itSubSel] then
-        exp.right:=level2(p, true)
+        exp.right:=level2(p)
       else if it in [itFuncCall, itIndex] then begin
         exp.inner:=ParseCExprEx(p);
         if p.Token = CIdentClose[it] then
@@ -454,7 +454,7 @@ begin
 end;
 
 
-function IntVal(exp: TExp; m: TCMacroHandler): Integer;
+function PreProcVal(exp: TExp; m: TCMacroHandler): Integer;
 var
   code  : Integer;
   l, r  : Integer;
@@ -462,6 +462,7 @@ var
   rt    : TExp;
   nm    : string;
   s     : string;
+  v     : string;
 const
   IntRes : array [boolean] of integer = (0,1);
 begin
@@ -475,7 +476,7 @@ begin
     if (nm='defined') and Assigned(m) then Result:=IntRes[ m.isMacroDefined(s)]
     else Result:=0;
   end else if exp.dir = edPrefix then begin
-    r:=IntVal(exp.right, m);
+    r:=PreProcVal(exp.right, m);
     //writeln('koko! ', PtrUInt(exp.right));
     if exp.op='!' then begin
       if r = 0 then Result:=1
@@ -483,8 +484,8 @@ begin
     end;
     // it should be
   end else if exp.dir = edInfix then begin
-    l:=IntVal(exp.left,m);
-    r:=IntVal(exp.right,m);
+    l:=PreProcVal(exp.left,m);
+    r:=PreProcVal(exp.right,m);
     if exp.op = '+' then Result:=l+r
     else if exp.op = '-' then Result:=l-r
     else if exp.op = '/' then Result:=l div r
@@ -505,16 +506,18 @@ begin
     else if exp.op = '>' then Result:=IntRes[l > r]
     else if exp.op = '<' then Result:=IntRes[l < r];
   end else begin
-    Val(exp.val, Result, code);
+    v:=trim(exp.val);
+    if Assigned(m) and (m.isMacroDefined(v)) then v:=m.GetMacroReplaceStr(v);
+    Val(v, Result, code);
   end;
 end;
 
-function ValuateIntExp(exp: TExp; macros: TCMacroHandler): Integer;
+function ValuatePreprocExp(exp: TExp; macros: TCMacroHandler): Integer;
 begin
-  Result:=IntVal(Exp, macros);
+  Result:=PreProcVal(Exp, macros);
 end;
 
-function ValuateIntExp(const exp: string; macros: TCMacroHandler): Integer;
+function ValuatePreprocExp(const exp: string; macros: TCMacroHandler): Integer;
 var
   prs : TTextParser;
   expObj : TExp;
@@ -526,7 +529,7 @@ begin
     if prs.NextToken then begin
       expObj:=ParseCExprEx(prs);
       if Assigned(expObj)
-        then Result:=ValuateIntExp(expObj, macros)
+        then Result:=ValuatePreprocExp(expObj, macros)
         else Result:=0;
     end else
       Result:=0;
