@@ -92,6 +92,18 @@ type
     procedure Clear;
   end;
 
+  { TCTypeInfo }
+
+  TCTypeInfo = class(TObject)
+  private
+    ftypeNames : TStrings;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    function isType(const nm: string): Boolean;
+    procedure RegisterTypeName(const nm: string);
+  end;
+
   { TTextParser }
 
   TTextParser = class(TObject)
@@ -122,6 +134,7 @@ type
     Stack         : TList;
     Errors        : TStringList;
     MacroHandler  : TCMacroHandler;
+    CTypeInfo     : TCTypeInfo;
 
     UseCommentEntities     : Boolean;
     UsePrecompileEntities  : Boolean;
@@ -140,6 +153,7 @@ type
 
     function NextToken: Boolean;
     function FindNextToken(var AToken: AnsiString; var ATokenType: TTokenType): Boolean;
+    function isTokenTypeName: Boolean;
 
     procedure SetError(const ErrorCmt: AnsiString; const Context: string = '');
   end;
@@ -257,6 +271,7 @@ type
 
   TCPPSectionClose = class(TCPPSection) // an entity for  just closing character }
   end;
+
 
 const
   nk_Ident = 0;
@@ -418,10 +433,45 @@ procedure DebugEnList(entlist: TList);
 
 procedure ParseDefine(const s: string; def: TCPrepDefine);
 
+function isStdCType(const s: string): boolean;
+
 implementation
 
 uses
   cparserexp; // todo: expression parsing should in the same unit!
+
+function isStdCType(const s: string): boolean;
+begin
+  Result:=false;
+  if length(s)=0 then Exit;
+  case s[1] of
+    'c': Result:= s = 'char';
+    'd': Result:= s = 'double';
+    'f': Result:= s = 'float';
+    'i': Result:= s = 'int';
+    's': Result:= (s = 'short')
+               or (s = 'short int')
+               or (s = 'signed char')
+               or (s = 'signed short')
+               or (s = 'signed short int')
+               or (s = 'signed int')
+               or (s = 'signed long')
+               or (s = 'signed long long')
+               or (s = 'signed long long int');
+    'l': Result:= (s = 'long')
+               or (s = 'long int')
+               or (s = 'long long')
+               or (s = 'long double');
+    'u': Result:= (s = 'unsigned')
+               or (s = 'unsigned char')
+               or (s = 'unsigned short')
+               or (s = 'unsigned short int')
+               or (s = 'unsigned int')
+               or (s = 'unsigned long')
+               or (s = 'unsigned long long')
+               or (s = 'unsigned long long int');
+  end;
+end;
 
 procedure ParseDefine(const s: string; def: TCPrepDefine);
 var
@@ -929,6 +979,11 @@ begin
   Result:=NextToken;
   AToken:=Token;
   ATokenType:=TokenType;
+end;
+
+function TTextParser.isTokenTypeName: Boolean;
+begin
+  Result:=Assigned(CTypeInfo) and (CTypeInfo.isType(Token));
 end;
 
 function TTextParser.SkipComments: Boolean;
@@ -2486,6 +2541,33 @@ begin
   else
     mh.AddParamMacro(def._Name, def.SubsText, def.Params);
 end;
+
+{ TCTypeInfo }
+
+constructor TCTypeInfo.Create;
+begin
+  inherited Create;
+  ftypeNames:=TStringList.Create;
+  TStringList(ftypeNames).Duplicates:=dupIgnore;
+  TStringList(ftypeNames).CaseSensitive:=true;
+end;
+
+destructor TCTypeInfo.Destroy;
+begin
+  ftypeNames.Free;
+  inherited Destroy;
+end;
+
+function TCTypeInfo.isType(const nm: string): Boolean;
+begin
+  Result:=ftypeNames.IndexOf(nm)>=0;
+end;
+
+procedure TCTypeInfo.RegisterTypeName(const nm: string);
+begin
+  ftypeNames.Add(nm);
+end;
+
 
 initialization
   _ParseNextEntity:=@ParseNextCEntity;

@@ -8,7 +8,16 @@ uses
 type
   TIdentType = (itIdent, itIndex, itFuncCall, itField, itSubSel);
 
-  TExpDir = (edValue, edPrefix, edPostfix, edInfix, edTernary, edSequence);
+  TExpDir = (    // Expression Direction describes what relative fields should be initialzed
+                 // for the expression node.
+      edValue    // "none" - this should be a leaf of the expression graph
+    , edPrefix   // "right"
+    , edPostfix  // "left" for the host. "inner" is used for arrays and function calls
+                 //   "left" ( "inner" )
+    , edInfix    // "left" and "right" are mandatory. used for all binary operators!
+    , edTernary  // used for ? operator. "main", "left", "right" are used, "main" ? "left" : "right"
+    , edSequence // used for , operator (and parameters). "left" and "right" are used
+  );
 
   TExp = class(TObject)
     left    : TExp;
@@ -33,7 +42,35 @@ function ParseCExprEx(p: TTextParser): TExp;
 function ValuateIntExp(exp: TExp; macros: TCMacroHandler): Integer; overload;
 function ValuateIntExp(const exp: string; macros: TCMacroHandler): Integer; overload;
 
+function isCTypeCast(exp: TExp; tinfo: TCTypeInfo): Boolean;
+
 implementation
+
+function isCTypeCast(exp: TExp; tinfo: TCTypeInfo): Boolean;
+var
+  hasType: Boolean;
+begin
+  Result:=false;
+  while Assigned(exp) do begin
+    if exp.dir = edPostfix then begin
+      exp:=exp.left;
+    end else if exp.dir = edPrefix then begin
+      exp:=exp.right;
+    end else if (exp.dir = edValue) then begin
+      if isStdCType(exp.val) then
+        hastype:=true
+      else begin
+        hasType:=Assigned(tinfo) and (tinfo.isType(exp.val));
+        if not hasType then Exit // an identify that's not a type
+      end;
+      exp:=nil;
+    end else begin
+      // nothing else os allowed in typecast
+      Exit;
+    end;
+  end;
+  Result:=hasType;
+end;
 
 function Rotate(core: TExp): TExp;
 begin
@@ -86,10 +123,7 @@ begin
       if it in [itField, itSubSel] then
         exp.right:=level2(p, true)
       else if it in [itFuncCall, itIndex] then begin
-        //writeln('parsing sub expression ', p.Token);
         exp.inner:=ParseCExprEx(p);
-        //writeln('res = ', PtrUint(exp.inner));
-        //writeln('p.token =', p.Token);
         if p.Token = CIdentClose[it] then
           p.NextToken
         else begin
@@ -117,13 +151,19 @@ begin
     // typecast
     if (p.Tokentype=tt_Symbol) and (p.Token='(') then begin
       p.NextToken;
-      ct:=TExp.Create(3, '(', edInfix);
-      ct.inner:=ParseCExprEx(p);
+      ct:=ParseCExprEx(p);
       if (p.TokenType=tt_Symbol) and (p.Token = ')') then
         p.NextToken;
-      ct.right:=ParseCExprEx(p);
-      Result:=ct;
-      Result:=Rotate(Result);
+      if not isCTypeCast(ct, p.CTypeInfo) then begin
+        // not a typecast!
+        ct.pr:=1;
+        Result:=ct;
+      end else begin
+        Result:=TExp.Create(3, 'typecast', edInfix);
+        Result.inner:=ct;
+        Result.right:=ParseCExprEx(p);
+        Result:=Rotate(REsult);
+      end;
     end else if (p.Token='sizeof') or (p.Token='++') or (p.Token='--')
       or ((length(p.Token) = 1) and (p.Token[1] in ['&','*','~','!','-','+']))
     then begin
