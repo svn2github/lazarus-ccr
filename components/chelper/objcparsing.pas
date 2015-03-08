@@ -86,6 +86,7 @@ type
     Protocols   : TStringList;
     Vars        : TList;
     Methods     : TList;
+    Entities    : TList;
     constructor Create(AOffset: Integer=-1); override;
     destructor Destroy; override;
   end;
@@ -98,6 +99,7 @@ type
     isForward   : Boolean;
     Protocols   : TStringList;
     Methods     : TList;
+    Entities    : TList;
     constructor Create(AOffset: Integer=-1); override;
     destructor Destroy; override;
   end;
@@ -119,7 +121,7 @@ function ParseClassList(AParser: TTextParser): TObjCClasses;
 function ParseInterface(AParser: TTextParser): TObjCInterface;
 function ParseMethod(AParser: TTextParser): TObjCMethod;
 function ParseProperty(AParser: TTextParser): TObjCProperty;
-function ParseMethods(AParser: TTextParser; MethodsList: TList; const EndToken: AnsiString = objcend): Boolean;
+function ParseMethods(AParser: TTextParser; MethodsList, OthersList: TList; const EndToken: AnsiString = objcend): Boolean;
 function ParseProtocol(AParser: TTextParser): TEntity;
 
 function ParseNextObjCEntity(AParser: TTextParser): TEntity;
@@ -258,34 +260,28 @@ begin
         AParser.NextToken;
         if not ConsumeIdentifier(AParser, itf.SuperClass) then Exit;
       end;
-
-      // protocols
-      if AParser.Token='<' then begin
-        AParser.NextToken;
-        while AParser.Token<>'>' do begin
-          if not ConsumeIdentifier(AParser, nm) then Exit;
-          itf.Protocols.Add(nm);
-          if AParser.Token=',' then AParser.NextToken
-          else if AParser.Token<>'>' then begin
-            ErrorExpect(AParser, '>');
-            Exit;
-          end;
-        end;
-        AParser.NextToken;
-      end;
-
-      { todo: typedef could be found within class
-      while APArser.Token='typedef' do begin
-        ent := ParseTypeDef(APArser );
-        if not Assigned(ent) then Exit;
-        itf.Vars.Add(ent);
-      end;
-      }
-
-      ParseInstVars(AParser, itf.Vars);
     end;
 
-    if not ParseMethods(AParser, itf.Methods, objcend) then Exit;
+    // protocols, also can be specified for categories
+    if AParser.Token='<' then begin
+      AParser.NextToken;
+      while AParser.Token<>'>' do begin
+        if not ConsumeIdentifier(AParser, nm) then Exit;
+        itf.Protocols.Add(nm);
+        if AParser.Token=',' then AParser.NextToken
+        else if AParser.Token<>'>' then begin
+          ErrorExpect(AParser, '>');
+          Exit;
+        end;
+      end;
+      AParser.NextToken;
+    end;
+
+
+    // categories cannot have instance variables
+    if not itf.isCategory then ParseInstVars(AParser, itf.Vars);
+
+    if not ParseMethods(AParser, itf.Methods, itf.Entities, objcend) then Exit;
     if AParser.Token<>objcend then ErrorExpect(AParser, objcend);
 
     Result:=itf;
@@ -328,7 +324,7 @@ begin
       if AParser.Token='>' then AParser.NextToken;
     end;
 
-    if ParseMethods(AParser, p.Methods, objcend) then
+    if ParseMethods(AParser, p.Methods, p.Entities, objcend) then
       Result:=p;
     if AParser.Token<>objcend then ErrorExpect(AParser, objcend);
   finally
@@ -377,7 +373,8 @@ end;
 constructor TObjCInterface.Create(AOffset:Integer);
 begin
   Vars := TList.Create;
-  Methods  := TList.Create;
+  Methods := TList.Create;
+  Entities := TList.Create;
   Protocols := TStringList.Create;
   inherited Create(AOffset);
 end;
@@ -390,8 +387,24 @@ begin
   Vars.Free;
   for i:=0 to Methods.Count-1 do TObject(Methods[i]).Free;
   Methods.Free;
+  for i:=0 to Entities.Count-1 do TObject(Entities[i]).Free;
+  Entities.Free;
   Protocols.Free;
   inherited Destroy;
+end;
+
+function isObjCParamMod(const t: string): Boolean;
+begin
+  if t ='' then Result:=false
+  else begin
+    Result:=false;
+    case t[1] of
+      'c': if (t = 'const') then Result:=true;
+      'i': if (t = 'in') or (t = 'inout') then Result:=true;
+      'o': if (t = 'out') or (t='oneway') then Result:=true;
+      'b': if (t = 'bycopy') or (t='byref') then Result:=true;
+    end;
+  end;
 end;
 
 function ParseMethod(AParser: TTextParser): TObjCMethod;
@@ -425,9 +438,15 @@ begin
 
       while (AParser.Token<>';') and (AParser.Token<>',') do begin
         if AParser.Token='(' then begin
-          prm:=ConsumeToken(AParser, '(') and
-               ParseName(APArser, atype, atname,[')']) and
-               ConsumeToken(AParser, ')');
+          prm:=ConsumeToken(AParser, '(');
+          if prm then begin
+            // todo: need to store them somewhere!
+            while isObjCParamMod(AParser.Token) do
+              AParser.NextToken;
+
+            prm:=ParseName(APArser, atype, atname,[')']) and
+            ConsumeToken(AParser, ')','parsing objc method paramter type');
+          end;
         end else begin
           prm:=True;
           atype:=nil;
@@ -440,7 +459,7 @@ begin
         // the next name starts
         if AParser.TokenType=tt_Ident then ConsumeIdentifier(AParser, nm) else nm:='';
         if (AParser.Token<>';') and (AParser.Token<>',') then begin
-          if not ConsumeToken(AParser,':') then Exit;
+          if not ConsumeToken(AParser,':','parsing the objc method " '+Copy(Aparser.Buf, AParser.Index-30, 40)+'"') then Exit;
           m.Name.Add(nm+':');
         end;
       end;
@@ -453,7 +472,7 @@ begin
       else ErrorExpect(AParser, '...');
     end;
 
-    if not ConsumeToken(AParser, ';') then Exit;
+    if not ConsumeToken(AParser, ';','parsing the end of objc method') then Exit;
 
     Result:=m;
   finally
@@ -461,32 +480,39 @@ begin
   end;
 end;
 
-function ParseMethods(AParser: TTextParser; MethodsList: TList; const EndToken: AnsiString): Boolean;
+function ParseMethods(AParser: TTextParser; MethodsList, OthersList: TList; const EndToken: AnsiString): Boolean;
 var
   m   : TObjCMethod;
   p   : TObjCProperty;
   opt : TObjCMethodOpt;
   s   : AnsiString;
+  ent : TEntity;
 begin
   Result:=False;
   if not Assigned(MethodsList) or not Assigned(AParser) then Exit;
   opt:=mo_Required;
-  while (AParser.Token<>EndToken) and (AParser.Token<>'') and (AParser.Token[1] in ['+','-','@']) do begin
-    if isObjCKeyword(AParser.Token) then begin
-      s:=GetObjCKeyword(AParser.Token);
-      if s='property' then begin
-        p:=ParseProperty(AParser);
-        MethodsList.Add(p);
+  while (AParser.Token<>EndToken) and (AParser.Token<>'') do begin
+
+    if (AParser.Token[1] in ['+','-','@']) then begin
+      if isObjCKeyword(AParser.Token) then begin
+        s:=GetObjCKeyword(AParser.Token);
+        if s='property' then begin
+          p:=ParseProperty(AParser);
+          MethodsList.Add(p);
+        end else begin
+          if s='optional' then opt:=mo_Optional
+          else opt:=mo_Required;
+          AParser.NextToken;
+        end;
       end else begin
-        if s='optional' then opt:=mo_Optional
-        else opt:=mo_Required;
-        AParser.NextToken;
+        m:=ParseMethod(AParser);
+        if not Assigned(m) then Exit;
+        m.Option:=opt;
+        MethodsList.Add(m);
       end;
     end else begin
-      m:=ParseMethod(AParser);
-      if not Assigned(m) then Exit;
-      m.Option:=opt;
-      MethodsList.Add(m);
+      ent:=ParseNextCEntity(AParser, false);
+      AParser.NextToken;
     end;
   end;
   Result:=True;
@@ -542,6 +568,7 @@ begin
   inherited Create(AOffset);
   Protocols := TStringList.Create;
   Methods   := TList.Create;
+  Entities  := TList.Create;
   Names     := TStringList.Create;
 end;
 
@@ -551,6 +578,8 @@ var
 begin
   for i:=0 to Methods.Count-1 do TObject(Methods[i]).Free;
   Methods.Free;
+  for i:=0 to Entities.Count-1 do TObject(Entities[i]).Free;
+  Entities.Free;
   Protocols.Free;
   Names.Free;
   inherited Destroy;
