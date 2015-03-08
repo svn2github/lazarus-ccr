@@ -306,6 +306,7 @@ type
     Id        : AnsiString;
     arrayexp  : array of TExpression;
     params    : array of TFuncParam;
+    valexp    : TExpression;
     constructor Create(AKind: TNameKind);
     destructor Destroy; override;
     procedure AddParam(prmtype: TEntity; prmname: TNamePart);
@@ -323,8 +324,12 @@ function ParseNextEntity(AParser: TTextParser): TEntity;
 function ParseNextCEntity(AParser: TTextParser; ExpectCPPSection: Boolean = true): TEntity; // default ParseNextEntity
 function ParseCNamePart(Parser: TTextParser): TNamePart;  // default ParseNamePart
 
-function ParseCExpression(AParser: TTextParser; var ExpS: AnsiString): Boolean; deprecated;
+
+// both ParseCExpr and ParseCBodyConent are not checking validity of the body syntax
 function ParseCExpr(Parser: TTextParser; CommaIsEnd: Boolean=False): TExpression;
+// collects all tokens in the body excluducing opening and closing {  }
+function ParseCBodyConent(Parser: TTextParser): TExpression;
+
 procedure ParseCNumeric(const S: AnsiString; var idx: integer; var NumStr: AnsiSTring);
 function ParseCString(const S: AnsiString; var idx: Integer; var CStr: AnsiString): Boolean;
 function ParseCMacroParam(AParser: TTextParser; var ExpS: AnsiString): Boolean;
@@ -363,6 +368,7 @@ type
   public
     RetType     : TEntity;
     Names       : TList;
+    Body        : TExpression;
     constructor Create(AOffset: Integer=-1); override;
     destructor Destroy; override;
     function FirstName: TNamePart;
@@ -429,7 +435,7 @@ function ParseEnum(AParser: TTextParser): TEnumType;
 
 function PreprocGlobal(const buf: string; fs: TFileOffsets; ent: TList): string;
 procedure ParseDirectives(const s: string; entList: TList);
-function PreprocessHeader(const s: string; entList: TList; macros: TCMacroHandler; fs: TFileOffsets): string;
+function PreprocessHeader(const s: string; entList: TList; macros: TCMacroHandler; fs: TFileOffsets; appliedEnt: TList = nil): string;
 procedure CPrepDefineToMacrosHandler(def: TCPrepDefine; mh: TCMacroHandler);
 
 procedure DebugEnList(entlist: TList);
@@ -479,13 +485,17 @@ end;
 
 procedure ParseDefine(const s: string; def: TCPrepDefine);
 var
-  i : integer;
+  prs: TTextParser;
 begin
-  i:=1;
-  SkipWhile(s, i,WhiteSpaceChars);
-  def._Name:=ScanTo(s, i, WhiteSpaceChars+['(']);
-  //todo!
-  def.SubsText:=ScanTo(s, i, EoLnChars);
+  //todo: creating a parse for each define is an overhead. However,
+  // parsing has been implemented using TTextParses already, so rewritting
+  // it at the moment seems unnecessary, but should be rewritten eventually
+  prs:=CreateCParser(s, false);
+  try
+    def.DoParse(prs);
+  finally
+    prs.Free;
+  end;
 end;
 
 procedure ParseDirectives(const s: string; entList: TList);
@@ -704,6 +714,32 @@ begin
   Result := ScanWhile(s, idx, ['0'..'9', 'A'..'F', 'a'..'f']);
 end;
 
+function ParseCBodyConent(Parser: TTextParser): TExpression;
+var
+  lvl : Integer;
+  x   : TExpression;
+  tk  : char;
+begin
+  lvl:=0;
+  x := TExpression.Create(Parser.Index);
+
+  repeat
+    if length(Parser.Token)>0 then tk:=Parser.Token[1]
+    else tk:=#0;
+
+    if (tk in ['(','[','{']) then
+      inc(lvl)
+    else begin
+      if (lvl=0) and (Parser.Token = '}') then
+        Break
+      else if (tk in [')',']','}']) then
+        dec(lvl)
+    end;
+    x.PushToken(Parser.Token, Parser.TokenType);
+  until not Parser.NextToken;
+
+end;
+
 procedure ParseCNumeric(const S: AnsiString; var idx: integer; var NumStr: AnsiSTring);
 var
   l : integer;
@@ -846,57 +882,6 @@ begin
   Result:=True;
 end;
 
-
-function ParseCExpression(AParser: TTextParser; var ExpS: AnsiString): Boolean;
-var
-  i     : integer;
-  nm    : AnsiString;
-  tt    : TTokenType;
-  brac  : Integer;
-begin
-//todo: better code. it's just a work around
-//  i := AParser.Index;
-  brac := 0;
-  ExpS := '';
-  Result := false;
-
-  try
-    while AParser.FindNextToken(nm, tt) do begin
-      if (nm = #39) then begin
-        ExpS := #39 + ScanTo(AParser.Buf, AParser.Index, [#39]) + #39;
-        inc(AParser.Index);
-        Result := true;
-        Exit;
-      end else if (tt = tt_Numeric) or (tt = tt_Ident) then begin
-        ExpS := ExpS + nm;
-        i := AParser.Index;
-        if not ParseCOperator(AParser, nm) then begin
-          AParser.Index := i;
-          Break;
-        end else
-          ExpS := ExpS + ' ' + nm + ' ';
-      end else if (tt = tt_Symbol) then begin
-        if nm ='(' then inc(brac)
-        else if (nm = ')') then begin
-          if brac=0 then dec(brac)
-          else begin
-            AParser.Index:=AParser.TokenPos;
-            Break;
-          end;
-        end;
-      end else begin
-        //i := AParser.Index;
-        Exit;
-      end;
-    end;
-    Result := true;
-
-  finally
-    while (brac > 0) and (AParser.FindNextToken(nm, tt)) do
-      if nm = ')' then
-        dec(brac);
-  end;
-end;
 
 { TTextParser }
 
@@ -1532,8 +1517,8 @@ begin
         i:=p.Index;
       end;
     end;
-    if i<length(p.Buf) then
-      Result:=Result+Copy(p.Buf, i, p.TokenPos-i);
+    if i<length(p.Buf) then // copy the remaining text
+      Result:=Result+Copy(p.Buf, i, length(p.Buf)+1-i);
   finally
     p.Free;
   end;
@@ -1597,11 +1582,13 @@ begin
           if  va='' then va:=x
           else va:=va+','+x;
           RVal.Values[ VaArgs ]:=va;
-        end else
+        end else begin
           RVal.Values [ cm.MacroParams[i]]:=x;
-
+        end;
         Parser.NextToken;
-        if Parser.Token=',' then Parser.NextToken;
+
+        //todo: need an error check here!
+        //if Parser.Token=',' then Parser.NextToken;
         inc(i);
       end;
 
@@ -1720,11 +1707,13 @@ var
   tp  : TEntity;
   nm  : TNamePart;
   v   : TVarFuncEntity;
+  checkSemiColon: Boolean;
 begin
   Result := nil;
   s:=AParser.Token;
   if s='' then Exit;
 
+  checkSemiColon:=true;
   if s = 'typedef' then begin
     Result:=ParseTypeDef(AParser)
   end else if (s = '}') and ExpectCPPSection then begin
@@ -1734,7 +1723,7 @@ begin
     Exit;
   end else begin
     v:=TVarFuncEntity.Create(AParser.TokenPos);
-    ParseNames(AParser, tp, v.Names, [';']);
+    ParseNames(AParser, tp, v.Names, [';','{']);
     if (v.Names.Count=0) and (tp is TCPPSectionOpen) then begin
       Result:=tp;
       // need to exit here, so it won't fail on ";"
@@ -1758,11 +1747,21 @@ begin
       Result:=TVarFuncEntity(v).RetType;
       TVarFuncEntity(v).RetType:=nil;
       v.Free;
-    end else
+    end else begin
       Result:=v;
+
+      if AParser.Token='{' then begin
+        checkSemiColon:=false;
+        AParser.NextToken;
+        v.Body:=ParseCBodyConent(AParser);
+        if (AParser.Token<>'}') and (AParser.Token<>'') then begin
+          ErrorExpect(AParser,'}', 'parsing C function body');
+        end;
+      end;
+    end;
   end;
 
-  if AParser.Token<>';' then begin
+  if checkSemiColon and (AParser.Token<>';') then begin
     Result.Free;
     Result:=nil;
     ErrorExpect(AParser,';', 'parsing C entity declaration');
@@ -1873,6 +1872,7 @@ function ParseCExpr(Parser: TTextParser; CommaIsEnd: Boolean=False): TExpression
 var
   x   : TExpression;
   lvl : Integer;
+  tk  : char;
 begin
   if isEndOfExpr(Parser.Token, CommaIsEnd) then
     Result:=nil
@@ -1881,12 +1881,15 @@ begin
     x := TExpression.Create(Parser.Index);
 
     repeat
-      if (Parser.Token='(') or (Parser.Token='[') then
+      if length(Parser.Token)>0 then tk:=Parser.Token[1]
+      else tk:=#0;
+
+      if (tk in ['(','[','{']) then
         inc(lvl)
       else begin
         if (lvl=0) and isEndOfExpr(Parser.Token, CommaIsEnd) then
           Break
-        else if (Parser.Token=')') or (Parser.Token=']') then
+        else if (tk in [')',']','}']) then
           dec(lvl)
       end;
       x.PushToken(Parser.Token, Parser.TokenType);
@@ -1940,6 +1943,7 @@ var
   id        : TNamePart;
   postfix   : TNamePart;
 // todo: store const them as part of the name
+// inout is found in ObjC headers
 begin
   if Parser.Token='const' then Parser.NextToken; // skip const qualifier
 
@@ -2047,15 +2051,19 @@ begin
     Result:=Assigned(NameType);
     if Result then NameType.Specifiers.Assign(specs)
     else Exit;
-  finally
-    Specs.Free;
-  end;
 
-  try
     Result:=False;
     repeat
       Name:=ParseNamePart(Parser);
       if Assigned(Name) then Names.Add(Name);
+
+      // constant or initializing value
+      if Parser.Token='=' then begin
+        Parser.NextToken;
+        if Assigned(Name) then
+          Name.valexp:=ParseCExpr(Parser,AllowMultipleNames);
+      end;
+
       if not AllowMultipleNames then begin
         Result:=True;
         Exit;
@@ -2063,7 +2071,7 @@ begin
       done:=isEndOfName(Parser, EndChars);
       if not done then begin
         if Parser.Token <> ',' then begin
-          ErrorExpect(Parser, ';', 'Parsing var/func declarations');
+          ErrorExpect(Parser, ';', 'parsing var/func declarations');
           Exit;
         end;
         Parser.NextToken;
@@ -2071,6 +2079,7 @@ begin
     until done;
     Result:=True;
   finally
+    Specs.Free;
   end;
 end;
 
@@ -2111,6 +2120,7 @@ begin
     params[i].prmtype.Free;
     params[i].name.Free;
   end;
+  valexp.Free;
   inherited Destroy;
 end;
 
@@ -2440,7 +2450,7 @@ begin
 
 end;
 
-function PreprocessHeader(const s: string; entList: TList; macros: TCMacroHandler; fs: TFileOffsets): string;
+function PreprocessHeader(const s: string; entList: TList; macros: TCMacroHandler; fs: TFileOffsets; appliedEnt: TList): string;
 var
   isCondMet : Boolean;
   lvl : Integer;
@@ -2449,6 +2459,7 @@ var
 
   procedure Feed(ToIdx: Integer);
   begin
+     //writeln('feeding: ', toIdx-k);
      if (ToIdx>=k) then begin
        Result:=Result+Copy(s, k, toIdx-k);
        k:=ToIdx+1;
@@ -2463,32 +2474,42 @@ var
 
   procedure ProcEntities(stInd, endInd: integer);
   var
-    i   : integer;
-    ent : TEntity;
-    dif : TCPrepIf;
-    stSub  : Integer;
-    endSub : integer;
+    i       : integer;
+    ent     : TEntity;
+    dif     : TCPrepIf;
+    cndend  : TEntity;
+    cndst   : TEntity;
+    stSub   : Integer;
+    endSub  : integer;
+    hasElse : Boolean;
   begin
     i:=stInd;
     while (i<=endInd) do begin
       ent:=TEntity(procList[i]);
       if not Assigned(ent) then Continue;
 
+      Feed( ent.Offset );
       if (ent is TCPrepDefine) then begin
-        Feed( ent.Offset );
+        if Assigned(appliedEnt) then appliedEnt.Add(ent);
+
         SetFeedOfs( ent.EndOffset );
         CPrepDefineToMacrosHandler( TCPrepDefine(ent), macros );
         inc(i);
       end else if ent is TCPrepIf then begin
-        Feed( ent.Offset );
-        dif := TCPrepIf(ent);
+        dif:=TCPrepIf(ent);
+        cndst:=nil;     // condition start
+        cndend:=nil;    // condition end
+        hasElse:=false;
+
         if (dif.IfOp='ifdef') or (dif.IfOp='ifndef') then begin
           isCondMet:=macros.isMacroDefined(dif._Cond);
           if (dif.IfOp='ifndef') then isCondMet:=not isCondMet;
-        end else if (dif.IfOp='if') or (dif.IfOp='elif') then begin
+        end else if (dif.IfOp='if') {or (dif.IfOp='elif')} then begin
           isCondMet:=ValuatePreprocExp(dif._Cond, macros)<>0;
         end else
           isCondMet:=false;
+
+        if isCondMet then cndst:=dif;
 
         lvl:=0;
         endSub:=-1;
@@ -2499,25 +2520,37 @@ var
           ent:=TEntity(procList[i]);
 
           if (ent is TCPrepElse) and (lvl=0) then begin
-            if not isCondMet then stSub:=i+1
-            else endSub:=i-1;
+            hasElse:=true;
+            if not isCondMet then begin
+              cndst:=ent;
+              stSub:=i+1
+            end else begin
+              cndend:=ent;
+              endSub:=i-1;
+            end;
           end else if ent is TCPrepEndif then begin
             // if stSub was initialized (by either if, ifdef or else)
             // but no "endSub" is specified, then endSub is here before end!
-            if (lvl=0) and (stSub>=0) and (endSub<0) then
+            if (lvl=0) and (stSub>=0) and (endSub<0) then begin
               endSub:=i-1;
-
+              if (not isCondMet and hasElse) or (isCondMet and not hasElse) and not Assigned(cndend) then
+                cndend:=ent
+            end;
             dec(lvl);
+
           end else if (ent is TCPrepIf) then begin
             if (TCPrepIf(ent).IfOp='elif') then begin
               if (lvl=0) then begin // same level if - check cond
                 if not isCondMet then begin
                   if ValuatePreprocExp(TCPrepIf(ent)._Cond, macros)=1 then begin
                     isCondMet:=true;
+                    cndst:=ent;
                     stSub:=i+1;
                   end;
-                end else if (endSub<0) then
+                end else if (endSub<0) then begin
                   endSub:=i-1;
+                  if not Assigned(cndend) then cndend:=ent;
+                end;
               end; // if elif, doesn't modify the level
             end else
               inc(lvl);
@@ -2526,13 +2559,33 @@ var
         end;
 
         if (stSub>=0) and (endSub>=0) then begin
-          SetFeedOfs( TEntity(procList[stSub]).Offset );
-          ProcEntities(stSub, endSub);
+
+          if stSub>endSub then begin
+            // this occurs, for simple expressions, like
+            // if-end or if-else-end
+            // with no other directives in between
+            //
+            // stSub and endSub are reversed.
+
+            if Assigned(cndst) and Assigned(cndend) then begin
+              SetFeedOfs( cndst.EndOffset );
+              Feed( cndend.Offset );
+            end;
+
+          end else begin
+            SetFeedOfs( cndst.EndOffset );
+            Feed ( TEntity(procList[stSub]).Offset );
+
+            ProcEntities(stSub, endSub);
+
+            SetFeedOfs( TEntity(procList[endSub]).EndOffset );
+            Feed( cndend.Offset );
+          end;
         end;
 
         SetFeedOfs( ent.EndOffset );
       end else begin
-        Feed( ent.Offset );
+        if Assigned(appliedEnt) then appliedEnt.Add(ent);
         SetFeedOfs( ent.EndOffset );
         inc(i);
       end;
@@ -2568,8 +2621,9 @@ begin
 
   if not Assigned(def.Params) or (def.Params.Count=0) then
     mh.AddSimpleMacro(def._Name, def.SubsText)
-  else
+  else begin
     mh.AddParamMacro(def._Name, def.SubsText, def.Params);
+  end;
 end;
 
 { TCTypeInfo }
