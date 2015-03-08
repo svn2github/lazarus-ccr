@@ -142,13 +142,16 @@ type
   { THeaderFile }
 
   THeaderFile = class(TObject)
-    ents      : TList;
+    ents      : TList; // list of lang entities
+    cmts      : TList; // list of comments
+    pres      : TList; // list of preprocess entities
     fn        : string;
     inclOrder : Integer;
     useCount  : Integer;
     isCore    : Boolean;
     usedBy    : Integer;
     text      : string;
+    fileOfs   : TFileOffsets;
     constructor Create;
     destructor Destroy; override;
   end;
@@ -2066,12 +2069,20 @@ constructor THeaderFile.Create;
 begin
   inherited Create;
   ents := TList.Create;
+  cmts := TList.Create;
+  pres := TList.Create;
+  fileOfs := TFileOffsets.Create;
 end;
 
 destructor THeaderFile.Destroy;
 begin
   ReleaseList(ents);
+  ReleaseList(cmts);
+  ReleaseList(pres);
+  cmts.Free;
+  pres.Free;
   ents.Free;
+  fileOfs.Free;
   inherited Destroy;
 end;
 
