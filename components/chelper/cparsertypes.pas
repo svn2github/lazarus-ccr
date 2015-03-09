@@ -1816,7 +1816,7 @@ begin
     nm:='';
     simple:=TSimpleType.Create(Parser.TokenPos);
 
-    issig:=(Parser.Token='unsigned') or (simple.Name='signed');
+    issig:=(Parser.Token='unsigned') or (Parser.Token='signed');
     if issig then begin
       nm:=nm+Parser.Token+' ';
       Parser.NextToken;
