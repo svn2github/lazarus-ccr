@@ -40,6 +40,7 @@ var
   isVerbose     : Boolean = false;
   DoIncludes    : Boolean = true;
 
+  IgnoreDefines : TStringList = nil;
   IncludePath   : TStringList = nil; // adjustement for include paths
 
 procedure NormalizePath(var pth: string);
@@ -51,7 +52,24 @@ begin
       pth[i]:=DirectorySeparator;
 end;
 
-function isIncludePath(const include: string; var pth: string): Boolean;
+procedure AddStringsFromFile(st: TStrings; const fn: string);
+var
+  add : TstringList;
+begin
+  if not FileExists(fn) then Exit;
+  try
+    add := TstringList.Create;
+    try
+      add.LoadFromFile(fn);
+      st.AddStrings(add);
+    finally
+      add.Free;
+    end;
+  except
+  end;
+end;
+
+function isIncludePath(const include: string; var pth: string; isSystemPath: Boolean): Boolean;
 var
   i  : integer;
   p  : string;
@@ -65,7 +83,11 @@ begin
   i:=IncludePath.IndexOfName(p);
 
   Result:=i>=0;
-  if not Result then Exit;
+  if not Result then begin
+    // always include empty path, even if it was not specified
+    if p ='.' then Result:=not isSystemPath;
+    Exit;
+  end;
 
   v:=IncludePath.ValueFromIndex[i];
   if p<>'' then p:=IncludeTrailingPathDelimiter(p);
@@ -119,6 +141,9 @@ begin
   writeln('                     physical path is used to specify the actual physical path on the hard drive.');
   writeln('                     if not specified, the current directory is assumed as a location for the header');
   writeln(' -verbose          - verbose output');
+  writeln(' -id %name_of_define%');
+  writeln(' -id @%filename%     ');
+  writeln('                   - the macros name or file name constaining the list of defines to be ignored ');
 end;
 
 procedure ConsumeIncludePath(const s: string);
@@ -188,6 +213,14 @@ begin
       end else if s='-ip' then begin
         inc(i);
         ConsumeIncludePath( Trim(SafeParamStr(i)) );
+      end else if s='-ig' then begin
+        inc(i);
+        fn:=Trim(SafeParamStr(i));
+        if (fn<>'') then begin
+          if (fn[1]='@')
+            then AddStringsFromFile(IgnoreDefines, Copy(fn,2,length(fn)))
+            else IgnoreDefines.Add(fn);
+        end;
       end else
         files.Add(ss);
       inc(i);
@@ -463,7 +496,8 @@ begin
 
     while i<files.Count do begin
       fn:=files[i];
-      //writeln('i = ',i,' ',fn);
+      log(fn);
+      log('reading');
 
       hdr:=THeaderFile(files.Objects[i]);
       if not Assigned(hdr) then begin
@@ -480,48 +514,28 @@ begin
       finally
         txt.Free;
       end;
+      log('preprocing %s ', [fn]);
       buf:=PreprocGlobal(buf, hdr.fileOfs, hdr.cmts);
-      //writeln('?parseri!');
       ParseDirectives(buf, hdr.pres);
 
       applied.Clear;
-      //writeln('?preproc!');
-      buf:=PreprocessHeader(buf, hdr.pres, inp.parser.MacroHandler, hdr.fileOfs, applied);
+      buf:=PreprocessHeader(buf, hdr.pres, inp.parser.MacroHandler, hdr.fileOfs, IgnoreDefines, applied);
+      log('preprocing done');
+      hdr.text:=Buf;
 
-      ResetText(inp, buf);
-
-      //writeln('?handler = ', PtrUInt(inp.parser.MacroHandler));
-      //DebugMacros(inp.parser.MacroHandler);
-      //writeln('parsing entities');
-
-      if not ParseCEntities(inp, hdr.ents, ot) then begin
-        //writeln('error:');
-        writeln('Parsing error at ', fn,' (',ot.error.ErrorPos.y,':',ot.error.ErrorPos.X,')');
-        writeln(ot.error.ErrorMsg);
-
-        ReleaseList(hdr.Ents);
-        inc(i);
-
-        SaveDebugToFile(inp.parser.Buf
-          +LineEnding+'----'+LineEnding+
-          buf
-          , fn,
-           Format('Parsing error at "%s" (%d:%d)'#13#10'%s',
-                 [fn, ot.error.ErrorPos.y, ot.error.ErrorPos.X,ot.error.ErrorMsg]));
-
-        Continue;
-      end;
-      hdr.text:=inp.parser.Buf;
-
-      AssignIntComments(hdr.ents);
-
-      if DoIncludes then
-        //writeln('kokoke: applied');
+      if DoIncludes then begin
+        Log ('checking included headers');
         for j:=0 to applied.Count-1 do
           if TObject(applied[j]) is TCPrepInclude then begin
             ic:=TCPrepInclude(applied[j]);
-            if isIncludePath(ic.Included, fn) then begin
+            if isIncludePath(ic.Included, fn, ic.isSysFile) then begin
+              Log('adding %s to headers list', [ic.Included]);
               fi:=Files.IndexOf(fn);
+              if not FileExists(fn) then begin
+                log('warning: incluide file %s not found', [fn]);
+                Continue;
+              end;
+
               if fi<0 then
                 // GetIncludeFN(ic.Included) is a hack not to add UIKit.h twice
                 fi:=Files.IndexOf( GetIncludeFN(ic.Included) );
@@ -532,28 +546,63 @@ begin
                 hh.usedBy:=hdr.inclOrder;
                 fi:=Files.AddObject(fn, hh);
               end else begin
+                log('%s is already in the list ', [ic.Included]);
                 hh:=THeaderFile(Files.Objects[fi]);
                 // fi<>0 is a hack not to add reassing UIKit.h twice
                 if (hh.usedBy=0) and (fi<>0) then hh.usedBy:=i;
               end;
               inc(THeaderFile(Files.Objects[fi]).useCount);
 
-            end;
-          end;
+            end else
+              Log('%s is not suggested for inclusion or a system header', [ic.Included]);
+          end; {if CPreInclude}
+      end;
 
       inc(i);
+      log('');
     end;
-    //writeln('done!');
 
+    log('');
     if isVerbose then begin
-      log('files count = ', files.Count);
-      log('original order');
+      log('total header files count ', files.Count);
+      log('parsing order:');
       DebugHeaders(files);
     end;
 
-    log('files order after usage resolving');
+    log('');
+    log('files order after usage resolving: ');
     ResortByUsage(files);
     if isVerbose then DebugHeaders(files);
+
+    log('macros:');
+    DebugMacros(inp.mmaker.hnd);
+
+    log('');
+    log('parsing files');
+    for i:=0 to files.count-1 do begin
+      hdr := THeaderFile(files.Objects[i]);
+      Log(files[i]);
+      Log('parsing, header length %d bytes', [length(hdr.text)]);
+      ResetText(inp, hdr.text);
+      //writeln(hdr.text);
+      if not ParseCEntities(inp, hdr.ents, ot) then begin
+        writeln('error:');
+        writeln('Parsing error at ', fn,' (',ot.error.ErrorPos.y,':',ot.error.ErrorPos.X,')');
+        writeln(ot.error.ErrorMsg);
+
+        ReleaseList(hdr.Ents);
+
+        SaveDebugToFile(inp.parser.Buf
+          +LineEnding+'----'+LineEnding+
+          buf
+          , fn,
+           Format('Parsing error at "%s" (%d:%d)'#13#10'%s',
+                 [fn, ot.error.ErrorPos.y, ot.error.ErrorPos.X,ot.error.ErrorMsg]));
+      end; // else
+      log('done!');
+
+        //AssignIntComments(hdr.ents);
+    end;
 
     //writeln('cout = ', files.Count);
     for i:=0 to files.Count-1 do begin
@@ -563,6 +612,7 @@ begin
 
       writeln(res);
     end;
+
 
     {writeln('alphabet!');
     TSTringList(files).Sort;
@@ -587,6 +637,7 @@ begin
   cfg:=TConvertSettings.Create;
   fns:=TStringList.Create;
   IncludePath:=TStringList.Create;
+  IgnoreDefines:=TStringList.Create;
   try
     ReadParams(fns, cfg);
     if isPrintHelp then begin
@@ -605,6 +656,7 @@ begin
     cfg.Free;
     fns.Free;
     IncludePath.Free;
+    IgnoreDefines.Free;
   end;
 end.
 

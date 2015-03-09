@@ -435,7 +435,7 @@ function ParseEnum(AParser: TTextParser): TEnumType;
 
 function PreprocGlobal(const buf: string; fs: TFileOffsets; ent: TList): string;
 procedure ParseDirectives(const s: string; entList: TList);
-function PreprocessHeader(const s: string; entList: TList; macros: TCMacroHandler; fs: TFileOffsets; appliedEnt: TList = nil): string;
+function PreprocessHeader(const s: string; entList: TList; macros: TCMacroHandler; fs: TFileOffsets; IgnoreDefines: TStrings; appliedEnt: TList = nil): string;
 procedure CPrepDefineToMacrosHandler(def: TCPrepDefine; mh: TCMacroHandler);
 
 procedure DebugEnList(entlist: TList);
@@ -738,6 +738,7 @@ begin
     x.PushToken(Parser.Token, Parser.TokenType);
   until not Parser.NextToken;
 
+  Result:=x;
 end;
 
 procedure ParseCNumeric(const S: AnsiString; var idx: integer; var NumStr: AnsiSTring);
@@ -2450,7 +2451,7 @@ begin
 
 end;
 
-function PreprocessHeader(const s: string; entList: TList; macros: TCMacroHandler; fs: TFileOffsets; appliedEnt: TList): string;
+function PreprocessHeader(const s: string; entList: TList; macros: TCMacroHandler; fs: TFileOffsets; IgnoreDefines: TStrings; appliedEnt: TList): string;
 var
   isCondMet : Boolean;
   lvl : Integer;
@@ -2482,6 +2483,7 @@ var
     stSub   : Integer;
     endSub  : integer;
     hasElse : Boolean;
+    nm  : string;
   begin
     i:=stInd;
     while (i<=endInd) do begin
@@ -2493,8 +2495,11 @@ var
         if Assigned(appliedEnt) then appliedEnt.Add(ent);
 
         SetFeedOfs( ent.EndOffset );
-        CPrepDefineToMacrosHandler( TCPrepDefine(ent), macros );
+        nm:=TCPrepDefine(ent)._Name;
+        if not Assigned(IgnoreDefines) or (IgnoreDefines.IndexOf(nm) <0) then
+          CPrepDefineToMacrosHandler( TCPrepDefine(ent), macros );
         inc(i);
+
       end else if ent is TCPrepIf then begin
         dif:=TCPrepIf(ent);
         cndst:=nil;     // condition start
