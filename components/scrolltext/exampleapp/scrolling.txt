@@ -6,7 +6,6 @@ A visual component for Lazarus/fpc
 Installation
 ========
 Make a new folder 'scrolltext' in lazarus/components
-Unzip this archive into it
 In Lazarus open the file 'scrolltext.lpk' as a package project
 Click 'Compile' then 'Use/Install'
 If asked 'do you want to recompile the IDE?' then click 'Yes'
