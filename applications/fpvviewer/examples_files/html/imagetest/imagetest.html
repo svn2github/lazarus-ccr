@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Image test</title> 
+</head> 
+<body>
+<h1> Image test </h1>
+<br />
+<table border="1">
+<caption>Image table </caption>
+<tbody>
+<tr><th> </th> <th> </th><th> Image </th><th>Type </th> </tr>
+<tr><th>1.</th> <td> png </td> <td> <img src="ide_icon48x48.png" width="48" height="48" alt="ide icon" /></td>
+   <td> Portable Network Graphics </td> </tr>
+<tr><th>2.</th> <td> jpg </td> 
+  <td> <img src="images/Build+with+FreePascal-Lazarus.jpg"  width="100" height="142" alt="Build with FreePascal-Lazarus" /></td>
+  <td> Joint Photographic Expert Group </td>
+</tr>
+<tr><th>3.</th> <td> gif </td> <td> <img src="images/lazarus_produced_logo.gif" /></td>
+  <td> Graphics Interchange Format </td> </tr>
+<tr><th>4.</th> <td> svg </td> <td> <img src="images/lazarus.svg" width="100" height="100" alt="Lazarus icon" /></td>
+  <td> Scalable Vector Graphics </td> </tr>
+<tr><th>5.</th> <td> embed svg </td> <td> 
+  <svg width="160" height="100">
+    <defs>
+      <polygon id="tahti" stroke="white" fill="blue"
+       points="60,80 80,80 90,60 100,80 120,80 105,95 110,115 90,105
+       70,115 75,95" />
+    </defs>
+    <use xlink:href="#tahti" x="-20" y="-30" />
+    <use xlink:href="#tahti" x="35" y="-20" />
+  </svg>
+
+</td></tr>
+<tr><th>6.</th> <td> embed png</td> <td> <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+<image width="100" height="100" xlink:href="data:image/png;base64,
+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"/>
+
+</svg> </td></tr>
+<tr><th>7.</th> <td> - </td> <td> <img src="images/noimage.gif" width="100" height="100" alt="No image" /></td></tr>
+
+</tbody>
+</table>
+
+<br />
+</body>
+</html>
