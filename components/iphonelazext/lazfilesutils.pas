@@ -35,6 +35,7 @@ function CopySymLinks(const SrcDir, DstDir, FilterMask: string): Boolean;
 procedure EnumFilesAtDir(const PathUtf8 : AnsiString; Dst: TStrings);
 procedure EnumFilesAtDir(const PathUtf8, AMask : AnsiString; Dst: TStrings);
 procedure ExecCmdLineNoWait(const CmdLineUtf8: AnsiString);
+function ExecCmdLineStdOut(const CmdLineUtf8: AnsiString; var StdOut: string; var ErrCode: LongWord): Boolean;
 
 implementation
 
@@ -218,6 +219,58 @@ begin
     proc.Execute;
   finally
     proc.Free;
+  end;
+end;
+
+function ExecCmdLineStdOut(const CmdLineUtf8: AnsiString; var StdOut: string; var ErrCode: LongWord): Boolean;
+var
+  OurCommand   : String;
+  OutputLines  : TStringList;
+  MemStream    : TStringStream;
+  OurProcess   : TProcess;
+  NumBytes     : LongInt;
+begin
+  // A temp Memorystream is used to buffer the output
+  MemStream := TStringStream.Create('');
+
+  OurProcess := TProcess.Create(nil);
+  try
+    OurProcess.CommandLine := CmdLineUtf8;
+    //OurProcess.Executable := CmdLineUtf8;
+    //OurProcess.Parameters.Add(OurCommand);
+
+    // We cannot use poWaitOnExit here since we don't
+    // know the size of the output. On Linux the size of the
+    // output pipe is 2 kB; if the output data is more, we
+    // need to read the data. This isn't possible since we are
+    // waiting. So we get a deadlock here if we use poWaitOnExit.
+    OurProcess.Options := [poUsePipes];
+    OurProcess.Execute;
+    while True do
+    begin
+      // make sure we have room
+      //MemStream.SetSize(BytesRead + READ_BYTES);
+
+      // try reading it
+      if OurProcess.Output.NumBytesAvailable > 0 then
+        MemStream.CopyFrom(OurProcess.Output, OurProcess.Output.NumBytesAvailable)
+      else begin
+        if not OurProcess.Active then
+          Break; // Program has finished execution.
+      end;
+
+    end;
+    //MemStream.SetSize(BytesRead);
+
+    //OutputLines := TStringList.Create;
+    //OutputLines.LoadFromStream(MemStream);
+    //OutputLines.Free;
+
+    StdOut:=MemStream.DataString;
+    Result:=true;
+  finally
+    OurProcess.Free;
+    MemStream.Free;
   end;
 end;
 

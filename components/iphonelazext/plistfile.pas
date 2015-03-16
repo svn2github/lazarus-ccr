@@ -19,7 +19,7 @@ unit PlistFile;
 interface
 
 uses
-  Classes, SysUtils, DOM, XMLRead;
+  Classes, SysUtils, DOM, XMLRead, XMLWrite, LazFilesUtils;
 
 type
   TPlistType = (ltString, ltArray, ltDict, ltData, ltDate, ltBoolean, ltNumber);
@@ -49,15 +49,19 @@ type
   TPListFile = class(TObject)
   public
     root : TPListValue;
+    constructor Create;
     destructor Destroy; override;
+    function GetStrValue(const valname: string): string;
   end;
 
 function LoadFromXML(const fn: string; plist: TPListFile): Boolean; overload;
 function LoadFromXML(doc: TXMLDocument; plist: TPListFile): Boolean; overload;
-
-procedure DebugPlistFile(const fl: TPListFile; Recursive: Boolean = false);
-
 function WriteXML(const plist: TPlistFile): string;
+
+procedure DebugPlistFile(const fl: TPListFile);
+
+function LoadFromFile(const fn: string; plist: TPListFile): Boolean;
+
 
 implementation
 
@@ -84,21 +88,147 @@ begin
   end;
 end;
 
-procedure DebugPlistFile(const fl: TPListFile; Recursive: Boolean = false);
+procedure DebugPlistFile(const fl: TPListFile);
 begin
   DebugValue(fl.root,'');
 end;
 
+function LoadFromFile(const fn: string; plist: TPListFile): Boolean;
+var
+  st : TFileStream;
+  buf : string[5];
+  xs  : string;
+  err : LongWord;
+  m   : TStringStream;
+  doc : TXMLDocument;
+begin
+  //todo: detect plist type and convert is necessary
+  st:=TFileSTream.Create(fn, fmOpenRead or fmShareDenyNone);
+  try
+    st.Read(buf, 5);
+  finally
+    st.Free;
+  end;
+  if buf='<?xml' then
+    Result:=LoadFromXML(fn, plist)
+  else begin
+    {$ifdef darwin}
+    // the utility is not available anywhere else but OSX
+    if not ExecCmdLineStdOut('plutil -convert xml1 -o - "'+fn+'"', xs, err) then begin
+      Result:=false;
+      Exit;
+    end;
+    m:=TStringStream.Create(xs);
+    try
+      ReadXMLFile(doc, m);
+      Result:=LoadFromXML(doc, plist);
+      doc.Free;
+    finally
+      m.Free;
+    end;
+    {$else}
+    Result:=false;
+    {$endif}
+  end;
+end;
+
 const
-  prefix=
+  PlistXMLPrefix=
   '<?xml version="1.0" encoding="UTF-8"?>'+LineEnding+
   '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">'+LineEnding+
-  '<plist version="1.0">'+LineEnding;
+  '<plist version="1.0">';
+
+const
+  EncText = ['<', '>', '&'];
+  amp = '&amp;';
+  lt = '&lt;';
+  gt = '&gt;';
+
+function XMLEncodeText(const v: WideString): string;
+var
+  i : integer;
+  j : Integer;
+  k : integer;
+  b : string;
+  rp : string;
+begin
+  Result:='';
+  b:=UTF8Encode(v);
+  j:=1;
+  for i:=1 to length(b) do begin
+    if b[i] in EncText then begin
+      if length(Result)=0 then begin
+        SetLength(Result, length(b)*5);
+        k:=1;
+      end;
+      Move(b[j], Result[k], i-j);
+      inc(k, i-j);
+      case b[i] of
+        '<': rp:=lt;
+        '>': rp:=gt;
+        '&': rp:=amp;
+      end;
+      j:=i+1;
+      Move(rp[1], Result[k], length(rp));
+      inc(k, length(rp));
+    end;
+
+  end;
+
+  if (Result='') and (b<>'') then
+    Result:=b
+  else begin
+    if j<length(b) then begin
+      i:=length(b)+1;
+      Move(b[j], Result[k], i-j);
+      inc(k, i-j);
+    end;
+    SetLength(Result, k-1);
+  end;
+end;
+
+const
+  XMLPFX = #9;
+
+procedure WriteXMLValue(v: TPListValue; dst: TStrings; const pfx: string);
+const
+  boolTag : array [boolean] of string = ('<false/>','<true/>');
+var
+  i : integer;
+begin
+  case v.ValueType of
+    ltBoolean: dst.Add(pfx+boolTag[v.bool]);
+    ltString: dst.Add(pfx+'<string>'+XMLEncodeText(v.str)+'</string>');
+    ltDict: begin
+      dst.Add(pfx+'<dict>');
+      for i:=0 to v.count-1 do begin
+        dst.Add(XMLPFX+'<key>'+XMLEncodeText(v.names[i])+'</key>');
+        WriteXMLValue(v.items[i], dst, pfx+XMLPFX);
+      end;
+      dst.Add(pfx+'</dict>');
+    end;
+    ltArray: begin
+      dst.Add(pfx+'<array>');
+      for i:=0 to v.count-1 do
+        WriteXMLValue(v.items[i], dst, pfx+XMLPFX);
+      dst.Add(pfx+'</array>');
+    end;
+  end;
+end;
 
 function WriteXML(const plist: TPlistFile): string;
+var
+  st: TSTringList;
 begin
-  Result:=prefix;
-  Result:=Result+'</plist>';
+  st:=TSTringList.Create;
+  try
+    st.Add(PlistXMLPrefix);
+    WriteXMLValue(plist.root, st, '');
+    st.Add('</plist>');
+    Result:=st.Text;
+  finally
+    st.Free;
+  end;
 end;
 
 function LoadFromXML(const fn: string; plist: TPListFile): Boolean; overload;
@@ -107,6 +237,7 @@ var
 begin
   ReadXMLFile(doc, fn);
   Result:=LoadFromXML(doc, plist);
+  doc.Free;
 end;
 
 function ReadValByNode(valnode: TDomNode): TPListValue; forward;
@@ -148,7 +279,7 @@ begin
   while Assigned(nd) do begin
     if nd.NodeName='key' then begin
       idx:=kv.AddValue;
-      kv.names[idx]:=nd.TextContent;
+      kv.names[idx]:=UTF8Encode(nd.TextContent);
       nd:=nd.NextSibling;
       if Assigned(nd) then begin
         kv.items[idx]:=ReadValByNode(nd);
@@ -180,6 +311,7 @@ function LoadFromXML(doc: TXMLDocument; plist: TPListFile): Boolean; overload;
 var
   root  : TDOMNode;
   nd    : TDOMNode;
+  r     : TPListValue;
 begin
   Result:=false;
   root:=doc.FirstChild; //('plist');
@@ -193,14 +325,40 @@ begin
   if not Assigned(root) then Exit;
 
   nd:=root.FirstChild;
+  r:=plist.root;
   plist.root:=ReadValByNode(nd);
+  if Assigned(plist.root) then r.Free;
   Result:=true;
+end;
+
+constructor TPListFile.Create;
+begin
+  inherited Create;
+  root:=TPListValue.Create(ltDict)
 end;
 
 destructor TPListFile.Destroy;
 begin
   root.Free;
   inherited Destroy;
+end;
+
+function TPListFile.GetStrValue(const valname: string): string;
+var
+  i : integer;
+begin
+  if not Assigned(root) or (root.ValueType<>ltDict) then begin
+    Result:='';
+    Exit;
+  end;
+
+  for i:=0 to root.count-1 do
+    if root.names[i]=valname then begin
+      Result:=UTF8Encode(root.items[i].str);
+      Exit;
+    end;
+  Result:='';
+
 end;
 
 { TPListValue }

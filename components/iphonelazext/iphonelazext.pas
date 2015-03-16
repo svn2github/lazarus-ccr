@@ -7,18 +7,18 @@ unit iphonelazext;
 interface
 
 uses
-    ideext, iPhoneExtStr, iPhoneBundle, XCodeProject, 
+  ideext, iPhoneExtStr, iPhoneBundle, XCodeProject, 
   environment_iphone_options, project_iphone_options, iPhoneExtOptions, 
-  xcodetemplate, LazFilesUtils, XcodeUtils, newXibDialog, xibfile, 
+  xcodetemplate, LazFilesUtils, XcodeUtils, newXibDialog, xibfile, PlistFile, 
   LazarusPackageIntf;
 
 implementation
 
 procedure Register;
 begin
-  RegisterUnit('ideext',@ideext.Register);
+  RegisterUnit('ideext', @ideext.Register);
 end;
 
 initialization
-  RegisterPackage('iphonelazext',@Register);
+  RegisterPackage('iphonelazext', @Register);
 end.

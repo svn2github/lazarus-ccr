@@ -47,13 +47,16 @@ var
   plist : TPListFile;
 begin
   Result:=False;
-  plist:=TPListFile.Create(FileName);
+  plist:=TPListFile.Create;
+  try
+    plistfile.LoadFromFile(FileName, plist);
 
-  Descr.Name:=plist.GetStrValue('CanonicalName');
-  Descr.Alternate:=plist.GetStrValue('AlternateSDK');
-  Descr.Version:=plist.GetStrValue('Version');
-
-  plist.Free;
+    Descr.Name:=plist.GetStrValue('CanonicalName');
+    Descr.Alternate:=plist.GetStrValue('AlternateSDK');
+    Descr.Version:=plist.GetStrValue('Version');
+  finally
+    plist.Free;
+  end;
 end;
 
 function isSDKDir(const SDKDir: String; var d: TSDKDescription): Boolean;
@@ -163,7 +166,8 @@ begin
         xib:='';
         for j:=0 to files.Count-1 do
           if AnsiLowerCase(ExtractFileExt(files[j]))='.plist' then begin
-            plist:=TPListFile.Create(files[j]);
+            plist:=TPListFile.Create;
+            plistfile.LoadFromFile(files[j],plist);
             xib:=plist.GetStrValue('MainTemplateFile');
             descr:=plist.GetStrValue('Description');
             name:=ChangeFileExt(xib, '');

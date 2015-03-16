@@ -488,8 +488,11 @@ procedure Register;
 begin
   // IDE integration is done in constructor
   Extension := TiPhoneExtension.Create;
-  EnvOptions.Load;
-  EnvOptions.RefreshVersions;
+  try
+    EnvOptions.Load;
+    EnvOptions.RefreshVersions;
+  except
+  end;
 end;
 
 initialization
