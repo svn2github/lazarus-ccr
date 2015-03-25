@@ -248,7 +248,7 @@ function DeduceEasyInterfaceForDocStyle(
       Exit;
     if not IsFinallyAClassType(locElt) then
       Exit;
-    locRawInParam := TPasClassType(locElt);
+    locRawInParam := TPasClassType(GetUltimeType(TPasType(locElt)));
     locIsFunction := False;
     if AMethod.InheritsFrom(TPasFunction) then begin
       locElt := TPasFunctionType(AMethod.ProcType).ResultEl.ResultType;
@@ -256,7 +256,7 @@ function DeduceEasyInterfaceForDocStyle(
         locElt := AContainer.FindElement(locElt.Name);
       if not IsFinallyAClassType(locElt) then
         Exit;
-      locRawOutParam := TPasClassType(locElt);
+      locRawOutParam := TPasClassType(GetUltimeType(TPasType(locElt)));
       q := locRawOutParam.Members.Count;
       if ( q > 0 ) then begin
         for k := 0 to ( q - 1 ) do begin
@@ -486,11 +486,20 @@ var
   HandleEasyIntf : boolean;
   
   procedure WriteDec();
+  var
+    locModule : TPasModule;
   begin
+    locModule := FindModule(AIntf);
+    if (locModule = nil) then
+      locModule := FSymbolTable.CurrentModule;
     Indent();
-    Write('%s=class(%s,%s',[GenerateClassName(AIntf),sPROXY_BASE_CLASS,AIntf.Name]);
-    if HandleEasyIntf then
-      Write(',%s',[AEasyIntf.Name]);
+    Write('%s=class(%s,%s.%s',[GenerateClassName(AIntf),sPROXY_BASE_CLASS, locModule.Name, AIntf.Name]);
+    if HandleEasyIntf then begin
+      locModule := FindModule(AIntf);
+      if (locModule = nil) then
+        locModule := FSymbolTable.CurrentModule;
+      Write(',%s.%s',[locModule.Name, AEasyIntf.Name]);
+    end;
     WriteLn(')');
     FDecProcStream.IncIndent();
     try
@@ -801,6 +810,7 @@ Var
     elt : TPasElement;
     objArgs : Boolean;
     localIsFunc : boolean;
+    origineResultType : TPasClassType;
   begin
     origineMthd := FindMember(AIntf,AMthd.Name) as TPasProcedure;
     Assert ( origineMthd <> nil );
@@ -810,8 +820,9 @@ Var
     localIsFunc := AMthd.InheritsFrom(TPasFunction);
     if origineIsFunc then begin
       origineRes := TPasFunctionType(origineMthd.ProcType).ResultEl;
-      for k := 0 to ( TPasClassType(origineRes.ResultType).Members.Count - 1 ) do begin
-        elt := TPasElement(TPasClassType(origineRes.ResultType).Members[k]);
+      origineResultType := GetUltimeType(TPasType(origineRes.ResultType)) as TPasClassType;
+      for k := 0 to (origineResultType.Members.Count - 1) do begin
+        elt := TPasElement(origineResultType.Members[k]);
         if elt.InheritsFrom(TPasProperty) and ( TPasProperty(elt).Visibility = visPublished ) then begin
           origineResProp := TPasProperty(elt);
           Break;
@@ -985,12 +996,17 @@ Var
   end;
 
   procedure WriteTypeInfoMethod();
+  var
+    locModule : TPasModule;
   begin
+    locModule := FindModule(AIntf);
+    if (locModule = nil) then
+      locModule := FSymbolTable.CurrentModule;
     NewLine();
     WriteLn('class function %s.GetServiceType() : PTypeInfo;',[strClassName]);
     WriteLn('begin');
       IncIndent();
-        Indent(); WriteLn('result := TypeInfo(%s);',[AIntf.Name]);
+        Indent(); WriteLn('result := TypeInfo(%s.%s);',[locModule.Name, AIntf.Name]);
       DecIndent();
     WriteLn('end;');
     NewLine();
@@ -2891,7 +2907,7 @@ procedure TInftGenerator.GenerateCustomMetadatas();
     pl := SymbolTable.Properties.FindList(AOp);
     if ( pl <> nil ) then begin
       for k := 0 to Pred(pl.Count) do begin
-        if not IsStrEmpty(pl.ValueFromIndex[k]) then begin
+        //if not IsStrEmpty(pl.ValueFromIndex[k]) then begin
           Indent();WriteLn('mm.SetOperationCustomData(');
             IncIndent();
               Indent(); WriteLn('%s,',[sUNIT_NAME]);
@@ -2901,7 +2917,7 @@ procedure TInftGenerator.GenerateCustomMetadatas();
               Indent(); WriteLn('%s' ,[QuotedStr(pl.ValueFromIndex[k])]);
             DecIndent();
           Indent();WriteLn(');');
-        end;
+        //end;
       end;
     end;
   end;
