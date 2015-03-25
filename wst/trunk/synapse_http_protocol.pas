@@ -199,7 +199,7 @@ begin
   if (i >= 0) then
     FConnection.Headers[i] := s
   else
-    FConnection.Headers.Add(s);
+    FConnection.Headers.Insert(0,s);
 end;
 
 procedure THTTPTransport.DoSendAndReceive(ARequest, AResponse : TStream);
@@ -229,6 +229,7 @@ begin
   end;
   AResponse.CopyFrom(FConnection.Document,0);
   FConnection.Document.Clear();
+  FConnection.Headers.Clear();
 end;
 
 constructor THTTPTransport.Create();
