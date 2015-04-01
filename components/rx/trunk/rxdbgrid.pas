@@ -295,10 +295,12 @@ type
   public
     constructor Create(Owner: TRxColumn);
     destructor Destroy; override;
-    property Owner: TRxColumn read FOwner;
-    property NumericValue: double read FTestValue;
     function DisplayText: string;
     procedure FillDefaultFont;
+
+    property Owner: TRxColumn read FOwner;
+    property NumericValue: double read FTestValue;
+    property CountRec:integer read FCountRec;
   published
     property Alignment: TAlignment read FAlignment write SetAlignment default
       taLeftJustify;
