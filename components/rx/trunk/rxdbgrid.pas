@@ -1237,12 +1237,14 @@ begin
   begin
     if not (F.DataSet.State in dsEditModes) then
       F.DataSet.Edit;
+
+    if F.IsNull then
+      F.Value:=0;
+
     F.Value:=F.Value - 1;
 
     Msg.LclMsg.msg:=GM_SETVALUE;
     Msg.Grid:=Col.Grid;
-{    Msg.Col:=FCol;
-    Msg.Row:=FRow;}
     Msg.Value:=F.DisplayText;
     TRxDBGrid(Col.Grid).Editor.Dispatch(Msg);
 
@@ -1263,15 +1265,15 @@ begin
   begin
     if not (F.DataSet.State in dsEditModes) then
       F.DataSet.Edit;
+
+    if F.IsNull then
+      F.Value:=0;
     F.Value:=F.Value + 1;
 
     Msg.LclMsg.msg:=GM_SETVALUE;
     Msg.Grid:=Col.Grid;
-{    Msg.Col:=FCol;
-    Msg.Row:=FRow;}
     Msg.Value:=F.DisplayText;
     TRxDBGrid(Col.Grid).Editor.Dispatch(Msg);
-
   end;
 end;
 
