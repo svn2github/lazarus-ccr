@@ -44,8 +44,6 @@ type
 
   TRxMemoryDataSortEngine = class(TRxDBGridSortEngine)
   protected
-    procedure UpdateFooterRows(ADataSet:TDataSet; AGrid:TRxDBGrid);override;
-    function EnabledFooterRowsCalc:boolean;override;
   public
     procedure Sort(FieldName: string; ADataSet:TDataSet; Asc:boolean; SortOptions:TRxSortEngineOptions);override;
     procedure SortList(ListField:string; ADataSet:TDataSet; Asc: array of boolean; SortOptions: TRxSortEngineOptions);override;
@@ -53,67 +51,6 @@ type
 
 implementation
 uses rxmemds;
-
-type
-  THackRxColumnFooter = class(TRxColumnFooter);
-  THackDataLink = class(TDataLink);
-  THackDataSet = class(TDataSet);
-  THackRxDBGrid = class(TRxDBGrid);
-
-procedure TRxMemoryDataSortEngine.UpdateFooterRows(ADataSet: TDataSet;
-  AGrid: TRxDBGrid);
-var
-  i:integer;
-  Col:TRxColumn;
-
-  DHL:THackDataLink;
-  DHS:THackDataSet;
-  SaveState:TDataSetState;
-  SavePos:integer;
-  SaveActiveRecord:integer;
-begin
-  if not Assigned(ADataSet) then exit;
-
-  DHL:=THackDataLink(THackRxDBGrid(AGrid).Datalink);
-  DHS:=THackDataSet(ADataSet);
-  SaveState:=DHS.SetTempState(dsBrowse);
-
-  SaveActiveRecord:=DHL.ActiveRecord;
-  DHL.ActiveRecord:=0;
-  SavePos:=ADataSet.RecNo;
-
-
-  ADataSet.First;
-  while not ADataSet.EOF do
-  begin
-
-    for i:=0 to AGrid.Columns.Count-1 do
-    begin
-      Col:=TRxColumn(AGrid.Columns[i]);
-      if THackRxColumnFooter(Col.Footer).ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin] then
-//        THackRxColumnFooter(Col.Footer).UpdateTestValueFromVar( ADataSet.FieldByName(Col.Footer.FieldName).Value);
-    end;
-
-    ADataSet.Next;
-  end;
-
-  DHS.RecNo := DHL.RecordCount + SavePos + 1;
-
-  while not ADataSet.BOF do
-  begin
-    if SavePos = ADataSet.RecNo then
-      break;
-    ADataSet.Prior;
-  end;
-
-  DHL.ActiveRecord:=SaveActiveRecord;
-  DHS.RestoreState(SaveState);
-end;
-
-function TRxMemoryDataSortEngine.EnabledFooterRowsCalc: boolean;
-begin
-  Result:=true;
-end;
 
 procedure TRxMemoryDataSortEngine.Sort(FieldName: string; ADataSet: TDataSet;
   Asc: boolean; SortOptions: TRxSortEngineOptions);
@@ -126,7 +63,6 @@ procedure TRxMemoryDataSortEngine.SortList(ListField: string;
   ADataSet: TDataSet; Asc: array of boolean; SortOptions: TRxSortEngineOptions);
 begin
   if Assigned(ADataSet) then
-//    (ADataSet as TRxMemoryData).SortOnFieldsEx(ListField, seoCaseInsensitiveSort in SortOptions, Asc);
     (ADataSet as TRxMemoryData).SortOnFields(ListField, seoCaseInsensitiveSort in SortOptions, Asc[0]);
 end;
 

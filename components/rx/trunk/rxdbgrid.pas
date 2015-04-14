@@ -211,8 +211,6 @@ type
   TRxDBGridSortEngine = class
   protected
     FGrid:TRxDBGrid;
-    procedure UpdateFooterRows(ADataSet:TDataSet; AGrid:TRxDBGrid);virtual; abstract;
-    function EnabledFooterRowsCalc:boolean;virtual;
   public
     procedure Sort(FieldName: string; ADataSet: TDataSet; Asc: boolean; SortOptions: TRxSortEngineOptions); virtual; abstract;
     procedure SortList(ListField: string; ADataSet: TDataSet; Asc: array of boolean; SortOptions: TRxSortEngineOptions); virtual;
@@ -5911,11 +5909,6 @@ begin
 end;
 
 { TExDBGridSortEngine }
-
-function TRxDBGridSortEngine.EnabledFooterRowsCalc: boolean;
-begin
-  Result:=false;
-end;
 
 procedure TRxDBGridSortEngine.SortList(ListField: string; ADataSet: TDataSet;
   Asc: array of boolean; SortOptions: TRxSortEngineOptions);
