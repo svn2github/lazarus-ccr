@@ -9314,7 +9314,7 @@ begin
   OwnerDraw := (hoOwnerDraw in FHeader.FOptions) and Assigned(FHeader.Treeview.FOnHeaderDraw) and
     not (csDesigning in FHeader.Treeview.ComponentState) and not AdvancedOwnerDraw;
 
-  ZeroMemory(@PaintInfo, SizeOf(PaintInfo));
+  FillChar(PaintInfo, SizeOf(PaintInfo), #0);
   PaintInfo.TargetCanvas := TargetCanvas;
 
   with PaintInfo, TargetCanvas do
