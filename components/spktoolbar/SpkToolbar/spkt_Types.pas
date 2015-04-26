@@ -28,11 +28,15 @@ type TSpkCollection = class(TPersistent)
        FRootComponent : TComponent;
 
      // *** Metody reakcji na zmiany w liœcie ***
+     // *** Methods responding to changes in list ***
        procedure Notify(Item : TComponent; Operation : TOperation); virtual;
        procedure Update; virtual;
 
      // *** Wewnêtrzne metody dodawania i wstawiania elementów ***
      // *** Gettery i settery ***
+
+     // *** Internal methods for adding and inserting elements ***
+     // *** Getters and setters ***
        function GetItems(index: integer): TComponent; virtual;
      public
      // *** Konstruktor, destruktor ***
@@ -40,21 +44,23 @@ type TSpkCollection = class(TPersistent)
        destructor Destroy; override;
 
      // *** Obs³uga listy ***
-       procedure AddItem(AItem : TComponent);
-       procedure InsertItem(index : integer; AItem : TComponent);
+     // *** List operations ***
+       procedure AddItem(AItem: TComponent);
+       procedure InsertItem(index: integer; AItem: TComponent);
        procedure Clear;
-       function Count : integer;
-       procedure Delete(index : integer); virtual;
-       function IndexOf(Item : TComponent) : integer;
-       procedure Remove(Item : TComponent); virtual;
-       procedure RemoveReference(Item : TComponent);
-       procedure Exchange(item1, item2 : integer);
-       procedure Move(IndexFrom, IndexTo : integer);
+       function Count: integer;
+       procedure Delete(index: integer); virtual;
+       function IndexOf(Item: TComponent) : integer;
+       procedure Remove(Item: TComponent); virtual;
+       procedure RemoveReference(Item: TComponent);
+       procedure Exchange(item1, item2: integer);
+       procedure Move(IndexFrom, IndexTo: integer);
 
      // *** Reader, writer i obs³uga designtime i DFM ***
-       procedure WriteNames(Writer : TWriter); virtual;
-       procedure ReadNames(Reader : TReader); virtual;
-       procedure ProcessNames(Owner : TComponent); virtual;
+     // *** Reader, writer and operation designtime and DFM
+       procedure WriteNames(Writer: TWriter); virtual;
+       procedure ReadNames(Reader: TReader); virtual;
+       procedure ProcessNames(Owner: TComponent); virtual;
 
        property ListState : TSpkListState read FListState;
        property Items[index : integer] : TComponent read GetItems; default;
@@ -68,6 +74,7 @@ type TSpkComponent = class(TComponent)
        FCollection: TSpkCollection;
      public
      // *** Obs³uga parenta ***
+     // *** Parent operations ***
        function HasParent : boolean; override;
        function GetParentComponent : TComponent; override;
        procedure SetParentComponent(Value : TComponent); override;
@@ -85,49 +92,47 @@ begin
 // Ta metoda mo¿e byæ wywo³ywana bez przetworzenia nazw (w szczególnoœci, metoda
 // przetwarzaj¹ca nazwy korzysta z AddItem)
 
-Notify(AItem, opInsert);
-FList.Add(AItem);
+// This method can be recalling untreated names (in particular, the method
+// uses the name przetwarzaj¹ca AddItem)   --- ???
 
-if AItem is TSpkComponent then
-  TSpkComponent(AItem).FCollection := self;
+  Notify(AItem, opInsert);
+  FList.Add(AItem);
 
-Update;
+  if AItem is TSpkComponent then
+    TSpkComponent(AItem).FCollection := self;
+
+  Update;
 end;
 
 procedure TSpkCollection.Clear;
 begin
-FList.Clear;
-
-Update;
+  FList.Clear;
+  Update;
 end;
 
 function TSpkCollection.Count: integer;
 begin
-result:=FList.Count;
+  result := FList.Count;
 end;
 
 constructor TSpkCollection.Create(RootComponent : TComponent);
 begin
-inherited Create;
-FRootComponent:=RootComponent;
-
-FNames:=TStringList.create;
-
-FList:=TFPObjectList.create(False);
-
-FListState:=lsReady;
+  inherited Create;
+  FRootComponent := RootComponent;
+  FNames := TStringList.create;
+  FList := TFPObjectList.create(False);
+  FListState := lsReady;
 end;
 
 procedure TSpkCollection.Delete(index: integer);
 begin
-if (index<0) or (index>=FList.count) then
-   raise InternalException.Create('TSpkCollection.Delete: Nieprawid³owy indeks!');
+  if (index < 0) or (index >= FList.count) then
+    raise InternalException.Create('TSpkCollection.Delete: Illegal index!');
+    //raise InternalException.Create('TSpkCollection.Delete: Nieprawid³owy indeks!');
 
-Notify(TComponent(FList[index]), opRemove);
-
-FList.Delete(index);
-
-Update;
+  Notify(TComponent(FList[index]), opRemove);
+  FList.Delete(index);
+  Update;
 end;
 
 destructor TSpkCollection.Destroy;
@@ -139,46 +144,47 @@ end;
 
 procedure TSpkCollection.Exchange(item1, item2: integer);
 begin
-FList.Exchange(item1, item2);
-Update;
+  FList.Exchange(item1, item2);
+  Update;
 end;
 
 function TSpkCollection.GetItems(index: integer): TComponent;
 begin
-if (index<0) or (index>=FList.Count) then
-   raise InternalException.create('TSpkCollection.GetItems: Nieprawid³owy indeks!');
+  if (index < 0) or (index >= FList.Count) then
+    raise InternalException.Create('TSpkCollection.Delete: Illegal index!');
+    //raise InternalException.create('TSpkCollection.GetItems: Nieprawid³owy indeks!');
 
-result:=TComponent(FList[index]);
+  result := TComponent(FList[index]);
 end;
 
 function TSpkCollection.IndexOf(Item: TComponent): integer;
 begin
-result:=FList.IndexOf(Item);
+  result := FList.IndexOf(Item);
 end;
 
 procedure TSpkCollection.InsertItem(index: integer; AItem: TComponent);
 begin
-if (index<0) or (index>FList.Count) then
-   raise InternalException.Create('TSpkCollection.Insert: Nieprawid³owy indeks!');
+  if (index < 0) or (index > FList.Count) then
+    raise InternalException.Create('TSpkCollection.Delete: Illegal index!');
+    //raise InternalException.Create('TSpkCollection.Insert: Nieprawid³owy indeks!');
 
-Notify(AItem, opInsert);
-
-FList.Insert(index, AItem);
-if AItem is TSpkComponent then
-   TSpkComponent(AItem).FCollection := self;
-
-Update;
+  Notify(AItem, opInsert);
+  FList.Insert(index, AItem);
+  if AItem is TSpkComponent then
+    TSpkComponent(AItem).FCollection := self;
+  Update;
 end;
 
 procedure TSpkCollection.Move(IndexFrom, IndexTo: integer);
 begin
-if (indexFrom<0) or (indexFrom>=FList.Count) or
-   (indexTo<0) or (indexTo>=FList.Count) then
-   raise InternalException.Create('TSpkCollection.Move: Nieprawid³owy indeks!');
+  if (indexFrom < 0) or (indexFrom >= FList.Count) or
+     (indexTo < 0) or (indexTo >= FList.Count)
+  then
+    raise InternalException.Create('TSpkCollection.Delete: Illegal index!');
+    //raise InternalException.Create('TSpkCollection.Move: Nieprawid³owy indeks!');
 
-FList.Move(IndexFrom, IndexTo);
-
-Update;
+  FList.Move(IndexFrom, IndexTo);
+  Update;
 end;
 
 procedure TSpkCollection.Notify(Item: TComponent; Operation: TOperation);
@@ -186,67 +192,52 @@ begin
 //
 end;
 
-procedure TSpkCollection.ProcessNames(Owner : TComponent);
-
-var s : string;
-
+procedure TSpkCollection.ProcessNames(Owner: TComponent);
+var
+  s: string;
 begin
-FList.Clear;
-
-if Owner<>nil then
-   for s in FNames do
-       AddItem(Owner.FindComponent(s));
-
-FNames.Clear;
-FListState:=lsReady;
+  FList.Clear;
+  if Owner <> nil then
+    for s in FNames do
+      AddItem(Owner.FindComponent(s));
+  FNames.Clear;
+  FListState := lsReady;
 end;
 
 procedure TSpkCollection.ReadNames(Reader: TReader);
-
 begin
-Reader.ReadListBegin;
-
-FNames.Clear;
-while not(Reader.EndOfList) do
-      FNames.Add(Reader.ReadString);
-
-Reader.ReadListEnd;
-
-FListState:=lsNeedsProcessing;
+  Reader.ReadListBegin;
+  FNames.Clear;
+  while not(Reader.EndOfList) do
+    FNames.Add(Reader.ReadString);
+  Reader.ReadListEnd;
+  FListState := lsNeedsProcessing;
 end;
 
 procedure TSpkCollection.Remove(Item: TComponent);
-
-var i : integer;
-
+var
+  i: integer;
 begin
-i:=FList.IndexOf(Item);
-
-if i>=0 then
-   begin
-   Notify(Item, opRemove);
-
-   FList.Delete(i);
-
-   Update;
-   end;
+  i := FList.IndexOf(Item);
+  if i >= 0 then
+  begin
+    Notify(Item, opRemove);
+    FList.Delete(i);
+    Update;
+  end;
 end;
 
 procedure TSpkCollection.RemoveReference(Item: TComponent);
-
-var i : integer;
-
+var
+  i: integer;
 begin
-i:=FList.IndexOf(Item);
-
-if i>=0 then
-   begin
-   Notify(Item, opRemove);
-
-   FList.Extract(Item);
-
-   Update;
-   end;
+  i := FList.IndexOf(Item);
+  if i >= 0 then
+  begin
+    Notify(Item, opRemove);
+    FList.Extract(Item);
+    Update;
+  end;
 end;
 
 procedure TSpkCollection.Update;
@@ -268,17 +259,17 @@ end;
 
 function TSpkComponent.GetParentComponent: TComponent;
 begin
-  result:=FParent;
+  result := FParent;
 end;
 
 function TSpkComponent.HasParent: boolean;
 begin
-  result:=FParent<>nil;
+  result := FParent<>nil;
 end;
 
 procedure TSpkComponent.SetParentComponent(Value: TComponent);
 begin
-  FParent:=Value;
+  FParent := Value;
 end;
 
 end.
