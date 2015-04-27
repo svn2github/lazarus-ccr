@@ -1,4 +1,10 @@
-(* 
+//ENG:Deprecated module. In future removed!!! Now all functions marked as comment.
+//ENG:for revert changes remove "(*" comment.
+//RUS:Устаревший модуль. В будущем будет удалён. Сейчас весь функционал просто закоментирован.
+//RUS:Для отмены изменений удалите "(*" коментарии
+
+
+(*
   A.Voitov zprokuror(cyka)narod.ru 
   LAZARUS-FPC-LINUX codeset conversion routines 
   
@@ -68,7 +74,8 @@
   iii. This unit tested with dc_utf8 and user's locale koi8-r only 
 *) 
 
-unit rxiconv; 
+unit rxiconv;
+(*
 {* Developer's codeset. Must be set on design-time. Default is UTF8}
 {.$DEFINE DC_KOI8} 
 {$DEFINE DC_WIN}
@@ -103,9 +110,10 @@ is not utf-8. First turn it of.}
          {$DEFINE USE_LOCALIZE} 
 {$ENDIF LCLGtk2} 
 
-{$mode objfpc} 
+{$mode objfpc}
+*)
 interface 
-
+(*
 {$IFNDEF WINDOWS}
 uses
   {$IFDEF USE_LOCALIZE} LResources, Classes,{$ENDIF} initc, SysUtils; 
@@ -158,7 +166,9 @@ uses
     {$ENDIF OBJ_IS_CLASS} 
 {$ENDIF USE_OBJECT} 
 {$ENDIF}
-implementation 
+*)
+implementation
+(*
 {$IFNDEF WINDOWS}
 uses dialogs;
 {$linklib c} 
@@ -436,4 +446,5 @@ finalization
   iconv_close(ic_gtk2str); 
 {$ENDIF LCLGtk2} 
 {$ENDIF}
+*)
 end.
