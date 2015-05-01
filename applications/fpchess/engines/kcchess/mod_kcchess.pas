@@ -337,6 +337,14 @@ begin
   end;
 
   Player[ComputerColor].LookAhead := spinDifficulty.Value;
+  if ComputerColor = C_WHITE then
+  begin
+    KCChessThread := TKCChessThread.Create(True);
+    KCChessThread.FreeOnTerminate := True;
+    KCChessThread.PlayerColor := PlayerColor;
+    KCChessThread.ComputerColor := ComputerColor;
+    KCChessThread.Resume();
+  end;
 end;
 
 function TKCChessModule.GetSecondPlayerName: ansistring;

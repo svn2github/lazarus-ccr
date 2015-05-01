@@ -102,22 +102,12 @@ begin
 end;
 
 procedure TWinboardChessModule.PrepareForGame;
-var
-  CompMove: moveInCoord;
-  lAnimation: TChessMoveAnimation;
 begin
   vwinboardConn.startEngine(editEnginePatch.text);
   if not vChessGame.FirstPlayerIsWhite then
   begin
     vwinboardConn.tellMove('go');
-    compMove:=vwinboardConn.engineMove;
-
-    lAnimation := TChessMoveAnimation.Create;
-    lAnimation.AFrom := CompMove[1];
-    lAnimation.ATo := CompMove[2];
-    vChessDrawer.AddAnimation(lAnimation);
   end;
-
 end;
 
 initialization
