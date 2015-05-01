@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils,
   StdCtrls, Forms, Controls,
-  chessmodules, chessgame;
+  chessmodules, chessgame, chessdrawer;
 
 type
 
@@ -17,7 +17,6 @@ type
   private
     textEnginePatch : TStaticText;
     editEnginePatch : TEdit;
-    EngineStringList: TStringList;
   public
     constructor Create; override;
     procedure CreateUserInterface(); override;
@@ -25,6 +24,7 @@ type
     procedure HideUserInterface(); override;
     procedure FreeUserInterface(); override;
     procedure PrepareForGame(); override;
+    function  GetSecondPlayerName(): ansistring; override;
     procedure HandleOnMove(AFrom, ATo: TPoint); override;
     procedure HandleOnTimer(); override;
   end;
@@ -72,10 +72,14 @@ begin
   editEnginePatch.Free;
 end;
 
+function TWinboardChessModule.GetSecondPlayerName(): ansistring;
+begin
+  Result := editEnginePatch.text;
+end;
+
 procedure TWinboardChessModule.HandleOnMove(AFrom, ATo: TPoint);
 var
   moveStr : String;
-  CompMove: moveInCoord;
 begin
   moveStr:=vwinboardConn.coordToString(AFrom,ATo,vChessGame.PreviousMove.PieceMoved,vChessGame.PreviousMove.PieceEaten);
   vwinboardConn.tellMove(moveStr);
@@ -84,23 +88,34 @@ end;
 procedure TWinboardChessModule.HandleOnTimer;
 var
   CompMove: moveInCoord;
+  lAnimation: TChessMoveAnimation;
 begin
-  CompMove[1]:=Point(1,1);
-  CompMove[2]:=Point(1,1);
   CompMove:=vwinboardConn.engineMove;
-  vChessGame.MovePiece(CompMove[1],CompMove[2]);
+
+  if (CompMove <> nilCoord) then
+  begin
+    lAnimation := TChessMoveAnimation.Create;
+    lAnimation.AFrom := CompMove[1];
+    lAnimation.ATo := CompMove[2];
+    vChessDrawer.AddAnimation(lAnimation);
+  end;
 end;
 
 procedure TWinboardChessModule.PrepareForGame;
-var i: integer;
-    CompMove: moveInCoord;
+var
+  CompMove: moveInCoord;
+  lAnimation: TChessMoveAnimation;
 begin
   vwinboardConn.startEngine(editEnginePatch.text);
   if not vChessGame.FirstPlayerIsWhite then
   begin
     vwinboardConn.tellMove('go');
     compMove:=vwinboardConn.engineMove;
-    vChessGame.MovePiece(CompMove[1],CompMove[2]);
+
+    lAnimation := TChessMoveAnimation.Create;
+    lAnimation.AFrom := CompMove[1];
+    lAnimation.ATo := CompMove[2];
+    vChessDrawer.AddAnimation(lAnimation);
   end;
 
 end;

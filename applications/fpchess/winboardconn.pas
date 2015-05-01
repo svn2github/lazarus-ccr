@@ -33,6 +33,9 @@ type
     //procedure detectEngine(path : String);
   end;
 
+const
+  nilCoord : moveInCoord = ((X:-1; Y:-1), (X:-1; Y:-1));
+
 var
   engineProcess : TProcess;
   outputText    : String;
@@ -40,7 +43,15 @@ var
   algebraicInput: boolean;
   engineRegExpression: TRegExpr;
 
+operator=(A, B: moveInCoord): Boolean;
+
 implementation
+
+operator=(A, B: moveInCoord): Boolean;
+begin
+  Result := (A[1].X = B[1].X) and (A[1].Y = B[1].Y) and
+      (A[2].X = B[2].X) and (A[2].Y = B[2].Y);
+end;
 
 destructor TWinboardConn.Destroy;
 begin
@@ -62,9 +73,11 @@ begin
 
   engineProcess.Options := engineProcess.Options + [poUsePipes];
   engineProcess.Execute;
-  extraCommands:='xboard'+#13+#10;
+  extraCommands:='xboard' + #13 + #10;
   EngineProcess.Input.Write(extraCommands[1], length(extraCommands));
-  extraCommands:='level 60 0.5 3'+#13+#10;
+  extraCommands:='level 60 0.5 3' + #13 + #10;
+  EngineProcess.Input.Write(extraCommands[1], length(extraCommands));
+  extraCommands:='easy' + #13 + #10;
   EngineProcess.Input.Write(extraCommands[1], length(extraCommands));
   outputText:='';
 
@@ -95,14 +108,15 @@ function TWinboardConn.engineMove : moveInCoord;
 var move  : String;
     points: moveInCoord;
 begin
+  points := nilCoord;
   engineRegExpression.Expression:='(?m)^(My move|my move|move)( is|)(: | : | )';
   readFromPipe;
   if engineRegExpression.Exec(outputText) then
   begin
     move := extractMove;
     points := stringToCoord(move);
-    result:=points;
   end;
+  result := points;
 end;
 
 function TWinboardConn.coordToString(AFrom, ATo : TPoint; pieceFrom, pieceTo : TChessTile) : String;
@@ -110,7 +124,7 @@ var
   move : String;
 begin
 
-  move:= move + numberToLetter(AFrom.X);
+  move:= numberToLetter(AFrom.X);
   move:= move + intToStr(AFrom.Y);
 
   move:= move + numberToLetter(ATo.X);
