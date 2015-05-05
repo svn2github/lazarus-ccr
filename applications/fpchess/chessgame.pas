@@ -27,7 +27,6 @@ const
 type
 
   TPacketKind = (pkConnect, pkStartGameClientAsWhite, pkStartGameClientAsBlack, pkMove);
-  BitBoard = array[1..8] of array [1..8] of boolean;// Map of attacked squares
 
   { TPacket }
 
@@ -62,7 +61,7 @@ type
 
   TChessMove = record
     From, To_: TPoint;
-    PieceMoved, PieceEaten: TChessTile;
+    PieceMoved, PieceCaptured: TChessTile;
   end;
 
   TOnMoveCallback = procedure (AFrom, ATo: TPoint);
@@ -114,9 +113,9 @@ type
     PreviousMove: TChessMove;
     // Data for Enpassant
     EnpassantSquare: TPoint; // Negative coords indicate that it is not allowed
-    // Data for the Roque
-    IsWhiteLeftRoquePossible, IsWhiteRightRoquePossible: Boolean;
-    IsBlackLeftRoquePossible, IsBlackRightRoquePossible: Boolean;
+    // Flags for castling
+    IsWhiteLeftCastlePossible, IsWhiteRightCastlePossible: Boolean;
+    IsBlackLeftCastlePossible, IsBlackRightCastlePossible: Boolean;
     Castle:boolean;//If the move will be a castle.
     CastleCord: TPoint;
     eraseCastleFlags: Integer; // 1=no, 2=yes, 3=flags already erased
@@ -177,10 +176,10 @@ begin
   MoveStartTime := Now;
 
   EnpassantSquare := Point(-1, -1); // Negative coords indicate that it is not allowed
-  IsWhiteLeftRoquePossible := True;
-  IsWhiteRightRoquePossible := True;
-  IsBlackLeftRoquePossible := True;
-  IsBlackRightRoquePossible := True;
+  IsWhiteLeftCastlePossible := True;
+  IsWhiteRightCastlePossible := True;
+  IsBlackLeftCastlePossible := True;
+  IsBlackRightCastlePossible := True;
 
   // Don't invert these, instead invert only in the drawer
   lWPawnRow := 2;
@@ -245,7 +244,7 @@ begin
   if not CheckStartMove(AFrom) then Exit;
   if not CheckEndMove(ATo) then Exit;
 
-  // Verify if the movement is in accordace to the rules for this piece
+  // Verify if the movement is in accordance to the rules for this piece
   if Board[AFrom.X][AFrom.Y] in [ctWPawn, ctBPawn] then result := ValidatePawnMove(AFrom,ATo, LEnpassantSquare, LEnpassantToClear)
   else if Board[AFrom.X][AFrom.Y] in [ctWRook, ctBRook] then result := ValidateRookMove(AFrom,ATo)
   else if Board[AFrom.X][AFrom.Y] in [ctWKnight, ctBKnight] then result := ValidateKnightMove(AFrom,ATo)
@@ -264,7 +263,7 @@ begin
   PreviousMove.From := AFrom;
   PreviousMove.To_ := ATo;
   PreviousMove.PieceMoved := Board[AFrom.X][AFrom.Y];
-  PreviousMove.PieceEaten := Board[ATo.X][ATo.Y];
+  PreviousMove.PieceCaptured := Board[ATo.X][ATo.Y];
   EnpassantSquare := LEnpassantSquare;
 
   // Now we will execute the move
@@ -282,13 +281,13 @@ begin
   // Change player
   IsWhitePlayerTurn := not IsWhitePlayerTurn;
 
-  // Check if the player got checkmated
+  // Check if the player was checkmated
   if willBeCheckMate(EnpassantSquare) then
   begin
     if (IsWhitePlayerTurn) then
     begin
       ShowMessage('White checkmated, black wins');
-      //need to stop the timers and set the result.
+      //TODO: need to stop the timers and set the result.
     end
     else
     begin
@@ -307,7 +306,7 @@ begin
   if Assigned(OnAfterMove) then OnAfterMove(AFrom, ATo);
 end;
 
-{ Really moves the piece without doing any check }
+{ Actually move the piece (without doing any check) }
 procedure TChessGame.DoMovePiece(AFrom, ATo, AEnpassantToClear: TPoint);
 begin
   // col, row
@@ -392,19 +391,19 @@ end;
 //turn false the possibility of castle.
 procedure TChessGame.ResetCastleVar(AFrom : TPoint);
 begin
-  //It's the rook that moves
-  if ((AFrom.X=1) and (AFrom.Y=1) and (IsWhiteLeftRoquePossible)) then IsWhiteLeftRoquePossible:=false;
-  if ((AFrom.X=8) and (AFrom.Y=1) and (IsWhiteRightRoquePossible)) then IsWhiteRightRoquePossible:=false;
-  if ((AFrom.X=1) and (AFrom.Y=8) and (IsBlackLeftRoquePossible)) then IsBlackLeftRoquePossible:=false;
-  if ((AFrom.X=8) and (AFrom.Y=8) and (IsBlackLeftRoquePossible)) then IsBlackRightRoquePossible:=false;
-  //It's the king that moves
+  // Verify if it was the rook that was moved
+  if ((AFrom.X=1) and (AFrom.Y=1) and (IsWhiteLeftCastlePossible)) then IsWhiteLeftCastlePossible:=false;
+  if ((AFrom.X=8) and (AFrom.Y=1) and (IsWhiteRightCastlePossible)) then IsWhiteRightCastlePossible:=false;
+  if ((AFrom.X=1) and (AFrom.Y=8) and (IsBlackLeftCastlePossible)) then IsBlackLeftCastlePossible:=false;
+  if ((AFrom.X=8) and (AFrom.Y=8) and (IsBlackLeftCastlePossible)) then IsBlackRightCastlePossible:=false;
+  // Verify if it was the king that was moved
   if ((AFrom.X=5) and (AFrom.Y=1)) then begin
-    IsWhiteLeftRoquePossible:=false;
-    IsWhiteRightRoquePossible:=false;
+    IsWhiteLeftCastlePossible:=false;
+    IsWhiteRightCastlePossible:=false;
   end;
   if ((AFrom.X=5) and (AFrom.Y=8)) then begin
-    IsBlackLeftRoquePossible:=false;
-    IsBlackRightRoquePossible:=false;
+    IsBlackLeftCastlePossible:=false;
+    IsBlackRightCastlePossible:=false;
   end;
 end;
 
@@ -498,11 +497,11 @@ var passage : boolean;
 begin
   Result := False;
 
-  // Verify the possibility of a Roque
+  // Verify the possibility of castling
   if IsWhitePlayerTurn then
   begin
     // Castle to the right
-    if IsWhiteRightRoquePossible and (AFrom.X = 5) and (AFrom.Y = 1)
+    if IsWhiteRightCastlePossible and (AFrom.X = 5) and (AFrom.Y = 1)
       and (ATo.X = 7) and (ATo.Y = 1) and (board[6][1]=ctEmpty) then
     begin
       if not(CheckPassageSquares(true,AFrom,ATo)) then exit(false);
@@ -512,7 +511,7 @@ begin
       result:= True;
     end;
     // Castle to the left
-    if IsWhiteLeftRoquePossible and (AFrom.X = 5) and (AFrom.Y = 1)
+    if IsWhiteLeftCastlePossible and (AFrom.X = 5) and (AFrom.Y = 1)
       and (ATo.X = 3) and (ATo.Y = 1) and (board[2][1]=ctEmpty) and (board[4][1]=ctEmpty) then
     begin
       if not(CheckPassageSquares(false,AFrom,ATo)) then exit(false);
@@ -525,7 +524,7 @@ begin
   else
   begin
   // Castle to the right
-    if IsBlackRightRoquePossible and (AFrom.X = 5) and (AFrom.Y = 8)
+    if IsBlackRightCastlePossible and (AFrom.X = 5) and (AFrom.Y = 8)
       and (ATo.X = 7) and (ATo.Y = 8) and (board[6][8]=ctEmpty) then
     begin
       if not(CheckPassageSquares(true,AFrom,ATo)) then exit(false);
@@ -535,7 +534,7 @@ begin
       result:= True;
     end;
     // Castle to the left
-    if IsBlackLeftRoquePossible and (AFrom.X = 5) and (AFrom.Y = 8)
+    if IsBlackLeftCastlePossible and (AFrom.X = 5) and (AFrom.Y = 8)
       and (ATo.X = 3) and (ATo.Y = 8) and (board[2][8]=ctEmpty) and (board[4][8]=ctEmpty) then
     begin
       if not(CheckPassageSquares(false,AFrom,ATo)) then exit(false);
@@ -744,36 +743,36 @@ end;
 
 function TChessGame.RookHasValidMove(ASquare: TPoint): boolean;
 var i,j : integer;
-    nullPoint: TPoint; // because makeMoveandValidate needs a en passant point (and we know that a
-                       // rook can't capture en passant, than the point to clear is -1,-1)
+    nullPoint: TPoint; // makeMoveandValidate needs an en passant point, as rooks
+                       // can't capture en passant, pass a dummy negative point
     bkpWhiteLeftCastle, bkpWhiteRightCastle, bkpBlackLeftRook, bkpBlackRightRook : boolean;
 begin
   Result:=false;
   nullPoint:=Point(-1,-1);
 
-  bkpWhiteLeftCastle :=IsWhiteLeftRoquePossible;
-  bkpWhiteRightCastle:=IsWhiteRightRoquePossible;
-  bkpBlackLeftRook   :=IsBlackLeftRoquePossible;
-  bkpBlackRightRook  :=IsBlackRightRoquePossible;
+  bkpWhiteLeftCastle :=IsWhiteLeftCastlePossible;
+  bkpWhiteRightCastle:=IsWhiteRightCastlePossible;
+  bkpBlackLeftRook   :=IsBlackLeftCastlePossible;
+  bkpBlackRightRook  :=IsBlackRightCastlePossible;
 
   for i:=1 to 8 do
   begin
     if (CheckEndMove(Point(ASquare.X,i)) and ValidateRookMove(ASquare,Point(ASquare.X,i))) then  //check the vertical
       if (makeMoveAndValidate(ASquare,Point(ASquare.X,i),nullPoint)) then
       begin
-        IsWhiteLeftRoquePossible:=bkpWhiteLeftCastle;
-        IsWhiteRightRoquePossible:=bkpWhiteRightCastle;
-        IsBlackLeftRoquePossible:=bkpBlackLeftRook;
-        IsBlackRightRoquePossible:=bkpBlackRightRook;
+        IsWhiteLeftCastlePossible:=bkpWhiteLeftCastle;
+        IsWhiteRightCastlePossible:=bkpWhiteRightCastle;
+        IsBlackLeftCastlePossible:=bkpBlackLeftRook;
+        IsBlackRightCastlePossible:=bkpBlackRightRook;
         exit(true);
       end;
     if (CheckEndMove(Point(i,ASquare.Y)) and ValidateRookMove(ASquare, Point(i,ASquare.Y))) then //check the horizontal
       if (makeMoveAndValidate(ASquare,Point(i,ASquare.Y),nullPoint)) then
       begin
-        IsWhiteLeftRoquePossible:=bkpWhiteLeftCastle;
-        IsWhiteRightRoquePossible:=bkpWhiteRightCastle;
-        IsBlackLeftRoquePossible:=bkpBlackLeftRook;
-        IsBlackRightRoquePossible:=bkpBlackRightRook;
+        IsWhiteLeftCastlePossible:=bkpWhiteLeftCastle;
+        IsWhiteRightCastlePossible:=bkpWhiteRightCastle;
+        IsBlackLeftCastlePossible:=bkpBlackLeftRook;
+        IsBlackRightCastlePossible:=bkpBlackRightRook;
         exit(true);
       end;
   end;
@@ -1079,10 +1078,8 @@ var
 begin
   WriteLn('[TChessGame.ChessMoveCoordsToBoardPos] ' + AMoveStr);
   lStr := Copy(AMoveStr, 1, 2);
-  ///WriteLn('[TChessGame.ChessMoveCoordsToBoardPos] ' + lStr);
   AFrom := TChessGame.ChessCoordsToBoardPos(lStr);
   lStr := Copy(AMoveStr, 4, 2);
-  //WriteLn('[TChessGame.ChessMoveCoordsToBoardPos] ' + lStr);
   ATo := TChessGame.ChessCoordsToBoardPos(lStr);
   WriteLn(Format('[TChessGame.ChessMoveCoordsToBoardPos] AFrom.X=%d,%d ATo=%d,%d', [AFrom.X, AFrom.Y, ATo.X, ATo.Y]));
 end;
@@ -1115,7 +1112,6 @@ begin
 end;
 
 // True  - The King will be in check
-// False - The King will not be in check
 function TChessGame.WillKingBeInCheck(AFrom, ATo, AEnpassantToClear: TPoint): Boolean;
 var
   kingPos: TPoint;

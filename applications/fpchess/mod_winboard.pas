@@ -81,7 +81,7 @@ procedure TWinboardChessModule.HandleOnMove(AFrom, ATo: TPoint);
 var
   moveStr : String;
 begin
-  moveStr:=vwinboardConn.coordToString(AFrom,ATo,vChessGame.PreviousMove.PieceMoved,vChessGame.PreviousMove.PieceEaten);
+  moveStr:=vwinboardConn.coordToString(AFrom,ATo,vChessGame.PreviousMove.PieceMoved,vChessGame.PreviousMove.PieceCaptured);
   vwinboardConn.tellMove(moveStr);
 end;
 
