@@ -84,7 +84,7 @@ procedure Register;
 
 implementation
 uses fpsallformats, LCLType, Forms, math, LazUTF8, rxdconst, Controls, LCLIntf,
-  RxDBGridExportSpreadSheet_ParamsUnit;
+  RxDBGridExportSpreadSheet_ParamsUnit, dbutils;
 
 {$R rxdbgridexportspreadsheet.res}
 
@@ -238,8 +238,22 @@ begin
           J := C.KeyList.IndexOf(S);
           if (J >= 0) and (J < C.PickList.Count) then
             S := C.PickList[j];
-        end;
-        FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S);
+          FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S);
+        end
+        else
+        if Assigned(C.Field.OnGetText) then
+          FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S)
+        else
+        if C.Field.DataType in [ftCurrency] then
+          FWorksheet.WriteCurrency(FCurRow, FCurCol, C.Field.AsCurrency, nfCurrency, '')
+        else
+        if C.Field.DataType in IntegerDataTypes then
+          FWorksheet.WriteNumber(FCurRow, FCurCol, C.Field.AsInteger, nfFixed, 0)
+        else
+        if C.Field.DataType in NumericDataTypes then
+          FWorksheet.WriteNumber(FCurRow, FCurCol, C.Field.AsFloat, nfFixed, 2)
+        else
+          FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S);
 
         if ressExportColors in FOptions then
         begin

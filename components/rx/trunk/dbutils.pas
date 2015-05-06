@@ -39,7 +39,7 @@ uses
   LCLType, LCLIntf, Registry, Classes, SysUtils, DB, IniFiles;
 
 const
-  IntegerDataTypes = [ftSmallint, ftInteger, ftWord, ftLargeint];
+  IntegerDataTypes = [ftSmallint, ftInteger, ftWord, ftLargeint, ftAutoInc];
 
   NumericDataTypes = IntegerDataTypes + [ftFloat, ftCurrency, ftBCD];
 
