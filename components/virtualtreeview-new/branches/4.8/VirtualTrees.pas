@@ -23857,7 +23857,7 @@ begin
     if not Handled and Assigned(FHeader) then
       Handled := FHeader.HandleMessage(Message);
 
-    if not Handled then
+    if not Handled or (csDesigning in ComponentState) then
       inherited;
   end;
 end;
