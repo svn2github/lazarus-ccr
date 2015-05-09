@@ -34459,10 +34459,14 @@ begin
       S := S + Format('\red%d\green%d\blue%d;', [J and $FF, (J shr 8) and $FF, (J shr 16) and $FF]);
     end;
     S := S + '}';
+    {$ifndef INCOMPLETE_WINAPI}
     if (GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_IMEASURE, @LocaleBuffer[0], Length(LocaleBuffer)) <> 0) and (LocaleBuffer[0] = '0'{metric}) then
       S := S + '\paperw16840\paperh11907'// This sets A4 landscape format
     else
       S := S + '\paperw15840\paperh12240';//[JAM:marder]  This sets US Letter landscape format
+    {$else}
+    S := S + '\paperw16840\paperh11907';// This sets A4 landscape format
+    {$endif}
     // Make sure a small margin is used so that a lot of the table fits on a paper. This defines a margin of 0.5"
     S := S + '\margl720\margr720\margt720\margb720';
     Result := S + Buffer.AsString + '}';
