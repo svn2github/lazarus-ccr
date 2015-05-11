@@ -2019,6 +2019,9 @@ type
 
 
   // ----- TBaseVirtualTree
+
+  { TBaseVirtualTree }
+
   TBaseVirtualTree = class(TCustomControl)
   private
     //FBorderStyle: TBorderStyle;
@@ -3016,6 +3019,7 @@ type
       ChildrenOnly: Boolean): PVirtualNode; overload;
     procedure CopyToClipboard; virtual;
     procedure CutToClipboard; virtual;
+    procedure DefaultHandler(var AMessage); override;
     procedure DeleteChildren(Node: PVirtualNode; ResetHasChildren: Boolean = False);
     procedure DeleteNode(Node: PVirtualNode; Reindex: Boolean = True);
     procedure DeleteSelectedNodes; virtual;
