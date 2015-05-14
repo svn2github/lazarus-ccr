@@ -2095,10 +2095,10 @@ type
     FHotPlusBM,
     FHotMinusBM: TBitmap;                        // small bitmaps used for hot tree buttons 
     FImages,                                     // normal images in the tree
-    FStateImages: TCustomImageList;              // state images in the tree
-    FCustomCheckImages: TBitmap;                 // application defined check images
+    FStateImages,                                // state images in the tree
+    FCustomCheckImages: TCustomImageList;        // application defined check images
     FCheckImageKind: TCheckImageKind;            // light or dark, cross marks or tick marks
-    FCheckImages: TBitmap;                       // Reference to global image list to be used for the check images.
+    FCheckImages: TCustomImageList;              // Reference to global image list to be used for the check images.
     FImageChangeLink,
     FStateChangeLink,
     FCustomCheckChangeLink: TChangeLink;         // connections to the image lists
@@ -2421,7 +2421,7 @@ type
     procedure SetChildCount(Node: PVirtualNode; NewChildCount: Cardinal);
     procedure SetClipboardFormats(const Value: TClipboardFormats);
     procedure SetColors(const Value: TVTColors);
-    procedure SetCustomCheckImages(const Value: TBitmap);
+    procedure SetCustomCheckImages(const Value: TCustomImageList);
     procedure SetDefaultNodeHeight(Value: Cardinal);
     procedure SetDisabled(Node: PVirtualNode; Value: Boolean);
     procedure SetEmptyListMessage(const Value: String);
@@ -2546,8 +2546,6 @@ type
     function CanSplitterResizeNode(P: TPoint; Node: PVirtualNode; Column: TColumnIndex): Boolean;
     procedure Change(Node: PVirtualNode); virtual;
     procedure ChangeScale(M, D: Integer); override;
-    //lcl
-    procedure CheckImageListNeeded;
     function CheckParentCheckState(Node: PVirtualNode; NewCheckState: TCheckState): Boolean; virtual;
     procedure ClearTempCache; virtual;
     function ColumnIsEmpty(Node: PVirtualNode; Column: TColumnIndex): Boolean; virtual;
@@ -2779,8 +2777,6 @@ type
     function SuggestDropEffect(Source: TObject; Shift: TShiftState; const Pt: TPoint; AllowedEffects: LongWord): LongWord; virtual;
     procedure ToggleSelection(StartNode, EndNode: PVirtualNode); virtual;
     procedure UnselectNodes(StartNode, EndNode: PVirtualNode); virtual;
-    //lcl
-    procedure UpdateCheckImageList;
     procedure UpdateColumnCheckState(Col: TVirtualTreeColumn);
     procedure UpdateDesigner; virtual;
     procedure UpdateEditBounds; virtual;
@@ -2814,7 +2810,7 @@ type
     property CheckImageKind: TCheckImageKind read FCheckImageKind write SetCheckImageKind default ckSystemDefault;
     property ClipboardFormats: TClipboardFormats read FClipboardFormats write SetClipboardFormats;
     property Colors: TVTColors read FColors write SetColors;
-    property CustomCheckImages: TBitmap read FCustomCheckImages write SetCustomCheckImages;
+    property CustomCheckImages: TCustomImageList read FCustomCheckImages write SetCustomCheckImages;
     property DefaultHintKind: TVTHintKind read GetDefaultHintKind;
     property DefaultNodeHeight: Cardinal read FDefaultNodeHeight write SetDefaultNodeHeight default 18;
     property DefaultPasteMode: TVTNodeAttachMode read FDefaultPasteMode write FDefaultPasteMode default amAddChildLast;
@@ -3188,7 +3184,7 @@ type
     {$endif}
     property BottomNode: PVirtualNode read GetBottomNode write SetBottomNode;
     property CheckedCount: Integer read GetCheckedCount;
-    property CheckImages: TBitmap read FCheckImages;
+    property CheckImages: TCustomImageList read FCheckImages;
     property CheckState[Node: PVirtualNode]: TCheckState read GetCheckState write SetCheckState;
     property CheckType[Node: PVirtualNode]: TCheckType read GetCheckType write SetCheckType;
     property ChildCount[Node: PVirtualNode]: Cardinal read GetChildCount write SetChildCount;
@@ -3551,8 +3547,7 @@ type
     property Color;
     property Colors;
     property Constraints;
-    //todo: see a way to set CustomCheckImages at design time
-    //property CustomCheckImages;
+    property CustomCheckImages;
     property DefaultNodeHeight;
     property DefaultPasteMode;
     property DefaultText;
@@ -4276,6 +4271,14 @@ type
 var
   WorkerThread: TWorkerThread;
   WorkEvent: TEvent;
+  LightCheckImages,                    // global light check images
+  DarkCheckImages,                     // global heavy check images
+  LightTickImages,                     // global light tick images
+  DarkTickImages,                      // global heavy check images
+  FlatImages,                          // global flat check images
+  XPImages,                            // global XP style check images
+  SystemCheckImages,                   // global system check images
+  SystemFlatCheckImages: TImageList;   // global flat system check images
   UtilityImages: TBitmap;              // some small additional images (e.g for header dragging)
   Initialized: Boolean;                // True if global structures have been initialized.
   NeedToUnitialize: Boolean;           // True if the OLE subsystem could be initialized successfully.
@@ -5312,6 +5315,22 @@ end;
 procedure FinalizeGlobalStructures;
 
 begin
+  LightCheckImages.Free;
+  LightCheckImages := nil;
+  DarkCheckImages.Free;
+  DarkCheckImages := nil;
+  LightTickImages.Free;
+  LightTickImages := nil;
+  DarkTickImages.Free;
+  DarkTickImages := nil;
+  FlatImages.Free;
+  FlatImages := nil;
+  XPImages.Free;
+  XPImages := nil;
+  SystemCheckImages.Free;
+  SystemCheckImages := nil;
+  SystemFlatCheckImages.Free;
+  SystemFlatCheckImages := nil;
   FreeAndNil(UtilityImages);
 
   if NeedToUnitialize then
@@ -5656,10 +5675,7 @@ begin
       if not (csLoading in ComponentState) and HandleAllocated then
       begin
         if toCheckSupport in ToBeSet + ToBeCleared then
-        begin
-          CheckImageListNeeded;
           Invalidate;
-        end;
         if not (csDesigning in ComponentState) then
         begin
           if toFullRepaintOnResize in (ToBeSet + ToBeCleared) then
@@ -6851,9 +6867,6 @@ begin
     FCheckBox := Value;
     if Value and (csDesigning in Owner.Header.Treeview.ComponentState) then
       Owner.Header.Options := Owner.Header.Options + [hoShowImages];
-    //lcl
-    if FCheckBox then
-      Owner.Header.Treeview.CheckImageListNeeded;
     Changed(False);
   end;
 end;
@@ -11939,6 +11952,7 @@ begin
   inherited DoubleBuffered := False;
 
   FCheckImageKind := ckSystemDefault;
+  FCheckImages := SystemCheckImages;
 
   FImageChangeLink := TChangeLink.Create;
   FImageChangeLink.OnChange := ImageListChange;
@@ -12409,7 +12423,7 @@ begin
   else
     StateImageOffset := 0;
   if WithCheck then
-    CheckOffset := FCheckImages.Height + 2
+    CheckOffset := FCheckImages.Width + 2
   else
     CheckOffset := 0;
   AutoSpan := FHeader.UseColumns and (toAutoSpanColumns in FOptions.FAutoOptions);
@@ -12589,7 +12603,7 @@ begin
   else
     StateImageOffset := 0;
   if WithCheck then
-    CheckOffset := FCheckImages.Height + 2
+    CheckOffset := FCheckImages.Width + 2
   else
     CheckOffset := 0;
   AutoSpan := FHeader.UseColumns and (toAutoSpanColumns in FOptions.FAutoOptions);
@@ -14141,8 +14155,9 @@ begin
   if FCheckImageKind <> Value then
   begin
     FCheckImageKind := Value;
-    if toCheckSupport in FOptions.FMiscOptions then
-      UpdateCheckImageList;
+    FCheckImages := GetCheckImageListFor(Value);
+    if not Assigned(FCheckImages) then
+      FCheckImages := FCustomCheckImages;
     if HandleAllocated and (FUpdateCount = 0) and not (csLoading in ComponentState) then
       InvalidateRect(Handle, nil, False);
   end;
@@ -14317,18 +14332,25 @@ end;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-procedure TBaseVirtualTree.SetCustomCheckImages(const Value: TBitmap);
+procedure TBaseVirtualTree.SetCustomCheckImages(const Value: TCustomImageList);
 
 begin
   if FCustomCheckImages <> Value then
   begin
     if Assigned(FCustomCheckImages) then
     begin
+      FCustomCheckImages.UnRegisterChanges(FCustomCheckChangeLink);
+      FCustomCheckImages.RemoveFreeNotification(Self);
       // Reset the internal check image list reference too, if necessary.
       if FCheckImages = FCustomCheckImages then
         FCheckImages := nil;
     end;
     FCustomCheckImages := Value;
+    if Assigned(FCustomCheckImages) then
+    begin
+      FCustomCheckImages.RegisterChanges(FCustomCheckChangeLink);
+      FCustomCheckImages.FreeNotification(Self);
+    end;
     // Check if currently custom check images are active.
     if FCheckImageKind = ckCustom then
       FCheckImages := Value;
@@ -18269,8 +18291,6 @@ begin
       RegisterDragDrop(Handle, VTVDragManager as IDropTarget);
   {$endif}
 
-  if toCheckSupport in FOptions.FMiscOptions then
-    CheckImageListNeeded;
   UpdateScrollBars(True);
   UpdateHeaderRect;
 end;
@@ -18455,7 +18475,7 @@ begin
       // Check support is only available for the main column.
       if MainColumnHit and (toCheckSupport in FOptions.FMiscOptions) and Assigned(FCheckImages) and
         (HitInfo.HitNode.CheckType <> ctNone) then
-        Inc(ImageOffset, FCheckImages.Height + 2);
+        Inc(ImageOffset, FCheckImages.Width + 2);
 
       if MainColumnHit and (Offset < ImageOffset) then
       begin
@@ -18592,7 +18612,7 @@ begin
       // Check support is only available for the main column.
       if MainColumnHit and (toCheckSupport in FOptions.FMiscOptions) and Assigned(FCheckImages) and
         (HitInfo.HitNode.CheckType <> ctNone) then
-        Dec(ImageOffset, FCheckImages.Height + 2);
+        Dec(ImageOffset, FCheckImages.Width + 2);
 
       if MainColumnHit and (Offset > ImageOffset) then
       begin
@@ -21386,10 +21406,6 @@ end;
 class function TBaseVirtualTree.GetCheckImageListFor(Kind: TCheckImageKind): TCustomImageList;
 
 begin
-  Result := nil;
-  raise Exception.Create('GetCheckImageListFor not implemented');
-
-  {
   case Kind of
     ckDarkCheck:
       Result := DarkCheckImages;
@@ -21410,24 +21426,9 @@ begin
     else
       Result := nil;
   end;
-  }
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
-
-procedure TBaseVirtualTree.CheckImageListNeeded;
-begin
-  if FCheckImages <> nil then
-    Exit;
-  if FCheckImageKind = ckCustom then
-    FCheckImages := FCustomCheckImages
-  else
-  begin
-    FCheckImages := TBitmap.Create;
-    FCheckImages.Transparent := True;
-    FCheckImages.LoadFromLazarusResource(CheckImagesStrings[FCheckImageKind]);
-  end;
-end;
 
 function TBaseVirtualTree.GetClientRect: TRect;
 begin
@@ -21543,7 +21544,7 @@ begin
     Inc(NodeLeft, FImages.Width + 2);
   WithCheck := (toCheckSupport in FOptions.FMiscOptions) and Assigned(FCheckImages);
   if WithCheck then
-    CheckOffset := FCheckImages.Height + 2
+    CheckOffset := FCheckImages.Width + 2
   else
     CheckOffset := 0;
 
@@ -23411,15 +23412,26 @@ begin
           Invalidate;
       end
       else
-        if AComponent = PopupMenu then
-          PopupMenu := nil
+        if AComponent = FCustomCheckImages then
+        begin
+          CustomCheckImages := nil;
+          FCheckImageKind := ckSystemDefault;
+          if not (csDestroying in ComponentState) then
+            Invalidate;
+        end
         else
-          // Check for components linked to the header.
-          if AComponent = FHeader.FImages then
-            FHeader.Images := nil
+          if AComponent = PopupMenu then
+            PopupMenu := nil
           else
-            if AComponent = FHeader.PopupMenu then
-              FHeader.PopupMenu := nil;
+            // Check for components linked to the header.
+            if Assigned(FHeader) then
+            begin
+              if AComponent = FHeader.FImages then
+                FHeader.Images := nil
+              else
+                if AComponent = FHeader.PopupMenu then
+                  FHeader.PopupMenu := nil;
+            end;
   end;
   inherited;
 end;
@@ -23645,6 +23657,7 @@ var
   Details: TThemedElementDetails;
   {$endif}
   UseThemes: Boolean;
+  DrawEffect: TGraphicsDrawEffect;
 
 begin
   {$ifdef DEBUG_VTV}Logger.EnterMethod([lcCheck],'PaintCheckImage');{$endif}
@@ -23699,13 +23712,17 @@ begin
     else
       with FCheckImages do
       begin
-        {$ifdef USE_DELPHICOMPAT}
-        DirectMaskBlt(Canvas.Handle, XPos, YPos, Height, Height, Canvas.Handle,
-          Index * Height, 0, MaskHandle);
-        {$else}
-        StretchMaskBlt(Canvas.Handle, XPos, YPos, Height, Height, Canvas.Handle,
-          Index * Height, 0, Height, Height, MaskHandle, Index * Height, 0, SRCCOPY);
-        {$endif}
+        if Selected and not Ghosted then
+        begin
+          if Focused or (toPopupMode in FOptions.FPaintOptions) then
+            DrawEffect := gdeHighlighted
+          else
+            DrawEffect := gdeNormal;
+        end
+        else
+          DrawEffect := gdeShadowed;
+
+        Draw(Canvas, XPos, YPos, Index, DrawEffect);
       end;
     end;
   {$ifdef DEBUG_VTV}Logger.ExitMethod([lcCheck],'PaintCheckImage');{$endif}
@@ -24878,16 +24895,6 @@ begin
       SetLength(FSelection, FSelectionCount);
     end;
   end;
-end;
-
-//----------------------------------------------------------------------------------------------------------------------
-
-procedure TBaseVirtualTree.UpdateCheckImageList;
-begin
-  if FCheckImages <> FCustomCheckImages then
-    FCheckImages.Free;
-  FCheckImages := nil;
-  CheckImageListNeeded;
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -26616,7 +26623,7 @@ begin
       if toShowRoot in FOptions.FPaintOptions then
         Inc(Offset, FIndent);
       if (toCheckSupport in FOptions.FMiscOptions) and Assigned(FCheckImages) and (Node.CheckType <> ctNone) then
-        Inc(Offset, FCheckImages.Height + 2);
+        Inc(Offset, FCheckImages.Width + 2);
     end;
     // Consider associated images.
     if Assigned(FStateImages) and HasImage(Node, ikState, Column) then
@@ -26740,7 +26747,7 @@ begin
       if Assigned(Result.FirstChild) then
       begin
         while Assigned(Result.FirstChild) do
-begin
+        begin
           Result := Result.FirstChild;
           if not (vsInitialized in Result.States) then
             InitNode(Result);
@@ -26756,7 +26763,7 @@ begin
       Result := nil;
   end
   else
-  Result := FRoot.FirstChild;
+    Result := FRoot.FirstChild;
 
   if Assigned(Result) and not (vsInitialized in Result.States) then
     InitNode(Result);
@@ -26865,7 +26872,7 @@ begin
 
   if Assigned(Result) and (GetNodeLevel(Result) <> NodeLevel) then // i.e. there is no node with the desired level in the tree
     Result := nil;
-    
+
   if Assigned(Result) and not (vsInitialized in Result.States) then
     InitNode(Result);
 end;
@@ -26886,7 +26893,7 @@ begin
 
       // Child nodes are the first choice if possible.
       if Assigned(Result.FirstChild) then
-begin
+      begin
         while Assigned(Result.FirstChild) do
           Result := Result.FirstChild;
       end
@@ -26897,7 +26904,7 @@ begin
       Result := nil;
   end
   else
-  Result := FRoot.FirstChild;
+    Result := FRoot.FirstChild;
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -26958,7 +26965,7 @@ begin
             if (vsHasChildren in Result.States) and (Result.ChildCount = 0) then
               InitChildren(Result);
             if (not Assigned(Result.FirstChild)) or (not (vsExpanded in Result.States)) then
-            Break;
+              Break;
           end;
 
           Result := Result.FirstChild;
@@ -30156,7 +30163,7 @@ begin
                             ImageInfo[iiCheck].Index := GetCheckImage(Node);
                             if ImageInfo[iiCheck].Index > -1 then
                             begin
-                              AdjustImageBorder(FCheckImages.Height, FCheckImages.Height, BidiMode, VAlign, ContentRect, ImageInfo[iiCheck]);
+                              AdjustImageBorder(FCheckImages, BidiMode, VAlign, ContentRect, ImageInfo[iiCheck]);
                               ImageInfo[iiCheck].Ghosted := False;
                             end;
                           end
