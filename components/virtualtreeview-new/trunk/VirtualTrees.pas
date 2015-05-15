@@ -5125,6 +5125,23 @@ begin
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
+
+function CreateCheckImageList(CheckKind: TCheckImageKind): TImageList;
+begin
+  Result := TImageList.Create(nil);
+  Result.Height := 16;
+  Result.Width := 16;
+  Result.AddLazarusResource(CheckImagesStrings[CheckKind], clFuchsia);
+end;
+
+function GetCheckImageList(var ImageList: TImageList; CheckKind: TCheckImageKind): TImageList;
+begin
+  if ImageList = nil then
+    ImageList := CreateCheckImageList(CheckKind);
+  Result := ImageList;
+end;
+
+//----------------------------------------------------------------------------------------------------------------------
 {$ifdef CPU64}
 
 function HasMMX: Boolean;
@@ -5290,6 +5307,8 @@ begin
   UtilityImages := TBitmap.Create;
   UtilityImages.Transparent := True;
   UtilityImages.LoadFromLazarusResource('VT_UTILITIES');
+
+  SystemCheckImages := CreateCheckImageList(ckSystemDefault);
 
   // Delphi (at least version 6 and lower) does not provide a standard split cursor.
   // Hence we have to load our own.
@@ -12051,9 +12070,6 @@ begin
 
   FOptions.Free;
   FreeAndNil(FHeader);
-
-  if FCheckImages <> FCustomCheckImages then
-    FCheckImages.Free;
   
   FreeMem(FRoot);
 
@@ -21408,21 +21424,21 @@ class function TBaseVirtualTree.GetCheckImageListFor(Kind: TCheckImageKind): TCu
 begin
   case Kind of
     ckDarkCheck:
-      Result := DarkCheckImages;
+      Result := GetCheckImageList(DarkCheckImages, ckDarkCheck);
     ckLightTick:
-      Result := LightTickImages;
+      Result := GetCheckImageList(LightTickImages, ckLightTick);
     ckDarkTick:
-      Result := DarkTickImages;
+      Result := GetCheckImageList(DarkTickImages, ckDarkTick);
     ckLightCheck:
-      Result := LightCheckImages;
+      Result := GetCheckImageList(LightCheckImages, ckLightCheck);
     ckFlat:
-      Result := FlatImages;
+      Result := GetCheckImageList(FlatImages, ckFlat);
     ckXP:
-      Result := XPImages;
+      Result := GetCheckImageList(XPImages, ckXP);
     ckSystemDefault:
-      Result := SystemCheckImages;
+      Result := GetCheckImageList(SystemCheckImages, ckSystemDefault);
     ckSystemFlat:
-      Result := SystemFlatCheckImages;
+      Result := GetCheckImageList(SystemFlatCheckImages, ckSystemFlat);
     else
       Result := nil;
   end;
