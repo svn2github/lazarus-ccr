@@ -169,7 +169,8 @@ implementation
          'NodeHeightResize',
          'NodeHeightDblClickResize',
          'EditOnClick',
-         'EditOnDblClick'
+         'EditOnDblClick',
+         'ReverseFullExpandHotKey'
       );
 
       aPaintOpts : array[0..Ord(High(TVTPaintOption ))] of string[25] = 
@@ -210,7 +211,9 @@ implementation
          'RightClickSelect'                                                                        ,
          'SiblingSelectConstraint'                                                                 ,
          'CenterScrollIntoView',
-         'SimpleDrawSelection'
+         'SimpleDrawSelection',
+         'AlwaysSelectNode',
+         'RestoreSelection'
       );
       
       aStrOpts : array[0..Ord(High(TVTStringOption ))] of string[25] = 

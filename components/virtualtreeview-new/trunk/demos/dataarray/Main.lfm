@@ -12,30 +12,30 @@ object Form1: TForm1
   OnClose = FormClose
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '1.0.8.0'
+  LCLVersion = '1.4.0.4'
   object Label1: TLabel
-    Left = 246
-    Height = 14
-    Top = 348
-    Width = 152
+    Left = 247
+    Height = 13
+    Top = 349
+    Width = 151
     Anchors = [akRight, akBottom]
     Caption = 'Array data  of  the clicked node:'
     ParentColor = False
   end
   object Label2: TLabel
-    Left = 258
-    Height = 14
-    Top = 382
-    Width = 222
+    Left = 259
+    Height = 13
+    Top = 383
+    Width = 221
     Anchors = [akRight, akBottom]
     Caption = 'Find and show the node by specific array index'
     ParentColor = False
   end
   object Label3: TLabel
-    Left = 261
-    Height = 14
-    Top = 398
-    Width = 237
+    Left = 262
+    Height = 13
+    Top = 399
+    Width = 236
     Anchors = [akRight, akBottom]
     Caption = 'Type index to get related tree node on the screen:'
     ParentColor = False
@@ -104,6 +104,7 @@ object Form1: TForm1
     Width = 641
     Anchors = [akTop, akLeft, akRight, akBottom]
     AutoScrollDelay = 1
+    Colors.UnfocusedColor = clMedGray
     DefaultText = 'Node'
     Header.AutoSizeIndex = 0
     Header.Columns = <    
@@ -126,9 +127,9 @@ object Form1: TForm1
     Header.DefaultHeight = 17
     Header.Font.Height = -11
     Header.Font.Name = 'MS Sans Serif'
+    Header.Height = 17
     Header.Options = [hoColumnResize, hoDblClickResize, hoDrag, hoShowSortGlyphs, hoVisible]
     Header.SortColumn = 0
-    Header.Style = hsXPStyle
     RootNodeCount = 10
     TabOrder = 5
     TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScroll, toAutoScrollOnExpand, toAutoTristateTracking]

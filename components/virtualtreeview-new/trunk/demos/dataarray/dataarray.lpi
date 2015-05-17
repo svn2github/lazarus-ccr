@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
     <Version Value="9"/>
@@ -40,7 +40,6 @@
       <Unit0>
         <Filename Value="dataarray.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="dataarray"/>
       </Unit0>
       <Unit1>
         <Filename Value="Main.pas"/>
@@ -67,8 +66,5 @@
         </Win32>
       </Options>
     </Linking>
-    <Other>
-      <CompilerPath Value="$(CompPath)"/>
-    </Other>
   </CompilerOptions>
 </CONFIG>

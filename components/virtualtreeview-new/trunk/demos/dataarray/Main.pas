@@ -332,9 +332,6 @@ begin
   MyTree.Header.Options :=
     MyTree.Header.Options + [hoVisible];
 
-  // Shows the header like XP does
-  MyTree.Header.Style := hsXPStyle;
-
   // Allows multi selection of nodes
   MyTree.TreeOptions.SelectionOptions :=
     MyTree.TreeOptions.SelectionOptions +[toMultiSelect];

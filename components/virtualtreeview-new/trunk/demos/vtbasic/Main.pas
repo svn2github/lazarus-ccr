@@ -81,7 +81,7 @@ implementation
       FCaptions.Add( 'Database example 1.'                                    );
 
       {this is first important value to set, 0 is ok if you want to use AddChild later}
-      VT .RootNodeCount := FCaptions.Count;          
+      VT.RootNodeCount := FCaptions.Count;
    end;
 
    procedure TfrmMain.FormDestroy(Sender: TObject);

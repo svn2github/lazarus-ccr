@@ -99,7 +99,6 @@ object WindowsXPForm: TWindowsXPForm
     Header.Font.Name = 'Microsoft Sans Serif'
     Header.Height = 24
     Header.Options = [hoColumnResize, hoDrag, hoHotTrack, hoShowSortGlyphs, hoVisible]
-    Header.Style = hsXPStyle
     HintMode = hmHint
     Images = LargeImages
     ParentShowHint = False

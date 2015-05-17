@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
     <Version Value="9"/>
@@ -43,7 +43,6 @@
       <Unit0>
         <Filename Value="mvcdemo.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="mvcdemo"/>
       </Unit0>
       <Unit1>
         <Filename Value="MVCDemoMain.pas"/>
@@ -56,7 +55,6 @@
       <Unit2>
         <Filename Value="MVCPanel.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="MVCPanel"/>
       </Unit2>
       <Unit3>
         <Filename Value="MVCTypes.pas"/>
@@ -73,8 +71,5 @@
         <UseAnsiStrings Value="False"/>
       </SyntaxOptions>
     </Parsing>
-    <Other>
-      <CompilerPath Value="$(CompPath)"/>
-    </Other>
   </CompilerOptions>
 </CONFIG>
