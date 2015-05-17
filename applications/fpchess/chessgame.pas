@@ -851,8 +851,7 @@ end;
 function TChessGame.QueenHasValidMove(ASquare: TPoint): boolean;
 begin
   Result:=false;
-  if (RookHasValidMove(ASquare) and BishopHasValidMove(ASquare)) then exit(true);
-  result:=false;
+  if (RookHasValidMove(ASquare) or BishopHasValidMove(ASquare)) then exit(true);
 end;
 
 function TChessGame.KingHasValidMove(ASquare: TPoint): boolean;
