@@ -7246,7 +7246,7 @@ begin
       end
       else
       begin
-        SortGlyphSize.cx := UtilityImages.Width;
+        SortGlyphSize.cx := UtilityImages.Height;
         SortGlyphSize.cy := UtilityImages.Height;
       end;
 
