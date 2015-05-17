@@ -6736,7 +6736,7 @@ begin
       if not FCheckBox then
         HeaderGlyphSize := Point(FImages.Width, FImages.Height)
       else
-        HeaderGlyphSize := Point(Treeview.CheckImages.Width, Treeview.CheckImages.Height)
+        HeaderGlyphSize := Point(Treeview.CheckImages.Height, Treeview.CheckImages.Height)
     else
       HeaderGlyphSize := Point(0, 0);
     if UseSortGlyph then
@@ -7785,7 +7785,8 @@ var
 
 begin
   // Convert vertical position to local coordinates.
-  Inc(P.Y, FHeader.FHeight);
+  //lclheader
+  //Inc(P.Y, FHeader.FHeight);
   NewClickIndex := ColumnFromPosition(P);
   if (NewClickIndex > NoColumn) and (coAllowClick in Items[NewClickIndex].FOptions) and
     ((NewClickIndex = FDownIndex) or Force) then
@@ -8691,7 +8692,7 @@ begin
             else
               DropMark := dmmNone;
             IsEnabled := (coEnabled in FOptions) and (FHeader.Treeview.Enabled);
-            ShowHeaderGlyph := (hoShowImages in FHeader.FOptions) and Assigned(Images) and (FImageIndex > -1);
+            ShowHeaderGlyph := (hoShowImages in FHeader.FOptions) and ((Assigned(Images) and (FImageIndex > -1)) or FCheckBox);
             ShowSortGlyph := (Integer(FPositionToIndex[I]) = FHeader.FSortColumn) and (hoShowSortGlyphs in FHeader.FOptions);
             WrapCaption := coWrapCaption in FOptions;
 
@@ -8782,7 +8783,9 @@ begin
               // main glyph
               FHasImage := False;
               if not (hpeHeaderGlyph in ActualElements) and ShowHeaderGlyph and
-                (not ShowSortGlyph or (FBidiMode <> bdLeftToRight) or (GlyphPos.X + Images.Width <= SortGlyphPos.X) ) then
+                (not ShowSortGlyph or (FBidiMode <> bdLeftToRight) or
+                  (Assigned(Images) and (GlyphPos.X + Images.Width <= SortGlyphPos.X)) or
+                  (FCheckBox and (GlyphPos.X + Header.Treeview.FCheckImages.Height <= SortGlyphPos.X))) then
               begin
                 if not FCheckBox then
                 begin
@@ -8814,8 +8817,16 @@ begin
                 begin
                   Left := GlyphPos.X;
                   Top := GlyphPos.Y;
-                  Right := Left + ColImages.Width;
-                  Bottom := Top + ColImages.Height;
+                  if not FCheckBox then
+                  begin
+                    Right := Left + ColImages.Width;
+                    Bottom := Top + ColImages.Height;
+                  end
+                  else
+                  begin
+                    Right := Left + Header.Treeview.FCheckImages.Height;
+                    Bottom := Top + Header.Treeview.FCheckImages.Height;
+                  end;
                 end;
               end;
 
@@ -9852,10 +9863,11 @@ begin
       begin
         //lclheader: NCMessages are given in screen coordinates unlike the ordinary
         with TLMMButtonDown(Message) do
-          P:= Point(XPos, YPos);
+          P := Point(XPos, YPos);
           //P := Treeview.ScreenToClient(Point(XPos, YPos));
+        //lclheader
         if InHeader(P) then
-          FOwner.DoHeaderMouseDown(mbMiddle, GetShiftState, P.X, P.Y + Integer(FHeight));
+          FOwner.DoHeaderMouseDown(mbMiddle, GetShiftState, P.X, P.Y { + Integer(FHeight)});
       end;
     LM_MBUTTONUP:
       begin
@@ -9865,7 +9877,8 @@ begin
         if InHeader(P) then
         begin
           FColumns.HandleClick(P, mbMiddle, True, False);
-          FOwner.DoHeaderMouseUp(mbMiddle, GetShiftState, P.X, P.Y + Integer(FHeight));
+          //lclheader
+          FOwner.DoHeaderMouseUp(mbMiddle, GetShiftState, P.X, P.Y { + Integer(FHeight)});
           FColumns.FDownIndex := NoColumn;
         end;
       end;
@@ -9968,8 +9981,9 @@ begin
           end;
 
         // This is a good opportunity to notify the application.
+        //lclheader
         if IsInHeader then
-          FOwner.DoHeaderMouseDown(mbLeft, GetShiftState, P.X, P.Y + Integer(FHeight));
+          FOwner.DoHeaderMouseDown(mbLeft, GetShiftState, P.X, P.Y { + Integer(FHeight)});
         end;
     LM_RBUTTONDOWN:
       begin
@@ -9977,7 +9991,7 @@ begin
           P:=Point(XPos,YPos);
           //P := FOwner.ScreenToClient(Point(XPos, YPos));
         if InHeader(P) then
-          FOwner.DoHeaderMouseDown(mbRight, GetShiftState, P.X, P.Y + Integer(FHeight));
+          FOwner.DoHeaderMouseDown(mbRight, GetShiftState, P.X, P.Y { + Integer(FHeight)});
       end;
     LM_RBUTTONUP:
       if not (csDesigning in FOwner.ComponentState) then
@@ -9990,13 +10004,14 @@ begin
           if InHeader(P) then
           begin
             FColumns.HandleClick(P, mbRight, True, False);
-            FOwner.DoHeaderMouseUp(mbRight, GetShiftState, P.X, P.Y + Integer(FHeight));
+            FOwner.DoHeaderMouseUp(mbRight, GetShiftState, P.X, P.Y { + Integer(FHeight)});
             FColumns.FDownIndex := NoColumn;
             FColumns.FTrackIndex := NoColumn;
 
             Menu := FPopupMenu;
+            //lclheader
             if not Assigned(Menu) then
-              Menu := DoGetPopupMenu(FColumns.ColumnFromPosition(Point(P.X, P.Y + Integer(FHeight))), P);
+              Menu := DoGetPopupMenu(FColumns.ColumnFromPosition(Point(P.X, P.Y {+ Integer(FHeight)})), P);
 
             // Trigger header popup if there's one.
             if Assigned(Menu) then

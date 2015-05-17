@@ -8165,7 +8165,8 @@ var
 
 begin
   // Convert vertical position to local coordinates.
-  Inc(P.Y, FHeader.FHeight);
+  //lclheader
+  //Inc(P.Y, FHeader.FHeight);
   NewClickIndex := ColumnFromPosition(P);
   with HitInfo do
   begin
@@ -10466,8 +10467,9 @@ begin
         with TLMMButtonDown(Message) do
           P:= Point(XPos, YPos);
           //P := Treeview.ScreenToClient(Point(XPos, YPos));
+        //lclheader
         if InHeader(P) then
-          FOwner.DoHeaderMouseDown(mbMiddle, GetShiftState, P.X, P.Y + Integer(FHeight));
+          FOwner.DoHeaderMouseDown(mbMiddle, GetShiftState, P.X, P.Y { + Integer(FHeight)});
       end;
     LM_MBUTTONUP:
       begin
@@ -10477,7 +10479,8 @@ begin
         if InHeader(P) then
         begin
           FColumns.HandleClick(P, mbMiddle, True, False);
-          FOwner.DoHeaderMouseUp(mbMiddle, GetShiftState, P.X, P.Y + Integer(FHeight));
+          //lclheader
+          FOwner.DoHeaderMouseUp(mbMiddle, GetShiftState, P.X, P.Y { + Integer(FHeight)});
           FColumns.FDownIndex := NoColumn;
           FColumns.FCheckBoxHit := False;
         end;
@@ -10593,16 +10596,18 @@ begin
           end;
 
         // This is a good opportunity to notify the application.
+        //lclheader
         if not (csDesigning in Treeview.ComponentState) and IsInHeader then
-          FOwner.DoHeaderMouseDown(mbLeft, GetShiftState, P.X, P.Y + Integer(FHeight));
+          FOwner.DoHeaderMouseDown(mbLeft, GetShiftState, P.X, P.Y { + Integer(FHeight)});
         end;
     LM_RBUTTONDOWN:
       begin
         with TLMRButtonDown(Message) do
           P:=Point(XPos,YPos);
           //P := FOwner.ScreenToClient(Point(XPos, YPos));
+        //lclheader
         if InHeader(P) then
-          FOwner.DoHeaderMouseDown(mbRight, GetShiftState, P.X, P.Y + Integer(FHeight));
+          FOwner.DoHeaderMouseDown(mbRight, GetShiftState, P.X, P.Y { + Integer(FHeight)});
       end;
     LM_RBUTTONUP:
       if not (csDesigning in FOwner.ComponentState) then
@@ -10615,14 +10620,16 @@ begin
           if InHeader(P) then
           begin
             FColumns.HandleClick(P, mbRight, True, False);
-            FOwner.DoHeaderMouseUp(mbRight, GetShiftState, P.X, P.Y + Integer(FHeight));
+            //lclheader
+            FOwner.DoHeaderMouseUp(mbRight, GetShiftState, P.X, P.Y { + Integer(FHeight)});
             FColumns.FDownIndex := NoColumn;
             FColumns.FTrackIndex := NoColumn;
             FColumns.FCheckBoxHit := False;
 
             Menu := FPopupMenu;
+            //lclheader
             if not Assigned(Menu) then
-              Menu := DoGetPopupMenu(FColumns.ColumnFromPosition(Point(P.X, P.Y + Integer(FHeight))), P);
+              Menu := DoGetPopupMenu(FColumns.ColumnFromPosition(Point(P.X, P.Y { + Integer(FHeight)})), P);
 
             // Trigger header popup if there's one.
             if Assigned(Menu) then
