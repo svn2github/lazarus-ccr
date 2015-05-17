@@ -13904,7 +13904,10 @@ begin
           begin
             Brush.Color := clBlack;
             Pen.Color := clBlack;
-            Polygon([Point(0, 2), Point(8, 2), Point(4, 6)]);
+            if BiDiMode = bdLeftToRight then
+              Polygon([Point(2, 0), Point(6, 4), Point(2, 8)])
+            else
+              Polygon([Point(6, 0), Point(2, 4), Point(6, 8)]);
           end
           else
           begin
