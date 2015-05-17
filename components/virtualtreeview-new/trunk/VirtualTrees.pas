@@ -948,7 +948,7 @@ type
   TVirtualTreeColumn = class(TCollectionItem)
   private
     FText,
-    FHint: String;
+    FHint: TTranslateString;
     FLeft,
     FWidth: Integer;
     FPosition: TColumnPosition;
@@ -1004,7 +1004,7 @@ type
     procedure GetAbsoluteBounds(var Left, Right: Integer);
     function GetDisplayName: string; override;
     function GetText: String; virtual; // [IPK]
-    procedure SetText(const Value: String); virtual; // [IPK] private to protected & virtual
+    procedure SetText(const Value: TTranslateString); virtual; // [IPK] private to protected & virtual
     function GetOwner: TVirtualTreeColumns; reintroduce;
     property HasImage: Boolean read FHasImage;
     property ImageRect: TRect read FImageRect;
@@ -1035,7 +1035,7 @@ type
     property CheckBox: Boolean read FCheckBox write SetCheckBox default False;
     property Color: TColor read FColor write SetColor stored IsColorStored;
     property DefaultSortDirection: TSortDirection read FDefaultSortDirection write FDefaultSortDirection default sdAscending;
-    property Hint: String read FHint write FHint stored False;
+    property Hint: TTranslateString read FHint write FHint stored False;
     property ImageIndex: TImageIndex read FImageIndex write SetImageIndex default -1;
     property Layout: TVTHeaderColumnLayout read FLayout write SetLayout default blGlyphLeft;
     property Margin: Integer read FMargin write SetMargin default 4;
@@ -1046,7 +1046,7 @@ type
     property Spacing: Integer read FSpacing write SetSpacing default 3;
     property Style: TVirtualTreeColumnStyle read FStyle write SetStyle default vsText;
     property Tag: NativeInt read FTag write FTag default 0;
-    property Text: String read GetText write SetText;
+    property Text: TTranslateString read GetText write SetText;
     property Width: Integer read FWidth write SetWidth default 50;
   end;
 
@@ -7104,7 +7104,7 @@ end;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-procedure TVirtualTreeColumn.SetText(const Value: String);
+procedure TVirtualTreeColumn.SetText(const Value: TTranslateString);
 
 begin
   if FText <> Value then

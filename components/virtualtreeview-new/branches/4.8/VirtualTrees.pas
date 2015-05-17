@@ -1161,7 +1161,7 @@ type
   TVirtualTreeColumn = class(TCollectionItem)
   private
     FText,
-    FHint: String;
+    FHint: TTranslateString;
     FLeft,
     FWidth: Integer;
     FPosition: TColumnPosition;
@@ -1208,7 +1208,7 @@ type
     procedure SetPosition(Value: TColumnPosition);
     procedure SetSpacing(Value: Integer);
     procedure SetStyle(Value: TVirtualTreeColumnStyle);
-   procedure SetText(const Value: String);
+   procedure SetText(const Value: TTranslateString);
     procedure SetWidth(Value: Integer);
   protected
     procedure ComputeHeaderLayout(DC: HDC; const Client: TRect; UseHeaderGlyph, UseSortGlyph: Boolean;
@@ -1243,7 +1243,7 @@ type
     property CheckState: TCheckState read FCheckState write SetCheckState default csUncheckedNormal;
     property CheckBox: Boolean read FCheckBox write SetCheckBox default False;
     property Color: TColor read FColor write SetColor stored IsColorStored;
-    property Hint: String read FHint write FHint;
+    property Hint: TTranslateString read FHint write FHint;
     property ImageIndex: TImageIndex read FImageIndex write SetImageIndex default -1;
     property Layout: TVTHeaderColumnLayout read FLayout write SetLayout default blGlyphLeft;
     property Margin: Integer read FMargin write SetMargin default 4;
@@ -1254,7 +1254,7 @@ type
     property Spacing: Integer read FSpacing write SetSpacing default 4;
     property Style: TVirtualTreeColumnStyle read FStyle write SetStyle default vsText;
     property Tag: Integer read FTag write FTag default 0;
-    property Text: String read FText write SetText;
+    property Text: TTranslateString read FText write SetText;
     property Width: Integer read FWidth write SetWidth default 50;
   end;
 
@@ -6614,7 +6614,7 @@ end;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-procedure TVirtualTreeColumn.SetText(const Value: String);
+procedure TVirtualTreeColumn.SetText(const Value: TTranslateString);
 
 begin
   if FText <> Value then
