@@ -69,6 +69,7 @@ Type
     procedure SetProxyServer(const AValue: string);
     procedure SetProxyUsername(const AValue: string);
     procedure SetSoapAction(const AValue : string);
+  protected
     procedure DoSendAndReceive(ARequest,AResponse:TStream); override;
   Public
     constructor Create();override;
