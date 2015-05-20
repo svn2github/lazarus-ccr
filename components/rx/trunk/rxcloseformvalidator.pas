@@ -85,6 +85,7 @@ type
   TRxCloseFormValidator = class(TComponent)
   private
     FErrorMsgCaption: string;
+    FIgnoreDisabled: boolean;
     FOnCloseQuery : TCloseQueryEvent;
     FItems:TValidateItems;
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -103,6 +104,7 @@ type
   published
     property ErrorMsgCaption:string read FErrorMsgCaption write FErrorMsgCaption;
     property Items:TValidateItems read GetItems write SetItems;
+    property IgnoreDisabled:boolean read FIgnoreDisabled write FIgnoreDisabled default false;
   end;
 
 implementation
@@ -241,6 +243,9 @@ var
 begin
   Result:=true;
   if not Assigned(FControl) then exit;
+
+  if (not FControl.Enabled) and (TRxCloseFormValidator(TValidateItems(Collection).Owner).IgnoreDisabled) then
+    exit;
 
   if Assigned(FOnValidate) then
     FOnValidate( TRxCloseFormValidator(TValidateItems(Collection).Owner), FControl, Result)
