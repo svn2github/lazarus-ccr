@@ -474,10 +474,14 @@ type
 
   { TRxDbGridColumns }
   TRxDbGridColumns = class(TDbGridColumns)
+  private
+    function GetColumn(Index: Integer): TRxColumn;
+    procedure SetColumn(Index: Integer; AValue: TRxColumn);
   protected
     procedure Notify(Item: TCollectionItem;Action: TCollectionNotification); override;
   public
     function Add: TRxColumn;
+    property Items[Index: Integer]: TRxColumn read GetColumn write SetColumn; default;
   end;
 
   { TRxDbGridColumnsSortList }
@@ -569,6 +573,7 @@ type
     FBeforeQuickSearch: TRxQuickSearchNotifyEvent;
     FQuickUTF8Search: string;
     FOldDataSetState:TDataSetState;
+    FToolsList:TFPList;
 
     FOnSortChanged: TNotifyEvent;
 
@@ -886,6 +891,8 @@ type
   end;
 
   { TRxDBGridAbstractTools }
+  TRxDBGridToolsEvent = (rxteMouseDown, rxteMouseUp, rxteMouseMove, rxteKeyDown, rxteKeyUp);
+  TRxDBGridToolsEvents = set of TRxDBGridToolsEvent;
 
   TRxDBGridAbstractTools = class(TComponent)
   private
@@ -896,11 +903,14 @@ type
   protected
     FRxDBGrid: TRxDBGrid;
     FCaption:string;
+    FToolsEvents:TRxDBGridToolsEvents;
     procedure SetRxDBGrid(AValue: TRxDBGrid);
     function DoExecTools:boolean; virtual;
     function DoSetupTools:boolean; virtual;
+    function MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: integer):boolean; virtual;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     function Execute:boolean;
   published
     property RxDBGrid:TRxDBGrid read FRxDBGrid write SetRxDBGrid;
@@ -1029,6 +1039,12 @@ begin
   Result:=true;
 end;
 
+function TRxDBGridAbstractTools.MouseDown(Button: TMouseButton;
+  Shift: TShiftState; X, Y: integer): boolean;
+begin
+  Result:=false;
+end;
+
 procedure TRxDBGridAbstractTools.ExecTools(Sender: TObject);
 begin
   Execute;
@@ -1037,8 +1053,15 @@ end;
 constructor TRxDBGridAbstractTools.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+  FToolsEvents:=[];
   FCaption:=Name;
   FShowSetupForm:=false;
+end;
+
+destructor TRxDBGridAbstractTools.Destroy;
+begin
+  SetRxDBGrid(nil);
+  inherited Destroy;
 end;
 
 function TRxDBGridAbstractTools.Execute: boolean;
@@ -1345,6 +1368,8 @@ begin
   else
     FOwner.FOptionsRx:=FOwner.FOptionsRx - [rdgFooterRows];
 
+  if FActive then
+    FOwner.CalcStatTotals;
   FOwner.VisualChange;
 end;
 
@@ -2900,6 +2925,9 @@ begin
   R.Caption := ATools.FCaption;
   R.OnClick := @(ATools.ExecTools);
   R.Tag:=IntPtr(ATools);
+
+  if Assigned(FToolsList) and (FToolsList.IndexOf(ATools)<0) then
+    FToolsList.Add(ATools);
 end;
 
 procedure TRxDBGrid.RemoveTools(ATools: TRxDBGridAbstractTools);
@@ -2915,6 +2943,9 @@ begin
       R.Free;
       exit;
     end;
+
+  if Assigned(FToolsList) then
+    FToolsList.Remove(ATools);
 end;
 
 {
@@ -3606,6 +3637,7 @@ var
   Cell: TGridCoord;
   Rect: TRect;
   C:TRxColumn;
+  i: Integer;
 begin
   QuickUTF8Search := '';
 
@@ -3690,13 +3722,22 @@ begin
         end;
       end
       else
+      begin
         inherited MouseDown(Button, Shift, X, Y);
+      end;
     end
     else
+    begin
       inherited MouseDown(Button, Shift, X, Y);
+    end;
   end
   else
   begin
+    for i:=0 to FToolsList.Count-1 do
+      if (rxteMouseDown in TRxDBGridAbstractTools(FToolsList[i]).FToolsEvents) then
+        if TRxDBGridAbstractTools(FToolsList[i]).MouseDown(Button, Shift, X, Y) then
+          exit;
+
     if rdgMrOkOnDblClik in FOptionsRx then
     begin
       if (Cell.Y > 0) and (Cell.X >= Ord(dgIndicator in Options)) and
@@ -5001,6 +5042,7 @@ begin
 {$IFDEF RXDBGRID_OPTIONS_WO_CANCEL_ON_EXIT}
   Options := Options - [dgCancelOnExit];
 {$ENDIF}
+  FToolsList:=TFPList.Create;
 
   FSortColumns:=TRxDbGridColumnsSortList.Create;
 
@@ -5074,6 +5116,7 @@ begin
   FreeAndNil(F_LastFilter);
 
   FreeAndNil(FKeyStrokes);
+  FreeAndNil(FToolsList);
   inherited Destroy;
   FreeAndNil(FSortColumns);
 end;
@@ -5148,6 +5191,16 @@ end;
 procedure TRxDBGrid.EraseBackground(DC: HDC);
 begin
   // The correct implementation is doing nothing
+end;
+
+function TRxDbGridColumns.GetColumn(Index: Integer): TRxColumn;
+begin
+  Result:=TRxColumn( inherited Items[Index] );
+end;
+
+procedure TRxDbGridColumns.SetColumn(Index: Integer; AValue: TRxColumn);
+begin
+  Items[Index].Assign( AValue );
 end;
 
 procedure TRxDbGridColumns.Notify(Item: TCollectionItem;

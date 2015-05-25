@@ -11,7 +11,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
   OnCreate = FormCreate
   SessionProperties = 'RxDBGridExportSpreadSheet1.FileName;RxDBGridExportSpreadSheet1.OpenAfterExport;RxDBGridExportSpreadSheet1.Options;RxDBGridExportSpreadSheet1.PageName;RxDBGridPrint1.Options;RxDBGridPrint1.Orientation;RxDBGridPrint1.PageMargin;RxDBGridPrint1.ReportTitle;RxDBGridPrint1.ShowColumnHeaderOnAllPage'
   ShowHint = True
-  LCLVersion = '1.2.4.0'
+  LCLVersion = '1.5'
   object RxDBGrid1: TRxDBGrid
     Left = 0
     Height = 624
@@ -23,10 +23,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
     Columns = <    
       item
         Title.Alignment = taCenter
-        Title.Caption = '...'
         Title.Orientation = toHorizontal
         Title.Hint = 'DEVELOPER'
         Title.ShowHint = True
+        Title.Caption = '...'
         Width = 50
         FieldName = 'DEVELOPER_ID'
         Constraints.MinWidth = 50
@@ -47,10 +47,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       item
         Color = clSkyBlue
         Title.Alignment = taCenter
-        Title.Caption = 'Code - ID'
         Title.Orientation = toVertical90
         Title.Hint = 'Code - ID'
         Title.ShowHint = True
+        Title.Caption = 'Code - ID'
         Width = 100
         FieldName = 'ID'
         EditButtons = <>
@@ -66,10 +66,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       end    
       item
         Title.Alignment = taCenter
-        Title.Caption = 'Developer'
         Title.Orientation = toHorizontal
         Title.Hint = 'Developer full name'
         Title.ShowHint = True
+        Title.Caption = 'Developer'
         Width = 136
         FieldName = 'Developer'
         Constraints.MinWidth = 10
@@ -89,10 +89,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       end    
       item
         Title.Alignment = taCenter
-        Title.Caption = 'Computer software (all info) - Программное обеспечение|Name'
         Title.Orientation = toHorizontal
         Title.Hint = 'Product name'
         Title.ShowHint = True
+        Title.Caption = 'Computer software (all info) - Программное обеспечение|Name'
         Width = 110
         FieldName = 'NAME'
         EditButtons = <>
@@ -106,10 +106,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       end    
       item
         Title.Alignment = taCenter
-        Title.Caption = 'Computer software (all info) - Программное обеспечение|Cost'
         Title.Orientation = toHorizontal
         Title.Hint = 'Product price'
         Title.ShowHint = True
+        Title.Caption = 'Computer software (all info) - Программное обеспечение|Cost'
         Width = 136
         FieldName = 'PRICE'
         DisplayFormat = '#,##0.00'
@@ -142,10 +142,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       end    
       item
         Title.Alignment = taCenter
-        Title.Caption = 'Computer software (all info) - Программное обеспечение|Date Present'
         Title.Orientation = toHorizontal
         Title.Hint = 'Soft date present...'
         Title.ShowHint = True
+        Title.Caption = 'Computer software (all info) - Программное обеспечение|Date Present'
         Width = 136
         FieldName = 'Date_Present'
         EditButtons = <>
@@ -157,10 +157,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       end    
       item
         Title.Alignment = taCenter
-        Title.Caption = 'DEVELOPER_ID'
         Title.Orientation = toHorizontal
         Title.Hint = 'DEVELOPER'
         Title.ShowHint = True
+        Title.Caption = 'DEVELOPER_ID'
         Width = 141
         FieldName = 'DEVELOPER_ID'
         EditButtons = <>
@@ -178,8 +178,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
           'Negative'
         )
         Title.Alignment = taCenter
-        Title.Caption = 'Rait'
         Title.Orientation = toHorizontal
+        Title.Caption = 'Rait'
         FieldName = 'RAIT'
         DirectInput = False
         EditButtons = <        
@@ -317,7 +317,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = Button2
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 274
+      Left = 270
       Height = 21
       Top = 7
       Width = 36
@@ -331,7 +331,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       Left = 7
       Height = 33
       Top = 7
-      Width = 89
+      Width = 87
       Action = actCalcTotal
       AutoSize = True
       BorderSpacing.Around = 6
@@ -341,10 +341,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = Button1
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 102
+      Left = 100
       Height = 33
       Top = 7
-      Width = 166
+      Width = 164
       Action = actOptimizeColumnsWidthAll
       AutoSize = True
       BorderSpacing.Around = 6
@@ -355,7 +355,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = CheckBox2
       AnchorSideTop.Side = asrBottom
-      Left = 503
+      Left = 499
       Height = 25
       Hint = 'Use filter line'
       Top = 38
@@ -369,7 +369,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = Label1
       AnchorSideTop.Control = Label1
       AnchorSideTop.Side = asrBottom
-      Left = 280
+      Left = 276
       Height = 29
       Top = 34
       Width = 217
@@ -389,7 +389,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = ComboBox1
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 503
+      Left = 499
       Height = 25
       Hint = 'Auto fill column width'
       Top = 7
@@ -403,7 +403,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = CheckBox2
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 643
+      Left = 639
       Height = 25
       Top = 7
       Width = 122
@@ -419,7 +419,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = CheckBox3
       AnchorSideTop.Side = asrBottom
-      Left = 643
+      Left = 639
       Height = 25
       Top = 38
       Width = 118
@@ -434,7 +434,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = CheckBox3
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 771
+      Left = 767
       Height = 25
       Top = 7
       Width = 97
@@ -480,19 +480,14 @@ object RxDBGridMainForm: TRxDBGridMainForm
       item
         Name = 'Date_Present'
         DataType = ftDate
-        Precision = 0
-        Size = 0
       end    
       item
         Name = 'DEVELOPER_ID'
         DataType = ftInteger
-        Precision = 0
-        Size = 0
       end    
       item
         Name = 'RAIT'
         DataType = ftString
-        Precision = 0
         Size = 15
       end>
     PacketRecords = 0
@@ -655,13 +650,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       item
         Name = 'DEVELOPER_ID'
         DataType = ftInteger
-        Precision = 0
-        Size = 0
       end    
       item
         Name = 'DEVELOPER_NAME'
         DataType = ftString
-        Precision = 0
         Size = 130
       end>
     PacketRecords = 0
@@ -1369,5 +1361,11 @@ object RxDBGridMainForm: TRxDBGridMainForm
     ReportTitle = 'RxDBGrid demo'
     left = 548
     top = 269
+  end
+  object RxDBGridFooterTools1: TRxDBGridFooterTools
+    RxDBGrid = RxDBGrid1
+    Caption = 'Totals row'
+    left = 591
+    top = 270
   end
 end

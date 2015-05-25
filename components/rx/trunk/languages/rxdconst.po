@@ -29,6 +29,10 @@ msgstr ""
 msgid "SCircularDataLink"
 msgstr ""
 
+#: rxdconst.scollumnname
+msgid "Collumn name"
+msgstr ""
+
 #: rxdconst.sconfirmpasswordlabel
 msgid "&Confirm:"
 msgstr ""
@@ -139,6 +143,46 @@ msgstr ""
 
 #: rxdconst.sfieldtypemismatch
 msgid "Type mismatch for field '%s', expecting: %s actual: %s"
+msgstr ""
+
+#: rxdconst.sfunction
+msgid "Function"
+msgstr ""
+
+#: rxdconst.sfvtavg
+msgid "AVG"
+msgstr ""
+
+#: rxdconst.sfvtcount
+msgid "Count"
+msgstr ""
+
+#: rxdconst.sfvtfieldvalue
+msgid "Field value"
+msgstr ""
+
+#: rxdconst.sfvtmax
+msgid "Max value"
+msgstr ""
+
+#: rxdconst.sfvtmin
+msgid "Min value"
+msgstr ""
+
+#: rxdconst.sfvtnon
+msgid "None"
+msgstr ""
+
+#: rxdconst.sfvtrecno
+msgid "Record no"
+msgstr ""
+
+#: rxdconst.sfvtstatictext
+msgid "Static text"
+msgstr ""
+
+#: rxdconst.sfvtsum
+msgid "Sum"
 msgstr ""
 
 #: rxdconst.shidezerovalues
@@ -397,6 +441,10 @@ msgstr ""
 msgid "Sort data for collumns"
 msgstr ""
 
+#: rxdconst.srxdbgridtoolscaption
+msgid "Totals row"
+msgstr ""
+
 #: rxdconst.srxdescending
 msgid "Descending"
 msgstr ""
@@ -513,6 +561,10 @@ msgstr ""
 
 #: rxdconst.ssetkeydata
 msgid "find"
+msgstr ""
+
+#: rxdconst.ssetuptotalrow
+msgid "Setup total row"
 msgstr ""
 
 #: rxdconst.sshowcolumnheaderonallpage

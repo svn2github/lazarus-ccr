@@ -11,7 +11,6 @@
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
       <Icon Value="0"/>
-      <ActiveWindowIndexAtStart Value="0"/>
     </General>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
@@ -71,10 +70,7 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="RxDBGridMainUnit"/>
         <IsVisibleTab Value="True"/>
-        <EditorIndex Value="0"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="10" Y="11"/>
+        <CursorPos X="37" Y="11"/>
         <UsageCount Value="100"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -99,15 +95,13 @@
       </Unit4>
       <Unit5>
         <Filename Value="../../rxdbgrid.pas"/>
-        <UnitName Value="rxdbgrid"/>
         <EditorIndex Value="1"/>
-        <WindowIndex Value="0"/>
         <TopLine Value="3475"/>
-        <CursorPos X="1" Y="3495"/>
+        <CursorPos Y="3495"/>
         <UsageCount Value="17"/>
         <Bookmarks Count="2">
-          <Item0 X="1" Y="2573" ID="2"/>
-          <Item1 X="1" Y="3776" ID="1"/>
+          <Item0 Y="2573" ID="2"/>
+          <Item1 Y="3776" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit5>
@@ -437,7 +431,6 @@
         <Filename Value="../../../../lcl/dbgrids.pas"/>
         <UnitName Value="DBGrids"/>
         <EditorIndex Value="2"/>
-        <WindowIndex Value="0"/>
         <TopLine Value="213"/>
         <CursorPos X="3" Y="216"/>
         <UsageCount Value="19"/>
@@ -447,7 +440,6 @@
         <Filename Value="../../../../lcl/grids.pas"/>
         <UnitName Value="Grids"/>
         <EditorIndex Value="3"/>
-        <WindowIndex Value="0"/>
         <TopLine Value="10079"/>
         <CursorPos X="25" Y="10111"/>
         <UsageCount Value="22"/>
@@ -572,7 +564,6 @@
         <Filename Value="../../../../lcl/controls.pp"/>
         <UnitName Value="Controls"/>
         <EditorIndex Value="4"/>
-        <WindowIndex Value="0"/>
         <TopLine Value="2211"/>
         <CursorPos X="15" Y="2233"/>
         <UsageCount Value="11"/>
@@ -737,7 +728,6 @@
       </Unit104>
       <Unit105>
         <Filename Value="/home/alexs/install/src/fixes_2_6/rtl/objpas/classes/classesh.inc"/>
-        <WindowIndex Value="0"/>
         <TopLine Value="471"/>
         <CursorPos X="15" Y="491"/>
         <UsageCount Value="10"/>
@@ -858,11 +848,11 @@
       </Position28>
       <Position29>
         <Filename Value="rxdbgridmainunit.pas"/>
-        <Caret Line="10" Column="3" TopLine="1"/>
+        <Caret Line="10" Column="3"/>
       </Position29>
       <Position30>
         <Filename Value="rxdbgridmainunit.pas"/>
-        <Caret Line="11" Column="10" TopLine="1"/>
+        <Caret Line="11" Column="10"/>
       </Position30>
     </JumpHistory>
   </ProjectOptions>
@@ -887,9 +877,6 @@
         </Win32>
       </Options>
     </Linking>
-    <Other>
-      <CompilerPath Value="$(CompPath)"/>
-    </Other>
   </CompilerOptions>
   <Debugging>
     <Watches Count="5">
@@ -918,5 +905,4 @@
       </Item2>
     </Exceptions>
   </Debugging>
-  <EditorMacros Count="0"/>
 </CONFIG>

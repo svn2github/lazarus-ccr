@@ -29,6 +29,10 @@ msgstr "Изменить пароль"
 msgid "SCircularDataLink"
 msgstr "Перекрёстная ссылка данных"
 
+#: rxdconst.scollumnname
+msgid "Collumn name"
+msgstr ""
+
 #: rxdconst.sconfirmpasswordlabel
 msgid "&Confirm:"
 msgstr "&Подтверждение:"
@@ -142,6 +146,46 @@ msgstr "Поле '%s' ожидает значение"
 #: rxdconst.sfieldtypemismatch
 msgid "Type mismatch for field '%s', expecting: %s actual: %s"
 msgstr "Несоответсвие типов для поля '%s', необходимо: %s введено: %s"
+
+#: rxdconst.sfunction
+msgid "Function"
+msgstr ""
+
+#: rxdconst.sfvtavg
+msgid "AVG"
+msgstr ""
+
+#: rxdconst.sfvtcount
+msgid "Count"
+msgstr ""
+
+#: rxdconst.sfvtfieldvalue
+msgid "Field value"
+msgstr ""
+
+#: rxdconst.sfvtmax
+msgid "Max value"
+msgstr ""
+
+#: rxdconst.sfvtmin
+msgid "Min value"
+msgstr ""
+
+#: rxdconst.sfvtnon
+msgid "None"
+msgstr ""
+
+#: rxdconst.sfvtrecno
+msgid "Record no"
+msgstr ""
+
+#: rxdconst.sfvtstatictext
+msgid "Static text"
+msgstr ""
+
+#: rxdconst.sfvtsum
+msgid "Sum"
+msgstr ""
 
 #: rxdconst.shidezerovalues
 msgid "Hide zero values"
@@ -400,6 +444,10 @@ msgstr "Выбор столбцов для отображения"
 msgid "Sort data for collumns"
 msgstr "Сортировать данные по колонкам"
 
+#: rxdconst.srxdbgridtoolscaption
+msgid "Totals row"
+msgstr ""
+
 #: rxdconst.srxdescending
 msgid "Descending"
 msgstr "По убыванию"
@@ -518,6 +566,10 @@ msgstr "Ошибка сервера"
 #: rxdconst.ssetkeydata
 msgid "find"
 msgstr "поиск"
+
+#: rxdconst.ssetuptotalrow
+msgid "Setup total row"
+msgstr ""
 
 #: rxdconst.sshowcolumnheaderonallpage
 msgid "Show column header on all page"

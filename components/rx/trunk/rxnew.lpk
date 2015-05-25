@@ -25,7 +25,7 @@ translate to Lazarus by alexs in 2005 - 2015
 "/>
     <License Value="LGPL"/>
     <Version Major="2" Minor="7" Release="2" Build="159"/>
-    <Files Count="69">
+    <Files Count="72">
       <Item1>
         <Filename Value="autopanel.pas"/>
         <UnitName Value="AutoPanel"/>
@@ -305,6 +305,18 @@ translate to Lazarus by alexs in 2005 - 2015
         <Filename Value="rxdaterangeeditunit.pas"/>
         <UnitName Value="rxDateRangeEditUnit"/>
       </Item69>
+      <Item70>
+        <Filename Value="rxdbgridfootertools.pas"/>
+        <UnitName Value="RxDBGridFooterTools"/>
+      </Item70>
+      <Item71>
+        <Filename Value="rxdbgridfootertools_setup.lfm"/>
+        <Type Value="LFM"/>
+      </Item71>
+      <Item72>
+        <Filename Value="rxdbgridfootertools_setup.pas"/>
+        <UnitName Value="rxdbgridfootertools_setup"/>
+      </Item72>
     </Files>
     <LazDoc Paths="docs;\usr\local\share\lazarus\components\rxnew\docs"/>
     <i18n>

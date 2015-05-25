@@ -18,7 +18,8 @@ uses
   RxTimeEdit, rxtoolbar, RxVersInfo, RxViewsPanel, rxxpman, seldsfrm, 
   tooledit, vclutils, RxCloseFormValidator, RxHistoryNavigator, 
   ex_rx_bin_datapacket, ex_rx_datapacket, ex_rx_xml_datapacket, rxsortby, 
-  RxMDI, RxIniPropStorage, rxDateRangeEditUnit, LazarusPackageIntf;
+  RxMDI, RxIniPropStorage, rxDateRangeEditUnit, RxDBGridFooterTools, 
+  rxdbgridfootertools_setup, LazarusPackageIntf;
 
 implementation
 

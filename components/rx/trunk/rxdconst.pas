@@ -200,6 +200,19 @@ resourcestring
   sPrintGrid                 = 'Print grid';
   sHideZeroValues            = 'Hide zero values';
 
+  sRxDBGridToolsCaption      = 'Totals row';
+  sfvtNon                    = 'None';
+  sfvtSum                    = 'Sum';
+  sfvtAvg                    = 'AVG';
+  sfvtCount                  = 'Count';
+  sfvtFieldValue             = 'Field value';
+  sfvtStaticText             = 'Static text';
+  sfvtMax                    = 'Max value';
+  sfvtMin                    = 'Min value';
+  sfvtRecNo                  = 'Record no';
+  sSetupTotalRow             = 'Setup total row';
+  sCollumnName               = 'Collumn name';
+  sFunction                  = 'Function';
 
 
 
