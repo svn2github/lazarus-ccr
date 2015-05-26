@@ -43,7 +43,9 @@ msgid "Left"
 msgstr "Ліворуч"
 
 #: rxconst.sbuttonalign3
-msgid "Rignt"
+#, fuzzy
+#| msgid "Rignt"
+msgid "Right"
 msgstr "Праворуч"
 
 #: rxconst.scarbonwidgetset
@@ -59,7 +61,9 @@ msgid "Close all windows"
 msgstr "Закрити всі вікна"
 
 #: rxconst.sclosevaliderror
-msgid "Error. Expected vailes..."
+#, fuzzy
+#| msgid "Error. Expected vailes..."
+msgid "Error. Expected values..."
 msgstr "Помилка. Очікується значеня..."
 
 #: rxconst.sclosewindows
@@ -187,7 +191,9 @@ msgid "QT widget set"
 msgstr "Набір віджетів QT"
 
 #: rxconst.sreqvalue
-msgid "Error. Expected value for filed %s."
+#, fuzzy
+#| msgid "Error. Expected value for filed %s."
+msgid "Error. Expected value for field %s."
 msgstr "Поле %s. Вимагається значення"
 
 #: rxconst.ssecondhalfofyear
@@ -227,7 +233,9 @@ msgid "Tool bar style"
 msgstr "Стиль панелі інструментів "
 
 #: rxconst.stoolbarstyle1
-msgid "Standart"
+#, fuzzy
+#| msgid "Standart"
+msgid "Standard"
 msgstr "Стандартний"
 
 #: rxconst.stoolbarstyle2

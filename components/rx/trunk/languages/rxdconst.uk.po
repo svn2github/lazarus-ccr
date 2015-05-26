@@ -39,7 +39,7 @@ msgid "SCircularDataLink"
 msgstr "Перехресне посилання даних"
 
 #: rxdconst.scollumnname
-msgid "Collumn name"
+msgid "Column name"
 msgstr ""
 
 #: rxdconst.sconfirmpasswordlabel
@@ -51,7 +51,9 @@ msgid "Data changed. Save?"
 msgstr "Дані були змінені. Зберегти?"
 
 #: rxdconst.sdatabasename
-msgid "Database loocked: %s"
+#, fuzzy
+#| msgid "Database loocked: %s"
+msgid "Database locked: %s"
 msgstr "База даних блокована: %s"
 
 #: rxdconst.sdatasourcefixed
@@ -99,7 +101,9 @@ msgid "Export file name"
 msgstr ""
 
 #: rxdconst.sexprbadcompare
-msgid "Compare opertion need fielad and const"
+#, fuzzy
+#| msgid "Compare opertion need fielad and const"
+msgid "Compare opertion needs field and const"
 msgstr "Операції порівняння вимагають наявності поля і константи"
 
 #: rxdconst.sexprbadfield
@@ -201,7 +205,9 @@ msgid "Hide zero values"
 msgstr ""
 
 #: rxdconst.shintlabel
-msgid "Enter you user name and password"
+#, fuzzy
+#| msgid "Enter you user name and password"
+msgid "Enter your user name and password"
 msgstr "Введіть ваші ім'я користувача та пароль"
 
 #: rxdconst.sinactivedata
@@ -221,7 +227,9 @@ msgid "No fields defined"
 msgstr "Немає оголошення полів"
 
 #: rxdconst.sinvalidusername
-msgid "User name or password not valid"
+#, fuzzy
+#| msgid "User name or password not valid"
+msgid "User name or password is not valid"
 msgstr "Помилка в імені користувача або паролі"
 
 #: rxdconst.slandscape
@@ -257,7 +265,9 @@ msgid "&Next"
 msgstr "&Далі"
 
 #: rxdconst.snotcapturefilter
-msgid "Control need locked by filter"
+#, fuzzy
+#| msgid "Control need locked by filter"
+msgid "Control needs to be locked by filter"
 msgstr "Елементи управління повинні бути захоплені фільтром"
 
 #: rxdconst.snotediting
@@ -426,7 +436,7 @@ msgid "Apply"
 msgstr "Застосувати"
 
 #: rxdconst.srxdbgridselapplyhint
-msgid "Apply current columns setings"
+msgid "Apply current column settings"
 msgstr ""
 
 #: rxdconst.srxdbgridselcolcaption
@@ -446,11 +456,15 @@ msgid "Select all rows"
 msgstr "Виділити всі рядки"
 
 #: rxdconst.srxdbgridselectcolumns
-msgid "Select visible collumns"
+#, fuzzy
+#| msgid "Select visible collumns"
+msgid "Select visible columns"
 msgstr "Вибір стовпців для відображення"
 
 #: rxdconst.srxdbgridsortbycolumns
-msgid "Sort data for collumns"
+#, fuzzy
+#| msgid "Sort data for collumns"
+msgid "Sort data for columns"
 msgstr "Сортувати дані по колонках"
 
 #: rxdconst.srxdbgridtoolscaption
@@ -564,9 +578,9 @@ msgstr "Вкажіть поля для сортування даних :"
 msgid "Fields as SortField"
 msgstr ""
 
-#: rxdconst.srxsoursedataset
-msgid "Sourse dataset"
-msgstr "Початкова таблиця"
+#: rxdconst.srxsourcedataset
+msgid "Source dataset"
+msgstr ""
 
 #: rxdconst.sservererrorlabel
 msgid "Server error"
@@ -581,7 +595,7 @@ msgid "Setup total row"
 msgstr ""
 
 #: rxdconst.sshowcolumnheaderonallpage
-msgid "Show column header on all page"
+msgid "Show column header on all pages"
 msgstr ""
 
 #: rxdconst.sshowfooter
@@ -621,11 +635,15 @@ msgid "Unknown XML Dataset format"
 msgstr "Не відомий формат XML даних"
 
 #: rxdconst.sunlockcaption
-msgid "Unloock"
+#, fuzzy
+#| msgid "Unloock"
+msgid "Unlock"
 msgstr "Розблокувати"
 
 #: rxdconst.sunlockhint
-msgid "Enter you password"
+#, fuzzy
+#| msgid "Enter you password"
+msgid "Enter your password"
 msgstr "Введіть ваш пароль"
 
 #: rxdconst.susernamelabel

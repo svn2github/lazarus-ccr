@@ -30,7 +30,7 @@ msgid "SCircularDataLink"
 msgstr "SCircularEnlaceDato"
 
 #: rxdconst.scollumnname
-msgid "Collumn name"
+msgid "Column name"
 msgstr ""
 
 #: rxdconst.sconfirmpasswordlabel
@@ -42,7 +42,9 @@ msgid "Data changed. Save?"
 msgstr "Dato cambiado. Salvar?"
 
 #: rxdconst.sdatabasename
-msgid "Database loocked: %s"
+#, fuzzy
+#| msgid "Database loocked: %s"
+msgid "Database locked: %s"
 msgstr "Base de Dato bloqueada: %s"
 
 #: rxdconst.sdatasourcefixed
@@ -90,7 +92,9 @@ msgid "Export file name"
 msgstr ""
 
 #: rxdconst.sexprbadcompare
-msgid "Compare opertion need fielad and const"
+#, fuzzy
+#| msgid "Compare opertion need fielad and const"
+msgid "Compare opertion needs field and const"
 msgstr "Comparación operacion necesita fielad y const"
 
 #: rxdconst.sexprbadfield
@@ -192,7 +196,9 @@ msgid "Hide zero values"
 msgstr ""
 
 #: rxdconst.shintlabel
-msgid "Enter you user name and password"
+#, fuzzy
+#| msgid "Enter you user name and password"
+msgid "Enter your user name and password"
 msgstr "Entre su nombre de usuario y clave"
 
 #: rxdconst.sinactivedata
@@ -212,7 +218,9 @@ msgid "No fields defined"
 msgstr "No hay campos definido"
 
 #: rxdconst.sinvalidusername
-msgid "User name or password not valid"
+#, fuzzy
+#| msgid "User name or password not valid"
+msgid "User name or password is not valid"
 msgstr "Nombre de usuario o clave no es valido"
 
 #: rxdconst.slandscape
@@ -248,7 +256,9 @@ msgid "&Next"
 msgstr "&Proximo"
 
 #: rxdconst.snotcapturefilter
-msgid "Control need locked by filter"
+#, fuzzy
+#| msgid "Control need locked by filter"
+msgid "Control needs to be locked by filter"
 msgstr "Control necesita bloquearlo por filtro"
 
 #: rxdconst.snotediting
@@ -417,7 +427,7 @@ msgid "Apply"
 msgstr "Aceptar"
 
 #: rxdconst.srxdbgridselapplyhint
-msgid "Apply current columns setings"
+msgid "Apply current column settings"
 msgstr ""
 
 #: rxdconst.srxdbgridselcolcaption
@@ -437,11 +447,15 @@ msgid "Select all rows"
 msgstr ""
 
 #: rxdconst.srxdbgridselectcolumns
-msgid "Select visible collumns"
+#, fuzzy
+#| msgid "Select visible collumns"
+msgid "Select visible columns"
 msgstr "Seleccionar Columnas Visibles"
 
 #: rxdconst.srxdbgridsortbycolumns
-msgid "Sort data for collumns"
+#, fuzzy
+#| msgid "Sort data for collumns"
+msgid "Sort data for columns"
 msgstr "Ordenar por Columnas"
 
 #: rxdconst.srxdbgridtoolscaption
@@ -557,9 +571,9 @@ msgstr "Seleccionar Dirección de Ordenamiento :"
 msgid "Fields as SortField"
 msgstr ""
 
-#: rxdconst.srxsoursedataset
-msgid "Sourse dataset"
-msgstr "Fuente del Conjunto de Datos"
+#: rxdconst.srxsourcedataset
+msgid "Source dataset"
+msgstr ""
 
 #: rxdconst.sservererrorlabel
 msgid "Server error"
@@ -574,7 +588,7 @@ msgid "Setup total row"
 msgstr ""
 
 #: rxdconst.sshowcolumnheaderonallpage
-msgid "Show column header on all page"
+msgid "Show column header on all pages"
 msgstr ""
 
 #: rxdconst.sshowfooter
@@ -614,11 +628,15 @@ msgid "Unknown XML Dataset format"
 msgstr ""
 
 #: rxdconst.sunlockcaption
-msgid "Unloock"
+#, fuzzy
+#| msgid "Unloock"
+msgid "Unlock"
 msgstr "Desbloquear"
 
 #: rxdconst.sunlockhint
-msgid "Enter you password"
+#, fuzzy
+#| msgid "Enter you password"
+msgid "Enter your password"
 msgstr "Entre su clave"
 
 #: rxdconst.susernamelabel

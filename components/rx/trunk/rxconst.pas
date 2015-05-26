@@ -86,7 +86,7 @@ resourcestring
   sAvaliableButtons     = 'Avaliable buttons';
   sShowCaption          = 'Show caption';
   sToolBarStyle         = 'Tool bar style';
-  sToolBarStyle1        = 'Standart';
+  sToolBarStyle1        = 'Standard';
   sToolBarStyle2        = 'Windows XP';
   sToolBarStyle3        = 'Native';
   sFlatButtons          = 'Flat buttons';
@@ -95,7 +95,7 @@ resourcestring
   sButtonAlign          = 'Button align';
   sButtonAlign1         = 'None';
   sButtonAlign2         = 'Left';
-  sButtonAlign3         = 'Rignt';
+  sButtonAlign3         = 'Right';
   sGTKWidgetSet         = 'GTK widget set';
   sGTK2WidgetSet        = 'GTK 2 widget set';
   sWin32_64WidgetSet    = 'Win32/Win64 widget set';
@@ -119,8 +119,8 @@ resourcestring
   sHistoryDesc          = 'History - "%s"';
 
   { RxCloseFormValidator }
-  sCloseValidError      = 'Error. Expected vailes...';
-  sReqValue             = 'Error. Expected value for filed %s.';
+  sCloseValidError      = 'Error. Expected values...';
+  sReqValue             = 'Error. Expected value for field %s.';
   sExptControlNotFound  = 'Control not found in validate %s.';
 
   { RxMDI }

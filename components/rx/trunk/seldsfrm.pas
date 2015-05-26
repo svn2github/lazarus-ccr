@@ -121,7 +121,7 @@ procedure TSelectDataSetForm.FormCreate(Sender: TObject);
 begin
   Caption:=sRxSelectDatasetStruct;
   CheckBox1.Caption:=sRxCopyOnlyMetadata;
-  Label1.Caption:=sRxSourseDataset;
+  Label1.Caption:=sRxSourceDataset;
 end;
 
 procedure TSelectDataSetForm.ListBox1DblClick(Sender: TObject);

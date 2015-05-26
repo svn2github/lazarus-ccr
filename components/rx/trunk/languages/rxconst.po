@@ -34,7 +34,7 @@ msgid "Left"
 msgstr ""
 
 #: rxconst.sbuttonalign3
-msgid "Rignt"
+msgid "Right"
 msgstr ""
 
 #: rxconst.scarbonwidgetset
@@ -50,7 +50,7 @@ msgid "Close all windows"
 msgstr ""
 
 #: rxconst.sclosevaliderror
-msgid "Error. Expected vailes..."
+msgid "Error. Expected values..."
 msgstr ""
 
 #: rxconst.sclosewindows
@@ -178,7 +178,7 @@ msgid "QT widget set"
 msgstr ""
 
 #: rxconst.sreqvalue
-msgid "Error. Expected value for filed %s."
+msgid "Error. Expected value for field %s."
 msgstr ""
 
 #: rxconst.ssecondhalfofyear
@@ -218,7 +218,7 @@ msgid "Tool bar style"
 msgstr ""
 
 #: rxconst.stoolbarstyle1
-msgid "Standart"
+msgid "Standard"
 msgstr ""
 
 #: rxconst.stoolbarstyle2

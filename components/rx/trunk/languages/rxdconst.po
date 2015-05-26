@@ -30,7 +30,7 @@ msgid "SCircularDataLink"
 msgstr ""
 
 #: rxdconst.scollumnname
-msgid "Collumn name"
+msgid "Column name"
 msgstr ""
 
 #: rxdconst.sconfirmpasswordlabel
@@ -42,7 +42,7 @@ msgid "Data changed. Save?"
 msgstr ""
 
 #: rxdconst.sdatabasename
-msgid "Database loocked: %s"
+msgid "Database locked: %s"
 msgstr ""
 
 #: rxdconst.sdatasourcefixed
@@ -90,7 +90,7 @@ msgid "Export file name"
 msgstr ""
 
 #: rxdconst.sexprbadcompare
-msgid "Compare opertion need fielad and const"
+msgid "Compare opertion needs field and const"
 msgstr ""
 
 #: rxdconst.sexprbadfield
@@ -190,7 +190,7 @@ msgid "Hide zero values"
 msgstr ""
 
 #: rxdconst.shintlabel
-msgid "Enter you user name and password"
+msgid "Enter your user name and password"
 msgstr ""
 
 #: rxdconst.sinactivedata
@@ -210,7 +210,7 @@ msgid "No fields defined"
 msgstr ""
 
 #: rxdconst.sinvalidusername
-msgid "User name or password not valid"
+msgid "User name or password is not valid"
 msgstr ""
 
 #: rxdconst.slandscape
@@ -246,7 +246,7 @@ msgid "&Next"
 msgstr ""
 
 #: rxdconst.snotcapturefilter
-msgid "Control need locked by filter"
+msgid "Control needs to be locked by filter"
 msgstr ""
 
 #: rxdconst.snotediting
@@ -414,7 +414,7 @@ msgid "Apply"
 msgstr ""
 
 #: rxdconst.srxdbgridselapplyhint
-msgid "Apply current columns setings"
+msgid "Apply current column settings"
 msgstr ""
 
 #: rxdconst.srxdbgridselcolcaption
@@ -434,11 +434,11 @@ msgid "Select all rows"
 msgstr ""
 
 #: rxdconst.srxdbgridselectcolumns
-msgid "Select visible collumns"
+msgid "Select visible columns"
 msgstr ""
 
 #: rxdconst.srxdbgridsortbycolumns
-msgid "Sort data for collumns"
+msgid "Sort data for columns"
 msgstr ""
 
 #: rxdconst.srxdbgridtoolscaption
@@ -551,8 +551,8 @@ msgstr ""
 msgid "Fields as SortField"
 msgstr ""
 
-#: rxdconst.srxsoursedataset
-msgid "Sourse dataset"
+#: rxdconst.srxsourcedataset
+msgid "Source dataset"
 msgstr ""
 
 #: rxdconst.sservererrorlabel
@@ -568,7 +568,7 @@ msgid "Setup total row"
 msgstr ""
 
 #: rxdconst.sshowcolumnheaderonallpage
-msgid "Show column header on all page"
+msgid "Show column header on all pages"
 msgstr ""
 
 #: rxdconst.sshowfooter
@@ -608,11 +608,11 @@ msgid "Unknown XML Dataset format"
 msgstr ""
 
 #: rxdconst.sunlockcaption
-msgid "Unloock"
+msgid "Unlock"
 msgstr ""
 
 #: rxdconst.sunlockhint
-msgid "Enter you password"
+msgid "Enter your password"
 msgstr ""
 
 #: rxdconst.susernamelabel

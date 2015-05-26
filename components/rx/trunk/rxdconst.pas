@@ -44,7 +44,7 @@ resourcestring
   SExprBadNullTest       = 'NULL-values enabled in ''='' and ''<>''';
   SExprBadField          = 'Field ''%s'' not used in filter expression';
   SCaptureFilter         = 'Control locked by filter';
-  SNotCaptureFilter      = 'Control need locked by filter';
+  SNotCaptureFilter      = 'Control needs to be locked by filter';
   SInactiveData          = 'inactive';
   SBrowseData            = 'browse';
   SEditData              = 'editing';
@@ -53,12 +53,12 @@ resourcestring
   SCalcFieldsData        = 'calc';
   SRegistration          = 'Register';
   SAppTitleLabel         = 'Application "%s"';
-  SHintLabel             = 'Enter you user name and password';
+  SHintLabel             = 'Enter your user name and password';
   SUserNameLabel         = '&User name:';
   SPasswordLabel         = '&Password:';
   SMore1                 = '&More >>';
   SMore2                 = '&Less <<';
-  SInvalidUserName       = 'User name or password not valid';
+  SInvalidUserName       = 'User name or password is not valid';
   SChangePassword        = 'Change password';
   SOldPasswordLabel      = '&Old password:';
   SNewPasswordLabel      = '&New password:';
@@ -78,11 +78,11 @@ resourcestring
   SExprInvalidChar         = 'Error symbol in expression: ''%s''';
   SExprNoRParen            = 'Error '')'', error: %s';
   SExprExpected            = 'Error %s';
-  SExprBadCompare          = 'Compare opertion need fielad and const';
+  SExprBadCompare          = 'Compare opertion needs field and const';
   SConfirmSave             = 'Data changed. Save?';
-  SDatabaseName            = 'Database loocked: %s';
-  SUnlockCaption           = 'Unloock';
-  SUnlockHint              = 'Enter you password';
+  SDatabaseName            = 'Database locked: %s';
+  SUnlockCaption           = 'Unlock';
+  SUnlockHint              = 'Enter your password';
   SDeleteMultipleRecords   = 'Delete all selected records?';
 
   SDBComboBoxFieldNotAssigned        = '%s:TDBComboBox - DataField not assigned';
@@ -112,8 +112,8 @@ resourcestring
   sRxDBGridFilter          = 'Filter data';//'Filtrar                               Ctrl+T';
   sRxDBGridFilterSimple    = 'Filter in table';//      Ctrl+E';  'Filtrar en Encabezado      Ctrl+E';
   sRxDBGridFilterClear     = 'Clear filter';//                      Ctrl+Q';'Quitar Filtro                      Ctrl+Q';
-  sRxDBGridSortByColumns   = 'Sort data for collumns';//     Ctrl+C';'Ordenar por Columnas     Ctrl+C';
-  sRxDBGridSelectColumns   = 'Select visible collumns';//      Ctrl+W';'Seleccionar Columnas      Ctrl+W';
+  sRxDBGridSortByColumns   = 'Sort data for columns';//     Ctrl+C';'Ordenar por Columnas     Ctrl+C';
+  sRxDBGridSelectColumns   = 'Select visible columns';//      Ctrl+W';'Seleccionar Columnas      Ctrl+W';
   sRxDBGridEmptiFilter     = '(Empty)';
   sRxDBGridSelectAllRows   = 'Select all rows';//      Ctrl+W';'Seleccionar Columnas      Ctrl+W';
   sRxDBGridCopyCellValue   = 'Copy cell value';//      Ctrl+W';'Seleccionar Columnas      Ctrl+W';
@@ -162,13 +162,13 @@ resourcestring
   sRxDbGridSelColHint1     = 'Move selected column up';
   sRxDbGridSelColHint2     = 'Move selected column down';
   sRxDbGridSelApplyCaption = 'Apply';
-  sRxDbGridSelApplyHint    = 'Apply current columns setings';
+  sRxDbGridSelApplyHint    = 'Apply current column settings';
 
   //seldsfrm
   sRxBorrowStructure       = 'Borrow structure...';
   sRxSelectDatasetStruct   = 'Select dataset to copy to';
   sRxCopyOnlyMetadata      = 'Copy only metadata';
-  sRxSourseDataset         = 'Sourse dataset';
+  sRxSourceDataset         = 'Source dataset';
 
   sUnknownXMLDatasetFormat = 'Unknown XML Dataset format';
 
@@ -180,7 +180,7 @@ resourcestring
   sExportColumnFooter        = 'Export column footer';
   sExportCellColors          = 'Export cell colors';
   sOverwriteExisting         = 'Overwrite existing';
-  sShowColumnHeaderOnAllPage = 'Show column header on all page';
+  sShowColumnHeaderOnAllPage = 'Show column header on all pages';
   sPageMargins               = 'Page margins';
   sLeftCaption               = 'Left';
   sTopCaption                = 'Top';
@@ -211,7 +211,7 @@ resourcestring
   sfvtMin                    = 'Min value';
   sfvtRecNo                  = 'Record no';
   sSetupTotalRow             = 'Setup total row';
-  sCollumnName               = 'Collumn name';
+  sCollumnName               = 'Column name';
   sFunction                  = 'Function';
 
 
