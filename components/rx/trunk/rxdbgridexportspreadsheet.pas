@@ -104,7 +104,9 @@ var
   C  : TRxColumn;
   CT : TRxColumnTitle;
   CC : TColor;
+{$IFDEF OLD_fpSPREADSHEET}
   scColor : TsColor;
+{$ENDIF}
   CB:TsCellBorders;
   FMaxTitleHeight : integer;
   P: TMLCaptionItem;
@@ -125,8 +127,12 @@ begin
           CC:=C.Title.Color;
           if (CC and SYS_COLOR_BASE) = 0  then
           begin
+{$IFDEF OLD_fpSPREADSHEET}
             scColor:=FWorkbook.AddColorToPalette(CC);
             FWorksheet.WriteBackgroundColor(FCurRow, FCurCol, scColor);
+{$ELSE}
+            FWorksheet.WriteBackgroundColor(FCurRow, FCurCol, CC);
+{$ENDIF}
           end;
 
           CB:=[cbNorth, cbWest, cbEast, cbSouth];
@@ -172,8 +178,12 @@ begin
         CC:=C.Title.Color;
         if (CC and SYS_COLOR_BASE) = 0  then
         begin
+          {$IFDEF OLD_fpSPREADSHEET}
           scColor:=FWorkbook.AddColorToPalette(CC);
           FWorksheet.WriteBackgroundColor( FCurRow, FCurCol, scColor);
+          {$ELSE}
+          FWorksheet.WriteBackgroundColor( FCurRow, FCurCol, CC);
+          {$ENDIF}
         end;
 
         FWorksheet.WriteBorders(FCurRow,FCurCol, [cbNorth, cbWest, cbEast, cbSouth]);
@@ -262,8 +272,12 @@ begin
             RxDBGrid.OnGetCellProps(RxDBGrid, C.Field, F, CC);
           if (CC and SYS_COLOR_BASE) = 0  then
           begin
+            {$IFDEF OLD_fpSPREADSHEET}
             scColor:=FWorkbook.AddColorToPalette(CC);
             FWorksheet.WriteBackgroundColor(FCurRow,FCurCol, scColor);
+            {$ELSE}
+            FWorksheet.WriteBackgroundColor(FCurRow,FCurCol, CC);
+            {$ENDIF}
           end;
         end;
 
@@ -289,7 +303,9 @@ var
   C : TRxColumn;
   CT : TRxColumnTitle;
   CC : TColor;
+  {$IFDEF OLD_fpSPREADSHEET}
   scColor : TsColor;
+  {$ENDIF}
 begin
   CC:=FRxDBGrid.FooterOptions.Color;
   FCurCol:=0;
@@ -301,8 +317,12 @@ begin
     begin
       if (CC and SYS_COLOR_BASE) = 0  then
       begin
+        {$IFDEF OLD_fpSPREADSHEET}
         scColor:=FWorkbook.AddColorToPalette(CC);
-        FWorksheet.WriteBackgroundColor(FCurRow,FCurCol, scColor);
+        FWorksheet.WriteBackgroundColor(FCurRow,FCurCol, scColor);}
+        {$ELSE}
+        FWorksheet.WriteBackgroundColor(FCurRow,FCurCol, CC);
+        {$ENDIF}
       end;
 
       if (C.Footer.ValueType <> fvtNon) then
@@ -367,7 +387,8 @@ begin
   FWorkbook := TsWorkbook.Create;
   FWorksheet := FWorkbook.AddWorksheet(FPageName);
   try
-    scColorBlack:=FWorkbook.AddColorToPalette(FRxDBGrid.GridLineColor);
+//    scColorBlack:=FWorkbook.AddColorToPalette(FRxDBGrid.GridLineColor);
+    scColorBlack:=FRxDBGrid.GridLineColor;
     FCurRow:=0;
 
     if ressExportTitle in FOptions then

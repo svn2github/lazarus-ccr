@@ -8,12 +8,14 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms,
+  sysutils,
   RxDBGridMainUnit;
 
 {$R RxDBGridDemo.res}
 
 begin
   LocalizeApp;
+  DefaultFormatSettings.ThousandSeparator:=' ';
   //
   Application.Title:='RxDBGrid demo';
   Application.Initialize;
