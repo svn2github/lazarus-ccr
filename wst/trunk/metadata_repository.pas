@@ -437,7 +437,6 @@ procedure CopyService(ASrcService,ADestService : PService);
       ppSrc := ASrcOperation^.Params;
       pp := ADstOperation^.Params;
       for ii := 0 to Pred(cc) do begin
-        //CopyParam(@(ASrcOperation^.Params[ii]),@(pp[ii]));
         CopyParam(ppSrc,pp);
         Inc(ppSrc);
         Inc(pp);
@@ -459,7 +458,6 @@ begin
     po := ADestService^.Operations;
     poSrc := ASrcService^.Operations;
     for j := 0 to Pred(k) do begin
-      //CopyOperation(@(ASrcService^.Operations[j]),@(po[j]));
       CopyOperation(poSrc,po);
       Inc(poSrc);
       Inc(po);
@@ -503,8 +501,9 @@ begin
       ps := ADest^.Services;
       psSrc := ASource^.Services;
       for i := 0 to Pred(c) do begin
-        //CopyService(@(ASource^.Services[i]),@(ps[i]));
         CopyService(psSrc,ps);
+        Inc(psSrc);
+        Inc(ps);
       end;
     end;
   except
