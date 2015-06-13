@@ -1,7 +1,7 @@
 object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
-  Left = 287
+  Left = 311
   Height = 644
-  Top = 196
+  Top = 82
   Width = 833
   AllowDropFiles = True
   Caption = '[Web Services Toolkit ] Type Library Editor'
@@ -12,7 +12,7 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
   OnDropFiles = FormDropFiles
   OnShow = FormShow
   Position = poDesktopCenter
-  LCLVersion = '1.2.5.0'
+  LCLVersion = '1.4.1.0'
   object SB: TStatusBar
     Left = 0
     Height = 20
@@ -503,7 +503,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
             end>
           VisibleSpecialChars = [vscSpace, vscTabAtLast]
           ReadOnly = True
-          SelectedColor.FrameEdges = sfeAround
           SelectedColor.BackPriority = 50
           SelectedColor.ForePriority = 50
           SelectedColor.FramePriority = 50
@@ -511,23 +510,17 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
           SelectedColor.ItalicPriority = 50
           SelectedColor.UnderlinePriority = 50
           SelectedColor.StrikeOutPriority = 50
-          IncrementColor.FrameEdges = sfeAround
-          HighlightAllColor.FrameEdges = sfeAround
           BracketHighlightStyle = sbhsBoth
           BracketMatchColor.Background = clNone
           BracketMatchColor.Foreground = clNone
-          BracketMatchColor.FrameEdges = sfeAround
           BracketMatchColor.Style = [fsBold]
           FoldedCodeColor.Background = clNone
           FoldedCodeColor.Foreground = clGray
           FoldedCodeColor.FrameColor = clGray
-          FoldedCodeColor.FrameEdges = sfeAround
           MouseLinkColor.Background = clNone
           MouseLinkColor.Foreground = clBlue
-          MouseLinkColor.FrameEdges = sfeAround
           LineHighlightColor.Background = clNone
           LineHighlightColor.Foreground = clNone
-          LineHighlightColor.FrameEdges = sfeAround
           inline TSynGutterPartList
             object TSynGutterMarks
               Width = 24
@@ -538,7 +531,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
               MouseActions = <>
               MarkupInfo.Background = clBtnFace
               MarkupInfo.Foreground = clNone
-              MarkupInfo.FrameEdges = sfeAround
               DigitCount = 2
               ShowOnlyLineNumbersMultiplesOf = 1
               ZeroStart = False
@@ -555,7 +547,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
               MouseActions = <>
               MarkupInfo.Background = clWhite
               MarkupInfo.Foreground = clGray
-              MarkupInfo.FrameEdges = sfeAround
             end
             object TSynGutterCodeFolding
               MouseActions = <              
@@ -586,7 +577,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
                 end>
               MarkupInfo.Background = clNone
               MarkupInfo.Foreground = clGray
-              MarkupInfo.FrameEdges = sfeAround
               MouseActionsExpanded = <              
                 item
                   ClickCount = ccAny
@@ -1048,7 +1038,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
             end>
           VisibleSpecialChars = [vscSpace, vscTabAtLast]
           ReadOnly = True
-          SelectedColor.FrameEdges = sfeAround
           SelectedColor.BackPriority = 50
           SelectedColor.ForePriority = 50
           SelectedColor.FramePriority = 50
@@ -1056,23 +1045,17 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
           SelectedColor.ItalicPriority = 50
           SelectedColor.UnderlinePriority = 50
           SelectedColor.StrikeOutPriority = 50
-          IncrementColor.FrameEdges = sfeAround
-          HighlightAllColor.FrameEdges = sfeAround
           BracketHighlightStyle = sbhsBoth
           BracketMatchColor.Background = clNone
           BracketMatchColor.Foreground = clNone
-          BracketMatchColor.FrameEdges = sfeAround
           BracketMatchColor.Style = [fsBold]
           FoldedCodeColor.Background = clNone
           FoldedCodeColor.Foreground = clGray
           FoldedCodeColor.FrameColor = clGray
-          FoldedCodeColor.FrameEdges = sfeAround
           MouseLinkColor.Background = clNone
           MouseLinkColor.Foreground = clBlue
-          MouseLinkColor.FrameEdges = sfeAround
           LineHighlightColor.Background = clNone
           LineHighlightColor.Foreground = clNone
-          LineHighlightColor.FrameEdges = sfeAround
           inline TSynGutterPartList
             object TSynGutterMarks
               Width = 24
@@ -1083,7 +1066,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
               MouseActions = <>
               MarkupInfo.Background = clBtnFace
               MarkupInfo.Foreground = clNone
-              MarkupInfo.FrameEdges = sfeAround
               DigitCount = 2
               ShowOnlyLineNumbersMultiplesOf = 1
               ZeroStart = False
@@ -1100,7 +1082,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
               MouseActions = <>
               MarkupInfo.Background = clWhite
               MarkupInfo.Foreground = clGray
-              MarkupInfo.FrameEdges = sfeAround
             end
             object TSynGutterCodeFolding
               MouseActions = <              
@@ -1131,7 +1112,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
                 end>
               MarkupInfo.Background = clNone
               MarkupInfo.Foreground = clGray
-              MarkupInfo.FrameEdges = sfeAround
               MouseActionsExpanded = <              
                 item
                   ClickCount = ccAny
@@ -1593,7 +1573,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
             end>
           VisibleSpecialChars = [vscSpace, vscTabAtLast]
           ReadOnly = True
-          SelectedColor.FrameEdges = sfeAround
           SelectedColor.BackPriority = 50
           SelectedColor.ForePriority = 50
           SelectedColor.FramePriority = 50
@@ -1601,23 +1580,17 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
           SelectedColor.ItalicPriority = 50
           SelectedColor.UnderlinePriority = 50
           SelectedColor.StrikeOutPriority = 50
-          IncrementColor.FrameEdges = sfeAround
-          HighlightAllColor.FrameEdges = sfeAround
           BracketHighlightStyle = sbhsBoth
           BracketMatchColor.Background = clNone
           BracketMatchColor.Foreground = clNone
-          BracketMatchColor.FrameEdges = sfeAround
           BracketMatchColor.Style = [fsBold]
           FoldedCodeColor.Background = clNone
           FoldedCodeColor.Foreground = clGray
           FoldedCodeColor.FrameColor = clGray
-          FoldedCodeColor.FrameEdges = sfeAround
           MouseLinkColor.Background = clNone
           MouseLinkColor.Foreground = clBlue
-          MouseLinkColor.FrameEdges = sfeAround
           LineHighlightColor.Background = clNone
           LineHighlightColor.Foreground = clNone
-          LineHighlightColor.FrameEdges = sfeAround
           inline TSynGutterPartList
             object TSynGutterMarks
               Width = 24
@@ -1628,7 +1601,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
               MouseActions = <>
               MarkupInfo.Background = clBtnFace
               MarkupInfo.Foreground = clNone
-              MarkupInfo.FrameEdges = sfeAround
               DigitCount = 2
               ShowOnlyLineNumbersMultiplesOf = 1
               ZeroStart = False
@@ -1645,7 +1617,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
               MouseActions = <>
               MarkupInfo.Background = clWhite
               MarkupInfo.Foreground = clGray
-              MarkupInfo.FrameEdges = sfeAround
             end
             object TSynGutterCodeFolding
               MouseActions = <              
@@ -1676,7 +1647,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
                 end>
               MarkupInfo.Background = clNone
               MarkupInfo.Foreground = clGray
-              MarkupInfo.FrameEdges = sfeAround
               MouseActionsExpanded = <              
                 item
                   ClickCount = ccAny
@@ -2138,7 +2108,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
             end>
           VisibleSpecialChars = [vscSpace, vscTabAtLast]
           ReadOnly = True
-          SelectedColor.FrameEdges = sfeAround
           SelectedColor.BackPriority = 50
           SelectedColor.ForePriority = 50
           SelectedColor.FramePriority = 50
@@ -2146,23 +2115,17 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
           SelectedColor.ItalicPriority = 50
           SelectedColor.UnderlinePriority = 50
           SelectedColor.StrikeOutPriority = 50
-          IncrementColor.FrameEdges = sfeAround
-          HighlightAllColor.FrameEdges = sfeAround
           BracketHighlightStyle = sbhsBoth
           BracketMatchColor.Background = clNone
           BracketMatchColor.Foreground = clNone
-          BracketMatchColor.FrameEdges = sfeAround
           BracketMatchColor.Style = [fsBold]
           FoldedCodeColor.Background = clNone
           FoldedCodeColor.Foreground = clGray
           FoldedCodeColor.FrameColor = clGray
-          FoldedCodeColor.FrameEdges = sfeAround
           MouseLinkColor.Background = clNone
           MouseLinkColor.Foreground = clBlue
-          MouseLinkColor.FrameEdges = sfeAround
           LineHighlightColor.Background = clNone
           LineHighlightColor.Foreground = clNone
-          LineHighlightColor.FrameEdges = sfeAround
           inline TSynGutterPartList
             object TSynGutterMarks
               Width = 24
@@ -2173,7 +2136,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
               MouseActions = <>
               MarkupInfo.Background = clBtnFace
               MarkupInfo.Foreground = clNone
-              MarkupInfo.FrameEdges = sfeAround
               DigitCount = 2
               ShowOnlyLineNumbersMultiplesOf = 1
               ZeroStart = False
@@ -2190,7 +2152,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
               MouseActions = <>
               MarkupInfo.Background = clWhite
               MarkupInfo.Foreground = clGray
-              MarkupInfo.FrameEdges = sfeAround
             end
             object TSynGutterCodeFolding
               MouseActions = <              
@@ -2221,7 +2182,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
                 end>
               MarkupInfo.Background = clNone
               MarkupInfo.Foreground = clGray
-              MarkupInfo.FrameEdges = sfeAround
               MouseActionsExpanded = <              
                 item
                   ClickCount = ccAny
@@ -2683,7 +2643,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
             end>
           VisibleSpecialChars = [vscSpace, vscTabAtLast]
           ReadOnly = True
-          SelectedColor.FrameEdges = sfeAround
           SelectedColor.BackPriority = 50
           SelectedColor.ForePriority = 50
           SelectedColor.FramePriority = 50
@@ -2691,23 +2650,17 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
           SelectedColor.ItalicPriority = 50
           SelectedColor.UnderlinePriority = 50
           SelectedColor.StrikeOutPriority = 50
-          IncrementColor.FrameEdges = sfeAround
-          HighlightAllColor.FrameEdges = sfeAround
           BracketHighlightStyle = sbhsBoth
           BracketMatchColor.Background = clNone
           BracketMatchColor.Foreground = clNone
-          BracketMatchColor.FrameEdges = sfeAround
           BracketMatchColor.Style = [fsBold]
           FoldedCodeColor.Background = clNone
           FoldedCodeColor.Foreground = clGray
           FoldedCodeColor.FrameColor = clGray
-          FoldedCodeColor.FrameEdges = sfeAround
           MouseLinkColor.Background = clNone
           MouseLinkColor.Foreground = clBlue
-          MouseLinkColor.FrameEdges = sfeAround
           LineHighlightColor.Background = clNone
           LineHighlightColor.Foreground = clNone
-          LineHighlightColor.FrameEdges = sfeAround
           inline TSynGutterPartList
             object TSynGutterMarks
               Width = 24
@@ -2718,7 +2671,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
               MouseActions = <>
               MarkupInfo.Background = clBtnFace
               MarkupInfo.Foreground = clNone
-              MarkupInfo.FrameEdges = sfeAround
               DigitCount = 2
               ShowOnlyLineNumbersMultiplesOf = 1
               ZeroStart = False
@@ -2735,7 +2687,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
               MouseActions = <>
               MarkupInfo.Background = clWhite
               MarkupInfo.Foreground = clGray
-              MarkupInfo.FrameEdges = sfeAround
             end
             object TSynGutterCodeFolding
               MouseActions = <              
@@ -2766,7 +2717,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
                 end>
               MarkupInfo.Background = clNone
               MarkupInfo.Foreground = clGray
-              MarkupInfo.FrameEdges = sfeAround
               MouseActionsExpanded = <              
                 item
                   ClickCount = ccAny
@@ -3271,7 +3221,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
             end>
           VisibleSpecialChars = [vscSpace, vscTabAtLast]
           ReadOnly = True
-          SelectedColor.FrameEdges = sfeAround
           SelectedColor.BackPriority = 50
           SelectedColor.ForePriority = 50
           SelectedColor.FramePriority = 50
@@ -3279,23 +3228,17 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
           SelectedColor.ItalicPriority = 50
           SelectedColor.UnderlinePriority = 50
           SelectedColor.StrikeOutPriority = 50
-          IncrementColor.FrameEdges = sfeAround
-          HighlightAllColor.FrameEdges = sfeAround
           BracketHighlightStyle = sbhsBoth
           BracketMatchColor.Background = clNone
           BracketMatchColor.Foreground = clNone
-          BracketMatchColor.FrameEdges = sfeAround
           BracketMatchColor.Style = [fsBold]
           FoldedCodeColor.Background = clNone
           FoldedCodeColor.Foreground = clGray
           FoldedCodeColor.FrameColor = clGray
-          FoldedCodeColor.FrameEdges = sfeAround
           MouseLinkColor.Background = clNone
           MouseLinkColor.Foreground = clBlue
-          MouseLinkColor.FrameEdges = sfeAround
           LineHighlightColor.Background = clNone
           LineHighlightColor.Foreground = clNone
-          LineHighlightColor.FrameEdges = sfeAround
           inline TSynGutterPartList
             object TSynGutterMarks
               Width = 24
@@ -3306,7 +3249,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
               MouseActions = <>
               MarkupInfo.Background = clBtnFace
               MarkupInfo.Foreground = clNone
-              MarkupInfo.FrameEdges = sfeAround
               DigitCount = 2
               ShowOnlyLineNumbersMultiplesOf = 1
               ZeroStart = False
@@ -3323,7 +3265,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
               MouseActions = <>
               MarkupInfo.Background = clWhite
               MarkupInfo.Foreground = clGray
-              MarkupInfo.FrameEdges = sfeAround
             end
             object TSynGutterCodeFolding
               MouseActions = <              
@@ -3354,7 +3295,6 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
                 end>
               MarkupInfo.Background = clNone
               MarkupInfo.Foreground = clGray
-              MarkupInfo.FrameEdges = sfeAround
               MouseActionsExpanded = <              
                 item
                   ClickCount = ccAny
@@ -3441,6 +3381,7 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
     end
     object ToolButton3: TToolButton
       Left = 93
+      Height = 22
       Top = 2
       Width = 5
       Caption = 'ToolButton3'
@@ -3478,6 +3419,7 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
     end
     object ToolButton11: TToolButton
       Left = 241
+      Height = 22
       Top = 2
       Width = 5
       Caption = 'ToolButton11'
@@ -3495,6 +3437,7 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
     end
     object ToolButton13: TToolButton
       Left = 338
+      Height = 22
       Top = 2
       Width = 5
       Caption = 'ToolButton13'
@@ -3527,6 +3470,7 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
     end
     object ToolButton19: TToolButton
       Left = 121
+      Height = 22
       Top = 2
       Width = 5
       Caption = 'ToolButton19'
@@ -3640,6 +3584,12 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
       object MenuItem34: TMenuItem
         Action = actDelete
         OnClick = actDeleteExecute
+      end
+      object MenuItem57: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem58: TMenuItem
+        Action = actShowOptions
       end
     end
     object MenuItem6: TMenuItem
@@ -3789,6 +3739,11 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
       OnExecute = actAddXsdImportExecute
       OnUpdate = actAddXsdImportUpdate
     end
+    object actShowOptions: TAction
+      Caption = 'Options ...'
+      ImageIndex = 9
+      OnExecute = actShowOptionsExecute
+    end
   end
   object OD: TOpenDialog
     Filter = 'wsdl files(*.wsdl)|*.wsdl|Pascal file (*.pas)|*.pas|XSD files ( *.xsd )|*.xsd|WDSL files(*.WSDL)|*.WSDL'
@@ -3799,22 +3754,11 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
   end
   object SynPasSyn1: TSynPasSyn
     Enabled = False
-    AsmAttri.FrameEdges = sfeAround
     CommentAttri.Foreground = clBlue
-    CommentAttri.FrameEdges = sfeAround
     CommentAttri.Style = [fsBold]
-    IDEDirectiveAttri.FrameEdges = sfeAround
-    IdentifierAttri.FrameEdges = sfeAround
-    KeyAttri.FrameEdges = sfeAround
-    NumberAttri.FrameEdges = sfeAround
-    SpaceAttri.FrameEdges = sfeAround
     StringAttri.Foreground = clMaroon
-    StringAttri.FrameEdges = sfeAround
-    SymbolAttri.FrameEdges = sfeAround
     SymbolAttri.Style = [fsBold]
-    CaseLabelAttri.FrameEdges = sfeAround
     DirectiveAttri.Foreground = clGreen
-    DirectiveAttri.FrameEdges = sfeAround
     DirectiveAttri.Style = [fsBold]
     CompilerMode = pcmDelphi
     NestedComments = True
@@ -4738,20 +4682,7 @@ object fWstTypeLibraryEdit: TfWstTypeLibraryEdit
     DefaultFilter = 'Documents WSDL (*.wsdl)|*.wsdl'
     Enabled = False
     ElementAttri.Foreground = clNavy
-    ElementAttri.FrameEdges = sfeAround
-    AttributeAttri.FrameEdges = sfeAround
-    NamespaceAttributeAttri.FrameEdges = sfeAround
     AttributeValueAttri.Foreground = clPurple
-    AttributeValueAttri.FrameEdges = sfeAround
-    NamespaceAttributeValueAttri.FrameEdges = sfeAround
-    TextAttri.FrameEdges = sfeAround
-    CDATAAttri.FrameEdges = sfeAround
-    EntityRefAttri.FrameEdges = sfeAround
-    ProcessingInstructionAttri.FrameEdges = sfeAround
-    CommentAttri.FrameEdges = sfeAround
-    DocTypeAttri.FrameEdges = sfeAround
-    SpaceAttri.FrameEdges = sfeAround
-    SymbolAttri.FrameEdges = sfeAround
     WantBracesParsed = False
     left = 466
     top = 252

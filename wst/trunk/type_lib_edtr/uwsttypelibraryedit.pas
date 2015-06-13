@@ -43,6 +43,7 @@ type
     actEditSearch : TAction;
     actClone : TAction;
     actAddXsdImport : TAction;
+    actShowOptions: TAction;
     actSaveXSD : TAction;
     actTreeSearch : TAction;
     actRecordCreate : TAction;
@@ -105,6 +106,8 @@ type
     MenuItem54 : TMenuItem;
     MenuItem55 : TMenuItem;
     MenuItem56 : TMenuItem;
+    MenuItem57: TMenuItem;
+    MenuItem58: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7 : TMenuItem;
     MenuItem8: TMenuItem;
@@ -191,6 +194,7 @@ type
     procedure actEditSearchExecute(Sender : TObject);
     procedure actEditSearchUpdate(Sender : TObject);
     procedure actSaveXSDExecute(Sender : TObject);
+    procedure actShowOptionsExecute(Sender: TObject);
     procedure actTreeSearchExecute(Sender : TObject);
     procedure actTreeSearchUpdate(Sender : TObject);
     procedure actTypeALiasCreateExecute(Sender : TObject);
@@ -249,7 +253,7 @@ uses
   view_helper, DOM, wst_fpc_xml, XMLWrite,
   xsd_parser, wsdl_parser, source_utils, command_line_parser, generator, metadata_generator,
   binary_streamer, wst_resources_utils, xsd_generator, wsdl_generator,
-  uabout, edit_helper, udm, ufrmsaveoption, pparser, SynEditTypes
+  uabout, edit_helper, udm, ufrmsaveoption, ueditoptions, pparser, SynEditTypes
   {$IFDEF WST_IDE},LazIDEIntf,IDEMsgIntf, IDEExternToolIntf{$ENDIF}
   , xsd_consts, parserutils, locators;
 
@@ -343,6 +347,8 @@ begin
   try
     Result := TwstPasTreeContainer.Create();
     try
+      Result.CaseSensitive := DM.CaseSensitive;
+      Result.XsdStringMaping := DM.XsdStringMaping;
       prsr := TWsdlParser.Create(locDoc,Result,ANotifier);
       locContext := prsr as IParserContext;
       if (locContext <> nil) then begin
@@ -400,10 +406,13 @@ begin
   prsr := nil;
   locDoc := ReadXMLFile(AContent);
   try
-    if (ASymbols = nil) then
-      Result := TwstPasTreeContainer.Create()
-    else
+    if (ASymbols = nil) then begin
+      Result := TwstPasTreeContainer.Create();
+      Result.CaseSensitive := DM.CaseSensitive;
+      Result.XsdStringMaping := DM.XsdStringMaping;
+    end else begin
       Result := ASymbols;
+    end;
     try
       prsr := TXsdParser.Create(locDoc,Result,'',ANotifier);
       locContext := prsr as IParserContext;
@@ -668,6 +677,18 @@ begin
     end;
   finally
     SD.Filter := oldFilter;
+  end;
+end;
+
+procedure TfWstTypeLibraryEdit.actShowOptionsExecute(Sender: TObject);
+var
+  f : TfEditOptions;
+begin
+  f := TfEditOptions.Create(nil);
+  try
+    f.ShowModal();
+  finally
+    f.Release();
   end;
 end;
 
