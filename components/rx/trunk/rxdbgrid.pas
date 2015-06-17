@@ -365,6 +365,7 @@ type
 
   TRxColumnEditButton = class(TCollectionItem)
   private
+    FEnabled: Boolean;
     FShortCut: TShortCut;
     FStyle: TRxColumnEditButtonStyle;
     FButton:TSpeedButton;
@@ -393,6 +394,7 @@ type
     destructor Destroy; override;
   published
     //property DropdownMenu: TPopupMenu read FDropdownMenu write FDropdownMenu; :TODO:
+    property Enabled: Boolean read FEnabled write FEnabled default true;
     property Glyph: TBitmap read GetGlyph write SetGlyph;
     property Hint: String read GetHint write SetHint;
     property NumGlyphs: Integer read GetNumGlyphs write SetNumGlyphs default 1;
@@ -566,8 +568,6 @@ type
     FOldPosition: Integer;
     FVersion: integer;
     FPropertyStorageLink: TPropertyStorageLink;
-    FRxDbGridLookupComboEditor: TCustomControl;
-    FRxDbGridDateEditor: TWinControl;
 
     FAfterQuickSearch: TRxQuickSearchNotifyEvent;
     FBeforeQuickSearch: TRxQuickSearchNotifyEvent;
@@ -642,6 +642,8 @@ type
     procedure AddTools(ATools:TRxDBGridAbstractTools);
     procedure RemoveTools(ATools:TRxDBGridAbstractTools);
   protected
+    FRxDbGridLookupComboEditor: TCustomControl;
+    FRxDbGridDateEditor: TWinControl;
     //procedure UpdateHorzScrollBar(const aVisible: boolean; const aRange,aPage,aPos: Integer); override;
     //procedure UpdateVertScrollbar(const aVisible: boolean; const aRange,aPage,aPos: Integer); override;
 
@@ -1316,6 +1318,7 @@ begin
   FSpinBtn.OnTopClick:=@DoTopClick;
 
   FVisible:=true;
+  FEnabled:=true;
   Width:=15;
 end;
 
@@ -1559,8 +1562,16 @@ begin
 end;
 
 procedure TRxDBGridDateEditor.msg_SetValue(var Msg: TGridMessage);
+var
+  D: TDateTime;
 begin
-  Self.Date := FGrid.SelectedField.AsDateTime;
+  if FGrid.SelectedField.DataType in [ftDate, ftDateTime] then
+    Self.Date := FGrid.SelectedField.AsDateTime
+  else
+  if TryStrToDateTime(FGrid.SelectedField.AsString, D) then
+    Self.Date := D
+  else
+    Self.Clear;
 end;
 
 procedure TRxDBGridDateEditor.msg_GetValue(var Msg: TGridMessage);
@@ -1582,14 +1593,6 @@ begin
   AutoSize := false;
   UpdateMask;
 end;
-
-                    {
-procedure TRxDBGridDateEditor.SetBounds(aLeft, aTop, aWidth, aHeight: integer);
-begin
-  Dec(aWidth, 25); //ButtonWidth);
-  inherited SetBounds(aLeft, aTop, aWidth, aHeight);
-end;               }
-
 
 procedure TRxDBGridDateEditor.EditingDone;
 begin
@@ -2865,7 +2868,7 @@ begin
     W:=0;
     for i:=0 to R.EditButtons.Count-1 do
     begin
-      if R.EditButtons[i].Visible then
+      if R.EditButtons[i].Visible and R.EditButtons[i].Enabled then
         W:=W+R.EditButtons[i].Width;
     end;
 
@@ -2883,7 +2886,7 @@ begin
       end;
 
       for i:=0 to R.EditButtons.Count-1 do
-      if R.EditButtons[i].Visible then
+      if R.EditButtons[i].Visible and R.EditButtons[i].Enabled then
       begin
         if R.EditButtons[i].Style = ebsUpDownRx then
         begin
