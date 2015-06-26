@@ -19,6 +19,7 @@ interface
 const           
   WST_BLOCK_TYPE = LongInt(56789); 
   sWST_SIGNATURE = 'WST_METADATA_0.6';
+  WST_VERSION_INTEGER = LongInt(10000*0 + 100*6);
 
 resourcestring
   SERR_BaseTypeNotSpecfifiedForSimpleType = 'Base type is not specified for the simple type, parsing : "%s".';
