@@ -1480,12 +1480,14 @@ var
   i, c : Integer;
   locSerInfo : TPropSerializationInfo;
 begin
+  if (AObject = nil) and Target.InheritsFrom(TBaseArrayRemotable) then
+    AObject := Target.Create();
   oldSS := AStore.GetSerializationStyle();
   if ( osoDontDoBeginRead in Options ) or ( AStore.BeginObjectRead(AName,ATypeInfo) >= 0 ) then begin
     try
       if AStore.IsCurrentScopeNil() then
         Exit; // ???? FreeAndNil(AObject);
-      if not Assigned(AObject) then
+      if (AObject = nil) then
         AObject := Target.Create();
       c := FSerializationInfos.Count;
       if ( c > 0 ) then begin

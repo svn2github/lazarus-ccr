@@ -2674,11 +2674,11 @@ begin
   end else begin
     itmName := AName;
   end;
+  if (AObject = nil) then
+    AObject := Create();
   len := AStore.BeginArrayRead(AName,ATypeInfo,styl,itmName);
   if ( len >= 0 ) then begin
     Try
-      If Not Assigned(AObject) Then
-        AObject := Create();
       itmTypInfo := PTypeInfo(GetItemClass().ClassInfo);
       nativObj := AObject as TBaseObjectArrayRemotable;
       If ( len > 0 ) Then Begin
@@ -3577,6 +3577,8 @@ begin
   end else begin
     itmName := AName;
   end;
+  if (AObject = nil) and Self.InheritsFrom(TBaseArrayRemotable) then
+    AObject := Create();
   len := AStore.BeginArrayRead(AName,ATypeInfo, GetStyle(),itmName);
   if ( len > 0 ) then begin
     try

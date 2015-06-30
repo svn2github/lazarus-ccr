@@ -3371,7 +3371,8 @@ begin
       x := 'a';
       f.Get(TypeInfo(TArrayOfStringRemotable),x,a);
     f.EndScopeRead();
-    CheckNull(a);
+    CheckNotNull(a);
+    CheckEquals(0,a.Length);
 
     a := TArrayOfStringRemotable.Create();
     f := CreateFormatter(TypeInfo(TClass_B));
@@ -4206,6 +4207,18 @@ begin
     s := TMemoryStream.Create();
     f.SaveToStream(s);
     //s.SaveToFile(wstExpandLocalFileName('TTestFormatter.Test_ObjectArray.' + f.GetFormatName()));
+
+    areaded := nil;
+    f := CreateFormatter(TypeInfo(TClass_B));
+    s.Position := 0;
+    f.LoadFromStream(s);
+    x := 'Root';
+    f.BeginObjectRead(x,TypeInfo(TClass_B));
+      x := 'a';
+      f.Get(TypeInfo(TClass_A_Array),x,areaded);
+    f.EndScopeRead();
+    CheckNotNull(areaded);
+    CheckEquals(0,areaded.Length);
 
     areaded := TClass_A_Array.Create();
     areaded.SetLength(12);
