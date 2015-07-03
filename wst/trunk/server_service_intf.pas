@@ -520,6 +520,12 @@ begin
       end;
     end;
   except
+    on e : EBaseRemoteException do begin
+      f.Clear();
+      f.SetSerializationStyle(ssNodeSerialization);
+      f.BeginExceptionList(e.FaultCode,e.FaultString);
+      f.EndExceptionList();
+    end;
     on e : Exception do begin
       f.Clear();
       f.SetSerializationStyle(ssNodeSerialization);
