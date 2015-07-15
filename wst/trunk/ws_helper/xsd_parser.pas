@@ -49,6 +49,7 @@ type
     poParsingIncludeSchema
   );
   TParserOptions = set of TParserOption;
+  IXsdPaser = interface;
   IParserContext = interface
     ['{F400BA9E-41AC-456C-ABF9-CEAA75313685}']
     function GetXsShortNames() : TStrings;
@@ -65,6 +66,7 @@ type
 
     procedure AddIncludedDoc(ADocLocation : string);
     function IsIncludedDoc(ADocLocation : string) : Boolean;
+    function FindParser(const ANamespace : string) : IXsdPaser;
   end;
 
   IXsdPaser = interface
@@ -708,7 +710,7 @@ var
       Result := '';
   end;
 
-  function FindTypeNode(out ASimpleTypeAlias : TPasType) : Boolean;
+  function FindTypeNode(out ASimpleTypeAlias : TPasType; out AIsAlias : Boolean) : Boolean;
   var
     nd, oldTypeNode : TDOMNode;
     crs : IObjectCursor;
@@ -716,6 +718,7 @@ var
     locHintedType : TPasType;
   begin
     ASimpleTypeAlias := nil;
+    AIsAlias := False;
     Result := True;
     if ( ATypeNode <> nil ) then
       typNd := ATypeNode
@@ -729,6 +732,7 @@ var
       crs := CreateCursorOn(CreateAttributesCursor(typNd,cetRttiNode),ParseFilter(Format('%s = %s',[s_NODE_NAME,QuotedStr(s_type)]),TDOMNodeRttiExposer));
       crs.Reset();
       if crs.MoveNext() then begin
+        AIsAlias := True;
         nd := (crs.GetCurrent() as TDOMNodeRttiExposer).InnerObject;
         ASimpleTypeAlias := FindElement(ExtractNameFromQName(nd.NodeValue)) as TPasType;
         if Assigned(ASimpleTypeAlias) then begin
@@ -833,7 +837,8 @@ var
   sct : TPasSection;
   shortNameSpace, longNameSpace : string;
   typeModule : TPasModule;
-  locTypeNodeFound : Boolean;
+  locTypeNodeFound, IsAlias : Boolean;
+  locNodeTag : string;
 begin
   Prepare(True);
   if not FImportParsed then
@@ -859,7 +864,7 @@ begin
     if (Result <> nil) and (not Result.InheritsFrom(TPasUnresolvedTypeRef)) then
       Exit;
     Init();
-    locTypeNodeFound := FindTypeNode(aliasType);
+    locTypeNodeFound := FindTypeNode(aliasType,IsAlias);
     if ( Result <> nil ) and ( typeModule = FModule ) and
        ( not Result.InheritsFrom(TPasUnresolvedTypeRef) )
     then begin                              
@@ -874,9 +879,12 @@ begin
       Result := nil;
       Init();
       if locTypeNodeFound {FindTypeNode(aliasType)} then begin
-        if AnsiSameText(ExtractNameFromQName(typNd.NodeName),s_complexType) then begin
+        locNodeTag := ExtractNameFromQName(typNd.NodeName);
+        if (locNodeTag = s_complexType) or (locNodeTag = s_group) or
+           (locNodeTag = s_attributeGroup)
+        then begin
           Result := ParseComplexType();
-        end else if AnsiSameText(ExtractNameFromQName(typNd.NodeName),s_simpleType) then begin
+        end else if (locNodeTag = s_simpleType) then begin
           Result := ParseSimpleType();
         end;
         if Assigned(Result) then begin
@@ -899,6 +907,11 @@ begin
       sct.Types.Add(Result);
       if Result.InheritsFrom(TPasClassType) then
         sct.Classes.Add(Result);
+      if IsAlias and (aliasType = nil) then begin
+        Result := CreateTypeAlias(Result);
+        sct.Declarations.Add(Result);
+        sct.Types.Add(Result);
+      end;
     end;
   except
     on e : EXsdTypeNotFoundException do begin
@@ -1012,11 +1025,13 @@ begin
   if Assigned(FChildCursor) then begin
     crsSchemaChild := FChildCursor.Clone() as IObjectCursor;
     typFilterStr := Format(
-                      '%s or %s or %s or %s',
+                      '%s or %s or %s or %s or %s or %s',
                       [ CreateQualifiedNameFilterStr(s_complexType,FXSShortNames),
                         CreateQualifiedNameFilterStr(s_simpleType,FXSShortNames),
                         CreateQualifiedNameFilterStr(s_element,FXSShortNames),
-                        CreateQualifiedNameFilterStr(s_attribute,FXSShortNames)
+                        CreateQualifiedNameFilterStr(s_attribute,FXSShortNames),
+                        CreateQualifiedNameFilterStr(s_group,FXSShortNames),
+                        CreateQualifiedNameFilterStr(s_attributeGroup,FXSShortNames)
                       ]
                     );
     crsSchemaChild := CreateCursorOn(crsSchemaChild,ParseFilter(typFilterStr,TDOMNodeRttiExposer));
@@ -1049,11 +1064,14 @@ var
   i : Integer;
   ls : TStrings;
   ok : Boolean;
+  eltForm, attForm : string;
 begin
   if FPrepared then
     exit;
 
   FTargetNameSpace := '';
+  eltForm := '';
+  attForm := '';
   ok := False;
   if (FSchemaNode.Attributes <> nil) and (GetNodeListCount(FSchemaNode.Attributes) > 0) then begin
     nd := FSchemaNode.Attributes.GetNamedItem(s_targetNamespace);
@@ -1061,6 +1079,8 @@ begin
       FTargetNameSpace := nd.NodeValue;
       ok := True;
     end;
+    eltForm := Trim(NodeValue(FSchemaNode.Attributes.GetNamedItem(s_elementFormDefault)));
+    attForm := Trim(NodeValue(FSchemaNode.Attributes.GetNamedItem(s_attributeFormDefault)));
   end;
   prntCtx := GetParentContext();
   if not ok then begin
@@ -1114,6 +1134,10 @@ begin
     SymbolTable.RegisterExternalAlias(FModule,FTargetNameSpace);
     FModule.InterfaceSection := TInterfaceSection(SymbolTable.CreateElement(TInterfaceSection,'',FModule,visDefault,'',0));
   end;
+  if (eltForm <> '') then
+    SymbolTable.Properties.SetValue(FModule,s_elementFormDefault,eltForm);
+  if (attForm <> '') then
+    SymbolTable.Properties.SetValue(FModule,s_attributeFormDefault,attForm);
 end;
 
 { TXsdParser }

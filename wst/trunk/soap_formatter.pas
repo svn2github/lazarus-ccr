@@ -71,12 +71,17 @@ procedure TSOAPFormatter.BeginCall(
         ATarget      : string;
         ACallContext : ICallContext
 );
+var
+  locOldStyle : TSOAPDocumentStyle;
 begin
   Prepare();
   WriteHeaders(ACallContext);
-  BeginScope('Body',sSOAP_ENV,'',stObject,asNone);
-  if ( Style = RPC ) then
-    BeginScope(AProcName,ATarget,'',stObject,asNone);
+  locOldStyle := Style;
+  Style := Document;
+    BeginScope('Body',sSOAP_ENV,'',stObject,asNone);
+    if (locOldStyle = RPC) then
+      BeginScope(AProcName,ATarget,'',stObject,asNone);
+  Style := locOldStyle;
       
   FCallTarget := ATarget;
   FCallProcedureName := AProcName;

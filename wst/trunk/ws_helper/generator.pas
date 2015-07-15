@@ -155,6 +155,7 @@ type
     FImpTempStream : ISourceStream;
     FImpLastStream : ISourceStream;
     FRttiFunc : ISourceStream;
+    FFormOptions : string;
   private
     procedure WriteDocumentation(AElement : TPasElement);
     procedure WriteDocIfEnabled(AElement : TPasElement);{$IFDEF USE_INLINE}inline;{$ENDIF}
@@ -188,7 +189,7 @@ type
   
   
 implementation
-uses parserutils, Contnrs, logger_intf;
+uses parserutils, Contnrs, logger_intf, xsd_consts, strutils;
 
 const sLOCAL_TYPE_REGISTER_REFERENCE = 'typeRegistryInstance';
       sPROXY_BASE_CLASS = 'TBaseProxy';
@@ -2642,6 +2643,8 @@ var
     end;
   end;
 
+var
+  strBuffer : string;
 begin
   locParentIsEnum := False;
   locPropList := TObjectList.Create(False);
@@ -2658,10 +2661,15 @@ begin
       DecIndent();
 
       FImpTempStream.Indent();
-      FImpTempStream.WriteLn(
-        '%s.Register(%s,TypeInfo(%s),%s);',
-        [sLOCAL_TYPE_REGISTER_REFERENCE,sNAME_SPACE,ASymbol.Name,QuotedStr(SymbolTable.GetExternalName(ASymbol))]
-      );
+      strBuffer := Format(
+                     '%s.Register(%s,TypeInfo(%s),%s)',
+                     [ sLOCAL_TYPE_REGISTER_REFERENCE,sNAME_SPACE,ASymbol.Name,
+                       QuotedStr(SymbolTable.GetExternalName(ASymbol))]
+                   );
+      if (FFormOptions <> '') then
+        strBuffer := Format('%s.AddOptions(%s)',[strBuffer,FFormOptions]);
+      strBuffer := strBuffer + ';';
+      FImpTempStream.WriteLn(strBuffer);
 
       SetCurrentStream(FImpStream);
         WriteImp();
@@ -3270,6 +3278,8 @@ begin
 end;
 
 procedure TInftGenerator.PrepareModule();
+var
+  s : string;
 begin
   FDecStream := SrcMngr.CreateItem(GetDestUnitName() + '.dec');
   FImpStream := SrcMngr.CreateItem(GetDestUnitName() + '.imp');
@@ -3280,6 +3290,21 @@ begin
   FImpFirstStream.IncIndent();
   FImpTempStream.IncIndent();
   FImpLastStream.IncIndent();
+
+  FFormOptions := '';
+  s := SymbolTable.Properties.GetValue(SymbolTable.CurrentModule,s_elementFormDefault);
+  if (AnsiIndexStr(s,[s_unqualified,s_qualified]) >= 0) then
+    FFormOptions := Format('trio%sElement',[s]);
+  s := SymbolTable.Properties.GetValue(SymbolTable.CurrentModule,s_attributeFormDefault);
+  if (AnsiIndexStr(s,[s_unqualified,s_qualified]) >= 0) then begin
+    s := Format('trio%sAttribute',[s]);
+    if (FFormOptions <> '') then
+      FFormOptions := Format('%s, %s',[FFormOptions,s])
+    else
+      FFormOptions := s;
+  end;
+  if (FFormOptions <> '') then
+    FFormOptions := '[' + FFormOptions + ']';
 end;
 
 procedure TInftGenerator.Execute();

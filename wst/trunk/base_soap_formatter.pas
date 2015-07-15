@@ -56,6 +56,8 @@ type
 
   TStackItem = class
   private
+    FAttributeFormUnqualified: Boolean;
+    FElementFormUnqualified: Boolean;
     FEmbeddedScopeCount: Integer;
     FNameSpace: string;
     FScopeObject: TDOMNode;
@@ -77,6 +79,9 @@ type
     function EndEmbeddedScope() : Integer;
 
     function GetScopeItemNames(const AReturnList : TStrings) : Integer;virtual;
+
+    property ElementFormUnqualified : Boolean read FElementFormUnqualified write FElementFormUnqualified;
+    property AttributeFormUnqualified : Boolean read FAttributeFormUnqualified write FAttributeFormUnqualified;
   End;
 
   { TObjectStackItem }
@@ -623,12 +628,10 @@ end;
 { TSOAPBaseFormatter }
 
 procedure TSOAPBaseFormatter.ClearStack();
-Var
-  i, c : Integer;
 begin
-  c := FStack.Count;
-  For I := 1 To c Do
-    FStack.Pop().Free();
+  while HasScope() do begin
+    EndScope();
+  end;
 end;
 
 function TSOAPBaseFormatter.PushStack(AScopeObject : TDOMNode) : TStackItem;
@@ -686,8 +689,8 @@ begin
   if ( FHeaderEnterCount <= 0 ) then begin
     Inc(FHeaderEnterCount);
     Prepare();
-    BeginScope(sHEADER,sSOAP_ENV,sSOAP_ENV_ABR,stObject,asNone);
     SetStyleAndEncoding(Document,Literal);
+    BeginScope(sHEADER,sSOAP_ENV,sSOAP_ENV_ABR,stObject,asNone);
   end;
 end;
 
@@ -846,7 +849,10 @@ function TSOAPBaseFormatter.FindXMLNodeWithNamespaceInSubScope(
     if FindAttributeByValueInNode(ANameSpace, ANode, AttrName) then begin
       if not IsStrEmpty(AttrName) then begin
         AttrName := ExtractNameSpaceShortName(AttrName);
-        if not IsStrEmpty(AttrName) then begin
+        if IsStrEmpty(AttrName) then begin
+          if (ANode.NodeName = ANodeName) then
+            Result := ANode;
+        end else begin
           if(ANode.NodeName = AttrName + ':' + ANodeName) then
             Result := ANode;
         end;
@@ -881,7 +887,11 @@ Var
   regItem : TTypeRegistryItem;
 begin
   strNodeName := AName;
-  if ( Style = Document ) then begin
+  if (Style = Document) and
+     ( ( (FSerializationStyle = ssNodeSerialization) and not(StackTop().ElementFormUnqualified) ) or
+       ( (FSerializationStyle = ssAttibuteSerialization) and not(StackTop().AttributeFormUnqualified))
+     )
+  then begin
     namespaceLongName := ANameSpace;
     if ( namespaceLongName <> '' ) then begin
       s := FindAttributeByValueInScope(namespaceLongName);
@@ -1063,7 +1073,13 @@ var
   namespaceShortName, strNodeName, s : string;
 begin
   strNodeName := AName;
-  if ( Style = Document ) then begin
+  if (Style = Document) and
+     ( not(HasScope()) or
+       ( ( (FSerializationStyle = ssNodeSerialization) and not(StackTop().ElementFormUnqualified) ) or
+         ( (FSerializationStyle = ssAttibuteSerialization) and not(StackTop().AttributeFormUnqualified))
+       )
+     )
+  then begin
     if ( ANameSpace <> '' ) then begin
       {if ( ANameSpace = '' ) then
         s := StackTop().NameSpace
@@ -1341,8 +1357,8 @@ end;
 
 destructor TSOAPBaseFormatter.Destroy();
 begin
-  ReleaseDomNode(FDoc);
   ClearStack();
+  ReleaseDomNode(FDoc);
   FStack.Free();
   inherited Destroy();
 end;
@@ -1389,7 +1405,11 @@ begin
     End;
   End;
 
-  if ( Style = Document ) then begin
+  if not(HasScope()) or
+     ( (Style = Document) and
+       not(StackTop().ElementFormUnqualified)
+     )
+  then begin
     strNodeName := nmspcSH + ':' + AName;
   end else begin
     strNodeName := AName;
@@ -1405,6 +1425,7 @@ begin
     AddScopeAttribute(xsiNmspcSH + sTYPE,Format('%s:%s',[GetNameSpaceShortName(typData.NameSpace,True),typData.DeclaredName]));
   end;
   StackTop().SetNameSpace(nmspc);
+  StackTop().ElementFormUnqualified := trioUnqualifiedElement in typData.Options;
 end;
 
 procedure TSOAPBaseFormatter.BeginArray(
@@ -1536,7 +1557,13 @@ begin
       End Else Begin
         nsStr := Copy(nsStr,Succ(AnsiPos(':',nsStr)),MaxInt);
       End;
-      scpStr := nsStr + ':' + scpStr;
+      if not(HasScope()) or
+         ( (Style = Document) and
+           not(StackTop().ElementFormUnqualified)
+         )
+      then begin
+        scpStr := nsStr + ':' + scpStr;
+      end;
     End;
 
     e := FDoc.CreateElement(scpStr);
@@ -1572,6 +1599,8 @@ var
   nmspc,nmspcSH : string;
   strNodeName : string;
 begin
+  nmspcSH := '';
+  strNodeName := AScopeName;
   if ( Style = Document ) then begin
     typData := GetTypeRegistry().Find(ATypeInfo,False);
     if not Assigned(typData) then begin
@@ -1592,7 +1621,7 @@ begin
         nmspcSH := Copy(nmspcSH,Length('xmlns:')+1,MaxInt);
       end;
     end;
-    if IsStrEmpty(nmspcSH) then begin
+    {if IsStrEmpty(nmspcSH) then begin
       strNodeName := AScopeName
     end else begin
       if ( Pos(':',AScopeName) < 1 ) then begin
@@ -1600,10 +1629,15 @@ begin
       end else begin
         strNodeName := AScopeName;
       end;
+    end;}
+    if not(IsStrEmpty(nmspcSH)) and
+       (  not(HasScope()) or
+          not(StackTop().ElementFormUnqualified)
+       )
+    then begin
+      if ( Pos(':',AScopeName) < 1 ) then
+        strNodeName := nmspcSH + ':' + AScopeName;
     end;
-  end else begin
-    nmspcSH := '';
-    strNodeName := AScopeName;
   end;
 
   stk := StackTop();
@@ -1627,6 +1661,11 @@ begin
     end;
     if ( Style = Document ) then begin
       StackTop().SetNameSpace(nmspc);
+      if (AScopeType = stObject) or
+         ( (AScopeType = stArray) and (AStyle = asScoped) )
+      then begin
+        StackTop().ElementFormUnqualified := trioUnqualifiedElement in typData.Options;
+      end;
     end;
     Result := StackTop().GetItemsCount();
     if ( Result = 0 ) and ( AScopeType = stArray ) then begin

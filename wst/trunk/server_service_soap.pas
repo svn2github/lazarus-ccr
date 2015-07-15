@@ -178,6 +178,7 @@ begin
   Else
     m := AErrorMsg;
   Clear();
+  Style := Document;
   BeginScope('Envelope',sSOAP_ENV,'SOAP-ENV',stObject,asNone);
     AddScopeAttribute('xmlns:xsi',sXSI_NS);
     AddScopeAttribute('xmlns:'+sXSD, sXSD_NS);

@@ -107,7 +107,9 @@ type
     function IndexOf(const AProp : TPasProperty) : Integer;
     function GetCount() : Integer;{$IFDEF USE_INLINE}inline;{$ENDIF}
   end;
-  
+
+  TComplexTypeKind = (ctkComplexType, ctkGroup, ctkAttributeGroup);
+
   { TComplexTypeParser }
 
   TComplexTypeParser = class(TAbstractTypeParser)
@@ -121,11 +123,13 @@ type
     FDerivationNode : TDOMNode;
     FSequenceType : TSequenceType;
     FHints : TParserTypeHints;
+    FKind : TComplexTypeKind;
+    FMixed : Boolean;
   private
     //helper routines
     function ExtractElementCursor(
           AParentNode : TDOMNode;
-      out AAttCursor : IObjectCursor;
+      out AAttCursor, AGroupCursor, AAttGroupCursor : IObjectCursor;
       out AAnyNode, AAnyAttNode : TDOMNode
     ):IObjectCursor;
     procedure ExtractExtendedMetadata(const AItem : TPasElement; const ANode : TDOMNode);
@@ -140,9 +144,13 @@ type
     ) : TPasArrayType;
     function IsHeaderBlock() : Boolean;
     function IsSimpleContentHeaderBlock() : Boolean;
+    procedure SetAsGroupType(AType : TPasType; const AValue : Boolean);
+    procedure AddGroup(ADest, AGroup : TPasClassType);
+    procedure ParseGroups(AClassDef : TPasClassType; AGroupCursor : IObjectCursor);
   private
     procedure CreateNodeCursors();
     procedure ExtractTypeName();
+    procedure ExtractMixedStatus();
     procedure ExtractContentType();
     procedure ExtractBaseType();
     function ParseSimpleContent(const ATypeName : string):TPasType;
@@ -425,9 +433,12 @@ end;
 { TComplexTypeParser }
 
 function TComplexTypeParser.ExtractElementCursor(
-      AParentNode : TDOMNode;
-  out AAttCursor : IObjectCursor;
-  out AAnyNode, AAnyAttNode : TDOMNode
+      AParentNode     : TDOMNode;
+  out AAttCursor,
+      AGroupCursor,
+      AAttGroupCursor : IObjectCursor;
+  out AAnyNode,
+      AAnyAttNode     : TDOMNode
 ) : IObjectCursor;
 var
   frstCrsr : IObjectCursor;
@@ -437,6 +448,7 @@ var
     locTmpCrs : IObjectCursor;
     locTmpNode : TDOMNode;
   begin
+    Result := nil;
     locTmpCrs := CreateCursorOn(
                    frstCrsr.Clone() as IObjectCursor,
                    ParseFilter(CreateQualifiedNameFilterStr(s_all,Context.GetXsShortNames()),TDOMNodeRttiExposer)
@@ -451,6 +463,10 @@ var
                        ParseFilter(CreateQualifiedNameFilterStr(s_element,Context.GetXsShortNames()),TDOMNodeRttiExposer)
                      );
         Result := locTmpCrs;
+        AGroupCursor := CreateCursorOn(
+                          CreateChildrenCursor(locTmpNode,cetRttiNode),
+                          ParseFilter(CreateQualifiedNameFilterStr(s_group,Context.GetXsShortNames()),TDOMNodeRttiExposer)
+                        );
       end;
     end;
   end;
@@ -496,6 +512,12 @@ var
         tmpCursor.Reset();
         if tmpCursor.MoveNext() then
           AAnyNode := TDOMNodeRttiExposer(tmpCursor.GetCurrent()).InnerObject;
+        tmpCursor := CreateCursorOn(
+                       CreateChildrenCursor(tmpNode,cetRttiNode),
+                       ParseFilter(CreateQualifiedNameFilterStr(s_group,Context.GetXsShortNames()),TDOMNodeRttiExposer)
+                     );
+        tmpCursor.Reset();
+        AGroupCursor := tmpCursor;
       end;
     end
   end;
@@ -506,8 +528,12 @@ var
 begin
   Result := nil;
   AAttCursor := nil;
+  AGroupCursor := nil;
+  AAttGroupCursor := nil;
   AAnyNode := nil;
   AAnyAttNode := nil;
+  if FMixed then
+    exit;
   parentNode := AParentNode;
   if (parentNode = nil) then begin
     case FDerivationMode of
@@ -517,10 +543,16 @@ begin
     end;
   end;
   if parentNode.HasChildNodes() then begin;
-    AAttCursor := CreateCursorOn(
-                   CreateChildrenCursor(parentNode,cetRttiNode),
-                   ParseFilter(CreateQualifiedNameFilterStr(s_attribute,Context.GetXsShortNames()),TDOMNodeRttiExposer)
-                 );
+    AAttCursor :=
+      CreateCursorOn(
+        CreateChildrenCursor(parentNode,cetRttiNode),
+        ParseFilter(CreateQualifiedNameFilterStr(s_attribute,Context.GetXsShortNames()),TDOMNodeRttiExposer)
+      );
+    AAttGroupCursor :=
+      CreateCursorOn(
+        CreateChildrenCursor(parentNode,cetRttiNode),
+        ParseFilter(CreateQualifiedNameFilterStr(s_attributeGroup,Context.GetXsShortNames()),TDOMNodeRttiExposer)
+      );
     crs := CreateChildrenCursor(parentNode,cetRttiNode);
     if ( crs <> nil ) then begin
       crs := CreateCursorOn(
@@ -688,6 +720,120 @@ begin
   Result := wst_findCustomAttributeXsd(Context.GetXsShortNames(),FTypeNode,s_WST_headerBlockSimpleContent,strBuffer) and AnsiSameText('true',Trim(strBuffer));
 end;
 
+procedure TComplexTypeParser.SetAsGroupType(
+        AType  : TPasType;
+  const AValue : Boolean
+);
+var
+  s : string;
+begin
+  if AValue then
+    s := '1'
+  else
+    s := '';
+  FSymbols.Properties.SetValue(AType,sIS_GROUP,s);
+end;
+
+procedure TComplexTypeParser.AddGroup(ADest, AGroup: TPasClassType);
+var
+  i, k : Integer;
+  src, dest : TPasProperty;
+  locIsAttribute, locHasInternalName : Boolean;
+  locInternalEltName : string;
+begin
+  for i := 0 to AGroup.Members.Count-1 do begin
+    if TObject(AGroup.Members[i]).InheritsFrom(TPasProperty) then begin
+      src := TPasProperty(AGroup.Members[i]);
+      locHasInternalName := False;
+      locIsAttribute := FSymbols.IsAttributeProperty(src);
+      locInternalEltName := src.Name;
+      if (FindMember(ADest,locInternalEltName) <> nil) then begin
+        locHasInternalName := True;
+        k := 0;
+        while True do begin
+          if locIsAttribute then
+            locInternalEltName := Format('%sAtt',[src.Name])
+          else
+            locInternalEltName := Format('%sElt',[src.Name]);
+          if (k > 0) then
+            locInternalEltName := locInternalEltName+IntToStr(k);
+          if (FindMember(ADest,locInternalEltName) = nil) then
+            break;
+          k := k+1;
+        end;
+      end;
+      dest := TPasProperty(FSymbols.CreateElement(TPasProperty,locInternalEltName,ADest,visPublished,'',0));
+      ADest.Members.Add(dest);
+      dest.VarType := src.VarType;
+      dest.VarType.AddRef();
+      if locHasInternalName or FSymbols.HasExternalName(src) then
+        FSymbols.RegisterExternalAlias(dest,FSymbols.GetExternalName(src));
+      if not locHasInternalName then begin
+        dest.ReadAccessorName := src.ReadAccessorName;
+        dest.WriteAccessorName := src.WriteAccessorName;
+        dest.StoredAccessorName := src.StoredAccessorName;
+      end else begin
+        dest.ReadAccessorName := StringReplace(src.ReadAccessorName,src.Name,dest.Name,[rfReplaceAll]);
+        dest.WriteAccessorName := StringReplace(src.WriteAccessorName,src.Name,dest.Name,[rfReplaceAll]);
+        dest.StoredAccessorName := StringReplace(src.StoredAccessorName,src.Name,dest.Name,[rfReplaceAll]);
+      end;
+      if locIsAttribute then
+        FSymbols.SetPropertyAsAttribute(dest,True);
+    {$IFDEF HAS_EXP_TREE}
+      if (src.DefaultExpr <> nil) and
+         src.DefaultExpr.InheritsFrom(TPrimitiveExpr)
+      then begin
+        dest.DefaultExpr :=
+          TPrimitiveExpr.Create(dest,pekString,TPrimitiveExpr(src.DefaultExpr).Value);
+      end;
+    {$ENDIF HAS_EXP_TREE}
+    end;
+  end;
+end;
+
+procedure TComplexTypeParser.ParseGroups(
+  AClassDef    : TPasClassType;
+  AGroupCursor : IObjectCursor
+);
+var
+  locNode : TDOMNode;
+  locAttCursor, locRefCursor : IObjectCursor;
+  s, locNS, locLN, locLongNS : string;
+  elt : TPasElement;
+  locParser : IXsdPaser;
+begin
+  if (AGroupCursor <> nil) then begin
+    AGroupCursor.Reset();
+    while AGroupCursor.MoveNext() do begin
+      locNode := (AGroupCursor.GetCurrent() as TDOMNodeRttiExposer).InnerObject;
+      locAttCursor := CreateAttributesCursor(locNode,cetRttiNode);
+      locRefCursor :=
+        CreateCursorOn(
+          locAttCursor.Clone() as IObjectCursor,
+          ParseFilter(Format('%s = %s',[s_NODE_NAME,QuotedStr(s_ref)]),TDOMNodeRttiExposer)
+        );
+      locRefCursor.Reset();
+      if locRefCursor.MoveNext() then begin
+        s := (locRefCursor.GetCurrent() as TDOMNodeRttiExposer).NodeValue;
+        ExplodeQName(s,locLN,locNS);
+        if not Context.FindNameSpace(locNS,locLongNS) then
+          locLongNS := locNS;
+        elt := FSymbols.FindElementNS(locLN,locLongNS);
+        if (elt = nil) then begin
+          locParser := Context.FindParser(locLongNS);
+          if (locParser <> nil) then
+            elt := locParser.ParseType(locLN,ExtractNameFromQName(locNode.NodeName));
+        end;
+        if (elt <> nil) then begin
+          if not elt.InheritsFrom(TPasClassType) then
+            raise EXsdInvalidElementDefinitionException.CreateFmt(SERR_UnableToResolveGroupRef,[FTypeName,elt.Name]);
+          AddGroup(AClassDef,elt as TPasClassType)
+        end;
+      end
+    end;
+  end;
+end;
+
 procedure TComplexTypeParser.CreateNodeCursors();
 begin
   FAttCursor := CreateAttributesCursor(FTypeNode,cetRttiNode);
@@ -710,6 +856,26 @@ begin
   end;
   if IsStrEmpty(FTypeName) then
     raise EXsdParserException.Create(SERR_InvalidTypeName);
+end;
+
+procedure TComplexTypeParser.ExtractMixedStatus();
+var
+  locCrs : IObjectCursor;
+  locValue : string;
+begin
+  FMixed := False;
+  if (FAttCursor <> nil) then begin
+    locCrs := CreateCursorOn(
+                FAttCursor.Clone() as IObjectCursor,
+                ParseFilter(Format('%s = %s',[s_NODE_NAME,QuotedStr(s_mixed)]),TDOMNodeRttiExposer)
+              );
+    locCrs.Reset();
+    if locCrs.MoveNext() then begin
+      locValue := Trim((locCrs.GetCurrent() as TDOMNodeRttiExposer).NodeValue);
+      if (locValue = 'true') then
+        FMixed := True;
+    end;
+  end;
 end;
 
 procedure TComplexTypeParser.ExtractContentType();
@@ -753,6 +919,11 @@ var
   locBaseTypeLocalSpace, locBaseTypeLocalName, locBaseTypeInternalName, locFilterStr : string;
   locBaseTypeLocalSpaceExpanded : string;
 begin
+  if FMixed then begin
+    FDerivationMode := dmNone;
+    FDerivationNode := nil;
+    exit;
+  end;
   locFilterStr := CreateQualifiedNameFilterStr(s_extension,Context.GetXsShortNames());
   locContentChildCrs := CreateChildrenCursor(FContentNode,cetRttiNode);
   locCrs := CreateCursorOn(
@@ -910,6 +1081,8 @@ var
     locIsRefElement : Boolean;
     locTypeHint : string;
     locTypeAddRef : Boolean;
+    locIsAttribute : Boolean;
+    k : Integer;
   begin
     locType := nil;
     locTypeName := '';
@@ -992,6 +1165,22 @@ var
       locInternalEltName := Format('_%s',[locInternalEltName]);
     end;
 
+    locIsAttribute := AnsiSameText(s_attribute,ExtractNameFromQName(AElement.NodeName));
+    if (FindMember(classDef,locInternalEltName) <> nil) then begin
+      locHasInternalName := True;
+      k := 0;
+      while True do begin
+        if locIsAttribute then
+          locInternalEltName := Format('%sAtt',[locInternalEltName])
+        else
+          locInternalEltName := Format('%sElt',[locInternalEltName]);
+        if (k > 0) then
+          locInternalEltName := locInternalEltName+IntToStr(k);
+        if (FindMember(classDef,locInternalEltName) = nil) then
+          break;
+        k := k+1;
+      end;
+    end;
     locProp := TPasProperty(FSymbols.CreateElement(TPasProperty,locInternalEltName,classDef,visPublished,'',0));
     classDef.Members.Add(locProp);
     locProp.VarType := locType as TPasType;
@@ -1004,7 +1193,7 @@ var
       TPasEmentCrack(locType).SetName(locType.Name + '_Type');
     end;}
 
-    if AnsiSameText(s_attribute,ExtractNameFromQName(AElement.NodeName)) then begin
+    if locIsAttribute then begin
       locPartCursor := CreateCursorOn(locAttCursor.Clone() as IObjectCursor,ParseFilter(Format('%s = %s',[s_NODE_NAME,QuotedStr(s_use)]),TDOMNodeRttiExposer));
       locPartCursor.Reset();
       if locPartCursor.MoveNext() then begin
@@ -1022,18 +1211,17 @@ var
         locMinOccur := 0;
       end;
     end else begin
-      if ABoundInfos.Valid then begin
-        locMinOccur := ABoundInfos.MinOccurs;
-      end else begin
+      if ABoundInfos.Valid then
+        locMinOccur := ABoundInfos.MinOccurs
+      else
         locMinOccur := 1;
-        locPartCursor := CreateCursorOn(locAttCursor.Clone() as IObjectCursor,ParseFilter(Format('%s = %s',[s_NODE_NAME,QuotedStr(s_minOccurs)]),TDOMNodeRttiExposer));
-        locPartCursor.Reset();
-        if locPartCursor.MoveNext() then begin
-          if not TryStrToInt((locPartCursor.GetCurrent() as TDOMNodeRttiExposer).NodeValue,locMinOccur) then
-            raise EXsdParserException.CreateFmt(SERR_InvalidMinOccursValue,[FTypeName,locName]);
-          if ( locMinOccur < 0 ) then
-            raise EXsdParserException.CreateFmt(SERR_InvalidMinOccursValue,[FTypeName,locName]);
-        end;
+      locPartCursor := CreateCursorOn(locAttCursor.Clone() as IObjectCursor,ParseFilter(Format('%s = %s',[s_NODE_NAME,QuotedStr(s_minOccurs)]),TDOMNodeRttiExposer));
+      locPartCursor.Reset();
+      if locPartCursor.MoveNext() then begin
+        if not TryStrToInt((locPartCursor.GetCurrent() as TDOMNodeRttiExposer).NodeValue,locMinOccur) then
+          raise EXsdParserException.CreateFmt(SERR_InvalidMinOccursValue,[FTypeName,locName]);
+        if ( locMinOccur < 0 ) then
+          raise EXsdParserException.CreateFmt(SERR_InvalidMinOccursValue,[FTypeName,locName]);
       end;
     end;
     locProp.ReadAccessorName := 'F' + locProp.Name;
@@ -1052,18 +1240,18 @@ var
     end else begin
       locMaxOccur := 1;
       locMaxOccurUnbounded := False;
-      locPartCursor := CreateCursorOn(locAttCursor.Clone() as IObjectCursor,ParseFilter(Format('%s = %s',[s_NODE_NAME,QuotedStr(s_maxOccurs)]),TDOMNodeRttiExposer));
-      locPartCursor.Reset();
-      if locPartCursor.MoveNext() then begin
-        locStrBuffer := (locPartCursor.GetCurrent() as TDOMNodeRttiExposer).NodeValue;
-        if AnsiSameText(locStrBuffer,s_unbounded) then begin
-          locMaxOccurUnbounded := True;
-        end else begin
-          if not TryStrToInt(locStrBuffer,locMaxOccur) then
-            raise EXsdParserException.CreateFmt(SERR_InvalidMaxOccursValue,[FTypeName,locName]);
-          if ( locMinOccur < 0 ) then
-            raise EXsdParserException.CreateFmt(SERR_InvalidMaxOccursValue,[FTypeName,locName]);
-        end;
+    end;
+    locPartCursor := CreateCursorOn(locAttCursor.Clone() as IObjectCursor,ParseFilter(Format('%s = %s',[s_NODE_NAME,QuotedStr(s_maxOccurs)]),TDOMNodeRttiExposer));
+    locPartCursor.Reset();
+    if locPartCursor.MoveNext() then begin
+      locStrBuffer := (locPartCursor.GetCurrent() as TDOMNodeRttiExposer).NodeValue;
+      if AnsiSameText(locStrBuffer,s_unbounded) then begin
+        locMaxOccurUnbounded := True;
+      end else begin
+        if not TryStrToInt(locStrBuffer,locMaxOccur) then
+          raise EXsdParserException.CreateFmt(SERR_InvalidMaxOccursValue,[FTypeName,locName]);
+        if ( locMinOccur < 0 ) then
+          raise EXsdParserException.CreateFmt(SERR_InvalidMaxOccursValue,[FTypeName,locName]);
       end;
     end;
     isArrayDef := locMaxOccurUnbounded or ( locMaxOccur > 1 );
@@ -1191,7 +1379,7 @@ var
   end;
 
 var
-  eltCrs, eltAttCrs : IObjectCursor;
+  eltCrs, eltAttCrs, grpCrs, attGrpCrs : IObjectCursor;
   internalName : string;
   hasInternalName : Boolean;
   arrayDef : TPasArrayType;
@@ -1207,7 +1395,7 @@ var
   locTempNode : TDOMNode;
 begin
   ExtractBaseType();
-  eltCrs := ExtractElementCursor(nil,eltAttCrs,locAnyNode,locAnyAttNode);
+  eltCrs := ExtractElementCursor(nil,eltAttCrs,grpCrs,attGrpCrs,locAnyNode,locAnyAttNode);
 
   internalName := ExtractIdentifier(ATypeName);
   hasInternalName := IsReservedKeyWord(internalName) or
@@ -1236,7 +1424,9 @@ begin
         end;
         locDefaultAncestorUsed := False;
         if ( classDef.AncestorType = nil ) then begin
-          if IsHeaderBlock() then begin
+          if FMixed then begin
+            classDef.AncestorType := FSymbols.FindElementInModule('TStringBufferRemotable',FSymbols.FindModule('base_service_intf') as TPasModule) as TPasType
+          end else if IsHeaderBlock() then begin
             classDef.AncestorType := FSymbols.FindElementInModule('THeaderBlock',FSymbols.FindModule('base_service_intf') as TPasModule) as TPasType
           end else if IsSimpleContentHeaderBlock() then begin
             classDef.AncestorType := FSymbols.FindElementInModule('TSimpleContentHeaderBlock',FSymbols.FindModule('base_service_intf') as TPasModule) as TPasType
@@ -1267,6 +1457,8 @@ begin
             end;
           end;
           ParseElementsAndAttributes(eltCrs,eltAttCrs,locBoundInfos);
+          ParseGroups(classDef,grpCrs);
+          ParseGroups(classDef,attGrpCrs);
           if ( arrayItems.GetCount() > 0 ) then begin
             if ( arrayItems.GetCount() = 1 ) and locDefaultAncestorUsed and
                ( GetElementCount(classDef.Members,TPasProperty) = 1 )
@@ -1586,12 +1778,22 @@ function TComplexTypeParser.Parse() : TPasType;
 var
   locSym : TPasElement;
   locContinue : Boolean;
+  locTagName : string;
 begin
-  if not AnsiSameText(ExtractNameFromQName(FTypeNode.NodeName),s_complexType) then
+  locTagName := ExtractNameFromQName(FTypeNode.NodeName);
+  if (locTagName = s_complexType) then
+    FKind := ctkComplexType
+  else if (locTagName = s_group) then
+    FKind := ctkGroup
+  else if (locTagName = s_attributeGroup) then
+    FKind := ctkAttributeGroup
+  else
     raise EXsdParserAssertException.CreateFmt(SERR_ExpectedButFound,[s_complexType,ExtractNameFromQName(FTypeNode.NodeName)]);
   Result := nil;
   CreateNodeCursors();
   ExtractTypeName();
+  if (FKind = ctkComplexType) then
+    ExtractMixedStatus();
   locContinue := True;
   locSym := FSymbols.FindElement(FTypeName);
   if Assigned(locSym) then begin
@@ -1604,10 +1806,10 @@ begin
   end;
   if locContinue then begin
     ExtractContentType();
-    if IsStrEmpty(FContentType) then begin
+    if IsStrEmpty(FContentType) and (FKind = ctkComplexType) then begin
       Result := ParseEmptyContent(FTypeName);
     end else begin
-      if AnsiSameText(FContentType,s_complexContent) then
+      if (FContentType = s_complexContent) or (FKind in [ctkGroup,ctkAttributeGroup]) then
         Result := ParseComplexContent(FTypeName)
       else
         Result := ParseSimpleContent(FTypeName);
@@ -1615,6 +1817,8 @@ begin
     if ( Result <> nil ) then begin
       if ( IsEmbeddedType(Result) <> FEmbededDef ) then
         SetAsEmbeddedType(Result,FEmbededDef);
+      if (FKind in [ctkGroup,ctkAttributeGroup]) then
+        SetAsGroupType(Result,True);
     end;
 {$IFDEF WST_HANDLE_DOC}
     if ( Result <> nil ) then

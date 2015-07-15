@@ -21,6 +21,7 @@ uses
 
 const
   sEMBEDDED_TYPE = '_E_T_';
+  sIS_GROUP      = '_IS_GROUP_';
   sEXTERNAL_NAME = '_E_N_';
   sATTRIBUTE = '_ATTRIBUTE_';
   sARRAY_ITEM_NAME = 'ARRAY_ITEM_NAME';
@@ -491,6 +492,7 @@ begin
       Result.InterfaceSection := TInterfaceSection(AContainer.CreateElement(TInterfaceSection,'',Result,visDefault,'',0));
       AddSystemSymbol(Result,AContainer,AContainer.XsdStringMaping);
       AddClassDef(Result,'TBaseRemotable','',TPasNativeClassType);
+        AddClassDef(Result,'TStringBufferRemotable','TBaseRemotable',TPasNativeClassType);
         AContainer.RegisterExternalAlias(AddClassDef(Result,'anyType_Type','TBaseRemotable',TPasNativeClassType),'anyType');
         AddClassDef(Result,'TAbstractSimpleRemotable','TBaseRemotable',TPasNativeClassType);
           AContainer.RegisterExternalAlias(AddClassDef(Result,'schema_Type','TAbstractSimpleRemotable'),'schema');

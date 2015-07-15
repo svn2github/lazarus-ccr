@@ -26,6 +26,8 @@ const
   s_array                      : WideString = 'array';
   s_arrayType                  : WideString = 'arrayType';
   s_attribute                  : WideString = 'attribute';
+  s_attributeFormDefault                    = 'attributeFormDefault';
+  s_attributeGroup                          = 'attributeGroup';
   s_base                       : WideString = 'base';
   s_binding                    : WideString = 'binding';
   s_body                       : WideString = 'body';
@@ -38,9 +40,11 @@ const
   s_document                   : WideString = 'document';
   s_documentation                           = 'documentation';
   s_element                    : WideString = 'element';
+  s_elementFormDefault                      = 'elementFormDefault';
   s_enumeration                : WideString = 'enumeration';
   s_extension                  : WideString = 'extension';
   s_guid                       : WideString = 'GUID';
+  s_group                                   = 'group';
   s_import                                  = 'import';
   s_include                                 = 'include';
   s_input                      : WideString = 'input';
@@ -50,6 +54,7 @@ const
   s_message                    : WideString = 'message';
   s_maxOccurs                  : WideString = 'maxOccurs';
   s_minOccurs                  : WideString = 'minOccurs';
+  s_mixed                                   = 'mixed';
   s_name                       : WideString = 'name';
   s_namespace                               = 'namespace';
   s_operation                               = 'operation';
@@ -61,6 +66,8 @@ const
   s_portType                                = 'portType';
   s_processContents                         = 'processContents';
   s_prohibited                              = 'prohibited';
+  s_qualified                               = 'qualified';
+  s_unqualified                             = 'unqualified';
 
   s_ref                        : WideString = 'ref';
   s_required                   : WideString = 'required';

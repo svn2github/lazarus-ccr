@@ -81,6 +81,7 @@ type
             ANode  : TDOMNode;
       const ASoapBindingStyle : string
     ) : TPasProcedure;
+    function FindParser(const ANamespace : string) : IXsdPaser;
     function GetParser(const ANamespace : string) : IXsdPaser;
     function ParseType(
       const AName : string; 
@@ -913,6 +914,27 @@ begin
   Result := locMthd;
 end;
 
+function TWsdlParser.FindParser(const ANamespace: string): IXsdPaser;
+var
+  i : Integer;
+  p, p1 : IXsdPaser;
+begin
+  Result := nil;
+  i := FXsdParsers.IndexOf(ANamespace);
+  if ( i >= 0 ) then begin
+    Result := (FXsdParsers.Objects[i] as TIntfObjectRef).Intf as IXsdPaser;
+  end else begin
+    for i := 0 to Pred(FXsdParsers.Count) do begin
+      p := (FXsdParsers.Objects[i] as TIntfObjectRef).Intf as IXsdPaser;
+      p1 := p.FindParser(ANamespace);
+      if (p1 <> nil) then begin
+        Result := p1;
+        Break;
+      end;
+    end;
+  end;
+end;
+
 procedure TWsdlParser.ParsePort(ANode: TDOMNode);
 
   function FindBindingNode(const AName : WideString):TDOMNode;
@@ -1467,24 +1489,8 @@ begin
 end;
 
 function TWsdlParser.GetParser(const ANamespace: string): IXsdPaser;
-var
-  i : Integer;
-  p, p1 : IXsdPaser;
 begin
-  Result := nil;
-  i := FXsdParsers.IndexOf(ANamespace); 
-  if ( i >= 0 ) then begin
-    Result := (FXsdParsers.Objects[i] as TIntfObjectRef).Intf as IXsdPaser; 
-  end else begin
-    for i := 0 to Pred(FXsdParsers.Count) do begin
-      p := (FXsdParsers.Objects[i] as TIntfObjectRef).Intf as IXsdPaser;
-      p1 := p.FindParser(ANamespace);
-      if (p1 <> nil) then begin
-        Result := p1;
-        Break;
-      end;
-    end;
-  end;
+  Result := FindParser(ANamespace);
   if (Result = nil) then
     raise EXsdParserAssertException.CreateFmt('Unable to find the parser, namespace : "%s".',[ANamespace]);
 end;

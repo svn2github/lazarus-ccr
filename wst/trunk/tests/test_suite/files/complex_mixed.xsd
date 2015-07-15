@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <xsd:schema xmlns:n="urn:wst-test" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  targetNamespace="urn:wst-test">
+    
+    <xsd:complexType name="TSampleType"  mixed="true">
+	    <xsd:sequence>
+		    <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+	    </xsd:sequence>
+    </xsd:complexType>
+        
+</xsd:schema>

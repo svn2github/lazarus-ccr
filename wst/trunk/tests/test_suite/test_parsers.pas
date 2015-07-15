@@ -56,9 +56,24 @@ type
     function LoadComplexType_Class_Choice2_Schema() : TwstPasTreeContainer;virtual;abstract;
     function LoadComplexType_Class_Choice3_Schema() : TwstPasTreeContainer;virtual;abstract;
     function LoadComplexType_Class_Choice4_Schema() : TwstPasTreeContainer;virtual;abstract;
+    function LoadComplexType_Class_SameNameOfElementAndAttributeSchema() : TwstPasTreeContainer;virtual;abstract;
+    function LoadComplexType_Class_Group() : TwstPasTreeContainer;virtual;abstract;
+    function LoadComplexType_Class_Group2() : TwstPasTreeContainer;virtual;abstract;
+    function LoadComplexType_Class_Group3() : TwstPasTreeContainer;virtual;abstract;
+    function LoadComplexType_Class_Group4() : TwstPasTreeContainer;virtual;abstract;
+    function LoadComplexType_Class_Group5() : TwstPasTreeContainer;virtual;abstract;
+    function LoadComplexType_Class_Group6() : TwstPasTreeContainer;virtual;abstract;
+    function LoadComplexType_Class_Group7() : TwstPasTreeContainer;virtual;abstract;
+    function LoadComplexType_Class_AttGroup() : TwstPasTreeContainer;virtual;abstract;
+    function LoadComplexType_Class_AttGroup2() : TwstPasTreeContainer;virtual;abstract;
+    function LoadComplexType_Class_AttGroup3() : TwstPasTreeContainer;virtual;abstract;
+    function LoadComplexType_Class_AttGroup4() : TwstPasTreeContainer;virtual;abstract;
+    function LoadComplexType_Class_AttGroup5() : TwstPasTreeContainer;virtual;abstract;
     
     function LoadComplexType_Record_Schema() : TwstPasTreeContainer;virtual;abstract;
     function LoadComplexType_Record_Embedded_Schema() : TwstPasTreeContainer;virtual;abstract;
+    function LoadComplexType_Mixed() : TwstPasTreeContainer;virtual;abstract;
+    function LoadComplexType_Mixed2() : TwstPasTreeContainer;virtual;abstract;
     
     function LoadComplexType_ArraySequence_Schema() : TwstPasTreeContainer;virtual;abstract;
     function LoadComplexType_ArraySequence_ItemName_Schema() : TwstPasTreeContainer;virtual;abstract;
@@ -87,6 +102,10 @@ type
     function load_schema_case_sensitive() : TwstPasTreeContainer;virtual;abstract;
     function load_schema_case_sensitive2() : TwstPasTreeContainer;virtual;abstract;
     function load_schema_case_sensitive_import() : TwstPasTreeContainer;virtual;abstract;
+    function load_schema_default_elt_att_form() : TwstPasTreeContainer;virtual;abstract;
+    function load_schema_default_elt_qualified_form() : TwstPasTreeContainer;virtual;abstract;
+    function load_schema_default_att_unqualified_form() : TwstPasTreeContainer;virtual;abstract;
+    function load_schema_default_elt_att_form_present() : TwstPasTreeContainer;virtual;abstract;
 
     function load_global_attribute() : TwstPasTreeContainer;virtual;abstract;
   published
@@ -112,9 +131,24 @@ type
     procedure ComplexType_Class_Choice2();
     procedure ComplexType_Class_Choice3();
     procedure ComplexType_Class_Choice4();
+    procedure ComplexType_Class_SameNameOfElementAndAttributeSchema();
+    procedure ComplexType_Class_Group();
+    procedure ComplexType_Class_Group_use();
+    procedure ComplexType_Class_Group_use_forwarded();
+    procedure ComplexType_Class_Group_multi_use();
+    procedure ComplexType_Class_Group_use_forwarded_type();
+    procedure ComplexType_Class_Group_use_array();
+    procedure ComplexType_Class_Group_use_array_choice();
+    procedure ComplexType_Class_AttGroup();
+    procedure ComplexType_Class_AttGroup_use();
+    procedure ComplexType_Class_AttGroup_use_forwarded();
+    procedure ComplexType_Class_AttGroup_multi_use();
+    procedure ComplexType_Class_AttGroup_use_forwarded_type();
 
     procedure ComplexType_Record();
     procedure ComplexType_Record_Embedded();
+    procedure ComplexType_Mixed();
+    procedure ComplexType_Mixed2();
 
     procedure ComplexType_ArraySequence();
     procedure ComplexType_ArraySequence_ItemName_Schema();
@@ -137,6 +171,10 @@ type
     procedure schema_include_fail_namespace();
     procedure schema_include_circular1();
     procedure schema_include_circular2();
+    procedure schema_default_elt_att_form();
+    procedure schema_default_elt_qualified_form();
+    procedure schema_default_att_unqualified_form();
+    procedure schema_default_elt_att_form_present();
 
     procedure case_sensitive();
     procedure case_sensitive2();
@@ -169,9 +207,24 @@ type
     function LoadComplexType_Class_Choice2_Schema() : TwstPasTreeContainer;override;
     function LoadComplexType_Class_Choice3_Schema() : TwstPasTreeContainer;override;
     function LoadComplexType_Class_Choice4_Schema() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_SameNameOfElementAndAttributeSchema() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_Group() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_Group2() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_Group3() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_Group4() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_Group5() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_Group6() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_Group7() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_AttGroup() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_AttGroup2() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_AttGroup3() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_AttGroup4() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_AttGroup5() : TwstPasTreeContainer;override;
 
     function LoadComplexType_Record_Schema() : TwstPasTreeContainer;override;
     function LoadComplexType_Record_Embedded_Schema() : TwstPasTreeContainer;override;
+    function LoadComplexType_Mixed() : TwstPasTreeContainer;override;
+    function LoadComplexType_Mixed2() : TwstPasTreeContainer;override;
 
     function LoadComplexType_ArraySequence_Schema() : TwstPasTreeContainer;override;
     function LoadComplexType_ArraySequence_ItemName_Schema() : TwstPasTreeContainer; override;
@@ -200,6 +253,10 @@ type
     function load_schema_case_sensitive() : TwstPasTreeContainer;override;
     function load_schema_case_sensitive2() : TwstPasTreeContainer;override;
     function load_schema_case_sensitive_import() : TwstPasTreeContainer;override;
+    function load_schema_default_elt_att_form() : TwstPasTreeContainer;override;
+    function load_schema_default_elt_qualified_form() : TwstPasTreeContainer;override;
+    function load_schema_default_att_unqualified_form() : TwstPasTreeContainer;override;
+    function load_schema_default_elt_att_form_present() : TwstPasTreeContainer;override;
 
     function load_global_attribute() : TwstPasTreeContainer;override;
   end;
@@ -228,9 +285,24 @@ type
     function LoadComplexType_Class_Choice2_Schema() : TwstPasTreeContainer;override;
     function LoadComplexType_Class_Choice3_Schema() : TwstPasTreeContainer;override;
     function LoadComplexType_Class_Choice4_Schema() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_SameNameOfElementAndAttributeSchema() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_Group() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_Group2() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_Group3() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_Group4() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_Group5() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_Group6() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_Group7() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_AttGroup() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_AttGroup2() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_AttGroup3() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_AttGroup4() : TwstPasTreeContainer;override;
+    function LoadComplexType_Class_AttGroup5() : TwstPasTreeContainer;override;
 
     function LoadComplexType_Record_Schema() : TwstPasTreeContainer;override;
     function LoadComplexType_Record_Embedded_Schema() : TwstPasTreeContainer;override;
+    function LoadComplexType_Mixed() : TwstPasTreeContainer;override;
+    function LoadComplexType_Mixed2() : TwstPasTreeContainer;override;
     
     function LoadComplexType_ArraySequence_Schema() : TwstPasTreeContainer;override;
     function LoadComplexType_ArraySequence_ItemName_Schema() : TwstPasTreeContainer; override;
@@ -259,6 +331,10 @@ type
     function load_schema_case_sensitive() : TwstPasTreeContainer;override;
     function load_schema_case_sensitive2() : TwstPasTreeContainer;override;
     function load_schema_case_sensitive_import() : TwstPasTreeContainer;override;
+    function load_schema_default_elt_att_form() : TwstPasTreeContainer;override;
+    function load_schema_default_elt_qualified_form() : TwstPasTreeContainer;override;
+    function load_schema_default_att_unqualified_form() : TwstPasTreeContainer;override;
+    function load_schema_default_elt_att_form_present() : TwstPasTreeContainer;override;
 
     function load_global_attribute() : TwstPasTreeContainer;override;
   published
@@ -1284,6 +1360,1072 @@ begin
   end;
 end;
 
+procedure TTest_CustomXsdParser.ComplexType_Class_SameNameOfElementAndAttributeSchema();
+var
+  tr : TwstPasTreeContainer;
+  clsType : TPasClassType;
+
+  procedure CheckProperty(
+    const AName,ATypeName : string; const AFieldType : TPropertyType;
+    const AExternalName : string = ''
+  );
+  var
+    prp : TPasProperty;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name);
+      if IsStrEmpty(AExternalName) then
+        CheckEquals(AName,tr.GetExternalName(prp))
+      else
+        CheckEquals(AExternalName,tr.GetExternalName(prp));
+      CheckNotNull(prp.VarType);
+      CheckEquals(ATypeName,tr.GetExternalName(prp.VarType));
+      CheckEquals(PropertyType_Att[AFieldType],tr.IsAttributeProperty(prp));
+  end;
+
+var
+  mdl : TPasModule;
+  ls : TList2;
+  elt : TPasElement;
+  i : Integer;
+  prpLs : TList;
+begin
+  tr := nil;
+  prpLs := TList.Create();
+  try
+    tr := LoadComplexType_Class_SameNameOfElementAndAttributeSchema();
+
+    mdl := tr.FindModule('complex_class_same_name_elt_att');
+    CheckNotNull(mdl);
+    CheckEquals('complex_class_same_name_elt_att',mdl.Name);
+    CheckEquals(x_targetNamespace,tr.GetExternalName(mdl));
+    ls := mdl.InterfaceSection.Declarations;
+    CheckEquals(1,ls.Count);
+    elt := tr.FindElement(x_complexType_SampleClassType);
+      CheckNotNull(elt,x_complexType_SampleClassType);
+      CheckEquals(x_complexType_SampleClassType,elt.Name);
+      CheckEquals(x_complexType_SampleClassType,tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(2,prpLs.Count);
+        CheckProperty('SomeField','int',ptField);
+        CheckProperty('SomeFieldAtt','string',ptAttribute,'SomeField');
+  finally
+    FreeAndNil(prpLs);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.ComplexType_Class_Group();
+var
+  tr : TwstPasTreeContainer;
+  clsType : TPasClassType;
+
+  procedure CheckProperty(const AName,ATypeName : string; const AFieldType : TPropertyType);
+  var
+    prp : TPasProperty;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name);
+      CheckEquals(AName,tr.GetExternalName(prp));
+      CheckNotNull(prp.VarType);
+      CheckEquals(ATypeName,tr.GetExternalName(prp.VarType));
+      CheckEquals(PropertyType_Att[AFieldType],tr.IsAttributeProperty(prp));
+  end;
+
+var
+  mdl : TPasModule;
+  ls : TList2;
+  elt : TPasElement;
+  i : Integer;
+  prpLs : TList;
+begin
+  tr := nil;
+  prpLs := TList.Create();
+  try
+    tr := LoadComplexType_Class_Group();
+
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    ls := mdl.InterfaceSection.Declarations;
+    CheckEquals(2,ls.Count,'Declarations.Count');
+    elt := tr.FindElement('TClassSampleType');
+      CheckNotNull(elt,'TClassSampleType');
+      CheckEquals('TClassSampleType',elt.Name);
+      CheckEquals('TClassSampleType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      CheckFalse(tr.Properties.HasValue(elt,sIS_GROUP),'TClassSampleType: '+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(2,prpLs.Count);
+        CheckProperty(x_intField,'int',ptField);
+        CheckProperty(x_strField,'string',ptAttribute);
+
+    elt := tr.FindElement('TContactGroupType');
+      CheckNotNull(elt,'TContactGroupType');
+      CheckEquals('TContactGroupType',elt.Name);
+      CheckEquals('TContactGroupType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      Check((tr.Properties.GetValue(elt,sIS_GROUP)='1'),'TContactGroupType'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(3,prpLs.Count);
+        CheckProperty('firstName','string',ptField);
+        CheckProperty('lastName','string',ptField);
+        CheckProperty('Age','int',ptField);
+  finally
+    FreeAndNil(prpLs);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.ComplexType_Class_Group_use();
+var
+  tr : TwstPasTreeContainer;
+  clsType : TPasClassType;
+
+  procedure CheckProperty(const AName,ATypeName : string; const AFieldType : TPropertyType);
+  var
+    prp : TPasProperty;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name);
+      CheckEquals(AName,tr.GetExternalName(prp));
+      CheckNotNull(prp.VarType);
+      CheckEquals(ATypeName,tr.GetExternalName(prp.VarType));
+      CheckEquals(PropertyType_Att[AFieldType],tr.IsAttributeProperty(prp));
+  end;
+
+var
+  mdl : TPasModule;
+  ls : TList2;
+  elt : TPasElement;
+  i : Integer;
+  prpLs : TList;
+begin
+  tr := nil;
+  prpLs := TList.Create();
+  try
+    tr := LoadComplexType_Class_Group2();
+
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    ls := mdl.InterfaceSection.Declarations;
+    CheckEquals(2,ls.Count,'Declarations.Count');
+
+    elt := tr.FindElement('TContactGroupType');
+      CheckNotNull(elt,'TContactGroupType');
+      CheckEquals('TContactGroupType',elt.Name);
+      CheckEquals('TContactGroupType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      Check((tr.Properties.GetValue(elt,sIS_GROUP)='1'),'TContactGroupType'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(3,prpLs.Count);
+        CheckProperty('firstName','string',ptField);
+        CheckProperty('lastName','string',ptField);
+        CheckProperty('Age','int',ptField);
+
+    elt := tr.FindElement('TClassSampleType');
+      CheckNotNull(elt,'TClassSampleType');
+      CheckEquals('TClassSampleType',elt.Name);
+      CheckEquals('TClassSampleType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      CheckFalse(tr.Properties.HasValue(elt,sIS_GROUP),'TClassSampleType: '+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(5,prpLs.Count);
+        CheckProperty(x_intField,'int',ptField);
+        CheckProperty(x_strField,'string',ptAttribute);
+        CheckProperty('firstName','string',ptField);
+        CheckProperty('lastName','string',ptField);
+        CheckProperty('Age','int',ptField);
+  finally
+    FreeAndNil(prpLs);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.ComplexType_Class_Group_use_forwarded();
+var
+  tr : TwstPasTreeContainer;
+  clsType : TPasClassType;
+
+  procedure CheckProperty(const AName,ATypeName : string; const AFieldType : TPropertyType);
+  var
+    prp : TPasProperty;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name);
+      CheckEquals(AName,tr.GetExternalName(prp));
+      CheckNotNull(prp.VarType);
+      CheckEquals(ATypeName,tr.GetExternalName(prp.VarType));
+      CheckEquals(PropertyType_Att[AFieldType],tr.IsAttributeProperty(prp));
+  end;
+
+var
+  mdl : TPasModule;
+  ls : TList2;
+  elt : TPasElement;
+  i : Integer;
+  prpLs : TList;
+begin
+  tr := nil;
+  prpLs := TList.Create();
+  try
+    tr := LoadComplexType_Class_Group3();
+
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    ls := mdl.InterfaceSection.Declarations;
+    CheckEquals(2,ls.Count,'Declarations.Count');
+
+    elt := tr.FindElement('TContactGroupType');
+      CheckNotNull(elt,'TContactGroupType');
+      CheckEquals('TContactGroupType',elt.Name);
+      CheckEquals('TContactGroupType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      Check((tr.Properties.GetValue(elt,sIS_GROUP)='1'),'TContactGroupType'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(3,prpLs.Count);
+        CheckProperty('firstName','string',ptField);
+        CheckProperty('lastName','string',ptField);
+        CheckProperty('Age','int',ptField);
+
+    elt := tr.FindElement('TClassSampleType');
+      CheckNotNull(elt,'TClassSampleType');
+      CheckEquals('TClassSampleType',elt.Name);
+      CheckEquals('TClassSampleType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      CheckFalse(tr.Properties.HasValue(elt,sIS_GROUP),'TClassSampleType: '+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(5,prpLs.Count);
+        CheckProperty(x_intField,'int',ptField);
+        CheckProperty(x_strField,'string',ptAttribute);
+        CheckProperty('firstName','string',ptField);
+        CheckProperty('lastName','string',ptField);
+        CheckProperty('Age','int',ptField);
+  finally
+    FreeAndNil(prpLs);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.ComplexType_Class_Group_multi_use();
+var
+  tr : TwstPasTreeContainer;
+  clsType : TPasClassType;
+
+  procedure CheckProperty(const AName,ATypeName : string; const AFieldType : TPropertyType);
+  var
+    prp : TPasProperty;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name);
+      CheckEquals(AName,tr.GetExternalName(prp));
+      CheckNotNull(prp.VarType);
+      CheckEquals(ATypeName,tr.GetExternalName(prp.VarType));
+      CheckEquals(PropertyType_Att[AFieldType],tr.IsAttributeProperty(prp));
+  end;
+
+var
+  mdl : TPasModule;
+  ls : TList2;
+  elt : TPasElement;
+  i : Integer;
+  prpLs : TList;
+begin
+  tr := nil;
+  prpLs := TList.Create();
+  try
+    tr := LoadComplexType_Class_Group4();
+
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    ls := mdl.InterfaceSection.Declarations;
+    CheckEquals(3,ls.Count,'Declarations.Count');
+
+    elt := tr.FindElement('TContactGroupType');
+      CheckNotNull(elt,'TContactGroupType');
+      CheckEquals('TContactGroupType',elt.Name);
+      CheckEquals('TContactGroupType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      Check((tr.Properties.GetValue(elt,sIS_GROUP)='1'),'TContactGroupType'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(3,prpLs.Count);
+        CheckProperty('firstName','string',ptField);
+        CheckProperty('lastName','string',ptField);
+        CheckProperty('Age','int',ptField);
+
+    elt := tr.FindElement('TJobGroupType');
+      CheckNotNull(elt,'TJobGroupType');
+      CheckEquals('TJobGroupType',elt.Name);
+      CheckEquals('TJobGroupType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      Check((tr.Properties.GetValue(elt,sIS_GROUP)='1'),'TJobGroupType'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(2,prpLs.Count);
+        CheckProperty('jobPosition','string',ptField);
+        CheckProperty('employer','string',ptField);
+
+    elt := tr.FindElement('TClassSampleType');
+      CheckNotNull(elt,'TClassSampleType');
+      CheckEquals('TClassSampleType',elt.Name);
+      CheckEquals('TClassSampleType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      CheckFalse(tr.Properties.HasValue(elt,sIS_GROUP),'TClassSampleType: '+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals((2+3+2),prpLs.Count);
+        CheckProperty(x_intField,'int',ptField);
+        CheckProperty(x_strField,'string',ptAttribute);
+        CheckProperty('firstName','string',ptField);
+        CheckProperty('lastName','string',ptField);
+        CheckProperty('Age','int',ptField);
+        CheckProperty('jobPosition','string',ptField);
+        CheckProperty('employer','string',ptField);
+  finally
+    FreeAndNil(prpLs);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.ComplexType_Class_Group_use_forwarded_type();
+var
+  tr : TwstPasTreeContainer;
+  clsType : TPasClassType;
+
+  procedure CheckProperty(const AName,ATypeName : string; const AFieldType : TPropertyType);
+  var
+    prp : TPasProperty;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name);
+      CheckEquals(AName,tr.GetExternalName(prp));
+      CheckNotNull(prp.VarType);
+      CheckEquals(ATypeName,tr.GetExternalName(prp.VarType));
+      CheckEquals(PropertyType_Att[AFieldType],tr.IsAttributeProperty(prp));
+  end;
+
+var
+  mdl : TPasModule;
+  ls : TList2;
+  elt : TPasElement;
+  i : Integer;
+  prpLs : TList;
+begin
+  tr := nil;
+  prpLs := TList.Create();
+  try
+    tr := LoadComplexType_Class_Group5();
+
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    ls := mdl.InterfaceSection.Declarations;
+    CheckEquals(3,ls.Count,'Declarations.Count');
+
+    elt := tr.FindElement('TContactGroupType');
+      CheckNotNull(elt,'TContactGroupType');
+      CheckEquals('TContactGroupType',elt.Name);
+      CheckEquals('TContactGroupType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      Check((tr.Properties.GetValue(elt,sIS_GROUP)='1'),'TContactGroupType'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(3,prpLs.Count);
+        CheckProperty('firstName','string',ptField);
+        CheckProperty('lastName','string',ptField);
+        CheckProperty('occupation','TJobType',ptField);
+
+    elt := tr.FindElement('TJobType');
+      CheckNotNull(elt,'TJobType');
+      CheckEquals('TJobType',elt.Name);
+      CheckEquals('TJobType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      CheckFalse(tr.Properties.HasValue(elt,sIS_GROUP),'TJobType:'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(2,prpLs.Count);
+        CheckProperty('jobPosition','string',ptField);
+        CheckProperty('employer','string',ptField);
+
+    elt := tr.FindElement('TClassSampleType');
+      CheckNotNull(elt,'TClassSampleType');
+      CheckEquals('TClassSampleType',elt.Name);
+      CheckEquals('TClassSampleType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      CheckFalse(tr.Properties.HasValue(elt,sIS_GROUP),'TClassSampleType: '+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals((2+3),prpLs.Count);
+        CheckProperty(x_intField,'int',ptField);
+        CheckProperty(x_strField,'string',ptAttribute);
+        CheckProperty('firstName','string',ptField);
+        CheckProperty('lastName','string',ptField);
+        CheckProperty('occupation','TJobType',ptField);
+  finally
+    FreeAndNil(prpLs);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.ComplexType_Class_Group_use_array();
+var
+  tr : TwstPasTreeContainer;
+  clsType : TPasClassType;
+
+  procedure CheckProperty(const AName,ATypeName : string; const AFieldType : TPropertyType);
+  var
+    prp : TPasProperty;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name);
+      CheckEquals(AName,tr.GetExternalName(prp));
+      CheckNotNull(prp.VarType);
+      CheckEquals(ATypeName,tr.GetExternalName(prp.VarType));
+      CheckEquals(PropertyType_Att[AFieldType],tr.IsAttributeProperty(prp));
+  end;
+
+  procedure CheckArrayProperty(const AName,ATypeName : string);
+  var
+    prp : TPasProperty;
+    at : TPasArrayType;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name);
+      CheckEquals(AName,tr.GetExternalName(prp));
+      CheckNotNull(prp.VarType);
+      CheckIs(prp.VarType,TPasArrayType,AName + ' should be an array.');
+      at := prp.VarType as TPasArrayType;
+      CheckEquals(ATypeName,tr.GetExternalName(at.ElType));
+  end;
+
+var
+  mdl : TPasModule;
+  ls : TList2;
+  elt : TPasElement;
+  i : Integer;
+  prpLs : TList;
+begin
+  tr := nil;
+  prpLs := TList.Create();
+  try
+    tr := LoadComplexType_Class_Group6();
+
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    ls := mdl.InterfaceSection.Declarations;
+    CheckEquals(2+1{array def},ls.Count,'Declarations.Count');
+
+    elt := tr.FindElement('TContactGroupType');
+      CheckNotNull(elt,'TContactGroupType');
+      CheckEquals('TContactGroupType',elt.Name);
+      CheckEquals('TContactGroupType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      Check((tr.Properties.GetValue(elt,sIS_GROUP)='1'),'TContactGroupType'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(4,prpLs.Count);
+        CheckProperty('firstName','string',ptField);
+        CheckProperty('lastName','string',ptField);
+        CheckProperty('Age','int',ptField);
+        CheckArrayProperty('otherName','string');
+
+    elt := tr.FindElement('TClassSampleType');
+      CheckNotNull(elt,'TClassSampleType');
+      CheckEquals('TClassSampleType',elt.Name);
+      CheckEquals('TClassSampleType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      CheckFalse(tr.Properties.HasValue(elt,sIS_GROUP),'TClassSampleType: '+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals((2+4),prpLs.Count);
+        CheckProperty(x_intField,'int',ptField);
+        CheckProperty(x_strField,'string',ptAttribute);
+        CheckProperty('firstName','string',ptField);
+        CheckProperty('lastName','string',ptField);
+        CheckProperty('Age','int',ptField);
+        CheckArrayProperty('otherName','string');
+  finally
+    FreeAndNil(prpLs);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.ComplexType_Class_Group_use_array_choice();
+var
+  tr : TwstPasTreeContainer;
+  clsType : TPasClassType;
+
+  procedure CheckProperty(const AName,ATypeName : string; const AFieldType : TPropertyType);
+  var
+    prp : TPasProperty;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name);
+      CheckEquals(AName,tr.GetExternalName(prp));
+      CheckNotNull(prp.VarType);
+      CheckEquals(ATypeName,tr.GetExternalName(prp.VarType));
+      CheckEquals(PropertyType_Att[AFieldType],tr.IsAttributeProperty(prp));
+  end;
+
+  procedure CheckArrayProperty(const AName,ATypeName : string);
+  var
+    prp : TPasProperty;
+    at : TPasArrayType;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name);
+      CheckEquals(AName,tr.GetExternalName(prp));
+      CheckNotNull(prp.VarType);
+      CheckIs(prp.VarType,TPasArrayType,AName + ' should be an array.');
+      at := prp.VarType as TPasArrayType;
+      CheckEquals(ATypeName,tr.GetExternalName(at.ElType));
+  end;
+
+var
+  mdl : TPasModule;
+  ls : TList2;
+  elt : TPasElement;
+  i : Integer;
+  prpLs : TList;
+begin
+  tr := nil;
+  prpLs := TList.Create();
+  try
+    tr := LoadComplexType_Class_Group7();
+
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+
+    elt := tr.FindElement('TContactGroupType');
+      CheckNotNull(elt,'TContactGroupType');
+      CheckEquals('TContactGroupType',elt.Name);
+      CheckEquals('TContactGroupType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      Check((tr.Properties.GetValue(elt,sIS_GROUP)='1'),'TContactGroupType'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(3,prpLs.Count);
+        CheckArrayProperty('firstName','string');
+        CheckArrayProperty('lastName','string');
+        CheckArrayProperty('otherName','string');
+
+    elt := tr.FindElement('TClassSampleType');
+      CheckNotNull(elt,'TClassSampleType');
+      CheckEquals('TClassSampleType',elt.Name);
+      CheckEquals('TClassSampleType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      CheckFalse(tr.Properties.HasValue(elt,sIS_GROUP),'TClassSampleType: '+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals((2+3),prpLs.Count);
+        CheckProperty(x_intField,'int',ptField);
+        CheckProperty(x_strField,'string',ptAttribute);
+        CheckArrayProperty('firstName','string');
+        CheckArrayProperty('lastName','string');
+        CheckArrayProperty('otherName','string');
+  finally
+    FreeAndNil(prpLs);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.ComplexType_Class_AttGroup();
+var
+  tr : TwstPasTreeContainer;
+  clsType : TPasClassType;
+
+  procedure CheckProperty(const AName,ATypeName : string; const AFieldType : TPropertyType);
+  var
+    prp : TPasProperty;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name);
+      CheckEquals(AName,tr.GetExternalName(prp));
+      CheckNotNull(prp.VarType);
+      CheckEquals(ATypeName,tr.GetExternalName(prp.VarType));
+      CheckEquals(PropertyType_Att[AFieldType],tr.IsAttributeProperty(prp));
+  end;
+
+var
+  mdl : TPasModule;
+  ls : TList2;
+  elt : TPasElement;
+  i : Integer;
+  prpLs : TList;
+begin
+  tr := nil;
+  prpLs := TList.Create();
+  try
+    tr := LoadComplexType_Class_AttGroup();
+
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    ls := mdl.InterfaceSection.Declarations;
+    CheckEquals(2,ls.Count,'Declarations.Count');
+    elt := tr.FindElement('TClassSampleType');
+      CheckNotNull(elt,'TClassSampleType');
+      CheckEquals('TClassSampleType',elt.Name);
+      CheckEquals('TClassSampleType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      CheckFalse(tr.Properties.HasValue(elt,sIS_GROUP),'TClassSampleType: '+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(2,prpLs.Count);
+        CheckProperty(x_intField,'int',ptField);
+        CheckProperty(x_strField,'string',ptAttribute);
+
+    elt := tr.FindElement('TContactGroupType');
+      CheckNotNull(elt,'TContactGroupType');
+      CheckEquals('TContactGroupType',elt.Name);
+      CheckEquals('TContactGroupType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      Check((tr.Properties.GetValue(elt,sIS_GROUP)='1'),'TContactGroupType'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(3,prpLs.Count);
+        CheckProperty('firstName','string',ptAttribute);
+        CheckProperty('lastName','string',ptAttribute);
+        CheckProperty('Age','int',ptAttribute);
+  finally
+    FreeAndNil(prpLs);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.ComplexType_Class_AttGroup_use();
+var
+  tr : TwstPasTreeContainer;
+  clsType : TPasClassType;
+
+  procedure CheckProperty(const AName,ATypeName : string; const AFieldType : TPropertyType);
+  var
+    prp : TPasProperty;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name);
+      CheckEquals(AName,tr.GetExternalName(prp));
+      CheckNotNull(prp.VarType);
+      CheckEquals(ATypeName,tr.GetExternalName(prp.VarType));
+      CheckEquals(PropertyType_Att[AFieldType],tr.IsAttributeProperty(prp));
+  end;
+
+var
+  mdl : TPasModule;
+  ls : TList2;
+  elt : TPasElement;
+  i : Integer;
+  prpLs : TList;
+begin
+  tr := nil;
+  prpLs := TList.Create();
+  try
+    tr := LoadComplexType_Class_AttGroup2();
+
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    ls := mdl.InterfaceSection.Declarations;
+    CheckEquals(2,ls.Count,'Declarations.Count');
+
+    elt := tr.FindElement('TContactGroupType');
+      CheckNotNull(elt,'TContactGroupType');
+      CheckEquals('TContactGroupType',elt.Name);
+      CheckEquals('TContactGroupType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      Check((tr.Properties.GetValue(elt,sIS_GROUP)='1'),'TContactGroupType'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(3,prpLs.Count);
+        CheckProperty('firstName','string',ptAttribute);
+        CheckProperty('lastName','string',ptAttribute);
+        CheckProperty('Age','int',ptAttribute);
+
+    elt := tr.FindElement('TClassSampleType');
+      CheckNotNull(elt,'TClassSampleType');
+      CheckEquals('TClassSampleType',elt.Name);
+      CheckEquals('TClassSampleType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      CheckFalse(tr.Properties.HasValue(elt,sIS_GROUP),'TClassSampleType: '+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(5,prpLs.Count);
+        CheckProperty(x_intField,'int',ptField);
+        CheckProperty(x_strField,'string',ptAttribute);
+        CheckProperty('firstName','string',ptAttribute);
+        CheckProperty('lastName','string',ptAttribute);
+        CheckProperty('Age','int',ptAttribute);
+  finally
+    FreeAndNil(prpLs);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.ComplexType_Class_AttGroup_use_forwarded();
+var
+  tr : TwstPasTreeContainer;
+  clsType : TPasClassType;
+
+  procedure CheckProperty(const AName,ATypeName : string; const AFieldType : TPropertyType);
+  var
+    prp : TPasProperty;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name);
+      CheckEquals(AName,tr.GetExternalName(prp));
+      CheckNotNull(prp.VarType);
+      CheckEquals(ATypeName,tr.GetExternalName(prp.VarType));
+      CheckEquals(PropertyType_Att[AFieldType],tr.IsAttributeProperty(prp));
+  end;
+
+var
+  mdl : TPasModule;
+  ls : TList2;
+  elt : TPasElement;
+  i : Integer;
+  prpLs : TList;
+begin
+  tr := nil;
+  prpLs := TList.Create();
+  try
+    tr := LoadComplexType_Class_AttGroup3();
+
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    ls := mdl.InterfaceSection.Declarations;
+    CheckEquals(2,ls.Count,'Declarations.Count');
+
+    elt := tr.FindElement('TContactGroupType');
+      CheckNotNull(elt,'TContactGroupType');
+      CheckEquals('TContactGroupType',elt.Name);
+      CheckEquals('TContactGroupType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      Check((tr.Properties.GetValue(elt,sIS_GROUP)='1'),'TContactGroupType'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(3,prpLs.Count);
+        CheckProperty('firstName','string',ptAttribute);
+        CheckProperty('lastName','string',ptAttribute);
+        CheckProperty('Age','int',ptAttribute);
+
+    elt := tr.FindElement('TClassSampleType');
+      CheckNotNull(elt,'TClassSampleType');
+      CheckEquals('TClassSampleType',elt.Name);
+      CheckEquals('TClassSampleType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      CheckFalse(tr.Properties.HasValue(elt,sIS_GROUP),'TClassSampleType: '+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(5,prpLs.Count);
+        CheckProperty(x_intField,'int',ptField);
+        CheckProperty(x_strField,'string',ptAttribute);
+        CheckProperty('firstName','string',ptAttribute);
+        CheckProperty('lastName','string',ptAttribute);
+        CheckProperty('Age','int',ptAttribute);
+  finally
+    FreeAndNil(prpLs);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.ComplexType_Class_AttGroup_multi_use();
+var
+  tr : TwstPasTreeContainer;
+  clsType : TPasClassType;
+
+  procedure CheckProperty(const AName,ATypeName : string; const AFieldType : TPropertyType);
+  var
+    prp : TPasProperty;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name);
+      CheckEquals(AName,tr.GetExternalName(prp));
+      CheckNotNull(prp.VarType);
+      CheckEquals(ATypeName,tr.GetExternalName(prp.VarType));
+      CheckEquals(PropertyType_Att[AFieldType],tr.IsAttributeProperty(prp));
+  end;
+
+var
+  mdl : TPasModule;
+  ls : TList2;
+  elt : TPasElement;
+  i : Integer;
+  prpLs : TList;
+begin
+  tr := nil;
+  prpLs := TList.Create();
+  try
+    tr := LoadComplexType_Class_AttGroup4();
+
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    ls := mdl.InterfaceSection.Declarations;
+    CheckEquals(3,ls.Count,'Declarations.Count');
+
+    elt := tr.FindElement('TContactGroupType');
+      CheckNotNull(elt,'TContactGroupType');
+      CheckEquals('TContactGroupType',elt.Name);
+      CheckEquals('TContactGroupType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      Check((tr.Properties.GetValue(elt,sIS_GROUP)='1'),'TContactGroupType'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(3,prpLs.Count);
+        CheckProperty('firstName','string',ptAttribute);
+        CheckProperty('lastName','string',ptAttribute);
+        CheckProperty('Age','int',ptAttribute);
+
+    elt := tr.FindElement('TJobGroupType');
+      CheckNotNull(elt,'TJobGroupType');
+      CheckEquals('TJobGroupType',elt.Name);
+      CheckEquals('TJobGroupType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      Check((tr.Properties.GetValue(elt,sIS_GROUP)='1'),'TJobGroupType'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(2,prpLs.Count);
+        CheckProperty('jobPosition','string',ptAttribute);
+        CheckProperty('employer','string',ptAttribute);
+
+    elt := tr.FindElement('TClassSampleType');
+      CheckNotNull(elt,'TClassSampleType');
+      CheckEquals('TClassSampleType',elt.Name);
+      CheckEquals('TClassSampleType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      CheckFalse(tr.Properties.HasValue(elt,sIS_GROUP),'TClassSampleType: '+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals((2+3+2),prpLs.Count);
+        CheckProperty(x_intField,'int',ptField);
+        CheckProperty(x_strField,'string',ptAttribute);
+        CheckProperty('firstName','string',ptAttribute);
+        CheckProperty('lastName','string',ptAttribute);
+        CheckProperty('Age','int',ptAttribute);
+        CheckProperty('jobPosition','string',ptAttribute);
+        CheckProperty('employer','string',ptAttribute);
+  finally
+    FreeAndNil(prpLs);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.ComplexType_Class_AttGroup_use_forwarded_type();
+var
+  tr : TwstPasTreeContainer;
+  clsType : TPasClassType;
+
+  procedure CheckProperty(const AName,ATypeName : string; const AFieldType : TPropertyType);
+  var
+    prp : TPasProperty;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name);
+      CheckEquals(AName,tr.GetExternalName(prp));
+      CheckNotNull(prp.VarType);
+      CheckEquals(ATypeName,tr.GetExternalName(prp.VarType));
+      CheckEquals(PropertyType_Att[AFieldType],tr.IsAttributeProperty(prp));
+  end;
+
+var
+  mdl : TPasModule;
+  ls : TList2;
+  elt : TPasElement;
+  i : Integer;
+  prpLs : TList;
+begin
+  tr := nil;
+  prpLs := TList.Create();
+  try
+    tr := LoadComplexType_Class_AttGroup5();
+
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    ls := mdl.InterfaceSection.Declarations;
+    CheckEquals(3,ls.Count,'Declarations.Count');
+
+    elt := tr.FindElement('TContactGroupType');
+      CheckNotNull(elt,'TContactGroupType');
+      CheckEquals('TContactGroupType',elt.Name);
+      CheckEquals('TContactGroupType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      Check((tr.Properties.GetValue(elt,sIS_GROUP)='1'),'TContactGroupType'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(4,prpLs.Count);
+        CheckProperty('firstName','string',ptAttribute);
+        CheckProperty('lastName','string',ptAttribute);
+        CheckProperty('jobPosition','string',ptAttribute);
+        CheckProperty('employer','string',ptAttribute);
+
+    elt := tr.FindElement('TJobGroupType');
+      CheckNotNull(elt,'TJobGroupType');
+      CheckEquals('TJobGroupType',elt.Name);
+      CheckEquals('TJobGroupType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      CheckTrue((tr.Properties.GetValue(elt,sIS_GROUP)='1'),'TJobGroupType:'+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(2,prpLs.Count);
+        CheckProperty('jobPosition','string',ptAttribute);
+        CheckProperty('employer','string',ptAttribute);
+
+    elt := tr.FindElement('TClassSampleType');
+      CheckNotNull(elt,'TClassSampleType');
+      CheckEquals('TClassSampleType',elt.Name);
+      CheckEquals('TClassSampleType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      CheckFalse(tr.Properties.HasValue(elt,sIS_GROUP),'TClassSampleType: '+sIS_GROUP);
+      clsType := elt as TPasClassType;
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals((2+4),prpLs.Count);
+        CheckProperty(x_intField,'int',ptField);
+        CheckProperty(x_strField,'string',ptAttribute);
+        CheckProperty('firstName','string',ptAttribute);
+        CheckProperty('lastName','string',ptAttribute);
+        CheckProperty('jobPosition','string',ptAttribute);
+        CheckProperty('employer','string',ptAttribute);
+  finally
+    FreeAndNil(prpLs);
+    FreeAndNil(tr);
+  end;
+end;
+
 procedure TTest_CustomXsdParser.ComplexType_Record();
 var
   tr : TwstPasTreeContainer;
@@ -1458,6 +2600,88 @@ begin
         CheckProperty(x_strAtt,'string',ptAttribute);
         CheckProperty(x_intAtt,'int',ptAttribute);
 
+  finally
+    FreeAndNil(prpLs);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.ComplexType_Mixed();
+var
+  tr : TwstPasTreeContainer;
+
+var
+  mdl : TPasModule;
+  ls : TList2;
+  elt : TPasElement;
+  clsType : TPasClassType;
+  i : Integer;
+  prpLs : TList;
+begin
+  tr := nil;
+  prpLs := TList.Create();
+  try
+    tr := LoadComplexType_Mixed();
+
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    ls := mdl.InterfaceSection.Declarations;
+    CheckEquals(1,ls.Count,'Declarations.Count');
+    elt := tr.FindElement('TSampleType');
+      CheckNotNull(elt,'TSampleType');
+      CheckEquals('TSampleType',elt.Name);
+      CheckEquals('TSampleType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      clsType := elt as TPasClassType;
+      CheckNotNull(clsType.AncestorType,'AncestorType');
+      CheckEquals('TStringBufferRemotable',clsType.AncestorType.Name,'AncestorType.Name');
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(0,prpLs.Count,'Should not have properties.');
+  finally
+    FreeAndNil(prpLs);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.ComplexType_Mixed2();
+var
+  tr : TwstPasTreeContainer;
+
+var
+  mdl : TPasModule;
+  ls : TList2;
+  elt : TPasElement;
+  clsType : TPasClassType;
+  i : Integer;
+  prpLs : TList;
+begin
+  tr := nil;
+  prpLs := TList.Create();
+  try
+    tr := LoadComplexType_Mixed2();
+
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    ls := mdl.InterfaceSection.Declarations;
+    CheckEquals(1,ls.Count,'Declarations.Count');
+    elt := tr.FindElement('TSampleType');
+      CheckNotNull(elt,'TSampleType');
+      CheckEquals('TSampleType',elt.Name);
+      CheckEquals('TSampleType',tr.GetExternalName(elt));
+      CheckIs(elt,TPasClassType);
+      clsType := elt as TPasClassType;
+      CheckNotNull(clsType.AncestorType,'AncestorType');
+      CheckEquals('TStringBufferRemotable',clsType.AncestorType.Name,'AncestorType.Name');
+        prpLs.Clear();
+        for i := 0 to Pred(clsType.Members.Count) do begin
+          if TPasElement(clsType.Members[i]).InheritsFrom(TPasProperty) then
+            prpLs.Add(clsType.Members[i]);
+        end;
+      CheckEquals(0,prpLs.Count,'Should not have properties.');
   finally
     FreeAndNil(prpLs);
     FreeAndNil(tr);
@@ -2453,6 +3677,99 @@ begin
   end;  
 end;
 
+procedure TTest_CustomXsdParser.schema_default_elt_att_form();
+var
+  tr : TwstPasTreeContainer;
+  mdl : TPasModule;
+begin
+  tr := load_schema_default_elt_att_form();
+  try
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    CheckFalse(
+      tr.Properties.HasValue(mdl,s_elementFormDefault),
+      'Should not have '+s_elementFormDefault
+    );
+    CheckFalse(
+      tr.Properties.HasValue(mdl,s_attributeFormDefault),
+      'Should not have '+s_attributeFormDefault
+    );
+  finally
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.schema_default_elt_qualified_form();
+var
+  tr : TwstPasTreeContainer;
+  mdl : TPasModule;
+begin
+  tr := load_schema_default_elt_qualified_form();
+  try
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    CheckTrue(
+      tr.Properties.HasValue(mdl,s_elementFormDefault),
+      'Should have '+s_elementFormDefault
+    );
+    CheckEquals(s_qualified,tr.Properties.GetValue(mdl,s_elementFormDefault));
+    CheckFalse(
+      tr.Properties.HasValue(mdl,s_attributeFormDefault),
+      'Should not have '+s_attributeFormDefault
+    );
+  finally
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.schema_default_att_unqualified_form();
+var
+  tr : TwstPasTreeContainer;
+  mdl : TPasModule;
+begin
+  tr := load_schema_default_att_unqualified_form();
+  try
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    CheckTrue(
+      tr.Properties.HasValue(mdl,s_attributeFormDefault),
+      'Should have '+s_attributeFormDefault
+    );
+    CheckEquals(s_unqualified,tr.Properties.GetValue(mdl,s_attributeFormDefault));
+    CheckFalse(
+      tr.Properties.HasValue(mdl,s_elementFormDefault),
+      'Should not have '+s_elementFormDefault
+    );
+  finally
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdParser.schema_default_elt_att_form_present();
+var
+  tr : TwstPasTreeContainer;
+  mdl : TPasModule;
+begin
+  tr := load_schema_default_elt_att_form_present();
+  try
+    mdl := tr.FindModule(x_targetNamespace);
+    CheckNotNull(mdl);
+    CheckTrue(
+      tr.Properties.HasValue(mdl,s_attributeFormDefault),
+      'Should have '+s_attributeFormDefault
+    );
+    CheckEquals(s_unqualified,tr.Properties.GetValue(mdl,s_attributeFormDefault));
+
+    CheckTrue(
+      tr.Properties.HasValue(mdl,s_attributeFormDefault),
+      'Should have '+s_attributeFormDefault
+    );
+    CheckEquals(s_unqualified,tr.Properties.GetValue(mdl,s_attributeFormDefault));
+  finally
+    FreeAndNil(tr);
+  end;
+end;
+
 procedure TTest_CustomXsdParser.case_sensitive();
 var
   tr : TwstPasTreeContainer;
@@ -2842,6 +4159,16 @@ begin
   Result := ParseDoc(x_complexType_record_embedded);
 end;
 
+function TTest_XsdParser.LoadComplexType_Mixed() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_mixed');
+end;
+
+function TTest_XsdParser.LoadComplexType_Mixed2() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_mixed2');
+end;
+
 function TTest_XsdParser.LoadComplexType_ArraySequence_Schema(): TwstPasTreeContainer;
 begin
   Result := ParseDoc(x_complexType_array_sequence);
@@ -2957,6 +4284,26 @@ begin
   Result := ParseDoc('case_sensitive3',True);
 end;
 
+function TTest_XsdParser.load_schema_default_elt_att_form() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('schema_defaultelementform1');
+end;
+
+function TTest_XsdParser.load_schema_default_elt_qualified_form: TwstPasTreeContainer;
+begin
+  Result := ParseDoc('schema_defaultelementform2');
+end;
+
+function TTest_XsdParser.load_schema_default_att_unqualified_form: TwstPasTreeContainer;
+begin
+  Result := ParseDoc('schema_defaultelementform3');
+end;
+
+function TTest_XsdParser.load_schema_default_elt_att_form_present: TwstPasTreeContainer;
+begin
+  Result := ParseDoc('schema_defaultelementform4');
+end;
+
 function TTest_XsdParser.load_global_attribute() : TwstPasTreeContainer;
 begin
   Result := ParseDoc('global_attribute');
@@ -2995,6 +4342,71 @@ end;
 function TTest_XsdParser.LoadComplexType_Class_Choice4_Schema(): TwstPasTreeContainer;
 begin
   Result := ParseDoc('complex_class_choice4');
+end;
+
+function TTest_XsdParser.LoadComplexType_Class_SameNameOfElementAndAttributeSchema: TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_same_name_elt_att');
+end;
+
+function TTest_XsdParser.LoadComplexType_Class_Group: TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group');
+end;
+
+function TTest_XsdParser.LoadComplexType_Class_Group2() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group2');
+end;
+
+function TTest_XsdParser.LoadComplexType_Class_Group3() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group3');
+end;
+
+function TTest_XsdParser.LoadComplexType_Class_Group4() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group4');
+end;
+
+function TTest_XsdParser.LoadComplexType_Class_Group5() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group5');
+end;
+
+function TTest_XsdParser.LoadComplexType_Class_Group6() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group6');
+end;
+
+function TTest_XsdParser.LoadComplexType_Class_Group7() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group7');
+end;
+
+function TTest_XsdParser.LoadComplexType_Class_AttGroup() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group_att');
+end;
+
+function TTest_XsdParser.LoadComplexType_Class_AttGroup2() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group_att2');
+end;
+
+function TTest_XsdParser.LoadComplexType_Class_AttGroup3() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group_att3');
+end;
+
+function TTest_XsdParser.LoadComplexType_Class_AttGroup4() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group_att4');
+end;
+
+function TTest_XsdParser.LoadComplexType_Class_AttGroup5() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group_att5');
 end;
 
 { TTest_WsdlParser }
@@ -3089,6 +4501,71 @@ begin
   Result := ParseDoc('complex_class_choice4');
 end;
 
+function TTest_WsdlParser.LoadComplexType_Class_SameNameOfElementAndAttributeSchema: TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_same_name_elt_att');
+end;
+
+function TTest_WsdlParser.LoadComplexType_Class_Group(): TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group');
+end;
+
+function TTest_WsdlParser.LoadComplexType_Class_Group2() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group2');
+end;
+
+function TTest_WsdlParser.LoadComplexType_Class_Group3() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group3');
+end;
+
+function TTest_WsdlParser.LoadComplexType_Class_Group4() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group4');
+end;
+
+function TTest_WsdlParser.LoadComplexType_Class_Group5() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group5');
+end;
+
+function TTest_WsdlParser.LoadComplexType_Class_Group6() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group6');
+end;
+
+function TTest_WsdlParser.LoadComplexType_Class_Group7() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group7');
+end;
+
+function TTest_WsdlParser.LoadComplexType_Class_AttGroup() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group_att');
+end;
+
+function TTest_WsdlParser.LoadComplexType_Class_AttGroup2() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group_att2');
+end;
+
+function TTest_WsdlParser.LoadComplexType_Class_AttGroup3() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group_att3');
+end;
+
+function TTest_WsdlParser.LoadComplexType_Class_AttGroup4() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group_att4');
+end;
+
+function TTest_WsdlParser.LoadComplexType_Class_AttGroup5() : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_class_group_att5');
+end;
+
 function TTest_WsdlParser.LoadComplexType_Record_Schema(): TwstPasTreeContainer;
 begin
   Result := ParseDoc(x_complexType_record);
@@ -3097,6 +4574,16 @@ end;
 function TTest_WsdlParser.LoadComplexType_Record_Embedded_Schema(): TwstPasTreeContainer;
 begin
   Result := ParseDoc(x_complexType_record_embedded);
+end;
+
+function TTest_WsdlParser.LoadComplexType_Mixed(): TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_mixed');
+end;
+
+function TTest_WsdlParser.LoadComplexType_Mixed2(): TwstPasTreeContainer;
+begin
+  Result := ParseDoc('complex_mixed2');
 end;
 
 function TTest_WsdlParser.LoadComplexType_ArraySequence_Schema(): TwstPasTreeContainer;
@@ -3786,6 +5273,26 @@ end;
 function TTest_WsdlParser.load_schema_case_sensitive_import(): TwstPasTreeContainer;
 begin
   Result := ParseDoc('case_sensitive3',True);
+end;
+
+function TTest_WsdlParser.load_schema_default_elt_att_form: TwstPasTreeContainer;
+begin
+  Result := ParseDoc('schema_defaultelementform1');
+end;
+
+function TTest_WsdlParser.load_schema_default_elt_qualified_form: TwstPasTreeContainer;
+begin
+  Result := ParseDoc('schema_defaultelementform2');
+end;
+
+function TTest_WsdlParser.load_schema_default_att_unqualified_form: TwstPasTreeContainer;
+begin
+  Result := ParseDoc('schema_defaultelementform3');
+end;
+
+function TTest_WsdlParser.load_schema_default_elt_att_form_present: TwstPasTreeContainer;
+begin
+  Result := ParseDoc('schema_defaultelementform4');
 end;
 
 function TTest_WsdlParser.load_global_attribute() : TwstPasTreeContainer;

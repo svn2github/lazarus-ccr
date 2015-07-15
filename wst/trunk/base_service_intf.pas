@@ -288,11 +288,14 @@ type
       const ATypeInfo : PTypeInfo
     );virtual;abstract;
     function Equal(const ACompareTo : TBaseRemotable) : Boolean;virtual;
+    function wstHasValue() : Boolean;virtual;
   End;
 
   TAbstractSimpleRemotableClass = class of TAbstractSimpleRemotable;
-  TAbstractSimpleRemotable = class(TBaseRemotable)
-  end;
+
+  { TAbstractSimpleRemotable }
+
+  TAbstractSimpleRemotable = class(TBaseRemotable) end;
 
   { TStringBufferRemotable }
 
@@ -315,6 +318,7 @@ type
 
     procedure Assign(Source: TPersistent); override;
     function Equal(const ACompareTo : TBaseRemotable) : Boolean;override;
+    function wstHasValue() : Boolean;override;
     property Data : string read FData write FData;
   end;
 
@@ -345,6 +349,7 @@ type
 
     procedure Assign(Source: TPersistent); override;
     function Equal(const ACompareTo : TBaseRemotable) : Boolean;override;
+    function wstHasValue() : Boolean;override;
     procedure LoadFromStream(AStream : TStream);
     procedure LoadFromFile(const AFileName : string);
     procedure SaveToStream(AStream : TStream);
@@ -403,6 +408,7 @@ type
 
     procedure Assign(Source: TPersistent); override;
     function Equal(const ACompareTo : TBaseRemotable) : Boolean;override;
+    function wstHasValue() : Boolean;override;
 
     property AsDate : TDateTime index 0 read GetDate write SetDate;
     property AsUTCDate : TDateTime index 1 read GetDate write SetDate;
@@ -463,6 +469,7 @@ type
 
     procedure Assign(Source: TPersistent); override;
     function Equal(const ACompareTo : TBaseRemotable) : Boolean;override;
+    function wstHasValue() : Boolean;override;
     procedure Clear();
 
     class function Parse(const ABuffer : string) : TDurationRec;
@@ -509,6 +516,7 @@ type
 
     procedure Assign(Source: TPersistent); override;
     function Equal(const ACompareTo : TBaseRemotable) : Boolean;override;
+    function wstHasValue() : Boolean;override;
     procedure Clear();
 
     class function Parse(const ABuffer : string) : TTimeRec;
@@ -620,6 +628,7 @@ type
     class procedure SaveValue(AObject : TBaseRemotable; AStore : IFormatterBase);override;
     class procedure LoadValue(var AObject : TObject; AStore : IFormatterBase);override;
   public
+    function wstHasValue() : Boolean;override;
     property Value : Byte read FValue write FValue;
   end;
 
@@ -632,6 +641,7 @@ type
     class procedure SaveValue(AObject : TBaseRemotable; AStore : IFormatterBase);override;
     class procedure LoadValue(var AObject : TObject; AStore : IFormatterBase);override;
   public
+    function wstHasValue() : Boolean;override;
     property Value : ShortInt read FValue write FValue;
   end;
 
@@ -644,8 +654,11 @@ type
     class procedure SaveValue(AObject : TBaseRemotable; AStore : IFormatterBase);override;
     class procedure LoadValue(var AObject : TObject; AStore : IFormatterBase);override;
   public
+    function wstHasValue() : Boolean;override;
     property Value : SmallInt read FValue write FValue;
   end;
+
+  { TComplexInt16UContentRemotable }
 
   TComplexInt16UContentRemotable = class(TBaseComplexSimpleContentRemotable)
   private
@@ -654,6 +667,7 @@ type
     class procedure SaveValue(AObject : TBaseRemotable; AStore : IFormatterBase);override;
     class procedure LoadValue(var AObject : TObject; AStore : IFormatterBase);override;
   public
+    function wstHasValue() : Boolean;override;
     property Value : Word read FValue write FValue;
   end;
 
@@ -666,6 +680,7 @@ type
     class procedure SaveValue(AObject : TBaseRemotable; AStore : IFormatterBase);override;
     class procedure LoadValue(var AObject : TObject; AStore : IFormatterBase);override;
   public
+    function wstHasValue() : Boolean;override;
     property Value : LongInt read FValue write FValue;
   end;
 
@@ -678,6 +693,7 @@ type
     class procedure SaveValue(AObject : TBaseRemotable; AStore : IFormatterBase);override;
     class procedure LoadValue(var AObject : TObject; AStore : IFormatterBase);override;
   public
+    function wstHasValue() : Boolean;override;
     property Value : LongWord read FValue write FValue;
   end;
 
@@ -690,6 +706,7 @@ type
     class procedure SaveValue(AObject : TBaseRemotable; AStore : IFormatterBase);override;
     class procedure LoadValue(var AObject : TObject; AStore : IFormatterBase);override;
   public
+    function wstHasValue() : Boolean;override;
     property Value : Int64 read FValue write FValue;
   end;
 
@@ -702,6 +719,7 @@ type
     class procedure SaveValue(AObject : TBaseRemotable; AStore : IFormatterBase);override;
     class procedure LoadValue(var AObject : TObject; AStore : IFormatterBase);override;
   public
+    function wstHasValue() : Boolean;override;
     property Value : QWord read FValue write FValue;
   end;
 
@@ -714,6 +732,7 @@ type
     class procedure SaveValue(AObject : TBaseRemotable; AStore : IFormatterBase);override;
     class procedure LoadValue(var AObject : TObject; AStore : IFormatterBase);override;
   public
+    function wstHasValue() : Boolean;override;
     property Value : Extended read FValue write FValue;
   end;
 
@@ -726,6 +745,7 @@ type
     class procedure SaveValue(AObject : TBaseRemotable; AStore : IFormatterBase);override;
     class procedure LoadValue(var AObject : TObject; AStore : IFormatterBase);override;
   public
+    function wstHasValue() : Boolean;override;
     property Value : Double read FValue write FValue;
   end;
 
@@ -738,6 +758,7 @@ type
     class procedure SaveValue(AObject : TBaseRemotable; AStore : IFormatterBase);override;
     class procedure LoadValue(var AObject : TObject; AStore : IFormatterBase);override;
   public
+    function wstHasValue() : Boolean;override;
     property Value : Single read FValue write FValue;
   end;
 
@@ -750,6 +771,7 @@ type
     class procedure SaveValue(AObject : TBaseRemotable; AStore : IFormatterBase);override;
     class procedure LoadValue(var AObject : TObject; AStore : IFormatterBase);override;
   public
+    function wstHasValue() : Boolean;override;
     property Value : Currency read FValue write FValue;
   end;  
     
@@ -782,6 +804,7 @@ type
     class procedure SaveValue(AObject : TBaseRemotable; AStore : IFormatterBase);override;
     class procedure LoadValue(var AObject : TObject; AStore : IFormatterBase);override;
   public
+    function wstHasValue() : Boolean;override;
     property Value : string read FValue write FValue;
   end;
 
@@ -794,6 +817,7 @@ type
     class procedure SaveValue(AObject : TBaseRemotable; AStore : IFormatterBase);override;
     class procedure LoadValue(var AObject : TObject; AStore : IFormatterBase);override;
   public
+    function wstHasValue() : Boolean;override;
     property Value : Widestring read FValue write FValue;
   end;
 
@@ -807,6 +831,7 @@ type
     class procedure SaveValue(AObject : TBaseRemotable; AStore : IFormatterBase);override;
     class procedure LoadValue(var AObject : TObject; AStore : IFormatterBase);override;
   public
+    function wstHasValue() : Boolean;override;
     property Value : UnicodeString read FValue write FValue;
   end;
 {$ENDIF WST_UNICODESTRING}
@@ -825,6 +850,7 @@ type
   public
     procedure Assign(Source: TPersistent); override;
     function Equal(const ACompareTo : TBaseRemotable) : Boolean;override;
+    function wstHasValue() : Boolean;override;
     procedure LoadFromStream(AStream : TStream);
     procedure LoadFromFile(const AFileName : string);
     procedure LoadFromBuffer(const ABuffer; const ABufferLen : Integer);
@@ -1556,7 +1582,11 @@ type
     property TimeOut : PtrUInt read FTimeOut write FTimeOut;
   end;
 
-  TTypeRegistryItemOption = ( trioNonVisibleToMetadataService, trioNonQualifiedName );
+  TTypeRegistryItemOption = (
+    trioNonVisibleToMetadataService,
+    trioUnqualifiedElement, trioQualifiedElement,
+    trioUnqualifiedAttribute, trioQualifiedAttribute
+  );
   TTypeRegistryItemOptions = set of TTypeRegistryItemOption;
   TTypeRegistry = class;
   TTypeRegistryItem = class;
@@ -1639,6 +1669,7 @@ type
       const APropName : string;
       const AOptions : TTypeRegistryItemOptions
     ); virtual;
+    procedure AddOptions(const AOptions : TTypeRegistryItemOptions);
 
     procedure RegisterObject(const APropName : string; const AObject : TObject);
     function GetObject(const APropName : string) : TObject;
@@ -2006,7 +2037,6 @@ begin
       Result := pstOptional;
   end;
 end;
-
 {$ELSE}
 function IsStoredPropClass(AClass : TClass;PropInfo : PPropInfo) : TPropStoreType;
 {var
@@ -2060,6 +2090,11 @@ end;
 function TBaseRemotable.Equal(const ACompareTo : TBaseRemotable) : Boolean;
 begin
   Result := ( Self = ACompareTo );
+end;
+
+function TBaseRemotable.wstHasValue() : Boolean;
+begin
+  Result := True;
 end;
 
 { TBaseComplexRemotable }
@@ -3176,12 +3211,8 @@ begin
     Result := TPropertyItem(FProperties[i]);
 end;
 
-constructor TTypeRegistryItem.Create(
-        AOwner        : TTypeRegistry;
-        ANameSpace    : String;
-        ADataType     : PTypeInfo;
-  Const ADeclaredName : String
-);
+constructor TTypeRegistryItem.Create(AOwner: TTypeRegistry; ANameSpace: string;
+  ADataType: PTypeInfo; const ADeclaredName: string);
 begin
   FOwner := AOwner;
   FNameSpace := ANameSpace;
@@ -3316,6 +3347,13 @@ begin
     po := FindProperty(APropName,pntInternalName);
   end;
   po.FOptions := AOptions;
+end;
+
+procedure TTypeRegistryItem.AddOptions(
+  const AOptions: TTypeRegistryItemOptions
+);
+begin
+  FOptions := FOptions + AOptions;
 end;
 
 { TTypeRegistry }
@@ -5663,6 +5701,11 @@ begin
   (AObject as TComplexInt32SContentRemotable).Value := i;
 end;
 
+function TComplexInt32SContentRemotable.wstHasValue: Boolean;
+begin
+  Result := (FValue <> 0);
+end;
+
 { TComplexInt32UContentRemotable }
 
 class procedure TComplexInt32UContentRemotable.SaveValue(
@@ -5683,6 +5726,11 @@ begin
   i := 0;
   AStore.GetScopeInnerValue(TypeInfo(LongWord),i);
   (AObject as TComplexInt32UContentRemotable).Value := i;
+end;
+
+function TComplexInt32UContentRemotable.wstHasValue() : Boolean;
+begin
+  Result := (FValue <> 0);
 end;
 
 { TComplexInt16SContentRemotable }
@@ -5707,6 +5755,11 @@ begin
   (AObject as TComplexInt16SContentRemotable).Value := i;
 end;
 
+function TComplexInt16SContentRemotable.wstHasValue() : Boolean;
+begin
+  Result := (FValue <> 0);
+end;
+
 { TComplexInt16UContentRemotable }
 
 class procedure TComplexInt16UContentRemotable.SaveValue(
@@ -5727,6 +5780,11 @@ begin
   i := 0;
   AStore.GetScopeInnerValue(TypeInfo(Word),i);
   (AObject as TComplexInt16UContentRemotable).Value := i;
+end;
+
+function TComplexInt16UContentRemotable.wstHasValue: Boolean;
+begin
+  Result := (FValue <> 0);
 end;
 
 { TComplexFloatExtendedContentRemotable }
@@ -5751,6 +5809,11 @@ begin
   (AObject as TComplexFloatExtendedContentRemotable).Value := i;
 end;
 
+function TComplexFloatExtendedContentRemotable.wstHasValue: Boolean;
+begin
+  Result := (FValue <> 0);
+end;
+
 { TComplexFloatDoubleContentRemotable }
 
 class procedure TComplexFloatDoubleContentRemotable.SaveValue(
@@ -5771,6 +5834,11 @@ begin
   i := 0;
   AStore.GetScopeInnerValue(TypeInfo(Double),i);
   (AObject as TComplexFloatDoubleContentRemotable).Value := i;
+end;
+
+function TComplexFloatDoubleContentRemotable.wstHasValue: Boolean;
+begin
+  Result := (FValue <> 0);
 end;
 
 { TComplexStringContentRemotable }
@@ -5795,6 +5863,11 @@ begin
   (AObject as TComplexStringContentRemotable).Value := i;
 end;
 
+function TComplexStringContentRemotable.wstHasValue: Boolean;
+begin
+  Result := (FValue <> '');
+end;
+
 { TComplexWideStringContentRemotable }
 
 class procedure TComplexWideStringContentRemotable.SaveValue(
@@ -5815,6 +5888,11 @@ begin
   i := '';
   AStore.GetScopeInnerValue(TypeInfo(WideString),i);
   (AObject as TComplexWideStringContentRemotable).Value := i;
+end;
+
+function TComplexWideStringContentRemotable.wstHasValue() : Boolean;
+begin
+  Result := (FValue <> '');
 end;
 
 {$IFDEF WST_UNICODESTRING}
@@ -5838,6 +5916,11 @@ begin
   i := '';
   AStore.GetScopeInnerValue(TypeInfo(UnicodeString),i);
   (AObject as TComplexUnicodeStringContentRemotable).Value := i;
+end;
+
+function TComplexUnicodeStringContentRemotable.wstHasValue() : Boolean;
+begin
+  Result := (FValue <> '');
 end;
 {$ENDIF WST_UNICODESTRING}
 
@@ -5947,6 +6030,11 @@ begin
             );
 end;
 
+function TBaseDateRemotable.wstHasValue() : Boolean;
+begin
+  Result := (FDate.Date <> 0);
+end;
+
 function TBaseDateRemotable.GetDate(const AIndex : Integer) : TDateTime;
 begin
   Result := FDate.Date;
@@ -6039,6 +6127,11 @@ begin
   (AObject as TComplexInt8SContentRemotable).Value := i;
 end;
 
+function TComplexInt8SContentRemotable.wstHasValue() : Boolean;
+begin
+  Result := (FValue <> 0);
+end;
+
 { TComplexInt8UContentRemotable }
 
 class procedure TComplexInt8UContentRemotable.SaveValue(
@@ -6059,6 +6152,11 @@ begin
   i := 0;
   AStore.GetScopeInnerValue(TypeInfo(Byte),i);
   (AObject as TComplexInt8UContentRemotable).Value := i;
+end;
+
+function TComplexInt8UContentRemotable.wstHasValue() : Boolean;
+begin
+  Result := (FValue <> 0);
 end;
 
 { TComplexFloatSingleContentRemotable }
@@ -6083,6 +6181,11 @@ begin
   (AObject as TComplexFloatSingleContentRemotable).Value := i;
 end;
 
+function TComplexFloatSingleContentRemotable.wstHasValue() : Boolean;
+begin
+  Result := (FValue <> 0);
+end;
+
 { TComplexCurrencyContentRemotable }
 
 class procedure TComplexCurrencyContentRemotable.SaveValue(
@@ -6103,6 +6206,11 @@ begin
   i := 0;
   AStore.GetScopeInnerValue(TypeInfo(Currency),i);
   (AObject as TComplexCurrencyContentRemotable).Value := i;
+end;
+
+function TComplexCurrencyContentRemotable.wstHasValue() : Boolean;
+begin
+  Result := (FValue <> 0);
 end;
 
 { TComplexInt64SContentRemotable }
@@ -6127,6 +6235,11 @@ begin
   (AObject as TComplexInt64SContentRemotable).Value := i;
 end;
 
+function TComplexInt64SContentRemotable.wstHasValue() : Boolean;
+begin
+  Result := (FValue <> 0);
+end;
+
 { TComplexInt64UContentRemotable }
 
 class procedure TComplexInt64UContentRemotable.SaveValue(
@@ -6147,6 +6260,11 @@ begin
   i := 0;
   AStore.GetScopeInnerValue(TypeInfo(QWord),i);
   (AObject as TComplexInt64UContentRemotable).Value := i;
+end;
+
+function TComplexInt64UContentRemotable.wstHasValue() : Boolean;
+begin
+  Result := (FValue <> 0);
 end;
 
 { TComplexBooleanContentRemotable }
@@ -6357,6 +6475,11 @@ begin
               ACompareTo.InheritsFrom(TStringBufferRemotable) and
               ( Self.Data = TStringBufferRemotable(ACompareTo).Data )
             );
+end;
+
+function TStringBufferRemotable.wstHasValue() : Boolean;
+begin
+  Result := (Data <> '');
 end;
 
 { TRemotableRecordEncoder }
@@ -6741,6 +6864,13 @@ begin
   end;
 end;
 
+function TDurationRemotable.wstHasValue() : Boolean;
+begin
+  Result := (FData.Year <> 0) or (FData.Month <> 0) or (FData.Day <> 0) or
+            (FData.Hour <> 0) or (FData.Minute <> 0) or (FData.Second <> 0) or
+            (FData.FractionalSecond <> 0);
+end;
+
 procedure TDurationRemotable.Clear();
 begin
   FData := ZERO_DURATION;
@@ -6868,6 +6998,11 @@ begin
             CompareMem(Pointer(Self.BinaryData),Pointer(TAbstractEncodedStringRemotable(ACompareTo).BinaryData),Length(Self.BinaryData));
 end;
 
+function TAbstractEncodedStringRemotable.wstHasValue() : Boolean;
+begin
+  Result := (Length(FBinaryData) > 0);
+end;
+
 procedure TAbstractEncodedStringRemotable.LoadFromStream(AStream: TStream);
 begin
   BinaryData := LoadBufferFromStream(AStream);
@@ -6935,6 +7070,11 @@ begin
             ACompareTo.InheritsFrom(TAbstractEncodedStringExtRemotable) and
             ( Length(Self.BinaryData) = Length(TAbstractEncodedStringExtRemotable(ACompareTo).BinaryData) ) and
             CompareMem(Pointer(Self.BinaryData),Pointer(TAbstractEncodedStringExtRemotable(ACompareTo).BinaryData),Length(Self.BinaryData));
+end;
+
+function TAbstractEncodedStringExtRemotable.wstHasValue: Boolean;
+begin
+  Result := (Length(FBinaryData) > 0);
 end;
 
 procedure TAbstractEncodedStringExtRemotable.LoadFromStream(AStream: TStream);
@@ -7143,6 +7283,12 @@ begin
     else
       Result := inherited Equal(ACompareTo);
   end;
+end;
+
+function TTimeRemotable.wstHasValue: Boolean;
+begin
+  Result := (Data.Hour <> 0) or (Data.Minute <> 0) or (Data.Second <> 0) or
+            (Data.HourOffset <> 0) or (Data.MinuteOffset <> 0);
 end;
 
 procedure TTimeRemotable.Clear();

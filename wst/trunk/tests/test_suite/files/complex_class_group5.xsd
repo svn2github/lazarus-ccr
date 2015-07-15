@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <xsd:schema xmlns:n="urn:wst-test" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  targetNamespace="urn:wst-test">
+  
+    <xsd:complexType name="TClassSampleType">
+	    <xsd:sequence>
+		    <xsd:element name="intField" type="xsd:int" />
+        <xsd:group ref="n:TContactGroupType"/>
+	    </xsd:sequence>
+	    <xsd:attribute name="strField" type="xsd:string"/>
+    </xsd:complexType>
+  
+    <xsd:group name="TContactGroupType">
+	    <xsd:sequence>
+		    <xsd:element name="firstName" type="xsd:string" />
+		    <xsd:element name="lastName" type="xsd:string" />
+		    <xsd:element name="occupation" type="n:TJobType" />
+	    </xsd:sequence>
+    </xsd:group>
+    
+    <xsd:complexType name="TJobType">
+	    <xsd:sequence>
+		    <xsd:element name="jobPosition" type="xsd:string" />
+		    <xsd:element name="employer" type="xsd:string" />
+	    </xsd:sequence>
+    </xsd:complexType>
+  
+        
+</xsd:schema>

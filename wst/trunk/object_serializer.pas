@@ -736,8 +736,16 @@ var
 begin
   locName := APropInfo.ExternalName;
   locData := GetObjectProp(AObject,APropInfo.PropInfo);
-  if ( locData <> nil ) or ( APropInfo.PersisteType = pstAlways ) then
+  if (APropInfo.PersisteType = pstAlways) or
+     ( (APropInfo.PersisteType = pstOptional) and
+       (locData <> nil) and
+       ( not(locData.InheritsFrom(TBaseRemotable)) or
+         TBaseRemotable(locData).wstHasValue()
+       )
+     )
+  then begin
     AStore.Put(locName,APropInfo.PropInfo^.PropType{$IFDEF WST_DELPHI}^{$ENDIF},locData);
+  end;
 end;
 
 procedure FloatWriter(
@@ -947,8 +955,16 @@ var
 begin
   locName := APropInfo.ExternalName;
   locData := GetObjectProp(AObject,APropInfo.PropInfo);
-  if ( locData <> nil ) or ( APropInfo.PersisteType = pstAlways ) then
+  if (APropInfo.PersisteType = pstAlways) or
+     ( (APropInfo.PersisteType = pstOptional) and
+       (locData <> nil) and
+       ( not(locData.InheritsFrom(TBaseRemotable)) or
+         TBaseRemotable(locData).wstHasValue()
+       )
+     )
+  then begin
     AStore.Put(APropInfo.NameSpace,locName,APropInfo.PropInfo^.PropType{$IFDEF WST_DELPHI}^{$ENDIF},locData);
+  end;
 end;
 
 procedure FloatWriterQualified(
@@ -1322,6 +1338,7 @@ var
   regPropItem : TPropertyItem;
   st : TPropStoreType;
   clPL : PPropList;
+  eltFormEmpty, attFormEmpty, qualifiedElt, qualifiedAtt : Boolean;
 begin
   FSerializationInfos.Clear();
   locTypeInfo := PTypeInfo(Target.ClassInfo);
@@ -1335,6 +1352,10 @@ begin
       cl := Target;
       thisRegItem := ATypeRegistry.ItemByTypeInfo[locTypeInfo];
       regItem := thisRegItem;
+      eltFormEmpty := ([trioQualifiedElement,trioUnqualifiedElement]*regItem.Options) = [];
+      attFormEmpty := ([trioQualifiedAttribute,trioUnqualifiedAttribute]*regItem.Options) = [];
+      qualifiedElt := (trioQualifiedElement in regItem.Options) and not(trioUnqualifiedElement in regItem.Options);
+      qualifiedAtt := (trioQualifiedAttribute in regItem.Options) and not(trioUnqualifiedAttribute in regItem.Options);
       GetPropList(locTypeInfo,FRawPropList);
       try
         for i := 0 to Pred(c) do begin
@@ -1355,18 +1376,16 @@ begin
             end else begin
               serInfo.FStyle := ssNodeSerialization;
             end;
-            if ( regPropItem <> nil ) then begin
-              serInfo.FExternalName := regPropItem.ExternalName;
-              if ( trioNonQualifiedName in regPropItem.Options ) then begin
-                serInfo.FNameSpace := '';
-                serInfo.FQualifiedName := True;
-              end;
-            end else begin
+            if ( regPropItem <> nil ) then
+              serInfo.FExternalName := regPropItem.ExternalName
+            else
               serInfo.FExternalName := serInfo.FName;
-              if ( trioNonQualifiedName in regItem.Options ) then begin
-                serInfo.FQualifiedName := True;
-                serInfo.FNameSpace := '';
-              end;
+            if (serInfo.FStyle = ssNodeSerialization) then begin
+              if not(eltFormEmpty) then
+                serInfo.FQualifiedName := qualifiedElt;
+            end else begin
+              if not(attFormEmpty) then
+                serInfo.FQualifiedName := qualifiedAtt;
             end;
             if serInfo.QualifiedName then begin
               serInfo.FReaderProc := ReaderInfoMap[ppi^.PropType^.Kind].Qualified;
@@ -1552,6 +1571,7 @@ var
   thisRegItem, regItem : TTypeRegistryItem;
   serArray : array of TPropSerializationInfo;
   cl : TClass;
+  attFormEmpty, qualifiedAtt : Boolean;
 
   procedure InitPropItem(const APropInfo : PPropInfo);
   var
@@ -1574,7 +1594,8 @@ var
       serInfo.FNameSpace := '';
       if ( regPropItem <> nil ) then begin
         serInfo.FExternalName := regPropItem.ExternalName;
-        if not ( trioNonQualifiedName in regPropItem.Options ) then begin
+        //if not ( trioNonQualifiedName in regPropItem.Options ) then begin
+        if not(attFormEmpty) and qualifiedAtt then begin
           serInfo.FNameSpace := regItem.NameSpace;
           serInfo.FQualifiedName := True;
         end;
@@ -1598,7 +1619,8 @@ var
     if ( serInfo <> nil ) then begin
       regPropItem := regItem.FindProperty(APropInfo^.Name,pntInternalName);
       if ( regPropItem <> nil ) then begin
-        if not ( trioNonQualifiedName in regPropItem.Options ) then begin
+        //if not ( trioNonQualifiedName in regPropItem.Options ) then begin
+        if not(attFormEmpty) and qualifiedAtt then begin
           serInfo.FNameSpace := regItem.NameSpace;
           serInfo.FQualifiedName := True;
         end;
@@ -1633,6 +1655,8 @@ begin
       cl := Target;
       thisRegItem := ATypeRegistry.ItemByTypeInfo[locTypeInfo];
       regItem := thisRegItem;
+      attFormEmpty := ([trioQualifiedAttribute,trioUnqualifiedAttribute]*regItem.Options) = [];
+      qualifiedAtt := (trioQualifiedAttribute in regItem.Options) and not(trioUnqualifiedAttribute in regItem.Options);
       GetPropList(locTypeInfo,FRawPropList);
       try
         for i := 0 to Pred(c) do begin

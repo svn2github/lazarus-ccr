@@ -102,6 +102,7 @@ resourcestring
   SERR_TypeStyleNotSupported             = 'This type style is not supported : "%s".';
   SERR_UnableToFindNameTagInNode         = 'Unable to find the <name> tag in the type/element node attributes.';
   SERR_UnableToResolveNamespace          = 'Unable to resolve namespace, short name = "%s".';
+  SERR_UnableToResolveGroupRef           = 'Unable to resolve the group reference, type = "%s", ref= "%s".';
   SERR_UnexpectedEndOfData               = 'Unexpected end of data.';
   SERR_UnknownProperty                   = 'Unknown property : "%s".';
   SERR_UnsupportedOperation        = 'Unsupported operation : "%s".';
