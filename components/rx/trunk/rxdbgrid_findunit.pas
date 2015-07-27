@@ -125,6 +125,7 @@ begin
   if Edit1.Text<>'' then
   begin
     try
+
       FieldName:=FGrid.Columns[ComboBox1.ItemIndex].FieldName;
       LOptions:=[];
       if not CheckBox1.Checked then
@@ -172,7 +173,11 @@ begin
   if Assigned(AGrid) then
   begin
     for i:=0 to AGrid.Columns.Count-1 do
-      ComboBox1.Items.Add(AGrid.Columns[i].Title.Caption);
+    begin
+      if not (coDisableDialogFind in AGrid.Columns[i].Options) then
+        ComboBox1.Items.Add(AGrid.Columns[i].Title.Caption);
+    end;
+
     ComboBox1.ItemIndex:=ComboBox1.Items.IndexOf(AGrid.SelectedColumn.Title.Caption);
   end;
 

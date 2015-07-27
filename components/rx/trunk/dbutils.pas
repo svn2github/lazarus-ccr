@@ -495,9 +495,11 @@ begin
       DataSet.FreeBookmark(Bookmark);
       DataSet.EnableControls;
     end;
-  finally
-    Fields.Free;
+  except
+{  finally
+    Fields.Free;}
   end;
+  Fields.Free;
 end;
 
 procedure SaveFields(DataSet: TDataSet; IniFile: TIniFile);

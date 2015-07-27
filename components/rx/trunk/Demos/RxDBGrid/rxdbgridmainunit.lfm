@@ -5,7 +5,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
   Width = 1151
   ActiveControl = Panel1
   Caption = 'RxDBGrid Demo'
-  ClientHeight = 694
+  ClientHeight = 692
   ClientWidth = 1151
   Menu = MainMenu1
   OnCreate = FormCreate
@@ -14,8 +14,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
   LCLVersion = '1.5'
   object RxDBGrid1: TRxDBGrid
     Left = 0
-    Height = 624
-    Top = 70
+    Height = 620
+    Top = 72
     Width = 1151
     TitleButtons = True
     AutoSort = True
@@ -80,12 +80,13 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Filter.EmptyValue = '(Нет)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
-        Footer.Value = 'This is test'
+        Footer.Value = 'This is test'#10'Line2'
         Footer.ValueType = fvtStaticText
         Footer.Font.Color = clRed
         Footer.Font.Height = -15
         Footer.Font.Name = 'Liberation Mono'
         Footer.Font.Style = [fsBold, fsItalic]
+        Options = [coCustomizeVisible, coCustomizeWidth, coDisableDialogFind]
       end    
       item
         Title.Alignment = taCenter
@@ -283,11 +284,11 @@ object RxDBGridMainForm: TRxDBGridMainForm
       end>
     FooterOptions.Active = True
     FooterOptions.Color = clYellow
-    FooterOptions.RowCount = 1
+    FooterOptions.RowCount = 2
     Version = 1
     OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgHighlightFocusCol, rdgHighlightFocusRow, rdgDblClickOptimizeColWidth, rdgFooterRows, rdgXORColSizing, rdgMultiTitleLines, rdgAllowQuickSearch, rdgAllowQuickFilter, rdgAllowFilterForm, rdgAllowSortForm, rdgAllowToolMenu]
     FooterColor = clYellow
-    FooterRowCount = 1
+    FooterRowCount = 2
     OnFiltred = RxDBGrid1Filtred
     Align = alClient
     Color = clWindow
@@ -305,12 +306,12 @@ object RxDBGridMainForm: TRxDBGridMainForm
   end
   object Panel1: TPanel
     Left = 0
-    Height = 70
+    Height = 72
     Top = 0
     Width = 1151
     Align = alTop
     AutoSize = True
-    ClientHeight = 70
+    ClientHeight = 72
     ClientWidth = 1151
     TabOrder = 1
     object Label1: TLabel
@@ -359,7 +360,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       Height = 25
       Hint = 'Use filter line'
       Top = 38
-      Width = 85
+      Width = 83
       BorderSpacing.Left = 6
       Caption = 'Use filter'
       OnChange = CheckBox1Change
@@ -370,7 +371,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideTop.Control = Label1
       AnchorSideTop.Side = asrBottom
       Left = 276
-      Height = 29
+      Height = 31
       Top = 34
       Width = 217
       BorderSpacing.Around = 6
@@ -393,7 +394,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       Height = 25
       Hint = 'Auto fill column width'
       Top = 7
-      Width = 134
+      Width = 132
       BorderSpacing.Around = 6
       Caption = 'Auto fill columns'
       OnChange = CheckBox2Change
@@ -403,10 +404,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = CheckBox2
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 639
+      Left = 637
       Height = 25
       Top = 7
-      Width = 122
+      Width = 120
       BorderSpacing.Around = 6
       Caption = 'Show indicator'
       Checked = True
@@ -419,10 +420,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = CheckBox3
       AnchorSideTop.Side = asrBottom
-      Left = 639
+      Left = 637
       Height = 25
       Top = 38
-      Width = 118
+      Width = 116
       BorderSpacing.Around = 6
       Caption = 'Show headers'
       Checked = True
@@ -434,10 +435,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = CheckBox3
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 767
+      Left = 763
       Height = 25
       Top = 7
-      Width = 97
+      Width = 95
       BorderSpacing.Around = 6
       Caption = 'Word wrap'
       OnChange = CheckBox5Change

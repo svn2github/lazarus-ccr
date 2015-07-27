@@ -75,7 +75,7 @@ type
   //TRxDBGridAllowedOperations = set of TRxDBGridAllowedOperation;
 {$ENDIF}
 
-  TRxColumnOption = (coCustomizeVisible, coCustomizeWidth, coFixDecimalSeparator);
+  TRxColumnOption = (coCustomizeVisible, coCustomizeWidth, coFixDecimalSeparator, coDisableDialogFind);
   TRxColumnOptions = set of TRxColumnOption;
 
   TRxColumnEditButtonStyle = (ebsDropDownRx, ebsEllipsisRx, ebsGlyphRx, ebsUpDownRx,
