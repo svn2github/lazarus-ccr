@@ -59,10 +59,9 @@
       <Unit0>
         <Filename Value="RxDBGridDemo.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="47" Y="18"/>
-        <UsageCount Value="100"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="103"/>
       </Unit0>
       <Unit1>
         <Filename Value="rxdbgridmainunit.pas"/>
@@ -72,8 +71,9 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="RxDBGridMainUnit"/>
         <IsVisibleTab Value="True"/>
-        <CursorPos X="7" Y="9"/>
-        <UsageCount Value="100"/>
+        <TopLine Value="241"/>
+        <CursorPos X="29" Y="263"/>
+        <UsageCount Value="103"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -98,9 +98,9 @@
       <Unit5>
         <Filename Value="../../rxdbgrid.pas"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="59"/>
-        <CursorPos X="102" Y="78"/>
-        <UsageCount Value="17"/>
+        <TopLine Value="4051"/>
+        <CursorPos X="135" Y="4080"/>
+        <UsageCount Value="18"/>
         <Bookmarks Count="2">
           <Item0 Y="2573" ID="2"/>
           <Item1 Y="3776" ID="1"/>
@@ -353,12 +353,10 @@
         <ComponentName Value="rxDBGridFindForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="148"/>
         <CursorPos Y="179"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit45>
       <Unit46>
         <Filename Value="../../rxtoolbar.pas"/>
@@ -802,110 +800,25 @@
       </Unit115>
       <Unit116>
         <Filename Value="../../dbutils.pas"/>
-        <EditorIndex Value="3"/>
-        <TopLine Value="432"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="465"/>
         <CursorPos Y="503"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit116>
     </Units>
-    <JumpHistory Count="24" HistoryIndex="23">
+    <JumpHistory Count="3" HistoryIndex="2">
       <Position1>
-        <Filename Value="../../rxdbgrid_findunit.pas"/>
-        <Caret Line="150" Column="57" TopLine="116"/>
-      </Position1>
-      <Position2>
-        <Filename Value="../../rxdbgrid_findunit.pas"/>
-        <Caret Line="129" Column="62" TopLine="115"/>
-      </Position2>
-      <Position3>
-        <Filename Value="../../rxdbgrid_findunit.pas"/>
-        <Caret Line="150" TopLine="119"/>
-      </Position3>
-      <Position4>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="442" TopLine="423"/>
-      </Position4>
-      <Position5>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="443" TopLine="423"/>
-      </Position5>
-      <Position6>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="445" TopLine="423"/>
-      </Position6>
-      <Position7>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="446" TopLine="423"/>
-      </Position7>
-      <Position8>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="448" TopLine="423"/>
-      </Position8>
-      <Position9>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="449" TopLine="423"/>
-      </Position9>
-      <Position10>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="450" TopLine="423"/>
-      </Position10>
-      <Position11>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="451" TopLine="423"/>
-      </Position11>
-      <Position12>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="453" TopLine="423"/>
-      </Position12>
-      <Position13>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="455" TopLine="435"/>
-      </Position13>
-      <Position14>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="430" TopLine="411"/>
-      </Position14>
-      <Position15>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="431" TopLine="411"/>
-      </Position15>
-      <Position16>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="432" TopLine="411"/>
-      </Position16>
-      <Position17>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="395" TopLine="378"/>
-      </Position17>
-      <Position18>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="396" TopLine="378"/>
-      </Position18>
-      <Position19>
-        <Filename Value="../../rxdbgrid_findunit.pas"/>
-        <Caret Line="150" TopLine="119"/>
-      </Position19>
-      <Position20>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="499" TopLine="468"/>
-      </Position20>
-      <Position21>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="500" Column="18" TopLine="469"/>
-      </Position21>
-      <Position22>
-        <Filename Value="../../dbutils.pas"/>
-        <Caret Line="502" TopLine="470"/>
-      </Position22>
-      <Position23>
-        <Filename Value="../../rxdbgrid_findunit.pas"/>
-        <Caret Line="170" Column="3" TopLine="148"/>
-      </Position23>
-      <Position24>
         <Filename Value="../../rxdbgrid.pas"/>
         <Caret Line="518" Column="3" TopLine="441"/>
-      </Position24>
+      </Position1>
+      <Position2>
+        <Filename Value="rxdbgridmainunit.pas"/>
+        <Caret Line="18" Column="143"/>
+      </Position2>
+      <Position3>
+        <Filename Value="rxdbgridmainunit.pas"/>
+        <Caret Line="274" Column="3" TopLine="242"/>
+      </Position3>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>

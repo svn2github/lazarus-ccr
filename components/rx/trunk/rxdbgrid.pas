@@ -252,7 +252,7 @@ type
   end;
 
   { TRxColumnFooter }
-
+(*
   TRxColumnFooter = class(TPersistent)
   private
     FIsDefaultFont: boolean;
@@ -309,7 +309,79 @@ type
     property ValueType: TFooterValueType read FValueType write SetValueType default fvtNon;
     property Font: TFont read GetFont write SetFont stored IsFontStored;
   end;
+*)
+  { TRxColumnFooterItem }
 
+  TRxColumnFooterItem = class(TCollectionItem)
+  private
+    FIsDefaultFont: boolean;
+    FLayout: TTextLayout;
+    FOwner: TRxColumn;
+    FAlignment: TAlignment;
+    FDisplayFormat: string;
+    FFieldName: string;
+    FField:TField;
+    FFont: TFont;
+    FValue: string;
+    FValueType: TFooterValueType;
+    FTestValue: double;
+    FCountRec:integer;
+    procedure FontChanged(Sender: TObject);
+    function GetFont: TFont;
+    function IsFontStored: Boolean;
+    procedure SetAlignment(AValue: TAlignment);
+    procedure SetDisplayFormat(AValue: string);
+    procedure SetFieldName(AValue: string);
+    procedure SetFont(AValue: TFont);
+    procedure SetLayout(AValue: TTextLayout);
+    procedure SetValue(AValue: string);
+    procedure SetValueType(AValue: TFooterValueType);
+
+    function GetFieldValue: string;
+    function GetRecordsCount: string;
+    function GetRecNo: string;
+    function GetStatTotal: string;
+    procedure ResetTestValue;
+    procedure UpdateTestValue;
+
+    function DeleteTestValue: boolean;
+    function PostTestValue: boolean;
+    function ErrorTestValue: boolean;
+  protected
+    procedure UpdateTestValueFromVar(AValue:Variant);
+    property  IsDefaultFont: boolean read FIsDefaultFont;
+  public
+    constructor Create(ACollection: TCollection); override;
+    destructor Destroy; override;
+    function DisplayText: string;
+    procedure FillDefaultFont;
+
+    property Owner: TRxColumn read FOwner;
+    property NumericValue: double read FTestValue;
+    property CountRec:integer read FCountRec;
+  published
+    property Alignment: TAlignment read FAlignment write SetAlignment default taLeftJustify;
+    property Layout: TTextLayout read FLayout write SetLayout default tlCenter;
+    property DisplayFormat: string read FDisplayFormat write SetDisplayFormat;
+    property FieldName: string read FFieldName write SetFieldName;
+    property Value: string read FValue write SetValue;
+    property ValueType: TFooterValueType read FValueType write SetValueType default fvtNon;
+    property Font: TFont read GetFont write SetFont stored IsFontStored;
+  end;
+
+  { TRxColumnFooterItems }
+
+  TRxColumnFooterItems = class(TOwnedCollection)
+  private
+    function GetItem(Index: integer): TRxColumnFooterItem;
+    procedure SetItem(Index: integer; const AValue: TRxColumnFooterItem);
+  protected
+    procedure Update(Item: TCollectionItem); override;
+  public
+    constructor Create(AOwner: TPersistent);
+  public
+    property Items[Index: integer]: TRxColumnFooterItem read GetItem write SetItem; default;
+  end;
 
   { TRxFilterItem }
 
@@ -426,7 +498,8 @@ type
   private
     FDirectInput: boolean;
     FEditButtons: TRxColumnEditButtons;
-    FFooter: TRxColumnFooter;
+(*    FFooter: TRxColumnFooter; *)
+    FFooter: TRxColumnFooterItem;
     FConstraints:TRxDBGridCollumnConstraints;
     FFilter: TRxColumnFilter;
     FImageList: TImageList;
@@ -438,14 +511,19 @@ type
     FSortOrder: TSortMarker;
     FSortPosition: integer;
     FWordWrap: boolean;
+    FFooters: TRxColumnFooterItems;
     function GetConstraints: TRxDBGridCollumnConstraints;
-    function GetFooter: TRxColumnFooter;
+(*    function GetFooter: TRxColumnFooter; *)
+    function GetFooter: TRxColumnFooterItem;
+    function GetFooters: TRxColumnFooterItems;
     function GetKeyList: TStrings;
     function GetSortFields:string;
     procedure SetConstraints(AValue: TRxDBGridCollumnConstraints);
     procedure SetEditButtons(AValue: TRxColumnEditButtons);
     procedure SetFilter(const AValue: TRxColumnFilter);
-    procedure SetFooter(const AValue: TRxColumnFooter);
+(*    procedure SetFooter(const AValue: TRxColumnFooter); *)
+    procedure SetFooter(const AValue: TRxColumnFooterItem);
+    procedure SetFooters(AValue: TRxColumnFooterItems);
     procedure SetImageList(const AValue: TImageList);
     procedure SetKeyList(const AValue: TStrings);
     procedure SetNotInKeyListIndex(const AValue: integer);
@@ -464,7 +542,9 @@ type
     property DirectInput : boolean read FDirectInput write FDirectInput default true;
     property EditButtons:TRxColumnEditButtons read FEditButtons write SetEditButtons;
     property Filter: TRxColumnFilter read FFilter write SetFilter;
-    property Footer: TRxColumnFooter read GetFooter write SetFooter;
+(*    property Footer: TRxColumnFooter read GetFooter write SetFooter; *)
+    property Footer: TRxColumnFooterItem read GetFooter write SetFooter;
+    property Footers: TRxColumnFooterItems read GetFooters write SetFooters;
     property ImageList: TImageList read FImageList write SetImageList;
     property KeyList: TStrings read GetKeyList write SetKeyList;
     property NotInKeyListIndex: integer read FNotInKeyListIndex write SetNotInKeyListIndex default -1;
@@ -1018,6 +1098,447 @@ type
     //procedure SetBounds(aLeft, aTop, aWidth, aHeight: integer); override;
     procedure EditingDone; override;
   end;
+
+{ TRxColumnFooterItem }
+
+procedure TRxColumnFooterItem.FontChanged(Sender: TObject);
+begin
+  FisDefaultFont := False;
+  FOwner.ColumnChanged;
+end;
+
+function TRxColumnFooterItem.GetFont: TFont;
+begin
+  Result := FFont;
+end;
+
+function TRxColumnFooterItem.IsFontStored: Boolean;
+begin
+  Result := not FisDefaultFont;
+end;
+
+procedure TRxColumnFooterItem.SetAlignment(AValue: TAlignment);
+begin
+  if FAlignment = AValue then exit;
+  FAlignment := AValue;
+  FOwner.ColumnChanged;
+end;
+
+procedure TRxColumnFooterItem.SetDisplayFormat(AValue: string);
+begin
+  if FDisplayFormat=AValue then Exit;
+  FDisplayFormat:=AValue;
+  FOwner.ColumnChanged;
+end;
+
+procedure TRxColumnFooterItem.SetFieldName(AValue: string);
+begin
+  if FFieldName=AValue then Exit;
+  FFieldName:=AValue;
+  FOwner.ColumnChanged;
+end;
+
+procedure TRxColumnFooterItem.SetFont(AValue: TFont);
+begin
+  if not FFont.IsEqual(AValue) then
+    FFont.Assign(AValue);
+end;
+
+procedure TRxColumnFooterItem.SetLayout(AValue: TTextLayout);
+begin
+  if FLayout=AValue then Exit;
+  FLayout:=AValue;
+  FOwner.ColumnChanged;
+end;
+
+procedure TRxColumnFooterItem.SetValue(AValue: string);
+begin
+  if FValue=AValue then Exit;
+  FValue:=AValue;
+  FOwner.ColumnChanged;
+end;
+
+procedure TRxColumnFooterItem.SetValueType(AValue: TFooterValueType);
+begin
+  if FValueType=AValue then Exit;
+  FValueType:=AValue;
+  FOwner.ColumnChanged;
+end;
+
+function TRxColumnFooterItem.GetFieldValue: string;
+begin
+  if (FFieldName <> '') and TRxDBGrid(FOwner.Grid).DatalinkActive then
+    Result := TRxDBGrid(FOwner.Grid).DataSource.DataSet.FieldByName(FFieldName).AsString
+  else
+    Result := '';
+end;
+
+function TRxColumnFooterItem.GetRecordsCount: string;
+begin
+  if TRxDBGrid(FOwner.Grid).DatalinkActive then
+  begin
+    if DisplayFormat <> '' then
+      Result := Format(DisplayFormat,
+        [{TRxDBGrid(FOwner.Grid).DataSource.DataSet.RecordCount} FCountRec])
+    else
+      Result := IntToStr(FCountRec); //TRxDBGrid(FOwner.Grid).DataSource.DataSet.RecordCount);
+  end
+  else
+    Result := '';
+end;
+
+function TRxColumnFooterItem.GetRecNo: string;
+begin
+  if TRxDBGrid(FOwner.Grid).DatalinkActive then
+  begin
+    if DisplayFormat <> '' then
+      Result := Format(DisplayFormat, [TRxDBGrid(FOwner.Grid).DataSource.DataSet.RecNo])
+    else
+      Result := IntToStr(TRxDBGrid(FOwner.Grid).DataSource.DataSet.RecNo);
+  end
+  else
+    Result := '';
+end;
+
+function TRxColumnFooterItem.GetStatTotal: string;
+var
+  F: TField;
+begin
+  if (FFieldName <> '') and TRxDBGrid(FOwner.Grid).DatalinkActive and
+    (TRxDBGrid(FOwner.Grid).DataSource.DataSet.RecordCount <> 0) then
+  begin
+    F := TRxDBGrid(FOwner.Grid).DataSource.DataSet.FieldByName(FFieldName);
+    if Assigned(F) then
+    begin
+      if F.DataType in [ftSmallint, ftInteger, ftWord, ftFloat, ftCurrency,
+        ftDate, ftTime, ftDateTime, ftTimeStamp, ftLargeint, ftBCD] then
+      begin
+        if F.DataType in [ftDate, ftTime, ftDateTime, ftTimeStamp] then
+        begin
+          if FValueType in [fvtSum, fvtAvg] then
+            Result := ''
+          else
+          if FTestValue = 0 then
+            Result := ''
+          else
+          if FDisplayFormat = '' then
+            Result := DateToStr(FTestValue)
+          else
+            Result := FormatDateTime(FDisplayFormat, FTestValue);
+        end
+        else
+        if F.DataType in [ftSmallint, ftInteger, ftWord, ftLargeint] then
+        begin
+          if FDisplayFormat = '' then
+            Result := IntToStr(Round(FTestValue))
+          else
+            Result := Format(FDisplayFormat, [Round(FTestValue)]);
+        end
+        else
+        begin
+          if FDisplayFormat <> '' then
+            Result := FormatFloat(FDisplayFormat, FTestValue)
+          else
+          if F.DataType = ftCurrency then
+            Result := FloatToStrF(FTestValue, ffCurrency, 12, 2)
+          else
+            Result := FloatToStr(FTestValue);
+        end;
+      end
+      else
+        Result := '';
+    end
+    else
+      Result := '';
+  end
+  else
+    Result := '';
+end;
+
+procedure TRxColumnFooterItem.ResetTestValue;
+var
+  F: TField;
+begin
+  FTestValue := 0;
+  FCountRec:=0;
+
+  if (ValueType in [fvtMin, fvtMax]) and (TRxDBGrid(
+    FOwner.Grid).DataSource.DataSet.RecordCount <> 0) then
+  begin
+    F := TRxDBGrid(FOwner.Grid).DataSource.DataSet.FieldByName(FFieldName);
+    if (Assigned(F)) and not (F.IsNull) then
+      if F.DataType in [ftDate, ftTime, ftDateTime, ftTimeStamp] then
+        FTestValue := F.AsDateTime
+      else
+        FTestValue := F.AsFloat;
+  end;
+end;
+
+procedure TRxColumnFooterItem.UpdateTestValue;
+var
+  F: TField;
+begin
+  if ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin] then
+  begin
+    F := TRxDBGrid(FOwner.Grid).DataSource.DataSet.FindField(FFieldName);
+    if Assigned(F) then
+    begin
+      if F.DataType in [ftDate, ftTime, ftDateTime, ftTimeStamp] then
+      begin
+        case FValueType of
+          fvtMax: FTestValue := Max(FTestValue, F.AsDateTime);
+          fvtMin: FTestValue := Min(FTestValue, F.AsDateTime);
+        end;
+      end
+      else
+      begin
+        case FValueType of
+          fvtSum: FTestValue := FTestValue + F.AsFloat;
+          //        fvtAvg:
+          fvtMax: FTestValue := Max(FTestValue, F.AsFloat);
+          fvtMin: FTestValue := Min(FTestValue, F.AsFloat);
+        end;
+      end;
+    end;
+  end;
+end;
+
+function TRxColumnFooterItem.DeleteTestValue: boolean;
+var
+  F: TField;
+begin
+  Result := True;
+  if ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin] then
+  begin
+    F := TRxDBGrid(FOwner.Grid).DataSource.DataSet.FieldByName(FFieldName);
+    if (Assigned(F)) and not (F.IsNull) then
+      if F.DataType in [ftDate, ftTime, ftDateTime, ftTimeStamp] then
+        Result := not ((FValueType in [fvtMax, fvtMin]) and (FTestValue = F.AsDateTime))
+      else
+      if FValueType in [fvtMax, fvtMin] then
+        Result := (FTestValue <> F.AsFloat)
+      else
+        FTestValue := FTestValue - F.AsFloat;
+  end;
+end;
+
+function TRxColumnFooterItem.PostTestValue: boolean;
+var
+  F: TField;
+begin
+  Result := True;
+  if ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin] then
+  begin
+    F := TRxDBGrid(FOwner.Grid).DataSource.DataSet.FieldByName(FFieldName);
+    if Assigned(F) then
+      if F.DataType in [ftDate, ftTime, ftDateTime, ftTimeStamp] then
+      begin
+        if FValueType in [fvtMax, fvtMin] then
+          if F.DataSet.State = dsinsert then
+          begin
+            if not (F.IsNull) then
+              case FValueType of
+                fvtMax: FTestValue := Max(FTestValue, F.AsDateTime);
+                fvtMin: FTestValue := Min(FTestValue, F.AsDateTime);
+              end;
+          end
+          else
+          if (F.OldValue <> null) and (FTestValue = TDateTime(F.OldValue)) then
+            Result := False
+          else
+          if not F.IsNull then
+            case FValueType of
+              fvtMax: FTestValue := Max(FTestValue, F.AsDateTime);
+              fvtMin: FTestValue := Min(FTestValue, F.AsDateTime);
+            end;
+      end
+      else
+      if F.DataSet.State = dsinsert then
+      begin
+        if not F.IsNull then
+          case FValueType of
+            fvtSum: FTestValue := FTestValue + F.AsFloat;
+            fvtMax: FTestValue := Max(FTestValue, F.AsFloat);
+            fvtMin: FTestValue := Min(FTestValue, F.AsFloat);
+          end;
+      end
+      else
+      if (FValueType in [fvtMax, fvtMin]) and (F.OldValue <> null) and
+        (FTestValue = Float(F.OldValue)) then
+        Result := False
+      else
+        case FValueType of
+          fvtSum:
+          begin
+            if not F.IsNull then
+            begin
+              if F.OldValue <> null then
+                FTestValue := FTestValue - Float(F.OldValue);
+              FTestValue := FTestValue + F.AsFloat;
+            end;
+          end;
+          fvtMax: if not F.IsNull then
+              FTestValue := Max(FTestValue, F.AsFloat);
+          fvtMin: if not F.IsNull then
+              FTestValue := Min(FTestValue, F.AsFloat);
+        end;
+  end;
+end;
+
+function TRxColumnFooterItem.ErrorTestValue: boolean;
+var
+  F: TField;
+begin
+  Result := True;
+  if ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin] then
+  begin
+    F := TRxDBGrid(FOwner.Grid).DataSource.DataSet.FieldByName(FFieldName);
+    if Assigned(F) then
+    begin
+      if F.DataType in [ftDate, ftTime, ftDateTime, ftTimeStamp] then
+      begin
+        if (FValueType in [fvtMax, fvtMin]) and not (F.IsNull) then
+        begin
+          if not (F.IsNull) and (FTestValue = F.AsDateTime) then
+            Result := False
+          else
+          if (F.DataSet.RecordCount <> 0) and (F.OldValue <> null) then
+          begin
+            case FValueType of
+              fvtMax: FTestValue := Max(FTestValue, TDateTime(F.OldValue));
+              fvtMin: FTestValue := Min(FTestValue, TDateTime(F.OldValue));
+            end;
+          end;
+        end;
+      end
+      else
+      if (FValueType in [fvtMax, fvtMin]) and not (F.IsNull) and (FTestValue = F.AsFloat) then
+        Result := False
+      else
+      begin
+        case FValueType of
+          fvtSum:
+            if F.DataSet.RecordCount = 0 then
+            begin
+{              if not F.IsNull then
+                FTestValue := FTestValue - F.AsFloat;}
+              { TODO -oalexs : need rewrite this code - where difficult! }
+            end
+            else
+            begin
+              if F.OldValue <> null then
+                FTestValue := FTestValue + Float(F.OldValue);
+              if not F.IsNull then
+                FTestValue := FTestValue - F.AsFloat;
+            end;
+          fvtMax:
+            if (F.DataSet.RecordCount <> 0) and (F.OldValue <> null) then
+              FTestValue := Max(FTestValue, Float(F.OldValue));
+          fvtMin:
+            if (F.DataSet.RecordCount <> 0) and (F.OldValue <> null) then
+              FTestValue := Min(FTestValue, Float(F.OldValue));
+        end;
+      end;
+    end;
+  end;
+end;
+
+procedure TRxColumnFooterItem.UpdateTestValueFromVar(AValue: Variant);
+begin
+  if FValueType in [fvtSum, fvtAvg, fvtMax, fvtMin] then
+  begin
+    if (not VarIsEmpty(AValue)) and (AValue <> null) and Assigned(FField) then
+    begin
+      if FField.DataType in [ftDate, ftTime, ftDateTime, ftTimeStamp] then
+      begin
+        case FValueType of
+          fvtMax: FTestValue := Max(FTestValue, AValue);
+          fvtMin: FTestValue := Min(FTestValue, AValue);
+        end;
+      end
+      else
+      begin
+        case FValueType of
+          fvtSum,
+          fvtAvg: FTestValue := FTestValue + AValue;
+          fvtMax: FTestValue := Max(FTestValue, AValue);
+          fvtMin: FTestValue := Min(FTestValue, AValue);
+        end;
+      end;
+    end;
+  end;
+end;
+
+constructor TRxColumnFooterItem.Create(ACollection: TCollection);
+begin
+  inherited Create(ACollection);
+  if Assigned(ACollection) then
+    FOwner := TRxColumn(TRxColumnFooterItems(ACollection).Owner);
+
+  FTestValue := 0;
+  FLayout := tlCenter;
+
+  FFont := TFont.Create;
+  FillDefaultFont;
+  FFont.OnChange := @FontChanged;
+end;
+
+destructor TRxColumnFooterItem.Destroy;
+begin
+  inherited Destroy;
+end;
+
+function TRxColumnFooterItem.DisplayText: string;
+begin
+  case FValueType of
+    fvtSum,
+    fvtAvg,
+    fvtMax,
+    fvtMin: Result := GetStatTotal;
+    fvtCount: Result := GetRecordsCount;
+    fvtFieldValue: Result := GetFieldValue;
+    fvtStaticText: Result := FValue;
+    fvtRecNo: Result := GetRecNo;
+    else
+      Result := '';
+  end;
+end;
+
+procedure TRxColumnFooterItem.FillDefaultFont;
+var
+  AGrid: TCustomGrid;
+begin
+  if not Assigned(FOwner) then exit;
+  AGrid := FOwner.Grid;
+  if (AGrid<>nil) then
+  begin
+    FFont.Assign(AGrid.Font);
+    FIsDefaultFont := True;
+  end;
+end;
+
+{ TRxColumnFooterItems }
+
+function TRxColumnFooterItems.GetItem(Index: integer): TRxColumnFooterItem;
+begin
+  Result := TRxColumnFooterItem(inherited GetItem(Index));
+end;
+
+procedure TRxColumnFooterItems.SetItem(Index: integer;
+  const AValue: TRxColumnFooterItem);
+begin
+  inherited SetItem(Index, AValue);
+end;
+
+procedure TRxColumnFooterItems.Update(Item: TCollectionItem);
+begin
+  inherited Update(Item);
+end;
+
+constructor TRxColumnFooterItems.Create(AOwner: TPersistent);
+begin
+  inherited Create(AOwner, TRxColumnFooterItem);
+end;
 
 { TRxDBGridAbstractTools }
 
@@ -3459,15 +3980,10 @@ var
   Background: TColor;
   ClipArea: Trect;
   TxS: TTextStyle;
+  j: Integer;
+  FItem: TRxColumnFooterItem;
 begin
-//  TotalWidth := GetClientRect.Right;
   TotalWidth := GCache.ClientWidth;
-{
-if ScrollBarIsVisible(SB_HORZ) then
-    TotalYOffs := GCache.ClientHeight - (GetSystemMetrics(SM_CYHSCROLL) + GetSystemMetrics(SM_SWSCROLLBARSPACING))
-  else
-    TotalYOffs := GCache.ClientHeight;
-  }
   TotalYOffs := GCache.ClientHeight - (DefaultRowHeight * FFooterOptions.RowCount);
 
   FooterRect := Rect(0, TotalYOffs, TotalWidth, TotalYOffs + DefaultRowHeight * FFooterOptions.RowCount);
@@ -3495,31 +4011,58 @@ if ScrollBarIsVisible(SB_HORZ) then
       Canvas.LineTo(R.Right - 1, RowHeights[0]);
     end;
 
-    for i := GCache.VisibleGrid.Left to GCache.VisibleGrid.Right do
+    R.Top := TotalYOffs;
+    R.Bottom := TotalYOffs + DefaultRowHeight;
+//    R.Bottom := TotalYOffs + DefaultRowHeight * FFooterOptions.RowCount;
+
+    for j:=0 to FFooterOptions.RowCount-1 do
     begin
-      ColRowToOffset(True, True, i, R.Left, R.Right);
-      Canvas.FillRect(R);
-      DrawCellGrid(i, 0, R, []);
 
-      if FDrawFullLine then
+      for i := GCache.VisibleGrid.Left to GCache.VisibleGrid.Right do
       begin
-        Canvas.MoveTo(R.Right - 1, R.Top);
-        Canvas.LineTo(R.Right - 1, RowHeights[0]);
+        ColRowToOffset(True, True, i, R.Left, R.Right);
+        Canvas.FillRect(R);
+        DrawCellGrid(i, 0, R, []);
+
+        if FDrawFullLine then
+        begin
+          Canvas.MoveTo(R.Right - 1, R.Top);
+          Canvas.LineTo(R.Right - 1, RowHeights[0]);
+        end;
+
+        C := ColumnFromGridColumn(i) as TRxColumn;
+        if Assigned(C) then
+        begin
+          FItem:=nil;
+          if (J = 0) then
+          begin
+            if (C.Footers.Count = 0) then
+              FItem:=C.Footer
+            else
+              FItem:=C.Footers[0];
+          end
+          else
+          if J <= C.Footers.Count-1 then
+            FItem:=C.Footers[j];
+
+          if Assigned(FItem) then
+          begin
+            TxS.Alignment := FItem.Alignment;
+            TxS.Layout := FItem.Layout;
+            Canvas.TextStyle := TxS;
+            if not FItem.IsDefaultFont then
+              Canvas.Font:=FItem.Font
+            else
+              Canvas.Font:=Font;
+            DrawCellText(i, 0, R, [], FItem.DisplayText);
+          end;
+        end;
       end;
 
-      C := ColumnFromGridColumn(i) as TRxColumn;
-      if Assigned(C) then
-      begin
-        TxS.Alignment := C.Footer.Alignment;
-        TxS.Layout := C.Footer.Layout;
-        Canvas.TextStyle := TxS;
-        if not C.Footer.IsDefaultFont then
-          Canvas.Font:=C.Footer.Font
-        else
-          Canvas.Font:=Font;
-        DrawCellText(i, 0, R, [], C.Footer.DisplayText);
-      end;
+      R.Top := R.Bottom;
+      R.Bottom := R.Bottom + DefaultRowHeight;
     end;
+
     if FDrawFullLine then
     begin
       Canvas.MoveTo(FooterRect.Left, FooterRect.Top);
@@ -3540,7 +4083,6 @@ if ScrollBarIsVisible(SB_HORZ) then
     end;
   end;
   Canvas.Brush.Color := Background;
-
 end;
 
 procedure TRxDBGrid.DoTitleClick(ACol: longint; ACollumn: TRxColumn;
@@ -4339,6 +4881,7 @@ var
   AValue:Variant;
 
   FCList:TFPList;
+  j: Integer;
 begin
   if (not (FFooterOptions.Active and DatalinkActive)) or (Columns.Count = 0) or (gsAddingAutoColumns in GridStatus)  then
     Exit;
@@ -4363,6 +4906,15 @@ begin
   begin
     APresent := TRxColumn(Columns[i]).Footer.FValueType in
       [fvtSum, fvtAvg, fvtMax, fvtMin, fvtCount];
+
+    if not APresent then
+      for j:=0 to TRxColumn(Columns[i]).Footers.Count-1 do
+      begin
+        APresent:=TRxColumn(Columns[i]).Footers[j].FValueType in [fvtSum, fvtAvg, fvtMax, fvtMin, fvtCount];
+        if APresent then
+          break;
+      end;
+
     if APresent then
       break;
   end;
@@ -4375,7 +4927,11 @@ begin
 
   cnt:=0;
   for i := 0 to Columns.Count - 1 do
+  begin
     TRxColumn(Columns[i]).Footer.ResetTestValue;
+    for j:=0 to TRxColumn(Columns[i]).Footers.Count - 1 do
+      TRxColumn(Columns[i]).Footers[j].ResetTestValue;
+  end;
 
   if (DataSource.DataSet.RecordCount<=0) then
   begin
@@ -4412,6 +4968,16 @@ begin
       FCList.Add(RCol);
       RCol.Footer.FField:=DHS.FieldByName(RCol.Footer.FieldName);
     end;
+
+    for j:=0 to RCol.Footers.Count - 1 do
+    begin
+      if (RCol.Footers[j].ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin]) and RCol.Visible then
+      begin
+        if FCList.IndexOf(RCol) < 0 then
+          FCList.Add(RCol);
+        RCol.Footers[j].FField:=DHS.FieldByName(RCol.Footers[j].FieldName);
+      end;
+    end;
   end;
 
   DHS.First;
@@ -4420,10 +4986,14 @@ begin
     for i:=0 to FCList.Count-1 do
     begin
       RCol:=TRxColumn(FCList[i]);
-      if RCol.FFooter.FValueType in [fvtSum, fvtAvg, fvtMax, fvtMin] then
-        RCol.FFooter.UpdateTestValueFromVar( RCol.FFooter.FField.AsVariant)
-//        BB:=RCol.FFooter.FField.AsFloat;
-//        RCol.FFooter.UpdateTestValueFromVar( RCol.FFooter.FField.AsFloat)
+      if (RCol.FFooter.FValueType in [fvtSum, fvtAvg, fvtMax, fvtMin]) and Assigned(RCol.FFooter.FField) then
+        RCol.FFooter.UpdateTestValueFromVar( RCol.FFooter.FField.AsVariant);
+
+      for j:=0 to RCol.FFooters.Count-1 do
+      begin
+        if (RCol.FFooters[j].FValueType in [fvtSum, fvtAvg, fvtMax, fvtMin]) and Assigned(RCol.FFooters[j].FField) then
+          RCol.FFooters[j].UpdateTestValueFromVar( RCol.FFooters[j].FField.AsVariant)
+      end;
     end;
     inc(cnt);
     DHS.Next;
@@ -4439,6 +5009,15 @@ begin
     else
     if RCol.Footer.ValueType = fvtAvg then
       RCol.FFooter.FTestValue:=RCol.FFooter.FTestValue / Cnt;
+
+    for j:=0 to RCol.Footers.Count-1 do
+    begin
+      if RCol.Footers[j].ValueType = fvtCount then
+          RCol.FFooters[j].FCountRec:=Cnt
+      else
+      if RCol.Footers[j].ValueType = fvtAvg then
+        RCol.FFooters[j].FTestValue:=RCol.FFooter.FTestValue / Cnt;
+    end;
   end;
 
   DHS.RecNo := Min(DHL.RecordCount + SavePos - 1, DHS.RecNo);
@@ -5251,9 +5830,15 @@ begin
   FFilter.Assign(AValue);
 end;
 
-function TRxColumn.GetFooter: TRxColumnFooter;
+(* function TRxColumn.GetFooter: TRxColumnFooter; *)
+function TRxColumn.GetFooter: TRxColumnFooterItem;
 begin
   Result := FFooter;
+end;
+
+function TRxColumn.GetFooters: TRxColumnFooterItems;
+begin
+  Result:=FFooters;
 end;
 
 function TRxColumn.GetConstraints: TRxDBGridCollumnConstraints;
@@ -5261,9 +5846,15 @@ begin
   Result:=FConstraints;
 end;
 
-procedure TRxColumn.SetFooter(const AValue: TRxColumnFooter);
+(* procedure TRxColumn.SetFooter(const AValue: TRxColumnFooter); *)
+procedure TRxColumn.SetFooter(const AValue: TRxColumnFooterItem);
 begin
   FFooter.Assign(AValue);
+end;
+
+procedure TRxColumn.SetFooters(AValue: TRxColumnFooterItems);
+begin
+  FFooters.Assign(AValue);
 end;
 
 procedure TRxColumn.SetImageList(const AValue: TImageList);
@@ -5321,15 +5912,21 @@ begin
   inherited Create(ACollection);
   FNotInKeyListIndex := -1;
   FConstraints:=TRxDBGridCollumnConstraints.Create(Self);
-  FFooter := TRxColumnFooter.Create(Self);
+(*  FFooter := TRxColumnFooter.Create(Self); *)
+  FFooter := TRxColumnFooterItem.Create(nil);
+  FFooter.FOwner:=Self;
+  FFooter.FillDefaultFont;
+
   FFilter := TRxColumnFilter.Create(Self);
   FDirectInput := true;
   FEditButtons:=TRxColumnEditButtons.Create(Self);
   FOptions:=[coCustomizeVisible, coCustomizeWidth];
+  FFooters:=TRxColumnFooterItems.Create(Self);
 end;
 
 destructor TRxColumn.Destroy;
 begin
+  FreeAndNil(FFooters);
   FreeAndNil(FEditButtons);
   if FKeyList <> nil then
   begin
@@ -5439,6 +6036,7 @@ begin
   inherited Destroy;
 end;
 
+(*
 { TRxColumnFooter }
 
 procedure TRxColumnFooter.SetValue(const AValue: string);
@@ -5863,6 +6461,7 @@ begin
   FreeThenNil(FFont);
   inherited Destroy;
 end;
+*)
 
 { TFilterListCellEditor }
 
@@ -6046,7 +6645,8 @@ begin
       with Add do
         Assign(TRxDBGridKeyStrokes(Source)[i]);
     end;
-  end else
+  end
+  else
     inherited Assign(Source);
 end;
 

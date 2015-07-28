@@ -80,13 +80,18 @@ type
 
 procedure TRxDBGridFooterFieldProperty.FillValues(const Values: TStringList);
 var
-  Footer: TRxColumnFooter;
   Grid: TRxDBGrid;
   DataSource: TDataSource;
 begin
-  Footer:=TRxColumnFooter(GetComponent(0));
-  Grid:=TRxDBGrid(Footer.Owner.Grid);
+  if GetComponent(0) is TRxColumnFooterItem then
+    Grid:=TRxDBGrid(TRxColumnFooterItem(GetComponent(0)).Owner.Grid)
+  else
+(*  if GetComponent(0) is TRxColumnFooter then
+    Grid:=TRxDBGrid(TRxColumnFooter(GetComponent(0)).Owner.Grid)
+  else *)
+    exit;
   if not (Grid is TRxDBGrid) then exit;
+
   DataSource := Grid.DataSource;
   if Assigned(DataSource) and Assigned(DataSource.DataSet) then
     DataSource.DataSet.GetFieldNames(Values);
@@ -163,7 +168,8 @@ begin
 
   //
   RegisterPropertyEditor(TypeInfo(string), TRxColumn, 'FieldName', TRxDBGridFieldProperty);
-  RegisterPropertyEditor(TypeInfo(string), TRxColumnFooter, 'FieldName', TRxDBGridFooterFieldProperty);
+(*  RegisterPropertyEditor(TypeInfo(string), TRxColumnFooter, 'FieldName', TRxDBGridFooterFieldProperty); *)
+  RegisterPropertyEditor(TypeInfo(string), TRxColumnFooterItem, 'FieldName', TRxDBGridFooterFieldProperty);
 end;
 
 end.

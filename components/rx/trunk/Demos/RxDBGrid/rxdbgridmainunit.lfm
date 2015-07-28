@@ -37,6 +37,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Filter.EmptyValue = '(Нет)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
+        Footers = <>
         ImageList = ImageList1
         KeyList.Strings = (
           '1=0'
@@ -63,6 +64,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Footer.Alignment = taRightJustify
         Footer.DisplayFormat = 'Count: %d'
         Footer.ValueType = fvtCount
+        Footers = <>
       end    
       item
         Title.Alignment = taCenter
@@ -80,12 +82,13 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Filter.EmptyValue = '(Нет)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
-        Footer.Value = 'This is test'#10'Line2'
+        Footer.Value = 'This is test'
         Footer.ValueType = fvtStaticText
         Footer.Font.Color = clRed
         Footer.Font.Height = -15
         Footer.Font.Name = 'Liberation Mono'
         Footer.Font.Style = [fsBold, fsItalic]
+        Footers = <>
         Options = [coCustomizeVisible, coCustomizeWidth, coDisableDialogFind]
       end    
       item
@@ -103,6 +106,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Filter.EmptyValue = '(Нет)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
+        Footers = <>
         WordWrap = True
       end    
       item
@@ -135,11 +139,22 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footer.Alignment = taRightJustify
-        Footer.DisplayFormat = '#,##0.00'
         Footer.FieldName = 'PRICE'
-        Footer.ValueType = fvtSum
         Footer.Font.Color = clPurple
         Footer.Font.Style = [fsBold, fsItalic]
+        Footers = <        
+          item
+            Alignment = taRightJustify
+            DisplayFormat = '#,##0.00'
+            FieldName = 'PRICE'
+            ValueType = fvtMin
+          end        
+          item
+            Alignment = taRightJustify
+            DisplayFormat = '#,##0.00'
+            FieldName = 'PRICE'
+            ValueType = fvtSum
+          end>
       end    
       item
         Title.Alignment = taCenter
@@ -155,6 +170,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Filter.EmptyValue = '(Нет)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
+        Footers = <>
       end    
       item
         Title.Alignment = taCenter
@@ -170,6 +186,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Filter.EmptyValue = '(Нет)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
+        Footers = <>
       end    
       item
         ButtonStyle = cbsPickList
@@ -225,6 +242,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Filter.EmptyValue = '(Нет)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
+        Footers = <>
       end>
     KeyStrokes = <    
       item
