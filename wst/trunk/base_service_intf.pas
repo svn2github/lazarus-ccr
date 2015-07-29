@@ -1638,6 +1638,7 @@ type
     FPascalSynonyms : TStrings;
     FExternalSynonyms : TStrings;
     FProperties : TObjectList;
+    procedure SetOptions(AValue: TTypeRegistryItemOptions);
   protected
     procedure Init(); virtual;
   protected
@@ -1678,7 +1679,7 @@ type
     property DataType : PTypeInfo read FDataType;
     property NameSpace : string read FNameSpace;
     property DeclaredName : string read FDeclaredName;
-    property Options : TTypeRegistryItemOptions read FOptions write FOptions;
+    property Options : TTypeRegistryItemOptions read FOptions write SetOptions;
     //property DefaultPropertyOptions : TTypeRegistryItemOptions
       //read FDefaultPropertyOptions write FDefaultPropertyOptions;
   end;
@@ -1884,12 +1885,12 @@ begin
 
   THeaderBlock.RegisterAttributeProperty('mustUnderstand');
   ri := r.Register(sSOAP_ENV,TypeInfo(THeaderBlock),'THeaderBlock');
-  ri.Options := ri.Options + [trioNonVisibleToMetadataService];
+  ri.Options := ri.Options + [trioNonVisibleToMetadataService,trioQualifiedAttribute];
   ri.SetPropertyOptions('mustUnderstand',[]);
   ri := r.Register(sSOAP_ENV,TypeInfo(TSimpleContentHeaderBlock));
-  ri.Options := ri.Options + [trioNonVisibleToMetadataService];
+  ri.Options := ri.Options + [trioNonVisibleToMetadataService,trioQualifiedAttribute];
   ri := r.Register(sSOAP_ENV,TypeInfo(THeaderBlockProxy));
-  ri.Options := ri.Options + [trioNonVisibleToMetadataService];
+  ri.Options := ri.Options + [trioNonVisibleToMetadataService,trioQualifiedAttribute];
 
 
   r.Register(sWST_BASE_NS,TypeInfo(TArrayOfStringRemotable),'TArrayOfStringRemotable').AddPascalSynonym('TArrayOfStringRemotable');
@@ -3163,6 +3164,14 @@ end;
 
 { TTypeRegistryItem }
 
+procedure TTypeRegistryItem.SetOptions(AValue: TTypeRegistryItemOptions);
+begin
+  if (FOptions = AValue) then
+    Exit;
+  FOptions := AValue;
+  Init();
+end;
+
 procedure TTypeRegistryItem.Init();
 begin
 
@@ -3353,7 +3362,7 @@ procedure TTypeRegistryItem.AddOptions(
   const AOptions: TTypeRegistryItemOptions
 );
 begin
-  FOptions := FOptions + AOptions;
+  Options := Options + AOptions;
 end;
 
 { TTypeRegistry }

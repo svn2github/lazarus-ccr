@@ -172,12 +172,61 @@ type
     property PartnerID : integer read FPartnerID write FPartnerID;
   end;
 
+  TShapeProperties = class(TBaseComplexRemotable)
+  private
+    FAreaFormula : UnicodeString;
+    FExtendedName : UnicodeString;
+  published
+    property AreaFormula : UnicodeString read FAreaFormula write FAreaFormula;
+    property ExtendedName : UnicodeString read FExtendedName write FExtendedName;
+  end;
+
+  TPositionPoint = class(TBaseComplexRemotable)
+  private
+    FX : integer;
+    FY : integer;
+    FUnits : UnicodeString;
+  published
+    property X : integer read FX write FX;
+    property Y : integer read FY write FY;
+    property Units : UnicodeString read FUnits write FUnits;
+  end;
+
+  TShape = class(TBaseComplexRemotable)
+  const NS = 'wst.test.form';
+  private
+    FName : UnicodeString;
+    FProperties : TShapeProperties;
+  public
+    constructor Create();override;
+    procedure FreeObjectProperties();override;
+  published
+    property Name : UnicodeString read FName write FName;
+    property Properties : TShapeProperties read FProperties write FProperties;
+  end;
+
+  TRectShape = class(TShape)
+  private
+    FWidth : integer;
+    FOrigine : TPositionPoint;
+    FHeight : integer;
+  public
+    constructor Create();override;
+    procedure FreeObjectProperties();override;
+  published
+    property Width : integer read FWidth write FWidth;
+    property Origine : TPositionPoint read FOrigine write FOrigine;
+    property Height : integer read FHeight write FHeight;
+  end;
+
   { TTest_SoapFormatterClient }
 
   TTest_SoapFormatterClient = class(TTestCase)
   published
     procedure test_soap_href_id();
     procedure inline_namespace();
+    procedure read_element_attribute_forms();
+    procedure write_element_attribute_forms();
   end;
 
   { TTest_THeaderBlockProxy }
@@ -225,6 +274,36 @@ end;
 class function NBHeader.GetNameSpace() : string;
 begin
   Result := 'NBS3';
+end;
+
+{ TShape }
+
+constructor TShape.Create();
+begin
+  inherited Create();
+  FProperties := TShapeProperties.Create();
+end;
+
+procedure TShape.FreeObjectProperties();
+begin
+  if Assigned(FProperties) then
+    FreeAndNil(FProperties);
+  inherited FreeObjectProperties();
+end;
+
+{ TRectShape }
+
+constructor TRectShape.Create();
+begin
+  inherited Create();
+  FOrigine := TPositionPoint.Create();
+end;
+
+procedure TRectShape.FreeObjectProperties();
+begin
+  if Assigned(FOrigine) then
+    FreeAndNil(FOrigine);
+  inherited FreeObjectProperties();
 end;
 
 { TTest_SoapFormatterServerNameSpace }
@@ -973,6 +1052,135 @@ begin
   end;
 end;
 
+procedure TTest_SoapFormatterClient.read_element_attribute_forms();
+const
+  XML_SOURCE =
+    '<?xml version="1.0" encoding="utf-8"?>' + sLineBreak +
+    '<SOAP-ENV:Envelope ' + sLineBreak +
+    '         xmlns:xsd="http://www.w3.org/2001/XMLSchema" ' + sLineBreak +
+    '         xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance"' + sLineBreak +
+    '         xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"' + sLineBreak +
+    '         xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">' + sLineBreak +
+    '  <SOAP-ENV:Body xmlns:ns1="wst.test.form">' + sLineBreak +
+    '    <ns1:Shape Height="123">' + sLineBreak +
+    '      <ns1:Name>Rectangle</ns1:Name>' + sLineBreak +
+    '      <Properties ns1:ExtendedName="A Rectangle Shape">' + sLineBreak +
+    '        <AreaFormula>Heigth * Width</AreaFormula>' + sLineBreak +
+    '      </Properties>' + sLineBreak +
+    '      <Width>456</Width>' + sLineBreak +
+    '      <Origine Units="Meters">' + sLineBreak +
+    '        <ns1:X>7</ns1:X>' + sLineBreak +
+    '        <ns1:Y>8</ns1:Y>' + sLineBreak +
+    '      </Origine>' + sLineBreak +
+    '    </ns1:Shape>' + sLineBreak +
+    '  </SOAP-ENV:Body>' + sLineBreak +
+    '</SOAP-ENV:Envelope>';
+var
+  f : IFormatterClient;
+  strm : TMemoryStream;
+  strBuffer : ansistring;
+  cctx : ICallContext;
+  x : TRectShape;
+  locStrPrmName : string;
+begin
+  x := nil;
+  f := soap_formatter.TSOAPFormatter.Create() as IFormatterClient;
+  f.GetPropertyManager().SetProperty('Style','Document');
+  f.GetPropertyManager().SetProperty('EncodingStyle','Literal');
+  strm := TMemoryStream.Create();
+  try
+    strBuffer := XML_SOURCE;
+    strm.Write(strBuffer[1],Length(strBuffer));
+    strm.Position := 0;
+    f.LoadFromStream(strm);
+    cctx := TSimpleCallContext.Create() as ICallContext;
+    f.BeginCallRead(cctx);
+    f.BeginCallRead(TSimpleCallContext.Create());
+      x := TRectShape.Create();
+      locStrPrmName := 'Shape';
+      f.Get(TypeInfo(TRectShape), locStrPrmName, x);
+    f.EndScopeRead();
+    CheckEquals('Rectangle',x.Name,'Name');
+    CheckEquals('A Rectangle Shape',x.Properties.ExtendedName,'x.Properties.ExtendedName');
+    CheckEquals('Heigth * Width',x.Properties.AreaFormula,'x.Properties.AreaFormula');
+    CheckEquals(123,x.Height,'Height');
+    CheckEquals(456,x.Width,'Width');
+    CheckEquals(7,x.Origine.X,'x.Origine.X');
+    CheckEquals(8,x.Origine.Y,'x.Origine.Y');
+  finally
+    FreeAndNil(x);
+    FreeAndNil(strm);
+  end;
+end;
+
+procedure TTest_SoapFormatterClient.write_element_attribute_forms();
+const
+  XML_SOURCE =
+    '<?xml version="1.0" encoding="utf-8"?>' + sLineBreak +
+    '<SOAP-ENV:Envelope ' + sLineBreak +
+    '         xmlns:xsd="http://www.w3.org/2001/XMLSchema" ' + sLineBreak +
+    '         xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance"' + sLineBreak +
+    '         xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"' + sLineBreak +
+    '         xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">' + sLineBreak +
+    '  <SOAP-ENV:Body xmlns:ns1="wst.test.form">' + sLineBreak +
+    '    <ns1:Shape Height="123">' + sLineBreak +
+    '      <ns1:Name>Rectangle</ns1:Name>' + sLineBreak +
+    '      <Properties ns1:ExtendedName="A Rectangle Shape">' + sLineBreak +
+    '        <AreaFormula>Heigth * Width</AreaFormula>' + sLineBreak +
+    '      </Properties>' + sLineBreak +
+    '      <Width>456</Width>' + sLineBreak +
+    '      <Origine Units="Meters">' + sLineBreak +
+    '        <ns1:X>7</ns1:X>' + sLineBreak +
+    '        <ns1:Y>8</ns1:Y>' + sLineBreak +
+    '      </Origine>' + sLineBreak +
+    '    </ns1:Shape>' + sLineBreak +
+    '  </SOAP-ENV:Body>' + sLineBreak +
+    '</SOAP-ENV:Envelope>';
+var
+  f : IFormatterClient;
+  strm : TMemoryStream;
+  strBuffer : ansistring;
+  x : TRectShape;
+  locDoc, locExistDoc : TXMLDocument;
+begin
+  locDoc := nil;
+  locExistDoc := nil;
+  strm := nil;
+  x := TRectShape.Create();
+  try
+    x.Name := 'Rectangle';
+    x.Properties.ExtendedName := 'A Rectangle Shape';
+    x.Properties.AreaFormula := 'Heigth * Width';
+    x.Height := 123;
+    x.Width := 456;
+    x.Origine.X := 7;
+    x.Origine.Y := 8;
+    x.Origine.Units := 'Meters';
+    f := TSOAPFormatter.Create() as IFormatterClient;
+    f.GetPropertyManager().SetProperty('Style','Document');
+    f.GetPropertyManager().SetProperty('EncodingStyle','Literal');
+    f.BeginCall('CreateRect','ShapeBO',TSimpleCallContext.Create() as ICallContext);
+      f.Put('Shape',TypeInfo(TRectShape),x);
+    f.EndCall();
+    strm := TMemoryStream.Create();
+    f.SaveToStream(strm);
+    strm.Position := 0;
+    ReadXMLFile(locDoc,strm);
+
+    strm.Clear();
+    strBuffer := XML_SOURCE;
+    strm.Write(strBuffer[1],Length(strBuffer));
+    strm.Position := 0;
+    ReadXMLFile(locExistDoc,strm);
+    Check(CompareNodes(locExistDoc.DocumentElement,locDoc.DocumentElement),'generated document differs from the existent one.');
+  finally
+    ReleaseDomNode(locDoc);
+    ReleaseDomNode(locExistDoc);
+    FreeAndNil(x);
+    FreeAndNil(strm);
+  end;
+end;
+
 { THeaderProxyTestObject }
 
 procedure THeaderProxyTestObject.SetDestructionCount(const AValue: PInteger);
@@ -1061,7 +1269,10 @@ end;
 
 initialization
 
-  GetTypeRegistry().Register(TSampleSimpleContentHeaderBlock_A.GetNameSpace(),TypeInfo(TSampleSimpleContentHeaderBlock_A));
+  GetTypeRegistry().Register(
+      TSampleSimpleContentHeaderBlock_A.GetNameSpace(),
+      TypeInfo(TSampleSimpleContentHeaderBlock_A)
+    );
   TSampleSimpleContentHeaderBlock_B.RegisterAttributeProperty('intAtt');
   GetTypeRegistry().Register(TSampleSimpleContentHeaderBlock_B.GetNameSpace(),TypeInfo(TSampleSimpleContentHeaderBlock_B));
   
@@ -1073,6 +1284,19 @@ initialization
   GetTypeRegistry().Register('urn:WS_PlotjetIntfU',TypeInfo(THRefTestSession),'TSession');
   GetTypeRegistry().Register(ns_soap_test,TypeInfo(TLoginInfos),'LoginInfos').AddExternalSynonym('NamedLoginInfos');
   GetTypeRegistry().Register(ns_soap_test,TypeInfo(THeaderProxyTestObject));
+
+  TRectShape.RegisterAttributeProperty('Height');
+  TShapeProperties.RegisterAttributeProperty('ExtendedName');
+  TPositionPoint.RegisterAttributeProperty('Units');
+  GetTypeRegistry().Register(TRectShape.NS,TypeInfo(TShape),'TShape');
+  GetTypeRegistry().Register(
+      TRectShape.NS,TypeInfo(TRectShape),'TRectShape'
+    ).AddOptions([trioUnqualifiedElement]);
+  GetTypeRegistry().Register(
+      TRectShape.NS,TypeInfo(TShapeProperties),
+      'TShapeProperties'
+    ).AddOptions([trioUnqualifiedElement,trioQualifiedAttribute]);
+  GetTypeRegistry().Register(TRectShape.NS,TypeInfo(TPositionPoint),'TPositionPoint');
 
   
   RegisterTest('Serializer',TTest_SoapFormatterServerNameSpace.Suite);

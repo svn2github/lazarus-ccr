@@ -1355,7 +1355,9 @@ begin
       eltFormEmpty := ([trioQualifiedElement,trioUnqualifiedElement]*regItem.Options) = [];
       attFormEmpty := ([trioQualifiedAttribute,trioUnqualifiedAttribute]*regItem.Options) = [];
       qualifiedElt := (trioQualifiedElement in regItem.Options) and not(trioUnqualifiedElement in regItem.Options);
+      qualifiedElt := eltFormEmpty or qualifiedElt;
       qualifiedAtt := (trioQualifiedAttribute in regItem.Options) and not(trioUnqualifiedAttribute in regItem.Options);
+      qualifiedAtt := not(attFormEmpty) and qualifiedAtt;
       GetPropList(locTypeInfo,FRawPropList);
       try
         for i := 0 to Pred(c) do begin
@@ -1369,24 +1371,18 @@ begin
             serInfo.FPersisteType := st;
             serInfo.FPropInfo := ppi;
             serInfo.FNameSpace := regItem.NameSpace;
-            if Target.IsAttributeProperty(ppi^.Name) then begin
-              serInfo.FStyle := ssAttibuteSerialization;
-              serInfo.FQualifiedName := True;
-              serInfo.FNameSpace := '';
-            end else begin
+            if Target.IsAttributeProperty(ppi^.Name) then
+              serInfo.FStyle := ssAttibuteSerialization
+            else
               serInfo.FStyle := ssNodeSerialization;
-            end;
             if ( regPropItem <> nil ) then
               serInfo.FExternalName := regPropItem.ExternalName
             else
               serInfo.FExternalName := serInfo.FName;
-            if (serInfo.FStyle = ssNodeSerialization) then begin
-              if not(eltFormEmpty) then
-                serInfo.FQualifiedName := qualifiedElt;
-            end else begin
-              if not(attFormEmpty) then
-                serInfo.FQualifiedName := qualifiedAtt;
-            end;
+            if (serInfo.FStyle = ssNodeSerialization) then
+              serInfo.FQualifiedName := qualifiedElt
+            else
+              serInfo.FQualifiedName := qualifiedAtt;
             if serInfo.QualifiedName then begin
               serInfo.FReaderProc := ReaderInfoMap[ppi^.PropType^.Kind].Qualified;
               serInfo.FWriterProc := WriterInfoMap[ppi^.PropType^.Kind].Qualified;
@@ -1405,15 +1401,44 @@ begin
             GetPropInfos(PTypeInfo(cl.ClassInfo),clPL);
             regItem := ATypeRegistry.Find(PTypeInfo(cl.ClassInfo),True);
             if ( regItem <> nil ) then begin
+              eltFormEmpty := ([trioQualifiedElement,trioUnqualifiedElement]*regItem.Options) = [];
+              attFormEmpty := ([trioQualifiedAttribute,trioUnqualifiedAttribute]*regItem.Options) = [];
+              qualifiedElt := (trioQualifiedElement in regItem.Options) and not(trioUnqualifiedElement in regItem.Options);
+              qualifiedElt := eltFormEmpty or qualifiedElt;
+              qualifiedAtt := (trioQualifiedAttribute in regItem.Options) and not(trioUnqualifiedAttribute in regItem.Options);
+              qualifiedAtt := not(attFormEmpty) and qualifiedAtt;
               for i := 0 to Pred(c) do begin
                 ppi := clPL^[i];
                 serInfo := serArray[ppi^.NameIndex];
                 if ( serInfo <> nil ) then begin
-                  if ( thisRegItem.NameSpace <> regItem.NameSpace ) then begin
-                    serInfo.FNameSpace := regItem.NameSpace;
-                    serInfo.FQualifiedName := True;
-                    serInfo.FReaderProc := ReaderInfoMap[ppi^.PropType^.Kind].Qualified;
-                    serInfo.FWriterProc := WriterInfoMap[ppi^.PropType^.Kind].Qualified;
+                  if (serInfo.Style = ssNodeSerialization) then begin
+                    if qualifiedElt then begin
+                      if not(serInfo.FQualifiedName) or (thisRegItem.NameSpace <> regItem.NameSpace) then begin
+                        serInfo.FNameSpace := regItem.NameSpace;
+                        serInfo.FQualifiedName := True;
+                        serInfo.FReaderProc := ReaderInfoMap[ppi^.PropType^.Kind].Qualified;
+                        serInfo.FWriterProc := WriterInfoMap[ppi^.PropType^.Kind].Qualified;
+                      end;
+                    end else begin
+                      serInfo.FNameSpace := '';
+                      serInfo.FQualifiedName := False;
+                      serInfo.FReaderProc := ReaderInfoMap[ppi^.PropType^.Kind].Simple;
+                      serInfo.FWriterProc := WriterInfoMap[ppi^.PropType^.Kind].Simple;
+                    end;
+                  end else begin
+                    if qualifiedAtt then begin
+                      if not(serInfo.FQualifiedName) or (thisRegItem.NameSpace <> regItem.NameSpace) then begin
+                        serInfo.FNameSpace := regItem.NameSpace;
+                        serInfo.FQualifiedName := True;
+                        serInfo.FReaderProc := ReaderInfoMap[ppi^.PropType^.Kind].Qualified;
+                        serInfo.FWriterProc := WriterInfoMap[ppi^.PropType^.Kind].Qualified;
+                      end;
+                    end else begin
+                      serInfo.FNameSpace := '';
+                      serInfo.FQualifiedName := False;
+                      serInfo.FReaderProc := ReaderInfoMap[ppi^.PropType^.Kind].Simple;
+                      serInfo.FWriterProc := WriterInfoMap[ppi^.PropType^.Kind].Simple;
+                    end;
                   end;
                 end;
               end;
@@ -1588,7 +1613,7 @@ var
       serInfo.FExternalName := serInfo.FName;
       serInfo.FPersisteType := st;
       serInfo.FPropInfo := APropInfo;
-      serInfo.FNameSpace := regItem.NameSpace;
+      //serInfo.FNameSpace := regItem.NameSpace;
       serInfo.FStyle := ssAttibuteSerialization;
       serInfo.FQualifiedName := True;
       serInfo.FNameSpace := '';
@@ -1877,7 +1902,9 @@ end;
 procedure TBaseComplexTypeRegistryItem.Init();
 begin
   inherited Init();
-  FSerializer := TObjectSerializer.Create(TBaseComplexRemotableClass(GetTypeData(DataType)^.ClassType),Owner);
+  if (FSerializer = nil) then
+    FSerializer := TObjectSerializer.Create(TBaseComplexRemotableClass(GetTypeData(DataType)^.ClassType),Owner);
+  FSerializer.Prepare(Self.Owner);
 end;
 
 destructor TBaseComplexTypeRegistryItem.Destroy();

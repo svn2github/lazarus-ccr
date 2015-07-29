@@ -5036,8 +5036,8 @@ begin
     s := TMemoryStream.Create();
     f.SaveToStream(s);
     FreeAndNil(a);
-  //  if not IsStrEmpty(AFilename) then
-    //  s.SaveToFile(wstExpandLocalFileName(AFilename));
+    //if not IsStrEmpty(AFilename) then
+      //s.SaveToFile(wstExpandLocalFileName(AFilename));
 
     a := TClass_B.Create();
     f := CreateFormatter(TypeInfo(TClass_B));

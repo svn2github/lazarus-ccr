@@ -888,9 +888,10 @@ Var
 begin
   strNodeName := AName;
   if (Style = Document) and
-     ( ( (FSerializationStyle = ssNodeSerialization) and not(StackTop().ElementFormUnqualified) ) or
+     (ANameSpace <> '')
+     {( ( (FSerializationStyle = ssNodeSerialization) and not(StackTop().ElementFormUnqualified) ) or
        ( (FSerializationStyle = ssAttibuteSerialization) and not(StackTop().AttributeFormUnqualified))
-     )
+     )}
   then begin
     namespaceLongName := ANameSpace;
     if ( namespaceLongName <> '' ) then begin
@@ -1074,11 +1075,12 @@ var
 begin
   strNodeName := AName;
   if (Style = Document) and
-     ( not(HasScope()) or
+     (ANameSpace <> '')
+     {( not(HasScope()) or
        ( ( (FSerializationStyle = ssNodeSerialization) and not(StackTop().ElementFormUnqualified) ) or
          ( (FSerializationStyle = ssAttibuteSerialization) and not(StackTop().AttributeFormUnqualified))
        )
-     )
+     )}
   then begin
     if ( ANameSpace <> '' ) then begin
       {if ( ANameSpace = '' ) then
@@ -1426,6 +1428,7 @@ begin
   end;
   StackTop().SetNameSpace(nmspc);
   StackTop().ElementFormUnqualified := trioUnqualifiedElement in typData.Options;
+  StackTop().AttributeFormUnqualified := not(trioQualifiedAttribute in typData.Options);
 end;
 
 procedure TSOAPBaseFormatter.BeginArray(
@@ -1558,8 +1561,8 @@ begin
         nsStr := Copy(nsStr,Succ(AnsiPos(':',nsStr)),MaxInt);
       End;
       if not(HasScope()) or
-         ( (Style = Document) and
-           not(StackTop().ElementFormUnqualified)
+         ( (Style = Document) {and
+           not(StackTop().ElementFormUnqualified) }
          )
       then begin
         scpStr := nsStr + ':' + scpStr;
@@ -1665,6 +1668,7 @@ begin
          ( (AScopeType = stArray) and (AStyle = asScoped) )
       then begin
         StackTop().ElementFormUnqualified := trioUnqualifiedElement in typData.Options;
+        StackTop().AttributeFormUnqualified := not(trioQualifiedAttribute in typData.Options);
       end;
     end;
     Result := StackTop().GetItemsCount();
@@ -1979,7 +1983,7 @@ procedure TSOAPBaseFormatter.Put(
   const AData
 );
 begin
-  Put(StackTop().NameSpace,AName,ATypeInfo,AData);
+  Put('',AName,ATypeInfo,AData);
 end;
 
 procedure TSOAPBaseFormatter.PutScopeInnerValue(
@@ -2264,7 +2268,7 @@ function TSOAPBaseFormatter.Get(
   var AData
 ) : Boolean;
 begin
-  Result := Get(ATypeInfo,StackTop().NameSpace,AName,AData);
+  Result := Get(ATypeInfo,'',AName,AData);
 end;
 
 procedure TSOAPBaseFormatter.GetScopeInnerValue(
