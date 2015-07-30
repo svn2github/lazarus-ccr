@@ -1708,10 +1708,16 @@ type
     function IndexOf(Const ATypeInfo : PTypeInfo):Integer;
     function Add(AItem:TTypeRegistryItem):Integer;
     function Register(
+      const ANameSpace    : string;
+      const ADataType     : PTypeInfo;
+      const ADeclaredName : string;
+      const AOptions      : TTypeRegistryItemOptions
+    ):TTypeRegistryItem;overload;
+    function Register(
       Const ANameSpace    : String;
       Const ADataType     : PTypeInfo;
       Const ADeclaredName : String = ''
-    ):TTypeRegistryItem;
+    ):TTypeRegistryItem;overload;
     function Find(ATypeInfo : PTypeInfo; Const AExact : Boolean):TTypeRegistryItem;overload;
     function Find(const APascalTypeName : string):TTypeRegistryItem;overload;
     function FindByDeclaredName(
@@ -3444,7 +3450,7 @@ begin
     FInitializerList.Add(AInitializer);
 end;
 
-function TTypeRegistry.IndexOf(Const ATypeInfo: PTypeInfo): Integer;
+function TTypeRegistry.IndexOf(const ATypeInfo: PTypeInfo): Integer;
 var
   i : Integer;
 begin
@@ -3471,9 +3477,10 @@ begin
 end;
 
 function TTypeRegistry.Register(
-  Const ANameSpace    : String;
-  Const ADataType     : PTypeInfo;
-  Const ADeclaredName : String = ''
+  const ANameSpace    : string;
+  const ADataType     : PTypeInfo;
+  const ADeclaredName : string;
+  const AOptions      : TTypeRegistryItemOptions
 ): TTypeRegistryItem;
 var
   i : Integer;
@@ -3482,6 +3489,7 @@ begin
   if ( i = -1 ) then begin
     Result := GetItemClassFor(ADataType).Create(Self,ANameSpace,ADataType,ADeclaredName);
     Add(Result);
+    Result.FOptions := Result.FOptions + AOptions;
     Result.Init();
 {$IFDEF TRemotableTypeInitializer_Initialize}
     InitializeItem(Result);
@@ -3491,7 +3499,17 @@ begin
   end;
 end;
 
-function TTypeRegistry.Find(ATypeInfo : PTypeInfo; Const AExact : Boolean):TTypeRegistryItem;
+function TTypeRegistry.Register(
+  const ANameSpace    : string;
+  const ADataType     : PTypeInfo;
+  const ADeclaredName : string
+) : TTypeRegistryItem;
+begin
+  Result := Register(ANameSpace,ADataType,ADeclaredName,[]);
+end;
+
+function TTypeRegistry.Find(ATypeInfo: PTypeInfo; const AExact: Boolean
+  ): TTypeRegistryItem;
 Var
   i : Integer;
   searchClass : TClass;

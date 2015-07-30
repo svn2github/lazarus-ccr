@@ -2644,7 +2644,7 @@ var
   end;
 
 var
-  strBuffer : string;
+  strBuffer, locFormOptionString : string;
 begin
   locParentIsEnum := False;
   locPropList := TObjectList.Create(False);
@@ -2660,15 +2660,18 @@ begin
         Indent(); WriteLn('end;');
       DecIndent();
 
+      if (FFormOptions <> '') then
+        locFormOptionString := Format(',%s',[FFormOptions])
+      else
+        locFormOptionString := '';
       FImpTempStream.Indent();
       strBuffer := Format(
-                     '%s.Register(%s,TypeInfo(%s),%s)',
+                     '%s.Register(%s,TypeInfo(%s),%s%s);',
                      [ sLOCAL_TYPE_REGISTER_REFERENCE,sNAME_SPACE,ASymbol.Name,
-                       QuotedStr(SymbolTable.GetExternalName(ASymbol))]
+                       QuotedStr(SymbolTable.GetExternalName(ASymbol)),
+                       locFormOptionString
+                     ]
                    );
-      if (FFormOptions <> '') then
-        strBuffer := Format('%s.AddOptions(%s)',[strBuffer,FFormOptions]);
-      strBuffer := strBuffer + ';';
       FImpTempStream.WriteLn(strBuffer);
 
       SetCurrentStream(FImpStream);
