@@ -54,6 +54,11 @@ type
     procedure type_alias_widestring();
     procedure type_hint_array_item();
     procedure type_hint_record_item();
+
+    procedure default_element_qualified();
+    procedure default_element_unqualified();
+    procedure default_attribute_qualified();
+    procedure default_attribute_unqualified();
   end;
 
   TTest_XsdGenerator = class(TTest_CustomXsdGenerator)
@@ -1006,6 +1011,138 @@ begin
     g.Execute(tr,mdl.Name);
     //WriteXMLFile(locDoc,wstExpandLocalFileName('type_hint_record_item.xsd'));
     locExistDoc := LoadXmlFromFilesList('type_hint_record_item.xsd');
+    Check(CompareNodes(locExistDoc.DocumentElement,locDoc.DocumentElement),'generated document differs from the existent one.');
+  finally
+    ReleaseDomNode(locExistDoc);
+    ReleaseDomNode(locDoc);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdGenerator.default_element_qualified();
+const MODULE_NAME = 'default_element_qualified';
+var
+  tr : TwstPasTreeContainer;
+  mdl : TPasModule;
+  g : IGenerator;
+  locDoc, locExistDoc : TXMLDocument;
+  fileName : string;
+begin
+  locDoc := nil;
+  locExistDoc := nil;
+  tr := TwstPasTreeContainer.Create();
+  try
+    CreateWstInterfaceSymbolTable(tr);
+    mdl := TPasModule(tr.CreateElement(TPasModule,MODULE_NAME,tr.Package,visDefault,'',0));
+    tr.Package.Modules.Add(mdl);
+    mdl.InterfaceSection := TInterfaceSection(tr.CreateElement(TInterfaceSection,'',mdl,visDefault,'',0));
+    tr.Properties.SetValue(mdl,s_elementFormDefault,s_qualified);
+
+    locDoc := CreateDoc();
+    g := CreateGenerator(locDoc);
+    g.Execute(tr,mdl.Name);
+    fileName := MODULE_NAME + '.xsd';
+    //WriteXMLFile(locDoc,'.\'+fileName);
+    locExistDoc := LoadXmlFromFilesList(fileName);
+    Check(CompareNodes(locExistDoc.DocumentElement,locDoc.DocumentElement),'generated document differs from the existent one.');
+  finally
+    ReleaseDomNode(locExistDoc);
+    ReleaseDomNode(locDoc);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdGenerator.default_element_unqualified();
+const MODULE_NAME = 'default_element_unqualified';
+var
+  tr : TwstPasTreeContainer;
+  mdl : TPasModule;
+  g : IGenerator;
+  locDoc, locExistDoc : TXMLDocument;
+  fileName : string;
+begin
+  locDoc := nil;
+  locExistDoc := nil;
+  tr := TwstPasTreeContainer.Create();
+  try
+    CreateWstInterfaceSymbolTable(tr);
+    mdl := TPasModule(tr.CreateElement(TPasModule,MODULE_NAME,tr.Package,visDefault,'',0));
+    tr.Package.Modules.Add(mdl);
+    mdl.InterfaceSection := TInterfaceSection(tr.CreateElement(TInterfaceSection,'',mdl,visDefault,'',0));
+    tr.Properties.SetValue(mdl,s_elementFormDefault,s_unqualified);
+
+    locDoc := CreateDoc();
+    g := CreateGenerator(locDoc);
+    g.Execute(tr,mdl.Name);
+    fileName := MODULE_NAME + '.xsd';
+    WriteXMLFile(locDoc,'.\'+fileName);
+    locExistDoc := LoadXmlFromFilesList(fileName);
+    Check(CompareNodes(locExistDoc.DocumentElement,locDoc.DocumentElement),'generated document differs from the existent one.');
+  finally
+    ReleaseDomNode(locExistDoc);
+    ReleaseDomNode(locDoc);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdGenerator.default_attribute_qualified();
+const MODULE_NAME = 'default_attribute_qualified';
+var
+  tr : TwstPasTreeContainer;
+  mdl : TPasModule;
+  g : IGenerator;
+  locDoc, locExistDoc : TXMLDocument;
+  fileName : string;
+begin
+  locDoc := nil;
+  locExistDoc := nil;
+  tr := TwstPasTreeContainer.Create();
+  try
+    CreateWstInterfaceSymbolTable(tr);
+    mdl := TPasModule(tr.CreateElement(TPasModule,MODULE_NAME,tr.Package,visDefault,'',0));
+    tr.Package.Modules.Add(mdl);
+    mdl.InterfaceSection := TInterfaceSection(tr.CreateElement(TInterfaceSection,'',mdl,visDefault,'',0));
+    tr.Properties.SetValue(mdl,s_attributeFormDefault,s_qualified);
+
+    locDoc := CreateDoc();
+    g := CreateGenerator(locDoc);
+    g.Execute(tr,mdl.Name);
+    fileName := MODULE_NAME + '.xsd';
+    //WriteXMLFile(locDoc,'.\'+fileName);
+    locExistDoc := LoadXmlFromFilesList(fileName);
+    Check(CompareNodes(locExistDoc.DocumentElement,locDoc.DocumentElement),'generated document differs from the existent one.');
+  finally
+    ReleaseDomNode(locExistDoc);
+    ReleaseDomNode(locDoc);
+    FreeAndNil(tr);
+  end;
+end;
+
+procedure TTest_CustomXsdGenerator.default_attribute_unqualified();
+const MODULE_NAME = 'default_attribute_unqualified';
+var
+  tr : TwstPasTreeContainer;
+  mdl : TPasModule;
+  g : IGenerator;
+  locDoc, locExistDoc : TXMLDocument;
+  fileName : string;
+begin
+  locDoc := nil;
+  locExistDoc := nil;
+  tr := TwstPasTreeContainer.Create();
+  try
+    CreateWstInterfaceSymbolTable(tr);
+    mdl := TPasModule(tr.CreateElement(TPasModule,MODULE_NAME,tr.Package,visDefault,'',0));
+    tr.Package.Modules.Add(mdl);
+    mdl.InterfaceSection := TInterfaceSection(tr.CreateElement(TInterfaceSection,'',mdl,visDefault,'',0));
+    tr.Properties.SetValue(mdl,s_attributeFormDefault,s_unqualified);
+
+    locDoc := CreateDoc();
+    g := CreateGenerator(locDoc);
+    g.Execute(tr,mdl.Name);
+    fileName := MODULE_NAME + '.xsd';
+    WriteXMLFile(locDoc,'.\'+fileName);
+    locExistDoc := LoadXmlFromFilesList(fileName);
     Check(CompareNodes(locExistDoc.DocumentElement,locDoc.DocumentElement),'generated document differs from the existent one.');
   finally
     ReleaseDomNode(locExistDoc);

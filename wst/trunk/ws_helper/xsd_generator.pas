@@ -117,6 +117,10 @@ type
       ASymTable : TwstPasTreeContainer;
       AModule   : TPasModule
     );virtual;
+    procedure GenerateModuleOptions(
+            ASymTable  : TwstPasTreeContainer;
+            AModule    : TPasModule
+    );virtual;
     property Document : TDOMDocument read FDocument;
     property Options : TGeneratorOptions read FOptions;
   public
@@ -1373,6 +1377,7 @@ begin
     raise EXsdGeneratorException.CreateFmt('Unable to find module : "%s".',[AModuleName]);
   Prepare(ASymTable,mdl);
   GenerateImports(ASymTable,mdl);
+  GenerateModuleOptions(ASymTable,mdl);
   gr := GetXsdTypeHandlerRegistry();
   typeList := mdl.InterfaceSection.Declarations;
   k := typeList.Count;
@@ -1417,6 +1422,30 @@ end;
 procedure TCustomXsdGenerator.Prepare(ASymTable : TwstPasTreeContainer; AModule : TPasModule);
 begin
 
+end;
+
+procedure TCustomXsdGenerator.GenerateModuleOptions(
+  ASymTable : TwstPasTreeContainer;
+  AModule   : TPasModule
+);
+var
+  s : string;
+  locSchemaNode : TDOMElement;
+begin
+  if ASymTable.Properties.HasValue(AModule,s_elementFormDefault) then begin
+    s := Trim(ASymTable.Properties.GetValue(AModule,s_elementFormDefault));
+    if (s <> '') then begin
+      locSchemaNode := GetSchemaNode(FDocument) as TDOMElement;
+      locSchemaNode.SetAttribute(s_elementFormDefault,s);
+    end;
+  end;
+  if ASymTable.Properties.HasValue(AModule,s_attributeFormDefault) then begin
+    s := Trim(ASymTable.Properties.GetValue(AModule,s_attributeFormDefault));
+    if (s <> '') then begin
+      locSchemaNode := GetSchemaNode(FDocument) as TDOMElement;
+      locSchemaNode.SetAttribute(s_attributeFormDefault,s);
+    end;
+  end;
 end;
 
 constructor TCustomXsdGenerator.Create(const ADocument : TDOMDocument);

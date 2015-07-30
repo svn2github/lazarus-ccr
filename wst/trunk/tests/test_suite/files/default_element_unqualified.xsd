@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schema 
+    xmlns:tns="default_element_unqualified" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="default_element_unqualified" 
+    elementFormDefault="unqualified"
+/>
