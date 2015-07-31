@@ -67,6 +67,7 @@ type
     RootAddress      : ShortString;
     ServicesCount    : Word;
     Services         : PService;
+    Properties       : PPropertyData;
   end;
 
   IModuleMetadataMngr = interface
@@ -75,6 +76,11 @@ type
     function GetCount():Integer;
     function GetRepositoryName(const AIndex : Integer):shortstring;
     procedure SetRepositoryNameSpace(const ARepName,ANameSpace : shortstring);
+    procedure SetRepositoryCustomData(
+      const ARepName   : shortstring;
+      const ADataName,
+            AData      : string
+    );
     function LoadRepositoryName(
       const ARepName,ARootAddress  : shortstring;
       out   ARepository  : PServiceRepository
@@ -316,6 +322,8 @@ begin
       end;
       Freemem(ARepository^.Services, c * SizeOf(TService) );
     end;
+    if (ARepository^.Properties <> nil) then
+      ClearProperties(ARepository^.Properties);
     Freemem(ARepository,SizeOf(TServiceRepository));
     ARepository := nil;
   end;
@@ -493,6 +501,7 @@ begin
     ADest^.Name := ASource^.Name;
     ADest^.NameSpace := ASource^.NameSpace;
     ADest^.RootAddress := ASource^.RootAddress;
+    ADest^.Properties := CloneProperties(ASource^.Properties);
     c := ASource^.ServicesCount;
     if ( c > 0 ) then begin
       ADest^.Services := wst_GetMem( c * SizeOf(TService) );
@@ -531,6 +540,11 @@ type
     function GetCount():Integer;
     function GetRepositoryName(const AIndex : Integer):shortstring;
     procedure SetRepositoryNameSpace(const ARepName,ANameSpace : shortstring);
+    procedure SetRepositoryCustomData(
+      const ARepName   : shortstring;
+      const ADataName,
+            AData      : string
+    );
     function LoadRepositoryName(
       const ARepName,ARootAddress  : shortstring;
       out   ARepository  : PServiceRepository
@@ -671,6 +685,23 @@ begin
   i := FindInnerListIndex(ARepName);
   if ( i >= 0 ) then
     FRepositories[i]^.NameSpace := ANameSpace;
+end;
+
+procedure TModuleMetadataMngr.SetRepositoryCustomData(
+  const ARepName   : shortstring;
+  const ADataName,
+        AData      : string
+);
+var
+  i : Integer;
+  rp : PServiceRepository;
+  sp : PService;
+begin
+  i := FindInnerListIndex(ARepName);
+  if (i < 0) then
+    i := InternalLoadRepository(ARepName);
+  rp := FRepositories[i];
+  Add(rp^.Properties,ADataName,AData);
 end;
 
 function TModuleMetadataMngr.LoadRepositoryName(

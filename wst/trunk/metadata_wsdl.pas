@@ -178,6 +178,9 @@ const
   sFORMAT_Input_EncodingStyle = 'FORMAT_Input_EncodingStyle';
   sFORMAT_Input_EncodingStyleURI = 'FORMAT_Input_EncodingStyleURI';
 
+  sFORM_attributeFormDefault = 'attributeFormDefault';
+  sFORM_elementFormDefault   = 'elementFormDefault';
+
 var
   WsdlTypeHandlerRegistryInst : IWsdlTypeHandlerRegistry;
   
@@ -596,6 +599,7 @@ var
   defNode, typesNode, schNode : TDOMElement;
   i, c : Integer;
   ps : PService;
+  propData : PPropertyData;
 begin
   if not ( Assigned(AMdtdRep) and Assigned(ADoc)) then
     Exit;
@@ -605,6 +609,12 @@ begin
   schNode := CreateElement(sXSD + ':' + sWSDL_SCHEMA,typesNode,ADoc);
   schNode.SetAttribute(sXMLNS,sXSD_NS);
   schNode.SetAttribute(sWSDL_TARGET_NS,AMdtdRep^.NameSpace);
+  propData := Find(AMdtdRep^.Properties,sFORM_elementFormDefault);
+  if (propData <> nil) and (propData^.Data <> '') then
+    schNode.SetAttribute(sFORM_elementFormDefault,Trim(propData^.Data));
+  propData := Find(AMdtdRep^.Properties,sFORM_attributeFormDefault);
+  if (propData <> nil) and (propData^.Data <> '') then
+    schNode.SetAttribute(sFORM_attributeFormDefault,Trim(propData^.Data));
 
   GenerateServiceTypes();
 

@@ -2981,6 +2981,7 @@ procedure TInftGenerator.GenerateCustomMetadatas();
   
 var
   i : Integer;
+  s : string;
 begin
   SetCurrentStream(FImpStream);
   IncIndent();
@@ -2992,6 +2993,12 @@ begin
   WriteLn('begin');
   Indent();WriteLn('mm := GetModuleMetadataMngr();');
   Indent();WriteLn('mm.SetRepositoryNameSpace(%s, %s);',[sUNIT_NAME,sNAME_SPACE]);
+  s := Trim(SymbolTable.Properties.GetValue(SymbolTable.CurrentModule,s_elementFormDefault));
+  if (s <> '') then
+    Indent();WriteLn('mm.SetRepositoryCustomData(%s, %s, %s);',[sUNIT_NAME,QuotedStr(s_elementFormDefault),QuotedStr(s)]);
+  s := Trim(SymbolTable.Properties.GetValue(SymbolTable.CurrentModule,s_attributeFormDefault));
+  if (s <> '') then
+    Indent();WriteLn('mm.SetRepositoryCustomData(%s, %s, %s);',[sUNIT_NAME,QuotedStr(s_attributeFormDefault),QuotedStr(s)]);
   for i := 0 to Pred(SymbolTable.BindingCount) do begin
     WriteServiceDatas(SymbolTable.Binding[i]);
   end;
