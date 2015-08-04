@@ -76,13 +76,18 @@ end;
 { TSOAPFormatter }
 
 procedure TSOAPFormatter.BeginCallResponse(Const AProcName,ATarget:string);
+var
+  locOldStyle : TSOAPDocumentStyle;
 begin
   if ( FCallContext = nil ) then
     FCallContext := TSimpleCallContext.Create();
   Clear();
   Prepare();
     WriteHeaders(FCallContext);
-    BeginScope('Body',sSOAP_ENV,'',stObject,asNone);
+    locOldStyle := Style;
+    Style := Document;
+      BeginScope('Body',sSOAP_ENV,'',stObject,asNone);
+    Style := locOldStyle;
       BeginScope(AProcName + 'Response',ATarget,'',stObject,asNone);
 end;
 
