@@ -153,6 +153,7 @@ var
   locRes : PServiceRepository;
 begin
   New(locRes);
+  FillChar(locRes^,SizeOf(locRes^),#0);
   locRes^.Name := 'runtime_generator';
   locRes^.NameSpace := sNAMESPACE_SAMPLE;
   locRes^.RootAddress := 'http://runtime-generator-sample.com';
