@@ -2994,11 +2994,13 @@ begin
   Indent();WriteLn('mm := GetModuleMetadataMngr();');
   Indent();WriteLn('mm.SetRepositoryNameSpace(%s, %s);',[sUNIT_NAME,sNAME_SPACE]);
   s := Trim(SymbolTable.Properties.GetValue(SymbolTable.CurrentModule,s_elementFormDefault));
-  if (s <> '') then
+  if (s <> '') then begin
     Indent();WriteLn('mm.SetRepositoryCustomData(%s, %s, %s);',[sUNIT_NAME,QuotedStr(s_elementFormDefault),QuotedStr(s)]);
+  end;
   s := Trim(SymbolTable.Properties.GetValue(SymbolTable.CurrentModule,s_attributeFormDefault));
-  if (s <> '') then
+  if (s <> '') then begin
     Indent();WriteLn('mm.SetRepositoryCustomData(%s, %s, %s);',[sUNIT_NAME,QuotedStr(s_attributeFormDefault),QuotedStr(s)]);
+  end;
   for i := 0 to Pred(SymbolTable.BindingCount) do begin
     WriteServiceDatas(SymbolTable.Binding[i]);
   end;
