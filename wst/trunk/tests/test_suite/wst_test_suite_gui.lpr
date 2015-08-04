@@ -3,9 +3,14 @@ program wst_test_suite_gui;
 {$mode objfpc}{$H+}
 
 uses
-  {$IFDEF UNIX}
-  cthreads, cwstring,
-  {$ENDIF}
+{$IFDEF UNIX}
+  cthreads,
+  {$IF (FPC_VERSION >= 3)}
+    fpwidestring, unicodeducet,
+  {$ELSEIF}
+    cwstring,
+  {$IFEND}
+{$ENDIF}
   Interfaces, Forms, GuiTestRunner, TestFormatter_unit, testmetadata_unit,
   server_service_soap, soap_formatter, base_binary_formatter, base_service_intf,
   base_soap_formatter, binary_formatter, binary_streamer,
