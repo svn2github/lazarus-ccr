@@ -1485,6 +1485,7 @@ end;
 
 destructor TRxColumnFooterItem.Destroy;
 begin
+  FreeAndNil(FFont);
   inherited Destroy;
 end;
 
