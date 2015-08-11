@@ -27,7 +27,7 @@ uses
   
 const
   ProgramName    = 'CvtHelp';
-  ProgramVersion = '0.01';
+  ProgramVersion = '0.03';
   
 var
   OldFileName : string;
@@ -210,9 +210,13 @@ begin
       WriteLn(NewFileVar, '-->');
       end                                                
 
+     {Important note: If you formatted your topics or popup text (what
+       you're linking to) with a different style name, change or add to
+       the next few lines (remove spaces from your style names).}
     else if (Pos('class=Topictitle', InStr) > 0) or
-            (Pos('class=Topic>', InStr) > 0) then  {Found a topic?}
-      begin
+            (Pos('class=Topic>', InStr) > 0) or
+            (Pos('class=Popuptext><a', InStr) > 0) then  {Found a topic?}
+      begin {Note since PopupText may have >1 paragraph, look for actual topic}
        {Get footnote number _ftnXX}
       FnPos := Pos('#_', InStr) + 1;
       FnRef := '';
@@ -227,8 +231,10 @@ begin
         TopicMapped := False;
         if MapSection.Values[TopicStr] <> '' then
           begin
-          WriteLn(NewFileVar, '<a name="', MapSection.Values[TopicStr],
-                  '"></a>');
+          WriteLn(NewFileVar, '<a name="', TopicStr, '"></a>');
+           //Was previously outputting MapSection.Values[TopicStr], which is
+           // just the help numeric value - more meaningful to use topic name
+           // (meaning same as non-mapped topics).
           TopicMapped := True;
           end;
         if not TopicMapped then  {No mapping in project file for topic?}
@@ -237,21 +243,21 @@ begin
           end;
         end;
        {Save part of 1st topic line}
-      if Pos('class=Topictitle', InStr) > 0 then
-        Write(NewFileVar, Copy(InStr, 1, Pos('class=Topictitle>', InStr)+16))
-      else
-        Write(NewFileVar, Copy(InStr, 1, Pos('class=Topic>', InStr)+11));
+      Write(NewFileVar, Copy(InStr, 1, Pos('>', InStr)));
       BuildStr := InStr;
       repeat  {Get rest of topic lines}
         ReadLn(OldFileVar, InStr);
         if InStr <> '' then
           BuildStr := BuildStr + ' ' + InStr; 
       until InStr = '';
-      TopicPos := Length(BuildStr);
-      repeat
-        Dec(TopicPos);
-      until (TopicPos = 0) or (BuildStr[TopicPos] = '>');
-      WriteLn(NewFileVar, Copy(BuildStr, TopicPos+2, MaxInt));
+      TopicPos := Pos('+</span>', BuildStr);
+      if TopicPos = 0 then
+        TopicPos := Pos('$</span>', BuildStr);
+      if TopicPos = 0 then
+        TopicPos := Pos('#</span>', BuildStr);
+      Delete(BuildStr, 1, TopicPos);
+      TopicPos := Pos('</a>', BuildStr) + 5; 
+      WriteLn(NewFileVar, Copy(BuildStr, TopicPos, MaxInt));
       end
 
     else if CompareText(InStr, '<div><br clear=all>') = 0 then {Found footnotes?}
@@ -288,11 +294,10 @@ begin
             if (Pos(TopicStr, InStr) > LinkPos) and
                (Pos(TopicStr, InStr) < NextLinkPos) then
               begin
-              BuildStr := Copy(InStr, 1, LinkPos-1) + '<a href="#';
-              if MapSection.Values[TopicStr] <> '' then
-                BuildStr := BuildStr + MapSection.Values[TopicStr]
-              else
-                BuildStr := BuildStr + TopicStr;
+              BuildStr := Copy(InStr, 1, LinkPos-1) + '<a href="#' + TopicStr;
+              //Was previously outputting MapSection.Values[TopicStr] if 
+              // non-blank, which is just the help numeric value - more 
+              // meaningful to use topic name.
               UnlinkPos := Pos('</u>', InStr);
               BuildStr := BuildStr + '">' +
                           Copy(InStr, LinkPos+3, UnlinkPos-LinkPos-3) + '</a>' +
