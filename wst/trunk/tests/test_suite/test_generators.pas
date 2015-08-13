@@ -1075,7 +1075,7 @@ begin
     g := CreateGenerator(locDoc);
     g.Execute(tr,mdl.Name);
     fileName := MODULE_NAME + '.xsd';
-    WriteXMLFile(locDoc,'.\'+fileName);
+    //WriteXMLFile(locDoc,'.\'+fileName);
     locExistDoc := LoadXmlFromFilesList(fileName);
     Check(CompareNodes(locExistDoc.DocumentElement,locDoc.DocumentElement),'generated document differs from the existent one.');
   finally
@@ -1141,7 +1141,7 @@ begin
     g := CreateGenerator(locDoc);
     g.Execute(tr,mdl.Name);
     fileName := MODULE_NAME + '.xsd';
-    WriteXMLFile(locDoc,'.\'+fileName);
+    //WriteXMLFile(locDoc,'.\'+fileName);
     locExistDoc := LoadXmlFromFilesList(fileName);
     Check(CompareNodes(locExistDoc.DocumentElement,locDoc.DocumentElement),'generated document differs from the existent one.');
   finally
