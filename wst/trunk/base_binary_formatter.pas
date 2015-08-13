@@ -1459,11 +1459,12 @@ var
 begin
   stk := StackTop();
   locNode := stk.Find(AScopeName);
-  if not Assigned(locNode) then begin
-    Error(SERR_ScopeNotFound,[AScopeName]);
+  if (locNode <> nil) then begin
+    PushStack(locNode,stObject);
+    Result := StackTop().GetItemCount();
+  end else begin
+    Result := -1;
   end;
-  PushStack(locNode,stObject);
-  Result := StackTop().GetItemCount();
 end;
 
 function TBaseBinaryFormatter.BeginArrayRead(
