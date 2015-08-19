@@ -66,6 +66,7 @@ type
     FRows: Integer;
     FColors: TList;
     MX, MY: integer;
+    function GetColorCount: Integer;
     function GetColors(Index: Integer): TColor;
     procedure SetButtonHeight(const AValue: Integer);
     procedure SetButtonWidth(const AValue: Integer);
@@ -77,6 +78,7 @@ type
     procedure MouseUp(Button: TMouseButton; Shift:TShiftState; X, Y:Integer); override;
     procedure ColorPick(AColor: TColor; Shift: TShiftState); dynamic;
     procedure ColorMouseMove(AColor: TColor; Shift: TShiftState); dynamic;
+    procedure DoAddColor(AColor: TColor);
   public
     PickedColor: TColor;
     PickShift: TShiftState;
@@ -84,11 +86,14 @@ type
     destructor Destroy; override;
     procedure Paint; override;
   public
+    procedure AddColor(AColor: TColor);
+    procedure DeleteColor(AIndex: Integer);
     procedure LoadPalette(const FileName: String);
   
     property ButtonWidth: Integer read FButtonWidth write SetButtonWidth;
     property ButtonHeight: Integer read FButtonHeight write SetButtonHeight;
     property Colors[Index: Integer]: TColor read GetColors write SetColors;
+    property ColorCount: Integer read GetColorCount;
     
     property OnColorPick: TColorMouseEvent read FOnColorPick write FOnColorPick;
     property OnColorMouseMove: TColorMouseEvent read FOnColorMouseMove write FOnColorMouseMove;
@@ -149,9 +154,14 @@ begin
   UpdateSize;
 end;
 
+function TCustomColorPalette.GetColorCount: Integer;
+begin
+  Result := FColors.Count;
+end;
+
 function TCustomColorPalette.GetColors(Index: Integer): TColor;
 begin
-  Result := TColor(FColors.Items[Index]);
+  Result := TColor(PtrUInt(FColors.Items[Index]));
 end;
 
 procedure TCustomColorPalette.SetButtonWidth(const AValue: Integer);
@@ -173,7 +183,7 @@ begin
   else
     FRows := Ceil(FColors.Count / FCols);
 
-  SetBounds(Left, Top, FCols * FButtonWidth + 1, FRows * FButtonHeight + 1)
+  SetBounds(Left, Top, FCols * FButtonWidth + 1, FRows * FButtonHeight + 1);
 end;
 
 procedure TCustomColorPalette.MouseDown(Button: TMouseButton;
@@ -192,7 +202,7 @@ begin
 
   if X + Y * FCols < FColors.Count then
   begin
-    PickedColor := TColor(FColors.Items[X + Y * FCols]);
+    PickedColor := GetColors(X + Y * FCols);
     PickShift := Shift;
   end;
 end;
@@ -218,7 +228,7 @@ begin
     Exit;
   if X + Y * FCols < FColors.Count then
   begin
-    C := TColor(FColors.Items[X + Y * FCols]);
+    C := GetColors(X + Y * FCols);
     if C <> clNone then ColorMouseMove(C, Shift);
   end;
 end;
@@ -243,25 +253,25 @@ begin
   ControlStyle := ControlStyle + [csFixedWidth, csFixedHeight];
   
   FCols := 8;
-  
-  FColors.Add(Pointer(clBlack));
-  FColors.Add(Pointer(clGray));
-  FColors.Add(Pointer(clMaroon));
-  FColors.Add(Pointer(clOlive));
-  FColors.Add(Pointer(clGreen));
-  FColors.Add(Pointer(clTeal));
-  FColors.Add(Pointer(clNavy));
-  FColors.Add(Pointer(clPurple));
-  
-  FColors.Add(Pointer(clWhite));
-  FColors.Add(Pointer(clSilver));
-  FColors.Add(Pointer(clRed));
-  FColors.Add(Pointer(clYellow));
-  FColors.Add(Pointer(clLime));
-  FColors.Add(Pointer(clAqua));
-  FColors.Add(Pointer(clBlue));
-  FColors.Add(Pointer(clFuchsia));
-  
+
+  DoAddColor(clBlack);
+  DoAddColor(clGray);
+  DoAddColor(clMaroon);
+  DoAddColor(clOlive);
+  DoAddColor(clGreen);
+  DoAddColor(clTeal);
+  DoAddColor(clNavy);
+  DoAddColor(clPurple);
+
+  DoAddColor(clWhite);
+  DoAddColor(clSilver);
+  DoAddColor(clRed);
+  DoAddColor(clYellow);
+  DoAddColor(clLime);
+  DoAddColor(clAqua);
+  DoAddColor(clBlue);
+  DoAddColor(clFuchsia);
+
   UpdateSize;
 end;
 
@@ -272,18 +282,39 @@ begin
   inherited;
 end;
 
+procedure TCustomColorPalette.AddColor(AColor: TColor);
+begin
+  DoAddColor(AColor);
+  UpdateSize;
+  Invalidate;
+end;
+
+procedure TCustomColorPalette.DoAddColor(AColor: TColor);
+begin
+  FColors.Add(Pointer(AColor));
+end;
+
+procedure TCustomColorPalette.DeleteColor(AIndex: Integer);
+begin
+  FColors.Delete(AIndex);
+  UpdateSize;
+  Invalidate;
+end;
+
 procedure TCustomColorPalette.Paint;
 var
   I, X, Y: Integer;
+  c: TColor;
 begin
   Canvas.Pen.Color := clBlack;
   for I := 0 to Pred(FColors.Count) do
   begin
     Y := I div FCols;
     X := I mod FCols;
-    if TColor(FColors.Items[I]) <> clNone then
+    c := GetColors(I);
+    if c <> clNone then
     begin
-      Canvas.Brush.Color := TColor(FColors.Items[I]);
+      Canvas.Brush.Color := c;
       Canvas.Rectangle(Bounds(X * FButtonWidth, Y * FButtonHeight, FButtonWidth,
         FButtonHeight));
     end;
@@ -327,17 +358,17 @@ var
       NR := Round((R * I + 255 * (Steps + 1 - I)) / (Steps + 1));
       NG := Round((G * I + 255 * (Steps + 1 - I)) / (Steps + 1));
       NB := Round((B * I + 255 * (Steps + 1 - I)) / (Steps + 1));
-      FColors.Add(Pointer(RGBToColor(NR, NG, NB)));
+      DoAddColor(RGBToColor(NR, NG, NB));
     end;
     
-    FColors.Add(Pointer(Color));
+    DoAddColor(Color);
     
     for I := Steps downto 1 do
     begin
       NR := Round(R * I / (Steps + 1));
       NG := Round(G * I / (Steps + 1));
       NB := Round(B * I / (Steps + 1));
-      FColors.Add(Pointer(RGBToColor(NR, NG, NB)));
+      DoAddColor(RGBToColor(NR, NG, NB));
     end;
   end;
   
@@ -359,7 +390,7 @@ begin
       if Line[1] = '#' then Continue;
       if Line[1] = '$' then
       begin
-        if Copy(Line, 2, 4) = 'NONE' then FColors.Add(Pointer(clNone));
+        if Copy(Line, 2, 4) = 'NONE' then DoAddColor(clNone);
         if Copy(Line, 2, 4) = 'COLS' then FCols := StrToIntDef(Copy(Line, 6, MaxInt), 8);
         if Copy(Line, 2, 7) = 'BLENDWB' then
         begin
@@ -369,13 +400,14 @@ begin
         end;
       end
       else
-        if Pos(',', Line) > 0 then FColors.Add(Pointer(ParseColor(Line)));
+        if Pos(',', Line) > 0 then DoAddColor(ParseColor(Line));
     end;
   finally
     Close(F);
   end;
   
   UpdateSize;
+  Invalidate;
 end;
 
 initialization
