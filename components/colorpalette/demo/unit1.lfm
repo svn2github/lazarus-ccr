@@ -14,12 +14,13 @@ object Form1: TForm1
     Width = 129
     ButtonWidth = 16
     ButtonHeight = 16
+    ColumnCount = 8
     OnColorPick = ColorPalette1ColorPick
   end
   object BtnLoadRndPalette: TButton
     Left = 176
     Height = 25
-    Top = 344
+    Top = 280
     Width = 139
     Caption = 'Load random palette'
     Enabled = False
@@ -29,7 +30,7 @@ object Form1: TForm1
   object BtnCreateRndPalette: TButton
     Left = 176
     Height = 25
-    Top = 312
+    Top = 248
     Width = 139
     Caption = 'Create random palette'
     OnClick = BtnCreateRndPaletteClick
@@ -38,16 +39,16 @@ object Form1: TForm1
   object BtnAddColor: TButton
     Left = 176
     Height = 25
-    Top = 400
+    Top = 336
     Width = 139
-    Caption = 'Add color'
+    Caption = 'Add color...'
     OnClick = BtnAddColorClick
     TabOrder = 2
   end
   object BtnLoadDefaultPal: TButton
     Left = 176
     Height = 25
-    Top = 264
+    Top = 200
     Width = 139
     Caption = 'Load Default.pal'
     OnClick = BtnLoadDefaultPalClick
@@ -56,7 +57,7 @@ object Form1: TForm1
   object Label1: TLabel
     Left = 176
     Height = 15
-    Top = 464
+    Top = 472
     Width = 34
     Caption = 'Label1'
     ParentColor = False
@@ -64,11 +65,37 @@ object Form1: TForm1
   object BtnDeleteColor0: TButton
     Left = 176
     Height = 25
-    Top = 432
+    Top = 368
     Width = 139
     Caption = 'Delete color #0'
     OnClick = BtnDeleteColor0Click
     TabOrder = 4
+  end
+  object EdColCount: TSpinEdit
+    Left = 176
+    Height = 23
+    Top = 437
+    Width = 72
+    OnChange = EdColCountChange
+    TabOrder = 5
+    Value = 8
+  end
+  object Label2: TLabel
+    Left = 176
+    Height = 15
+    Top = 416
+    Width = 80
+    Caption = 'Column count:'
+    ParentColor = False
+  end
+  object BtnLoadDefaultPal1: TButton
+    Left = 176
+    Height = 25
+    Top = 152
+    Width = 139
+    Caption = 'Save palette...'
+    OnClick = BtnLoadDefaultPal1Click
+    TabOrder = 6
   end
   object ColorDialog1: TColorDialog
     Color = clBlack
@@ -96,5 +123,12 @@ object Form1: TForm1
     )
     left = 163
     top = 51
+  end
+  object SaveDialog1: TSaveDialog
+    Title = 'Save palette as'
+    DefaultExt = '.pal'
+    Filter = 'Palette files (*.pal)|*.pal'
+    left = 121
+    top = 147
   end
 end

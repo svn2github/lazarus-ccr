@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ColorPalette;
+  Spin, ColorPalette;
 
 type
 
@@ -14,6 +14,7 @@ type
 
   TForm1 = class(TForm)
     BtnDeleteColor0: TButton;
+    BtnLoadDefaultPal1: TButton;
     BtnLoadRndPalette: TButton;
     BtnCreateRndPalette: TButton;
     BtnAddColor: TButton;
@@ -21,7 +22,11 @@ type
     ColorDialog1: TColorDialog;
     ColorPalette1: TColorPalette;
     Label1: TLabel;
+    EdColCount: TSpinEdit;
+    Label2: TLabel;
+    SaveDialog1: TSaveDialog;
     procedure BtnDeleteColor0Click(Sender: TObject);
+    procedure BtnLoadDefaultPal1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure BtnLoadRndPaletteClick(Sender: TObject);
     procedure BtnCreateRndPaletteClick(Sender: TObject);
@@ -29,6 +34,7 @@ type
     procedure BtnLoadDefaultPalClick(Sender: TObject);
     procedure ColorPalette1ColorPick(Sender: TObject; AColor: TColor;
       Shift: TShiftState);
+    procedure EdColCountChange(Sender: TObject);
   private
     { private declarations }
   public
@@ -54,6 +60,11 @@ begin
     '  blue = %d', [ColorToString(AColor), Red(AColor), Green(AColor), Blue(AColor)]));
 end;
 
+procedure TForm1.EdColCountChange(Sender: TObject);
+begin
+  ColorPalette1.ColumnCount := EdColCount.Value;
+end;
+
 procedure TForm1.Button1Click(Sender: TObject);
 begin
   ColorPalette1.LoadPalette('palette1.txt');
@@ -69,10 +80,19 @@ begin
   end;
 end;
 
+procedure TForm1.BtnLoadDefaultPal1Click(Sender: TObject);
+begin
+  SaveDialog1.FileName := 'random_palette.pal';
+  SaveDialog1.InitialDir := ExtractFileDir(ParamStr(0));
+  if SaveDialog1.Execute then
+    ColorPalette1.SavePalette(SaveDialog1.FileName);
+end;
+
 procedure TForm1.BtnLoadRndPaletteClick(Sender: TObject);
 begin
   ColorPalette1.LoadPalette('random_palette.pal');
   Label1.Caption := IntToStr(ColorPalette1.ColorCount) + ' colors available';
+  EdColCount.Value := ColorPalette1.ColumnCount;
 end;
 
 procedure TForm1.BtnCreateRndPaletteClick(Sender: TObject);
@@ -115,6 +135,7 @@ begin
   end;
   ColorPalette1.LoadPalette('..\default.pal');
   Label1.caption := IntToStr(ColorPalette1.ColorCount) + ' colors available';
+  EdColCount.Value := ColorPalette1.ColumnCount;
 end;
 
 end.

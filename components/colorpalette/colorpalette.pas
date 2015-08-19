@@ -71,6 +71,7 @@ type
     procedure SetButtonHeight(const AValue: Integer);
     procedure SetButtonWidth(const AValue: Integer);
     procedure SetColors(Index: Integer; const AValue: TColor);
+    procedure SetCols(AValue: Integer);
     procedure UpdateSize;
   protected
     procedure MouseDown(Button: TMouseButton; Shift:TShiftState; X, Y:Integer); override;
@@ -89,11 +90,13 @@ type
     procedure AddColor(AColor: TColor);
     procedure DeleteColor(AIndex: Integer);
     procedure LoadPalette(const FileName: String);
+    procedure SavePalette(const FileName: String);
   
     property ButtonWidth: Integer read FButtonWidth write SetButtonWidth;
     property ButtonHeight: Integer read FButtonHeight write SetButtonHeight;
     property Colors[Index: Integer]: TColor read GetColors write SetColors;
     property ColorCount: Integer read GetColorCount;
+    property ColumnCount: Integer read FCols write SetCols;
     
     property OnColorPick: TColorMouseEvent read FOnColorPick write FOnColorPick;
     property OnColorMouseMove: TColorMouseEvent read FOnColorMouseMove write FOnColorMouseMove;
@@ -110,6 +113,7 @@ type
     property ButtonWidth;
     property ButtonHeight;
     property Color;
+    property ColumnCount;
     property Constraints;
     property DragCursor;
     property DragKind;
@@ -175,6 +179,15 @@ end;
 procedure TCustomColorPalette.SetColors(Index: Integer; const AValue: TColor);
 begin
   FColors.Items[Index] := Pointer(AValue);
+end;
+
+procedure TCustomColorPalette.SetCols(AValue: Integer);
+begin
+  if AValue = FCols then
+    exit;
+  FCols := AValue;
+  UpdateSize;
+  Invalidate;
 end;
 
 procedure TCustomColorPalette.UpdateSize;
@@ -409,6 +422,32 @@ begin
   UpdateSize;
   Invalidate;
 end;
+
+procedure TCustomColorPalette.SavePalette(const Filename: String);
+var
+  i: Integer;
+  L: TStringList;
+  clr: TColor;
+  r,g,b: Byte;
+begin
+  L := TStringList.Create;
+  try
+    L.Add(Format('$COLS %d', [FCols]));
+    for i:=0 to FColors.Count-1 do begin
+      clr := Colors[i];
+      if clr = clNone then
+        L.Add('$NONE')
+      else begin
+        RedGreenBlue(clr, r,g,b);
+        L.Add(Format('%d, %d, %d',[r, g, b]));
+      end;
+    end;
+    L.SaveToFile(FileName);
+  finally
+    L.Free;
+  end;
+end;
+
 
 initialization
 {$I colorpalette.lrs}
