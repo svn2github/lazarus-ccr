@@ -6,96 +6,76 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Spin, ColorPalette;
+  Spin, ExtCtrls, Menus, ColorPalette;
 
 type
 
-  { TForm1 }
+  { TMainForm }
 
-  TForm1 = class(TForm)
-    BtnDeleteColor0: TButton;
+  TMainForm = class(TForm)
+    Bevel1: TBevel;
+    BtnDeleteCurrent: TButton;
     BtnLoadDefaultPal1: TButton;
     BtnLoadRndPalette: TButton;
     BtnCreateRndPalette: TButton;
     BtnAddColor: TButton;
     BtnLoadDefaultPal: TButton;
-    ColorDialog1: TColorDialog;
-    ColorPalette1: TColorPalette;
-    Label1: TLabel;
+    BtnEditColor: TButton;
+    ColorDialog: TColorDialog;
+    ColorPalette: TColorPalette;
+    LblPaletteSize: TLabel;
     EdColCount: TSpinEdit;
     Label2: TLabel;
-    SaveDialog1: TSaveDialog;
-    procedure BtnDeleteColor0Click(Sender: TObject);
+    LblInfo: TLabel;
+    MnuEditPickedColor: TMenuItem;
+    MnuDeletePickedColor: TMenuItem;
+    PalettePopupMenu: TPopupMenu;
+    Panel1: TPanel;
+    SaveDialog: TSaveDialog;
+    curColor: TShape;
+    procedure BtnDeleteCurrentClick(Sender: TObject);
     procedure BtnLoadDefaultPal1Click(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
     procedure BtnLoadRndPaletteClick(Sender: TObject);
     procedure BtnCreateRndPaletteClick(Sender: TObject);
     procedure BtnAddColorClick(Sender: TObject);
     procedure BtnLoadDefaultPalClick(Sender: TObject);
-    procedure ColorPalette1ColorPick(Sender: TObject; AColor: TColor;
+    procedure ColorPaletteColorPick(Sender: TObject; AColor: TColor;
       Shift: TShiftState);
+    procedure ColorPaletteMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure EdColCountChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure MnuDeletePickedColorClick(Sender: TObject);
+    procedure MnuEditPickedClick(Sender: TObject);
+    procedure BtnEditColorClick(Sender: TObject);
   private
     { private declarations }
+    curIndex: integer;
+    procedure EditCurColor;
+    procedure SetLabel(ATitle: string; AColor: TColor);
+    procedure UpdatePalette;
   public
     { public declarations }
   end;
 
 var
-  Form1: TForm1;
+  MainForm: TMainForm;
 
 implementation
 
 {$R *.lfm}
 
-{ TForm1 }
+{ TMainForm }
 
-procedure TForm1.ColorPalette1ColorPick(Sender: TObject; AColor: TColor;
-  Shift: TShiftState);
+
+procedure TMainForm.BtnAddColorClick(Sender: TObject);
 begin
-  ShowMessage(Format(
-    'Color %s picked.'+#13+
-    '  red = %d'#13+
-    '  green = %d'#13+
-    '  blue = %d', [ColorToString(AColor), Red(AColor), Green(AColor), Blue(AColor)]));
+  if ColorDialog.Execute then
+    ColorPalette.AddColor(ColorDialog.Color);
+  LblPaletteSize.caption := IntToStr(ColorPalette.ColorCount) + ' colors available';
 end;
 
-procedure TForm1.EdColCountChange(Sender: TObject);
-begin
-  ColorPalette1.ColumnCount := EdColCount.Value;
-end;
-
-procedure TForm1.Button1Click(Sender: TObject);
-begin
-  ColorPalette1.LoadPalette('palette1.txt');
-  Label1.caption := IntToStr(ColorPalette1.ColorCount) + ' colors available';
-end;
-
-procedure TForm1.BtnDeleteColor0Click(Sender: TObject);
-begin
-  if ColorPalette1.ColorCount > 0 then
-  begin
-    ColorPalette1.DeleteColor(0);
-    Label1.Caption := IntToStr(ColorPalette1.ColorCount) + ' colors available';
-  end;
-end;
-
-procedure TForm1.BtnLoadDefaultPal1Click(Sender: TObject);
-begin
-  SaveDialog1.FileName := 'random_palette.pal';
-  SaveDialog1.InitialDir := ExtractFileDir(ParamStr(0));
-  if SaveDialog1.Execute then
-    ColorPalette1.SavePalette(SaveDialog1.FileName);
-end;
-
-procedure TForm1.BtnLoadRndPaletteClick(Sender: TObject);
-begin
-  ColorPalette1.LoadPalette('random_palette.pal');
-  Label1.Caption := IntToStr(ColorPalette1.ColorCount) + ' colors available';
-  EdColCount.Value := ColorPalette1.ColumnCount;
-end;
-
-procedure TForm1.BtnCreateRndPaletteClick(Sender: TObject);
+procedure TMainForm.BtnCreateRndPaletteClick(Sender: TObject);
 const
   N = 64;
 var
@@ -119,23 +99,137 @@ begin
   BtnLoadRndPalette.Enabled := true;
 end;
 
-procedure TForm1.BtnAddColorClick(Sender: TObject);
+procedure TMainForm.BtnDeleteCurrentClick(Sender: TObject);
 begin
-  if ColorDialog1.Execute then
-    ColorPalette1.AddColor(ColorDialog1.Color);
-  Label1.caption := IntToStr(ColorPalette1.ColorCount) + ' colors available';
+  with ColorPalette do
+  begin
+    if (curIndex < ColorCount) and (ColorCount > 0) then
+    begin
+      DeleteColor(curIndex);
+      if curIndex = ColorCount then dec(curIndex);
+      curColor.Brush.Color := Colors[curIndex] ;
+      LblPaletteSize.Caption := IntToStr(ColorCount) + ' colors available';
+      SetLabel('Current', ColorPalette.Colors[curIndex]);
+    end;
+  end;
 end;
 
-procedure TForm1.BtnLoadDefaultPalClick(Sender: TObject);
+procedure TMainForm.BtnLoadDefaultPalClick(Sender: TObject);
 begin
   if not FileExists('..\default.pal') then
   begin
     ShowMessage('File "default.pal" not found. Copy it from the TColorPalette folder to the current exe folder.');
     exit;
   end;
-  ColorPalette1.LoadPalette('..\default.pal');
-  Label1.caption := IntToStr(ColorPalette1.ColorCount) + ' colors available';
-  EdColCount.Value := ColorPalette1.ColumnCount;
+  ColorPalette.LoadPalette('..\default.pal');
+  LblPaletteSize.caption := IntToStr(ColorPalette.ColorCount) + ' colors available';
+  EdColCount.Value := ColorPalette.ColumnCount;
+end;
+
+procedure TMainForm.BtnLoadDefaultPal1Click(Sender: TObject);
+begin
+  Showmessage('???');
+  SaveDialog.FileName := 'random_palette.pal';
+  SaveDialog.InitialDir := ExtractFileDir(ParamStr(0));
+  if SaveDialog.Execute then
+    ColorPalette.SavePalette(SaveDialog.FileName);
+end;
+
+procedure TMainForm.BtnLoadRndPaletteClick(Sender: TObject);
+begin
+  ColorPalette.LoadPalette('random_palette.pal');
+  LblPaletteSize.Caption := IntToStr(ColorPalette.ColorCount) + ' colors available';
+  EdColCount.Value := ColorPalette.ColumnCount;
+end;
+
+procedure TMainForm.BtnEditColorClick(Sender: TObject);
+begin
+  if BtnEditColor.caption = 'Edit' then
+    EditCurColor
+  else
+    UpdatePalette;
+end;
+
+procedure TMainForm.ColorPaletteColorPick(Sender: TObject; AColor: TColor;
+  Shift: TShiftState);
+begin
+  curColor.Brush.Color := ColorPalette.PickedColor;
+  SetLabel('PickedColor', ColorPalette.PickedColor);
+end;
+
+procedure TMainForm.ColorPaletteMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  with ColorPalette do
+  begin
+    X := X div ButtonWidth;
+    Y := Y div ButtonHeight;
+    curIndex := X + Y * ColumnCount;
+  end;
+  BtnDeleteCurrent.caption := 'Delete color #' + IntToStr(curIndex);
+  Caption := 'CurIndex: ' + IntToStr(curIndex);
+end;
+
+procedure TMainForm.EdColCountChange(Sender: TObject);
+begin
+  ColorPalette.ColumnCount := EdColCount.Value;
+end;
+
+procedure TMainForm.EditCurColor;
+begin
+  with ColorDialog do
+  begin
+    Color := curColor.Brush.color;
+    if Execute then
+      curColor.Brush.Color := Color;
+  end;
+  if curColor.Brush.Color <> ColorPalette.PickedColor then
+  begin
+    BtnEditColor.caption := 'Update';
+    BtnEditColor.hint := 'Update palette';
+    SetLabel('New color', curColor.Brush.Color);
+  end;
+end;
+
+procedure TMainForm.FormCreate(Sender: TObject);
+begin
+  Caption := 'TColorPalette Demo';
+  curIndex := 0;
+  curColor.brush.color := ColorPalette.Colors[0];
+  SetLabel('Current', ColorPalette.Colors[curIndex]);
+  LblPaletteSize.Caption := IntToStr(ColorPalette.ColorCount) + ' colors available';
+end;
+
+procedure TMainForm.MnuDeletePickedColorClick(Sender: TObject);
+begin
+  BtnDeleteCurrentClick(self);
+end;
+
+procedure TMainForm.MnuEditPickedClick(Sender: TObject);
+begin
+  BtnEditColorClick(self);
+end;
+
+procedure TMainForm.SetLabel(ATitle: string; AColor: TColor);
+begin
+  LblInfo.caption := Format(
+    '%s: %s'#13+
+    ' red = %d'#13+
+    ' green = %d'#13+
+    ' blue = %d', [ATitle, ColorToString(AColor), Red(AColor), Green(AColor), Blue(AColor)]
+  );
+end;
+
+procedure TMainForm.UpdatePalette;
+begin
+  ColorPalette.Colors[curIndex] := curColor.Brush.Color;
+  ColorPalette.Refresh;
+  SetLabel('Current', ColorPalette.Colors[curIndex]);
+  with  BtnEditColor do
+  begin
+    Caption := 'Edit';
+    Hint := 'Edit current color';
+  end;
 end;
 
 end.

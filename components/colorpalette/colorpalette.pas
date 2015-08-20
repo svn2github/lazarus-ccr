@@ -52,7 +52,7 @@ uses
   
 type
 
-  TColorMouseEvent = procedure (Sender: TObject; AColor: TColor; Shift: TShiftState) of Object;
+  TColorMouseEvent = procedure (Sender: TObject; AColor: TColor; Shift: TShiftState) of object;
 
   { TCustomColorPalette }
 
@@ -72,14 +72,15 @@ type
     procedure SetButtonWidth(const AValue: Integer);
     procedure SetColors(Index: Integer; const AValue: TColor);
     procedure SetCols(AValue: Integer);
-    procedure UpdateSize;
   protected
     procedure MouseDown(Button: TMouseButton; Shift:TShiftState; X, Y:Integer); override;
     procedure MouseMove(Shift:TShiftState; X, Y:Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift:TShiftState; X, Y:Integer); override;
     procedure ColorPick(AColor: TColor; Shift: TShiftState); dynamic;
     procedure ColorMouseMove(AColor: TColor; Shift: TShiftState); dynamic;
-    procedure DoAddColor(AColor: TColor);
+    procedure DoAddColor(AColor: TColor); virtual;
+    procedure DoDeleteColor(AIndex: Integer); virtual;
+    procedure UpdateSize; virtual;
   public
     PickedColor: TColor;
     PickShift: TShiftState;
@@ -302,16 +303,21 @@ begin
   Invalidate;
 end;
 
+procedure TCustomColorPalette.DeleteColor(AIndex: Integer);
+begin
+  DoDeleteColor(AIndex);
+  UpdateSize;
+  Invalidate;
+end;
+
 procedure TCustomColorPalette.DoAddColor(AColor: TColor);
 begin
   FColors.Add(Pointer(AColor));
 end;
 
-procedure TCustomColorPalette.DeleteColor(AIndex: Integer);
+procedure TCustomColorPalette.DoDeleteColor(AIndex: Integer);
 begin
   FColors.Delete(AIndex);
-  UpdateSize;
-  Invalidate;
 end;
 
 procedure TCustomColorPalette.Paint;

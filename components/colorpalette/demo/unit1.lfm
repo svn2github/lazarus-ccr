@@ -1,103 +1,157 @@
-object Form1: TForm1
-  Left = 290
+object MainForm: TMainForm
+  Left = 522
   Height = 502
-  Top = 157
-  Width = 331
-  Caption = 'Form1'
+  Top = 211
+  Width = 455
+  Caption = 'MainForm'
   ClientHeight = 502
-  ClientWidth = 331
+  ClientWidth = 455
+  OnCreate = FormCreate
+  ShowHint = True
   LCLVersion = '1.5'
-  object ColorPalette1: TColorPalette
-    Left = 22
+  object ColorPalette: TColorPalette
+    Left = 176
     Height = 33
-    Top = 19
+    Top = 15
     Width = 129
     ButtonWidth = 16
     ButtonHeight = 16
     ColumnCount = 8
-    OnColorPick = ColorPalette1ColorPick
+    PopupMenu = PalettePopupMenu
+    OnColorPick = ColorPaletteColorPick
+    OnMouseDown = ColorPaletteMouseDown
   end
-  object BtnLoadRndPalette: TButton
-    Left = 176
-    Height = 25
-    Top = 280
-    Width = 139
-    Caption = 'Load random palette'
-    Enabled = False
-    OnClick = BtnLoadRndPaletteClick
+  object Panel1: TPanel
+    Left = 0
+    Height = 502
+    Top = 0
+    Width = 160
+    Align = alLeft
+    BevelOuter = bvNone
+    ClientHeight = 502
+    ClientWidth = 160
     TabOrder = 0
+    object curColor: TShape
+      Left = 10
+      Height = 29
+      Top = 13
+      Width = 69
+    end
+    object LblInfo: TLabel
+      Left = 12
+      Height = 65
+      Top = 45
+      Width = 135
+      AutoSize = False
+      Caption = 'LblInfo'
+      Font.Color = clGreen
+      ParentColor = False
+      ParentFont = False
+      WordWrap = True
+    end
+    object BtnEditColor: TButton
+      Left = 91
+      Height = 19
+      Hint = 'Edit current color'
+      Top = 13
+      Width = 56
+      Caption = 'Edit'
+      OnClick = BtnEditColorClick
+      TabOrder = 0
+    end
+    object BtnLoadRndPalette: TButton
+      Left = 10
+      Height = 25
+      Top = 188
+      Width = 137
+      Caption = 'Load random palette'
+      Enabled = False
+      OnClick = BtnLoadRndPaletteClick
+      TabOrder = 1
+    end
+    object BtnCreateRndPalette: TButton
+      Left = 10
+      Height = 25
+      Top = 161
+      Width = 137
+      Caption = 'Create random palette'
+      OnClick = BtnCreateRndPaletteClick
+      TabOrder = 2
+    end
+    object BtnAddColor: TButton
+      Left = 10
+      Height = 25
+      Top = 282
+      Width = 137
+      Caption = 'Add color...'
+      OnClick = BtnAddColorClick
+      TabOrder = 3
+    end
+    object BtnLoadDefaultPal: TButton
+      Left = 10
+      Height = 25
+      Top = 121
+      Width = 137
+      Caption = 'Load Default.pal'
+      OnClick = BtnLoadDefaultPalClick
+      TabOrder = 4
+    end
+    object BtnDeleteCurrent: TButton
+      Left = 10
+      Height = 25
+      Top = 314
+      Width = 137
+      Caption = 'Delete color #0'
+      OnClick = BtnDeleteCurrentClick
+      TabOrder = 5
+    end
+    object BtnLoadDefaultPal1: TButton
+      Left = 10
+      Height = 25
+      Top = 227
+      Width = 137
+      Caption = 'Save palette...'
+      OnClick = BtnLoadDefaultPal1Click
+      TabOrder = 6
+    end
+    object LblPaletteSize: TLabel
+      Left = 10
+      Height = 15
+      Top = 466
+      Width = 72
+      Caption = 'LblPaletteSize'
+      ParentColor = False
+    end
+    object EdColCount: TSpinEdit
+      Left = 12
+      Height = 23
+      Top = 432
+      Width = 66
+      MinValue = 1
+      OnChange = EdColCountChange
+      TabOrder = 7
+      Value = 8
+    end
+    object Label2: TLabel
+      Left = 10
+      Height = 15
+      Top = 411
+      Width = 80
+      Caption = 'Column count:'
+      ParentColor = False
+    end
   end
-  object BtnCreateRndPalette: TButton
-    Left = 176
-    Height = 25
-    Top = 248
-    Width = 139
-    Caption = 'Create random palette'
-    OnClick = BtnCreateRndPaletteClick
-    TabOrder = 1
+  object Bevel1: TBevel
+    Left = 160
+    Height = 486
+    Top = 8
+    Width = 3
+    Align = alLeft
+    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 8
+    Shape = bsLeftLine
   end
-  object BtnAddColor: TButton
-    Left = 176
-    Height = 25
-    Top = 336
-    Width = 139
-    Caption = 'Add color...'
-    OnClick = BtnAddColorClick
-    TabOrder = 2
-  end
-  object BtnLoadDefaultPal: TButton
-    Left = 176
-    Height = 25
-    Top = 200
-    Width = 139
-    Caption = 'Load Default.pal'
-    OnClick = BtnLoadDefaultPalClick
-    TabOrder = 3
-  end
-  object Label1: TLabel
-    Left = 176
-    Height = 15
-    Top = 472
-    Width = 34
-    Caption = 'Label1'
-    ParentColor = False
-  end
-  object BtnDeleteColor0: TButton
-    Left = 176
-    Height = 25
-    Top = 368
-    Width = 139
-    Caption = 'Delete color #0'
-    OnClick = BtnDeleteColor0Click
-    TabOrder = 4
-  end
-  object EdColCount: TSpinEdit
-    Left = 176
-    Height = 23
-    Top = 437
-    Width = 72
-    OnChange = EdColCountChange
-    TabOrder = 5
-    Value = 8
-  end
-  object Label2: TLabel
-    Left = 176
-    Height = 15
-    Top = 416
-    Width = 80
-    Caption = 'Column count:'
-    ParentColor = False
-  end
-  object BtnLoadDefaultPal1: TButton
-    Left = 176
-    Height = 25
-    Top = 152
-    Width = 139
-    Caption = 'Save palette...'
-    OnClick = BtnLoadDefaultPal1Click
-    TabOrder = 6
-  end
-  object ColorDialog1: TColorDialog
+  object ColorDialog: TColorDialog
     Color = clBlack
     CustomColors.Strings = (
       'ColorA=000000'
@@ -121,14 +175,26 @@ object Form1: TForm1
       'ColorS=F0FBFF'
       'ColorT=A4A0A0'
     )
-    left = 163
-    top = 51
+    left = 384
+    top = 76
   end
-  object SaveDialog1: TSaveDialog
+  object SaveDialog: TSaveDialog
     Title = 'Save palette as'
     DefaultExt = '.pal'
     Filter = 'Palette files (*.pal)|*.pal'
-    left = 121
-    top = 147
+    left = 384
+    top = 18
+  end
+  object PalettePopupMenu: TPopupMenu
+    left = 384
+    top = 136
+    object MnuEditPickedColor: TMenuItem
+      Caption = 'Edit picked color...'
+      OnClick = MnuEditPickedClick
+    end
+    object MnuDeletePickedColor: TMenuItem
+      Caption = 'Delete picked color'
+      OnClick = MnuDeletePickedColorClick
+    end
   end
 end
