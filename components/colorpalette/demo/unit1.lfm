@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 522
+  Left = 358
   Height = 502
-  Top = 211
+  Top = 179
   Width = 455
   Caption = 'MainForm'
   ClientHeight = 502
@@ -17,8 +17,10 @@ object MainForm: TMainForm
     ButtonWidth = 16
     ButtonHeight = 16
     ColumnCount = 8
+    PickShift = [ssLeft, ssMiddle]
     PopupMenu = PalettePopupMenu
     OnColorPick = ColorPaletteColorPick
+    OnDblClick = ColorPaletteDblClick
     OnMouseDown = ColorPaletteMouseDown
   end
   object Panel1: TPanel
@@ -35,7 +37,7 @@ object MainForm: TMainForm
       Left = 10
       Height = 29
       Top = 13
-      Width = 69
+      Width = 63
     end
     object LblInfo: TLabel
       Left = 12
@@ -50,11 +52,11 @@ object MainForm: TMainForm
       WordWrap = True
     end
     object BtnEditColor: TButton
-      Left = 91
+      Left = 83
       Height = 19
       Hint = 'Edit current color'
       Top = 13
-      Width = 56
+      Width = 64
       Caption = 'Edit'
       OnClick = BtnEditColorClick
       TabOrder = 0
@@ -62,7 +64,7 @@ object MainForm: TMainForm
     object BtnLoadRndPalette: TButton
       Left = 10
       Height = 25
-      Top = 188
+      Top = 190
       Width = 137
       Caption = 'Load random palette'
       Enabled = False
@@ -99,7 +101,7 @@ object MainForm: TMainForm
     object BtnDeleteCurrent: TButton
       Left = 10
       Height = 25
-      Top = 314
+      Top = 311
       Width = 137
       Caption = 'Delete color #0'
       OnClick = BtnDeleteCurrentClick
@@ -108,10 +110,9 @@ object MainForm: TMainForm
     object BtnLoadDefaultPal1: TButton
       Left = 10
       Height = 25
-      Top = 227
+      Top = 228
       Width = 137
       Caption = 'Save palette...'
-      OnClick = BtnLoadDefaultPal1Click
       TabOrder = 6
     end
     object LblPaletteSize: TLabel
@@ -138,6 +139,32 @@ object MainForm: TMainForm
       Top = 411
       Width = 80
       Caption = 'Column count:'
+      ParentColor = False
+    end
+    object CbPickMode: TComboBox
+      Left = 12
+      Height = 23
+      Hint = 'Defines when the picked color is determined and when the OnPickColor event is generated:'#13#10#13#10'pmDefault: '#13#10'  Color selection at mouse-down, OnPickColor event at mouse-up if at same location'#13#10#13#10'pmImproved:'#13#10'  Color selection and OnPickColor event at mouse-down'#13#10#13#10'pmContinuous:'#13#10'  Color selection and OnPickColor event while mouse is down'
+      Top = 376
+      Width = 135
+      ItemHeight = 15
+      ItemIndex = 0
+      Items.Strings = (
+        'default'
+        'improved'
+        'continuous'
+      )
+      OnSelect = CbPickModeSelect
+      Style = csDropDownList
+      TabOrder = 8
+      Text = 'default'
+    end
+    object LblPickMode: TLabel
+      Left = 12
+      Height = 15
+      Top = 355
+      Width = 56
+      Caption = 'Pick mode'
       ParentColor = False
     end
   end
