@@ -22,6 +22,7 @@ type
     BtnLoadDefaultPal: TButton;
     BtnEditColor: TButton;
     CbShowSelection: TCheckBox;
+    CbShowColorHints: TCheckBox;
     ColorDialog: TColorDialog;
     ColorPalette: TColorPalette;
     CbPickMode: TComboBox;
@@ -42,6 +43,7 @@ type
     procedure BtnLoadDefaultPalClick(Sender: TObject);
     procedure BtnLoadRndPaletteClick(Sender: TObject);
     procedure CbPickModeSelect(Sender: TObject);
+    procedure CbShowColorHintsChange(Sender: TObject);
     procedure CbShowSelectionChange(Sender: TObject);
     procedure ColorPaletteDblClick(Sender: TObject);
     procedure ColorPaletteMouseDown(Sender: TObject; Button: TMouseButton;
@@ -147,6 +149,11 @@ end;
 procedure TMainForm.CbPickModeSelect(Sender: TObject);
 begin
   ColorPalette.PickMode := TPickMode(CbPickMode.ItemIndex);
+end;
+
+procedure TMainForm.CbShowColorHintsChange(Sender: TObject);
+begin
+  ColorPalette.ShowColorHint := CbShowColorHints.Checked;
 end;
 
 procedure TMainForm.CbShowSelectionChange(Sender: TObject);

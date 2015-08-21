@@ -84,7 +84,9 @@ type
     FMouseIndex: Integer;
     FPrevMouseIndex: Integer;
     FStoredShift: TShiftState;
+    FShowColorHint: Boolean;
     FShowSelection: Boolean;
+    FSavedHint: String;
     function GetColorCount: Integer;
     function GetColors(AIndex: Integer): TColor;
     function GetPickedColor: TColor;
@@ -93,6 +95,7 @@ type
     procedure SetColors(AIndex: Integer; const AValue: TColor);
     procedure SetCols(AValue: Integer);
     procedure SetSelectedIndex(AValue: Integer);
+//    procedure SetShowColorHint(AValue: Boolean);
     procedure SetShowSelection(AValue: Boolean);
   protected
     procedure ColorPick(AIndex: Integer; Shift: TShiftState); dynamic;
@@ -101,8 +104,11 @@ type
     procedure DoColorPick(AColor: TColor; AShift: TShiftState); virtual;
     procedure DoDeleteColor(AIndex: Integer); virtual;
     procedure DoSelectColor(AColor: TColor); virtual;
+    function GetHintText(AColor: TColor): String; virtual;
     function IsCorrectShift(Shift: TShiftState): Boolean;
     procedure MouseDown(Button: TMouseButton; Shift:TShiftState; X, Y:Integer); override;
+    procedure MouseEnter; override;
+    procedure MouseLeave; override;
     procedure MouseMove(Shift:TShiftState; X, Y:Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift:TShiftState; X, Y:Integer); override;
     procedure UpdateSize; virtual;
@@ -112,6 +118,7 @@ type
     property PickMode: TPickMode read FPickMode write FPickMode default pmDefault;
     property PickShift: TPickShift read FPickShift write FPickShift default [ssLeft];
     property SelectedIndex: Integer read FSelectedIndex write SetSelectedIndex default 0;
+    property ShowColorHint: Boolean read FShowColorHint write FShowColorHint default true;
     property ShowSelection: Boolean read FShowSelection write SetShowSelection default false;
   public
     constructor Create(TheOwner: TComponent); override;
@@ -157,6 +164,7 @@ type
     property PickShift;
     property PopupMenu;
     property SelectedIndex;
+    property ShowColorHint;
     property ShowHint;
     property ShowSelection;
     property Visible;
@@ -198,6 +206,7 @@ begin
   FButtonHeight := 12;
   FPrevMouseIndex := -1;
   FPickShift := [ssLeft];
+  FShowColorHint := true;
 
   FCols := 8;
 
@@ -294,6 +303,27 @@ begin
     Result := clNone
   else
     Result := TColor(PtrUInt(FColors.Items[AIndex]));
+end;
+
+function TCustomColorPalette.GetHintText(AColor: TColor): string;
+const
+  INDENT = '* ';
+  MASK = '%sRed: %d'#13'%sGreen: %d'#13'%sBlue: %d';
+begin
+  if AColor = clNone then
+    Result := 'NONE'
+  else
+  begin
+    Result := ColorToString(AColor);
+    if (Result[1] = 'c') and (Result[2] = 'l') then
+    begin
+      Delete(Result, 1, 2);
+      Result := Uppercase(Result) + #13 + Format(MASK, [
+        INDENT, Red(AColor), INDENT, Green(AColor), INDENT, Blue(AColor)]
+      );
+    end else
+      Result := Format(MASK, ['', Red(AColor), '', Green(AColor), '', Blue(AColor)]);
+  end;
 end;
 
 function TCustomColorPalette.GetPickedColor: TColor;
@@ -424,25 +454,42 @@ begin
   end;
 end;
 
+procedure TCustomColorPalette.MouseEnter;
+begin
+  FSavedHint := Hint;
+  inherited;
+end;
+
+procedure TCustomColorPalette.MouseLeave;
+begin
+  inherited;
+  Hint := FSavedHint;
+end;
+
 procedure TCustomColorPalette.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
   C: TColor;
 begin
   inherited;
 
-  X := X div FButtonWidth;
-  Y := Y div FButtonHeight;
+  FMouseIndex := X div FButtonWidth + (Y div FButtonHeight) * FCols;
 
-  FMouseIndex := X + Y * FCols;
-  if (FMouseIndex >= 0) and (FMouseIndex < FColors.Count) and
-     (FMouseIndex <> FPrevMouseIndex) then
+  if (FMouseIndex >= 0) and (FMouseIndex < FColors.Count) then
   begin
     C := GetColors(FMouseIndex);
-    if C <> clNone then
-      ColorMouseMove(C, Shift);
-
-    if FPickMode = pmContinuous then
-      ColorPick(FMouseIndex, Shift);
+    if ShowHint and FShowColorHint then
+    begin
+      Hint := GetHintText(c);
+      if FMouseIndex <> FPrevMouseIndex then
+        Application.ActivateHint(ClientToScreen(Point(X, Y)));
+    end;
+    if (FMouseIndex <> FPrevMouseIndex) then
+    begin
+      if C <> clNone then
+        ColorMouseMove(C, Shift);
+      if FPickMode = pmContinuous then
+        ColorPick(FMouseIndex, Shift);
+    end;
   end;
 
   FPrevMouseIndex := FMouseIndex;
@@ -558,7 +605,17 @@ begin
   UpdateSize;
   Invalidate;
 end;
-
+{
+procedure TCustomColorPalette.SetShowColorHint(AValue: Boolean);
+begin
+  if FShowColorHint = AValue then exit;
+  if AValue then
+    FSavedHint := Hint
+  else
+    Hint := FSavedHint;
+  FShowColorHint := AValue;
+end;
+ }
 procedure TCustomColorPalette.SetShowSelection(AValue: Boolean);
 begin
   if FShowSelection = AValue then exit;

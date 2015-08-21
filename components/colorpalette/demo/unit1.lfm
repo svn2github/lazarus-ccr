@@ -12,6 +12,7 @@ object MainForm: TMainForm
   object ColorPalette: TColorPalette
     Left = 176
     Height = 33
+    Hint = 'Click to select a color'
     Top = 15
     Width = 129
     ButtonWidth = 16
@@ -64,7 +65,7 @@ object MainForm: TMainForm
     object BtnLoadRndPalette: TButton
       Left = 10
       Height = 25
-      Top = 190
+      Top = 181
       Width = 137
       Caption = 'Load random palette'
       Enabled = False
@@ -74,7 +75,7 @@ object MainForm: TMainForm
     object BtnCreateRndPalette: TButton
       Left = 10
       Height = 25
-      Top = 161
+      Top = 152
       Width = 137
       Caption = 'Create random palette'
       OnClick = BtnCreateRndPaletteClick
@@ -83,7 +84,7 @@ object MainForm: TMainForm
     object BtnAddColor: TButton
       Left = 10
       Height = 25
-      Top = 282
+      Top = 264
       Width = 137
       Caption = 'Add color...'
       OnClick = BtnAddColorClick
@@ -92,7 +93,7 @@ object MainForm: TMainForm
     object BtnLoadDefaultPal: TButton
       Left = 10
       Height = 25
-      Top = 121
+      Top = 112
       Width = 137
       Caption = 'Load Default.pal'
       OnClick = BtnLoadDefaultPalClick
@@ -101,7 +102,7 @@ object MainForm: TMainForm
     object BtnDeleteColor: TButton
       Left = 10
       Height = 25
-      Top = 311
+      Top = 293
       Width = 137
       Caption = 'Delete color #0'
       OnClick = BtnDeleteColorClick
@@ -110,7 +111,7 @@ object MainForm: TMainForm
     object BtnLoadDefaultPal1: TButton
       Left = 10
       Height = 25
-      Top = 228
+      Top = 219
       Width = 137
       Caption = 'Save palette...'
       TabOrder = 6
@@ -137,7 +138,7 @@ object MainForm: TMainForm
       Left = 11
       Height = 23
       Hint = 'Defines when the picked color is determined and when the OnPickColor event is generated:'#13#10#13#10'pmDefault: '#13#10'  Color selection at mouse-down, OnPickColor event at mouse-up if at same location'#13#10#13#10'pmImmediate:'#13#10'  Color selection and OnPickColor event at mouse-down'#13#10#13#10'pmContinuous:'#13#10'  Color selection and OnPickColor event while mouse is down'
-      Top = 376
+      Top = 358
       Width = 136
       ItemHeight = 15
       ItemIndex = 0
@@ -154,7 +155,7 @@ object MainForm: TMainForm
     object LblPickMode: TLabel
       Left = 10
       Height = 15
-      Top = 355
+      Top = 337
       Width = 56
       Caption = 'Pick mode'
       ParentColor = False
@@ -162,11 +163,22 @@ object MainForm: TMainForm
     object CbShowSelection: TCheckBox
       Left = 11
       Height = 19
-      Top = 413
+      Top = 395
       Width = 99
       Caption = 'Show selection'
       OnChange = CbShowSelectionChange
       TabOrder = 9
+    end
+    object CbShowColorHints: TCheckBox
+      Left = 11
+      Height = 19
+      Top = 416
+      Width = 108
+      Caption = 'Show color hints'
+      Checked = True
+      OnChange = CbShowColorHintsChange
+      State = cbChecked
+      TabOrder = 10
     end
   end
   object Bevel1: TBevel
