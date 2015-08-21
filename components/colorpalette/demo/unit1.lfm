@@ -19,9 +19,9 @@ object MainForm: TMainForm
     ColumnCount = 8
     PickShift = [ssLeft, ssMiddle]
     PopupMenu = PalettePopupMenu
-    OnColorPick = ColorPaletteColorPick
     OnDblClick = ColorPaletteDblClick
     OnMouseDown = ColorPaletteMouseDown
+    OnSelectColor = ColorPaletteSelectColor
   end
   object Panel1: TPanel
     Left = 0
@@ -33,19 +33,19 @@ object MainForm: TMainForm
     ClientHeight = 502
     ClientWidth = 160
     TabOrder = 0
-    object curColor: TShape
+    object ColorSample: TShape
       Left = 10
       Height = 29
       Top = 13
       Width = 63
     end
-    object LblInfo: TLabel
+    object LblColorInfo: TLabel
       Left = 12
       Height = 65
       Top = 45
       Width = 135
       AutoSize = False
-      Caption = 'LblInfo'
+      Caption = 'LblColorInfo'
       Font.Color = clGreen
       ParentColor = False
       ParentFont = False
@@ -98,13 +98,13 @@ object MainForm: TMainForm
       OnClick = BtnLoadDefaultPalClick
       TabOrder = 4
     end
-    object BtnDeleteCurrent: TButton
+    object BtnDeleteColor: TButton
       Left = 10
       Height = 25
       Top = 311
       Width = 137
       Caption = 'Delete color #0'
-      OnClick = BtnDeleteCurrentClick
+      OnClick = BtnDeleteColorClick
       TabOrder = 5
     end
     object BtnLoadDefaultPal1: TButton
@@ -115,16 +115,8 @@ object MainForm: TMainForm
       Caption = 'Save palette...'
       TabOrder = 6
     end
-    object LblPaletteSize: TLabel
-      Left = 10
-      Height = 15
-      Top = 466
-      Width = 72
-      Caption = 'LblPaletteSize'
-      ParentColor = False
-    end
     object EdColCount: TSpinEdit
-      Left = 12
+      Left = 11
       Height = 23
       Top = 432
       Width = 66
@@ -134,7 +126,7 @@ object MainForm: TMainForm
       Value = 8
     end
     object Label2: TLabel
-      Left = 10
+      Left = 11
       Height = 15
       Top = 411
       Width = 80
@@ -142,16 +134,16 @@ object MainForm: TMainForm
       ParentColor = False
     end
     object CbPickMode: TComboBox
-      Left = 12
+      Left = 11
       Height = 23
-      Hint = 'Defines when the picked color is determined and when the OnPickColor event is generated:'#13#10#13#10'pmDefault: '#13#10'  Color selection at mouse-down, OnPickColor event at mouse-up if at same location'#13#10#13#10'pmImproved:'#13#10'  Color selection and OnPickColor event at mouse-down'#13#10#13#10'pmContinuous:'#13#10'  Color selection and OnPickColor event while mouse is down'
+      Hint = 'Defines when the picked color is determined and when the OnPickColor event is generated:'#13#10#13#10'pmDefault: '#13#10'  Color selection at mouse-down, OnPickColor event at mouse-up if at same location'#13#10#13#10'pmImmediate:'#13#10'  Color selection and OnPickColor event at mouse-down'#13#10#13#10'pmContinuous:'#13#10'  Color selection and OnPickColor event while mouse is down'
       Top = 376
-      Width = 135
+      Width = 136
       ItemHeight = 15
       ItemIndex = 0
       Items.Strings = (
         'default'
-        'improved'
+        'immediate'
         'continuous'
       )
       OnSelect = CbPickModeSelect
@@ -160,7 +152,7 @@ object MainForm: TMainForm
       Text = 'default'
     end
     object LblPickMode: TLabel
-      Left = 12
+      Left = 11
       Height = 15
       Top = 355
       Width = 56
@@ -217,7 +209,7 @@ object MainForm: TMainForm
     top = 136
     object MnuEditPickedColor: TMenuItem
       Caption = 'Edit picked color...'
-      OnClick = MnuEditPickedClick
+      OnClick = MnuEditPickedColorClick
     end
     object MnuDeletePickedColor: TMenuItem
       Caption = 'Delete picked color'
