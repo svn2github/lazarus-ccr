@@ -76,22 +76,26 @@ type
     FOnSelectColor: TColorPaletteEvent;
     FRows: Integer;
     FColors: TList;
-    FPickedColor: TColor;
-    FSelectedColor: TColor;  // same as PickedColor, but updated only if "IsCorrectShift"
+    FSelectedColor: TColor;
+    FSelectedIndex: Integer;
     FPickMode: TPickMode;
     FPickShift: TPickShift;
     FMousePt: TPoint;
     FMouseIndex: Integer;
     FPrevMouseIndex: Integer;
     FStoredShift: TShiftState;
+    FShowSelection: Boolean;
     function GetColorCount: Integer;
-    function GetColors(Index: Integer): TColor;
+    function GetColors(AIndex: Integer): TColor;
+    function GetPickedColor: TColor;
     procedure SetButtonHeight(const AValue: Integer);
     procedure SetButtonWidth(const AValue: Integer);
-    procedure SetColors(Index: Integer; const AValue: TColor);
+    procedure SetColors(AIndex: Integer; const AValue: TColor);
     procedure SetCols(AValue: Integer);
+    procedure SetSelectedIndex(AValue: Integer);
+    procedure SetShowSelection(AValue: Boolean);
   protected
-    procedure ColorPick(AColor: TColor; Shift: TShiftState); dynamic;
+    procedure ColorPick(AIndex: Integer; Shift: TShiftState); dynamic;
     procedure ColorMouseMove(AColor: TColor; Shift: TShiftState); dynamic;
     procedure DoAddColor(AColor: TColor); virtual;
     procedure DoColorPick(AColor: TColor; AShift: TShiftState); virtual;
@@ -107,6 +111,8 @@ type
     property ColumnCount: Integer read FCols write SetCols;
     property PickMode: TPickMode read FPickMode write FPickMode default pmDefault;
     property PickShift: TPickShift read FPickShift write FPickShift default [ssLeft];
+    property SelectedIndex: Integer read FSelectedIndex write SetSelectedIndex default 0;
+    property ShowSelection: Boolean read FShowSelection write SetShowSelection default false;
   public
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
@@ -119,7 +125,7 @@ type
   
     property Colors[Index: Integer]: TColor read GetColors write SetColors;
     property ColorCount: Integer read GetColorCount;
-    property PickedColor: TColor read FSelectedColor; deprecated 'Use SelectedColor';
+    property PickedColor: TColor read GetPickedColor; deprecated 'Use SelectedColor';
     property SelectedColor: TColor read FSelectedColor;
 
     property OnSelectColor: TColorPaletteEvent read FOnSelectColor write FOnSelectColor;
@@ -150,7 +156,9 @@ type
     property PickMode;
     property PickShift;
     property PopupMenu;
+    property SelectedIndex;
     property ShowHint;
+    property ShowSelection;
     property Visible;
     
     property OnChangeBounds;
@@ -227,11 +235,14 @@ begin
   Invalidate;
 end;
 
-procedure TCustomColorPalette.ColorPick(AColor: TColor; Shift: TShiftState);
+procedure TCustomColorPalette.ColorPick(AIndex: Integer; Shift: TShiftState);
+var
+  c: TColor;
 begin
-  DoColorPick(AColor, Shift);
+  c := GetColors(AIndex);
+  DoColorPick(c, Shift);
   if IsCorrectShift(Shift) then
-    DoSelectColor(AColor);
+    SelectedIndex := AIndex;
 end;
 
 procedure TCustomColorPalette.ColorMouseMove(AColor: TColor; Shift: TShiftState);
@@ -260,12 +271,15 @@ end;
 
 procedure TCustomColorPalette.DoDeleteColor(AIndex: Integer);
 begin
+  if (AIndex < 0) or (AIndex >= FColors.Count) then
+    exit;
   FColors.Delete(AIndex);
 end;
 
 procedure TCustomColorPalette.DoSelectColor(AColor: TColor);
 begin
   FSelectedColor := AColor;
+  Invalidate;
   if Assigned(FOnSelectColor) then FOnSelectColor(self, AColor);
 end;
 
@@ -274,14 +288,20 @@ begin
   Result := FColors.Count;
 end;
 
-function TCustomColorPalette.GetColors(Index: Integer): TColor;
+function TCustomColorPalette.GetColors(AIndex: Integer): TColor;
 begin
-  Result := TColor(PtrUInt(FColors.Items[Index]));
+  if (AIndex < 0) or (AIndex >= FColors.Count) then
+    Result := clNone
+  else
+    Result := TColor(PtrUInt(FColors.Items[AIndex]));
+end;
+
+function TCustomColorPalette.GetPickedColor: TColor;
+begin
+  Result := GetColors(FMouseIndex);
 end;
 
 function TCustomColorPalette.IsCorrectShift(Shift: TShiftState): Boolean;
-var
-  ss: TShiftState;
 begin
   Result := True;
   if (ssLeft in FPickShift) and (Classes.ssLeft in Shift) then exit;
@@ -376,7 +396,7 @@ begin
   end;
 
   UpdateSize;
-  Invalidate;
+  SelectedIndex := 0;
 end;
 
 procedure TCustomColorPalette.MouseDown(Button: TMouseButton;
@@ -398,10 +418,9 @@ begin
 
   if (FMouseIndex < FColors.Count) then
   begin
-    FPickedColor := GetColors(FMouseIndex);
     FStoredShift := Shift;       // store for usage by pmDefault at MouseUp
     if FPickMode <> pmDefault then
-      ColorPick(FPickedColor, Shift);
+      ColorPick(FMouseIndex, Shift);
   end;
 end;
 
@@ -422,10 +441,8 @@ begin
     if C <> clNone then
       ColorMouseMove(C, Shift);
 
-    if FPickMode = pmContinuous then begin
-      FPickedColor := GetColors(FMouseIndex);
-      ColorPick(FPickedColor, Shift);
-    end;
+    if FPickMode = pmContinuous then
+      ColorPick(FMouseIndex, Shift);
   end;
 
   FPrevMouseIndex := FMouseIndex;
@@ -437,7 +454,7 @@ begin
   case FPickMode of
     pmDefault:
       if (FMousePt.X = X) and (FMousePt.Y = Y) then
-        ColorPick(FPickedColor, FStoredShift);
+        ColorPick(FMouseIndex, FStoredShift);
     pmImmediate, pmContinuous:
       begin
         X := X div FButtonWidth;
@@ -446,8 +463,7 @@ begin
         if (FMouseIndex >= 0) and (FMouseIndex < FColors.Count) and
            (FMouseIndex <> FPrevMouseIndex) then
         begin
-          FPickedColor := GetColors(FMouseIndex);
-          ColorPick(FPickedColor, Shift);
+          ColorPick(FMouseIndex, Shift);
         end;
       end;
   end;
@@ -460,6 +476,7 @@ procedure TCustomColorPalette.Paint;
 var
   I, X, Y: Integer;
   c: TColor;
+  R: TRect;
 begin
   Canvas.Pen.Color := clBlack;
   for I := 0 to Pred(FColors.Count) do
@@ -469,9 +486,19 @@ begin
     c := GetColors(I);
     if c <> clNone then
     begin
+      R := Bounds(X * FButtonWidth, Y*FButtonHeight, FButtonWidth, FButtonHeight);
+      if FShowSelection and (FSelectedIndex = I) then
+      begin
+        if Red(c) + Green(c) + Blue(c) > 128*3 then
+          Canvas.Pen.Color := clBlack else
+          Canvas.Pen.Color := clWhite;
+        Canvas.Pen.Width := 3;
+      end else begin
+        Canvas.Pen.Color := clBlack;
+        Canvas.Pen.Width := 1;
+      end;
       Canvas.Brush.Color := c;
-      Canvas.Rectangle(Bounds(X * FButtonWidth, Y * FButtonHeight, FButtonWidth,
-        FButtonHeight));
+      Canvas.Rectangle(R);
     end;
   end;
 end;
@@ -517,9 +544,9 @@ begin
   UpdateSize;
 end;
 
-procedure TCustomColorPalette.SetColors(Index: Integer; const AValue: TColor);
+procedure TCustomColorPalette.SetColors(AIndex: Integer; const AValue: TColor);
 begin
-  FColors.Items[Index] := Pointer(AValue);
+  FColors.Items[AIndex] := Pointer(AValue);
   Invalidate;
 end;
 
@@ -530,6 +557,26 @@ begin
   FCols := AValue;
   UpdateSize;
   Invalidate;
+end;
+
+procedure TCustomColorPalette.SetShowSelection(AValue: Boolean);
+begin
+  if FShowSelection = AValue then exit;
+  FShowSelection := AValue;
+  Invalidate;
+end;
+
+procedure TCustomColorPalette.SetSelectedIndex(AValue: Integer);
+begin
+  if FSelectedIndex = AValue then exit;
+  if AValue < 0 then
+    FSelectedIndex := 0
+  else
+  if AValue >= FColors.Count then
+    FSelectedIndex := FColors.Count-1
+  else
+    FSelectedIndex := AValue;
+  DoSelectColor(GetColors(FSelectedIndex));
 end;
 
 procedure TCustomColorPalette.UpdateSize;
