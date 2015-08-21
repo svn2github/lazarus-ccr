@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Spin, ExtCtrls, Menus, ColorPalette;
+  Spin, ExtCtrls, Menus, ColorBox, ColorPalette;
 
 type
 
@@ -23,13 +23,19 @@ type
     BtnEditColor: TButton;
     CbShowSelection: TCheckBox;
     CbShowColorHints: TCheckBox;
+    CbBorderColor: TColorBox;
     ColorDialog: TColorDialog;
     ColorPalette: TColorPalette;
     CbPickMode: TComboBox;
+    EdBorderWidth: TSpinEdit;
+    EdBoxSize: TSpinEdit;
+    Label3: TLabel;
+    Label4: TLabel;
     LblPickMode: TLabel;
     EdColCount: TSpinEdit;
     Label2: TLabel;
     LblColorInfo: TLabel;
+    LblPickMode1: TLabel;
     MnuEditPickedColor: TMenuItem;
     MnuDeletePickedColor: TMenuItem;
     PalettePopupMenu: TPopupMenu;
@@ -45,10 +51,11 @@ type
     procedure CbPickModeSelect(Sender: TObject);
     procedure CbShowColorHintsChange(Sender: TObject);
     procedure CbShowSelectionChange(Sender: TObject);
+    procedure CbBorderColorSelect(Sender: TObject);
     procedure ColorPaletteDblClick(Sender: TObject);
-    procedure ColorPaletteMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
     procedure ColorPaletteSelectColor(Sender: TObject; AColor: TColor);
+    procedure EdBorderWidthChange(Sender: TObject);
+    procedure EdBoxSizeChange(Sender: TObject);
     procedure EdColCountChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MnuDeletePickedColorClick(Sender: TObject);
@@ -70,8 +77,8 @@ implementation
 
 {$R *.lfm}
 
-{ TMainForm }
 
+{ TMainForm }
 
 procedure TMainForm.BtnAddColorClick(Sender: TObject);
 begin
@@ -146,6 +153,11 @@ begin
     UpdatePalette;
 end;
 
+procedure TMainForm.CbBorderColorSelect(Sender: TObject);
+begin
+  ColorPalette.BorderColor := CbBorderColor.Selected;
+end;
+
 procedure TMainForm.CbPickModeSelect(Sender: TObject);
 begin
   ColorPalette.PickMode := TPickMode(CbPickMode.ItemIndex);
@@ -181,17 +193,6 @@ begin
   end;
 end;
 
-procedure TMainForm.ColorPaletteMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
-exit;
-
-
-
-  BtnDeleteColor.caption := 'Delete color #' + IntToStr(ColorPalette.SelectedIndex);
-  UpdateCaption;
-end;
-
 procedure TMainForm.ColorPaletteSelectColor(Sender: TObject; AColor: TColor);
 begin
   ColorSample.Brush.Color := AColor;
@@ -201,6 +202,17 @@ begin
   SetColorInfo('SelectedColor', AColor);
   BtnDeleteColor.Caption := 'Delete color #' + IntToStr(ColorPalette.SelectedIndex);
   UpdateCaption;
+end;
+
+procedure TMainForm.EdBorderWidthChange(Sender: TObject);
+begin
+  ColorPalette.BorderWidth := EdBorderWidth.Value;
+end;
+
+procedure TMainForm.EdBoxSizeChange(Sender: TObject);
+begin
+  ColorPalette.ButtonWidth := EdBoxSize.Value;
+  ColorPalette.ButtonHeight := EdBoxSize.Value;
 end;
 
 procedure TMainForm.EdColCountChange(Sender: TObject);

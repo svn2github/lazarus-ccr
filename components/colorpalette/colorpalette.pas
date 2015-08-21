@@ -87,15 +87,18 @@ type
     FShowColorHint: Boolean;
     FShowSelection: Boolean;
     FSavedHint: String;
+    FBorderColor: TColor;
+    FBorderWidth: Integer;
     function GetColorCount: Integer;
     function GetColors(AIndex: Integer): TColor;
     function GetPickedColor: TColor;
+    procedure SetBorderColor(const AValue: TColor);
+    procedure SetBorderWidth(const AValue: Integer);
     procedure SetButtonHeight(const AValue: Integer);
     procedure SetButtonWidth(const AValue: Integer);
     procedure SetColors(AIndex: Integer; const AValue: TColor);
     procedure SetCols(AValue: Integer);
     procedure SetSelectedIndex(AValue: Integer);
-//    procedure SetShowColorHint(AValue: Boolean);
     procedure SetShowSelection(AValue: Boolean);
   protected
     procedure ColorPick(AIndex: Integer; Shift: TShiftState); dynamic;
@@ -112,6 +115,8 @@ type
     procedure MouseMove(Shift:TShiftState; X, Y:Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift:TShiftState; X, Y:Integer); override;
     procedure UpdateSize; virtual;
+    property BorderColor: TColor read FBorderColor write SetBorderColor default clBlack;
+    property BorderWidth: Integer read FBorderWidth write SetBorderWidth default 1;
     property ButtonWidth: Integer read FButtonWidth write SetButtonWidth;
     property ButtonHeight: Integer read FButtonHeight write SetButtonHeight;
     property ColumnCount: Integer read FCols write SetCols;
@@ -120,11 +125,12 @@ type
     property SelectedIndex: Integer read FSelectedIndex write SetSelectedIndex default 0;
     property ShowColorHint: Boolean read FShowColorHint write FShowColorHint default true;
     property ShowSelection: Boolean read FShowSelection write SetShowSelection default false;
+
   public
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
     procedure Paint; override;
-  public
+
     procedure AddColor(AColor: TColor);
     procedure DeleteColor(AIndex: Integer);
     procedure LoadPalette(const FileName: String);
@@ -145,13 +151,27 @@ type
   
   TColorPalette = class(TCustomColorPalette)
   published
+    // inherited from TCustomColorPalette
+    property BorderColor;
+    property BorderWidth;
+    property ButtonWidth;
+    property ButtonHeight;
+    property ColumnCount;
+    property PickMode;
+    property PickShift;
+    property SelectedIndex;
+    property ShowColorHint;
+    property ShowSelection;
+
+    property OnColorMouseMove;
+    property OnColorPick;
+    property OnSelectColor;
+
+    // inherited from TCustomColorPalette's ancestors
     property Align;
     property Anchors;
     property BorderSpacing;
-    property ButtonWidth;
-    property ButtonHeight;
     property Color;
-    property ColumnCount;
     property Constraints;
     property DragCursor;
     property DragKind;
@@ -160,19 +180,12 @@ type
     property Hint;
     property ParentColor;
     property ParentShowHint;
-    property PickMode;
-    property PickShift;
     property PopupMenu;
-    property SelectedIndex;
-    property ShowColorHint;
     property ShowHint;
-    property ShowSelection;
     property Visible;
     
     property OnChangeBounds;
     property OnClick;
-    property OnColorMouseMove;
-    property OnColorPick;
     property OnDblClick;
     property OnMouseDown;
     property OnMouseMove;
@@ -180,13 +193,15 @@ type
     property OnMouseEnter;
     property OnMouseLeave;
     property OnResize;
-    property OnSelectColor;
   end;
   
   procedure Register;
 
 
 implementation
+
+uses
+  LCLIntf;
 
 procedure Register;
 begin
@@ -202,6 +217,8 @@ begin
   ControlStyle := ControlStyle + [csFixedWidth, csFixedHeight];
 
   FColors := TList.Create;
+  FBorderColor := clBlack;
+  FBorderWidth := 1;
   FButtonWidth := 12;
   FButtonHeight := 12;
   FPrevMouseIndex := -1;
@@ -520,33 +537,73 @@ begin
 end;
 
 procedure TCustomColorPalette.Paint;
-var
-  I, X, Y: Integer;
-  c: TColor;
-  R: TRect;
-begin
-  Canvas.Pen.Color := clBlack;
-  for I := 0 to Pred(FColors.Count) do
+
+  procedure PaintBox(x1, y1, x2, y2: Integer; c: TColor);
   begin
-    Y := I div FCols;
-    X := I mod FCols;
-    c := GetColors(I);
-    if c <> clNone then
+    if c = clNone then
+      exit;
+
+    // Fill interior
+    Canvas.Brush.Color := c;
+    Canvas.FillRect(x1, y1, x2, y2);
+
+    // Paint border
+    if (FBorderColor <> clNone) and (FBorderWidth > 0) then
     begin
-      R := Bounds(X * FButtonWidth, Y*FButtonHeight, FButtonWidth, FButtonHeight);
-      if FShowSelection and (FSelectedIndex = I) then
-      begin
-        if Red(c) + Green(c) + Blue(c) > 128*3 then
-          Canvas.Pen.Color := clBlack else
-          Canvas.Pen.Color := clWhite;
-        Canvas.Pen.Width := 3;
-      end else begin
-        Canvas.Pen.Color := clBlack;
-        Canvas.Pen.Width := 1;
-      end;
-      Canvas.Brush.Color := c;
-      Canvas.Rectangle(R);
+      x1 := x1 - FBorderWidth div 2 - FBorderWidth mod 2;
+      y1 := y1 - FBorderWidth div 2 - FBorderWidth mod 2;
+      x2 := x1 + FButtonWidth;
+      y2 := y1 + FButtonHeight;
+      Canvas.Pen.Color := FBorderColor;
+      Canvas.Pen.Width := FBorderWidth;
+      Canvas.MoveTo(x1, y1);
+      Canvas.LineTo(x2, y1);
+      Canvas.LineTo(x2, y2);
+      Canvas.LineTo(x1, y2);
+      Canvas.LineTo(x1, y1);
     end;
+  end;
+
+var
+  I, X, Y, W, H, d: Integer;
+  c: TColor;
+  Rsel: TRect;
+begin
+  Canvas.Pen.Endcap := pecSquare;
+
+  // Paint color boxes
+  X := FBorderWidth;
+  Y := FBorderWidth;
+  W := FButtonWidth - FBorderWidth;
+  H := FButtonHeight - FBorderWidth;
+  for I := 0 to pred(FColors.Count) do
+  begin
+    if I = FSelectedIndex then    // Selected rect of box with selected color
+      Rsel := Bounds(X, Y, W, H);
+    c := GetColors(I);
+    PaintBox(X, Y, X+W, Y+H, c);
+    inc(X, FButtonWidth);
+    if X >= Width then
+    begin
+      inc(Y, FButtonHeight);
+      X := FBorderWidth;
+    end;
+  end;
+
+  // Paint selection
+  if FShowSelection then
+  begin
+    d := FBorderWidth div 2;
+    if d = 0 then
+      c := GetColors(FSelectedIndex) else
+      c := ColorToRgb(FBorderColor);
+    Canvas.Pen.Color := InvertColor(c);
+    Canvas.Pen.Width := 1;
+    Canvas.Pen.Style := psSolid;
+    Canvas.Brush.Style := bsSolid;
+    Canvas.Brush.Style := bsClear;
+    InflateRect(Rsel, d, d);
+    Canvas.Rectangle(Rsel);
   end;
 end;
 
@@ -575,12 +632,19 @@ begin
   end;
 end;
 
-procedure TCustomColorPalette.SetButtonWidth(const AValue: Integer);
+procedure TCustomColorPalette.SetBorderColor(const AValue: TColor);
 begin
-  if FButtonWidth = AValue then Exit;
-  FButtonWidth := AValue;
-  if FButtonWidth < 1 then FButtonWidth := 1;
+  if FBorderColor = AValue then exit;
+  FBorderColor := AValue;
+  Invalidate;
+end;
+
+procedure TCustomColorPalette.SetBorderWidth(const AValue: Integer);
+begin
+  if FBorderWidth = AValue then exit;
+  FBorderWidth := AValue;
   UpdateSize;
+  Invalidate;
 end;
 
 procedure TCustomColorPalette.SetButtonHeight(const AValue: Integer);
@@ -588,6 +652,14 @@ begin
   if FButtonHeight = AValue then Exit;
   FButtonHeight := AValue;
   if FButtonHeight < 1 then FButtonHeight := 1;
+  UpdateSize;
+end;
+
+procedure TCustomColorPalette.SetButtonWidth(const AValue: Integer);
+begin
+  if FButtonWidth = AValue then Exit;
+  FButtonWidth := AValue;
+  if FButtonWidth < 1 then FButtonWidth := 1;
   UpdateSize;
 end;
 
@@ -642,7 +714,7 @@ begin
   else
     FRows := Ceil(FColors.Count / FCols);
 
-  SetBounds(Left, Top, FCols * FButtonWidth + 1, FRows * FButtonHeight + 1);
+  SetBounds(Left, Top, FCols * FButtonWidth + FBorderWidth, FRows * FButtonHeight + FBorderWidth);
 end;
 
 
