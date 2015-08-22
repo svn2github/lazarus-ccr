@@ -14,6 +14,7 @@ type
 
   TMainForm = class(TForm)
     Bevel1: TBevel;
+    Bevel2: TBevel;
     BtnDeleteColor: TButton;
     BtnLoadDefaultPal1: TButton;
     BtnLoadRndPalette: TButton;
@@ -21,6 +22,7 @@ type
     BtnAddColor: TButton;
     BtnLoadDefaultPal: TButton;
     BtnEditColor: TButton;
+    CbBuiltinPalettes: TComboBox;
     CbShowSelection: TCheckBox;
     CbShowColorHints: TCheckBox;
     CbBorderColor: TColorBox;
@@ -29,25 +31,31 @@ type
     CbPickMode: TComboBox;
     EdBorderWidth: TSpinEdit;
     EdBoxSize: TSpinEdit;
+    EdGradientSteps: TSpinEdit;
     Label3: TLabel;
     Label4: TLabel;
+    LblGradientSteps: TLabel;
     LblPickMode: TLabel;
     EdColCount: TSpinEdit;
     Label2: TLabel;
     LblColorInfo: TLabel;
     LblPickMode1: TLabel;
+    LblPickMode2: TLabel;
     MnuEditPickedColor: TMenuItem;
     MnuDeletePickedColor: TMenuItem;
     PalettePopupMenu: TPopupMenu;
     Panel1: TPanel;
+    Panel2: TPanel;
     SaveDialog: TSaveDialog;
     ColorSample: TShape;
+    ScrollBox1: TScrollBox;
     procedure BtnAddColorClick(Sender: TObject);
     procedure BtnCreateRndPaletteClick(Sender: TObject);
     procedure BtnDeleteColorClick(Sender: TObject);
     procedure BtnEditColorClick(Sender: TObject);
     procedure BtnLoadDefaultPalClick(Sender: TObject);
     procedure BtnLoadRndPaletteClick(Sender: TObject);
+    procedure CbBuiltinPalettesSelect(Sender: TObject);
     procedure CbPickModeSelect(Sender: TObject);
     procedure CbShowColorHintsChange(Sender: TObject);
     procedure CbShowSelectionChange(Sender: TObject);
@@ -57,6 +65,7 @@ type
     procedure EdBorderWidthChange(Sender: TObject);
     procedure EdBoxSizeChange(Sender: TObject);
     procedure EdColCountChange(Sender: TObject);
+    procedure EdGradientStepsChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MnuDeletePickedColorClick(Sender: TObject);
     procedure MnuEditPickedColorClick(Sender: TObject);
@@ -158,6 +167,15 @@ begin
   ColorPalette.BorderColor := CbBorderColor.Selected;
 end;
 
+procedure TMainForm.CbBuiltinPalettesSelect(Sender: TObject);
+begin
+  ColorPalette.PaletteKind := TPaletteKind(CbBuiltinPalettes.ItemIndex);
+  UpdateCaption;
+  EdColCount.Value := ColorPalette.ColumnCount;
+  EdGradientSteps.Enabled := ColorPalette.PaletteKind = pkGradientPalette;
+  LblGradientSteps.Enabled := EdGradientSteps.Enabled;
+end;
+
 procedure TMainForm.CbPickModeSelect(Sender: TObject);
 begin
   ColorPalette.PickMode := TPickMode(CbPickMode.ItemIndex);
@@ -220,6 +238,12 @@ begin
   ColorPalette.ColumnCount := EdColCount.Value;
 end;
 
+procedure TMainForm.EdGradientStepsChange(Sender: TObject);
+begin
+  ColorPalette.GradientSteps := EdGradientSteps.Value;
+  UpdateCaption;
+end;
+
 procedure TMainForm.EditCurColor;
 begin
   with ColorDialog do
@@ -240,6 +264,8 @@ end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+  EdColCount.Value := ColorPalette.ColumnCount;
+  EdGradientSteps.Value := ColorPalette.GradientSteps;
   ColorSample.Brush.Color := ColorPalette.SelectedColor;
   SetColorInfo('Current', ColorPalette.SelectedColor);
   UpdateCaption;
@@ -247,6 +273,7 @@ begin
   { ColorPalette.PickShift must contain ssRight in order to be able to select
     colors for the context menu. Use object inspector, or use this code:  }
   ColorPalette.PickShift := [ssLeft, ssRight];
+
 end;
 
 procedure TMainForm.MnuDeletePickedColorClick(Sender: TObject);

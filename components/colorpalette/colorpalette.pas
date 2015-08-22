@@ -61,6 +61,10 @@ type
   TPickShiftEnum = (ssLeft, ssRight, ssMiddle);
   TPickShift = set of TPickShiftEnum;
 
+  TPaletteKind = (pkStandardPalette, pkExtendedPalette, pkSystemPalette,
+    pkStandardAndSystemPalette, pkExtendedAndSystemPalette,
+    pkGradientPalette, pkWebSafePalette, pkWebSafePalette2);
+
   TColorMouseEvent = procedure (Sender: TObject; AColor: TColor; Shift: TShiftState) of object;
   TColorPaletteEvent = procedure (Sender: TObject; AColor: TColor) of object;
 
@@ -89,6 +93,8 @@ type
     FSavedHint: String;
     FBorderColor: TColor;
     FBorderWidth: Integer;
+    FPaletteKind: TPaletteKind;
+    FGradientSteps: Byte;
     function GetColorCount: Integer;
     function GetColors(AIndex: Integer): TColor;
     function GetPickedColor: TColor;
@@ -98,9 +104,13 @@ type
     procedure SetButtonWidth(const AValue: Integer);
     procedure SetColors(AIndex: Integer; const AValue: TColor);
     procedure SetCols(AValue: Integer);
+    procedure SetGradientSteps(AValue: Byte);
+    procedure SetPaletteKind(AValue: TPaletteKind);
     procedure SetSelectedIndex(AValue: Integer);
     procedure SetShowSelection(AValue: Boolean);
+
   protected
+    procedure BlendWBColor(AColor: TColor; Steps: Integer);
     procedure ColorPick(AIndex: Integer; Shift: TShiftState); dynamic;
     procedure ColorMouseMove(AColor: TColor; Shift: TShiftState); dynamic;
     procedure DoAddColor(AColor: TColor); virtual;
@@ -120,6 +130,8 @@ type
     property ButtonWidth: Integer read FButtonWidth write SetButtonWidth;
     property ButtonHeight: Integer read FButtonHeight write SetButtonHeight;
     property ColumnCount: Integer read FCols write SetCols;
+    property GradientSteps: Byte read FGradientSteps write SetGradientSteps default 3;
+    property PaletteKind: TPaletteKind read FPaletteKind write SetPaletteKind default pkStandardPalette;
     property PickMode: TPickMode read FPickMode write FPickMode default pmDefault;
     property PickShift: TPickShift read FPickShift write FPickShift default [ssLeft];
     property SelectedIndex: Integer read FSelectedIndex write SetSelectedIndex default 0;
@@ -132,6 +144,7 @@ type
     procedure Paint; override;
 
     procedure AddColor(AColor: TColor);
+    procedure ClearColors;
     procedure DeleteColor(AIndex: Integer);
     procedure LoadPalette(const FileName: String);
     procedure SavePalette(const FileName: String);
@@ -157,6 +170,8 @@ type
     property ButtonWidth;
     property ButtonHeight;
     property ColumnCount;
+    property GradientSteps;
+    property PaletteKind;
     property PickMode;
     property PickShift;
     property SelectedIndex;
@@ -224,26 +239,10 @@ begin
   FPrevMouseIndex := -1;
   FPickShift := [ssLeft];
   FShowColorHint := true;
+  FGradientSteps := 3;
 
   FCols := 8;
-
-  DoAddColor(clBlack);
-  DoAddColor(clGray);
-  DoAddColor(clMaroon);
-  DoAddColor(clOlive);
-  DoAddColor(clGreen);
-  DoAddColor(clTeal);
-  DoAddColor(clNavy);
-  DoAddColor(clPurple);
-
-  DoAddColor(clWhite);
-  DoAddColor(clSilver);
-  DoAddColor(clRed);
-  DoAddColor(clYellow);
-  DoAddColor(clLime);
-  DoAddColor(clAqua);
-  DoAddColor(clBlue);
-  DoAddColor(clFuchsia);
+  SetPaletteKind(pkStandardPalette);
 
   UpdateSize;
 end;
@@ -259,6 +258,37 @@ begin
   DoAddColor(AColor);
   UpdateSize;
   Invalidate;
+end;
+
+procedure TCustomColorPalette.BlendWBColor(AColor: TColor; Steps: Integer);
+var
+  I: Integer;
+  R, G, B, NR, NG, NB: Byte;
+begin
+  RedGreenBlue(AColor, R, G, B);
+
+  for I := 1 to Steps do
+  begin
+    NR := Round((R * I + 255 * (Steps + 1 - I)) / (Steps + 1));
+    NG := Round((G * I + 255 * (Steps + 1 - I)) / (Steps + 1));
+    NB := Round((B * I + 255 * (Steps + 1 - I)) / (Steps + 1));
+    DoAddColor(RGBToColor(NR, NG, NB));
+  end;
+
+  DoAddColor(AColor);
+
+  for I := Steps downto 1 do
+  begin
+    NR := Round(R * I / (Steps + 1));
+    NG := Round(G * I / (Steps + 1));
+    NB := Round(B * I / (Steps + 1));
+    DoAddColor(RGBToColor(NR, NG, NB));
+  end;
+end;
+
+procedure TCustomColorPalette.ClearColors;
+begin
+  FColors.Clear;
 end;
 
 procedure TCustomColorPalette.ColorPick(AIndex: Integer; Shift: TShiftState);
@@ -380,32 +410,6 @@ var
     Delete(S, 1, Pred(I));
 
     Result := RGBToColor(Max(0, Min(R, 255)), Max(0, Min(G, 255)), Max(0, Min(B, 255)));
-  end;
-
-  procedure BlendWBColor(Color: TColor; Steps: Integer);
-  var
-    I: Integer;
-    R, G, B, NR, NG, NB: Byte;
-  begin
-    RedGreenBlue(Color, R, G, B);
-
-    for I := 1 to Steps do
-    begin
-      NR := Round((R * I + 255 * (Steps + 1 - I)) / (Steps + 1));
-      NG := Round((G * I + 255 * (Steps + 1 - I)) / (Steps + 1));
-      NB := Round((B * I + 255 * (Steps + 1 - I)) / (Steps + 1));
-      DoAddColor(RGBToColor(NR, NG, NB));
-    end;
-
-    DoAddColor(Color);
-
-    for I := Steps downto 1 do
-    begin
-      NR := Round(R * I / (Steps + 1));
-      NG := Round(G * I / (Steps + 1));
-      NB := Round(B * I / (Steps + 1));
-      DoAddColor(RGBToColor(NR, NG, NB));
-    end;
   end;
 
 begin
@@ -677,22 +681,299 @@ begin
   UpdateSize;
   Invalidate;
 end;
-{
-procedure TCustomColorPalette.SetShowColorHint(AValue: Boolean);
+
+procedure TCustomColorPalette.SetGradientSteps(AValue: Byte);
 begin
-  if FShowColorHint = AValue then exit;
-  if AValue then
-    FSavedHint := Hint
-  else
-    Hint := FSavedHint;
-  FShowColorHint := AValue;
+  if FGradientSteps = AValue then
+    exit;
+  FGradientSteps := AValue;
+  if FPaletteKind = pkGradientPalette then
+  begin
+    FColors.Clear;
+    SetPaletteKind(FPaletteKind);
+  end;
 end;
- }
-procedure TCustomColorPalette.SetShowSelection(AValue: Boolean);
+
+procedure TCustomColorPalette.SetPaletteKind(AValue: TPaletteKind);
+
+  function FixHex(hx: String): TColor;
+  var
+    r, g, b, color: string;
+  begin
+    r := copy(hx,1,2);
+    g := copy(hx,3,2);
+    b := copy(hx,5,2);
+    Result := StringToColor('$0' + b + g + r);
+  end;
+
+const
+  STEPS: array[0..4] of byte = (0, 64, 128, 192, 255);
+  COLCOUNT: array[TPaletteKind] of Integer = (
+     8,  // StandardPalette = 16 standard colors
+     4,  // ExtendedPalette = 16 standard colors + 4 extra colors
+     5,  // SystemPalette = 25 system colors
+     8,  // StandardAndSystemPalette = 16 standard + 25 system colors = 41 colors
+     5,  // ExtendedAndSystemPalette = 16 std + 4 extra + 25 system colors = 45 colors
+    -1,  // Gradient palette - color count depends on PaletteStep
+     6,  // Websafe palette
+    14   // Websafe palette #2
+  );
+var
+  i, n: Integer;
+  r,g,b: Integer;
 begin
-  if FShowSelection = AValue then exit;
-  FShowSelection := AValue;
-  Invalidate;
+  if (FPaletteKind = AValue) and (FColors.Count > 0) then
+    exit;
+
+  FPaletteKind := AValue;
+  FColors.Clear;
+
+  if FPaletteKind in [pkStandardPalette, pkExtendedPalette,
+    pkStandardAndSystemPalette, pkExtendedAndSystemPalette] then
+  begin
+    DoAddColor(clBlack);       // 16
+    DoAddColor(clGray);
+    DoAddColor(clMaroon);
+    DoAddColor(clOlive);
+    DoAddColor(clGreen);
+    DoAddColor(clTeal);
+    DoAddColor(clNavy);
+    DoAddColor(clPurple);
+    DoAddColor(clWhite);
+    DoAddColor(clSilver);
+    DoAddColor(clRed);
+    DoAddColor(clYellow);
+    DoAddColor(clLime);
+    DoAddColor(clAqua);
+    DoAddColor(clBlue);
+    DoAddColor(clFuchsia);
+  end;
+
+  if FPaletteKind in [pkExtendedPalette, pkExtendedAndSystemPalette] then
+  begin
+    DoAddColor(clMoneyGreen);     // 4
+    DoAddColor(clSkyBlue);
+    DoAddColor(clCream);
+    DoAddColor(clMedGray);
+  end;
+
+  if FPaletteKind in [pkSystemPalette, pkStandardAndSystemPalette, pkExtendedAndSystemPalette] then
+  begin
+    DoAddColor(clScrollBar);            // 25
+    DoAddColor(clBackground);
+    DoAddColor(clActiveCaption);
+    DoAddColor(clInactiveCaption);
+    DoAddColor(clMenu);
+    DoAddColor(clWindow);
+    DoAddColor(clWindowFrame);
+    DoAddColor(clMenuText);
+    DoAddColor(clWindowText);
+    DoAddColor(clCaptionText);
+    DoAddColor(clActiveBorder);
+    DoAddColor(clInactiveBorder);
+    DoAddColor(clAppWorkspace);
+    DoAddColor(clHighlight);
+    DoAddColor(clHighlightText);
+    DoAddColor(clBtnFace);
+    DoAddColor(clBtnShadow);
+    DoAddColor(clGrayText);
+    DoAddColor(clBtnText);
+    DoAddColor(clInactiveCaptionText);
+    DoAddColor(clBtnHighlight);
+    DoAddColor(cl3DDkShadow);
+    DoAddColor(cl3DLight);
+    DoAddColor(clInfoText);
+    DoAddColor(clInfoBk);
+  end;
+
+  if FPaletteKind = pkGradientPalette then
+  begin
+    if FGradientSteps = 0 then n := 1 else n := FGradientSteps;
+    for i:= Low(STEPS) to High(STEPS) do BlendWBColor((RGBToColor(255, STEPS[i], 0)), n);
+    for i:= High(STEPS) downto Low(STEPS) do BlendWBColor((RGBToColor(STEPS[i], 255, 0)), n);
+    for i:= Low(STEPS) to High(STEPS) do BlendWBColor((RGBToColor(0, 255, STEPS[i])), n);
+    for i:= High(STEPS) downto Low(STEPS) do BlendWBColor((RGBToColor(0, STEPS[i], 255)), n);
+    for i:= Low(STEPS) to High(STEPS) do BlendWBColor((RGBToColor(STEPS[i], 0, 255)), n);
+    for i:= Low(STEPS) downto High(STEPS) do BlendWBColor((RGBToColor(0, 255, STEPS[i])), n);
+    SetCols(n*2 + 1);
+  end;
+
+  if FPaletteKind = pkWebSafePalette then
+    // https://en.wikipedia.org/wiki/Web_colors
+    for g := 0 to 5 do
+      for b:= 0 to 5 do
+        for r:=0 to 5 do
+          DoAddColor(RGBToColor(r*$33, g*$33, b*$33));
+
+  if FPaletteKind = pkWebSafePalette2 then
+  begin
+    DoAddColor(FixHex('f0f8ff'));       // 140
+    DoAddColor(FixHex('faebd7'));
+    DoAddColor(FixHex('00ffff'));
+    DoAddColor(FixHex('7fffd4'));
+    DoAddColor(FixHex('f0ffff'));
+    DoAddColor(FixHex('f5f5dc'));
+
+    DoAddColor(FixHex('ffe4c4'));
+    DoAddColor(FixHex('000000'));
+    DoAddColor(FixHex('ffebcd'));
+    DoAddColor(FixHex('0000ff'));
+    DoAddColor(FixHex('8a2be2'));
+    DoAddColor(FixHex('a52a2a'));
+
+    DoAddColor(FixHex('deb887'));
+    DoAddColor(FixHex('5f9ea0'));
+    DoAddColor(FixHex('7fff00'));
+    DoAddColor(FixHex('d2691e'));
+    DoAddColor(FixHex('ff7f50'));
+    DoAddColor(FixHex('6495ed'));
+
+    DoAddColor(FixHex('fff8dc'));
+    DoAddColor(FixHex('dc143c'));
+    DoAddColor(FixHex('00ffff'));
+    DoAddColor(FixHex('00008b'));
+    DoAddColor(FixHex('008b8b'));
+    DoAddColor(FixHex('b8860b'));
+
+    DoAddColor(FixHex('a9a9a9'));
+    DoAddColor(FixHex('006400'));
+    DoAddColor(FixHex('bdb76b'));
+    DoAddColor(FixHex('8b008b'));
+    DoAddColor(FixHex('556b2f'));
+    DoAddColor(FixHex('ff8c00'));
+
+    DoAddColor(FixHex('9932cc'));
+    DoAddColor(FixHex('8b0000'));
+    DoAddColor(FixHex('e9967a'));
+    DoAddColor(FixHex('8fbc8f'));
+    DoAddColor(FixHex('483d8b'));
+    DoAddColor(FixHex('2f4f4f'));
+
+    DoAddColor(FixHex('00ced1'));
+    DoAddColor(FixHex('9400d3'));
+    DoAddColor(FixHex('ff1493'));
+    DoAddColor(FixHex('00bfff'));
+    DoAddColor(FixHex('696969'));
+    DoAddColor(FixHex('1e90ff'));
+
+    DoAddColor(FixHex('b22222'));
+    DoAddColor(FixHex('fffaf0'));
+    DoAddColor(FixHex('228b22'));
+    DoAddColor(FixHex('ff00ff'));
+    DoAddColor(FixHex('dcdcdc'));
+    DoAddColor(FixHex('f8f8ff'));
+
+    DoAddColor(FixHex('ffd700'));
+    DoAddColor(FixHex('daa520'));
+    DoAddColor(FixHex('808080'));
+    DoAddColor(FixHex('008000'));
+    DoAddColor(FixHex('adff2f'));
+    DoAddColor(FixHex('f0fff0'));
+
+    DoAddColor(FixHex('ff69b4'));
+    DoAddColor(FixHex('cd5c5c'));
+    DoAddColor(FixHex('4b0082'));
+    DoAddColor(FixHex('fffff0'));
+    DoAddColor(FixHex('f0e68c'));
+    DoAddColor(FixHex('e6e6fa'));
+
+    DoAddColor(FixHex('fff0f5'));
+    DoAddColor(FixHex('7cfc00'));
+    DoAddColor(FixHex('fffacd'));
+    DoAddColor(FixHex('add8e6'));
+    DoAddColor(FixHex('f08080'));
+    DoAddColor(FixHex('e0ffff'));
+
+    DoAddColor(FixHex('fafad2'));
+    DoAddColor(FixHex('90ee90'));
+    DoAddColor(FixHex('d3d3d3'));
+    DoAddColor(FixHex('ffb6c1'));
+    DoAddColor(FixHex('ffa07a'));
+    DoAddColor(FixHex('20b2aa'));
+
+    DoAddColor(FixHex('87cefa'));
+    DoAddColor(FixHex('778899'));
+    DoAddColor(FixHex('b0c4de'));
+    DoAddColor(FixHex('ffffe0'));
+    DoAddColor(FixHex('00ff00'));
+    DoAddColor(FixHex('32cd32'));
+
+    DoAddColor(FixHex('faf0e6'));
+    DoAddColor(FixHex('ff00ff'));
+    DoAddColor(FixHex('800000'));
+    DoAddColor(FixHex('66cdaa'));
+    DoAddColor(FixHex('0000cd'));
+    DoAddColor(FixHex('ba55d3'));
+
+    DoAddColor(FixHex('9370db'));
+    DoAddColor(FixHex('3cb371'));
+    DoAddColor(FixHex('7b68ee'));
+    DoAddColor(FixHex('00fa9a'));
+    DoAddColor(FixHex('48d1cc'));
+    DoAddColor(FixHex('c71585'));
+
+    DoAddColor(FixHex('191970'));
+    DoAddColor(FixHex('f5fffa'));
+    DoAddColor(FixHex('ffe4e1'));
+    DoAddColor(FixHex('ffe4b5'));
+    DoAddColor(FixHex('ffdead'));
+    DoAddColor(FixHex('000080'));
+
+    DoAddColor(FixHex('fdf5e6'));
+    DoAddColor(FixHex('808000'));
+    DoAddColor(FixHex('6b8e23'));
+    DoAddColor(FixHex('ffa500'));
+    DoAddColor(FixHex('ff4500'));
+    DoAddColor(FixHex('da70d6'));
+
+    DoAddColor(FixHex('eee8aa'));
+    DoAddColor(FixHex('98fb98'));
+    DoAddColor(FixHex('afeeee'));
+    DoAddColor(FixHex('db7093'));
+    DoAddColor(FixHex('ffefd5'));
+    DoAddColor(FixHex('ffdab9'));
+
+    DoAddColor(FixHex('cd853f'));
+    DoAddColor(FixHex('ffc0cb'));
+    DoAddColor(FixHex('dda0dd'));
+    DoAddColor(FixHex('b0e0e6'));
+    DoAddColor(FixHex('800080'));
+    DoAddColor(FixHex('ff0000'));
+
+    DoAddColor(FixHex('bc8f8f'));
+    DoAddColor(FixHex('4169e1'));
+    DoAddColor(FixHex('8b4513'));
+    DoAddColor(FixHex('fa8072'));
+    DoAddColor(FixHex('f4a460'));
+    DoAddColor(FixHex('2e8b57'));
+
+    DoAddColor(FixHex('fff5ee'));
+    DoAddColor(FixHex('a0522d'));
+    DoAddColor(FixHex('c0c0c0'));
+    DoAddColor(FixHex('87ceeb'));
+    DoAddColor(FixHex('6a5acd'));
+    DoAddColor(FixHex('708090'));
+
+    DoAddColor(FixHex('fffafa'));
+    DoAddColor(FixHex('00ff7f'));
+    DoAddColor(FixHex('4682b4'));
+    DoAddColor(FixHex('d2b48c'));
+    DoAddColor(FixHex('008080'));
+    DoAddColor(FixHex('d8bfd8'));
+
+    DoAddColor(FixHex('ff6347'));
+    DoAddColor(FixHex('40e0d0'));
+    DoAddColor(FixHex('ee82ee'));
+    DoAddColor(FixHex('f5deb3'));
+    DoAddColor(FixHex('ffffff'));
+    DoAddColor(FixHex('f5f5f5'));
+
+    DoAddColor(FixHex('ffff00'));
+    DoAddColor(FixHex('9acd32'));
+  end;
+
+  if FPaletteKind <> pkGradientPalette then
+    SetCols(COLCOUNT[FPaletteKind]);
 end;
 
 procedure TCustomColorPalette.SetSelectedIndex(AValue: Integer);
@@ -706,6 +987,13 @@ begin
   else
     FSelectedIndex := AValue;
   DoSelectColor(GetColors(FSelectedIndex));
+end;
+
+procedure TCustomColorPalette.SetShowSelection(AValue: Boolean);
+begin
+  if FShowSelection = AValue then exit;
+  FShowSelection := AValue;
+  Invalidate;
 end;
 
 procedure TCustomColorPalette.UpdateSize;
