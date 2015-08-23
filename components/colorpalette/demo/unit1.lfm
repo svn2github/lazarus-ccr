@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 374
+  Left = 394
   Height = 535
-  Top = 222
+  Top = 287
   Width = 625
   Caption = 'MainForm'
   ClientHeight = 535
@@ -313,8 +313,8 @@ object MainForm: TMainForm
     Height = 519
     Top = 8
     Width = 287
-    HorzScrollBar.Increment = 14
-    HorzScrollBar.Page = 145
+    HorzScrollBar.Increment = 12
+    HorzScrollBar.Page = 129
     HorzScrollBar.Smooth = True
     HorzScrollBar.Tracking = True
     VertScrollBar.Increment = 3
@@ -331,11 +331,10 @@ object MainForm: TMainForm
       Height = 33
       Hint = 'Click to select a color'
       Top = 1
-      Width = 145
+      Width = 129
       ButtonWidth = 16
       ButtonHeight = 16
-      ColumnCount = 9
-      GradientSteps = 3
+      ColumnCount = 8
       PickShift = [ssLeft, ssMiddle]
       OnSelectColor = ColorPaletteSelectColor
       PopupMenu = PalettePopupMenu

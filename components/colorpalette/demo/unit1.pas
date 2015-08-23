@@ -266,6 +266,13 @@ procedure TMainForm.FormCreate(Sender: TObject);
 begin
   EdColCount.Value := ColorPalette.ColumnCount;
   EdGradientSteps.Value := ColorPalette.GradientSteps;
+  CbPickMode.ItemIndex := ord(ColorPalette.PickMode);
+  CbShowSelection.Checked := ColorPalette.ShowSelection;
+  CbShowColorHints.Checked := ColorPalette.ShowColorHint;
+  CbBorderColor.Selected := ColorPalette.SelectedColor;
+  EdBorderWidth.Value := ColorPalette.BorderWidth;
+  EdBoxSize.Value := ColorPalette.ButtonWidth;
+
   ColorSample.Brush.Color := ColorPalette.SelectedColor;
   SetColorInfo('Current', ColorPalette.SelectedColor);
   UpdateCaption;

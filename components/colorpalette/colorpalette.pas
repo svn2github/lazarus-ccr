@@ -132,14 +132,14 @@ type
     property ColumnCount: Integer read FCols write SetCols;
     property GradientSteps: Byte read FGradientSteps write SetGradientSteps default 3;
     property PaletteKind: TPaletteKind read FPaletteKind write SetPaletteKind default pkStandardPalette;
-    property PickMode: TPickMode read FPickMode write FPickMode default pmDefault;
+    property PickMode: TPickMode read FPickMode write FPickMode default pmImmediate;
     property PickShift: TPickShift read FPickShift write FPickShift default [ssLeft];
     property SelectedIndex: Integer read FSelectedIndex write SetSelectedIndex default 0;
     property ShowColorHint: Boolean read FShowColorHint write FShowColorHint default true;
     property ShowSelection: Boolean read FShowSelection write SetShowSelection default false;
 
   public
-    constructor Create(TheOwner: TComponent); override;
+    constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Paint; override;
 
@@ -226,7 +226,7 @@ end;
 
 { TCustomColorPalette }
 
-constructor TCustomColorPalette.Create(TheOwner: TComponent);
+constructor TCustomColorPalette.Create(AOwner: TComponent);
 begin
   inherited;
   ControlStyle := ControlStyle + [csFixedWidth, csFixedHeight];
@@ -237,10 +237,10 @@ begin
   FButtonWidth := 12;
   FButtonHeight := 12;
   FPrevMouseIndex := -1;
+  FPickMode := pmImmediate;
   FPickShift := [ssLeft];
   FShowColorHint := true;
   FGradientSteps := 3;
-
   FCols := 8;
   SetPaletteKind(pkStandardPalette);
 
@@ -799,11 +799,13 @@ begin
   end;
 
   if FPaletteKind = pkWebSafePalette then
+  begin
     // https://en.wikipedia.org/wiki/Web_colors
     for g := 0 to 5 do
       for b:= 0 to 5 do
         for r:=0 to 5 do
           DoAddColor(RGBToColor(r*$33, g*$33, b*$33));
+  end;
 
   if FPaletteKind = pkWebSafePalette2 then
   begin
