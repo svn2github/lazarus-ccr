@@ -29,7 +29,7 @@
 
     0,0,0
     # inserts color r,g,b
-    255,255,255
+    255,255,255 Pure white
 
     $NONE
     # inserts empty palette grid cell
@@ -63,7 +63,7 @@ type
 
   TPaletteKind = (pkStandardPalette, pkExtendedPalette, pkSystemPalette,
     pkStandardAndSystemPalette, pkExtendedAndSystemPalette,
-    pkGradientPalette, pkWebSafePalette, pkWebSafePalette2);
+    pkGradientPalette, pkHTMLPalette, pkWebSafePalette);
 
   TColorMouseEvent = procedure (Sender: TObject; AColor: TColor; Shift: TShiftState) of object;
   TColorPaletteEvent = procedure (Sender: TObject; AColor: TColor) of object;
@@ -82,7 +82,7 @@ type
     FOnSelectColor: TColorPaletteEvent;
     FOnGetHintText: TColorPaletteHintEvent;
     FRows: Integer;
-    FColors: TList;
+    FColors: TStringList;
     FSelectedColor: TColor;
     FSelectedIndex: Integer;
     FPickMode: TPickMode;
@@ -98,29 +98,33 @@ type
     FBorderWidth: Integer;
     FPaletteKind: TPaletteKind;
     FGradientSteps: Byte;
+    FUseSpacers: Boolean;
     function GetColorCount: Integer;
     function GetColors(AIndex: Integer): TColor;
+    function GetColorNames(AIndex: Integer): String;
     function GetPickedColor: TColor;
     procedure SetBorderColor(const AValue: TColor);
     procedure SetBorderWidth(const AValue: Integer);
     procedure SetButtonHeight(const AValue: Integer);
     procedure SetButtonWidth(const AValue: Integer);
+    procedure SetColorNames(AIndex: Integer; const AValue: String);
     procedure SetColors(AIndex: Integer; const AValue: TColor);
     procedure SetCols(AValue: Integer);
     procedure SetGradientSteps(AValue: Byte);
     procedure SetPaletteKind(AValue: TPaletteKind);
     procedure SetSelectedIndex(AValue: Integer);
     procedure SetShowSelection(AValue: Boolean);
+    procedure SetUseSpacers(AValue: Boolean);
 
   protected
     procedure BlendWBColor(AColor: TColor; Steps: Integer);
     procedure ColorPick(AIndex: Integer; Shift: TShiftState); dynamic;
     procedure ColorMouseMove(AColor: TColor; Shift: TShiftState); dynamic;
-    procedure DoAddColor(AColor: TColor); virtual;
+    procedure DoAddColor(AColor: TColor; AColorName: String = ''); virtual;
     procedure DoColorPick(AColor: TColor; AShift: TShiftState); virtual;
     procedure DoDeleteColor(AIndex: Integer); virtual;
     procedure DoSelectColor(AColor: TColor); virtual;
-    function GetHintText(AColor: TColor): String; virtual;
+    function GetHintText(AIndex: Integer): String; virtual;
     function IsCorrectShift(Shift: TShiftState): Boolean;
     procedure MouseDown(Button: TMouseButton; Shift:TShiftState; X, Y:Integer); override;
     procedure MouseEnter; override;
@@ -140,6 +144,7 @@ type
     property SelectedIndex: Integer read FSelectedIndex write SetSelectedIndex default 0;
     property ShowColorHint: Boolean read FShowColorHint write FShowColorHint default true;
     property ShowSelection: Boolean read FShowSelection write SetShowSelection default false;
+    property UseSpacers: Boolean read FUseSpacers write SetUseSpacers default true;
     property OnGetHintText: TColorPaletteHintEvent read FOnGetHintText write FOnGetHintText;
 
   public
@@ -147,13 +152,14 @@ type
     destructor Destroy; override;
     procedure Paint; override;
 
-    procedure AddColor(AColor: TColor);
+    procedure AddColor(AColor: TColor; AColorName: String = '');
     procedure ClearColors;
     procedure DeleteColor(AIndex: Integer);
     procedure LoadPalette(const FileName: String);
     procedure SavePalette(const FileName: String);
   
     property Colors[Index: Integer]: TColor read GetColors write SetColors;
+    property ColorNames[Index: Integer]: String read GetColorNames write SetColorNames;
     property ColorCount: Integer read GetColorCount;
     property PickedColor: TColor read GetPickedColor; deprecated 'Use SelectedColor';
     property SelectedColor: TColor read FSelectedColor;
@@ -181,6 +187,7 @@ type
     property SelectedIndex;
     property ShowColorHint;
     property ShowSelection;
+    property UseSpacers;
 
     property OnColorMouseMove;
     property OnColorPick;
@@ -221,7 +228,7 @@ type
 implementation
 
 uses
-  LCLIntf;
+  LCLIntf, StrUtils;
 
 procedure Register;
 begin
@@ -236,7 +243,7 @@ begin
   inherited;
   ControlStyle := ControlStyle + [csFixedWidth, csFixedHeight];
 
-  FColors := TList.Create;
+  FColors := TStringList.Create;
   FBorderColor := clBlack;
   FBorderWidth := 1;
   FButtonWidth := 12;
@@ -246,6 +253,7 @@ begin
   FPickShift := [ssLeft];
   FShowColorHint := true;
   FGradientSteps := 3;
+  FUseSpacers := true;
   FCols := 8;
   SetPaletteKind(pkStandardPalette);
 
@@ -258,9 +266,9 @@ begin
   inherited;
 end;
 
-procedure TCustomColorPalette.AddColor(AColor: TColor);
+procedure TCustomColorPalette.AddColor(AColor: TColor; AColorName: String = '');
 begin
-  DoAddColor(AColor);
+  DoAddColor(AColor, AColorName);
   UpdateSize;
   Invalidate;
 end;
@@ -319,9 +327,9 @@ begin
   Invalidate;
 end;
 
-procedure TCustomColorPalette.DoAddColor(AColor: TColor);
+procedure TCustomColorPalette.DoAddColor(AColor: TColor; AColorName: String = '');
 begin
-  FColors.Add(Pointer(AColor));
+  FColors.AddObject(AColorName, TObject(AColor));
 end;
 
 procedure TCustomColorPalette.DoColorPick(AColor: TColor; AShift: TShiftState);
@@ -349,32 +357,54 @@ begin
   Result := FColors.Count;
 end;
 
-function TCustomColorPalette.GetColors(AIndex: Integer): TColor;
+function TCustomColorPalette.GetColorNames(AIndex: Integer): String;
 begin
-  if (AIndex < 0) or (AIndex >= FColors.Count) then
-    Result := clNone
-  else
-    Result := TColor(PtrUInt(FColors.Items[AIndex]));
+  if (AIndex >= 0) and (AIndex < FColors.Count) then
+  begin
+    Result := FColors.Strings[AIndex];
+    if Result = '' then
+    begin
+      Result := ColorToString(GetColors(AIndex));
+      if FUseSpacers and (Result = ColorToString(clNone)) then
+        Result := '';
+    end;
+  end else
+    Result := '';
 end;
 
-function TCustomColorPalette.GetHintText(AColor: TColor): string;
+function TCustomColorPalette.GetColors(AIndex: Integer): TColor;
+begin
+  if (AIndex >= 0) and (AIndex < FColors.Count) then
+    Result := TColor(PtrUInt(FColors.Objects[AIndex]))
+  else
+    Result := clNone;
+end;
+
+function TCustomColorPalette.GetHintText(AIndex: Integer): string;
 const
   INDENT = '* ';
-  MASK = '%3:s'#13'%4:sRed: %0:d'#13'%4:sGreen: %1:d'#13'%4:sBlue: %2:d';
+  MASK = '%0:s'#13'%4:sRed: %1:d'#13'%4:sGreen: %2:d'#13'%4:sBlue: %3:d';
+var
+  C: TColor;
 begin
-  if AColor = clNone then
-    Result := 'NONE'
-  else
+  C := GetColors(AIndex);
+  if C = clNone then
   begin
-    Result := ColorToString(AColor);
-    if (Result[1] = 'c') and (Result[2] = 'l') then
+    if FUseSpacers then
+      Result := ''
+    else
+      Result := 'None'
+  end else
+  begin
+    Result := GetColorNames(AIndex);
+    if (Result <> '') and (Result[1] = 'c') and (Result[2] = 'l') then
       Delete(Result, 1, 2);
     Result := Format(MASK, [
-      Red(AColor), Green(AColor), Blue(AColor), Uppercase(Result), INDENT]
+      Result, Red(C), Green(C), Blue(C), INDENT]
     );
   end;
   if Assigned(FOnGetHintText) then
-    FOnGetHintText(Self, AColor, Result);
+    FOnGetHintText(Self, C, Result);
 end;
 
 function TCustomColorPalette.GetPickedColor: TColor;
@@ -396,24 +426,66 @@ var
   F: TextFile;
   Line: String;
   C: TColor;
+  clrName: String;
+  p, steps: Integer;
 
-  function ParseColor(var S: String): TColor;
+  procedure ParseColor(S: String; out AColor: TColor; out Steps: Integer;
+    out ColorName: String);
   var
-    R, G, B: Integer;
-    I: Integer;
+    I, counter: Integer;
+    L: TStringList;
+    tmp: String;
+    P: PChar;
+    R,G,B: Integer;
   begin
-    R := StrToIntDef(Copy(S, 1, Pos(',', S) - 1), 0);
-    Delete(S, 1, Pos(',', S));
-    G := StrToIntDef(Copy(S, 1, Pos(',', S) - 1), 0);
-    Delete(S, 1, Pos(',', S));
-
-    S := TrimLeft(S);
-    I := 1;
-    while (I <= Length(S)) and (S[I] in ['0'..'9']) do Inc(I);
-    B := StrToIntDef(Copy(S, 1, Pred(I)), 0);
-    Delete(S, 1, Pred(I));
-
-    Result := RGBToColor(Max(0, Min(R, 255)), Max(0, Min(G, 255)), Max(0, Min(B, 255)));
+    R := 0;
+    G := 0;
+    B := 0;
+    Steps := 0;
+    ColorName := '';
+    tmp := '';
+    P := PChar(S);
+    counter := 0;
+    // Skip leading spaces
+    while (P^ = ' ') do inc(P);
+    while P^ <> #0 do begin
+      case P^ of
+        ' ': begin
+               if counter = 2 then begin
+                 B := StrToIntDef(tmp, B);
+                 inc(counter);
+                 tmp := '';
+                 while P^ = ' ' do inc(P);
+               end else
+               if counter > 2 then
+               begin
+                 tmp := tmp + ' ';
+                 inc(P);
+               end;
+             end;
+        ',': begin
+               case counter of
+                 0: R := StrToIntDef(tmp, R);
+                 1: G := StrToIntDef(tmp, G);
+               end;
+               inc(counter);
+               tmp := '';
+               inc(P);
+               while P^ = ' ' do inc(P);
+             end;
+        else tmp := tmp + P^;
+             inc(P);
+      end;
+    end;
+    if tmp <> '' then
+      case counter of
+        0: R := StrToIntDef(tmp, R);
+        1: G := StrToIntDef(tmp, B);
+        2: B := StrToIntDef(tmp, B);
+      else
+        if not TryStrToInt(tmp, Steps) then ColorName := tmp;
+      end;
+    AColor := RGBToColor(Max(0, Min(R, 255)), Max(0, Min(G, 255)), Max(0, Min(B, 255)));
   end;
 
 begin
@@ -431,20 +503,32 @@ begin
       ReadLn(F, Line);
       Line := Trim(Line);
       if Length(Line) < 2 then Continue;
-      if Line[1] = '#' then Continue;
+      if Line[1] = '#' then
+        Continue;
+      // Allow '#' as comment within line
+      p := pos('#', Line);
+      if p > 0 then
+        Line := TrimRight(Copy(Line, 1, p-1));
+      // Parse data lines
       if Line[1] = '$' then
       begin
-        if Copy(Line, 2, 4) = 'NONE' then DoAddColor(clNone);
-        if Copy(Line, 2, 4) = 'COLS' then FCols := StrToIntDef(Copy(Line, 6, MaxInt), 8);
+        if Copy(Line, 2, 4) = 'NONE' then
+          DoAddColor(clNone);
+        if Copy(Line, 2, 4) = 'COLS' then
+          FCols := StrToIntDef(Copy(Line, 6, MaxInt), 8);
         if Copy(Line, 2, 7) = 'BLENDWB' then
         begin
           Delete(Line, 1, 8);
-          C := ParseColor(Line);
-          BlendWBColor(C, StrToInt(Line));
+          ParseColor(Line, C, steps, clrName);
+          BlendWBColor(C, steps);
         end;
       end
       else
-        if Pos(',', Line) > 0 then DoAddColor(ParseColor(Line));
+        if Pos(',', Line) > 0 then
+        begin
+          ParseColor(Line, C, steps, clrName);
+          DoAddColor(C, clrName);
+        end;
     end;
   finally
     Close(F);
@@ -504,16 +588,18 @@ begin
     C := GetColors(FMouseIndex);
     if ShowHint and FShowColorHint then
     begin
-      Hint := GetHintText(c);
+      Hint := GetHintText(FMouseIndex);
       if FMouseIndex <> FPrevMouseIndex then
         Application.ActivateHint(ClientToScreen(Point(X, Y)));
     end;
     if (FMouseIndex <> FPrevMouseIndex) then
     begin
-      if C <> clNone then
+      if not (FUseSpacers and (C = clNone)) then
+      begin
         ColorMouseMove(C, Shift);
-      if FPickMode = pmContinuous then
-        ColorPick(FMouseIndex, Shift);
+        if FPickMode = pmContinuous then
+          ColorPick(FMouseIndex, Shift);
+      end;
     end;
   end;
 
@@ -548,12 +634,22 @@ procedure TCustomColorPalette.Paint;
 
   procedure PaintBox(x1, y1, x2, y2: Integer; c: TColor);
   begin
-    if c = clNone then
+    if FUseSpacers and (c = clNone) then
       exit;
 
     // Fill interior
-    Canvas.Brush.Color := c;
-    Canvas.FillRect(x1, y1, x2, y2);
+    if c = clNone then
+    begin
+      Canvas.Pen.Color := clBlack;
+      Canvas.Pen.Width := 1;
+      Canvas.Pen.Style := psSolid;
+      Canvas.Line(x1, y1, x2, y2);
+      Canvas.Line(x1, y2, x2, y1);
+    end else
+    begin
+      Canvas.Brush.Color := c;
+      Canvas.FillRect(x1, y1, x2, y2);
+    end;
 
     // Paint border
     if (FBorderColor <> clNone) and (FBorderWidth > 0) then
@@ -620,6 +716,7 @@ var
   i: Integer;
   L: TStringList;
   clr: TColor;
+  clrName: String;
   r,g,b: Byte;
 begin
   L := TStringList.Create;
@@ -631,7 +728,11 @@ begin
         L.Add('$NONE')
       else begin
         RedGreenBlue(clr, r,g,b);
-        L.Add(Format('%d, %d, %d',[r, g, b]));
+        clrName := ColorNames[i];
+        if clrName = '' then
+          L.Add(Format('%d, %d, %d',[r, g, b]))
+        else
+          L.Add(Format('%d, %d, %d %s', [r, g, b, clrName]));
       end;
     end;
     L.SaveToFile(FileName);
@@ -671,9 +772,14 @@ begin
   UpdateSize;
 end;
 
+procedure TCustomColorPalette.SetColorNames(AIndex: Integer; const AValue: String);
+begin
+  FColors.Strings[AIndex] := AValue;
+end;
+
 procedure TCustomColorPalette.SetColors(AIndex: Integer; const AValue: TColor);
 begin
-  FColors.Items[AIndex] := Pointer(AValue);
+  FColors.Objects[AIndex] := TObject(AValue);
   Invalidate;
 end;
 
@@ -699,19 +805,10 @@ begin
 end;
 
 procedure TCustomColorPalette.SetPaletteKind(AValue: TPaletteKind);
-
-  function FixHex(hx: String): TColor;
-  var
-    r, g, b, color: string;
-  begin
-    r := copy(hx,1,2);
-    g := copy(hx,3,2);
-    b := copy(hx,5,2);
-    Result := StringToColor('$0' + b + g + r);
-  end;
-
 const
   STEPS: array[0..4] of byte = (0, 64, 128, 192, 255);
+
+  // Number of columns for each built-in palette, for a decent layout.
   COLCOUNT: array[TPaletteKind] of Integer = (
      8,  // StandardPalette = 16 standard colors
      4,  // ExtendedPalette = 16 standard colors + 4 extra colors
@@ -719,8 +816,8 @@ const
      8,  // StandardAndSystemPalette = 16 standard + 25 system colors = 41 colors
      5,  // ExtendedAndSystemPalette = 16 std + 4 extra + 25 system colors = 45 colors
     -1,  // Gradient palette - color count depends on PaletteStep
-     6,  // Websafe palette
-    14   // Websafe palette #2
+    10,  // HTML palette
+     6   // Websafe palette #2
   );
 var
   i, n: Integer;
@@ -802,6 +899,309 @@ begin
     SetCols(n*2 + 1);
   end;
 
+  if FPaletteKind = pkHTMLPalette then
+  // https://en.wikipedia.org/wiki/Web_colors#X11_color_names
+  begin
+    // White_colors
+    DoAddColor(RGBToColor(255,255,255), 'White');
+    DoAddColor(RGBToColor(255,250,250), 'Snow');
+    DoAddColor(RGBToColor(240,255,240), 'Honeydew');
+    DoAddColor(RGBToColor(245,255,250), 'MintCream');
+    DoAddColor(RGBToColor(240,255,255), 'Azure');
+    DoAddColor(RGBToColor(240,248,255), 'AliceBlue');
+    DoAddColor(RGBToColor(248,248,255), 'GhostWhite');
+    DoAddColor(RGBToColor(245,245,245), 'WhiteSmoke');
+    DoAddColor(RGBToColor(255,245,238), 'Seashell');
+    DoAddColor(RGBToColor(245,245,220), 'Beige');
+    DoAddColor(RGBToColor(253,245,230), 'OldLace');
+    DoAddColor(RGBToColor(255,250,240), 'FloralWhite');
+    DoAddColor(RGBToColor(255,255,240), 'Ivory');
+    DoAddColor(RGBToColor(250,235,215), 'AntiqueWhite');
+    DoAddColor(RGBToColor(250,240,230), 'Linen');
+    DoAddColor(RGBToColor(255,240,245), 'LavenderBlush');
+    DoAddColor(RGBToColor(255,228,225), 'MistyRose');
+    // Pink_colors
+    DoAddColor(RGBToColor(255,192,203), 'Pink');
+    DoAddColor(RGBToColor(255,182,193), 'LightPink');
+    DoAddColor(RGBToColor(255,105,180), 'HotPink');
+    DoAddColor(RGBToColor(255, 20,147), 'DeepPink');
+    DoAddColor(RGBToColor(219,112,147), 'PaleVioletRed');
+    DoAddColor(RGBToColor(199, 21,133), 'MediumVioletRed');
+    // Red_colors
+    DoAddColor(RGBToColor(255,160,122), 'LightSalmon');
+    DoAddColor(RGBToColor(250,128,114), 'Salmon');
+    DoAddColor(RGBToColor(233,150,122), 'DarkSalmon');
+    DoAddColor(RGBToColor(240,128,128), 'LightCoral');
+    DoAddColor(RGBToColor(205, 92, 92), 'IndianRed');
+    DoAddColor(RGBToColor(220, 20, 60), 'Crimson');
+    DoAddColor(RGBToColor(178, 34, 34), 'FireBrick');
+    DoAddColor(RGBToColor(139,  0,  0), 'DarkRed');
+    DoAddColor(RGBToColor(255,  0,  0), 'Red');
+    // Orange_colors
+    DoAddColor(RGBToColor(255, 69,  0), 'OrangeRed');
+    DoAddColor(RGBToColor(255, 99, 71), 'Tomato');
+    DoAddColor(RGBToColor(255,127, 80), 'Coral');
+    DoAddColor(RGBToColor(255,140,  0), 'DarkOrange');
+    DoAddColor(RGBToColor(255,165,  0), 'Orange');
+    // Yellow_colors
+    DoAddColor(RGBToColor(255,255,  0), 'Yellow');
+    DoAddColor(RGBToColor(255,255,224), 'LightYellow');
+    DoAddColor(RGBToColor(255,250,205), 'LemonChiffon');
+    DoAddColor(RGBToColor(250,250,210), 'LightGoldenrodYellow');
+    DoAddColor(RGBToColor(255,239,213), 'PapayaWhip');
+    DoAddColor(RGBToColor(255,228,181), 'Moccasin');
+    DoAddColor(RGBToColor(255,218,185), 'PeachPuff');
+    DoAddColor(RGBToColor(238,232,170), 'PaleGoldenrod');
+    DoAddColor(RGBToColor(240,230,140), 'Khaki');
+    DoAddColor(RGBToColor(189,183,107), 'DarkKhaki');
+    DoAddColor(RGBToColor(255,215,  0), 'Gold');
+    // Brown_colors
+    DoAddColor(RGBToColor(255,248,220), 'Cornsilk');
+    DoAddColor(RGBToColor(255,235,205), 'BlanchedAlmond');
+    DoAddColor(RGBToColor(255,228,196), 'Bisque');
+    DoAddColor(RGBToColor(255,222,173), 'NavajoWhite');
+    DoAddColor(RGBToColor(245,222,179), 'Wheat');
+    DoAddColor(RGBToColor(222,184,135), 'BurlyWood');
+    DoAddColor(RGBToColor(210,180,140), 'Tan');
+    DoAddColor(RGBToColor(188,143,143), 'RosyBrown');
+    DoAddColor(RGBToColor(244,164, 96), 'SandyBrown');
+    DoAddColor(RGBToColor(218,165, 32), 'Goldenrod');
+    DoAddColor(RGBToColor(184,134, 11), 'DarkGoldenrod');
+    DoAddColor(RGBToColor(205,133, 63), 'Peru');
+    DoAddColor(RGBToColor(210,105, 30), 'Chocolate');
+    DoAddColor(RGBToColor(139, 69, 19), 'SaddleBrown');
+    DoAddColor(RGBToColor(160, 82, 45), 'Sienna');
+    DoAddColor(RGBToColor(165, 42, 42), 'Brown');
+    DoAddColor(RGBToColor(128,  0,  0), 'Maroon');
+    // Green_colors
+    DoAddColor(RGBToColor( 85,107, 47), 'DarkOliveGreen');
+    DoAddColor(RGBToColor(128,128,  0), 'Olive');
+    DoAddColor(RGBToColor(107,142, 35), 'OliveDrab');
+    DoAddColor(RGBToColor(154,205, 50), 'YellowGreen');
+    DoAddColor(RGBToColor( 50,205, 50), 'LimeGreen');
+    DoAddColor(RGBToColor(  0,255,  0), 'Lime');
+    DoAddColor(RGBToColor(124,252,  0), 'LawnGreen');
+    DoAddColor(RGBToColor(127,255,  0), 'Chartreuse');
+    DoAddColor(RGBToColor(173,255, 47), 'GreenYellow');
+    DoAddColor(RGBToColor(  0,255,127), 'SpringGreen');
+    DoAddColor(RGBToColor(  0,250,154), 'MediumSpringGreen');
+    DoAddColor(RGBToColor(144,238,144), 'LightGreen');
+    DoAddColor(RGBToColor(152,251,152), 'PaleGreen');
+    DoAddColor(RGBToColor(143,188,143), 'DarkSeaGreen');
+    DoAddColor(RGBToColor( 60,179,113), 'MediumSeaGreen');
+    DoAddColor(RGBToColor( 46,139, 87), 'SeaGreen');
+    DoAddColor(RGBToColor( 34,139, 34), 'ForestGreen');
+    DoAddColor(RGBToColor(  0,128,  0), 'Green');
+    DoAddColor(RGBToColor(  0,100,  0), 'DarkGreen');
+    // Cyan_colors
+    DoAddColor(RGBToColor(102,205,170), 'MediumAquamarine');
+    DoAddColor(RGBToColor(  0,255,255), 'Aqua');
+//    DoAddColor(RGBToColor(  0,255,255), 'Cyan');
+    DoAddColor(RGBToColor(224,255,255), 'LightCyan');
+    DoAddColor(RGBToColor(175,238,238), 'PaleTurquoise');
+    DoAddColor(RGBToColor(127,255,212), 'Aquamarine');
+    DoAddColor(RGBToColor( 64,224,208), 'Turquoise');
+    DoAddColor(RGBToColor( 72,209,204), 'MediumTurquoise');
+    DoAddColor(RGBToColor(  0,206,209), 'DarkTurquoise');
+    DoAddColor(RGBToColor( 32,178,170), 'LightSeaGreen');
+    DoAddColor(RGBToColor( 95,158,160), 'CadetBlue');
+    DoAddColor(RGBToColor(  0,139,139), 'DarkCyan');
+    DoAddColor(RGBToColor(  0,128,128), 'Teal');
+    // Blue_colors
+    DoAddColor(RGBToColor(176,196,222), 'LightSteelBlue');
+    DoAddColor(RGBToColor(176,224,230), 'PowderBlue');
+    DoAddColor(RGBToColor(173,216,230), 'LightBlue');
+    DoAddColor(RGBToColor(135,206,235), 'SkyBlue');
+    DoAddColor(RGBToColor(135,206,250), 'LightSkyBlue');
+    DoAddColor(RGBToColor(  0,191,255), 'DeepSkyBlue');
+    DoAddColor(RGBToColor( 30,144,255), 'DodgerBlue');
+    DoAddColor(RGBToColor(100,149,237), 'CornflowerBlue');
+    DoAddColor(RGBToColor( 70,130,180), 'SteelBlue');
+    DoAddColor(RGBToColor( 65,105,225), 'RoyalBlue');
+    DoAddColor(RGBToColor(  0,  0,255), 'Blue');
+    DoAddColor(RGBToColor(  0,  0,205), 'MediumBlue');
+    DoAddColor(RGBToColor(  0,  0,139), 'DarkBlue');
+    DoAddColor(RGBToColor(  0,  0,128), 'Navy');
+    DoAddColor(RGBToColor( 25, 25,112), 'MidnightBlue');
+    // Purple/Violet/Magenta colors
+    DoAddColor(RGBToColor(230,230,250), 'Lavender');
+    DoAddColor(RGBToColor(216,191,216), 'Thistle');
+    DoAddColor(RGBToColor(221,160,221), 'Plum');
+    DoAddColor(RGBToColor(238,130,238), 'Violet');
+    DoAddColor(RGBToColor(218,112,214), 'Orchid');
+    DoAddColor(RGBToColor(255,  0,255), 'Fuchsia');
+    DoAddColor(RGBToColor(255,  0,255), 'Magenta');
+    DoAddColor(RGBToColor(186, 85,211), 'MediumOrchid');
+    DoAddColor(RGBToColor(147,112,219), 'MediumPurple');
+    DoAddColor(RGBToColor(138, 43,226), 'BlueViolet');
+    DoAddColor(RGBToColor(148,  0,211), 'DarkViolet');
+    DoAddColor(RGBToColor(153, 50,204), 'DarkOrchid');
+    DoAddColor(RGBToColor(139,  0,139), 'DarkMagenta');
+    DoAddColor(RGBToColor(128,  0,128), 'Purple');
+    DoAddColor(RGBToColor( 75,  0,130), 'Indigo');
+    DoAddColor(RGBToColor( 72, 61,139), 'DarkSlateBlue');
+    DoAddColor(RGBToColor(102, 51,153), 'RebeccaPurple');
+    DoAddColor(RGBToColor(106, 90,205), 'SlateBlue');
+    DoAddColor(RGBToColor(123,104,238), 'MediumSlateBlue');
+    // Gray/Black_colors
+    DoAddColor(RGBToColor(220,220,220), 'Gainsboro');
+    DoAddColor(RGBToColor(211,211,211), 'LightGrey');
+    DoAddColor(RGBToColor(192,192,192), 'Silver');
+    DoAddColor(RGBToColor(169,169,169), 'DarkGray');
+    DoAddColor(RGBToColor(128,128,128), 'Gray');
+    DoAddColor(RGBToColor(105,105,105), 'DimGray');
+    DoAddColor(RGBToColor(119,136,153), 'LightSlateGray');
+    DoAddColor(RGBToColor(112,128,144), 'SlateGray');
+    DoAddColor(RGBToColor( 47, 79, 79), 'DarkSlateGray');
+    DoAddColor(RGBToColor(  0,  0,  0), 'Black');
+  end;
+
+  {
+  if FPaletteKind = pkHTMLPalette then
+  begin
+    DoAddColor(RGBToColor(255,255,255), 'white');
+    DoAddColor(RGBToColor(255,255,240), 'ivory');
+    DoAddColor(RGBToColor(255,255,224), 'lightyellow');
+    DoAddColor(RGBToColor(255,255,  0), 'yellow');
+    DoAddColor(RGBToColor(255,250,250), 'snow');
+    DoAddColor(RGBToColor(255,250,240), 'floralwhite');
+    DoAddColor(RGBToColor(255,250,205), 'lemonchiffon');
+    DoAddColor(RGBToColor(255,248,220), 'cornsilk');
+    DoAddColor(RGBToColor(255,245,238), 'seashell');
+    DoAddColor(RGBToColor(255,240,245), 'lavenderblush');
+    DoAddColor(RGBToColor(255,239,213), 'papayawhip');
+    DoAddColor(RGBToColor(255,235,205), 'blanchedalmond');
+    DoAddColor(RGBToColor(255,228,225), 'mistyrose');
+    DoAddColor(RGBToColor(255,228,196), 'bisque');
+    DoAddColor(RGBToColor(255,228,181), 'moccasin');
+    DoAddColor(RGBToColor(255,222,173), 'navajowhite');
+    DoAddColor(RGBToColor(255,218,185), 'peachpuff');
+    DoAddColor(RGBToColor(255,215,  0), 'gold');
+    DoAddColor(RGBToColor(255,192,203), 'pink');
+    DoAddColor(RGBToColor(255,182,193), 'lightpink');
+    DoAddColor(RGBToColor(255,165,  0), 'orange');
+    DoAddColor(RGBToColor(255,160,122), 'lightsalmon');
+    DoAddColor(RGBToColor(255,140,  0), 'darkorange');
+    DoAddColor(RGBToColor(255,127, 80), 'coral');
+    DoAddColor(RGBToColor(255,105,180), 'hotpink');
+    DoAddColor(RGBToColor(255, 99, 71), 'tomato');
+    DoAddColor(RGBToColor(255, 69,  0), 'orangered');
+    DoAddColor(RGBToColor(255, 20,147), 'deeppink');
+    DoAddColor(RGBToColor(255,  0,255), 'fuchsia');
+    DoAddColor(RGBToColor(255,  0,255), 'fuchsia');
+    DoAddColor(RGBToColor(255,  0,  0), 'red');
+    DoAddColor(RGBToColor(253,245,230), 'oldlace');
+    DoAddColor(RGBToColor(250,250,210), 'lightgoldenrodyellow');
+    DoAddColor(RGBToColor(250,240,230), 'linen');
+    DoAddColor(RGBToColor(250,235,215), 'antiquewhite');
+    DoAddColor(RGBToColor(250,128,114), 'salmon');
+    DoAddColor(RGBToColor(248,248,255), 'ghostwhite');
+    DoAddColor(RGBToColor(245,255,250), 'mintcream');
+    DoAddColor(RGBToColor(245,245,245), 'whitesmoke');
+    DoAddColor(RGBToColor(245,245,220), 'beige');
+    DoAddColor(RGBToColor(245,222,179), 'wheat');
+    DoAddColor(RGBToColor(244,164, 96), 'sandybrown');
+    DoAddColor(RGBToColor(240,255,255), 'azure');
+    DoAddColor(RGBToColor(240,255,240), 'honeydew');
+    DoAddColor(RGBToColor(240,248,255), 'aliceblue');
+    DoAddColor(RGBToColor(240,230,140), 'khaki');
+    DoAddColor(RGBToColor(240,128,128), 'lightcoral');
+    DoAddColor(RGBToColor(238,232,170), 'palegoldenrod');
+    DoAddColor(RGBToColor(238,130,238), 'violet');
+    DoAddColor(RGBToColor(233,150,122), 'darksalmon');
+    DoAddColor(RGBToColor(230,230,250), 'lavender');
+    DoAddColor(RGBToColor(224,255,255), 'lightcyan');
+    DoAddColor(RGBToColor(222,184,135), 'burlywood');
+    DoAddColor(RGBToColor(221,160,221), 'plum');
+    DoAddColor(RGBToColor(220,220,220), 'gainsboro');
+    DoAddColor(RGBToColor(220, 20, 60), 'crimson');
+    DoAddColor(RGBToColor(219,112,147), 'palevioletred');
+    DoAddColor(RGBToColor(218,165, 32), 'goldenrod');
+    DoAddColor(RGBToColor(218,112,214), 'orchid');
+    DoAddColor(RGBToColor(216,191,216), 'thistle');
+    DoAddColor(RGBToColor(211,211,211), 'lightgrey');
+    DoAddColor(RGBToColor(210,180,140), 'tan');
+    DoAddColor(RGBToColor(210,105, 30), 'chocolate');
+    DoAddColor(RGBToColor(205,133, 63), 'peru');
+    DoAddColor(RGBToColor(205, 92, 92), 'indianred');
+    DoAddColor(RGBToColor(199, 21,133), 'mediumvioletred');
+    DoAddColor(RGBToColor(192,192,192), 'silver');
+    DoAddColor(RGBToColor(189,183,107), 'darkkhaki');
+    DoAddColor(RGBToColor(188,143,143), 'rosybrown');
+    DoAddColor(RGBToColor(186, 85,211), 'mediumorchid');
+    DoAddColor(RGBToColor(184,134, 11), 'darkgoldenrod');
+    DoAddColor(RGBToColor(178, 34, 34), 'firebrick');
+    DoAddColor(RGBToColor(176,224,230), 'powderblue');
+    DoAddColor(RGBToColor(176,196,222), 'lightsteelblue');
+    DoAddColor(RGBToColor(175,238,238), 'paleturquoise');
+    DoAddColor(RGBToColor(173,255, 47), 'greenyellow');
+    DoAddColor(RGBToColor(173,216,230), 'lightblue');
+    DoAddColor(RGBToColor(169,169,169), 'darkgray');
+    DoAddColor(RGBToColor(165, 42, 42), 'brown');
+    DoAddColor(RGBToColor(160, 82, 45), 'sienna');
+    DoAddColor(RGBToColor(154,205, 50), 'yellowgreen');
+    DoAddColor(RGBToColor(153, 50,204), 'darkorchid');
+    DoAddColor(RGBToColor(152,251,152), 'palegreen');
+    DoAddColor(RGBToColor(148,  0,211), 'darkviolet');
+    DoAddColor(RGBToColor(147,112,219), 'mediumpurple');
+    DoAddColor(RGBToColor(144,238,144), 'lightgreen');
+    DoAddColor(RGBToColor(143,188,143), 'darkseagreen');
+    DoAddColor(RGBToColor(139, 69, 19), 'saddlebrown');
+    DoAddColor(RGBToColor(139,  0,139), 'darkmagenta');
+    DoAddColor(RGBToColor(139,  0,  0), 'darkred');
+    DoAddColor(RGBToColor(138, 43,226), 'blueviolet');
+    DoAddColor(RGBToColor(135,206,250), 'lightskyblue');
+    DoAddColor(RGBToColor(135,206,235), 'skyblue');
+    DoAddColor(RGBToColor(128,128,128), 'gray');
+    DoAddColor(RGBToColor(128,128,  0), 'olive');
+    DoAddColor(RGBToColor(128,  0,128), 'purple');
+    DoAddColor(RGBToColor(128,  0,  0), 'maroon');
+    DoAddColor(RGBToColor(127,255,212), 'aquamarine');
+    DoAddColor(RGBToColor(127,255,  0), 'chartreuse');
+    DoAddColor(RGBToColor(124,252,  0), 'lawngreen');
+    DoAddColor(RGBToColor(123,104,238), 'mediumslateblue');
+    DoAddColor(RGBToColor(119,136,153), 'lightslategray');
+    DoAddColor(RGBToColor(112,128,144), 'slategray');
+    DoAddColor(RGBToColor(107,142, 35), 'olivedrab');
+    DoAddColor(RGBToColor(106, 90,205), 'slateblue');
+    DoAddColor(RGBToColor(105,105,105), 'dimgray');
+    DoAddColor(RGBToColor(102,205,170), 'mediumaquamarine');
+    DoAddColor(RGBToColor(100,149,237), 'cornflowerblue');
+    DoAddColor(RGBToColor( 95,158,160), 'cadetblue');
+    DoAddColor(RGBToColor( 85,107, 47), 'darkolivegreen');
+    DoAddColor(RGBToColor( 75,  0,130), 'indigo');
+    DoAddColor(RGBToColor( 72,209,204), 'mediumturquoise');
+    DoAddColor(RGBToColor( 72, 61,139), 'darkslateblue');
+    DoAddColor(RGBToColor( 70,130,180), 'steelblue');
+    DoAddColor(RGBToColor( 65,105,225), 'royalblue');
+    DoAddColor(RGBToColor( 64,224,208), 'turquoise');
+    DoAddColor(RGBToColor( 60,179,113), 'mediumseagreen');
+    DoAddColor(RGBToColor( 50,205, 50), 'limegreen');
+    DoAddColor(RGBToColor( 47, 79, 79), 'darkslategray');
+    DoAddColor(RGBToColor( 46,139, 87), 'seagreen');
+    DoAddColor(RGBToColor( 34,139, 34), 'forestgreen');
+    DoAddColor(RGBToColor( 32,178,170), 'lightseagreen');
+    DoAddColor(RGBToColor( 30,144,255), 'dodgerblue');
+    DoAddColor(RGBToColor( 25, 25,112), 'midnightblue');
+    DoAddColor(RGBToColor(  0,255,255), 'aqua');
+    DoAddColor(RGBToColor(  0,255,255), 'cyan');
+    DoAddColor(RGBToColor(  0,255,127), 'springgreen');
+    DoAddColor(RGBToColor(  0,255,  0), 'lime');
+    DoAddColor(RGBToColor(  0,250,154), 'mediumspringgreen');
+    DoAddColor(RGBToColor(  0,206,209), 'darkturquoise');
+    DoAddColor(RGBToColor(  0,191,255), 'deepskyblue');
+    DoAddColor(RGBToColor(  0,139,139), 'darkcyan');
+    DoAddColor(RGBToColor(  0,128,128), 'teal');
+    DoAddColor(RGBToColor(  0,128,  0), 'green');
+    DoAddColor(RGBToColor(  0,100,  0), 'darkgreen');
+    DoAddColor(RGBToColor(  0,  0,255), 'blue');
+    DoAddColor(RGBToColor(  0,  0,205), 'mediumblue');
+    DoAddColor(RGBToColor(  0,  0,139), 'darkblue');
+    DoAddColor(RGBToColor(  0,  0,128), 'navy');
+    DoAddColor(RGBToColor(  0,  0,  0), 'black');
+  end;
+  }
+
   if FPaletteKind = pkWebSafePalette then
   begin
     // https://en.wikipedia.org/wiki/Web_colors
@@ -809,173 +1209,6 @@ begin
       for b:= 0 to 5 do
         for r:=0 to 5 do
           DoAddColor(RGBToColor(r*$33, g*$33, b*$33));
-  end;
-
-  if FPaletteKind = pkWebSafePalette2 then
-  begin
-    DoAddColor(FixHex('f0f8ff'));       // 140
-    DoAddColor(FixHex('faebd7'));
-    DoAddColor(FixHex('00ffff'));
-    DoAddColor(FixHex('7fffd4'));
-    DoAddColor(FixHex('f0ffff'));
-    DoAddColor(FixHex('f5f5dc'));
-
-    DoAddColor(FixHex('ffe4c4'));
-    DoAddColor(FixHex('000000'));
-    DoAddColor(FixHex('ffebcd'));
-    DoAddColor(FixHex('0000ff'));
-    DoAddColor(FixHex('8a2be2'));
-    DoAddColor(FixHex('a52a2a'));
-
-    DoAddColor(FixHex('deb887'));
-    DoAddColor(FixHex('5f9ea0'));
-    DoAddColor(FixHex('7fff00'));
-    DoAddColor(FixHex('d2691e'));
-    DoAddColor(FixHex('ff7f50'));
-    DoAddColor(FixHex('6495ed'));
-
-    DoAddColor(FixHex('fff8dc'));
-    DoAddColor(FixHex('dc143c'));
-    DoAddColor(FixHex('00ffff'));
-    DoAddColor(FixHex('00008b'));
-    DoAddColor(FixHex('008b8b'));
-    DoAddColor(FixHex('b8860b'));
-
-    DoAddColor(FixHex('a9a9a9'));
-    DoAddColor(FixHex('006400'));
-    DoAddColor(FixHex('bdb76b'));
-    DoAddColor(FixHex('8b008b'));
-    DoAddColor(FixHex('556b2f'));
-    DoAddColor(FixHex('ff8c00'));
-
-    DoAddColor(FixHex('9932cc'));
-    DoAddColor(FixHex('8b0000'));
-    DoAddColor(FixHex('e9967a'));
-    DoAddColor(FixHex('8fbc8f'));
-    DoAddColor(FixHex('483d8b'));
-    DoAddColor(FixHex('2f4f4f'));
-
-    DoAddColor(FixHex('00ced1'));
-    DoAddColor(FixHex('9400d3'));
-    DoAddColor(FixHex('ff1493'));
-    DoAddColor(FixHex('00bfff'));
-    DoAddColor(FixHex('696969'));
-    DoAddColor(FixHex('1e90ff'));
-
-    DoAddColor(FixHex('b22222'));
-    DoAddColor(FixHex('fffaf0'));
-    DoAddColor(FixHex('228b22'));
-    DoAddColor(FixHex('ff00ff'));
-    DoAddColor(FixHex('dcdcdc'));
-    DoAddColor(FixHex('f8f8ff'));
-
-    DoAddColor(FixHex('ffd700'));
-    DoAddColor(FixHex('daa520'));
-    DoAddColor(FixHex('808080'));
-    DoAddColor(FixHex('008000'));
-    DoAddColor(FixHex('adff2f'));
-    DoAddColor(FixHex('f0fff0'));
-
-    DoAddColor(FixHex('ff69b4'));
-    DoAddColor(FixHex('cd5c5c'));
-    DoAddColor(FixHex('4b0082'));
-    DoAddColor(FixHex('fffff0'));
-    DoAddColor(FixHex('f0e68c'));
-    DoAddColor(FixHex('e6e6fa'));
-
-    DoAddColor(FixHex('fff0f5'));
-    DoAddColor(FixHex('7cfc00'));
-    DoAddColor(FixHex('fffacd'));
-    DoAddColor(FixHex('add8e6'));
-    DoAddColor(FixHex('f08080'));
-    DoAddColor(FixHex('e0ffff'));
-
-    DoAddColor(FixHex('fafad2'));
-    DoAddColor(FixHex('90ee90'));
-    DoAddColor(FixHex('d3d3d3'));
-    DoAddColor(FixHex('ffb6c1'));
-    DoAddColor(FixHex('ffa07a'));
-    DoAddColor(FixHex('20b2aa'));
-
-    DoAddColor(FixHex('87cefa'));
-    DoAddColor(FixHex('778899'));
-    DoAddColor(FixHex('b0c4de'));
-    DoAddColor(FixHex('ffffe0'));
-    DoAddColor(FixHex('00ff00'));
-    DoAddColor(FixHex('32cd32'));
-
-    DoAddColor(FixHex('faf0e6'));
-    DoAddColor(FixHex('ff00ff'));
-    DoAddColor(FixHex('800000'));
-    DoAddColor(FixHex('66cdaa'));
-    DoAddColor(FixHex('0000cd'));
-    DoAddColor(FixHex('ba55d3'));
-
-    DoAddColor(FixHex('9370db'));
-    DoAddColor(FixHex('3cb371'));
-    DoAddColor(FixHex('7b68ee'));
-    DoAddColor(FixHex('00fa9a'));
-    DoAddColor(FixHex('48d1cc'));
-    DoAddColor(FixHex('c71585'));
-
-    DoAddColor(FixHex('191970'));
-    DoAddColor(FixHex('f5fffa'));
-    DoAddColor(FixHex('ffe4e1'));
-    DoAddColor(FixHex('ffe4b5'));
-    DoAddColor(FixHex('ffdead'));
-    DoAddColor(FixHex('000080'));
-
-    DoAddColor(FixHex('fdf5e6'));
-    DoAddColor(FixHex('808000'));
-    DoAddColor(FixHex('6b8e23'));
-    DoAddColor(FixHex('ffa500'));
-    DoAddColor(FixHex('ff4500'));
-    DoAddColor(FixHex('da70d6'));
-
-    DoAddColor(FixHex('eee8aa'));
-    DoAddColor(FixHex('98fb98'));
-    DoAddColor(FixHex('afeeee'));
-    DoAddColor(FixHex('db7093'));
-    DoAddColor(FixHex('ffefd5'));
-    DoAddColor(FixHex('ffdab9'));
-
-    DoAddColor(FixHex('cd853f'));
-    DoAddColor(FixHex('ffc0cb'));
-    DoAddColor(FixHex('dda0dd'));
-    DoAddColor(FixHex('b0e0e6'));
-    DoAddColor(FixHex('800080'));
-    DoAddColor(FixHex('ff0000'));
-
-    DoAddColor(FixHex('bc8f8f'));
-    DoAddColor(FixHex('4169e1'));
-    DoAddColor(FixHex('8b4513'));
-    DoAddColor(FixHex('fa8072'));
-    DoAddColor(FixHex('f4a460'));
-    DoAddColor(FixHex('2e8b57'));
-
-    DoAddColor(FixHex('fff5ee'));
-    DoAddColor(FixHex('a0522d'));
-    DoAddColor(FixHex('c0c0c0'));
-    DoAddColor(FixHex('87ceeb'));
-    DoAddColor(FixHex('6a5acd'));
-    DoAddColor(FixHex('708090'));
-
-    DoAddColor(FixHex('fffafa'));
-    DoAddColor(FixHex('00ff7f'));
-    DoAddColor(FixHex('4682b4'));
-    DoAddColor(FixHex('d2b48c'));
-    DoAddColor(FixHex('008080'));
-    DoAddColor(FixHex('d8bfd8'));
-
-    DoAddColor(FixHex('ff6347'));
-    DoAddColor(FixHex('40e0d0'));
-    DoAddColor(FixHex('ee82ee'));
-    DoAddColor(FixHex('f5deb3'));
-    DoAddColor(FixHex('ffffff'));
-    DoAddColor(FixHex('f5f5f5'));
-
-    DoAddColor(FixHex('ffff00'));
-    DoAddColor(FixHex('9acd32'));
   end;
 
   if FPaletteKind <> pkGradientPalette then
@@ -999,6 +1232,13 @@ procedure TCustomColorPalette.SetShowSelection(AValue: Boolean);
 begin
   if FShowSelection = AValue then exit;
   FShowSelection := AValue;
+  Invalidate;
+end;
+
+procedure TCustomColorPalette.SetUseSpacers(AValue: Boolean);
+begin
+  if FUseSpacers = AValue then exit;
+  FUseSpacers := AValue;
   Invalidate;
 end;
 

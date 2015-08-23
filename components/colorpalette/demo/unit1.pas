@@ -27,6 +27,7 @@ type
     CbShowColorHints: TCheckBox;
     CbBorderColor: TColorBox;
     CbCustomHintText: TCheckBox;
+    CbUseSpacers: TCheckBox;
     ColorDialog: TColorDialog;
     ColorPalette: TColorPalette;
     CbPickMode: TComboBox;
@@ -44,6 +45,7 @@ type
     LblPickMode2: TLabel;
     MnuEditPickedColor: TMenuItem;
     MnuDeletePickedColor: TMenuItem;
+    OpenDialog: TOpenDialog;
     PalettePopupMenu: TPopupMenu;
     Panel1: TPanel;
     Panel2: TPanel;
@@ -62,6 +64,7 @@ type
     procedure CbShowColorHintsChange(Sender: TObject);
     procedure CbShowSelectionChange(Sender: TObject);
     procedure CbBorderColorSelect(Sender: TObject);
+    procedure CbUseSpacersChange(Sender: TObject);
     procedure ColorPaletteDblClick(Sender: TObject);
     procedure ColorPaletteGetHintText(Sender: TObject; AColor: TColor;
       var AText: String);
@@ -141,6 +144,14 @@ end;
 
 procedure TMainForm.BtnLoadDefaultPalClick(Sender: TObject);
 begin
+  with OpenDialog do
+    if Execute then
+    begin
+      ColorPalette.LoadPalette(FileName);
+      UpdateCaption;
+      EdColCount.Value := ColorPalette.ColumnCount;
+    end;
+                     {
   if not FileExists('..\default.pal') then
   begin
     ShowMessage('File "default.pal" not found. Copy it from the TColorPalette folder to the current exe folder.');
@@ -149,6 +160,7 @@ begin
   ColorPalette.LoadPalette('..\default.pal');
   UpdateCaption;
   EdColCount.Value := ColorPalette.ColumnCount;
+  }
 end;
 
 procedure TMainForm.BtnLoadRndPaletteClick(Sender: TObject);
@@ -201,6 +213,11 @@ end;
 procedure TMainForm.CbShowSelectionChange(Sender: TObject);
 begin
   ColorPalette.ShowSelection := CbShowSelection.Checked;
+end;
+
+procedure TMainForm.CbUseSpacersChange(Sender: TObject);
+begin
+  ColorPalette.UseSpacers := CbUseSpacers.Checked;
 end;
 
 procedure TMainForm.ColorPaletteDblClick(Sender: TObject);
@@ -301,7 +318,7 @@ begin
     colors for the context menu. Use object inspector, or use this code:  }
   ColorPalette.PickShift := [ssLeft, ssRight];
 
-  ColorPalette.OnGetHintText := nil;
+  ColorPalette.OnGetHintText := nil;   // will be activated by CbCustomHintText
 end;
 
 procedure TMainForm.MnuDeletePickedColorClick(Sender: TObject);
@@ -318,16 +335,17 @@ procedure TMainForm.SetColorInfo(ATitle: string; AColor: TColor);
 begin
   if AColor = clNone then
     LblColorInfo.Caption := Format(
-      '%s: %s', [ATitle, ColorToString(AColor)]
+      '%s: None', [ATitle]
     )
   else
     LblColorInfo.caption := Format(
       '%s: %s'#13+
       ' red = %d'#13+
       ' green = %d'#13+
-      ' blue = %d',
-      [ATitle, ColorToString(AColor), Red(AColor), Green(AColor), Blue(AColor)]
-    );
+      ' blue = %d', [
+      ATitle, ColorPalette.ColorNames[ColorPalette.SelectedIndex],
+      Red(AColor), Green(AColor), Blue(AColor)
+    ]);
 end;
 
 procedure TMainForm.UpdateCaption;
