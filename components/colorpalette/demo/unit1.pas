@@ -26,6 +26,7 @@ type
     CbShowSelection: TCheckBox;
     CbShowColorHints: TCheckBox;
     CbBorderColor: TColorBox;
+    CbCustomHintText: TCheckBox;
     ColorDialog: TColorDialog;
     ColorPalette: TColorPalette;
     CbPickMode: TComboBox;
@@ -56,11 +57,14 @@ type
     procedure BtnLoadDefaultPalClick(Sender: TObject);
     procedure BtnLoadRndPaletteClick(Sender: TObject);
     procedure CbBuiltinPalettesSelect(Sender: TObject);
+    procedure CbCustomHintTextChange(Sender: TObject);
     procedure CbPickModeSelect(Sender: TObject);
     procedure CbShowColorHintsChange(Sender: TObject);
     procedure CbShowSelectionChange(Sender: TObject);
     procedure CbBorderColorSelect(Sender: TObject);
     procedure ColorPaletteDblClick(Sender: TObject);
+    procedure ColorPaletteGetHintText(Sender: TObject; AColor: TColor;
+      var AText: String);
     procedure ColorPaletteSelectColor(Sender: TObject; AColor: TColor);
     procedure EdBorderWidthChange(Sender: TObject);
     procedure EdBoxSizeChange(Sender: TObject);
@@ -176,6 +180,14 @@ begin
   LblGradientSteps.Enabled := EdGradientSteps.Enabled;
 end;
 
+procedure TMainForm.CbCustomHintTextChange(Sender: TObject);
+begin
+  if CbCustomHintText.Checked then
+    ColorPalette.OnGetHintText := @ColorPaletteGetHintText
+  else
+    ColorPalette.OnGetHintText := nil;
+end;
+
 procedure TMainForm.CbPickModeSelect(Sender: TObject);
 begin
   ColorPalette.PickMode := TPickMode(CbPickMode.ItemIndex);
@@ -209,6 +221,14 @@ begin
       end;
     end;
   end;
+end;
+
+procedure TMainForm.ColorPaletteGetHintText(Sender: TObject; AColor: TColor;
+  var AText: String);
+begin
+  AText := Format('This is HTML color #%0.2x%0.2x%0.2x', [
+    Red(AColor), Green(AColor), Blue(AColor)
+  ]);
 end;
 
 procedure TMainForm.ColorPaletteSelectColor(Sender: TObject; AColor: TColor);
@@ -281,6 +301,7 @@ begin
     colors for the context menu. Use object inspector, or use this code:  }
   ColorPalette.PickShift := [ssLeft, ssRight];
 
+  ColorPalette.OnGetHintText := nil;
 end;
 
 procedure TMainForm.MnuDeletePickedColorClick(Sender: TObject);

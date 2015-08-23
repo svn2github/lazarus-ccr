@@ -68,6 +68,8 @@ type
   TColorMouseEvent = procedure (Sender: TObject; AColor: TColor; Shift: TShiftState) of object;
   TColorPaletteEvent = procedure (Sender: TObject; AColor: TColor) of object;
 
+  TColorPaletteHintEvent = procedure (Sender: TObject; AColor: TColor; var AText: String) of object;
+
   { TCustomColorPalette }
 
   TCustomColorPalette = class(TGraphicControl)
@@ -78,6 +80,7 @@ type
     FOnColorMouseMove: TColorMouseEvent;
     FOnColorPick: TColorMouseEvent;
     FOnSelectColor: TColorPaletteEvent;
+    FOnGetHintText: TColorPaletteHintEvent;
     FRows: Integer;
     FColors: TList;
     FSelectedColor: TColor;
@@ -137,6 +140,7 @@ type
     property SelectedIndex: Integer read FSelectedIndex write SetSelectedIndex default 0;
     property ShowColorHint: Boolean read FShowColorHint write FShowColorHint default true;
     property ShowSelection: Boolean read FShowSelection write SetShowSelection default false;
+    property OnGetHintText: TColorPaletteHintEvent read FOnGetHintText write FOnGetHintText;
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -180,6 +184,7 @@ type
 
     property OnColorMouseMove;
     property OnColorPick;
+    property OnGetHintText;
     property OnSelectColor;
 
     // inherited from TCustomColorPalette's ancestors
@@ -355,7 +360,7 @@ end;
 function TCustomColorPalette.GetHintText(AColor: TColor): string;
 const
   INDENT = '* ';
-  MASK = '%sRed: %d'#13'%sGreen: %d'#13'%sBlue: %d';
+  MASK = '%3:s'#13'%4:sRed: %0:d'#13'%4:sGreen: %1:d'#13'%4:sBlue: %2:d';
 begin
   if AColor = clNone then
     Result := 'NONE'
@@ -363,14 +368,13 @@ begin
   begin
     Result := ColorToString(AColor);
     if (Result[1] = 'c') and (Result[2] = 'l') then
-    begin
       Delete(Result, 1, 2);
-      Result := Uppercase(Result) + #13 + Format(MASK, [
-        INDENT, Red(AColor), INDENT, Green(AColor), INDENT, Blue(AColor)]
-      );
-    end else
-      Result := Format(MASK, ['', Red(AColor), '', Green(AColor), '', Blue(AColor)]);
+    Result := Format(MASK, [
+      Red(AColor), Green(AColor), Blue(AColor), Uppercase(Result), INDENT]
+    );
   end;
+  if Assigned(FOnGetHintText) then
+    FOnGetHintText(Self, AColor, Result);
 end;
 
 function TCustomColorPalette.GetPickedColor: TColor;
