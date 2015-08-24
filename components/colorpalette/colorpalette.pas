@@ -126,8 +126,8 @@ type
     procedure DoColorPick(AColor: TColor; AShift: TShiftState); virtual;
     procedure DoDeleteColor(AIndex: Integer); virtual;
     procedure DoSelectColor(AColor: TColor); virtual;
-    function GetCellHeight: Integer;
-    function GetCellWidth: Integer;
+    function GetCellHeight: Integer; inline;
+    function GetCellWidth: Integer; inline;
     function GetColorIndex(X,Y: Integer): Integer;
     function GetHintText(AIndex: Integer): String; virtual;
     function IsCorrectShift(Shift: TShiftState): Boolean;
@@ -254,6 +254,7 @@ begin
   FColors := TStringList.Create;
   FButtonBorderColor := clBlack;
   FButtonDistance := 0;
+  FMargin := 1;
   FButtonHeight := 12;
   FButtonWidth := 12;
   FPrevMouseIndex := -1;
@@ -706,14 +707,14 @@ var
   Rsel: TRect;
   xmax: Integer;
 begin
-  Canvas.Pen.Endcap := pecSquare;
-
   // Paint background color
   if Color <> clNone then begin
     Canvas.Brush.Color := Color;
     Canvas.Brush.Style := bsSolid;
     Canvas.FillRect(0, 0, Width, Height);
   end;
+
+  Canvas.Pen.Endcap := pecFlat;
 
   // Paint color boxes
   X := FMargin;
@@ -789,7 +790,7 @@ begin
   FButtonDistance := AValue;
   if FButtonDistance = 0 then
     FMargin := 1 else
-    FMargin := FButtonDistance div 2;
+    FMargin := FButtonDistance div 2 + FButtonDistance mod 2;
   UpdateSize;
   Invalidate;
 end;
@@ -1284,8 +1285,8 @@ procedure TCustomColorPalette.UpdateSize;
 var
   d, dx, dy: Integer;
 begin
-  if (FCols = 0) or (FColors.Count = 0) then FRows := 0
-  else
+  if (FCols = 0) or (FColors.Count = 0) then
+    FRows := 0 else
     FRows := Ceil(FColors.Count / FCols);
 
   dx := GetCellWidth;
@@ -1295,7 +1296,7 @@ begin
   begin
     dec(dx);
     dec(dy);
-    d := -1;
+    d := -1;   // Correct for button frame line width
   end;
   SetBounds(Left, Top, FCols * dx - d + 2*FMargin, FRows * dy - d + 2*FMargin);
 end;
