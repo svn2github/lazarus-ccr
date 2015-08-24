@@ -25,23 +25,25 @@ type
     CbBuiltinPalettes: TComboBox;
     CbShowSelection: TCheckBox;
     CbShowColorHints: TCheckBox;
-    CbBorderColor: TColorBox;
+    CbButtonBorderColor: TColorBox;
     CbCustomHintText: TCheckBox;
     CbUseSpacers: TCheckBox;
     ColorDialog: TColorDialog;
     ColorPalette: TColorPalette;
     CbPickMode: TComboBox;
-    EdBorderWidth: TSpinEdit;
+    MouseColorSample: TShape;
+    EdButtonDistance: TSpinEdit;
     EdBoxSize: TSpinEdit;
     EdGradientSteps: TSpinEdit;
     Label3: TLabel;
     Label4: TLabel;
+    LblMouseColorInfo: TLabel;
     LblGradientSteps: TLabel;
     LblPickMode: TLabel;
     EdColCount: TSpinEdit;
     Label2: TLabel;
     LblColorInfo: TLabel;
-    LblPickMode1: TLabel;
+    LblButtonBorderColor: TLabel;
     LblPickMode2: TLabel;
     MnuEditPickedColor: TMenuItem;
     MnuDeletePickedColor: TMenuItem;
@@ -63,13 +65,17 @@ type
     procedure CbPickModeSelect(Sender: TObject);
     procedure CbShowColorHintsChange(Sender: TObject);
     procedure CbShowSelectionChange(Sender: TObject);
-    procedure CbBorderColorSelect(Sender: TObject);
+    procedure CbButtonBorderColorSelect(Sender: TObject);
     procedure CbUseSpacersChange(Sender: TObject);
     procedure ColorPaletteDblClick(Sender: TObject);
     procedure ColorPaletteGetHintText(Sender: TObject; AColor: TColor;
       var AText: String);
+    procedure ColorPaletteMouseEnter(Sender: TObject);
+    procedure ColorPaletteMouseLeave(Sender: TObject);
+    procedure ColorPaletteMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
     procedure ColorPaletteSelectColor(Sender: TObject; AColor: TColor);
-    procedure EdBorderWidthChange(Sender: TObject);
+    procedure EdButtonDistanceChange(Sender: TObject);
     procedure EdBoxSizeChange(Sender: TObject);
     procedure EdColCountChange(Sender: TObject);
     procedure EdGradientStepsChange(Sender: TObject);
@@ -79,7 +85,7 @@ type
   private
     { private declarations }
     procedure EditCurColor;
-    procedure SetColorInfo(ATitle: string; AColor: TColor);
+    procedure SetColorInfo(ALabel: TLabel; ATitle: string; AColor: TColor);
     procedure UpdateCaption;
     procedure UpdatePalette;
   public
@@ -138,7 +144,7 @@ begin
       ColorSample.Brush.Style := bsClear else
       ColorSample.Brush.Style := bsSolid;
     UpdateCaption;
-    SetColorInfo('Current', Colors[SelectedIndex]);
+    SetColorInfo(LblColorInfo, 'Current', Colors[SelectedIndex]);
   end;
 end;
 
@@ -178,9 +184,9 @@ begin
     UpdatePalette;
 end;
 
-procedure TMainForm.CbBorderColorSelect(Sender: TObject);
+procedure TMainForm.CbButtonBorderColorSelect(Sender: TObject);
 begin
-  ColorPalette.BorderColor := CbBorderColor.Selected;
+  ColorPalette.ButtonBorderColor := CbButtonBorderColor.Selected;
 end;
 
 procedure TMainForm.CbBuiltinPalettesSelect(Sender: TObject);
@@ -230,7 +236,7 @@ begin
       ColorPalette.Colors[ColorPalette.SelectedIndex] := Color;
       ColorSample.Brush.Color := Color;
       ColorSample.Brush.Style := bsSolid;
-      SetColorInfo('Current', Color);
+      SetColorInfo(LblColorInfo, 'Current', Color);
       with  BtnEditColor do
       begin
         Caption := 'Edit';
@@ -248,20 +254,42 @@ begin
   ]);
 end;
 
+procedure TMainForm.ColorPaletteMouseEnter(Sender: TObject);
+begin
+  MouseColorSample.Show;
+  LblMouseColorInfo.Show;
+end;
+
+procedure TMainForm.ColorPaletteMouseLeave(Sender: TObject);
+begin
+  MouseColorSample.Hide;
+  LblMouseColorInfo.Hide;
+end;
+
+procedure TMainForm.ColorPaletteMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  MousecolorSample.Brush.Color := Colorpalette.MouseColor;
+  if MouseColorSample.Brush.Color = clNone then
+    MouseColorSample.Brush.Style := bsClear else
+    MouseColorSample.Brush.Style := bsSolid;
+  SetColorInfo(LblMouseColorInfo, 'MouseColor', MouseColorSample.Brush.Color);
+end;
+
 procedure TMainForm.ColorPaletteSelectColor(Sender: TObject; AColor: TColor);
 begin
   ColorSample.Brush.Color := AColor;
   if AColor = clNone then
     ColorSample.Brush.Style := bsClear else
     ColorSample.Brush.Style := bsSolid;
-  SetColorInfo('SelectedColor', AColor);
+  SetColorInfo(LblColorInfo, 'SelectedColor', AColor);
   BtnDeleteColor.Caption := 'Delete color #' + IntToStr(ColorPalette.SelectedIndex);
   UpdateCaption;
 end;
 
-procedure TMainForm.EdBorderWidthChange(Sender: TObject);
+procedure TMainForm.EdButtonDistanceChange(Sender: TObject);
 begin
-  ColorPalette.BorderWidth := EdBorderWidth.Value;
+  ColorPalette.ButtonDistance := EdButtonDistance.Value;
 end;
 
 procedure TMainForm.EdBoxSizeChange(Sender: TObject);
@@ -295,7 +323,7 @@ begin
   begin
     BtnEditColor.caption := 'Update >';
     BtnEditColor.hint := 'Update palette';
-    SetColorInfo('New color', ColorSample.Brush.Color);
+    SetColorInfo(LblColorInfo, 'New color', ColorSample.Brush.Color);
   end;
 end;
 
@@ -306,12 +334,12 @@ begin
   CbPickMode.ItemIndex := ord(ColorPalette.PickMode);
   CbShowSelection.Checked := ColorPalette.ShowSelection;
   CbShowColorHints.Checked := ColorPalette.ShowColorHint;
-  CbBorderColor.Selected := ColorPalette.SelectedColor;
-  EdBorderWidth.Value := ColorPalette.BorderWidth;
+  CbButtonBorderColor.Selected := ColorPalette.SelectedColor;
+  EdButtonDistance.Value := ColorPalette.ButtonDistance;
   EdBoxSize.Value := ColorPalette.ButtonWidth;
 
   ColorSample.Brush.Color := ColorPalette.SelectedColor;
-  SetColorInfo('Current', ColorPalette.SelectedColor);
+  SetColorInfo(LblColorInfo, 'Current', ColorPalette.SelectedColor);
   UpdateCaption;
 
   { ColorPalette.PickShift must contain ssRight in order to be able to select
@@ -331,14 +359,14 @@ begin
   BtnEditColorClick(self);
 end;
 
-procedure TMainForm.SetColorInfo(ATitle: string; AColor: TColor);
+procedure TMainForm.SetColorInfo(ALabel: TLabel; ATitle: string; AColor: TColor);
 begin
   if AColor = clNone then
-    LblColorInfo.Caption := Format(
+    ALabel.Caption := Format(
       '%s: None', [ATitle]
     )
   else
-    LblColorInfo.caption := Format(
+    ALabel.caption := Format(
       '%s: %s'#13+
       ' red = %d'#13+
       ' green = %d'#13+
@@ -358,7 +386,7 @@ end;
 procedure TMainForm.UpdatePalette;
 begin
   ColorPalette.Colors[ColorPalette.SelectedIndex] := ColorSample.Brush.Color;
-  SetColorInfo('Current', ColorSample.Brush.Color);
+  SetColorInfo(LblColorInfo, 'Current', ColorSample.Brush.Color);
   with  BtnEditColor do
   begin
     Caption := 'Edit';
