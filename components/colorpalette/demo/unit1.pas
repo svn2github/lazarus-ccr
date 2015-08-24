@@ -88,7 +88,7 @@ type
   private
     { private declarations }
     procedure EditCurColor;
-    procedure SetColorInfo(ALabel: TLabel; ATitle: string; AColor: TColor);
+    procedure SetColorInfo(ALabel: TLabel; ATitle: string; AIndex: Integer);
     procedure UpdateCaption;
     procedure UpdatePalette;
   public
@@ -147,7 +147,7 @@ begin
       ColorSample.Brush.Style := bsClear else
       ColorSample.Brush.Style := bsSolid;
     UpdateCaption;
-    SetColorInfo(LblColorInfo, 'Current', Colors[SelectedIndex]);
+    SetColorInfo(LblColorInfo, 'Current', SelectedIndex);
   end;
 end;
 
@@ -244,7 +244,7 @@ begin
       ColorPalette.Colors[ColorPalette.SelectedIndex] := Color;
       ColorSample.Brush.Color := Color;
       ColorSample.Brush.Style := bsSolid;
-      SetColorInfo(LblColorInfo, 'Current', Color);
+      SetColorInfo(LblColorInfo, 'Current', ColorPalette.SelectedIndex);
       with  BtnEditColor do
       begin
         Caption := 'Edit';
@@ -281,7 +281,7 @@ begin
   if MouseColorSample.Brush.Color = clNone then
     MouseColorSample.Brush.Style := bsClear else
     MouseColorSample.Brush.Style := bsSolid;
-  SetColorInfo(LblMouseColorInfo, 'MouseColor', MouseColorSample.Brush.Color);
+  SetColorInfo(LblMouseColorInfo, 'MouseColor', ColorPalette.MouseIndex);
 end;
 
 procedure TMainForm.ColorPaletteSelectColor(Sender: TObject; AColor: TColor);
@@ -290,7 +290,7 @@ begin
   if AColor = clNone then
     ColorSample.Brush.Style := bsClear else
     ColorSample.Brush.Style := bsSolid;
-  SetColorInfo(LblColorInfo, 'SelectedColor', AColor);
+  SetColorInfo(LblColorInfo, 'SelectedColor', ColorPalette.SelectedIndex);
   BtnDeleteColor.Caption := 'Delete color #' + IntToStr(ColorPalette.SelectedIndex);
   UpdateCaption;
 end;
@@ -331,7 +331,7 @@ begin
   begin
     BtnEditColor.caption := 'Update >';
     BtnEditColor.hint := 'Update palette';
-    SetColorInfo(LblColorInfo, 'New color', ColorSample.Brush.Color);
+    SetColorInfo(LblColorInfo, 'New color', ColorPalette.SelectedIndex);
   end;
 end;
 
@@ -348,7 +348,7 @@ begin
   EdBoxSize.Value := ColorPalette.ButtonWidth;
 
   ColorSample.Brush.Color := ColorPalette.SelectedColor;
-  SetColorInfo(LblColorInfo, 'Current', ColorPalette.SelectedColor);
+  SetColorInfo(LblColorInfo, 'Current', ColorPalette.SelectedIndex);
   UpdateCaption;
 
   { ColorPalette.PickShift must contain ssRight in order to be able to select
@@ -368,9 +368,12 @@ begin
   BtnEditColorClick(self);
 end;
 
-procedure TMainForm.SetColorInfo(ALabel: TLabel; ATitle: string; AColor: TColor);
+procedure TMainForm.SetColorInfo(ALabel: TLabel; ATitle: string; AIndex: Integer);
+var
+  C: TColor;
 begin
-  if AColor = clNone then
+  C := ColorPalette.Colors[AIndex];
+  if C = clNone then
     ALabel.Caption := Format(
       '%s: None', [ATitle]
     )
@@ -380,8 +383,8 @@ begin
       ' red = %d'#13+
       ' green = %d'#13+
       ' blue = %d', [
-      ATitle, ColorPalette.ColorNames[ColorPalette.SelectedIndex],
-      Red(AColor), Green(AColor), Blue(AColor)
+      ATitle, ColorPalette.ColorNames[AIndex],
+      Red(C), Green(C), Blue(C)
     ]);
 end;
 
@@ -395,7 +398,7 @@ end;
 procedure TMainForm.UpdatePalette;
 begin
   ColorPalette.Colors[ColorPalette.SelectedIndex] := ColorSample.Brush.Color;
-  SetColorInfo(LblColorInfo, 'Current', ColorSample.Brush.Color);
+  SetColorInfo(LblColorInfo, 'Current', ColorPalette.SelectedIndex);
   with  BtnEditColor do
   begin
     Caption := 'Edit';
