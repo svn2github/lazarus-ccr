@@ -99,6 +99,7 @@ type
     FPaletteKind: TPaletteKind;
     FGradientSteps: Byte;
     FUseSpacers: Boolean;
+    FMargin: Integer;
     function GetColorCount: Integer;
     function GetColors(AIndex: Integer): TColor;
     function GetColorNames(AIndex: Integer): String;
@@ -235,9 +236,6 @@ implementation
 
 uses
   LCLIntf, StrUtils;
-
-const
-  SELMARGIN = 1;  // extra margin for selection rectangle
 
 procedure Register;
 begin
@@ -414,8 +412,8 @@ var
 begin
   W := GetCellWidth;
   H := GetCellHeight;
-  dec(X, SELMARGIN);
-  dec(Y, SELMARGIN);
+  dec(X, FMargin);
+  dec(Y, FMargin);
   if (FButtonDistance = 0) and (FButtonBorderColor <> clNone) then
   begin
     dec(W);
@@ -701,22 +699,6 @@ procedure TCustomColorPalette.Paint;
         Canvas.FillRect(x1, y1, x2, y2) else
         Canvas.Rectangle(x1, y1, x2, y2);
     end;
-
-    // Paint background between the color buttons
-    if ((Color <> clNone) and (FButtonDistance > 0)) then
-    begin
-      x1 := x1 - FButtonDistance div 2 - FButtonDistance mod 2;
-      y1 := y1 - FButtonDistance div 2 - FButtonDistance mod 2;
-      x2 := x1 + FButtonWidth - FButtonDistance;
-      y2 := y1 + FButtonHeight - FButtonDistance;
-      Canvas.Pen.Color := Color;
-      Canvas.Pen.Width := FButtonDistance;
-      Canvas.MoveTo(x1, y1);
-      Canvas.LineTo(x2, y1);
-      Canvas.LineTo(x2, y2);
-      Canvas.LineTo(x1, y2);
-      Canvas.LineTo(x1, y1);
-    end;
   end;
 
 var
@@ -726,10 +708,17 @@ var
 begin
   Canvas.Pen.Endcap := pecSquare;
 
+  // Paint background color
+  if Color <> clNone then begin
+    Canvas.Brush.Color := Color;
+    Canvas.Brush.Style := bsSolid;
+    Canvas.FillRect(0, 0, Width, Height);
+  end;
+
   // Paint color boxes
-  X := SELMARGIN;
-  Y := SELMARGIN;
-  xmax := Width - SELMARGIN;
+  X := FMargin;
+  Y := FMargin;
+  xmax := Width - FMargin;
   if (FButtonDistance = 0) and (FButtonBordercolor <> clNone) then dec(xmax);
   for I := 0 to pred(FColors.Count) do
   begin
@@ -742,7 +731,7 @@ begin
     begin
       inc(Y, GetCellHeight);
       if (FButtonDistance = 0) and (FButtonBorderColor <> clNone) then dec(Y);
-      X := SELMARGIN;
+      X := FMargin;
     end;
   end;
 
@@ -798,6 +787,9 @@ procedure TCustomColorPalette.SetButtonDistance(const AValue: Integer);
 begin
   if FButtonDistance = AValue then exit;
   FButtonDistance := AValue;
+  if FButtonDistance = 0 then
+    FMargin := 1 else
+    FMargin := FButtonDistance div 2;
   UpdateSize;
   Invalidate;
 end;
@@ -1305,7 +1297,7 @@ begin
     dec(dy);
     d := -1;
   end;
-  SetBounds(Left, Top, FCols * dx - d + 2*SELMARGIN, FRows * dy - d + 2*SELMARGIN);
+  SetBounds(Left, Top, FCols * dx - d + 2*FMargin, FRows * dy - d + 2*FMargin);
 end;
 
 

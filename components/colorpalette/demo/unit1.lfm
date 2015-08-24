@@ -198,7 +198,7 @@ object MainForm: TMainForm
     object Label3: TLabel
       Left = 83
       Height = 15
-      Top = 230
+      Top = 276
       Width = 65
       Caption = 'Btn distance'
       ParentColor = False
@@ -206,7 +206,7 @@ object MainForm: TMainForm
     object EdButtonDistance: TSpinEdit
       Left = 83
       Height = 23
-      Top = 250
+      Top = 296
       Width = 58
       Alignment = taRightJustify
       MaxValue = 16
@@ -217,7 +217,7 @@ object MainForm: TMainForm
     object Label4: TLabel
       Left = 10
       Height = 15
-      Top = 230
+      Top = 276
       Width = 40
       Caption = 'Btn size'
       ParentColor = False
@@ -225,7 +225,7 @@ object MainForm: TMainForm
     object EdBoxSize: TSpinEdit
       Left = 10
       Height = 23
-      Top = 250
+      Top = 296
       Width = 59
       Alignment = taRightJustify
       MinValue = 1
@@ -302,7 +302,7 @@ object MainForm: TMainForm
     object EdColCount: TSpinEdit
       Left = 10
       Height = 23
-      Top = 306
+      Top = 352
       Width = 59
       Alignment = taRightJustify
       MinValue = 1
@@ -313,7 +313,7 @@ object MainForm: TMainForm
     object Label2: TLabel
       Left = 10
       Height = 15
-      Top = 286
+      Top = 332
       Width = 48
       Caption = 'Columns'
       ParentColor = False
@@ -338,6 +338,26 @@ object MainForm: TMainForm
       State = cbChecked
       TabOrder = 8
     end
+    object LblButtonBorderColor1: TLabel
+      Left = 10
+      Height = 15
+      Top = 224
+      Width = 94
+      Caption = 'Background color'
+      FocusControl = CbColor
+      ParentColor = False
+    end
+    object CbColor: TColorBox
+      Left = 10
+      Height = 22
+      Top = 244
+      Width = 138
+      NoneColorColor = clWindow
+      Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeNone]
+      ItemHeight = 16
+      OnSelect = CbColorSelect
+      TabOrder = 9
+    end
   end
   object Bevel2: TBevel
     Left = 462
@@ -354,12 +374,12 @@ object MainForm: TMainForm
     Height = 535
     Top = 8
     Width = 287
-    HorzScrollBar.Increment = 16
-    HorzScrollBar.Page = 160
+    HorzScrollBar.Increment = 15
+    HorzScrollBar.Page = 155
     HorzScrollBar.Smooth = True
     HorzScrollBar.Tracking = True
     VertScrollBar.Increment = 4
-    VertScrollBar.Page = 41
+    VertScrollBar.Page = 42
     VertScrollBar.Smooth = True
     VertScrollBar.Tracking = True
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -369,10 +389,10 @@ object MainForm: TMainForm
     TabOrder = 2
     object ColorPalette: TColorPalette
       Left = 0
-      Height = 40
+      Height = 41
       Hint = 'Click to select a color'
       Top = 1
-      Width = 160
+      Width = 155
       ButtonHeight = 20
       ButtonWidth = 20
       ColumnCount = 8

@@ -23,6 +23,7 @@ type
     BtnLoadDefaultPal: TButton;
     BtnEditColor: TButton;
     CbBuiltinPalettes: TComboBox;
+    CbColor: TColorBox;
     CbShowSelection: TCheckBox;
     CbShowColorHints: TCheckBox;
     CbButtonBorderColor: TColorBox;
@@ -31,6 +32,7 @@ type
     ColorDialog: TColorDialog;
     ColorPalette: TColorPalette;
     CbPickMode: TComboBox;
+    LblButtonBorderColor1: TLabel;
     MouseColorSample: TShape;
     EdButtonDistance: TSpinEdit;
     EdBoxSize: TSpinEdit;
@@ -61,6 +63,7 @@ type
     procedure BtnLoadDefaultPalClick(Sender: TObject);
     procedure BtnLoadRndPaletteClick(Sender: TObject);
     procedure CbBuiltinPalettesSelect(Sender: TObject);
+    procedure CbColorSelect(Sender: TObject);
     procedure CbCustomHintTextChange(Sender: TObject);
     procedure CbPickModeSelect(Sender: TObject);
     procedure CbShowColorHintsChange(Sender: TObject);
@@ -196,6 +199,11 @@ begin
   EdColCount.Value := ColorPalette.ColumnCount;
   EdGradientSteps.Enabled := ColorPalette.PaletteKind = pkGradientPalette;
   LblGradientSteps.Enabled := EdGradientSteps.Enabled;
+end;
+
+procedure TMainForm.CbColorSelect(Sender: TObject);
+begin
+  ColorPalette.Color := CbColor.Selected;
 end;
 
 procedure TMainForm.CbCustomHintTextChange(Sender: TObject);
@@ -334,7 +342,8 @@ begin
   CbPickMode.ItemIndex := ord(ColorPalette.PickMode);
   CbShowSelection.Checked := ColorPalette.ShowSelection;
   CbShowColorHints.Checked := ColorPalette.ShowColorHint;
-  CbButtonBorderColor.Selected := ColorPalette.SelectedColor;
+  CbButtonBorderColor.Selected := ColorPalette.ButtonBorderColor;
+  CbColor.Selected := ColorPalette.Color;
   EdButtonDistance.Value := ColorPalette.ButtonDistance;
   EdBoxSize.Value := ColorPalette.ButtonWidth;
 
