@@ -1,0 +1,169 @@
+object Form1: TForm1
+  Left = 290
+  Height = 491
+  Top = 160
+  Width = 584
+  Caption = 'Form1'
+  ClientHeight = 491
+  ClientWidth = 584
+  OnCreate = FormCreate
+  ShowHint = True
+  LCLVersion = '1.5'
+  object Panel1: TPanel
+    Left = 0
+    Height = 459
+    Top = 32
+    Width = 584
+    Align = alClient
+    BevelOuter = bvNone
+    ClientHeight = 459
+    ClientWidth = 584
+    TabOrder = 0
+    OnPaint = Panel1Paint
+    object Shape1: TShape
+      Left = 56
+      Height = 120
+      Top = 64
+      Width = 146
+      BorderSpacing.Around = 8
+      Brush.Style = bsClear
+    end
+    object Shape2: TShape
+      Left = 216
+      Height = 120
+      Top = 64
+      Width = 146
+      BorderSpacing.Around = 8
+    end
+    object Label1: TLabel
+      Left = 56
+      Height = 56
+      Top = 192
+      Width = 146
+      AutoSize = False
+      Caption = 'Selected color:'
+      Font.Color = clWhite
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label2: TLabel
+      Left = 216
+      Height = 56
+      Top = 192
+      Width = 146
+      AutoSize = False
+      Caption = 'Mouse color:'
+      Font.Color = clWhite
+      ParentColor = False
+      ParentFont = False
+    end
+  end
+  object CoolBar: TCoolBar
+    Left = 0
+    Height = 32
+    Top = 0
+    Width = 584
+    AutoSize = True
+    Bands = <    
+      item
+        Control = ToolBar
+        MinWidth = 25
+        Width = 599
+      end>
+    GrabStyle = gsGripper
+    object ToolBar: TToolBar
+      AnchorSideLeft.Control = CoolBar
+      AnchorSideTop.Control = CoolBar
+      Left = 24
+      Height = 22
+      Top = 5
+      Width = 353
+      Align = alNone
+      AutoSize = True
+      BorderSpacing.Left = 22
+      BorderSpacing.Top = 3
+      ButtonWidth = 22
+      Caption = 'ToolBar'
+      EdgeBorders = []
+      Images = ImageList1
+      List = True
+      TabOrder = 0
+      Transparent = True
+      Wrapable = False
+      object ColorPalette: TColorPalette
+        Left = 30
+        Height = 22
+        Top = 0
+        Width = 323
+        ButtonHeight = 21
+        ButtonWidth = 21
+        ColumnCount = 16
+        SelectionColor = clWhite
+        SelectionKind = pskThinInverted
+        ShowColorHint = False
+        UseSpacers = False
+        OnSelectColor = ColorPaletteSelectColor
+        ParentColor = False
+        OnMouseMove = ColorPaletteMouseMove
+      end
+      object TbChangeOrientation: TToolButton
+        Left = 1
+        Hint = 'Change orientation of toolbar'
+        Top = 0
+        AllowAllUp = True
+        Caption = 'TbChangeOrientation'
+        Grouped = True
+        ImageIndex = 0
+        OnClick = TbChangeOrientationClick
+        Style = tbsCheck
+      end
+      object TbSpacer: TToolButton
+        Left = 23
+        Height = 22
+        Top = 0
+        Width = 7
+        Caption = 'TbSpacer'
+        Style = tbsDivider
+      end
+    end
+  end
+  object ImageList1: TImageList
+    left = 432
+    top = 168
+    Bitmap = {
+      4C69010000001000000010000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00C2772200CA7F2800D2872E00D98E3300E095
+      3800E0953800DE933700E89D3F00E89D3F00E89D3F00E99E4099E99E40CCE99E
+      40CCE99E40CCE99E4099FFFFFF00C2772200CA7F2800D2872E00D98E3300E095
+      3800E0953800DE933700E2973A00E59A3C00E59A3C00E59A3CCCFFDF93FFFFDA
+      8EFFFFDE92FFE59A3CCCFFFFFF00C2772200CA7F2800D2872E00D98E3300DF94
+      385CDF943899DE933700DE933700E0953800E0953800E09538CCFDD68AFFFBCB
+      7FFFFCD589FFE09538CCFFFFFF00C2772200CA7F2800D2872E00D88D335CD98E
+      33CCD98E33CCD98E3300D0852C00CE832B00D78C3209DA9036CEF9CE82FFF6C2
+      76FFF9CD81FFD98E33CCFFFFFF00C2772200CA7F2800D1862D5CD2872ECCFDDD
+      91FFD2872ECCCE832B00CC812900CE832B09D1862D61D99842D9D8A252FFD397
+      47FFE2AF60FFD2872ECAFFFFFF00C2772200C97E275CCA7F28CCFBD98DFFF4C4
+      76FFCA7F28CCCA7F28CCCA7F28CCCC822ACED59239D9E4AD4FF9DA9B34FFDA99
+      33FFE1A849FCCA7F28C1FFFFFF00C176215CC27722CCFAD68AFFEDAD4AFFEDAF
+      37FFF1B844FFF0B742FFF0B640FFEFB43CFFECAC30FFE9A421FFE8A31FFFE9A4
+      21FFE1A336F0C277229AFFFFFF00B96E1CCCF9D387FFF3B03BFFF6AC0EFFF6AC
+      0CFFF6AC0CFFF6AC0CFFF6AC0CFFF6AC0CFFF6AC0CFFF6AC0CFFF6AD0EFFF2AE
+      20FBC57D20D5BA6F1D42FFFFFF00B267175CB16616CCFFCC4EFFFFB201FFFFB7
+      11FFFFBC1EFFFFBB1BFFFFBA19FFFFB917FFFFB815FFFAB415FCE9A319F0BF76
+      18D5B166166EB3681701FFFFFF00B1661600AB60115CAA5F10CCFFC539FFFFBB
+      1AFFAA5F10CCAA5F10CCAA5F10CCAA5F10CCAA5F10CAAA5F10C1AA5F109AAB60
+      1142AE631301B3681700FFFFFF00B1661600AA5F1000A4590C5CA3580BCCFFBF
+      27FFA3580BCCA75C0D00A85D0E00A85D0E00A85D0E00A85D0E00A85D0E00AA5F
+      1000AE631300B3681700FFFFFF00B1661600AA5F1000A3580B009E53075C9D52
+      06CC9D5206CC9D520600A55A0C00A85D0E00A85D0E00A85D0E00A85D0E00AA5F
+      1000AE631300B3681700FFFFFF00B1661600AA5F1000A3580B009D520600994E
+      035C994E0399994E0300994E0300A85D0E00A85D0E00A85D0E00A85D0E00AA5F
+      1000AE631300B3681700FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00
+    }
+  end
+end

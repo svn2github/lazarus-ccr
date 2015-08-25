@@ -30,6 +30,7 @@ type
     CbButtonBorderColor: TColorBox;
     CbCustomHintText: TCheckBox;
     CbUseSpacers: TCheckBox;
+    CbVertical: TCheckBox;
     ColorDialog: TColorDialog;
     ColorPalette: TColorPalette;
     CbPickMode: TComboBox;
@@ -74,6 +75,7 @@ type
     procedure CbShowColorHintsChange(Sender: TObject);
     procedure CbButtonBorderColorSelect(Sender: TObject);
     procedure CbUseSpacersChange(Sender: TObject);
+    procedure CbVerticalChange(Sender: TObject);
     procedure ColorPaletteDblClick(Sender: TObject);
     procedure ColorPaletteGetHintText(Sender: TObject; AColor: TColor;
       var AText: String);
@@ -241,6 +243,11 @@ end;
 procedure TMainForm.CbUseSpacersChange(Sender: TObject);
 begin
   ColorPalette.UseSpacers := CbUseSpacers.Checked;
+end;
+
+procedure TMainForm.CbVerticalChange(Sender: TObject);
+begin
+  ColorPalette.Vertical := CbVertical.Checked;
 end;
 
 procedure TMainForm.ColorPaletteDblClick(Sender: TObject);

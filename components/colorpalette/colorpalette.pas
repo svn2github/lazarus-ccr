@@ -103,6 +103,7 @@ type
     FGradientSteps: Byte;
     FUseSpacers: Boolean;
     FMargin: Integer;
+    FVertical: Boolean;
     function GetColorCount: Integer;
     function GetColors(AIndex: Integer): TColor;
     function GetColorNames(AIndex: Integer): String;
@@ -121,6 +122,7 @@ type
     procedure SetSelectionColor(AValue: TColor);
     procedure SetSelectionKind(AValue: TPaletteSelectionKind);
     procedure SetUseSpacers(AValue: Boolean);
+    procedure SetVertical(AValue: Boolean);
 
   protected
     procedure BlendWBColor(AColor: TColor; Steps: Integer);
@@ -129,6 +131,7 @@ type
     procedure DoAddColor(AColor: TColor; AColorName: String = ''); virtual;
     procedure DoColorPick(AColor: TColor; AShift: TShiftState); virtual;
     procedure DoDeleteColor(AIndex: Integer); virtual;
+    procedure DoInsertColor(AIndex: Integer; AColor: TColor; AColorName: String = ''); virtual;
     procedure DoSelectColor(AColor: TColor); virtual;
     function GetCellHeight: Integer; inline;
     function GetCellWidth: Integer; inline;
@@ -156,6 +159,7 @@ type
     property SelectionKind: TPaletteSelectionKind read FSelectionKind write SetSelectionKind default pskNone;
     property ShowColorHint: Boolean read FShowColorHint write FShowColorHint default true;
     property UseSpacers: Boolean read FUseSpacers write SetUseSpacers default true;
+    property Vertical: Boolean read FVertical write SetVertical default false;
     property OnGetHintText: TColorPaletteHintEvent read FOnGetHintText write FOnGetHintText;
 
   public
@@ -166,6 +170,7 @@ type
     procedure AddColor(AColor: TColor; AColorName: String = '');
     procedure ClearColors;
     procedure DeleteColor(AIndex: Integer);
+    procedure InsertColor(AIndex: Integer; AColor: TColor; AColorName: String = '');
     procedure LoadPalette(const FileName: String);
     procedure SavePalette(const FileName: String);
   
@@ -202,6 +207,7 @@ type
     property SelectionKind;
     property ShowColorHint;
     property UseSpacers;
+    property Vertical;
 
     property OnColorMouseMove;
     property OnColorPick;
@@ -361,6 +367,12 @@ begin
   FColors.Delete(AIndex);
 end;
 
+procedure TCustomColorPalette.DoInsertColor(AIndex: Integer; AColor: TColor;
+  AColorName: String = '');
+begin
+  FColors.InsertObject(AIndex, AColorName, TObject(AColor));
+end;
+
 procedure TCustomColorPalette.DoSelectColor(AColor: TColor);
 begin
   FSelectedColor := AColor;
@@ -426,13 +438,24 @@ begin
   begin
     dec(W);
     dec(H);
-    Result := X div W + Y div H * FCols;
+    if FVertical then
+      Result := Y div H + X div W * FCols else
+      Result := X div W + Y div H * FCols;
   end else
   begin
-    Result := X div W + Y div H * FCols;
-    // Do not consider the space between the buttons
-    if (X mod W > FButtonWidth) or (Y mod H > FButtonWidth) then
-      Result := -1
+    if FVertical then
+    begin
+      Result := Y div H + X div W * FCols;
+      // Do not consider the space between the buttons
+      if (Y mod H > FButtonWidth) or (X mod W > FButtonWidth) then
+        Result := -1;
+    end else
+    begin
+      Result := X div W + Y div H * FCols;
+      // Do not consider the space between the buttons
+      if (X mod W > FButtonWidth) or (Y mod H > FButtonWidth) then
+        Result := -1
+    end;
   end;
 end;
 
@@ -466,6 +489,12 @@ end;
 function TCustomColorPalette.GetPickedColor: TColor;
 begin
   Result := GetColors(FMouseIndex);
+end;
+
+procedure TCustomColorPalette.InsertColor(AIndex: Integer; AColor: TColor;
+  AColorName: String = '');
+begin
+  DoInsertColor(AIndex, AColor, AColorName);
 end;
 
 function TCustomColorPalette.IsCorrectShift(Shift: TShiftState): Boolean;
@@ -712,7 +741,7 @@ procedure TCustomColorPalette.Paint;
 var
   I, X, Y: Integer;
   Rsel: TRect;
-  xmax: Integer;
+  max: Integer;
 begin
   // Paint background color
   if Color <> clNone then begin
@@ -726,20 +755,35 @@ begin
   // Paint color boxes
   X := FMargin;
   Y := FMargin;
-  xmax := Width - FMargin;
-  if (FButtonDistance = 0) and (FButtonBordercolor <> clNone) then dec(xmax);
+  max := IfThen(FVertical, Height, Width) - FMargin;
+  if (FButtonDistance = 0) and (FButtonBordercolor <> clNone) then
+    dec(max);
+
   for I := 0 to pred(FColors.Count) do
   begin
     if I = FSelectedIndex then    // Selected rect of box with selected color
       Rsel := Bounds(X, Y, FButtonWidth, FButtonHeight);
     PaintBox(X, Y, X + FButtonWidth, Y + FButtonHeight, GetColors(I));
-    inc(X, GetCellWidth);
-    if (FButtonDistance = 0) and (FButtonBorderColor <> clNone) then dec(X);
-    if X >= xmax then
+    if FVertical then
     begin
       inc(Y, GetCellHeight);
       if (FButtonDistance = 0) and (FButtonBorderColor <> clNone) then dec(Y);
-      X := FMargin;
+      if Y >= max then
+      begin
+        inc(X, GetCellWidth);
+        if (FButtonDistance = 0) and (FButtonBorderColor <> clNone) then dec(X);
+        Y := FMargin;
+      end;
+    end else
+    begin
+      inc(X, GetCellWidth);
+      if (FButtonDistance = 0) and (FButtonBorderColor <> clNone) then dec(X);
+      if X >= max then
+      begin
+        inc(Y, GetCellHeight);
+        if (FButtonDistance = 0) and (FButtonBorderColor <> clNone) then dec(Y);
+        X := FMargin;
+      end;
     end;
   end;
 
@@ -865,6 +909,14 @@ begin
     FColors.Clear;
     SetPaletteKind(FPaletteKind);
   end;
+end;
+
+procedure TCustomColorPalette.SetVertical(AValue: Boolean);
+begin
+  if FVertical = AValue then exit;
+  FVertical := AValue;
+  UpdateSize;
+  Invalidate;
 end;
 
 procedure TCustomColorPalette.SetPaletteKind(AValue: TPaletteKind);
@@ -1334,7 +1386,11 @@ begin
     dec(dy);
     d := -1;   // Correct for button frame line width
   end;
-  SetBounds(Left, Top, FCols * dx - d + 2*FMargin, FRows * dy - d + 2*FMargin);
+
+  if FVertical then  // Rows and columns are interchanged here !!!
+    SetBounds(Left, Top, FRows * dx - d + 2*FMargin, FCols * dy - d + 2*FMargin)
+  else
+    SetBounds(Left, Top, FCols * dx - d + 2*FMargin, FRows * dy - d + 2*FMargin);
 end;
 
 

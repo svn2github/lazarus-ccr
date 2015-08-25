@@ -404,6 +404,15 @@ object MainForm: TMainForm
       OnSelect = CbSelColorSelect
       TabOrder = 10
     end
+    object CbVertical: TCheckBox
+      Left = 10
+      Height = 19
+      Top = 465
+      Width = 59
+      Caption = 'Vertical'
+      OnChange = CbVerticalChange
+      TabOrder = 11
+    end
   end
   object Bevel2: TBevel
     Left = 462
