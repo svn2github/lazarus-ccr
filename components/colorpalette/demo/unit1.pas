@@ -23,8 +23,9 @@ type
     BtnLoadDefaultPal: TButton;
     BtnEditColor: TButton;
     CbBuiltinPalettes: TComboBox;
-    CbColor: TColorBox;
-    CbShowSelection: TCheckBox;
+    CbSelColor: TColorBox;
+    CbBkColor: TColorBox;
+    CbSelKind: TComboBox;
     CbShowColorHints: TCheckBox;
     CbButtonBorderColor: TColorBox;
     CbCustomHintText: TCheckBox;
@@ -32,30 +33,32 @@ type
     ColorDialog: TColorDialog;
     ColorPalette: TColorPalette;
     CbPickMode: TComboBox;
-    LblButtonBorderColor1: TLabel;
+    LblBkColor: TLabel;
+    LblSelColor: TLabel;
+    LblSelKind: TLabel;
     MouseColorSample: TShape;
     EdButtonDistance: TSpinEdit;
-    EdBoxSize: TSpinEdit;
+    EdButtonSize: TSpinEdit;
     EdGradientSteps: TSpinEdit;
-    Label3: TLabel;
-    Label4: TLabel;
+    LblButtonDistance: TLabel;
+    LblButtonSize: TLabel;
     LblMouseColorInfo: TLabel;
     LblGradientSteps: TLabel;
     LblPickMode: TLabel;
     EdColCount: TSpinEdit;
-    Label2: TLabel;
+    LblColCount: TLabel;
     LblColorInfo: TLabel;
     LblButtonBorderColor: TLabel;
-    LblPickMode2: TLabel;
+    LblBuiltinPalettes: TLabel;
     MnuEditPickedColor: TMenuItem;
     MnuDeletePickedColor: TMenuItem;
     OpenDialog: TOpenDialog;
     PalettePopupMenu: TPopupMenu;
-    Panel1: TPanel;
-    Panel2: TPanel;
+    LeftPanel: TPanel;
+    RightPanel: TPanel;
     SaveDialog: TSaveDialog;
     ColorSample: TShape;
-    ScrollBox1: TScrollBox;
+    ScrollBox: TScrollBox;
     procedure BtnAddColorClick(Sender: TObject);
     procedure BtnCreateRndPaletteClick(Sender: TObject);
     procedure BtnDeleteColorClick(Sender: TObject);
@@ -63,11 +66,12 @@ type
     procedure BtnLoadDefaultPalClick(Sender: TObject);
     procedure BtnLoadRndPaletteClick(Sender: TObject);
     procedure CbBuiltinPalettesSelect(Sender: TObject);
-    procedure CbColorSelect(Sender: TObject);
+    procedure CbBkColorSelect(Sender: TObject);
     procedure CbCustomHintTextChange(Sender: TObject);
     procedure CbPickModeSelect(Sender: TObject);
+    procedure CbSelColorSelect(Sender: TObject);
+    procedure CbSelKindSelect(Sender: TObject);
     procedure CbShowColorHintsChange(Sender: TObject);
-    procedure CbShowSelectionChange(Sender: TObject);
     procedure CbButtonBorderColorSelect(Sender: TObject);
     procedure CbUseSpacersChange(Sender: TObject);
     procedure ColorPaletteDblClick(Sender: TObject);
@@ -79,7 +83,7 @@ type
       Y: Integer);
     procedure ColorPaletteSelectColor(Sender: TObject; AColor: TColor);
     procedure EdButtonDistanceChange(Sender: TObject);
-    procedure EdBoxSizeChange(Sender: TObject);
+    procedure EdButtonSizeChange(Sender: TObject);
     procedure EdColCountChange(Sender: TObject);
     procedure EdGradientStepsChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -201,9 +205,9 @@ begin
   LblGradientSteps.Enabled := EdGradientSteps.Enabled;
 end;
 
-procedure TMainForm.CbColorSelect(Sender: TObject);
+procedure TMainForm.CbBkColorSelect(Sender: TObject);
 begin
-  ColorPalette.Color := CbColor.Selected;
+  ColorPalette.Color := CbBkColor.Selected;
 end;
 
 procedure TMainForm.CbCustomHintTextChange(Sender: TObject);
@@ -219,14 +223,19 @@ begin
   ColorPalette.PickMode := TPickMode(CbPickMode.ItemIndex);
 end;
 
+procedure TMainForm.CbSelColorSelect(Sender: TObject);
+begin
+  ColorPalette.SelectionColor := CbSelColor.Selected;
+end;
+
+procedure TMainForm.CbSelKindSelect(Sender: TObject);
+begin
+  ColorPalette.SelectionKind := TPaletteSelectionKind(CbSelKind.ItemIndex);
+end;
+
 procedure TMainForm.CbShowColorHintsChange(Sender: TObject);
 begin
   ColorPalette.ShowColorHint := CbShowColorHints.Checked;
-end;
-
-procedure TMainForm.CbShowSelectionChange(Sender: TObject);
-begin
-  ColorPalette.ShowSelection := CbShowSelection.Checked;
 end;
 
 procedure TMainForm.CbUseSpacersChange(Sender: TObject);
@@ -300,10 +309,10 @@ begin
   ColorPalette.ButtonDistance := EdButtonDistance.Value;
 end;
 
-procedure TMainForm.EdBoxSizeChange(Sender: TObject);
+procedure TMainForm.EdButtonSizeChange(Sender: TObject);
 begin
-  ColorPalette.ButtonWidth := EdBoxSize.Value;
-  ColorPalette.ButtonHeight := EdBoxSize.Value;
+  ColorPalette.ButtonWidth := EdButtonSize.Value;
+  ColorPalette.ButtonHeight := EdButtonSize.Value;
 end;
 
 procedure TMainForm.EdColCountChange(Sender: TObject);
@@ -340,12 +349,12 @@ begin
   EdColCount.Value := ColorPalette.ColumnCount;
   EdGradientSteps.Value := ColorPalette.GradientSteps;
   CbPickMode.ItemIndex := ord(ColorPalette.PickMode);
-  CbShowSelection.Checked := ColorPalette.ShowSelection;
+  CbSelKind.ItemIndex := ord(ColorPalette.SelectionKind);
   CbShowColorHints.Checked := ColorPalette.ShowColorHint;
   CbButtonBorderColor.Selected := ColorPalette.ButtonBorderColor;
-  CbColor.Selected := ColorPalette.Color;
+  CbBkColor.Selected := ColorPalette.Color;
   EdButtonDistance.Value := ColorPalette.ButtonDistance;
-  EdBoxSize.Value := ColorPalette.ButtonWidth;
+  EdButtonSize.Value := ColorPalette.ButtonWidth;
 
   ColorSample.Brush.Color := ColorPalette.SelectedColor;
   SetColorInfo(LblColorInfo, 'Current', ColorPalette.SelectedIndex);
@@ -353,7 +362,7 @@ begin
 
   { ColorPalette.PickShift must contain ssRight in order to be able to select
     colors for the context menu. Use object inspector, or use this code:  }
-  ColorPalette.PickShift := [ssLeft, ssRight];
+  //ColorPalette.PickShift := [ssLeft, ssRight];
 
   ColorPalette.OnGetHintText := nil;   // will be activated by CbCustomHintText
 end;

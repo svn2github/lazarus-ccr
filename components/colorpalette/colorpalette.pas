@@ -65,6 +65,8 @@ type
     pkStandardAndSystemPalette, pkExtendedAndSystemPalette,
     pkGradientPalette, pkHTMLPalette, pkWebSafePalette);
 
+  TPaletteSelectionKind = (pskNone, pskThin, pskThinInverted, pskThick, pskThickInverted);
+
   TColorMouseEvent = procedure (Sender: TObject; AColor: TColor; Shift: TShiftState) of object;
   TColorPaletteEvent = procedure (Sender: TObject; AColor: TColor) of object;
 
@@ -94,7 +96,8 @@ type
     FPrevMouseIndex: Integer;
     FStoredShift: TShiftState;
     FShowColorHint: Boolean;
-    FShowSelection: Boolean;
+    FSelectionColor: TColor;
+    FSelectionKind: TPaletteSelectionKind;
     FSavedHint: String;
     FPaletteKind: TPaletteKind;
     FGradientSteps: Byte;
@@ -115,7 +118,8 @@ type
     procedure SetGradientSteps(AValue: Byte);
     procedure SetPaletteKind(AValue: TPaletteKind);
     procedure SetSelectedIndex(AValue: Integer);
-    procedure SetShowSelection(AValue: Boolean);
+    procedure SetSelectionColor(AValue: TColor);
+    procedure SetSelectionKind(AValue: TPaletteSelectionKind);
     procedure SetUseSpacers(AValue: Boolean);
 
   protected
@@ -137,6 +141,7 @@ type
     procedure MouseMove(Shift:TShiftState; X, Y:Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift:TShiftState; X, Y:Integer); override;
     procedure UpdateSize; virtual;
+
     property ButtonBorderColor: TColor read FButtonBorderColor write SetButtonBorderColor default clBlack;
     property ButtonDistance: Integer read FButtonDistance write SetButtonDistance default 0;
     property ButtonWidth: Integer read FButtonWidth write SetButtonWidth;
@@ -147,8 +152,9 @@ type
     property PickMode: TPickMode read FPickMode write FPickMode default pmImmediate;
     property PickShift: TPickShift read FPickShift write FPickShift default [ssLeft];
     property SelectedIndex: Integer read FSelectedIndex write SetSelectedIndex default 0;
+    property SelectionColor: TColor read FSelectionColor write SetSelectionColor default clBlack;
+    property SelectionKind: TPaletteSelectionKind read FSelectionKind write SetSelectionKind default pskNone;
     property ShowColorHint: Boolean read FShowColorHint write FShowColorHint default true;
-    property ShowSelection: Boolean read FShowSelection write SetShowSelection default false;
     property UseSpacers: Boolean read FUseSpacers write SetUseSpacers default true;
     property OnGetHintText: TColorPaletteHintEvent read FOnGetHintText write FOnGetHintText;
 
@@ -192,8 +198,9 @@ type
     property PickMode;
     property PickShift;
     property SelectedIndex;
+    property SelectionColor;
+    property SelectionKind;
     property ShowColorHint;
-    property ShowSelection;
     property UseSpacers;
 
     property OnColorMouseMove;
@@ -737,12 +744,31 @@ begin
   end;
 
   // Paint selection
-  if FShowSelection then
+  if FSelectionKind <> pskNone then
   begin
-    Canvas.Pen.Color := InvertColor(GetColors(FSelectedIndex));
-    Canvas.Pen.Width := 3;
-    Canvas.Pen.Style := psSolid;
     Canvas.Brush.Style := bsClear;
+    Canvas.Pen.Style := psSolid;
+    case FSelectionKind of
+      pskThin, pskThinInverted :
+        begin
+          Canvas.Pen.Width := 1;
+          if FButtonDistance > 2 then InflateRect(Rsel, 2, 2);
+        end;
+      pskThick, pskThickInverted:
+        begin
+          Canvas.Pen.Width := 3;
+        end;
+    end;
+    case FSelectionKind of
+      pskThin, pskThick:
+        Canvas.Pen.Color := FSelectionColor;
+      pskThinInverted, pskThickInverted:
+        begin
+          Canvas.Pen.Color := InvertColor(GetColors(FSelectedIndex));
+          if (FSelectionKind = pskThinInverted) and (Canvas.Pen.Color = FButtonBorderColor) then
+            Canvas.Pen.Color := FSelectionColor;
+        end;
+    end;
     Canvas.Rectangle(Rsel);
   end;
 end;
@@ -781,6 +807,7 @@ procedure TCustomColorPalette.SetButtonBorderColor(const AValue: TColor);
 begin
   if FButtonBorderColor = AValue then exit;
   FButtonBorderColor := AValue;
+  UpdateSize;
   Invalidate;
 end;
 
@@ -788,9 +815,6 @@ procedure TCustomColorPalette.SetButtonDistance(const AValue: Integer);
 begin
   if FButtonDistance = AValue then exit;
   FButtonDistance := AValue;
-  if FButtonDistance = 0 then
-    FMargin := 1 else
-    FMargin := FButtonDistance div 2 + FButtonDistance mod 2;
   UpdateSize;
   Invalidate;
 end;
@@ -1267,10 +1291,18 @@ begin
   DoSelectColor(GetColors(FSelectedIndex));
 end;
 
-procedure TCustomColorPalette.SetShowSelection(AValue: Boolean);
+procedure TCustomColorPalette.SetSelectionColor(AValue: TColor);
 begin
-  if FShowSelection = AValue then exit;
-  FShowSelection := AValue;
+  if FSelectionColor = AValue then exit;
+  FSelectionColor := AValue;
+  Invalidate;
+end;
+
+procedure TCustomColorPalette.SetSelectionKind(AValue: TPaletteSelectionKind);
+begin
+  if FSelectionKind = AValue then exit;
+  FSelectionKind := AValue;
+  UpdateSize;
   Invalidate;
 end;
 
@@ -1288,6 +1320,10 @@ begin
   if (FCols = 0) or (FColors.Count = 0) then
     FRows := 0 else
     FRows := Ceil(FColors.Count / FCols);
+
+  if FButtonDistance = 0 then
+    FMargin := 1 else
+    FMargin := FButtonDistance div 2 + FButtonDistance mod 2;
 
   dx := GetCellWidth;
   dy := GetCellHeight;

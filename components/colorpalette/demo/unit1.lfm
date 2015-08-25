@@ -1,22 +1,22 @@
 object MainForm: TMainForm
   Left = 394
-  Height = 551
+  Height = 555
   Top = 287
   Width = 625
   Caption = 'MainForm'
-  ClientHeight = 551
+  ClientHeight = 555
   ClientWidth = 625
   OnCreate = FormCreate
   ShowHint = True
   LCLVersion = '1.5'
-  object Panel1: TPanel
+  object LeftPanel: TPanel
     Left = 0
-    Height = 551
+    Height = 555
     Top = 0
     Width = 160
     Align = alLeft
     BevelOuter = bvNone
-    ClientHeight = 551
+    ClientHeight = 555
     ClientWidth = 160
     TabOrder = 0
     object ColorSample: TShape
@@ -108,6 +108,7 @@ object MainForm: TMainForm
       Width = 116
       Caption = 'Built-in gradient steps'
       Enabled = False
+      FocusControl = EdGradientSteps
       ParentColor = False
     end
     object EdGradientSteps: TSpinEdit
@@ -123,12 +124,13 @@ object MainForm: TMainForm
       TabOrder = 7
       Value = 3
     end
-    object LblPickMode2: TLabel
+    object LblBuiltinPalettes: TLabel
       Left = 10
       Height = 15
       Top = 224
       Width = 83
       Caption = 'Built-in palettes'
+      FocusControl = CbBuiltinPalettes
       ParentColor = False
     end
     object CbBuiltinPalettes: TComboBox
@@ -177,7 +179,7 @@ object MainForm: TMainForm
   end
   object Bevel1: TBevel
     Left = 160
-    Height = 535
+    Height = 539
     Top = 8
     Width = 3
     Align = alLeft
@@ -185,28 +187,29 @@ object MainForm: TMainForm
     BorderSpacing.Bottom = 8
     Shape = bsLeftLine
   end
-  object Panel2: TPanel
+  object RightPanel: TPanel
     Left = 465
-    Height = 551
+    Height = 555
     Top = 0
     Width = 160
     Align = alRight
     BevelOuter = bvNone
-    ClientHeight = 551
+    ClientHeight = 555
     ClientWidth = 160
     TabOrder = 1
-    object Label3: TLabel
+    object LblButtonDistance: TLabel
       Left = 83
       Height = 15
-      Top = 276
+      Top = 358
       Width = 65
       Caption = 'Btn distance'
+      FocusControl = EdButtonDistance
       ParentColor = False
     end
     object EdButtonDistance: TSpinEdit
       Left = 83
       Height = 23
-      Top = 296
+      Top = 378
       Width = 58
       Alignment = taRightJustify
       MaxValue = 16
@@ -214,29 +217,30 @@ object MainForm: TMainForm
       TabOrder = 0
       Value = 1
     end
-    object Label4: TLabel
+    object LblButtonSize: TLabel
       Left = 10
       Height = 15
-      Top = 276
+      Top = 358
       Width = 40
       Caption = 'Btn size'
+      FocusControl = EdButtonSize
       ParentColor = False
     end
-    object EdBoxSize: TSpinEdit
+    object EdButtonSize: TSpinEdit
       Left = 10
       Height = 23
-      Top = 296
+      Top = 378
       Width = 59
       Alignment = taRightJustify
       MinValue = 1
-      OnChange = EdBoxSizeChange
+      OnChange = EdButtonSizeChange
       TabOrder = 1
       Value = 16
     end
     object LblButtonBorderColor: TLabel
       Left = 10
       Height = 15
-      Top = 176
+      Top = 258
       Width = 89
       Caption = 'Btn border color:'
       FocusControl = CbButtonBorderColor
@@ -245,7 +249,7 @@ object MainForm: TMainForm
     object CbButtonBorderColor: TColorBox
       Left = 10
       Height = 22
-      Top = 196
+      Top = 278
       Width = 138
       NoneColorColor = clWindow
       Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeNone]
@@ -277,91 +281,133 @@ object MainForm: TMainForm
       Top = 13
       Width = 56
       Caption = 'Pick mode'
+      FocusControl = CbPickMode
       ParentColor = False
-    end
-    object CbShowSelection: TCheckBox
-      Left = 10
-      Height = 19
-      Top = 73
-      Width = 99
-      Caption = 'Show selection'
-      OnChange = CbShowSelectionChange
-      TabOrder = 4
     end
     object CbShowColorHints: TCheckBox
       Left = 10
       Height = 19
-      Top = 94
+      Top = 176
       Width = 108
       Caption = 'Show color hints'
       Checked = True
       OnChange = CbShowColorHintsChange
       State = cbChecked
-      TabOrder = 5
+      TabOrder = 4
     end
     object EdColCount: TSpinEdit
       Left = 10
       Height = 23
-      Top = 352
+      Top = 428
       Width = 59
       Alignment = taRightJustify
       MinValue = 1
       OnChange = EdColCountChange
-      TabOrder = 6
+      TabOrder = 5
       Value = 8
     end
-    object Label2: TLabel
+    object LblColCount: TLabel
       Left = 10
       Height = 15
-      Top = 332
+      Top = 408
       Width = 48
       Caption = 'Columns'
+      FocusControl = EdColCount
       ParentColor = False
     end
     object CbCustomHintText: TCheckBox
       Left = 10
       Height = 19
-      Top = 117
+      Top = 199
       Width = 108
       Caption = 'Custom hint text'
       OnChange = CbCustomHintTextChange
-      TabOrder = 7
+      TabOrder = 6
     end
     object CbUseSpacers: TCheckBox
       Left = 10
       Height = 19
-      Top = 142
+      Top = 224
       Width = 131
       Caption = 'Use clNone as spacer'
       Checked = True
       OnChange = CbUseSpacersChange
       State = cbChecked
-      TabOrder = 8
+      TabOrder = 7
     end
-    object LblButtonBorderColor1: TLabel
+    object LblBkColor: TLabel
       Left = 10
       Height = 15
-      Top = 224
+      Top = 306
       Width = 94
       Caption = 'Background color'
-      FocusControl = CbColor
+      FocusControl = CbBkColor
       ParentColor = False
     end
-    object CbColor: TColorBox
+    object CbBkColor: TColorBox
       Left = 10
       Height = 22
-      Top = 244
+      Top = 326
       Width = 138
       NoneColorColor = clWindow
       Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeNone]
       ItemHeight = 16
-      OnSelect = CbColorSelect
+      OnSelect = CbBkColorSelect
+      TabOrder = 8
+    end
+    object LblSelKind: TLabel
+      Left = 10
+      Height = 15
+      Top = 67
+      Width = 74
+      Caption = 'Selection kind'
+      FocusControl = CbSelKind
+      ParentColor = False
+    end
+    object CbSelKind: TComboBox
+      Left = 10
+      Height = 23
+      Hint = 'Defines when the picked color is determined and when the OnPickColor event is generated:'#13#10#13#10'pmDefault: '#13#10'  Color selection at mouse-down, OnPickColor event at mouse-up if at same location'#13#10#13#10'pmImmediate:'#13#10'  Color selection and OnPickColor event at mouse-down'#13#10#13#10'pmContinuous:'#13#10'  Color selection and OnPickColor event while mouse is down'
+      Top = 87
+      Width = 137
+      ItemHeight = 15
+      ItemIndex = 0
+      Items.Strings = (
+        'none'
+        'thin'
+        'thin (inverted color)'
+        'thick'
+        'thick (inverted color)'
+      )
+      OnSelect = CbSelKindSelect
+      Style = csDropDownList
       TabOrder = 9
+      Text = 'none'
+    end
+    object LblSelColor: TLabel
+      Left = 10
+      Height = 15
+      Top = 119
+      Width = 119
+      Caption = 'Color of selection rect:'
+      FocusControl = CbSelColor
+      ParentColor = False
+    end
+    object CbSelColor: TColorBox
+      Left = 9
+      Height = 22
+      Top = 139
+      Width = 138
+      NoneColorColor = clWindow
+      Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeNone]
+      ItemHeight = 16
+      OnSelect = CbSelColorSelect
+      TabOrder = 10
     end
   end
   object Bevel2: TBevel
     Left = 462
-    Height = 535
+    Height = 539
     Top = 8
     Width = 3
     Align = alRight
@@ -369,9 +415,9 @@ object MainForm: TMainForm
     BorderSpacing.Bottom = 8
     Shape = bsLeftLine
   end
-  object ScrollBox1: TScrollBox
+  object ScrollBox: TScrollBox
     Left = 168
-    Height = 535
+    Height = 539
     Top = 8
     Width = 287
     HorzScrollBar.Increment = 15
@@ -384,7 +430,7 @@ object MainForm: TMainForm
     VertScrollBar.Tracking = True
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderStyle = bsNone
-    ClientHeight = 535
+    ClientHeight = 539
     ClientWidth = 287
     TabOrder = 2
     object ColorPalette: TColorPalette
@@ -396,7 +442,7 @@ object MainForm: TMainForm
       ButtonHeight = 20
       ButtonWidth = 20
       ColumnCount = 8
-      PickShift = [ssLeft, ssMiddle]
+      PickShift = [ssLeft, ssRight]
       OnGetHintText = ColorPaletteGetHintText
       OnSelectColor = ColorPaletteSelectColor
       ParentColor = False
