@@ -143,7 +143,7 @@ object Form1: TForm1
       Left = 78
       Height = 45
       Top = 7
-      Width = 283
+      Width = 385
       ButtonHeight = 15
       ButtonWidth = 15
       ColumnCount = 3
@@ -152,6 +152,7 @@ object Form1: TForm1
       PaletteKind = pkGradientPalette
       PickedIndex = 0
       SelectionKind = pskThickInverted
+      ShowColorHint = False
       UseSpacers = False
       OnColorMouseMove = ColorPaletteColorMouseMove
       OnColorPick = ColorPaletteColorPick
