@@ -28,7 +28,7 @@
     # sets count of palette grid columns
 
     0,0,0
-    # inserts color r,g,b
+    # inserts color r,g,b ColorName
     255,255,255 Pure white
 
     $NONE
@@ -68,6 +68,7 @@ type
   TColorPaletteEvent = procedure (Sender: TObject; AColor: TColor) of object;
 
   TColorPaletteHintEvent = procedure (Sender: TObject; AColor: TColor; var AText: String) of object;
+
 
   { TCustomColorPalette }
 
@@ -258,6 +259,7 @@ begin
   FButtonHeight := 12;
   FButtonWidth := 12;
   FPrevMouseIndex := -1;
+  FMouseIndex := -1;
   FPickMode := pmImmediate;
   FShowColorHint := true;
   FGradientSteps := 3;
@@ -436,6 +438,8 @@ begin
         Result := -1
     end;
   end;
+  if (Result >= FColors.Count) or (Result < 0) then
+    REsult := -1;
 end;
 
 function TCustomColorPalette.GetHintText(AIndex: Integer): string;
@@ -626,6 +630,7 @@ begin
   inherited;
   Hint := FSavedHint;
   FMouseIndex := -1;
+  ColorMouseMove(MouseColor, []);
 end;
 
 procedure TCustomColorPalette.MouseMove(Shift: TShiftState; X, Y: Integer);
@@ -635,26 +640,23 @@ begin
   inherited;
 
   FMouseIndex := GetColorIndex(X, Y);
-  if (FMouseIndex >= 0) and (FMouseIndex < FColors.Count) and
-     ([ssLeft, ssRight, ssMiddle] * Shift <> []) then
+  C := GetColors(FMouseIndex);
+  ColorMouseMove(C, Shift);
+
+  if ShowHint and FShowColorHint then
   begin
-    C := GetColors(FMouseIndex);
-    if ShowHint and FShowColorHint then
-    begin
-      Hint := GetHintText(FMouseIndex);
-      if FMouseIndex <> FPrevMouseIndex then
-        Application.ActivateHint(ClientToScreen(Point(X, Y)));
-    end;
-    if (FMouseIndex <> FPrevMouseIndex) then
-    begin
-      if not (FUseSpacers and (C = clNone)) then
-      begin
-        ColorMouseMove(C, Shift);
-        if FPickMode = pmContinuous then
-          ColorPick(FMouseIndex, Shift);
-      end;
-    end;
+    Hint := GetHintText(FMouseIndex);
+    if FMouseIndex <> FPrevMouseIndex then
+      Application.ActivateHint(ClientToScreen(Point(X, Y)));
   end;
+
+  if (FMouseIndex >= 0) and (FMouseIndex < FColors.Count) and
+     ([ssLeft, ssRight, ssMiddle] * Shift <> []) and
+     (FMouseIndex <> FPrevMouseIndex) and
+     (FUseSpacers or (C <> clNone)) and
+     (FPickMode = pmContinuous)
+  then
+    ColorPick(FMouseIndex, Shift);
 
   FPrevMouseIndex := FMouseIndex;
 end;
@@ -909,7 +911,7 @@ const
      5,  // ExtendedAndSystemPalette = 16 std + 4 extra + 25 system colors = 45 colors
     -1,  // Gradient palette - color count depends on PaletteStep
     10,  // HTML palette
-     6   // Websafe palette #2
+     6   // Websafe palette
   );
 var
   i, n: Integer;
