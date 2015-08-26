@@ -103,7 +103,7 @@ type
     FGradientSteps: Byte;
     FUseSpacers: Boolean;
     FMargin: Integer;
-    FVertical: Boolean;
+    FFlipped: Boolean;
     function GetColorCount: Integer;
     function GetColors(AIndex: Integer): TColor;
     function GetColorNames(AIndex: Integer): String;
@@ -122,7 +122,7 @@ type
     procedure SetSelectionColor(AValue: TColor);
     procedure SetSelectionKind(AValue: TPaletteSelectionKind);
     procedure SetUseSpacers(AValue: Boolean);
-    procedure SetVertical(AValue: Boolean);
+    procedure SetFlipped(AValue: Boolean);
 
   protected
     procedure BlendWBColor(AColor: TColor; Steps: Integer);
@@ -150,6 +150,7 @@ type
     property ButtonWidth: Integer read FButtonWidth write SetButtonWidth;
     property ButtonHeight: Integer read FButtonHeight write SetButtonHeight;
     property ColumnCount: Integer read FCols write SetCols;
+    property Flipped: Boolean read FFlipped write SetFlipped default false;
     property GradientSteps: Byte read FGradientSteps write SetGradientSteps default 3;
     property PaletteKind: TPaletteKind read FPaletteKind write SetPaletteKind default pkStandardPalette;
     property PickMode: TPickMode read FPickMode write FPickMode default pmImmediate;
@@ -159,7 +160,6 @@ type
     property SelectionKind: TPaletteSelectionKind read FSelectionKind write SetSelectionKind default pskNone;
     property ShowColorHint: Boolean read FShowColorHint write FShowColorHint default true;
     property UseSpacers: Boolean read FUseSpacers write SetUseSpacers default true;
-    property Vertical: Boolean read FVertical write SetVertical default false;
     property OnGetHintText: TColorPaletteHintEvent read FOnGetHintText write FOnGetHintText;
 
   public
@@ -198,6 +198,7 @@ type
     property ButtonHeight;
     property ButtonWidth;
     property ColumnCount;
+    property Flipped;
     property GradientSteps;
     property PaletteKind;
     property PickMode;
@@ -207,7 +208,6 @@ type
     property SelectionKind;
     property ShowColorHint;
     property UseSpacers;
-    property Vertical;
 
     property OnColorMouseMove;
     property OnColorPick;
@@ -351,7 +351,7 @@ end;
 
 procedure TCustomColorPalette.DoAddColor(AColor: TColor; AColorName: String = '');
 begin
-  FColors.AddObject(AColorName, TObject(AColor));
+  FColors.AddObject(AColorName, TObject(PtrInt(AColor)));
 end;
 
 procedure TCustomColorPalette.DoColorPick(AColor: TColor; AShift: TShiftState);
@@ -370,7 +370,7 @@ end;
 procedure TCustomColorPalette.DoInsertColor(AIndex: Integer; AColor: TColor;
   AColorName: String = '');
 begin
-  FColors.InsertObject(AIndex, AColorName, TObject(AColor));
+  FColors.InsertObject(AIndex, AColorName, TObject(PtrInt(AColor)));
 end;
 
 procedure TCustomColorPalette.DoSelectColor(AColor: TColor);
@@ -438,12 +438,12 @@ begin
   begin
     dec(W);
     dec(H);
-    if FVertical then
+    if FFlipped then
       Result := Y div H + X div W * FCols else
       Result := X div W + Y div H * FCols;
   end else
   begin
-    if FVertical then
+    if FFlipped then
     begin
       Result := Y div H + X div W * FCols;
       // Do not consider the space between the buttons
@@ -755,7 +755,7 @@ begin
   // Paint color boxes
   X := FMargin;
   Y := FMargin;
-  max := IfThen(FVertical, Height, Width) - FMargin;
+  max := IfThen(FFlipped, Height, Width) - FMargin;
   if (FButtonDistance = 0) and (FButtonBordercolor <> clNone) then
     dec(max);
 
@@ -764,7 +764,7 @@ begin
     if I = FSelectedIndex then    // Selected rect of box with selected color
       Rsel := Bounds(X, Y, FButtonWidth, FButtonHeight);
     PaintBox(X, Y, X + FButtonWidth, Y + FButtonHeight, GetColors(I));
-    if FVertical then
+    if FFlipped then
     begin
       inc(Y, GetCellHeight);
       if (FButtonDistance = 0) and (FButtonBorderColor <> clNone) then dec(Y);
@@ -886,7 +886,7 @@ end;
 
 procedure TCustomColorPalette.SetColors(AIndex: Integer; const AValue: TColor);
 begin
-  FColors.Objects[AIndex] := TObject(AValue);
+  FColors.Objects[AIndex] := TObject(PtrInt(AValue));
   Invalidate;
 end;
 
@@ -895,6 +895,14 @@ begin
   if AValue = FCols then
     exit;
   FCols := AValue;
+  UpdateSize;
+  Invalidate;
+end;
+
+procedure TCustomColorPalette.SetFlipped(AValue: Boolean);
+begin
+  if FFlipped = AValue then exit;
+  FFlipped := AValue;
   UpdateSize;
   Invalidate;
 end;
@@ -909,14 +917,6 @@ begin
     FColors.Clear;
     SetPaletteKind(FPaletteKind);
   end;
-end;
-
-procedure TCustomColorPalette.SetVertical(AValue: Boolean);
-begin
-  if FVertical = AValue then exit;
-  FVertical := AValue;
-  UpdateSize;
-  Invalidate;
 end;
 
 procedure TCustomColorPalette.SetPaletteKind(AValue: TPaletteKind);
@@ -1004,12 +1004,12 @@ begin
 
   if FPaletteKind = pkGradientPalette then
   begin
-    if FGradientSteps = 0 then n := 1 else n := FGradientSteps;
-    for i:= Low(STEPS) to High(STEPS) do BlendWBColor((RGBToColor(255, STEPS[i], 0)), n);
-    for i:= High(STEPS) downto Low(STEPS) do BlendWBColor((RGBToColor(STEPS[i], 255, 0)), n);
-    for i:= Low(STEPS) to High(STEPS) do BlendWBColor((RGBToColor(0, 255, STEPS[i])), n);
-    for i:= High(STEPS) downto Low(STEPS) do BlendWBColor((RGBToColor(0, STEPS[i], 255)), n);
-    for i:= Low(STEPS) to High(STEPS) do BlendWBColor((RGBToColor(STEPS[i], 0, 255)), n);
+    if FGradientSteps < 0 then n := 0 else n := FGradientSteps;
+    for i:= Low(STEPS) to High(STEPS)-1 do BlendWBColor((RGBToColor(255, STEPS[i], 0)), n);
+    for i:= High(STEPS) downto Low(STEPS)+1 do BlendWBColor((RGBToColor(STEPS[i], 255, 0)), n);
+    for i:= Low(STEPS) to High(STEPS)-1 do BlendWBColor((RGBToColor(0, 255, STEPS[i])), n);
+    for i:= High(STEPS) downto Low(STEPS)+1 do BlendWBColor((RGBToColor(0, STEPS[i], 255)), n);
+    for i:= Low(STEPS) to High(STEPS)-1 do BlendWBColor((RGBToColor(STEPS[i], 0, 255)), n);
     for i:= Low(STEPS) downto High(STEPS) do BlendWBColor((RGBToColor(0, 255, STEPS[i])), n);
     SetCols(n*2 + 1);
   end;
@@ -1387,7 +1387,7 @@ begin
     d := -1;   // Correct for button frame line width
   end;
 
-  if FVertical then  // Rows and columns are interchanged here !!!
+  if FFlipped then  // Rows and columns are interchanged here !!!
     SetBounds(Left, Top, FRows * dx - d + 2*FMargin, FCols * dy - d + 2*FMargin)
   else
     SetBounds(Left, Top, FCols * dx - d + 2*FMargin, FRows * dy - d + 2*FMargin);

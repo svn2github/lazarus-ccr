@@ -404,13 +404,13 @@ object MainForm: TMainForm
       OnSelect = CbSelColorSelect
       TabOrder = 10
     end
-    object CbVertical: TCheckBox
+    object CbFlipped: TCheckBox
       Left = 10
       Height = 19
       Top = 465
       Width = 59
-      Caption = 'Vertical'
-      OnChange = CbVerticalChange
+      Caption = 'Flipped'
+      OnChange = CbFlippedChange
       TabOrder = 11
     end
   end
