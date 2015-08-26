@@ -55,7 +55,7 @@ object MainForm: TMainForm
       Caption = 'Load random palette'
       Enabled = False
       OnClick = BtnLoadRndPaletteClick
-      TabOrder = 1
+      TabOrder = 5
     end
     object BtnCreateRndPalette: TButton
       Left = 10
@@ -64,7 +64,7 @@ object MainForm: TMainForm
       Width = 137
       Caption = 'Create random palette'
       OnClick = BtnCreateRndPaletteClick
-      TabOrder = 2
+      TabOrder = 4
     end
     object BtnAddColor: TButton
       Left = 10
@@ -73,16 +73,16 @@ object MainForm: TMainForm
       Width = 137
       Caption = 'Add color...'
       OnClick = BtnAddColorClick
-      TabOrder = 3
+      TabOrder = 7
     end
-    object BtnLoadDefaultPal: TButton
+    object BtnLoadPalette: TButton
       Left = 10
       Height = 25
       Top = 339
       Width = 137
       Caption = 'Load palette...'
-      OnClick = BtnLoadDefaultPalClick
-      TabOrder = 4
+      OnClick = BtnLoadPaletteClick
+      TabOrder = 3
     end
     object BtnDeleteColor: TButton
       Left = 10
@@ -91,9 +91,9 @@ object MainForm: TMainForm
       Width = 137
       Caption = 'Delete color #0'
       OnClick = BtnDeleteColorClick
-      TabOrder = 5
+      TabOrder = 8
     end
-    object BtnLoadDefaultPal1: TButton
+    object BtnSavePalette: TButton
       Left = 10
       Height = 25
       Top = 446
@@ -119,9 +119,8 @@ object MainForm: TMainForm
       Alignment = taRightJustify
       Enabled = False
       MaxValue = 10
-      MinValue = 1
       OnChange = EdGradientStepsChange
-      TabOrder = 7
+      TabOrder = 2
       Value = 3
     end
     object LblBuiltinPalettes: TLabel
@@ -153,7 +152,7 @@ object MainForm: TMainForm
       )
       OnSelect = CbBuiltinPalettesSelect
       Style = csDropDownList
-      TabOrder = 8
+      TabOrder = 1
       Text = 'Standard palette'
     end
     object MouseColorSample: TShape
@@ -214,7 +213,7 @@ object MainForm: TMainForm
       Alignment = taRightJustify
       MaxValue = 16
       OnChange = EdButtonDistanceChange
-      TabOrder = 0
+      TabOrder = 9
       Value = 1
     end
     object LblButtonSize: TLabel
@@ -234,7 +233,7 @@ object MainForm: TMainForm
       Alignment = taRightJustify
       MinValue = 1
       OnChange = EdButtonSizeChange
-      TabOrder = 1
+      TabOrder = 8
       Value = 16
     end
     object LblButtonBorderColor: TLabel
@@ -255,7 +254,7 @@ object MainForm: TMainForm
       Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeNone]
       ItemHeight = 16
       OnSelect = CbButtonBorderColorSelect
-      TabOrder = 2
+      TabOrder = 6
     end
     object CbPickMode: TComboBox
       Left = 10
@@ -272,7 +271,7 @@ object MainForm: TMainForm
       )
       OnSelect = CbPickModeSelect
       Style = csDropDownList
-      TabOrder = 3
+      TabOrder = 0
       Text = 'default'
     end
     object LblPickMode: TLabel
@@ -293,7 +292,7 @@ object MainForm: TMainForm
       Checked = True
       OnChange = CbShowColorHintsChange
       State = cbChecked
-      TabOrder = 4
+      TabOrder = 3
     end
     object EdColCount: TSpinEdit
       Left = 10
@@ -303,7 +302,7 @@ object MainForm: TMainForm
       Alignment = taRightJustify
       MinValue = 1
       OnChange = EdColCountChange
-      TabOrder = 5
+      TabOrder = 10
       Value = 8
     end
     object LblColCount: TLabel
@@ -322,7 +321,7 @@ object MainForm: TMainForm
       Width = 108
       Caption = 'Custom hint text'
       OnChange = CbCustomHintTextChange
-      TabOrder = 6
+      TabOrder = 4
     end
     object CbUseSpacers: TCheckBox
       Left = 10
@@ -333,7 +332,7 @@ object MainForm: TMainForm
       Checked = True
       OnChange = CbUseSpacersChange
       State = cbChecked
-      TabOrder = 7
+      TabOrder = 5
     end
     object LblBkColor: TLabel
       Left = 10
@@ -353,7 +352,7 @@ object MainForm: TMainForm
       Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeNone]
       ItemHeight = 16
       OnSelect = CbBkColorSelect
-      TabOrder = 8
+      TabOrder = 7
     end
     object LblSelKind: TLabel
       Left = 10
@@ -381,7 +380,7 @@ object MainForm: TMainForm
       )
       OnSelect = CbSelKindSelect
       Style = csDropDownList
-      TabOrder = 9
+      TabOrder = 1
       Text = 'none'
     end
     object LblSelColor: TLabel
@@ -402,7 +401,7 @@ object MainForm: TMainForm
       Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeNone]
       ItemHeight = 16
       OnSelect = CbSelColorSelect
-      TabOrder = 10
+      TabOrder = 2
     end
     object CbFlipped: TCheckBox
       Left = 10
@@ -451,9 +450,9 @@ object MainForm: TMainForm
       ButtonHeight = 20
       ButtonWidth = 20
       ColumnCount = 8
-      PickShift = [ssLeft, ssRight]
+      PickedIndex = 0
+      OnColorPick = ColorPaletteColorPick
       OnGetHintText = ColorPaletteGetHintText
-      OnSelectColor = ColorPaletteSelectColor
       ParentColor = False
       PopupMenu = PalettePopupMenu
       OnDblClick = ColorPaletteDblClick

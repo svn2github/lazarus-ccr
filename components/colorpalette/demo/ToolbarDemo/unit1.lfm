@@ -2,10 +2,10 @@ object Form1: TForm1
   Left = 290
   Height = 491
   Top = 160
-  Width = 584
+  Width = 639
   Caption = 'Form1'
   ClientHeight = 491
-  ClientWidth = 584
+  ClientWidth = 639
   OnCreate = FormCreate
   ShowHint = True
   LCLVersion = '1.5'
@@ -13,37 +13,30 @@ object Form1: TForm1
     Left = 0
     Height = 436
     Top = 55
-    Width = 584
+    Width = 639
     Align = alClient
-    Anchors = []
-    AutoSize = True
     BevelOuter = bvNone
     ClientHeight = 436
-    ClientWidth = 584
+    ClientWidth = 639
     TabOrder = 0
     object Shape1: TShape
-      Left = 56
+      Left = 64
       Height = 120
       Top = 40
       Width = 146
-      Anchors = []
-      BorderSpacing.Around = 8
       Brush.Style = bsClear
     end
     object Shape2: TShape
-      Left = 216
+      Left = 224
       Height = 120
       Top = 40
       Width = 146
-      Anchors = []
-      BorderSpacing.Around = 8
     end
     object Label1: TLabel
-      Left = 56
+      Left = 64
       Height = 56
       Top = 176
       Width = 146
-      Anchors = []
       AutoSize = False
       Caption = 'Gradient start'#13#10#13#10'(Left click)'
       Font.Color = clWhite
@@ -51,11 +44,10 @@ object Form1: TForm1
       ParentFont = False
     end
     object Label2: TLabel
-      Left = 216
+      Left = 224
       Height = 56
       Top = 176
       Width = 146
-      Anchors = []
       AutoSize = False
       Caption = 'Mouse color:'
       Font.Color = clWhite
@@ -63,20 +55,17 @@ object Form1: TForm1
       ParentFont = False
     end
     object Shape3: TShape
-      Left = 376
+      Left = 384
       Height = 120
       Top = 40
       Width = 146
-      Anchors = []
-      BorderSpacing.Around = 8
       Brush.Style = bsClear
     end
     object Label3: TLabel
-      Left = 376
+      Left = 384
       Height = 56
       Top = 176
       Width = 146
-      Anchors = []
       AutoSize = False
       Caption = 'Gradient end'#13#10#13#10'(Right click)'
       Font.Color = clWhite
@@ -88,9 +77,10 @@ object Form1: TForm1
     Left = 0
     Height = 55
     Top = 0
-    Width = 584
+    Width = 639
     Bands = <    
       item
+        Break = False
         Control = ToolBar
         MinHeight = 45
         MinWidth = 45
@@ -127,8 +117,7 @@ object Form1: TForm1
         Flipped = True
         GradientSteps = 1
         PaletteKind = pkGradientPalette
-        PickShift = [ssLeft, ssRight]
-        SelectionColor = clWhite
+        PickedIndex = 0
         SelectionKind = pskThickInverted
         ShowColorHint = False
         UseSpacers = False

@@ -58,9 +58,6 @@ type
     pmContinuous  // Select color at mouse-down and mouse-move, ColorPick event at mouse-up
   );
 
-  TPickShiftEnum = (ssLeft, ssRight, ssMiddle);
-  TPickShift = set of TPickShiftEnum;
-
   TPaletteKind = (pkStandardPalette, pkExtendedPalette, pkSystemPalette,
     pkStandardAndSystemPalette, pkExtendedAndSystemPalette,
     pkGradientPalette, pkHTMLPalette, pkWebSafePalette);
@@ -83,14 +80,11 @@ type
     FCols: Integer;
     FOnColorMouseMove: TColorMouseEvent;
     FOnColorPick: TColorMouseEvent;
-    FOnSelectColor: TColorPaletteEvent;
     FOnGetHintText: TColorPaletteHintEvent;
     FRows: Integer;
     FColors: TStringList;
-    FSelectedColor: TColor;
-    FSelectedIndex: Integer;
+    FPickedIndex: Integer;
     FPickMode: TPickMode;
-    FPickShift: TPickShift;
     FMousePt: TPoint;
     FMouseIndex: Integer;
     FPrevMouseIndex: Integer;
@@ -118,7 +112,7 @@ type
     procedure SetCols(AValue: Integer);
     procedure SetGradientSteps(AValue: Byte);
     procedure SetPaletteKind(AValue: TPaletteKind);
-    procedure SetSelectedIndex(AValue: Integer);
+    procedure SetPickedIndex(AValue: Integer);
     procedure SetSelectionColor(AValue: TColor);
     procedure SetSelectionKind(AValue: TPaletteSelectionKind);
     procedure SetUseSpacers(AValue: Boolean);
@@ -132,12 +126,10 @@ type
     procedure DoColorPick(AColor: TColor; AShift: TShiftState); virtual;
     procedure DoDeleteColor(AIndex: Integer); virtual;
     procedure DoInsertColor(AIndex: Integer; AColor: TColor; AColorName: String = ''); virtual;
-    procedure DoSelectColor(AColor: TColor); virtual;
     function GetCellHeight: Integer; inline;
     function GetCellWidth: Integer; inline;
     function GetColorIndex(X,Y: Integer): Integer;
     function GetHintText(AIndex: Integer): String; virtual;
-    function IsCorrectShift(Shift: TShiftState): Boolean;
     procedure MouseDown(Button: TMouseButton; Shift:TShiftState; X, Y:Integer); override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
@@ -153,13 +145,15 @@ type
     property Flipped: Boolean read FFlipped write SetFlipped default false;
     property GradientSteps: Byte read FGradientSteps write SetGradientSteps default 3;
     property PaletteKind: TPaletteKind read FPaletteKind write SetPaletteKind default pkStandardPalette;
+    property PickedIndex: Integer read FPickedIndex write SetPickedIndex default -1;
     property PickMode: TPickMode read FPickMode write FPickMode default pmImmediate;
-    property PickShift: TPickShift read FPickShift write FPickShift default [ssLeft];
-    property SelectedIndex: Integer read FSelectedIndex write SetSelectedIndex default 0;
     property SelectionColor: TColor read FSelectionColor write SetSelectionColor default clBlack;
     property SelectionKind: TPaletteSelectionKind read FSelectionKind write SetSelectionKind default pskNone;
     property ShowColorHint: Boolean read FShowColorHint write FShowColorHint default true;
     property UseSpacers: Boolean read FUseSpacers write SetUseSpacers default true;
+
+    property OnColorPick: TColorMouseEvent read FOnColorPick write FOnColorPick;
+    property OnColorMouseMove: TColorMouseEvent read FOnColorMouseMove write FOnColorMouseMove;
     property OnGetHintText: TColorPaletteHintEvent read FOnGetHintText write FOnGetHintText;
 
   public
@@ -179,13 +173,8 @@ type
     property ColorCount: Integer read GetColorCount;
     property MouseIndex: Integer read FMouseIndex;
     property MouseColor: TColor read GetMouseColor;
-    property PickedColor: TColor read GetPickedColor; deprecated 'Use SelectedColor';
-    property SelectedColor: TColor read FSelectedColor;
+    property PickedColor: TColor read GetPickedColor;
 
-    property OnSelectColor: TColorPaletteEvent read FOnSelectColor write FOnSelectColor;
-    property OnColorPick: TColorMouseEvent read FOnColorPick write FOnColorPick;
-    property OnColorMouseMove: TColorMouseEvent read FOnColorMouseMove write FOnColorMouseMove;
-    
     property Height stored False;
     property Width stored False;
   end;
@@ -201,9 +190,8 @@ type
     property Flipped;
     property GradientSteps;
     property PaletteKind;
+    property PickedIndex;
     property PickMode;
-    property PickShift;
-    property SelectedIndex;
     property SelectionColor;
     property SelectionKind;
     property ShowColorHint;
@@ -212,7 +200,6 @@ type
     property OnColorMouseMove;
     property OnColorPick;
     property OnGetHintText;
-    property OnSelectColor;
 
     // inherited from TCustomColorPalette's ancestors
     property Align;
@@ -272,7 +259,6 @@ begin
   FButtonWidth := 12;
   FPrevMouseIndex := -1;
   FPickMode := pmImmediate;
-  FPickShift := [ssLeft];
   FShowColorHint := true;
   FGradientSteps := 3;
   FUseSpacers := true;
@@ -330,10 +316,10 @@ procedure TCustomColorPalette.ColorPick(AIndex: Integer; Shift: TShiftState);
 var
   c: TColor;
 begin
+  FPickedIndex := AIndex;
   c := GetColors(AIndex);
   DoColorPick(c, Shift);
-  if IsCorrectShift(Shift) then
-    SelectedIndex := AIndex;
+  Invalidate;
 end;
 
 procedure TCustomColorPalette.ColorMouseMove(AColor: TColor; Shift: TShiftState);
@@ -371,13 +357,6 @@ procedure TCustomColorPalette.DoInsertColor(AIndex: Integer; AColor: TColor;
   AColorName: String = '');
 begin
   FColors.InsertObject(AIndex, AColorName, TObject(PtrInt(AColor)));
-end;
-
-procedure TCustomColorPalette.DoSelectColor(AColor: TColor);
-begin
-  FSelectedColor := AColor;
-  Invalidate;
-  if Assigned(FOnSelectColor) then FOnSelectColor(self, AColor);
 end;
 
 function TCustomColorPalette.GetColorCount: Integer;
@@ -488,22 +467,13 @@ end;
 
 function TCustomColorPalette.GetPickedColor: TColor;
 begin
-  Result := GetColors(FMouseIndex);
+  Result := GetColors(FPickedIndex);
 end;
 
 procedure TCustomColorPalette.InsertColor(AIndex: Integer; AColor: TColor;
   AColorName: String = '');
 begin
   DoInsertColor(AIndex, AColor, AColorName);
-end;
-
-function TCustomColorPalette.IsCorrectShift(Shift: TShiftState): Boolean;
-begin
-  Result := True;
-  if (ssLeft in FPickShift) and (Classes.ssLeft in Shift) then exit;
-  if (ssRight in FPickShift) and (Classes.ssRight in Shift) then exit;
-  if (ssMiddle in FPickShift) and (Classes.ssMiddle in Shift) then exit;
-  Result := false;
 end;
 
 procedure TCustomColorPalette.LoadPalette(const FileName: String);
@@ -620,7 +590,7 @@ begin
   end;
 
   UpdateSize;
-  SelectedIndex := 0;
+  PickedIndex := -1;
 end;
 
 procedure TCustomColorPalette.MouseDown(Button: TMouseButton;
@@ -665,7 +635,8 @@ begin
   inherited;
 
   FMouseIndex := GetColorIndex(X, Y);
-  if (FMouseIndex >= 0) and (FMouseIndex < FColors.Count) then
+  if (FMouseIndex >= 0) and (FMouseIndex < FColors.Count) and
+     ([ssLeft, ssRight, ssMiddle] * Shift <> []) then
   begin
     C := GetColors(FMouseIndex);
     if ShowHint and FShowColorHint then
@@ -761,7 +732,7 @@ begin
 
   for I := 0 to pred(FColors.Count) do
   begin
-    if I = FSelectedIndex then    // Selected rect of box with selected color
+    if I = FPickedIndex then    // Selected rect of box with selected color
       Rsel := Bounds(X, Y, FButtonWidth, FButtonHeight);
     PaintBox(X, Y, X + FButtonWidth, Y + FButtonHeight, GetColors(I));
     if FFlipped then
@@ -808,7 +779,7 @@ begin
         Canvas.Pen.Color := FSelectionColor;
       pskThinInverted, pskThickInverted:
         begin
-          Canvas.Pen.Color := InvertColor(GetColors(FSelectedIndex));
+          Canvas.Pen.Color := InvertColor(GetPickedColor);
           if (FSelectionKind = pskThinInverted) and (Canvas.Pen.Color = FButtonBorderColor) then
             Canvas.Pen.Color := FSelectionColor;
         end;
@@ -890,6 +861,9 @@ begin
   Invalidate;
 end;
 
+{ Setter for the property ColumnCount.
+  WARNING: If Flipped is true then this property is reinterpreted as the number
+  of ROWS! }
 procedure TCustomColorPalette.SetCols(AValue: Integer);
 begin
   if AValue = FCols then
@@ -899,6 +873,9 @@ begin
   Invalidate;
 end;
 
+{ Setter for the property Flipped.
+  WARNING: If Flipped is true then the property ColumnCount is reinterpreted
+  as the number of ROWS! }
 procedure TCustomColorPalette.SetFlipped(AValue: Boolean);
 begin
   if FFlipped = AValue then exit;
@@ -1171,152 +1148,6 @@ begin
     DoAddColor(RGBToColor(  0,  0,  0), 'Black');
   end;
 
-  {
-  if FPaletteKind = pkHTMLPalette then
-  begin
-    DoAddColor(RGBToColor(255,255,255), 'white');
-    DoAddColor(RGBToColor(255,255,240), 'ivory');
-    DoAddColor(RGBToColor(255,255,224), 'lightyellow');
-    DoAddColor(RGBToColor(255,255,  0), 'yellow');
-    DoAddColor(RGBToColor(255,250,250), 'snow');
-    DoAddColor(RGBToColor(255,250,240), 'floralwhite');
-    DoAddColor(RGBToColor(255,250,205), 'lemonchiffon');
-    DoAddColor(RGBToColor(255,248,220), 'cornsilk');
-    DoAddColor(RGBToColor(255,245,238), 'seashell');
-    DoAddColor(RGBToColor(255,240,245), 'lavenderblush');
-    DoAddColor(RGBToColor(255,239,213), 'papayawhip');
-    DoAddColor(RGBToColor(255,235,205), 'blanchedalmond');
-    DoAddColor(RGBToColor(255,228,225), 'mistyrose');
-    DoAddColor(RGBToColor(255,228,196), 'bisque');
-    DoAddColor(RGBToColor(255,228,181), 'moccasin');
-    DoAddColor(RGBToColor(255,222,173), 'navajowhite');
-    DoAddColor(RGBToColor(255,218,185), 'peachpuff');
-    DoAddColor(RGBToColor(255,215,  0), 'gold');
-    DoAddColor(RGBToColor(255,192,203), 'pink');
-    DoAddColor(RGBToColor(255,182,193), 'lightpink');
-    DoAddColor(RGBToColor(255,165,  0), 'orange');
-    DoAddColor(RGBToColor(255,160,122), 'lightsalmon');
-    DoAddColor(RGBToColor(255,140,  0), 'darkorange');
-    DoAddColor(RGBToColor(255,127, 80), 'coral');
-    DoAddColor(RGBToColor(255,105,180), 'hotpink');
-    DoAddColor(RGBToColor(255, 99, 71), 'tomato');
-    DoAddColor(RGBToColor(255, 69,  0), 'orangered');
-    DoAddColor(RGBToColor(255, 20,147), 'deeppink');
-    DoAddColor(RGBToColor(255,  0,255), 'fuchsia');
-    DoAddColor(RGBToColor(255,  0,255), 'fuchsia');
-    DoAddColor(RGBToColor(255,  0,  0), 'red');
-    DoAddColor(RGBToColor(253,245,230), 'oldlace');
-    DoAddColor(RGBToColor(250,250,210), 'lightgoldenrodyellow');
-    DoAddColor(RGBToColor(250,240,230), 'linen');
-    DoAddColor(RGBToColor(250,235,215), 'antiquewhite');
-    DoAddColor(RGBToColor(250,128,114), 'salmon');
-    DoAddColor(RGBToColor(248,248,255), 'ghostwhite');
-    DoAddColor(RGBToColor(245,255,250), 'mintcream');
-    DoAddColor(RGBToColor(245,245,245), 'whitesmoke');
-    DoAddColor(RGBToColor(245,245,220), 'beige');
-    DoAddColor(RGBToColor(245,222,179), 'wheat');
-    DoAddColor(RGBToColor(244,164, 96), 'sandybrown');
-    DoAddColor(RGBToColor(240,255,255), 'azure');
-    DoAddColor(RGBToColor(240,255,240), 'honeydew');
-    DoAddColor(RGBToColor(240,248,255), 'aliceblue');
-    DoAddColor(RGBToColor(240,230,140), 'khaki');
-    DoAddColor(RGBToColor(240,128,128), 'lightcoral');
-    DoAddColor(RGBToColor(238,232,170), 'palegoldenrod');
-    DoAddColor(RGBToColor(238,130,238), 'violet');
-    DoAddColor(RGBToColor(233,150,122), 'darksalmon');
-    DoAddColor(RGBToColor(230,230,250), 'lavender');
-    DoAddColor(RGBToColor(224,255,255), 'lightcyan');
-    DoAddColor(RGBToColor(222,184,135), 'burlywood');
-    DoAddColor(RGBToColor(221,160,221), 'plum');
-    DoAddColor(RGBToColor(220,220,220), 'gainsboro');
-    DoAddColor(RGBToColor(220, 20, 60), 'crimson');
-    DoAddColor(RGBToColor(219,112,147), 'palevioletred');
-    DoAddColor(RGBToColor(218,165, 32), 'goldenrod');
-    DoAddColor(RGBToColor(218,112,214), 'orchid');
-    DoAddColor(RGBToColor(216,191,216), 'thistle');
-    DoAddColor(RGBToColor(211,211,211), 'lightgrey');
-    DoAddColor(RGBToColor(210,180,140), 'tan');
-    DoAddColor(RGBToColor(210,105, 30), 'chocolate');
-    DoAddColor(RGBToColor(205,133, 63), 'peru');
-    DoAddColor(RGBToColor(205, 92, 92), 'indianred');
-    DoAddColor(RGBToColor(199, 21,133), 'mediumvioletred');
-    DoAddColor(RGBToColor(192,192,192), 'silver');
-    DoAddColor(RGBToColor(189,183,107), 'darkkhaki');
-    DoAddColor(RGBToColor(188,143,143), 'rosybrown');
-    DoAddColor(RGBToColor(186, 85,211), 'mediumorchid');
-    DoAddColor(RGBToColor(184,134, 11), 'darkgoldenrod');
-    DoAddColor(RGBToColor(178, 34, 34), 'firebrick');
-    DoAddColor(RGBToColor(176,224,230), 'powderblue');
-    DoAddColor(RGBToColor(176,196,222), 'lightsteelblue');
-    DoAddColor(RGBToColor(175,238,238), 'paleturquoise');
-    DoAddColor(RGBToColor(173,255, 47), 'greenyellow');
-    DoAddColor(RGBToColor(173,216,230), 'lightblue');
-    DoAddColor(RGBToColor(169,169,169), 'darkgray');
-    DoAddColor(RGBToColor(165, 42, 42), 'brown');
-    DoAddColor(RGBToColor(160, 82, 45), 'sienna');
-    DoAddColor(RGBToColor(154,205, 50), 'yellowgreen');
-    DoAddColor(RGBToColor(153, 50,204), 'darkorchid');
-    DoAddColor(RGBToColor(152,251,152), 'palegreen');
-    DoAddColor(RGBToColor(148,  0,211), 'darkviolet');
-    DoAddColor(RGBToColor(147,112,219), 'mediumpurple');
-    DoAddColor(RGBToColor(144,238,144), 'lightgreen');
-    DoAddColor(RGBToColor(143,188,143), 'darkseagreen');
-    DoAddColor(RGBToColor(139, 69, 19), 'saddlebrown');
-    DoAddColor(RGBToColor(139,  0,139), 'darkmagenta');
-    DoAddColor(RGBToColor(139,  0,  0), 'darkred');
-    DoAddColor(RGBToColor(138, 43,226), 'blueviolet');
-    DoAddColor(RGBToColor(135,206,250), 'lightskyblue');
-    DoAddColor(RGBToColor(135,206,235), 'skyblue');
-    DoAddColor(RGBToColor(128,128,128), 'gray');
-    DoAddColor(RGBToColor(128,128,  0), 'olive');
-    DoAddColor(RGBToColor(128,  0,128), 'purple');
-    DoAddColor(RGBToColor(128,  0,  0), 'maroon');
-    DoAddColor(RGBToColor(127,255,212), 'aquamarine');
-    DoAddColor(RGBToColor(127,255,  0), 'chartreuse');
-    DoAddColor(RGBToColor(124,252,  0), 'lawngreen');
-    DoAddColor(RGBToColor(123,104,238), 'mediumslateblue');
-    DoAddColor(RGBToColor(119,136,153), 'lightslategray');
-    DoAddColor(RGBToColor(112,128,144), 'slategray');
-    DoAddColor(RGBToColor(107,142, 35), 'olivedrab');
-    DoAddColor(RGBToColor(106, 90,205), 'slateblue');
-    DoAddColor(RGBToColor(105,105,105), 'dimgray');
-    DoAddColor(RGBToColor(102,205,170), 'mediumaquamarine');
-    DoAddColor(RGBToColor(100,149,237), 'cornflowerblue');
-    DoAddColor(RGBToColor( 95,158,160), 'cadetblue');
-    DoAddColor(RGBToColor( 85,107, 47), 'darkolivegreen');
-    DoAddColor(RGBToColor( 75,  0,130), 'indigo');
-    DoAddColor(RGBToColor( 72,209,204), 'mediumturquoise');
-    DoAddColor(RGBToColor( 72, 61,139), 'darkslateblue');
-    DoAddColor(RGBToColor( 70,130,180), 'steelblue');
-    DoAddColor(RGBToColor( 65,105,225), 'royalblue');
-    DoAddColor(RGBToColor( 64,224,208), 'turquoise');
-    DoAddColor(RGBToColor( 60,179,113), 'mediumseagreen');
-    DoAddColor(RGBToColor( 50,205, 50), 'limegreen');
-    DoAddColor(RGBToColor( 47, 79, 79), 'darkslategray');
-    DoAddColor(RGBToColor( 46,139, 87), 'seagreen');
-    DoAddColor(RGBToColor( 34,139, 34), 'forestgreen');
-    DoAddColor(RGBToColor( 32,178,170), 'lightseagreen');
-    DoAddColor(RGBToColor( 30,144,255), 'dodgerblue');
-    DoAddColor(RGBToColor( 25, 25,112), 'midnightblue');
-    DoAddColor(RGBToColor(  0,255,255), 'aqua');
-    DoAddColor(RGBToColor(  0,255,255), 'cyan');
-    DoAddColor(RGBToColor(  0,255,127), 'springgreen');
-    DoAddColor(RGBToColor(  0,255,  0), 'lime');
-    DoAddColor(RGBToColor(  0,250,154), 'mediumspringgreen');
-    DoAddColor(RGBToColor(  0,206,209), 'darkturquoise');
-    DoAddColor(RGBToColor(  0,191,255), 'deepskyblue');
-    DoAddColor(RGBToColor(  0,139,139), 'darkcyan');
-    DoAddColor(RGBToColor(  0,128,128), 'teal');
-    DoAddColor(RGBToColor(  0,128,  0), 'green');
-    DoAddColor(RGBToColor(  0,100,  0), 'darkgreen');
-    DoAddColor(RGBToColor(  0,  0,255), 'blue');
-    DoAddColor(RGBToColor(  0,  0,205), 'mediumblue');
-    DoAddColor(RGBToColor(  0,  0,139), 'darkblue');
-    DoAddColor(RGBToColor(  0,  0,128), 'navy');
-    DoAddColor(RGBToColor(  0,  0,  0), 'black');
-  end;
-  }
-
   if FPaletteKind = pkWebSafePalette then
   begin
     // https://en.wikipedia.org/wiki/Web_colors
@@ -1330,17 +1161,13 @@ begin
     SetCols(COLCOUNT[FPaletteKind]);
 end;
 
-procedure TCustomColorPalette.SetSelectedIndex(AValue: Integer);
+procedure TCustomColorPalette.SetPickedIndex(AValue: Integer);
 begin
-  if FSelectedIndex = AValue then exit;
-  if AValue < 0 then
-    FSelectedIndex := 0
-  else
-  if AValue >= FColors.Count then
-    FSelectedIndex := FColors.Count-1
-  else
-    FSelectedIndex := AValue;
-  DoSelectColor(GetColors(FSelectedIndex));
+  if FPickedIndex = AValue then exit;
+  if (AValue >= 0) and (AValue < FColors.Count) then
+    FPickedIndex := AValue else
+    FPickedIndex := -1;
+  Invalidate;
 end;
 
 procedure TCustomColorPalette.SetSelectionColor(AValue: TColor);
@@ -1384,7 +1211,7 @@ begin
   begin
     dec(dx);
     dec(dy);
-    d := -1;   // Correct for button frame line width
+    d := -1;   // Needed to correct for button frame line width
   end;
 
   if FFlipped then  // Rows and columns are interchanged here !!!

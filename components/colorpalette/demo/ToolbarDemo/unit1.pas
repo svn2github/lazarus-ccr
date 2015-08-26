@@ -49,50 +49,22 @@ implementation
 {$R *.lfm}
 
 { TForm1 }
-                  (*
-procedure TForm1.ColorPalettePickColorColor(Sender: TObject; AColor: TColor;
-  AShift: TShiftState);
-begin
-  if ColorPalette.SelectedColor = clNone then
-    Shape1.Brush.Style := bsClear
-  else
-  begin
-    Shape1.Brush.Style := bsSolid;
-    Shape1.Brush.Color := ColorPalette.SelectedColor;
-  end;
-  Label1.Caption := Format('Selected color:'#13'%s', [
-    ColorPalette.ColorNames[ColorPalette.SelectedIndex]
-  ]);
 
-  inc(counter);
-  if odd(counter) then
-    FStartColor := Colorpalette.SelectedColor else
-    FEndColor := ColorPalette.SelectedColor;
-
-  Panel1.Invalidate;
-end;
-            *)
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-//  ColorPalette.InsertColor(0, clNone);
-  //ColorPalette.ColumnCount := 3; //ColorPalette.ColorCount div 3;
- // ColorPalette.Vertical := true;
-  //ColorPalette.ColumnCount := 3;
-  ColorPalette.SelectedIndex := -1;
-  colorPalette.SelectedIndex := 0;
   Toolbar.BorderSpacing.Left := 0;
   Toolbar.AutoSize := true;
   Coolbar.AutoSize := true;
 
-  ColorPaletteColorPick(self, ColorPalette.SelectedColor, [Classes.ssLeft]);
-  ColorPaletteColorPick(self, ColorPalette.Colors[ColorPalette.ColorCount-1], [Classes.ssRight]);
+  ColorPaletteColorPick(self, ColorPalette.Colors[0], [ssLeft]);
+  ColorPaletteColorPick(self, ColorPalette.Colors[ColorPalette.ColorCount-1], [ssRight]);
 
+  // For Laz 1.4.2 where TPanel.OnPaint is not published:
   Panel1.OnPaint := @Panel1Paint;
 end;
 
 procedure TForm1.Panel1Paint(Sender: TObject);
 begin
-//  Panel1.Canvas.GradientFill(Panel1.ClientRect, clSkyBlue, clNavy, gdVertical);
   Panel1.Canvas.GradientFill(Panel1.ClientRect,
     FStartColor,
     FEndColor,
@@ -106,6 +78,7 @@ var
 begin
   // Vertical orientation
   CoolBar.AutoSize := false;
+  Toolbar.AutoSize := false;
   if TbChangeOrientation.Down then
   begin
     CoolBar.Vertical := true;
@@ -113,7 +86,8 @@ begin
     ToolBar.Align := alLeft;
     ColorPalette.Flipped := not ColorPalette.Flipped;
     ColorPalette.Top := 9999;
-  end else
+  end
+  else
   // Horizontal orientation
   begin
     CoolBar.Vertical := false;
@@ -122,6 +96,7 @@ begin
     ColorPalette.Flipped := not ColorPalette.Flipped;
     ColorPalette.Left := 9999;
   end;
+  Toolbar.AutoSize := true;
   CoolBar.AutoSize := true;
 end;
 
@@ -137,7 +112,8 @@ end;
 procedure TForm1.ColorPaletteColorPick(Sender: TObject; AColor: TColor;
   Shift: TShiftState);
 begin
-  if (Shift * [Classes.ssLeft] <> []) then
+  // Select gradient start color with left mouse button
+  if (Shift * [ssLeft] <> []) then
   begin
     FStartColor := AColor;
     if FStartColor = clNone then
@@ -151,7 +127,8 @@ begin
       #13'(Left click)';
   end;
 
-  if (Shift * [Classes.ssRight] <> []) then
+  // Select gradient end color with right mouse button
+  if (Shift * [ssRight] <> []) then
   begin
     FEndColor := AColor;
     if FEndColor = clNone then
