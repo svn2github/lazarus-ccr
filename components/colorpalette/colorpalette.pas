@@ -28,7 +28,7 @@
     # sets count of palette grid columns
 
     0,0,0
-    # inserts color r,g,b ColorName
+    # inserts color r,g,b [optional color name]
     255,255,255 Pure white
 
     $NONE
@@ -65,8 +65,6 @@ type
   TPaletteSelectionKind = (pskNone, pskThin, pskThinInverted, pskThick, pskThickInverted);
 
   TColorMouseEvent = procedure (Sender: TObject; AColor: TColor; Shift: TShiftState) of object;
-  TColorPaletteEvent = procedure (Sender: TObject; AColor: TColor) of object;
-
   TColorPaletteHintEvent = procedure (Sender: TObject; AColor: TColor; var AText: String) of object;
 
 
@@ -74,6 +72,7 @@ type
 
   TCustomColorPalette = class(TGraphicControl)
   private
+    FSizeToLastCol: Integer;
     FButtonHeight: Integer;
     FButtonWidth: Integer;
     FButtonBorderColor: TColor;
@@ -411,6 +410,13 @@ var
   W, H: Integer;
   ix, iy: Integer;
 begin
+  Result := -1;
+  if FFlipped then
+  begin
+    if (Y < 0) or (Y > FSizeToLastCol) then exit;
+  end else
+    if (X < 0) or (X > FSizeToLastCol) then exit;
+
   W := GetCellWidth;
   H := GetCellHeight;
   dec(X, FMargin);
@@ -439,13 +445,13 @@ begin
     end;
   end;
   if (Result >= FColors.Count) or (Result < 0) then
-    REsult := -1;
+    Result := -1;
 end;
 
 function TCustomColorPalette.GetHintText(AIndex: Integer): string;
 const
   INDENT = '* ';
-  MASK = '%0:s'#13'%4:sRed: %1:d'#13'%4:sGreen: %2:d'#13'%4:sBlue: %3:d';
+  MASK = '%0:s' + LineEnding + '%4:sRed: %1:d' + LineEnding + '%4:sGreen: %2:d' + LineEnding + '%4:sBlue: %3:d';
 var
   C: TColor;
 begin
@@ -728,7 +734,8 @@ begin
   // Paint color boxes
   X := FMargin;
   Y := FMargin;
-  max := IfThen(FFlipped, Height, Width) - FMargin;
+  max := FSizeToLastCol - FMargin;
+//  max := IfThen(FFlipped, Height, Width) - FMargin;
   if (FButtonDistance = 0) and (FButtonBordercolor <> clNone) then
     dec(max);
 
@@ -1217,9 +1224,14 @@ begin
   end;
 
   if FFlipped then  // Rows and columns are interchanged here !!!
-    SetBounds(Left, Top, FRows * dx - d + 2*FMargin, FCols * dy - d + 2*FMargin)
-  else
+  begin
+    FSizeToLastCol := FCols * dy - d + 2*FMargin;
+    SetBounds(Left, Top, FRows * dx - d + 2*FMargin, FCols * dy - d + 2*FMargin);
+  end else
+  begin
+    FSizeToLastCol := FCols * dx - d + 2*FMargin;
     SetBounds(Left, Top, FCols * dx - d + 2*FMargin, FRows * dy - d + 2*FMargin);
+  end;
 end;
 
 

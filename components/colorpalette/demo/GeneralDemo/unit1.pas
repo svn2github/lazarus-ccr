@@ -397,9 +397,9 @@ begin
     )
   else
     ALabel.caption := Format(
-      '%s: %s'#13+
-      ' red = %d'#13+
-      ' green = %d'#13+
+      '%s: %s' + LineEnding +
+      ' red = %d' + LineEnding +
+      ' green = %d' + LineEnding +
       ' blue = %d', [
       ATitle, ColorPalette.ColorNames[AIndex],
       Red(C), Green(C), Blue(C)
