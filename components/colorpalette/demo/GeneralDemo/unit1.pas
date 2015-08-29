@@ -16,6 +16,7 @@ type
     Bevel1: TBevel;
     Bevel2: TBevel;
     BtnDeleteColor: TButton;
+    BtnLoadPaletteAndProps: TButton;
     BtnSavePalette: TButton;
     BtnLoadRndPalette: TButton;
     BtnCreateRndPalette: TButton;
@@ -66,6 +67,7 @@ type
     procedure BtnEditColorClick(Sender: TObject);
     procedure BtnLoadPaletteClick(Sender: TObject);
     procedure BtnLoadRndPaletteClick(Sender: TObject);
+    procedure BtnSavePaletteClick(Sender: TObject);
     procedure CbBuiltinPalettesSelect(Sender: TObject);
     procedure CbBkColorSelect(Sender: TObject);
     procedure CbCustomHintTextChange(Sender: TObject);
@@ -163,20 +165,18 @@ begin
   with OpenDialog do
     if Execute then
     begin
-      ColorPalette.LoadPalette(FileName);
-      UpdateCaption;
+      if Sender = BtnLoadPaletteAndProps then
+        ColorPalette.LoadPalette(FileName, piAll) else
+        ColorPalette.LoadPalette(FileName);
       EdColCount.Value := ColorPalette.ColumnCount;
+      CbSelKind.ItemIndex := ord(Colorpalette.SelectionKind);
+      CbSelColor.Selected := ColorPalette.SelectionColor;
+      CbButtonBorderColor.Selected := ColorPalette.ButtonBorderColor;
+      EdButtonSize.Value := ColorPalette.ButtonWidth;
+      EdButtonDistance.Value := ColorPalette.ButtonDistance;
+      CbFlipped.Checked := ColorPalette.Flipped;
+      UpdateCaption;
     end;
-                     {
-  if not FileExists('..\default.pal') then
-  begin
-    ShowMessage('File "default.pal" not found. Copy it from the TColorPalette folder to the current exe folder.');
-    exit;
-  end;
-  ColorPalette.LoadPalette('..\default.pal');
-  UpdateCaption;
-  EdColCount.Value := ColorPalette.ColumnCount;
-  }
 end;
 
 procedure TMainForm.BtnLoadRndPaletteClick(Sender: TObject);
@@ -184,6 +184,12 @@ begin
   ColorPalette.LoadPalette('random_palette.pal');
   UpdateCaption;
   EdColCount.Value := ColorPalette.ColumnCount;
+end;
+
+procedure TMainForm.BtnSavePaletteClick(Sender: TObject);
+begin
+  if SaveDialog.Execute then
+    ColorPalette.SavePalette(SaveDialog.FileName);
 end;
 
 procedure TMainForm.BtnEditColorClick(Sender: TObject);

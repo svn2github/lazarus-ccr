@@ -22,6 +22,7 @@
     Color palette grid with custom palette support.
     The OnColorPick event is fired when user picks a color.
     The LoadPalette procedure loads custom palette.
+
     Custom palette example:
     
     $COLS 8
@@ -51,7 +52,6 @@ uses
   LCLType;
   
 type
-
   TPickMode = (
     pmDefault,    // Select color at mouse-down, ColorPick event at mouse-up if at same pos
     pmImmediate,  // Select color and ColorPick event at mouse-down
@@ -64,11 +64,26 @@ type
 
   TPaletteSelectionKind = (pskNone, pskThin, pskThinInverted, pskThick, pskThickInverted);
 
-  TColorMouseEvent = procedure (Sender: TObject; AColor: TColor; Shift: TShiftState) of object;
-  TColorPaletteHintEvent = procedure (Sender: TObject; AColor: TColor; var AText: String) of object;
+  TPaletteItem = (
+    piColors, piColumnCount, piFlipped,
+    piButtonBorder, piButtonSize, piButtonDistance,
+    piSelKind, piSelColor
+  );
+  TPaletteItems = set of TPaletteItem;
 
+const
+  piAll = [piColors, piColumnCount, piFlipped,
+    piButtonBorder, piButtonSize, piButtonDistance,
+    piSelKind, piSelColor
+  ];
+
+
+type
 
   { TCustomColorPalette }
+
+  TColorMouseEvent = procedure (Sender: TObject; AColor: TColor; Shift: TShiftState) of object;
+  TColorPaletteHintEvent = procedure (Sender: TObject; AColor: TColor; var AText: String) of object;
 
   TCustomColorPalette = class(TGraphicControl)
   private
@@ -110,13 +125,13 @@ type
     procedure SetColorNames(AIndex: Integer; const AValue: String);
     procedure SetColors(AIndex: Integer; const AValue: TColor);
     procedure SetCols(AValue: Integer);
+    procedure SetFlipped(AValue: Boolean);
     procedure SetGradientSteps(AValue: Byte);
     procedure SetPaletteKind(AValue: TPaletteKind);
     procedure SetPickedIndex(AValue: Integer);
     procedure SetSelectionColor(AValue: TColor);
     procedure SetSelectionKind(AValue: TPaletteSelectionKind);
     procedure SetUseSpacers(AValue: Boolean);
-    procedure SetFlipped(AValue: Boolean);
 
   protected
     procedure BlendWBColor(AColor: TColor; Steps: Integer);
@@ -165,7 +180,8 @@ type
     procedure ClearColors;
     procedure DeleteColor(AIndex: Integer);
     procedure InsertColor(AIndex: Integer; AColor: TColor; AColorName: String = '');
-    procedure LoadPalette(const FileName: String);
+    procedure LoadPalette(const FileName: String;
+      AItems: TPaletteItems = [piColors, piColumnCount]);
     procedure SavePalette(const FileName: String);
   
     property Colors[Index: Integer]: TColor read GetColors write SetColors;
@@ -236,6 +252,11 @@ implementation
 
 uses
   LCLIntf, StrUtils;
+
+const
+  SELKIND_NAMES: Array[TPaletteSelectionKind] of String = (
+    'NONE', 'THIN', 'THIN-INV', 'THICK', 'THICK-INV'
+  );
 
 procedure Register;
 begin
@@ -486,13 +507,15 @@ begin
   DoInsertColor(AIndex, AColor, AColorName);
 end;
 
-procedure TCustomColorPalette.LoadPalette(const FileName: String);
+procedure TCustomColorPalette.LoadPalette(const FileName: String;
+  AItems: TPaletteItems = [piColors, piColumnCount]);
 var
   F: TextFile;
   Line: String;
   C: TColor;
   clrName: String;
   p, steps: Integer;
+  sk: TPaletteSelectionKind;
 
   procedure ParseColor(S: String; out AColor: TColor; out Steps: Integer;
     out ColorName: String);
@@ -578,10 +601,51 @@ begin
       if Line[1] = '$' then
       begin
         if Copy(Line, 2, 4) = 'NONE' then
-          DoAddColor(clNone);
-        if Copy(Line, 2, 4) = 'COLS' then
-          FCols := StrToIntDef(Copy(Line, 6, MaxInt), 8);
-        if Copy(Line, 2, 7) = 'BLENDWB' then
+          DoAddColor(clNone)
+        else
+        if (Copy(Line, 2, 4) = 'COLS') and (piColumnCount in AItems) then
+          FCols := StrToIntDef(Copy(Line, 6, MaxInt), FCols)
+        else
+        if (Copy(Line, 2, 7) = 'BTNDIST') and (piButtonDistance in AItems) then
+          FButtonDistance := StrToIntDef(Copy(Line, 9, MaxInt), FButtonDistance)
+        else
+        if (Copy(Line, 2, 8) = 'BTNWIDTH') and (piButtonSize in AItems) then
+          FButtonWidth := StrToIntDef(Copy(Line, 10, MaxInt), FButtonWidth)
+        else
+        if (Copy(Line, 2, 9) = 'BTNHEIGHT') and (piButtonSize in AItems) then
+          FButtonHeight := StrToIntDef(Copy(Line, 11, MaxInt), FButtonHeight)
+        else
+        if (Copy(Line, 2, 9) = 'BTNBORDER') and (piButtonBorder in AItems) then
+        begin
+          Delete(Line, 1, 11);
+          ParseColor(Line, C, steps, clrName);
+          FButtonBorderColor := C;
+        end else
+        if (Copy(Line, 2, 7) = 'FLIPPED') and (piFlipped in AItems) then
+        begin
+          Delete(Line, 1, 9);
+          case Line of
+            'TRUE' : FFlipped := true;
+            'FALSE': FFlipped := false;
+          end;
+        end else
+        if (Copy(Line, 2, 7) = 'SELKIND') and (piSelKind in AItems) then
+        begin
+          Delete(Line, 1, 9);
+          for sk in TPaletteSelectionKind do
+            if Line = SELKIND_NAMES[sk] then
+            begin
+              FSelectionKind := sk;
+              break;
+            end;
+        end else
+        if (Copy(Line, 2, 8) = 'SELCOLOR') and (piSelColor in AItems) then
+        begin
+          Delete(Line, 1, 10);
+          ParseColor(Line, C, steps, clrName);
+          FSelectionColor := C;
+        end else
+        if (Copy(Line, 2, 7) = 'BLENDWB') and (piColors in AItems) then
         begin
           Delete(Line, 1, 8);
           ParseColor(Line, C, steps, clrName);
@@ -589,7 +653,7 @@ begin
         end;
       end
       else
-        if Pos(',', Line) > 0 then
+        if (Pos(',', Line) > 0) and (piColors in AItems) then
         begin
           ParseColor(Line, C, steps, clrName);
           DoAddColor(C, clrName);
@@ -807,7 +871,17 @@ var
 begin
   L := TStringList.Create;
   try
+    L.Add('# PROPERTIES');
+    L.Add(Format('$BTNBORDER %d, %d, %d', [Red(FButtonBorderColor), Green(FButtonBorderColor), Blue(FButtonBorderColor)]));
+    L.ADd(Format('$BTNWIDTH %d', [FButtonWidth]));
+    L.Add(Format('$BTNHEIGHT %d', [FButtonHeight]));
+    L.Add(Format('$BTNDIST %d', [FButtonDistance]));
+    L.Add(Format('$SELKIND %s', [SELKIND_NAMES[FSelectionKind]]));
+    L.Add(Format('$SELCOLOR %d, %d, %d', [Red(FSelectionColor), Green(FSelectionColor), Blue(FSelectionColor)]));
+    L.Add(Format('$FLIPPED %s', [BoolToStr(FFlipped, 'TRUE', 'FALSE')]));
     L.Add(Format('$COLS %d', [FCols]));
+    L.Add('');
+    L.Add('# COLORS');
     for i:=0 to FColors.Count-1 do begin
       clr := Colors[i];
       if clr = clNone then

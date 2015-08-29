@@ -1,22 +1,22 @@
 object MainForm: TMainForm
   Left = 394
-  Height = 555
+  Height = 586
   Top = 287
   Width = 625
   Caption = 'MainForm'
-  ClientHeight = 555
+  ClientHeight = 586
   ClientWidth = 625
   OnCreate = FormCreate
   ShowHint = True
   LCLVersion = '1.5'
   object LeftPanel: TPanel
     Left = 0
-    Height = 555
+    Height = 586
     Top = 0
     Width = 160
     Align = alLeft
     BevelOuter = bvNone
-    ClientHeight = 555
+    ClientHeight = 586
     ClientWidth = 160
     TabOrder = 0
     object ColorSample: TShape
@@ -50,7 +50,7 @@ object MainForm: TMainForm
     object BtnLoadRndPalette: TButton
       Left = 10
       Height = 25
-      Top = 408
+      Top = 437
       Width = 137
       Caption = 'Load random palette'
       Enabled = False
@@ -60,7 +60,7 @@ object MainForm: TMainForm
     object BtnCreateRndPalette: TButton
       Left = 10
       Height = 25
-      Top = 379
+      Top = 408
       Width = 137
       Caption = 'Create random palette'
       OnClick = BtnCreateRndPaletteClick
@@ -69,7 +69,7 @@ object MainForm: TMainForm
     object BtnAddColor: TButton
       Left = 10
       Height = 25
-      Top = 485
+      Top = 514
       Width = 137
       Caption = 'Add color...'
       OnClick = BtnAddColorClick
@@ -87,7 +87,7 @@ object MainForm: TMainForm
     object BtnDeleteColor: TButton
       Left = 10
       Height = 25
-      Top = 514
+      Top = 543
       Width = 137
       Caption = 'Delete color #0'
       OnClick = BtnDeleteColorClick
@@ -96,9 +96,10 @@ object MainForm: TMainForm
     object BtnSavePalette: TButton
       Left = 10
       Height = 25
-      Top = 446
+      Top = 475
       Width = 137
       Caption = 'Save palette...'
+      OnClick = BtnSavePaletteClick
       TabOrder = 6
     end
     object LblGradientSteps: TLabel
@@ -175,10 +176,19 @@ object MainForm: TMainForm
       Visible = False
       WordWrap = True
     end
+    object BtnLoadPaletteAndProps: TButton
+      Left = 10
+      Height = 25
+      Top = 367
+      Width = 137
+      Caption = 'Load palette && props...'
+      OnClick = BtnLoadPaletteClick
+      TabOrder = 9
+    end
   end
   object Bevel1: TBevel
     Left = 160
-    Height = 539
+    Height = 570
     Top = 8
     Width = 3
     Align = alLeft
@@ -188,12 +198,12 @@ object MainForm: TMainForm
   end
   object RightPanel: TPanel
     Left = 465
-    Height = 555
+    Height = 586
     Top = 0
     Width = 160
     Align = alRight
     BevelOuter = bvNone
-    ClientHeight = 555
+    ClientHeight = 586
     ClientWidth = 160
     TabOrder = 1
     object LblButtonDistance: TLabel
@@ -415,7 +425,7 @@ object MainForm: TMainForm
   end
   object Bevel2: TBevel
     Left = 462
-    Height = 539
+    Height = 570
     Top = 8
     Width = 3
     Align = alRight
@@ -425,7 +435,7 @@ object MainForm: TMainForm
   end
   object ScrollBox: TScrollBox
     Left = 168
-    Height = 539
+    Height = 570
     Top = 8
     Width = 287
     HorzScrollBar.Increment = 15
@@ -438,7 +448,7 @@ object MainForm: TMainForm
     VertScrollBar.Tracking = True
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderStyle = bsNone
-    ClientHeight = 539
+    ClientHeight = 570
     ClientWidth = 287
     TabOrder = 2
     object ColorPalette: TColorPalette
