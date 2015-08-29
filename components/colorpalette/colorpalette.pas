@@ -512,6 +512,7 @@ procedure TCustomColorPalette.LoadPalette(const FileName: String;
 var
   F: TextFile;
   Line: String;
+  ucline: String;
   C: TColor;
   clrName: String;
   p, steps: Integer;
@@ -598,54 +599,55 @@ begin
       if p > 0 then
         Line := TrimRight(Copy(Line, 1, p-1));
       // Parse data lines
-      if Line[1] = '$' then
+      ucLine := Uppercase(Line);
+      if ucLine[1] = '$' then
       begin
-        if Copy(Line, 2, 4) = 'NONE' then
+        if Copy(ucLine, 2, 4) = 'NONE' then
           DoAddColor(clNone)
         else
-        if (Copy(Line, 2, 4) = 'COLS') and (piColumnCount in AItems) then
+        if (Copy(ucLine, 2, 4) = 'COLS') and (piColumnCount in AItems) then
           FCols := StrToIntDef(Copy(Line, 6, MaxInt), FCols)
         else
-        if (Copy(Line, 2, 7) = 'BTNDIST') and (piButtonDistance in AItems) then
+        if (Copy(ucLine, 2, 7) = 'BTNDIST') and (piButtonDistance in AItems) then
           FButtonDistance := StrToIntDef(Copy(Line, 9, MaxInt), FButtonDistance)
         else
-        if (Copy(Line, 2, 8) = 'BTNWIDTH') and (piButtonSize in AItems) then
+        if (Copy(ucLine, 2, 8) = 'BTNWIDTH') and (piButtonSize in AItems) then
           FButtonWidth := StrToIntDef(Copy(Line, 10, MaxInt), FButtonWidth)
         else
-        if (Copy(Line, 2, 9) = 'BTNHEIGHT') and (piButtonSize in AItems) then
+        if (Copy(ucLine, 2, 9) = 'BTNHEIGHT') and (piButtonSize in AItems) then
           FButtonHeight := StrToIntDef(Copy(Line, 11, MaxInt), FButtonHeight)
         else
-        if (Copy(Line, 2, 9) = 'BTNBORDER') and (piButtonBorder in AItems) then
+        if (Copy(ucLine, 2, 9) = 'BTNBORDER') and (piButtonBorder in AItems) then
         begin
           Delete(Line, 1, 11);
           ParseColor(Line, C, steps, clrName);
           FButtonBorderColor := C;
         end else
-        if (Copy(Line, 2, 7) = 'FLIPPED') and (piFlipped in AItems) then
+        if (Copy(ucLine, 2, 7) = 'FLIPPED') and (piFlipped in AItems) then
         begin
-          Delete(Line, 1, 9);
-          case Line of
+          Delete(ucLine, 1, 9);
+          case ucLine of
             'TRUE' : FFlipped := true;
             'FALSE': FFlipped := false;
           end;
         end else
-        if (Copy(Line, 2, 7) = 'SELKIND') and (piSelKind in AItems) then
+        if (Copy(ucLine, 2, 7) = 'SELKIND') and (piSelKind in AItems) then
         begin
-          Delete(Line, 1, 9);
+          Delete(ucLine, 1, 9);
           for sk in TPaletteSelectionKind do
-            if Line = SELKIND_NAMES[sk] then
+            if ucLine = SELKIND_NAMES[sk] then
             begin
               FSelectionKind := sk;
               break;
             end;
         end else
-        if (Copy(Line, 2, 8) = 'SELCOLOR') and (piSelColor in AItems) then
+        if (Copy(ucLine, 2, 8) = 'SELCOLOR') and (piSelColor in AItems) then
         begin
           Delete(Line, 1, 10);
           ParseColor(Line, C, steps, clrName);
           FSelectionColor := C;
         end else
-        if (Copy(Line, 2, 7) = 'BLENDWB') and (piColors in AItems) then
+        if (Copy(ucLine, 2, 7) = 'BLENDWB') and (piColors in AItems) then
         begin
           Delete(Line, 1, 8);
           ParseColor(Line, C, steps, clrName);
