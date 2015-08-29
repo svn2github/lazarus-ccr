@@ -189,7 +189,6 @@ type
     property SubCaption;
     //default properties
     property Align;
-    property Anchors;
     property BorderSpacing;
     property BorderWidth;
     property DragCursor;
