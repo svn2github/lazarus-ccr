@@ -315,7 +315,7 @@ begin
   MousecolorSample.Brush.Color := Colorpalette.MouseColor;
   if MouseColorSample.Brush.Color = clNone then
     MouseColorSample.Brush.Style := bsClear else
-    MouseColorSample.Brush.Style := bsSolid;
+  MouseColorSample.Brush.Style := bsSolid;
   SetColorInfo(LblMouseColorInfo, 'Mouse color', ColorPalette.MouseIndex);
 end;
 

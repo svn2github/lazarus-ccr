@@ -10,9 +10,9 @@ uses
 
 type
 
-  { TForm1 }
+  { TMainForm }
 
-  TForm1 = class(TForm)
+  TMainForm = class(TForm)
     ColorPalette: TColorPalette;
     CoolBar: TCoolBar;
     ImageList: TImageList;
@@ -30,6 +30,8 @@ type
       Shift: TShiftState);
     procedure ColorPaletteColorPick(Sender: TObject; AColor: TColor;
       Shift: TShiftState);
+    procedure ColorPaletteMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
     procedure FormCreate(Sender: TObject);
     procedure MainPanelPaint(Sender: TObject);
     procedure TbChangeOrientationClick(Sender: TObject);
@@ -42,21 +44,22 @@ type
   end;
 
 var
-  Form1: TForm1;
+  MainForm: TMainForm;
 
 implementation
 
 {$R *.lfm}
 
-{ TForm1 }
+{ TMainForm }
 
 { OnColorMouseMove is called when the mouse enters a different color button,
   or when the ColorPalette is left. }
-procedure TForm1.ColorPaletteColorMouseMove(Sender: TObject; AColor: TColor;
+procedure TMainForm.ColorPaletteColorMouseMove(Sender: TObject; AColor: TColor;
   Shift: TShiftState);
 var
   clrName: String;
 begin
+  (*
   if ColorPalette.MouseColor = clNone then
     Shape2.Brush.Style := bsClear
   else begin
@@ -68,12 +71,13 @@ begin
   else
     clrName := ColorPalette.ColorNames[ColorPalette.MouseIndex];
   LblMouseColor.Caption := 'Mouse color:'#13 + clrName;
+  *)
 end;
 
 { OnColorPick is called whenever a color button is clicked.
   A left-click defines the start color of the gradient of the main panel,
   a right-click defines its end color. }
-procedure TForm1.ColorPaletteColorPick(Sender: TObject; AColor: TColor;
+procedure TMainForm.ColorPaletteColorPick(Sender: TObject; AColor: TColor;
   Shift: TShiftState);
 begin
   // Select gradient start color with left mouse button
@@ -124,7 +128,29 @@ begin
   MainPanel.Invalidate;
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TMainForm.ColorPaletteMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+var
+  clrName: String;
+begin
+  if ColorPalette.MouseColor = clNone then
+  begin
+    Shape2.Brush.Style := bsClear;
+    Shape2.Pen.Style := psDot;
+  end else
+  begin
+    Shape2.Brush.Style := bsSolid;
+    Shape2.Brush.Color := ColorPalette.MouseColor;
+    Shape2.Pen.Style := psSolid;
+  end;
+  if ColorPalette.MouseIndex = -1 then
+    clrName := 'clNone'
+  else
+    clrName := ColorPalette.ColorNames[ColorPalette.MouseIndex];
+  LblMouseColor.Caption := 'Mouse color:'#13 + clrName;
+end;
+
+procedure TMainForm.FormCreate(Sender: TObject);
 begin
   Toolbar.BorderSpacing.Left := 0;
   Toolbar.AutoSize := true;
@@ -133,7 +159,7 @@ begin
   // Paint the three color boxes
   ColorPaletteColorPick(self, ColorPalette.Colors[0], [ssLeft]);
   ColorPaletteColorPick(self, ColorPalette.Colors[ColorPalette.ColorCount-1], [ssRight]);
-  ColorPaletteColorMouseMove(self, ColorPalette.MouseColor, []);
+  ColorPaletteMouseMove(self, [], 0, 0);
 
   // For Laz 1.4.2 where TPanel.OnPaint is not published:
   MainPanel.OnPaint := @MainPanelPaint;
@@ -142,7 +168,7 @@ end;
 { Paints a color gradient onto the main panel of the form. The gradient is
   defined by the FStartColor and FEndColor obtained by clicks into the
   ColorPalette. }
-procedure TForm1.MainPanelPaint(Sender: TObject);
+procedure TMainForm.MainPanelPaint(Sender: TObject);
 begin
   MainPanel.Canvas.GradientFill(MainPanel.ClientRect,
     FStartColor,
@@ -152,7 +178,7 @@ begin
 end;
 
 { Fires when the "Flip" button is clicked }
-procedure TForm1.TbChangeOrientationClick(Sender: TObject);
+procedure TMainForm.TbChangeOrientationClick(Sender: TObject);
 var
   i: Integer;
 begin

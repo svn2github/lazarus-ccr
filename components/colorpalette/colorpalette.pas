@@ -135,8 +135,8 @@ type
 
   protected
     procedure BlendWBColor(AColor: TColor; Steps: Integer);
-    procedure ColorPick(AIndex: Integer; Shift: TShiftState); dynamic;
-    procedure ColorMouseMove(AColor: TColor; Shift: TShiftState); dynamic;
+    procedure ColorPick(AIndex: Integer; Shift: TShiftState); virtual;
+    procedure ColorMouseMove(AColor: TColor; Shift: TShiftState); virtual;
     procedure DoAddColor(AColor: TColor; AColorName: String = ''); virtual;
     procedure DoColorPick(AColor: TColor; AShift: TShiftState); virtual;
     procedure DoDeleteColor(AIndex: Integer); virtual;
@@ -168,7 +168,7 @@ type
     property UseSpacers: Boolean read FUseSpacers write SetUseSpacers default true;
 
     property OnColorPick: TColorMouseEvent read FOnColorPick write FOnColorPick;
-    property OnColorMouseMove: TColorMouseEvent read FOnColorMouseMove write FOnColorMouseMove;
+    property OnColorMouseMove: TColorMouseEvent read FOnColorMouseMove write FOnColorMouseMove; deprecated 'Use OnMouseMove() and MouseColor';
     property OnGetHintText: TColorPaletteHintEvent read FOnGetHintText write FOnGetHintText;
 
   public
@@ -434,9 +434,9 @@ begin
   Result := -1;
   if FFlipped then
   begin
-    if (Y < 0) or (Y > FSizeToLastCol) then exit;
+    if (Y < 0) or (Y >= FSizeToLastCol-1) then exit;
   end else
-    if (X < 0) or (X > FSizeToLastCol) then exit;
+    if (X < 0) or (X >= FSizeToLastCol-1) then exit;
 
   W := GetCellWidth;
   H := GetCellHeight;
@@ -702,15 +702,15 @@ begin
   inherited;
   Hint := FSavedHint;
   FMouseIndex := -1;
-  ColorMouseMove(MouseColor, []);
+  if Assigned(OnMouseMove) then
+    OnMouseMove(self, GetKeyShiftState, FMousePt.X, FMousePt.Y);
+//  ColorMouseMove(MouseColor, []);
 end;
 
 procedure TCustomColorPalette.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
   C: TColor;
 begin
-  inherited;
-
   FMouseIndex := GetColorIndex(X, Y);
   C := GetColors(FMouseIndex);
   ColorMouseMove(C, Shift);
@@ -731,6 +731,8 @@ begin
     ColorPick(FMouseIndex, Shift);
 
   FPrevMouseIndex := FMouseIndex;
+
+  inherited;
 end;
 
 procedure TCustomColorPalette.MouseUp(Button: TMouseButton;
@@ -1296,7 +1298,7 @@ begin
   begin
     dec(dx);
     dec(dy);
-    d := -1;   // Needed to correct for button frame line width
+    d := 0;
   end;
 
   if FFlipped then  // Rows and columns are interchanged here !!!

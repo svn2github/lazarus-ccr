@@ -1,9 +1,9 @@
-object Form1: TForm1
+object MainForm: TMainForm
   Left = 290
   Height = 491
   Top = 160
   Width = 633
-  Caption = 'Form1'
+  Caption = 'MainForm'
   ClientHeight = 491
   ClientWidth = 633
   OnCreate = FormCreate
@@ -161,6 +161,7 @@ object Form1: TForm1
       ParentColor = False
       ParentShowHint = False
       ShowHint = True
+      OnMouseMove = ColorPaletteMouseMove
     end
   end
   object ImageList: TImageList
