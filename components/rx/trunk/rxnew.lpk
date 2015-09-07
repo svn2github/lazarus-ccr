@@ -24,7 +24,7 @@ Copyright (c) 1998 Master-Bank
 translate to Lazarus by alexs in 2005 - 2015
 "/>
     <License Value="LGPL"/>
-    <Version Major="2" Minor="8" Release="1" Build="170"/>
+    <Version Major="2" Minor="8" Release="2" Build="181"/>
     <Files Count="72">
       <Item1>
         <Filename Value="autopanel.pas"/>

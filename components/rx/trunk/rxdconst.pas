@@ -213,6 +213,7 @@ resourcestring
   sSetupTotalRow             = 'Setup total row';
   sCollumnName               = 'Column name';
   sFunction                  = 'Function';
+  sBlobText                  = '(blob)';
 
 
 

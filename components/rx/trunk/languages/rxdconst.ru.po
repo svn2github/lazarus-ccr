@@ -5,6 +5,10 @@ msgstr "Content-Type: text/plain; charset=UTF-8"
 msgid "Application \"%s\""
 msgstr "Программа \"%s\""
 
+#: rxdconst.sblobtext
+msgid "(blob)"
+msgstr "(примечание)"
+
 #: rxdconst.sbottomcaption
 msgid "Bottom"
 msgstr "Снизу"

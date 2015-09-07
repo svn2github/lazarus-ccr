@@ -5,6 +5,10 @@ msgstr "Content-Type: text/plain; charset=UTF-8"
 msgid "Application \"%s\""
 msgstr ""
 
+#: rxdconst.sblobtext
+msgid "(blob)"
+msgstr ""
+
 #: rxdconst.sbottomcaption
 msgid "Bottom"
 msgstr ""

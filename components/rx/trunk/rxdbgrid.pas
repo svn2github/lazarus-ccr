@@ -69,11 +69,8 @@ type
 
 //Freeman35 added
   TOnRxCalcFooterValues = procedure(Sender: TObject; Column: TRxColumn; var AValue : Variant) of object;
-
-{$IFDEF RxDBGridDepricatedProps}
-  //TRxDBGridAllowedOperation = (aoInsert, aoUpdate, aoDelete, aoAppend);
-  //TRxDBGridAllowedOperations = set of TRxDBGridAllowedOperation;
-{$ENDIF}
+  TOnRxColumnFooterDraw = procedure(Sender: TObject; ABrush: TBrush; AFont : TFont;
+    const Rect: TRect; Column: TRxColumn; var AText :String) of object;
 
   TRxColumnOption = (coCustomizeVisible, coCustomizeWidth, coFixDecimalSeparator, coDisableDialogFind);
   TRxColumnOptions = set of TRxColumnOption;
@@ -203,6 +200,20 @@ type
     property Style: TTitleStyle read FStyle write SetStyle default tsLazarus;
   end;
 
+  { TRxDBGridColumnDefValues }
+
+  TRxDBGridColumnDefValues = class(TPersistent)
+  private
+    FBlobText: string;
+    FOwner: TRxDBGrid;
+  protected
+    procedure AssignTo(Dest: TPersistent); override;
+  public
+    constructor Create(AOwner: TRxDBGrid);
+    destructor Destroy; override;
+  published
+    property BlobText:string read FBlobText write FBlobText;
+  end;
 
   { TRxDBGridSortEngine }
   TRxSortEngineOption = (seoCaseInsensitiveSort);
@@ -251,65 +262,6 @@ type
     property ShowHint: boolean read FShowHint write FShowHint default False;
   end;
 
-  { TRxColumnFooter }
-(*
-  TRxColumnFooter = class(TPersistent)
-  private
-    FIsDefaultFont: boolean;
-    FLayout: TTextLayout;
-    FOwner: TRxColumn;
-    FAlignment: TAlignment;
-    FDisplayFormat: string;
-    FFieldName: string;
-    FField:TField;
-    FFont: TFont;
-    FValue: string;
-    FValueType: TFooterValueType;
-    FTestValue: double;
-    FCountRec:integer;
-    procedure FontChanged(Sender: TObject);
-    function GetFont: TFont;
-    function IsFontStored: Boolean;
-    procedure SetAlignment(const AValue: TAlignment);
-    procedure SetDisplayFormat(const AValue: string);
-    procedure SetFieldName(const AValue: string);
-    procedure SetFont(AValue: TFont);
-    procedure SetLayout(const AValue: TTextLayout);
-    procedure SetValue(const AValue: string);
-    procedure SetValueType(const AValue: TFooterValueType);
-    function GetFieldValue: string;
-    function GetRecordsCount: string;
-    function GetRecNo: string;
-    function GetStatTotal: string;
-    procedure ResetTestValue;
-    procedure UpdateTestValue;
-
-    function DeleteTestValue: boolean;
-    function PostTestValue: boolean;
-    function ErrorTestValue: boolean;
-  protected
-    procedure UpdateTestValueFromVar(AValue:Variant);
-    property  IsDefaultFont: boolean read FIsDefaultFont;
-  public
-    constructor Create(Owner: TRxColumn);
-    destructor Destroy; override;
-    function DisplayText: string;
-    procedure FillDefaultFont;
-
-    property Owner: TRxColumn read FOwner;
-    property NumericValue: double read FTestValue;
-    property CountRec:integer read FCountRec;
-  published
-    property Alignment: TAlignment read FAlignment write SetAlignment default
-      taLeftJustify;
-    property Layout: TTextLayout read FLayout write SetLayout default tlCenter;
-    property DisplayFormat: string read FDisplayFormat write SetDisplayFormat;
-    property FieldName: string read FFieldName write SetFieldName;
-    property Value: string read FValue write SetValue;
-    property ValueType: TFooterValueType read FValueType write SetValueType default fvtNon;
-    property Font: TFont read GetFont write SetFont stored IsFontStored;
-  end;
-*)
   { TRxColumnFooterItem }
 
   TRxColumnFooterItem = class(TCollectionItem)
@@ -498,7 +450,6 @@ type
   private
     FDirectInput: boolean;
     FEditButtons: TRxColumnEditButtons;
-(*    FFooter: TRxColumnFooter; *)
     FFooter: TRxColumnFooterItem;
     FConstraints:TRxDBGridCollumnConstraints;
     FFilter: TRxColumnFilter;
@@ -513,7 +464,6 @@ type
     FWordWrap: boolean;
     FFooters: TRxColumnFooterItems;
     function GetConstraints: TRxDBGridCollumnConstraints;
-(*    function GetFooter: TRxColumnFooter; *)
     function GetFooter: TRxColumnFooterItem;
     function GetFooters: TRxColumnFooterItems;
     function GetKeyList: TStrings;
@@ -521,7 +471,6 @@ type
     procedure SetConstraints(AValue: TRxDBGridCollumnConstraints);
     procedure SetEditButtons(AValue: TRxColumnEditButtons);
     procedure SetFilter(const AValue: TRxColumnFilter);
-(*    procedure SetFooter(const AValue: TRxColumnFooter); *)
     procedure SetFooter(const AValue: TRxColumnFooterItem);
     procedure SetFooters(AValue: TRxColumnFooterItems);
     procedure SetImageList(const AValue: TImageList);
@@ -542,7 +491,6 @@ type
     property DirectInput : boolean read FDirectInput write FDirectInput default true;
     property EditButtons:TRxColumnEditButtons read FEditButtons write SetEditButtons;
     property Filter: TRxColumnFilter read FFilter write SetFilter;
-(*    property Footer: TRxColumnFooter read GetFooter write SetFooter; *)
     property Footer: TRxColumnFooterItem read GetFooter write SetFooter;
     property Footers: TRxColumnFooterItems read GetFooters write SetFooters;
     property ImageList: TImageList read FImageList write SetImageList;
@@ -597,12 +545,12 @@ type
   { TRxDBGrid }
   TRxDBGrid = class(TCustomDBGrid)
   private
+    FColumnDefValues: TRxDBGridColumnDefValues;
     FrxDSState:TRxDSState;
     FFooterOptions: TRxDBGridFooterOptions;
     FSortColumns: TRxDbGridColumnsSortList;
     FSortingNow:Boolean;
     FInProcessCalc: integer;
-//    FAllowedOperations: TRxDBGridAllowedOperations;
     //
     FKeyStrokes: TRxDBGridKeyStrokes;
     FOnGetCellProps: TGetCellPropsEvent;
@@ -612,6 +560,7 @@ type
     FOnGetBtnParams: TGetBtnParamsEvent;
     FOnFiltred: TNotifyEvent;
     FOnRxCalcFooterValues :TOnRxCalcFooterValues;
+    FOnRxColumnFooterDraw :TOnRxColumnFooterDraw;
     //auto sort support
 
     FMarkerUp   : TBitmap;
@@ -658,7 +607,6 @@ type
     FOnSortChanged: TNotifyEvent;
 
     procedure DoCreateJMenu;
-    //function GetAllowedOperations: TRxDBGridAllowedOperations;
     function GetColumns: TRxDbGridColumns;
     function GetFooterColor: TColor;
     function GetFooterRowCount: integer;
@@ -670,10 +618,8 @@ type
     function GetTitleButtons: boolean;
     function IsColumnsStored: boolean;
 
-{$IFDEF RxDBGridDepricatedProps}
-    procedure SetAllowedOperations(AValue: TRxDBGridAllowedOperations);
-{$ENDIF}
     procedure SetAutoSort(const AValue: boolean);
+    procedure SetColumnDefValues(AValue: TRxDBGridColumnDefValues);
     procedure SetColumns(const AValue: TRxDbGridColumns);
     procedure SetFooterColor(const AValue: TColor);
     procedure SetFooterOptions(AValue: TRxDBGridFooterOptions);
@@ -724,8 +670,6 @@ type
   protected
     FRxDbGridLookupComboEditor: TCustomControl;
     FRxDbGridDateEditor: TWinControl;
-    //procedure UpdateHorzScrollBar(const aVisible: boolean; const aRange,aPage,aPos: Integer); override;
-    //procedure UpdateVertScrollbar(const aVisible: boolean; const aRange,aPage,aPos: Integer); override;
 
     procedure CollumnSortListUpdate;
     procedure CollumnSortListClear;
@@ -842,36 +786,25 @@ type
     property MarkerUp : TBitmap read GetMarkerUp write SetMarkerUp;
     property MarkerDown : TBitmap read GetMarkerDown write SetMarkerDown;
   published
-    property AfterQuickSearch: TRxQuickSearchNotifyEvent
-      read FAfterQuickSearch write FAfterQuickSearch;
-    property BeforeQuickSearch: TRxQuickSearchNotifyEvent
-      read FBeforeQuickSearch write FBeforeQuickSearch;
-    property OnGetBtnParams: TGetBtnParamsEvent
-      read FOnGetBtnParams write FOnGetBtnParams;
+    property AfterQuickSearch: TRxQuickSearchNotifyEvent read FAfterQuickSearch write FAfterQuickSearch;
+    property ColumnDefValues:TRxDBGridColumnDefValues read FColumnDefValues write SetColumnDefValues;
+    property BeforeQuickSearch: TRxQuickSearchNotifyEvent read FBeforeQuickSearch write FBeforeQuickSearch;
+    property OnGetBtnParams: TGetBtnParamsEvent read FOnGetBtnParams write FOnGetBtnParams;
     property TitleButtons: boolean read GetTitleButtons write SetTitleButtons;
     property AutoSort: boolean read FAutoSort write SetAutoSort;
-    property OnGetCellProps: TGetCellPropsEvent
-      read FOnGetCellProps write FOnGetCellProps;
-    property Columns: TRxDbGridColumns
-      read GetColumns write SetColumns stored IsColumnsStored;
+    property OnGetCellProps: TGetCellPropsEvent read FOnGetCellProps write FOnGetCellProps;
+    property Columns: TRxDbGridColumns read GetColumns write SetColumns stored IsColumnsStored;
     property KeyStrokes: TRxDBGridKeyStrokes read FKeyStrokes write SetKeyStrokes;
     property FooterOptions:TRxDBGridFooterOptions read FFooterOptions write SetFooterOptions;
 
     //storage
-    property PropertyStorage: TCustomPropertyStorage
-      read GetPropertyStorage write SetPropertyStorage;
+    property PropertyStorage: TCustomPropertyStorage read GetPropertyStorage write SetPropertyStorage;
     property Version: integer read FVersion write FVersion default 0;
-    {$IFDEF RxDBGridDepricatedProps}
-    property AllowedOperations: TRxDBGridAllowedOperations
-      read GetAllowedOperations write SetAllowedOperations default [aoInsert, aoUpdate, aoDelete, aoAppend]; deprecated;
-    {$ENDIF}
     property OptionsRx: TOptionsRx read FOptionsRx write SetOptionsRx;
     property FooterColor: TColor read GetFooterColor write SetFooterColor default clWindow; deprecated;
     property FooterRowCount: integer read GetFooterRowCount write SetFooterRowCount default 0; deprecated;
 
     property OnFiltred: TNotifyEvent read FOnFiltred write FOnFiltred;
-//    property Constraints:TRxDBGridCollumnConstraints read GetConstraints write SetConstraints;
-
     property OnSortChanged: TNotifyEvent read FOnSortChanged write FOnSortChanged;
 
     //from DBGrid
@@ -963,6 +896,7 @@ type
     property OnStartDrag;
     property OnTitleClick;
     property OnRxCalcFooterValues: TOnRxCalcFooterValues read FOnRxCalcFooterValues write FOnRxCalcFooterValues;
+    property OnRxColumnFooterDraw: TOnRxColumnFooterDraw read FOnRxColumnFooterDraw write FOnRxColumnFooterDraw;
     property OnUserCheckboxBitmap;
     property OnUserCheckboxState;
     property OnUTF8KeyPress;
@@ -1098,6 +1032,30 @@ type
     //procedure SetBounds(aLeft, aTop, aWidth, aHeight: integer); override;
     procedure EditingDone; override;
   end;
+
+{ TRxDBGridColumnDefValues }
+
+procedure TRxDBGridColumnDefValues.AssignTo(Dest: TPersistent);
+begin
+  if Dest is TRxDBGridColumnDefValues then
+  begin
+    TRxDBGridColumnDefValues(Dest).FBlobText:=FBlobText;
+  end
+  else
+    inherited AssignTo(Dest);
+end;
+
+constructor TRxDBGridColumnDefValues.Create(AOwner: TRxDBGrid);
+begin
+  inherited Create;
+  FOwner:=AOwner;
+  FBlobText:=sBlobText;
+end;
+
+destructor TRxDBGridColumnDefValues.Destroy;
+begin
+  inherited Destroy;
+end;
 
 { TRxColumnFooterItem }
 
@@ -2448,6 +2406,11 @@ begin
   end;
 end;
 
+procedure TRxDBGrid.SetColumnDefValues(AValue: TRxDBGridColumnDefValues);
+begin
+  FColumnDefValues.AssignTo(AValue);
+end;
+
 function TRxDBGrid.GetColumns: TRxDbGridColumns;
 begin
   Result := TRxDbGridColumns(TCustomDrawGrid(Self).Columns);
@@ -2513,24 +2476,6 @@ begin
   CreateMenuItem(#0, sRxDBGridCopyCellValue, @OnCopyCellValue);
 end;
 
-{$IFDEF RxDBGridDepricatedProps}
-function TRxDBGrid.GetAllowedOperations: TRxDBGridAllowedOperations;
-begin
-  Result:=[];
-  if dgDisableInsert in Options then
-    Result:=Result - [aoInsert, aoAppend]
-  else
-    Result:=Result + [aoInsert, aoAppend]
-    ;
-
-  if dgDisableDelete in Options then
-    Result:=Result - [aoDelete]
-  else
-    Result:=Result + [aoDelete]
-    ;
-end;
-{$ENDIF}
-
 function TRxDBGrid.GetPropertyStorage: TCustomPropertyStorage;
 begin
   Result := FPropertyStorageLink.Storage;
@@ -2561,22 +2506,6 @@ function TRxDBGrid.IsColumnsStored: boolean;
 begin
   Result := TRxDbGridColumns(TCustomDrawGrid(Self).Columns).Enabled;
 end;
-
-{$IFDEF RxDBGridDepricatedProps}
-procedure TRxDBGrid.SetAllowedOperations(AValue: TRxDBGridAllowedOperations);
-begin
-//  FAllowedOperations:=AValue;
-  if [aoInsert, aoAppend] * AValue <> [aoInsert, aoAppend] then
-    Options:=Options - [dgDisableInsert]
-  else
-    Options:=Options + [dgDisableInsert];
-
-  if aoDelete in AValue then
-    Options:=Options - [dgDisableDelete]
-  else
-    Options:=Options + [dgDisableDelete]
-end;
-{$ENDIF}
 
 procedure TRxDBGrid.SetColumns(const AValue: TRxDbGridColumns);
 begin
@@ -3816,7 +3745,7 @@ begin
               end;
             end
             else
-              S := '(blob)';
+              S := FColumnDefValues.FBlobText;
           end
           else
             S := '';
@@ -3983,6 +3912,9 @@ var
   TxS: TTextStyle;
   j: Integer;
   FItem: TRxColumnFooterItem;
+//FreeMan35 added
+  AText: String;
+  ABrush: TBrush;
 begin
   TotalWidth := GCache.ClientWidth;
   TotalYOffs := GCache.ClientHeight - (DefaultRowHeight * FFooterOptions.RowCount);
@@ -4011,6 +3943,8 @@ begin
       Canvas.MoveTo(R.Right - 1, R.Top);
       Canvas.LineTo(R.Right - 1, RowHeights[0]);
     end;
+
+    ABrush := nil;//initialize, no need create everytime.
 
     R.Top := TotalYOffs;
     R.Bottom := TotalYOffs + DefaultRowHeight;
@@ -4055,14 +3989,30 @@ begin
               Canvas.Font:=FItem.Font
             else
               Canvas.Font:=Font;
-            DrawCellText(i, 0, R, [], FItem.DisplayText);
+
+            if not Assigned(OnRxColumnFooterDraw) then begin
+             DrawCellText(i, 0, R, [], FItem.DisplayText);
+            end
+            else
+            begin
+              if not Assigned(ABrush)then ABrush := TBrush.Create;
+              ABrush.Assign(Canvas.Brush);//Backup Brush info
+              AText := FItem.DisplayText;
+              OnRxColumnFooterDraw(Self, Canvas.Brush, Canvas.Font, R, C, AText);
+              Canvas.FillRect(R);//need repaint cell
+              DrawCellGrid(i, 0, R, []);//need reDraw cell
+              DrawCellText(i, 0, R, [], AText);
+              Canvas.Brush.Assign(ABrush);//Restore Brush info
+            end;
           end;
-        end;
+        end;//Assigned(C)
       end;
 
       R.Top := R.Bottom;
       R.Bottom := R.Bottom + DefaultRowHeight;
     end;
+
+    if assigned(ABrush)then FreeAndNil(ABrush);
 
     if FDrawFullLine then
     begin
@@ -5626,6 +5576,7 @@ begin
   Options := Options - [dgCancelOnExit];
 {$ENDIF}
   FToolsList:=TFPList.Create;
+  FColumnDefValues:=TRxDBGridColumnDefValues.Create(Self);
 
   FSortColumns:=TRxDbGridColumnsSortList.Create;
 
@@ -5633,11 +5584,9 @@ begin
   FMarkerDown := LoadLazResBitmapImage('rx_markerdown');
 
   Options := Options - [dgTabs];
-  OptionsRx := OptionsRx + [rdgAllowColumnsForm, rdgAllowDialogFind,
-    rdgAllowQuickFilter];
+  OptionsRx := OptionsRx + [rdgAllowColumnsForm, rdgAllowDialogFind, rdgAllowQuickFilter];
 
   FAutoSort := True;
-  //  FTitleButtons:=True;
 
   F_Clicked := False;
   F_MenuBMP := LoadLazResBitmapImage('menu_grid');
@@ -5653,8 +5602,6 @@ begin
   FPropertyStorageLink := TPropertyStorageLink.Create;
   FPropertyStorageLink.OnSave := @OnIniSave;
   FPropertyStorageLink.OnLoad := @OnIniLoad;
-
-//  FAllowedOperations := [aoInsert, aoUpdate, aoDelete, aoAppend];
 
   FFilterListEditor := TFilterListCellEditor.Create(nil);
   with FFilterListEditor do
@@ -5700,6 +5647,7 @@ begin
 
   FreeAndNil(FKeyStrokes);
   FreeAndNil(FToolsList);
+  FreeAndNil(FColumnDefValues);
   inherited Destroy;
   FreeAndNil(FSortColumns);
 end;
@@ -6717,9 +6665,7 @@ begin
 end;
 
 initialization
-  {$IFNDEF RxDBGridDepricatedProps}
   RegisterPropertyToSkip( TRxDBGrid, 'AllowedOperations', 'This property duplicated standart DBGrid.Options', '');
-  {$ENDIF}
 
   {$I rxdbgrid.lrs}
   //  {$I rx_markerdown.lrs}

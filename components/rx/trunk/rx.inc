@@ -57,6 +57,4 @@
 {$ELSE}
 {$ENDIF}
 
-{.$DEFINE RxDBGridDepricatedProps}
-
 {.$DEFINE OLD_fpSPREADSHEET}
