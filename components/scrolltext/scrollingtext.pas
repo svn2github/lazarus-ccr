@@ -239,7 +239,7 @@ begin
     //reset buffer font
     FBuffer.Canvas.Font := fFont;
     FBuffer.Canvas.Font.Style := [];
-    FBuffer.Canvas.Font.Color := clBlack;
+    FBuffer.Canvas.Font.Color := fFont.Color;// clBlack;
 
     //skip empty lines
     if Length(s) > 0 then
