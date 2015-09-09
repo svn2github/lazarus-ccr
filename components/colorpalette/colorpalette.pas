@@ -145,6 +145,7 @@ type
     function GetCellWidth: Integer; inline;
     function GetColorIndex(X,Y: Integer): Integer;
     function GetHintText(AIndex: Integer): String; virtual;
+    procedure Loaded; override;
     procedure MouseDown(Button: TMouseButton; Shift:TShiftState; X, Y:Integer); override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
@@ -505,6 +506,12 @@ procedure TCustomColorPalette.InsertColor(AIndex: Integer; AColor: TColor;
   AColorName: String = '');
 begin
   DoInsertColor(AIndex, AColor, AColorName);
+end;
+
+procedure TCustomColorPalette.Loaded;
+begin
+  inherited;
+  UpdateSize;
 end;
 
 procedure TCustomColorPalette.LoadPalette(const FileName: String;
