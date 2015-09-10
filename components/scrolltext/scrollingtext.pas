@@ -202,14 +202,15 @@ begin
     fLines.Add('http://wiki.lazarus.freepascal.org/Main_Page');
     fLines.Add('mailto:bill_gates@microsoft.com');
     fLines.Add('are clickable by the user');
+    fLines.Add('(each link should be a single line of text)');
     fLines.Add(' ');
     fLines.Add('TScrollingText is released under the GPL license (See About)');
     fLines.Add('Code is modified from the Lazarus ''AboutFrm'' code');
     fLines.Add(' ');
     fLines.Add('The standalone visual component TScrollingText is available at:');
-    fLines.Add('http://www.charcodelvalle.com/scrollingtext/scrollingtext_component.zip');
+    fLines.Add('https://sourceforge.net/p/lazarus-ccr/svn/HEAD/tree/components/');
     fLines.Add(' ');
-    fLines.Add('June 2014');
+    fLines.Add('Sep 2015');
   end;
 end;
 
@@ -394,7 +395,7 @@ begin
   AboutBoxFontName:='Arial';
   AboutBoxFontSize:=10;
   AboutBoxVersion:=C_VERSION;
-  AboutBoxAuthorname:='Gordon Bamber';
+  AboutBoxAuthorname:='Gordon Bamber and Andrey Gunenko';
   AboutBoxOrganisation:='Public Domain';
   AboutBoxAuthorEmail:='minesadorada@charcodelvalle.com';
   AboutBoxLicenseType:='LGPL';
