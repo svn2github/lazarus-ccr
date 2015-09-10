@@ -26,12 +26,12 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs,
-  ExtCtrls, LCLIntf,AboutScrolltextunit;
+  ExtCtrls, LCLIntf,LCLTranslator,AboutScrolltextunit;
 
 const
   C_TEXTFILENAME = 'scrolling.txt';
-  C_TEXTRESOURCENAME = 'scrolltext'; //Note: LResouces unit needed
-  C_VERSION = '1.0.0.0';
+  C_TEXTRESOURCENAME = 'scrolltext'; //Note: LResources unit needed
+  C_VERSION = '1.0.1.0';
 
 type
   TTextSource = (stStringlist, stTextfile, stResource);
@@ -50,6 +50,7 @@ type
     FStepSize: integer;
     FTimer: TTimer;
     FFont: TFont;
+    FLinkFont:TFont;
     FBackColor: TColor;
     fTextFileName: string;
     fResourceName: string;
@@ -62,6 +63,7 @@ type
     procedure DrawScrollingText(Sender: TObject);
     procedure SetLines(AValue: TStrings);
     procedure SetFont(AValue: TFont);
+    procedure SetLinkFont(AValue: TFont);
   protected
     procedure DoOnChangeBounds; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: integer); override;
@@ -90,6 +92,8 @@ type
     property BackColor: TColor read fBackColor write fBackColor default clWindow;
     // Sets the font properties of the scrolling text
     property Font: TFont read fFont write SetFont;
+    // Sets the font properties of links in the scrolling text
+    property LinkFont: TFont read fLinkFont write SetLinkFont;
     // Source of the text to display.
     // If TextSource=stTextfile 'scrolling.txt' should be in the deployed app folder
     // if TextSource=stResource be sure to add LResources to your uses clause
@@ -117,6 +121,11 @@ end;
 procedure TScrollingText.SetFont(AValue: TFont);
 begin
   fFont.Assign(AValue);
+end;
+
+procedure TScrollingText.SetLinkFont(AValue: TFont);
+begin
+  fLinkFont.Assign(AValue);
 end;
 
 procedure TScrollingText.SetLines(AValue: TStrings);
@@ -238,8 +247,8 @@ begin
 
     //reset buffer font
     FBuffer.Canvas.Font := fFont;
-    FBuffer.Canvas.Font.Style := [];
-    FBuffer.Canvas.Font.Color := fFont.Color;// clBlack;
+    FBuffer.Canvas.Font.Style := fFont.Style;
+    FBuffer.Canvas.Font.Color := fFont.Color;
 
     //skip empty lines
     if Length(s) > 0 then
@@ -249,20 +258,24 @@ begin
       begin
         s := copy(s, 2, Length(s) - 1);
         FBuffer.Canvas.Font.Style := [fsBold];
-      end
-      else
+      end;
       begin
         //check for url
-        if (Pos('http://', s) = 1) OR  (Pos('mailto:', s) = 1) then
+        if (Pos('http://', s) <> 0)
+        OR (Pos('https://', s) <> 0)
+        OR  (Pos('mailto:', s) <> 0) then
         begin
+          FBuffer.Canvas.Font := FLinkFont;
           if i = FActiveLine then
           begin
-            FBuffer.Canvas.Font.Style := [fsUnderline];
-            FBuffer.Canvas.Font.Color := clRed;
+            FBuffer.Canvas.Font.Style := FBuffer.Canvas.Font.Style+[fsUnderline];
+            //FBuffer.Canvas.Font.Color := clRed;
           end
           else
-            FBuffer.Canvas.Font.Color := clBlue;
-        end;
+            //FBuffer.Canvas.Font.Color := clBlue;
+        end
+        else FBuffer.Canvas.Font := FFont;
+
       end;
 
       w := FBuffer.Canvas.TextWidth(s);
@@ -279,7 +292,9 @@ end;
 function TScrollingText.ActiveLineIsURL: boolean;
 begin
   if (FActiveLine > 0) and (FActiveLine < FLines.Count) then
-    Result := (Pos('http://', FLines[FActiveLine]) = 1) OR (Pos('mailto:', FLines[FActiveLine]) = 1)
+    Result := (Pos('http://', FLines[FActiveLine]) <> 0)
+    OR (Pos('https:', FLines[FActiveLine]) <> 0)
+    OR (Pos('mailto:', FLines[FActiveLine]) <> 0)
   else
     Result := False;
 end;
@@ -292,11 +307,38 @@ end;
 
 procedure TScrollingText.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: integer);
+var
+  s:string;
 begin
   inherited MouseDown(Button, Shift, X, Y);
-
-  if ActiveLineIsURL then
-    OpenURL(FLines[FActiveLine]);
+  if ActiveLineIsURL and
+  ((Pos('http://', FLines[FActiveLine]) OR (Pos('https://', FLines[FActiveLine]))<> 0)) then
+  begin
+    s:=FLines[FActiveLine];
+    if (Pos(' ',s))=0 then s:=Copy(s,Pos('http://',s),MaxInt)
+    else begin
+      if Pos(' ',s)<Pos('http://',s) then s:=Copy(s,Pos('http://',s),MaxInt);
+      if (Pos(' ',s))=0 then s:=Copy(s,Pos('http://',s),MaxInt)
+      else s:=Copy(s,Pos('http://',s),(Pos(' ',s)-Pos('http://',s)));
+    end;
+    if (Pos(' ',s))=0 then s:=Copy(s,Pos('https://',s),MaxInt)
+    else begin
+      if Pos(' ',s)<Pos('https://',s) then s:=Copy(s,Pos('https://',s),MaxInt);
+      if (Pos(' ',s))=0 then s:=Copy(s,Pos('https://',s),MaxInt)
+      else s:=Copy(s,Pos('https://',s),(Pos(' ',s)-Pos('https://',s)));
+    end;
+    OpenURL(s);
+  end
+  else if ActiveLineIsURL and (Pos('mailto:', FLines[FActiveLine]) <> 0) then begin
+    s:=FLines[FActiveLine];
+    if (Pos(' ',s))=0 then s:=Copy(s,Pos('mailto:',s),MaxInt)
+    else begin
+      if Pos(' ',s)<Pos('mailto:',s) then s:=Copy(s,Pos('mailto:',s),MaxInt);
+      if (Pos(' ',s))=0 then s:=Copy(s,Pos('mailto:',s),MaxInt)
+      else s:=Copy(s,Pos('mailto:',s),(Pos(' ',s)-Pos('mailto:',s)));
+    end;
+    OpenURL(s);
+  end;
 end;
 
 procedure TScrollingText.MouseMove(Shift: TShiftState; X, Y: integer);
@@ -325,7 +367,9 @@ begin
   FTimer.Interval := 30;
   FBuffer := TBitmap.Create;
   FFont := TFont.Create;
+  FLinkFont := TFont.Create;
   FFont.Size := 10;
+  FLinkFont.Size := 10;
   fBackColor := clWindow;
 
   FStepSize := 1;
@@ -363,6 +407,7 @@ begin
   FTimer.Free;
   FBuffer.Free;
   FFont.Free;
+  FLinkFont.Free;
   inherited Destroy;
 end;
 
