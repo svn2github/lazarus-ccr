@@ -126,6 +126,7 @@ procedure CheckRequiredFields(const Fields: array of TField);
 function ExtractFieldName(const Fields: string; var Pos: Integer): string;
 procedure FillValueForField(const Field: TField; Value:Variant);
 procedure CloneRecord(DataSet: TDataSet; IgnoreFields: array of const);
+function FieldValueToStrings(const DataSet: TDataSet; const FieldName: string; List:TStrings = nil):TStrings;
 
 { SQL expressions }
 
@@ -1037,6 +1038,37 @@ begin
       DataSet.Fields[i].Value:=Rec[i];
       Rec[i]:=Null;
     end;
+  end;
+end;
+
+function FieldValueToStrings(const DataSet: TDataSet; const FieldName: string;
+  List: TStrings): TStrings;
+var
+  Field: TField;
+  P: TBookMark;
+begin
+  Result:=List;
+  if not Assigned(Result) then
+    Result:=TStringList.Create;
+  if not Assigned(DataSet) then exit;
+  Field:=DataSet.FindField(FieldName);
+  if not Assigned(Field) then exit;
+
+  DataSet.DisableControls;
+  Result.BeginUpdate;
+  P:=DataSet.Bookmark;
+  try
+    DataSet.First;
+    while not DataSet.EOF do
+    begin
+      if Result.IndexOf(Field.AsString) < 0 then
+        Result.Add(Field.AsString);
+      DataSet.Next;
+    end;
+  finally
+    DataSet.Bookmark:=P;
+    Result.EndUpdate;
+    DataSet.EnableControls;
   end;
 end;
 

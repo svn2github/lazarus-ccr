@@ -3847,7 +3847,7 @@ end;
 
 procedure TRxDBGrid.SetDBHandlers(Value: boolean);
 begin
-  if Value then
+   if Value then
   begin
     if DataSource.DataSet.OnFilterRecord <> @FilterRec then
     begin
