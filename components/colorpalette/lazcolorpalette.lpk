@@ -20,7 +20,7 @@
     </CompilerOptions>
     <Description Value="This package contains a color palette component."/>
     <License Value="Modified LGPL"/>
-    <Version Minor="2" Release="1"/>
+    <Version Minor="2" Release="2"/>
     <Files Count="2">
       <Item1>
         <Filename Value="colorpalette.lrs"/>
