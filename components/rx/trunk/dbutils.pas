@@ -1056,7 +1056,7 @@ begin
 
   DataSet.DisableControls;
   Result.BeginUpdate;
-  P:=DataSet.Bookmark;
+  P:=DataSet.GetBookmark;
   try
     DataSet.First;
     while not DataSet.EOF do
@@ -1066,7 +1066,8 @@ begin
       DataSet.Next;
     end;
   finally
-    DataSet.Bookmark:=P;
+    DataSet.GotoBookmark(P);
+    DataSet.FreeBookmark(P);
     Result.EndUpdate;
     DataSet.EnableControls;
   end;
