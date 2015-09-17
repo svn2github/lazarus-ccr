@@ -86,6 +86,29 @@
       </element><element name="TRxDBGrid.OnRxColumnFooterDraw"><short>Событие возникает при отрисовке итоговой строк</short><descr>Событие возникает при отрисовке итоговой строк</descr>
       </element><element name="TRxDBGrid.OnRxCalcFooterValues"><short>Событие возникает при расчёте итоговой строк</short><descr>Событие возникает при расчёте итоговой строк</descr>
       </element><element name="TRxDBGrid.DrawFullLine"><short>Признак необходимости отрисовки вертикальных линий сетки до итоговой строки</short><descr>Признак необходимости отрисовки вертикальных линий сетки до итоговой строки</descr>
+      </element><element name="TRxDBGrid.AutoSort"><short>Включение автоматической сортировки данных</short><descr>Включение автоматической сортировки данных в гриде. Сортировка осуществляется щелчком мышки по заголовку столбца.</descr>
+      </element><element name="TRxDBGrid.OptimizeColumnsWidthAll"><short>Метод производит подбор ширины всех колонок в зависимости от данных</short><descr>Метод производит подбор ширины всех колонок в зависимости от данных</descr>
+      </element><element name="TRxDBGrid.OptimizeColumnsWidth"><short>Метод производит подбор ширины указанных колонок в зависимости от данных</short>
+      </element><element name="TRxDBGrid.CalcStatTotals"><short>Метод выполняет пересчёт итоговой строки списка</short>
+      </element><element name="TRxDBGrid.ShowFindDialog"><short>Метод отображает диалоговое окно поиска в гриде</short>
+      </element><element name="TRxDBGrid.ShowColumnsDialog"><short>Метод отображает диалоговое окно настроек колонок списка</short>
+      </element><element name="TRxDBGrid.ShowFilterDialog"><short>Метод отображает диалоговое окно фильтрации данных</short>
+      </element><element name="TRxDBGrid.Version"><short>Номер версии сохранённых настроек грида</short><descr>Свойство определяет номер версии настроек списка.
+При чтении настроек из файла если номер версии списка больше номера версии в файле, то настройки будут проигнорированны.
+Используется в случае необходимости принудительно установить все настроки списка с новой версией программы.</descr>
+      </element>
+    <element name="TRxDBGridFooterOptions"><short>Класс определяет параметры итовой строки грида</short>
+      </element><element name="TRxDBGridFooterOptions.Active"><short>Признак активности итоговой строки</short>
+      </element><element name="TRxDBGridFooterOptions.Color"><short>Цвет итоговой строки</short>
+      </element><element name="TRxDBGridFooterOptions.RowCount"><short>Кол-во строк с текстом в итоговой строке грида</short>
+      </element><element name="TRxDBGridFooterOptions.Style"><short>Стиль отображения итоговой строки</short>
+      </element><element name="TRxDBGrid.FooterOptions"><short>Параметры итоговой строки грида</short>
+      </element><element name="TRxDBGrid.KeyStrokes"><short>Настройки клавиатрных комбинаций для грида</short>
+      </element><element name="TRxDBGridKeyStrokes"><short>Класс содержит настройки клавиатрных комбинаций для грида</short>
+      </element><element name="TRxDBGridKeyStroke"><short>Класс содержит клавиатурную комбинацию для грида</short>
+      </element><element name="TRxDBGridKeyStroke.Command"><short>Команда грида</short>
+      </element><element name="TRxDBGridKeyStroke.ShortCut"><short>Клавиатурная комбинация</short>
+      </element><element name="TRxDBGridKeyStroke.Enabled"><short>Признак разрешённой команды</short>
       </element>
     </module>
   </package>
