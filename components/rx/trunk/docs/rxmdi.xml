@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fpdoc-descriptions><package name="rxnew"><module name="RxMDI"><element name="TRxMDIButton.DoActivateMenu"/><element name="TRxMDIButton"><short>Кнопка на панели задач компонентов MDI</short><descr>Кнопка предназначена для управления окнами</descr>
+      </element><element name="TRxMDIButton.NavForm"><short>Указатель на связанное с кнопкой окно</short><descr>Указатель на связанное с кнопкой окно</descr>
+      </element><element name="TRxMDIPanel"><short>Основаня панель для управления окнами в режиме MDI</short>
+      </element><element name="TRxMDIPanel.CloseButton"><short>Указатель на кнопку закрвтия MDI окон</short>
+      </element><element name="TRxMDIPanel.TaskPanel"><short>Указатель на панель задач для MDI окон</short>
+      </element><element name="TRxMDIPanel.CloseAll"><short>Закрыть все окна</short>
+      </element>
+    </module>
+  </package>
+</fpdoc-descriptions>
