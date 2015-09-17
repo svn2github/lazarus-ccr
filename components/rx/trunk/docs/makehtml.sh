@@ -17,18 +17,22 @@ fpdoc --package=rxfpc --format=html --index-colcount=4 --hide-protected \
   --input=../rxswitch.pas --descr=rxfpc.xml \
   --input=../tooledit.pas --descr=rxfpc.xml \
   --input=../pickdate.pas --descr=rxfpc.xml \
-  --input=../rxversinfo.pas --descr=rxfpc.xml \
+  --input=../rxversinfo.pas --descr=rxversinfo.xml \
   --input=../rxtimeedit.pas --descr=rxfpc.xml \
   --input=../rxdbcomb.pas --descr=rxfpc.xml \
   --input=../rxdbtimeedit.pas --descr=rxfpc.xml \
-  --input=../rxdbgrid.pas --descr=rxfpc.xml \
+  --input=../rxdbgrid.pas --descr=rxdbgrid.xml \
   --input=../rxdbgrid_columsunit.pas --descr=rxfpc.xml \
   --input=../rxdbgrid_findunit.pas --descr=rxfpc.xml \
   --input=../rxdbctrls.pas --descr=rxfpc.xml \
   --input=../rxdbspinedit.pas --descr=rxfpc.xml \
   --input=../rxaboutformunit.pas --descr=rxfpc.xml \
-  --input=../rxaboutdialog.pas --descr=rxfpc.xml \
+  --input=../rxaboutdialog.pas --descr=rxaboutdialog.xml \
   --input=../dateutil.pas --descr=rxfpc.xml \
   --input=../rxfileutils.pas --descr=rxfpc.xml \
   --input=../rxdbgridexportspreadsheet_paramsunit.pas --descr=rxfpc.xml \
-  --input=../rxdbgridexportspreadsheet.pas --descr=rxfpc.xml 
+  --input=../rxdbgridexportspreadsheet.pas --descr=rxfpc.xml \
+  --input=../rxcloseformvalidator.pas --descr=rxcloseformvalidator.xml \
+  --input=../rxmdi.pas --descr=rxmdi.xml \
+  --input=../rxinipropstorage.pas --descr=rxinipropstorage.xml 
+   

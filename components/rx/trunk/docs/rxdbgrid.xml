@@ -3,6 +3,89 @@
         </descr>
       </element><element name="TRxDBGrid.BeforeQuickSearch"><short>Событие, возникающее до выполнения операции быстрого поиска данных в спике</short>
       </element><element name="TRxDBGrid.AfterQuickSearch"><short>Событие, возникающее после выполнения операции быстрого поиска данных в спике</short>
+      </element><element name="TRxDBGrid.OnGetBtnParams"><short>Данный тип описывает событие при отображении в списке заголовка колонки</short>
+      </element><element name="TRxDBGrid.TitleButtons"><short>Свойство определяет, могут ли заголовки колонок в Grid-е быть использованы как кнопки.</short><descr>Свойство определяет, могут ли заголовки колонок в Grid-е быть использованы как кнопки. По умолчанию - False. 
+При установке свойства в значение True Вы можете обработать события OnTitleBtnClick для обработки нажатия на такую кнопку и OnCheckButton, OnGetBtnParams для установки свойств кнопок в заголовке.</descr>
+      </element><element name="TRxDBGrid.OnGetCellProps"><short>Событие получения параметров ячейки в RxDBGrid-е</short>
+      </element><element name="TRxDBGrid.PropertyStorage"><short>Свойство позволяет автоматически сохранять специфические установки компоненты в INI-файле</short><descr><p>Свойство позволяет автоматически сохранять специфические установки компоненты в INI-файле или (для 32-разрядной версии) в системном регистре при помощи компонент TFormPlacement или TFormStorage. </p><p>При задании значения свойству IniStorage (и непустом имени компоненты), некоторые ее настройки, которые не являются published-свойствами и не могут быть заданы для TFormStorage напрямую, будут сохраняться и восстанавливаться одновременни с другими значениями, заданными для соответствующей компоненты TFormPlacement (TFormStorage). </p><p>Для TSpeedbar - это расположение кнопок на панели и положение самой панели, для TMRUManager - список строк, для TRxDBGrid - ширины и положение полей в таблице и т.д. Все компоненты, имеющие свойство IniStorage, имеют также методы для сохранения и восстановления их настроек вручную, такие как Save/RestoreLayout и т.д.</p>
+        </descr>
+      </element><element name="TRxDBGrid.OptionsRx"><short>Набор флагов, управляющих поведением RxDBGrid</short>
+      </element><element name="TRxColumn"><short>Этот клас представляет собой колонку в RxDBGrid</short>
+      </element><element name="TRxColumn.Create"><short>Конструктор TRxColumn</short><descr>Конструктор constructor <b>TRxColumn.Create(ACollection: TCollection);</b>
+Создаёт класс столбца и заполняет начальные значения</descr>
+      </element><element name="TRxQuickSearchNotifyEvent"><short>Тип описывает событие, возникающее во время операции быстрого поиска данных в спике</short><descr>Тип описывает событие, возникающее во время операции быстрого поиска данных в спике</descr>
+      </element><element name="TSortMarker"><short>Маркер направления сортировки</short><descr><p>Маркер направления сортировки.</p><p>Определяет отображение маркера сортировки в заголовке столбца RxDBGrid-а.</p><table><th><td>Параметр</td><td>Описание</td>
+            </th><tr><td>smNone</td><td>Не отображать маркер</td>
+            </tr><tr><td>smDown</td><td>Отображать маркер "Вниз" - прямая сортировка</td>
+            </tr><tr><td>smUp</td><td>Отображать маркер "Вверх" - обратная сортировка</td>
+            </tr>
+          </table>
+        </descr>
+      </element><element name="TGetBtnParamsEvent"><short>Данный тип описывает событие при отображении в списке заголовка колонки</short><descr><p>Данный тип описывает событие при отображении в списке заголовка колонки</p><table><th><td>Параметр</td><td>Тип</td><td>Описание</td>
+            </th><tr><td>Sender: TObject</td><td>Вх.</td><td>Указывает на экземпляр объекта <link id="TRxDBGrid">RxDBGrid</link>
+              </td>
+            </tr><tr><td>Field: TField</td><td>Вх.</td><td>Определяет колонку, для которой необходимо определить параметры</td>
+            </tr><tr><td>AFont: TFont</td><td>Вх.</td><td>С помощью данного объекта можно указать параметры шрифта заголовка</td>
+            </tr><tr><td>Background: TColor</td><td>Вых.</td><td>Можно указать цвет фона заголовка колонки</td>
+            </tr><tr><td>SortMarker: TSortMarker</td><td>Вых.</td><td>Можно указать <link id="TSortMarker">тип маркера сортировки</link>
+              </td>
+            </tr><tr><td>IsDown: Boolean</td><td>Вх.</td><td>Определяет, был ли клик мышкой по данному заголовку</td>
+            </tr>
+          </table>
+        </descr>
+      </element><element name="TGetCellPropsEvent"><short>Данный тип описывает событие получения параметров ячейки в RxDBGrid-е</short><descr><p>Данный тип описывает событие получения параметров ячейки в <link id="TRxDBGrid">RxDBGrid</link>-е</p><table><th><td>Параметр</td><td>Тип параметра</td><td>Описание</td>
+            </th><tr><td>Sender: TObject</td><td>вх.</td><td>Указывает на экземпляр объекта <link id="TRxDBGrid">RxDBGrid</link>
+              </td>
+            </tr><tr><td>Field: TField</td><td>вх.</td><td>Определяет колонку, для которой произошло событие</td>
+            </tr><tr><td>AFont: TFont</td><td>вх.</td><td>С помощью данного объекта можно указать параметры шрифта ячейки</td>
+            </tr><tr><td>Background: TColor</td><td>вых.</td><td>Можно указать цвет фона ячейки</td>
+            </tr>
+          </table>
+        </descr>
+      </element><element name="TFooterValueType"><short>Определяем тип занчения, автоматически расчитываемого в итоговой строке</short><descr><p>Определяем тип занчения, автоматически расчитываемого в итоговой строке</p><table><th><td>Параметр</td><td>Значение</td>
+            </th><tr><td>fvtNon</td><td>По умолчанию, ничего не отображаем</td>
+            </tr><tr><td>fvtSum</td><td>Отображается сумма по указанной колонке</td>
+            </tr><tr><td>fvtAvg</td><td>Расчитывается среднее значение по указанной колонке</td>
+            </tr><tr><td>fvtCount</td><td>Отображается общее количество строк в списке</td>
+            </tr><tr><td>fvtFieldValue</td><td>Отображается значение указанной колонки</td>
+            </tr><tr><td>fvtStaticText</td><td>Отображается текст из поля <link id="TRxColumnFooter.Value">Value</link>
+              </td>
+            </tr><tr><td>fvtMin</td><td>Отображается минимальное значние указанного в свойстве <link id="TRxColumnFooter.FieldName">FieldName</link>поля</td>
+            </tr><tr><td>fvtMax</td><td>Отображается максимальное значние указанного в свойстве <link id="TRxColumnFooter.FieldName">FieldName</link>поля</td>
+            </tr><tr><td>fvtRecNo</td><td>Отображается номер текущей записи из списка</td>
+            </tr>
+          </table>
+        </descr>
+      </element><element name="TOptionRx"><short>Набор флагов, управляющих поведением RxDBGrid</short><descr><p>Набор флагов, управляющих поведением <link id="TRxDBGrid">RxDBGrid</link>
+          </p><table><th><td>Параметр</td><td>Описание</td>
+            </th><tr><td>rdgAllowColumnsForm</td><td>Разрешает вызов формы управления отображением и порядком расположения колонок в <link id="TRxDBGrid">RxDBGrid</link>-е</td>
+            </tr><tr><td>rdgAllowDialogFind</td><td>Разрешает вызов формы поиска данных в <link id="TRxDBGrid">RxDBGrid</link>-е</td>
+            </tr><tr><td>rdgHighlightFocusCol</td><td>Подсвечивать текущую колонку</td>
+            </tr><tr><td>rdgHighlightFocusRow</td><td>Подсвечивать текущую строку</td>
+            </tr><tr><td>rdgDblClickOptimizeColWidth</td><td>При двойном щелчке по разделителю между колонками в <link id="TRxDBGrid">RxDBGrid</link>-е  автоматически подбирать размер колонки по ширине отображаемых данных</td>
+            </tr><tr><td>rdgFooterRows</td><td>Отображать итоговую строку (подвал) спика</td>
+            </tr><tr><td>rdgXORColSizing</td><td>При изменении размера колонки отображать только будущую границу колонки, саму колонку при этом не менять. В противном случае при изменении размера ширина колонки меняется сразу. Параметр полезен для медленных компьютеров или терминального режима</td>
+            </tr><tr><td>rdgFilter</td><td>Разрешить локальную фильтрацию данных</td>
+            </tr><tr><td>rdgMultiTitleLines</td><td>Разрешить объединение заголовков колонок</td>
+            </tr><tr><td>rdgMrOkOnDblClik</td><td>При двойном щелчке мышки генерировать для формы-владельца грида событие mrOk - полезно при создании формы выбора из списка</td>
+            </tr><tr><td>rdgAllowQuickSearch</td><td>Разрешить быстрыый поиск в гриде - в этом режиме нажатие клавиш включет механизм встроенного поиска по текущей колонке, прямое редактирование в списке будет запрещено. </td>
+            </tr><tr><td>rdgAllowQuickFilter</td><td>Разрешить быструю фильтрацию в колонках - в заголовке списка будет доступна по нажатию клавиши <b>Ctrl+E</b> дополнительная строка, содержащая ComboBox-ы со значениями колонок. Аналогично сортировки в электронных таблицах.</td>
+            </tr><tr><td>rdgAllowFilterForm</td><td>Разрешает к использованию форму фильтрации  в <link id="TRxDBGrid">RxDBGrid</link>-е</td>
+            </tr><tr><td>rdgAllowSortForm</td><td>Разрешает к использованию формы сортировки данных в <link id="TRxDBGrid">RxDBGrid</link>-е</td>
+            </tr><tr><td>rdgAllowToolMenu</td><td>Включает отображение меню инструментов  в <link id="TRxDBGrid">RxDBGrid</link>-е. При активации данного параметра в верхнем левом углу грида отрисовывается специальный значок и при его нажатии мышкой выдаётся меню иснтрументов</td>
+            </tr><tr><td>rdgCaseInsensitiveSort</td><td>Параметр включает режим сортировки без учёта регистра символов в столбце  <link id="TRxDBGrid">RxDBGrid</link>-а</td>
+            </tr>
+          </table>
+        </descr>
+      </element><element name="TRxColumnOption"><short>Параметры для столбца RxDBGrid</short><descr><b>Список флагов для настройки поведения столбца грида.</b><p>coCustomizeVisible - колонка доступна в окне настроки столбцов грида</p><p>coCustomizeWidth - разрешено изменять ширину колонки</p><p>coFixDecimalSeparator - при вводе значений в редакторе будет проверяться и исправляться запятая и точка в числовых значениях</p><p>coDisableDialogFind - запрет поиска по данной колонке в окне поиска</p>
+        </descr>
+      </element><element name="TRxColumnOption.coDisableDialogFind"><short>запрет поиска по данной колонке в окне поиска</short>
+      </element><element name="TRxColumnOption.coCustomizeWidth"><short>разрешено изменять ширину колонки</short>
+      </element><element name="TRxColumnOption.coFixDecimalSeparator"><short>при вводе значений в редакторе будет проверяться и исправляться запятая и точка в числовых значениях</short>
+      </element><element name="TRxColumnOption.coCustomizeVisible"><short>колонка доступна в окне настроки столбцов грида</short>
+      </element><element name="TRxDBGrid.OnRxColumnFooterDraw"><short>Событие возникает при отрисовке итоговой строк</short><descr>Событие возникает при отрисовке итоговой строк</descr>
+      </element><element name="TRxDBGrid.OnRxCalcFooterValues"><short>Событие возникает при расчёте итоговой строк</short><descr>Событие возникает при расчёте итоговой строк</descr>
+      </element><element name="TRxDBGrid.DrawFullLine"><short>Признак необходимости отрисовки вертикальных линий сетки до итоговой строки</short><descr>Признак необходимости отрисовки вертикальных линий сетки до итоговой строки</descr>
       </element>
     </module>
   </package>
