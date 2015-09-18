@@ -2,24 +2,24 @@
 #надо скопировать rx.inc в текущий каталог, иначе не соберём (глюк fpdoc)
 cp ../rx.inc rx.inc 
 fpdoc --package=rxfpc --format=html --index-colcount=4 --hide-protected \
-  --input=../curredit.pas --descr=rxfpc.xml \
+  --input=../curredit.pas --descr=curredit.xml \
   --input=../dbdateedit.pas --descr=rxfpc.xml \
-  --input=../duallist.pas --descr=rxfpc.xml \
-  --input=../folderlister.pas --descr=rxfpc.xml \
-  --input=../rxctrls.pas --descr=rxfpc.xml \
-  --input=../rxdice.pas --descr=rxfpc.xml \
-  --input=../rxlookup.pas --descr=rxfpc.xml \
-  --input=../rxlogin.pas --descr=rxfpc.xml \
-  --input=../rxtoolbar.pas --descr=rxfpc.xml \
+  --input=../duallist.pas --descr=duallist.xml \
+  --input=../folderlister.pas --descr=folderlister.xml \
+  --input=../rxctrls.pas --descr=rxctrls.xml \
+  --input=../rxdice.pas --descr=rxdice.xml \
+  --input=../rxlookup.pas --descr=rxlookup.xml \
+  --input=../rxlogin.pas --descr=rxlogin.xml \
+  --input=../rxtoolbar.pas --descr=rxtoolbar.xml \
   --input=../rxspin.pas --descr=rxfpc.xml \
-  --input=../rxclock.pas --descr=rxfpc.xml \
-  --input=../rxmemds.pas --descr=rxfpc.xml \
-  --input=../rxswitch.pas --descr=rxfpc.xml \
-  --input=../tooledit.pas --descr=rxfpc.xml \
-  --input=../pickdate.pas --descr=rxfpc.xml \
+  --input=../rxclock.pas --descr=rxclock.xml \
+  --input=../rxmemds.pas --descr=rxmemds.xml \
+  --input=../rxswitch.pas --descr=rxswitch.xml \
+  --input=../tooledit.pas --descr=tooledit.xml \
+  --input=../pickdate.pas --descr=pickdate.xml \
   --input=../rxversinfo.pas --descr=rxversinfo.xml \
-  --input=../rxtimeedit.pas --descr=rxfpc.xml \
-  --input=../rxdbcomb.pas --descr=rxfpc.xml \
+  --input=../rxtimeedit.pas --descr=RxTimeEdit.xml \
+  --input=../rxdbcomb.pas --descr=rxdbcomb.xml \
   --input=../rxdbtimeedit.pas --descr=rxfpc.xml \
   --input=../rxdbgrid.pas --descr=rxdbgrid.xml \
   --input=../rxdbgrid_columsunit.pas --descr=rxfpc.xml \
@@ -28,11 +28,15 @@ fpdoc --package=rxfpc --format=html --index-colcount=4 --hide-protected \
   --input=../rxdbspinedit.pas --descr=rxfpc.xml \
   --input=../rxaboutformunit.pas --descr=rxfpc.xml \
   --input=../rxaboutdialog.pas --descr=rxaboutdialog.xml \
-  --input=../dateutil.pas --descr=rxfpc.xml \
-  --input=../rxfileutils.pas --descr=rxfpc.xml \
+  --input=../dateutil.pas --descr=dateutil.xml \
+  --input=../rxfileutils.pas --descr=rxFileUtils.xml \
   --input=../rxdbgridexportspreadsheet_paramsunit.pas --descr=rxfpc.xml \
   --input=../rxdbgridexportspreadsheet.pas --descr=rxfpc.xml \
   --input=../rxcloseformvalidator.pas --descr=rxcloseformvalidator.xml \
   --input=../rxmdi.pas --descr=rxmdi.xml \
+  --input=../rxviewspanel.pas --descr=RxViewsPanel.xml \
+  --input=../rxdbgridfootertools.pas --descr=rxdbgridfootertools.xml \
+  --input=../rxdbgridfootertools_setup.pas --descr=rxdbgridfootertools_setup.xml \
   --input=../rxinipropstorage.pas --descr=rxinipropstorage.xml 
-   
+
+

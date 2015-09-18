@@ -48,10 +48,10 @@
             </tr><tr><td>fvtAvg</td><td>Расчитывается среднее значение по указанной колонке</td>
             </tr><tr><td>fvtCount</td><td>Отображается общее количество строк в списке</td>
             </tr><tr><td>fvtFieldValue</td><td>Отображается значение указанной колонки</td>
-            </tr><tr><td>fvtStaticText</td><td>Отображается текст из поля <link id="TRxColumnFooter.Value">Value</link>
+            </tr><tr><td>fvtStaticText</td><td>Отображается текст из поля <link id="TRxColumnFooterItem.Value">Value</link>
               </td>
-            </tr><tr><td>fvtMin</td><td>Отображается минимальное значние указанного в свойстве <link id="TRxColumnFooter.FieldName">FieldName</link>поля</td>
-            </tr><tr><td>fvtMax</td><td>Отображается максимальное значние указанного в свойстве <link id="TRxColumnFooter.FieldName">FieldName</link>поля</td>
+            </tr><tr><td>fvtMin</td><td>Отображается минимальное значние указанного в свойстве <link id="TRxColumnFooterItem.FieldName">FieldName</link>поля</td>
+            </tr><tr><td>fvtMax</td><td>Отображается максимальное значние указанного в свойстве <link id="TRxColumnFooterItem.FieldName">FieldName</link>поля</td>
             </tr><tr><td>fvtRecNo</td><td>Отображается номер текущей записи из списка</td>
             </tr>
           </table>
@@ -109,6 +109,46 @@
       </element><element name="TRxDBGridKeyStroke.Command"><short>Команда грида</short>
       </element><element name="TRxDBGridKeyStroke.ShortCut"><short>Клавиатурная комбинация</short>
       </element><element name="TRxDBGridKeyStroke.Enabled"><short>Признак разрешённой команды</short>
+      </element>
+      <element name="TRxDBGridSortEngine">
+        <short>Абстрактный класс сортировки данных</short>
+        <descr>Абстрактный класс сортировки данных в RXDBGrid.
+От этого класса необходимо создавать наследников, которые будут предоставлять функционал по сортировке данных в наборе данных, который подключен к RXDBGrid.</descr>
+      </element>
+      <element name="TRxDBGridSortEngine.Sort">
+        <short>Абстрактный метод сортировки по столбцу</short>
+        <descr>Этот метод необходимо перекрывать в наследнике для обеспечения функции сортировки данных при щелчке по столбцу в RxDBGrid-е</descr>
+      </element>
+      <element name="TRxDBGridSortEngine.SortList">
+        <short>Абстрактный метод сортировки по нескольким столбцам</short>
+        <descr>В RXDBGrid-е есть возможность сортировки по нескольким столбцам одновременно.
+Если набор данных имеет такую возможность, то данный метод необходимо переопределить и вписать в нём вызов сортировки по нескольким столбцам.</descr>
+      </element>
+      <element name="TRxColumnTitle">
+        <short>Этот класс представляет собой заголовок столбца в RXDbGrid</short>
+        <descr>
+          <b>TRxColumnTitle = class(TColumnTitle)</b>
+Этот класс наследует все основные свойства заголовка из DBGrid и добавялет инструменты по отображению многострочных заголовков</descr>
+      </element>
+
+    <element name="TRxDBGridAbstractTools"><short>Абстрактный класс для расширений функциональности RxDBGrid</short><descr>Абстрактный класс для расширений функциональности RxDBGrid</descr>
+      </element>
+    <element name="TRxColumnFooterItem.ValueType"><short>Тип итогового значения</short>
+      </element><element name="TRxColumnFooterItem.Font"><short>Шрифт, используемый для отображения текста в итоговой строке</short>
+      </element><element name="TRxColumn.OptimizeWidth"><short>Метод подбирает ширину колонки в гриде по данным</short>
+      </element><element name="TRxColumn.SortOrder"><short>Текущий порядок сортировки данных</short>
+      </element><element name="TRxColumn.SortPosition"><short>В случае сортировки по нескольким полям - порядковый номер поля в сортировке</short>
+      </element><element name="TRxColumn.Constraints"><short>Органичения для колонки</short>
+      </element><element name="TRxColumn.DirectInput"><short>Признак того, что в колонку разрешён прямой ввода данных</short>
+      </element><element name="TRxColumn.EditButtons"><short>Колекция дополнительных кнопок, отображаемых при редактировинии колонки</short>
+      </element><element name="TRxColumn.Filter"><short>Фильтр для колонки</short>
+      </element><element name="TRxColumn.Footer"><short>Информация по итоговой строк</short>
+      </element><element name="TRxColumn.Footers"><short>Информация по итоговым строкам</short>
+      </element><element name="TRxColumn.ImageList"><short>Список изображений для колонки</short>
+      </element><element name="TRxColumn.Options"><short>Дополнительные параметры колонки</short>
+      </element><element name="TRxColumn.SortFields"><short>Поле БД, по которому надо сортировать данную колонку</short>
+      </element><element name="TRxColumn.OnDrawColumnCell"><short>Событие возникает при отрисовке значения колонки</short>
+      </element><element name="TRxDBGrid.InvertSelection"><short>Инвертировать текущее выделение строки</short>
       </element>
     </module>
   </package>
