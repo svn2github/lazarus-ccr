@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fpdoc-descriptions><package name="rxdbgrid_print"><module name="RxDBGridPrintGrid"><short>Модуль обеспечивает печать содержимого RxDBGrid</short><element name="TRxDBGridPrint"><short>TRxDBGridPrint - инструмент печати содердимого RxDBGrid</short>
+      </element><element name="TRxDBGridPrint.ReportTitle"><short>Заголовок отчёта</short>
+      </element><element name="TRxDBGridPrint.ShowColumnHeaderOnAllPage"><short>Признак отображаения заголовков колонок на всех страницах</short>
+      </element><element name="TRxDBGridPrint.PageMargin"><short>Отступы на странице</short>
+      </element><element name="TRxDBGridPrint.ShowProgress"><short>Отображать прогрес построения отчёта</short>
+      </element><element name="TRxDBGridPrint.Orientation"><short>Ориентация бумаги при построении отчёта</short>
+      </element><element name="TRxDBGridPrint.PreviewReport"><short>Отобразаить форму предавирительного просмотра отчёта</short>
+      </element>
+    </module>
+  </package>
+</fpdoc-descriptions>

@@ -95,17 +95,16 @@ begin
   else Result := -1;
 end;
 
-{$IFNDEF WIN32}
-{function BoxGetCanvas(List: TWinControl): TCanvas;
+{.$IFNDEF WIN32}
+function BoxGetCanvas(List: TWinControl): TCanvas;
 begin
   if List is TCustomListBox then
     Result := TCustomListBox(List).Canvas
-  else if List is TRxCustomListBox then
-    Result := TRxCustomListBox(List).Canvas
+{  else if List is TRxCustomListBox then
+    Result := TRxCustomListBox(List).Canvas }
   else Result := nil;
 end;
-}
-{$ENDIF}
+{.$ENDIF}
 
 procedure BoxSetItemIndex(List: TWinControl; Index: Integer);
 begin
@@ -256,15 +255,18 @@ var
   Focused: Integer;
 begin
   Result := False;
-{  if (BoxSelCount(List) = 1) or (not BoxMultiSelect(List)) then begin
+  if (BoxSelCount(List) = 1) or (not BoxMultiSelect(List)) then
+  begin
     Focused := BoxGetItemIndex(List);
-    if Focused <> LB_ERR then begin
+    if Focused <> LB_ERR then
+    begin
       DragIndex := BoxItemAtPos(List, Point(X, Y), True);
-      if (DragIndex >= 0) and (DragIndex <> Focused) then begin
+      if (DragIndex >= 0) and (DragIndex <> Focused) then
+      begin
         Result := True;
       end;
     end;
-  end;}
+  end;
 end;
 
 procedure BoxDragOver(List: TWinControl; Source: TObject;
@@ -272,8 +274,9 @@ procedure BoxDragOver(List: TWinControl; Source: TObject;
 var
   DragIndex: Integer;
   R: TRect;
+
+procedure DrawItemFocusRect(Idx: Integer);
 (*
-  procedure DrawItemFocusRect(Idx: Integer);
 {$IFDEF WIN32}
   var
     P: TPoint;
@@ -290,34 +293,44 @@ var
 {$ELSE}
     BoxGetCanvas(List).DrawFocusRect(R);
 {$ENDIF}
-  end;
 *)
 begin
-{  if Source <> List then
-    Accept := (Source is TWinControl) or (Source is TRxCustomListBox)
-  else begin
-    if Sorted then Accept := False
-    else begin
+   BoxGetCanvas(List).DrawFocusRect(R);
+end;
+
+begin
+  if Source <> List then
+    Accept := (Source is TWinControl) { or (Source is TRxCustomListBox) }
+  else
+  begin
+    if Sorted then
+      Accept := False
+    else
+    begin
       Accept := BoxCanDropItem(List, X, Y, DragIndex);
-      if ((List.Tag - 1) = DragIndex) and (DragIndex >= 0) then begin
-        if State = dsDragLeave then begin
+      if ((List.Tag - 1) = DragIndex) and (DragIndex >= 0) then
+      begin
+        if State = dsDragLeave then
+        begin
           DrawItemFocusRect(List.Tag - 1);
           List.Tag := 0;
         end;
       end
-      else begin
+      else
+      begin
         if List.Tag > 0 then DrawItemFocusRect(List.Tag - 1);
         if DragIndex >= 0 then DrawItemFocusRect(DragIndex);
         List.Tag := DragIndex + 1;
       end;
     end;
-  end;}
+  end;
 end;
 
 procedure BoxMoveFocusedItem(List: TWinControl; DstIndex: Integer);
 begin
   if (DstIndex >= 0) and (DstIndex < BoxItems(List).Count) then
-    if (DstIndex <> BoxGetItemIndex(List)) then begin
+    if (DstIndex <> BoxGetItemIndex(List)) then
+    begin
       BoxItems(List).Move(BoxGetItemIndex(List), DstIndex);
       BoxSetItem(List, DstIndex);
     end;

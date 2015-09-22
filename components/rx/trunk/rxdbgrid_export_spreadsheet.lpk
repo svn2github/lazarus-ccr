@@ -2,6 +2,7 @@
 <CONFIG>
   <Package Version="4">
     <Name Value="rxdbgrid_export_spreadsheet"/>
+    <Type Value="RunAndDesignTime"/>
     <Author Value="Lagunov Aleksey"/>
     <CompilerOptions>
       <Version Value="11"/>
@@ -26,7 +27,7 @@
         <UnitName Value="RxDBGridExportSpreadSheet_ParamsUnit"/>
       </Item3>
     </Files>
-    <Type Value="RunAndDesignTime"/>
+    <LazDoc Paths="docs"/>
     <RequiredPkgs Count="3">
       <Item1>
         <PackageName Value="laz_fpspreadsheet"/>

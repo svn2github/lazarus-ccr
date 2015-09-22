@@ -263,7 +263,6 @@ type
   end;
 
   { TRxColumnFooterItem }
-
   TRxColumnFooterItem = class(TCollectionItem)
   private
     FIsDefaultFont: boolean;

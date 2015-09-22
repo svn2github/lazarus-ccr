@@ -70,9 +70,10 @@
           <link id="TFolderLister.Files"/>
         </seealso>
       </element>
-      <element name="TFolderLister.DefaultExt"/>
+      <element name="TFolderLister.DefaultExt"><short>Маска для скнирования файлов</short>
+      </element>
       <element name="TFolderLister.FileFolder">
-        <short>Свойство FileFolder</short>
+        <short>Папка, в которой будет производится поиск файлов</short>
         <descr>
           <b>property FileFolder:string</b>
           <p>Свойство FileFolder определяет каталог с файлами, который будет сканироваться при вызове метода <link id="TFolderLister.Execute">Execute</link> и по содержимому которого будет произведено заполнение массива Files</p>
@@ -99,6 +100,10 @@
         <seealso>
           <link id="TFolderLister.Execute"/>
         </seealso>
+      </element>
+    <short>Модуль содержит компонент предназначенные для просмотра содержимого указанной папки</short><element name="TCustomFolderLister.Execute"><short>Метод сканирует содержимое указанной папки и заполняет массив Files</short>
+      </element><element name="TCustomFolderLister.Files"><short>Свойство содержит список просканированных файлов</short>
+      </element><element name="TCustomFolderLister.Count"><short>Кол-во найденных файлов</short>
       </element>
     </module>
 

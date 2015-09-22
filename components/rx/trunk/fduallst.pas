@@ -32,7 +32,6 @@
 unit fduallst;
 
 {$I RX.INC}
-{$L-,S-}
 
 interface
 
@@ -82,8 +81,9 @@ end;
 
 implementation
 
-uses VCLUtils, BOXPROCS;
+uses vclutils, boxprocs;
 
+{$R *.lfm}
 
 { TDualListForm }
 
@@ -213,8 +213,5 @@ procedure TDualListForm.ListClick(Sender: TObject);
 begin
   SetButtons;
 end;
-
-initialization
-  {$i fduallst.lrs}
 
 end.

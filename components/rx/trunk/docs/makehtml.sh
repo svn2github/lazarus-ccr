@@ -1,9 +1,9 @@
 #!/bin/bash
 #надо скопировать rx.inc в текущий каталог, иначе не соберём (глюк fpdoc)
 cp ../rx.inc rx.inc 
-fpdoc --package=rxfpc --format=html --index-colcount=4 --hide-protected \
   --input=../curredit.pas --descr=curredit.xml \
   --input=../dbdateedit.pas --descr=rxfpc.xml \
+  --input=../dbutils.pas --descr=dbutils.xml \
   --input=../duallist.pas --descr=duallist.xml \
   --input=../folderlister.pas --descr=folderlister.xml \
   --input=../rxctrls.pas --descr=rxctrls.xml \
@@ -37,6 +37,14 @@ fpdoc --package=rxfpc --format=html --index-colcount=4 --hide-protected \
   --input=../rxviewspanel.pas --descr=RxViewsPanel.xml \
   --input=../rxdbgridfootertools.pas --descr=rxdbgridfootertools.xml \
   --input=../rxdbgridfootertools_setup.pas --descr=rxdbgridfootertools_setup.xml \
+  --input=../autopanel.pas --descr=autopanel.xml \
+  --input=../boxprocs.pas --descr=boxprocs.xml \
   --input=../rxinipropstorage.pas --descr=rxinipropstorage.xml 
 
 
+fpdoc --package=rxdbgrid_print --format=html --index-colcount=4 --hide-protected \
+  --input=../rxdbgridprintgrid.pas --descr=rxdbgridprintgrid.xml
+
+fpdoc --package=rxdbgrid_export_spreadsheet --format=html --index-colcount=4 --hide-protected \
+  --input=../rxdbgridexportspreadsheet.pas --descr=rxdbgridexportspreadsheet.xml \ 
+  --input=../rxdbgridexportspreadsheet_paramsunit.pas rxdbgridexportspreadsheet_paramsunit.xml
