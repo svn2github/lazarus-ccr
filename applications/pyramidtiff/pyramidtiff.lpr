@@ -452,7 +452,7 @@ begin
     Result:=TFPReaderTiff
   else begin
     for i:=0 to ImageHandlers.Count-1 do begin
-      if Pos(Ext,ImageHandlers.Extentions[ImageHandlers.TypeNames[i]])<1
+      if Pos(Ext,ImageHandlers.{$IF FPC_FULLVERSION>=20701}Extensions{$ELSE}Extentions{$ENDIF}[ImageHandlers.TypeNames[i]])<1
       then continue;
       Result:=ImageHandlers.ImageReader[ImageHandlers.TypeNames[i]];
     end;
@@ -700,7 +700,7 @@ begin
   write('   Input image file can be a:');
   for i:=0 to ImageHandlers.Count-1 do begin
     ImgType:=ImageHandlers.TypeNames[i];
-    write(' ',ImageHandlers.Extentions[ImgType]);
+    write(' ',ImageHandlers.{$IF FPC_FULLVERSION>=20701}Extensions{$ELSE}Extentions{$ENDIF}[ImgType]);
   end;
   writeln;
   writeln('   If input file is a directory then the -o must be a directory too.');
