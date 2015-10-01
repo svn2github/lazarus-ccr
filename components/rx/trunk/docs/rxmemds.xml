@@ -3,7 +3,8 @@
 <package name="rxnew">
 
     <module name="rxmemds">
-      <element name="TRxMemoryData"/>
+      <element name="TRxMemoryData"><short>TRxMemoryData - таблица в памяти. Является наследником от TDataSet</short><descr>TRxMemoryData - таблица в памяти. Является наследником от TDataSet</descr>
+      </element>
       <element name="TRxMemoryData.Create"/>
       <element name="TRxMemoryData.Destroy"/>
       <element name="TRxMemoryData.BookmarkValid"/>
@@ -13,13 +14,20 @@
       <element name="TRxMemoryData.GetCurrentRecord"/>
       <element name="TRxMemoryData.IsSequenced"/>
       <element name="TRxMemoryData.Locate"/>
-      <element name="TRxMemoryData.SortOnFields"/>
-      <element name="TRxMemoryData.EmptyTable"/>
-      <element name="TRxMemoryData.CloseOpen"/>
-      <element name="TRxMemoryData.CopyStructure"/>
-      <element name="TRxMemoryData.LoadFromDataSet"/>
-      <element name="TRxMemoryData.SaveToDataSet"/>
-      <element name="TRxMemoryData.AppendRecord"/>
+      <element name="TRxMemoryData.SortOnFields"><short>Производит сортировку данных в таблице по полю</short>
+      </element>
+      <element name="TRxMemoryData.EmptyTable"><short>Очищает содержимое набора данных</short>
+      </element>
+      <element name="TRxMemoryData.CloseOpen"><short>Закрывает и открывает набор данных</short>
+      </element>
+      <element name="TRxMemoryData.CopyStructure"><short>Копирует структуру таблицы из другого источника данных</short><descr>Копирует структуру таблицы из другого источника данных</descr>
+      </element>
+      <element name="TRxMemoryData.LoadFromDataSet"><short>Копирует содержимое таблицы из другого источника данных</short><descr>Копирует содержимое таблицы из другого источника данных</descr>
+      </element>
+      <element name="TRxMemoryData.SaveToDataSet"><short>Копирует содержимое таблицы в другой источник данных</short>
+      </element>
+      <element name="TRxMemoryData.AppendRecord"><short>AppendRecord добавляет запись в таблицу и заполняет значения полей из массива Values</short>
+      </element>
       <element name="TRxMemoryData.Capacity"/>
       <element name="TRxMemoryData.Active"/>
       <element name="TRxMemoryData.AutoCalcFields"/>
@@ -63,6 +71,8 @@
       <element name="TMemoryRecord.ID"/>
       <element name="TMemoryRecord.Index"/>
       <element name="TMemoryRecord.Data"/>
+    <short>Модуль rxmemds содержит компонент TRxMemoryData</short><descr>Модуль rxmemds содержит компонент TRxMemoryData и вспомогательные методы для работы с данным компонентом</descr><element name="TRxMemoryData.SortOnFieldsEx"><short>Производит сортировку данных в таблице по нескольким полям</short>
+      </element>
     </module>
 
 </package>

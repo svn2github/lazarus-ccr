@@ -39,6 +39,7 @@ cp ../rx.inc rx.inc
   --input=../rxdbgridfootertools_setup.pas --descr=rxdbgridfootertools_setup.xml \
   --input=../autopanel.pas --descr=autopanel.xml \
   --input=../boxprocs.pas --descr=boxprocs.xml \
+  --input=../rxspin.pas --descr=rxspin \
   --input=../rxinipropstorage.pas --descr=rxinipropstorage.xml 
 
 
