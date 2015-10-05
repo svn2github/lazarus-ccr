@@ -16,7 +16,7 @@ uses
   PyTiGraphics, FPReadTiff, FPTiffCmn, FPWriteTiff;
 
 const
-  Version = '1.1';
+  Version = '1.2';
 type
 
   { TFilenameToStringTree }
@@ -191,6 +191,9 @@ procedure TPyramidTiffer.LoadTiff(out Img: TFPCompactImgBase;
   Reader: TFPReaderTiff; InStream: TMemoryStream; var ErrorMsg: string);
 begin
   Reader.OnCreateImage:=@TiffReaderCreateImage;
+  {$ifdef FPC_Debug_Image}
+  Reader.Debug:=true;
+  {$endif}
   Reader.LoadFromStream(InStream);
   if Reader.ImageCount=0 then begin
     ErrorMsg:='tiff has no image';
