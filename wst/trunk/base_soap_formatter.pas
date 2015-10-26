@@ -510,7 +510,7 @@ var
       locHRefValue := locNode.NodeValue;
       if ( locHRefValue[1] = '#' ) then
         locHRefValue := Copy(locHRefValue,2,Length(locHRefValue));
-      Result := SelectSingleNode(Format('//*[@id=%s]',[locHRefValue]),locNode.OwnerDocument,True);
+      Result := SelectSingleNode(Format('//*[@id=%s]',[QuotedStr(locHRefValue)]),locNode.OwnerDocument,True);
       //ANode.OwnerDocument.GetElementById(locHRefValue);
       if ( Result = nil ) then
         raise ESOAPException.CreateFmt(SERR_NodeNotFoundByID,[locHRefValue]);
