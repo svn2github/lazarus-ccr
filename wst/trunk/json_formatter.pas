@@ -179,7 +179,7 @@ Var
 begin
   ClearStack();
   PushStack(GetRootData(),stObject);
-  elt := GetRootData().Elements[s_json_error];
+  elt := GetRootData().Find(s_json_error);
   if Assigned(elt) and elt.InheritsFrom(TJSONObject) then begin
     remoteErr := TJSONObject(elt);
     i := remoteErr.IndexOfName(s_json_code);
@@ -239,7 +239,7 @@ begin
   Assert(Assigned(ATransport));
   propMngr := ATransport.GetPropertyManager();
   propMngr.SetProperty(
-    s_json_ContentType,
+    sCONTENT_TYPE,
     s_json
   );
   propMngr.SetProperty(
