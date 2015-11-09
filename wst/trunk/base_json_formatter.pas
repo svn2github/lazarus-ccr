@@ -21,6 +21,7 @@ uses
 
 const
   sFORMAT = 'format';
+  sCONTENT_TYPE = 'contenttype';
   s_json_ContentType = 'application/json';
   s_json = 'json';
   s_inner_value = '__';
@@ -513,7 +514,7 @@ procedure TJsonRpcBaseFormatter.PutEnum(
   const AData : TEnumIntType
 );
 begin
-  StackTop().CreateIntBuffer(AName,AData);
+  StackTop().CreateStringBuffer(AName,GetEnumName(ATypeInfo,AData));
 end;
 
 procedure TJsonRpcBaseFormatter.PutBool(
@@ -638,7 +639,7 @@ var
 begin
   Result := GetDataBuffer(AName,locBuffer);
   if Result then
-    AData := locBuffer.AsInteger;
+    AData := GetEnumValue(ATypeInfo,locBuffer.AsString);
 end;
 
 function TJsonRpcBaseFormatter.GetBool(
@@ -1565,7 +1566,7 @@ end;
 
 procedure TJsonRpcBaseFormatter.SaveToStream(AStream : TStream);
 var
-  locBuffer : string;
+  locBuffer : UTF8String;
 begin
   if Assigned(FRootData) then begin
     locBuffer := FRootData.AsJSON;
