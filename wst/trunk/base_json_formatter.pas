@@ -24,7 +24,7 @@ const
   sCONTENT_TYPE = 'contenttype';
   s_json_ContentType = 'application/json';
   s_json = 'json';
-  s_inner_value = '__';
+  s_inner_value = 'value';
   
   s_json_code = 'code';
   s_json_error = 'error';
