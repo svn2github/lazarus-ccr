@@ -6009,12 +6009,7 @@ var
   buffer : string;
 begin
   buffer := TBaseDateRemotable(AObject).AsString;
-  AStore.BeginObject(AName,ATypeInfo);
-  try
-    AStore.PutScopeInnerValue(TypeInfo(string),buffer);
-  finally
-    AStore.EndScope();
-  end;
+  AStore.Put(AName,TypeInfo(string),buffer);
 end;
 
 class procedure TBaseDateRemotable.Load(
@@ -6024,19 +6019,13 @@ class procedure TBaseDateRemotable.Load(
   const ATypeInfo : PTypeInfo
 );
 var
-  strBuffer : string;
+  buffer : string;
 begin
-  if ( AStore.BeginObjectRead(AName,ATypeInfo) >= 0 ) then begin
-    try
-      strBuffer := '';
-      AStore.GetScopeInnerValue(TypeInfo(string),strBuffer);
-      if ( AObject = nil ) then    
-        AObject := Create();
-      (AObject as TBaseDateRemotable).AsString := strBuffer
-    finally
-      AStore.EndScopeRead();
-    end;
-  end;
+  buffer := '';
+  AStore.Get(TypeInfo(string),AName,buffer);
+  if ( AObject = nil ) then
+    AObject := Create();
+  TBaseDateRemotable(AObject).AsString := buffer;
 end;
 
 procedure TBaseDateRemotable.Assign(Source: TPersistent);
@@ -6841,12 +6830,7 @@ var
   buffer : string;
 begin
   buffer := TDurationRemotable(AObject).AsString;
-  AStore.BeginObject(AName,ATypeInfo);
-  try
-    AStore.PutScopeInnerValue(TypeInfo(string),buffer);
-  finally
-    AStore.EndScope();
-  end;
+  AStore.Put(AName,TypeInfo(string),buffer);
 end;
 
 class procedure TDurationRemotable.Load(
@@ -6856,19 +6840,13 @@ class procedure TDurationRemotable.Load(
   const ATypeInfo : PTypeInfo
 );
 var
-  strBuffer : string;
+  buffer : string;
 begin
-  if ( AStore.BeginObjectRead(AName,ATypeInfo) >= 0 ) then begin
-    try
-      strBuffer := '';
-      AStore.GetScopeInnerValue(TypeInfo(string),strBuffer);
-      if ( AObject = nil ) then
-        AObject := Create();
-      TDurationRemotable(AObject).AsString := strBuffer;
-    finally
-      AStore.EndScopeRead();
-    end;
-  end;
+  buffer := '';
+  AStore.Get(TypeInfo(string),AName,buffer);
+  if ( AObject = nil ) then
+    AObject := Create();
+  TDurationRemotable(AObject).AsString := buffer;
 end;
 
 procedure TDurationRemotable.Assign(Source : TPersistent);
@@ -7253,12 +7231,7 @@ var
   buffer : string;
 begin
   buffer := TTimeRemotable(AObject).AsString;
-  AStore.BeginObject(AName,ATypeInfo);
-  try
-    AStore.PutScopeInnerValue(TypeInfo(string),buffer);
-  finally
-    AStore.EndScope();
-  end;
+  AStore.Put(AName,TypeInfo(string),buffer);
 end;
 
 class procedure TTimeRemotable.Load(
@@ -7268,22 +7241,13 @@ class procedure TTimeRemotable.Load(
   const ATypeInfo : PTypeInfo
 );
 var
-  strBuffer : string;
+  buffer : string;
 begin
-  if ( AStore.BeginObjectRead(AName,ATypeInfo) >= 0 ) then begin
-    try
-      strBuffer := '';
-      AStore.GetScopeInnerValue(TypeInfo(string),strBuffer);
-      if ( AObject = nil ) then
-        AObject := Create();
-      if IsStrEmpty(strBuffer) then
-        (AObject as TTimeRemotable).Clear()
-      else
-        (AObject as TTimeRemotable).AsString := strBuffer;
-    finally
-      AStore.EndScopeRead();
-    end;
-  end;
+  buffer := '';
+  AStore.Get(TypeInfo(string),AName,buffer);
+  if ( AObject = nil ) then
+    AObject := Create();
+  TTimeRemotable(AObject).AsString := buffer;
 end;
 
 procedure TTimeRemotable.Assign(Source: TPersistent);
