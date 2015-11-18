@@ -400,7 +400,7 @@ begin // find nearest fraction
   //writeln('IntPart := ',IntPart);
   //Avoid call to TFraction.Normalize in Result := H + IntPart
   Result := H;
-  Result.Numerator := Result.Numerator+ (Result.Numerator * IntPart);
+  Result.Numerator := Result.Numerator+ (Result.Denominator * IntPart);
   if IsNeg then
     Result.Numerator := -Result.Numerator;
   //writeln('MF_FloatToFraction End.');
@@ -618,7 +618,7 @@ operator = (F1: TFraction; F2: TFraction) B: Boolean;
 begin
   F1.Normalize;
   F2.Normalize;
-  B := (F1.Numerator = F2.Numerator) and (F2.Denominator = F2.Denominator);
+  B := (F1.Numerator = F2.Numerator) and (F1.Denominator = F2.Denominator);
 end;
 
 operator < (F1: TFraction; F2: TFraction) B: Boolean;
@@ -782,16 +782,16 @@ end;
 
 function TFraction.Resolve: String;
 var
-  IntPart: Int64;
+  Num, IntPart: Int64;
 begin
   Normalize;
   if (Abs(Numerator) > Abs(Denominator)) then
   begin
     IntPart := Numerator div Denominator;
-    Numerator := Numerator mod Denominator;
-    if (IntPart < 0) then Numerator := -Numerator;
-    if (Numerator <> 0) then
-      Result := IntToStr(IntPart) + #32 + ToString
+    Num := Numerator mod Denominator;
+    if (IntPart < 0) then Num := -Num;
+    if (Num <> 0) then
+      Result := IntToStr(IntPart) + #32 + IntToStr(Num) +  FracSymbol + IntToStr(Denominator)
     else
       Result := IntToStr(IntPart);
   end
