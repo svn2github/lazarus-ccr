@@ -302,7 +302,7 @@ end;
     * Original code dealt with 32-bit integers, it was adjusted for 64-bit integers
 
   The original copyrigh holder has granted me permission to adjust and redistribute
-  this code under LGPL license.
+  this code under modified LGPL license with kining exception (see COPYING.modifiedLGPL.txt).
 
   When redistributing this code, the comments above MUST also be redistributed with it!
 }
