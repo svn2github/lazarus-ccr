@@ -1,0 +1,70 @@
+                                                                                                                                                                                                                                                               
+Delivered-To: xxxxxxxxx@gmail.com
+Received: by 10.25.0.149 with SMTP id 143csp530858lfa;
+        Thu, 26 Mar 2015 05:44:37 -0700 (PDT)
+X-Received: by 10.52.14.99 with SMTP id o3mr16503005vdc.39.1427373876559;
+        Thu, 26 Mar 2015 05:44:36 -0700 (PDT)
+Return-Path: <richard@mathforum.org>
+Received: from support1.mathforum.org (clock.mathforum.org. [144.118.94.131])
+        by mx.google.com with ESMTP id v6si7030140vdi.67.2015.03.26.05.44.35
+        for <bartjunk64@gmail.com>;
+        Thu, 26 Mar 2015 05:44:36 -0700 (PDT)
+Received-SPF: none (google.com: richard@mathforum.org does not designate permitted sender hosts) client-ip=144.118.94.131;
+Authentication-Results: mx.google.com;
+       spf=none (google.com: richard@mathforum.org does not designate permitted sender hosts) smtp.mail=richard@mathforum.org
+Received: from technetium.mathforum.org (technetium.mathforum.org [144.118.94.79])
+	by support1.mathforum.org (8.11.6/8.11.6/The Math Forum, $Revision: 1.14  primary) with ESMTP id t2QCiZe31784;
+	Thu, 26 Mar 2015 08:44:35 -0400
+Date: Thu, 26 Mar 2015 08:44:35 -0400 (EDT)
+From: r!chard tchen <richard@mathforum.org>
+To: Bart Broersma <bartjunk64@gmail.com>
+cc: contact@mathforum.org
+Subject: Re: Can I use your code in my library?
+In-Reply-To: <201503221646.t2MGkjuj032618@sdp.mathforum.org>
+Message-ID: <Pine.LNX.4.64.1503260843530.4883@technetium.mathforum.org>
+References: <201503221646.t2MGkjuj032618@sdp.mathforum.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+
+On Sun, 22 Mar 2015, Bart Broersma wrote:
+> forumURL: http://mathforum.org/library/drmath/view/51886.html
+> message: Hi,
+>
+> I ported the C++ code on this page (Decimal To Fraction Conversion) to Pascal.
+>
+> I would like to add this to my Fractions library.
+> This library is modified LGPL (with linking exception).
+>
+> Would you grant me permission to do so?
+> In the long run the library may become part of the FreePascal component library.
+> (FreePascal is an open souce Pascal compiler, which is used for the Lazarus IDE, for which I am one of the devolopers: see http://www.lazarus-ide.org/ for more info on this project.)
+>
+> Sincerely yours,
+>
+> Bart Broersma
+
+
+Dear Bart,
+
+Thanks for writing the Math Forum @ Drexel.
+
+You're welcome to take the C++ code from that Ask Dr. Math conversation and add it to your Pascal library. Please just give us proper attribution (in comments?) and clearly identify that code as a resource of David Peterson and The Math Forum @ Drexel, and not something of your own creation.
+
+On this reply, Bart, I've "Bcc:"ed Doctor Peterson, so that he may appreciate your interest.
+
+Let us know how this helps you, FreePascal, and the greater Lazarus community.
+
+-- 
+Richard Tchen
+
+The Math Forum @ Drexel
+3210 Cherry Street
+Philadelphia, PA 19104-2713
+
+tel1: (215)895-1787
+tel2: (800)756-7823
+facs: (215)895-2964
+
+The Math Forum @ Drexel (http://mathforum.org/)
+is a research and educational enterprise of
+The Drexel University School of Education (http://goodwin.drexel.edu/soe/).
