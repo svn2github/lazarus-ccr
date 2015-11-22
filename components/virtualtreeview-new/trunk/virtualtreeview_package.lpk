@@ -2,6 +2,7 @@
 <CONFIG>
   <Package Version="4">
     <Name Value="virtualtreeview_package"/>
+    <Type Value="RunAndDesignTime"/>
     <AddToProjectUsesSection Value="True"/>
     <Author Value="Mike Lischke (LCL Port: Luiz Américo)"/>
     <CompilerOptions>
@@ -11,15 +12,30 @@
         <OtherUnitFiles Value="units/$(LCLWidgetType)"/>
         <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)-$(LCLWidgetType)"/>
       </SearchPaths>
+      <Conditionals Value="if VirtualTreeView_Debug = 'True' then
+begin
+  CustomOptions := '-dDEBUG_VTV';
+  UnitPath += ';$PkgOutDir(multiloglaz)';
+  UsageUnitPath += ';$PkgOutDir(multiloglaz)';
+end;"/>
+      <BuildMacros>
+        <Count Value="1"/>
+        <Item1>
+          <Identifier Value="VirtualTreeView_Debug"/>
+          <Description Value="Enables debugging of VTV. Requires MultiLog package"/>
+          <Values Count="2">
+            <Item1 Value="True"/>
+            <Item2 Value="False"/>
+          </Values>
+          <ValueDescriptions Count="2"/>
+        </Item1>
+      </BuildMacros>
       <Parsing>
         <SyntaxOptions>
           <CStyleMacros Value="True"/>
           <UseAnsiStrings Value="False"/>
         </SyntaxOptions>
       </Parsing>
-      <Other>
-        <CompilerPath Value="$(CompPath)"/>
-      </Other>
     </CompilerOptions>
     <Description Value="Virtual Treeview is an advanced TreeView component
 "/>
@@ -57,7 +73,6 @@
         <UnitName Value="VTGraphics"/>
       </Item7>
     </Files>
-    <Type Value="RunAndDesignTime"/>
     <RequiredPkgs Count="2">
       <Item1>
         <PackageName Value="lclextensions_package"/>
