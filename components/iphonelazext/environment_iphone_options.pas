@@ -21,7 +21,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, LResources, Forms, StdCtrls,
   IDEOptionsIntf, ProjectIntf,
-  iPhoneExtOptions;
+  iPhoneExtOptions, iphonesimctrl;
 
 type
 
@@ -30,6 +30,8 @@ type
   TiPhoneSpecificOptions = class(TAbstractIDEOptionsEditor)
     Button1: TButton;
     cmbDefaultSDK: TComboBox;
+    ddSimDevice: TComboBox;
+    ddPhoneSimType: TComboBox;
     edtCompilerPath: TEdit;
     edtRTLPath: TEdit;
     edtCompilerOptions: TEdit;
@@ -37,6 +39,8 @@ type
     edtSimBundle: TEdit;
     edtSimApps: TEdit;
     Label1: TLabel;
+    lblDefaultDevice: TLabel;
+    lblSimType: TLabel;
     lblRTLUtils: TLabel;
     lblSimAppPath: TLabel;
     lblCompilerPath: TLabel;
@@ -47,6 +51,7 @@ type
     lblSimBundle: TLabel;
     procedure Button1Click(Sender: TObject);
     procedure edtCompilerOptionsChange(Sender: TObject);
+    procedure lblSimTypeClick(Sender: TObject);
     procedure lblCmpOptionsClick(Sender: TObject);
   private
     { private declarations }
@@ -60,6 +65,8 @@ type
   end;
 
 implementation
+
+{$R *.lfm}
 
 { TiPhoneSpecificOptions }
 
@@ -88,6 +95,11 @@ begin
 
 end;
 
+procedure TiPhoneSpecificOptions.lblSimTypeClick(Sender: TObject);
+begin
+
+end;
+
 function TiPhoneSpecificOptions.GetTitle: String;
 begin
   Result:='Files';
@@ -101,6 +113,10 @@ end;
 procedure TiPhoneSpecificOptions.ReadSettings(AOptions: TAbstractIDEOptions);
 var
   opt : TiPhoneEnvironmentOptions;
+  idx : integer;
+  i   : integer;
+  j   : integer;
+  sd  : TSimDevice;
 begin
   if not Assigned(AOptions) or not (AOptions is TiPhoneEnvironmentOptions) then Exit;
   opt:=TiPhoneEnvironmentOptions(AOptions);
@@ -116,6 +132,21 @@ begin
   cmbDefaultSDK.Items.Clear;
   opt.GetSDKVersions(cmbDefaultSDK.Items);
   cmbDefaultSDK.ItemIndex:=cmbDefaultSDK.Items.IndexOf(opt.DefaultSDK);
+
+  if EnvOptions.DeviceCount=0 then
+    EnvOptions.DeviceListReload;
+  idx:=-1;
+  ddSimDevice.Clear;
+  for i:=0 to EnvOptions.DeviceCount-1 do begin
+    sd:=EnvOptions.Device[i];
+    if sd.isavail then begin
+      j:=ddSimDevice.Items.Add( sd.name );
+      ddSimDevice.Items.Objects[j]:=sd;
+      if sd.id=EnvOptions.DefaultDeviceID then
+        idx:=j;
+    end;
+  end;
+  if idx>=0 then ddSimDevice.ItemIndex:=idx;
 end;
 
 procedure TiPhoneSpecificOptions.WriteSettings(AOptions: TAbstractIDEOptions);
@@ -132,6 +163,8 @@ begin
   opt.SimBundle:=edtSimBundle.Text;
   opt.SimAppsPath:=edtSimApps.Text;
 
+  if ddSimDevice.ItemIndex>=0 then
+    opt.DefaultDeviceID:=TSimDevice(ddSimDevice.Items.Objects[ddSimDevice.ItemIndex]).id;
   opt.Save;
 end;
 
@@ -141,7 +174,6 @@ begin
 end;
 
 initialization
-  {$I environment_iphone_options.lrs}
   RegisterIDEOptionsEditor(iPhoneEnvGroup, TiPhoneSpecificOptions, iPhoneEnvGroup+1);
 
 end.

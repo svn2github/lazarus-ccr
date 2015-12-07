@@ -91,6 +91,8 @@ type
 
 implementation
 
+{$R *.lfm}
+
 { TiPhoneProjectOptionsEditor }
 
 procedure TiPhoneProjectOptionsEditor.cmbSDKsChange(Sender: TObject);
@@ -568,8 +570,6 @@ const
   iPhoneOptions = 10000; //todo: get it dynamically
 
 initialization
-  {$I project_iphone_options.lrs}
-  writeln('registering iPhone proj editor');
   //RegisterIDEOptionsEditor(iPhonePrjGroup, TiPhoneProjectOptionsEditor, iPhoneOptions);
   RegisterIDEOptionsEditor(GroupProject, TiPhoneProjectOptionsEditor, iPhoneOptions);
 

@@ -27,7 +27,7 @@ uses
 
   project_iphone_options, xcodetemplate,
 
-  iPhoneExtOptions, iPhoneExtStr, iPhoneBundle, lazfilesutils;
+  iPhoneExtOptions, iPhoneExtStr, iPhoneBundle, lazfilesutils, iphonesimctrl;
 
 procedure Register;
 
@@ -456,14 +456,13 @@ begin
   IDEMessagesWindow.AddMsg(strXcodeUpdated, '', 0);
 end;
 
-procedure TiPhoneExtension.SimRun(Sender: TObject);
+procedure SimRunDirect;
 var
   t     : TProcess;
   path  : String;
 begin
   t :=TProcess.Create(nil);
   try
-    //ProjectBuilding(nil);
     path:=IncludeTrailingPathDelimiter(EnvOptions.SimBundle)+'Contents/MacOS/iPhone Simulator';
     EnvOptions.SubstituteMacros(path);
     t.CommandLine:='"'+path+'"';
@@ -475,6 +474,28 @@ begin
   end;
   t.Free;
 end;
+
+function SimRunInstruct(var err: string): Boolean;
+begin
+  if EnvOptions.DefaultDeviceID='' then begin
+    err:='Device type is not specified';
+    Result:=false;
+    Exit;
+  end;
+  Result:=true;
+  iphonesimctrl.RunSim( EnvOptions.DefaultDeviceID );
+end;
+
+procedure TiPhoneExtension.SimRun(Sender: TObject);
+var
+  err : string;
+begin
+  if not SimRunInstruct(err) then begin
+    ShowMessage('Unable to run Simulator. '+err);
+    Exit;
+  end;
+end;
+
 
 {procedure TiPhoneExtension.isProjectClicked(Sender: TObject);
 begin

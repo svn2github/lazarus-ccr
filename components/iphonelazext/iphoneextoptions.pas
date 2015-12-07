@@ -21,7 +21,7 @@ interface
 
 uses
   Classes, SysUtils, IDEOptionsIntf, LazIDEIntf, ProjectIntf, MacroIntf,
-  iPhoneBundle, DOM, XMLRead, XMLConf, XcodeUtils, FileUtil;
+  iPhoneBundle, XMLConf, XcodeUtils, FileUtil, iphonesimctrl;
 
 const
   DefaultResourceDir = 'Resources';
@@ -75,8 +75,13 @@ type
     fSimAppsPath      : String;
     fSimBundle        : String;
     fDefaultSDK       : String;
+    fDefaultSimType   : String;
+    fDefaultDeviceID  : String;
 
-    fVersions  : TStringList;
+    fVersions   : TStringList;
+    fDeviceList : TList;
+    function GetDevice(i: integer): TSimDevice;
+    function GetDeviceCount: Integer;
   protected
     function XMLFileName: String;
 
@@ -100,6 +105,9 @@ type
     procedure GetSDKVersions(Strings: TStrings);
     procedure RefreshVersions;
 
+    procedure DeviceListClear;
+    procedure DeviceListReload;
+
     property PlatformsBaseDir: String read fPlatformsBaseDir write fPlatformsBaseDir;
     property CompilerPath: String read fCompilerPath write fCompilerPath;
     property BaseRTLPath: String read fBaseRTLPath write fBaseRTLPath;
@@ -109,6 +117,12 @@ type
     property SimAppsPath: String read fSimAppsPath write fSimAppsPath;
 
     property DefaultSDK: String read fDefaultSDK write fDefaultSDK;
+
+    property DefaultSimType: String read fDefaultSimType write fDefaultSimType; // it's currently Simulator via instruments
+    property DefaultDeviceID: String read fDefaultDeviceID write fDefaultDeviceID;
+
+    property DeviceCount: Integer read GetDeviceCount;
+    property Device[i: integer]: TSimDevice read GetDevice;
   end;
 
 function EnvOptions: TiPhoneEnvironmentOptions;
@@ -173,6 +187,17 @@ end;
 class function TiPhoneEnvironmentOptions.GetInstance: TAbstractIDEOptions;
 begin
   Result:=EnvOptions;
+end;
+
+function TiPhoneEnvironmentOptions.GetDevice(i: integer): TSimDevice;
+begin
+  if (i<0) and (i>=fDeviceList.Count) then Result:=nil
+  else Result:=TSimDevice(fDeviceList[i]);
+end;
+
+function TiPhoneEnvironmentOptions.GetDeviceCount: Integer;
+begin
+  Result:=fDeviceList.Count;
 end;
 
 function TiPhoneEnvironmentOptions.XMLFileName: String;
@@ -240,12 +265,15 @@ begin
   fSimBundle := GetDefaultSimBundlePath;
   fCompilerPath := '/usr/local/bin/fpc';
   fVersions:=TStringList.Create;
+  fDeviceList:=TList.Create;
 end;
 
 destructor TiPhoneEnvironmentOptions.Destroy;
 begin
   ClearVersionsInfo;
   fVersions.Free;
+  DeviceListClear;
+  fDeviceList.Free;
   inherited Destroy;
 end;
 
@@ -267,6 +295,7 @@ begin
       fSimBundle    := UTF8Encode(xmlcfg.GetValue('SimBundle', fSimBundle));
       fSimAppsPath  := UTF8Encode(xmlcfg.GetValue('SimAppPath', fSimAppsPath));
       fDefaultSDK := UTF8Encode(xmlcfg.GetValue('DefaultSDK', fDefaultSDK));
+      fDefaultDeviceID := UTF8Encode(xmlcfg.GetValue('DefaultDevice', fDefaultDeviceID));
 
       RefreshVersions;
       if (fDefaultSDK = '') and (fVersions.Count>0) then
@@ -296,6 +325,7 @@ begin
       xmlcfg.SetValue('SimBundle', UTF8Decode(fSimBundle));
       xmlcfg.SetValue('SimAppPath', UTF8Decode(fSimAppsPath));
       xmlcfg.SetValue('DefaultSDK', UTF8Decode(fDefaultSDK));
+      xmlcfg.SetValue('DefaultDevice', UTF8Decode(fDefaultDeviceID));
     finally
       xmlcfg.Free;
     end;
@@ -348,6 +378,20 @@ procedure TiPhoneEnvironmentOptions.RefreshVersions;
 begin
   ClearVersionsInfo;
   ScanForSDK(EnvOptions.PlatformsBaseDir, @FoundSDK);
+end;
+
+procedure TiPhoneEnvironmentOptions.DeviceListClear;
+var
+  i : integer;
+begin
+  for i:=0 to fDeviceList.Count-1 do
+    TObject(fDeviceList[i]).Free;
+  fDeviceList.Clear;
+end;
+
+procedure TiPhoneEnvironmentOptions.DeviceListReload;
+begin
+  ListDevice(fDeviceList);
 end;
 
 { TiPhoneProjectOptions }
