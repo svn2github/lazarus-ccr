@@ -17,7 +17,8 @@ interface
 *   {} - is an object (just like json)                                          *
 *  escaping characters with C-style escaping:                                   *
 *    * quotes (")                                                               *
-*    * line breaks (note OSX is typically using \n, unline Unix \r)             *
+*    * line breaks (note OSX is typically using \n, unlike Unix \r)             *
+*                                                                               *
 *                                                                               *
 * PBXScanner - scans through the file                                           *
 * PBXParser - parses the file, returning a higher level entities of the file:   *
@@ -177,6 +178,7 @@ var
   i : Integer;
   k : Integer;
 begin
+  Result:='';
   k:=0;
   for i:=1 to length(v) do begin
     if not (v[i] in IdentName) then begin
@@ -435,6 +437,7 @@ begin
   LastComment:='';
   Name:='';
   Value:='';
+  Result:=etError;
   case fState of
     stInit :
       case scanner.FetchToken of
@@ -700,6 +703,7 @@ var
   lvl : Integer;
   tk  : TPBXEntity;
 begin
+  Result:=false;
   if not Assigned(p) then Exit;
   lvl:=p.Level;
   while (p.Level>=lvl) do begin

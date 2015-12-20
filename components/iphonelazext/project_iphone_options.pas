@@ -21,7 +21,8 @@ interface
 uses
   Classes,SysUtils,FileUtil,LResources,Forms,StdCtrls,CheckLst,Buttons, Dialogs,
   Menus,IDEOptionsIntf,ProjectIntf,LazIDEIntf,iPhoneExtStr,
-  iPhoneExtOptions, Controls, LazFilesUtils, XcodeUtils, newXibDialog, xibfile;
+  iPhoneExtOptions, Controls, LazFilesUtils, XcodeUtils, newXibDialog, xibfile
+  ,CompOptsIntf;
 
 type
 
@@ -32,6 +33,8 @@ type
     btnAddXib:TButton;
     btnRemoveXib:TButton;
     Label5:TLabel;
+    Label6: TLabel;
+    memResFiles: TMemo;
     mnuDump:TMenuItem;
     mnuOpenIB:TMenuItem;
     nibFilesBox:TCheckListBox;
@@ -72,8 +75,8 @@ type
     SelXibFile  : String;
     ResDirChanged : Boolean;
 
-    fOnChanged  : TNotifyEvent;
-    procedure DoChanged;
+    //fOnChanged  : TNotifyEvent;
+    //procedure DoChanged;
 
     procedure RefreshXIBList;
 
@@ -86,7 +89,7 @@ type
     procedure Setup(ADialog: TAbstractOptionsEditorDialog); override;
     procedure ReadSettings(AOptions: TAbstractIDEOptions); override;
     procedure WriteSettings(AOptions: TAbstractIDEOptions); override;
-    property OnChanged: TNotifyEvent read fOnChanged write fOnChanged;
+    //property OnChanged: TNotifyEvent read fOnChanged write fOnChanged;
   end;
 
 implementation
@@ -281,10 +284,10 @@ begin
   mnuDump.Enabled:=SelXibFile<>''
 end;
 
-procedure TiPhoneProjectOptionsEditor.DoChanged;
-begin
-  if Assigned(fOnChanged) then fOnChanged(Self);
-end;
+//procedure TiPhoneProjectOptionsEditor.DoChanged;
+//begin
+  //if Assigned(fOnChanged) then fOnChanged(Self);
+//end;
 
 procedure TiPhoneProjectOptionsEditor.RefreshXIBList;
 var
@@ -513,7 +516,7 @@ procedure TiPhoneProjectOptionsEditor.ReadSettings(AOptions: TAbstractIDEOptions
 var
   i : Integer;
 begin
-  with TiPhoneProjectOptions(AOptions) do
+  with ProjOptions do
   begin
     Load;
     chkisPhone.Checked:=isIPhoneApp;
@@ -526,14 +529,16 @@ begin
     edtAppID.Text:=AppID;
     edtResDir.Text:=ResourceDir;
     edtExclude.Text:=ExcludeMask;
+    memResFiles.Text:=ResFiles.Text;
   end;
 
   RefreshXIBList;
-  if TiPhoneProjectOptions(AOptions).MainNib<>'' then begin
-    i:=nibFilesBox.Items.IndexOf(TiPhoneProjectOptions(AOptions).MainNib);
+  if ProjOptions.MainNib<>'' then begin
+    i:=nibFilesBox.Items.IndexOf(ProjOptions.MainNib);
     if i>=0 then nibFilesBox.Checked[i]:=True;
   end;
   SetControlsEnabled(chkisPhone.Checked); // is iPhone project
+
 end;
 
 procedure TiPhoneProjectOptionsEditor.WriteSettings(AOptions: TAbstractIDEOptions);
@@ -548,7 +553,7 @@ begin
       Break;
     end;
 
-  with TiPhoneProjectOptions(AOptions) do
+  with ProjOptions do
   begin
     isIPhoneApp:=chkisPhone.Checked;
     SDK:=cmbSDKs.Caption;
@@ -556,14 +561,16 @@ begin
     ResourceDir:=edtResDir.Text;
     ExcludeMask:=edtExclude.Text;
     MainNib:=amainnib;
+    ResFiles.Text:=memResFiles.Text;
     Save;
-    DoChanged;
   end;
+  DoOnChange;
 end;
 
 class function TiPhoneProjectOptionsEditor.SupportedOptionsClass: TAbstractIDEOptionsClass;
 begin
-  Result:=TiPhoneProjectOptions;
+  //Result:=TiPhoneProjectOptions;
+  Result:=TLazCompilerOptions;
 end;
 
 const

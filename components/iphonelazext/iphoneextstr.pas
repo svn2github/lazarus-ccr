@@ -30,7 +30,7 @@ resourcestring
   strPtrOptAppID     = 'Application ID';
   strPtrOptAppIDHint = 'It''s recommended by Apple to use domain-structured identifier i.e. "com.mycompany.myApplication"';
 
-  strXcodeUpdated   = 'Xcode project updated';
+  strXcodeUpdated   = 'Xcode project updated (%s)';
 
   strWNoSDKSelected = 'Warning: SDK is not selected using %s';
   strWNoSDK         = 'Warning: No SDK available. Linking might fail.';

@@ -1,57 +1,59 @@
-inherited iPhoneProjectOptionsEditor: TiPhoneProjectOptionsEditor
-  Height = 474
-  Width = 620
-  ClientHeight = 474
-  ClientWidth = 620
+object iPhoneProjectOptionsEditor: TiPhoneProjectOptionsEditor
+  Left = 0
+  Height = 466
+  Top = 0
+  Width = 598
+  ClientHeight = 466
+  ClientWidth = 598
   OnClick = FrameClick
   TabOrder = 0
-  DesignLeft = 513
-  DesignTop = 97
-  object chkisPhone: TCheckBox[0]
+  DesignLeft = 408
+  DesignTop = 201
+  object chkisPhone: TCheckBox
     Left = 16
     Height = 18
     Top = 16
-    Width = 199
+    Width = 191
     Caption = 'is iPhone application project'
     OnChange = chkisPhoneChange
     TabOrder = 0
   end
-  object lblAppID: TLabel[1]
+  object lblAppID: TLabel
     Left = 16
-    Height = 18
+    Height = 16
     Top = 88
-    Width = 87
+    Width = 89
     Caption = 'Application ID'
     ParentColor = False
   end
-  object edtAppID: TEdit[2]
+  object edtAppID: TEdit
     Left = 112
     Height = 22
     Top = 85
-    Width = 490
+    Width = 468
     Anchors = [akTop, akLeft, akRight]
     TabOrder = 1
     Text = 'com.mycompany.myapp'
   end
-  object lblAppIDHint: TLabel[3]
+  object lblAppIDHint: TLabel
     Left = 16
-    Height = 14
+    Height = 12
     Top = 117
-    Width = 493
+    Width = 497
     Caption = 'It''s recommended by Apple to use domain-structured name, i.e. com.mycompany.myApplication as ID'
     Font.Height = -10
     ParentColor = False
     ParentFont = False
   end
-  object lblSDKVer: TLabel[4]
+  object lblSDKVer: TLabel
     Left = 16
-    Height = 18
+    Height = 16
     Top = 51
-    Width = 80
+    Width = 79
     Caption = 'SDK version:'
     ParentColor = False
   end
-  object cmbSDKs: TComboBox[5]
+  object cmbSDKs: TComboBox
     Left = 112
     Height = 20
     Top = 48
@@ -61,12 +63,12 @@ inherited iPhoneProjectOptionsEditor: TiPhoneProjectOptionsEditor
     Style = csDropDownList
     TabOrder = 2
   end
-  object edtResDir: TEdit[6]
+  object edtResDir: TEdit
     AnchorSideRight.Control = btnShowInFinder
     Left = 120
     Height = 22
     Top = 174
-    Width = 355
+    Width = 332
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Right = 10
     OnChange = edtResDirChange
@@ -74,56 +76,56 @@ inherited iPhoneProjectOptionsEditor: TiPhoneProjectOptionsEditor
     TabOrder = 3
     Text = 'Resources'
   end
-  object Label1: TLabel[7]
+  object Label1: TLabel
     Left = 16
-    Height = 18
+    Height = 16
     Top = 176
     Width = 89
     Caption = 'Resources dir:'
     ParentColor = False
   end
-  object edtExclude: TEdit[8]
+  object edtExclude: TEdit
     Left = 120
     Height = 22
     Top = 224
-    Width = 482
+    Width = 460
     Anchors = [akTop, akLeft, akRight]
     OnChange = edtExcludeChange
     TabOrder = 4
     Text = '.svn'
   end
-  object Label2: TLabel[9]
+  object Label2: TLabel
     Left = 16
-    Height = 18
+    Height = 16
     Top = 224
-    Width = 81
+    Width = 82
     Caption = 'Ignore mask:'
     ParentColor = False
   end
-  object Label3: TLabel[10]
+  object Label3: TLabel
     Left = 16
-    Height = 14
+    Height = 12
     Top = 200
-    Width = 364
+    Width = 359
     Caption = 'It''s recommended to set resource dir as a relative (to project .lpr file) path'
     Font.Height = -10
     ParentColor = False
     ParentFont = False
   end
-  object Label4: TLabel[11]
+  object Label4: TLabel
     Left = 16
-    Height = 18
+    Height = 16
     Top = 256
-    Width = 54
+    Width = 56
     Caption = 'Nib files:'
     ParentColor = False
   end
-  object nibFilesBox: TCheckListBox[12]
+  object nibFilesBox: TCheckListBox
     Left = 120
-    Height = 180
+    Height = 76
     Top = 256
-    Width = 482
-    Anchors = [akTop, akLeft, akRight, akBottom]
+    Width = 460
+    Anchors = [akTop, akLeft, akRight]
     ItemHeight = 0
     OnClickCheck = nibFilesBoxClickCheck
     OnItemClick = nibFilesBoxItemClick
@@ -132,54 +134,71 @@ inherited iPhoneProjectOptionsEditor: TiPhoneProjectOptionsEditor
     PopupMenu = nibsPopup
     TabOrder = 5
   end
-  object Label5: TLabel[13]
+  object Label5: TLabel
     AnchorSideTop.Control = nibFilesBox
     AnchorSideTop.Side = asrBottom
     Left = 120
-    Height = 14
-    Top = 436
-    Width = 246
+    Height = 12
+    Top = 332
+    Width = 247
     Caption = 'The checked one is the main Nib of the application'
     Font.Height = -10
     ParentColor = False
     ParentFont = False
   end
-  object btnShowInFinder: TButton[14]
-    Left = 485
+  object btnShowInFinder: TButton
+    Left = 462
     Height = 20
     Top = 176
-    Width = 117
+    Width = 118
     Anchors = [akTop, akRight]
     AutoSize = True
     Caption = 'Show in Finder'
     OnClick = btnShowInFinderClick
     TabOrder = 6
   end
-  object btnAddXib: TButton[15]
+  object btnAddXib: TButton
     AnchorSideLeft.Control = btnRemoveXib
     AnchorSideRight.Control = btnRemoveXib
     AnchorSideRight.Side = asrBottom
     Left = 40
     Height = 20
     Top = 283
-    Width = 74
+    Width = 77
     Anchors = [akTop, akLeft, akRight]
     AutoSize = True
     Caption = 'Add'
     OnClick = btnAddXibClick
     TabOrder = 7
   end
-  object btnRemoveXib: TButton[16]
+  object btnRemoveXib: TButton
     Left = 40
     Height = 20
     Top = 312
-    Width = 74
+    Width = 77
     AutoSize = True
     Caption = 'Remove'
     OnClick = btnRemoveXibClick
     TabOrder = 8
   end
-  object nibsPopup: TPopupMenu[17]
+  object memResFiles: TMemo
+    Left = 120
+    Height = 106
+    Top = 352
+    Width = 458
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    ScrollBars = ssVertical
+    TabOrder = 9
+  end
+  object Label6: TLabel
+    Left = 16
+    Height = 16
+    Top = 352
+    Width = 90
+    Caption = 'Included Files:'
+    ParentColor = False
+  end
+  object nibsPopup: TPopupMenu
     OnPopup = nibsPopupPopup
     left = 160
     top = 272

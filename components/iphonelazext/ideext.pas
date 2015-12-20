@@ -51,7 +51,6 @@ type
     constructor Create;
     procedure UpdateXcode(Sender: TObject);
     procedure SimRun(Sender: TObject);
-    //procedure isProjectClicked(Sender: TObject);
   end;
 
 var
@@ -349,6 +348,7 @@ var
   projname  : string;
 
   ext       : string;
+  exename   : string;
   tname     : string;
   plistname : string;
 
@@ -358,7 +358,6 @@ var
   opt   : string;
   optSim: string;
 begin
-  FillBunldeInfo(false, Info);
   // the create .plist would be used by XCode project
   // the simulator .plist in created with InstallAppToSim.
   // they differ with SDKs used
@@ -367,43 +366,32 @@ begin
 
   tname:=ExtractFileName( LazarusIDE.ActiveProject.MainFile.Filename);
   tname:=ChangeFileExt(tname, '');
-  plistname:=tname+'.plist';
+  plistname:='info.plist';
 
   build.Add('INFOPLIST_FILE','"'+plistname+'"');
   build.Add('PRODUCT_NAME','"'+tname+'"');
   build.Add('SDKROOT',EnvOptions.GetSDKName(ProjOptions.SDK, false));
 	build.Add('FPC_COMPILER_PATH','"'+EnvOptions.CompilerPath+'"');
 	build.Add('FPC_MAIN_FILE','"'+LazarusIDE.ActiveProject.MainFile.Filename+'"');
-  opt :=
-    ' -XR'+EnvOptions.GetSDKFullPath(ProjOptions.SDK, false)+' ' +
-    ' -FD'+IncludeTrailingPathDelimiter(EnvOptions.PlatformsBaseDir)+'iPhoneOS.platform/Developer/usr/bin ' +
-    EnvOptions.CommonOpt;
-  optSim :=
-    ' -XR'+EnvOptions.GetSDKFullPath(ProjOptions.SDK, true)+' ' +
-    ' -FD'+IncludeTrailingPathDelimiter(EnvOptions.PlatformsBaseDir)+'iPhoneSimulator.platform/Developer/usr/bin ' +
-    EnvOptions.CommonOpt;
+  opt:='';
 
   with LazarusIDE.ActiveProject.LazCompilerOptions do begin
     opt:=opt + ' ' +BreakPathsStringToOption(OtherUnitFiles, '-Fu', '\"');
     opt:=opt + ' ' +BreakPathsStringToOption(IncludePath, '-Fi', '\"');
     opt:=opt + ' ' +BreakPathsStringToOption(ObjectPath, '-Fo', '\"');
     opt:=opt + ' ' +BreakPathsStringToOption(Libraries, '-Fl', '\"');
-    optSim:=optSim + ' ' +BreakPathsStringToOption(OtherUnitFiles, '-Fu', '\"');
-    optSim:=optSim + ' ' +BreakPathsStringToOption(IncludePath, '-Fi', '\"');
-    optSim:=optSim + ' ' +BreakPathsStringToOption(ObjectPath, '-Fo', '\"');
-    optSim:=optSim + ' ' +BreakPathsStringToOption(Libraries, '-Fl', '\"');
   end;
-
-        build.Add('FPC_CUSTOM_OPTIONS','"'+opt+'"');
-        build.Add('"FPC_CUSTOM_OPTIONS[sdk=iphonesimulator*]"','"'+optSim+'"');
 
   dir:=ResolveProjectPath('xcode');
   dir:=dir+'/';
 
-  name:=ExtractFileName(GetProjectExeName(LazarusIDE.ActiveProject));
+  // not using executable name. It's driven by product name
+  //exename:=ExtractFileName(GetProjectExeName(LazarusIDE.ActiveProject));
+  //name:=exename;
   ForceDirectories(dir);
-  WriteDefInfoList( dir + GetProjectPlistName(LazarusIDE.ActiveProject),
-    name, name, Info);
+
+  FillBunldeInfo(false, Info);
+  WriteDefInfoList( dir + plistname, tname, tname, Info);
 
 
   projname:=ExtractFileName(LazarusIDE.ActiveProject.MainFile.Filename);
@@ -417,32 +405,30 @@ begin
   proj:=TStringList.Create;
   templates:=nil;
   try
-    if not FileExists(projname) then begin
-      templates:=TStringList.Create;
+    templates:=TStringList.Create;
 
-      if WriteIconTo( IncludeTrailingPathDelimiter(dir)+'Icon.png') then begin
-        templates.Values['icon']:=XCodeProjectTemplateIcon;
-        templates.Values['iconid']:=XCodeProjectTemplateIconID;
-        templates.Values['iconfile']:=XCodeIconFile;
-        templates.Values['iconfileref']:=XCodeIconFileRef;
-      end else begin
-        templates.Values['icon']:='';
-        templates.Values['iconid']:='';
-        templates.Values['iconfile']:='';
-        templates.Values['iconfileref']:='';
-      end;
+    if WriteIconTo( IncludeTrailingPathDelimiter(dir)+'Icon.png') then begin
+      templates.Values['icon']:=XCodeProjectTemplateIcon;
+      templates.Values['iconid']:=XCodeProjectTemplateIconID;
+      templates.Values['iconfile']:=XCodeIconFile;
+      templates.Values['iconfileref']:=XCodeIconFileRef;
+    end else begin
+      templates.Values['icon']:='';
+      templates.Values['iconid']:='';
+      templates.Values['iconfile']:='';
+      templates.Values['iconfileref']:='';
+    end;
 
-      //todo:
-      templates.Values['bundle']:=tname+'.app';
-      templates.Values['plist']:=plistname;
-      templates.Values['targetname']:=tname;
-      templates.Values['productname']:=tname;
+    //todo:
+    templates.Values['bundle']:=tname+'.app';
+    templates.Values['plist']:=plistname;
+    templates.Values['targetname']:=tname;  // Target and Product name must match
+    templates.Values['productname']:=tname;
+    templates.Values['mainfile']:=LazarusIDE.ActiveProject.MainFile.Filename;
+    templates.Values['projoptions']:=opt;
 
-      proj.Text:=XCodeProjectTemplate;
-    end else
-      proj.LoadFromFile(projname);
-
-    PrepareTemplateFile(proj, templates, build);
+ // Xcode project updated (/Users/dmitry/FPC_Laz/iphonelazext/tests/xcode/test_xcodetemplate.xcodeproj)
+    PrepareTemplateFile(proj, templates);
     proj.SaveToFile(projname);
   except
     on e: exception do
@@ -453,7 +439,7 @@ begin
   templates.Free;
   build.Free;
 
-  IDEMessagesWindow.AddMsg(strXcodeUpdated, '', 0);
+  IDEMessagesWindow.AddMsg(Format(strXcodeUpdated,[projdir]), '', 0);
 end;
 
 procedure SimRunDirect;
@@ -495,15 +481,6 @@ begin
     Exit;
   end;
 end;
-
-
-{procedure TiPhoneExtension.isProjectClicked(Sender: TObject);
-begin
-  if not Assigned(Sender) or not Assigned(LazarusIDE.ActiveProject) then Exit;
-  TIDEMenuCommand(Sender).Checked:=not TIDEMenuCommand(Sender).Checked;
-  ProjOptions.isiPhoneApp:=TIDEMenuCommand(Sender).Checked;
-  ProjOptions.Save;
-end;}
 
 procedure Register;
 begin

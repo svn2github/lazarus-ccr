@@ -1,12 +1,13 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <Package Version="4">
     <Name Value="iphonelazext"/>
-    <AddToProjectUsesSection Value="True"/>
+    <Type Value="DesignTime"/>
     <Author Value="Dmitry 'skalogryz' Boyarintsev"/>
     <CompilerOptions>
       <Version Value="11"/>
       <SearchPaths>
+        <OtherUnitFiles Value="pbx"/>
         <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
       <Parsing>
@@ -16,15 +17,15 @@
       </Parsing>
       <Other>
         <CompilerMessages>
-          <IgnoredMessages idx4055="True" idx4079="True" idx4080="True" idx4081="True" idx5024="True" idx5057="True" idx5060="True"/>
+          <IgnoredMessages idx5091="True" idx5060="True" idx5057="True" idx5024="True" idx4081="True" idx4080="True" idx4079="True" idx4055="True"/>
         </CompilerMessages>
-        <CompilerPath Value="$(CompPath)"/>
+        <CustomOptions Value="-Sm -dPACKAGE_PATH:='$(PkgDir)'"/>
       </Other>
     </CompilerOptions>
     <Description Value="iPhone Development Lazarus extension"/>
     <License Value="LGPL"/>
-    <Version Minor="7"/>
-    <Files Count="14">
+    <Version Minor="8"/>
+    <Files Count="21">
       <Item1>
         <Filename Value="ideext.pas"/>
         <HasRegisterProc Value="True"/>
@@ -68,22 +69,52 @@
       </Item10>
       <Item11>
         <Filename Value="lazfilesutils.pas"/>
-        <UnitName Value="lazfilesutils"/>
+        <UnitName Value="LazFilesUtils"/>
       </Item11>
       <Item12>
         <Filename Value="xcodeutils.pas"/>
-        <UnitName Value="xcodeutils"/>
+        <UnitName Value="XcodeUtils"/>
       </Item12>
       <Item13>
         <Filename Value="newxibdialog.pas"/>
-        <UnitName Value="newxibdialog"/>
+        <UnitName Value="newXibDialog"/>
       </Item13>
       <Item14>
         <Filename Value="xibfile.pas"/>
         <UnitName Value="xibfile"/>
       </Item14>
+      <Item15>
+        <Filename Value="pbx/pbxcontainer.pas"/>
+        <AddToUsesPkgSection Value="False"/>
+        <UnitName Value="pbxcontainer"/>
+      </Item15>
+      <Item16>
+        <Filename Value="pbx/pbxfile.pas"/>
+        <AddToUsesPkgSection Value="False"/>
+        <UnitName Value="pbxfile"/>
+      </Item16>
+      <Item17>
+        <Filename Value="pbx/xcodeproj.pas"/>
+        <AddToUsesPkgSection Value="False"/>
+        <UnitName Value="xcodeproj"/>
+      </Item17>
+      <Item18>
+        <Filename Value="plistfile.pas"/>
+        <UnitName Value="PlistFile"/>
+      </Item18>
+      <Item19>
+        <Filename Value="pbx/xcodeprojutils.pas"/>
+        <UnitName Value="xcodeprojutils"/>
+      </Item19>
+      <Item20>
+        <Filename Value="iphonesimctrl.pas"/>
+        <UnitName Value="iphonesimctrl"/>
+      </Item20>
+      <Item21>
+        <Filename Value="res/buildscript.sh"/>
+        <Type Value="Text"/>
+      </Item21>
     </Files>
-    <Type Value="DesignTime"/>
     <RequiredPkgs Count="3">
       <Item1>
         <PackageName Value="LCL"/>

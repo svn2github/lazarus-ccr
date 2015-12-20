@@ -25,7 +25,8 @@ uses
 
 function ResolveProjectPath(const path: string; project: TLazProject = nil): string;
 
-function BreakPathsStringToOption(const Paths, Switch: String; const Quotes: string = '"'; project: TLazProject = nil): String;
+function BreakPathsStringToOption(const Paths, Switch: String;
+  const Quotes: string = '"'; project: TLazProject = nil; AResolvePath: Boolean = false): String;
 
 function RelativeToFullPath(const BasePath, Relative: string): String;
 function NeedQuotes(const path: string): Boolean;
@@ -152,7 +153,7 @@ begin
   end;
 end;
 
-function BreakPathsStringToOption(const Paths, Switch, Quotes: String; project: TLazProject): String;
+function BreakPathsStringToOption(const Paths, Switch, Quotes: String; project: TLazProject; AResolvePath: Boolean): String;
 var
   i, j  : Integer;
   fixed : String;
@@ -168,7 +169,7 @@ begin
     if Paths[i]=';' then begin
       fixed:=Trim(Copy(paths,j, i-j)  );
       if fixed<>'' then begin
-        fixed:=ResolveProjectPath(fixed, project);
+        if AResolvePath then fixed:=ResolveProjectPath(fixed, project);
         Result:=Result+' ' + Switch + QuoteStrIfNeeded(fixed, quotes);
       end;
       j:=i+1;
@@ -176,7 +177,7 @@ begin
 
   fixed:=Trim(Copy(paths,j, length(paths)-j+1)  );
   if fixed<>'' then begin
-    fixed:=ResolveProjectPath(fixed, project);
+    if AResolvePath then fixed:=ResolveProjectPath(fixed, project);
     Result:=Result+' ' + Switch + QuoteStrIfNeeded(fixed, quotes);
   end;
 end;

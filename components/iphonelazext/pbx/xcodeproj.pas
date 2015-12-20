@@ -17,9 +17,14 @@ unit xcodeproj;
 *   * any objects within key-value tables are freed                             *
 * Alternative solution - implement ref counting!                                *
 *                                                                               *
+* PBXShellScriptBuildPhase - the give script must be using MacOS line breaks    *
+*   which are \n (#13). Using unix line breaks \r (#10) will cause issues       *
+*   in Xcode.                                                                   *
 --------------------------------------------------------------------------------}
 
 interface
+
+{$ifdef fpc}{$mode delphi}{$endif}
 
 uses
   Classes, SysUtils,
@@ -49,10 +54,16 @@ type
     fdefaultConfigurationIsVisible: string;
     fdefaultConfigurationName: string;
     fbuildConfigurations: TPBXObjectsList;
+
+    function GetConfigItem(i: integer): XCBuildConfiguration;
+    function GetCount: integer;
   public
     constructor Create; override;
     destructor Destroy; override;
     function addConfig(const aname: string): XCBuildConfiguration;
+    // Count and Items are just for convenience. MUST NOT BE in "published" section
+    property Count: integer read GetCount;
+    property Items[i: integer]: XCBuildConfiguration read GetConfigItem; default;
   published
     property buildConfigurations: TPBXObjectsList read fbuildConfigurations;
 	  property defaultConfigurationIsVisible: string read fdefaultConfigurationIsVisible write fdefaultConfigurationIsVisible;
@@ -76,17 +87,19 @@ type
 
   { PBXFileReference }
 
+  // these files might not be physically present in for the project.
+  // i.e. a bundle .app file doesn't physically exists until it's actual "built" by the xcode
   PBXFileReference = class(PBXObject)
   private
     FexplicitFileType: string;
-    FincludeInIndex: string;
+    FincludeInIndex: Boolean;
     FlastKnownFileType: string;
     Fname: string;
     Fpath: string;
     FsourceTree: string;
   published
     property explicitFileType: string read FexplicitFileType write FexplicitFileType;
-    property includeInIndex: string read FincludeInIndex write FincludeInIndex;
+    property includeInIndex: Boolean read FincludeInIndex write FincludeInIndex;
     property lastKnownFileType: string read flastKnownFileType write flastKnownFileType;
     property name: string read Fname write Fname;
     property path: string read Fpath write Fpath;
@@ -135,6 +148,7 @@ type
     foutputPaths: TPBXStringArray;
     fshellpath: string;
     fshellScript: string;
+    fshowEnvVarsInLog: Boolean;
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -143,6 +157,7 @@ type
     property outputPaths: TPBXStringArray read foutputPaths;
     property shellPath: string read fshellpath write fshellPath;
     property shellScript: string read fshellScript write fshellScript;
+    property showEnvVarsInLog: Boolean read fshowEnvVarsInLog write fshowEnvVarsInLog default true;
   end;
 
   { PBXGroup }
@@ -197,9 +212,26 @@ type
     property dependencies: TPBXObjectsList read fdependencies;
 		property name: string read fname write fname;
 		property productName: string read fproductName write fproductName; // = ttestGame;
-		property productReference: PBXObject read fproductReference write fproductReference; // = 0AFA6EAD19F60EFE004C8FD9 /* ttestGame.app */;
+		property productReference: PBXObject read fproductReference write fproductReference;   // producut resulting file
 		property productType: string read fproductType write fproductType; // = "com.apple.product-type.application";
 	end;
+
+  { PBXLegacyTarget }
+
+  PBXLegacyTarget = class(PBXObject)
+  private
+    fpassBuildSettingsInEnvironment : Boolean;
+    fbuildArgumentsString  : string;
+    fbuildToolPath         : string;
+    fbuildWorkingDirectory : string;
+  public
+    constructor Create; override;
+  published
+    property buildArgumentsString: string read fbuildArgumentsString write fbuildArgumentsString;
+    property buildToolPath: string read fbuildToolPath write fbuildToolPath;
+    property buildWorkingDirectory: string read fbuildWorkingDirectory write fbuildWorkingDirectory;
+    property passBuildSettingsInEnvironment: Boolean read fpassBuildSettingsInEnvironment write fpassBuildSettingsInEnvironment;
+  end;
 
   { PBXTargetDependency }
 
@@ -285,19 +317,28 @@ const
   //FILETYPE_SCRIPT = 'text.script.sh';
   FILETYPE_EXEC   = 'compiled.mach-o.executable';
   FILETYPE_MACHO  = FILETYPE_EXEC;
+  FILETYPE_BUNDLE = 'wrapper.application';
+  FILETYPE_PLIST  = 'text.plist.xml';
+  FILETYPE_OBJC   = 'sourcecode.c.objc';
 
 function FileRefCreate(const afilename: string; const filetype: string = ''): PBXFileReference;
 
 const
-  GROUPSRC_ABSOLUTE = '<absolute>';
-  GROUPSRC_GROUP    = '<group>';
+  SRCTREE_ABSOLUTE = '<absolute>';           // path is absolute path
+  SRCTREE_GROUP    = '<group>';              // path is relative to the parent group
+  SRCTREE_PRODUCT  = 'BUILT_PRODUCTS_DIR';   // path is relative to the product build directory
+  SRCTREE_PROJECT  = 'SOURCE_ROOT';          // path is relative for .xcodeproj directory location
+  SRCTREE_DEV      = 'DEVELOPER_DIR';        // path is relative to developer dir
+  SRCTREE_SDK      = 'SDKROOT';              // path is relative to selected SDK dir
 
-function GroupCreate(const aname: string; const srcTree: string = GROUPSRC_GROUP): PBXGroup;
+function GroupCreate(const aname: string; const srcTree: string = SRCTREE_GROUP): PBXGroup;
 //todo: need a rountine to update the path whenever the project is saved
 function GroupCreateRoot(const projectfolder: string = ''): PBXGroup;
 
 const
   PRODTYPE_TOOL = 'com.apple.product-type.tool';
+  PRODTYPE_APP  = 'com.apple.product-type.application'; // use it for OSX / iOS app targets
+    // prodtype of app type should have productReference to the result bundle! (.app) file
 
 //
 // PBXSourcesBuildPhase (sources) - is part of a PBXNativeTarget
@@ -309,8 +350,37 @@ const
 			//0AA67B671A04929900CF0DD7 /* CopyFiles */,
 		//);
 
+const
+  TARGET_IOS_8_0 = '8.0';
+  TARGET_IOS_8_1 = '8.1';
+
+procedure ConfigIOS(cfg: XCBuildConfiguration; const targetiOS: string);
+
+const
+  CFG_SDKROOT = 'SDKROOT';
+  CFG_IOSTRG  = 'IPHONEOS_DEPLOYMENT_TARGET';
+  CFG_DEVICE  = 'TARGET_DEVICE_FAMILY';
+  CFG_DEVICE_ALL    = '1,2';
+  CFG_DEVICE_IPHONE = '1';
+  CFG_DEVICE_IPAD   = '2';
 
 implementation
+
+procedure ConfigIOS(cfg: XCBuildConfiguration; const targetiOS: string);
+begin
+  if not Assigned(cfg) then Exit;
+  cfg.buildSettings.AddStr(CFG_IOSTRG, targetiOS);
+  cfg.buildSettings.AddStr(CFG_SDKROOT, 'iphoneos');
+  cfg.buildSettings.AddStr(CFG_DEVICE,  CFG_DEVICE_ALL);
+end;
+
+{ PBXLegacyTarget }
+
+constructor PBXLegacyTarget.Create;
+begin
+  inherited Create;
+  fpassBuildSettingsInEnvironment:=true;
+end;
 
 { PBXTargetDependency }
 
@@ -388,11 +458,21 @@ begin
   targets.Add(Result);
   Result._headerComment:=aname;
   Result.name:=aname;
-  // productName?
-  // productReference - is a resulting file
+  Result.productName:=aname;
 end;
 
 { XCConfigurationList }
+
+function XCConfigurationList.GetConfigItem(i: integer): XCBuildConfiguration;
+begin
+  if (i<0) or (i>=fbuildConfigurations.Count) then Result:=nil
+  else Result:=XCBuildConfiguration(fbuildConfigurations[i]);
+end;
+
+function XCConfigurationList.GetCount: integer;
+begin
+  Result:=fbuildConfigurations.Count;
+end;
 
 constructor XCConfigurationList.Create;
 begin
@@ -406,7 +486,8 @@ begin
   inherited Destroy;
 end;
 
-function XCConfigurationList.AddConfig(const aname: string): XCBuildConfiguration;
+function XCConfigurationList.addConfig(const aname: string
+  ): XCBuildConfiguration;
 begin
   Result:=XCBuildConfiguration.Create;
   Result.name:=aname;
@@ -448,7 +529,7 @@ begin
   fchildren.Add(Result);
   Result.name:=aname;
   Result._headerComment:=aname;
-  Result.sourceTree:=GROUPSRC_GROUP;
+  Result.sourceTree:=SRCTREE_GROUP;
 end;
 
 function PBXGroup.findGroup(const aname: string): PBXGroup;
@@ -536,7 +617,7 @@ begin
   p.buildConfigurationList._headerComment:='Build configuration list for PBXProject';
   p.buildConfigurationList.defaultConfigurationIsVisible:='0';
 
-  cfg:=p.buildConfigurationList.addConfig('Default');
+  cfg:=p.buildConfigurationList.addConfig('Debug');
   cfg:=p.buildConfigurationList.addConfig('Release');
   // default name must be present
   p.buildConfigurationList.defaultConfigurationName:='Release';
@@ -609,7 +690,7 @@ end;
 
 function GroupCreateRoot(const projectfolder: string): PBXGroup;
 begin
-  Result:=GroupCreate('', GROUPSRC_ABSOLUTE);
+  Result:=GroupCreate('', SRCTREE_GROUP);
   Result.path:=projectfolder;
   Result._headerComment:=projectfolder;
 end;

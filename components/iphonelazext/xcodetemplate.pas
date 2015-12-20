@@ -19,9 +19,13 @@ unit xcodetemplate;
 interface
 
 uses
-  Classes, SysUtils, contnrs;
+  Classes, SysUtils, contnrs, xcodeproj;
 
-procedure PrepareTemplateFile(Src, TemplateValues: TStrings; BuildSettings: TFPStringHashTable);
+procedure PrepareTemplateFile_(Src, TemplateValues: TStrings; BuildSettings: TFPStringHashTable);
+procedure PrepareTemplateFile(Src, TemplateValues: TStrings);
+procedure UpdateBldConfig(const proj: PBXProject; optName, optVal: string);
+procedure UpdateMainFile(const proj: PBXProject; mainfile: string);
+procedure UpdateCompileOpts(const proj: PBXProject; options: string);
 
 const
   XCodeProjectTemplateIconID : AnsiString ='0AE3FFA610F3C9AF00A9B007,';
@@ -141,10 +145,10 @@ const
     '				COPY_PHASE_STRIP = YES;'#10+
     '				FPC_OUTPUT_FILE = $BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH;'#10+
     '				FPC_COMPILER_OPTIONS = "-Parm -o$FPC_OUTPUT_FILE $FPC_CUSTOM_OPTIONS";'#10+
-    '                           "FPC_COMPILER_OPTIONS[sdk=iphonesimulator*]" = "-Tiphonesim -Pi386 -o$FPC_OUTPUT_FILE $FPC_CUSTOM_OPTIONS";'#10+
+    '       "FPC_COMPILER_OPTIONS[sdk=iphonesimulator*]" = "-Tiphonesim -Pi386 -o$FPC_OUTPUT_FILE $FPC_CUSTOM_OPTIONS";'#10+
     '				FPC_COMPILER_PATH = ;'#10+
     '				FPC_CUSTOM_OPTIONS = ;'#10+
-    '                           "FPC_CUSTOM_OPTIONS[sdk=iphonesimulator*]" = ;'#10+
+    '       "FPC_CUSTOM_OPTIONS[sdk=iphonesimulator*]" = ;'#10+
     '				FPC_MAIN_FILE = ;'#10+
     '				SDKROOT = iphoneos2.0;'#10+
     '				VALID_ARCHS = "armv6 armv7";'#10+
@@ -199,6 +203,41 @@ const
     '	rootObject = 0A52AE8310F0D05300478C4F /* Project object */;'#10+
     '}'#10;
 
+  BuildScript =
+     '## start'#13
+    +'echo "compiling FPC project"'#13
+    +''#13
+    +'export RESULT_EXE=${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}'#13
+    +'export IOSHEADERS='#13
+    +'cd $FPC_MAIN_DIR'#13
+    +'#rm $RESULT_EXE'#13
+    +'export TargetCPU=${PLATFORM_PREFERRED_ARCH}'#13
+    +''#13
+    +'if [ "${PLATFORM_NAME}" == "iphonesimulator" ]; then'#13
+    +'  export TargetOS="iphonesim"'#13
+    +'fi'#13
+    +'export Target=${TargetCPU}-${TargetOS}'#13
+    +''#13
+    +'pwd'#13
+    +'echo ${RESULT_EXE}'#13
+    +''#13
+    +'${FPC_DIR}fpc -T${TargetOS} -P${TargetCPU} -MDelphi -Scghi -O1 -l -dIPHONEALL \'#13
+    +' ${FPC_CUSTOM_OPTIONS} \'#13
+    //-Fu~/iOS_6_0 -Fu.
+    +'-Filib/${Target} -FUlib/${Target} \'#13
+    +'-XR${SDKROOT}  -FD${PLATFORM_DEVELOPER_BIN_DIR} $FPC_MAIN_FILE \'#13
+    +' -o${RESULT_EXE}'#13
+    +'export RES=$?'#13
+    +''#13
+    +'if [ $RES != 0 ]; then'#13
+    +'  exit $RES'#13
+    +'fi'#13
+    +''#13
+    +'echo ${RESULT_EXE}'#13
+    +''#13
+    +'exit $FPCRES'#13;
+
+
 implementation
 
 function GetValueName(const Source: String; idx: Integer): String;
@@ -244,7 +283,7 @@ begin
   end;
 end;
 
-procedure PrepareTemplateFile(Src, TemplateValues: TStrings; BuildSettings: TFPStringHashTable);
+procedure PrepareTemplateFile_(Src, TemplateValues: TStrings; BuildSettings: TFPStringHashTable);
 //todo: Better code to update XCode project file!
 var
   i, j       : Integer;
@@ -286,6 +325,119 @@ begin
   end;
 end;
 
+procedure UpdateBldConfig(const proj: PBXProject; optName, optVal: string);
+var
+  trg : PBXNativeTarget;
+  cfg : XCBuildConfiguration;
+  i   : integer;
+  j   : integer;
+begin
+  for i:=0 to proj.targets.Count-1 do begin
+    trg := PBXNativeTarget(proj.targets[i]);
+    for j:=0 to trg.buildConfigurationList.Count-1 do begin
+      cfg:=XCBuildConfiguration(trg.buildConfigurationList.buildConfigurations[j]);
+      cfg.buildSettings.str[optName]:=optVal;
+    end;
+  end;
+end;
+
+procedure UpdateCompileOpts(const proj: PBXProject; options: string);
+var
+  opt : string;
+begin
+  //UpdateBldConfig(proj, 'FPC_CUSTOM_OPTIONS', options);
+  UpdateBldConfig(proj, 'FPC_CUSTOM_OPTIONS', '');
+
+  opt:=options;
+  opt:=StringReplace(opt,'$(TargetCPU)','$arch',[rfReplaceAll, rfIgnoreCase]);
+  opt:=StringReplace(opt,'$(TargetOS)','iphone',[rfReplaceAll, rfIgnoreCase]);
+  UpdateBldConfig(proj, 'FPC_CUSTOM_OPTIONS[sdk=iphoneos*]', opt);
+
+  opt:=options;
+  opt:=StringReplace(opt,'$(TargetCPU)','$arch',[rfReplaceAll, rfIgnoreCase]);
+  opt:=StringReplace(opt,'$(TargetOS)','iphonesim',[rfReplaceAll, rfIgnoreCase]);
+  UpdateBldConfig(proj, 'FPC_CUSTOM_OPTIONS[sdk=iphonesimulator*]', opt);
+end;
+
+procedure UpdateMainFile(const proj: PBXProject; mainfile: string);
+begin
+  UpdateBldConfig(proj, 'FPC_MAIN_FILE', mainfile);
+  UpdateBldConfig(proj, 'FPC_MAIN_DIR', ExtractFileDir(mainfile));
+end;
+
+procedure PrepareTemplateFile(Src, TemplateValues: TStrings);
+var
+  prj : PBXProject;
+  trg : PBXNativeTarget;
+  cfg : XCBuildConfiguration;
+  fr  : PBXFileReference;
+  grp : PBXGroup;
+  scr : PBXShellScriptBuildPhase;
+  i   : integer;
+  plist      : string;
+  targetName : string;
+  bundle     : string;
+  main       : string;
+begin
+  prj:=ProjectCreate3_2;
+
+  targetName:=TemplateValues.Values['targetname'];
+  bundle:=TemplateValues.Values['bundle'];
+  plist:=TemplateValues.Values['plist'];
+  if plist='' then plist:='info.plist';
+  main:=TemplateValues.Values['mainfile'];
+
+  trg:=ProjectAddTarget(prj, targetName);
+  for i:=0 to prj.buildConfigurationList.Count-1 do begin
+    cfg:=prj.buildConfigurationList[i];
+    ConfigIOS(cfg, TARGET_IOS_8_1);
+    // Enable Build Active Architecture Only When Debugging
+    if cfg.name='Debug' then cfg.buildSettings.AddStr('ONLY_ACTIVE_ARCH','YES');
+  end;
+
+  // adding application type
+  trg.productName:=TemplateValues.Values['productname'];
+  trg.productType:=PRODTYPE_APP;
+
+  // target configuration
+  trg.buildConfigurationList:=XCConfigurationList.Create;
+  // Debug
+  cfg:=trg.buildConfigurationList.addConfig('Debug');
+  cfg.buildSettings.AddStr('INFOPLIST_FILE', '$(SRCROOT)/'+plist);
+  cfg.buildSettings.AddStr('PRODUCT_NAME', trg.productName);
+  // Build
+  cfg:=trg.buildConfigurationList.addConfig('Release');
+  cfg.buildSettings.AddStr('INFOPLIST_FILE', '$(SRCROOT)/'+plist);
+  cfg.buildSettings.AddStr('PRODUCT_NAME', trg.productName);
+
+  trg.buildConfigurationList.defaultConfigurationName:='Debug';
+
+  // Adding the ".app" directory for the bundle and bind it to the target
+  fr:=FileRefCreate(bundle, FILETYPE_MACHO);
+  fr.sourceTree:= SRCTREE_PRODUCT;
+  trg.productReference:=fr;
+
+  // Creating "content" for the directory. It should also contain .plist
+  grp:=prj.mainGroup.addSubGroup(targetName); // name must match to the target name!
+  grp:=grp.addSubGroup('Supporting Files'); // name must match!
+
+  // creating a reference to info.plist. It's located at "xcode" folder.
+  // Thus at the same directar as .xcodeproj dir
+  fr:=FileRefCreate(plist, FILETYPE_PLIST );
+  fr.sourceTree:=SRCTREE_PROJECT;
+
+  fr.path:=plist;
+  grp.children.Add( fr );
+
+  scr:=TargetAddRunScript(trg);
+  scr.shellScript:=BuildScript;
+  scr.showEnvVarsInLog:=true;
+
+  UpdateMainFile(prj, main);
+  UpdateCompileOpts(prj, TemplateValues.Values['projoptions']);
+
+  src.Text:=ProjectWrite(prj);
+end;
 
 end.
 

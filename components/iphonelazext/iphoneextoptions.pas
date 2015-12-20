@@ -21,6 +21,7 @@ interface
 
 uses
   Classes, SysUtils, IDEOptionsIntf, LazIDEIntf, ProjectIntf, MacroIntf,
+  CompOptsIntf,
   iPhoneBundle, XMLConf, XcodeUtils, FileUtil, iphonesimctrl;
 
 const
@@ -40,8 +41,11 @@ type
     fResourceDir  : String;
     fExcludeMask  : String;
     fMainNib      : String;
+    fResFiles     : TStrings;
   public
+    //constructor Create; override;
     constructor Create;
+    destructor Destroy; override;
     class function GetGroupCaption: String; override;
     class function GetInstance: TAbstractIDEOptions; override;
     function Load: Boolean;
@@ -54,6 +58,7 @@ type
     property ResourceDir: String read fResourceDir write fResourceDir;
     property ExcludeMask: String read fExcludeMask write fExcludeMask;
     property MainNib: String read fMainNib write fMainNib;
+    property ResFiles: TStrings read fResFiles;
   end;
 
   { TiPhoneEnvironmentOptions }
@@ -149,6 +154,7 @@ const
   optResourceDir = 'iPhone/ResourceDir';
   optExcludeMask = 'iPhone/ExcludeMask';
   optMainNib     = 'iPhone/MainNib';
+  optResFiles    = 'iPhone/ResFiles';
 
 function EnvOptions: TiPhoneEnvironmentOptions;
 begin
@@ -403,12 +409,20 @@ begin
   fAppID:='com.mycompany.myapplication';
   fSpaceName:='';
   DataWritten:=false;
+  fResFiles.Clear;
 end;
 
 constructor TiPhoneProjectOptions.Create;
 begin
   inherited Create;
+  fResFiles := TStringList.Create;
   Reset;
+end;
+
+destructor TiPhoneProjectOptions.Destroy;
+begin
+  fResFiles.Free;
+  inherited Destroy;
 end;
 
 class function TiPhoneProjectOptions.GetGroupCaption: String;
@@ -435,24 +449,42 @@ begin
     else fResourceDir:=DefaultResourceDir;
     if CustomData.Contains(optExcludeMask) then fExcludeMask:=CustomData.Values[optExcludeMask];
     if CustomData.Contains(optMainNib) then fMainNib:=CustomData.Values[optMainNib];
+    if CustomData.Contains(optResFiles) then ResFiles.Text:=CustomData.Values[optResFiles];
   end;
 end;
 
 function TiPhoneProjectOptions.Save: Boolean;
 const
   BoolStr : array[Boolean] of String = ('false', 'true');
+var
+  modflag: Boolean;
 begin
   Result:=True;
   {do not write iPhone related info to non-iPhone projects}
   if DataWritten or fisiPhone then
     with LazarusIDE.ActiveProject do begin
-      CustomData.Values[optisIPhone] := BoolStr[fisiPhone];
-      CustomData.Values[optSDK]:=fSDK;
-      CustomData.Values[optAppID]:=fAppID;
-      CustomData.Values[optSpaceName]:=fSpaceName;
-      CustomData.Values[optResourceDir]:=fResourceDir;
-      CustomData.Values[optExcludeMask]:=fExcludeMask;
-      CustomData.Values[optMainNib]:=fMainNib;
+
+      modflag:=false;
+      modflag:=(CustomData.Values[optisIPhone] <> BoolStr[fisiPhone])
+             or (CustomData.Values[optSDK]<>fSDK)
+             or (CustomData.Values[optAppID]<>fAppID)
+             or (CustomData.Values[optSpaceName]<>fSpaceName)
+             or (CustomData.Values[optResourceDir]<>fResourceDir)
+             or (CustomData.Values[optExcludeMask]<>fExcludeMask)
+             or (CustomData.Values[optMainNib]<>fMainNib)
+             or (CustomData.Values[optResFiles]<>ResFiles.Text);
+
+      if modflag then begin
+        LazarusIDE.ActiveProject.Modified:=true;
+        CustomData.Values[optisIPhone] := BoolStr[fisiPhone];
+        CustomData.Values[optSDK]:=fSDK;
+        CustomData.Values[optAppID]:=fAppID;
+        CustomData.Values[optSpaceName]:=fSpaceName;
+        CustomData.Values[optResourceDir]:=fResourceDir;
+        CustomData.Values[optExcludeMask]:=fExcludeMask;
+        CustomData.Values[optMainNib]:=fMainNib;
+        CustomData.Values[optResFiles]:=ResFiles.Text;
+      end;
     end;
 end;
 

@@ -85,10 +85,14 @@ type
   TPBXKeyValue = class(TFPHashObjectList)
   protected
     function AddVal(const name: string; atype: TPBXValueType): TPBXValue;
+    function GetValStr(const name: string): string;
+    procedure AddValStr(const name, avalue: string);
   public
     function AddStr(const name: string; const avalue: string = ''): TPBXValue;
     function AddStrArray(const name: string): TPBXValue;
     function AddKeyVal(const name: string): TPBXValue;
+    // it must be "public, not published"
+    property Str[const name: string]: string read GetValStr write AddValStr;
   end;
 
   TPBXFileInfo = record
@@ -135,9 +139,15 @@ procedure PBXWriteStrArray( w: TPBXWriter; list: TPBXStringArray );
 procedure PBXWriteKeyValue( w: TPBXWriter; kv: TPBXKeyValue );
 procedure PBXWriteObj(pbx: PBXObject; w: TPBXWriter; WriteEmpty: TStrings);
 
+{ assigns reference IDs to each object in the list. "ID" is 24 charactewr long hex-string }
 procedure PBXAssignRef(list: TList);
 
+{ Returns the list of objects that should populate the "objects" section of pbx file }
 procedure PBXGatherObjects(obj: TObject; srz: TList);
+
+procedure PBXKeyValsCopy(src, dst: TPBXKeyValue);
+procedure PBXValueCopy(src, dst: TPBXValue);
+procedure PBXStringArrayCopy(src, dst: TPBXStringArray);
 
 implementation
 
@@ -169,6 +179,48 @@ begin
   end;
   Result:=True;
 end;
+
+procedure PBXStringArrayCopy(src, dst: TPBXStringArray);
+begin
+  if not Assigned(src) or not Assigned(dst) then Exit;
+  src.Assign(dst);
+end;
+
+procedure PBXValueCopy(src, dst: TPBXValue);
+var
+  dv : TPBXValue;
+begin
+  if not Assigned(src) or not Assigned(dst) then Exit;
+  dst.valType:=src.valType;
+  case dst.valType of
+    vtString: dst.str:=src.str;
+    vtArrayOfStr: begin
+      if not Assigned(dst.arr) then dst.arr:=TPBXStringArray.Create;
+      PBXStringArrayCopy(src.arr, dst.arr);
+    end;
+    vtKeyVal: begin
+      if not Assigned(dst.keyval) then dst.keyval:=TPBXKeyValue.Create(true);
+      PBXKeyValsCopy(src.keyval, dst.keyval);
+    end;
+  end;
+end;
+
+procedure PBXKeyValsCopy(src, dst: TPBXKeyValue);
+var
+  svl : TPBXValue;
+  nm  : string;
+  i   : Integer;
+  dvl : TPBXValue;
+begin
+  if not Assigned(src) or not Assigned(dst) then Exit;
+  for i:=0 to src.Count-1 do begin
+    nm:=src.NameOfIndex(i);
+    svl:=TPBXValue(src.Items[i]);
+    dvl:=dst.AddVal(nm, svl.valType);
+    PBXValueCopy(svl, dvl);
+  end;
+end;
+
 
 procedure TestContainer(const buf: string);
 var
@@ -215,6 +267,11 @@ end;
 
 { TPBXKeyValue }
 
+procedure TPBXKeyValue.AddValStr(const name, AValue: string);
+begin
+  AddStr(name, Avalue);
+end;
+
 function TPBXKeyValue.AddVal(const name: string; atype: TPBXValueType): TPBXValue;
 begin
   Result:=TPBXValue.Create;
@@ -224,6 +281,16 @@ begin
     vtArrayOfStr: Result.arr:=TPBXStringArray.Create;
   end;
   Add(name, Result);
+end;
+
+function TPBXKeyValue.GetValStr(const name: string): string;
+var
+  vl : TPBXValue;
+begin
+  vl:=TPBXValue(Self.Find(name));
+  if not Assigned(vl)
+    then Result:=''
+    else Result:=vl.str;
 end;
 
 function TPBXKeyValue.AddStr(const name: string; const avalue: string): TPBXValue;
@@ -241,6 +308,7 @@ function TPBXKeyValue.AddKeyVal(const name: string): TPBXValue;
 begin
   Result:=AddVal(name, vtKeyVal);
 end;
+
 
 { TPBXReref }
 
@@ -666,8 +734,8 @@ begin
         vl:=IntToStr(GetInt64Prop(pbx, p^[i]));
         isstr:=(vl<>'') or (WriteEmpty.indexOf(nm)>=0);
       end else if p^[i].PropType.Kind = tkBool then begin
-        vl:=IntToStr(GetOrdProp(pbx, p^[i]));
-        isstr:=true;
+        isstr:=PtrUInt(p^[i].Default)<>PtrUInt(p^[i].GetProc);
+        if isstr then vl:=IntToStr(GetOrdProp(pbx, p^[i]));
       end;
 
       if isstr then begin
