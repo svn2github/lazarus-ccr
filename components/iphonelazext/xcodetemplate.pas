@@ -22,7 +22,7 @@ uses
   Classes, SysUtils, contnrs, xcodeproj;
 
 procedure PrepareTemplateFile_(Src, TemplateValues: TStrings; BuildSettings: TFPStringHashTable);
-procedure PrepareTemplateFile(Src, TemplateValues: TStrings);
+procedure PrepareTemplateFile(Src, TemplateValues, ResFiles: TStrings);
 procedure UpdateBldConfig(const proj: PBXProject; optName, optVal: string);
 procedure UpdateMainFile(const proj: PBXProject; mainfile: string);
 procedure UpdateCompileOpts(const proj: PBXProject; options: string);
@@ -365,19 +365,23 @@ begin
   UpdateBldConfig(proj, 'FPC_MAIN_DIR', ExtractFileDir(mainfile));
 end;
 
-procedure PrepareTemplateFile(Src, TemplateValues: TStrings);
+procedure PrepareTemplateFile(Src, TemplateValues, ResFiles: TStrings);
 var
   prj : PBXProject;
   trg : PBXNativeTarget;
   cfg : XCBuildConfiguration;
   fr  : PBXFileReference;
+  fbld : PBXBuildFile;
   grp : PBXGroup;
+  pgrp : PBXGroup;
   scr : PBXShellScriptBuildPhase;
+  res : PBXResourcesBuildPhase;
   i   : integer;
   plist      : string;
   targetName : string;
   bundle     : string;
   main       : string;
+  fnm  : string;
 begin
   prj:=ProjectCreate3_2;
 
@@ -418,8 +422,8 @@ begin
   trg.productReference:=fr;
 
   // Creating "content" for the directory. It should also contain .plist
-  grp:=prj.mainGroup.addSubGroup(targetName); // name must match to the target name!
-  grp:=grp.addSubGroup('Supporting Files'); // name must match!
+  pgrp:=prj.mainGroup.addSubGroup(targetName); // name must match to the target name!
+  grp:=pgrp.addSubGroup('Supporting Files'); // name must match!
 
   // creating a reference to info.plist. It's located at "xcode" folder.
   // Thus at the same directar as .xcodeproj dir
@@ -432,6 +436,26 @@ begin
   scr:=TargetAddRunScript(trg);
   scr.shellScript:=BuildScript;
   scr.showEnvVarsInLog:=true;
+
+  if Assigned(ResFiles) and (ResFiles.Count>0) then begin
+    grp:=prj.mainGroup.addSubGroup('Resources'); // name must match to the target name!
+    //grp:=pgrp.addSubGroup('Supporting Files'); // name must match!
+
+    res := PBXResourcesBuildPhase.Create;
+    res.buildActionMask:=2147483647;
+    //res.name:='Resources';
+    trg.buildPhases.Add(res);
+    for i:=0 to ResFiles.Count-1 do begin
+      fnm:='../'+ResFiles[i];
+      fr:=FileRefCreate(fnm, FILETYPE_MACHO);
+      fr.sourceTree:=SRCTREE_PROJECT;
+      grp.children.add(fr);
+
+      fbld := PBXBuildFile.Create;
+      fbld.fileRef:=fr;
+      res.files.Add(fbld);
+    end;
+  end;
 
   UpdateMainFile(prj, main);
   UpdateCompileOpts(prj, TemplateValues.Values['projoptions']);

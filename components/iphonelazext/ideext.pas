@@ -427,8 +427,7 @@ begin
     templates.Values['mainfile']:=LazarusIDE.ActiveProject.MainFile.Filename;
     templates.Values['projoptions']:=opt;
 
- // Xcode project updated (/Users/dmitry/FPC_Laz/iphonelazext/tests/xcode/test_xcodetemplate.xcodeproj)
-    PrepareTemplateFile(proj, templates);
+    PrepareTemplateFile(proj, templates, ProjOptions.ResFiles);
     proj.SaveToFile(projname);
   except
     on e: exception do
