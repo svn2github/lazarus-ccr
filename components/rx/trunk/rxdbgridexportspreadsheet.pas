@@ -413,7 +413,7 @@ begin
     FDataSet.EnableControls;
   end;
 
-  if Result then
+  if Result and FOpenAfterExport then
     OpenDocument(FileName);
 end;
 

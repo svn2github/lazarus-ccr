@@ -40,6 +40,7 @@ cp ../rx.inc rx.inc
   --input=../autopanel.pas --descr=autopanel.xml \
   --input=../boxprocs.pas --descr=boxprocs.xml \
   --input=../rxspin.pas --descr=rxspin \
+  --input=../vclutils.pas --descr=vclutils.xml \
   --input=../rxinipropstorage.pas --descr=rxinipropstorage.xml 
 
 
@@ -49,3 +50,7 @@ fpdoc --package=rxdbgrid_print --format=html --index-colcount=4 --hide-protected
 fpdoc --package=rxdbgrid_export_spreadsheet --format=html --index-colcount=4 --hide-protected \
   --input=../rxdbgridexportspreadsheet.pas --descr=rxdbgridexportspreadsheet.xml \ 
   --input=../rxdbgridexportspreadsheet_paramsunit.pas rxdbgridexportspreadsheet_paramsunit.xml
+  
+fpdoc --package=rx_sort_zeos --format=html --index-colcount=4 --hide-protected \
+  --input=..exsortzeos.pas --descr=exsortzeos.xml \
+  --input=../rxsortzeos.pas --descr=rxsortzeos.xml

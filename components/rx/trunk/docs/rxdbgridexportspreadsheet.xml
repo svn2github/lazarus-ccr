@@ -12,6 +12,11 @@ ressOverwriteExisting - при экспорте перезаписывать с�
       </element><element name="TRxDBGridExportSpreadSheet.FileName"><short>Имя файла для экспорта</short>
       </element><element name="TRxDBGridExportSpreadSheet.PageName"><short>Имя страницы с данными</short>
       </element><element name="TRxDBGridExportSpreadSheet.Options"><short>Параметры экспорта</short>
+      <descr><p>Параметры экспорта данных</p>
+ressExportTitle - экспорт заголовков колонок
+ressExportColors - экспорт цвета ячеек
+ressExportFooter - экспорт строки итогов
+ressOverwriteExisting - при экспорте перезаписывать существующий файл</descr>
       </element><element name="TRxDBGridExportSpreadSheet.OpenAfterExport"><short>Открывать файл после экспорта</short>
       </element>
     </module>

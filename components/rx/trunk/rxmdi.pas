@@ -222,7 +222,7 @@ constructor TRxMDICloseButton.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 //  FLabelPosition := lpAbove;
-  FLabelSpacing := 3;
+  FLabelSpacing := 6;
   CreateInternalLabel;
   Glyph:=LoadLazResBitmapImage('RxMDICloseIcon');
 end;

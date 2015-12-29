@@ -150,6 +150,13 @@
       </element><element name="TRxColumn.OnDrawColumnCell"><short>Событие возникает при отрисовке значения колонки</short>
       </element><element name="TRxDBGrid.InvertSelection"><short>Инвертировать текущее выделение строки</short>
       </element>
+    <element name="TRxDBGridAbstractTools.RxDBGrid"><short>Ссылка на RxDBGrid, которому подключается данная функциональность</short>
+      </element><element name="TRxDBGridAbstractTools.ShowSetupForm"><short>Отображать форму параметров интрумента</short>
+      </element><element name="TRxDBGridAbstractTools.OnBeforeExecute"><short>Событие вызывается перед запуском инструмента</short>
+      </element><element name="TRxDBGridAbstractTools.OnAfterExecute"><short>Событие вызывается после запуска инструмента</short>
+      </element><element name="TRxDBGridAbstractTools.Execute"><short>Запуск инструмента</short>
+      </element><element name="RegisterRxDBGridSortEngine"><short>Процдера регистрирует вспомогательный класс для сортировки данных внутри RxDBGrid</short>
+      </element>
     </module>
   </package>
 </fpdoc-descriptions>
