@@ -8049,6 +8049,7 @@ procedure TVirtualTreeColumns.DrawButtonText(DC: HDC; Caption: String; Bounds: T
 
 var
   TextSpace: Integer;
+  TextColor: TColor;
   Size: TSize;
 
 begin
@@ -8065,12 +8066,11 @@ begin
   if not Enabled then
     if FHeader.Treeview.VclStyleEnabled then
     begin
-      SetTextColor(DC, ColorToRGB(FHeader.Treeview.FColors.HeaderFontColor));
-      {$ifdef Windows}
-      Windows.DrawTextW(DC, PWideChar(Caption), Length(Caption), Bounds, DrawFormat);
-      {$else}
-      LCLIntf.DrawText(DC, PChar(Caption), Length(Caption), Bounds, DrawFormat);
-      {$endif}
+      TextColor := FHeader.Treeview.FColors.HeaderFontColor;
+      if TextColor = clDefault then
+        TextColor := clCaptionText;
+      SetTextColor(DC, ColorToRGB(TextColor));
+      DrawText(DC, PChar(Caption), Length(Caption), Bounds, DrawFormat);
     end
     else
   begin
@@ -8084,9 +8084,12 @@ begin
   else
   begin
     if Hot then
-      SetTextColor(DC, ColorToRGB(FHeader.Treeview.FColors.HeaderHotColor))
+      TextColor := FHeader.Treeview.FColors.HeaderHotColor
     else
-      SetTextColor(DC, ColorToRGB(FHeader.Treeview.FColors.HeaderFontColor));
+      TextColor := FHeader.Treeview.FColors.HeaderFontColor;
+    if TextColor = clDefault then
+      TextColor := clCaptionText;
+    SetTextColor(DC, ColorToRGB(TextColor));
     DrawText(DC, PChar(Caption), Length(Caption), Bounds, DrawFormat);
   end;
 end;
@@ -32954,6 +32957,8 @@ begin
           end;
       end;
     end;
+    if Canvas.Font.Color = clDefault then
+      Canvas.Font.Color := clWindowText;
   end;
 end;
 
