@@ -7548,12 +7548,9 @@ begin
     if Hot then
       TextColor := FHeader.Treeview.FColors.HeaderHotColor
     else
-    begin
-      if FHeader.FFont.Color = clDefault then
-        TextColor := clCaptionText
-      else
-        TextColor := FHeader.FFont.Color;
-    end;
+      TextColor := FHeader.FFont.Color;
+    if TextColor = clDefault then
+      TextColor := clCaptionText;
     SetTextColor(DC, ColorToRGB(TextColor));
     DrawText(DC, PChar(Caption), Length(Caption), Bounds, DrawFormat);
   end;
