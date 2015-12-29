@@ -7486,12 +7486,12 @@ begin
     if OldPosition < Position then
     begin
       // column will be moved up so move down other entries
-      Move(FPositionToIndex[OldPosition + 1], FPositionToIndex[OldPosition], (Position - OldPosition) * SizeOf(Cardinal));
+      Move(FPositionToIndex[OldPosition + 1], FPositionToIndex[OldPosition], (Position - OldPosition) * SizeOf(TColumnIndex));
     end
     else
     begin
       // column will be moved down so move up other entries
-      Move(FPositionToIndex[Position], FPositionToIndex[Position + 1], (OldPosition - Position) * SizeOf(Cardinal));
+      Move(FPositionToIndex[Position], FPositionToIndex[Position + 1], (OldPosition - Position) * SizeOf(TColumnIndex));
     end;
     FPositionToIndex[Position] := Column.Index;
   end;
@@ -7841,7 +7841,7 @@ begin
       begin
         // Index found. Move all higher entries one step down and remove the last entry.
         if I < Upper then
-          Move(FPositionToIndex[I + 1], FPositionToIndex[I], (Upper - I) * SizeOf(Integer));
+          Move(FPositionToIndex[I + 1], FPositionToIndex[I], (Upper - I) * SizeOf(TColumnIndex));
       end;
       // Decrease all indices, which are greater than the index to be deleted.
       if FPositionToIndex[I] > OldIndex then
@@ -8490,7 +8490,7 @@ begin
       for I := 0 to ItemCount - 1 do
         Add.LoadFromStream(Stream, Version);
       SetLength(FPositionToIndex, ItemCount);
-      Stream.ReadBuffer(FPositionToIndex[0], ItemCount * SizeOf(Cardinal));
+      Stream.ReadBuffer(FPositionToIndex[0], ItemCount * SizeOf(TColumnIndex));
       UpdatePositions(True);
     finally
       EndUpdate;
@@ -8911,7 +8911,7 @@ begin
     for I := 0 to Count - 1 do
       TVirtualTreeColumn(Items[I]).SaveToStream(Stream);
 
-    Stream.WriteBuffer(FPositionToIndex[0], Count * SizeOf(Cardinal));
+    Stream.WriteBuffer(FPositionToIndex[0], Count * SizeOf(TColumnIndex));
   end;
 
   // Data introduced with header stream version 5.
@@ -23089,7 +23089,7 @@ begin
     begin
       Exclude(Node.States, vsSelected);
       if FindNodeInSelection(Node, Index, -1, -1) and (Index < FSelectionCount - 1) then
-        Move(FSelection[Index + 1], FSelection[Index], (FSelectionCount - Index - 1) * 4);
+        Move(FSelection[Index + 1], FSelection[Index], (FSelectionCount - Index - 1) * SizeOf(Pointer));
       if FSelectionCount > 0 then
         Dec(FSelectionCount);
       SetLength(FSelection, FSelectionCount);
