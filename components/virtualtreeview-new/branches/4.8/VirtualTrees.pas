@@ -7520,6 +7520,7 @@ procedure TVirtualTreeColumns.DrawButtonText(DC: HDC; Caption: String; Bounds: T
 
 var
   TextSpace: Integer;
+  TextColor: TColor;
   Size: TSize;
 
 begin
@@ -7545,9 +7546,15 @@ begin
   else
   begin
     if Hot then
-      SetTextColor(DC, ColorToRGB(FHeader.Treeview.FColors.HeaderHotColor))
+      TextColor := FHeader.Treeview.FColors.HeaderHotColor
     else
-      SetTextColor(DC, ColorToRGB(FHeader.FFont.Color));
+    begin
+      if FHeader.FFont.Color = clDefault then
+        TextColor := clCaptionText
+      else
+        TextColor := FHeader.FFont.Color;
+    end;
+    SetTextColor(DC, ColorToRGB(TextColor));
     DrawText(DC, PChar(Caption), Length(Caption), Bounds, DrawFormat);
   end;
 end;
@@ -30983,6 +30990,8 @@ begin
           end;
       end;
     end;
+    if Canvas.Font.Color = clDefault then
+      Canvas.Font.Color := clWindowText;
   end;
 end;
 
