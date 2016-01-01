@@ -516,7 +516,7 @@ begin
   prj := GetXcodeProjDirName;
   IDEMsg('Build+Install Xcode project (xcodebuild)');
 
-  if not InstallXcodePrj(prj, 'iphonesimulator') then begin
+  if not InstallXcodePrj(prj, 'iphonesimulator', EnvOptions.DefaultDeviceID) then begin
     IDEMsg('xcodebuild failed');
     Exit;
   end else

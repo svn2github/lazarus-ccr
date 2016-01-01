@@ -28,7 +28,7 @@ type
 
 function ListDevice(lst: TList): Boolean;
 
-function InstallXcodePrj(const project, sdk: string): Boolean;
+function InstallXcodePrj(const project, sdk, deviceid: string): Boolean;
 
 type
   { TRWProcess }
@@ -242,14 +242,67 @@ begin
   end;
 end;
 
-function InstallXcodePrj(const project, sdk: string): Boolean;
+function checkOptVal(const s: string; nm: string; var vl: string): Boolean;
+var
+  i : integer;
+begin
+  i:=Pos(nm, s);
+  Result:=(i>0);
+  if not Result then Exit;
+  //if i<0 then
+  inc(i, length(nm));
+  for i:=i to length(s) do
+    if s[i]='=' then begin
+      vl:=trim(Copy(s, i+1, length(s)));
+      Result:=true;
+      Exit;
+    end;
+  Result:=false;
+end;
+
+function InstallXcodePrj(const project, sdk, deviceid: string): Boolean;
 var
   outstr: string;
+  s  : string;
+  l  : string;
+  st : TStringList;
+  i  : integer;
+  j  : integer;
+  ip : string; // install path
+  fp : string; // content path
 begin
-  writeln('project = ', project);
-  writeln('sdk =     ', sdk);
-  Result:=RunCommand('xcodebuild', ['install', '-project' ,project, '-sdk',sdk], outstr);
+  Result:=RunCommand('xcodebuild',
+    ['install'
+    ,'-project' ,project, '-sdk',sdk], outstr);
+
   if not Result then Exit;
+
+  Result:=RunCommand('xcodebuild',
+    ['install'
+    ,'-project' ,project, '-sdk',sdk
+    ,'-showBuildSettings'], outstr);
+  st:=TStringList.Create;
+  try
+    st.Text:=outstr;
+    ip:='';
+    fp:='';
+    for i:=st.Count-1 downto 0 do begin
+      s:=st[i];
+      l:=AnsiLowerCase(s);
+      if (ip='') then checkOptVal(s, 'INSTALL_DIR', ip);
+      if (fp='') then checkOptVal(s, 'CONTENTS_FOLDER_PATH', fp);
+      if pos('build settings for', l)>0 then Break;
+    end;
+  finally
+    st.Free;
+  end;
+  Result:=(ip<>'') and (fp<>'');
+
+  if Result then begin
+    Result:=RunCommand('xcrun',
+      ['simctl','install'
+      ,deviceid, IncludeTrailingPathDelimiter(ip)+fp ], outstr);
+  end;
 end;
 
 Const
