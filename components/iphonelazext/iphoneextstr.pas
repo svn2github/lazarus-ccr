@@ -22,6 +22,7 @@ resourcestring
   striPhoneProject = 'iPhone Project';
   strStartAtXcode  = 'Update Xcode project';
   strRunSimulator  = 'Run iPhone Simulator';
+  strTermSimulator  = 'Terminate Project App on Sim';
 
   strPrjOptTitle    = 'iPhone specific';
   strPrjOptIsiPhone = 'is iPhone application project';

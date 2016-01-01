@@ -1,6 +1,6 @@
 unit xibfile;
 
-{$mode objfpc}
+{$mode objfpc}{$h+}
 
 interface
 

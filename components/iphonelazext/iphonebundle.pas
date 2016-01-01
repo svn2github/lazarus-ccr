@@ -19,7 +19,7 @@ unit iPhoneBundle;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, LazFileUtils;
 
 const
   platform_iPhoneSim = 'iphonesimulator';
@@ -61,7 +61,6 @@ function RandomSpaceName: WideString;
 implementation
 
 uses
-  FileUtil,
   iPhoneExtOptions;
 
 function RandomSpaceName: WideString;
@@ -253,7 +252,7 @@ begin
       ]);
   if FileExists(InfoFileName) then DeleteFile(InfoFileName);
 
-  fs:=TFileStream.Create(InfoFileName, fmCreate or fmOpenWrite);
+  fs:=TFileStream.Create(UTF8Encode(InfoFileName), fmCreate or fmOpenWrite);
   try
     if s<>'' then fs.Write(s[1], length(s));
   finally

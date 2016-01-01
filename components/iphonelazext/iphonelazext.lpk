@@ -12,9 +12,16 @@
       </SearchPaths>
       <Parsing>
         <SyntaxOptions>
-          <UseAnsiStrings Value="False"/>
+          <CStyleOperator Value="False"/>
+          <AllowLabel Value="False"/>
+          <CPPInline Value="False"/>
         </SyntaxOptions>
       </Parsing>
+      <CodeGeneration>
+        <Optimizations>
+          <OptimizationLevel Value="0"/>
+        </Optimizations>
+      </CodeGeneration>
       <Other>
         <CompilerMessages>
           <IgnoredMessages idx5091="True" idx5060="True" idx5057="True" idx5024="True" idx4081="True" idx4080="True" idx4079="True" idx4055="True"/>
@@ -25,7 +32,7 @@
     <Description Value="iPhone Development Lazarus extension"/>
     <License Value="LGPL"/>
     <Version Minor="8"/>
-    <Files Count="21">
+    <Files Count="22">
       <Item1>
         <Filename Value="ideext.pas"/>
         <HasRegisterProc Value="True"/>
@@ -114,6 +121,10 @@
         <Filename Value="res/buildscript.sh"/>
         <Type Value="Text"/>
       </Item21>
+      <Item22>
+        <Filename Value="iphonelog_form.pas"/>
+        <UnitName Value="iphonelog_form"/>
+      </Item22>
     </Files>
     <RequiredPkgs Count="3">
       <Item1>

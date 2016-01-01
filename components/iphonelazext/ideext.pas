@@ -21,17 +21,24 @@ interface
 uses
   Unix, BaseUnix, process,
   Classes, SysUtils, contnrs,
-  Graphics, Controls, Forms, Dialogs, FileUtil,
+  Graphics, Controls, Forms, Dialogs, LazFileUtils,
   {Lazarus Interface}
-  LazIDEIntf, MenuIntf, ProjectIntf, IDEOptionsIntf, IDEMsgIntf,
+  LazIDEIntf, MenuIntf, ProjectIntf, IDEOptionsIntf, IDEMsgIntf
+  ,IDEExternToolIntf
 
-  project_iphone_options, xcodetemplate,
+  ,project_iphone_options, xcodetemplate, iphonelog_form,
 
   iPhoneExtOptions, iPhoneExtStr, iPhoneBundle, lazfilesutils, iphonesimctrl;
 
 procedure Register;
 
 implementation
+
+procedure IDEMsg(const msg: string);
+begin
+  IDEMessagesWindow.AddCustomMessage(mluProgress, msg);
+end;
+
 
 type
   { TiPhoneExtension }
@@ -47,10 +54,17 @@ type
     function ProjectBuilding(Sender: TObject): TModalResult;
     function ProjectOpened(Sender: TObject; AProject: TLazProject): TModalResult;
     //procedure OnProjOptionsChanged(Sender: TObject; Restore: Boolean);
+
+    function GetXcodeProjDirName: string;
   public
+    SimPID    : Integer;
+    SimLogger : TPTYReader;
     constructor Create;
     procedure UpdateXcode(Sender: TObject);
     procedure SimRun(Sender: TObject);
+    procedure SimTerminate(Sender: TObject);
+    procedure CloseProc;
+    procedure OnBytesRead(Sender: TObject; const buf: string);
   end;
 
 var
@@ -88,10 +102,10 @@ end;
 
 procedure TiPhoneExtension.FillBunldeInfo(forSimulator: Boolean; var info: TiPhoneBundleInfo);
 begin
-  Info.AppID:=ProjOptions.AppID;
-  Info.DisplayName:=LazarusIDE.ActiveProject.Title;
-  Info.iPlatform:=EnvOptions.GetSDKName(ProjOptions.SDK, forSimulator);
-  Info.SDKVersion:=ProjOptions.SDK;
+  Info.AppID:=UTF8Decode(ProjOptions.AppID);
+  Info.DisplayName:=UTF8Decode(LazarusIDE.ActiveProject.Title);
+  Info.iPlatform:=UTF8Decode(EnvOptions.GetSDKName(ProjOptions.SDK, forSimulator));
+  Info.SDKVersion:=UTF8Decode(ProjOptions.SDK);
   Info.MainNib:=UTF8Decode(ProjOptions.MainNib);
 end;
 
@@ -111,7 +125,7 @@ var
   i       : Integer;
   s       : string;
 begin
-  Space:=ProjOptions.SpaceName; // LazarusIDE.ActiveProject.CustomData.;
+  Space:=UTF8Decode(ProjOptions.SpaceName); // LazarusIDE.ActiveProject.CustomData.;
 
   bundleName:=ExtractFileName(LazarusIDE.ActiveProject.ProjectInfoFile);
   bundleName:=Copy(bundleName, 1, length(bundleName)-length(ExtractFileExt(bundleName)));
@@ -122,13 +136,15 @@ begin
 
   FillBunldeInfo(true, Info);
 
-  CreateBundle(bundleName, Space, ExtractFileName(nm), Info, RealSpace, bundlepath, exepath);
+  CreateBundle(UTF8Decode(bundleName), Space
+    , UTF8Decode(ExtractFileName(nm))
+    , Info, RealSpace, bundlepath, exepath);
 
-  WriteIconTo( IncludeTrailingPathDelimiter(bundlepath)+'Icon.png');
+  WriteIconTo( UTF8Encode(IncludeTrailingPathDelimiter(bundlepath)+'Icon.png') );
 
   CopySymLinks(
     ResolveProjectPath(ProjOptions.ResourceDir),
-    bundlepath,
+    UTF8Encode(bundlepath),
     // don't copy .xib files, they're replaced by compiled nibs
     '*.xib; '+ ProjOptions.ExcludeMask
   );
@@ -152,7 +168,7 @@ begin
       end;
     EnumFilesAtDir(ResolveProjectPath(ProjOptions.ResourceDir), '*.xib', xiblist);
     for i:=0 to xiblist.Count-1 do begin
-      dstpath:=IncludeTrailingPathDelimiter(bundlepath)+ChangeFileExt(ExtractFileName(xiblist[i]), '.nib');
+      dstpath:=UTF8Encode(IncludeTrailingPathDelimiter(bundlepath))+ChangeFileExt(ExtractFileName(xiblist[i]), '.nib');
       ExecCmdLineNoWait(Format('ibtool --compile "%s" "%s"', [dstpath, xiblist[i]]));
     end;
   finally
@@ -213,7 +229,7 @@ begin
     try
       EnvOptions.GetSDKVersions(st);
       if st.Count=0 then
-        IDEMessagesWindow.AddMsg(strWNoSDK, '', 0)
+        IDEMsg(strWNoSDK)
       else begin
         sdkver:=st[0];
         ProjOptions.SDK:=sdkver;
@@ -258,6 +274,7 @@ begin
 
   RegisterIDEMenuCommand(itmProjectWindowSection, 'mnuiPhoneToXCode', strStartAtXcode, @UpdateXcode, nil);
   RegisterIDEMenuCommand(itmProjectWindowSection, 'mnuiPhoneRunSim', strRunSimulator, @SimRun, nil);
+  RegisterIDEMenuCommand(itmProjectWindowSection, 'mnuiPhoneTermSim', strTermSimulator, @SimTerminate, nil);
 end;
 
 function TiPhoneExtension.ProjectBuilding(Sender: TObject): TModalResult;
@@ -281,6 +298,20 @@ begin
   ProjOptions.Reset;
   ProjOptions.Load;
   Result:=mrOk;
+end;
+
+function TiPhoneExtension.GetXcodeProjDirName: string;
+var
+  dir      : string;
+  projname : string;
+  ext      : string;
+begin
+  dir:=ResolveProjectPath('xcode');
+  dir:=dir+'/';
+  projname:=ExtractFileName(LazarusIDE.ActiveProject.MainFile.Filename);
+  ext:=ExtractFileExt(projname);
+  projname:=Copy(projname, 1, length(projname)-length(ext));
+  Result:=dir+projname+'.xcodeproj';
 end;
 
 function TiPhoneExtension.WriteIconTo(const FullName: String): Boolean;
@@ -348,15 +379,12 @@ var
   projname  : string;
 
   ext       : string;
-  exename   : string;
   tname     : string;
   plistname : string;
 
   Info  : TiPhoneBundleInfo;
-  name  : string;
 
   opt   : string;
-  optSim: string;
 begin
   // the create .plist would be used by XCode project
   // the simulator .plist in created with InstallAppToSim.
@@ -391,7 +419,11 @@ begin
   ForceDirectories(dir);
 
   FillBunldeInfo(false, Info);
-  WriteDefInfoList( dir + plistname, tname, tname, Info);
+  WriteDefInfoList(
+    UTF8Decode(dir + plistname)
+    , UTF8Decode(tname)
+    , UTF8Decode(tname)
+    , Info);
 
 
   projname:=ExtractFileName(LazarusIDE.ActiveProject.MainFile.Filename);
@@ -438,7 +470,7 @@ begin
   templates.Free;
   build.Free;
 
-  IDEMessagesWindow.AddMsg(Format(strXcodeUpdated,[projdir]), '', 0);
+  IDEMsg(Format(strXcodeUpdated,[projdir]));
 end;
 
 procedure SimRunDirect;
@@ -450,8 +482,8 @@ begin
   try
     path:=IncludeTrailingPathDelimiter(EnvOptions.SimBundle)+'Contents/MacOS/iPhone Simulator';
     EnvOptions.SubstituteMacros(path);
-    t.CommandLine:='"'+path+'"';
-    t.CurrentDirectory:=UTF8Encode(GetSandBoxDir(ProjOptions.SpaceName));
+    t.Executable:=path;
+    t.CurrentDirectory:=UTF8Encode(GetSandBoxDir(UTF8Decode(ProjOptions.SpaceName)));
     t.Execute;
   except
     on E: Exception do
@@ -474,11 +506,67 @@ end;
 procedure TiPhoneExtension.SimRun(Sender: TObject);
 var
   err : string;
+  pid : integer;
+  prj : string;
+  s   : string;
 begin
+  CloseProc;
+  UpdateXcode(Sender);
+  // install Xcode project
+  prj := GetXcodeProjDirName;
+  IDEMsg('Build+Install Xcode project (xcodebuild)');
+
+  if not InstallXcodePrj(prj, 'iphonesimulator') then begin
+    IDEMsg('xcodebuild failed');
+    Exit;
+  end else
+    IDEMsg('xcodebuild successed, project installed');
+
+  IDEMsg('Running Simulator');
   if not SimRunInstruct(err) then begin
-    ShowMessage('Unable to run Simulator. '+err);
+    IDEMsg('Unable to run Simulator. '+err);
     Exit;
   end;
+
+
+  if not Assigned(iphonelogform) then
+    iphonelogform:=Tiphonelogform.Create(Application)
+  else
+    iphonelogform.AddNewSheet;
+  SimLogger:=TPTYReader.Create;
+  SimLogger.OnBytesRead:=@OnBytesRead;
+
+  IDEMsg('Launching the Application on the Simulator');
+  if RunAppOnSim( ProjOptions.AppID, 'booted', true, pid, s) then begin
+    SimPID:=pid;
+    LLDBRediretIO(SimPID, SimLogger.PTY.FileName);
+    iphonelogform.Show;
+  end else begin
+    IDEMsg('Failed to launch Application.');
+    Exit;
+  end;
+  IDEMsg('Success. Application pid='+IntToStr(pid));
+end;
+
+procedure TiPhoneExtension.SimTerminate(Sender: TObject);
+begin
+  CloseProc;
+end;
+
+procedure TiPhoneExtension.CloseProc;
+begin
+  if SimPID>0 then begin
+    StopProc(SimPID);
+    SimPID:=-1;
+    SimLogger.Free;
+    SimLogger:=nil;
+  end;
+end;
+
+procedure TiPhoneExtension.OnBytesRead(Sender: TObject; const buf: string);
+begin
+  if not Assigned(iphonelogform) then Exit;
+  iphonelogform.LogMemo.Append(buf);
 end;
 
 procedure Register;

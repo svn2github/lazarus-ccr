@@ -7,7 +7,7 @@ object iPhoneProjectOptionsEditor: TiPhoneProjectOptionsEditor
   ClientWidth = 598
   OnClick = FrameClick
   TabOrder = 0
-  DesignLeft = 408
+  DesignLeft = 410
   DesignTop = 201
   object chkisPhone: TCheckBox
     Left = 16

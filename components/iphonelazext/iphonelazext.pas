@@ -10,7 +10,7 @@ uses
   ideext, iPhoneExtStr, iPhoneBundle, XCodeProject, 
   environment_iphone_options, project_iphone_options, iPhoneExtOptions, 
   xcodetemplate, LazFilesUtils, XcodeUtils, newXibDialog, xibfile, PlistFile, 
-  xcodeprojutils, iphonesimctrl, LazarusPackageIntf;
+  xcodeprojutils, iphonesimctrl, iphonelog_form, LazarusPackageIntf;
 
 implementation
 

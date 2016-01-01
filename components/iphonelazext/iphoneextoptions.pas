@@ -21,8 +21,7 @@ interface
 
 uses
   Classes, SysUtils, IDEOptionsIntf, LazIDEIntf, ProjectIntf, MacroIntf,
-  CompOptsIntf,
-  iPhoneBundle, XMLConf, XcodeUtils, FileUtil, iphonesimctrl;
+  iPhoneBundle, XMLConf, XcodeUtils, LazFileUtils, iphonesimctrl;
 
 const
   DefaultResourceDir = 'Resources';
@@ -247,7 +246,7 @@ end;
 function GetDefaultPlatformPath: WideString;
 begin
   result := '/Applications/Xcode.app/Contents/Developer/Platforms';
-  if not DirectoryExistsUTF8(result) then
+  if not DirectoryExistsUTF8(UTF8Encode(result)) then
     Result:='/Developer/Platforms';
 end;
 
@@ -266,9 +265,9 @@ end;
 constructor TiPhoneEnvironmentOptions.Create;
 begin
   inherited Create;
-  fPlatformsBaseDir := GetDefaultPlatformPath;
-  fSimAppsPath := GetDefaultSimAppPath;
-  fSimBundle := GetDefaultSimBundlePath;
+  fPlatformsBaseDir := UTF8Encode(GetDefaultPlatformPath);
+  fSimAppsPath := UTF8Encode(GetDefaultSimAppPath);
+  fSimBundle := UTF8Encode(GetDefaultSimBundlePath);
   fCompilerPath := '/usr/local/bin/fpc';
   fVersions:=TStringList.Create;
   fDeviceList:=TList.Create;
@@ -444,7 +443,7 @@ begin
     if CustomData.Contains(optSDK) then fSDK:=CustomData.Values[optSDK];
     if CustomData.Contains(optAppID) then fAppID:=CustomData.Values[optAppID];
     fSpaceName:=CustomData.Values[optSpaceName];
-    if fSpaceName='' then fSpaceName:=RandomSpaceName;
+    if fSpaceName='' then fSpaceName:=UTF8Encode(RandomSpaceName);
     if CustomData.Contains(optResourceDir) then fResourceDir:=CustomData.Values[optResourceDir]
     else fResourceDir:=DefaultResourceDir;
     if CustomData.Contains(optExcludeMask) then fExcludeMask:=CustomData.Values[optExcludeMask];

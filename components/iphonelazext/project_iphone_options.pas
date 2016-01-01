@@ -19,7 +19,7 @@ unit project_iphone_options;
 interface
 
 uses
-  Classes,SysUtils,FileUtil,LResources,Forms,StdCtrls,CheckLst,Buttons, Dialogs,
+  Classes,SysUtils,FileUtil,LazFileUtils,LResources,Forms,StdCtrls,CheckLst,Buttons, Dialogs,
   Menus,IDEOptionsIntf,ProjectIntf,LazIDEIntf,iPhoneExtStr,
   iPhoneExtOptions, Controls, LazFilesUtils, XcodeUtils, newXibDialog, xibfile
   ,CompOptsIntf;

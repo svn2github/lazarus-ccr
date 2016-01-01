@@ -1,0 +1,63 @@
+object iphonelogform: Tiphonelogform
+  Left = 443
+  Height = 342
+  Top = 233
+  Width = 501
+  Caption = 'iPhone Application Log'
+  ClientHeight = 342
+  ClientWidth = 501
+  OnCreate = FormCreate
+  OnShow = FormShow
+  LCLVersion = '1.7'
+  object PageControl1: TPageControl
+    Left = 0
+    Height = 316
+    Top = 26
+    Width = 501
+    ActivePage = LogSheet1
+    Align = alClient
+    TabIndex = 0
+    TabOrder = 0
+    object LogSheet1: TTabSheet
+      Caption = 'Log'
+      ClientHeight = 277
+      ClientWidth = 495
+      object Memo1: TMemo
+        Left = 0
+        Height = 277
+        Top = 0
+        Width = 495
+        Align = alClient
+        Font.Name = 'Monaco'
+        Lines.Strings = (
+          'Memo1'
+          ''
+          ''
+          ''
+        )
+        ParentFont = False
+        ScrollBars = ssBoth
+        TabOrder = 0
+      end
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 26
+    Top = 0
+    Width = 501
+    Align = alTop
+    ClientHeight = 26
+    ClientWidth = 501
+    TabOrder = 1
+    object chkStayOnTop: TCheckBox
+      Left = 8
+      Height = 18
+      Top = 5
+      Width = 94
+      Caption = 'Stay On Top'
+      OnChange = chkStayOnTopChange
+      TabOrder = 0
+    end
+  end
+end

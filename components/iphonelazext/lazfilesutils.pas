@@ -20,7 +20,7 @@ interface
 
 uses
   {$ifdef Unix}BaseUnix,{$endif}
-  Classes, SysUtils, FileUtil, Masks,
+  Classes, SysUtils, FileUtil, LazFileUtils, Masks,
   LazIDEIntf, ProjectIntf, process;
 
 function ResolveProjectPath(const path: string; project: TLazProject = nil): string;
@@ -225,11 +225,11 @@ end;
 
 function ExecCmdLineStdOut(const CmdLineUtf8: AnsiString; var StdOut: string; var ErrCode: LongWord): Boolean;
 var
-  OurCommand   : String;
-  OutputLines  : TStringList;
+  //OurCommand   : String;
+  //OutputLines  : TStringList;
   MemStream    : TStringStream;
   OurProcess   : TProcess;
-  NumBytes     : LongInt;
+  //NumBytes     : LongInt;
 begin
   // A temp Memorystream is used to buffer the output
   MemStream := TStringStream.Create('');

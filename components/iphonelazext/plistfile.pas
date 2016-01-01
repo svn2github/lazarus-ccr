@@ -292,7 +292,6 @@ end;
 
 function ReadValByNode(valnode: TDomNode): TPListValue;
 var
-  t : string;
   tp : TPlistType;
 begin
   Result:=nil;
