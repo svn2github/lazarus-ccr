@@ -19,7 +19,7 @@ unit ideext;
 interface
 
 uses
-  Unix, BaseUnix, process,
+  process,
   Classes, SysUtils, contnrs,
   Graphics, Controls, Forms, Dialogs, LazFileUtils,
   {Lazarus Interface}
@@ -46,7 +46,7 @@ type
   TiPhoneExtension = class(TObject)
   protected
     procedure FillBunldeInfo(forSimulator: Boolean; var info: TiPhoneBundleInfo);
-    procedure InstallAppToSim;
+    procedure InstallAppToSim; deprecated 'use iphonesimctrl unit routines instead';
     function FixCustomOptions(const Options: String; isRealDevice: Boolean): String;
 
     function WriteIconTo(const FullName: String): Boolean;
@@ -58,7 +58,9 @@ type
     function GetXcodeProjDirName: string;
   public
     SimPID    : Integer;
+    {$ifdef darwin}
     SimLogger : TPTYReader;
+    {$endif}
     constructor Create;
     procedure UpdateXcode(Sender: TObject);
     procedure SimRun(Sender: TObject);
@@ -151,8 +153,10 @@ begin
 
   if nm<>'' then begin
     dstpath:=UTF8Encode(exepath);
+    {$ifdef darwin}
     FpUnlink(dstpath);
     fpSymlink(PChar(nm), PChar(dstpath));
+    {$endif}
   end;
 
   xiblist := TStringList.Create;
@@ -516,6 +520,9 @@ begin
   prj := GetXcodeProjDirName;
   IDEMsg('Build+Install Xcode project (xcodebuild)');
 
+  {$ifndef darwin}
+  IDEMsg('Unable to install / run simulator on non Mac OS X platform');
+  {$else}
   if not InstallXcodePrj(prj, 'iphonesimulator', EnvOptions.DefaultDeviceID) then begin
     IDEMsg('xcodebuild failed');
     Exit;
@@ -546,6 +553,7 @@ begin
     Exit;
   end;
   IDEMsg('Success. Application pid='+IntToStr(pid));
+  {$endif}
 end;
 
 procedure TiPhoneExtension.SimTerminate(Sender: TObject);
@@ -558,8 +566,10 @@ begin
   if SimPID>0 then begin
     StopProc(SimPID);
     SimPID:=-1;
+    {$ifdef darwin}
     SimLogger.Free;
     SimLogger:=nil;
+    {$endif}
   end;
 end;
 

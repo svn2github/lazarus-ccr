@@ -5,11 +5,15 @@ unit newXibDialog;
 interface
 
 uses
+  {$ifdef lclcarbon}
   MacOSAll,
+  {$endif}
   Types,Classes,SysUtils,FileUtil,LResources,Forms,Controls,Graphics,Dialogs,StdCtrls,LCLProc,
-  Grids,
+  Grids
   //todo: use LCL file loading and drawing, instead of OSX
-  CarbonGDIObjects, CarbonProc;
+  {$ifdef lclcarbon}
+  ,CarbonGDIObjects, CarbonProc
+  {$endif};
 
 type
 
@@ -65,6 +69,7 @@ type
 { TXibItem }
 
 constructor TXibItem.Create(const AName,ASourceFile,ADescr, IconFileName:AnsiString);
+{$ifdef darwin}
 var
   url   : CFURLRef;
   data  : CGImageSourceRef;
@@ -110,6 +115,11 @@ begin
     CFRelease(url);
   end;
 end;
+{$else}
+begin
+  inherited Create;
+end;
+{$endif}
 
 destructor TXibItem.Destroy;
 begin

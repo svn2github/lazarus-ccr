@@ -211,7 +211,7 @@ begin
   RunCommand('xcrun', ['simctl', 'list', 'devices', '-j'], s);
   try
     dt:=nil;
-    j:=TJSONParser.Create(s, []);
+    j:=TJSONParser.Create(s);
     try
       dt:=j.Parse;
     finally
