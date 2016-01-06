@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleDevelopmentRegion</key><string>English</string>
+  <key>CFBundleDisplayName</key><string>%s</string>
+  <key>CFBundleExecutable</key><string>%s</string>
+  <key>CFBundleIdentifier</key><string>%s</string>
+  <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+  <key>CFBundleName</key><string>%s</string>
+  <key>CFBundlePackageType</key><string>APPL</string>
+  <key>CFBundleSignature</key><string>????</string>
+  <key>CFBundleSupportedPlatforms</key>
+    <array><string>%s</string></array>
+  <key>CFBundleVersion</key><string>1.0</string>
+  <key>DTPlatformName</key><string>%s</string>
+  <key>DTSDKName</key><string>%s</string>
+  <key>LSRequiresIPhoneOS</key><true/>
+</dict>
+</plist>

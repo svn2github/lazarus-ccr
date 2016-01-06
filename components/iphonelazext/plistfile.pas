@@ -14,12 +14,12 @@
 }
 unit PlistFile;
 
-{$mode delphi}
+{$mode delphi}{$h+}
 
 interface
 
 uses
-  Classes, SysUtils, DOM, XMLRead, XMLWrite, LazFilesUtils;
+  Classes, SysUtils, DOM, XMLRead;
 
 type
   TPlistType = (ltString, ltArray, ltDict, ltData, ltDate, ltBoolean, ltNumber);
@@ -40,23 +40,29 @@ type
     items     : array of TPListValue;
     names     : array of string;
     constructor Create(AType: TPlistType);
+    destructor Destroy; override;
     function AddValue: Integer;
     property ValueType: TPListType read fType;
+    function FindValue(const nm: string): Integer;
   end;
 
   { TPListFile }
 
   TPListFile = class(TObject)
+  protected
+    function GetValueIdx(const aname: string; force: Boolean): Integer;
   public
     root : TPListValue;
     constructor Create;
     destructor Destroy; override;
     function GetStrValue(const valname: string): string;
+    procedure SetStrValue(const AName: string; const AValue: WideString; AValType: TPlistType = ltString);
   end;
 
 function LoadFromXML(const fn: string; plist: TPListFile): Boolean; overload;
 function LoadFromXML(doc: TXMLDocument; plist: TPListFile): Boolean; overload;
 function WriteXML(const plist: TPlistFile): string;
+function SaveToXMLFile(plist: TPlistFile; const fn: string): Boolean;
 
 procedure DebugPlistFile(const fl: TPListFile);
 
@@ -231,6 +237,31 @@ begin
   end;
 end;
 
+function SaveToXMLFile(plist: TPlistFile; const fn: string): Boolean;
+var
+  fs  : TFileStream;
+  s   : string;
+begin
+  if not Assigned(plist) then begin
+    Result:=false;
+    Exit;
+  end;
+  try
+    fs:=TfileStream.Create(fn, fmCreate);
+    try
+      s:=WriteXML(plist);
+      if length(s)>0 then
+        fs.Write(s[1], length(s));
+      Result:=true;
+    finally
+      fs.Free;
+    end;
+  except
+    Result:=false;
+  end;
+end;
+
+
 function LoadFromXML(const fn: string; plist: TPListFile): Boolean; overload;
 var
   doc : TXMLDocument;
@@ -330,10 +361,24 @@ begin
   Result:=true;
 end;
 
+function TPListFile.GetValueIdx(const aname: string; force: Boolean): Integer;
+var
+  idx: integer;
+begin
+  idx:=root.FindValue(aname);
+  if (idx<0) and (force) then begin
+    idx:=root.AddValue;
+    if not Assigned(root.Items[idx]) then
+      root.items[idx]:=TPListValue.Create(ltString);
+    root.names[idx]:=aname;
+  end;
+  Result:=idx;
+end;
+
 constructor TPListFile.Create;
 begin
   inherited Create;
-  root:=TPListValue.Create(ltDict)
+  root:=TPListValue.Create(ltDict);
 end;
 
 destructor TPListFile.Destroy;
@@ -360,12 +405,34 @@ begin
 
 end;
 
+procedure TPListFile.SetStrValue(const AName: string; const AValue: WideString; AValType: TPlistType);
+var
+  idx: integer;
+begin
+  idx:=GetValueIdx(aname, true);
+  writeln('idx= ', idx,' ',length(root.items),' ',root.count,' ',Assigned(root.items[idx]));
+  root.items[idx].str:=avalue;
+  writeln('222');
+  root.items[idx].fType:=AValType;
+  writeln('333');
+end;
+
 { TPListValue }
 
 constructor TPListValue.Create(AType: TPlistType);
 begin
   inherited Create;
   fType:=AType;
+end;
+
+destructor TPListValue.Destroy;
+var
+  i : integer;
+begin
+  for i:=0 to length(items)-1 do
+    if Assigned(items[i]) then
+      items[i].Free;
+  inherited Destroy;
 end;
 
 function TPListValue.AddValue: Integer;
@@ -381,6 +448,18 @@ begin
     if fType=ltDict then SetLength(names, length(items));
   end;
   inc(count);
+end;
+
+function TPListValue.FindValue(const nm: string): Integer;
+var
+  i : integer;
+begin
+  for i:=0 to count-1 do
+    if names[i]=nm then begin
+      Result:=i;
+      Exit;
+    end;
+  Result:=-1;
 end;
 
 end.
