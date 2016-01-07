@@ -7550,7 +7550,7 @@ begin
     else
       TextColor := FHeader.FFont.Color;
     if TextColor = clDefault then
-      TextColor := clCaptionText;
+      TextColor := clBtnText;
     SetTextColor(DC, ColorToRGB(TextColor));
     DrawText(DC, PChar(Caption), Length(Caption), Bounds, DrawFormat);
   end;
