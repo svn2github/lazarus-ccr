@@ -8068,7 +8068,7 @@ begin
     begin
       TextColor := FHeader.Treeview.FColors.HeaderFontColor;
       if TextColor = clDefault then
-        TextColor := clCaptionText;
+        TextColor := clBtnText;
       SetTextColor(DC, ColorToRGB(TextColor));
       DrawText(DC, PChar(Caption), Length(Caption), Bounds, DrawFormat);
     end
@@ -8088,7 +8088,7 @@ begin
     else
       TextColor := FHeader.Treeview.FColors.HeaderFontColor;
     if TextColor = clDefault then
-      TextColor := clCaptionText;
+      TextColor := clBtnText;
     SetTextColor(DC, ColorToRGB(TextColor));
     DrawText(DC, PChar(Caption), Length(Caption), Bounds, DrawFormat);
   end;
