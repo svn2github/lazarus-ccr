@@ -19,7 +19,7 @@ unit PlistFile;
 interface
 
 uses
-  Classes, SysUtils, DOM, XMLRead;
+  Classes, SysUtils, DOM, XMLRead{$ifdef darwin},process{$endif};
 
 type
   TPlistType = (ltString, ltArray, ltDict, ltData, ltDate, ltBoolean, ltNumber);
@@ -29,6 +29,8 @@ type
   TPListValue = class(TObject)
   private
     fType : TPlistType;
+  protected
+    function GetValueIndex(const aname: string; force: Boolean): Integer;
   public
     str       : WideString;
     binary    : array of byte;
@@ -42,21 +44,20 @@ type
     constructor Create(AType: TPlistType);
     destructor Destroy; override;
     function AddValue: Integer;
-    property ValueType: TPListType read fType;
     function FindValue(const nm: string): Integer;
+    procedure Delete(idx: Integer);
+    procedure Clear;
+    property ValueType: TPListType read fType;
   end;
 
   { TPListFile }
 
   TPListFile = class(TObject)
   protected
-    function GetValueIdx(const aname: string; force: Boolean): Integer;
   public
     root : TPListValue;
     constructor Create;
     destructor Destroy; override;
-    function GetStrValue(const valname: string): string;
-    procedure SetStrValue(const AName: string; const AValue: WideString; AValType: TPlistType = ltString);
   end;
 
 function LoadFromXML(const fn: string; plist: TPListFile): Boolean; overload;
@@ -68,8 +69,46 @@ procedure DebugPlistFile(const fl: TPListFile);
 
 function LoadFromFile(const fn: string; plist: TPListFile): Boolean;
 
+function GetStr(dict: TPListValue; const AName: string): string; overload;
+function GetStr(pl: TPListFile; const AName: string): string; overload; inline;
+
+procedure SetStr(vl: TPListValue; const AValue: WideString); overload;
+procedure SetStr(dict: TPListValue; const AName: string; const AValue: WideString); overload;
+procedure SetStr(arr: TPListValue; idx: Integer; const AValue: WideString); overload;
+procedure SetStr(pl: TPListFile; const AName: string; const AValue: WideString); overload; inline;
+
+procedure SetBool(dict: TPListvalue; const AName: string; AValue: Boolean); overload;
+procedure SetBool(pl: TPListFile;  const AName: string; AValue: Boolean); overload; inline;
+
+function AddItem(vl: TPListValue; const name: string; tp: TPListType = ltString): Integer; overload;
+function AddItem(vl: TPListValue; tp: TPListType = ltString ): Integer; overload;
+procedure AddStr(arr: TPListValue; const AValue: WideString);
+
+function SetArr(vl: TPListValue; const AName: string): TPListValue; overload;
+function SetArr(pl: TPListFile; const AName: string): TPListValue; overload; inline;
 
 implementation
+
+function AddItem(vl: TPListValue; const name: string; tp: TPListType = ltString): Integer; overload;
+begin
+  Result:=AddItem(vl, tp);
+  if vl.ValueType=ltDict then
+    vl.names[Result]:=name;
+end;
+
+function AddItem(vl: TPListValue; tp: TPListType = ltString ): Integer; overload;
+var
+  idx : integer;
+begin
+  if not Assigned(vl) then begin
+    Result:=-1;
+    Exit;
+  end;
+  idx:=vl.AddValue;
+  if not Assigned(vl.items[idx]) then
+    vl.items[idx]:=TPListValue.Create(tp);
+  Result:=idx;
+end;
 
 procedure DebugValue(kv: TPListValue; const prefix: string );
 var
@@ -120,7 +159,7 @@ begin
   else begin
     {$ifdef darwin}
     // the utility is not available anywhere else but OSX
-    if not ExecCmdLineStdOut('plutil -convert xml1 -o - "'+fn+'"', xs, err) then begin
+    if not RunCommand('plutil', ['-convert','xml1','-o' ,'-', fn], xs) then begin
       Result:=false;
       Exit;
     end;
@@ -184,12 +223,16 @@ begin
   if (Result='') and (b<>'') then
     Result:=b
   else begin
-    if j<length(b) then begin
-      i:=length(b)+1;
-      Move(b[j], Result[k], i-j);
-      inc(k, i-j);
+    if b='' then
+      Result:=''
+    else begin
+      if j<length(b) then begin
+        i:=length(b)+1;
+        Move(b[j], Result[k], i-j);
+        inc(k, i-j);
+      end;
+      SetLength(Result, k-1);
     end;
-    SetLength(Result, k-1);
   end;
 end;
 
@@ -361,16 +404,16 @@ begin
   Result:=true;
 end;
 
-function TPListFile.GetValueIdx(const aname: string; force: Boolean): Integer;
+function TPListValue.GetValueIndex(const aname: string; force: Boolean): Integer;
 var
   idx: integer;
 begin
-  idx:=root.FindValue(aname);
+  idx:=FindValue(aname);
   if (idx<0) and (force) then begin
-    idx:=root.AddValue;
-    if not Assigned(root.Items[idx]) then
-      root.items[idx]:=TPListValue.Create(ltString);
-    root.names[idx]:=aname;
+    idx:=AddValue;
+    if not Assigned(Items[idx]) then
+      items[idx]:=TPListValue.Create(ltString);
+    names[idx]:=aname;
   end;
   Result:=idx;
 end;
@@ -387,34 +430,93 @@ begin
   inherited Destroy;
 end;
 
-function TPListFile.GetStrValue(const valname: string): string;
+function GetStr(dict: TPListValue; const AName: string): string;
 var
   i : integer;
 begin
-  if not Assigned(root) or (root.ValueType<>ltDict) then begin
+  if not Assigned(dict) or (dict.ValueType<>ltDict) then begin
     Result:='';
     Exit;
   end;
 
-  for i:=0 to root.count-1 do
-    if root.names[i]=valname then begin
-      Result:=UTF8Encode(root.items[i].str);
+  for i:=0 to dict.count-1 do
+    if dict.names[i]=AName then begin
+      Result:=UTF8Encode(dict.items[i].str);
       Exit;
     end;
   Result:='';
-
 end;
 
-procedure TPListFile.SetStrValue(const AName: string; const AValue: WideString; AValType: TPlistType);
+procedure SetStr(vl: TPListValue; const AValue: WideString);
+begin
+  if not Assigned(vl) then Exit;
+  vl.str:=AValue;
+  vl.fType:=ltString;
+end;
+
+procedure SetStr(dict: TPListValue; const AName: string; const AValue: WideString);
 var
   idx: integer;
 begin
-  idx:=GetValueIdx(aname, true);
-  writeln('idx= ', idx,' ',length(root.items),' ',root.count,' ',Assigned(root.items[idx]));
-  root.items[idx].str:=avalue;
-  writeln('222');
-  root.items[idx].fType:=AValType;
-  writeln('333');
+  idx:=dict.GetValueIndex(AName, true);
+  SetStr(dict.items[idx], Avalue);
+end;
+
+procedure SetBool(dict: TPListvalue; const AName: string; AValue: Boolean); overload;
+var
+  idx: integer;
+begin
+  idx:=dict.GetValueIndex(AName, true);
+  dict.items[idx].bool:=AValue;
+  dict.items[idx].fType:=ltBoolean;
+end;
+
+procedure SetStr(pl: TPListFile; const AName: string; const AValue: WideString); overload; inline;
+begin
+  SetStr(pl.root, AName, AValue);
+end;
+
+procedure SetBool(pl: TPListFile;  const AName: string; AValue: Boolean); overload; inline;
+begin
+  SetBool(pl.root, AName, AValue);
+end;
+
+procedure SetStr(arr: TPListValue; idx: Integer; const AValue: WideString); overload;
+begin
+  if not Assigned(arr) or (arr.ValueType<>ltArray) or (idx<0) or (idx>arr.count) then Exit;
+  if idx=arr.count then
+    AddStr(arr, Avalue)
+  else begin
+    if not Assigned(arr.items[idx]) then arr.items[idx]:=TPListValue.Create(ltString);
+    SetStr(arr.items[idx], AValue);
+  end;
+end;
+
+procedure AddStr(arr: TPListValue; const AValue: WideString);
+var
+  idx: integer;
+begin
+  idx:=AddItem(arr, ltString);
+  arr.items[idx].str:=AValue;
+end;
+
+function GetStr(pl: TPListFile; const AName: string): string; overload; inline;
+begin
+  Result:=GetStr(pl.root, AName);
+end;
+
+function SetArr(vl: TPListValue; const AName: string): TPListValue; overload;
+var
+  idx: integer;
+begin
+  idx:=vl.GetValueIndex(AName, true);
+  Result:=vl.items[idx];
+  Result.fType:=ltArray;
+end;
+
+function SetArr(pl: TPListFile; const AName: string): TPListValue; overload; inline;
+begin
+  Result := SetArr(pl.root, AName);
 end;
 
 { TPListValue }
@@ -426,12 +528,8 @@ begin
 end;
 
 destructor TPListValue.Destroy;
-var
-  i : integer;
 begin
-  for i:=0 to length(items)-1 do
-    if Assigned(items[i]) then
-      items[i].Free;
+  Clear;
   inherited Destroy;
 end;
 
@@ -460,6 +558,37 @@ begin
       Exit;
     end;
   Result:=-1;
+end;
+
+procedure TPListValue.Delete(idx: Integer);
+var
+  i : integer;
+begin
+  if (idx<0) or (idx>=count) then Exit;
+  items[idx].Free;
+  if ValueType=ltDict then names[idx]:='';
+
+  if idx<count-1 then begin
+    Move(items[idx+1], items[idx], (count-idx)*sizeof(TPListValue));
+    if ValueType=ltDict then begin
+      Move(names[idx+1], names[idx], (count-idx)*sizeof(PtrUInt));
+      names[count-1]:='';
+    end;
+  end;
+  dec(count);
+  items[count]:=nil;
+end;
+
+procedure TPListValue.Clear;
+var
+  i : Integer;
+begin
+  for i:=0 to length(items)-1 do
+    if Assigned(items[i]) then
+      items[i].Free;
+  count:=0;
+  SetLength(names, 0);
+  SetLength(items, 0);
 end;
 
 end.

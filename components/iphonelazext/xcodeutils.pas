@@ -51,9 +51,9 @@ begin
   try
     plistfile.LoadFromFile(FileName, plist);
 
-    Descr.Name:=plist.GetStrValue('CanonicalName');
-    Descr.Alternate:=plist.GetStrValue('AlternateSDK');
-    Descr.Version:=plist.GetStrValue('Version');
+    Descr.Name:=GetStr(plist, 'CanonicalName');
+    Descr.Alternate:=GetStr(plist, 'AlternateSDK');
+    Descr.Version:=GetStr(plist, 'Version');
   finally
     plist.Free;
   end;
@@ -168,8 +168,8 @@ begin
           if AnsiLowerCase(ExtractFileExt(files[j]))='.plist' then begin
             plist:=TPListFile.Create;
             plistfile.LoadFromFile(files[j],plist);
-            xib:=plist.GetStrValue('MainTemplateFile');
-            descr:=plist.GetStrValue('Description');
+            xib:=GetStr(plist, 'MainTemplateFile');
+            descr:=GetStr(plist, 'Description');
             name:=ChangeFileExt(xib, '');
             Break;
           end;

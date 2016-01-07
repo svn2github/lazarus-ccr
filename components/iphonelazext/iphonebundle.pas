@@ -19,7 +19,7 @@ unit iPhoneBundle;
 interface
 
 uses
-  Classes, SysUtils, LazFileUtils;
+  Classes, SysUtils, LazFileUtils, PlistFile;
 
 const
   platform_iPhoneSim = 'iphonesimulator';
@@ -47,6 +47,7 @@ procedure MakeSimSpaceStruct(const iPhoneSimUserPath, SpaceName, BundleName: Wid
 function GetBundleExeName(const BundleAppDir, ExeName: WideString): WideString;
 
 procedure WritePkgFile(const FileName: WideString);
+function WriteDefInfoList_(const InfoFileName, BundleName, ExeName: WideString; const info: TiPhoneBundleInfo): Boolean;
 function WriteDefInfoList(const InfoFileName, BundleName, ExeName: WideString; const info: TiPhoneBundleInfo): Boolean;
 
 procedure CreateBundle(const BundleName, ExeName: WideString; const Info: TiPhoneBundleInfo; var FullBundlePath, FullExeName: WideString);
@@ -198,7 +199,55 @@ begin
   fs.Free;
 end;
 
+procedure InitDefaultPlist(pl: TPListFile);
+var
+  arr : TPListValue;
+begin
+  SetStr(pl, 'CFBundleDevelopmentRegion', 'English');
+  SetStr(pl, 'CFBundleDisplayName', '');
+  SetStr(pl, 'CFBundleExecutable', '');
+  SetStr(pl, 'CFBundleIdentifier', '');
+  SetStr(pl, 'CFBundleInfoDictionaryVersion', '6.0');
+  SetStr(pl, 'CFBundleName', '');
+  SetStr(pl, 'CFBundlePackageType', 'APPL');
+  SetStr(pl, 'CFBundleSignature', '????');
+  SetArr(pl, 'CFBundleSupportedPlatforms');
+  SetStr(pl, 'CFBundleVersion', '1.0');
+  SetStr(pl, 'DTPlatformName', '');
+  SetStr(pl, 'DTSDKName', '');
+  SetBool(pl, 'LSRequiresIPhoneOS', true);
+  arr:=SetArr(pl, 'UISupportedInterfaceOrientations');
+  AddStr(arr, 'UIInterfaceOrientationPortrait');
+  AddStr(arr, 'UIInterfaceOrientationLandscapeLeft');
+end;
+
 function WriteDefInfoList(const InfoFileName, BundleName, ExeName: WideString; const info: TiPhoneBundleInfo): Boolean;
+var
+  pl : TPListFile;
+  arr : TPListValue;
+begin
+  pl := TPListFile.Create;
+  try
+    if not FileExists(InfoFileName) then begin
+      InitDefaultPlist(pl);
+    end else
+      LoadFromFile(InfoFileName, pl);
+    SetStr(pl, 'CFBundleDisplayName', info.DisplayName);
+    SetStr(pl, 'CFBundleExecutable', ExeName);
+    SetStr(pl, 'CFBundleIdentifier', info.AppID);
+    SetStr(pl, 'CFBundleName', BundleName);
+    arr:=SetArr(pl, 'CFBundleSupportedPlatforms');
+    SetStr(arr, 0, info.iPlatform);
+    SetStr(pl, 'DTPlatformName', info.iPlatform);
+    SetStr(pl, 'DTSDKName', info.SDKVersion);
+
+    SaveToXMLFile(pl, InfoFileName);
+  finally
+    pl.Free;
+  end;
+end;
+
+function WriteDefInfoList_(const InfoFileName, BundleName, ExeName: WideString; const info: TiPhoneBundleInfo): Boolean;
 const
   BundleFormat : AnsiString =
     '<?xml version="1.0" encoding="UTF-8"?>'#10+
@@ -219,6 +268,11 @@ const
     '	<key>DTPlatformName</key>'#10+                '	<string>%s</string>'#10+     {platform}
     '	<key>DTSDKName</key>'#10+                     '	<string>%s</string>'#10+     {sdk version}
     '	<key>LSRequiresIPhoneOS</key>'#10+            '	<true/>'#10+
+    '	<key>UISupportedInterfaceOrientations</key>'#10+
+  	' <array>'#10+
+  	'	  <string>UIInterfaceOrientationPortrait</string>'#10+
+  	'	  <string>UIInterfaceOrientationLandscapeLeft</string>'#10+
+  	' </array>'#10+
     '</dict>'#10+
     '</plist>';
 

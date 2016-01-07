@@ -19,6 +19,7 @@ unit ideext;
 interface
 
 uses
+  {$ifdef darwin}BaseUnix, Unix,{$endif}
   process,
   Classes, SysUtils, contnrs,
   Graphics, Controls, Forms, Dialogs, LazFileUtils,
