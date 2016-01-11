@@ -45,6 +45,8 @@ published
   property StrictSize: Boolean read GetStrictSize write SetStrictSize;
   property BackgroundColor: TColor read GetBackgroundColor write SetBackgroundColor default clWhite;
   property ForegroundColor: TColor read GetForegroundColor write SetForegroundColor default clBlack;
+  property Width default 88;
+  property Height default 88;
 end;
 
 { TLazBarcodeCustomText }
@@ -281,6 +283,8 @@ begin
   FBackgroundColor:=clWhite;
   FForegroundColor:=clBlack;
   FStrictSize:=true;
+  Width := 88;
+  Height := 88;
 end;
 
 destructor TLazBarcodeCustomBase.Destroy;
@@ -400,15 +404,17 @@ begin
     ZBarcode_Delete(FQR);
     FQR:=nil;
   end;
-  FQR:=ZBarcode_Create();
-  with FQR^ do begin
-    border_width:=4;
-  end;
-  UpdateECCLevel;
-  ErrorCode:=qr_code(FQR,@FText[1],Length(FText));
-  if ErrorCode<>0 then begin
-    FLastErrorString:=FQR^.errtxt;
-    exit;
+  if Length(FText) > 0 then begin
+    FQR:=ZBarcode_Create();
+    with FQR^ do begin
+      border_width:=4;
+    end;
+    UpdateECCLevel;
+    ErrorCode:=qr_code(FQR,@FText[1],Length(FText));
+    if ErrorCode<>0 then begin
+      FLastErrorString:=FQR^.errtxt;
+      exit;
+    end;
   end;
 end;
 
@@ -422,15 +428,17 @@ begin
     ZBarcode_Delete(FQR);
     FQR:=nil;
   end;
-  FQR:=ZBarcode_Create();
-  with FQR^ do begin
-    border_width:=4;
-  end;
-  UpdateECCLevel;
-  ErrorCode:=microqr(FQR,@FText[1],Length(FText));
-  if ErrorCode<>0 then begin
-    FLastErrorString:=FQR^.errtxt;
-    exit;
+  if Length(FText) > 0 then begin
+    FQR:=ZBarcode_Create();
+    with FQR^ do begin
+      border_width:=4;
+    end;
+    UpdateECCLevel;
+    ErrorCode:=microqr(FQR,@FText[1],Length(FText));
+    if ErrorCode<>0 then begin
+      FLastErrorString:=FQR^.errtxt;
+      exit;
+    end;
   end;
 end;
 
