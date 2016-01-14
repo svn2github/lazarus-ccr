@@ -89,7 +89,7 @@ var
   ToolPanelSetupForm: TToolPanelSetupForm;
 
 implementation
-uses vclutils, ActnList, boxprocs, rxconst;
+uses vclutils, ActnList, boxprocs, rxconst, LCLProc;
 
 {$R *.lfm}
 
@@ -122,6 +122,7 @@ var
   BtnRect:TRect;
   Cnv:TCanvas;
   C: TColor;
+  S: String;
 begin
   Cnv:=(Control as TListBox).Canvas;
   C:=Cnv.Brush.Color;
@@ -150,7 +151,14 @@ begin
       end;
       Offset := Offset + 6;
       Cnv.Brush.Color:=C;
-      Cnv.TextOut(ARect.Left + Offset, (ARect.Top + ARect.Bottom  - Cnv.TextHeight('W')) div 2, TCustomAction(P.Action).Caption);  { display the text }
+      Cnv.TextOut(ARect.Left + Offset, (ARect.Top + ARect.Bottom  - Cnv.TextHeight('Wg')) div 2, TCustomAction(P.Action).Caption);  { display the text }
+      if (P.Action is TAction) then
+        if TAction(P.Action).ShortCut <> 0 then
+        begin
+          S:=ShortCutToText(TAction(P.Action).ShortCut);
+          if S<> '' then
+            Cnv.TextOut(ARect.Right - Cnv.TextWidth(S) - 2, (ARect.Top + ARect.Bottom  - Cnv.TextHeight('Wg')) div 2, S);  { display the shortut caption }
+        end;
     end;
   end;
 end;

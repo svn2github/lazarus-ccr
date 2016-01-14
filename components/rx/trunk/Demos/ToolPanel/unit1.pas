@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  Buttons, StdCtrls, rxtoolbar, ActnList, XMLPropStorage, Menus;
+  Buttons, rxtoolbar, RxIniPropStorage, RxAboutDialog, ActnList,
+  Menus;
 
 
 type
@@ -23,6 +24,8 @@ type
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
     PopupMenu2: TPopupMenu;
+    RxAboutDialog1: TRxAboutDialog;
+    RxIniPropStorage1: TRxIniPropStorage;
     SpeedButton1: TSpeedButton;
     sysAbout: TAction;
     actNew: TAction;
@@ -40,7 +43,6 @@ type
     MenuItem9: TMenuItem;
     PopupMenu1: TPopupMenu;
     ToolPanel1: TToolPanel;
-    XMLPropStorage1: TXMLPropStorage;
     procedure Action1Execute(Sender: TObject);
     procedure actCustomExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
@@ -56,7 +58,6 @@ var
 
 
 implementation
-uses AboutUnit;
 
 {$R *.lfm}
 
@@ -80,9 +81,7 @@ end;
 
 procedure TMainForm.sysAboutExecute(Sender: TObject);
 begin
-  AboutForm:=TAboutForm.Create(Application);
-  AboutForm.ShowModal;
-  AboutForm.Free;
+  RxAboutDialog1.Execute;
 end;
 
 end.

@@ -5,8 +5,7 @@ program project1;
 uses
   Interfaces, // this includes the LCL widgetset
   Forms,
-  Unit1,
-  AboutUnit;
+  Unit1;
 
 {$R *.res}
 
