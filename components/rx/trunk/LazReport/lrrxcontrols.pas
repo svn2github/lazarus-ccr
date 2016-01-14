@@ -20,12 +20,12 @@ type
     function GetKeyField: string;
     function GetListField: string;
     function GetListSource: string;
-    function GetText: Variant;
+    function GetText: string;
     procedure SetKeyField(AValue: string);
     procedure SetListField(AValue: string);
     procedure SetListSource(AValue: string);
     procedure RxDBLookupComboBox1CloseUp(Sender: TObject; SearchResult:boolean);
-    procedure SetText(AValue: Variant);
+    procedure SetText(AValue: string);
   protected
     procedure PaintDesignControl; override;
     function CreateControl:TControl;override;
@@ -42,7 +42,7 @@ type
     property ListSource:string read GetListSource write SetListSource;
     property Color;
     property Enabled;
-    property Text:Variant read GetText write SetText;
+    property Text:string read GetText write SetText;
     property OnClick;
   end;
 
@@ -160,9 +160,9 @@ begin
   Result:=FListSource;
 end;
 
-function TlrRxDBLookupComboBox.GetText: Variant;
+function TlrRxDBLookupComboBox.GetText: string;
 begin
-  Result:=TRxDBLookupCombo(FControl).KeyValue;
+  Result:=TRxDBLookupCombo(FControl).Value;
 end;
 
 procedure TlrRxDBLookupComboBox.SetKeyField(AValue: string);
@@ -201,9 +201,9 @@ begin
 }
 end;
 
-procedure TlrRxDBLookupComboBox.SetText(AValue: Variant);
+procedure TlrRxDBLookupComboBox.SetText(AValue: string);
 begin
-  TRxDBLookupCombo(FControl).KeyValue:=AValue;
+  TRxDBLookupCombo(FControl).Value:=AValue;
 end;
 
 procedure TlrRxDBLookupComboBox.PaintDesignControl;
