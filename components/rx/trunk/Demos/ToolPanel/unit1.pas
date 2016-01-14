@@ -46,6 +46,7 @@ type
     procedure Action1Execute(Sender: TObject);
     procedure actCustomExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
     procedure sysAboutExecute(Sender: TObject);
   private
    //
@@ -58,6 +59,8 @@ var
 
 
 implementation
+
+uses rxShortCutUnit;
 
 {$R *.lfm}
 
@@ -77,6 +80,15 @@ end;
 procedure TMainForm.actExitExecute(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TMainForm.BitBtn1Click(Sender: TObject);
+var
+  A: TShortCut;
+begin
+  A:=sysAbout.ShortCut;
+  if RxSelectShortCut(A) then
+    sysAbout.ShortCut:=A;
 end;
 
 procedure TMainForm.sysAboutExecute(Sender: TObject);

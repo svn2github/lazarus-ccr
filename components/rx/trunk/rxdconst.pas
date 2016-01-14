@@ -236,6 +236,7 @@ const
   sIndex        = '.Index';
   sSortMarker   = '.SortMarker';
   sSortField    = '.SortField';
+  sShortCut     = '.ShortCut';
 
 
 implementation

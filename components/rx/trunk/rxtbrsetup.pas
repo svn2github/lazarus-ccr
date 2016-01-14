@@ -76,6 +76,7 @@ type
       ARect: TRect; State: TOwnerDrawState);
     procedure ListBtnAvaliableClick(Sender: TObject);
     procedure cbShowCaptionChange(Sender: TObject);
+    procedure ListBtnVisibleDblClick(Sender: TObject);
   private
     procedure FillItems(List:TStrings; AVisible:boolean);
     procedure UpdateStates;
@@ -89,7 +90,7 @@ var
   ToolPanelSetupForm: TToolPanelSetupForm;
 
 implementation
-uses vclutils, ActnList, boxprocs, rxconst, LCLProc;
+uses vclutils, ActnList, boxprocs, rxconst, LCLProc, rxShortCutUnit;
 
 {$R *.lfm}
 
@@ -180,6 +181,29 @@ procedure TToolPanelSetupForm.cbShowCaptionChange(Sender: TObject);
 begin
   if (ListBtnVisible.ItemIndex>-1) and (ListBtnVisible.ItemIndex<ListBtnVisible.Items.Count) then
     TToolbarItem(ListBtnVisible.Items.Objects[ListBtnVisible.ItemIndex]).ShowCaption:=cbShowCaption.Checked;
+end;
+
+procedure TToolPanelSetupForm.ListBtnVisibleDblClick(Sender: TObject);
+var
+  Act: TBasicAction;
+  A: TShortCut;
+begin
+  if FToolPanel.CustomizeShortCut then
+  if (TListBox(Sender).ItemIndex>-1) and (TListBox(Sender).ItemIndex<TListBox(Sender).Items.Count) then
+  begin
+    Act:=TToolbarItem(TListBox(Sender).Items.Objects[TListBox(Sender).ItemIndex]).Action;
+    if Act is TCustomAction then
+    begin
+      A:=TCustomAction(Act).ShortCut;
+      Hide;
+      if RxSelectShortCut(A) then
+      begin
+        TCustomAction(Act).ShortCut:=A;
+        TListBox(Sender).Invalidate;
+      end;
+      Show;
+    end;
+  end;
 end;
 
 procedure TToolPanelSetupForm.FillItems(List: TStrings; AVisible: boolean);

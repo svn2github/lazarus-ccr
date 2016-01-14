@@ -184,6 +184,7 @@ type
   TToolPanel = class(TCustomPanel)
   private
     FButtonAllign: TToolButtonAllign;
+    FCustomizeShortCut: boolean;
     FImageList: TImageList;
     FImageListSelected: TImageList;
     FOptions: TToolPanelOptions;
@@ -235,6 +236,7 @@ type
     property Options:TToolPanelOptions read FOptions write SetOptions;
     property Version: Integer read FVersion write FVersion default 0;
     property ButtonAllign:TToolButtonAllign read FButtonAllign write SetButtonAllign default tbaLeft;
+    property CustomizeShortCut:boolean read FCustomizeShortCut write FCustomizeShortCut;
 
     property Align;
     property Alignment;
@@ -987,6 +989,8 @@ begin
       FPropertyStorageLink.Storage.WriteInteger(S1+sTop, FToolbarItems[i].Top);
       FPropertyStorageLink.Storage.WriteInteger(S1+sLeft, FToolbarItems[i].Left);
       FPropertyStorageLink.Storage.WriteInteger(S1+sWidth, FToolbarItems[i].Width);
+      if FCustomizeShortCut and Assigned(FToolbarItems[i].Action) then
+        FPropertyStorageLink.Storage.WriteString(S1+sShortCut, ShortCutToText(TCustomAction(FToolbarItems[i].Action).ShortCut));
     end;
   end;
 end;
@@ -1026,6 +1030,11 @@ begin
         AItem.Width:=FPropertyStorageLink.Storage.ReadInteger(S1+sWidth, AItem.Width);
         AItem.Visible:=FPropertyStorageLink.Storage.ReadInteger(S1+sVisible, ord(AItem.Visible)) <> 0;
         AItem.ShowCaption:=FPropertyStorageLink.Storage.ReadInteger(S1+sShowCaption, ord(AItem.ShowCaption)) <> 0;
+        if FCustomizeShortCut and Assigned(AItem.Action) then
+        begin
+          S2:=FPropertyStorageLink.Storage.ReadString(S1+sShortCut, ShortCutToText(TCustomAction(AItem.Action).ShortCut));
+          TCustomAction(AItem.Action).ShortCut:=TextToShortCut(S2);
+        end;
       end;
     end;
   end;
@@ -1145,6 +1154,7 @@ constructor TToolPanel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FArrowBmp:=CreateArrowBitmap;
+  FCustomizeShortCut:=false;
   AutoSize:=false;
   FButtonAllign:=tbaLeft;
   FToolbarItems:=TToolbarItems.Create(Self);
