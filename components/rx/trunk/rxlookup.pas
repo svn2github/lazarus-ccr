@@ -131,6 +131,8 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+  published
+    property Spacing default 0;
   end;
 
   TRxLookupEdit = class(TRxCustomDBLookupEdit)
@@ -614,6 +616,7 @@ var
   P:TBitmap;
 begin
   inherited Create(AOwner);
+  Spacing:=0;
   FLocateObject:=CreateLocate(nil);
 
   //Lookup

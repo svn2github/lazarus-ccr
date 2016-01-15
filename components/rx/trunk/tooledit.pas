@@ -198,6 +198,7 @@ type
     property WeekendColor;
     property Weekends;
     property YearDigits;
+    property Spacing default 0;
 
     property OnAcceptDate;
     property OnChange;
@@ -376,6 +377,7 @@ end;
 constructor TRxDateEdit.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+  Spacing:=0;
   UpdateMask;
 end;
 
