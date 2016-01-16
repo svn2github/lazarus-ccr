@@ -557,6 +557,8 @@ begin
 end;
 
 function TPBXScanner.DoFetchToken: TPBXToken;
+var
+  donestr: Boolean;
 begin
   if idx>length(buf) then begin
     Result:=tkEOF;
@@ -590,7 +592,16 @@ begin
     '"': begin
       inc(idx);
       Result:=tkIdentifier;
-      FCurTokenString:=ScanTo(buf, idx, ['"']);
+      donestr:=false;
+      FCurTokenString:='';
+      repeat
+        FCurTokenString:=FCurTokenString+ScanTo(buf, idx, ['"']);
+        donestr:=(buf[idx-1]<>'\');
+        if not donestr then begin
+          FCurTokenString:=FCurTokenString+'"';
+          inc(idx);
+        end;
+      until donestr;
       inc(idx);
     end;
     '=': begin

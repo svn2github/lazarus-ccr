@@ -374,7 +374,7 @@ begin
   tk:=p.FetchNextEntity;
   refs:=TList.Create;
   try
-    while tk<>etCloseObject do begin
+    while not (tk in [etError, etCloseObject]) do begin
       if tk=etOpenObject then begin
         id:=p.Name;
         cmt:=p.LastComment;
@@ -388,8 +388,9 @@ begin
             obj._id:=id;
             PBXReadClass(p, obj, refs);
             objs.Add(id, obj);
-          end else
+          end else begin
             PBXParserSkipLevel(p);
+          end;
 
         end else
           PBXParserSkipLevel(p);
@@ -422,6 +423,7 @@ var
   root  : string;
   objs  : TObjHashList;
   rt    : TObject;
+  i     : Integer;
 begin
   Result:=false;
   AFileInfo.archiveVersion:='';
@@ -440,7 +442,7 @@ begin
 
 
     tk:=p.FetchNextEntity;
-    while tk <> etEOF do begin
+    while not (tk in [etEOF,etError]) do begin
       if tk = etValue then begin
         if p.Name='archiveVersion' then AFileInfo.archiveVersion:=p.Value
         else if p.Name='objectVersion' then AFileInfo.objectVersion:=p.Value
@@ -449,6 +451,13 @@ begin
         ReadObjects(p, objs);
       end;
       tk:=p.FetchNextEntity;
+    end;
+
+    if tk=etError then begin
+      {for i:=0 to objs.Count-1 do
+        TObject(objs[i]).Free;}
+      Result:=false;
+      Exit;
     end;
 
     rt:=objs.Find(root);

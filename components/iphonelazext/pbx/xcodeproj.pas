@@ -709,6 +709,7 @@ initialization
   PBXRegisterClass(PBXVariantGroup);
   PBXRegisterClass(XCBuildConfiguration);
   PBXRegisterClass(XCConfigurationList);
+  PBXRegisterClass(PBXShellScriptBuildPhase);
 
 end.
 
