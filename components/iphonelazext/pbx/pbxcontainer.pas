@@ -41,8 +41,6 @@ uses
 
 type
 
-  { TPBXObject }
-
   { PBXObject }
 
   PBXObject = class(TObject)
@@ -58,7 +56,7 @@ type
     property __id: string read _id;
     property _headerComment: string read _fheaderComment write _fheaderComment;
     constructor Create; virtual;
-
+    function GetIsaName: string; virtual;
   end;
   PBXObjectClass = class of PBXObject;
 
@@ -113,6 +111,18 @@ type
   { TPBXContainer }
 
   TObjHashList = TFPHashObjectList;
+
+  { TPBXUnkClass }
+
+  TPBXUnkClass = class(PBXObject)
+  private
+    fisa : string;
+  public
+    constructor CreateWithName(const AISA: string);
+    constructor Create; override;
+    function GetIsaName: string; override;
+    property _isa: string read fisa write fisa;
+  end;
 
   TPBXContainer = class(TObject)
   protected
@@ -256,6 +266,24 @@ begin
 
 end;
 
+{ TPBXUnkClass }
+
+constructor TPBXUnkClass.CreateWithName(const AISA: string);
+begin
+  fisa:=AISA;
+  Create;
+end;
+
+constructor TPBXUnkClass.Create;
+begin
+  inherited Create;
+end;
+
+function TPBXUnkClass.GetIsaName: string;
+begin
+  Result:=fisa;
+end;
+
 { TPBXValue }
 
 destructor TPBXValue.Destroy;
@@ -332,6 +360,11 @@ begin
 
 end;
 
+function PBXObject.GetIsaName: string;
+begin
+  Result:=ClassName;
+end;
+
 { TPBXContainer }
 
 procedure PBXReref(objs: TObjHashList; refs: TList);
@@ -383,6 +416,8 @@ begin
         if (p.CurEntity = etValue) and (p.Name = 'isa') then begin
           cls:=p.Value;
           obj:=AllocObject(cls);
+          if not Assigned(obj) then
+            obj:=TPBXUnkClass.CreateWithName(cls);
           if Assigned(obj) then begin
             obj._headerComment:=cmt;
             obj._id:=id;
@@ -695,11 +730,11 @@ begin
 
   w.WriteName(pbx._id, pbx._headerComment);
 
-  isMan:=(pbx.ClassName='PBXFileReference') or (pbx.ClassName='PBXBuildFile');
+  isMan:=(pbx.GetIsaName='PBXFileReference') or (pbx.GetIsaName='PBXBuildFile');
   if isMan then w.ManualLineBreak:=true;
 
   w.OpenBlock('{');
-  w.WriteNamedValue('isa', pbx.ClassName);
+  w.WriteNamedValue('isa', pbx.GetIsaName);
 
   p:=nil;
   cnt:=GetPropList(pbx, p);
@@ -780,7 +815,7 @@ begin
     if AssignRef then PBXAssignRef(lst);
 
     for i:=0 to lst.Count-1 do begin
-      st.AddObject( PBXObject(lst[i]).ClassName+' '+PBXObject(lst[i])._id, PBXObject(lst[i]));
+      st.AddObject( PBXObject(lst[i]).GetIsaName+' '+PBXObject(lst[i])._id, PBXObject(lst[i]));
     end;
     st.Sort;
 
@@ -796,11 +831,11 @@ begin
       w.WriteName('objects'); w.OpenBlock('{');
       for i:=0 to st.Count-1 do begin
         pbx:=PBXObject(st.Objects[i]);
-        if sc<>pbx.ClassName then begin
+        if sc<>pbx.GetIsaName then begin
           if sc<>'' then begin
             w.WriteLineComment('End '+sc+' section');
           end;
-          sc:=pbx.ClassName;
+          sc:=pbx.GetIsaName;
           w.WriteLineBreak();
           w.WriteLineComment('Begin '+sc+' section');
           emp.Clear;
