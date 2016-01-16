@@ -157,6 +157,8 @@ procedure ParseAString(const test: string);
 function PBXParserSkipLevel(p: TPBXParser): Boolean;
 function PBXRawWriteValue(const v: string): string;
 
+function Unescape(const s: string): string;
+
 implementation
 
 type
@@ -172,6 +174,44 @@ const
   IdentName        = AlphaNumeric+['_','.','/']; // . and / are allowed in values
   ToEscape         = ['"',#13,#9,#10,'\'];
   // commas are not
+
+function Unescape(const s: string): string;
+var
+  i   : Integer;
+  j   : Integer;
+  cnt : Integer;
+begin
+  if s='' then begin
+    Result:='';
+    Exit;
+  end;
+  SetLength(Result, length(s));
+  cnt := length(s);
+  i:=1;
+  j:=1;
+  while i<=cnt do begin
+    if s[i]='\' then begin
+      inc(i);
+      if i<=cnt then begin
+        case s[i] of
+          'r': Result[j]:=#10;
+          'n': Result[j]:=#13;
+          't': Result[j]:=#9;
+          '0': Result[j]:=#0;
+        else
+          Result[j]:=s[i];
+        end;
+        inc(j);
+        inc(i);
+      end;
+    end else begin
+      Result[j]:=s[i];
+      inc(j);
+      inc(i);
+    end;
+  end;
+  Result:=Copy(Result, 1, j-1);
+end;
 
 function PBXRawWriteValue(const v: string): string;
 var
@@ -602,6 +642,7 @@ begin
           inc(idx);
         end;
       until donestr;
+      FCurTokenString:=Unescape(FCurTokenString);
       inc(idx);
     end;
     '=': begin
