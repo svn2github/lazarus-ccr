@@ -180,7 +180,7 @@ begin
   //ScanAString( ReadFileToString(ParamStr(1)));
   //ParseAString( ReadFileToString(ParamStr(1)));
   //TestProject( ReadFileToString(ParamStr(1)));
-  if LoadProjectFromFile(ParamStr(1), prj) then begin
+  if ProjectLoadFromFile(ParamStr(1), prj) then begin
     //list:=TList.Create;
     //PBXGatherObjects(prj, list);
     Write(ProjectWrite(prj));
@@ -214,7 +214,7 @@ var
   //cfg : XCBuildConfiguration;
   ph   : PBXShellScriptBuildPhase;
 begin
-  p:=CreateMinProject;
+  p:=ProjectCreateMin;
   p.buildConfigurationList._headerComment:=p.buildConfigurationList._headerComment+' for PBXProject "test"';
   p.attributes.AddStr('LastUpgradeCheck','0610');
   t:=ProjectAddTarget(p,'targetto');
@@ -222,8 +222,8 @@ begin
   ph.shellScript:='echo "hello world"';
   //ph.buildActionMask:='0';
 
-  ph.runOnlyForDeploymentPostprocessing:='0';
-  t.productReference:=CreateFileRef('targetto', FILETYPE_EXEC);
+  ph.runOnlyForDeploymentPostprocessing:=false;
+  t.productReference:=FileRefCreate('targetto', FILETYPE_EXEC);
   PBXFileReference(t.productReference).sourceTree:='BUILT_PRODUCTS_DIR';
   t.productName:='targetto';
   t.productType:=PRODTYPE_TOOL;
@@ -245,7 +245,7 @@ begin
   cfg.buildSettings.AddStr('PRODUCT_NAME', 'targetto');   }
 
 
-  p.mainGroup:=CreateRootGroup('/Users/dmitry/pbx/utils/test.xcodeproj');
+  p.mainGroup:=GroupCreateRoot('/Users/dmitry/pbx/utils/test.xcodeproj');
   // requirements ?
   prd:=p.mainGroup.addSubGroup('Products');
   prd.children.Add(t.productReference);
