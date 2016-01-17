@@ -23,13 +23,27 @@ unit pbxcontainer;
 *   for array of strings TPBXStringArray must be used                           *
 *   for key-value set use TPBXKeyValue class                                    *
 *   string and integer properties are supported... anything else?               *
-*   booleans are (always) written as 0 or 1 to the file
-*
+*   booleans are (always) written as 0 or 1 to the file                         *
+*                                                                               *
 *                                                                               *
 * todo: add more documentions                                                   *
 *                                                                               *
 * todo: memoty allocation and release. ObjC is using ref-counted structure.     *
 *       do the same? similar?                                                   *
+*                                                                               *
+* Class naming convention.                                                      *
+* Any "utility" class should follow Object Pascal naming convention and start   *
+* with "T" (i.e. TPBXValue)                                                     *
+*  Any class that's expected to map an actual class (objective-c?), stored      *
+* in .pbx file, should go without "T" prefix. The name of the class             *
+* should match the one loaded/saved to the PBX file.                            *
+* This is necessary for serializing purposes                                    *
+*  Any mapped class must inherit from the base PBXObject.                       *
+*                                                                               *
+* TPBXUnkObject inherites from PBXObject, but since it has an utility role      *
+* it falls under Object Pascal naming convention. It also stores ObjC           *
+* class name as a property (which is serialized as a classname)                 *
+*                                                                               *
 -------------------------------------------------------------------------------*)
 
 interface
@@ -40,6 +54,18 @@ uses
   Classes, SysUtils, typinfo, pbxfile, contnrs;
 
 type
+  TPBXValue = class;
+  { TPBXUnkProperty }
+
+  TPBXUnkProperty = class(TObject)
+  private
+    fname: string;
+  public
+    value : TPBXValue;
+    constructor Create;
+    destructor Destroy; override;
+    property name  : string read fname;
+  end;
 
   { PBXObject }
 
@@ -47,25 +73,35 @@ type
   private
     _id   : string;
     _fheaderComment : string;
+    _funkProp : TFPHashObjectList;
+    function GetHasUnkProp: Boolean;
   protected
     // collects the name of string properties that should be written out
     // even if their values is an empty string.
     // if property value is an empty string, it would not be written to the file
     class procedure _WriteEmpty(propnames: TStrings); virtual;
+    function GetUnkProp: TFPHashObjectList;
   public
     property __id: string read _id;
     property _headerComment: string read _fheaderComment write _fheaderComment;
     constructor Create; virtual;
+    destructor Destroy; override;
     function GetIsaName: string; virtual;
+    //todo: unknown properties are read as "strings"
+    //      however, some strings are actually object references
+    //      these references must be resolved (as actual objects!)
+    function _addUnkProp(const aname: string): TPBXUnkProperty;
+    property _unkProp: TFPHashObjectList read GetUnkProp;
+    property _hasUnkProp: Boolean read GetHasUnkProp;
   end;
   PBXObjectClass = class of PBXObject;
 
   TPBXObjectsList = class(TObjectList);
   TPBXStringArray = class(TStringList);
 
-  TPBXKeyValue = class;
-
   TPBXValueType = (vtString, vtArrayOfStr, vtKeyVal);
+
+  TPBXKeyValue = class;
 
   { TPBXValue }
 
@@ -266,6 +302,20 @@ begin
 
 end;
 
+{ TPBXUnkProperty }
+
+constructor TPBXUnkProperty.Create;
+begin
+  inherited Create;
+  value:=TPBXValue.Create;
+end;
+
+destructor TPBXUnkProperty.Destroy;
+begin
+  value.Free;
+  inherited Destroy;
+end;
+
 { TPBXUnkClass }
 
 constructor TPBXUnkClass.CreateWithName(const AISA: string);
@@ -350,19 +400,42 @@ end;
 
 { TPBXObject }
 
+function PBXObject.GetHasUnkProp: Boolean;
+begin
+  Result:=Assigned(_funkProp) and (_funkProp.Count>0);
+end;
+
 class procedure PBXObject._WriteEmpty(propnames: TStrings);
 begin
 
 end;
 
+function PBXObject.GetUnkProp: TFPHashObjectList;
+begin
+  if not Assigned(_funkProp) then _funkProp:=TFPHashObjectList.Create(true);
+  Result:=_funkProp;
+end;
+
 constructor PBXObject.Create;
 begin
+end;
 
+destructor PBXObject.Destroy;
+begin
+  _funkProp.Free;
+  inherited Destroy;
 end;
 
 function PBXObject.GetIsaName: string;
 begin
   Result:=ClassName;
+end;
+
+function PBXObject._addUnkProp(const aname: string): TPBXUnkProperty;
+begin
+  Result:=TPBXUnkProperty.Create;
+  Result.fname:=aname;
+  _unkProp.Add(aname, Result);
 end;
 
 { TPBXContainer }
@@ -535,6 +608,31 @@ begin
   end;
 end;
 
+function GuessProperty(p: TPBXParser; uprop: TPBXUnkProperty): Boolean;
+begin
+  case p.CurEntity of
+    etValue: begin
+      // assuming string. Object Ref will be resolved later!
+      uprop.value.str:=p.Value;
+      uprop.value.valType:=vtString;
+      Result:=true;
+    end;
+    etOpenArray: begin
+      // assuming array of strings. Array of Objects will be resolved later!
+      uprop.value.arr:=TPBXStringArray.Create;
+      uprop.value.valType:=vtArrayOfStr;
+      Result:=PBXReadStringArray(p, uprop.value.arr);
+    end;
+    etOpenObject: begin
+      uprop.value.keyval:=TPBXKeyValue.Create;
+      uprop.value.valType:=vtKeyVal;
+      Result:=PBXReadKeyValue(p, uprop.value.keyval);
+    end;
+  else
+    Result:=false;
+  end;
+end;
+
 function PBXReadClass(p: TPBXParser; obj: PBXObject; refs: TList): Boolean;
 var
   tk  : TPBXEntity;
@@ -542,6 +640,7 @@ var
   prp  : PPropInfo;
   pobj  : TObject;
   pk    : TTypeKind;
+  uprop : TPBXUnkProperty;
 begin
   lvl:=p.Level;
   tk:=p.FetchNextEntity;
@@ -588,9 +687,11 @@ begin
           PBXParserSkipLevel(p);
       end;
     end else begin
-      writeln(obj.ClassName, ': property not found: ', p.Name);
-      if tk <> etValue then
-        PBXParserSkipLevel(p);
+      writeln(obj.ClassName, ': unkown property: ', p.Name);
+      uprop:=obj._addUnkProp(p.Name);
+      GuessProperty(p,uprop);
+      {if tk <> etValue then
+        PBXParserSkipLevel(p);}
     end;
 
     tk:=p.FetchNextEntity;
@@ -712,6 +813,17 @@ begin
   w.CloseBlock( '}' );
 end;
 
+type
+
+  { TWriteProp }
+
+  TWriteProp = class(TObject)
+    propIdx : integer;
+    unk     : TPBXUnkProperty;
+    constructor Create(aidx: Integer); overload;
+    constructor Create(aunk: TPBXUnkProperty); overload;
+  end;
+
 procedure PBXWriteObj(pbx: PBXObject; w: TPBXWriter; WriteEmpty: TStrings);
 var
   p     : PPropList;
@@ -724,8 +836,10 @@ var
   vcmt  : string;
   isstr : Boolean;
 
-  // used for sorting. todo: find a better way for sort by names!
-  names : TStringList;
+  names : TStringList; // used for sorting.
+                       // todo: find a better way for sort by names
+  wp    : TWriteProp;
+  up    : TPBXUnkProperty;
 begin
 
   w.WriteName(pbx._id, pbx._headerComment);
@@ -739,23 +853,69 @@ begin
   p:=nil;
   cnt:=GetPropList(pbx, p);
 
-  //todo: I don't like this soritng at all!
+  //todo: I don't like this sorting at all!
   //      but it appears to be the most common available
   names:=TStringList.Create;
   try
-    for i:=0 to cnt-1 do names.AddObject(p^[i].Name, TObject(PtrUInt(i)));
+    names.OwnsObjects:=true;
+
+    for i:=0 to cnt-1 do begin
+      writeln('idx = ', i);
+      wp:=TWriteProp.Create(i);
+      names.AddObject(p^[i].Name, wp);
+      //names.AddObject(p^[i].Name, TObject(PtrInt(i)));
+    end;
+    //for i:=0 to
+    if pbx._hasUnkProp then begin
+      for i:=0 to pbx._unkProp.Count-1 do begin
+        writeln('udx = ', i);
+        up:=TPBXUnkProperty(pbx._unkProp[i]);
+        wp:=TWriteProp.Create(up);
+        names.AddObject(up.name, wp);
+      end;
+    end;
+
     names.Sort;
 
     for j:=0 to names.Count-1 do begin
-      i:=Integer(PtrUInt(names.Objects[j]));
+      //i:=Integer(PtrInt(names.Objects[j]));
 
       vl:='';
       vcmt:='';
       isstr:=false;
+      sobj:=nil;
 
-      nm:=p^[i].Name;
-      if p^[i].PropType.Kind=tkClass then begin
-        sobj:=GetObjectProp(pbx, p^[i]);
+      wp:=TWriteProp(names.Objects[j]);
+      if not Assigned(wp.unk) then begin
+        i:=wp.propIdx;
+        writeln('idx = ', i);
+        nm:=p^[i].Name;
+        if p^[i].PropType.Kind=tkClass then begin
+          sobj:=GetObjectProp(pbx, p^[i])
+        end else begin
+          if p^[i].PropType.Kind in [tkAString, tkString] then begin
+            vl:=GetStrProp(pbx,p^[i]);
+            isstr:=(vl<>'') or (WriteEmpty.indexOf(nm)>=0);
+          end else if p^[i].PropType.Kind in [tkInteger, tkInt64, tkQWord] then begin
+            vl:=IntToStr(GetInt64Prop(pbx, p^[i]));
+            isstr:=(vl<>'') or (WriteEmpty.indexOf(nm)>=0);
+          end else if p^[i].PropType.Kind = tkBool then begin
+            isstr:=PtrUInt(p^[i].Default)<>PtrUInt(p^[i].GetProc);
+            if isstr then vl:=IntToStr(GetOrdProp(pbx, p^[i]));
+          end;
+        end;
+      end else begin
+        nm:=wp.unk.name;
+        case wp.unk.value.valType of
+          vtArrayOfStr: sobj:=wp.unk.value.arr;
+          vtKeyVal: sobj:=wp.unk.value.keyval;
+        else
+          isstr:=true;
+          vl:=wp.unk.value.str;
+        end;
+      end;
+
+      if Assigned(sobj) then begin
         if sobj is PBXObject then begin
           vl:=PBXObject(sobj)._id;
           vcmt:=PBXObject(sobj)._headerComment;
@@ -771,15 +931,6 @@ begin
           w.WriteName(nm);
           PBXWriteKeyValue(w, TPBXKeyValue(sobj));
         end;
-      end else if p^[i].PropType.Kind in [tkAString, tkString] then begin
-        vl:=GetStrProp(pbx,p^[i]);
-        isstr:=(vl<>'') or (WriteEmpty.indexOf(nm)>=0);
-      end else if p^[i].PropType.Kind in [tkInteger, tkInt64, tkQWord] then begin
-        vl:=IntToStr(GetInt64Prop(pbx, p^[i]));
-        isstr:=(vl<>'') or (WriteEmpty.indexOf(nm)>=0);
-      end else if p^[i].PropType.Kind = tkBool then begin
-        isstr:=PtrUInt(p^[i].Default)<>PtrUInt(p^[i].GetProc);
-        if isstr then vl:=IntToStr(GetOrdProp(pbx, p^[i]));
       end;
 
       if isstr then begin
@@ -859,6 +1010,20 @@ begin
     lst.Free;
     emp.Free;
   end;
+end;
+
+{ TWriteProp }
+
+constructor TWriteProp.Create(aidx: Integer);
+begin
+  inherited Create;
+  propIdx:=aidx;
+end;
+
+constructor TWriteProp.Create(aunk: TPBXUnkProperty);
+begin
+  inherited Create;
+  unk:=aunk;
 end;
 
 initialization

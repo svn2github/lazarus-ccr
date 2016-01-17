@@ -20,8 +20,8 @@ interface
 *    * line breaks (note OSX is typically using \n, unlike Unix \r)             *
 *                                                                               *
 *                                                                               *
-* PBXScanner - scans through the file                                           *
-* PBXParser - parses the file, returning a higher level entities of the file:   *
+* TPBXScanner - scans through the file                                          *
+* TPBXParser - parses the file, returning a higher level entities of the file:  *
 *             values, open/close of object/array                                *
 * The parser doesn't produce any kind of structure. Instead it only allows to   *
 * build one. i.e. PBXContainer                                                  *
