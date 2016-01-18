@@ -23,6 +23,7 @@ uses
 
 procedure PrepareTemplateFile_(Src, TemplateValues: TStrings; BuildSettings: TFPStringHashTable);
 procedure PrepareTemplateFile(Src, TemplateValues, ResFiles: TStrings);
+procedure PrepareTemplateFile(prj: PBXProject; TemplateValues, ResFiles: TStrings);
 procedure UpdateBldConfig(const proj: PBXProject; optName, optVal: string);
 procedure UpdateMainFile(const proj: PBXProject; mainfile: string);
 procedure UpdateCompileOpts(const proj: PBXProject; options: string);
@@ -368,6 +369,13 @@ end;
 procedure PrepareTemplateFile(Src, TemplateValues, ResFiles: TStrings);
 var
   prj : PBXProject;
+begin
+  prj:=ProjectCreate3_2;
+  PrepareTemplateFile(prj, TemplateValues, ResFiles);
+end;
+
+procedure PrepareTemplateFile(prj: PBXProject; TemplateValues, ResFiles: TStrings);
+var
   trg : PBXNativeTarget;
   cfg : XCBuildConfiguration;
   fr  : PBXFileReference;
@@ -383,19 +391,20 @@ var
   main       : string;
   fnm  : string;
 begin
-  prj:=ProjectCreate3_2;
-
   targetName:=TemplateValues.Values['targetname'];
   bundle:=TemplateValues.Values['bundle'];
   plist:=TemplateValues.Values['plist'];
   if plist='' then plist:='info.plist';
   main:=TemplateValues.Values['mainfile'];
 
-  trg:=ProjectAddTarget(prj, targetName);
+  trg:=ProjectForceTarget(prj, targetName);
   for i:=0 to prj.buildConfigurationList.Count-1 do begin
     cfg:=prj.buildConfigurationList[i];
     ConfigIOS(cfg, TARGET_IOS_8_1);
     // Enable Build Active Architecture Only When Debugging
+    // it would be amd-32 for iPhone5 (and earlier)
+    //         and amd-64 for iPhone6 (and later)
+    // Release requires to have a fat binary 32+64 amd, if target is less than iphone6
     if cfg.name='Debug' then cfg.buildSettings.AddStr('ONLY_ACTIVE_ARCH','YES');
   end;
 
@@ -404,34 +413,43 @@ begin
   trg.productType:=PRODTYPE_APP;
 
   // target configuration
-  trg.buildConfigurationList:=XCConfigurationList.Create;
+  if not Assigned(trg.buildConfigurationList) then
+    trg.buildConfigurationList:=XCConfigurationList.Create;
+
   // Debug
-  cfg:=trg.buildConfigurationList.addConfig('Debug');
+  cfg:=trg.buildConfigurationList.findConfig('Debug', true);
   cfg.buildSettings.AddStr('INFOPLIST_FILE', '$(SRCROOT)/'+plist);
   cfg.buildSettings.AddStr('PRODUCT_NAME', trg.productName);
   // Build
-  cfg:=trg.buildConfigurationList.addConfig('Release');
+  cfg:=trg.buildConfigurationList.findConfig('Release', true);
   cfg.buildSettings.AddStr('INFOPLIST_FILE', '$(SRCROOT)/'+plist);
   cfg.buildSettings.AddStr('PRODUCT_NAME', trg.productName);
 
-  trg.buildConfigurationList.defaultConfigurationName:='Debug';
+  if trg.buildConfigurationList = '' then
+    trg.buildConfigurationList.defaultConfigurationName:='Debug';
 
   // Adding the ".app" directory for the bundle and bind it to the target
-  fr:=FileRefCreate(bundle, FILETYPE_MACHO);
-  fr.sourceTree:= SRCTREE_PRODUCT;
-  trg.productReference:=fr;
+  if not Assigned(trg.productReference) then begin
+    fr:=FileRefCreate(bundle, FILETYPE_MACHO);
+    fr.sourceTree:= SRCTREE_PRODUCT;
+    trg.productReference:=fr;
+  end else
+    fr:=trg.productReference;
 
   // Creating "content" for the directory. It should also contain .plist
-  pgrp:=prj.mainGroup.addSubGroup(targetName); // name must match to the target name!
-  grp:=pgrp.addSubGroup('Supporting Files'); // name must match!
+  pgrp:=prj.mainGroup.findGroup(targetName, true); // name must match to the target name!
+  grp:=pgrp.findGroup('Supporting Files', true); // name must match!
 
   // creating a reference to info.plist. It's located at "xcode" folder.
   // Thus at the same directar as .xcodeproj dir
-  fr:=FileRefCreate(plist, FILETYPE_PLIST );
-  fr.sourceTree:=SRCTREE_PROJECT;
+  if not Assigned(grp.findFileRefByPathName(plist)) then
+  begin
+    fr:=FileRefCreate(plist, FILETYPE_PLIST );
+    fr.sourceTree:=SRCTREE_PROJECT;
 
-  fr.path:=plist;
-  grp.children.Add( fr );
+    fr.path:=plist;
+    grp.children.Add( fr );
+  end;
 
   scr:=TargetAddRunScript(trg);
   scr.shellScript:=BuildScript;

@@ -61,6 +61,7 @@ type
     constructor Create; override;
     destructor Destroy; override;
     function addConfig(const aname: string): XCBuildConfiguration;
+    function findConfig(const aname: string; aforce: Boolean = false): XCBuildConfiguration;
     // Count and Items are just for convenience. MUST NOT BE in "published" section
     property Count: integer read GetCount;
     property Items[i: integer]: XCBuildConfiguration read GetConfigItem; default;
@@ -175,7 +176,8 @@ type
     constructor Create; override;
     destructor Destroy; override;
     function addSubGroup(const aname: string): PBXGroup;
-    function findGroup(const aname: string): PBXGroup;
+    function findGroup(const aname: string; aforce: Boolean = false): PBXGroup;
+    function findFileRefByPathName(const afilename: string): PBXFileReference;
   published
     property children: TPBXObjectsList read fchildren;
     property name: string read fname write fname;
@@ -305,6 +307,8 @@ procedure ProjectUpdateForXcode3_2(prj: PBXProject);
 function ProjectCreate3_2: PBXProject;
 
 function ProjectAddTarget(prj: PBXProject; const ATargetName: string): PBXNativeTarget;
+// adds if doesn't exist
+function ProjectForceTarget(prj: PBXProject; const ATargetName: string): PBXNativeTarget;
 
 const
   SCRIPT_RUNPATH = '/bin/sh';
@@ -495,6 +499,21 @@ begin
   fbuildConfigurations.Add(Result);
 end;
 
+function XCConfigurationList.findConfig(const aname: string; aforce: Boolean): XCBuildConfiguration;
+var
+  i : integer;
+begin
+  for i:=0 to fbuildConfigurations.Count-1 do begin
+    Result:=XCBuildConfiguration(fbuildConfigurations[i]);
+    if Result.name=aname then
+      Exit;
+  end;
+  if aforce then
+    Result:=addConfig(aname)
+  else
+    Result:=nil;
+end;
+
 { XCBuildConfiguration }
 
 constructor XCBuildConfiguration.Create;
@@ -532,7 +551,7 @@ begin
   Result.sourceTree:=SRCTREE_GROUP;
 end;
 
-function PBXGroup.findGroup(const aname: string): PBXGroup;
+function PBXGroup.findGroup(const aname: string; aforce: Boolean = false): PBXGroup;
 var
   i   : integer;
   obj : TObject;
@@ -541,6 +560,24 @@ begin
     obj:=fchildren[i];
     if (obj is PBXGroup) and (PBXGroup(obj).name=aname) then begin
       Result:=PBXGroup(obj);
+      Exit;
+    end;
+  end;
+  if aforce then
+    Result:=addSubGroup(aname)
+  else
+    Result:=nil;
+end;
+
+function PBXGroup.findFileRefByPathName(const afilename: string): PBXFileReference;
+var
+  i   : integer;
+  obj : TObject;
+begin
+  for i:=0 to fchildren.Count-1 do begin
+    obj:=fchildren[i];
+    if (obj is PBXFileReference) and (PBXFileReference(obj).path=afilename) then begin
+      Result:=PBXFileReference(obj);
       Exit;
     end;
   end;
@@ -660,6 +697,18 @@ begin
   Result:=nil;
   if not Assigned(prj) then Exit;
   Result:=prj.addTarget(ATargetName);
+end;
+
+function ProjectForceTarget(prj: PBXProject; const ATargetName: string): PBXNativeTarget;
+var
+  i : integer;
+begin
+  for i:=0 to prj.targets.Count-1 do begin
+    Result:=PBXNativeTarget(prj.targets[i]);
+    if Result.name=ATargetName then
+      Exit;
+  end;
+  Result:=ProjectAddTarget(prj, ATargetName);
 end;
 
 function TargetAddRunScript(atarget: PBXNativeTarget): PBXShellScriptBuildPhase;
