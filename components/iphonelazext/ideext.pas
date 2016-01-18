@@ -509,21 +509,24 @@ begin
 end;
 
 procedure TiPhoneExtension.SimRun(Sender: TObject);
+{$ifdef darwin}
 var
+  prj : string;
   err : string;
   pid : integer;
-  prj : string;
   s   : string;
+  {$endif}
 begin
   CloseProc;
   UpdateXcode(Sender);
+
   // install Xcode project
-  prj := GetXcodeProjDirName;
-  IDEMsg('Build+Install Xcode project (xcodebuild)');
 
   {$ifndef darwin}
   IDEMsg('Unable to install / run simulator on non Mac OS X platform');
   {$else}
+  prj := GetXcodeProjDirName;
+  IDEMsg('Build+Install Xcode project (xcodebuild)');
   if not InstallXcodePrj(prj, 'iphonesimulator', EnvOptions.DefaultDeviceID) then begin
     IDEMsg('xcodebuild failed');
     Exit;

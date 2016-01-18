@@ -233,8 +233,6 @@ begin
 end;
 
 procedure PBXValueCopy(src, dst: TPBXValue);
-var
-  dv : TPBXValue;
 begin
   if not Assigned(src) or not Assigned(dst) then Exit;
   dst.valType:=src.valType;
@@ -531,7 +529,6 @@ var
   root  : string;
   objs  : TObjHashList;
   rt    : TObject;
-  i     : Integer;
 begin
   Result:=false;
   AFileInfo.archiveVersion:='';
@@ -687,7 +684,7 @@ begin
           PBXParserSkipLevel(p);
       end;
     end else begin
-      writeln(obj.ClassName, ': unkown property: ', p.Name);
+      //writeln(obj.ClassName, ': unkown property: ', p.Name);
       uprop:=obj._addUnkProp(p.Name);
       GuessProperty(p,uprop);
       {if tk <> etValue then
@@ -860,7 +857,6 @@ begin
     names.OwnsObjects:=true;
 
     for i:=0 to cnt-1 do begin
-      writeln('idx = ', i);
       wp:=TWriteProp.Create(i);
       names.AddObject(p^[i].Name, wp);
       //names.AddObject(p^[i].Name, TObject(PtrInt(i)));
@@ -868,7 +864,6 @@ begin
     //for i:=0 to
     if pbx._hasUnkProp then begin
       for i:=0 to pbx._unkProp.Count-1 do begin
-        writeln('udx = ', i);
         up:=TPBXUnkProperty(pbx._unkProp[i]);
         wp:=TWriteProp.Create(up);
         names.AddObject(up.name, wp);
@@ -888,7 +883,6 @@ begin
       wp:=TWriteProp(names.Objects[j]);
       if not Assigned(wp.unk) then begin
         i:=wp.propIdx;
-        writeln('idx = ', i);
         nm:=p^[i].Name;
         if p^[i].PropType.Kind=tkClass then begin
           sobj:=GetObjectProp(pbx, p^[i])

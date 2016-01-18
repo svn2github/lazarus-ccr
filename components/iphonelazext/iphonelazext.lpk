@@ -26,7 +26,6 @@
         <CompilerMessages>
           <IgnoredMessages idx5091="True" idx5060="True" idx5057="True" idx5024="True" idx4081="True" idx4080="True" idx4079="True" idx4055="True"/>
         </CompilerMessages>
-        <CustomOptions Value="-Sm -dPACKAGE_PATH:='$(PkgDir)'"/>
       </Other>
     </CompilerOptions>
     <Description Value="iPhone Development Lazarus extension"/>
