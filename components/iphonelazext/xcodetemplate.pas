@@ -372,14 +372,37 @@ var
 begin
   prj:=ProjectCreate3_2;
   PrepareTemplateFile(prj, TemplateValues, ResFiles);
+  src.Text:=ProjectWrite(prj);
 end;
+
+function ReadBuildScriptFile(const fn: string): string;
+var
+  fs : TFileStream;
+begin
+  fs:=TFileStream.Create(fn, fmOpenRead or fmShareDenyNone);
+  try
+    if fs.Size=0 then begin
+      Result:='';
+      Exit;
+    end;
+    SetLength(Result, fs.Size);
+    fs.Read(Result[1], fs.Size);
+
+    // replacing line breaks with #13 for Xcode
+    Result:=StringReplace(Result, #13#10, #13,  [rfReplaceAll]);
+    Result:=StringReplace(Result, #10#13, #13,  [rfReplaceAll]);
+    Result:=StringReplace(Result, #10, #13,  [rfReplaceAll]);
+  finally
+    fs.Free;
+  end;
+end;
+
 
 procedure PrepareTemplateFile(prj: PBXProject; TemplateValues, ResFiles: TStrings);
 var
   trg : PBXNativeTarget;
   cfg : XCBuildConfiguration;
   fr  : PBXFileReference;
-  fbld : PBXBuildFile;
   grp : PBXGroup;
   pgrp : PBXGroup;
   scr : PBXShellScriptBuildPhase;
@@ -390,6 +413,8 @@ var
   bundle     : string;
   main       : string;
   fnm  : string;
+const
+  FILE_COPY_MASK = 2147483647;
 begin
   targetName:=TemplateValues.Values['targetname'];
   bundle:=TemplateValues.Values['bundle'];
@@ -425,16 +450,15 @@ begin
   cfg.buildSettings.AddStr('INFOPLIST_FILE', '$(SRCROOT)/'+plist);
   cfg.buildSettings.AddStr('PRODUCT_NAME', trg.productName);
 
-  if trg.buildConfigurationList = '' then
+  if trg.buildConfigurationList.defaultConfigurationName = '' then
     trg.buildConfigurationList.defaultConfigurationName:='Debug';
 
   // Adding the ".app" directory for the bundle and bind it to the target
   if not Assigned(trg.productReference) then begin
-    fr:=FileRefCreate(bundle, FILETYPE_MACHO);
-    fr.sourceTree:= SRCTREE_PRODUCT;
+    fr:=FileRefCreate(bundle, FILETYPE_MACHO, SRCTREE_PRODUCT);
     trg.productReference:=fr;
-  end else
-    fr:=trg.productReference;
+  end; (* else
+    fr:=trg.productReference;*)
 
   // Creating "content" for the directory. It should also contain .plist
   pgrp:=prj.mainGroup.findGroup(targetName, true); // name must match to the target name!
@@ -444,41 +468,41 @@ begin
   // Thus at the same directar as .xcodeproj dir
   if not Assigned(grp.findFileRefByPathName(plist)) then
   begin
-    fr:=FileRefCreate(plist, FILETYPE_PLIST );
-    fr.sourceTree:=SRCTREE_PROJECT;
-
-    fr.path:=plist;
+    fr:=FileRefCreate(plist, FILETYPE_PLIST, SRCTREE_PROJECT );
     grp.children.Add( fr );
   end;
 
-  scr:=TargetAddRunScript(trg);
-  scr.shellScript:=BuildScript;
-  scr.showEnvVarsInLog:=true;
+  if not Assigned(TargetFindRunScript(trg)) then begin
+    scr:=TargetAddRunScript(trg);
+    scr.shellScript:=BuildScript;
+    scr.showEnvVarsInLog:=true;
+  end;
 
+  // todo: removal of files!
   if Assigned(ResFiles) and (ResFiles.Count>0) then begin
-    grp:=prj.mainGroup.addSubGroup('Resources'); // name must match to the target name!
+    grp:=prj.mainGroup.findGroup('Resources', true); // name must match to the target name!
     //grp:=pgrp.addSubGroup('Supporting Files'); // name must match!
 
-    res := PBXResourcesBuildPhase.Create;
-    res.buildActionMask:=2147483647;
-    //res.name:='Resources';
-    trg.buildPhases.Add(res);
+    res := PBXResourcesBuildPhase(TargetFindBuildPhase(trg, PBXResourcesBuildPhase));
+    if not Assigned(res) then begin
+      res := PBXResourcesBuildPhase.Create;
+      //res.name:='Resources';
+      res.buildActionMask:=FILE_COPY_MASK;
+      trg.buildPhases.Add(res);
+    end;
+
     for i:=0 to ResFiles.Count-1 do begin
       fnm:='../'+ResFiles[i];
-      fr:=FileRefCreate(fnm, FILETYPE_MACHO);
-      fr.sourceTree:=SRCTREE_PROJECT;
-      grp.children.add(fr);
-
-      fbld := PBXBuildFile.Create;
-      fbld.fileRef:=fr;
-      res.files.Add(fbld);
+      if not Assigned(grp.findFileRefByPathName(fnm)) then begin
+        fr:=FileRefCreate(fnm, FILETYPE_MACHO, SRCTREE_PROJECT);
+        grp.children.add( fr );
+        res.AddFile(fr);
+      end;
     end;
   end;
 
   UpdateMainFile(prj, main);
   UpdateCompileOpts(prj, TemplateValues.Values['projoptions']);
-
-  src.Text:=ProjectWrite(prj);
 end;
 
 end.

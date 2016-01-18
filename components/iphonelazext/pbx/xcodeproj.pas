@@ -129,6 +129,7 @@ type
   public
     constructor Create; override;
     destructor Destroy; override;
+    function AddFile(ref: PBXFileReference): PBXBuildFile;
   published
 	  property buildActionMask: Integer read fbuildActionMask write fbuildActionMask;
     property files: TPBXObjectsList read ffiles;
@@ -140,6 +141,8 @@ type
   PBXFrameworksBuildPhase = class(PBXBuildPhase);
 	PBXResourcesBuildPhase = class(PBXBuildPhase);
   PBXSourcesBuildPhase = class(PBXBuildPhase);
+
+  PBXBuildPhaseClass = class of PBXBuildPhase;
 
   { PBXShellScriptBuildPhase }
 
@@ -316,6 +319,9 @@ const
   SCRIPT_DEFNAME = 'Run Script';
 
 function TargetAddRunScript(atarget: PBXNativeTarget): PBXShellScriptBuildPhase;
+function TargetFindBuildPhase(atarget: PBXNativeTarget; aclass: PBXBuildPhaseClass; aforce: Boolean = false): PBXBuildPhase;
+function TargetFindRunScript(atarget: PBXNativeTarget; aforce: Boolean = false): PBXShellScriptBuildPhase;
+function TargetFindResources(atarget: PBXNativeTarget; aforce: Boolean = false): PBXResourcesBuildPhase;
 
 const
   //FILETYPE_SCRIPT = 'text.script.sh';
@@ -325,7 +331,9 @@ const
   FILETYPE_PLIST  = 'text.plist.xml';
   FILETYPE_OBJC   = 'sourcecode.c.objc';
 
-function FileRefCreate(const afilename: string; const filetype: string = ''): PBXFileReference;
+// defaults to SRCTREE_GROUP for source related
+function FileRefCreate(const afilename: string; const filetype: string = ''): PBXFileReference; overload;
+function FileRefCreate(const afilename: string; const filetype, ASrcTreeRel: string): PBXFileReference; overload;
 
 const
   SRCTREE_ABSOLUTE = '<absolute>';           // path is absolute path
@@ -597,6 +605,17 @@ begin
   ffiles.Free;
 end;
 
+function PBXBuildPhase.AddFile(ref: PBXFileReference): PBXBuildFile;
+begin
+  if not Assigned(ref) then begin
+    Result:=nil;
+    Exit;
+  end;
+  Result := PBXBuildFile.Create;
+  Result.fileRef:=ref;
+  ffiles.Add(Result);
+end;
+
 function ProjectLoadFromStream(st: TStream; var prj: PBXProject): Boolean;
 var
   c : TPBXContainer;
@@ -711,8 +730,41 @@ begin
   Result:=ProjectAddTarget(prj, ATargetName);
 end;
 
+function TargetFindBuildPhase(atarget: PBXNativeTarget; aclass: PBXBuildPhaseClass; aforce: Boolean = false): PBXBuildPhase;
+var
+  i : integer;
+begin
+  Result:=nil;
+  if not Assigned(atarget) then Exit;
+  for i:=0 to atarget.buildPhases.Count-1 do
+    if atarget.buildPhases[i] is aclass then begin
+      Result:=PBXBuildPhase(atarget.buildPhases[i]);
+      Break;
+    end;
+  if not Assigned(Result) and aforce then begin
+    Result:=aclass.Create;
+    atarget.buildPhases.Add(Result);
+  end;
+end;
+
+function TargetFindResources(atarget: PBXNativeTarget; aforce: Boolean = false): PBXResourcesBuildPhase;
+begin
+  Result:=PBXResourcesBuildPhase(TargetFindBuildPhase(atarget, PBXResourcesBuildPhase, aforce));
+end;
+
+function TargetFindRunScript(atarget: PBXNativeTarget; aforce: Boolean = false): PBXShellScriptBuildPhase;
+begin
+  Result:=PBXShellScriptBuildPhase(TargetFindBuildPhase(atarget, PBXShellScriptBuildPhase, false));
+  if not Assigned(Result) and aforce then
+    Result:=TargetAddRunScript(atarget);
+end;
+
 function TargetAddRunScript(atarget: PBXNativeTarget): PBXShellScriptBuildPhase;
 begin
+  if not Assigned(atarget) then begin
+    Result:=nil;
+    Exit;
+  end;
   Result:=PBXShellScriptBuildPhase.Create;
   Result.name:=SCRIPT_DEFNAME;
   Result._headerComment:=SCRIPT_DEFNAME;
@@ -723,10 +775,16 @@ end;
 
 function FileRefCreate(const afilename: string; const filetype: string ): PBXFileReference;
 begin
+  Result:=FileRefCreate(afilename, filetype, SRCTREE_GROUP);
+end;
+
+function FileRefCreate(const afilename: string; const filetype, ASrcTreeRel: string): PBXFileReference;
+begin
   Result:=PBXFileReference.Create;
   Result.path:=afilename;
   Result._headerComment:=afilename;
   Result.explicitFileType:=FILETYPE_EXEC;
+  Result.sourceTree:=ASrcTreeRel;
 end;
 
 function GroupCreate(const aname, srcTree: string): PBXGroup;
