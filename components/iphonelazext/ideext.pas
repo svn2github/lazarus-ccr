@@ -285,6 +285,9 @@ end;
 function TiPhoneExtension.ProjectBuilding(Sender: TObject): TModalResult;
 begin
   Result:=mrOk;
+  Exit;
+  //todo:detect if the selected target is iSim or iOS and try to install it!
+
   if not Assigned(LazarusIDE.ActiveProject) or not ProjOptions.isIPhoneApp then Exit;
 
   LazarusIDE.ActiveProject.LazCompilerOptions.CustomOptions :=
