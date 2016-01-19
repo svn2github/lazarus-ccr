@@ -5417,7 +5417,8 @@ procedure TOvcCustomTable.ctimQueryOptions(var Msg : TMessage);
 {$IFNDEF LCL}
     Msg.Result := longint(word(FOptions));
 {$ELSE}
-    Msg.Result := longint(FOptions);
+//    Msg.Result := longint(FOptions);  //this used to compile - not sure what changed in Laz 1.6
+    Msg.Result := longint(word(FOptions));
 {$ENDIF}
   end;
 {--------}
