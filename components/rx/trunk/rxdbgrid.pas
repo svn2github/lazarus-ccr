@@ -886,6 +886,8 @@ type
     property OnMouseDown;
     property OnMouseMove;
     property OnMouseUp;
+    property OnMouseEnter;
+    property OnMouseLeave;
     property OnMouseWheel;
     property OnMouseWheelDown;
     property OnMouseWheelUp;

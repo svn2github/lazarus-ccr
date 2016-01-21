@@ -71,8 +71,8 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="RxDBGridMainUnit"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="241"/>
-        <CursorPos X="29" Y="263"/>
+        <TopLine Value="202"/>
+        <CursorPos Y="225"/>
         <UsageCount Value="103"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -98,12 +98,12 @@
       <Unit5>
         <Filename Value="../../rxdbgrid.pas"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="4051"/>
-        <CursorPos X="135" Y="4080"/>
+        <TopLine Value="867"/>
+        <CursorPos Y="891"/>
         <UsageCount Value="18"/>
         <Bookmarks Count="2">
-          <Item0 Y="2573" ID="2"/>
-          <Item1 Y="3776" ID="1"/>
+          <Item0 Y="2575" ID="2"/>
+          <Item1 Y="3778" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit5>
@@ -433,10 +433,11 @@
       <Unit58>
         <Filename Value="../../../../lcl/dbgrids.pas"/>
         <UnitName Value="DBGrids"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="213"/>
-        <CursorPos X="3" Y="216"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="510"/>
+        <CursorPos Y="546"/>
         <UsageCount Value="19"/>
+        <Loaded Value="True"/>
       </Unit58>
       <Unit59>
         <Filename Value="../../../../lcl/grids.pas"/>
@@ -806,7 +807,7 @@
         <UsageCount Value="10"/>
       </Unit116>
     </Units>
-    <JumpHistory Count="3" HistoryIndex="2">
+    <JumpHistory Count="7" HistoryIndex="6">
       <Position1>
         <Filename Value="../../rxdbgrid.pas"/>
         <Caret Line="518" Column="3" TopLine="441"/>
@@ -819,6 +820,22 @@
         <Filename Value="rxdbgridmainunit.pas"/>
         <Caret Line="274" Column="3" TopLine="242"/>
       </Position3>
+      <Position4>
+        <Filename Value="rxdbgridmainunit.pas"/>
+        <Caret Line="225" Column="26" TopLine="202"/>
+      </Position4>
+      <Position5>
+        <Filename Value="../../rxdbgrid.pas"/>
+        <Caret Line="846" Column="14" TopLine="519"/>
+      </Position5>
+      <Position6>
+        <Filename Value="../../../../lcl/dbgrids.pas"/>
+        <Caret Line="283" Column="3" TopLine="262"/>
+      </Position6>
+      <Position7>
+        <Filename Value="rxdbgridmainunit.pas"/>
+        <Caret Line="225" Column="26" TopLine="202"/>
+      </Position7>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>

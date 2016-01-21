@@ -5,18 +5,19 @@ object RxDBGridMainForm: TRxDBGridMainForm
   Width = 1151
   ActiveControl = Panel1
   Caption = 'RxDBGrid Demo'
-  ClientHeight = 692
+  ClientHeight = 693
   ClientWidth = 1151
   Menu = MainMenu1
   OnCreate = FormCreate
   SessionProperties = 'RxDBGridExportSpreadSheet1.FileName;RxDBGridExportSpreadSheet1.OpenAfterExport;RxDBGridExportSpreadSheet1.Options;RxDBGridExportSpreadSheet1.PageName;RxDBGridPrint1.Options;RxDBGridPrint1.Orientation;RxDBGridPrint1.PageMargin;RxDBGridPrint1.ReportTitle;RxDBGridPrint1.ShowColumnHeaderOnAllPage'
   ShowHint = True
-  LCLVersion = '1.5'
+  LCLVersion = '1.7'
   object RxDBGrid1: TRxDBGrid
     Left = 0
-    Height = 620
-    Top = 72
+    Height = 623
+    Top = 70
     Width = 1151
+    ColumnDefValues.BlobText = '(примечание)'
     TitleButtons = True
     AutoSort = True
     OnGetCellProps = RxDBGrid1GetCellProps
@@ -324,12 +325,12 @@ object RxDBGridMainForm: TRxDBGridMainForm
   end
   object Panel1: TPanel
     Left = 0
-    Height = 72
+    Height = 70
     Top = 0
     Width = 1151
     Align = alTop
     AutoSize = True
-    ClientHeight = 72
+    ClientHeight = 70
     ClientWidth = 1151
     TabOrder = 1
     object Label1: TLabel
@@ -337,7 +338,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
       Left = 270
-      Height = 21
+      Height = 20
       Top = 7
       Width = 36
       BorderSpacing.Around = 6
@@ -348,7 +349,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = Panel1
       AnchorSideTop.Control = Panel1
       Left = 7
-      Height = 33
+      Height = 32
       Top = 7
       Width = 87
       Action = actCalcTotal
@@ -361,7 +362,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
       Left = 100
-      Height = 33
+      Height = 32
       Top = 7
       Width = 164
       Action = actOptimizeColumnsWidthAll
@@ -375,10 +376,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideTop.Control = CheckBox2
       AnchorSideTop.Side = asrBottom
       Left = 499
-      Height = 25
+      Height = 24
       Hint = 'Use filter line'
-      Top = 38
-      Width = 83
+      Top = 37
+      Width = 84
       BorderSpacing.Left = 6
       Caption = 'Use filter'
       OnChange = CheckBox1Change
@@ -389,8 +390,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideTop.Control = Label1
       AnchorSideTop.Side = asrBottom
       Left = 276
-      Height = 31
-      Top = 34
+      Height = 30
+      Top = 33
       Width = 217
       BorderSpacing.Around = 6
       ItemHeight = 0
@@ -409,10 +410,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
       Left = 499
-      Height = 25
+      Height = 24
       Hint = 'Auto fill column width'
       Top = 7
-      Width = 132
+      Width = 133
       BorderSpacing.Around = 6
       Caption = 'Auto fill columns'
       OnChange = CheckBox2Change
@@ -422,8 +423,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = CheckBox2
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 637
-      Height = 25
+      Left = 638
+      Height = 24
       Top = 7
       Width = 120
       BorderSpacing.Around = 6
@@ -438,9 +439,9 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = CheckBox3
       AnchorSideTop.Side = asrBottom
-      Left = 637
-      Height = 25
-      Top = 38
+      Left = 638
+      Height = 24
+      Top = 37
       Width = 116
       BorderSpacing.Around = 6
       Caption = 'Show headers'
@@ -453,8 +454,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = CheckBox3
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 763
-      Height = 25
+      Left = 764
+      Height = 24
       Top = 7
       Width = 95
       BorderSpacing.Around = 6
