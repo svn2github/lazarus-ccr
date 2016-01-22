@@ -291,9 +291,9 @@ if (I <= 2) or (J > 0) then
                  nil, SW_SHOWNORMAL); 
  {$ELSE}  //Not sure if this makes any sense since executable won't have .exe.
   {$IFDEF LCLCarbon}
-    Shell('open -n "' + S + '" --args "' + Params + '"');
+    fpSystem('open -n "' + S + '" --args "' + Params + '"');
   {$ELSE}
-    Shell('"' + S + '" "' + Params + '"');
+    fpSystem('"' + S + '" "' + Params + '"');
   {$ENDIF}
  {$ENDIF}
 {$ENDIF}
@@ -324,9 +324,9 @@ if (I > 0) or (J > 0) then
   ShellExecute(Handle, nil, StrPCopy(PC, URL), nil, nil, SW_SHOWNORMAL);
 {$ELSE}
  {$IFDEF LCLCarbon}
-  Shell('open "' + URL + '"');
+  fpSystem('open "' + URL + '"');
  {$ELSE}
-  Shell('"' + URL + '"');  //use LCL's OpenURL?
+  fpSystem('"' + URL + '"');  //use LCL's OpenURL?
  {$ENDIF}
 {$ENDIF}
   Handled := True;
@@ -631,11 +631,11 @@ if FileExists(S) then
                StrPCopy(PC2, S+Dest), nil, SW_SHOWNORMAL); 
  {$ELSE}
   {$IFDEF LCLCarbon}
-  Shell('open -n "' + 
+  fpSystem('open -n "' + 
         ExtractFileDir(ExtractFileDir(ExtractFileDir(ParamStr(0)))) + 
         '" --args "' + S+Dest + '"');
   {$ELSE}
-  Shell('"' + ParamStr(0) + '" "' + S+Dest + '"');
+  fpSystem('"' + ParamStr(0) + '" "' + S+Dest + '"');
   {$ENDIF}
  {$ENDIF}
 {$ENDIF}
@@ -873,11 +873,11 @@ begin
                StrPCopy(PC2, NewWindowFile), nil, SW_SHOWNORMAL); 
  {$ELSE}
   {$IFDEF LCLCarbon}
-  Shell('open -n "' + 
+  fpSystem('open -n "' + 
         ExtractFileDir(ExtractFileDir(ExtractFileDir(ParamStr(0)))) + 
         '" --args "' + NewWindowFile + '"');
   {$ELSE}
-  Shell('"' + ParamStr(0) + '" "' + NewWindowFile + '"');
+  fpSystem('"' + ParamStr(0) + '" "' + NewWindowFile + '"');
   {$ENDIF}
  {$ENDIF}
 {$ENDIF}
