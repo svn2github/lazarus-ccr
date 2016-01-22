@@ -134,10 +134,10 @@ begin
     '', '', SW_SHOWNORMAL) <= 32
 {$ELSE}
  {$IFDEF DARWIN}
-  if Shell('Open http://sourceforge.net/projects/tporpheus/') = 127
+  if fpSystem('Open http://sourceforge.net/projects/tporpheus/') = 127
  {$ELSE}
   if (GetBrowserPath = '') or
-     (Shell(GetBrowserPath + ' http://sourceforge.net/projects/tporpheus/') = 127)
+     (fpSystem(GetBrowserPath + ' http://sourceforge.net/projects/tporpheus/') = 127)
  {$ENDIF}
 {$ENDIF}
   then
@@ -156,10 +156,10 @@ begin
   SW_SHOWNORMAL) <= 32
 {$ELSE}
  {$IFDEF DARWIN}
-  if Shell('Open http://sourceforge.net/forum/forum.php?forum_id=241874') = 127 
+  if fpSystem('Open http://sourceforge.net/forum/forum.php?forum_id=241874') = 127 
  {$ELSE}
   if (GetBrowserPath = '') or
-     (Shell(GetBrowserPath + ' http://sourceforge.net/forum/forum.php?forum_id=241874') = 127) 
+     (fpSystem(GetBrowserPath + ' http://sourceforge.net/forum/forum.php?forum_id=241874') = 127) 
  {$ENDIF}
 {$ENDIF}
   then
@@ -178,10 +178,10 @@ begin
   SW_SHOWNORMAL) <= 32
 {$ELSE}
  {$IFDEF DARWIN}
-  if Shell('Open http://sourceforge.net/forum/forum.php?forum_id=241873') = 127 
+  if fpSystem('Open http://sourceforge.net/forum/forum.php?forum_id=241873') = 127 
  {$ELSE}
   if (GetBrowserPath = '') or
-     (Shell(GetBrowserPath + ' http://sourceforge.net/forum/forum.php?forum_id=241873') = 127) 
+     (fpSystem(GetBrowserPath + ' http://sourceforge.net/forum/forum.php?forum_id=241873') = 127) 
  {$ENDIF}
 {$ENDIF}
   then

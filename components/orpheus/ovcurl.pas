@@ -178,11 +178,11 @@ begin
 begin
   if URL > '' then begin
  {$IFDEF DARWIN}
-    if Shell('Open ' + URL) = 127 then
+    if fpSystem('Open ' + URL) = 127 then
       MessageBeep(0);
  {$ELSE}
     if (GetBrowserPath = '') or 
-       (Shell(GetBrowserPath + ' ' + URL) = 127) then
+       (fpSystem(GetBrowserPath + ' ' + URL) = 127) then
       MessageBeep(0);
  {$ENDIF}
   end;
