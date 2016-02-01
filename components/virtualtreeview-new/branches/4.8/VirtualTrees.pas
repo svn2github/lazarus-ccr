@@ -2471,7 +2471,7 @@ type
     procedure SetVerticalAlignment(Node: PVirtualNode; Value: Byte);
     procedure SetVisible(Node: PVirtualNode; Value: Boolean);
     procedure SetVisiblePath(Node: PVirtualNode; Value: Boolean);
-    procedure StaticBackground(Source: TBitmap; Target: TCanvas; const Offset: TPoint; const R: TRect);
+    procedure StaticBackground(Source: TBitmap; Target: TCanvas; const OffsetPosition: TPoint; const R: TRect);
     procedure TileBackground(Source: TBitmap; Target: TCanvas; const Offset: TPoint; R: TRect);
     function ToggleCallback(Step, StepSize: Integer; Data: Pointer): Boolean;
   protected
@@ -14433,7 +14433,7 @@ end;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-procedure TBaseVirtualTree.StaticBackground(Source: TBitmap; Target: TCanvas; const Offset: TPoint; const R: TRect);
+procedure TBaseVirtualTree.StaticBackground(Source: TBitmap; Target: TCanvas; const OffsetPosition: TPoint; const R: TRect);
 
 // Draws the given source graphic so that it stays static in the given rectangle which is relative to the target bitmap.
 // The graphic is aligned so that it always starts at the upper left corner of the target canvas.
@@ -14456,7 +14456,7 @@ begin
   PicRect := Rect(FBackgroundOffsetX, FBackgroundOffsetY, FBackgroundOffsetX + Source.Width, FBackgroundOffsetY + Source.Height);
 
   // Area to be draw in relation to client viewscreen.
-  AreaRect := Rect(Offset.X + R.Left, Offset.Y + R.Top, Offset.X + R.Right, Offset.Y + R.Bottom);
+  AreaRect := Rect(OffsetPosition.X + R.Left, OffsetPosition.Y + R.Top, OffsetPosition.X + R.Right, OffsetPosition.Y + R.Bottom);
 
   // If picture falls in AreaRect, return intersection (DrawRect).
   if IntersectRect(DrawRect, PicRect, AreaRect) then
@@ -14466,16 +14466,16 @@ begin
     begin
       // Leave transparent area as destination unchanged (DST), copy non-transparent areas to canvas (SRCCOPY).
       with DrawRect do
-        MaskBlt(Target.Handle, Left - Offset.X, Top - Offset.Y, (Right - Offset.X) - (Left - Offset.X),
-          (Bottom - Offset.Y) - (Top - Offset.Y), Source.Canvas.Handle, Left - PicRect.Left, DrawRect.Top - PicRect.Top,
+        MaskBlt(Target.Handle, Left - OffsetPosition.X, Top - OffsetPosition.Y, (Right - OffsetPosition.X) - (Left - OffsetPosition.X),
+          (Bottom - OffsetPosition.Y) - (Top - OffsetPosition.Y), Source.Canvas.Handle, Left - PicRect.Left, DrawRect.Top - PicRect.Top,
           Source.MaskHandle, Left - PicRect.Left, Top - PicRect.Top, MakeROP4(DST, SRCCOPY));
     end
     else
     begin
       // copy image to destination
       with DrawRect do
-        BitBlt(Target.Handle, Left - Offset.X, Top - Offset.Y, (Right - Offset.X) - (Left - Offset.X),
-          (Bottom - Offset.Y) - (Top - Offset.Y) + R.Top, Source.Canvas.Handle, Left - PicRect.Left, DrawRect.Top - PicRect.Top,
+        BitBlt(Target.Handle, Left - OffsetPosition.X, Top - OffsetPosition.Y, (Right - OffsetPosition.X) - (Left - OffsetPosition.X),
+          (Bottom - OffsetPosition.Y) - (Top - OffsetPosition.Y) + R.Top, Source.Canvas.Handle, Left - PicRect.Left, DrawRect.Top - PicRect.Top,
           SRCCOPY);
     end;
   end;
@@ -30827,7 +30827,7 @@ procedure TStringEditLink.SetBounds(R: TRect);
 // Sets the outer bounds of the edit control and the actual edit area in the control.
 
 var
-  Offset: Integer;
+  lOffset: Integer;
 
 begin
   if not FStopping then
@@ -30853,10 +30853,10 @@ begin
       // We have to take out the two pixel border of the edit control as well as a one pixel "edit border" the
       // control leaves around the (selected) text.
       R := FEdit.ClientRect;
-      Offset := 2;
+      lOffset := 2;
       if tsUseThemes in FTree.FStates then
-        Inc(Offset);
-      InflateRect(R, -FTree.FTextMargin + Offset, Offset);
+        Inc(lOffset);
+      InflateRect(R, -FTree.FTextMargin + lOffset, lOffset);
       if not (vsMultiline in FNode.States) then
         OffsetRect(R, 0, FTextBounds.Top - FEdit.Top);
 
