@@ -3268,9 +3268,9 @@ type
     Column: TColumnIndex; const S: String; TextSpace: Integer; var Result: String;
     var Done: Boolean) of object;
   TVTMeasureTextWidthEvent = procedure(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode;
-    Column: TColumnIndex; const Text: String; var Width: Integer) of object;
+    Column: TColumnIndex; const CellText: String; var Width: Integer) of object;
   TVTDrawTextEvent = procedure(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode;
-    Column: TColumnIndex; const Text: String; const CellRect: TRect; var DefaultDraw: Boolean) of object;
+    Column: TColumnIndex; const CellText: String; const CellRect: TRect; var DefaultDraw: Boolean) of object;
 
   // Helper class to speed up rendering text formats for clipboard and drag'n drop transfers.
 
