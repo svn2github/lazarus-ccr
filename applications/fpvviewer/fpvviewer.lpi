@@ -14,7 +14,7 @@
     <VersionInfo>
       <StringTable ProductVersion=""/>
     </VersionInfo>
-    <BuildModes Count="4">
+    <BuildModes Count="5">
       <Item1 Name="default" Default="True"/>
       <Item2 Name="win32-console">
         <CompilerOptions>
@@ -65,6 +65,9 @@
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Linking>
+            <Debugging>
+              <DebugInfoType Value="dsDwarf2"/>
+            </Debugging>
             <Options>
               <Win32>
                 <GraphicApplication Value="True"/>
@@ -73,6 +76,28 @@
           </Linking>
         </CompilerOptions>
       </Item4>
+      <Item5 Name="carbon">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="fpvviewer"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Linking>
+            <Debugging>
+              <DebugInfoType Value="dsDwarf2"/>
+            </Debugging>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item5>
       <SharedMatrixOptions Count="2">
         <Item1 ID="669514139583" Modes="qt" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt"/>
         <Item2 ID="166328276776" Modes="cocoa" Type="IDEMacro" MacroName="LCLWidgetType" Value="cocoa"/>
@@ -114,7 +139,6 @@
         <ComponentName Value="frmFPVViewer"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fpvv_mainform"/>
       </Unit1>
       <Unit2>
         <Filename Value="dxftokentotree.pas"/>

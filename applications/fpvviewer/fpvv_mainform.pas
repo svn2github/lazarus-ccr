@@ -23,6 +23,7 @@ type
     btnVisualize: TButton;
     Button1: TButton;
     Button2: TButton;
+    buttonAutoFit: TButton;
     buttonPrint: TButton;
     buttonAdjust: TButton;
     buttonViewDebugInfo: TButton;
@@ -54,6 +55,7 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure buttonAdjustClick(Sender: TObject);
+    procedure buttonAutoFitClick(Sender: TObject);
     procedure buttonPrintClick(Sender: TObject);
     procedure buttonRenderingTestClick(Sender: TObject);
     procedure buttonViewDebugInfoClick(Sender: TObject);
@@ -96,44 +98,24 @@ const
   FPVVIEWER_MIN_IMAGE_SIZE = 100;
   FPVVIEWER_SPACE_FOR_NEGATIVE_COORDS = 100;
 var
-  Vec: TvVectorialDocument;
   CanvasSize: TPoint;
   lCurPage: TvVectorialPage;
   lPage: TvPage;
   YAxisMultiplier: Double = -1;
 begin
-  // First check the in input
-  if editFileName.FileName = '' then Exit; // silent exit in this simple case
-  //if not CheckInput() then Exit;
-
-  notebook.PageIndex := 0;
-
-  Vec := TvVectorialDocument.Create;
+  Render_PrepareFile();
   try
-    // some formats like HTML need an input of control size to render themselves
-    Vec.Width := Drawer.Width;
-    Vec.Height := Drawer.Height;
-
-    // If we desire, force a encoding for the read operation
-    if comboEncoding.ItemIndex > 0 then
-      Vec.ForcedEncodingOnRead := comboEncoding.Text
-    else Vec.ForcedEncodingOnRead := '';
-
-    Vec.ReadFromFile(editFileName.FileName);
-    // Show document properties
-    labelFileEncoding.Caption := 'File encoding: ' + Vec.Encoding;
-
     // We need to be robust, because sometimes the document size won't be given
     // also give up drawing everything if we need more then 4MB of RAM for the image
     // and also give some space in the image to allow for negative coordinates
-    if Vec.Width * spinScale.Value > FPVVIEWER_MAX_IMAGE_SIZE then CanvasSize.X := FPVVIEWER_MAX_IMAGE_SIZE
-    else if Vec.Width < FPVVIEWER_MIN_IMAGE_SIZE then CanvasSize.X := Drawer.Width
-    else CanvasSize.X := Round(Vec.Width * spinScale.Value);
+    if FVec.Width * spinScale.Value > FPVVIEWER_MAX_IMAGE_SIZE then CanvasSize.X := FPVVIEWER_MAX_IMAGE_SIZE
+    else if FVec.Width < FPVVIEWER_MIN_IMAGE_SIZE then CanvasSize.X := Drawer.Width
+    else CanvasSize.X := Round(FVec.Width * spinScale.Value);
     if CanvasSize.X < Drawer.Width then CanvasSize.X := Drawer.Width;
 
-    if Vec.Height * spinScale.Value > FPVVIEWER_MAX_IMAGE_SIZE then CanvasSize.Y := FPVVIEWER_MAX_IMAGE_SIZE
-    else  if Vec.Height < FPVVIEWER_MIN_IMAGE_SIZE then CanvasSize.Y := Drawer.Height
-    else CanvasSize.Y := Round(Vec.Height * spinScale.Value);
+    if FVec.Height * spinScale.Value > FPVVIEWER_MAX_IMAGE_SIZE then CanvasSize.Y := FPVVIEWER_MAX_IMAGE_SIZE
+    else  if FVec.Height < FPVVIEWER_MIN_IMAGE_SIZE then CanvasSize.Y := Drawer.Height
+    else CanvasSize.Y := Round(FVec.Height * spinScale.Value);
     if CanvasSize.Y < Drawer.Height then CanvasSize.Y := Drawer.Height;
 
     Drawer.Drawing.Width := CanvasSize.X;
@@ -141,7 +123,7 @@ begin
     Drawer.Drawing.Canvas.Brush.Color := clWhite;
     Drawer.Drawing.Canvas.Brush.Style := bsSolid;
     Drawer.Drawing.Canvas.FillRect(0, 0, Drawer.Drawing.Width, Drawer.Drawing.Height);
-    lPage := Vec.GetPage(0);
+    lPage := FVec.GetPage(0);
     if lPage = nil then
       Exception.Create('The document has no pages');
     if lPage is TvTextPageSequence then YAxisMultiplier := 1.0;
@@ -165,9 +147,9 @@ begin
 
     // Show debug tokens
     TokensTreeView.Items.Clear;
-    Vec.GenerateDebugTree(@FPVDebugAddItemProc);
+    FVec.GenerateDebugTree(@FPVDebugAddItemProc);
   finally
-    Vec.Free;
+    Render_FreeFile();
   end;
 end;
 
@@ -388,6 +370,26 @@ begin
   end;
 end;
 
+procedure TfrmFPVViewer.buttonAutoFitClick(Sender: TObject);
+var
+  lPage: TvPage;
+  lDeltaX, lDeltaY: Integer;
+  lZoom: Double;
+begin
+  Render_PrepareFile();
+  try
+    lPage := FVec.GetPage(0);
+    lPage.AutoFit(Drawer.Drawing.Canvas,
+      Drawer.Drawing.Width, Drawer.Drawing.Height,
+      lDeltaX, lDeltaY, lZoom);
+    spinAdjustX.Value := lDeltaX;
+    spinAdjustY.Value := lDeltaY;
+    spinScale.Value := lZoom;
+  finally
+    Render_FreeFile();
+  end;
+end;
+
 procedure TfrmFPVViewer.buttonPrintClick(Sender: TObject);
 var
   printDialog: TPrintDialog;
@@ -579,6 +581,13 @@ begin
   else FVec.ForcedEncodingOnRead := '';
 
   FVec.ReadFromFile(editFileName.FileName);
+
+  // some formats like HTML need an input of control size to render themselves
+  FVec.Width := Drawer.Width;
+  FVec.Height := Drawer.Height;
+
+  // Show document properties
+  labelFileEncoding.Caption := 'File encoding: ' + FVec.Encoding;
 end;
 
 procedure TfrmFPVViewer.Render_DoRender(ACanvasSizeX, ACanvasSizeY,
@@ -588,9 +597,6 @@ const
   FPVVIEWER_MIN_IMAGE_SIZE = 100;
   FPVVIEWER_SPACE_FOR_NEGATIVE_COORDS = 100;
 begin
-  // Show document properties
-  labelFileEncoding.Caption := 'File encoding: ' + FVec.Encoding;
-
   Drawer.Drawing.Width := ACanvasSizeX;
   Drawer.Drawing.Height := ACanvasSizeY;
   Drawer.Drawing.Canvas.Brush.Color := clWhite;
