@@ -350,7 +350,7 @@ begin
   try
     lPage := FVec.GetPage(0);
     lPage.AutoFit(Drawer.Drawing.Canvas,
-      Drawer.Drawing.Width, Drawer.Drawing.Height,
+      Drawer.Width, Drawer.Height,
       lDeltaX, lDeltaY, lZoom);
     spinAdjustX.Value := lDeltaX;
     spinAdjustY.Value := lDeltaY;
