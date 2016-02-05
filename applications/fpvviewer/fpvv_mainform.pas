@@ -96,7 +96,6 @@ procedure TfrmFPVViewer.btnVisualizeClick(Sender: TObject);
 const
   FPVVIEWER_MAX_IMAGE_SIZE = 1000;
   FPVVIEWER_MIN_IMAGE_SIZE = 100;
-  FPVVIEWER_SPACE_FOR_NEGATIVE_COORDS = 100;
 var
   CanvasSize: TPoint;
   lCurPage: TvVectorialPage;
@@ -132,15 +131,15 @@ begin
       lPage.DrawBackground(Drawer.Drawing.Canvas);
     lPage.Render(
       Drawer.Drawing.Canvas,
-      FPVVIEWER_SPACE_FOR_NEGATIVE_COORDS + Drawer.PosX,
-      Drawer.Drawing.Height - FPVVIEWER_SPACE_FOR_NEGATIVE_COORDS + Drawer.PosY,
+      Drawer.PosX,
+      Drawer.Drawing.Height - Drawer.PosY,
       spinScale.Value,
       YAxisMultiplier * spinScale.Value);
     if checkShowPage.Checked then
       lPage.RenderPageBorder(
         Drawer.Drawing.Canvas,
-        FPVVIEWER_SPACE_FOR_NEGATIVE_COORDS + Drawer.PosX,
-        Drawer.Drawing.Height - FPVVIEWER_SPACE_FOR_NEGATIVE_COORDS + Drawer.PosY,
+        Drawer.PosX,
+        Drawer.Drawing.Height + Drawer.PosY,
         spinScale.Value,
         YAxisMultiplier * spinScale.Value);
     Drawer.Invalidate;
@@ -457,6 +456,8 @@ begin
 end;
 
 procedure TfrmFPVViewer.FormCreate(Sender: TObject);
+const
+  FPVVIEWER_SPACE_FOR_NEGATIVE_COORDS = 100;
 begin
   Drawer := TFPVVDrawer.Create(Self);
   Drawer.Parent := pageViewer;
@@ -467,6 +468,9 @@ begin
   Drawer.OnMouseWheel := @HandleDrawerMouseWheel;
   Drawer.PosChangedCallback := @HandleDrawerPosChanged;
   Drawer.RedrawCallback := @HandleDrawerRedraw;
+  Drawer.PosX := FPVVIEWER_SPACE_FOR_NEGATIVE_COORDS;
+  Drawer.PosY := -1 * FPVVIEWER_SPACE_FOR_NEGATIVE_COORDS;
+  HandleDrawerPosChanged(nil);
 
   FPVUDebugOutCallback := @ViewerDebugOutCallback;
 end;
@@ -570,7 +574,6 @@ procedure TfrmFPVViewer.Render_DoRender(ACanvasSizeX, ACanvasSizeY,
 const
   FPVVIEWER_MAX_IMAGE_SIZE = 1000;
   FPVVIEWER_MIN_IMAGE_SIZE = 100;
-  FPVVIEWER_SPACE_FOR_NEGATIVE_COORDS = 100;
 begin
   Drawer.Drawing.Width := ACanvasSizeX;
   Drawer.Drawing.Height := ACanvasSizeY;
