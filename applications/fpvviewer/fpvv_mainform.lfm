@@ -141,13 +141,13 @@ object frmFPVViewer: TfrmFPVViewer
       OnClick = buttonRenderingTestClick
       TabOrder = 4
     end
-    object Button1: TButton
+    object buttonConvertToSVG: TButton
       Left = 360
       Height = 25
       Top = 41
       Width = 120
       Caption = 'Convert to SVG'
-      OnClick = Button1Click
+      OnClick = buttonConvertToSVGClick
       TabOrder = 5
     end
     object btnContourLines: TButton
@@ -197,13 +197,13 @@ object frmFPVViewer: TfrmFPVViewer
       Caption = 'X adjustment:'
       ParentColor = False
     end
-    object Button2: TButton
+    object buttonViewFPVTokens: TButton
       Left = 312
       Height = 25
       Top = 70
       Width = 168
       Caption = 'View FPVectorial Tokens'
-      OnClick = Button2Click
+      OnClick = buttonViewFPVTokensClick
       TabOrder = 9
     end
     object Label4: TLabel

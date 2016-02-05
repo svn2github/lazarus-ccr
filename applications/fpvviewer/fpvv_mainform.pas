@@ -21,8 +21,8 @@ type
     btnSearchInTokens: TButton;
     btnViewDXFTokens: TButton;
     btnVisualize: TButton;
-    Button1: TButton;
-    Button2: TButton;
+    buttonConvertToSVG: TButton;
+    buttonViewFPVTokens: TButton;
     buttonAutoFit: TButton;
     buttonPrint: TButton;
     buttonAdjust: TButton;
@@ -52,8 +52,8 @@ type
     procedure btnSearchInTokensClick(Sender: TObject);
     procedure btnVisualizeClick(Sender: TObject);
     procedure btnViewDXFTokensClick(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
+    procedure buttonConvertToSVGClick(Sender: TObject);
+    procedure buttonViewFPVTokensClick(Sender: TObject);
     procedure buttonAdjustClick(Sender: TObject);
     procedure buttonAutoFitClick(Sender: TObject);
     procedure buttonPrintClick(Sender: TObject);
@@ -293,7 +293,7 @@ begin
   end;
 end;
 
-procedure TfrmFPVViewer.Button1Click(Sender: TObject);
+procedure TfrmFPVViewer.buttonConvertToSVGClick(Sender: TObject);
 var
   Vec: TvVectorialDocument;
 begin
@@ -306,38 +306,9 @@ begin
   end;
 end;
 
-procedure TfrmFPVViewer.Button2Click(Sender: TObject);
-var
-  Vec: TvVectorialDocument;
-  i: Integer;
-  lCurPage: TvVectorialPage;
+procedure TfrmFPVViewer.buttonViewFPVTokensClick(Sender: TObject);
 begin
-  // First check the in input
-  //if not CheckInput() then Exit;
-
   notebook.PageIndex := 1;
-
-  {Vec := TvVectorialDocument.Create;
-  try
-    // some formats like HTML need an input of control size to render themselves
-    Vec.Width := Drawer.Width;
-    Vec.Height := Drawer.Height;
-
-    // read
-    Vec.ReadFromFile(editFileName.FileName);
-
-    // Generate the positioning info
-    for i := 0 to Vec.GetPageCount()-1 do
-    begin
-      if Vec.GetPageAsVectorial(i) <> nil then
-        Vec.GetPageAsVectorial(i).PositionEntitySubparts(Canvas, 0, 0);
-    end;
-
-    TokensTreeView.Items.Clear;
-    Vec.GenerateDebugTree(@FPVDebugAddItemProc);
-  finally
-    Vec.Free;
-  end; }
 end;
 
 procedure TfrmFPVViewer.buttonAdjustClick(Sender: TObject);
@@ -385,6 +356,10 @@ begin
     spinAdjustX.Value := lDeltaX;
     spinAdjustY.Value := lDeltaY;
     spinScale.Value := lZoom;
+
+    spinAdjustXChange(nil);
+    spinAdjustYChange(nil);
+    spinScaleChange(nil);
   finally
     Render_FreeFile();
   end;
