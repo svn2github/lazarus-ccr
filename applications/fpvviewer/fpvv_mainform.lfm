@@ -124,27 +124,27 @@ object frmFPVViewer: TfrmFPVViewer
       ParentColor = False
     end
     object btnViewDXFTokens: TButton
-      Left = 112
+      Left = 224
       Height = 25
-      Top = 41
+      Top = 40
       Width = 128
       Caption = 'View DXF Tokens'
       OnClick = btnViewDXFTokensClick
       TabOrder = 3
     end
-    object buttonRenderingTest: TButton
-      Left = 256
+    object buttonAutoFitView: TButton
+      Left = 112
       Height = 25
-      Top = 41
+      Top = 40
       Width = 96
-      Caption = 'Render Test'
-      OnClick = buttonRenderingTestClick
+      Caption = 'Auto Fit View'
+      OnClick = buttonAutoFitViewClick
       TabOrder = 4
     end
     object buttonConvertToSVG: TButton
       Left = 360
       Height = 25
-      Top = 41
+      Top = 40
       Width = 120
       Caption = 'Convert to SVG'
       OnClick = buttonConvertToSVGClick
