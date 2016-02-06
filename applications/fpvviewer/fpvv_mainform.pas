@@ -109,7 +109,7 @@ begin
     lPage := FVec.GetPage(0);
     if lPage = nil then
       Exception.Create('The document has no pages');
-    lPageHeight := Drawer.Height;
+    lPageHeight := Drawer.Drawing.Height;
     lPage.GetNaturalRenderPos(lPageHeight, YAxisMultiplier);
     if checkForceWhiteBackground.Checked then lPage.BackgroundColor := colWhite;
     if not checkForceWhiteBackground.Checked then
@@ -117,14 +117,14 @@ begin
     lPage.Render(
       Drawer.Drawing.Canvas,
       Drawer.PosX,
-      Drawer.Drawing.Height + Drawer.PosY,
+      lPageHeight + Drawer.PosY,
       spinScale.Value,
       YAxisMultiplier * spinScale.Value);
     if checkShowPage.Checked then
       lPage.RenderPageBorder(
         Drawer.Drawing.Canvas,
         Drawer.PosX,
-        Drawer.Drawing.Height + Drawer.PosY,
+        lPageHeight + Drawer.PosY,
         spinScale.Value,
         YAxisMultiplier * spinScale.Value);
     Drawer.Invalidate;
