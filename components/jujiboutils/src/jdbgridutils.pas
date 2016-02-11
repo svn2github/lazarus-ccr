@@ -313,8 +313,8 @@ begin
   if Field.IsNull then
     Result := ''
   else
-    Result := FormatDateTime(ShortDateFormat, Field.AsDateTime) +
-      ' ' + FormatDateTime(ShortTimeFormat, Field.AsDateTime);
+    Result := FormatDateTime(DefaultFormatSettings.ShortDateFormat, Field.AsDateTime) +
+      ' ' + FormatDateTime(DefaultFormatSettings.ShortTimeFormat, Field.AsDateTime);
 end;
 
 procedure TJDbGridDateTimeCtrl.myEditEnter(Sender: TObject);
@@ -510,7 +510,8 @@ begin
   CellEditor.OnKeyDown := @OnKeyDown;
   CellEditor.OnEditingDone := @myEditOnEditingDone;
   CellEditor.OnKeyPress := @OnKeyPress;
-  DisplayFormat := ShortDateFormat + ' ' + ShortTimeFormat;
+  DisplayFormat := DefaultFormatSettings.ShortDateFormat + ' ' +
+    DefaultFormatSettings.ShortTimeFormat;
 end;
 
 destructor TJDbGridDateTimeCtrl.Destroy;
@@ -704,7 +705,7 @@ begin
   CellEditor.OnKeyDown := @OnKeyDown;
   CellEditor.OnEditingDone := @myEditOnEditingDone;
   CellEditor.OnKeyPress := @OnKeyPress;   // se sobreescribe por el Grid :(
-  DisplayFormat := ShortTimeFormat;
+  DisplayFormat := DefaultFormatSettings.ShortTimeFormat;
 end;
 
 destructor TJDbGridTimeCtrl.Destroy;
@@ -937,7 +938,7 @@ begin
   CellEditor.OnKeyDown := @OnKeyDown;
   CellEditor.OnEditingDone := @myEditOnEditingDone;
   CellEditor.OnKeyPress := @OnKeyPress;   // se sobreescribe por el Grid :(
-  DisplayFormat := ShortDateFormat;
+  DisplayFormat := DefaultFormatSettings.ShortDateFormat;
 end;
 
 destructor TJDbGridDateCtrl.Destroy;
@@ -1035,10 +1036,12 @@ end;
 procedure TJDbGridDoubleCtrl.OnKeyPress(Sender: TObject; var key: char);
 begin
   if (Key in ['.', ',']) then
-    Key := Decimalseparator;
-  if (key = DecimalSeparator) and (Pos(key, CellEditor.Caption) > 0) then
+    Key := DefaultFormatSettings.Decimalseparator;
+  if (key = DefaultFormatSettings.DecimalSeparator) and
+    (Pos(key, CellEditor.Caption) > 0) then
     key := #0;
-  if not (Key in ['0'..'9', DecimalSeparator, '+', '-', #8, #9]) then
+  if not (Key in ['0'..'9', DefaultFormatSettings.DecimalSeparator,
+    '+', '-', #8, #9]) then
     Key := #0;
   //if (Key = DecimalSeparator) and (fDecimals = 0) then
   //  Key := #0;    // Note: decimal=0 avoids rounding

@@ -42,7 +42,6 @@ type
   protected
     { Protected declarations }
     procedure SetShadowColor(Value: TColor);
-    procedure Paint; override;
 
     property ShadowColor: TColor read FShadowColor write SetShadowColor;
     property ShadowColor2: TColor read FShadowColor2 write SetShadowColor2;
@@ -91,6 +90,7 @@ type
   public
     { Public declarations }
     constructor Create(TheOwner: TComponent); override;
+    procedure Paint; override;
   end;
 
   TJLabel = class(TJCustomLabel)

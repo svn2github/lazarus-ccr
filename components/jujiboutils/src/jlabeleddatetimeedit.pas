@@ -336,7 +336,8 @@ constructor TJLabeledDateTimeEdit.Create(TheOwner: TComponent);
 begin
   inherited Create(TheOwner);
   Text := '';
-  fFormat := ShortDateFormat + ' ' + ShortTimeFormat;
+  fFormat := DefaultFormatSettings.ShortDateFormat + ' ' +
+    DefaultFormatSettings.ShortTimeFormat;
   theValue := 0;
   formatInput;
   FButton := TSpeedButton.Create(self);

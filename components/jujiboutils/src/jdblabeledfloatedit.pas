@@ -360,10 +360,11 @@ begin
   if not FieldIsEditable(Field) or not FDatalink.Edit then
     Key := #0;
   if (Key in ['.', ',']) then
-    Key := Decimalseparator;
-  if (key = DecimalSeparator) and (Pos(key, Text) > 0) then
+    Key := DefaultFormatSettings.Decimalseparator;
+  if (key = DefaultFormatSettings.DecimalSeparator) and (Pos(key, Text) > 0) then
     key := #0;
-  if not (Key in ['0'..'9', DecimalSeparator, '+', '-', #8, #9]) then
+  if not (Key in ['0'..'9', DefaultFormatSettings.DecimalSeparator,
+    '+', '-', #8, #9]) then
     Key := #0;
   if (Key <> #0) and (not IsReadOnly) then
     FDatalink.Edit;
@@ -417,4 +418,3 @@ end;
 
 
 end.
-

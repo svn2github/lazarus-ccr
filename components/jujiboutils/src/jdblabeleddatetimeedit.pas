@@ -249,8 +249,9 @@ begin
   if Field.IsNull then
     Result := ''
   else
-    Result := FormatDateTime(ShortDateFormat, FDataLink.Field.AsDateTime) +
-      ' ' + FormatDateTime(ShortTimeFormat, FDataLink.Field.AsDateTime);
+    Result := FormatDateTime(DefaultFormatSettings.ShortDateFormat,
+      FDataLink.Field.AsDateTime) + ' ' +
+      FormatDateTime(DefaultFormatSettings.ShortTimeFormat, FDataLink.Field.AsDateTime);
 end;
 
 function TJDBLabeledDateTimeEdit.getFormat: string;

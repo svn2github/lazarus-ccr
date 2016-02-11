@@ -314,7 +314,7 @@ constructor TJLabeledDateEdit.Create(TheOwner: TComponent);
 begin
   inherited Create(TheOwner);
   Text := '';
-  fFormat := ShortDateFormat;
+  fFormat := DefaultFormatSettings.ShortDateFormat;
   theValue := 0;
   FButton := TSpeedButton.Create(self);
   FButton.Height := Self.Height;
