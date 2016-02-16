@@ -851,6 +851,7 @@ function TWsdlParser.ParseOperation(
             then begin
               locProcType := tmpMthd.ProcType;
               locFunc := TPasFunction(SymbolTable.CreateElement(TPasFunction,tmpMthd.Name,AOwner,visDefault,'',0));
+              SymbolTable.RegisterExternalAlias(locFunc,SymbolTable.GetExternalName(tmpMthd));
               locFuncType := SymbolTable.CreateFunctionType('','Result',locFunc,False,'',0);
               locFunc.ProcType := locFuncType;
               resArgIndex := FindIndexOfResultArg(locProcType.Args);
@@ -880,8 +881,13 @@ function TWsdlParser.ParseOperation(
     
   begin
     AMthd := nil;
-    tmpMthd := TPasProcedure(SymbolTable.CreateElement(TPasProcedure,AMthdName,AOwner,visDefault,'',0));
+    tmpMthd :=
+      TPasProcedure(
+        SymbolTable.CreateElement(TPasProcedure,ExtractIdentifier(AMthdName),
+        AOwner,visDefault,'',0)
+      );
     try
+      SymbolTable.RegisterExternalAlias(tmpMthd,AMthdName);
       ParseInputMessage();
       ParseOutputMessage();
     except

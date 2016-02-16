@@ -349,6 +349,7 @@ type
     procedure parameter_const_default();
     procedure parameter_composed_name();
     procedure parameter_composed_name_function();
+    procedure method_composed_name();
     procedure soap_action();
   end;
   
@@ -5158,6 +5159,67 @@ begin
       res := TPasFunctionType(mthType).ResultEl;
         CheckNotNull(res, 'Result');
         CheckEquals(LowerCase(STRING_TYPE_NAME), LowerCase(res.ResultType.Name));
+  finally
+    tr.Free();
+  end;
+end;
+
+procedure TTest_WsdlParser.method_composed_name();
+const PROC_METHOD_NAME = 'Composed-Name-Proc'; PROC_METHOD_ID = 'Composed_Name_Proc';
+      FUNC_METHOD_NAME = 'Composed-Name-Func'; FUNC_METHOD_ID = 'Composed_Name_Func';
+var
+  tr : TwstPasTreeContainer;
+
+  function FindProc(const AName : string; AIntf : TPasClassType) : TPasProcedure;
+  var
+    k : Integer;
+  begin
+    Result := nil;
+    for k := 0 to (AIntf.Members.Count - 1) do begin
+      if TObject(AIntf.Members[k]).InheritsFrom(TPasProcedure) and
+         (tr.GetExternalName(TPasElement(AIntf.Members[k])) = AName)
+      then begin
+        Result := TPasProcedure(AIntf.Members[k]);
+        Break;
+      end;
+    end;
+  end;
+
+var
+  elt : TPasElement;
+  intf : TPasClassType;
+  mth : TPasProcedure;
+  mthType : TPasProcedureType;
+  res : TPasResultElement;
+  arg : TPasArgument;
+  i, c : Integer;
+begin
+  tr := ParseDoc('function_composed_name');
+  try
+    elt := tr.FindElement('TestService');
+    CheckNotNull(elt,'TestService');
+    CheckIs(elt,TPasClassType);
+    intf := elt as TPasClassType;
+    CheckEquals(Ord(okInterface),Ord(intf.ObjKind));
+
+    c := 0;
+    for i := 0 to (intf.Members.Count - 1) do begin
+      if TObject(TObject(intf.Members[i])).InheritsFrom(TPasProcedure) then
+        c := c+1;
+    end;
+    CheckEquals(2,c,'number of method');
+
+    mth := FindProc(PROC_METHOD_NAME,intf);
+      CheckNotNull(mth,PROC_METHOD_NAME +' not found');
+      CheckEquals(PROC_METHOD_ID,mth.Name,'internal name');
+      mthType := mth.ProcType;
+      CheckIs(mthType,TPasProcedureType);
+
+    mth := FindProc(FUNC_METHOD_NAME,intf);
+      CheckNotNull(mth,FUNC_METHOD_NAME +' not found');
+      CheckEquals(FUNC_METHOD_ID,mth.Name,'internal name');
+      mthType := mth.ProcType;
+      CheckIs(mthType,TPasFunctionType);
   finally
     tr.Free();
   end;

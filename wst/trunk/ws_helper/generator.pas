@@ -1480,7 +1480,9 @@ Var
       for k := 0 to Pred(mtds.Count) do begin
         if TPasElement(mtds[k]).InheritsFrom(TPasProcedure) then begin
           mtd := TPasProcedure(mtds[k]);
-          WriteLn('RegisterVerbHandler(%s,{$IFDEF FPC}@{$ENDIF}%sHandler);',[QuotedStr(mtd.Name),mtd.Name]);
+          WriteLn(
+            'RegisterVerbHandler(%s,{$IFDEF FPC}@{$ENDIF}%sHandler);',
+            [QuotedStr(FSymbolTable.GetExternalName(mtd)),mtd.Name]);
         end;
       end;
     EndAutoIndent();
@@ -1554,7 +1556,10 @@ Var
       WriteLn('procedure Server_service_Register%sService();',[strBuff]);
       WriteLn('Begin');
         IncIndent();
-          WriteLn('GetServerServiceRegistry().Register(%s,T%s_ServiceBinderFactory.Create() as IItemFactory);',[QuotedStr(AIntf.Name),strBuff]);
+          WriteLn(
+            'GetServerServiceRegistry().Register(%s,T%s_ServiceBinderFactory.Create() as IItemFactory);',
+            [QuotedStr(FSymbolTable.GetExternalName(AIntf)),strBuff]
+          );
         DecIndent();
       WriteLn('End;');
     EndAutoIndent();
