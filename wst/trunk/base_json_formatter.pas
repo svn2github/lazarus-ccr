@@ -942,7 +942,8 @@ begin
   stk := StackTop();
   locNode := stk.FindNode(AScopeName);
   if not Assigned(locNode) then begin
-    Error(SERR_ScopeNotFound,[AScopeName]);
+    Result := -1;
+    exit;
   end;
   case locNode.JSONType() of
     jtObject : PushStack(locNode,stObject);
