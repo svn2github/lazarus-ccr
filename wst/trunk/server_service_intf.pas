@@ -523,6 +523,8 @@ begin
     on e : EBaseRemoteException do begin
       f.Clear();
       f.SetSerializationStyle(ssNodeSerialization);
+      if (e.FaultString = '') and (e.Message <> '') then
+        e.FaultString := e.Message;
       f.BeginExceptionList(e.FaultCode,e.FaultString);
       f.EndExceptionList();
     end;
