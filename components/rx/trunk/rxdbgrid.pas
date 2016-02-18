@@ -4998,7 +4998,7 @@ begin
   DHS.FreeBookmark(P);
   DHS.FreeBookmark(P_26);
   {$ELSE}
-  if DHS.CompareBookmarks(DHS.Bookmark, P)<>0 then
+  if DHS.BookmarkValid(P) and (DHS.CompareBookmarks(DHS.Bookmark, P)<>0) then
     DHS.Bookmark:=P; //workaround for fix navigation problem
   {$ENDIF}
 

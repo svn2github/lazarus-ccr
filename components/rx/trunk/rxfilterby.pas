@@ -333,6 +333,9 @@ Begin
             FilterStr := FilterStr+Combo_3[X-1].Text+' ';
 
           C:=FGrid.ColumnByCaption(Combo_1[X].Text);
+          if Pos('NULL', Combo_2[X].Text) > 0 then
+            FilterStr := FilterStr+'('+C.FieldName+Combo_2[X].Text+') '
+          else
           case C.Field.DataType of
             ftDateTime   ,
             ftDate       : FilterStr := FilterStr+'('+C.FieldName+Combo_2[X].Text+Char(39)+Copy(Edit_1[X].Text,7,4)+Copy(Edit_1[X].Text,3,4)+Copy(Edit_1[X].Text,1,2)+Copy(Edit_1[X].Text,11,9)+Char(39)+') ';
