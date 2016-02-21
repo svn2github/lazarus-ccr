@@ -35,6 +35,7 @@ type
     CbHexAddress: TCheckBox;
     CbHexEditorLineSize: TComboBox;
     CbHexSingleBytes: TCheckBox;
+    CoolBar: TCoolBar;
     ImageList: TImageList;
     HexEditor: TKHexEditor;
     MainMenu: TMainMenu;
@@ -687,7 +688,10 @@ begin
     OnRecentFile := @MRUMenuManagerRecentFile;
   end;
 
+  HexEditor.Font.Name := GetFixedFontName;  // The hard-coded Courier New does not exist in Linux
   HexEditor.Font.Style := [];
+
+  AnalysisDetails.Font.Name := HexEditor.Font.Name;
 
   FAnalysisGrid := TBIFFGrid.Create(self);
   with FAnalysisGrid do begin
@@ -1022,6 +1026,9 @@ var
   s: String;
   sw: WideString;
   ls: Integer;
+  len: SizeInt;
+  pw: PWideChar;
+  p: PChar;
 begin
   idx := FCurrOffset;
 //  idx := HexEditor.SelStart.Index;
@@ -1122,7 +1129,16 @@ begin
     ValueGrid.Cells[2, VALUE_ROW_ANSISTRING] := '';
   end;
 
-  s := StrPas(PChar(@FBuffer[idx]));
+  // Avoid buffer overrun
+  p := PChar(@FBuffer[idx]);
+  len := 0;
+  while (p^ <> #0) and (p - @FBuffer[0] < Length(FBuffer)) do
+  begin
+    inc(p);
+    inc(len);
+  end;
+  SetLength(s, len);
+  Move(FBuffer[idx], s[1], len);
   ValueGrid.Cells[1, VALUE_ROW_PANSICHAR] := s;
   ValueGrid.Cells[2, VALUE_ROW_PANSICHAR] := Format('%d ... %d', [idx, idx + Length(s)]);
 
@@ -1146,7 +1162,15 @@ begin
     ValueGrid.Cells[2, VALUE_ROW_WIDESTRING] := '';
   end;
 
-  s := UTF8Encode(StrPas(PWideChar(@FBuffer[idx])));
+  // Avoid buffer overrun
+  pw := PWideChar(@FBuffer[idx]);
+  len := 0;
+  while (pw^ <> #0) and (pw - @FBuffer[0] < Length(FBuffer)-1) do
+  begin
+    inc(pw);
+    inc(len);
+  end;
+  s := {%H-}WideCharLenToString(PWideChar(@FBuffer[idx]), len);
   ValueGrid.Cells[1, VALUE_ROW_PWIDECHAR] := s;
   ValueGrid.Cells[2, VALUE_ROW_PWIDECHAR] := Format('%d ... %d', [idx, idx + Length(s)]);
 end;

@@ -16,6 +16,8 @@ function GetFileFormatName(AFormat: TsSpreadsheetFormat): String;
 function GetFormatFromFileHeader(const AFileName: TFileName;
   out SheetType: TsSpreadsheetFormat): Boolean;
 
+function GetFixedFontName: String;
+
 
 implementation
 
@@ -160,6 +162,27 @@ begin
     stream.Free;
   end;
 end;
+
+
+function GetFixedFontName: String;
+var
+  idx: Integer;
+begin
+  Result := Screen.SystemFont.Name;
+  idx := Screen.Fonts.IndexOf('Courier New');
+  if idx = -1 then
+    idx := Screen.Fonts.IndexOf('Courier 10 Pitch');
+  if idx <> -1 then
+    Result := Screen.Fonts[idx]
+  else
+    for idx := 0 to Screen.Fonts.Count-1 do
+      if pos('courier', Lowercase(Screen.Fonts[idx])) = 1 then
+      begin
+        Result := Screen.Fonts[idx];
+        exit;
+      end;
+end;
+
 
 end.
 

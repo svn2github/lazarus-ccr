@@ -17,61 +17,23 @@ object MainForm: TMainForm
   LCLVersion = '1.7'
   object Splitter1: TSplitter
     Left = 419
-    Height = 508
-    Top = 25
+    Height = 483
+    Top = 50
     Width = 5
-  end
-  object ToolBar: TToolBar
-    Left = 4
-    Height = 25
-    Top = 0
-    Width = 1085
-    AutoSize = True
-    BorderSpacing.Left = 4
-    ButtonHeight = 25
-    Caption = 'ToolBar'
-    EdgeBorders = []
-    Images = ImageList
-    TabOrder = 1
-    object ToolButton1: TToolButton
-      Left = 1
-      Top = 0
-      Action = AcFileOpen
-      DropdownMenu = RecentFilesPopupMenu
-      Style = tbsDropDown
-    end
-    object ToolButton2: TToolButton
-      Left = 64
-      Top = 0
-      Action = AcFileQuit
-    end
-    object ToolButton3: TToolButton
-      Left = 36
-      Top = 0
-      Action = AcFind
-    end
-    object ToolButton4: TToolButton
-      Left = 59
-      Height = 25
-      Top = 0
-      Width = 5
-      Caption = 'ToolButton4'
-      Style = tbsDivider
-    end
   end
   object DetailPanel: TPanel
     Left = 424
-    Height = 508
-    Top = 25
+    Height = 483
+    Top = 50
     Width = 665
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 508
+    ClientHeight = 483
     ClientWidth = 665
-    TabOrder = 3
+    TabOrder = 2
     object PageControl: TPageControl
       Left = 0
-      Height = 508
+      Height = 483
       Top = 0
       Width = 665
       ActivePage = PgValues
@@ -111,12 +73,12 @@ object MainForm: TMainForm
       end
       object PgValues: TTabSheet
         Caption = 'Values'
-        ClientHeight = 480
+        ClientHeight = 455
         ClientWidth = 657
         object ValueGrid: TStringGrid
           Left = 0
           Height = 158
-          Top = 322
+          Top = 297
           Width = 657
           Align = alBottom
           ColCount = 3
@@ -151,14 +113,14 @@ object MainForm: TMainForm
           Cursor = crVSplit
           Left = 0
           Height = 5
-          Top = 317
+          Top = 292
           Width = 657
           Align = alBottom
           ResizeAnchor = akBottom
         end
         object HexEditor: TKHexEditor
           Left = 0
-          Height = 286
+          Height = 261
           Top = 31
           Width = 657
           AddressPrefix = '$'
@@ -236,19 +198,19 @@ object MainForm: TMainForm
   end
   object TreePanel: TPanel
     Left = 0
-    Height = 508
-    Top = 25
+    Height = 483
+    Top = 50
     Width = 419
     Align = alLeft
     BevelOuter = bvNone
-    ClientHeight = 508
+    ClientHeight = 483
     ClientWidth = 419
     Constraints.MinWidth = 275
-    TabOrder = 2
+    TabOrder = 1
     object FindPanel: TPanel
       Left = 0
       Height = 30
-      Top = 478
+      Top = 453
       Width = 419
       Align = alBottom
       BevelOuter = bvNone
@@ -293,7 +255,7 @@ object MainForm: TMainForm
     end
     object BIFFTree: TVirtualStringTree
       Left = 0
-      Height = 478
+      Height = 453
       Top = 0
       Width = 419
       Align = alClient
@@ -372,6 +334,64 @@ object MainForm: TMainForm
         Width = 180
       end>
     SimplePanel = False
+  end
+  object CoolBar: TCoolBar
+    Left = 0
+    Height = 50
+    Top = 0
+    Width = 1089
+    AutoSize = True
+    Bands = <    
+      item
+        Control = ToolBar
+        Width = 1114
+      end>
+    GrabStyle = gsGripper
+    object ToolBar: TToolBar
+      AnchorSideLeft.Control = CoolBar
+      AnchorSideTop.Control = CoolBar
+      Left = 24
+      Height = 40
+      Top = 5
+      Width = 1085
+      Align = alNone
+      AutoSize = True
+      BorderSpacing.Left = 22
+      BorderSpacing.Top = 3
+      ButtonHeight = 40
+      ButtonWidth = 40
+      Caption = 'ToolBar'
+      EdgeBorders = []
+      Images = ImageList
+      ShowCaptions = True
+      TabOrder = 0
+      Transparent = True
+      object ToolButton1: TToolButton
+        Left = 1
+        Top = 0
+        Action = AcFileOpen
+        DropdownMenu = RecentFilesPopupMenu
+        Style = tbsDropDown
+      end
+      object ToolButton2: TToolButton
+        Left = 98
+        Top = 0
+        Action = AcFileQuit
+      end
+      object ToolButton3: TToolButton
+        Left = 53
+        Top = 0
+        Action = AcFind
+      end
+      object ToolButton4: TToolButton
+        Left = 93
+        Height = 40
+        Top = 0
+        Width = 5
+        Caption = 'ToolButton4'
+        Style = tbsDivider
+      end
+    end
   end
   object ImageList: TImageList
     left = 80

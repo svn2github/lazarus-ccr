@@ -123,12 +123,12 @@
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="beabout.pas"/>
+        <Filename Value="bemain.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="AboutForm"/>
+        <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="beAbout"/>
+        <UnitName Value="beMain"/>
       </Unit1>
       <Unit2>
         <Filename Value="bebiffgrid.pas"/>
@@ -145,12 +145,12 @@
         <IsPartOfProject Value="True"/>
       </Unit4>
       <Unit5>
-        <Filename Value="bemain.pas"/>
+        <Filename Value="beabout.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="MainForm"/>
+        <ComponentName Value="AboutForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="beMain"/>
+        <UnitName Value="beAbout"/>
       </Unit5>
       <Unit6>
         <Filename Value="beutils.pas"/>
