@@ -1055,7 +1055,6 @@ var
   pa: PAnsiChar;
 begin
   idx := FCurrOffset;
-//  idx := HexEditor.SelStart.Index;
 
   i := ValueGrid.RowCount;
   j := ValueGrid.ColCount;
@@ -1121,7 +1120,7 @@ begin
     ValueGrid.Cells[2, VALUE_ROW_INT64] := '';
   end;
 
-  // Singke
+  // Single
   if idx <= Length(FBuffer) - SizeOf(single) then begin
     for i:=0 to SizeOf(single)-1 do buf[i] := FBuffer[idx+i];
     ValueGrid.Cells[1, VALUE_ROW_SINGLE] := Format('%f', [sng]);
@@ -1162,17 +1161,23 @@ begin
 
   // PAnsiChar
   // Avoid buffer overrun
-  pa := PAnsiChar(@FBuffer[idx]);
-  ls := 0;
-  while (pa^ <> #0) and (pa - @FBuffer[0] < Length(FBuffer)) do
+  if idx < Length(FBuffer) then begin
+    pa := PAnsiChar(@FBuffer[idx]);
+    ls := 0;
+    while (pa^ <> #0) and (pa - @FBuffer[0] < Length(FBuffer)) do
+    begin
+      inc(pa);
+      inc(ls);
+    end;
+    SetLength(s, ls);
+    Move(FBuffer[idx], s[1], ls);
+    ValueGrid.Cells[1, VALUE_ROW_PANSICHAR] := s;
+    ValueGrid.Cells[2, VALUE_ROW_PANSICHAR] := Format('%d ... %d', [idx, idx + ls]);
+  end else
   begin
-    inc(pa);
-    inc(ls);
+    ValueGrid.Cells[1, VALUE_ROW_PANSICHAR] := '';
+    ValueGrid.Cells[2, VALUE_ROW_PANSICHAR] := '';
   end;
-  SetLength(s, ls);
-  Move(FBuffer[idx], s[1], ls);
-  ValueGrid.Cells[1, VALUE_ROW_PANSICHAR] := s;
-  ValueGrid.Cells[2, VALUE_ROW_PANSICHAR] := Format('%d ... %d', [idx, idx + ls]);
 
   // WideString
   if idx < Length(FBuffer) then begin
@@ -1197,16 +1202,22 @@ begin
 
   // PWideChar
   // Avoid buffer overrun
-  pw := PWideChar(@FBuffer[idx]);
-  ls := 0;
-  while (pw^ <> #0) and (pw - @FBuffer[0] < Length(FBuffer)-1) do
+  if idx < Length(FBuffer) then begin
+    pw := PWideChar(@FBuffer[idx]);
+    ls := 0;
+    while (pw^ <> #0) and (pw - @FBuffer[0] < Length(FBuffer)-1) do
+    begin
+      inc(pw);
+      inc(ls);
+    end;
+    s := {%H-}WideCharLenToString(PWideChar(@FBuffer[idx]), ls);
+    ValueGrid.Cells[1, VALUE_ROW_PWIDECHAR] := s;
+    ValueGrid.Cells[2, VALUE_ROW_PWIDECHAR] := Format('%d ... %d', [idx, idx + ls * SizeOf(widechar)]);
+  end else
   begin
-    inc(pw);
-    inc(ls);
+    ValueGrid.Cells[1, VALUE_ROW_PWIDECHAR] := '';
+    ValueGrid.Cells[2, VALUE_ROW_PWIDECHAR] := '';
   end;
-  s := {%H-}WideCharLenToString(PWideChar(@FBuffer[idx]), ls);
-  ValueGrid.Cells[1, VALUE_ROW_PWIDECHAR] := s;
-  ValueGrid.Cells[2, VALUE_ROW_PWIDECHAR] := Format('%d ... %d', [idx, idx + ls * SizeOf(widechar)]);
 end;
 
 
