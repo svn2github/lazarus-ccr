@@ -83,7 +83,7 @@ begin
           AddListItem(HyperLink(
             'Nuvola icons',
             'www.icon-king.com/projects/nuvola/') +
-            ' (for application icon');
+            ' (for application icon)');
         EndBulletList;
 
         AddEmptyLine;

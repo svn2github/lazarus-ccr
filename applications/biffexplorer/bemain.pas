@@ -1162,10 +1162,6 @@ begin
 
   // PAnsiChar
   // Avoid buffer overrun
-
-  ls := Length(FBuffer);
-
-
   pa := PAnsiChar(@FBuffer[idx]);
   ls := 0;
   while (pa^ <> #0) and (pa - @FBuffer[0] < Length(FBuffer)) do
@@ -1180,7 +1176,7 @@ begin
 
   // WideString
   if idx < Length(FBuffer) then begin
-    ls := Min(FBuffer[idx], (Length(FBuffer) - idx - 1) div Sizeof(wideChar));
+    ls := Min(FBuffer[idx], (Length(FBuffer) - idx - 1) div SizeOf(WideChar));
     SetLength(sw, ls);
     j := 0;
     i := idx + 2;
