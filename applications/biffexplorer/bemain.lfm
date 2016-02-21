@@ -347,19 +347,20 @@ object MainForm: TMainForm
         Width = 1114
       end>
     GrabStyle = gsGripper
+    VerticalSpacing = 1
     object ToolBar: TToolBar
       AnchorSideLeft.Control = CoolBar
       AnchorSideTop.Control = CoolBar
       Left = 24
-      Height = 40
-      Top = 5
-      Width = 1085
+      Height = 44
+      Top = 3
+      Width = 150
       Align = alNone
       AutoSize = True
       BorderSpacing.Left = 22
-      BorderSpacing.Top = 3
-      ButtonHeight = 40
-      ButtonWidth = 40
+      BorderSpacing.Top = 1
+      ButtonHeight = 44
+      ButtonWidth = 44
       Caption = 'ToolBar'
       EdgeBorders = []
       Images = ImageList
@@ -374,18 +375,18 @@ object MainForm: TMainForm
         Style = tbsDropDown
       end
       object ToolButton2: TToolButton
-        Left = 98
+        Left = 106
         Top = 0
         Action = AcFileQuit
       end
       object ToolButton3: TToolButton
-        Left = 53
+        Left = 57
         Top = 0
         Action = AcFind
       end
       object ToolButton4: TToolButton
-        Left = 93
-        Height = 40
+        Left = 101
+        Height = 44
         Top = 0
         Width = 5
         Caption = 'ToolButton4'
