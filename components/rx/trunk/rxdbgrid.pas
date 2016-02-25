@@ -4972,7 +4972,8 @@ begin
     end;
   end;
 
-  DHS.RecNo := Min(DHL.RecordCount + SavePos - 1, DHS.RecNo);
+  if Min(DHL.RecordCount + SavePos - 1, DHS.RecNo) > 0 then
+    DHS.RecNo := Min(DHL.RecordCount + SavePos - 1, DHS.RecNo);
   K:=DHS.RecNo;
 
   while not DHS.BOF do
