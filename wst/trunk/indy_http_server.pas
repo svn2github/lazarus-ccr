@@ -43,8 +43,9 @@ type
 
   TwstIndyHttpListener = class(TwstListener)
   private
-    FHTTPServerObject: TIdHTTPServer;
     FRootAddress : string;
+  protected
+    FHTTPServerObject: TIdHTTPServer;
   private
     procedure ProcessWSDLRequest(
           {$IFDEF INDY_10}
