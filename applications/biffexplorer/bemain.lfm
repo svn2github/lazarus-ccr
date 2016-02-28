@@ -313,6 +313,8 @@ object MainForm: TMainForm
       OnGetText = BIFFTreeGetText
       OnPaintText = BIFFTreePaintText
       OnGetNodeDataSize = BIFFTreeGetNodeDataSize
+      OnResize = BIFFTreeResize
+      OnScroll = BIFFTreeScroll
     end
   end
   object StatusBar: TStatusBar

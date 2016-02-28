@@ -108,6 +108,8 @@ type
     procedure BIFFTreePaintText(Sender: TBaseVirtualTree;
       const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       TextType: TVSTTextType);
+    procedure BIFFTreeResize(Sender: TObject);
+    procedure BIFFTreeScroll(Sender: TBaseVirtualTree; DeltaX, DeltaY: Integer);
     procedure CbFindChange(Sender: TObject);
     procedure CbFindKeyPress(Sender: TObject; var Key: char);
     procedure CbHexAddressChange(Sender: TObject);
@@ -491,19 +493,47 @@ begin
            1: CellText := Format('$%.4x', [data^.RecordID]);
            2: CellText := data^.RecordName;
            3: if data^.Index > -1 then CellText := IntToStr(data^.Index);
-           4: cellText := data^.RecordDescription;
+           4: CellText := data^.RecordDescription;
          end;
     end;
 end;
 
 
+{ Paint parent node in bold font. }
 procedure TMainForm.BIFFTreePaintText(Sender: TBaseVirtualTree;
   const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   TextType: TVSTTextType);
 begin
-  // Paint parent node in bold font.
   if (Sender.GetNodeLevel(Node) = 0) and (Column = 0) then
     TargetCanvas.Font.Style := [fsBold];
+end;
+
+
+{ Make the BIFFTree show complete lines.
+  See https://stackoverflow.com/questions/929600/how-can-virtual-treeview-control-be-made-to-always-scroll-by-lines?rq=1}
+procedure TMainForm.BIFFTreeResize(Sender: TObject);
+var
+  DY: integer;
+begin
+  with BiffTree do begin
+    DY := BiffTree.DefaultNodeHeight;
+    BottomSpace := ClientHeight mod DY;
+    BiffTree.OffsetY := Round(BiffTree.OffsetY / DY) * DY;
+  end;
+end;
+
+
+{ Make the BIFFTree scroll by lines, not by pixels.
+  See https://stackoverflow.com/questions/929600/how-can-virtual-treeview-control-be-made-to-always-scroll-by-lines?rq=1}
+procedure TMainForm.BIFFTreeScroll(Sender: TBaseVirtualTree;
+  DeltaX, DeltaY: Integer);
+var
+  DY: integer;
+begin
+  if DeltaY <> 0 then begin
+    DY := BiffTree.DefaultNodeHeight;
+    BiffTree.OffsetY := Round(BiffTree.OffsetY / DY) * DY;
+  end;
 end;
 
 
@@ -732,6 +762,7 @@ begin
 
   BiffTree.DefaultNodeHeight := BiffTree.Canvas.TextHeight('Tg') + 4;
   BiffTree.Header.DefaultHeight := ValueGrid.DefaultRowHeight;
+  BiffTree.ScrollBarOptions.VerticalIncrement := BiffTree.DefaultNodeHeight;
 
   UpdateCmds;
 end;
