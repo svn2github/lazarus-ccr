@@ -239,7 +239,7 @@ msgstr "Прозрачно"
 
 #: rxconst.svisiblebuttons
 msgid "Visible buttons"
-msgstr "Отображаемые конпки"
+msgstr "Отображаемые кнопки"
 
 #: rxconst.swin32_64widgetset
 msgid "Win32/Win64 widget set"
