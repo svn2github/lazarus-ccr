@@ -49,7 +49,7 @@ uses
    Windows,
 {$ELSE}
 {$ENDIF}
-   FileUtil;
+   FileUtil, LazFileUtils, LazUTF8;
 
 {$IF DEFINED(WINDOWS) AND NOT DEFINED(WINCE)}
 function LStrError(const Ernum: Longint; const UseUTF8: Boolean = False): string;
