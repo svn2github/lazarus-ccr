@@ -109,7 +109,7 @@ type
 
 
 implementation
-uses FileUtil, resource, resreader, InterfaceBase, rxconst
+uses FileUtil, resource, resreader, InterfaceBase, rxconst, LazFileUtils, LazUTF8
 {$IFDEF WINDOWS}
   , winpeimagereader
 {$ENDIF}

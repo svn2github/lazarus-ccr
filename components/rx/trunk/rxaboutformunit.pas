@@ -69,7 +69,7 @@ type
   end; 
 
 implementation
-uses rxconst;
+uses rxconst, LazFileUtils, LazUTF8;
 
 {$R *.lfm}
 

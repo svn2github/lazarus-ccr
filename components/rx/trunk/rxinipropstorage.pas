@@ -54,7 +54,7 @@ type
   end;
 
 implementation
-uses rxapputils, LazUTF8, FileUtil;
+uses rxapputils, LazUTF8, FileUtil, LazFileUtils;
 
 { TRxIniPropStorage }
 

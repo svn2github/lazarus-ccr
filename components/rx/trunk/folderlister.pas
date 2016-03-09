@@ -79,7 +79,7 @@ type
   end;
   
 implementation
-uses FileUtil, strutils, RxAppUtils, LazUTF8;
+uses FileUtil, strutils, RxAppUtils, LazUTF8, LazFileUtils;
 
 function MenuItemStr(S:string):string;
 var

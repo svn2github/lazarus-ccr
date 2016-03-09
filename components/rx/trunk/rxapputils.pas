@@ -80,7 +80,7 @@ uses
   {$IFDEF WINDOWS}
   windirs,
   {$ENDIF}
-  Registry, Forms, FileUtil, LazUTF8;
+  Registry, Forms, FileUtil, LazUTF8, LazFileUtils;
 
 {$IFDEF WINDOWS}
 function RxGetAppConfigDir(Global: Boolean): String;

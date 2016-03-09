@@ -4,6 +4,7 @@
 
 unit rxdbgrid_export_spreadsheet;
 
+{$warn 5023 off : no warning about unused units}
 interface
 
 uses
