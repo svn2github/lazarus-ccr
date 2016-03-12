@@ -50,7 +50,6 @@
       <Unit0>
         <Filename Value="demo.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="demo"/>
       </Unit0>
       <Unit1>
         <Filename Value="umainform.pas"/>
@@ -58,7 +57,6 @@
         <ComponentName Value="mainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="umainform"/>
       </Unit1>
     </Units>
   </ProjectOptions>
@@ -78,12 +76,6 @@
         </Win32>
       </Options>
     </Linking>
-    <Other>
-      <CompilerMessages>
-        <MsgFileName Value=""/>
-      </CompilerMessages>
-      <CompilerPath Value="$(CompPath)"/>
-    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">

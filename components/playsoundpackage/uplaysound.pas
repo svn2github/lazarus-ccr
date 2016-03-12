@@ -30,6 +30,7 @@ type
     destructor Destroy; reintroduce;
     // This is the default method
     procedure Execute;
+    procedure StopSound;
   published
     { Published declarations }
     // This is normally set at runtime
@@ -202,6 +203,15 @@ begin
       [fPlayCommand]);
 {$ENDIF}
 end;
+procedure Tplaysound.StopSound;
+begin
+{$IFDEF WINDOWS}
+   sndPlaySound(nil, SND_ASYNC or SND_NODEFAULT);
+{$ELSE}
+  if SoundPlayerSyncProcess <> nil then SoundPlayerSyncProcess.Terminate;
+  if SoundPlayerAsyncProcess <> nil then SoundPlayerAsyncProcess.Terminate;
+{$ENDIF}
+end;
 
 procedure Register;
 begin
@@ -209,4 +219,4 @@ begin
   {$I playsound_icon.lrs}
 end;
 
-end.
+end.

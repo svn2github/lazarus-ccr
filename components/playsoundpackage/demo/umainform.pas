@@ -14,11 +14,13 @@ type
 
   Tmainform = class(TForm)
     BitBtn1: TBitBtn;
+    cmd_StpSound: TButton;
     cmd_Async: TButton;
     cmd_Sync: TButton;
     playsound1: Tplaysound;
     TIPropertyGrid1: TTIPropertyGrid;
     procedure cmd_AsyncClick(Sender: TObject);
+    procedure cmd_StpSoundClick(Sender: TObject);
     procedure cmd_SyncClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -44,6 +46,11 @@ begin
   playsound1.Execute;
   playsound1.SoundFile:='telephone.wav';
   playsound1.Execute;
+end;
+
+procedure Tmainform.cmd_StpSoundClick(Sender: TObject);
+begin
+  playsound1.StopSound;
 end;
 
 procedure Tmainform.cmd_SyncClick(Sender: TObject);
