@@ -189,7 +189,7 @@ begin
   inherited DoEnter;
   if ReadOnly then
     exit;
-  if Length(EditFormat) > 0 then
+  if EditFormat <> '' then
     Text := FormatFloat(EditFormat, theValue)
   else
     Text := FloatToStr(theValue);

@@ -31,6 +31,7 @@ type
 
   TJLabeledCurrencyEdit = class(TCustomLabeledEdit)
   private
+    fEFormat: string;
     theValue: currency;
     fFormat: string;
     fDecimals: integer;
@@ -55,6 +56,7 @@ type
   published
     { Published declarations }
     property DisplayFormat: string read getFormat write setFormat;
+    property EditFormat: string read fEFormat write fEFormat;
     property Decimals: integer read getDecimals write setDecimals;
     property Value: currency read getValue write setValue;
 
@@ -182,7 +184,10 @@ begin
   inherited DoEnter;
   if ReadOnly then
     exit;
-  Text := FloatToStr(theValue);
+  if EditFormat <> '' then
+    Text := FormatFloat(EditFormat, theValue)
+  else
+    Text := FloatToStr(theValue);
   SelectAll;
 end;
 

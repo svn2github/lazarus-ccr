@@ -33,6 +33,7 @@ type
 
   TJLabeledDateTimeEdit = class(TCustomLabeledEdit)
   private
+    fEFormat: string;
     { Private declarations }
     theValue: TDateTime;
     fFormat: string;
@@ -72,6 +73,7 @@ type
     { Published declarations }
     function isNull: boolean;
     property DisplayFormat: string read getFormat write setFormat;
+    property EditFormat: string read fEFormat write fEFormat;
     property Value: TDateTime read getValue write setValue;
     property Button: TSpeedButton read FButton;
     property ButtonWidth: integer read GetButtonWidth write SetButtonWidth;
@@ -195,7 +197,13 @@ begin
   if ReadOnly then
     exit;
   if theValue <> 0 then
-    Text := FormatDateTime(DisplayFormat, theValue)
+  begin
+    if EditFormat <> '' then
+      Text := FormatDateTime(EditFormat, theValue)
+    else
+      Text := FormatDateTime(DefaultFormatSettings.ShortDateFormat +
+        ' ' + DefaultFormatSettings.ShortTimeFormat, theValue);
+  end
   else
     Text := '';
   SelectAll;
