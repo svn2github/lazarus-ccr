@@ -241,29 +241,31 @@ begin
       CT:=C.Title as TRxColumnTitle;
       if C.Visible then
       begin
-
-        S:=C.Field.DisplayText;
-        if (C.KeyList.Count > 0) and (C.PickList.Count > 0) then
+        if Assigned(C.Field) then
         begin
-          J := C.KeyList.IndexOf(S);
-          if (J >= 0) and (J < C.PickList.Count) then
-            S := C.PickList[j];
-          FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S);
-        end
-        else
-        if Assigned(C.Field.OnGetText) then
-          FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S)
-        else
-        if C.Field.DataType in [ftCurrency] then
-          FWorksheet.WriteCurrency(FCurRow, FCurCol, C.Field.AsCurrency, nfCurrency, '')
-        else
-        if C.Field.DataType in IntegerDataTypes then
-          FWorksheet.WriteNumber(FCurRow, FCurCol, C.Field.AsInteger, nfFixed, 0)
-        else
-        if C.Field.DataType in NumericDataTypes then
-          FWorksheet.WriteNumber(FCurRow, FCurCol, C.Field.AsFloat, nfFixed, 2)
-        else
-          FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S);
+          S:=C.Field.DisplayText;
+          if (C.KeyList.Count > 0) and (C.PickList.Count > 0) then
+          begin
+            J := C.KeyList.IndexOf(S);
+            if (J >= 0) and (J < C.PickList.Count) then
+              S := C.PickList[j];
+            FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S);
+          end
+          else
+          if Assigned(C.Field.OnGetText) then
+            FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S)
+          else
+          if C.Field.DataType in [ftCurrency] then
+            FWorksheet.WriteCurrency(FCurRow, FCurCol, C.Field.AsCurrency, nfCurrency, '')
+          else
+          if C.Field.DataType in IntegerDataTypes then
+            FWorksheet.WriteNumber(FCurRow, FCurCol, C.Field.AsInteger, nfFixed, 0)
+          else
+          if C.Field.DataType in NumericDataTypes then
+            FWorksheet.WriteNumber(FCurRow, FCurCol, C.Field.AsFloat, nfFixed, 2)
+          else
+            FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S);
+        end;
 
         if ressExportColors in FOptions then
         begin
