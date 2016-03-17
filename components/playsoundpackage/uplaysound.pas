@@ -139,7 +139,13 @@ procedure Tplaysound.Execute;
 begin
   if not FileExistsUTF8(fPathToSoundFile) then
     Exit;
-  PlaySound(fPathToSoundFile);
+  Try
+    PlaySound(fPathToSoundFile);
+  Except
+    On E: Exception do
+          E.CreateFmt(C_UnableToPlay +
+           '%s Message:%s', [fPathToSoundFile, E.Message]);
+  end;
 end;
 
 procedure Tplaysound.PlaySound(const szSoundFilename: string);
