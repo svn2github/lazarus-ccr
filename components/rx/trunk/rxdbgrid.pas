@@ -2072,6 +2072,7 @@ constructor TRxDBGridDateEditor.Create(Aowner: TComponent);
 begin
   inherited Create(Aowner);
   AutoSize := false;
+  Spacing:=0;
   UpdateMask;
 end;
 
