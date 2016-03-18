@@ -164,7 +164,7 @@ type
 implementation
 
 uses
-  StrUtils, Math, lazutf8,
+  StrUtils, Math, lazutf8, lconvencoding,
   fpsutils,
   beBIFFUtils;
 
@@ -273,7 +273,7 @@ begin
     SetLength(sa, n);
     ANumBytes := n;
     Move(FBuffer[ABufIndex], sa[1], ANumBytes);
-    AString := AnsiToUTF8(sa);  // to do: use code page of file
+    AString := CP1252ToUTF8(sa);  // to do: use code page of file
   end;
 end;
 
@@ -1305,7 +1305,7 @@ begin
           ls := Length(FBuffer)-1;
           SetLength(sa, ls);
           Move(FBuffer[FBufferIndex+1], sa[1], ls);
-          s := AnsiToUTF8(sa);
+          s := CP1252ToUTF8(sa);
         end else
         if FBuffer[FBufferIndex] = 1 then begin
           ls := (Length(FBuffer) - 1) div SizeOf(WideChar);
@@ -1678,7 +1678,7 @@ begin
       numBytes := lenName * sizeOf(ansiChar);
       SetLength(ansiStr, lenName);
       Move(FBuffer[FBufferIndex], ansiStr[1], numbytes);
-      s := AnsiToUTF8(ansistr);
+      s := CP1252ToUTF8(ansistr);
     end else
     begin
       if (FBuffer[FBufferIndex] and $01 = 0) //and (not IgnoreCompressedFlag)
@@ -1686,7 +1686,7 @@ begin
         SetLength(ansiStr, lenName);
         numbytes := lenName*SizeOf(ansiChar) + 1;
         Move(FBuffer[FBufferIndex + 1], ansiStr[1], lenName*SizeOf(AnsiChar));
-        s := AnsiToUTF8(ansiStr);
+        s := CP1252ToUTF8(ansiStr);
       end else begin
         SetLength(wideStr, lenName);
         numBytes := lenName*SizeOf(WideChar) + 1;
@@ -2044,7 +2044,7 @@ begin
     numBytes := len*SizeOf(AnsiChar) + 1;
     SetLength(ansiStr, len);
     Move(FBuffer[1], ansiStr[1], len*SizeOf(AnsiChar));
-    s := AnsiToUTF8(ansiStr);
+    s := CP1252ToUTF8(ansiStr);
     if FCurrRow = Row then begin
       FDetails.Add('Encoded document and sheet name:'#13);
       if s[1] = #03 then begin
@@ -3188,7 +3188,7 @@ begin
       numbytes := nchar;
       SetLength(ansistr, nchar);
       Move(FBuffer[FBufferIndex], ansistr[1], nchar);
-      s := AnsiToUTF8(ansistr);
+      s := CP1252ToUTF8(ansistr);
       ShowInRow(FCurrRow, FBufferIndex, numbytes, s,
         'Character array of the shortened file path and name (no unicode string header, always 8-bit characters, zero-terminated)');
       inc(n);
@@ -5170,7 +5170,7 @@ begin
   begin
     SetLength(ansistr, len);
     Move(FBuffer[FBufferIndex+2], ansistr[1], len);
-    s := AnsiToUTF8(ansistr);
+    s := CP1252ToUTF8(ansistr);
     numbytes := 2 + len;
   end;
 
