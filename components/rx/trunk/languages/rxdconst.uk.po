@@ -20,7 +20,7 @@ msgstr ""
 
 #: rxdconst.sbottomcaption
 msgid "Bottom"
-msgstr ""
+msgstr "Вниз"
 
 #: rxdconst.sbrowsedata
 msgid "browse"
@@ -44,7 +44,7 @@ msgstr "Перехресне посилання даних"
 
 #: rxdconst.scollumnname
 msgid "Column name"
-msgstr ""
+msgstr "Назва стовпця"
 
 #: rxdconst.sconfirmpasswordlabel
 msgid "&Confirm:"
@@ -55,8 +55,6 @@ msgid "Data changed. Save?"
 msgstr "Дані були змінені. Зберегти?"
 
 #: rxdconst.sdatabasename
-#, fuzzy
-#| msgid "Database loocked: %s"
 msgid "Database locked: %s"
 msgstr "База даних блокована: %s"
 
@@ -90,23 +88,22 @@ msgstr "Повідомлення про помилку"
 
 #: rxdconst.sexportcellcolors
 msgid "Export cell colors"
-msgstr ""
+msgstr "Експортувати колір стовпців"
 
 #: rxdconst.sexportcolumnfooter
 msgid "Export column footer"
-msgstr ""
+msgstr "Експортувати підсумки стовпців"
 
 #: rxdconst.sexportcolumnheader
 msgid "Export column header"
-msgstr ""
+msgstr "Експортувати заголовки стовпців"
 
 #: rxdconst.sexportfilename
 msgid "Export file name"
-msgstr ""
+msgstr "Експортувати назву файлу"
 
 #: rxdconst.sexprbadcompare
-#, fuzzy
-#| msgid "Compare opertion need fielad and const"
+# msgid "Compare opertion need fielad and const"
 msgid "Compare opertion needs field and const"
 msgstr "Операції порівняння вимагають наявності поля і константи"
 
@@ -115,8 +112,6 @@ msgid "Field '%s' not used in filter expression"
 msgstr "Поле '%s' не може бути використане в виразі фільтрації"
 
 #: rxdconst.sexprbadnulltest
-#, fuzzy
-#| msgid "NULL-values enabled in '=' и '<>'"
 msgid "NULL-values enabled in '=' and '<>'"
 msgstr "NULL-значення дозволені тільки у виразах '=' і '<>'"
 
@@ -162,19 +157,19 @@ msgstr "Поле '%s' очікує значення"
 
 #: rxdconst.sfieldtypemismatch
 msgid "Type mismatch for field '%s', expecting: %s actual: %s"
-msgstr "Несоответсвие типов для поля '%s', необходимо: %s введено: %s"
+msgstr "Неспівпадіння типів для стовпця '%s', необхідно: %s введено: %s"
 
 #: rxdconst.sfunction
 msgid "Function"
-msgstr ""
+msgstr "Функція"
 
 #: rxdconst.sfvtavg
 msgid "AVG"
-msgstr ""
+msgstr "Середнє"
 
 #: rxdconst.sfvtcount
 msgid "Count"
-msgstr ""
+msgstr "Кількість"
 
 #: rxdconst.sfvtfieldvalue
 msgid "Field value"
@@ -182,35 +177,33 @@ msgstr ""
 
 #: rxdconst.sfvtmax
 msgid "Max value"
-msgstr ""
+msgstr "Максимальне значення"
 
 #: rxdconst.sfvtmin
 msgid "Min value"
-msgstr ""
+msgstr "Мінімальне значення"
 
 #: rxdconst.sfvtnon
 msgid "None"
-msgstr ""
+msgstr "Без"
 
 #: rxdconst.sfvtrecno
 msgid "Record no"
-msgstr ""
+msgstr "Номер запису"
 
 #: rxdconst.sfvtstatictext
 msgid "Static text"
-msgstr ""
+msgstr "Статичний текст"
 
 #: rxdconst.sfvtsum
 msgid "Sum"
-msgstr ""
+msgstr "Сума"
 
 #: rxdconst.shidezerovalues
 msgid "Hide zero values"
-msgstr ""
+msgstr "Ховати нульові значення"
 
 #: rxdconst.shintlabel
-#, fuzzy
-#| msgid "Enter you user name and password"
 msgid "Enter your user name and password"
 msgstr "Введіть ваші ім'я користувача та пароль"
 
@@ -231,8 +224,6 @@ msgid "No fields defined"
 msgstr "Немає оголошення полів"
 
 #: rxdconst.sinvalidusername
-#, fuzzy
-#| msgid "User name or password not valid"
 msgid "User name or password is not valid"
 msgstr "Помилка в імені користувача або паролі"
 
@@ -242,7 +233,7 @@ msgstr ""
 
 #: rxdconst.sleftcaption
 msgid "Left"
-msgstr ""
+msgstr "Вліво"
 
 #: rxdconst.slocaldatabase
 msgid "Unable complete this operation on local dataset"
@@ -269,8 +260,6 @@ msgid "&Next"
 msgstr "&Далі"
 
 #: rxdconst.snotcapturefilter
-#, fuzzy
-#| msgid "Control need locked by filter"
 msgid "Control needs to be locked by filter"
 msgstr "Елементи управління повинні бути захоплені фільтром"
 
@@ -284,23 +273,23 @@ msgstr "&Старий пароль"
 
 #: rxdconst.sopenafterexport
 msgid "Open after export"
-msgstr ""
+msgstr "Відкрити після експортування"
 
 #: rxdconst.sorientation
 msgid "Orientation"
-msgstr ""
+msgstr "Орієнтація"
 
 #: rxdconst.soverwriteexisting
 msgid "Overwrite existing"
-msgstr ""
+msgstr "Переписати існуючий"
 
 #: rxdconst.spagemargins
 msgid "Page margins"
-msgstr ""
+msgstr "Межі сторінки"
 
 #: rxdconst.spagename
 msgid "Page name"
-msgstr ""
+msgstr "Назва сторінки"
 
 #: rxdconst.spasswordchanged
 msgid "Password changed"
@@ -320,7 +309,7 @@ msgstr "Новий пароль і підтвердження не співпа�
 
 #: rxdconst.sportrait
 msgid "Portrait"
-msgstr ""
+msgstr "Книжна"
 
 #: rxdconst.sprevbutton
 msgid "&Prior"
@@ -328,11 +317,11 @@ msgstr "&Попередній"
 
 #: rxdconst.sprintgrid
 msgid "Print grid"
-msgstr ""
+msgstr "Друк таблиці"
 
 #: rxdconst.sprintoptions
 msgid "Print options"
-msgstr ""
+msgstr "Налаштування друку"
 
 #: rxdconst.spropdefbylookup
 msgid "PropDefByLookup"
@@ -344,7 +333,7 @@ msgstr "Реєстрація"
 
 #: rxdconst.sreporttitle
 msgid "Report title"
-msgstr ""
+msgstr "Заголовок звіту"
 
 #: rxdconst.sretrylogin
 msgid "Retry to connect with database?"
@@ -352,11 +341,11 @@ msgstr "Ви хочете повторити спробу з'єднання з �
 
 #: rxdconst.srightcaption
 msgid "Right"
-msgstr ""
+msgstr "Вправо"
 
 #: rxdconst.srxallfields
 msgid "All fields"
-msgstr ""
+msgstr "Усі поля"
 
 #: rxdconst.srxascendign
 msgid "Ascendign"
@@ -372,7 +361,7 @@ msgstr "Копіювати тільки метадані ..."
 
 #: rxdconst.srxdbgridcopycellvalue
 msgid "Copy cell value"
-msgstr ""
+msgstr "Копіювати значення комірки"
 
 #: rxdconst.srxdbgridemptifilter
 msgid "(Empty)"
@@ -441,7 +430,7 @@ msgstr "Застосувати"
 
 #: rxdconst.srxdbgridselapplyhint
 msgid "Apply current column settings"
-msgstr ""
+msgstr "Застосувати налаштування поточного стовпця"
 
 #: rxdconst.srxdbgridselcolcaption
 msgid "Grid columns"
@@ -460,20 +449,17 @@ msgid "Select all rows"
 msgstr "Виділити всі рядки"
 
 #: rxdconst.srxdbgridselectcolumns
-#, fuzzy
-#| msgid "Select visible collumns"
+# msgid "Select visible collumns"
 msgid "Select visible columns"
 msgstr "Вибір стовпців для відображення"
 
 #: rxdconst.srxdbgridsortbycolumns
-#, fuzzy
-#| msgid "Sort data for collumns"
 msgid "Sort data for columns"
 msgstr "Сортувати дані по колонках"
 
 #: rxdconst.srxdbgridtoolscaption
 msgid "Totals row"
-msgstr ""
+msgstr "Підсумковий рядок"
 
 #: rxdconst.srxdescending
 msgid "Descending"
@@ -492,8 +478,6 @@ msgid "Fill fields in SortField property"
 msgstr ""
 
 #: rxdconst.srxfilterformapply
-#, fuzzy
-msgctxt "rxdconst.srxfilterformapply"
 msgid "Apply"
 msgstr "Застосувати"
 
@@ -584,7 +568,7 @@ msgstr ""
 
 #: rxdconst.srxsourcedataset
 msgid "Source dataset"
-msgstr ""
+msgstr "Джерело даних"
 
 #: rxdconst.sservererrorlabel
 msgid "Server error"
@@ -596,39 +580,39 @@ msgstr "Пошук"
 
 #: rxdconst.ssetuptotalrow
 msgid "Setup total row"
-msgstr ""
+msgstr "Налаштувати підсумковий рядок"
 
 #: rxdconst.sshowcolumnheaderonallpage
 msgid "Show column header on all pages"
-msgstr ""
+msgstr "Виводити заголовок стовпців на всіх сторінках"
 
 #: rxdconst.sshowfooter
 msgid "Show footer"
-msgstr ""
+msgstr "Показати підсумок"
 
 #: rxdconst.sshowfootercolor
 msgid "Show footer color"
-msgstr ""
+msgstr "Показати  колір пісумку"
 
 #: rxdconst.sshowgridcolor
 msgid "Show grid color"
-msgstr ""
+msgstr "Показати колір таблиці"
 
 #: rxdconst.sshowreporttitle
 msgid "Show report title"
-msgstr ""
+msgstr "Показати заголовок звіту"
 
 #: rxdconst.sshowtitle
 msgid "Show column title"
-msgstr ""
+msgstr "Показати заголовок стовпця"
 
 #: rxdconst.stoolsexportspeadsheet
 msgid "Export to speadsheet"
-msgstr ""
+msgstr "Експорт до електронної таблиці"
 
 #: rxdconst.stopcaption
 msgid "Top"
-msgstr ""
+msgstr "Вверх"
 
 #: rxdconst.sunknownfieldtype
 msgid "SUnknownFieldType %s"
@@ -639,14 +623,10 @@ msgid "Unknown XML Dataset format"
 msgstr "Не відомий формат XML даних"
 
 #: rxdconst.sunlockcaption
-#, fuzzy
-#| msgid "Unloock"
 msgid "Unlock"
 msgstr "Розблокувати"
 
 #: rxdconst.sunlockhint
-#, fuzzy
-#| msgid "Enter you password"
 msgid "Enter your password"
 msgstr "Введіть ваш пароль"
 

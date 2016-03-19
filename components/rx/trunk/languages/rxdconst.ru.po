@@ -7,11 +7,11 @@ msgstr "Программа \"%s\""
 
 #: rxdconst.sblobtext
 msgid "(blob)"
-msgstr "(примечание)"
+msgstr ""
 
 #: rxdconst.sbottomcaption
 msgid "Bottom"
-msgstr "Снизу"
+msgstr ""
 
 #: rxdconst.sbrowsedata
 msgid "browse"
@@ -35,7 +35,7 @@ msgstr "Перекрёстная ссылка данных"
 
 #: rxdconst.scollumnname
 msgid "Column name"
-msgstr "Наименование колонки"
+msgstr ""
 
 #: rxdconst.sconfirmpasswordlabel
 msgid "&Confirm:"
@@ -46,6 +46,8 @@ msgid "Data changed. Save?"
 msgstr "Данные были изменены. Сохранить?"
 
 #: rxdconst.sdatabasename
+#, fuzzy
+#| msgid "Database loocked: %s"
 msgid "Database locked: %s"
 msgstr "База данных блокирована: %s"
 
@@ -79,21 +81,23 @@ msgstr "Сообщение об ошибке"
 
 #: rxdconst.sexportcellcolors
 msgid "Export cell colors"
-msgstr "Экспортировать цвет ячеек"
+msgstr ""
 
 #: rxdconst.sexportcolumnfooter
 msgid "Export column footer"
-msgstr "Экспортировать итоги колонок"
+msgstr ""
 
 #: rxdconst.sexportcolumnheader
 msgid "Export column header"
-msgstr "Экспортировать заголовки колонок"
+msgstr ""
 
 #: rxdconst.sexportfilename
 msgid "Export file name"
-msgstr "Имя файла для экспорта"
+msgstr ""
 
 #: rxdconst.sexprbadcompare
+#, fuzzy
+#| msgid "Compare opertion need fielad and const"
 msgid "Compare opertion needs field and const"
 msgstr "Операции сравнения требуют наличия поля и константы"
 
@@ -102,6 +106,8 @@ msgid "Field '%s' not used in filter expression"
 msgstr "Поле '%s' не может быть использовано в выражении фильтрации"
 
 #: rxdconst.sexprbadnulltest
+#, fuzzy
+#| msgid "NULL-values enabled in '=' и '<>'"
 msgid "NULL-values enabled in '=' and '<>'"
 msgstr "NULL-значения разрешены только в выражениях '=' и '<>'"
 
@@ -151,49 +157,51 @@ msgstr "Несоответсвие типов для поля '%s', необхо
 
 #: rxdconst.sfunction
 msgid "Function"
-msgstr "Функция"
+msgstr ""
 
 #: rxdconst.sfvtavg
 msgid "AVG"
-msgstr "Среднее"
+msgstr ""
 
 #: rxdconst.sfvtcount
 msgid "Count"
-msgstr "Кол-во"
+msgstr ""
 
 #: rxdconst.sfvtfieldvalue
 msgid "Field value"
-msgstr "Значение поля"
+msgstr ""
 
 #: rxdconst.sfvtmax
 msgid "Max value"
-msgstr "Максимальное"
+msgstr ""
 
 #: rxdconst.sfvtmin
 msgid "Min value"
-msgstr "Минимальное"
+msgstr ""
 
 #: rxdconst.sfvtnon
 msgid "None"
-msgstr "Пусто"
+msgstr ""
 
 #: rxdconst.sfvtrecno
 msgid "Record no"
-msgstr "Номер записи"
+msgstr ""
 
 #: rxdconst.sfvtstatictext
 msgid "Static text"
-msgstr "Текст"
+msgstr ""
 
 #: rxdconst.sfvtsum
 msgid "Sum"
-msgstr "Сумма"
+msgstr ""
 
 #: rxdconst.shidezerovalues
 msgid "Hide zero values"
-msgstr "Скрыть нулевые значения"
+msgstr ""
 
 #: rxdconst.shintlabel
+#, fuzzy
+#| msgid "Enter you user name and password"
 msgid "Enter your user name and password"
 msgstr "Введите ваше имя и пароль"
 
@@ -214,16 +222,18 @@ msgid "No fields defined"
 msgstr "Нет объявления полей"
 
 #: rxdconst.sinvalidusername
+#, fuzzy
+#| msgid "User name or password not valid"
 msgid "User name or password is not valid"
 msgstr "Ошибка в имени пользователя или пароле"
 
 #: rxdconst.slandscape
 msgid "Landscape"
-msgstr "Альбомная"
+msgstr ""
 
 #: rxdconst.sleftcaption
 msgid "Left"
-msgstr "Слева"
+msgstr ""
 
 #: rxdconst.slocaldatabase
 msgid "Unable complete this operation on local dataset"
@@ -250,6 +260,8 @@ msgid "&Next"
 msgstr "&Дальше"
 
 #: rxdconst.snotcapturefilter
+#, fuzzy
+#| msgid "Control need locked by filter"
 msgid "Control needs to be locked by filter"
 msgstr "Элементы управления должны быть захвачены фильтром"
 
@@ -263,23 +275,23 @@ msgstr "&Старый пароль"
 
 #: rxdconst.sopenafterexport
 msgid "Open after export"
-msgstr "Открыть после экспорта"
+msgstr ""
 
 #: rxdconst.sorientation
 msgid "Orientation"
-msgstr "Ориентация бумаги"
+msgstr ""
 
 #: rxdconst.soverwriteexisting
 msgid "Overwrite existing"
-msgstr "Перезаписать существующее"
+msgstr ""
 
 #: rxdconst.spagemargins
 msgid "Page margins"
-msgstr "Отступы на странице"
+msgstr ""
 
 #: rxdconst.spagename
 msgid "Page name"
-msgstr "Имя страницы"
+msgstr ""
 
 #: rxdconst.spasswordchanged
 msgid "Password changed"
@@ -299,7 +311,7 @@ msgstr "Новый пароль и подтверждение не совпад�
 
 #: rxdconst.sportrait
 msgid "Portrait"
-msgstr "Портрет"
+msgstr ""
 
 #: rxdconst.sprevbutton
 msgid "&Prior"
@@ -307,11 +319,11 @@ msgstr "&Превыдущие"
 
 #: rxdconst.sprintgrid
 msgid "Print grid"
-msgstr "Печать списка"
+msgstr ""
 
 #: rxdconst.sprintoptions
 msgid "Print options"
-msgstr "Параметры епечати"
+msgstr ""
 
 #: rxdconst.spropdefbylookup
 msgid "PropDefByLookup"
@@ -323,7 +335,7 @@ msgstr "Регистрация"
 
 #: rxdconst.sreporttitle
 msgid "Report title"
-msgstr "Заголовок отчёта"
+msgstr ""
 
 #: rxdconst.sretrylogin
 msgid "Retry to connect with database?"
@@ -331,7 +343,7 @@ msgstr "Вы хотите повторить попытку соединения
 
 #: rxdconst.srightcaption
 msgid "Right"
-msgstr "Справа"
+msgstr ""
 
 #: rxdconst.srxallfields
 msgid "All fields"
@@ -413,13 +425,14 @@ msgid "Text to find"
 msgstr "Текст для поиска"
 
 #: rxdconst.srxdbgridselapplycaption
+#, fuzzy
 msgctxt "rxdconst.srxdbgridselapplycaption"
 msgid "Apply"
 msgstr "Применить"
 
 #: rxdconst.srxdbgridselapplyhint
 msgid "Apply current column settings"
-msgstr "Применить текущие параметры колонок"
+msgstr ""
 
 #: rxdconst.srxdbgridselcolcaption
 msgid "Grid columns"
@@ -438,16 +451,20 @@ msgid "Select all rows"
 msgstr "Выделить все строки"
 
 #: rxdconst.srxdbgridselectcolumns
+#, fuzzy
+#| msgid "Select visible collumns"
 msgid "Select visible columns"
 msgstr "Выбор столбцов для отображения"
 
 #: rxdconst.srxdbgridsortbycolumns
+#, fuzzy
+#| msgid "Sort data for collumns"
 msgid "Sort data for columns"
 msgstr "Сортировать данные по колонкам"
 
 #: rxdconst.srxdbgridtoolscaption
 msgid "Totals row"
-msgstr "Всего строк"
+msgstr ""
 
 #: rxdconst.srxdescending
 msgid "Descending"
@@ -557,7 +574,7 @@ msgstr "Поля для сортировки"
 
 #: rxdconst.srxsourcedataset
 msgid "Source dataset"
-msgstr "Исходный набор данных"
+msgstr ""
 
 #: rxdconst.sservererrorlabel
 msgid "Server error"
@@ -569,39 +586,39 @@ msgstr "поиск"
 
 #: rxdconst.ssetuptotalrow
 msgid "Setup total row"
-msgstr "Параметры итоговой строки"
+msgstr ""
 
 #: rxdconst.sshowcolumnheaderonallpage
 msgid "Show column header on all pages"
-msgstr "Отображать заголовки колонок на всех страницах"
+msgstr ""
 
 #: rxdconst.sshowfooter
 msgid "Show footer"
-msgstr "Отображать итоги"
+msgstr ""
 
 #: rxdconst.sshowfootercolor
 msgid "Show footer color"
-msgstr "Отображать цвет итогов"
+msgstr ""
 
 #: rxdconst.sshowgridcolor
 msgid "Show grid color"
-msgstr "Отображать цвет списка"
+msgstr ""
 
 #: rxdconst.sshowreporttitle
 msgid "Show report title"
-msgstr "Отображать заголовок отчёта"
+msgstr ""
 
 #: rxdconst.sshowtitle
 msgid "Show column title"
-msgstr "Отображать заголовок колонок"
+msgstr ""
 
 #: rxdconst.stoolsexportspeadsheet
 msgid "Export to speadsheet"
-msgstr "Экспорт в электронную таблицу"
+msgstr ""
 
 #: rxdconst.stopcaption
 msgid "Top"
-msgstr "Сверху"
+msgstr ""
 
 #: rxdconst.sunknownfieldtype
 msgid "SUnknownFieldType %s"
@@ -612,10 +629,14 @@ msgid "Unknown XML Dataset format"
 msgstr "Не известный формат XML данных"
 
 #: rxdconst.sunlockcaption
+#, fuzzy
+#| msgid "Unloock"
 msgid "Unlock"
 msgstr "Разблокировать"
 
 #: rxdconst.sunlockhint
+#, fuzzy
+#| msgid "Enter you password"
 msgid "Enter your password"
 msgstr "Введите ваш пароль"
 
