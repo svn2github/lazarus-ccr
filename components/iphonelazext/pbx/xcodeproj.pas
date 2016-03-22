@@ -294,6 +294,7 @@ type
 
 function ProjectLoadFromStream(st: TStream; var prj: PBXProject): Boolean;
 function ProjectLoadFromFile(const fn: string; var prj: PBXProject): Boolean;
+function ProjectSaveToFile(prj: PBXProject; const fn: string): Boolean;
 
 // serializes a PBX project to the string, using PBXContainer structure
 function ProjectWrite(prj: PBXProject): string;
@@ -376,14 +377,25 @@ const
   CFG_DEVICE_IPHONE = '1';
   CFG_DEVICE_IPAD   = '2';
 
+procedure SetNewStr(kv: TPBXKeyValue; const aname, avalue: string);
+
 implementation
+
+procedure SetNewStr(kv: TPBXKeyValue; const aname, avalue: string);
+begin
+  if Assigned(kv) then begin
+    if kv.FindIndexOf(aname)<0 then
+      kv.AddStr(aname, avalue);
+  end;
+end;
 
 procedure ConfigIOS(cfg: XCBuildConfiguration; const targetiOS: string);
 begin
   if not Assigned(cfg) then Exit;
-  cfg.buildSettings.AddStr(CFG_IOSTRG, targetiOS);
-  cfg.buildSettings.AddStr(CFG_SDKROOT, 'iphoneos');
-  cfg.buildSettings.AddStr(CFG_DEVICE,  CFG_DEVICE_ALL);
+
+  SetNewStr(cfg.buildSettings, CFG_IOSTRG, targetiOS);
+  SetNewStr(cfg.buildSettings, CFG_SDKROOT, 'iphoneos');
+  SetNewStr(cfg.buildSettings, CFG_DEVICE, CFG_DEVICE_ALL);
 end;
 
 { PBXLegacyTarget }
@@ -647,6 +659,25 @@ begin
   finally
     fs.Free;
   end;
+end;
+
+function ProjectSaveToFile(prj: PBXProject; const fn: string): Boolean;
+var
+  fs : TFileStream;
+  s  : string;
+begin
+  s:=ProjectWrite(prj);
+  try
+    fs:=TFileStream.Create(fn, fmCreate);
+    try
+      if length(s)>0 then fs.Write(s[1], length(s));
+    finally
+      fs.Free;
+    end;
+  except
+    Result:=false;
+  end;
+
 end;
 
 function ProjectWrite(prj: PBXProject): string;

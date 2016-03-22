@@ -24,6 +24,8 @@ uses
 procedure PrepareTemplateFile_(Src, TemplateValues: TStrings; BuildSettings: TFPStringHashTable);
 procedure PrepareTemplateFile(Src, TemplateValues, ResFiles: TStrings);
 procedure PrepareTemplateFile(prj: PBXProject; TemplateValues, ResFiles: TStrings);
+function UpdateProject(const ProjFileName: string; TemplateValues, ResFiles: TStrings): Boolean;
+
 procedure UpdateBldConfig(const proj: PBXProject; optName, optVal: string);
 procedure UpdateMainFile(const proj: PBXProject; mainfile: string);
 procedure UpdateCompileOpts(const proj: PBXProject; options: string);
@@ -430,7 +432,9 @@ begin
     // it would be amd-32 for iPhone5 (and earlier)
     //         and amd-64 for iPhone6 (and later)
     // Release requires to have a fat binary 32+64 amd, if target is less than iphone6
-    if cfg.name='Debug' then cfg.buildSettings.AddStr('ONLY_ACTIVE_ARCH','YES');
+    if (cfg.name='Debug') then begin
+      SetNewStr(cfg.buildSettings, 'ONLY_ACTIVE_ARCH', 'YES');
+    end;
   end;
 
   // adding application type
@@ -443,12 +447,13 @@ begin
 
   // Debug
   cfg:=trg.buildConfigurationList.findConfig('Debug', true);
-  cfg.buildSettings.AddStr('INFOPLIST_FILE', '$(SRCROOT)/'+plist);
-  cfg.buildSettings.AddStr('PRODUCT_NAME', trg.productName);
-  // Build
+  SetNewStr(cfg.buildSettings, 'INFOPLIST_FILE', '$(SRCROOT)/'+plist);
+  SetNewStr(cfg.buildSettings, 'PRODUCT_NAME', trg.productName);
+
+  // Release
   cfg:=trg.buildConfigurationList.findConfig('Release', true);
-  cfg.buildSettings.AddStr('INFOPLIST_FILE', '$(SRCROOT)/'+plist);
-  cfg.buildSettings.AddStr('PRODUCT_NAME', trg.productName);
+  SetNewStr(cfg.buildSettings, 'INFOPLIST_FILE', '$(SRCROOT)/'+plist);
+  SetNewStr(cfg.buildSettings, 'PRODUCT_NAME', trg.productName);
 
   if trg.buildConfigurationList.defaultConfigurationName = '' then
     trg.buildConfigurationList.defaultConfigurationName:='Debug';
@@ -457,8 +462,7 @@ begin
   if not Assigned(trg.productReference) then begin
     fr:=FileRefCreate(bundle, FILETYPE_MACHO, SRCTREE_PRODUCT);
     trg.productReference:=fr;
-  end; (* else
-    fr:=trg.productReference;*)
+  end;
 
   // Creating "content" for the directory. It should also contain .plist
   pgrp:=prj.mainGroup.findGroup(targetName, true); // name must match to the target name!
@@ -503,6 +507,28 @@ begin
 
   UpdateMainFile(prj, main);
   UpdateCompileOpts(prj, TemplateValues.Values['projoptions']);
+end;
+
+function UpdateProject(const ProjFileName: string; TemplateValues, ResFiles: TStrings): Boolean;
+var
+  prj : PBXProject;
+begin
+  if FileExists(ProjFileName) then begin
+    prj:=nil;
+    Result:=ProjectLoadFromFile(ProjFileName, prj);
+    if not Result then begin
+      prj.Free;
+      Exit;
+    end;
+  end else
+    prj:=ProjectCreate3_2;
+
+  try
+    PrepareTemplateFile(prj, TemplateValues, Resfiles);
+    Result:=ProjectSaveToFile(prj, ProjFileName);
+  finally
+    prj.Free;
+  end;
 end;
 
 end.

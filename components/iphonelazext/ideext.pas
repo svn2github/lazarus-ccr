@@ -383,7 +383,7 @@ var
   build     : TFPStringHashTable;
   dir       : string;
   projdir   : string;
-  proj      : TStringList;
+  //proj      : TStringList;
   projname  : string;
 
   ext       : string;
@@ -442,7 +442,7 @@ begin
   ForceDirectories(projdir);
 
   projname:=IncludeTrailingPathDelimiter(projdir)+'project.pbxproj';
-  proj:=TStringList.Create;
+  //proj:=TStringList.Create;
   templates:=nil;
   try
     templates:=TStringList.Create;
@@ -467,18 +467,21 @@ begin
     templates.Values['mainfile']:=LazarusIDE.ActiveProject.MainFile.Filename;
     templates.Values['projoptions']:=opt;
 
-    PrepareTemplateFile(proj, templates, ProjOptions.ResFiles);
-    proj.SaveToFile(projname);
+    if not UpdateProject(projName, templates, ProjOptions.ResFiles) then
+      IDEMsg(Format(strXcodeUpdFailed,[projdir]))
+    else
+      IDEMsg(Format(strXcodeUpdated,[projdir]));
+    //PrepareTemplateFile(proj, templates, ProjOptions.ResFiles);
+    //proj.SaveToFile(projname);
   except
     on e: exception do
       ShowMessage(e.Message);
   end;
 
-  proj.Free;
+  //proj.Free;
   templates.Free;
   build.Free;
 
-  IDEMsg(Format(strXcodeUpdated,[projdir]));
 end;
 
 procedure SimRunDirect;
