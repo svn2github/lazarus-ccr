@@ -142,21 +142,25 @@ function LoadFromFile(const fn: string; plist: TPListFile): Boolean;
 var
   st : TFileStream;
   buf : string[5];
+  res : integer;
+  {$ifdef darwin}
   xs  : string;
   err : LongWord;
   m   : TStringStream;
   doc : TXMLDocument;
+  {$endif}
 begin
   //todo: detect plist type and convert is necessary
   st:=TFileSTream.Create(fn, fmOpenRead or fmShareDenyNone);
   try
-    st.Read(buf, 5);
+    SetLength(buf, 5);
+    res:=st.Read(buf[1], 5);
   finally
     st.Free;
   end;
-  if buf='<?xml' then
+  if (res=5) and (buf='<?xml') then begin
     Result:=LoadFromXML(fn, plist)
-  else begin
+  end else begin
     {$ifdef darwin}
     // the utility is not available anywhere else but OSX
     if not RunCommand('plutil', ['-convert','xml1','-o' ,'-', fn], xs) then begin
@@ -561,8 +565,6 @@ begin
 end;
 
 procedure TPListValue.Delete(idx: Integer);
-var
-  i : integer;
 begin
   if (idx<0) or (idx>=count) then Exit;
   items[idx].Free;
