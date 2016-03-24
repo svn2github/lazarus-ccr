@@ -114,9 +114,7 @@ type
   private
     FButton: TToolbarButton;
     FSaveLeft:integer;
-//    FActionLink:TActionLink;
     function GetAction: TBasicAction;
-    //function GetAutoSize: boolean;
     function GetButtonStyle: TToolbarButtonStyle;
     function GetDropDownMenu: TPopupMenu;
     function GetGroupIndex: Integer;
@@ -128,9 +126,7 @@ type
     function GetTop: Integer;
     function GetVisible: boolean;
     function GetWidth: Integer;
-//    procedure OnActionChanges(Sender: TObject);
     procedure SetAction(const AValue: TBasicAction);
-    //procedure SetAutoSize(const AValue: boolean);
     procedure SetButtonStyle(const AValue: TToolbarButtonStyle);
     procedure SetDropDownMenu(const AValue: TPopupMenu);
     procedure SetGroupIndex(const AValue: Integer);
@@ -151,7 +147,6 @@ type
     destructor Destroy; override;
   published
     property Action:TBasicAction read GetAction write SetAction;
-    //property AutoSize:boolean read GetAutoSize write SetAutoSize default true;
     property Visible:boolean read GetVisible write SetVisible;
     property Left: Integer read GetLeft write SetLeft;
     property Height: Integer read GetHeight write SetHeight;

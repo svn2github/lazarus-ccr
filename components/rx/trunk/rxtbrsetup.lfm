@@ -206,9 +206,9 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideTop.Control = cbTransp
         AnchorSideTop.Side = asrBottom
         Left = 6
-        Height = 22
-        Top = 163
-        Width = 82
+        Height = 24
+        Top = 178
+        Width = 90
         BorderSpacing.Around = 6
         Caption = 'Show hint'
         TabOrder = 0
@@ -218,9 +218,9 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideTop.Control = cbFlatBtn
         AnchorSideTop.Side = asrBottom
         Left = 6
-        Height = 22
-        Top = 135
-        Width = 94
+        Height = 24
+        Top = 148
+        Width = 101
         BorderSpacing.Around = 6
         Caption = 'Transparent'
         TabOrder = 1
@@ -230,9 +230,9 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideTop.Control = RadioGroup1
         AnchorSideTop.Side = asrBottom
         Left = 6
-        Height = 22
-        Top = 107
-        Width = 93
+        Height = 24
+        Top = 118
+        Width = 104
         BorderSpacing.Around = 6
         Caption = 'Flat buttons'
         TabOrder = 2
@@ -244,7 +244,7 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideRight.Control = TabSheet2
         AnchorSideRight.Side = asrBottom
         Left = 333
-        Height = 95
+        Height = 106
         Top = 6
         Width = 312
         Anchors = [akTop, akLeft, akRight]
@@ -258,7 +258,7 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         ChildSizing.ShrinkVertical = crsScaleChilds
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 1
-        ClientHeight = 73
+        ClientHeight = 84
         ClientWidth = 308
         Items.Strings = (
           'None'
@@ -273,7 +273,7 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideTop.Control = TabSheet2
         AnchorSideRight.Control = Panel2
         Left = 6
-        Height = 95
+        Height = 106
         Top = 6
         Width = 312
         Anchors = [akTop, akLeft, akRight]
@@ -289,7 +289,7 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         ChildSizing.ShrinkVertical = crsScaleChilds
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 1
-        ClientHeight = 73
+        ClientHeight = 84
         ClientWidth = 308
         Items.Strings = (
           'Standart'
@@ -306,7 +306,7 @@ object ToolPanelSetupForm: TToolPanelSetupForm
         AnchorSideBottom.Control = TabSheet2
         AnchorSideBottom.Side = asrBottom
         Left = 324
-        Height = 388
+        Height = 383
         Top = 6
         Width = 3
         Anchors = [akTop, akLeft, akBottom]

@@ -73,7 +73,7 @@ end;
 
 procedure TMainForm.actCustomExecute(Sender: TObject);
 begin
-  ToolPanel1.Customize(0); ToolPanel1.:=;
+  ToolPanel1.Customize(0);
 end;
 
 

@@ -14,7 +14,6 @@ type
 
   TForm1 = class(TForm)
     Button1: TButton;
-    CheckBox1: TCheckBox;
     DataSource1: TDataSource;
     FileNameEdit1: TFileNameEdit;
     Label1: TLabel;

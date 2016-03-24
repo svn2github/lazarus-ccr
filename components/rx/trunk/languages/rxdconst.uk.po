@@ -102,8 +102,8 @@ msgstr "Експортувати заголовки стовпців"
 msgid "Export file name"
 msgstr "Експортувати назву файлу"
 
-#: rxdconst.sexprbadcompare
 # msgid "Compare opertion need fielad and const"
+#: rxdconst.sexprbadcompare
 msgid "Compare opertion needs field and const"
 msgstr "Операції порівняння вимагають наявності поля і константи"
 
@@ -448,8 +448,8 @@ msgstr "Перемістити вибране поле нижче"
 msgid "Select all rows"
 msgstr "Виділити всі рядки"
 
-#: rxdconst.srxdbgridselectcolumns
 # msgid "Select visible collumns"
+#: rxdconst.srxdbgridselectcolumns
 msgid "Select visible columns"
 msgstr "Вибір стовпців для відображення"
 
@@ -478,6 +478,7 @@ msgid "Fill fields in SortField property"
 msgstr ""
 
 #: rxdconst.srxfilterformapply
+msgctxt "rxdconst.srxfilterformapply"
 msgid "Apply"
 msgstr "Застосувати"
 

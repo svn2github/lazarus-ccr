@@ -7,20 +7,21 @@ object Form1: TForm1
   ClientHeight = 527
   ClientWidth = 746
   OnCreate = FormCreate
-  LCLVersion = '1.3'
+  LCLVersion = '1.7'
   object RxDBGrid1: TRxDBGrid
     Left = 0
     Height = 457
     Top = 70
     Width = 746
+    ColumnDefValues.BlobText = '(blob)'
     TitleButtons = False
     AutoSort = True
     Columns = <    
       item
         Color = clMoneyGreen
         Title.Alignment = taCenter
-        Title.Caption = 'CODE'
         Title.Orientation = toHorizontal
+        Title.Caption = 'CODE'
         Width = 90
         FieldName = 'CODE'
         EditButtons = <>
@@ -28,12 +29,13 @@ object Form1: TForm1
         Filter.EmptyValue = '(Нет)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
+        Footers = <>
       end    
       item
         Color = clAqua
         Title.Alignment = taCenter
-        Title.Caption = 'NAME'
         Title.Orientation = toHorizontal
+        Title.Caption = 'NAME'
         Width = 350
         FieldName = 'NAME'
         EditButtons = <>
@@ -41,11 +43,12 @@ object Form1: TForm1
         Filter.EmptyValue = '(Нет)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
+        Footers = <>
       end    
       item
         Title.Alignment = taCenter
-        Title.Caption = 'PRICE'
         Title.Orientation = toHorizontal
+        Title.Caption = 'PRICE'
         Width = 120
         FieldName = 'PRICE'
         EditButtons = <>
@@ -53,6 +56,10 @@ object Form1: TForm1
         Filter.EmptyValue = '(Нет)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
+        Footer.Alignment = taRightJustify
+        Footer.FieldName = 'PRICE'
+        Footer.ValueType = fvtSum
+        Footers = <>
       end>
     KeyStrokes = <    
       item
@@ -110,7 +117,12 @@ object Form1: TForm1
         ShortCut = 16451
         Enabled = True
       end>
-    OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgAllowToolMenu]
+    FooterOptions.Active = True
+    FooterOptions.Color = clYellow
+    FooterOptions.RowCount = 1
+    OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgFooterRows, rdgAllowToolMenu]
+    FooterColor = clYellow
+    FooterRowCount = 1
     Align = alClient
     Color = clWindow
     DrawFullLine = False
@@ -137,35 +149,20 @@ object Form1: TForm1
       AnchorSideLeft.Control = Panel1
       AnchorSideTop.Control = Panel1
       Left = 7
-      Height = 19
+      Height = 20
       Top = 7
-      Width = 131
+      Width = 146
       BorderSpacing.Around = 6
       Caption = 'SpeadSheet file name '
       ParentColor = False
-    end
-    object CheckBox1: TCheckBox
-      AnchorSideTop.Control = Panel1
-      AnchorSideRight.Control = Panel1
-      AnchorSideRight.Side = asrBottom
-      Left = 606
-      Height = 23
-      Top = 7
-      Width = 133
-      Anchors = [akTop, akRight]
-      BorderSpacing.Around = 6
-      Caption = 'Open after export'
-      Checked = True
-      State = cbChecked
-      TabOrder = 0
     end
     object FileNameEdit1: TFileNameEdit
       AnchorSideLeft.Control = Label1
       AnchorSideTop.Control = Label1
       AnchorSideTop.Side = asrBottom
       Left = 13
-      Height = 31
-      Top = 32
+      Height = 30
+      Top = 33
       Width = 275
       FilterIndex = 0
       HideDirectories = False
@@ -173,7 +170,7 @@ object Form1: TForm1
       NumGlyphs = 1
       BorderSpacing.Around = 6
       MaxLength = 0
-      TabOrder = 1
+      TabOrder = 0
     end
     object Button1: TButton
       AnchorSideLeft.Control = FileNameEdit1
@@ -182,11 +179,11 @@ object Form1: TForm1
       AnchorSideTop.Side = asrCenter
       Left = 294
       Height = 33
-      Top = 31
+      Top = 32
       Width = 87
       Caption = 'Export data'
       OnClick = Button1Click
-      TabOrder = 2
+      TabOrder = 1
     end
   end
   object RxMemoryData1: TRxMemoryData
@@ -194,20 +191,15 @@ object Form1: TForm1
       item
         Name = 'CODE'
         DataType = ftInteger
-        Precision = 0
-        Size = 0
       end    
       item
         Name = 'NAME'
         DataType = ftString
-        Precision = 0
         Size = 300
       end    
       item
         Name = 'PRICE'
         DataType = ftCurrency
-        Precision = 0
-        Size = 0
       end>
     PacketRecords = 0
     left = 368
@@ -259,6 +251,7 @@ object Form1: TForm1
     OnBeforeExecute = RxDBGridExportSpreadSheet1BeforeExecute
     PageName = 'Test page'
     Options = [ressExportTitle, ressExportColors, ressExportFooter, ressOverwriteExisting]
+    OpenAfterExport = True
     left = 336
     top = 256
   end

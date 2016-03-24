@@ -175,6 +175,7 @@ begin
         cbShowCaption.Checked:=TToolbarItem(Items.Objects[ItemIndex]).ShowCaption;
     end;
   end;
+  UpdateStates;
 end;
 
 procedure TToolPanelSetupForm.cbShowCaptionChange(Sender: TObject);
@@ -233,11 +234,12 @@ begin
     
   BitBtn6.Enabled:=ListBtnVisible.Items.Count>0;
   BitBtn5.Enabled:=ListBtnVisible.Items.Count>0;
-  cbShowCaption.Enabled:=ListBtnVisible.Items.Count>0;
+  cbShowCaption.Enabled:=(ListBtnVisible.Items.Count>0) and (ListBtnVisible.ItemIndex>=0);
 
   BitBtn4.Enabled:=ListBtnAvaliable.Items.Count>0;
   BitBtn3.Enabled:=ListBtnAvaliable.Items.Count>0;
-  cbFlatBtn.Checked:=tpTransparentBtns in FToolPanel.Options;
+
+  cbFlatBtn.Checked:=tpFlatBtns in FToolPanel.Options;
 end;
 
 procedure TToolPanelSetupForm.Localize;

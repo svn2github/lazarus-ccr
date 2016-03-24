@@ -110,6 +110,7 @@ object MainForm: TMainForm
     Action = actCustom
     AutoSize = True
     Margin = 3
+    Visible = False
   end
   object BitBtn1: TBitBtn
     Left = 440
@@ -165,6 +166,7 @@ object MainForm: TMainForm
     }
     OnClick = BitBtn1Click
     TabOrder = 1
+    Visible = False
   end
   object ImageList1: TImageList
     left = 168

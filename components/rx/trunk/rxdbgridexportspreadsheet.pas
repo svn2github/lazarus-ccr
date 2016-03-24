@@ -329,7 +329,13 @@ begin
 
       if (C.Footer.ValueType <> fvtNon) then
       begin
-        FWorksheet.WriteUTF8Text(FCurRow, FCurCol, C.Footer.DisplayText);
+        if C.Footer.ValueType = fvtSum then
+        begin
+          //if C.Footer.FieldName;
+          FWorksheet.WriteNumber(FCurRow, FCurCol, C.Footer.NumericValue, nfFixed, 2)
+        end
+        else
+          FWorksheet.WriteUTF8Text(FCurRow, FCurCol, C.Footer.DisplayText);
 
         FWorksheet.WriteBorders(FCurRow,FCurCol, [cbNorth, cbWest, cbEast, cbSouth]);
         FWorksheet.WriteBorderColor(FCurRow,FCurCol, cbNorth, scColorBlack);
