@@ -102,6 +102,10 @@ msgstr "Експортувати заголовки стовпців"
 msgid "Export file name"
 msgstr "Експортувати назву файлу"
 
+#: rxdconst.sexportformula
+msgid "Export footer formula"
+msgstr ""
+
 # msgid "Compare opertion need fielad and const"
 #: rxdconst.sexprbadcompare
 msgid "Compare opertion needs field and const"

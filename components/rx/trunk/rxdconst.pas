@@ -179,6 +179,7 @@ resourcestring
   sExportColumnHeader        = 'Export column header';
   sExportColumnFooter        = 'Export column footer';
   sExportCellColors          = 'Export cell colors';
+  sExportFormula             = 'Export footer formula';
   sOverwriteExisting         = 'Overwrite existing';
   sShowColumnHeaderOnAllPage = 'Show column header on all pages';
   sPageMargins               = 'Page margins';

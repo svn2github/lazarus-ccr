@@ -93,6 +93,10 @@ msgstr ""
 msgid "Export file name"
 msgstr ""
 
+#: rxdconst.sexportformula
+msgid "Export footer formula"
+msgstr ""
+
 #: rxdconst.sexprbadcompare
 msgid "Compare opertion needs field and const"
 msgstr ""

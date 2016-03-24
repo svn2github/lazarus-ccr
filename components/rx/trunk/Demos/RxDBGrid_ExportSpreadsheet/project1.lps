@@ -3,13 +3,13 @@
   <ProjectSession>
     <Version Value="9"/>
     <BuildModes Active="Default"/>
-    <Units Count="6">
+    <Units Count="9">
       <Unit0>
         <Filename Value="project1.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="1"/>
         <CursorPos Y="20"/>
-        <UsageCount Value="21"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -20,24 +20,24 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
         <TopLine Value="3"/>
-        <CursorPos X="5" Y="22"/>
-        <UsageCount Value="21"/>
+        <CursorPos X="16" Y="18"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="../../../fpspreadsheet/fpspreadsheet.pas"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="4364"/>
-        <CursorPos Y="4385"/>
-        <UsageCount Value="10"/>
+        <TopLine Value="874"/>
+        <CursorPos X="78" Y="863"/>
+        <UsageCount Value="15"/>
       </Unit2>
       <Unit3>
         <Filename Value="unit1.lfm"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="223"/>
         <CursorPos X="56" Y="250"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit3>
       <Unit4>
@@ -45,140 +45,163 @@
         <UnitName Value="RxDBGridExportSpreadSheet"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="317"/>
-        <CursorPos X="13" Y="334"/>
-        <UsageCount Value="10"/>
+        <TopLine Value="345"/>
+        <CursorPos X="40" Y="358"/>
+        <UsageCount Value="15"/>
+        <Bookmarks Count="1">
+          <Item0 Y="404" ID="1"/>
+        </Bookmarks>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
         <Filename Value="../../rxdbgrid.pas"/>
-        <EditorIndex Value="3"/>
-        <TopLine Value="290"/>
-        <CursorPos X="14" Y="307"/>
-        <UsageCount Value="10"/>
-        <Loaded Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="913"/>
+        <CursorPos X="3" Y="914"/>
+        <UsageCount Value="15"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="../../../fpspreadsheet/fpsstrings.pas"/>
+        <UnitName Value="fpsStrings"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="88" Y="14"/>
+        <UsageCount Value="9"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="../../rxdbgridexportspreadsheet_paramsunit.pas"/>
+        <ComponentName Value="RxDBGridExportSpreadSheet_ParamsForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="RxDBGridExportSpreadSheet_ParamsUnit"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="45"/>
+        <CursorPos X="43" Y="82"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="../../rxdconst.pas"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="163"/>
+        <CursorPos X="17" Y="182"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit8>
     </Units>
-    <JumpHistory Count="30" HistoryIndex="28">
+    <JumpHistory Count="28" HistoryIndex="27">
       <Position1>
-        <Filename Value="unit1.pas"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="375" Column="3" TopLine="355"/>
       </Position1>
       <Position2>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="15" Column="27"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="337" Column="83" TopLine="311"/>
       </Position2>
       <Position3>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="16" Column="33"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="329" Column="31" TopLine="322"/>
       </Position3>
       <Position4>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="52" Column="22" TopLine="11"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="343" Column="9" TopLine="324"/>
       </Position4>
       <Position5>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="53" Column="22" TopLine="11"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="345" TopLine="327"/>
       </Position5>
       <Position6>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="54" Column="22" TopLine="12"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="61" Column="14" TopLine="42"/>
       </Position6>
       <Position7>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="55" Column="22" TopLine="13"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="368" TopLine="348"/>
       </Position7>
       <Position8>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="57" Column="22" TopLine="15"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="365" TopLine="331"/>
       </Position8>
       <Position9>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="53" Column="50" TopLine="22"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="345" Column="7" TopLine="325"/>
       </Position9>
       <Position10>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="69" Column="57" TopLine="30"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="391" Column="7" TopLine="374"/>
       </Position10>
       <Position11>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="67" Column="40" TopLine="36"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="346" Column="15" TopLine="328"/>
       </Position11>
       <Position12>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="52" Column="59" TopLine="32"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="347" Column="46" TopLine="329"/>
       </Position12>
       <Position13>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="48" Column="49" TopLine="8"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="349" Column="14" TopLine="332"/>
       </Position13>
       <Position14>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="8" Column="75" TopLine="8"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="351" TopLine="333"/>
       </Position14>
       <Position15>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="23" Column="22" TopLine="8"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="356" Column="50" TopLine="338"/>
       </Position15>
       <Position16>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="22" Column="26" TopLine="8"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="359" Column="50" TopLine="341"/>
       </Position16>
       <Position17>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="23" Column="60" TopLine="8"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="345" Column="38" TopLine="331"/>
       </Position17>
       <Position18>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="83" TopLine="48"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="358" Column="96" TopLine="341"/>
       </Position18>
       <Position19>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="77" TopLine="43"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="138" TopLine="122"/>
       </Position19>
       <Position20>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="67" TopLine="43"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="139" TopLine="122"/>
       </Position20>
       <Position21>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="72" Column="35" TopLine="43"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="140" TopLine="122"/>
       </Position21>
       <Position22>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="23" Column="46" TopLine="10"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="141" TopLine="122"/>
       </Position22>
       <Position23>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="25" Column="27" TopLine="10"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="142" TopLine="122"/>
       </Position23>
       <Position24>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="53" Column="99" TopLine="41"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="144" TopLine="122"/>
       </Position24>
       <Position25>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="52" Column="9" TopLine="40"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="199" TopLine="181"/>
       </Position25>
       <Position26>
-        <Filename Value="../../rxdbgrid.pas"/>
-        <Caret Line="1552" Column="3" TopLine="1550"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="200" Column="34" TopLine="181"/>
       </Position26>
       <Position27>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="52" Column="9" TopLine="40"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="211" TopLine="181"/>
       </Position27>
       <Position28>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="22" Column="5" TopLine="3"/>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <Caret Line="96" Column="69" TopLine="39"/>
       </Position28>
-      <Position29>
-        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
-        <Caret Line="335" Column="70" TopLine="317"/>
-      </Position29>
-      <Position30>
-        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
-        <Caret Line="265" Column="71" TopLine="232"/>
-      </Position30>
     </JumpHistory>
   </ProjectSession>
 </CONFIG>

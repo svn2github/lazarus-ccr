@@ -43,7 +43,22 @@ object Form1: TForm1
         Filter.EmptyValue = '(Нет)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
-        Footers = <>
+        Footers = <        
+          item
+            Alignment = taRightJustify
+            Value = 'Min value'
+            ValueType = fvtStaticText
+          end        
+          item
+            Alignment = taRightJustify
+            Value = 'Max value'
+            ValueType = fvtStaticText
+          end        
+          item
+            Alignment = taRightJustify
+            Value = 'Summa'
+            ValueType = fvtStaticText
+          end>
       end    
       item
         Title.Alignment = taCenter
@@ -59,7 +74,22 @@ object Form1: TForm1
         Footer.Alignment = taRightJustify
         Footer.FieldName = 'PRICE'
         Footer.ValueType = fvtSum
-        Footers = <>
+        Footers = <        
+          item
+            Alignment = taRightJustify
+            FieldName = 'PRICE'
+            ValueType = fvtMin
+          end        
+          item
+            Alignment = taRightJustify
+            FieldName = 'PRICE'
+            ValueType = fvtMax
+          end        
+          item
+            Alignment = taRightJustify
+            FieldName = 'PRICE'
+            ValueType = fvtSum
+          end>
       end>
     KeyStrokes = <    
       item
@@ -119,10 +149,10 @@ object Form1: TForm1
       end>
     FooterOptions.Active = True
     FooterOptions.Color = clYellow
-    FooterOptions.RowCount = 1
+    FooterOptions.RowCount = 3
     OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgFooterRows, rdgAllowToolMenu]
     FooterColor = clYellow
-    FooterRowCount = 1
+    FooterRowCount = 3
     Align = alClient
     Color = clWindow
     DrawFullLine = False
@@ -250,7 +280,7 @@ object Form1: TForm1
     ShowSetupForm = True
     OnBeforeExecute = RxDBGridExportSpreadSheet1BeforeExecute
     PageName = 'Test page'
-    Options = [ressExportTitle, ressExportColors, ressExportFooter, ressOverwriteExisting]
+    Options = [ressExportTitle, ressExportColors, ressExportFooter, ressExportFormula, ressOverwriteExisting]
     OpenAfterExport = True
     left = 336
     top = 256

@@ -45,6 +45,7 @@ type
 
   TRxDBGridExportSpreadSheet_ParamsForm = class(TForm)
     ButtonPanel1: TButtonPanel;
+    cbExportFormula: TCheckBox;
     cbExportColumnFooter: TCheckBox;
     cbOpenAfterExport: TCheckBox;
     cbExportColumnHeader: TCheckBox;
@@ -78,6 +79,7 @@ begin
   cbExportColumnFooter.Caption:=sExportColumnFooter;
   cbExportCellColors.Caption:=sExportCellColors;
   cbOverwriteExisting.Caption:=sOverwriteExisting;
+  cbExportFormula.Caption:=sExportFormula;
 end;
 
 end.
