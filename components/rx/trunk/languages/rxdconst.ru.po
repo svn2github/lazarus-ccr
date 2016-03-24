@@ -35,7 +35,7 @@ msgstr "Перекрёстная ссылка данных"
 
 #: rxdconst.scollumnname
 msgid "Column name"
-msgstr ""
+msgstr "Имя столбца"
 
 #: rxdconst.sconfirmpasswordlabel
 msgid "&Confirm:"
@@ -46,8 +46,6 @@ msgid "Data changed. Save?"
 msgstr "Данные были изменены. Сохранить?"
 
 #: rxdconst.sdatabasename
-#, fuzzy
-#| msgid "Database loocked: %s"
 msgid "Database locked: %s"
 msgstr "База данных блокирована: %s"
 
@@ -81,27 +79,25 @@ msgstr "Сообщение об ошибке"
 
 #: rxdconst.sexportcellcolors
 msgid "Export cell colors"
-msgstr ""
+msgstr "Экспорт цвета ячейки"
 
 #: rxdconst.sexportcolumnfooter
 msgid "Export column footer"
-msgstr ""
+msgstr "Экспорт итогов"
 
 #: rxdconst.sexportcolumnheader
 msgid "Export column header"
-msgstr ""
+msgstr "Экспорт заголовков стобцов"
 
 #: rxdconst.sexportfilename
 msgid "Export file name"
-msgstr ""
+msgstr "Имя файла экспорта"
 
 #: rxdconst.sexportformula
 msgid "Export footer formula"
-msgstr ""
+msgstr "Экспортирововать формулы итоговой строки"
 
 #: rxdconst.sexprbadcompare
-#, fuzzy
-#| msgid "Compare opertion need fielad and const"
 msgid "Compare opertion needs field and const"
 msgstr "Операции сравнения требуют наличия поля и константы"
 
@@ -110,8 +106,6 @@ msgid "Field '%s' not used in filter expression"
 msgstr "Поле '%s' не может быть использовано в выражении фильтрации"
 
 #: rxdconst.sexprbadnulltest
-#, fuzzy
-#| msgid "NULL-values enabled in '=' и '<>'"
 msgid "NULL-values enabled in '=' and '<>'"
 msgstr "NULL-значения разрешены только в выражениях '=' и '<>'"
 
@@ -201,11 +195,9 @@ msgstr ""
 
 #: rxdconst.shidezerovalues
 msgid "Hide zero values"
-msgstr ""
+msgstr "Не отображать нулевые значения"
 
 #: rxdconst.shintlabel
-#, fuzzy
-#| msgid "Enter you user name and password"
 msgid "Enter your user name and password"
 msgstr "Введите ваше имя и пароль"
 
@@ -226,8 +218,6 @@ msgid "No fields defined"
 msgstr "Нет объявления полей"
 
 #: rxdconst.sinvalidusername
-#, fuzzy
-#| msgid "User name or password not valid"
 msgid "User name or password is not valid"
 msgstr "Ошибка в имени пользователя или пароле"
 
@@ -264,8 +254,6 @@ msgid "&Next"
 msgstr "&Дальше"
 
 #: rxdconst.snotcapturefilter
-#, fuzzy
-#| msgid "Control need locked by filter"
 msgid "Control needs to be locked by filter"
 msgstr "Элементы управления должны быть захвачены фильтром"
 
@@ -323,11 +311,11 @@ msgstr "&Превыдущие"
 
 #: rxdconst.sprintgrid
 msgid "Print grid"
-msgstr ""
+msgstr "Печать списка"
 
 #: rxdconst.sprintoptions
 msgid "Print options"
-msgstr ""
+msgstr "Параметры печати"
 
 #: rxdconst.spropdefbylookup
 msgid "PropDefByLookup"
@@ -339,7 +327,7 @@ msgstr "Регистрация"
 
 #: rxdconst.sreporttitle
 msgid "Report title"
-msgstr ""
+msgstr "Заголовок отчёта"
 
 #: rxdconst.sretrylogin
 msgid "Retry to connect with database?"
@@ -429,14 +417,12 @@ msgid "Text to find"
 msgstr "Текст для поиска"
 
 #: rxdconst.srxdbgridselapplycaption
-#, fuzzy
-msgctxt "rxdconst.srxdbgridselapplycaption"
 msgid "Apply"
 msgstr "Применить"
 
 #: rxdconst.srxdbgridselapplyhint
 msgid "Apply current column settings"
-msgstr ""
+msgstr "Применить текущие настройки столбца"
 
 #: rxdconst.srxdbgridselcolcaption
 msgid "Grid columns"
@@ -455,20 +441,16 @@ msgid "Select all rows"
 msgstr "Выделить все строки"
 
 #: rxdconst.srxdbgridselectcolumns
-#, fuzzy
-#| msgid "Select visible collumns"
 msgid "Select visible columns"
 msgstr "Выбор столбцов для отображения"
 
 #: rxdconst.srxdbgridsortbycolumns
-#, fuzzy
-#| msgid "Sort data for collumns"
 msgid "Sort data for columns"
 msgstr "Сортировать данные по колонкам"
 
 #: rxdconst.srxdbgridtoolscaption
 msgid "Totals row"
-msgstr ""
+msgstr "Всего строк"
 
 #: rxdconst.srxdescending
 msgid "Descending"
@@ -594,31 +576,31 @@ msgstr ""
 
 #: rxdconst.sshowcolumnheaderonallpage
 msgid "Show column header on all pages"
-msgstr ""
+msgstr "Отображать заголовки столбцов на всех страницах"
 
 #: rxdconst.sshowfooter
 msgid "Show footer"
-msgstr ""
+msgstr "Отображать итоги"
 
 #: rxdconst.sshowfootercolor
 msgid "Show footer color"
-msgstr ""
+msgstr "Отображать цвет итогов"
 
 #: rxdconst.sshowgridcolor
 msgid "Show grid color"
-msgstr ""
+msgstr "Отображать цвета таблицы"
 
 #: rxdconst.sshowreporttitle
 msgid "Show report title"
-msgstr ""
+msgstr "Отображать заголовок отчёта"
 
 #: rxdconst.sshowtitle
 msgid "Show column title"
-msgstr ""
+msgstr "Отображать заголовки столбцов"
 
 #: rxdconst.stoolsexportspeadsheet
 msgid "Export to speadsheet"
-msgstr ""
+msgstr "Экспорт в электронную таблицу"
 
 #: rxdconst.stopcaption
 msgid "Top"
