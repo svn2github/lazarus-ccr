@@ -172,6 +172,7 @@ resourcestring
 
   sUnknownXMLDatasetFormat = 'Unknown XML Dataset format';
 
+  sExportParams              = 'Export params';
   sToolsExportSpeadSheet     = 'Export to speadsheet';
   sExportFileName            = 'Export file name';
   sOpenAfterExport           = 'Open after export';

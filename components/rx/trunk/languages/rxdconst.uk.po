@@ -106,6 +106,10 @@ msgstr "Експортувати назву файлу"
 msgid "Export footer formula"
 msgstr ""
 
+#: rxdconst.sexportparams
+msgid "Export params"
+msgstr ""
+
 # msgid "Compare opertion need fielad and const"
 #: rxdconst.sexprbadcompare
 msgid "Compare opertion needs field and const"

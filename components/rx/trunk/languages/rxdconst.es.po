@@ -99,6 +99,10 @@ msgstr ""
 msgid "Export footer formula"
 msgstr ""
 
+#: rxdconst.sexportparams
+msgid "Export params"
+msgstr ""
+
 #: rxdconst.sexprbadcompare
 #, fuzzy
 #| msgid "Compare opertion need fielad and const"

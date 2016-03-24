@@ -72,6 +72,7 @@ uses rxdconst;
 
 procedure TRxDBGridExportSpreadSheet_ParamsForm.FormCreate(Sender: TObject);
 begin
+  Caption:=sExportParams;
   Label1.Caption:=sExportFileName;
   Label3.Caption:=sPageName;
   cbOpenAfterExport.Caption:=sOpenAfterExport;

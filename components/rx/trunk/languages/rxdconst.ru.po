@@ -97,6 +97,10 @@ msgstr "Имя файла экспорта"
 msgid "Export footer formula"
 msgstr "Экспортирововать формулы итоговой строки"
 
+#: rxdconst.sexportparams
+msgid "Export params"
+msgstr "Параметры экспорта"
+
 #: rxdconst.sexprbadcompare
 msgid "Compare opertion needs field and const"
 msgstr "Операции сравнения требуют наличия поля и константы"
@@ -155,43 +159,43 @@ msgstr "Несоответсвие типов для поля '%s', необхо
 
 #: rxdconst.sfunction
 msgid "Function"
-msgstr ""
+msgstr "Функция"
 
 #: rxdconst.sfvtavg
 msgid "AVG"
-msgstr ""
+msgstr "Среднее"
 
 #: rxdconst.sfvtcount
 msgid "Count"
-msgstr ""
+msgstr "Количество"
 
 #: rxdconst.sfvtfieldvalue
 msgid "Field value"
-msgstr ""
+msgstr "Значение поля"
 
 #: rxdconst.sfvtmax
 msgid "Max value"
-msgstr ""
+msgstr "Максимум"
 
 #: rxdconst.sfvtmin
 msgid "Min value"
-msgstr ""
+msgstr "Минимум"
 
 #: rxdconst.sfvtnon
 msgid "None"
-msgstr ""
+msgstr "Нет"
 
 #: rxdconst.sfvtrecno
 msgid "Record no"
-msgstr ""
+msgstr "Номер строки"
 
 #: rxdconst.sfvtstatictext
 msgid "Static text"
-msgstr ""
+msgstr "Текст"
 
 #: rxdconst.sfvtsum
 msgid "Sum"
-msgstr ""
+msgstr "Сумма"
 
 #: rxdconst.shidezerovalues
 msgid "Hide zero values"
@@ -223,7 +227,7 @@ msgstr "Ошибка в имени пользователя или пароле"
 
 #: rxdconst.slandscape
 msgid "Landscape"
-msgstr ""
+msgstr "Ландшафт"
 
 #: rxdconst.sleftcaption
 msgid "Left"
@@ -267,23 +271,23 @@ msgstr "&Старый пароль"
 
 #: rxdconst.sopenafterexport
 msgid "Open after export"
-msgstr ""
+msgstr "Открыть после экспорта"
 
 #: rxdconst.sorientation
 msgid "Orientation"
-msgstr ""
+msgstr "Ориентация"
 
 #: rxdconst.soverwriteexisting
 msgid "Overwrite existing"
-msgstr ""
+msgstr "Перезаписать существующее"
 
 #: rxdconst.spagemargins
 msgid "Page margins"
-msgstr ""
+msgstr "Отступы на странице"
 
 #: rxdconst.spagename
 msgid "Page name"
-msgstr ""
+msgstr "Имя страницы"
 
 #: rxdconst.spasswordchanged
 msgid "Password changed"
@@ -303,7 +307,7 @@ msgstr "Новый пароль и подтверждение не совпад�
 
 #: rxdconst.sportrait
 msgid "Portrait"
-msgstr ""
+msgstr "Портрет"
 
 #: rxdconst.sprevbutton
 msgid "&Prior"
@@ -417,6 +421,7 @@ msgid "Text to find"
 msgstr "Текст для поиска"
 
 #: rxdconst.srxdbgridselapplycaption
+msgctxt "rxdconst.srxdbgridselapplycaption"
 msgid "Apply"
 msgstr "Применить"
 
@@ -615,14 +620,10 @@ msgid "Unknown XML Dataset format"
 msgstr "Не известный формат XML данных"
 
 #: rxdconst.sunlockcaption
-#, fuzzy
-#| msgid "Unloock"
 msgid "Unlock"
 msgstr "Разблокировать"
 
 #: rxdconst.sunlockhint
-#, fuzzy
-#| msgid "Enter you password"
 msgid "Enter your password"
 msgstr "Введите ваш пароль"
 
