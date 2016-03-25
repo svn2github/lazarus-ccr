@@ -54,9 +54,10 @@ uses ZDbcIntfs, ZVariant;
 
 function FixFieldName(S:string):string;inline;
 begin
-  if Pos(' ', S)>0 then
-    S:='"'+S+'"';
-  Result:=S;
+  if not IsValidIdent(S) then
+    Result:='"'+S+'"'
+  else
+    Result:=S;
 end;
 
 procedure TZeosDataSetSortEngine.Sort(FieldName: string; ADataSet: TDataSet;
