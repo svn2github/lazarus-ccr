@@ -355,7 +355,7 @@ var
 begin
   if (Footer.ValueType <> fvtNon) then
   begin
-    if (ressExportFormula in FOptions) and (Footer.ValueType in [fvtSum, fvtMax, fvtMin]) and (FFirstDataRow <= FLastDataRow) and (Footer.DisplayFormat = '') then
+    if (ressExportFormula in FOptions) and (Footer.ValueType in [fvtSum, fvtMax, fvtMin]) and (FFirstDataRow <= FLastDataRow) {and (Footer.DisplayFormat = '')} then
     begin
       D:=ColIndex(RxDBGrid.ColumnByFieldName(Footer.FieldName));
 
