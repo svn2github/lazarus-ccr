@@ -52,17 +52,21 @@ type
 implementation
 uses ZDbcIntfs, ZVariant;
 
+function FixFieldName(S:string):string;inline;
+begin
+  if Pos(' ', S)>0 then
+    S:='"'+S+'"';
+  Result:=S;
+end;
+
 procedure TZeosDataSetSortEngine.Sort(FieldName: string; ADataSet: TDataSet;
   Asc: boolean; SortOptions: TRxSortEngineOptions);
 begin
   if not Assigned(ADataSet) then exit;
 
-  if Pos(' ', FieldName)>0 then
-    FieldName:='"'+FieldName+'"';
-
   if ADataSet is TZAbstractRODataset then
   begin
-    TZAbstractRODataset(ADataSet).SortedFields:=FieldName;
+    TZAbstractRODataset(ADataSet).SortedFields:=FixFieldName(FieldName);
     if Asc then
       TZAbstractRODataset(ADataSet).SortType:=stAscending
     else
@@ -84,7 +88,7 @@ begin
   while C>0 do
   begin
     if S<>'' then S:=S+';';
-    S:=S + Copy(ListField, 1, C-1);
+    S:=S + FixFieldName(Copy(ListField, 1, C-1));
     Delete(ListField, 1, C);
 
     if (i<=High(Asc)) and (not Asc[i]) then
@@ -96,7 +100,7 @@ begin
   if ListField<>'' then
   begin
     if S<>'' then S:=S+';';
-    S:=S + ListField;
+    S:=S + FixFieldName(ListField);
     if (i<=High(Asc)) and (not Asc[i]) then
       S:=S + ' DESC';
   end;
