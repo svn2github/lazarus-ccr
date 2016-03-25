@@ -748,21 +748,41 @@ begin
   end;
 end;
 
+function GetNextID(hash: TFPHashObjectList; var id: Int64): string;
+begin
+  repeat
+    Result:=IntToHex(id, 24);
+    inc(id);
+  until not Assigned(hash.Find(Result));
+end;
+
+
 procedure PBXAssignRef(list: TList);
 var
   i : Integer;
   p : PBXObject;
   id: Int64;
+  usedid: TFPHashObjectList;
 begin
   if not Assigned(list) then Exit;
-  id:=2; // root! :)
-  for i:=0 to list.Count-1 do begin
-    p:=PBXObject(list[i]);
-    if not Assigned(p) then Continue;
-    if (p._id='') then begin
-      p._id:=IntToHex(id, 24);
-      inc(id);
+  usedid:=TFPHashObjectList.Create(false);
+  try
+    for i:=0 to list.Count-1 do begin
+      p:=PBXObject(list[i]);
+      if p._id<>'' then usedid.Add(p._id, p);;
     end;
+
+
+    id:=2; // root! :)
+    for i:=0 to list.Count-1 do begin
+      p:=PBXObject(list[i]);
+      if not Assigned(p) then Continue;
+      if (p._id='') then begin
+        p._id:=GetNextID(usedid, id);
+      end;
+    end;
+  finally
+    usedid.Free;
   end;
   // 0AFA6EA519F60EFD004C8FD9
   // 123456789012345678901234
