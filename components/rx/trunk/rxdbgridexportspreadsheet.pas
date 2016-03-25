@@ -370,7 +370,7 @@ begin
         end;
 
         FWorksheet.WriteFormula(FCurRow, FCurCol,
-          Format('=%s(%s%d:%s%d)', [SF, GetColString(D), FFirstDataRow, GetColString(D), FLastDataRow]));
+          Format('=%s(%s%d:%s%d)', [SF, GetColString(D), FFirstDataRow+1, GetColString(D), FLastDataRow+1]));
       end
       else
       begin
