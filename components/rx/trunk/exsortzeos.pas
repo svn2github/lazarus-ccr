@@ -56,6 +56,10 @@ procedure TZeosDataSetSortEngine.Sort(FieldName: string; ADataSet: TDataSet;
   Asc: boolean; SortOptions: TRxSortEngineOptions);
 begin
   if not Assigned(ADataSet) then exit;
+
+  if Pos(' ', FieldName)>0 then
+    FieldName:='"'+FieldName+'"';
+
   if ADataSet is TZAbstractRODataset then
   begin
     TZAbstractRODataset(ADataSet).SortedFields:=FieldName;
