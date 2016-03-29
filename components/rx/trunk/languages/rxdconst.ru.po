@@ -11,7 +11,7 @@ msgstr ""
 
 #: rxdconst.sbottomcaption
 msgid "Bottom"
-msgstr ""
+msgstr "Снизу"
 
 #: rxdconst.sbrowsedata
 msgid "browse"
@@ -157,6 +157,10 @@ msgstr "Поле '%s' ожидает значение"
 msgid "Type mismatch for field '%s', expecting: %s actual: %s"
 msgstr "Несоответсвие типов для поля '%s', необходимо: %s введено: %s"
 
+#: rxdconst.sfooterrowcolor
+msgid "Footer row color"
+msgstr "Цвет итоговой строки"
+
 #: rxdconst.sfunction
 msgid "Function"
 msgstr "Функция"
@@ -231,7 +235,7 @@ msgstr "Ландшафт"
 
 #: rxdconst.sleftcaption
 msgid "Left"
-msgstr ""
+msgstr "Слева"
 
 #: rxdconst.slocaldatabase
 msgid "Unable complete this operation on local dataset"
@@ -276,6 +280,10 @@ msgstr "Открыть после экспорта"
 #: rxdconst.sorientation
 msgid "Orientation"
 msgstr "Ориентация"
+
+#: rxdconst.sotheroptions
+msgid "Other options"
+msgstr "Прочие параметры"
 
 #: rxdconst.soverwriteexisting
 msgid "Overwrite existing"
@@ -339,7 +347,7 @@ msgstr "Вы хотите повторить попытку соединения
 
 #: rxdconst.srightcaption
 msgid "Right"
-msgstr ""
+msgstr "Справа"
 
 #: rxdconst.srxallfields
 msgid "All fields"
@@ -565,7 +573,7 @@ msgstr "Поля для сортировки"
 
 #: rxdconst.srxsourcedataset
 msgid "Source dataset"
-msgstr ""
+msgstr "Искодный источник данных"
 
 #: rxdconst.sservererrorlabel
 msgid "Server error"
@@ -577,7 +585,7 @@ msgstr "поиск"
 
 #: rxdconst.ssetuptotalrow
 msgid "Setup total row"
-msgstr ""
+msgstr "Настроки итоговой строки"
 
 #: rxdconst.sshowcolumnheaderonallpage
 msgid "Show column header on all pages"
@@ -609,7 +617,7 @@ msgstr "Экспорт в электронную таблицу"
 
 #: rxdconst.stopcaption
 msgid "Top"
-msgstr ""
+msgstr "Сверху"
 
 #: rxdconst.sunknownfieldtype
 msgid "SUnknownFieldType %s"

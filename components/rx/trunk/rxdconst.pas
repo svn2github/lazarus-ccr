@@ -216,6 +216,8 @@ resourcestring
   sCollumnName               = 'Column name';
   sFunction                  = 'Function';
   sBlobText                  = '(blob)';
+  sOtherOptions              = 'Other options';
+  sFooterRowColor            = 'Footer row color';
 
 
 

@@ -5,7 +5,20 @@
       </element><element name="TRxDBGridPrint.PageMargin"><short>Отступы на странице</short>
       </element><element name="TRxDBGridPrint.ShowProgress"><short>Отображать прогрес построения отчёта</short>
       </element><element name="TRxDBGridPrint.Orientation"><short>Ориентация бумаги при построении отчёта</short>
-      </element><element name="TRxDBGridPrint.PreviewReport"><short>Отобразаить форму предавирительного просмотра отчёта</short>
+      </element><element name="TRxDBGridPrint.PreviewReport"><short>Отобразить форму предавирительного просмотра отчёта</short>
+      </element>
+    <element name="TRxDBGridPrint.Options"><short>Параметры печати содержимого списка</short>
+      </element><element name="TRxPageMargin.Left"><short>Левый отступ на странице</short>
+      </element><element name="TRxPageMargin.Top"><short>Отступ сверху на странице</short>
+      </element><element name="TRxPageMargin.Right"><short>Правый отступ на странице</short>
+      </element><element name="TRxPageMargin.Bottom"><short>Отступ снизу на странице</short>
+      </element><element name="TRxDBGridPrintOption.rxpoShowTitle"><short>Отображать заголовок колонок в печатной форме</short>
+      </element><element name="TRxDBGridPrintOption.rxpoShowFooter"><short>Отображать итоги в печатной форме</short>
+      </element><element name="TRxDBGridPrintOption.rxpoShowGridColor"><short>Использовать цвета в отчёте в соответсвии с окраской списка</short>
+      </element><element name="TRxDBGridPrintOption.rxpoShowFooterColor"><short>Использовать окраску итоговой строки списка</short>
+      </element><element name="TRxDBGridPrintOption.rxpoHideZeroValues"><short>Не отображать нулевые значения</short>
+      </element><element name="TRxDBGridPrintOption.rxpoShowReportTitle"><short>Отображать название списка в печатной форме</short>
+      </element><element name="TRxDBGridPrintOptions"><short>Параметры печати списка</short>
       </element>
     </module>
   </package>

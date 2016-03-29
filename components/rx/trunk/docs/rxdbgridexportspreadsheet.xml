@@ -19,6 +19,10 @@ ressExportFooter - экспорт строки итогов
 ressOverwriteExisting - при экспорте перезаписывать существующий файл</descr>
       </element><element name="TRxDBGridExportSpreadSheet.OpenAfterExport"><short>Открывать файл после экспорта</short>
       </element>
+    <element name="TRxDBGridExportSpreadSheetOption.ressExportFormula"><short>Экспорт значений итоговой строки в виде формул</short><descr><p>При экспорте итоговой строки в случае если в итогах считается выражение <b>SUM</b>, <b>MIN</b>, <b>MAX</b> то в электронную таблицу будет выгружена формула. </p><p>Иначе будет выгружено фактическое значение</p>
+        </descr>
+      </element><element name="TRxDBGridExportSpreadSheetOptions"><short>Параметры экспорта данных в электронную таблицу</short>
+      </element>
     </module>
   </package>
 </fpdoc-descriptions>

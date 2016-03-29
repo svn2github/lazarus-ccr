@@ -37,7 +37,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Grids,
-  ButtonPanel, rxdbgrid, rxdconst;
+  ButtonPanel, ComCtrls, StdCtrls, ColorBox, rxdbgrid, rxdconst;
 
 type
 
@@ -45,7 +45,12 @@ type
 
   TRxDBGridFooterTools_SetupForm = class(TForm)
     ButtonPanel1: TButtonPanel;
+    ColorBox1: TColorBox;
+    Label1: TLabel;
+    PageControl1: TPageControl;
     StringGrid1: TStringGrid;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
     procedure FormCreate(Sender: TObject);
   private
     FRxDBGrid:TRxDBGrid;
@@ -69,7 +74,11 @@ uses dbutils;
 
 procedure TRxDBGridFooterTools_SetupForm.FormCreate(Sender: TObject);
 begin
+  PageControl1.ActivePageIndex:=0;
   Caption:=sSetupTotalRow;
+  TabSheet1.Caption:=sFunction;
+  TabSheet2.Caption:=sOtherOptions;
+  Label1.Caption:=sFooterRowColor;
   StringGrid1.Columns[0].Title.Caption:=sCollumnName;
   StringGrid1.Columns[1].Title.Caption:=sFunction;
 end;
@@ -96,6 +105,7 @@ begin
     if FRxDBGrid.Columns[i].Footer.ValueType <> fvtNon then
       StringGrid1.Cells[1, i+1]:=rxFooterFunctionNames[FRxDBGrid.Columns[i].Footer.ValueType];
   end;
+  ColorBox1.Selected:=FRxDBGrid.FooterOptions.Color;
 end;
 
 procedure TRxDBGridFooterTools_SetupForm.SetData;
@@ -131,6 +141,7 @@ begin
 
     Col.Footer.ValueType:=B;
   end;
+  FRxDBGrid.FooterOptions.Color:=ColorBox1.Selected;
 end;
 
 end.

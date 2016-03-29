@@ -163,6 +163,10 @@ msgstr "Campo '%s' debe tener un valor"
 msgid "Type mismatch for field '%s', expecting: %s actual: %s"
 msgstr "Tipo no corresponde para el campo '%s', se esperaba: %s actual: %s"
 
+#: rxdconst.sfooterrowcolor
+msgid "Footer row color"
+msgstr ""
+
 #: rxdconst.sfunction
 msgid "Function"
 msgstr ""
@@ -287,6 +291,10 @@ msgstr ""
 
 #: rxdconst.sorientation
 msgid "Orientation"
+msgstr ""
+
+#: rxdconst.sotheroptions
+msgid "Other options"
 msgstr ""
 
 #: rxdconst.soverwriteexisting

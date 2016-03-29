@@ -157,6 +157,16 @@
       </element><element name="TRxDBGridAbstractTools.Execute"><short>Запуск инструмента</short>
       </element><element name="RegisterRxDBGridSortEngine"><short>Процдера регистрирует вспомогательный класс для сортировки данных внутри RxDBGrid</short>
       </element>
+    <element name="TRxDBGridAbstractTools.Caption"><short>Заголовок пункта меню в инструментальном меню списка</short>
+      </element><element name="TRxDBGridToolsEvent"><short>Набор флагов для указания списка событий принимаемых расширением от списка</short>
+      </element><element name="TRxDBGridToolsEvents"><short>События, которые принимает от списка расширение</short>
+      </element><element name="TRxDBGridToolsEvent.rxteMouseDown"><short>В расширение передаётся событие OnMouseDown</short>
+      </element><element name="TRxDBGridToolsEvent.rxteMouseUp"><short>В расширение передаётся событие OnMouseUp</short>
+      </element><element name="TRxDBGridToolsEvent.rxteMouseMove"><short>В расширение передаётся событие OnMouseMove</short>
+      </element><element name="TRxDBGridToolsEvent.rxteKeyDown"><short>В расширение передаётся событие OnKeyDown</short>
+      </element><element name="TRxDBGridToolsEvent.rxteKeyUp"><short>В расширение передаётся событие OnKeyUp</short>
+      </element><element name="TRxDBGridAbstractTools.FToolsEvents"><short>Перечень события, которые принимает от списка расширение</short><descr>В случае необходимости взаимодействия расширения с пользователем в данное поле вносится наборе флагов, описывающих какие именно события от оператора расширение должно получать.</descr>
+      </element>
     </module>
   </package>
 </fpdoc-descriptions>

@@ -167,6 +167,10 @@ msgstr "Поле '%s' очікує значення"
 msgid "Type mismatch for field '%s', expecting: %s actual: %s"
 msgstr "Неспівпадіння типів для стовпця '%s', необхідно: %s введено: %s"
 
+#: rxdconst.sfooterrowcolor
+msgid "Footer row color"
+msgstr ""
+
 #: rxdconst.sfunction
 msgid "Function"
 msgstr "Функція"
@@ -286,6 +290,10 @@ msgstr "Відкрити після експортування"
 #: rxdconst.sorientation
 msgid "Orientation"
 msgstr "Орієнтація"
+
+#: rxdconst.sotheroptions
+msgid "Other options"
+msgstr ""
 
 #: rxdconst.soverwriteexisting
 msgid "Overwrite existing"
