@@ -44,7 +44,7 @@ unit JvExControls;
 interface
 
 uses
-  Classes, Controls, Graphics, LCLIntf, LCLType, LMessages, Forms;
+  Classes, types, Controls, Graphics, LCLIntf, LCLType, LMessages, Forms;
 
 type
   TDlgCode =
