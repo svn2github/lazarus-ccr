@@ -1358,7 +1358,8 @@ begin
       qualifiedElt := eltFormEmpty or qualifiedElt;
       qualifiedAtt := (trioQualifiedAttribute in regItem.Options) and not(trioUnqualifiedAttribute in regItem.Options);
       qualifiedAtt := not(attFormEmpty) and qualifiedAtt;
-      GetPropList(locTypeInfo,FRawPropList);
+      if (FRawPropList = nil) then
+        GetPropList(locTypeInfo,FRawPropList);
       try
         for i := 0 to Pred(c) do begin
           ppi := FRawPropList^[i];
