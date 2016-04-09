@@ -56,14 +56,20 @@ Type
     FFormat : string;
     FConnection : TidHttp;
     FCookieManager : ICookieManager;
+{$IFDEF INDY_9}
+    FConnectTimeout, FReadTimeout: Integer;
+{$ENDIF}
   private
     function GetAddress: string;
+    function GetConnectTimeout : Integer;
     function GetProtocolVersion : string;
     function GetProxyPassword: string;
     function GetProxyPort: Integer;
     function GetProxyServer: string;
     function GetProxyUsername: string;
+    function GetReadTimeout : Integer;
     procedure SetAddress(const AValue: string);
+    procedure SetConnectTimeout(AValue : Integer);
     procedure SetProtocolVersion(const AValue : string);
     procedure SetProxyPassword(const AValue: string);
     procedure SetProxyPort(const AValue: Integer);
@@ -72,7 +78,11 @@ Type
     function GetContentType: string;
     procedure SetContentType(const Value: string);
     function GetSoapAction: string;
+    procedure SetReadTimeout(AValue : Integer);
     procedure SetSoapAction(const Value: string);
+{$IFDEF INDY_9}
+    procedure SetReadTimeoutOnConnect(Sender: TObject);
+{$ENDIF}
   protected
     procedure DoSendAndReceive(ARequest,AResponse:TStream);override;
   public
@@ -90,6 +100,8 @@ Type
     property SoapAction : string read GetSoapAction write SetSoapAction;
     property Format : string read FFormat write FFormat;
     property ProtocolVersion : string read GetProtocolVersion write SetProtocolVersion;
+    property ConnectTimeout: Integer read GetConnectTimeout write SetConnectTimeout;
+    property ReadTimeout: Integer read GetReadTimeout write SetReadTimeout;
   End;
 
   procedure INDY_RegisterHTTP_Transport();
@@ -126,6 +138,15 @@ begin
   Result := FConnection.Request.URL;
 end;
 
+function THTTPTransport.GetConnectTimeout : Integer;
+begin
+{$IFDEF INDY_9}
+  Result := FConnectTimeout;
+{$ELSE}
+  Result := FConnection.ConnectTimeout;
+{$ENDIF}
+end;
+
 function THTTPTransport.GetProtocolVersion : string;
 begin
   Result := ProtocolVersionMAP[FConnection.ProtocolVersion];
@@ -151,9 +172,27 @@ begin
   Result := FConnection.ProxyParams.ProxyUsername;
 end;
 
+function THTTPTransport.GetReadTimeout : Integer;
+begin
+{$IFDEF INDY_9}
+  Result := FReadTimeout;
+{$ELSE}
+  Result := FConnection.ReadTimeout;
+{$ENDIF}
+end;
+
 function THTTPTransport.GetSoapAction: string;
 begin
   Result := FConnection.Request.CustomHeaders.Values['SOAPAction'];
+end;
+
+procedure THTTPTransport.SetReadTimeout(AValue : Integer);
+begin
+{$IFDEF INDY_9}
+  FReadTimeout := AValue;
+{$ELSE}
+  FConnection.ReadTimeout := AValue;
+{$ENDIF}
 end;
 
 function THTTPTransport.GetTransportName() : string;
@@ -166,10 +205,26 @@ begin
   FConnection.Request.URL := AValue;
 end;
 
+procedure THTTPTransport.SetConnectTimeout(AValue : Integer);
+begin
+{$IFDEF INDY_9}
+  FConnectTimeout := AValue;
+{$ELSE}
+  FConnection.ConnectTimeout := AValue;
+{$ENDIF}
+end;
+
 procedure THTTPTransport.SetContentType(const Value: string);
 begin
   FConnection.Request.ContentType := Value;
 end;
+
+{$IFDEF INDY_9}
+procedure THTTPTransport.SetReadTimeoutOnConnect(Sender: TObject);
+begin
+  FConnection.ReadTimeout := FReadTimeout;
+end;
+{$ENDIF}
 
 procedure THTTPTransport.SetProtocolVersion(const AValue : string);
 var
@@ -211,6 +266,9 @@ constructor THTTPTransport.Create();
 begin
   inherited;
   FConnection := TidHttp.Create(Nil);
+{$IFDEF INDY_9}
+  FConnection.OnConnected := {$IFDEF FPC}@{$ENDIF}SetReadTimeoutOnConnect;
+{$ENDIF}
 end;
 
 destructor THTTPTransport.Destroy();
