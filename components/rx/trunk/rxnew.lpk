@@ -21,10 +21,10 @@
     </CompilerOptions>
     <Description Value="Delphi VCL Extensions (RX) 
 Copyright (c) 1998 Master-Bank
-translate to Lazarus by alexs in 2005 - 2015
+translate to Lazarus by alexs in 2005 - 2016
 "/>
     <License Value="LGPL"/>
-    <Version Major="2" Minor="8" Release="2" Build="181"/>
+    <Version Major="2" Minor="8" Release="3" Build="183"/>
     <Files Count="74">
       <Item1>
         <Filename Value="autopanel.pas"/>
@@ -323,7 +323,7 @@ translate to Lazarus by alexs in 2005 - 2015
       </Item73>
       <Item74>
         <Filename Value="rxshortcutunit.pas"/>
-        <UnitName Value="rxshortcutunit"/>
+        <UnitName Value="rxShortCutUnit"/>
       </Item74>
     </Files>
     <LazDoc Paths="docs;\usr\local\share\lazarus\components\rxnew\docs"/>
