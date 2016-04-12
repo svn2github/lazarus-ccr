@@ -285,6 +285,14 @@ begin
   then begin
     FConnection.ProxyParams.BasicAuthentication := True;
   end;
+{$IFDEF INDY_9}
+  // In Indy 9 the TIdHTTP.ReadTimeout is used also
+  // for connect. So, we assign to ReadTimeout,
+  // first the FConnectTimeout before connecting for connect
+  // and after connect in the OnConnected method handler
+  // we assign the FReadTimeout for read.
+  FConnection.ReadTimeout := FConnectTimeout;
+{$ENDIF}
   FConnection.Post(Address,ARequest, AResponse);
 end;
 
