@@ -34,8 +34,6 @@ msgid "Left"
 msgstr "Влево"
 
 #: rxconst.sbuttonalign3
-#, fuzzy
-#| msgid "Rignt"
 msgid "Right"
 msgstr "Вправо"
 
@@ -52,8 +50,6 @@ msgid "Close all windows"
 msgstr "Закрыть все окна"
 
 #: rxconst.sclosevaliderror
-#, fuzzy
-#| msgid "Error. Expected vailes..."
 msgid "Error. Expected values..."
 msgstr "Ошибка. Ожидается значение..."
 
@@ -95,11 +91,11 @@ msgstr "Указанный файл не исполняемый, не библи
 
 #: rxconst.sfirsthalfofyear
 msgid "First half of year"
-msgstr ""
+msgstr "Первая половина года"
 
 #: rxconst.sfirstquarter
 msgid "First quarter"
-msgstr ""
+msgstr "Первый квартал"
 
 #: rxconst.sflatbuttons
 msgid "Flat buttons"
@@ -107,7 +103,7 @@ msgstr "Плавающие кнопки"
 
 #: rxconst.sfourthquarter
 msgid "Fourth quarter"
-msgstr ""
+msgstr "Четвёртый квартал"
 
 #: rxconst.sfpcversion
 msgid "FPC version : "
@@ -182,18 +178,16 @@ msgid "QT widget set"
 msgstr "Графический интерфейс QT"
 
 #: rxconst.sreqvalue
-#, fuzzy
-#| msgid "Error. Expected value for filed %s."
 msgid "Error. Expected value for field %s."
 msgstr "Поле %s. Требуется значение"
 
 #: rxconst.ssecondhalfofyear
 msgid "Second half of year"
-msgstr ""
+msgstr "Вторая половина года"
 
 #: rxconst.ssecondquarter
 msgid "Second quarter"
-msgstr ""
+msgstr "Второй квартал"
 
 #: rxconst.sshowcaption
 msgid "Show caption"
@@ -213,7 +207,7 @@ msgstr "Целевая ОС : "
 
 #: rxconst.sthirdquarter
 msgid "Third quarter"
-msgstr ""
+msgstr "Третий квартал"
 
 #: rxconst.stocurdate
 msgid "Set current date"
@@ -224,8 +218,6 @@ msgid "Tool bar style"
 msgstr "Стиль панели инструментов"
 
 #: rxconst.stoolbarstyle1
-#, fuzzy
-#| msgid "Standart"
 msgid "Standard"
 msgstr "Стандартный"
 
