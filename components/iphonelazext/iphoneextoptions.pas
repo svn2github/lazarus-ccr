@@ -21,7 +21,9 @@ interface
 
 uses
   Classes, SysUtils, IDEOptionsIntf, LazIDEIntf, ProjectIntf, MacroIntf,
-  iPhoneBundle, XMLConf, XcodeUtils, LazFileUtils, iphonesimctrl;
+  iPhoneBundle, XMLConf, XcodeUtils, PlistFile
+  , LazFileUtils, LazFilesUtils
+  , iphonesimctrl, xcodeproj;
 
 const
   DefaultResourceDir = 'Resources';
@@ -47,8 +49,8 @@ type
     destructor Destroy; override;
     class function GetGroupCaption: String; override;
     class function GetInstance: TAbstractIDEOptions; override;
-    function Load: Boolean;
-    function Save: Boolean;
+    function Load(AProject: TLazProject = nil): Boolean;
+    function Save(AProject: TLazProject = nil): Boolean;
     procedure Reset;
     property isIPhoneApp: Boolean read fisIPhone write fisIPhone;
     property SDK: String read fSDK write fSDK;
@@ -136,6 +138,10 @@ function ProjOptions: TiPhoneProjectOptions;
 var
   iPhoneEnvGroup : Integer;
   iPhonePrjGroup : Integer;
+
+function LazToXcodeProjFile(AProject: TLazProject): string;
+function LazToXcodePlistFile(AProject: TLazProject): string;
+procedure ReadUploadFilesList(pbx: PBXProject; lst: TStrings);
 
 implementation
 
@@ -434,12 +440,66 @@ begin
   Result:=ProjOptions;
 end;
 
-function TiPhoneProjectOptions.Load: Boolean;
+procedure ReadUploadFilesList(pbx: PBXProject; lst: TStrings);
+var
+  trg  : PBXNativeTarget;
+  i    : Integer;
+  res  : PBXResourcesBuildPhase;
+  bf   : PBXBuildFile;
+  grp  : PBXGroup;
+  p    : string;
+begin
+  if not Assigned(pbx) or not Assigned(lst) or not Assigned(pbx.targets)
+    or (pbx.targets.Count=0) then Exit;
+  trg:=PBXNativeTarget(pbx.targets.Items[0]);
+
+  res := PBXResourcesBuildPhase(TargetFindBuildPhase(trg, PBXResourcesBuildPhase));
+  if not Assigned(res) then begin
+    writeln('failed');
+    Exit;
+  end;
+  grp:=pbx.mainGroup.findGroup('Resources', true); // name must match to the target name!
+
+  for i:=0 to res.files.Count-1 do begin
+    bf:=PBXBuildFile(res.files[i]);
+    // making sure that the file is one of "Resources" files
+    p:=bf.fileRef.path;
+    if Assigned(grp.findFileRefByPathName(p)) then
+      lst.Add(p);
+  end;
+end;
+
+procedure FileNamesRelateiveToProject(st: TStrings);
+var
+  i : integer;
+  s : string;
+begin
+  //todo: it shouldn't really be hardcoded
+  if not Assigned(st) then Exit;
+
+  for i:=0 to st.Count-1 do begin
+    s:=st[i];
+    if s='' then Continue;
+    if Pos('../',s)=1 then
+      s:=Copy(s, 4, length(s));
+    st[i]:=s;
+  end;
+end;
+
+function TiPhoneProjectOptions.Load(AProject: TLazProject): Boolean;
+var
+  projname  : string;
+  pbx       : PBXProject;
+  st        : TStringList;
 begin
   Result:=True;
-  with LazarusIDE.ActiveProject do begin
+  if not Assigned(AProject) then
+    AProject:=LazarusIDE.ActiveProject;
+
+  with AProject do begin
     DataWritten:=CustomData.Contains(optisIphone);
     fisiPhone:=(DataWritten) and (CustomData.Values[optisIphone] = 'true');
+
     if CustomData.Contains(optSDK) then fSDK:=CustomData.Values[optSDK];
     if CustomData.Contains(optAppID) then fAppID:=CustomData.Values[optAppID];
     fSpaceName:=CustomData.Values[optSpaceName];
@@ -448,11 +508,31 @@ begin
     else fResourceDir:=DefaultResourceDir;
     if CustomData.Contains(optExcludeMask) then fExcludeMask:=CustomData.Values[optExcludeMask];
     if CustomData.Contains(optMainNib) then fMainNib:=CustomData.Values[optMainNib];
-    if CustomData.Contains(optResFiles) then ResFiles.Text:=CustomData.Values[optResFiles];
+
+    projname:=LazToXcodeProjFile(AProject);
+    if FileExists(projname) then begin
+      ProjectLoadFromFile(projname, pbx);
+      if Assigned(pbx) then begin
+        st:=TStringList.Create;
+        try
+          ReadUploadFilesList(pbx, st);
+          FileNamesRelateiveToProject(st);
+          ResFiles.Assign(st);
+        finally
+          st.Free;
+          pbx.Free;
+        end;
+      end;
+    end;
+
+    //todo: this must go away. the only intention is to cleanup the old code
+    if CustomData.Contains(optResFiles) then begin
+      CustomData.Remove(optResFiles);
+    end;
   end;
 end;
 
-function TiPhoneProjectOptions.Save: Boolean;
+function TiPhoneProjectOptions.Save(AProject: TLazProject): Boolean;
 const
   BoolStr : array[Boolean] of String = ('false', 'true');
 var
@@ -485,6 +565,27 @@ begin
         CustomData.Values[optResFiles]:=ResFiles.Text;
       end;
     end;
+end;
+
+function LazToXcodeProjFile(AProject: TLazProject): string;
+begin
+  if not Assigned(AProject) then
+    AProject:=LazarusIDE.ActiveProject;
+
+  Result:=
+        IncludeTrailingPathDelimiter( ResolveProjectPath('xcode', AProject) )
+      + ChangeFileExt( ExtractFileName(LazarusIDE.ActiveProject.MainFile.Filename),'.xcodeproj')
+      + PathDelim
+      +'project.pbxproj';
+end;
+
+function LazToXcodePlistFile(AProject: TLazProject): string;
+begin
+  if not Assigned(AProject) then
+    AProject:=LazarusIDE.ActiveProject;
+  Result:=
+        IncludeTrailingPathDelimiter( ResolveProjectPath('xcode', AProject) )
+        +'info.plist';
 end;
 
 initialization

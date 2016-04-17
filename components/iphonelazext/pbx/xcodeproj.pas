@@ -653,11 +653,16 @@ function ProjectLoadFromFile(const fn: string; var prj: PBXProject): Boolean;
 var
   fs :TFileStream;
 begin
-  fs:=TFileStream.Create(fn, fmOpenRead or fmShareDenyNone);
   try
-    Result:=ProjectLoadFromStream(fs, prj);
-  finally
-    fs.Free;
+    prj:=nil;
+    fs:=TFileStream.Create(fn, fmOpenRead or fmShareDenyNone);
+    try
+      Result:=ProjectLoadFromStream(fs, prj);
+    finally
+      fs.Free;
+    end;
+  except
+    Result:=false;
   end;
 end;
 

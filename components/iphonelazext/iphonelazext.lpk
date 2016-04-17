@@ -31,7 +31,7 @@
     <Description Value="iPhone Development Lazarus extension"/>
     <License Value="LGPL"/>
     <Version Minor="8"/>
-    <Files Count="22">
+    <Files Count="20">
       <Item1>
         <Filename Value="ideext.pas"/>
         <HasRegisterProc Value="True"/>
@@ -46,84 +46,76 @@
         <UnitName Value="iPhoneBundle"/>
       </Item3>
       <Item4>
-        <Filename Value="xcodeproject.pas"/>
-        <UnitName Value="XCodeProject"/>
-      </Item4>
-      <Item5>
         <Filename Value="environment_iphone_options.pas"/>
         <UnitName Value="environment_iphone_options"/>
-      </Item5>
-      <Item6>
+      </Item4>
+      <Item5>
         <Filename Value="project_iphone_options.pas"/>
         <UnitName Value="project_iphone_options"/>
-      </Item6>
-      <Item7>
+      </Item5>
+      <Item6>
         <Filename Value="iphoneextoptions.pas"/>
         <UnitName Value="iPhoneExtOptions"/>
-      </Item7>
-      <Item8>
+      </Item6>
+      <Item7>
         <Filename Value="xcodetemplate.pas"/>
         <UnitName Value="xcodetemplate"/>
+      </Item7>
+      <Item8>
+        <Filename Value="environment_iphone_options.lfm"/>
+        <Type Value="LFM"/>
       </Item8>
       <Item9>
-        <Filename Value="environment_iphone_options.lfm"/>
+        <Filename Value="project_iphone_options.lfm"/>
         <Type Value="LFM"/>
       </Item9>
       <Item10>
-        <Filename Value="project_iphone_options.lfm"/>
-        <Type Value="LFM"/>
-      </Item10>
-      <Item11>
         <Filename Value="lazfilesutils.pas"/>
         <UnitName Value="LazFilesUtils"/>
-      </Item11>
-      <Item12>
+      </Item10>
+      <Item11>
         <Filename Value="xcodeutils.pas"/>
         <UnitName Value="XcodeUtils"/>
-      </Item12>
-      <Item13>
+      </Item11>
+      <Item12>
         <Filename Value="newxibdialog.pas"/>
         <UnitName Value="newXibDialog"/>
-      </Item13>
-      <Item14>
+      </Item12>
+      <Item13>
         <Filename Value="xibfile.pas"/>
         <UnitName Value="xibfile"/>
-      </Item14>
-      <Item15>
+      </Item13>
+      <Item14>
         <Filename Value="pbx/pbxcontainer.pas"/>
         <AddToUsesPkgSection Value="False"/>
         <UnitName Value="pbxcontainer"/>
-      </Item15>
-      <Item16>
+      </Item14>
+      <Item15>
         <Filename Value="pbx/pbxfile.pas"/>
         <AddToUsesPkgSection Value="False"/>
         <UnitName Value="pbxfile"/>
-      </Item16>
-      <Item17>
+      </Item15>
+      <Item16>
         <Filename Value="pbx/xcodeproj.pas"/>
         <AddToUsesPkgSection Value="False"/>
         <UnitName Value="xcodeproj"/>
-      </Item17>
-      <Item18>
+      </Item16>
+      <Item17>
         <Filename Value="plistfile.pas"/>
         <UnitName Value="PlistFile"/>
-      </Item18>
-      <Item19>
+      </Item17>
+      <Item18>
         <Filename Value="pbx/xcodeprojutils.pas"/>
         <UnitName Value="xcodeprojutils"/>
-      </Item19>
-      <Item20>
+      </Item18>
+      <Item19>
         <Filename Value="iphonesimctrl.pas"/>
         <UnitName Value="iphonesimctrl"/>
-      </Item20>
-      <Item21>
-        <Filename Value="res/buildscript.sh"/>
-        <Type Value="Text"/>
-      </Item21>
-      <Item22>
+      </Item19>
+      <Item20>
         <Filename Value="iphonelog_form.pas"/>
         <UnitName Value="iphonelog_form"/>
-      </Item22>
+      </Item20>
     </Files>
     <RequiredPkgs Count="3">
       <Item1>
