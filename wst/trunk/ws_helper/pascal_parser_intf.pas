@@ -535,6 +535,7 @@ begin
       AddAlias('language','string',Result);
       AddAlias('anyURI','string',Result);
       AddAlias('ID','string',Result);
+      AddAlias('NCName','string',Result);
       //AddAlias('float','Single',Result);
       AddAlias('integer','int',Result);
       AddAlias('nonNegativeInteger','LongWord',Result);

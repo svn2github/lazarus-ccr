@@ -41,7 +41,8 @@ type
   { standart data types defines }
   anyURI = type string;
   token = type string;
-  language = type string;   
+  language = type string;
+  NCName = type string;
   nonNegativeInteger = type LongWord;
   positiveInteger = type nonNegativeInteger;
   float = Single;
