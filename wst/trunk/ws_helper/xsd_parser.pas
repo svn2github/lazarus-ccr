@@ -805,7 +805,8 @@ var
     baseName := ExtractNameFromQName(AName);
     internalName := ExtractIdentifier(baseName);
     hasInterName := IsReservedKeyWord(internalName) or
-                    ( not IsValidIdent(internalName) );
+                    not(IsValidIdent(internalName)) or
+                    SameText(internalName,Self.Module.Name);
     if hasInterName then begin
       internalName := '_' + internalName;
     end;
