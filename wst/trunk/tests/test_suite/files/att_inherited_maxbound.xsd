@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <xsd:schema xmlns:n="urn:wst-test" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  targetNamespace="urn:wst-test">
+  
+  <xsd:element name="TSampleType">
+    <xsd:complexType>
+      <xsd:choice minOccurs="1" maxOccurs="unbounded">
+        <xsd:element name="StringElement" type="xsd:string" />
+        <xsd:element name="IntElement" type="xsd:int" />
+      </xsd:choice>
+      <xsd:attribute name="StringAtt" type="xsd:string" use="required" />
+      <xsd:attribute name="IntAtt" type="xsd:int" use="optional" />
+    </xsd:complexType>
+  </xsd:element>
+  
+ </xsd:schema>

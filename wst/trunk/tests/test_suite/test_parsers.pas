@@ -108,6 +108,7 @@ type
     function load_schema_default_elt_att_form_present() : TwstPasTreeContainer;virtual;abstract;
 
     function load_global_attribute() : TwstPasTreeContainer;virtual;abstract;
+    function load_att_inherited_maxbound() : TwstPasTreeContainer;virtual;
   published
     procedure EmptySchema();
 
@@ -181,6 +182,7 @@ type
     procedure case_sensitive_import();
 
     procedure global_attribute();
+    procedure att_inherited_maxbound();
   end;
 
   { TTest_XsdParser }
@@ -429,6 +431,11 @@ function TTest_CustomXsdParser.ParseDoc(const ADoc: string): TwstPasTreeContaine
 begin
   Result := ParseDoc(ADoc,False);
   Result.DefaultSearchNameKinds := NAME_KINDS_DEFAULT;
+end;
+
+function TTest_CustomXsdParser.load_att_inherited_maxbound : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('att_inherited_maxbound');
 end;
 
 procedure TTest_CustomXsdParser.EmptySchema();
@@ -4078,6 +4085,61 @@ begin
       clsType := elt as TPasClassType;
       CheckProperty('intAtt','intAtt','int',ptAttribute);
       CheckProperty('strAtt','strAtt','string',ptAttribute);
+  finally
+    tr.Free();
+  end;
+end;
+
+procedure TTest_CustomXsdParser.att_inherited_maxbound();
+const s_class_name = 'TSampleType';
+var
+  clsType : TPasClassType;
+  tr : TwstPasTreeContainer;
+
+  procedure CheckProperty(
+    const AName,
+          ADeclaredName,
+          ATypeName      : string;
+    const AFieldType     : TPropertyType;
+    const AIsArray       : Boolean
+  );
+  var
+    prp : TPasProperty;
+    t : TPasType;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name,'Name');
+      CheckEquals(ADeclaredName,tr.GetExternalName(prp),'External Name');
+      CheckNotNull(prp.VarType);
+      t := GetUltimeType(prp.VarType);
+      CheckNotNull(t,'Property''s Ultime Type not found.');
+      if AIsArray then begin
+        CheckEquals(AIsArray,(t is TPasArrayType));
+        CheckNotNull(TPasArrayType(t).ElType,'array element type');
+        CheckEquals(ATypeName,tr.GetExternalName(TPasArrayType(t).ElType),'TypeName');
+      end else begin
+        CheckEquals(ATypeName,tr.GetExternalName(t),'TypeName');
+      end;
+      CheckEquals(PropertyType_Att[AFieldType],tr.IsAttributeProperty(prp));
+  end;
+
+var
+  mdl : TPasModule;
+  elt : TPasElement;
+begin
+  tr := load_att_inherited_maxbound();
+  try
+    mdl := tr.FindModule('urn:wst-test');
+    CheckNotNull(mdl,'urn:wst-test');
+    elt := tr.FindElement(s_class_name);
+      CheckNotNull(elt,s_class_name);
+      CheckIs(elt,TPasClassType);
+      clsType := elt as TPasClassType;
+      CheckProperty('StringElement','StringElement','string',ptField,True);
+      CheckProperty('IntElement','IntElement','int',ptField,True);
+      CheckProperty('StringAtt','StringAtt','string',ptAttribute,False);
+      CheckProperty('IntAtt','IntAtt','int',ptAttribute,False);
   finally
     tr.Free();
   end;

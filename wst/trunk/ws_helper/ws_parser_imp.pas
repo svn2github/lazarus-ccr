@@ -1234,33 +1234,37 @@ var
       locProp.StoredAccessorName := 'True';
     end;
 
-    if ABoundInfos.Valid then begin
-      locMaxOccur := ABoundInfos.MaxOccurs;
-      locMaxOccurUnbounded := ABoundInfos.Unboundded;
-    end else begin
+    if locIsAttribute then begin
       locMaxOccur := 1;
       locMaxOccurUnbounded := False;
-    end;
-    locPartCursor := CreateCursorOn(locAttCursor.Clone() as IObjectCursor,ParseFilter(Format('%s = %s',[s_NODE_NAME,QuotedStr(s_maxOccurs)]),TDOMNodeRttiExposer));
-    locPartCursor.Reset();
-    if locPartCursor.MoveNext() then begin
-      locStrBuffer := (locPartCursor.GetCurrent() as TDOMNodeRttiExposer).NodeValue;
-      if AnsiSameText(locStrBuffer,s_unbounded) then begin
-        locMaxOccurUnbounded := True;
+    end else begin
+      if ABoundInfos.Valid then begin
+        locMaxOccur := ABoundInfos.MaxOccurs;
+        locMaxOccurUnbounded := ABoundInfos.Unboundded;
       end else begin
-        if not TryStrToInt(locStrBuffer,locMaxOccur) then
-          raise EXsdParserException.CreateFmt(SERR_InvalidMaxOccursValue,[FTypeName,locName]);
-        if ( locMinOccur < 0 ) then
-          raise EXsdParserException.CreateFmt(SERR_InvalidMaxOccursValue,[FTypeName,locName]);
+        locMaxOccur := 1;
+        locMaxOccurUnbounded := False;
+      end;
+      locPartCursor := CreateCursorOn(locAttCursor.Clone() as IObjectCursor,ParseFilter(Format('%s = %s',[s_NODE_NAME,QuotedStr(s_maxOccurs)]),TDOMNodeRttiExposer));
+      locPartCursor.Reset();
+      if locPartCursor.MoveNext() then begin
+        locStrBuffer := (locPartCursor.GetCurrent() as TDOMNodeRttiExposer).NodeValue;
+        if AnsiSameText(locStrBuffer,s_unbounded) then begin
+          locMaxOccurUnbounded := True;
+        end else begin
+          if not TryStrToInt(locStrBuffer,locMaxOccur) then
+            raise EXsdParserException.CreateFmt(SERR_InvalidMaxOccursValue,[FTypeName,locName]);
+          if ( locMinOccur < 0 ) then
+            raise EXsdParserException.CreateFmt(SERR_InvalidMaxOccursValue,[FTypeName,locName]);
+        end;
       end;
     end;
-    isArrayDef := locMaxOccurUnbounded or ( locMaxOccur > 1 );
+    isArrayDef := not(locIsAttribute) and (locMaxOccurUnbounded or (locMaxOccur > 1));
     if isArrayDef then begin
       arrayItems.Add(locProp).FIsCollection := IsCollectionArray(AElement);
     end;
-    if AnsiSameText(s_attribute,ExtractNameFromQName(AElement.NodeName)) then begin
+    if locIsAttribute then
       FSymbols.SetPropertyAsAttribute(locProp,True);
-    end;
     locPartCursor := CreateCursorOn(locAttCursor.Clone() as IObjectCursor,ParseFilter(Format('%s = %s',[s_NODE_NAME,QuotedStr(s_default)]),TDOMNodeRttiExposer));
     locPartCursor.Reset();
     if locPartCursor.MoveNext() then
