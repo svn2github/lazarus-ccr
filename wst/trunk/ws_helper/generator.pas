@@ -29,7 +29,8 @@ type
   TGeneratorOption = (
     goDocumentWrappedParameter { .Net style wrapped parameters },
     goGenerateDocAsComments    { Documentation include in the XSD/WSDL schema will be generated as comments },
-    goGenerateObjectCollection { Generate object "collection" instead of "array" }
+    goGenerateObjectCollection { Generate object "collection" instead of "array" },
+    goCreateChoiceFieldsInConstructor
   );
   TGeneratorOptions = set of TGeneratorOption;
   
@@ -2545,12 +2546,14 @@ var
     p : TPasProperty;
     pte : TPasElement;
     pt : TPasType;
+    okCreation, okChoiceFields : Boolean;
   begin
     if ( locClassPropNbr > 0 ) then begin
       NewLine();
       WriteLn('{ %s }',[ASymbol.Name]);
       
       if ( locClassPropNbr > 0 ) or ( locClassPropNbr > 0 ) then begin
+        okChoiceFields := (goCreateChoiceFieldsInConstructor in Self.Options);
         NewLine();
         WriteLn('constructor %s.Create();',[ASymbol.Name]);
         WriteLn('begin');
@@ -2559,9 +2562,15 @@ var
           for k := 0 to Pred(locPropCount) do begin
             p := TPasProperty(locPropList[k]);
             pt := FindActualType(p.VarType,SymbolTable);
-            if SymbolTable.IsOfType(pt,TPasClassType) or
-               SymbolTable.IsOfType(pt,TPasArrayType)
-            then begin
+            okCreation := SymbolTable.IsOfType(pt,TPasArrayType);
+            if not okCreation then begin
+              okCreation := SymbolTable.IsOfType(pt,TPasClassType) and
+                            (GetUltimeType(pt,SymbolTable) <> ASymbol) and
+                            ( not(SymbolTable.IsChoiceProperty(p)) or
+                              okChoiceFields
+                            );
+            end;
+            if okCreation then begin
               Indent(); WriteLn('F%s := %s.Create();',[p.Name,GetTypeText(p,pt)]);
             end;
           end;

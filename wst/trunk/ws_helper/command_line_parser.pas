@@ -25,7 +25,7 @@ Type
     cloOutPutDirRelative, cloOutPutDirAbsolute, cloHandleWrappedParameters,
     cloGenerateDocAsComments, cloGenerateObjectCollection,
     cloFileRenaming, cloPrefixEnum, cloParserCaseSensitive,
-    cloStringMaping
+    cloStringMaping, cloCreateChoiceFields
   );
   TComandLineOptions = set of TComandLineOption;
 
@@ -85,6 +85,9 @@ begin
           end else if ( Pos('S',OptArg) = 1 ) then begin
             Include(AAppOptions,cloStringMaping);
             OptionsArgsMAP[cloStringMaping] := OptArg;
+          end else if ( Pos('F',OptArg) = 1 ) then begin
+            Include(AAppOptions,cloCreateChoiceFields);
+            OptionsArgsMAP[cloCreateChoiceFields] := OptArg;
           end;
         end;
       'f' :

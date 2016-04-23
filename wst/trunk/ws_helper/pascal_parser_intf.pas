@@ -30,6 +30,7 @@ const
     sARRAY_STYLE_SCOPED = 'ARRAY_STYLE_SCOPED';
     sARRAY_STYLE_EMBEDDED = 'ARRAY_STYLE_EMBEDDED';
   sARRAY_IS_COLLECTION = 'ARRAY_COLLECTION';
+  sCHOICE = 'CHOICE';
   sWST_PROP_STORE_PREFIX = 'wstHas_';
   sFILE_NAME = 'FileName';
   sNS_COUNT = 'NS_Count';
@@ -187,6 +188,8 @@ type
     function GetNameSpace(AType : TPasType) : string ;
     function IsAttributeProperty(AObject : TPasVariable) : Boolean;
     procedure SetPropertyAsAttribute(AObject : TPasVariable; const AValue : Boolean);
+    function IsChoiceProperty(AObject : TPasProperty) : Boolean;
+    procedure SetPropertyAsChoice(AObject : TPasProperty; const AValue : Boolean);
 
     function IsInitNeed(AType: TPasType): Boolean;
     function IsOfType(AType: TPasType; AClass: TClass): Boolean;
@@ -1174,6 +1177,27 @@ begin
   else
     s := 'False';
   Properties.SetValue(AObject,sATTRIBUTE,s);
+end;
+
+function TwstPasTreeContainer.IsChoiceProperty(
+  AObject : TPasProperty
+) : Boolean;
+begin
+  Result := AnsiSameText(Properties.GetValue(AObject,sCHOICE),'True');
+end;
+
+procedure TwstPasTreeContainer.SetPropertyAsChoice(
+        AObject : TPasProperty;
+  const AValue  : Boolean
+);
+var
+  s : string;
+begin
+  if AValue then
+    s := 'True'
+  else
+    s := 'False';
+  Properties.SetValue(AObject,sCHOICE,s);
 end;
 
 function TwstPasTreeContainer.FindElementNS(const AName, ANameSpace: string): TPasElement;

@@ -779,6 +779,8 @@ begin
       end;
       if locIsAttribute then
         FSymbols.SetPropertyAsAttribute(dest,True);
+      if FSymbols.IsChoiceProperty(src) then
+        FSymbols.SetPropertyAsChoice(dest,True);
     {$IFDEF HAS_EXP_TREE}
       if (src.DefaultExpr <> nil) and
          src.DefaultExpr.InheritsFrom(TPrimitiveExpr)
@@ -1067,7 +1069,11 @@ var
     AMaxUnboundded := locMaxOccurUnbounded;
   end;
 
-  procedure ParseElement(AElement : TDOMNode; const ABoundInfos : TOccurrenceRec);
+  procedure ParseElement(
+          AElement        : TDOMNode;
+    const ABoundInfos     : TOccurrenceRec;
+    const AIsChoiceParent : Boolean
+  );
   var
     locAttCursor, locPartCursor : IObjectCursor;
     locName, locTypeName, locTypeInternalName : string;
@@ -1273,6 +1279,8 @@ var
     {$ELSE HAS_EXP_TREE}
       locProp.DefaultValue := (locPartCursor.GetCurrent() as TDOMNodeRttiExposer).NodeValue;
     {$ENDIF HAS_EXP_TREE}
+    if AIsChoiceParent then
+      FSymbols.SetPropertyAsChoice(locProp,AIsChoiceParent);
     ExtractExtendedMetadata(locProp,AElement);
   end;
 
@@ -1284,9 +1292,10 @@ var
   end;
   
   procedure ParseElementsAndAttributes(
-    AEltCrs,
-    AEltAttCrs  : IObjectCursor;
-    ABoundInfos : TOccurrenceRec
+          AEltCrs,
+          AEltAttCrs      : IObjectCursor;
+          ABoundInfos     : TOccurrenceRec;
+    const AIsChoiceParent : Boolean
   );
 
     function ExtractElement(ANode : TDOMNode) : IObjectCursor;
@@ -1324,17 +1333,20 @@ var
             ExtractOccurences(s_choice,locEltAttCrs,locBoundInfos.MinOccurs,locBoundInfos.MaxOccurs,locBoundInfos.Unboundded);
             locBoundInfos.MinOccurs := 0;
             locBoundInfos.Valid := True;
-            ParseElementsAndAttributes(locEltCrs,locEltAttCrs,locBoundInfos);
+            ParseElementsAndAttributes(locEltCrs,locEltAttCrs,locBoundInfos,AIsChoiceParent);
           end;
         end else begin
-          ParseElement(locNode,ABoundInfos);
+          ParseElement(locNode,ABoundInfos,AIsChoiceParent);
         end;
       end;
     end;
     if Assigned(AEltAttCrs) then begin
       AEltAttCrs.Reset();
       while AEltAttCrs.MoveNext() do begin
-        ParseElement((AEltAttCrs.GetCurrent() as TDOMNodeRttiExposer).InnerObject,ABoundInfos);
+        ParseElement(
+          (AEltAttCrs.GetCurrent() as TDOMNodeRttiExposer).InnerObject,
+          ABoundInfos,AIsChoiceParent
+        );
       end;
     end;
   end;
@@ -1397,6 +1409,7 @@ var
   locDefaultAncestorUsed : Boolean;
   locBoundInfos : TOccurrenceRec;
   locTempNode : TDOMNode;
+  locIsChoiceParent : Boolean;
 begin
   ExtractBaseType();
   eltCrs := ExtractElementCursor(nil,eltAttCrs,grpCrs,attGrpCrs,locAnyNode,locAnyAttNode);
@@ -1443,6 +1456,7 @@ begin
         classDef.AncestorType.AddRef();
         if Assigned(eltCrs) or Assigned(eltAttCrs) then begin
           isArrayDef := False;
+          locIsChoiceParent := False;
           FillChar(locBoundInfos,SizeOf(locBoundInfos),#0);
           if (eltCrs <> nil) then begin
             eltCrs.Reset();
@@ -1457,10 +1471,11 @@ begin
                 );
                 locBoundInfos.MinOccurs := 0;
                 locBoundInfos.Valid := True;
+                locIsChoiceParent := True;
               end;
             end;
           end;
-          ParseElementsAndAttributes(eltCrs,eltAttCrs,locBoundInfos);
+          ParseElementsAndAttributes(eltCrs,eltAttCrs,locBoundInfos,locIsChoiceParent);
           ParseGroups(classDef,grpCrs);
           ParseGroups(classDef,attGrpCrs);
           if ( arrayItems.GetCount() > 0 ) then begin

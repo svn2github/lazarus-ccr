@@ -19,6 +19,8 @@ resourcestring
            '        C  : object arrays are generated as "collection" derived from TObjectCollectionRemotable' + sNEW_LINE +
            '        EP : enum type''s items are prefixed with the enum name' + sNEW_LINE +
            '        EN : enum type''s items are not prefixed with the enum name, the default' + sNEW_LINE +
+           '        FN : do not create fields for "choice"''s items in constructor' + sNEW_LINE +
+           '        FO : create fields for "choice"''s items in constructor, the default' + sNEW_LINE +
            '        SS : XSD''string type is mapped to Object Pascal'' String' + sNEW_LINE +
            '        SU : XSD''string type is mapped to Object Pascal'' UnicodeString' + sNEW_LINE +
            '  -p  Generate service proxy' + sNEW_LINE +
@@ -100,6 +102,12 @@ var
         Exclude(AppOptions,cloParserCaseSensitive);
     end else begin
       Include(AppOptions,cloParserCaseSensitive);
+    end;
+    if not(cloCreateChoiceFields in AppOptions) then begin
+      Include(AppOptions,cloCreateChoiceFields);
+    end else begin
+      if AnsiSameText('FN',Trim(GetOptionArg(cloCreateChoiceFields))) then
+        Exclude(AppOptions,cloCreateChoiceFields);
     end;
   end;
 
@@ -287,7 +295,9 @@ var
           if wrappedParams then
             g.Options := g.Options + [goDocumentWrappedParameter];
           if ( cloGenerateObjectCollection in AppOptions ) then
-            g.Options := g.Options + [goGenerateObjectCollection];    
+            g.Options := g.Options + [goGenerateObjectCollection];
+          if ( cloCreateChoiceFields in AppOptions ) then
+            g.Options := g.Options + [goCreateChoiceFieldsInConstructor];
           g.Execute();
           FreeAndNil(g);
         end;
