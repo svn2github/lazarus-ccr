@@ -6089,7 +6089,10 @@ end;
 
 procedure TBaseDateRemotable.SetAsString(const AValue: string);
 begin
-  FDate := Parse(AValue);
+  if (AValue<>'') then
+    FDate := Parse(AValue)
+  else
+    FillChar(FDate,SizeOf(TDateTimeRec),0);
 end;
 
 procedure TBaseDateRemotable.SetOffset(const Index: Integer; const Value: Shortint);
@@ -6800,7 +6803,10 @@ end;
 
 procedure TDurationRemotable.SetAsString(const AValue: string);
 begin
-  FData := Parse(AValue);
+  if (AValue<>'') then
+    FData := Parse(AValue)
+  else
+    FillChar(FData,SizeOf(TDurationRec),0);
 end;
 
 procedure TDurationRemotable.SetNegative(const AValue: Boolean);
@@ -7197,7 +7203,10 @@ end;
 
 procedure TTimeRemotable.SetAsString(const AValue: string);
 begin
-  Data := Parse(AValue);
+  if (AValue<>'') then
+    Data := Parse(AValue)
+  else
+    FillChar(FData,SizeOf(TTimeRec),0);
 end;
 
 procedure TTimeRemotable.SetMilliSecond(const AValue: Word);
