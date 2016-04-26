@@ -238,11 +238,12 @@ procedure TResEditForm.SetControls;
 begin
   OKBtn.Enabled := (DescriptionEdit.Text <> '');
 end;
-
+             (*
 initialization
 {$IFDEF LCL}
   {$I vpreseditdlg.lrs}
 {$ENDIF}
+               *)
 
 end.
   

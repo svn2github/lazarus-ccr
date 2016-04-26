@@ -1,22 +1,23 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="3">
+  <Package Version="4">
     <Name Value="v103_lazarus"/>
+    <Type Value="RunAndDesignTime"/>
+    <AddToProjectUsesSection Value="True"/>
     <CompilerOptions>
-      <Version Value="5"/>
+      <Version Value="11"/>
       <SearchPaths>
-        <IncludeFiles Value="../source/"/>
-        <OtherUnitFiles Value="../source/"/>
+        <IncludeFiles Value="../source"/>
+        <OtherUnitFiles Value="../source"/>
         <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
-      <CodeGeneration>
-        <Generate Value="Faster"/>
-      </CodeGeneration>
-      <Other>
-        <CompilerPath Value="$(CompPath)"/>
-      </Other>
+      <Parsing>
+        <SyntaxOptions>
+          <UseAnsiStrings Value="False"/>
+        </SyntaxOptions>
+      </Parsing>
     </CompilerOptions>
-    <Files Count="60">
+    <Files Count="61">
       <Item1>
         <Filename Value="../source/vpabout.pas"/>
         <UnitName Value="VpAbout"/>
@@ -258,8 +259,11 @@
         <Filename Value="../source/vpxparsr.pas"/>
         <UnitName Value="VpXParsr"/>
       </Item60>
+      <Item61>
+        <Filename Value="../source/vpbase.res"/>
+        <Type Value="Binary"/>
+      </Item61>
     </Files>
-    <Type Value="RunAndDesignTime"/>
     <RequiredPkgs Count="3">
       <Item1>
         <PackageName Value="FCL"/>

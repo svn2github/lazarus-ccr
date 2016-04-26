@@ -384,6 +384,8 @@ type
 
 implementation
 
+{$R vpbase.res}
+
 uses
   Math
   {$IFNDEF LCL}
@@ -959,11 +961,13 @@ begin
   end;
 end;
 {=====}
-
+                             (*
 //soenr ich habe das hinzugefügt
 {$IFDEF FPC}
 initialization
-  {$i vpbase.lrs}
+  {$i ../source/vpbase.lrs}
 {$ENDIF}
+*)
+
 end.
 

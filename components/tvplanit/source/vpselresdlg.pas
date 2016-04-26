@@ -75,11 +75,12 @@ procedure TfrmSelectResource.btnEditClick(Sender: TObject);
 begin
   VpResourceEditDialog1.Execute;
 end;
-
+          (*
 initialization
 {$IFDEF LCL}
   {$I vpselresdlg.lrs}
 {$ENDIF}
+*)
 
 end.
  

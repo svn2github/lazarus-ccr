@@ -415,11 +415,11 @@ begin
   if Key = VK_ESCAPE then
     actCancel.Execute;
 end;
-
+                (*
 initialization
 {$IFDEF LCL}
   {$I vpprtprvdlg.lrs}
 {$ENDIF}
-
+                  *)
 end.
   

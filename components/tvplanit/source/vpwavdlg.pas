@@ -187,11 +187,11 @@ begin
   if Key = VK_ESCAPE then
     Close;
 end;
-
+      (*
 initialization
 {$IFDEF LCL}
   {$I vpwavdlg.lrs}
 {$ENDIF}
-
+        *)
 end.
   

@@ -667,11 +667,12 @@ begin
     NameEdit.SetFocus;
 end;
 {=====}
-
+               (*
 initialization
 {$IFDEF LCL}
   {$I vpcontacteditdlg.lrs}
 {$ENDIF}
+                 *)
 
 end.
 

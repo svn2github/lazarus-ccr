@@ -282,11 +282,13 @@ begin
   Self.Height := 210;
   OpenItemBtn.SetFocus;
 end;
-
+      (*
 initialization
+
 {$IFDEF LCL}
   {$I vpalarmdlg.lrs}
 {$ENDIF}
+*)
 
 end.
  

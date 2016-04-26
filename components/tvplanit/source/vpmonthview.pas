@@ -580,7 +580,11 @@ var
     end;
 
     { Acquire startdate and end date }
+    {$IF FPC_FULLVERSION >= 30000}
+    HeadStr := FormatDateTime(DateLabelFormat, DisplayDate);
+    {$ELSE}
     HeadStr := SysToUTF8(FormatDateTime(DateLabelFormat, DisplayDate));
+    {$ENDIF}
 
     { draw the text }
     if (DisplayOnly) and

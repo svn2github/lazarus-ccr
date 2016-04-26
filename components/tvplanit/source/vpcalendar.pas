@@ -35,7 +35,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,
+  LMessages,LCLProc,LCLType,LCLIntf,LazUTF8,
   {$ELSE}
   Windows,
   {$ENDIF}
@@ -1537,6 +1537,9 @@ var
         S := FormatDateTime('mmm yyyy', RenderDate)
       else
         S := FormatDateTime('mmm', RenderDate);
+   {$IF FPC_FULLVERSION < 30000}
+    S := SysToUTF8(S);
+   {$ENDIF}
 
     R := Rect (clRowCol[0, 1].Left + RealLeft,
                clRowCol[0, 1].Top + RealTop,
@@ -1547,7 +1550,11 @@ var
     {switch to short date format if string won't fit}
     if FDateFormat = dfLong then
       if RenderCanvas.TextWidth(S) > R.Right-R.Left then
+        {$IF FPC_FULLVERSION >= 30000}
         S := FormatDateTime('mmm yyyy', RenderDate);
+        {$ELSE}
+        S := SysToUTF8(FormatDateTime('mmm yyyy', RenderDate));
+        {$ENDIF}
 
     RenderCanvas.Font.Color := MonthYearColor;
     if Assigned(FOnDrawDate) then
@@ -1587,6 +1594,9 @@ var
         else
           S := Copy(LongDayNames[Ord(DOW)+1], 1, FDayNameWidth)
       end;
+     {$IF FPC_FULLVERSION < 30000}
+      S := SysToUTF8(S);
+     {$ENDIF}
 
       {draw the day name above each column}
       DrawRect := Rect (clRowCol[1, I].Left + RealLeft,

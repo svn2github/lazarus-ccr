@@ -224,11 +224,11 @@ begin
   end;
 end;
 {=====}
-
+      (*
 initialization
 {$IFDEF LCL}
   {$I vptaskeditdlg.lrs}
 {$ENDIF}
-
+        *)
 end.
   

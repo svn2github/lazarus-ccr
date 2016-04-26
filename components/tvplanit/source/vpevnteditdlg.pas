@@ -724,9 +724,9 @@ begin
   StartTime.Text := FormatDateTime('hh:mm',ET- (30/MinutesInDay));
   end;
 end;                                                                     
-
+           (*
 initialization
   {$I vpevnteditdlg.lrs}
-
+             *)
 end.
  

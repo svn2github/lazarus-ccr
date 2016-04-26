@@ -810,7 +810,11 @@ var
       if FDayHeadAttributes.Bordered then
         TPSRectangle (RenderCanvas, Angle, RenderIn, TextRect);
       { Fix Header String }
+      {$IF FPC_FULLVERSION >= 30000}
+      DayStr := FormatDateTime(FDayHeadAttributes.DateFormat, StartDate + I);
+      {$ELSE}
       DayStr := SysToUTF8(FormatDateTime(FDayHeadAttributes.DateFormat, StartDate + I));
+      {$ENDIF}
       SL := RenderCanvas.TextWidth(DayStr);
       if SL > TextRect.Right - TextRect.Left then begin
         DayStr := GetDisplayString(RenderCanvas, DayStr, 0, TextRect.Right -
