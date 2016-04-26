@@ -54,6 +54,8 @@ Type
     FFormat : string;
     FCookieManager : ICookieManager;
   private
+    function GetConnectTimeout : Integer;
+    function GetReadTimeout : Integer;
     function IndexOfHeader(const AHeader : string) :Integer;
     function GetAddress: string;
     function GetContentType: string;
@@ -63,11 +65,13 @@ Type
     function GetProxyUsername: string;
     function GetSoapAction : string;
     procedure SetAddress(const AValue: string);
+    procedure SetConnectTimeout(AValue : Integer);
     procedure SetContentType(const AValue: string);
     procedure SetProxyPassword(const AValue: string);
     procedure SetProxyPort(const AValue: Integer);
     procedure SetProxyServer(const AValue: string);
     procedure SetProxyUsername(const AValue: string);
+    procedure SetReadTimeout(AValue : Integer);
     procedure SetSoapAction(const AValue : string);
   protected
     procedure DoSendAndReceive(ARequest,AResponse:TStream); override;
@@ -85,6 +89,8 @@ Type
     property ProxyPassword : string read GetProxyPassword write SetProxyPassword;
     property SoapAction : string read GetSoapAction write SetSoapAction;
     property Format : string read FFormat write FFormat;
+    property ConnectTimeout: Integer read GetConnectTimeout write SetConnectTimeout;
+    property ReadTimeout: Integer read GetReadTimeout write SetReadTimeout;
   End;
 {$M+}
 
@@ -98,6 +104,16 @@ const
   s_soapAction_Header = 'soapAction:';
 
 { THTTPTransport }
+
+function THTTPTransport.GetConnectTimeout : Integer;
+begin
+  Result := FConnection.Sock.ConnectionTimeout;
+end;
+
+function THTTPTransport.GetReadTimeout : Integer;
+begin
+  Result := FConnection.Timeout;
+end;
 
 function THTTPTransport.IndexOfHeader(const AHeader : string) : Integer;
 var
@@ -165,6 +181,11 @@ begin
   FAddress := AValue;
 end;
 
+procedure THTTPTransport.SetConnectTimeout(AValue : Integer);
+begin
+  FConnection.Sock.ConnectionTimeout := AValue;
+end;
+
 procedure THTTPTransport.SetContentType(const AValue: string);
 begin
   FConnection.MimeType := AValue;
@@ -188,6 +209,11 @@ end;
 procedure THTTPTransport.SetProxyUsername(const AValue: string);
 begin
   FConnection.ProxyUser := AValue;
+end;
+
+procedure THTTPTransport.SetReadTimeout(AValue : Integer);
+begin
+  FConnection.Timeout := AValue;
 end;
 
 procedure THTTPTransport.SetSoapAction(const AValue : string);
