@@ -28,7 +28,7 @@ function UpdateProject(const ProjFileName: string; TemplateValues, ResFiles: TSt
 
 procedure UpdateBldConfig(const proj: PBXProject; optName, optVal: string);
 procedure UpdateMainFile(const proj: PBXProject; mainfile: string);
-procedure UpdateCompileOpts(const proj: PBXProject; options: string);
+procedure UpdateCompileOpts(const proj: PBXProject; const options: string);
 
 const
   XCodeProjectTemplateIconID : AnsiString ='0AE3FFA610F3C9AF00A9B007,';
@@ -344,22 +344,65 @@ begin
   end;
 end;
 
-procedure UpdateCompileOpts(const proj: PBXProject; options: string);
+function isCPUorOS(const s: string): boolean;
+begin
+  Result:=(Pos('$(TargetCPU)', s)>0) or (Pos('$(TargetOS)', s)>0)
+end;
+
+function ResolveCPUOS(const s: string; const cpu, os: string): string;
+begin
+  Result:=StringReplace(s, '$(TargetCPU)', cpu, [rfReplaceAll, rfIgnoreCase]);
+  Result:=StringReplace(Result, '$(TargetOS)', os, [rfReplaceAll, rfIgnoreCase]);
+end;
+
+procedure UpdateCompileOpts(const proj: PBXProject; const options: string);
 var
-  opt : string;
+  opt    : string;
+  i32opt : string;
+  i64opt : string;
+  a32opt : string;
+  a64opt : string;
+  i,j,l  : integer;
+  s      : string;
 begin
   //UpdateBldConfig(proj, 'FPC_CUSTOM_OPTIONS', options);
   UpdateBldConfig(proj, 'FPC_CUSTOM_OPTIONS', '');
+  i:=1;
+  j:=1;
+  l:=length(options);
 
-  opt:=options;
-  opt:=StringReplace(opt,'$(TargetCPU)','$arch',[rfReplaceAll, rfIgnoreCase]);
-  opt:=StringReplace(opt,'$(TargetOS)','iphone',[rfReplaceAll, rfIgnoreCase]);
+  opt:='';
+  i32opt:='';
+  i64opt:='';
+  a32opt:='';
+  a64opt:='';
+
+  while i<=l do begin
+    if (options[i]=' ') and (i>=j) then begin
+      if (options[j]=' ') then begin
+        j:=i+1;
+      end else begin
+        s:=Copy(options,j,i-j);
+        if isCPUorOS(s) then begin
+          i32opt:=i32opt+ResolveCPUOS(s, 'i386', 'iphonesim')+' ';
+          i64opt:=i64opt+ResolveCPUOS(s, 'x86_64', 'iphonesim')+' ';
+          a32opt:=a32opt+ResolveCPUOS(s, 'arm', 'darwin')+' ';
+          a64opt:=a64opt+ResolveCPUOS(s, 'aarch64', 'darwin')+' ';
+        end else begin
+          opt:=opt+s+' ';
+        end;
+        j:=i+1;
+      end;
+    end;
+    inc(i);
+  end;
   UpdateBldConfig(proj, 'FPC_CUSTOM_OPTIONS[sdk=iphoneos*]', opt);
-
-  opt:=options;
-  opt:=StringReplace(opt,'$(TargetCPU)','$arch',[rfReplaceAll, rfIgnoreCase]);
-  opt:=StringReplace(opt,'$(TargetOS)','iphonesim',[rfReplaceAll, rfIgnoreCase]);
   UpdateBldConfig(proj, 'FPC_CUSTOM_OPTIONS[sdk=iphonesimulator*]', opt);
+  UpdateBldConfig(proj, 'FPC_OPT_I32', i32opt);
+  UpdateBldConfig(proj, 'FPC_OPT_I64', i64opt);
+  a32opt:=a32opt + ' -Cparmv7 -Cg -Cfvfpv3 ';
+  UpdateBldConfig(proj, 'FPC_OPT_A32', a32opt);
+  UpdateBldConfig(proj, 'FPC_OPT_A64', a64opt);
 end;
 
 procedure UpdateMainFile(const proj: PBXProject; mainfile: string);
