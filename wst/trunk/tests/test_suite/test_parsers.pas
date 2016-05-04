@@ -109,6 +109,7 @@ type
 
     function load_global_attribute() : TwstPasTreeContainer;virtual;abstract;
     function load_att_inherited_maxbound() : TwstPasTreeContainer;virtual;
+    function load_embedded_unbounded_choice() : TwstPasTreeContainer;virtual;
   published
     procedure EmptySchema();
 
@@ -183,6 +184,7 @@ type
 
     procedure global_attribute();
     procedure att_inherited_maxbound();
+    procedure embedded_unbounded_choice();
   end;
 
   { TTest_XsdParser }
@@ -436,6 +438,11 @@ end;
 function TTest_CustomXsdParser.load_att_inherited_maxbound : TwstPasTreeContainer;
 begin
   Result := ParseDoc('att_inherited_maxbound');
+end;
+
+function TTest_CustomXsdParser.load_embedded_unbounded_choice : TwstPasTreeContainer;
+begin
+  Result := ParseDoc('embedded_unbounded_choice');
 end;
 
 procedure TTest_CustomXsdParser.EmptySchema();
@@ -4140,6 +4147,79 @@ begin
       CheckProperty('IntElement','IntElement','int',ptField,True);
       CheckProperty('StringAtt','StringAtt','string',ptAttribute,False);
       CheckProperty('IntAtt','IntAtt','int',ptAttribute,False);
+  finally
+    tr.Free();
+  end;
+end;
+
+procedure TTest_CustomXsdParser.embedded_unbounded_choice();
+const s_class_name = 'EntityContainer';
+var
+  clsType : TPasClassType;
+  tr : TwstPasTreeContainer;
+
+  procedure CheckProperty(
+    const AName,
+          ADeclaredName,
+          ATypeName      : string;
+    const AFieldType     : TPropertyType;
+    const AIsArray       : Boolean
+  );
+  var
+    prp : TPasProperty;
+    t : TPasType;
+  begin
+    prp := FindMember(clsType,AName) as TPasProperty;
+      CheckNotNull(prp);
+      CheckEquals(AName,prp.Name,'Name');
+      CheckEquals(ADeclaredName,tr.GetExternalName(prp),'External Name');
+      CheckNotNull(prp.VarType);
+      t := GetUltimeType(prp.VarType);
+      CheckNotNull(t,'Property''s Ultime Type not found.');
+      if AIsArray then begin
+        CheckEquals(AIsArray,(t is TPasArrayType));
+        CheckNotNull(TPasArrayType(t).ElType,'array element type');
+        CheckEquals(ATypeName,tr.GetExternalName(TPasArrayType(t).ElType),'TypeName');
+      end else begin
+        CheckEquals(ATypeName,tr.GetExternalName(t),'TypeName');
+      end;
+      CheckEquals(PropertyType_Att[AFieldType],tr.IsAttributeProperty(prp));
+  end;
+
+var
+  mdl : TPasModule;
+  elt : TPasElement;
+  s : string;
+begin
+  tr := load_embedded_unbounded_choice();
+  try
+    mdl := tr.FindModule('urn:wst-test');
+    CheckNotNull(mdl,'urn:wst-test');
+    elt := tr.FindElement(s_class_name);
+      CheckNotNull(elt,s_class_name);
+      CheckIs(elt,TPasClassType);
+      clsType := elt as TPasClassType;
+      CheckProperty('Documentation','Documentation','string',ptField,False);
+      CheckProperty('FunctionImport','FunctionImport','EntityContainer_FunctionImport_Type',ptField,True);
+      CheckProperty('EntitySet','EntitySet','EntityContainer_EntitySet_Type',ptField,True);
+
+    s := 'EntityContainer_FunctionImport_Type';
+    elt := tr.FindElement(s);
+      CheckNotNull(elt,s);
+      CheckIs(elt,TPasClassType);
+      clsType := elt as TPasClassType;
+      CheckProperty('Documentation','Documentation','string',ptField,False);
+      CheckProperty('ReturnType','ReturnType','string',ptField,True);
+      CheckProperty('Parameter','Parameter','string',ptField,True);
+
+    s := 'EntityContainer_EntitySet_Type';
+    elt := tr.FindElement(s);
+      CheckNotNull(elt,s);
+      CheckIs(elt,TPasClassType);
+      clsType := elt as TPasClassType;
+      CheckProperty('Documentation','Documentation','string',ptField,False);
+      CheckProperty('ValueAnnotation','ValueAnnotation','string',ptField,True);
+      CheckProperty('TypeAnnotation','TypeAnnotation','integer',ptField,True);
   finally
     tr.Free();
   end;

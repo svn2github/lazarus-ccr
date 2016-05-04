@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<definitions name="wst_test" 
+   xmlns="http://schemas.xmlsoap.org/wsdl/" 
+   xmlns:tns="library1" 
+   xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+   targetNamespace="urn:wst-test">
+
+  <types>
+    <xs:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:wst-test">
+            
+          <xs:element name="EntityContainer">
+            <xs:complexType>
+              <xs:sequence>  
+                <xs:element name="Documentation" type="xs:string" minOccurs="0" maxOccurs="1" />
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                  <xs:element name="FunctionImport">
+                    <xs:complexType>
+                      <xs:sequence>
+                          <xs:element name="Documentation" type="xs:string" minOccurs="0" maxOccurs="1" />
+                          <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="ReturnType" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+                            <xs:element name="Parameter" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+                          </xs:choice>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="EntitySet">
+                    <xs:complexType>
+                      <xs:sequence>
+                          <xs:element name="Documentation" type="xs:string" minOccurs="0" maxOccurs="1" />
+                          <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="ValueAnnotation" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+                            <xs:element name="TypeAnnotation" type="xs:integer" minOccurs="0" maxOccurs="unbounded" />
+                          </xs:choice>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:choice>
+              </xs:sequence>  
+            </xs:complexType>
+          </xs:element>
+  
+    </xs:schema>
+  </types>
+  
+
+</definitions>

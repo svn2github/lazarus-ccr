@@ -1330,10 +1330,12 @@ var
         if (locLN = s_choice) then begin
           locEltCrs := ExtractElement(locNode);
           if (locEltCrs <> nil) then begin
+            locEltAttCrs := CreateAttributesCursor(locNode,cetRttiNode);
+            FillChar(locBoundInfos,SizeOf(locBoundInfos),#0);
             ExtractOccurences(s_choice,locEltAttCrs,locBoundInfos.MinOccurs,locBoundInfos.MaxOccurs,locBoundInfos.Unboundded);
             locBoundInfos.MinOccurs := 0;
             locBoundInfos.Valid := True;
-            ParseElementsAndAttributes(locEltCrs,locEltAttCrs,locBoundInfos,AIsChoiceParent);
+            ParseElementsAndAttributes(locEltCrs,nil,locBoundInfos,True);
           end;
         end else begin
           ParseElement(locNode,ABoundInfos,AIsChoiceParent);
