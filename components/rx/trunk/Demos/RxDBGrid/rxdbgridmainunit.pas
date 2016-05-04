@@ -98,7 +98,7 @@ var
 
 procedure LocalizeApp;
 implementation
-uses rxsortmemds, FileUtil, gettext, translations, rxFileUtils;
+uses rxsortmemds, FileUtil, gettext, translations, rxFileUtils, LazFileUtils, LazUTF8;
 
 procedure LocalizeApp;
 var

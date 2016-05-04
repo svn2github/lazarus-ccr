@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <Name Value="rxtools"/>
+    <Type Value="RunAndDesignTime"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <SearchPaths>
+        <OtherUnitFiles Value="."/>
+        <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+    </CompilerOptions>
+    <Files Count="3">
+      <Item1>
+        <Filename Value="rxconfigvalues.pas"/>
+        <UnitName Value="rxConfigValues"/>
+      </Item1>
+      <Item2>
+        <Filename Value="rxstrutils.pas"/>
+        <UnitName Value="rxstrutils"/>
+      </Item2>
+      <Item3>
+        <Filename Value="dateutil.pas"/>
+        <UnitName Value="dateutil"/>
+      </Item3>
+    </Files>
+    <RequiredPkgs Count="1">
+      <Item1>
+        <PackageName Value="FCL"/>
+      </Item1>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>
