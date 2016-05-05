@@ -181,11 +181,13 @@ type
   private
     FActive: boolean;
     FColor: TColor;
+    FDrawFullLine: boolean;
     FOwner: TRxDBGrid;
     FRowCount: integer;
     FStyle: TTitleStyle;
     procedure SetActive(AValue: boolean);
     procedure SetColor(AValue: TColor);
+    procedure SetDrawFullLine(AValue: boolean);
     procedure SetRowCount(AValue: integer);
     procedure SetStyle(AValue: TTitleStyle);
   protected
@@ -198,6 +200,7 @@ type
     property Color: TColor read FColor write SetColor default clWindow;
     property RowCount: integer read FRowCount write SetRowCount default 0;
     property Style: TTitleStyle read FStyle write SetStyle default tsLazarus;
+    property DrawFullLine: boolean read FDrawFullLine write SetDrawFullLine;
   end;
 
   { TRxDBGridColumnDefValues }
@@ -571,7 +574,6 @@ type
     FPressed: boolean;
     FSwapButtons: boolean;
     FTracking: boolean;
-    FDrawFullLine: boolean;
 
     F_Clicked: boolean;
     F_PopupMenu: TPopupMenu;
@@ -1862,6 +1864,12 @@ begin
   if FColor=AValue then Exit;
   FColor:=AValue;
   FOwner.Invalidate;
+end;
+
+procedure TRxDBGridFooterOptions.SetDrawFullLine(AValue: boolean);
+begin
+  if FDrawFullLine=AValue then Exit;
+  FDrawFullLine:=AValue;
 end;
 
 procedure TRxDBGridFooterOptions.SetRowCount(AValue: integer);

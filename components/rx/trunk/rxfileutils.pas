@@ -44,13 +44,15 @@ function NormalizeDirectoryName(const DirName:string):string;
 function GetUserName:string;
 
 implementation
+
 uses
 {$IFDEF WINDOWS}
-   Windows,
+   Windows;
 {$ELSE}
 {$ENDIF}
-   FileUtil, LazFileUtils, LazUTF8;
-
+(*
+ FileUtil, LazFileUtils, LazUTF8;
+*)
 {$IF DEFINED(WINDOWS) AND NOT DEFINED(WINCE)}
 function LStrError(const Ernum: Longint; const UseUTF8: Boolean = False): string;
 const
@@ -141,8 +143,9 @@ var
   S:string;
 begin
   {$IF DEFINED(WINDOWS) AND NOT DEFINED(WINCE)}
-  GetFileNameOwner(UTF8ToSys(SearchDomain), UTF8ToSys(FileName), Result, S);
-  Result:=UTF8Encode(Result);
+(*  GetFileNameOwner(UTF8ToSys(SearchDomain), UTF8ToSys(FileName), Result, S);
+  Result:=UTF8Encode(Result);*)
+  GetFileNameOwner(SearchDomain, FileName, Result, S);
   {$ELSE}
   Result:='';
   {$ENDIF}
@@ -152,9 +155,10 @@ procedure GetFileOwnerData(const SearchDomain, FileName: String; out UserName,
   DomainName: string);
 begin
   {$IF DEFINED(WINDOWS) AND NOT DEFINED(WINCE)}
-  GetFileNameOwner(UTF8ToSys(SearchDomain), UTF8ToSys(FileName), UserName, DomainName);
+{  GetFileNameOwner(UTF8ToSys(SearchDomain), UTF8ToSys(FileName), UserName, DomainName);
   UserName:=UTF8Encode(UserName);
-  DomainName:=UTF8Encode(DomainName);
+  DomainName:=UTF8Encode(DomainName);}
+  GetFileNameOwner(SearchDomain, FileName, UserName, DomainName);
   {$ELSE}
   UserName:='';
   DomainName:='';
@@ -184,10 +188,12 @@ begin
   L:=SizeOf(A)-1;
   if Windows.GetUserNameA(@A, L) then
   begin
-    Result:=SysToUTF8(StrPas(@A));
+(*    Result:=SysToUTF8(StrPas(@A)); *)
+    Result:=StrPas(@A);
   end
   else
-    Result:=GetEnvironmentVariableUTF8('USERNAME');
+    (*Result:=GetEnvironmentVariableUTF8('USERNAME');*)
+    Result:=SysUtils.GetEnvironmentVariable('USERNAME');
   {$ELSE}
   Result:=GetEnvironmentVariable('USER');
   {$ENDIF}

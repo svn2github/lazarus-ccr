@@ -13,14 +13,13 @@ uses
   RegisterRxTools, RxAboutDialog, rxAboutFormUnit, rxappicon, rxapputils, 
   rxclock, rxconst, rxctrls, rxcustomchartpanel, RxDBColorBox, rxdbcomb, 
   RxDBCtrls, rxdbgrid, rxdbgrid_columsunit, rxdbgrid_findunit, RxDBSpinEdit, 
-  RxDBTimeEdit, rxdconst, rxdice, rxFileUtils, rxfilterby, rxiconv, rxlogin, 
-  rxlookup, rxmemds, rxpopupunit, rxsortmemds, rxspin, rxswitch, 
-  RxSystemServices, rxtbrsetup, RxTimeEdit, rxtoolbar, RxVersInfo, 
-  RxViewsPanel, rxxpman, seldsfrm, tooledit, vclutils, RxCloseFormValidator, 
-  RxHistoryNavigator, ex_rx_bin_datapacket, ex_rx_datapacket, 
-  ex_rx_xml_datapacket, rxsortby, RxMDI, RxIniPropStorage, 
-  rxDateRangeEditUnit, RxDBGridFooterTools, rxdbgridfootertools_setup, 
-  rxShortCutUnit, LazarusPackageIntf;
+  RxDBTimeEdit, rxdconst, rxdice, rxfilterby, rxiconv, rxlogin, rxlookup, 
+  rxmemds, rxpopupunit, rxsortmemds, rxspin, rxswitch, RxSystemServices, 
+  rxtbrsetup, RxTimeEdit, rxtoolbar, RxVersInfo, RxViewsPanel, rxxpman, 
+  seldsfrm, tooledit, vclutils, RxCloseFormValidator, RxHistoryNavigator, 
+  ex_rx_bin_datapacket, ex_rx_datapacket, ex_rx_xml_datapacket, rxsortby, 
+  RxMDI, RxIniPropStorage, rxDateRangeEditUnit, RxDBGridFooterTools, 
+  rxdbgridfootertools_setup, rxShortCutUnit, LazarusPackageIntf;
 
 implementation
 
