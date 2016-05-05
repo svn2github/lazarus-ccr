@@ -10,7 +10,7 @@
         <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
-    <Files Count="3">
+    <Files Count="4">
       <Item1>
         <Filename Value="rxconfigvalues.pas"/>
         <UnitName Value="rxConfigValues"/>
@@ -23,6 +23,10 @@
         <Filename Value="dateutil.pas"/>
         <UnitName Value="dateutil"/>
       </Item3>
+      <Item4>
+        <Filename Value="rxfileutils.pas"/>
+        <UnitName Value="rxFileUtils"/>
+      </Item4>
     </Files>
     <RequiredPkgs Count="1">
       <Item1>
