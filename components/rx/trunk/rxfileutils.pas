@@ -45,8 +45,8 @@ function GetUserName:string;
 
 implementation
 
-uses
 {$IFDEF WINDOWS}
+uses
    Windows;
 {$ELSE}
 {$ENDIF}

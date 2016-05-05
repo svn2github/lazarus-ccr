@@ -820,7 +820,7 @@ type
     property BorderStyle;
     property Color;
     property BorderColor;
-    property DrawFullLine: boolean read GetDrawFullLine write SetDrawFullLine;
+    property DrawFullLine: boolean read GetDrawFullLine write SetDrawFullLine; deprecated;
     property FocusColor;
     property FixedHotColor;
 
@@ -1870,6 +1870,7 @@ procedure TRxDBGridFooterOptions.SetDrawFullLine(AValue: boolean);
 begin
   if FDrawFullLine=AValue then Exit;
   FDrawFullLine:=AValue;
+  FOwner.VisualChange;
 end;
 
 procedure TRxDBGridFooterOptions.SetRowCount(AValue: integer);
@@ -2448,13 +2449,12 @@ end;
 
 function TRxDBGrid.GetDrawFullLine: boolean;
 begin
-  Result := FDrawFullLine;
+  Result := FFooterOptions.FDrawFullLine;
 end;
 
 procedure TRxDBGrid.SetDrawFullLine(Value: boolean);
 begin
-  FDrawFullLine := Value;
-  VisualChange;
+  FFooterOptions.DrawFullLine := Value;
 end;
 
 procedure TRxDBGrid.DoCreateJMenu;
@@ -3946,7 +3946,7 @@ begin
   begin
     TxS := Canvas.TextStyle;
 
-    if FDrawFullLine then
+    if FFooterOptions.FDrawFullLine then
     begin
       ColRowToOffset(True, True, 0, R.Left, R.Right);
       Canvas.Pen.Color := GridLineColor;
@@ -3969,7 +3969,7 @@ begin
         Canvas.FillRect(R);
         DrawCellGrid(i, 0, R, []);
 
-        if FDrawFullLine then
+        if FFooterOptions.FDrawFullLine then
         begin
           Canvas.MoveTo(R.Right - 1, R.Top);
           Canvas.LineTo(R.Right - 1, RowHeights[0]);
@@ -4024,7 +4024,7 @@ begin
 
     if assigned(ABrush)then FreeAndNil(ABrush);
 
-    if FDrawFullLine then
+    if FFooterOptions.FDrawFullLine then
     begin
       Canvas.MoveTo(FooterRect.Left, FooterRect.Top);
       Canvas.LineTo(R.Right, FooterRect.Top);
