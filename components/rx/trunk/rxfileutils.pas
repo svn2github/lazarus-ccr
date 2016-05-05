@@ -45,11 +45,12 @@ function GetUserName:string;
 
 implementation
 
-{$IFDEF WINDOWS}
 uses
-   Windows;
+{$IFDEF WINDOWS}
+   Windows
 {$ELSE}
-{$ENDIF}
+  BaseUnix, users
+{$ENDIF};
 (*
  FileUtil, LazFileUtils, LazUTF8;
 *)
@@ -153,6 +154,8 @@ end;
 
 procedure GetFileOwnerData(const SearchDomain, FileName: String; out UserName,
   DomainName: string);
+var
+  SR: stat;
 begin
   {$IF DEFINED(WINDOWS) AND NOT DEFINED(WINCE)}
 {  GetFileNameOwner(UTF8ToSys(SearchDomain), UTF8ToSys(FileName), UserName, DomainName);
@@ -160,8 +163,9 @@ begin
   DomainName:=UTF8Encode(DomainName);}
   GetFileNameOwner(SearchDomain, FileName, UserName, DomainName);
   {$ELSE}
-  UserName:='';
-  DomainName:='';
+  FpStat(FileName, SR);
+  UserName:=users.GetUserName(SR.uid);
+  DomainName:='';//IntToStr( SR.gid);
   {$ENDIF}
 end;
 

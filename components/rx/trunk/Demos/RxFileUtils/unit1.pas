@@ -37,8 +37,7 @@ var
   Form1: TForm1;
 
 implementation
-uses rxFileUtils
-  , LazUTF8;
+uses rxFileUtils;
 
 {$R *.lfm}
 
