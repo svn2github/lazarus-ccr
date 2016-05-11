@@ -49,7 +49,7 @@ uses
 {$IFDEF WINDOWS}
    Windows
 {$ELSE}
-  BaseUnix, users
+  BaseUnix, users, strutils
 {$ENDIF};
 (*
  FileUtil, LazFileUtils, LazUTF8;
@@ -81,8 +81,6 @@ begin
     Delete(Tmp, Length(Tmp)-1, 2);
   Result := Result + Tmp;
 end;
-
-{ TODO -oalexs : In future need rewrite this code for fix mem leak }
 
 procedure GetFileNameOwner(const SearchDomain, FileName: String; out UserName, DomainName: string);
 var
@@ -154,8 +152,11 @@ end;
 
 procedure GetFileOwnerData(const SearchDomain, FileName: String; out UserName,
   DomainName: string);
+{$IF DEFINED(WINDOWS) AND NOT DEFINED(WINCE)}
+{$ELSE}
 var
   SR: stat;
+  {$ENDIF}
 begin
   {$IF DEFINED(WINDOWS) AND NOT DEFINED(WINCE)}
 {  GetFileNameOwner(UTF8ToSys(SearchDomain), UTF8ToSys(FileName), UserName, DomainName);
@@ -165,7 +166,10 @@ begin
   {$ELSE}
   FpStat(FileName, SR);
   UserName:=users.GetUserName(SR.uid);
-  DomainName:='';//IntToStr( SR.gid);
+  if Pos('\', UserName) > 0 then
+    DomainName:=Copy2SymbDel(UserName, '\') //for unix samba WinBIND
+  else
+    DomainName:='';//IntToStr( SR.gid);
   {$ENDIF}
 end;
 

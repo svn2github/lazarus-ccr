@@ -12,10 +12,10 @@ object Form1: TForm1
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 322
-    Height = 32
+    Left = 335
+    Height = 23
     Top = 6
-    Width = 113
+    Width = 100
     Anchors = [akTop, akRight]
     AutoSize = True
     BorderSpacing.Around = 6
@@ -30,8 +30,8 @@ object Form1: TForm1
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 12
-    Height = 30
-    Top = 70
+    Height = 21
+    Top = 54
     Width = 423
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Around = 6
@@ -46,8 +46,8 @@ object Form1: TForm1
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 12
-    Height = 30
-    Top = 132
+    Height = 21
+    Top = 100
     Width = 423
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Around = 6
@@ -62,8 +62,8 @@ object Form1: TForm1
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 10
-    Height = 30
-    Top = 282
+    Height = 21
+    Top = 211
     Width = 425
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Around = 6
@@ -78,8 +78,8 @@ object Form1: TForm1
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 12
-    Height = 30
-    Top = 344
+    Height = 21
+    Top = 257
     Width = 423
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Around = 6
@@ -92,9 +92,9 @@ object Form1: TForm1
     AnchorSideTop.Control = Button1
     AnchorSideTop.Side = asrBottom
     Left = 6
-    Height = 20
-    Top = 44
-    Width = 251
+    Height = 13
+    Top = 35
+    Width = 188
     BorderSpacing.Around = 6
     Caption = 'User name (from environment variable)'
     ParentColor = False
@@ -104,11 +104,11 @@ object Form1: TForm1
     AnchorSideTop.Control = Edit1
     AnchorSideTop.Side = asrBottom
     Left = 6
-    Height = 20
-    Top = 106
-    Width = 80
+    Height = 13
+    Top = 81
+    Width = 59
     BorderSpacing.Around = 6
-    Caption = 'User domani'
+    Caption = 'User domain'
     ParentColor = False
   end
   object Label3: TLabel
@@ -116,9 +116,9 @@ object Form1: TForm1
     AnchorSideTop.Control = DividerBevel1
     AnchorSideTop.Side = asrBottom
     Left = 6
-    Height = 20
-    Top = 194
-    Width = 55
+    Height = 13
+    Top = 146
+    Width = 40
     BorderSpacing.Around = 6
     Caption = 'File info:'
     ParentColor = False
@@ -130,8 +130,8 @@ object Form1: TForm1
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 0
-    Height = 20
-    Top = 168
+    Height = 13
+    Top = 127
     Width = 441
     Caption = 'File owner'
     Anchors = [akTop, akLeft, akRight]
@@ -147,8 +147,8 @@ object Form1: TForm1
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 12
-    Height = 30
-    Top = 220
+    Height = 21
+    Top = 165
     Width = 423
     FilterIndex = 0
     HideDirectories = False
@@ -164,9 +164,9 @@ object Form1: TForm1
     AnchorSideTop.Control = FileNameEdit1
     AnchorSideTop.Side = asrBottom
     Left = 4
-    Height = 20
-    Top = 256
-    Width = 83
+    Height = 13
+    Top = 192
+    Width = 61
     BorderSpacing.Around = 6
     Caption = 'Owner name'
     ParentColor = False
@@ -176,9 +176,9 @@ object Form1: TForm1
     AnchorSideTop.Control = Edit3
     AnchorSideTop.Side = asrBottom
     Left = 6
-    Height = 20
-    Top = 318
-    Width = 94
+    Height = 13
+    Top = 238
+    Width = 69
     BorderSpacing.Around = 6
     Caption = 'Owner domain'
     ParentColor = False
