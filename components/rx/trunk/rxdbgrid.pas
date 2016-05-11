@@ -565,8 +565,6 @@ type
     FOnRxColumnFooterDraw :TOnRxColumnFooterDraw;
     //auto sort support
 
-    FMarkerUp   : TBitmap;
-    FMarkerDown : TBitmap;
     FAutoSort   : boolean;
     FSortEngine : TRxDBGridSortEngine;
     FPressedCol : TRxColumn;
@@ -578,6 +576,16 @@ type
     F_Clicked: boolean;
     F_PopupMenu: TPopupMenu;
     F_MenuBMP: TBitmap;
+    //glyph for collumns buttons
+{
+    FMarkerUp   : TBitmap;
+    FMarkerDown : TBitmap;
+    FEllipsisRxBMP: TBitmap;
+    FGlyphRxBMP: TBitmap;
+    FUpDownRxBMP: TBitmap;
+    FPlusRxBMP: TBitmap;
+    FMinusRxBMP: TBitmap;
+}
 
     F_EventOnFilterRec: TFilterRecordEvent;
     F_EventOnBeforeDelete: TDataSetNotifyEvent;
@@ -611,8 +619,8 @@ type
     function GetColumns: TRxDbGridColumns;
     function GetFooterColor: TColor;
     function GetFooterRowCount: integer;
-    function GetMarkerDown: TBitmap;
-    function GetMarkerUp: TBitmap;
+    //function GetMarkerDown: TBitmap;
+    //function GetMarkerUp: TBitmap;
     function GetPropertyStorage: TCustomPropertyStorage;
     function GetSortField: string;
     function GetSortOrder: TSortMarker;
@@ -626,8 +634,8 @@ type
     procedure SetFooterOptions(AValue: TRxDBGridFooterOptions);
     procedure SetFooterRowCount(const AValue: integer);
     procedure SetKeyStrokes(const AValue: TRxDBGridKeyStrokes);
-    procedure SetMarkerDown(AValue: TBitmap);
-    procedure SetMarkerUp(AValue: TBitmap);
+    //procedure SetMarkerDown(AValue: TBitmap);
+    //procedure SetMarkerUp(AValue: TBitmap);
     procedure SetOptionsRx(const AValue: TOptionsRx);
     procedure SetPropertyStorage(const AValue: TCustomPropertyStorage);
     procedure SetTitleButtons(const AValue: boolean);
@@ -784,8 +792,8 @@ type
     property SortOrder:TSortMarker read GetSortOrder;
 
     property SortColumns:TRxDbGridColumnsSortList read FSortColumns;
-    property MarkerUp : TBitmap read GetMarkerUp write SetMarkerUp;
-    property MarkerDown : TBitmap read GetMarkerDown write SetMarkerDown;
+    //property MarkerUp : TBitmap read GetMarkerUp write SetMarkerUp;
+    //property MarkerDown : TBitmap read GetMarkerDown write SetMarkerDown;
   published
     property AfterQuickSearch: TRxQuickSearchNotifyEvent read FAfterQuickSearch write FAfterQuickSearch;
     property ColumnDefValues:TRxDBGridColumnDefValues read FColumnDefValues write SetColumnDefValues;
@@ -947,6 +955,8 @@ implementation
 uses Math, rxdconst, rxstrutils, strutils, rxdbgrid_findunit, rxdbgrid_columsunit,
   rxlookup, tooledit, LCLProc, Clipbrd, rxfilterby, rxsortby, variants;
 
+{$R rxdbgrid.res}
+
 const
   EditorCommandStrs: array[rxgcNone .. High(TRxDBGridCommand)] of TIdentMapEntry =
     (
@@ -966,6 +976,15 @@ const
 
 var
   RxDBGridSortEngineList: TStringList;
+
+  FMarkerUp   : TBitmap = nil;
+  FMarkerDown : TBitmap = nil;
+  FEllipsisRxBMP: TBitmap = nil;
+  FGlyphRxBMP: TBitmap = nil;
+  FUpDownRxBMP: TBitmap = nil;
+  FPlusRxBMP: TBitmap = nil;
+  FMinusRxBMP: TBitmap = nil;
+
 
 procedure RegisterRxDBGridSortEngine(
   RxDBGridSortEngineClass: TRxDBGridSortEngineClass; DataSetClassName: string);
@@ -1693,9 +1712,35 @@ begin
 end;
 
 procedure TRxColumnEditButton.SetStyle(AValue: TRxColumnEditButtonStyle);
+{var
+  G: TRxDBGrid;
+  P: TPersistent;}
 begin
   if FStyle=AValue then Exit;
   FStyle:=AValue;
+
+{  if Assigned(Collection) and Assigned(Collection.Owner)
+    and Assigned(TRxColumn(Collection.Owner).Collection)
+    and Assigned(TRxColumn(Collection.Owner).Collection.Owner) then
+  begin
+    P:=Collection;
+    P:=Collection.Owner;
+    P:=TRxColumn(Collection.Owner).Collection;
+    P:=TRxColumn(Collection.Owner).Collection.Owner;
+    G:=TRxDBGrid(TRxColumn(Collection.Owner).Collection.Owner);
+}
+    case FStyle of
+      ebsDropDownRx:FButton.Glyph.Assign(FMarkerDown);
+      ebsEllipsisRx:FButton.Glyph.Assign(FEllipsisRxBMP);
+      ebsGlyphRx:FButton.Glyph.Assign(FGlyphRxBMP);
+      ebsUpDownRx:FButton.Glyph.Assign(FUpDownRxBMP);
+      ebsPlusRx:FButton.Glyph.Assign(FPlusRxBMP);
+      ebsMinusRx:FButton.Glyph.Assign(FMinusRxBMP);
+    else
+      FButton.Glyph.Assign(nil);
+    end;
+
+//  end;
 end;
 
 procedure TRxColumnEditButton.SetVisible(AValue: Boolean);
@@ -1792,10 +1837,16 @@ begin
 end;
 
 constructor TRxColumnEditButton.Create(ACollection: TCollection);
+var
+  P: TBitmap;
 begin
   inherited Create(ACollection);
   FButton:=TSpeedButton.Create(nil);
-  FButton.Glyph:=LoadLazResBitmapImage('rx_markerdown');
+  //FButton.Glyph:=LoadLazResBitmapImage('rx_markerdown');
+{  P:=CreateResBitmap('rx_markerdown');
+  FButton.Glyph:=P;
+  P.Free;}
+
   FSpinBtn:=TRxSpinButton.Create(nil);
   FSpinBtn.OnBottomClick:=@DoBottomClick;
   FSpinBtn.OnTopClick:=@DoTopClick;
@@ -2436,7 +2487,7 @@ function TRxDBGrid.GetFooterRowCount: integer;
 begin
   Result:=FFooterOptions.RowCount;
 end;
-
+{
 function TRxDBGrid.GetMarkerDown: TBitmap;
 begin
   Result:=FMarkerDown;
@@ -2446,7 +2497,7 @@ function TRxDBGrid.GetMarkerUp: TBitmap;
 begin
   Result:=FMarkerUp;
 end;
-
+}
 function TRxDBGrid.GetDrawFullLine: boolean;
 begin
   Result := FFooterOptions.FDrawFullLine;
@@ -2546,7 +2597,7 @@ begin
 
   UpdateJMenuKeys;
 end;
-
+{
 procedure TRxDBGrid.SetMarkerDown(AValue: TBitmap);
 begin
   FMarkerDown.Assign(AValue);
@@ -2556,7 +2607,7 @@ procedure TRxDBGrid.SetMarkerUp(AValue: TBitmap);
 begin
   FMarkerUp.Assign(AValue);
 end;
-
+}
 procedure TRxDBGrid.SetOptionsRx(const AValue: TOptionsRx);
 var
   OldOpt: TOptionsRx;
@@ -5591,8 +5642,20 @@ begin
 
   FSortColumns:=TRxDbGridColumnsSortList.Create;
 
-  FMarkerUp := LoadLazResBitmapImage('rx_markerup');
-  FMarkerDown := LoadLazResBitmapImage('rx_markerdown');
+//  FMarkerUp := LoadBitmapFromLazarusResource('rx_markerup');
+//  FMarkerDown := LoadBitmapFromLazarusResource('rx_markerdown');
+//  F_MenuBMP := LoadBitmapFromLazarusResource('menu_grid');
+
+  F_MenuBMP := CreateResBitmap('rx_menu_grid');
+(*
+  FMarkerUp := CreateResBitmap('rx_markerup');
+  FMarkerDown := CreateResBitmap('rx_markerdown');
+  FEllipsisRxBMP:=CreateResBitmap('rx_Ellipsis');
+  FGlyphRxBMP:=CreateResBitmap('rx_Glyph');
+  FUpDownRxBMP:=CreateResBitmap('rx_UpDown');
+  FPlusRxBMP:=CreateResBitmap('rx_plus');
+  FMinusRxBMP:=CreateResBitmap('rx_minus');
+*)
 
   Options := Options - [dgTabs];
   OptionsRx := OptionsRx + [rdgAllowColumnsForm, rdgAllowDialogFind, rdgAllowQuickFilter];
@@ -5600,7 +5663,6 @@ begin
   FAutoSort := True;
 
   F_Clicked := False;
-  F_MenuBMP := LoadLazResBitmapImage('menu_grid');
 
   DoCreateJMenu;
 
@@ -5647,13 +5709,19 @@ begin
 
   FreeAndNil(FRxDbGridLookupComboEditor);
   FreeAndNil(FRxDbGridDateEditor);
-  FreeAndNil(FMarkerDown);
-  FreeAndNil(FMarkerUp);
+  //FreeAndNil(FMarkerDown);
+  //FreeAndNil(FMarkerUp);
   FreeAndNil(FPropertyStorageLink);
   FreeAndNil(FFilterListEditor);
 
   FreeAndNil(F_PopupMenu);
   FreeAndNil(F_MenuBMP);
+{  FreeAndNil(FEllipsisRxBMP);
+  FreeAndNil(FGlyphRxBMP);
+  FreeAndNil(FUpDownRxBMP);
+  FreeAndNil(FPlusRxBMP);
+  FreeAndNil(FMinusRxBMP);}
+
   FreeAndNil(F_LastFilter);
 
   FreeAndNil(FKeyStrokes);
@@ -6678,11 +6746,19 @@ end;
 initialization
   RegisterPropertyToSkip( TRxDBGrid, 'AllowedOperations', 'This property duplicated standart DBGrid.Options', '');
 
-  {$I rxdbgrid.lrs}
+  //{$I rxdbgrid.lrs}
   //  {$I rx_markerdown.lrs}
 
   RxDBGridSortEngineList := TStringList.Create;
   RxDBGridSortEngineList.Sorted := True;
+
+  FMarkerUp := CreateResBitmap('rx_markerup');
+  FMarkerDown := CreateResBitmap('rx_markerdown');
+  FEllipsisRxBMP:=CreateResBitmap('rx_Ellipsis');
+  FGlyphRxBMP:=CreateResBitmap('rx_Glyph');
+  FUpDownRxBMP:=CreateResBitmap('rx_UpDown');
+  FPlusRxBMP:=CreateResBitmap('rx_plus');
+  FMinusRxBMP:=CreateResBitmap('rx_minus');
 
 finalization
 
@@ -6692,6 +6768,14 @@ finalization
     RxDBGridSortEngineList.Delete(0);
   end;
   RxDBGridSortEngineList.Free;
+
+  FreeAndNil(FMarkerUp);
+  FreeAndNil(FMarkerDown);
+  FreeAndNil(FEllipsisRxBMP);
+  FreeAndNil(FGlyphRxBMP);
+  FreeAndNil(FUpDownRxBMP);
+  FreeAndNil(FPlusRxBMP);
+  FreeAndNil(FMinusRxBMP);
 
 end.
 

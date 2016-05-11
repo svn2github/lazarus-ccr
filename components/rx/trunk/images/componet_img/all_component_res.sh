@@ -3,7 +3,7 @@ rm rxdbgrid.lrs
 rm tooledit.res
 rm rxdbgrid.res
 
-/usr/local/share/lazarus/tools/lazres rxdbgrid.res rx_markerdown.png rx_markerup.png
+/usr/local/share/lazarus/tools/lazres rxdbgrid.res rx_markerdown.png rx_markerup.png rx_DropDown.png  rx_Ellipsis.png  rx_Glyph.png  rx_minus.png  rx_plus.png  rx_UpDown.png rx_menu_grid.png
 /usr/local/share/lazarus/tools/lazres rx_lcl.res picDateEdit.png rxbtn_downarrow.png
 
 #../../../../tools\lazres.exe tooledit.lrs picDateEdit.bmp

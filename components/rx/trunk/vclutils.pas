@@ -62,6 +62,7 @@ procedure OutTextXY90(Canvas:TCanvas; X,Y:integer; Text:string; Orientation:TTex
 function IsForegroundTask: Boolean;
 function ValidParentForm(Control: TControl): TCustomForm;
 function CreateArrowBitmap:TBitmap;
+function CreateResBitmap(const AResName:string):TBitmap;
 function  LoadLazResBitmapImage(const ResName: string): TBitmap;
 
 {functions from DBGrid}
@@ -604,11 +605,10 @@ end;
 {$ENDIF}
 
 function CreateArrowBitmap:TBitmap;
-var
-  C : TCustomBitmap;
 begin
   {$IFNDEF RX_USE_LAZARUS_RESOURCE}
-  Result := TBitmap.Create;
+  Result:=CreateResBitmap('rxbtn_downarrow');
+(*  Result := TBitmap.Create;
   try
     try
       C := TPortableNetworkGraphic.Create;
@@ -620,10 +620,29 @@ begin
   except
     Result.Free;
     raise;
-  end;
+  end; *)
   {$ELSE}
   Result:=LoadLazResBitmapImage('rxbtn_downarrow')
   {$ENDIF}
+end;
+
+function CreateResBitmap(const AResName: string): TBitmap;
+var
+  C : TCustomBitmap;
+begin
+  Result := TBitmap.Create;
+  try
+    try
+      C := TPortableNetworkGraphic.Create;
+      C.LoadFromResourceName(hInstance, AResName);
+      Result.Assign(C);
+    finally
+      C.Free;
+    end;
+  except
+    Result.Free;
+    raise;
+  end;
 end;
 
 //Code from DBGrid
