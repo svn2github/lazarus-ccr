@@ -262,6 +262,7 @@ type
   function MakeInternalSymbolNameFrom(const AName : string) : string ;
 
   function CreateWstInterfaceSymbolTable(AContainer : TwstPasTreeContainer) : TPasModule;
+  function JavaCreateWstInterfaceSymbolTable(AContainer : TwstPasTreeContainer) : TPasModule;
   procedure CreateDefaultBindingForIntf(ATree : TwstPasTreeContainer);
   
 implementation
@@ -302,6 +303,75 @@ const
           ('AnsiChar', 'TComplexAnsiCharContentRemotable', 'string'),
           ('WideChar', 'TComplexWideCharContentRemotable', 'string')
      );
+// JAVA
+    JAVA_SIMPLE_TYPES_COUNT = 11;
+      JAVA_SIMPLE_TYPES : Array[0..Pred(JAVA_SIMPLE_TYPES_COUNT)] Of array[0..2] of string = (
+          ('char', '', ''),
+          ('byte', '', ''),
+          ('short', '', ''),
+          ('int', '', ''),
+          ('long', '', ''),
+          ('float', '', ''),
+          ('double', '', ''),
+          ('boolean', '', ''),
+          ('String', '', 'string'),
+          ('wst.DateTime', '', 'dateTime') , //('java.util.OffsetDateTime', '', 'dateTime') ,
+          //('java.time.OffsetTime', '', 'time') ,
+          //('java.time.Duration', '', 'duration') ,
+          ('java.math.BigDecimal', '', 'decimal')
+        );
+
+
+procedure JavaRegisterSimpleTypes(
+  ADest      : TPasModule;
+  AContainer : TwstPasTreeContainer
+);
+var
+  i : Integer;
+  splTyp : TPasNativeSimpleType;
+  syb : TPasNativeSimpleContentClassType;
+  s : string;
+  typlst : array[0..Pred(JAVA_SIMPLE_TYPES_COUNT)] of TPasNativeSimpleType;
+begin
+  for i := Low(JAVA_SIMPLE_TYPES) to High(JAVA_SIMPLE_TYPES) do begin
+    splTyp := TPasNativeSimpleType(
+                AContainer.CreateElement(
+                  TPasNativeSimpleType,JAVA_SIMPLE_TYPES[i][0],
+                  ADest.InterfaceSection,visPublic,'',0
+                )
+              );
+    ADest.InterfaceSection.Declarations.Add(splTyp);
+    ADest.InterfaceSection.Types.Add(splTyp);
+    typlst[i] := splTyp;
+  end;
+  for i := Low(JAVA_SIMPLE_TYPES) to High(JAVA_SIMPLE_TYPES) do begin
+    s := JAVA_SIMPLE_TYPES[i][1];
+    if not IsStrEmpty(s) then begin
+      syb := AContainer.FindElementInModule(JAVA_SIMPLE_TYPES[i][1],ADest)
+               as TPasNativeSimpleContentClassType;
+      if not Assigned(syb) then begin
+        syb := TPasNativeSimpleContentClassType(
+                 AContainer.CreateElement(
+                   TPasNativeSimpleContentClassType,s,
+                   ADest.InterfaceSection,visDefault,'',0
+                 )
+               );
+        ADest.InterfaceSection.Declarations.Add(syb);
+        ADest.InterfaceSection.Types.Add(syb);
+      end;
+      typlst[i].SetExtendableType(syb);
+    end;
+  end;
+  for i := Low(JAVA_SIMPLE_TYPES) to High(JAVA_SIMPLE_TYPES) do begin
+    splTyp := typlst[i];
+    if not IsStrEmpty(JAVA_SIMPLE_TYPES[i][2]) then begin
+      AContainer.RegisterExternalAlias(splTyp,JAVA_SIMPLE_TYPES[i][2]);
+      if ( splTyp.ExtendableType <> nil ) then begin
+        AContainer.RegisterExternalAlias(splTyp.ExtendableType,JAVA_SIMPLE_TYPES[i][2]);
+      end;
+    end;
+  end;
+end;
 
 procedure AddSystemSymbol(
   ADest      : TPasModule;
@@ -443,44 +513,89 @@ begin
   RegisterBoxedTypes();
 end;
 
+function AddAlias(
+        AContainer : TwstPasTreeContainer;
+  const AName,
+        ABaseType  : string;
+        ATable     : TPasModule
+) : TPasTypeAliasType;
+begin
+  Result := TPasTypeAliasType(AContainer.CreateElement(TPasAliasType,AName,ATable.InterfaceSection,visPublic,'',0));
+  Result.DestType := AContainer.FindElementInModule(ABaseType,ATable) as TPasType;
+  if Assigned(Result.DestType) then
+    Result.DestType.AddRef();
+  ATable.InterfaceSection.Declarations.Add(Result);
+  ATable.InterfaceSection.Classes.Add(Result);
+  ATable.InterfaceSection.Types.Add(Result);
+end;
+
+function AddClassDef(
+        AContainer : TwstPasTreeContainer;
+        ATable      : TPasModule;
+  const AClassName,
+        AParentName : string;
+  const AClassType  : TPasClassTypeClass = nil
+):TPasClassType;
+var
+  locClassType : TPasClassTypeClass;
+begin
+  if Assigned(AClassType) then begin
+    locClassType := AClassType;
+  end else begin
+    locClassType := TPasClassType;
+  end;
+  Result := TPasClassType(AContainer.CreateElement(locClassType,AClassName,ATable.InterfaceSection,visDefault,'',0));
+  if not IsStrEmpty(AParentName) then begin
+    Result.AncestorType := AContainer.FindElementInModule(AParentName,ATable) as TPasType;
+    if Assigned(Result.AncestorType) then
+      Result.AncestorType.AddRef();
+  end;
+  ATable.InterfaceSection.Classes.Add(Result);
+  ATable.InterfaceSection.Declarations.Add(Result);
+  ATable.InterfaceSection.Types.Add(Result);
+end;
+
+function JavaCreateWstInterfaceSymbolTable(AContainer : TwstPasTreeContainer) : TPasModule;
+var
+  locOldNameKinds : TElementNameKinds;
+begin
+  locOldNameKinds := AContainer.DefaultSearchNameKinds;
+  AContainer.DefaultSearchNameKinds := [elkDeclaredName,elkName];
+  try
+    Result := TPasNativeModule(AContainer.CreateElement(TPasNativeModule,'base_service_intf',AContainer.Package,visPublic,'',0));
+    try
+      AContainer.Package.Modules.Add(Result);
+      AContainer.RegisterExternalAlias(Result,sXSD_NS);
+      Result.InterfaceSection := TInterfaceSection(AContainer.CreateElement(TInterfaceSection,'',Result,visDefault,'',0));
+      JavaRegisterSimpleTypes(Result,AContainer);
+      AddClassDef(AContainer,Result,'Object','',TPasNativeClassType);
+      AddAlias(AContainer,'TBaseComplexRemotable','Object',Result);
+      AddAlias(AContainer,'UnicodeString','string',Result);
+      AddAlias(AContainer,'token','string',Result);
+      AddAlias(AContainer,'language','string',Result);
+      AddAlias(AContainer,'anyURI','string',Result);
+      AddAlias(AContainer,'ID','string',Result);
+      AddAlias(AContainer,'base64Binary','string',Result);
+      AddAlias(AContainer,'hexBinary','string',Result);
+      AddAlias(AContainer,'integer','int',Result);
+      AddAlias(AContainer,'nonNegativeInteger','int',Result);
+      AddAlias(AContainer,'positiveInteger','int',Result);
+      AddAlias(AContainer,'unsignedInt','int',Result);
+      AddAlias(AContainer,'unsignedByte','int',Result);
+      AddAlias(AContainer,'unsignedShort','int',Result);
+      AddAlias(AContainer,'unsignedLong','long',Result);
+      AddAlias(AContainer,'Currency','decimal',Result);
+      AddAlias(AContainer,'date','dateTime',Result);
+    except
+      FreeAndNil(Result);
+      raise;
+    end;
+  finally
+    AContainer.DefaultSearchNameKinds := locOldNameKinds;
+  end;
+end;
+
 function CreateWstInterfaceSymbolTable(AContainer : TwstPasTreeContainer) : TPasModule;
-
-  function AddClassDef(
-          ATable      : TPasModule;
-    const AClassName,
-          AParentName : string;
-    const AClassType  : TPasClassTypeClass = nil
-  ):TPasClassType;
-  var
-    locClassType : TPasClassTypeClass;
-  begin
-    if Assigned(AClassType) then begin
-      locClassType := AClassType;
-    end else begin
-      locClassType := TPasClassType;
-    end;
-    Result := TPasClassType(AContainer.CreateElement(locClassType,AClassName,ATable.InterfaceSection,visDefault,'',0));
-    if not IsStrEmpty(AParentName) then begin
-      Result.AncestorType := AContainer.FindElementInModule(AParentName,ATable) as TPasType;
-      if Assigned(Result.AncestorType) then
-        Result.AncestorType.AddRef();
-    end;
-    ATable.InterfaceSection.Classes.Add(Result);
-    ATable.InterfaceSection.Declarations.Add(Result);
-    ATable.InterfaceSection.Types.Add(Result);
-  end;
-
-  function AddAlias(const AName, ABaseType : string; ATable : TPasModule) : TPasTypeAliasType;
-  begin
-    Result := TPasTypeAliasType(AContainer.CreateElement(TPasAliasType,AName,ATable.InterfaceSection,visPublic,'',0));
-    Result.DestType := AContainer.FindElementInModule(ABaseType,ATable) as TPasType;
-    if Assigned(Result.DestType) then
-      Result.DestType.AddRef();
-    ATable.InterfaceSection.Declarations.Add(Result);
-    ATable.InterfaceSection.Classes.Add(Result);
-    ATable.InterfaceSection.Types.Add(Result);
-  end;
-  
 var
   loc_TBaseComplexSimpleContentRemotable : TPasClassType;
   locOldNameKinds : TElementNameKinds;
@@ -494,60 +609,60 @@ begin
       AContainer.RegisterExternalAlias(Result,sXSD_NS);
       Result.InterfaceSection := TInterfaceSection(AContainer.CreateElement(TInterfaceSection,'',Result,visDefault,'',0));
       AddSystemSymbol(Result,AContainer,AContainer.XsdStringMaping);
-      AddClassDef(Result,'TBaseRemotable','',TPasNativeClassType);
-        AddClassDef(Result,'TStringBufferRemotable','TBaseRemotable',TPasNativeClassType);
-        AContainer.RegisterExternalAlias(AddClassDef(Result,'anyType_Type','TBaseRemotable',TPasNativeClassType),'anyType');
-        AddClassDef(Result,'TAbstractSimpleRemotable','TBaseRemotable',TPasNativeClassType);
-          AContainer.RegisterExternalAlias(AddClassDef(Result,'schema_Type','TAbstractSimpleRemotable'),'schema');
-          AContainer.RegisterExternalAlias(AddClassDef(Result,'TDateRemotable','TAbstractSimpleRemotable'),'date');
-          AContainer.RegisterExternalAlias(AddClassDef(Result,'TDateTimeRemotable','TAbstractSimpleRemotable'),'dateTime');
+      AddClassDef(AContainer,Result,'TBaseRemotable','',TPasNativeClassType);
+        AddClassDef(AContainer,Result,'TStringBufferRemotable','TBaseRemotable',TPasNativeClassType);
+        AContainer.RegisterExternalAlias(AddClassDef(AContainer,Result,'anyType_Type','TBaseRemotable',TPasNativeClassType),'anyType');
+        AddClassDef(AContainer,Result,'TAbstractSimpleRemotable','TBaseRemotable',TPasNativeClassType);
+          AContainer.RegisterExternalAlias(AddClassDef(AContainer,Result,'schema_Type','TAbstractSimpleRemotable'),'schema');
+          AContainer.RegisterExternalAlias(AddClassDef(AContainer,Result,'TDateRemotable','TAbstractSimpleRemotable'),'date');
+          AContainer.RegisterExternalAlias(AddClassDef(AContainer,Result,'TDateTimeRemotable','TAbstractSimpleRemotable'),'dateTime');
   {$IFDEF WST_HAS_TDURATIONREMOTABLE}
-          AContainer.RegisterExternalAlias(AddClassDef(Result,'TDurationRemotable','TAbstractSimpleRemotable'),'duration');
+          AContainer.RegisterExternalAlias(AddClassDef(AContainer,Result,'TDurationRemotable','TAbstractSimpleRemotable'),'duration');
   {$ENDIF WST_HAS_TDURATIONREMOTABLE}
-          AContainer.RegisterExternalAlias(AddClassDef(Result,'TTimeRemotable','TAbstractSimpleRemotable'),'time');
+          AContainer.RegisterExternalAlias(AddClassDef(AContainer,Result,'TTimeRemotable','TAbstractSimpleRemotable'),'time');
 
-        AddClassDef(Result,'TAbstractComplexRemotable','TBaseRemotable',TPasNativeClassType);
-          loc_TBaseComplexSimpleContentRemotable := AddClassDef(Result,'TBaseComplexSimpleContentRemotable','TAbstractComplexRemotable',TPasNativeClassType);
+        AddClassDef(AContainer,Result,'TAbstractComplexRemotable','TBaseRemotable',TPasNativeClassType);
+          loc_TBaseComplexSimpleContentRemotable := AddClassDef(AContainer,Result,'TBaseComplexSimpleContentRemotable','TAbstractComplexRemotable',TPasNativeClassType);
             (AContainer.FindElementInModule('TComplexInt16SContentRemotable',Result) as TPasClassType).AncestorType := loc_TBaseComplexSimpleContentRemotable;
             (AContainer.FindElementInModule('TComplexFloatDoubleContentRemotable',Result) as TPasClassType).AncestorType := loc_TBaseComplexSimpleContentRemotable;
               loc_TBaseComplexSimpleContentRemotable.AddRef();
               loc_TBaseComplexSimpleContentRemotable.AddRef();
 
-          AddClassDef(Result,'TBaseComplexRemotable','TAbstractComplexRemotable',TPasNativeClassType);
-            AddClassDef(Result,'THeaderBlock','TBaseComplexRemotable',TPasNativeClassType);
-              AddClassDef(Result,'TSimpleContentHeaderBlock','THeaderBlock',TPasNativeClassType);
-          AddClassDef(Result,'TBaseArrayRemotable','TAbstractComplexRemotable',TPasNativeClassType);
-            AddClassDef(Result,'TBaseObjectArrayRemotable','TBaseArrayRemotable',TPasNativeClassType);
-            AddClassDef(Result,'TBaseSimpleTypeArrayRemotable','TBaseArrayRemotable',TPasNativeClassType);
-              AddClassDef(Result,'TArrayOfStringRemotable','TBaseSimpleTypeArrayRemotable');
-              AddClassDef(Result,'TArrayOfBooleanRemotable','TBaseSimpleTypeArrayRemotable');
-              AddClassDef(Result,'TArrayOfInt8URemotable','TBaseSimpleTypeArrayRemotable');
-              AddClassDef(Result,'TArrayOfInt8SRemotable','TBaseSimpleTypeArrayRemotable');
-              AddClassDef(Result,'TArrayOfInt16SRemotable','TBaseSimpleTypeArrayRemotable');
-              AddClassDef(Result,'TArrayOfInt16URemotable','TBaseSimpleTypeArrayRemotable');
-              AddClassDef(Result,'TArrayOfInt32URemotable','TBaseSimpleTypeArrayRemotable');
-              AddClassDef(Result,'TArrayOfInt32SRemotable','TBaseSimpleTypeArrayRemotable');
-              AddClassDef(Result,'TArrayOfInt64SRemotable','TBaseSimpleTypeArrayRemotable');
-              AddClassDef(Result,'TArrayOfInt64URemotable','TBaseSimpleTypeArrayRemotable');
-              AddClassDef(Result,'TArrayOfFloatSingleRemotable','TBaseSimpleTypeArrayRemotable');
-              AddClassDef(Result,'TArrayOfFloatDoubleRemotable','TBaseSimpleTypeArrayRemotable');
-              AddClassDef(Result,'TArrayOfFloatExtendedRemotable','TBaseSimpleTypeArrayRemotable');
-              AddClassDef(Result,'TArrayOfFloatCurrencyRemotable','TBaseSimpleTypeArrayRemotable');
+          AddClassDef(AContainer,Result,'TBaseComplexRemotable','TAbstractComplexRemotable',TPasNativeClassType);
+            AddClassDef(AContainer,Result,'THeaderBlock','TBaseComplexRemotable',TPasNativeClassType);
+              AddClassDef(AContainer,Result,'TSimpleContentHeaderBlock','THeaderBlock',TPasNativeClassType);
+          AddClassDef(AContainer,Result,'TBaseArrayRemotable','TAbstractComplexRemotable',TPasNativeClassType);
+            AddClassDef(AContainer,Result,'TBaseObjectArrayRemotable','TBaseArrayRemotable',TPasNativeClassType);
+            AddClassDef(AContainer,Result,'TBaseSimpleTypeArrayRemotable','TBaseArrayRemotable',TPasNativeClassType);
+              AddClassDef(AContainer,Result,'TArrayOfStringRemotable','TBaseSimpleTypeArrayRemotable');
+              AddClassDef(AContainer,Result,'TArrayOfBooleanRemotable','TBaseSimpleTypeArrayRemotable');
+              AddClassDef(AContainer,Result,'TArrayOfInt8URemotable','TBaseSimpleTypeArrayRemotable');
+              AddClassDef(AContainer,Result,'TArrayOfInt8SRemotable','TBaseSimpleTypeArrayRemotable');
+              AddClassDef(AContainer,Result,'TArrayOfInt16SRemotable','TBaseSimpleTypeArrayRemotable');
+              AddClassDef(AContainer,Result,'TArrayOfInt16URemotable','TBaseSimpleTypeArrayRemotable');
+              AddClassDef(AContainer,Result,'TArrayOfInt32URemotable','TBaseSimpleTypeArrayRemotable');
+              AddClassDef(AContainer,Result,'TArrayOfInt32SRemotable','TBaseSimpleTypeArrayRemotable');
+              AddClassDef(AContainer,Result,'TArrayOfInt64SRemotable','TBaseSimpleTypeArrayRemotable');
+              AddClassDef(AContainer,Result,'TArrayOfInt64URemotable','TBaseSimpleTypeArrayRemotable');
+              AddClassDef(AContainer,Result,'TArrayOfFloatSingleRemotable','TBaseSimpleTypeArrayRemotable');
+              AddClassDef(AContainer,Result,'TArrayOfFloatDoubleRemotable','TBaseSimpleTypeArrayRemotable');
+              AddClassDef(AContainer,Result,'TArrayOfFloatExtendedRemotable','TBaseSimpleTypeArrayRemotable');
+              AddClassDef(AContainer,Result,'TArrayOfFloatCurrencyRemotable','TBaseSimpleTypeArrayRemotable');
 
-      AddAlias('token','string',Result);
-      AddAlias('language','string',Result);
-      AddAlias('anyURI','string',Result);
-      AddAlias('ID','string',Result);
-      AddAlias('NCName','string',Result);
-      //AddAlias('float','Single',Result);
-      AddAlias('integer','int',Result);
-      AddAlias('nonNegativeInteger','LongWord',Result);
-      AddAlias('positiveInteger','nonNegativeInteger',Result);
+      AddAlias(AContainer,'token','string',Result);
+      AddAlias(AContainer,'language','string',Result);
+      AddAlias(AContainer,'anyURI','string',Result);
+      AddAlias(AContainer,'ID','string',Result);
+      AddAlias(AContainer,'NCName','string',Result);
+      //AddAlias(AContainer,'float','Single',Result);
+      AddAlias(AContainer,'integer','int',Result);
+      AddAlias(AContainer,'nonNegativeInteger','LongWord',Result);
+      AddAlias(AContainer,'positiveInteger','nonNegativeInteger',Result);
   {$IFNDEF WST_HAS_TDURATIONREMOTABLE}
-      AddAlias('duration','string',Result);
+      AddAlias(AContainer,'duration','string',Result);
   {$ENDIF WST_HAS_TDURATIONREMOTABLE}
   {$IFNDEF WST_HAS_TTIMEREMOTABLE}
-      AddAlias('time','string',Result);
+      AddAlias(AContainer,'time','string',Result);
   {$ENDIF WST_HAS_TTIMEREMOTABLE}
     except
       FreeAndNil(Result);

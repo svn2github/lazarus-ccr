@@ -21,7 +21,7 @@ uses
 Type
 
   TComandLineOption = (
-    cloInterface, cloProxy, cloImp, cloBinder, cloWsdl, cloXsd,
+    cloInterface, cloProxy, cloImp, cloBinder, cloWsdl, cloXsd, cloJava,
     cloOutPutDirRelative, cloOutPutDirAbsolute, cloHandleWrappedParameters,
     cloGenerateDocAsComments, cloGenerateObjectCollection,
     cloFileRenaming, cloPrefixEnum, cloParserCaseSensitive,
@@ -50,7 +50,7 @@ begin
   AAppOptions := [];
   c := #0;
   repeat
-    c := GetOpt('u:pibo:a:wxydg:f:c:');
+    c := GetOpt('u:pibo:a:wxydg:f:c:j');
     case c of
       'u' :
         begin
@@ -100,6 +100,7 @@ begin
           Include(AAppOptions,cloParserCaseSensitive);
           OptionsArgsMAP[cloParserCaseSensitive] := OptArg;
         end;
+      'j' : Include(AAppOptions,cloJava);
     end;
   until ( c = EndOfOptions );
   Result := OptInd;

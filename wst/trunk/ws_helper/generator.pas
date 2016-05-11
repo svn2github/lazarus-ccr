@@ -19,56 +19,12 @@ interface
 uses
   Classes, SysUtils,
   PasTree,
-  pascal_parser_intf, source_utils, wst_types;
+  pascal_parser_intf, source_utils, wst_types, generatorbase;
   
 const
   sWST_EXTENSION = 'wst';
   
 type
-
-  TGeneratorOption = (
-    goDocumentWrappedParameter { .Net style wrapped parameters },
-    goGenerateDocAsComments    { Documentation include in the XSD/WSDL schema will be generated as comments },
-    goGenerateObjectCollection { Generate object "collection" instead of "array" },
-    goCreateChoiceFieldsInConstructor
-  );
-  TGeneratorOptions = set of TGeneratorOption;
-  
-  { TBaseGenerator }
-
-  TBaseGenerator = class
-  Private
-    FOptions : TGeneratorOptions;
-    FSrcMngr  : ISourceManager;
-    FCurrentStream : ISourceStream;
-    FSymbolTable: TwstPasTreeContainer;
-    FMainModule : TPasModule;
-  Protected
-    procedure SetCurrentStream(AStream : ISourceStream);
-    procedure Indent();
-    function IncIndent():Integer;
-    function DecIndent():Integer;
-    procedure BeginAutoIndent();
-    procedure EndAutoIndent();
-    procedure Write(AText : String);overload;
-    procedure Write(AText : String; Const AArgs : array of const);overload;
-    procedure WriteLn(AText : String);overload;
-    procedure WriteLn(AText : String; Const AArgs : array of const);overload;
-    procedure NewLine();
-    
-    function ExtractserviceName(AIntf : TPasElement):String;
-    function GenerateExtraUses() : string;   
-  Public
-    constructor Create(
-      ASymTable : TwstPasTreeContainer;
-      ASrcMngr  : ISourceManager
-    );
-    procedure Execute();virtual;abstract;
-    property SymbolTable : TwstPasTreeContainer Read FSymbolTable;
-    property SrcMngr : ISourceManager Read FSrcMngr;
-    property Options : TGeneratorOptions read FOptions write FOptions;
-    property MainModule : TPasModule read FMainModule;
-  End;
 
   { TProxyGenerator }
 
@@ -473,7 +429,7 @@ begin
     end;
   end;
   GenerateUnitImplementationFooter();
-  FSrcMngr.Merge(GetDestUnitName() + '.pas',[FDecStream,FDecProcStream,FImpStream]);
+  SrcMngr.Merge(GetDestUnitName() + '.pas',[FDecStream,FDecProcStream,FImpStream]);
   FDecStream := nil;
   FImpStream := nil;
 end;
@@ -493,13 +449,13 @@ var
   begin
     locModule := FindModule(AIntf);
     if (locModule = nil) then
-      locModule := FSymbolTable.CurrentModule;
+      locModule := SymbolTable.CurrentModule;
     Indent();
     Write('%s=class(%s,%s.%s',[GenerateClassName(AIntf),sPROXY_BASE_CLASS, locModule.Name, AIntf.Name]);
     if HandleEasyIntf then begin
       locModule := FindModule(AIntf);
       if (locModule = nil) then
-        locModule := FSymbolTable.CurrentModule;
+        locModule := SymbolTable.CurrentModule;
       Write(',%s.%s',[locModule.Name, AEasyIntf.Name]);
     end;
     WriteLn(')');
@@ -958,7 +914,7 @@ Var
               Indent();WriteLn('Result := Nil;');
             end;
           end;
-          Indent();WriteLn('%s := %s;',[sPRM_NAME,QuotedStr(FSymbolTable.GetExternalName(resPrm))]);
+          Indent();WriteLn('%s := %s;',[sPRM_NAME,QuotedStr(SymbolTable.GetExternalName(resPrm))]);
           Indent();WriteLn('%s.Get(TypeInfo(%s), %s, %s);',[sLOC_SERIALIZER,resPrm.ResultType.Name,sPRM_NAME,'Result']);
         end;
         //--------------------------------
@@ -1003,7 +959,7 @@ Var
   begin
     locModule := FindModule(AIntf);
     if (locModule = nil) then
-      locModule := FSymbolTable.CurrentModule;
+      locModule := SymbolTable.CurrentModule;
     NewLine();
     WriteLn('class function %s.GetServiceType() : PTypeInfo;',[strClassName]);
     WriteLn('begin');
@@ -1055,119 +1011,6 @@ begin
   NewLine();
   WriteDec();
   WriteMethods();
-end;
-
-
-{ TBaseGenerator }
-
-procedure TBaseGenerator.SetCurrentStream(AStream: ISourceStream);
-begin
-  FCurrentStream := AStream;
-end;
-
-procedure TBaseGenerator.Indent();
-begin
-  FCurrentStream.Indent();
-end;
-
-function TBaseGenerator.IncIndent():Integer;
-begin
-  Result := FCurrentStream.IncIndent();
-end;
-
-function TBaseGenerator.DecIndent():Integer;
-begin
-  Result := FCurrentStream.DecIndent();
-end;
-
-procedure TBaseGenerator.BeginAutoIndent();
-begin
-  FCurrentStream.BeginAutoIndent();
-end;
-
-procedure TBaseGenerator.EndAutoIndent();
-begin
-  FCurrentStream.EndAutoIndent();
-end;
-
-procedure TBaseGenerator.Write(AText: String);
-begin
-  FCurrentStream.Write(AText);
-end;
-
-procedure TBaseGenerator.Write(AText: String; const AArgs: array of const);
-begin
-  Write(Format(AText,AArgs));
-end;
-
-procedure TBaseGenerator.WriteLn(AText: String);
-begin
-  Write(AText+sNEW_LINE);
-end;
-
-procedure TBaseGenerator.WriteLn(AText: String; const AArgs: array of const);
-begin
-  Write(AText+sNEW_LINE,AArgs);
-end;
-
-procedure TBaseGenerator.NewLine();
-begin
-  WriteLn('');
-end;
-
-function TBaseGenerator.ExtractserviceName(AIntf: TPasElement): String;
-begin
-  Result := AIntf.Name;
-  If upCase(Result[1]) = 'I' Then
-    Delete(Result,1,1);
-end;
-
-{function TBaseGenerator.GenerateExtraUses() : string; 
-var
-  m : TPasModule;
-  k, currentModuleIndex : Integer;
-  mdlList : TList2;
-  mdl : TPasModule;    
-begin
-  Result := '';
-  mdlList := SymbolTable.Package.Modules;  
-  currentModuleIndex := mdlList.IndexOf(MainModule);
-  for k := 0 to Pred(mdlList.Count) do begin
-    if ( k <> currentModuleIndex ) then begin
-      mdl := TPasModule(mdlList[k]);
-      if ( mdl <> SymbolTable.CurrentModule ) and ( not mdl.InheritsFrom(TPasNativeModule) ) then
-        Result := Result + ', ' +  mdl.Name;
-    end;
-  end;
-  if ( Length(Result) > 0 ) then
-    Delete(Result,1,2); 
-end;}
-function TBaseGenerator.GenerateExtraUses() : string; 
-var
-  locUsesList : TList2;
-  locModule : TPasElement;
-  i : Integer;
-begin
-  Result := '';
-  locUsesList := SymbolTable.CurrentModule.InterfaceSection.UsesList;
-  if (locUsesList.Count > 0) then begin
-    for i := 0 to Pred(locUsesList.Count) do begin
-      locModule := TPasElement(locUsesList[i]);
-      Result := Result + ', ' +  locModule.Name;
-    end;     
-    if ( Length(Result) > 0 ) then
-      Delete(Result,1,2); 
-  end;
-end;
-
-constructor TBaseGenerator.Create(ASymTable: TwstPasTreeContainer; ASrcMngr: ISourceManager);
-begin
-  Assert(Assigned(ASymTable));
-  Assert(Assigned(ASrcMngr));
-  FSrcMngr :=ASrcMngr;
-  FCurrentStream := Nil;
-  FSymbolTable := ASymTable;
-  FMainModule := FSymbolTable.CurrentModule;
 end;
 
 { TBinderGenerator }
@@ -1483,7 +1326,7 @@ Var
           mtd := TPasProcedure(mtds[k]);
           WriteLn(
             'RegisterVerbHandler(%s,{$IFDEF FPC}@{$ENDIF}%sHandler);',
-            [QuotedStr(FSymbolTable.GetExternalName(mtd)),mtd.Name]);
+            [QuotedStr(SymbolTable.GetExternalName(mtd)),mtd.Name]);
         end;
       end;
     EndAutoIndent();
@@ -1559,7 +1402,7 @@ Var
         IncIndent();
           WriteLn(
             'GetServerServiceRegistry().Register(%s,T%s_ServiceBinderFactory.Create() as IItemFactory);',
-            [QuotedStr(FSymbolTable.GetExternalName(AIntf)),strBuff]
+            [QuotedStr(SymbolTable.GetExternalName(AIntf)),strBuff]
           );
         DecIndent();
       WriteLn('End;');
@@ -1612,7 +1455,7 @@ begin
     end;
   end;
   GenerateUnitImplementationFooter();
-  FSrcMngr.Merge(GetDestUnitName() + '.pas',[FDecStream,FImpStream]);
+  SrcMngr.Merge(GetDestUnitName() + '.pas',[FDecStream,FImpStream]);
   FDecStream := nil;
   FImpStream := nil;
 end;
@@ -1902,7 +1745,7 @@ begin
     end;
   end;
   GenerateUnitImplementationFooter();
-  FSrcMngr.Merge(GetDestUnitName() + '.pas',[FDecStream,FImpStream]);
+  SrcMngr.Merge(GetDestUnitName() + '.pas',[FDecStream,FImpStream]);
   FDecStream := nil;
   FImpStream := nil;
 end;
@@ -1915,7 +1758,7 @@ var
   docString : string;
   i : Integer;
 begin
-  pl := FSymbolTable.Properties.FindList(AElement);
+  pl := SymbolTable.Properties.FindList(AElement);
   if ( pl <> nil ) then begin
     i := pl.IndexOfName(sDOCUMENTATION);
     if ( i >= 0 ) then begin
@@ -2205,8 +2048,8 @@ begin
   IncIndent();
   WriteLn('');   
   WriteLn('const');
-  Indent();WriteLn('sNAME_SPACE = %s;',[QuotedStr(SymbolTable.GetExternalName(FSymbolTable.CurrentModule))]);
-  Indent();WriteLn('sUNIT_NAME = %s;',[QuotedStr(FSymbolTable.CurrentModule.Name)]);
+  Indent();WriteLn('sNAME_SPACE = %s;',[QuotedStr(SymbolTable.GetExternalName(SymbolTable.CurrentModule))]);
+  Indent();WriteLn('sUNIT_NAME = %s;',[QuotedStr(SymbolTable.CurrentModule.Name)]);
   DecIndent();
 
   if AIncludeTypeSection then begin
@@ -2606,7 +2449,7 @@ var
         WriteLn('begin');
         IncIndent();
           Indent();
-          pte := FindActualType(p.VarType,FSymbolTable);
+          pte := FindActualType(p.VarType,SymbolTable);
           if ( pte <> nil ) and pte.InheritsFrom(TPasType) then begin
             pt := pte as TPasType;
             pt := GetUltimeType(pt,SymbolTable);
@@ -2758,7 +2601,7 @@ begin
 
   if classItemArray then begin
     if ( goGenerateObjectCollection in Options ) or
-       FSymbolTable.IsCollection(ASymbol) 
+       SymbolTable.IsCollection(ASymbol)
     then
       WriteObjectCollection(ASymbol)
     else
@@ -3230,7 +3073,7 @@ begin
           for j := 0 to k do begin
             clssTyp := objLst[k-j] as TPasClassType;
             if ( gnrClssLst.IndexOf(clssTyp) = -1 ) then begin
-              if ( FSymbolTable.CurrentModule.InterfaceSection.Declarations.IndexOf(clssTyp) <> -1 ) then begin
+              if ( SymbolTable.CurrentModule.InterfaceSection.Declarations.IndexOf(clssTyp) <> -1 ) then begin
                 GenerateClass(clssTyp);
                 gnrClssLst.Add(clssTyp);
               end;
@@ -3256,15 +3099,15 @@ begin
     end;
 
     if ( goDocumentWrappedParameter in Self.Options ) then begin
-      c := FSymbolTable.BindingCount;
+      c := SymbolTable.BindingCount;
       if ( c > 0 ) then begin
         for i := 0 to ( c - 1 ) do begin
-          locBinding := FSymbolTable.Binding[i];
+          locBinding := SymbolTable.Binding[i];
           if (typeList.IndexOf(locBinding.Intf) >= 0) and
              (locBinding.BindingStyle = bsDocument) 
           then begin
             if (locBinding.EasyIntf = nil) then begin
-              locBinding.EasyIntf := DeduceEasyInterfaceForDocStyle(locBinding.Intf,FSymbolTable);
+              locBinding.EasyIntf := DeduceEasyInterfaceForDocStyle(locBinding.Intf,SymbolTable);
               if (locBinding.EasyIntf <> nil) then
                 locBinding.EasyIntf.Release();
             end;
@@ -3287,7 +3130,7 @@ begin
     FImpFirstStream.NewLine();
     FImpLastStream.NewLine();
     GenerateUnitImplementationFooter();
-    FSrcMngr.Merge(
+    SrcMngr.Merge(
       GetDestUnitName() + '.pas',
       [FDecStream,FImpStream,FRttiFunc,FImpFirstStream,FImpTempStream,FImpLastStream]
     );

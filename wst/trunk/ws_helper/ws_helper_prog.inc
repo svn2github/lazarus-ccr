@@ -35,6 +35,7 @@ resourcestring
            '  -c  Indicate the parser''s case sensitivity : ' + sNEW_LINE +
            '        S  : the paser is case sensitive' + sNEW_LINE +
            '        I  : the paser is not case sensitive' + sNEW_LINE +
+           '  -j  Generate Java Language interface files for' + sNEW_LINE +
            '  -f  Specify unit(s) renaming option : oldName= NewName(;oldName= NewName)* ';
   sCOPYRIGHT = 'ws_helper, Web Service Toolkit 0.6 Copyright (c) 2006-2014 by Inoussa OUEDRAOGO';
 
@@ -359,6 +360,15 @@ var
           end;
         end;
 
+        If ( cloJava in AppOptions ) Then Begin
+          WriteLn('Java file generation...');
+          g := generatorj.TInftGenerator.Create(symtable,srcMngr);
+          //if wrappedParams then
+            //g.Options := g.Options + [goDocumentWrappedParameter];
+          g.Execute();
+          FreeAndNil(g);
+        End;
+
         Result := True;
       except
         on E : Exception do begin
@@ -406,7 +416,9 @@ begin
         Error(errStr);
       end;
       symtable := TwstPasTreeContainer.Create();
-      symtable.CaseSensitive := cloParserCaseSensitive in AppOptions;
+      symtable.CaseSensitive := (([cloParserCaseSensitive,cloJava]*AppOptions) <>[]);
+      if (cloJava in AppOptions) then
+        JavaCreateWstInterfaceSymbolTable(symtable);
       if (cloStringMaping in AppOptions) then begin
         tmpString := Trim(GetOptionArg(cloStringMaping));
         tmpString := UpperCase(Copy(tmpString,2,Length(tmpString)));

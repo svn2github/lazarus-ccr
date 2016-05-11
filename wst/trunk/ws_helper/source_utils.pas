@@ -226,12 +226,15 @@ end;
 
 procedure TSourceStream.SaveToFile(const APath: string);
 var
-  s: string;
+  locDir,locFileName: string;
 begin
-  s := IncludeTrailingPathDelimiter(APath) + GetFileName();
-  FStream.SaveToFile(s);
+  locFileName := IncludeTrailingPathDelimiter(APath) + GetFileName();
+  locDir := ExtractFileDir(locFileName);
+  if not DirectoryExists(locDir) then
+    ForceDirectories(locDir);
+  FStream.SaveToFile(locFileName);
   {$IFDEF WST_IDE}
-  LazFileUtils.InvalidateFileStateCache(s);
+  LazFileUtils.InvalidateFileStateCache(locFileName);
   {$ENDIF}
 end;
 
