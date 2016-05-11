@@ -48,6 +48,7 @@ type
   private
     FValid: Boolean;
     FValues:TStringList;
+    FFileName: string;
     function GetComments: string;
     function GetCompanyName: string;
     function GetFileDescription: string;
@@ -144,6 +145,8 @@ end;
 function TRxVersionInfo.GetFileName: string;
 begin
   Result:=FValues.Values['OriginalFilename'];
+  if Result = '' then
+    Result:=FFileName;
 end;
 
 function TRxVersionInfo.GetFileVersion: string;
@@ -228,7 +231,7 @@ end;
 
 procedure TRxVersionInfo.SetFileName(const AValue: string);
 begin
-
+  LoadFromFile(AValue);
 end;
 
 procedure TRxVersionInfo.DoVersionInfo(V: TVersionResource);
@@ -262,6 +265,7 @@ var
   Reader:TAbstractResourceReader;
   V:TVersionResource;
 begin
+  FFileName:=AFileName;
   FValues.Clear;
   FValid:=false;
   Reader:=nil;
@@ -278,7 +282,7 @@ begin
   Res:=TResources.Create;
   V:=nil;
   try
-    Res.LoadFromFile(ParamStr(0), Reader);
+    Res.LoadFromFile(AFileName, Reader);
     for i:=0 to Res.Count-1 do
     begin
       if Res[i] is TVersionResource then
