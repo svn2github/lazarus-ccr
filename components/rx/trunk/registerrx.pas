@@ -55,10 +55,8 @@ uses
   {$IFDEF USE_TRxAppIcon}
   RxAppIcon,
   {$ENDIF}
-  Dialogs, ComponentEditors, DBPropEdits, rxctrls,
-  RxCustomChartPanel, AutoPanel, pickdate, tooledit, rxclock,
-  rxspin, RxTimeEdit, rxDateRangeEditUnit,
-  RxAboutDialog, RxViewsPanel, RxMDI;
+  Dialogs, ComponentEditors, DBPropEdits, rxctrls, AutoPanel, pickdate, tooledit, rxclock,
+  rxspin, RxTimeEdit, rxDateRangeEditUnit, RxAboutDialog, RxViewsPanel, RxMDI;
 
 {$IFDEF USE_TRxAppIcon}
 procedure RegisterRxAppIcon;
@@ -114,11 +112,6 @@ begin
   RegisterComponents(RxCtrllPageName,[TRxLabel, TSecretPanel, TRxSpeedButton, TRxRadioGroup]);
 end;
 
-
-procedure RegisterChartPanel;
-begin
-  RegisterComponents(RxCtrllPageName,[TRxChart]);
-end;
 
 procedure RegisterAutoPanel;
 begin
@@ -192,7 +185,6 @@ begin
   RegisterUnit('rxappicon', @RegisterRxAppIcon);
   {$ENDIF}
   RegisterUnit('rxctrls', @RegisterRxCtrls);
-  RegisterUnit('RxCustomChartPanel', @RegisterChartPanel);
   RegisterUnit('AutoPanel', @RegisterAutoPanel);
   RegisterUnit('pickdate', @RegisterPickDate);
   RegisterUnit('tooledit', @RegisterToolEdit);
