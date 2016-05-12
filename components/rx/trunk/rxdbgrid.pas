@@ -113,7 +113,7 @@ type
 
     );
 
-  TRxDSState = (rxdsInactive, rxdsActive);
+  //TRxDSState = (rxdsInactive, rxdsActive);
 
   TRxFilterOpCode = (fopEQ, fopNotEQ, fopStartFrom, fopEndTo, fopLike, fopNotLike);
   { TRxDBGridKeyStroke }
@@ -548,7 +548,7 @@ type
   TRxDBGrid = class(TCustomDBGrid)
   private
     FColumnDefValues: TRxDBGridColumnDefValues;
-    FrxDSState:TRxDSState;
+    //FrxDSState:TRxDSState;
     FFooterOptions: TRxDBGridFooterOptions;
     FSortColumns: TRxDbGridColumnsSortList;
     FSortingNow:Boolean;
@@ -718,8 +718,6 @@ type
 
     procedure ColRowMoved(IsColumn: boolean; FromIndex, ToIndex: integer); override;
     procedure Paint; override;
-    procedure UpdateActive; override;
-    procedure UpdateData; override;
     procedure MoveSelection; override;
     function  GetBufferCount: integer; override;
     procedure CMHintShow(var Message: TLMessage); message CM_HINTSHOW;
@@ -749,12 +747,12 @@ type
     procedure DoEditorHide; override;
     procedure DoEditorShow; override;
 
-    procedure EraseBackground(DC: HDC); override;
     property Editor;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
+    procedure EraseBackground(DC: HDC); override;
     procedure FilterRec(DataSet: TDataSet; var Accept: boolean);
     function EditorByStyle(Style: TColumnButtonStyle): TWinControl; override;
     procedure LayoutChanged; override;
@@ -953,7 +951,7 @@ procedure RegisterRxDBGridSortEngine(RxDBGridSortEngineClass: TRxDBGridSortEngin
 implementation
 
 uses Math, rxdconst, rxstrutils, strutils, rxdbgrid_findunit, rxdbgrid_columsunit,
-  rxlookup, tooledit, LCLProc, Clipbrd, rxfilterby, rxsortby, variants;
+  rxlookup, tooledit, LCLProc, Clipbrd, rxfilterby, rxsortby, variants, LazUTF8;
 
 {$R rxdbgrid.res}
 
@@ -1535,7 +1533,7 @@ end;
 
 function TRxDBGridAbstractTools.DoExecTools: boolean;
 begin
-  //
+  Result:=false;
 end;
 
 function TRxDBGridAbstractTools.DoSetupTools: boolean;
@@ -1837,15 +1835,9 @@ begin
 end;
 
 constructor TRxColumnEditButton.Create(ACollection: TCollection);
-var
-  P: TBitmap;
 begin
   inherited Create(ACollection);
   FButton:=TSpeedButton.Create(nil);
-  //FButton.Glyph:=LoadLazResBitmapImage('rx_markerdown');
-{  P:=CreateResBitmap('rx_markerdown');
-  FButton.Glyph:=P;
-  P.Free;}
 
   FSpinBtn:=TRxSpinButton.Create(nil);
   FSpinBtn.OnBottomClick:=@DoBottomClick;
@@ -2304,12 +2296,13 @@ begin
 end;
 
 { TRxDBGrid }
+(*
 const
   ALIGN_FLAGS: array[TAlignment] of integer =
     (DT_LEFT or DT_SINGLELINE {or DT_EXPANDTABS} or DT_NOPREFIX,
     DT_RIGHT or DT_SINGLELINE {or DT_EXPANDTABS} or DT_NOPREFIX,
     DT_CENTER or DT_SINGLELINE {or DT_EXPANDTABS} or DT_NOPREFIX);
-
+*)
 const
   ALIGN_FLAGS_HEADER: array[TAlignment] of integer =
     (DT_LEFT or {DT_EXPANDTABS or} DT_NOPREFIX,
@@ -2391,7 +2384,7 @@ procedure TRxDBGrid.WMVScroll(var Message: TLMVScroll);
 var
   IsSeq: boolean;
   aPos, aRange, aPage: Integer;
-  DeltaRec: integer;
+  //DeltaRec: integer;
 
   function MaxPos: Integer;
   begin
@@ -2441,6 +2434,7 @@ begin
 
   if EditorMode then
     RestoreEditor;
+  inherited;
   {$ifdef dbgDBGrid}
   DebugLn('---- Diff=',dbgs(DeltaRec), ' FinalPos=',dbgs(aPos));
   {$endif}
@@ -2695,13 +2689,13 @@ end;
 procedure TRxDBGrid.CalcTitle;
 var
   i, j: integer;
-  H, H1, W, H2, W1: integer;
+  H, H1, W, {H2,} W1: integer;
   rxCol, rxColNext: TRxColumn;
   rxTit, rxTitleNext: TRxColumnTitle;
   MLRec1, P: TMLCaptionItem;
   MLRec2: TMLCaptionItem;
   tmpCanvas: TCanvas;
-  S: string;
+  //S: string;
 begin
   { TODO -oalexs : need rewrite code - split to 2 step:
 1. make links between column
@@ -2710,7 +2704,6 @@ begin
     exit;
   tmpCanvas := GetWorkingCanvas(Canvas);
   try
-//    H := 1;
     ClearMLCaptionPointers;
     for i := 0 to Columns.Count - 1 do
     begin
@@ -2817,7 +2810,7 @@ begin
             for j := 0 to rxTit.CaptionLinesCount - 1 do
             begin
               MLRec1 := rxTit.CaptionLine(j);
-              S := MLRec1.Caption;
+              //S := MLRec1.Caption;
               if not Assigned(MLRec1.Prior) then
               begin
                 W := rxCol.Width;
@@ -2914,8 +2907,8 @@ end;
 
 procedure TRxDBGrid.OutCaptionCellText(aCol, aRow: integer; const aRect: TRect;
   aState: TGridDrawState; const ACaption: string);
-var
-  T1, T2: TTextStyle;
+//var
+//  T1, T2: TTextStyle;
 begin
   if (TitleStyle = tsNative) then
     DrawThemedCell(aCol, aRow, aRect, aState)
@@ -3244,6 +3237,7 @@ var
   Asc:array of boolean;
 begin
   if (FSortColumns.Count = 0) then exit;
+  S:='';
   FSortingNow:=true;
   if (FSortColumns.Count>1) or (Pos(';', FSortColumns[0].GetSortFields)>0) then
   begin
@@ -3278,7 +3272,7 @@ end;
 function TRxDBGrid.UpdateRowsHeight: integer;
 var
   i, J, H, H1, H2:integer;
-  B:boolean;
+  //B:boolean;
   F:TField;
   S:string;
   CurActiveRecord: Integer;
@@ -3514,7 +3508,7 @@ var
   FTitle: TRxColumnTitle;
   GrdCol: TRxColumn;
 
-  MLI, MLINext, MLI1: TMLCaptionItem;
+  MLI{, MLINext, MLI1}: TMLCaptionItem;
 
 begin
   if (dgIndicator in Options) and (aCol = 0) then
@@ -4440,8 +4434,8 @@ begin
 end;
 
 procedure TRxDBGrid.KeyDown(var Key: word; Shift: TShiftState);
-var
-  FTmpReadOnly: boolean;
+//var
+//  FTmpReadOnly: boolean;
 
   procedure DoShowFindDlg;
   begin
@@ -4641,28 +4635,6 @@ begin
     DrawFooterRows;
   end;
   Dec(FInProcessCalc);
-end;
-
-procedure TRxDBGrid.UpdateActive;
-begin
-{  if FInProcessCalc > 0 then
-    exit;}
-  inherited UpdateActive;
-{  if FInProcessCalc < 0 then
-  begin
-    FInProcessCalc := 0;
-    UpdateFooterRowOnUpdateActive;
-  end
-{  else
-  if FFooterOptions.Active and (FFooterOptions.RowCount > 0) then
-    UpdateFooterRowOnUpdateActive;}
-}
- // UpdateRowsHeight;
-end;
-
-procedure TRxDBGrid.UpdateData;
-begin
-  inherited UpdateData;
 end;
 
 procedure TRxDBGrid.MoveSelection;
@@ -4876,9 +4848,8 @@ var
   P_26: TBookmark;
   {$ENDIF}
   P: TBookmark;
-  i, cnt, K: integer;
+  i, cnt: integer;
   APresent: boolean;
-  BB:Double;
 
   DHL:THackDataLink;
   DHS:THackDataSet;
@@ -5034,7 +5005,7 @@ begin
 
   if Min(DHL.RecordCount + SavePos - 1, DHS.RecNo) > 0 then
     DHS.RecNo := Min(DHL.RecordCount + SavePos - 1, DHS.RecNo);
-  K:=DHS.RecNo;
+  //K:=DHS.RecNo;
 
   while not DHS.BOF do
   begin
@@ -5299,9 +5270,6 @@ begin
 end;
 
 procedure TRxDBGrid.OnFilterClose(Sender: TObject);
-var
-  C: TRxColumn;
-  i: integer;
 begin
   OptionsRx := OptionsRx - [rdgFilter];
   DataSource.DataSet.Filtered := False;
@@ -5461,7 +5429,7 @@ end;
 procedure TRxDBGrid.DoEditorHide;
 var
   R:TRxColumn;
-  i, w:integer;
+  i:integer;
 begin
   inherited DoEditorHide;
   R:=SelectedColumn as TRxColumn;

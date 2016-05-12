@@ -114,18 +114,10 @@ type
 
 function TRxDBGridFooterTools.MouseDown(Button: TMouseButton;
   Shift: TShiftState; X, Y: integer): boolean;
-var
-  Cell: TGridCoord;
 begin
-  if (Y > THackRxDBGrid(RxDBGrid).GCache.ClientHeight - (RxDBGrid.DefaultRowHeight * RxDBGrid.FooterOptions.RowCount)) then
-  begin
-    Result:=true;
-    Cell := RxDBGrid.MouseCoord(X, Y);
-    if (ssDouble in Shift) then
-      DoSetupTools;
-  end
-  else
-    Result:=false;
+  Result:=(Y > THackRxDBGrid(RxDBGrid).GCache.ClientHeight - (RxDBGrid.DefaultRowHeight * RxDBGrid.FooterOptions.RowCount));
+  if Result and (ssDouble in Shift) then
+    DoSetupTools;
 end;
 
 constructor TRxDBGridFooterTools.Create(AOwner: TComponent);

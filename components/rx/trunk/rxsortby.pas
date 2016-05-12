@@ -128,13 +128,13 @@ procedure TrxSortByForm.ListBox1DrawItem(Control: TWinControl; Index: Integer;
   ARect: TRect; State: TOwnerDrawState);
 var
   X, Y:integer;
-  P:TRxColumn;
+  //P:TRxColumn;
   S1, S2:string;
   Cnv:TCanvas;
 begin
   Cnv:=ListBox1.Canvas;
   Cnv.FillRect(ARect);       { clear the rectangle }
-  P:=TRxColumn(ListBox1.Items.Objects[Index]);
+  //P:=TRxColumn(ListBox1.Items.Objects[Index]);
   S1:=ListBox1.Items[Index];
   S2:=Copy(S1, 1, 1);
   Delete(S1, 1, 1);
@@ -222,7 +222,7 @@ end;
 function TrxSortByForm.Execute(ADBGrid: TRxDBGrid; SortNames: TStringList
   ): Boolean;
 var
-  i, j : Integer;
+  i : Integer;
   S             : String;
   C:TRxColumn;
 begin
