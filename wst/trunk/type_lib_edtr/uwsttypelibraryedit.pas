@@ -251,7 +251,8 @@ implementation
 
 uses
   view_helper, DOM, wst_fpc_xml, XMLWrite,
-  xsd_parser, wsdl_parser, source_utils, command_line_parser, generator, metadata_generator,
+  xsd_parser, wsdl_parser, source_utils, command_line_parser, generator,
+  metadata_generator, generatorbase,
   binary_streamer, wst_resources_utils, xsd_generator, wsdl_generator,
   uabout, edit_helper, udm, ufrmsaveoption, ueditoptions, pparser, SynEditTypes
   {$IFDEF WST_IDE},LazIDEIntf,IDEMsgIntf, IDEExternToolIntf{$ENDIF}
