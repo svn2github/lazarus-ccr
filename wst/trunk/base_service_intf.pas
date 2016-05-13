@@ -353,8 +353,10 @@ type
     function wstHasValue() : Boolean;override;
     procedure LoadFromStream(AStream : TStream);
     procedure LoadFromFile(const AFileName : string);
+    procedure LoadFromBuffer(const ABuffer; const ABufferLen : Integer);
     procedure SaveToStream(AStream : TStream);
     procedure SaveToFile(const AFileName : string);
+    function SaveToBuffer(var ABuffer; const ABufferLen : Integer) : Integer;
     property BinaryData : TByteDynArray read FBinaryData write FBinaryData;
     property EncodedString : string read GetEncodedString write SetEncodedString;
   end;
@@ -7020,6 +7022,16 @@ begin
   BinaryData := LoadBufferFromStream(AStream);
 end;
 
+procedure TAbstractEncodedStringRemotable.LoadFromBuffer(
+  const ABuffer;
+  const ABufferLen: Integer
+);
+begin
+  SetLength(FBinaryData,ABufferLen);
+  if (ABufferLen > 0) then
+    Move(ABuffer,FBinaryData[0],ABufferLen);
+end;
+
 procedure TAbstractEncodedStringRemotable.LoadFromFile(const AFileName: string);
 begin
   BinaryData := LoadBufferFromFile(AFileName);
@@ -7029,6 +7041,21 @@ procedure TAbstractEncodedStringRemotable.SaveToStream(AStream: TStream);
 begin
   if ( Length(FBinaryData) > 0 ) then
     AStream.Write(FBinaryData[0],Length(FBinaryData));
+end;
+
+function TAbstractEncodedStringRemotable.SaveToBuffer(
+  var ABuffer;
+  const ABufferLen: Integer
+) : Integer;
+var
+  c : Integer;
+begin
+  c := Length(FBinaryData);
+  if (c > ABufferLen) then
+    c := ABufferLen;
+  if (c > 0) then
+    Move(FBinaryData[0],ABuffer,c);
+  Result := c;
 end;
 
 procedure TAbstractEncodedStringRemotable.SaveToFile(const AFileName: string);
