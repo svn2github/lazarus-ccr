@@ -795,7 +795,7 @@ begin
     if FMonthOffset = 2 then FMonthOffset := -5;
 
     FillDaysArray;
-    MoveExtend(false, (ADay - FMonthOffset) mod 7, (ADay - FMonthOffset) div 7 + 1);
+    MoveExtend(false, (ADay - FMonthOffset) mod 7, (ADay - FMonthOffset) div 7 + 1, true);
     TopRow:=1; //Правим ошибку для автоскрола календаря после 15 числа...
     VisualChange;
 
