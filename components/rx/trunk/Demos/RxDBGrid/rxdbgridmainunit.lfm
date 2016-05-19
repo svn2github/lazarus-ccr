@@ -554,6 +554,35 @@ object RxDBGridMainForm: TRxDBGridMainForm
       OnChange = CheckBox5Change
       TabOrder = 7
     end
+    object Label2: TLabel
+      AnchorSideLeft.Control = CheckBox5
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      Left = 865
+      Height = 20
+      Top = 7
+      Width = 32
+      BorderSpacing.Around = 6
+      Caption = 'Дата'
+      ParentColor = False
+    end
+    object RxDateEdit1: TRxDateEdit
+      AnchorSideLeft.Control = Label2
+      AnchorSideTop.Control = Label2
+      AnchorSideTop.Side = asrBottom
+      Left = 871
+      Height = 30
+      Top = 33
+      Width = 129
+      BorderSpacing.Around = 6
+      ButtonWidth = 23
+      MaxLength = 10
+      NumGlyphs = 2
+      PasswordChar = #0
+      PopupColor = clWindow
+      TabOrder = 8
+      Text = '  .  .    '
+    end
   end
   object SpeedButton1: TSpeedButton
     Left = 596

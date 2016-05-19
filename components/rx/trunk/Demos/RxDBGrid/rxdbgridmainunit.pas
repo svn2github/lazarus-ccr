@@ -7,8 +7,8 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, rxmemds,
   DB, rxdbgrid, RxAboutDialog, RxIniPropStorage, RxDBGridPrintGrid,
-  RxDBGridExportSpreadSheet, RxDBGridFooterTools, ExtCtrls, Buttons, Menus,
-  ActnList, StdCtrls, DBGrids, types;
+  RxDBGridExportSpreadSheet, RxDBGridFooterTools, tooledit, ExtCtrls, Buttons,
+  Menus, ActnList, StdCtrls, DBGrids, types;
 
 type
 
@@ -17,11 +17,13 @@ type
   TRxDBGridMainForm = class(TForm)
     actCalcTotal: TAction;
     CheckBox5: TCheckBox;
+    Label2: TLabel;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
     MenuItem8: TMenuItem;
     MenuItem9: TMenuItem;
     RxAboutDialog1: TRxAboutDialog;
+    RxDateEdit1: TRxDateEdit;
     RxDBGridExportSpreadSheet1: TRxDBGridExportSpreadSheet;
     RxDBGridFooterTools1: TRxDBGridFooterTools;
     RxDBGridPrint1: TRxDBGridPrint;

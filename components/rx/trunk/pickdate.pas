@@ -264,8 +264,9 @@ const
 
 implementation
 
-uses Messages, RXCtrls, rxconst, ToolEdit, vclutils, math, LCLStrConsts,
-  {rxstrutils,} LResources;
+uses Messages, RXCtrls, rxconst, ToolEdit, vclutils, math, LCLStrConsts, LResources;
+
+{$R pickdate.res}
 
 const
   SBtnGlyphs: array[0..3] of PChar = ('PREV2', 'PREV1', 'NEXT1', 'NEXT2');
@@ -795,7 +796,7 @@ begin
     if FMonthOffset = 2 then FMonthOffset := -5;
 
     FillDaysArray;
-    MoveExtend(false, (ADay - FMonthOffset) mod 7, (ADay - FMonthOffset) div 7 + 1, true);
+    MoveExtend(false, (ADay - FMonthOffset) mod 7, (ADay - FMonthOffset) div 7 + 1);
     TopRow:=1; //Правим ошибку для автоскрола календаря после 15 числа...
     VisualChange;
 
@@ -1012,7 +1013,8 @@ begin
     Parent := FControlPanel;
     SetBounds(-1, -1, BtnSide, BtnSide);
     //loaded bitmap should be freed as Glyph just takes a copy of it
-    TmpBitmap:=LoadBitmapFromLazarusResource('prev2');
+    //TmpBitmap:=LoadBitmapFromLazarusResource('prev2');
+    TmpBitmap:=CreateResBitmap('rx_prev2');
     Glyph := TmpBitmap;
     FreeAndNil(TmpBitmap);
 
@@ -1027,7 +1029,8 @@ begin
     Parent := FControlPanel;
     SetBounds(BtnSide - 2, -1, BtnSide, BtnSide);
 
-    TmpBitmap:=LoadBitmapFromLazarusResource('prev1');
+    //TmpBitmap:=LoadBitmapFromLazarusResource('prev1');
+    TmpBitmap:=CreateResBitmap('rx_prev1');
     Glyph := TmpBitmap;
     FreeAndNil(TmpBitmap);
 
@@ -1041,7 +1044,8 @@ begin
   begin
     Parent := FControlPanel;
     SetBounds(FControlPanel.Width - 2 * BtnSide + 2, -1, BtnSide, BtnSide);
-    TmpBitmap:=LoadBitmapFromLazarusResource('next1');
+    //TmpBitmap:=LoadBitmapFromLazarusResource('next1');
+    TmpBitmap:=CreateResBitmap('rx_next1');
     Glyph := TmpBitmap;
     FreeAndNil(TmpBitmap);
     OnClick := @NextMonthBtnClick;
@@ -1054,7 +1058,8 @@ begin
   begin
     Parent := FControlPanel;
     SetBounds(FControlPanel.Width - BtnSide + 1, -1, BtnSide, BtnSide);
-    TmpBitmap:=LoadBitmapFromLazarusResource('next2');
+    //TmpBitmap:=LoadBitmapFromLazarusResource('next2');
+    TmpBitmap:=CreateResBitmap('rx_next2');
     Glyph := TmpBitmap;
     FreeAndNil(TmpBitmap);
     OnClick := @NextYearBtnClick;
@@ -1589,6 +1594,4 @@ begin
   DefaultRowHeight := (aHeight - GridLinesH) div 7;
 end;
 
-initialization
-  {$I pickdate.lrs}
 end.
