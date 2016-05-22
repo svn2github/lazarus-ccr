@@ -24004,7 +24004,7 @@ var
   FocusRect,
   InnerRect: TRect;
   {$ifdef ThemeSupport}
-    RowRect: TRect;
+    //RowRect: TRect;
     //Theme: HTHEME;
   {$endif ThemeSupport}
 
@@ -33862,7 +33862,6 @@ var
 
   RenderColumns: Boolean;
   Columns: TColumnsArray;
-  ColumnColors: array of String;
   Index: Integer;
   IndentWidth,
   LineStyleText: String;
@@ -33944,12 +33943,10 @@ begin
     Buffer.AddNewLine;
 
     Columns := nil;
-    ColumnColors := nil;
     RenderColumns := FHeader.UseColumns;
     if RenderColumns then
     begin
       Columns := FHeader.FColumns.GetVisibleColumns;
-      SetLength(ColumnColors, Length(Columns));
     end;
 
     GetRenderStartValues(Source, Run, GetNextNode);
