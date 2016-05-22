@@ -4041,7 +4041,6 @@ uses
 
 resourcestring
   // Localizable strings.
-  SEditLinkIsNil = 'Edit link must not be nil.';
   SWrongMoveError = 'Target node cannot be a child node of the node to be moved.';
   SWrongStreamFormat = 'Unable to load tree structure, the format is wrong.';
   SWrongStreamVersion = 'Unable to load tree structure, the version is unknown.';
@@ -33779,14 +33778,6 @@ function TCustomVirtualStringTree.ContentToHTML(Source: TVSTTextSourceType; cons
 // Renders the current tree content (depending on Source) as HTML text encoded in UTF-8.
 // If Caption is not empty then it is used to create and fill the header for the table built here.
 // Based on ideas and code from Frank van den Bergh and Andreas H??emeier.
-
-type
-  UCS2 = Word;
-  UCS4 = Cardinal;
-
-const
-  MaximumUCS4: UCS4 = $7FFFFFFF;
-  ReplacementCharacter: UCS4 = $0000FFFD;
 
 var
   Buffer: TBufferedUTF8String;
