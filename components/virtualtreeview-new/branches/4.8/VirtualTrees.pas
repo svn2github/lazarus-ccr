@@ -13284,7 +13284,7 @@ var
   Size: TSize;
   {$ifdef ThemeSupport}
     //Theme: HTHEME;
-    R: TRect;
+    //R: TRect;
  
 const
   TVP_HOTGLYPH = 4;
@@ -15374,8 +15374,10 @@ procedure TBaseVirtualTree.WMContextMenu(var Message: TLMContextMenu);
 // This method is called when a popup menu is about to be displayed.
 // We have to cancel some pending states here to avoid interferences.
 //lcl: handle mouse up here because MouseUp is not called when popup is show
+{$ifdef ContextMenuBeforeMouseUp}
 var
   HitInfo: THitInfo;
+{$endif}
 
 begin
   {$ifdef DEBUG_VTV}Logger.EnterMethod([lcMessages],'WMContextMenu');{$endif}
@@ -15584,11 +15586,9 @@ var
   ParentControl: TWinControl;
   R: TRect;
   NewCheckState: TCheckState;
-  TempColumn,
   NewColumn: TColumnIndex;
   ActAsGrid: Boolean;
   ForceSelection: Boolean;
-  NewWidth,
   NewHeight: Integer;
   RTLFactor: Integer;
 
@@ -22725,7 +22725,7 @@ var
   FocusRect,
   InnerRect: TRect;
   {$ifdef ThemeSupport}
-    RowRect: TRect;
+    //RowRect: TRect;
     //Theme: HTHEME;
   {$endif ThemeSupport}
 
@@ -31808,7 +31808,6 @@ var
 
   RenderColumns: Boolean;
   Columns: TColumnsArray;
-  ColumnColors: array of String;
   Index: Integer;
   IndentWidth,
   LineStyleText: String;
@@ -31888,12 +31887,10 @@ begin
     Buffer.AddNewLine;
 
     Columns := nil;
-    ColumnColors := nil;
     RenderColumns := FHeader.UseColumns;
     if RenderColumns then
     begin
       Columns := FHeader.FColumns.GetVisibleColumns;
-      SetLength(ColumnColors, Length(Columns));
     end;
 
     GetRenderStartValues(Source, Run, GetNextNode);
