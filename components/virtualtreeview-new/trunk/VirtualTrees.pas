@@ -73,7 +73,7 @@ uses
   virtualpanningwindow,
   VTGraphics, //alpha blend functions
   {$ifdef DEBUG_VTV}
-  vtlogger,
+  VTLogger,
   {$endif}
   LCLType, LResources, LMessages, Types,
   SysUtils, Classes, Graphics, Controls, Forms, ImgList, StdCtrls, Menus, Printers,
