@@ -1222,7 +1222,7 @@ type
     destructor Destroy; override;
 
     procedure Assign(Source: TPersistent); override;
-    function Equals(OtherColumnObj: TObject): Boolean; virtual;
+    function Equals(OtherColumnObj: TObject): Boolean; override;
     function GetRect: TRect; virtual;
     procedure LoadFromStream(const Stream: TStream; Version: Integer);
     procedure ParentBiDiModeChanged;
@@ -1319,7 +1319,7 @@ type
     procedure Clear; virtual;
     function ColumnFromPosition(const P: TPoint; Relative: Boolean = True): TColumnIndex; overload; virtual;
     function ColumnFromPosition(PositionIndex: TColumnPosition): TColumnIndex; overload; virtual;
-    function Equals(OtherColumnsObj: TObject): Boolean;
+    function Equals(OtherColumnsObj: TObject): Boolean; override;
     procedure GetColumnBounds(Column: TColumnIndex; out Left, Right: Integer);
     function GetFirstVisibleColumn(ConsiderAllowFocus: Boolean = False): TColumnIndex;
     function GetLastVisibleColumn(ConsiderAllowFocus: Boolean = False): TColumnIndex;
