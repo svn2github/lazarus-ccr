@@ -28,14 +28,14 @@ unit VirtualTrees;
 // For a list of recent changes please see file CHANGES.TXT
 //
 // Credits for their valuable assistance and code donations go to:
-//   Freddy Ertl, Marian Aldenh?vel, Thomas Bogenrieder, Jim Kuenemann, Werner Lehmann, Jens Treichler,
-//   Paul Gallagher (IBO tree), Ondrej Kelle, Ronaldo Melo Ferraz, Heri Bender, Roland Bed?rftig (BCB)
+//   Freddy Ertl, Marian AldenhÃ¶vel, Thomas Bogenrieder, Jim Kuenemann, Werner Lehmann, Jens Treichler,
+//   Paul Gallagher (IBO tree), Ondrej Kelle, Ronaldo Melo Ferraz, Heri Bender, Roland BedÃ¼rftig (BCB)
 //   Anthony Mills, Alexander Egorushkin (BCB), Mathias Torell (BCB), Frank van den Bergh, Vadim Sedulin, Peter Evans,
 //   Milan Vandrovec (BCB), Steve Moss, Joe White, David Clark, Anders Thomsen, Igor Afanasyev, Eugene Programmer,
 //   Corbin Dunn, Richard Pringle, Uli Gerhardt, Azza, Igor Savkic, Daniel Bauten, Timo Tegtmeier, Dmitry Zegebart,
 //   Andreas Hausladen, Joachim Marder
 // Beta testers:
-//   Freddy Ertl, Hans-J?rgen Schnorrenberg, Werner Lehmann, Jim Kueneman, Vadim Sedulin, Moritz Franckenstein,
+//   Freddy Ertl, Hans-JÃ¼rgen Schnorrenberg, Werner Lehmann, Jim Kueneman, Vadim Sedulin, Moritz Franckenstein,
 //   Wim van der Vegt, Franc v/d Westelaken
 // Indirect contribution (via publicly accessible work of those persons):
 //   Alex Denissov, Hiroyuki Hori (MMXAsm expert)
@@ -49,7 +49,7 @@ unit VirtualTrees;
 // Accessability implementation:
 //   Marco Zehe (with help from Sebastian Modersohn)
 // LCL Port:
-//   Luiz Am?rico Pereira C?mara
+//   Luiz AmÃ©rico Pereira CÃ¢mara
 //----------------------------------------------------------------------------------------------------------------------
 
 interface
@@ -252,10 +252,10 @@ type
 
   // Need to declare the correct WMNCPaint record as the VCL (D5-) doesn't.
   TRealWMNCPaint = packed record
-    Msg: Cardinal;
+    Msg: UINT;
     Rgn: HRGN;
-    lParam: Integer;
-    Result: Integer;
+    lParam: LPARAM;
+    Result: LRESULT;
   end;
 
   // Be careful when adding new states as this might change the size of the type which in turn
@@ -2019,9 +2019,6 @@ type
 
 
   // ----- TBaseVirtualTree
-
-  { TBaseVirtualTree }
-
   TBaseVirtualTree = class(TCustomControl)
   private
     //FBorderStyle: TBorderStyle;
@@ -2336,7 +2333,6 @@ type
 
     FVclStyleEnabled: Boolean;
 
-    // TODO:  Compilerversion Ein/Ausschalten < Ist Eingeschaltet >
     {$ifdef VCLStyleSupport}
     FSavedBevelKind: TBevelKind;
     FSavedBorderWidth: Integer;
@@ -3295,7 +3291,7 @@ type
   public
     constructor Create(Link: TStringEditLink); reintroduce;
 
-    procedure Release;
+    procedure Release; virtual;
 
     property AutoSelect;
     property AutoSize;
@@ -4071,7 +4067,7 @@ const
 
   // Do not modify the copyright in any way! Usage of this unit is prohibited without the copyright notice
   // in the compiled binary file.
-  Copyright: string = 'Virtual Treeview ? 1999, 2010 Mike Lischke';
+  Copyright: string = 'Virtual Treeview Â© 1999, 2010 Mike Lischke';
 
 var
   //Workaround to LCL bug 8553
@@ -4203,9 +4199,9 @@ type // streaming support
 
   // Internally used data for animations.
   TToggleAnimationData = record
-    Window: HWND;               // copy of the tree's window handle
-    DC: HDC;                    // the DC of the window to erase uncovered parts
-    Brush: HBRUSH;              // the brush to be used to erase uncovered parts
+    Window: HWND;                 // copy of the tree's window handle
+    DC: HDC;                      // the DC of the window to erase uncovered parts
+    Brush: HBRUSH;                // the brush to be used to erase uncovered parts
     R1,
     R2: TRect;                    // animation rectangles
     Mode1,
@@ -4215,19 +4211,6 @@ type // streaming support
   end;
 
 const
-  CheckImagesStrings: array [TCheckImageKind] of String =
-    ('VT_CHECK_LIGHT',
-    'VT_CHECK_DARK',
-    'VT_TICK_LIGHT',
-    'VT_TICK_DARK',
-    'VT_FLAT',
-    'VT_XP',
-    '',//ckCustom,
-    // Only the button images are used for ckSystem *
-    // The check buttons are draw at fly as requested
-    'VT_FLAT',//ckSystemFlat
-    'VT_CHECK_DARK' //ckSystemDefault
-     );
   MagicID: TMagicID = (#$45, 'V', 'T', Char(VTTreeStreamVersion), ' ', #$46);
 
   // chunk IDs
@@ -4247,6 +4230,20 @@ const
 
   WideCR = WideChar(#13);
   WideLF = WideChar(#10);
+
+  CheckImagesStrings: array [TCheckImageKind] of String =
+    ('VT_CHECK_LIGHT',
+    'VT_CHECK_DARK',
+    'VT_TICK_LIGHT',
+    'VT_TICK_DARK',
+    'VT_FLAT',
+    'VT_XP',
+    '',//ckCustom,
+    // Only the button images are used for ckSystem *
+    // The check buttons are draw at fly as requested
+    'VT_FLAT',//ckSystemFlat
+    'VT_CHECK_DARK' //ckSystemDefault
+     );
 
 type
   // internal worker thread
@@ -5142,19 +5139,17 @@ begin
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
-{$ifdef CPU64}
-
-function HasMMX: Boolean;
-begin
-  Result := True;
-end;
-
-{$else}
 
 function HasMMX: Boolean;
 
 // Helper method to determine whether the current processor supports MMX.
 
+{$ifdef CPU64}
+begin
+  // We use SSE2 in the "MMX-functions"
+  Result := True;
+end;
+{$else}
 asm
         PUSH    EBX
         XOR     EAX, EAX     // Result := False
@@ -5539,6 +5534,7 @@ begin
 end;
 
 //----------------- TBufferedUTF8String --------------------------------------------------------------------------------
+
 const
   AllocIncrement = 2 shl 11;  // Must be a power of 2.
 
@@ -5552,6 +5548,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------
 
 function TBufferedUTF8String.GetAsAnsiString: AnsiString;
+
 begin
   //an implicit conversion is done
   Result := AsUTF16String;
@@ -7603,7 +7600,7 @@ var
 begin
   if OtherColumnObj is TVirtualTreeColumn then
   begin
-    OtherColumn :=  TVirtualTreeColumn (OtherColumnObj);
+    OtherColumn := TVirtualTreeColumn (OtherColumnObj);
     Result := (BiDiMode = OtherColumn.BiDiMode) and
       (ImageIndex = OtherColumn.ImageIndex) and
       (Layout = OtherColumn.Layout) and
@@ -8131,7 +8128,7 @@ begin
 
   if FHeader.Treeview.UseRightToLeftAlignment then
     Inc(ColumnLeft, FHeader.Treeview.ComputeRTLOffset(True));
-    
+
   for I := 0 to Count - 1 do
     with Items[FPositionToIndex[I]] do
       if coVisible in FOptions then
@@ -8194,7 +8191,7 @@ begin
       if Items[NewClickIndex].CheckBox then
       begin
         if Button = mbLeft then
-        FHeader.Treeview.UpdateColumnCheckState(Items[NewClickIndex]);
+          FHeader.Treeview.UpdateColumnCheckState(Items[NewClickIndex]);
         Include(HitInfo.HitPosition, hhiOnCheckbox);
       end;
     end;
@@ -9083,7 +9080,7 @@ var
   var
     BackgroundRect: TRect;
     Details: TThemedElementDetails;
-    
+
   begin
     BackgroundRect := Rect(Target.X, Target.Y, Target.X + R.Right - R.Left, Target.Y + FHeader.Height);
 
@@ -9103,7 +9100,7 @@ var
         end
         else
         begin
-          Brush.Color :=  FHeader.FBackground;
+          Brush.Color := FHeader.FBackground;
           FillRect(BackgroundRect);
         end;
       end;
@@ -9398,9 +9395,9 @@ begin
     if Run <= NoColumn then
       Exit;
 
-    TargetRect.Top    := Target.Y;
+    TargetRect.Top := Target.Y;
     TargetRect.Bottom := Target.Y + R.Bottom - R.Top;
-    TargetRect.Left   := Target.X - R.Left + Items[Run].FLeft + RTLOffset;
+    TargetRect.Left := Target.X - R.Left + Items[Run].FLeft + RTLOffset;
     // TargetRect.Right will be set in the loop
 
     ShowRightBorder := (FHeader.Style = hsThickButtons) or not (hoAutoResize in FHeader.FOptions);
@@ -9978,7 +9975,7 @@ var
   end;
 
   //--------------- end local function ----------------------------------------
-  
+
 begin
   Result := False;
   FColumns.FTrackIndex := NoColumn;
@@ -10008,8 +10005,8 @@ begin
                 // directly determine the current column width.
                 FTrackPoint.X := SplitPoint + IfThen(coFixed in FOptions, Treeview.FEffectiveOffsetX) + FWidth;
                 FTrackPoint.Y := P.Y;
-              Break;
-            end;
+                Break;
+              end;
             end;
             Inc(SplitPoint, FWidth);
           end;
@@ -10033,8 +10030,8 @@ begin
                 // directly determine the current column width.
                 FTrackPoint.X := SplitPoint + IfThen(coFixed in FOptions, Treeview.FEffectiveOffsetX) - FWidth;
                 FTrackPoint.Y := P.Y;
-              Break;
-            end;
+                Break;
+              end;
             end;
             Dec(SplitPoint, FWidth);
           end;
@@ -10139,7 +10136,7 @@ end;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-function TVTHeader.DoGetPopupMenu(Column: TColumnIndex; Position: TPoint): TPopupMenu; 
+function TVTHeader.DoGetPopupMenu(Column: TColumnIndex; Position: TPoint): TPopupMenu;
 
 // Queries the application whether there is a column specific header popup menu.
 
@@ -10562,8 +10559,8 @@ begin
         IsHSplitterHit := HSplitterHit;
 
         if IsVSplitterHit or IsHSplitterHit then
-          begin
-            FTrackStart := P;
+        begin
+          FTrackStart := P;
           FColumns.FHoverIndex := NoColumn;
           if IsVSplitterHit then
           begin
@@ -10578,11 +10575,12 @@ begin
             Include(FStates, hsColumnWidthTrackPending);
           end;
 
-            SetCapture(Treeview.Handle);
-            Result := True;
-            Message.Result := 0;
-          end
-        else if IsInHeader then
+          SetCapture(Treeview.Handle);
+          Result := True;
+          Message.Result := 0;
+        end
+        else
+          if IsInHeader then
           begin
             HitIndex := Columns.AdjustDownColumn(P);
             // in design-time header columns are always draggable
@@ -10887,6 +10885,8 @@ begin
   // Determine initial position of drag image (screen coordinates).
   FColumns.FDropTarget := NoColumn;
   Start := Treeview.ScreenToClient(Start);
+  //lclheader
+  //Inc(Start.Y, FHeight);
   FColumns.FDragIndex := FColumns.ColumnFromPosition(Start);
   DragColumn := FColumns[FColumns.FDragIndex];
 
@@ -11003,8 +11003,9 @@ begin
         with FColumns do
           if (FMaxWidthPercent > 0) and (FixedWidth > MaxFixedWidth) then
             ResizeColumns(MaxFixedWidth - FixedWidth, 0, Count - 1, [coVisible, coFixed])
-          else if (FMinWidthPercent > 0) and (FixedWidth < MinFixedWidth) then
-            ResizeColumns(MinFixedWidth - FixedWidth, 0, Count - 1, [coVisible, coFixed]);
+          else
+            if (FMinWidthPercent > 0) and (FixedWidth < MinFixedWidth) then
+              ResizeColumns(MinFixedWidth - FixedWidth, 0, Count - 1, [coVisible, coFixed]);
 
         FColumns.UpdatePositions;
       end;
@@ -11183,14 +11184,14 @@ begin
 
   TreeView.StartOperation(okAutoFitColumns);
   try
-  if Assigned(TreeView.FOnBeforeAutoFitColumns) then
-    TreeView.FOnBeforeAutoFitColumns(Self, SmartAutoFitType);
+    if Assigned(TreeView.FOnBeforeAutoFitColumns) then
+      TreeView.FOnBeforeAutoFitColumns(Self, SmartAutoFitType);
 
-  for I := StartCol to EndCol do
-    DoAutoFitColumn(I);
+    for I := StartCol to EndCol do
+      DoAutoFitColumn(I);
 
-  if Assigned(TreeView.FOnAfterAutoFitColumns) then
-    TreeView.FOnAfterAutoFitColumns(Self);
+    if Assigned(TreeView.FOnAfterAutoFitColumns) then
+      TreeView.FOnAfterAutoFitColumns(Self);
 
   finally
     Treeview.EndOperation(okAutoFitColumns);
@@ -11757,7 +11758,7 @@ begin
   FColors[13] := clHighlight;     // SelectionRectangleBorderColor
   FColors[14] := clBtnShadow;     // HeaderHotColor
   FColors[15] := clHighlightText; // SelectionTextColor
-  FColors[16] := clMedGray;       // UnfocusedColor  [IPK]
+  FColors[16] := clBtnFace;       // UnfocusedColor  [IPK]
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -11971,6 +11972,7 @@ begin
   FHotPlusBM := TBitmap.Create;
   FMinusBM := TBitmap.Create;
   FHotMinusBM := TBitmap.Create;
+
   BorderStyle := bsSingle;
   FButtonStyle := bsRectangle;
   FButtonFillMode := fmTreeColor;
@@ -12454,7 +12456,6 @@ begin
     CheckOffset := 0;
   AutoSpan := FHeader.UseColumns and (toAutoSpanColumns in FOptions.FAutoOptions);
   SimpleSelection := toSimpleDrawSelection in FOptions.FSelectionOptions;
-
   // This is the node to start with.
   Run := InternalGetNodeAt(0, MinY, False, CurrentTop);
 
@@ -12500,7 +12501,7 @@ begin
             repeat
               Dummy := GetNextVisibleColumn(NextColumn);
               if (Dummy = InvalidColumn) or not ColumnIsEmpty(Run, Dummy) or
-                (Items[Dummy].BidiMode <> bdLeftToRight) then
+                 (Items[Dummy].BidiMode <> bdLeftToRight) then
                 Break;
               NextColumn := Dummy;
             until False;
@@ -12512,31 +12513,30 @@ begin
         end
         else
           CurrentRight := NodeRight;
-
-        // Check if we need the node's width. This is the case when the node is not left aligned or the
-        // left border of the selection rectangle is to the right of the left node border.
-        if (TextLeft < OldRect.Left) or (TextLeft < NewRect.Left) or (Alignment <> taLeftJustify) then
-        begin
-          NodeWidth := DoGetNodeWidth(Run, MainColumn);
-          if NodeWidth >= (CurrentRight - TextLeft) then
-            TextRight := CurrentRight
-          else
-            case Alignment of
-              taLeftJustify:
-                TextRight := TextLeft + NodeWidth;
-              taCenter:
-                begin
-                  TextLeft := (TextLeft + CurrentRight - NodeWidth) div 2;
-                  TextRight := TextLeft + NodeWidth;
-                end;
+          // Check if we need the node's width. This is the case when the node is not left aligned or the
+          // left border of the selection rectangle is to the right of the left node border.
+          if (TextLeft < OldRect.Left) or (TextLeft < NewRect.Left) or (Alignment <> taLeftJustify) then
+          begin
+            NodeWidth := DoGetNodeWidth(Run, MainColumn);
+            if NodeWidth >= (CurrentRight - TextLeft) then
+              TextRight := CurrentRight
             else
-              // taRightJustify
-              TextRight := CurrentRight;
-              TextLeft := TextRight - NodeWidth;
-            end;
-        end
-        else
-          TextRight := CurrentRight;
+              case Alignment of
+                taLeftJustify:
+                  TextRight := TextLeft + NodeWidth;
+                taCenter:
+                  begin
+                    TextLeft := (TextLeft + CurrentRight - NodeWidth) div 2;
+                    TextRight := TextLeft + NodeWidth;
+                  end;
+              else
+                // taRightJustify
+                TextRight := CurrentRight;
+                TextLeft := TextRight - NodeWidth;
+              end;
+          end
+          else
+            TextRight := CurrentRight;
 
         // Now determine whether we need to change the state.
         IsInOldRect := (OldRect.Left <= TextRight) and (OldRect.Right >= TextLeft) and
@@ -12561,9 +12561,8 @@ begin
             InternalCacheNode(Run)
           else
             InternalRemoveFromSelection(Run);
-        end;
+          end;
       end;
-
       CurrentTop := NextTop;
       // Get next visible node and update left node position.
       NextNode := GetNextVisibleNoInit(Run, True);
@@ -12634,7 +12633,6 @@ begin
     CheckOffset := 0;
   AutoSpan := FHeader.UseColumns and (toAutoSpanColumns in FOptions.FAutoOptions);
   SimpleSelection := toSimpleDrawSelection in FOptions.FSelectionOptions;
-
   // This is the node to start with.
   Run := InternalGetNodeAt(0, MinY, False, CurrentTop);
 
@@ -12675,7 +12673,7 @@ begin
           repeat
             Dummy := FHeader.FColumns.GetPreviousVisibleColumn(NextColumn);
             if (Dummy = InvalidColumn) or not ColumnIsEmpty(Run, Dummy) or
-              (FHeader.FColumns[Dummy].BiDiMode = bdLeftToRight) then
+               (FHeader.FColumns[Dummy].BiDiMode = bdLeftToRight) then
               Break;
             NextColumn := Dummy;
           until False;
@@ -12686,12 +12684,10 @@ begin
         end
         else
           CurrentLeft := NodeLeft;
-
-        // Check if we need the node's width. This is the case when the node is not left aligned (in RTL context this
-        // means actually right aligned) or the right border of the selection rectangle is to the left
-        // of the right node border.
-        if (TextRight > OldRect.Right) or (TextRight > NewRect.Right) or (Alignment <> taRightJustify) then
-        begin
+          // Check if we need the node's width. This is the case when the node is not left aligned (in RTL context this        // means actually right aligned) or the right border of the selection rectangle is to the left
+          // of the right node border.
+          if (TextRight > OldRect.Right) or (TextRight > NewRect.Right) or (Alignment <> taRightJustify) then
+          begin
           NodeWidth := DoGetNodeWidth(Run, MainColumn);
           if NodeWidth >= (TextRight - CurrentLeft) then
             TextLeft := CurrentLeft
@@ -12707,9 +12703,9 @@ begin
                   TextLeft := (TextRight + CurrentLeft - NodeWidth) div 2;
                   TextRight := TextLeft + NodeWidth;
                 end;
-            else
-              // taRightJustify
-              TextLeft := TextRight - NodeWidth;
+              else
+                // taRightJustify
+                TextLeft := TextRight - NodeWidth;
             end;
         end
         else
@@ -12740,7 +12736,6 @@ begin
             InternalRemoveFromSelection(Run);
         end;
       end;
-
       CurrentTop := NextTop;
       // Get next visible node and update left node position.
       NextNode := GetNextVisibleNoInit(Run, True);
@@ -13055,7 +13050,7 @@ procedure TBaseVirtualTree.FixupTotalCount(Node: PVirtualNode);
 
 var
   Child: PVirtualNode;
-  
+
 begin
   // Initial total count is set to one on node creation.
   Child := Node.FirstChild;
@@ -13076,7 +13071,7 @@ procedure TBaseVirtualTree.FixupTotalHeight(Node: PVirtualNode);
 
 var
   Child: PVirtualNode;
-  
+
 begin
   // Initial total height is set to the node height on load.
   Child := Node.FirstChild;
@@ -13644,6 +13639,7 @@ begin
   end;
   {$endif}
 end;
+
 //----------------------------------------------------------------------------------------------------------------------
 
 function TBaseVirtualTree.IsFirstVisibleChild(Parent, Node: PVirtualNode): Boolean;
@@ -13737,13 +13733,13 @@ end;
 function TBaseVirtualTree.PackArray(const TheArray: TNodeArray; Count: Integer): Integer;
 var
   Source, Dest: ^PVirtualNode;
-  ConstOne: PtrInt;
+  ConstOne: NativeInt;
 begin
   Source := Pointer(TheArray);
   ConstOne := 1;
   Result := 0;
   // Do the fastest scan possible to find the first entry
-  while (Count <> 0) and {not Odd(NativeInt(Source^))} (PtrInt(Source^) and ConstOne = 0) do
+  while (Count <> 0) and {not Odd(NativeInt(Source^))} (NativeInt(Source^) and ConstOne = 0) do
   begin
     Inc(Result);
     Inc(Source);
@@ -13755,7 +13751,7 @@ begin
     Dest := Source;
     repeat
       // Skip odd entries
-      if {not Odd(NativeInt(Source^))} PtrInt(Source^) and ConstOne = 0 then
+      if {not Odd(NativeInt(Source^))} NativeInt(Source^) and ConstOne = 0 then
       begin
         Dest^ := Source^;
         Inc(Result);
@@ -13766,7 +13762,6 @@ begin
     until Count = 0;
   end;
 end;
-
 {$else}
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -13863,7 +13858,7 @@ var
         if (FHeader.MainColumn > NoColumn) and not (coParentColor in FHeader.FColumns[FHeader.MainColumn].Options) then
           Brush.Color := FHeader.FColumns[FHeader.MainColumn].Color
         else
-          Brush.Color :=  FColors.BackGroundColor;
+          Brush.Color := FColors.BackGroundColor;
       end
       else
         Brush.Color := clFuchsia;
@@ -13905,7 +13900,7 @@ begin
       // box is always of odd size
       FillBitmap(FMinusBM);
       FillBitmap(FHotMinusBM);
-      // Weil die selbstgezeichneten Bitmaps sehen im Vcl Style scheiße aus
+      // Weil die selbstgezeichneten Bitmaps sehen im Vcl Style schei? aus
       if (not VclStyleEnabled) {or (Theme = 0)} then
       begin
         if not(tsUseExplorerTheme in FStates) then
@@ -14260,7 +14255,7 @@ begin
         begin
           Remaining := NewChildCount - Node.ChildCount;
           Count := Remaining;
-          
+
           // New nodes to add.
           if Assigned(Node.LastChild) then
             Index := Node.LastChild.Index + 1
@@ -14581,10 +14576,10 @@ begin
       begin
         AdjustTotalHeight(Node, -Integer(NodeHeight[Node]), True);
         if FullyVisible[Node] then
-      begin
-        Dec(FVisibleCount);
-        NeedUpdate := True;
-      end;
+        begin
+          Dec(FVisibleCount);
+          NeedUpdate := True;
+        end;
       end;
 
       if FUpdateCount = 0 then
@@ -15050,7 +15045,7 @@ begin
       // Update the hidden children flag of the parent.
       // Since this node is now visible we simply have to remove the flag.
       if not IsEffectivelyFiltered[Node] then
-      Exclude(Node.Parent.States, vsAllChildrenHidden);
+        Exclude(Node.Parent.States, vsAllChildrenHidden);
     end
     else
     begin
@@ -15299,16 +15294,16 @@ begin
       begin
         if Mode1 = tamScrollUp then
           DoScrollUp(DC, Brush, R1, StepSize)
-          else
+        else
           DoScrollDown(DC, Brush, R1, StepSize);
 
         if (Mode2 <> tamNoScroll) and (ScaleFactor > 0) then
-          begin
+        begin
           // As this routine is able to scroll two independent areas at once, the missing StepSize is
           // computed in that case. To ensure the maximal accuracy the rounding error is accumulated.
           SecondaryStepSize := Round((StepSize + MissedSteps) * ScaleFactor);
           MissedSteps := MissedSteps + StepSize * ScaleFactor - SecondaryStepSize;
-      end;
+        end;
       end
       else
         SecondaryStepSize := StepSize;
@@ -15350,7 +15345,7 @@ begin
     FEffectiveOffsetX := -FOffsetX;
   if FEffectiveOffsetX < 0 then
     FEffectiveOffsetX := 0;
-    
+
   if toAutoBidiColumnOrdering in FOptions.FAutoOptions then
     FHeader.FColumns.ReorderColumns(UseRightToLeftAlignment);
   FHeader.Invalidate(nil);
@@ -15640,7 +15635,7 @@ begin
                   ColRight := ClientWidth;
                 end;
 
-                FHintData.DefaultHint :=  '';
+                FHintData.DefaultHint := '';
                 if FHintMode <> hmTooltip then
                 begin
                   // Node specific hint text.
@@ -15793,9 +15788,9 @@ begin
 
   if Assigned(Header) then
   begin
-  Header.FColumns.FDownIndex := NoColumn;
-  Header.FColumns.FHoverIndex := NoColumn;
-  Header.FColumns.FCheckBoxHit := False;
+    Header.FColumns.FDownIndex := NoColumn;
+    Header.FColumns.FHoverIndex := NoColumn;
+    Header.FColumns.FCheckBoxHit := False;
   end;
   DoMouseLeave();
   inherited CMMouseLeave(Message);
@@ -16243,7 +16238,7 @@ begin
     RTLFactor := -1
   else
     RTLFactor := 1;
-    
+
   case Message.ScrollCode of
     SB_BOTTOM:
       SetOffsetX(-Integer(FRangeX));
@@ -16368,7 +16363,7 @@ begin
           RTLFactor := -1
         else
           RTLFactor := 1;
-          
+
         // Determine new focused node.
         case CharCode of
           VK_HOME, VK_END:
@@ -16423,8 +16418,7 @@ begin
             if Shift = [ssCtrl, ssShift] then
               SetOffsetX(FOffsetX + ClientWidth)
             else
-            begin
-              if [ssShift,ssAlt] = Shift then
+              if [ssShift, ssAlt] = Shift then
               begin
                 if FFocusedColumn <= NoColumn then
                   NewColumn := FHeader.FColumns.GetFirstVisibleColumn
@@ -16447,7 +16441,6 @@ begin
                 SetFocusedColumn(NewColumn);
               end
               else
-              begin
                 if ssCtrlOS in Shift then
                   SetOffsetY(FOffsetY + ClientHeight)
                 else
@@ -16472,14 +16465,11 @@ begin
                   end;
                   FocusedNode := Node;
                 end;
-              end;
-            end;
           VK_NEXT:
             if Shift = [ssCtrl, ssShift] then
               SetOffsetX(FOffsetX - ClientWidth)
             else
-            begin
-              if [ssShift,ssAlt] = Shift then
+              if [ssShift, ssAlt] = Shift then
               begin
                 if FFocusedColumn <= NoColumn then
                   NewColumn := FHeader.FColumns.GetFirstVisibleColumn
@@ -16502,33 +16492,30 @@ begin
                 SetFocusedColumn(NewColumn);
               end
               else
-            begin
-              if ssCtrlOS in Shift then
-                SetOffsetY(FOffsetY - ClientHeight)
-              else
-              begin
-                Offset := 0;
-                // If there's no focused node then just take the very last one.
-                if FFocusedNode = nil then
-                  Node := GetLastVisible(nil, True)
+                if ssCtrlOS in Shift then
+                  SetOffsetY(FOffsetY - ClientHeight)
                 else
                 begin
-                  // Go up as many nodes as comprise together a size of ClientHeight.
-                  Node := FFocusedNode;
-                  while True do
+                  Offset := 0;
+                  // If there's no focused node then just take the very last one.
+                  if FFocusedNode = nil then
+                    Node := GetLastVisible(nil, True)
+                  else
                   begin
-                    Temp := GetNextVisible(Node, True);
-                    NewHeight := NodeHeight[Node];
-                    if (Temp = nil) or (Offset + NewHeight >= ClientHeight) then
-                      Break;
-                    Node := Temp;
-                    Inc(Offset, NewHeight);
+                    // Go up as many nodes as comprise together a size of ClientHeight.
+                    Node := FFocusedNode;
+                    while True do
+                    begin
+                      Temp := GetNextVisible(Node, True);
+                      NewHeight := NodeHeight[Node];
+                      if (Temp = nil) or (Offset + NewHeight >= ClientHeight) then
+                        Break;
+                      Node := Temp;
+                      Inc(Offset, NewHeight);
+                    end;
                   end;
+                  FocusedNode := Node;
                 end;
-                FocusedNode := Node;
-              end;
-            end;
-          end;
           VK_UP:
             begin
               // scrolling without selection change
@@ -16997,7 +16984,6 @@ var
 begin
   {$ifdef DEBUG_VTV}Logger.EnterMethod([lcMessages],'WMLButtonDblClk');{$endif}
   DoStateChange([tsLeftDblClick]);
-
   inherited WMLButtonDblClk(Message);
 
   // get information about the hit
@@ -18272,7 +18258,6 @@ begin
     //todo_lcl_low
     //AddBiDiModeExStyle(ExStyle);
   end;
-
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -18456,15 +18441,15 @@ begin
       Indent := FIndent
     else
     begin
-    Run := HitInfo.HitNode;
-    while (Run.Parent <> FRoot) do
-    begin
-      Inc(Indent, FIndent);
+      Run := HitInfo.HitNode;
+      while (Run.Parent <> FRoot) do
+      begin
+        Inc(Indent, FIndent);
       Run := Run.Parent;
+      end;
+      if toShowRoot in FOptions.FPaintOptions then
+        Inc(Indent, FIndent);
     end;
-    if toShowRoot in FOptions.FPaintOptions then
-      Inc(Indent, FIndent);
-  end;
   end;
 
   if (MainColumnHit and (Offset < (Indent + Margin{See issue #259}))) then
@@ -18593,15 +18578,15 @@ begin
       Dec(Right, FIndent)
     else
     begin
-    Run := HitInfo.HitNode;
-    while (Run.Parent <> FRoot) do
-    begin
-      Dec(Right, FIndent);
-      Run := Run.Parent;
+      Run := HitInfo.HitNode;
+      while (Run.Parent <> FRoot) do
+      begin
+        Dec(Right, FIndent);
+        Run := Run.Parent;
+      end;
+      if toShowRoot in FOptions.FPaintOptions then
+        Dec(Right, FIndent);
     end;
-    if toShowRoot in FOptions.FPaintOptions then
-      Dec(Right, FIndent);
-  end;
   end;
 
   if Offset >= Right then
@@ -19992,7 +19977,7 @@ begin
   if Assigned(FOnInitChildren) then
   begin
     FOnInitChildren(Self, Node, ChildCount);
-    Result :=  True;
+    Result := True;
   end
   else
     Result := False;
@@ -20590,7 +20575,7 @@ begin
 
     if UseRightToLeftAlignment then
       DeltaX := - DeltaX;
-      
+
     if IsMouseSelecting then
     begin
       // In order to avoid scrolling the area which needs a repaint due to the changed selection rectangle
@@ -20803,7 +20788,7 @@ begin
   // no DragOver event is created by the OLE subsystem.
   Result := DragOver(VTVDragManager.DragSource, KeyState, dsDragMove, Pt, Effect);
   try
-    if (Result <>  NOERROR) or ((Effect and not DROPEFFECT_SCROLL) = DROPEFFECT_NONE) then
+    if (Result <> NOERROR) or ((Effect and not DROPEFFECT_SCROLL) = DROPEFFECT_NONE) then
       Result := E_FAIL
     else
     begin
@@ -20902,7 +20887,7 @@ begin
     // This is only necessary if we cannot use the drag image helper interfaces.
     if not VTVDragManager.DropTargetHelperSupported and Assigned(VTVDragManager.DragSource) then
       TBaseVirtualTree(VTVDragManager.DragSource).FDragImage.ShowDragImage;
-    Result :=  NOERROR;
+    Result := NOERROR;
   except
     Result := E_UNEXPECTED;
   end;
@@ -20922,7 +20907,7 @@ var
 begin
   {$ifdef DEBUG_VTV}Logger.EnterMethod([lcDrag],'DragFinished');{$endif}
   if [tsOLEDragging, tsVCLDragPending, tsVCLDragging, tsVCLDragFinished] * FStates = [] then
-    Exit;  
+    Exit;
 
   DoStateChange([], [tsVCLDragPending, tsVCLDragging, tsUserDragObject, tsVCLDragFinished]);
 
@@ -21157,7 +21142,7 @@ begin
       Effect := DROPEFFECT_NONE;
     if WindowScrolled then
       Effect := Effect or LongWord(DROPEFFECT_SCROLL);
-    Result :=  NOERROR;
+    Result := NOERROR;
   except
     Result := E_UNEXPECTED;
   end;
@@ -21834,10 +21819,8 @@ var
   //---------------------------------------------------------------------------
 
   function KeyUnicode(C: Char): WideChar;
-
   // Converts the given character into its corresponding Unicode character
   // depending on the active keyboard layout.
-
   begin
     MultiByteToWideChar(CodePageFromLocale(GetKeyboardLayout(0) and $FFFF),
       MB_USEGLYPHCHARS, @C, 1, @Result, 1);
@@ -22010,42 +21993,42 @@ begin
     end
     else
       if hiOnItemCheckBox in HitInfo.HitPositions then
-    begin
-      if (FStates * [tsMouseCheckPending, tsKeyCheckPending] = []) and not (vsDisabled in HitInfo.HitNode.States) then
       begin
-        with HitInfo.HitNode^ do
-          NewCheckState := DetermineNextCheckState(CheckType, CheckState);
+        if (FStates * [tsMouseCheckPending, tsKeyCheckPending] = []) and not (vsDisabled in HitInfo.HitNode.States) then
+        begin
+          with HitInfo.HitNode^ do
+            NewCheckState := DetermineNextCheckState(CheckType, CheckState);
           if (ssLeft in KeysToShiftState(Message.Keys)) and DoChecking(HitInfo.HitNode, NewCheckState) then
-        begin
-          DoStateChange([tsMouseCheckPending]);
-          FCheckNode := HitInfo.HitNode;
-          FPendingCheckState := NewCheckState;
-          FCheckNode.CheckState := PressedState[FCheckNode.CheckState];
-          InvalidateNode(HitInfo.HitNode);
-          MayEdit := False;
-        end;
-      end;
-    end
-    else
-    begin
-      if hiOnItemButton in HitInfo.HitPositions then
-      begin
-        ToggleNode(HitInfo.HitNode);
-        MayEdit := False;
-      end
-      else
-      begin
-        if toToggleOnDblClick in FOptions.FMiscOptions then
-        begin
-          if ((([hiOnItemButton, hiOnItemLabel, hiOnNormalIcon, hiOnStateIcon] * HitInfo.HitPositions) <> []) or
-            ((toFullRowSelect in FOptions.FSelectionOptions) and Assigned(HitInfo.HitNode))) then
           begin
-            ToggleNode(HitInfo.HitNode);
+            DoStateChange([tsMouseCheckPending]);
+            FCheckNode := HitInfo.HitNode;
+            FPendingCheckState := NewCheckState;
+            FCheckNode.CheckState := PressedState[FCheckNode.CheckState];
+            InvalidateNode(HitInfo.HitNode);
             MayEdit := False;
           end;
         end;
+      end
+      else
+      begin
+        if hiOnItemButton in HitInfo.HitPositions then
+        begin
+          ToggleNode(HitInfo.HitNode);
+          MayEdit := False;
+        end
+        else
+        begin
+          if toToggleOnDblClick in FOptions.FMiscOptions then
+          begin
+            if ((([hiOnItemButton, hiOnItemLabel, hiOnNormalIcon, hiOnStateIcon] * HitInfo.HitPositions) <> []) or
+              ((toFullRowSelect in FOptions.FSelectionOptions) and Assigned(HitInfo.HitNode))) then
+            begin
+              ToggleNode(HitInfo.HitNode);
+              MayEdit := False;
+            end;
+          end;
+        end;
       end;
-    end;
   end;
 
   if MayEdit and Assigned(FFocusedNode) and (FFocusedNode = HitInfo.HitNode) and
@@ -23247,7 +23230,7 @@ begin
     //  FHeader.FColumns.AdjustAutoSize(InvalidColumn, True);
   finally
     Updated;
-  end;                             
+  end;
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -23550,7 +23533,7 @@ begin
     RTLOffset := ComputeRTLOffset(True)
   else
     RTLOffset := 0;
-  
+
   // The update rect has already been filled in WMPaint, as it is the window's update rect, which gets
   // reset when BeginPaint is called (in the ancestor).
   // The difference to the DC's clipbox is that it is also valid with internal paint operations used
@@ -26001,6 +25984,7 @@ begin
   //used to avoid default handler of LM_MOUSEWHEEL
 end;
 
+//----------------------------------------------------------------------------------------------------------------------
 
 procedure TBaseVirtualTree.DeleteChildren(Node: PVirtualNode; ResetHasChildren: Boolean = False);
 
@@ -26347,34 +26331,34 @@ begin
 
   if not Result then
   begin
-      Result := Action is TEditSelectAll;
+    Result := Action is TEditSelectAll;
+    if Result then
+      SelectAll(False)
+    else
+    begin
+      Result := Action is TEditCopy;
       if Result then
-        SelectAll(False)
+        CopyToClipboard
       else
+        if not (toReadOnly in FOptions.FMiscOptions) then
         begin
-        Result := Action is TEditCopy;
-        if Result then
-          CopyToClipboard
-        else
-          if not (toReadOnly in FOptions.FMiscOptions) then
-          begin
-            Result := Action is TEditCut;
-            if Result then
+          Result := Action is TEditCut;
+          if Result then
             CutToClipboard
-            else
-            begin
-              Result := Action is TEditPaste;
-              if Result then
-                PasteFromClipboard
-                else
-                begin
-                  Result := Action is TEditDelete;
-                  if Result then
+          else
+          begin
+            Result := Action is TEditPaste;
+            if Result then
+              PasteFromClipboard
+              else
+              begin
+                Result := Action is TEditDelete;
+                if Result then
                   DeleteSelectedNodes;
-                end;
-            end;
+              end;
           end;
       end;
+    end;
   end;
 end;
 
@@ -26388,7 +26372,6 @@ var
   Run, ToDelete: PVirtualNode;
 
 begin
-
   if tsCutPending in FStates then
   begin
     Run := FRoot.FirstChild;
@@ -27110,8 +27093,9 @@ begin
               Result := nil;
             Break;
           end
-          else if (not Assigned(Result.FirstChild)) or (not (vsExpanded in Result.States))then
-            Break;
+          else
+            if (not Assigned(Result.FirstChild)) or (not (vsExpanded in Result.States))then
+              Break;
 
           Result := Result.FirstChild;
         until False;
@@ -27303,15 +27287,15 @@ var
 begin
   Result := GetLastChild(Node);
   if not ConsiderChildrenAbove or not (toChildrenAbove in FOptions.FPaintOptions) then
-  while Assigned(Result) do
-  begin
-    // Test if there is a next last child. If not keep the node from the last run.
-    // Otherwise use the next last child.
-    Next := GetLastChild(Result);
-    if Next = nil then
-      Break;
-    Result := Next;
-  end;
+    while Assigned(Result) do
+    begin
+      // Test if there is a next last child. If not keep the node from the last run.
+      // Otherwise use the next last child.
+      Next := GetLastChild(Result);
+      if Next = nil then
+        Break;
+      Result := Next;
+    end;
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -27339,15 +27323,15 @@ var
 begin
   Result := GetLastChildNoInit(Node);
   if not ConsiderChildrenAbove or not (toChildrenAbove in FOptions.FPaintOptions) then
-  while Assigned(Result) do
-  begin
-    // Test if there is a next last child. If not keep the node from the last run.
-    // Otherwise use the next last child.
-    Next := GetLastChildNoInit(Result);
-    if Next = nil then
-      Break;
-    Result := Next;
-  end;
+    while Assigned(Result) do
+    begin
+      // Test if there is a next last child. If not keep the node from the last run.
+      // Otherwise use the next last child.
+      Next := GetLastChildNoInit(Result);
+      if Next = nil then
+        Break;
+      Result := Next;
+    end;
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -27608,7 +27592,7 @@ end;
 
 function TBaseVirtualTree.GetNext(Node: PVirtualNode; ConsiderChildrenAbove: Boolean = False): PVirtualNode;
 
-// Returns next node in tree while optionally considering toChildrenAbove. The Result will be initialized if needed. 
+// Returns next node in tree while optionally considering toChildrenAbove. The Result will be initialized if needed.
 
 begin
   Result := Node;
@@ -27647,45 +27631,45 @@ begin
     end
     else
     begin
-    // Has this node got children?
-    if vsHasChildren in Result.States then
-    begin
-      // Yes, there are child nodes. Initialize them if necessary.
-      if Result.ChildCount = 0 then
-        InitChildren(Result);
-    end;
+      // Has this node got children?
+      if vsHasChildren in Result.States then
+      begin
+        // Yes, there are child nodes. Initialize them if necessary.
+        if Result.ChildCount = 0 then
+          InitChildren(Result);
+      end;
 
-    // if there is no child node try siblings
-    if Assigned(Result.FirstChild) then
-      Result := Result.FirstChild
-    else
-    begin
-      repeat
-        // Is there a next sibling?
-        if Assigned(Result.NextSibling) then
-        begin
-          Result := Result.NextSibling;
-          Break;
-        end
-        else
-        begin
-          // No sibling anymore, so use the parent's next sibling.
-          if Result.Parent <> FRoot then
-            Result := Result.Parent
+      // if there is no child node try siblings
+      if Assigned(Result.FirstChild) then
+        Result := Result.FirstChild
+      else
+      begin
+        repeat
+          // Is there a next sibling?
+          if Assigned(Result.NextSibling) then
+          begin
+            Result := Result.NextSibling;
+            Break;
+          end
           else
           begin
-            // There are no further nodes to examine, hence there is no further visible node.
-            Result := nil;
-            Break;
+            // No sibling anymore, so use the parent's next sibling.
+            if Result.Parent <> FRoot then
+              Result := Result.Parent
+            else
+            begin
+              // There are no further nodes to examine, hence there is no further visible node.
+              Result := nil;
+              Break;
+            end;
           end;
-        end;
-      until False;
+        until False;
+      end;
     end;
   end;
-    end;
 
-    if Assigned(Result) and not (vsInitialized in Result.States) then
-      InitNode(Result);
+  if Assigned(Result) and not (vsInitialized in Result.States) then
+    InitNode(Result);
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -27792,24 +27776,25 @@ begin
         Result := GetNextLevel(Result, NodeLevel);
     end
     else
-    if StartNodeLevel = NodeLevel then
-    begin
-      Result := Node.NextSibling;
-      if not Assigned(Result) then // i.e. start node was a last sibling
+      if StartNodeLevel = NodeLevel then
       begin
-        Result := Node.Parent;
-        if Assigned(Result) then
+        Result := Node.NextSibling;
+        if not Assigned(Result) then // i.e. start node was a last sibling
         begin
-          // go to next anchestor of the start node which has a next sibling (if exists)
-          while Assigned(Result) and not Assigned(Result.NextSibling) do
-            Result := Result.Parent;
+          Result := Node.Parent;
           if Assigned(Result) then
-            Result := GetNextLevel(Result.NextSibling, NodeLevel);
+          begin
+            // go to next anchestor of the start node which has a next sibling (if exists)
+            while Assigned(Result) and not Assigned(Result.NextSibling) do
+              Result := Result.Parent;
+            if Assigned(Result) then
+              Result := GetNextLevel(Result.NextSibling, NodeLevel);
+          end;
         end;
-      end;
-    end
-    else // i.e. StartNodeLevel > NodeLevel
-      Result := GetNextLevel(Node.Parent, NodeLevel);
+      end
+      else
+        // i.e. StartNodeLevel > NodeLevel
+        Result := GetNextLevel(Node.Parent, NodeLevel);
   end;
 
   if Assigned(Result) and not (vsInitialized in Result.States) then
@@ -27853,34 +27838,34 @@ begin
     end
     else
     begin
-    // If there is no child node try siblings.
-    if Assigned(Result.FirstChild) then
-      Result := Result.FirstChild
-    else
-    begin
-      repeat
-        // Is there a next sibling?
-        if Assigned(Result.NextSibling) then
-        begin
-          Result := Result.NextSibling;
-          Break;
-        end
-        else
-        begin
-          // No sibling anymore, so use the parent's next sibling.
-          if Result.Parent <> FRoot then
-            Result := Result.Parent
+      // If there is no child node try siblings.
+      if Assigned(Result.FirstChild) then
+        Result := Result.FirstChild
+      else
+      begin
+        repeat
+          // Is there a next sibling?
+          if Assigned(Result.NextSibling) then
+          begin
+            Result := Result.NextSibling;
+            Break;
+          end
           else
           begin
-            // There are no further nodes to examine, hence there is no further visible node.
-            Result := nil;
-            Break;
+            // No sibling anymore, so use the parent's next sibling.
+            if Result.Parent <> FRoot then
+              Result := Result.Parent
+            else
+            begin
+              // There are no further nodes to examine, hence there is no further visible node.
+              Result := nil;
+              Break;
+            end;
           end;
-        end;
-      until False;
+        until False;
+      end;
     end;
   end;
-end;
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -27957,82 +27942,24 @@ begin
     Assert(Result <> FRoot, 'Node must not be the hidden root node.');
 
     repeat
-    // If the given node is not visible then look for a parent node which is visible, otherwise we will
-    // likely go unnecessarily through a whole bunch of invisible nodes.
-    if not FullyVisible[Result] then
+      // If the given node is not visible then look for a parent node which is visible, otherwise we will
+      // likely go unnecessarily through a whole bunch of invisible nodes.
+      if not FullyVisible[Result] then
         Result := GetVisibleParent(Result, True);
 
-    if ConsiderChildrenAbove and (toChildrenAbove in FOptions.FPaintOptions) then
-    begin
-      repeat
-        // If there a no siblings anymore, go up one level.
-        if not Assigned(Result.NextSibling) then
-        begin
-          Result := Result.Parent;
-          if Result = FRoot then
-          begin
-            Result := nil;
-            Break;
-          end;
-
-          if not (vsInitialized in Result.States) then
-            InitNode(Result);
-          if vsVisible in Result.States then
-            Break;
-        end
-        else
-        begin
-          // There is at least one sibling so take it.
-          Result := Result.NextSibling;
-          if not (vsInitialized in Result.States) then
-            InitNode(Result);
-          if not (vsVisible in Result.States) then
-            Continue;
-
-          // Now take a look at the children.
-          // As the children are initialized while toggling, we don't need to do this here.
-          while (vsExpanded in Result.States) and Assigned(Result.FirstChild) do
-          begin
-            Result := Result.FirstChild;
-            if not (vsInitialized in Result.States) then
-              InitNode(Result);
-            if not (vsVisible in Result.States) then
-              Break;
-          end;
-
-          // If we found a visible node we don't need to search any longer.
-          if vsVisible in Result.States then
-            Break;
-        end;
-      until False;
-    end
-    else
-    begin
-      // Has this node got children?
-      if [vsHasChildren, vsExpanded] * Result.States = [vsHasChildren, vsExpanded] then
-      begin
-        // Yes, there are child nodes. Initialize them if necessary.
-        if Result.ChildCount = 0 then
-          InitChildren(Result);
-      end;
-
-      // Child nodes are the first choice if possible.
-      if (vsExpanded in Result.States) and Assigned(Result.FirstChild) then
-      begin
-        Result := GetFirstChild(Result);
-        ForceSearch := False;
-      end
-      else
-        ForceSearch := True;
-
-      // If there are no children or the first child is not visible then search the sibling nodes or traverse parents.
-      if Assigned(Result) and (ForceSearch or not (vsVisible in Result.States)) then
+      if ConsiderChildrenAbove and (toChildrenAbove in FOptions.FPaintOptions) then
       begin
         repeat
-          // Is there a next sibling?
-          if Assigned(Result.NextSibling) then
+          // If there a no siblings anymore, go up one level.
+          if not Assigned(Result.NextSibling) then
           begin
-            Result := Result.NextSibling;
+            Result := Result.Parent;
+            if Result = FRoot then
+            begin
+              Result := nil;
+              Break;
+            end;
+
             if not (vsInitialized in Result.States) then
               InitNode(Result);
             if vsVisible in Result.States then
@@ -28040,19 +27967,77 @@ begin
           end
           else
           begin
-            // No sibling anymore, so use the parent's next sibling.
-            if Result.Parent <> FRoot then
-              Result := Result.Parent
-            else
+            // There is at least one sibling so take it.
+            Result := Result.NextSibling;
+            if not (vsInitialized in Result.States) then
+              InitNode(Result);
+            if not (vsVisible in Result.States) then
+              Continue;
+
+            // Now take a look at the children.
+            // As the children are initialized while toggling, we don't need to do this here.
+            while (vsExpanded in Result.States) and Assigned(Result.FirstChild) do
             begin
-              // There are no further nodes to examine, hence there is no further visible node.
-              Result := nil;
-              Break;
+              Result := Result.FirstChild;
+              if not (vsInitialized in Result.States) then
+                InitNode(Result);
+              if not (vsVisible in Result.States) then
+                Break;
             end;
+
+            // If we found a visible node we don't need to search any longer.
+            if vsVisible in Result.States then
+              Break;
           end;
         until False;
+      end
+      else
+      begin
+        // Has this node got children?
+        if [vsHasChildren, vsExpanded] * Result.States = [vsHasChildren, vsExpanded] then
+        begin
+          // Yes, there are child nodes. Initialize them if necessary.
+          if Result.ChildCount = 0 then
+            InitChildren(Result);
+        end;
+
+        // Child nodes are the first choice if possible.
+        if (vsExpanded in Result.States) and Assigned(Result.FirstChild) then
+        begin
+          Result := GetFirstChild(Result);
+          ForceSearch := False;
+        end
+        else
+          ForceSearch := True;
+
+        // If there are no children or the first child is not visible then search the sibling nodes or traverse parents.
+        if Assigned(Result) and (ForceSearch or not (vsVisible in Result.States)) then
+        begin
+          repeat
+            // Is there a next sibling?
+            if Assigned(Result.NextSibling) then
+            begin
+              Result := Result.NextSibling;
+              if not (vsInitialized in Result.States) then
+                InitNode(Result);
+              if vsVisible in Result.States then
+                Break;
+            end
+            else
+            begin
+              // No sibling anymore, so use the parent's next sibling.
+              if Result.Parent <> FRoot then
+                Result := Result.Parent
+              else
+              begin
+                // There are no further nodes to examine, hence there is no further visible node.
+                Result := nil;
+                Break;
+              end;
+            end;
+          until False;
+        end;
       end;
-    end;
     until not Assigned(Result) or IsEffectivelyVisible[Result];
   end;
 end;
@@ -28074,84 +28059,84 @@ begin
     Assert(Result <> FRoot, 'Node must not be the hidden root node.');
 
     repeat
-    if ConsiderChildrenAbove and (toChildrenAbove in FOptions.FPaintOptions) then
-    begin
-      repeat
-        // If there a no siblings anymore, go up one level.
-        if not Assigned(Result.NextSibling) then
-        begin
-          Result := Result.Parent;
-          if Result = FRoot then
-          begin
-            Result := nil;
-            Break;
-          end;
-          if vsVisible in Result.States then
-            Break;
-        end
-        else
-        begin
-          // There is at least one sibling so take it.
-          Result := Result.NextSibling;
-          if not (vsVisible in Result.States) then
-            Continue;
-
-          // Now take a look at the children.
-          while (vsExpanded in Result.States) and Assigned(Result.FirstChild) do
-          begin
-            Result := Result.FirstChild;
-            if not (vsVisible in Result.States) then
-              Break;
-          end;
-
-          // If we found a visible node we don't need to search any longer.
-          if vsVisible in Result.States then
-            Break;
-        end;
-      until False;
-    end
-    else
-    begin
-      // If the given node is not visible then look for a parent node which is visible, otherwise we will
-      // likely go unnecessarily through a whole bunch of invisible nodes.
-      if not FullyVisible[Result] then
-          Result := GetVisibleParent(Result, True);
-
-      // Child nodes are the first choice if possible.
-      if (vsExpanded in Result.States) and Assigned(Result.FirstChild) then
-      begin
-        Result := Result.FirstChild;
-        ForceSearch := False;
-      end
-      else
-        ForceSearch := True;
-
-      // If there are no children or the first child is not visible then search the sibling nodes or traverse parents.
-      if ForceSearch or not (vsVisible in Result.States) then
+      if ConsiderChildrenAbove and (toChildrenAbove in FOptions.FPaintOptions) then
       begin
         repeat
-          // Is there a next sibling?
-          if Assigned(Result.NextSibling) then
+          // If there a no siblings anymore, go up one level.
+          if not Assigned(Result.NextSibling) then
           begin
-            Result := Result.NextSibling;
+            Result := Result.Parent;
+            if Result = FRoot then
+            begin
+              Result := nil;
+              Break;
+            end;
             if vsVisible in Result.States then
               Break;
           end
           else
           begin
-            // No sibling anymore, so use the parent's next sibling.
-            if Result.Parent <> FRoot then
-              Result := Result.Parent
-            else
+            // There is at least one sibling so take it.
+            Result := Result.NextSibling;
+            if not (vsVisible in Result.States) then
+              Continue;
+
+            // Now take a look at the children.
+            while (vsExpanded in Result.States) and Assigned(Result.FirstChild) do
             begin
-              // There are no further nodes to examine, hence there is no further visible node.
-              Result := nil;
-              Break;
+              Result := Result.FirstChild;
+              if not (vsVisible in Result.States) then
+                Break;
             end;
+
+            // If we found a visible node we don't need to search any longer.
+            if vsVisible in Result.States then
+              Break;
           end;
         until False;
+      end
+      else
+      begin
+        // If the given node is not visible then look for a parent node which is visible, otherwise we will
+        // likely go unnecessarily through a whole bunch of invisible nodes.
+        if not FullyVisible[Result] then
+          Result := GetVisibleParent(Result, True);
+
+        // Child nodes are the first choice if possible.
+        if (vsExpanded in Result.States) and Assigned(Result.FirstChild) then
+        begin
+          Result := Result.FirstChild;
+          ForceSearch := False;
+        end
+        else
+          ForceSearch := True;
+
+        // If there are no children or the first child is not visible then search the sibling nodes or traverse parents.
+        if ForceSearch or not (vsVisible in Result.States) then
+        begin
+          repeat
+            // Is there a next sibling?
+            if Assigned(Result.NextSibling) then
+            begin
+              Result := Result.NextSibling;
+              if vsVisible in Result.States then
+                Break;
+            end
+            else
+            begin
+              // No sibling anymore, so use the parent's next sibling.
+              if Result.Parent <> FRoot then
+                Result := Result.Parent
+              else
+              begin
+                // There are no further nodes to examine, hence there is no further visible node.
+                Result := nil;
+                Break;
+              end;
+            end;
+          until False;
+        end;
       end;
-    end;
     until not Assigned(Result) or IsEffectivelyVisible[Result];
   end;
 end;
@@ -28275,10 +28260,10 @@ var
   Run: PVirtualNode;
 
 begin
-    Result := Node;
-    if Assigned(Result) then
-    begin
-      Assert(Result <> FRoot, 'Node must not be the hidden root node.');
+  Result := Node;
+  if Assigned(Result) then
+  begin
+    Assert(Result <> FRoot, 'Node must not be the hidden root node.');
 
     if ConsiderChildrenAbove and (toChildrenAbove in FOptions.FPaintOptions) then
     begin
@@ -28286,28 +28271,29 @@ begin
       if (vsHasChildren in Result.States) and (Result.ChildCount = 0) then
         InitChildren(Result);
 
-        // If there is a last child, take it; if not try the previous sibling.
-        if Assigned(Result.LastChild) then
-          Result := Result.LastChild
-        else if Assigned(Result.PrevSibling) then
+      // If there is a last child, take it; if not try the previous sibling.
+      if Assigned(Result.LastChild) then
+        Result := Result.LastChild
+      else
+        if Assigned(Result.PrevSibling) then
            Result := Result.PrevSibling
-        else
-        begin
-          // If neither a last child nor a previous sibling exist, go the tree upwards and
-          // look, wether one of the parent nodes have a previous sibling. If not the result
-          // will ne nil.
-          repeat
-            Result := Result.Parent;
-            Run    := nil;
-            if Result <> FRoot then
-              Run := Result.PrevSibling
-            else
-              Result := nil;
-          until Assigned(Run) or (Result = nil);
+      else
+      begin
+        // If neither a last child nor a previous sibling exist, go the tree upwards and
+        // look, wether one of the parent nodes have a previous sibling. If not the result
+        // will ne nil.
+        repeat
+          Result := Result.Parent;
+          Run := nil;
+          if Result <> FRoot then
+            Run := Result.PrevSibling
+          else
+            Result := nil;
+        until Assigned(Run) or (Result = nil);
 
-          if Assigned(Run) then
-            Result := Run;
-        end;
+        if Assigned(Run) then
+          Result := Run;
+      end;
     end
     else
     begin
@@ -28328,9 +28314,9 @@ begin
     end;
   end;
 
-      if Assigned(Result) and not (vsInitialized in Result.States) then
-        InitNode(Result);
-    end;
+  if Assigned(Result) and not (vsInitialized in Result.States) then
+    InitNode(Result);
+end;
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -28441,8 +28427,9 @@ begin
         begin
           if Assigned(Result.PrevSibling) then
             Result := GetPreviousLevel(Result, NodeLevel)
-          else if Assigned(Result) and (Result.Parent <> FRoot) then
-            Result := GetPreviousLevel(Result.Parent, NodeLevel)
+          else
+            if Assigned(Result) and (Result.Parent <> FRoot) then
+              Result := GetPreviousLevel(Result.Parent, NodeLevel)
           else
             Result := nil;
         end;
@@ -28450,18 +28437,19 @@ begin
       else
         Result := GetPreviousLevel(Node.Parent, NodeLevel);
     end
-    else if StartNodeLevel = NodeLevel then
-    begin
-      Result := Node.PrevSibling;
-      if not Assigned(Result) then // i.e. start node was a first sibling
+    else
+      if StartNodeLevel = NodeLevel then
       begin
-        Result := Node.Parent;
-        if Assigned(Result) then
-          Result := GetPreviousLevel(Result, NodeLevel);
-      end;
-    end
-    else // i.e. StartNodeLevel > NodeLevel
-      Result := GetPreviousLevel(Node.Parent, NodeLevel);
+        Result := Node.PrevSibling;
+        if not Assigned(Result) then // i.e. start node was a first sibling
+        begin
+          Result := Node.Parent;
+          if Assigned(Result) then
+            Result := GetPreviousLevel(Result, NodeLevel);
+        end;
+      end
+      else // i.e. StartNodeLevel > NodeLevel
+        Result := GetPreviousLevel(Node.Parent, NodeLevel);
   end;
 
   if Assigned(Result) and not (vsInitialized in Result.States) then
@@ -28478,37 +28466,38 @@ var
   Run: PVirtualNode;
 
 begin
-    Result := Node;
-    if Assigned(Result) then
-    begin
-      Assert(Result <> FRoot, 'Node must not be the hidden root node.');
+  Result := Node;
+  if Assigned(Result) then
+  begin
+    Assert(Result <> FRoot, 'Node must not be the hidden root node.');
 
     if ConsiderChildrenAbove and (toChildrenAbove in FOptions.FPaintOptions) then
     begin
       // If there is a last child, take it; if not try the previous sibling.
       if Assigned(Result.LastChild) then
         Result := Result.LastChild
-      else if Assigned(Result.PrevSibling) then
-         Result := Result.PrevSibling
       else
-      begin
-        // If neither a last child nor a previous sibling exist, go the tree upwards and
-        // look, wether one of the parent nodes have a previous sibling. If not the result
-        // will ne nil.
-        repeat
-          Result := Result.Parent;
-          Run    := nil;
-          if Result <> FRoot then
-            Run := Result.PrevSibling
-          else
-            Result := nil;
-        until Assigned(Run) or (Result = nil);
+        if Assigned(Result.PrevSibling) then
+          Result := Result.PrevSibling
+        else
+        begin
+          // If neither a last child nor a previous sibling exist, go the tree upwards and
+          // look, wether one of the parent nodes have a previous sibling. If not the result
+          // will ne nil.
+          repeat
+            Result := Result.Parent;
+            Run := nil;
+            if Result <> FRoot then
+              Run := Result.PrevSibling
+            else
+              Result := nil;
+          until Assigned(Run) or (Result = nil);
 
-        if Assigned(Run) then
-          Result := Run;
-      end;
-  end
-  else
+          if Assigned(Run) then
+            Result := Run;
+        end;
+    end
+    else
     begin
       // Is there a previous sibling?
       if Assigned(Node.PrevSibling) then
@@ -28627,32 +28616,33 @@ begin
               if vsVisible in Result.States then
                 Break;
             end
-            else if Assigned(Result.PrevSibling) then
-            begin
-              if not (vsInitialized in Result.PrevSibling.States) then
-                InitNode(Result.PrevSibling);
-
-              if vsVisible in Result.PrevSibling.States then
+            else
+              if Assigned(Result.PrevSibling) then
               begin
-                Result := Result.PrevSibling;
+                if not (vsInitialized in Result.PrevSibling.States) then
+                  InitNode(Result.PrevSibling);
+
+                if vsVisible in Result.PrevSibling.States then
+                begin
+                  Result := Result.PrevSibling;
+                  Break;
+                end;
+              end
+              else
+              begin
+                Marker := nil;
+                repeat
+                  Result := Result.Parent;
+                  if Result <> FRoot then
+                    Marker := GetPreviousVisibleSibling(Result, True)
+                  else
+                    Result := nil;
+                until Assigned(Marker) or (Result = nil);
+                if Assigned(Marker) then
+                  Result := Marker;
+
                 Break;
               end;
-            end
-            else
-            begin
-              Marker := nil;
-              repeat
-                Result := Result.Parent;
-                if Result <> FRoot then
-                  Marker := GetPreviousVisibleSibling(Result, True)
-                else
-                  Result := nil;
-              until Assigned(Marker) or (Result = nil);
-              if Assigned(Marker) then
-                Result := Marker;
-
-              Break;
-            end;
           until False;
         end
         else
@@ -28733,32 +28723,33 @@ begin
               if vsVisible in Result.States then
                 Break;
             end
-            else if Assigned(Result.PrevSibling) then
-            begin
-              // No children anymore, so take the previous sibling.
-              if vsVisible in Result.PrevSibling.States then
+            else
+              if Assigned(Result.PrevSibling) then
               begin
-                Result := Result.PrevSibling;
+                // No children anymore, so take the previous sibling.
+                if vsVisible in Result.PrevSibling.States then
+                begin
+                  Result := Result.PrevSibling;
+                  Break;
+                end;
+              end
+              else
+              begin
+                // No children and no previous siblings, so walk up the tree and look wether
+                // a parent has a previous visible sibling. If that is the case take it,
+                // otherwise there is no previous visible node.
+                Marker := nil;
+                repeat
+                  Result := Result.Parent;
+                  if Result <> FRoot then
+                    Marker := GetPreviousVisibleSiblingNoInit(Result, True)
+                  else
+                    Result := nil;
+                until Assigned(Marker) or (Result = nil);
+                if Assigned(Marker) then
+                  Result := Marker;
                 Break;
               end;
-            end
-            else
-            begin
-              // No children and no previous siblings, so walk up the tree and look wether
-              // a parent has a previous visible sibling. If that is the case take it,
-              // otherwise there is no previous visible node.
-              Marker := nil;
-              repeat
-                Result := Result.Parent;
-                if Result <> FRoot then
-                  Marker := GetPreviousVisibleSiblingNoInit(Result, True)
-                else
-                  Result := nil;
-              until Assigned(Marker) or (Result = nil);
-              if Assigned(Marker) then
-                Result := Marker;
-              Break;
-            end;
           until False;
         end
         else
@@ -31141,7 +31132,7 @@ var
 
 begin
   //todo: minimize calls to ClientHeight and ClientWidth
-  ScrolledVertically   := False;
+  ScrolledVertically := False;
   ScrolledHorizontally := False;
 
   if Assigned(Node) and (Node <> FRoot) then
@@ -31466,11 +31457,11 @@ begin
       begin
         StartOperation(okSortNode);
         try
-        // Sort the linked list, check direction flag only once.
-        if Direction = sdAscending then
-          Node.FirstChild := MergeSortAscending(Node.FirstChild, Node.ChildCount)
-        else
-          Node.FirstChild := MergeSortDescending(Node.FirstChild, Node.ChildCount);
+          // Sort the linked list, check direction flag only once.
+          if Direction = sdAscending then
+            Node.FirstChild := MergeSortAscending(Node.FirstChild, Node.ChildCount)
+          else
+            Node.FirstChild := MergeSortDescending(Node.FirstChild, Node.ChildCount);
         finally
           EndOperation(okSortNode);
         end;
@@ -31539,7 +31530,7 @@ begin
     begin
       StartOperation(okSortTree);
       try
-      DoSort(FRoot);
+        DoSort(FRoot);
       finally
         EndOperation(okSortTree);
       end; 
@@ -31852,17 +31843,18 @@ begin
                           else
                             StepsR1 := ClientHeight - Integer(FRangeY);
                         end
-                        else if Integer(FRangeY) + HeightDelta <= ClientHeight then
-                        begin
-                          // We cannot make the first child the top node as we cannot scroll to that extent,
-                          // so we do a simple scroll down.
-                          Mode2 := tamNoScroll;
-                          StepsR1 := HeightDelta;
-                        end
                         else
-                          // If the subtree does not fit into the client area at once, the expanded node will
-                          // be made the bottom node.
-                          StepsR1 := ClientHeight - R1.Top - Integer(NodeHeight[Node]);
+                          if Integer(FRangeY) + HeightDelta <= ClientHeight then
+                          begin
+                            // We cannot make the first child the top node as we cannot scroll to that extent,
+                            // so we do a simple scroll down.
+                            Mode2 := tamNoScroll;
+                            StepsR1 := HeightDelta;
+                          end
+                          else
+                            // If the subtree does not fit into the client area at once, the expanded node will
+                            // be made the bottom node.
+                            StepsR1 := ClientHeight - R1.Top - Integer(NodeHeight[Node]);
 
                         if Mode2 <> tamNoScroll then
                         begin
@@ -32015,12 +32007,10 @@ begin
     Result := inherited UpdateAction(Action)
   else
   begin
-    Result := (Action is TEditCut) or (Action is TEditCopy)
-       or (Action is TEditDelete);
+    Result := (Action is TEditCut) or (Action is TEditCopy) or (Action is TEditDelete);
 
     if Result then
-      TAction(Action).Enabled := (FSelectionCount > 0) and
-        ((Action is TEditDelete) or (FClipboardFormats.Count > 0))
+      TAction(Action).Enabled := (FSelectionCount > 0) and ((Action is TEditDelete) or (FClipboardFormats.Count > 0))
     else
     begin
       Result := Action is TEditPaste;
@@ -32028,11 +32018,11 @@ begin
         TAction(Action).Enabled := True
       else
       begin
-          Result := Action is TEditSelectAll;
-          if Result then
-            TAction(Action).Enabled := (toMultiSelect in FOptions.FSelectionOptions) and (FVisibleCount > 0)
-          else
-            Result := inherited UpdateAction(Action);
+        Result := Action is TEditSelectAll;
+        if Result then
+          TAction(Action).Enabled := (toMultiSelect in FOptions.FSelectionOptions) and (FVisibleCount > 0)
+        else
+          Result := inherited UpdateAction(Action);
       end;
     end;
   end;
@@ -32835,7 +32825,7 @@ begin
     for LColIndex := LStartIndex to Pred(Header.Columns.Count) do
     begin
       if (LColIndex > LStartIndex) then
-        LAddString  := LAddString + ',';
+        LAddString := LAddString + ',';
       LAddString := LAddString + AnsiQuotedStr(Header.Columns.Items[LColIndex].Text, '"');
     end;//for
     AStrings.Add(LAddString);
@@ -32850,12 +32840,12 @@ begin
     { Read for each column and then populate the text }
     for LColIndex := LStartIndex to Pred(Header.Columns.Count) do
     begin
-      LCellText     := Text[LChildNode, LColIndex];
+      LCellText := Text[LChildNode, LColIndex];
       if (LCellText = EmptyStr) then
-        LCellText   := ' ';
+        LCellText := ' ';
       if (LColIndex > LStartIndex) then
-        LAddString  := LAddString + ',';
-      LAddString    := LAddString + AnsiQuotedStr(LCellText, '"');
+        LAddString := LAddString + ',';
+      LAddString := LAddString + AnsiQuotedStr(LCellText, '"');
     end;//for - Header.Columns.Count
 
     AStrings.Add(LAddString);
@@ -32923,8 +32913,8 @@ begin
   begin
     // Set default font values first.
     Canvas.Font := Font;
-    if Enabled then // Es werden sonst nur die Farben verwendet von Font die an  Canvas.Font übergeben wurden
-       Canvas.Font.Color :=  FColors.NodeFontColor
+    if Enabled then // Es werden sonst nur die Farben verwendet von Font die an  Canvas.Font Ã¼bergeben wurden
+       Canvas.Font.Color := FColors.NodeFontColor
     else
       Canvas.Font.Color := FColors.DisabledColor;
 
@@ -33188,6 +33178,7 @@ var
 
 begin
   inherited;
+
   MemDC := CreateCompatibleDC(0);
   try
     SelectObject(MemDC, Font.Reference.Handle);
@@ -33757,18 +33748,18 @@ begin
   PaintInfo.Column := Column;
   PaintInfo.CellRect := Rect(0, 0, 0, 0);
   if Column > NoColumn then
-	begin
-	  PaintInfo.CellRect.Right := FHeader.Columns[Column].Width - FTextMargin;
-	  PaintInfo.CellRect.Left := FTextMargin + FMargin;
-	  if Column = Header.MainColumn then
-	  begin
-	    if toFixedIndent in FOptions.FPaintOptions then
-	      SetLength(LineImage, 1)
-	    else
-	      DetermineLineImageAndSelectLevel(Node, LineImage);
-	    Inc(PaintInfo.CellRect.Left, Length(LineImage) * Integer(Indent));
-	  end;
-	end
+  begin
+    PaintInfo.CellRect.Right := FHeader.Columns[Column].Width - FTextMargin;
+    PaintInfo.CellRect.Left := FTextMargin + FMargin;
+    if Column = Header.MainColumn then
+    begin
+      if toFixedIndent in FOptions.FPaintOptions then
+        SetLength(LineImage, 1)
+      else
+        DetermineLineImageAndSelectLevel(Node, LineImage);
+    Inc(PaintInfo.CellRect.Left, Length(LineImage) * Integer(Indent));
+    end;
+  end
   else
     PaintInfo.CellRect.Right := ClientWidth;
   AdjustPaintCellRect(PaintInfo, Dummy);
@@ -33787,7 +33778,7 @@ function TCustomVirtualStringTree.ContentToHTML(Source: TVSTTextSourceType; cons
 
 // Renders the current tree content (depending on Source) as HTML text encoded in UTF-8.
 // If Caption is not empty then it is used to create and fill the header for the table built here.
-// Based on ideas and code from Frank van den Bergh and Andreas Hörstemeier.
+// Based on ideas and code from Frank van den Bergh and Andreas H??emeier.
 
 type
   UCS2 = Word;
@@ -33861,7 +33852,7 @@ var
     Buffer.Add(Format('font-weight: %s; ', [IfThen(fsBold in Font.Style, 'bold', 'normal')]));
     Buffer.Add(Format('text-decoration: %s; ', [IfThen(fsUnderline in Font.Style, 'underline', 'none')]));
 
-    Buffer.Add('color:');
+    Buffer.Add('color: ');
     WriteColorAsHex(Font.Color);
     Buffer.Add(';}');
     if Length(Name) = 0 then
@@ -33909,7 +33900,7 @@ begin
 
     // Create HTML table based on the tree structure. To simplify formatting we use styles defined in a small CSS area.
     Buffer.Add('<style type="text/css">');
-    Buffer.AddNewLine;
+    Buffer.AddnewLine;
     WriteStyle('default', Font);
     Buffer.AddNewLine;
     WriteStyle('header', FHeader.Font);
@@ -34262,7 +34253,7 @@ end;
 function TCustomVirtualStringTree.ContentToRTF(Source: TVSTTextSourceType): String;
 
 // Renders the current tree content (depending on Source) as RTF (rich text).
-// Based on ideas and code from Frank van den Bergh and Andreas Hörstemeier.
+// Based on ideas and code from Frank van den Bergh and Andreas H??emeier.
 
 var
   Fonts: TStringList;
@@ -34370,10 +34361,10 @@ var
           Buffer.Add( '{\par}' )
         else
           if (Text[I] <> WideCR) then
-        begin
-          Buffer.Add(Format('\u%d\''3f', [SmallInt(WText[I])]));
-          Continue;
-        end;
+          begin
+            Buffer.Add(Format('\u%d\''3f', [SmallInt(WText[I])]));
+            Continue;
+          end;
       end;
       if UseUnderline then
         Buffer.Add('\ul0');
@@ -36045,11 +36036,5 @@ finalization
 
   InternalClipboardFormats.Free;
   InternalClipboardFormats := nil;
-  {$ifdef EnableAccessible}
-  if VTAccessibleFactory <> nil then
-  begin
-    VTAccessibleFactory.Free;
-    VTAccessibleFactory := nil;
-  end;
-  {$endif}
+
 end.
