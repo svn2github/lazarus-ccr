@@ -61,7 +61,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="47" Y="18"/>
-        <UsageCount Value="107"/>
+        <UsageCount Value="109"/>
       </Unit0>
       <Unit1>
         <Filename Value="rxdbgridmainunit.pas"/>
@@ -70,9 +70,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="RxDBGridMainUnit"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="70"/>
         <CursorPos X="133" Y="87"/>
-        <UsageCount Value="107"/>
+        <UsageCount Value="109"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -443,8 +444,8 @@
         <Filename Value="../../../../lcl/grids.pas"/>
         <UnitName Value="Grids"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="1185"/>
-        <CursorPos X="15" Y="1215"/>
+        <TopLine Value="1031"/>
+        <CursorPos X="15" Y="1047"/>
         <UsageCount Value="23"/>
       </Unit59>
       <Unit60>
@@ -469,11 +470,10 @@
       </Unit62>
       <Unit63>
         <Filename Value="../../vclutils.pas"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="618"/>
         <CursorPos X="10" Y="629"/>
         <UsageCount Value="12"/>
-        <Loaded Value="True"/>
       </Unit63>
       <Unit64>
         <Filename Value="../../../../lcl/include/canvas.inc"/>
@@ -827,12 +827,9 @@
       </Unit118>
       <Unit119>
         <Filename Value="../../pickdate.pas"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="990"/>
-        <CursorPos X="36" Y="1017"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="6" Y="32"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit119>
       <Unit120>
         <Filename Value="../../rxdbctrls.pas"/>
@@ -897,23 +894,15 @@
         <UsageCount Value="10"/>
       </Unit128>
     </Units>
-    <JumpHistory Count="4" HistoryIndex="3">
+    <JumpHistory Count="2" HistoryIndex="1">
       <Position1>
-        <Filename Value="../../pickdate.pas"/>
-        <Caret Line="940" Column="3" TopLine="1560"/>
-      </Position1>
-      <Position2>
-        <Filename Value="../../pickdate.pas"/>
-        <Caret Line="353" Column="10" TopLine="319"/>
-      </Position2>
-      <Position3>
         <Filename Value="rxdbgridmainunit.pas"/>
         <Caret Line="85" Column="133" TopLine="68"/>
-      </Position3>
-      <Position4>
+      </Position1>
+      <Position2>
         <Filename Value="rxdbgridmainunit.pas"/>
         <Caret Line="86" Column="133" TopLine="69"/>
-      </Position4>
+      </Position2>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>

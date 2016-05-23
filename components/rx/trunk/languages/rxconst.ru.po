@@ -211,7 +211,7 @@ msgstr "Третий квартал"
 
 #: rxconst.stocurdate
 msgid "Set current date"
-msgstr "Установть текущую дату"
+msgstr "Установить текущую дату"
 
 #: rxconst.stoolbarstyle
 msgid "Tool bar style"
