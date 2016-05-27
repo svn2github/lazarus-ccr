@@ -1,21 +1,22 @@
 { This file was automatically created by Lazarus. Do not edit!
-This source is only used to compile and install the package.
+  This source is only used to compile and install the package.
  }
 
-unit JvXPBarLaz; 
+unit JvXPBarLaz;
 
+{$warn 5023 off : no warning about unused units}
 interface
 
 uses
-  JvXPCoreUtils, JvXPBar, JvXPCore, JvXPBarReg, LazarusPackageIntf; 
+  JvXPCoreUtils, JvXPBar, JvXPCore, JvXPBarReg, LazarusPackageIntf;
 
 implementation
 
-procedure Register; 
+procedure Register;
 begin
-  RegisterUnit('JvXPBarReg', @JvXPBarReg.Register); 
-end; 
+  RegisterUnit('JvXPBarReg', @JvXPBarReg.Register);
+end;
 
 initialization
-  RegisterPackage('JvXPBarLaz', @Register); 
+  RegisterPackage('JvXPBarLaz', @Register);
 end.
