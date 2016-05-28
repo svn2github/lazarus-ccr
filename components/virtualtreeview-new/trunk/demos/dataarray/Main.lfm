@@ -1,10 +1,10 @@
-object Form1: TForm1
+object MainForm: TMainForm
   Left = 188
   Height = 434
   Top = 104
   Width = 648
   ActiveControl = MyTree
-  Caption = 'Form1'
+  Caption = 'Data Array Virtual Tree Demo'
   ClientHeight = 434
   ClientWidth = 648
   Font.Height = -11
@@ -12,7 +12,7 @@ object Form1: TForm1
   OnClose = FormClose
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '1.4.0.4'
+  LCLVersion = '1.7'
   object Label1: TLabel
     Left = 247
     Height = 13
@@ -104,7 +104,6 @@ object Form1: TForm1
     Width = 641
     Anchors = [akTop, akLeft, akRight, akBottom]
     AutoScrollDelay = 1
-    Colors.UnfocusedColor = clMedGray
     DefaultText = 'Node'
     Header.AutoSizeIndex = 0
     Header.Columns = <    

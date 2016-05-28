@@ -44,7 +44,7 @@
 {$ifdef Windows}
   {$define EnableThreadSupport}
 {$endif}
-{$if (FPC_FULLVERSION >= 30100) or defined(CPU64)}
+{$if (FPC_FULLVERSION >= 30100) or defined(CPU64) or defined(LCLCarbon)}
   {$define PACKARRAYPASCAL}
 {$endif}
 

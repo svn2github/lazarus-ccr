@@ -43,33 +43,33 @@ end;"/>
     <Version Major="5" Minor="3" Release="2" Build="1"/>
     <Files Count="7">
       <Item1>
-        <Filename Value="virtualtrees.lrs"/>
-        <Type Value="LRS"/>
-      </Item1>
-      <Item2>
         <Filename Value="VirtualTrees.pas"/>
         <UnitName Value="VirtualTrees"/>
-      </Item2>
-      <Item3>
+      </Item1>
+      <Item2>
         <Filename Value="VTHeaderPopup.pas"/>
         <UnitName Value="VTHeaderPopup"/>
-      </Item3>
-      <Item4>
+      </Item2>
+      <Item3>
         <Filename Value="registervirtualtreeview.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="registervirtualtreeview"/>
-      </Item4>
-      <Item5>
+      </Item3>
+      <Item4>
         <Filename Value="ideicons.lrs"/>
         <Type Value="LRS"/>
-      </Item5>
-      <Item6>
+      </Item4>
+      <Item5>
         <Filename Value="VTConfig.inc"/>
         <Type Value="Include"/>
-      </Item6>
-      <Item7>
+      </Item5>
+      <Item6>
         <Filename Value="VTGraphics.pas"/>
         <UnitName Value="VTGraphics"/>
+      </Item6>
+      <Item7>
+        <Filename Value="VirtualTrees.res"/>
+        <Type Value="Binary"/>
       </Item7>
     </Files>
     <RequiredPkgs Count="2">

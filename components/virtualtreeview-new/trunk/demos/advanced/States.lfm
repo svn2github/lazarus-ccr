@@ -1,7 +1,7 @@
 object StateForm: TStateForm
-  Left = 396
+  Left = 403
   Height = 589
-  Top = 91
+  Top = 147
   Width = 478
   HorzScrollBar.Page = 477
   VertScrollBar.Page = 588
@@ -12,7 +12,7 @@ object StateForm: TStateForm
   ClientWidth = 478
   Font.Height = -14
   Font.Name = 'Arial Narrow'
-  LCLVersion = '1.4.0.4'
+  LCLVersion = '1.7'
   object EnableCheckBox: TCheckBox
     Left = 9
     Height = 20
@@ -455,7 +455,7 @@ object StateForm: TStateForm
     object CheckBox22: TCheckBox
       Left = 9
       Height = 20
-      Top = 109
+      Top = 114
       Width = 181
       Caption = 'Default node height scale'
       Enabled = False

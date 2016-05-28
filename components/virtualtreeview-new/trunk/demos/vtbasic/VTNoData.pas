@@ -57,7 +57,8 @@ interface
       end;
 
 implementation
-{.$R *.dfm}
+
+   {$R *.lfm}
 
    procedure TfrmVTNoData.FormCreate(Sender: TObject);
    begin
@@ -170,7 +171,7 @@ implementation
          'NodeHeightDblClickResize',
          'EditOnClick',
          'EditOnDblClick',
-         'ReverseFullExpandHotKey'
+         'toReverseFullExpandHotKey'
       );
 
       aPaintOpts : array[0..Ord(High(TVTPaintOption ))] of string[25] = 
@@ -196,8 +197,8 @@ implementation
          'ChildrenAbove',
          'FixedIndent',
          'UseExplorerTheme',
-         'HideTreeLinesIfThemed',
-         'ShowHiddenNodes'
+         'toHideTreeLinesIfThemed',
+         'toShowFilteredNodes'
       );
 
       aSelOpts : array[0..Ord(High(TVTSelectionOption))] of string[25] = 
@@ -212,8 +213,8 @@ implementation
          'SiblingSelectConstraint'                                                                 ,
          'CenterScrollIntoView',
          'SimpleDrawSelection',
-         'AlwaysSelectNode',
-         'RestoreSelection'
+         'toAlwaysSelectNode',
+         'toRestoreSelection'
       );
       
       aStrOpts : array[0..Ord(High(TVTStringOption ))] of string[25] = 
@@ -283,9 +284,6 @@ implementation
       Height := r.Bottom-Top;
       {$endif}
    end;
-
-initialization
-  {$I VTNoData.lrs}
 
 
 end.

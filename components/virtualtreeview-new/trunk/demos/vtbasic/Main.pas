@@ -61,6 +61,8 @@ TfrmMain =
 
 implementation
 
+   {$R *.lfm}
+
 
    uses
       VTNoData, VTCheckList, VTPropEdit, VTDBExample, VTEditors, ViewCode;
@@ -182,6 +184,8 @@ implementation
       sFile : string;
       f     : TForm;
    begin
+      if VT.FocusedNode = nil then
+        Exit;
       case VT.FocusedNode.Index of
          0: sFile := 'Main'        ;
          1: sFile := 'VTNoData'    ;
@@ -193,8 +197,6 @@ implementation
       TfrmViewCode(f).SynEdit1.Lines.LoadFromFile( ExtractFilePath(ParamStr(0)) + sFile + '.pas' );
    end;
 
-initialization
-  {$I Main.lrs}
 
 end.
 

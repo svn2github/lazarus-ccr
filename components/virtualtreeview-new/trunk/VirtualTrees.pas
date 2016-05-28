@@ -75,7 +75,7 @@ uses
   {$ifdef DEBUG_VTV}
   VTLogger,
   {$endif}
-  LCLType, LResources, LMessages, Types,
+  LCLType, LMessages, Types,
   SysUtils, Classes, Graphics, Controls, Forms, ImgList, StdCtrls, Menus, Printers,
   SyncObjs,  // Thread support
   Clipbrd // Clipboard support
@@ -1201,10 +1201,10 @@ type
   TVTHeaderOptions = set of TVTHeaderOption;
 
   THeaderState = (
-    hsAutoSizing,      // auto size chain is in progess, do not trigger again on WM_SIZE
-    hsDragging,        // header dragging is in progress (only if enabled)
-    hsDragPending,     // left button is down, user might want to start dragging a column
-    hsLoading,         // The header currently loads from stream, so updates are not necessary.
+    hsAutoSizing,              // auto size chain is in progess, do not trigger again on WM_SIZE
+    hsDragging,                // header dragging is in progress (only if enabled)
+    hsDragPending,             // left button is down, user might want to start dragging a column
+    hsLoading,                 // The header currently loads from stream, so updates are not necessary.
     hsColumnWidthTracking,     // column resizing is in progress
     hsColumnWidthTrackPending, // left button is down, user might want to start resize a column
     hsHeightTracking,          // height resizing is in progress
@@ -1231,7 +1231,7 @@ type
     crNodeAdded,    // a node has been added
     crNodeCopied,   // a node has been duplicated
     crNodeMoved     // a node has been moved to a new place
-  ); // describes what made a structure change event happen
+  ); // desribes what made a structure change event happen
 
   TVTHeader = class(TPersistent)
   private
@@ -2195,8 +2195,8 @@ type
     FOnGetImage: TVTGetImageEvent;               // Used to retrieve the image index of a given node.
     FOnGetImageEx: TVTGetImageExEvent;           // Used to retrieve the image index of a given node along with a custom
                                                  // image list.
-    FOnGetImageText: TVTGetImageTextEvent;               // Used to retrieve the image alternative text of a given node.
-                                                         // Used by the accessibility interface to provide useful text for status images.
+    FOnGetImageText: TVTGetImageTextEvent;       // Used to retrieve the image alternative text of a given node.
+                                                 // Used by the accessibility interface to provide useful text for status images.
     FOnHotChange: TVTHotNodeChangeEvent;         // called when the current "hot" node (that is, the node under the mouse)
                                                  // changes and hot tracking is enabled
     FOnExpanding,                                // called just before a node is expanded
@@ -4020,6 +4020,8 @@ procedure ShowError(const Msg: String; HelpContext: Integer);  // [IPK] Surface 
 
 implementation
 
+{$R VirtualTrees.res}
+
 uses
   StrUtils, Math,
   {$ifdef EnableOLE}
@@ -5127,7 +5129,7 @@ begin
   Result := TImageList.Create(nil);
   Result.Height := 16;
   Result.Width := 16;
-  Result.AddLazarusResource(CheckImagesStrings[CheckKind], clFuchsia);
+  Result.AddResourceName(0, CheckImagesStrings[CheckKind], clFuchsia);
 end;
 
 function GetCheckImageList(var ImageList: TImageList; CheckKind: TCheckImageKind): TImageList;
@@ -5279,6 +5281,9 @@ procedure InitializeGlobalStructures;
 
 // initialization of stuff global to the unit
 
+var
+  TheInstance: THandle;
+
 begin
   Initialized := True;
 
@@ -5290,6 +5295,8 @@ begin
   IsWinVistaOrAbove := False;
   {$endif}
 
+  TheInstance := HINSTANCE;
+
   {$ifdef EnableOLE}
   // Initialize OLE subsystem for drag'n drop and clipboard operations.
   //todo: replace by Suceeded (see in windows unit)
@@ -5300,14 +5307,14 @@ begin
 
   UtilityImages := TBitmap.Create;
   UtilityImages.Transparent := True;
-  UtilityImages.LoadFromLazarusResource('VT_UTILITIES');
+  UtilityImages.LoadFromResourceName(0, 'VT_UTILITIES');
 
   SystemCheckImages := CreateCheckImageList(ckSystemDefault);
 
   // Delphi (at least version 6 and lower) does not provide a standard split cursor.
   // Hence we have to load our own.
-  Screen.Cursors[crHeaderSplit] := LoadCursorFromLazarusResource('VT_HEADERSPLIT');
-  Screen.Cursors[crVertSplit] := LoadCursorFromLazarusResource('VT_VERTSPLIT');
+  Screen.Cursors[crHeaderSplit] := LoadCursor(TheInstance, 'VT_HEADERSPLIT');
+  Screen.Cursors[crVertSplit] := LoadCursor(TheInstance, 'VT_VERTSPLIT');
   // Clipboard format registration.
   // Native clipboard format. Needs a new identifier and has an average priority to allow other formats to take over.
   // This format is supposed to use the IStream storage format but unfortunately this does not work when
@@ -13679,20 +13686,24 @@ end;
 
 procedure TBaseVirtualTree.LoadPanningCursors;
 
+var
+  TheInstance: THandle;
+
 begin
+  TheInstance := HINSTANCE;
   with Screen do
   begin
-    Cursors[crVT_MOVEALL]:=LoadCursorFromLazarusResource('VT_MOVEALL');
-    Cursors[crVT_MOVEEW]:=LoadCursorFromLazarusResource('VT_MOVEEW');
-    Cursors[crVT_MOVENS]:=LoadCursorFromLazarusResource('VT_MOVENS');
-    Cursors[crVT_MOVENW]:=LoadCursorFromLazarusResource('VT_MOVENW');
-    Cursors[crVT_MOVESW]:=LoadCursorFromLazarusResource('VT_MOVESW');
-    Cursors[crVT_MOVESE]:=LoadCursorFromLazarusResource('VT_MOVESE');
-    Cursors[crVT_MOVENE]:=LoadCursorFromLazarusResource('VT_MOVENE');
-    Cursors[crVT_MOVEW]:=LoadCursorFromLazarusResource('VT_MOVEW');
-    Cursors[crVT_MOVEE]:=LoadCursorFromLazarusResource('VT_MOVEE');
-    Cursors[crVT_MOVEN]:=LoadCursorFromLazarusResource('VT_MOVEN');
-    Cursors[crVT_MOVES]:=LoadCursorFromLazarusResource('VT_MOVES');
+    Cursors[crVT_MOVEALL]:=LoadCursor(TheInstance, 'VT_MOVEALL');
+    Cursors[crVT_MOVEEW]:=LoadCursor(TheInstance, 'VT_MOVEEW');
+    Cursors[crVT_MOVENS]:=LoadCursor(TheInstance, 'VT_MOVENS');
+    Cursors[crVT_MOVENW]:=LoadCursor(TheInstance, 'VT_MOVENW');
+    Cursors[crVT_MOVESW]:=LoadCursor(TheInstance, 'VT_MOVESW');
+    Cursors[crVT_MOVESE]:=LoadCursor(TheInstance, 'VT_MOVESE');
+    Cursors[crVT_MOVENE]:=LoadCursor(TheInstance, 'VT_MOVENE');
+    Cursors[crVT_MOVEW]:=LoadCursor(TheInstance, 'VT_MOVEW');
+    Cursors[crVT_MOVEE]:=LoadCursor(TheInstance, 'VT_MOVEE');
+    Cursors[crVT_MOVEN]:=LoadCursor(TheInstance, 'VT_MOVEN');
+    Cursors[crVT_MOVES]:=LoadCursor(TheInstance, 'VT_MOVES');
   end;
 end;
 //----------------------------------------------------------------------------------------------------------------------
@@ -13931,7 +13942,7 @@ begin
               LineTo(Width - 2, Width div 2);
             end
             else
-              FMinusBM.LoadFromLazarusResource('VT_XPBUTTONMINUS');
+              FMinusBM.LoadFromResourceName(0, 'VT_XPBUTTONMINUS');
             FHotMinusBM.Canvas.Draw(0, 0, FMinusBM);
           end;
         end;
@@ -13973,7 +13984,7 @@ begin
               LineTo(Width div 2, Width - 2);
             end
             else
-              FPlusBM.LoadFromLazarusResource('VT_XPBUTTONPLUS');
+              FPlusBM.LoadFromResourceName(0, 'VT_XPBUTTONPLUS');
             FHotPlusBM.Canvas.Draw(0, 0, FPlusBM);
           end;
         end;
@@ -23723,13 +23734,8 @@ begin
     else
       with FCheckImages do
       begin
-        if Selected and not Ghosted then
-        begin
-          if Focused or (toPopupMode in FOptions.FPaintOptions) then
-            DrawEffect := gdeHighlighted
-          else
-            DrawEffect := gdeNormal;
-        end
+        if not Ghosted then
+          DrawEffect := gdeNormal
         else
           DrawEffect := gdeShadowed;
 
@@ -24657,7 +24663,7 @@ begin
   else
     ImageName := 'VT_MOVENS_BMP';
 
-  FPanningWindow.Image.LoadFromLazarusResource(ImageName);
+  FPanningWindow.Image.LoadFromResourceName(0, ImageName);
 
   FPanningWindow.Show(CreateClipRegion);
 
@@ -36013,7 +36019,6 @@ end;
 {$ifend}
 
 initialization
-  {$I virtualtrees.lrs}
   // Necessary for dynamic package loading.
   Initialized := False;
   NeedToUnitialize := False;

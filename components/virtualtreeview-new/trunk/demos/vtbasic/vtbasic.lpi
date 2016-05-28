@@ -9,6 +9,7 @@
       </Flags>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
+      <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
     </General>
     <VersionInfo>
@@ -54,7 +55,6 @@
         <ComponentName Value="frmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="Main"/>
       </Unit1>
       <Unit2>
         <Filename Value="VTEditors.pas"/>
@@ -66,7 +66,6 @@
         <ComponentName Value="frmVTNoData"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="VTNoData"/>
       </Unit3>
       <Unit4>
         <Filename Value="VTPropEdit.pas"/>
@@ -84,6 +83,7 @@
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmViewCode"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit6>
       <Unit7>
         <Filename Value="VTCheckList.pas"/>
@@ -104,6 +104,12 @@
   <CompilerOptions>
     <Version Value="11"/>
     <PathDelim Value="\"/>
+    <Target>
+      <Filename Value="vtbasic"/>
+    </Target>
+    <SearchPaths>
+      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
     <Parsing>
       <SyntaxOptions>
         <UseAnsiStrings Value="False"/>
