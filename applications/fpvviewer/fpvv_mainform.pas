@@ -10,6 +10,7 @@ uses
   Printers, PrintersDlgs, LCLIntf, LCLType,
   fpvv_drawer, fpimage, fpcanvas, coreconrec, fpvutils,
   fpvectorial, lasvectorialreader, svgvectorialwriter,
+  svgvectorialreader_rsvg, svgvectorialreader,
   dxfvectorialreader, epsvectorialreader, fpvtocanvas, dxftokentotree;
 
 type
@@ -28,6 +29,8 @@ type
     buttonAdjust: TButton;
     buttonViewDebugInfo: TButton;
     buttonAutoFitView: TButton;
+    checkboxSVGviaRSVG: TCheckBox;
+    checkboxForceBottomLeftOrigin: TCheckBox;
     checkShowPage: TCheckBox;
     checkForceWhiteBackground: TCheckBox;
     comboEncoding: TComboBox;
@@ -550,6 +553,17 @@ begin
     FVec.ForcedEncodingOnRead := comboEncoding.Text
   else FVec.ForcedEncodingOnRead := '';
 
+  // checkbox options
+  {$ifdef Windows}
+  gSVGVecReader_RSVG_Path := ExtractFilePath(paramstr(0))+'rsvg\rsvg-convert.exe';
+  {$endif}
+  gSVGVecReader_UseTopLeftCoords := not checkboxForceBottomLeftOrigin.Checked;
+  if checkboxSVGviaRSVG.Checked then
+    RegisterVectorialReader(TvSVGVectorialReader_RSVG, vfSVG)
+  else
+    RegisterVectorialReader(TvSVGVectorialReader, vfSVG);
+
+  // Actual reading process
   FVec.ReadFromFile(editFileName.FileName);
 
   // some formats like HTML need an input of control size to render themselves
@@ -567,6 +581,7 @@ const
 var
   CanvasSize: TPoint;
 begin
+  if FVec = nil then Exit;
   // We need to be robust, because sometimes the document size won't be given
   // also give up drawing everything if we need more then 4MB of RAM for the image
   // and also give some space in the image to allow for negative coordinates
