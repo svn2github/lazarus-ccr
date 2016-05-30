@@ -139,6 +139,7 @@
         <ComponentName Value="frmFPVViewer"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fpvv_mainform"/>
       </Unit1>
       <Unit2>
         <Filename Value="dxftokentotree.pas"/>

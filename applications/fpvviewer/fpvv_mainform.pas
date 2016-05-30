@@ -109,6 +109,7 @@ begin
     Drawer.Drawing.Canvas.Brush.Color := clWhite;
     Drawer.Drawing.Canvas.Brush.Style := bsSolid;
     Drawer.Drawing.Canvas.FillRect(0, 0, Drawer.Drawing.Width, Drawer.Drawing.Height);
+    if FVec = nil then Exit;
     lPage := FVec.GetPage(0);
     if lPage = nil then
       Exception.Create('The document has no pages');
