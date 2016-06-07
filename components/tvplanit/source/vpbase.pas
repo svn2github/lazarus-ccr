@@ -34,17 +34,18 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType, LResources,
+  LMessages, LCLProc, LCLType, LResources,
   {$ELSE}
   Windows,
   {$ENDIF}
-  Messages,Classes, Graphics, Controls, Dialogs, Forms, StdCtrls,
+  Messages,
+  Classes, Graphics, Controls, Dialogs, Forms, StdCtrls,
   ExtCtrls, SysUtils, VpConst,
   VpSR;                                                                  
 
 const
   {Message base}
-  Vp_First              = WM_USER;//$7DF0;   {Sets base for all Vp messages}
+  Vp_First              = WM_USER; //$7DF0;   {Sets base for all Vp messages}
 
 const
   {Custom message types}
@@ -960,13 +961,6 @@ begin
   end;
 end;
 {=====}
-                             (*
-//soenr ich habe das hinzugefügt
-{$IFDEF FPC}
-initialization
-  {$i ../source/vpbase.lrs}
-{$ENDIF}
-*)
 
 end.
 

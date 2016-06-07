@@ -98,8 +98,10 @@ type
 
 implementation
 
-{$IFNDEF LCL}
-{$R *.dfm}
+{$IFDEF LCL}
+ {$R *.lfm}
+{$ELSE}
+ {$R *.dfm}
 {$ENDIF}
 
 uses

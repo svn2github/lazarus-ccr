@@ -35,7 +35,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLIntf,
+  LMessages, LCLProc, LCLIntf,
   {$ELSE}
   Windows,
   {$ENDIF}
@@ -228,7 +228,7 @@ type
 
     procedure DeregisterAllWatchers;
     procedure DeregisterWatcher (Watcher : THandle);
-    function GetNextID(TableName: string): int64; virtual; abstract;
+    function GetNextID(TableName: string): Integer; virtual; abstract;
     property Resources: TVpResources read FResources;
     procedure Load; virtual;
     procedure LoadEvents; virtual; abstract;

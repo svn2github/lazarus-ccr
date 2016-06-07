@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpCalendar;
   {-Calendar component}
@@ -1862,7 +1862,7 @@ procedure TVpCustomCalendar.SetBorderStyle(Value : TBorderStyle);
 begin
   if Value <> FBorderStyle then begin
     FBorderStyle := Value;
-    RecreateWnd{$IFDEF LCL}(self){$ENDIF};
+    RecreateWnd(Self); { *Converted from RecreateWnd* }
   end;
 end;
 {=====}
@@ -1986,7 +1986,7 @@ procedure TVpCustomCalendar.SetWantDblClicks(Value : Boolean);
 begin
   if Value <> FWantDblClicks then begin
     FWantDblClicks := Value;
-    RecreateWnd{$IFDEF LCL}(Self){$ENDIF};
+    RecreateWnd(Self); { *Converted from RecreateWnd* }
   end;
 end;
 {=====}

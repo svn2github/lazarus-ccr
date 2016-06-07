@@ -135,7 +135,7 @@ uses
   VpContactGrid,              { ContactGrid Component                        }
   VpDateEdit,                 { DateEdit Component                           }
   VpTaskList,                 { Task List Component                          }
-//  VpFlxDS,                    { Flexible DataStore                           }
+  VpFlxDS,                    { Flexible DataStore                           }
   VpContactEditDlg,           { Contact Edit Dialog Component                }
   VpTaskEditDlg,              { Task Edit Dialog Component                   }
   VpEvntEditDlg,              { Event Edit Dialog Component                  }
@@ -149,8 +149,8 @@ uses
   VpContactButtons,           { - New contact grid button bar component }    
   { Designtime Interfaces (Property and Component Editors)                   }
   VpAbout,                    { About form for the About property editor     }
-  VpNabEd;                    { component editor for the VpNavBar            }
-//  VpFlxDSEd1;                 { Field mapper component editor for the FlexDS }
+  VpNabEd,                    { component editor for the VpNavBar            }
+  VpFlxDSEd1;                 { Field mapper component editor for the FlexDS }
 
 
 (*****************************************************************************)
@@ -388,9 +388,9 @@ end;
       TVpClock,
       TVpCalendar,
       TVpNavBar,
-  {$IFNDEF LCL}
       TVpFlexDataStore,
-      TVpBDEDataStore,
+  {$IFNDEF LCL}
+      TVpBDEDataStore,    // BDE is not available in Lazarus
   {$ENDIF}
       TVpControlLink,
       TVpPrintPreview,

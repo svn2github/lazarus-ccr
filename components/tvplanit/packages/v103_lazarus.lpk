@@ -13,11 +13,12 @@
       </SearchPaths>
       <Parsing>
         <SyntaxOptions>
+          <SyntaxMode Value="Delphi"/>
           <UseAnsiStrings Value="False"/>
         </SyntaxOptions>
       </Parsing>
     </CompilerOptions>
-    <Files Count="61">
+    <Files Count="63">
       <Item1>
         <Filename Value="../source/vpabout.pas"/>
         <UnitName Value="VpAbout"/>
@@ -263,6 +264,14 @@
         <Filename Value="../source/vpbase.res"/>
         <Type Value="Binary"/>
       </Item61>
+      <Item62>
+        <Filename Value="../source/vpflxds.pas"/>
+        <UnitName Value="VpFlxDS"/>
+      </Item62>
+      <Item63>
+        <Filename Value="../source/vpflxdsed1.pas"/>
+        <UnitName Value="VpFlxDsEd1"/>
+      </Item63>
     </Files>
     <RequiredPkgs Count="3">
       <Item1>

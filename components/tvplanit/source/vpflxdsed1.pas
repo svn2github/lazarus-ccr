@@ -37,10 +37,14 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  {$IFNDEF RUNTIMETEST}
-  {$IFDEF VERSION6} DesignIntf, DesignEditors, {$ELSE} DsgnIntf, {$ENDIF}
-  {$ENDIF} {RUNTIMETEST}
-  ExtCtrls, StdCtrls, Db, DBTables, VpData, VpFlxDS, ComCtrls, Buttons;
+ {$IFNDEF RUNTIMETEST}
+ {$IFDEF LCL}
+  propedits, componenteditors, FormEditingIntf, lclintf, IDEIntf,
+ {$ELSE}
+ {$IFDEF VERSION6} DesignIntf, DesignEditors, {$ELSE} DsgnIntf, {$ENDIF}, DBTables,
+ {$ENDIF}
+ {$ENDIF} {RUNTIMETEST}
+  ExtCtrls, StdCtrls, Db, VpData, VpFlxDS, ComCtrls, Buttons;
 
 type
   TfrmFieldMapper = class(TForm)
@@ -100,7 +104,12 @@ procedure RuntimeTest(FlexDS: TVpFlexDataStore);
 {$ENDIF}
 
 implementation
-{$R *.DFM}
+{$IFDEF LCL}
+ {$R *.LFM}
+{$ELSE}
+ {$R *.DFM}
+{$ENDIF}
+
 uses
   vpConst;
 
@@ -141,13 +150,17 @@ end;
 
 {$ELSE} {RUNTIMETEST}
 
+{$IFDEF LCL}
+procedure MapDatabaseFields(Designer : TComponentEditorDesigner;
+  FlexDS : TVpFlexDataStore);
+{$ELSE}
 {$IFDEF VERSION6}
-procedure MapDatabaseFields(Designer : IDesigner;
+procedure MapDatabaseFields(Designer : TComponentEditorDesigner;;  // was: Designer : IDesigner;
   FlexDS : TVpFlexDataStore);
 {$ELSE}
 procedure MapDatabaseFields(Designer : IFormDesigner;
   FlexDS : TVpFlexDataStore);
-{$ENDIF}
+{$ENDIF}{$ENDIF}
 var
   frmFieldMapper: TfrmFieldMapper;
 begin

@@ -25,9 +25,9 @@ object TaskEditForm: TTaskEditForm
     ClientWidth = 546
     TabOrder = 0
     object ResourceNameLbl: TLabel
-      Left = 8
+      Left = 6
       Height = 16
-      Top = 12
+      Top = 10
       Width = 100
       AutoSize = False
       Caption = 'Resource Name'
@@ -39,9 +39,9 @@ object TaskEditForm: TTaskEditForm
       ParentColor = False
     end
     object OKBtn: TButton
-      Left = 389
+      Left = 387
       Height = 25
-      Top = 8
+      Top = 6
       Width = 75
       Anchors = [akTop, akRight]
       Caption = 'OK'
@@ -50,9 +50,9 @@ object TaskEditForm: TTaskEditForm
       TabOrder = 0
     end
     object CancelBtn: TButton
-      Left = 467
+      Left = 465
       Height = 25
-      Top = 8
+      Top = 6
       Width = 75
       Anchors = [akTop, akRight]
       Cancel = True

@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpTaskEditDlg;
   { default task editing dialog }
@@ -104,7 +104,11 @@ type
 implementation
 
 {$IFNDEF LCL}
-{$R *.dfm}
+{$IFnDEF FPC}
+  {$R *.dfm}
+{$ELSE}
+  {$R *.lfm}
+{$ENDIF}
 {$ENDIF}
 
 { TTaskEditForm }

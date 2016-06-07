@@ -29,6 +29,11 @@
 {.$I Vp.INC}
 
 unit VpConst;
+
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
   {-Versioning defines and methods}
 
 interface

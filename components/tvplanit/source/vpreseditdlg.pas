@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpResEditDlg;
 
@@ -93,7 +93,11 @@ function ExecuteResourceDlg(Resource: TVpResource): Boolean;
 implementation
 
 {$IFNDEF LCL}
-{$R *.DFM}
+{$IFnDEF FPC}
+  {$R *.dfm}
+{$ELSE}
+  {$R *.lfm}
+{$ENDIF}
 {$ENDIF}
 
 function ExecuteResourceDlg(Resource: TVpResource): Boolean;

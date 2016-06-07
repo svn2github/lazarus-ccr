@@ -35,7 +35,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,LResources,
+  LMessages, LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
   Windows,Messages,
   {$ENDIF}
@@ -95,8 +95,10 @@ type
 
 implementation
 
-{$IFNDEF LCL}
-{$R *.DFM}
+{$IFDEF LCL}
+ {$R *.LFM}
+{$ELSE}
+ {$R *.DFM}
 {$ENDIF}
 
 uses VpSR;
@@ -282,13 +284,6 @@ begin
   Self.Height := 210;
   OpenItemBtn.SetFocus;
 end;
-      (*
-initialization
-
-{$IFDEF LCL}
-  {$I vpalarmdlg.lrs}
-{$ENDIF}
-*)
 
 end.
  

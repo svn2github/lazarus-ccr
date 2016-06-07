@@ -14,7 +14,9 @@ object frmFieldMapper: TfrmFieldMapper
   OnClose = FormClose
   OnShow = FormShow
   Position = poScreenCenter
+  LCLVersion = '1.7'
   object Panel1: TPanel
+    Left = 0
     Height = 57
     Top = 480
     Width = 409
@@ -33,7 +35,9 @@ object frmFieldMapper: TfrmFieldMapper
     end
   end
   object PageControl1: TPageControl
+    Left = 0
     Height = 480
+    Top = 0
     Width = 409
     ActivePage = TabSheet1
     Align = alClient
@@ -86,7 +90,7 @@ object frmFieldMapper: TfrmFieldMapper
         Height = 255
         Top = 56
         Width = 145
-        ItemHeight = 13
+        ItemHeight = 0
         OnClick = DBFieldSelected
         OnKeyPress = DatasetFieldLBKeyPress
         TabOrder = 0
@@ -96,7 +100,7 @@ object frmFieldMapper: TfrmFieldMapper
         Height = 255
         Top = 56
         Width = 145
-        ItemHeight = 13
+        ItemHeight = 0
         OnClick = VpFieldSelected
         OnKeyPress = VPFieldLBKeyPress
         TabOrder = 1
@@ -106,7 +110,7 @@ object frmFieldMapper: TfrmFieldMapper
         Height = 100
         Top = 349
         Width = 217
-        ItemHeight = 13
+        ItemHeight = 0
         OnClick = FieldMappingsLBClick
         OnKeyPress = FieldMappingsLBKeyPress
         TabOrder = 2
@@ -126,7 +130,6 @@ object frmFieldMapper: TfrmFieldMapper
         Height = 21
         Top = 10
         Width = 145
-        AutoCompleteText = [cbactEndOfLineComplete, cbactSearchAscending]
         ItemHeight = 13
         OnChange = DatasetComboChange
         TabOrder = 4
@@ -139,7 +142,6 @@ object frmFieldMapper: TfrmFieldMapper
         Width = 69
         Caption = 'Add Field Mapping'
         Enabled = False
-        NumGlyphs = 0
         OnClick = btnAddMappingClick
         TabOrder = 5
       end
