@@ -354,9 +354,13 @@ end;
     RegisterPropertyEditor(TypeInfo(string), TVpBDEDataStore,
       'DriverName', TDriverNameProperty);
    {$ENDIF}
+
+    // LCL: Registering next property editor inhibits that the DataStore
+    // property combo of the DayView lists the available datastores.
+
     {register the DayView properties                                          }
-    RegisterPropertyEditor(TypeInfo(TVpCustomDataStore), TVpDayView,
-      'DataStore', TDataStoreProperty);
+    //RegisterPropertyEditor(TypeInfo(TVpCustomDataStore), TVpDayView,
+    //  'DataStore', TDataStoreProperty);
 
     {register the property editor for the DataStore's DefaultAlarmWav         }
     RegisterPropertyEditor(TypeInfo(string), TVpCustomDataStore,
