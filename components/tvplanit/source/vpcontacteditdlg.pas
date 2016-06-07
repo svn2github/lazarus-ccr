@@ -34,7 +34,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,LResources,
+  LMessages, LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
   Windows,
   {$ENDIF}
@@ -139,8 +139,10 @@ type
 
 implementation
 
-{$IFNDEF LCL}
-{$R *.dfm}
+{$IFDEF LCL}
+ {$R *.lfm}
+{$ELSE}
+ {$R *.dfm}
 {$ENDIF}
 
 uses
@@ -667,12 +669,6 @@ begin
     NameEdit.SetFocus;
 end;
 {=====}
-               (*
-initialization
-{$IFDEF LCL}
-  {$I vpcontacteditdlg.lrs}
-{$ENDIF}
-                 *)
 
 end.
 

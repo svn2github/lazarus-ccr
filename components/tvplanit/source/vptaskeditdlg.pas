@@ -35,7 +35,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,LResources,
+  LMessages, LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
   Windows,
   {$ENDIF}
@@ -103,12 +103,10 @@ type
 
 implementation
 
-{$IFNDEF LCL}
-{$IFnDEF FPC}
-  {$R *.dfm}
+{$IFDEF LCL}
+ {$R *.lfm}
 {$ELSE}
-  {$R *.lfm}
-{$ENDIF}
+ {$R *.dfm}
 {$ENDIF}
 
 { TTaskEditForm }
@@ -228,11 +226,6 @@ begin
   end;
 end;
 {=====}
-      (*
-initialization
-{$IFDEF LCL}
-  {$I vptaskeditdlg.lrs}
-{$ENDIF}
-        *)
+
 end.
   

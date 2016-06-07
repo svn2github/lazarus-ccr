@@ -32,7 +32,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,
+  LMessages, LCLProc, LCLType, LCLIntf,
   {$ELSE}
   Windows,
   {$ENDIF}
@@ -56,8 +56,10 @@ var
 
 implementation
 
-{$IFNDEF LCL}
-{$R *.DFM}
+{$IFDEF LCL}
+ {$R *.lfm}
+{$ELSE}
+ {$R *.dfm}
 {$ENDIF}
 
 function TfrmDatePropertyEditor.Execute : Boolean;

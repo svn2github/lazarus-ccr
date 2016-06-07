@@ -1795,6 +1795,28 @@ procedure TVpCustomDBDataStore.SetFilterCriteria(aTable : TDataset;
   aUseDateTime : Boolean; aResourceID : Integer; aStartDateTime : TDateTime;
       aEndDateTime : TDateTime);
 begin
+  // error here. Could it be that it does not recognise StartTime and EndTime
+  // (because they are not mapped?)
+  // however StartTime + EndTime are only found in events not tasks
+
+ { if aUseDateTime then
+    aTable.Filter := Format('ResourceID = %d '
+      + 'and (( (StartTime >= %s) and (EndTime <= %s) ) '
+      + '     or ( (RepeatCode > 0) and (%s <= RepeatRangeEnd) ))',
+      [aResourceID,
+       QuotedStr(FormatDateTime('c', aStartDateTime)),
+       QuotedStr(FormatDateTime('c', aEndDateTime)),
+       QuotedStr(FormatDateTime('c', aStartDateTime))])
+  else
+  }
+  aTable.Filter := Format('ResourceID = %d', [aResourceID]);
+  aTable.Filtered := true;
+end;
+(*
+procedure TVpCustomDBDataStore.SetFilterCriteria(aTable : TDataset;
+  aUseDateTime : Boolean; aResourceID : Integer; aStartDateTime : TDateTime;
+      aEndDateTime : TDateTime);
+begin
   if aUseDateTime then
     aTable.Filter := Format('ResourceID = %d '
       + 'and (( (StartTime >= %s) and (EndTime <= %s) ) '             
@@ -1806,7 +1828,7 @@ begin
   else
     aTable.Filter := Format('ResourceID = %d', [aResourceID]);
   aTable.Filtered := true;
-end;
+end;*)
 {=====}
 
 end.

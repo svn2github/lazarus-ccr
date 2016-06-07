@@ -34,7 +34,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,LResources,
+  LMessages, LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
   Windows,
   {$ENDIF}
@@ -92,12 +92,10 @@ function ExecuteResourceDlg(Resource: TVpResource): Boolean;
 
 implementation
 
-{$IFNDEF LCL}
-{$IFnDEF FPC}
-  {$R *.dfm}
-{$ELSE}
+{$IFDEF LCL}
   {$R *.lfm}
-{$ENDIF}
+{$ELSE}
+  {$R *.dfm}
 {$ENDIF}
 
 function ExecuteResourceDlg(Resource: TVpResource): Boolean;
@@ -242,12 +240,6 @@ procedure TResEditForm.SetControls;
 begin
   OKBtn.Enabled := (DescriptionEdit.Text <> '');
 end;
-             (*
-initialization
-{$IFDEF LCL}
-  {$I vpreseditdlg.lrs}
-{$ENDIF}
-               *)
 
 end.
   

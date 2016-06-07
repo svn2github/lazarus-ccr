@@ -96,9 +96,9 @@ type
 implementation
 
 {$IFDEF LCL}
- {$R *.LFM}
+ {$R *.lfm}
 {$ELSE}
- {$R *.DFM}
+ {$R *.dfm}
 {$ENDIF}
 
 uses VpSR;
@@ -278,6 +278,7 @@ begin
   Event.SnoozeTime := Now + SnoozeDelay;
 end;
 {=====}
+
 procedure TAlarmNotifyForm.FormShow(Sender: TObject);
 begin
   Self.Width := 410;

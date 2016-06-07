@@ -32,7 +32,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,LResources,
+  LMessages, LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
   Windows,
   {$ENDIF}
@@ -62,8 +62,10 @@ var
 
 implementation
 
-{$IFNDEF LCL}
-{$R *.DFM}
+{$IFDEF LCL}
+ {$R *.lfm}
+{$ELSE}
+ {$R *.DFM}
 {$ENDIF}
 
 procedure TfrmSelectResource.btnAddNewClick(Sender: TObject);
@@ -75,12 +77,6 @@ procedure TfrmSelectResource.btnEditClick(Sender: TObject);
 begin
   VpResourceEditDialog1.Execute;
 end;
-          (*
-initialization
-{$IFDEF LCL}
-  {$I vpselresdlg.lrs}
-{$ENDIF}
-*)
 
 end.
  

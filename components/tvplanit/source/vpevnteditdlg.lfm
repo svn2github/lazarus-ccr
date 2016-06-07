@@ -14,7 +14,7 @@ object DlgEventEdit: TDlgEventEdit
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '0.9.29'
+  LCLVersion = '1.7'
   object Panel1: TPanel
     Left = 0
     Height = 41
@@ -217,7 +217,6 @@ object DlgEventEdit: TDlgEventEdit
       Height = 22
       Top = 167
       Width = 23
-      Color = clBtnFace
       Glyph.Data = {
         F6000000424DF600000000000000760000002800000010000000100000000100
         0400000000008000000000000000000000001000000010000000000000000000
@@ -228,7 +227,6 @@ object DlgEventEdit: TDlgEventEdit
         8888008880088808888888088088880808888880808888088088888808088088
         8808888880808088888888888800088888888888888888888888
       }
-      NumGlyphs = 0
     end
     object imgClock: TImage
       Left = 18
@@ -339,12 +337,12 @@ object DlgEventEdit: TDlgEventEdit
       Height = 29
       Top = 99
       Width = 19
-      Min = 0
       Max = 32767
+      Min = 0
+      OnClick = IntervalUpDownClick
       Position = 0
       TabOrder = 9
       Wrap = False
-      OnClick = IntervalUpDownClick
     end
     object AlarmAdvType: TComboBox
       Left = 230
@@ -360,12 +358,12 @@ object DlgEventEdit: TDlgEventEdit
       Height = 29
       Top = 164
       Width = 19
-      Min = 1
       Max = 120
+      Min = 1
+      OnClick = AdvanceUpDownClick
       Position = 1
       TabOrder = 10
       Wrap = False
-      OnClick = AdvanceUpDownClick
     end
     object CBAllDay: TCheckBox
       Left = 109
@@ -395,7 +393,6 @@ object DlgEventEdit: TDlgEventEdit
       CancelCaption = 'Cancel'
       DateOrder = doNone
       ButtonWidth = 23
-      CharCase = ecNormal
       Glyph.Data = {
         36040000424D3604000000000000360000002800000010000000100000000100
         2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
@@ -447,7 +444,6 @@ object DlgEventEdit: TDlgEventEdit
       CancelCaption = 'Cancel'
       DateOrder = doNone
       ButtonWidth = 23
-      CharCase = ecNormal
       Glyph.Data = {
         36040000424D3604000000000000360000002800000010000000100000000100
         2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
@@ -499,7 +495,6 @@ object DlgEventEdit: TDlgEventEdit
       CancelCaption = 'Cancel'
       DateOrder = doNone
       ButtonWidth = 23
-      CharCase = ecNormal
       Glyph.Data = {
         36040000424D3604000000000000360000002800000010000000100000000100
         2000000000000004000064000000640000000000000000000000FFFFFF00FFFF

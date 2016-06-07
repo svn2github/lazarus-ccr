@@ -36,7 +36,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,LResources,
+  LMessages, LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
   Windows,
   {$ENDIF}
@@ -79,8 +79,10 @@ uses
 {$ENDIF}
   VpSR;
 
-{$IFNDEF LCL}
-{$R *.DFM}
+{$IFDEF LCL}
+ {$R *.lfm}
+{$ELSE}
+ {$R *.dfm}
 {$ENDIF}
 
 function ExecuteSoundFinder(var DingPath: string): Boolean;

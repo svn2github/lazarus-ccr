@@ -35,7 +35,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,LResources,
+  LMessages, LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
   Windows, Messages, Mask,
   {$ENDIF}
@@ -160,8 +160,10 @@ implementation
 uses
   VpSR, VpWavDlg;
 
-{$IFNDEF LCL}
-{$R *.dfm}
+{$IFDEF LCL}
+ {$R *.lfm}
+{$ELSE}
+ {$R *.dfm}
 {$ENDIF}
 
 { TVpRightAlignedEdit }
@@ -724,9 +726,6 @@ begin
   StartTime.Text := FormatDateTime('hh:mm',ET- (30/MinutesInDay));
   end;
 end;                                                                     
-           (*
-initialization
-  {$I vpevnteditdlg.lrs}
-             *)
+
 end.
  

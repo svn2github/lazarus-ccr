@@ -34,7 +34,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,LResources,
+  LMessages, LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
   Windows,Messages,
   {$ENDIF}
@@ -172,8 +172,10 @@ type
 
 implementation
 
-{$IFNDEF LCL}
-{$R *.dfm}
+{$IFDEF LCL}
+ {$R *.lfm}
+{$ELSE}
+ {$R *.dfm}
 {$ENDIF}
 
 procedure TfrmPrintPreview.FormCreate(Sender: TObject);
@@ -415,11 +417,6 @@ begin
   if Key = VK_ESCAPE then
     actCancel.Execute;
 end;
-                (*
-initialization
-{$IFDEF LCL}
-  {$I vpprtprvdlg.lrs}
-{$ENDIF}
-                  *)
+
 end.
   
