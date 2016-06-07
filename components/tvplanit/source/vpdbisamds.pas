@@ -75,7 +75,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
-    function GetNextID(TableName: string): Integer; override;
+    function GetNextID(TableName: string): Int64; override;
     procedure Load; override;
     procedure CreateTable(TableName: string);
     procedure CreateIndexDefs(const TableName : string;
@@ -251,7 +251,7 @@ begin
 end;
 {=====}
 
-function TVpDBISAMDataStore.GetNextID(TableName: string): Integer;
+function TVpDBISAMDataStore.GetNextID(TableName: string): Int64;
 var
   Query: TDBISAMQuery;
   GotIt: Boolean;
