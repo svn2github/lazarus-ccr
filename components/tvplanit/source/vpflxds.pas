@@ -287,6 +287,8 @@ end;
 {=====}
 
 procedure TVpFlexDataStore.SetConnected(const Value: boolean);
+var
+  rststrikes: Integer;
 begin
   { disconnect if destroying }
   if csDestroying in ComponentState then Exit;
@@ -302,11 +304,44 @@ begin
     and (FTasksDataSrc = nil)                                            
   then Exit;                                                             
 
-  if (FResourceDataSrc.Dataset = nil)                                    
+  rststrikes := 0;
+  // basically a Src can fail either if (a) it is completely nil, or (b) only the dataset is nil
+  if (FResourceDataSrc <> nil) then begin
+    if (FResourceDataSrc.Dataset = nil) then begin
+      inc(rststrikes)
+    end;
+  end else
+    inc(rststrikes);
+
+  if (FEventsDataSrc <> nil) then begin
+    if (FEventsDataSrc.Dataset = nil) then begin
+      inc(rststrikes)
+    end;
+  end else
+    inc(rststrikes);
+
+  if (FContactsDataSrc <> nil) then begin
+    if (FContactsDataSrc.Dataset = nil) then begin
+      inc(rststrikes)
+    end;
+  end else
+    inc(rststrikes);
+
+  if (FTasksDataSrc <> nil) then begin
+    if (FTasksDataSrc.Dataset = nil) then begin
+      inc(rststrikes)
+    end;
+  end else
+    inc(rststrikes);
+
+  //if no datasrc is set then exit
+  if rststrikes >= 4 then Exit;
+
+  {if (FResourceDataSrc.Dataset = nil)
     and (FEventsDataSrc.Dataset = nil)                                   
     and (FContactsDataSrc.Dataset = nil)                                 
     and (FTasksDataSrc.Dataset = nil)                                    
-  then Exit;                                                             
+  then Exit;                                                              }
 
   if Value then begin
     { try to open the tables one at a time.  If they fail, and AutoCreate is }
