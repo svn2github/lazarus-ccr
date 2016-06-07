@@ -18,7 +18,7 @@
         </SyntaxOptions>
       </Parsing>
     </CompilerOptions>
-    <Files Count="63">
+    <Files Count="64">
       <Item1>
         <Filename Value="../source/vpabout.pas"/>
         <UnitName Value="VpAbout"/>
@@ -272,6 +272,10 @@
         <Filename Value="../source/vpflxdsed1.pas"/>
         <UnitName Value="VpFlxDsEd1"/>
       </Item63>
+      <Item64>
+        <Filename Value="../source/vpflxdsed1.lfm"/>
+        <Type Value="LFM"/>
+      </Item64>
     </Files>
     <RequiredPkgs Count="3">
       <Item1>
