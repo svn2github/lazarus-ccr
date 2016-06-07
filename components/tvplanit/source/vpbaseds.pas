@@ -1227,8 +1227,10 @@ procedure TVpControlLink.ReleaseDependents;
 var
   I : Integer;
 begin
-  for I := 0 to pred(DependentList.Count) do
-    Detach(TVpDependentInfo(DependentList.List^[I]).Component);
+  for I := pred(DependentList.Count) downto 0 do
+    Detach(TVpDependentInfo(DependentList[i]).Component);
+//  for I := 0 to pred(DependentList.Count) do
+//    Detach(TVpDependentInfo(DependentList.List^[I]).Component);
 end;
 {=====}
 
@@ -1238,9 +1240,11 @@ var
 begin
   try                                                                    
     for I := 0 to pred(DependentList.Count) do
-      if TVpDependentInfo(DependentList.List^[I]).Component = Sender then
+//      if TVpDependentInfo(DependentList.List^[I]).Component = Sender then
+      if TVpDependentInfo(DependentList[I]).Component = Sender then
       begin
-        TVpDependentInfo(DependentList.List^[I]).Free;
+//        TVpDependentInfo(DependentList.List^[I]).Free;
+        TVpDependentInfo(DependentList[I]).Free;
         DependentList.Delete(I);
         if Sender is TVpLinkableControl then
           TVpLinkableControl(Sender).ControlLink := nil;
@@ -1260,7 +1264,8 @@ var
 begin
   Exists := false;
   for I := 0 to pred(DependentList.Count) do
-    if TVpDependentInfo(DependentList.List^[I]).Component = Sender then begin
+//    if TVpDependentInfo(DependentList.List^[I]).Component = Sender then begin
+    if TVpDependentInfo(DependentList[I]).Component = Sender then begin
       Exists := true;
       Break;
     end;
@@ -1293,7 +1298,8 @@ var
   I : Integer;
 begin
   for I := 0 to pred(DependentList.Count) do begin
-    with TVpDependentInfo(DependentList.List^[I]) do begin
+//    with TVpDependentInfo(DependentList.List^[I]) do begin
+    with TVpDependentInfo(DependentList[I]) do begin
       if Component <> Sender then
         EventHandler(Sender, NotificationType, Value);
       end;
