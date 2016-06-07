@@ -30,7 +30,6 @@
 
 unit VpBase;
 
-
 interface
 
 uses
@@ -57,11 +56,11 @@ type
   TVpRotationAngle = (ra0, ra90, ra180, ra270);
   TVpItemMeasurement = (imAbsolutePixel, imPercent, imInches);
   TVpItemType = (itDayView, itWeekView, itMonthView, itCalendar,
-                  itShape, itCaption, itTasks, itContacts);
+                 itShape, itCaption, itTasks, itContacts);
 
   TVpHours = (h_00, h_01, h_02, h_03, h_04, h_05, h_06, h_07, h_08,
-               h_09, h_10, h_11, h_12, h_13, h_14, h_15, h_16, h_17,
-               h_18, h_19, h_20, h_21, h_22, h_23);
+              h_09, h_10, h_11, h_12, h_13, h_14, h_15, h_16, h_17,
+              h_18, h_19, h_20, h_21, h_22, h_23);
 
   TVpGranularity = (gr05Min, gr06Min, gr10Min, gr15Min, gr20Min, gr30Min,
                     gr60Min);
