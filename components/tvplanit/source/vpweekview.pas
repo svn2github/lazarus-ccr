@@ -1940,8 +1940,7 @@ begin
         FAfterEdit(self, ActiveEvent);
       DataStore.PostEvents;
     end;
-    wvInPlaceEditor.Free;
-    wvInPlaceEditor := nil;
+    FreeAndNil(wvInPlaceEditor);
     Invalidate;
 //    SetFocus;
   end;
