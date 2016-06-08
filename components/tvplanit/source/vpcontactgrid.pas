@@ -152,6 +152,7 @@ type
     cgPainting         : Boolean;
     cgColCount         : Integer;
     cgVScrollDelta     : Integer;
+    FOldCursor : TCursor;
 
     { property methods }
     function GetBarWidth: Integer;
@@ -1979,8 +1980,11 @@ begin
         Break;
       end;
     end;
-    if OverBar then
-      SetCursor(Screen.Cursors[crHSplit]);
+    if OverBar then begin
+      if Cursor <> crHSplit then FOldCursor := Cursor;
+      Cursor := crHSplit
+    end else
+      Cursor := FOldCursor;
   end;
 end;
 {=====}
@@ -2376,8 +2380,7 @@ begin
       end;
     end;
 
-    cgInPlaceEditor.Free;
-    cgInPlaceEditor := nil;
+    FreeAndNil(cgInPlaceEditor);
 
     if FActiveContact.Changed then begin
       DataStore.PostContacts;
