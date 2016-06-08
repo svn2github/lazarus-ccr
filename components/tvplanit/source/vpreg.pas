@@ -337,9 +337,9 @@ end;
   {$IFNDEF LCL}
     RegisterPropertyEditor(TypeInfo(string), TVpBDEDataStore,
       'Version', TVpAboutProperty);
+  {$ENDIF}
     RegisterPropertyEditor(TypeInfo(string), TVpFlexDataStore,
       'Version', TVpAboutProperty);
-  {$ENDIF}
     RegisterPropertyEditor(TypeInfo(string), TVpDateEdit,
       'Version', TVpAboutProperty);
     RegisterPropertyEditor(TypeInfo(string), TVpBaseDialog,
