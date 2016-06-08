@@ -10,7 +10,7 @@ object frmFieldMapper: TfrmFieldMapper
   ClientHeight = 537
   ClientWidth = 409
   Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Name = 'Default'
   OnClose = FormClose
   OnShow = FormShow
   Position = poScreenCenter
@@ -23,7 +23,7 @@ object frmFieldMapper: TfrmFieldMapper
     Align = alBottom
     ClientHeight = 57
     ClientWidth = 409
-    TabOrder = 0
+    TabOrder = 1
     object Button2: TButton
       Left = 325
       Height = 25
@@ -42,10 +42,10 @@ object frmFieldMapper: TfrmFieldMapper
     ActivePage = TabSheet1
     Align = alClient
     TabIndex = 0
-    TabOrder = 1
+    TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Field Mapping Designer'
-      ClientHeight = 454
+      ClientHeight = 453
       ClientWidth = 401
       object Bevel1: TBevel
         Left = 5
@@ -55,15 +55,15 @@ object frmFieldMapper: TfrmFieldMapper
       end
       object Label2: TLabel
         Left = 10
-        Height = 13
+        Height = 14
         Top = 36
-        Width = 116
+        Width = 118
         Caption = 'Available Dataset Fields:'
         ParentColor = False
       end
       object Label5: TLabel
         Left = 35
-        Height = 13
+        Height = 14
         Top = 329
         Width = 74
         Caption = 'Field Mappings:'
@@ -71,15 +71,15 @@ object frmFieldMapper: TfrmFieldMapper
       end
       object Label6: TLabel
         Left = 242
-        Height = 13
+        Height = 14
         Top = 36
-        Width = 137
+        Width = 139
         Caption = 'Available Visual PlanIt Fields:'
         ParentColor = False
       end
       object Label1: TLabel
         Left = 12
-        Height = 13
+        Height = 14
         Top = 13
         Width = 40
         Caption = 'Dataset:'
@@ -93,7 +93,7 @@ object frmFieldMapper: TfrmFieldMapper
         ItemHeight = 0
         OnClick = DBFieldSelected
         OnKeyPress = DatasetFieldLBKeyPress
-        TabOrder = 0
+        TabOrder = 1
       end
       object VPFieldLB: TListBox
         Left = 243
@@ -103,7 +103,7 @@ object frmFieldMapper: TfrmFieldMapper
         ItemHeight = 0
         OnClick = VpFieldSelected
         OnKeyPress = VPFieldLBKeyPress
-        TabOrder = 1
+        TabOrder = 3
       end
       object FieldMappingsLB: TListBox
         Left = 35
@@ -113,7 +113,7 @@ object frmFieldMapper: TfrmFieldMapper
         ItemHeight = 0
         OnClick = FieldMappingsLBClick
         OnKeyPress = FieldMappingsLBKeyPress
-        TabOrder = 2
+        TabOrder = 4
       end
       object btnDeleteMapping: TButton
         Left = 259
@@ -123,16 +123,16 @@ object frmFieldMapper: TfrmFieldMapper
         Caption = 'Delete Mapping'
         Enabled = False
         OnClick = btnDeleteMappingClick
-        TabOrder = 3
+        TabOrder = 5
       end
       object DatasetCombo: TComboBox
         Left = 56
-        Height = 21
+        Height = 22
         Top = 10
         Width = 145
-        ItemHeight = 13
+        ItemHeight = 14
         OnChange = DatasetComboChange
-        TabOrder = 4
+        TabOrder = 0
         Text = 'DatasetCombo'
       end
       object btnAddMapping: TBitBtn
@@ -143,7 +143,7 @@ object frmFieldMapper: TfrmFieldMapper
         Caption = 'Add Field Mapping'
         Enabled = False
         OnClick = btnAddMappingClick
-        TabOrder = 5
+        TabOrder = 2
       end
       object btnClearMappings: TButton
         Left = 259

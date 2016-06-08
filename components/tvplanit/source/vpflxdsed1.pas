@@ -47,6 +47,9 @@ uses
   ExtCtrls, StdCtrls, Db, VpData, VpFlxDS, ComCtrls, Buttons;
 
 type
+
+  { TfrmFieldMapper }
+
   TfrmFieldMapper = class(TForm)
     Panel1: TPanel;
     Button2: TButton;

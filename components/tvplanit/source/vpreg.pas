@@ -311,9 +311,7 @@ end;
     { register component editors }
     RegisterComponentEditor(TVpNavBar, TVpNavBarEditor);
     RegisterComponentEditor(TVpControlLink, TVpPrtFmtPropertyEditor);
-    {$IFNDEF LCL}
     RegisterComponentEditor(TVpFlexDataStore, TVpFlexDSEditor);
-    {$ENDIF}
 
     { register the About Box property editor for the Version properties        }
     RegisterPropertyEditor(TypeInfo(string), TVpCollectionItem,
