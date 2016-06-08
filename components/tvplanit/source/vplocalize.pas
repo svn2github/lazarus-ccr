@@ -33,10 +33,11 @@ unit VpLocalize;
 interface
 
 uses
+  {$IFDEF WINDOWS}
+  Windows,                 // Needed for LCIDs
+  {$ENDIF}
   {$IFDEF LCL}
   LMessages,LCLProc,LCLType,LCLIntf,
-  {$ELSE}
-  Windows,
   {$ENDIF}
   Classes,
   Dialogs,
@@ -526,6 +527,7 @@ begin
     AStrings.Add (FCountries.Items[i].Name);
 end;
 
+{$IFDEF WINDOWS}
 function TVpLocalization.GetCurrentCountry : Integer;
 
    function SubLangID (LanguageID : Word) : Word;
@@ -544,8 +546,6 @@ var
   Secondary : Word;
 
 begin
-//TODO:
-{
   LangId    := GetUserDefaultLangID;
   Primary   := PrimaryLangID (LangID);
   Secondary := SubLangID (LangID);
@@ -553,8 +553,13 @@ begin
     Result := Self.GetCountryBySubLanguage (Primary, Secondary)
   else
     Result := Self.GetCountryByLanguage (Primary);
-}
 end;
+{$ELSE}
+function TVpLocalization.GetCurrentCountry: Integer;
+begin
+  Result := -1;
+end;
+{$ENDIF}
 
 function TVpLocalization.GetCountryByLanguage (ALanguage : Integer) : Integer;
 var
