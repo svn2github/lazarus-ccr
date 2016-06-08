@@ -381,7 +381,7 @@ const
   MinFormWidth     = 265;
   FormHeightOffset = 103;
   MinFormHeight    = 250;
-  TopField         = 4;
+  TopField         = 8;
 
 type
   TLabelArray = array[0..9] of TLabel;
@@ -394,6 +394,7 @@ var
   j            : Integer;
   OldFont      : TFont;
   FieldTop     : Integer;
+  delta        : Integer;
 
 begin
   { Note: The resizing algorithm is dependent upon the labels having their
@@ -451,6 +452,7 @@ begin
     WidestField := 0;
     OldFont := TFont.Create;
     try
+      OldFont.Assign(Canvas.Font);
       Canvas.Font.Assign (cboxCountry.Font);
       try
         for j := 0 to cboxState.Items.Count - 1 do begin
@@ -484,11 +486,12 @@ begin
   end;
 
   { Vertically arrange the fields. }
+  delta := (Labels[0].FocusControl.Height - labels[0].Height) div 2;
   FieldTop := TopField;
   for i := Low(Labels) to High(Labels) do
     if Labels[i].Visible then begin
       Labels[i].FocusControl.Top := FieldTop;
-      Labels[i].Top := FieldTop + 2;
+      Labels[i].Top := FieldTop + delta;
       inc(FieldTop, FieldVertSep);
     end;
 
