@@ -72,8 +72,6 @@ type
     procedure OKButtonClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure lblTurboLinkClick(Sender: TObject);
-    procedure lblFreeUpdateCenterClick(Sender: TObject);
-    procedure lblTurboPowerLiveClick(Sender: TObject);
     procedure lblTurboLinkMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -113,6 +111,13 @@ uses
 resourcestring
   cBrowserError = 'Unable to start web browser. Make sure you have it properly setup on your system.';
 
+const
+  TURBO_LINK_URL = 'http://sourceforge.net/projects/tpvplanit/';
+  HELP_URL = 'http://sourceforge.net/forum/forum.php?forum_id=241880';
+  NEWS_SPECIFIC_URL = 'news://news.turbopower.com/turbopower.public.support.visualplanit';
+  GENERAL_DISCUSSION_URL = 'http://sourceforge.net/forum/forum.php?forum_id=241879';
+
+
 {*** TVpAboutProperty ***}
 
 function TVpAboutProperty.GetAttributes: TPropertyAttributes;
@@ -141,13 +146,19 @@ end;
 {=====}
 
 procedure TfrmAbout.FormActivate(Sender: TObject);
+const
+{$IFDEF LCL}
+  COPYRIGHT = '©';
+{$ELSE}
+  COPYRIGHT = #169
+{$ENDIF}
 var
   Year, Junk: Word;
 begin
   ProgramName.Caption := VpProductName + ' ' + VpVersionStr;
   DecodeDate(Now, Year, junk, junk);
-  CopyrightLabel.Caption := #169 + ' Copyright 2000 - ' + IntToStr(Year)
-    + ', TurboPower Software Company.';
+  CopyrightLabel.Caption := Format('%s Copyright 2000 - %d, TurboPower Software Company.',
+    [COPYRIGHT, Year]);
 
   lblTurboLink.Cursor := crHandPoint;
   lblHelp.Cursor := crHandPoint;
@@ -157,23 +168,18 @@ end;
 
 procedure TfrmAbout.lblTurboLinkClick(Sender: TObject);
 begin
-{$IFNDEF LCL}
-  if ShellExecute(0, 'open', 'http://sourceforge.net/projects/tpvplanit/',
-    '', '', SW_SHOWNORMAL) <= 32
+{$IFDEF LCL}
+  if not OpenURL(TURBO_LINK_URL)
+{$ELSE}
+  if ShellExecute(0, 'open', TURBO_LINK_URL, '', '', SW_SHOWNORMAL) <= 32
+{$ENDIF}
   then
     ShowMessage(cBrowserError);
-{$ENDIF}
 end;
 {=====}
 
-procedure TfrmAbout.lblFreeUpdateCenterClick(Sender : TObject);
-begin
-end;
 {=====}
 
-procedure TfrmAbout.lblTurboPowerLiveClick(Sender : TObject);
-begin
-end;
 {=====}
 
 procedure TfrmAbout.lblTurboLinkMouseMove(Sender: TObject;
@@ -192,37 +198,37 @@ end;
 
 procedure TfrmAbout.lblHelpClick(Sender: TObject);
 begin
-{$IFNDEF LCL}
-  if ShellExecute(0, 'open',
-    'http://sourceforge.net/forum/forum.php?forum_id=241880', '', '',
-    SW_SHOWNORMAL) <= 32
+{$IFDEF LCL}
+  if not OpenUrl(HELP_URL)
+{$ELSE}
+  if ShellExecute(0, 'open', HELP_URL, '', '', SW_SHOWNORMAL) <= 32
+{$ENDIF}
   then
     ShowMessage(cBrowserError);
-{$ENDIF}
 end;
 {=====}
 
 procedure TfrmAbout.lblNewsSpecificClick(Sender: TObject);
 begin
-{$IFNDEF LCL}
-  if ShellExecute(0, 'open',
-    'news://news.turbopower.com/turbopower.public.support.visualplanit',
-    '', '', SW_SHOWNORMAL) <= 32
+{$IFDEF LCL}
+  if not OpenURL(NEWS_SPECIFIC_URL)
+{$ELSE}
+  if ShellExecute(0, 'open', NEWS_SPECIFIC_URL, '', '', SW_SHOWNORMAL) <= 32
+{$ENDIF}
   then
     ShowMessage(cBrowserError);
-{$ENDIF}
 end;
 {=====}
 
 procedure TfrmAbout.lblGeneralDiscussionClick(Sender: TObject);
 begin
-{$IFNDEF LCL}
-  if ShellExecute(0, 'open',
-    'http://sourceforge.net/forum/forum.php?forum_id=241879', '', '',
-    SW_SHOWNORMAL) <= 32
+{$IFDEF LCL}
+  if not OpenURL(GENERAL_DISCUSSION_URL)
+{$ELSE}
+  if ShellExecute(0, 'open', GENERAL_DISCUSSION_URL, '', '', SW_SHOWNORMAL) <= 32
+{$ENDIF}
   then
     ShowMessage(cBrowserError);
-{$ENDIF}
 end;
 
 end.

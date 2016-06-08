@@ -10,10 +10,11 @@ object frmAbout: TfrmAbout
   ClientHeight = 312
   ClientWidth = 471
   Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Name = 'Default'
   OnActivate = FormActivate
   OnMouseMove = FormMouseMove
   Position = poScreenCenter
+  LCLVersion = '1.7'
   object Bevel3: TBevel
     Left = 152
     Height = 96
@@ -30,110 +31,114 @@ object frmAbout: TfrmAbout
   end
   object ProgramName: TLabel
     Left = 152
-    Height = 14
+    Height = 16
     Top = 8
-    Width = 92
+    Width = 80
     Caption = 'Visual PlanIt'
     Font.Height = -13
-    Font.Name = 'MS Sans Serif'
+    Font.Name = 'Default'
     Font.Style = [fsBold]
     ParentColor = False
+    ParentFont = False
   end
   object VisitUsLabel: TLabel
-    Left = 153
-    Height = 15
+    Left = 152
+    Height = 14
     Top = 109
-    Width = 287
+    Width = 217
     Caption = 'Visit the Visual PlanIt project on SourceForge'
     ParentColor = False
   end
   object GeneralNewsgroupsLabel: TLabel
     Left = 160
-    Height = 15
+    Height = 14
     Top = 168
-    Width = 179
+    Width = 135
     Caption = 'Visual PlanIt support groups'
     ParentColor = False
   end
   object lblTurboLink: TLabel
     Cursor = crHandPoint
     Left = 161
-    Height = 13
+    Height = 14
     Top = 125
-    Width = 232
+    Width = 193
     Caption = 'http://sourceforge.net/projects/tpvplanit/'
     Font.Color = clBlue
     Font.Height = -11
-    Font.Name = 'MS Sans Serif'
+    Font.Name = 'Default'
     Font.Style = [fsUnderline]
     ParentColor = False
+    ParentFont = False
     OnClick = lblTurboLinkClick
     OnMouseMove = lblTurboLinkMouseMove
   end
   object lblHelp: TLabel
     Cursor = crHandPoint
     Left = 168
-    Height = 13
+    Height = 14
     Top = 198
-    Width = 334
+    Width = 278
     Caption = 'http://sourceforge.net/forum/forum.php?forum_id=241880'
     Font.Color = clBlue
     Font.Height = -11
-    Font.Name = 'MS Sans Serif'
+    Font.Name = 'Default'
     Font.Style = [fsUnderline]
     ParentColor = False
+    ParentFont = False
     OnClick = lblHelpClick
     OnMouseMove = lblTurboLinkMouseMove
   end
   object CopyrightLabel: TLabel
     Left = 7
-    Height = 15
+    Height = 14
     Top = 273
-    Width = 332
+    Width = 256
     Caption = '(C) Copyright 2001, TurboPower Software Company.'
     ParentColor = False
   end
   object RightsReservedLabel: TLabel
     Left = 7
-    Height = 15
+    Height = 14
     Top = 289
-    Width = 120
+    Width = 92
     Caption = 'All rights reserved.'
     ParentColor = False
   end
   object lblGeneralDiscussion: TLabel
     Cursor = crHandPoint
     Left = 168
-    Height = 13
+    Height = 14
     Top = 230
-    Width = 334
+    Width = 278
     Caption = 'http://sourceforge.net/forum/forum.php?forum_id=241879'
     Font.Color = clBlue
     Font.Height = -11
-    Font.Name = 'MS Sans Serif'
+    Font.Name = 'Default'
     Font.Style = [fsUnderline]
     ParentColor = False
+    ParentFont = False
     OnClick = lblGeneralDiscussionClick
     OnMouseMove = lblTurboLinkMouseMove
   end
   object Label2: TLabel
     Left = 168
-    Height = 15
+    Height = 14
     Top = 186
-    Width = 34
+    Width = 24
     Caption = 'Help:'
     ParentColor = False
   end
   object Label3: TLabel
     Left = 168
-    Height = 15
+    Height = 14
     Top = 217
-    Width = 127
+    Width = 97
     Caption = 'General Discussion:'
     ParentColor = False
   end
   object Label1: TLabel
-    Left = 160
+    Left = 152
     Height = 49
     Top = 40
     Width = 265
@@ -1283,7 +1288,6 @@ object frmAbout: TfrmAbout
         E117E117E117E117E117E117E117E117E117E117E117E117E117E117E117E117
         E117E117E117E117E117E1FF9139
       }
-      Transparent = False
     end
   end
   object OKButton: TButton
