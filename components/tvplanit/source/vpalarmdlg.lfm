@@ -1,27 +1,26 @@
 object AlarmNotifyForm: TAlarmNotifyForm
   Left = 490
-  Height = 209
+  Height = 215
   Top = 253
-  Width = 407
+  Width = 410
   HorzScrollBar.Page = 399
   VertScrollBar.Page = 196
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Reminder'
-  ClientHeight = 209
-  ClientWidth = 407
+  ClientHeight = 215
+  ClientWidth = 410
   Color = clWindow
   KeyPreview = True
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   Position = poDefault
-  LCLVersion = '0.9.29'
+  LCLVersion = '1.7'
   object SnoozeCaption: TLabel
     Left = 24
     Height = 57
     Top = 136
-    Width = 102
-    Alignment = taRightJustify
+    Width = 112
     AutoSize = False
     Caption = 'SnoozeCaption'
     ParentColor = False
@@ -29,9 +28,9 @@ object AlarmNotifyForm: TAlarmNotifyForm
   end
   object lSubject: TLabel
     Left = 24
-    Height = 16
+    Height = 15
     Top = 32
-    Width = 46
+    Width = 45
     Caption = 'lSubject'
     Font.Style = [fsBold]
     ParentColor = False
@@ -49,9 +48,9 @@ object AlarmNotifyForm: TAlarmNotifyForm
   end
   object lTime: TLabel
     Left = 24
-    Height = 16
+    Height = 15
     Top = 8
-    Width = 31
+    Width = 30
     Caption = 'lTime'
     ParentColor = False
   end
@@ -84,10 +83,10 @@ object AlarmNotifyForm: TAlarmNotifyForm
     TabOrder = 2
   end
   object SnoozeCombo: TComboBox
-    Left = 136
+    Left = 144
     Height = 23
     Top = 136
-    Width = 152
+    Width = 144
     ItemHeight = 15
     Items.Strings = (
       '5 Minutes'
