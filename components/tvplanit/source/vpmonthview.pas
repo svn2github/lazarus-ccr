@@ -87,6 +87,7 @@ type
     FVisibleLines      : Integer;
     FDayNameStyle      : TVpMVDayNameStyle;
     FOffDayColor       : TColor;
+    FOffDayFontColor   : TColor;
     FSelectedDayColor  : TColor;
     FWeekStartsOn      : TVpDayType;
     FShowEvents        : Boolean;
@@ -132,6 +133,7 @@ type
     procedure SetColor(Value: TColor);
     procedure SetLineColor(Value: TColor);
     procedure SetOffDayColor(Value: TColor);
+    procedure SetOffDayFontColor(Value: TColor);
     procedure SetDateLabelFormat(Value: string);
     procedure SetShowEvents(Value: Boolean);
     procedure SetEventDayStyle(Value: TFontStyles);
@@ -241,6 +243,8 @@ type
       read FTimeFormat write SetTimeFormat;
     property OffDayColor: TColor
       read FOffDayColor write SetOffDayColor;
+    property OffDayFontColor: TColor
+      read FOffDayFontColor write SetOffDayFontColor default clGray;
     property OwnerDrawCells: TVpOwnerDrawDayEvent
       read FOwnerDrawCells write FOwnerDrawCells;
     property RightClickChangeDate : Boolean                              
@@ -357,6 +361,7 @@ begin
   FEventFont := TFont.Create;
   FEventFont.Assign(Font);
   FEventFont.OnChange := mvFontChanged;
+  FOffDayFontColor := clGray;
 
   SetLength(mvEventArray, MaxVisibleEvents);
   SetLength(mvMonthdayArray, 45);
@@ -670,6 +675,9 @@ var
 
       if FDayNameStyle = dsLong then
         { Draw each day's full caption... }
+       {$IFDEF LCL}
+        str := FormatSettings.LongDayNames[DayTag+1]
+       {$ELSE}
         case DayTag of
           0: str := RSSunday;
           1: str := RSMonday;
@@ -679,8 +687,12 @@ var
           5: str := RSFriday;
           6: str := RSSaturday;
         end
+       {$ENDIF }
       else if FDayNameStyle = dsShort then
         { Draw each day's abbreviated caption... }
+       {$IFDEF LCL}
+        str := FormatSettings.ShortDayNames[DayTag+1]
+       {$ELSE}
         case DayTag of
           0: str := RSASunday;
           1: str := RSAMonday;
@@ -690,8 +702,12 @@ var
           5: str := RSAFriday;
           6: str := RSASaturday;
         end
+       {$ENDIF}
       else if FDayNameStyle = dsLetter then
         { Draw each day's first letter only }
+       {$IFDEF LCL}
+        str := FormatSettings.ShortDayNames[DayTag+1, 1];
+       {$ELSE}
         case DayTag of
           0: str := RSLSunday;
           1: str := RSLMonday;
@@ -701,6 +717,7 @@ var
           5: str := RSLFriday;
           6: str := RSLSaturday;
         end;
+       {$ENDIF}
 
       { Fix Header String }
       StrL := RenderCanvas.TextWidth(Str);
@@ -863,6 +880,8 @@ var
                 RenderCanvas.Font.Style := [fsBold, fsItalic];
                 TextAdjust := RenderCanvas.TextWidth (Str);
                 RenderCanvas.Font.Style := FontStyle;
+                if Tmp <> M then
+                  RenderCanvas.Font.Color := FOffDayFontColor;
 
                 { write the day number at the top of the square. }
                 if fsItalic in RenderCanvas.Font.Style then
@@ -970,6 +989,8 @@ var
                 RenderCanvas.Font.Style := [fsBold, fsItalic];
                 TextAdjust := RenderCanvas.TextWidth (Str);
                 RenderCanvas.Font.Style := FontStyle;
+                if Tmp <> M then
+                  RenderCanvas.Font.Color := FOffdayFontColor;
 
                 if fsItalic in RenderCanvas.Font.Style then
                   TPSTextOut (RenderCanvas, Angle, RenderIn,
@@ -1082,6 +1103,8 @@ var
 
               { set the event font }
               RenderCanvas.Font.Assign(FEventFont);
+              if mvMonthDayArray[I].OffDay then
+                RenderCanvas.Font.Color := FOffDayFontColor;
 
               StrLn := RenderCanvas.TextWidth(Str);
               if (StrLn > TextRect.Right - TextRect.Left - (TextMargin * 2)) then
@@ -1285,6 +1308,13 @@ begin
     FOffDayColor := Value;
     Invalidate;
   end;
+end;
+{=====}
+
+procedure TVpMonthView.SetOffDayFontColor(Value: TColor);
+begin
+  FOffDayFontColor := Value;
+  Invalidate;
 end;
 {=====}
 
