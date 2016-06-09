@@ -126,7 +126,7 @@ type
     FDateLabelFormat   : string;
     FDayHeadAttributes : TVpDayHeadAttr;
     FDrawingStyle      : TVpDrawingStyle;
-    FaActiveEvent       : TVpEvent;
+    FaActiveEvent      : TVpEvent;
     FHeadAttr          : TVpWvHeadAttributes;
     FEventFont         : TFont;
     FLineColor         : TColor;
@@ -1075,7 +1075,7 @@ var
                                      RenderCanvas.TextWidth (HeadStr)) div 2,
                                      HeadRect.Top)
     else
-      HeadTextRect.TopLeft := Point (RealLeft + 30 + TextMargin * 2,
+      HeadTextRect.TopLeft := Point (RealLeft + Trunc(wvHeaderHeight * 0.8) * 2 + TextMargin * 2,
                                      HeadRect.Top);
     HeadTextRect.BottomRight := HeadRect.BottomRight;
     { Fix Header String }
