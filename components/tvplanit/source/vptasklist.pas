@@ -755,21 +755,33 @@ var
     W := RowHeight - TextMargin * 2;
 
     { draw check box }
-    RenderCanvas.Pen.Color := RGB (192, 204, 216);
-    RenderCanvas.Brush.Color := RealCheckBgColor; 
-    TPSRectangle (RenderCanvas, Angle, RenderIn,
-                  Rect (X, Y, X + W, Y + W));
-    RenderCanvas.Pen.Color := RGB (80, 100, 128);
-    TPSPolyLine (RenderCanvas, Angle, RenderIn,
-                 [Point(X, Y + W - 2), Point(X, Y), Point(X + W - 1, Y)]);
-    RenderCanvas.Pen.Color := RealCheckBoxColor;
-    TPSPolyLine (RenderCanvas, Angle, RenderIn,
-                 [Point(X + 1, Y + W - 3), Point(X + 1, Y + 1),
-                  Point(X + W - 2, Y + 1)]);
-    RenderCanvas.Pen.Color := RGB(128,152,176);
-    TPSPolyLine (RenderCanvas, Angle, RenderIn,
-                 [Point(X + 1, Y + W - 2), Point(X + W - 2, Y + W - 2),
-                  Point(X+W-2, Y)]);
+    if FDrawingStyle = dsFlat then begin
+      RenderCanvas.Brush.Color := RealCheckBgColor;
+      RenderCanvas.Pen.Color := RealCheckBoxColor;
+      TPSRectangle (RenderCanvas, Angle, RenderIn,
+                    Rect (X, Y, X + W, Y + W));
+    end else
+    begin
+      // complete box, rather bright
+      RenderCanvas.Pen.Color := RGB (192, 204, 216);
+      RenderCanvas.Brush.Color := RealCheckBgColor;
+      TPSRectangle (RenderCanvas, Angle, RenderIn,
+                    Rect (X, Y, X + W, Y + W));
+      // left and top lines
+      RenderCanvas.Pen.Color := RGB (80, 100, 128);
+      TPSPolyLine (RenderCanvas, Angle, RenderIn,
+                   [Point(X, Y + W - 2), Point(X, Y), Point(X + W - 1, Y)]);
+      // left and top lines
+      RenderCanvas.Pen.Color := RealCheckBoxColor;
+      TPSPolyLine (RenderCanvas, Angle, RenderIn,
+                   [Point(X + 1, Y + W - 3), Point(X + 1, Y + 1),
+                    Point(X + W - 2, Y + 1)]);
+      // right and bottom lines
+      RenderCanvas.Pen.Color := RGB(128, 152, 176);
+      TPSPolyLine (RenderCanvas, Angle, RenderIn,
+                   [Point(X + 1, Y + W - 2), Point(X + W - 2, Y + W - 2),
+                    Point(X+W-2, Y)]);
+    end;
 
     { build check rect }
     CR := Rect(X + 3, Y + 3, X + W - 3, Y + W - 3);
