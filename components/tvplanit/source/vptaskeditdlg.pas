@@ -42,11 +42,13 @@ uses
   Messages, SysUtils,
   {$IFDEF VERSION6} Variants, {$ENDIF}
   Classes, Graphics, Controls, Forms, Dialogs, VpData, StdCtrls, ExtCtrls,
-  VpEdPop, VpDateEdit, VpBase, VpSR, VpDlg, ComCtrls;
+  VpEdPop, VpDateEdit, VpBase, VpSR, VpDlg, ComCtrls, EditBtn;
 
 type
   { forward declarations }
   TVpTaskEditDialog = class;
+
+  { TTaskEditForm }
 
   TTaskEditForm = class(TForm)
     Panel2: TPanel;
@@ -56,7 +58,7 @@ type
     tabTask: TTabSheet;
     DescriptionEdit: TEdit;
     DueDateLbl: TLabel;
-    DueDateEdit: TVpDateEdit;
+    DueDateEdit: TDateEdit;
     CompleteCB: TCheckBox;
     CreatedOnLbl: TLabel;
     CompletedOnLbl: TLabel;
