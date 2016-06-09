@@ -9,8 +9,6 @@ object frmAbout: TfrmAbout
   Caption = 'About Visual PlanIt'
   ClientHeight = 312
   ClientWidth = 471
-  Font.Height = -11
-  Font.Name = 'Default'
   OnActivate = FormActivate
   OnMouseMove = FormMouseMove
   Position = poScreenCenter
@@ -43,17 +41,17 @@ object frmAbout: TfrmAbout
   end
   object VisitUsLabel: TLabel
     Left = 152
-    Height = 14
+    Height = 15
     Top = 109
-    Width = 217
+    Width = 235
     Caption = 'Visit the Visual PlanIt project on SourceForge'
     ParentColor = False
   end
   object GeneralNewsgroupsLabel: TLabel
     Left = 160
-    Height = 14
+    Height = 15
     Top = 168
-    Width = 135
+    Width = 148
     Caption = 'Visual PlanIt support groups'
     ParentColor = False
   end
@@ -91,17 +89,17 @@ object frmAbout: TfrmAbout
   end
   object CopyrightLabel: TLabel
     Left = 7
-    Height = 14
+    Height = 15
     Top = 273
-    Width = 256
+    Width = 277
     Caption = '(C) Copyright 2001, TurboPower Software Company.'
     ParentColor = False
   end
   object RightsReservedLabel: TLabel
     Left = 7
-    Height = 14
+    Height = 15
     Top = 289
-    Width = 92
+    Width = 97
     Caption = 'All rights reserved.'
     ParentColor = False
   end
@@ -123,17 +121,17 @@ object frmAbout: TfrmAbout
   end
   object Label2: TLabel
     Left = 168
-    Height = 14
+    Height = 15
     Top = 186
-    Width = 24
+    Width = 28
     Caption = 'Help:'
     ParentColor = False
   end
   object Label3: TLabel
     Left = 168
-    Height = 14
+    Height = 15
     Top = 217
-    Width = 97
+    Width = 102
     Caption = 'General Discussion:'
     ParentColor = False
   end

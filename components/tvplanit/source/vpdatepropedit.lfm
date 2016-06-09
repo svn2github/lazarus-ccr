@@ -9,9 +9,8 @@ object frmDatePropertyEditor: TfrmDatePropertyEditor
   Caption = 'Select Date'
   ClientHeight = 193
   ClientWidth = 219
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
   Position = poDefaultPosOnly
+  LCLVersion = '1.7'
   object Button1: TButton
     Left = 56
     Height = 25
@@ -35,18 +34,23 @@ object frmDatePropertyEditor: TfrmDatePropertyEditor
     Height = 140
     Top = 8
     Width = 200
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
+    ParentFont = False
+    BorderStyle = bsNone
     Colors.ActiveDay = clRed
+    Colors.ColorScheme = cscalCustom
     Colors.DayNames = clMaroon
+    Colors.Days = clBlack
     Colors.InactiveDays = clGray
     Colors.MonthAndYear = clBlue
     Colors.Weekend = clRed
+    Colors.EventDays = clBlack
     DateFormat = dfLong
     DayNameWidth = 3
     Options = [cdoShortNames, cdoShowYear, cdoShowRevert, cdoShowToday, cdoShowNavBtns]
+    ReadOnly = False
     TabOrder = 2
     TabStop = True
     WantDblClicks = True
+    WeekStarts = dtSunday
   end
 end

@@ -499,6 +499,8 @@ begin
     Height := FieldTop + FormHeightOffset
   else
     Height := MinFormHeight;
+
+  EMailLbl.Left := EMailEdit.Left - EMailLbl.Width;
 end;
 {=====}
 

@@ -155,6 +155,7 @@ procedure TTaskEditForm.OnChange(Sender: TObject);
 begin
   Task.Changed := true;
 end;
+
 {=====}
 
 procedure TTaskEditForm.OKBtnClick(Sender: TObject);

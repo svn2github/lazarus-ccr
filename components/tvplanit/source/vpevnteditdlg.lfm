@@ -9,8 +9,6 @@ object DlgEventEdit: TDlgEventEdit
   ClientWidth = 697
   Constraints.MinHeight = 378
   Constraints.MinWidth = 594
-  Font.Height = -11
-  Font.Name = 'Default'
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
@@ -41,7 +39,7 @@ object DlgEventEdit: TDlgEventEdit
       ParentFont = False
     end
     object OKBtn: TButton
-      Left = 518
+      Left = 509
       Height = 25
       Top = 8
       Width = 85
@@ -53,7 +51,7 @@ object DlgEventEdit: TDlgEventEdit
       TabStop = False
     end
     object CancelBtn: TButton
-      Left = 606
+      Left = 602
       Height = 25
       Top = 8
       Width = 85
@@ -77,10 +75,9 @@ object DlgEventEdit: TDlgEventEdit
     TabOrder = 0
     object DescriptionLbl: TLabel
       Left = 5
-      Height = 13
+      Height = 15
       Top = 15
-      Width = 77
-      AutoSize = False
+      Width = 63
       Caption = 'Description:'
       ParentColor = False
     end
@@ -100,15 +97,14 @@ object DlgEventEdit: TDlgEventEdit
     end
     object CategoryLbl: TLabel
       Left = 5
-      Height = 13
+      Height = 15
       Top = 41
-      Width = 77
-      AutoSize = False
+      Width = 51
       Caption = 'Category:'
       ParentColor = False
     end
     object StartTimeLbl: TLabel
-      Left = 32
+      Left = 33
       Height = 13
       Top = 108
       Width = 59
@@ -118,7 +114,7 @@ object DlgEventEdit: TDlgEventEdit
       ParentColor = False
     end
     object EndTimeLbl: TLabel
-      Left = 33
+      Left = 35
       Height = 13
       Top = 135
       Width = 57
@@ -276,7 +272,7 @@ object DlgEventEdit: TDlgEventEdit
     end
     object DescriptionEdit: TEdit
       Left = 86
-      Height = 22
+      Height = 23
       Top = 11
       Width = 580
       Anchors = [akTop, akLeft, akRight]
@@ -287,7 +283,7 @@ object DlgEventEdit: TDlgEventEdit
       Left = 38
       Height = 19
       Top = 170
-      Width = 68
+      Width = 74
       Caption = '&Reminder:'
       OnClick = AlarmSetClick
       TabOrder = 11
@@ -297,7 +293,7 @@ object DlgEventEdit: TDlgEventEdit
       Height = 22
       Top = 104
       Width = 93
-      ItemHeight = 14
+      ItemHeight = 15
       OnChangeBounds = StartTimeChange
       OnExit = StartTimeExit
       TabOrder = 4
@@ -307,7 +303,7 @@ object DlgEventEdit: TDlgEventEdit
       Height = 22
       Top = 131
       Width = 93
-      ItemHeight = 14
+      ItemHeight = 15
       OnChangeBounds = EndTimeChange
       OnExit = EndTimeExit
       TabOrder = 6
@@ -328,16 +324,17 @@ object DlgEventEdit: TDlgEventEdit
       Height = 22
       Top = 104
       Width = 187
-      ItemHeight = 14
+      ItemHeight = 15
       OnChange = RecurringTypeChange
       Style = csDropDownList
       TabOrder = 7
     end
     object IntervalUpDown: TUpDown
-      Left = 654
-      Height = 24
-      Top = 103
-      Width = 19
+      Left = 652
+      Height = 23
+      Top = 104
+      Width = 16
+      Associate = edtUnusedPlaceholder
       Max = 32767
       Min = 0
       OnClick = IntervalUpDownClick
@@ -350,15 +347,16 @@ object DlgEventEdit: TDlgEventEdit
       Height = 22
       Top = 167
       Width = 93
-      ItemHeight = 14
+      ItemHeight = 15
       Style = csDropDownList
       TabOrder = 14
     end
     object AdvanceUpDown: TUpDown
-      Left = 196
-      Height = 24
-      Top = 167
-      Width = 19
+      Left = 194
+      Height = 23
+      Top = 168
+      Width = 14
+      Associate = AlarmAdvance
       Max = 120
       Min = 1
       OnClick = AdvanceUpDownClick
@@ -370,14 +368,14 @@ object DlgEventEdit: TDlgEventEdit
       Left = 104
       Height = 19
       Top = 80
-      Width = 84
+      Width = 89
       Caption = 'All Day Event'
       OnClick = CBAllDayClick
       TabOrder = 2
     end
     object edtUnusedPlaceholder: TEdit
       Left = 587
-      Height = 22
+      Height = 23
       Top = 104
       Width = 65
       TabOrder = 8
@@ -386,7 +384,7 @@ object DlgEventEdit: TDlgEventEdit
     end
     object StartDate: TDateEdit
       Left = 104
-      Height = 22
+      Height = 23
       Top = 104
       Width = 104
       CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
@@ -437,7 +435,7 @@ object DlgEventEdit: TDlgEventEdit
     end
     object EndDate: TDateEdit
       Left = 104
-      Height = 22
+      Height = 23
       Top = 131
       Width = 104
       CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
@@ -488,7 +486,7 @@ object DlgEventEdit: TDlgEventEdit
     end
     object RepeatUntil: TDateEdit
       Left = 440
-      Height = 22
+      Height = 23
       Top = 131
       Width = 100
       CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
@@ -538,7 +536,7 @@ object DlgEventEdit: TDlgEventEdit
     end
     object AlarmAdvance: TEdit
       Left = 130
-      Height = 22
+      Height = 23
       Top = 168
       Width = 64
       OnChange = AlarmAdvanceChange

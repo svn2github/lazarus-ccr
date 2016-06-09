@@ -10,13 +10,14 @@ object frmPrintPreview: TfrmPrintPreview
   ClientWidth = 477
   Constraints.MinHeight = 200
   Constraints.MinWidth = 395
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
   KeyPreview = True
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
+  LCLVersion = '1.7'
   object Panel1: TPanel
+    Left = 0
     Height = 73
+    Top = 0
     Width = 477
     Align = alTop
     ClientHeight = 73
@@ -27,8 +28,7 @@ object frmPrintPreview: TfrmPrintPreview
       Height = 21
       Top = 40
       Width = 145
-      AutoCompleteText = [cbactEndOfLineComplete, cbactSearchAscending]
-      ItemHeight = 13
+      ItemHeight = 15
       Items.Strings = (
         'Fit to Control'
         'Actual Size'
@@ -47,7 +47,7 @@ object frmPrintPreview: TfrmPrintPreview
       Height = 21
       Top = 40
       Width = 201
-      ItemHeight = 13
+      ItemHeight = 15
       Sorted = True
       TabOrder = 1
     end
@@ -58,7 +58,6 @@ object frmPrintPreview: TfrmPrintPreview
       Width = 475
       ButtonHeight = 25
       Caption = 'ToolBar1'
-      Flat = True
       Images = imMain
       ParentShowHint = False
       ShowHint = True
@@ -66,23 +65,20 @@ object frmPrintPreview: TfrmPrintPreview
       object btnCancel: TSpeedButton
         Left = 132
         Height = 25
-        Hint = 'Cancel preview'
         Top = 2
         Width = 77
         Action = actCancel
-        Color = clBtnFace
         Flat = True
-        NumGlyphs = 0
         Transparent = False
       end
       object btnPrint: TToolButton
         Left = 1
-        Hint = 'Print'
         Top = 2
         Action = actPrint
       end
       object ToolButton3: TToolButton
         Left = 24
+        Height = 25
         Top = 2
         Width = 8
         Caption = 'ToolButton3'
@@ -91,30 +87,27 @@ object frmPrintPreview: TfrmPrintPreview
       end
       object btnFirstPage: TToolButton
         Left = 32
-        Hint = 'First page'
         Top = 2
         Action = actFirstPage
       end
       object btnPrevPage: TToolButton
         Left = 55
-        Hint = 'Previous page'
         Top = 2
         Action = actPrevPage
       end
       object btnNextPage: TToolButton
         Left = 78
-        Hint = 'Next page'
         Top = 2
         Action = actNextPage
       end
       object btnLastPage: TToolButton
         Left = 101
-        Hint = 'Last page'
         Top = 2
         Action = actLastPage
       end
       object ToolButton8: TToolButton
         Left = 124
+        Height = 25
         Top = 2
         Width = 8
         Caption = 'ToolButton8'
@@ -124,9 +117,11 @@ object frmPrintPreview: TfrmPrintPreview
     end
   end
   object VpPrintPreview1: TVpPrintPreview
+    Left = 0
     Height = 445
     Top = 73
     Width = 477
+    CurPage = 0
     EndDate = 37355.4526088079
     StartDate = 37348.4526088079
     Align = alClient
@@ -330,7 +325,6 @@ object frmPrintPreview: TfrmPrintPreview
     top = 152
     object actPrint: TAction
       Caption = '&Print'
-      DisableIfNoHandler = True
       Hint = 'Print'
       ImageIndex = 0
       OnExecute = actPrintExecute
@@ -338,7 +332,6 @@ object frmPrintPreview: TfrmPrintPreview
     end
     object actFirstPage: TAction
       Caption = '&First page'
-      DisableIfNoHandler = True
       Hint = 'First page'
       ImageIndex = 1
       OnExecute = actFirstPageExecute
@@ -346,7 +339,6 @@ object frmPrintPreview: TfrmPrintPreview
     end
     object actPrevPage: TAction
       Caption = 'Pre&vious page'
-      DisableIfNoHandler = True
       Hint = 'Previous page'
       ImageIndex = 2
       OnExecute = actPrevPageExecute
@@ -354,7 +346,6 @@ object frmPrintPreview: TfrmPrintPreview
     end
     object actNextPage: TAction
       Caption = '&Next page'
-      DisableIfNoHandler = True
       Hint = 'Next page'
       ImageIndex = 3
       OnExecute = actNextPageExecute
@@ -362,14 +353,12 @@ object frmPrintPreview: TfrmPrintPreview
     end
     object actLastPage: TAction
       Caption = '&Last page'
-      DisableIfNoHandler = True
       Hint = 'Last page'
       ImageIndex = 4
       OnExecute = actLastPageExecute
       ShortCut = 16460
     end
     object actCancel: TAction
-      DisableIfNoHandler = True
       Hint = 'Cancel preview'
       OnExecute = actCancelExecute
       ShortCut = 32835

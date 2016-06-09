@@ -8,36 +8,34 @@ object frmPrnFormat: TfrmPrnFormat
   Caption = 'Print Format Designer'
   ClientHeight = 480
   ClientWidth = 640
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
+  LCLVersion = '1.7'
   object Label1: TLabel
     Left = 8
-    Height = 14
-    Top = 4
-    Width = 44
+    Height = 15
+    Top = 5
+    Width = 46
     Caption = '&Formats:'
     FocusControl = lbFormats
     ParentColor = False
   end
   object Label2: TLabel
     Left = 8
-    Height = 14
+    Height = 15
     Top = 205
-    Width = 48
+    Width = 51
     Caption = 'Ele&ments:'
     FocusControl = lbElements
     ParentColor = False
   end
   object btnMoveElementUp: TSpeedButton
-    Left = 232
+    Left = 248
     Height = 22
     Top = 352
     Width = 23
-    Color = clBtnFace
     Glyph.Data = {
       76010000424D7601000000000000760000002800000020000000100000000100
       0400000000000001000000000000000000001000000010000000000000000000
@@ -56,11 +54,10 @@ object frmPrnFormat: TfrmPrnFormat
     OnClick = btnMoveElementUpClick
   end
   object btnMoveElementDn: TSpeedButton
-    Left = 232
+    Left = 248
     Height = 22
     Top = 380
     Width = 23
-    Color = clBtnFace
     Glyph.Data = {
       76010000424D7601000000000000760000002800000020000000100000000100
       0400000000000001000000000000000000001000000010000000000000000000
@@ -79,10 +76,10 @@ object frmPrnFormat: TfrmPrnFormat
     OnClick = btnMoveElementDnClick
   end
   object Label3: TLabel
-    Left = 220
-    Height = 14
+    Left = 232
+    Height = 15
     Top = 332
-    Width = 54
+    Width = 58
     Caption = 'Print Order'
     ParentColor = False
   end
@@ -97,19 +94,22 @@ object frmPrnFormat: TfrmPrnFormat
     TabOrder = 1
   end
   object Panel1: TPanel
-    Left = 334
+    Left = 312
     Height = 439
-    Width = 306
+    Top = 0
+    Width = 320
     Align = alRight
+    BorderSpacing.Right = 8
     Caption = 'Panel1'
     ClientHeight = 439
-    ClientWidth = 306
+    ClientWidth = 320
     TabOrder = 8
     object PrintPreview: TVpPrintPreview
       Left = 1
       Height = 437
       Top = 1
-      Width = 304
+      Width = 318
+      CurPage = 0
       EndDate = 37377.6447728357
       StartDate = 37370.6447728357
       ZoomFactor = zfActualSize
@@ -121,10 +121,10 @@ object frmPrnFormat: TfrmPrnFormat
   end
   object lbFormats: TListBox
     Left = 8
-    Height = 170
-    Top = 28
+    Height = 173
+    Top = 25
     Width = 201
-    ItemHeight = 13
+    ItemHeight = 0
     OnClick = lbFormatsClick
     Sorted = True
     TabOrder = 0
@@ -134,7 +134,7 @@ object frmPrnFormat: TfrmPrnFormat
     Height = 180
     Top = 225
     Width = 201
-    ItemHeight = 13
+    ItemHeight = 0
     OnClick = lbElementsClick
     OnDragDrop = lbElementsDragDrop
     OnDragOver = lbElementsDragOver
@@ -192,6 +192,7 @@ object frmPrnFormat: TfrmPrnFormat
     TabOrder = 7
   end
   object Panel2: TPanel
+    Left = 0
     Height = 41
     Top = 439
     Width = 640
@@ -243,8 +244,8 @@ object frmPrnFormat: TfrmPrnFormat
     DefaultExt = '.xml'
     FileName = '*.xml'
     Filter = 'Filter Files (.xml)|*.xml|All Files (*.*)|*.*'
-    left = 215
-    top = 156
+    left = 400
+    top = 128
   end
   object SaveDialog1: TSaveDialog
     Title = 'Save formats as'
@@ -252,7 +253,7 @@ object frmPrnFormat: TfrmPrnFormat
     FileName = '*.xml'
     Filter = 'Filter Files (.xml)|*.xml|All Files (*.*)|*.*'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
-    left = 247
-    top = 156
+    left = 400
+    top = 200
   end
 end

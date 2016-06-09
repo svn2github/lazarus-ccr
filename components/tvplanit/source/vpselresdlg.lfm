@@ -8,9 +8,8 @@ object frmSelectResource: TfrmSelectResource
   Caption = 'Select a Resource'
   ClientHeight = 162
   ClientWidth = 274
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
   Position = poDesktopCenter
+  LCLVersion = '1.7'
   object Bevel1: TBevel
     Left = 8
     Height = 105
@@ -19,9 +18,9 @@ object frmSelectResource: TfrmSelectResource
   end
   object lblSelectResource: TLabel
     Left = 16
-    Height = 14
+    Height = 15
     Top = 16
-    Width = 87
+    Width = 91
     Caption = 'Select a Resource'
     ParentColor = False
   end
@@ -29,7 +28,7 @@ object frmSelectResource: TfrmSelectResource
     Left = 16
     Height = 21
     Top = 40
-    Width = 217
+    Width = 232
     Style = csDropDownList
   end
   object btnOK: TButton
@@ -40,7 +39,7 @@ object frmSelectResource: TfrmSelectResource
     Caption = 'OK'
     Default = True
     ModalResult = 1
-    TabOrder = 1
+    TabOrder = 3
   end
   object btnCancel: TButton
     Left = 192
@@ -50,7 +49,7 @@ object frmSelectResource: TfrmSelectResource
     Cancel = True
     Caption = 'Cancel'
     ModalResult = 2
-    TabOrder = 2
+    TabOrder = 4
   end
   object btnAddNew: TButton
     Left = 16
@@ -59,7 +58,7 @@ object frmSelectResource: TfrmSelectResource
     Width = 113
     Caption = 'Add New Resource'
     OnClick = btnAddNewClick
-    TabOrder = 3
+    TabOrder = 1
   end
   object btnEdit: TButton
     Left = 136
@@ -68,15 +67,17 @@ object frmSelectResource: TfrmSelectResource
     Width = 113
     Caption = 'Edit This Resource'
     OnClick = btnEditClick
-    TabOrder = 4
+    TabOrder = 2
   end
   object VpResourceEditDialog1: TVpResourceEditDialog
     Version = 'v1.03'
+    Options = []
+    Placement.Position = mpCenter
     Placement.Top = 10
     Placement.Left = 10
     Placement.Height = 250
     Placement.Width = 400
     left = 232
-    top = 24
+    top = 16
   end
 end

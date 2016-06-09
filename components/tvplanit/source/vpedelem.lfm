@@ -1,24 +1,23 @@
 object frmEditElement: TfrmEditElement
   Left = 376
-  Height = 445
+  Height = 427
   Top = 163
-  Width = 379
+  Width = 413
   HorzScrollBar.Page = 378
   VertScrollBar.Page = 444
   BorderStyle = bsDialog
   Caption = 'Edit Element'
-  ClientHeight = 445
-  ClientWidth = 379
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  ClientHeight = 427
+  ClientWidth = 413
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
+  LCLVersion = '1.7'
   object Label1: TLabel
-    Left = 8
+    Left = 20
     Height = 15
     Top = 136
-    Width = 72
+    Width = 58
     Caption = 'Day Offset:'
     ParentColor = False
   end
@@ -26,7 +25,7 @@ object frmEditElement: TfrmEditElement
     Left = 12
     Height = 15
     Top = 16
-    Width = 48
+    Width = 38
     Caption = 'Name: '
     ParentColor = False
   end
@@ -34,7 +33,7 @@ object frmEditElement: TfrmEditElement
     Left = 12
     Height = 81
     Top = 44
-    Width = 349
+    Width = 388
     AutoFill = True
     Caption = 'Item Type '
     ChildSizing.LeftRightSpacing = 6
@@ -46,7 +45,7 @@ object frmEditElement: TfrmEditElement
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 4
     ClientHeight = 61
-    ClientWidth = 345
+    ClientWidth = 384
     Columns = 4
     ItemIndex = 0
     Items.Strings = (
@@ -63,10 +62,10 @@ object frmEditElement: TfrmEditElement
     TabOrder = 1
   end
   object rgDayOffset: TRadioGroup
-    Left = 100
-    Height = 37
+    Left = 116
+    Height = 43
     Top = 136
-    Width = 261
+    Width = 284
     AutoFill = True
     Caption = ' Day Offset Unit '
     ChildSizing.LeftRightSpacing = 6
@@ -77,8 +76,8 @@ object frmEditElement: TfrmEditElement
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 4
-    ClientHeight = 17
-    ClientWidth = 257
+    ClientHeight = 23
+    ClientWidth = 280
     Columns = 4
     ItemIndex = 0
     Items.Strings = (
@@ -87,59 +86,59 @@ object frmEditElement: TfrmEditElement
       'Month'
       'Year'
     )
-    TabOrder = 2
+    TabOrder = 3
   end
   object btnOk: TButton
-    Left = 212
+    Left = 240
     Height = 25
-    Top = 412
+    Top = 392
     Width = 75
     Caption = 'OK'
     Default = True
     OnClick = btnOkClick
-    TabOrder = 6
+    TabOrder = 8
   end
   object btnCancel: TButton
-    Left = 292
+    Left = 320
     Height = 25
-    Top = 412
+    Top = 392
     Width = 75
     Cancel = True
     Caption = 'Cancel'
     OnClick = btnCancelClick
-    TabOrder = 7
+    TabOrder = 9
   end
   object edName: TEdit
     Left = 56
-    Height = 21
+    Height = 23
     Top = 12
-    Width = 241
+    Width = 344
     TabOrder = 0
   end
   object btnShape: TButton
-    Left = 44
+    Left = 12
     Height = 25
-    Top = 412
+    Top = 392
     Width = 75
     Caption = 'Shape...'
     Enabled = False
     OnClick = btnShapeClick
-    TabOrder = 5
+    TabOrder = 7
   end
   object gbVisual: TGroupBox
     Left = 12
-    Height = 121
+    Height = 129
     Top = 184
-    Width = 357
+    Width = 388
     Caption = ' Visual '
-    ClientHeight = 101
-    ClientWidth = 353
-    TabOrder = 3
+    ClientHeight = 109
+    ClientWidth = 384
+    TabOrder = 5
     object Label3: TLabel
       Left = 172
       Height = 15
       Top = 20
-      Width = 28
+      Width = 23
       Caption = 'Top:'
       ParentColor = False
     end
@@ -147,30 +146,30 @@ object frmEditElement: TfrmEditElement
       Left = 172
       Height = 15
       Top = 48
-      Width = 29
+      Width = 23
       Caption = 'Left:'
       ParentColor = False
     end
     object Label5: TLabel
-      Left = 259
+      Left = 276
       Height = 15
       Top = 20
-      Width = 47
+      Width = 39
       Caption = 'Height:'
       ParentColor = False
     end
     object Label6: TLabel
-      Left = 263
+      Left = 280
       Height = 15
       Top = 48
-      Width = 40
+      Width = 35
       Caption = 'Width:'
       ParentColor = False
     end
     object rgMeasurement: TRadioGroup
       Left = 76
-      Height = 80
-      Top = 20
+      Height = 99
+      Top = 0
       Width = 89
       AutoFill = True
       Caption = ' Measurement '
@@ -182,7 +181,7 @@ object frmEditElement: TfrmEditElement
       ChildSizing.ShrinkVertical = crsScaleChilds
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
-      ClientHeight = 60
+      ClientHeight = 79
       ClientWidth = 85
       ItemIndex = 1
       Items.Strings = (
@@ -195,8 +194,8 @@ object frmEditElement: TfrmEditElement
     end
     object rgRotation: TRadioGroup
       Left = 8
-      Height = 93
-      Top = 20
+      Height = 99
+      Top = 0
       Width = 61
       AutoFill = True
       Caption = ' Rotation '
@@ -208,7 +207,7 @@ object frmEditElement: TfrmEditElement
       ChildSizing.ShrinkVertical = crsScaleChilds
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
-      ClientHeight = 73
+      ClientHeight = 79
       ClientWidth = 57
       ItemIndex = 0
       Items.Strings = (
@@ -220,8 +219,8 @@ object frmEditElement: TfrmEditElement
       TabOrder = 0
     end
     object edTop: TEdit
-      Left = 197
-      Height = 21
+      Left = 208
+      Height = 23
       Top = 16
       Width = 40
       OnEnter = PosEditEnter
@@ -230,132 +229,152 @@ object frmEditElement: TfrmEditElement
       Text = '0.00'
     end
     object edLeft: TEdit
-      Left = 197
-      Height = 21
+      Left = 208
+      Height = 23
       Top = 44
-      Width = 40
-      OnEnter = PosEditEnter
-      OnExit = PosEditExit
-      TabOrder = 3
-      Text = '0.00'
-    end
-    object edHeight: TEdit
-      Left = 296
-      Height = 21
-      Top = 16
       Width = 40
       OnEnter = PosEditEnter
       OnExit = PosEditExit
       TabOrder = 4
       Text = '0.00'
     end
+    object edHeight: TEdit
+      Left = 321
+      Height = 23
+      Top = 16
+      Width = 40
+      OnEnter = PosEditEnter
+      OnExit = PosEditExit
+      TabOrder = 6
+      Text = '0.00'
+    end
     object edWidth: TEdit
-      Left = 296
-      Height = 21
+      Left = 321
+      Height = 23
       Top = 44
       Width = 40
       OnEnter = PosEditEnter
       OnExit = PosEditExit
-      TabOrder = 5
+      TabOrder = 8
       Text = '0.00'
     end
     object chkVisible: TCheckBox
       Left = 228
-      Height = 23
+      Height = 19
       Top = 80
-      Width = 65
+      Width = 54
       Caption = 'Visible'
-      TabOrder = 6
+      TabOrder = 10
     end
     object udTop: TUpDown
-      Left = 237
-      Height = 21
+      Left = 248
+      Height = 23
       Top = 16
       Width = 12
-      TabOrder = 7
+      Associate = edTop
+      Min = 0
       OnClick = UpDownClick
+      Position = 0
+      TabOrder = 3
+      Wrap = False
     end
     object udLeft: TUpDown
-      Left = 237
-      Height = 21
+      Left = 248
+      Height = 23
       Top = 44
       Width = 12
-      TabOrder = 8
+      Associate = edLeft
+      Min = 0
       OnClick = UpDownClick
+      Position = 0
+      TabOrder = 5
+      Wrap = False
     end
     object udHeight: TUpDown
-      Left = 336
-      Height = 21
+      Left = 361
+      Height = 23
       Top = 16
       Width = 12
-      TabOrder = 9
+      Associate = edHeight
+      Min = 0
       OnClick = UpDownClick
+      Position = 0
+      TabOrder = 7
+      Wrap = False
     end
     object udWidth: TUpDown
-      Left = 336
-      Height = 21
+      Left = 361
+      Height = 23
       Top = 44
       Width = 12
-      TabOrder = 10
+      Associate = edWidth
+      Min = 0
       OnClick = UpDownClick
+      Position = 0
+      TabOrder = 9
+      Wrap = False
     end
   end
   object gbCaption: TGroupBox
     Left = 12
-    Height = 93
+    Height = 69
     Top = 316
-    Width = 357
+    Width = 388
     Caption = ' Caption '
-    ClientHeight = 73
-    ClientWidth = 353
-    TabOrder = 4
+    ClientHeight = 49
+    ClientWidth = 384
+    TabOrder = 6
     object lbCaptionText: TLabel
       Left = 16
       Height = 15
-      Top = 24
-      Width = 36
+      Top = 12
+      Width = 27
       Caption = 'Text: '
       ParentColor = False
     end
     object btnCaptionFont: TButton
-      Left = 24
+      Left = 312
       Height = 25
-      Top = 48
-      Width = 75
+      Top = 6
+      Width = 67
       Caption = 'Font...'
       OnClick = btnCaptionFontClick
       TabOrder = 1
     end
     object edCaptionText: TEdit
       Left = 52
-      Height = 21
-      Top = 20
-      Width = 293
+      Height = 23
+      Top = 8
+      Width = 253
       OnChange = edCaptionTextChange
       TabOrder = 0
     end
   end
   object edOffset: TEdit
     Left = 20
-    Height = 21
+    Height = 23
     Top = 156
     Width = 54
-    OnKeyDown = nil
-    TabOrder = 8
+    TabOrder = 2
     Text = '0'
   end
   object udOffset: TUpDown
     Left = 74
-    Height = 21
+    Height = 23
     Top = 156
     Width = 11
     Associate = edOffset
-    TabOrder = 9
+    Min = 0
+    Position = 0
+    TabOrder = 4
+    Wrap = False
   end
   object FontDialog1: TFontDialog
     Font.Height = -11
     Font.Name = 'MS Sans Serif'
-    left = 4
-    top = 308
+    MinFontSize = 0
+    MaxFontSize = 0
+    left = 176
+    top = 296
   end
 end

@@ -9,14 +9,12 @@ object frmEditShape: TfrmEditShape
   Caption = 'Edit Shape'
   ClientHeight = 314
   ClientWidth = 363
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
   OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '1.7'
   object rgShapeType: TRadioGroup
     Left = 8
-    Height = 84
+    Height = 88
     Top = 8
     Width = 345
     AutoFill = True
@@ -29,7 +27,7 @@ object frmEditShape: TfrmEditShape
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 3
-    ClientHeight = 66
+    ClientHeight = 68
     ClientWidth = 341
     Columns = 3
     ItemIndex = 0
@@ -67,26 +65,26 @@ object frmEditShape: TfrmEditShape
   end
   object gbBrush: TGroupBox
     Left = 188
-    Height = 165
-    Top = 92
+    Height = 158
+    Top = 100
     Width = 165
     Caption = ' Brush '
-    ClientHeight = 147
+    ClientHeight = 138
     ClientWidth = 161
     TabOrder = 2
     object Label1: TLabel
       Left = 6
-      Height = 13
-      Top = 112
-      Width = 26
+      Height = 15
+      Top = 111
+      Width = 28
       Caption = 'Style:'
       ParentColor = False
     end
     object cbBrushStyle: TComboBox
-      Left = 42
+      Left = 48
       Height = 22
       Top = 108
-      Width = 97
+      Width = 99
       ItemHeight = 16
       OnDrawItem = cbBrushStyleDrawItem
       Style = csOwnerDrawFixed
@@ -104,49 +102,49 @@ object frmEditShape: TfrmEditShape
     TabOrder = 1
     object Label2: TLabel
       Left = 8
-      Height = 13
-      Top = 104
-      Width = 26
+      Height = 15
+      Top = 103
+      Width = 28
       Caption = 'Style:'
       ParentColor = False
     end
     object Label3: TLabel
       Left = 8
-      Height = 13
+      Height = 15
       Top = 132
-      Width = 31
+      Width = 35
       Caption = 'Width:'
       ParentColor = False
     end
     object Label4: TLabel
       Left = 8
-      Height = 13
+      Height = 15
       Top = 160
-      Width = 30
+      Width = 34
       Caption = 'Mode:'
       ParentColor = False
     end
     object cbPenStyle: TComboBox
-      Left = 44
-      Height = 19
+      Left = 52
+      Height = 22
       Top = 100
-      Width = 105
-      ItemHeight = 13
+      Width = 97
+      ItemHeight = 16
       OnDrawItem = cbPenStyleDrawItem
       Style = csOwnerDrawFixed
       TabOrder = 0
     end
     object cbPenMode: TComboBox
-      Left = 44
+      Left = 52
       Height = 21
       Top = 156
-      Width = 105
-      ItemHeight = 13
+      Width = 97
+      ItemHeight = 15
       TabOrder = 1
     end
     object udPenWidth: TUpDown
       Left = 98
-      Height = 21
+      Height = 23
       Top = 128
       Width = 11
       Associate = edPenWidth
@@ -156,10 +154,10 @@ object frmEditShape: TfrmEditShape
       Wrap = False
     end
     object edPenWidth: TEdit
-      Left = 44
-      Height = 21
+      Left = 52
+      Height = 23
       Top = 128
-      Width = 54
+      Width = 46
       TabOrder = 2
       Text = '0'
     end

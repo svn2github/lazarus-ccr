@@ -10,8 +10,6 @@ object ResEditForm: TResEditForm
   ClientWidth = 400
   Constraints.MinHeight = 250
   Constraints.MinWidth = 400
-  Font.Height = -11
-  Font.Name = 'Default'
   OnCreate = FormCreate
   OnShow = FormShow
   LCLVersion = '1.7'
@@ -66,17 +64,17 @@ object ResEditForm: TResEditForm
       ClientWidth = 392
       object lblDescription: TLabel
         Left = 8
-        Height = 14
+        Height = 15
         Top = 24
-        Width = 57
+        Width = 63
         Caption = 'Description:'
         ParentColor = False
       end
       object lblNotes: TLabel
         Left = 8
-        Height = 14
+        Height = 15
         Top = 47
-        Width = 31
+        Width = 34
         Caption = 'Notes:'
         ParentColor = False
       end
@@ -114,7 +112,7 @@ object ResEditForm: TResEditForm
       end
       object DescriptionEdit: TEdit
         Left = 80
-        Height = 22
+        Height = 23
         Top = 20
         Width = 257
         Anchors = [akTop, akLeft, akRight]

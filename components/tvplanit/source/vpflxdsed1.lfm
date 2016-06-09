@@ -1,33 +1,31 @@
 object frmFieldMapper: TfrmFieldMapper
   Left = 281
-  Height = 537
+  Height = 533
   Top = 112
   Width = 409
   HorzScrollBar.Page = 408
   VertScrollBar.Page = 536
   BorderStyle = bsToolWindow
   Caption = 'FlexDataStore Field Mapping Designer'
-  ClientHeight = 537
+  ClientHeight = 533
   ClientWidth = 409
-  Font.Height = -11
-  Font.Name = 'Default'
   OnClose = FormClose
   OnShow = FormShow
   Position = poScreenCenter
   LCLVersion = '1.7'
   object Panel1: TPanel
     Left = 0
-    Height = 57
-    Top = 480
+    Height = 45
+    Top = 488
     Width = 409
     Align = alBottom
-    ClientHeight = 57
+    ClientHeight = 45
     ClientWidth = 409
     TabOrder = 1
     object Button2: TButton
       Left = 325
       Height = 25
-      Top = 16
+      Top = 8
       Width = 75
       Caption = 'Close'
       OnClick = Button2Click
@@ -36,7 +34,7 @@ object frmFieldMapper: TfrmFieldMapper
   end
   object PageControl1: TPageControl
     Left = 0
-    Height = 480
+    Height = 488
     Top = 0
     Width = 409
     ActivePage = TabSheet1
@@ -45,7 +43,7 @@ object frmFieldMapper: TfrmFieldMapper
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Field Mapping Designer'
-      ClientHeight = 453
+      ClientHeight = 460
       ClientWidth = 401
       object Bevel1: TBevel
         Left = 5
@@ -54,34 +52,34 @@ object frmFieldMapper: TfrmFieldMapper
         Width = 390
       end
       object Label2: TLabel
-        Left = 10
-        Height = 14
+        Left = 11
+        Height = 15
         Top = 36
-        Width = 118
+        Width = 126
         Caption = 'Available Dataset Fields:'
         ParentColor = False
       end
       object Label5: TLabel
         Left = 35
-        Height = 14
+        Height = 15
         Top = 329
-        Width = 74
+        Width = 84
         Caption = 'Field Mappings:'
         ParentColor = False
       end
       object Label6: TLabel
         Left = 242
-        Height = 14
+        Height = 15
         Top = 36
-        Width = 139
+        Width = 151
         Caption = 'Available Visual PlanIt Fields:'
         ParentColor = False
       end
       object Label1: TLabel
-        Left = 12
-        Height = 14
+        Left = 11
+        Height = 15
         Top = 13
-        Width = 40
+        Width = 42
         Caption = 'Dataset:'
         ParentColor = False
       end
@@ -119,18 +117,18 @@ object frmFieldMapper: TfrmFieldMapper
         Left = 259
         Height = 25
         Top = 349
-        Width = 97
+        Width = 109
         Caption = 'Delete Mapping'
         Enabled = False
         OnClick = btnDeleteMappingClick
         TabOrder = 5
       end
       object DatasetCombo: TComboBox
-        Left = 56
+        Left = 64
         Height = 22
         Top = 10
         Width = 145
-        ItemHeight = 14
+        ItemHeight = 15
         OnChange = DatasetComboChange
         TabOrder = 0
         Text = 'DatasetCombo'
@@ -140,7 +138,7 @@ object frmFieldMapper: TfrmFieldMapper
         Height = 49
         Top = 136
         Width = 69
-        Caption = 'Add Field Mapping'
+        Caption = 'Add'
         Enabled = False
         OnClick = btnAddMappingClick
         TabOrder = 2
@@ -149,7 +147,7 @@ object frmFieldMapper: TfrmFieldMapper
         Left = 259
         Height = 25
         Top = 381
-        Width = 97
+        Width = 109
         Caption = 'Clear All '
         Enabled = False
         OnClick = btnClearMappingsClick

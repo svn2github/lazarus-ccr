@@ -1,67 +1,66 @@
 object frmEditFormat: TfrmEditFormat
   Left = 403
-  Height = 189
+  Height = 199
   Top = 199
   Width = 329
   HorzScrollBar.Page = 328
   VertScrollBar.Page = 188
   BorderStyle = bsDialog
   Caption = 'Edit Format'
-  ClientHeight = 189
+  ClientHeight = 199
   ClientWidth = 329
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
   OnShow = FormShow
   Position = poScreenCenter
+  LCLVersion = '1.7'
   object Label1: TLabel
-    Left = 12
+    Left = 16
     Height = 15
     Top = 76
-    Width = 99
+    Width = 80
     Caption = 'Day Increment:'
     ParentColor = False
   end
   object Label2: TLabel
-    Left = 12
+    Left = 16
     Height = 15
     Top = 44
-    Width = 81
+    Width = 66
     Caption = 'Description: '
     ParentColor = False
   end
   object Label3: TLabel
-    Left = 12
+    Left = 16
     Height = 15
     Top = 16
-    Width = 48
+    Width = 38
     Caption = 'Name: '
     ParentColor = False
   end
   object btnOk: TButton
-    Left = 160
+    Left = 157
     Height = 25
-    Top = 156
+    Top = 164
     Width = 75
     Caption = 'OK'
     Default = True
     OnClick = btnOkClick
-    TabOrder = 3
+    TabOrder = 5
   end
   object btnCancel: TButton
-    Left = 240
+    Left = 237
     Height = 25
-    Top = 156
+    Top = 164
     Width = 75
     Cancel = True
     Caption = 'Cancel'
     OnClick = btnCancelClick
-    TabOrder = 4
+    TabOrder = 6
   end
   object rgDayIncrement: TRadioGroup
     Left = 16
-    Height = 37
+    Height = 48
     Top = 104
-    Width = 293
+    Width = 296
     AutoFill = True
     Caption = ' Day Increment Unit '
     ChildSizing.LeftRightSpacing = 6
@@ -72,8 +71,8 @@ object frmEditFormat: TfrmEditFormat
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 4
-    ClientHeight = 17
-    ClientWidth = 289
+    ClientHeight = 28
+    ClientWidth = 292
     Columns = 4
     ItemIndex = 0
     Items.Strings = (
@@ -82,38 +81,40 @@ object frmEditFormat: TfrmEditFormat
       'Month'
       'Year'
     )
-    TabOrder = 2
+    TabOrder = 4
   end
   object edDescription: TEdit
-    Left = 80
-    Height = 21
+    Left = 88
+    Height = 23
     Top = 40
-    Width = 241
+    Width = 224
     TabOrder = 1
   end
   object edName: TEdit
-    Left = 56
-    Height = 21
+    Left = 64
+    Height = 23
     Top = 12
-    Width = 265
+    Width = 248
     TabOrder = 0
   end
   object udIncrement: TUpDown
-    Left = 150
-    Height = 21
+    Left = 158
+    Height = 23
     Top = 72
     Width = 16
     Associate = edIncrement
     Max = 365
-    TabOrder = 5
+    Min = 0
+    Position = 0
+    TabOrder = 3
+    Wrap = False
   end
   object edIncrement: TEdit
-    Left = 96
-    Height = 21
+    Left = 104
+    Height = 23
     Top = 72
     Width = 54
-    OnKeyDown = nil
-    TabOrder = 6
+    TabOrder = 2
     Text = '0'
   end
 end

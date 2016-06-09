@@ -9,14 +9,15 @@ object FrmSoundDialog: TFrmSoundDialog
   Caption = 'FrmSoundDialog'
   ClientHeight = 262
   ClientWidth = 402
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
   KeyPreview = True
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   Position = poScreenCenter
+  LCLVersion = '1.7'
   object PageControl1: TPageControl
+    Left = 0
     Height = 262
+    Top = 0
     Width = 402
     TabStop = False
     ActivePage = TabSheet1
@@ -32,7 +33,6 @@ object FrmSoundDialog: TFrmSoundDialog
         Height = 22
         Top = 163
         Width = 26
-        Color = clBtnFace
         Glyph.Data = {
           DE010000424DDE01000000000000760000002800000024000000120000000100
           0400000000006801000000000000000000001000000010000000000000000000
@@ -60,7 +60,7 @@ object FrmSoundDialog: TFrmSoundDialog
         Top = 29
         Width = 185
         Directory = 'D:\lazarus'
-        ItemHeight = 13
+        ItemHeight = 0
         Mask = '*.wav'
         OnChange = FileListBox1Change
         TabOrder = 1
@@ -69,7 +69,7 @@ object FrmSoundDialog: TFrmSoundDialog
         Left = 204
         Height = 19
         Top = 5
-        Width = 74
+        Width = 73
         Caption = 'CBDefault'
         OnClick = CBDefaultClick
         TabOrder = 0
@@ -82,7 +82,7 @@ object FrmSoundDialog: TFrmSoundDialog
         Caption = 'OkBtn'
         Default = True
         OnClick = OkBtnClick
-        TabOrder = 3
+        TabOrder = 2
       end
       object CancelBtn: TButton
         Left = 308
@@ -91,7 +91,7 @@ object FrmSoundDialog: TFrmSoundDialog
         Width = 75
         Caption = 'CancelBtn'
         OnClick = CancelBtnClick
-        TabOrder = 2
+        TabOrder = 3
       end
     end
   end
