@@ -1644,9 +1644,9 @@ begin
 
     { Load this resource's events into memory }
     with EventsTable do begin
-    SetFilterCriteria(EventsTable, True, Resource.ResourceID,
-                      TimeRange.StartTime,
-                      TimeRange.EndTime);
+      SetFilterCriteria(EventsTable, True, Resource.ResourceID,
+                        TimeRange.StartTime,
+                        TimeRange.EndTime);
       First;
 
       while not EventsTable.EOF  do
@@ -1795,7 +1795,9 @@ procedure TVpCustomDBDataStore.SetFilterCriteria(aTable : TDataset;
   aUseDateTime : Boolean; aResourceID : Integer; aStartDateTime : TDateTime;
       aEndDateTime : TDateTime);
 begin
-  // error here. Could it be that it does not recognise StartTime and EndTime
+  // error here: "... raised an exception class 'EDatabaseError' with message:
+  //              Index based on unknown field '>='.".
+  // Could it be that it does not recognise StartTime and EndTime
   // (because they are not mapped?)
   // however StartTime + EndTime are only found in events not tasks
 
@@ -1812,13 +1814,15 @@ begin
   aTable.Filter := Format('ResourceID = %d', [aResourceID]);
   aTable.Filtered := true;
 end;
-(*
+                         (*
 procedure TVpCustomDBDataStore.SetFilterCriteria(aTable : TDataset;
   aUseDateTime : Boolean; aResourceID : Integer; aStartDateTime : TDateTime;
-      aEndDateTime : TDateTime);
+  aEndDateTime : TDateTime);
+var
+  filter: String;
 begin
   if aUseDateTime then
-    aTable.Filter := Format('ResourceID = %d '
+    filter := Format('ResourceID = %d '
       + 'and (( (StartTime >= %s) and (EndTime <= %s) ) '             
       + '     or ( (RepeatCode > 0) and (%s <= RepeatRangeEnd) ))',   
       [aResourceID,
@@ -1826,9 +1830,10 @@ begin
        QuotedStr(FormatDateTime('c', aEndDateTime)),
        QuotedStr(FormatDateTime('c', aStartDateTime))])
   else
-    aTable.Filter := Format('ResourceID = %d', [aResourceID]);
+    filter := Format('ResourceID = %d', [aResourceID]);
+  aTable.Filter := filter;
   aTable.Filtered := true;
-end;*)
+end;                       *)
 {=====}
 
 end.
