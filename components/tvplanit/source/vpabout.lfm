@@ -2,13 +2,13 @@ object frmAbout: TfrmAbout
   Left = 282
   Height = 312
   Top = 205
-  Width = 471
+  Width = 502
   HorzScrollBar.Page = 470
   VertScrollBar.Page = 311
   BorderStyle = bsDialog
   Caption = 'About Visual PlanIt'
   ClientHeight = 312
-  ClientWidth = 471
+  ClientWidth = 502
   OnActivate = FormActivate
   OnMouseMove = FormMouseMove
   Position = poScreenCenter
@@ -17,14 +17,14 @@ object frmAbout: TfrmAbout
     Left = 152
     Height = 96
     Top = 160
-    Width = 305
+    Width = 344
     Shape = bsFrame
   end
   object Bevel2: TBevel
     Left = 6
     Height = 17
     Top = 265
-    Width = 451
+    Width = 490
     Shape = bsTopLine
   end
   object ProgramName: TLabel
@@ -58,14 +58,11 @@ object frmAbout: TfrmAbout
   object lblTurboLink: TLabel
     Cursor = crHandPoint
     Left = 161
-    Height = 14
+    Height = 15
     Top = 125
-    Width = 193
+    Width = 222
     Caption = 'http://sourceforge.net/projects/tpvplanit/'
     Font.Color = clBlue
-    Font.Height = -11
-    Font.Name = 'Default'
-    Font.Style = [fsUnderline]
     ParentColor = False
     ParentFont = False
     OnClick = lblTurboLinkClick
@@ -74,14 +71,11 @@ object frmAbout: TfrmAbout
   object lblHelp: TLabel
     Cursor = crHandPoint
     Left = 168
-    Height = 14
+    Height = 15
     Top = 198
-    Width = 278
+    Width = 315
     Caption = 'http://sourceforge.net/forum/forum.php?forum_id=241880'
     Font.Color = clBlue
-    Font.Height = -11
-    Font.Name = 'Default'
-    Font.Style = [fsUnderline]
     ParentColor = False
     ParentFont = False
     OnClick = lblHelpClick
@@ -106,14 +100,11 @@ object frmAbout: TfrmAbout
   object lblGeneralDiscussion: TLabel
     Cursor = crHandPoint
     Left = 168
-    Height = 14
+    Height = 15
     Top = 230
-    Width = 278
+    Width = 315
     Caption = 'http://sourceforge.net/forum/forum.php?forum_id=241879'
     Font.Color = clBlue
-    Font.Height = -11
-    Font.Name = 'Default'
-    Font.Style = [fsUnderline]
     ParentColor = False
     ParentFont = False
     OnClick = lblGeneralDiscussionClick
@@ -137,9 +128,9 @@ object frmAbout: TfrmAbout
   end
   object Label1: TLabel
     Left = 152
-    Height = 49
+    Height = 58
     Top = 40
-    Width = 265
+    Width = 336
     AutoSize = False
     Caption = 'Visual PlanIt was released under the Mozilla 1.1 license in January, 2003. The project is hosted on SourceForge at sourceforge.net/projects/tpvplanit.'
     ParentColor = False
@@ -1289,7 +1280,7 @@ object frmAbout: TfrmAbout
     end
   end
   object OKButton: TButton
-    Left = 380
+    Left = 416
     Height = 25
     Top = 277
     Width = 75

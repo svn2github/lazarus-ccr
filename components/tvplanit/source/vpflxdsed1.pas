@@ -246,7 +246,6 @@ var
   ErrorStr: string;
 begin
   ErrorStr := '';
-  btnAddMapping.Caption := 'Add Field'#13#10'Mapping';
 
   DSResActive := false;
   DSEventActive := false;

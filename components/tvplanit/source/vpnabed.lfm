@@ -1,12 +1,12 @@
 object frmNavBarEd: TfrmNavBarEd
   Left = 374
-  Height = 326
+  Height = 344
   Top = 236
   Width = 426
   HorzScrollBar.Page = 425
   VertScrollBar.Page = 322
   Caption = 'Nav Bar Layout Tool'
-  ClientHeight = 326
+  ClientHeight = 344
   ClientWidth = 426
   FormStyle = fsStayOnTop
   OnClose = FormClose
@@ -16,18 +16,19 @@ object frmNavBarEd: TfrmNavBarEd
   LCLVersion = '1.7'
   object pnlItems: TPanel
     Left = 217
-    Height = 224
+    Height = 226
     Top = 0
     Width = 209
     Align = alClient
-    ClientHeight = 224
+    BevelOuter = bvNone
+    ClientHeight = 226
     ClientWidth = 209
     TabOrder = 1
     object lbItems: TListBox
-      Left = 1
-      Height = 199
-      Top = 24
-      Width = 175
+      Left = 0
+      Height = 203
+      Top = 23
+      Width = 173
       Align = alClient
       ItemHeight = 13
       OnClick = lbItemsClick
@@ -36,13 +37,14 @@ object frmNavBarEd: TfrmNavBarEd
       TabOrder = 1
     end
     object Panel1: TPanel
-      Left = 176
-      Height = 199
-      Top = 24
+      Left = 173
+      Height = 203
+      Top = 23
       Width = 32
       Align = alRight
+      BorderSpacing.Right = 4
       BevelOuter = bvNone
-      ClientHeight = 199
+      ClientHeight = 203
       ClientWidth = 32
       TabOrder = 2
       object btnItemAdd: TSpeedButton
@@ -135,17 +137,17 @@ object frmNavBarEd: TfrmNavBarEd
       end
     end
     object Panel4: TPanel
-      Left = 1
+      Left = 0
       Height = 23
-      Top = 1
-      Width = 207
+      Top = 0
+      Width = 209
       Align = alTop
       BevelOuter = bvNone
       ClientHeight = 23
-      ClientWidth = 207
+      ClientWidth = 209
       TabOrder = 0
       object Label2: TLabel
-        Left = 4
+        Left = 0
         Height = 15
         Top = 4
         Width = 62
@@ -157,32 +159,34 @@ object frmNavBarEd: TfrmNavBarEd
   end
   object pnlFolders: TPanel
     Left = 0
-    Height = 224
+    Height = 226
     Top = 0
     Width = 217
     Align = alLeft
-    ClientHeight = 224
+    BevelOuter = bvNone
+    ClientHeight = 226
     ClientWidth = 217
     TabOrder = 0
     object lbFolders: TListBox
-      Left = 1
-      Height = 199
-      Top = 24
-      Width = 183
+      Left = 4
+      Height = 203
+      Top = 23
+      Width = 181
       Align = alClient
+      BorderSpacing.Left = 4
       ItemHeight = 0
       OnClick = lbFoldersClick
       TabOrder = 1
     end
     object Panel6: TPanel
-      Left = 1
+      Left = 0
       Height = 23
-      Top = 1
-      Width = 215
+      Top = 0
+      Width = 217
       Align = alTop
       BevelOuter = bvNone
       ClientHeight = 23
-      ClientWidth = 215
+      ClientWidth = 217
       TabOrder = 0
       object Label1: TLabel
         Left = 4
@@ -195,13 +199,13 @@ object frmNavBarEd: TfrmNavBarEd
       end
     end
     object Panel5: TPanel
-      Left = 184
-      Height = 199
-      Top = 24
+      Left = 185
+      Height = 203
+      Top = 23
       Width = 32
       Align = alRight
       BevelOuter = bvNone
-      ClientHeight = 199
+      ClientHeight = 203
       ClientWidth = 32
       TabOrder = 2
       object btnFolderAdd: TSpeedButton
@@ -296,25 +300,26 @@ object frmNavBarEd: TfrmNavBarEd
   end
   object pnlImages: TPanel
     Left = 0
-    Height = 102
-    Top = 224
+    Height = 118
+    Top = 226
     Width = 426
     Align = alBottom
-    ClientHeight = 102
+    BevelOuter = bvNone
+    ClientHeight = 118
     ClientWidth = 426
     TabOrder = 2
     object Panel8: TPanel
-      Left = 1
+      Left = 0
       Height = 27
-      Top = 1
-      Width = 424
+      Top = 0
+      Width = 426
       Align = alTop
       BevelOuter = bvNone
       ClientHeight = 27
-      ClientWidth = 424
+      ClientWidth = 426
       TabOrder = 0
       object Label3: TLabel
-        Left = 8
+        Left = 4
         Height = 15
         Top = 8
         Width = 89
@@ -323,11 +328,14 @@ object frmNavBarEd: TfrmNavBarEd
       end
     end
     object lbImages: TListBox
-      Left = 1
-      Height = 73
-      Top = 28
-      Width = 424
+      Left = 4
+      Height = 87
+      Top = 27
+      Width = 418
       Align = alClient
+      BorderSpacing.Left = 4
+      BorderSpacing.Right = 4
+      BorderSpacing.Bottom = 4
       Columns = 10
       ItemHeight = 16
       OnClick = lbImagesClick

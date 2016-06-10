@@ -4,6 +4,7 @@
     <Name Value="laz_visualplanit"/>
     <Type Value="RunAndDesignTime"/>
     <AddToProjectUsesSection Value="True"/>
+    <Author Value="Original author: TurboPower Software"/>
     <CompilerOptions>
       <Version Value="11"/>
       <SearchPaths>
@@ -19,8 +20,19 @@
       </Parsing>
     </CompilerOptions>
     <Description Value="Lazarus Port of Turbo Power's VisualPlanIt components (designtime package)"/>
+    <License Value="The contents of these files are subject to the Mozilla Public License  Version 1.1 (the &quot;License&quot;); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.mozilla.org/MPL/.
+
+Software distributed under the License is distributed on an &quot;AS IS&quot; basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing rights and limitations under the License.   
+
+The Original Code is TurboPower Visual PlanIt.
+
+The Initial Developer of the Original Code is TurboPower Software.
+
+Portions created by TurboPower Software Inc. are Copyright (C) 2002 TurboPower Software Inc. All Rights Reserved. 
+
+Contributor(s): "/>
     <Version Major="1" Release="4"/>
-    <Files Count="2">
+    <Files Count="6">
       <Item1>
         <Filename Value="../source/vpabout.pas"/>
         <UnitName Value="VpAbout"/>
@@ -30,6 +42,22 @@
         <HasRegisterProc Value="True"/>
         <UnitName Value="VpReg"/>
       </Item2>
+      <Item3>
+        <Filename Value="../source/vpflxdsed1.lfm"/>
+        <Type Value="LFM"/>
+      </Item3>
+      <Item4>
+        <Filename Value="../source/vpflxdsed1.pas"/>
+        <UnitName Value="VpFlxDsEd1"/>
+      </Item4>
+      <Item5>
+        <Filename Value="../source/vpnabed.lfm"/>
+        <Type Value="LFM"/>
+      </Item5>
+      <Item6>
+        <Filename Value="../source/vpnabed.pas"/>
+        <UnitName Value="VpNabEd"/>
+      </Item6>
     </Files>
     <i18n>
       <EnableI18N Value="True"/>
