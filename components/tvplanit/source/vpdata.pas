@@ -259,6 +259,7 @@ type
     property Category : Integer read FCategory write SetCategory;
     property AlarmSet : Boolean read FAlarmSet write SetAlarmSet;
     property AlarmAdv : Integer read FAlarmAdv write SetAlarmAdv;
+    property Location: string read FLocation write FLocation;
     property Loading : Boolean read FLoading write FLoading;
     { 0=Minutes, 1=Hours, 2=Days   }
     property AlarmAdvType : TVpAlarmAdvType read FAlarmAdvType write SetAlarmAdvType;
@@ -271,7 +272,6 @@ type
     { is Zero if IntervalCode <> 7      }
     property CustInterval : Integer read FCustInterval write SetCustInterval;
     property Owner: TVpSchedule read FOwner;
-    property Location: string read FLocation write FLocation;
     { Reserved for your use }
     property UserField0: string read FUserField0 write FUserField0;
     property UserField1: string read FUserField1 write FUserField1;

@@ -332,7 +332,7 @@ begin
     VpFieldLB.Items.Add('Description');
     VpFieldLB.Items.Add('Notes');
     VpFieldLB.Items.Add('ImageIndex');
-    VpFieldLB.Items.Add('Active');
+    VpFieldLB.Items.Add('ResourceActive');
     VpFieldLB.Items.Add('UserField0');
     VpFieldLB.Items.Add('UserField1');
     VpFieldLB.Items.Add('UserField2');

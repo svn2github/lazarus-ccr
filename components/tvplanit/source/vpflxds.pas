@@ -469,7 +469,7 @@ begin
           if FN <> '' then
             Res.Notes := ResourceTable.FieldByName(FN).AsString;
 
-          FN := GetFieldName(FResourceMappings, 'Active');
+          FN := GetFieldName(FResourceMappings, 'ResourceActive');
           if FN <> '' then
             Res.Active := ResourceTable.FieldByName(FN).AsBoolean;
 
@@ -2049,9 +2049,33 @@ begin
 end;
 {=====}
 
+(* Original version:
+{ returns the name of the dataset field currently mapped to the   }
+{ specified internal Visual PlanIt field. If not field is mapped, }
+{ then it returns an empty string                                 }
+function TVpFlexDataStore.GetFieldName(Mappings: TCollection;
+  VPField: string): string;
+var
+  I: integer;
+  FM: TVpFieldMapping;
+begin
+  I := 0;
+  result := '';
+  while (I < Mappings.Count)
+  and (result = '') do begin
+    FM := TVpFieldMapping(Mappings.Items[I]);
+    if Uppercase(FM.VPField) = Uppercase(VPField) then begin
+      result := FM.DBField;
+      I := FResourceMappings.Count;
+    end;
+    Inc(I);
+  end;
+end;
+*)
+
 { returns the name of the dataset field currently mapped to the   }      
 { specified internal Visual PlanIt field. If not field is mapped, }      
-{ then it returns an empty string                                 }      
+{ then it returns the Visual PlanIt field name                    }
 function TVpFlexDataStore.GetFieldName(Mappings: TCollection;            
   VPField: string): string;                                              
 var                                                                      
@@ -2059,16 +2083,18 @@ var
   FM: TVpFieldMapping;                                                   
 begin                                                                    
   I := 0;                                                                
-  result := '';                                                          
-  while (I < Mappings.Count)                                             
-  and (result = '') do begin                                             
-    FM := TVpFieldMapping(Mappings.Items[I]);                            
-    if Uppercase(FM.VPField) = Uppercase(VPField) then begin             
-      result := FM.DBField;                                              
-      I := FResourceMappings.Count;                                      
-    end;                                                                 
-    Inc(I);                                                              
-  end;                                                                   
+  result := '';
+  if Mappings.Count = 0 then
+    Result := VpField
+  else
+    while (I < Mappings.Count) and (result = '') do begin
+      FM := TVpFieldMapping(Mappings.Items[I]);
+      if Uppercase(FM.VPField) = Uppercase(VPField) then begin
+        result := FM.DBField;
+        break;
+      end;
+      Inc(I);
+    end;
 end;                                                                     
 {=====}                                                                  
 

@@ -143,7 +143,7 @@ begin
       { Resource ID }
       with AddFieldDef do begin
         Name := 'ResourceID';
-        DataType := ftInteger;
+        DataType := ftAutoInc; //ftInteger;
         Required := true;
       end;
       { Description }
@@ -249,7 +249,7 @@ begin
       { Record ID }
       with AddFieldDef do begin
         Name := 'RecordID';
-        DataType := ftInteger;
+        DataType := ftAutoInc; //ftInteger;
         Required := true;
       end;
       { StartTime }
@@ -422,7 +422,7 @@ begin
       { Record ID }
       with AddFieldDef do begin
         Name := 'RecordID';
-        DataType := ftInteger;
+        DataType := ftAutoInc; //ftInteger;
         Required := true;
       end;
       { Resource ID }
@@ -703,7 +703,7 @@ begin
       { Record ID }
       with AddFieldDef do begin
         Name := 'RecordID';
-        DataType := ftInteger;
+        DataType := ftAutoInc; //ftInteger;
         Required := true;
       end;
       { Resource ID }
