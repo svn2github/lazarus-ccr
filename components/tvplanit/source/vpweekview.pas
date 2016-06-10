@@ -483,6 +483,7 @@ end;
 
 destructor TVpWeekView.Destroy;
 begin
+  FreeAndNil(wvInplaceEditor);
   FDayHeadAttributes.Free;
   FAllDayEventAttr.Free;
   FHeadAttr.Free;
@@ -1822,13 +1823,16 @@ begin
 
     if AllowIt then begin
       { create and spawn the in-place editor }
-      wvInPlaceEditor := TVpWvInPlaceEdit.Create(Self);
-      wvInPlaceEditor.Parent := self;
-      wvInPlaceEditor.OnExit := EndEdit;
+      if wvInplaceEditor = nil then begin
+        wvInPlaceEditor := TVpWvInPlaceEdit.Create(Self);
+        wvInPlaceEditor.Parent := self;
+        wvInPlaceEditor.OnExit := EndEdit;
+      end;
       wvInPlaceEditor.SetBounds(wvActiveEventRec.Left + TextMargin,
                                 wvActiveEventRec.Top,
                                 wvActiveEventRec.Right - (TextMargin*2),
                                 wvActiveEventRec.Bottom- (TextMargin*2));
+      wvInplaceEditor.Show;
       wvInPlaceEditor.Text := ActiveEvent.Description;
       Invalidate;
       wvInPlaceEditor.SetFocus;
@@ -1932,7 +1936,7 @@ end;
 
 procedure TVpWeekView.EndEdit(Sender: TObject);
 begin
-  if wvInPlaceEditor <> nil then begin
+  if (wvInPlaceEditor <> nil) and (ActiveEvent <> nil) then begin
     if wvInPlaceEditor.Text <> ActiveEvent.Description then begin
       ActiveEvent.Description := wvInPlaceEditor.Text;
       ActiveEvent.Changed := true;
@@ -1940,7 +1944,7 @@ begin
         FAfterEdit(self, ActiveEvent);
       DataStore.PostEvents;
     end;
-    FreeAndNil(wvInPlaceEditor);
+    wvInplaceEditor.Hide;
     Invalidate;
 //    SetFocus;
   end;
