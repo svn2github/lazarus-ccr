@@ -908,7 +908,7 @@ var
       if (LineRect.Top + Trunc(RowHeight * 0.5) <= RealBottom) then begin
         { if this is the selected task and we are not in edit mode, }
         { then set background selection                             }
-        if (Task = FActiveTask) and (tlInPlaceEditor = nil)
+        if (Task = FActiveTask) and ((tlInPlaceEditor = nil) or not tlInplaceEditor.Visible)
         and (not DisplayOnly) and Focused then begin     
           RenderCanvas.Brush.Color := BackgroundSelHighlight;
           RenderCanvas.FillRect(LineRect);
@@ -934,7 +934,7 @@ var
         end;
 
         { if this is the selected task, set highlight text color }
-        if (Task = FActiveTask) and (tlInPlaceEditor = nil)
+        if (Task = FActiveTask) and ((tlInPlaceEditor = nil) or not tlInplaceEditor.Visible)
         and (not DisplayOnly) and Focused then  
           RenderCanvas.Font.Color := ForegroundSelHighlight;
 
@@ -1217,7 +1217,7 @@ end;
 
 procedure TVpTaskList.SetTaskIndex(Value: Integer);
 begin
-  if (tlInPlaceEditor <> nil) then
+  if (tlInPlaceEditor <> nil) and tlInplaceEditor.Visible then
     EndEdit(self);
 
   if (Value < DataStore.Resource.Tasks.Count)
@@ -1522,10 +1522,13 @@ begin
     R.Top := R.Top + TextMargin;
     R.Left := R.Left + TextMargin - 1;
     { create and spawn the in-place editor }
-    tlInPlaceEditor := TVpTLInPlaceEdit.Create(Self);
-    tlInPlaceEditor.Parent := self;
-    tlInPlaceEditor.OnExit := EndEdit;
-    tlInPlaceEditor.Move(R , true);
+    if tlInplaceEditor = nil then begin
+      tlInPlaceEditor := TVpTLInPlaceEdit.Create(Self);
+      tlInPlaceEditor.Parent := self;
+      tlInPlaceEditor.OnExit := EndEdit;
+    end;
+    tlInplaceEditor.Show;
+    tlInPlaceEditor.Move(R, true);
     tlInPlaceEditor.Text := FActiveTask.Description;
     tlInPlaceEditor.Font.Assign(Font);
     tlInPlaceEditor.SelectAll;
@@ -1536,7 +1539,7 @@ end;
 
 procedure TVpTaskList.EndEdit(Sender: TObject);
 begin
-  if tlInPlaceEditor <> nil then begin
+  if (tlInPlaceEditor <> nil) and tlInplaceEditor.Visible then begin
     if tlInPlaceEditor.Text <> FActiveTask.Description then begin
       FActiveTask.Description := tlInPlaceEditor.Text;
       FActiveTask.Changed := true;
@@ -1545,9 +1548,7 @@ begin
       if Assigned(FAfterEdit) then
         FAfterEdit(self, FActiveTask);
     end;
-
-    tlInPlaceEditor.Free;
-    tlInPlaceEditor := nil;
+    tlInPlaceEditor.Hide;
     SetFocus;
     Invalidate;
   end;
@@ -1631,7 +1632,7 @@ procedure TVpTaskList.WMVScroll(var Msg: TLMVScroll);
 begin
   { for simplicity, bail out of editing while scrolling. }
   EndEdit(Self);
-  if tlInPlaceEditor <> nil then Exit;
+  if (tlInPlaceEditor <> nil) and tlInplaceEditor.Visible then Exit;
 
   case Msg.ScrollCode of
     SB_LINEUP        :
