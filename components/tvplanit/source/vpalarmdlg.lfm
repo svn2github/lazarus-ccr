@@ -12,6 +12,7 @@ object AlarmNotifyForm: TAlarmNotifyForm
   ClientWidth = 410
   Color = clWindow
   KeyPreview = True
+  OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   Position = poDefault
@@ -20,7 +21,7 @@ object AlarmNotifyForm: TAlarmNotifyForm
     Left = 24
     Height = 57
     Top = 136
-    Width = 112
+    Width = 144
     AutoSize = False
     Caption = 'SnoozeCaption'
     ParentColor = False
@@ -35,16 +36,6 @@ object AlarmNotifyForm: TAlarmNotifyForm
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
-  end
-  object lNotes: TLabel
-    Left = 24
-    Height = 64
-    Top = 64
-    Width = 368
-    AutoSize = False
-    Caption = 'lNotes'
-    ParentColor = False
-    WordWrap = True
   end
   object lTime: TLabel
     Left = 24
@@ -83,10 +74,10 @@ object AlarmNotifyForm: TAlarmNotifyForm
     TabOrder = 2
   end
   object SnoozeCombo: TComboBox
-    Left = 144
+    Left = 176
     Height = 23
     Top = 136
-    Width = 144
+    Width = 112
     ItemHeight = 15
     Items.Strings = (
       '5 Minutes'
@@ -114,6 +105,28 @@ object AlarmNotifyForm: TAlarmNotifyForm
     ParentColor = True
     Style = csDropDownList
     TabOrder = 3
+  end
+  object Panel1: TPanel
+    Left = 24
+    Height = 72
+    Top = 56
+    Width = 371
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ClientHeight = 72
+    ClientWidth = 371
+    TabOrder = 4
+    object lNotes: TLabel
+      Left = 2
+      Height = 68
+      Top = 2
+      Width = 367
+      Align = alClient
+      AutoSize = False
+      Caption = 'lNotes'
+      ParentColor = False
+      WordWrap = True
+    end
   end
   object EventDialog: TVpEventEditDialog
     Version = 'v1.03'

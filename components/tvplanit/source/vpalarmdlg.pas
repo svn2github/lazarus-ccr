@@ -56,9 +56,11 @@ type
     lSubject: TLabel;
     lNotes: TLabel;
     OpenItemBtn: TButton;
+    Panel1: TPanel;
     SnoozeBtn: TButton;
     SnoozeCaption: TLabel;
     SnoozeCombo: TComboBox;
+    procedure FormCreate(Sender: TObject);
     procedure SnoozeComboChange(Sender: TObject);
     procedure SnoozeBtnClick(Sender: TObject);
     procedure DismissBtnClick(Sender: TObject);
@@ -167,12 +169,28 @@ begin
       + ShortTimeFormat, Event.StartTime);
 
     SnoozeCombo.Items.Clear;
+    SnoozeCombo.Items.Add(RS1Minute);
+    SnoozeCombo.Items.Add(Format(RSXMinutes, [5]));
+    SnoozeCombo.Items.Add(Format(RSXMinutes, [10]));
+    SnoozeCombo.Items.Add(Format(RSXMinutes, [15]));
+    SnoozeCombo.Items.Add(Format(RSXMinutes, [30]));
+    SnoozeCombo.Items.Add(Format(RSXMinutes, [45]));
+    {
     SnoozeCombo.Items.Add(RS5Minutes);
     SnoozeCombo.Items.Add(RS10Minutes);
     SnoozeCombo.Items.Add(RS15Minutes);
     SnoozeCombo.Items.Add(RS30Minutes);
     SnoozeCombo.Items.Add(RS45Minutes);
+    }
     SnoozeCombo.Items.Add(RS1Hour);
+    SnoozeCombo.Items.Add(Format(RSXHours, [2]));
+    SnoozeCombo.Items.Add(Format(RSXHours, [3]));
+    SnoozeCombo.Items.Add(Format(RSXHours, [4]));
+    SnoozeCombo.Items.Add(Format(RSXHours, [5]));
+    SnoozeCombo.Items.Add(Format(RSXHours, [6]));
+    SnoozeCombo.Items.Add(Format(RSXHours, [7]));
+    SnoozeCombo.Items.Add(Format(RSXHours, [8]));
+    {
     SnoozeCombo.Items.Add(RS2Hours);
     SnoozeCombo.Items.Add(RS3Hours);
     SnoozeCombo.Items.Add(RS4Hours);
@@ -180,12 +198,20 @@ begin
     SnoozeCombo.Items.Add(RS6Hours);
     SnoozeCombo.Items.Add(RS7Hours);
     SnoozeCombo.Items.Add(RS8Hours);
-    SnoozeCombo.Items.Add(RS1Days);
+    }
+    SnoozeCombo.Items.Add(RS1Day);
+    SnoozeCombo.Items.Add(Format(RSXDays, [2]));
+    SnoozeCombo.Items.Add(Format(RSXDays, [3]));
+    SnoozeCombo.Items.Add(Format(RSXDays, [4]));
+    SnoozeCombo.Items.Add(Format(RSXDays, [5]));
+    SnoozeCombo.Items.Add(Format(RSXDays, [6]));
+    {
     SnoozeCombo.Items.Add(RS2Days);
     SnoozeCombo.Items.Add(RS3Days);
     SnoozeCombo.Items.Add(RS4Days);
     SnoozeCombo.Items.Add(RS5Days);
     SnoozeCombo.Items.Add(RS6Days);
+    }
     SnoozeCombo.Items.Add(RS1Week);
     SnoozeCombo.ItemIndex := 0;
     SnoozeDelay := 5 / MinutesInDay;
@@ -198,26 +224,27 @@ end;
 procedure TAlarmNotifyForm.SnoozeComboChange(Sender: TObject);
 begin
   case SnoozeCombo.ItemIndex of
-    0 : SnoozeDelay :=  5  / MinutesInDay; { 5 minutes }
-    1 : SnoozeDelay := 10  / MinutesInDay; {10 Minutes }
-    2 : SnoozeDelay := 15  / MinutesInDay; {15 Minutes }
-    3 : SnoozeDelay := 30  / MinutesInDay; {30 Minutes }
-    4 : SnoozeDelay := 45  / MinutesInDay; {45 Minutes }
-    5 : SnoozeDelay := 60  / MinutesInDay; {1 Hour     }
-    6 : SnoozeDelay := 120 / MinutesInDay; {2 Hours    }
-    7 : SnoozeDelay := 180 / MinutesInDay; {3 Hours    }
-    8 : SnoozeDelay := 240 / MinutesInDay; {4 Hours    }
-    9 : SnoozeDelay := 300 / MinutesInDay; {5 Hours    }
-    10: SnoozeDelay := 360 / MinutesInDay; {6 Hours    }
-    11: SnoozeDelay := 420 / MinutesInDay; {7 Hours    }
-    12: SnoozeDelay := 480 / MinutesInDay; {8 Hours    }
-    13: SnoozeDelay := 1.0;                {1 day      }
-    14: SnoozeDelay := 2.0;                {2 day      }
-    15: SnoozeDelay := 3.0;                {3 day      }
-    16: SnoozeDelay := 4.0;                {4 day      }
-    17: SnoozeDelay := 5.0;                {5 day      }
-    18: SnoozeDelay := 6.0;                {6 day      }
-    19: SnoozeDelay := 7.0;                {1 week     }
+    0 : SnoozeDelay :=  1  / MinutesInDay; { 1 minute  }
+    1 : SnoozeDelay :=  5  / MinutesInDay; { 5 minutes }
+    2 : SnoozeDelay := 10  / MinutesInDay; {10 Minutes }
+    3 : SnoozeDelay := 15  / MinutesInDay; {15 Minutes }
+    4 : SnoozeDelay := 30  / MinutesInDay; {30 Minutes }
+    5 : SnoozeDelay := 45  / MinutesInDay; {45 Minutes }
+    6 : SnoozeDelay := 60  / MinutesInDay; {1 Hour     }
+    7 : SnoozeDelay := 120 / MinutesInDay; {2 Hours    }
+    8 : SnoozeDelay := 180 / MinutesInDay; {3 Hours    }
+    9 : SnoozeDelay := 240 / MinutesInDay; {4 Hours    }
+    10: SnoozeDelay := 300 / MinutesInDay; {5 Hours    }
+    11: SnoozeDelay := 360 / MinutesInDay; {6 Hours    }
+    12: SnoozeDelay := 420 / MinutesInDay; {7 Hours    }
+    13: SnoozeDelay := 480 / MinutesInDay; {8 Hours    }
+    14: SnoozeDelay := 1.0;                {1 day      }
+    15: SnoozeDelay := 2.0;                {2 day      }
+    16: SnoozeDelay := 3.0;                {3 day      }
+    17: SnoozeDelay := 4.0;                {4 day      }
+    18: SnoozeDelay := 5.0;                {5 day      }
+    19: SnoozeDelay := 6.0;                {6 day      }
+    20: SnoozeDelay := 7.0;                {1 week     }
   end;
 end;
 {=====}
@@ -252,6 +279,12 @@ begin
     end;
   Close;
 end;
+
+procedure TAlarmNotifyForm.FormCreate(Sender: TObject);
+begin
+  SnoozeCombo.Top := SnoozeBtn.Top + (SnoozeBtn.Height - SnoozeCombo.Height) div 2;
+end;
+
 {=====}
 
 procedure TAlarmNotifyForm.OpenItemBtnClick(Sender: TObject);

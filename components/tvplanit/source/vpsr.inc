@@ -243,6 +243,7 @@ resourcestring
   RSZipCodeLbl              = 'Zip Code:';
   RSCompanyLbl              = 'Company:';
   RSPositionLbl             = 'Position:';
+  RSMasterData              = 'Master data';
 
   { Print Preview dialog captions }
   RSDlgPrintPreview        = 'Print Preview';
@@ -265,6 +266,14 @@ resourcestring
   RSDismissBtn             = '&Dismiss';
   RSSnoozeBtn              = '&Snooze';
   RSOpenItemBtn            = '&Open Item';
+  RS1Minute                = '1 minute';
+  RSXMinutes               = '%d minutes';
+  RS1Hour                  = '1 hour';
+  RSXHours                 = '%d hours';
+  RS1Day                   = '1 day';
+  RSXDays                  = '%d days';
+  RS1Week                  = '1 week';
+  {
   RS5Minutes               = '5 Minutes';
   RS10Minutes              = '10 Minutes';
   RS15Minutes              = '15 Minutes';
@@ -285,6 +294,7 @@ resourcestring
   RS5Days                  = '5 Days';
   RS6Days                  = '6 Days';
   RS1Week                  = '1 Week';
+  }
 
   { Calendar }
   RSCalendarPrevMonth      = 'Previous Month';
@@ -415,3 +425,8 @@ resourcestring
                        'like to add one now?';                         {!!.01}
   RSSelectResource   = 'No resource has been selected. Would you ' +   {!!.01}
                        'like to select one now?';
+
+  { AboutBox }
+  RSBrowserError     = 'Unable to start web browser. Make sure you have ' +
+                       'it properly setup on your system.';
+

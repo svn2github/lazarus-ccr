@@ -1930,7 +1930,7 @@ begin
   else begin
     { Column sizing happens here...}
     { if the in-place editor is active then kill it. }
-    if cgInPlaceEditor.Visible then
+    if Assigned(cgInplaceEditor) and cgInPlaceEditor.Visible then
       EndEdit(self);
 
     if cgDragBarNumber = -1 then begin
@@ -2094,7 +2094,7 @@ procedure TVpContactGrid.WMKillFocus(var Msg : TWMKillFocus);
 procedure TVpContactGrid.WMKillFocus(var Msg : TLMKillFocus);
 {$ENDIF}
 begin
-  if not cgInplaceEditor.Visible then
+  if Assigned(cgInplaceEditor) and not cgInplaceEditor.Visible then
     Invalidate;
 end;
 {=====}
@@ -2539,7 +2539,7 @@ begin
 
   { for simplicity, bail out of editing while scrolling. }
   EndEdit(Self);
-  if cgInplaceEditor.Visible then
+  if Assigned(cgInplaceEditor) and cgInplaceEditor.Visible then
     Exit;
 
   case Msg.ScrollCode of

@@ -106,10 +106,7 @@ uses
 {$IFNDEF LCL}
   ShellAPI,
 {$ENDIF}
-  VpConst;
-
-resourcestring
-  cBrowserError = 'Unable to start web browser. Make sure you have it properly setup on your system.';
+  VpConst, VpSR;
 
 const
   TURBO_LINK_URL = 'http://sourceforge.net/projects/tpvplanit/';
@@ -174,7 +171,7 @@ begin
   if ShellExecute(0, 'open', TURBO_LINK_URL, '', '', SW_SHOWNORMAL) <= 32
 {$ENDIF}
   then
-    ShowMessage(cBrowserError);
+    ShowMessage(RSBrowserError);
 end;
 {=====}
 
@@ -204,7 +201,7 @@ begin
   if ShellExecute(0, 'open', HELP_URL, '', '', SW_SHOWNORMAL) <= 32
 {$ENDIF}
   then
-    ShowMessage(cBrowserError);
+    ShowMessage(RSBrowserError);
 end;
 {=====}
 
@@ -216,7 +213,7 @@ begin
   if ShellExecute(0, 'open', NEWS_SPECIFIC_URL, '', '', SW_SHOWNORMAL) <= 32
 {$ENDIF}
   then
-    ShowMessage(cBrowserError);
+    ShowMessage(RSBrowserError);
 end;
 {=====}
 
@@ -228,7 +225,7 @@ begin
   if ShellExecute(0, 'open', GENERAL_DISCUSSION_URL, '', '', SW_SHOWNORMAL) <= 32
 {$ENDIF}
   then
-    ShowMessage(cBrowserError);
+    ShowMessage(RSBrowserError);
 end;
 
 end.

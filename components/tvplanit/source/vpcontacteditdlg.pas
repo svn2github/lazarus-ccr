@@ -169,6 +169,11 @@ end;
 
 procedure TContactEditForm.SetCaptions;
 begin
+  tabMain.Caption := RSMasterData;
+  tabContact.Caption := RSDlgContactEdit;
+  tabCustom.Caption := RSCustom;
+  tabNotes.Caption := RSNotes;
+
   OkBtn.Caption := RSOKBtn;
   CancelBtn.Caption := RSCancelBtn;
   NameLbl.Caption := RSNameLbl;
@@ -500,7 +505,17 @@ begin
   else
     Height := MinFormHeight;
 
-  EMailLbl.Left := EMailEdit.Left - EMailLbl.Width;
+  EMailLbl.Left := EMailEdit.Left - GetLabelWidth(EMailLbl) - 8;
+
+  Custom1Edit.Left := CustomLbl4.Left + GetLabelWidth(CustomLbl4) + 8;
+  Custom2Edit.Left := Custom1Edit.Left;
+  Custom3Edit.Left := Custom1Edit.Left;
+  Custom4Edit.Left := Custom1Edit.Left;
+  Custom1Edit.Width := ClientWidth - 8 - Custom1Edit.Left - 8;
+  Custom2Edit.Width := Custom1Edit.Width;
+  Custom3Edit.Width := Custom1Edit.Width;
+  Custom4Edit.Width := Custom1Edit.Width;
+
 end;
 {=====}
 
