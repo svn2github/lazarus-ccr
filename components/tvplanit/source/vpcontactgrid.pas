@@ -344,10 +344,18 @@ begin
   with Loc do begin
     Margin := 0;
     if (Field = 'Address') or (Field = 'Company') or (Field ='CSZ') then
-      Margin := (TextMargin * 2);
+      Margin := TextMargin * 2;
+    SetBounds(
+      Left + Margin,
+      Top + TextMargin div 2,
+      Right - Left - TextMargin * 2,
+      Bottom - Top
+    );
+    (*
     SetWindowPos(Handle, HWND_TOP, Left + Margin,
       Top + (TextMargin div 2), Right - Left - TextMargin * 2, Bottom - Top,
       {SWP_SHOWWINDOW or} SWP_NOREDRAW);
+      *)
   end;
   if Redraw then Invalidate;
   SetFocus;
@@ -458,6 +466,8 @@ end;
 
 destructor TVpContactGrid.Destroy;
 begin
+  FreeAndNil(cgInplaceEditor);
+
   if (HandleAllocated) and
      (Assigned (DataStore)) and
      (not (csDesigning in ComponentState)) then
@@ -1920,7 +1930,7 @@ begin
   else begin
     { Column sizing happens here...}
     { if the in-place editor is active then kill it. }
-    if cgInPlaceEditor <> nil then
+    if cgInPlaceEditor.Visible then
       EndEdit(self);
 
     if cgDragBarNumber = -1 then begin
@@ -2084,7 +2094,7 @@ procedure TVpContactGrid.WMKillFocus(var Msg : TWMKillFocus);
 procedure TVpContactGrid.WMKillFocus(var Msg : TLMKillFocus);
 {$ENDIF}
 begin
-  if (cgInPlaceEditor = nil) then
+  if not cgInplaceEditor.Visible then
     Invalidate;
 end;
 {=====}
@@ -2219,9 +2229,12 @@ begin
 
           if field <> '' then begin
             { create and spawn the in-place editor }
-            cgInPlaceEditor := TVpCGInPlaceEdit.Create(Self);
-            cgInPlaceEditor.Parent := self;
-            cgInPlaceEditor.OnExit := EndEdit;
+            if cgInplaceEditor = nil then begin
+              cgInPlaceEditor := TVpCGInPlaceEdit.Create(Self);
+              cgInPlaceEditor.Parent := self;
+              cgInPlaceEditor.OnExit := EndEdit;
+            end;
+            cgInplaceEditor.Show;
 
             { edit address }
             if field = 'Address' then begin
@@ -2380,7 +2393,8 @@ begin
       end;
     end;
 
-    FreeAndNil(cgInPlaceEditor);
+    cgInplaceEditor.Hide;
+//    FreeAndNil(cgInPlaceEditor);
 
     if FActiveContact.Changed then begin
       DataStore.PostContacts;
@@ -2525,7 +2539,7 @@ begin
 
   { for simplicity, bail out of editing while scrolling. }
   EndEdit(Self);
-  if cgInPlaceEditor <> nil then
+  if cgInplaceEditor.Visible then
     Exit;
 
   case Msg.ScrollCode of
