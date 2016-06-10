@@ -345,17 +345,18 @@ begin
     Margin := 0;
     if (Field = 'Address') or (Field = 'Company') or (Field ='CSZ') then
       Margin := TextMargin * 2;
+   {$IFDEF LCL}
     SetBounds(
       Left + Margin,
       Top + TextMargin div 2,
       Right - Left - TextMargin * 2,
       Bottom - Top
     );
-    (*
+   {$ELSE}
     SetWindowPos(Handle, HWND_TOP, Left + Margin,
       Top + (TextMargin div 2), Right - Left - TextMargin * 2, Bottom - Top,
-      {SWP_SHOWWINDOW or} SWP_NOREDRAW);
-      *)
+      SWP_NOREDRAW);
+   {$ENDIF}
   end;
   if Redraw then Invalidate;
   SetFocus;
@@ -466,8 +467,6 @@ end;
 
 destructor TVpContactGrid.Destroy;
 begin
-  FreeAndNil(cgInplaceEditor);
-
   if (HandleAllocated) and
      (Assigned (DataStore)) and
      (not (csDesigning in ComponentState)) then
@@ -476,6 +475,8 @@ begin
   cgClickTimer.Free;
   FContactHeadAttr.Free;
   FDefaultPopup.Free;
+  FreeAndNil(cgInplaceEditor);
+
   inherited;
 end;
 {=====}

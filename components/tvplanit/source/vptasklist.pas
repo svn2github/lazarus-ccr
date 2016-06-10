@@ -110,7 +110,7 @@ type
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
   public
     constructor Create(AOwner: TComponent); override;
-    procedure Move(const Loc: TRect; Redraw: Boolean);
+//    procedure Move(const Loc: TRect; Redraw: Boolean);
   end;
 
   TVpTaskHeadAttr = class(TVpPersistent)
@@ -451,18 +451,16 @@ begin
   {$ENDIF}
 end;
 {=====}
-
+                           {
 procedure TVpTLInPlaceEdit.Move(const Loc: TRect; Redraw: Boolean);
 begin
   CreateHandle;
   Redraw := Redraw or not IsWindowVisible(Handle);
   Invalidate;
-  with Loc do
-    SetWindowPos(Handle, HWND_TOP, Left, Top, Right - Left, Bottom - Top,
-      {SWP_SHOWWINDOW or} SWP_NOREDRAW);
+  SetBounds(Loc.Left, Loc.Top, Loc.Right-Loc.Left, Loc.Bottom-Loc.Top);
   if Redraw then Invalidate;
   SetFocus;
-end;
+end;                        }
 {=====}
 
 procedure TVpTLInPlaceEdit.CreateParams(var Params: TCreateParams);
@@ -554,6 +552,7 @@ end;
 
 destructor TVpTaskList.Destroy;
 begin
+  FreeAndNil(tlInplaceEditor);
   tlClickTimer.Free;
   FDisplayOptions.Free;
   tlAllTaskList.Free;
@@ -1528,7 +1527,7 @@ begin
       tlInPlaceEditor.OnExit := EndEdit;
     end;
     tlInplaceEditor.Show;
-    tlInPlaceEditor.Move(R, true);
+    tlInPlaceEditor.SetBounds(R.Left, R.Top, R.Right-R.Left, R.Bottom-R.Top); //Move(R, true);
     tlInPlaceEditor.Text := FActiveTask.Description;
     tlInPlaceEditor.Font.Assign(Font);
     tlInPlaceEditor.SelectAll;
