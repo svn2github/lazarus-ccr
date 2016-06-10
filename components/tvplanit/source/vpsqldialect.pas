@@ -167,18 +167,18 @@ procedure TVPBaseSQLDialect.CreateTable(const aTableName: String;
 var
   j: Integer;
   Fields: String;
-  SQL: String;
+  lSQL: String;
   IDS: ISQLDataSet;
 begin
   for j := 0 to aFieldDefs.Count-1 do    // Iterate
     Fields:=Fields+SQLGetColumnDef(aFieldDefs[j])+', ';
 
-  SQL:=GetCreateSyntax;
-  SQL:=StringReplace(SQL, '%TableName%', aTableName, [rfIgnoreCase]);
-  SQL:=StringReplace(SQL, '%Fields%', copy(Fields,1,length(Fields)-2), [rfIgnoreCase]);
+  lSQL:=GetCreateSyntax;
+  lSQL:=StringReplace(SQL, '%TableName%', aTableName, [rfIgnoreCase]);
+  lSQL:=StringReplace(SQL, '%Fields%', copy(Fields,1,length(Fields)-2), [rfIgnoreCase]);
   fDataset.GetInterface(ISQLDataSet, ids);
   try
-    ids.iSQL:=SQL;
+    ids.iSQL:=lSQL;
     ids.IExecSQL;
   finally
     ids:=nil;
