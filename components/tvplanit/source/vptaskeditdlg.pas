@@ -105,6 +105,9 @@ type
 
 implementation
 
+uses
+  VpMisc;
+
 {$IFDEF LCL}
  {$R *.lfm}
 {$ELSE}
@@ -132,6 +135,7 @@ end;
 procedure TTaskEditForm.PopulateSelf;
 begin
   ResourceNameLbl.Caption := Resource.Description;
+  CompleteCB.Caption := RSTaskComplete;
   DueDateLbl.Caption := RSDueDate;
   OKBtn.Caption := RSOKBtn;
   CancelBtn.Caption := RSCancelBtn;
@@ -148,6 +152,8 @@ begin
   CompletedOnLbl.Visible := CompleteCB.Checked;
   CreatedOnLbl.Caption := RSCreatedOn + ' ' +
                           FormatDateTime(ShortDateFormat, Task.CreatedOn);
+
+  DueDateEdit.Left := DueDateLbl.Left + GetLabelWidth(DueDateLbl) + 8;
 end;
 {=====}
 

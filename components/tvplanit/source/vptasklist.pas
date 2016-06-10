@@ -902,6 +902,7 @@ var
       end;
     end;
 
+    RenderCanvas.Font.Assign(Font);
     for I := StartLine to pred(tlAllTaskList.Count) do begin
       Task := tlAllTaskList[I];
       if (LineRect.Top + Trunc(RowHeight * 0.5) <= RealBottom) then begin
@@ -996,15 +997,19 @@ var
     HeadRect.Bottom := RealTop + RenderCanvas.TextHeight ('YyGg0') +     
                        TextMargin * 2;                                   
     TPSFillRect (RenderCanvas, Angle, RenderIn, HeadRect);
+
     { draw the header cell borders }
     if FDrawingStyle = dsFlat then begin
       { draw an outer and inner bevel }
+
+      { wp: no bevel in flat style!
       HeadRect.Left := HeadRect.Left - 1;
       HeadRect.Top := HeadRect.Top - 1;
       DrawBevelRect (RenderCanvas,
                      TPSRotateRectangle (Angle, RenderIn, HeadRect),
                      BevelShadow,
                      BevelShadow);
+      }
     end else if FDrawingStyle = ds3d then begin
       { draw a 3d bevel }
       HeadRect.Right := HeadRect.Right - 1;
@@ -1034,7 +1039,8 @@ var
       finally
         Bmp.Free;
       end;
-    end;                                                                 
+    end;
+
     { draw the text }
     if ShowResourceName
     and (DataStore <> nil)

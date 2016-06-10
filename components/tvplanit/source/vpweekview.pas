@@ -1039,6 +1039,9 @@ var
     { draw the header cell and borders }
     if FDrawingStyle = dsFlat then begin
       { draw an outer and inner bevel }
+      HeadRect := Rect(RealLeft, RealTop, RealRight, RealTop + wvHeaderHeight + 2);
+      TPSFillRect(RenderCanvas, Angle, RenderIn, HeadRect);
+      { wp: above lines replace the next ones - no bevel in flat style!
       HeadRect.Left := RealLeft + 1;
       HeadRect.Top := RealTop + 1;
       HeadRect.Right := RealRight - 1;
@@ -1047,6 +1050,7 @@ var
       DrawBevelRect (RenderCanvas,
                      TPSRotateRectangle (Angle, RenderIn, HeadRect),
                      BevelHighlightColor, BevelShadowColor);
+      }
     end else if FDrawingStyle = ds3d then begin
       { draw a 3d bevel }
       HeadRect.Left := RealLeft + 2;

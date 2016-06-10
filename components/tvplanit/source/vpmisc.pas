@@ -39,7 +39,7 @@ uses
   {$ELSE}
   Windows, Consts,
   {$ENDIF}
-  Buttons, Classes, Controls, ExtCtrls, Forms, Graphics, Messages,
+  Buttons, Classes, Controls, StdCtrls, ExtCtrls, Forms, Graphics, Messages,
   SysUtils, VpBase, VpData, VpConst;
 
 type
@@ -126,6 +126,8 @@ function TimeInRange(Time, StartTime, EndTime: TDateTime;
 function LineToStartTime(Line: Integer; Granularity: TVpGranularity): TDateTime;
 
 function GetLineDuration(Granularity: TVpGranularity): Double;
+
+function GetLabelWidth(ALabel : TLabel) : Integer;
 
 implementation
 
@@ -575,5 +577,16 @@ begin
   result := result - trunc(result);
 end;
 {=====}
+
+function GetLabelWidth(ALabel : TLabel) : Integer;
+var
+  canvas: TControlCanvas;
+begin
+  canvas := TControlCanvas.Create;
+  canvas.Control := ALabel;
+  Result := canvas.TextWidth(ALabel.Caption);
+  canvas.Free;
+end;
+
 
 end.

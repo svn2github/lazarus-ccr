@@ -249,10 +249,6 @@ msgstr "Firma"
 msgid "Company:"
 msgstr "Firma:"
 
-#: vpsr.rscomplete
-msgid "Task complete"
-msgstr "Aufgabe fertiggestellt"
-
 #: vpsr.rscompletedon
 msgid "Completed on"
 msgstr "Fertiggestellt am"
@@ -426,6 +422,15 @@ msgstr "Ereignis"
 #: vpsr.rsdlgprintpreview
 msgid "Print Preview"
 msgstr "Druckvorschau"
+
+#: vpsr.rsdlgreseditcaption
+msgid "Resource Edit"
+msgstr "Ressource bearbeiten"
+
+#: vpsr.rsdlgreseditdescription
+msgctxt "vpsr.rsdlgreseditdescription"
+msgid "Description"
+msgstr "Beschreibung"
 
 #: vpsr.rsdlgtaskedit
 msgid "Task"
@@ -851,6 +856,10 @@ msgstr "Termin-Wiederholung:"
 msgid "Reminder"
 msgstr "Erinnerung"
 
+#: vpsr.rsresource
+msgid "Resource"
+msgstr "Ressource"
+
 #: vpsr.rssaturday
 msgid "Saturday"
 msgstr "Samstag"
@@ -899,6 +908,11 @@ msgstr "Sonntag"
 #: vpsr.rstallshortchars
 msgid "Wy"
 msgstr "Wy"
+
+#: vpsr.rstaskcomplete
+msgctxt "vpsr.rstaskcomplete"
+msgid "Task complete"
+msgstr "Aufgabe fertiggestellt"
 
 #: vpsr.rstaskpopupadd
 msgid "Add Task..."

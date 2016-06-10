@@ -74,7 +74,7 @@ object TaskEditForm: TTaskEditForm
     TabOrder = 0
     object tabTask: TTabSheet
       Caption = 'Task'
-      ClientHeight = 276
+      ClientHeight = 275
       ClientWidth = 539
       object DueDateLbl: TLabel
         Left = 52
@@ -94,7 +94,7 @@ object TaskEditForm: TTaskEditForm
         ParentColor = False
       end
       object CompletedOnLbl: TLabel
-        Left = 313
+        Left = 333
         Height = 15
         Top = 69
         Width = 79
@@ -227,7 +227,7 @@ object TaskEditForm: TTaskEditForm
         Transparent = True
       end
       object imgCompleted: TImage
-        Left = 272
+        Left = 290
         Height = 32
         Top = 38
         Width = 32
@@ -269,16 +269,16 @@ object TaskEditForm: TTaskEditForm
         Text = 'DescriptionEdit'
       end
       object CompleteCB: TCheckBox
-        Left = 313
+        Left = 333
         Height = 19
-        Top = 41
+        Top = 43
         Width = 72
         Caption = 'Complete'
         TabOrder = 2
       end
       object DetailsMemo: TMemo
         Left = 4
-        Height = 147
+        Height = 146
         Top = 96
         Width = 529
         Anchors = [akTop, akLeft, akRight, akBottom]

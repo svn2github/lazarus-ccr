@@ -252,10 +252,15 @@ resourcestring
   RSDlgTaskEdit            = 'Task';
   RSDueDate                = 'Due Date:';
   RSDetails                = 'Details:';
-  RSComplete               = 'Task complete';
+  RSTaskComplete           = 'Task complete';
   RSDaysOverdue            = ' Days overdue';
   RSCreatedOn              = 'Created on';
   RSCompletedOn            = 'Completed on';
+
+  { Resource Edit Dialog Captions }
+  RSDlgResEditCaption      = 'Resource Edit';
+  RSDlgResEditDescription  = 'Description';
+  RSResource               = 'Resource';
 
   { Reminder Dialog Captions}
   RSReminder               = 'Reminder';
@@ -273,28 +278,6 @@ resourcestring
   RS1Day                   = '1 day';
   RSXDays                  = '%d days';
   RS1Week                  = '1 week';
-  {
-  RS5Minutes               = '5 Minutes';
-  RS10Minutes              = '10 Minutes';
-  RS15Minutes              = '15 Minutes';
-  RS30Minutes              = '30 Minutes';
-  RS45Minutes              = '45 Minutes';
-  RS1Hour                  = '1 Hour';
-  RS2Hours                 = '2 Hours';
-  RS3Hours                 = '3 Hours';
-  RS4Hours                 = '4 Hours';
-  RS5Hours                 = '5 Hours';
-  RS6Hours                 = '6 Hours';
-  RS7Hours                 = '7 Hours';
-  RS8Hours                 = '8 Hours';
-  RS1Days                  = '1 Day';
-  RS2Days                  = '2 Days';
-  RS3Days                  = '3 Days';
-  RS4Days                  = '4 Days';
-  RS5Days                  = '5 Days';
-  RS6Days                  = '6 Days';
-  RS1Week                  = '1 Week';
-  }
 
   { Calendar }
   RSCalendarPrevMonth      = 'Previous Month';

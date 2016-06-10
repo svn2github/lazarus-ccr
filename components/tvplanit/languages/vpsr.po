@@ -239,10 +239,6 @@ msgstr ""
 msgid "Company:"
 msgstr ""
 
-#: vpsr.rscomplete
-msgid "Task complete"
-msgstr ""
-
 #: vpsr.rscompletedon
 msgid "Completed on"
 msgstr ""
@@ -415,6 +411,15 @@ msgstr ""
 
 #: vpsr.rsdlgprintpreview
 msgid "Print Preview"
+msgstr ""
+
+#: vpsr.rsdlgreseditcaption
+msgid "Resource Edit"
+msgstr ""
+
+#: vpsr.rsdlgreseditdescription
+msgctxt "vpsr.rsdlgreseditdescription"
+msgid "Description"
 msgstr ""
 
 #: vpsr.rsdlgtaskedit
@@ -841,6 +846,10 @@ msgstr ""
 msgid "Reminder"
 msgstr ""
 
+#: vpsr.rsresource
+msgid "Resource"
+msgstr ""
+
 #: vpsr.rssaturday
 msgid "Saturday"
 msgstr ""
@@ -888,6 +897,11 @@ msgstr ""
 
 #: vpsr.rstallshortchars
 msgid "Wy"
+msgstr ""
+
+#: vpsr.rstaskcomplete
+msgctxt "vpsr.rstaskcomplete"
+msgid "Task complete"
 msgstr ""
 
 #: vpsr.rstaskpopupadd

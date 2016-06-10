@@ -359,26 +359,6 @@ end;
 {=====}
 
 procedure TContactEditForm.ResizeControls;
-
-  function GetLabelWidth (ALabel : TLabel) : Integer;
-  var
-    OldFont : TFont;
-    
-  begin
-    OldFont := TFont.Create;
-    try
-      OldFont.Assign (Canvas.Font);
-      try
-        Canvas.Font.Assign (ALabel.Font);
-        Result := Canvas.TextWidth (ALabel.Caption);
-      finally
-        Canvas.Font.Assign (OldFont);
-      end;
-    finally
-      OldFont.Free;
-    end;
-  end;
-  
 const
   ComboArrowWidth  = 32;
   FieldVertSep     = 25;

@@ -98,6 +98,9 @@ implementation
   {$R *.dfm}
 {$ENDIF}
 
+uses
+  vpSR, vpMisc;
+
 function ExecuteResourceDlg(Resource: TVpResource): Boolean;
 var
   EditForm: TResEditForm;
@@ -196,6 +199,17 @@ procedure TResEditForm.PopulateSelf;
 begin
   DescriptionEdit.Text := Resource.Description;
   NotesMemo.Text := Resource.Notes;
+
+  Caption := RSDlgResEditCaption;
+  tabResource.Caption := RSResource;
+  lblDescription.Caption := RSDlgResEditDescription;
+  lblNotes.Caption := RSNotes;
+  OKBtn.Caption := RSOKBtn;
+  CancelBtn.Caption := RSCancelBtn;
+
+  DescriptionEdit.Left := lblDescription.Left + GetLabelWidth(lblDescription) + 8;
+  DescriptionEdit.Width := imgResources.Left - 16 - DescriptionEdit.Left;
+
 end;
 {=====}
 

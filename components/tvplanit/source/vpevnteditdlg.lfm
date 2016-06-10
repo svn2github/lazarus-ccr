@@ -39,10 +39,10 @@ object DlgEventEdit: TDlgEventEdit
       ParentFont = False
     end
     object OKBtn: TButton
-      Left = 509
+      Left = 528
       Height = 25
       Top = 8
-      Width = 85
+      Width = 75
       Anchors = [akTop, akRight]
       Caption = '&OK'
       Default = True
@@ -51,10 +51,10 @@ object DlgEventEdit: TDlgEventEdit
       TabStop = False
     end
     object CancelBtn: TButton
-      Left = 602
+      Left = 608
       Height = 25
       Top = 8
-      Width = 85
+      Width = 75
       Anchors = [akTop, akRight]
       Cancel = True
       Caption = '&Cancel'
@@ -70,7 +70,7 @@ object DlgEventEdit: TDlgEventEdit
     Width = 679
     Anchors = [akTop, akLeft, akRight]
     Caption = 'Appointment'
-    ClientHeight = 199
+    ClientHeight = 198
     ClientWidth = 675
     TabOrder = 0
     object DescriptionLbl: TLabel
@@ -290,7 +290,7 @@ object DlgEventEdit: TDlgEventEdit
     end
     object StartTime: TComboBox
       Left = 231
-      Height = 22
+      Height = 23
       Top = 104
       Width = 93
       ItemHeight = 15
@@ -300,7 +300,7 @@ object DlgEventEdit: TDlgEventEdit
     end
     object EndTime: TComboBox
       Left = 231
-      Height = 22
+      Height = 23
       Top = 131
       Width = 93
       ItemHeight = 15
@@ -321,7 +321,7 @@ object DlgEventEdit: TDlgEventEdit
     end
     object RecurringType: TComboBox
       Left = 379
-      Height = 22
+      Height = 23
       Top = 104
       Width = 187
       ItemHeight = 15
@@ -344,7 +344,7 @@ object DlgEventEdit: TDlgEventEdit
     end
     object AlarmAdvType: TComboBox
       Left = 231
-      Height = 22
+      Height = 23
       Top = 167
       Width = 93
       ItemHeight = 15

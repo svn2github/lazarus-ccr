@@ -60,7 +60,7 @@ object ResEditForm: TResEditForm
     TabOrder = 0
     object tabResource: TTabSheet
       Caption = 'Resource'
-      ClientHeight = 182
+      ClientHeight = 181
       ClientWidth = 392
       object lblDescription: TLabel
         Left = 8
@@ -122,7 +122,7 @@ object ResEditForm: TResEditForm
       end
       object NotesMemo: TMemo
         Left = 8
-        Height = 103
+        Height = 102
         Top = 67
         Width = 374
         Anchors = [akTop, akLeft, akRight, akBottom]
