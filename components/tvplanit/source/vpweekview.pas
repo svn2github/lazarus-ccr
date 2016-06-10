@@ -295,7 +295,7 @@ type
 implementation
 
 uses
-  SysUtils, Math, Forms, Dialogs, VpEvntEditDlg;
+  SysUtils, Math, LazUTF8, Forms, Dialogs, VpEvntEditDlg;
 
 (*****************************************************************************)
 { TVpTGInPlaceEdit }

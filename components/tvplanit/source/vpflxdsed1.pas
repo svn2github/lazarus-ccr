@@ -36,11 +36,12 @@ unit VpFlxDsEd1;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
  {$IFNDEF RUNTIMETEST}
  {$IFDEF LCL}
   propedits, componenteditors, FormEditingIntf, lclintf, IDEIntf,
  {$ELSE}
+  Windows, Messages,
  {$IFDEF VERSION6} DesignIntf, DesignEditors, {$ELSE} DsgnIntf, {$ENDIF}, DBTables,
  {$ENDIF}
  {$ENDIF} {RUNTIMETEST}

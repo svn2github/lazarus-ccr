@@ -125,7 +125,7 @@ object frmFieldMapper: TfrmFieldMapper
       end
       object DatasetCombo: TComboBox
         Left = 64
-        Height = 22
+        Height = 23
         Top = 10
         Width = 145
         ItemHeight = 15
