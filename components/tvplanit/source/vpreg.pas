@@ -135,6 +135,7 @@ uses
   VpContactGrid,              { ContactGrid Component                        }
   VpDateEdit,                 { DateEdit Component                           }
   VpTaskList,                 { Task List Component                          }
+  VpBufDS,                    { Datastore for TBufDataset                    }
   VpFlxDS,                    { Flexible DataStore                           }
   VpContactEditDlg,           { Contact Edit Dialog Component                }
   VpTaskEditDlg,              { Task Edit Dialog Component                   }
@@ -390,6 +391,7 @@ end;
       TVpClock,
       TVpCalendar,
       TVpNavBar,
+      TVpBufDSDatastore,
       TVpFlexDataStore,
   {$IFNDEF LCL}
       TVpBDEDataStore,    // BDE is not available in Lazarus

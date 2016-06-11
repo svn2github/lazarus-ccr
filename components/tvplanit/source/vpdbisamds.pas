@@ -367,7 +367,7 @@ begin
     CreateFieldDefs(TableName, Table.FieldDefs);
     CreateIndexDefs(TableName, Table.IndexDefs);
 
-        if Table <> nil then
+    if Table <> nil then
       Table.CreateTable;
 
     if TableName = RecordIDTableName then

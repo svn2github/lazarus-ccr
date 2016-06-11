@@ -222,6 +222,12 @@ type
     procedure SetDayBuffer(Value: Integer);
     procedure SetRange(StartTime, EndTime: TDateTime);
     procedure NotifyLinked;
+
+    property AutoConnect: Boolean
+      read FAutoConnect write SetAutoConnect;
+    property AutoCreate: Boolean
+      read FAutoCreate write FAutoCreate;
+
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -265,10 +271,6 @@ type
     property TimeRange: TVpTimeRange
       read FTimeRange;
   published
-    property AutoConnect: Boolean
-      read FAutoConnect write SetAutoConnect;
-    property AutoCreate: Boolean
-      read FAutoCreate write FAutoCreate;
     property CategoryColorMap: TVpCategoryColorMap
       read FCategoryColorMap write FCategoryColorMap;
     property DefaultEventSound: string
