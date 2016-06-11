@@ -103,7 +103,8 @@ implementation
  {$R *.dfm}
 {$ENDIF}
 
-uses VpSR;
+uses
+  StrUtils, VpSR;
 
 { TVpNotificationDialog }
 
@@ -147,26 +148,29 @@ end;
 { TAlarmNotifyForm }
 
 procedure TAlarmNotifyForm.PopulateSelf;
+var
+  fmt: String;
 begin
   if Event <> nil then begin
-    Caption := RSReminder;
 //    SubjectCaption.Caption := RSSubjectCaption;
 //    NotesCaption.Caption := RSNotesCaption;
     SnoozeCaption.Caption := RSSnoozeCaption;
     DismissBtn.Caption := RSDismissBtn;
     SnoozeBtn.Caption := RSSnoozeBtn;
     OpenItemBtn.Caption := RSOpenItemBtn;
-    lNotes.Caption := Event.Note;
+    lNotes.Caption := Event.Notes;
     lSubject.Caption := Event.Description;
-    lTime.caption := dateTimeToStr(Event.StartTime)+' - '+dateTimeToStr(Event.EndTime);
 
-    if Now > Event.StartTime then
-      Self.Caption := RSOverdue + ' : '
-    else
-      Self.Caption := RSReminder + ' : ';
+    fmt := IfThen(trunc(Event.StartTime) = Date(), 't', 'ddddd t');
+    lTime.Caption := Format('%s - %s', [
+      FormatDateTime(fmt, Event.StartTime),
+      FormatDateTime(fmt, Event.EndTime)] );
+    if Event.Location <> '' then
+      lTime.Caption := lTime.Caption + ' (' + Event.Location + ')';
 
-    Self.Caption := Self.Caption + FormatDateTime(ShortDateFormat + ' '
-      + ShortTimeFormat, Event.StartTime);
+    Caption := Format('%s : %s', [
+      IfThen(Now > Event.StartTime, RSOverdue, RSReminder),
+      FormatDateTime(fmt, Event.StartTime) ]);
 
     SnoozeCombo.Items.Clear;
     SnoozeCombo.Items.Add(RS1Minute);
@@ -175,13 +179,6 @@ begin
     SnoozeCombo.Items.Add(Format(RSXMinutes, [15]));
     SnoozeCombo.Items.Add(Format(RSXMinutes, [30]));
     SnoozeCombo.Items.Add(Format(RSXMinutes, [45]));
-    {
-    SnoozeCombo.Items.Add(RS5Minutes);
-    SnoozeCombo.Items.Add(RS10Minutes);
-    SnoozeCombo.Items.Add(RS15Minutes);
-    SnoozeCombo.Items.Add(RS30Minutes);
-    SnoozeCombo.Items.Add(RS45Minutes);
-    }
     SnoozeCombo.Items.Add(RS1Hour);
     SnoozeCombo.Items.Add(Format(RSXHours, [2]));
     SnoozeCombo.Items.Add(Format(RSXHours, [3]));
@@ -190,28 +187,12 @@ begin
     SnoozeCombo.Items.Add(Format(RSXHours, [6]));
     SnoozeCombo.Items.Add(Format(RSXHours, [7]));
     SnoozeCombo.Items.Add(Format(RSXHours, [8]));
-    {
-    SnoozeCombo.Items.Add(RS2Hours);
-    SnoozeCombo.Items.Add(RS3Hours);
-    SnoozeCombo.Items.Add(RS4Hours);
-    SnoozeCombo.Items.Add(RS5Hours);
-    SnoozeCombo.Items.Add(RS6Hours);
-    SnoozeCombo.Items.Add(RS7Hours);
-    SnoozeCombo.Items.Add(RS8Hours);
-    }
     SnoozeCombo.Items.Add(RS1Day);
     SnoozeCombo.Items.Add(Format(RSXDays, [2]));
     SnoozeCombo.Items.Add(Format(RSXDays, [3]));
     SnoozeCombo.Items.Add(Format(RSXDays, [4]));
     SnoozeCombo.Items.Add(Format(RSXDays, [5]));
     SnoozeCombo.Items.Add(Format(RSXDays, [6]));
-    {
-    SnoozeCombo.Items.Add(RS2Days);
-    SnoozeCombo.Items.Add(RS3Days);
-    SnoozeCombo.Items.Add(RS4Days);
-    SnoozeCombo.Items.Add(RS5Days);
-    SnoozeCombo.Items.Add(RS6Days);
-    }
     SnoozeCombo.Items.Add(RS1Week);
     SnoozeCombo.ItemIndex := 0;
     SnoozeDelay := 5 / MinutesInDay;

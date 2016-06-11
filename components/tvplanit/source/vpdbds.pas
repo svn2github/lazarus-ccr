@@ -143,7 +143,7 @@ begin
       { Resource ID }
       with AddFieldDef do begin
         Name := 'ResourceID';
-        DataType := ftAutoInc; //ftInteger;
+        DataType := ftInteger;
         Required := true;
       end;
       { Description }
@@ -249,7 +249,7 @@ begin
       { Record ID }
       with AddFieldDef do begin
         Name := 'RecordID';
-        DataType := ftAutoInc; //ftInteger;
+        DataType := ftInteger;
         Required := true;
       end;
       { StartTime }
@@ -273,6 +273,13 @@ begin
       { Description }
       with AddFieldDef do begin
         Name := 'Description';
+        DataType := ftString;
+        Size := 255;
+        Required := false;
+      end;
+      { Locataion }              // new
+      with AddFieldDef do begin
+        Name := 'Location';
         DataType := ftString;
         Size := 255;
         Required := false;
@@ -422,7 +429,7 @@ begin
       { Record ID }
       with AddFieldDef do begin
         Name := 'RecordID';
-        DataType := ftAutoInc; //ftInteger;
+        DataType := ftInteger;
         Required := true;
       end;
       { Resource ID }
@@ -515,7 +522,7 @@ begin
       end;
       { Note }
       with AddFieldDef do begin
-        Name := 'Note';
+        Name := 'Notes';          // was: "Note" in old version
         DataType := ftString;
         Size := 1024;
         Required := false;
@@ -703,7 +710,7 @@ begin
       { Record ID }
       with AddFieldDef do begin
         Name := 'RecordID';
-        DataType := ftAutoInc; //ftInteger;
+        DataType := ftInteger;
         Required := true;
       end;
       { Resource ID }
@@ -1014,33 +1021,37 @@ end;
 procedure TVpCustomDBDataStore.LoadEvents;
 var
   Event: TVpEvent;
+  F: TField;
 begin
   if Resource <> nil then
     { Load this resource's events into memory }
     with EventsTable do begin
-
-      SetFilterCriteria(EventsTable,
-                        True,
-                        ResourceTable.FieldByName('ResourceID').AsInteger,
-                        TimeRange.StartTime,
-                        TimeRange.EndTime);
+      SetFilterCriteria(
+        EventsTable,
+        True,
+        ResourceTable.FieldByName('ResourceID').AsInteger,
+        TimeRange.StartTime,
+        TimeRange.EndTime
+      );
       First;
-
       while not EventsTable.EOF do begin
-        Event := Resource.Schedule.AddEvent(FieldByName('RecordID').AsInteger,
+        Event := Resource.Schedule.AddEvent(
+          FieldByName('RecordID').AsInteger,
           FieldByName('StartTime').AsDateTime,
-          FieldByName('EndTime').AsDateTime);
+          FieldByName('EndTime').AsDateTime
+        );
         if Event <> nil then begin
           Event.Loading := true;
           Event.Description := FieldByName('Description').AsString;
-          Event.Note := FieldByName('Notes').AsString;
+          F := FieldByName('Location');   // new
+          if F <> nil then Event.Location := F.AsString;
+          Event.Notes := FieldByName('Notes').AsString;
           Event.Category := FieldByName('Category').AsInteger;
           Event.AlarmWavPath := FieldByName('DingPath').AsString;
           Event.AllDayEvent := FieldByName('AllDayEvent').AsBoolean;
           Event.AlarmSet := FieldByName('AlarmSet').AsBoolean;
           Event.AlarmAdv := FieldByName('AlarmAdvance').AsInteger;
-          Event.AlarmAdvType := TVpAlarmAdvType(
-            FieldByName('AlarmAdvanceType').AsInteger);
+          Event.AlarmAdvType := TVpAlarmAdvType(FieldByName('AlarmAdvanceType').AsInteger);
           Event.SnoozeTime := FieldByName('SnoozeTime').AsDateTime;
           Event.RepeatCode := TVpRepeatType(FieldByName('RepeatCode').AsInteger);
           Event.RepeatRangeEnd := FieldByName('RepeatRangeEnd').AsDateTime;
@@ -1068,6 +1079,7 @@ end;
 procedure TVpCustomDBDataStore.LoadContacts;
 var
   Contact: TVpContact;
+  F: TField;
 begin
   if (Resource <> nil) then
     with ContactsTable do begin
@@ -1092,7 +1104,9 @@ begin
         Contact.State := FieldByName('State').AsString;
         Contact.Zip := FieldByName('Zip').AsString;
         Contact.Country := FieldByName('Country').AsString;
-        Contact.Note := FieldByName('Note').AsString;
+        F := FieldByName('Notes');
+        if F = nil then F := FieldByName('Note');  // deprecated
+        if F <> nil then Contact.Notes := F.AsString;
         Contact.Phone1 := FieldByName('Phone1').AsString;
         Contact.Phone2 := FieldByName('Phone2').AsString;
         Contact.Phone3 := FieldByName('Phone3').AsString;
@@ -1168,6 +1182,7 @@ procedure TVpCustomDBDataStore.PostContacts;
 var
   I: Integer;
   Contact: TVpContact;
+  F: TField;
 begin
   if (Resource <> nil) and Resource.ContactsDirty then begin
     { Dump this resource's dirty contacts to the DB }
@@ -1216,7 +1231,9 @@ begin
             ContactsTable.FieldByName('State').AsString := Contact.State;
             ContactsTable.FieldByName('Zip').AsString := Contact.Zip;
             ContactsTable.FieldByName('Country').AsString := Contact.Country;
-            ContactsTable.FieldByName('Note').AsString := Contact.Note;
+            F := ContactsTable.FieldByName('Notes');
+            if F = nil then F := ContactsTable.FieldByName('Note');
+            if F <> nil then F.AsString := Contact.Notes;
             ContactsTable.FieldByName('Phone1').AsString := Contact.Phone1;
             ContactsTable.FieldByName('Phone2').AsString := Contact.Phone2;
             ContactsTable.FieldByName('Phone3').AsString := Contact.Phone3;
@@ -1273,6 +1290,7 @@ procedure TVpCustomDBDataStore.PostEvents;
 var
   J: Integer;
   Event: TVpEvent;
+  F: TField;
 begin
   if (Resource <> nil) and Resource.EventsDirty then begin
     { Dump this resource's dirty events to the DB }
@@ -1310,9 +1328,11 @@ begin
             EventsTable.FieldByName('EndTime').AsDateTime := Event.EndTime;
             EventsTable.FieldByName('ResourceID').AsInteger := Resource.ResourceID;
             EventsTable.FieldByName('Description').AsString := Event.Description;
-            EventsTable.FieldByName('Notes').AsString := Event.Note;
+            F := EventsTable.FieldByName('Location');  // new
+            if F <> nil then F.AsString := Event.Location;
+            EventsTable.FieldByName('Notes').AsString := Event.Notes;
             EventsTable.FieldByName('Category').AsInteger := Event.Category;
-            EventsTable.FieldByName('DingPath').AsString := Event.AlarmWavPath;
+            EventsTable.FieldByName('DingPath').AsString := Event.DingPath;
             EventsTable.FieldByName('AllDayEvent').AsBoolean := Event.AllDayEvent;
             EventsTable.FieldByName('AlarmSet').AsBoolean := Event.AlarmSet;
             EventsTable.FieldByName('AlarmAdvance').AsInteger := Event.AlarmAdv;
@@ -1573,6 +1593,7 @@ end;
 procedure TVpCustomDBDataStore.RefreshContacts;
 var
   Contact: TVpContact;
+  F: TField;
 begin
   if Resource <> nil then begin
     { Clear the Contacts }
@@ -1599,7 +1620,9 @@ begin
         Contact.State := FieldByName('State').AsString;
         Contact.Zip := FieldByName('Zip').AsString;
         Contact.Country := FieldByName('Country').AsString;
-        Contact.Note := FieldByName('Note').AsString;
+        F := FieldByName('Notes');
+        if F = nil then F := FieldByName('Note');  // deprecated
+        if F <> nil then Contact.Notes := F.AsString;
         Contact.Phone1 := FieldByName('Phone1').AsString;
         Contact.Phone2 := FieldByName('Phone2').AsString;
         Contact.Phone3 := FieldByName('Phone3').AsString;
@@ -1637,6 +1660,7 @@ end;
 procedure TVpCustomDBDataStore.RefreshEvents;
 var
   Event: TVpEvent;
+  F: TField;
 begin
   if Resource <> nil then begin
     { Clear the Events }
@@ -1659,9 +1683,11 @@ begin
           Event.Loading := true; {prevents the events changed flag from being set}
 //          Event.RecordID := FieldByName('RecordID').AsInteger;      
           Event.Description := FieldByName('Description').AsString;
-          Event.Note := FieldByName('Notes').AsString;
+          F := FieldByName('Location');               // new
+          if F <> nil then Event.Location := F.AsString;
+          Event.Notes := FieldByName('Notes').AsString;
           Event.Category := FieldByName('Category').AsInteger;
-          Event.AlarmWavPath := FieldByName('DingPath').AsString;
+          Event.DingPath := FieldByName('DingPath').AsString;
           Event.AllDayEvent := FieldByName('AllDayEvent').AsBoolean;
           Event.AlarmSet := FieldByName('AlarmSet').AsBoolean;
           Event.AlarmAdv := FieldByName('AlarmAdvance').AsInteger;
@@ -1823,8 +1849,8 @@ var
 begin
   if aUseDateTime then
     filter := Format('ResourceID = %d '
-      + 'and (( (StartTime >= %s) and (EndTime <= %s) ) '             
-      + '     or ( (RepeatCode > 0) and (%s <= RepeatRangeEnd) ))',   
+      + 'and ( ( (StartTime >= %s) and (EndTime <= %s) ) '
+      + '     or ( (RepeatCode > 0) and (%s <= RepeatRangeEnd) ) )',
       [aResourceID,
        QuotedStr(FormatDateTime('c', aStartDateTime)),
        QuotedStr(FormatDateTime('c', aEndDateTime)),

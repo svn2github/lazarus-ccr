@@ -1,11 +1,11 @@
 object DlgEventEdit: TDlgEventEdit
   Left = 417
-  Height = 385
+  Height = 388
   Top = 211
   Width = 697
   BorderStyle = bsToolWindow
   Caption = 'Add / Edit Events'
-  ClientHeight = 385
+  ClientHeight = 388
   ClientWidth = 697
   Constraints.MinHeight = 378
   Constraints.MinWidth = 594
@@ -16,7 +16,7 @@ object DlgEventEdit: TDlgEventEdit
   object Panel1: TPanel
     Left = 0
     Height = 41
-    Top = 344
+    Top = 347
     Width = 697
     Align = alBottom
     BevelOuter = bvNone
@@ -96,9 +96,9 @@ object DlgEventEdit: TDlgEventEdit
       Anchors = [akTop, akLeft, akRight]
     end
     object CategoryLbl: TLabel
-      Left = 5
+      Left = 403
       Height = 15
-      Top = 41
+      Top = 43
       Width = 51
       Caption = 'Category:'
       ParentColor = False
@@ -286,7 +286,7 @@ object DlgEventEdit: TDlgEventEdit
       Width = 74
       Caption = '&Reminder:'
       OnClick = AlarmSetClick
-      TabOrder = 11
+      TabOrder = 12
     end
     object StartTime: TComboBox
       Left = 231
@@ -296,7 +296,7 @@ object DlgEventEdit: TDlgEventEdit
       ItemHeight = 15
       OnChangeBounds = StartTimeChange
       OnExit = StartTimeExit
-      TabOrder = 4
+      TabOrder = 5
     end
     object EndTime: TComboBox
       Left = 231
@@ -306,18 +306,18 @@ object DlgEventEdit: TDlgEventEdit
       ItemHeight = 15
       OnChangeBounds = EndTimeChange
       OnExit = EndTimeExit
-      TabOrder = 6
+      TabOrder = 7
     end
     object Category: TComboBox
-      Left = 86
+      Left = 484
       Height = 21
-      Top = 38
+      Top = 40
       Width = 182
       ItemHeight = 15
       OnDrawItem = CategoryDrawItem
       ReadOnly = True
       Style = csOwnerDrawFixed
-      TabOrder = 1
+      TabOrder = 2
     end
     object RecurringType: TComboBox
       Left = 379
@@ -327,7 +327,7 @@ object DlgEventEdit: TDlgEventEdit
       ItemHeight = 15
       OnChange = RecurringTypeChange
       Style = csDropDownList
-      TabOrder = 7
+      TabOrder = 8
     end
     object IntervalUpDown: TUpDown
       Left = 652
@@ -339,7 +339,7 @@ object DlgEventEdit: TDlgEventEdit
       Min = 0
       OnClick = IntervalUpDownClick
       Position = 0
-      TabOrder = 9
+      TabOrder = 10
       Wrap = False
     end
     object AlarmAdvType: TComboBox
@@ -349,7 +349,7 @@ object DlgEventEdit: TDlgEventEdit
       Width = 93
       ItemHeight = 15
       Style = csDropDownList
-      TabOrder = 14
+      TabOrder = 15
     end
     object AdvanceUpDown: TUpDown
       Left = 194
@@ -361,7 +361,7 @@ object DlgEventEdit: TDlgEventEdit
       Min = 1
       OnClick = AdvanceUpDownClick
       Position = 1
-      TabOrder = 13
+      TabOrder = 14
       Wrap = False
     end
     object CBAllDay: TCheckBox
@@ -371,14 +371,14 @@ object DlgEventEdit: TDlgEventEdit
       Width = 89
       Caption = 'All Day Event'
       OnClick = CBAllDayClick
-      TabOrder = 2
+      TabOrder = 3
     end
     object edtUnusedPlaceholder: TEdit
       Left = 587
       Height = 23
       Top = 104
       Width = 65
-      TabOrder = 8
+      TabOrder = 9
       Text = 'Placeholder control'
       Visible = False
     end
@@ -431,7 +431,7 @@ object DlgEventEdit: TDlgEventEdit
       NumGlyphs = 1
       MaxLength = 0
       OnChangeBounds = StartDateChange
-      TabOrder = 3
+      TabOrder = 4
     end
     object EndDate: TDateEdit
       Left = 104
@@ -482,7 +482,7 @@ object DlgEventEdit: TDlgEventEdit
       NumGlyphs = 1
       MaxLength = 0
       OnChangeBounds = EndDateChange
-      TabOrder = 5
+      TabOrder = 6
     end
     object RepeatUntil: TDateEdit
       Left = 440
@@ -532,7 +532,7 @@ object DlgEventEdit: TDlgEventEdit
       }
       NumGlyphs = 1
       MaxLength = 0
-      TabOrder = 10
+      TabOrder = 11
     end
     object AlarmAdvance: TEdit
       Left = 130
@@ -540,13 +540,29 @@ object DlgEventEdit: TDlgEventEdit
       Top = 168
       Width = 64
       OnChange = AlarmAdvanceChange
-      TabOrder = 12
+      TabOrder = 13
       Text = 'AlarmAdvance'
+    end
+    object LocationLbl: TLabel
+      Left = 5
+      Height = 15
+      Top = 43
+      Width = 49
+      Caption = 'Location:'
+      FocusControl = LocationEdit
+      ParentColor = False
+    end
+    object LocationEdit: TEdit
+      Left = 86
+      Height = 23
+      Top = 39
+      Width = 235
+      TabOrder = 1
     end
   end
   object NotesMemo: TMemo
     Left = 8
-    Height = 102
+    Height = 105
     Top = 232
     Width = 679
     Anchors = [akTop, akLeft, akRight, akBottom]

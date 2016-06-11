@@ -41,7 +41,7 @@ uses
   {$ENDIF}
   SysUtils, {$IFDEF VERSION6}Variants,{$ENDIF} Classes,
   Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls, VpData, VpEdPop,
-  VpDateEdit, ComCtrls, VpBase, VpClock, VpBaseDS, VpDlg, VpConst,
+  ComCtrls, VpBase, VpBaseDS, VpDlg, VpConst,
   Buttons, EditBtn;
 
 type
@@ -59,6 +59,8 @@ type
 
   TDlgEventEdit = class(TForm)
     AlarmAdvance: TEdit;
+    LocationEdit: TEdit;
+    LocationLbl: TLabel;
     NotesMemo: TMemo;
     StartDate: TDateEdit;
     EndDate: TDateEdit;
@@ -307,14 +309,14 @@ begin
   CBAllDay.Checked := Event.AllDayEvent;
   AlarmWavPath := Event.AlarmWavPath;
 
-
   StartDate.Enabled := not CBAllDay.Checked;
   EndDate.Enabled := not CBAllDay.Checked;
   EndTime.Enabled := not CBAllDay.Checked;
   StartTime.Enabled := not CBAllDay.Checked;
 
   DescriptionEdit.Text := Event.Description;
-  NotesMemo.Text := Event.Note;
+  LocationEdit.Text := Event.Location;
+  NotesMemo.Text := Event.Notes;
   AlarmSet.Checked := Event.AlarmSet;
   AlarmSetClick(Self);
   if not Event.AlarmSet then
@@ -345,7 +347,8 @@ begin
   Event.EndTime := EndDate.Date + StrToTime(EndTime.Text);
   Event.RepeatRangeEnd := RepeatUntil.Date;
   Event.Description := DescriptionEdit.Text;
-  Event.Note := NotesMemo.Text;
+  Event.Location := LocationEdit.Text;
+  Event.Notes := NotesMemo.Text;
   Event.Category := Category.ItemIndex;
   Event.AlarmSet := AlarmSet.Checked;
   Event.AlarmAdv := StrToIntDef(AlarmAdvance.Text, 0);
@@ -353,7 +356,7 @@ begin
   Event.RepeatCode := TVpRepeatType(RecurringType.ItemIndex);
   Event.CustInterval := StrToIntDef(FCustomInterval.Text, 0);
   Event.AllDayEvent := CBAllDay.Checked;
-  Event.AlarmWavPath := AlarmWavPath;
+  Event.DingPath := AlarmWavPath;
 end;
 {=====}
 
@@ -502,6 +505,7 @@ begin
   CancelBtn.Caption := RSCancelBtn;
   AppointmentGroupBox.Caption := RSAppointmentGroupBox;
   DescriptionLbl.Caption := RSDescriptionLbl;
+  LocationLbl.Caption := RSLocationLbl;
   CategoryLbl.Caption := RSCategoryLbl;
   StartTimeLbl.Caption := RSStartTimeLbl;
   EndTimeLbl.Caption := RSEndTimeLbl;

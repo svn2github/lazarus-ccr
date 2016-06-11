@@ -157,10 +157,9 @@ type
     procedure PurgeResource(Res: TVpResource); override;                 
     procedure PurgeEvents(Res: TVpResource); override;                   
     procedure PurgeContacts(Res: TVpResource); override;                 
-    procedure PurgeTasks(Res: TVpResource); override;                    
-    function GetFieldName(Mappings: TCollection;                         
-      VPField: string): string;                                          
+    procedure PurgeTasks(Res: TVpResource); override;
 
+    function GetFieldName(Mappings: TCollection; VPField: string): string;
     function GetNextID(TableName: string): Int64; override;
 
     { These are published via the TVpDataSources class, which allows them to }
@@ -246,43 +245,39 @@ begin
       and FContactsDataSrc.DataSet.Active
       and FTasksDataSrc.DataSet.Active;
 
-  result := AllAssigned and AllActive;
+  Result := AllAssigned and AllActive;
 end;
 {=====}
 
 function TVpFlexDataStore.GetResourceTable : TDataset;
 begin
   result := nil;
-  if (FResourceDataSrc <> nil)
-  and (FResourceDataSrc.DataSet <> nil)
-  then result := FResourceDataSrc.DataSet;
+  if (FResourceDataSrc <> nil) and (FResourceDataSrc.DataSet <> nil) then
+    Result := FResourceDataSrc.DataSet;
 end;
 {=====}
 
 function TVpFlexDataStore.GetEventsTable : TDataset;
 begin
   result := nil;
-  if (FEventsDataSrc <> nil)
-  and (FEventsDataSrc.DataSet <> nil)
-  then result := FEventsDataSrc.DataSet;
+  if (FEventsDataSrc <> nil) and (FEventsDataSrc.DataSet <> nil) then
+    Result := FEventsDataSrc.DataSet;
 end;
 {=====}
 
 function TVpFlexDataStore.GetContactsTable : TDataset;
 begin
   result := nil;
-  if (FContactsDataSrc <> nil)
-  and (FContactsDataSrc.DataSet <> nil)
-  then result := FContactsDataSrc.DataSet;
+  if (FContactsDataSrc <> nil) and (FContactsDataSrc.DataSet <> nil) then
+    Result := FContactsDataSrc.DataSet;
 end;
 {=====}
 
 function TVpFlexDataStore.GetTasksTable : TDataset;
 begin
   result := nil;
-  if (FTasksDataSrc <> nil)
-  and (FTasksDataSrc.DataSet <> nil)
-  then result := FTasksDataSrc.DataSet;
+  if (FTasksDataSrc <> nil) and (FTasksDataSrc.DataSet <> nil) then
+    Result := FTasksDataSrc.DataSet;
 end;
 {=====}
 
@@ -575,15 +570,22 @@ begin
             if (FN1 <> '') then
               Event.Description := FieldByName(FN1).AsString;
 
-            FN1 := GetFieldName(FEventMappings, 'Note');                 
+            FN1 := GetFieldName(FEventMappings, 'Location');  // new
             if (FN1 <> '') then
-              Event.Note := FieldByName(FN1).AsString;
+              Event.Location := FieldByName(FN1).AsString;
+
+            FN1 := GetFieldName(FEventMappings, 'Notes');
+            if (FN1 = '') then FN1 := GetFieldName(FEventMappings, 'Note');  // deprecated
+            if (FN1 <> '') then
+              Event.Notes := FieldByName(FN1).AsString;
 
             FN1 := GetFieldName(FEventMappings, 'Category');
             if (FN1 <> '') then
               Event.Category := FieldByName(FN1).AsInteger;
 
-            FN1 := GetFieldName(FEventMappings, 'AlarmWavPath');
+            FN1 := GetFieldName(FEventMappings, 'DingPath');
+            if FN1 = '' then
+              FN1 := GetFieldName(FEventMappings, 'AlarmWavPath');  // deprectated
             if (FN1 <> '') then
               Event.AlarmWavPath := FieldByName(FN1).AsString;
 
@@ -746,9 +748,11 @@ begin
           if FN <> '' then
             Contact.Country := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'Note');
+          FN := GetFieldName(FContactMappings, 'Notes');
+          if FN = '' then
+            FN := GetFieldName(FContactMappings, 'Note');  // deprecated
           if FN <> '' then
-            Contact.Note := FieldByName(FN).AsString;
+            Contact.Notes := FieldByName(FN).AsString;
 
           FN := GetFieldName(FContactMappings, 'Phone1');
           if FN <> '' then
@@ -1161,15 +1165,23 @@ begin
                 if FN <> '' then
                   EventsTable.FieldByName(FN).AsString := Event.Description;
 
-                FN := GetFieldName(FEventMappings, 'Note');              
+                FN := GetFieldName(FEventMappings, 'Location');    // new
                 if FN <> '' then
-                  EventsTable.FieldByName(FN).AsString := Event.Note;
+                  EventsTable.FieldByName(FN).AsString := Event.Location;
+
+                FN := GetFieldName(FEventMappings, 'Notes');
+                if FN = '' then
+                  FN := GetFieldName(FEventMappings, 'Note');  // deprecated
+                if FN <> '' then
+                  EventsTable.FieldByName(FN).AsString := Event.Notes;
 
                 FN := GetFieldName(FEventMappings, 'Category');
                 if FN <> '' then
                   EventsTable.FieldByName(FN).AsInteger := Event.Category;
 
-                FN := GetFieldName(FEventMappings, 'AlarmWavPath');      
+                FN := GetFieldName(FEventMappings, 'DingPath');
+                if FN = '' then
+                  FN := GetFieldName(FEventMappings, 'AlarmWavPath');  // deprecated
                 if FN <> '' then
                   EventsTable.FieldByName(FN).AsString := Event.AlarmWavPath;
 
@@ -1380,9 +1392,11 @@ begin
           if FN <> '' then
             ContactsTable.FieldByName(FN).AsString := Contact.Country;
 
-          FN := GetFieldName(FContactMappings, 'Note');
+          FN := GetFieldName(FContactMappings, 'Notes');
+          if FN = '' then
+            FN := GetFieldName(FContactMappings, 'Note');  // deprecated
           if FN <> '' then
-            ContactsTable.FieldByName(FN).AsString := Contact.Note;
+            ContactsTable.FieldByName(FN).AsString := Contact.Notes;
 
           FN := GetFieldName(FContactMappings, 'Phone1');
           if FN <> '' then

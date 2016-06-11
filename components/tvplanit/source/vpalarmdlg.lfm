@@ -129,7 +129,7 @@ object AlarmNotifyForm: TAlarmNotifyForm
     end
   end
   object EventDialog: TVpEventEditDialog
-    Version = 'v1.03'
+    Version = 'v1.04'
     TimeFormat = tf24Hour
     Options = []
     Placement.Position = mpCenterTop

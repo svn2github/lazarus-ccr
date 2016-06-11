@@ -188,8 +188,6 @@ type
   { TVpEvent }
 
   TVpEvent = class
-  private
-    FLocation: string;
   protected{private}
     FOwner: TVpSchedule;
     FItemIndex: Integer;
@@ -205,7 +203,8 @@ type
     FAlertDisplayed: Boolean;
     FAlarmAdvType: TVpAlarmAdvType;
     FRecordID: Int64;
-    FNote: string;
+    FLocation: string;
+    FNotes: string;
     FDescription: string;
     FStartTime: TDateTime;
     FEndTime: TDateTime;
@@ -236,7 +235,8 @@ type
     procedure SetCategory(Value: Integer);
     procedure SetDescription(const Value: string);
     procedure SetEndTime(Value: TDateTime);
-    procedure SetNote(const Value: string);
+    procedure SetLocation(const Value: String);
+    procedure SetNotes(const Value: string);
     procedure SetRecordID(Value: Int64);
     procedure SetStartTime(Value: TDateTime);
     procedure SetCustInterval(Value: Integer);
@@ -245,7 +245,8 @@ type
   public
     constructor Create(Owner: TVpSchedule);
     destructor Destroy; override;
-    property AlarmWavPath: string read FDingPath write SetDingPath;
+    property DingPath: string read FDingPath write SetDingPath;
+    property AlarmWavPath: string read FDingPath write SetDingPath; deprecated 'Use "DingPath" instead';
     property AlertDisplayed: Boolean read FAlertDisplayed write FAlertDisplayed;
     property AllDayEvent: Boolean read FAllDayEvent write SetAllDayEvent;
     property Changed: Boolean read FChanged write SetChanged;
@@ -255,11 +256,12 @@ type
     property StartTime : TDateTime read FStartTime write SetStartTime;
     property EndTime : TDateTime read FEndTime write SetEndTime;
     property Description : string read FDescription write SetDescription;
-    property Note : string read FNote write SetNote;
+    property Notes : string read FNotes write SetNotes;
+    property Note: String read FNotes write SetNotes; deprecated 'Use "Notes" instead';
     property Category : Integer read FCategory write SetCategory;
     property AlarmSet : Boolean read FAlarmSet write SetAlarmSet;
     property AlarmAdv : Integer read FAlarmAdv write SetAlarmAdv;
-    property Location: string read FLocation write FLocation;
+    property Location: string read FLocation write SetLocation;
     property Loading : Boolean read FLoading write FLoading;
     { 0=Minutes, 1=Hours, 2=Days   }
     property AlarmAdvType : TVpAlarmAdvType read FAlarmAdvType write SetAlarmAdvType;
@@ -445,7 +447,7 @@ type
     FState        : string;
     FZip          : string;
     FCountry      : string;
-    FNote         : string;
+    FNotes        : string;
     FPrivateRec   : boolean;
     FCategory     : integer;
     FCustom1      : string;
@@ -480,7 +482,7 @@ type
     procedure SetEMail(const Value: string);
     procedure SetFirstName(const Value: string);
     procedure SetLastName(const Value: string);
-    procedure SetNote(const Value: string);
+    procedure SetNotes(const Value: string);
     procedure SetPhone1(const Value: string);
     procedure SetPhone2(const Value: string);
     procedure SetPhone3(const Value: string);
@@ -528,7 +530,8 @@ type
     property State        : string read FState write SetState;
     property Zip          : string read FZip write SetZip;
     property Country      : string read FCountry write SetCountry;
-    property Note         : string read FNote write SetNote;
+    property Note         : string read FNotes write SetNotes; deprecated 'Use "Notes" instead';
+    property Notes        : string read FNotes write SetNotes;
     property Category     : integer read FCategory write SetCategory;
     property Custom1      : string read FCustom1 write SetCustom1;
     property Custom2      : string read FCustom2 write SetCustom2;
@@ -954,10 +957,19 @@ begin
 end;
 {=====}
 
-procedure TVpEvent.SetNote(const Value: string);
+procedure TVpEvent.SetLocation(const Value: String);
 begin
-  if Value <> FNote then begin
-    FNote := Value;
+  if Value <> FLocation then begin
+    FLocation := Value;
+    Changed := true;
+  end;
+end;
+{=====}
+
+procedure TVpEvent.SetNotes(const Value: string);
+begin
+  if Value <> FNotes then begin
+    FNotes := Value;
     Changed := true;
   end;
 end;
@@ -1604,10 +1616,10 @@ begin
 end;
 {=====}
 
-procedure TVpContact.SetNote(const Value: string);
+procedure TVpContact.SetNotes(const Value: string);
 begin
-  if Value <> FNote then begin
-    FNote := Value;
+  if Value <> FNotes then begin
+    FNotes := Value;
     Changed := true;
   end;
 end;

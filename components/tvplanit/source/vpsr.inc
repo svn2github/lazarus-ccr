@@ -222,6 +222,7 @@ resourcestring
   RSDlgEventEdit            = 'Event';
   RSAppointmentGroupBox     = 'Appointment';
   RSDescriptionLbl          = 'Subject:';
+  RSLocationLbl             = 'Location:';
   RSCategoryLbl             = 'Category:';
   RSStartTimeLbl            = 'Start Time:';
   RSEndTimeLbl              = 'End Time:';

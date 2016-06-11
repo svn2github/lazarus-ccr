@@ -561,6 +561,10 @@ msgstr ""
 msgid "M"
 msgstr ""
 
+#: vpsr.rslocationlbl
+msgid "Location:"
+msgstr ""
+
 #: vpsr.rslsaturday
 msgctxt "vpsr.rslsaturday"
 msgid "S"
