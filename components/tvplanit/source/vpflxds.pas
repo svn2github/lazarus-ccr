@@ -184,6 +184,7 @@ type
 
   published
     property AutoConnect;
+    property AutoCreate;
     { properties }
     property DayBuffer;
     property DataSources: TVpDataSources
