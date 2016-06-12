@@ -18,17 +18,17 @@ object AlarmNotifyForm: TAlarmNotifyForm
   Position = poDefault
   LCLVersion = '1.7'
   object SnoozeCaption: TLabel
-    Left = 24
+    Left = 16
     Height = 57
     Top = 136
-    Width = 144
+    Width = 152
     AutoSize = False
     Caption = 'SnoozeCaption'
     ParentColor = False
     WordWrap = True
   end
   object lSubject: TLabel
-    Left = 24
+    Left = 16
     Height = 15
     Top = 32
     Width = 45
@@ -38,7 +38,7 @@ object AlarmNotifyForm: TAlarmNotifyForm
     ParentFont = False
   end
   object lTime: TLabel
-    Left = 24
+    Left = 16
     Height = 15
     Top = 8
     Width = 30
@@ -107,20 +107,20 @@ object AlarmNotifyForm: TAlarmNotifyForm
     TabOrder = 3
   end
   object Panel1: TPanel
-    Left = 24
+    Left = 16
     Height = 72
     Top = 56
-    Width = 371
+    Width = 379
     BevelInner = bvRaised
     BevelOuter = bvLowered
     ClientHeight = 72
-    ClientWidth = 371
+    ClientWidth = 379
     TabOrder = 4
     object lNotes: TLabel
       Left = 2
       Height = 68
       Top = 2
-      Width = 367
+      Width = 375
       Align = alClient
       AutoSize = False
       Caption = 'lNotes'

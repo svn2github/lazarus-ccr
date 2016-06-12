@@ -51,6 +51,7 @@ type
 
   TVpRightAlignedEdit = class(TEdit)
   public
+    constructor Create(AOwner: TComponent); override;
     procedure CreateParams(var Params : TCreateParams); override;
   end;
 
@@ -145,18 +146,16 @@ type
 
   TVpEventEditDialog = class(TVpBaseDialog)
   protected {private}
-    ceEditDlg         : TDlgEventEdit;
-    FTimeFormat       : TVpTimeFormat;
-    ceEvent           : TVpEvent;
+    ceEditDlg: TDlgEventEdit;
+    FTimeFormat: TVpTimeFormat;
+    ceEvent: TVpEvent;
   public
     constructor Create(AOwner : TComponent); override;
-    function Execute(Event: TVpEvent;
-      TimeFormat: TVpTimeFormat = tf12Hour): Boolean; reintroduce;
+    function Execute(Event: TVpEvent; TimeFormat: TVpTimeFormat = tf12Hour): Boolean; reintroduce;
     function AddNewEvent(StartTime, EndTime: TDateTime): Boolean;
   published
     {properties}
-    property TimeFormat: TVpTimeFormat
-      read FTimeFormat write FTimeFormat default tf12Hour;
+    property TimeFormat: TVpTimeFormat read FTimeFormat write FTimeFormat default tf12Hour;
     property DataStore;
     property Options;
     property Placement;
@@ -165,7 +164,7 @@ type
 implementation
 
 uses
-  VpSR, VpWavDlg;
+  VpSR, VpMisc, VpWavDlg;
 
 {$IFDEF LCL}
  {$R *.lfm}
@@ -174,6 +173,14 @@ uses
 {$ENDIF}
 
 { TVpRightAlignedEdit }
+
+constructor TVpRightAlignedEdit.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+ {$IFDEF LCL}
+  Alignment := taRightJustify;
+ {$ENDIF}
+end;
 
 procedure TVpRightAlignedEdit.CreateParams(var Params: TCreateParams);
 begin
@@ -188,6 +195,8 @@ end;
 { TDlgEventEdit }
 
 procedure TDlgEventEdit.FormCreate(Sender: TObject);
+const
+  DELTA = 8;
 begin
  {$IFDEF LCL}
   StartTime := TTimeEdit.Create(self);
@@ -228,6 +237,13 @@ begin
     TabOrder := edtUnusedPlaceholder.TabOrder;
   end;
   IntervalUpDown.Associate := FCustomInterval;
+
+  DescriptionLbl.Left := DescriptionEdit.Left - GetLabelWidth(DescriptionLbl) - DELTA;
+  LocationLbl.Left := LocationEdit.Left - GetLabelWidth(LocationLbl) - DELTA;
+  CategoryLbl.Left := Category.Left - GetLabelWidth(CategoryLbl) - DELTA;
+  StartTimeLbl.Left := StartDate.Left - GetLabelWidth(StartTimeLbl) - DELTA;
+  EndTimeLbl.Left := EndDate.Left - GetLabelWidth(EndTimeLbl) - DELTA;
+  RecurrenceEndsLbl.Left := RepeatUntil.Left - GetLabelWidth(RecurrenceEndsLbl) - DELTA;
 end;
 {=====}
 
@@ -248,45 +264,45 @@ begin
   Color := clBlack;
   case Index of
     0: begin
-      Color := CatColorMap.Category0.Color;
-      Name := CatColorMap.Category0.Description;
-    end;
-    1:  begin
-      Color := CatColorMap.Category1.Color;
-      Name := CatColorMap.Category1.Description;
-    end;
-    2:  begin
-      Color := CatColorMap.Category2.Color;
-      Name := CatColorMap.Category2.Description;
-    end;
-    3:  begin
-      Color := CatColorMap.Category3.Color;
-      Name := CatColorMap.Category3.Description;
-    end;
-    4:  begin
-      Color := CatColorMap.Category4.Color;
-      Name := CatColorMap.Category4.Description;
-    end;
-    5:  begin
-      Color := CatColorMap.Category5.Color;
-      Name := CatColorMap.Category5.Description;
-    end;
-    6:  begin
-      Color := CatColorMap.Category6.Color;
-      Name := CatColorMap.Category6.Description;
-    end;
-    7:  begin
-      Color := CatColorMap.Category7.Color;
-      Name := CatColorMap.Category7.Description;
-    end;
-    8:  begin
-      Color := CatColorMap.Category8.Color;
-      Name := CatColorMap.Category8.Description;
-    end;
-    9:  begin
-      Color := CatColorMap.Category9.Color;
-      Name := CatColorMap.Category9.Description;
-    end;
+         Color := CatColorMap.Category0.Color;
+         Name := CatColorMap.Category0.Description;
+       end;
+    1: begin
+         Color := CatColorMap.Category1.Color;
+         Name := CatColorMap.Category1.Description;
+       end;
+    2: begin
+         Color := CatColorMap.Category2.Color;
+         Name := CatColorMap.Category2.Description;
+       end;
+    3: begin
+         Color := CatColorMap.Category3.Color;
+         Name := CatColorMap.Category3.Description;
+       end;
+    4: begin
+         Color := CatColorMap.Category4.Color;
+         Name := CatColorMap.Category4.Description;
+       end;
+    5: begin
+         Color := CatColorMap.Category5.Color;
+         Name := CatColorMap.Category5.Description;
+       end;
+    6: begin
+         Color := CatColorMap.Category6.Color;
+         Name := CatColorMap.Category6.Description;
+       end;
+    7: begin
+         Color := CatColorMap.Category7.Color;
+         Name := CatColorMap.Category7.Description;
+       end;
+    8: begin
+         Color := CatColorMap.Category8.Color;
+         Name := CatColorMap.Category8.Description;
+       end;
+    9: begin
+         Color := CatColorMap.Category9.Color;
+         Name := CatColorMap.Category9.Description;
+       end;
   end; {Case}
 
   SaveColor := Category.Canvas.Brush.Color;
@@ -418,11 +434,9 @@ begin
   { follow the start time by 30 minutes }
   if ST > StrToTime(EndTime.Text) then begin
     if TimeFormat = tf24Hour then
-      EndTime.Text := FormatDateTime ('h:mm',
-                                      ST + (30/MinutesInDay))
+      EndTime.Text := FormatDateTime('h:mm', ST + 30 / MinutesInDay)
     else
-      EndTime.Text := FormatDateTime ('hh:mm AM/PM',
-                                      ST + (30/MinutesInDay));
+      EndTime.Text := FormatDateTime('hh:mm AM/PM', ST + 30 / MinutesInDay);
   end;
 
 end;
@@ -430,9 +444,9 @@ end;
 
 procedure TDlgEventEdit.EndTimeChange(Sender: TObject);
 
-  function IsMidnight (ATime : TDateTime) : Boolean;                     
+  function IsMidnight(ATime: TDateTime) : Boolean;
   begin                                                                  
-    Result := ATime = Trunc (ATime);                                     
+    Result := ATime = Trunc(ATime);
   end;                                                                   
 
 var                                                                      
@@ -441,12 +455,11 @@ var
 begin
   { Verify the value is valid }
   try
-    ET := StrToTime (EndTime.Text);
-    if (IsMidnight (ET)) and (not IsMidnight (FLastEndTime)) then        
+    ET := StrToTime(EndTime.Text);
+    if (IsMidnight(ET)) and (not IsMidnight(FLastEndTime)) then
       EndDate.Date := EndDate.Date + 1                                   
-    else if (not IsMidnight (ET)) and (IsMidnight (FLastEndTime)) then   
+    else if (not IsMidnight(ET)) and (IsMidnight(FLastEndTime)) then
       EndDate.Date := EndDate.Date - 1;                                  
-
     FLastEndTime := ET;                                                  
   except
     EndTime.Color := clRed;
@@ -459,22 +472,22 @@ begin
   { precede the end time by 30 minutes }
   if ET < StrToTime(StartTime.Text) then begin
     if TimeFormat = tf24Hour then
-      StartTime.Text := FormatDateTime ('h:mm',
-                                        ET - (30/MinutesInDay))
+      StartTime.Text := FormatDateTime('h:mm', ET - 30 / MinutesInDay)
     else
-      StartTime.Text := FormatDateTime ('h:mm AM/PM',
-                                        ET - (30/MinutesInDay));
+      StartTime.Text := FormatDateTime('h:mm AM/PM', ET - 30 / MinutesInDay);
   end;
 end;
 {=====}
 
 procedure TDlgEventEdit.PopLists;
+{$IFDEF DELPHI}
 var
   StringList: TStringList;
   I, Hour, Minute: Integer;
   MinStr, AMPMStr: string;
+{$ENDIF}
 begin
- {$IFDEF DELPHI}
+ {$IFDEF DELPHI}      // No longer needed for Lazarus using a TTimeEdit now.
  { Time Lists }
   StringList := TStringList.Create;
   try
@@ -606,9 +619,7 @@ end;
 
 procedure TDlgEventEdit.RecurringTypeChange(Sender: TObject);
 begin
-  if (RecurringType.ItemIndex > 0)
-  and (RepeatUntil.Date <= StartDate.Date)
-  then
+  if (RecurringType.ItemIndex > 0) and (RepeatUntil.Date <= StartDate.Date) then
     RepeatUntil.Date := StartDate.Date + 365;
 
   RecurrenceEndsLbl.Enabled := (RecurringType.ItemIndex > 0);
@@ -658,7 +669,7 @@ end;
 
 { TVpEventEditDialog }
 
-constructor TVpEventEditDialog.Create(AOwner : TComponent);
+constructor TVpEventEditDialog.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FPlacement.Position := mpCenterTop;
@@ -712,50 +723,43 @@ end;
 procedure TDlgEventEdit.StartTimeExit(Sender: TObject);                  
 var                                                                      
   ST : TDateTime;                                                        
-
 begin                                                                    
-  { Verify the value is valid                                          } 
+  { Verify the value is valid }
   try                                                                    
-    ST := StartDate.Date +
-          StrToTime (StartTime.Text);
-  except                                                                 
-    StartTime.Color := clRed;                                            
-    StartTime.SetFocus;                                                  
-    Exit;                                                                
+    ST := StartDate.Date + StrToTime(StartTime.Text);
+  except
+    StartTime.Color := clRed;
+    StartTime.SetFocus;
+    Exit;
   end;                                                                   
-  StartTime.Color := clWindow;                                           
+  StartTime.Color := clWindow;
 
-  { if the end time is less than the start time then change the end    } 
+  { If the end time is less than the start time then change the end    }
   {  time to  follow the start time by 30 minutes                      } 
 
-  if ST > EndDate.Date +
-          StrToTime (EndTime.Text) then begin
-  EndTime.Text := FormatDateTime('hh:mm',ST + (30/MinutesInDay));
-  end;
+  if ST > EndDate.Date + StrToTime (EndTime.Text) then
+    EndTime.Text := FormatDateTime('hh:mm', ST + 30 / MinutesInDay);
 end;                                                                     
 
 procedure TDlgEventEdit.EndTimeExit(Sender: TObject);                    
 var                                                                      
-  ET : TDateTime;                                                        
-
+  ET: TDateTime;
 begin                                                                    
-  { Verify the value is valid                                          } 
-  try                                                                    
-    ET := EndDate.Date + StrToTime (EndTime.Text);
-  except                                                                 
-    EndTime.Color := clRed;                                              
-    EndTime.SetFocus;                                                    
-    Exit;                                                                
-  end;                                                                   
-  EndTime.Color := clWindow;                                             
+  { Verify the value is valid }
+  try
+    ET := EndDate.Date + StrToTime(EndTime.Text);
+  except
+    EndTime.Color := clRed;
+    EndTime.SetFocus;
+    Exit;
+  end;
+  EndTime.Color := clWindow;
 
-  { if the end time is less than the start time then change the        } 
+  { If the end time is less than the start time then change the        }
   { start time to precede the end time by 30 minutes                   } 
 
-  if ET < StartDate.Date +
-          StrToTime (StartTime.Text) then begin
-  StartTime.Text := FormatDateTime('hh:mm',ET- (30/MinutesInDay));
-  end;
+  if ET < StartDate.Date + StrToTime (StartTime.Text) then
+    StartTime.Text := FormatDateTime('hh:mm', ET - 30 / MinutesInDay);
 end;                                                                     
 
 end.

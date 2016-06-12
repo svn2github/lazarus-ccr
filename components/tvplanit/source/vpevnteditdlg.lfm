@@ -105,21 +105,19 @@ object DlgEventEdit: TDlgEventEdit
     end
     object StartTimeLbl: TLabel
       Left = 33
-      Height = 13
+      Height = 15
       Top = 108
-      Width = 59
+      Width = 54
       Alignment = taRightJustify
-      AutoSize = False
       Caption = 'Start time:'
       ParentColor = False
     end
     object EndTimeLbl: TLabel
       Left = 35
-      Height = 13
+      Height = 15
       Top = 135
-      Width = 57
+      Width = 50
       Alignment = taRightJustify
-      AutoSize = False
       Caption = 'End time:'
       ParentColor = False
     end
@@ -154,10 +152,9 @@ object DlgEventEdit: TDlgEventEdit
     end
     object RecurringLbl: TLabel
       Left = 395
-      Height = 13
-      Top = 87
-      Width = 187
-      AutoSize = False
+      Height = 15
+      Top = 85
+      Width = 136
       Caption = 'Appointment Recurrence:'
       ParentColor = False
     end
@@ -168,11 +165,10 @@ object DlgEventEdit: TDlgEventEdit
       Width = 2
     end
     object IntervalLbl: TLabel
-      Left = 589
-      Height = 13
-      Top = 87
-      Width = 92
-      AutoSize = False
+      Left = 583
+      Height = 15
+      Top = 85
+      Width = 77
       Caption = 'Interval (days):'
       ParentColor = False
     end
@@ -209,7 +205,7 @@ object DlgEventEdit: TDlgEventEdit
       }
     end
     object SpeedButton1: TSpeedButton
-      Left = 329
+      Left = 312
       Height = 22
       Top = 167
       Width = 23
@@ -261,12 +257,11 @@ object DlgEventEdit: TDlgEventEdit
       }
     end
     object RecurrenceEndsLbl: TLabel
-      Left = 368
-      Height = 13
+      Left = 424
+      Height = 15
       Top = 135
-      Width = 88
+      Width = 28
       Alignment = taRightJustify
-      AutoSize = False
       Caption = 'Until:'
       ParentColor = False
     end
@@ -274,7 +269,7 @@ object DlgEventEdit: TDlgEventEdit
       Left = 86
       Height = 23
       Top = 11
-      Width = 580
+      Width = 578
       Anchors = [akTop, akLeft, akRight]
       TabOrder = 0
       Text = 'DescriptionEdit'
@@ -292,7 +287,7 @@ object DlgEventEdit: TDlgEventEdit
       Left = 484
       Height = 21
       Top = 40
-      Width = 182
+      Width = 180
       ItemHeight = 15
       OnDrawItem = CategoryDrawItem
       ReadOnly = True
@@ -310,7 +305,7 @@ object DlgEventEdit: TDlgEventEdit
       TabOrder = 6
     end
     object IntervalUpDown: TUpDown
-      Left = 652
+      Left = 648
       Height = 23
       Top = 104
       Width = 16
@@ -326,7 +321,7 @@ object DlgEventEdit: TDlgEventEdit
       Left = 231
       Height = 23
       Top = 167
-      Width = 93
+      Width = 77
       ItemHeight = 15
       Style = csDropDownList
       TabOrder = 13
@@ -354,7 +349,7 @@ object DlgEventEdit: TDlgEventEdit
       TabOrder = 3
     end
     object edtUnusedPlaceholder: TEdit
-      Left = 587
+      Left = 583
       Height = 23
       Top = 104
       Width = 65
