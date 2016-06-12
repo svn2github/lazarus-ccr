@@ -96,7 +96,6 @@ type
 
   TVpGetEditorCaption = procedure(var Caption : string) of object;
 
-
   { XML exceptions }
   EXML = class (Exception);
 
@@ -104,45 +103,38 @@ type
   private
     seFilePos : Longint;
   public
-    constructor CreateError(const FilePos : Longint;
-                            const Reason  : DOMString);
-    property FilePos : Longint
+    constructor CreateError(const FilePos: Longint; const Reason: DOMString);
+    property FilePos: Longint
        read seFilePos;
   end;
 
   EVpFilterError = class(EVpStreamError)
   private
-    feReason  : DOMString;
-    feLine    : Longint;
-    feLinePos : Longint;
+    feReason: DOMString;
+    feLine: Longint;
+    feLinePos: Longint;
   public
-    constructor CreateError(const FilePos, Line, LinePos : Longint;
-                            const Reason : DOMString);
-    property Reason : DOMString
-       read feReason;
-    property Line : Longint
-       read feLine;
-    property LinePos : Longint
-       read feLinePos;
+    constructor CreateError(const FilePos, Line, LinePos: Longint; const Reason: DOMString);
+    property Reason : DOMString read feReason;
+    property Line : Longint read feLine;
+    property LinePos : Longint read feLinePos;
   end;
 
   EVpParserError = class(EVpFilterError)
-  protected
   public
-    constructor CreateError(Line, LinePos : Longint;
-                            const Reason : DOMString);
+    constructor CreateError(Line, LinePos: Longint; const Reason: DOMString);
   end;
 
   { implements the Version property with its associated design time About box }
   TVpComponent = class(TComponent)
   protected { private }
-    function GetVersion : string;
-    procedure SetVersion(const Value : string);
+    function GetVersion: string;
+    procedure SetVersion(const Value: string);
   public
     constructor Create(AOwner: TComponent); override;
   published
     { properties }
-    property Version : string read GetVersion write SetVersion stored False;
+    property Version: string read GetVersion write SetVersion stored False;
   end;
 
   { Ancestor for all Visual PlanIt visual controls }
@@ -162,19 +154,17 @@ type
     {$ENDIF}
 
   protected
-    procedure DoOnMouseWheel(Shift : TShiftState;
-      Delta, XPos, YPos : SmallInt); dynamic;
+    procedure DoOnMouseWheel(Shift: TShiftState; Delta, XPos, YPos: SmallInt); dynamic;
     procedure CreateWnd; override;
-    property AfterEnter : TNotifyEvent read FAfterEnter write FAfterEnter;
-    property AfterExit : TNotifyEvent read FAfterExit write FAfterExit;
-    property OnMouseWheel : TVpMouseWheelEvent read FOnMouseWheel
-      write FOnMouseWheel;
+    property AfterEnter: TNotifyEvent read FAfterEnter write FAfterEnter;
+    property AfterExit: TNotifyEvent read FAfterExit write FAfterExit;
+    property OnMouseWheel: TVpMouseWheelEvent read FOnMouseWheel write FOnMouseWheel;
 
   public                                                                 
     constructor Create (AOwner : TComponent); override;                  
 
   published
-    property Version : string read GetVersion write SetVersion stored False;
+    property Version: string read GetVersion write SetVersion stored False;
     {$IFNDEF LCL}
     {$IFDEF VERSION6}                                                    
     property BevelEdges;                                                 
@@ -214,9 +204,8 @@ type
     constructor Create;                                                  
     destructor Destroy; override;                                        
   published
-    property BackgroundColor : TColor                                    
-             read FBackgroundColor write SetBackgroundColor              
-             default clWindow;                                           
+    property BackgroundColor : TColor read FBackgroundColor write SetBackgroundColor
+      default clWindow;
     property Bitmap : TBitmap read FBitmap write SetBitmap;              
     property Color: TColor read FColor write SetColor;
     property Description: string read FDescription write SetDescription;
@@ -272,10 +261,10 @@ type
     procedure SetVersion(const Value: String);
     procedure SetName(Value: String); virtual;
   public
-    property DisplayText : string read FDisplayText write FDisplayText;
+    property DisplayText: string read FDisplayText write FDisplayText;
     property Name: String read FName write SetName;
   published
-    property Version : String read GetVersion write SetVersion;
+    property Version: String read GetVersion write SetVersion;
   end;
 
   TVpCollection = class(TCollection)
@@ -296,32 +285,26 @@ type
     function GetCount : Integer;
     procedure Loaded;
   public
-    constructor Create(AOwner : TPersistent;
-                       ItemClass : TCollectionItemClass); virtual;
+    constructor Create(AOwner : TPersistent; ItemClass : TCollectionItemClass); virtual;
     destructor Destroy; override;
-    property ItemEditor : TForm read FItemEditor write FItemEditor;
-    function Add : TVpCollectionItem; dynamic;
+    property ItemEditor: TForm read FItemEditor write FItemEditor;
+    function Add: TVpCollectionItem; dynamic;
     {$IFNDEF VERSION4}
     function Insert(Index: Integer): TVpCollectionItem; dynamic;
     {$ENDIF}
     function GetItem(Index: Integer): TVpCollectionItem;
     function GetOwner: TPersistent; override;
     procedure SetItem(Index: Integer; Value: TVpCollectionItem);
-    procedure DoOnItemSelected(Index : Integer);
-    function GetEditorCaption : string;
-    function ItemByName(const Name : string) : TVpCollectionItem;
-    function ParentForm : TForm;
+    procedure DoOnItemSelected(Index: Integer);
+    function GetEditorCaption: string;
+    function ItemByName(const Name: string) : TVpCollectionItem;
+    function ParentForm: TForm;
     property Count: Integer read GetCount;
-    property Item[Index: Integer] : TVpCollectionItem
-      read GetItem write SetItem; default;
-    property OnGetEditorCaption : TVpGetEditorCaption
-      read FOnGetEditorCaption write FOnGetEditorCaption;
-    property ReadOnly : Boolean
-      read FReadOnly write FReadOnly default False;
-    property OnChanged : TNotifyEvent
-      read FOnChanged write FOnChanged;
-    property OnItemSelected : TVpItemSelectedEvent
-      read FOnItemSelected write FOnItemSelected;
+    property Item[Index: Integer] : TVpCollectionItem read GetItem write SetItem; default;
+    property OnGetEditorCaption : TVpGetEditorCaption read FOnGetEditorCaption write FOnGetEditorCaption;
+    property ReadOnly : Boolean read FReadOnly write FReadOnly default False;
+    property OnChanged : TNotifyEvent read FOnChanged write FOnChanged;
+    property OnItemSelected : TVpItemSelectedEvent read FOnItemSelected write FOnItemSelected;
   end;
 
   TVpContainerList = class(TList)
@@ -378,8 +361,7 @@ type
     property Holiday: TColor read FHoliday write SetHoliday;
     property Weekday: TColor read FWeekday write SetWeekday;
     property Weekend: TColor read FWeekend write SetWeekend;
-    property ActiveRange: TVpTimeRange
-      read FActiveRange write FActiveRange;
+    property ActiveRange: TVpTimeRange read FActiveRange write FActiveRange;
   end;
 
 implementation
@@ -404,11 +386,10 @@ end;
 
 { EAdFilterError }
 
-constructor EVpFilterError.CreateError(const FilePos, Line,
-  LinePos: Integer; const Reason: DOMString);
+constructor EVpFilterError.CreateError(const FilePos, Line, LinePos: Integer;
+  const Reason: DOMString);
 begin
   inherited CreateError(FilePos, Reason);
-
   feLine := Line;
   feLinePos := LinePos;
   feReason := Reason;
@@ -425,7 +406,7 @@ end;
 (*****************************************************************************)
 { TVpCustomControl }
 
-constructor TVpCustomControl.Create (AOwner : TComponent);               
+constructor TVpCustomControl.Create (AOwner: TComponent);
 begin                                                                    
   inherited Create (AOwner);                                             
   TabStop := True;                                                       
@@ -446,8 +427,8 @@ begin
 end;
 {=====}
 
-procedure TVpCustomControl.DoOnMouseWheel(Shift: TShiftState; Delta, XPos,
-  YPos: SmallInt);
+procedure TVpCustomControl.DoOnMouseWheel(Shift: TShiftState;
+  Delta, XPos, YPos: SmallInt);
 begin
   if Assigned(FOnMouseWheel) then
     FOnMouseWheel(Self, Shift, Delta, XPos, YPos);
@@ -475,15 +456,16 @@ begin
   with Msg do
     DoOnMouseWheel(KeysToShiftState(LOWORD(wParam)) {fwKeys},
                    HIWORD(wParam) {zDelta},
-                   LOWORD(lParam) {xPos},   HIWORD(lParam) {yPos});
+                   LOWORD(lParam) {xPos},
+                   HIWORD(lParam) {yPos}
+    );
 end;
 {=====}
 
 (*****************************************************************************)
 { TVpCollection }
 
-constructor TVpCollection.Create(AOwner : TPersistent;
-                                  ItemClass : TCollectionItemClass);
+constructor TVpCollection.Create(AOwner: TPersistent; ItemClass: TCollectionItemClass);
 begin
   FOwner := AOwner;
   Inherited Create(ItemClass);
@@ -498,20 +480,20 @@ begin
 end;
 {=====}
 
-procedure TVpCollection.DoOnItemSelected(Index : Integer);
+procedure TVpCollection.DoOnItemSelected(Index: Integer);
 begin
   if Assigned(FOnItemSelected) then
     FOnItemSelected(Self, Index);
 end;
 {=====}
 
-function TVpCollection.GetCount : Integer;
+function TVpCollection.GetCount: Integer;
 begin
   Result := inherited Count;
 end;
 {=====}
 
-function TVpCollection.GetEditorCaption : string;
+function TVpCollection.GetEditorCaption: string;
 begin
   Result := 'Editing ' + ClassName;
   if Assigned(FOnGetEditorCaption) then
@@ -519,7 +501,7 @@ begin
 end;
 {=====}
 
-function TVpCollection.Add : TVpCollectionItem;
+function TVpCollection.Add: TVpCollectionItem;
 begin
   Result := TVpCollectionItem(inherited Add);
   if ItemEditor <> nil then
@@ -540,7 +522,7 @@ end;
 {=====}
 {$ENDIF}
 
-function TVpCollection.GetItem(Index : Integer) : TVpCollectionItem;
+function TVpCollection.GetItem(Index: Integer): TVpCollectionItem;
 begin
   Result := TVpCollectionItem(inherited GetItem(Index));
 end;
@@ -551,13 +533,13 @@ begin
 end;
 {=====}
 
-procedure TVpCollection.SetItem(Index : Integer; Value : TVpCollectionItem);
+procedure TVpCollection.SetItem(Index: Integer; Value: TVpCollectionItem);
 begin
   inherited SetItem(Index, Value);
 end;
 {=====}
 
-function TVpCollection.ItemByName(const Name : string) : TVpCollectionItem;
+function TVpCollection.ItemByName(const Name: string): TVpCollectionItem;
 var
   i : Integer;
 begin
@@ -660,9 +642,10 @@ end;
 procedure TVpFont.Changed;
 begin
   inherited;
-  Assert((FOwner is TControl) or (FOwner is TVpPersistent),
-         Format('TVpFont.Changed: Unexpected parent class: %s',
-                [FOwner.ClassName]));
+  Assert(
+    (FOwner is TControl) or (FOwner is TVpPersistent),
+    Format('TVpFont.Changed: Unexpected parent class: %s', [FOwner.ClassName])
+  );
   if FOwner is TControl then
     TControl(FOwner).Invalidate
   else if FOwner is TVpPersistent then
@@ -683,7 +666,6 @@ end;
 constructor TVpCategoryColorMap.Create;
 begin
   inherited Create;
-
   FCat0 := TVpCategoryInfo.Create;
     FCat0.Color := clNavy;
     FCat0.Description := RSCategoryDesc0;                                
@@ -787,25 +769,23 @@ end;
 constructor TVpCategoryInfo.Create;                                      
 begin                                                                    
   inherited Create;                                                      
-
-  FBitmap          := TBitmap.Create;                                    
+  FBitmap := TBitmap.Create;
   FBackgroundColor := clWindow;                                          
 end;                                                                     
 
 destructor TVpCategoryInfo.Destroy;                                      
 begin                                                                    
   FBitmap.Free;                                                          
-
   inherited Destroy;                                                     
 end;                                                                     
 
-procedure TVpCategoryInfo.SetBackgroundColor (const v : TColor);         
+procedure TVpCategoryInfo.SetBackgroundColor(const v: TColor);
 begin                                                                    
   if v <> FBackgroundColor then                                          
     FBackgroundColor := v;                                               
 end;                                                                     
 
-procedure TVpCategoryInfo.SetBitmap (v : TBitmap);                       
+procedure TVpCategoryInfo.SetBitmap(v: TBitmap);
 begin                                                                    
   FBitmap.Assign (v);                                                    
 end;                                                                     
@@ -857,7 +837,6 @@ begin
   { start to be one hour earlier than the end }
   if FRangeBegin > Value then
     FRangeBegin := TVpHours(Ord(Value) - 1);
-
   FRangeEnd := Value;
   SetEndTime((Ord(Value) * 60) / MinutesInDay);
 end;
@@ -868,7 +847,6 @@ begin
   if Value < StartTime then
     StartTime := Value - (30 / MinutesInDay);
   FEndTime := Value;
-
   if FOwner is TVpTimeSlotColor then
     (FOwner as TVpTimeSlotColor).Changed;
 end;
@@ -879,7 +857,6 @@ begin
   if Value > EndTime then
     EndTime := Value + (30 / MinutesInDay);
   FStartTime := Value;
-
   if FOwner is TVpTimeSlotColor then
     (FOwner as TVpTimeSlotColor).Changed;
 end;
@@ -895,12 +872,12 @@ constructor TVpTimeSlotColor.Create(AOwner: TVpCustomControl);
 begin
   inherited Create;
   FOwner := AOwner;
-  FActiveRange   := TVpTimeRange.Create(Self);
+  FActiveRange := TVpTimeRange.Create(Self);
   FInactive := $0080FFFF;
-  FHoliday  := $00FF80FF;
-  FWeekend  := $00FFFF80;
-  FActive   := clWhite;
-  FWeekday  := clWhite;
+  FHoliday := $00FF80FF;
+  FWeekend := $00FFFF80;
+  FActive := clWhite;
+  FWeekday := clWhite;
 end;
 {=====}
 

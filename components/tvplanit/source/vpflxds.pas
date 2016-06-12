@@ -193,7 +193,7 @@ type
     property OnGetNextID: TVpGetNextIDEvent
       read FOnGetNextID write FOnGetNextID;
     property OnCreateTable: TVpTableEvent
-     read FOnCreateTable write FOnCreateTable;
+      read FOnCreateTable write FOnCreateTable;
     property OnSetFilterCriteria: TVpSetFilterCriteriaEvent
       read FOnSetFilterCriteria write FOnSetFilterCriteria;
   end;
@@ -210,10 +210,10 @@ constructor TVpFlexDataStore.Create(AOwner: TComponent);
 begin
   inherited;
   FResourceMappings := TCollection.Create(TVpFieldMapping);              
-  FEventMappings    := TCollection.Create(TVpFieldMapping);              
-  FContactMappings  := TCollection.Create(TVpFieldMapping);              
-  FTaskMappings     := TCollection.Create(TVpFieldMapping);              
-  FDataSources  := TVpDataSources.Create(self);
+  FEventMappings := TCollection.Create(TVpFieldMapping);
+  FContactMappings := TCollection.Create(TVpFieldMapping);
+  FTaskMappings := TCollection.Create(TVpFieldMapping);
+  FDataSources := TVpDataSources.Create(self);
   FConnected := false;
   FResourceID := 0;
 end;
@@ -234,7 +234,7 @@ function TVpFlexDataStore.GetConnected: Boolean;
 var
   AllAssigned, AllActive: Boolean;
 begin
-  AllActive   := false;
+  AllActive := false;
   AllAssigned := (FResourceDataSrc.DataSet <> nil)
     and (FEventsDataSrc.DataSet <> nil)
     and (FContactsDataSrc.DataSet <> nil)
@@ -348,9 +348,8 @@ begin
       try
         FResourceDataSrc.DataSet.Open;
       except
-        if Assigned(OnCreateTable) then begin
+        if Assigned(OnCreateTable) then
           OnCreateTable(Self, ResourceTableName);
-        end;
         try
           FResourceDataSrc.DataSet.Open;
         except
@@ -364,9 +363,8 @@ begin
       try
         FEventsDataSrc.DataSet.Open;
       except
-        if Assigned(OnCreateTable) then begin
+        if Assigned(OnCreateTable) then
           OnCreateTable(Self, EventsTableName);
-        end;
         try
           FEventsDataSrc.DataSet.Open;
         except
@@ -380,9 +378,8 @@ begin
       try
         FContactsDataSrc.DataSet.Open;
       except
-        if Assigned(OnCreateTable) then begin
+        if Assigned(OnCreateTable) then
           OnCreateTable(Self, ContactsTableName);
-        end;
         try
           FContactsDataSrc.DataSet.Open;
         except
@@ -396,9 +393,8 @@ begin
       try                                                                
         FTasksDataSrc.DataSet.Open;
       except
-        if Assigned(OnCreateTable) then begin
+        if Assigned(OnCreateTable) then
           OnCreateTable(Self, TasksTableName);
-        end;
         try
           FTasksDataSrc.DataSet.Open;
         except
@@ -429,9 +425,8 @@ end;
 
 procedure TVpFlexDataStore.Load;
 var
-  Res        : TVpResource;
-  {FieldName}
-  FN: string;
+  Res: TVpResource;
+  FN: string;    // Field name
 begin
   if (csLoading in ComponentState) then
     Exit;
@@ -538,21 +533,17 @@ var
   {Field Name}
   FN1, FN2, FN3  : string;
 begin
-  if (FEventsDataSrc = nil)
-  or (FEventsDataSrc.DataSet = nil) then
+  if (FEventsDataSrc = nil) or (FEventsDataSrc.DataSet = nil) then
     Exit;
 
   if (FResource <> nil) then begin
     { Load this resource's events into memory }
-    SetFilterCriteria(FEventsDataSrc.DataSet,
-                      True,
-                      FResource.ResourceID,
-                      TimeRange.StartTime,
-                      TimeRange.EndTime);
+    SetFilterCriteria(FEventsDataSrc.DataSet, True, FResource.ResourceID,
+      TimeRange.StartTime, TimeRange.EndTime);
 
-    if (FEventsDataSrc = nil)
-    or (FEventsDataSrc.DataSet = nil)
-    or (not FEventsDataSrc.DataSet.Active) then
+    if (FEventsDataSrc = nil) or
+       (FEventsDataSrc.DataSet = nil) or (not FEventsDataSrc.DataSet.Active)
+    then
       Exit;
 
     with FEventsDataSrc.Dataset do begin
@@ -564,8 +555,8 @@ begin
         FN3 := GetFieldName(FEventMappings, 'EndTime');
         if (FN1 <> '') and (FN2 <> '') and (FN3 <> '') then begin
           Event := Resource.Schedule.AddEvent(FieldByName(FN1).AsInteger,
-            FieldByName(FN2).AsDateTime,
-            FieldByName(FN3).AsDateTime);
+            FieldByName(FN2).AsDateTime, FieldByName(FN3).AsDateTime);
+
           if Event <> nil then begin
             Event.Loading := true;
 
@@ -688,187 +679,185 @@ var
 begin
   if (FResource <> nil) then begin
     {load this resource's contacts into memory}
-    if (FContactsDataSrc <> nil)
-    and (FContactsDataSrc.DataSet <> nil)
-    and (FContactsDataSrc.DataSet.Active) then
-    with FContactsDataSrc.DataSet do begin
-      SetFilterCriteria(FContactsDataSrc.DataSet, False,
-                        FResource.ResourceID, 0, 0);
-      First;
-      while not EOF do begin
-        Contact := Resource.Contacts.AddContact(GetNextID(ContactsTableName));
-        if Contact <> nil then begin
-          Contact.Loading := true;
+    if (FContactsDataSrc <> nil) and (FContactsDataSrc.DataSet <> nil) and FContactsDataSrc.DataSet.Active
+    then
+      with FContactsDataSrc.DataSet do begin
+        SetFilterCriteria(FContactsDataSrc.DataSet, False, FResource.ResourceID, 0, 0);
+        First;
+        while not EOF do begin
+          Contact := Resource.Contacts.AddContact(GetNextID(ContactsTableName));
+          if Contact <> nil then begin
+            Contact.Loading := true;
 
-          FN := GetFieldName(FContactMappings, 'RecordID');
-          if FN <> '' then
-            Contact.RecordID := FieldByName(FN).AsInteger;
+            FN := GetFieldName(FContactMappings, 'RecordID');
+            if FN <> '' then
+              Contact.RecordID := FieldByName(FN).AsInteger;
 
-          FN := GetFieldName(FContactMappings, 'FirstName');
-          if FN <> '' then
-            Contact.FirstName := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'FirstName');
+            if FN <> '' then
+              Contact.FirstName := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'LastName');
-          if FN <> '' then
-            Contact.LastName := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'LastName');
+            if FN <> '' then
+              Contact.LastName := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'BirthDate');
-          if FN <> '' then
-            Contact.Birthdate := FieldByName(FN).AsDateTime;
+            FN := GetFieldName(FContactMappings, 'BirthDate');
+            if FN <> '' then
+              Contact.Birthdate := FieldByName(FN).AsDateTime;
 
-          FN := GetFieldName(FContactMappings, 'Anniversary');
-          if FN <> '' then
-            Contact.Anniversary := FieldByName(FN).AsDateTime;
+            FN := GetFieldName(FContactMappings, 'Anniversary');
+            if FN <> '' then
+              Contact.Anniversary := FieldByName(FN).AsDateTime;
 
-          FN := GetFieldName(FContactMappings, 'Title');
-          if FN <> '' then
-            Contact.Title := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Title');
+            if FN <> '' then
+              Contact.Title := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'Company');
-          if FN <> '' then
-            Contact.Company := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Company');
+            if FN <> '' then
+              Contact.Company := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'Job_Position');
-          if FN = '' then
-            FN := GetFieldName(FContactMappings, 'Position');  // deprecated
-          if FN <> '' then
-            Contact.Job_Position := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Job_Position');
+            if FN = '' then
+              FN := GetFieldName(FContactMappings, 'Position');  // deprecated
+            if FN <> '' then
+              Contact.Job_Position := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'EMail');
-          if FN <> '' then
-            Contact.EMail := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'EMail');
+            if FN <> '' then
+              Contact.EMail := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'Address');
-          if FN <> '' then
-            Contact.Address := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Address');
+            if FN <> '' then
+              Contact.Address := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'City');
-          if FN <> '' then
-            Contact.City := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'City');
+            if FN <> '' then
+              Contact.City := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'State');
-          if FN <> '' then
-            Contact.State := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'State');
+            if FN <> '' then
+              Contact.State := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'Zip');
-          if FN <> '' then
-            Contact.Zip := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Zip');
+            if FN <> '' then
+              Contact.Zip := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'Country');
-          if FN <> '' then
-            Contact.Country := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Country');
+            if FN <> '' then
+              Contact.Country := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'Notes');
-          if FN = '' then
-            FN := GetFieldName(FContactMappings, 'Note');  // deprecated
-          if FN <> '' then
-            Contact.Notes := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Notes');
+            if FN = '' then
+              FN := GetFieldName(FContactMappings, 'Note');  // deprecated
+            if FN <> '' then
+              Contact.Notes := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'Phone1');
-          if FN <> '' then
-            Contact.Phone1 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Phone1');
+            if FN <> '' then
+              Contact.Phone1 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'Phone2');
-          if FN <> '' then
-            Contact.Phone2 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Phone2');
+            if FN <> '' then
+              Contact.Phone2 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'Phone3');
-          if FN <> '' then
-            Contact.Phone3 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Phone3');
+            if FN <> '' then
+              Contact.Phone3 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'Phone4');
-          if FN <> '' then
-            Contact.Phone4 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Phone4');
+            if FN <> '' then
+              Contact.Phone4 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'Phone5');
-          if FN <> '' then
-            Contact.Phone5 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Phone5');
+            if FN <> '' then
+              Contact.Phone5 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'PhoneType1');
-          if FN <> '' then
-            Contact.PhoneType1 := FieldByName(FN).AsInteger;
+            FN := GetFieldName(FContactMappings, 'PhoneType1');
+            if FN <> '' then
+              Contact.PhoneType1 := FieldByName(FN).AsInteger;
 
-          FN := GetFieldName(FContactMappings, 'PhoneType2');
-          if FN <> '' then
-            Contact.PhoneType2 := FieldByName(FN).AsInteger;
+            FN := GetFieldName(FContactMappings, 'PhoneType2');
+            if FN <> '' then
+              Contact.PhoneType2 := FieldByName(FN).AsInteger;
 
-          FN := GetFieldName(FContactMappings, 'PhoneType3');
-          if FN <> '' then
-            Contact.PhoneType3 := FieldByName(FN).AsInteger;
+            FN := GetFieldName(FContactMappings, 'PhoneType3');
+            if FN <> '' then
+              Contact.PhoneType3 := FieldByName(FN).AsInteger;
 
-          FN := GetFieldName(FContactMappings, 'PhoneType4');
-          if FN <> '' then
-            Contact.PhoneType4 := FieldByName(FN).AsInteger;
+            FN := GetFieldName(FContactMappings, 'PhoneType4');
+            if FN <> '' then
+              Contact.PhoneType4 := FieldByName(FN).AsInteger;
 
-          FN := GetFieldName(FContactMappings, 'PhoneType5');
-          if FN <> '' then
-            Contact.PhoneType5 := FieldByName(FN).AsInteger;
+            FN := GetFieldName(FContactMappings, 'PhoneType5');
+            if FN <> '' then
+              Contact.PhoneType5 := FieldByName(FN).AsInteger;
 
-          FN := GetFieldName(FContactMappings, 'Category');
-          if FN <> '' then
-            Contact.Category := FieldByName(FN).AsInteger;
+            FN := GetFieldName(FContactMappings, 'Category');
+            if FN <> '' then
+              Contact.Category := FieldByName(FN).AsInteger;
 
-          FN := GetFieldName(FContactMappings, 'Custom1');
-          if FN <> '' then
-            Contact.Custom1 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Custom1');
+            if FN <> '' then
+              Contact.Custom1 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'Custom2');
-          if FN <> '' then
-            Contact.Custom2 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Custom2');
+            if FN <> '' then
+              Contact.Custom2 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'Custom3');
-          if FN <> '' then
-            Contact.Custom3 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Custom3');
+            if FN <> '' then
+              Contact.Custom3 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'Custom4');
-          if FN <> '' then
-            Contact.Custom4 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'Custom4');
+            if FN <> '' then
+              Contact.Custom4 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'UserField0');
-          if FN <> '' then
-            Contact.UserField0 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'UserField0');
+            if FN <> '' then
+              Contact.UserField0 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'UserField1');
-          if FN <> '' then
-            Contact.UserField1 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'UserField1');
+            if FN <> '' then
+              Contact.UserField1 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'UserField2');
-          if FN <> '' then
-            Contact.UserField2 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'UserField2');
+            if FN <> '' then
+              Contact.UserField2 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'UserField3');
-          if FN <> '' then
-            Contact.UserField3 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'UserField3');
+            if FN <> '' then
+              Contact.UserField3 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'UserField4');
-          if FN <> '' then
-            Contact.UserField4 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'UserField4');
+            if FN <> '' then
+              Contact.UserField4 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'UserField5');
-          if FN <> '' then
-            Contact.UserField5 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'UserField5');
+            if FN <> '' then
+              Contact.UserField5 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'UserField6');
-          if FN <> '' then
-            Contact.UserField6 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'UserField6');
+            if FN <> '' then
+              Contact.UserField6 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'UserField7');
-          if FN <> '' then
-            Contact.UserField7 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'UserField7');
+            if FN <> '' then
+              Contact.UserField7 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'UserField8');
-          if FN <> '' then
-            Contact.UserField8 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'UserField8');
+            if FN <> '' then
+              Contact.UserField8 := FieldByName(FN).AsString;
 
-          FN := GetFieldName(FContactMappings, 'UserField9');
-          if FN <> '' then
-            Contact.UserField9 := FieldByName(FN).AsString;
+            FN := GetFieldName(FContactMappings, 'UserField9');
+            if FN <> '' then
+              Contact.UserField9 := FieldByName(FN).AsString;
 
-          Contact.Loading := false;
-        end;
-        Next;
-      end; {while}
-    end; {with ContactsTable}
+            Contact.Loading := false;
+          end;
+          Next;
+        end; {while}
+      end; {with ContactsTable}
   end; {if Resource <> nil}
 end;
 {=====}
@@ -881,12 +870,10 @@ var
 begin
   if (FResource <> nil) then begin
     {load this resource's contacts into memory}
-    if (FTasksDataSrc <> nil)
-    and (FTasksDataSrc.DataSet <> nil)
-    and (FTasksDataSrc.DataSet.Active) then begin
+    if (FTasksDataSrc <> nil) and (FTasksDataSrc.DataSet <> nil) and (FTasksDataSrc.DataSet.Active) then
+    begin
       with FTasksDataSrc.DataSet do begin
-        SetFilterCriteria(FTasksDataSrc.DataSet, False, FResource.ResourceID,
-          0, 0);
+        SetFilterCriteria(FTasksDataSrc.DataSet, False, FResource.ResourceID, 0, 0);
         First;
         while not EOF do begin
           Task := Resource.Tasks.AddTask(GetNextID(TasksTableName));
@@ -1000,7 +987,6 @@ begin
   then FResourceDataSrc.DataSet.Open;
 
   if FResourceDataSrc.DataSet.Active then begin
-
     with FResourceDataSrc.DataSet do begin
       { if a resource }
       FN := GetFieldName(FResourceMappings, 'ResourceID');
@@ -1115,20 +1101,17 @@ var
   FN: string;
 begin
   {if no events dataset has been defined then bail.}
-  if (FEventsDataSrc = nil)
-  or (FEventsDataSrc.DataSet = nil) then
+  if (FEventsDataSrc = nil) or (FEventsDataSrc.DataSet = nil) then
     Exit;
 
   if (Resource <> nil) and Resource.EventsDirty then begin
     { Dump this resource's dirty events to the DB }
-    if (FResourceDataSrc <> nil)
-    and (FResourceDataSrc.DataSet <> nil) then begin
-
+    if (FResourceDataSrc <> nil) and (FResourceDataSrc.DataSet <> nil) then
+    begin
       FResourceDataSrc.DataSet.Open;
 
       FN := GetFieldName(FEventMappings, 'ResourceID');
-      if (FN <> '')
-      and FResourceDataSrc.DataSet.Locate(FN, Resource.ResourceID, [])
+      if (FN <> '') and FResourceDataSrc.DataSet.Locate(FN, Resource.ResourceID, [])
       then begin
         SetFilterCriteria(FEventsDataSrc.DataSet, False, Resource.ResourceID,
           0, 0);
@@ -1159,7 +1142,6 @@ begin
                 { RecordID fields, then  don't overwrite them here. }
                 if Event.RecordID <> -1 then
                   EventsTable.FieldByName(FN).AsInteger := Event.RecordID;
-
 
                 FN := GetFieldName(FEventMappings, 'StartTime');
                 if FN <> '' then
@@ -1287,10 +1269,8 @@ begin
               if Event.RecordID = -1 then begin                          
                  FN := GetFieldName(EventMappings, 'RecordID');          
                  if FN <> '' then                                        
-                  Event.RecordID                                         
-                    := EventsTable.FieldByName(FN).AsInteger;            
+                  Event.RecordID := EventsTable.FieldByName(FN).AsInteger;
               end;                                                       
-
 
 (* Bad Phillip.
               if Event.RecordID = -1 then
@@ -1332,8 +1312,8 @@ begin
       { if the delete flag is set then delete the record }
       { and free the event instance }
       if Contact.Deleted then begin
-        if ContactsTable.Locate(FN, Contact.RecordID, [])
-        then ContactsTable.Delete;
+        if ContactsTable.Locate(FN, Contact.RecordID, []) then
+          ContactsTable.Delete;
         Contact.Free;
         Continue;
       end;
@@ -1530,7 +1510,7 @@ begin
         if Contact.RecordID = -1 then begin
           FN := GetFieldName(FContactMappings, 'RecordID');
           if FN <> '' then
-          Contact.RecordID := ContactsTable.FieldByName(FN).AsInteger;
+            Contact.RecordID := ContactsTable.FieldByName(FN).AsInteger;
         end;
 
         Contact.Changed := false;
@@ -1552,14 +1532,14 @@ var
 begin
   if (Resource <> nil) and Resource.TasksDirty then begin
 
-    if (FResourceDataSrc <> nil)
-    and (FResourceDataSrc.Dataset <> nil) then begin
+    if (FResourceDataSrc <> nil) and (FResourceDataSrc.Dataset <> nil) then
+    begin
       FResourceDataSrc.DataSet.Open;
       if FResourceDataSrc.DataSet.Active then begin
         FN := GetFieldName(FTaskMappings, 'ResourceID');
         { Dump this resource's dirty contacts to the DB }
-        if not FResourceDataSrc.DataSet.Locate(FN, Resource.ResourceID, [])
-        then Exit;
+        if not FResourceDataSrc.DataSet.Locate(FN, Resource.ResourceID, []) then
+          Exit;
       end; {if FResourceDataSrc.DataSet.Active}
     end; {if (FResourceDataSrc ...}
 
@@ -1569,9 +1549,7 @@ begin
     for I := pred(Resource.Tasks.Count) downto 0 do begin
 
       with FTasksDataSrc.DataSet do begin
-
         Task := Resource.Tasks.GetTask(I);
-
         FN := GetFieldName(FTaskMappings, 'RecordID');
 
         { if the delete flag is set then delete the record }
@@ -1584,15 +1562,14 @@ begin
         end;
 
         if Task.Changed then begin
-          if Locate(FN, Task.RecordID, [])
-          then
+          if Locate(FN, Task.RecordID, []) then
             { this event already exists in the database so update it }
             Edit
           else
             { this record doesn't exist in the database, so it's a new event }
             Append;
-          try
 
+          try
           { DataStore descendants that can use an autoincrement RecordID }
           { field set the RecordID to -1 by default.  If the RecordID is }
           { -1 then this is a new record and we shouldn't overwrite      }
@@ -1726,7 +1703,6 @@ begin
 
         FN := GetFieldName(FResourceMappings, 'ResourceID');
         if (FN <> '') then begin
-
           if (Res <> nil) and Res.Deleted then begin
             PurgeEvents(Res);
             PurgeContacts(Res);
@@ -1850,9 +1826,8 @@ procedure TVpFlexDataStore.PurgeEvents(Res: TVpResource);
 var
   I: integer;
 begin
-  for I := 0 to pred(Res.Schedule.EventCount) do begin
+  for I := 0 to pred(Res.Schedule.EventCount) do
     TVpEvent(Res.Schedule.GetEvent(I)).Deleted := true;
-  end;
   PostEvents;
   Res.Schedule.ClearEvents;
 end;
@@ -1863,9 +1838,8 @@ procedure TVpFlexDataStore.PurgeContacts(Res: TVpResource);
 var
   I: integer;
 begin
-  for I := 0 to pred(Res.Contacts.Count) do begin
+  for I := 0 to pred(Res.Contacts.Count) do
     TVpContact(Res.Contacts.GetContact(I)).Deleted := true;
-  end;
   PostContacts;
   Res.Contacts.ClearContacts;
 end;
@@ -1876,9 +1850,8 @@ procedure TVpFlexDataStore.PurgeTasks(Res: TVpResource);
 var
   I: integer;
 begin
-  for I := 0 to pred(Res.Tasks.Count) do begin
+  for I := 0 to pred(Res.Tasks.Count) do
     TVpTask(Res.Tasks.GetTask(I)).Deleted := true;
-  end;
   PostTasks;
   Res.Tasks.ClearTasks;
 end;
@@ -2079,7 +2052,6 @@ begin
   { for each table. }
 
   result := -1;
-
   if Assigned(OnGetNextID) then
     result := OnGetNextID(Self, TableName);
 end;
@@ -2201,7 +2173,6 @@ begin
   FOwner.TasksDataSource := Value;
 end;
 {=====}
-
 
 
 end.
