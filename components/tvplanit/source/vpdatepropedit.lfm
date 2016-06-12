@@ -1,29 +1,29 @@
 object frmDatePropertyEditor: TfrmDatePropertyEditor
   Left = 349
-  Height = 193
+  Height = 201
   Top = 233
-  Width = 219
+  Width = 231
   HorzScrollBar.Page = 218
   VertScrollBar.Page = 192
   BorderStyle = bsDialog
   Caption = 'Select Date'
-  ClientHeight = 193
-  ClientWidth = 219
+  ClientHeight = 201
+  ClientWidth = 231
   Position = poDefaultPosOnly
   LCLVersion = '1.7'
   object Button1: TButton
-    Left = 56
+    Left = 69
     Height = 25
-    Top = 160
+    Top = 168
     Width = 75
     Caption = 'OK'
     ModalResult = 1
     TabOrder = 0
   end
   object Button2: TButton
-    Left = 136
+    Left = 149
     Height = 25
-    Top = 160
+    Top = 168
     Width = 75
     Caption = 'Cancel'
     ModalResult = 2
@@ -31,9 +31,9 @@ object frmDatePropertyEditor: TfrmDatePropertyEditor
   end
   object VpCalendar1: TVpCalendar
     Left = 8
-    Height = 140
+    Height = 152
     Top = 8
-    Width = 200
+    Width = 216
     ParentFont = False
     BorderStyle = bsNone
     Colors.ActiveDay = clRed

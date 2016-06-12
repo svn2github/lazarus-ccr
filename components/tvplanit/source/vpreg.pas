@@ -45,23 +45,14 @@ uses
   Dialogs,
   {$IFDEF VERSION6}
   {$IFNDEF LCL}
-  DesignIntf,
-  DesignEditors,
-  VCLEditors,
+  DesignIntf, DesignEditors, VCLEditors,
   {$ELSE}
-  PropEdits,
-  LazarusPackageIntf,
-  FieldsEditor,
-  ComponentEditors,
+  PropEdits, LazarusPackageIntf, FieldsEditor,  ComponentEditors,
   {$ENDIF}
   {$ELSE}
   DsgnIntf,
   {$ENDIF}
-  Classes,
-  Controls,
-  TypInfo,
-  Forms,
-  SysUtils,
+  Classes, Controls, TypInfo, Forms, SysUtils,
   VpDatePropEdit;
 
 type
@@ -128,14 +119,20 @@ uses
   VpCalendar,                 { Calendar Component                           }
   VpNavBar,                   { Navigation Bar Component                     }
   VpBaseDS,                   { Base DataStore Classes                       }
-//  VpBDEDS,                    { DataStore Component                          }
   VpDayView,                  { Day View Component                           }
   VpWeekView,                 { Week View Component                          }
   VpMonthView,                { Month View Component                         }
   VpContactGrid,              { ContactGrid Component                        }
-  VpDateEdit,                 { DateEdit Component                           }
   VpTaskList,                 { Task List Component                          }
+ {$IFDEF DELPHI}
+  VpBDEDS,                    { DataStore Component                          }
+  VpDateEdit,                 { DateEdit Component                           }
+ {$ENDIF}
+ {$IFDEF LCL}
   VpBufDS,                    { Datastore for TBufDataset                    }
+  //  VpSdfDS                     { Datastore for TSdfDataset                    }
+  //  VpDbfDS,                    { Datastore for dbase files                    }
+ {$ENDIF}
   VpFlxDS,                    { Flexible DataStore                           }
   VpContactEditDlg,           { Contact Edit Dialog Component                }
   VpTaskEditDlg,              { Task Edit Dialog Component                   }
@@ -256,13 +253,13 @@ end;
 
 function TVpDateProperty.GetValue : string;
 begin
-  Result := FormatDateTime ('ddddd', GetFloatValue);
+  Result := FormatDateTime('ddddd', GetFloatValue);
 end;
 {=====}
 
 procedure TVpDateProperty.SetValue (const Value : string);
 begin
-  SetFloatValue (StrToDate (Value));
+  SetFloatValue(StrToDate (Value));
 end;
 {=====}
 
@@ -307,112 +304,117 @@ begin
 end;
 
 {*** component registration ***}
-  procedure Register;
-  begin
-    { register component editors }
-    RegisterComponentEditor(TVpNavBar, TVpNavBarEditor);
-    RegisterComponentEditor(TVpControlLink, TVpPrtFmtPropertyEditor);
-    RegisterComponentEditor(TVpFlexDataStore, TVpFlexDSEditor);
+procedure Register;
+begin
+  { register component editors }
+  RegisterComponentEditor(TVpNavBar, TVpNavBarEditor);
+  RegisterComponentEditor(TVpControlLink, TVpPrtFmtPropertyEditor);
+  RegisterComponentEditor(TVpFlexDataStore, TVpFlexDSEditor);
 
-    { register the About Box property editor for the Version properties        }
-    RegisterPropertyEditor(TypeInfo(string), TVpCollectionItem,
-      'Version', TVpAboutProperty);
-    RegisterPropertyEditor(TypeInfo(string), TVpComponent,
-      'Version', TVpAboutProperty);
-    RegisterPropertyEditor(TypeInfo(string), TVpNavBar,
-      'Version', TVpAboutProperty);
-    RegisterPropertyEditor(TypeInfo(string), TVpCalendar,
-      'Version', TVpAboutProperty);
-    RegisterPropertyEditor(TypeInfo(string), TVpLEDLabel,
-      'Version', TVpAboutProperty);
-    RegisterPropertyEditor(TypeInfo(string), TVpClock,
-      'Version', TVpAboutProperty);
-    RegisterPropertyEditor(TypeInfo(string), TVpResourceCombo,
-      'Version', TVpAboutProperty);
-    RegisterPropertyEditor(TypeInfo(string), TVpCustomControl,
-      'Version', TVpAboutProperty);
-    RegisterPropertyEditor(TypeInfo(string), TVpControlLink,
-      'Version', TVpAboutProperty);
-  {$IFNDEF LCL}
-    RegisterPropertyEditor(TypeInfo(string), TVpBDEDataStore,
-      'Version', TVpAboutProperty);
-  {$ENDIF}
-    RegisterPropertyEditor(TypeInfo(string), TVpFlexDataStore,
-      'Version', TVpAboutProperty);
-    RegisterPropertyEditor(TypeInfo(string), TVpDateEdit,
-      'Version', TVpAboutProperty);
-    RegisterPropertyEditor(TypeInfo(string), TVpBaseDialog,
-      'Version', TVpAboutProperty);
-    RegisterPropertyEditor(TypeInfo(string), TVpPrintFormatComboBox,
-      'Version', TVpAboutProperty);
+  { register the About Box property editor for the Version properties        }
+  RegisterPropertyEditor(TypeInfo(string), TVpCollectionItem,
+    'Version', TVpAboutProperty);
+  RegisterPropertyEditor(TypeInfo(string), TVpComponent,
+    'Version', TVpAboutProperty);
+  RegisterPropertyEditor(TypeInfo(string), TVpNavBar,
+    'Version', TVpAboutProperty);
+  RegisterPropertyEditor(TypeInfo(string), TVpCalendar,
+    'Version', TVpAboutProperty);
+  RegisterPropertyEditor(TypeInfo(string), TVpLEDLabel,
+    'Version', TVpAboutProperty);
+  RegisterPropertyEditor(TypeInfo(string), TVpClock,
+    'Version', TVpAboutProperty);
+  RegisterPropertyEditor(TypeInfo(string), TVpResourceCombo,
+    'Version', TVpAboutProperty);
+  RegisterPropertyEditor(TypeInfo(string), TVpCustomControl,
+    'Version', TVpAboutProperty);
+  RegisterPropertyEditor(TypeInfo(string), TVpControlLink,
+    'Version', TVpAboutProperty);
+{$IFNDEF LCL}
+  RegisterPropertyEditor(TypeInfo(string), TVpBDEDataStore,
+    'Version', TVpAboutProperty);
+  RegisterPropertyEditor(TypeInfo(string), TVpDateEdit,
+    'Version', TVpAboutProperty);
+{$ENDIF}
+  RegisterPropertyEditor(TypeInfo(string), TVpFlexDataStore,
+    'Version', TVpAboutProperty);
+  RegisterPropertyEditor(TypeInfo(string), TVpBaseDialog,
+    'Version', TVpAboutProperty);
+  RegisterPropertyEditor(TypeInfo(string), TVpPrintFormatComboBox,
+    'Version', TVpAboutProperty);
 
-    {register the BDE Alias and Driver properties                             }
-  {$IFNDEF LCL}
-    RegisterPropertyEditor(TypeInfo(string), TVpBDEDataStore,
-      'AliasName', TAliasNameProperty);
-    RegisterPropertyEditor(TypeInfo(string), TVpBDEDataStore,
-      'DriverName', TDriverNameProperty);
-   {$ENDIF}
+  {register the BDE Alias and Driver properties                             }
+{$IFNDEF LCL}
+  RegisterPropertyEditor(TypeInfo(string), TVpBDEDataStore,
+    'AliasName', TAliasNameProperty);
+  RegisterPropertyEditor(TypeInfo(string), TVpBDEDataStore,
+    'DriverName', TDriverNameProperty);
+ {$ENDIF}
 
-    // LCL: Registering next property editor inhibits that the DataStore
-    // property combo of the DayView lists the available datastores.
+  // LCL: Registering next property editor inhibits that the DataStore
+  // property combo of the DayView lists the available datastores.
 
-    {register the DayView properties                                          }
-    //RegisterPropertyEditor(TypeInfo(TVpCustomDataStore), TVpDayView,
-    //  'DataStore', TDataStoreProperty);
+  {register the DayView properties                                          }
+  //RegisterPropertyEditor(TypeInfo(TVpCustomDataStore), TVpDayView,
+  //  'DataStore', TDataStoreProperty);
 
-    {register the property editor for the DataStore's DefaultAlarmWav         }
-    RegisterPropertyEditor(TypeInfo(string), TVpCustomDataStore,
-      'DefaultEventSound', TWavFileProperty);
+  {register the property editor for the DataStore's DefaultAlarmWav         }
+  RegisterPropertyEditor(TypeInfo(string), TVpCustomDataStore,
+    'DefaultEventSound', TWavFileProperty);
 
-    RegisterPropertyEditor (TypeInfo (TDateTime),
-                            TVpPrintPreview,
-                            'StartDate',
-                            TVpDateProperty);
-    RegisterPropertyEditor (TypeInfo (TDateTime),
-                            TVpPrintPreview,
-                            'EndDate',
-                            TVpDateProperty);
-    RegisterPropertyEditor (TypeInfo (TDateTime),
-                            TVpPrintPreviewDialog,
-                            'StartDate',
-                            TVpDateProperty);
-    RegisterPropertyEditor (TypeInfo (TDateTime),
-                            TVpPrintPreviewDialog,
-                            'EndDate',
-                            TVpDateProperty);
+  RegisterPropertyEditor (TypeInfo (TDateTime),
+                          TVpPrintPreview,
+                          'StartDate',
+                          TVpDateProperty);
+  RegisterPropertyEditor (TypeInfo (TDateTime),
+                          TVpPrintPreview,
+                          'EndDate',
+                          TVpDateProperty);
+  RegisterPropertyEditor (TypeInfo (TDateTime),
+                          TVpPrintPreviewDialog,
+                          'StartDate',
+                          TVpDateProperty);
+  RegisterPropertyEditor (TypeInfo (TDateTime),
+                          TVpPrintPreviewDialog,
+                          'EndDate',
+                          TVpDateProperty);
 
-    RegisterPropertyEditor (TypeInfo (string), TVpControlLink,
-                            'LocalizationFile', TVpLocalizeFileNameProperty);
+  RegisterPropertyEditor (TypeInfo (string), TVpControlLink,
+                          'LocalizationFile', TVpLocalizeFileNameProperty);
 
-    {register Visual PlanIt components with the IDE}
-    RegisterComponents('Visual PlanIt', [
-      TVpLEDLabel,
-      TVpClock,
-      TVpCalendar,
-      TVpNavBar,
-      TVpBufDSDatastore,
-      TVpFlexDataStore,
-  {$IFNDEF LCL}
-      TVpBDEDataStore,    // BDE is not available in Lazarus
-  {$ENDIF}
-      TVpControlLink,
-      TVpPrintPreview,
-      TVpPrintFormatComboBox,
-      TVpDateEdit,
-      TVpResourceCombo,
-      TVpDayView,
-      TVpWeekView,
-      TVpMonthView,
-      TVpContactGrid,
-      TVpContactButtonBar,                                               
-      TVpTaskList,
-      TVpNotificationDialog,
-      TVpResourceEditDialog,
-      TVpEventEditDialog,
-      TVpContactEditDialog,
-      TVpTaskEditDialog,
-      TVpPrintFormatEditDialog,
-      TVpPrintPreviewDialog]);
-  end;
+  {register Visual PlanIt components with the IDE}
+  RegisterComponents('Visual PlanIt', [
+    TVpLEDLabel,
+    TVpClock,
+    TVpCalendar,
+    TVpNavBar,
+    TVpFlexDataStore,
+{$IFDEF DELPHI}
+    TVpBDEDataStore,    // BDE is not available in Lazarus
+    TVpDateEdit,        // Does not work in Lazarus
+{$ENDIF}
+{$IFDEF LCL}
+    TVpBufDSDatastore,
+    //TVpSdfDatastore,       // to do (maybe)...
+    //TVpDbfDatastore,       // to do...
+{$ENDIF}
+    TVpControlLink,
+    TVpPrintPreview,
+    TVpPrintFormatComboBox,
+    TVpResourceCombo,
+    TVpDayView,
+    TVpWeekView,
+    TVpMonthView,
+    TVpContactGrid,
+    TVpContactButtonBar,
+    TVpTaskList,
+    TVpNotificationDialog,
+    TVpResourceEditDialog,
+    TVpEventEditDialog,
+    TVpContactEditDialog,
+    TVpTaskEditDialog,
+    TVpPrintFormatEditDialog,
+    TVpPrintPreviewDialog]);
+end;
+
 end.

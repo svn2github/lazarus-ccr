@@ -37,7 +37,8 @@ uses
   Windows,
   {$ENDIF}
   Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, VpEdPop, VpDateEdit, VpBase, VpBaseDS, VpCalendar;
+  StdCtrls, //VpEdPop, VpDateEdit, VpBase, VpBaseDS,
+  VpCalendar;
 
 type
   TfrmDatePropertyEditor = class(TForm)
