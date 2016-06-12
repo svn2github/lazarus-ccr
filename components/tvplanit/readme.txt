@@ -87,3 +87,18 @@ steps:
   4079 - Using the DBIsamDataStore, recurring events show up under all
          resources.
   4080 - De Piggify the DBIsamDataStore component.
+
+  
+4.2 Release 1.04
+
+  misc - Replace hard-coded MS Sans Serif font by "default" to use the system 
+         font
+  misc - Fix crashes due to inplace editors being destroyed.
+  misc - Replace lrs resources by res resources. FPC 2.4 or greater required!
+  misc - Add FlexDatastore and its component editor to package.
+  4710 - Rename package to laz_visualplanit.
+  4717 - Add new event field "Location". Rename some fields for more consistency. 
+  4719 - Add a datastore (TVpBufDSDatastore) for TBufDataset.
+
+  
+
