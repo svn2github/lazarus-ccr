@@ -35,14 +35,13 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf, LResources,
+  LMessages, LCLProc, LCLType, LCLIntf, LResources, EditBtn,
   {$ELSE}
   Windows, Messages, Mask,
   {$ENDIF}
   SysUtils, {$IFDEF VERSION6}Variants,{$ENDIF} Classes,
-  Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls, VpData, VpEdPop,
-  ComCtrls, VpBase, VpBaseDS, VpDlg, VpConst,
-  Buttons, EditBtn;
+  Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls, ComCtrls, Buttons,
+  VpData, VpBase, VpBaseDS, VpDlg, VpConst; //VpEdPop,
 
 type
   { forward declarations }
@@ -87,8 +86,6 @@ type
     SpeedButton1: TSpeedButton;
     DescriptionEdit: TEdit;
     AlarmSet: TCheckBox;
-    StartTime: TComboBox;
-    EndTime: TComboBox;
     Category: TComboBox;
     RecurringType: TComboBox;
     IntervalUpDown: TUpDown;
@@ -119,6 +116,14 @@ type
     procedure StartTimeExit(Sender: TObject);
     procedure EndTimeExit(Sender: TObject);
   private { Private declarations }
+   {$IFDEF LCL}
+    StartTime: TTimeEdit;
+    EndTime: TTimeEdit;
+   {$ENDIF}
+   {$IFDEF DELPHI}
+    StartTime: TComboBox;
+    EndTime: TComboBox;
+   {$ENDIF}
     AAVerifying: Boolean;
     CIVerifying: Boolean;
     FCustomInterval : TVpRightAlignedEdit;
@@ -184,11 +189,31 @@ end;
 
 procedure TDlgEventEdit.FormCreate(Sender: TObject);
 begin
+ {$IFDEF LCL}
+  StartTime := TTimeEdit.Create(self);
+ {$ELSE}
+  StartTime := TCombobox.Create(self);
+  StartTime.Width := 93;
+  StartTime.ItemIndex := -1;
+ {$ENDIF}
+  StartTime.Parent := AppointmentGroupbox;
+  StartTime.Left := AlarmAdvanceType.Left;
+  StartTime.Top := StartDate.Top;
+
+ {$IFDEF LCL}
+  EndTime := TTimeEdit.Create(self);
+ {$ELSE}
+  EndTime := TCombobox.Create(self);
+  EndTime.Width := 93;
+  EndTime.ItemIndex := -1;
+ {$ENDIF}
+  EndTime.Parent := AppointmentGroupbox;
+  EndTime.Left := AlarmAdvanceType.Left;
+  EndTime.Top := EndDate.Top;
+
   ReturnCode := rtAbandon;
   PopLists;
   LoadCaptions;
-  StartTime.ItemIndex := -1;
-  EndTime.ItemIndex := -1;
   EndDate.Enabled := False;
 
   FCustomInterval := TVpRightAlignedEdit.Create(Self);
@@ -449,6 +474,7 @@ var
   I, Hour, Minute: Integer;
   MinStr, AMPMStr: string;
 begin
+ {$IFDEF DELPHI}
  { Time Lists }
   StringList := TStringList.Create;
   try
@@ -479,6 +505,7 @@ begin
   finally
     StringList.Free;
   end;
+ {$ENDIF}
 
   { RecurringList }
   RecurringType.Items.Add(RSNone);

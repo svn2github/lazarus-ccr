@@ -124,7 +124,7 @@ object DlgEventEdit: TDlgEventEdit
       ParentColor = False
     end
     object Image2: TImage
-      Left = 352
+      Left = 368
       Height = 18
       Top = 81
       Width = 18
@@ -153,7 +153,7 @@ object DlgEventEdit: TDlgEventEdit
       }
     end
     object RecurringLbl: TLabel
-      Left = 379
+      Left = 395
       Height = 13
       Top = 87
       Width = 187
@@ -162,7 +162,7 @@ object DlgEventEdit: TDlgEventEdit
       ParentColor = False
     end
     object Bevel3: TBevel
-      Left = 339
+      Left = 350
       Height = 76
       Top = 78
       Width = 2
@@ -261,10 +261,10 @@ object DlgEventEdit: TDlgEventEdit
       }
     end
     object RecurrenceEndsLbl: TLabel
-      Left = 352
+      Left = 368
       Height = 13
       Top = 135
-      Width = 80
+      Width = 88
       Alignment = taRightJustify
       AutoSize = False
       Caption = 'Until:'
@@ -286,27 +286,7 @@ object DlgEventEdit: TDlgEventEdit
       Width = 74
       Caption = '&Reminder:'
       OnClick = AlarmSetClick
-      TabOrder = 12
-    end
-    object StartTime: TComboBox
-      Left = 231
-      Height = 23
-      Top = 104
-      Width = 93
-      ItemHeight = 15
-      OnChangeBounds = StartTimeChange
-      OnExit = StartTimeExit
-      TabOrder = 5
-    end
-    object EndTime: TComboBox
-      Left = 231
-      Height = 23
-      Top = 131
-      Width = 93
-      ItemHeight = 15
-      OnChangeBounds = EndTimeChange
-      OnExit = EndTimeExit
-      TabOrder = 7
+      TabOrder = 10
     end
     object Category: TComboBox
       Left = 484
@@ -320,14 +300,14 @@ object DlgEventEdit: TDlgEventEdit
       TabOrder = 2
     end
     object RecurringType: TComboBox
-      Left = 379
+      Left = 395
       Height = 23
       Top = 104
-      Width = 187
+      Width = 171
       ItemHeight = 15
       OnChange = RecurringTypeChange
       Style = csDropDownList
-      TabOrder = 8
+      TabOrder = 6
     end
     object IntervalUpDown: TUpDown
       Left = 652
@@ -339,7 +319,7 @@ object DlgEventEdit: TDlgEventEdit
       Min = 0
       OnClick = IntervalUpDownClick
       Position = 0
-      TabOrder = 10
+      TabOrder = 8
       Wrap = False
     end
     object AlarmAdvanceType: TComboBox
@@ -349,7 +329,7 @@ object DlgEventEdit: TDlgEventEdit
       Width = 93
       ItemHeight = 15
       Style = csDropDownList
-      TabOrder = 15
+      TabOrder = 13
     end
     object AdvanceUpDown: TUpDown
       Left = 194
@@ -361,11 +341,11 @@ object DlgEventEdit: TDlgEventEdit
       Min = 1
       OnClick = AdvanceUpDownClick
       Position = 1
-      TabOrder = 14
+      TabOrder = 12
       Wrap = False
     end
     object CBAllDay: TCheckBox
-      Left = 104
+      Left = 86
       Height = 19
       Top = 80
       Width = 89
@@ -378,7 +358,7 @@ object DlgEventEdit: TDlgEventEdit
       Height = 23
       Top = 104
       Width = 65
-      TabOrder = 9
+      TabOrder = 7
       Text = 'Placeholder control'
       Visible = False
     end
@@ -482,10 +462,10 @@ object DlgEventEdit: TDlgEventEdit
       NumGlyphs = 1
       MaxLength = 0
       OnChangeBounds = EndDateChange
-      TabOrder = 6
+      TabOrder = 5
     end
     object RepeatUntil: TDateEdit
-      Left = 440
+      Left = 464
       Height = 23
       Top = 131
       Width = 100
@@ -532,7 +512,7 @@ object DlgEventEdit: TDlgEventEdit
       }
       NumGlyphs = 1
       MaxLength = 0
-      TabOrder = 11
+      TabOrder = 9
     end
     object AlarmAdvance: TEdit
       Left = 130
@@ -540,7 +520,7 @@ object DlgEventEdit: TDlgEventEdit
       Top = 168
       Width = 64
       OnChange = AlarmAdvanceChange
-      TabOrder = 13
+      TabOrder = 11
       Text = 'AlarmAdvance'
     end
     object LocationLbl: TLabel
