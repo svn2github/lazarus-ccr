@@ -238,6 +238,8 @@ end;
 {=====}
 
 procedure TAlarmNotifyForm.DismissBtnClick(Sender: TObject);
+var
+  t0: TTime;
 begin
   if Event.RepeatCode = rtNone then
     begin
@@ -246,9 +248,12 @@ begin
   else
     begin
       SnoozeDelay := 0;
+      t0 := Trunc(Now) + frac(Event.StartTime) - EncodeTime(0, Event.AlarmAdvance, 0, 0);
       case Event.RepeatCode of
-      rtDaily:Event.SnoozeTime := Trunc(Now)+1+(Frac(Event.StartTime)-EncodeTime(0,Event.AlarmAdv,0,0));
-      rtWeekly:Event.SnoozeTime := Trunc(Now)+7+(Frac(Event.StartTime)-EncodeTime(0,Event.AlarmAdv,0,0));
+      rtDaily:
+        Event.SnoozeTime := t0 + 1; //Trunc(Now)+1+(Frac(Event.StartTime)-EncodeTime(0,Event.AlarmAdvance,0,0));
+      rtWeekly:
+        Event.SnoozeTime := t0 + 7; //Trunc(Now)+7+(Frac(Event.StartTime)-EncodeTime(0,Event.AlarmAdvance,0,0));
 //TODO:      rtMonthlyByDay:
 //TODO:      rtMonthlyByDate:
 //TODO:      rtYearlyByDay:

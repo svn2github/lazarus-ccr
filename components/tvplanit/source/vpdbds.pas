@@ -987,7 +987,7 @@ begin
       Res.ResourceID := ResourceTable.FieldByName('ResourceID').AsInteger;
       Res.Description := ResourceTable.FieldByName('Description').AsString;
       Res.Notes := ResourceTable.FieldByName('Notes').AsString;
-      Res.Active := ResourceTable.FieldByName('ResourceActive').AsBoolean;
+      Res.ResourceActive := ResourceTable.FieldByName('ResourceActive').AsBoolean;
       Res.UserField0 := ResourceTable.FieldByName('UserField0').AsString;
       Res.UserField1 := ResourceTable.FieldByName('UserField1').AsString;
       Res.UserField2 := ResourceTable.FieldByName('UserField2').AsString;
@@ -1001,7 +1001,7 @@ begin
       Res.Loading := false;
 
       { Add events, contacts and tasks for the currently selected resource }
-      if (Res.ResourceID = ResourceID) and Res.Active then begin
+      if (Res.ResourceID = ResourceID) and Res.ResourceActive then begin
         Resource := Res;
         LoadEvents;
         LoadContacts;
@@ -1047,15 +1047,15 @@ begin
           if F <> nil then Event.Location := F.AsString;
           Event.Notes := FieldByName('Notes').AsString;
           Event.Category := FieldByName('Category').AsInteger;
-          Event.AlarmWavPath := FieldByName('DingPath').AsString;
+          Event.DingPath := FieldByName('DingPath').AsString;
           Event.AllDayEvent := FieldByName('AllDayEvent').AsBoolean;
           Event.AlarmSet := FieldByName('AlarmSet').AsBoolean;
-          Event.AlarmAdv := FieldByName('AlarmAdvance').AsInteger;
-          Event.AlarmAdvType := TVpAlarmAdvType(FieldByName('AlarmAdvanceType').AsInteger);
+          Event.AlarmAdvance := FieldByName('AlarmAdvance').AsInteger;
+          Event.AlarmAdvanceType := TVpAlarmAdvType(FieldByName('AlarmAdvanceType').AsInteger);
           Event.SnoozeTime := FieldByName('SnoozeTime').AsDateTime;
           Event.RepeatCode := TVpRepeatType(FieldByName('RepeatCode').AsInteger);
           Event.RepeatRangeEnd := FieldByName('RepeatRangeEnd').AsDateTime;
-          Event.CustInterval := FieldByName('CustomInterval').AsInteger;
+          Event.CustomInterval := FieldByName('CustomInterval').AsInteger;
           Event.UserField0 := FieldByName('UserField0').AsString;
           Event.UserField1 := FieldByName('UserField1').AsString;
           Event.UserField2 := FieldByName('UserField2').AsString;
@@ -1097,7 +1097,7 @@ begin
         Contact.Anniversary := FieldByName('Anniversary').AsDateTime;
         Contact.Title := FieldByName('Title').AsString;
         Contact.Company := FieldByName('Company').AsString;
-        Contact.Position := FieldByName('Job_Position').AsString;
+        Contact.Job_Position := FieldByName('Job_Position').AsString;
         Contact.EMail := FieldByName('EMail').AsString;
         Contact.Address := FieldByName('Address').AsString;
         Contact.City := FieldByName('City').AsString;
@@ -1224,7 +1224,7 @@ begin
             ContactsTable.FieldByName('Anniversary').AsDateTime := Contact.Anniversary;
             ContactsTable.FieldByName('Title').AsString := Contact.Title;
             ContactsTable.FieldByName('Company').AsString := Contact.Company;
-            ContactsTable.FieldByName('Job_Position').AsString := Contact.Position;
+            ContactsTable.FieldByName('Job_Position').AsString := Contact.Job_Position;
             ContactsTable.FieldByName('EMail').AsString := Contact.EMail;
             ContactsTable.FieldByName('Address').AsString := Contact.Address;
             ContactsTable.FieldByName('City').AsString := Contact.City;
@@ -1335,12 +1335,12 @@ begin
             EventsTable.FieldByName('DingPath').AsString := Event.DingPath;
             EventsTable.FieldByName('AllDayEvent').AsBoolean := Event.AllDayEvent;
             EventsTable.FieldByName('AlarmSet').AsBoolean := Event.AlarmSet;
-            EventsTable.FieldByName('AlarmAdvance').AsInteger := Event.AlarmAdv;
-            EventsTable.FieldByName('AlarmAdvanceType').AsInteger := Ord(Event.AlarmAdvType);
+            EventsTable.FieldByName('AlarmAdvance').AsInteger := Event.AlarmAdvance;
+            EventsTable.FieldByName('AlarmAdvanceType').AsInteger := Ord(Event.AlarmAdvanceType);
             EventsTable.FieldByName('SnoozeTime').AsDateTime := Event.SnoozeTime;
             EventsTable.FieldByName('RepeatCode').AsInteger := Ord(Event.RepeatCode);
             EventsTable.FieldByName('RepeatRangeEnd').AsDateTime := Event.RepeatRangeEnd;
-            EventsTable.FieldByName('CustomInterval').AsInteger := Event.CustInterval;
+            EventsTable.FieldByName('CustomInterval').AsInteger := Event.CustomInterval;
             EventsTable.FieldByName('UserField0').AsString := Event.UserField0;
             EventsTable.FieldByName('UserField1').AsString := Event.UserField1;
             EventsTable.FieldByName('UserField2').AsString := Event.UserField2;
@@ -1496,7 +1496,7 @@ begin
 
               FieldByName('Description').AsString := Res.Description;
               FieldByName('Notes').AsString := Res.Notes;
-              FieldByName('ResourceActive').AsBoolean := Res.Active;
+              FieldByName('ResourceActive').AsBoolean := Res.ResourceActive;
               FieldByName('UserField0').AsString := Res.UserField0;
               FieldByName('UserField1').AsString := Res.UserField1;
               FieldByName('UserField2').AsString := Res.UserField2;
@@ -1613,7 +1613,7 @@ begin
         Contact.Anniversary := FieldByName('Anniversary').AsDateTime;
         Contact.Title := FieldByName('Title').AsString;
         Contact.Company := FieldByName('Company').AsString;
-        Contact.Position := FieldByName('Job_Position').AsString;
+        Contact.Job_Position := FieldByName('Job_Position').AsString;
         Contact.EMail := FieldByName('EMail').AsString;
         Contact.Address := FieldByName('Address').AsString;
         Contact.City := FieldByName('City').AsString;
@@ -1690,22 +1690,22 @@ begin
           Event.DingPath := FieldByName('DingPath').AsString;
           Event.AllDayEvent := FieldByName('AllDayEvent').AsBoolean;
           Event.AlarmSet := FieldByName('AlarmSet').AsBoolean;
-          Event.AlarmAdv := FieldByName('AlarmAdvance').AsInteger;
-          Event.AlarmAdvType := TVpAlarmAdvType(
+          Event.AlarmAdvance := FieldByName('AlarmAdvance').AsInteger;
+          Event.AlarmAdvanceType := TVpAlarmAdvType(
             FieldByName('AlarmAdvanceType').AsInteger);
           Event.RepeatCode := TVpRepeatType(FieldByName('RepeatCode').AsInteger);
           Event.RepeatRangeEnd := FieldByName('RepeatRangeEnd').AsDateTime;
-          Event.CustInterval := FieldByName('CustomInterval').AsInteger;
-          Event.UserField0 := FieldBYName('UserField0').AsString;
-          Event.UserField1 := FieldBYName('UserField1').AsString;
-          Event.UserField2 := FieldBYName('UserField2').AsString;
-          Event.UserField3 := FieldBYName('UserField3').AsString;
-          Event.UserField4 := FieldBYName('UserField4').AsString;
-          Event.UserField5 := FieldBYName('UserField5').AsString;
-          Event.UserField6 := FieldBYName('UserField6').AsString;
-          Event.UserField7 := FieldBYName('UserField7').AsString;
-          Event.UserField8 := FieldBYName('UserField8').AsString;
-          Event.UserField9 := FieldBYName('UserField9').AsString;
+          Event.CustomInterval := FieldByName('CustomInterval').AsInteger;
+          Event.UserField0 := FieldByName('UserField0').AsString;
+          Event.UserField1 := FieldByName('UserField1').AsString;
+          Event.UserField2 := FieldByName('UserField2').AsString;
+          Event.UserField3 := FieldByName('UserField3').AsString;
+          Event.UserField4 := FieldByName('UserField4').AsString;
+          Event.UserField5 := FieldByName('UserField5').AsString;
+          Event.UserField6 := FieldByName('UserField6').AsString;
+          Event.UserField7 := FieldByName('UserField7').AsString;
+          Event.UserField8 := FieldByName('UserField8').AsString;
+          Event.UserField9 := FieldByName('UserField9').AsString;
 
           Event.Loading := false;
         end;
@@ -1781,7 +1781,7 @@ begin
       Resource.ResourceID := ResourceID;
       Resource.Description := FieldByName('Description').AsString;
       Resource.Notes := FieldByName('Notes').AsString;
-      Resource.Active := FieldByName('ResourceActive').AsBoolean;
+      Resource.ResourceActive := FieldByName('ResourceActive').AsBoolean;
       Resource.UserField0 := FieldByName('UserField0').AsString;
       Resource.UserField1 := FieldByName('UserField1').AsString;
       Resource.UserField2 := FieldByName('UserField2').AsString;

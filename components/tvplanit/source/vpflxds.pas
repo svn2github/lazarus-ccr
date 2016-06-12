@@ -466,8 +466,10 @@ begin
             Res.Notes := ResourceTable.FieldByName(FN).AsString;
 
           FN := GetFieldName(FResourceMappings, 'ResourceActive');
+          if FN = '' then
+            FN := GetFieldName(FResourceMappings, 'Active');  // deprecated
           if FN <> '' then
-            Res.Active := ResourceTable.FieldByName(FN).AsBoolean;
+            Res.ResourceActive := ResourceTable.FieldByName(FN).AsBoolean;
 
           FN := GetFieldName(FResourceMappings, 'UserField0');
           if FN <> '' then
@@ -511,7 +513,7 @@ begin
           Res.Loading := false;
 
           { Add events, contacts and tasks for the currently selected resource }
-          if (Res.ResourceID = ResourceID) and Res.Active then begin
+          if (Res.ResourceID = ResourceID) and Res.ResourceActive then begin
             Resource := Res;
             LoadEvents;
             LoadContacts;
@@ -588,7 +590,7 @@ begin
             if FN1 = '' then
               FN1 := GetFieldName(FEventMappings, 'AlarmWavPath');  // deprectated
             if (FN1 <> '') then
-              Event.AlarmWavPath := FieldByName(FN1).AsString;
+              Event.DingPath := FieldByName(FN1).AsString;
 
             FN1 := GetFieldName(FEventMappings, 'AllDayEvent');
             if (FN1 <> '') then
@@ -598,14 +600,17 @@ begin
             if (FN1 <> '') then
               Event.AlarmSet := FieldByName(FN1).AsBoolean;
 
-            FN1 := GetFieldName(FEventMappings, 'AlarmAdv');
+            FN1 := GetFieldName(FEventMappings, 'AlarmAdvance');
+            if FN1 = '' then
+              FN1 := GetFieldName(FEventMappings, 'AlarmAdv');      // deprecated
             if (FN1 <> '') then
-              Event.AlarmAdv := FieldByName(FN1).AsInteger;
+              Event.AlarmAdvance := FieldByName(FN1).AsInteger;
 
-            FN1 := GetFieldName(FEventMappings, 'AlarmAdvType');
+            FN1 := GetFieldName(FEventMappings, 'AlarmAdvanceType');
+            if FN1 = '' then
+              FN1 := GetFieldName(FEventMappings, 'AlarmAdvType');  // deprecated
             if (FN1 <> '') then
-              Event.AlarmAdvType := TVpAlarmAdvType(
-                FieldByName(FN1).AsInteger);
+              Event.AlarmAdvanceType := TVpAlarmAdvType(FieldByName(FN1).AsInteger);
 
             FN1 := GetFieldName(FEventMappings, 'SnoozeTime');
             if (FN1 <> '') then
@@ -619,9 +624,11 @@ begin
             if (FN1 <> '') then
               Event.RepeatRangeEnd := FieldByName(FN1).AsDateTime;
 
-            FN1 := GetFieldName(FEventMappings, 'CustInterval');
+            FN1 := GetfieldName(FEventMappings, 'CustomInterval');
+            if FN1 = '' then
+              FN1 := GetFieldName(FEventMappings, 'CustInterval');
             if (FN1 <> '') then
-              Event.CustInterval := FieldByName(FN1).AsInteger;
+              Event.CustomInterval := FieldByName(FN1).AsInteger;
 
             FN1 := GetFieldName(FEventMappings, 'UserField0');
             if (FN1 <> '') then
@@ -722,8 +729,10 @@ begin
             Contact.Company := FieldByName(FN).AsString;
 
           FN := GetFieldName(FContactMappings, 'Job_Position');
+          if FN = '' then
+            FN := GetFieldName(FContactMappings, 'Position');  // deprecated
           if FN <> '' then
-            Contact.Position := FieldByName(FN).AsString;
+            Contact.Job_Position := FieldByName(FN).AsString;
 
           FN := GetFieldName(FContactMappings, 'EMail');
           if FN <> '' then
@@ -1008,8 +1017,10 @@ begin
             Resource.Notes := FieldByName(FN).AsString;
 
           FN := GetFieldName(FResourceMappings, 'ResourceActive');
+          if FN = '' then
+            FN := GetFieldName(FResourceMappings, 'Active');  // deprecated
           if FN <> '' then
-            Resource.Active := FieldByName(FN).AsBoolean;
+            Resource.ResourceActive := FieldByName(FN).AsBoolean;
 
           FN := GetFieldName(FResourceMappings, 'UserField0');
           if FN <> '' then
@@ -1184,7 +1195,7 @@ begin
                 if FN = '' then
                   FN := GetFieldName(FEventMappings, 'AlarmWavPath');  // deprecated
                 if FN <> '' then
-                  EventsTable.FieldByName(FN).AsString := Event.AlarmWavPath;
+                  EventsTable.FieldByName(FN).AsString := Event.DingPath;
 
                 FN := GetFieldName(FEventMappings, 'AllDayEvent');
                 if FN <> '' then
@@ -1195,12 +1206,16 @@ begin
                   EventsTable.FieldByName(FN).AsBoolean := Event.AlarmSet;
 
                 FN := GetFieldName(FEventMappings, 'AlarmAdvance');
+                if FN = '' then
+                  FN := GetFieldName(FEventMappings, 'AlarmAdv');    // Deprecated
                 if FN <> '' then
-                  EventsTable.FieldByName(FN).AsInteger := Event.AlarmAdv;
+                  EventsTable.FieldByName(FN).AsInteger := Event.AlarmAdvance;
 
                 FN := GetFieldName(FEventMappings, 'AlarmAdvanceType');
+                if FN = '' then
+                  FN := GetFieldName(FEventMappings, 'AlarmAdvType');  // deprecated
                 if FN <> '' then
-                  EventsTable.FieldByName(FN).AsInteger := Ord(Event.AlarmAdvType);
+                  EventsTable.FieldByName(FN).AsInteger := Ord(Event.AlarmAdvanceType);
 
                 FN := GetFieldName(FEventMappings, 'SnoozeTime');
                 if FN <> '' then
@@ -1215,8 +1230,10 @@ begin
                   EventsTable.FieldByName(FN).AsDateTime := Event.RepeatRangeEnd;
 
                 FN := GetFieldName(FEventMappings, 'CustomInterval');
+                if FN = '' then
+                  FN := GetFieldName(FEventMappings, 'CustInterval'); // deprecated
                 if FN <> '' then
-                  EventsTable.FieldByName(FN).AsInteger := Event.CustInterval;
+                  EventsTable.FieldByName(FN).AsInteger := Event.CustomInterval;
 
                 FN := GetFieldName(FEventMappings, 'UserField0');
                 if FN <> '' then
@@ -1365,9 +1382,11 @@ begin
           if FN <> '' then
             ContactsTable.FieldByName(FN).AsString := Contact.Company;
 
-          FN := GetFieldName(FContactMappings, 'Position');
+          FN := GetFieldName(FContactMappings, 'Job_Position');
+          if FN = '' then
+            FN := GetFieldName(FContactMappings, 'Position');  // deprecated
           if FN <> '' then
-            ContactsTable.FieldByName(FN).AsString := Contact.Position;
+            ContactsTable.FieldByName(FN).AsString := Contact.Job_Position;
 
           FN := GetFieldName(FContactMappings, 'EMail');
           if FN <> '' then
@@ -1743,8 +1762,10 @@ begin
                   FieldByName(FN).AsString := Res.Notes;
 
                 FN := GetFieldName(FResourceMappings, 'ResourceActive');
+                if FN = '' then
+                  FN := GetFieldName(FResourceMappings, 'Active');  // deprecated
                 if FN <> '' then
-                  FieldByName(FN).AsBoolean := Res.Active;
+                  FieldByName(FN).AsBoolean := Res.ResourceActive;
 
                 FN := GetFieldName(FResourceMappings, 'UserField0');
                 if FN <> '' then

@@ -593,12 +593,12 @@ begin
               Qry.FieldByName('DingPath').AsString := Event.DingPath;
               Qry.FieldByName('AllDayEvent').AsBoolean := Event.AllDayEvent;
               Qry.FieldByName('AlarmSet').AsBoolean := Event.AlarmSet;
-              Qry.FieldByName('AlarmAdvance').AsInteger := Event.AlarmAdv;
-              Qry.FieldByName('AlarmAdvanceType').AsInteger := Ord(Event.AlarmAdvType);
+              Qry.FieldByName('AlarmAdvance').AsInteger := Event.AlarmAdvance;
+              Qry.FieldByName('AlarmAdvanceType').AsInteger := Ord(Event.AlarmAdvanceType);
               Qry.FieldByName('SnoozeTime').AsDateTime := Event.SnoozeTime;
               Qry.FieldByName('RepeatCode').AsInteger := Ord(Event.RepeatCode);
               Qry.FieldByName('RepeatRangeEnd').AsDateTime := Event.RepeatRangeEnd;
-              Qry.FieldByName('CustomInterval').AsInteger := Event.CustInterval;
+              Qry.FieldByName('CustomInterval').AsInteger := Event.CustomInterval;
               Qry.FieldByName('UserField0').AsString := Event.UserField0;
               Qry.FieldByName('UserField1').AsString := Event.UserField1;
               Qry.FieldByName('UserField2').AsString := Event.UserField2;
@@ -640,14 +640,14 @@ begin
             Qry.ParamByName('Notes').AsString := Event.Notes;
             Qry.ParamByName('SnTime').AsDateTime := Event.SnoozeTime;
             Qry.ParamByName('Cat').AsInteger := Event.Category;
-            Qry.ParamByName('DPath').AsString := Event.AlarmWavPath;
+            Qry.ParamByName('DPath').AsString := Event.DingPath;
             Qry.ParamByName('ADEvent').AsBoolean := Event.AllDayEvent;
             Qry.ParamByName('ASet').AsBoolean := Event.AlarmSet;
-            Qry.ParamByName('AAdvance').AsInteger := Event.AlarmAdv;
-            Qry.ParamByName('AAdvanceType').AsInteger := Ord(Event.AlarmAdvType);
+            Qry.ParamByName('AAdvance').AsInteger := Event.AlarmAdvance;
+            Qry.ParamByName('AAdvanceType').AsInteger := Ord(Event.AlarmAdvanceType);
             Qry.ParamByName('RCode').AsInteger := Ord(Event.RepeatCode);
             Qry.ParamByName('RRangeEnd').AsDateTime := Event.RepeatRangeEnd;
-            Qry.ParamByName('CInterval').AsInteger := Event.CustInterval;
+            Qry.ParamByName('CInterval').AsInteger := Event.CustomInterval;
             Qry.ParamByName('UserField0').AsString := Event.UserField0;
             Qry.ParamByName('UserField1').AsString := Event.UserField1;
             Qry.ParamByName('UserField2').AsString := Event.UserField2;
@@ -731,7 +731,7 @@ begin
               { - end}
               Qry.FieldByName('Title').AsString := Contact.Title;
               Qry.FieldByName('Company').AsString := Contact.Company;
-              Qry.FieldByName('Job_Position').AsString := Contact.Position;
+              Qry.FieldByName('Job_Position').AsString := Contact.Job_Position;
               Qry.FieldByName('EMail').AsString := Contact.EMail;
               Qry.FieldByName('Address').AsString := Contact.Address;
               Qry.FieldByName('City').AsString := Contact.City;
@@ -804,7 +804,7 @@ begin
             { - end}
             Qry.ParamByName('Title').AsString := Contact.Title;
             Qry.ParamByName('Company').AsString := Contact.Company;
-            Qry.ParamByName('Job_Position').AsString := Contact.Position;
+            Qry.ParamByName('Job_Position').AsString := Contact.Job_Position;
             Qry.ParamByName('EMail').AsString := Contact.EMail;
             Qry.ParamByName('Address').AsString := Contact.Address;
             Qry.ParamByName('City').AsString := Contact.City;

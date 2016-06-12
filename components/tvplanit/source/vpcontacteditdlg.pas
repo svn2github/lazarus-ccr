@@ -222,7 +222,7 @@ begin
   else
     Contact.State := StateEdit.Text;
   Contact.Zip := ZipCodeEdit.Text;
-  Contact.Position := PositionEdit.Text;
+  Contact.Job_Position := PositionEdit.Text;
   Contact.Title := TitleEdit.Text;
   Contact.EMail := EMailEdit.Text;
   Contact.Company := CompanyEdit.Text;
@@ -235,7 +235,7 @@ begin
     Contact.Country := cboxCountry.Text
   else
     Contact.Country := edtCountry.Text;
-  Contact.Note := NoteEdit.Text;
+  Contact.Notes := NoteEdit.Text;
   Contact.Category := cboxCategory.ItemIndex;
   Contact.Custom1 := Custom1Edit.Text;
   Contact.Custom2 := Custom2Edit.Text;
@@ -263,7 +263,7 @@ begin
   AddressEdit.Text := Contact.Address;
   CityEdit.Text := Contact.City;
   ZipCodeEdit.Text := Contact.Zip;
-  PositionEdit.Text := Contact.Position;
+  PositionEdit.Text := Contact.Job_Position;
   TitleEdit.Text := Contact.Title;
   EMailEdit.Text := Contact.EMail;
   CompanyEdit.Text := Contact.Company;
@@ -272,7 +272,7 @@ begin
   Phone3Edit.Text := Contact.Phone3;
   Phone4Edit.Text := Contact.Phone4;
   Phone5Edit.Text := Contact.Phone5;
-  NoteEdit.Text := Contact.Note;
+  NoteEdit.Text := Contact.Notes;
   cboxCategory.ItemIndex := Contact.Category;
   Custom1Edit.Text := Contact.Custom1;
   Custom2Edit.Text := Contact.Custom2;

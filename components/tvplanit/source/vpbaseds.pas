@@ -566,7 +566,7 @@ begin
       Event := Resource.Schedule.GetEvent(I);
 
       if (Event <> nil) and Event.AlarmSet then begin
-        AdvanceTime := GetAlarmAdvanceTime(Event.AlarmAdv, Event.AlarmAdvType);
+        AdvanceTime := GetAlarmAdvanceTime(Event.AlarmAdvance, Event.AlarmAdvanceType);
         AlarmTime := Event.StartTime - AdvanceTime;
 
         { if the AlarmTime has already passed, then show the alarm notification }

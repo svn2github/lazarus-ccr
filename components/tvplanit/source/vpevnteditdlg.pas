@@ -92,7 +92,7 @@ type
     Category: TComboBox;
     RecurringType: TComboBox;
     IntervalUpDown: TUpDown;
-    AlarmAdvType: TComboBox;
+    AlarmAdvanceType: TComboBox;
     AdvanceUpDown: TUpDown;
     CBAllDay: TCheckBox;
     edtUnusedPlaceholder: TEdit;
@@ -307,7 +307,7 @@ begin
 
   StartTimeChange(Self);
   CBAllDay.Checked := Event.AllDayEvent;
-  AlarmWavPath := Event.AlarmWavPath;
+  AlarmWavPath := Event.DingPath;
 
   StartDate.Enabled := not CBAllDay.Checked;
   EndDate.Enabled := not CBAllDay.Checked;
@@ -322,11 +322,11 @@ begin
   if not Event.AlarmSet then
     AlarmAdvance.Text := '15'
   else
-    AlarmAdvance.Text := IntToStr(Event.AlarmAdv);
-  AlarmAdvType.ItemIndex := Ord(Event.AlarmAdvType);
+    AlarmAdvance.Text := IntToStr(Event.AlarmAdvance);
+  AlarmAdvanceType.ItemIndex := Ord(Event.AlarmAdvanceType);
   RecurringType.ItemIndex := Ord(Event.RepeatCode);
   RecurringTypeChange(Self);
-  FCustomInterval.Text := IntToStr(Event.CustInterval);
+  FCustomInterval.Text := IntToStr(Event.CustomInterval);
 
   Category.Items.Clear;
 
@@ -351,10 +351,10 @@ begin
   Event.Notes := NotesMemo.Text;
   Event.Category := Category.ItemIndex;
   Event.AlarmSet := AlarmSet.Checked;
-  Event.AlarmAdv := StrToIntDef(AlarmAdvance.Text, 0);
-  Event.AlarmAdvType := TVpAlarmAdvType(AlarmAdvType.ItemIndex);
+  Event.AlarmAdvance := StrToIntDef(AlarmAdvance.Text, 0);
+  Event.AlarmAdvanceType := TVpAlarmAdvType(AlarmAdvanceType.ItemIndex);
   Event.RepeatCode := TVpRepeatType(RecurringType.ItemIndex);
-  Event.CustInterval := StrToIntDef(FCustomInterval.Text, 0);
+  Event.CustomInterval := StrToIntDef(FCustomInterval.Text, 0);
   Event.AllDayEvent := CBAllDay.Checked;
   Event.DingPath := AlarmWavPath;
 end;
@@ -492,10 +492,10 @@ begin
   RecurringType.ItemIndex := 0;
 
   { Alarm Advance Type }
-  AlarmAdvType.Items.Add(RSMinutes);
-  AlarmAdvType.Items.Add(RSHours);
-  AlarmAdvType.Items.Add(RSDays);
-  AlarmAdvType.ItemIndex := 0;
+  AlarmAdvanceType.Items.Add(RSMinutes);
+  AlarmAdvanceType.Items.Add(RSHours);
+  AlarmAdvanceType.Items.Add(RSDays);
+  AlarmAdvanceType.ItemIndex := 0;
 end;
 {=====}
 
@@ -602,7 +602,7 @@ end;
 procedure TDlgEventEdit.AlarmSetClick(Sender: TObject);
 begin
   AlarmAdvance.Enabled  := AlarmSet.Checked;
-  AlarmAdvType.Enabled  := AlarmSet.Checked;
+  AlarmAdvanceType.Enabled  := AlarmSet.Checked;
   AdvanceUpDown.Enabled := AlarmSet.Checked;
   Event.SnoozeTime := 0.0;
 end;

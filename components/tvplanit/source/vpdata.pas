@@ -35,7 +35,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,
+  LMessages, LCLProc, LCLType,
   {$ELSE}
   Windows,
   {$ENDIF}
@@ -138,7 +138,8 @@ type
     property EventsDirty: Boolean read FEventsDirty write FEventsDirty;
     property ContactsDirty: Boolean read FContactsDirty write FContactsDirty;
     property TasksDirty: Boolean read FTasksDirty write FTasksDirty;
-    property Active: Boolean read FActive write FActive;
+    property ResourceActive: Boolean read FActive write FActive;
+    property Active: Boolean read FActive write FActive; deprecated 'Use "ResourceActive" instead';
     property Owner: TVpResources read FOwner;
     property ItemIndex: integer read FItemIndex;
     property Notes: string read FNotes write SetNotes;
@@ -260,19 +261,22 @@ type
     property Note: String read FNotes write SetNotes; deprecated 'Use "Notes" instead';
     property Category : Integer read FCategory write SetCategory;
     property AlarmSet : Boolean read FAlarmSet write SetAlarmSet;
-    property AlarmAdv : Integer read FAlarmAdv write SetAlarmAdv;
+    property AlarmAdvance: Integer read FAlarmAdv write SetAlarmAdv;
+    property AlarmAdv : Integer read FAlarmAdv write SetAlarmAdv; deprecated 'Use "AlarmAdvance" instead';
     property Location: string read FLocation write SetLocation;
     property Loading : Boolean read FLoading write FLoading;
     { 0=Minutes, 1=Hours, 2=Days   }
-    property AlarmAdvType : TVpAlarmAdvType read FAlarmAdvType write SetAlarmAdvType;
+    property AlarmAdvanceType: TVpAlarmAdvType read FAlarmAdvType write SetAlarmAdvType;
+    property AlarmAdvType : TVpAlarmAdvType read FAlarmAdvType write SetAlarmAdvType; deprecated 'Use "AlarmAdvanceType" instead';
     property SnoozeTime : TDateTime read FSnoozeTime write SetSnoozeTime;
     { rtNone, rtDaily, rtWeekly, rtMonthlyByDay, rtMonthlyByDate, }
     { rtYearlyByDay, rtYearlyByDate, rtCustom                     }
-    property RepeatCode   : TVpRepeatType read FRepeatCode write SetRepeatCode;
+    property RepeatCode: TVpRepeatType read FRepeatCode write SetRepeatCode;
     property RepeatRangeEnd: TDateTime read FRepeatRangeEnd write SetRepeatRangeEnd;
     { Custom Repeat Interval in seconds }
     { is Zero if IntervalCode <> 7      }
-    property CustInterval : Integer read FCustInterval write SetCustInterval;
+    property CustomInterval : Integer read FCustInterval write SetCustInterval;
+    property CustInterval : Integer read FCustInterval write SetCustInterval; deprecated 'Use "CustomInterval" instead';
     property Owner: TVpSchedule read FOwner;
     { Reserved for your use }
     property UserField0: string read FUserField0 write FUserField0;
@@ -507,7 +511,8 @@ type
     property Changed      : Boolean read FChanged write SetChanged;
     property Deleted      : Boolean read FDeleted write SetDeleted;
     property RecordID     : Integer read FRecordID write SetRecordID;
-    property Position     : string read FPosition write SetPosition;
+    property Job_Position : string read FPosition write SetPosition;
+    property Position     : string read FPosition write SetPosition; deprecated 'Use "Job_Position" instead';
     property FirstName    : string read FFirstName write SetFirstName;
     property LastName     : string read FLastName write SetLastName;
     property BirthDate    : TDateTime read FBirthdate write SetBirthdate;
@@ -613,7 +618,7 @@ begin
     Resource.Loading := true;
     Resource.FItemIndex := FResourceList.Add(Resource);
     Resource.ResourceID := ResID;
-    Resource.Active := true;
+    Resource.ResourceActive := true;
     Resource.Loading := false;
     result := Resource;
   except
@@ -1269,7 +1274,7 @@ begin
           { the event start time is evenly divisible by the event's custom }
           { interval, then we have a recurrence on this day                }
            result := (Trunc(Day) - Trunc(Event.StartTime))
-             mod Event.CustInterval = 0;
+             mod Event.CustomInterval = 0;
         end;
     end;
   end;

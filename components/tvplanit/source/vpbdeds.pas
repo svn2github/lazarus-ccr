@@ -518,7 +518,7 @@ begin
               Qry.FieldByName('ResourceID').AsInteger := Resource.ResourceID;
               Qry.FieldByName('Description').AsString := Resource.Description;
               Qry.FieldByName('Notes').AsString := Resource.Notes;
-              Qry.FieldByName('ResourceActive').AsBoolean := Resource.Active;
+              Qry.FieldByName('ResourceActive').AsBoolean := Resource.ResourceActive;
               Qry.FieldByName('UserField0').AsString := Resource.UserField0;
               Qry.FieldByName('UserField1').AsString := Resource.UserField1;
               Qry.FieldByName('UserField2').AsString := Resource.UserField2;
@@ -637,12 +637,12 @@ begin
               Qry.FieldByName('DingPath').AsString := Event.DingPath;
               Qry.FieldByName('AllDayEvent').AsBoolean := Event.AllDayEvent;
               Qry.FieldByName('AlarmSet').AsBoolean := Event.AlarmSet;
-              Qry.FieldByName('AlarmAdvance').AsInteger := Event.AlarmAdv;
-              Qry.FieldByName('AlarmAdvanceType').AsInteger := Ord(Event.AlarmAdvType);
+              Qry.FieldByName('AlarmAdvance').AsInteger := Event.AlarmAdvance;
+              Qry.FieldByName('AlarmAdvanceType').AsInteger := Ord(Event.AlarmAdvanceType);
               Qry.FieldByName('SnoozeTime').AsDateTime := Event.SnoozeTime;
               Qry.FieldByName('RepeatCode').AsInteger := Ord(Event.RepeatCode);
               Qry.FieldByName('RepeatRangeEnd').AsDateTime := Event.RepeatRangeEnd;
-              Qry.FieldByName('CustomInterval').AsInteger := Event.CustInterval;
+              Qry.FieldByName('CustomInterval').AsInteger := Event.CustomInterval;
               Qry.FieldByName('UserField0').AsString := Event.UserField0;
               Qry.FieldByName('UserField1').AsString := Event.UserField1;
               Qry.FieldByName('UserField2').AsString := Event.UserField2;

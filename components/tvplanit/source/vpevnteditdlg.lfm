@@ -342,7 +342,7 @@ object DlgEventEdit: TDlgEventEdit
       TabOrder = 10
       Wrap = False
     end
-    object AlarmAdvType: TComboBox
+    object AlarmAdvanceType: TComboBox
       Left = 231
       Height = 23
       Top = 167
