@@ -149,12 +149,8 @@ type
     procedure CMVisibleChanged(var Msg : TMessage); message CM_VISIBLECHANGED;
     {$IFNDEF LCL}
     procedure WMMouseWheel(var Msg : TMessage); message WM_MOUSEWHEEL;
-    {$ELSE}
-    procedure WMMouseWheel(var Msg : TLMessage); message LM_MOUSEWHEEL;
-    {$ENDIF}
-
-  protected
     procedure DoOnMouseWheel(Shift: TShiftState; Delta, XPos, YPos: SmallInt); dynamic;
+    {$ENDIF}
     procedure CreateWnd; override;
     property AfterEnter: TNotifyEvent read FAfterEnter write FAfterEnter;
     property AfterExit: TNotifyEvent read FAfterExit write FAfterExit;
@@ -427,14 +423,6 @@ begin
 end;
 {=====}
 
-procedure TVpCustomControl.DoOnMouseWheel(Shift: TShiftState;
-  Delta, XPos, YPos: SmallInt);
-begin
-  if Assigned(FOnMouseWheel) then
-    FOnMouseWheel(Self, Shift, Delta, XPos, YPos);
-end;
-{=====}
-
 function TVpCustomControl.GetVersion: string;
 begin
   Result := VpVersionStr;
@@ -449,17 +437,24 @@ end;
 
 {$IFNDEF LCL}
 procedure TVpCustomControl.WMMouseWheel(var Msg: TMessage);
-{$ELSE}
-procedure TVpCustomControl.WMMouseWheel(var Msg: TLMessage);
-{$ENDIF}
 begin
   with Msg do
-    DoOnMouseWheel(KeysToShiftState(LOWORD(wParam)) {fwKeys},
-                   HIWORD(wParam) {zDelta},
-                   LOWORD(lParam) {xPos},
-                   HIWORD(lParam) {yPos}
+    DoOnMouseWheel(
+      KeysToShiftState(LOWORD(wParam)) {fwKeys},
+      HIWORD(wParam) {zDelta},
+      LOWORD(lParam) {xPos},
+      HIWORD(lParam) {yPos}
     );
 end;
+
+procedure TVpCustomControl.DoOnMouseWheel(Shift: TShiftState;
+  Delta, XPos, YPos: SmallInt);
+begin
+  if Assigned(FOnMouseWheel) then
+    FOnMouseWheel(Self, Shift, Delta, XPos, YPos);
+end;
+
+{$ENDIF}
 {=====}
 
 (*****************************************************************************)

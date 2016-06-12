@@ -229,8 +229,12 @@ type
     procedure CreateWnd; override;
     procedure DoOnChange(Value : TDateTime); dynamic;
     function DoOnGetDateEnabled(ADate : TDateTime) : Boolean; dynamic;
+   {$IFDEF LCL}
+    // .... to be done in DoMouseWheel
+   {$ELSE}
     procedure DoOnMouseWheel(Shift : TShiftState;
                              Delta, XPos, YPos : SmallInt); override;
+   {$ENDIF}
     function IsReadOnly : Boolean; dynamic;
       {-return true if the calendar is in read-only mode}
     procedure KeyDown(var Key : Word; Shift : TShiftState); override;
@@ -973,12 +977,14 @@ begin
 end;
 {=====}
 
+{$IFDEF LCL}
+  // to be done in DoMouseWheel
+{$ELSE}
 procedure TVpCustomCalendar.DoOnMouseWheel(Shift : TShiftState; Delta, XPos, YPos : SmallInt);
 var
   Key : Word;
 begin
   inherited DoOnMouseWheel(Shift, Delta, XPos, YPos);
-{$IFNDEF LCL}
   if Abs(Delta) = WHEEL_DELTA then begin
     {inc/dec month}
     if Delta < 0 then
@@ -1001,8 +1007,8 @@ begin
       Key := VK_UP;
     KeyDown(Key, []);
   end;
-{$ENDIF}
 end;
+{$ENDIF}
 {=====}
 
 function TVpCustomCalendar.IsReadOnly : Boolean;

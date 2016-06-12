@@ -332,8 +332,7 @@ type
     procedure DragOver(Source: TObject; X, Y: Integer; State: TDragState;
       var Accept: Boolean); override;
     { internal methods }
-    function dvCalcRowHeight (Scale   : Extended;
-                              UseGran : TVpGranularity) : Integer;
+    function dvCalcRowHeight (Scale: Extended; UseGran: TVpGranularity): Integer;
     function dvCalcVisibleLines (RenderHeight  : Integer;
                                  ColHeadHeight : Integer;
                                  RowHeight     : Integer;
@@ -361,8 +360,7 @@ type
     procedure Paint; override;
     procedure Loaded; override;
     procedure dvSpawnEventEditDialog(NewEvent: Boolean);
-    procedure dvSetActiveRowByCoord (Pnt    : TPoint;                   
-                                     Sloppy : Boolean);                 
+    procedure dvSetActiveRowByCoord(Pnt: TPoint; Sloppy: Boolean);
     procedure dvSetActiveColByCoord(Pnt: TPoint);
     procedure dvPopulate;
     procedure dvNavButtonsClick(Sender: TObject);
@@ -372,33 +370,31 @@ type
     procedure MouseUp(Button: TMouseButton; Shift:TShiftState; X,Y:Integer); override;
     procedure MouseMove(Shift: TShiftState; X,Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift:TShiftState; X,Y:Integer); override;
-    {$IFNDEF LCL}
-    procedure WMLButtonDblClk(var Msg : TWMLButtonDblClk);
-      message WM_LBUTTONDBLCLK;
-    {$ELSE}
-    procedure WMLButtonDblClk(var Msg : TLMLButtonDblClk);  message LM_LBUTTONDBLCLK;
-    {$ENDIF}
     procedure SetActiveEventByCoord (APoint : TPoint);                   
     function EditEventAtCoord(Point: TPoint): Boolean;
     function GetEventAtCoord(Point: TPoint): TVpEvent;
     procedure EditEvent;
     procedure EndEdit(Sender: TObject);
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-    procedure SetTimeIntervals (UseGran : TVpGranularity);
+    procedure SetTimeIntervals(UseGran: TVpGranularity);
     { message handlers }
-    procedure VpDayViewInit (var Msg : TMessage); Message Vp_DayViewInit;
+    procedure VpDayViewInit(var Msg: TMessage); message Vp_DayViewInit;
     {$IFNDEF LCL}
+    procedure WMLButtonDblClk(var Msg : TWMLButtonDblClk); message WM_LBUTTONDBLCLK;
     procedure WMSize(var Msg: TWMSize); message WM_SIZE;
     procedure WMVScroll(var Msg: TWMVScroll); message WM_VSCROLL;
     procedure WMSetFocus(var Msg : TWMSetFocus); message WM_SETFOCUS;
-    procedure WMEraseBackground (var Msg : TWMERASEBKGND);
-    procedure CMWantSpecialKey(var Msg: TCMWantSpecialKey);
-      message CM_WANTSPECIALKEY;
+    procedure WMEraseBackground (var Msg : TWMERASEBKGND);   // ??? wp: missing "message WM_ERASEBKGN"?
+    procedure CMWantSpecialKey(var Msg: TCMWantSpecialKey); message CM_WANTSPECIALKEY;
     {$ELSE}
+    function  DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean; override;
+    function  DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): Boolean; override;
+    function  DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): Boolean; override;
     procedure WMSize(var Msg: TLMSize); message LM_SIZE;
     procedure WMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
-    procedure WMSetFocus(var Msg : TLMSetFocus); message LM_SETFOCUS;
-    procedure WMEraseBackground (var Msg : TLMERASEBKGND);
+    procedure WMSetFocus(var Msg: TLMSetFocus); message LM_SETFOCUS;
+    procedure WMEraseBackground(var Msg: TLMERASEBKGND);  // ??? wp: missing "message WM_ERASEBKGN"?
+    procedure WMLButtonDblClk(var Msg: TLMLButtonDblClk); message LM_LBUTTONDBLCLK;
     {$ENDIF}
   public
     constructor Create(AOwner: TComponent); override;
@@ -407,8 +403,7 @@ type
 
     procedure DeleteActiveEvent(Verify: Boolean);
     procedure DragDrop(Source: TObject; X, Y: Integer); override;
-    function HourToLine (const Value   : TVpHours;
-                         const UseGran : TVpGranularity) : Integer;
+    function HourToLine (const Value: TVpHours; const UseGran: TVpGranularity): Integer;
     procedure Invalidate; override;
     procedure LinkHandler(Sender: TComponent;
       NotificationType: TVpNotificationType;
@@ -1447,8 +1442,9 @@ begin
     Result := FNumDays;                                                  
 end;                                                                     
 {=====}
-function TVpDayView.HourToLine (const Value   : TVpHours;
-                                 const UseGran : TVpGranularity) : Integer;
+
+function TVpDayView.HourToLine (const Value: TVpHours;
+  const UseGran: TVpGranularity): Integer;
 begin
   case UseGran of
     gr60Min : Result := Ord (Value);
@@ -1458,8 +1454,7 @@ begin
     gr10Min : Result := Ord (Value) * 6;
     gr06Min : Result := Ord (Value) * 10;
     gr05Min : Result := Ord (Value) * 12;
-    else
-      Result := Ord (Value) * 2; { Default to 30 minutes }
+    else      Result := Ord (Value) * 2; { Default to 30 minutes }
   end;
 end;
 
@@ -2028,6 +2023,54 @@ begin
   end;
 end;
 {=====}
+
+{$IFDEF LCL}
+{
+procedure TVpDayView.WMMouseWheel(var Message: TLMMouseEvent);
+begin
+  inherited;
+end;
+ }
+function TVpDayView.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
+  MousePos: TPoint): Boolean;
+begin
+  Result := inherited DoMouseWheel(Shift, WheelDelta, MousePos);
+end;
+
+function TVpDayView.DoMouseWheelDown(Shift: TShiftState;
+  MousePos: TPoint): Boolean;
+var
+  delta: Integer;
+begin
+  Result := inherited DoMouseWheelDown(Shift, MousePos);
+  if not Result then begin
+    if [ssCtrl, ssShift] * Shift <> [] then begin
+      delta := HourToLine(h_01, FGranularity);
+      if delta = 1 then delta := 3;
+    end else
+      delta := 1;
+    dvScrollVertical(delta);
+    Result := True;
+  end;
+end;
+
+function TVpDayView.DoMouseWheelUp(Shift: TShiftState;
+  MousePos: TPoint): Boolean;
+var
+  delta: Integer;
+begin
+  Result := inherited DoMouseWheelUp(Shift, MousePos);
+  if not Result then begin
+    if [ssCtrl, ssShift] * Shift <> [] then begin
+      delta := HourToLine(h_01, FGranularity);
+      if delta = 1 then delta := 3;
+    end else
+      delta := 1;
+    dvScrollVertical(-delta);
+    Result := True;
+  end;
+end;
+{$ENDIF}
 
 procedure TVpDayView.EditSelectedEvent;
 begin
