@@ -2025,12 +2025,6 @@ end;
 {=====}
 
 {$IFDEF LCL}
-{
-procedure TVpDayView.WMMouseWheel(var Message: TLMMouseEvent);
-begin
-  inherited;
-end;
- }
 function TVpDayView.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
   MousePos: TPoint): Boolean;
 begin

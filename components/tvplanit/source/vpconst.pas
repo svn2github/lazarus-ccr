@@ -40,7 +40,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  Controls,LCLType,LCLProc,
+  Controls, LCLType, LCLProc,
   {$ELSE}
   Windows,
   {$ENDIF}

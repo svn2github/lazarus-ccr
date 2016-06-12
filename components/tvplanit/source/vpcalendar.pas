@@ -34,7 +34,7 @@ unit VpCalendar;
 interface
 
 uses
-  {$IFDEF LCL}
+  {$IFDEF LCL}    windows,
   LMessages, LCLProc, LCLType, LCLIntf, LazUTF8,
   {$ELSE}
   Windows,
@@ -217,7 +217,7 @@ type
     procedure DoOnChange(Value: TDateTime); dynamic;
     function DoOnGetDateEnabled(ADate: TDateTime): Boolean; dynamic;
    {$IFDEF LCL}
-    // .... to be done in DoMouseWheel
+    function DoMouseWheel(Shift: TShiftState; Delta: Integer; MousePos: TPoint): Boolean; override;
    {$ELSE}
     procedure DoOnMouseWheel(Shift: TShiftState; Delta, XPos, YPos: SmallInt); override;
    {$ENDIF}
@@ -922,13 +922,22 @@ end;
 {=====}
 
 {$IFDEF LCL}
-  // to be done in DoMouseWheel
+function TVpCustomCalendar.DoMouseWheel(Shift: TShiftState;
+  Delta: Integer; MousePos: TPoint): Boolean;
 {$ELSE}
-procedure TVpCustomCalendar.DoOnMouseWheel(Shift: TShiftState; Delta, XPos, YPos: SmallInt);
+procedure TVpCustomCalendar.DoMouseWheel(Shift: TShiftState;
+  Delta, XPos, YPos: SmallInt);
+{$ENDIF}
+const
+  WHEEL_DELTA = 120;  // in unit Windows.
 var
-  Key: Word;
+  key: Word;
 begin
+ {$IFDEF LCL}
+  Result := inherited DoMouseWheel(Shift, Delta, MousePos);
+ {$ELSE}
   inherited DoOnMouseWheel(Shift, Delta, XPos, YPos);
+ {$ENDIF}
   if Abs(Delta) = WHEEL_DELTA then begin
     {inc/dec month}
     if Delta < 0 then
@@ -952,7 +961,6 @@ begin
     KeyDown(Key, []);
   end;
 end;
-{$ENDIF}
 {=====}
 
 function TVpCustomCalendar.IsReadOnly: Boolean;
