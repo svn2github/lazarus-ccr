@@ -214,13 +214,10 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure LinkHandler(Sender: TComponent;
-      NotificationType: TVpNotificationType;
-      const Value: Variant); override;
+      NotificationType: TVpNotificationType; const Value: Variant); override;
     function GetControlType : TVpItemType; override;
     procedure DeleteActiveContact(Verify: Boolean);
-    procedure PaintToCanvas (ACanvas : TCanvas;
-                             ARect   : TRect;
-                             Angle   : TVpRotationAngle);
+    procedure PaintToCanvas (ACanvas: TCanvas; ARect: TRect; Angle: TVpRotationAngle);
     procedure RenderToCanvas (RenderCanvas : TCanvas;
                               RenderIn     : TRect;
                               Angle        : TVpRotationAngle;
@@ -470,10 +467,10 @@ end;
 
 destructor TVpContactGrid.Destroy;
 begin
-  if (HandleAllocated) and
-     (Assigned (DataStore)) and
-     (not (csDesigning in ComponentState)) then
-    DataStore.DeregisterWatcher (Handle);
+  if (HandleAllocated) and (Assigned (DataStore)) and
+     (not (csDesigning in ComponentState))
+  then
+    DataStore.DeregisterWatcher(Handle);
 
   cgClickTimer.Free;
   FContactHeadAttr.Free;
@@ -488,8 +485,8 @@ procedure TVpContactGrid.LinkHandler(Sender: TComponent;
   NotificationType: TVpNotificationType; const Value: Variant);
 begin
   case NotificationType of
-    neDataStoreChange: Invalidate;
-    neInvalidate: Invalidate;
+    neDataStoreChange : Invalidate;
+    neInvalidate      : Invalidate;
   end;
 end;
 {=====}
@@ -754,11 +751,14 @@ var
     Col, RecsInCol: Integer;
     HeadRect, AddrRect, CSZRect, Phone1Rect, Phone2Rect, Phone3Rect: TRect;
     Phone4Rect, Phone5Rect, WholeRect, CompanyRect, EMailRect: TRect;
-    TmpBmpRect   : TRect;
-    TextColWidth : Integer;
-    TextXOffset  : Integer;
-    TextYOffset  : Integer;
+    TmpBmpRect: TRect;
+    TextColWidth: Integer;
+    TextXOffset: Integer;
+    TextYOffset: Integer;
+    oldCol1RecCount: Integer;
   begin
+    oldCol1RecCount := cgCol1RecCount;
+
     FVisibleContacts := 0;
     cgCol1RecCount := 0;
     TextXOffset := 0;
@@ -1456,58 +1456,59 @@ var
             case Angle of
               ra0 : begin
                 if (RenderIn.Top + Anchor.y + WholeRect.Bottom >= RenderIn.Bottom - TextMargin * 3) and
-                   (RecsInCol > 0) then begin
-                  Anchor := Point (Anchor.x + WholeRect.Right +
-                                   FBarWidth + 1 + (TextMargin * 3),
-                                   2 + (TextMargin * 2));
+                   (RecsInCol > 0)
+                then begin
+                  Anchor := Point(
+                    Anchor.x + WholeRect.Right + FBarWidth + 1 + TextMargin * 3,
+                    2 + TextMargin * 2
+                  );
                   if Col = 1 then
                     cgCol1RecCount := RecsInCol;
                   Inc(Col);
                   RecsInCol := 0;
-                  if DisplayOnly and
-                     (Anchor.X + TextColWidth >= RenderIn.Right) then
+                  if DisplayOnly and (Anchor.X + TextColWidth >= RenderIn.Right) then
                     Exit;
                 end;
               end;
               ra90 : begin
-                if (Anchor.x + RenderIn.Left + (WholeRect.Right - WholeRect.Left) > RenderIn.Right - TextMargin * 3) and
-                   (RecsInCol > 0) then begin
-                  Anchor.x := 2 + (TextMargin * 2);
+                if (Anchor.x + RenderIn.Left + WholeRect.Right - WholeRect.Left > RenderIn.Right - TextMargin * 3) and
+                   (RecsInCol > 0)
+                then begin
+                  Anchor.x := 2 + TextMargin * 2;
                   Anchor.y := Anchor.y + WholeRect.Bottom + FBarWidth + 1 + TextMargin * 3;
                   if Col = 1 then
                     cgCol1RecCount := RecsInCol;
                   Inc(Col);
                   RecsInCol := 0;
-                  if DisplayOnly and
-                     (Anchor.y + TextColWidth >= RenderIn.Bottom) then
+                  if DisplayOnly and (Anchor.y + TextColWidth >= RenderIn.Bottom) then
                     Exit;
                 end;
               end;
               ra180 : begin
-                if (Anchor.y + RenderIn.Top - (WholeRect.Bottom - WholeRect.Top) <= RenderIn.Top + TextMargin * 3) and
-                   (RecsInCol > 0) then begin
-                  Anchor.x := Anchor.x - ((WholeRect.Right) + FBarWidth + 1 + TextMargin * 3);
-                  Anchor.y := TmpBmp.Height - 2 - (TextMargin * 2);
+                if (Anchor.y + RenderIn.Top - WholeRect.Bottom - WholeRect.Top <= RenderIn.Top + TextMargin * 3) and
+                   (RecsInCol > 0) then
+                begin
+                  Anchor.x := Anchor.x - (WholeRect.Right + FBarWidth + 1 + TextMargin * 3);
+                  Anchor.y := TmpBmp.Height - 2 - TextMargin * 2;
                   if Col = 1 then
                     cgCol1RecCount := RecsInCol;
                   Inc(Col);
                   RecsInCol := 0;
-                  if DisplayOnly and
-                     (Anchor.x + TextColWidth < RenderIn.Left) then
+                  if DisplayOnly and (Anchor.x + TextColWidth < RenderIn.Left) then
                     Exit;
                 end;
               end;
               ra270 : begin
                 if (Anchor.x + RenderIn.Left + (WholeRect.Right - WholeRect.Left) >= RenderIn.Right - TextMargin * 3) and
-                   (RecsInCol > 0) then begin
-                  Anchor.x := 2 + (TextMargin * 2);
+                   (RecsInCol > 0) then
+                begin
+                  Anchor.x := 2 + TextMargin * 2;
                   Anchor.y := Anchor.y - (WholeRect.Bottom + FBarWidth + 1 + TextMargin * 3);
                   if Col = 1 then
                     cgCol1RecCount := RecsInCol;
                   Inc(Col);
                   RecsInCol := 0;
-                  if DisplayOnly and
-                     (Anchor.y + TextColWidth <= RenderIn.Top) then
+                  if DisplayOnly and (Anchor.y + TextColWidth <= RenderIn.Top) then
                     Exit;
                 end;
               end;
@@ -1691,6 +1692,9 @@ var
       FLastPrintLine := -2
     else
       FLastPrintLine := FContactsAfter;
+
+    if (oldCol1RecCount > 0) and (cgCol1RecCount = 0) then
+      cgCol1RecCount := oldCol1RecCount;
   end;
   {--}
 
@@ -1733,7 +1737,6 @@ var
   {--}
 
 begin
-
   if DisplayOnly then begin
     RealColor                := clWhite;
     SizingBarColor           := clBlack;
@@ -1777,8 +1780,7 @@ begin
     SetMeasurements;
 
     if DisplayOnly and (PrintNumColumns > 0) then
-      RealColumnWidth := (RealWidth - ((2 + ExtraBarWidth) *
-                          (PrintNumColumns - 1))) div PrintNumColumns
+      RealColumnWidth := (RealWidth - ((2 + ExtraBarWidth) * (PrintNumColumns - 1))) div PrintNumColumns
     else
       RealColumnWidth := ColumnWidth;
 
@@ -1812,30 +1814,29 @@ end;
 
 { Introduced to support the buttonbar component                           !!.02}
 function TVpContactGrid.SelectContactByName(const Name: String): Boolean;
-var                                                                      
-  Contact: TVpContact;                                                   
-  ItemIndex: Integer;                                                    
-begin                                                                    
-  result := false;                                                       
-  if (DataStore <> nil) and (DataStore.Resource <> nil) then begin       
+var
+  Contact: TVpContact;
+  ItemIndex: Integer;
+begin
+  result := false;
+  if (DataStore <> nil) and (DataStore.Resource <> nil) then
+  begin
     Contact := DataStore.Resource.Contacts.FindContactByName(Name, True);
-    if ( Contact <> nil ) then begin                                     
-      FActiveContact := Contact;                                         
-      ItemIndex :=                                                       
-        DataStore.Resource.Contacts.ContactsList.IndexOf(Contact);       
-      if (ItemIndex > FContactsBefore + FVisibleContacts)                
-      or (ItemIndex <= FContactsBefore)                                  
-      then begin                                                         
-        if ItemIndex = 0 then                                            
-          FContactsBefore := 0                                           
-        else                                                             
-          FContactsBefore := ItemIndex - 1;                              
-      end;                                                               
-      result := true;                                                    
-      Invalidate;                                                        
-    end;                                                                 
-  end;                                                                   
-end;                                                                     
+    if (Contact <> nil) then begin
+      FActiveContact := Contact;
+      ItemIndex := DataStore.Resource.Contacts.ContactsList.IndexOf(Contact);
+      if (ItemIndex > FContactsBefore + FVisibleContacts) or (ItemIndex <= FContactsBefore)
+      then begin
+        if ItemIndex = 0 then
+          FContactsBefore := 0
+        else
+          FContactsBefore := ItemIndex - 1;
+      end;
+      result := true;
+      Invalidate;
+    end;
+  end;
+end;
 {=====}                                                                  
 
 procedure TVpContactGrid.SetColor(const Value: TColor);
@@ -2625,20 +2626,19 @@ begin
   else if (Rows > 0) and (FContactsAfter > 0) then
     FContactsBefore := FContactsBefore + cgCol1RecCount;
 
-  if FContactsBefore < 0 then FContactsBefore := 0;
   if FContactsBefore >= DataStore.Resource.Contacts.Count then
     FContactsBefore := DataStore.Resource.Contacts.Count - cgCol1RecCount;
+
+  if FContactsBefore < 0 then FContactsBefore := 0;
 end;
 {=====}
 
 procedure TVpContactGrid.SetHScrollPos;
 var
-  SI : TScrollInfo;
+  SI: TScrollInfo;
 begin
-  if (not HandleAllocated)
-  or (DataStore = nil)
-  or (DataStore.Resource = nil)
-  or (csDesigning in ComponentState)
+  if (not HandleAllocated) or (DataStore = nil) or (DataStore.Resource = nil)
+    or (csDesigning in ComponentState)
   then Exit;
 
   with SI do begin
