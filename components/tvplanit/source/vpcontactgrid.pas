@@ -206,6 +206,9 @@ type
     procedure WMLButtonDblClk(var Msg : TLMLButtonDblClk); message LM_LBUTTONDBLCLK;
     procedure WMKillFocus(var Msg : TLMKillFocus); message LM_KILLFOCUS;
     procedure WMRButtonDown(var Msg : TLMRButtonDown); message LM_RBUTTONDOWN;
+    function  DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean; override;
+    function  DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): Boolean; override;
+    function  DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): Boolean; override;
     {$ENDIF}
   public
     constructor Create(AOwner: TComponent); override;
@@ -547,26 +550,46 @@ begin
 end;
 {=====}
 
+{$IFDEF LCL}
+function TVpContactGrid.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
+  MousePos: TPoint): Boolean;
+begin
+  Result := inherited DoMouseWheel(Shift, WheelDelta, MousePos);
+end;
+
+function TVpContactGrid.DoMouseWheelDown(Shift: TShiftState;
+  MousePos: TPoint): Boolean;
+begin
+  Result := inherited DoMouseWheelDown(Shift, MousePos);
+  if not Result then begin
+    cgScrollHorizontal(1);
+    Invalidate;
+    Result := True;
+  end;
+end;
+
+function TVpContactGrid.DoMouseWheelUp(Shift: TShiftState;
+  MousePos: TPoint): Boolean;
+begin
+  Result := inherited DoMouseWheelUp(Shift, MousePos);
+  if not Result then begin
+    cgScrollHorizontal(-1);
+    Invalidate;
+    Result := True;
+  end;
+end;
+{$ENDIF}
+
 procedure TVpContactGrid.Paint;
 begin
-  RenderToCanvas (Canvas,
-                  Rect (0, 0, Width, Height),
-                  ra0,
-                  1,
-                  Now,
-                  -1,
-                  -1,
-                  gr30Min,
-                  False);
+  RenderToCanvas(Canvas, Rect(0, 0, Width, Height), ra0, 1, Now, -1, -1, gr30Min, False);
 end;
 {=====}
 
-procedure TVpContactGrid.PaintToCanvas (ACanvas : TCanvas;
-                                         ARect   : TRect;
-                                         Angle   : TVpRotationAngle);
+procedure TVpContactGrid.PaintToCanvas(ACanvas: TCanvas; ARect: TRect;
+  Angle: TVpRotationAngle);
 begin
-  RenderToCanvas (ACanvas, ARect, Angle, 1, Now,
-                  -1, -1, gr30Min, True);
+  RenderToCanvas(ACanvas, ARect, Angle, 1, Now, -1, -1, gr30Min, True);
 end;
 {=====}
 
@@ -667,8 +690,7 @@ var
     RenderCanvas.Pen.Style := psSolid;
     BarPos := RealLeft + 2 + RealColumnWidth + ExtraBarWidth;
     BarCount := 0;
-    while (BarPos < RealRight) and
-          (BarCount < Pred (MaxColumns)) do begin
+    while (BarPos < RealRight) and (BarCount < Pred (MaxColumns)) do begin
       cgBarArray[BarCount].Rec := Rect(BarPos - ExtraBarWidth, RealTop,
         BarPos - ExtraBarWidth + FBarWidth, RealBottom);
       cgBarArray[BarCount].Index := BarCount;
@@ -699,9 +721,12 @@ var
       BarCount := 0;
       while (BarPos < Width) and (BarCount < pred(MaxColumns)) do begin
         cgResizeBarArray[BarCount].Index := BarCount;
-        cgResizeBarArray[BarCount].Rec := Rect(BarPos - ExtraBarWidth,
-          RealTop, BarPos - ExtraBarWidth + FBarWidth,
-          RealBottom);
+        cgResizeBarArray[BarCount].Rec := Rect(
+          BarPos - ExtraBarWidth,
+          RealTop,
+          BarPos - ExtraBarWidth + FBarWidth,
+          RealBottom
+        );
         for I := 1 to BarWidth do begin
           TPSMoveTo (RenderCanvas, Angle, RenderIn,
                      RealLeft + BarPos,
@@ -782,17 +807,19 @@ var
       { Set the anchor starting point }
       case Angle of
         ra0 :
-          Anchor := Point (2 + (TextMargin * 2),
-                           2 + (TextMargin * 2));
+          Anchor := Point(2 + TextMargin * 2, 2 + TextMargin * 2);
         ra90 :
-          Anchor := Point (2 + (TextMargin * 2),
-                           2 + (TextMargin * 2));
+          Anchor := Point(2 + TextMargin * 2, 2 + TextMargin * 2);
         ra180 :
-          Anchor := Point ((RenderIn.Right - RenderIn.Left) - TmpBmp.Width - 2 - (TextMargin * 2),
-                           TmpBmp.Height - 2 - (TextMargin * 2));
+          Anchor := Point(
+            RenderIn.Right - RenderIn.Left - TmpBmp.Width - 2 - TextMargin * 2,
+            TmpBmp.Height - 2 - TextMargin * 2
+          );
         ra270 :
-          Anchor := Point (2 + (TextMargin * 2),
-                           (RenderIn.Bottom - RenderIn.Top) - TmpBmp.Height - 2 - (TextMargin * 2));
+          Anchor := Point(
+            2 + TextMargin * 2,
+            RenderIn.Bottom - RenderIn.Top - TmpBmp.Height - 2 - TextMargin * 2
+          );
       end;
       RecsInCol := 0;
 
@@ -809,36 +836,49 @@ var
           TmpBmp.Canvas.Brush.Style := bsSolid;
           TmpBmp.Canvas.Font.Assign(FContactHeadAttr.Font);
           case Angle of
-            ra0 : begin
-              WholeRect.TopLeft := Point(0, 0);
-              HeadRect.TopLeft := Point(TextMargin, 0);
-              HeadRect.BottomRight := Point (TmpBmp.Width,
-                                      HeadRect.Top + TmpBmp.Canvas.TextHeight(VpProductName)
-                                      + (TextMargin div 2));
-              WholeRect.BottomRight := HeadRect.BottomRight;
-            end;
-            ra90 : begin
-              HeadRect.TopLeft := Point (TmpBmpRect.Right - TextMargin - TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2), 0);
-              HeadRect.BottomRight := Point (TmpBmpRect.Right,
-                                             TmpBmp.Height);
-              WholeRect.TopLeft := HeadRect.TopLeft;
-              WholeRect.BottomRight := HeadRect.BottomRight;
-            end;
-            ra180 : begin
-              WholeRect.BottomRight := Point (TmpBmp.Width, TmpBmp.Height);
-              HeadRect.TopLeft := Point (TextMargin, TmpBmpRect.Bottom -
-                                         TmpBmp.Canvas.TextHeight(VpProductName) - TextMargin);
-              HeadRect.BottomRight := Point (TmpBmp.Width,
-                                             TmpBmp.Height - (TextMargin div 2));
-              WholeRect.TopLeft := HeadRect.TopLeft;
-            end;
-            ra270 : begin
-              WholeRect.TopLeft := Point (0, 0);
-              HeadRect.TopLeft := Point (0, TextMargin);
-              HeadRect.BottomRight := Point (TextMargin + TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                             TmpBmp.Height);
-              WholeRect.BottomRight := HeadRect.BottomRight;
-            end;
+            ra0:
+              begin
+                WholeRect.TopLeft := Point(0, 0);
+                HeadRect.TopLeft := Point(TextMargin, 0);
+                HeadRect.BottomRight := Point(
+                  TmpBmp.Width,
+                  HeadRect.Top + TmpBmp.Canvas.TextHeight(VpProductName) + TextMargin div 2
+                );
+                WholeRect.BottomRight := HeadRect.BottomRight;
+              end;
+            ra90:
+              begin
+                HeadRect.TopLeft := Point(
+                  TmpBmpRect.Right - TextMargin - TmpBmp.Canvas.TextHeight(VpProductName) + TextMargin div 2,
+                  0
+                );
+                HeadRect.BottomRight := Point(TmpBmpRect.Right, TmpBmp.Height);
+                WholeRect.TopLeft := HeadRect.TopLeft;
+                WholeRect.BottomRight := HeadRect.BottomRight;
+              end;
+            ra180:
+              begin
+                WholeRect.BottomRight := Point(TmpBmp.Width, TmpBmp.Height);
+                HeadRect.TopLeft := Point(
+                  TextMargin,
+                  TmpBmpRect.Bottom - TmpBmp.Canvas.TextHeight(VpProductName) - TextMargin
+                );
+                HeadRect.BottomRight := Point(
+                  TmpBmp.Width,
+                  TmpBmp.Height - TextMargin div 2
+                );
+                WholeRect.TopLeft := HeadRect.TopLeft;
+              end;
+            ra270:
+              begin
+                WholeRect.TopLeft := Point(0, 0);
+                HeadRect.TopLeft := Point(0, TextMargin);
+                HeadRect.BottomRight := Point(
+                  TextMargin + TmpBmp.Canvas.TextHeight(VpProductName) + TextMargin div 2,
+                  TmpBmp.Height
+                );
+                WholeRect.BottomRight := HeadRect.BottomRight;
+              end;
           end;
           { assemble the header string }
           Str := AssembleName(TmpCon);
@@ -1475,14 +1515,10 @@ var
 
             { add a little spacing between records }
             case Angle of
-              ra0   :
-                WholeRect.Bottom := WholeRect.Bottom + (TextMargin * 2);
-              ra90  :
-                WholeRect.Left := WholeRect.Left - (TextMargin * 2);
-              ra180 :
-                WholeRect.Top := WholeRect.Top - (TextMargin * 2);
-              ra270 :
-                WholeRect.Right := WholeRect.Right + (TextMargin * 2);
+              ra0   : WholeRect.Bottom := WholeRect.Bottom + TextMargin * 2;
+              ra90  : WholeRect.Left := WholeRect.Left - TextMargin * 2;
+              ra180 : WholeRect.Top := WholeRect.Top - TextMargin * 2;
+              ra270 : WholeRect.Right := WholeRect.Right + TextMargin * 2;
             end;
 
             { Update Array Rects }
@@ -2544,18 +2580,23 @@ begin
     Exit;
 
   case Msg.ScrollCode of
-    SB_LINELEFT       : cgScrollHorizontal(-1);
-    SB_LINERIGHT      : cgScrollHorizontal(1);
-    SB_PAGELEFT       : cgScrollHorizontal(-1);
-    SB_PAGERIGHT      : cgScrollHorizontal(1);
-    SB_THUMBPOSITION, SB_THUMBTRACK : begin
-      if (Msg.Pos > FContactsBefore) and (FContactsAfter = 0) then Exit;
-      FContactsBefore := Msg.Pos;
-      if (FContactsBefore = 1) and (cgCol1RecCount = 1) then
-        FContactsBefore := 0;
-      if FContactsBefore >= DataStore.Resource.Contacts.Count then
-        FContactsBefore := DataStore.Resource.Contacts.Count - cgCol1RecCount;
-    end;
+    SB_LINELEFT:
+      cgScrollHorizontal(-1);
+    SB_LINERIGHT:
+      cgScrollHorizontal(1);
+    SB_PAGELEFT:
+      cgScrollHorizontal(-1);
+    SB_PAGERIGHT:
+      cgScrollHorizontal(1);
+    SB_THUMBPOSITION, SB_THUMBTRACK:
+      begin
+        if (Msg.Pos > FContactsBefore) and (FContactsAfter = 0) then Exit;
+        FContactsBefore := Msg.Pos;
+        if (FContactsBefore = 1) and (cgCol1RecCount = 1) then
+          FContactsBefore := 0;
+        if FContactsBefore >= DataStore.Resource.Contacts.Count then
+          FContactsBefore := DataStore.Resource.Contacts.Count - cgCol1RecCount;
+      end;
   end;
   Invalidate;
 end;
