@@ -1799,6 +1799,7 @@ var
 begin
   Result := False;
   Done   := False;
+  GetRgnBox (ARegion, @WorkRect);
   while not Done do begin
     if HPos > WorkRect.Right then begin 
       HPos := WorkRect.Left;
