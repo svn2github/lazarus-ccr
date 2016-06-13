@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: de\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Generator: Poedit 1.8.8\n"
 
 #: vpsr.rs1day
 msgid "1 day"
@@ -686,7 +686,7 @@ msgstr "Sprachdatei nicht gefunden."
 
 #: vpsr.rsnone
 msgid "None"
-msgstr "Nichts"
+msgstr "keine"
 
 #: vpsr.rsnonestr
 msgid "(None)"
