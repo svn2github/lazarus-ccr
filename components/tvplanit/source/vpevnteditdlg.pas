@@ -212,6 +212,7 @@ begin
   StartTime.Parent := AppointmentGroupbox;
   StartTime.Left := AlarmAdvanceType.Left;
   StartTime.Top := StartDate.Top;
+  StartTime.TabOrder:= StartDate.TabOrder+ 1;
 
  {$IFDEF LCL}
   EndTime := TTimeEdit.Create(self);
@@ -223,6 +224,11 @@ begin
   EndTime.Parent := AppointmentGroupbox;
   EndTime.Left := AlarmAdvanceType.Left;
   EndTime.Top := EndDate.Top;
+  EndTime.TabOrder := EndDate.TabOrder + 1;
+
+  SoundFinderBtn.Top := AlarmAdvanceType.Top;
+  SoundFinderBtn.Height := AlarmAdvanceType.Height;
+  SoundFinderBtn.Width := SoundFinderBtn.Height;
 
   ReturnCode := rtAbandon;
   PopLists;
@@ -646,6 +652,7 @@ begin
   AlarmAdvance.Enabled  := AlarmSet.Checked;
   AlarmAdvanceType.Enabled  := AlarmSet.Checked;
   AdvanceUpDown.Enabled := AlarmSet.Checked;
+  SoundFinderBtn.Enabled := AlarmSet.Checked;
   Event.SnoozeTime := 0.0;
 end;
 {=====}
