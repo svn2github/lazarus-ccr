@@ -72,6 +72,8 @@ type
 
   TVpTimeFormat = (tf24Hour, tf12Hour);
 
+  TVpPlaySoundMode = (psmSync, psmASync);
+
   { XML definitions }
   DOMString = WideString;
 
@@ -95,6 +97,9 @@ type
     Index : Integer) of object;
 
   TVpGetEditorCaption = procedure(var Caption : string) of object;
+
+  TVpPlaySoundEvent = procedure(Sender: TObject; const AWavFile: String;
+    AMode: TVpPlaySoundMode) of object;
 
   { XML exceptions }
   EXML = class (Exception);

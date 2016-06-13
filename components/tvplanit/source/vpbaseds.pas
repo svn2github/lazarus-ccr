@@ -210,6 +210,7 @@ type
     FOnAlert           : TVpEventEvent;
     FOnResourceChange  : TVpResourceEvent;
     FOnDateChanged     : TVpDateChangedEvent;                            
+    FOnPlaySound       : TVpPlaySoundEvent;
 
     procedure dsOnTimer(Sender: TObject);
     procedure dsDoOnAlert(Event: TVpEvent);
@@ -258,6 +259,7 @@ type
     procedure PostTasks; virtual; abstract;
     procedure PostResources; virtual; abstract;
     procedure RegisterWatcher (Watcher : THandle);
+    procedure PlaySound(const AWavFile: String; APlaySoundMode: TVpPlaySoundMode);
     property Loading : Boolean
       read FLoading write FLoading;
     property Resource: TVpResource
@@ -290,6 +292,8 @@ type
       read FOnDisconnect write FOnDisconnect;
     property OnResourceChange: TVpResourceEvent
       read FOnResourceChange write FOnResourceChange;
+    property OnPlaySound: TVpPlaySoundEvent
+      read FOnPlaySound write FOnPlaySound;
   end;
 
 
@@ -383,7 +387,7 @@ implementation
 
 uses
   VpSR, VpConst, VpMisc, VpResEditDlg, VpAlarmDlg,
-{$IFNDEF LCL}
+{$IFDEF WINDOWS}
   mmSystem,
 {$ENDIF}
   VpDlg, VpSelResDlg;
@@ -601,23 +605,22 @@ end;
 
 procedure TVpCustomDataStore.dsDoOnAlert(Event: TVpEvent);
 begin
-  if Event.AlertDisplayed then Exit;
+  if Event.AlertDisplayed then
+    Exit;
 
   if Assigned(FOnAlert) then
     FOnAlert(Self, Event)
   else begin
     {Ding!}
     if FPlayEventSounds then begin
-  {$IFNDEF LCL}
-      if FileExists(Event.AlarmWavPath) then
+      if FileExists(Event.DingPath) then
         { if the event has a sound of its own, then play that one. }
-        SndPlaySound(PChar(Event.AlarmWavPath), snd_Async)
+        PlaySound(Event.DingPath, psmASync)
       else if FileExists(FDefaultEventSound) then
         { otherwise, if there is a default sound assigned, then play that one }
-        SndPlaySound(PChar(FDefaultEventSound), snd_Async)
+        PlaySound(FDefaultEventSound, psmASync)
       else
         { otherwise just ding }
-  {$ENDIF}
         Beep;
     end;
 
@@ -869,7 +872,21 @@ begin
 end;
 {=====}
 
-
+procedure TVpCustomDatastore.PlaySound(const AWavFile: String;
+  APlaySoundMode: TVpPlaySoundMode);
+begin
+  if Assigned(FOnPlaySound) then
+    FOnPlaySound(Self, AWavFile, APlaySoundMode)
+  else begin
+   {$IFDEF WINDOWS}
+    case APlaySoundMode of
+      psmSync  : SndPlaySound(PChar(AWavFile), SND_SYNC);
+      psmASync : SndPlaySound(PChar(AWavFile), SND_ASYNC);
+    end;
+   {$ENDIF}
+  end;
+end;
+{=====}
 
 
 { TVpResourceCombo }
