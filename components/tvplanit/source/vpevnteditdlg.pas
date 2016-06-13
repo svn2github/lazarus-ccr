@@ -680,7 +680,7 @@ begin
       if SoundFinder.CBDefault.Checked then
         AlarmWavPath := ''
       else
-        AlarmWavPath := SoundFinder.FileListBox1.FileName;
+        AlarmWavPath := SoundFinder.GetSelectedFilename;
     end;
   finally
     SoundFinder.Release;

@@ -1,7 +1,7 @@
 object FrmSoundDialog: TFrmSoundDialog
-  Left = 328
+  Left = 323
   Height = 474
-  Top = 242
+  Top = 278
   Width = 736
   HorzScrollBar.Page = 401
   VertScrollBar.Page = 261
@@ -28,24 +28,25 @@ object FrmSoundDialog: TFrmSoundDialog
       ClientHeight = 446
       ClientWidth = 728
       object RightPanel: TPanel
-        Left = 453
+        Left = 395
         Height = 446
         Top = 0
-        Width = 275
+        Width = 333
         Align = alRight
         BevelOuter = bvNone
+        Caption = 'Nothing to select from...'
         ClientHeight = 446
-        ClientWidth = 275
+        ClientWidth = 333
         TabOrder = 2
         object Panel1: TPanel
           Left = 0
           Height = 34
           Top = 0
-          Width = 275
+          Width = 333
           Align = alTop
           BevelOuter = bvNone
           ClientHeight = 34
-          ClientWidth = 275
+          ClientWidth = 333
           TabOrder = 0
           object CBDefault: TCheckBox
             Left = 8
@@ -61,11 +62,11 @@ object FrmSoundDialog: TFrmSoundDialog
           Left = 0
           Height = 38
           Top = 408
-          Width = 275
+          Width = 333
           Align = alBottom
           BevelOuter = bvNone
           ClientHeight = 38
-          ClientWidth = 275
+          ClientWidth = 333
           TabOrder = 2
           object PlayButton: TSpeedButton
             Left = 8
@@ -94,7 +95,7 @@ object FrmSoundDialog: TFrmSoundDialog
             OnClick = PlayButtonClick
           end
           object OkBtn: TButton
-            Left = 112
+            Left = 170
             Height = 25
             Top = 8
             Width = 75
@@ -105,7 +106,7 @@ object FrmSoundDialog: TFrmSoundDialog
             TabOrder = 0
           end
           object CancelBtn: TButton
-            Left = 192
+            Left = 250
             Height = 25
             Top = 8
             Width = 75
@@ -115,22 +116,34 @@ object FrmSoundDialog: TFrmSoundDialog
             TabOrder = 1
           end
         end
-        object FileListBox1: TFileListBox
+        object ShellListView: TShellListView
           Left = 0
           Height = 374
           Top = 34
-          Width = 271
+          Width = 329
           Align = alClient
           BorderSpacing.Right = 4
-          Directory = 'D:\lazarus'
-          ItemHeight = 0
+          Color = clDefault
+          HideSelection = False
           Mask = '*.wav'
-          OnChange = FileListBox1Change
           TabOrder = 1
+          ObjectTypes = [otNonFolders]
+          ShellTreeView = ShellTreeView
+        end
+        object Panel3: TPanel
+          Left = 61
+          Height = 90
+          Top = 110
+          Width = 170
+          BevelOuter = bvNone
+          BorderStyle = bsSingle
+          Caption = 'Nothing to select from'
+          TabOrder = 3
+          Wordwrap = True
         end
       end
       object Splitter1: TSplitter
-        Left = 448
+        Left = 390
         Height = 446
         Top = 0
         Width = 5
@@ -141,15 +154,27 @@ object FrmSoundDialog: TFrmSoundDialog
         Left = 4
         Height = 438
         Top = 4
-        Width = 444
+        Width = 386
         Align = alClient
         BorderSpacing.Left = 4
         BorderSpacing.Top = 4
         BorderSpacing.Bottom = 4
         FileSortType = fstNone
+        ReadOnly = True
         TabOrder = 0
-        OnChange = ShellTreeViewChange
+        Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
         ObjectTypes = [otFolders]
+        ShellListView = ShellListView
+      end
+      object Panel4: TPanel
+        Left = 61
+        Height = 90
+        Top = 110
+        Width = 170
+        BevelOuter = bvNone
+        BorderStyle = bsSingle
+        Caption = 'Nothing to select from'
+        TabOrder = 3
       end
     end
   end

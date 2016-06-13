@@ -217,6 +217,7 @@ resourcestring
   RSSelectASound            = 'Select A Sound';
   RSSoundFinder             = 'Sound Finder';
   RSDefaultSound            = 'Use the default sound';
+  RSNothingToSelectFrom     = 'There is nothing to select if default sound is used.';
 
   { Event Edit Dialog Captions }
   RSDlgEventEdit            = 'Event';

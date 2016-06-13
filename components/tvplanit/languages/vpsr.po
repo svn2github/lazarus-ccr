@@ -704,6 +704,10 @@ msgctxt "vpsr.rsnoteslbl"
 msgid "Notes:"
 msgstr ""
 
+#: vpsr.rsnothingtoselectfrom
+msgid "There is nothing to select if default sound is used."
+msgstr ""
+
 #: vpsr.rsnotimersavail
 msgid "No Window's timers are available."
 msgstr ""

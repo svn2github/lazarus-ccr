@@ -51,14 +51,14 @@ type
     PageControl1: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
+    Panel3: TPanel;
+    Panel4: TPanel;
     RightPanel: TPanel;
+    ShellListView: TShellListView;
     ShellTreeView: TShellTreeView;
     Splitter1: TSplitter;
     TabSheet1: TTabSheet;
     PlayButton: TSpeedButton;
-//    DriveComboBox1: TDriveComboBox;
-//    DirectoryListBox1: TDirectoryListBox;
-    FileListBox1: TFileListBox;
     CBDefault: TCheckBox;
     OkBtn: TButton;
     CancelBtn: TButton;
@@ -70,12 +70,13 @@ type
     procedure CancelBtnClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure ShellTreeViewChange(Sender: TObject; Node: TTreeNode);
   private
     FOnPlaySound: TVpPlaySoundEvent;
+    function FindFileItem(AFilename: String): TListItem;
   public
     DingPath: string;
     ReturnCode : TVpEditorReturnCode;
+    function GetSelectedFileName: String;
     procedure Populate;
     property OnPlaySound: TVpPlaySoundEvent read FOnPlaySound write FOnPlaySound;
   end;
@@ -94,9 +95,9 @@ uses
 
 procedure TFrmSoundDialog.FileListBox1Change(Sender: TObject);
 begin
-  if FileListBox1.Items.Count > 0 then begin
+  if ShellListview.Items.Count > 0 then begin
     PlayButton.Enabled := true;
-    DingPath := FileListBox1.FileName;
+    DingPath := GetSelectedFileName;
   end else begin
    PlayButton.Enabled := false;
    DingPath := '';
@@ -108,55 +109,63 @@ procedure TFrmSoundDialog.PlayButtonClick(Sender: TObject);
 begin
   if Assigned(FOnPlaySound) then begin
     PlayButton.Enabled := false;
-    FOnPlaySound(self, FileListbox1.FileName, psmSync);
+    FOnPlaySound(self, GetSelectedFileName, psmSync);
     PlayButton.Enabled := true;
   end;
 end;
 {=====}
 
-procedure TFrmSoundDialog.Populate;
+function TFrmSoundDialog.FindFileItem(AFileName: String): TListItem;
 var
-  Drive: char;
+  i: Integer;
+begin
+  AFileName := ExtractFileName(AFileName);
+  for i:=0 to ShellListview.Items.Count-1 do
+    if ShellListview.Items[i].Caption = AFilename then begin
+      Result := ShellListview.Items[i];
+      exit;
+    end;
+  Result := nil;
+end;
+
+procedure TFrmSoundDialog.Populate;
 begin
   TabSheet1.Caption := RSSelectASound;
   Self.Caption := RSSoundFinder;
   CBDefault.Caption := RSDefaultSound;
   OkBtn.Caption := RSOkBtn;
   CancelBtn.Caption := RSCancelBtn;
+  Panel3.Caption := RSNothingToSelectFrom;
+  Panel4.Caption := RSNothingToSelectFrom;
   if DingPath = '' then begin
     CBDefault.Checked := true;
     ShellTreeView.Path := ExtractFileDir(ParamStr(0));
-//    DirectoryListBox1.Directory := ExtractFileDir(ParamStr(0));
+  end else
+  if FileExists(DingPath) then begin
+    ShellTreeview.Path := ExtractFileDir(DingPath);
+    ShellListview.Selected := FindFileItem(DingPath);
   end else begin
-    Drive := UpCase(ExtractFileDrive(DingPath)[1]);
-    if FileExists(DingPath) and (Drive in ['A'..'Z']) then begin
-      ShellTreeview.Path := ExtractFileDir(DingPath);
-      FileListBox1.FileName := DingPath;
-    end else begin
-      ShellTreeView.Path := ExtractFileDir(ParamStr(0));
-    end;
+    ShellTreeView.Path := ExtractFileDir(ParamStr(0));
   end;
-end;
-
-procedure TFrmSoundDialog.ShellTreeViewChange(Sender: TObject; Node: TTreeNode);
-begin
-  FileListbox1.Directory := ShellTreeView.Path;
+  CBDefaultClick(nil);
 end;
 
 {=====}
 
 procedure TFrmSoundDialog.CBDefaultClick(Sender: TObject);
 begin
-//  DriveComboBox1.Enabled := not CBDefault.Checked;
-//  DirectoryListBox1.Enabled := not CBDefault.Checked;
-  ShellTreeview.Enabled := not CBDefault.Checked;
-  FileListBox1.Enabled := not CBDefault.Checked;
-  PlayButton.Enabled := not CBDefault.Checked;
+  ShellTreeview.Visible := not CBDefault.Checked;
+  ShellListview.Visible := not CBDefault.Checked;
+  Panel3.Visible := CBDefault.Checked;
+  Panel4.Visible := CBDefault.Checked;
+  PlayButton.Visible := not CBDefault.Checked;
 end;
 {=====}
 
 procedure TFrmSoundDialog.FormCreate(Sender: TObject);
 begin
+  Panel3.Align := alClient;
+  Panel4.Align := alClient;
   ReturnCode := rtAbandon;
 end;
 {=====}
@@ -179,6 +188,14 @@ procedure TFrmSoundDialog.FormKeyDown(Sender: TObject; var Key: Word;
 begin
   if Key = VK_ESCAPE then
     Close;
+end;
+
+function TFrmSoundDialog.GetSelectedFileName: String;
+begin
+  if ShellListview.ItemFocused <> nil then
+    Result := IncludeTrailingPathDelimiter(ShellTreeView.Path) + ShellListview.ItemFocused.Caption
+  else
+    Result := '';
 end;
 
 end.
