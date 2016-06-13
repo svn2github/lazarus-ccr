@@ -70,6 +70,7 @@ type
     procedure CancelBtnClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure ShellTreeViewChange(Sender: TObject; Node: TTreeNode);
   private
     FOnPlaySound: TVpPlaySoundEvent;
   public
@@ -129,16 +130,19 @@ begin
   end else begin
     Drive := UpCase(ExtractFileDrive(DingPath)[1]);
     if FileExists(DingPath) and (Drive in ['A'..'Z']) then begin
-//      DriveComboBox1.Drive := Drive;
-//      DirectoryListBox1.Directory := ExtractFileDir(DingPath);
       ShellTreeview.Path := ExtractFileDir(DingPath);
       FileListBox1.FileName := DingPath;
     end else begin
-//      DirectoryListBox1.Directory := ExtractFileDir(ParamStr(0));
       ShellTreeView.Path := ExtractFileDir(ParamStr(0));
     end;
   end;
 end;
+
+procedure TFrmSoundDialog.ShellTreeViewChange(Sender: TObject; Node: TTreeNode);
+begin
+  FileListbox1.Directory := ShellTreeView.Path;
+end;
+
 {=====}
 
 procedure TFrmSoundDialog.CBDefaultClick(Sender: TObject);

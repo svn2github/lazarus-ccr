@@ -667,8 +667,8 @@ begin
   try
     SoundFinder.DingPath := AlarmWavPath;
     SoundFinder.Populate;
-    SoundFinder.ShowModal;
     SoundFinder.OnPlaySound := DoPlaySound;
+    SoundFinder.ShowModal;
     if SoundFinder.ReturnCode = TvpEditorReturnCode(rtCommit) then begin
       if SoundFinder.CBDefault.Checked then
         AlarmWavPath := ''
