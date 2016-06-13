@@ -84,7 +84,7 @@ type
     Bevel3: TBevel;
     IntervalLbl: TLabel;
     Image1: TImage;
-    SpeedButton1: TSpeedButton;
+    SoundFinderBtn: TSpeedButton;
     DescriptionEdit: TEdit;
     AlarmSet: TCheckBox;
     Category: TComboBox;
@@ -112,7 +112,7 @@ type
     procedure AlarmSetClick(Sender: TObject);
     procedure EndDateChange(Sender: TObject);
     procedure CBAllDayClick(Sender: TObject);
-    procedure SpeedButton1Click(Sender: TObject);
+    procedure SoundFinderBtnClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure StartTimeExit(Sender: TObject);
     procedure EndTimeExit(Sender: TObject);
@@ -655,7 +655,7 @@ begin
 end;
 {=====}
 
-procedure TDlgEventEdit.SpeedButton1Click(Sender: TObject);
+procedure TDlgEventEdit.SoundFinderBtnClick(Sender: TObject);
 begin
   ExecuteSoundFinder(AlarmWavPath);
 end;

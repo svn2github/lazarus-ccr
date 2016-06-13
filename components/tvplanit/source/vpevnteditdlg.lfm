@@ -204,7 +204,7 @@ object DlgEventEdit: TDlgEventEdit
         7671328DB5B6E607EA5FBE1E3353EA940000000049454E44AE426082
       }
     end
-    object SpeedButton1: TSpeedButton
+    object SoundFinderBtn: TSpeedButton
       Left = 312
       Height = 22
       Top = 167
@@ -219,6 +219,7 @@ object DlgEventEdit: TDlgEventEdit
         8888008880088808888888088088880808888880808888088088888808088088
         8808888880808088888888888800088888888888888888888888
       }
+      OnClick = SoundFinderBtnClick
     end
     object imgClock: TImage
       Left = 13

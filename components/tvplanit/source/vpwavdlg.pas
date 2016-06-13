@@ -41,11 +41,19 @@ uses
   Windows,
   {$ENDIF}
   Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  FileCtrl, StdCtrls, ExtCtrls, Buttons, VpBase, ComCtrls;
+  FileCtrl, StdCtrls, ExtCtrls, Buttons, VpBase, ComCtrls, ShellCtrls;
 
 type
+
+  { TFrmSoundDialog }
+
   TFrmSoundDialog = class(TForm)
     PageControl1: TPageControl;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    RightPanel: TPanel;
+    ShellTreeView: TShellTreeView;
+    Splitter1: TSplitter;
     TabSheet1: TTabSheet;
     PlayButton: TSpeedButton;
 //    DriveComboBox1: TDriveComboBox;
@@ -141,15 +149,18 @@ begin
   CancelBtn.Caption := RSCancelBtn;
   if DingPath = '' then begin
     CBDefault.Checked := true;
+    ShellTreeView.Path := ExtractFileDir(ParamStr(0));
 //    DirectoryListBox1.Directory := ExtractFileDir(ParamStr(0));
   end else begin
     Drive := UpCase(ExtractFileDrive(DingPath)[1]);
     if FileExists(DingPath) and (Drive in ['A'..'Z']) then begin
 //      DriveComboBox1.Drive := Drive;
 //      DirectoryListBox1.Directory := ExtractFileDir(DingPath);
+      ShellTreeview.Path := ExtractFileDir(DingPath);
       FileListBox1.FileName := DingPath;
     end else begin
 //      DirectoryListBox1.Directory := ExtractFileDir(ParamStr(0));
+      ShellTreeView.Path := ExtractFileDir(ParamStr(0));
     end;
   end;
 end;
@@ -159,6 +170,7 @@ procedure TFrmSoundDialog.CBDefaultClick(Sender: TObject);
 begin
 //  DriveComboBox1.Enabled := not CBDefault.Checked;
 //  DirectoryListBox1.Enabled := not CBDefault.Checked;
+  ShellTreeview.Enabled := not CBDefault.Checked;
   FileListBox1.Enabled := not CBDefault.Checked;
   PlayButton.Enabled := not CBDefault.Checked;
 end;

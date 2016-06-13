@@ -1,14 +1,13 @@
 object FrmSoundDialog: TFrmSoundDialog
   Left = 328
-  Height = 262
+  Height = 474
   Top = 242
-  Width = 402
+  Width = 736
   HorzScrollBar.Page = 401
   VertScrollBar.Page = 261
-  BorderStyle = bsDialog
   Caption = 'FrmSoundDialog'
-  ClientHeight = 262
-  ClientWidth = 402
+  ClientHeight = 474
+  ClientWidth = 736
   KeyPreview = True
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
@@ -16,9 +15,9 @@ object FrmSoundDialog: TFrmSoundDialog
   LCLVersion = '1.7'
   object PageControl1: TPageControl
     Left = 0
-    Height = 262
+    Height = 474
     Top = 0
-    Width = 402
+    Width = 736
     TabStop = False
     ActivePage = TabSheet1
     Align = alClient
@@ -26,72 +25,130 @@ object FrmSoundDialog: TFrmSoundDialog
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Select A Sound'
-      ClientHeight = 236
-      ClientWidth = 394
-      object PlayButton: TSpeedButton
-        Left = 204
-        Height = 22
-        Top = 163
-        Width = 26
-        Glyph.Data = {
-          DE010000424DDE01000000000000760000002800000024000000120000000100
-          0400000000006801000000000000000000001000000010000000000000000000
-          80000080000000808000800000008000800080800000C0C0C000808080000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00666666666666
-          6666666666666666666666660000666666660066666666666666668866666666
-          0000666666603086666666666666688886666666000066666603077866686666
-          66668887786668660000666660388FF866866666666888877866866600006666
-          03B07FF8686666666688787778686666000066003BF07FF8666666668887F877
-          7866666600006038BFB00FF866666668887F788778666666000063B7FBF080F8
-          6888866877F7F88878688886000063B7BFB070F866666668777F787878666666
-          000063F7FBF00FF866666668F7F7F8877866666600006633BFB07FF868666666
-          887F787778686666000066663BF07FF8668666666687F8777866866600006666
-          63B887F866686666666878877866686600006666663B07766666666666668787
-          7866666600006666666380866666666666666888866666660000666666660066
-          6666666666666688666666660000666666666666666666666666666666666666
-          0000
-        }
-        NumGlyphs = 2
-        OnClick = PlayButtonClick
-      end
-      object FileListBox1: TFileListBox
-        Left = 204
-        Height = 121
-        Top = 29
-        Width = 185
-        Directory = 'D:\lazarus'
-        ItemHeight = 0
-        Mask = '*.wav'
-        OnChange = FileListBox1Change
-        TabOrder = 1
-      end
-      object CBDefault: TCheckBox
-        Left = 204
-        Height = 19
-        Top = 5
-        Width = 73
-        Caption = 'CBDefault'
-        OnClick = CBDefaultClick
+      ClientHeight = 446
+      ClientWidth = 728
+      object RightPanel: TPanel
+        Left = 453
+        Height = 446
+        Top = 0
+        Width = 275
+        Align = alRight
+        BevelOuter = bvNone
+        ClientHeight = 446
+        ClientWidth = 275
         TabOrder = 0
+        object Panel1: TPanel
+          Left = 0
+          Height = 34
+          Top = 0
+          Width = 275
+          Align = alTop
+          BevelOuter = bvNone
+          ClientHeight = 34
+          ClientWidth = 275
+          TabOrder = 0
+          object CBDefault: TCheckBox
+            Left = 8
+            Height = 19
+            Top = 8
+            Width = 73
+            Caption = 'CBDefault'
+            OnClick = CBDefaultClick
+            TabOrder = 0
+          end
+        end
+        object Panel2: TPanel
+          Left = 0
+          Height = 38
+          Top = 408
+          Width = 275
+          Align = alBottom
+          BevelOuter = bvNone
+          ClientHeight = 38
+          ClientWidth = 275
+          TabOrder = 1
+          object PlayButton: TSpeedButton
+            Left = 8
+            Height = 25
+            Top = 8
+            Width = 29
+            Glyph.Data = {
+              DE010000424DDE01000000000000760000002800000024000000120000000100
+              0400000000006801000000000000000000001000000010000000000000000000
+              80000080000000808000800000008000800080800000C0C0C000808080000000
+              FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00666666666666
+              6666666666666666666666660000666666660066666666666666668866666666
+              0000666666603086666666666666688886666666000066666603077866686666
+              66668887786668660000666660388FF866866666666888877866866600006666
+              03B07FF8686666666688787778686666000066003BF07FF8666666668887F877
+              7866666600006038BFB00FF866666668887F788778666666000063B7FBF080F8
+              6888866877F7F88878688886000063B7BFB070F866666668777F787878666666
+              000063F7FBF00FF866666668F7F7F8877866666600006633BFB07FF868666666
+              887F787778686666000066663BF07FF8668666666687F8777866866600006666
+              63B887F866686666666878877866686600006666663B07766666666666668787
+              7866666600006666666380866666666666666888866666660000666666660066
+              6666666666666688666666660000666666666666666666666666666666666666
+              0000
+            }
+            NumGlyphs = 2
+            OnClick = PlayButtonClick
+          end
+          object OkBtn: TButton
+            Left = 112
+            Height = 25
+            Top = 8
+            Width = 75
+            Anchors = [akTop, akRight]
+            Caption = 'OkBtn'
+            Default = True
+            OnClick = OkBtnClick
+            TabOrder = 0
+          end
+          object CancelBtn: TButton
+            Left = 192
+            Height = 25
+            Top = 8
+            Width = 75
+            Anchors = [akTop, akRight]
+            Caption = 'CancelBtn'
+            OnClick = CancelBtnClick
+            TabOrder = 1
+          end
+        end
+        object FileListBox1: TFileListBox
+          Left = 0
+          Height = 374
+          Top = 34
+          Width = 271
+          Align = alClient
+          BorderSpacing.Right = 4
+          Directory = 'D:\lazarus'
+          ItemHeight = 0
+          Mask = '*.wav'
+          OnChange = FileListBox1Change
+          TabOrder = 2
+        end
       end
-      object OkBtn: TButton
-        Left = 220
-        Height = 25
-        Top = 205
-        Width = 75
-        Caption = 'OkBtn'
-        Default = True
-        OnClick = OkBtnClick
+      object Splitter1: TSplitter
+        Left = 448
+        Height = 446
+        Top = 0
+        Width = 5
+        Align = alRight
+        ResizeAnchor = akRight
+      end
+      object ShellTreeView: TShellTreeView
+        Left = 4
+        Height = 438
+        Top = 4
+        Width = 444
+        Align = alClient
+        BorderSpacing.Left = 4
+        BorderSpacing.Top = 4
+        BorderSpacing.Bottom = 4
+        FileSortType = fstNone
         TabOrder = 2
-      end
-      object CancelBtn: TButton
-        Left = 308
-        Height = 25
-        Top = 205
-        Width = 75
-        Caption = 'CancelBtn'
-        OnClick = CancelBtnClick
-        TabOrder = 3
+        ObjectTypes = [otFolders]
       end
     end
   end
