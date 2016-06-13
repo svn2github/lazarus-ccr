@@ -71,20 +71,18 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
   private
+    FOnPlaySound: TVpPlaySoundEvent;
   public
     DingPath: string;
     ReturnCode : TVpEditorReturnCode;
     procedure Populate;
+    property OnPlaySound: TVpPlaySoundEvent read FOnPlaySound write FOnPlaySound;
   end;
 
-function ExecuteSoundFinder(var DingPath: string): Boolean;
 
 implementation
 
 uses
-{$IFNDEF LCL}
-  mmSystem,
-{$ENDIF}
   VpSR;
 
 {$IFDEF LCL}
@@ -92,29 +90,6 @@ uses
 {$ELSE}
  {$R *.dfm}
 {$ENDIF}
-
-function ExecuteSoundFinder(var DingPath: string): Boolean;
-var
-  SoundFinder: TfrmSoundDialog;
-begin
-  Result := false;
-  Application.CreateForm(TfrmSoundDialog, SoundFinder);
-  try
-    SoundFinder.DingPath := DingPath;
-    SoundFinder.Populate;
-    SoundFinder.ShowModal;
-    if SoundFinder.ReturnCode = rtCommit then begin
-      if SoundFinder.CBDefault.Checked then
-        DingPath := ''
-      else
-        DingPath := SoundFinder.FileListBox1.FileName;
-      Result := true;
-    end;
-  finally
-    SoundFinder.Release;
-  end;
-end;
-{=====}
 
 procedure TFrmSoundDialog.FileListBox1Change(Sender: TObject);
 begin
@@ -130,11 +105,11 @@ end;
 
 procedure TFrmSoundDialog.PlayButtonClick(Sender: TObject);
 begin
-  PlayButton.Enabled := false;
-{$IFNDEF LCL}
-  SndPlaySound(PChar(FileListBox1.FileName), snd_Sync);
-{$ENDIF}
-  PlayButton.Enabled := true;
+  if Assigned(FOnPlaySound) then begin
+    PlayButton.Enabled := false;
+    FOnPlaySound(self, FileListbox1.FileName, psmSync);
+    PlayButton.Enabled := true;
+  end;
 end;
 {=====}
 

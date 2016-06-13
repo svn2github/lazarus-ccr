@@ -125,11 +125,15 @@ type
     StartTime: TComboBox;
     EndTime: TComboBox;
    {$ENDIF}
+    FDatastore: TVpCustomDatastore;
     AAVerifying: Boolean;
     CIVerifying: Boolean;
     FCustomInterval : TVpRightAlignedEdit;
     procedure PopLists;
     procedure LoadCaptions;
+    procedure DoPlaySound(Sender: TObject; const AWavFile: String; AMode: TVpPlaySoundMode);
+  protected
+    property Datastore: TVpCustomDatastore read FDatastore write FDatastore;
   public { Public declarations }
     Event: TVpEvent;
     CatColorMap: TVpCategoryColorMap;
@@ -656,8 +660,32 @@ end;
 {=====}
 
 procedure TDlgEventEdit.SoundFinderBtnClick(Sender: TObject);
+var
+  SoundFinder: TfrmSoundDialog;
 begin
-  ExecuteSoundFinder(AlarmWavPath);
+  Application.CreateForm(TfrmSoundDialog, SoundFinder);
+  try
+    SoundFinder.DingPath := AlarmWavPath;
+    SoundFinder.Populate;
+    SoundFinder.ShowModal;
+    SoundFinder.OnPlaySound := DoPlaySound;
+    if SoundFinder.ReturnCode = TvpEditorReturnCode(rtCommit) then begin
+      if SoundFinder.CBDefault.Checked then
+        AlarmWavPath := ''
+      else
+        AlarmWavPath := SoundFinder.FileListBox1.FileName;
+    end;
+  finally
+    SoundFinder.Release;
+  end;
+end;
+{=====}
+
+procedure TDlgEventEdit.DoPlaySound(Sender: TObject; const AWavFile: String;
+  AMode: TVpPlaySoundMode);
+begin
+  if DataStore <> nil then
+    Datastore.PlaySound(AWavFile, AMode);
 end;
 {=====}
 
@@ -688,6 +716,7 @@ begin
   try
     DoFormPlacement(DlgEventEdit);
     SetFormCaption(DlgEventEdit, Event.Description, RSDlgEventEdit);
+    DlgEventEdit.Datastore := Datastore;
     DlgEventEdit.Event := Event;
     DlgEventEdit.TimeFormat := FTimeFormat;
     DlgEventEdit.Resource := DataStore.Resource;
