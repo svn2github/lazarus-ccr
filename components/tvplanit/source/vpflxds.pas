@@ -1110,11 +1110,11 @@ begin
     begin
       FResourceDataSrc.DataSet.Open;
 
-      FN := GetFieldName(FEventMappings, 'ResourceID');
+//      FN := GetFieldName(FEventMappings, 'ResourceID');
+      FN := GetFieldName(FResourceMappings, 'ResourceID');
       if (FN <> '') and FResourceDataSrc.DataSet.Locate(FN, Resource.ResourceID, [])
       then begin
-        SetFilterCriteria(FEventsDataSrc.DataSet, False, Resource.ResourceID,
-          0, 0);
+        SetFilterCriteria(FEventsDataSrc.DataSet, False, Resource.ResourceID, 0, 0);
 
         for J := pred(Resource.Schedule.EventCount) downto 0 do begin
           Event := Resource.Schedule.GetEvent(J);
@@ -1536,7 +1536,8 @@ begin
     begin
       FResourceDataSrc.DataSet.Open;
       if FResourceDataSrc.DataSet.Active then begin
-        FN := GetFieldName(FTaskMappings, 'ResourceID');
+//        FN := GetFieldName(FTaskMappings, 'ResourceID');
+        FN := GetFieldName(FResourceMappings, 'ResourceID');
         { Dump this resource's dirty contacts to the DB }
         if not FResourceDataSrc.DataSet.Locate(FN, Resource.ResourceID, []) then
           Exit;
@@ -2069,8 +2070,7 @@ var
 begin
   I := 0;
   result := '';
-  while (I < Mappings.Count)
-  and (result = '') do begin
+  while (I < Mappings.Count) and (result = '') do begin
     FM := TVpFieldMapping(Mappings.Items[I]);
     if Uppercase(FM.VPField) = Uppercase(VPField) then begin
       result := FM.DBField;
@@ -2079,32 +2079,45 @@ begin
     Inc(I);
   end;
 end;
-*)
+   *)
 
 { returns the name of the dataset field currently mapped to the   }      
 { specified internal Visual PlanIt field. If not field is mapped, }      
-{ then it returns the Visual PlanIt field name                    }
-function TVpFlexDataStore.GetFieldName(Mappings: TCollection;            
-  VPField: string): string;                                              
-var                                                                      
-  I: integer;                                                            
-  FM: TVpFieldMapping;                                                   
-begin                                                                    
-  I := 0;                                                                
-  result := '';
-  if Mappings.Count = 0 then
-    Result := VpField
-  else
-    while (I < Mappings.Count) and (result = '') do begin
-      FM := TVpFieldMapping(Mappings.Items[I]);
-      if Uppercase(FM.VPField) = Uppercase(VPField) then begin
-        result := FM.DBField;
-        break;
-      end;
-      Inc(I);
+{ then it returns the Visual PlanIt field name, but if the field  }
+{ is not available in the database it returns an empty string.    }
+function TVpFlexDataStore.GetFieldName(Mappings: TCollection;
+  VPField: string): string;
+
+  function FieldAvail(AFieldName: String; ADataset: TDataset): Boolean;
+  begin
+    Result := ADataset.FieldDefs.IndexOf(AFieldName) > -1;
+  end;
+
+var
+  I: integer;
+  FM: TVpFieldMapping;
+begin
+  // Use PlanIt field name as default, i.e. mappings only required for fields
+  // with different names.
+  result := VpField;
+  I := 0;
+  while (I < Mappings.Count) do begin
+    FM := TVpFieldMapping(Mappings.Items[I]);
+    if Uppercase(FM.VPField) = Uppercase(VPField) then begin
+      Result := FM.DBField;
+      break;
     end;
-end;                                                                     
-{=====}                                                                  
+    Inc(I);
+  end;
+  // Make sure that non-existing fields are identified by an empty return string
+  if ((Mappings = FResourceMappings) and not FieldAvail(Result, ResourceTable)) or
+     ((Mappings = FContactMappings) and not FieldAvail(Result, ContactsTable)) or
+     ((Mappings = FEventMappings) and not FieldAvail(Result, EventsTable)) or
+     ((Mappings = FTaskMappings) and not FieldAvail(Result, TasksTable))
+  then
+    Result := '';
+end;
+{=====}
 
 procedure TVpFlexDataStore.SetFilterCriteria(aTable: TDataset;           
   aUseDateTime: Boolean; aResourceID: Integer; aStartDateTime,           
