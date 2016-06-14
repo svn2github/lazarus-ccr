@@ -34,7 +34,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,
+  LMessages, LCLProc, LCLType, LCLIntf,
   {$ELSE}
   Windows,Messages,
   {$ENDIF}
@@ -52,6 +52,9 @@ uses
   Classes, SysUtils;
 
 type
+
+  { TfrmAbout }
+
   TfrmAbout = class(TForm)
     Bevel2: TBevel;
     Panel1: TPanel;
@@ -69,16 +72,12 @@ type
     Label2: TLabel;
     Label3: TLabel;
     Label1: TLabel;
-    procedure OKButtonClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
-    procedure lblTurboLinkClick(Sender: TObject);
-    procedure lblTurboLinkMouseMove(Sender: TObject; Shift: TShiftState; X,
+    procedure lblLinkMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
-    procedure lblHelpClick(Sender: TObject);
-    procedure lblNewsSpecificClick(Sender: TObject);
-    procedure lblGeneralDiscussionClick(Sender: TObject);
+    procedure lblLinkClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -121,7 +120,6 @@ function TVpAboutProperty.GetAttributes: TPropertyAttributes;
 begin
   Result := [paDialog, paReadOnly];
 end;
-{=====}
 
 procedure TVpAboutProperty.Edit;
 begin
@@ -133,14 +131,9 @@ begin
     end;
   end;
 end;
-{=====}
 
-{====================================================================}
-procedure TfrmAbout.OKButtonClick(Sender : TObject);
-begin
-  Close;
-end;
-{=====}
+
+{ FrmAbout }
 
 procedure TfrmAbout.FormActivate(Sender: TObject);
 const
@@ -161,72 +154,37 @@ begin
   lblHelp.Cursor := crHandPoint;
   lblGeneralDiscussion.Cursor := crHandPoint;
 end;
-{=====}
 
-procedure TfrmAbout.lblTurboLinkClick(Sender: TObject);
+procedure TfrmAbout.FormMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
 begin
+  lblTurboLink.Font.Style := [];
+end;
+
+procedure TfrmAbout.lblLinkClick(Sender: TObject);
+var
+  url: String;
+begin
+  //  if Sender = lblNewsSpecific then url := NEWS_SPECIFIC_URL else
+  if Sender = lblHelp then url := HELP_URL else
+  if Sender = lblGeneralDiscussion then url := GENERAL_DISCUSSION_URL else
+  if Sender = lblTurboLink then url := TURBO_LINK_URL else
+  exit;
 {$IFDEF LCL}
-  if not OpenURL(TURBO_LINK_URL)
+  if not OpenUrl(url)
 {$ELSE}
-  if ShellExecute(0, 'open', TURBO_LINK_URL, '', '', SW_SHOWNORMAL) <= 32
+  if ShellExecute(0, 'open', PChar(url), '', '', SW_SHOWNORMAL) <= 32
 {$ENDIF}
   then
     ShowMessage(RSBrowserError);
 end;
-{=====}
 
-{=====}
-
-{=====}
-
-procedure TfrmAbout.lblTurboLinkMouseMove(Sender: TObject;
+procedure TfrmAbout.lblLinkMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
   TLabel(Sender).Font.Style := [fsUnderline];
 end;
-{=====}
 
-procedure TfrmAbout.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
-  Y: Integer);
-begin
-  lblTurboLink.Font.Style := [];
-end;
-{=====}
-
-procedure TfrmAbout.lblHelpClick(Sender: TObject);
-begin
-{$IFDEF LCL}
-  if not OpenUrl(HELP_URL)
-{$ELSE}
-  if ShellExecute(0, 'open', HELP_URL, '', '', SW_SHOWNORMAL) <= 32
-{$ENDIF}
-  then
-    ShowMessage(RSBrowserError);
-end;
-{=====}
-
-procedure TfrmAbout.lblNewsSpecificClick(Sender: TObject);
-begin
-{$IFDEF LCL}
-  if not OpenURL(NEWS_SPECIFIC_URL)
-{$ELSE}
-  if ShellExecute(0, 'open', NEWS_SPECIFIC_URL, '', '', SW_SHOWNORMAL) <= 32
-{$ENDIF}
-  then
-    ShowMessage(RSBrowserError);
-end;
-{=====}
-
-procedure TfrmAbout.lblGeneralDiscussionClick(Sender: TObject);
-begin
-{$IFDEF LCL}
-  if not OpenURL(GENERAL_DISCUSSION_URL)
-{$ELSE}
-  if ShellExecute(0, 'open', GENERAL_DISCUSSION_URL, '', '', SW_SHOWNORMAL) <= 32
-{$ENDIF}
-  then
-    ShowMessage(RSBrowserError);
-end;
 
 end.
   

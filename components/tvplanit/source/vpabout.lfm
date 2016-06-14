@@ -2,13 +2,13 @@ object frmAbout: TfrmAbout
   Left = 282
   Height = 312
   Top = 205
-  Width = 567
+  Width = 561
   HorzScrollBar.Page = 470
   VertScrollBar.Page = 311
   BorderStyle = bsDialog
   Caption = 'About Visual PlanIt'
   ClientHeight = 312
-  ClientWidth = 567
+  ClientWidth = 561
   OnActivate = FormActivate
   OnMouseMove = FormMouseMove
   Position = poScreenCenter
@@ -17,15 +17,16 @@ object frmAbout: TfrmAbout
     Left = 152
     Height = 96
     Top = 160
-    Width = 409
+    Width = 403
     Anchors = [akTop, akLeft, akRight]
     Shape = bsFrame
+    OnMouseMove = lblLinkMouseMove
   end
   object Bevel2: TBevel
     Left = 6
     Height = 17
     Top = 265
-    Width = 555
+    Width = 549
     Anchors = [akTop, akLeft, akRight]
     Shape = bsTopLine
   end
@@ -67,8 +68,8 @@ object frmAbout: TfrmAbout
     Font.Color = clBlue
     ParentColor = False
     ParentFont = False
-    OnClick = lblTurboLinkClick
-    OnMouseMove = lblTurboLinkMouseMove
+    OnClick = lblLinkClick
+    OnMouseMove = lblLinkMouseMove
   end
   object lblHelp: TLabel
     Cursor = crHandPoint
@@ -80,8 +81,8 @@ object frmAbout: TfrmAbout
     Font.Color = clBlue
     ParentColor = False
     ParentFont = False
-    OnClick = lblHelpClick
-    OnMouseMove = lblTurboLinkMouseMove
+    OnClick = lblLinkClick
+    OnMouseMove = lblLinkMouseMove
   end
   object CopyrightLabel: TLabel
     Left = 7
@@ -109,8 +110,8 @@ object frmAbout: TfrmAbout
     Font.Color = clBlue
     ParentColor = False
     ParentFont = False
-    OnClick = lblGeneralDiscussionClick
-    OnMouseMove = lblTurboLinkMouseMove
+    OnClick = lblLinkClick
+    OnMouseMove = lblLinkMouseMove
   end
   object Label2: TLabel
     Left = 168
@@ -132,7 +133,7 @@ object frmAbout: TfrmAbout
     Left = 152
     Height = 58
     Top = 40
-    Width = 401
+    Width = 395
     Anchors = [akTop, akLeft, akRight]
     AutoSize = False
     Caption = 'Visual PlanIt was released under the Mozilla 1.1 license in January, 2003. The project is hosted on SourceForge at sourceforge.net/projects/tpvplanit.'
@@ -1283,14 +1284,14 @@ object frmAbout: TfrmAbout
     end
   end
   object OKButton: TButton
-    Left = 481
+    Left = 475
     Height = 25
     Top = 277
     Width = 75
     Anchors = [akTop, akRight]
     Cancel = True
     Caption = 'OK'
-    OnClick = OKButtonClick
+    ModalResult = 1
     TabOrder = 1
   end
 end
