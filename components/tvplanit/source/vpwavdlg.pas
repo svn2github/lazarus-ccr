@@ -62,24 +62,17 @@ type
     CBDefault: TCheckBox;
     OkBtn: TButton;
     CancelBtn: TButton;
-    procedure FileListBox1Change(Sender: TObject);
-    procedure PlayButtonClick(Sender: TObject);
     procedure CBDefaultClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure OkBtnClick(Sender: TObject);
-    procedure CancelBtnClick(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure PlayButtonClick(Sender: TObject);
   private
-    FMediaFolder: String;
     FOnPlaySound: TVpPlaySoundEvent;
     function FindFileItem(AFilename: String): TListItem;
   public
     DingPath: string;
-    ReturnCode : TVpEditorReturnCode;
+    MediaFolder: String;
     function GetSelectedFileName: String;
     procedure Populate;
-    property MediaFolder: String read FMediaFolder write FMediaFolder;
     property OnPlaySound: TVpPlaySoundEvent read FOnPlaySound write FOnPlaySound;
   end;
 
@@ -95,25 +88,13 @@ uses
  {$R *.dfm}
 {$ENDIF}
 
-procedure TFrmSoundDialog.FileListBox1Change(Sender: TObject);
+procedure TFrmSoundDialog.CBDefaultClick(Sender: TObject);
 begin
-  if ShellListview.Items.Count > 0 then begin
-    PlayButton.Enabled := true;
-    DingPath := GetSelectedFileName;
-  end else begin
-   PlayButton.Enabled := false;
-   DingPath := '';
-  end;
-end;
-{=====}
-
-procedure TFrmSoundDialog.PlayButtonClick(Sender: TObject);
-begin
-  if Assigned(FOnPlaySound) then begin
-    PlayButton.Enabled := false;
-    FOnPlaySound(self, GetSelectedFileName, psmSync);
-    PlayButton.Enabled := true;
-  end;
+  ShellTreeview.Visible := not CBDefault.Checked;
+  ShellListview.Visible := not CBDefault.Checked;
+  Panel3.Visible := CBDefault.Checked;
+  Panel4.Visible := CBDefault.Checked;
+  PlayButton.Visible := not CBDefault.Checked;
 end;
 {=====}
 
@@ -130,6 +111,32 @@ begin
   Result := nil;
 end;
 
+procedure TFrmSoundDialog.FormCreate(Sender: TObject);
+begin
+  Panel3.Align := alClient;
+  Panel4.Align := alClient;
+end;
+{=====}
+
+function TFrmSoundDialog.GetSelectedFileName: String;
+begin
+  if ShellListview.Selected <> nil then
+    Result := IncludeTrailingPathDelimiter(ShellTreeView.Path) + ShellListview.Selected.Caption
+  else
+    Result := '';
+end;
+
+procedure TFrmSoundDialog.PlayButtonClick(Sender: TObject);
+begin
+  DingPath := GetSelectedFileName;
+  if Assigned(FOnPlaySound) then begin
+    PlayButton.Enabled := false;
+    FOnPlaySound(self, DingPath, psmSync);
+    PlayButton.Enabled := true;
+  end;
+end;
+{=====}
+
 procedure TFrmSoundDialog.Populate;
 begin
   TabSheet1.Caption := RSSelectASound;
@@ -141,64 +148,17 @@ begin
   Panel4.Caption := RSNothingToSelectFrom;
   if DingPath = '' then begin
     CBDefault.Checked := true;
-    ShellTreeView.Path := FMediaFolder; //ExtractFileDir(ParamStr(0));
+    ShellTreeView.Path := MediaFolder;
   end else
   if FileExists(DingPath) then begin
     ShellTreeview.Path := ExtractFileDir(DingPath);
     ShellListview.Selected := FindFileItem(DingPath);
   end else begin
-    ShellTreeView.Path := FMediaFolder; //ExtractFileDir(ParamStr(0));
+    ShellTreeView.Path := MediaFolder;
   end;
   CBDefaultClick(nil);
 end;
-
 {=====}
-
-procedure TFrmSoundDialog.CBDefaultClick(Sender: TObject);
-begin
-  ShellTreeview.Visible := not CBDefault.Checked;
-  ShellListview.Visible := not CBDefault.Checked;
-  Panel3.Visible := CBDefault.Checked;
-  Panel4.Visible := CBDefault.Checked;
-  PlayButton.Visible := not CBDefault.Checked;
-end;
-{=====}
-
-procedure TFrmSoundDialog.FormCreate(Sender: TObject);
-begin
-  Panel3.Align := alClient;
-  Panel4.Align := alClient;
-  ReturnCode := rtAbandon;
-end;
-{=====}
-
-procedure TFrmSoundDialog.OkBtnClick(Sender: TObject);
-begin
-  ReturnCode := rtCommit;
-  Close;
-end;
-{=====}
-
-procedure TFrmSoundDialog.CancelBtnClick(Sender: TObject);
-begin
-  Close;
-end;
-{=====}
-
-procedure TFrmSoundDialog.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if Key = VK_ESCAPE then
-    Close;
-end;
-
-function TFrmSoundDialog.GetSelectedFileName: String;
-begin
-  if ShellListview.ItemFocused <> nil then
-    Result := IncludeTrailingPathDelimiter(ShellTreeView.Path) + ShellListview.ItemFocused.Caption
-  else
-    Result := '';
-end;
 
 end.
   

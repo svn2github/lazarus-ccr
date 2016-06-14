@@ -670,21 +670,20 @@ procedure TDlgEventEdit.SoundFinderBtnClick(Sender: TObject);
 var
   SoundFinder: TfrmSoundDialog;
 begin
-  Application.CreateForm(TfrmSoundDialog, SoundFinder);
+  SoundFinder := TFrmSoundDialog.Create(nil);
   try
     SoundFinder.DingPath := AlarmWavPath;
     SoundFinder.MediaFolder := Datastore.MediaFolder;
     SoundFinder.OnPlaySound := DoPlaySound;
     SoundFinder.Populate;
-    SoundFinder.ShowModal;
-    if SoundFinder.ReturnCode = TvpEditorReturnCode(rtCommit) then begin
+    if SoundFinder.ShowModal = mrOK then begin
       if SoundFinder.CBDefault.Checked then
         AlarmWavPath := ''
       else
         AlarmWavPath := SoundFinder.GetSelectedFilename;
     end;
   finally
-    SoundFinder.Release;
+    SoundFinder.Free;
   end;
 end;
 {=====}

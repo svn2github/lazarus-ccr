@@ -10,7 +10,6 @@ object FrmSoundDialog: TFrmSoundDialog
   ClientWidth = 736
   KeyPreview = True
   OnCreate = FormCreate
-  OnKeyDown = FormKeyDown
   Position = poScreenCenter
   LCLVersion = '1.7'
   object PageControl1: TPageControl
@@ -102,7 +101,7 @@ object FrmSoundDialog: TFrmSoundDialog
             Anchors = [akTop, akRight]
             Caption = 'OkBtn'
             Default = True
-            OnClick = OkBtnClick
+            ModalResult = 1
             TabOrder = 0
           end
           object CancelBtn: TButton
@@ -111,8 +110,9 @@ object FrmSoundDialog: TFrmSoundDialog
             Top = 8
             Width = 75
             Anchors = [akTop, akRight]
+            Cancel = True
             Caption = 'CancelBtn'
-            OnClick = CancelBtnClick
+            ModalResult = 2
             TabOrder = 1
           end
         end
