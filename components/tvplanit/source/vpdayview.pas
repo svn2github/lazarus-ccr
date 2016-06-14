@@ -787,18 +787,20 @@ begin
   FIncludeWeekends               := True;
 
   { set up fonts and colors }
-  FHeadAttr.Font.Name            := 'Tahoma';
   FHeadAttr.Font.Size            := 10;
   FHeadAttr.Font.Style           := [];
   FHeadAttr.Color                := clBtnFace;
 
-  FRowHeadAttr.FHourFont.Name    := 'Tahoma';
   FRowHeadAttr.FHourFont.Size    := 18;
   FRowHeadAttr.FHourFont.Style   := [];
-  FRowHeadAttr.FMinuteFont.Name  := 'Tahoma';
   FRowHeadAttr.FMinuteFont.Size  := 9;
   FRowHeadAttr.FMinuteFont.Style := [];
   FRowHeadAttr.Color             := clBtnFace;
+ {$IFNDEF LCL}
+  FHeadAttr.Font.Name            := 'Tahoma';
+  FRowHeadAttr.FHourFont.Name    := 'Tahoma';
+  FRowHeadAttr.FMinuteFont.Name  := 'Tahoma';
+ {$ENDIF}
 
   SetLength(dvEventArray, MaxVisibleEvents);
 
@@ -4800,9 +4802,11 @@ begin
   inherited Create;
   FOwner := AOwner;
   FHourFont := TVpFont.Create(AOwner);
-  FHourFont.Name := 'Tahoma';
   FMinuteFont := TVpFont.Create(AOwner);
+ {$IFNDEF LCL}
+  FHourFont.Name := 'Tahoma';
   FMinuteFont.Name := 'Tahoma';
+ {$ENDIF}
 end;
 {=====}
 
