@@ -2,13 +2,13 @@ object frmAbout: TfrmAbout
   Left = 282
   Height = 312
   Top = 205
-  Width = 502
+  Width = 567
   HorzScrollBar.Page = 470
   VertScrollBar.Page = 311
   BorderStyle = bsDialog
   Caption = 'About Visual PlanIt'
   ClientHeight = 312
-  ClientWidth = 502
+  ClientWidth = 567
   OnActivate = FormActivate
   OnMouseMove = FormMouseMove
   Position = poScreenCenter
@@ -17,14 +17,16 @@ object frmAbout: TfrmAbout
     Left = 152
     Height = 96
     Top = 160
-    Width = 344
+    Width = 409
+    Anchors = [akTop, akLeft, akRight]
     Shape = bsFrame
   end
   object Bevel2: TBevel
     Left = 6
     Height = 17
     Top = 265
-    Width = 490
+    Width = 555
+    Anchors = [akTop, akLeft, akRight]
     Shape = bsTopLine
   end
   object ProgramName: TLabel
@@ -42,7 +44,7 @@ object frmAbout: TfrmAbout
   object VisitUsLabel: TLabel
     Left = 152
     Height = 15
-    Top = 109
+    Top = 104
     Width = 235
     Caption = 'Visit the Visual PlanIt project on SourceForge'
     ParentColor = False
@@ -59,7 +61,7 @@ object frmAbout: TfrmAbout
     Cursor = crHandPoint
     Left = 161
     Height = 15
-    Top = 125
+    Top = 120
     Width = 222
     Caption = 'http://sourceforge.net/projects/tpvplanit/'
     Font.Color = clBlue
@@ -130,7 +132,8 @@ object frmAbout: TfrmAbout
     Left = 152
     Height = 58
     Top = 40
-    Width = 336
+    Width = 401
+    Anchors = [akTop, akLeft, akRight]
     AutoSize = False
     Caption = 'Visual PlanIt was released under the Mozilla 1.1 license in January, 2003. The project is hosted on SourceForge at sourceforge.net/projects/tpvplanit.'
     ParentColor = False
@@ -1280,10 +1283,11 @@ object frmAbout: TfrmAbout
     end
   end
   object OKButton: TButton
-    Left = 416
+    Left = 481
     Height = 25
     Top = 277
     Width = 75
+    Anchors = [akTop, akRight]
     Cancel = True
     Caption = 'OK'
     OnClick = OKButtonClick
