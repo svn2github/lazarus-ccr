@@ -77,6 +77,7 @@ const
   calDefWidth      = 200;     { popup calendar default width             }
   ExtraBarWidth    = 2;       { The extra, draggable area on either side }
                               { of the Contact Grid's horizontal bars.   }
+  CompareTimeEPS   = 1.0 / (24*60*60*10); { Epsilon for time comparison, 0.1 sec }
 
   ResourceTableName = 'Resources';
   TasksTableName    = 'Tasks';

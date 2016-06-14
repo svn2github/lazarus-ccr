@@ -3766,9 +3766,9 @@ begin
 
   { Initialize some stuff }
   if TimeFormat = tf24Hour then
-    Format := 'h:mm'
+    Format := 'h:nn'
   else
-    Format := 'h:mmam/pm';
+    Format := 'h:nnam/pm';
 
   { set the event array's size }
   SetLength(EventArray, MaxVisibleEvents);

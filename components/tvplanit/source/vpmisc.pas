@@ -534,11 +534,18 @@ end;
 
 function TimeInRange(Time, StartTime, EndTime: TDateTime;
   Inclusive: Boolean): Boolean;
+var
+  equStart, equEnd: Boolean;
 begin
+  equStart := abs(Time - StartTime) < CompareTimeEps;
+  equEnd := abs(Time - EndTime) < CompareTimeEps;
+
   if Inclusive then
-    result := (Time >= StartTime) and (Time <= EndTime)
+    Result := equStart or equEnd  or ((Time > StartTime) and (Time < EndTime))
+//    result := (Time >= StartTime) and (Time <= EndTime)
   else
-    result := (Time > StartTime) and (Time < EndTime);
+    Result := (not equStart) and (not equEnd) and (Time > StartTime) and (Time < EndTime);
+//    result := (Time > StartTime) and (Time < EndTime);
 end;
 {=====}
 
