@@ -72,7 +72,7 @@ type
 
   TVpTimeFormat = (tf24Hour, tf12Hour);
 
-  TVpPlaySoundMode = (psmSync, psmASync);
+  TVpPlaySoundMode = (psmSync, psmAsync, psmStop);
 
   { XML definitions }
   DOMString = WideString;

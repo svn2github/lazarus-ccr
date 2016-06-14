@@ -62,12 +62,16 @@ type
     CBDefault: TCheckBox;
     OkBtn: TButton;
     CancelBtn: TButton;
+    procedure CancelBtnClick(Sender: TObject);
     procedure CBDefaultClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure OkBtnClick(Sender: TObject);
     procedure PlayButtonClick(Sender: TObject);
   private
     FOnPlaySound: TVpPlaySoundEvent;
     function FindFileItem(AFilename: String): TListItem;
+    procedure PlaySound;
+    procedure StopSound;
   public
     DingPath: string;
     MediaFolder: String;
@@ -87,6 +91,11 @@ uses
 {$ELSE}
  {$R *.dfm}
 {$ENDIF}
+
+procedure TFrmSoundDialog.CancelBtnClick(Sender: TObject);
+begin
+  StopSound;
+end;
 
 procedure TFrmSoundDialog.CBDefaultClick(Sender: TObject);
 begin
@@ -126,16 +135,23 @@ begin
     Result := '';
 end;
 
+procedure TFrmSoundDialog.OkBtnClick(Sender: TObject);
+begin
+  StopSound;
+end;
+
 procedure TFrmSoundDialog.PlayButtonClick(Sender: TObject);
 begin
   DingPath := GetSelectedFileName;
-  if Assigned(FOnPlaySound) then begin
-    PlayButton.Enabled := false;
-    FOnPlaySound(self, DingPath, psmSync);
-    PlayButton.Enabled := true;
-  end;
+  PlaySound;
 end;
 {=====}
+
+procedure TFrmSoundDialog.PlaySound;
+begin
+  if Assigned(FOnPlaySound) then
+    FOnPlaySound(self, DingPath, psmAsync);
+end;
 
 procedure TFrmSoundDialog.Populate;
 begin
@@ -159,6 +175,12 @@ begin
   CBDefaultClick(nil);
 end;
 {=====}
+
+procedure TFrmSoundDialog.StopSound;
+begin
+  if Assigned(FOnPlaySound) then
+    FOnPlaySound(self, '', psmStop);
+end;
 
 end.
   

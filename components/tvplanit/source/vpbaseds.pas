@@ -892,7 +892,8 @@ begin
    {$IFDEF WINDOWS}
     case APlaySoundMode of
       psmSync  : SndPlaySound(PChar(AWavFile), SND_SYNC);
-      psmASync : SndPlaySound(PChar(AWavFile), SND_ASYNC);
+      psmAsync : SndPlaySound(PChar(AWavFile), SND_ASYNC);
+      psmStop  : SndPlaySound(nil, 0);
     end;
    {$ENDIF}
   end;

@@ -102,6 +102,7 @@ object FrmSoundDialog: TFrmSoundDialog
             Caption = 'OkBtn'
             Default = True
             ModalResult = 1
+            OnClick = OkBtnClick
             TabOrder = 0
           end
           object CancelBtn: TButton
@@ -113,6 +114,7 @@ object FrmSoundDialog: TFrmSoundDialog
             Cancel = True
             Caption = 'CancelBtn'
             ModalResult = 2
+            OnClick = CancelBtnClick
             TabOrder = 1
           end
         end
