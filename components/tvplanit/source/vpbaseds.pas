@@ -186,6 +186,10 @@ type
 
 
   TVpCustomDataStore = class(TVpComponent)
+  private
+    FMediaFolder       : String;
+    function IsStoredMediaFolder: Boolean;
+
   protected{private}
     FAutoCreate        : Boolean;
     FAutoConnect       : Boolean;
@@ -281,6 +285,8 @@ type
       read FEventTimerEnabled write SetEventTimerEnabled;
     property PlayEventSounds: Boolean
       read FPlayEventSounds write FPlayEventSounds;
+    property MediaFolder: String
+      read FMediaFolder write FMediaFolder stored IsStoredMediaFolder;
     {events}
     property OnAlert: TVpEventEvent
       read FOnAlert write FOnAlert;
@@ -634,6 +640,11 @@ begin
   end; { if }
 end;
 {=====}
+
+function TVpCustomDatastore.IsStoredMediaFolder: Boolean;
+begin
+  Result := FMediaFolder <> '';
+end;
 
 procedure TVpCustomDataStore.NotifyLinked;
 var

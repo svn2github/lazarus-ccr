@@ -673,8 +673,9 @@ begin
   Application.CreateForm(TfrmSoundDialog, SoundFinder);
   try
     SoundFinder.DingPath := AlarmWavPath;
-    SoundFinder.Populate;
+    SoundFinder.MediaFolder := Datastore.MediaFolder;
     SoundFinder.OnPlaySound := DoPlaySound;
+    SoundFinder.Populate;
     SoundFinder.ShowModal;
     if SoundFinder.ReturnCode = TvpEditorReturnCode(rtCommit) then begin
       if SoundFinder.CBDefault.Checked then

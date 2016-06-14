@@ -71,6 +71,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
   private
+    FMediaFolder: String;
     FOnPlaySound: TVpPlaySoundEvent;
     function FindFileItem(AFilename: String): TListItem;
   public
@@ -78,6 +79,7 @@ type
     ReturnCode : TVpEditorReturnCode;
     function GetSelectedFileName: String;
     procedure Populate;
+    property MediaFolder: String read FMediaFolder write FMediaFolder;
     property OnPlaySound: TVpPlaySoundEvent read FOnPlaySound write FOnPlaySound;
   end;
 
@@ -139,13 +141,13 @@ begin
   Panel4.Caption := RSNothingToSelectFrom;
   if DingPath = '' then begin
     CBDefault.Checked := true;
-    ShellTreeView.Path := ExtractFileDir(ParamStr(0));
+    ShellTreeView.Path := FMediaFolder; //ExtractFileDir(ParamStr(0));
   end else
   if FileExists(DingPath) then begin
     ShellTreeview.Path := ExtractFileDir(DingPath);
     ShellListview.Selected := FindFileItem(DingPath);
   end else begin
-    ShellTreeView.Path := ExtractFileDir(ParamStr(0));
+    ShellTreeView.Path := FMediaFolder; //ExtractFileDir(ParamStr(0));
   end;
   CBDefaultClick(nil);
 end;
