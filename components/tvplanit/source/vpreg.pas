@@ -359,8 +359,11 @@ begin
   //  'DataStore', TDataStoreProperty);
 
   {register the property editor for the DataStore's DefaultAlarmWav         }
+  { NO - not useful in design mode because there is not platform-independent way
+    to play the sound
   RegisterPropertyEditor(TypeInfo(string), TVpCustomDataStore,
     'DefaultEventSound', TWavFileProperty);
+  }
 
   RegisterPropertyEditor (TypeInfo (TDateTime),
                           TVpPrintPreview,
