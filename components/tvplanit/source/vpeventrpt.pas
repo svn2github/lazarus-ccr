@@ -1637,14 +1637,14 @@ var
         EventStr := '';
         if ShowEventTime then begin
           if TimeFormat = tf24Hour then
-            EventStr := FormatDateTime ('hh:mm',
+            EventStr := FormatDateTime ('hh:nn',
                             TVpEvent (EventList.List^[j]).StartTime) +
-                            ' - ' + FormatDateTime('hh:mm',
+                            ' - ' + FormatDateTime('hh:nn',
                             TVpEvent (EventList.List^[j]).EndTime) + ': '
           else
-            EventStr := FormatDateTime ('hh:mm AM/PM',
+            EventStr := FormatDateTime ('hh:nn AM/PM',
                           TVpEvent (EventList.List^[j]).StartTime) +
-                          ' - ' + FormatDateTime('hh:mm AM/PM',
+                          ' - ' + FormatDateTime('hh:nn AM/PM',
                           TVpEvent (EventList.List^[j]).EndTime) + ': ';
         end;
 

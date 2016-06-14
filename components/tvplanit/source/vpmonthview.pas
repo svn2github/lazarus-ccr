@@ -1092,10 +1092,10 @@ var
               { format the display text }
               if ShowEventTime then begin
                 if (TimeFormat = tf24Hour) then
-                  Str := FormatDateTime('hh:mm',
+                  Str := FormatDateTime('hh:nn',
                     TVpEvent(EventList.List^[j]).StartTime)
                 else
-                  Str := FormatDateTime('hh:mm AM/PM',
+                  Str := FormatDateTime('hh:nn AM/PM',
                     TVpEvent(EventList.List^[j]).StartTime);
                 Str := Str + ' - ' + TVpEvent(EventList.List^[j]).Description;
               end else

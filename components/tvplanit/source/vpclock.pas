@@ -1296,13 +1296,13 @@ begin
 
     if DisplayMode = dmDigital then begin
       if FDigitalOptions.ShowSeconds and FMilitaryTime then
-        TimeStr := FormatDateTime('hh:mm:ss', FTime)
+        TimeStr := FormatDateTime('hh:nn:ss', FTime)
       else if FDigitalOptions.ShowSeconds and not FMilitaryTime then
-        TimeStr := FormatDateTime('hh:mm:ss am/pm', FTime)
+        TimeStr := FormatDateTime('hh:nn:ss am/pm', FTime)
       else if not FDigitalOptions.ShowSeconds and FMilitaryTime then
-        TimeStr := FormatDateTime('hh:mm', FTime)
+        TimeStr := FormatDateTime('hh:nn', FTime)
       else if not FDigitalOptions.ShowSeconds and not FMilitaryTime then
-        TimeStr := FormatDateTime('hh:mm am/pm', FTime);
+        TimeStr := FormatDateTime('hh:nn am/pm', FTime);
       ckLEDDisplay.Caption := TimeStr;
     end;
 

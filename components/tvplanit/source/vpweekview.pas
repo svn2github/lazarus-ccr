@@ -888,11 +888,11 @@ var
             if ShowEventTime then
               begin
                if TimeFormat = tf24Hour then
-                 DayStr := FormatDateTime('hh:mm',TodayStartTime)
-                  + ' - ' + FormatDateTime('hh:mm',TodayEndTime) + ': '
+                 DayStr := FormatDateTime('hh:nn',TodayStartTime)
+                  + ' - ' + FormatDateTime('hh:nn',TodayEndTime) + ': '
               else
-                DayStr := FormatDateTime('hh:mm AM/PM',TVpEvent(EventList.List^[j]).StartTime)
-                  + ' - ' + FormatDateTime('hh:mm AM/PM',TVpEvent(EventList.List^[j]).EndTime) + ': ';
+                DayStr := FormatDateTime('hh:nn AM/PM',TVpEvent(EventList.List^[j]).StartTime)
+                  + ' - ' + FormatDateTime('hh:nn AM/PM',TVpEvent(EventList.List^[j]).EndTime) + ': ';
               end;
             if DayStr = '' then
               DayStr := TVpEvent(EventList.List^[j]).Description

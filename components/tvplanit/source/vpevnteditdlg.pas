@@ -353,8 +353,8 @@ begin
   StartDate.Date := Event.StartTime;
   EndDate.Date := Event.EndTime;
   RepeatUntil.Date := Event.RepeatRangeEnd;
-  StartTime.Text := FormatDateTime('hh:mm',Event.StartTime);
-  EndTime.Text := FormatDateTime('hh:mm',Event.EndTime);
+  StartTime.Text := FormatDateTime('hh:nn',Event.StartTime);
+  EndTime.Text := FormatDateTime('hh:nn',Event.EndTime);
 
   StartTimeChange(Self);
   CBAllDay.Checked := Event.AllDayEvent;
@@ -444,9 +444,9 @@ begin
   { follow the start time by 30 minutes }
   if ST > StrToTime(EndTime.Text) then begin
     if TimeFormat = tf24Hour then
-      EndTime.Text := FormatDateTime('h:mm', ST + 30 / MinutesInDay)
+      EndTime.Text := FormatDateTime('h:nn', ST + 30 / MinutesInDay)
     else
-      EndTime.Text := FormatDateTime('hh:mm AM/PM', ST + 30 / MinutesInDay);
+      EndTime.Text := FormatDateTime('hh:nn AM/PM', ST + 30 / MinutesInDay);
   end;
 
 end;
@@ -774,7 +774,7 @@ begin
   {  time to  follow the start time by 30 minutes                      } 
 
   if ST > EndDate.Date + StrToTime (EndTime.Text) then
-    EndTime.Text := FormatDateTime('hh:mm', ST + 30 / MinutesInDay);
+    EndTime.Text := FormatDateTime('hh:nn', ST + 30 / MinutesInDay);
 end;                                                                     
 
 procedure TDlgEventEdit.EndTimeExit(Sender: TObject);                    
@@ -795,7 +795,7 @@ begin
   { start time to precede the end time by 30 minutes                   } 
 
   if ET < StartDate.Date + StrToTime (StartTime.Text) then
-    StartTime.Text := FormatDateTime('hh:mm', ET - 30 / MinutesInDay);
+    StartTime.Text := FormatDateTime('hh:nn', ET - 30 / MinutesInDay);
 end;                                                                     
 
 end.
