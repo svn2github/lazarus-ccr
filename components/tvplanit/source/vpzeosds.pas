@@ -109,7 +109,7 @@ begin
         'Phone3 VARCHAR(25), '+
         'Phone4 VARCHAR(25), '+
         'Phone5 VARCHAR(25), '+
-        'PhoneType1 INEGER, '+
+        'PhoneType1 INTEGER, '+
         'PhoneType2 INTEGER, '+
         'PhoneType3 INTEGER, '+
         'PhoneType4 INTEGER, '+
@@ -186,7 +186,7 @@ begin
       'CREATE TABLE Tasks ('+
         'RecordID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, '+
         'ResourceID INTEGER, '+
-        'Complete TIMESTAMP, '+
+        'Complete BOOL, '+
         'Description VARCHAR(255), '+
         'Details VARCHAR(1024), '+
         'CreatedOn TIMESTAMP, '+
