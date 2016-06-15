@@ -109,6 +109,14 @@ type
     procedure SetValue(const Value: string); override;
   end;
 
+  TVpMediaFolderProperty = class(TStringProperty)
+  public
+    function  GetAttributes: TPropertyAttributes; override;
+    function  GetValue: string; override;
+    procedure Edit; override;
+    procedure SetValue(const Value: string); override;
+  end;
+
 procedure Register;
 
 implementation
@@ -344,7 +352,7 @@ begin
         dlg.InitialDir := ds.MediaFolder
       else
         dlg.InitialDir := ExtractFilePath(ds.DefaultEventSound);
-      if OD.Execute then
+      if dlg.Execute then
         ds.DefaultEventSound := dlg.FileName;
     finally
       dlg.Free;
@@ -354,6 +362,50 @@ begin
     inherited;
 end;
 
+
+{ TVpMediaFolderProperty }
+
+function TVpMediaFolderProperty.GetAttributes: TPropertyAttributes;
+begin
+  Result := [paDialog];
+end;
+
+function TVpMediaFolderProperty.GetValue: string;
+begin
+  Result := GetStrValue;
+end;
+
+procedure TVpMediaFolderProperty.SetValue(const Value: string);
+begin
+  SetStrValue(Value);
+end;
+
+procedure TVpMediaFolderProperty.Edit;
+var
+  dlg: TSelectDirectoryDialog;
+  ds: TVpCustomDatastore;
+begin
+  ds := GetComponent(0) as TVpCustomDatastore;
+  if Assigned(ds) then
+  begin
+    dlg := TSelectDirectoryDialog.Create(nil);
+    try
+      dlg.Filter := 'Wav files (*.wav)|*.wav|All files (*.*)|*.*';
+      dlg.FilterIndex := 1;
+      dlg.DefaultExt := '*.wav';
+      if ds.MediaFolder <> '' then
+        dlg.InitialDir := ds.MediaFolder
+      else
+        dlg.InitialDir := ExtractFilePath(ds.DefaultEventSound);
+      if dlg.Execute then
+        ds.DefaultEventSound := dlg.FileName;
+    finally
+      dlg.Free;
+    end;
+  end
+  else
+    inherited;
+end;
 
 
 {*** component registration ***}
@@ -421,7 +473,10 @@ begin
   RegisterPropertyEditor(TypeInfo(String), TVpCustomDatastore,
     'DefaultEventSound', TVpWavFileProperty);
 
-  RegisterPropertyEditor (TypeInfo (TDateTime),
+ RegisterPropertyEditor(TypeInfo(String), TVpCustomDatastore,
+   'MediaFolder', TVpMediaFolderProperty);
+
+ RegisterPropertyEditor (TypeInfo (TDateTime),
                           TVpPrintPreview,
                           'StartDate',
                           TVpDateProperty);
