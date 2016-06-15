@@ -3,7 +3,7 @@ unit VpZeosDs;
 interface
 
 uses
-  Classes, DB,
+  SysUtils, Classes, DB,
   VpBaseDS, VpDBDS,
   ZCompatibility, ZConnection, ZDataset;
 
@@ -15,26 +15,7 @@ type
     FEventsTable: TZTable;
     FResourceTable: TZTable;
     FTasksTable: TZTable;
-    function GetClientCodepage: String;
-    function GetControlsCodePage: TZControlsCodePage;
-    function GetDatabase: String;
-    function GetHostname: String;
-    function GetLibLocation: String;
-    function GetLoginPrompt: Boolean;
-    function GetPassword: String;
-    function GetPort: Integer;
-    function GetProtocol: String;
-    function GetUser: String;
-    procedure SetClientCodepage(const AValue: String);
-    procedure SetControlsCodePage(const AValue: TZControlsCodePage);
-    procedure SetDatabase(const AValue: String);
-    procedure SetHostName(const AValue: String);
-    procedure SetLibLocation(const AValue: String);
-    procedure SetLoginPrompt(const AValue: Boolean);
-    procedure SetPassword(const AValue: String);
-    procedure SetPort(const AValue: Integer);
-    procedure SetProtocol(const AValue: String);
-    procedure SetUser(const AValue: String);
+    procedure SetConnection(const AValue: TZConnection);
 
   protected
     procedure CreateTable(const ATableName: String);
@@ -44,29 +25,20 @@ type
     function GetResourceTable: TDataset; override;
     function GetTasksTable: TDataset; override;
     procedure Loaded; override;
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure SetConnected(const AValue: Boolean); override;
 
   public
     constructor Create(AOwner: TComponent); override;
     procedure CreateTables;
 
-    property Connection: TZConnection read FConnection;
     property ResourceTable;
     property EventsTable;
     property ContactsTable;
     property TasksTable;
 
   published
-    property HostName: string read GetHostName write SetHostName;
-    property Port: Integer read GetPort write SetPort;
-    property Database: string read GetDatabase write SetDatabase;
-    property User: string read GetUser write SetUser;
-    property Password: string read GetPassword write SetPassword;
-    property Protocol: string read GetProtocol write SetProtocol;
-    property LibraryLocation: string read GetLibLocation write SetLibLocation;
-    property LoginPrompt: Boolean read GetLoginPrompt write SetLoginPrompt;
-    property ControlsCodePage: TZControlsCodepage read GetControlsCodepage write SetControlsCodepage;
-    property ClientCodePage: String read GetClientCodePage write SetClientCodepage;
+    property Connection: TZConnection read FConnection write SetConnection;
 
     // inherited
     property AutoConnect;
@@ -87,28 +59,22 @@ constructor TVpZeosDatastore.Create(AOwner: TComponent);
 begin
   inherited;
 
-  FConnection := TZConnection.Create(self);
-
   FContactsTable := TZTable.Create(self);
-  FContactsTable.Connection := FConnection;
   FContactsTable.TableName := 'Contacts';
 
   FEventsTable := TZTable.Create(Self);
-  FEventsTable.Connection := FConnection;
   FEventsTable.TableName := 'Events';
 
   FResourceTable := TZTable.Create(self);
-  FResourceTable.Connection := FConnection;
   FResourceTable.TableName := 'Resources';
 
   FTasksTable := TZTable.Create(self);
-  FTasksTable.Connection := FConnection;
   FTasksTable.TableName := 'Tasks';
 end;
 
 procedure TVpZeosDatastore.CreateTables;
 begin
-  if FileExistsUTF8(Database) then
+  if FileExistsUTF8(FConnection.Database) then
     exit;
 
   CreateTable(ContactsTableName);
@@ -245,39 +211,9 @@ begin
   Result := FContactsTable;
 end;
 
-function TVpZeosDatastore.GetClientCodePage: string;
-begin
-  Result := FConnection.ClientCodePage;
-end;
-
-function TVpZeosDatastore.GetControlsCodePage: TZControlsCodePage;
-begin
-  Result := FConnection.ControlsCodePage;
-end;
-
-function TVpZeosDatastore.GetDatabase: String;
-begin
-  Result := FConnection.Database;
-end;
-
 function TVpZeosDatastore.GetEventsTable: TDataset;
 begin
   Result := FEventsTable;
-end;
-
-function TVpZeosDatastore.GetHostname: String;
-begin
-  Result := FConnection.Hostname;
-end;
-
-function TVpZeosDatastore.GetLibLocation: String;
-begin
-  Result := FConnection.LibLocation;
-end;
-
-function TVpZeosDatastore.GetLoginPrompt: Boolean;
-begin
-  Result := FConnection.LoginPrompt;
 end;
 
 function TVpZeosDataStore.GetNextID(TableName: string): int64;
@@ -285,21 +221,6 @@ begin
   { This is not needed in the ZEOS datastore as these tables use
     autoincrement fields. }
   result := -1;
-end;
-
-function TVpZeosDatastore.GetPassword: String;
-begin
-  Result := FConnection.Password;
-end;
-
-function TVpZeosDatastore.GetPort: Integer;
-begin
-  Result := FConnection.Port;
-end;
-
-function TVpZeosDatastore.GetProtocol: String;
-begin
-  Result := FConnection.Protocol;
 end;
 
 function TVpZeosDatastore.GetResourceTable : TDataset;
@@ -312,16 +233,19 @@ begin
   Result := FTasksTable;
 end;
 
-function TVpZeosDatastore.GetUser: String;
-begin
-  Result := FConnection.User;
-end;
-
 procedure TVpZeosDatastore.Loaded;
 begin
   inherited;
   if not (csDesigning in ComponentState) then
     Connected := AutoConnect;
+end;
+
+procedure TVpZeosDatastore.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited Notification(AComponent, Operation);
+  if (Operation = opRemove) and (AComponent = FConnection) then
+    FConnection := nil;
 end;
 
 procedure TVpZeosDatastore.SetConnected(const AValue: Boolean);
@@ -341,76 +265,29 @@ begin
   end;
 
   inherited SetConnected(AValue);
+
+  if FConnection.Connected then
+    Load;
 end;
 
-procedure TVpZeosDatastore.SetClientCodePage(const AValue: string);
+procedure TVpZeosDatastore.SetConnection(const AValue: TZConnection);
+var
+  wasConnected: Boolean;
 begin
-  if AValue = ClientCodePage then exit;
-  FConnection.Connected := false;
-  FConnection.ClientCodePage := AValue;
-end;
+  if AValue = FConnection then
+    exit;
 
-procedure TVpZeosDatastore.SetControlsCodePage(const AValue: TZControlsCodePage);
-begin
-  if AValue = ControlsCodePage then exit;
-  FConnection.Connected := false;
-  FConnection.ControlsCodePage := AValue;
-end;
-
-procedure TVpZeosDatastore.SetDatabase(const AValue: String);
-begin
-  if AValue = GetDatabase then exit;
-  FConnection.Connected := false;
-  FConnection.Database := AValue;
-end;
-
-procedure TVpZeosDatastore.SetHostName(const AValue: String);
-begin
-  if AValue = HostName then exit;
-  FConnection.Connected := false;
-  FConnection.HostName := AValue;
-end;
-
-procedure TVpZeosDatastore.SetLibLocation(const AValue: String);
-begin
-  if AValue = LibraryLocation then exit;
-  FConnection.Connected := false;
-  FConnection.LibraryLocation := AValue;
-end;
-
-procedure TVpZeosDatastore.SetLoginPrompt(const AValue: Boolean);
-begin
-  if AValue = LoginPrompt then exit;
-  FConnection.Connected := false;
-  FConnection.LoginPrompt := AValue;
-end;
-
-procedure TVpZeosDatastore.SetPassword(const AValue: String);
-begin
-  if AValue = Password then exit;
-  FConnection.Connected := false;
-  FConnection.Password := AValue;
-end;
-
-procedure TVpZeosDatastore.SetPort(const AValue: Integer);
-begin
-  if AValue = Port then exit;
-  FConnection.Connected := false;
-  FConnection.Port := AValue;
-end;
-
-procedure TVpZeosDatastore.SetProtocol(const AValue: String);
-begin
-  if AValue = Protocol then exit;
-  FConnection.Connected := false;
-  FConnection.Protocol := AValue;
-end;
-
-procedure TVpZeosDatastore.SetUser(const AValue: String);
-begin
-  if AValue = User then exit;
-  FConnection.Connected := false;
-  FConnection.User := AValue;
+  // To do: clear planit lists...
+  if FConnection <> nil then begin
+    wasConnected := FConnection.Connected;
+    Connected := false;
+  end;
+  FConnection := AValue;
+  FContactsTable.Connection := FConnection;
+  FEventsTable.Connection := FConnection;
+  FResourceTable.Connection := FConnection;
+  FTasksTable.Connection := FConnection;
+  if wasConnected then Connected := true;
 end;
 
 end.
