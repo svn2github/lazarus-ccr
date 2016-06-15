@@ -72,21 +72,24 @@ begin
   FTasksTable.TableName := 'Tasks';
 end;
 
+// Connection and tables are active afterwards!
 procedure TVpZeosDatastore.CreateTables;
 begin
-  if FileExistsUTF8(FConnection.Database) then
-    exit;
+  FConnection.Connected := true;
+  if not FContactsTable.Exists then CreateTable(ContactsTableName);
+  if not FEventsTable.Exists then CreateTable(EventsTableName);
+  if not FResourceTable.Exists then CreateTable(ResourceTableName);
+  if not FTasksTable.Exists then CreateTable(TasksTableName);
 
-  CreateTable(ContactsTableName);
-  CreateTable(EventsTableName);
-  CreateTable(ResourceTableName);
-  CreateTable(TasksTableName);
+  ContactsTable.Open;
+  EventsTable.Open;
+  ResourceTable.Open;
+  TasksTable.Open;
 end;
 
 procedure TVpZeosDatastore.CreateTable(const ATableName: String);
 begin
-  FConnection.Connected := true;
-  if ATableName = ContactsTableName then
+  if ATableName = ContactsTableName then begin
     FConnection.ExecuteDirect(
       'CREATE TABLE Contacts ('+
         'RecordID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, '+
@@ -129,9 +132,19 @@ begin
         'UserField6 VARCHAR(100), '+
         'UserField7 VARCHAR(100), '+
         'UserField8 VARCHAR(100), '+
-        'UserField9 VARCHAR(100) )')
-  else
-  if ATableName = EventsTableName then
+        'UserField9 VARCHAR(100) )'
+    );
+    FConnection.ExecuteDirect(
+      'CREATE INDEX ContactsResourceID_idx ON Contacts(ResourceID)'
+    );
+    FConnection.ExecuteDirect(
+      'CREATE INDEX ContactsName_idx ON Contacts(LastName, FirstName)'
+    );
+    FConnection.ExecuteDirect(
+      'CREATE INDEX ContactsCompany_idx ON Contacts(Company)'
+    );
+  end else
+  if ATableName = EventsTableName then begin
     FConnection.ExecuteDirect(
       'CREATE TABLE Events ('+
         'RecordID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, '+
@@ -160,9 +173,19 @@ begin
         'UserField6 VARCHAR(100), '+
         'UserField7 VARCHAR(100), '+
         'UserField8 VARCHAR(100), '+
-        'UserField9 VARCHAR(100) )')
-  else
-  if ATableName = ResourceTableName then
+        'UserField9 VARCHAR(100) )'
+    );
+    FConnection.ExecuteDirect(
+      'CREATE INDEX EventsResourceID_idx ON Events(ResourceID)'
+    );
+    FConnection.ExecuteDirect(
+      'CREATE INDEX EventsStartTime_idx ON Events(StartTime)'
+    );
+    FConnection.ExecuteDirect(
+      'CREATE INDEX EventsEndTime_idx ON Events(EndTime)'
+    );
+  end else
+  if ATableName = ResourceTableName then begin
     FConnection.ExecuteDirect(
       'CREATE TABLE Resources ( '+
          'ResourceID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, '+
@@ -179,9 +202,10 @@ begin
          'UserField6 VARCHAR(100), '+
          'UserField7 VARCHAR(100), '+
          'UserField8 VARCHAR(100), '+
-         'UserField9 VARCHAR(100) )')
-  else
-  if ATableName = TasksTableName then
+         'UserField9 VARCHAR(100) )'
+    );
+  end else
+  if ATableName = TasksTableName then begin
     FConnection.ExecuteDirect(
       'CREATE TABLE Tasks ('+
         'RecordID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, '+
@@ -203,7 +227,18 @@ begin
         'UserField6 VARCHAR(100), '+
         'UserField7 VARCHAR(100), '+
         'UserField8 VARCHAR(100), '+
-        'UserField9 VARCHAR(100) )');
+        'UserField9 VARCHAR(100) )'
+    );
+    FConnection.ExecuteDirect(
+      'CREATE INDEX TasksResourceID_idx ON Tasks(ResourceID)'
+    );
+    FConnection.ExecuteDirect(
+      'CREATE INDEX TasksDueDate_idx ON Tasks(DueDate)'
+    );
+    FConnection.ExecuteDirect(
+      'CREATE INDEX TasksCompletedOn_idx ON Tasks(CompletedOn)'
+    );
+  end;
 end;
 
 function TVpZeosDatastore.GetContactsTable: TDataset;
