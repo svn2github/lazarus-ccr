@@ -27,9 +27,7 @@
 {* ***** END LICENSE BLOCK *****                                              *}
 
 {$I Vp.INC}    { Compiler Version Defines }
-//{$IFNDEF LCL}
 {$R VpREG.RES} { Palette Glyphs           }
-//{$ENDIF}
 
 unit VpReg;
   {Registration unit for the Visual PlanIt design-time interface}
@@ -38,7 +36,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,
+  LMessages, LCLProc, LCLType, LCLIntf,
   {$ELSE}
   Windows,
   {$ENDIF}
@@ -103,13 +101,21 @@ type
   TVpLocalizeFileNameProperty = class (TVpGenericFileNameProperty)
   end;
 
+  TVpWavFileProperty = class(TStringProperty)
+  public
+    function  GetAttributes: TPropertyAttributes; override;
+    function  GetValue: string; override;
+    procedure Edit; override;
+    procedure SetValue(const Value: string); override;
+  end;
+
 procedure Register;
 
 implementation
 
 uses
 //  DbTables,                   { VCL - BDE runtime unit                       }
-  VpWavPE,                    { Wav File Finder - Property Editor            }
+//  VpWavPE,                    { Wav File Finder - Property Editor            }
 
   { Component Units                                                          }
   VpBase,                     { Base classes for Vp                          }
@@ -303,6 +309,53 @@ begin
   end;
 end;
 
+
+{ TVpWavFileProperty }
+
+function TVpWavFileProperty.GetAttributes: TPropertyAttributes;
+begin
+  Result := [paDialog];
+end;
+
+function TVpWavFileProperty.GetValue: string;
+begin
+  Result := GetStrValue;
+end;
+
+procedure TVpWavFileProperty.SetValue(const Value: string);
+begin
+  SetStrValue(Value);
+end;
+
+procedure TVpWavFileProperty.Edit;
+var
+  dlg: TOpenDialog;
+  ds: TVpCustomDatastore;
+begin
+  ds := GetComponent(0) as TVpCustomDatastore;
+  if Assigned(ds) then
+  begin
+    dlg := TOpenDialog.Create(nil);
+    try
+      dlg.Filter := 'Wav files (*.wav)|*.wav|All files (*.*)|*.*';
+      dlg.FilterIndex := 1;
+      dlg.DefaultExt := '*.wav';
+      if ds.DefaultEventSound = '' then
+        dlg.InitialDir := ds.MediaFolder
+      else
+        dlg.InitialDir := ExtractFilePath(ds.DefaultEventSound);
+      if OD.Execute then
+        ds.DefaultEventSound := dlg.FileName;
+    finally
+      dlg.Free;
+    end;
+  end
+  else
+    inherited;
+end;
+
+
+
 {*** component registration ***}
 procedure Register;
 begin
@@ -364,6 +417,9 @@ begin
   RegisterPropertyEditor(TypeInfo(string), TVpCustomDataStore,
     'DefaultEventSound', TWavFileProperty);
   }
+
+  RegisterPropertyEditor(TypeInfo(String), TVpCustomDatastore,
+    'DefaultEventSound', TVpWavFileProperty);
 
   RegisterPropertyEditor (TypeInfo (TDateTime),
                           TVpPrintPreview,
