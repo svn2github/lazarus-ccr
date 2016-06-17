@@ -162,6 +162,7 @@ begin
     EditForm.ShowModal;
     if EditForm.ReturnCode = rtCommit then begin
       EditForm.DePopulateSelf;
+      DataStore.NotifyDependents;
       result := true;
     end;
   finally

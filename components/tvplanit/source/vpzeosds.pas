@@ -292,7 +292,7 @@ end;
 
 procedure TVpZeosDatastore.SetConnected(const AValue: Boolean);
 begin
-  if {(AValue = Connected) or }(FConnection = nil) then
+  if (AValue = Connected) or (FConnection = nil) then
     exit;
 
   if AValue and AutoCreate then

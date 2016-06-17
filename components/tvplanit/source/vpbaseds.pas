@@ -653,8 +653,7 @@ var
 begin
   for i := 0 to FNotifiers.Count - 1 do
     if Assigned (FNotifiers[i]) then
-      PostMessage (PVpWatcher (FNotifiers[i]).Handle,
-                                Vp_DataStoreChanged, 0, 0); 
+      PostMessage (PVpWatcher (FNotifiers[i]).Handle, Vp_DataStoreChanged, 0, 0);
 end;
 {=====}
 
@@ -976,9 +975,8 @@ begin
       Res := DataStore.Resources.Items[I];
       if Res = nil then
         Continue;
-      if Res.Description <> '' then begin
+      if Res.Description <> '' then
         Items.Add(Res.Description);
-      end;
     end;
 
     if DataStore.Resource = nil then
