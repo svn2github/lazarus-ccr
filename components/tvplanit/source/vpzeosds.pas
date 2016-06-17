@@ -19,9 +19,9 @@ type
 
   protected
     procedure CreateTable(const ATableName: String);
+    procedure CreateAllTables;
     function GetContactsTable: TDataset; override;
     function GetEventsTable: TDataset; override;
-    function GetNextID(TableName: string): int64; override;
     function GetResourceTable: TDataset; override;
     function GetTasksTable: TDataset; override;
     procedure Loaded; override;
@@ -31,6 +31,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     procedure CreateTables;
+    function GetNextID(TableName: string): int64; override;
 
     property ResourceTable;
     property EventsTable;
@@ -72,19 +73,12 @@ begin
   FTasksTable.TableName := 'Tasks';
 end;
 
-// Connection and tables are active afterwards!
-procedure TVpZeosDatastore.CreateTables;
+procedure TVpZeosDatastore.CreateAllTables;
 begin
-  FConnection.Connected := true;
   if not FContactsTable.Exists then CreateTable(ContactsTableName);
   if not FEventsTable.Exists then CreateTable(EventsTableName);
   if not FResourceTable.Exists then CreateTable(ResourceTableName);
   if not FTasksTable.Exists then CreateTable(TasksTableName);
-
-  ContactsTable.Open;
-  EventsTable.Open;
-  ResourceTable.Open;
-  TasksTable.Open;
 end;
 
 procedure TVpZeosDatastore.CreateTable(const ATableName: String);
@@ -241,6 +235,16 @@ begin
   end;
 end;
 
+procedure TVpZeosDatastore.CreateTables;
+var
+  wasConnected: Boolean;
+begin
+  wasConnected := FConnection.Connected;
+  FConnection.Connected := true;
+  CreateAllTables;
+  SetConnected(wasConnected or AutoConnect);
+end;
+
 function TVpZeosDatastore.GetContactsTable: TDataset;
 begin
   Result := FContactsTable;
@@ -272,7 +276,10 @@ procedure TVpZeosDatastore.Loaded;
 begin
   inherited;
   if not (csDesigning in ComponentState) then
-    Connected := AutoConnect;
+    Connected := AutoConnect and (
+      AutoCreate or
+      (FContactsTable.Exists and FEventsTable.Exists and FResourceTable.Exists and FTasksTable.Exists)
+    );
 end;
 
 procedure TVpZeosDatastore.Notification(AComponent: TComponent;
@@ -285,14 +292,14 @@ end;
 
 procedure TVpZeosDatastore.SetConnected(const AValue: Boolean);
 begin
-  if AValue = Connected then
+  if {(AValue = Connected) or }(FConnection = nil) then
     exit;
 
   if AValue and AutoCreate then
     CreateTables;
 
   FConnection.Connected := AValue;
-  if AValue then begin
+  if FConnection.Connected then begin
     FContactsTable.Open;
     FEventsTable.Open;
     FResourceTable.Open;
