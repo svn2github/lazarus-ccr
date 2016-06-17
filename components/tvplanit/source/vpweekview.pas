@@ -1457,28 +1457,24 @@ procedure TVpWeekView.WMRButtonDown(var Msg : TWMRButtonDown);
 procedure TVpWeekView.WMRButtonDown(var Msg : TLMRButtonDown);
 {$ENDIF}
 var
-  ClientOrigin : TPoint;
-  i            : Integer;
-
+  i: Integer;
 begin
   inherited;
-  if not Assigned (PopupMenu) then begin
-//    if not focused then
-//      SetFocus;
-    { The mouse click landed inside the client area }
-    wvSetDateByCoord(Point(Msg.XPos, Msg.YPos));
-    EventAtCoord (Point (Msg.XPos, Msg.YPos));
-    wvClickTimer.Enabled := false;
-    ClientOrigin := GetClientOrigin;
+  if not Assigned(PopupMenu) then
+    exit;
 
-    if not Assigned (ActiveEvent) then
-      for i := 0 to FDefaultPopup.Items.Count - 1 do begin
-        if (FDefaultPopup.Items[i].Tag = 1) or (ReadOnly) then           
-          FDefaultPopup.Items[i].Enabled := False;
-      end
-    else
-      for i := 0 to FDefaultPopup.Items.Count - 1 do
-        FDefaultPopup.Items[i].Enabled := True;
+  { The mouse click landed inside the client area }
+  wvSetDateByCoord(Point(Msg.XPos, Msg.YPos));
+  EventAtCoord(Point(Msg.XPos, Msg.YPos));
+  wvClickTimer.Enabled := false;
+
+  if not Assigned(ActiveEvent) then begin
+    for i := 0 to FDefaultPopup.Items.Count - 1 do
+      if (FDefaultPopup.Items[i].Tag = 1) or (ReadOnly) then
+        FDefaultPopup.Items[i].Enabled := False;
+  end else begin
+    for i := 0 to FDefaultPopup.Items.Count - 1 do
+      FDefaultPopup.Items[i].Enabled := True;
   end;
 end;
 {=====}
