@@ -323,7 +323,8 @@ begin
   if FConnection <> nil then begin
     wasConnected := FConnection.Connected;
     Connected := false;
-  end;
+  end else
+    wasConnected := false;
   FConnection := AValue;
   FContactsTable.Connection := FConnection;
   FEventsTable.Connection := FConnection;
