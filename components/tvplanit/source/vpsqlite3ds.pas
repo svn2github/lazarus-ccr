@@ -84,9 +84,13 @@ end;
 
 // Connection and tables are active afterwards!
 procedure TVpSqlite3Datastore.CreateTables;
+var
+  wasConnected: Boolean;
 begin
   if FileExists(FConnection.DatabaseName) then
     exit;
+
+  wasConnected := FConnection.Connected;
 
   FConnection.Close;
 
@@ -99,38 +103,12 @@ begin
   if FTasksTable.Transaction = nil then
     FTasksTable.Transaction := FConnection.Transaction;
 
-  FConnection.Connected := true;
-  FConnection.Transaction.Active := true;
-
-  // Per the SQLite Documentation (edited for clarity):
-  // The pragma user_version is used to set or get the value of the user-version.
-  // The user-version is a big-endian 32-bit signed integer stored in the database header at offset 60.
-  // The user-version is not used internally by SQLite. It may be used by applications for any purpose.
-  // http://www.sqlite.org/pragma.html#pragma_schema_version
- // FConnection.ExecuteDirect('PRAGMA user_version = ' + IntToStr(USER_VERSION) + ';');
-
-  // Per the SQLite Documentation:
-  // The application_id PRAGMA is used to query or set the 32-bit unsigned big-endian
-  // "Application ID" integer located at offset 68 into the database header.
-  // Applications that use SQLite as their application file-format should set the
-  // Application ID integer to a unique integer so that utilities such as file(1) can
-  // determine the specific file type rather than just reporting "SQLite3 Database".
-  // A list of assigned application IDs can be seen by consulting the magic.txt file
-  // in the SQLite source repository.
-  // http://www.sqlite.org/pragma.html#pragma_application_id
- // FConnection.ExecuteDirect('PRAGMA application_id = ' + IntToStr(APPLICATION_ID) + ';');
-
   CreateTable(ContactsTableName);
   CreateTable(EventsTableName);
   CreateTable(ResourceTableName);
   CreateTable(TasksTableName);
 
-  FConnection.Transaction.Commit;
-  FConnection.Connected := false;
-
-  Connected := AutoConnect;
-
-  //OpenTables;
+  SetConnected(wasConnected or AutoConnect);
 end;
 
 procedure TVpSqlite3Datastore.CreateTable(const ATableName: String);
@@ -318,7 +296,7 @@ procedure TVpSqlite3Datastore.Loaded;
 begin
   inherited;
   if not (csDesigning in ComponentState) then
-    Connected := AutoConnect;
+    Connected := AutoConnect and (AutoCreate or FileExists(FConnection.DatabaseName));
 end;
 
 procedure TVpSqlite3Datastore.Notification(AComponent: TComponent;
@@ -377,7 +355,7 @@ begin
   if (FConnection = nil) or (FConnection.Transaction = nil) then
     exit;
 
-  if AValue = Connected then
+  if AValue = FConnection.Connected then
     exit;
 
   if AValue and AutoCreate then
