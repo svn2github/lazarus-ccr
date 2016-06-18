@@ -824,6 +824,8 @@ end;
 destructor TVpDayView.Destroy;
 
 begin
+  FreeAndNil(dvInplaceEditor);
+
   FTimeSlotColors.Free;
   FHeadAttr.Free;
   FRowHeadAttr.Free;
@@ -2254,14 +2256,18 @@ begin
 
   if AllowIt then begin
     { create and spawn the in-place editor }
-    dvInPlaceEditor := TVpDvInPlaceEdit.Create(Self);
-    dvInPlaceEditor.Parent := self;
-    dvInPlaceEditor.OnExit := EndEdit;
-    dvInPlaceEditor.SetBounds(dvActiveIconRec.Right + FGutterWidth +
-                                    TextMargin,
-                              dvActiveEventRec.Top + TextMargin,
-                              dvActiveEventRec.Right,
-                              dvActiveEventRec.Bottom - 1);
+    if dvInPlaceEditor = nil then begin
+      dvInPlaceEditor := TVpDvInPlaceEdit.Create(Self);
+      dvInPlaceEditor.Parent := self;
+      dvInPlaceEditor.OnExit := EndEdit;
+    end;
+    dvInPlaceEditor.SetBounds(
+      dvActiveIconRec.Right + FGutterWidth + TextMargin,
+      dvActiveEventRec.Top + TextMargin,
+      dvActiveEventRec.Right,
+      dvActiveEventRec.Bottom - 1
+    );
+    dvInPlaceEditor.Show;
     dvInPlaceEditor.Text := FActiveEvent.Description;
     Invalidate;
     dvInPlaceEditor.SetFocus;
@@ -2275,7 +2281,7 @@ begin
     Exit;                                                                
   dvEndingEditing := True;                                               
   try                                                                    
-    if dvInPlaceEditor <> nil then begin
+    if (dvInPlaceEditor <> nil) and dvInplaceEditor.Visible then begin
       if dvInPlaceEditor.Text <> FActiveEvent.Description then begin
         FActiveEvent.Description := dvInPlaceEditor.Text;
         FActiveEvent.Changed := true;
@@ -2283,12 +2289,7 @@ begin
         if Assigned(FAfterEdit) then
           FAfterEdit(self, FActiveEvent);
       end;
-      try
-        dvInPlaceEditor.Free;
-        dvInPlaceEditor := nil;
-      except
-        // The editor was already freed.
-      end;
+      dvInplaceEditor.Hide;
       Invalidate;
     end;
   finally                                                                
@@ -2359,7 +2360,7 @@ begin
   { for simplicity, bail out of editing while scrolling. }
   EndEdit(Self);
 
-  if dvInPlaceEditor <> nil then Exit;
+  if (dvInPlaceEditor <> nil) and dvInplaceEditor.Visible then Exit;
 
   case Msg.ScrollCode of
     SB_LINEUP    : dvScrollVertical(-1);
@@ -4050,7 +4051,7 @@ begin
 
       RenderCanvas.Brush.Color := WindowColor;
 
-      if (dvInPlaceEditor <> nil) then begin                             
+      if (dvInPlaceEditor <> nil) and dvInplaceEditor.Visible then begin
         if FActiveEvent = Event then                                     
           EventIsEditing := True                                         
         else                                                             
@@ -4234,7 +4235,7 @@ begin
     if Assigned (FActiveEvent) then
       OKToDrawEditFrame := not (FActiveEvent.AllDayEvent);
 
-    if (dvInPlaceEditor <> nil) and (OKToDrawEditFrame) then begin
+    if (dvInPlaceEditor <> nil) and dvInplaceEditor.Visible and OKToDrawEditFrame then begin
       { paint extra borders around the editor }
       if Assigned (DataStore) then                                       
         RenderCanvas.Brush.Color := DataStore.CategoryColorMap.GetColor(
