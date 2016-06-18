@@ -1353,7 +1353,7 @@ begin
 
   if not Focused then SetFocus; 
 
-  if wvInPlaceEditor <> nil then
+  if (wvInPlaceEditor <> nil) and wvInPlaceEditor.Visible then
     EndEdit(Self);
 
   if (Msg.YPos > wvHeaderHeight) then
@@ -1902,7 +1902,8 @@ end;
 
 procedure TVpWeekView.EndEdit(Sender: TObject);
 begin
-  if (wvInPlaceEditor <> nil) and (ActiveEvent <> nil) then begin
+  if (wvInPlaceEditor <> nil) and wvInplaceEditor.Visible and (ActiveEvent <> nil)
+  then begin
     if wvInPlaceEditor.Text <> ActiveEvent.Description then begin
       ActiveEvent.Description := wvInPlaceEditor.Text;
       ActiveEvent.Changed := true;
