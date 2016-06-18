@@ -733,7 +733,7 @@ begin
     result := (DlgEventEdit.ReturnCode = rtCommit);
     if Result then begin
       DlgEventEdit.DePopulateDialog;
-      DataStore.PostEvents;
+//      DataStore.PostEvents;
     end;
   finally
     DlgEventEdit.Release;

@@ -212,8 +212,8 @@ begin
       Task.Changed := Result;
       if Result then begin
         TaskEditForm.DePopulateSelf;
-        DataStore.PostTasks;
-        DataStore.NotifyDependents;
+//        DataStore.PostTasks;
+//        DataStore.NotifyDependents;
       end;
     finally
       TaskEditForm.Release;

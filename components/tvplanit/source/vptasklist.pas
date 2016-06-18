@@ -1464,6 +1464,7 @@ begin
   end;
   if AllowIt then begin
     DataStore.PostTasks();
+    DataStore.NotifyDependents;
     Invalidate;
   end else begin
     if NewTask then begin
