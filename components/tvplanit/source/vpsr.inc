@@ -123,6 +123,7 @@ resourcestring
   RSMinutes                 = 'Minutes';
   RSHours                   = 'Hours';
   RSDays                    = 'Days';
+  RSCalendarWeekAbbr        = 'CW';   // Abbreviation of "calendar week"
 
   {WARNINGS}
   RSPermanent               = 'This operation cannot be undone!';

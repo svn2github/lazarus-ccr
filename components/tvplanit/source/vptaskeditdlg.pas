@@ -90,10 +90,10 @@ type
 
   TVpTaskEditDialog = class(TVpBaseDialog)
   protected {private}
-    teEditDlg         : TTaskEditForm;
-    teTask            : TVpTask;
+    teEditDlg: TTaskEditForm;
+    teTask: TVpTask;
   public
-    constructor Create(AOwner : TComponent); override;
+    constructor Create(AOwner: TComponent); override;
     function Execute(Task: TVpTask): Boolean; reintroduce;
     function AddNewTask: Boolean;
   published
@@ -145,13 +145,11 @@ begin
   DetailsMemo.Text := Task.Details;
   CompleteCB.Checked := Task.Complete;
   if Task.CompletedOn <> 0 then
-    CompletedOnLbl.Caption := RSCompletedOn + ' ' +
-                              FormatDateTime(ShortDateFormat, Task.CompletedOn)
+    CompletedOnLbl.Caption := RSCompletedOn + ' ' + FormatDateTime(ShortDateFormat, Task.CompletedOn)
   else
     CompletedOnLbl.Visible := False;
   CompletedOnLbl.Visible := CompleteCB.Checked;
-  CreatedOnLbl.Caption := RSCreatedOn + ' ' +
-                          FormatDateTime(ShortDateFormat, Task.CreatedOn);
+  CreatedOnLbl.Caption := RSCreatedOn + ' ' + FormatDateTime(ShortDateFormat, Task.CreatedOn);
 
   DueDateEdit.Left := DueDateLbl.Left + GetLabelWidth(DueDateLbl) + 8;
 end;
@@ -188,8 +186,8 @@ end;
 constructor TVpTaskEditDialog.Create(AOwner : TComponent);
 begin
   inherited Create(AOwner);
-  FPlacement.Height   := 340;
-  FPlacement.Width    := 545;
+  FPlacement.Height := 340;
+  FPlacement.Width := 545;
 end;
 
 function TVpTaskEditDialog.Execute(Task: TVpTask): Boolean;
@@ -198,8 +196,8 @@ var
 begin
   Result := false;
   teTask := Task;
-  if (teTask <> nil) and (DataStore <> nil) and
-     (DataStore.Resource <> nil) then begin
+  if (teTask <> nil) and (DataStore <> nil) and (DataStore.Resource <> nil) then
+  begin
     Application.CreateForm(TTaskEditForm, TaskEditForm);
     try
       DoFormPlacement(TaskEditForm);

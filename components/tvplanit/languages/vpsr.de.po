@@ -159,6 +159,10 @@ msgctxt "vpsr.rscalendartoday"
 msgid "Today"
 msgstr "Heute"
 
+#: vpsr.rscalendarweekabbr
+msgid "CW"
+msgstr "KW"
+
 #: vpsr.rscancelbtn
 msgid "Cancel"
 msgstr "Abbrechen"

@@ -44,10 +44,10 @@ type
   TVpCustomDBDataStore = class(TVpCustomDataStore)
   protected {private}
     FReadOnly : Boolean;
-    FAfterPostEvents : TNotifyEvent;                                     
-    FAfterPostTasks : TNotifyEvent;                                      
-    FAfterPostContacts : TNotifyEvent;                                   
-    FAfterPostResources : TNotifyEvent;                                  
+    FAfterPostEvents : TNotifyEvent;
+    FAfterPostTasks : TNotifyEvent;
+    FAfterPostContacts : TNotifyEvent;
+    FAfterPostResources : TNotifyEvent;
 
     { property getters }
     function GetResourceTable : TDataset; virtual; abstract;
@@ -91,10 +91,10 @@ type
     procedure PostTasks; override;
     procedure PostResources; override;
 { - Added}
-    procedure PurgeResource(Res: TVpResource); override;                 
-    procedure PurgeEvents(Res: TVpResource); override;                   
-    procedure PurgeContacts(Res: TVpResource); override;                 
-    procedure PurgeTasks(Res: TVpResource); override;                    
+    procedure PurgeResource(Res: TVpResource); override;
+    procedure PurgeEvents(Res: TVpResource); override;
+    procedure PurgeContacts(Res: TVpResource); override;
+    procedure PurgeTasks(Res: TVpResource); override;
 { - End}
     procedure SetResourceByName(Value: string); override;
     procedure CreateFieldDefs(const TableName : string;
@@ -102,18 +102,18 @@ type
     procedure CreateIndexDefs(const TableName : string;
       IndexDefs : TIndexDefs); virtual;
 
-  published                                                              
-    {events}                                                             
-    property AfterPostEvents : TNotifyEvent                              
-      read FAfterPostEvents write FAfterPostEvents;                      
-    property AfterPostContacts : TNotifyEvent                            
-      read FAfterPostContacts write FAfterPostContacts;                  
-    property AfterPostTasks : TNotifyEvent                               
-      read FAfterPostTasks write FAfterPostTasks;                        
-    property AfterPostResources : TNotifyEvent                           
-      read FAfterPostResources write FAfterPostResources;                
-  end;                                                                   
-                                                                         
+  published
+    {events}
+    property AfterPostEvents : TNotifyEvent
+      read FAfterPostEvents write FAfterPostEvents;
+    property AfterPostContacts : TNotifyEvent
+      read FAfterPostContacts write FAfterPostContacts;
+    property AfterPostTasks : TNotifyEvent
+      read FAfterPostTasks write FAfterPostTasks;
+    property AfterPostResources : TNotifyEvent
+      read FAfterPostResources write FAfterPostResources;
+  end;
+
 { Constants for index names }
 const
   VpcIndexNameResID = 'ResID_ndx';
@@ -892,17 +892,17 @@ begin
     end;
   end else if TableName = EventsTableName then begin
     with IndexDefs do begin
-      { added a new index on the ResourceID and StartTime fields.         }
+      { added a new index on the ResourceID and StartTime fields.              }
       { this index is used by the FlashFiler 2 DataStore for setting ranges    }
       { instead of using filters on the Events table.                          }
       { tables created with unpatched 1.0 or 1.01 versions of Visual PlanIt    }
       { will not have this new index available so they will continue to use    }
       { filters.                                                               }
-      with AddIndexDef do begin                                          
-        Name := 'rid_st_ndx';                                            
-        Fields := 'ResourceID;StartTime';                                
-        Options := [ixCaseInsensitive];                                  
-      end;                                                               
+      with AddIndexDef do begin
+        Name := 'rid_st_ndx';
+        Fields := 'ResourceID;StartTime';
+        Options := [ixCaseInsensitive];
+      end;
       with AddIndexDef do begin
         Name := 'st_ndx';
         Fields := 'StartTime';
@@ -982,7 +982,7 @@ begin
     ResourceTable.First;
     while not ResourceTable.EOF do begin
       { Load this resource into memory }
-      Res := Resources.AddResource(-1);                               
+      Res := Resources.AddResource(-1);
       Res.Loading := true;
       Res.ResourceID := ResourceTable.FieldByName('ResourceID').AsInteger;
       Res.Description := ResourceTable.FieldByName('Description').AsString;
@@ -1084,8 +1084,9 @@ begin
   if (Resource <> nil) then
     with ContactsTable do begin
       SetFilterCriteria(ContactsTable, False,
-                        ResourceTable.FieldByName('ResourceID').AsInteger,
-                        0, 0);
+        ResourceTable.FieldByName('ResourceID').AsInteger,
+        0, 0
+      );
       First;
       while not EOF do begin
         Contact := Resource.Contacts.AddContact(GetNextID(ContactsTableName));
@@ -1146,8 +1147,9 @@ begin
   if (Resource <> nil) then
     with TasksTable do begin
       SetFilterCriteria(TasksTable, False,
-                        ResourceTable.FieldByName('ResourceID').AsInteger,
-                        0, 0);
+        ResourceTable.FieldByName('ResourceID').AsInteger,
+        0, 0
+      );
       First;
       while not EOF do begin
         Task := Resource.Tasks.AddTask(GetNextID(TasksTableName));
@@ -1187,25 +1189,24 @@ begin
   if (Resource <> nil) and Resource.ContactsDirty then begin
     { Dump this resource's dirty contacts to the DB }
     if ResourceTable.Locate('ResourceID', Resource.ResourceID, []) then begin
-      SetFilterCriteria(ContactsTable, False, Resource.ResourceID,    
-        0, 0);                                                        
+      SetFilterCriteria(ContactsTable, False, Resource.ResourceID, 0, 0);
 
       for I := pred(Resource.Contacts.Count) downto 0 do begin
         Contact := Resource.Contacts.GetContact(I);
-        { if the delete flag is set then delete the record }          
-        { and free the event instance }                               
-        if Contact.Deleted then begin                                 
+        { if the delete flag is set then delete the record }
+        { and free the event instance }
+        if Contact.Deleted then begin
           if ContactsTable.Locate('RecordID', Contact.RecordID, [])   
-          then ContactsTable.Delete;                                  
-          Contact.Free;                                               
-          Continue;                                                   
-        end;                                                          
+          then ContactsTable.Delete;
+          Contact.Free;
+          Continue;
+        end;
 
         if Contact.Changed then begin
           if ContactsTable.Locate('RecordID', Contact.RecordID, []) then
             { this event already exists in the database so update it }
-            ContactsTable.Edit                                        
-          else begin                                                  
+            ContactsTable.Edit
+          else begin
             { this record doesn't exist in the database, so it's a new event }
             ContactsTable.Append;
           end;
@@ -1274,14 +1275,14 @@ begin
           Contact.Changed := false;
         end;
       end;
-    end;                                                              
+    end;
     Resource.ContactsDirty := false;
 
     if not Loading then
       NotifyDependents;
 
-    if Assigned(AfterPostContacts) then                                  
-      FAfterPostContacts(self);                                          
+    if Assigned(AfterPostContacts) then
+      FAfterPostContacts(self);
   end;
 end;
 {=====}
@@ -1296,26 +1297,25 @@ begin
     { Dump this resource's dirty events to the DB }
     if ResourceTable.Locate('ResourceID', Resource.ResourceID, [])
     then begin
-      SetFilterCriteria(EventsTable, False, Resource.ResourceID,      
-        0, 0);                                                        
+      SetFilterCriteria(EventsTable, False, Resource.ResourceID, 0, 0);
 
       for J := pred(Resource.Schedule.EventCount) downto 0 do begin
         Event := Resource.Schedule.GetEvent(J);
 
         { if the delete flag is set then delete it from the database }
-        { and free the event instance }                               
-        if Event.Deleted then begin                                   
-          if EventsTable.Locate('RecordID', Event.RecordID, []) then  
-            EventsTable.Delete;                                       
-          Event.Free;                                                 
-          Continue;                                                   
-        end;                                                          
+        { and free the event instance }
+        if Event.Deleted then begin
+          if EventsTable.Locate('RecordID', Event.RecordID, []) then
+            EventsTable.Delete;
+          Event.Free;
+          Continue;
+        end;
 
         if Event.Changed then begin
           if EventsTable.Locate('RecordID', Event.RecordID, []) then  
             { this event already exists in the database so update it }
-            EventsTable.Edit                                          
-          else begin                                                  
+            EventsTable.Edit
+          else begin
             EventsTable.Append;
           end;
           try
@@ -1366,15 +1366,15 @@ begin
           Event.Changed := false;
         end;
       end;
-    end;                                                                 
+    end;
     Resource.EventsDirty := false;
-    Resource.Schedule.Sort;                                              
+    Resource.Schedule.Sort;
 
     if not Loading then
       NotifyDependents;
 
-    if Assigned(AfterPostEvents) then                                    
-      FAfterPostEvents(self);                                            
+    if Assigned(AfterPostEvents) then
+      FAfterPostEvents(self);
   end;
 end;
 {=====}
@@ -1388,30 +1388,28 @@ begin
     { Dump this resource's dirty contacts to the DB }
     if ResourceTable.Locate('ResourceID', Resource.ResourceID, [])
     then begin
-      SetFilterCriteria(TasksTable, False, Resource.ResourceID,       
-        0, 0);                                                        
+      SetFilterCriteria(TasksTable, False, Resource.ResourceID, 0, 0);
 
       for I := pred(Resource.Tasks.Count) downto 0 do begin
         Task := Resource.Tasks.GetTask(I);
 
-        { if the delete flag is set then delete the record }          
-        { and free the event instance }                               
-        if Task.Deleted then begin                                    
-          if TasksTable.Locate('RecordID', Task.RecordID, []) then    
-            TasksTable.Delete;                                        
-          Task.Free;                                                  
-          Continue;                                                   
-        end;                                                          
+        { if the delete flag is set then delete the record }
+        { and free the event instance }
+        if Task.Deleted then begin
+          if TasksTable.Locate('RecordID', Task.RecordID, []) then
+            TasksTable.Delete;
+          Task.Free;
+          Continue;
+        end;
 
         if Task.Changed then begin
           if TasksTable.Locate('RecordID', Task.RecordID, [])
-          then                                                        
-            { this event already exists in the database so }          
-            { update it }                                             
-            TasksTable.Edit                                           
-          else                                                        
-            { this record doesn't exist in the database, so }         
-            { it's a new event }                                      
+          then
+            { this event already exists in the database so update it }
+            TasksTable.Edit
+          else
+            { this record doesn't exist in the database, so }
+            { it's a new event }
             TasksTable.Append;
           try
             TasksTable.FieldByName('ResourceID').AsInteger := Resource.ResourceID;
@@ -1445,11 +1443,11 @@ begin
     end;
     Resource.TasksDirty := false;
 
-    if not Loading then                                                  
-      NotifyDependents;                                                  
+    if not Loading then
+      NotifyDependents;
 
-    if Assigned(AfterPostTasks) then                                     
-      FAfterPostTasks(self);                                             
+    if Assigned(AfterPostTasks) then
+      FAfterPostTasks(self);
   end;
 end;
 {=====}
@@ -1468,25 +1466,25 @@ begin
       for I := 0 to pred(Resources.Count) do begin
         Res := Resources.Items[I];
 
-        if (Res <> nil) and Res.Deleted then begin                    
-          PurgeEvents(Res);                                           
-          PurgeContacts(Res);                                         
-          PurgeTasks(Res);                                            
+        if (Res <> nil) and Res.Deleted then begin
+          PurgeEvents(Res);
+          PurgeContacts(Res);
+          PurgeTasks(Res);
           if ResourceTable.Locate('ResourceID', Res.ResourceID, [])   
-          then ResourceTable.Delete;                                  
-          if Resource = Res then                                      
-            ResourceID := -1;                                         
-          Res.Free;                                                   
-          Continue;                                                   
-        end;                                                          
+          then ResourceTable.Delete;
+          if Resource = Res then
+            ResourceID := -1;
+          Res.Free;
+          Continue;
+        end;
 
         { Dump this resource to the DB }
         if (Res <> nil) and Res.Changed then begin
           with ResourceTable do begin
             if Locate('ResourceID', Res.ResourceID, []) then
-              { existing record found }                               
-              Edit                                                    
-            else                                                      
+              { existing record found }
+              Edit
+            else
               { this is a new record}
               Append;
 
@@ -1523,11 +1521,11 @@ begin
           Res.Changed := false;
         end;
       end;
-      if not Loading then                                                
-        NotifyDependents;                                                
+      if not Loading then
+        NotifyDependents;
 
-      if Assigned(AfterPostEvents) then                                  
-        FAfterPostEvents(self);                                          
+      if Assigned(AfterPostEvents) then
+        FAfterPostEvents(self);
     end;
   finally
     Loading := false;
@@ -1536,37 +1534,37 @@ end;
 {=====}
 
 { - Added}
-procedure TVpCustomDBDataStore.PurgeResource(Res: TVpResource);       
-begin                                                                 
-  Res.Deleted := true;                                                
-  PostResources;                                                      
-  Load;                                                               
-end;                                                                  
-{=====}                                                               
+procedure TVpCustomDBDataStore.PurgeResource(Res: TVpResource);
+begin
+  Res.Deleted := true;
+  PostResources;
+  Load;
+end;
+{=====}
 
-procedure TVpCustomDBDataStore.PurgeEvents(Res: TVpResource);         
-begin                                                                 
+procedure TVpCustomDBDataStore.PurgeEvents(Res: TVpResource);
+begin
   { Purging the events from the database is done by the descendant     !!.01}
   { classes                                                            !!.01}
-  inherited;                                                          
-end;                                                                  
-{=====}                                                               
+  inherited;
+end;
+{=====}
 
-procedure TVpCustomDBDataStore.PurgeContacts(Res: TVpResource);       
-begin                                                                 
+procedure TVpCustomDBDataStore.PurgeContacts(Res: TVpResource);
+begin
   { Purging the contacts from the database is done by the descendant   !!.01}
   { classes                                                            !!.01}
-  inherited;                                                          
-end;                                                                  
-{=====}                                                               
+  inherited;
+end;
+{=====}
 
-procedure TVpCustomDBDataStore.PurgeTasks(Res: TVpResource);          
-begin                                                                 
+procedure TVpCustomDBDataStore.PurgeTasks(Res: TVpResource);
+begin
   { Purging the tasks from the database is done by the descendant      !!.01}
   { classes                                                            !!.01}
-  inherited;                                                          
-end;                                                                  
-{=====}                                                               
+  inherited;
+end;
+{=====}
 { - End}
 
 procedure TVpCustomDBDataStore.SetResourceByName(Value: string);
@@ -1603,8 +1601,7 @@ begin
       SetFilterCriteria(ContactsTable, False, Resource.ResourceID, 0, 0);
       First;
       while not EOF do begin
-        Contact := Resource.Contacts.AddContact(                      
-          FieldByName('RecordID').AsInteger);                         
+        Contact := Resource.Contacts.AddContact(FieldByName('RecordID').AsInteger);
         Contact.Loading := true;
 //        Contact.RecordID := FieldByName('RecordID').AsInteger;      
         Contact.FirstName := FieldByName('FirstName').AsString;
@@ -1668,17 +1665,16 @@ begin
 
     { Load this resource's events into memory }
     with EventsTable do begin
-      SetFilterCriteria(EventsTable, True, Resource.ResourceID,
-                        TimeRange.StartTime,
-                        TimeRange.EndTime);
+      SetFilterCriteria(EventsTable, True, Resource.ResourceID, TimeRange.StartTime, TimeRange.EndTime);
       First;
 
       while not EventsTable.EOF  do
       begin
-        Event := Resource.Schedule.AddEvent(                          
-          FieldByName('RecordID').AsInteger,                          
+        Event := Resource.Schedule.AddEvent(
+          FieldByName('RecordID').AsInteger,
           FieldByName('StartTime').AsDateTime,
-          FieldByName('EndTime').AsDateTime);
+          FieldByName('EndTime').AsDateTime
+        );
         if Event <> nil then begin
           Event.Loading := true; {prevents the events changed flag from being set}
 //          Event.RecordID := FieldByName('RecordID').AsInteger;      
@@ -1729,8 +1725,7 @@ begin
       SetFilterCriteria(TasksTable, False, Resource.ResourceID, 0, 0);
       First;
       while not EOF do begin
-        Task := Resource.Tasks.AddTask(                               
-          FieldByName('RecordID').AsInteger);                         
+        Task := Resource.Tasks.AddTask(FieldByName('RecordID').AsInteger);
         Task.Loading := true;
 //        Task.RecordID := FieldByName('RecordID').AsInteger;         
         Task.Complete := FieldByName('Complete').AsBoolean;

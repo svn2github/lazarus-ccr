@@ -113,10 +113,10 @@ type
     procedure DisplayCurrentCountry;
     procedure ResizeControls;
   public
-    Resource    : TVpResource;
-    Contact     : TVpContact;
-    ReturnCode  : TVpEditorReturnCode;
-    ControlLink : TVpControlLink;
+    Resource: TVpResource;
+    Contact: TVpContact;
+    ReturnCode: TVpEditorReturnCode;
+    ControlLink: TVpControlLink;
     procedure PopulateSelf;
     procedure DePopulateSelf;
     procedure ArrangeControls;
@@ -124,9 +124,9 @@ type
 
   TVpContactEditDialog = class(TVpBaseDialog)
   protected {private}
-    ceEditDlg         : TContactEditForm;
-    ceContact         : TVpContact;
-    ceResource        : TVpResource;
+    ceEditDlg: TContactEditForm;
+    ceContact: TVpContact;
+    ceResource: TVpResource;
   public
     function Execute(Contact: TVpContact): Boolean; reintroduce;
     function AddNewContact: Boolean;
@@ -150,7 +150,7 @@ uses
 
 {== Utility functions ===================================}
 
-function Max(const a, b : Integer) : Integer;
+function Max(const a, b: Integer): Integer;
 begin
   if a >= b then
     Result := a
@@ -254,9 +254,9 @@ end;
 
 procedure TContactEditForm.PopulateSelf;
 var
-  CurCountry : Integer;
-  i          : TVpPhoneType;
-  j          : TVpCategoryType;
+  CurCountry: Integer;
+  pt: TVpPhoneType;
+  ct: TVpCategoryType;
 
 begin
   NameEdit.Text := AssembleName(Contact);
@@ -296,12 +296,12 @@ begin
   cboxState.Text := Contact.State;
 
 
-  for i := Low (TVpPhoneType) to High (TVpPhoneType) do begin
-    cboxPhoneLbl1.Items.Add (PhoneLabel (i));
-    cboxPhoneLbl2.Items.Add (PhoneLabel (i));
-    cboxPhoneLbl3.Items.Add (PhoneLabel (i));
-    cboxPhoneLbl4.Items.Add (PhoneLabel (i));
-    cboxPhoneLbl5.Items.Add (PhoneLabel (i));
+  for pt := Low (TVpPhoneType) to High (TVpPhoneType) do begin
+    cboxPhoneLbl1.Items.Add(PhoneLabel(pt));
+    cboxPhoneLbl2.Items.Add(PhoneLabel(pt));
+    cboxPhoneLbl3.Items.Add(PhoneLabel(pt));
+    cboxPhoneLbl4.Items.Add(PhoneLabel(pt));
+    cboxPhoneLbl5.Items.Add(PhoneLabel(pt));
   end;
   cboxPhoneLbl1.ItemIndex := Contact.PhoneType1;
   cboxPhoneLbl2.ItemIndex := Contact.PhoneType2;
@@ -309,8 +309,8 @@ begin
   cboxPhoneLbl4.ItemIndex := Contact.PhoneType4;
   cboxPhoneLbl5.ItemIndex := Contact.PhoneType5;
 
-  for j := Low (TVpCategoryType) to High (TVpCategoryType) do
-    cboxCategory.Items.Add (CategoryLabel (j));
+  for ct := Low (TVpCategoryType) to High (TVpCategoryType) do
+    cboxCategory.Items.Add(CategoryLabel(ct));
   cboxCategory.ItemIndex := Contact.Category;
 
   DisplayCurrentCountry;
@@ -346,7 +346,7 @@ begin
     cboxState.Visible := False;
   end
   else begin
-    ControlLink.Localization.CountriesToTStrings (cboxCountry.Items);
+    ControlLink.Localization.CountriesToTStrings(cboxCountry.Items);
     CountryLbl.FocusControl := cboxCountry;
     cboxCountry.Visible := True;
     edtCountry.Visible := False;
@@ -372,14 +372,13 @@ type
   TLabelArray = array[0..9] of TLabel;
 
 var
-  Labels : TLabelArray;
-  LargestLabel : Integer;
-  WidestField  : Integer;
-  i            : Integer;
-  j            : Integer;
-  OldFont      : TFont;
-  FieldTop     : Integer;
-  delta        : Integer;
+  Labels: TLabelArray;
+  LargestLabel: Integer;
+  WidestField: Integer;
+  i, j: Integer;
+  OldFont: TFont;
+  FieldTop: Integer;
+  delta: Integer;
 
 begin
   { Note: The resizing algorithm is dependent upon the labels having their
@@ -413,21 +412,22 @@ begin
     try
       Canvas.Font.Assign (cboxCountry.Font);
       try
-      for j := 0 to cboxCountry.Items.Count - 1 do begin
-        i := Canvas.TextWidth (cboxCountry.Items[j]);
-        if i > WidestField then
-          WidestField := i;
-      end;
-      WidestField := WidestField + ComboArrowWidth;
-      cboxCountry.Width := WidestField;
+        for j := 0 to cboxCountry.Items.Count - 1 do begin
+          i := Canvas.TextWidth(cboxCountry.Items[j]);
+          if i > WidestField then
+            WidestField := i;
+        end;
+        WidestField := WidestField + ComboArrowWidth;
+        cboxCountry.Width := WidestField;
       finally
-        Canvas.Font.Assign (OldFont);
+        Canvas.Font.Assign(OldFont);
       end;
     finally
       OldFont.Free;
     end;
     if (cboxCountry.Left + cboxCountry.Width + FormRightBorder > MinFormWidth) and
-       (not cboxState.Visible) then
+       (not cboxState.Visible)
+    then
       Width := cboxCountry.Left + cboxCountry.Width + FormRightBorder
     else
       Width := MinFormWidth;
@@ -438,23 +438,24 @@ begin
     OldFont := TFont.Create;
     try
       OldFont.Assign(Canvas.Font);
-      Canvas.Font.Assign (cboxCountry.Font);
+      Canvas.Font.Assign(cboxCountry.Font);
       try
         for j := 0 to cboxState.Items.Count - 1 do begin
-          i := Canvas.TextWidth (cboxState.Items[j]);
+          i := Canvas.TextWidth(cboxState.Items[j]);
           if i > WidestField then
             WidestField := i;
         end;
         WidestField := WidestField + ComboArrowWidth;
         cboxState.Width := WidestField;
       finally
-        Canvas.Font.Assign (OldFont);
+        Canvas.Font.Assign(OldFont);
       end;
     finally
       OldFont.Free;
     end;
     if (cboxState.Left + cboxState.Width + FormRightBorder > MinFormWidth) and
-       (not cboxCountry.Visible) then
+       (not cboxCountry.Visible)
+    then
       Width := cboxState.Left + cboxState.Width + FormRightBorder
     else
       Width := MinFormWidth;
@@ -502,14 +503,13 @@ end;
 procedure TContactEditForm.DisplayCurrentCountry;
 var
   Idx : Integer;
-
 begin
-  if not Assigned (ControlLink) then
+  if not Assigned(ControlLink) then
     Exit;
 
-  Idx := ControlLink.Localization.CountryNameToIndex (cboxCountry.Text);
+  Idx := ControlLink.Localization.CountryNameToIndex(cboxCountry.Text);
   if Idx > -1 then begin
-    ControlLink.Localization.StatesToTStrings (Idx, cboxState.Items);
+    ControlLink.Localization.StatesToTStrings(Idx, cboxState.Items);
 
     if ControlLink.Localization.Countries.Items[Idx].Address1Visible then begin
       AddrLbl.Visible := True;

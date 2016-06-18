@@ -116,6 +116,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure StartTimeExit(Sender: TObject);
     procedure EndTimeExit(Sender: TObject);
+
   private { Private declarations }
    {$IFDEF LCL}
     StartTime: TTimeEdit;
@@ -132,8 +133,10 @@ type
     procedure PopLists;
     procedure LoadCaptions;
     procedure DoPlaySound(Sender: TObject; const AWavFile: String; AMode: TVpPlaySoundMode);
+
   protected
     property Datastore: TVpCustomDatastore read FDatastore write FDatastore;
+
   public { Public declarations }
     Event: TVpEvent;
     CatColorMap: TVpCategoryColorMap;
@@ -142,7 +145,7 @@ type
     Conflicts : Integer;
     TimeFormat: TVpTimeFormat;
     AlarmWavPath: string;
-    FLastEndTime : TDateTime;                                            
+    FLastEndTime : TDateTime;
 
     procedure PopulateDialog;
     procedure DePopulateDialog;
@@ -387,7 +390,7 @@ begin
 
   Category.ItemIndex := Event.Category;
 
-  FLastEndTime := Event.EndTime;                                         
+  FLastEndTime := Event.EndTime;
 end;
 {=====}
 
@@ -455,22 +458,21 @@ end;
 procedure TDlgEventEdit.EndTimeChange(Sender: TObject);
 
   function IsMidnight(ATime: TDateTime) : Boolean;
-  begin                                                                  
+  begin
     Result := ATime = Trunc(ATime);
-  end;                                                                   
+  end;
 
-var                                                                      
-  ET: TDateTime;                                                         
-
+var
+  ET: TDateTime;
 begin
   { Verify the value is valid }
   try
     ET := StrToTime(EndTime.Text);
     if (IsMidnight(ET)) and (not IsMidnight(FLastEndTime)) then
-      EndDate.Date := EndDate.Date + 1                                   
+      EndDate.Date := EndDate.Date + 1
     else if (not IsMidnight(ET)) and (IsMidnight(FLastEndTime)) then
-      EndDate.Date := EndDate.Date - 1;                                  
-    FLastEndTime := ET;                                                  
+      EndDate.Date := EndDate.Date - 1;
+    FLastEndTime := ET;
   except
     EndTime.Color := clRed;
     EndTime.SetFocus;
@@ -512,7 +514,7 @@ begin
       Hour := (Minute div 15) div 4;
       MinStr := IntToStr(Minute mod 60);
       if MinStr = '0' then MinStr := '00';
-      if TimeFormat = tf24Hour then                                      
+      if TimeFormat = tf24Hour then
         StringList.Add(IntToStr(Hour) + ':' + MinStr)
       else begin
         if Hour > 12 then Hour := Hour - 12;
@@ -643,7 +645,6 @@ begin
     if Visible then
       FCustomInterval.SetFocus;
   end;
-
 end;
 {=====}
 
@@ -709,7 +710,7 @@ begin
   inherited Create(AOwner);
   FPlacement.Position := mpCenterTop;
   FPlacement.Height := 415;
-  FPlacement.Width  := 710;
+  FPlacement.Width := 710;
 end;
 {=====}
 
@@ -746,7 +747,9 @@ begin
   Result := false;
   if DataStore <> nil then begin
     ceEvent := DataStore.Resource.Schedule.AddEvent(
-      DataStore.GetNextID(EventsTableName), StartTime, EndTime);
+      DataStore.GetNextID(EventsTableName),
+      StartTime, EndTime
+    );
     if ceEvent <> nil then begin
       Result := Execute(ceEvent);
       if (not Result) or (ceEvent = nil) then
@@ -756,18 +759,18 @@ begin
 end;
 {=====}
 
-procedure TDlgEventEdit.StartTimeExit(Sender: TObject);                  
-var                                                                      
-  ST : TDateTime;                                                        
-begin                                                                    
+procedure TDlgEventEdit.StartTimeExit(Sender: TObject);
+var
+  ST : TDateTime;
+begin
   { Verify the value is valid }
-  try                                                                    
+  try
     ST := StartDate.Date + StrToTime(StartTime.Text);
   except
     StartTime.Color := clRed;
     StartTime.SetFocus;
     Exit;
-  end;                                                                   
+  end;
   StartTime.Color := clWindow;
 
   { If the end time is less than the start time then change the end    }
@@ -775,12 +778,12 @@ begin
 
   if ST > EndDate.Date + StrToTime (EndTime.Text) then
     EndTime.Text := FormatDateTime('hh:nn', ST + 30 / MinutesInDay);
-end;                                                                     
+end;
 
-procedure TDlgEventEdit.EndTimeExit(Sender: TObject);                    
-var                                                                      
+procedure TDlgEventEdit.EndTimeExit(Sender: TObject);
+var
   ET: TDateTime;
-begin                                                                    
+begin
   { Verify the value is valid }
   try
     ET := EndDate.Date + StrToTime(EndTime.Text);
@@ -796,7 +799,7 @@ begin
 
   if ET < StartDate.Date + StrToTime (StartTime.Text) then
     StartTime.Text := FormatDateTime('hh:nn', ET - 30 / MinutesInDay);
-end;                                                                     
+end;
 
 end.
  
