@@ -135,6 +135,7 @@ object MainForm: TMainForm
           DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
+          ParentShowHint = False
           Align = alClient
           ReadOnly = False
           TabStop = True
@@ -148,7 +149,7 @@ object MainForm: TMainForm
           TimeSlotColors.Inactive = 8454143
           TimeSlotColors.Holiday = 16744703
           TimeSlotColors.Weekday = clWhite
-          TimeSlotColors.Weekend = 16777088
+          TimeSlotColors.Weekend = 14737632
           TimeSlotColors.ActiveRange.RangeBegin = h_00
           TimeSlotColors.ActiveRange.RangeEnd = h_00
           HeadAttributes.Font.Height = -13
@@ -317,7 +318,7 @@ object MainForm: TMainForm
     Height = 652
     Top = 34
     Width = 120
-    ActiveFolder = 3
+    ActiveFolder = 0
     AllowRearrange = True
     BackgroundColor = clInactiveCaption
     BackgroundMethod = bmNormal

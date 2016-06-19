@@ -509,14 +509,22 @@ msgstr "Von Ihrem Zeitplan?"
 msgid "from your task list?"
 msgstr "Von Ihrer Aufgabenliste?"
 
+#: vpsr.rshintnextday
+msgid "Next day"
+msgstr "Nächster Tag"
+
 #: vpsr.rshintnextweek
 msgctxt "vpsr.rshintnextweek"
-msgid "Next Week"
+msgid "Next week"
 msgstr "Nächste Woche"
+
+#: vpsr.rshintprevday
+msgid "Previous day"
+msgstr "Voriger Tag"
 
 #: vpsr.rshintprevweek
 msgctxt "vpsr.rshintprevweek"
-msgid "Previous Week"
+msgid "Previous week"
 msgstr "Vorige Woche"
 
 #: vpsr.rshinttoday

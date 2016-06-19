@@ -499,14 +499,22 @@ msgstr ""
 msgid "from your task list?"
 msgstr ""
 
+#: vpsr.rshintnextday
+msgid "Next day"
+msgstr ""
+
 #: vpsr.rshintnextweek
 msgctxt "vpsr.rshintnextweek"
-msgid "Next Week"
+msgid "Next week"
+msgstr ""
+
+#: vpsr.rshintprevday
+msgid "Previous day"
 msgstr ""
 
 #: vpsr.rshintprevweek
 msgctxt "vpsr.rshintprevweek"
-msgid "Previous Week"
+msgid "Previous week"
 msgstr ""
 
 #: vpsr.rshinttoday

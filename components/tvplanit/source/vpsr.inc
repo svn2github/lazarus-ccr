@@ -190,8 +190,10 @@ resourcestring
   RSHintToday               = 'Today';                                   {!!.01}
   RSHintTomorrow            = 'Tomorrow';                                {!!.01}
   RSHintYesterday           = 'Yesterday';                               {!!.01}
-  RSHintNextWeek            = 'Next Week';                               {!!.01}
-  RSHintPrevWeek            = 'Previous Week';                           {!!.01}
+  RSHintNextWeek            = 'Next week';                               {!!.01}
+  RSHintPrevWeek            = 'Previous week';                           {!!.01}
+  RSHintPrevDay             = 'Previous day';
+  RsHintNextDay             = 'Next day';
 
   { field names }
   RSPosition                = 'Position';

@@ -66,7 +66,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,
+  LMessages, LCLProc, LCLType, LCLIntf,
   {$ELSE}
   Windows,
   {$ENDIF}
@@ -859,11 +859,11 @@ end;
 
 procedure TVpDayView.LoadLanguage;
 begin
-  dvDayUpBtn.Hint                := rsHintTomorrow;
-  dvDayDownBtn.Hint              := rsHintYesterday;
-  dvTodayBtn.Hint                := rsHintToday;
-  dvWeekUpBtn.Hint               := rsHintNextWeek;
-  dvWeekDownBtn.Hint             := rsHintPrevWeek;
+  dvDayUpBtn.Hint                := RSHintNextDay; //rsHintTomorrow;
+  dvDayDownBtn.Hint              := RSHintPrevDay; //rsHintYesterday;
+  dvTodayBtn.Hint                := RSHintToday;
+  dvWeekUpBtn.Hint               := RSHintNextWeek;
+  dvWeekDownBtn.Hint             := RSHintPrevWeek;
   FDefaultPopup.Items.Clear;
   InitializeDefaultPopup;
 end;

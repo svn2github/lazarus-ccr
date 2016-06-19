@@ -327,6 +327,9 @@ begin
     SetDefaultLang(FLang, langdir);
     TranslateUnitResourceStrings('vpsr', langdir + 'vpsr.' + FLang + '.po');
   end;
+  VpDayView1.LoadLanguage;
+  VpWeekView1.LoadLanguage;
+  VpMonthView1.LoadLanguage;
 
   // Select language in language combobox.
   if ALang = '' then ALang := 'en';
