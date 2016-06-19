@@ -24,7 +24,7 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="6">
+    <RequiredPackages Count="5">
       <Item1>
         <PackageName Value="SQLDBLaz"/>
       </Item1>
@@ -32,17 +32,14 @@
         <PackageName Value="laz_visualplanit_sqlite3"/>
       </Item2>
       <Item3>
-        <PackageName Value="laz_visualplanit_zeos"/>
+        <PackageName Value="laz_visualplanit"/>
       </Item3>
       <Item4>
-        <PackageName Value="laz_visualplanit"/>
+        <PackageName Value="zcomponent"/>
       </Item4>
       <Item5>
-        <PackageName Value="zcomponent"/>
-      </Item5>
-      <Item6>
         <PackageName Value="LCL"/>
-      </Item6>
+      </Item5>
     </RequiredPackages>
     <Units Count="2">
       <Unit0>
