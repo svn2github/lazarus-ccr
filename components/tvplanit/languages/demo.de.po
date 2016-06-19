@@ -1,0 +1,52 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.8\n"
+"Language: de\n"
+
+#: tmainform.btneditres.caption
+msgid "Edit resource"
+msgstr "Ressource bearbeiten"
+
+#: tmainform.btnnewres.caption
+msgid "New resource"
+msgstr "Neue Ressource"
+
+#: tmainform.caption
+msgid "Turbo Power VisualPlanIt Demo"
+msgstr "Turbo Power VisualPlanIt Demo"
+
+#: tmainform.label1.caption
+msgid "Language"
+msgstr "Sprache"
+
+#: tmainform.rballtasks.caption
+msgid "All tasks"
+msgstr "Alle Aufgaben"
+
+#: tmainform.rbhidecompletedtasks.caption
+msgid "Hide completed tasks"
+msgstr "Fertiggestellte Aufgaben ausblenden"
+
+#: tmainform.tabcontacts.caption
+msgid "Contacts"
+msgstr "Kontakte"
+
+#: tmainform.tabevents.caption
+msgid "Events"
+msgstr "Ereignisse"
+
+#: tmainform.tabinfo.caption
+msgid "Info"
+msgstr "Info"
+
+#: tmainform.tabtasks.caption
+msgid "Tasks"
+msgstr "Aufgaben"

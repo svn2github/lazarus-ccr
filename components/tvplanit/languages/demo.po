@@ -1,0 +1,43 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: tmainform.btneditres.caption
+msgid "Edit resource"
+msgstr ""
+
+#: tmainform.btnnewres.caption
+msgid "New resource"
+msgstr ""
+
+#: tmainform.caption
+msgid "Turbo Power VisualPlanIt Demo"
+msgstr ""
+
+#: tmainform.label1.caption
+msgid "Language"
+msgstr ""
+
+#: tmainform.rballtasks.caption
+msgid "All tasks"
+msgstr ""
+
+#: tmainform.rbhidecompletedtasks.caption
+msgid "Hide completed tasks"
+msgstr ""
+
+#: tmainform.tabcontacts.caption
+msgid "Contacts"
+msgstr ""
+
+#: tmainform.tabevents.caption
+msgid "Events"
+msgstr ""
+
+#: tmainform.tabinfo.caption
+msgid "Info"
+msgstr ""
+
+#: tmainform.tabtasks.caption
+msgid "Tasks"
+msgstr ""
+
