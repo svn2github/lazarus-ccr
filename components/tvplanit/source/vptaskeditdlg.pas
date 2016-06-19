@@ -139,6 +139,7 @@ begin
   DueDateLbl.Caption := RSDueDate;
   OKBtn.Caption := RSOKBtn;
   CancelBtn.Caption := RSCancelBtn;
+  TabTask.Caption := RSDlgTaskEdit;
 
   DescriptionEdit.Text := Task.Description;
   DueDateEdit.Date := Task.DueDate;
