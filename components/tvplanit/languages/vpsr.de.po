@@ -401,6 +401,10 @@ msgstr "Standard-Klang verwenden"
 msgid "Delete"
 msgstr "Löschen"
 
+#: vpsr.rsdeletecontactfromschedule
+msgid "Delete contact %s from your schedule?"
+msgstr ""
+
 #: vpsr.rsdescriptionlbl
 msgctxt "vpsr.rsdescriptionlbl"
 msgid "Subject:"
@@ -1368,3 +1372,4 @@ msgstr "Unbekannte Achsen-Spezifikation: %s"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "Die XML-Deklaration muss vor dem ersten Element erscheinen."
+

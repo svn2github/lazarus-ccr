@@ -76,15 +76,15 @@ uses
 
 type
   TVpLineRec = packed record
-    Hour   : TVpHours;
-    Minute : Integer;
-    Time   : TDateTime;
-    Rec    : TRect;
+    Hour: TVpHours;
+    Minute: Integer;
+    Time: TDateTime;
+    Rec: TRect;
   end;
 
   TVpColRec = packed record
-    Rec    : TRect;
-    Date   : TDateTime;
+    Rec: TRect;
+    Date: TDateTime;
   end;
 
 type
@@ -95,29 +95,24 @@ type
   TVpColRectArray = array of TVpColRec;
 
   TVpDVIconData = record                                                 
-    Show   : Boolean;                                                    
-    Bitmap : TBitmap;                                                    
-  end;                                                                   
-  TVpDVIconTypes = (itAlarm, itRecurring, itCategory, itCustom);         
-  TVpDVIcons = array [itAlarm..itCustom] of TVpDVIconData;               
+    Show: Boolean;
+    Bitmap: TBitmap;
+  end;
 
-  TVpOnDVBeforeDrawEvent = procedure (Sender    : TObject;               
-                                      Event     : TVpEvent;              
-                                      Active    : Boolean;               
-                                      ACanvas   : TCanvas;               
-                                      EventRect : TRect;                 
-                                      IconRect  : TRect) of object;      
-  TVpOnDVAfterDrawEvent = procedure (Sender    : TObject;                
-                                     Event     : TVpEvent;               
-                                     Active    : Boolean;                
-                                     ACanvas   : TCanvas;                
-                                     EventRect : TRect;                  
-                                     IconRect  : TRect) of object;       
-  TVpOnDVDrawIcons = procedure (Sender : TObject;                        
-                                Event  : TVpEvent;                       
-                                var Icons  : TVpDVIcons) of object;      
+  TVpDVIconTypes = (itAlarm, itRecurring, itCategory, itCustom);
 
-  TVpDVWrapStyle = (wsNone, wsIconFlow, wsNoFlow);                       
+  TVpDVIcons = array [itAlarm..itCustom] of TVpDVIconData;
+
+  TVpOnDVBeforeDrawEvent = procedure (Sender: TObject; Event: TVpEvent;
+    Active: Boolean; ACanvas: TCanvas; EventRect: TRect; IconRect: TRect) of object;
+
+  TVpOnDVAfterDrawEvent = procedure (Sender: TObject; Event: TVpEvent;
+    Active: Boolean; ACanvas: TCanvas; EventRect: TRect; IconRect: TRect) of object;
+
+  TVpOnDVDrawIcons = procedure (Sender: TObject; Event: TVpEvent;
+    var Icons: TVpDVIcons) of object;
+
+  TVpDVWrapStyle = (wsNone, wsIconFlow, wsNoFlow);
 
   { Forward Declarations }
   TVpDayView = class;
@@ -147,7 +142,7 @@ type
   public
     constructor Create(AOwner: TVpDayView);
     destructor Destroy; override;
-    property Owner : TVpDayView read FOwner;
+    property Owner: TVpDayView read FOwner;
   published
     property HourFont: TVpFont read FHourFont write SetHourFont;
     property MinuteFont: TVpFont read FMinuteFont write SetMinuteFont;
@@ -156,13 +151,13 @@ type
 
   TVpAllDayEventAttributes = class(TPersistent)
   protected {Private}
-    FOwner                : TWinControl;
-    FBackgroundColor      : TColor;
-    FEventBackgroundColor : TColor;
-    FEventBorderColor     : TColor;
-    FFont                 : TVpFont;
+    FOwner: TWinControl;
+    FBackgroundColor: TColor;
+    FEventBackgroundColor: TColor;
+    FEventBorderColor: TColor;
+    FFont: TVpFont;
   public
-    constructor Create (AOwner : TWinControl);
+    constructor Create(AOwner: TWinControl);
     destructor Destroy; override;
     procedure SetBackGroundColor(Value: TColor);
     procedure SetEventBackgroundColor(Value: TColor);
@@ -195,126 +190,123 @@ type
     property Color: TColor read FColor write SetColor;
   end;
 
-  TVpDayViewIconAttributes = class (TPersistent)                         
-    private                                                              
-      FShowAlarmBitmap     : Boolean;                                    
-      FShowCategoryBitmap  : Boolean;                                    
-      FShowRecurringBitmap : Boolean;                                    
-      FAlarmBitmap         : TBitmap;                                    
-      FRecurringBitmap     : TBitmap;                                    
-      FOwner               : TVpLinkableControl;                         
+  TVpDayViewIconAttributes = class (TPersistent)
+    private
+      FShowAlarmBitmap: Boolean;
+      FShowCategoryBitmap: Boolean;
+      FShowRecurringBitmap: Boolean;
+      FAlarmBitmap: TBitmap;
+      FRecurringBitmap: TBitmap;
+      FOwner: TVpLinkableControl;
 
-    protected                                                            
-      procedure SetAlarmBitmap (v : TBitmap);                            
-      procedure SetRecurringBitmap (v : TBitmap);                        
-      procedure SetShowAlarmBitmap (const v : Boolean);                  
-      procedure SetShowCategoryBitmap (const v : Boolean);               
-      procedure SetShowRecurringBitmap (const v : Boolean);              
+    protected
+      procedure SetAlarmBitmap(v: TBitmap);
+      procedure SetRecurringBitmap(v: TBitmap);
+      procedure SetShowAlarmBitmap(const v: Boolean);
+      procedure SetShowCategoryBitmap(const v: Boolean);
+      procedure SetShowRecurringBitmap(const v: Boolean);
 
-    public                                                               
-      constructor Create (AOwner : TVpLinkableControl);                  
-      destructor Destroy; override;                                      
+    public
+      constructor Create(AOwner: TVpLinkableControl);
+      destructor Destroy; override;
 
-    published                                                            
-      property AlarmBitmap : TBitmap                                     
-               read FAlarmBitmap write SetAlarmBitmap;                   
-      property RecurringBitmap : TBitmap                                 
-               read FRecurringBitmap write SetRecurringBitmap;           
-      property ShowAlarmBitmap : Boolean                                 
-               read FShowAlarmBitmap write SetShowAlarmBitmap            
-               default True;                                             
-      property ShowCategoryBitmap : Boolean                              
-               read FShowCategoryBitmap write SetShowCategoryBitmap      
-               default True;                                             
-      property ShowRecurringBitmap : Boolean                             
-               read FShowRecurringBitmap write SetShowRecurringBitmap    
-               default True;                                             
-  end;                                                                   
+    published
+      property AlarmBitmap: TBitmap
+        read FAlarmBitmap write SetAlarmBitmap;
+      property RecurringBitmap: TBitmap
+        read FRecurringBitmap write SetRecurringBitmap;
+      property ShowAlarmBitmap: Boolean
+        read FShowAlarmBitmap write SetShowAlarmBitmap default True;
+      property ShowCategoryBitmap : Boolean
+        read FShowCategoryBitmap write SetShowCategoryBitmap default True;
+      property ShowRecurringBitmap : Boolean
+        read FShowRecurringBitmap write SetShowRecurringBitmap default True;
+  end;
 
   { TVpDayView }
 
   TVpDayView = class(TVpLinkableControl)
   protected{ private }
-    FGranularity       : TVpGranularity;
-    FColumnWidth       : Integer;
-    FColor             : TColor;
-    FLineColor         : TColor;
-    FDefTopHour        : TVpHours;
-    FTopHour           : TVpHours;
-    FDateLabelFormat   : string;
-    FShowResourceName  : Boolean;
-    FTopLine           : Integer;
-    FActiveRow         : Integer;
-    FActiveCol         : Integer;
-    FActiveEvent       : TVpEvent;
-    FGutterWidth       : Integer;
-    FDefaultPopup      : TPopupMenu;
-    FLineCount         : Integer;
-    FVisibleLines      : Integer;
-    FTimeFormat        : TVpTimeFormat;
-    FDrawingStyle      : TVpDrawingStyle;
-    FTimeSlotColors    : TVpTimeSlotColor;
-    FRowHeadAttr       : TVpRHAttributes;
-    FHeadAttr          : TVpCHAttributes;
-    FAllDayEventAttr   : TVpAllDayEventAttributes;
-    FDisplayDate       : TDateTime;
-    FScrollBars        : TScrollStyle;
-    FIconAttributes    : TVpDayViewIconAttributes;                       
-    FWrapStyle         : TVpDVWrapStyle;                                 
-    FDotDotDotColor    : TColor;                                         
-    FShowEventTimes    : Boolean;                                        
+    FGranularity: TVpGranularity;
+    FColumnWidth: Integer;
+    FColor: TColor;
+    FLineColor: TColor;
+    FDefTopHour: TVpHours;
+    FTopHour: TVpHours;
+    FDateLabelFormat: string;
+    FShowResourceName: Boolean;
+    FTopLine: Integer;
+    FActiveRow: Integer;
+    FActiveCol: Integer;
+    FActiveEvent: TVpEvent;
+    FGutterWidth: Integer;
+    FDefaultPopup: TPopupMenu;
+    FLineCount: Integer;
+    FVisibleLines: Integer;
+    FTimeFormat: TVpTimeFormat;
+    FDrawingStyle: TVpDrawingStyle;
+    FTimeSlotColors: TVpTimeSlotColor;
+    FRowHeadAttr: TVpRHAttributes;
+    FHeadAttr: TVpCHAttributes;
+    FAllDayEventAttr: TVpAllDayEventAttributes;
+    FDisplayDate: TDateTime;
+    FScrollBars: TScrollStyle;
+    FIconAttributes: TVpDayViewIconAttributes;
+    FWrapStyle: TVpDVWrapStyle;
+    FDotDotDotColor: TColor;
+    FShowEventTimes: Boolean;
     { event variables }
-    FOwnerDrawRowHead  : TVpOwnerDrawRowEvent;
-    FOwnerDrawCells    : TVpOwnerDrawRowEvent;
-    FOwnerDrawColHead  : TVpOwnerDrawEvent;
-    FBeforeEdit        : TVpBeforeEditEvent;
-    FAfterEdit         : TVpAfterEditEvent;
-    FOwnerEditEvent    : TVpEditEvent;
-    FOnDrawIcons       : TVpOnDVDrawIcons;                               
-    FOnBeforeDrawEvent : TVpOnDVBeforeDrawEvent;                         
-    FOnAfterDrawEvent  : TVpOnDVAfterDrawEvent;                          
-    FOnAddEvent        : TVpOnAddNewEvent;                               
-    FNumDays           : Integer;
-    FIncludeWeekends   : Boolean;
+    FOwnerDrawRowHead: TVpOwnerDrawRowEvent;
+    FOwnerDrawCells: TVpOwnerDrawRowEvent;
+    FOwnerDrawColHead: TVpOwnerDrawEvent;
+    FBeforeEdit: TVpBeforeEditEvent;
+    FAfterEdit: TVpAfterEditEvent;
+    FOwnerEditEvent: TVpEditEvent;
+    FOnDrawIcons: TVpOnDVDrawIcons;
+    FOnBeforeDrawEvent: TVpOnDVBeforeDrawEvent;
+    FOnAfterDrawEvent: TVpOnDVAfterDrawEvent;
+    FOnAddEvent: TVpOnAddNewEvent;
+    FNumDays: Integer;
+    FIncludeWeekends: Boolean;
     { internal variables }
-    dvClickTimer       : TTimer;
-    dvLoaded           : Boolean;
-    dvInLinkHandler    : Boolean;
-    dvRowHeight        : Integer;
-    dvColHeadHeight    : Integer;
-    dvRowHeadWidth     : Integer;
-    dvClientVArea      : Integer;
-    dvMouseDownPoint   : TPoint;
-    dvMouseDown        : Boolean;
-    dvEndingEditing    : Boolean;
+    dvClickTimer: TTimer;
+    dvLoaded: Boolean;
+    dvInLinkHandler: Boolean;
+    dvRowHeight: Integer;
+    dvColHeadHeight: Integer;
+    dvRowHeadWidth: Integer;
+    dvClientVArea: Integer;
+    dvMouseDownPoint: TPoint;
+    dvMouseDown: Boolean;
+    dvEndingEditing: Boolean;
    {$IFDEF DRAGDROP}
-    dvDragging         : Boolean;
-    dvDragStartTime    : TDateTime;
+    dvDragging: Boolean;
+    dvDragStartTime: TDateTime;
    {$ENDIF}
 
     { Nav Buttons }
-    dvDayUpBtn         : TSpeedButton;
-    dvDayDownBtn       : TSpeedButton;
-    dvTodayBtn         : TSpeedButton;
-    dvWeekUpBtn        : TSpeedButton;
-    dvWeekDownBtn      : TSpeedButton;
+    dvDayUpBtn: TSpeedButton;
+    dvDayDownBtn: TSpeedButton;
+    dvTodayBtn: TSpeedButton;
+    dvWeekUpBtn: TSpeedButton;
+    dvWeekDownBtn: TSpeedButton;
 
-    dvLineMatrix       : TVpLineMatrix;
-    dvColRectArray     : TVpColRectArray;
-    dvEventArray       : TVpEventArray;
-    dvActiveEventRec   : TRect;
-    dvActiveIconRec    : TRect;                                                                                           
-    dvInPlaceEditor    : TVpDvInPlaceEdit;
-    dvCreatingEditor   : Boolean;
+    dvLineMatrix: TVpLineMatrix;
+    dvColRectArray: TVpColRectArray;
+    dvEventArray: TVpEventArray;
+    dvActiveEventRec: TRect;
+    dvActiveIconRec: TRect;
+    dvInPlaceEditor: TVpDvInPlaceEdit;
+    dvCreatingEditor: Boolean;
     { the granularity based time increment for each row }
-    dvTimeIncSize      : double;
-    dvPainting         : Boolean;
-    dvVScrollDelta     : Integer;
-    dvHotPoint         : TPoint;
+    dvTimeIncSize: double;
+    dvPainting: Boolean;
+    dvVScrollDelta: Integer;
+    dvHotPoint: TPoint;
 
     { property methods }
-    function GetLastVisibleDate : TDateTime;                             
-    function GetRealNumDays (WorkDate : TDateTime) : Integer;            
+    function GetLastVisibleDate: TDateTime;
+    function GetRealNumDays(WorkDate: TDateTime) : Integer;
     procedure SetDrawingStyle(Value: TVpDrawingStyle);
     procedure SetColor(Value: TColor);
     procedure SetLineColor(Value: TColor);
@@ -325,15 +317,15 @@ type
     procedure SetDefTopHour(Value: TVpHours);
     procedure SetGranularity(Value: TVpGranularity);
     procedure SetTimeFormat(Value: TVpTimeFormat);
-    procedure SetNumDays(Value : Integer);
-    procedure SetIncludeWeekends(Value : Boolean);
+    procedure SetNumDays(Value: Integer);
+    procedure SetIncludeWeekends(Value: Boolean);
     procedure SetDisplayDate(Value: TDateTime);
     procedure SetVScrollPos;
     procedure SetShowResourceName(Value: Boolean);
     procedure SetActiveRow(Value: Integer);
     procedure SetActiveCol(Value: Integer);
-    procedure SetWrapStyle (const v : TVpDVWrapStyle);                   
-    procedure SetDotDotDotColor (const v : TColor);                      
+    procedure SetWrapStyle(const v: TVpDVWrapStyle);
+    procedure SetDotDotDotColor(const v: TColor);
     procedure SetShowEventTimes(Value: Boolean);
     { drag-drop methods }
    {$IFDEF DRAGDROP}
@@ -343,30 +335,26 @@ type
       var Accept: Boolean); override;
    {$ENDIF}
     { internal methods }
-    function dvCalcRowHeight (Scale: Extended; UseGran: TVpGranularity): Integer;
-    function dvCalcVisibleLines (RenderHeight  : Integer;
-                                 ColHeadHeight : Integer;
-                                 RowHeight     : Integer;
-                                 Scale         : Extended;
-                                 StartLine     : Integer;
-                                 StopLine      : Integer) : Integer;
-    function dvCalcColHeadHeight (Scale : Extended) : Integer;
+    function dvCalcRowHeight(Scale: Extended; UseGran: TVpGranularity): Integer;
+    function dvCalcVisibleLines(RenderHeight, ColHeadHeight, RowHeight: Integer;
+      Scale: Extended; StartLine, StopLine: Integer): Integer;
+    function dvCalcColHeadHeight(Scale: Extended): Integer;
     procedure dvEditInPlace(Sender: TObject);
     procedure dvHookUp;
-    procedure PopupAddEvent (Sender : TObject);
-    procedure PopupDeleteEvent (Sender : TObject);
-    procedure PopupEditEvent (Sender : TObject);
-    procedure PopupToday (Sender : TObject);
-    procedure PopupTomorrow (Sender : TObject);
-    procedure PopupYesterday (Sender : TObject);
-    procedure PopupNextDay (Sender : TObject);
-    procedure PopupPrevDay (Sender : TObject);
-    procedure PopupNextWeek (Sender : TObject);
-    procedure PopupPrevWeek (Sender : TObject);
-    procedure PopupNextMonth (Sender : TObject);
-    procedure PopupPrevMonth(Sender : TObject);
-    procedure PopupNextYear (Sender : TObject);
-    procedure PopupPrevYear (Sender : TObject);
+    procedure PopupAddEvent(Sender: TObject);
+    procedure PopupDeleteEvent(Sender: TObject);
+    procedure PopupEditEvent(Sender: TObject);
+    procedure PopupToday(Sender: TObject);
+    procedure PopupTomorrow(Sender: TObject);
+    procedure PopupYesterday(Sender: TObject);
+    procedure PopupNextDay(Sender: TObject);
+    procedure PopupPrevDay(Sender: TObject);
+    procedure PopupNextWeek(Sender: TObject);
+    procedure PopupPrevWeek(Sender: TObject);
+    procedure PopupNextMonth(Sender: TObject);
+    procedure PopupPrevMonth(Sender: TObject);
+    procedure PopupNextYear(Sender: TObject);
+    procedure PopupPrevYear(Sender: TObject);
     procedure InitializeDefaultPopup;
     procedure Paint; override;
     procedure Loaded; override;
@@ -378,10 +366,10 @@ type
     procedure dvScrollVertical(Lines: Integer);
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
-    procedure MouseUp(Button: TMouseButton; Shift:TShiftState; X,Y:Integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X,Y: Integer); override;
-    procedure MouseDown(Button: TMouseButton; Shift:TShiftState; X,Y:Integer); override;
-    procedure SetActiveEventByCoord (APoint : TPoint);                   
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
+    procedure SetActiveEventByCoord(APoint: TPoint);
     function EditEventAtCoord(Point: TPoint): Boolean;
     function GetEventAtCoord(Point: TPoint): TVpEvent;
     procedure EditEvent;
@@ -416,36 +404,21 @@ type
    {$IFDEF DRAGDROP}
     procedure DragDrop(Source: TObject; X, Y: Integer); override;
    {$ENDIF}
-    function HourToLine (const Value: TVpHours; const UseGran: TVpGranularity): Integer;
+    function HourToLine(const Value: TVpHours; const UseGran: TVpGranularity): Integer;
     procedure Invalidate; override;
     procedure LinkHandler(Sender: TComponent; NotificationType: TVpNotificationType;
       const Value: Variant); override;
     procedure EditSelectedEvent;
 
-    function GetControlType : TVpItemType; override;
-    procedure AutoScaledPaintToCanvas (PaintCanvas : TCanvas;
-                                       PaintTo     : TRect;
-                                       Angle       : TVpRotationAngle;
-                                       RenderDate  : TDateTime;
-                                       StartLine   : Integer;
-                                       StopLine    : Integer;
-                                       UseGran     : TVpGranularity);
-    procedure PaintToCanvas (ACanvas   : TCanvas;
-                             ARect     : TRect;
-                             Angle     : TVpRotationAngle;
-                             ADate     : TDateTime;
-                             StartHour : TVpHours;
-                             EndHour   : TVpHours;
-                             UseGran   : TVpGranularity);
-    procedure RenderToCanvas (RenderCanvas : TCanvas;
-                              RenderIn     : TRect;
-                              Angle        : TVpRotationAngle;
-                              Scale        : Extended;
-                              RenderDate   : TDateTime;
-                              StartLine    : Integer;
-                              StopLine     : Integer;
-                              UseGran      : TVpGranularity;
-                              DisplayOnly  : Boolean); override;
+    function GetControlType: TVpItemType; override;
+    procedure AutoScaledPaintToCanvas(PaintCanvas: TCanvas; PaintTo: TRect;
+      Angle: TVpRotationAngle; RenderDate: TDateTime; StartLine, StopLine: Integer;
+      UseGran: TVpGranularity);
+    procedure PaintToCanvas (ACanvas: TCanvas; ARect: TRect; Angle: TVpRotationAngle;
+      ADate: TDateTime; StartHour, EndHour: TVpHours; UseGran: TVpGranularity);
+    procedure RenderToCanvas (RenderCanvas: TCanvas; RenderIn: TRect;
+      Angle: TVpRotationAngle; Scale: Extended; RenderDate: TDateTime;
+      StartLine, StopLine: Integer; UseGran: TVpGranularity; DisplayOnly: Boolean); override;
     property ActiveEvent: TVpEvent read FActiveEvent write FActiveEvent;
     property TopHour: TVpHours read FTopHour write SetTopHour;
     property TopLine: Integer read FTopLine write SetTopLine;
@@ -453,7 +426,7 @@ type
     property ActiveRow: Integer read FActiveRow write SetActiveRow;
     property ActiveCol: Integer read FActiveCol write SetActiveCol;
     property Date: TDateTime read FDisplayDate write SetDisplayDate;
-    property LastVisibleDate : TDateTime read GetLastVisibleDate;        
+    property LastVisibleDate: TDateTime read GetLastVisibleDate;
     property VisibleLines: Integer read FVisibleLines;
   published
     property Align;
@@ -463,62 +436,37 @@ type
     property TabStop;
     property TabOrder;
     property Font;
-    property AllDayEventAttributes: TVpAllDayEventAttributes
-      read FAllDayEventAttr write FAllDayEventAttr;
-
-    property DotDotDotColor : TColor
-      read FDotDotDotColor write SetDotDotDotColor default clBlack;      
-
-    property ShowEventTimes: Boolean                                     
-      read FShowEventTimes write SetShowEventTimes default true;         
-
-    property DrawingStyle: TVpDrawingStyle
-      read FDrawingStyle write SetDrawingStyle stored True;
-    property TimeSlotColors: TVpTimeSlotColor
-      read FTimeSlotColors write FTimeSlotColors;
-    property HeadAttributes: TVpCHAttributes
-      read FHeadAttr write FHeadAttr;
-    property RowHeadAttributes: TVpRHAttributes
-      read FRowHeadAttr write FRowHeadAttr;
-    property IconAttributes : TVpDayViewIconAttributes                   
-             read FIconAttributes write FIconAttributes;                 
+    property AllDayEventAttributes: TVpAllDayEventAttributes read FAllDayEventAttr write FAllDayEventAttr;
+    property DotDotDotColor: TColor read FDotDotDotColor write SetDotDotDotColor default clBlack;
+    property ShowEventTimes: Boolean read FShowEventTimes write SetShowEventTimes default true;
+    property DrawingStyle: TVpDrawingStyle read FDrawingStyle write SetDrawingStyle stored True;
+    property TimeSlotColors: TVpTimeSlotColor read FTimeSlotColors write FTimeSlotColors;
+    property HeadAttributes: TVpCHAttributes read FHeadAttr write FHeadAttr;
+    property RowHeadAttributes: TVpRHAttributes read FRowHeadAttr write FRowHeadAttr;
+    property IconAttributes: TVpDayViewIconAttributes read FIconAttributes write FIconAttributes;
     property Color: TColor read FColor write SetColor;
-    property OwnerDrawRowHeader: TVpOwnerDrawRowEvent
-      read FOwnerDrawRowHead write FOwnerDrawRowHead;
-    property OwnerDrawColHeader: TVpOwnerDrawEvent
-      read FOwnerDrawColHead write FOwnerDrawColHead;
-    property OwnerDrawCells: TVpOwnerDrawRowEvent
-      read FOwnerDrawCells write FOwnerDrawCells;
-    property ShowResourceName: Boolean
-      read FShowResourceName write SetShowResourceName;
+    property OwnerDrawRowHeader: TVpOwnerDrawRowEvent read FOwnerDrawRowHead write FOwnerDrawRowHead;
+    property OwnerDrawColHeader: TVpOwnerDrawEvent read FOwnerDrawColHead write FOwnerDrawColHead;
+    property OwnerDrawCells: TVpOwnerDrawRowEvent read FOwnerDrawCells write FOwnerDrawCells;
+    property ShowResourceName: Boolean read FShowResourceName write SetShowResourceName;
     property LineColor: TColor read FLineColor write SetLineColor;
     property GutterWidth: Integer read FGutterWidth write SetGutterWidth;
-    property DateLabelFormat:
-      string read FDateLabelFormat write SetDateLabelFormat;
+    property DateLabelFormat: string read FDateLabelFormat write SetDateLabelFormat;
     Property Granularity: TVpGranularity read FGranularity write SetGranularity;
     property DefaultTopHour: TVpHours read FDefTopHour write SetDefTopHour;
     property TimeFormat: TVpTimeFormat read FTimeFormat write SetTimeFormat;
+    property IncludeWeekends: Boolean read FIncludeWeekends write SetIncludeWeekends default True;
+    property NumDays: Integer read FNumDays write SetNumDays default 1;
+    property WrapStyle: TVpDVWrapStyle read FWrapStyle Write SetWrapStyle default wsIconFlow;
     {events}
-    property AfterEdit : TVpAfterEditEvent read FAfterEdit write FAfterEdit;
+    property AfterEdit: TVpAfterEditEvent read FAfterEdit write FAfterEdit;
     property BeforeEdit: TVpBeforeEditEvent read FBeforeEdit write FBeforeEdit;
-    property IncludeWeekends : Boolean
-             read FIncludeWeekends write SetIncludeWeekends default True;
-    property NumDays : Integer read FNumDays write SetNumDays default 1;
-    property WrapStyle : TVpDVWrapStyle                                  
-             read FWrapStyle Write SetWrapStyle default wsIconFlow;      
-
-    property OnAddEvent: TVpOnAddNewEvent                                
-      read FOnAddEvent write FOnAddEvent;                                
-
-    property OnAfterDrawEvent : TVpOnDVAfterDrawEvent                    
-             read FOnAfterDrawEvent write FOnAfterDrawEvent;             
-    property OnBeforeDrawEvent : TVpOnDVBeforeDrawEvent                  
-             read FOnBeforeDrawEvent write FOnBeforeDrawEvent;           
-    property OnDrawIcons : TVpOnDVDrawIcons                              
-             read FOnDrawIcons Write FOnDrawIcons;                       
+    property OnAddEvent: TVpOnAddNewEvent read FOnAddEvent write FOnAddEvent;
+    property OnAfterDrawEvent: TVpOnDVAfterDrawEvent read FOnAfterDrawEvent write FOnAfterDrawEvent;
+    property OnBeforeDrawEvent: TVpOnDVBeforeDrawEvent read FOnBeforeDrawEvent write FOnBeforeDrawEvent;
+    property OnDrawIcons: TVpOnDVDrawIcons read FOnDrawIcons Write FOnDrawIcons;
+    property OnOwnerEditEvent: TVpEditEvent read FOwnerEditEvent write FOwnerEditEvent;
     property OnClick;
-    property OnOwnerEditEvent: TVpEditEvent
-      read FOwnerEditEvent write FOwnerEditEvent;
   end;
 
 implementation
@@ -554,27 +502,31 @@ procedure TVpDvInPlaceEdit.KeyDown(var Key: Word; Shift: TShiftState);
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 begin
   case Key of
-    VK_RETURN: begin
-      Key := 0;
-      TVpDayView(Owner).EndEdit(Self);
-    end;
+    VK_RETURN:
+      begin
+        Key := 0;
+        TVpDayView(Owner).EndEdit(Self);
+      end;
 
-    VK_UP: begin
-      Key := 0;
-      TVpDayView(Owner).ActiveRow := TVpDayView(Owner).ActiveRow - 1;
+    VK_UP:
+      begin
+        Key := 0;
+        TVpDayView(Owner).ActiveRow := TVpDayView(Owner).ActiveRow - 1;
 // !!!! TVpDayView(Owner).EndEdit(Self); !!!!  !!!!!!!!!!!!!!!!!!!!!!!!!
-    end;
+      end;
 
-    VK_DOWN: begin
-      Key := 0;
-      TVpDayView(Owner).ActiveRow := TVpDayView(Owner).ActiveRow + 1;
+    VK_DOWN:
+      begin
+        Key := 0;
+        TVpDayView(Owner).ActiveRow := TVpDayView(Owner).ActiveRow + 1;
 // !!!! TVpDayView(Owner).EndEdit(Self); !!!!  !!!!!!!!!!!!!!!!!!!!!!!!!
-    end;
+      end;
 
-    VK_ESCAPE: begin
-      Key := 0;
-      TVpDayView(Owner).SetFocus;
-    end;
+    VK_ESCAPE:
+      begin
+        Key := 0;
+        TVpDayView(Owner).SetFocus;
+      end;
 
   else
     inherited;
@@ -583,9 +535,9 @@ end;
 {=====}
 
 {$IFNDEF LCL}
-procedure TVpDvInPlaceEdit.WMKillFocus(var Msg : TWMKillFocus);
+procedure TVpDvInPlaceEdit.WMKillFocus(var Msg: TWMKillFocus);
 {$ELSE}
-procedure TVpDvInPlaceEdit.WMKillFocus(var Msg : TLMKillFocus);
+procedure TVpDvInPlaceEdit.WMKillFocus(var Msg: TLMKillFocus);
 {$ENDIF}
 begin
   TVpDayView(Owner).EndEdit(self);
@@ -595,7 +547,7 @@ end;
 
 { TVpAllDayEventAttributes }
 
-constructor TVpAllDayEventAttributes.Create (AOwner : TWinControl);
+constructor TVpAllDayEventAttributes.Create(AOwner: TWinControl);
 begin
   FOwner:= AOwner;
   FFont := TVpFont.Create(AOwner);
@@ -640,74 +592,66 @@ end;
 {=====}
 
 (*****************************************************************************)
-{ TVpDayViewIconAttributes }                                             
+{ TVpDayViewIconAttributes }
 
-constructor TVpDayViewIconAttributes.Create (                            
-                AOwner : TVpLinkableControl);                            
-begin                                                                    
-  inherited Create;                                                      
+constructor TVpDayViewIconAttributes.Create(AOwner: TVpLinkableControl);
+begin
+  inherited Create;
+  FOwner := AOwner;
+  FAlarmBitmap := TBitmap.Create;
+  FRecurringBitmap := TBitmap.Create;
+  FShowAlarmBitmap := True;
+  FShowCategoryBitmap := True;
+  FShowRecurringBitmap := True;
+end;
 
-  FOwner               := AOwner;                                                                                              
+destructor TVpDayViewIconAttributes.Destroy;
+begin
+  FAlarmBitmap.Free;
+  FRecurringBitmap.Free;
+  inherited Destroy;
+end;
 
-  FAlarmBitmap         := TBitmap.Create;                                
-  FRecurringBitmap     := TBitmap.Create;                                
+procedure TVpDayViewIconAttributes.SetAlarmBitmap(v: TBitmap);
+begin
+  FAlarmBitmap.Assign(v);
+  if Assigned(FOwner) then
+    FOwner.Invalidate;
+end;
 
-  FShowAlarmBitmap     := True;                                          
-  FShowCategoryBitmap  := True;                                          
-  FShowRecurringBitmap := True;                                          
-end;                                                                     
+procedure TVpDayViewIconAttributes.SetRecurringBitmap(v: TBitmap);
+begin
+  FRecurringBitmap.Assign(v);
+  if Assigned(FOwner) then
+    FOwner.Invalidate
+end;
 
-destructor TVpDayViewIconAttributes.Destroy;                             
-begin                                                                    
-  FAlarmBitmap.Free;                                                     
-  FRecurringBitmap.Free;                                                 
+procedure TVpDayViewIconAttributes.SetShowAlarmBitmap(const v: Boolean);
+begin
+  if FShowAlarmBitmap <> v then begin
+    FShowAlarmBitmap := v;
+    if Assigned(FOwner) then
+      FOwner.Invalidate
+  end;
+end;
 
-  inherited Destroy;                                                     
-end;                                                                     
+procedure TVpDayViewIconAttributes.SetShowCategoryBitmap(const v: Boolean);
+begin
+  if FShowCategoryBitmap <> v then begin
+    FShowCategoryBitmap := v;
+    if Assigned(FOwner) then
+      FOwner.Invalidate;
+  end;
+end;
 
-procedure TVpDayViewIconAttributes.SetAlarmBitmap (v : TBitmap);         
-begin                                                                    
-  FAlarmBitmap.Assign (v);                                               
-  if Assigned (FOwner) then                                              
-    FOwner.Invalidate;                                                   
-end;                                                                     
-
-procedure TVpDayViewIconAttributes.SetRecurringBitmap (v : TBitmap);     
-begin                                                                    
-  FRecurringBitmap.Assign (v);                                           
-  if Assigned (FOwner) then                                              
-    FOwner.Invalidate;                                                   
-end;                                                                     
-
-procedure TVpDayViewIconAttributes.SetShowAlarmBitmap (                  
-              const v : Boolean);                                        
-begin                                                                    
-  if FShowAlarmBitmap <> v then begin                                    
-    FShowAlarmBitmap := v;                                               
-    if Assigned (FOwner) then                                            
-      FOwner.Invalidate;                                                 
-  end;                                                                   
-end;                                                                     
-
-procedure TVpDayViewIconAttributes.SetShowCategoryBitmap (               
-              const v : Boolean);                                        
-begin                                                                    
-  if FShowCategoryBitmap <> v then begin                                 
-    FShowCategoryBitmap := v;                                            
-    if Assigned (FOwner) then                                            
-      FOwner.Invalidate;                                                 
-  end;                                                                   
-end;                                                                     
-
-procedure TVpDayViewIconAttributes.SetShowRecurringBitmap (              
-              const v : Boolean);                                        
-begin                                                                    
-  if FShowRecurringBitmap <> v then begin                                
-    FShowRecurringBitmap := v;                                           
-    if Assigned (FOwner) then                                            
-      FOwner.Invalidate;                                                 
-  end;                                                                   
-end;                                                                     
+procedure TVpDayViewIconAttributes.SetShowRecurringBitmap(const v: Boolean);
+begin
+  if FShowRecurringBitmap <> v then begin
+    FShowRecurringBitmap := v;
+    if Assigned(FOwner) then
+      FOwner.Invalidate
+  end;
+end;
 
 (*****************************************************************************)
 { TVpDayView }
@@ -718,36 +662,36 @@ begin
   ControlStyle := [csCaptureMouse, csOpaque, csDoubleClicks];
 
   { Create internal classes and stuff }
-  FTimeSlotColors                := TVpTimeSlotColor.Create (self);
-  FHeadAttr                      := TVpCHAttributes.Create (self);
-  FRowHeadAttr                   := TVpRHAttributes.Create (self);
-  FAllDayEventAttr               := TVpAllDayEventAttributes.Create(self);
-  dvClickTimer                   := TTimer.Create (self);
-  FIconAttributes                := TVpDayViewIconAttributes.Create (Self); 
+  FTimeSlotColors := TVpTimeSlotColor.Create (self);
+  FHeadAttr := TVpCHAttributes.Create (self);
+  FRowHeadAttr := TVpRHAttributes.Create (self);
+  FAllDayEventAttr := TVpAllDayEventAttributes.Create(self);
+  dvClickTimer := TTimer.Create (self);
+  FIconAttributes := TVpDayViewIconAttributes.Create (Self);
 
   { create Nav buttons }
-  dvDayUpBtn                     := TSpeedButton.Create(self);
-  dvDayUpBtn.Parent              := self;
-  dvDayDownBtn                   := TSpeedButton.Create(self);
-  dvDayDownBtn.Parent            := self;
-  dvTodayBtn                     := TSpeedButton.Create(self);
-  dvTodayBtn.Parent              := self;
-  dvWeekDownBtn                  := TSpeedButton.Create(self);
-  dvWeekDownBtn.Parent           := self;
-  dvWeekUpBtn                    := TSpeedButton.Create(self);
-  dvWeekUpBtn.Parent             := self;
+  dvDayUpBtn := TSpeedButton.Create(self);
+  dvDayUpBtn.Parent := self;
+  dvDayDownBtn := TSpeedButton.Create(self);
+  dvDayDownBtn.Parent := self;
+  dvTodayBtn := TSpeedButton.Create(self);
+  dvTodayBtn.Parent  := self;
+  dvWeekDownBtn := TSpeedButton.Create(self);
+  dvWeekDownBtn.Parent := self;
+  dvWeekUpBtn := TSpeedButton.Create(self);
+  dvWeekUpBtn.Parent := self;
   { flat }
-  dvTodayBtn.Flat                := true;
-  dvWeekDownBtn.Flat             := true;
-  dvDayDownBtn.Flat              := true;
-  dvDayUpBtn.Flat                := true;
-  dvWeekUpBtn.Flat               := true;
+  dvTodayBtn.Flat := true;
+  dvWeekDownBtn.Flat := true;
+  dvDayDownBtn.Flat := true;
+  dvDayUpBtn.Flat := true;
+  dvWeekUpBtn.Flat := true;
   { transparent }
-  dvTodayBtn.Transparent         := true;
-  dvWeekDownBtn.Transparent      := true;
-  dvDayDownBtn.Transparent       := true;
-  dvDayUpBtn.Transparent         := true;
-  dvWeekUpBtn.Transparent        := true;
+  dvTodayBtn.Transparent := true;
+  dvWeekDownBtn.Transparent := true;
+  dvDayDownBtn.Transparent := true;
+  dvDayUpBtn.Transparent := true;
+  dvWeekUpBtn.Transparent := true;
   { load their images }
   dvDayUpBtn.Glyph.LoadFromResourceName(HINSTANCE,'VPRIGHTARROW');
   dvDayDownBtn.Glyph.LoadFromResourceName(HINSTANCE,'VPLEFTARROW');
@@ -755,63 +699,63 @@ begin
   dvWeekUpBtn.Glyph.LoadFromResourceName(HINSTANCE,'VPRIGHTARROWS');
   dvWeekDownBtn.Glyph.LoadFromResourceName(HINSTANCE,'VPLEFTARROWS');
   { set their OnClick handler }
-  dvDayUpBtn.OnClick             := dvNavButtonsClick;
-  dvDayDownBtn.OnClick           := dvNavButtonsClick;
-  dvTodayBtn.OnClick             := dvNavButtonsClick;
-  dvWeekUpBtn.OnClick            := dvNavButtonsClick;
-  dvWeekDownBtn.OnClick          := dvNavButtonsClick;
-  { Set up the hints }                                                   
-  dvDayUpBtn.ShowHint            := True;                                
-  dvDayDownBtn.ShowHint          := True;                                
-  dvTodayBtn.ShowHint            := True;                                
-  dvWeekUpBtn.ShowHint           := True;                                
-  dvWeekDownBtn.ShowHint         := True;                                
+  dvDayUpBtn.OnClick := dvNavButtonsClick;
+  dvDayDownBtn.OnClick := dvNavButtonsClick;
+  dvTodayBtn.OnClick := dvNavButtonsClick;
+  dvWeekUpBtn.OnClick := dvNavButtonsClick;
+  dvWeekDownBtn.OnClick := dvNavButtonsClick;
+  { Set up the hints }
+  dvDayUpBtn.ShowHint := True;
+  dvDayDownBtn.ShowHint := True;
+  dvTodayBtn.ShowHint := True;
+  dvWeekUpBtn.ShowHint := True;
+  dvWeekDownBtn.ShowHint := True;
 
   { Set styles and initialize internal variables }
   {$IFDEF VERSION4}
-  DoubleBuffered                 := true;
+  DoubleBuffered := true;
   {$ENDIF}
-  NumDays                        := 1;
-  dvInLinkHandler                := false;
-  dvClickTimer.Enabled           := false;
-  dvClickTimer.Interval          := ClickDelay;
-  dvClickTimer.OnTimer           := dvEditInPlace;
+  NumDays := 1;
+  dvInLinkHandler := false;
+  dvClickTimer.Enabled := false;
+  dvClickTimer.Interval := ClickDelay;
+  dvClickTimer.OnTimer := dvEditInPlace;
 
-  dvCreatingEditor               := false;
-  FDrawingStyle                  := ds3d;
-  dvPainting                     := false;
-  FShowResourceName              := true;
-  FColor                         := clWindow;
-  FLineColor                     := clGray;
-  Granularity                    := gr30min;
-  FDefTopHour                    := h_07;
-  FDisplayDate                   := Now;
-  TopHour                        := FDefTopHour;
-  FTimeFormat                    := tf12Hour;
-  FDateLabelFormat               := 'dddd, mmmm dd, yyyy';
-  FColumnWidth                   := 200;
-  FScrollBars                    := ssVertical;
-  FActiveRow                     := -1;
-  FGutterWidth                   := 7;
-  dvEndingEditing                := False;                               
-  FWrapStyle                     := wsIconFlow;                          
-  FDotDotDotColor                := clBlack;                             
-  FIncludeWeekends               := True;
+  dvCreatingEditor := false;
+  FDrawingStyle := ds3d;
+  dvPainting := false;
+  FShowResourceName := true;
+  FColor := clWindow;
+  FLineColor := clGray;
+  Granularity := gr30min;
+  FDefTopHour := h_07;
+  FDisplayDate := Now;
+  TopHour := FDefTopHour;
+  FTimeFormat := tf12Hour;
+  FDateLabelFormat := 'dddd, mmmm dd, yyyy';
+  FColumnWidth := 200;
+  FScrollBars := ssVertical;
+  FActiveRow := -1;
+  FGutterWidth := 7;
+  dvEndingEditing := False;
+  FWrapStyle := wsIconFlow;
+  FDotDotDotColor := clBlack;
+  FIncludeWeekends := True;
 
   { set up fonts and colors }
-  FHeadAttr.Font.Size            := 10;
-  FHeadAttr.Font.Style           := [];
-  FHeadAttr.Color                := clBtnFace;
+  FHeadAttr.Font.Size := 10;
+  FHeadAttr.Font.Style := [];
+  FHeadAttr.Color := clBtnFace;
 
-  FRowHeadAttr.FHourFont.Size    := 18;
-  FRowHeadAttr.FHourFont.Style   := [];
-  FRowHeadAttr.FMinuteFont.Size  := 9;
+  FRowHeadAttr.FHourFont.Size := 18;
+  FRowHeadAttr.FHourFont.Style := [];
+  FRowHeadAttr.FMinuteFont.Size := 9;
   FRowHeadAttr.FMinuteFont.Style := [];
-  FRowHeadAttr.Color             := clBtnFace;
+  FRowHeadAttr.Color := clBtnFace;
  {$IFNDEF LCL}
-  FHeadAttr.Font.Name            := 'Tahoma';
-  FRowHeadAttr.FHourFont.Name    := 'Tahoma';
-  FRowHeadAttr.FMinuteFont.Name  := 'Tahoma';
+  FHeadAttr.Font.Name := 'Tahoma';
+  FRowHeadAttr.FHourFont.Name := 'Tahoma';
+  FRowHeadAttr.FMinuteFont.Name := 'Tahoma';
  {$ENDIF}
 
   SetLength(dvEventArray, MaxVisibleEvents);
@@ -824,10 +768,10 @@ begin
   dvMouseDown := false;
 
   { size }
-  Height                         := 225;
-  Width                          := 265;
+  Height := 225;
+  Width := 265;
 
-  FDefaultPopup := TPopupMenu.Create (Self);
+  FDefaultPopup := TPopupMenu.Create(Self);
   Self.PopupMenu := FDefaultPopup;
   LoadLanguage;
 
@@ -836,7 +780,6 @@ end;
 {=====}
 
 destructor TVpDayView.Destroy;
-
 begin
   FreeAndNil(dvInplaceEditor);
 
@@ -846,7 +789,7 @@ begin
   FAllDayEventAttr.Free;
   dvClickTimer.Free;
   FDefaultPopup.Free;
-  FIconAttributes.Free;                                                   
+  FIconAttributes.Free;
 
   dvDayUpBtn.Free;
   dvDayDownBtn.Free;
@@ -859,11 +802,11 @@ end;
 
 procedure TVpDayView.LoadLanguage;
 begin
-  dvDayUpBtn.Hint                := RSHintNextDay; //rsHintTomorrow;
-  dvDayDownBtn.Hint              := RSHintPrevDay; //rsHintYesterday;
-  dvTodayBtn.Hint                := RSHintToday;
-  dvWeekUpBtn.Hint               := RSHintNextWeek;
-  dvWeekDownBtn.Hint             := RSHintPrevWeek;
+  dvDayUpBtn.Hint := RSHintNextDay; //rsHintTomorrow;
+  dvDayDownBtn.Hint := RSHintPrevDay; //rsHintYesterday;
+  dvTodayBtn.Hint := RSHintToday;
+  dvWeekUpBtn.Hint := RSHintNextWeek;
+  dvWeekDownBtn.Hint := RSHintPrevWeek;
   FDefaultPopup.Items.Clear;
   InitializeDefaultPopup;
 end;
@@ -875,7 +818,7 @@ var
   Str: string;
   DoIt: Boolean;
 begin
-  if ReadOnly then                                                       
+  if ReadOnly then
     Exit;
   dvClickTimer.Enabled := false;
   EndEdit(self);
@@ -886,9 +829,9 @@ begin
     Str := '"' + FActiveEvent.Description + '"';
 
     if Verify then
-      DoIt := (MessageDlg(RSDelete + ' ' + Str + ' ' + RSFromSchedule
-        + #13#10#10 + RSPermanent, mtconfirmation,
-        [mbYes, mbNo], 0) = mrYes);
+      DoIt := (MessageDlg(Format(RSDeleteContactFromSchedule, [Str]) + #13#10#10 + RSPermanent,
+//      DoIt := (MessageDlg(RSDelete + ' ' + Str + ' ' + RSFromSchedule + #13#10#10 + RSPermanent,
+        mtConfirmation, [mbYes, mbNo], 0) = mrYes);
 
     if DoIt then begin
       FActiveEvent.Deleted := true;
@@ -911,9 +854,9 @@ begin
   dvInLinkHandler := true;
   try
     case NotificationType of
-      neDateChange: Date := Value;
-      neDataStoreChange: Invalidate;
-      neInvalidate: Invalidate;
+      neDateChange      : Date := Value;
+      neDataStoreChange : Invalidate;
+      neInvalidate      : Invalidate;
     end;
   finally
     dvInLinkHandler := false;
@@ -939,226 +882,224 @@ end;
 
 procedure TVpDayView.InitializeDefaultPopup;
 var
-  NewItem    : TMenuItem;
-  NewSubItem : TMenuItem;
-
+  NewItem: TMenuItem;
+  NewSubItem: TMenuItem;
 begin
   if RSDayPopupAdd <> '' then begin
-    NewItem := TMenuItem.Create (Self);
+    NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSDayPopupAdd;
     NewItem.OnClick := PopupAddEvent;
     NewItem.Tag := 0;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
   end;
 
   if RSDayPopupEdit <> '' then begin
-    NewItem := TMenuItem.Create (Self);
+    NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSDayPopupEdit;
     NewItem.OnClick := PopupEditEvent;
     NewItem.Tag := 1;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
   end;
 
   if RSDayPopupDelete <> '' then begin
-    NewItem := TMenuItem.Create (Self);
+    NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSDayPopupDelete;
     NewItem.OnClick := PopupDeleteEvent;
     NewItem.Tag := 1;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
   end;
 
   if RSDayPopupNav <> '' then begin
-    NewItem := TMenuItem.Create (Self);
+    NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSDayPopupNav;
     NewItem.Tag := 0;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
 
     if RSDayPopupNavToday <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSDayPopupNavToday;
       NewSubItem.OnClick := PopupToday;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSDayPopupNavYesterday <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSDayPopupNavYesterday;
       NewSubItem.OnClick := PopupYesterday;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSDayPopupNavTomorrow <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSDayPopupNavTomorrow;
       NewSubItem.OnClick := PopupTomorrow;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSDayPopupNavNextDay <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSDayPopupNavNextDay;
       NewSubItem.OnClick := PopupNextDay;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSDayPopupNavPrevDay <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSDayPopupNavPrevDay;
       NewSubItem.OnClick := PopupPrevDay;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSDayPopupNavNextWeek <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSDayPopupNavNextWeek;
       NewSubItem.OnClick := PopupNextWeek;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSDayPopupNavPrevWeek <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSDayPopupNavPrevWeek;
       NewSubItem.OnClick := PopupPrevWeek;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSDayPopupNavNextMonth <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSDayPopupNavNextMonth;
       NewSubItem.OnClick := PopupNextMonth;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSDayPopupNavPrevMonth <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSDayPopupNavPrevMonth;
       NewSubItem.OnClick := PopupPrevMonth;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSDayPopupNavNextYear <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSDayPopupNavNextYear;
       NewSubItem.OnClick := PopupNextYear;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSDayPopupNavPrevYear <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSDayPopupNavPrevYear;
       NewSubItem.OnClick := PopupPrevYear;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
   end;
 end;
 {=====}
 
-procedure TVpDayView.PopupAddEvent (Sender : TObject);
+procedure TVpDayView.PopupAddEvent(Sender: TObject);
 var
-  StartTime : TDateTime;
-  EndTime   : TDateTime;
-
+  StartTime: TDateTime;
+  EndTime: TDateTime;
 begin
-  if ReadOnly then                                                     
-    Exit;                                                              
-  if not CheckCreateResource then                                      
-    Exit;                                                              
+  if ReadOnly then
+    Exit;
+  if not CheckCreateResource then
+    Exit;
   if not Assigned (DataStore) then
     Exit;
   if not Assigned (DataStore.Resource) then
     Exit;
 
-  StartTime := trunc(FDisplayDate + ActiveCol) +
-               dvLineMatrix[ActiveCol, ActiveRow].Time;
+  StartTime := trunc(FDisplayDate + ActiveCol) + dvLineMatrix[ActiveCol, ActiveRow].Time;
   EndTime := StartTime + dvTimeIncSize;
-  FActiveEvent := DataStore.Resource.Schedule.AddEvent (
-                      DataStore.GetNextID (EventsTableName),
-                      StartTime, EndTime);
+  FActiveEvent := DataStore.Resource.Schedule.AddEvent(
+    DataStore.GetNextID(EventsTableName),
+    StartTime,
+    EndTime
+  );
 
-  Repaint;                                                             
+  Repaint;
   { edit this new event }
   dvSpawnEventEditDialog(True);
 end;
 {=====}
 
-procedure TVpDayView.PopupDeleteEvent (Sender : TObject);
+procedure TVpDayView.PopupDeleteEvent(Sender: TObject);
 begin
-  if ReadOnly then                                                     
-    Exit;                                                              
-  Repaint;                                                             
+  if ReadOnly then
+    Exit;
+  Repaint;
   if FActiveEvent <> nil then
     DeleteActiveEvent (True);
 end;
 {=====}
 
-procedure TVpDayView.PopupEditEvent (Sender : TObject);
+procedure TVpDayView.PopupEditEvent(Sender: TObject);
 begin
-  if ReadOnly then                                                     
-    Exit;                                                              
-  Repaint;                                                             
+  if ReadOnly then
+    Exit;
+  Repaint;
   if FActiveEvent <> nil then
     { edit this Event }
     dvSpawnEventEditDialog(False);
 end;
 {=====}
 
-procedure TVpDayView.PopupToday (Sender : TObject);
+procedure TVpDayView.PopupToday(Sender: TObject);
 begin
   Date := Now;
 end;
 {=====}
 
-procedure TVpDayView.PopupTomorrow (Sender : TObject);
+procedure TVpDayView.PopupTomorrow(Sender: TObject);
 begin
   Date := Now + 1;
 end;
 {=====}
 
-procedure TVpDayView.PopupYesterday (Sender : TObject);
+procedure TVpDayView.PopupYesterday(Sender: TObject);
 begin
   Date := Now - 1;
 end;
 {=====}
 
-procedure TVpDayView.PopupNextDay (Sender : TObject);
+procedure TVpDayView.PopupNextDay(Sender: TObject);
 begin
   Date := Date + 1;
 end;
 {=====}
 
-procedure TVpDayView.PopupPrevDay (Sender : TObject);
+procedure TVpDayView.PopupPrevDay(Sender: TObject);
 begin
   Date := Date - 1;
 end;
 {=====}
 
-procedure TVpDayView.PopupNextWeek (Sender : TObject);
+procedure TVpDayView.PopupNextWeek(Sender: TObject);
 begin
   Date := Date + 7;
 end;
 {=====}
 
-procedure TVpDayView.PopupPrevWeek (Sender : TObject);
+procedure TVpDayView.PopupPrevWeek(Sender: TObject);
 begin
   Date := Date - 7;
 end;
 {=====}
 
-procedure TVpDayView.PopupNextMonth (Sender : TObject);
+procedure TVpDayView.PopupNextMonth(Sender: TObject);
 var
-  M, D, Y : Word;
-
+  M, D, Y: Word;
 begin
   DecodeDate(Date, Y, M, D);
   if M = 12 then begin
@@ -1173,9 +1114,9 @@ begin
 end;
 {=====}
 
-procedure TVpDayView.PopupPrevMonth(Sender : TObject);
+procedure TVpDayView.PopupPrevMonth(Sender: TObject);
 var
-  M, D, Y : Word;
+  M, D, Y: Word;
 begin
   DecodeDate(Date, Y, M, D);
   if M = 1 then begin
@@ -1190,23 +1131,21 @@ begin
 end;
 {=====}
 
-procedure TVpDayView.PopupNextYear (Sender : TObject);
+procedure TVpDayView.PopupNextYear(Sender: TObject);
 var
   M, D, Y : Word;
-
 begin
-  DecodeDate (Date, Y, M, D);
-  Date := EncodeDate (Y + 1, M, 1);
+  DecodeDate(Date, Y, M, D);
+  Date := EncodeDate(Y + 1, M, 1);
 end;
 {=====}
 
-procedure TVpDayView.PopupPrevYear (Sender : TObject);
+procedure TVpDayView.PopupPrevYear(Sender: TObject);
 var
-  M, D, Y : Word;
-
+  M, D, Y: Word;
 begin
-  DecodeDate (Date, Y, M, D);
-  Date := EncodeDate (Y - 1, M, 1);
+  DecodeDate(Date, Y, M, D);
+  Date := EncodeDate(Y - 1, M, 1);
 end;
 {=====}
 
@@ -1221,15 +1160,8 @@ end;
 
 procedure TVpDayView.Paint;
 begin
-  RenderToCanvas (Canvas,
-                  Rect (0, 0, Width, Height),
-                  ra0,
-                  1,
-                  FDisplayDate,
-                  TopLine,
-                  -1,
-                  FGranularity,
-                  False);
+  RenderToCanvas(Canvas, Rect(0, 0, Width, Height), ra0, 1, FDisplayDate,
+    TopLine, -1, FGranularity, False);
   SetVScrollPos; 
 end;
 {=====}
@@ -1257,21 +1189,16 @@ begin
 end;
 {=====}
 
-function TVpDayView.dvCalcVisibleLines (RenderHeight  : Integer;
-                                        ColHeadHeight : Integer;
-                                        RowHeight     : Integer;
-                                        Scale         : Extended;
-                                        StartLine     : Integer;
-                                        StopLine      : Integer) : Integer;
+function TVpDayView.dvCalcVisibleLines(RenderHeight, ColHeadHeight, RowHeight: Integer;
+  Scale: Extended; StartLine, StopLine: Integer): Integer;
 var
   vertical: integer;
-
 begin
   if StartLine < 0 then
     StartLine := TopLine;
 
   { take into account the number lines that are allowed! }
-  vertical := Round (RenderHeight - (ColHeadHeight * Scale) - 2);
+  vertical := Round(RenderHeight - ColHeadHeight * Scale - 2);
   Result := trunc (Vertical div RowHeight) + 2;
   if Result > FLineCount then
     Result := FLineCOunt;
@@ -1292,20 +1219,18 @@ begin
 end;
 {=====}
 
-function TVpDayView.dvCalcColHeadHeight (Scale : Extended) : Integer;
+function TVpDayView.dvCalcColHeadHeight(Scale: Extended): Integer;
 var
-  TextHeight : Integer;
-
+  TextHeight: Integer;
 begin
-  Canvas.Font.Assign (FHeadAttr.Font);
+  Canvas.Font.Assign(FHeadAttr.Font);
 
-  if FShowResourceName and (DataStore <> nil) and
-     (DataStore.Resource <> nil) then
-    TextHeight := (Canvas.TextHeight(RSTallShortChars) * 2) +
-                  (TextMargin * 3)
+  if FShowResourceName and (DataStore <> nil) and (DataStore.Resource <> nil)
+  then
+    TextHeight := Canvas.TextHeight(RSTallShortChars) * 2 + TextMargin * 3
   else
-    TextHeight := Canvas.TextHeight(RSTallShortChars) + (TextMargin * 2);
-  Result := Round (TextHeight * Scale);
+    TextHeight := Canvas.TextHeight(RSTallShortChars) + TextMargin * 2;
+  Result := Round(TextHeight * Scale);
   dvColHeadHeight := Result; 
 end;
 {=====}
@@ -1318,8 +1243,7 @@ begin //exit;
     Exit;
   if FActiveEvent <> nil then begin
     // Set the time from which this event was dragged
-    DvDragStartTime := trunc(Date + ActiveCol)
-      + dvLineMatrix[ActiveCol, ActiveRow].Time;
+    DvDragStartTime := trunc(Date + ActiveCol) + dvLineMatrix[ActiveCol, ActiveRow].Time;
 
     DragObject := TVpEventDragObject.Create(Self);
     TVpEventDragObject(DragObject).Event := FActiveEvent;
@@ -1356,11 +1280,10 @@ end;
 
 procedure TVpDayView.DragDrop(Source: TObject; X, Y: Integer);
 var
-  Event       : TVpEvent;
-  Duration    : TDateTime;
-  DragToTime  : TDateTime;
-  i           : Integer;                                                 
-
+  Event: TVpEvent;
+  Duration: TDateTime;
+  DragToTime: TDateTime;
+  i: Integer;
 begin //exit;
   if ReadOnly then
     Exit;
@@ -1384,19 +1307,19 @@ begin //exit;
     DataStore.PostEvents;
 
     { Force a repaint.  This will update the rectangles for the event }
-    Repaint;                                                             
+    Repaint;
 
     { Reset the active event rectangle }
-    for I := 0 to pred(Length(dvEventArray)) do begin                    
-      if dvEventArray[I].Event = nil then                                
-        Break;                                                           
+    for I := 0 to pred(Length(dvEventArray)) do begin
+      if dvEventArray[I].Event = nil then
+        Break;
 
-      if dvEventArray[i].Event = Event then begin                        
-        dvActiveEventRec := dvEventArray[I].Rec;                         
-        dvActiveIconRec  := dvEventArray[I].IconRect;                    
-        Break;                                                           
-      end;                                                               
-    end;                                                                 
+      if dvEventArray[i].Event = Event then begin
+        dvActiveEventRec := dvEventArray[I].Rec;
+        dvActiveIconRec  := dvEventArray[I].IconRect;
+        Break;
+      end;
+    end;
 
     { Invalidate;                                                      } 
   end;
@@ -1405,12 +1328,11 @@ end;
 {=====}
 {$ENDIF}
 
-function TVpDayView.dvCalcRowHeight (Scale   : Extended;
-                                     UseGran : TVpGranularity) : Integer;
+function TVpDayView.dvCalcRowHeight(Scale: Extended;
+  UseGran: TVpGranularity): Integer;
 var
-  SaveFont : TFont;
-  Temp     : Integer;
-
+  SaveFont: TFont;
+  Temp: Integer;
 begin
   { Calculates row height based on the largest of the RowHead's Minute }
   { font, the standard client font, and a sample character string.     }
@@ -1423,7 +1345,7 @@ begin
     Result := Temp;
   Result := Result + TextMargin * 2;
 
-  Result := Round (Result * Scale);
+  Result := Round(Result * Scale);
 
   case UseGran of
     gr60Min : dvClientVArea := Result * 24;
@@ -1436,34 +1358,33 @@ begin
   end;
   dvRowHeight := Result;
 end;
-
-{=====}
-function TVpDayView.GetLastVisibleDate : TDateTime;                      
-begin                                                                    
-  Result := Date + GetRealNumDays (Date);                                
-end;                                                                     
-{=====}
-function TVpDayView.GetRealNumDays (WorkDate : TDateTime) : Integer;     
-var                                                                      
-  i : Integer;                                                           
-
-begin                                                                    
-  if not FIncludeWeekends then begin                                     
-    Result := 0;                                                         
-    i := 0;                                                              
-    while i < FNumDays do begin                                          
-      if (DayOfWeek (WorkDate) <> 1) and                                 
-         (DayOfWeek (WorkDate) <> 7) then                                
-        Inc (i);                                                         
-      WorkDate := WorkDate + 1;                                          
-      Inc (Result);                                                      
-    end;                                                                 
-  end else                                                               
-    Result := FNumDays;                                                  
-end;                                                                     
 {=====}
 
-function TVpDayView.HourToLine (const Value: TVpHours;
+function TVpDayView.GetLastVisibleDate : TDateTime;
+begin
+  Result := Date + GetRealNumDays(Date);
+end;
+{=====}
+
+function TVpDayView.GetRealNumDays(WorkDate: TDateTime) : Integer;
+var
+  i: Integer;
+begin
+  if not FIncludeWeekends then begin
+    Result := 0;
+    i := 0;
+    while i < FNumDays do begin
+      if (DayOfWeek (WorkDate) <> 1) and (DayOfWeek (WorkDate) <> 7) then
+        Inc(i);
+      WorkDate := WorkDate + 1;
+      Inc (Result);
+    end;
+  end else
+    Result := FNumDays;
+end;
+{=====}
+
+function TVpDayView.HourToLine(const Value: TVpHours;
   const UseGran: TVpGranularity): Integer;
 begin
   case UseGran of
@@ -1496,11 +1417,11 @@ begin
 end;
 {=====}
 
-procedure TVpDayView.SetTopHour (Value : TVpHours);
+procedure TVpDayView.SetTopHour(Value: TVpHours);
 begin
   if FTopHour <> Value then begin
     FTopHour := Value;
-    TopLine := HourToLine (FTopHour, FGranularity);
+    TopLine := HourToLine(FTopHour, FGranularity);
   end;
 end;
 {=====}
@@ -1538,9 +1459,8 @@ end;
 
 procedure TVpDayView.SetGutterWidth(Value: Integer);
 begin
-  if (Value <> FGutterWidth)
-  and (Value > -1)
-  and (Value < (Width div 10)) then begin
+  if (Value <> FGutterWidth) and (Value > -1) and (Value < Width div 10) then
+  begin
     FGutterWidth := Value;
     Invalidate;
   end;
@@ -1557,39 +1477,46 @@ begin
 end;
 {=====}
 
-procedure TVpDayView.SetTimeIntervals (UseGran : TVpGranularity);
+procedure TVpDayView.SetTimeIntervals(UseGran: TVpGranularity);
 var
-  I, J : Integer;
+  I, J: Integer;
 begin
   case UseGran of
-    gr60Min: begin
-      FLineCount := 24;
-      dvTimeIncSize :=  60 / MinutesInDay;                               
-    end;
-    gr30Min: begin
-      FLineCount := 48;
-      dvTimeIncSize :=  30 / MinutesInDay;
-    end;
-    gr20Min: begin
-      FLineCount := 72;
-      dvTimeIncSize :=  20 / MinutesInDay;
-    end;
-    gr15Min: begin
-      FLineCount := 96;
-      dvTimeIncSize :=  15 / MinutesInDay;
-    end;
-    gr10Min: begin
-      FLineCount := 144;
-      dvTimeIncSize :=  10 / MinutesInDay;
-    end;
-    gr06Min : begin
-      FLineCount := 240;
-      dvTimeIncSize :=   6 / MinutesInDay;
-    end;
-    gr05Min : begin
-      FLineCount := 288;
-      dvTimeIncSize :=   5 / MinutesInDay;
-    end;
+    gr60Min:
+      begin
+        FLineCount := 24;
+        dvTimeIncSize :=  60 / MinutesInDay;
+      end;
+    gr30Min:
+      begin
+        FLineCount := 48;
+        dvTimeIncSize :=  30 / MinutesInDay;
+      end;
+    gr20Min:
+      begin
+        FLineCount := 72;
+        dvTimeIncSize :=  20 / MinutesInDay;
+      end;
+    gr15Min:
+      begin
+        FLineCount := 96;
+        dvTimeIncSize :=  15 / MinutesInDay;
+      end;
+    gr10Min:
+      begin
+        FLineCount := 144;
+        dvTimeIncSize :=  10 / MinutesInDay;
+      end;
+    gr06Min:
+      begin
+        FLineCount := 240;
+        dvTimeIncSize :=   6 / MinutesInDay;
+      end;
+    gr05Min:
+      begin
+        FLineCount := 288;
+        dvTimeIncSize :=   5 / MinutesInDay;
+      end;
   end;
 
   SetLength(dvLineMatrix, NumDays);
@@ -1605,234 +1532,209 @@ begin
       end
       else begin
         case UseGran of
-          gr60Min: begin
-            dvLineMatrix[I,J].Time := J * (60 / MinutesInDay);
-            dvLineMatrix[I,J].Hour := TVpHours(J);
-            dvLineMatrix[I,J].Minute := 0;
-          end;
+          gr60Min:
+            begin
+              dvLineMatrix[I,J].Time := J * (60 / MinutesInDay);
+              dvLineMatrix[I,J].Hour := TVpHours(J);
+              dvLineMatrix[I,J].Minute := 0;
+            end;
 
-          gr30Min: begin
-            dvLineMatrix[I,J].Hour := TVpHours(J div 2);
-            case (J mod 2) of
-              0: begin
-                dvLineMatrix[I,J].Time := (J div 2) * (60 / MinutesInDay);
-                dvLineMatrix[I,J].Minute := 0;
-              end;
-              1: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour)
-                  * (60 / MinutesInDay)
-                  + dvTimeIncSize);
-                dvLineMatrix[I,J].Minute := 30;
+          gr30Min:
+            begin
+              dvLineMatrix[I,J].Hour := TVpHours(J div 2);
+              case (J mod 2) of
+                0: begin
+                     dvLineMatrix[I,J].Time := (J div 2) * (60 / MinutesInDay);
+                     dvLineMatrix[I,J].Minute := 0;
+                   end;
+                1: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize;
+                     dvLineMatrix[I,J].Minute := 30;
+                   end;
               end;
             end;
-          end;
 
-          gr20Min: begin
-            dvLineMatrix[I,J].Hour := TVpHours(J div 3);
-            case (J mod 3) of
-              0: begin
-                dvLineMatrix[I,J].Time := (J div 3) * (60 / MinutesInDay);
-                dvLineMatrix[I,J].Minute := 0;
-              end;
-              1: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour)
-                  * (60 / MinutesInDay) + dvTimeIncSize);
-                dvLineMatrix[I,J].Minute := 20;
-              end;
-              2: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour)
-                  * (60 / MinutesInDay) + (dvTimeIncSize * 2));
-                dvLineMatrix[I,J].Minute := 40;
+          gr20Min:
+            begin
+              dvLineMatrix[I,J].Hour := TVpHours(J div 3);
+              case (J mod 3) of
+                0: begin
+                     dvLineMatrix[I,J].Time := (J div 3) * (60 / MinutesInDay);
+                     dvLineMatrix[I,J].Minute := 0;
+                   end;
+                1: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize;
+                     dvLineMatrix[I,J].Minute := 20;
+                   end;
+                2: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 2;
+                     dvLineMatrix[I,J].Minute := 40;
+                   end;
               end;
             end;
-          end;
 
-          gr15Min: begin
-            dvLineMatrix[I,J].Hour := TVpHours(J div 4);
-            case (J mod 4) of
-              0: begin
-                dvLineMatrix[I,J].Time := (J div 4) * (60 / MinutesInDay);
-                dvLineMatrix[I,J].Minute := 0;
-              end;
-              1: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour)
-                  * (60 / MinutesInDay) + dvTimeIncSize);
-                dvLineMatrix[I,J].Minute := 15;
-              end;
-              2: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 2));
-                dvLineMatrix[I,J].Minute := 30;
-              end;
-              3: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 3));
-                dvLineMatrix[I,J].Minute := 45;
+          gr15Min:
+            begin
+              dvLineMatrix[I,J].Hour := TVpHours(J div 4);
+              case J mod 4 of
+                0: begin
+                     dvLineMatrix[I,J].Time := (J div 4) * (60 / MinutesInDay);
+                     dvLineMatrix[I,J].Minute := 0;
+                   end;
+                1: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize;
+                     dvLineMatrix[I,J].Minute := 15;
+                   end;
+                2: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 2;
+                     dvLineMatrix[I,J].Minute := 30;
+                   end;
+                3: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 3;
+                     dvLineMatrix[I,J].Minute := 45;
+                   end;
               end;
             end;
-          end;
 
-          gr10Min: begin
-            dvLineMatrix[I,J].Hour := TVpHours(J div 6);
-            case (J mod 6) of
-              0: begin
-                dvLineMatrix[I,J].Time := (J div 6) * (60 / MinutesInDay);
-                dvLineMatrix[I,J].Minute := 0;
-              end;
-              1: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + dvTimeIncSize);
-                dvLineMatrix[I,J].Minute := 10;
-              end;
-              2: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 2));
-                dvLineMatrix[I,J].Minute := 20;
-              end;
-              3: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 3));
-                dvLineMatrix[I,J].Minute := 30;
-              end;
-              4: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 4));
-                dvLineMatrix[I,J].Minute := 40;
-              end;
-              5: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 5));
-                dvLineMatrix[I,J].Minute := 50;
+          gr10Min:
+            begin
+              dvLineMatrix[I,J].Hour := TVpHours(J div 6);
+              case (J mod 6) of
+                0: begin
+                     dvLineMatrix[I,J].Time := (J div 6) * (60 / MinutesInDay);
+                     dvLineMatrix[I,J].Minute := 0;
+                   end;
+                1: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize;
+                     dvLineMatrix[I,J].Minute := 10;
+                   end;
+                2: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 2;
+                     dvLineMatrix[I,J].Minute := 20;
+                   end;
+                3: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 3;
+                     dvLineMatrix[I,J].Minute := 30;
+                   end;
+                4: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 4;
+                     dvLineMatrix[I,J].Minute := 40;
+                   end;
+                5: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 5;
+                     dvLineMatrix[I,J].Minute := 50;
+                   end;
               end;
             end;
-          end;
 
-          gr06Min : begin
-            dvLineMatrix[I,J].Hour := TVpHours(J div 10);
-            case (J mod 10) of
-              0: begin
-                dvLineMatrix[I,J].Time := (J div 10) * (60 / MinutesInDay);
-                dvLineMatrix[I,J].Minute := 0;
-              end;
-              1: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + dvTimeIncSize);
-                dvLineMatrix[I,J].Minute := 6;
-              end;
-              2: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 2));
-                dvLineMatrix[I,J].Minute := 12;
-              end;
-              3: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 3));
-                dvLineMatrix[I,J].Minute := 18;
-              end;
-              4: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 4));
-                dvLineMatrix[I,J].Minute := 24;
-              end;
-              5: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 5));
-                dvLineMatrix[I,J].Minute := 30;
-              end;
-              6: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 6));
-                dvLineMatrix[I,J].Minute := 36;
-              end;
-              7: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 7));
-                dvLineMatrix[I,J].Minute := 42;
-              end;
-              8: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 8));
-                dvLineMatrix[I,J].Minute := 48;
-              end;
-              9: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 9));
-                dvLineMatrix[I,J].Minute := 54;
+          gr06Min:
+            begin
+              dvLineMatrix[I,J].Hour := TVpHours(J div 10);
+              case (J mod 10) of
+                0: begin
+                     dvLineMatrix[I,J].Time := (J div 10) * (60 / MinutesInDay);
+                     dvLineMatrix[I,J].Minute := 0;
+                   end;
+                1: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize;
+                     dvLineMatrix[I,J].Minute := 6;
+                   end;
+                2: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 2;
+                     dvLineMatrix[I,J].Minute := 12;
+                   end;
+                3: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 3;
+                     dvLineMatrix[I,J].Minute := 18;
+                   end;
+                4: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 4;
+                     dvLineMatrix[I,J].Minute := 24;
+                   end;
+                5: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 5;
+                     dvLineMatrix[I,J].Minute := 30;
+                   end;
+                6: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 6;
+                     dvLineMatrix[I,J].Minute := 36;
+                   end;
+                7: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 7;
+                     dvLineMatrix[I,J].Minute := 42;
+                   end;
+                8: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 8;
+                     dvLineMatrix[I,J].Minute := 48;
+                   end;
+                9: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 9;
+                     dvLineMatrix[I,J].Minute := 54;
+                   end;
               end;
             end;
-          end;
 
-          gr05Min : begin
-            dvLineMatrix[I,J].Hour := TVpHours(J div 12);
-            case (J mod 12) of
-              0: begin
-                dvLineMatrix[I,J].Time := (J div 12) * (60 / MinutesInDay);
-                dvLineMatrix[I,J].Minute := 0;
-              end;
-              1: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + dvTimeIncSize);
-                dvLineMatrix[I,J].Minute := 5;
-              end;
-              2: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 2));
-                dvLineMatrix[I,J].Minute := 10;
-              end;
-              3: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 3));
-                dvLineMatrix[I,J].Minute := 15;
-              end;
-              4: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 4));
-                dvLineMatrix[I,J].Minute := 20;
-              end;
-              5: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 5));
-                dvLineMatrix[I,J].Minute := 25;
-              end;
-              6: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 6));
-                dvLineMatrix[I,J].Minute := 30;
-              end;
-              7: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 7));
-                dvLineMatrix[I,J].Minute := 35;
-              end;
-              8: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 8));
-                dvLineMatrix[I,J].Minute := 40;
-              end;
-              9: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 9));
-                dvLineMatrix[I,J].Minute := 45;
-              end;
-              10: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 10));
-                dvLineMatrix[I,J].Minute := 50;
-              end;
-              11: begin
-                dvLineMatrix[I,J].Time := (Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay)
-                  + (dvTimeIncSize * 11));
-                dvLineMatrix[I,J].Minute := 55;
+          gr05Min:
+            begin
+              dvLineMatrix[I,J].Hour := TVpHours(J div 12);
+              case J mod 12 of
+                0: begin
+                     dvLineMatrix[I,J].Time := (J div 12) * (60 / MinutesInDay);
+                     dvLineMatrix[I,J].Minute := 0;
+                   end;
+                1: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize;
+                     dvLineMatrix[I,J].Minute := 5;
+                   end;
+                2: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 2;
+                     dvLineMatrix[I,J].Minute := 10;
+                   end;
+                3: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 3;
+                     dvLineMatrix[I,J].Minute := 15;
+                   end;
+                4: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 4;
+                     dvLineMatrix[I,J].Minute := 20;
+                   end;
+                5: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 5;
+                     dvLineMatrix[I,J].Minute := 25;
+                   end;
+                6: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 6;
+                     dvLineMatrix[I,J].Minute := 30;
+                   end;
+                7: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 7;
+                     dvLineMatrix[I,J].Minute := 35;
+                   end;
+                8: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 8;
+                     dvLineMatrix[I,J].Minute := 40;
+                   end;
+                9: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 9;
+                     dvLineMatrix[I,J].Minute := 45;
+                   end;
+               10: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 10;
+                     dvLineMatrix[I,J].Minute := 50;
+                   end;
+               11: begin
+                     dvLineMatrix[I,J].Time := Ord(dvLineMatrix[I,J].Hour) * (60 / MinutesInDay) + dvTimeIncSize * 11;
+                     dvLineMatrix[I,J].Minute := 55;
+                   end;
               end;
             end;
-          end;
         end;
       end;
     end; {for J...}
   end; {for I...}
 
   if FLineCount <= FVisibleLines then
-    FTopLine := HourToLine (h_00, FGranularity);
+    FTopLine := HourToLine(h_00, FGranularity);
 
   SetVScrollPos;
 end;

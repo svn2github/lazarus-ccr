@@ -136,6 +136,7 @@ resourcestring
 
   {Event Specific}
   RSFromSchedule            = 'from your schedule?';
+  RSDeleteContactFromSchedule = 'Delete contact %s from your schedule?';
 
   {Task Specific}
   RSFromTaskList            = 'from your task list?';

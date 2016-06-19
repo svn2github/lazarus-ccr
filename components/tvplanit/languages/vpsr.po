@@ -391,6 +391,10 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
+#: vpsr.rsdeletecontactfromschedule
+msgid "Delete contact %s from your schedule?"
+msgstr ""
+
 #: vpsr.rsdescriptionlbl
 msgctxt "vpsr.rsdescriptionlbl"
 msgid "Subject:"
