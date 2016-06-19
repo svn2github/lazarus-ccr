@@ -47,7 +47,7 @@ type
 
     // inherited
     property AutoConnect;
-    property AutoCreate default true;
+    property AutoCreate;
     property Connected;
   end;
 

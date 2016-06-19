@@ -50,6 +50,7 @@ type
   published
     property Directory: String read FDirectory write SetDirectory;
     property AutoConnect;
+    property AutoCreate;
   end;
 
 
@@ -183,7 +184,7 @@ begin
 
   { Connecting or disconnecting? }
   if Value then begin
-    CreateTables;
+    if AutoCreate then CreateTables;
     OpenTables;
     Load;
   end;
