@@ -171,45 +171,9 @@ msgstr "Abbrechen"
 msgid "Category"
 msgstr "Kategorie"
 
-#: vpsr.rscategorydesc0
-msgid "Category 0"
-msgstr "Kategorie 0"
-
-#: vpsr.rscategorydesc1
-msgid "Category 1"
-msgstr "Kategorie 1"
-
-#: vpsr.rscategorydesc2
-msgid "Category 2"
-msgstr "Kategorie 2"
-
-#: vpsr.rscategorydesc3
-msgid "Category 3"
-msgstr "Kategorie 3"
-
-#: vpsr.rscategorydesc4
-msgid "Category 4"
-msgstr "Kategorie 4"
-
-#: vpsr.rscategorydesc5
-msgid "Category 5"
-msgstr "Kategorie 5"
-
-#: vpsr.rscategorydesc6
-msgid "Category 6"
-msgstr "Kategorie 6"
-
-#: vpsr.rscategorydesc7
-msgid "Category 7"
-msgstr "Kategorie 7"
-
-#: vpsr.rscategorydesc8
-msgid "Category 8"
-msgstr "Kategorie 8"
-
-#: vpsr.rscategorydesc9
-msgid "Category 9"
-msgstr "Kategorie 9"
+#: vpsr.rscategorydesc
+msgid "Category %d"
+msgstr "Kategorie %d"
 
 #: vpsr.rscategorylabel1
 msgid "Business"
@@ -403,7 +367,7 @@ msgstr "Löschen"
 
 #: vpsr.rsdeletecontactfromschedule
 msgid "Delete contact %s from your schedule?"
-msgstr ""
+msgstr "Kontakt %s aus Ihrem Terminplan löschen?"
 
 #: vpsr.rsdescriptionlbl
 msgctxt "vpsr.rsdescriptionlbl"
@@ -416,7 +380,7 @@ msgstr "Details:"
 
 #: vpsr.rsdismissbtn
 msgid "&Dismiss"
-msgstr "Ablehnen"
+msgstr "Bestätigen"
 
 #: vpsr.rsdlgcontactedit
 msgctxt "vpsr.rsdlgcontactedit"
@@ -1372,4 +1336,3 @@ msgstr "Unbekannte Achsen-Spezifikation: %s"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "Die XML-Deklaration muss vor dem ersten Element erscheinen."
-

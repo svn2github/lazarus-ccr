@@ -376,7 +376,6 @@ resourcestring
   sUCS_U8ConverErr   = 'Cannot convert UCS-4 character to UTF-8';
 
   { Misc Exceptions and Errors }
-
   RSOutOfRange       = 'Out of range';
   RSNotSupported     = 'not supported';
   RSNeedElementName  = 'Please supply an Element Name';
@@ -392,24 +391,12 @@ resourcestring
   RSNoLocalizationFile = 'Localization file not found.';                 {!!.02}
 
   { Misc strings }
-
-  RSCategoryDesc0    = 'Category 0';                                     {!!.01}
-  RSCategoryDesc1    = 'Category 1';                                     {!!.01}
-  RSCategoryDesc2    = 'Category 2';                                     {!!.01}
-  RSCategoryDesc3    = 'Category 3';                                     {!!.01}
-  RSCategoryDesc4    = 'Category 4';                                     {!!.01}
-  RSCategoryDesc5    = 'Category 5';                                     {!!.01}
-  RSCategoryDesc6    = 'Category 6';                                     {!!.01}
-  RSCategoryDesc7    = 'Category 7';                                     {!!.01}
-  RSCategoryDesc8    = 'Category 8';                                     {!!.01}
-  RSCategoryDesc9    = 'Category 9';                                     {!!.01}
+  RSCategoryDesc     = 'Category %d';
 
   { Print Format Editor }
-
   RSEditPrintFormat  = 'Edit Print Formats...';
 
   { Automatic resource adding/selection}                               {!!.01}
-
   RSAddNewResource   = 'No resources have been defined. Would you ' +  {!!.01}
                        'like to add one now?';                         {!!.01}
   RSSelectResource   = 'No resource has been selected. Would you ' +   {!!.01}

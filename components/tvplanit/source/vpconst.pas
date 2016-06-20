@@ -246,15 +246,15 @@ const
   VpXSLImplementation = 0.0;
   VpXMLSpecification = '1.0';
 
-{ Defaults }                                                             
+{ Defaults }
 
-  { MonthView }                                                          
+  { MonthView }
 
-  vpDefWVRClickChangeDate = True;                                        
+  vpDefWVRClickChangeDate = True;
 
 implementation
 
-initialization                                                           
+initialization
 {$IFNDEF LCL}
   ClickDelay :=  GetDoubleClickTime;                                     
 {$ENDIF}

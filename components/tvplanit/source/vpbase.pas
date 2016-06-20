@@ -41,7 +41,7 @@ uses
   Messages,
   Classes, Graphics, Controls, Dialogs, Forms, StdCtrls,
   ExtCtrls, SysUtils, VpConst,
-  VpSR;                                                                  
+  VpSR;
 
 const
   {Message base}
@@ -51,7 +51,7 @@ const
   {Custom message types}
   Vp_PrintFormatChanged = Vp_First + 1;   {Print formats have changed}
   Vp_DataStoreChanged   = Vp_First + 2;   {Data Store has changed}
-  Vp_DayViewInit        = Vp_First + 3;   {Initialize the DayView}     
+  Vp_DayViewInit        = Vp_First + 3;   {Initialize the DayView}
 
 type
   TVpRotationAngle = (ra0, ra90, ra180, ra270);
@@ -63,8 +63,7 @@ type
               h_09, h_10, h_11, h_12, h_13, h_14, h_15, h_16, h_17,
               h_18, h_19, h_20, h_21, h_22, h_23);
 
-  TVpGranularity = (gr05Min, gr06Min, gr10Min, gr15Min, gr20Min, gr30Min,
-                    gr60Min);
+  TVpGranularity = (gr05Min, gr06Min, gr10Min, gr15Min, gr20Min, gr30Min, gr60Min);
 
   TVpEditorReturnCode = (rtCommit, rtAbandon);
 
@@ -81,8 +80,8 @@ type
   TVpDrawingStyle = (dsFlat, ds3d, dsNone);
 
   { event method types }
-  TVpMouseWheelEvent = procedure(Sender : TObject; Shift : TShiftState;
-    Delta, XPos, YPos : Word) of object;
+  TVpMouseWheelEvent = procedure(Sender: TObject; Shift: TShiftState;
+    Delta, XPos, YPos: Word) of object;
 
   TVpOwnerDrawEvent = procedure(Sender: TObject; const Canvas: TCanvas;
     R: TRect; var Drawn: Boolean) of object;
@@ -93,10 +92,10 @@ type
   TVpOwnerDrawDayEvent = procedure(Sender: TObject; const Canvas: TCanvas;
     R: TRect; Day: Integer; var Drawn: Boolean) of object;
 
-  TVpItemSelectedEvent = procedure(Sender : TObject;
-    Index : Integer) of object;
+  TVpItemSelectedEvent = procedure(Sender: TObject;
+    Index: Integer) of object;
 
-  TVpGetEditorCaption = procedure(var Caption : string) of object;
+  TVpGetEditorCaption = procedure(var Caption: string) of object;
 
   TVpPlaySoundEvent = procedure(Sender: TObject; const AWavFile: String;
     AMode: TVpPlaySoundMode) of object;
@@ -109,8 +108,7 @@ type
     seFilePos : Longint;
   public
     constructor CreateError(const FilePos: Longint; const Reason: DOMString);
-    property FilePos: Longint
-       read seFilePos;
+    property FilePos: Longint read seFilePos;
   end;
 
   EVpFilterError = class(EVpStreamError)
@@ -121,8 +119,8 @@ type
   public
     constructor CreateError(const FilePos, Line, LinePos: Longint; const Reason: DOMString);
     property Reason : DOMString read feReason;
-    property Line : Longint read feLine;
-    property LinePos : Longint read feLinePos;
+    property Line: Longint read feLine;
+    property LinePos: Longint read feLinePos;
   end;
 
   EVpParserError = class(EVpFilterError)
@@ -145,13 +143,13 @@ type
   { Ancestor for all Visual PlanIt visual controls }
   TVpCustomControl = class(TCustomControl)
   protected { private }
-    FAfterEnter    : TNotifyEvent;
-    FAfterExit     : TNotifyEvent;
-    FOnMouseWheel  : TVpMouseWheelEvent;
-    FAutoScroll    : Boolean;
+    FAfterEnter: TNotifyEvent;
+    FAfterExit: TNotifyEvent;
+    FOnMouseWheel: TVpMouseWheelEvent;
+    FAutoScroll: Boolean;
     function GetVersion : string;
-    procedure SetVersion(const Value : string);
-    procedure CMVisibleChanged(var Msg : TMessage); message CM_VISIBLECHANGED;
+    procedure SetVersion(const Value: string);
+    procedure CMVisibleChanged(var Msg: TMessage); message CM_VISIBLECHANGED;
     {$IFNDEF LCL}
     procedure WMMouseWheel(var Msg : TMessage); message WM_MOUSEWHEEL;
     procedure DoOnMouseWheel(Shift: TShiftState; Delta, XPos, YPos: SmallInt); dynamic;
@@ -192,22 +190,22 @@ type
   private
     FCategoryIndex: Integer;
   protected
-    FBackgroundColor : TColor;                                                                                          
-    FColor           : TColor;
-    FDescription     : string;
-    FIndex           : Integer;
-    FBitmap          : TBitmap;                                          
-    procedure SetBackgroundColor (const v : TColor);                     
-    procedure SetBitmap (v : TBitmap);                                   
+    FBackgroundColor: TColor;
+    FColor: TColor;
+    FDescription: string;
+    FIndex: Integer;
+    FBitmap: TBitmap;
+    procedure SetBackgroundColor (const v : TColor);
+    procedure SetBitmap (v : TBitmap);
     procedure SetColor(Value: TColor);
     procedure SetDescription(Value: string);
-  public                                                                 
-    constructor Create;                                                  
-    destructor Destroy; override;                                        
+  public
+    constructor Create;
+    destructor Destroy; override;
   published
-    property BackgroundColor : TColor read FBackgroundColor write SetBackgroundColor
-      default clWindow;
-    property Bitmap : TBitmap read FBitmap write SetBitmap;              
+    property BackgroundColor: TColor
+      read FBackgroundColor write SetBackgroundColor default clWindow;
+    property Bitmap : TBitmap read FBitmap write SetBitmap;
     property Color: TColor read FColor write SetColor;
     property Description: string read FDescription write SetDescription;
     property CategoryIndex: Integer read FCategoryIndex;
@@ -215,32 +213,49 @@ type
 
   TVpCategoryColorMap = class(TPersistent)
   protected
-    FCat0 : TVpCategoryInfo;
-    FCat1 : TVpCategoryInfo;
-    FCat2 : TVpCategoryInfo;
-    FCat3 : TVpCategoryInfo;
-    FCat4 : TVpCategoryInfo;
-    FCat5 : TVpCategoryInfo;
-    FCat6 : TVpCategoryInfo;
-    FCat7 : TVpCategoryInfo;
-    FCat8 : TVpCategoryInfo;
-    FCat9 : TVpCategoryInfo;
+    FCat: array[0..9] of TVpCategoryInfo;
+    function GetCat(AIndex: Integer): TVpCategoryInfo;
+    procedure SetCat(AIndex: Integer; AValue: TVpCategoryInfo);
+    {
+    FCat0: TVpCategoryInfo;
+    FCat1: TVpCategoryInfo;
+    FCat2: TVpCategoryInfo;
+    FCat3: TVpCategoryInfo;
+    FCat4: TVpCategoryInfo;
+    FCat5: TVpCategoryInfo;
+    FCat6: TVpCategoryInfo;
+    FCat7: TVpCategoryInfo;
+    FCat8: TVpCategoryInfo;
+    FCat9: TVpCategoryInfo;
+    }
   public
     constructor Create;
     destructor Destroy; override;
     function GetColor(Index: Integer): TColor;
     function GetName(Index: Integer):string;
   published
-    property Category0 : TVpCategoryInfo read FCat0 write FCat0;
-    property Category1 : TVpCategoryInfo read FCat1 write FCat1;
-    property Category2 : TVpCategoryInfo read FCat2 write FCat2;
-    property Category3 : TVpCategoryInfo read FCat3 write FCat3;
-    property Category4 : TVpCategoryInfo read FCat4 write FCat4;
-    property Category5 : TVpCategoryInfo read FCat5 write FCat5;
-    property Category6 : TVpCategoryInfo read FCat6 write FCat6;
-    property Category7 : TVpCategoryInfo read FCat7 write FCat7;
-    property Category8 : TVpCategoryInfo read FCat8 write FCat8;
-    property Category9 : TVpCategoryInfo read FCat9 write FCat9;
+    property Category0: TVpCategoryInfo index 0 read GetCat write SetCat;
+    property Category1: TVpCategoryInfo index 1 read GetCat write SetCat;
+    property Category2: TVpCategoryInfo index 2 read GetCat write SetCat;
+    property Category3: TVpCategoryInfo index 3 read GetCat write SetCat;
+    property Category4: TVpCategoryInfo index 4 read GetCat write SetCat;
+    property Category5: TVpCategoryInfo index 5 read GetCat write SetCat;
+    property Category6: TVpCategoryInfo index 6 read GetCat write SetCat;
+    property Category7: TVpCategoryInfo index 7 read GetCat write SetCat;
+    property Category8: TVpCategoryInfo index 8 read GetCat write SetCat;
+    property Category9: TVpCategoryInfo index 9 read GetCat write SetCat;
+    {
+    property Category0: TVpCategoryInfo read FCat0 write FCat0;
+    property Category1: TVpCategoryInfo read FCat1 write FCat1;
+    property Category2: TVpCategoryInfo read FCat2 write FCat2;
+    property Category3: TVpCategoryInfo read FCat3 write FCat3;
+    property Category4: TVpCategoryInfo read FCat4 write FCat4;
+    property Category5: TVpCategoryInfo read FCat5 write FCat5;
+    property Category6: TVpCategoryInfo read FCat6 write FCat6;
+    property Category7: TVpCategoryInfo read FCat7 write FCat7;
+    property Category8: TVpCategoryInfo read FCat8 write FCat8;
+    property Category9: TVpCategoryInfo read FCat9 write FCat9;
+    }
   end;
 
   { TVpFont }
@@ -271,22 +286,22 @@ type
   TVpCollection = class(TCollection)
   protected { private }
     { property variables }
-    FItemEditor     : TForm;
-    FReadOnly       : Boolean;
-    FOwner          : TPersistent;
+    FItemEditor: TForm;
+    FReadOnly: Boolean;
+    FOwner: TPersistent;
     { event variables }
-    FOnChanged      : TNotifyEvent;
-    FOnItemSelected : TVpItemSelectedEvent;
-    FOnGetEditorCaption : TVpGetEditorCaption;
+    FOnChanged: TNotifyEvent;
+    FOnItemSelected: TVpItemSelectedEvent;
+    FOnGetEditorCaption: TVpGetEditorCaption;
     { Internal variables }
-    InLoaded        : Boolean;
-    IsLoaded        : Boolean;
-    InChanged       : Boolean;
+    InLoaded: Boolean;
+    IsLoaded: Boolean;
+    InChanged: Boolean;
   protected
-    function GetCount : Integer;
+    function GetCount: Integer;
     procedure Loaded;
   public
-    constructor Create(AOwner : TPersistent; ItemClass : TCollectionItemClass); virtual;
+    constructor Create(AOwner: TPersistent; ItemClass: TCollectionItemClass); virtual;
     destructor Destroy; override;
     property ItemEditor: TForm read FItemEditor write FItemEditor;
     function Add: TVpCollectionItem; dynamic;
@@ -301,11 +316,11 @@ type
     function ItemByName(const Name: string) : TVpCollectionItem;
     function ParentForm: TForm;
     property Count: Integer read GetCount;
-    property Item[Index: Integer] : TVpCollectionItem read GetItem write SetItem; default;
-    property OnGetEditorCaption : TVpGetEditorCaption read FOnGetEditorCaption write FOnGetEditorCaption;
-    property ReadOnly : Boolean read FReadOnly write FReadOnly default False;
-    property OnChanged : TNotifyEvent read FOnChanged write FOnChanged;
-    property OnItemSelected : TVpItemSelectedEvent read FOnItemSelected write FOnItemSelected;
+    property Item[Index: Integer]: TVpCollectionItem read GetItem write SetItem; default;
+    property OnGetEditorCaption: TVpGetEditorCaption read FOnGetEditorCaption write FOnGetEditorCaption;
+    property ReadOnly: Boolean read FReadOnly write FReadOnly default False;
+    property OnChanged: TNotifyEvent read FOnChanged write FOnChanged;
+    property OnItemSelected: TVpItemSelectedEvent read FOnItemSelected write FOnItemSelected;
   end;
 
   TVpContainerList = class(TList)
@@ -407,11 +422,11 @@ end;
 (*****************************************************************************)
 { TVpCustomControl }
 
-constructor TVpCustomControl.Create (AOwner: TComponent);
-begin                                                                    
-  inherited Create (AOwner);                                             
-  TabStop := True;                                                       
-end;                                                                     
+constructor TVpCustomControl.Create(AOwner: TComponent);
+begin
+  inherited Create (AOwner);
+  TabStop := True;
+end;
 {=====}
 
 procedure TVpCustomControl.CMVisibleChanged(var Msg: TMessage);
@@ -664,53 +679,72 @@ end;
 { TVpCategoryColorMap }
 
 constructor TVpCategoryColorMap.Create;
+const
+  CAT_COLORS: Array[0..9] of TColor = (
+    clNavy, clRed, clYellow, clLime, clPurple, clTeal, clFuchsia, clOlive, clAqua, clMaroon
+  );
+var
+  i: Integer;
 begin
   inherited Create;
+  for i:=0 to High(FCat) do
+  begin
+    FCat[i] := TVpCategoryInfo.Create;
+    FCat[i].FIndex := i;
+    FCat[i].Color := CAT_COLORS[i];
+    FCat[i].Description := Format(RSCategoryDesc, [i]);
+  end;
+{
   FCat0 := TVpCategoryInfo.Create;
     FCat0.Color := clNavy;
-    FCat0.Description := RSCategoryDesc0;                                
+    FCat0.Description := RSCategoryDesc0;
     FCat0.FIndex := 0;
   FCat1 := TVpCategoryInfo.Create;
     FCat1.Color := clRed;
-    FCat1.Description := RSCategoryDesc1;                                
+    FCat1.Description := RSCategoryDesc1;
     FCat1.FIndex := 1;
   FCat2 := TVpCategoryInfo.Create;
     FCat2.Color := clYellow;
-    FCat2.Description := RSCategoryDesc2;                                
+    FCat2.Description := RSCategoryDesc2;
     FCat2.FIndex := 2;
   FCat3 := TVpCategoryInfo.Create;
     FCat3.Color := clLime;
-    FCat3.Description := RSCategoryDesc3;                                
+    FCat3.Description := RSCategoryDesc3;
     FCat3.FIndex := 3;
   FCat4 := TVpCategoryInfo.Create;
     FCat4.Color := clPurple;
-    FCat4.Description := RSCategoryDesc4;                                
+    FCat4.Description := RSCategoryDesc4;
     FCat4.FIndex := 4;
   FCat5 := TVpCategoryInfo.Create;
     FCat5.Color := clTeal;
-    FCat5.Description := RSCategoryDesc5;                                
+    FCat5.Description := RSCategoryDesc5;
     FCat5.FIndex := 5;
   FCat6 := TVpCategoryInfo.Create;
     FCat6.Color := clFuchsia;
-    FCat6.Description := RSCategoryDesc6;                                
+    FCat6.Description := RSCategoryDesc6;
     FCat6.FIndex := 6;
   FCat7 := TVpCategoryInfo.Create;
     FCat7.Color := clOlive;
-    FCat7.Description := RSCategoryDesc7;                                
+    FCat7.Description := RSCategoryDesc7;
     FCat7.FIndex := 7;
   FCat8 := TVpCategoryInfo.Create;
     FCat8.Color := clAqua;
-    FCat8.Description := RSCategoryDesc8;                                
+    FCat8.Description := RSCategoryDesc8;
     FCat8.FIndex := 8;
   FCat9 := TVpCategoryInfo.Create;
     FCat9.Color := clMaroon;
-    FCat9.Description := RSCategoryDesc9;                                
+    FCat9.Description := RSCategoryDesc9;
     FCat9.FIndex := 9;
+    }
 end;
 {=====}
 
 destructor TVpCategoryColorMap.Destroy;
+var
+  i: Integer;
 begin
+  for i:=0 to High(FCat) do FCat[i].Free;
+  {
   FCat0.Free;
   FCat1.Free;
   FCat2.Free;
@@ -721,12 +755,23 @@ begin
   FCat7.Free;
   FCat8.Free;
   FCat9.Free;
+  }
   inherited;
 end;
 {=====}
 
+function TVpCategoryColorMap.GetCat(AIndex: Integer): TVpCategoryInfo;
+begin
+  Result := FCat[AIndex];
+end;
+
 function TVpCategoryColorMap.GetColor(Index: Integer): TColor;
 begin
+  if Index <= High(FCat) then
+    Result := FCat[Index].Color
+  else
+    Result := clBlack;
+  {
   case Index of
     0 : result := FCat0.Color;
     1 : result := FCat1.Color;
@@ -741,11 +786,17 @@ begin
   else
     result := clBlack;
   end;
+  }
 end;
 {=====}
 
 function TVpCategoryColorMap.GetName(Index: Integer): string;
 begin
+  if Index <= High(FCat) then
+    Result := FCat[Index].Description
+  else
+    Result := '';
+  {
   case Index of
     0 : result := FCat0.Description;
     1 : result := FCat1.Description;
@@ -760,35 +811,41 @@ begin
   else
     result := '';
   end;
+  }
 end;
 {=====}
+
+procedure TVpCategoryColorMap.SetCat(AIndex: Integer; AValue: TVpCategoryInfo);
+begin
+  FCat[AIndex] := AValue;
+end;
 
 (*****************************************************************************)
 { TVpCategoryInfo }
 
-constructor TVpCategoryInfo.Create;                                      
-begin                                                                    
-  inherited Create;                                                      
+constructor TVpCategoryInfo.Create;
+begin
+  inherited Create;
   FBitmap := TBitmap.Create;
-  FBackgroundColor := clWindow;                                          
-end;                                                                     
+  FBackgroundColor := clWindow;
+end;
 
-destructor TVpCategoryInfo.Destroy;                                      
-begin                                                                    
-  FBitmap.Free;                                                          
-  inherited Destroy;                                                     
-end;                                                                     
+destructor TVpCategoryInfo.Destroy;
+begin
+  FBitmap.Free;
+  inherited Destroy;
+end;
 
 procedure TVpCategoryInfo.SetBackgroundColor(const v: TColor);
-begin                                                                    
-  if v <> FBackgroundColor then                                          
-    FBackgroundColor := v;                                               
-end;                                                                     
+begin
+  if v <> FBackgroundColor then
+    FBackgroundColor := v;
+end;
 
 procedure TVpCategoryInfo.SetBitmap(v: TBitmap);
-begin                                                                    
-  FBitmap.Assign (v);                                                    
-end;                                                                     
+begin
+  FBitmap.Assign(v);
+end;
 
 procedure TVpCategoryInfo.SetColor(Value: TColor);
 begin
@@ -861,8 +918,6 @@ begin
     (FOwner as TVpTimeSlotColor).Changed;
 end;
 {=====}
-
-
 
 
 (*****************************************************************************)

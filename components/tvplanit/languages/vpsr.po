@@ -161,44 +161,8 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
-#: vpsr.rscategorydesc0
-msgid "Category 0"
-msgstr ""
-
-#: vpsr.rscategorydesc1
-msgid "Category 1"
-msgstr ""
-
-#: vpsr.rscategorydesc2
-msgid "Category 2"
-msgstr ""
-
-#: vpsr.rscategorydesc3
-msgid "Category 3"
-msgstr ""
-
-#: vpsr.rscategorydesc4
-msgid "Category 4"
-msgstr ""
-
-#: vpsr.rscategorydesc5
-msgid "Category 5"
-msgstr ""
-
-#: vpsr.rscategorydesc6
-msgid "Category 6"
-msgstr ""
-
-#: vpsr.rscategorydesc7
-msgid "Category 7"
-msgstr ""
-
-#: vpsr.rscategorydesc8
-msgid "Category 8"
-msgstr ""
-
-#: vpsr.rscategorydesc9
-msgid "Category 9"
+#: vpsr.rscategorydesc
+msgid "Category %d"
 msgstr ""
 
 #: vpsr.rscategorylabel1
