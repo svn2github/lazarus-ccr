@@ -58,6 +58,8 @@ const
     ((31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31),
      (31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31));
 
+  GranularityMinutes: Array[TVpGranularity] of Integer = (5, 6, 10, 15, 20, 30, 60);
+
 function DaysInMonth(Year, Month : Integer) : Integer;
   {-return the number of days in the specified month of a given year}
 function DefaultEpoch : Integer;
