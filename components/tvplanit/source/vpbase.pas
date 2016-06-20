@@ -214,7 +214,6 @@ type
   TVpCategoryColorMap = class(TPersistent)
   protected
     FCat: array[0..9] of TVpCategoryInfo;
-    function GetCat(AIndex: Integer): TVpCategoryInfo;
     procedure SetCat(AIndex: Integer; AValue: TVpCategoryInfo);
     {
     FCat0: TVpCategoryInfo;
@@ -233,17 +232,18 @@ type
     destructor Destroy; override;
     function GetColor(Index: Integer): TColor;
     function GetName(Index: Integer):string;
+    function GetCategory(AIndex: Integer): TVpCategoryInfo;
   published
-    property Category0: TVpCategoryInfo index 0 read GetCat write SetCat;
-    property Category1: TVpCategoryInfo index 1 read GetCat write SetCat;
-    property Category2: TVpCategoryInfo index 2 read GetCat write SetCat;
-    property Category3: TVpCategoryInfo index 3 read GetCat write SetCat;
-    property Category4: TVpCategoryInfo index 4 read GetCat write SetCat;
-    property Category5: TVpCategoryInfo index 5 read GetCat write SetCat;
-    property Category6: TVpCategoryInfo index 6 read GetCat write SetCat;
-    property Category7: TVpCategoryInfo index 7 read GetCat write SetCat;
-    property Category8: TVpCategoryInfo index 8 read GetCat write SetCat;
-    property Category9: TVpCategoryInfo index 9 read GetCat write SetCat;
+    property Category0: TVpCategoryInfo index 0 read GetCategory write SetCat;
+    property Category1: TVpCategoryInfo index 1 read GetCategory write SetCat;
+    property Category2: TVpCategoryInfo index 2 read GetCategory write SetCat;
+    property Category3: TVpCategoryInfo index 3 read GetCategory write SetCat;
+    property Category4: TVpCategoryInfo index 4 read GetCategory write SetCat;
+    property Category5: TVpCategoryInfo index 5 read GetCategory write SetCat;
+    property Category6: TVpCategoryInfo index 6 read GetCategory write SetCat;
+    property Category7: TVpCategoryInfo index 7 read GetCategory write SetCat;
+    property Category8: TVpCategoryInfo index 8 read GetCategory write SetCat;
+    property Category9: TVpCategoryInfo index 9 read GetCategory write SetCat;
     {
     property Category0: TVpCategoryInfo read FCat0 write FCat0;
     property Category1: TVpCategoryInfo read FCat1 write FCat1;
@@ -760,7 +760,7 @@ begin
 end;
 {=====}
 
-function TVpCategoryColorMap.GetCat(AIndex: Integer): TVpCategoryInfo;
+function TVpCategoryColorMap.GetCategory(AIndex: Integer): TVpCategoryInfo;
 begin
   Result := FCat[AIndex];
 end;

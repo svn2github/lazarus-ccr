@@ -528,8 +528,8 @@ begin
         TVpDayView(Owner).SetFocus;
       end;
 
-  else
-    inherited;
+    else
+      inherited;
   end;
 end;
 {=====}
@@ -1225,8 +1225,7 @@ var
 begin
   Canvas.Font.Assign(FHeadAttr.Font);
 
-  if FShowResourceName and (DataStore <> nil) and (DataStore.Resource <> nil)
-  then
+  if FShowResourceName and (DataStore <> nil) and (DataStore.Resource <> nil) then
     TextHeight := Canvas.TextHeight(RSTallShortChars) * 2 + TextMargin * 3
   else
     TextHeight := Canvas.TextHeight(RSTallShortChars) + TextMargin * 2;
@@ -1351,7 +1350,7 @@ begin
 end;
 {=====}
 
-function TVpDayView.GetLastVisibleDate : TDateTime;
+function TVpDayView.GetLastVisibleDate: TDateTime;
 begin
   Result := Date + GetRealNumDays(Date);
 end;
@@ -1484,10 +1483,8 @@ end;
 procedure TVpDayView.SetGranularity(Value: TVpGranularity);
 begin
   FGranularity := Value;
-
   SetTimeIntervals (FGranularity);
   FTopLine := HourToLine(FTopHour, FGranularity);
-
   Invalidate;
 end;
 {=====}
@@ -1526,6 +1523,7 @@ var
   EmptyLines: Integer;
 begin
   inherited;
+
   { How many lines are there between TopLine and the last line of the day. }
   MaxLinesToDraw := Length(dvLineMatrix[0]) - TopLine;
   EmptyLines := FVisibleLines - MaxLinesToDraw;
@@ -1560,8 +1558,8 @@ begin
 end;
 
 
-procedure TVpDayView.MouseUp(Button: TMouseButton; Shift: TShiftState; X,
-  Y: Integer);
+procedure TVpDayView.MouseUp(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
 begin
   inherited MouseUp(Button, Shift, X, Y);
   if Button = mbLeft then
@@ -1593,11 +1591,11 @@ begin
   end;
 end;
 
-procedure TVpDayView.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
-  Y: Integer);
+procedure TVpDayView.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
 var
-  ClientOrigin : TPoint;
-  i            : Integer;
+  ClientOrigin: TPoint;
+  i: Integer;
 begin
   inherited MouseDown(Button, Shift, X, Y);
   if Button = mbLeft then
@@ -1654,9 +1652,9 @@ end;
 {=====}
 
 {$IFNDEF LCL}
-procedure TVpDayView.WMLButtonDblClk(var Msg : TWMLButtonDblClk);
+procedure TVpDayView.WMLButtonDblClk(var Msg: TWMLButtonDblClk);
 {$ELSE}
-procedure TVpDayView.WMLButtonDblClk(var Msg : TLMLButtonDblClk);
+procedure TVpDayView.WMLButtonDblClk(var Msg: TLMLButtonDblClk);
 {$ENDIF}
 var
   StartTime, EndTime: TDateTime;
@@ -1669,14 +1667,14 @@ begin
   if (Msg.XPos > dvRowHeadWidth - 9) and (Msg.YPos > dvColHeadHeight) then
   begin
     { The mouse click landed inside the client area }
-    dvSetActiveRowByCoord(Point(Msg.XPos, Msg.YPos), True);              
+    dvSetActiveRowByCoord(Point(Msg.XPos, Msg.YPos), True);
     { See if we hit an active event }
     if (FActiveEvent <> nil) and (not ReadOnly) then begin
       { edit this event }
       dvSpawnEventEditDialog(False);
     end else if not ReadOnly then begin
-      if not CheckCreateResource then                                  
-        Exit;                                                          
+      if not CheckCreateResource then
+        Exit;
       if (DataStore = nil) or (DataStore.Resource = nil) then
         Exit;
       { otherwise, we must want to create a new event }
@@ -1767,8 +1765,8 @@ begin
   if AllowIt then begin
     FActiveEvent.Changed := true;
     DataStore.PostEvents;
-    if Assigned(FOnAddEvent) then                                        
-      FOnAddEvent(self, FActiveEvent);                                   
+    if Assigned(FOnAddEvent) then
+      FOnAddEvent(self, FActiveEvent);
     Invalidate;
   end else begin
     if NewEvent then begin
@@ -1776,19 +1774,18 @@ begin
       DataStore.PostEvents;
       FActiveEvent := nil;
       dvActiveEventRec := Rect(0, 0, 0, 0);
-      dvActiveIconRec  := Rect(0, 0, 0, 0);                                  
+      dvActiveIconRec := Rect(0, 0, 0, 0);
     end else
       DataStore.PostEvents;
-
     Invalidate;
   end;
 end;
 {=====}
 
 {$IFNDEF LCL}
-procedure TVpDayView.WMSetFocus(var Msg : TWMSetFocus);
+procedure TVpDayView.WMSetFocus(var Msg: TWMSetFocus);
 {$ELSE}
-procedure TVpDayView.WMSetFocus(var Msg : TLMSetFocus);
+procedure TVpDayView.WMSetFocus(var Msg: TLMSetFocus);
 {$ENDIF}
 begin
   if ActiveRow = -1 then ActiveRow := TopLine;
@@ -1796,9 +1793,9 @@ end;
 {=====}
 
 {$IFNDEF LCL}
-procedure TVpDayView.WMEraseBackground (var Msg : TWMERASEBKGND);
+procedure TVpDayView.WMEraseBackground(var Msg: TWMERASEBKGND);
 {$ELSE}
-procedure TVpDayView.WMEraseBackground (var Msg : TLMERASEBKGND);
+procedure TVpDayView.WMEraseBackground(var Msg: TLMERASEBKGND);
 {$ENDIF}
 begin
   Msg.Result := 1;
@@ -1814,27 +1811,25 @@ end;
 {$ENDIF}
 {=====}
 
-procedure TVpDayView.SetActiveEventByCoord (APoint : TPoint);            
-var                                                                      
-  I : Integer;                                                                                                                             
-
-begin                                                                    
-  for I := 0 to pred(Length(dvEventArray)) do begin                      
-
-    if dvEventArray[I].Event = nil then                                  
-      Exit;                                                              
-
-    if (APoint.X > dvEventArray[I].Rec.Left)   and                       
-       (APoint.X < dvEventArray[I].Rec.Right)  and                       
-       (APoint.Y > dvEventArray[I].Rec.Top)    and                       
-       (APoint.Y < dvEventArray[I].Rec.Bottom) then begin                
-      FActiveEvent := TVpEvent(dvEventArray[I].Event);                   
-      dvActiveEventRec := dvEventArray[I].Rec;                           
-      dvActiveIconRec  := dvEventArray[I].IconRect;                      
-      Exit;                                                              
-    end;                                                                 
-  end;                                                                   
-end;                                                                     
+procedure TVpDayView.SetActiveEventByCoord(APoint: TPoint);
+var
+  I : Integer;
+begin
+  for I := 0 to pred(Length(dvEventArray)) do begin
+    if dvEventArray[I].Event = nil then
+      Exit;
+    if (APoint.X > dvEventArray[I].Rec.Left) and
+       (APoint.X < dvEventArray[I].Rec.Right) and
+       (APoint.Y > dvEventArray[I].Rec.Top) and
+       (APoint.Y < dvEventArray[I].Rec.Bottom)
+    then begin
+      FActiveEvent := TVpEvent(dvEventArray[I].Event);
+      dvActiveEventRec := dvEventArray[I].Rec;
+      dvActiveIconRec  := dvEventArray[I].IconRect;
+      Exit;
+    end;
+  end;
+end;
 
 function TVpDayView.EditEventAtCoord(Point: TPoint): Boolean;
 var
@@ -1851,16 +1846,17 @@ begin
       dvActiveEventRec.Bottom := 0;
       dvActiveEventRec.Right := 0;
       dvActiveEventRec.Left := 0;
-      dvActiveIconRec  := Rect (0, 0, 0, 0);                             
+      dvActiveIconRec  := Rect (0, 0, 0, 0);
       Exit;
     end;
-    if (Point.X > dvEventArray[I].Rec.Left)
-    and (Point.X < dvEventArray[I].Rec.Right)
-    and (Point.Y > dvEventArray[I].Rec.Top)
-    and (Point.Y < dvEventArray[I].Rec.Bottom) then begin
+    if (Point.X > dvEventArray[I].Rec.Left) and
+       (Point.X < dvEventArray[I].Rec.Right) and
+       (Point.Y > dvEventArray[I].Rec.Top) and
+       (Point.Y < dvEventArray[I].Rec.Bottom)
+    then begin
       FActiveEvent := TVpEvent(dvEventArray[I].Event);
       dvActiveEventRec := dvEventArray[I].Rec;
-      dvActiveIconRec  := dvEventArray[I].IconRect;                      
+      dvActiveIconRec := dvEventArray[I].IconRect;
       dvClickTimer.Enabled := true;
       result := true;
       Break;
@@ -1870,7 +1866,7 @@ begin
       dvActiveEventRec.Bottom := 0;
       dvActiveEventRec.Right := 0;
       dvActiveEventRec.Left := 0;
-      dvActiveIconRec  := Rect (0, 0, 0, 0);                             
+      dvActiveIconRec := Rect (0, 0, 0, 0);
     end;
   end;
 end;
@@ -1882,14 +1878,13 @@ var
 begin
   result := nil;
   for I := 0 to pred(Length(dvEventArray)) do begin
-
     if dvEventArray[I].Event = nil then
       Exit;
-
-    if (Point.X > dvEventArray[I].Rec.Left)
-    and (Point.X < dvEventArray[I].Rec.Right)
-    and (Point.Y > dvEventArray[I].Rec.Top)
-    and (Point.Y < dvEventArray[I].Rec.Bottom) then begin
+    if (Point.X > dvEventArray[I].Rec.Left) and
+       (Point.X < dvEventArray[I].Rec.Right) and
+       (Point.Y > dvEventArray[I].Rec.Top) and
+       (Point.Y < dvEventArray[I].Rec.Bottom)
+    then begin
       result := TVpEvent(dvEventArray[I].Event);
       Exit;
     end;
@@ -1941,10 +1936,10 @@ end;
 
 procedure TVpDayView.EndEdit(Sender: TObject);
 begin
-  if dvEndingEditing then                                                
-    Exit;                                                                
-  dvEndingEditing := True;                                               
-  try                                                                    
+  if dvEndingEditing then
+    Exit;
+  dvEndingEditing := True;
+  try
     if (dvInPlaceEditor <> nil) and dvInplaceEditor.Visible then begin
       if dvInPlaceEditor.Text <> FActiveEvent.Description then begin
         FActiveEvent.Description := dvInPlaceEditor.Text;
@@ -1956,61 +1951,69 @@ begin
       dvInplaceEditor.Hide;
       Invalidate;
     end;
-  finally                                                                
-    dvEndingEditing := False;                                            
-  end;                                                                   
+  finally
+    dvEndingEditing := False;
+  end;
 end;
 {=====}
 
 procedure TVpDayView.KeyDown(var Key: Word; Shift: TShiftState);
-
 var
   PopupPoint : TPoint;
-
 begin
   case Key of
-    VK_UP      : ActiveRow := ActiveRow - 1;
-    VK_DOWN    : ActiveRow := ActiveRow + 1;
-    VK_NEXT    : ActiveRow := ActiveRow + FVisibleLines;
-    VK_PRIOR   : ActiveRow := ActiveRow - FVisibleLines;
-    VK_LEFT    : Date := Date - 1;
-    VK_RIGHT   : Date := Date + 1;
-    VK_HOME    : ActiveRow := 0;
-    VK_END     : ActiveRow := LineCount;
-    VK_DELETE  : if not ReadOnly then
-                  DeleteActiveEvent(true);
+    VK_UP:
+      ActiveRow := ActiveRow - 1;
+    VK_DOWN:
+      ActiveRow := ActiveRow + 1;
+    VK_NEXT:
+      ActiveRow := ActiveRow + FVisibleLines;
+    VK_PRIOR:
+      ActiveRow := ActiveRow - FVisibleLines;
+    VK_LEFT:
+      Date := Date - 1;
+    VK_RIGHT:
+      Date := Date + 1;
+    VK_HOME:
+      ActiveRow := 0;
+    VK_END:
+      ActiveRow := LineCount;
+    VK_DELETE:
+      if not ReadOnly then
+        DeleteActiveEvent(true);
 {$IFNDEF LCL}
-    VK_TAB     :
+    VK_TAB:
       if ssShift in Shift then
         Windows.SetFocus (GetNextDlgTabItem(GetParent(Handle), Handle, False))
       else
         Windows.SetFocus (GetNextDlgTabItem(GetParent(Handle), Handle, True));
 {$ENDIF}
-    VK_F10    :
+    VK_F10:
       if (ssShift in Shift) and not (Assigned (PopupMenu)) then begin
         PopupPoint := GetClientOrigin;
-        FDefaultPopup.Popup (PopupPoint.x + 10,
-                             PopupPoint.y + 10);
+        FDefaultPopup.Popup(PopupPoint.x + 10, PopupPoint.y + 10);
       end;
-    VK_APPS   :
-      if not Assigned (PopupMenu) then begin
+    VK_APPS :
+      if not Assigned(PopupMenu) then begin
         PopupPoint := GetClientOrigin;
-        FDefaultPopup.Popup (PopupPoint.x + 10,
-                             PopupPoint.y + 10);
+        FDefaultPopup.Popup(PopupPoint.x + 10, PopupPoint.y + 10);
       end;
-    VK_RETURN : PopupEditEvent (Self);
-    VK_INSERT : PopupAddEvent (Self);
-    VK_F2     : if Assigned (FActiveEvent) then
-                  dvEditInPlace (Self)                                   
-                else begin                                               
-                  PopupPoint := dvLineMatrix[ActiveCol,                  
-                                             ActiveRow].Rec.TopLeft;     
-                  PopupPoint.x := PopupPoint.x + 1;                      
-                  PopupPoint.y := PopupPoint.y + 1;                      
-                  SetActiveEventByCoord (PopupPoint);                    
-                  if Assigned (FActiveEvent) then                        
-                    dvEditInPlace (Self);                                
-                end;                                                     
+    VK_RETURN:
+      PopupEditEvent(Self);
+    VK_INSERT:
+      PopupAddEvent(Self);
+    VK_F2:
+      if Assigned(FActiveEvent) then
+        dvEditInPlace(Self)
+      else
+      begin
+        PopupPoint := dvLineMatrix[ActiveCol, ActiveRow].Rec.TopLeft;
+        PopupPoint.x := PopupPoint.x + 1;
+        PopupPoint.y := PopupPoint.y + 1;
+        SetActiveEventByCoord (PopupPoint);
+        if Assigned(FActiveEvent) then
+          dvEditInPlace(Self);
+      end;
   end;
 end;
 {=====}
@@ -2066,6 +2069,7 @@ begin
   SetScrollInfo (Handle, SB_VERT, SI, True);
 end;
 {=====}
+
 procedure TVpDayView.SetShowResourceName(Value: Boolean);
 begin
   if Value <> FShowResourceName then begin
@@ -2074,7 +2078,7 @@ begin
   end;
 end;
 
-procedure TVpDayView.SetNumDays (Value : Integer);
+procedure TVpDayView.SetNumDays(Value: Integer);
 begin
   if (Value <> FNumDays)
   and (Value > 0)
@@ -2138,51 +2142,53 @@ begin
   end;
 end;
 {=====}
-procedure TVpDayView.SetDotDotDotColor (const v : TColor);               
-begin                                                                    
-  if v <> FDotDotDotColor then begin                                     
-    FDotDotDotColor := v;                                                
-    Invalidate;                                                          
-  end;                                                                   
-end;                                                                     
+procedure TVpDayView.SetDotDotDotColor(const v: TColor);
+begin
+  if v <> FDotDotDotColor then begin
+    FDotDotDotColor := v;
+    Invalidate;
+  end;
+end;
 {=====}
 
-procedure TVpDayView.SetShowEventTimes(Value: Boolean);                  
-begin                                                                    
-  if Value <> FShowEventTimes then begin                                 
-    FShowEventTimes := Value;                                            
-    Invalidate;                                                          
-  end;                                                                   
-end;                                                                     
-{=====}                                                                  
-
-procedure TVpDayView.SetWrapStyle (const v : TVpDVWrapStyle);            
-begin                                                                    
-  if v <> FWrapStyle then begin                                          
-    FWrapStyle := v;                                                     
-    Invalidate;                                                          
-  end;                                                                   
-end;                                                                     
+procedure TVpDayView.SetShowEventTimes(Value: Boolean);
+begin
+  if Value <> FShowEventTimes then begin
+    FShowEventTimes := Value;
+    Invalidate;
+  end
+end;
 {=====}
 
-procedure TVpDayView.dvSetActiveRowByCoord (Pnt    : TPoint;             
-                                            Sloppy : Boolean);           
+procedure TVpDayView.SetWrapStyle(const v: TVpDVWrapStyle);
+begin
+  if v <> FWrapStyle then begin
+    FWrapStyle := v;
+    Invalidate;
+  end;
+end;
+{=====}
+
+procedure TVpDayView.dvSetActiveRowByCoord(Pnt: TPoint; Sloppy: Boolean);
 var
   I : Integer;
 begin
   if dvClickTimer.Enabled  then
     dvClickTimer.Enabled := false;
   for I := 0 to pred(LineCount) do begin
-    if (Sloppy) and                                                      
-            (Pnt.y <= dvLineMatrix[ActiveCol, I].Rec.Bottom) and         
-            (Pnt.y > dvLineMatrix[ActiveCol, I].Rec.Top) then begin      
-      ActiveRow := I;                                                    
-      Exit;                                                              
-    end else if (Pnt.x > dvLineMatrix[ActiveCol, I].Rec.Left) and        
-                (Pnt.x < dvLineMatrix[ActiveCol, I].Rec.Right) and       
-                (Pnt.y <= dvLineMatrix[ActiveCol, I].Rec.Bottom) and     
-                (Pnt.y > dvLineMatrix[ActiveCol, I].Rec.Top) then begin  
-      ActiveRow := I;                                        
+    if Sloppy and
+       (Pnt.y <= dvLineMatrix[ActiveCol, I].Rec.Bottom) and
+       (Pnt.y > dvLineMatrix[ActiveCol, I].Rec.Top)
+    then begin
+      ActiveRow := I;
+      Exit;
+    end else
+    if (Pnt.x > dvLineMatrix[ActiveCol, I].Rec.Left) and
+       (Pnt.x < dvLineMatrix[ActiveCol, I].Rec.Right) and
+       (Pnt.y <= dvLineMatrix[ActiveCol, I].Rec.Bottom) and
+       (Pnt.y > dvLineMatrix[ActiveCol, I].Rec.Top)
+    then begin
+      ActiveRow := I;
       Exit;
     end;
   end;
@@ -2194,10 +2200,11 @@ var
   I : Integer;
 begin
   for I := 0 to pred(length(dvColRectArray)) do begin
-    if (Pnt.x > dvColRectArray[I].Rec.Left)
-    and (Pnt.x < dvColRectArray[I].Rec.Right)
-    and (Pnt.y < dvColRectArray[I].Rec.Bottom)
-    and (Pnt.y > dvColRectArray[I].Rec.Top) then begin
+    if (Pnt.x > dvColRectArray[I].Rec.Left) and
+       (Pnt.x < dvColRectArray[I].Rec.Right) and
+       (Pnt.y < dvColRectArray[I].Rec.Bottom) and
+       (Pnt.y > dvColRectArray[I].Rec.Top)
+    then begin
       ActiveCol := I;
       Exit;
     end;
@@ -2210,125 +2217,93 @@ begin
   Result := itDayView;
 end;
 
-procedure TVpDayView.AutoScaledPaintToCanvas (PaintCanvas : TCanvas;
-                                               PaintTo     : TRect;
-                                               Angle       : TVpRotationAngle;
-                                               RenderDate  : TDateTime;
-                                               StartLine   : Integer;
-                                               StopLine    : Integer;
-                                               UseGran     : TVpGranularity);
+procedure TVpDayView.AutoScaledPaintToCanvas(PaintCanvas: TCanvas; PaintTo: TRect;
+  Angle: TVpRotationAngle; RenderDate: TDateTime; StartLine, StopLine: Integer;
+  UseGran: TVpGranularity);
 var
-  SrcResY  : Integer;
-  DestResY : Integer;
-  Scale    : Extended;
-
+  SrcResY: Integer;
+  DestResY: Integer;
+  Scale: Extended;
 begin
-  SrcResY  := GetDeviceCaps (Canvas.Handle,      LOGPIXELSY);
-  DestResY := GetDeviceCaps (PaintCanvas.Handle, LOGPIXELSY);
-
-  Scale    := DestResY / SrcResY;
-
-  RenderToCanvas (PaintCanvas, PaintTo, Angle, Scale, RenderDate,
-                        StartLine, StopLine, UseGran, True);
+  SrcResY := GetDeviceCaps(Canvas.Handle, LOGPIXELSY);
+  DestResY := GetDeviceCaps(PaintCanvas.Handle, LOGPIXELSY);
+  Scale := DestResY / SrcResY;
+  RenderToCanvas(PaintCanvas, PaintTo, Angle, Scale, RenderDate, StartLine, StopLine, UseGran, True);
 end;
 
-procedure TVpDayView.PaintToCanvas (ACanvas   : TCanvas;
-                                     ARect     : TRect;
-                                     Angle     : TVpRotationAngle;
-                                     ADate     : TDateTime;
-                                     StartHour : TVpHours;
-                                     EndHour   : TVpHours;
-                                     UseGran   : TVpGranularity);
+procedure TVpDayView.PaintToCanvas(ACanvas: TCanvas; ARect: TRect;
+  Angle: TVpRotationAngle; ADate: TDateTime; StartHour, EndHour: TVpHours;
+  UseGran: TVpGranularity);
 begin
-  RenderToCanvas (ACanvas, ARect, Angle, 1, ADate,
-                  HourToLine (StartHour, UseGran),
-                  HourToLine (EndHour, UseGran),
-                  UseGran, True);
+  RenderToCanvas(
+    ACanvas,
+    ARect,
+    Angle,
+    1,
+    ADate,
+    HourToLine(StartHour, UseGran),
+    HourToLine(EndHour, UseGran),
+    UseGran,
+    True);
 end;
 
-procedure TVpDayView.RenderToCanvas (RenderCanvas : TCanvas;
-                                     RenderIn     : TRect;
-                                     Angle        : TVpRotationAngle;
-                                     Scale        : Extended;
-                                     RenderDate   : TDateTime;
-                                     StartLine    : Integer;
-                                     StopLine     : Integer;
-                                     UseGran      : TVpGranularity;
-                                     DisplayOnly  : Boolean);
-
-  {function GetRealNumDays (WorkDate : TDateTime) : Integer;           } 
-  {var                                                                 } 
-  {  i        : Integer;                                               } 
-  {begin                                                               } 
-  {  if not FIncludeWeekends then begin                                } 
-  {    Result := 0;                                                    } 
-  {    i := 0;                                                         } 
-  {    while i < FNumDays do begin                                     } 
-  {      if (DayOfWeek (WorkDate) <> 1) and                            } 
-  {         (DayOfWeek (WorkDate) <> 7) then                           } 
-  {        Inc (i);                                                    } 
-  {      WorkDate := WorkDate + 1;                                     } 
-  {      Inc (Result);                                                 } 
-  {    end;                                                            } 
-  {  end else                                                          } 
-  {    Result := FNumDays;                                             } 
-  {end;                                                                } 
-
+procedure TVpDayView.RenderToCanvas(RenderCanvas: TCanvas; RenderIn: TRect;
+  Angle: TVpRotationAngle; Scale: Extended; RenderDate: TDateTime;
+  StartLine, StopLine: Integer; UseGran: TVpGranularity; DisplayOnly: Boolean);
 var
-  TextWidth       : Integer;
-  ColHeadRect     : TRect;
-  CellsRect       : TRect;
-  RowHeadRect     : TRect;
-  ADEventsRect    : TRect;
-  SaveBrushColor  : TColor;
-  SavePenStyle    : TPenStyle;
-  SavePenColor    : TColor;
-  Drawn           : Boolean;
-  ScrollBarOffset : Integer;
-  EventCount      : Integer;
-  RealWidth       : Integer;
-  RealHeight      : Integer;
-  RealLeft        : Integer;
-  RealRight       : Integer;
-  RealTop         : Integer;
-  RealBottom      : Integer;
-  DayWidth        : Integer;
-  RealNumDays     : Integer;
-  Rgn             : HRGN;
-  RealRowHeight   : Integer;
-  RealColHeadHeight : Integer;
-  RealRowHeadWidth  : Integer;
-  RealVisibleLines  : Integer;
-
-  BevelShadow          : TColor;
-  BevelHighlight       : TColor;
-  BevelDarkShadow      : TColor;
-  WindowColor          : TColor;
-  HighlightText        : TColor;
-  RealHeadAttrColor    : TColor;
-  RealRowHeadAttrColor : TColor;
-  RealLineColor        : TColor;
-  RealColor            : TColor;
-  BevelFace            : TColor;
-  HighlightBkg         : TColor;
-  RealADEventBkgColor  : TColor;                                         
-  ADEventAttrBkgColor  : TColor;                                         
-  ADEventBorderColor   : TColor;                                         
+  TextWidth: Integer;
+  ColHeadRect: TRect;
+  CellsRect: TRect;
+  RowHeadRect: TRect;
+  ADEventsRect: TRect;
+  SaveBrushColor: TColor;
+  SavePenStyle: TPenStyle;
+  SavePenColor: TColor;
+  Drawn: Boolean;
+  ScrollBarOffset: Integer;
+  EventCount: Integer;
+  RealWidth: Integer;
+  RealHeight: Integer;
+  RealLeft: Integer;
+  RealRight: Integer;
+  RealTop: Integer;
+  RealBottom: Integer;
+  DayWidth: Integer;
+  RealNumDays: Integer;
+  Rgn: HRGN;
+  RealRowHeight: Integer;
+  RealColHeadHeight: Integer;
+  RealRowHeadWidth: Integer;
+  RealVisibleLines: Integer;
+  BevelShadow: TColor;
+  BevelHighlight: TColor;
+  BevelDarkShadow: TColor;
+  WindowColor: TColor;
+  HighlightText: TColor;
+  RealHeadAttrColor: TColor;
+  RealRowHeadAttrColor: TColor;
+  RealLineColor: TColor;
+  RealColor: TColor;
+  BevelFace: TColor;
+  HighlightBkg: TColor;
+  RealADEventBkgColor: TColor;
+  ADEventAttrBkgColor: TColor;
+  ADEventBorderColor: TColor;
 
   procedure SetMeasurements;
   begin
-    RealWidth  := TPSViewportWidth (Angle, RenderIn);
-    RealHeight := TPSViewportHeight (Angle, RenderIn);
-    RealLeft   := TPSViewportLeft (Angle, RenderIn);
-    RealRight  := TPSViewportRight (Angle, RenderIn);
-    RealTop    := TPSViewportTop (Angle, RenderIn);
-    RealBottom := TPSViewportBottom (Angle, RenderIn);
-    dvCalcColHeadHeight (Scale);
+    RealWidth := TPSViewportWidth(Angle, RenderIn);
+    RealHeight := TPSViewportHeight(Angle, RenderIn);
+    RealLeft := TPSViewportLeft(Angle, RenderIn);
+    RealRight := TPSViewportRight(Angle, RenderIn);
+    RealTop := TPSViewportTop(Angle, RenderIn);
+    RealBottom := TPSViewportBottom(Angle, RenderIn);
+    dvCalcColHeadHeight(Scale);
   end;
 
-  procedure dvDrawColHeader(R : TRect; RenderDate : TDateTime; Col: Integer);
+  procedure dvDrawColHeader(R: TRect; RenderDate: TDateTime; Col: Integer);
   var
-    SaveFont : TFont;
+    SaveFont: TFont;
     DateStr, ResStr: string;
     DateStrLen, ResStrLen: integer;
     StrHt: Integer;
@@ -2342,7 +2317,7 @@ var
       RenderCanvas.Font.Assign(FHeadAttr.FFont);
       RenderCanvas.Brush.Color := RealHeadAttrColor;
       RenderCanvas.Pen.Style := psClear;
-      TPSRectangle (RenderCanvas, Angle, RenderIn, R);
+      TPSRectangle(RenderCanvas, Angle, RenderIn, R);
       RenderCanvas.Pen.Style := psSolid;
 
       { Size text rect }
@@ -2356,65 +2331,58 @@ var
       DateStrLen := RenderCanvas.TextWidth(DateStr);
       StrHt := RenderCanvas.TextHeight(DateStr);
       if DateStrLen > TextRect.Right - TextRect.Left then begin
-        DateStr := GetDisplayString(RenderCanvas, DateStr, 0,
-          TextRect.Right - TextRect.Left);
+        DateStr := GetDisplayString(RenderCanvas, DateStr, 0, TextRect.Right - TextRect.Left);
         DateStrLen := RenderCanvas.TextWidth(DateStr);
       end;
 
-      if (DataStore <> nil)
-      and (DataStore.Resource <> nil)
-      and FShowResourceName then begin
+      if (DataStore <> nil) and (DataStore.Resource <> nil) and FShowResourceName
+      then begin
         { fix Res String }
         ResStr := DataStore.Resource.Description;
         ResStrLen := RenderCanvas.TextWidth(ResStr);
         if ResStrLen > TextRect.Right - TextRect.Left then begin
-          ResStr := GetDisplayString(RenderCanvas, ResStr, 0,
-            TextRect.Right - TextRect.Left);
+          ResStr := GetDisplayString(RenderCanvas, ResStr, 0, TextRect.Right - TextRect.Left);
           ResStrLen := RenderCanvas.TextWidth(ResStr);
         end;
         { center and write the resource name in the first column }
         if (Col = 0) then begin
-          X := TextRect.Left + ((TextRect.Right - TextRect.Left) div 2)
-            - ResStrLen div 2;
+          X := TextRect.Left + (TextRect.Right - TextRect.Left) div 2 - ResStrLen div 2;
           Y := TextRect.Top + TextMargin;
-          TPSTextOut (RenderCanvas, Angle, RenderIn,
-                      X, Y, DataStore.Resource.Description);
+          TPSTextOut(RenderCanvas, Angle, RenderIn, X, Y, DataStore.Resource.Description);
         end;
         { center and write the date string }
-        X := TextRect.Left + ((TextRect.Right - TextRect.Left) div 2)
-          - DateStrLen div 2;
+        X := TextRect.Left + (TextRect.Right - TextRect.Left) div 2 - DateStrLen div 2;
         Y := TextRect.Top + (TextMargin * 2) + StrHt;
-        TPSTextOut (RenderCanvas, Angle, RenderIn,
-                    X, Y, DateStr);
+        TPSTextOut(RenderCanvas, Angle, RenderIn, X, Y, DateStr);
       end else begin
         { center and write the date string }
         Y := TextRect.Top + TextMargin;
-        X := TextRect.Left + ((TextRect.Right - TextRect.Left) div 2)
-          - DateStrLen div 2;
-        TPSTextOut (RenderCanvas, Angle, RenderIn, X, Y, DateStr);
+        X := TextRect.Left + (TextRect.Right - TextRect.Left) div 2 - DateStrLen div 2;
+        TPSTextOut(RenderCanvas, Angle, RenderIn, X, Y, DateStr);
       end;
 
       {Draw Column Head Borders }
       if FDrawingStyle = dsFlat then begin
-
-        RenderCanvas.Pen.color := BevelShadow;
+        RenderCanvas.Pen.Color := BevelShadow;
         {bottom}
-        TPSMoveTo (RenderCanvas, Angle, RenderIn, R.Right, R.Bottom);
-        TPSLineTo (RenderCanvas, Angle, RenderIn, R.Left - 1, R.Bottom);
+        TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right, R.Bottom);
+        TPSLineTo(RenderCanvas, Angle, RenderIn, R.Left - 1, R.Bottom);
         {right side}
-        TPSMoveTo (RenderCanvas, Angle, RenderIn, R.Right, R.Bottom - 4);
-        TPSLineTo (RenderCanvas, Angle, RenderIn, R.Right, R.Top + 3);
-        RenderCanvas.Pen.color := BevelHighlight;
+        TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right, R.Bottom - 4);
+        TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right, R.Top + 3);
+        RenderCanvas.Pen.Color := BevelHighlight;
         {left side}
-        TPSMoveTo (RenderCanvas, Angle, RenderIn, R.Left, R.Bottom - 4);
-        TPSLineTo (RenderCanvas, Angle, RenderIn, R.Left, R.Top + 3);
+        TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Left, R.Bottom - 4);
+        TPSLineTo(RenderCanvas, Angle, RenderIn, R.Left, R.Top + 3);
       end
-      else if FDrawingStyle = ds3d then begin
-        DrawBevelRect (RenderCanvas,
-                       TPSRotateRectangle (Angle, RenderIn,
-                                           Rect (R.Left, R.Top,
-                                                 R.Right, R.Bottom)),
-                       BevelHighlight, BevelDarkShadow);
+      else
+      if FDrawingStyle = ds3d then begin
+        DrawBevelRect(
+          RenderCanvas,
+          TPSRotateRectangle(Angle, RenderIn, Rect (R.Left, R.Top, R.Right, R.Bottom)),
+          BevelHighlight,
+          BevelDarkShadow
+        );
       end;
       RenderCanvas.Font.Assign(SaveFont);
     finally
@@ -2422,14 +2390,13 @@ var
     end;
   end;
 
-  procedure dvDrawRowHeader (R : TRect);
+  procedure dvDrawRowHeader(R: TRect);
   var
     Temp , I: Integer;
     LineRect: TRect;
     LastHour, Hour: Integer;
     MinuteStr, HourStr: string;
     SaveFont: TFont;
-
   begin
     if StartLine < 0 then
       StartLine := TopLine;
@@ -2441,22 +2408,26 @@ var
       TPSFillRect(RenderCanvas, Angle, RenderIn, R);
       RenderCanvas.Pen.Style := psSolid;
 
-      RenderCanvas.Font.Assign (FRowHeadAttr.MinuteFont);
-      RealVisibleLines := dvCalcVisibleLines (R.Bottom - R.Top,
-                                              RealColHeadHeight, RealRowHeight,
-                                              Scale, StartLine, StopLine);
+      RenderCanvas.Font.Assign(FRowHeadAttr.MinuteFont);
+      RealVisibleLines := dvCalcVisibleLines(
+        R.Bottom - R.Top,
+        RealColHeadHeight,
+        RealRowHeight,
+        Scale,
+        StartLine,
+        StopLine
+      );
       Temp := RenderCanvas.TextWidth('33');
       Temp := Temp + 10;
       RenderCanvas.Pen.Style := psSolid;
       RenderCanvas.Pen.Color := RealLineColor;
-      LineRect := Rect (R.Left, R.Top, R.Right, R.Top + RealRowHeight);
+      LineRect := Rect(R.Left, R.Top, R.Right, R.Top + RealRowHeight);
       Hour := Ord(dvLineMatrix[0, StartLine].Hour);
 
       for I := 0 to RealVisibleLines do begin
         { prevent any extranneous drawing below the last hour }
-        if (I + FTopLine >= FLineCount)
-        or (Hour > 23)
-        then Break;
+        if (I + FTopLine >= FLineCount) or (Hour > 23) then
+          Break;
 
         if I = 0 then begin
           if Hour < 12 then
@@ -2487,49 +2458,55 @@ var
         if UseGran = gr60Min then begin
           { Paint time }
           RenderCanvas.Font.Assign(FRowHeadAttr.MinuteFont);
-          TPSTextOut (RenderCanvas, Angle, RenderIn,
-                      LineRect.Right -
-                      RenderCanvas.TextWidth(HourStr + ':' + MinuteStr) - 7,
-                      LineRect.Top + TextMargin, HourStr + ':' + MinuteStr);
+          TPSTextOut(RenderCanvas, Angle, RenderIn,
+            LineRect.Right - RenderCanvas.TextWidth(HourStr + ':' + MinuteStr) - 7,
+            LineRect.Top + TextMargin,
+            HourStr + ':' + MinuteStr
+          );
           LastHour := Hour;
           Inc(Hour);
         end else begin
           { Paint Minute Text}
           if dvLineMatrix[0, StartLine + i].Minute = 0 then begin
             RenderCanvas.Font.Assign(FRowHeadAttr.MinuteFont);
-            TPSTextOut (RenderCanvas, Angle, RenderIn,
-                        LineRect.Right - RenderCanvas.TextWidth(MinuteStr) - 7,
-                        LineRect.Top + TextMargin, MinuteStr);
+            TPSTextOut(RenderCanvas, Angle, RenderIn,
+              LineRect.Right - RenderCanvas.TextWidth(MinuteStr) - 7,
+              LineRect.Top + TextMargin,
+              MinuteStr
+            );
             { Paint Hour Text }
             RenderCanvas.Font.Assign(FRowHeadAttr.HourFont);
-            TPSTextOut (RenderCanvas, Angle, RenderIn,
-                        LineRect.Right - RenderCanvas.TextWidth(HourStr) - 2
-                          - Temp, LineRect.Top + TextMargin - 2, HourStr);
+            TPSTextOut(RenderCanvas, Angle, RenderIn,
+              LineRect.Right - RenderCanvas.TextWidth(HourStr) - 2 - Temp,
+              LineRect.Top + TextMargin - 2,
+              HourStr
+            );
           end;
           LastHour := Hour;
           Hour := Ord(dvLineMatrix[0, StartLine + i + 1].Hour);
         end;
 
-        TPSMoveTo (RenderCanvas, Angle, RenderIn,
-                   LineRect.Right-6, LineRect.Bottom);
+        TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Right-6, LineRect.Bottom);
         if LastHour <> Hour then
-          TPSLineTo (RenderCanvas, Angle, RenderIn,
-                     LineRect.Left + 6, LineRect.Bottom)
+          TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Left + 6, LineRect.Bottom)
         else
-          TPSLineTo (RenderCanvas, Angle, RenderIn,
-                     LineRect.Right-Temp, LineRect.Bottom);
+          TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right-Temp, LineRect.Bottom);
       end; {for}
 
       { Draw Row Header Borders }
       if FDrawingStyle = dsFlat then begin
-        DrawBevelRect (RenderCanvas, TPSRotateRectangle (Angle, RenderIn,
-          Rect (R.Left - 1, R.Top, R.Right - 1, R.Bottom - 2)), BevelHighlight,
-          BevelShadow);
+        DrawBevelRect(RenderCanvas, TPSRotateRectangle (Angle, RenderIn,
+          Rect(R.Left - 1, R.Top, R.Right - 1, R.Bottom - 2)),
+          BevelHighlight,
+          BevelShadow
+        );
       end
       else if FDrawingStyle = ds3d then begin
-        DrawBevelRect (RenderCanvas, TPSRotateRectangle (Angle, RenderIn,
-          Rect (R.Left + 1, R.Top, R.Right - 1, R.Bottom - 3)), BevelHighlight,
-          BevelDarkShadow);
+        DrawBevelRect(RenderCanvas,
+          TPSRotateRectangle (Angle, RenderIn, Rect(R.Left + 1, R.Top, R.Right - 1, R.Bottom - 3)),
+          BevelHighlight,
+          BevelDarkShadow
+        );
       end;
 
       RenderCanvas.Font.Assign(SaveFont);
@@ -2538,26 +2515,24 @@ var
       SaveFont.Free;
     end;
   end;
-  {=====}
 
   { Draws the all-day events at the top of the DayView in a special manner }
   procedure DrawAllDayEvents;
   var
-    ADEventsList       : TList;
-    TempList           : TList;
-    I, J, K            : Integer;
-    Event              : TVpEvent;
-    ADEventRect        : TRect;
-    StartsBeforeRange  : Boolean;
-    MaxADEvents        : Integer;
-    Skip               : Boolean;
-    ADTextHeight       : Integer;
-    EventStr           : string;
+    ADEventsList: TList;
+    TempList: TList;
+    I, J, K: Integer;
+    Event: TVpEvent;
+    ADEventRect: TRect;
+    StartsBeforeRange : Boolean;
+    MaxADEvents: Integer;
+    Skip: Boolean;
+    ADTextHeight: Integer;
+    EventStr: string;
     I2: Integer;
     DI: Integer;
     AllDayWidth: Integer;
     OldTop: LongInt;
-
   begin
     if (DataStore = nil) or (DataStore.Resource = nil) then
       Exit;
@@ -2575,14 +2550,13 @@ var
       try
         for I := 0 to pred(RealNumDays) do begin
           { skip weekends }
-          if ((DayOfWeek (RenderDate + i) = 1) or
-              (DayOfWeek (RenderDate + i) = 7)) and
-              (not FIncludeWeekends) then
+          if ((DayOfWeek (RenderDate + i) = 1) or (DayOfWeek (RenderDate + i) = 7)) and
+              (not FIncludeWeekends)
+          then
             Continue;
 
           { get the all day events for the day specified by RenderDate + I }
-          DataStore.Resource.Schedule.AllDayEventsByDate(RenderDate + I,
-            TempList);
+          DataStore.Resource.Schedule.AllDayEventsByDate(RenderDate + I, TempList);
 
           { Iterate through these events and place them in ADEventsList    }
           Skip := false;
@@ -2608,7 +2582,6 @@ var
       end;
 
       if MaxADEvents > 0 then begin
-
         RenderCanvas.Brush.Color := RealADEventBkgColor;
         RenderCanvas.Font.Assign (AllDayEventAttributes.Font);
 
@@ -2617,73 +2590,68 @@ var
 
         { set the top of the event's rect }
         OldTop := ADEventsRect.Top;
-        AdEventRect.Top := OldTop + TextMargin
-                    + (I  * ADTextHeight);
+        AdEventRect.Top := OldTop + TextMargin + I * ADTextHeight;
 
         { Build the AllDayEvent rect based on the value of MaxADEvents }
-        ADEventsRect.Bottom := AdEventsRect.Top
-          + (MaxADEvents * ADTextHeight) + TextMargin * 2;
+        ADEventsRect.Bottom := AdEventsRect.Top + MaxADEvents * ADTextHeight + TextMargin * 2;
 
         { Clear the AllDayEvents area }
         TpsFillRect(RenderCanvas, Angle, RenderIn, ADEventsRect);
 
         for I := 0 to pred(RealNumDays) do begin
           { Set attributes }
-
           StartsBeforeRange  := false;
           DI := 0;
           { Cycle through the all day events and draw them appropriately }
           for I2 := 0 to pred(ADEventsList.Count) do begin
-
             Event := ADEventsList[I2];
+            if (trunc(Event.StartTime)<=(trunc(RenderDate)+I)) and
+               (trunc(Event.EndTime)>=(trunc(RenderDate)+I))
+            then begin
+              { set the top of the event's rect }
+              AdEventRect.Top := OldTop + TextMargin + DI * ADTextHeight;
+              inc(DI);
 
-            if (trunc(Event.StartTime)<=(trunc(RenderDate)+I))
-            and (trunc(Event.EndTime)>=(trunc(RenderDate)+I)) then
-              begin
+              { see if the event began before the start of the range }
+              if (Event.StartTime < trunc(RenderDate)) then
+                StartsBeforeRange := true;
 
-                { set the top of the event's rect }
-                AdEventRect.Top := OldTop + TextMargin
-                  + (DI  * ADTextHeight);
+              AdEventRect.Bottom := ADEventRect.Top + ADTextHeight;
+              AdEventRect.Left := AdEventsRect.Left + DayWidth*I + TextMargin div 2;
+              AdEventRect.Right := AdEventRect.Left+DayWidth;
 
-                inc(DI);
+              if StartsBeforeRange then
+                EventStr := '>> '
+              else
+                EventStr := '';
 
-                { see if the event began before the start of the range }
-                if (Event.StartTime < trunc(RenderDate)) then
-                  StartsBeforeRange := true;
+              EventStr := EventStr + Event.Description;
 
-                AdEventRect.Bottom := ADEventRect.Top + ADTextHeight;
-                AdEventRect.Left := AdEventsRect.Left + (DayWidth*I) + (TextMargin div 2);
-                AdEventRect.Right := AdEventRect.Left+DayWidth;
+              RenderCanvas.Brush.Color := ADEventAttrBkgColor;
+              RenderCanvas.Pen.Color := ADEventBorderColor;
+              TPSRectangle(RenderCanvas, Angle, RenderIn,
+                ADEventRect.Left + TextMargin,
+                ADEventRect.Top + TextMargin div 2,
+                ADEventRect.Right - TextMargin,
+                ADEventRect.Top + ADTextHeight + TextMargin div 2
+              );
+              TPSTextOut(RenderCanvas,Angle, RenderIn,
+                AdEventRect.Left + TextMargin * 2 + TextMargin div 2,
+                AdEventRect.Top + TextMargin div 2,
+                EventStr
+              );
 
-                if (StartsBeforeRange) then
-                  EventStr := '>> '
-                else
-                  EventStr := '';
-
-                EventStr := EventStr + Event.Description;
-
-                RenderCanvas.Brush.Color := ADEventAttrBkgColor;
-                RenderCanvas.Pen.Color := ADEventBorderColor;
-                TPSRectangle (RenderCanvas, Angle, RenderIn,
-                              ADEventRect.Left + TextMargin,
-                              ADEventRect.Top + TextMargin div 2,
-                              ADEventRect.Right - TextMargin,
-                              ADEventRect.Top + ADTextHeight + TextMargin div 2);
-                TPSTextOut (RenderCanvas,Angle, RenderIn,
-                            AdEventRect.Left + TextMargin * 2 + TextMargin div 2,
-                            AdEventRect.Top + TextMargin div 2,
-                            EventStr);
-
-                dvEventArray[EventCount].Rec := Rect (ADEventRect.Left,
-                                                      ADEventRect.Top - 2,
-                                                      ADEventRect.Right - TextMargin,
-                                                      ADEventRect.Bottom);
-                dvEventArray[EventCount].Event := Event;
-                Inc (EventCount);
-              end;
+              dvEventArray[EventCount].Rec := Rect(
+                ADEventRect.Left,
+                ADEventRect.Top - 2,
+                ADEventRect.Right - TextMargin,
+                ADEventRect.Bottom
+              );
+              dvEventArray[EventCount].Event := Event;
+              Inc(EventCount);
+            end;
           end; { for I2 := 0 to pred(ADEventsList.Count) do ... }
         end;
-
       end;   { if MaxADEvents > 0 }
 
     finally
@@ -2820,57 +2788,49 @@ var
   end; *)
 
 
-  procedure DrawEvents (RenderDate : TDateTime; Col: Integer);
+  procedure DrawEvents(RenderDate: TDateTime; Col: Integer);
   type
-    { Defines matrix of event records for managing how events overlap }
-    { with each other.                                                }
+    { Defines matrix of event records for managing how events overlap with each other. }
     TVpDvEventRec = packed record
-      Event        : Pointer;
-      Level        : Integer;
-      OLLevels     : Integer; { The number of levels which overlap with the }
-                              { event represented by this record.           }
-      WidthDivisor : Integer; { the maximum OLEvents of all of this event's }
-                              { overlapping neighbors.                      }
-      RealStartTime : TDateTime;
-      RealEndTime : TDateTime;
+      Event: Pointer;
+      Level: Integer;
+      OLLevels: Integer; { Number of levels which overlap with the event represented by this record. }
+      WidthDivisor: Integer; { Maximum OLEvents of all of this event's overlapping neighbors. }
+      RealStartTime: TDateTime;
+      RealEndTime: TDateTime;
     end;
   type
     TVpDvEventArray = array of TVpDvEventRec;
-
   var
-    I,J, StartPixelOffset, EndPixelOffset      : Integer;
-    Level, EventWidth, EventSLine, EventELine  : Integer;
-    EventLineCount                             : Integer;
-    EventSTime, EventETime, ThisTime           : Double;
-    EventDuration, LineDuration, PixelDuration : Double;
-    StartOffset, EndOffset, STime, ETime       : Double;
-    EventRect, VisibleRect, GutterRect         : TRect;
-    EventString, Format                        : string;
-
-    Event      : TVpEvent;
-    SaveFont   : TFont;
-    SaveColor  : TColor;
-    EventArray : TVpDvEventArray;
-    EventList  : TList;
-
-    IconRect                                   : TRect;                  
-    dvBmpRecurring     : TBitmap;                                        
-    dvBmpCategory      : TBitmap;                                        
-    dvBmpAlarm         : TBitmap;                                        
-    dvBmpCustom        : TBitmap;                                        
-    RecurringW         : Integer;                                        
-    RecurringH         : Integer;                                        
-    CategoryW          : Integer;                                        
-    CategoryH          : Integer;                                        
-    AlarmW             : Integer;                                        
-    AlarmH             : Integer;                                        
-    CustomW            : Integer;                                        
-    CustomH            : Integer;                                        
-
+    I,J, StartPixelOffset, EndPixelOffset: Integer;
+    Level, EventWidth, EventSLine, EventELine: Integer;
+    EventLineCount: Integer;
+    EventSTime, EventETime, ThisTime: Double;
+    EventDuration, LineDuration, PixelDuration: Double;
+    StartOffset, EndOffset, STime, ETime: Double;
+    EventRect, VisibleRect, GutterRect: TRect;
+    EventString, Format: string;
+    Event: TVpEvent;
+    SaveFont: TFont;
+    SaveColor: TColor;
+    EventArray: TVpDvEventArray;
+    EventList: TList;
+    IconRect: TRect;
+    dvBmpRecurring: TBitmap;
+    dvBmpCategory: TBitmap;
+    dvBmpAlarm: TBitmap;
+    dvBmpCustom: TBitmap;
+    RecurringW: Integer;
+    RecurringH: Integer;
+    CategoryW: Integer;
+    CategoryH: Integer;
+    AlarmW: Integer;
+    AlarmH: Integer;
+    CustomW: Integer;
+    CustomH: Integer;
     {$IFDEF DEBUGDV}
     SL : TStringList;
     {$ENDIF}
-
 
     { returns the number of events which overlap the specified event }
     function CountOverlappingEvents(Event: TVpEvent;const EArray: TVpDvEventArray): Integer;
@@ -2914,14 +2874,13 @@ var
 
         { if the Tmp event's StartTime or EndTime falls within the range of }
         { Event... }
-        if (TimeInRange(frac(Tmp.StartTime), frac(Event.StartTime), frac(Event.EndTime), false)
-          or TimeInRange(frac(Tmp.EndTime), frac(Event.StartTime), frac(Event.EndTime), false))
-        { or the Tmp event's StartTime is before or equal to the Event's  }
-        { start time AND its end time is after or equal to the Event's    }
-        { end time, then the events overlap and we will need to increment }
-        { the value of K.          }
-        or ((frac(Tmp.StartTime) <= frac(Event.StartTime))
-          and (frac(Tmp.EndTime) >= frac(Event.EndTime)))
+        if TimeInRange(frac(Tmp.StartTime), frac(Event.StartTime), frac(Event.EndTime), false) or
+           TimeInRange(frac(Tmp.EndTime), frac(Event.StartTime), frac(Event.EndTime), false) or
+          { or the Tmp event's StartTime is before or equal to the Event's  }
+          { start time AND its end time is after or equal to the Event's    }
+          { end time, then the events overlap and we will need to increment }
+          { the value of K.          }
+           ((frac(Tmp.StartTime) <= frac(Event.StartTime)) and (frac(Tmp.EndTime) >= frac(Event.EndTime)))
         then begin
           { Count this event at this level }
           Inc(Levels[EArray[K].Level]);
@@ -2938,12 +2897,9 @@ var
         result := result - (Levels[K] - 1);
       end;
     end;
-    {---}
-
 
     { returns the maximum OLEvents value from all overlapping neighbors }
-    function GetMaxOLEvents(Event: TVpEvent;
-      const EArray: TVpDvEventArray): Integer;
+    function GetMaxOLEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
     var
       K: Integer;
       Tmp: TVpEvent;
@@ -2970,17 +2926,15 @@ var
         end;
         *)
 
-        { if the Tmp event's StartTime or EndTime falls within the range of }
-        { Event... }
-        if (TimeInRange(frac(Tmp.StartTime), frac(Event.StartTime), frac(Event.EndTime), false)
-          or TimeInRange(frac(Tmp.EndTime), frac(Event.StartTime), frac(Event.EndTime), false))
-        { or the Tmp event's StartTime is before or equal to the Event's  }
-        { start time AND its end time is after or equal to the Event's    }
-        { end time, then the events overlap and we will need to check the }
-        { value of OLLevels. If it is bigger than result, then modify     }
-        { Result accordingly. }
-        or ((frac(Tmp.StartTime) <= frac(Event.StartTime))
-          and (frac(Tmp.EndTime) >= frac(Event.EndTime)))
+        { if the Tmp event's StartTime or EndTime falls within the range of Event. }
+        if TimeInRange(frac(Tmp.StartTime), frac(Event.StartTime), frac(Event.EndTime), false) or
+           TimeInRange(frac(Tmp.EndTime), frac(Event.StartTime), frac(Event.EndTime), false) or
+          { or the Tmp event's StartTime is before or equal to the Event's  }
+          { start time AND its end time is after or equal to the Event's    }
+          { end time, then the events overlap and we will need to check the }
+          { value of OLLevels. If it is bigger than result, then modify     }
+          { Result accordingly. }
+          ((frac(Tmp.StartTime) <= frac(Event.StartTime)) and (frac(Tmp.EndTime) >= frac(Event.EndTime)))
         then begin
           if EArray[K].OLLevels > result then
             Result := EArray[K].OLLevels;
@@ -2990,15 +2944,12 @@ var
         Tmp := TVpEvent(EArray[K].Event);
       end;
     end;
-    {---}
-
 
     procedure VerifyMaxWidthDivisors;
     var
       I, K: Integer;
       Event1, Event2: TVpEvent;
     begin
-
       for I := 0 to pred(MaxVisibleEvents) do begin
         { if we hit a null event, then we're through }
         if EventArray[I].Event = nil then
@@ -3026,66 +2977,80 @@ var
           or ((Event2.StartTime <= Event1.StartTime)
             and (Event2.EndTime >= Event1.EndTime))
             *)
-          if (TimeInRange(frac(Event2.StartTime), frac(Event1.StartTime), frac(Event1.EndTime), false)
-            or TimeInRange(frac(Event2.EndTime), frac(Event1.StartTime), frac(Event1.EndTime), false))
-          or ((frac(Event2.StartTime) <= frac(Event1.StartTime))
-            and (frac(Event2.EndTime) >= frac(Event1.EndTime)))
+          if TimeInRange(frac(Event2.StartTime), frac(Event1.StartTime), frac(Event1.EndTime), false) or
+             TimeInRange(frac(Event2.EndTime), frac(Event1.StartTime), frac(Event1.EndTime), false) or
+            ((frac(Event2.StartTime) <= frac(Event1.StartTime)) and (frac(Event2.EndTime) >= frac(Event1.EndTime)))
           then begin
-            if EventArray[I].WidthDivisor < EventArray[K].WidthDivisor
-              Then EventArray[I].WidthDivisor := EventArray[K].WidthDivisor;
+            if EventArray[I].WidthDivisor < EventArray[K].WidthDivisor then
+              EventArray[I].WidthDivisor := EventArray[K].WidthDivisor;
           end;
         end;
       end;
     end;
-    {---}                                                                
 
-    procedure CreateBitmaps;                                             
-    begin                                                                
+    procedure CreateBitmaps;
+    begin
       dvBmpRecurring := TBitmap.Create;                                  
-      dvBmpCategory  := TBitmap.Create;                                  
-      dvBmpAlarm     := TBitmap.Create;                                  
-      dvBmpCustom    := TBitmap.Create;                                  
-    end;                                                                 
+      dvBmpCategory := TBitmap.Create;
+      dvBmpAlarm := TBitmap.Create;
+      dvBmpCustom := TBitmap.Create;
+    end;
 
-    procedure FreeBitmaps;                                               
-    begin                                                                
-      dvBmpRecurring.Free;                                               
-      dvBmpCategory.Free;                                                
-      dvBmpAlarm.Free;                                                   
-      dvBmpCustom.Free;                                                  
-    end;                                                                 
+    procedure FreeBitmaps;
+    begin
+      dvBmpRecurring.Free;
+      dvBmpCategory.Free;
+      dvBmpAlarm.Free;
+      dvBmpCustom.Free;
+    end;
 
-    procedure GetIcons (Event : TVpEvent);                               
-    var                                                                  
-      ShowAlarm     : Boolean;                                           
-      ShowRecurring : Boolean;                                           
-      ShowCategory  : Boolean;                                           
-      ShowCustom    : Boolean;                                           
-      Icons         : TVpDVIcons;                                        
+    procedure GetIcons(Event: TVpEvent);
+    var
+      ShowAlarm: Boolean;
+      ShowRecurring: Boolean;
+      ShowCategory: Boolean;
+      ShowCustom: Boolean;
+      Icons: TVpDVIcons;
+      cat: TVpCategoryInfo;
+      w, h: Integer;
+    begin
+      ShowAlarm := False;
+      ShowRecurring := False;
+      ShowCategory := False;
+      ShowCustom := False;
 
-    begin                                                                
-      ShowAlarm     := False;                                            
-      ShowRecurring := False;                                            
-      ShowCategory  := False;                                            
-      ShowCustom    := False;                                            
+      if Event.AlarmSet then begin
+        dvBmpAlarm.Assign(IconAttributes.AlarmBitmap);
+        ShowAlarm := (dvBmpAlarm.Width <> 0) and (dvBmpAlarm.Height <> 0);
+      end;
 
-      if Event.AlarmSet then begin                                       
-        dvBmpAlarm.Assign (IconAttributes.AlarmBitmap);                  
-        ShowAlarm := (dvBmpAlarm.Width <> 0) and                         
-                     (dvBmpAlarm.Height <> 0);                           
-      end;                                                               
+      if Event.RepeatCode <> rtNone then begin
+        dvBmpRecurring.Assign (IconAttributes.RecurringBitmap);
+        ShowRecurring := (dvBmpRecurring.Width <> 0) and (dvBmpRecurring.Height <> 0);
+      end;
 
-      if Event.RepeatCode <> rtNone then begin                           
-        dvBmpRecurring.Assign (IconAttributes.RecurringBitmap);          
-        ShowRecurring := (dvBmpRecurring.Width <> 0) and                 
-                         (dvBmpRecurring.Height <> 0);                   
-      end;                                                               
+      if Assigned(DataStore) then begin
+        if Event.Category < 10 then begin
+          cat := Datastore.CategoryColorMap.GetCategory(Event.Category);
+          w := cat.Bitmap.Width;
+          h := cat.Bitmap.Height;
+          dvBmpCategory.Width := w;
+          dvBmpCategory.Height := h;
+          dvBmpCategory.Canvas.CopyRect(
+            Rect(0, 0, w, h),
+            cat.Bitmap.Canvas,
+            Rect(0, 0, w, h)
+          );
+        end else
+        begin
+          dvBmpCategory.Width  := 0;
+          dvBmpCategory.Height := 0;
+        end;
 
-      if Assigned (DataStore) then begin                                 
-        case Event.Category of                                           
-          0 : begin                                                      
-            dvBmpCategory.Width  :=                                      
-                DataStore.CategoryColorMap.Category0.Bitmap.Width;       
+(*
+        case Event.Category of
+          0: begin
+            dvBmpCategory.Width := DataStore.CategoryColorMap.Category0.Bitmap.Width;
             dvBmpCategory.Height :=                                      
                 DataStore.CategoryColorMap.Category0.Bitmap.Height;      
             dvBmpCategory.Canvas.CopyRect (                              
@@ -3197,746 +3162,660 @@ var
             dvBmpCategory.Width  := 0;                                   
             dvBmpCategory.Height := 0;                                   
           end;                                                           
-        end;                                                             
-        ShowCategory := (dvBmpCategory.Width <> 0) and                   
-                        (dvBmpCategory.Height <> 0);                     
-      end;                                                               
+        end;
+        *)
+        ShowCategory := (dvBmpCategory.Width <> 0) and (dvBmpCategory.Height <> 0);
+      end;
 
-      dvBmpCustom.Width  := 0;                                           
-      dvBmpCustom.Height := 0;                                           
+      dvBmpCustom.Width  := 0;
+      dvBmpCustom.Height := 0;
 
-      if not IconAttributes.ShowAlarmBitmap then                         
-        ShowAlarm := False;                                              
-      if not IconAttributes.ShowCategoryBitmap then                      
-        ShowCategory := False;                                           
-      if not IconAttributes.ShowRecurringBitmap then                     
-        ShowRecurring := False;                                          
+      if not IconAttributes.ShowAlarmBitmap then
+        ShowAlarm := False;
+      if not IconAttributes.ShowCategoryBitmap then
+        ShowCategory := False;
+      if not IconAttributes.ShowRecurringBitmap then
+        ShowRecurring := False;
 
-      if Assigned (FOnDrawIcons) then begin                              
-        Icons[itAlarm].Show := ShowAlarm;                                
-        Icons[itAlarm].Bitmap := dvBmpAlarm;                             
-        Icons[itRecurring].Show := ShowRecurring;                        
-        Icons[itRecurring].Bitmap := dvBmpRecurring;                     
-        Icons[itCategory].Show := ShowCategory;                          
-        Icons[itCategory].Bitmap := dvBmpCategory;                       
-        Icons[itCustom].Show := ShowCustom;                              
-        Icons[itCustom].Bitmap := dvBmpCustom;                           
+      if Assigned(FOnDrawIcons) then begin
+        Icons[itAlarm].Show := ShowAlarm;
+        Icons[itAlarm].Bitmap := dvBmpAlarm;
+        Icons[itRecurring].Show := ShowRecurring;
+        Icons[itRecurring].Bitmap := dvBmpRecurring;
+        Icons[itCategory].Show := ShowCategory;
+        Icons[itCategory].Bitmap := dvBmpCategory;
+        Icons[itCustom].Show := ShowCustom;
+        Icons[itCustom].Bitmap := dvBmpCustom;
 
-        FOnDrawIcons (Self, Event, Icons);                               
+        FOnDrawIcons (Self, Event, Icons);
 
-        ShowAlarm := Icons[itAlarm].Show;                                
-        ShowRecurring := Icons[itRecurring].Show;                        
-        ShowCategory := Icons[itCategory].Show;                          
-        ShowCustom := Icons[itCustom].Show;                              
-      end;                                                               
+        ShowAlarm := Icons[itAlarm].Show;
+        ShowRecurring := Icons[itRecurring].Show;
+        ShowCategory := Icons[itCategory].Show;
+        ShowCustom := Icons[itCustom].Show;
+      end;
 
-      if not ShowAlarm then begin                                        
-        dvBmpAlarm.Width  := 0;                                          
-        dvBmpAlarm.Height := 0;                                          
-      end;                                                               
+      if not ShowAlarm then begin
+        dvBmpAlarm.Width := 0;
+        dvBmpAlarm.Height := 0;
+      end;
 
-      if not ShowRecurring then begin                                    
-        dvBmpRecurring.Width  := 0;                                      
-        dvBmpRecurring.Height := 0;                                      
-      end;                                                               
+      if not ShowRecurring then begin
+        dvBmpRecurring.Width := 0;
+        dvBmpRecurring.Height := 0;
+      end;
 
-      if not ShowCategory then begin                                     
-        dvBmpCategory.Width  := 0;                                       
-        dvBmpCategory.Height := 0;                                       
-      end;                                                               
+      if not ShowCategory then begin
+        dvBmpCategory.Width := 0;
+        dvBmpCategory.Height := 0;
+      end;
 
-      if not ShowCustom then begin                                       
-        dvBmpCustom.Width  := 0;                                         
-        dvBmpCustom.Height := 0;                                         
-      end;                                                               
+      if not ShowCustom then begin
+        dvBmpCustom.Width := 0;
+        dvBmpCustom.Height := 0;
+      end;
 
-      AlarmW     := dvBmpAlarm.Width;                                    
-      RecurringW := dvBmpRecurring.Width;                                
-      CategoryW  := dvBmpCategory.Width;                                 
-      CustomW    := dvBmpCustom.Width;                                   
-      AlarmH     := dvBmpAlarm.Height;                                   
-      RecurringH := dvBmpRecurring.Height;                               
-      CategoryH  := dvBmpCategory.Height;                                
-      CustomH    := dvBmpCustom.Height;                                  
-    end;                                                                 
-    {---}                                                                
+      AlarmW := dvBmpAlarm.Width;
+      RecurringW := dvBmpRecurring.Width;
+      CategoryW := dvBmpCategory.Width;
+      CustomW := dvBmpCustom.Width;
+      AlarmH := dvBmpAlarm.Height;
+      RecurringH := dvBmpRecurring.Height;
+      CategoryH  := dvBmpCategory.Height;
+      CustomH    := dvBmpCustom.Height;
+    end;
 
-    procedure ScaleIcons (EventRect : TRect);                            
-    begin                                                                
-      if (dvBmpAlarm.Height >                                            
-          EventRect.Bottom - EventRect.Top - 2) and                      
-         (dvBmpAlarm.Height * dvBmpAlarm.Width <> 0) then begin          
-        AlarmW := Trunc (((EventRect.Bottom - EventRect.Top - 2) /       
-                                 dvBmpAlarm.Height) *                    
-                                dvBmpAlarm.Width);                       
-        AlarmH := EventRect.Bottom - EventRect.Top - 2;                  
-      end;                                                               
+    procedure ScaleIcons(EventRect: TRect);
+    var
+      h: Integer;
+    begin
+      h := EventRect.Bottom - EventRect.Top - 2;
+      if (dvBmpAlarm.Height > h) and (dvBmpAlarm.Height * dvBmpAlarm.Width <> 0)
+      then begin
+        AlarmW := Trunc((h / dvBmpAlarm.Height) * dvBmpAlarm.Width);
+        AlarmH := h;
+      end;
 
-      if (dvBmpRecurring.Height >                                        
-          EventRect.Bottom - EventRect.Top - 2) and                      
-         (dvBmpRecurring.Height * dvBmpRecurring.Width <> 0) then begin  
-        RecurringW := Trunc (((EventRect.Bottom - EventRect.Top - 2) /   
-                                 dvBmpRecurring.Height) *                
-                                dvBmpRecurring.Width);                   
-        RecurringH := EventRect.Bottom - EventRect.Top - 2;              
-      end;                                                               
+      if (dvBmpRecurring.Height > h) and (dvBmpRecurring.Height * dvBmpRecurring.Width <> 0)
+      then begin
+        RecurringW := Trunc((h / dvBmpRecurring.Height) * dvBmpRecurring.Width);
+        RecurringH := h;
+      end;
 
-      if (dvBmpCategory.Height >                                         
-          EventRect.Bottom - EventRect.Top - 2) and                      
-         (dvBmpCategory.Height * dvBmpCategory.Width <> 0) then begin    
-        CategoryW := Trunc (((EventRect.Bottom - EventRect.Top - 2) /    
-                                 dvBmpCategory.Height) *                 
-                                dvBmpCategory.Width);                    
-        CategoryH := EventRect.Bottom - EventRect.Top - 2;               
-      end;                                                               
+      if (dvBmpCategory.Height > h) and (dvBmpCategory.Height * dvBmpCategory.Width <> 0)
+      then begin
+        CategoryW := Trunc((h / dvBmpCategory.Height) *  dvBmpCategory.Width);
+        CategoryH := h;
+      end;
 
-      if (dvBmpCustom.Height >                                           
-          EventRect.Bottom - EventRect.Top - 2) and                      
-         (dvBmpCustom.Height * dvBmpCustom.Width <> 0) then begin        
-        CustomW := Trunc (((EventRect.Bottom - EventRect.Top - 2) /      
-                                 dvBmpCustom.Height) *                   
-                                dvBmpCustom.Width);                      
-        CustomH := EventRect.Bottom - EventRect.Top - 2;                 
-      end;                                                               
-    end;                                                                 
-
-    procedure DetermineIconSize (     EventRect : TRect;                 
-                                      Event     : TVpEvent);             
-    var                                                                  
-      MaxHeight : Integer;                                               
-
-    begin                                                                
-      IconRect.Left := EventRect.Left;                                   
-      IconRect.Right := EventRect.Left;                                  
-      IconRect.Top := EventRect.Top;                                     
-      IconRect.Bottom := EventRect.Bottom;                               
-
-      IconRect.Right := IconRect.Right + AlarmW +                        
-                        RecurringW + CategoryW +                         
-                        CustomW + 2;                                     
-
-      MaxHeight := AlarmH;                                               
-      if RecurringH > MaxHeight then                                     
-        MaxHeight := dvBmpRecurring.Height;                              
-      if CategoryH > MaxHeight then                                      
-        MaxHeight := dvBmpCategory.Height;                               
-      if CustomH > MaxHeight then                                        
-        MaxHeight := dvBmpCustom.Height;                                 
-      if MaxHeight > EventRect.Bottom - EventRect.Top then               
-        MaxHeight := EventRect.Bottom - EventRect.Top;                   
-      IconRect.Bottom := EventRect.Top + MaxHeight;                      
-      if IconRect.Right > EventRect.Right then                           
-        IconRect.Right := EventRect.Right;                               
-    end;                                                                 
-    {---}                                                                
-
-    procedure DrawIcons;                                                 
-    var                                                                  
-      DrawPos : Integer;                                                 
-
-    begin                                                                
-      DrawPos := 1;                                                      
-
-      if (dvBmpCustom.Width <> 0) and                                    
-         (dvBmpCustom.Height <> 0) then begin                            
-        Canvas.CopyRect (Rect (IconRect.Left + 1,                        
-                               IconRect.Top + 1,                         
-                               IconRect.Left + CustomW + 1,              
-                               IconRect.Top + CustomH + 1),              
-                         dvBmpCustom.Canvas,                             
-                         Rect (0,                                        
-                               0,                                        
-                               dvBmpCustom.Width,                        
-                               dvBmpCustom.Height));                     
-        DrawPos := CustomW + 1;                                          
-      end;                                                               
-
-      if (dvBmpCategory.Width <> 0) and                                  
-         (dvBmpCategory.Height <> 0) then begin                          
-        Canvas.CopyRect (Rect (IconRect.Left + DrawPos,                  
-                               IconRect.Top + 1,                         
-                               IconRect.Left + DrawPos + CategoryW + 1,  
-                               IconRect.Top + CategoryH + 1),            
-                         dvBmpCategory.Canvas,                           
-                         Rect (0,                                        
-                               0,                                        
-                               dvBmpCategory.Width,                      
-                               dvBmpCategory.Height));                   
-        DrawPos := DrawPos + CategoryW;                                  
-      end;                                                               
-
-      if (dvBmpAlarm.Width <> 0) and (dvBmpAlarm.Height <> 0) then begin 
-        Canvas.CopyRect (Rect (IconRect.Left + DrawPos,                  
-                               IconRect.Top + 1,                         
-                               IconRect.Left + DrawPos + AlarmW + 1,     
-                               IconRect.Top + AlarmH + 1),               
-                         dvBmpAlarm.Canvas,                              
-                         Rect (0,                                        
-                               0,                                        
-                               dvBmpAlarm.Width,                         
-                               dvBmpAlarm.Height));                      
-        DrawPos := DrawPos + AlarmW;                                     
-      end;                                                               
-
-      if (dvBmpRecurring.Width <> 0) and                                 
-         (dvBmpRecurring.Height <> 0) then                               
-        Canvas.CopyRect (Rect (IconRect.Left + DrawPos,                  
-                               IconRect.Top + 1,                         
-                               IconRect.Left + DrawPos + RecurringW + 1, 
-                               IconRect.Top + RecurringH + 1),           
-                         dvBmpRecurring.Canvas,                          
-                         Rect (0,                                        
-                               0,                                        
-                               dvBmpRecurring.Width,                     
-                               dvBmpRecurring.Height));                  
-    end;                                                                 
-    {---}                                                                
-
-var
-  OKToDrawEditFrame : Boolean;
-  TextRegion        : HRGN;                                              
-  WorkRegion1       : HRGN;                                              
-  WorkRegion2       : HRGN;                                              
-  CW                : Integer;                                           
-  EventIsEditing    : Boolean;                                           
-  OldPen            : TPen;                                              
-  OldBrush          : TBrush;                                            
-  OldFont           : TFont;                                             
-
-begin
-  if (DataStore = nil)
-  or (DataStore.Resource = nil)
-  or (not DataStore.Connected) then
-    Exit;
-
-  { Save the canvas color and font }
-  SaveColor := RenderCanvas.Brush.Color;
-  SaveFont := TFont.Create;
-  SaveFont.Assign(RenderCanvas.Font);
-
-  { Initialize some stuff }
-  if TimeFormat = tf24Hour then
-    Format := 'h:nn'
-  else
-    Format := 'h:nnam/pm';
-
-  { set the event array's size }
-  SetLength(EventArray, MaxVisibleEvents);
-
-  { Initialize the new matrix }
-  for I := 0 to pred(MaxVisibleEvents) do begin
-    EventArray[I].Event           := nil;
-    EventArray[I].Level           := 0;
-    EventArray[I].OLLevels        := 0;
-    EventArray[I].WidthDivisor    := 0;
-  end;
-
-  EventList := TList.Create;
-  try
-    {Get all of the events for this day}
-    DataStore.Resource.Schedule.EventsByDate(RenderDate, EventList);
-
-    { Discard AllDayEvents, because they are drawn above. }
-    for I := pred(EventList.Count) downto 0 do begin
-      Event := EventList[I];
-      if Event.AllDayEvent then begin
-        EventList.Delete(I);
+      if (dvBmpCustom.Height > h) and (dvBmpCustom.Height * dvBmpCustom.Width <> 0)
+      then begin
+        CustomW := Trunc((h / dvBmpCustom.Height) * dvBmpCustom.Width);
+        CustomH := h;
       end;
     end;
 
-    { Arrange this day's events in the event matrix }
-    Level := 0;
-    I := 0;
-    while EventList.Count > 0 do begin
-      { Iterate through the events, and place them all in the proper     }
-      { place in the EventMatrix, according to their start and end times }
-      J := 0;
-      ThisTime := 0.0;//Trunc(RenderDate);
-      while (J < EventList.Count) and (J < MaxVisibleEvents) do begin
-        Event := EventList[J];
-        if Event.StartTime - Trunc(Event.StartTime) >= ThisTime then begin
-          ThisTime := Event.EndTime - Trunc(Event.EndTime);
-          { Handle end times of midnight }
-          if ThisTime = 0 then                                           
-            ThisTime := EncodeTime (23, 59, 59, 0);                      
-          EventList.Delete(J);
-          EventArray[I].Event := Event;
-          EventArray[I].Level := Level;
-          Inc(I);
+    procedure DetermineIconSize(EventRect: TRect; Event: TVpEvent);
+    var
+      MaxHeight: Integer;
+    begin
+      IconRect.Left := EventRect.Left;
+      IconRect.Top := EventRect.Top;
+      IconRect.Bottom := EventRect.Bottom;
+      IconRect.Right := EventRect.Left + AlarmW + RecurringW + CategoryW + CustomW + 2;
+
+      MaxHeight := AlarmH;
+      if RecurringH > MaxHeight then
+        MaxHeight := dvBmpRecurring.Height;
+      if CategoryH > MaxHeight then
+        MaxHeight := dvBmpCategory.Height;
+      if CustomH > MaxHeight then
+        MaxHeight := dvBmpCustom.Height;
+      if MaxHeight > EventRect.Bottom - EventRect.Top then
+        MaxHeight := EventRect.Bottom - EventRect.Top;
+      IconRect.Bottom := EventRect.Top + MaxHeight;
+      if IconRect.Right > EventRect.Right then
+        IconRect.Right := EventRect.Right;
+    end;
+
+    procedure DrawIcon(bmp: TBitmap; w, h: Integer; var DrawPos: Integer; IncDrawPos: Boolean = false);
+    begin
+      if (bmp.Width <> 0) and (bmp.Height <> 0) then
+      begin
+        Canvas.CopyRect(
+          Rect(IconRect.Left + 1, IconRect.Top +1, IconRect.Left + w + 1, IconRect.Top + h + 1),
+          bmp.Canvas,
+          Rect(0, 0, bmp.Width, bmp.Height)
+        );
+        if IncDrawPos then
+          inc(DrawPos, w);
+      end;
+    end;
+
+    procedure DrawIcons;
+    var
+      DrawPos: Integer;
+    begin
+      DrawPos := 1;
+      DrawIcon(dvBmpCustom, CustomW, CustomH, DrawPos);
+      DrawIcon(dvBmpCategory, CategoryW, CategoryH, DrawPos);
+      DrawIcon(dvBmpAlarm, AlarmW, AlarmH, DrawPos);
+      DrawIcon(dvBmpRecurring, RecurringW, RecurringH, DrawPos, false);
+    end;
+
+  var
+    OKToDrawEditFrame : Boolean;
+    TextRegion : HRGN;
+    WorkRegion1: HRGN;
+    WorkRegion2: HRGN;
+    CW: Integer;
+    EventIsEditing: Boolean;
+    OldPen: TPen;
+    OldBrush: TBrush;
+    OldFont: TFont;
+  begin
+    if (DataStore = nil) or (DataStore.Resource = nil) or (not DataStore.Connected) then
+      Exit;
+
+    { Save the canvas color and font }
+    SaveColor := RenderCanvas.Brush.Color;
+    SaveFont := TFont.Create;
+    SaveFont.Assign(RenderCanvas.Font);
+
+    { Initialize some stuff }
+    if TimeFormat = tf24Hour then
+      Format := 'h:nn'
+    else
+      Format := 'h:nnam/pm';
+
+    { set the event array's size }
+    SetLength(EventArray, MaxVisibleEvents);
+
+    { Initialize the new matrix }
+    for I := 0 to pred(MaxVisibleEvents) do begin
+      EventArray[I].Event := nil;
+      EventArray[I].Level := 0;
+      EventArray[I].OLLevels := 0;
+      EventArray[I].WidthDivisor := 0;
+    end;
+
+    EventList := TList.Create;
+    try
+      {Get all of the events for this day}
+      DataStore.Resource.Schedule.EventsByDate(RenderDate, EventList);
+
+      { Discard AllDayEvents, because they are drawn above. }
+      for I := pred(EventList.Count) downto 0 do begin
+        Event := EventList[I];
+        if Event.AllDayEvent then
+          EventList.Delete(I);
+      end;
+
+      { Arrange this day's events in the event matrix }
+      Level := 0;
+      I := 0;
+      while EventList.Count > 0 do begin
+        { Iterate through the events, and place them all in the proper     }
+        { place in the EventMatrix, according to their start and end times }
+        J := 0;
+        ThisTime := 0.0;//Trunc(RenderDate);
+        while (J < EventList.Count) and (J < MaxVisibleEvents) do begin
+          Event := EventList[J];
+          if frac(Event.StartTime) >= ThisTime then begin
+            ThisTime := frac(Event.EndTime);
+            { Handle end times of midnight }
+            if ThisTime = 0 then
+              ThisTime := EncodeTime (23, 59, 59, 0);
+            EventList.Delete(J);
+            EventArray[I].Event := Event;
+            EventArray[I].Level := Level;
+            Inc(I);
+            Continue;
+          end
+          else
+            Inc(J);
+        end;
+        Inc(Level);
+      end;
+
+    finally
+      EventList.Free;
+    end;
+
+    { Count the number of events which all share some of the same time }
+    for I := 0 to pred(MaxVisibleEvents) do begin
+      if EventArray[I].Event = nil then
+        Break;
+      EventArray[I].OLLevels := 1 + { it is necessary to count this event too }
+        CountOverlappingEvents(TVpEvent(EventArray[I].Event), EventArray);
+    end;
+
+    { Calculate the largest width divisor of all overlapping events, }
+    { for each event. }
+    for I := 0 to pred(MaxVisibleEvents) do begin
+      if EventArray[I].Event = nil then
+        Break;
+      EventArray[I].WidthDivisor := GetMaxOLEvents(TVpEvent(EventArray[I].Event), EventArray);
+    end;
+
+    {Make one last pass, to make sure that we have set up the width divisors properly }
+    VerifyMaxWidthDivisors;
+
+/////// Debug Code /////////
+    { Dump a debug report to drive C }
+    {$IFDEF DEBUGDV}
+    SL := TStringList.Create;
+    try
+      I := 0;
+      while EventArray[I].Event <> nil do begin
+        SL.Add('Description: ' + TVpEvent(EventArray[I].Event).Description
+          + #13#10 + '   Level: ' + IntToStr(EventArray[I].Level)
+          + #13#10 + '   OLLevels: ' + IntToStr(EventArray[I].OLLevels)
+          + #13#10 + '   WidthDivisor: ' + IntToStr(EventArray[I].WidthDivisor));
+        Inc(I);
+      end;
+      SL.SaveToFile('C:\EventList' + IntToStr(Col) + '.txt');
+    finally
+      Sl.Free;
+    end;
+    {$ENDIF}
+/////// Debug Code /////////
+
+    { Time to paint 'em. Let's see if we calculated their placements correctly   }
+    IconRect := Rect (0, 0, 0, 0);
+    CreateBitmaps;
+    OldFont := TFont.Create;
+    OldPen := TPen.Create;
+    OldBrush := TBrush.Create;
+    try
+      { get a rectangle of the visible area }
+      VisibleRect := dvLineMatrix[Col, StartLine].Rec;
+      VisibleRect.Bottom := ClientRect.Bottom;
+
+      STime := dvLineMatrix[0, StartLine].Time;
+      ETime := dvLineMatrix[0, StartLine + RealVisibleLines].Time;
+
+      LineDuration := GetLineDuration(Granularity);
+      { Determine how much time is represented by one pixel. It is the   }
+      { amount of time represented by one line, divided by the height of }
+      { a line in pixels. }
+      if (dvLineMatrix[Col, StartLine].Rec.Bottom - dvLineMatrix[Col, StartLine].Rec.Top) > 0 then
+        PixelDuration := (LineDuration / (dvLineMatrix[Col, StartLine].Rec.Bottom - dvLineMatrix[Col, StartLine].Rec.Top))
+      else
+        PixelDuration := 0;
+
+      { Iterate through events and paint them }
+      for I := 0 to pred(MaxVisibleEvents) do begin
+        { get the next event }
+        Event := TVpEvent(EventArray[I].Event);
+
+        { if we have hit the end of the events, then bail out }
+        if Event = nil then
+          Break;
+   (*  -- original
+        { remove the date portion from the start and end times }
+        EventSTime := Event.StartTime;
+        EventETime := Event.EndTime;
+        if trunc(EventSTime) < trunc(RenderDate) then //First Event
+          EventSTime := 0+trunc(RenderDate);
+        if trunc(EventETime) > trunc(RenderDate) then //First Event
+          EventETime := 0.999+trunc(RenderDate);
+        EventSTime := EventSTime - RenderDate;
+        EventETime := EventETime - RenderDate;
+        { Find the line on which this event starts }
+        EventSLine := GetStartLine(EventSTime, Granularity);
+        { Handle End Times of Midnight }
+        if EventETime = 0 then
+          EventETime := EncodeTime (23, 59, 59, 0);
+    *)
+
+        { remove the date portion from the start and end times }
+        EventSTime := Event.StartTime;
+        EventETime := Event.EndTime;
+        if (EventSTime < trunc(RenderDate)) and (Event.RepeatCode=rtNone) then //First Event
+          EventSTime := trunc(RenderDate)
+        else if (Event.RepeatCode <> rtNone) then
+          EventSTime := frac(EventSTime) + trunc(RenderDate);
+        if (trunc(EventETime) > trunc(RenderDate)) and (Event.RepeatCode = rtNone) then //First Event
+          EventETime := 0.999+trunc(RenderDate)
+        else if (Event.RepeatCode<>rtNone) then
+          EventETime := frac(EventETime) + trunc(RenderDate);
+        EventSTime := EventSTime - trunc(RenderDate);
+        EventETime := EventETime - trunc(RenderDate);
+        { Find the line on which this event starts }
+        EventSLine := GetStartLine(EventSTime, Granularity);
+        { Handle End Times of Midnight }
+        if EventETime = 0 then
+          EventETime := EncodeTime (23, 59, 59, 0);
+
+        { calculate the number of lines this event will cover }
+        EventELine := GetEndLine(EventETime {Event.EndTime}, Granularity);
+        EventLineCount := EventELine - EventSLine + 1;
+        EventDuration := EventETime - EventSTime;
+
+        { if the event doesn't occupy area that is currently visible, then skip it. }
+        if (EventELine < StartLine) or (EventSLine > StartLine + RealVisibleLines) then
           Continue;
+
+        { Build the rectangle in which the event will be painted. }
+        EventRect := dvLineMatrix[Col, EventSLine].Rec;
+        if EventRect.Left < VisibleRect.Left then
+          EventRect.Left := VisibleRect.Left;
+        if EventRect.Top < VisibleRect.Top then
+          EventRect.Top := VisibleRect.Top;
+        EventRect.Bottom := dvLineMatrix[Col, EventELine].Rec.Bottom;
+        if EventRect.Bottom < VisibleRect.Top then
+          EventRect.Bottom := VisibleRect.Bottom;
+        EventWidth := (VisibleRect.Right - VisibleRect.Left) div EventArray[I].WidthDivisor;
+
+        { Slide the rect over to correspond with the level }
+        if EventArray[I].Level > 0 then
+          EventRect.Left := EventRect.Left + (EventWidth * EventArray[I].Level)
+        { added because level 0 events were one pixel too far to the right }
+        else
+          EventRect.Left := EventRect.Left - 1;
+
+        EventRect.Right := EventRect.Left + EventWidth - GutterWidth;
+
+        { Draw the event rectangle }
+        { paint Event text area clWindow }
+        if Assigned(DataStore) then
+          RenderCanvas.Brush.Color := Datastore.CategoryColorMap.GetCategory(Event.Category).BackgroundColor
+        {
+          case Event.Category of
+            0 : RenderCanvas.Brush.Color :=
+                    DataStore.CategoryColorMap.Category0.BackgroundColor;
+            1 : RenderCanvas.Brush.Color :=
+                    DataStore.CategoryColorMap.Category1.BackgroundColor;
+            2 : RenderCanvas.Brush.Color :=
+                    DataStore.CategoryColorMap.Category2.BackgroundColor;
+            3 : RenderCanvas.Brush.Color :=
+                    DataStore.CategoryColorMap.Category3.BackgroundColor;
+            4 : RenderCanvas.Brush.Color :=
+                    DataStore.CategoryColorMap.Category4.BackgroundColor;
+            5 : RenderCanvas.Brush.Color :=
+                    DataStore.CategoryColorMap.Category5.BackgroundColor;
+            6 : RenderCanvas.Brush.Color :=
+                    DataStore.CategoryColorMap.Category6.BackgroundColor;
+            7 : RenderCanvas.Brush.Color :=
+                    DataStore.CategoryColorMap.Category7.BackgroundColor;
+            8 : RenderCanvas.Brush.Color :=
+                    DataStore.CategoryColorMap.Category8.BackgroundColor;
+            9 : RenderCanvas.Brush.Color :=
+                    DataStore.CategoryColorMap.Category9.BackgroundColor;
+            else
+              RenderCanvas.Brush.Color := WindowColor;
+          end}
+        else
+          RenderCanvas.Brush.Color := WindowColor;
+        TPSFillRect(RenderCanvas, Angle, RenderIn, EventRect);
+
+        { paint the little area to the left of the text the color }
+        { corresponding to the event's category                   }
+        { These colors are used even when printing }
+        if Assigned(DataStore) then
+          RenderCanvas.Brush.Color := DataStore.CategoryColorMap.GetColor(Event.Category);
+
+        { find the pixel offset to use for determining where to start and }
+        { stop drawing colored area according to the start time and end time of the event. }
+        StartPixelOffset := 0;
+        EndPixelOffset := 0;
+
+        if (PixelDuration > 0) and (EventDuration < GetLineDuration(Granularity) * EventLineCount)
+        then begin
+          if (EventSLine >= StartLine) and (EventSTime > dvLineMatrix[0, EventSLine].Time)
+          then begin
+            { Get the start offset in TDateTime format }
+            StartOffset := EventSTime - dvLineMatrix[0, EventSLine].Time;
+
+            { determine how many pixels to scooch down before painting the event's color code. }
+            StartPixelOffset := trunc(StartOffset / PixelDuration);
+          end;
+
+          if (EventELine <= StartLine + RealVisibleLines) and
+             (EventETime < dvLineMatrix[0, EventELine + 1].Time )
+          then begin
+            { Get the end offset in TDateTime format }
+            EndOffset := dvLineMatrix[0, EventELine + 1].Time  - EventETime;
+
+            { determine how many pixels to scooch down before painting the   }
+            { event's color code. }
+            EndPixelOffset := trunc(EndOffset / PixelDuration);
+          end;
+        end;
+
+        { Paint the gutter inside the EventRect all events }
+        if (EventArray[I].Level = 0) then
+          GutterRect.Left := EventRect.Left - Trunc (FGutterWidth * Scale)
+        else
+          GutterRect.Left := EventRect.Left;
+        GutterRect.Right := GutterRect.Left + Round (FGutterWidth * Scale);
+        GutterRect.Top := EventRect.Top + StartPixelOffset;
+        GutterRect.Bottom := EventRect.Bottom - EndPixelOffset;
+
+        TPSFillRect(RenderCanvas, Angle, RenderIn, GutterRect);
+
+        RenderCanvas.Brush.Color := WindowColor;
+
+        if (dvInPlaceEditor <> nil) and dvInplaceEditor.Visible then begin
+          if FActiveEvent = Event then
+            EventIsEditing := True
+          else
+            EventIsEditing := False;
+        end else
+          EventIsEditing := False;
+
+        { build the event string }
+        IconRect.Left := EventRect.Left;
+        IconRect.Top := EventRect.Top;
+        IconRect.Right := EventRect.Left;
+        IconRect.Bottom := EventRect.Top;
+        if not DisplayOnly then begin
+          GetIcons(Event);
+          if EventArray[I].Level = 0 then begin
+            ScaleIcons (EventRect);
+            DetermineIconSize(EventRect, Event);
+          end else begin
+            ScaleIcons(Rect(
+              EventRect.Left + GutterWidth,
+              EventRect.Top,
+              EventRect.Right,
+              EventRect.Bottom
+            ));
+            DetermineIconSize(Rect(
+              EventRect.Left + GutterWidth,
+              EventRect.Top,
+              EventRect.Right,
+              EventRect.Bottom), Event
+            );
+          end;
+        end;
+
+        OldPen.Assign(Canvas.Pen);
+        OldBrush.Assign(Canvas.Brush);
+        OldFont.Assign(Canvas.Font);
+        if Assigned(FOnBeforeDrawEvent) and (EventArray[I].Level = 0) then
+          FOnBeforeDrawEvent(Self, Event, FActiveEvent = Event, RenderCanvas, EventRect, IconRect)
+        else if Assigned (FOnBeforeDrawEvent) then
+          FOnBeforeDrawEvent(Self, Event, FActiveEvent = Event, RenderCanvas,
+            Rect(EventRect.Left + FGutterWidth, EventRect.Top, EventRect.Right, EventRect.Bottom),
+            IconRect
+          );
+
+        if not DisplayOnly then
+          DrawIcons;
+
+        if ShowEventTimes then
+          EventString := FormatDateTime(Format, Event.StartTime) + '-' +
+            FormatDateTime(Format, Event.EndTime) + ' ' + Event.Description
+        else
+          EventString := Event.Description;
+
+        if WrapStyle = wsNone then begin
+          { if the string is longer than the availble space then chop    }
+          { off the and and place those little '...'s at the end         }
+
+          if RenderCanvas.TextWidth(EventString) > EventRect.Right - IconRect.Right - Round(FGutterWidth * Scale) - TextMargin
+          then
+            EventString := GetDisplayString(
+              RenderCanvas,
+              EventString,
+              0,
+              EventRect.Right - IconRect.Right - Round (FGutterWidth * Scale) - TextMargin
+            );
+          end;
+
+          if (WrapStyle <> wsNone) and (not EventIsEditing) then begin
+            if (EventRect.Bottom <> IconRect.Bottom) and (EventRect.Left <> IconRect.Right)
+          then begin
+            if WrapStyle = wsIconFlow then
+            begin
+              WorkRegion1 := CreateRectRgn(IconRect.Right, EventRect.Top, EventRect.Right, IconRect.Bottom);
+              WorkRegion2 := CreateRectRgn(EventRect.Left + GutterWidth, IconRect.Bottom, EventRect.Right, EventRect.Bottom);
+              TextRegion := CreateRectRgn(IconRect.Right, EventRect.Top, EventRect.Right, IconRect.Bottom);
+              CombineRgn(TextRegion, WorkRegion1, WorkRegion2, RGN_OR);
+            end else
+              TextRegion := CreateRectRgn(IconRect.Right, EventRect.Top, EventRect.Right, EventRect.Bottom);
+          end else
+            TextRegion := CreateRectRgn(IconRect.Right + GutterWidth, EventRect.Top, EventRect.Right, EventRect.Bottom);
+          try
+            CW := RenderTextToRegion(RenderCanvas, Angle, RenderIn, TextRegion, EventString);
+            { write the event string to the proper spot in the EventRect }
+            if CW < Length (EventString) then begin
+              RenderCanvas.Brush.Color := DotDotDotColor;
+              { draw dot dot dot }
+              TPSFillRect(RenderCanvas, Angle, RenderIn,
+                Rect(EventRect.Right - 20, EventRect.Bottom - 7, EventRect.Right - 17, EventRect.Bottom - 4)
+              );
+              TPSFillRect(RenderCanvas, Angle, RenderIn,
+                Rect(EventRect.Right - 13, EventRect.Bottom - 7, EventRect.Right - 10, EventRect.Bottom - 4));
+              TPSFillRect(RenderCanvas, Angle, RenderIn,
+                Rect(EventRect.Right - 6, EventRect.Bottom - 7, EventRect.Right - 3, EventRect.Bottom - 4));
+            end;
+
+          finally
+            if ((EventRect.Bottom > IconRect.Bottom) and (EventRect.Left > IconRect.Right)) or
+               (WrapStyle = wsIconFlow)
+            then begin
+              DeleteObject(WorkRegion1);
+              DeleteObject(WorkRegion2);
+              DeleteObject(TextRegion);
+            end else begin
+              DeleteObject(TextRegion);
+            end;
+          end;
         end
         else
-          Inc(J);
-      end;
-      Inc(Level);
-    end;
-
-  finally
-    EventList.Free;
-  end;
-
-  { Count the number of events which all share some of the same time }
-  for I := 0 to pred(MaxVisibleEvents) do begin
-    if EventArray[I].Event = nil then
-      Break;
-    EventArray[I].OLLevels := 1 + { it is necessary to count this event too }
-      CountOverlappingEvents(TVpEvent(EventArray[I].Event), EventArray);
-  end;
-
-  { Calculate the largest width divisor of all overlapping events, }
-  { for each event. }
-  for I := 0 to pred(MaxVisibleEvents) do begin
-    if EventArray[I].Event = nil then
-      Break;
-    EventArray[I].WidthDivisor := GetMaxOLEvents(TVpEvent(EventArray[I].Event), EventArray);
-  end;
-
-  {Make one last pass, to make sure that we have set up the width }
-  { divisors properly }
-  VerifyMaxWidthDivisors;
-
-/////// Debug Code /////////
-  { Dump a debug report to drive C }
-  {$IFDEF DEBUGDV}
-  SL := TStringList.Create;
-  try
-    I := 0;
-    while EventArray[I].Event <> nil do begin
-      SL.Add('Description: ' + TVpEvent(EventArray[I].Event).Description
-        + #13#10 + '   Level: ' + IntToStr(EventArray[I].Level)
-        + #13#10 + '   OLLevels: ' + IntToStr(EventArray[I].OLLevels)
-        + #13#10 + '   WidthDivisor: ' + IntToStr(EventArray[I].WidthDivisor));
-      Inc(I);
-    end;
-    SL.SaveToFile('C:\EventList' + IntToStr(Col) + '.txt');
-  finally
-    Sl.Free;
-  end;
-  {$ENDIF}
-/////// Debug Code /////////
-
-  { Time to paint 'em. Let's see if we calculated their placements correctly   }
-  IconRect := Rect (0, 0, 0, 0);                                         
-  CreateBitmaps;                                                         
-  OldFont  := TFont.Create;                                              
-  OldPen   := TPen.Create;                                               
-  OldBrush := TBrush.Create;                                             
-  try
-    { get a rectangle of the visible area }
-    VisibleRect := dvLineMatrix[Col, StartLine].Rec;
-    VisibleRect.Bottom := ClientRect.Bottom;
-
-    STime := dvLineMatrix[0, StartLine].Time;
-    ETime := dvLineMatrix[0, StartLine + RealVisibleLines].Time;
-
-    LineDuration := GetLineDuration(Granularity);
-    { Determine how much time is represented by one pixel. It is the   }
-    { amount of time represented by one line, divided by the height of }
-    { a line in pixels. }
-    if (dvLineMatrix[Col, StartLine].Rec.Bottom - dvLineMatrix[Col, StartLine].Rec.Top) > 0 then
-      PixelDuration := (LineDuration / (dvLineMatrix[Col, StartLine].Rec.Bottom - dvLineMatrix[Col, StartLine].Rec.Top))
-    else
-      PixelDuration := 0;
-
-    { Iterate through events and paint them }
-    for I := 0 to pred(MaxVisibleEvents) do begin
-      { get the next event }
-      Event := TVpEvent(EventArray[I].Event);
-
-      { if we have hit the end of the events, then bail out }
-      if Event = nil then
-        Break;
-                                                      (*  -- original
-      { remove the date portion from the start and end times }
-      EventSTime := Event.StartTime;
-      EventETime := Event.EndTime;
-      if trunc(EventSTime) < trunc(RenderDate) then //First Event
-        EventSTime := 0+trunc(RenderDate);
-      if trunc(EventETime) > trunc(RenderDate) then //First Event
-        EventETime := 0.999+trunc(RenderDate);
-      EventSTime := EventSTime - RenderDate;
-      EventETime := EventETime - RenderDate;
-      { Find the line on which this event starts }
-      EventSLine := GetStartLine(EventSTime, Granularity);
-      { Handle End Times of Midnight }
-      if EventETime = 0 then                                             
-        EventETime := EncodeTime (23, 59, 59, 0);
-      *)
-
-      { remove the date portion from the start and end times }
-      EventSTime := Event.StartTime;
-      EventETime := Event.EndTime;
-      if (EventSTime < trunc(RenderDate)) and (Event.RepeatCode=rtNone) then //First Event
-        EventSTime := trunc(RenderDate)
-      else if (Event.RepeatCode<>rtNone) then
-        EventSTime := frac(EventSTime)+trunc(RenderDate);
-      if (trunc(EventETime) > trunc(RenderDate)) and (Event.RepeatCode=rtNone) then //First Event
-        EventETime := 0.999+trunc(RenderDate)
-      else if (Event.RepeatCode<>rtNone) then
-        EventETime := frac(EventETime)+trunc(RenderDate);
-      EventSTime := EventSTime - trunc(RenderDate);
-      EventETime := EventETime - trunc(RenderDate);
-      { Find the line on which this event starts }
-      EventSLine := GetStartLine(EventSTime, Granularity);
-      { Handle End Times of Midnight }
-      if EventETime = 0 then
-        EventETime := EncodeTime (23, 59, 59, 0);
-
-      { calculate the number of lines this event will cover }
-      EventELine := GetEndLine(EventETime {Event.EndTime}, Granularity); 
-      EventLineCount := EventELine - EventSLine + 1;
-      EventDuration := EventETime - EventSTime;
-
-      { if the event doesn't occupy area that is currently visible, }
-      { then skip it. }
-      if (EventELine < StartLine)
-      or (EventSLine > StartLine + RealVisibleLines) then
-        Continue;
-
-      { Build the rectangle in which the event will be painted. }
-      EventRect := dvLineMatrix[Col, EventSLine].Rec;
-      if EventRect.Left < VisibleRect.Left then
-        EventRect.Left := VisibleRect.Left;
-      if EventRect.Top < VisibleRect.Top then
-        EventRect.Top := VisibleRect.Top;
-      EventRect.Bottom := dvLineMatrix[Col, EventELine].Rec.Bottom;
-      if EventRect.Bottom < VisibleRect.Top then
-        EventRect.Bottom := VisibleRect.Bottom;
-      EventWidth := (VisibleRect.Right - VisibleRect.Left)
-        div EventArray[I].WidthDivisor;
-
-      { Slide the rect over to correspond with the level }
-      if EventArray[I].Level > 0 then
-        EventRect.Left := EventRect.Left + (EventWidth * EventArray[I].Level)
-      { added because level 0 events were one pixel too far to the right }
-      else                                                               
-        EventRect.Left := EventRect.Left - 1;                            
-
-      EventRect.Right := EventRect.Left + EventWidth - GutterWidth;
-
-      { Draw the event rectangle }
-      { paint Event text area clWindow                        }
-      if Assigned (DataStore) then                                       
-        case Event.Category of                                           
-          0 : RenderCanvas.Brush.Color :=                                
-                  DataStore.CategoryColorMap.Category0.BackgroundColor;  
-          1 : RenderCanvas.Brush.Color :=                                
-                  DataStore.CategoryColorMap.Category1.BackgroundColor;  
-          2 : RenderCanvas.Brush.Color :=                                
-                  DataStore.CategoryColorMap.Category2.BackgroundColor;  
-          3 : RenderCanvas.Brush.Color :=                                
-                  DataStore.CategoryColorMap.Category3.BackgroundColor;  
-          4 : RenderCanvas.Brush.Color :=                                
-                  DataStore.CategoryColorMap.Category4.BackgroundColor;  
-          5 : RenderCanvas.Brush.Color :=                                
-                  DataStore.CategoryColorMap.Category5.BackgroundColor;  
-          6 : RenderCanvas.Brush.Color :=                                
-                  DataStore.CategoryColorMap.Category6.BackgroundColor;  
-          7 : RenderCanvas.Brush.Color :=                                
-                  DataStore.CategoryColorMap.Category7.BackgroundColor;  
-          8 : RenderCanvas.Brush.Color :=                                
-                  DataStore.CategoryColorMap.Category8.BackgroundColor;  
-          9 : RenderCanvas.Brush.Color :=                                
-                  DataStore.CategoryColorMap.Category9.BackgroundColor;  
-          else                                                           
-            RenderCanvas.Brush.Color := WindowColor;                     
-        end                                                              
-      else                                                               
-        RenderCanvas.Brush.Color := WindowColor;
-      TPSFillRect (RenderCanvas, Angle, RenderIn, EventRect);
-
-      { paint the little area to the left of the text the color }
-      { corresponding to the event's category                   }
-      { These colors are used even when printing }
-      if Assigned (DataStore) then                                       
-        RenderCanvas.Brush.Color := DataStore.CategoryColorMap.GetColor(
-            Event.Category);
-
-      { find the pixel offset to use for determining where to start and }
-      { stop drawing colored area according to the start time and end   }
-      { time of the event. }
-      StartPixelOffset := 0;
-      EndPixelOffset := 0;
-
-      if (PixelDuration > 0)
-      and (EventDuration < GetLineDuration(Granularity) * EventLineCount)
-      then begin
-        if (EventSLine >= StartLine)
-        and (EventSTime > dvLineMatrix[0, EventSLine].Time)
-        then begin
-          { Get the start offset in TDateTime format }
-          StartOffset := EventSTime - dvLineMatrix[0, EventSLine].Time;
-
-          { determine how many pixels to scooch down before painting the   }
-          { event's color code. }
-          StartPixelOffset := trunc(StartOffset / PixelDuration);
+        if (not EventIsEditing) then begin
+          if EventArray[I].Level = 0 then
+            { don't draw the gutter in the EventRest for level 0 events. }
+            TPSTextOut(RenderCanvas,
+              Angle,
+              RenderIn,
+              IconRect.Right + GutterWidth + TextMargin,
+              EventRect.Top + TextMargin,
+              EventString
+            )
+          else
+            TPSTextOut(RenderCanvas,
+              Angle,
+              RenderIn,
+              IconRect.Right + GutterWidth + TextMargin,
+              EventRect.Top + TextMargin,
+              EventString
+            );
         end;
 
-        if (EventELine <= StartLine + RealVisibleLines)
-        and (EventETime < dvLineMatrix[0, EventELine + 1].Time ) then
-        begin
-          { Get the end offset in TDateTime format }
-          EndOffset := dvLineMatrix[0, EventELine + 1].Time  - EventETime;
-
-          { determine how many pixels to scooch down before painting the   }
-          { event's color code. }
-          EndPixelOffset := trunc(EndOffset / PixelDuration);
+        { paint the borders around the event text area }
+        TPSPolyline(RenderCanvas, Angle, RenderIn, [
+          Point(EventRect.Left, EventRect.Top),
+          Point(EventRect.Right, EventRect.Top),
+          Point(EventRect.Right, EventRect.Bottom),
+          Point(EventRect.Left, EventRect.Bottom),
+          Point(EventRect.Left, EventRect.Top)
+        ]);
+        { don't paint gutter area on level 0 items }
+        if EventArray[I].Level > 0 then begin
+          TPSMoveTo(RenderCanvas, Angle, RenderIn, EventRect.Left + Round(FGutterWidth * Scale), EventRect.Top);
+          TPSLineTo(RenderCanvas, Angle, RenderIn, EventRect.Left + Round(FGutterWidth * Scale), EventRect.Bottom);
         end;
+
+        if Assigned (FOnAfterDrawEvent) and (EventArray[I].Level = 0) then
+          FOnAfterDrawEvent(Self, Event, FActiveEvent = Event, RenderCanvas, EventRect, IconRect)
+        else
+        if Assigned (FOnAfterDrawEvent) then
+          FOnAfterDrawEvent(Self, Event, FActiveEvent = Event, RenderCanvas,
+            Rect(EventRect.Left + FGutterWidth, EventRect.Top, EventRect.Right, EventRect.Bottom),
+            IconRect
+          );
+
+        Canvas.Brush.Assign(OldBrush);
+        Canvas.Pen.Assign(OldPen);
+        Canvas.Font.Assign(OldFont);
+
+        dvEventArray[EventCount].Rec := Rect(
+          EventRect.Left, EventRect.Top, EventRect.Right, EventRect.Bottom + 1
+        );
+        dvEventArray[EventCount].IconRect := IconRect;
+        dvEventArray[EventCount].Event := Event;
+        Inc(EventCount);
       end;
 
-      { Paint the gutter inside the EventRect all events }
-      if (EventArray[I].Level = 0) then
-        GutterRect.Left := EventRect.Left - Trunc (FGutterWidth * Scale)
-      else
-        GutterRect.Left := EventRect.Left;
+      OKToDrawEditFrame := True;
+      if Assigned (FActiveEvent) then
+        OKToDrawEditFrame := not (FActiveEvent.AllDayEvent);
 
-      GutterRect.Right := GutterRect.Left + Round (FGutterWidth * Scale);
-      GutterRect.Top := EventRect.Top + StartPixelOffset;
-      GutterRect.Bottom := EventRect.Bottom - EndPixelOffset;
-
-      TPSFillRect (RenderCanvas, Angle, RenderIn, GutterRect);
-
-      RenderCanvas.Brush.Color := WindowColor;
-
-      if (dvInPlaceEditor <> nil) and dvInplaceEditor.Visible then begin
-        if FActiveEvent = Event then                                     
-          EventIsEditing := True                                         
-        else                                                             
-          EventIsEditing := False;                                       
-      end else                                                           
-        EventIsEditing := False;                                         
-      { build the event string }
-
-      IconRect.Left   := EventRect.Left;                                 
-      IconRect.Top    := EventRect.Top;                                  
-      IconRect.Right  := EventRect.Left;                                 
-      IconRect.Bottom := EventRect.Top;                                  
-      if not DisplayOnly then begin                                      
-        GetIcons (Event);                                                
-        if EventArray[I].Level = 0 then begin                            
-          ScaleIcons (EventRect);                                        
-          DetermineIconSize (EventRect, Event);                          
-        end else begin                                                   
-          ScaleIcons (Rect (EventRect.Left + GutterWidth,                
-                            EventRect.Top, EventRect.Right,              
-                            EventRect.Bottom));                          
-          DetermineIconSize (Rect (EventRect.Left + GutterWidth,         
-                                   EventRect.Top, EventRect.Right,       
-                                   EventRect.Bottom), Event);            
-        end;                                                             
-      end;                                                               
-
-      OldPen.Assign (Canvas.Pen);                                        
-      OldBrush.Assign (Canvas.Brush);                                    
-      OldFont.Assign (Canvas.Font);                                      
-      if Assigned (FOnBeforeDrawEvent) and                               
-         (EventArray[I].Level = 0) then                                  
-        FOnBeforeDrawEvent (Self, Event, FActiveEvent = Event,           
-                            RenderCanvas, EventRect, IconRect)           
-      else if Assigned (FOnBeforeDrawEvent) then                         
-        FOnBeforeDrawEvent (Self, Event, FActiveEvent = Event,           
-                            RenderCanvas,                                
-                            Rect (EventRect.Left + FGutterWidth,         
-                                  EventRect.Top, EventRect.Right,        
-                                  EventRect.Bottom),                     
-                            IconRect);                                   
-
-      if not DisplayOnly then                                            
-        DrawIcons;                                                       
-
-      if ShowEventTimes then                                             
-        EventString := FormatDateTime(Format, Event.StartTime) + '-' +
-          FormatDateTime(Format, Event.EndTime) + ' ' + Event.Description
-      else                                                               
-        EventString := Event.Description;                                
-
-      if WrapStyle = wsNone then begin                                   
-        { if the string is longer than the availble space then chop    } 
-        { off the and and place those little '...'s at the end         } 
-
-      if RenderCanvas.TextWidth (EventString) >                          
-             (EventRect.Right - IconRect.Right -                         
-             Round (FGutterWidth * Scale) - TextMargin) then             
-        EventString := GetDisplayString (                                
-            RenderCanvas, EventString, 0,                                
-            EventRect.Right - IconRect.Right -                           
-            Round (FGutterWidth * Scale) - TextMargin);                  
-      end;                                                               
-
-      if (WrapStyle <> wsNone) and (not EventIsEditing) then begin       
-        if (EventRect.Bottom <> IconRect.Bottom) and                     
-           (EventRect.Left <> IconRect.Right) then begin                 
-           if WrapStyle = wsIconFlow then begin
-              WorkRegion1 := CreateRectRgn (IconRect.Right,              
-                                            EventRect.Top,               
-                                            EventRect.Right,             
-                                            IconRect.Bottom);            
-              WorkRegion2 := CreateRectRgn (EventRect.Left + GutterWidth,
-                                            IconRect.Bottom,             
-                                            EventRect.Right,             
-                                            EventRect.Bottom);           
-              TextRegion  := CreateRectRgn (IconRect.Right,              
-                                            EventRect.Top,               
-                                            EventRect.Right,             
-                                            IconRect.Bottom);            
-              CombineRgn (TextRegion, WorkRegion1, WorkRegion2, RGN_OR); 
-           end else                                                      
-             TextRegion := CreateRectRgn (IconRect.Right, EventRect.Top, 
-                                          EventRect.Right,               
-                                          EventRect.Bottom);             
-        end else                                                         
-          TextRegion := CreateRectRgn (IconRect.Right + GutterWidth,     
-                                       EventRect.Top,                    
-                                       EventRect.Right,                  
-                                       EventRect.Bottom);                
-        try                                                              
-          CW := RenderTextToRegion (RenderCanvas, Angle, RenderIn,       
-                                    TextRegion, EventString);            
-          { write the event string to the proper spot in the EventRect } 
-          if CW < Length (EventString) then begin                        
-            RenderCanvas.Brush.Color := DotDotDotColor;                  
-            { draw dot dot dot }                                         
-            TPSFillRect (RenderCanvas, Angle, RenderIn,                  
-                         Rect (EventRect.Right - 20,                     
-                               EventRect.Bottom - 7,                     
-                               EventRect.Right - 17,                     
-                               EventRect.Bottom - 4));                   
-            TPSFillRect (RenderCanvas, Angle, RenderIn,                  
-                         Rect (EventRect.Right - 13,                     
-                               EventRect.Bottom - 7,                     
-                               EventRect.Right - 10,                     
-                               EventRect.Bottom - 4));                   
-            TPSFillRect (RenderCanvas, Angle, RenderIn,                  
-                         Rect (EventRect.Right -  6,                     
-                               EventRect.Bottom - 7,                     
-                               EventRect.Right -  3,                     
-                               EventRect.Bottom - 4));                   
-          end;                                                           
-
-        finally                                                          
-          if ((EventRect.Bottom > IconRect.Bottom) and                   
-              (EventRect.Left > IconRect.Right)) or                      
-              (WrapStyle = wsIconFlow) then begin
-            DeleteObject (WorkRegion1);                                  
-            DeleteObject (WorkRegion2);                                  
-            DeleteObject (TextRegion);                                   
-          end else begin                                                 
-            DeleteObject (TextRegion);                                   
-          end;                                                           
-        end;                                                             
-      end else if (not EventIsEditing) then begin                        
-        if EventArray[I].Level = 0 then                                  
-          { don't draw the gutter in the EventRest for level 0 events. } 
-          TPSTextOut (RenderCanvas, Angle, RenderIn,                     
-                      IconRect.Right + GutterWidth + TextMargin,         
-                      EventRect.Top + TextMargin, EventString)           
-        else                                                             
-          TPSTextOut (RenderCanvas, Angle, RenderIn,                     
-                      IconRect.Right + GutterWidth + TextMargin,         
-                      EventRect.Top + TextMargin, EventString);          
-      end;                                                               
-
-      { paint the borders around the event text area }
-      TPSPolyline (RenderCanvas, Angle, RenderIn,
-                   [Point (EventRect.Left, EventRect.Top),
-                    Point (EventRect.Right, EventRect.Top),
-                    Point (EventRect.Right, EventRect.Bottom),
-                    Point (EventRect.Left, EventRect.Bottom),
-                    Point (EventRect.Left, EventRect.Top)]);
-      { don't paint gutter area on level 0 items }
-      if EventArray[I].Level > 0 then begin
-        TPSMoveTo (RenderCanvas, Angle, RenderIn,
-                   EventRect.Left + Round (FGutterWidth * Scale),
-                   EventRect.Top);
-        TPSLineTo (RenderCanvas, Angle, RenderIn,
-                   EventRect.Left + Round (FGutterWidth * Scale),
-                   EventRect.Bottom);
+      if (dvInPlaceEditor <> nil) and dvInplaceEditor.Visible and OKToDrawEditFrame then begin
+        { paint extra borders around the editor }
+        if Assigned (DataStore) then
+          RenderCanvas.Brush.Color := DataStore.CategoryColorMap.GetColor(FActiveEvent.Category);
+        RenderCanvas.Pen.Color := clWindowFrame;
+        TPSFillRect(RenderCanvas, Angle, RenderIn,
+          Rect(dvActiveEventRec.Left, dvActiveEventRec.Top - FGutterWidth, dvActiveEventRec.Right, dvActiveEventRec.Top)
+        );
+        TPSPolyline(RenderCanvas, Angle, RenderIn, [
+          Point(dvActiveEventRec.Left, dvActiveEventRec.Top),
+          Point(dvActiveEventRec.Left, dvActiveEventRec.Top - FGutterWidth),
+          Point(dvActiveEventRec.Right, dvActiveEventRec.Top - FGutterWidth),
+          Point(dvActiveEventRec.Right, dvActiveEventRec.Top)
+        ]);
+        TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(
+          dvActiveEventRec.Left,
+          dvActiveEventRec.Bottom,
+          dvActiveEventRec.Right,
+          dvActiveEventRec.Bottom + FGutterWidth
+        ));
+        TPSPolyline(RenderCanvas, Angle, RenderIn, [
+          Point(dvActiveEventRec.Left, dvActiveEventRec.Bottom),
+          Point(dvActiveEventRec.Left, dvActiveEventRec.Bottom + FGutterWidth),
+          Point(dvActiveEventRec.Right, dvActiveEventRec.Bottom + FGutterWidth),
+          Point(dvActiveEventRec.Right, dvActiveEventRec.Bottom)
+        ]);
       end;
-
-      if Assigned (FOnAfterDrawEvent) and                                
-         (EventArray[I].Level = 0) then                                  
-        FOnAfterDrawEvent (Self, Event, FActiveEvent = Event,            
-                           RenderCanvas, EventRect, IconRect)            
-      else if Assigned (FOnAfterDrawEvent) then                          
-        FOnAfterDrawEvent (Self, Event, FActiveEvent = Event,            
-                           RenderCanvas,                                 
-                           Rect (EventRect.Left + FGutterWidth,          
-                                 EventRect.Top, EventRect.Right,         
-                                 EventRect.Bottom),                      
-                           IconRect);                                    
-
-      Canvas.Brush.Assign (OldBrush);                                    
-      Canvas.Pen.Assign (OldPen);                                        
-      Canvas.Font.Assign (OldFont);                                      
-
-      dvEventArray[EventCount].Rec := Rect (EventRect.Left,              
-                                            EventRect.Top,               
-                                            EventRect.Right,             
-                                            EventRect.Bottom + 1);       
-      dvEventArray[EventCount].IconRect := IconRect;                     
-      dvEventArray[EventCount].Event := Event;
-      Inc(EventCount);
-    end;
-
-    OKToDrawEditFrame := True;
-    if Assigned (FActiveEvent) then
-      OKToDrawEditFrame := not (FActiveEvent.AllDayEvent);
-
-    if (dvInPlaceEditor <> nil) and dvInplaceEditor.Visible and OKToDrawEditFrame then begin
-      { paint extra borders around the editor }
-      if Assigned (DataStore) then                                       
-        RenderCanvas.Brush.Color := DataStore.CategoryColorMap.GetColor(
-          FActiveEvent.Category);
-      RenderCanvas.Pen.Color := clWindowFrame;
-      TPSFillRect (RenderCanvas, Angle, RenderIn,
-                   Rect(dvActiveEventRec.Left,
-                   dvActiveEventRec.Top - FGutterWidth,
-                   dvActiveEventRec.Right,
-                   dvActiveEventRec.Top));
-      TPSPolyline (RenderCanvas, Angle, RenderIn,
-                   [Point(dvActiveEventRec.Left, dvActiveEventRec.Top),
-                    Point(dvActiveEventRec.Left,
-                      dvActiveEventRec.Top - FGutterWidth),
-                    Point(dvActiveEventRec.Right,
-                      dvActiveEventRec.Top - FGutterWidth),
-                    Point(dvActiveEventRec.Right, dvActiveEventRec.Top)]);
-      TPSFillRect (RenderCanvas, Angle, RenderIn,
-                   Rect(dvActiveEventRec.Left,
-                   dvActiveEventRec.Bottom, dvActiveEventRec.Right,
-                   dvActiveEventRec.Bottom + FGutterWidth));
-      TPSPolyline (RenderCanvas, Angle, RenderIn,
-                   [Point(dvActiveEventRec.Left, dvActiveEventRec.Bottom),
-                    Point(dvActiveEventRec.Left,
-                      dvActiveEventRec.Bottom + FGutterWidth),
-                    Point(dvActiveEventRec.Right,
-                      dvActiveEventRec.Bottom + FGutterWidth),
-                    Point(dvActiveEventRec.Right, dvActiveEventRec.Bottom)]);
-    end;
 
       { Clean Up }
     finally
-      try                                                                
-        FreeBitmaps;                                                     
-      finally                                                            
+      try
+        FreeBitmaps;
+      finally
         { restore canvas color and font }
         RenderCanvas.Brush.Color := SaveColor;
         RenderCanvas.Font.Assign(SaveFont);
         SaveFont.Free;
-        OldFont.Free;                                                    
-        OldPen.Free;                                                     
-        OldBrush.Free;                                                   
-      end;                                                               
+        OldFont.Free;
+        OldPen.Free;
+        OldBrush.Free;
+      end;
     end;
-  end;
+  end; // DrawEvents (begins at line 2832 . OMG: 1000 lines per local proc!!!)
 
-  procedure DrawCells (R : TRect; ColDate: TDateTime; Col: Integer);
+  procedure DrawCells(R: TRect; ColDate: TDateTime; Col: Integer);
   var
-    I             : Integer;
-    LineRect      : TRect;
-    SavedFont     : TFont;
-    GutterRect    : TRect;
-    LineStartTime : Double;
-
+    I: Integer;
+    LineRect: TRect;
+    SavedFont: TFont;
+    GutterRect: TRect;
+    LineStartTime: Double;
   begin
     if StartLine < 0 then
       StartLine := TopLine;
@@ -3969,7 +3848,7 @@ begin
     try
       RenderCanvas.Font.Assign(Font);
       RenderCanvas.Brush.Color := RealColor;
-      TPSFillRect (RenderCanvas, Angle, RenderIn, R);
+      TPSFillRect(RenderCanvas, Angle, RenderIn, R);
 
       LineRect := Rect(R.left, R.top, R.Right, R.Top + RealRowHeight);
       RenderCanvas.Pen.Style := psSolid;
@@ -4003,14 +3882,12 @@ begin
 //         ActiveRow := TopLine;                                         
 
         if not DisplayOnly then begin
-          if (Focused)
-          and (FActiveCol = col)
-          and (FActiveRow = StartLine + I)
-          then begin
+          if Focused and (FActiveCol = col) and (FActiveRow = StartLine + I) then
+          begin
             { Paint background hilight color }
             RenderCanvas.Brush.Color := HighlightBkg;
             RenderCanvas.Font.Color := HighlightText;
-            TPSFillRect (RenderCanvas, Angle, RenderIn, LineRect);
+            TPSFillRect(RenderCanvas, Angle, RenderIn, LineRect);
           end else begin
             { paint the active, inactive, weekend, and holiday colors }
 
@@ -4021,23 +3898,22 @@ begin
             if (DayOfWeek(ColDate) = 1) or (DayOfWeek(ColDate) = 7) then begin
               { this is a weekend }
               RenderCanvas.Brush.Color := TimeSlotColors.Weekend;
-              TPSFillRect (RenderCanvas, Angle, RenderIn, LineRect);
+              TPSFillRect(RenderCanvas, Angle, RenderIn, LineRect);
             end
 
             else begin
-            { ColDate is a weekday, so check to see if the active     }
-            { range is set. If it isn't then paint all rows the color }
-            { corresponding to Weekday. If it is, then paint inactive }
-            { rows the color corresponding to inactive and the active }
-            { rows the color corresponding to Active Rows.            }
-              if TimeSlotColors.ActiveRange.RangeBegin
-                = TimeSlotColors.ActiveRange.RangeEnd then begin
+              { ColDate is a weekday, so check to see if the active     }
+              { range is set. If it isn't then paint all rows the color }
+              { corresponding to Weekday. If it is, then paint inactive }
+              { rows the color corresponding to inactive and the active }
+              { rows the color corresponding to Active Rows.            }
+              if TimeSlotColors.ActiveRange.RangeBegin = TimeSlotColors.ActiveRange.RangeEnd then
+              begin
                 { there is no active range, so all time slots are to be }
                 { painted the color of Weekday }
                 RenderCanvas.Brush.Color := TimeSlotColors.Weekday;
-                TPSFillRect (RenderCanvas, Angle, RenderIn, LineRect);
+                TPSFillRect(RenderCanvas, Angle, RenderIn, LineRect);
               end
-
               else begin
                 { there is an active range defined, so we need to see if }
                 { the current line falls in the active range or not, and }
@@ -4061,14 +3937,10 @@ begin
         { Draw the lines }
         if I + StartLine <= LineCount then begin
           RenderCanvas.Pen.Color := LineColor;
-          TPSMoveTo (RenderCanvas, Angle, RenderIn,
-                     LineRect.Left, LineRect.Top);
-          TPSLineTo (RenderCanvas, Angle, RenderIn,
-                     LineRect.Right - 1, LineRect.Top);
-          TPSMoveTo (RenderCanvas, Angle, RenderIn,
-                     LineRect.Left, LineRect.Bottom);
-          TPSLineTo (RenderCanvas, Angle, RenderIn,
-                     LineRect.Right - 1, LineRect.Bottom);
+          TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Left, LineRect.Top);
+          TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right - 1, LineRect.Top);
+          TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Left, LineRect.Bottom);
+          TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right - 1, LineRect.Bottom);
         end;
       end;
 
@@ -4077,7 +3949,7 @@ begin
       RenderCanvas.Pen.Color := BevelShadow;
       RenderCanvas.Pen.Style := psSolid;
       TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Bottom);
-      TPSLineTo (RenderCanvas, Angle, RenderIn, R.Right - 1, R.Top - 1);
+      TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Top - 1);
 
       RenderCanvas.Font.Assign(SavedFont);
     finally
@@ -4085,19 +3957,17 @@ begin
     end;
   end;
 
-
   procedure DrawAllDays;
   var
-    i           : Integer;
-    RPos        : Integer;
-    AllDayWidth : Integer;
-    ExtraSpace  : Integer;
-    DrawMe      : Boolean;
-    RealDay     : Integer;
-
+    i: Integer;
+    RPos: Integer;
+    AllDayWidth: Integer;
+    ExtraSpace: Integer;
+    DrawMe: Boolean;
+    RealDay: Integer;
   begin
     if RealNumDays = 0 then begin
-      while (DayOfWeek (RenderDate) = 1) or (DayOfWeek (RenderDate) = 7) do
+      while (DayOfWeek(RenderDate) = 1) or (DayOfWeek(RenderDate) = 7) do
         RenderDate := RenderDate + 1;
       RealNumDays := FNumDays;
     end;
@@ -4112,17 +3982,12 @@ begin
     for i := 0 to RealNumDays - 1 do begin
       DrawMe := True;
       if not FIncludeWeekends then begin
-        if (DayOfWeek (RenderDate + i) = 1) or
-           (DayOfWeek (RenderDate + i) = 7) then
+        if (DayOfWeek(RenderDate + i) = 1) or (DayOfWeek(RenderDate + i) = 7) then
           DrawMe := False
       end;
       if DrawMe then begin
         { Draw Column Header }
-        ColHeadRect := Rect (RPos,
-                             RealTop + 2,
-                             RPos + DayWidth - 1,
-                             RealTop + RealColHeadHeight);
-
+        ColHeadRect := Rect(RPos, RealTop + 2, RPos + DayWidth - 1, RealTop + RealColHeadHeight);
         if (i = RealNumDays - 1) and (ExtraSpace > 0) then
           ColHeadRect.Right := ColHeadRect.Right + ExtraSpace;
 
@@ -4130,17 +3995,13 @@ begin
           Drawn := false;
           FOwnerDrawColHead (self, RenderCanvas, ColHeadRect, Drawn);
           if not Drawn then
-            dvDrawColHeader (ColHeadRect, RenderDate + i, RealDay);
+            dvDrawColHeader(ColHeadRect, RenderDate + i, RealDay);
         end else
-          dvDrawColHeader (ColHeadRect, RenderDate + i, RealDay);
+          dvDrawColHeader(ColHeadRect, RenderDate + i, RealDay);
 
         { Calculate the column rect for this day }
         RenderCanvas.Font.Assign(Font);
-        CellsRect := Rect (RPos,
-                           ADEventsRect.Bottom + 1,
-                           RPos + DayWidth,
-                           RealBottom - 2);
-
+        CellsRect := Rect(RPos, ADEventsRect.Bottom + 1, RPos + DayWidth, RealBottom - 2);
         if (i = RealNumDays - 1) and (ExtraSpace > 0) then
           CellsRect.Right := CellsRect.Right + ExtraSpace;
 
@@ -4152,15 +4013,15 @@ begin
         if Assigned(FOwnerDrawCells) then begin
           FOwnerDrawCells(self, RenderCanvas, CellsRect, RealRowHeight, Drawn);
           if not Drawn then
-            DrawCells (CellsRect, RenderDate + i, RealDay);
+            DrawCells(CellsRect, RenderDate + i, RealDay);
         end else
-          DrawCells (CellsRect, RenderDate + i, RealDay);
+          DrawCells(CellsRect, RenderDate + i, RealDay);
 
         { Draw the regular events }
         DrawEvents(RenderDate + i, RealDay); 
 
-        Inc (RPos, DayWidth);
-        Inc (RealDay);
+        Inc(RPos, DayWidth);
+        Inc(RealDay);
       end;
     end;
   end;
@@ -4168,7 +4029,6 @@ begin
   procedure InitializeEventRectangles;
   var
     I : Integer;
-
   begin
     EventCount := 0;
     for I := 0 to pred(Length(dvEventArray)) do begin
@@ -4182,35 +4042,35 @@ begin
 
 begin
   if DisplayOnly then begin
-    BevelShadow          := clBlack;
-    BevelHighlight       := clBlack;
-    BevelDarkShadow      := clBlack;
-    BevelFace            := clBlack;
-    WindowColor          := clWhite;
-    HighlightText        := clBlack;
-    RealHeadAttrColor    := clSilver;
+    BevelShadow := clBlack;
+    BevelHighlight := clBlack;
+    BevelDarkShadow := clBlack;
+    BevelFace := clBlack;
+    WindowColor := clWhite;
+    HighlightText := clBlack;
+    RealHeadAttrColor := clSilver;
     RealRowHeadAttrColor := clSilver;
-    RealLineColor        := clBlack;
-    RealColor            := clWhite;
-    HighlightBkg         := clWhite;
-    RealADEventBkgColor  := clWhite;                                     
-    ADEventAttrBkgColor  := clWhite;                                     
-    ADEventBorderColor   := clBlack;                                     
+    RealLineColor := clBlack;
+    RealColor := clWhite;
+    HighlightBkg := clWhite;
+    RealADEventBkgColor := clWhite;
+    ADEventAttrBkgColor := clWhite;
+    ADEventBorderColor := clBlack;
   end else begin
-    BevelShadow          := clBtnShadow;
-    BevelHighlight       := clBtnHighlight;
-    BevelDarkShadow      := cl3DDkShadow;
-    BevelFace            := clBtnFace;
-    WindowColor          := clWindow;
-    HighlightText        := clHighlightText;
-    HighlightBkg         := clHighlight;
-    RealHeadAttrColor    := FHeadAttr.Color;
+    BevelShadow := clBtnShadow;
+    BevelHighlight := clBtnHighlight;
+    BevelDarkShadow := cl3DDkShadow;
+    BevelFace := clBtnFace;
+    WindowColor := clWindow;
+    HighlightText := clHighlightText;
+    HighlightBkg := clHighlight;
+    RealHeadAttrColor := FHeadAttr.Color;
     RealRowHeadAttrColor := FRowHeadAttr.Color;
-    RealLineColor        := LineColor;
-    RealColor            := Color;
-    RealADEventBkgColor  := AllDayEventAttributes.BackgroundColor;       
-    ADEventAttrBkgColor  := AllDayEventAttributes.EventBackgroundColor;  
-    ADEventBorderColor   := AllDayEventAttributes.EventBorderColor;      
+    RealLineColor := LineColor;
+    RealColor := Color;
+    RealADEventBkgColor := AllDayEventAttributes.BackgroundColor;
+    ADEventAttrBkgColor := AllDayEventAttributes.EventBackgroundColor;
+    ADEventBorderColor := AllDayEventAttributes.EventBorderColor;
   end;
 
   SetMeasurements;
@@ -4223,15 +4083,14 @@ begin
   else
     ScrollBarOffset := 14;
 
-  dvPainting     := true;
-  SavePenStyle   := RenderCanvas.Pen.Style;
+  dvPainting := true;
+  SavePenStyle := RenderCanvas.Pen.Style;
   SaveBrushColor := RenderCanvas.Brush.Color;
-  SavePenColor   := RenderCanvas.Pen.Color;
+  SavePenColor := RenderCanvas.Pen.Color;
 
-  Rgn := CreateRectRgn (RenderIn.Left, RenderIn.Top,
-                        RenderIn.Right, RenderIn.Bottom);
+  Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
   try
-    SelectClipRgn (RenderCanvas.Handle, Rgn);
+    SelectClipRgn(RenderCanvas.Handle, Rgn);
 
     { Calculate Row Header }
     RealRowHeight := dvCalcRowHeight (Scale, UseGran);
@@ -4242,9 +4101,9 @@ begin
     RealRowHeadWidth := TextWidth * 2 + 10;
 
     { initialize the All Day Events area... }
-    ADEventsRect.Left   := RealLeft + 3 + RealRowHeadWidth;
-    ADEventsRect.Top    := RealTop + RealColHeadHeight;
-    ADEventsRect.Right  := ClientRect.Right;
+    ADEventsRect.Left := RealLeft + 3 + RealRowHeadWidth;
+    ADEventsRect.Top := RealTop + RealColHeadHeight;
+    ADEventsRect.Right := ClientRect.Right;
     ADEventsRect.Bottom := AdEventsRect.Top;
 
     { Calculate the RealNumDays (The number of days the control covers) }
@@ -4256,56 +4115,53 @@ begin
     DrawAllDayEvents;
 
     { draw the area in the top left corner, where the nav buttons go. }
-    RowHeadRect := Rect(RealLeft + 1,
-                        RealTop,
-                        RealLeft + 3 + RealRowHeadWidth,
-                        RealTop + RealColHeadHeight + 2);
+    RowHeadRect := Rect(
+      RealLeft + 1,
+      RealTop,
+      RealLeft + 3 + RealRowHeadWidth,
+      RealTop + RealColHeadHeight + 2
+    );
 
     RenderCanvas.Brush.Color := RealHeadAttrColor;
     TPSFillRect(RenderCanvas, Angle, RenderIn, RowHeadRect);
 
     if DrawingStyle = ds3d then
-      DrawBevelRect(RenderCanvas, TPSRotateRectangle (Angle, RenderIn,
-        Rect (RowHeadRect.Left + 1, RowHeadRect.Top + 2, RowHeadRect.Right - 2,
-          RowHeadRect.Bottom - 2)), BevelHighlight, BevelShadow)
+      DrawBevelRect(
+        RenderCanvas,
+        TPSRotateRectangle(Angle, RenderIn, Rect(
+          RowHeadRect.Left + 1,
+          RowHeadRect.Top + 2,
+          RowHeadRect.Right - 2,
+          RowHeadRect.Bottom - 2
+        )),
+        BevelHighlight,
+        BevelShadow
+      )
     else begin
       RenderCanvas.Pen.Color := BevelShadow;
-      TPSMoveTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Right - 2,
-        RowHeadRect.Bottom - 2);
-      TPSLineTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Left,
-        RowHeadRect.Bottom - 2);
+      TPSMoveTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Right - 2, RowHeadRect.Bottom - 2);
+      TPSLineTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Left, RowHeadRect.Bottom - 2);
       RenderCanvas.Pen.Color := BevelHighlight;
-      TPSLineTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Left,
-        RowHeadRect.Top);
-      TPSLineTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Right - 2,
-        RowHeadRect.Top);
+      TPSLineTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Left, RowHeadRect.Top);
+      TPSLineTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Right - 2, RowHeadRect.Top);
       RenderCanvas.Pen.Color := BevelShadow;
-      TPSMoveTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Right - 2,
-        RowHeadRect.Top + 6);
-      TPSLineTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Right - 2,
-        RowHeadRect.Bottom - 5);
+      TPSMoveTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Right - 2, RowHeadRect.Top + 6);
+      TPSLineTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Right - 2, RowHeadRect.Bottom - 5);
     end;
-
 
     RenderCanvas.Font.Assign(FRowHeadAttr.FHourFont);
     if DrawingStyle = dsFlat then
-      RowHeadRect := Rect(RealLeft + 2,
-                          ADEventsRect.Bottom + 1,
-                          RealLeft + 2 + RealRowHeadWidth,
-                          RealBottom)
+      RowHeadRect := Rect(RealLeft + 2, ADEventsRect.Bottom + 1, RealLeft + 2 + RealRowHeadWidth, RealBottom)
     else
-      RowHeadRect := Rect (RealLeft + 1,
-                           ADEventsRect.Bottom + 1,
-                           RealLeft + 2 + RealRowHeadWidth,
-                           RealBottom);
+      RowHeadRect := Rect(RealLeft + 1, ADEventsRect.Bottom + 1, RealLeft + 2 + RealRowHeadWidth, RealBottom);
 
     if Assigned(FOwnerDrawRowHead) then begin
       Drawn := false;
-      FOwnerDrawRowHead (self, RenderCanvas, RowHeadRect, RealRowHeight, Drawn);
+      FOwnerDrawRowHead(self, RenderCanvas, RowHeadRect, RealRowHeight, Drawn);
       if not Drawn then
-        dvDrawRowHeader (RowHeadRect);
+        dvDrawRowHeader(RowHeadRect);
     end else
-      dvDrawRowHeader (RowHeadRect);
+      dvDrawRowHeader(RowHeadRect);
 
     { Draw the regular events }
     DrawAllDays; 
@@ -4313,36 +4169,33 @@ begin
     { Draw Borders }
     if FDrawingStyle = dsFlat then begin
       { Draw an outer and inner bevel }
-      DrawBevelRect (RenderCanvas,
-                     TPSRotateRectangle (Angle, RenderIn,
-                                         Rect (RealLeft,
-                                               RealTop,
-                                               RealRight - 1,
-                                               RealBottom - 1)),
-                     BevelShadow, BevelHighlight);
-      DrawBevelRect (RenderCanvas,
-                     TPSRotateRectangle (Angle, RenderIn,
-                                         Rect (RealLeft + 1,
-                                               RealTop + 1,
-                                               RealRight - 2,
-                                               RealBottom - 2)),
-                     BevelHighlight, BevelShadow);
-    end else if FDrawingStyle = ds3d then begin
-    { Draw a 3d bevel }
-      DrawBevelRect (RenderCanvas,
-                     TPSRotateRectangle (Angle, RenderIn,
-                                         Rect (RealLeft,
-                                               RealTop,
-                                               RealRight - 1,
-                                               RealBottom - 1)),
-                     BevelShadow, BevelHighlight);
-      DrawBevelRect (RenderCanvas,
-                     TPSRotateRectangle (Angle, RenderIn,
-                                         Rect (RealLeft + 1,
-                                               RealTop + 1,
-                                               RealRight - 2,
-                                               RealBottom - 2)),
-                     BevelDarkShadow, BevelFace);
+      DrawBevelRect(
+        RenderCanvas,
+        TPSRotateRectangle(Angle, RenderIn, Rect(RealLeft, RealTop, RealRight - 1, RealBottom - 1)),
+        BevelShadow,
+        BevelHighlight
+      );
+      DrawBevelRect(
+        RenderCanvas,
+        TPSRotateRectangle(Angle, RenderIn, Rect(RealLeft + 1, RealTop + 1, RealRight - 2, RealBottom - 2)),
+        BevelHighlight,
+        BevelShadow
+      );
+    end else
+    if FDrawingStyle = ds3d then begin
+      { Draw a 3d bevel }
+      DrawBevelRect(
+        RenderCanvas,
+        TPSRotateRectangle(Angle, RenderIn, Rect(RealLeft, RealTop, RealRight - 1, RealBottom - 1)),
+        BevelShadow,
+        BevelHighlight
+      );
+      DrawBevelRect(
+        RenderCanvas,
+        TPSRotateRectangle(Angle, RenderIn, Rect(RealLeft + 1, RealTop + 1, RealRight - 2, RealBottom - 2)),
+        BevelDarkShadow,
+        BevelFace
+      );
     end;
 
     { Place navigation buttons               }
@@ -4357,29 +4210,29 @@ begin
       dvTodayBtn.Top := 2;
       dvTodayBtn.Width := RealRowHeadWidth;
     end;
-    { size and place the WeekDown button     }
+    { size and place the WeekDown button }
     dvWeekDownBtn.Height := dvTodayBtn.Height;
     dvWeekDownBtn.Width := trunc(RealRowHeadWidth * 0.25) + 2;
     dvWeekDownBtn.Left := dvTodayBtn.Left;
     dvWeekDownBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
-    { size and place the DayDown button      }
+    { size and place the DayDown button }
     dvDayDownBtn.Height := dvTodayBtn.Height;
     dvDayDownBtn.Width := dvWeekDownBtn.Width - 4;
     dvDayDownBtn.Left := dvWeekDownBtn.Left + dvWeekDownBtn.Width;
     dvDayDownBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
-    { size and place the DayUp button        }
+    { size and place the DayUp button }
     dvDayUpBtn.Height := dvTodayBtn.Height;
     dvDayUpBtn.Width := dvWeekDownBtn.Width - 4;
     dvDayUpBtn.Left := dvDayDownBtn.Left + dvDayDownBtn.Width;
     dvDayUpBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
-    { size and place the WeekUp button       }
+    { size and place the WeekUp button }
     dvWeekUpBtn.Height := dvTodayBtn.Height;
     dvWeekUpBtn.Width := dvTodayBtn.Width - dvWeekDownBtn.Width
       - dvDayDownBtn.Width - dvDayUpBtn.Width;
     dvWeekUpBtn.Left := dvDayUpBtn.Left + dvDayUpBtn.Width;
     dvWeekUpBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
 
-    { Reinstate RenderCanvas settings        }
+    { Reinstate RenderCanvas settings }
     RenderCanvas.Pen.Style := SavePenStyle;
     RenderCanvas.Brush.Color := SaveBrushColor;
     RenderCanvas.Pen.Color := SavePenColor;
@@ -4395,16 +4248,15 @@ end;
 
 {.$IFNDEF LCL}
 procedure TVpDayView.VpDayViewInit (var Msg : TMessage);
-begin                                                                  
-  if csLoading in ComponentState then begin                            
-    PostMessage (Handle, Vp_DayViewInit, 0, 0);                        
-    Exit;                                                              
-  end;                                                                 
+begin
+  if csLoading in ComponentState then begin
+    PostMessage(Handle, Vp_DayViewInit, 0, 0);
+    Exit;
+  end;
 
-  dvCalcColHeadHeight (1);                                             
-  dvCalcRowHeight (1, FGranularity);                                   
-  dvCalcVisibleLines (Height, dvColHeadHeight, dvRowHeight, 1,         
-                      TopLine, -1);                                    
+  dvCalcColHeadHeight(1);
+  dvCalcRowHeight(1, FGranularity);
+  dvCalcVisibleLines(Height, dvColHeadHeight, dvRowHeight, 1, TopLine, -1);
   SetVScrollPos;
 end;
 {.$ENDIF}
