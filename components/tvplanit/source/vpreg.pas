@@ -62,6 +62,7 @@ type
     procedure GetValues(Proc: TGetStrProc); override;
   end;
 
+  {$IFDEF DELPHI}
   {TAliasNameProperty}
   TAliasNameProperty = class(TDBStringProperty)
   public
@@ -82,6 +83,7 @@ type
   public
     procedure GetValues(Proc: TGetStrProc); override;
   end;
+ {$ENDIF}
 
   TVpDateProperty = class (TFloatProperty)
     public
@@ -168,16 +170,6 @@ uses
 
 
 (*****************************************************************************)
-{ TAliasNameProperty }
-
-procedure TAliasNameProperty.GetValueList(List: TStrings);
-begin
-{$IFDEF DELPHI}
-  (GetComponent(0) as TVpBDEDataStore).Database.Session.GetAliasNames(List);
-{$ENDIF}
-end;
-
-(*****************************************************************************)
 { TDBStringProperty }
 
 function TDBStringProperty.GetAttributes: TPropertyAttributes;
@@ -206,16 +198,22 @@ begin
 end;
 {=====}
 
+{$IFDEF DELPHI}
+(*****************************************************************************)
+{ TAliasNameProperty }
+
+procedure TAliasNameProperty.GetValueList(List: TStrings);
+begin
+  (GetComponent(0) as TVpBDEDataStore).Database.Session.GetAliasNames(List);
+end;
+
 (*****************************************************************************)
 { TDriverNameProperty }
 
 procedure TDriverNameProperty.GetValueList(List: TStrings);
 begin
-  {$IFDEF DELPHI}
   (GetComponent(0) as TVpBDEDataStore).Database.Session.GetDriverNames(List);
-  {$ENDIF}
 end;
-{=====}
 
 (*****************************************************************************)
 { TDataStoreProperty }
@@ -224,13 +222,11 @@ var
   J: Integer;
   DataStore: TVpCustomDataStore;
 begin
-  {$IFDEF DELPHI}
   DataStore := TVpCustomDataStore(Designer.GetComponent(Value));
   for J := 0 to PropCount - 1 do
     if TVpDayView(GetComponent(J)).DataStore = DataStore then
       Exit;
   FCheckProc(Value);
-  {$ENDIF}
 end;
 
 procedure TDataStoreProperty.GetValues(Proc: TGetStrProc);
@@ -239,28 +235,25 @@ begin
   inherited GetValues(CheckComponent);
 end;
 {=====}
+{$ENDIF}
 
 (*****************************************************************************)
-{ TDataStoreProperty }
+{ TVpDateProperty }
 procedure TVpDateProperty.Edit;
-
 var
-  frmDatePropertyEditor : TfrmDatePropertyEditor;
-
+  frmDatePropertyEditor: TfrmDatePropertyEditor;
 begin
   frmDatePropertyEditor := TfrmDatePropertyEditor.Create (Application);
   try
     frmDatePropertyEditor.VpCalendar1.Date := GetFloatValue;
     if frmDatePropertyEditor.Execute then
-      SetFloatValue (Trunc (frmDatePropertyEditor.VpCalendar1.Date));
+      SetFloatValue(Trunc(frmDatePropertyEditor.VpCalendar1.Date));
   finally
     frmDatePropertyEditor.Free;
   end;
 end;
 {=====}
 
-(*****************************************************************************)
-{ TVpDateProperty }
 function TVpDateProperty.GetAttributes : TPropertyAttributes;
 begin
   Result := [paDialog, paMultiSelect];
@@ -413,14 +406,20 @@ end;
 {*** component registration ***}
 procedure Register;
 begin
-  { register component editors }
+  {----------------------------------------------------------------------------}
+  {                   register component editors                               }
+  {----------------------------------------------------------------------------}
  {$IFDEF DELPHI}
   RegisterComponentEditor(TVpNavBar, TVpNavBarEditor);
  {$ENDIF}
   RegisterComponentEditor(TVpControlLink, TVpPrtFmtPropertyEditor);
   RegisterComponentEditor(TVpFlexDataStore, TVpFlexDSEditor);
 
-  { register the About Box property editor for the Version properties        }
+  {----------------------------------------------------------------------------}
+  {                    register property editors                               }
+  {----------------------------------------------------------------------------}
+
+  { register the About Box property editor for the Version properties }
   RegisterPropertyEditor(TypeInfo(string), TVpCollectionItem,
     'Version', TVpAboutProperty);
   RegisterPropertyEditor(TypeInfo(string), TVpComponent,
@@ -439,6 +438,8 @@ begin
     'Version', TVpAboutProperty);
   RegisterPropertyEditor(TypeInfo(string), TVpControlLink,
     'Version', TVpAboutProperty);
+
+  { Other property editors }
 {$IFDEF DELPHI}
   RegisterPropertyEditor(TypeInfo(string), TVpBDEDataStore,
     'Version', TVpAboutProperty);
@@ -452,27 +453,27 @@ begin
   RegisterPropertyEditor(TypeInfo(string), TVpPrintFormatComboBox,
     'Version', TVpAboutProperty);
 
-  {register the BDE Alias and Driver properties                             }
 {$IFDEF DELPHI}
+  {register the BDE Alias and Driver properties                             }
+
   RegisterPropertyEditor(TypeInfo(string), TVpBDEDataStore,
     'AliasName', TAliasNameProperty);
   RegisterPropertyEditor(TypeInfo(string), TVpBDEDataStore,
     'DriverName', TDriverNameProperty);
- {$ENDIF}
+
+  {register the DayView properties                                          }
 
   // LCL: Registering next property editor inhibits that the DataStore
   // property combo of the DayView lists the available datastores.
-
-  {register the DayView properties                                          }
-  //RegisterPropertyEditor(TypeInfo(TVpCustomDataStore), TVpDayView,
-  //  'DataStore', TDataStoreProperty);
+  RegisterPropertyEditor(TypeInfo(TVpCustomDataStore), TVpDayView,
+    'DataStore', TDataStoreProperty);
 
   {register the property editor for the DataStore's DefaultAlarmWav         }
-  { NO - not useful in design mode because there is not platform-independent way
-    to play the sound
+  // NO - not useful in design mode because there is not platform-independent way
+  // to play the sound }
   RegisterPropertyEditor(TypeInfo(string), TVpCustomDataStore,
     'DefaultEventSound', TWavFileProperty);
-  }
+ {$ENDIF}
 
   RegisterPropertyEditor(TypeInfo(String), TVpCustomDatastore,
     'DefaultEventSound', TVpWavFileProperty);
@@ -495,7 +496,10 @@ begin
   RegisterPropertyEditor(TypeInfo(string), TVpControlLink,
     'LocalizationFile', TVpLocalizeFileNameProperty);
 
-  {register Visual PlanIt components with the IDE}
+
+  {----------------------------------------------------------------------------}
+  {               register Visual PlanIt components with the IDE               }
+  {----------------------------------------------------------------------------}
   RegisterComponents('Visual PlanIt', [
     TVpLEDLabel,
     TVpClock,
