@@ -404,7 +404,7 @@ type
    {$IFDEF DRAGDROP}
     procedure DragDrop(Source: TObject; X, Y: Integer); override;
    {$ENDIF}
-    function HourToLine(const Value: TVpHours; const UseGran: TVpGranularity): Integer;
+//    function HourToLine(const Value: TVpHours; const UseGran: TVpGranularity): Integer;
     procedure Invalidate; override;
     procedure LinkHandler(Sender: TComponent; NotificationType: TVpNotificationType;
       const Value: Variant); override;
@@ -1346,16 +1346,7 @@ begin
   Result := Result + TextMargin * 2;
 
   Result := Round(Result * Scale);
-
-  case UseGran of
-    gr60Min : dvClientVArea := Result * 24;
-    gr30Min : dvClientVArea := Result * 48;
-    gr20Min : dvClientVArea := Result * 72;
-    gr15Min : dvClientVArea := Result * 96;
-    gr10Min : dvClientVArea := Result * 144;
-    gr06Min : dvClientVArea := Result * 240;
-    gr05Min : dvClientVArea := Result * 288;
-  end;
+  dvClientVArea := Result * MinutesInDay div GranularityMinutes[UseGran];
   dvRowHeight := Result;
 end;
 {=====}
@@ -1383,21 +1374,12 @@ begin
     Result := FNumDays;
 end;
 {=====}
-
+                                    (*
 function TVpDayView.HourToLine(const Value: TVpHours;
   const UseGran: TVpGranularity): Integer;
 begin
-  case UseGran of
-    gr60Min : Result := Ord (Value);
-    gr30Min : Result := Ord (Value) * 2;
-    gr20Min : Result := Ord (Value) * 3;
-    gr15Min : Result := Ord (Value) * 4;
-    gr10Min : Result := Ord (Value) * 6;
-    gr06Min : Result := Ord (Value) * 10;
-    gr05Min : Result := Ord (Value) * 12;
-    else      Result := Ord (Value) * 2; { Default to 30 minutes }
-  end;
-end;
+  Result := Ord(Value) * 60 div GranularityMinutes[UseGran];
+end;                                  *)
 
 procedure TVpDayView.SetDrawingStyle(Value: TVpDrawingStyle);
 begin
@@ -1430,10 +1412,7 @@ procedure TVpDayView.SetTopLine(Value: Integer);
 begin
   if Value <> FTopLine then begin
     if Value + VisibleLines >= pred(LineCount) then begin
-      if Granularity = gr60Min then
-        FTopLine := pred(LineCount) - VisibleLines + 2
-      else
-        FTopLine := pred(LineCount) - VisibleLines + 2;
+      FTopLine := pred(LineCount) - VisibleLines + 2;
       { prevent the control from hanging at the bottom }
       if (Value < FTopLine) and (Value > 0) then
         FTopLine := Value;
@@ -1507,7 +1486,7 @@ begin
   FGranularity := Value;
 
   SetTimeIntervals (FGranularity);
-  FTopLine := HourToLine (FTopHour, FGranularity);                       
+  FTopLine := HourToLine(FTopHour, FGranularity);
 
   Invalidate;
 end;
@@ -2560,23 +2539,6 @@ var
     end;
   end;
   {=====}
-
-
-  { Returns the time duration of one row of the DayView }
-  function RowDuration: Double;
-  begin
-    case Granularity of
-      gr60Min : result := 24 / MinutesInDay;
-      gr30Min : result := 30 / MinutesInDay;
-      gr20Min : result := 20 / MinutesInDay;
-      gr15Min : result := 15 / MinutesInDay;
-      gr10Min : result := 10 / MinutesInDay;
-      gr06Min : result :=  6 / MinutesInDay;
-      gr05Min : result :=  5 / MinutesInDay;
-    else
-      result := 0.0;
-    end;
-  end;
 
   { Draws the all-day events at the top of the DayView in a special manner }
   procedure DrawAllDayEvents;

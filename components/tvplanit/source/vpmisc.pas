@@ -113,23 +113,19 @@ function IncYear (TheDate : TDateTime; NumYears : Integer) : TDateTime;
 
 function GetJulianDate(Date: TDateTime): Word;
 
-function HourToLine (const Value       : TVpHours;
-                     const Granularity : TVpGranularity) : Integer;
+function HourToLine(const Value: TVpHours; const Granularity: TVpGranularity): Integer;
 
-function GetStartLine (StartTime: TDateTime;
-  Granularity: TVpGranularity): Integer;
+function GetStartLine(StartTime: TDateTime; Granularity: TVpGranularity): Integer;
 
-function GetEndLine (EndTime: TDateTime;
-  Granularity: TVpGranularity): Integer;
+function GetEndLine (EndTime: TDateTime; Granularity: TVpGranularity): Integer;
 
-function TimeInRange(Time, StartTime, EndTime: TDateTime;
-  Inclusive: Boolean): Boolean;
+function TimeInRange(Time, StartTime, EndTime: TDateTime; Inclusive: Boolean): Boolean;
 
 function LineToStartTime(Line: Integer; Granularity: TVpGranularity): TDateTime;
 
 function GetLineDuration(Granularity: TVpGranularity): Double;
 
-function GetLabelWidth(ALabel : TLabel) : Integer;
+function GetLabelWidth(ALabel: TLabel): Integer;
 
 implementation
 
@@ -455,9 +451,10 @@ begin
 end;
 {=====}
 
-function HourToLine (const Value       : TVpHours;
-                     const Granularity : TVpGranularity) : Integer;
+function HourToLine(const Value: TVpHours; const Granularity: TVpGranularity): Integer;
 begin
+  Result := Ord(Value) * 60 div GranularityMinutes[Granularity];
+  (*
   case Granularity of
     gr60Min : Result := Ord (Value);
     gr30Min : Result := Ord (Value) * 2;
@@ -469,18 +466,20 @@ begin
     else
       Result := Ord (Value) * 2; { Default to 30 minutes }
   end;
+  *)
 end;
 {=====}
 
-function GetStartLine (StartTime: TDateTime;
-  Granularity: TVpGranularity): Integer;
+function GetStartLine(StartTime: TDateTime; Granularity: TVpGranularity): Integer;
 var
-  LineDuration : Double; { the percentage of a day covered by each line }
-  Time         : Double;
+  LineDuration: Double; { the percentage of a day covered by each line }
+  Time: Double;
 begin
   { remove the date part, and add one minute to the time }
-  Time := StartTime - trunc(StartTime) + (1 / MinutesInDay);
-
+//  Time := StartTime - trunc(StartTime) + (1 / MinutesInDay);
+  Time := frac(StartTime) + 1 / MinutesInDay;
+  LineDuration := GranularityMinutes[Granularity] / MinutesInDay;
+    (*
   case Granularity of
     gr60Min : LineDuration := 60 / MinutesInDay;
     gr30Min : LineDuration := 30 / MinutesInDay;
@@ -492,19 +491,22 @@ begin
   else
     LineDuration := 30 / MinutesInDay;
   end;
+  *)
 
   result := trunc(Time / LineDuration);
 end;
 {=====}
 
-function GetEndLine (EndTime: TDateTime;
-  Granularity: TVpGranularity): Integer;
+function GetEndLine(EndTime: TDateTime; Granularity: TVpGranularity): Integer;
 var
-  LineDuration : Double; { the percentage of a day covered by each line }
-  Time         : Double;
+  LineDuration: Double; { the percentage of a day covered by each line }
+  Time: Double;
 begin
   { remove the date part, and subtract one minute from the time }
-  Time := EndTime - trunc(EndTime) - (1 / MinutesInDay);
+  Time := frac(EndTime) - 1 / MinutesInDay;
+//  Time := EndTime - trunc(EndTime) - (1 / MinutesInDay);
+  LineDuration := GranularityMinutes[Granularity] / MinutesInDay;
+  {
 
   case Granularity of
     gr60Min : LineDuration := 60 / MinutesInDay;
@@ -517,7 +519,7 @@ begin
   else
     LineDuration := 30 / MinutesInDay;
   end;
-
+   }
   result := trunc(Time / LineDuration);
 end;
 {=====}
@@ -528,7 +530,7 @@ begin
   result := 0.0;
   case AdvanceType of
     atMinutes : result := Advance / MinutesInDay;
-    atHours   : result := (Advance * 60) / MinutesInDay;
+    atHours   : result := Advance * 60 / MinutesInDay;
     atDays    : result := Advance;
   end;
 end;
@@ -553,8 +555,10 @@ end;
 
 function LineToStartTime(Line: Integer; Granularity: TVpGranularity): TDateTime;
 begin
+  Result := frac(Line * GranularityMinutes[Granularity] / MinutesInDay);
+  (*
   case Granularity of
-    gr60Min : result := (Line * 24) / MinutesInDay;
+    gr60Min : result := (Line * 24) / MinutesInDay;     // shouldn't this be 60?
     gr30Min : result := (Line * 30) / MinutesInDay;
     gr20Min : result := (Line * 20) / MinutesInDay;
     gr15Min : result := (Line * 15) / MinutesInDay;
@@ -566,13 +570,16 @@ begin
   end;
   {chop off the date portion}
   result := result - trunc(Result);
+  *)
 end;
 {=====}
 
 function GetLineDuration(Granularity: TVpGranularity): Double;
 begin
+  Result := GranularityMinutes[Granularity] / MinutesInDay;
+  (*
   case Granularity of
-    gr60Min : result := 24 / MinutesInDay;
+    gr60Min : result := 24 / MinutesInDay;  // shouldn't this be 60?
     gr30Min : result := 30 / MinutesInDay;
     gr20Min : result := 20 / MinutesInDay;
     gr15Min : result := 15 / MinutesInDay;
@@ -584,10 +591,11 @@ begin
   end;
   { chop off the date portion }
   result := result - trunc(result);
+  *)
 end;
 {=====}
 
-function GetLabelWidth(ALabel : TLabel) : Integer;
+function GetLabelWidth(ALabel: TLabel): Integer;
 var
   canvas: TControlCanvas;
 begin

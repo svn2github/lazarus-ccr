@@ -1344,11 +1344,17 @@ end;
 {=====}
 
 procedure TVpPrinter.AddDefaultVariables (Date : TDateTime);
+
   function HourToStr (Hour : TVpHours; Mil : Boolean) : string;
   begin
     if Mil then
       Result := IntToStr(ord(Hour))
     else
+    if ord(Hour) mod 12 = 0 then
+      Result := '12'
+    else
+      Result := IntToStr(ord(Hour) mod 12);
+    {
       case Hour of
         h_00 : Result := '12';
         h_01 : Result := '1';
@@ -1375,23 +1381,15 @@ procedure TVpPrinter.AddDefaultVariables (Date : TDateTime);
         h_22 : Result := '10';
         h_23 : Result := '11';
       end;
+      }
   end;
 
-  function GranularityToStr (Gran : TVpGranularity) : string;
+  function GranularityToStr(Gran: TVpGranularity): string;
   begin
-    Result := '';
-    case Gran of
-      gr60Min : Result := '60';
-      gr30Min : Result := '30';
-      gr20Min : Result := '20';
-      gr15Min : Result := '15';
-      gr10Min : Result := '10';
-      gr06Min  : Result := '6';
-      gr05Min  : Result := '5';
-    end;
+    Result := IntToStr(GranularityMinutes[Gran]);
   end;
 
-  function HourToAMPM (Hour : TVpHours) : string;
+  function HourToAMPM(Hour: TVpHours): string;
   begin
     if (Hour >= H_00) and (Hour <= h_11) then
       Result := 'AM'
