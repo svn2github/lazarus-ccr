@@ -161,7 +161,9 @@ uses
   VpContactButtons,           { - New contact grid button bar component }    
   { Designtime Interfaces (Property and Component Editors)                   }
   VpAbout,                    { About form for the About property editor     }
+ {$IFDEF DELPHI}
   VpNabEd,                    { component editor for the VpNavBar            }
+ {$ENDIF}
   VpFlxDSEd1;                 { Field mapper component editor for the FlexDS }
 
 
@@ -170,7 +172,7 @@ uses
 
 procedure TAliasNameProperty.GetValueList(List: TStrings);
 begin
-{$IFNDEF LCL}
+{$IFDEF DELPHI}
   (GetComponent(0) as TVpBDEDataStore).Database.Session.GetAliasNames(List);
 {$ENDIF}
 end;
@@ -209,7 +211,7 @@ end;
 
 procedure TDriverNameProperty.GetValueList(List: TStrings);
 begin
-  {$IFNDEF LCL}
+  {$IFDEF DELPHI}
   (GetComponent(0) as TVpBDEDataStore).Database.Session.GetDriverNames(List);
   {$ENDIF}
 end;
@@ -222,7 +224,7 @@ var
   J: Integer;
   DataStore: TVpCustomDataStore;
 begin
-  {$IFNDEF LCL}
+  {$IFDEF DELPHI}
   DataStore := TVpCustomDataStore(Designer.GetComponent(Value));
   for J := 0 to PropCount - 1 do
     if TVpDayView(GetComponent(J)).DataStore = DataStore then
@@ -412,7 +414,9 @@ end;
 procedure Register;
 begin
   { register component editors }
+ {$IFDEF DELPHI}
   RegisterComponentEditor(TVpNavBar, TVpNavBarEditor);
+ {$ENDIF}
   RegisterComponentEditor(TVpControlLink, TVpPrtFmtPropertyEditor);
   RegisterComponentEditor(TVpFlexDataStore, TVpFlexDSEditor);
 
@@ -435,7 +439,7 @@ begin
     'Version', TVpAboutProperty);
   RegisterPropertyEditor(TypeInfo(string), TVpControlLink,
     'Version', TVpAboutProperty);
-{$IFNDEF LCL}
+{$IFDEF DELPHI}
   RegisterPropertyEditor(TypeInfo(string), TVpBDEDataStore,
     'Version', TVpAboutProperty);
   RegisterPropertyEditor(TypeInfo(string), TVpDateEdit,
@@ -449,7 +453,7 @@ begin
     'Version', TVpAboutProperty);
 
   {register the BDE Alias and Driver properties                             }
-{$IFNDEF LCL}
+{$IFDEF DELPHI}
   RegisterPropertyEditor(TypeInfo(string), TVpBDEDataStore,
     'AliasName', TAliasNameProperty);
   RegisterPropertyEditor(TypeInfo(string), TVpBDEDataStore,
@@ -473,28 +477,23 @@ begin
   RegisterPropertyEditor(TypeInfo(String), TVpCustomDatastore,
     'DefaultEventSound', TVpWavFileProperty);
 
- RegisterPropertyEditor(TypeInfo(String), TVpCustomDatastore,
+  RegisterPropertyEditor(TypeInfo(String), TVpCustomDatastore,
    'MediaFolder', TVpMediaFolderProperty);
 
- RegisterPropertyEditor (TypeInfo (TDateTime),
-                          TVpPrintPreview,
-                          'StartDate',
-                          TVpDateProperty);
-  RegisterPropertyEditor (TypeInfo (TDateTime),
-                          TVpPrintPreview,
-                          'EndDate',
-                          TVpDateProperty);
-  RegisterPropertyEditor (TypeInfo (TDateTime),
-                          TVpPrintPreviewDialog,
-                          'StartDate',
-                          TVpDateProperty);
-  RegisterPropertyEditor (TypeInfo (TDateTime),
-                          TVpPrintPreviewDialog,
-                          'EndDate',
-                          TVpDateProperty);
+  RegisterPropertyEditor(TypeInfo(TDateTime), TVpPrintPreview,
+    'StartDate', TVpDateProperty);
 
-  RegisterPropertyEditor (TypeInfo (string), TVpControlLink,
-                          'LocalizationFile', TVpLocalizeFileNameProperty);
+  RegisterPropertyEditor(TypeInfo(TDateTime), TVpPrintPreview,
+    'EndDate', TVpDateProperty);
+
+  RegisterPropertyEditor(TypeInfo(TDateTime), TVpPrintPreviewDialog,
+    'StartDate', TVpDateProperty);
+
+  RegisterPropertyEditor(TypeInfo(TDateTime), TVpPrintPreviewDialog,
+    'EndDate', TVpDateProperty);
+
+  RegisterPropertyEditor(TypeInfo(string), TVpControlLink,
+    'LocalizationFile', TVpLocalizeFileNameProperty);
 
   {register Visual PlanIt components with the IDE}
   RegisterComponents('Visual PlanIt', [
