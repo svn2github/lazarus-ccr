@@ -3,6 +3,7 @@
   <Package Version="4">
     <PathDelim Value="\"/>
     <Name Value="pack_powerpdf"/>
+    <Type Value="RunAndDesignTime"/>
     <AddToProjectUsesSection Value="True"/>
     <CompilerOptions>
       <Version Value="11"/>
@@ -20,7 +21,7 @@
         <CustomOptions Value="-dLAZ_POWERPDF"/>
       </Other>
     </CompilerOptions>
-    <Version Minor="9" Release="12"/>
+    <Version Minor="9" Release="13"/>
     <Files Count="12">
       <Item1>
         <Filename Value="PdfTypes.pas"/>
@@ -72,7 +73,6 @@
         <UnitName Value="PowerPdf"/>
       </Item12>
     </Files>
-    <Type Value="RunAndDesignTime"/>
     <RequiredPkgs Count="2">
       <Item1>
         <PackageName Value="LCL"/>
