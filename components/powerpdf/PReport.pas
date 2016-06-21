@@ -2307,17 +2307,17 @@ begin
   with ARect do
   begin
     Top := PageHeight - Top;
-    if Height > 1 then
+    if self.Height > 1 then
       Bottom := PageHeight - Bottom + 1
     else
       Bottom := PageHeight - Bottom;
-    if Width > 1 then
+    if self.Width > 1 then
       Right := Right - 1;
 
-    if (Height <= 1) and (Width <= 1) then Exit;
+    if (self.Height <= 1) and (self.Width <= 1) then Exit;
 
     if (LineColor = clNone) or (LineStyle = psClear) then
-      if (Height <= 1) or (Width <= 1) then Exit;
+      if (self.Height <= 1) or (self.Width <= 1) then Exit;
 
     SetDash(ACanvas.PdfCanvas, FLineStyle);
 
@@ -2392,17 +2392,17 @@ begin
   with ARect do
   begin
     Top := PageHeight - Top;
-    if Height > 1 then
+    if self.Height > 1 then
       Bottom := PageHeight - Bottom + 1
     else
       Bottom := PageHeight - Bottom;
-    if Width > 1 then
+    if self.Width > 1 then
       Right := Right - 1;
 
-    if (Height <= 1) and (Width <= 1) then Exit;
+    if (self.Height <= 1) and (self.Width <= 1) then Exit;
 
     if (LineColor = clNone) or (LineStyle = psClear) then
-      if (Height <= 1) or (Width <= 1) then Exit;
+      if (self.Height <= 1) or (self.Width <= 1) then Exit;
 
     SetDash(ACanvas.PdfCanvas, FLineStyle);
 
@@ -2493,8 +2493,8 @@ begin
   end;
   with ARect, ACanvas.PdfCanvas do
     if FStretch then begin
-      AWidth := Width;
-      AHeight := Height;
+      AWidth := self.Width;
+      AHeight := self.Height;
       if FProportional then
         CalcProportionalBounds(AWidth, AHeight);
       DrawXObject(Left, GetPage.Height - Top - AHeight, AWidth, AHeight, FXObjectName)
@@ -2503,7 +2503,7 @@ begin
       WidthF := FPicture.Width * ScaleX;
       HeightF := FPicture.Height * ScaleY;
       DrawXObjectEx(Left, GetPage.Height - Top - HeightF, WidthF, HeightF,
-            Left, GetPage.Height - Top - Height, Width, Height, FXObjectName);
+            Left, GetPage.Height - Top - self.Height, self.Width, self.Height, FXObjectName);
     end;
 end;
 
