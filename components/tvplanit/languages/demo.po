@@ -9,10 +9,6 @@ msgstr ""
 msgid "New resource"
 msgstr ""
 
-#: tmainform.button1.caption
-msgid "Print preview"
-msgstr ""
-
 #: tmainform.caption
 msgid "Turbo Power VisualPlanIt Demo"
 msgstr ""
@@ -22,7 +18,7 @@ msgid "Language"
 msgstr ""
 
 #: tmainform.label2.caption
-msgid "Visible days"
+msgid "Number of days"
 msgstr ""
 
 #: tmainform.rballtasks.caption

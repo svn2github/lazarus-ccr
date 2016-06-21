@@ -223,6 +223,18 @@ type
         read FShowRecurringBitmap write SetShowRecurringBitmap default True;
   end;
 
+  { Defines matrix of event records for managing how events overlap with each other. }
+  TVpDvEventRec = packed record
+    Event: Pointer;
+    Level: Integer;
+    OLLevels: Integer; { Number of levels which overlap with the event represented by this record. }
+    WidthDivisor: Integer; { Maximum OLEvents of all of this event's overlapping neighbors. }
+    RealStartTime: TDateTime;
+    RealEndTime: TDateTime;
+  end;
+
+  TVpDvEventArray = array of TVpDvEventRec;
+
   { TVpDayView }
 
   TVpDayView = class(TVpLinkableControl)
@@ -376,6 +388,9 @@ type
     procedure EndEdit(Sender: TObject);
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure SetTimeIntervals(UseGran: TVpGranularity);
+    { helpers for painting }
+    function CountOverlappingEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
+    function GetMaxOLEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
     { message handlers }
     procedure VpDayViewInit(var Msg: TMessage); message Vp_DayViewInit;
     {$IFNDEF LCL}
@@ -395,6 +410,7 @@ type
     procedure WMEraseBackground(var Msg: TLMERASEBKGND);  // ??? wp: missing "message WM_ERASEBKGN"?
     procedure WMLButtonDblClk(var Msg: TLMLButtonDblClk); message LM_LBUTTONDBLCLK;
     {$ENDIF}
+
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -428,6 +444,7 @@ type
     property Date: TDateTime read FDisplayDate write SetDisplayDate;
     property LastVisibleDate: TDateTime read GetLastVisibleDate;
     property VisibleLines: Integer read FVisibleLines;
+
   published
     property Align;
     property Anchors;
@@ -2787,18 +2804,6 @@ var
 
 
   procedure DrawEvents(RenderDate: TDateTime; Col: Integer);
-  type
-    { Defines matrix of event records for managing how events overlap with each other. }
-    TVpDvEventRec = packed record
-      Event: Pointer;
-      Level: Integer;
-      OLLevels: Integer; { Number of levels which overlap with the event represented by this record. }
-      WidthDivisor: Integer; { Maximum OLEvents of all of this event's overlapping neighbors. }
-      RealStartTime: TDateTime;
-      RealEndTime: TDateTime;
-    end;
-  type
-    TVpDvEventArray = array of TVpDvEventRec;
   var
     I,J, StartPixelOffset, EndPixelOffset: Integer;
     Level, EventWidth, EventSLine, EventELine: Integer;
@@ -2829,119 +2834,6 @@ var
     {$IFDEF DEBUGDV}
     SL : TStringList;
     {$ENDIF}
-
-    { returns the number of events which overlap the specified event }
-    function CountOverlappingEvents(Event: TVpEvent;const EArray: TVpDvEventArray): Integer;
-    var
-      K, SelfLevel: Integer;
-      Tmp: TVpEvent;
-      Levels: array of Integer;
-    begin
-      { initialize the levels array }
-      SetLength(Levels, MaxEventDepth);
-      for K := 0 to pred(MaxEventDepth) do
-        Levels[K] := 0;
-      result := 0;
-      { First, simply count the number of overlapping events. }
-      K := 0;
-      SelfLevel := -1;
-      Tmp := TVpEvent(EArray[K].Event);
-      while Tmp <> nil do begin
-        if Tmp = Event then begin
-          SelfLevel := K;
-          Inc(K);
-          Tmp := TVpEvent(EArray[K].Event);
-          Continue;
-        end;
-        (* --- original
-        { if the Tmp event's StartTime or EndTime falls within the range of }
-        { Event... }
-        if (TimeInRange(Tmp.StartTime, Event.StartTime, Event.EndTime, false)
-          or TimeInRange(Tmp.EndTime, Event.StartTime, Event.EndTime, false))
-        { or the Tmp event's StartTime is before or equal to the Event's  }
-        { start time AND its end time is after or equal to the Event's    }
-        { end time, then the events overlap and we will need to increment }
-        { the value of K.          }
-        or ((Tmp.StartTime <= Event.StartTime)
-          and (Tmp.EndTime >= Event.EndTime))
-        then begin
-          { Count this event at this level }
-          Inc(Levels[EArray[K].Level]);
-          Inc(result);
-        end;            *)
-
-        { if the Tmp event's StartTime or EndTime falls within the range of }
-        { Event... }
-        if TimeInRange(frac(Tmp.StartTime), frac(Event.StartTime), frac(Event.EndTime), false) or
-           TimeInRange(frac(Tmp.EndTime), frac(Event.StartTime), frac(Event.EndTime), false) or
-          { or the Tmp event's StartTime is before or equal to the Event's  }
-          { start time AND its end time is after or equal to the Event's    }
-          { end time, then the events overlap and we will need to increment }
-          { the value of K.          }
-           ((frac(Tmp.StartTime) <= frac(Event.StartTime)) and (frac(Tmp.EndTime) >= frac(Event.EndTime)))
-        then begin
-          { Count this event at this level }
-          Inc(Levels[EArray[K].Level]);
-          Inc(result);
-        end;
-
-        Inc(K);
-        Tmp := TVpEvent(EArray[K].Event);
-      end;
-      { Then adjust count for overlapping events which share a level. }
-      for K := 0 to pred(MaxEventDepth) do begin
-        if K = SelfLevel then Continue;
-        if Levels[K] = 0 then Continue;
-        result := result - (Levels[K] - 1);
-      end;
-    end;
-
-    { returns the maximum OLEvents value from all overlapping neighbors }
-    function GetMaxOLEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
-    var
-      K: Integer;
-      Tmp: TVpEvent;
-    begin
-      result := 1;
-      K := 0;
-      Tmp := TVpEvent(EArray[K].Event);
-      while Tmp <> nil do begin
-        (*  original
-        { if the Tmp event's StartTime or EndTime falls within the range of }
-        { Event... }
-        if (TimeInRange(Tmp.StartTime, Event.StartTime, Event.EndTime, false)
-          or TimeInRange(Tmp.EndTime, Event.StartTime, Event.EndTime, false))
-        { or the Tmp event's StartTime is before or equal to the Event's  }
-        { start time AND its end time is after or equal to the Event's    }
-        { end time, then the events overlap and we will need to check the }
-        { value of OLLevels. If it is bigger than result, then modify     }
-        { Result accordingly. }
-        or ((Tmp.StartTime <= Event.StartTime)
-          and (Tmp.EndTime >= Event.EndTime))
-        then begin
-          if EArray[K].OLLevels > result then
-            Result := EArray[K].OLLevels;
-        end;
-        *)
-
-        { if the Tmp event's StartTime or EndTime falls within the range of Event. }
-        if TimeInRange(frac(Tmp.StartTime), frac(Event.StartTime), frac(Event.EndTime), false) or
-           TimeInRange(frac(Tmp.EndTime), frac(Event.StartTime), frac(Event.EndTime), false) or
-          { or the Tmp event's StartTime is before or equal to the Event's  }
-          { start time AND its end time is after or equal to the Event's    }
-          { end time, then the events overlap and we will need to check the }
-          { value of OLLevels. If it is bigger than result, then modify     }
-          { Result accordingly. }
-          ((frac(Tmp.StartTime) <= frac(Event.StartTime)) and (frac(Tmp.EndTime) >= frac(Event.EndTime)))
-        then begin
-          if EArray[K].OLLevels > result then
-            Result := EArray[K].OLLevels;
-        end;
-
-        Inc(K);
-        Tmp := TVpEvent(EArray[K].Event);
-      end;
-    end;
 
     procedure VerifyMaxWidthDivisors;
     var
@@ -3044,124 +2936,6 @@ var
           dvBmpCategory.Width  := 0;
           dvBmpCategory.Height := 0;
         end;
-
-(*
-        case Event.Category of
-          0: begin
-            dvBmpCategory.Width := DataStore.CategoryColorMap.Category0.Bitmap.Width;
-            dvBmpCategory.Height :=                                      
-                DataStore.CategoryColorMap.Category0.Bitmap.Height;      
-            dvBmpCategory.Canvas.CopyRect (                              
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height),  
-                DataStore.CategoryColorMap.Category0.Bitmap.Canvas,      
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height)); 
-          end;                                                           
-
-          1 : begin                                                      
-            dvBmpCategory.Width  :=                                      
-                DataStore.CategoryColorMap.Category1.Bitmap.Width;       
-            dvBmpCategory.Height :=                                      
-                DataStore.CategoryColorMap.Category1.Bitmap.Height;      
-            dvBmpCategory.Canvas.CopyRect (                              
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height),  
-                DataStore.CategoryColorMap.Category1.Bitmap.Canvas,      
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height)); 
-          end;                                                           
-
-          2 : begin                                                      
-            dvBmpCategory.Width  :=                                      
-                DataStore.CategoryColorMap.Category2.Bitmap.Width;       
-            dvBmpCategory.Height :=                                      
-                DataStore.CategoryColorMap.Category2.Bitmap.Height;      
-            dvBmpCategory.Canvas.CopyRect (                              
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height),  
-                DataStore.CategoryColorMap.Category2.Bitmap.Canvas,      
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height)); 
-          end;                                                           
-
-          3 : begin                                                      
-            dvBmpCategory.Width  :=                                      
-                DataStore.CategoryColorMap.Category3.Bitmap.Width;       
-            dvBmpCategory.Height :=                                      
-                DataStore.CategoryColorMap.Category3.Bitmap.Height;      
-            dvBmpCategory.Canvas.CopyRect (                              
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height),  
-                DataStore.CategoryColorMap.Category3.Bitmap.Canvas,      
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height)); 
-          end;                                                           
-
-          4 : begin                                                      
-            dvBmpCategory.Width  :=                                      
-                DataStore.CategoryColorMap.Category4.Bitmap.Width;       
-            dvBmpCategory.Height :=                                      
-                DataStore.CategoryColorMap.Category4.Bitmap.Height;      
-            dvBmpCategory.Canvas.CopyRect (                              
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height),  
-                DataStore.CategoryColorMap.Category4.Bitmap.Canvas,      
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height)); 
-          end;                                                           
-
-          5 : begin                                                      
-            dvBmpCategory.Width  :=                                      
-                DataStore.CategoryColorMap.Category5.Bitmap.Width;       
-            dvBmpCategory.Height :=                                      
-                DataStore.CategoryColorMap.Category5.Bitmap.Height;      
-            dvBmpCategory.Canvas.CopyRect (                              
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height),  
-                DataStore.CategoryColorMap.Category5.Bitmap.Canvas,      
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height)); 
-          end;                                                           
-
-          6 : begin                                                      
-            dvBmpCategory.Width  :=                                      
-                DataStore.CategoryColorMap.Category6.Bitmap.Width;       
-            dvBmpCategory.Height :=                                      
-                DataStore.CategoryColorMap.Category6.Bitmap.Height;      
-            dvBmpCategory.Canvas.CopyRect (                              
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height),  
-                DataStore.CategoryColorMap.Category6.Bitmap.Canvas,      
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height)); 
-          end;                                                           
-
-          7 : begin                                                      
-            dvBmpCategory.Width  :=                                      
-                DataStore.CategoryColorMap.Category7.Bitmap.Width;       
-            dvBmpCategory.Height :=                                      
-                DataStore.CategoryColorMap.Category7.Bitmap.Height;      
-            dvBmpCategory.Canvas.CopyRect (                              
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height),  
-                DataStore.CategoryColorMap.Category7.Bitmap.Canvas,      
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height)); 
-          end;                                                           
-
-          8 : begin                                                      
-            dvBmpCategory.Width  :=                                      
-                DataStore.CategoryColorMap.Category8.Bitmap.Width;       
-            dvBmpCategory.Height :=                                      
-                DataStore.CategoryColorMap.Category8.Bitmap.Height;      
-            dvBmpCategory.Canvas.CopyRect (                              
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height),  
-                DataStore.CategoryColorMap.Category8.Bitmap.Canvas,      
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height)); 
-          end;                                                           
-
-          9 : begin                                                      
-            dvBmpCategory.Width  :=                                      
-                DataStore.CategoryColorMap.Category9.Bitmap.Width;       
-            dvBmpCategory.Height :=                                      
-                DataStore.CategoryColorMap.Category9.Bitmap.Height;      
-            dvBmpCategory.Canvas.CopyRect (                              
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height),  
-                DataStore.CategoryColorMap.Category9.Bitmap.Canvas,      
-                Rect (0, 0, dvBmpCategory.Width, dvBmpCategory.Height)); 
-          end;                                                           
-
-          else begin                                                     
-            dvBmpCategory.Width  := 0;                                   
-            dvBmpCategory.Height := 0;                                   
-          end;                                                           
-        end;
-        *)
         ShowCategory := (dvBmpCategory.Width <> 0) and (dvBmpCategory.Height <> 0);
       end;
 
@@ -3271,6 +3045,7 @@ var
         MaxHeight := dvBmpCustom.Height;
       if MaxHeight > EventRect.Bottom - EventRect.Top then
         MaxHeight := EventRect.Bottom - EventRect.Top;
+
       IconRect.Bottom := EventRect.Top + MaxHeight;
       if IconRect.Right > EventRect.Right then
         IconRect.Right := EventRect.Right;
@@ -3363,7 +3138,7 @@ var
             ThisTime := frac(Event.EndTime);
             { Handle end times of midnight }
             if ThisTime = 0 then
-              ThisTime := EncodeTime (23, 59, 59, 0);
+              ThisTime := EncodeTime(23, 59, 59, 0);
             EventList.Delete(J);
             EventArray[I].Event := Event;
             EventArray[I].Level := Level;
@@ -3420,7 +3195,7 @@ var
 /////// Debug Code /////////
 
     { Time to paint 'em. Let's see if we calculated their placements correctly   }
-    IconRect := Rect (0, 0, 0, 0);
+    IconRect := Rect(0, 0, 0, 0);
     CreateBitmaps;
     OldFont := TFont.Create;
     OldPen := TPen.Create;
@@ -3519,31 +3294,6 @@ var
         { paint Event text area clWindow }
         if Assigned(DataStore) then
           RenderCanvas.Brush.Color := Datastore.CategoryColorMap.GetCategory(Event.Category).BackgroundColor
-        {
-          case Event.Category of
-            0 : RenderCanvas.Brush.Color :=
-                    DataStore.CategoryColorMap.Category0.BackgroundColor;
-            1 : RenderCanvas.Brush.Color :=
-                    DataStore.CategoryColorMap.Category1.BackgroundColor;
-            2 : RenderCanvas.Brush.Color :=
-                    DataStore.CategoryColorMap.Category2.BackgroundColor;
-            3 : RenderCanvas.Brush.Color :=
-                    DataStore.CategoryColorMap.Category3.BackgroundColor;
-            4 : RenderCanvas.Brush.Color :=
-                    DataStore.CategoryColorMap.Category4.BackgroundColor;
-            5 : RenderCanvas.Brush.Color :=
-                    DataStore.CategoryColorMap.Category5.BackgroundColor;
-            6 : RenderCanvas.Brush.Color :=
-                    DataStore.CategoryColorMap.Category6.BackgroundColor;
-            7 : RenderCanvas.Brush.Color :=
-                    DataStore.CategoryColorMap.Category7.BackgroundColor;
-            8 : RenderCanvas.Brush.Color :=
-                    DataStore.CategoryColorMap.Category8.BackgroundColor;
-            9 : RenderCanvas.Brush.Color :=
-                    DataStore.CategoryColorMap.Category9.BackgroundColor;
-            else
-              RenderCanvas.Brush.Color := WindowColor;
-          end}
         else
           RenderCanvas.Brush.Color := WindowColor;
         TPSFillRect(RenderCanvas, Angle, RenderIn, EventRect);
@@ -4226,8 +3976,7 @@ begin
     dvDayUpBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
     { size and place the WeekUp button }
     dvWeekUpBtn.Height := dvTodayBtn.Height;
-    dvWeekUpBtn.Width := dvTodayBtn.Width - dvWeekDownBtn.Width
-      - dvDayDownBtn.Width - dvDayUpBtn.Width;
+    dvWeekUpBtn.Width := dvTodayBtn.Width - dvWeekDownBtn.Width - dvDayDownBtn.Width - dvDayUpBtn.Width;
     dvWeekUpBtn.Left := dvDayUpBtn.Left + dvDayUpBtn.Width;
     dvWeekUpBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
 
@@ -4237,8 +3986,8 @@ begin
     RenderCanvas.Pen.Color := SavePenColor;
 
   finally
-    SelectClipRgn (RenderCanvas.Handle, 0);
-    DeleteObject (Rgn);
+    SelectClipRgn(RenderCanvas.Handle, 0);
+    DeleteObject(Rgn);
   end;
 
   dvPainting := false;
@@ -4246,7 +3995,7 @@ end;
 {=====}
 
 {.$IFNDEF LCL}
-procedure TVpDayView.VpDayViewInit (var Msg : TMessage);
+procedure TVpDayView.VpDayViewInit(var Msg: TMessage);
 begin
   if csLoading in ComponentState then begin
     PostMessage(Handle, Vp_DayViewInit, 0, 0);
@@ -4259,6 +4008,118 @@ begin
   SetVScrollPos;
 end;
 {.$ENDIF}
+
+{ returns the number of events which overlap the specified event }
+function TVpDayView.CountOverlappingEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
+var
+  K, SelfLevel: Integer;
+  Tmp: TVpEvent;
+  Levels: array of Integer;
+begin
+  { initialize the levels array }
+  SetLength(Levels, MaxEventDepth);
+  for K := 0 to pred(MaxEventDepth) do
+    Levels[K] := 0;
+  result := 0;
+  { First, simply count the number of overlapping events. }
+  K := 0;
+  SelfLevel := -1;
+  Tmp := TVpEvent(EArray[K].Event);
+  while Tmp <> nil do begin
+    if Tmp = Event then begin
+      SelfLevel := K;
+      Inc(K);
+      Tmp := TVpEvent(EArray[K].Event);
+      Continue;
+    end;
+    { --- original
+    // if the Tmp event's StartTime or EndTime falls within the range of Event...
+    if (TimeInRange(Tmp.StartTime, Event.StartTime, Event.EndTime, false)
+      or TimeInRange(Tmp.EndTime, Event.StartTime, Event.EndTime, false)
+    // or the Tmp event's StartTime is before or equal to the Event's
+    // start time AND its end time is after or equal to the Event's
+    // end time, then the events overlap and we will need to increment
+    // the value of K.
+    or ((Tmp.StartTime <= Event.StartTime)
+      and (Tmp.EndTime >= Event.EndTime))
+    then begin
+      // Count this event at this level
+      Inc(Levels[EArray[K].Level]);
+      Inc(result);
+    end;  }
+
+    { if the Tmp event's StartTime or EndTime falls within the range of }
+    { Event... }
+    if TimeInRange(frac(Tmp.StartTime), frac(Event.StartTime), frac(Event.EndTime), false) or
+       TimeInRange(frac(Tmp.EndTime), frac(Event.StartTime), frac(Event.EndTime), false) or
+      { or the Tmp event's StartTime is before or equal to the Event's  }
+      { start time AND its end time is after or equal to the Event's    }
+      { end time, then the events overlap and we will need to increment }
+      { the value of K.          }
+       ((frac(Tmp.StartTime) <= frac(Event.StartTime)) and (frac(Tmp.EndTime) >= frac(Event.EndTime)))
+    then begin
+      { Count this event at this level }
+      Inc(Levels[EArray[K].Level]);
+      Inc(result);
+    end;
+
+    Inc(K);
+    Tmp := TVpEvent(EArray[K].Event);
+  end;
+  { Then adjust count for overlapping events which share a level. }
+  for K := 0 to pred(MaxEventDepth) do begin
+    if K = SelfLevel then Continue;
+    if Levels[K] = 0 then Continue;
+    result := result - (Levels[K] - 1);
+  end;
+end;
+
+{ returns the maximum OLEvents value from all overlapping neighbors }
+function TVpDayView.GetMaxOLEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
+var
+  K: Integer;
+  Tmp: TVpEvent;
+begin
+  result := 1;
+  K := 0;
+  Tmp := TVpEvent(EArray[K].Event);
+  while Tmp <> nil do begin
+    (*  original
+    { if the Tmp event's StartTime or EndTime falls within the range of }
+    { Event... }
+    if (TimeInRange(Tmp.StartTime, Event.StartTime, Event.EndTime, false)
+      or TimeInRange(Tmp.EndTime, Event.StartTime, Event.EndTime, false))
+    { or the Tmp event's StartTime is before or equal to the Event's  }
+    { start time AND its end time is after or equal to the Event's    }
+    { end time, then the events overlap and we will need to check the }
+    { value of OLLevels. If it is bigger than result, then modify     }
+    { Result accordingly. }
+    or ((Tmp.StartTime <= Event.StartTime)
+      and (Tmp.EndTime >= Event.EndTime))
+    then begin
+      if EArray[K].OLLevels > result then
+        Result := EArray[K].OLLevels;
+    end;
+    *)
+
+    { if the Tmp event's StartTime or EndTime falls within the range of Event. }
+    if TimeInRange(frac(Tmp.StartTime), frac(Event.StartTime), frac(Event.EndTime), false) or
+       TimeInRange(frac(Tmp.EndTime), frac(Event.StartTime), frac(Event.EndTime), false) or
+      { or the Tmp event's StartTime is before or equal to the Event's  }
+      { start time AND its end time is after or equal to the Event's    }
+      { end time, then the events overlap and we will need to check the }
+      { value of OLLevels. If it is bigger than result, then modify     }
+      { Result accordingly. }
+      ((frac(Tmp.StartTime) <= frac(Event.StartTime)) and (frac(Tmp.EndTime) >= frac(Event.EndTime)))
+    then begin
+      if EArray[K].OLLevels > result then
+        Result := EArray[K].OLLevels;
+    end;
+
+    Inc(K);
+    Tmp := TVpEvent(EArray[K].Event);
+  end;
+end;
 
 (*****************************************************************************)
 { TVpCHAttributes }
