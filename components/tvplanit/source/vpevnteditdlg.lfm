@@ -15,20 +15,19 @@ object DlgEventEdit: TDlgEventEdit
   LCLVersion = '1.7'
   object Panel1: TPanel
     Left = 0
-    Height = 41
-    Top = 347
+    Height = 36
+    Top = 352
     Width = 697
     Align = alBottom
     BevelOuter = bvNone
-    ClientHeight = 41
+    ClientHeight = 36
     ClientWidth = 697
     TabOrder = 2
     object ResourceNameLbl: TLabel
       Left = 8
       Height = 16
-      Top = 12
-      Width = 385
-      AutoSize = False
+      Top = 5
+      Width = 100
       Caption = 'Resource Name'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clMaroon
@@ -41,7 +40,7 @@ object DlgEventEdit: TDlgEventEdit
     object OKBtn: TButton
       Left = 528
       Height = 25
-      Top = 8
+      Top = 0
       Width = 75
       Anchors = [akTop, akRight]
       Caption = '&OK'
@@ -53,7 +52,7 @@ object DlgEventEdit: TDlgEventEdit
     object CancelBtn: TButton
       Left = 608
       Height = 25
-      Top = 8
+      Top = 0
       Width = 75
       Anchors = [akTop, akRight]
       Cancel = True
@@ -121,7 +120,7 @@ object DlgEventEdit: TDlgEventEdit
       Caption = 'End time:'
       ParentColor = False
     end
-    object Image2: TImage
+    object ImgRecurring: TImage
       Left = 368
       Height = 18
       Top = 81
@@ -163,16 +162,17 @@ object DlgEventEdit: TDlgEventEdit
       Height = 76
       Top = 78
       Width = 2
+      Shape = bsLeftLine
     end
     object IntervalLbl: TLabel
       Left = 583
       Height = 15
-      Top = 85
+      Top = 84
       Width = 77
       Caption = 'Interval (days):'
       ParentColor = False
     end
-    object Image1: TImage
+    object ImgAlarm: TImage
       Left = 13
       Height = 25
       Top = 168
@@ -511,10 +511,10 @@ object DlgEventEdit: TDlgEventEdit
       TabOrder = 9
     end
     object AlarmAdvance: TEdit
-      Left = 130
+      Left = 136
       Height = 23
       Top = 168
-      Width = 64
+      Width = 58
       OnChange = AlarmAdvanceChange
       TabOrder = 11
       Text = 'AlarmAdvance'

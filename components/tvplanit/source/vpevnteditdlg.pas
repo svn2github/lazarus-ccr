@@ -79,11 +79,11 @@ type
     CategoryLbl: TLabel;
     StartTimeLbl: TLabel;
     EndTimeLbl: TLabel;
-    Image2: TImage;
+    ImgRecurring: TImage;
     RecurringLbl: TLabel;
     Bevel3: TBevel;
     IntervalLbl: TLabel;
-    Image1: TImage;
+    ImgAlarm: TImage;
     SoundFinderBtn: TSpeedButton;
     DescriptionEdit: TEdit;
     AlarmSet: TCheckBox;
@@ -131,6 +131,7 @@ type
     CIVerifying: Boolean;
     FCustomInterval : TVpRightAlignedEdit;
     procedure PopLists;
+    procedure PositionControls;
     procedure LoadCaptions;
     procedure DoPlaySound(Sender: TObject; const AWavFile: String; AMode: TVpPlaySoundMode);
 
@@ -171,6 +172,7 @@ type
 implementation
 
 uses
+  Math,
   VpSR, VpMisc, VpWavDlg;
 
 {$IFDEF LCL}
@@ -202,8 +204,6 @@ end;
 { TDlgEventEdit }
 
 procedure TDlgEventEdit.FormCreate(Sender: TObject);
-const
-  DELTA = 8;
 begin
  {$IFDEF LCL}
   StartTime := TTimeEdit.Create(self);
@@ -250,13 +250,6 @@ begin
     TabOrder := edtUnusedPlaceholder.TabOrder;
   end;
   IntervalUpDown.Associate := FCustomInterval;
-
-  DescriptionLbl.Left := DescriptionEdit.Left - GetLabelWidth(DescriptionLbl) - DELTA;
-  LocationLbl.Left := LocationEdit.Left - GetLabelWidth(LocationLbl) - DELTA;
-  CategoryLbl.Left := Category.Left - GetLabelWidth(CategoryLbl) - DELTA;
-  StartTimeLbl.Left := StartDate.Left - GetLabelWidth(StartTimeLbl) - DELTA;
-  EndTimeLbl.Left := EndDate.Left - GetLabelWidth(EndTimeLbl) - DELTA;
-  RecurrenceEndsLbl.Left := RepeatUntil.Left - GetLabelWidth(RecurrenceEndsLbl) - DELTA;
 end;
 {=====}
 
@@ -699,9 +692,78 @@ end;
 
 procedure TDlgEventEdit.FormShow(Sender: TObject);
 begin
+  PositionControls;
   DescriptionEdit.SetFocus;
 end;
 {=====}
+
+procedure TDlgEventEdit.PositionControls;
+const
+  DELTA = 8;
+var
+  w: Integer;
+begin
+  // Position controls according to label widths
+  w := MaxValue([GetLabelWidth(DescriptionLbl), GetLabelWidth(LocationLbl), GetLabelWidth(StartTimeLbl), GetLabelWidth(EndTimeLbl)]);
+  DescriptionEdit.Left := w + 2*DELTA;
+  DescriptionEdit.Width := AppointmentGroupbox.ClientWidth - DescriptionEdit.Left - DELTA;
+  DescriptionLbl.Left := DescriptionEdit.Left - GetLabelWidth(DescriptionLbl) - DELTA;
+
+  LocationEdit.Left := DescriptionEdit.Left;
+  LocationLbl.Left := LocationEdit.Left - GetLabelWidth(LocationLbl) - DELTA;
+
+  StartDate.Left := DescriptionEdit.Left;
+  StartTimeLbl.Left := StartDate.Left - GetLabelWidth(StartTimeLbl) - DELTA;
+
+  EndDate.Left := StartDate.Left;
+  EndTimeLbl.Left := EndDate.Left - GetLabelWidth(EndTimeLbl) - DELTA;
+
+  StartTime.Left := StartDate.Left + StartDate.Width + DELTA;
+  EndTime.Left := StartTime.Left;
+
+  CbAllDay.Left := ImgClock.Left + ImgClock.Picture.Width + DELTA;
+  AlarmSet.Left := ImgAlarm.Left + ImgAlarm.Picture.Width + DELTA;
+
+  Bevel3.Left := StartTime.Left + StartTime.Width + 2*DELTA;
+
+  ImgRecurring.Left := Bevel3.Left + Bevel3.Width + 2*DELTA;
+  RecurringType.Left := ImgRecurring.Left;
+
+  RecurringLbl.Left := ImgRecurring.Left + ImgRecurring.Picture.Width + DELTA;
+  w := Max(
+    GetLabelWidth(RecurringLbl) + ImgRecurring.Picture.Width + DELTA,
+    GetLabelWidth(RecurrenceEndsLbl) + DELTA + RepeatUntil.Width
+  );
+  if w > RecurringType.Width then RecurringType.Width := w;
+
+  RepeatUntil.Left := RecurringType.Left + Recurringtype.Width - RepeatUntil.Width;
+  RecurrenceEndsLbl.Left := RepeatUntil.Left - DELTA - GetLabelWIdth(RecurrenceEndsLbl);
+
+  w := GetLabelWidth(IntervalLbl);
+  if w > FCustomInterval.Width + IntervalUpdown.Width then
+    FCustomInterval.Width := w - IntervalUpdown.Width;
+  FCustomInterval.Left := RecurringType.Left + RecurringType.Width + 2*DELTA;
+  IntervalUpdown.Left := FCustomInterval.Left + FCustomInterval.Width;
+  IntervalLbl.Left := FCustomInterval.Left;
+
+  LocationEdit.Width := Bevel3.Left - LocationEdit.Left;
+
+  if AlarmSet.Left + AlarmSet.Width + DELTA < StartDate.Left + StartDate.Width - AdvanceUpdown.Width - AlarmAdvance.Width then
+  begin
+    AdvanceUpdown.Left := StartDate.Left + StartDate.Width - AdvanceUpdown.Width;
+    AlarmAdvance.Left := AdvanceUpdown.Left - AlarmAdvance.Width;
+  end else begin
+    AlarmAdvance.Left := AlarmSet.Left + AlarmSet.Width + DELTA;
+    AdvanceUpdown.Left := AlarmAdvance.Left + AlarmAdvance.Width;
+    AlarmAdvancetype.Left := AdvanceUpdown.Left + AdvanceUpdown.Width + 2*DELTA;
+  end;
+  SoundFinderBtn.Left := AlarmAdvanceType.Left + AlarmAdvanceType.Width + 2;
+
+  Width := IntervalUpdown.Left + IntervalUpdown.Width + DELTA + Width - AppointmentGroupbox.ClientWidth;
+
+  Category.Left := DescriptionEdit.Left + DescriptionEdit.Width - category.Width;
+  CategoryLbl.Left := Category.Left - DELTA - GetLabelWidth(CategoryLbl);
+end;
 
 { TVpEventEditDialog }
 
