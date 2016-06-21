@@ -34,7 +34,10 @@ unit VpCalendar;
 interface
 
 uses
-  {$IFDEF LCL}    windows,
+  {$IFDEF LCL}
+  {$IFDEF WINDOWS}
+  Windows,
+  {$ENDIF}
   LMessages, LCLProc, LCLType, LCLIntf, LazUTF8,
   {$ELSE}
   Windows,

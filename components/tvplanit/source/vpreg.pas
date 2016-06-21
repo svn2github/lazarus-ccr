@@ -27,7 +27,7 @@
 {* ***** END LICENSE BLOCK *****                                              *}
 
 {$I Vp.INC}    { Compiler Version Defines }
-{$R VpREG.RES} { Palette Glyphs           }
+{$R vpreg.res} { Palette Glyphs           }
 
 unit VpReg;
   {Registration unit for the Visual PlanIt design-time interface}
