@@ -21,6 +21,10 @@ msgstr ""
 msgid "Language"
 msgstr ""
 
+#: tmainform.label2.caption
+msgid "Visible days"
+msgstr ""
+
 #: tmainform.rballtasks.caption
 msgid "All tasks"
 msgstr ""

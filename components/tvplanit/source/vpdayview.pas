@@ -2080,9 +2080,7 @@ end;
 
 procedure TVpDayView.SetNumDays(Value: Integer);
 begin
-  if (Value <> FNumDays)
-  and (Value > 0)
-  and (Value < 31) then begin
+  if (Value <> FNumDays) and (Value > 0) and (Value < 31) then begin
     FNumDays := Value;
     SetLength(dvColRectArray, FNumDays);
     SetTimeIntervals(Granularity);
@@ -3796,6 +3794,7 @@ var
       { Clean Up }
     finally
       try
+        SetLength(EventArray, 0);
         FreeBitmaps;
       finally
         { restore canvas color and font }
@@ -3807,7 +3806,7 @@ var
         OldBrush.Free;
       end;
     end;
-  end; // DrawEvents (begins at line 2832 . OMG: 1000 lines per local proc!!!)
+  end; // DrawEvents (begins at line 2832 . OMG - 1000 lines per local proc!!!)
 
   procedure DrawCells(R: TRect; ColDate: TDateTime; Col: Integer);
   var
