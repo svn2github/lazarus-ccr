@@ -62,7 +62,10 @@ uses
 type
   TVpPrintPreviewDialog = class;
 
+  { TfrmPrintPreview }
+
   TfrmPrintPreview = class (TForm)
+      ImageList1: TImageList;
       Panel1                 : TPanel;
       cboxZoom               : TComboBox;
       VpPrintPreview1        : TVpPrintPreview;
@@ -85,7 +88,6 @@ type
       actCancel: TAction;
       btnCancel: TSpeedButton;
 
-      procedure FormCreate (Sender : TObject);
       procedure OKBtnClick (Sender : TObject);
       procedure btnFirstPageClick(Sender: TObject);
       procedure btnPrevPageClick(Sender: TObject);
@@ -99,8 +101,8 @@ type
       procedure actLastPageExecute(Sender: TObject);
       procedure actMainUpdate(Action: TBasicAction; var Handled: Boolean);
       procedure actCancelExecute(Sender: TObject);
-      procedure FormKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+      procedure FormCreate(Sender: TObject);
+      procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 
     private
       procedure SetCaptions;
@@ -348,15 +350,7 @@ end;
 
 procedure TfrmPrintPreview.cboxZoomChange(Sender: TObject);
 begin
-  case cboxZoom.ItemIndex of
-    0 : VpPrintPreview1.ZoomFactor := zfFitToControl;
-    1 : VpPrintPreview1.ZoomFactor := zfActualSize;
-    2 : VpPrintPreview1.ZoomFactor := zf25Percent;
-    3 : VpPrintPreview1.ZoomFactor := zf33Percent;
-    4 : VpPrintPreview1.ZoomFactor := zf50Percent;
-    5 : VpPrintPreview1.ZoomFactor := zf67Percent;
-    6 : VpPrintPreview1.ZoomFactor := zf75Percent;
-  end;
+  VpPrintPreview1.ZoomFactor := TVpPPZoomFactor(cboxZoom.ItemIndex);
 end;
 
 procedure TfrmPrintPreview.actPrintExecute(Sender: TObject);

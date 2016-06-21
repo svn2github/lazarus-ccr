@@ -9,6 +9,10 @@ msgstr ""
 msgid "New resource"
 msgstr ""
 
+#: tmainform.button1.caption
+msgid "Print preview"
+msgstr ""
+
 #: tmainform.caption
 msgid "Turbo Power VisualPlanIt Demo"
 msgstr ""
