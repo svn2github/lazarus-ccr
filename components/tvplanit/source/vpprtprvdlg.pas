@@ -36,7 +36,7 @@ uses
   {$IFDEF LCL}
   LMessages, LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
-  Windows,Messages,
+  Windows, Messages,
   {$ENDIF}
   SysUtils,
   Classes,
@@ -64,12 +64,12 @@ type
 
   { TfrmPrintPreview }
 
-  TfrmPrintPreview = class (TForm)
-      ImageList1: TImageList;
-      Panel1                 : TPanel;
-      cboxZoom               : TComboBox;
-      VpPrintPreview1        : TVpPrintPreview;
-      VpPrintFormatComboBox1 : TVpPrintFormatComboBox;
+  TfrmPrintPreview = class(TForm)
+      Panel1: TPanel;
+      cboxZoom: TComboBox;
+      btnCancel: TToolButton;
+      VpPrintPreview1: TVpPrintPreview;
+      VpPrintFormatComboBox1: TVpPrintFormatComboBox;
       ToolBar1: TToolBar;
       btnPrint: TToolButton;
       ToolButton3: TToolButton;
@@ -86,13 +86,8 @@ type
       actNextPage: TAction;
       actLastPage: TAction;
       actCancel: TAction;
-      btnCancel: TSpeedButton;
 
       procedure OKBtnClick (Sender : TObject);
-      procedure btnFirstPageClick(Sender: TObject);
-      procedure btnPrevPageClick(Sender: TObject);
-      procedure btnNextPageClick(Sender: TObject);
-      procedure btnLastPageClick(Sender: TObject);
       procedure cboxZoomChange(Sender: TObject);
       procedure actPrintExecute(Sender: TObject);
       procedure actFirstPageExecute(Sender: TObject);
@@ -108,64 +103,57 @@ type
       procedure SetCaptions;
 
     public
-      Resource   : TVpResource;
-      Contact    : TVpContact;
-      ReturnCode : TVpEditorReturnCode;
+      Resource: TVpResource;
+      Contact: TVpContact;
+      ReturnCode: TVpEditorReturnCode;
   end;
 
   TVpPrintPreviewDialog = class (TVpBaseDialog)
     private
-      FControlLink  : TVpControlLink;
-      FAutoPrint    : Boolean;
-      FBottomMargin : Extended;
-      FEndDate      : TDateTime;
-      FLeftMargin   : Extended;
-      FMarginUnits  : TVpItemMeasurement;
-      FRightMargin  : Extended;
-      FStartDate    : TDateTime;
-      FTopMargin    : Extended;
-      FZoomFactor   : TVpPPZoomFactor;
-      FWindowState  : TWindowState;
-      FPrinter      : TPrinter;
+      FControlLink: TVpControlLink;
+      FAutoPrint: Boolean;
+      FBottomMargin: Extended;
+      FEndDate: TDateTime;
+      FLeftMargin: Extended;
+      FMarginUnits: TVpItemMeasurement;
+      FRightMargin: Extended;
+      FStartDate: TDateTime;
+      FTopMargin: Extended;
+      FZoomFactor: TVpPPZoomFactor;
+      FWindowState: TWindowState;
+      FPrinter: TPrinter;
 
     protected
-      procedure Notification (AComponent : TComponent;
-                              Operation  : TOperation); override;
-      procedure SetAutoPrint (const v : Boolean);
-      procedure SetBottomMargin (const v : Extended);
-      procedure SetControlLink (const v : TVpControlLink);
-      procedure SetEndDate (const v : TDateTime);
-      procedure SetLeftMargin (const v : Extended);
-      procedure SetMarginUnits (const v : TVpItemMeasurement);
-      procedure SetRightMargin (const v : Extended);
-      procedure SetStartDate (const v : TDateTime);
-      procedure SetTopMargin (const v : Extended);
-      procedure SetZoomFactor (const v : TVpPPZoomFactor);
+      procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+      procedure SetAutoPrint(const v: Boolean);
+      procedure SetBottomMargin(const v: Extended);
+      procedure SetControlLink(const v: TVpControlLink);
+      procedure SetEndDate(const v: TDateTime);
+      procedure SetLeftMargin(const v: Extended);
+      procedure SetMarginUnits(const v: TVpItemMeasurement);
+      procedure SetRightMargin(const v: Extended);
+      procedure SetStartDate(const v: TDateTime);
+      procedure SetTopMargin(const v: Extended);
+      procedure SetZoomFactor(const v: TVpPPZoomFactor);
 
     public
-      constructor Create (AOwner : TComponent); override;
-      function Execute : Boolean; override;
+      constructor Create(AOwner: TComponent); override;
+      function Execute: Boolean; override;
 
-      property Printer : TPrinter read FPrinter write FPrinter;
+      property Printer: TPrinter read FPrinter write FPrinter;
 
     published
-      property AutoPrint : Boolean read FAutoPrint write SetAutoPrint
-               default False;
-      property BottomMargin : Extended
-               read FBottomMargin write SetBottomMargin;
-      property ControlLink : TVpControlLink
-               read FControlLink write SetControlLink;
-      property EndDate : TDateTime read FEndDate write SetEndDate;
-      property LeftMargin : Extended read FLeftMargin write SetLeftMargin;
-      property MarginUnits : TVpItemMeasurement
-               read FMarginUnits write SetMarginUnits default imInches;
-      property RightMargin : Extended read FRightMargin write SetRightMargin;
-      property StartDate : TDateTime read FStartDate write SetStartDate;
-      property TopMargin : Extended read FTopMargin write SetTopMargin;
-      property WindowState : TWindowState read FWindowState write FWindowState
-               default wsNormal;
-      property ZoomFactor : TVpPPZoomFactor
-               read FZoomFactor write SetZoomFactor default zfFitToControl;
+      property AutoPrint: Boolean read FAutoPrint write SetAutoPrint default False;
+      property BottomMargin: Extended read FBottomMargin write SetBottomMargin;
+      property ControlLink: TVpControlLink read FControlLink write SetControlLink;
+      property EndDate: TDateTime read FEndDate write SetEndDate;
+      property LeftMargin: Extended read FLeftMargin write SetLeftMargin;
+      property MarginUnits: TVpItemMeasurement read FMarginUnits write SetMarginUnits default imInches;
+      property RightMargin: Extended read FRightMargin write SetRightMargin;
+      property StartDate: TDateTime read FStartDate write SetStartDate;
+      property TopMargin: Extended read FTopMargin write SetTopMargin;
+      property WindowState: TWindowState read FWindowState write FWindowState default wsNormal;
+      property ZoomFactor: TVpPPZoomFactor read FZoomFactor write SetZoomFactor default zfFitToControl;
 
       property DataStore;
       property Options;
@@ -189,7 +177,18 @@ end;
 procedure TfrmPrintPreview.SetCaptions;
 begin
   Self.Caption := RSDlgPrintPreview;
-  actCancel.Caption := RSCancelBtn;
+  actPrint.Caption := RSPrintPrvPrint;
+  actPrint.Hint := RSPrintPrvPrintHint;
+  actFirstPage.Caption := RSPrintPrvFirstPage;
+  actFirstPage.Hint := RSPrintPrvFirstPageHint;
+  actPrevPage.Caption := RSPrintPrvPrevPage;
+  actPrevPage.Hint := RsPrintPrvPrevPageHint;
+  actNextPage.Caption := RSPrintPrvNextPage;
+  actNextPage.Hint := RSPrintPrvNextPageHint;
+  actLastPage.Caption := RSPrintPrvLastPage;
+  actLastPage.Hint := RSPrintPrvLastPageHint;
+  actCancel.Caption := RSPrintPrvCancel;
+  actCancel.Hint := RSPrintPrvCancelHint;
 end;
 
 
@@ -199,26 +198,26 @@ begin
   Close;
 end;
 
-constructor TVpPrintPreviewDialog.Create (AOwner : TComponent);
+constructor TVpPrintPreviewDialog.Create(AOwner: TComponent);
 begin
   inherited Create (AOwner);
   FPlacement.Height := 480;
-  FPlacement.Width  := 640;
-  StartDate         := Now;
-  EndDate           := Now + 7;
-  FZoomFactor       := zfFitToControl;
-  FWindowState      := wsNormal;
-  FAutoPrint        := False;
-  FControlLink      := SearchControlLink (Owner);
-  FPrinter          := Printer;
+  FPlacement.Width := 640;
+  StartDate := Now;
+  EndDate := Now + 7;
+  FZoomFactor := zfFitToControl;
+  FWindowState := wsNormal;
+  FAutoPrint := False;
+  FControlLink := SearchControlLink(Owner);
+  FPrinter := Printer;
 end;
 
-function TVpPrintPreviewDialog.Execute : Boolean;
+function TVpPrintPreviewDialog.Execute: Boolean;
 var
-  EditForm : TfrmPrintPreview;
+  EditForm: TfrmPrintPreview;
 begin
   Result := False;
-  Application.CreateForm (TfrmPrintPreview, EditForm);
+  Application.CreateForm(TfrmPrintPreview, EditForm);
   try
     DoFormPlacement(EditForm);
     EditForm.WindowState := WindowState;
@@ -234,10 +233,10 @@ begin
     if EditForm.ReturnCode = rtCommit then begin
       Result := True;
     end;
-    if AutoPrint and Assigned (FControlLink) and Result then begin
+    if AutoPrint and Assigned(FControlLink) and Result then begin
       Printer.BeginDoc;
       try
-        FControlLink.Printer.Print (Printer, StartDate, EndDate);
+        FControlLink.Printer.Print(Printer, StartDate, EndDate);
       finally
         Printer.EndDoc;
       end;
@@ -247,18 +246,19 @@ begin
   end;
 end;
 
-procedure TVpPrintPreviewDialog.Notification (AComponent : TComponent;
-                                               Operation  : TOperation);
-  {-Handle new/deleted components}
+{ Handle new/deleted components}
+procedure TVpPrintPreviewDialog.Notification(AComponent: TComponent;
+  Operation : TOperation);
 begin
-  inherited Notification (AComponent, Operation);
+  inherited Notification(AComponent, Operation);
 
   if Operation = opRemove then begin
     {Owned components going away}
     if AComponent = FControlLink then begin
       FControlLink := nil;
     end;
-  end else if Operation = opInsert then begin
+  end else
+  if Operation = opInsert then begin
     if AComponent is TVpControlLink then begin
       if not Assigned (FControlLink) then begin
         FControlLink := TVpControlLink (AComponent);
@@ -267,85 +267,64 @@ begin
   end;
 end;
 
-procedure TVpPrintPreviewDialog.SetAutoPrint (const v : Boolean);
+procedure TVpPrintPreviewDialog.SetAutoPrint(const v: Boolean);
 begin
   if v <> FAutoPrint then
     FAutoPrint := v;
 end;
 
-procedure TVpPrintPreviewDialog.SetBottomMargin (const v : Extended);
+procedure TVpPrintPreviewDialog.SetBottomMargin(const v: Extended);
 begin
   if v <> FBottomMargin then
     FBottomMargin := v;
 end;
 
-procedure TVpPrintPreviewDialog.SetControlLink (const v : TVpControlLink);
+procedure TVpPrintPreviewDialog.SetControlLink(const v: TVpControlLink);
 begin
   if FControlLink <> v then
     FControlLink := v;
 end;
 
-procedure TVpPrintPreviewDialog.SetEndDate (const v : TDateTime);
+procedure TVpPrintPreviewDialog.SetEndDate(const v: TDateTime);
 begin
   if v <> FEndDate then
     FEndDate := v;
 end;
 
-procedure TVpPrintPreviewDialog.SetLeftMargin (const v : Extended);
+procedure TVpPrintPreviewDialog.SetLeftMargin(const v: Extended);
 begin
   if v <> FLeftMargin then
     FLeftMargin := v;
 end;
 
-procedure TVpPrintPreviewDialog.SetMarginUnits (const v : TVpItemMeasurement);
+procedure TVpPrintPreviewDialog.SetMarginUnits(const v: TVpItemMeasurement);
 begin
   if v <> FMarginUnits then
     FMarginUnits := v;
 end;
 
-procedure TVpPrintPreviewDialog.SetRightMargin (const v : Extended);
+procedure TVpPrintPreviewDialog.SetRightMargin(const v: Extended);
 begin
   if v <> FRightMargin then
     FRightMargin := v;
 end;
 
-procedure TVpPrintPreviewDialog.SetStartDate (const v : TDateTime);
+procedure TVpPrintPreviewDialog.SetStartDate(const v: TDateTime);
 begin
   if v <> FStartDate then
     FStartDate := v;
 end;
 
-procedure TVpPrintPreviewDialog.SetTopMargin (const v : Extended);
+procedure TVpPrintPreviewDialog.SetTopMargin(const v: Extended);
 begin
   if v <> FTopMargin then
     FTopMargin := v;
 end;
 
-procedure TVpPrintPreviewDialog.SetZoomFactor (const v : TVpPPZoomFactor);
+procedure TVpPrintPreviewDialog.SetZoomFactor(const v: TVpPPZoomFactor);
 begin
   if v <> FZoomFactor then
     FZoomFactor := v;
-end;
-
-{ TfrmPrintPreview }
-procedure TfrmPrintPreview.btnFirstPageClick(Sender: TObject);
-begin
-  VpPrintPreview1.FirstPage;
-end;
-
-procedure TfrmPrintPreview.btnPrevPageClick(Sender: TObject);
-begin
-  VpPrintPreview1.PrevPage;
-end;
-
-procedure TfrmPrintPreview.btnNextPageClick(Sender: TObject);
-begin
-  VpPrintPreview1.NextPage;
-end;
-
-procedure TfrmPrintPreview.btnLastPageClick(Sender: TObject);
-begin
-  VpPrintPreview1.LastPage;
 end;
 
 procedure TfrmPrintPreview.cboxZoomChange(Sender: TObject);

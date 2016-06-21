@@ -164,6 +164,7 @@ msgid "CW"
 msgstr "KW"
 
 #: vpsr.rscancelbtn
+msgctxt "vpsr.rscancelbtn"
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -809,24 +810,59 @@ msgid "Position:"
 msgstr "Position"
 
 #: vpsr.rsprintbtn
+msgctxt "vpsr.rsprintbtn"
 msgid "&Print"
 msgstr "&Drucken"
 
+#: vpsr.rsprintprvcancel
+msgctxt "vpsr.rsprintprvcancel"
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: vpsr.rsprintprvcancelhint
+msgid "Cancel preview"
+msgstr "Durckvorschau abbrechen"
+
 #: vpsr.rsprintprvfirstpage
-msgid "First Page"
-msgstr "Erste Seite"
+msgid "&First page"
+msgstr "&Erste Seite"
+
+#: vpsr.rsprintprvfirstpagehint
+msgid "Go to first page"
+msgstr "Zur ersten Seite gehen"
 
 #: vpsr.rsprintprvlastpage
-msgid "Last Page"
-msgstr "Letzte Seite"
+msgid "&Last page"
+msgstr "&Letzte Seite"
+
+#: vpsr.rsprintprvlastpagehint
+msgid "Go to last page"
+msgstr "Zur letzten Seite gehen"
 
 #: vpsr.rsprintprvnextpage
-msgid "Next Page"
-msgstr "Nächste Seite"
+msgid "&Next page"
+msgstr "&Nächste Seite"
+
+#: vpsr.rsprintprvnextpagehint
+msgid "Go to next page"
+msgstr "Zur nächsten Seite gehen"
 
 #: vpsr.rsprintprvprevpage
-msgid "Previous Page"
-msgstr "Vorige Seite"
+msgid "Pre&vious page"
+msgstr "&Vorige Seite"
+
+#: vpsr.rsprintprvprevpagehint
+msgid "Go to previous page"
+msgstr "Zur vorigen Seite gehen"
+
+#: vpsr.rsprintprvprint
+msgctxt "vpsr.rsprintprvprint"
+msgid "&Print"
+msgstr "&Drucken"
+
+#: vpsr.rsprintprvprinthint
+msgid "Print"
+msgstr "Drucken"
 
 #: vpsr.rsprtcontrolowner
 msgid "Print controller is not owned by a TVpControlLink!"

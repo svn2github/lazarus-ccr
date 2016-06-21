@@ -164,6 +164,7 @@ msgid "CW"
 msgstr ""
 
 #: vpsr.rscancelbtn
+msgctxt "vpsr.rscancelbtn"
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -171,45 +172,9 @@ msgstr "Отмена"
 msgid "Category"
 msgstr "Категория"
 
-#: vpsr.rscategorydesc0
-msgid "Category 0"
-msgstr "Категория 0"
-
-#: vpsr.rscategorydesc1
-msgid "Category 1"
-msgstr "Категория 1"
-
-#: vpsr.rscategorydesc2
-msgid "Category 2"
-msgstr "Категория 2"
-
-#: vpsr.rscategorydesc3
-msgid "Category 3"
-msgstr "Категория 3"
-
-#: vpsr.rscategorydesc4
-msgid "Category 4"
-msgstr "Категория 4"
-
-#: vpsr.rscategorydesc5
-msgid "Category 5"
-msgstr "Категория 5"
-
-#: vpsr.rscategorydesc6
-msgid "Category 6"
-msgstr "Категория 6"
-
-#: vpsr.rscategorydesc7
-msgid "Category 7"
-msgstr "Категория 7"
-
-#: vpsr.rscategorydesc8
-msgid "Category 8"
-msgstr "Категория 8"
-
-#: vpsr.rscategorydesc9
-msgid "Category 9"
-msgstr "Категория 9"
+#: vpsr.rscategorydesc
+msgid "Category %d"
+msgstr ""
 
 #: vpsr.rscategorylabel1
 msgid "Business"
@@ -845,24 +810,69 @@ msgid "Position:"
 msgstr "Позиция:"
 
 #: vpsr.rsprintbtn
+msgctxt "vpsr.rsprintbtn"
 msgid "&Print"
 msgstr "Печать"
 
+#: vpsr.rsprintprvcancel
+#, fuzzy
+msgctxt "vpsr.rsprintprvcancel"
+msgid "Cancel"
+msgstr "Отмена"
+
+#: vpsr.rsprintprvcancelhint
+msgid "Cancel preview"
+msgstr ""
+
 #: vpsr.rsprintprvfirstpage
-msgid "First Page"
+#, fuzzy
+#| msgid "First Page"
+msgid "&First page"
 msgstr "Первая страницы"
 
+#: vpsr.rsprintprvfirstpagehint
+msgid "Go to first page"
+msgstr ""
+
 #: vpsr.rsprintprvlastpage
-msgid "Last Page"
+#, fuzzy
+#| msgid "Last Page"
+msgid "&Last page"
 msgstr "Последняя страница"
 
+#: vpsr.rsprintprvlastpagehint
+msgid "Go to last page"
+msgstr ""
+
 #: vpsr.rsprintprvnextpage
-msgid "Next Page"
+#, fuzzy
+#| msgid "Next Page"
+msgid "&Next page"
 msgstr "Следующая страница"
 
+#: vpsr.rsprintprvnextpagehint
+msgid "Go to next page"
+msgstr ""
+
 #: vpsr.rsprintprvprevpage
-msgid "Previous Page"
+#, fuzzy
+#| msgid "Previous Page"
+msgid "Pre&vious page"
 msgstr "Предыдущая страница"
+
+#: vpsr.rsprintprvprevpagehint
+msgid "Go to previous page"
+msgstr ""
+
+#: vpsr.rsprintprvprint
+#, fuzzy
+msgctxt "vpsr.rsprintprvprint"
+msgid "&Print"
+msgstr "Печать"
+
+#: vpsr.rsprintprvprinthint
+msgid "Print"
+msgstr ""
 
 #: vpsr.rsprtcontrolowner
 msgid "Print controller is not owned by a TVpControlLink!"
@@ -1372,3 +1382,4 @@ msgstr ""
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr ""
+

@@ -167,10 +167,18 @@ resourcestring
   RSWeekPopupNavPrevYear    = 'Previous Year';
 
   { Print Preview Specific }
-  RSPrintPrvPrevPage        = 'Previous Page';
-  RSPrintPrvNextPage        = 'Next Page';
-  RSPrintPrvFirstPage       = 'First Page';
-  RSPrintPrvLastPage        = 'Last Page';
+  RSPrintPrvPrint           = '&Print';
+  RSPrintPrvPrintHint       = 'Print';
+  RSPrintPrvPrevPage        = 'Pre&vious page';
+  RSPrintPrvNextPage        = '&Next page';
+  RSPrintPrvFirstPage       = '&First page';
+  RSPrintPrvLastPage        = '&Last page';
+  RSPrintPrvFirstPageHint   = 'Go to first page';
+  RSPrintPrvPrevPageHint    = 'Go to previous page';
+  RSPrintPrvNextPageHint    = 'Go to next page';
+  RSPrintPrvLastPageHint    = 'Go to last page';
+  RSPrintPrvCancel          = 'Cancel';
+  RSPrintPrvCancelHint      = 'Cancel preview';
 
   { DayView Specific }
   RSDayPopupAdd             = 'Add Event...';
