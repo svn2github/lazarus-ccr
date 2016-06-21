@@ -377,7 +377,7 @@ type
       FTaskList: TComponent;
       { Notification Handles }
       FNotifiers: TList;
-      FDefaultXMLFileName: string;                                     
+      FDefaultXMLFileName: string;
 
     protected
       procedure CreateWorkControls;
@@ -393,8 +393,8 @@ type
       procedure SetRightMargin(const v: Extended);
       procedure SetTopMargin(const v: Extended);
       procedure SetUseFormComponents(const v: Boolean);
-      procedure xmlPrintFormatAttribute(oOwner: TObject;
-        sName, sValue: DOMString; bSpecified: Boolean);
+      procedure xmlPrintFormatAttribute(oOwner: TObject; sName, sValue: DOMString;
+        bSpecified: Boolean);
       procedure xmlPrintFormatEndElement(oOwner: TObject; sValue: DOMString);
       procedure xmlPrintFormatStartElement(oOwner: TObject; sValue: DOMString);
 
@@ -424,7 +424,6 @@ type
       procedure SaveToFile(FileName: string);
       procedure UpdateDateVariables(Date: TDateTime);
       function ValidFormat(const v: Integer): Boolean;
-
 
       property Calendar: TComponent read FCalendar write FCalendar;
       property ContactGrid: TComponent read FContactGrid write FContactGrid;
@@ -583,39 +582,39 @@ begin
       case FShape of
         ustRectangle:
           {$IFDEF VERSION5}
-          ACanvas.Rectangle (ARect);
+          ACanvas.Rectangle(ARect);
           {$ELSE}
-          ACanvas.Rectangle (ARect.Left, ARect.Top, ARect.Right, ARect.Bottom);
+          ACanvas.Rectangle(ARect.Left, ARect.Top, ARect.Right, ARect.Bottom);
           {$ENDIF}
         ustTopLine:
           begin
-            ACanvas.MoveTo (ARect.Left, ARect.Top);
-            ACanvas.LineTo (ARect.Right, ARect.Top);
+            ACanvas.MoveTo(ARect.Left, ARect.Top);
+            ACanvas.LineTo(ARect.Right, ARect.Top);
           end;
         ustBottomLine:
           begin
-            ACanvas.MoveTo (ARect.Left, ARect.Bottom);
-            ACanvas.LineTo (ARect.Right, ARect.Bottom);
+            ACanvas.MoveTo(ARect.Left, ARect.Bottom);
+            ACanvas.LineTo(ARect.Right, ARect.Bottom);
           end;
         ustLeftLine:
           begin
-            ACanvas.MoveTo (ARect.Left, ARect.Top);
-            ACanvas.LineTo (ARect.Left, ARect.Bottom);
+            ACanvas.MoveTo(ARect.Left, ARect.Top);
+            ACanvas.LineTo(ARect.Left, ARect.Bottom);
           end;
         ustRightLine:
           begin
-            ACanvas.MoveTo (ARect.Right, ARect.Top);
-            ACanvas.LineTo (ARect.Right, ARect.Bottom);
+            ACanvas.MoveTo(ARect.Right, ARect.Top);
+            ACanvas.LineTo(ARect.Right, ARect.Bottom);
           end;
         ustTLToBRLine:
           begin
-            ACanvas.MoveTo (ARect.Left, ARect.Top);
-            ACanvas.LineTo (ARect.Right, ARect.Bottom);
+            ACanvas.MoveTo(ARect.Left, ARect.Top);
+            ACanvas.LineTo(ARect.Right, ARect.Bottom);
           end;
         ustBLToTRLine:
           begin
-            ACanvas.MoveTo (ARect.Left, ARect.Bottom);
-            ACanvas.LineTo (ARect.Right, ARect.Top);
+            ACanvas.MoveTo(ARect.Left, ARect.Bottom);
+            ACanvas.LineTo(ARect.Right, ARect.Top);
           end;
         ustEllipse:
           ACanvas.Ellipse(ARect.Left, ARect.Top, ARect.Right, ARect.Bottom);
@@ -697,7 +696,7 @@ constructor TVpPrintFormatElementItem.Create(Collection: TCollection);
 begin
   inherited Create(Collection);
   FCollection := TVpPrintFormatElement.Create(TVpPrintFormatElement(Collection).FOwner);
-  FShape   := TVpPrintShape.Create(Self);
+  FShape := TVpPrintShape.Create(Self);
   FCaption := TVpPrintCaption.Create(Self);
   FRotation := ra0;
   FElementName := '';
@@ -753,7 +752,7 @@ begin
   if v = FDayOffset then
     Exit;
 
-  if Assigned (FCollection) then begin
+  if Assigned(FCollection) then begin
     FCollection.BeginUpdate;
     FDayOffset := v;
     FCollection.EndUpdate;
@@ -965,14 +964,13 @@ end;
 procedure TVpPrintFormatElement.NotifyAll(Item: TCollectionItem);
 var
   Notifier: TPersistent;
-
 begin
   if not Assigned (FOwner) then
     Exit;
 
   if FOwner is TVpPrintFormatItem then begin
     if Assigned(TVpPrintFormatItem(FOwner).FCollection) then
-      TVpPrintFormatItem (FOwner).FCollection.NotifyAll((TVpPrintFormatItem (FOwner)));
+      TVpPrintFormatItem(FOwner).FCollection.NotifyAll((TVpPrintFormatItem(FOwner)));
   end;
 
   if FOwner is TVpPrintFormatItem then
@@ -1003,7 +1001,7 @@ end;
 procedure TVpPrintFormatElement.Notify(Item: TCollectionItem; Action: TCollectionNotification);
 begin
   inherited Notify(Item, Action);
-  NotifyAll (Item);
+  NotifyAll(Item);
 end;
 {$ENDIF}
 {=====}
@@ -1165,7 +1163,6 @@ begin
     FVisible := v;
 end;
 {=====}
-
 
 
 // TVpPrintFormat ************************************************************
@@ -1335,7 +1332,6 @@ procedure TVpPrinter.AddDefaultVariables(Date: TDateTime);
     DataStore: TVpCustomDataStore;
     i: Integer;
     TopLevel: TComponent;
-
   begin
     if not Assigned(FOwner) then
       Exit;
@@ -1353,7 +1349,7 @@ procedure TVpPrinter.AddDefaultVariables(Date: TDateTime);
       end;
 
     if Assigned(DataStore) then begin
-      AddVariable('ResourceID', IntToStr (DataStore.ResourceID));
+      AddVariable('ResourceID', IntToStr(DataStore.ResourceID));
       if Assigned(DataStore.Resource) then begin
         AddVariable('Resource', DataStore.Resource.Description);
         AddVariable('ResourceNotes', DataStore.Resource.Notes);
@@ -1423,7 +1419,7 @@ end;
 procedure TVpPrinter.CreateWorkControls;
 begin
 {$IFNDEF LCL}
-  FParentHandle := AllocateHWnd (nil);
+  FParentHandle := AllocateHWnd(nil);
   FDayView := TVpDayView.CreateParented(FParentHandle);
   FWeekView := TVpWeekView.CreateParented(FParentHandle);
   FMonthView := TVpMonthView.CreateParented(FParentHandle);
@@ -1437,7 +1433,7 @@ end;
 procedure TVpPrinter.DestroyWorkControls;
 begin
 {$IFNDEF LCL}
-  DeallocateHWnd (FParentHandle);
+  DeallocateHWnd(FParentHandle);
   FDayView.Free;                                                       
   FWeekView.Free;                                                      
   FMonthView.Free;                                                     
@@ -1564,7 +1560,7 @@ var
   i: Integer;
 begin
   for i := 0 to FNotifiers.Count - 1 do
-    if Assigned (FNotifiers[i]) then
+    if Assigned(FNotifiers[i]) then
       PostMessage(PVpWatcher(FNotifiers[i]).Handle, Vp_PrintFormatChanged, 0, 0);
 end;
 {=====}
@@ -1611,9 +1607,9 @@ var
 
       imPercent:
         begin
-          StartX := Round(Element.Left * WidthInPixels  / 100);
-          StartY := Round(Element.Top  * HeightInPixels / 100);
-          StopX := Round((Element.Left + Element.Width)  * WidthInPixels  / 100);
+          StartX := Round(Element.Left * WidthInPixels / 100);
+          StartY := Round(Element.Top * HeightInPixels / 100);
+          StopX := Round((Element.Left + Element.Width) * WidthInPixels / 100);
           StopY := Round((Element.Top  + Element.Height) * HeightInPixels / 100);
         end;
 
@@ -1628,8 +1624,8 @@ var
 
     inc(StartX, ARect.Left);
     inc(StartY, ARect.Top);
-    inc(StopX,  ARect.Left);
-    inc(StopY,  ARect.Top);
+    inc(StopX, ARect.Left);
+    inc(StopY, ARect.Top);
   end;
 
   function GetDate(Element: TVpPrintFormatElementItem): TDateTime;
@@ -1661,7 +1657,7 @@ var
       for i := 0 to DependentList.Count - 1 do begin
         DI := TVpDependentInfo(DependentList.List^[I]);
         if TVpLinkableControl(DI.Component).GetControlType = Element.ItemType then begin
-          RenderControl := TVpLinkableControl (DI.Component);
+          RenderControl := TVpLinkableControl(DI.Component);
           Break;
         end;
       end;
@@ -1683,20 +1679,20 @@ var
       case Element.ItemType of
         itTasks:
           begin
-          FHaveTaskList := True;
-          RenderControl.RenderToCanvas(
-            ACanvas,
-            Rect(StartX, StartY, StopX, StopY),
-            Element.Rotation,
-            Scale,
-            GetDate(Element),
-            FLastTask,
-            EndLine,
-            Granularity,
-            True
-          );
-          FLastTask := RenderControl.GetLastPrintLine;
-        end;
+            FHaveTaskList := True;
+            RenderControl.RenderToCanvas(
+              ACanvas,
+              Rect(StartX, StartY, StopX, StopY),
+              Element.Rotation,
+              Scale,
+              GetDate(Element),
+              FLastTask,
+              EndLine,
+              Granularity,
+              True
+            );
+            FLastTask := RenderControl.GetLastPrintLine;
+          end;
 
         itContacts:
           begin
@@ -1739,6 +1735,7 @@ var
 
 var
   i: Integer;
+  elem: TVpPrintFormatElementItem;
 
 begin
   CheckPrintFormat;                                                      
@@ -1759,34 +1756,35 @@ begin
     raise EVpPrintFormatError.Create(RSBadPrintFormat + IntToStr(CurFormat));
 
   for i := 0 to FPrintFormats.Items[CurFormat].Elements.Count - 1 do begin
-    GetPrintRectangle(FPrintFormats.Items[CurFormat].Elements.Items[i]);
+    elem := FPrintFormats.Items[CurFormat].Elements.Items[i];
+    GetPrintRectangle(elem);
 
-    if FPrintFormats.Items[CurFormat].Elements.Items[i].ItemType = itCaption then begin
-      if FPrintFormats.Items[CurFormat].Elements.Items[i].Visible then begin
-        UpdateDateVariables(GetDate(FPrintFormats.Items[CurFormat].Elements.Items[i]));
-        ACanvas.Font.Assign(FPrintFormats.Items[CurFormat].Elements.Items[i].FCaption.Font);
-        FPrintFormats.Items[CurFormat].Elements.Items[i].FCaption.PaintToCanvas(
+    if elem.ItemType = itCaption then begin
+      if elem.Visible then begin
+        UpdateDateVariables(GetDate(elem));
+        ACanvas.Font.Assign(elem.FCaption.Font);
+        elem.FCaption.PaintToCanvas(
           ACanvas,
           Rect(StartX, StartY, StopX, StopY),
-          FPrintFormats.Items[CurFormat].Elements.Items[i].Rotation,
+          elem.Rotation,
           ARect,
-          ReplaceVariables(FPrintFormats.Items[CurFormat].Elements.Items[i].FCaption.Caption)
+          ReplaceVariables(elem.FCaption.Caption)
         );
       end;
     end else
-    if FPrintFormats.Items[CurFormat].Elements.Items[i].ItemType = itShape then begin
-      if FPrintFormats.Items[CurFormat].Elements.Items[i].Visible then begin
-        ACanvas.Pen.Assign(FPrintFormats.Items[CurFormat].Elements.Items[i].FShape.Pen);
-        ACanvas.Brush.Assign(FPrintFormats.Items[CurFormat].Elements.Items[i].FShape.Brush);
-        FPrintFormats.Items[CurFormat].Elements.Items[i].FShape.PaintToCanvas(
+    if elem.ItemType = itShape then begin
+      if elem.Visible then begin
+        ACanvas.Pen.Assign(elem.FShape.Pen);
+        ACanvas.Brush.Assign(elem.FShape.Brush);
+        elem.FShape.PaintToCanvas(
           ACanvas,
           Rect(StartX, StartY, StopX, StopY),
-          FPrintFormats.Items[CurFormat].Elements.Items[i].Rotation,
+          elem.Rotation,
           ARect
-        )
+        );
       end;
     end else
-      RenderItem(FPrintFormats.Items[CurFormat].Elements.Items[i]);
+      RenderItem(elem);
   end;
 end;
 {=====}
@@ -1953,7 +1951,6 @@ procedure TVpPrinter.RegisterWatcher(Watcher: THandle);
 var
   i: Integer;
   NewHandle: PVpWatcher;
-
 begin
   for i := 0 to FNotifiers.Count - 1 do
     if Assigned(FNotifiers[i]) then
@@ -2178,13 +2175,9 @@ begin
         TriggerOnGetVariable(Self, VarName, Found, Value, Change);
 
     case Change of
-      cvChange:
-        Result := Result + LookupVariable(VarName);
-      cvIgnore :
-        Result := Result + '$' + VarName + s[i - 1];
-      cvRemove :
-        begin
-        end;
+      cvChange : Result := Result + LookupVariable(VarName);
+      cvIgnore : Result := Result + '$' + VarName + s[i - 1];
+      cvRemove : ;
     end;
   end;
 end;
@@ -2195,7 +2188,8 @@ var
   fpOut: TextFile;
   i: Integer;
   j: Integer;
-
+  fmt: TVpPrintFormatItem;
+  elem: TVpPrintFormatElementItem;
 begin
   if FileName = '' then                                                
     FileName := DefaultXMLFileName;                                    
@@ -2206,35 +2200,39 @@ begin
     Writeln(fpOut, '<?xml version="1.0" encoding="UTF-8"?>');
     Writeln(fpOut, '<VpPrintFormats');
     Writeln(fpOut, '  Version = "0.0.1">');
+
     for i := 0 to FPrintFormats.Count - 1 do begin
+      fmt := FPrintFormats.Items[i];
       Writeln(fpOut, '  <PrintFormat');
-      Writeln(fpOut, '    Name="' + XMLizeString(FPrintFormats.Items[i].FormatName) + '"');
-      Writeln(fpOut, '    Description="' + XMLizeString(FPrintFormats.Items[i].Description) + '"');
-      Writeln(fpOut, '    DayIncrement="' + IntToStr(FPrintFormats.Items[i].DayInc) + '"');
-      if FPrintFormats.Items[i].Visible then
+      Writeln(fpOut, '    Name="' + XMLizeString(fmt.FormatName) + '"');
+      Writeln(fpOut, '    Description="' + XMLizeString(fmt.Description) + '"');
+      Writeln(fpOut, '    DayIncrement="' + IntToStr(fmt.DayInc) + '"');
+      if fmt.Visible then
         Writeln(fpOut, '    Visble="True"')
       else
         Writeln(fpOut, '    Visble="False"');
-      case FPrintFormats.Items[i].DayIncUnits of
+      case fmt.DayIncUnits of
         duDay   : Writeln(fpOut, '    DayIncrementUnits="Day">');
         duWeek  : Writeln(fpOut, '    DayIncrementUnits="Week">');
         duMonth : Writeln(fpOut, '    DayIncrementUnits="Month">');
         duYear  : Writeln(fpOut, '    DayIncrementUnits="Year">');
       end;
-      for j := 0 to FPrintFormats.Items[i].Elements.Count - 1 do begin
+
+      for j := 0 to fmt.Elements.Count - 1 do begin
+        elem := fmt.Elements.Items[j];
         Writeln(fpOut, '    <Element');
-        Writeln(fpOut, '      Name="' + FPrintFormats.Items[i].Elements.Items[j].ElementName + '"');
-        if FPrintFormats.Items[i].Elements.Items[j].Visible then
+        Writeln(fpOut, '      Name="' + elem.ElementName + '"');
+        if elem.Visible then
           Writeln(fpOut, '      Visible="True"')
         else
           Writeln(fpOut, '      Visible="False"');
-        case FPrintFormats.Items[i].Elements.Items[j].Rotation of
+        case elem.Rotation of
           ra0   : Writeln(fpOut, '      Rotation="0"');
           ra90  : Writeln(fpOut, '      Rotation="90"');
           ra180 : Writeln(fpOut, '      Rotation="180"');
           ra270 : Writeln(fpOut, '      Rotation="270"');
         end;
-        case FPrintFormats.Items[i].Elements.Items[j].ItemType of
+        case elem.ItemType of
           itDayView   : Writeln(fpOut, '      Item="DayView"');
           itWeekView  : Writeln(fpOut, '      Item="WeekView"');
           itMonthView : Writeln(fpOut, '      Item="MonthView"');
@@ -2244,26 +2242,26 @@ begin
           itTasks     : Writeln(fpOut, '      Item="Tasks"');
           itContacts  : Writeln(fpOut, '      Item="Contacts"');
         end;
-        case FPrintFormats.Items[i].Elements.Items[j].Measurement of
+        case elem.Measurement of
           imAbsolutePixel : Writeln(fpOut, '      Measurement="AbsolutePixel"');
           imPercent       : Writeln(fpOut, '      Measurement="Percent"');
           imInches        : Writeln(fpOut, '      Measurement="Inches"');
         end;
-        Writeln(fpOut, '      Left="' + FloatToStr(FPrintFormats.Items[i].Elements.Items[j].Left) + '"');
-        Writeln(fpOut, '      Top="' + FloatToStr(FPrintFormats.Items[i].Elements.Items[j].Top) + '"');
-        Writeln(fpOut, '      Width="' + FloatToStr(FPrintFormats.Items[i].Elements.Items[j].Width) + '"');
-        Writeln(fpOut, '      Height="' + FloatToStr(FPrintFormats.Items[i].Elements.Items[j].Height) + '"');
-        Writeln(fpOut, '      DayOffset="' + IntToStr(FPrintFormats.Items[i].Elements.Items[j].DayOffset) + '"');
-        case FPrintFormats.Items[i].Elements.Items[j].DayOffsetUnits of
+        Writeln(fpOut, '      Left="' + FloatToStr(elem.Left) + '"');
+        Writeln(fpOut, '      Top="' + FloatToStr(elem.Top) + '"');
+        Writeln(fpOut, '      Width="' + FloatToStr(elem.Width) + '"');
+        Writeln(fpOut, '      Height="' + FloatToStr(elem.Height) + '"');
+        Writeln(fpOut, '      DayOffset="' + IntToStr(elem.DayOffset) + '"');
+        case elem.DayOffsetUnits of
           duDay   : Writeln(fpOut, '      DayOffsetUnits="Day">');
           duWeek  : Writeln(fpOut, '      DayOffsetUnits="Week">');
           duMonth : Writeln(fpOut, '      DayOffsetUnits="Month">');
           duYear  : Writeln(fpOut, '      DayOffsetUnits="Year">');
         end;
 
-        if FPrintFormats.Items[i].Elements.Items[j].ItemType = itShape then begin
+        if elem.ItemType = itShape then begin
           Writeln(fpOut, '      <Shape');
-          case FPrintFormats.Items[i].Elements.Items[j].FShape.Shape of
+          case elem.FShape.Shape of
             ustRectangle  : Writeln(fpOut, '        Type="Rectangle">');
             ustTopLine    : Writeln(fpOut, '        Type="TopLine">');
             ustBottomLine : Writeln(fpOut, '        Type="BottomLine">');
@@ -2275,8 +2273,8 @@ begin
           end;
 
           Writeln(fpOut, '        <Brush');
-          Writeln(fpOut, '          Color="' + IntToStr(FPrintFormats.Items[i].Elements.Items[j].FShape.Brush.Color) + '"');
-          case FPrintFormats.Items[i].Elements.Items[j].FShape.Brush.Style of
+          Writeln(fpOut, '          Color="' + IntToStr(elem.FShape.Brush.Color) + '"');
+          case elem.FShape.Brush.Style of
             bsSolid      : Writeln(fpOut, '          Style="Solid"/>');
             bsClear      : Writeln(fpOut, '          Style="Clear"/>');
             bsHorizontal : Writeln(fpOut, '          Style="Horizontal"/>');
@@ -2287,8 +2285,8 @@ begin
             bsDiagCross  : Writeln(fpOut, '          Style="DiagCross"/>');
           end;
           Writeln(fpOut, '        <Pen');
-          Writeln(fpOut, '          Color="' + IntToStr(FPrintFormats.Items[i].Elements.Items[j].FShape.Pen.Color) + '"');
-          case FPrintFormats.Items[i].Elements.Items[j].FShape.Pen.Style of
+          Writeln(fpOut, '          Color="' + IntToStr(elem.FShape.Pen.Color) + '"');
+          case elem.FShape.Pen.Style of
             psSolid       : Writeln(fpOut, '          Style="Solid"');
             psDash        : Writeln(fpOut, '          Style="Dash"');
             psDot         : Writeln(fpOut, '          Style="Dot"');
@@ -2297,15 +2295,15 @@ begin
             psClear       : Writeln(fpOut, '          Style="Clear"');
             psInsideFrame : Writeln(fpOut, '          Style="InsideFrame"');
           end;
-          Writeln(fpOut, '          Width="' + IntToStr(FPrintFormats.Items[i].Elements.Items[j].FShape.Pen.Width) + '"/>');
+          Writeln(fpOut, '          Width="' + IntToStr(elem.FShape.Pen.Width) + '"/>');
           Writeln(fpOut, '      </Shape>');
         end;
 
-        if FPrintFormats.Items[i].Elements.Items[j].ItemType = itCaption then begin
+        if elem.ItemType = itCaption then begin
           Writeln(fpOut, '      <Caption');
-          Writeln(fpOut, '        Caption="' + XMLizeString(FPrintFormats.Items[i].Elements.Items[j].Caption.Caption) + '">');
+          Writeln(fpOut, '        Caption="' + XMLizeString(elem.Caption.Caption) + '">');
           Writeln(fpOut, '        <Font');
-          case FPrintFormats.Items[i].Elements.Items[j].Caption.Font.Charset of
+          case elem.Caption.Font.Charset of
             ANSI_CHARSET        : Writeln(fpOut, '          CharSet="ANSI"');
             DEFAULT_CHARSET     : Writeln(fpOut, '          CharSet="Default"');
             SYMBOL_CHARSET      : Writeln(fpOut, '          CharSet="Symbol"');
@@ -2332,27 +2330,27 @@ begin
             EASTEUROPE_CHARSET  : Writeln(fpOut, '          CharSet="EastEurope"');
             OEM_CHARSET         : Writeln(fpOut, '          CharSet="OEM"');
           end;
-          Writeln(fpOut, '          Color="' + IntToStr(FPrintFormats.Items[i].Elements.Items[j].Caption.Font.Color) + '"');
-          Writeln(fpOut, '          Height="' + IntToStr(FPrintFormats.Items[i].Elements.Items[j].Caption.Font.Height) + '"');
-          Writeln(fpOut, '          Name="' + XMLizeString(FPrintFormats.Items[i].Elements.Items[j].Caption.Font.Name) + '"');
-          case FPrintFormats.Items[i].Elements.Items[j].Caption.Font.Pitch of
+          Writeln(fpOut, '          Color="' + IntToStr(elem.Caption.Font.Color) + '"');
+          Writeln(fpOut, '          Height="' + IntToStr(elem.Caption.Font.Height) + '"');
+          Writeln(fpOut, '          Name="' + XMLizeString(elem.Caption.Font.Name) + '"');
+          case elem.Caption.Font.Pitch of
             fpDefault  : Writeln(fpOut, '          Pitch="Default"');
             fpVariable : Writeln(fpOut, '          Pitch="Variable"');
             fpFixed    : Writeln(fpOut, '          Pitch="Fixed"');
           end;
-          if fsBold in FPrintFormats.Items[i].Elements.Items[j].Caption.Font.Style then
+          if fsBold in elem.Caption.Font.Style then
             Writeln(fpOut, '          Bold="True"')
           else
             Writeln(fpOut, '          Bold="False"');
-          if fsItalic in FPrintFormats.Items[i].Elements.Items[j].Caption.Font.Style then
+          if fsItalic in elem.Caption.Font.Style then
             Writeln(fpOut, '          Italic="True"')
           else
             Writeln(fpOut, '          Italic="False"');
-          if fsUnderline in FPrintFormats.Items[i].Elements.Items[j].Caption.Font.Style then
+          if fsUnderline in elem.Caption.Font.Style then
             Writeln(fpOut, '          Underline="True"')
           else
             Writeln(fpOut, '          Underline="False"');
-          if fsStrikeout in FPrintFormats.Items[i].Elements.Items[j].Caption.Font.Style then
+          if fsStrikeout in elem.Caption.Font.Style then
             Writeln(fpOut, '          Strikeout="True"/>')
           else
             Writeln(fpOut, '          Strikeout="False"/>');
