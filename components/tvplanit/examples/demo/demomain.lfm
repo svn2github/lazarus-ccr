@@ -25,9 +25,9 @@ object MainForm: TMainForm
       Height = 532
       Top = 48
       Width = 780
-      ActivePage = TabEvents
+      ActivePage = TabTasks
       Align = alClient
-      TabIndex = 0
+      TabIndex = 1
       TabOrder = 0
       object TabEvents: TTabSheet
         Caption = 'Events'
@@ -146,6 +146,7 @@ object MainForm: TMainForm
               Max = 7
               Min = 1
               OnChange = DaysTrackBarChange
+              PageSize = 1
               Position = 1
               TabOrder = 0
             end
@@ -446,6 +447,7 @@ object MainForm: TMainForm
         Top = 8
         Width = 84
         Caption = 'TitleLbl'
+        Font.Color = clWhite
         Font.Height = -24
         Font.Style = [fsBold]
         ParentColor = False

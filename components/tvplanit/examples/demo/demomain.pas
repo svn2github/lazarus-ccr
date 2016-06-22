@@ -413,10 +413,20 @@ begin
 
     CbTimeFormat.ItemIndex := ini.ReadInteger('Settings', 'TimeFormat', ord(VpDayView1.TimeFormat));
     CbTimeFormatChange(nil);
+
     CbGranularity.ItemIndex := ini.ReadInteger('Settings', 'Granularity', ord(VpDayView1.Granularity));
     CbGranularityChange(nil);
+
     CbFirstDayOfWeek.ItemIndex := ini.ReadInteger('Settings', 'FirstDayOfWeek', ord(VpWeekView1.WeekStartsOn));
     CbFirstDayOfWeekChange(nil);
+
+    if ini.ReadBool('Settings', 'AllTasks', VpTaskList1.DisplayOptions.ShowAll) then
+      RbAllTasks.Checked := true else
+      RbHideCompletedTasks.Checked := true;
+    RbAllTasksChange(nil);
+
+    DaysTrackbar.Position := ini.ReadInteger('Settings', 'VisibleDays', DaysTrackbar.Position);
+    DaysTrackbarChange(nil);
 
   finally
     ini.Free;
@@ -442,6 +452,8 @@ begin
     ini.WriteInteger('Settings', 'TimeFormat', ord(VpDayView1.TimeFormat));
     ini.WriteInteger('Settings', 'Granularity', ord(VpDayView1.Granularity));
     ini.WriteInteger('Settings', 'FirstDayOfWeek', ord(VpWeekView1.WeekStartsOn));
+    ini.WriteInteger('Settings', 'VisibleDays', VpDayView1.NumDays);
+    ini.WriteBool('Settings', 'AllTasks', VpTaskList1.DisplayOptions.ShowAll);
   finally
     ini.Free;
   end;
