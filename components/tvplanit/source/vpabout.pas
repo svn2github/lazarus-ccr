@@ -33,22 +33,18 @@ unit VpAbout;
 interface
 
 uses
-  {$IFDEF LCL}
+ {$IFDEF LCL}
   LMessages, LCLProc, LCLType, LCLIntf,
-  {$ELSE}
-  Windows, Messages,
-  {$ENDIF}
   Forms, Graphics, Controls, Dialogs, StdCtrls, ExtCtrls,
-  {$IFDEF VERSION6}
-  {$IFNDEF LCL}
+ {$IFDEF VERSION6}
+  {$IFDEF DELPHI}
   DesignIntf, DesignEditors,
   {$ELSE}
-  PropEdits,
-  LazarusPackageIntf,
+  PropEdits, LazarusPackageIntf,
   {$ENDIF}
-  {$ELSE}
+ {$ELSE}
   DsgnIntf,
-  {$ENDIF}
+ {$ENDIF}
   Classes, SysUtils;
 
 type
