@@ -32,7 +32,7 @@ Portions created by TurboPower Software Inc. are Copyright (C) 2002 TurboPower S
 
 Contributor(s): "/>
     <Version Major="1" Release="4"/>
-    <Files Count="65">
+    <Files Count="66">
       <Item1>
         <Filename Value="../source/vpalarmdlg.lfm"/>
         <Type Value="LFM"/>
@@ -294,6 +294,10 @@ Contributor(s): "/>
         <Filename Value="../source/vpdayviewpainter.pas"/>
         <UnitName Value="VpDayViewPainter"/>
       </Item65>
+      <Item66>
+        <Filename Value="../source/vpweekviewpainter.pas"/>
+        <UnitName Value="VpWeekViewPainter"/>
+      </Item66>
     </Files>
     <i18n>
       <EnableI18N Value="True"/>
