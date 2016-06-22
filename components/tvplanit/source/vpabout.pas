@@ -33,24 +33,26 @@ unit VpAbout;
 interface
 
 uses
- {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf,
-  Forms, Graphics, Controls, Dialogs, StdCtrls, ExtCtrls,
- {$IFDEF VERSION6}
-  {$IFDEF DELPHI}
-  DesignIntf, DesignEditors,
-  {$ELSE}
-  PropEdits, LazarusPackageIntf,
-  {$ENDIF}
+{$IFDEF LCL}
+ LMessages, LCLProc, LCLType, LCLIntf,
+{$ELSE}
+ Windows, Messages,
+{$ENDIF}
+ Forms, Graphics, Controls, Dialogs, StdCtrls, ExtCtrls,
+{$IFDEF VERSION6}
+ {$IFDEF DELPHI}
+ DesignIntf, DesignEditors,
  {$ELSE}
-  DsgnIntf,
+ PropEdits, LazarusPackageIntf,
  {$ENDIF}
-  Classes, SysUtils;
+{$ELSE}
+ DsgnIntf,
+{$ENDIF}
+ Classes, SysUtils;
 
 type
 
   { TfrmAbout }
-
   TfrmAbout = class(TForm)
     Bevel2: TBevel;
     Panel1: TPanel;

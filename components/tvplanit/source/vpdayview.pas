@@ -1483,7 +1483,7 @@ begin
 
   SetLength(dvLineMatrix, NumDays);
   for I := 0 to pred(NumDays) do begin
-    SetLength(dvLineMatrix[I], LineCount);
+    SetLength(dvLineMatrix[I], LineCount);    // was +1. Why? Without it, the IDE crashes! - there is an upper loop index of LineCount in DrawCells. After correcting that, the crash is gone.
     for J := 0 to pred(LineCount) do begin
       dvLineMatrix[I,J].Hour := TVpHours(J div grPerHour);
       dvLineMatrix[I,J].Minute := (J mod grPerHour) * GranularityMinutes[UseGran];
@@ -3585,7 +3585,7 @@ var
     TPSMoveTo(RenderCanvas, Angle, RenderIn, GutterRect.Right, GutterRect.Top);
     TPSLineTo(RenderCanvas, Angle, RenderIn, GutterRect.Right, GutterRect.Bottom);
 
-    for I := 0 to LineCount do begin
+    for I := 0 to LineCount-1 do begin  // this was "LineCount", without -1 --> IDE crash
       dvLineMatrix[Col, I].Rec.Left := -1;
       dvLineMatrix[Col, I].Rec.Top := -1;
       dvLineMatrix[Col, I].Rec.Right := -1;
