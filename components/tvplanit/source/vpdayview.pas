@@ -489,7 +489,7 @@ type
 implementation
 
 uses
-  SysUtils, Math, Forms, Dialogs, VpEvntEditDlg;
+  SysUtils, Math, Forms, Dialogs, VpEvntEditDlg, VpDayViewPainter;
 
 (*****************************************************************************)
 { TVpTGInPlaceEdit }
@@ -2266,6 +2266,21 @@ procedure TVpDayView.RenderToCanvas(RenderCanvas: TCanvas; RenderIn: TRect;
   Angle: TVpRotationAngle; Scale: Extended; RenderDate: TDateTime;
   StartLine, StopLine: Integer; UseGran: TVpGranularity; DisplayOnly: Boolean);
 var
+  painter: TVpDayViewPainter;
+begin
+  dvPainting := true;
+  painter := TVpDayviewPainter.Create(Self, RenderCanvas);
+  try
+    painter.RenderToCanvas(RenderIn, Angle, Scale, RenderDate, StartLine,
+      StopLine, UseGran, DisplayOnly);
+  finally
+    painter.Free;
+    dvPainting := false;
+  end;
+end;
+
+(*
+var
   TextWidth: Integer;
   ColHeadRect: TRect;
   CellsRect: TRect;
@@ -2674,8 +2689,8 @@ var
     end;
   end;
 
-  (*  original version
-  { Draws the all-day events at the top of the DayView in a special manner }
+  {  original version
+  // Draws the all-day events at the top of the DayView in a special manner
   procedure DrawAllDayEvents;
   var
     ADEventsList       : TList;
@@ -2693,8 +2708,8 @@ var
     if (DataStore = nil) or (DataStore.Resource = nil) then
       Exit;
 
-    { Collect all of the events for this range and determine the maximum     }
-    { number of all day events for the range of days covered by the control. }
+    // Collect all of the events for this range and determine the maximum
+    // number of all day events for the range of days covered by the control.
     MaxADEvents := 0;
 
     ADEventsList := TList.Create;
@@ -2702,17 +2717,17 @@ var
       TempList := TList.Create;
       try
         for I := 0 to pred(RealNumDays) do begin
-          { skip weekends }
+          // skip weekends
           if ((DayOfWeek (RenderDate + i) = 1) or
               (DayOfWeek (RenderDate + i) = 7)) and
               (not FIncludeWeekends) then
             Continue;
 
-          { get the all day events for the day specified by RenderDate + I }
+          // get the all day events for the day specified by RenderDate + I
           DataStore.Resource.Schedule.AllDayEventsByDate(RenderDate + I,
             TempList);
 
-          { Iterate through these events and place them in ADEventsList    }
+          // Iterate through these events and place them in ADEventsList
           Skip := false;
           for J := 0 to pred(TempList.Count) do begin
             if AdEventsList.Count > 0 then begin
@@ -2736,31 +2751,31 @@ var
       end;
 
       if MaxADEvents > 0 then begin
-        { Set attributes }
+        // Set attributes
         RenderCanvas.Brush.Color := RealADEventBkgColor;                 
         RenderCanvas.Font.Assign (AllDayEventAttributes.Font);
 
-        { Measure the AllDayEvent TextHeight }
+        // Measure the AllDayEvent TextHeight
         ADTextHeight := RenderCanvas.TextHeight(VpProductName) + TextMargin;
 
-        { Build the AllDayEvent rect based on the value of MaxADEvents }
+        // Build the AllDayEvent rect based on the value of MaxADEvents
         ADEventsRect.Bottom := AdEventsRect.Top
           + (MaxADEvents * ADTextHeight) + TextMargin * 2;
 
-        { Clear the AllDayEvents area }
+        // Clear the AllDayEvents area
         TpsFillRect(RenderCanvas, Angle, RenderIn, ADEventsRect);
 
         StartsBeforeRange  := false;
-        { Cycle through the all day events and draw them appropriately }
+        // Cycle through the all day events and draw them appropriately
         for I := 0 to pred(ADEventsList.Count) do begin
 
           Event := ADEventsList[I];
 
-          { set the top of the event's rect }
+          // set the top of the event's rect
           AdEventRect.Top := ADEventsRect.Top + TextMargin
             + (I  * ADTextHeight);
 
-          { see if the event began before the start of the range }
+          // see if the event began before the start of the range
           if (Event.StartTime < trunc(RenderDate)) then
             StartsBeforeRange := true;
 
@@ -2793,14 +2808,14 @@ var
                                                 ADEventRect.Bottom);
           dvEventArray[EventCount].Event := Event;
           Inc (EventCount);
-        end; { for I := 0 to pred(ADEventsList.Count) do ... }
+        end; // for I := 0 to pred(ADEventsList.Count) do ...
 
-      end;   { if MaxADEvents > 0 }
+      end;   // if MaxADEvents > 0
 
     finally
       ADEventsList.Free;
     end;
-  end; *)
+  end; }
 
 
   procedure DrawEvents(RenderDate: TDateTime; Col: Integer);
@@ -2861,12 +2876,12 @@ var
           Event2 := EventArray[K].Event;
 
           { if the Tmp event overlaps with Event, then check it's Width divisor }
-          (* -- original
+          {-- original
           if (TimeInRange(Event2.StartTime, Event1.StartTime, Event1.EndTime, false)
             or TimeInRange(Event2.EndTime, Event1.StartTime, Event1.EndTime, false))
           or ((Event2.StartTime <= Event1.StartTime)
             and (Event2.EndTime >= Event1.EndTime))
-            *)
+            }
           if TimeInRange(frac(Event2.StartTime), frac(Event1.StartTime), frac(Event1.EndTime), false) or
              TimeInRange(frac(Event2.EndTime), frac(Event1.StartTime), frac(Event1.EndTime), false) or
             ((frac(Event2.StartTime) <= frac(Event1.StartTime)) and (frac(Event2.EndTime) >= frac(Event1.EndTime)))
@@ -3225,8 +3240,8 @@ var
         { if we have hit the end of the events, then bail out }
         if Event = nil then
           Break;
-   (*  -- original
-        { remove the date portion from the start and end times }
+   {  -- original
+        // remove the date portion from the start and end times
         EventSTime := Event.StartTime;
         EventETime := Event.EndTime;
         if trunc(EventSTime) < trunc(RenderDate) then //First Event
@@ -3235,12 +3250,12 @@ var
           EventETime := 0.999+trunc(RenderDate);
         EventSTime := EventSTime - RenderDate;
         EventETime := EventETime - RenderDate;
-        { Find the line on which this event starts }
+        // Find the line on which this event starts
         EventSLine := GetStartLine(EventSTime, Granularity);
-        { Handle End Times of Midnight }
+        // Handle End Times of Midnight
         if EventETime = 0 then
           EventETime := EncodeTime (23, 59, 59, 0);
-    *)
+    }
 
         { remove the date portion from the start and end times }
         EventSTime := Event.StartTime;
@@ -3992,6 +4007,7 @@ begin
 
   dvPainting := false;
 end;
+*)
 {=====}
 
 {.$IFNDEF LCL}
