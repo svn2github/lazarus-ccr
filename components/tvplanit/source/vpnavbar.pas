@@ -128,6 +128,7 @@ type
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
     function GetContainer: TVpFolderContainer;
+    function ItemByName(AName: String): TVpNavBtnItem;
 
     property Items[Index: Integer]: TVpNavBtnItem read GetItem;
     property ItemCount: Integer read GetItemCount;
@@ -833,6 +834,18 @@ begin
     result := nil;
 end;
 {=====}
+
+function TVpNavFolder.ItemByName(AName: String): TVpNavBtnItem;
+var
+  i: Integer;
+begin
+  for i:=0 to ItemCount-1 do begin
+    Result := Items[i];
+    if Result.Name = AName then
+      exit;
+  end;
+  Result := nil;
+end;
 
 procedure TVpNavFolder.lfGetEditorCaption(var Caption: string);
 begin
