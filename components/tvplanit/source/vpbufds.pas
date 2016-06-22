@@ -99,7 +99,12 @@ begin
     dir := IncludeTrailingPathDelimiter(FDirectory);
   dir := ExpandFileName(dir);
   if not DirectoryExistsUTF8(dir) then
-    raise Exception.CreateFmt('Directory "%s" for tables does not exist.', [dir]);
+  begin
+    if AutoCreate then
+      CreateDir(dir)
+    else
+      raise Exception.CreateFmt('Directory "%s" for tables does not exist.', [dir]);
+  end;
 
   if ATableName = ResourceTableName then
     table := FResourceTable

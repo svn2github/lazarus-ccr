@@ -17,10 +17,6 @@ msgstr ""
 msgid "Language"
 msgstr ""
 
-#: tmainform.label2.caption
-msgid "Number of days"
-msgstr ""
-
 #: tmainform.rballtasks.caption
 msgid "All tasks"
 msgstr ""
