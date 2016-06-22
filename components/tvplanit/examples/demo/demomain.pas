@@ -409,7 +409,7 @@ begin
     SetLanguage(lang);
 
     SetActiveView(ini.ReadInteger('Settings', 'ActiveView', 0));
-    VpNavBar1.ActiveFolder := FActiveView mod 1000;
+    VpNavBar1.ActiveFolder := FActiveView div 1000;
 
     CbTimeFormat.ItemIndex := ini.ReadInteger('Settings', 'TimeFormat', ord(VpDayView1.TimeFormat));
     CbTimeFormatChange(nil);
@@ -444,9 +444,12 @@ begin
       ini.WriteInteger('Form', 'Height', Height);
       ini.WriteInteger('Left', 'Left', Left);
       ini.WriteInteger('Form', 'Top', Top);
+    end;
+    if FActiveView = 0 then begin
       ini.WriteInteger('Form', 'LeftPanel_Width', LeftPanel.Width);
       ini.WriteInteger('Form', 'BottomPanel_Height', VpMonthView1.Height);
     end;
+
     ini.WriteString('Settings', 'Language', FLang);
     ini.WriteInteger('Settings', 'ActiveView', FActiveView);
     ini.WriteInteger('Settings', 'TimeFormat', ord(VpDayView1.TimeFormat));
