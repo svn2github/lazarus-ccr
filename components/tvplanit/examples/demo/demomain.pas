@@ -20,11 +20,13 @@ type
     CbLanguages: TComboBox;
     ImageList1: TImageList;
     Label1: TLabel;
+    Label2: TLabel;
     Memo1: TMemo;
     PageControl1: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
+    DaySelectorPanel: TPanel;
     RbAllTasks: TRadioButton;
     RbHideCompletedTasks: TRadioButton;
     Splitter2: TSplitter;
@@ -33,6 +35,7 @@ type
     TabContacts: TTabSheet;
     TabInfo: TTabSheet;
     TabTasks: TTabSheet;
+    TrackBar1: TTrackBar;
     VpBufDSDataStore1: TVpBufDSDataStore;
     VpContactButtonBar1: TVpContactButtonBar;
     VpContactGrid1: TVpContactGrid;
@@ -51,6 +54,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure RbAllTasksChange(Sender: TObject);
     procedure RbHideCompletedTasksChange(Sender: TObject);
+    procedure TrackBar1Change(Sender: TObject);
     procedure VpNavBar1ItemClick(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; Index: Integer);
   private
@@ -363,6 +367,11 @@ begin
   Invalidate;
 end;
 
+procedure TMainForm.TrackBar1Change(Sender: TObject);
+begin
+  VpDayView1.NumDays := Trackbar1.Position;
+end;
+
 procedure TMainForm.VpNavBar1ItemClick(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; Index: Integer);
 
@@ -379,6 +388,8 @@ procedure TMainForm.VpNavBar1ItemClick(Sender: TObject; Button: TMouseButton;
     Splitter3.Show;
     Splitter3.Left := Width;
     VpWeekView1.Show;
+    DaySelectorPanel.Hide;
+    VpDayView1.NumDays := 1;
   end;
 
   procedure ShowEventsPerMonth;
@@ -390,6 +401,7 @@ procedure TMainForm.VpNavBar1ItemClick(Sender: TObject; Button: TMouseButton;
     VpMonthView1.Parent := TabEvents;
     VpMonthView1.Align := alClient;
     VpMonthView1.Show;
+    DaySelectorPanel.Hide;
   end;
 
   procedure ShowEventsPerWeek;
@@ -400,6 +412,7 @@ procedure TMainForm.VpNavBar1ItemClick(Sender: TObject; Button: TMouseButton;
     VpMonthView1.Hide;
     VpDayView1.Hide;
     VpWeekView1.Show;
+    DaySelectorPanel.Hide;
   end;
 
   procedure ShowEventsPerDay;
@@ -411,6 +424,9 @@ procedure TMainForm.VpNavBar1ItemClick(Sender: TObject; Button: TMouseButton;
     VpDayView1.Parent := TabEvents;
     VpDayView1.Align := alClient;
     VpDayView1.Show;
+    DaySelectorPanel.Parent := TabEvents;
+    DaySelectorPanel.Show;
+    VpDayView1.NumDays := Trackbar1.Position;
   end;
 
   procedure ShowTasks;

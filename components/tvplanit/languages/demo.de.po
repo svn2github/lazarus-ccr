@@ -27,6 +27,10 @@ msgstr "Turbo Power VisualPlanIt Demo"
 msgid "Language"
 msgstr "Sprache"
 
+#: tmainform.label2.caption
+msgid "Tage"
+msgstr ""
+
 #: tmainform.rballtasks.caption
 msgid "All tasks"
 msgstr "Alle Aufgaben"
