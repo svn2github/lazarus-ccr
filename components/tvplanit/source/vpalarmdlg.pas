@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpAlarmDlg;
   { Alarm Notification Dialog }
@@ -37,7 +37,7 @@ uses
   {$IFDEF LCL}
   LMessages, LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
-  Windows,Messages,
+  Windows, Messages,
   {$ENDIF}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   VpDlg, VpData, ExtCtrls, StdCtrls, VpBase, VpEvntEditDlg, VpBaseDS, VpConst,

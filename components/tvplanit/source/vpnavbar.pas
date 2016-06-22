@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpNavBar;
 
@@ -36,9 +36,9 @@ uses
   {$IFDEF LCL}
   LMessages, LCLProc, LCLType, LCLIntf,
   {$ELSE}
-  Windows, MMSystem,
+  Windows, Messages, MMSystem,
   {$ENDIF}
-  Messages, Controls, Graphics, Forms, Buttons, SysUtils,
+  Controls, Graphics, Forms, Buttons, SysUtils,
   StdCtrls, Classes, ExtCtrls, VpBase, VpConst, VpMisc, VpSR, Math;
 
 type

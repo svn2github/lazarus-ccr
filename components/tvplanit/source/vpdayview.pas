@@ -49,7 +49,7 @@
   provide multi-line editing capabilities.
 }
 
-{$I Vp.INC}
+{$I vp.inc}
 
 {.$DEFINE DEBUGDV} { Causes the DayView to operate in debug mode }
 
@@ -68,9 +68,9 @@ uses
   {$IFDEF LCL}
   LMessages, LCLProc, LCLType, LCLIntf,
   {$ELSE}
-  Windows,
+  Windows, Messages,
   {$ENDIF}
-  Messages, Classes, Graphics, Controls, ComCtrls, ExtCtrls, StdCtrls,
+  Classes, Graphics, Controls, ComCtrls, ExtCtrls, StdCtrls,
   Buttons, VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst,
   VpCanvasUtils, Menus;
 
@@ -392,7 +392,7 @@ type
     function CountOverlappingEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
     function GetMaxOLEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
     { message handlers }
-    procedure VpDayViewInit(var Msg: TMessage); message Vp_DayViewInit;
+    procedure VpDayViewInit(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message Vp_DayViewInit;
     {$IFNDEF LCL}
     procedure WMLButtonDblClk(var Msg : TWMLButtonDblClk); message WM_LBUTTONDBLCLK;
     procedure WMSize(var Msg: TWMSize); message WM_SIZE;
@@ -3995,7 +3995,7 @@ end;
 {=====}
 
 {.$IFNDEF LCL}
-procedure TVpDayView.VpDayViewInit(var Msg: TMessage);
+procedure TVpDayView.VpDayViewInit(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 begin
   if csLoading in ComponentState then begin
     PostMessage(Handle, Vp_DayViewInit, 0, 0);

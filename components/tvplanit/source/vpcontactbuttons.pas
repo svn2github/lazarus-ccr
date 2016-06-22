@@ -31,7 +31,7 @@
 { providing this component, and allowing us to include it.     }
 { Thanks Steve!                                                }
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpContactButtons;
 
@@ -39,18 +39,18 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf,
+  LCLProc, LCLType, LCLIntf,
   {$ELSE}
   Windows,
   {$ENDIF}
-  Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   VpBase, VpContactGrid, VpMisc;
 
 const
-        VP_MIN_BUTTONS = 2;
+  VP_MIN_BUTTONS = 2;
   VP_LETTERS_IN_ALPHABET = 26;
   VP_MAX_BUTTONS = VP_LETTERS_IN_ALPHABET + 1;
-        VP_LETTER_A = Ord('a');
+  VP_LETTER_A = Ord('a');
 
 type
   TVpButtonRec = packed record

@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpDlg;
   {dialog components base classes}

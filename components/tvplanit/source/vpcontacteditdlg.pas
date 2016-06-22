@@ -34,11 +34,11 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf, LResources,
+  LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
-  Windows,
+  Windows, Messages,
   {$ENDIF}
-  Messages, SysUtils,
+  SysUtils,
   {$IFDEF VERSION6} Variants, {$ENDIF}
   Classes, Graphics, Controls, Forms, Dialogs, VpData, ExtCtrls, StdCtrls,
   VpException, VpMisc, VpBase, VpSR, VpDlg, VpBaseDS, ComCtrls;

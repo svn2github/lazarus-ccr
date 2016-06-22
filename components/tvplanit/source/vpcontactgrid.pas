@@ -34,9 +34,9 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,
+  LMessages, LCLProc, LCLType, LCLIntf,
   {$ELSE}
-  Windows,Messages,
+  Windows, Messages,
   {$ENDIF}
   Classes, Graphics, Controls, ComCtrls, ExtCtrls, StdCtrls,
   VpBase, VpBaseDS, VpMisc, VpData, VpConst, VpSR, VpCanvasUtils, Menus;

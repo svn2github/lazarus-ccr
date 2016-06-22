@@ -85,16 +85,10 @@ uses
   {$IFDEF LCL}
   LMessages,LCLProc,LCLType,LCLIntf,FileUtil,
   {$ELSE}
-  Windows,
+  Windows, //Messages,
   {$ENDIF}
-  Classes,
-  SysUtils,
-  Graphics,
-  Controls,
-  Messages,
-  VpException,
-  VpSR,
-  VpBase;
+  Classes, SysUtils, Graphics, Controls,
+  VpException, VpSR, VpBase;
 
 type
   TVpPaletteArray = array [0..255] of TPALETTEENTRY;

@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpAbout;
 
@@ -36,7 +36,7 @@ uses
   {$IFDEF LCL}
   LMessages, LCLProc, LCLType, LCLIntf,
   {$ELSE}
-  Windows,Messages,
+  Windows, Messages,
   {$ENDIF}
   Forms, Graphics, Controls, Dialogs, StdCtrls, ExtCtrls,
   {$IFDEF VERSION6}

@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpEvntEditDlg;
   { The default event edit dialog }
@@ -35,7 +35,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf, LResources, EditBtn,
+  LCLProc, LCLType, LCLIntf, LResources, EditBtn,
   {$ELSE}
   Windows, Messages, Mask,
   {$ENDIF}

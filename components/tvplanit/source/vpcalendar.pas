@@ -40,9 +40,9 @@ uses
   {$ENDIF}
   LMessages, LCLProc, LCLType, LCLIntf, LazUTF8,
   {$ELSE}
-  Windows,
+  Windows, Messages,
   {$ENDIF}
-  Buttons, Classes, Controls, Forms, Graphics, Menus, Messages,
+  Buttons, Classes, Controls, Forms, Graphics, Menus,
   SysUtils, VpBase, VpSR, VpConst, VpMisc, VpBaseDS, VpCanvasUtils,
   VpException;
 
@@ -205,9 +205,9 @@ type
       {-calcualte new sizes for rows and columns}
 
     {VCL control methods}
-    procedure CMEnter(var Msg: TMessage); message CM_ENTER;
-    procedure CMExit(var Msg: TMessage); message CM_EXIT;
-    procedure CMFontChanged(var Msg: TMessage); message CM_FONTCHANGED;
+    procedure CMEnter(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message CM_ENTER;
+    procedure CMExit(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message CM_EXIT;
+    procedure CMFontChanged(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message CM_FONTCHANGED;
 
     {windows message methods}
     procedure WMEraseBkgnd(var Msg: TWMEraseBkgnd); message WM_ERASEBKGND;
@@ -726,7 +726,7 @@ begin
 end;
 {=====}
 
-procedure TVpCustomCalendar.CMEnter(var Msg: TMessage);
+procedure TVpCustomCalendar.CMEnter(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 var
   R : TRect;
 begin
@@ -740,7 +740,7 @@ begin
 end;
 {=====}
 
-procedure TVpCustomCalendar.CMExit(var Msg: TMessage);
+procedure TVpCustomCalendar.CMExit(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 var
   R : TRect;
 begin
@@ -752,7 +752,7 @@ begin
 end;
 {=====}
 
-procedure TVpCustomCalendar.CMFontChanged(var Msg: TMessage);
+procedure TVpCustomCalendar.CMFontChanged(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 begin
   inherited;
 

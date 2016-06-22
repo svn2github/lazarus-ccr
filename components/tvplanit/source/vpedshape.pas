@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpEdShape;
 
@@ -34,9 +34,9 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf,
+  LCLProc, LCLType, LCLIntf,
   {$ELSE}
-  Windows,Messages,ColorGrd,
+  Windows, Messages, ColorGrd,
   {$ENDIF}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, TypInfo, ComCtrls,

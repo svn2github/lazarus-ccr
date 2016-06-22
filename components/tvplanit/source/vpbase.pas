@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpBase;
 
@@ -36,9 +36,8 @@ uses
   {$IFDEF LCL}
   LMessages, LCLProc, LCLType, LResources,
   {$ELSE}
-  Windows,
+  Windows, Messages.
   {$ENDIF}
-  Messages,
   Classes, Graphics, Controls, Dialogs, Forms, StdCtrls,
   ExtCtrls, SysUtils, VpConst,
   VpSR;
@@ -149,8 +148,8 @@ type
     FAutoScroll: Boolean;
     function GetVersion : string;
     procedure SetVersion(const Value: string);
-    procedure CMVisibleChanged(var Msg: TMessage); message CM_VISIBLECHANGED;
-    {$IFNDEF LCL}
+    procedure CMVisibleChanged(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message CM_VISIBLECHANGED;
+    {$IFDEF DELPHI}
     procedure WMMouseWheel(var Msg : TMessage); message WM_MOUSEWHEEL;
     procedure DoOnMouseWheel(Shift: TShiftState; Delta, XPos, YPos: SmallInt); dynamic;
     {$ENDIF}
@@ -429,7 +428,7 @@ begin
 end;
 {=====}
 
-procedure TVpCustomControl.CMVisibleChanged(var Msg: TMessage);
+procedure TVpCustomControl.CMVisibleChanged(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 begin
   inherited;
   if csLoading in ComponentState then
@@ -455,7 +454,7 @@ begin
 end;
 {=====}
 
-{$IFNDEF LCL}
+{$IFDEF DELPHI}
 procedure TVpCustomControl.WMMouseWheel(var Msg: TMessage);
 begin
   with Msg do

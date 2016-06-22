@@ -94,20 +94,8 @@ uses
   {$ELSE}
   Windows,
   {$ENDIF}
-  Classes,
-  Dialogs,
-  SysUtils,
-  Graphics,
-  StdCtrls,
-  VpBase,
-  VpMisc,
-  VpData,
-  VpXParsr,
-  VpCanvasUtils,
-  VpSR,
-  VpException,
-  Forms,
-  Printers;
+  Classes, Dialogs, SysUtils, Graphics, StdCtrls, Forms, Printers,
+  VpBase, VpMisc, VpData, VpXParsr, VpCanvasUtils, VpSR, VpException;
 
 type
   TVpChangeVar = (cvRemove, cvIgnore, cvChange);

@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpBaseDS;
   { Base DataStore classes }
@@ -37,10 +37,10 @@ uses
   {$IFDEF LCL}
   LMessages, LCLProc, LCLIntf,
   {$ELSE}
-  Windows,
+  Windows, Messages,
   {$ENDIF}
   Classes, Dialogs, SysUtils, Graphics, Controls, StdCtrls, ExtCtrls,
-  Messages, VpBase, VpData, Forms, VpPrtFmt, VpLocalize, VpException;    
+  VpBase, VpData, Forms, VpPrtFmt, VpLocalize, VpException;
 
 type
   TVpResourceUpdate = (ruOnChange, ruOnExit, ruOnDropDownClose);         
@@ -144,7 +144,7 @@ type
       OldItemIndex : Integer;
       FResourceUpdateStyle : TVpResourceUpdate;                                                      
 
-      procedure VpDataStoreChanged (var Msg : TMessage); message Vp_DataStoreChanged;
+      procedure VpDataStoreChanged (var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message Vp_DataStoreChanged;
       procedure SetDataStore (const Value : TVpCustomDataStore);
       function GetAbout : string;
       procedure SetAbout (const Value : string);
@@ -313,8 +313,8 @@ type
     function CheckCreateResource : Boolean;                                   
     procedure SetDataStore (const Value : TVpCustomDataStore); virtual;
     procedure SetControlLink (const Value : TVpControlLink);
-    procedure CMEnter(var Msg : TMessage);       message CM_ENTER;
-    procedure CMExit(var Msg : TMessage);        message CM_EXIT;
+    procedure CMEnter(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message CM_ENTER;
+    procedure CMExit(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message CM_EXIT;
   public
     constructor Create (AOwner : TComponent); override;
     destructor Destroy; override;
@@ -947,7 +947,7 @@ end;
 {$ENDIF}
 {=====}
 
-procedure TVpResourceCombo.VpDataStoreChanged (var Msg : TMessage);
+procedure TVpResourceCombo.VpDataStoreChanged(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 begin
   LoadItems;
 end;
@@ -1175,13 +1175,13 @@ begin
 end;
 {=====}
 
-procedure TVpLinkableControl.CMEnter(var Msg : TMessage);
+procedure TVpLinkableControl.CMEnter(var Msg : {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 begin
   invalidate;
 end;
 {=====}
 
-procedure TVpLinkableControl.CMExit(var Msg : TMessage);
+procedure TVpLinkableControl.CMExit(var Msg : {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 begin
   invalidate;
 end;

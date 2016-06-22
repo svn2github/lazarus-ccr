@@ -40,7 +40,7 @@
   functions in VpCanvasUtils are used to go between the rendering of the
   control and the TCanvas that it needs to render to.  
 }
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpWeekView;
 
@@ -48,9 +48,9 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,FileUtil,
+  LMessages, LCLProc, LCLType, LCLIntf, FileUtil,
   {$ELSE}
-  Windows,Messages,
+  Windows, Messages,
   {$ENDIF}
   Classes, Graphics, Controls, ComCtrls, ExtCtrls, StdCtrls,
   VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils, Menus,

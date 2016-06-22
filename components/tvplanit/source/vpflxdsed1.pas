@@ -27,7 +27,7 @@
 {* ***** END LICENSE BLOCK *****                                              *}
 
 {.$DEFINE RUNTIMETEST}
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpFlxDsEd1;
   { Flexible DataStore ComponentEditor }

@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpPrtFmtEd;
   {- property editor for TVpControlLink.Printer.PrintFormats property}
@@ -35,9 +35,9 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,
+  LCLProc, LCLType, LCLIntf,
   {$ELSE}
-  Windows,Messages,
+  Windows, Messages,
   {$ENDIF}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   {$IFDEF VERSION6}
@@ -52,9 +52,8 @@ uses
   {$ELSE}
   DsgnIntf,
   {$ENDIF}
-  StdCtrls, ExtCtrls, Buttons, VpSR,
-
-  VpBase, VpBaseDS, VpEdFmtLst;
+  StdCtrls, ExtCtrls, Buttons,
+  VpSR, VpBase, VpBaseDS, VpEdFmtLst;
 
 type
   TVpPrtFmtPropertyEditor = class(TComponentEditor)

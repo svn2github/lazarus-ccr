@@ -38,9 +38,9 @@ uses
   {$IFDEF LCL}
   LMessages, LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
-  Windows,
+  Windows, Messages,
   {$ENDIF}
-  Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   FileCtrl, StdCtrls, ExtCtrls, Buttons, VpBase, ComCtrls, ShellCtrls;
 
 type

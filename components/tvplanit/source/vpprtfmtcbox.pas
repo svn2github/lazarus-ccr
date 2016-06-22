@@ -34,11 +34,10 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,
+  LMessages, LCLProc,LCLType,LCLIntf,
   {$ELSE}
-  Windows,Messages,
+  Windows, Messages,
   {$ENDIF}
-  Messages,
   SysUtils,
   Classes,
   Controls,
@@ -56,11 +55,10 @@ type
       procedure Change; override;
       function GetAbout : string;
       procedure Loaded; override;
-      procedure Notification (AComponent : TComponent;
-                              Operation  : TOperation); override;
+      procedure Notification (AComponent: TComponent; Operation: TOperation); override;
       procedure SetAbout (const Value : string);
       procedure SetControlLink (const v : TVpControlLink);
-      procedure VpPrintFormatChanged (var Msg : TMessage); message Vp_PrintFormatChanged;
+      procedure VpPrintFormatChanged (var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message Vp_PrintFormatChanged;
 
     public
       constructor Create (AOwner : TComponent); override;
@@ -234,7 +232,7 @@ begin
   end;
 end;
 
-procedure TVpPrintFormatComboBox.VpPrintFormatChanged (var Msg : TMessage);
+procedure TVpPrintFormatComboBox.VpPrintFormatChanged(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 begin
   UpdateItems;
 end;

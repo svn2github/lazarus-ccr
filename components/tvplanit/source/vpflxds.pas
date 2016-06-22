@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpFlxDS;
   { Flexible DataStore Component }
@@ -35,7 +35,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLIntf,
+  LCLProc, LCLIntf,
   {$ELSE}
   Windows,
   {$ENDIF}

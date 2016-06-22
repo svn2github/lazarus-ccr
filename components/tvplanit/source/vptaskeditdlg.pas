@@ -37,9 +37,9 @@ uses
   {$IFDEF LCL}
   LMessages, LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
-  Windows,
+  Windows, Messages,
   {$ENDIF}
-  Messages, SysUtils,
+  SysUtils,
   {$IFDEF VERSION6} Variants, {$ENDIF}
   Classes, Graphics, Controls, Forms, Dialogs, VpData, StdCtrls, ExtCtrls,
   VpEdPop, VpDateEdit, VpBase, VpSR, VpDlg, ComCtrls, EditBtn;

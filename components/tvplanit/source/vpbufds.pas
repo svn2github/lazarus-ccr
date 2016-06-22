@@ -1,6 +1,6 @@
 { Visual PlanIt datastore for a TBufDataset }
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpBufDS;
 

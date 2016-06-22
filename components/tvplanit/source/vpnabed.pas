@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpNabEd;
   {-property editor for the NavBar}
@@ -37,7 +37,7 @@ uses
   {$IFDEF LCL}
   LMessages, LCLProc, LCLType, LCLIntf,
   {$ELSE}
-  Windows,Messages,
+  Windows, Messages,
   {$ENDIF}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   {$IFDEF VERSION6}

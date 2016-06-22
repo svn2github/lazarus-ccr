@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpMonthView;
 
@@ -34,9 +34,9 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,FileUtil,
+  LMessages, LCLProc, LCLType, LCLIntf, FileUtil,
   {$ELSE}
-  Windows,Messages,
+  Windows, Messages,
   {$ENDIF}
   Classes, Graphics, Controls, ComCtrls, ExtCtrls, StdCtrls,
   VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils, Menus;

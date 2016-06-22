@@ -35,11 +35,11 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,
+  LCLProc, LCLType, LCLIntf,
   {$ELSE}
-  Windows, Consts,
+  Windows, Consts, Messages,
   {$ENDIF}
-  Buttons, Classes, Controls, StdCtrls, ExtCtrls, Forms, Graphics, Messages,
+  Buttons, Classes, Controls, StdCtrls, ExtCtrls, Forms, Graphics,
   SysUtils, VpBase, VpData, VpConst;
 
 type

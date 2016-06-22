@@ -37,19 +37,10 @@ uses
   Windows,                 // Needed for LCIDs
   {$ENDIF}
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,
+  LCLProc, LCLType, LCLIntf,
   {$ENDIF}
-  Classes,
-  Dialogs,
-  SysUtils,
-  Graphics,
-  StdCtrls,
-  VpBase,
-  VpMisc,
-  VpData,
-  VpXParsr,
-  VpPrtFmt, { For TVpAttributes }
-  Forms;
+  Classes, Dialogs,SysUtils, Graphics, StdCtrls, Forms,
+  VpBase, VpMisc, VpData, VpXParsr, VpPrtFmt; { For TVpAttributes }
 
 type
   TVpLocalizeLanguage = class;

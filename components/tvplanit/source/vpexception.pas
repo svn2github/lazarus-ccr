@@ -26,7 +26,7 @@
 {*                                                                            *}
 {* ***** END LICENSE BLOCK *****                                              *}
 
-{$I Vp.INC}
+{$I vp.inc}
 
 unit VpException;
   {Vp exceptions}
@@ -35,7 +35,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,
+  LCLProc, LCLType,
   {$ELSE}
   Windows,
   {$ENDIF}

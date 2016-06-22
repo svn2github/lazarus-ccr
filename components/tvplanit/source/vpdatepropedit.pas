@@ -32,11 +32,11 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf,
+  LCLProc, LCLType, LCLIntf,
   {$ELSE}
-  Windows,
+  Windows, Messages.
   {$ENDIF}
-  Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, //VpEdPop, VpDateEdit, VpBase, VpBaseDS,
   VpCalendar;
 
