@@ -240,18 +240,21 @@ begin
 end;
 
 procedure TVpWeekViewPainter.DrawBorders;
+var
+  shadow, bright: TColor;
 begin
   if FWeekView.DrawingStyle = dsFlat then begin
-    { draw an outer and inner bevel }
+    {
     DrawBevelRect(RenderCanvas,
       TPSRotateRectangle(Angle, RenderIn, Rect(RealLeft, RealTop, RealRight - 1, RealBottom - 1)),
       BevelShadowColor,
-      BevelHighlightColor
+      BevelShadowColor
     );
+    }
     DrawBevelRect(RenderCanvas,
       TPSRotateRectangle(Angle, RenderIn, Rect(RealLeft + 1, RealTop + 1, RealRight - 2, RealBottom - 2)),
       BevelShadowColor,
-      BevelHighlightColor
+      BevelShadowColor    // use the same color --> no bevel in flat mode!
     );
   end else
   if FWeekView.DrawingStyle = ds3d then begin
@@ -262,7 +265,7 @@ begin
       BevelShadowColor
     );
     DrawBevelRect(RenderCanvas,
-      TPSRotateRectangle(Angle, RenderIn, Rect (RealLeft + 1, RealTop + 1, RealRight - 2, RealBottom - 2)),
+      TPSRotateRectangle(Angle, RenderIn, Rect(RealLeft + 1, RealTop + 1, RealRight - 2, RealBottom - 2)),
       BevelDarkShadow,
       BevelButtonFace
     );
@@ -531,15 +534,19 @@ begin
                    TPSRotateRectangle (Angle, RenderIn, HeadRect),
                    BevelHighlightColor, BevelShadowColor);
     }
-  end else if FWeekView.DrawingStyle = ds3d then begin
+  end else
+  if FWeekView.DrawingStyle = ds3d then begin
     { draw a 3d bevel }
     HeadRect.Left := RealLeft + 2;
     HeadRect.Top := RealTop + 2;
     HeadRect.Right := RealRight - 3;
     HeadRect.Bottom := RealTop + TVpWeekViewOpener(FWeekView).wvHeaderHeight;
     TPSFillRect(RenderCanvas, Angle, RenderIn, HeadRect);
-    DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn, HeadRect),
-      BevelHighlightColor, BevelDarkShadow
+    DrawBevelRect(
+      RenderCanvas,
+      TPSRotateRectangle(Angle, RenderIn, HeadRect),
+      BevelHighlightColor,
+      BevelDarkShadow
     );
   end else begin
     HeadRect.Left := RealLeft + 1;
