@@ -6,22 +6,12 @@ interface
 
 uses
   SysUtils, LCLType, LCLIntf, Types,
-  Classes, Graphics, VpConst, VPBase, VpData, VpWeekView;
+  Classes, Graphics, VpConst, VPBase, VpData, VpBasePainter, VpWeekView;
 
 type
-  TVpWeekViewPainter = class
+  TVpWeekViewPainter = class(TVpBasePainter)
   private
     FWeekView: TVpWeekView;
-    // Buffered input parameters
-    FRenderCanvas: TCanvas;
-    FAngle: TVpRotationAngle;
-    FScale: Extended;
-    FRenderDate: TDateTime;
-    FRenderIn: TRect;
-    FStartLine: Integer;
-    FStopLine: Integer;
-    FUseGran: TVpGranularity;
-    FDisplayOnly: Boolean;
     // local parameters of the old TVpWeekView method
     HeadRect: TRect;
     SaveBrushColor: TColor;
@@ -52,18 +42,6 @@ type
     ADEventBorderColor: TColor;
 
   protected
-    // Buffered input parameters as properties
-    property Angle: TVpRotationAngle read FAngle;
-    property DisplayOnly: Boolean read FDisplayOnly;
-    property RenderCanvas: TCanvas read FRenderCanvas;
-    property RenderDate: TDateTime read FRenderDate write FRenderDate;
-    property RenderIn: TRect read FRenderIn;
-    property Scale: Extended read FScale;
-    property StartLine: Integer read FStartLine write FStartLine;
-    property StopLine: Integer read FStopLine;
-    property UseGran: TVpGranularity read FUseGran;
-
-  protected
     procedure Clear;
     function DrawAllDayEvents(ADate: TDateTime; DayRect: TRect; var EAIndex: Integer): Boolean;
     procedure DrawBorders;
@@ -75,7 +53,7 @@ type
     constructor Create(AWeekView: TVpWeekView; ARenderCanvas: TCanvas);
     procedure RenderToCanvas(ARenderIn: TRect; AAngle: TVpRotationAngle;
       AScale: Extended; ARenderDate: TDateTime; AStartLine, AStopLine: Integer;
-      AUseGran: TVpGranularity; ADisplayOnly: Boolean);
+      AUseGran: TVpGranularity; ADisplayOnly: Boolean); override;
   end;
 
 
@@ -90,8 +68,8 @@ type
 constructor TVpWeekViewPainter.Create(AWeekView: TVpWeekView;
   ARenderCanvas: TCanvas);
 begin
+  inherited Create(ARenderCanvas);
   FWeekView := AWeekView;
-  FRenderCanvas := ARenderCanvas;
 end;
 
 procedure TVpWeekViewPainter.Clear;
@@ -601,15 +579,7 @@ procedure TVpWeekViewPainter.RenderToCanvas(ARenderIn: TRect;
   AAngle: TVpRotationAngle; AScale: Extended; ARenderDate: TDateTime;
   AStartLine, AStopLine: Integer; AUseGran: TVpGranularity; ADisplayOnly: Boolean);
 begin
-  // Buffer parameters
-  FRenderIn := ARenderIn;
-  FAngle := AAngle;
-  FScale := AScale;
-  FRenderDate := ARenderDate;
-  FStartLine := AStartLine;
-  FStopLine := AStopLine;
-  FUseGran := AUseGran;
-  FDisplayOnly := ADisplayOnly;
+  inherited;
 
   // Here begins the original routine...
   if DisplayOnly then begin

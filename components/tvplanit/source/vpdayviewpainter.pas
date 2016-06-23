@@ -6,7 +6,7 @@ interface
 
 uses
   SysUtils, LCLType, LCLIntf, Types,
-  Classes, Graphics, VpConst, VPBase, VpData, VpDayView;
+  Classes, Graphics, VpConst, VPBase, VpData, VpBasePainter, VpDayView;
 
 type
   { Defines matrix of event records for managing how events overlap with each other. }
@@ -21,19 +21,9 @@ type
 
   TVpDvEventArray = array of TVpDvEventRec;
 
-  TVpDayViewPainter = class
+  TVpDayViewPainter = class(TVpBasePainter)
   private
     FDayView: TVpDayView;
-    // Buffered input parameters
-    FRenderCanvas: TCanvas;
-    FAngle: TVpRotationAngle;
-    FScale: Extended;
-    FRenderDate: TDateTime;
-    FRenderIn: TRect;
-    FStartLine: Integer;
-    FStopLine: Integer;
-    FUseGran: TVpGranularity;
-    FDisplayOnly: Boolean;
     // local parameters of the old render procedure
     TextWidth: Integer;
     ColHeadRect: TRect;
@@ -73,12 +63,6 @@ type
     RealADEventBkgColor: TColor;
     ADEventAttrBkgColor: TColor;
     ADEventBorderColor: TColor;
-    // Aliases of protected TVpDayview elements
-    dvActiveEventRec: TRect;
-    dvColRectArray: TVpColRectArray;
-    dvEventArray: TVpEventArray;
-    dvLineMatrix: TVpLineMatrix;
-    dvInPlaceEditor: TVpDvInPlaceEdit;
     // variables from local procedures for better access
     dvBmpRecurring: TBitmap;
     dvBmpCategory: TBitmap;
@@ -92,18 +76,6 @@ type
     AlarmH: Integer;
     CustomW: Integer;
     CustomH: Integer;
-
-  protected
-    // Buffered input parameters as properties
-    property Angle: TVpRotationAngle read FAngle;
-    property DisplayOnly: Boolean read FDisplayOnly;
-    property RenderCanvas: TCanvas read FRenderCanvas;
-    property RenderDate: TDateTime read FRenderDate write FRenderDate;
-    property RenderIn: TRect read FRenderIn;
-    property Scale: Extended read FScale;
-    property StartLine: Integer read FStartLine write FStartLine;
-    property StopLine: Integer read FStopLine;
-    property UseGran: TVpGranularity read FUseGran;
 
   protected
     function CountOverlappingEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
@@ -127,7 +99,7 @@ type
     constructor Create(ADayView: TVpDayview; ARenderCanvas: TCanvas);
     procedure RenderToCanvas(ARenderIn: TRect; AAngle: TVpRotationAngle;
       AScale: Extended; ARenderDate: TDateTime; AStartLine, AStopLine: Integer;
-      AUseGran: TVpGranularity; ADisplayOnly: Boolean);
+      AUseGran: TVpGranularity; ADisplayOnly: Boolean); override;
 
   end;
 
@@ -141,13 +113,8 @@ type
 
 constructor TVpDayViewPainter.Create(ADayView: TVpDayView; ARenderCanvas: TCanvas);
 begin
+  inherited Create(ARenderCanvas);
   FDayView := ADayView;
-  FRenderCanvas := ARenderCanvas;
-  dvActiveEventRec := TVpDayViewOpener(FDayView).dvActiveEventRec;
-  dvColRectArray := TVpDayViewOpener(FDayView).dvColRectArray;
-  dvEventArray := TVpDayViewOpener(FDayView).dvEventArray;
-  dvInPlaceEditor := TVpDayViewOpener(FDayView).dvInplaceEditor;
-  dvLineMatrix := TVpDayViewOpener(FDayView).dvLineMatrix;
 end;
 
 function TVpDayViewPainter.CountOverlappingEvents(Event: TVpEvent;
@@ -388,13 +355,14 @@ begin
               EventStr
             );
 
-            dvEventArray[EventCount].Rec := Rect(
+            TVpDayViewOpener(FDayView).dvEventArray[EventCount].Rec := Rect(
               ADEventRect.Left,
               ADEventRect.Top - 2,
               ADEventRect.Right - TextMargin,
               ADEventRect.Bottom
             );
-            dvEventArray[EventCount].Event := Event;
+            TVpDayViewOpener(FDayView).dvEventArray[EventCount].Event := Event;
+
             Inc(EventCount);
           end;
         end; { for I2 := 0 to pred(ADEventsList.Count) do ... }
@@ -455,8 +423,8 @@ begin
         CellsRect.Right := CellsRect.Right + ExtraSpace;
 
       { set the ColRectArray }
-      dvColRectArray[RealDay].Rec := CellsRect;
-      dvColRectArray[RealDay].Date := RenderDate + i;
+      TVpDayViewOpener(FDayView).dvColRectArray[RealDay].Rec := CellsRect;
+      TVpDayViewOpener(FDayView).dvColRectArray[RealDay].Date := RenderDate + i;
 
       { Draw the cells }
       if Assigned(FDayView.OwnerDrawCells) then begin
@@ -503,10 +471,12 @@ begin
   TPSLineTo(RenderCanvas, Angle, RenderIn, GutterRect.Right, GutterRect.Bottom);
 
   for I := 0 to FDayView.LineCount - 1 do begin  // wp: was withoug -1
-    dvLineMatrix[Col, I].Rec.Left := -1;
-    dvLineMatrix[Col, I].Rec.Top := -1;
-    dvLineMatrix[Col, I].Rec.Right := -1;
-    dvLineMatrix[Col, I].Rec.Bottom := -1;
+    with TVpDayViewOpener(FDayView) do begin
+      dvLineMatrix[Col, I].Rec.Left := -1;
+      dvLineMatrix[Col, I].Rec.Top := -1;
+      dvLineMatrix[Col, I].Rec.Right := -1;
+      dvLineMatrix[Col, I].Rec.Bottom := -1;
+    end;
   end;
 
   SavedFont := TFont.Create;
@@ -534,7 +504,7 @@ begin
       LineRect.Top := Round (R.Top + (i * RealRowHeight));
       LineRect.Bottom := Round (LineRect.Top + (RealRowHeight));
       if I + StartLine < FDayView.LineCount then
-        dvLineMatrix[Col, I + StartLine].Rec := LineRect;
+        TVpDayViewOpener(FDayView).dvLineMatrix[Col, I + StartLine].Rec := LineRect;
 
       { color-code cells }
 
@@ -585,7 +555,7 @@ begin
               { there is an active range defined, so we need to see if }
               { the current line falls in the active range or not, and }
               { paint it accordingly }
-              LineStartTime := dvLineMatrix[Col, StartLine + I].Time;
+              LineStartTime := TVpDayViewOpener(FDayView).dvLineMatrix[Col, StartLine + I].Time;
               if TimeInRange(LineStartTime,
                 FDayView.TimeSlotColors.ActiveRange.StartTime,
                 FDayView.TimeSlotColors.ActiveRange.EndTime - (1/MinutesInDay), true)
@@ -731,20 +701,6 @@ var
   EventArray: TVpDvEventArray;
   EventList: TList;
   IconRect: TRect;
-  {
-  dvBmpRecurring: TBitmap;
-  dvBmpCategory: TBitmap;
-  dvBmpAlarm: TBitmap;
-  dvBmpCustom: TBitmap;
-  RecurringW: Integer;
-  RecurringH: Integer;
-  CategoryW: Integer;
-  CategoryH: Integer;
-  AlarmW: Integer;
-  AlarmH: Integer;
-  CustomW: Integer;
-  CustomH: Integer;
-  }
   {$IFDEF DEBUGDV}
   SL : TStringList;
   {$ENDIF}
@@ -919,20 +875,21 @@ begin
   OldBrush := TBrush.Create;
   try
     { get a rectangle of the visible area }
-    VisibleRect := dvLineMatrix[Col, StartLine].Rec;
+    VisibleRect := TVpDayViewOpener(FDayView).dvLineMatrix[Col, StartLine].Rec;
     VisibleRect.Bottom := FDayView.ClientRect.Bottom;
 
-    STime := dvLineMatrix[0, StartLine].Time;
-    ETime := dvLineMatrix[0, StartLine + RealVisibleLines].Time;
+    STime := TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine].Time;
+    ETime := TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine + RealVisibleLines].Time;
 
     LineDuration := GetLineDuration(FDayView.Granularity);
     { Determine how much time is represented by one pixel. It is the   }
     { amount of time represented by one line, divided by the height of }
     { a line in pixels. }
-    if (dvLineMatrix[Col, StartLine].Rec.Bottom - dvLineMatrix[Col, StartLine].Rec.Top) > 0 then
-      PixelDuration := (LineDuration / (dvLineMatrix[Col, StartLine].Rec.Bottom - dvLineMatrix[Col, StartLine].Rec.Top))
-    else
-      PixelDuration := 0;
+    with TVpDayViewOpener(FDayView) do
+      if (dvLineMatrix[Col, StartLine].Rec.Bottom - dvLineMatrix[Col, StartLine].Rec.Top) > 0 then
+        PixelDuration := (LineDuration / (dvLineMatrix[Col, StartLine].Rec.Bottom - dvLineMatrix[Col, StartLine].Rec.Top))
+      else
+        PixelDuration := 0;
 
     { Iterate through events and paint them }
     for I := 0 to pred(MaxVisibleEvents) do begin
@@ -988,12 +945,12 @@ begin
         Continue;
 
       { Build the rectangle in which the event will be painted. }
-      EventRect := dvLineMatrix[Col, EventSLine].Rec;
+      EventRect := TVpDayViewOpener(FDayView).dvLineMatrix[Col, EventSLine].Rec;
       if EventRect.Left < VisibleRect.Left then
         EventRect.Left := VisibleRect.Left;
       if EventRect.Top < VisibleRect.Top then
         EventRect.Top := VisibleRect.Top;
-      EventRect.Bottom := dvLineMatrix[Col, EventELine].Rec.Bottom;
+      EventRect.Bottom := TVpDayViewOpener(FDayView).dvLineMatrix[Col, EventELine].Rec.Bottom;
       if EventRect.Bottom < VisibleRect.Top then
         EventRect.Bottom := VisibleRect.Bottom;
       EventWidth := (VisibleRect.Right - VisibleRect.Left) div EventArray[I].WidthDivisor;
@@ -1028,20 +985,20 @@ begin
 
       if (PixelDuration > 0) and (EventDuration < GetLineDuration(FDayView.Granularity) * EventLineCount)
       then begin
-        if (EventSLine >= StartLine) and (EventSTime > dvLineMatrix[0, EventSLine].Time)
+        if (EventSLine >= StartLine) and (EventSTime > TVpDayViewOpener(FDayView).dvLineMatrix[0, EventSLine].Time)
         then begin
           { Get the start offset in TDateTime format }
-          StartOffset := EventSTime - dvLineMatrix[0, EventSLine].Time;
+          StartOffset := EventSTime - TVpDayViewOpener(FDayView).dvLineMatrix[0, EventSLine].Time;
 
           { determine how many pixels to scooch down before painting the event's color code. }
           StartPixelOffset := trunc(StartOffset / PixelDuration);
         end;
 
         if (EventELine <= StartLine + RealVisibleLines) and
-           (EventETime < dvLineMatrix[0, EventELine + 1].Time )
+           (EventETime < TVpDayViewOpener(FDayView).dvLineMatrix[0, EventELine + 1].Time)
         then begin
           { Get the end offset in TDateTime format }
-          EndOffset := dvLineMatrix[0, EventELine + 1].Time  - EventETime;
+          EndOffset := TVpDayViewOpener(FDayView).dvLineMatrix[0, EventELine + 1].Time  - EventETime;
 
           { determine how many pixels to scooch down before painting the   }
           { event's color code. }
@@ -1062,7 +1019,9 @@ begin
 
       RenderCanvas.Brush.Color := WindowColor;
 
-      if (dvInPlaceEditor <> nil) and dvInplaceEditor.Visible then begin
+      if (TVpDayViewOpener(FDayView).dvInPlaceEditor <> nil) and
+          TVpDayViewOpener(FDayView).dvInplaceEditor.Visible then
+      begin
         if FDayView.ActiveEvent = Event then
           EventIsEditing := True
         else
@@ -1103,9 +1062,9 @@ begin
       OldBrush.Assign(Canvas.Brush);
       OldFont.Assign(Canvas.Font);
       }
-      OldPen.Assign(FRenderCanvas.Pen);
-      OldBrush.Assign(FRenderCanvas.Brush);
-      OldFont.Assign(FRenderCanvas.Font);
+      OldPen.Assign(RenderCanvas.Pen);
+      OldBrush.Assign(RenderCanvas.Brush);
+      OldFont.Assign(RenderCanvas.Font);
       if Assigned(FDayView.OnBeforeDrawEvent) and (EventArray[I].Level = 0) then
         FDayView.OnBeforeDrawEvent(Self, Event, FDayView.ActiveEvent = Event, RenderCanvas, EventRect, IconRect)
       else if Assigned(FDayView.OnBeforeDrawEvent) then
@@ -1230,11 +1189,12 @@ begin
       RenderCanvas.Pen.Assign(OldPen);
       RenderCanvas.Font.Assign(OldFont);
 
-      dvEventArray[EventCount].Rec := Rect(
+      TVpDayViewOpener(FDayView).dvEventArray[EventCount].Rec := Rect(
         EventRect.Left, EventRect.Top, EventRect.Right, EventRect.Bottom + 1
       );
-      dvEventArray[EventCount].IconRect := IconRect;
-      dvEventArray[EventCount].Event := Event;
+      TVpDayViewOpener(FDayView).dvEventArray[EventCount].IconRect := IconRect;
+      TVpDayViewOpener(FDayView).dvEventArray[EventCount].Event := Event;
+
       Inc(EventCount);
     end;
 
@@ -1242,32 +1202,37 @@ begin
     if Assigned(FDayView.ActiveEvent) then
       OKToDrawEditFrame := not (FDayView.ActiveEvent.AllDayEvent);
 
-    if (dvInPlaceEditor <> nil) and dvInplaceEditor.Visible and OKToDrawEditFrame then begin
+    if (TVpDayViewOpener(FDayView).dvInPlaceEditor <> nil) and
+        TVpDayViewOpener(FDayView).dvInplaceEditor.Visible and
+        OKToDrawEditFrame then
+    begin
       { paint extra borders around the editor }
       if Assigned(FDayView.DataStore) then
         RenderCanvas.Brush.Color := FDayView.DataStore.CategoryColorMap.GetColor(FDayView.ActiveEvent.Category);
       RenderCanvas.Pen.Color := clWindowFrame;
-      TPSFillRect(RenderCanvas, Angle, RenderIn,
-        Rect(dvActiveEventRec.Left, dvActiveEventRec.Top - FDayView.GutterWidth, dvActiveEventRec.Right, dvActiveEventRec.Top)
-      );
-      TPSPolyline(RenderCanvas, Angle, RenderIn, [
-        Point(dvActiveEventRec.Left, dvActiveEventRec.Top),
-        Point(dvActiveEventRec.Left, dvActiveEventRec.Top - FDayView.GutterWidth),
-        Point(dvActiveEventRec.Right, dvActiveEventRec.Top - FDayView.GutterWidth),
-        Point(dvActiveEventRec.Right, dvActiveEventRec.Top)
-      ]);
-      TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(
-        dvActiveEventRec.Left,
-        dvActiveEventRec.Bottom,
-        dvActiveEventRec.Right,
-        dvActiveEventRec.Bottom + FDayView.GutterWidth
-      ));
-      TPSPolyline(RenderCanvas, Angle, RenderIn, [
-        Point(dvActiveEventRec.Left, dvActiveEventRec.Bottom),
-        Point(dvActiveEventRec.Left, dvActiveEventRec.Bottom + FDayView.GutterWidth),
-        Point(dvActiveEventRec.Right, dvActiveEventRec.Bottom + FDayView.GutterWidth),
-        Point(dvActiveEventRec.Right, dvActiveEventRec.Bottom)
-      ]);
+      with TVpDayViewOpener(FDayView) do begin
+        TPSFillRect(RenderCanvas, Angle, RenderIn,
+          Rect(dvActiveEventRec.Left, dvActiveEventRec.Top - GutterWidth, dvActiveEventRec.Right, dvActiveEventRec.Top)
+        );
+        TPSPolyline(RenderCanvas, Angle, RenderIn, [
+          Point(dvActiveEventRec.Left, dvActiveEventRec.Top),
+          Point(dvActiveEventRec.Left, dvActiveEventRec.Top - FDayView.GutterWidth),
+          Point(dvActiveEventRec.Right, dvActiveEventRec.Top - FDayView.GutterWidth),
+          Point(dvActiveEventRec.Right, dvActiveEventRec.Top)
+        ]);
+        TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(
+          dvActiveEventRec.Left,
+          dvActiveEventRec.Bottom,
+          dvActiveEventRec.Right,
+          dvActiveEventRec.Bottom + FDayView.GutterWidth
+        ));
+        TPSPolyline(RenderCanvas, Angle, RenderIn, [
+          Point(dvActiveEventRec.Left, dvActiveEventRec.Bottom),
+          Point(dvActiveEventRec.Left, dvActiveEventRec.Bottom + FDayView.GutterWidth),
+          Point(dvActiveEventRec.Right, dvActiveEventRec.Bottom + FDayView.GutterWidth),
+          Point(dvActiveEventRec.Right, dvActiveEventRec.Bottom)
+        ]);
+      end;
     end;
 
     { Clean Up }
@@ -1295,7 +1260,7 @@ var
   begin
     if (bmp.Width <> 0) and (bmp.Height <> 0) then
     begin
-      FRenderCanvas.CopyRect(  // wp: was FDayview.Canvas -- does not look correct...
+      RenderCanvas.CopyRect(  // wp: was FDayview.Canvas -- does not look correct...
         Rect(AIconRect.Left + 1, AIconRect.Top +1, AIconRect.Left + w + 1, AIconRect.Top + h + 1),
         bmp.Canvas,
         Rect(0, 0, bmp.Width, bmp.Height)
@@ -1345,7 +1310,7 @@ begin
     RenderCanvas.Pen.Style := psSolid;
     RenderCanvas.Pen.Color := RealLineColor;
     LineRect := Rect(R.Left, R.Top, R.Right, R.Top + RealRowHeight);
-    Hour := Ord(dvLineMatrix[0, StartLine].Hour);
+    Hour := Ord(TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine].Hour);
 
     for I := 0 to RealVisibleLines do begin
       { prevent any extranneous drawing below the last hour }
@@ -1390,7 +1355,7 @@ begin
         Inc(Hour);
       end else begin
         { Paint Minute Text}
-        if dvLineMatrix[0, StartLine + i].Minute = 0 then begin
+        if TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine + i].Minute = 0 then begin
           RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
           TPSTextOut(RenderCanvas, Angle, RenderIn,
             LineRect.Right - RenderCanvas.TextWidth(MinuteStr) - 7,
@@ -1406,7 +1371,7 @@ begin
           );
         end;
         LastHour := Hour;
-        Hour := Ord(dvLineMatrix[0, StartLine + i + 1].Hour);
+        Hour := Ord(TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine + i + 1].Hour);
       end;
 
       TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Right-6, LineRect.Bottom);
@@ -1555,28 +1520,21 @@ var
   I : Integer;
 begin
   EventCount := 0;
-  for I := 0 to pred(Length(dvEventArray)) do begin
-    dvEventArray[I].Rec.Left := -1;
-    dvEventArray[I].Rec.Top := -1;
-    dvEventArray[I].Rec.Right := -1;
-    dvEventArray[I].Rec.Bottom := -1;
-    dvEventArray[I].Event := nil;
-  end;
+  with TVpDayViewOpener(FDayView) do
+    for I := 0 to pred(Length(dvEventArray)) do begin
+      dvEventArray[I].Rec.Left := -1;
+      dvEventArray[I].Rec.Top := -1;
+      dvEventArray[I].Rec.Right := -1;
+      dvEventArray[I].Rec.Bottom := -1;
+      dvEventArray[I].Event := nil;
+    end;
 end;
 
-procedure TVpDayviewPainter.RenderToCanvas(ARenderIn: TRect;
+procedure TVpDayViewPainter.RenderToCanvas(ARenderIn: TRect;
   AAngle: TVpRotationAngle; AScale: Extended; ARenderDate: TDateTime;
   AStartLine, AStopLine: Integer; AUseGran: TVpGranularity; ADisplayOnly: Boolean);
 begin
-  // Buffer parameters
-  FRenderIn := ARenderIn;
-  FAngle := AAngle;
-  FScale := AScale;
-  FRenderDate := ARenderDate;
-  FStartLine := AStartLine;
-  FStopLine := AStopLine;
-  FUseGran := AUseGran;
-  FDisplayOnly := ADisplayOnly;
+  inherited;
 
   // Here begins the original routine...
   if DisplayOnly then begin
