@@ -145,6 +145,10 @@ msgstr "Neu"
 msgid "Turbo Power VisualPlanIt Demo"
 msgstr "Turbo Power VisualPlanIt Demo"
 
+#: tmainform.cballowinplaceediting.caption
+msgid "Allow inplace editing"
+msgstr ""
+
 #: tmainform.cbgranularity.text
 msgid "30 Min"
 msgstr "30 Min"
@@ -237,3 +241,4 @@ msgstr "Aufgaben"
 #: tmainform.titlelbl.caption
 msgid "TitleLbl"
 msgstr ""
+

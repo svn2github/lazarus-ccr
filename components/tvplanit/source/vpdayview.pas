@@ -267,6 +267,7 @@ type
     FWrapStyle: TVpDVWrapStyle;
     FDotDotDotColor: TColor;
     FShowEventTimes: Boolean;
+    FAllowInplaceEdit: Boolean;
     { event variables }
     FOwnerDrawRowHead: TVpOwnerDrawRowEvent;
     FOwnerDrawCells: TVpOwnerDrawRowEvent;
@@ -454,6 +455,7 @@ type
     property TabOrder;
     property Font;
     property AllDayEventAttributes: TVpAllDayEventAttributes read FAllDayEventAttr write FAllDayEventAttr;
+    property AllowInplaceEditing: Boolean read FAllowInplaceEdit write FAllowInplaceEdit default true;
     property DotDotDotColor: TColor read FDotDotDotColor write SetDotDotDotColor default clBlack;
     property ShowEventTimes: Boolean read FShowEventTimes write SetShowEventTimes default true;
     property DrawingStyle: TVpDrawingStyle read FDrawingStyle write SetDrawingStyle stored True;
@@ -758,6 +760,7 @@ begin
   FWrapStyle := wsIconFlow;
   FDotDotDotColor := clBlack;
   FIncludeWeekends := True;
+  FAllowInplaceEdit := true;
 
   { set up fonts and colors }
   FHeadAttr.Font.Size := 10;
@@ -1925,29 +1928,32 @@ var
 begin
   if ReadOnly then
     Exit;
-  AllowIt := true;
+  if not FAllowInplaceEdit then
+    Exit;
+
   { call the user defined BeforeEdit event }
+  AllowIt := true;
   if Assigned(FBeforeEdit) then
     FBeforeEdit(Self, FActiveEvent, AllowIt);
+  if not AllowIt then
+    exit;
 
-  if AllowIt then begin
-    { create and spawn the in-place editor }
-    if dvInPlaceEditor = nil then begin
-      dvInPlaceEditor := TVpDvInPlaceEdit.Create(Self);
-      dvInPlaceEditor.Parent := self;
-      dvInPlaceEditor.OnExit := EndEdit;
-    end;
-    dvInPlaceEditor.SetBounds(
-      dvActiveIconRec.Right + FGutterWidth + TextMargin,
-      dvActiveEventRec.Top + TextMargin,
-      dvActiveEventRec.Right,
-      dvActiveEventRec.Bottom - 1
-    );
-    dvInPlaceEditor.Show;
-    dvInPlaceEditor.Text := FActiveEvent.Description;
-    Invalidate;
-    dvInPlaceEditor.SetFocus;
+  { create and spawn the in-place editor }
+  if dvInPlaceEditor = nil then begin
+    dvInPlaceEditor := TVpDvInPlaceEdit.Create(Self);
+    dvInPlaceEditor.Parent := self;
+    dvInPlaceEditor.OnExit := EndEdit;
   end;
+  dvInPlaceEditor.SetBounds(
+    dvActiveIconRec.Right + FGutterWidth + TextMargin,
+    dvActiveEventRec.Top + TextMargin,
+    dvActiveEventRec.Right,
+    dvActiveEventRec.Bottom - 1
+  );
+  dvInPlaceEditor.Show;
+  dvInPlaceEditor.Text := FActiveEvent.Description;
+  Invalidate;
+  dvInPlaceEditor.SetFocus;
 end;
 {=====}
 

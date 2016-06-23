@@ -22,6 +22,7 @@ type
     CbGranularity: TComboBox;
     CbTimeFormat: TComboBox;
     CbFirstDayOfWeek: TComboBox;
+    CbAllowInplaceEditing: TCheckBox;
     Img: TImage;
     ImageList1: TImageList;
     LblFirstDayOfWeek: TLabel;
@@ -68,6 +69,7 @@ type
     procedure BtnDeleteResClick(Sender: TObject);
     procedure BtnNewResClick(Sender: TObject);
     procedure BtnEditResClick(Sender: TObject);
+    procedure CbAllowInplaceEditingChange(Sender: TObject);
     procedure CbFirstDayOfWeekChange(Sender: TObject);
     procedure CbGranularityChange(Sender: TObject);
     procedure CbLanguagesChange(Sender: TObject);
@@ -233,6 +235,14 @@ end;
 procedure TMainForm.BtnNewResClick(Sender: TObject);
 begin
   VpResourceEditDialog1.AddNewResource;
+end;
+
+procedure TMainForm.CbAllowInplaceEditingChange(Sender: TObject);
+begin
+  VpContactGrid1.AllowInplaceEditing := CbAllowInplaceEditing.Checked;
+  VpDayView1.AllowInplaceEditing := CbAllowInplaceEditing.Checked;
+  VpWeekView1.AllowInplaceEditing := CbAllowInplaceEditing.Checked;
+  VpTaskList1.AllowInplaceEditing := CbAllowInplaceEditing.Checked;
 end;
 
 procedure TMainForm.CbFirstDayOfWeekChange(Sender: TObject);
@@ -428,6 +438,9 @@ begin
     DaysTrackbar.Position := ini.ReadInteger('Settings', 'VisibleDays', DaysTrackbar.Position);
     DaysTrackbarChange(nil);
 
+    CbAllowInplaceEditing.Checked := ini.ReadBool('Settings', 'AllowInplaceEditing', CbAllowInplaceEditing.Checked);
+    CbAllowInplaceEditingChange(nil);
+
   finally
     ini.Free;
   end;
@@ -457,6 +470,7 @@ begin
     ini.WriteInteger('Settings', 'FirstDayOfWeek', ord(VpWeekView1.WeekStartsOn));
     ini.WriteInteger('Settings', 'VisibleDays', VpDayView1.NumDays);
     ini.WriteBool('Settings', 'AllTasks', VpTaskList1.DisplayOptions.ShowAll);
+    ini.WriteBool('Settings', 'AllowInplaceEditing', CbAllowInplaceEditing.Checked);
   finally
     ini.Free;
   end;
@@ -586,6 +600,7 @@ begin
   LblTimeFormat.Left := CbTimeFormat.Left - 8 - GetLabelWidth(LblTimeFormat);
   CbFirstDayOfWeek.Left := CbLanguages.Left;
   LblFirstDayOfWeek.Left := CbFirstDayOfWeek.Left - 8 - GetLabelWidth(LblFirstDayOfWeek);
+  CbAllowInplaceEditing.Left := CbLanguages.Left + CbLanguages.Width + 32;
   RbHideCompletedTasks.Left := RbAllTasks.Left + RbAllTasks.Width + 48;
 
   // Next settings work correctly only for Windows.

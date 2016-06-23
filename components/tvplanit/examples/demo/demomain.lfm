@@ -25,9 +25,9 @@ object MainForm: TMainForm
       Height = 532
       Top = 48
       Width = 780
-      ActivePage = TabContacts
+      ActivePage = TabSettings
       Align = alClient
-      TabIndex = 2
+      TabIndex = 4
       TabOrder = 0
       object TabEvents: TTabSheet
         Caption = 'Events'
@@ -419,6 +419,17 @@ object MainForm: TMainForm
           OnChange = CbFirstDayOfWeekChange
           Style = csDropDownList
           TabOrder = 2
+        end
+        object CbAllowInplaceEditing: TCheckBox
+          Left = 349
+          Height = 19
+          Top = 28
+          Width = 131
+          Caption = 'Allow inplace editing'
+          Checked = True
+          OnChange = CbAllowInplaceEditingChange
+          State = cbChecked
+          TabOrder = 3
         end
       end
     end

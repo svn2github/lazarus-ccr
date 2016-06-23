@@ -149,7 +149,8 @@ type
     FDrawingStyle      : TVpDrawingStyle;
     FTaskID            : Integer;
     FDefaultPopup      : TPopupMenu;
-    FShowIcon          : Boolean;                                        
+    FShowIcon          : Boolean;
+    FAllowInplaceEdit  : Boolean;
     { task variables }
     FOwnerDrawTask     : TVpOwnerDrawTask;
     FBeforeEdit        : TVpBeforeEditTask;
@@ -250,6 +251,8 @@ type
     property TabOrder;
     property ReadOnly;
 
+    property AllowInplaceEditing: Boolean
+      read FAllowInplaceEdit write FAllowInplaceEdit default true;
     property DisplayOptions: TVpTaskDisplayOptions
       read FDisplayOptions write FDisplayOptions;
     property LineColor: TColor
@@ -262,8 +265,8 @@ type
       read FDrawingStyle write SetDrawingStyle;
     property Color: TColor
       read FColor write SetColor;
-    property ShowIcon : Boolean read FShowIcon write SetShowIcon         
-             default True;                                               
+    property ShowIcon : Boolean
+      read FShowIcon write SetShowIcon default True;
     property ShowResourceName: Boolean
       read FShowResourceName write SetShowResourceName;
     { events }
@@ -536,6 +539,7 @@ begin
   FScrollBars           := ssVertical;
   FTaskIndex            := -1;
   FShowIcon             := True;                                               
+  FAllowInplaceEdit     := true;
 
   SetLength(tlVisibleTaskArray, MaxVisibleTasks);
 
@@ -1506,6 +1510,9 @@ begin
   if FActiveTask.Complete then
     Exit;
 
+  if not FAllowInplaceEdit then
+    exit;
+
   AllowIt := true;
 
   VisTask := tlTaskIndexToVisibleTask (TaskIndex);
@@ -1528,7 +1535,7 @@ begin
       tlInPlaceEditor.OnExit := EndEdit;
     end;
     tlInplaceEditor.Show;
-    tlInPlaceEditor.SetBounds(R.Left, R.Top, R.Right-R.Left, R.Bottom-R.Top); //Move(R, true);
+    tlInPlaceEditor.SetBounds(R.Left, R.Top, WidthOf(R), HeightOf(R));
     tlInPlaceEditor.Text := FActiveTask.Description;
     tlInPlaceEditor.Font.Assign(Font);
     tlInPlaceEditor.SelectAll;

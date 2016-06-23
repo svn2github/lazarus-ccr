@@ -137,6 +137,7 @@ type
     FWeekStartsOn: TVpDayType;
     FDefaultPopup: TPopupMenu;
     FAllDayEventAttr: TVpAllDayEventAttributes;
+    FAllowInplaceEdit: Boolean;
     { event variables }
     FBeforeEdit: TVpBeforeEditEvent;
     FAfterEdit: TVpAfterEditEvent;
@@ -233,8 +234,8 @@ type
     property VisibleLines: Integer read FVisibleLines;
 
   published
-    property AllDayEventAttributes: TVpAllDayEventAttributes
-      read FAllDayEventAttr write FAllDayEventAttr;
+    property AllDayEventAttributes: TVpAllDayEventAttributes read FAllDayEventAttr write FAllDayEventAttr;
+    property AllowInplaceEditing: Boolean read FAllowInplaceEdit write FAllowInplaceEdit default true;
     property Color: TColor read FColor write SetColor;
     property DateLabelFormat: string read FDateLabelFormat write SetDateLabelFormat;
     property DayHeadAttributes: TVpDayHeadAttr read FDayHeadAttributes write FDayHeadAttributes;
@@ -425,6 +426,7 @@ begin
   FTimeFormat := tf12Hour;
   FDateLabelFormat := 'dddd, mmmm dd, yyyy';
   FColumnWidth := 200;
+  FAllowInplaceEdit := true;
 
   { set up fonts and colors }
 //  FDayHeadAttributes.Font.Name := 'Tahoma';
@@ -1178,6 +1180,9 @@ var
   AllowIt: Boolean;
 begin
   if ActiveEvent <> nil then begin
+    if not FAllowInplaceEdit then
+      exit;
+
     AllowIt := true;
     { call the user defined BeforeEdit event }
     if Assigned(FBeforeEdit) then
