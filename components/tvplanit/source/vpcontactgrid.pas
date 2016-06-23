@@ -410,8 +410,8 @@ begin
   ControlStyle          := [csCaptureMouse, csOpaque, csDoubleClicks];
   cgGridState           := gsNormal;
   { Create internal classes and stuff }
-  cgClickTimer          := TTimer.Create (self);
-  FContactHeadAttr      := TVpContactHeadAttr.Create (Self);
+  cgClickTimer          := TTimer.Create(self);
+  FContactHeadAttr      := TVpContactHeadAttr.Create(Self);
 
   { Set styles and initialize internal variables }
   {$IFDEF VERSION4}
@@ -2359,7 +2359,7 @@ begin
         end;
       end;
     end;
-    if cgInPlaceEditor <> nil then
+    if (cgInPlaceEditor <> nil) and cgInplaceEditor.Visible then
       cgInPlaceEditor.SelectAll;
   end;
 end;

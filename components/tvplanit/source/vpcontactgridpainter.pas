@@ -29,7 +29,7 @@ type
   protected
     procedure Clear;
     procedure DrawBorders;
-    procedure DrawContactPart(ABitmap: TBitmap; AText, ALabel: String;
+    procedure DrawContactLine(ABitmap: TBitmap; AText, ALabel: String;
       var AWholeRect, ATextRect: TRect);
     procedure DrawContacts;
     procedure DrawVerticalBars;
@@ -122,14 +122,16 @@ begin
   end;
 end;
 
-procedure TVpContactGridPainter.DrawContactPart(ABitmap: TBitmap; AText, ALabel: String;
-  var AWholeRect, ATextRect: TRect);
+procedure TVpContactGridPainter.DrawContactLine(ABitmap: TBitmap;
+  AText, ALabel: String; var AWholeRect, ATextRect: TRect);
 var
   txtheight: Integer;
   txtColWidth: Integer;
 begin
-  if AText = '' then
+  if AText = '' then begin
+    ATextRect := Rect(0, 0, 0, 0);
     exit;
+  end;
 
   txtHeight := ABitmap.Canvas.TextHeight(VpProductName);
 
@@ -267,6 +269,7 @@ begin
     end;
 
     Col := 1;
+
     { clear the bitmap }
     TmpBmp.Canvas.FillRect(Rect(0, 0, TmpBmp.Width, TmpBmp.Height));
 
@@ -358,19 +361,9 @@ begin
         if Str > '' then begin
           { paint the header cell's background }
           if (Angle = ra0) or (Angle = ra180) then
-            Str := GetDisplayString(
-              TmpBmp.Canvas,
-              Str,
-              2,
-              WidthOf(HeadRect) - TextMargin
-            )
+            Str := GetDisplayString(TmpBmp.Canvas, Str, 2, WidthOf(HeadRect) - TextMargin)
           else
-            Str := GetDisplayString(
-              TmpBmp.Canvas,
-              Str,
-              2,
-              HeightOf(HeadRect) - TextMargin
-            );
+            Str := GetDisplayString(TmpBmp.Canvas, Str, 2, HeightOf(HeadRect) - TextMargin);
           TmpBmp.Canvas.Brush.Color := RealContactHeadAttrColor;
           TmpBmp.Canvas.FillRect(HeadRect);
           { paint the header cell's border }
@@ -386,26 +379,26 @@ begin
           case Angle of
             ra90:
               begin
-                TextXOffset := HeadRect.Right - HeadRect.Left - TextMargin div 2;
+                TextXOffset := WidthOf(HeadRect) - TextMargin div 2;
                 TextYOffset := TextMargin div 3;
               end;
             ra180:
               begin
-                TextXOffset := HeadRect.Right - HeadRect.Left - TextMargin;
-                TextYOffset := HeadRect.Bottom - HeadRect.Top - TextMargin div 3;
+                TextXOffset := WidthOf(HeadRect) - TextMargin;
+                TextYOffset := HeightOf(HeadRect) - TextMargin div 3;
               end;
             ra270:
               begin
                 TextXOffset := TextMargin div 2;
-                TextYOffset := HeadRect.Bottom - HeadRect.Top - TextMargin div 3;
+                TextYOffset := HeightOf(HeadRect) - TextMargin div 3;
               end;
           end;
           TPSTextOutAtPoint(
             TmpBmp.Canvas,
             Angle,
             TmpBmpRect,
-            HeadRect.Left + (TextMargin div 2) + TextXOffset,
-            HeadRect.Top + (TextMargin div 3) + TextYOffset,
+            HeadRect.Left + TextMargin div 2 + TextXOffset,
+            HeadRect.Top + TextMargin div 3 + TextYOffset,
             Str
           );
 
@@ -416,10 +409,10 @@ begin
           TmpBmp.Canvas.Pen.Style := psSolid;
 
           { do Company }
-          DrawContactPart(TmpBmp, TmpCon.Company, '', WholeRect, CompanyRect);
+          DrawContactLine(TmpBmp, TmpCon.Company, '', WholeRect, CompanyRect);
 
           { do address... }
-          DrawContactPart(TmpBmp, TmpCon.Address, '', WholeRect, AddrRect);
+          DrawContactLine(TmpBmp, TmpCon.Address, '', WholeRect, AddrRect);
 
           { do City, State, Zip }
           Str := TmpCon.City;
@@ -431,30 +424,30 @@ begin
             Str := Str + ' ' + TmpCon.Zip
           else
             Str := TmpCon.Zip;
-          DrawContactPart(TmpBmp, Str, '', WholeRect, CSZRect);
+          DrawContactLine(TmpBmp, Str, '', WholeRect, CSZRect);
 
           { do Phone1 }
           Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType1)) + ': ';
-          DrawContactPart(TmpBmp, TmpCon.Phone1, Str, WholeRect, Phone1Rect);
+          DrawContactLine(TmpBmp, TmpCon.Phone1, Str, WholeRect, Phone1Rect);
 
           { do Phone2 }
           Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType2)) + ': ';
-          DrawContactPart(TmpBmp, TmpCon.Phone2, Str, WholeRect, Phone2Rect);
+          DrawContactLine(TmpBmp, TmpCon.Phone2, Str, WholeRect, Phone2Rect);
 
           { do Phone3 }
           Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType3)) + ': ';
-          DrawContactPart(TmpBmp, TmpCon.Phone3, Str, WholeRect, Phone3Rect);
+          DrawContactLine(TmpBmp, TmpCon.Phone3, Str, WholeRect, Phone3Rect);
 
           { do Phone4 }
           Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType4)) + ': ';
-          DrawContactPart(TmpBmp, TmpCon.Phone4, Str, WholeRect, Phone4Rect);
+          DrawContactLine(TmpBmp, TmpCon.Phone4, Str, WholeRect, Phone4Rect);
 
           { do Phone5 }
           Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType5)) + ': ';
-          DrawContactPart(TmpBmp, TmpCon.Phone5, Str, WholeRect, Phone5Rect);
+          DrawContactLine(TmpBmp, TmpCon.Phone5, Str, WholeRect, Phone5Rect);
 
           { do EMail }
-          DrawContactPart(TmpBmp, TmpCon.EMail, RSEmail + ': ', WholeRect, EMailRect);
+          DrawContactLine(TmpBmp, TmpCon.EMail, RSEmail + ': ', WholeRect, EMailRect);
 
           { if this record's too big to fit in the remaining area of this }
           { column, then slide over to the top of the next column }
