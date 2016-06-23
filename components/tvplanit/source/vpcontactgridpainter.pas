@@ -29,6 +29,8 @@ type
   protected
     procedure Clear;
     procedure DrawBorders;
+    procedure DrawContactPart(ABitmap: TBitmap; AText, ALabel: String;
+      var AWholeRect, ATextRect: TRect);
     procedure DrawContacts;
     procedure DrawVerticalBars;
     procedure InitColors;
@@ -118,6 +120,94 @@ begin
         drawBevelRect(RenderCanvas, R, BevelDarkShadow, BevelFace);
       end;
   end;
+end;
+
+procedure TVpContactGridPainter.DrawContactPart(ABitmap: TBitmap; AText, ALabel: String;
+  var AWholeRect, ATextRect: TRect);
+var
+  txtheight: Integer;
+  txtColWidth: Integer;
+begin
+  if AText = '' then
+    exit;
+
+  txtHeight := ABitmap.Canvas.TextHeight(VpProductName);
+
+  case Angle of
+    ra0:
+      begin
+        ATextRect.Left := TextMargin;
+        ATextRect.Top := AWholeRect.Bottom + TextMargin div 2;
+        ATextRect.Right := ABitmap.Width;
+        ATextRect.Bottom := ATextRect.Top + txtHeight + TextMargin div 2;
+        AWholeRect.Bottom := ATextRect.Bottom;
+        txtColWidth := ABitmap.Width;
+      end;
+    ra90:
+      begin
+        ATextRect.Left := AWholeRect.Left - txtHeight + TextMargin div 2;
+        ATextRect.Top := TextMargin;
+        ATextRect.Right := AWholeRect.Left - TextMargin div 2;
+        ATextRect.Bottom := AWholeRect.Bottom + TextMargin div 2;
+        AWholeRect.Left := ATextRect.Left;
+        txtColWidth := ABitmap.Height;
+      end;
+    ra180:
+      begin
+        ATextRect.Left := AWholeRect.Right - TextMargin * 2;    // Shouldn't this be "div 2" ?
+        ATextRect.Top := AWholeRect.Top - txtHeight - TextMargin;
+        ATextRect.Right := AWholeRect.Left + TextMargin;
+        ATextRect.Bottom := AWholeRect.Top - TextMargin div 2;
+        AWholeRect.Top := ATextRect.Top;
+        txtColWidth := ABitmap.Width;
+      end;
+    ra270:
+      begin
+        ATextRect.Left := AWholeRect.Right;
+        ATextRect.Top := AWholeRect.Bottom - TextMargin;
+        ATextRect.Right := AWholeRect.Right + txtHeight + TextMargin div 2;
+        ATextRect.Bottom := AWholeRect.Top + TextMargin div 2;
+        AWholeRect.Right := ATextRect.Right;
+        txtColWidth := ABitmap.Height;
+      end;
+  end;  // case Angle...
+
+  AText := GetDisplayString(ABitmap.Canvas, AText, 2, txtColWidth - TextMargin * 2);
+
+  if ALabel <> '' then begin
+    TPSTextOutAtPoint(
+      ABitmap.Canvas,
+      Angle,
+      Rect(0, 0, ABitmap.Width, ABitmap.Height),
+      ATextRect.Left + TextMargin,
+      ATextRect.Top + TextMargin div 2,
+      ALabel
+    );
+
+    with ATextRect do
+      case Angle of
+        ra0   : TopLeft := Point(Left + PhoneLblWidth, Top + TextMargin div 2);
+        ra90  : TopLeft := Point(Top + PhoneLblWidth, Left + TextMargin);
+        ra180 : TopLeft := Point(Left - PhoneLblWidth, top + TextMargin div 2);
+        ra270 : TopLeft := Point(Left + TextMargin div 2, Top - PhoneLblWidth);
+      end;
+    TPSTextOutAtPoint(
+      ABitmap.Canvas,
+      Angle,
+      Rect(0, 0, ABitmap.Width, ABitmap.Height),
+      ATextRect.Left,
+      ATextRect.Top,
+      AText
+    );
+  end else
+    TPSTextOutAtPoint(
+      ABitmap.Canvas,
+      Angle,
+      Rect(0, 0, ABitmap.Width, ABitmap.Height),
+      ATextRect.Left + TextMargin,
+      ATextRect.Top + TextMargin div 2,
+      AText
+    );
 end;
 
 procedure TVpContactGridPainter.DrawContacts;
@@ -326,91 +416,10 @@ begin
           TmpBmp.Canvas.Pen.Style := psSolid;
 
           { do Company }
-          Str := TmpCon.Company;
-          if Str <> '' then begin
-            case Angle of
-              ra0 : begin
-                CompanyRect.TopLeft := Point (TextMargin,
-                                           WholeRect.Bottom + (TextMargin div 2));
-                CompanyRect.BottomRight := Point(TmpBmp.Width, CompanyRect.Top
-                  + TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2));
-                WholeRect.Bottom := CompanyRect.Bottom;
-              end;
-              ra90 : begin
-                CompanyRect.TopLeft := Point (WholeRect.Left - TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                              TextMargin);
-                CompanyRect.BottomRight := Point (WholeRect.Left - (TextMargin div 2),
-                                               WholeRect.Bottom + (TextMargin div 2));
-                WholeRect.Left   := CompanyRect.Left;
-              end;
-              ra180 : begin
-                CompanyRect.TopLeft := Point (WholeRect.Right - TextMargin * 2,
-                                              WholeRect.Top - TmpBmp.Canvas.TextHeight(VpProductName) - TextMargin);
-                CompanyRect.BottomRight := Point (WholeRect.Left + TextMargin,
-                                                  WholeRect.Top - (TextMargin div 2));
-                WholeRect.Top := CompanyRect.Top;
-              end;
-              ra270 : begin
-                CompanyRect.TopLeft := Point (WholeRect.Right,
-                                              WholeRect.Bottom - TextMargin);
-                CompanyRect.BottomRight := Point (WholeRect.Right + TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                                  WholeRect.Top + (TextMargin div 2));
-                WholeRect.Right  := CompanyRect.Right;
-              end;
-            end;
-            Str := GetDisplayString(TmpBmp.Canvas, Str, 2, TextColWidth
-              - TextMargin * 2);
-            TPSTextOutAtPoint (TmpBmp.Canvas, Angle, TmpBmpRect,
-                               CompanyRect.Left + TextMargin,
-                               CompanyRect.Top + (TextMargin div 2),
-                               Str);
-          end;
+          DrawContactPart(TmpBmp, TmpCon.Company, '', WholeRect, CompanyRect);
 
           { do address... }
-          if TmpCon.Address <> '' then begin
-            case Angle of
-              ra0   : begin
-                AddrRect.TopLeft := Point (TextMargin,
-                                           WholeRect.Bottom + (TextMargin div 2));
-                AddrRect.BottomRight := Point (TmpBmp.Width,
-                                               AddrRect.Top +
-                                               TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2));
-                WholeRect.Bottom := AddrRect.Bottom;
-                Str := GetDisplayString(TmpBmp.Canvas, TmpCon.Address, 2,
-                       WidthOf(AddrRect) - TextMargin);
-              end;
-              ra90  : begin
-                AddrRect.TopLeft := Point (WholeRect.Left - TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                           TextMargin);
-                AddrRect.BottomRight := Point (WholeRect.Left - (TextMargin div 2),
-                                               WholeRect.Bottom + (TextMargin div 2));
-                WholeRect.Left := AddrRect.Left;
-                Str := GetDisplayString(TmpBmp.Canvas, TmpCon.Address, 2,
-                       HeightOf (AddrRect) - TextMargin);
-              end;
-              ra180 : begin
-                AddrRect.TopLeft := Point (WholeRect.Right - TextMargin * 2,
-                                              WholeRect.Top - TmpBmp.Canvas.TextHeight(VpProductName) - TextMargin);
-                AddrRect.BottomRight := Point (WholeRect.Left + TextMargin,
-                                                  WholeRect.Top - (TextMargin div 2));
-                WholeRect.Top := AddrRect.Top;
-                Str := GetDisplayString(TmpBmp.Canvas, TmpCon.Address, 2,
-                       WidthOf(AddrRect) - TextMargin);
-              end;
-              ra270 : begin
-                AddrRect.TopLeft := Point (WholeRect.Right,
-                                              WholeRect.Bottom - TextMargin);
-                AddrRect.BottomRight := Point (WholeRect.Right + TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                                  WholeRect.Top + (TextMargin div 2));
-                WholeRect.Right := AddrRect.Right;
-                Str := GetDisplayString(TmpBmp.Canvas, TmpCon.Address, 2,
-                       TextColWidth - TextMargin * 2);
-              end;
-            end;
-            TPSTextOutAtPoint (TmpBmp.Canvas, Angle, TmpBmpRect,
-                               AddrRect.Left + TextMargin,
-                               AddrRect.Top + (TextMargin div 2), Str);
-          end;
+          DrawContactPart(TmpBmp, TmpCon.Address, '', WholeRect, AddrRect);
 
           { do City, State, Zip }
           Str := TmpCon.City;
@@ -422,431 +431,30 @@ begin
             Str := Str + ' ' + TmpCon.Zip
           else
             Str := TmpCon.Zip;
-          if Str <> '' then begin
-            case Angle of
-              ra0 : begin
-                CSZRect.TopLeft := Point(TextMargin, WholeRect.Bottom
-                                   + (TextMargin div 2));
-                CSZRect.BottomRight := Point(TmpBmp.Width, CSZRect.Top +
-                                    TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2));
-                WholeRect.Bottom := CSZRect.Bottom;
-                Str := GetDisplayString(TmpBmp.Canvas, Str, 2, TextColWidth
-                       - TextMargin * 2);
-              end;
-              ra90 : begin
-                CSZRect.TopLeft := Point (WholeRect.Left - TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                          TextMargin);
-                CSZRect.BottomRight := Point (WholeRect.Left - (TextMargin div 2),
-                                               WholeRect.Bottom + (TextMargin div 2));
-                WholeRect.Bottom := CSZRect.Bottom;
-                Str := GetDisplayString(TmpBmp.Canvas, Str, 2, TextColWidth
-                       - TextMargin * 2);
-                WholeRect.Left   := CSZRect.Left;
-              end;
-              ra180 : begin
-                CSZRect.TopLeft := Point (WholeRect.Right - TextMargin * 2,
-                                              WholeRect.Top - TmpBmp.Canvas.TextHeight(VpProductName) - (TextMargin div 2));
-                CSZRect.BottomRight := Point (WholeRect.Left + TextMargin,
-                                                  WholeRect.Top - (TextMargin div 2));
-                WholeRect.Top    := CSZRect.Top;
-              end;
-              ra270 : begin
-                CSZRect.TopLeft := Point (WholeRect.Right,
-                                              WholeRect.Bottom - TextMargin);
-                CSZRect.BottomRight := Point (WholeRect.Right + TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                                  WholeRect.Top + (TextMargin div 2));
-                WholeRect.Right  := CSZRect.Right;
-              end;
-            end;
-            Str := GetDisplayString(TmpBmp.Canvas, Str, 2, TextColWidth
-              - TextMargin * 2);
-            TPSTextOutAtPoint (TmpBmp.Canvas, Angle, TmpBmpRect,
-                               CSZRect.Left + TextMargin,
-                               CSZRect.Top + (TextMargin div 2), Str);
-          end;
+          DrawContactPart(TmpBmp, Str, '', WholeRect, CSZRect);
 
           { do Phone1 }
-          Str := TmpCon.Phone1;
-          if Str <> '' then begin
-            case Angle of
-              ra0 : begin
-                Phone1Rect.TopLeft :=
-                    Point (TextMargin,
-                           WholeRect.Bottom + (TextMargin div 2));
-                Phone1Rect.BottomRight :=
-                    Point (TmpBmp.Width,
-                           Phone1Rect.Top +
-                           TmpBmp.Canvas.TextHeight (VpProductName) +
-                           (TextMargin div 2));
-                WholeRect.Bottom := Phone1Rect.Bottom;
-                Str := GetDisplayString (TmpBmp.Canvas, Str, 2,
-                                         TextColWidth - (TextMargin * 2) -
-                                         PhoneLblWidth);
-              end;
-              ra90 : begin
-                Phone1Rect.TopLeft := Point (WholeRect.Left - TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                             TextMargin);
-                Phone1Rect.BottomRight := Point (WholeRect.Left - (TextMargin div 2),
-                                               WholeRect.Bottom + (TextMargin div 2));
-                WholeRect.Left := Phone1Rect.Left;
-                Str := GetDisplayString(TmpBmp.Canvas, Str, 2, TextColWidth
-                    - (TextMargin * 2) - PhoneLblWidth);
-              end;
-              ra180 : begin
-                Phone1Rect.TopLeft := Point (WholeRect.Right - TextMargin * 2,
-                                              WholeRect.Top - TmpBmp.Canvas.TextHeight(VpProductName) - TextMargin);
-                Phone1Rect.BottomRight := Point (WholeRect.Left + TextMargin,
-                                                  WholeRect.Top - (TextMargin div 2));
-                WholeRect.Top := Phone1Rect.Top;
-                Str := GetDisplayString(TmpBmp.Canvas, Str, 2, TextColWidth
-                    - (TextMargin * 2) - PhoneLblWidth);
-              end;
-              ra270 : begin
-                Phone1Rect.TopLeft := Point (WholeRect.Right,
-                                              WholeRect.Bottom - TextMargin);
-                Phone1Rect.BottomRight := Point (WholeRect.Right + TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                                  WholeRect.Top + (TextMargin div 2));
-                WholeRect.Right := Phone1Rect.Right;
-                Str := GetDisplayString(TmpBmp.Canvas, Str, 2, TextColWidth
-                    - (TextMargin * 2) - PhoneLblWidth);
-              end;
-            end;
-            TPSTextOutAtPoint (TmpBmp.Canvas, Angle, TmpBmpRect,
-                               Phone1Rect.Left + TextMargin,
-                               Phone1Rect.Top + (TextMargin div 2),
-                               PhoneLabel(TVpPhoneType(TmpCon.PhoneType1)) + ': ');
-            case Angle of
-              ra0 : begin
-                Phone1Rect.Left := Phone1Rect.Left + PhoneLblWidth;
-                Phone1Rect.Top := Phone1Rect.Top + (TextMargin div 2);
-              end;
-              ra90 : begin
-                Phone1Rect.Top := Phone1Rect.Top + PhoneLblWidth;
-                Phone1Rect.Left := Phone1Rect.Left + (TextMargin);
-              end;
-              ra180 : begin
-                Phone1Rect.Left := Phone1Rect.Left - PhoneLblWidth;
-                Phone1Rect.Top := Phone1Rect.Top + (TextMargin div 2);
-              end;
-              ra270 : begin
-                Phone1Rect.Top := Phone1Rect.Top - PhoneLblWidth;
-                Phone1Rect.Left := Phone1Rect.Left + (TextMargin div 2);
-              end;
-            end;
-            TPSTextOutAtPoint (TmpBmp.Canvas, Angle, TmpBmpRect,
-                               Phone1Rect.Left,
-                               Phone1Rect.Top, Str);
-          end;
+          Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType1)) + ': ';
+          DrawContactPart(TmpBmp, TmpCon.Phone1, Str, WholeRect, Phone1Rect);
 
           { do Phone2 }
-          Str := TmpCon.Phone2;
-          if Str <> '' then begin
-            case Angle of
-              ra0 : begin
-                Phone2Rect.TopLeft := Point(TextMargin, WholeRect.Bottom
-                  + (TextMargin div 2));
-                Phone2Rect.BottomRight := Point(TmpBmp.Width, Phone2Rect.Top +
-                  TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2));
-                WholeRect.Bottom := Phone2Rect.Bottom;
-              end;
-              ra90 : begin
-                Phone2Rect.TopLeft := Point (WholeRect.Left - TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                             TextMargin);
-                Phone2Rect.BottomRight := Point (WholeRect.Left - (TextMargin div 2),
-                                               WholeRect.Bottom + (TextMargin div 2));
-                WholeRect.Left := Phone2Rect.Left;
-              end;
-              ra180 : begin
-                Phone2Rect.TopLeft := Point (WholeRect.Right - TextMargin * 2,
-                                              WholeRect.Top - TmpBmp.Canvas.TextHeight(VpProductName) - TextMargin);
-                Phone2Rect.BottomRight := Point (WholeRect.Left + TextMargin,
-                                                  WholeRect.Top - (TextMargin div 2));
-                WholeRect.Top := Phone2Rect.Top;
-              end;
-              ra270 : begin
-                Phone2Rect.TopLeft := Point (WholeRect.Right,
-                                              WholeRect.Bottom - TextMargin);
-                Phone2Rect.BottomRight := Point (WholeRect.Right + TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                                  WholeRect.Top + (TextMargin div 2));
-                WholeRect.Right := Phone2Rect.Right;
-             end;
-            end;
-            Str := GetDisplayString(TmpBmp.Canvas, Str, 2, TextColWidth
-              - (TextMargin * 2) - PhoneLblWidth);
-            TPSTextOutAtPoint (TmpBmp.Canvas, Angle, TmpBmpRect,
-                               Phone2Rect.Left + TextMargin,
-                               Phone2Rect.Top + (TextMargin div 2),
-                               PhoneLabel(TVpPhoneType(TmpCon.PhoneType2)) + ': ');
-            case Angle of
-              ra0 : begin
-                Phone2Rect.Left := Phone2Rect.Left + PhoneLblWidth;
-                Phone2Rect.Top := Phone2Rect.Top + (TextMargin div 2);
-              end;
-              ra90 : begin
-                Phone2Rect.Top := Phone2Rect.Top + PhoneLblWidth;
-                Phone2Rect.Left := Phone2Rect.Left + (TextMargin);
-              end;
-              ra180 : begin
-                Phone2Rect.Left := Phone2Rect.Left - PhoneLblWidth;
-                Phone2Rect.Top := Phone2Rect.Top + (TextMargin div 2);
-              end;
-              ra270 : begin
-                Phone2Rect.Top := Phone2Rect.Top - PhoneLblWidth;
-                Phone2Rect.Left := Phone2Rect.Left + (TextMargin div 2);
-              end;
-            end;
-
-            TPSTextOutAtPoint (TmpBmp.Canvas, Angle, TmpBmpRect,
-                               Phone2Rect.Left,
-                               Phone2Rect.Top, Str);
-          end;
+          Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType2)) + ': ';
+          DrawContactPart(TmpBmp, TmpCon.Phone2, Str, WholeRect, Phone2Rect);
 
           { do Phone3 }
-          Str := TmpCon.Phone3;
-          if Str <> '' then begin
-            case Angle of
-              ra0 : begin
-                Phone3Rect.TopLeft := Point(TextMargin, WholeRect.Bottom
-                  + (TextMargin div 2));
-                Phone3Rect.BottomRight := Point(TmpBmp.Width, Phone3Rect.Top +
-                  TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2));
-                WholeRect.Bottom := Phone3Rect.Bottom;
-              end;
-              ra90 : begin
-                Phone3Rect.TopLeft := Point (WholeRect.Left - TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                             TextMargin);
-                Phone3Rect.BottomRight := Point (WholeRect.Left - (TextMargin div 2),
-                                               WholeRect.Bottom + (TextMargin div 2));
-                WholeRect.Left := Phone3Rect.Left;
-              end;
-              ra180 : begin
-                Phone3Rect.TopLeft := Point (WholeRect.Right - TextMargin * 2,
-                                              WholeRect.Top - TmpBmp.Canvas.TextHeight(VpProductName) - TextMargin);
-                Phone3Rect.BottomRight := Point (WholeRect.Left + TextMargin,
-                                                  WholeRect.Top - (TextMargin div 2));
-                WholeRect.Top := Phone3Rect.Top;
-              end;
-              ra270 : begin
-                Phone3Rect.TopLeft := Point (WholeRect.Right,
-                                              WholeRect.Bottom - TextMargin);
-                Phone3Rect.BottomRight := Point (WholeRect.Right + TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                                  WholeRect.Top + (TextMargin div 2));
-                WholeRect.Right := Phone3Rect.Right;
-              end;
-            end;
-            Str := GetDisplayString(TmpBmp.Canvas, Str, 2, TextColWidth
-              - (TextMargin * 2) - PhoneLblWidth);
-            TPSTextOutAtPoint (TmpBmp.Canvas, Angle, TmpBmpRect,
-                               Phone3Rect.Left + TextMargin,
-                               Phone3Rect.Top + (TextMargin div 2),
-                               PhoneLabel(TVpPhoneType(TmpCon.PhoneType3)) + ': ');
-            case Angle of
-              ra0 : begin
-                Phone3Rect.Left := Phone3Rect.Left + PhoneLblWidth;
-                Phone3Rect.Top := Phone3Rect.Top + (TextMargin div 2);
-              end;
-              ra90 : begin
-                Phone3Rect.Top := Phone3Rect.Top + PhoneLblWidth;
-                Phone3Rect.Left := Phone3Rect.Left + (TextMargin);
-              end;
-              ra180 : begin
-                Phone3Rect.Left := Phone3Rect.Left - PhoneLblWidth;
-                Phone3Rect.Top := Phone3Rect.Top + (TextMargin div 2);
-              end;
-              ra270 : begin
-                Phone3Rect.Top := Phone3Rect.Top - PhoneLblWidth;
-                Phone3Rect.Left := Phone3Rect.Left + (TextMargin div 2);
-              end;
-            end;
-            TPSTextOutAtPoint (TmpBmp.Canvas, Angle, TmpBmpRect,
-                               Phone3Rect.Left,
-                               Phone3Rect.Top, Str);
-          end;
+          Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType3)) + ': ';
+          DrawContactPart(TmpBmp, TmpCon.Phone3, Str, WholeRect, Phone3Rect);
 
           { do Phone4 }
-          Str := TmpCon.Phone4;
-          if Str <> '' then begin
-            case Angle of
-              ra0 : begin
-                Phone4Rect.TopLeft := Point(TextMargin, WholeRect.Bottom
-                  + (TextMargin div 2));
-                Phone4Rect.BottomRight := Point(TmpBmp.Width, Phone4Rect.Top +
-                  TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2));
-                WholeRect.Bottom := Phone4Rect.Bottom;
-              end;
-              ra90 : begin
-                Phone4Rect.TopLeft := Point (WholeRect.Left - TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                             TextMargin);
-                Phone4Rect.BottomRight := Point (WholeRect.Left - (TextMargin div 2),
-                                               WholeRect.Bottom + (TextMargin div 2));
-                WholeRect.Left := Phone4Rect.Left;
-              end;
-              ra180 : begin
-                Phone4Rect.TopLeft := Point (WholeRect.Right - TextMargin * 2,
-                                              WholeRect.Top - TmpBmp.Canvas.TextHeight(VpProductName) - TextMargin);
-                Phone4Rect.BottomRight := Point (WholeRect.Left + TextMargin,
-                                                  WholeRect.Top - (TextMargin div 2));
-                WholeRect.Top := Phone4Rect.Top;
-              end;
-              ra270 : begin
-                Phone4Rect.TopLeft := Point (WholeRect.Right,
-                                              WholeRect.Bottom - TextMargin);
-                Phone4Rect.BottomRight := Point (WholeRect.Right + TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                                  WholeRect.Top + (TextMargin div 2));
-                WholeRect.Right := Phone4Rect.Right;
-              end;
-            end;
-            Str := GetDisplayString(TmpBmp.Canvas, Str, 2, TextColWidth
-              - (TextMargin * 2) - PhoneLblWidth);
-            TPSTextOutAtPoint (TmpBmp.Canvas, Angle, TmpBmpRect,
-                               Phone4Rect.Left + TextMargin,
-                               Phone4Rect.Top + (TextMargin div 2),
-                               PhoneLabel(TVpPhoneType(TmpCon.PhoneType4)) + ': ');
-            case Angle of
-              ra0 : begin
-                Phone4Rect.Left := Phone4Rect.Left + PhoneLblWidth;
-                Phone4Rect.Top := Phone4Rect.Top + (TextMargin div 2);
-              end;
-              ra90 : begin
-                Phone4Rect.Top := Phone4Rect.Top + PhoneLblWidth;
-                Phone4Rect.Left := Phone4Rect.Left + (TextMargin {div 2});
-              end;
-              ra180 : begin
-                Phone4Rect.Left := Phone4Rect.Left - PhoneLblWidth;
-                Phone4Rect.Top := Phone4Rect.Top + (TextMargin div 2);
-              end;
-              ra270 : begin
-                Phone4Rect.Top := Phone4Rect.Top - PhoneLblWidth;
-                Phone4Rect.Left := Phone4Rect.Left + (TextMargin div 2);
-              end;
-            end;
-            TPSTextOutAtPoint (TmpBmp.Canvas, Angle, TmpBmpRect,
-                               Phone4Rect.Left,
-                               Phone4Rect.Top, Str);
-          end;
+          Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType4)) + ': ';
+          DrawContactPart(TmpBmp, TmpCon.Phone4, Str, WholeRect, Phone4Rect);
 
           { do Phone5 }
-          Str := TmpCon.Phone5;
-          if Str <> '' then begin
-            case Angle of
-              ra0 : begin
-                Phone5Rect.TopLeft := Point(TextMargin, WholeRect.Bottom
-                  + (TextMargin div 2));
-                Phone5Rect.BottomRight := Point(TmpBmp.Width, Phone5Rect.Top +
-                  TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2));
-                WholeRect.Bottom := Phone5Rect.Bottom;
-              end;
-              ra90 : begin
-                Phone5Rect.TopLeft := Point (WholeRect.Left - TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                             TextMargin);
-                Phone5Rect.BottomRight := Point (WholeRect.Left - (TextMargin div 2),
-                                               WholeRect.Bottom + (TextMargin div 2));
-                WholeRect.Left := Phone5Rect.Left;
-              end;
-              ra180 : begin
-                Phone5Rect.TopLeft := Point (WholeRect.Right - TextMargin * 2,
-                                              WholeRect.Top - TmpBmp.Canvas.TextHeight(VpProductName) - TextMargin);
-                Phone5Rect.BottomRight := Point (WholeRect.Left + TextMargin,
-                                                  WholeRect.Top - (TextMargin div 2));
-                WholeRect.Top := Phone5Rect.Top;
-              end;
-              ra270 : begin
-                Phone5Rect.TopLeft := Point (WholeRect.Right,
-                                              WholeRect.Bottom - TextMargin);
-                Phone5Rect.BottomRight := Point (WholeRect.Right + TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                                  WholeRect.Top + (TextMargin div 2));
-                WholeRect.Right := Phone5Rect.Right;
-              end;
-            end;
-            Str := GetDisplayString(TmpBmp.Canvas, Str, 2, TextColWidth
-              - (TextMargin * 2) - PhoneLblWidth);
-            TPSTextOutAtPoint (TmpBmp.Canvas, Angle, TmpBmpRect,
-                               Phone5Rect.Left + TextMargin,
-                               Phone5Rect.Top + (TextMargin div 2),
-                               PhoneLabel(TVpPhoneType(TmpCon.PhoneType5)) + ': ');
-            case Angle of
-              ra0 : begin
-                Phone5Rect.Left := Phone5Rect.Left + PhoneLblWidth;
-                Phone5Rect.Top := Phone5Rect.Top + (TextMargin div 2);
-              end;
-              ra90 : begin
-                Phone5Rect.Top := Phone5Rect.Top+ PhoneLblWidth;
-                Phone5Rect.Left := Phone5Rect.Left + (TextMargin);
-              end;
-              ra180 : begin
-                Phone5Rect.Left := Phone5Rect.Left - PhoneLblWidth;
-                Phone5Rect.Top := Phone5Rect.Top + (TextMargin div 2);
-              end;
-              ra270 : begin
-                Phone5Rect.Top := Phone5Rect.Top - PhoneLblWidth;
-                Phone5Rect.Left := Phone5Rect.Left + (TextMargin div 2);
-              end;
-            end;
-            TPSTextOutAtPoint (TmpBmp.Canvas, Angle, TmpBmpRect,
-                               Phone5Rect.Left,
-                               Phone5Rect.Top, Str);
-          end;
+          Str := PhoneLabel(TVpPhoneType(TmpCon.PhoneType5)) + ': ';
+          DrawContactPart(TmpBmp, TmpCon.Phone5, Str, WholeRect, Phone5Rect);
 
           { do EMail }
-          Str := TmpCon.EMail;
-          if Str <> '' then begin
-            case Angle of
-              ra0 : begin
-                EMailRect.TopLeft := Point(TextMargin, WholeRect.Bottom
-                  + (TextMargin div 2));
-                EMailRect.BottomRight := Point(TmpBmp.Width, EMailRect.Top +
-                  TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2));
-                WholeRect.Bottom := EMailRect.Bottom;
-              end;
-              ra90 : begin
-                EMailRect.TopLeft := Point (WholeRect.Left - TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                            TextMargin);
-                EMailRect.BottomRight := Point (WholeRect.Left - (TextMargin div 2),
-                                               WholeRect.Bottom + (TextMargin div 2));
-                WholeRect.Left := EMailRect.Left;
-              end;
-              ra180 : begin
-                EMailRect.TopLeft := Point (WholeRect.Right - TextMargin * 2,
-                                              WholeRect.Top - TmpBmp.Canvas.TextHeight(VpProductName) - TextMargin);
-                EMailRect.BottomRight := Point (WholeRect.Left + TextMargin,
-                                                  WholeRect.Top - (TextMargin div 2));
-                WholeRect.Top := EMailRect.Top;
-              end;
-              ra270 : begin
-                EMailRect.TopLeft := Point (WholeRect.Right,
-                                              WholeRect.Bottom - TextMargin);
-                EMailRect.BottomRight := Point (WholeRect.Right + TmpBmp.Canvas.TextHeight(VpProductName) + (TextMargin div 2),
-                                                  WholeRect.Top + (TextMargin div 2));
-                WholeRect.Right := EMailRect.Right;
-              end;
-            end;
-            Str := GetDisplayString(TmpBmp.Canvas, Str, 2, TextColWidth
-              - (TextMargin * 2) - PhoneLblWidth);
-            TPSTextOutAtPoint (TmpBmp.Canvas, Angle, TmpBmpRect,
-                               EMailRect.Left + TextMargin,
-                               EMailRect.Top + (TextMargin div 2), RSEmail + ': ');
-            case Angle of
-              ra0   : begin
-                EMailRect.Left := EMailRect.Left + PhoneLblWidth;
-                EmailRect.Top := EMailRect.Top + (TextMargin div 2);
-              end;
-              ra90  : begin
-                EMailRect.Top := EMailRect.Top + PhoneLblWidth;
-                EmailRect.Left := EMailRect.Left + TextMargin;
-              end;
-              ra180 : begin
-                EMailRect.Left := EMailRect.Left - PhoneLblWidth;
-                EmailRect.Top := EMailRect.Top + (TextMargin div 2);
-              end;
-              ra270 : begin
-                EMailRect.Top := EMailRect.Top - PhoneLblWidth;
-                EMailRect.Left := EMailRect.Left + (TextMargin div 2);
-              end;
-            end;
-            TPSTextOutAtPoint (TmpBmp.Canvas, Angle, TmpBmpRect,
-                               EMailRect.Left,
-                               EMailRect.Top, Str);
-          end;
+          DrawContactPart(TmpBmp, TmpCon.EMail, RSEmail + ': ', WholeRect, EMailRect);
 
           { if this record's too big to fit in the remaining area of this }
           { column, then slide over to the top of the next column }
@@ -1097,7 +705,7 @@ begin
   end;
 end;
 
-(*
+    (*
 var
   Anchor: TPoint;
   I, J: Integer;

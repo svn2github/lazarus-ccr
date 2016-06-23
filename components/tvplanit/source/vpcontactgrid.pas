@@ -218,20 +218,17 @@ type
     function GetControlType : TVpItemType; override;
     procedure DeleteActiveContact(Verify: Boolean);
     procedure PaintToCanvas (ACanvas: TCanvas; ARect: TRect; Angle: TVpRotationAngle);
-    procedure RenderToCanvas (RenderCanvas : TCanvas;
-                              RenderIn     : TRect;
-                              Angle        : TVpRotationAngle;
-                              Scale        : Extended;
-                              RenderDate   : TDateTime;
-                              StartLine    : Integer;
-                              StopLine     : Integer;
-                              UseGran      : TVpGranularity;
-                              DisplayOnly  : Boolean); override;
+    procedure RenderToCanvas(RenderCanvas: TCanvas; RenderIn: TRect;
+      Angle: TVpRotationAngle; Scale: Extended; RenderDate: TDateTime;
+      StartLine, StopLine: Integer; UseGran: TVpGranularity;
+      DisplayOnly: Boolean); override;
+
     { - Added to support the buttonbar component.                         }
     function SelectContactByName(const Name: String): Boolean;           
 
-    property ActiveContact : TVpContact read FActiveContact;
+    property ActiveContact: TVpContact read FActiveContact;
     property ContactIndex: Integer read FContactIndex write SetContactIndex;
+
   published
     property Align;
     property Anchors;
@@ -590,15 +587,10 @@ begin
 end;
 {=====}
 
-procedure TVpContactGrid.RenderToCanvas (RenderCanvas : TCanvas;
-                                         RenderIn     : TRect;
-                                         Angle        : TVpRotationAngle;
-                                         Scale        : Extended;
-                                         RenderDate   : TDateTime;
-                                         StartLine    : Integer;
-                                         StopLine     : Integer;
-                                         UseGran      : TVpGranularity;
-                                         DisplayOnly  : Boolean);
+procedure TVpContactGrid.RenderToCanvas(RenderCanvas: TCanvas;
+  RenderIn: TRect; Angle: TVpRotationAngle; Scale: Extended;
+  RenderDate: TDateTime; StartLine, StopLine: Integer;
+  UseGran: TVpGranularity; DisplayOnly: Boolean);
 var
   painter: TVpContactGridPainter;
 begin
@@ -612,7 +604,8 @@ begin
     cgPainting := false;
   end;
 end;
-(*
+
+  (*
 var
   SaveBrushColor : TColor;
   SavePenStyle   : TPenStyle;
@@ -1825,7 +1818,7 @@ begin
   cgPainting := false;
 end;
 {=====}
-  *)
+*)
 
 { Introduced to support the buttonbar component                           !!.02}
 function TVpContactGrid.SelectContactByName(const Name: String): Boolean;

@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 291
+  Left = 325
   Height = 600
-  Top = 164
+  Top = 181
   Width = 900
   Caption = 'Turbo Power VisualPlanIt Demo'
   ClientHeight = 580
