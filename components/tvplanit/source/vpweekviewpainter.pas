@@ -20,12 +20,6 @@ type
     DayRectHeight: Integer;
     StrLn: Integer;
     StartDate: TDateTime;
-    RealWidth: Integer;
-    RealHeight: Integer;
-    RealLeft: Integer;
-    RealRight: Integer;
-    RealTop: Integer;
-    RealBottom: Integer;
     ADEventsRect: TRect;
     Rgn: HRGN;
     DotDotDotColor: TColor;
@@ -47,7 +41,8 @@ type
     procedure DrawBorders;
     procedure DrawDays;
     procedure DrawHeader;
-    procedure SetMeasurements;
+    procedure InitColors;
+    procedure SetMeasurements; override;
 
   public
     constructor Create(AWeekView: TVpWeekView; ARenderCanvas: TCanvas);
@@ -575,13 +570,8 @@ begin
   );
 end;
 
-procedure TVpWeekViewPainter.RenderToCanvas(ARenderIn: TRect;
-  AAngle: TVpRotationAngle; AScale: Extended; ARenderDate: TDateTime;
-  AStartLine, AStopLine: Integer; AUseGran: TVpGranularity; ADisplayOnly: Boolean);
+procedure TVpWeekViewPainter.InitColors;
 begin
-  inherited;
-
-  // Here begins the original routine...
   if DisplayOnly then begin
     BevelHighlightColor := clBlack;
     BevelShadowColor := clBlack;
@@ -608,16 +598,17 @@ begin
     ADEventBorderColor := FWeekView.AllDayEventAttributes.EventBorderColor;
   end;
   DotDotDotColor := clBlack;
+end;
 
-//  wvPainting := true;    --- moved to TVpWeekView
-  SavePenStyle := RenderCanvas.Pen.Style;
-  SaveBrushColor := RenderCanvas.Brush.Color;
-  SavePenColor := RenderCanvas.Pen.Color;
+procedure TVpWeekViewPainter.RenderToCanvas(ARenderIn: TRect;
+  AAngle: TVpRotationAngle; AScale: Extended; ARenderDate: TDateTime;
+  AStartLine, AStopLine: Integer; AUseGran: TVpGranularity; ADisplayOnly: Boolean);
+begin
+  inherited;
 
-  RenderCanvas.Pen.Style := psSolid;
-  RenderCanvas.Pen.Width := 1;
-  RenderCanvas.Pen.Mode := pmCopy;
-  RenderCanvas.Brush.Style := bsSolid;
+  InitColors;
+  SavePenBrush;
+  InitPenBrush;
 
   Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
   try
@@ -644,20 +635,12 @@ begin
     DeleteObject(Rgn);
   end;
 
-  RenderCanvas.Pen.Style := SavePenStyle;
-  RenderCanvas.Brush.Color := SaveBrushColor;
-  RenderCanvas.Pen.Color := SavePenColor;
-//  wvPainting := false;   --- moved to TVpWeekView
+  RestorePenBrush;
 end;
 
 procedure TVpWeekViewPainter.SetMeasurements;
 begin
-  RealWidth := TPSViewportWidth(Angle, RenderIn);
-  RealHeight := TPSViewportHeight(Angle, RenderIn);
-  RealLeft := TPSViewportLeft(Angle, RenderIn);
-  RealRight := TPSViewportRight(Angle, RenderIn);
-  RealTop := TPSViewportTop(Angle, RenderIn);
-  RealBottom := TPSViewportBottom(Angle, RenderIn);
+  inherited;
 
   with TVpWeekViewOpener(FWeekView) do
     if RenderDate = 0 then

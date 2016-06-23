@@ -267,7 +267,7 @@ type
 implementation
 
 uses
-  SysUtils, Math, Forms, Dialogs, VpContactEditDlg;
+  SysUtils, Math, Forms, Dialogs, VpContactEditDlg, VpContactGridPainter;
 
 
 (*****************************************************************************)
@@ -599,6 +599,20 @@ procedure TVpContactGrid.RenderToCanvas (RenderCanvas : TCanvas;
                                          StopLine     : Integer;
                                          UseGran      : TVpGranularity;
                                          DisplayOnly  : Boolean);
+var
+  painter: TVpContactGridPainter;
+begin
+  cgPainting := true;
+  painter := TVpContactGridPainter.Create(Self, RenderCanvas);
+  try
+    painter.RenderToCanvas(RenderIn, Angle, Scale, RenderDate, StartLine,
+      StopLine, UseGran, DisplayOnly);
+  finally
+    painter.Free;
+    cgPainting := false;
+  end;
+end;
+(*
 var
   SaveBrushColor : TColor;
   SavePenStyle   : TPenStyle;
@@ -1811,6 +1825,7 @@ begin
   cgPainting := false;
 end;
 {=====}
+  *)
 
 { Introduced to support the buttonbar component                           !!.02}
 function TVpContactGrid.SelectContactByName(const Name: String): Boolean;

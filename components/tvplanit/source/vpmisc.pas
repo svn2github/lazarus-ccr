@@ -136,9 +136,9 @@ procedure StripString(var Str: string);
 begin
   if Length (Str) < 1 then
     Exit;
-  while not (Str[1] in ['A'..'Z', 'a'..'z', '0'..'9']) do
+  while (Length(Str) > 0) and (not (Str[1] in ['A'..'Z', 'a'..'z', '0'..'9'])) do
     delete(Str, 1, 1);
-  while not (Str[Length(Str)] in ['A'..'Z', 'a'..'z', '0'..'9']) do
+  while (Length(Str) > 0) and (not (Str[Length(Str)] in ['A'..'Z', 'a'..'z', '0'..'9'])) do
     delete(Str, Length(Str), 1);
 end;
 {=====}

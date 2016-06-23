@@ -36,12 +36,6 @@ type
     Drawn: Boolean;
     ScrollBarOffset: Integer;
     EventCount: Integer;
-    RealWidth: Integer;
-    RealHeight: Integer;
-    RealLeft: Integer;
-    RealRight: Integer;
-    RealTop: Integer;
-    RealBottom: Integer;
     DayWidth: Integer;
     RealNumDays: Integer;
     Rgn: HRGN;
@@ -91,9 +85,11 @@ type
     procedure DrawRowHeader(R: TRect);
     procedure FreeBitmaps;
     procedure GetIcons(Event: TVpEvent);
+    procedure InitColors;
     procedure InitializeEventRectangles;
     procedure ScaleIcons(EventRect: TRect);
-    procedure SetMeasurements;
+
+    procedure SetMeasurements; override;
 
   public
     constructor Create(ADayView: TVpDayview; ARenderCanvas: TCanvas);
@@ -1515,28 +1511,8 @@ begin
   CustomH := dvBmpCustom.Height;
 end;
 
-procedure TVpDayViewPainter.InitializeEventRectangles;
-var
-  I : Integer;
+procedure TVpDayViewPainter.InitColors;
 begin
-  EventCount := 0;
-  with TVpDayViewOpener(FDayView) do
-    for I := 0 to pred(Length(dvEventArray)) do begin
-      dvEventArray[I].Rec.Left := -1;
-      dvEventArray[I].Rec.Top := -1;
-      dvEventArray[I].Rec.Right := -1;
-      dvEventArray[I].Rec.Bottom := -1;
-      dvEventArray[I].Event := nil;
-    end;
-end;
-
-procedure TVpDayViewPainter.RenderToCanvas(ARenderIn: TRect;
-  AAngle: TVpRotationAngle; AScale: Extended; ARenderDate: TDateTime;
-  AStartLine, AStopLine: Integer; AUseGran: TVpGranularity; ADisplayOnly: Boolean);
-begin
-  inherited;
-
-  // Here begins the original routine...
   if DisplayOnly then begin
     BevelShadow := clBlack;
     BevelHighlight := clBlack;
@@ -1568,6 +1544,33 @@ begin
     ADEventAttrBkgColor := FDayView.AllDayEventAttributes.EventBackgroundColor;
     ADEventBorderColor := FDayView.AllDayEventAttributes.EventBorderColor;
   end;
+end;
+
+procedure TVpDayViewPainter.InitializeEventRectangles;
+var
+  I : Integer;
+begin
+  EventCount := 0;
+  with TVpDayViewOpener(FDayView) do
+    for I := 0 to pred(Length(dvEventArray)) do begin
+      dvEventArray[I].Rec.Left := -1;
+      dvEventArray[I].Rec.Top := -1;
+      dvEventArray[I].Rec.Right := -1;
+      dvEventArray[I].Rec.Bottom := -1;
+      dvEventArray[I].Event := nil;
+    end;
+end;
+
+procedure TVpDayViewPainter.RenderToCanvas(ARenderIn: TRect;
+  AAngle: TVpRotationAngle; AScale: Extended; ARenderDate: TDateTime;
+  AStartLine, AStopLine: Integer; AUseGran: TVpGranularity; ADisplayOnly: Boolean);
+begin
+  inherited;
+
+  // Here begins the original routine...
+  InitColors;
+  SavePenBrush;
+  InitPenBrush;
 
   SetMeasurements;
 
@@ -1578,11 +1581,6 @@ begin
     ScrollBarOffset := 2
   else
     ScrollBarOffset := 14;
-
-//  dvPainting := true;  -- moved to TVpDayView
-  SavePenStyle := RenderCanvas.Pen.Style;
-  SaveBrushColor := RenderCanvas.Brush.Color;
-  SavePenColor := RenderCanvas.Pen.Color;
 
   Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
   try
@@ -1730,15 +1728,12 @@ begin
     end;
 
     { Reinstate RenderCanvas settings }
-    RenderCanvas.Pen.Style := SavePenStyle;
-    RenderCanvas.Brush.Color := SaveBrushColor;
-    RenderCanvas.Pen.Color := SavePenColor;
+    RestorePenBrush;
 
   finally
     SelectClipRgn(RenderCanvas.Handle, 0);
     DeleteObject(Rgn);
   end;
-//  dvPainting := false;   -- moved to TVpDayView
 end;
 
 procedure TVpDayViewPainter.ScaleIcons(EventRect: TRect);
@@ -1774,12 +1769,7 @@ end;
 
 procedure TVpDayViewPainter.SetMeasurements;
 begin
-  RealWidth := TPSViewportWidth(Angle, RenderIn);
-  RealHeight := TPSViewportHeight(Angle, RenderIn);
-  RealLeft := TPSViewportLeft(Angle, RenderIn);
-  RealRight := TPSViewportRight(Angle, RenderIn);
-  RealTop := TPSViewportTop(Angle, RenderIn);
-  RealBottom := TPSViewportBottom(Angle, RenderIn);
+  inherited;
   TVpDayViewOpener(FDayView).dvCalcColHeadHeight(Scale);
 end;
 
