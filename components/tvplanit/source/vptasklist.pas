@@ -224,6 +224,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure DeleteActiveTask(Verify: Boolean);
+    procedure LoadLanguage;
     procedure LinkHandler(Sender: TComponent;
       NotificationType: TVpNotificationType;
       const Value: Variant); override;
@@ -592,6 +593,12 @@ begin
   end;
 end;
 {=====}
+
+procedure TVpTaskList.LoadLanguage;
+begin
+  FDefaultPopup.Items.Clear;
+  InitializeDefaultPopup;
+end;
 
 procedure TVpTaskList.LinkHandler(Sender: TComponent;
   NotificationType: TVpNotificationType; const Value: Variant);

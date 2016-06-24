@@ -227,8 +227,10 @@ msgid "Events"
 msgstr "Termine"
 
 #: tmainform.tabresources.caption
+#, fuzzy
+#| msgid "Maintenance"
 msgctxt "tmainform.tabresources.caption"
-msgid "Maintenance"
+msgid "Resources"
 msgstr "Wartung"
 
 #: tmainform.tabsettings.caption

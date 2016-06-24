@@ -558,6 +558,8 @@ begin
   VpDayView1.LoadLanguage;
   VpWeekView1.LoadLanguage;
   VpMonthView1.LoadLanguage;
+  VpTaskList1.LoadLanguage;
+  VpContactGrid1.LoadLanguage;
 
   // Select language in language combobox.
   if ALang = '' then ALang := 'en';
@@ -639,7 +641,7 @@ begin
   VpWeekView1.WeekStartsOn := firstWeekDay;
  {$ENDIF}
 
-  SetActiveView(FActiveView);
+  SetActiveView(1001);
   Invalidate;
 end;
 
@@ -672,7 +674,6 @@ begin
   VpMonthView1.Align := alClient;
   VpMonthView1.Show;
   DaySelectorPanel.Hide;
-
   TitleLbl.Caption := RSEventsPerMonth;
   ImageList1.GetBitmap(5, Img.Picture.Bitmap);
 end;
@@ -686,7 +687,6 @@ begin
   VpDayView1.Hide;
   VpWeekView1.Show;
   DaySelectorPanel.Hide;
-
   TitleLbl.Caption := RSEventsPerWeek;
   ImageList1.GetBitmap(4, Img.Picture.Bitmap);
 end;
@@ -704,7 +704,6 @@ begin
   DaySelectorPanel.Show;
   DaysTrackbar.Position := FVisibleDays;
   VpDayView1.NumDays := DaysTrackBar.Position;
-
   TitleLbl.Caption := RSEventsPerDay;
   ImageList1.GetBitmap(3, Img.Picture.Bitmap);
 end;
@@ -770,7 +769,7 @@ begin
         0: ShowResources;
         1: ShowSettings;
       end;
- end;
+  end;
 end;
 
 end.

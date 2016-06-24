@@ -213,6 +213,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    procedure LoadLanguage;
     procedure LinkHandler(Sender: TComponent;
       NotificationType: TVpNotificationType; const Value: Variant); override;
     function GetControlType : TVpItemType; override;
@@ -477,6 +478,12 @@ begin
   inherited;
 end;
 {=====}
+
+procedure TVpContactGrid.LoadLanguage;
+begin
+  FDefaultPopup.Items.Clear;
+  InitializeDefaultPopup;
+end;
 
 procedure TVpContactGrid.LinkHandler(Sender: TComponent;
   NotificationType: TVpNotificationType; const Value: Variant);

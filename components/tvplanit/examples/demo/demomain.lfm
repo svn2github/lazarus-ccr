@@ -335,7 +335,7 @@ object MainForm: TMainForm
         end
       end
       object TabResources: TTabSheet
-        Caption = 'Maintenance'
+        Caption = 'Resources'
         ClientHeight = 504
         ClientWidth = 772
         TabVisible = False

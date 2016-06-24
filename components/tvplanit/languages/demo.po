@@ -217,7 +217,7 @@ msgstr ""
 
 #: tmainform.tabresources.caption
 msgctxt "TMAINFORM.TABRESOURCES.CAPTION"
-msgid "Maintenance"
+msgid "Resources"
 msgstr ""
 
 #: tmainform.tabsettings.caption
