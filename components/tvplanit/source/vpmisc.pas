@@ -597,15 +597,16 @@ begin
   Result := trunc(dt1) = trunc(dt2);
 end;
 
+// Calculates ISO week number (checked with Jan 1, 2016, which is in week 53).
 function GetWeekOfYear(ADate: TDateTime): byte;
-// was in TvWeekView
+// was in TvWeekView.
 var
   yr, dummy: word;
   First: TDateTime;
 begin
   DecodeDate(ADate + (8 - DayOfWeek(ADate)) mod 7 - 3, yr, dummy,dummy);
   First := EncodeDate(yr, 1, 1);
-  Result := (trunc(ADate - First - 3 + (DayOfWeek(First) + 1) mod 7) div 7) + 1;
+  Result := trunc(ADate - First - 3 + (DayOfWeek(First) + 1) mod 7) div 7 + 1;
 end;
 
 
