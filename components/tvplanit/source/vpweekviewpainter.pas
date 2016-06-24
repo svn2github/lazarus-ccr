@@ -517,6 +517,7 @@ var
   HeadTextRect: TRect;
   HeadStr: string;
   HeadStrLen : Integer;
+  weekNo: Integer;
 begin
   RenderCanvas.Brush.Color := RealHeadAttrColor;
   RenderCanvas.Font.Assign(TFont(FWeekView.HeadAttributes.Font));
@@ -557,12 +558,13 @@ begin
   end;
 
   { build header caption }
+  weekNo := GetWeekOfYear(StartDate);
   HeadStr := HeadStr + Format('%s %s (%s %d)', [
-    RSWeekOf, FormatDateTime(FWeekView.DateLabelFormat, StartDate), RSCalendarWeekAbbr, GetWeekOfYear(StartDate)
+    RSWeekOf, FormatDateTime(FWeekView.DateLabelFormat, StartDate), RSCalendarWeekAbbr, weekNo
   ]);
-//    HeadStr := HeadStr + RSWeekof + ' ' + FormatDateTime(DateLabelFormat, StartDate)+' (KW'+IntToStr(GetWeekOfYear(StartDate))+')';
+
   { draw the text }
-  if DisplayOnly and (RenderCanvas.TextWidth(HeadStr) >= RenderIn.Right - RenderIn.Left)
+  if DisplayOnly and (RenderCanvas.TextWidth(HeadStr) >= WidthOf(RenderIn))
   then
     HeadTextRect.TopLeft:= Point(RealLeft + TextMargin * 2, HeadRect.Top)
   else

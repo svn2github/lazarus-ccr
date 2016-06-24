@@ -444,15 +444,11 @@ type
 implementation
 
 uses
-  VpBaseDS,
-  VpPrtFmtCBox,
-  VpPrtPrv,
-  VpDayView,
-  VpWeekView,
-  VpMonthView,
-  VpCalendar,
-  VpTaskList,
-  VpContactGrid;
+ {$IFDEF LCL}
+  DateUtils,
+ {$ENDIF}
+  VpBaseDS, VpPrtFmtCBox, VpPrtPrv, VpDayView, VpWeekView, VpMonthView,
+  VpCalendar, VpTaskList, VpContactGrid;
 
 function XMLizeString(const s: string): string;
 var

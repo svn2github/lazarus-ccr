@@ -96,39 +96,27 @@ procedure DrawBevelRect(const Canvas: TCanvas; R: TRect;
 function PointInRect(Point: TPoint; Rect: TRect): Boolean;
   {-determines if the specified point resides inside the specified TRect }
 
-function GetAlarmAdvanceTime(Advance: Integer;
-  AdvanceType: TVpAlarmAdvType): TDateTime;
+function GetAlarmAdvanceTime(Advance: Integer; AdvanceType: TVpAlarmAdvType): TDateTime;
 
-{$IFNDEF Delphi6}
-
-function MonthOfTheYear (TheDate : TDateTime) : Word;
-
-procedure IncAMonth (var Year, Month, Day : Word; NumMonths : Integer);
-
-function IncMonth(const TheDate : TDateTime;
-  NumberOfMonths : Integer) : TDateTime;
-
-function IncYear (TheDate : TDateTime; NumYears : Integer) : TDateTime;
-{$ENDIF}
+{$IFDEF DELPHI}{$IFNDEF Delphi6}
+function MonthOfTheYear(TheDate: TDateTime): Word;
+procedure IncAMonth(var Year, Month, Day: Word; NumMonths: Integer);
+function IncMonth(const TheDate: TDateTime; NumberOfMonths: Integer): TDateTime;
+function IncYear(TheDate: TDateTime; NumYears: Integer): TDateTime;
+{$ENDIF}{$ENDIF}
 
 function GetJulianDate(Date: TDateTime): Word;
-
-function HourToLine(const Value: TVpHours; const Granularity: TVpGranularity): Integer;
-
-function GetStartLine(StartTime: TDateTime; Granularity: TVpGranularity): Integer;
-
-function GetEndLine (EndTime: TDateTime; Granularity: TVpGranularity): Integer;
-
+function GetWeekOfYear(ADate: TDateTime): byte;
+function SameDate(dt1, dt2: TDateTime): Boolean;
 function TimeInRange(Time, StartTime, EndTime: TDateTime; Inclusive: Boolean): Boolean;
 
+function HourToLine(const Value: TVpHours; const Granularity: TVpGranularity): Integer;
+function GetStartLine(StartTime: TDateTime; Granularity: TVpGranularity): Integer;
+function GetEndLine (EndTime: TDateTime; Granularity: TVpGranularity): Integer;
 function LineToStartTime(Line: Integer; Granularity: TVpGranularity): TDateTime;
-
 function GetLineDuration(Granularity: TVpGranularity): Double;
 
 function GetLabelWidth(ALabel: TLabel): Integer;
-
-function SameDate(dt1, dt2: TDateTime): Boolean;
-function GetWeekOfYear(ADate: TDateTime): byte;
 
 
 implementation
@@ -374,10 +362,7 @@ end;
 {=====}
 
 
-
-{$IFNDEF Delphi6}
-{=====}
-
+{$IFDEF DELPHI} {$IFNDEF Delphi6}
 function MonthOfTheYear (TheDate : TDateTime) : Word;
 var
   Year, Day: Word;
@@ -390,7 +375,6 @@ procedure IncAMonth (var Year, Month, Day : Word; NumMonths : Integer);
 type
   PMonthDayTable = ^TMonthDayTable;
   TMonthDayTable = array[1..12] of Word;
-
 const
   MonthDays: array [Boolean] of TMonthDayTable =
     ((31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31),
@@ -398,7 +382,6 @@ const
 var
   DayTable: PDayTable;
   Sign: Integer;
-
 begin
   if NumMonths >= 0 then
     Sign := 1
@@ -433,7 +416,7 @@ begin
   Result := IncMonth (TheDate, NumYears * 12);
 end;
 {=====}
-{$ENDIF}
+{$ENDIF}{$ENDIF}
 
 function GetJulianDate(Date: TDateTime): Word;
 var
