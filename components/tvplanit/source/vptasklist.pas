@@ -1521,11 +1521,14 @@ begin
   if not FAllowInplaceEdit then
     exit;
 
+  if Assigned(tlInplaceEditor) and tlInplaceEditor.Visible then
+    exit;
+
   AllowIt := true;
 
-  VisTask := tlTaskIndexToVisibleTask (TaskIndex);
+  VisTask := tlTaskIndexToVisibleTask(TaskIndex);
   if VisTask < 0 then
-      Exit;
+    Exit;
 
   { call the user defined BeforeEdit task }
   if Assigned(FBeforeEdit) then
@@ -1542,11 +1545,11 @@ begin
       tlInPlaceEditor.Parent := self;
       tlInPlaceEditor.OnExit := EndEdit;
     end;
-    tlInplaceEditor.Show;
+    tlInPlaceEditor.Font.Assign(Font);
     tlInPlaceEditor.SetBounds(R.Left, R.Top, WidthOf(R), HeightOf(R));
     tlInPlaceEditor.Text := FActiveTask.Description;
-    tlInPlaceEditor.Font.Assign(Font);
-    tlInPlaceEditor.SelectAll;
+    tlInplaceEditor.Show;
+    tlInplaceEditor.SetFocus;
     Invalidate;
   end;
 end;
