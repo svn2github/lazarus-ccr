@@ -18,7 +18,7 @@ type
     SavePenStyle: TPenStyle;
     SavePenColor: TColor;
     DayRectHeight: Integer;
-    StrLn: Integer;
+//    StrLn: Integer;
     StartDate: TDateTime;
     ADEventsRect: TRect;
     DotDotDotColor: TColor;
@@ -38,8 +38,11 @@ type
     procedure Clear;
     function DrawAllDayEvents(ADate: TDateTime; DayRect: TRect; var EAIndex: Integer): Boolean;
     procedure DrawBorders;
-    procedure DrawDay(AIndex: Integer; var DayRect: TRect; var EAIndex: Integer);
+    procedure DrawFocusRect(ADayIndex: Integer; DayRect: TRect);
+    procedure DrawDay(ADayIndex: Integer; var DayRect: TRect; var EAIndex: Integer);
+    procedure DrawDayHeader(ADayIndex: Integer; var TextRect: TRect);
     procedure DrawDays;
+    procedure DrawEvent(AEvent: TVpEvent; DayRect, TextRect: TRect; ADayIndex: Integer);
     procedure DrawHeader;
     procedure InitColors;
     procedure SetMeasurements; override;
@@ -246,24 +249,34 @@ begin
   end;
 end;
 
-procedure TVpWeekViewPainter.DrawDay(AIndex: Integer; var DayRect: TRect;
+procedure TVpWeekViewPainter.DrawFocusRect(ADayIndex: Integer; DayRect: TRect);
+var
+  tmpRect: TRect;
+begin
+  if (not DisplayOnly) and SameDate(StartDate + ADayIndex, FWeekView.Date) and FWeekView.Focused
+  then begin
+    tmpRect := DayRect;
+    InflateRect(tmpRect, -2, -2);
+    tmpRect.Top := tmpRect.Top + TVpWeekViewOpener(FWeekView).wvDayHeadHeight;
+    TPSDrawFocusRect(RenderCanvas, Angle, RenderIn, tmpRect);
+  end;
+end;
+
+procedure TVpWeekViewPainter.DrawDay(ADayIndex: Integer; var DayRect: TRect;
   var EAIndex: Integer);
 var
   TextRect: TRect;
-  DayStr: String;
-  SL: Integer;
-  tmpRect: TRect;
   J: Integer;
   EventList: TList;
-  TodayStartTime: Double;
-  TodayEndTime: Double;
   dayHeadHeight: Integer;
   rowHeight: Integer;
-  timeFmt: String;
+  headerHeight: Integer;
+  tmpRect: TRect;
 begin
   // Abbreviations
   dayHeadHeight := TVpWeekviewOpener(FWeekView).wvDayHeadHeight;
   rowHeight := TVpWeekViewOpener(FWeekView).wvRowHeight;
+  headerHeight := TVpWeekViewOpener(FWeekView).wvHeaderHeight;
 
   { draw day head}
   RenderCanvas.Font.Assign(FWeekView.DayHeadAttributes.Font);
@@ -275,33 +288,17 @@ begin
     TPSRectangle(RenderCanvas, Angle, RenderIn, TextRect);
 
   { Fix Header String }
-  DayStr := FormatDateTime(FWeekView.DayHeadAttributes.DateFormat, StartDate + AIndex);
-  {$IFDEF LCL}
-  {$IF FPC_FULLVERSION < 30000}DayStr := SysToUTF8(DayStr); {$ENDIF}
-  {$ENDIF}
-  SL := RenderCanvas.TextWidth(DayStr);
-  if SL > WidthOf(TextRect) then
-    DayStr := GetDisplayString(RenderCanvas, DayStr, 0, WidthOf(TextRect) - TextMargin);
-  SL := RenderCanvas.TextWidth(DayStr);
-  TextRect.Left := TextRect.Right - SL - TextMargin;
-  TPSTextOut(
-    RenderCanvas,
-    Angle,
-    RenderIn,
-    TextRect.Left,
-    TextRect.Top + TextMargin - 1,
-    DayStr
-  );
+  DrawDayHeader(ADayIndex, TextRect);
 
   if (FWeekView.DataStore <> nil) and (FWeekView.DataStore.Resource <> nil) and
-     (FWeekView.DataStore.Resource.Schedule.EventCountByDay(StartDate + AIndex) > 0) and
+     (FWeekView.DataStore.Resource.Schedule.EventCountByDay(StartDate + ADayIndex) > 0) and
      (HeightOf(DayRect) >= TextMargin * 2 + dayHeadHeight)
   then begin
     { events exist for this day }
     EventList := TList.Create;
     try
       { populate the eventlist with events for this day }
-      FWeekView.DataStore.Resource.Schedule.EventsByDate(StartDate + AIndex, EventList);
+      FWeekView.DataStore.Resource.Schedule.EventsByDate(StartDate + ADayIndex, EventList);
       { initialize TextRect for this day }
       TextRect := DayRect;
       TextRect.Top := DayRect.Top + dayHeadHeight;
@@ -310,7 +307,7 @@ begin
       { Handle All Day Events }
       tmpRect := TextRect;
       tmpRect.Bottom := DayRect.Bottom;
-      if DrawAllDayEvents(StartDate + AIndex, tmpRect, EAIndex) then
+      if DrawAllDayEvents(StartDate + ADayIndex, tmpRect, EAIndex) then
       begin
         TextRect.Bottom := TextRect.Bottom + ADEventsRect.Bottom - TextRect.Top;
         TextRect.Top := ADEventsRect.Bottom;
@@ -336,57 +333,17 @@ begin
           TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
           OffsetRect(tmpRect, 7, 0);
           TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
-          {
-          TPSFillRect(RenderCanvas, Angle, RenderIn,
-            Rect(DayRect.Right - 20,  DayRect.Bottom - 7, DayRect.Right - 17,  DayRect.Bottom - 4)
-          );
-          TPSFillRect(RenderCanvas, Angle, RenderIn,
-            Rect(DayRect.Right - 13,  DayRect.Bottom - 7, DayRect.Right - 10,  DayRect.Bottom - 4)
-          );
-          TPSFillRect(RenderCanvas, Angle, RenderIn,
-            Rect(DayRect.Right - 6,  DayRect.Bottom - 7, DayRect.Right -  3,  DayRect.Bottom - 4)
-          );}
           break;
         end;
 
-        { format the display text }
-        DayStr := '';
-        TodayStartTime := TVpEvent(EventList.List^[J]).StartTime;
-        TodayEndTime := TVpEvent(EventList.List^[J]).EndTime;
-        if trunc(TodayStartTime) < trunc(StartDate + AIndex) then //First Event
-          TodayStartTime := 0;
-        if trunc(TodayEndTime) > trunc(StartDate + AIndex) then //Last Event
-          TodayEndTime := 0.9999;
-        if FWeekView.ShowEventTime then
-        begin
-          timefmt := IfThen(FWeekView.TimeFormat = tf24Hour, 'hh:nn', 'hh:nn AM/PM');
-          DayStr := Format('%s - %s: ', [
-            FormatDateTime(timeFmt, TodayStartTime),
-            FormatDateTime(timeFmt, TodayEndTime)
-          ]);
-        end;
-        if DayStr = '' then
-          DayStr := TVpEvent(EventList.List^[J]).Description
-        else
-          DayStr := DayStr + ' ' + TVpEvent(EventList.List^[J]).Description;
-
-        { set the event font }
-        RenderCanvas.Font.Assign(FWeekView.EventFont);
-        RenderCanvas.Brush.Color := RealColor;
-
-        StrLn := RenderCanvas.TextWidth(DayStr);
-        if (StrLn > WidthOf(TextRect) - TextMargin) then
-          DayStr := GetDisplayString(RenderCanvas, DayStr, 0, WidthOf(TextRect) - TextMargin * 2);
-
         { write the event text }
-        TPSTextOut(RenderCanvas, Angle, RenderIn,
-          TextRect.Left + TextMargin, TextRect.Top + TextMargin div 2,
-          DayStr
-        );
+        DrawEvent(TVpEvent(EventList.List^[J]), DayRect, TextRect, ADayIndex);
 
         { update the EventArray }
-        TVpWeekViewOpener(FWeekView).wvEventArray[EAIndex].Rec := TextRect;
-        TVpWeekViewOpener(FWeekView).wvEventArray[EAIndex].Event := TVpEvent(EventList.List^[J]);
+        with TVpWeekViewOpener(FWeekView).wvEventArray[EAIndex] do begin
+          Rec := TextRect;
+          Event := TVpEvent(EventList.List^[J]);
+        end;
         Inc(EAIndex);
 
         TextRect.Top := TextRect.Bottom;
@@ -398,55 +355,30 @@ begin
   end;
 
   { Draw focus rect if this is the current day }
-
-  if (not DisplayOnly) and (StartDate + AIndex = Trunc(FWeekView.Date)) and FWeekView.Focused
-  then begin
-    tmpRect := DayRect;
-    InflateRect(tmpRect, -2, -2);
-    tmpRect.Top := tmpRect.Top + TVpWeekViewOpener(FWeekView).wvDayHeadHeight;
-    TPSDrawFocusRect(RenderCanvas, Angle, RenderIn, tmpRect);
-    {
-    TPSDrawFocusRect(RenderCanvas, Angle, RenderIn, Rect(
-      DayRect.Left + 2,
-      DayRect.Top + TVpWeekViewOpener(FWeekView).wvDayHeadHeight + 2,
-      DayRect.Right - 2,
-      DayRect.Bottom - 2
-    ));
-    }
-  end;
+  DrawFocusRect(ADayIndex, DayRect);
 
   { update WeekdayArray }
-  with TVpWeekViewOpener(FWeekView).wvWeekdayArray[AIndex] do begin
+  with TVpWeekViewOpener(FWeekView).wvWeekdayArray[ADayIndex] do begin
     Rec := DayRect;
-    Day := StartDate + AIndex;
+    Day := StartDate + ADayIndex;
   end;
 
   { adjust the DayRect for the next day }
-  if (AIndex = 2) then begin
+  if (ADayIndex = 2) then begin
     { move the dayrect to the top of the next column }
+    DayRect := Rect(
+      RealLeft + (RealRight - RealLeft) div 2,
+      RealTop + headerHeight + 2,
+      RealRight - 2,
+      RealTop + headerHeight + DayRectHeight
+    );
     if FWeekView.DrawingStyle = ds3D then begin
-      DayRect.TopLeft := Point(
-        RealLeft + (RealRight - RealLeft) div 2,
-        RealTop + TVpWeekViewOpener(FWeekView).wvHeaderHeight + 3
-      );
-      DayRect.BottomRight := Point(
-        RealRight - 2,
-        RealTop + TVpWeekViewOpener(FWeekView).wvHeaderHeight + DayRectHeight
-      );
-    end
-    else begin
-      DayRect.TopLeft := Point(
-        RealLeft + (RealRight - RealLeft) div 2,
-        RealTop + TVpWeekViewOpener(FWeekView).wvHeaderHeight + 2
-      );
-      DayRect.BottomRight := Point(
-        RealRight - 1,
-        RealTop + TVpWeekViewOpener(FWeekView).wvHeaderHeight + DayRectHeight
-      );
+      inc(DayRect.Top);
+      dec(DayRect.Right);
     end;
   end
   else
-  if (AIndex = 4 {Friday}) then begin
+  if (ADayIndex = 4 {Friday}) then begin
     { shrink DayRect for weekend days }
     DayRectHeight := DayRectHeight div 2;
     DayRect.Top := DayRect.Bottom;
@@ -458,37 +390,56 @@ begin
   end;
 end;
 
+procedure TVpWeekViewPainter.DrawDayHeader(ADayIndex: Integer; var TextRect: TRect);
+var
+  dayStr: String;
+  strWid: Integer;
+begin
+  dayStr := FormatDateTime(FWeekView.DayHeadAttributes.DateFormat, StartDate + ADayIndex);
+  {$IFDEF LCL}
+  {$IF FPC_FULLVERSION < 30000}DayStr := SysToUTF8(DayStr); {$ENDIF}
+  {$ENDIF}
+
+  strWid := RenderCanvas.TextWidth(dayStr);
+  if strWid > WidthOf(TextRect) then
+    dayStr := GetDisplayString(RenderCanvas, dayStr, 0, WidthOf(TextRect) - TextMargin);
+  strWid := RenderCanvas.TextWidth(dayStr);
+
+  TextRect.Left := TextRect.Right - strWid - TextMargin;
+
+  TPSTextOut(
+    RenderCanvas,
+    Angle,
+    RenderIn,
+    TextRect.Left,
+    TextRect.Top + TextMargin - 1,
+    dayStr
+  );
+end;
+
 procedure TVpWeekViewPainter.DrawDays;
 var
   DayRect: TRect;
   EAIndex: Integer;
   I: Integer;
   headerHeight: Integer;
-  {
-  TextRect: TRect;
-  I, J, SL: Integer;
-  DayStr: string;
-  EventList: TList;
-  TodayStartTime: Double;
-  TodayEndTime: Double;
-  }
+  realCenter: Integer;
 begin
-  { Initialize WeekdayArray }
-  with TVpWeekViewOpener(FWeekView) do
+  with TVpWeekViewOpener(FWeekView) do begin
+    { Initialize weekday array }
     for I := 0 to pred(Length(wvWeekdayArray)) do begin
       wvWeekdayArray[I].Rec.TopLeft := Point(-1, -1);
       wvWeekdayArray[I].Rec.BottomRight := Point(-1, -1);
       wvWeekdayArray[I].Day := 0;
     end;
-
-  { initialize Event Array }
-  EAIndex := 0;
-  with TVpWeekViewOpener(FWeekView) do
+    { initialize event array }
+    EAIndex := 0;
     for I := 0 to pred(Length(wvEventArray)) do begin
       wvEventArray[I].Rec.TopLeft := Point(-1, -1);
       wvEventArray[I].Rec.BottomRight := Point(-1, -1);
       wvEventArray[I].Event := nil;
     end;
+  end;
 
   RenderCanvas.Pen.Color := RealLineColor;
   RenderCanvas.Pen.Style := psSolid;
@@ -505,24 +456,60 @@ begin
   if FWeekView.DrawingStyle = ds3D then
     inc(DayRect.Top, 1);
 
-          (*
-  if FWeekView.DrawingStyle = ds3D then
-    DayRect.TopLeft := Point(RealLeft + 1, RealTop + TVpWeekViewOpener(FWeekView).wvHeaderHeight + 3)
-  else
-    DayRect.TopLeft := Point(RealLeft + 1, RealTop + TVpWeekViewOpener(FWeekView).wvHeaderHeight + 2);
-  DayRect.BottomRight := Point(
-    RealLeft + (RealRight - RealLeft) div 2 + 1,
-    RealTop + TVpWeekViewOpener(FWeekView).wvHeaderHeight + DayRectHeight
-  );        *)
-
-  { draw the day frames }
+  { Draw the day frames and texts }
   for I := 0 to 6 do
     DrawDay(I, DayRect, EAIndex);
 
   { Draw the center vertical line }
   RenderCanvas.Pen.Color := RealLineColor;
-  TPSMoveTo(RenderCanvas, Angle, RenderIn, RealLeft + (RealRight - RealLeft) div 2, RealTop + headerHeight + 2);
-  TPSLineTo(RenderCanvas, Angle, RenderIn, RealLeft + (RealRight - RealLeft) div 2, RealBottom - 1);
+  realCenter := RealLeft + (RealRight - RealLeft) div 2;
+  TPSMoveTo(RenderCanvas, Angle, RenderIn, realCenter, RealTop + headerHeight + 2);
+  TPSLineTo(RenderCanvas, Angle, RenderIn, realCenter, RealBottom - 1);
+end;
+
+procedure TVpWeekViewPainter.DrawEvent(AEvent: TVpEvent; DayRect, TextRect: TRect;
+  ADayIndex: Integer);
+var
+  tmpRect: TRect;
+  dayStr: String;
+  todayStartTime: TDateTime;
+  todayEndTime: TDateTime;
+  strLen: Integer;
+  timefmt: String;
+begin
+  { format the display text }
+  todayStartTime := AEvent.StartTime;
+  todayEndTime := AEvent.EndTime;
+  if trunc(todayStartTime) < trunc(StartDate + ADayIndex) then  // first event
+    todayStartTime := 0;
+  if trunc(TodayEndTime) > trunc(StartDate + ADayIndex) then    // last event
+    todayEndTime := 0.9999;
+
+  { set the event font }
+  RenderCanvas.Font.Assign(FWeekView.EventFont);
+  RenderCanvas.Brush.Color := RealColor;
+
+  { Build the event text }
+  if FWeekView.ShowEventTime then
+  begin
+    timefmt := IfThen(FWeekView.TimeFormat = tf24Hour, 'hh:nn', 'hh:nn AM/PM');
+    dayStr := Format('%s - %s: ', [
+      FormatDateTime(timeFmt, todayStartTime),
+      FormatDateTime(timeFmt, todayEndTime)
+    ]);
+  end else
+    dayStr := '';
+  dayStr := IfThen(dayStr = '', AEvent.Description, dayStr + ' ' + AEvent.Description);
+
+  strLen := RenderCanvas.TextWidth(dayStr);
+  if (strLen > WidthOf(TextRect) - TextMargin) then                                           // wp: shouldn't this be 2*TextMargin ?
+    dayStr := GetDisplayString(RenderCanvas, dayStr, 0, WidthOf(TextRect) - TextMargin * 2);
+
+  { Write the event text }
+  TPSTextOut(RenderCanvas, Angle, RenderIn,
+    TextRect.Left + TextMargin, TextRect.Top + TextMargin div 2,
+    dayStr
+  );
 end;
 
 procedure TVpWeekViewPainter.DrawHeader;
