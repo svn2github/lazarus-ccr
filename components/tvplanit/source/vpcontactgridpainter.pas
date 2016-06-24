@@ -16,7 +16,6 @@ type
     PhoneLblWidth: Integer;
     StartContact: Integer;
     RealColumnWidth: Integer;
-    Rgn: HRGN;
     RealColor: TColor;
     SizingBarColor: TColor;
     BevelDarkShadow: TColor;

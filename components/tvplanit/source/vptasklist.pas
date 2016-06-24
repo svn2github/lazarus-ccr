@@ -281,7 +281,7 @@ type
 implementation
 
 uses
-  SysUtils, Math, Forms, Dialogs, VpTaskEditDlg, VpDlg;
+  SysUtils, Math, Forms, Dialogs, VpTaskEditDlg, VpDlg, VpTasklistPainter;
 
 
 (*****************************************************************************)
@@ -658,15 +658,23 @@ begin
 end;
 {=====}
 
-procedure TVpTaskList.RenderToCanvas (RenderCanvas : TCanvas;
-                                       RenderIn     : TRect;
-                                       Angle        : TVpRotationAngle;
-                                       Scale        : Extended;
-                                       RenderDate   : TDateTime;
-                                       StartLine    : Integer;
-                                       StopLine     : Integer;
-                                       UseGran      : TVpGranularity;
-                                       DisplayOnly  : Boolean);
+procedure TVpTaskList.RenderToCanvas(RenderCanvas: TCanvas; RenderIn: TRect;
+  Angle: TVpRotationAngle; Scale: Extended; RenderDate : TDateTime;
+  StartLine, StopLine: Integer; UseGran: TVpGranularity; DisplayOnly: Boolean);
+var
+  painter: TVpTaskListPainter;
+begin
+  tlPainting := true;
+  painter := TVpTaskListPainter.Create(Self, RenderCanvas);
+  try
+    painter.RenderToCanvas(RenderIn, Angle, Scale, RenderDate, StartLine,
+      StopLine, UseGran, DisplayOnly);
+  finally
+    painter.Free;
+    tlPainting := false;
+  end;
+end;
+(*
 var
   HeadRect       : TRect;
   Bmp            : Graphics.TBitmap;
@@ -1179,7 +1187,7 @@ begin
   RenderCanvas.Pen.Color := SavePenColor;
   tlPainting := false;
 end;
-{=====}
+{=====}                       *)
 
 procedure TVpTaskList.SetColor(const Value: TColor);
 begin

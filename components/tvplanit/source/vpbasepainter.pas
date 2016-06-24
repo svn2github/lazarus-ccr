@@ -3,7 +3,7 @@ unit VpBasePainter;
 interface
 
 uses
-  Classes, Graphics,
+  Classes, Graphics, LCLType,
   VPBase;
 
 type
@@ -23,6 +23,8 @@ type
     UseGran: TVpGranularity;
     DisplayOnly: Boolean;
   protected
+    // Shared local variables of all the old painting routines
+    Rgn: HRGN;
     RealWidth: Integer;
     RealHeight: Integer;
     RealLeft: Integer;

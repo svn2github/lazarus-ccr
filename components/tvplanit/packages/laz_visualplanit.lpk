@@ -32,7 +32,7 @@ Portions created by TurboPower Software Inc. are Copyright (C) 2002 TurboPower S
 
 Contributor(s): "/>
     <Version Major="1" Release="4"/>
-    <Files Count="69">
+    <Files Count="70">
       <Item1>
         <Filename Value="../source/vpalarmdlg.lfm"/>
         <Type Value="LFM"/>
@@ -310,6 +310,10 @@ Contributor(s): "/>
         <Filename Value="../source/vpcontactgridpainter.pas"/>
         <UnitName Value="VpContactGridPainter"/>
       </Item69>
+      <Item70>
+        <Filename Value="../source/vptasklistpainter.pas"/>
+        <UnitName Value="VpTasklistPainter"/>
+      </Item70>
     </Files>
     <i18n>
       <EnableI18N Value="True"/>

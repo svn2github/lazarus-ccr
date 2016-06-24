@@ -21,7 +21,6 @@ type
     StrLn: Integer;
     StartDate: TDateTime;
     ADEventsRect: TRect;
-    Rgn: HRGN;
     DotDotDotColor: TColor;
     BevelHighlightColor: TColor;
     BevelShadowColor: TColor;

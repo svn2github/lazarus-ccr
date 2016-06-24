@@ -38,7 +38,6 @@ type
     EventCount: Integer;
     DayWidth: Integer;
     RealNumDays: Integer;
-    Rgn: HRGN;
     RealRowHeight: Integer;
     RealColHeadHeight: Integer;
     RealRowHeadWidth: Integer;
