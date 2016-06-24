@@ -35,10 +35,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  {$IFDEF WINDOWS}
-  Windows,
-  {$ENDIF}
-  LMessages, LCLProc, LCLType, LCLIntf, LazUTF8,
+  LMessages, LCLProc, LCLType, LCLIntf, FileUtil,
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
@@ -210,9 +207,15 @@ type
     procedure CMFontChanged(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message CM_FONTCHANGED;
 
     {windows message methods}
+    {$IFDEF DELPHI}
     procedure WMEraseBkgnd(var Msg: TWMEraseBkgnd); message WM_ERASEBKGND;
     procedure WMGetDlgCode(var Msg: TWMGetDlgCode); message WM_GETDLGCODE;
     procedure WMKillFocus(var Msg: TWMKillFocus); message WM_KILLFOCUS;
+    {$ELSE}
+    procedure WMEraseBkgnd(var Msg: TLMEraseBkgnd); message LM_ERASEBKGND;
+//    procedure WMGetDlgCode(var Msg: TLMGetDlgCode); message LM_GETDLGCODE;
+    procedure WMKillFocus(var Msg: TLMKillFocus); message LM_KILLFOCUS;
+    {$ENDIF}
 
     procedure calBtnClick(Sender: TObject);
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1295,10 +1298,14 @@ begin
       HC := GetCapture = Handle;
 
       P.X := X-20;
-      P.Y := Y - ((GetSystemMetrics(SM_CYMENU)*7) div 2);
+      P.Y := Y - (GetSystemMetrics(SM_CYMENU)*7) div 2;
       P := ClientToScreen(P);
       {move the mouse to cause the menu item to highlight}
+      {$IFDEF DELPHI}
       PostMessage(Handle, WM_MOUSEMOVE, 0, MAKELONG(P.X,P.Y+1));
+      {$ELSE}
+      PostMessage(Handle, LM_MOUSEMOVE, 0, MAKELONG(P.X,P.Y+1));
+      {$ENDIF}
 
       clInPopup := True;
       try
@@ -1419,7 +1426,7 @@ begin
   Result := itCalendar;
 end;
 
-procedure TVpCustomCalendar.PaintToCanvas(ACanvas : TCanvas; ARect: TRect;
+procedure TVpCustomCalendar.PaintToCanvas(ACanvas: TCanvas; ARect: TRect;
   Angle: TVpRotationAngle; ADate: TDateTime);
 begin
   RenderToCanvas(ACanvas, ARect, Angle, 1, ADate, -1, -1, gr30Min, True);
@@ -1938,6 +1945,7 @@ begin
 end;
 {=====}
 
+{$IFDEF DELPHI}
 procedure TVpCustomCalendar.WMEraseBkgnd(var Msg: TWMEraseBkgnd);
 begin
   Msg.Result := 1;   {don't erase background, just say we did. Shhhhhhh!}
@@ -1956,6 +1964,26 @@ begin
   Invalidate;
 end;
 {=====}
+{$ELSE}
+procedure TVpCustomCalendar.WMEraseBkgnd(var Msg: TLMEraseBkgnd);
+begin
+  Msg.Result := 1;   {don't erase background, just say we did. Shhhhhhh!}
+end;
+{=====}
+                           {
+procedure TVpCustomCalendar.WMGetDlgCode(var Msg: TLMGetDlgCode);
+begin
+  Msg.Result := DLGC_WANTARROWS;
+end;                        }
+{=====}
+
+procedure TVpCustomCalendar.WMKillFocus(var Msg: TLMKillFocus);
+begin
+  inherited;
+  Invalidate;
+end;
+{=====}
+{$ENDIF}
 
 procedure TVpCustomCalendar.InitializeDefaultPopup;
 var
