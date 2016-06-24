@@ -3191,7 +3191,6 @@ procedure TRxDBGrid.CollumnSortListUpdate;
 var
   i, J:integer;
   C:TRxColumn;
-
 begin
   FSortColumns.Clear;
   for i:=0 to Columns.Count - 1 do

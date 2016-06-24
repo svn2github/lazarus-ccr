@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fpdoc-descriptions><package name="rxtools"><module name="rxFileUtils"><short>Модуль содержит вспомогательные утилиты для работы с файлами и каталогами</short><element name="FileNameDisabledChars"><short>Список символов, которые нельзя использовать в имени фала</short><descr><p>Константа FileNameDisabledChars содержит список символов, которые нельзя использовать в имени файла.</p><p>Значения константы зависит от платформы</p>
+        </descr>
+      </element><element name="IsValidFileNameChar"><short>Функция проверяет допустимост использования символа в имени файла</short>
+      </element><element name="NormalizeFileName"><short>Функция приводит имя файла к правильному виду в зависимости от платформы</short><descr><p>Данная функция проверяет все символы в имени файла и заменяет запрещённые символы на указанный <b>AReplaceChar</b>.</p><p>По умолчанию вместо AReplaceChar подставляется символ "_" (подчёркивание)</p>
+        </descr>
+      </element><element name="GetFileOwnerUser"><short>Функция возвращает имя пользователя - владельца файла</short>
+      </element><element name="GetFileOwnerData"><short>Функция возвращает данные о владельце файла</short>
+      </element><element name="NormalizeDirectoryName"><short>Функция приводит все разделители в полном пути к файлу к виду принятом на текущей платформе</short>
+      </element><element name="GetUserName"><short>Функция возвращяет имя текущего пользователя, зарегистрированного в операционной сиситеме на рабочем месте</short>
+      </element>
+    </module>
+  </package>
+</fpdoc-descriptions>

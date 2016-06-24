@@ -43,6 +43,16 @@ procedure GetFileOwnerData(const SearchDomain, FileName:String;out UserName, Dom
 function NormalizeDirectoryName(const DirName:string):string;
 function GetUserName:string;
 
+function IsValidFileNameChar(const AChar: Char): Boolean;inline;
+function NormalizeFileName(const FileName:string; AReplaceChar:char = '_'):string; //funtion only for filename - without folder name
+
+const
+  {$IFDEF WINDOWS}
+  FileNameDisabledChars = [#0 .. #31, '"', '*', '/', ':', '<', '>', '?', '\' , '|'];
+  {$ELSE}
+  FileNameDisabledChars = [#0 .. #31, '/', '~'];
+  {$ENDIF}
+
 implementation
 
 uses
@@ -205,6 +215,21 @@ begin
   {$ELSE}
   Result:=GetEnvironmentVariable('USER');
   {$ENDIF}
+end;
+
+function IsValidFileNameChar(const AChar: Char): Boolean;
+begin
+  Result:=not (AChar in FileNameDisabledChars);
+end;
+
+function NormalizeFileName(const FileName: string; AReplaceChar:char = '_'): string;
+var
+  i:integer;
+begin
+  Result:=FileName;
+  for i:=1 to Length(Result) do
+    if not IsValidFileNameChar(Result[i]) then
+      Result[i]:=AReplaceChar;
 end;
 
 end.

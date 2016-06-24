@@ -39,7 +39,9 @@ msgid "Change password"
 msgstr "Змінити пароль"
 
 #: rxdconst.scirculardatalink
-msgid "SCircularDataLink"
+#, fuzzy
+#| msgid "SCircularDataLink"
+msgid "Circular data link"
 msgstr "Перехресне посилання даних"
 
 #: rxdconst.scollumnname
@@ -57,10 +59,6 @@ msgstr "Дані були змінені. Зберегти?"
 #: rxdconst.sdatabasename
 msgid "Database locked: %s"
 msgstr "База даних блокована: %s"
-
-#: rxdconst.sdatasourcefixed
-msgid "SDataSourceFixed"
-msgstr ""
 
 #: rxdconst.sdbcomboboxfieldnotassigned
 msgid "%s:TDBComboBox - DataField not assigned"
@@ -338,10 +336,6 @@ msgstr "Друк таблиці"
 #: rxdconst.sprintoptions
 msgid "Print options"
 msgstr "Налаштування друку"
-
-#: rxdconst.spropdefbylookup
-msgid "PropDefByLookup"
-msgstr ""
 
 #: rxdconst.sregistration
 msgid "Register"

@@ -30,7 +30,7 @@ msgid "Change password"
 msgstr ""
 
 #: rxdconst.scirculardatalink
-msgid "SCircularDataLink"
+msgid "Circular data link"
 msgstr ""
 
 #: rxdconst.scollumnname
@@ -47,10 +47,6 @@ msgstr ""
 
 #: rxdconst.sdatabasename
 msgid "Database locked: %s"
-msgstr ""
-
-#: rxdconst.sdatasourcefixed
-msgid "SDataSourceFixed"
 msgstr ""
 
 #: rxdconst.sdbcomboboxfieldnotassigned
@@ -327,10 +323,6 @@ msgstr ""
 
 #: rxdconst.sprintoptions
 msgid "Print options"
-msgstr ""
-
-#: rxdconst.spropdefbylookup
-msgid "PropDefByLookup"
 msgstr ""
 
 #: rxdconst.sregistration

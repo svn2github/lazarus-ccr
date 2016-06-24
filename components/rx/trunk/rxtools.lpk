@@ -33,6 +33,7 @@
         <UnitName Value="rxFileUtils"/>
       </Item4>
     </Files>
+    <LazDoc Paths="docs;/usr/local/share/lazarus/components/rxnew/docs"/>
     <RequiredPkgs Count="1">
       <Item1>
         <PackageName Value="FCL"/>

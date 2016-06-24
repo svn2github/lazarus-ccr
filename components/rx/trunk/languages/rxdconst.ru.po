@@ -7,7 +7,7 @@ msgstr "Программа \"%s\""
 
 #: rxdconst.sblobtext
 msgid "(blob)"
-msgstr ""
+msgstr "(данные)"
 
 #: rxdconst.sbottomcaption
 msgid "Bottom"
@@ -30,7 +30,7 @@ msgid "Change password"
 msgstr "Изменить пароль"
 
 #: rxdconst.scirculardatalink
-msgid "SCircularDataLink"
+msgid "Circular data link"
 msgstr "Перекрёстная ссылка данных"
 
 #: rxdconst.scollumnname
@@ -48,10 +48,6 @@ msgstr "Данные были изменены. Сохранить?"
 #: rxdconst.sdatabasename
 msgid "Database locked: %s"
 msgstr "База данных блокирована: %s"
-
-#: rxdconst.sdatasourcefixed
-msgid "SDataSourceFixed"
-msgstr ""
 
 #: rxdconst.sdbcomboboxfieldnotassigned
 msgid "%s:TDBComboBox - DataField not assigned"
@@ -328,10 +324,6 @@ msgstr "Печать списка"
 #: rxdconst.sprintoptions
 msgid "Print options"
 msgstr "Параметры печати"
-
-#: rxdconst.spropdefbylookup
-msgid "PropDefByLookup"
-msgstr ""
 
 #: rxdconst.sregistration
 msgid "Register"

@@ -30,7 +30,9 @@ msgid "Change password"
 msgstr "Cambiar clave"
 
 #: rxdconst.scirculardatalink
-msgid "SCircularDataLink"
+#, fuzzy
+#| msgid "SCircularDataLink"
+msgid "Circular data link"
 msgstr "SCircularEnlaceDato"
 
 #: rxdconst.scollumnname
@@ -50,10 +52,6 @@ msgstr "Dato cambiado. Salvar?"
 #| msgid "Database loocked: %s"
 msgid "Database locked: %s"
 msgstr "Base de Dato bloqueada: %s"
-
-#: rxdconst.sdatasourcefixed
-msgid "SDataSourceFixed"
-msgstr "SFuenteDatosFija"
 
 #: rxdconst.sdbcomboboxfieldnotassigned
 msgid "%s:TDBComboBox - DataField not assigned"
@@ -340,10 +338,6 @@ msgstr ""
 #: rxdconst.sprintoptions
 msgid "Print options"
 msgstr ""
-
-#: rxdconst.spropdefbylookup
-msgid "PropDefByLookup"
-msgstr "PropDefByLookup"
 
 #: rxdconst.sregistration
 msgid "Register"

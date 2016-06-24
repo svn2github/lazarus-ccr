@@ -87,9 +87,9 @@ resourcestring
 
   SDBComboBoxFieldNotAssigned        = '%s:TDBComboBox - DataField not assigned';
 
-  SPropDefByLookup         = 'PropDefByLookup';
-  SDataSourceFixed         = 'SDataSourceFixed';
-  SCircularDataLink        = 'SCircularDataLink';
+  //SPropDefByLookup         = 'PropDefByLookup';
+  //SDataSourceFixed         = 'SDataSourceFixed';
+  SCircularDataLink        = 'Circular data link';
   sRxAscendign             = 'Ascendign';
   sRxDescending            = 'Descending';
   sRxAllFields             = 'All fields';
