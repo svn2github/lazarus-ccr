@@ -222,6 +222,19 @@ msgstr "Firma:"
 msgid "Completed on"
 msgstr "Fertiggestellt am"
 
+#: vpsr.rsconfirmdeletecontact
+msgid "Delete contact %s?"
+msgstr "Kontakt %s löschen?"
+
+#: vpsr.rsconfirmdeleteevent
+msgctxt "vpsr.rsconfirmdeleteevent"
+msgid "Delete event from schedule?"
+msgstr "Ereignis aus dem Kalender löschen?"
+
+#: vpsr.rsconfirmdeletetask
+msgid "Delete this task from your list?"
+msgstr "Diese Aufgabe von Ihrer Liste löschen?"
+
 #: vpsr.rscontactpopupadd
 msgid "Add Contact..."
 msgstr "Kontakt hinzufügen..."
@@ -366,10 +379,6 @@ msgstr "Standard-Klang verwenden"
 msgid "Delete"
 msgstr "Löschen"
 
-#: vpsr.rsdeletecontactfromschedule
-msgid "Delete contact %s from your schedule?"
-msgstr "Kontakt %s aus Ihrem Terminplan löschen?"
-
 #: vpsr.rsdescriptionlbl
 msgctxt "vpsr.rsdescriptionlbl"
 msgid "Subject:"
@@ -466,17 +475,9 @@ msgstr "F"
 msgid "Friday"
 msgstr "Freitag"
 
-#: vpsr.rsfromcontactlist
-msgid "from your list of contacts?"
-msgstr "Von Ihrer Kontaktliste?"
-
 #: vpsr.rsfromschedule
 msgid "from your schedule?"
 msgstr "Von Ihrem Zeitplan?"
-
-#: vpsr.rsfromtasklist
-msgid "from your task list?"
-msgstr "Von Ihrer Aufgabenliste?"
 
 #: vpsr.rshintnextday
 msgid "Next day"

@@ -530,9 +530,8 @@ begin
       Str := FActiveContact.LastName;
 
     if Verify then
-      DoIt := (MessageDlg(RSDelete + ' ' + Str + ' ' + RSFromContactList
-        + #13#10#10 + RSPermanent, mtconfirmation,
-        [mbYes, mbNo], 0) = mrYes);
+      DoIt := (MessageDlg(Format(RSConfirmDeleteContact, [Str]) + #13#10#10 + RSPermanent,
+        mtConfirmation, [mbYes, mbNo], 0) = mrYes);
 
     if DoIt then begin
       FActiveContact.Deleted := true;

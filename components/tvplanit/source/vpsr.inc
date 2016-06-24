@@ -129,17 +129,17 @@ resourcestring
   RSPermanent               = 'This operation cannot be undone!';
 
   {Contact Specific}
-  RSFromContactList         = 'from your list of contacts?';
   RSContactPopupAdd         = 'Add Contact...';
   RSContactPopupEdit        = 'Edit Contact...';
   RSContactPopupDelete      = 'Delete Contact...';
+  RSConfirmDeleteContact    = 'Delete contact %s?';
 
   {Event Specific}
   RSFromSchedule            = 'from your schedule?';
-  RSDeleteContactFromSchedule = 'Delete contact %s from your schedule?';
+  RSConfirmDeleteEvent      = 'Delete event from schedule?';
 
   {Task Specific}
-  RSFromTaskList            = 'from your task list?';
+  RSConfirmDeleteTask       = 'Delete this task from your list?';
   RSTaskPopupAdd            = 'Add Task...';
   RSTaskPopupEdit           = 'Edit Task...';
   RSTaskPopupDelete         = 'Delete Task...';

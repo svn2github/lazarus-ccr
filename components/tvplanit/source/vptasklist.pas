@@ -577,9 +577,8 @@ begin
     Str := FActiveTask.Description;
 
     if Verify then
-      DoIt := (MessageDlg(RSDelete + ' ' + Str + ' ' + RSFromTaskList
-        + #13#10#10 + RSPermanent, mtconfirmation,
-        [mbYes, mbNo], 0) = mrYes);
+      DoIt := (MessageDlg(RSConfirmDeleteTask + #13#10#10 + RSPermanent,
+        mtConfirmation, [mbYes, mbNo], 0) = mrYes);
 
     if DoIt then begin
       FActiveTask.Deleted := true;
@@ -1425,7 +1424,7 @@ begin
     Exit;                                                              
   if FActiveTask <> nil then begin                                       
     Repaint;                                                             
-    DeleteActiveTask (True);
+    DeleteActiveTask(True);
   end;                                                                   
 end;
 {=====}
@@ -1437,7 +1436,7 @@ begin
   if FActiveTask <> nil then begin                                       
     Repaint;                                                             
     { edit this Task }
-    tlSpawnTaskEditDialog (False);
+    tlSpawnTaskEditDialog(False);
   end;                                                                   
 end;
 {=====}

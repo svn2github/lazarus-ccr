@@ -212,6 +212,19 @@ msgstr ""
 msgid "Completed on"
 msgstr ""
 
+#: vpsr.rsconfirmdeletecontact
+msgid "Delete contact %s?"
+msgstr ""
+
+#: vpsr.rsconfirmdeleteevent
+msgctxt "vpsr.rsconfirmdeleteevent"
+msgid "Delete event from schedule?"
+msgstr ""
+
+#: vpsr.rsconfirmdeletetask
+msgid "Delete this task from your list?"
+msgstr ""
+
 #: vpsr.rscontactpopupadd
 msgid "Add Contact..."
 msgstr ""
@@ -356,10 +369,6 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: vpsr.rsdeletecontactfromschedule
-msgid "Delete contact %s from your schedule?"
-msgstr ""
-
 #: vpsr.rsdescriptionlbl
 msgctxt "vpsr.rsdescriptionlbl"
 msgid "Subject:"
@@ -456,16 +465,8 @@ msgstr ""
 msgid "Friday"
 msgstr ""
 
-#: vpsr.rsfromcontactlist
-msgid "from your list of contacts?"
-msgstr ""
-
 #: vpsr.rsfromschedule
 msgid "from your schedule?"
-msgstr ""
-
-#: vpsr.rsfromtasklist
-msgid "from your task list?"
 msgstr ""
 
 #: vpsr.rshintnextday

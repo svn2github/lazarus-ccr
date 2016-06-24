@@ -849,8 +849,7 @@ begin
     Str := '"' + FActiveEvent.Description + '"';
 
     if Verify then
-      DoIt := (MessageDlg(Format(RSDeleteContactFromSchedule, [Str]) + #13#10#10 + RSPermanent,
-//      DoIt := (MessageDlg(RSDelete + ' ' + Str + ' ' + RSFromSchedule + #13#10#10 + RSPermanent,
+      DoIt := (MessageDlg(RSConfirmDeleteEvent + #13#10#10 + RSPermanent,
         mtConfirmation, [mbYes, mbNo], 0) = mrYes);
 
     if DoIt then begin

@@ -222,6 +222,19 @@ msgstr "Компания:"
 msgid "Completed on"
 msgstr "Завершено на"
 
+#: vpsr.rsconfirmdeletecontact
+msgid "Delete contact %s?"
+msgstr ""
+
+#: vpsr.rsconfirmdeleteevent
+msgctxt "vpsr.rsconfirmdeleteevent"
+msgid "Delete event from schedule?"
+msgstr ""
+
+#: vpsr.rsconfirmdeletetask
+msgid "Delete this task from your list?"
+msgstr ""
+
 #: vpsr.rscontactpopupadd
 msgid "Add Contact..."
 msgstr "Добавить контакт..."
@@ -366,10 +379,6 @@ msgstr "Использовать звук по умолчанию"
 msgid "Delete"
 msgstr "Удалить"
 
-#: vpsr.rsdeletecontactfromschedule
-msgid "Delete contact %s from your schedule?"
-msgstr "Удалить контакт %s из вашего расписания?"
-
 #: vpsr.rsdescriptionlbl
 msgctxt "vpsr.rsdescriptionlbl"
 msgid "Subject:"
@@ -466,17 +475,9 @@ msgstr ""
 msgid "Friday"
 msgstr "Пятница"
 
-#: vpsr.rsfromcontactlist
-msgid "from your list of contacts?"
-msgstr "из вашего списка контактов?"
-
 #: vpsr.rsfromschedule
 msgid "from your schedule?"
 msgstr "из вашего расписания?"
-
-#: vpsr.rsfromtasklist
-msgid "from your task list?"
-msgstr "из вашего списка задач?"
 
 #: vpsr.rshintnextday
 msgid "Next day"
