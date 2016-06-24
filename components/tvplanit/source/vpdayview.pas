@@ -1866,7 +1866,7 @@ begin
       dvActiveEventRec.Bottom := 0;
       dvActiveEventRec.Right := 0;
       dvActiveEventRec.Left := 0;
-      dvActiveIconRec  := Rect (0, 0, 0, 0);
+      dvActiveIconRec := Rect (0, 0, 0, 0);
       Exit;
     end;
     if (Point.X > dvEventArray[I].Rec.Left) and
@@ -1945,10 +1945,10 @@ begin
     dvInPlaceEditor.OnExit := EndEdit;
   end;
   dvInPlaceEditor.SetBounds(
-    dvActiveIconRec.Right + FGutterWidth + TextMargin,
+    dvActiveIconRec.Left + FGutterWidth + TextMargin,
     dvActiveEventRec.Top + TextMargin,
-    dvActiveEventRec.Right,
-    dvActiveEventRec.Bottom - 1
+    dvActiveEventRec.Right - dvActiveIconRec.Left - FGutterWidth - TextMargin,
+    dvActiveEventRec.Bottom - dvActiveEventRec.Top - TextMargin
   );
   dvInPlaceEditor.Show;
   dvInPlaceEditor.Text := FActiveEvent.Description;

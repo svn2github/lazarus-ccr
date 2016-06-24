@@ -149,7 +149,7 @@ object MainForm: TMainForm
             }
             ShowResourceName = True
             LineColor = clGray
-            GutterWidth = 7
+            GutterWidth = 5
             DateLabelFormat = 'dddd, mmmm dd, yyyy'
             Granularity = gr30Min
             DefaultTopHour = h_07
