@@ -190,7 +190,7 @@ type
     property Color: TColor read FColor write SetColor;
   end;
 
-  TVpDayViewIconAttributes = class (TPersistent)
+  TVpDayViewIconAttributes = class(TPersistent)
     private
       FShowAlarmBitmap: Boolean;
       FShowCategoryBitmap: Boolean;
@@ -681,12 +681,12 @@ begin
   ControlStyle := [csCaptureMouse, csOpaque, csDoubleClicks];
 
   { Create internal classes and stuff }
-  FTimeSlotColors := TVpTimeSlotColor.Create (self);
-  FHeadAttr := TVpCHAttributes.Create (self);
-  FRowHeadAttr := TVpRHAttributes.Create (self);
+  FTimeSlotColors := TVpTimeSlotColor.Create(self);
+  FHeadAttr := TVpCHAttributes.Create(self);
+  FRowHeadAttr := TVpRHAttributes.Create(self);
   FAllDayEventAttr := TVpAllDayEventAttributes.Create(self);
   dvClickTimer := TTimer.Create (self);
-  FIconAttributes := TVpDayViewIconAttributes.Create (Self);
+  FIconAttributes := TVpDayViewIconAttributes.Create(Self);
 
   { create Nav buttons }
   dvDayUpBtn := TSpeedButton.Create(self);
@@ -694,7 +694,7 @@ begin
   dvDayDownBtn := TSpeedButton.Create(self);
   dvDayDownBtn.Parent := self;
   dvTodayBtn := TSpeedButton.Create(self);
-  dvTodayBtn.Parent  := self;
+  dvTodayBtn.Parent := self;
   dvWeekDownBtn := TSpeedButton.Create(self);
   dvWeekDownBtn.Parent := self;
   dvWeekUpBtn := TSpeedButton.Create(self);
@@ -712,11 +712,11 @@ begin
   dvDayUpBtn.Transparent := true;
   dvWeekUpBtn.Transparent := true;
   { load their images }
-  dvDayUpBtn.Glyph.LoadFromResourceName(HINSTANCE,'VPRIGHTARROW');
-  dvDayDownBtn.Glyph.LoadFromResourceName(HINSTANCE,'VPLEFTARROW');
-  dvTodayBtn.Glyph.LoadFromResourceName(HINSTANCE,'VPTODAY');
-  dvWeekUpBtn.Glyph.LoadFromResourceName(HINSTANCE,'VPRIGHTARROWS');
-  dvWeekDownBtn.Glyph.LoadFromResourceName(HINSTANCE,'VPLEFTARROWS');
+  dvDayUpBtn.Glyph.LoadFromResourceName(HINSTANCE, 'VPRIGHTARROW');
+  dvDayDownBtn.Glyph.LoadFromResourceName(HINSTANCE, 'VPLEFTARROW');
+  dvTodayBtn.Glyph.LoadFromResourceName(HINSTANCE, 'VPTODAY');
+  dvWeekUpBtn.Glyph.LoadFromResourceName(HINSTANCE, 'VPRIGHTARROWS');
+  dvWeekDownBtn.Glyph.LoadFromResourceName(HINSTANCE, 'VPLEFTARROWS');
   { set their OnClick handler }
   dvDayUpBtn.OnClick := dvNavButtonsClick;
   dvDayDownBtn.OnClick := dvNavButtonsClick;
@@ -1845,7 +1845,7 @@ begin
     then begin
       FActiveEvent := TVpEvent(dvEventArray[I].Event);
       dvActiveEventRec := dvEventArray[I].Rec;
-      dvActiveIconRec  := dvEventArray[I].IconRect;
+      dvActiveIconRec := dvEventArray[I].IconRect;
       Exit;
     end;
   end;
@@ -1945,9 +1945,9 @@ begin
     dvInPlaceEditor.OnExit := EndEdit;
   end;
   dvInPlaceEditor.SetBounds(
-    dvActiveIconRec.Left + FGutterWidth + TextMargin,
+    dvActiveIconRec.Right + TextMargin,
     dvActiveEventRec.Top + TextMargin,
-    dvActiveEventRec.Right - dvActiveIconRec.Left - FGutterWidth - TextMargin,
+    dvActiveEventRec.Right - dvActiveIconRec.Right - TextMargin,
     dvActiveEventRec.Bottom - dvActiveEventRec.Top - TextMargin
   );
   dvInPlaceEditor.Show;
