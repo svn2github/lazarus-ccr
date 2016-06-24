@@ -134,6 +134,10 @@ msgstr ""
 msgid "Turbo Power VisualPlanIt Demo"
 msgstr ""
 
+#: tmainform.cb3d.caption
+msgid "3d display mode"
+msgstr ""
+
 #: tmainform.cballowinplaceediting.caption
 msgid "Allow inplace editing"
 msgstr ""

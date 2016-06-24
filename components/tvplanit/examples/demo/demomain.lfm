@@ -25,9 +25,9 @@ object MainForm: TMainForm
       Height = 532
       Top = 48
       Width = 780
-      ActivePage = TabSettings
+      ActivePage = TabEvents
       Align = alClient
-      TabIndex = 4
+      TabIndex = 0
       TabOrder = 0
       object TabEvents: TTabSheet
         Caption = 'Events'
@@ -430,6 +430,15 @@ object MainForm: TMainForm
           OnChange = CbAllowInplaceEditingChange
           State = cbChecked
           TabOrder = 3
+        end
+        object Cb3D: TCheckBox
+          Left = 349
+          Height = 19
+          Top = 64
+          Width = 107
+          Caption = '3d display mode'
+          OnChange = Cb3DChange
+          TabOrder = 4
         end
       end
     end

@@ -23,6 +23,7 @@ type
     CbTimeFormat: TComboBox;
     CbFirstDayOfWeek: TComboBox;
     CbAllowInplaceEditing: TCheckBox;
+    Cb3D: TCheckBox;
     Img: TImage;
     ImageList1: TImageList;
     LblFirstDayOfWeek: TLabel;
@@ -69,6 +70,7 @@ type
     procedure BtnDeleteResClick(Sender: TObject);
     procedure BtnNewResClick(Sender: TObject);
     procedure BtnEditResClick(Sender: TObject);
+    procedure Cb3DChange(Sender: TObject);
     procedure CbAllowInplaceEditingChange(Sender: TObject);
     procedure CbFirstDayOfWeekChange(Sender: TObject);
     procedure CbGranularityChange(Sender: TObject);
@@ -235,6 +237,18 @@ end;
 procedure TMainForm.BtnNewResClick(Sender: TObject);
 begin
   VpResourceEditDialog1.AddNewResource;
+end;
+
+procedure TMainForm.Cb3DChange(Sender: TObject);
+var
+  ds: TVpDrawingStyle;
+begin
+ if Cb3D.Checked then ds := ds3d else ds := dsFlat;
+ VpTaskList1.DrawingStyle := ds;
+ VpContactGrid1.DrawingStyle := ds;
+ VpDayView1.DrawingStyle := ds;
+ VpWeekView1.DrawingStyle := ds;
+ VpMonthView1.DrawingStyle := ds;
 end;
 
 procedure TMainForm.CbAllowInplaceEditingChange(Sender: TObject);
@@ -601,6 +615,7 @@ begin
   CbFirstDayOfWeek.Left := CbLanguages.Left;
   LblFirstDayOfWeek.Left := CbFirstDayOfWeek.Left - 8 - GetLabelWidth(LblFirstDayOfWeek);
   CbAllowInplaceEditing.Left := CbLanguages.Left + CbLanguages.Width + 32;
+  Cb3D.Left := CbAllowInplaceEditing.Left;
   RbHideCompletedTasks.Left := RbAllTasks.Left + RbAllTasks.Width + 48;
 
   // Next settings work correctly only for Windows.

@@ -127,6 +127,8 @@ function GetLineDuration(Granularity: TVpGranularity): Double;
 
 function GetLabelWidth(ALabel: TLabel): Integer;
 
+function SameDate(dt1, dt2: TDateTime): Boolean;
+
 implementation
 
 uses
@@ -603,6 +605,11 @@ begin
   canvas.Control := ALabel;
   Result := canvas.TextWidth(ALabel.Caption);
   canvas.Free;
+end;
+
+function SameDate(dt1, dt2: TDateTime): Boolean;
+begin
+  Result := trunc(dt1) = trunc(dt2);
 end;
 
 end.
