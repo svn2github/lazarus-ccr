@@ -91,8 +91,8 @@ type
     { private declarations }
     FLang: String;
     FActiveView: Integer;
+    FVisibleDays: Integer;
     procedure PopulateLanguages;
-    procedure ReadIni;
     procedure SetActiveView(AValue: Integer);
     procedure SetLanguage(ALang: String); overload;
     procedure SetLanguage(AIndex: Integer); overload;
@@ -105,6 +105,7 @@ type
     procedure ShowSettings;
     procedure ShowTasks;
 
+    procedure ReadIni;
     procedure WriteIni;
   public
     { public declarations }
@@ -449,8 +450,11 @@ begin
       RbHideCompletedTasks.Checked := true;
     RbAllTasksChange(nil);
 
-    DaysTrackbar.Position := ini.ReadInteger('Settings', 'VisibleDays', DaysTrackbar.Position);
-    DaysTrackbarChange(nil);
+    FVisibleDays := ini.ReadInteger('Settings', 'VisibleDays', DaysTrackbar.Position);
+    if FActiveView = 3 then begin  // DayView
+      DaysTrackbar.Position := FVisibleDays;
+      DaysTrackbarChange(nil);
+    end;
 
     CbAllowInplaceEditing.Checked := ini.ReadBool('Settings', 'AllowInplaceEditing', CbAllowInplaceEditing.Checked);
     CbAllowInplaceEditingChange(nil);
@@ -482,7 +486,7 @@ begin
     ini.WriteInteger('Settings', 'TimeFormat', ord(VpDayView1.TimeFormat));
     ini.WriteInteger('Settings', 'Granularity', ord(VpDayView1.Granularity));
     ini.WriteInteger('Settings', 'FirstDayOfWeek', ord(VpWeekView1.WeekStartsOn));
-    ini.WriteInteger('Settings', 'VisibleDays', VpDayView1.NumDays);
+    ini.WriteInteger('Settings', 'VisibleDays', FVisibleDays);
     ini.WriteBool('Settings', 'AllTasks', VpTaskList1.DisplayOptions.ShowAll);
     ini.WriteBool('Settings', 'AllowInplaceEditing', CbAllowInplaceEditing.Checked);
   finally
@@ -698,6 +702,7 @@ begin
   VpDayView1.Show;
   DaySelectorPanel.Parent := TabEvents;
   DaySelectorPanel.Show;
+  DaysTrackbar.Position := FVisibleDays;
   VpDayView1.NumDays := DaysTrackBar.Position;
 
   TitleLbl.Caption := RSEventsPerDay;
@@ -734,6 +739,8 @@ end;
 
 procedure TMainForm.DaysTrackBarChange(Sender: TObject);
 begin
+  if FActiveView = 3 then
+    FVisibleDays := DaysTrackbar.Position;
   VpDayView1.NumDays := DaysTrackBar.Position;
 end;
 
