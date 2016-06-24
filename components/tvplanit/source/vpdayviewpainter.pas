@@ -79,6 +79,7 @@ type
     procedure DrawAllDays;
     procedure DrawCells(R: TRect; ColDate: TDateTime; Col: Integer);
     procedure DrawColHeader(R: TRect; ARenderDate: TDateTime; Col: Integer);
+    procedure DrawEditFrame(R: TRect; AGutter: Integer; AColor: TColor);
     procedure DrawEvents(ARenderDate: TDateTime; Col: Integer);
     procedure DrawIcons(AIconRect: TRect);
     procedure DrawRowHeader(R: TRect);
@@ -680,6 +681,20 @@ begin
   end;
 end;
 
+{ paint extra borders around the editor }
+procedure TVpDayViewPainter.DrawEditFrame(R: TRect; AGutter: Integer;
+  AColor: TColor);
+begin
+  RenderCanvas.Pen.Color := clWindowFrame;
+  RenderCanvas.Brush.Color := AColor;
+  with R do begin
+    TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Left, Top-AGutter, Right, Top));
+    TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Left-AGutter, Top, Left, Bottom));
+    TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Left, Bottom, Right, Bottom + AGutter));
+    TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Right, Top, Right+AGutter, Bottom));
+  end;
+end;
+
 procedure TVpDayViewPainter.DrawEvents(ARenderDate: TDateTime; Col: Integer);
 var
   I,J, StartPixelOffset, EndPixelOffset: Integer;
@@ -1193,45 +1208,20 @@ begin
       Inc(EventCount);
     end;
 
+    { paint extra borders around the editor }
     OKToDrawEditFrame := True;
     if Assigned(FDayView.ActiveEvent) then
       OKToDrawEditFrame := not (FDayView.ActiveEvent.AllDayEvent);
 
     if (TVpDayViewOpener(FDayView).dvInPlaceEditor <> nil) and
         TVpDayViewOpener(FDayView).dvInplaceEditor.Visible and
-        OKToDrawEditFrame then
-    begin
-      { paint extra borders around the editor }
-      if Assigned(FDayView.DataStore) then
-        RenderCanvas.Brush.Color := FDayView.DataStore.CategoryColorMap.GetColor(FDayView.ActiveEvent.Category);
-      RenderCanvas.Pen.Color := clWindowFrame;
-      with TVpDayViewOpener(FDayView) do begin
-        TPSFillRect(RenderCanvas, Angle, RenderIn,
-          Rect(dvActiveEventRec.Left, dvActiveEventRec.Top - GutterWidth, dvActiveEventRec.Right, dvActiveEventRec.Top)
-        );
-        TPSPolyline(RenderCanvas, Angle, RenderIn, [
-          Point(dvActiveEventRec.Left, dvActiveEventRec.Top),
-          Point(dvActiveEventRec.Left, dvActiveEventRec.Top - FDayView.GutterWidth),
-          Point(dvActiveEventRec.Right, dvActiveEventRec.Top - FDayView.GutterWidth),
-          Point(dvActiveEventRec.Right, dvActiveEventRec.Top)
-        ]);
-        TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(
-          dvActiveEventRec.Left,
-          dvActiveEventRec.Bottom,
-          dvActiveEventRec.Right,
-          dvActiveEventRec.Bottom + FDayView.GutterWidth
-        ));
-        TPSPolyline(RenderCanvas, Angle, RenderIn, [
-          Point(dvActiveEventRec.Left, dvActiveEventRec.Bottom),
-          Point(dvActiveEventRec.Left, dvActiveEventRec.Bottom + FDayView.GutterWidth),
-          Point(dvActiveEventRec.Right, dvActiveEventRec.Bottom + FDayView.GutterWidth),
-          Point(dvActiveEventRec.Right, dvActiveEventRec.Bottom)
-        ]);
-      end;
-    end;
+        OKToDrawEditFrame
+    then
+      with TVpDayViewOpener(FDayView) do
+        DrawEditFrame(dvActiveEventRec, GutterWidth, Datastore.CategoryColorMap.GetColor(ActiveEvent.Category));
 
-    { Clean Up }
   finally
+    { Clean Up }
     try
       SetLength(EventArray, 0);
       FreeBitmaps;
