@@ -711,9 +711,6 @@ var
   EventArray: TVpDvEventArray;
   EventList: TList;
   IconRect: TRect;
-  {$IFDEF DEBUGDV}
-  SL : TStringList;
-  {$ENDIF}
 
   procedure VerifyMaxWidthDivisors;
   var
@@ -857,26 +854,6 @@ begin
 
   {Make one last pass, to make sure that we have set up the width divisors properly }
   VerifyMaxWidthDivisors;
-
-/////// Debug Code /////////
-  { Dump a debug report to drive C }
-  {$IFDEF DEBUGDV}
-  SL := TStringList.Create;
-  try
-    I := 0;
-    while EventArray[I].Event <> nil do begin
-      SL.Add('Description: ' + TVpEvent(EventArray[I].Event).Description
-        + #13#10 + '   Level: ' + IntToStr(EventArray[I].Level)
-        + #13#10 + '   OLLevels: ' + IntToStr(EventArray[I].OLLevels)
-        + #13#10 + '   WidthDivisor: ' + IntToStr(EventArray[I].WidthDivisor));
-      Inc(I);
-    end;
-    SL.SaveToFile('C:\EventList' + IntToStr(Col) + '.txt');
-  finally
-    Sl.Free;
-  end;
-  {$ENDIF}
-/////// Debug Code /////////
 
   { Time to paint 'em. Let's see if we calculated their placements correctly   }
   IconRect := Rect(0, 0, 0, 0);
