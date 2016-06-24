@@ -344,7 +344,7 @@ type
 implementation
 
 uses
-  VpData;
+  VpData, VpCalendarPainter;
 
 const
   calMargin = 4; {left, right, and top margin}
@@ -1437,6 +1437,18 @@ procedure TVpCustomCalendar.RenderToCanvas(RenderCanvas: TCanvas;
   RenderDate: TDateTime; StartLine: Integer; StopLine: Integer;
   UseGran: TVpGranularity; DisplayOnly: Boolean);
 var
+  painter: TVpCalendarPainter;
+begin
+  painter := TVpCalendarPainter.Create(Self, RenderCanvas);
+  try
+    painter.RenderToCanvas(RenderIn, Angle, Scale, RenderDate,
+      StartLine, StopLine, UseGran, DisplayOnly);
+  finally
+    painter.Free;
+  end;
+end;
+(*
+var
   R, C: Integer;
   I: Integer;
   SatCol: Integer;
@@ -1800,6 +1812,7 @@ begin
   end;
 end;
 {=====}
+*)
 
 procedure TVpCustomCalendar.SetBorderStyle(Value: TBorderStyle);
 begin

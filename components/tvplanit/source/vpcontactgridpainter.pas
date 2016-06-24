@@ -3,7 +3,6 @@ unit VpContactGridPainter;
 interface
 
 uses
-  //SysUtils,
   LCLType, LCLIntf,
   Types, Classes, Graphics,
   VpConst, VPBase, VpData, VpBasePainter, VpContactGrid;
