@@ -798,17 +798,18 @@ begin
       { edit this event }
       wvSpawnEventEditDialog(False);
     end
-    else if (DataStore.Resource <> nil) then begin
+    else
+    if (DataStore.Resource <> nil) then begin
       { otherwise, we must want to create a new event }
-      StartTime := trunc(Date) + 1 / 2; { default to 12:00 noon }
-      EndTime := StartTime + (30 / MinutesInDay); { StartTime + 30 minutes }
+      StartTime := trunc(Date) + 0.5; { default to 12:00 noon }
+      EndTime := StartTime + 30 / MinutesInDay; { StartTime + 30 minutes }
       ActiveEvent := DataStore.Resource.Schedule.AddEvent(
         DataStore.GetNextID('Events'),
         StartTime,
         EndTime
       );
       { edit this new event }
-      wvSpawnEventEditDialog(True);
+      wvSpawnEventEditDialog(True);  // true = new event
     end;
   end;
 end;

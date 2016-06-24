@@ -128,6 +128,8 @@ function GetLineDuration(Granularity: TVpGranularity): Double;
 function GetLabelWidth(ALabel: TLabel): Integer;
 
 function SameDate(dt1, dt2: TDateTime): Boolean;
+function GetWeekOfYear(ADate: TDateTime): byte;
+
 
 implementation
 
@@ -611,5 +613,17 @@ function SameDate(dt1, dt2: TDateTime): Boolean;
 begin
   Result := trunc(dt1) = trunc(dt2);
 end;
+
+function GetWeekOfYear(ADate: TDateTime): byte;
+// was in TvWeekView
+var
+  yr, dummy: word;
+  First: TDateTime;
+begin
+  DecodeDate(ADate + (8 - DayOfWeek(ADate)) mod 7 - 3, yr, dummy,dummy);
+  First := EncodeDate(yr, 1, 1);
+  Result := (trunc(ADate - First - 3 + (DayOfWeek(First) + 1) mod 7) div 7) + 1;
+end;
+
 
 end.
