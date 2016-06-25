@@ -1,5 +1,7 @@
 unit VpCalendarPainter;
 
+{$I vp.inc}
+
 interface
 
 uses
@@ -297,7 +299,7 @@ begin
     DecodeDate(RenderDate, Y, M, D);
     try
       {$IFDEF VERSION6}
-      if not TryEncodeDate (Y, M, clDay, lDate) then
+      if not TryEncodeDate (Y, M, TVpCalendarOpener(FCalendar).clDay, lDate) then
         lBadDate := true;
       {$ELSE}
       lDate := EncodeDate(Y, M, TVpCalendarOpener(FCalendar).clDay);

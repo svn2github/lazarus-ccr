@@ -1,5 +1,7 @@
 unit VpContactGridPainter;
 
+{$I vp.inc}
+
 interface
 
 uses

@@ -1,8 +1,8 @@
+{$I vp.inc}
+
 unit VpDayViewPainter;
 
 interface
-{$I vp.inc}
-
 
 uses
   SysUtils, LCLType, LCLIntf, Types,

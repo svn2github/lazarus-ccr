@@ -1,5 +1,7 @@
 unit VpTasklistPainter;
 
+{$I vp.inc}
+
 interface
 
 uses
