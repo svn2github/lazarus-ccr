@@ -696,6 +696,7 @@ begin
   PageControl1.ActivePage := TabEvents;
   LeftPanel.Hide;
   Splitter3.Hide;
+  VpMonthView1.Hide;
   VpWeekView1.Hide;
   VpDayView1.Parent := TabEvents;
   VpDayView1.Align := alClient;
