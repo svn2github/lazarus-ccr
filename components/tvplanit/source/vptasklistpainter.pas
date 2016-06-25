@@ -19,7 +19,6 @@ type
     HeadRect: TRect;
     Bmp: Graphics.TBitmap;
     RowHeight: Integer;
-    Rgn: HRGN;
     RealColor: TColor;
     BackgroundSelHighlight: TColor;
     ForegroundSelHighlight: TColor;
