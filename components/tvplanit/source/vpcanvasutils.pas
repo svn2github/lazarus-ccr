@@ -1738,7 +1738,8 @@ begin
 
     WorkRect := GetNextRectangle(ARegion, LineHeight, AvgCharSize, HPos, linepos);
     if (WorkRect.Top = 0) and (WorkRect.left = 0) and (WorkRect.Bottom = 0) and (WorkRect.Right = 0) then
-      Workrect := Regionrect;
+      break;
+//      Workrect := Regionrect;
     if WorkRect.Right - WorkRect.Left > 0 then begin
       VpRotatedCanvas.TextOut(WorkRect.Left + FTextMargin, WorkRect.Top,
         FitStringInRect(ACanvas, WidthOf(WorkRect) - FTextMargin, AvgCharSize, AString, CharsWritten)

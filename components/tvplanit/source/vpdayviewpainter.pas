@@ -103,7 +103,7 @@ type
     procedure InitializeEventRectangles;
     procedure PopulateEventArray(ARenderDate: TDateTime);
     procedure PrepareEventRect(AWidthDivisor, ALevel: Integer;
-      var AEventRect: TRect; var AEventWidth: Integer);
+      var AEventRect: TRect);
     procedure PrepareEventTimes(AEvent: TVpEvent; ARenderDate: TDateTime;
       out AStartTime, AEndTime: TDateTime);
     procedure ScaleIcons(EventRect: TRect);
@@ -755,7 +755,6 @@ var
   EventSTime, EventETime: Double;
   EventDuration: Double;
   EventSLine, EventELine, EventLineCount: Integer;
-  EventWidth: Integer;
   EventRect, GutterRect: TRect;
   StartPixelOffset, EndPixelOffset: Integer;
   StartOffset, EndOffset: Double;
@@ -789,7 +788,7 @@ begin
   { Build the rectangle in which the event will be painted. }
   EventRect := TVpDayViewOpener(FDayView).dvLineMatrix[Col, EventSLine].Rec;
   EventRect.Bottom := TVpDayViewOpener(FDayView).dvLineMatrix[Col, EventELine].Rec.Bottom;
-  PrepareEventRect(AEventRec.WidthDivisor, AEventRec.Level, EventRect, EventWidth);
+  PrepareEventRect(AEventRec.WidthDivisor, AEventRec.Level, EventRect);
 
   { Draw the event rectangle }
   { paint Event text area clWindow }
@@ -831,7 +830,7 @@ begin
     end;
   end;
 
-  { Paint the gutter inside the EventRect all events }
+  { Paint the gutter inside the EventRect of all events }
   if (AEventRec.Level = 0) then
     GutterRect.Left := EventRect.Left - Trunc(FDayView.GutterWidth * Scale)
   else
@@ -1063,7 +1062,12 @@ var
   TextRegion: HRGN;
   CW: Integer;
 begin
-  if (FDayView.WrapStyle <> wsNone) and (not AEventIsEditing) then begin
+  {
+  if AEventIsEditing then
+    exit;
+  }
+
+  if (FDayView.WrapStyle <> wsNone) then begin
     if (AEventRect.Bottom <> AIconRect.Bottom) and (AEventRect.Left <> AIconRect.Right)
     then begin
       if FDayView.WrapStyle = wsIconFlow then
@@ -1103,25 +1107,24 @@ begin
       end;
     end;
   end
+  else begin
+  if ALevel = 0 then
+    { don't draw the gutter in the EventRest for level 0 events. }
+    TPSTextOut(RenderCanvas,                                         // wp: both cases are the same ?!
+      Angle,
+      RenderIn,
+      AIconRect.Right + FDayView.GutterWidth + TextMargin,
+      AEventRect.Top + TextMargin,
+      AText
+    )
   else
-  if (not AEventIsEditing) then begin
-    if ALevel = 0 then
-      { don't draw the gutter in the EventRest for level 0 events. }
-      TPSTextOut(RenderCanvas,                                         // wp: both cases are the same ?!
-        Angle,
-        RenderIn,
-        AIconRect.Right + FDayView.GutterWidth + TextMargin,
-        AEventRect.Top + TextMargin,
-        AText
-      )
-    else
-      TPSTextOut(RenderCanvas,
-        Angle,
-        RenderIn,
-        AIconRect.Right + FDayView.GutterWidth + TextMargin,
-        AEventRect.Top + TextMargin,
-        AText
-      );
+    TPSTextOut(RenderCanvas,
+      Angle,
+      RenderIn,
+      AIconRect.Right + FDayView.GutterWidth + TextMargin,
+      AEventRect.Top + TextMargin,
+      AText
+    );
   end;
 end;
 
@@ -1695,7 +1698,9 @@ begin
 end;
 
 procedure TVpDayViewPainter.PrepareEventRect(AWidthDivisor, ALevel: Integer;
-  var AEventRect: TRect; var AEventWidth: Integer);
+  var AEventRect: TRect);
+var
+  eventWidth: Integer;
 begin
   if AEventRect.Left < VisibleRect.Left then
     AEventRect.Left := VisibleRect.Left;
@@ -1705,15 +1710,15 @@ begin
 
   if AEventRect.Bottom < VisibleRect.Top then
     AEventRect.Bottom := VisibleRect.Bottom;
-  AEventWidth := WidthOf(VisibleRect) div AWidthDivisor;
+  eventWidth := WidthOf(VisibleRect) div AWidthDivisor;
 
   { Slide the rect over to correspond with the level }
   if ALevel > 0 then
-    AEventRect.Left := AEventRect.Left + AEventWidth * ALevel
+    AEventRect.Left := AEventRect.Left + eventWidth * ALevel
     { added because level 0 events were one pixel too far to the right }
   else
     AEventRect.Left := AEventRect.Left - 1;
-  AEventRect.Right := AEventRect.Left + AEventWidth - FDayView.GutterWidth;
+  AEventRect.Right := AEventRect.Left + eventWidth - FDayView.GutterWidth;
 end;
 
 { remove the date portion from the start and end times }
