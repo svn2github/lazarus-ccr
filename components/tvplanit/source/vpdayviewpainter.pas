@@ -87,7 +87,7 @@ type
     procedure DrawAllDays;
     procedure DrawCells(R: TRect; ColDate: TDateTime; Col: Integer);
     procedure DrawColHeader(R: TRect; ARenderDate: TDateTime; Col: Integer);
-    procedure DrawEditFrame(R: TRect; AGutter: Integer; AColor: TColor);
+    procedure DrawEditFrame(R: TRect; AGutter, ALevel: Integer; AColor: TColor);
     procedure DrawEvent(AEvent: TVpEvent; AEventRec: TVpDvEventRec;
       ARenderDate: TDateTime; Col: Integer);
     procedure DrawEvents(ARenderDate: TDateTime; Col: Integer);
@@ -725,17 +725,25 @@ begin
 end;
 
 { paint extra borders around the editor }
-procedure TVpDayViewPainter.DrawEditFrame(R: TRect; AGutter: Integer;
+procedure TVpDayViewPainter.DrawEditFrame(R: TRect; AGutter, ALevel: Integer;
   AColor: TColor);
 begin
   RenderCanvas.Pen.Color := clWindowFrame;
   RenderCanvas.Brush.Color := AColor;
-  with R do begin
-    TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Left, Top-AGutter, Right, Top));
-    TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Left-AGutter, Top, Left, Bottom));
-    TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Left, Bottom, Right, Bottom + AGutter));
-    TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Right, Top, Right+AGutter, Bottom));
-  end;
+  if ALevel = 0 then
+    with R do begin
+      TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Left, Top-AGutter, Right, Top));
+      TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Left-AGutter, Top, Left, Bottom));
+      TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Left, Bottom, Right, Bottom + AGutter));
+      TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Right, Top, Right+AGutter, Bottom));
+    end
+  else
+    with R do begin
+      TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Left+AGutter, Top-AGutter, Right, Top));
+      TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Left, Top, Left, Bottom));
+      TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Left+AGutter, Bottom, Right, Bottom + AGutter));
+      TPSFillRect(RenderCanvas, Angle, RenderIn, Rect(Right, Top, Right+AGutter, Bottom));
+    end;
 end;
 
 procedure TVpDayViewPainter.DrawEvent(AEvent: TVpEvent; AEventRec: TVpDvEventRec;
@@ -958,6 +966,8 @@ var
   SaveFont: TFont;
   SaveColor: TColor;
   OKToDrawEditFrame: Boolean;
+  tmpRect: TRect;
+  level: Integer;
 begin
   if (FDayView.DataStore = nil) or (FDayView.DataStore.Resource = nil) or
      (not FDayView.DataStore.Connected) then
@@ -1011,6 +1021,7 @@ begin
         PixelDuration := 0;
 
     { Iterate through events and paint them }
+    level := -1;
     for I := 0 to pred(MaxVisibleEvents) do begin
       { get the next event }
       Event := TVpEvent(EventArray[I].Event);
@@ -1020,6 +1031,7 @@ begin
         Break;
 
       DrawEvent(Event, EventArray[i], ARenderDate, Col);
+      if Event = FDayView.ActiveEvent then level := i;
     end;
 
     { paint extra borders around the editor }
@@ -1027,12 +1039,13 @@ begin
     if Assigned(FDayView.ActiveEvent) then
       OKToDrawEditFrame := not (FDayView.ActiveEvent.AllDayEvent);
 
-    if (TVpDayViewOpener(FDayView).dvInPlaceEditor <> nil) and
-        TVpDayViewOpener(FDayView).dvInplaceEditor.Visible and
-        OKToDrawEditFrame
-    then
-      with TVpDayViewOpener(FDayView) do
-        DrawEditFrame(dvActiveEventRec, GutterWidth, Datastore.CategoryColorMap.GetColor(ActiveEvent.Category));
+    with TVpDayViewOpener(FDayView) do
+      if (dvInPlaceEditor <> nil) and dvInplaceEditor.Visible and OKToDrawEditFrame then
+      begin
+        tmpRect := dvActiveEventRec;
+        DrawEditFrame(tmpRect, GutterWidth, level,
+          Datastore.CategoryColorMap.GetColor(ActiveEvent.Category));
+      end;
 
   finally
     { Clean Up }
