@@ -91,7 +91,7 @@ type
     procedure DrawEvent(AEvent: TVpEvent; AEventRec: TVpDvEventRec;
       ARenderDate: TDateTime; Col: Integer);
     procedure DrawEvents(ARenderDate: TDateTime; Col: Integer);
-    procedure DrawEventString(const AText: String; const AEventRect, AIconRect: TRect;
+    procedure DrawEventText(const AText: String; const AEventRect, AIconRect: TRect;
       ALevel: Integer; AEventIsEditing: Boolean);
     procedure DrawIcons(AIconRect: TRect);
     procedure DrawNavBtns;
@@ -879,7 +879,7 @@ begin
   EventString := BuildEventString(AEvent, EventRect, IconRect);
 
   { draw the event string }
-  DrawEventString(EventString, EventRect, IconRect, AEventRec.Level, EventIsEditing);
+  DrawEventText(EventString, EventRect, IconRect, AEventRec.Level, EventIsEditing);
 
   { paint the borders around the event text area }
   TPSPolyline(RenderCanvas, Angle, RenderIn, [
@@ -1055,7 +1055,7 @@ begin
   DrawIcon(dvBmpRecurring, RecurringW, RecurringH, false);
 end;
 
-procedure TVpDayViewPainter.DrawEventString(const AText: String;
+procedure TVpDayViewPainter.DrawEventText(const AText: String;
   const AEventRect, AIconRect: TRect; ALevel: Integer; AEventIsEditing: Boolean);
 var
   WorkRegion1: HRGN;
