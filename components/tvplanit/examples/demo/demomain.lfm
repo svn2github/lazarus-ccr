@@ -628,9 +628,10 @@ object MainForm: TMainForm
   object VpBufDSDataStore1: TVpBufDSDataStore
     CategoryColorMap.Category0.BackgroundColor = clSkyBlue
     CategoryColorMap.Category0.Color = clNavy
-    CategoryColorMap.Category0.Description = 'Category 0'
+    CategoryColorMap.Category0.Description = 'Appointment'
+    CategoryColorMap.Category1.BackgroundColor = 13290239
     CategoryColorMap.Category1.Color = clRed
-    CategoryColorMap.Category1.Description = 'Category 1'
+    CategoryColorMap.Category1.Description = 'Urgent'
     CategoryColorMap.Category2.Color = clYellow
     CategoryColorMap.Category2.Description = 'Category 2'
     CategoryColorMap.Category3.Color = clLime

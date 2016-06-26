@@ -77,6 +77,7 @@ type
   protected
     function BuildEventString(AEvent: TVpEvent;
       const AEventRect, AIconRect: TRect): String;
+    procedure CalcRowHeadRect(out ARect: TRect);
     function CountOverlappingEvents(Event: TVpEvent;
       const EArray: TVpDvEventArray): Integer;
     procedure CreateBitmaps;
@@ -93,6 +94,8 @@ type
     procedure DrawEventString(const AText: String; const AEventRect, AIconRect: TRect;
       ALevel: Integer; AEventIsEditing: Boolean);
     procedure DrawIcons(AIconRect: TRect);
+    procedure DrawNavBtns;
+    procedure DrawNavBtnBackground;
     procedure DrawRowHeader(R: TRect);
     procedure FreeBitmaps;
     procedure GetIcons(Event: TVpEvent);
@@ -1152,9 +1155,89 @@ begin
   end;
 end;
 
+procedure TVpDayViewPainter.DrawNavBtns;
+begin
+  { size and place the Today button first. }
+  with TVpDayViewOpener(FDayView) do begin
+    dvTodayBtn.Height := trunc(RealColHeadHeight div 2);
+    if DrawingStyle = dsFlat then begin
+      dvTodayBtn.Left := 1;
+      dvTodayBtn.Top := 1;
+      dvTodayBtn.Width := RealRowHeadWidth + 1;
+    end else begin
+      dvTodayBtn.Left := 2;
+      dvTodayBtn.Top := 2;
+      dvTodayBtn.Width := RealRowHeadWidth;
+    end;
+
+    { size and place the WeekDown button }
+    dvWeekDownBtn.Height := dvTodayBtn.Height;
+    dvWeekDownBtn.Width := trunc(RealRowHeadWidth * 0.25) + 2;
+    dvWeekDownBtn.Left := dvTodayBtn.Left;
+    dvWeekDownBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
+
+    { size and place the DayDown button }
+    dvDayDownBtn.Height := dvTodayBtn.Height;
+    dvDayDownBtn.Width := dvWeekDownBtn.Width - 4;
+    dvDayDownBtn.Left := dvWeekDownBtn.Left + dvWeekDownBtn.Width;
+    dvDayDownBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
+
+    { size and place the DayUp button }
+    dvDayUpBtn.Height := dvTodayBtn.Height;
+    dvDayUpBtn.Width := dvWeekDownBtn.Width - 4;
+    dvDayUpBtn.Left := dvDayDownBtn.Left + dvDayDownBtn.Width;
+    dvDayUpBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
+
+    { size and place the WeekUp button }
+    dvWeekUpBtn.Height := dvTodayBtn.Height;
+    dvWeekUpBtn.Width := dvTodayBtn.Width - dvWeekDownBtn.Width - dvDayDownBtn.Width - dvDayUpBtn.Width;
+    dvWeekUpBtn.Left := dvDayUpBtn.Left + dvDayUpBtn.Width;
+    dvWeekUpBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
+  end;
+end;
+
+procedure TVpDayViewPainter.DrawNavBtnBackground;
+var
+  R: TRect;
+begin
+  R := Rect(
+    RealLeft + 1,
+    RealTop,
+    RealLeft + 3 + RealRowHeadWidth,
+    RealTop + RealColHeadHeight + 2
+  );
+
+  RenderCanvas.Brush.Color := RealHeadAttrColor;
+  TPSFillRect(RenderCanvas, Angle, RenderIn, R);
+
+  if FDayView.DrawingStyle = ds3d then
+    DrawBevelRect(
+      RenderCanvas,
+      TPSRotateRectangle(Angle, RenderIn, Rect(
+        R.Left + 1,
+        R.Top + 2,
+        R.Right - 2,
+        R.Bottom - 2
+      )),
+      BevelHighlight,
+      BevelShadow
+    )
+  else begin
+    RenderCanvas.Pen.Color := BevelShadow;
+    TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 2, R.Bottom - 2);
+    TPSLineTo(RenderCanvas, Angle, RenderIn, R.Left, R.Bottom - 2);
+    RenderCanvas.Pen.Color := BevelHighlight;
+    TPSLineTo(RenderCanvas, Angle, RenderIn, R.Left, R.Top);
+    TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right - 2, R.Top);
+    RenderCanvas.Pen.Color := BevelShadow;
+    TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 2, R.Top + 6);
+    TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right - 2, R.Bottom - 5);
+  end;
+end;
+
 procedure TVpDayViewPainter.DrawRowHeader(R: TRect);
 var
-  Temp , I: Integer;
+  Temp, I, len: Integer;
   LineRect: TRect;
   LastHour, Hour: Integer;
   MinuteStr, HourStr: string;
@@ -1179,31 +1262,22 @@ begin
       StartLine,
       StopLine
     );
-    Temp := RenderCanvas.TextWidth('33');
-    Temp := Temp + 10;
+    len := RenderCanvas.TextWidth('33') + 10;
+
     RenderCanvas.Pen.Style := psSolid;
     RenderCanvas.Pen.Color := RealLineColor;
     LineRect := Rect(R.Left, R.Top, R.Right, R.Top + RealRowHeight);
     Hour := Ord(TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine].Hour);
 
     for I := 0 to RealVisibleLines do begin
-      { prevent any extranneous drawing below the last hour }
+      { prevent any extraneous drawing below the last hour }
       if (I + FDayView.TopLine >= FDayView.LineCount) or (Hour > 23) then
         Break;
 
-      if I = 0 then begin
-        if Hour < 12 then
-          MinuteStr := 'am'
-        else
-          MinuteStr := 'pm';
-      end
-      else if Ord(Hour) = 12 then
-        MinuteStr := 'pm'
-      else
-        MinuteStr := '00';
-
-      if FDayView.TimeFormat = tf24Hour then
-        MinuteStr := '00';
+      case FDayView.TimeFormat of
+        tf24Hour: MinuteStr := '00';
+        tf12Hour: MinuteStr := IfThen(Hour < 12, 'am', 'pm');
+      end;
 
       { Position the rect }
       LineRect.Top := R.Top + i * RealRowHeight;
@@ -1236,10 +1310,11 @@ begin
             LineRect.Top + TextMargin,
             MinuteStr
           );
+          temp := RenderCanvas.TextWidth(MinuteStr) + 4;
           { Paint Hour Text }
           RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.HourFont);
           TPSTextOut(RenderCanvas, Angle, RenderIn,
-            LineRect.Right - RenderCanvas.TextWidth(HourStr) - 2 - Temp,
+            LineRect.Right - RenderCanvas.TextWidth(HourStr) - 7 - temp,
             LineRect.Top + TextMargin - 2,
             HourStr
           );
@@ -1252,7 +1327,7 @@ begin
       if LastHour <> Hour then
         TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Left + 6, LineRect.Bottom)
       else
-        TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right-Temp, LineRect.Bottom);
+        TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right - len, LineRect.Bottom);
     end; {for}
 
     { Draw Row Header Borders }
@@ -1276,6 +1351,18 @@ begin
   finally
     SaveFont.Free;
   end;
+end;
+
+procedure TVpDayViewPainter.CalcRowHeadRect(out ARect: TRect);
+begin
+  ARect := Rect(
+    RealLeft + 1,
+    ADEventsRect.Bottom + 1,
+    RealLeft + 2 + RealRowHeadWidth,
+    RealBottom
+  );
+  if FDayView.DrawingStyle = dsFlat then
+    inc(ARect.Left);
 end;
 
 procedure TVpDayViewPainter.FreeBitmaps;
@@ -1445,6 +1532,8 @@ end;
 procedure TVpDayViewPainter.RenderToCanvas(ARenderIn: TRect;
   AAngle: TVpRotationAngle; AScale: Extended; ARenderDate: TDateTime;
   AStartLine, AStopLine: Integer; AUseGran: TVpGranularity; ADisplayOnly: Boolean);
+var
+  tmpRect: TRect;
 begin
   inherited;
 
@@ -1489,7 +1578,12 @@ begin
     { Draw the All Day Events }
     DrawAllDayEvents;
 
-    { draw the area in the top left corner, where the nav buttons go. }
+    { Draw the area in the top left corner, where the nav buttons go. }
+    DrawNavBtnBackground;
+
+    { Draw row headers }
+    CalcRowHeadRect(RowHeadRect);
+                 (*
     RowHeadRect := Rect(
       RealLeft + 1,
       RealTop,
@@ -1525,10 +1619,9 @@ begin
     end;
 
     RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.HourFont);
+    RowHeadRect := Rect(RealLeft + 1 , ADEventsRect.Bottom + 1, RealLeft + 2 + RealRowHeadWidth, RealBottom);
     if FDayView.DrawingStyle = dsFlat then
-      RowHeadRect := Rect(RealLeft + 2, ADEventsRect.Bottom + 1, RealLeft + 2 + RealRowHeadWidth, RealBottom)
-    else
-      RowHeadRect := Rect(RealLeft + 1, ADEventsRect.Bottom + 1, RealLeft + 2 + RealRowHeadWidth, RealBottom);
+      inc(RowHeadRect.Left);*)
 
     if Assigned(FDayView.OwnerDrawRowHeader) then begin
       Drawn := false;
@@ -1541,72 +1634,23 @@ begin
     { Draw the regular events }
     DrawAllDays;
 
-    { Draw Borders }
+    { Draw borders }
+    tmpRect := Rect(RealLeft, RealTop, RealRight-1, RealBottom-1);
     if FDayView.DrawingStyle = dsFlat then begin
       { Draw an outer and inner bevel }
-      DrawBevelRect(
-        RenderCanvas,
-        TPSRotateRectangle(Angle, RenderIn, Rect(RealLeft, RealTop, RealRight - 1, RealBottom - 1)),
-        BevelShadow,
-        BevelHighlight
-      );
-      DrawBevelRect(
-        RenderCanvas,
-        TPSRotateRectangle(Angle, RenderIn, Rect(RealLeft + 1, RealTop + 1, RealRight - 2, RealBottom - 2)),
-        BevelHighlight,
-        BevelShadow
-      );
+      DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn, tmpRect), BevelShadow, BevelHighlight);
+      InflateRect(tmpRect, -1, -1);
+      DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn, tmpRect), BevelHighlight, BevelShadow);
     end else
     if FDayView.DrawingStyle = ds3d then begin
       { Draw a 3d bevel }
-      DrawBevelRect(
-        RenderCanvas,
-        TPSRotateRectangle(Angle, RenderIn, Rect(RealLeft, RealTop, RealRight - 1, RealBottom - 1)),
-        BevelShadow,
-        BevelHighlight
-      );
-      DrawBevelRect(
-        RenderCanvas,
-        TPSRotateRectangle(Angle, RenderIn, Rect(RealLeft + 1, RealTop + 1, RealRight - 2, RealBottom - 2)),
-        BevelDarkShadow,
-        BevelFace
-      );
+      DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn, tmpRect), BevelShadow, BevelHighlight);
+      InflateRect(tmpRect, -1, -1);
+      DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn, tmpRect), BevelDarkShadow, BevelFace);
     end;
 
-    { Place navigation buttons               }
-    { size and place the Today button first. }
-    with TVpDayViewOpener(FDayView) do begin
-      dvTodayBtn.Height := trunc(RealColHeadHeight div 2);
-      if DrawingStyle = dsFlat then begin
-        dvTodayBtn.Left := 1;
-        dvTodayBtn.Top := 1;
-        dvTodayBtn.Width := RealRowHeadWidth + 1;
-      end else begin
-        dvTodayBtn.Left := 2;
-        dvTodayBtn.Top := 2;
-        dvTodayBtn.Width := RealRowHeadWidth;
-      end;
-      { size and place the WeekDown button }
-      dvWeekDownBtn.Height := dvTodayBtn.Height;
-      dvWeekDownBtn.Width := trunc(RealRowHeadWidth * 0.25) + 2;
-      dvWeekDownBtn.Left := dvTodayBtn.Left;
-      dvWeekDownBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
-      { size and place the DayDown button }
-      dvDayDownBtn.Height := dvTodayBtn.Height;
-      dvDayDownBtn.Width := dvWeekDownBtn.Width - 4;
-      dvDayDownBtn.Left := dvWeekDownBtn.Left + dvWeekDownBtn.Width;
-      dvDayDownBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
-      { size and place the DayUp button }
-      dvDayUpBtn.Height := dvTodayBtn.Height;
-      dvDayUpBtn.Width := dvWeekDownBtn.Width - 4;
-      dvDayUpBtn.Left := dvDayDownBtn.Left + dvDayDownBtn.Width;
-      dvDayUpBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
-      { size and place the WeekUp button }
-      dvWeekUpBtn.Height := dvTodayBtn.Height;
-      dvWeekUpBtn.Width := dvTodayBtn.Width - dvWeekDownBtn.Width - dvDayDownBtn.Width - dvDayUpBtn.Width;
-      dvWeekUpBtn.Left := dvDayUpBtn.Left + dvDayUpBtn.Width;
-      dvWeekUpBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
-    end;
+    { Place navigation buttons }
+    DrawNavBtns;
 
     { Reinstate RenderCanvas settings }
     RestorePenBrush;
