@@ -685,7 +685,7 @@ begin
   FHeadAttr := TVpCHAttributes.Create(self);
   FRowHeadAttr := TVpRHAttributes.Create(self);
   FAllDayEventAttr := TVpAllDayEventAttributes.Create(self);
-  dvClickTimer := TTimer.Create (self);
+  dvClickTimer := TTimer.Create(self);
   FIconAttributes := TVpDayViewIconAttributes.Create(Self);
 
   { create Nav buttons }
@@ -1613,59 +1613,57 @@ end;
 procedure TVpDayView.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 var
-  ClientOrigin: TPoint;
   i: Integer;
 begin
   inherited MouseDown(Button, Shift, X, Y);
   if Button = mbLeft then
-    begin
-      dvMouseDownPoint := Point(x, y);
-      dvMouseDown      := true;
-
-      { if the mouse was pressed down in the client area, then select the cell. }
-      if not focused then SetFocus;
-
-      if (x > dvRowHeadWidth - 9) and (y > dvColHeadHeight) then
-        begin
-          { The mouse click landed inside the client area }
-          dvSetActiveColByCoord(Point(x, y));
-          dvSetActiveRowByCoord(Point(x, y), True);
-          if not ReadOnly then
-            EditEventAtCoord(Point(x, y));
-        end else if y > dvColHeadHeight then
-          dvSetActiveRowByCoord (Point (x, y), True);
-
-      if Assigned(OnClick) then
-        OnClick(self);
-    end
-  else
-    begin
-  if not focused then
-    SetFocus;
-
-  if (x > dvRowHeadWidth - 9) and (y > dvColHeadHeight) then
   begin
-    { The mouse click landed inside the client area }
-    dvSetActiveColByCoord(Point(x, y));
-    dvSetActiveRowByCoord(Point(x, y), True);
-  end;
+    dvMouseDownPoint := Point(x, y);
+    dvMouseDown := true;
 
-  EditEventAtCoord (Point (x, y));
-  dvClickTimer.Enabled := false;
+    { if the mouse was pressed down in the client area, then select the cell. }
+    if not focused then SetFocus;
 
-  if not Assigned (PopupMenu) then begin
-    ClientOrigin := GetClientOrigin;
+    if (x > dvRowHeadWidth - 9) and (y > dvColHeadHeight) then
+    begin
+      { The mouse click landed inside the client area }
+      dvSetActiveColByCoord(Point(x, y));
+      dvSetActiveRowByCoord(Point(x, y), True);
+      if not ReadOnly then
+        EditEventAtCoord(Point(x, y));
+    end else
+    if y > dvColHeadHeight then
+      dvSetActiveRowByCoord(Point (x, y), True);
 
-    if not Assigned (FActiveEvent) then
-      for i := 0 to FDefaultPopup.Items.Count - 1 do begin
-        if (FDefaultPopup.Items[i].Tag = 1) or (ReadOnly) then
-          FDefaultPopup.Items[i].Enabled := False;
-      end
-    else
-      for i := 0 to FDefaultPopup.Items.Count - 1 do
-        FDefaultPopup.Items[i].Enabled := True;
-  end;
+    if Assigned(OnClick) then
+      OnClick(self);
+  end
+  else begin
+    if not focused then
+      SetFocus;
+
+    if (x > dvRowHeadWidth - 9) and (y > dvColHeadHeight) then
+    begin
+      { The mouse click landed inside the client area }
+      dvSetActiveColByCoord(Point(x, y));
+      dvSetActiveRowByCoord(Point(x, y), True);
     end;
+
+    EditEventAtCoord(Point (x, y));
+    dvClickTimer.Enabled := false;
+
+    if not Assigned(PopupMenu) then
+    begin
+      if not Assigned(FActiveEvent) then
+        for i := 0 to FDefaultPopup.Items.Count - 1 do begin
+          if (FDefaultPopup.Items[i].Tag = 1) or (ReadOnly) then
+            FDefaultPopup.Items[i].Enabled := False;
+        end
+      else
+        for i := 0 to FDefaultPopup.Items.Count - 1 do
+          FDefaultPopup.Items[i].Enabled := True;
+    end;
+  end;
 end;
 
 {=====}
@@ -1858,16 +1856,12 @@ begin
   if ReadOnly then
     Exit;
   for I := 0 to pred(Length(dvEventArray)) do begin
-    if dvEventArray[I].Event = nil then begin
+    FActiveEvent := nil;                               // wp: shouldn't these be set also if ReadOnly is true?
+    dvActiveEventRec := Rect(0, 0, 0, 0);
+    dvActiveIconRec := Rect(0, 0, 0, 0);
+    if dvEventArray[I].Event = nil then
       { we've hit the end of visible events without finding a match }
-      FActiveEvent := nil;
-      dvActiveEventRec.Top := 0;
-      dvActiveEventRec.Bottom := 0;
-      dvActiveEventRec.Right := 0;
-      dvActiveEventRec.Left := 0;
-      dvActiveIconRec := Rect (0, 0, 0, 0);
       Exit;
-    end;
     if (Point.X > dvEventArray[I].Rec.Left) and
        (Point.X < dvEventArray[I].Rec.Right) and
        (Point.Y > dvEventArray[I].Rec.Top) and
@@ -1879,13 +1873,6 @@ begin
       dvClickTimer.Enabled := true;
       result := true;
       Break;
-    end else begin
-      FActiveEvent := nil;
-      dvActiveEventRec.Top := 0;
-      dvActiveEventRec.Bottom := 0;
-      dvActiveEventRec.Right := 0;
-      dvActiveEventRec.Left := 0;
-      dvActiveIconRec := Rect (0, 0, 0, 0);
     end;
   end;
 end;
@@ -2284,8 +2271,7 @@ begin
     dvPainting := false;
   end;
 end;
-
-(*
+    (*
 var
   TextWidth: Integer;
   ColHeadRect: TRect;
@@ -4013,7 +3999,7 @@ begin
 
   dvPainting := false;
 end;
-*)
+  *)
 {=====}
 
 {.$IFNDEF LCL}

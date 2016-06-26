@@ -75,6 +75,8 @@ type
     OldFont: TFont;
 
   protected
+    function BuildEventString(AEvent: TVpEvent;
+      const AEventRect, AIconRect: TRect): String;
     function CountOverlappingEvents(Event: TVpEvent;
       const EArray: TVpDvEventArray): Integer;
     procedure CreateBitmaps;
@@ -88,12 +90,19 @@ type
     procedure DrawEvent(AEvent: TVpEvent; AEventRec: TVpDvEventRec;
       ARenderDate: TDateTime; Col: Integer);
     procedure DrawEvents(ARenderDate: TDateTime; Col: Integer);
+    procedure DrawEventString(const AText: String; const AEventRect, AIconRect: TRect;
+      ALevel: Integer; AEventIsEditing: Boolean);
     procedure DrawIcons(AIconRect: TRect);
     procedure DrawRowHeader(R: TRect);
     procedure FreeBitmaps;
     procedure GetIcons(Event: TVpEvent);
     procedure InitColors;
     procedure InitializeEventRectangles;
+    procedure PopulateEventArray(ARenderDate: TDateTime);
+    procedure PrepareEventRect(AWidthDivisor, ALevel: Integer;
+      var AEventRect: TRect; var AEventWidth: Integer);
+    procedure PrepareEventTimes(AEvent: TVpEvent; ARenderDate: TDateTime;
+      out AStartTime, AEndTime: TDateTime);
     procedure ScaleIcons(EventRect: TRect);
     procedure SetMeasurements; override;
 
@@ -118,6 +127,31 @@ constructor TVpDayViewPainter.Create(ADayView: TVpDayView; ARenderCanvas: TCanva
 begin
   inherited Create(ARenderCanvas);
   FDayView := ADayView;
+end;
+
+function TVpDayViewPainter.BuildEventString(AEvent: TVpEvent;
+  const AEventRect, AIconRect: TRect): String;
+var
+  maxW: Integer;
+  timeFmt: String;
+begin
+  if FDayView.ShowEventTimes then begin
+    timeFmt := IfThen(FDayView.TimeFormat = tf24Hour, 'h:nn', 'h:nnam/pm');
+    Result := Format('%s - %s: %s', [
+      FormatDateTime(timeFmt, AEvent.StartTime),
+      FormatDateTime(timeFmt, AEvent.EndTime),
+      AEvent.Description
+    ]);
+  end else
+    Result := AEvent.Description;
+
+  if FDayView.WrapStyle = wsNone then begin
+    { if the string is longer than the availble space then chop off the end
+      and place those little '...'s at the end }
+    maxW := AEventRect.Right - AIconRect.Right - Round(FDayView.GutterWidth * Scale) - TextMargin;
+    if RenderCanvas.TextWidth(Result) > maxW then
+      Result := GetDisplayString(RenderCanvas, Result, 0, maxW);
+  end;
 end;
 
 function TVpDayViewPainter.CountOverlappingEvents(Event: TVpEvent;
@@ -713,14 +747,8 @@ var
   EventRect, GutterRect: TRect;
   StartPixelOffset, EndPixelOffset: Integer;
   StartOffset, EndOffset: Double;
-  timeFmt: String;
   EventString: String;
-  TextRegion : HRGN;
-  WorkRegion1: HRGN;
-  WorkRegion2: HRGN;
   tmpRect: TRect;
-  CW: Integer;
-  w: Integer;
 begin
   { Initialize, collect useful information needed later }
   EventCategory := FDayView.Datastore.CategoryColorMap.GetCategory(AEvent.Category);
@@ -731,74 +759,25 @@ begin
     else
       EventIsEditing := false;
 
-  timeFmt := IfThen(FDayView.TimeFormat = tf24Hour, 'h:nn', 'h:nnam/pm');
-
-   (*  -- original
-        { remove the date portion from the start and end times }
-        EventSTime := Event.StartTime;
-        EventETime := Event.EndTime;
-        if trunc(EventSTime) < trunc(ARenderDate) then //First Event
-          EventSTime := 0+trunc(ARenderDate);
-        if trunc(EventETime) > trunc(ARenderDate) then //First Event
-          EventETime := 0.999+trunc(ARenderDate);
-        EventSTime := EventSTime - ARenderDate;
-        EventETime := EventETime - ARenderDate;
-        { Find the line on which this event starts }
-        EventSLine := GetStartLine(EventSTime, Granularity);
-        { Handle End Times of Midnight }
-        if EventETime = 0 then
-          EventETime := EncodeTime (23, 59, 59, 0);
-    *)
-
   { remove the date portion from the start and end times }
-  EventSTime := AEvent.StartTime;
-  EventETime := AEvent.EndTime;
-  if (EventSTime < trunc(ARenderDate)) and (AEvent.RepeatCode = rtNone) then  // First Event
-    EventSTime := trunc(ARenderDate)
-  else if (AEvent.RepeatCode <> rtNone) then
-    EventSTime := frac(EventSTime) + trunc(ARenderDate);
+  PrepareEventTimes(AEvent, ARenderDate, EventSTime, EventETime);
 
-  if (trunc(EventETime) > trunc(ARenderDate)) and (AEvent.RepeatCode = rtNone) then  // First Event
-    EventETime := 0.999 + trunc(ARenderDate)
-  else if (AEvent.RepeatCode <> rtNone) then
-    EventETime := frac(EventETime) + trunc(ARenderDate);
-  EventSTime := EventSTime - trunc(ARenderDate);
-  EventETime := EventETime - trunc(ARenderDate);
-
-  { Handle End Times of Midnight }
-  if EventETime = 0 then
-    EventETime := EncodeTime(23, 59, 59, 0);
-
-  { Find the line on which this event starts }
+  { Find the lines on which this event starts and ends }
   EventSLine := GetStartLine(EventSTime, FDayView.Granularity);
-
-  { Calculate the number of lines this event will cover }
-  EventELine := GetEndLine(EventETime {Event.EndTime}, FDayView.Granularity);
-  EventLineCount := EventELine - EventSLine + 1;
-  EventDuration := EventETime - EventSTime;
+  EventELine := GetEndLine(EventETime, FDayView.Granularity);
 
   { If the event doesn't occupy area that is currently visible, then skip it. }
   if (EventELine < StartLine) or (EventSLine > StartLine + RealVisibleLines) then
     Exit;
 
+  { Calculate the number of lines this event will cover }
+  EventLineCount := EventELine - EventSLine + 1;
+  EventDuration := EventETime - EventSTime;
+
   { Build the rectangle in which the event will be painted. }
   EventRect := TVpDayViewOpener(FDayView).dvLineMatrix[Col, EventSLine].Rec;
-  if EventRect.Left < VisibleRect.Left then
-    EventRect.Left := VisibleRect.Left;
-  if EventRect.Top < VisibleRect.Top then
-    EventRect.Top := VisibleRect.Top;
   EventRect.Bottom := TVpDayViewOpener(FDayView).dvLineMatrix[Col, EventELine].Rec.Bottom;
-  if EventRect.Bottom < VisibleRect.Top then
-    EventRect.Bottom := VisibleRect.Bottom;
-  EventWidth := WidthOf(VisibleRect) div AEventRec.WidthDivisor;
-
-  { Slide the rect over to correspond with the level }
-  if AEventRec.Level > 0 then
-    EventRect.Left := EventRect.Left + EventWidth * AEventRec.Level
-    { added because level 0 events were one pixel too far to the right }
-  else
-    EventRect.Left := EventRect.Left - 1;
-  EventRect.Right := EventRect.Left + EventWidth - FDayView.GutterWidth;
+  PrepareEventRect(AEventRec.WidthDivisor, AEventRec.Level, EventRect, EventWidth);
 
   { Draw the event rectangle }
   { paint Event text area clWindow }
@@ -820,14 +799,12 @@ begin
   { stop drawing colored area according to the start time and end time of the event. }
   StartPixelOffset := 0;
   EndPixelOffset := 0;
-
   if (PixelDuration > 0) and (EventDuration < GetLineDuration(FDayView.Granularity) * EventLineCount)
   then begin
     if (EventSLine >= StartLine) and (EventSTime > TVpDayViewOpener(FDayView).dvLineMatrix[0, EventSLine].Time)
     then begin
       { Get the start offset in TDateTime format }
       StartOffset := EventSTime - TVpDayViewOpener(FDayView).dvLineMatrix[0, EventSLine].Time;
-
       { determine how many pixels to scooch down before painting the event's color code. }
       StartPixelOffset := trunc(StartOffset / PixelDuration);
     end;
@@ -837,7 +814,6 @@ begin
     then begin
       { Get the end offset in TDateTime format }
       EndOffset := TVpDayViewOpener(FDayView).dvLineMatrix[0, EventELine + 1].Time  - EventETime;
-
       { determine how many pixels to scooch down before painting the event's color code. }
       EndPixelOffset := trunc(EndOffset / PixelDuration);
     end;
@@ -856,7 +832,6 @@ begin
 
   RenderCanvas.Brush.Color := WindowColor;
 
-  { build the event string }
   IconRect.Left := EventRect.Left;
   IconRect.Top := EventRect.Top;
   IconRect.Right := EventRect.Left;
@@ -874,102 +849,25 @@ begin
     end;
   end;
 
-  { wp: Using Canvas here does not look correct...
-  OldPen.Assign(Canvas.Pen);
-  OldBrush.Assign(Canvas.Brush);
-  OldFont.Assign(Canvas.Font);
-  }
-  OldPen.Assign(RenderCanvas.Pen);
+  OldPen.Assign(RenderCanvas.Pen);      // wp: Original code had "Canvas" here which does not look correct
   OldBrush.Assign(RenderCanvas.Brush);
   OldFont.Assign(RenderCanvas.Font);
-  if Assigned(FDayView.OnBeforeDrawEvent) and (AEventRec.Level = 0) then
-    FDayView.OnBeforeDrawEvent(Self, AEvent, FDayView.ActiveEvent = AEvent, RenderCanvas, EventRect, IconRect)
-  else if Assigned(FDayView.OnBeforeDrawEvent) then
-    FDayView.OnBeforeDrawEvent(Self, AEvent, FDayView.ActiveEvent = AEvent, RenderCanvas,
-      Rect(EventRect.Left + FDayView.GutterWidth, EventRect.Top, EventRect.Right, EventRect.Bottom),
-      IconRect
-    );
+
+  if Assigned(FDayView.OnBeforeDrawEvent) then begin
+    tmpRect := EventRect;
+    if (AEventRec.Level <> 0) then
+      inc(tmpRect.Left, FDayView.GutterWidth);
+    FDayView.OnBeforeDrawEvent(Self, AEvent, FDayView.ActiveEvent = AEvent, RenderCanvas, tmpRect, IconRect);
+  end;
 
   if not DisplayOnly then
     DrawIcons(IconRect);
 
-  if FDayView.ShowEventTimes then
-    EventString := Format('%s - %s: %s', [
-      FormatDateTime(timeFmt, AEvent.StartTime),
-      FormatDateTime(timeFmt, AEvent.EndTime),
-      AEvent.Description
-    ])
-  else
-    EventString := AEvent.Description;
+  { build the event string }
+  EventString := BuildEventString(AEvent, EventRect, IconRect);
 
-  if FDayView.WrapStyle = wsNone then begin
-    { if the string is longer than the availble space then chop    }
-    { off the and and place those little '...'s at the end         }
-    w := EventRect.Right - IconRect.Right - Round(FDayView.GutterWidth * Scale) - TextMargin;
-    if RenderCanvas.TextWidth(EventString) > w then
-      EventString := GetDisplayString(RenderCanvas, EventString, 0, w);
-  end;
-
-  if (FDayView.WrapStyle <> wsNone) and (not EventIsEditing) then begin
-    if (EventRect.Bottom <> IconRect.Bottom) and (EventRect.Left <> IconRect.Right)
-    then begin
-      if FDayView.WrapStyle = wsIconFlow then
-      begin
-        WorkRegion1 := CreateRectRgn(IconRect.Right, EventRect.Top, EventRect.Right, IconRect.Bottom);
-        WorkRegion2 := CreateRectRgn(EventRect.Left + FDayView.GutterWidth, IconRect.Bottom, EventRect.Right, EventRect.Bottom);
-        TextRegion := CreateRectRgn(IconRect.Right, EventRect.Top, EventRect.Right, IconRect.Bottom);
-        CombineRgn(TextRegion, WorkRegion1, WorkRegion2, RGN_OR);
-      end else
-        TextRegion := CreateRectRgn(IconRect.Right, EventRect.Top, EventRect.Right, EventRect.Bottom);
-    end else
-      TextRegion := CreateRectRgn(IconRect.Right + FDayView.GutterWidth, EventRect.Top, EventRect.Right, EventRect.Bottom);
-
-    try
-      CW := RenderTextToRegion(RenderCanvas, Angle, RenderIn, TextRegion, EventString);
-      { write the event string to the proper spot in the EventRect }
-      if CW < Length(EventString) then begin
-        RenderCanvas.Brush.Color := FDayView.DotDotDotColor;
-        { draw dot dot dot }
-        TPSFillRect(RenderCanvas, Angle, RenderIn,
-          Rect(EventRect.Right - 20, EventRect.Bottom - 7, EventRect.Right - 17, EventRect.Bottom - 4)
-        );
-        TPSFillRect(RenderCanvas, Angle, RenderIn,
-          Rect(EventRect.Right - 13, EventRect.Bottom - 7, EventRect.Right - 10, EventRect.Bottom - 4));
-        TPSFillRect(RenderCanvas, Angle, RenderIn,
-          Rect(EventRect.Right - 6, EventRect.Bottom - 7, EventRect.Right - 3, EventRect.Bottom - 4));
-      end;
-    finally
-      if ((EventRect.Bottom > IconRect.Bottom) and (EventRect.Left > IconRect.Right)) or
-         (FDayView.WrapStyle = wsIconFlow)
-      then begin
-        DeleteObject(WorkRegion1);
-        DeleteObject(WorkRegion2);
-        DeleteObject(TextRegion);
-      end else begin
-        DeleteObject(TextRegion);
-      end;
-    end;
-  end
-  else
-  if (not EventIsEditing) then begin
-    if AEventRec.Level = 0 then
-      { don't draw the gutter in the EventRest for level 0 events. }
-      TPSTextOut(RenderCanvas,                                         // wp: both cases are the same ?!
-        Angle,
-        RenderIn,
-        IconRect.Right + FDayView.GutterWidth + TextMargin,
-        EventRect.Top + TextMargin,
-        EventString
-      )
-    else
-      TPSTextOut(RenderCanvas,
-        Angle,
-        RenderIn,
-        IconRect.Right + FDayView.GutterWidth + TextMargin,
-        EventRect.Top + TextMargin,
-        EventString
-      );
-  end;
+  { draw the event string }
+  DrawEventString(EventString, EventRect, IconRect, AEventRec.Level, EventIsEditing);
 
   { paint the borders around the event text area }
   TPSPolyline(RenderCanvas, Angle, RenderIn, [
@@ -986,21 +884,14 @@ begin
     TPSLineTo(RenderCanvas, Angle, RenderIn, EventRect.Left + Round(FDayView.GutterWidth * Scale), EventRect.Bottom);
   end;
 
-  if Assigned(FDayView.OnAfterDrawEvent) and (AEventRec.Level = 0) then
-    FDayView.OnAfterDrawEvent(Self, AEvent, FDayView.ActiveEvent = AEvent, RenderCanvas, EventRect, IconRect)
-  else
-  if Assigned(FDayView.OnAfterDrawEvent) then
-    FDayView.OnAfterDrawEvent(Self, AEvent, FDayView.ActiveEvent = AEvent, RenderCanvas,
-      Rect(EventRect.Left + FDayView.GutterWidth, EventRect.Top, EventRect.Right, EventRect.Bottom),
-      IconRect
-    );
+  if Assigned(FDayView.OnAfterDrawEvent) then begin
+    tmpRect := EventRect;
+    if (AEventRec.Level <> 0) then
+      inc(tmpRect.Left, FDayView.GutterWidth);
+    FDayView.OnAfterDrawEvent(Self, AEvent, FDayView.ActiveEvent = AEvent, RenderCanvas, tmpRect, IconRect);
+  end;
 
-  { Canvas does not look correct here...
-  Canvas.Brush.Assign(OldBrush);
-  Canvas.Pen.Assign(OldPen);
-  Canvas.Font.Assign(OldFont);           }
-
-  RenderCanvas.Brush.Assign(OldBrush);
+  RenderCanvas.Brush.Assign(OldBrush);   // wp: Original code had "Canvas" here which does not look correct.
   RenderCanvas.Pen.Assign(OldPen);
   RenderCanvas.Font.Assign(OldFont);
 
@@ -1060,13 +951,10 @@ procedure TVpDayViewPainter.DrawEvents(ARenderDate: TDateTime; Col: Integer);
 
 var
   I,J: Integer;
-  Level: Integer;
   Event: TVpEvent;
   SaveFont: TFont;
   SaveColor: TColor;
-  EventList: TList;
   OKToDrawEditFrame: Boolean;
-  ThisTime: Double;
 begin
   if (FDayView.DataStore = nil) or (FDayView.DataStore.Resource = nil) or
      (not FDayView.DataStore.Connected) then
@@ -1077,61 +965,10 @@ begin
   SaveFont := TFont.Create;
   SaveFont.Assign(RenderCanvas.Font);
 
-  { set the event array's size }
-  SetLength(EventArray, MaxVisibleEvents);
+  {Get all of the events for this day}
+  PopulateEventArray(ARenderDate);
 
-  { Initialize the new matrix }
-  for I := 0 to pred(MaxVisibleEvents) do begin
-    EventArray[I].Event := nil;
-    EventArray[I].Level := 0;
-    EventArray[I].OLLevels := 0;
-    EventArray[I].WidthDivisor := 0;
-  end;
-
-  EventList := TList.Create;
-  try
-    {Get all of the events for this day}
-    FDayView.DataStore.Resource.Schedule.EventsByDate(ARenderDate, EventList);
-
-    { Discard AllDayEvents, because they are drawn above. }
-    for I := pred(EventList.Count) downto 0 do begin
-      Event := EventList[I];
-      if Event.AllDayEvent then
-        EventList.Delete(I);
-    end;
-
-    { Arrange this day's events in the event matrix }
-    Level := 0;
-    I := 0;
-    while EventList.Count > 0 do begin
-      { Iterate through the events, and place them all in the proper     }
-      { place in the EventMatrix, according to their start and end times }
-      J := 0;
-      ThisTime := 0.0;
-      while (J < EventList.Count) and (J < MaxVisibleEvents) do begin
-        Event := EventList[J];
-        if frac(Event.StartTime) >= ThisTime then begin
-          ThisTime := frac(Event.EndTime);
-          { Handle end times of midnight }
-          if ThisTime = 0 then
-            ThisTime := EncodeTime(23, 59, 59, 0);
-          EventList.Delete(J);
-          EventArray[I].Event := Event;
-          EventArray[I].Level := Level;
-          Inc(I);
-          Continue;
-        end
-        else
-          Inc(J);
-      end;
-      Inc(Level);
-    end;
-
-  finally
-    EventList.Free;
-  end;
-
-  { Count the number of events which all share some of the same time }
+  // Count the number of events which all share some of the same time
   for I := 0 to pred(MaxVisibleEvents) do begin
     if EventArray[I].Event = nil then
       Break;
@@ -1139,18 +976,17 @@ begin
       CountOverlappingEvents(TVpEvent(EventArray[I].Event), EventArray);
   end;
 
-  { Calculate the largest width divisor of all overlapping events, }
-  { for each event. }
+  // Calculate the largest width divisor of all overlapping events, for each event.
   for I := 0 to pred(MaxVisibleEvents) do begin
     if EventArray[I].Event = nil then
       Break;
     EventArray[I].WidthDivisor := GetMaxOLEvents(TVpEvent(EventArray[I].Event), EventArray);
   end;
 
-  {Make one last pass, to make sure that we have set up the width divisors properly }
+  // Make one last pass, to make sure that we have set up the width divisors properly
   VerifyMaxWidthDivisors;
 
-  { Time to paint 'em. Let's see if we calculated their placements correctly   }
+  // Time to paint 'em. Let's see if we calculated their placements correctly
   IconRect := Rect(0, 0, 0, 0);
   CreateBitmaps;
   OldFont := TFont.Create;
@@ -1244,6 +1080,76 @@ begin
   DrawIcon(dvBmpCategory, CategoryW, CategoryH);
   DrawIcon(dvBmpAlarm, AlarmW, AlarmH);
   DrawIcon(dvBmpRecurring, RecurringW, RecurringH, false);
+end;
+
+procedure TVpDayViewPainter.DrawEventString(const AText: String;
+  const AEventRect, AIconRect: TRect; ALevel: Integer; AEventIsEditing: Boolean);
+var
+  WorkRegion1: HRGN;
+  WorkRegion2: HRGN;
+  TextRegion: HRGN;
+  CW: Integer;
+begin
+  if (FDayView.WrapStyle <> wsNone) and (not AEventIsEditing) then begin
+    if (AEventRect.Bottom <> AIconRect.Bottom) and (AEventRect.Left <> AIconRect.Right)
+    then begin
+      if FDayView.WrapStyle = wsIconFlow then
+      begin
+        WorkRegion1 := CreateRectRgn(AIconRect.Right, AEventRect.Top, AEventRect.Right, AIconRect.Bottom);
+        WorkRegion2 := CreateRectRgn(AEventRect.Left + FDayView.GutterWidth, AIconRect.Bottom, AEventRect.Right, AEventRect.Bottom);
+        TextRegion := CreateRectRgn(AIconRect.Right, AEventRect.Top, AEventRect.Right, AIconRect.Bottom);
+        CombineRgn(TextRegion, WorkRegion1, WorkRegion2, RGN_OR);
+      end else
+        TextRegion := CreateRectRgn(AIconRect.Right, AEventRect.Top, AEventRect.Right, AEventRect.Bottom);
+    end else
+      TextRegion := CreateRectRgn(AIconRect.Right + FDayView.GutterWidth, AEventRect.Top, AEventRect.Right, AEventRect.Bottom);
+
+    try
+      CW := RenderTextToRegion(RenderCanvas, Angle, RenderIn, TextRegion, AText);
+      { write the event string to the proper spot in the EventRect }
+      if CW < Length(AText) then begin
+        RenderCanvas.Brush.Color := FDayView.DotDotDotColor;
+        { draw dot dot dot }
+        TPSFillRect(RenderCanvas, Angle, RenderIn,
+          Rect(AEventRect.Right - 20, AEventRect.Bottom - 7, AEventRect.Right - 17, AEventRect.Bottom - 4)
+        );
+        TPSFillRect(RenderCanvas, Angle, RenderIn,
+          Rect(AEventRect.Right - 13, AEventRect.Bottom - 7, AEventRect.Right - 10, AEventRect.Bottom - 4));
+        TPSFillRect(RenderCanvas, Angle, RenderIn,
+          Rect(AEventRect.Right - 6, AEventRect.Bottom - 7, AEventRect.Right - 3, AEventRect.Bottom - 4));
+      end;
+    finally
+      if ((AEventRect.Bottom > AIconRect.Bottom) and (AEventRect.Left > AIconRect.Right)) or
+         (FDayView.WrapStyle = wsIconFlow)
+      then begin
+        DeleteObject(WorkRegion1);
+        DeleteObject(WorkRegion2);
+        DeleteObject(TextRegion);
+      end else begin
+        DeleteObject(TextRegion);
+      end;
+    end;
+  end
+  else
+  if (not AEventIsEditing) then begin
+    if ALevel = 0 then
+      { don't draw the gutter in the EventRest for level 0 events. }
+      TPSTextOut(RenderCanvas,                                         // wp: both cases are the same ?!
+        Angle,
+        RenderIn,
+        AIconRect.Right + FDayView.GutterWidth + TextMargin,
+        AEventRect.Top + TextMargin,
+        AText
+      )
+    else
+      TPSTextOut(RenderCanvas,
+        Angle,
+        RenderIn,
+        AIconRect.Right + FDayView.GutterWidth + TextMargin,
+        AEventRect.Top + TextMargin,
+        AText
+      );
+  end;
 end;
 
 procedure TVpDayViewPainter.DrawRowHeader(R: TRect);
@@ -1709,6 +1615,136 @@ begin
     SelectClipRgn(RenderCanvas.Handle, 0);
     DeleteObject(Rgn);
   end;
+end;
+
+procedure TVpDayViewPainter.PopulateEventArray(ARenderDate: TDateTime);
+var
+  EventList: TList;
+  event: TVpEvent;
+  level: Integer;
+  I, J: Integer;
+  thisTime: TTime;
+begin
+  { Set the event array's max size }
+  SetLength(EventArray, MaxVisibleEvents);  // EventArray is global within painter
+
+  { Initialize the new matrix }
+  for I := 0 to pred(MaxVisibleEvents) do begin
+    EventArray[I].Event := nil;
+    EventArray[I].Level := 0;
+    EventArray[I].OLLevels := 0;
+    EventArray[I].WidthDivisor := 0;
+  end;
+
+  EventList := TList.Create;
+  try
+    {Get all of the events for this day}
+    FDayView.DataStore.Resource.Schedule.EventsByDate(ARenderDate, EventList);
+
+    { Discard AllDayEvents, because they are drawn separately. }
+    for I := pred(EventList.Count) downto 0 do begin
+      event := EventList[I];
+      if event.AllDayEvent then
+        EventList.Delete(I);
+    end;
+
+    { Arrange this day's events in the event matrix }
+    level := 0;
+    I := 0;
+    while EventList.Count > 0 do begin
+      { Iterate through the events, and place them all in the proper     }
+      { place in the EventMatrix, according to their start and end times }
+      J := 0;
+      ThisTime := 0.0;
+      while (J < EventList.Count) and (J < MaxVisibleEvents) do begin
+        event := EventList[J];
+        if frac(event.StartTime) >= thisTime then begin
+          thisTime := frac(event.EndTime);
+          { Handle end times of midnight }
+          if thisTime = 0 then
+            thisTime := EncodeTime(23, 59, 59, 0);
+          EventList.Delete(J);
+          EventArray[I].Event := event;
+          EventArray[I].Level := level;
+          Inc(I);
+          Continue;
+        end
+        else
+          Inc(J);
+      end;
+      Inc(level);
+    end;
+
+  finally
+    EventList.Free;
+  end;
+end;
+
+procedure TVpDayViewPainter.PrepareEventRect(AWidthDivisor, ALevel: Integer;
+  var AEventRect: TRect; var AEventWidth: Integer);
+begin
+  if AEventRect.Left < VisibleRect.Left then
+    AEventRect.Left := VisibleRect.Left;
+
+  if AEventRect.Top < VisibleRect.Top then
+    AEventRect.Top := VisibleRect.Top;
+
+  if AEventRect.Bottom < VisibleRect.Top then
+    AEventRect.Bottom := VisibleRect.Bottom;
+  AEventWidth := WidthOf(VisibleRect) div AWidthDivisor;
+
+  { Slide the rect over to correspond with the level }
+  if ALevel > 0 then
+    AEventRect.Left := AEventRect.Left + AEventWidth * ALevel
+    { added because level 0 events were one pixel too far to the right }
+  else
+    AEventRect.Left := AEventRect.Left - 1;
+  AEventRect.Right := AEventRect.Left + AEventWidth - FDayView.GutterWidth;
+end;
+
+procedure TVpDayViewPainter.PrepareEventTimes(AEvent: TVpEvent;
+  ARenderDate: TDateTime; out AStartTime, AEndTime: TDateTime);
+begin
+(*  -- original
+     { remove the date portion from the start and end times }
+     EventSTime := Event.StartTime;
+     EventETime := Event.EndTime;
+     if trunc(EventSTime) < trunc(ARenderDate) then //First Event
+       EventSTime := 0+trunc(ARenderDate);
+     if trunc(EventETime) > trunc(ARenderDate) then //First Event
+       EventETime := 0.999+trunc(ARenderDate);
+     EventSTime := EventSTime - ARenderDate;
+     EventETime := EventETime - ARenderDate;
+     { Find the line on which this event starts }
+     EventSLine := GetStartLine(EventSTime, Granularity);
+     { Handle End Times of Midnight }
+     if EventETime = 0 then
+       EventETime := EncodeTime (23, 59, 59, 0);
+ *)
+
+  { remove the date portion from the start and end times }
+  AStartTime := AEvent.StartTime;
+  AEndTime := AEvent.EndTime;
+
+  if (AStartTime < trunc(ARenderDate)) and (AEvent.RepeatCode = rtNone) then  // First Event
+    AStartTime := trunc(ARenderDate)
+  else if (AEvent.RepeatCode <> rtNone) then
+    AStartTime := frac(AStartTime) + trunc(ARenderDate);
+
+  if (trunc(AEndTime) > trunc(ARenderDate)) and (AEvent.RepeatCode = rtNone) then  // First Event
+  // wp: wouldn't this be better?
+  //  AEndtime := trunc(ARenderDate) + 1 - 1.0 / (24 * 60 * 60)  // 1 sec before midnight
+    AEndTime := 0.999 + trunc(ARenderDate)
+  else if (AEvent.RepeatCode <> rtNone) then
+    AEndTime := frac(AEndTime) + trunc(ARenderDate);
+
+  // Transfer the times to the renderdate.
+  AStartTime := AStartTime - trunc(ARenderDate);
+  AEndTime := AEndTime - trunc(ARenderDate);
+
+  { Handle End Times of Midnight }
+  if AEndTime = 0 then
+    AEndTime := EncodeTime(23, 59, 59, 0);    // wp: Is the date part correct here?
 end;
 
 procedure TVpDayViewPainter.ScaleIcons(EventRect: TRect);
