@@ -25,9 +25,9 @@ object MainForm: TMainForm
       Height = 532
       Top = 48
       Width = 780
-      ActivePage = TabEvents
+      ActivePage = TabResources
       Align = alClient
-      TabIndex = 0
+      TabIndex = 3
       TabOrder = 0
       object TabEvents: TTabSheet
         Caption = 'Events'

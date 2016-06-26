@@ -2049,6 +2049,7 @@ begin
   { for simplicity, bail out of editing while scrolling. }
   EndEdit(Self);
 
+  // wp: Next line should never happen after EndEdit...
   if (dvInPlaceEditor <> nil) and dvInplaceEditor.Visible then Exit;
 
   case Msg.ScrollCode of

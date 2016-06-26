@@ -30,9 +30,6 @@ type
     CellsRect: TRect;
     RowHeadRect: TRect;
     ADEventsRect: TRect;
-    SaveBrushColor: TColor;
-    SavePenStyle: TPenStyle;
-    SavePenColor: TColor;
     Drawn: Boolean;
     ScrollBarOffset: Integer;
     EventCount: Integer;
@@ -78,9 +75,10 @@ type
     OldFont: TFont;
 
   protected
-    function CountOverlappingEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
+    function CountOverlappingEvents(Event: TVpEvent;
+      const EArray: TVpDvEventArray): Integer;
     procedure CreateBitmaps;
-    function DetermineIconRect(AEventRect: TRect; AEvent: TVpEvent): TRect;
+    function DetermineIconRect(AEventRect: TRect): TRect;
     function GetMaxOLEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
     procedure DrawAllDayEvents;
     procedure DrawAllDays;
@@ -97,7 +95,6 @@ type
     procedure InitColors;
     procedure InitializeEventRectangles;
     procedure ScaleIcons(EventRect: TRect);
-
     procedure SetMeasurements; override;
 
   public
@@ -181,8 +178,7 @@ begin
   dvBmpCustom := TBitmap.Create;
 end;
 
-function TVpDayViewPainter.DetermineIconRect(AEventRect: TRect;
-  AEvent: TVpEvent): TRect;
+function TVpDayViewPainter.DetermineIconRect(AEventRect: TRect): TRect;
 var
   MaxHeight: Integer;
 begin
@@ -729,10 +725,11 @@ begin
   { Initialize, collect useful information needed later }
   EventCategory := FDayView.Datastore.CategoryColorMap.GetCategory(AEvent.Category);
 
-  EventIsEditing := false;
   with TVpDayViewOpener(FDayView) do
     if (dvInplaceEditor <> nil) and dvInplaceEditor.Visible then
-      EventIsEditing := (ActiveEvent = AEvent);
+      EventIsEditing := (ActiveEvent = AEvent)
+    else
+      EventIsEditing := false;
 
   timeFmt := IfThen(FDayView.TimeFormat = tf24Hour, 'h:nn', 'h:nnam/pm');
 
@@ -868,12 +865,12 @@ begin
     GetIcons(AEvent);
     if AEventRec.Level = 0 then begin
       ScaleIcons(EventRect);
-      IconRect := DetermineIconRect(EventRect, AEvent);
+      IconRect := DetermineIconRect(EventRect);
     end else begin
       tmpRect := EventRect;
       inc(tmpRect.Left, FDayView.GutterWidth);
       ScaleIcons(tmpRect);
-      IconRect := DetermineIconRect(tmpRect, AEvent);
+      IconRect := DetermineIconRect(tmpRect);
     end;
   end;
 
@@ -1064,7 +1061,6 @@ procedure TVpDayViewPainter.DrawEvents(ARenderDate: TDateTime; Col: Integer);
 var
   I,J: Integer;
   Level: Integer;
-  STime, ETime: Double;
   Event: TVpEvent;
   SaveFont: TFont;
   SaveColor: TColor;
@@ -1164,9 +1160,6 @@ begin
     { get a rectangle of the visible area }
     VisibleRect := TVpDayViewOpener(FDayView).dvLineMatrix[Col, StartLine].Rec;
     VisibleRect.Bottom := FDayView.ClientRect.Bottom;
-
-    STime := TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine].Time;
-    ETime := TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine + RealVisibleLines].Time;
 
     LineDuration := GetLineDuration(FDayView.Granularity);
     { Determine how much time is represented by one pixel. It is the   }
