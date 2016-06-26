@@ -108,6 +108,7 @@ type
       out AStartTime, AEndTime: TDateTime);
     procedure ScaleIcons(EventRect: TRect);
     procedure SetMeasurements; override;
+    procedure VerifyMaxWidthDevisors;
 
   public
     constructor Create(ADayView: TVpDayview; ARenderCanvas: TCanvas);
@@ -916,50 +917,6 @@ begin
 end;
 
 procedure TVpDayViewPainter.DrawEvents(ARenderDate: TDateTime; Col: Integer);
-
-  procedure VerifyMaxWidthDivisors;
-  var
-    I, K: Integer;
-    Event1, Event2: TVpEvent;
-  begin
-    for I := 0 to pred(MaxVisibleEvents) do begin
-      { if we hit a null event, then we're through }
-      if EventArray[I].Event = nil then
-        Break;
-
-      { otherwise keep going }
-      Event1 := EventArray[I].Event;
-
-      { initialize the WidthDivisor for this record }
-      EventArray[I].WidthDivisor := 1;
-
-      {now iterate through all events and get the maximum OLEvents value of }
-      { all the overlapping events }
-      for K := 0 to pred(MaxVisibleEvents) do begin
-        { if we hit a null event, then we're through }
-        if EventArray[K].Event = nil then
-          Break;
-
-        Event2 := EventArray[K].Event;
-
-        { if the Tmp event overlaps with Event, then check it's Width divisor }
-        (* -- original
-        if (TimeInRange(Event2.StartTime, Event1.StartTime, Event1.EndTime, false)
-          or TimeInRange(Event2.EndTime, Event1.StartTime, Event1.EndTime, false))
-        or ((Event2.StartTime <= Event1.StartTime)
-          and (Event2.EndTime >= Event1.EndTime))
-          *)
-        if TimeInRange(frac(Event2.StartTime), frac(Event1.StartTime), frac(Event1.EndTime), false) or
-           TimeInRange(frac(Event2.EndTime), frac(Event1.StartTime), frac(Event1.EndTime), false) or
-          ((frac(Event2.StartTime) <= frac(Event1.StartTime)) and (frac(Event2.EndTime) >= frac(Event1.EndTime)))
-        then begin
-          if EventArray[I].WidthDivisor < EventArray[K].WidthDivisor then
-            EventArray[I].WidthDivisor := EventArray[K].WidthDivisor;
-        end;
-      end;
-    end;
-  end;
-
 var
   I,J: Integer;
   Event: TVpEvent;
@@ -997,7 +954,7 @@ begin
   end;
 
   // Make one last pass, to make sure that we have set up the width divisors properly
-  VerifyMaxWidthDivisors;
+  VerifyMaxWidthDevisors;
 
   // Time to paint 'em. Let's see if we calculated their placements correctly
   IconRect := Rect(0, 0, 0, 0);
@@ -1759,6 +1716,7 @@ begin
   AEventRect.Right := AEventRect.Left + AEventWidth - FDayView.GutterWidth;
 end;
 
+{ remove the date portion from the start and end times }
 procedure TVpDayViewPainter.PrepareEventTimes(AEvent: TVpEvent;
   ARenderDate: TDateTime; out AStartTime, AEndTime: TDateTime);
 begin
@@ -1779,7 +1737,6 @@ begin
        EventETime := EncodeTime (23, 59, 59, 0);
  *)
 
-  { remove the date portion from the start and end times }
   AStartTime := AEvent.StartTime;
   AEndTime := AEvent.EndTime;
 
@@ -1795,7 +1752,6 @@ begin
   else if (AEvent.RepeatCode <> rtNone) then
     AEndTime := frac(AEndTime) + trunc(ARenderDate);
 
-  // Transfer the times to the renderdate.
   AStartTime := AStartTime - trunc(ARenderDate);
   AEndTime := AEndTime - trunc(ARenderDate);
 
@@ -1839,6 +1795,67 @@ procedure TVpDayViewPainter.SetMeasurements;
 begin
   inherited;
   TVpDayViewOpener(FDayView).dvCalcColHeadHeight(Scale);
+end;
+
+procedure TVpDayViewPainter.VerifyMaxWidthDevisors;
+var
+  I, K: Integer;
+  Event1, Event2: TVpEvent;
+  tStart1, tEnd1, tStart2, tEnd2: TTime;
+begin
+  for I := 0 to pred(MaxVisibleEvents) do begin
+    { if we hit a null event, then we're through }
+    if EventArray[I].Event = nil then
+      Break;
+
+    { otherwise keep going }
+    Event1 := EventArray[I].Event;
+
+    { get start and end times without the date part }
+    tStart1 := frac(Event1.StartTime);
+    tEnd1 := frac(Event1.EndTime);
+
+    { initialize the WidthDivisor for this record }
+    EventArray[I].WidthDivisor := 1;
+
+    { Now iterate through all events and get the maximum OLEvents value of all
+      the overlapping events }
+    for K := 0 to pred(MaxVisibleEvents) do begin
+      { if we hit a null event, then we're through }
+      if EventArray[K].Event = nil then
+        Break;
+
+      Event2 := EventArray[K].Event;
+      tStart2 := frac(Event2.StartTime);
+      tEnd2 := frac(Event2.EndTime);
+
+      { if the Tmp event overlaps with Event, then check its WidthDivisor }
+      if TimeInRange(tStart2, tStart1, tEnd1, false) or
+         TimeInRange(tEnd2, tStart1, tEnd1, false) or
+         ((tStart2 <= tStart1) and (tEnd2 >= tEnd1))
+      then begin
+         if EventArray[I].WidthDivisor < EventArray[K].WidthDivisor then
+           EventArray[I].WidthDivisor := EventArray[K].WidthDivisor;
+       end;
+    end;
+
+    {  -- original
+      if (TimeInRange(Event2.StartTime, Event1.StartTime, Event1.EndTime, false)
+        or TimeInRange(Event2.EndTime, Event1.StartTime, Event1.EndTime, false))
+      or ((Event2.StartTime <= Event1.StartTime)
+        and (Event2.EndTime >= Event1.EndTime))
+        }
+
+        {
+      if TimeInRange(frac(Event2.StartTime), frac(Event1.StartTime), frac(Event1.EndTime), false) or
+         TimeInRange(frac(Event2.EndTime), frac(Event1.StartTime), frac(Event1.EndTime), false) or
+        ((frac(Event2.StartTime) <= frac(Event1.StartTime)) and (frac(Event2.EndTime) >= frac(Event1.EndTime)))
+      then begin
+        if EventArray[I].WidthDivisor < EventArray[K].WidthDivisor then
+          EventArray[I].WidthDivisor := EventArray[K].WidthDivisor;
+      end;
+          }
+  end;
 end;
 
 
