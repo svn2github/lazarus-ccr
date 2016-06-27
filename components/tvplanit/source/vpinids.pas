@@ -167,7 +167,7 @@ end;
 function TVpIniDatastore.GetNextID(TableName: string): Int64;
 begin
   repeat
-    Result := Random($7FFFFFFF);
+    Result := Random(High(Int64));
   until UniqueID(Result);
 end;
 
