@@ -75,11 +75,9 @@ type
     OldFont: TFont;
 
   protected
-    function BuildEventString(AEvent: TVpEvent;
-      const AEventRect, AIconRect: TRect): String;
+    function BuildEventString(AEvent: TVpEvent; const AEventRect, AIconRect: TRect): String;
     procedure CalcRowHeadRect(out ARect: TRect);
-    function CountOverlappingEvents(Event: TVpEvent;
-      const EArray: TVpDvEventArray): Integer;
+    function CountOverlappingEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
     procedure CreateBitmaps;
     function DetermineIconRect(AEventRect: TRect): TRect;
     function GetMaxOLEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
@@ -123,6 +121,9 @@ implementation
 uses
   StrUtils,
   VpCanvasUtils, VpMisc;
+
+const
+  ICON_MARGIN = 4;
 
 type
   TVpDayViewOpener = class(TVpDayView);
@@ -223,14 +224,14 @@ begin
   Result.Left := AEventRect.Left;
   Result.Top := AEventRect.Top;
   Result.Bottom := AEventRect.Bottom;
-  Result.Right := AEventRect.Left + AlarmW + RecurringW + CategoryW + CustomW + 2;
+  Result.Right := AEventRect.Left + AlarmW + RecurringW + CategoryW + CustomW + ICON_MARGIN + 2;
 
-  MaxHeight := AlarmH;
-  if RecurringH > MaxHeight then
+  MaxHeight := AlarmH + ICON_MARGIN;
+  if RecurringH + ICON_MARGIN > MaxHeight then
     MaxHeight := dvBmpRecurring.Height;
-  if CategoryH > MaxHeight then
+  if CategoryH + ICON_MARGIN > MaxHeight then
     MaxHeight := dvBmpCategory.Height;
-  if CustomH > MaxHeight then
+  if CustomH + ICON_MARGIN > MaxHeight then
     MaxHeight := dvBmpCustom.Height;
   if MaxHeight > AEventRect.Bottom - AEventRect.Top then
     MaxHeight := AEventRect.Bottom - AEventRect.Top;
@@ -1032,7 +1033,7 @@ var
     begin
       bmp.Transparent := True;
       R := Rect(0, 0, w, h);
-      OffsetRect(R, AIconRect.Left + 1, AIconRect.Top + 1);
+      OffsetRect(R, AIconRect.Left + ICON_MARGIN, AIconRect.Top + ICON_MARGIN);
       RenderCanvas.StretchDraw(R, bmp);
       {
       RenderCanvas.CopyRect(  // wp: was FDayview.Canvas -- does not look correct...
@@ -1042,7 +1043,7 @@ var
       );
       }
       if IncDrawPos then
-        inc(DrawPos, w);
+        inc(DrawPos, w + ICON_MARGIN);
     end;
   end;
 
