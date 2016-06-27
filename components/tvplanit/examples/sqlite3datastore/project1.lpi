@@ -24,7 +24,7 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="5">
+    <RequiredPackages Count="4">
       <Item1>
         <PackageName Value="SQLDBLaz"/>
       </Item1>
@@ -35,11 +35,8 @@
         <PackageName Value="laz_visualplanit"/>
       </Item3>
       <Item4>
-        <PackageName Value="zcomponent"/>
-      </Item4>
-      <Item5>
         <PackageName Value="LCL"/>
-      </Item5>
+      </Item4>
     </RequiredPackages>
     <Units Count="2">
       <Unit0>

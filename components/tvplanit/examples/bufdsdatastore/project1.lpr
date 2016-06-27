@@ -7,8 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, Unit1, laz_visualplanit, zcomponent
-  { you can add units after this };
+  Forms, Unit1, laz_visualplanit;
 
 {$R *.res}
 
