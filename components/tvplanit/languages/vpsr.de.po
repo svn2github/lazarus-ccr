@@ -516,6 +516,10 @@ msgstr "Gestern"
 msgid "Hours"
 msgstr "Stunden"
 
+#: vpsr.rsinifilestructure
+msgid "Incorrect structure of ini file."
+msgstr ""
+
 #: vpsr.rsintervallbl
 msgid "Interval (days):"
 msgstr "Intervall (Tage):"
@@ -1373,3 +1377,4 @@ msgstr "Unbekannte Achsen-Spezifikation: %s"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "Die XML-Deklaration muss vor dem ersten Element erscheinen."
+

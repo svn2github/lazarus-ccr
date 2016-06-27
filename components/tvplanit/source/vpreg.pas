@@ -145,6 +145,7 @@ uses
   VpDateEdit,                 { DateEdit Component                           }
  {$ENDIF}
  {$IFDEF LCL}
+  VpIniDS,                    { IniFile datastore                            }
   VpBufDS,                    { Datastore for TBufDataset                    }
   //  VpSdfDS                     { Datastore for TSdfDataset                    }
   //  VpDbfDS,                    { Datastore for dbase files                    }
@@ -511,6 +512,7 @@ begin
     TVpDateEdit,        // Does not work in Lazarus
 {$ENDIF}
 {$IFDEF LCL}
+    TVpIniDatastore,
     TVpBufDSDatastore,
     //TVpSdfDatastore,       // to do (maybe)...
     //TVpDbfDatastore,       // to do...

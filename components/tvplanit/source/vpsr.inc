@@ -414,3 +414,6 @@ resourcestring
   RSBrowserError     = 'Unable to start web browser. Make sure you have ' +
                        'it properly setup on your system.';
 
+  { Ini storage }
+  RSIniFileStructure = 'Incorrect structure of ini file.';
+

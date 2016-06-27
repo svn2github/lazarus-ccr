@@ -506,6 +506,10 @@ msgstr ""
 msgid "Hours"
 msgstr ""
 
+#: vpsr.rsinifilestructure
+msgid "Incorrect structure of ini file."
+msgstr ""
+
 #: vpsr.rsintervallbl
 msgid "Interval (days):"
 msgstr ""

@@ -81,7 +81,7 @@ type
     constructor Create(Owner: TObject);
     destructor Destroy; override;
     function AddResource(ResID: Int64): TVpResource;
-    function FindResourceByName (AName : string) : TVpResource;
+    function FindResourceByName(AName : string) : TVpResource;
     function GetResource(ID: Integer): TVpResource;
     procedure ClearResources;
     procedure RemoveResource(Resource: TVpResource);
@@ -634,7 +634,7 @@ var
 
 begin
   Result := nil;
-  AName := LowerCase (AName);
+  AName := LowerCase(AName);
   for i := 0 to Count - 1 do
     if LowerCase (Items[i].Description) = AName then begin
       Result := Items[i];

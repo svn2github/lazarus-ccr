@@ -118,6 +118,9 @@ function GetLineDuration(Granularity: TVpGranularity): Double;
 
 function GetLabelWidth(ALabel: TLabel): Integer;
 
+function DecodeLineEndings(const AText: String): String;
+function EncodeLineEndings(const AText: String): String;
+
 
 implementation
 
@@ -609,5 +612,14 @@ begin
   Result := trunc(ADate - First - 3 + (DayOfWeek(First) + 1) mod 7) div 7 + 1;
 end;
 
+function DecodeLineEndings(const AText: String): String;
+begin
+  Result := StringReplace(AText, LineEnding, '\n', [rfReplaceAll]);
+end;
+
+function EncodeLineEndings(const AText: String): String;
+begin
+  Result := StringReplace(AText, '\n', LineEnding, [rfReplaceAll]);
+end;
 
 end.

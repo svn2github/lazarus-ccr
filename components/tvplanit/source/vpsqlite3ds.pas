@@ -1,3 +1,5 @@
+{$I vp.inc}
+
 unit VpSQLite3DS;
 
 interface
