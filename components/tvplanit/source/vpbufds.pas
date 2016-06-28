@@ -28,7 +28,7 @@ type
     function GetTasksTable: TDataset; override;
 
     { ancestor methods }
-    function GetNextID(TableName: string): int64; override;
+    function GetNextID(TableName: string): integer; override;
     procedure Loaded; override;
     procedure SetConnected(const Value: boolean); override;
 
@@ -153,7 +153,7 @@ begin
   Result := FContactsTable;
 end;
 
-function TVpBufDSDataStore.GetNextID(TableName: string): int64;
+function TVpBufDSDataStore.GetNextID(TableName: string): integer;
 begin
   { This is not needed in the BufDataset datastore as these tables use
     autoincrement fields. }

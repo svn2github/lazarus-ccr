@@ -33,7 +33,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     procedure CreateTables;
-    function GetNextID(TableName: string): int64; override;
+    function GetNextID(TableName: string): integer; override;
     procedure PostEvents; override;
     procedure PostContacts; override;
     procedure PostTasks; override;
@@ -277,7 +277,7 @@ begin
   Result := FEventsTable;
 end;
 
-function TVpSqlite3DataStore.GetNextID(TableName: string): int64;
+function TVpSqlite3DataStore.GetNextID(TableName: string): integer;
 begin
   { This is not needed in the SQLITE3 datastore as these tables use
     autoincrement fields. }

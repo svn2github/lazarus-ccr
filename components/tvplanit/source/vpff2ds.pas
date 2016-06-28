@@ -77,7 +77,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
-    function GetNextID(TableName: string): int64; override;
+    function GetNextID(TableName: string): integer; override;
 
 //    procedure PurgeResource(Res: TVpResource); override;            
     procedure PurgeEvents(Res: TVpResource); override;
@@ -138,7 +138,7 @@ begin
 end;
 {=====}
 
-function TVpFF2DataStore.GetNextID(TableName: string): int64;
+function TVpFF2DataStore.GetNextID(TableName: string): integer;
 begin
   { this is not used in the FlashFiler Datastore as the FlashFiler tables use }
   { autoincrement fields }

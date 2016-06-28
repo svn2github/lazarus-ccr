@@ -160,7 +160,7 @@ type
     procedure PurgeTasks(Res: TVpResource); override;
 
     function GetFieldName(Mappings: TCollection; VPField: string): string;
-    function GetNextID(TableName: string): Int64; override;
+    function GetNextID(TableName: string): Integer; override;
 
     { These are published via the TVpDataSources class, which allows them to }
     { be clustered in the Object Inspector Don't publish them individually   }
@@ -2041,7 +2041,7 @@ begin
 end;
 {=====}
 
-function TVpFlexDataStore.GetNextID(TableName: string): Int64;
+function TVpFlexDataStore.GetNextID(TableName: string): Integer;
 begin
   { The FlexDataStore has no idea what type of database you are connected to }
   { beyond TDataset compatibility, so it cannot presume to generate record   }

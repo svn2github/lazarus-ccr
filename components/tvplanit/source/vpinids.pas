@@ -30,7 +30,7 @@ type
 
     procedure SetConnected(const AValue: Boolean); override;
     procedure Split(const AString: String; AList: TStrings);
-    function UniqueID(AValue: Int64): Boolean;
+    function UniqueID(AValue: Integer): Boolean;
 
     procedure ReadFromIni;
     procedure WriteToIni;
@@ -39,7 +39,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
-    function GetNextID(TableName: string): Int64; override;
+    function GetNextID(TableName: string): Integer; override;
     procedure LoadEvents; override;
     procedure LoadContacts; override;
     procedure LoadTasks; override;
@@ -169,14 +169,14 @@ begin
     AEvent.UserField9 + '}';
 end;
 
-function TVpIniDatastore.GetNextID(TableName: string): Int64;
+function TVpIniDatastore.GetNextID(TableName: string): Integer;
 begin
   repeat
-    Result := Random(High(Int64));
-  until UniqueID(Result);
+    Result := Random(High(Integer));
+  until UniqueID(Result) and (Result <> -1);
 end;
 
-function TVpIniDatastore.UniqueID(AValue: Int64): Boolean;
+function TVpIniDatastore.UniqueID(AValue: Integer): Boolean;
 var
   i, j: Integer;
   res: TVpResource;
@@ -572,7 +572,7 @@ var
   i,j: Integer;
   s: String;
   key: String;
-  resID, id: Int64;
+  resID, id: Integer;
 begin
   if FFileName = '' then
     exit;
@@ -588,7 +588,7 @@ begin
       s := ini.ReadString('Resources', ResList[i], '');
       if s = '' then
         IniError(RSIniFileStructure);
-      resID := StrToInt64(ResList[i]);
+      resID := StrToInt(ResList[i]);
       res := Resources.AddResource(resID);
       StrToResource(s, res);
 
@@ -596,7 +596,7 @@ begin
       L.Clear;
       ini.ReadSection(key, L);
       for j:=0 to L.Count-1 do begin
-        id := StrToInt64(L[j]);
+        id := StrToInt(L[j]);
         contact := res.Contacts.AddContact(id);
         s := ini.ReadString(key, L[j], '');
         StrToContact(s, contact);
@@ -607,7 +607,7 @@ begin
     L.Clear;
     ini.ReadSection(key, L);
     for j:=0 to L.Count-1 do begin
-      id := StrToInt64(L[j]);
+      id := StrToInt(L[j]);
       event := res.Schedule.AddEvent(id, 0, 1);
       s := ini.ReadString(key, L[j], '');
       StrToEvent(s, event);
@@ -617,7 +617,7 @@ begin
     L.Clear;
     ini.ReadSection(key, L);
     for j:=0 to L.Count-1 do begin
-      id := StrToInt64(L[j]);
+      id := StrToInt(L[j]);
       task := res.Tasks.AddTask(id);
       s := ini.ReadString(key, L[j], '');
       StrToTask(s, task);

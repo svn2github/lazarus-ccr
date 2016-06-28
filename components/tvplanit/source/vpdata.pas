@@ -74,20 +74,20 @@ type
     FOwner: TObject;
     FResourceList: TList;
     function Compare(Descr1, Descr2: string): Integer;
-    function GetItem(Index: Int64): TVpResource;
+    function GetItem(Index: Integer): TVpResource;
     function GetCount: Integer;
-    function NextResourceID: Int64;
+    function NextResourceID: Integer;
   public
     constructor Create(Owner: TObject);
     destructor Destroy; override;
-    function AddResource(ResID: Int64): TVpResource;
+    function AddResource(ResID: Integer): TVpResource;
     function FindResourceByName(AName : string) : TVpResource;
     function GetResource(ID: Integer): TVpResource;
     procedure ClearResources;
     procedure RemoveResource(Resource: TVpResource);
     procedure Sort;
     property Count: Integer read GetCount;
-    property Items[Index: Int64]: TVpResource read GetItem;
+    property Items[Index: Integer]: TVpResource read GetItem;
     property Owner: TObject read FOwner;
   end;
 
@@ -172,9 +172,9 @@ type
   public
     constructor Create(Owner: TVpResource);
     destructor Destroy; override;
-    function AddEvent(RecordID: Int64; StartTime, EndTime: TDateTime): TVpEvent;
+    function AddEvent(RecordID: Integer; StartTime, EndTime: TDateTime): TVpEvent;
     procedure DeleteEvent(Event: TVpEvent);
-    function GetEvent(Index: Int64): TVpEvent;
+    function GetEvent(Index: Integer): TVpEvent;
     function RepeatsOn(Event: TVpEvent; Day: TDateTime): Boolean;
     procedure Sort;
     procedure ClearEvents;
@@ -203,7 +203,7 @@ type
     FAlarmAdv: Integer;
     FAlertDisplayed: Boolean;
     FAlarmAdvType: TVpAlarmAdvType;
-    FRecordID: Int64;
+    FRecordID: Integer;
     FLocation: string;
     FNotes: string;
     FDescription: string;
@@ -238,7 +238,7 @@ type
     procedure SetEndTime(Value: TDateTime);
     procedure SetLocation(const Value: String);
     procedure SetNotes(const Value: string);
-    procedure SetRecordID(Value: Int64);
+    procedure SetRecordID(Value: Integer);
     procedure SetStartTime(Value: TDateTime);
     procedure SetCustInterval(Value: Integer);
     procedure SetRepeatCode(Value: TVpRepeatType);
@@ -253,7 +253,7 @@ type
     property Changed: Boolean read FChanged write SetChanged;
     property Deleted: Boolean read FDeleted write SetDeleted;
     property ItemIndex: Integer read FItemIndex;
-    property RecordID : Int64 read FRecordID write SetRecordID;
+    property RecordID : Integer read FRecordID write SetRecordID;
     property StartTime : TDateTime read FStartTime write SetStartTime;
     property EndTime : TDateTime read FEndTime write SetEndTime;
     property Description : string read FDescription write SetDescription;
@@ -302,7 +302,7 @@ type
     procedure BatchUpdate(value: Boolean);
     procedure Sort;
     function Compare(Item1, Item2: TVpTask): Integer;
-    function AddTask(RecordID: Int64): TVpTask;
+    function AddTask(RecordID: Integer): TVpTask;
     function Count : Integer;
     function CountByDay(Date: TDateTime): Integer;
     function Last: TVpTask;
@@ -580,7 +580,7 @@ begin
 end;
 {=====}
 
-function TVpResources.GetItem(Index: Int64): TVpResource;
+function TVpResources.GetItem(Index: Integer): TVpResource;
 begin
   result := TVpResource(FResourceList.List^[Index]);
 end;
@@ -592,10 +592,10 @@ begin
 end;
 {=====}
 
-function TVpResources.NextResourceID: Int64;
+function TVpResources.NextResourceID: Integer;
 var
   I : Integer;
-  ID: Int64;
+  ID: Integer;
   Res: TVpResource;
 begin
   ID := 0;
@@ -609,7 +609,7 @@ begin
 end;
 {=====}
 
-function TVpResources.AddResource(ResID: Int64): TVpResource;
+function TVpResources.AddResource(ResID: Integer): TVpResource;
 var
   Resource : TVpResource;
 begin
@@ -980,7 +980,7 @@ begin
 end;
 {=====}
 
-procedure TVpEvent.SetRecordID(Value: Int64);
+procedure TVpEvent.SetRecordID(Value: Integer);
 begin
   if Value <> FRecordID then begin
     FRecordID := Value;
@@ -1119,7 +1119,7 @@ end;
 {=====}
 
 {Adds the event to the eventlist and returns a pointer to it, or nil on failure}
-function TVpSchedule.AddEvent(RecordID: Int64; StartTime,
+function TVpSchedule.AddEvent(RecordID: Integer; StartTime,
   EndTime: TDateTime): TVpEvent;
 begin
   result := nil;
@@ -1175,7 +1175,7 @@ begin
 end;
 {=====}
 
-function TVpSchedule.GetEvent(Index: Int64): TVpEvent;
+function TVpSchedule.GetEvent(Index: Integer): TVpEvent;
 begin
   { Returns an event on success or nil on failure }
   result := FEventList.Items[Index];
@@ -2132,7 +2132,7 @@ begin
 end;
 {=====}
 
-function TVpTasks.AddTask(RecordID: Int64): TVpTask;
+function TVpTasks.AddTask(RecordID: Integer): TVpTask;
 var
   Task: TVpTask;
 begin

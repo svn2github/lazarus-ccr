@@ -106,7 +106,7 @@ type
 
     // returns the next id for a store by doing an equivalent of select max(id) from table
     // and increasing the number by one
-    function GetNextID(TableName: string): Int64; override;
+    function GetNextID(TableName: string): Integer; override;
 
     // post changes to the store
     procedure PostResources; override;
@@ -333,7 +333,7 @@ begin
   result:=Stores[TasksTableName].Dataset;
 end;
 
-function TVPSQLDataStore.GetNextID(TableName: string): Int64;
+function TVPSQLDataStore.GetNextID(TableName: string): Integer;
 var
   FldName : string;
 begin

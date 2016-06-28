@@ -33,7 +33,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     procedure CreateTables;
-    function GetNextID(TableName: string): int64; override;
+    function GetNextID(TableName: string): integer; override;
 
     property ResourceTable;
     property EventsTable;
@@ -257,7 +257,7 @@ begin
   Result := FEventsTable;
 end;
 
-function TVpZeosDataStore.GetNextID(TableName: string): int64;
+function TVpZeosDataStore.GetNextID(TableName: string): integer;
 begin
   { This is not needed in the ZEOS datastore as these tables use
     autoincrement fields. }
