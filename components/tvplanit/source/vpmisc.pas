@@ -614,12 +614,12 @@ end;
 
 function DecodeLineEndings(const AText: String): String;
 begin
-  Result := StringReplace(AText, LineEnding, '\n', [rfReplaceAll]);
+  Result := StringReplace(AText, '\n', LineEnding, [rfReplaceAll]);
 end;
 
 function EncodeLineEndings(const AText: String): String;
 begin
-  Result := StringReplace(AText, '\n', LineEnding, [rfReplaceAll]);
+  Result := StringReplace(AText, LineEnding, '\n', [rfReplaceAll]);
 end;
 
 end.
