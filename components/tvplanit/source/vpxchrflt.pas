@@ -503,7 +503,7 @@ var
   Ch     : TVpUCS4Char;
   IL     : Boolean;
 begin
-  if FLastChar = '' then begin
+  if (FLastChar = '') or (FLastChar = #0) then begin  // wp: added #0
     csGetChar(Ch, IL);
     VpUcs4ToWideChar(Ch, Result);
     Dec(FLinePos);
