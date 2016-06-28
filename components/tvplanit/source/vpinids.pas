@@ -93,9 +93,9 @@ end;
 function TVpIniDatastore.ContactToStr(AContact: TVpContact): String;
 begin
   Result := '{' +    // RecordID is stored in ini value name.
-    AContact.FirstName + '{|}' +
-    AContact.LastName + '{|}' +
-    FormatDateTime('ddddd', AContact.BirthDate, FFormatSettings) + '{|}' +   // Short date format
+    AContact.FirstName + '}|{' +
+    AContact.LastName + '}|{' +
+    FormatDateTime('ddddd', AContact.BirthDate, FFormatSettings) + '}|{' +   // Short date format
     FormatDateTime('ddddd', AContact.Anniversary, FFormatSettings) + '}|{' +
     AContact.Title + '}|{' +
     AContact.Company + '}|{' +
@@ -337,13 +337,33 @@ begin
 end;
 
 procedure TVpIniDatastore.PostContacts;
+var
+  i: Integer;
+  contact: TVpContact;
 begin
-  // Nothing to do...
+  if Resource = nil then
+    exit;
+  for i := Resource.Contacts.Count-1 downto 0 do begin
+    contact := Resource.Contacts.GetContact(i);
+    if contact.Deleted then
+      contact.Free;
+  end;
+  RefreshContacts;
 end;
 
 procedure TVpIniDatastore.PostEvents;
+var
+  i: Integer;
+  event: TVpEvent;
 begin
-  // Nothing to do ...
+  if Resource = nil then
+    exit;
+  for i := Resource.Schedule.EventCount-1 downto 0 do begin
+    event := Resource.Schedule.GetEvent(i);
+    if event.Deleted then
+      event.Free;
+  end;
+  RefreshEvents;
 end;
 
 procedure TVpIniDatastore.PostResources;
@@ -352,8 +372,18 @@ begin
 end;
 
 procedure TVpIniDatastore.PostTasks;
+var
+  i: Integer;
+  task: TVpTask;
 begin
-  // Nothing to do...
+  if Resource = nil then
+    exit;
+  for i := Resource.Tasks.Count-1 downto 0 do begin
+    task := Resource.Tasks.GetTask(i);
+    if task.Deleted then
+      task.Free;
+  end;
+  RefreshTasks;
 end;
 
 procedure TVpIniDatastore.StrToContact(AString: String; AContact: TVpContact);
@@ -534,7 +564,7 @@ begin
       s := ini.ReadString('Resources', ResList[i], '');
       if s = '' then
         IniError(RSIniFileStructure);
-      resID := StrToInt(ResList[i]);
+      resID := StrToInt64(ResList[i]);
       res := Resources.AddResource(resID);
       StrToResource(s, res);
 
@@ -542,7 +572,7 @@ begin
       L.Clear;
       ini.ReadSection(key, L);
       for j:=0 to L.Count-1 do begin
-        id := StrToInt(L[j]);
+        id := StrToInt64(L[j]);
         contact := res.Contacts.AddContact(id);
         s := ini.ReadString(key, L[j], '');
         StrToContact(s, contact);
@@ -553,7 +583,7 @@ begin
     L.Clear;
     ini.ReadSection(key, L);
     for j:=0 to L.Count-1 do begin
-      id := StrToInt(L[j]);
+      id := StrToInt64(L[j]);
       event := res.Schedule.AddEvent(id, 0, 1);
       s := ini.ReadString(key, L[j], '');
       StrToEvent(s, event);
@@ -563,7 +593,7 @@ begin
     L.Clear;
     ini.ReadSection(key, L);
     for j:=0 to L.Count-1 do begin
-      id := StrToInt(L[j]);
+      id := StrToInt64(L[j]);
       task := res.Tasks.AddTask(id);
       s := ini.ReadString(key, L[j], '');
       StrToTask(s, task);
@@ -595,7 +625,8 @@ begin
 
     for i:=0 to Resources.Count-1 do begin
       res := Resources.Items[i];
-      ini.WriteString('Resources', IntToStr(res.ResourceID), ResourceToStr(res));
+      if not res.Deleted then
+        ini.WriteString('Resources', IntToStr(res.ResourceID), ResourceToStr(res));
     end;
 
     for i:=0 to Resources.Count-1 do begin
@@ -603,7 +634,8 @@ begin
       key := Format('ContactsOfResource%d', [res.ResourceID]);
       for j:=0 to res.Contacts.Count-1 do begin
         contact := res.Contacts.GetContact(i);
-        ini.WriteString(key, IntToStr(contact.RecordID), ContactToStr(contact));
+        if not contact.Deleted then
+          ini.WriteString(key, IntToStr(contact.RecordID), ContactToStr(contact));
       end;
     end;
 
@@ -612,7 +644,8 @@ begin
       key := Format('TasksOfResource%d', [res.ResourceID]);
       for j:=0 to res.Tasks.Count-1 do begin
         task := res.Tasks.GetTask(i);
-        ini.WriteString(key, IntToStr(task.RecordID), TaskToStr(task));
+        if not task.Deleted then
+          ini.WriteString(key, IntToStr(task.RecordID), TaskToStr(task));
       end;
     end;
 
@@ -621,7 +654,8 @@ begin
       key := Format('EventsOfResource%d', [res.ResourceID]);
       for j:=0 to res.Schedule.EventCount-1 do begin
         event := res.Schedule.GetEvent(j);
-        ini.WriteString(key, IntToStr(event.RecordID), EventToStr(event));
+        if not event.Deleted then
+          ini.WriteString(key, IntToStr(event.RecordID), EventToStr(event));
       end;
     end;
 

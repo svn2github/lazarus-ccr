@@ -75,8 +75,8 @@ type
 
   TVpResourceEditDialog = class(TVpBaseDialog)
   protected {private}
-    reEditDlg         : TResEditForm;
-    reResource        : TVpResource;
+    reEditDlg: TResEditForm;
+    reResource: TVpResource;
     function Show: Boolean;
   public
     function Execute: Boolean; reintroduce;
