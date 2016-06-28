@@ -1480,6 +1480,7 @@ begin
       TaskDlg.Free;
     end;
   end;
+
   if AllowIt then begin
     DataStore.PostTasks();
     DataStore.NotifyDependents;
@@ -1491,6 +1492,10 @@ begin
     DataStore.PostTasks;
     Invalidate;
   end;
+
+  Writeln(Datastore.Resource.Tasks.GetTask(0).RecordID);
+  WriteLn(Datastore.Resource.Tasks.GetTask(1).RecordID);
+
 end;
 {=====}
 

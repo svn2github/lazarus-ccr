@@ -592,7 +592,7 @@ begin
       res := Resources.AddResource(resID);
       StrToResource(s, res);
 
-      key := Format('ContactsOfResource%d', [resID]);
+      key := Format('Contacts of resource %d', [resID]);
       L.Clear;
       ini.ReadSection(key, L);
       for j:=0 to L.Count-1 do begin
@@ -603,7 +603,7 @@ begin
       end;
     end;
 
-    key := Format('EventsOfResource%d', [resID]);
+    key := Format('Events of resource %d', [resID]);
     L.Clear;
     ini.ReadSection(key, L);
     for j:=0 to L.Count-1 do begin
@@ -613,7 +613,7 @@ begin
       StrToEvent(s, event);
     end;
 
-    key := Format('TasksOfResource%d', [resID]);
+    key := Format('Tasks of resource %d', [resID]);
     L.Clear;
     ini.ReadSection(key, L);
     for j:=0 to L.Count-1 do begin
@@ -655,9 +655,9 @@ begin
 
     for i:=0 to Resources.Count-1 do begin
       res := Resources.Items[i];
-      key := Format('ContactsOfResource%d', [res.ResourceID]);
+      key := Format('Contacts of resource %d', [res.ResourceID]);
       for j:=0 to res.Contacts.Count-1 do begin
-        contact := res.Contacts.GetContact(i);
+        contact := res.Contacts.GetContact(j);
         if not contact.Deleted then
           ini.WriteString(key, IntToStr(contact.RecordID), ContactToStr(contact));
       end;
@@ -665,9 +665,9 @@ begin
 
     for i:=0 to Resources.Count-1 do begin
       res := Resources.Items[i];
-      key := Format('TasksOfResource%d', [res.ResourceID]);
+      key := Format('Tasks of resource %d', [res.ResourceID]);
       for j:=0 to res.Tasks.Count-1 do begin
-        task := res.Tasks.GetTask(i);
+        task := res.Tasks.GetTask(j);
         if not task.Deleted then
           ini.WriteString(key, IntToStr(task.RecordID), TaskToStr(task));
       end;
@@ -675,7 +675,7 @@ begin
 
     for i:=0 to Resources.Count-1 do begin
       res := Resources.Items[i];
-      key := Format('EventsOfResource%d', [res.ResourceID]);
+      key := Format('Events of resource %d', [res.ResourceID]);
       for j:=0 to res.Schedule.EventCount-1 do begin
         event := res.Schedule.GetEvent(j);
         if not event.Deleted then
