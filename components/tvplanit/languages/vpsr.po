@@ -353,10 +353,6 @@ msgstr ""
 msgid "Days"
 msgstr ""
 
-#: vpsr.rsdaysoverdue
-msgid " Days overdue"
-msgstr ""
-
 #: vpsr.rsdbposterror
 msgid "Error posting data to the database."
 msgstr ""

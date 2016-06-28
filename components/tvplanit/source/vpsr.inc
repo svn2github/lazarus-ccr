@@ -268,7 +268,6 @@ resourcestring
   RSDueDate                = 'Due Date:';
   RSDetails                = 'Details:';
   RSTaskComplete           = 'Task complete';
-  RSDaysOverdue            = ' Days overdue';
   RSCreatedOn              = 'Created on';
   RSCompletedOn            = 'Completed on';
 

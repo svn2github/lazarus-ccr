@@ -363,10 +363,6 @@ msgstr "Вчера"
 msgid "Days"
 msgstr "Дни"
 
-#: vpsr.rsdaysoverdue
-msgid " Days overdue"
-msgstr "Просроченных дней"
-
 #: vpsr.rsdbposterror
 msgid "Error posting data to the database."
 msgstr "Ошибка указания даты в базе данных"

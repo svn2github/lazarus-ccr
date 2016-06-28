@@ -1492,10 +1492,6 @@ begin
     DataStore.PostTasks;
     Invalidate;
   end;
-
-  Writeln(Datastore.Resource.Tasks.GetTask(0).RecordID);
-  WriteLn(Datastore.Resource.Tasks.GetTask(1).RecordID);
-
 end;
 {=====}
 
