@@ -59,7 +59,7 @@ type
 implementation
 
 uses
-  typinfo, Strings, IniFiles,
+  typinfo, StrUtils, Strings, IniFiles,
   VpMisc, VpSR;
 
 const
@@ -95,8 +95,10 @@ begin
   Result := '{' +    // RecordID is stored in ini value name.
     AContact.FirstName + '}|{' +
     AContact.LastName + '}|{' +
-    FormatDateTime('ddddd', AContact.BirthDate, FFormatSettings) + '}|{' +   // Short date format
-    FormatDateTime('ddddd', AContact.Anniversary, FFormatSettings) + '}|{' +
+    IfThen(AContact.BirthDate = 0.0, '',
+      FormatDateTime('ddddd', AContact.BirthDate, FFormatSettings)) + '}|{' +   // Short date format
+    IfThen(AContact.Anniversary = 0.0, '',
+      FormatDateTime('ddddd', AContact.Anniversary, FFormatSettings)) + '}|{' +
     AContact.Title + '}|{' +
     AContact.Company + '}|{' +
     AContact.Job_Position + '}|{' +
@@ -137,8 +139,10 @@ end;
 function TVpIniDatastore.EventToStr(AEvent: TVpEvent): String;
 begin
   Result := '{' +     // RecordID is stored as ini value name
-    FormatDateTime('c', AEvent.StartTime, FFormatSettings) + '}|{' +          // Short date + long time
-    FormatDateTime('c', AEvent.EndTime, FFormatSettings) +'}|{' +
+    IfThen(AEvent.StartTime = 0.0, '',
+      FormatDateTime('c', AEvent.StartTime, FFormatSettings)) + '}|{' +          // Short date + long time
+    IfThen(AEvent.EndTime = 0.0, '',
+      FormatDateTime('c', AEvent.EndTime, FFormatSettings)) +'}|{' +
     AEvent.Description + '}|{' +
     AEvent.Location + '}|{' +
     EncodeLineEndings(AEvent.Notes) + '}|{' +
@@ -150,7 +154,8 @@ begin
     GetEnumName(TypeInfo(TVpAlarmAdvType), ord(AEvent.AlarmAdvanceType)) + '}|{' +
     FormatDateTime('tt', AEvent.SnoozeTime, FFormatSettings) + '}|{' +         // long time format
     GetEnumName(TypeInfo(TVpRepeatType), ord(AEvent.RepeatCode)) + '}|{' +
-    FormatDateTime('ddddd', AEvent.RepeatRangeEnd, FFormatSettings) + '}|{' +  // Short date format
+    IfThen(AEvent.RepeatRangeEnd = 0.0, '',
+      FormatDateTime('ddddd', AEvent.RepeatRangeEnd, FFormatSettings)) + '}|{' +  // Short date format
     IntToStr(AEvent.CustomInterval) + '}|{' +
     AEvent.UserField0 + '}|{' +
     AEvent.UserField1 + '}|{' +
@@ -298,11 +303,14 @@ begin
     BoolToStr(ATask.Complete, strTRUE, strFALSE) + '}|{' +
     ATask.Description + '}|{' +
     EncodeLineendings(ATask.Details) + '}|{' +
-    FormatDateTime('ddddd', ATask.CreatedOn, FFormatsettings) + '}|{' +
-    FormatDateTime('ddddd', ATask.CompletedOn, FFormatSettings) + '}|{' +
+    IfThen(ATask.CreatedOn = 0.0, '',
+      FormatDateTime('ddddd', ATask.CreatedOn, FFormatsettings)) + '}|{' +
+    IfThen(ATask.CompletedOn = 0.0, '',
+      FormatDateTime('ddddd', ATask.CompletedOn, FFormatSettings)) + '}|{' +
     IntToStr(ATask.Priority) + '}|{' +
     IntToStr(ATask.Category) + '}|{' +
-    FormatDateTime('ddddd', ATask.DueDate, FFormatSettings) + '}|{' +
+    IfThen(ATask.DueDate = 0.0, '',
+      FormatDateTime('ddddd', ATask.DueDate, FFormatSettings)) + '}|{' +
     ATask.UserField0 + '}|{' +
     ATask.UserField1 + '}|{' +
     ATask.UserField2 + '}|{' +
@@ -397,8 +405,12 @@ begin
       IniError(RSIniFileStructure);
     AContact.FirstName := L[0];
     AContact.LastName := L[1];
-    AContact.BirthDate := StrToDate(L[2], FFormatSettings);
-    AContact.Anniversary := StrToDate(L[3], FFormatSettings);
+    if L[2] = '' then
+      AContact.BirthDate := 0.0 else
+      AContact.BirthDate := StrToDate(L[2], FFormatSettings);
+    if L[3] = '' then
+      AContact.Anniversary := 0.0 else
+      AContact.Anniversary := StrToDate(L[3], FFormatSettings);
     AContact.Title := L[4];
     AContact.Company := L[5];
     AContact.Job_Position := L[6];
@@ -448,8 +460,12 @@ begin
     Split(AString, L);
     if L.Count <> 25 then
       IniError(RSIniFileStructure);
-    AEvent.StartTime := StrToDateTime(L[0], FFormatSettings);
-    AEvent.EndTime := StrToDateTime(L[1], FFormatSettings);
+    if L[0] = '' then
+      AEvent.StartTime := 0 else
+      AEvent.StartTime := StrToDateTime(L[0], FFormatSettings);
+    if L[1] = '' then
+      AEvent.EndTime := 0 else
+      AEvent.EndTime := StrToDateTime(L[1], FFormatSettings);
     AEvent.Description := L[2];
     AEvent.Location := L[3];
     AEvent.Notes := DecodeLineEndings(L[4]);
@@ -461,7 +477,9 @@ begin
     AEvent.AlarmAdvanceType := TVpAlarmAdvType(GetEnumValue(TypeInfo(TVpAlarmAdvType), L[10]));
     AEvent.SnoozeTime := StrToTime(L[11]);
     AEvent.RepeatCode := TVpRepeatType(GetEnumValue(TypeInfo(TVpRepeatType), L[12]));
-    AEvent.RepeatRangeEnd := StrToDate(L[13], FFormatSettings);
+    if L[13] = '' then
+      AEvent.RepeatRangeEnd := 0 else
+      AEvent.RepeatRangeEnd := StrToDate(L[13], FFormatSettings);
     AEvent.CustomInterval := StrToInt(L[14]);
     AEvent.UserField0 := L[15];
     AEvent.UserField1 := L[16];
@@ -517,11 +535,17 @@ begin
     ATask.Complete := StrToBool(L[0]);
     ATask.Description := L[1];
     ATask.Details := DecodeLineEndings(L[2]);
-    ATask.CreatedOn := StrToDate(L[3], FFormatSettings);
-    ATask.CompletedOn := StrToDate(L[4], FFormatSettings);
+    if L[3] = '' then
+      ATask.CreatedOn := 0.0 else
+      ATask.CreatedOn := StrToDate(L[3], FFormatSettings);
+    if L[4] = '' then
+      ATask.CompletedOn := 0.0 else
+      ATask.CompletedOn := StrToDate(L[4], FFormatSettings);
     ATask.Priority := StrToInt(L[5]);
     ATask.Category := StrToInt(L[6]);
-    ATask.DueDate := StrtoDate(L[7], FFormatSettings);
+    if L[7] = '' then
+      ATask.DueDate := 0.0 else
+      ATask.DueDate := StrtoDate(L[7], FFormatSettings);
     ATask.UserField0 := L[8];
     ATask.UserField1 := L[9];
     ATask.UserField2 := L[10];
