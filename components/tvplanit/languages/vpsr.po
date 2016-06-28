@@ -392,7 +392,7 @@ msgid "Event"
 msgstr ""
 
 #: vpsr.rsdlgprintpreview
-msgid "Print Preview"
+msgid "Print preview"
 msgstr ""
 
 #: vpsr.rsdlgreseditcaption
@@ -433,7 +433,7 @@ msgid "E-Mail"
 msgstr ""
 
 #: vpsr.rsendtimelbl
-msgid "End Time:"
+msgid "End time:"
 msgstr ""
 
 #: vpsr.rsexclusiveeventconflict
@@ -459,6 +459,10 @@ msgstr ""
 #: vpsr.rsfalse
 msgctxt "vpsr.rsfalse"
 msgid "F"
+msgstr ""
+
+#: vpsr.rsfirstnamelbl
+msgid "First name:"
 msgstr ""
 
 #: vpsr.rsfriday
@@ -536,6 +540,10 @@ msgstr ""
 
 #: vpsr.rsinvalidyear
 msgid "Error: Invalid Year."
+msgstr ""
+
+#: vpsr.rslastnamelbl
+msgid "Last name:"
 msgstr ""
 
 #: vpsr.rslfriday
@@ -630,10 +638,6 @@ msgstr ""
 
 #: vpsr.rsnameisrequired
 msgid "Error: Name cannot be empty."
-msgstr ""
-
-#: vpsr.rsnamelbl
-msgid "Name:"
 msgstr ""
 
 #: vpsr.rsneedelementname
@@ -864,11 +868,11 @@ msgid "Print controller is not owned by a TVpControlLink!"
 msgstr ""
 
 #: vpsr.rsrecurrenceendslbl
-msgid "Repeat Until:"
+msgid "Repeat until:"
 msgstr ""
 
 #: vpsr.rsrecurringlbl
-msgid "Appointment Recurrence:"
+msgid "Appointment recurrence:"
 msgstr ""
 
 #: vpsr.rsreminder
@@ -908,7 +912,7 @@ msgid "Error: Unable to update "
 msgstr ""
 
 #: vpsr.rsstarttimelbl
-msgid "Start Time:"
+msgid "Start time:"
 msgstr ""
 
 #: vpsr.rsstatelbl
@@ -1081,7 +1085,7 @@ msgid "Y"
 msgstr ""
 
 #: vpsr.rszipcodelbl
-msgid "Zip Code:"
+msgid "Zip code:"
 msgstr ""
 
 #: vpsr.sallocsrcmemfailed

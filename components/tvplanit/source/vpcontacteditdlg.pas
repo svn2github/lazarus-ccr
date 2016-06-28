@@ -47,10 +47,14 @@ type
   { forward declarations }
   TVpContactEditDialog = class;
 
+  { TContactEditForm }
+
   TContactEditForm = class(TForm)
+    FirstNameEdit: TEdit;
+    FirstNameLbl: TLabel;
     tsContacts: TPageControl;
     tabMain: TTabSheet;
-    NameLbl: TLabel;
+    LastNameLbl: TLabel;
     AddrLbl: TLabel;
     CityLbl: TLabel;
     StateLbl: TLabel;
@@ -59,7 +63,7 @@ type
     PositionLbl: TLabel;
     TitleLbl: TLabel;
     CompanyLbl: TLabel;
-    NameEdit: TEdit;
+    LastNameEdit: TEdit;
     AddressEdit: TEdit;
     CityEdit: TEdit;
     StateEdit: TEdit;
@@ -176,7 +180,8 @@ begin
 
   OkBtn.Caption := RSOKBtn;
   CancelBtn.Caption := RSCancelBtn;
-  NameLbl.Caption := RSNameLbl;
+  LastNameLbl.Caption := RSLastNameLbl;
+  FirstNameLbl.Caption := RSFirstNameLbl;
   TitleLbl.Caption := RSTitleLbl;
   AddrLbl.Caption := RSAddressLbl;
   CityLbl.Caption := RSCityLbl;
@@ -196,7 +201,7 @@ end;
 
 procedure TContactEditForm.OKBtnClick(Sender: TObject);
 begin
-  if NameEdit.Text = '' then begin
+  if LastNameEdit.Text = '' then begin
     raise EVpContactEditError.Create(RSNameIsRequired);
     exit;
   end;
@@ -214,7 +219,9 @@ end;
 
 procedure TContactEditForm.DePopulateSelf;
 begin
-  ParseName(Contact, NameEdit.Text);
+//  ParseName(Contact, LastNameEdit.Text);
+  Contact.LastName := LastNameEdit.Text;
+  Contact.FirstName := FirstNameEdit.Text;
   Contact.Address := AddressEdit.Text;
   Contact.City := CityEdit.Text;
   if cboxState.Visible then
@@ -259,7 +266,8 @@ var
   ct: TVpCategoryType;
 
 begin
-  NameEdit.Text := AssembleName(Contact);
+  LastNameEdit.Text := Contact.LastName;
+  FirstNameEdit.Text := Contact.FirstName; //AssembleName(Contact);
   AddressEdit.Text := Contact.Address;
   CityEdit.Text := Contact.City;
   ZipCodeEdit.Text := Contact.Zip;
@@ -321,13 +329,13 @@ procedure TContactEditForm.ItemChanged(Sender: TObject);
 begin
   Contact.Changed := true;
 
-  { if there is a comma in the nameedit, then it is assumed that the name is  }
+  { if there is a comma in the LastNameEdit, then it is assumed that the name is  }
   { formatted as last, first. Since the comma & space aren't actually part of }
   { the name, we need to allow two extra characters in the namefield's width. }
-  if Pos(',', NameEdit.Text) > 0 then
-    NameEdit.MaxLength := 102
+  if Pos(',', LastNameEdit.Text) > 0 then
+    LastNameEdit.MaxLength := 102
   else
-    NameEdit.MaxLength := 100;
+    LastNameEdit.MaxLength := 100;
 end;
 {=====}
 
@@ -369,7 +377,7 @@ const
   TopField         = 8;
 
 type
-  TLabelArray = array[0..9] of TLabel;
+  TLabelArray = array[0..10] of TLabel;
 
 var
   Labels: TLabelArray;
@@ -384,16 +392,17 @@ begin
   { Note: The resizing algorithm is dependent upon the labels having their
     FocusControl property set to the corresponding edit field or combobox. }
 
-  Labels[0] := NameLbl;
-  Labels[1] := TitleLbl;
-  Labels[2] := AddrLbl;
-  Labels[3] := CityLbl;
-  Labels[4] := StateLbl;
-  Labels[5] := ZipLbl;
-  Labels[6] := CountryLbl;
-  Labels[7] := CompanyLbl;
-  Labels[8] := PositionLbl;
-  Labels[9] := CategoryLbl;
+  Labels[0] := LastNameLbl;
+  Labels[1] := FirstNameLbl;
+  Labels[2] := TitleLbl;
+  Labels[3] := AddrLbl;
+  Labels[4] := CityLbl;
+  Labels[5] := StateLbl;
+  Labels[6] := ZipLbl;
+  Labels[7] := CountryLbl;
+  Labels[8] := CompanyLbl;
+  Labels[9] := PositionLbl;
+  Labels[10] := CategoryLbl;
 
   LargestLabel := 0;
   for i := Low(Labels) to High(Labels) do
@@ -403,14 +412,14 @@ begin
     in effect. }
   for i := Low(Labels) to High(Labels) do begin
     Labels[i].Width := LargestLabel;
-    Labels[i].FocusControl.Left := NameLbl.Left + LargestLabel + 4;
+    Labels[i].FocusControl.Left := LastNameLbl.Left + LargestLabel + 4;
   end;
 
   if cboxCountry.Visible then begin
     WidestField := 0;
     OldFont := TFont.Create;
     try
-      Canvas.Font.Assign (cboxCountry.Font);
+      Canvas.Font.Assign(cboxCountry.Font);
       try
         for j := 0 to cboxCountry.Items.Count - 1 do begin
           i := Canvas.TextWidth(cboxCountry.Items[j]);
@@ -575,6 +584,7 @@ begin
   end;
   ResizeControls;
 end;
+
 {=====}
 
 procedure TContactEditForm.cboxCountryChange(Sender: TObject);
@@ -653,7 +663,7 @@ procedure TContactEditForm.tsContactsChange(Sender: TObject);
 begin
   if Visible then
     if tsContacts.ActivePage = tabMain then
-      NameEdit.SetFocus
+      LastNameEdit.SetFocus
     else if tsContacts.ActivePage = tabContact then
       Phone1Edit.SetFocus
     else if tsContacts.ActivePage = tabCustom then
@@ -666,7 +676,7 @@ end;
 procedure TContactEditForm.FormShow(Sender: TObject);
 begin
   if tsContacts.ActivePage = tabMain then
-    NameEdit.SetFocus;
+    LastNameEdit.SetFocus;
 end;
 {=====}
 

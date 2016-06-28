@@ -1042,7 +1042,7 @@ begin
   end
   else begin
   if ALevel = 0 then
-    { don't draw the gutter in the EventRest for level 0 events. }
+    { don't draw the gutter in the EventRect for level 0 events. }
     TPSTextOut(RenderCanvas,                                         // wp: both cases are the same ?!
       Angle,
       RenderIn,

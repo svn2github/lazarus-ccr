@@ -402,7 +402,9 @@ msgid "Event"
 msgstr "Событие"
 
 #: vpsr.rsdlgprintpreview
-msgid "Print Preview"
+#, fuzzy
+#| msgid "Print Preview"
+msgid "Print preview"
 msgstr "Предварительный просмотр печати"
 
 #: vpsr.rsdlgreseditcaption
@@ -443,7 +445,9 @@ msgid "E-Mail"
 msgstr "Электронная почта"
 
 #: vpsr.rsendtimelbl
-msgid "End Time:"
+#, fuzzy
+#| msgid "End Time:"
+msgid "End time:"
 msgstr "Время окончания:"
 
 #: vpsr.rsexclusiveeventconflict
@@ -469,6 +473,10 @@ msgstr "Ошибка при создании задачи."
 #: vpsr.rsfalse
 msgctxt "vpsr.rsfalse"
 msgid "F"
+msgstr ""
+
+#: vpsr.rsfirstnamelbl
+msgid "First name:"
 msgstr ""
 
 #: vpsr.rsfriday
@@ -547,6 +555,10 @@ msgstr "Ошибка: Не верное определение таблицы."
 #: vpsr.rsinvalidyear
 msgid "Error: Invalid Year."
 msgstr "Ошибка: Не верный год."
+
+#: vpsr.rslastnamelbl
+msgid "Last name:"
+msgstr ""
 
 #: vpsr.rslfriday
 msgctxt "vpsr.rslfriday"
@@ -641,10 +653,6 @@ msgstr "Сегодня"
 #: vpsr.rsnameisrequired
 msgid "Error: Name cannot be empty."
 msgstr "Ошибка: Имя не может быть пустым."
-
-#: vpsr.rsnamelbl
-msgid "Name:"
-msgstr "Имя:"
 
 #: vpsr.rsneedelementname
 msgid "Please supply an Element Name"
@@ -884,11 +892,13 @@ msgid "Print controller is not owned by a TVpControlLink!"
 msgstr ""
 
 #: vpsr.rsrecurrenceendslbl
-msgid "Repeat Until:"
+#, fuzzy
+#| msgid "Repeat Until:"
+msgid "Repeat until:"
 msgstr "Повторять до:"
 
 #: vpsr.rsrecurringlbl
-msgid "Appointment Recurrence:"
+msgid "Appointment recurrence:"
 msgstr ""
 
 #: vpsr.rsreminder
@@ -928,7 +938,9 @@ msgid "Error: Unable to update "
 msgstr "Ошибка обновления"
 
 #: vpsr.rsstarttimelbl
-msgid "Start Time:"
+#, fuzzy
+#| msgid "Start Time:"
+msgid "Start time:"
 msgstr "Время начала:"
 
 #: vpsr.rsstatelbl
@@ -1101,7 +1113,9 @@ msgid "Y"
 msgstr ""
 
 #: vpsr.rszipcodelbl
-msgid "Zip Code:"
+#, fuzzy
+#| msgid "Zip Code:"
+msgid "Zip code:"
 msgstr "Почтовый индекс:"
 
 #: vpsr.sallocsrcmemfailed

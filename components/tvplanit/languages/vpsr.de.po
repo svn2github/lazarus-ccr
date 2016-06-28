@@ -402,7 +402,7 @@ msgid "Event"
 msgstr "Ereignis"
 
 #: vpsr.rsdlgprintpreview
-msgid "Print Preview"
+msgid "Print preview"
 msgstr "Druckvorschau"
 
 #: vpsr.rsdlgreseditcaption
@@ -443,8 +443,8 @@ msgid "E-Mail"
 msgstr "E-Mail"
 
 #: vpsr.rsendtimelbl
-msgid "End Time:"
-msgstr "Ende-Zeit"
+msgid "End time:"
+msgstr "Ende-Zeit:"
 
 #: vpsr.rsexclusiveeventconflict
 msgid "Conflicts with another exclusive event."
@@ -470,6 +470,10 @@ msgstr "Fehler beim Erzeugen einer Aufgabe."
 msgctxt "vpsr.rsfalse"
 msgid "F"
 msgstr "F"
+
+#: vpsr.rsfirstnamelbl
+msgid "First name:"
+msgstr "Vorname:"
 
 #: vpsr.rsfriday
 msgid "Friday"
@@ -518,7 +522,7 @@ msgstr "Stunden"
 
 #: vpsr.rsinifilestructure
 msgid "Incorrect structure of ini file."
-msgstr ""
+msgstr "Falscher Aufbau der ini-Datei"
 
 #: vpsr.rsintervallbl
 msgid "Interval (days):"
@@ -547,6 +551,10 @@ msgstr "Fehler: Ungültige Tabelle angegeben."
 #: vpsr.rsinvalidyear
 msgid "Error: Invalid Year."
 msgstr "Fehler: Ungültiges Jahr"
+
+#: vpsr.rslastnamelbl
+msgid "Last name:"
+msgstr "Nachname:"
 
 #: vpsr.rslfriday
 msgctxt "vpsr.rslfriday"
@@ -641,10 +649,6 @@ msgstr "Heute"
 #: vpsr.rsnameisrequired
 msgid "Error: Name cannot be empty."
 msgstr "Fehler: Name muss angegeben sein."
-
-#: vpsr.rsnamelbl
-msgid "Name:"
-msgstr "Name:"
 
 #: vpsr.rsneedelementname
 msgid "Please supply an Element Name"
@@ -874,11 +878,11 @@ msgid "Print controller is not owned by a TVpControlLink!"
 msgstr "Print Controll hat nicht TVpControlLink als Owner"
 
 #: vpsr.rsrecurrenceendslbl
-msgid "Repeat Until:"
+msgid "Repeat until:"
 msgstr "Wiederholen bis:"
 
 #: vpsr.rsrecurringlbl
-msgid "Appointment Recurrence:"
+msgid "Appointment recurrence:"
 msgstr "Termin-Wiederholung:"
 
 #: vpsr.rsreminder
@@ -918,8 +922,8 @@ msgid "Error: Unable to update "
 msgstr "Fehler: Kann nicht updaten"
 
 #: vpsr.rsstarttimelbl
-msgid "Start Time:"
-msgstr "Start-Zeit"
+msgid "Start time:"
+msgstr "Start-Zeit:"
 
 #: vpsr.rsstatelbl
 msgid "State:"
@@ -1091,7 +1095,7 @@ msgid "Y"
 msgstr "Y"
 
 #: vpsr.rszipcodelbl
-msgid "Zip Code:"
+msgid "Zip code:"
 msgstr "Postleitzahl:"
 
 #: vpsr.sallocsrcmemfailed
@@ -1377,4 +1381,3 @@ msgstr "Unbekannte Achsen-Spezifikation: %s"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "Die XML-Deklaration muss vor dem ersten Element erscheinen."
-

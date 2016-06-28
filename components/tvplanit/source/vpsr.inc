@@ -237,30 +237,31 @@ resourcestring
   RSDescriptionLbl          = 'Subject:';
   RSLocationLbl             = 'Location:';
   RSCategoryLbl             = 'Category:';
-  RSStartTimeLbl            = 'Start Time:';
-  RSEndTimeLbl              = 'End Time:';
+  RSStartTimeLbl            = 'Start time:';
+  RSEndTimeLbl              = 'End time:';
   RSAlarmSet                = '&Reminder';
-  RSRecurringLbl            = 'Appointment Recurrence:';
+  RSRecurringLbl            = 'Appointment recurrence:';
   RSIntervalLbl             = 'Interval (days):';
-  RSRecurrenceEndsLbl       = 'Repeat Until:';
+  RSRecurrenceEndsLbl       = 'Repeat until:';
   RSAllDayEvent             = '&All Day Event';
   RSNotesLbl                = 'Notes:';
 
   { Contact Edit Dialog Captions }
   RSDlgContactEdit          = 'Contact';
-  RSNameLbl                 = 'Name:';
+  RSLastNameLbl             = 'Last name:';
+  RSFirstNameLbl            = 'First name:';
   RSTitleLbl                = 'Title:';
   RSAddressLbl              = 'Address:';
   RSCityLbl                 = 'City:';
   RSStateLbl                = 'State:';
   RSCountryLbl              = 'Country:';
-  RSZipCodeLbl              = 'Zip Code:';
+  RSZipCodeLbl              = 'Zip code:';
   RSCompanyLbl              = 'Company:';
   RSPositionLbl             = 'Position:';
   RSMasterData              = 'Master data';
 
   { Print Preview dialog captions }
-  RSDlgPrintPreview        = 'Print Preview';
+  RSDlgPrintPreview        = 'Print preview';
 
   { Task Edit Dialog Captions }
   RSDlgTaskEdit            = 'Task';
