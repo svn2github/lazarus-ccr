@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, ComCtrls, VpBaseDS, VpDayView, VpWeekView, VpTaskList,
+  StdCtrls, ComCtrls, Menus, VpBaseDS, VpDayView, VpWeekView, VpTaskList,
   VpContactGrid, VpMonthView, VpResEditDlg, VpContactButtons, VpIniDs;
 
 type
@@ -19,6 +19,7 @@ type
     PageControl1: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
+    PopupMenu1: TPopupMenu;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
     Splitter3: TSplitter;
@@ -83,7 +84,6 @@ begin
     datastore.ResourceID := lastRes.ResourceID;
   end;
 end;
-
 
 end.
 

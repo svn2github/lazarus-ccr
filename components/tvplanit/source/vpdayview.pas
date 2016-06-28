@@ -1625,7 +1625,7 @@ begin
       OnClick(self);
   end
   else begin
-    if not focused then
+    if not Focused then
       SetFocus;
 
     if (x > dvRowHeadWidth - 9) and (y > dvColHeadHeight) then
@@ -1638,17 +1638,14 @@ begin
     EditEventAtCoord(Point (x, y));
     dvClickTimer.Enabled := false;
 
-    if not Assigned(PopupMenu) then
-    begin
-      if not Assigned(FActiveEvent) then
-        for i := 0 to FDefaultPopup.Items.Count - 1 do begin
-          if (FDefaultPopup.Items[i].Tag = 1) or (ReadOnly) then
-            FDefaultPopup.Items[i].Enabled := False;
-        end
-      else
-        for i := 0 to FDefaultPopup.Items.Count - 1 do
-          FDefaultPopup.Items[i].Enabled := True;
-    end;
+    if not Assigned(FActiveEvent) then
+      for i := 0 to FDefaultPopup.Items.Count - 1 do begin
+        if (FDefaultPopup.Items[i].Tag = 1) or (ReadOnly) then
+          FDefaultPopup.Items[i].Enabled := False;
+      end
+    else
+      for i := 0 to FDefaultPopup.Items.Count - 1 do
+        FDefaultPopup.Items[i].Enabled := True;
   end;
 end;
 

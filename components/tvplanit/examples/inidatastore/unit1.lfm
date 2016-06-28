@@ -300,4 +300,8 @@ object Form1: TForm1
     left = 140
     top = 200
   end
+  object PopupMenu1: TPopupMenu
+    left = 129
+    top = 527
+  end
 end
