@@ -25,6 +25,7 @@ type
 
     procedure StrToContact(AString: String; AContact: TVpContact);
     procedure StrToEvent(AString: String; AEvent: TVpEvent);
+    procedure StrToEventTimes(AString: String; var AStartTime, AEndTime: TDateTime);
     procedure StrToResource(AString: String; AResource: TVpResource);
     procedure StrToTask(AString: String; ATask: TVpTask);
 
@@ -451,6 +452,27 @@ begin
   end;
 end;
 
+procedure TVpIniDatastore.StrToEventTimes(AString: String;
+  var AStartTime, AEndTime: TDateTime);
+var
+  L: TStrings;
+begin
+  L := TStringList.Create;
+  try
+    Split(AString, L);
+    if L.Count < 2 then
+      IniError(RSIniFileStructure);
+    if L[0] = '' then
+      AStartTime := 0 else
+      AStartTime := StrToDateTime(L[0], FFormatSettings);
+    if L[1] = '' then
+      AEndTime := 0 else
+      AEndtime := StrToDateTime(L[1], FFormatSettings);
+  finally
+    L.Free;
+  end;
+end;
+
 procedure TVpIniDatastore.StrToEvent(AString: String; AEvent: TVpEvent);
 var
   L: TStrings;
@@ -573,6 +595,7 @@ var
   s: String;
   key: String;
   resID, id: Integer;
+  tStart, tEnd: TDateTime;
 begin
   if FFileName = '' then
     exit;
@@ -601,26 +624,27 @@ begin
         s := ini.ReadString(key, L[j], '');
         StrToContact(s, contact);
       end;
-    end;
 
-    key := Format('Events of resource %d', [resID]);
-    L.Clear;
-    ini.ReadSection(key, L);
-    for j:=0 to L.Count-1 do begin
-      id := StrToInt(L[j]);
-      event := res.Schedule.AddEvent(id, 0, 1);
-      s := ini.ReadString(key, L[j], '');
-      StrToEvent(s, event);
-    end;
+      key := Format('Events of resource %d', [resID]);
+      L.Clear;
+      ini.ReadSection(key, L);
+      for j:=0 to L.Count-1 do begin
+        id := StrToInt(L[j]);
+        s := ini.ReadString(key, L[j], '');
+        StrToEventTimes(s, tStart, tEnd);
+        event := res.Schedule.AddEvent(id, tStart, tEnd);
+        StrToEvent(s, event);
+      end;
 
-    key := Format('Tasks of resource %d', [resID]);
-    L.Clear;
-    ini.ReadSection(key, L);
-    for j:=0 to L.Count-1 do begin
-      id := StrToInt(L[j]);
-      task := res.Tasks.AddTask(id);
-      s := ini.ReadString(key, L[j], '');
-      StrToTask(s, task);
+      key := Format('Tasks of resource %d', [resID]);
+      L.Clear;
+      ini.ReadSection(key, L);
+      for j:=0 to L.Count-1 do begin
+        id := StrToInt(L[j]);
+        task := res.Tasks.AddTask(id);
+        s := ini.ReadString(key, L[j], '');
+        StrToTask(s, task);
+      end;
     end;
 
   finally

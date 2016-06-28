@@ -926,7 +926,7 @@ begin
     { paint extra borders around the editor }
     OKToDrawEditFrame := True;
     if Assigned(FDayView.ActiveEvent) then
-      OKToDrawEditFrame := not (FDayView.ActiveEvent.AllDayEvent);
+      OKToDrawEditFrame := not FDayView.ActiveEvent.AllDayEvent;
 
     with TVpDayViewOpener(FDayView) do
       if (dvInPlaceEditor <> nil) and dvInplaceEditor.Visible and OKToDrawEditFrame then
