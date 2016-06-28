@@ -41,7 +41,7 @@ uses
   SysUtils,
   {$IFDEF VERSION6} Variants, {$ENDIF}
   Classes, Graphics, Controls, Forms, Dialogs, VpData, ExtCtrls, StdCtrls,
-  VpException, VpMisc, VpBase, VpSR, VpDlg, VpBaseDS, ComCtrls;
+  VpException, VpMisc, VpBase, VpSR, VpDlg, VpBaseDS, ComCtrls, Types;
 
 type
   { forward declarations }
@@ -108,8 +108,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure ItemChanged(Sender: TObject);
     procedure cboxCountryChange(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure tsContactsChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
@@ -141,6 +140,7 @@ type
     property Placement;                  
   end;
 
+
 implementation
 
 {$IFDEF LCL}
@@ -152,7 +152,7 @@ implementation
 uses
   VpConst;
 
-{== Utility functions ===================================}
+{ Utility functions }
 
 function Max(const a, b: Integer): Integer;
 begin
@@ -162,14 +162,14 @@ begin
     Result := b;
 end;
 
-{== TEditForm ===========================================}
+
+{ TContactEditForm }
 
 procedure TContactEditForm.FormCreate(Sender: TObject);
 begin
   ReturnCode := rtAbandon;
   SetCaptions;
 end;
-{=====}
 
 procedure TContactEditForm.SetCaptions;
 begin
@@ -197,7 +197,6 @@ begin
   CustomLbl3.Caption := RSCustom3;
   CustomLbl4.Caption := RSCustom4;
 end;
-{=====}
 
 procedure TContactEditForm.OKBtnClick(Sender: TObject);
 begin
@@ -208,14 +207,12 @@ begin
   ReturnCode := rtCommit;
   Close;
 end;
-{=====}
 
 procedure TContactEditForm.CancelBtnClick(Sender: TObject);
 begin
   ReturnCode := rtAbandon;
   Close;
 end;
-{=====}
 
 procedure TContactEditForm.DePopulateSelf;
 begin
@@ -257,7 +254,6 @@ begin
 
   Contact.Category := cboxCategory.ItemIndex;
 end;
-{=====}
 
 procedure TContactEditForm.PopulateSelf;
 var
@@ -323,7 +319,6 @@ begin
 
   DisplayCurrentCountry;
 end;
-{=====}
 
 procedure TContactEditForm.ItemChanged(Sender: TObject);
 begin
@@ -337,7 +332,6 @@ begin
   else
     LastNameEdit.MaxLength := 100;
 end;
-{=====}
 
 procedure TContactEditForm.ArrangeControls;
 begin
@@ -364,34 +358,41 @@ begin
   end;
   tsContacts.ActivePage := tabMain;
 end;
-{=====}
 
 procedure TContactEditForm.ResizeControls;
 const
   ComboArrowWidth  = 32;
   FieldVertSep     = 25;
-  FormRightBorder  = 20;
-  MinFormWidth     = 265;
-  FormHeightOffset = 103;
-  MinFormHeight    = 250;
+//  FormRightBorder  = 20;
+//  MinFormWidth     = 265;
+//  FormHeightOffset = 103;
+//  MinFormHeight    = 250;
   TopField         = 8;
+  DIST             = 4;   // distance between label and edit/combo
 
 type
-  TLabelArray = array[0..10] of TLabel;
+  TLabelArray = array of TLabel;
+  TComboboxArray = array of TCombobox;
+  TEditArray = array of TEdit;
 
 var
   Labels: TLabelArray;
+  Comboboxes: TComboboxArray;
+  Edits: TEditArray;
   LargestLabel: Integer;
   WidestField: Integer;
   i, j: Integer;
   OldFont: TFont;
   FieldTop: Integer;
   delta: Integer;
+  horMargin: Integer;  // Margin at left and right from tabsheet to label/edit
+  corr: Integer;       // difference between form's client width and tabsheet width
 
 begin
   { Note: The resizing algorithm is dependent upon the labels having their
     FocusControl property set to the corresponding edit field or combobox. }
 
+  SetLength(Labels, 11);
   Labels[0] := LastNameLbl;
   Labels[1] := FirstNameLbl;
   Labels[2] := TitleLbl;
@@ -408,77 +409,50 @@ begin
   for i := Low(Labels) to High(Labels) do
     LargestLabel := Max(LargestLabel, GetLabelWidth(Labels[i]));
 
-  { Determine height of label based upon whether large or small fonts are
+  { Determine width of label based upon whether large or small fonts are
     in effect. }
   for i := Low(Labels) to High(Labels) do begin
     Labels[i].Width := LargestLabel;
-    Labels[i].FocusControl.Left := LastNameLbl.Left + LargestLabel + 4;
+    Labels[i].FocusControl.Left := LastNameLbl.Left + LargestLabel + DIST;
   end;
+  horMargin := Labels[0].Left;
 
-  if cboxCountry.Visible then begin
-    WidestField := 0;
-    OldFont := TFont.Create;
-    try
-      Canvas.Font.Assign(cboxCountry.Font);
-      try
-        for j := 0 to cboxCountry.Items.Count - 1 do begin
-          i := Canvas.TextWidth(cboxCountry.Items[j]);
-          if i > WidestField then
-            WidestField := i;
-        end;
-        WidestField := WidestField + ComboArrowWidth;
-        cboxCountry.Width := WidestField;
-      finally
-        Canvas.Font.Assign(OldFont);
-      end;
-    finally
-      OldFont.Free;
-    end;
-    if (cboxCountry.Left + cboxCountry.Width + FormRightBorder > MinFormWidth) and
-       (not cboxState.Visible)
-    then
-      Width := cboxCountry.Left + cboxCountry.Width + FormRightBorder
-    else
-      Width := MinFormWidth;
-  end;
+  widestField := 250;
 
-  if cboxState.Visible then begin
-    WidestField := 0;
+  { If localization file is loaded determine the width of the country and state
+    comboboxes }
+  if cboxCountry.Visible or cboxState.Visible then begin
     OldFont := TFont.Create;
     try
       OldFont.Assign(Canvas.Font);
-      Canvas.Font.Assign(cboxCountry.Font);
-      try
-        for j := 0 to cboxState.Items.Count - 1 do begin
-          i := Canvas.TextWidth(cboxState.Items[j]);
-          if i > WidestField then
-            WidestField := i;
-        end;
-        WidestField := WidestField + ComboArrowWidth;
-        cboxState.Width := WidestField;
-      finally
-        Canvas.Font.Assign(OldFont);
+
+      if cboxCountry.Visible then begin
+        Canvas.Font.Assign(cboxCountry.Font);
+        for j := 0 to cboxCountry.Items.Count - 1 do
+          widestField := Max(widestField, Canvas.TextWidth(cboxCountry.Items[j]) + ComboArrowWidth);
+      end;
+
+      if cboxState.Visible then begin
+        Canvas.Font.Assign(cboxCountry.Font);
+        for j := 0 to cboxState.Items.Count - 1 do
+          widestField := Max(widestfield, Canvas.TextWidth(cboxState.Items[j]) + ComboArrowWidth);
       end;
     finally
+      Canvas.Font.Assign(OldFont);
       OldFont.Free;
     end;
-    if (cboxState.Left + cboxState.Width + FormRightBorder > MinFormWidth) and
-       (not cboxCountry.Visible)
-    then
-      Width := cboxState.Left + cboxState.Width + FormRightBorder
-    else
-      Width := MinFormWidth;
   end;
 
-  if (cboxState.Visible) and (cboxCountry.Visible) then begin
-    FieldTop := cboxCountry.Left + cboxCountry.Width + FormRightBorder;
-    if cboxState.Left + cboxState.Width + FormRightBorder > FieldTop then
-      FieldTop := cboxState.Left + cboxState.Width + FormRightBorder;
-    if (FieldTop > MinFormWidth) then
-      Width := FieldTop
-    else
-      Width := MinFormWidth;
-  end;
+  { Set form width according to widest field }
+  corr := ClientWidth - tabMain.ClientWidth;
+  ClientWidth := LastNameEdit.Left + widestfield + horMargin + corr;
+
+  { Set edit and combo widths }
+  for i:= Low(Labels) to High(Labels) do
+    if (Labels[i].FocusControl <> ZipCodeEdit) then
+      Labels[i].FocusControl.Width := widestfield;
+  cboxCountry.Width := widestField;
+  cboxState.Width := widestField;
 
   { Vertically arrange the fields. }
   delta := (Labels[0].FocusControl.Height - labels[0].Height) div 2;
@@ -490,27 +464,80 @@ begin
       inc(FieldTop, FieldVertSep);
     end;
 
+  { Set form height such that first tab is filled completely by controls }
   ClientHeight := cboxCategory.Top + cboxCategory.Height + TopField +
     pnlBottom.Height + tsContacts.Height - tabMain.Height;
-  {
-  if FieldTop + FormHeightOffset > MinFormHeight then
-    Height := FieldTop + FormHeightOffset
-  else
-    Height := MinFormHeight;
-   }
-  EMailLbl.Left := EMailEdit.Left - GetLabelWidth(EMailLbl) - 8;
 
-  Custom1Edit.Left := CustomLbl4.Left + GetLabelWidth(CustomLbl4) + 8;
-  Custom2Edit.Left := Custom1Edit.Left;
-  Custom3Edit.Left := Custom1Edit.Left;
-  Custom4Edit.Left := Custom1Edit.Left;
-  Custom1Edit.Width := ClientWidth - 8 - Custom1Edit.Left - 8;
-  Custom2Edit.Width := Custom1Edit.Width;
-  Custom3Edit.Width := Custom1Edit.Width;
-  Custom4Edit.Width := Custom1Edit.Width;
+  { Page "Contact" }
+  SetLength(Comboboxes, 5);
+  Comboboxes[0] := cboxPhoneLbl1;
+  Comboboxes[1] := cboxPhoneLbl2;
+  Comboboxes[2] := cboxPhoneLbl3;
+  Comboboxes[3] := cboxPhoneLbl4;
+  Comboboxes[4] := cboxPhoneLbl5;
 
+  SetLength(Edits, 5);
+  Edits[0] := Phone1Edit;
+  Edits[1] := Phone2Edit;
+  Edits[2] := Phone3Edit;
+  Edits[3] := Phone4Edit;
+  Edits[4] := Phone5Edit;
+
+  largestLabel := GetLabelWidth(EMailLbl);
+  OldFont := TFont.Create;
+  try
+    OldFont.Assign(Canvas.Font);
+    Canvas.Font.Assign(cboxPhoneLbl1.Font);
+    for i:=0 to cboxPhoneLbl1.Items.Count-1 do
+      largestLabel := Max(cboxPhoneLbl1.Canvas.TextWidth(cboxPhoneLbl1.Items[i]) + ComboArrowWidth, largestlabel);
+  finally
+    Canvas.Font.Assign(OldFont);
+    OldFont.Free;
+  end;
+
+  FieldTop := TopField;
+  for i:=Low(Comboboxes) to High(Comboboxes) do begin
+    Comboboxes[i].Left := horMargin;
+    Comboboxes[i].Width := largestLabel;
+    Comboboxes[i].Top := FieldTop;
+    inc(FieldTop, FieldVertSep);
+  end;
+
+  for i:= Low(Edits) to High(Edits) do begin
+    Edits[i].Left := cboxPhoneLbl1.Left + cboxPhoneLbl1.Width + DIST;
+    Edits[i].Width := ClientWidth - Edits[i].Left - horMargin - corr;
+    Edits[i].Top := Comboboxes[i].Top;
+  end;
+
+  EMailEdit.Left := Phone1Edit.Left;
+  EMailEdit.Width := Phone1Edit.Width;
+  EMailEdit.Top := Phone5Edit.Top + FieldVertSep;
+  EMailLbl.Left := EMailEdit.Left - GetLabelWidth(EMailLbl) - DIST;
+  EMailLbl.Top := EMailEdit.Top + delta;
+
+
+  { Page "User-defined" }
+  SetLength(Labels, 4);
+  Labels[0] := CustomLbl1;
+  Labels[1] := CustomLbl2;
+  Labels[2] := CustomLbl3;
+  Labels[3] := CustomLbl4;
+
+  largestLabel := 0;
+  for i := Low(Labels) to High(Labels) do
+    largestLabel := Max(largestLabel, GetLabelWidth(Labels[i]));
+
+  FieldTop := TopField;
+  for i := Low(Labels) to High(Labels) do begin
+    Labels[i].FocusControl.Left := horMargin + LargestLabel + DIST;
+    Labels[i].FocusControl.Top := FieldTop;
+    Labels[i].FocusControl.Width := ClientWidth - Labels[i].FocusControl.Left - horMargin - corr;
+    Labels[i].Width := LargestLabel;
+    Labels[i].Left := Labels[i].FocusControl.Left - GetLabelWidth(Labels[i]) - DIST;
+    Labels[i].Top := FieldTop + delta;
+    inc(FieldTop, FieldVertSep);
+  end;
 end;
-{=====}
 
 procedure TContactEditForm.DisplayCurrentCountry;
 var
@@ -529,7 +556,7 @@ begin
       if ControlLink.Localization.Countries.Items[Idx].Address1Caption <> '' then
         AddrLbl.Caption := ControlLink.Localization.Countries.Items[Idx].Address1Caption
       else
-        AddrLbl.Caption := 'Address: ';
+        AddrLbl.Caption := RSAddressLbl;
     end else begin
       AddrLbl.Visible := False;
       AddressEdit.Visible := False;
@@ -541,7 +568,7 @@ begin
       if ControlLink.Localization.Countries.Items[Idx].CityCaption <> '' then
         CityLbl.Caption := ControlLink.Localization.Countries.Items[Idx].CityCaption
       else
-        CityLbl.Caption := 'City: ';
+        CityLbl.Caption := RSCityLbl;
     end else begin
       CityLbl.Visible := False;
       CityEdit.Visible := False;
@@ -562,7 +589,7 @@ begin
       if ControlLink.Localization.Countries.Items[Idx].StateCaption <> '' then
         StateLbl.Caption := ControlLink.Localization.Countries.Items[Idx].StateCaption
       else
-        StateLbl.Caption := 'State: ';
+        StateLbl.Caption := RSStateLbl;
     end else begin
       StateLbl.Visible := False;
       StateEdit.Visible := False;
@@ -575,7 +602,7 @@ begin
       if ControlLink.Localization.Countries.Items[Idx].ZipCaption <> '' then
         ZipLbl.Caption := ControlLink.Localization.Countries.Items[Idx].ZipCaption
       else
-        ZipLbl.Caption := 'Zip Code: ';
+        ZipLbl.Caption := RSZipCodeLbl;
     end else begin
       ZipLbl.Visible := False;
       ZipCodeEdit.Visible := False;
@@ -588,15 +615,40 @@ begin
   ResizeControls;
 end;
 
-{=====}
-
 procedure TContactEditForm.cboxCountryChange(Sender: TObject);
 begin
   StateEdit.Text := '';
   cboxState.Text := '';
   DisplayCurrentCountry;
 end;
-{=====}
+
+procedure TContactEditForm.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then begin
+    ReturnCode := rtAbandon;
+    Close;
+  end;
+end;
+
+procedure TContactEditForm.tsContactsChange(Sender: TObject);
+begin
+  if Visible then
+    if tsContacts.ActivePage = tabMain then
+      LastNameEdit.SetFocus
+    else if tsContacts.ActivePage = tabContact then
+      Phone1Edit.SetFocus
+    else if tsContacts.ActivePage = tabCustom then
+      Custom1Edit.SetFocus
+    else if tsContacts.ActivePage = tabNotes then
+      NoteEdit.SetFocus;
+end;
+
+procedure TContactEditForm.FormShow(Sender: TObject);
+begin
+  if tsContacts.ActivePage = tabMain then
+    LastNameEdit.SetFocus;
+end;
 
 
 { TVpContactEditDialog }
@@ -631,7 +683,6 @@ begin
     DataStore.NotifyDependents;
   end;
 end;
-{=====}
 
 function TVpContactEditDialog.AddNewContact: Boolean;
 begin
@@ -650,38 +701,6 @@ begin
     end;
   end;
 end;
-{=====}
-
-procedure TContactEditForm.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if Key = VK_ESCAPE then begin
-    ReturnCode := rtAbandon;
-    Close;
-  end;
-end;
-{=====}
-
-procedure TContactEditForm.tsContactsChange(Sender: TObject);
-begin
-  if Visible then
-    if tsContacts.ActivePage = tabMain then
-      LastNameEdit.SetFocus
-    else if tsContacts.ActivePage = tabContact then
-      Phone1Edit.SetFocus
-    else if tsContacts.ActivePage = tabCustom then
-      Custom1Edit.SetFocus
-    else if tsContacts.ActivePage = tabNotes then
-      NoteEdit.SetFocus;
-end;
-{=====}
-
-procedure TContactEditForm.FormShow(Sender: TObject);
-begin
-  if tsContacts.ActivePage = tabMain then
-    LastNameEdit.SetFocus;
-end;
-{=====}
 
 end.
 

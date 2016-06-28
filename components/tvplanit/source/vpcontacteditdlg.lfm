@@ -19,9 +19,9 @@ object ContactEditForm: TContactEditForm
     Height = 314
     Top = 0
     Width = 433
-    ActivePage = tabContact
+    ActivePage = tabMain
     Align = alClient
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 0
     OnChange = tsContactsChange
     object tabMain: TTabSheet
@@ -205,7 +205,7 @@ object ContactEditForm: TContactEditForm
         Left = 136
         Height = 23
         Top = 200
-        Width = 121
+        Width = 247
         MaxLength = 50
         OnChange = ItemChanged
         TabOrder = 10
@@ -223,7 +223,7 @@ object ContactEditForm: TContactEditForm
         Left = 136
         Height = 23
         Top = 127
-        Width = 249
+        Width = 247
         ItemHeight = 15
         MaxLength = 65535
         TabOrder = 5
@@ -240,13 +240,10 @@ object ContactEditForm: TContactEditForm
         Left = 136
         Height = 21
         Top = 175
-        Width = 249
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        ItemHeight = 13
+        Width = 247
+        ItemHeight = 15
         MaxLength = 65535
         OnChange = cboxCountryChange
-        ParentFont = False
         TabOrder = 8
       end
       object FirstNameEdit: TEdit
@@ -384,7 +381,7 @@ object ContactEditForm: TContactEditForm
     end
     object tabCustom: TTabSheet
       Caption = 'RSCustom'
-      ClientHeight = 251
+      ClientHeight = 286
       ClientWidth = 425
       ImageIndex = 2
       object CustomLbl1: TLabel
@@ -393,6 +390,7 @@ object ContactEditForm: TContactEditForm
         Top = 12
         Width = 64
         Caption = 'CustomLbl1'
+        FocusControl = Custom1Edit
         ParentColor = False
       end
       object CustomLbl2: TLabel
@@ -401,6 +399,7 @@ object ContactEditForm: TContactEditForm
         Top = 36
         Width = 64
         Caption = 'CustomLbl2'
+        FocusControl = Custom2Edit
         ParentColor = False
       end
       object CustomLbl3: TLabel
@@ -409,6 +408,7 @@ object ContactEditForm: TContactEditForm
         Top = 60
         Width = 64
         Caption = 'CustomLbl3'
+        FocusControl = Custom3Edit
         ParentColor = False
       end
       object CustomLbl4: TLabel
@@ -417,6 +417,7 @@ object ContactEditForm: TContactEditForm
         Top = 84
         Width = 64
         Caption = 'CustomLbl4'
+        FocusControl = Custom4Edit
         ParentColor = False
       end
       object Custom1Edit: TEdit
