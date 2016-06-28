@@ -490,11 +490,14 @@ begin
       inc(FieldTop, FieldVertSep);
     end;
 
+  ClientHeight := cboxCategory.Top + cboxCategory.Height + TopField +
+    pnlBottom.Height + tsContacts.Height - tabMain.Height;
+  {
   if FieldTop + FormHeightOffset > MinFormHeight then
     Height := FieldTop + FormHeightOffset
   else
     Height := MinFormHeight;
-
+   }
   EMailLbl.Left := EMailEdit.Left - GetLabelWidth(EMailLbl) - 8;
 
   Custom1Edit.Left := CustomLbl4.Left + GetLabelWidth(CustomLbl4) + 8;
