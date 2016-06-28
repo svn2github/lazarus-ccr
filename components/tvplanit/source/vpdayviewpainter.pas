@@ -82,7 +82,6 @@ type
     function DetermineIconRect(AEventRect: TRect): TRect;
     function GetMaxOLEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
     procedure DrawAllDayEvents;
-    procedure DrawAllDays;
     procedure DrawCells(R: TRect; ColDate: TDateTime; Col: Integer);
     procedure DrawColHeader(R: TRect; ARenderDate: TDateTime; Col: Integer);
     procedure DrawEditFrame(R: TRect; AGutter, ALevel: Integer; AColor: TColor);
@@ -94,6 +93,7 @@ type
     procedure DrawIcons(AIconRect: TRect);
     procedure DrawNavBtns;
     procedure DrawNavBtnBackground;
+    procedure DrawRegularEvents;
     procedure DrawRowHeader(R: TRect);
     procedure FreeBitmaps;
     procedure GetIcons(Event: TVpEvent);
@@ -159,6 +159,7 @@ begin
   end;
 end;
 
+{ returns the number of events which overlap the specified event }
 function TVpDayViewPainter.CountOverlappingEvents(Event: TVpEvent;
   const EArray: TVpDvEventArray): Integer;
 var
@@ -412,75 +413,6 @@ begin
 
   finally
     ADEventsList.Free;
-  end;
-end;
-
-procedure TVpDayViewPainter.DrawAllDays;
-var
-  i: Integer;
-  RPos: Integer;
-  AllDayWidth: Integer;
-  ExtraSpace: Integer;
-  DrawMe: Boolean;
-  RealDay: Integer;
-begin
-  if RealNumDays = 0 then begin
-    while (DayOfWeek(RenderDate) = 1) or (DayOfWeek(RenderDate) = 7) do
-      RenderDate := RenderDate + 1;
-    RealNumDays := FDayView.NumDays;
-  end;
-  AllDayWidth := RealWidth - RealRowHeadWidth - 1 - ScrollBarOffset;
-
-  DayWidth := AllDayWidth div FDayView.NumDays;
-  ExtraSpace := AllDayWidth mod FDayView.NumDays;
-
-  RPos := RowHeadRect.Right;
-
-  RealDay := 0;
-  for i := 0 to RealNumDays - 1 do begin
-    DrawMe := True;
-    if not FDayView.IncludeWeekends then begin
-      if (DayOfWeek(RenderDate + i) = 1) or (DayOfWeek(RenderDate + i) = 7) then
-        DrawMe := False
-    end;
-    if DrawMe then begin
-      { Draw Column Header }
-      ColHeadRect := Rect(RPos, RealTop + 2, RPos + DayWidth - 1, RealTop + RealColHeadHeight);
-      if (i = RealNumDays - 1) and (ExtraSpace > 0) then
-        ColHeadRect.Right := ColHeadRect.Right + ExtraSpace;
-
-      if Assigned(FDayView.OwnerDrawColHeader) then begin
-        Drawn := false;
-        FDayView.OwnerDrawColHeader(self, RenderCanvas, ColHeadRect, Drawn);
-        if not Drawn then
-          DrawColHeader(ColHeadRect, RenderDate + i, RealDay);
-      end else
-        DrawColHeader(ColHeadRect, RenderDate + i, RealDay);
-
-      { Calculate the column rect for this day }
-      RenderCanvas.Font.Assign(FDayView.Font);
-      CellsRect := Rect(RPos, ADEventsRect.Bottom + 1, RPos + DayWidth, RealBottom - 2);
-      if (i = RealNumDays - 1) and (ExtraSpace > 0) then
-        CellsRect.Right := CellsRect.Right + ExtraSpace;
-
-      { set the ColRectArray }
-      TVpDayViewOpener(FDayView).dvColRectArray[RealDay].Rec := CellsRect;
-      TVpDayViewOpener(FDayView).dvColRectArray[RealDay].Date := RenderDate + i;
-
-      { Draw the cells }
-      if Assigned(FDayView.OwnerDrawCells) then begin
-        FDayView.OwnerDrawCells(self, RenderCanvas, CellsRect, RealRowHeight, Drawn);
-        if not Drawn then
-          DrawCells(CellsRect, RenderDate + i, RealDay);
-      end else
-        DrawCells(CellsRect, RenderDate + i, RealDay);
-
-      { Draw the regular events }
-      DrawEvents(RenderDate + i, RealDay);
-
-      Inc(RPos, DayWidth);
-      Inc(RealDay);
-    end;
   end;
 end;
 
@@ -1209,6 +1141,75 @@ begin
   end;
 end;
 
+procedure TVpDayViewPainter.DrawRegularEvents;
+var
+  i: Integer;
+  RPos: Integer;
+  AllDayWidth: Integer;
+  ExtraSpace: Integer;
+  DrawMe: Boolean;
+  RealDay: Integer;
+begin
+  if RealNumDays = 0 then begin
+    while (DayOfWeek(RenderDate) = 1) or (DayOfWeek(RenderDate) = 7) do
+      RenderDate := RenderDate + 1;
+    RealNumDays := FDayView.NumDays;
+  end;
+  AllDayWidth := RealWidth - RealRowHeadWidth - 1 - ScrollBarOffset;
+
+  DayWidth := AllDayWidth div FDayView.NumDays;
+  ExtraSpace := AllDayWidth mod FDayView.NumDays;
+
+  RPos := RowHeadRect.Right;
+
+  RealDay := 0;
+  for i := 0 to RealNumDays - 1 do begin
+    DrawMe := True;
+    if not FDayView.IncludeWeekends then begin
+      if (DayOfWeek(RenderDate + i) = 1) or (DayOfWeek(RenderDate + i) = 7) then
+        DrawMe := False
+    end;
+    if DrawMe then begin
+      { Draw Column Header }
+      ColHeadRect := Rect(RPos, RealTop + 2, RPos + DayWidth - 1, RealTop + RealColHeadHeight);
+      if (i = RealNumDays - 1) and (ExtraSpace > 0) then
+        ColHeadRect.Right := ColHeadRect.Right + ExtraSpace;
+
+      if Assigned(FDayView.OwnerDrawColHeader) then begin
+        Drawn := false;
+        FDayView.OwnerDrawColHeader(self, RenderCanvas, ColHeadRect, Drawn);
+        if not Drawn then
+          DrawColHeader(ColHeadRect, RenderDate + i, RealDay);
+      end else
+        DrawColHeader(ColHeadRect, RenderDate + i, RealDay);
+
+      { Calculate the column rect for this day }
+      RenderCanvas.Font.Assign(FDayView.Font);
+      CellsRect := Rect(RPos, ADEventsRect.Bottom + 1, RPos + DayWidth, RealBottom - 2);
+      if (i = RealNumDays - 1) and (ExtraSpace > 0) then
+        CellsRect.Right := CellsRect.Right + ExtraSpace;
+
+      { set the ColRectArray }
+      TVpDayViewOpener(FDayView).dvColRectArray[RealDay].Rec := CellsRect;
+      TVpDayViewOpener(FDayView).dvColRectArray[RealDay].Date := RenderDate + i;
+
+      { Draw the cells }
+      if Assigned(FDayView.OwnerDrawCells) then begin
+        FDayView.OwnerDrawCells(self, RenderCanvas, CellsRect, RealRowHeight, Drawn);
+        if not Drawn then
+          DrawCells(CellsRect, RenderDate + i, RealDay);
+      end else
+        DrawCells(CellsRect, RenderDate + i, RealDay);
+
+      { Draw the regular events }
+      DrawEvents(RenderDate + i, RealDay);
+
+      Inc(RPos, DayWidth);
+      Inc(RealDay);
+    end;
+  end;
+end;
+
 procedure TVpDayViewPainter.DrawRowHeader(R: TRect);
 var
   Temp, I, len: Integer;
@@ -1557,46 +1558,6 @@ begin
 
     { Draw row headers }
     CalcRowHeadRect(RowHeadRect);
-                 (*
-    RowHeadRect := Rect(
-      RealLeft + 1,
-      RealTop,
-      RealLeft + 3 + RealRowHeadWidth,
-      RealTop + RealColHeadHeight + 2
-    );
-
-    RenderCanvas.Brush.Color := RealHeadAttrColor;
-    TPSFillRect(RenderCanvas, Angle, RenderIn, RowHeadRect);
-
-    if FDayView.DrawingStyle = ds3d then
-      DrawBevelRect(
-        RenderCanvas,
-        TPSRotateRectangle(Angle, RenderIn, Rect(
-          RowHeadRect.Left + 1,
-          RowHeadRect.Top + 2,
-          RowHeadRect.Right - 2,
-          RowHeadRect.Bottom - 2
-        )),
-        BevelHighlight,
-        BevelShadow
-      )
-    else begin
-      RenderCanvas.Pen.Color := BevelShadow;
-      TPSMoveTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Right - 2, RowHeadRect.Bottom - 2);
-      TPSLineTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Left, RowHeadRect.Bottom - 2);
-      RenderCanvas.Pen.Color := BevelHighlight;
-      TPSLineTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Left, RowHeadRect.Top);
-      TPSLineTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Right - 2, RowHeadRect.Top);
-      RenderCanvas.Pen.Color := BevelShadow;
-      TPSMoveTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Right - 2, RowHeadRect.Top + 6);
-      TPSLineTo(RenderCanvas, Angle, RenderIn, RowHeadRect.Right - 2, RowHeadRect.Bottom - 5);
-    end;
-
-    RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.HourFont);
-    RowHeadRect := Rect(RealLeft + 1 , ADEventsRect.Bottom + 1, RealLeft + 2 + RealRowHeadWidth, RealBottom);
-    if FDayView.DrawingStyle = dsFlat then
-      inc(RowHeadRect.Left);*)
-
     if Assigned(FDayView.OwnerDrawRowHeader) then begin
       Drawn := false;
       FDayView.OwnerDrawRowHeader(self, RenderCanvas, RowHeadRect, RealRowHeight, Drawn);
@@ -1606,7 +1567,7 @@ begin
       DrawRowHeader(RowHeadRect);
 
     { Draw the regular events }
-    DrawAllDays;
+    DrawRegularEvents;
 
     { Draw borders }
     tmpRect := Rect(RealLeft, RealTop, RealRight-1, RealBottom-1);
