@@ -193,11 +193,9 @@ begin
         OnDrawItem(Self, RenderDate + NewIdx - OldIdx, clRowCol[R,C])
       else
       if clRowCol[R, C].Top <> 0 then begin
-        DrawRect := Rect (clRowCol[R, C].Left + RealLeft,
-                          clRowCol[R, C].Top + RealTop,
-                          clRowCol[R, C].Right + RealLeft,
-                          clRowCol[R, C].Bottom + RealTop);
-        TH := RenderCanvas.TextHeight (S);
+        DrawRect := clRowCol[R, C];
+        OffsetRect(DrawRect, RealLeft, RealTop);
+        TH := RenderCanvas.TextHeight(S);
         if TH < DrawRect.Bottom - DrawRect.Top then
           DrawRect.Top := DrawRect.Top + ((DrawRect.Bottom - DrawRect.Top) - TH) div 2;
         TPSCenteredTextOut(RenderCanvas, Angle, RenderIn, DrawRect, S);

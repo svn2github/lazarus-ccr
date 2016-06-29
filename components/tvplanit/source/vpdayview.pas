@@ -1818,11 +1818,8 @@ begin
   for I := 0 to pred(Length(dvEventArray)) do begin
     if dvEventArray[I].Event = nil then
       Exit;
-    if (APoint.X > dvEventArray[I].Rec.Left) and
-       (APoint.X < dvEventArray[I].Rec.Right) and
-       (APoint.Y > dvEventArray[I].Rec.Top) and
-       (APoint.Y < dvEventArray[I].Rec.Bottom)
-    then begin
+    if PointInRect(APoint, dvEventArray[I].Rec) then
+    begin
       FActiveEvent := TVpEvent(dvEventArray[I].Event);
       dvActiveEventRec := dvEventArray[I].Rec;
       dvActiveIconRec := dvEventArray[I].IconRect;
@@ -1845,11 +1842,8 @@ begin
     if dvEventArray[I].Event = nil then
       { we've hit the end of visible events without finding a match }
       Exit;
-    if (Point.X > dvEventArray[I].Rec.Left) and
-       (Point.X < dvEventArray[I].Rec.Right) and
-       (Point.Y > dvEventArray[I].Rec.Top) and
-       (Point.Y < dvEventArray[I].Rec.Bottom)
-    then begin
+    if PointInRect(Point, dvEventArray[I].Rec) then
+    begin
       FActiveEvent := TVpEvent(dvEventArray[I].Event);
       dvActiveEventRec := dvEventArray[I].Rec;
       dvActiveIconRec := dvEventArray[I].IconRect;
@@ -1869,11 +1863,8 @@ begin
   for I := 0 to pred(Length(dvEventArray)) do begin
     if dvEventArray[I].Event = nil then
       Exit;
-    if (Point.X > dvEventArray[I].Rec.Left) and
-       (Point.X < dvEventArray[I].Rec.Right) and
-       (Point.Y > dvEventArray[I].Rec.Top) and
-       (Point.Y < dvEventArray[I].Rec.Bottom)
-    then begin
+    if PointInRect(Point, dvEventArray[I].Rec) then
+    begin
       result := TVpEvent(dvEventArray[I].Event);
       Exit;
     end;
@@ -2174,11 +2165,8 @@ begin
       ActiveRow := I;
       Exit;
     end else
-    if (Pnt.x > dvLineMatrix[ActiveCol, I].Rec.Left) and
-       (Pnt.x < dvLineMatrix[ActiveCol, I].Rec.Right) and
-       (Pnt.y <= dvLineMatrix[ActiveCol, I].Rec.Bottom) and
-       (Pnt.y > dvLineMatrix[ActiveCol, I].Rec.Top)
-    then begin
+    if PointInRect(Pnt, dvLineMatrix[ActiveCol, I].Rec) then
+    begin
       ActiveRow := I;
       Exit;
     end;
@@ -2191,11 +2179,8 @@ var
   I : Integer;
 begin
   for I := 0 to pred(length(dvColRectArray)) do begin
-    if (Pnt.x > dvColRectArray[I].Rec.Left) and
-       (Pnt.x < dvColRectArray[I].Rec.Right) and
-       (Pnt.y < dvColRectArray[I].Rec.Bottom) and
-       (Pnt.y > dvColRectArray[I].Rec.Top)
-    then begin
+    if PointInRect(Pnt, dvColRectArray[I].Rec) then
+    begin
       ActiveCol := I;
       Exit;
     end;

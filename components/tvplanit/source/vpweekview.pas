@@ -1112,11 +1112,8 @@ var
   I: Integer;
 begin
   for I := 0 to pred(Length(wvWeekdayArray)) do
-    if (Point.X >= wvWeekdayArray[I].Rec.Left) and
-       (Point.X <= wvWeekdayArray[I].Rec.Right) and
-       (Point.Y >= wvWeekdayArray[I].Rec.Top) and
-       (Point.Y <= wvWeekdayArray[I].Rec.Bottom)
-    then begin
+    if PointInRect(Point, wvWeekdayArray[I].Rec) then
+    begin
       Date := wvWeekdayArray[I].Day;
       Invalidate;
       Exit;
@@ -1141,11 +1138,8 @@ begin
       Exit;
     end;
 
-    if (Pt.X > wvEventArray[I].Rec.Left) and
-       (Pt.X < wvEventArray[I].Rec.Right) and
-       (Pt.Y > wvEventArray[I].Rec.Top) and
-       (Pt.Y < wvEventArray[I].Rec.Bottom)
-    then begin
+    if PointInRect(Pt, wvEventArray[I].Rec) then
+    begin
       { point falls inside this event's rectangle }
       wvHotPoint := Pt;
       ActiveEvent := TVpEvent(wvEventArray[I].Event);
