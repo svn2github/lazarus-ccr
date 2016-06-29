@@ -785,7 +785,7 @@ begin
     Exit;
 
   wvSetDateByCoord(Point(Msg.XPos, Msg.YPos));
-  EventAtCoord (Point (Msg.XPos, Msg.YPos));
+  EventAtCoord(Point (Msg.XPos, Msg.YPos));
 
   // if the mouse was pressed down in the client area, then select the cell.
   if not focused then SetFocus; 

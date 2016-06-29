@@ -254,7 +254,28 @@ end;
 {=====}
 
 procedure TDlgEventEdit.OKBtnClick(Sender: TObject);
+var
+  res: Integer;
+  tStart, tEnd, t: TDateTime;
 begin
+  tStart := StartDate.Date + StartTime.Time;
+  tEnd := EndDate.Date + EndTime.Time;
+
+  if (tStart > tEnd) then begin
+    res := MessageDlg('Incorrect order of start and end times. Do you want to flip them?',
+      mtConfirmation, [mbYes, mbNo], 0);
+    if res = mrYes then begin
+      t := tStart;
+      tStart := tEnd;
+      tEnd := t;
+      StartDate.Date := trunc(tStart);
+      StartTime.Time := frac(tStart);
+      EndDate.Date := trunc(tEnd);
+      EndTime.Time := frac(tEnd);
+    end else
+      exit;
+  end;
+
   ReturnCode := rtCommit;
   Close;
 end;
@@ -436,6 +457,7 @@ begin
   end;
   StartTime.Color := clWindow;
 
+  (*
   { if the end time is less than the start time then change the end time to }
   { follow the start time by 30 minutes }
   if ST > StrToTime(EndTime.Text) then begin
@@ -444,6 +466,7 @@ begin
     else
       EndTime.Text := FormatDateTime('hh:nn AM/PM', ST + 30 / MinutesInDay);
   end;
+  *)
 
 end;
 {=====}
