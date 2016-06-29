@@ -406,7 +406,6 @@ object DlgEventEdit: TDlgEventEdit
       }
       NumGlyphs = 1
       MaxLength = 0
-      OnChangeBounds = StartDateChange
       TabOrder = 4
     end
     object EndDate: TDateEdit
@@ -457,7 +456,6 @@ object DlgEventEdit: TDlgEventEdit
       }
       NumGlyphs = 1
       MaxLength = 0
-      OnChangeBounds = EndDateChange
       TabOrder = 5
     end
     object RepeatUntil: TDateEdit

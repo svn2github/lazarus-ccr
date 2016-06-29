@@ -214,18 +214,6 @@ type
   protected
     FCat: array[0..9] of TVpCategoryInfo;
     procedure SetCat(AIndex: Integer; AValue: TVpCategoryInfo);
-    {
-    FCat0: TVpCategoryInfo;
-    FCat1: TVpCategoryInfo;
-    FCat2: TVpCategoryInfo;
-    FCat3: TVpCategoryInfo;
-    FCat4: TVpCategoryInfo;
-    FCat5: TVpCategoryInfo;
-    FCat6: TVpCategoryInfo;
-    FCat7: TVpCategoryInfo;
-    FCat8: TVpCategoryInfo;
-    FCat9: TVpCategoryInfo;
-    }
   public
     constructor Create;
     destructor Destroy; override;

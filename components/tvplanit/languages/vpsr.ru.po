@@ -937,6 +937,10 @@ msgstr ""
 msgid "Error: Unable to update "
 msgstr "Ошибка обновления"
 
+#: vpsr.rsstartendtimeerror
+msgid "Incorrect order of start and end times. Do you want to flip them?"
+msgstr ""
+
 #: vpsr.rsstarttimelbl
 #, fuzzy
 #| msgid "Start Time:"

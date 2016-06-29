@@ -921,6 +921,10 @@ msgstr "Klang-Suche"
 msgid "Error: Unable to update "
 msgstr "Fehler: Kann nicht updaten"
 
+#: vpsr.rsstartendtimeerror
+msgid "Incorrect order of start and end times. Do you want to flip them?"
+msgstr "Falsche Reihenfolge der Start- und Ende-Zeit. Wollen Sie die beiden vertauschen?"
+
 #: vpsr.rsstarttimelbl
 msgid "Start time:"
 msgstr "Start-Zeit:"

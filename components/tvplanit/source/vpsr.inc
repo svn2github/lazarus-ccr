@@ -137,6 +137,8 @@ resourcestring
   {Event Specific}
   RSFromSchedule            = 'from your schedule?';
   RSConfirmDeleteEvent      = 'Delete event from schedule?';
+  RSStartEndTimeError       = 'Incorrect order of start and end times. ' +
+                              'Do you want to flip them?';
 
   {Task Specific}
   RSConfirmDeleteTask       = 'Delete this task from your list?';

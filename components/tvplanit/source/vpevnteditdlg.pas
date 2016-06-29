@@ -101,21 +101,15 @@ type
     procedure OKBtnClick(Sender: TObject);
     procedure CancelBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure StartDateChange(Sender: TObject);
-    procedure StartTimeChange(Sender: TObject);
-    procedure EndTimeChange(Sender: TObject);
     procedure AlarmAdvanceChange(Sender: TObject);
     procedure AdvanceUpDownClick(Sender: TObject; Button: TUDBtnType);
     procedure CustomIntervalChange(Sender: TObject);
     procedure IntervalUpDownClick(Sender: TObject; Button: TUDBtnType);
     procedure RecurringTypeChange(Sender: TObject);
     procedure AlarmSetClick(Sender: TObject);
-    procedure EndDateChange(Sender: TObject);
     procedure CBAllDayClick(Sender: TObject);
     procedure SoundFinderBtnClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure StartTimeExit(Sender: TObject);
-    procedure EndTimeExit(Sender: TObject);
 
   private { Private declarations }
    {$IFDEF LCL}
@@ -180,6 +174,7 @@ uses
 {$ELSE}
  {$R *.dfm}
 {$ENDIF}
+
 
 { TVpRightAlignedEdit }
 
@@ -256,22 +251,19 @@ end;
 procedure TDlgEventEdit.OKBtnClick(Sender: TObject);
 var
   res: Integer;
-  tStart, tEnd, t: TDateTime;
+  tStart, tEnd: TDateTime;
 begin
-  tStart := StartDate.Date + StartTime.Time;
-  tEnd := EndDate.Date + EndTime.Time;
+  tStart := trunc(StartDate.Date) + frac(StartTime.Time);
+  tEnd := trunc(EndDate.Date) + frac(EndTime.Time);
 
   if (tStart > tEnd) then begin
-    res := MessageDlg('Incorrect order of start and end times. Do you want to flip them?',
+    res := MessageDlg(RSStartEndTimeError,
       mtConfirmation, [mbYes, mbNo], 0);
     if res = mrYes then begin
-      t := tStart;
-      tStart := tEnd;
-      tEnd := t;
-      StartDate.Date := trunc(tStart);
-      StartTime.Time := frac(tStart);
-      EndDate.Date := trunc(tEnd);
-      EndTime.Time := frac(tEnd);
+      StartDate.Date := trunc(tEnd);
+      StartTime.Time := frac(tEnd);
+      EndDate.Date := trunc(tStart);
+      EndTime.Time := frac(tStart);
     end else
       exit;
   end;
@@ -288,49 +280,9 @@ var
   ColorRect: TRect;
 begin
   Category.Canvas.FillRect(ARect);
-  Color := clBlack;
-  case Index of
-    0: begin
-         Color := CatColorMap.Category0.Color;
-         Name := CatColorMap.Category0.Description;
-       end;
-    1: begin
-         Color := CatColorMap.Category1.Color;
-         Name := CatColorMap.Category1.Description;
-       end;
-    2: begin
-         Color := CatColorMap.Category2.Color;
-         Name := CatColorMap.Category2.Description;
-       end;
-    3: begin
-         Color := CatColorMap.Category3.Color;
-         Name := CatColorMap.Category3.Description;
-       end;
-    4: begin
-         Color := CatColorMap.Category4.Color;
-         Name := CatColorMap.Category4.Description;
-       end;
-    5: begin
-         Color := CatColorMap.Category5.Color;
-         Name := CatColorMap.Category5.Description;
-       end;
-    6: begin
-         Color := CatColorMap.Category6.Color;
-         Name := CatColorMap.Category6.Description;
-       end;
-    7: begin
-         Color := CatColorMap.Category7.Color;
-         Name := CatColorMap.Category7.Description;
-       end;
-    8: begin
-         Color := CatColorMap.Category8.Color;
-         Name := CatColorMap.Category8.Description;
-       end;
-    9: begin
-         Color := CatColorMap.Category9.Color;
-         Name := CatColorMap.Category9.Description;
-       end;
-  end; {Case}
+
+  Color := CatColorMap.GetCategory(Index).Color;
+  Name := CatColorMap.GetCategory(Index).Description;
 
   SaveColor := Category.Canvas.Brush.Color;
   Category.Canvas.Brush.Color := Color;
@@ -351,13 +303,10 @@ begin
   Category.Canvas.TextOut(ARect.Left, ARect.Top, Name);
 end;
 
-{=====}
-
 procedure TDlgEventEdit.CancelBtnClick(Sender: TObject);
 begin
   Close;
 end;
-{=====}
 
 procedure TDlgEventEdit.PopulateDialog;
 var
@@ -367,13 +316,17 @@ begin
   ResourceNameLbl.Caption := Resource.Description;
 
   { Events }
-  StartDate.Date := Event.StartTime;
-  EndDate.Date := Event.EndTime;
-  RepeatUntil.Date := Event.RepeatRangeEnd;
+  StartDate.Date := trunc(Event.StartTime);
+  EndDate.Date := trunc(Event.EndTime);
+  RepeatUntil.Date := trunc(Event.RepeatRangeEnd);
+  {$IFDEF LCL}
+  StartTime.Time := frac(Event.StartTime);
+  EndTime.Time := frac(Event.EndTime);
+  {$ELSE}
   StartTime.Text := FormatDateTime('hh:nn',Event.StartTime);
   EndTime.Text := FormatDateTime('hh:nn',Event.EndTime);
+  {$ENDIF}
 
-  StartTimeChange(Self);
   CBAllDay.Checked := Event.AllDayEvent;
   AlarmWavPath := Event.DingPath;
 
@@ -406,13 +359,17 @@ begin
 
   FLastEndTime := Event.EndTime;
 end;
-{=====}
 
 procedure TDlgEventEdit.DePopulateDialog;
 begin
   { Events }
+  {$IFDEF LCL}
+  Event.StartTime := StartDate.Date + StartTime.Time;
+  Event.EndTime := EndDate.Date + EndTime.Time;
+  {$ELSE}
   Event.StartTime := StartDate.Date + StrToTime(StartTime.Text);
   Event.EndTime := EndDate.Date + StrToTime(EndTime.Text);
+  {$ENDIF}
   Event.RepeatRangeEnd := RepeatUntil.Date;
   Event.Description := DescriptionEdit.Text;
   Event.Location := LocationEdit.Text;
@@ -426,86 +383,6 @@ begin
   Event.AllDayEvent := CBAllDay.Checked;
   Event.DingPath := AlarmWavPath;
 end;
-{=====}
-
-procedure TDlgEventEdit.StartDateChange(Sender: TObject);
-begin
-  if StartDate.Date > EndDate.Date then
-    EndDate.Date := StartDate.Date;
-end;
-{=====}
-
-procedure TDlgEventEdit.EndDateChange(Sender: TObject);
-begin
-  if StartDate.Date > EndDate.Date then
-    StartDate.Date := EndDate.Date;
-end;
-{=====}
-
-procedure TDlgEventEdit.StartTimeChange(Sender: TObject);
-var
-  ST: TDateTime;
-begin
-  { Verify the value is valid }
-  try
-    ST := StrToTime(StartTime.Text);
-  except
-    StartTime.Color := clRed;
-    if Visible then
-      StartTime.SetFocus;
-    Exit;
-  end;
-  StartTime.Color := clWindow;
-
-  (*
-  { if the end time is less than the start time then change the end time to }
-  { follow the start time by 30 minutes }
-  if ST > StrToTime(EndTime.Text) then begin
-    if TimeFormat = tf24Hour then
-      EndTime.Text := FormatDateTime('h:nn', ST + 30 / MinutesInDay)
-    else
-      EndTime.Text := FormatDateTime('hh:nn AM/PM', ST + 30 / MinutesInDay);
-  end;
-  *)
-
-end;
-{=====}
-
-procedure TDlgEventEdit.EndTimeChange(Sender: TObject);
-
-  function IsMidnight(ATime: TDateTime) : Boolean;
-  begin
-    Result := ATime = Trunc(ATime);
-  end;
-
-var
-  ET: TDateTime;
-begin
-  { Verify the value is valid }
-  try
-    ET := StrToTime(EndTime.Text);
-    if (IsMidnight(ET)) and (not IsMidnight(FLastEndTime)) then
-      EndDate.Date := EndDate.Date + 1
-    else if (not IsMidnight(ET)) and (IsMidnight(FLastEndTime)) then
-      EndDate.Date := EndDate.Date - 1;
-    FLastEndTime := ET;
-  except
-    EndTime.Color := clRed;
-    EndTime.SetFocus;
-    Exit;
-  end;
-  EndTime.Color := clWindow;
-
-  { if the end time is less than the start time then change the start time to }
-  { precede the end time by 30 minutes }
-  if ET < StrToTime(StartTime.Text) then begin
-    if TimeFormat = tf24Hour then
-      StartTime.Text := FormatDateTime('h:mm', ET - 30 / MinutesInDay)
-    else
-      StartTime.Text := FormatDateTime('h:mm AM/PM', ET - 30 / MinutesInDay);
-  end;
-end;
-{=====}
 
 procedure TDlgEventEdit.PopLists;
 {$IFDEF DELPHI}
@@ -591,11 +468,12 @@ var
   Str: string;
 begin
   if AAVerifying then exit;
+
   AAVerifying := true;
   { Don't allow non numeric values. }
   Str := AlarmAdvance.Text;
   I := Length(Str);
-  if (Str[I] > #57) or (Str[I] < #48) then
+  if (Str[I] > '9') or (Str[I] < '0') then
     Delete(Str, I, 1);
   AlarmAdvance.Text := Str;
   AAVerifying := false;
@@ -628,7 +506,7 @@ begin
   CIVerifying := true;
   Str := FCustomInterval.Text;
   for I := 1 to Length(Str) do
-    if (Ord(Str[I]) in [48..57]) then
+    if (Str[I] in ['0'..'9']) then
       Continue
     else
       Delete(Str, I, 1);
@@ -788,6 +666,7 @@ begin
   CategoryLbl.Left := Category.Left - DELTA - GetLabelWidth(CategoryLbl);
 end;
 
+
 { TVpEventEditDialog }
 
 constructor TVpEventEditDialog.Create(AOwner: TComponent);
@@ -841,49 +720,6 @@ begin
         ceEvent.Free;
     end;
   end;
-end;
-{=====}
-
-procedure TDlgEventEdit.StartTimeExit(Sender: TObject);
-var
-  ST : TDateTime;
-begin
-  { Verify the value is valid }
-  try
-    ST := StartDate.Date + StrToTime(StartTime.Text);
-  except
-    StartTime.Color := clRed;
-    StartTime.SetFocus;
-    Exit;
-  end;
-  StartTime.Color := clWindow;
-
-  { If the end time is less than the start time then change the end    }
-  {  time to  follow the start time by 30 minutes                      } 
-
-  if ST > EndDate.Date + StrToTime (EndTime.Text) then
-    EndTime.Text := FormatDateTime('hh:nn', ST + 30 / MinutesInDay);
-end;
-
-procedure TDlgEventEdit.EndTimeExit(Sender: TObject);
-var
-  ET: TDateTime;
-begin
-  { Verify the value is valid }
-  try
-    ET := EndDate.Date + StrToTime(EndTime.Text);
-  except
-    EndTime.Color := clRed;
-    EndTime.SetFocus;
-    Exit;
-  end;
-  EndTime.Color := clWindow;
-
-  { If the end time is less than the start time then change the        }
-  { start time to precede the end time by 30 minutes                   } 
-
-  if ET < StartDate.Date + StrToTime (StartTime.Text) then
-    StartTime.Text := FormatDateTime('hh:nn', ET - 30 / MinutesInDay);
 end;
 
 end.
