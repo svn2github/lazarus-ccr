@@ -93,23 +93,38 @@ type
       procedure SetValue (const Value : string); override;
   end;
 
-  TVpGenericFileNameProperty = class (TStringProperty)
+  TVpGeneralFileNameProperty = class (TStringProperty)
     protected
+      function GetDefaultExt: String; virtual;
+      function GetFilter: String; virtual;
+      function GetInitialDir: String; virtual;
     public
       function GetAttributes: TPropertyAttributes; override;
+      function GetValue: string; override;
       procedure Edit; override;
+      procedure SetValue(const NewValue: String); override;
   end;
 
-  TVpLocalizeFileNameProperty = class (TVpGenericFileNameProperty)
+  TVpLocalizeFileNameProperty = class (TVpGeneralFileNameProperty)
+  protected
+    function GetDefaultExt: String; override;
+    function GetFilter: String; override;
   end;
 
-  TVpWavFileProperty = class(TStringProperty)
+  TVpWavFilenameProperty = class(TVpGeneralFilenameProperty)
+  protected
+    function GetDefaultExt: String; override;
+    function GetFilter: String; override;
+    function GetInitialDir: String; override;
+  end;
+  {
   public
     function  GetAttributes: TPropertyAttributes; override;
     function  GetValue: string; override;
     procedure Edit; override;
     procedure SetValue(const Value: string); override;
   end;
+   }
 
   TVpMediaFolderProperty = class(TStringProperty)
   public
@@ -274,12 +289,76 @@ end;
 {=====}
 
 (*****************************************************************************)
-{ TVpGenericFileNameProperty }
-function TVpGenericFileNameProperty.GetAttributes: TPropertyAttributes;
+{ TVpGeneralFileNameProperty }
+
+function TVpGeneralFileNameProperty.GetAttributes: TPropertyAttributes;
 begin
   Result := [paDialog];
 end;
 
+procedure TVpGeneralFileNameProperty.Edit;
+var
+  dlg: TOpenDialog;
+begin
+  dlg := TOpenDialog.Create(Application);
+  try
+    dlg.DefaultExt := GetDefaultExt;
+    dlg.Filter := GetFilter;
+    dlg.FilterIndex := 1;
+    dlg.InitialDir := GetInitialDir;
+    dlg.Options := [ofHideReadOnly];
+    dlg.Filename := GetValue;
+    if dlg.Execute then
+      SetValue(dlg.Filename);
+  finally
+    dlg.Free;
+  end;
+end;
+
+function TVpGeneralFilenameProperty.GetDefaultExt: String;
+begin
+  Result := '*.*';
+end;
+
+function TVpGeneralFilenameProperty.GetFilter: String;
+begin
+  Result := 'All files (*.*)|*.*';
+end;
+
+function TVpGeneralFilenameProperty.GetInitialDir: String;
+var
+  filename: String;
+begin
+  filename := GetValue;
+  if filename <> '' then
+    Result := ExtractFileDir(filename) else
+    Result := '';
+end;
+
+function TVpGeneralFileNameProperty.GetValue: string;
+begin
+  Result := GetStrValue;
+end;
+
+procedure TVpGeneralFilenameProperty.SetValue(const NewValue: string);
+begin
+  SetStrValue(NewValue);
+end;
+
+
+{ TVpLocalizeFilenameProperty }
+
+function TVpLocalizeFilenameProperty.GetDefaultExt: String;
+begin
+  Result := '*.xml';
+end;
+
+function TVpLocalizeFilenameProperty.GetFilter: String;
+begin
+  Result := 'Localization files (*.xml)|*.xml|' + inherited;
+end;
+
+{
 procedure TVpGenericFileNameProperty.Edit;
 const
   VpRegLocalizeFilter = 'Localization Files (*.XML)|*.XML';
@@ -305,17 +384,44 @@ begin
     Dlg.Filter := Filter;
     Dlg.FilterIndex := 0;
     Dlg.Options := [ofHideReadOnly];
-{    Dlg.FileName := Value;
-    if Dlg.Execute then
-      Value := Dlg.FileName;  }
+//    Dlg.FileName := Value;
+//    if Dlg.Execute then
+//      Value := Dlg.FileName;
   finally
     Dlg.Free;
   end;
 end;
+                               }
+
+{ TVpWavFilenameProperty }
+
+function TVpWavFilenameProperty.GetDefaultExt: String;
+begin
+  Result := '*.wav';
+end;
+
+function TVpWavFilenameProperty.GetFilter: String;
+begin
+  Result := 'Wav files (*.wav)|*.wav|All files (*.*)|*.*';
+end;
+
+function TVpWavFilenameProperty.GetInitialDir: String;
+var
+  ds: TVpCustomDatastore;
+begin
+  ds := GetComponent(0) as TVpCustomDatastore;
+  if Assigned(ds) then begin
+    if ds.DefaultEventSound = '' then
+      Result := ds.MediaFolder
+    else
+      Result := ExtractFilePath(ds.DefaultEventSound);
+  end else
+    Result := '';
+end;
 
 
 { TVpWavFileProperty }
-
+            {
 function TVpWavFileProperty.GetAttributes: TPropertyAttributes;
 begin
   Result := [paDialog];
@@ -357,7 +463,7 @@ begin
   else
     inherited;
 end;
-
+     }
 
 { TVpMediaFolderProperty }
 
@@ -473,11 +579,11 @@ begin
   // NO - not useful in design mode because there is not platform-independent way
   // to play the sound }
   RegisterPropertyEditor(TypeInfo(string), TVpCustomDataStore,
-    'DefaultEventSound', TWavFileProperty);
+    'DefaultEventSound', TWavFilenameProperty);
  {$ENDIF}
 
   RegisterPropertyEditor(TypeInfo(String), TVpCustomDatastore,
-    'DefaultEventSound', TVpWavFileProperty);
+    'DefaultEventSound', TVpWavFilenameProperty);
 
   RegisterPropertyEditor(TypeInfo(String), TVpCustomDatastore,
    'MediaFolder', TVpMediaFolderProperty);
