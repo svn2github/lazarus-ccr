@@ -138,6 +138,10 @@ msgstr ""
 msgid "3d display mode"
 msgstr ""
 
+#: tmainform.cbaddressbuilder.text
+msgid "(default)"
+msgstr ""
+
 #: tmainform.cballowinplaceediting.caption
 msgid "Allow inplace editing"
 msgstr ""

@@ -467,6 +467,11 @@ begin
       DaysTrackbarChange(nil);
     end;
 
+    VpControlLink1.CityStateZipFormat := ini.ReadString('Settings', 'CityStateZip', '');
+    if VpControlLink1.CityStateZipFormat = '' then
+      CbAddressBuilder.ItemIndex := 0 else
+      CbAddressBuilder.ItemIndex := CbAddressBuilder.Items.Indexof(VpControlLink1.CityStateZipFormat);
+
     CbAllowInplaceEditing.Checked := ini.ReadBool('Settings', 'AllowInplaceEditing', CbAllowInplaceEditing.Checked);
     CbAllowInplaceEditingChange(nil);
 
@@ -497,6 +502,7 @@ begin
     ini.WriteInteger('Settings', 'TimeFormat', ord(VpDayView1.TimeFormat));
     ini.WriteInteger('Settings', 'Granularity', ord(VpDayView1.Granularity));
     ini.WriteInteger('Settings', 'FirstDayOfWeek', ord(VpWeekView1.WeekStartsOn));
+    ini.WriteString('Settings', 'CityStateZip', VpControlLink1.CityStateZipFormat);
     ini.WriteInteger('Settings', 'VisibleDays', FVisibleDays);
     ini.WriteBool('Settings', 'AllTasks', VpTaskList1.DisplayOptions.ShowAll);
     ini.WriteBool('Settings', 'AllowInplaceEditing', CbAllowInplaceEditing.Checked);
@@ -631,6 +637,8 @@ begin
   LblTimeFormat.Left := CbTimeFormat.Left - 8 - GetLabelWidth(LblTimeFormat);
   CbFirstDayOfWeek.Left := CbLanguages.Left;
   LblFirstDayOfWeek.Left := CbFirstDayOfWeek.Left - 8 - GetLabelWidth(LblFirstDayOfWeek);
+  CbAddressBuilder.Left := CbLanguages.Left;
+  LblAddressBuilder.Left := CbAddressBuilder.Left - 8 - GetLabelWidth(LblAddressBuilder);
   CbAllowInplaceEditing.Left := CbLanguages.Left + CbLanguages.Width + 32;
   Cb3D.Left := CbAllowInplaceEditing.Left;
   RbHideCompletedTasks.Left := RbAllTasks.Left + RbAllTasks.Width + 48;

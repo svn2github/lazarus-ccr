@@ -486,9 +486,11 @@ object MainForm: TMainForm
           TabOrder = 4
         end
         object LblAddressBuilder: TLabel
+          AnchorSideTop.Control = CbAddressBuilder
+          AnchorSideTop.Side = asrCenter
           Left = 16
           Height = 15
-          Top = 149
+          Top = 148
           Width = 82
           Caption = 'Address builder'
           ParentColor = False
@@ -499,6 +501,7 @@ object MainForm: TMainForm
           Top = 144
           Width = 172
           ItemHeight = 15
+          ItemIndex = 0
           Items.Strings = (
             '(default)'
             '@ZIP @CITY'
@@ -508,6 +511,7 @@ object MainForm: TMainForm
           OnChange = CbAddressBuilderChange
           Style = csDropDownList
           TabOrder = 5
+          Text = '(default)'
         end
       end
     end

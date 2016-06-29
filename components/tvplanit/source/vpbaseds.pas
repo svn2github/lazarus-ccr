@@ -1342,8 +1342,10 @@ end;
 
 procedure TVpControlLink.SetCityStateZipFormat(const Value: String);
 begin
-  if FCityStateZipFormat <> Value then
-    FCityStateZipFormat := Value
+  if FCityStateZipFormat <> Value then begin
+    FCityStateZipFormat := Value;
+    Notify(self, neInvalidate, 0);
+  end;
 end;
 
 procedure TVpControlLink.SetDataStore(const Value: TVpCustomDataStore);
