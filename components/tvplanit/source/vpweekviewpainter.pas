@@ -480,10 +480,14 @@ begin
   { format the display text }
   todayStartTime := AEvent.StartTime;
   todayEndTime := AEvent.EndTime;
-  if trunc(todayStartTime) < trunc(StartDate + ADayIndex) then  // first event
-    todayStartTime := 0;
-  if trunc(TodayEndTime) > trunc(StartDate + ADayIndex) then    // last event
-    todayEndTime := 0.9999;
+
+  // Event reaches into the next day(s)
+  if trunc(todayEndTime) > trunc(todayStartTime) then begin
+    if trunc(todayStartTime) < trunc(StartDate + ADayIndex) then  // first event
+      todayStartTime := 0;
+    if trunc(TodayEndTime) > trunc(StartDate + ADayIndex) then    // last event
+      todayEndTime := 0.9999;
+  end;
 
   { set the event font }
   RenderCanvas.Font.Assign(FWeekView.EventFont);

@@ -118,6 +118,60 @@ msgstr ""
 msgid "Wednesday"
 msgstr ""
 
+#: tfrmreportsetup.button1.caption
+msgctxt "tfrmreportsetup.button1.caption"
+msgid "OK"
+msgstr ""
+
+#: tfrmreportsetup.button2.caption
+msgctxt "tfrmreportsetup.button2.caption"
+msgid "Cancel"
+msgstr ""
+
+#: tfrmreportsetup.caption
+msgid "Report Setup"
+msgstr ""
+
+#: tfrmreportsetup.dateedit1.cancelcaption
+msgctxt "TFRMREPORTSETUP.DATEEDIT1.CANCELCAPTION"
+msgid "Cancel"
+msgstr ""
+
+#: tfrmreportsetup.dateedit1.okcaption
+msgctxt "TFRMREPORTSETUP.DATEEDIT1.OKCAPTION"
+msgid "OK"
+msgstr ""
+
+#: tfrmreportsetup.dateedit1.text
+msgid "DateEdit1"
+msgstr ""
+
+#: tfrmreportsetup.dateedit2.cancelcaption
+msgctxt "TFRMREPORTSETUP.DATEEDIT2.CANCELCAPTION"
+msgid "Cancel"
+msgstr ""
+
+#: tfrmreportsetup.dateedit2.okcaption
+msgctxt "TFRMREPORTSETUP.DATEEDIT2.OKCAPTION"
+msgid "OK"
+msgstr ""
+
+#: tfrmreportsetup.dateedit2.text
+msgid "DateEdit2"
+msgstr ""
+
+#: tfrmreportsetup.label1.caption
+msgid "Start Date:"
+msgstr ""
+
+#: tfrmreportsetup.label2.caption
+msgid "End Date:"
+msgstr ""
+
+#: tfrmreportsetup.label3.caption
+msgid "Format:"
+msgstr ""
+
 #: tmainform.btndeleteres.caption
 msgid "Delete"
 msgstr ""
