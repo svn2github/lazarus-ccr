@@ -626,7 +626,7 @@ object MainForm: TMainForm
   end
   object VpControlLink1: TVpControlLink
     DataStore = VpBufDSDataStore1
-    LocalizationFile = '../../vplocalize.xml'
+    LocalizationFile = '../../source\vplocalize.xml'
     Printer.BottomMargin = 0
     Printer.DayStart = h_08
     Printer.DayEnd = h_05

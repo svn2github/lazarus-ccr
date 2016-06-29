@@ -35,7 +35,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLIntf,
+  LMessages, LCLProc, LCLIntf, LazFileUtils,
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
@@ -1351,16 +1351,19 @@ end;
 {=====}
 
 procedure TVpControlLink.SetLocalizationFile (const v : string);
+var
+  fn: String;
 begin
   if v <> FLocalizationFile then begin
     FLocalizationFile := v;
-    if (FLocalizationFile <> '') and                                     
-       not (csDesigning in ComponentState) then begin                    
-      if not FileExists (v) then begin                                   
-        if Assigned (FOnNoLocalizationFile) then                         
-          FOnNoLocalizationFile (Self, v);                               
+    if (FLocalizationFile <> '') and not (csDesigning in ComponentState) then
+    begin
+      fn := ExpandFilename(v);
+      if not FileExists(fn) then begin
+        if Assigned(FOnNoLocalizationFile) then
+          FOnNoLocalizationFile(Self, fn);
       end else                                                                                                                             
-        FLocalization.LoadFromFile (FLocalizationFile, False);
+        FLocalization.LoadFromFile(fn, False);
     end;                                                                 
   end;
 end;

@@ -37,7 +37,7 @@ uses
   Windows,                 // Needed for LCIDs
   {$ENDIF}
   {$IFDEF LCL}
-  LCLProc, LCLType, LCLIntf,
+  LCLProc, LCLType, LCLIntf, LazFileUtils,
   {$ENDIF}
   Classes, Dialogs,SysUtils, Graphics, StdCtrls, Forms,
   VpBase, VpMisc, VpData, VpXParsr, VpPrtFmt; { For TVpAttributes }
@@ -591,12 +591,16 @@ begin
 
   FLoadingIndex := -1;
   FElementIndex := -1;
-  Parser := TVpParser.Create (nil);
+  Parser := TVpParser.Create(nil);
   Parser.OnAttribute := xmlLocalizeAttribute;
   Parser.OnStartElement := xmlLocalizeStartElement;
   Parser.OnEndElement := xmlLocalizeEndElement;
   try
-    Parser.ParseDataSource (FileName);
+   {$IFDEF DELPHI}
+    Parser.ParseDataSource(FileName);
+   {$ELSE}
+    Parser.ParseDataSource(GetForcedPathDelims(FileName));
+   {$ENDIF}
   finally
     Parser.Free;
   end;

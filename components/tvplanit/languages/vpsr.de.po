@@ -95,6 +95,10 @@ msgstr "Ungültiges Druckformat"
 msgid "Invalid trigger handle."
 msgstr "Ungültiges Trigger-Handle"
 
+#: vpsr.rsbirthdatelbl
+msgid "Birth date:"
+msgstr "Geburtsdatum:"
+
 #: vpsr.rsbrowsererror
 msgid "Unable to start web browser. Make sure you have it properly setup on your system."
 msgstr "Web-Browser kann nicht gestartet werden. Bitte stellen Sie sicher, dass er in Ihrem System korrekt eingerichtet ist."
@@ -1377,4 +1381,3 @@ msgstr "Unbekannte Achsen-Spezifikation: %s"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "Die XML-Deklaration muss vor dem ersten Element erscheinen."
-

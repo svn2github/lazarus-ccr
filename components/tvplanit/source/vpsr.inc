@@ -258,6 +258,7 @@ resourcestring
   RSZipCodeLbl              = 'Zip code:';
   RSCompanyLbl              = 'Company:';
   RSPositionLbl             = 'Position:';
+  RSBirthDateLbl            = 'Birth date:';
   RSMasterData              = 'Master data';
 
   { Print Preview dialog captions }

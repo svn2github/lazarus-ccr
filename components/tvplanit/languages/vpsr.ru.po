@@ -95,6 +95,10 @@ msgstr "Не верный формат печати"
 msgid "Invalid trigger handle."
 msgstr ""
 
+#: vpsr.rsbirthdatelbl
+msgid "Birth date:"
+msgstr ""
+
 #: vpsr.rsbrowsererror
 msgid "Unable to start web browser. Make sure you have it properly setup on your system."
 msgstr "Ошибка запуска браузер. Убедитесь в правильности настроек вашей системы."

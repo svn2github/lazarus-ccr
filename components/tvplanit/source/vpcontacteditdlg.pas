@@ -41,7 +41,7 @@ uses
   SysUtils,
   {$IFDEF VERSION6} Variants, {$ENDIF}
   Classes, Graphics, Controls, Forms, Dialogs, VpData, ExtCtrls, StdCtrls,
-  VpException, VpMisc, VpBase, VpSR, VpDlg, VpBaseDS, ComCtrls, Types;
+  VpException, VpMisc, VpBase, VpSR, VpDlg, VpBaseDS, ComCtrls, EditBtn, Types;
 
 type
   { forward declarations }
@@ -50,6 +50,8 @@ type
   { TContactEditForm }
 
   TContactEditForm = class(TForm)
+    BirthdateEdit: TDateEdit;
+    BirthdateLbl: TLabel;
     FirstNameEdit: TEdit;
     FirstNameLbl: TLabel;
     tsContacts: TPageControl;
@@ -191,6 +193,7 @@ begin
   CompanyLbl.Caption := RSCompanyLbl;
   PositionLbl.Caption := RSPositionLbl;
   CategoryLbl.Caption := RSCategoryLbl;
+  BirthdateLbl.Caption := RSBirthDateLbl;
   EmailLbl.Caption := RSEmail;
   CustomLbl1.Caption := RSCustom1;
   CustomLbl2.Caption := RSCustom2;
@@ -230,6 +233,7 @@ begin
   Contact.Title := TitleEdit.Text;
   Contact.EMail := EMailEdit.Text;
   Contact.Company := CompanyEdit.Text;
+  Contact.Birthdate := BirthdateEdit.Date;
   Contact.Phone1 := Phone1Edit.Text;
   Contact.Phone2 := Phone2Edit.Text;
   Contact.Phone3 := Phone3Edit.Text;
@@ -298,7 +302,9 @@ begin
   end;
   StateEdit.Text := Contact.State;
   cboxState.Text := Contact.State;
-
+  if Contact.Birthdate = 0.0 then
+    BirthdateEdit.Clear else
+    BirthdateEdit.Date := Contact.Birthdate;
 
   for pt := Low (TVpPhoneType) to High (TVpPhoneType) do begin
     cboxPhoneLbl1.Items.Add(PhoneLabel(pt));
@@ -392,7 +398,7 @@ begin
   { Note: The resizing algorithm is dependent upon the labels having their
     FocusControl property set to the corresponding edit field or combobox. }
 
-  SetLength(Labels, 11);
+  SetLength(Labels, 12);
   Labels[0] := LastNameLbl;
   Labels[1] := FirstNameLbl;
   Labels[2] := TitleLbl;
@@ -404,6 +410,7 @@ begin
   Labels[8] := CompanyLbl;
   Labels[9] := PositionLbl;
   Labels[10] := CategoryLbl;
+  Labels[11] := BirthdateLbl;
 
   LargestLabel := 0;
   for i := Low(Labels) to High(Labels) do
@@ -449,7 +456,9 @@ begin
 
   { Set edit and combo widths }
   for i:= Low(Labels) to High(Labels) do
-    if (Labels[i].FocusControl <> ZipCodeEdit) then
+    if (Labels[i].FocusControl <> ZipCodeEdit) and
+       (Labels[i].FocusControl <> BirthdateEdit)
+    then
       Labels[i].FocusControl.Width := widestfield;
   cboxCountry.Width := widestField;
   cboxState.Width := widestField;
@@ -465,7 +474,7 @@ begin
     end;
 
   { Set form height such that first tab is filled completely by controls }
-  ClientHeight := cboxCategory.Top + cboxCategory.Height + TopField +
+  ClientHeight := BirthdateEdit.Top + BirthdateEdit.Height + TopField +
     pnlBottom.Height + tsContacts.Height - tabMain.Height;
 
   { Page "Contact" }
