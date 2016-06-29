@@ -34,6 +34,9 @@ interface
 
 uses
   Classes,
+ {$IFDEF LCL}
+  LazUTF8Classes,
+ {$ENDIF}
   VpBase;
 
 
@@ -55,7 +58,11 @@ type
     procedure SetPointer(Ptr : Pointer; Size : Longint);
   end;
 
+ {$IFDEF LCL}
+  TVpFileStream = class(TFileStreamUTF8)
+ {$ELSE}
   TVpFileStream = class(TFileStream)
+ {$ENDIF}
     FFileName : string;
   public
     constructor CreateEx(Mode : Word; const FileName : string);

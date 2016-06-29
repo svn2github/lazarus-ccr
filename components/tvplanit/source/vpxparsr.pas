@@ -34,7 +34,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,
+  LMessages, LCLProc, LCLType,
   {$ELSE}
   Windows,
   {$ENDIF}

@@ -36,7 +36,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LCLProc, LCLType, LCLIntf,
+  LCLProc, LCLType, LCLIntf, LazFileUtils,
   {$ELSE}
   Windows,
   {$ENDIF}
@@ -305,7 +305,7 @@ begin
     dlg.DefaultExt := GetDefaultExt;
     dlg.Filter := GetFilter;
     dlg.FilterIndex := 1;
-    dlg.InitialDir := GetInitialDir;
+    dlg.InitialDir := GetForcedPathDelims(GetInitialDir);
     dlg.Options := [ofHideReadOnly];
     dlg.Filename := GetValue;
     if dlg.Execute then
@@ -415,6 +415,7 @@ begin
       Result := ds.MediaFolder
     else
       Result := ExtractFilePath(ds.DefaultEventSound);
+    Result := GetForcedPathDelims(Result);
   end else
     Result := '';
 end;
