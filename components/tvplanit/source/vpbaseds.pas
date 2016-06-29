@@ -358,11 +358,13 @@ type
     FLocalization     : TVpLocalization;
     FLocalizationFile : string;
     FDefaultCountry   : string;
+    FCityStateZipFormat: String;
   protected{private}
     DependentList: TList;
     procedure Attach (Sender : TComponent);
     procedure Detach (Sender : TComponent);
     procedure ReleaseDependents;
+    procedure SetCityStateZipFormat(const Value: String);
     procedure SetDataStore (const Value : TVpCustomDataStore);
     procedure SetDefaultCountry (const v : string);
     procedure SetLocalizationFile (const v : string);
@@ -378,6 +380,8 @@ type
     procedure TriggerOnPageStart (Sender: TObject; PageNum: Integer; ADate: TDateTime);
     property Localization : TVpLocalization read FLocalization write FLocalization;
   published
+    property CityStateZipFormat: String read FCityStateZipFormat write SetCityStateZipFormat;
+      // Use symbols @CITY, @STATE, @ZIP to define the order of these strings
     property DataStore: TVpCustomDataStore read FDataStore write SetDataStore;
     property DefaultCountry : string read FDefaultCountry write SetDefaultCountry;
     property LocalizationFile : string read FLocalizationFile write SetLocalizationFile;
@@ -1335,6 +1339,12 @@ begin
     end;
 end;
 {=====}
+
+procedure TVpControlLink.SetCityStateZipFormat(const Value: String);
+begin
+  if FCityStateZipFormat <> Value then
+    FCityStateZipFormat := Value
+end;
 
 procedure TVpControlLink.SetDataStore(const Value: TVpCustomDataStore);
 begin

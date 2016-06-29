@@ -216,6 +216,7 @@ type
     procedure LoadLanguage;
     procedure LinkHandler(Sender: TComponent;
       NotificationType: TVpNotificationType; const Value: Variant); override;
+    function GetCityStateZipFormat: String;
     function GetControlType : TVpItemType; override;
     procedure DeleteActiveContact(Verify: Boolean);
     procedure PaintToCanvas (ACanvas: TCanvas; ARect: TRect; Angle: TVpRotationAngle);
@@ -517,6 +518,13 @@ begin
   cgLoaded := true;
 end;
 {=====}
+
+function TVpContactGrid.GetCityStateZipFormat: String;
+begin
+  if ControlLink <> nil then
+    Result := ControlLink.CityStateZipFormat else
+    Result := '';
+end;
 
 function TVpContactGrid.GetControlType : TVpItemType;
 begin

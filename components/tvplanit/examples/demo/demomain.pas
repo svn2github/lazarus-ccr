@@ -24,8 +24,10 @@ type
     CbFirstDayOfWeek: TComboBox;
     CbAllowInplaceEditing: TCheckBox;
     Cb3D: TCheckBox;
+    CbAddressBuilder: TComboBox;
     Img: TImage;
     ImageList1: TImageList;
+    LblAddressBuilder: TLabel;
     LblFirstDayOfWeek: TLabel;
     LblTimeFormat: TLabel;
     LblGranularity: TLabel;
@@ -71,6 +73,7 @@ type
     procedure BtnNewResClick(Sender: TObject);
     procedure BtnEditResClick(Sender: TObject);
     procedure Cb3DChange(Sender: TObject);
+    procedure CbAddressBuilderChange(Sender: TObject);
     procedure CbAllowInplaceEditingChange(Sender: TObject);
     procedure CbFirstDayOfWeekChange(Sender: TObject);
     procedure CbGranularityChange(Sender: TObject);
@@ -250,6 +253,14 @@ begin
  VpDayView1.DrawingStyle := ds;
  VpWeekView1.DrawingStyle := ds;
  VpMonthView1.DrawingStyle := ds;
+end;
+
+procedure TMainForm.CbAddressBuilderChange(Sender: TObject);
+begin
+ if CbAddressBuilder.ItemIndex <= 0 then
+   VpControlLink1.CityStateZipFormat := ''
+ else
+   VpControlLink1.CityStateZipFormat := CbAddressBuilder.Items[CbAddressBuilder.ItemIndex];
 end;
 
 procedure TMainForm.CbAllowInplaceEditingChange(Sender: TObject);

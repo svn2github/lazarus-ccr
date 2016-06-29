@@ -157,6 +157,10 @@ msgstr "Editieren an Ort und Stelle erlauben"
 msgid "30 Min"
 msgstr "30 Min"
 
+#: tmainform.lbladdressbuilder.caption
+msgid "Address builder"
+msgstr ""
+
 #: tmainform.lblfirstdayofweek.caption
 msgid "First day of week"
 msgstr "Die Woche beginnt am"

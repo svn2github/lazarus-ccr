@@ -25,9 +25,9 @@ object MainForm: TMainForm
       Height = 532
       Top = 48
       Width = 780
-      ActivePage = TabEvents
+      ActivePage = TabSettings
       Align = alClient
-      TabIndex = 0
+      TabIndex = 4
       TabOrder = 0
       object TabEvents: TTabSheet
         Caption = 'Events'
@@ -485,6 +485,30 @@ object MainForm: TMainForm
           OnChange = Cb3DChange
           TabOrder = 4
         end
+        object LblAddressBuilder: TLabel
+          Left = 16
+          Height = 15
+          Top = 149
+          Width = 82
+          Caption = 'Address builder'
+          ParentColor = False
+        end
+        object CbAddressBuilder: TComboBox
+          Left = 112
+          Height = 23
+          Top = 144
+          Width = 172
+          ItemHeight = 15
+          Items.Strings = (
+            '(default)'
+            '@ZIP @CITY'
+            '@CITY, @STATE @ZIP'
+            '@CITY @ZIP'
+          )
+          OnChange = CbAddressBuilderChange
+          Style = csDropDownList
+          TabOrder = 5
+        end
       end
     end
     object HeaderPanel: TPanel
@@ -626,7 +650,7 @@ object MainForm: TMainForm
   end
   object VpControlLink1: TVpControlLink
     DataStore = VpBufDSDataStore1
-    LocalizationFile = '../../source\vplocalize.xml'
+    LocalizationFile = '../../source/vplocalize.xml'
     Printer.BottomMargin = 0
     Printer.DayStart = h_08
     Printer.DayEnd = h_05

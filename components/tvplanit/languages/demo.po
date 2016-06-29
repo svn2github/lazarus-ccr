@@ -146,6 +146,10 @@ msgstr ""
 msgid "30 Min"
 msgstr ""
 
+#: tmainform.lbladdressbuilder.caption
+msgid "Address builder"
+msgstr ""
+
 #: tmainform.lblfirstdayofweek.caption
 msgid "First day of week"
 msgstr ""
