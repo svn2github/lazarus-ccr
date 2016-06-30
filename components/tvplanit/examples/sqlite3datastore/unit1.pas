@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   StdCtrls, ComCtrls, VpBaseDS, VpDayView, VpWeekView, VpTaskList,
   VpContactGrid, VpMonthView, VpResEditDlg, VpContactButtons, VpSQLite3DS,
-  sqlite3conn, sqldb;
+  sqlite3conn, sqldb, VpData;
 
 type
 

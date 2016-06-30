@@ -117,9 +117,6 @@ object Form1: TForm1
           AllDayEventAttributes.BackgroundColor = clWindow
           AllDayEventAttributes.EventBorderColor = clGray
           AllDayEventAttributes.EventBackgroundColor = clBtnFace
-          Align = alClient
-          TabStop = True
-          TabOrder = 0
           DateLabelFormat = 'dddd, mmmm dd, yyyy'
           DayHeadAttributes.Color = clBtnFace
           DayHeadAttributes.DateFormat = 'dddd mmmm, dd'
@@ -132,6 +129,9 @@ object Form1: TForm1
           TimeFormat = tf12Hour
           ShowEventTime = True
           WeekStartsOn = dtMonday
+          Align = alClient
+          TabStop = True
+          TabOrder = 0
         end
         object VpMonthView1: TVpMonthView
           Left = 0

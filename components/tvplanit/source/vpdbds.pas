@@ -969,7 +969,8 @@ end;
 
 procedure TVpCustomDBDataStore.Load;
 var
-  Res        : TVpResource;
+  Res: TVpResource;
+  F: TField;
 begin
   Loading := true;
   try
@@ -988,16 +989,26 @@ begin
       Res.Description := ResourceTable.FieldByName('Description').AsString;
       Res.Notes := ResourceTable.FieldByName('Notes').AsString;
       Res.ResourceActive := ResourceTable.FieldByName('ResourceActive').AsBoolean;
-      Res.UserField0 := ResourceTable.FieldByName('UserField0').AsString;
-      Res.UserField1 := ResourceTable.FieldByName('UserField1').AsString;
-      Res.UserField2 := ResourceTable.FieldByName('UserField2').AsString;
-      Res.UserField3 := ResourceTable.FieldByName('UserField3').AsString;
-      Res.UserField4 := ResourceTable.FieldByName('UserField4').AsString;
-      Res.UserField5 := ResourceTable.FieldByName('UserField5').AsString;
-      Res.UserField6 := ResourceTable.FieldByName('UserField6').AsString;
-      Res.UserField7 := ResourceTable.FieldByName('UserField7').AsString;
-      Res.UserField8 := ResourceTable.FieldByName('UserField8').AsString;
-      Res.UserField9 := ResourceTable.FieldByName('UserField9').AsString;
+      F := ResourceTable.FindField('UserField0');
+      if F <> nil then Res.UserField0 := F.AsString;
+      F := ResourceTable.FindField('UserField1');
+      if F <> nil then Res.UserField1 := F.AsString;
+      F := ResourceTable.FindField('UserField2');
+      if F <> nil then Res.UserField2 := F.AsString;
+      F := ResourceTable.FindField('UserField3');
+      if F <> nil then Res.UserField3 := F.AsString;
+      F := ResourceTable.FindField('UserField4');
+      if F <> nil then Res.UserField4 := F.AsString;
+      F := ResourceTable.FindField('UserField5');
+      if F <> nil then Res.UserField5 := F.AsString;
+      F := ResourceTable.FindField('UserField6');
+      if F <> nil then Res.UserField6 := F.AsString;
+      F := ResourceTable.FindField('UserField7');
+      if F <> nil then Res.UserField7 := F.AsString;
+      F := ResourceTable.FindField('UserField8');
+      if F <> nil then Res.UserField8 := F.AsString;
+      F := ResourceTable.FindField('UserField9');
+      if F <> nil then Res.UserField9 := F.AsString;
       Res.Loading := false;
 
       { Add events, contacts and tasks for the currently selected resource }
@@ -1056,16 +1067,26 @@ begin
           Event.RepeatCode := TVpRepeatType(FieldByName('RepeatCode').AsInteger);
           Event.RepeatRangeEnd := FieldByName('RepeatRangeEnd').AsDateTime;
           Event.CustomInterval := FieldByName('CustomInterval').AsInteger;
-          Event.UserField0 := FieldByName('UserField0').AsString;
-          Event.UserField1 := FieldByName('UserField1').AsString;
-          Event.UserField2 := FieldByName('UserField2').AsString;
-          Event.UserField3 := FieldByName('UserField3').AsString;
-          Event.UserField4 := FieldByName('UserField4').AsString;
-          Event.UserField5 := FieldByName('UserField5').AsString;
-          Event.UserField6 := FieldByName('UserField6').AsString;
-          Event.UserField7 := FieldByName('UserField7').AsString;
-          Event.UserField8 := FieldByName('UserField8').AsString;
-          Event.UserField9 := FieldByName('UserField9').AsString;
+          F := FindField('UserField0');
+          if F <> nil then Event.UserField0 := F.AsString;
+          F := FindField('UserField1');
+          if F <> nil then Event.UserField1 := F.AsString;
+          F := FindField('UserField2');
+          if F <> nil then Event.UserField2 := F.AsString;
+          F := FindField('UserField3');
+          if F <> nil then Event.UserField3 := F.AsString;
+          F := FindField('UserField4');
+          if F <> nil then Event.UserField4 := F.AsString;
+          F := FindField('UserField5');
+          if F <> nil then Event.UserField5 := F.AsString;
+          F := FindField('UserField6');
+          if F <> nil then Event.UserField6 := F.AsString;
+          F := FindField('UserField7');
+          if F <> nil then Event.UserField7 := F.AsString;
+          F := FindField('UserField8');
+          if F <> nil then Event.UserField8 := F.AsString;
+          F := FindField('UserField9');
+          if F <> nil then Event.UserField9 := F.AsString;
 
           Event.Loading := false;
         end;
@@ -1123,16 +1144,26 @@ begin
         Contact.Custom2 := FieldByName('Custom2').AsString;
         Contact.Custom3 := FieldByName('Custom3').AsString;
         Contact.Custom4 := FieldByName('Custom4').AsString;
-        Contact.UserField0 := FieldByName('UserField0').AsString;
-        Contact.UserField1 := FieldByName('UserField1').AsString;
-        Contact.UserField2 := FieldByName('UserField2').AsString;
-        Contact.UserField3 := FieldByName('UserField3').AsString;
-        Contact.UserField4 := FieldByName('UserField4').AsString;
-        Contact.UserField5 := FieldByName('UserField5').AsString;
-        Contact.UserField6 := FieldByName('UserField6').AsString;
-        Contact.UserField7 := FieldByName('UserField7').AsString;
-        Contact.UserField8 := FieldByName('UserField8').AsString;
-        Contact.UserField9 := FieldByName('UserField9').AsString;
+        F := FindField('UserField0');
+        if F <> nil then Contact.UserField0 := F.AsString;
+        F := FindField('UserField1');
+        if F <> nil then Contact.UserField1 := F.AsString;
+        F := FindField('UserField2');
+        if F <> nil then Contact.UserField2 := F.AsString;
+        F := FindField('UserField3');
+        if F <> nil then Contact.UserField3 := F.AsString;
+        F := FindField('UserField4');
+        if F <> nil then Contact.UserField4 := F.AsString;
+        F := FindField('UserField5');
+        if F <> nil then Contact.UserField5 := F.AsString;
+        F := FindField('UserField6');
+        if F <> nil then Contact.UserField6 := F.AsString;
+        F := FindField('UserField7');
+        if F <> nil then Contact.UserField7 := F.AsString;
+        F := FindField('UserField8');
+        if F <> nil then Contact.UserField8 := F.AsString;
+        F := FindField('UserField9');
+        if F <> nil then Contact.UserField9 := F.AsString;
         Contact.Loading := false;
         Next;
       end; {while}
@@ -1143,6 +1174,7 @@ end;
 procedure TVpCustomDBDataStore.LoadTasks;
 var
   Task: TVpTask;
+  F: TField;
 begin
   if (Resource <> nil) then
     with TasksTable do begin
@@ -1163,16 +1195,26 @@ begin
         Task.Priority := FieldByName('Priority').AsInteger;
         Task.Category := FieldByName('Category').AsInteger;
         Task.DueDate := FieldByName('DueDate').AsDateTime;
-        Task.UserField0 := FieldBYName('UserField0').AsString;
-        Task.UserField1 := FieldBYName('UserField1').AsString;
-        Task.UserField2 := FieldBYName('UserField2').AsString;
-        Task.UserField3 := FieldBYName('UserField3').AsString;
-        Task.UserField4 := FieldBYName('UserField4').AsString;
-        Task.UserField5 := FieldBYName('UserField5').AsString;
-        Task.UserField6 := FieldBYName('UserField6').AsString;
-        Task.UserField7 := FieldBYName('UserField7').AsString;
-        Task.UserField8 := FieldBYName('UserField8').AsString;
-        Task.UserField9 := FieldBYName('UserField9').AsString;
+        F := FindField('UserField0');
+        if F <> nil then Task.UserField0 := F.AsString;
+        F := FindField('UserField1');
+        if F <> nil then Task.UserField1 := F.AsString;
+        F := FindField('UserField2');
+        if F <> nil then Task.UserField2 := F.AsString;
+        F := FindField('UserField3');
+        if F <> nil then Task.UserField3 := F.AsString;
+        F := FindField('UserField4');
+        if F <> nil then Task.UserField4 := F.AsString;
+        F := FindField('UserField5');
+        if F <> nil then Task.UserField5 := F.AsString;
+        F := FindField('UserField6');
+        if F <> nil then Task.UserField6 := F.AsString;
+        F := FindField('UserField7');
+        if F <> nil then Task.UserField7 := F.AsString;
+        F := FindField('UserField8');
+        if F <> nil then Task.UserField8 := F.AsString;
+        F := FindField('UserField9');
+        if F <> nil then Task.UserField9 := F.AsString;
         Task.Loading := false;
         Next;
       end; {while}
@@ -1250,16 +1292,26 @@ begin
             ContactsTable.FieldByName('Custom2').AsString := Contact.Custom2;
             ContactsTable.FieldByName('Custom3').AsString := Contact.Custom3;
             ContactsTable.FieldByName('Custom4').AsString := Contact.Custom4;
-            ContactsTable.FieldByName('UserField0').AsString := Contact.UserField0;
-            ContactsTable.FieldByName('UserField1').AsString := Contact.UserField1;
-            ContactsTable.FieldByName('UserField2').AsString := Contact.UserField2;
-            ContactsTable.FieldByName('UserField3').AsString := Contact.UserField3;
-            ContactsTable.FieldByName('UserField4').AsString := Contact.UserField4;
-            ContactsTable.FieldByName('UserField5').AsString := Contact.UserField5;
-            ContactsTable.FieldByName('UserField6').AsString := Contact.UserField6;
-            ContactsTable.FieldByName('UserField7').AsString := Contact.UserField7;
-            ContactsTable.FieldByName('UserField8').AsString := Contact.UserField8;
-            ContactsTable.FieldByName('UserField9').AsString := Contact.UserField9;
+            F := ContactsTable.FindField('UserField0');
+            if F <> nil then F.AsString := Contact.UserField0;
+            F := ContactsTable.FindField('UserField1');
+            if F <> nil then F.AsString := Contact.UserField1;
+            F := ContactsTable.FindField('UserField2');
+            if F <> nil then F.AsString := Contact.UserField2;
+            F := ContactsTable.FindField('UserField3');
+            if F <> nil then F.AsString := Contact.UserField3;
+            F := ContactsTable.FindField('UserField4');
+            if F <> nil then F.AsString := Contact.UserField4;
+            F := ContactsTable.FindField('UserField5');
+            if F <> nil then F.AsString := Contact.UserField5;
+            F := ContactsTable.FindField('UserField6');
+            if F <> nil then F.AsString := Contact.UserField6;
+            F := ContactsTable.FindField('UserField7');
+            if F <> nil then F.AsString := Contact.UserField7;
+            F := ContactsTable.FindField('UserField8');
+            if F <> nil then F.AsString := Contact.UserField8;
+            F := ContactsTable.FindField('UserField9');
+            if F <> nil then F.AsString := Contact.UserField9;
             ContactsTable.Post;
           except
             ContactsTable.Cancel;
@@ -1341,16 +1393,28 @@ begin
             EventsTable.FieldByName('RepeatCode').AsInteger := Ord(Event.RepeatCode);
             EventsTable.FieldByName('RepeatRangeEnd').AsDateTime := Event.RepeatRangeEnd;
             EventsTable.FieldByName('CustomInterval').AsInteger := Event.CustomInterval;
-            EventsTable.FieldByName('UserField0').AsString := Event.UserField0;
-            EventsTable.FieldByName('UserField1').AsString := Event.UserField1;
-            EventsTable.FieldByName('UserField2').AsString := Event.UserField2;
-            EventsTable.FieldByName('UserField3').AsString := Event.UserField3;
-            EventsTable.FieldByName('UserField4').AsString := Event.UserField4;
-            EventsTable.FieldByName('UserField5').AsString := Event.UserField5;
-            EventsTable.FieldByName('UserField6').AsString := Event.UserField6;
-            EventsTable.FieldByName('UserField7').AsString := Event.UserField7;
-            EventsTable.FieldByName('UserField8').AsString := Event.UserField8;
-            EventsTable.FieldByName('UserField9').AsString := Event.UserField9;
+
+            F := EventsTable.FindField('Userfield0');
+            if F <> nil then F.AsString := Event.UserField0;
+            F := EventsTable.FindField('Userfield1');
+            if F <> nil then F.AsString := Event.UserField1;
+            F := EventsTable.FindField('Userfield2');
+            if F <> nil then F.AsString := Event.UserField2;
+            F := EventsTable.FindField('Userfield3');
+            if F <> nil then F.AsString := Event.UserField3;
+            F := EventsTable.FindField('Userfield4');
+            if F <> nil then F.AsString := Event.UserField4;
+            F := EventsTable.FindField('Userfield5');
+            if F <> nil then F.AsString := Event.UserField5;
+            F := EventsTable.FindField('Userfield6');
+            if F <> nil then F.AsString := Event.UserField6;
+            F := EventsTable.FindField('Userfield7');
+            if F <> nil then F.AsString := Event.UserField7;
+            F := EventsTable.FindField('Userfield8');
+            if F <> nil then F.AsString := Event.UserField8;
+            F := EventsTable.FindField('Userfield9');
+            if F <> nil then F.AsString := Event.UserField9;
+
             EventsTable.Post;
           except
             EventsTable.Cancel;
@@ -1383,6 +1447,7 @@ procedure TVpCustomDBDataStore.PostTasks;
 var
   I: Integer;
   Task: TVpTask;
+  F: TField;
 begin
   if (Resource <> nil) and Resource.TasksDirty then begin
     { Dump this resource's dirty contacts to the DB }
@@ -1421,16 +1486,28 @@ begin
             TasksTable.FieldByName('CompletedOn').AsDateTime := Task.CompletedOn;
             TasksTable.FieldByName('Priority').AsInteger := Task.Priority;
             TasksTable.FieldByName('Category').AsInteger := Task.Category;
-            TasksTable.FieldByName('UserField0').AsString := Task.UserField0;
-            TasksTable.FieldByName('UserField1').AsString := Task.UserField1;
-            TasksTable.FieldByName('UserField2').AsString := Task.UserField2;
-            TasksTable.FieldByName('UserField3').AsString := Task.UserField3;
-            TasksTable.FieldByName('UserField4').AsString := Task.UserField4;
-            TasksTable.FieldByName('UserField5').AsString := Task.UserField5;
-            TasksTable.FieldByName('UserField6').AsString := Task.UserField6;
-            TasksTable.FieldByName('UserField7').AsString := Task.UserField7;
-            TasksTable.FieldByName('UserField8').AsString := Task.UserField8;
-            TasksTable.FieldByName('UserField9').AsString := Task.UserField9;
+
+            F := TasksTable.FindField('UserField0');
+            if F <> nil then F.AsString := Task.UserField0;
+            F := TasksTable.FindField('UserField1');
+            if F <> nil then F.AsString := Task.UserField1;
+            F := TasksTable.FindField('UserField2');
+            if F <> nil then F.AsString := Task.UserField2;
+            F := TasksTable.FindField('UserField3');
+            if F <> nil then F.AsString := Task.UserField3;
+            F := TasksTable.FindField('UserField4');
+            if F <> nil then F.AsString := Task.UserField4;
+            F := TasksTable.FindField('UserField5');
+            if F <> nil then F.AsString := Task.UserField5;
+            F := TasksTable.FindField('UserField6');
+            if F <> nil then F.AsString := Task.UserField6;
+            F := TasksTable.FindField('UserField7');
+            if F <> nil then F.AsString := Task.UserField7;
+            F := TasksTable.FindField('UserField8');
+            if F <> nil then F.AsString := Task.UserField8;
+            F := TasksTable.FindField('UserField9');
+            if F <> nil then F.AsString := Task.UserField9;
+
             TasksTable.Post;
             Task.RecordID := TasksTable.FieldByName('RecordID').AsInteger;
           except
@@ -1456,6 +1533,7 @@ procedure TVpCustomDBDataStore.PostResources;
 var
   I: Integer;
   Res: TVpResource;
+  F: TField;
 begin
   Loading := true;
   try
@@ -1495,16 +1573,26 @@ begin
               FieldByName('Description').AsString := Res.Description;
               FieldByName('Notes').AsString := Res.Notes;
               FieldByName('ResourceActive').AsBoolean := Res.ResourceActive;
-              FieldByName('UserField0').AsString := Res.UserField0;
-              FieldByName('UserField1').AsString := Res.UserField1;
-              FieldByName('UserField2').AsString := Res.UserField2;
-              FieldByName('UserField3').AsString := Res.UserField3;
-              FieldByName('UserField4').AsString := Res.UserField4;
-              FieldByName('UserField5').AsString := Res.UserField5;
-              FieldByName('UserField6').AsString := Res.UserField6;
-              FieldByName('UserField7').AsString := Res.UserField7;
-              FieldByName('UserField8').AsString := Res.UserField8;
-              FieldByName('UserField9').AsString := Res.UserField9;
+              F := FindField('UserField0');
+              if F <> nil then F.AsString := Res.UserField0;
+              F := FindField('UserField1');
+              if F <> nil then F.AsString := Res.UserField1;
+              F := FindField('UserField2');
+              if F <> nil then F.AsString := Res.UserField2;
+              F := FindField('UserField3');
+              if F <> nil then F.AsString := Res.UserField3;
+              F := FindField('UserField4');
+              if F <> nil then F.AsString := Res.UserField4;
+              F := FindField('UserField5');
+              if F <> nil then F.AsString := Res.UserField5;
+              F := FindField('UserField6');
+              if F <> nil then F.AsString := Res.UserField6;
+              F := FindField('UserField7');
+              if F <> nil then F.AsString := Res.UserField7;
+              F := FindField('UserField8');
+              if F <> nil then F.AsString := Res.UserField8;
+              F := FindField('UserField9');
+              if F <> nil then F.AsString := Res.UserField9;
               Post;
             except
               Cancel;
@@ -1635,16 +1723,26 @@ begin
         Contact.Custom2 := FieldByName('Custom2').AsString;
         Contact.Custom3 := FieldByName('Custom3').AsString;
         Contact.Custom4 := FieldByName('Custom4').AsString;
-        Contact.UserField0 := FieldByName('UserField0').AsString;
-        Contact.UserField1 := FieldByName('UserField1').AsString;
-        Contact.UserField2 := FieldByName('UserField2').AsString;
-        Contact.UserField3 := FieldByName('UserField3').AsString;
-        Contact.UserField4 := FieldByName('UserField4').AsString;
-        Contact.UserField5 := FieldByName('UserField5').AsString;
-        Contact.UserField6 := FieldByName('UserField6').AsString;
-        Contact.UserField7 := FieldByName('UserField7').AsString;
-        Contact.UserField8 := FieldByName('UserField8').AsString;
-        Contact.UserField9 := FieldByName('UserField9').AsString;
+        F := FindField('UserField0');
+        if F <> nil then Contact.UserField0 := F.AsString;
+        F := FindField('UserField1');
+        if F <> nil then Contact.UserField1 := F.AsString;
+        F := FindField('UserField2');
+        if F <> nil then Contact.UserField2 := F.AsString;
+        F := FindField('UserField3');
+        if F <> nil then Contact.UserField3 := F.AsString;
+        F := FindField('UserField4');
+        if F <> nil then Contact.UserField4 := F.AsString;
+        F := FindField('UserField5');
+        if F <> nil then Contact.UserField5 := F.AsString;
+        F := FindField('UserField6');
+        if F <> nil then Contact.UserField6 := F.AsString;
+        F := FindField('UserField7');
+        if F <> nil then Contact.UserField7 := F.AsString;
+        F := FindField('UserField8');
+        if F <> nil then Contact.UserField8 := F.AsString;
+        F := FindField('UserField9');
+        if F <> nil then Contact.UserField9 := F.AsString;
         Contact.Loading := false;
         Next;
       end;
@@ -1692,16 +1790,27 @@ begin
           Event.RepeatCode := TVpRepeatType(FieldByName('RepeatCode').AsInteger);
           Event.RepeatRangeEnd := FieldByName('RepeatRangeEnd').AsDateTime;
           Event.CustomInterval := FieldByName('CustomInterval').AsInteger;
-          Event.UserField0 := FieldByName('UserField0').AsString;
-          Event.UserField1 := FieldByName('UserField1').AsString;
-          Event.UserField2 := FieldByName('UserField2').AsString;
-          Event.UserField3 := FieldByName('UserField3').AsString;
-          Event.UserField4 := FieldByName('UserField4').AsString;
-          Event.UserField5 := FieldByName('UserField5').AsString;
-          Event.UserField6 := FieldByName('UserField6').AsString;
-          Event.UserField7 := FieldByName('UserField7').AsString;
-          Event.UserField8 := FieldByName('UserField8').AsString;
-          Event.UserField9 := FieldByName('UserField9').AsString;
+
+          F := FindField('UserField0');
+          if F <> nil then Event.UserField0 := F.AsString;
+          F := FindField('UserField1');
+          if F <> nil then Event.UserField1 := F.AsString;
+          F := FindField('UserField2');
+          if F <> nil then Event.UserField2 := F.AsString;
+          F := FindField('UserField3');
+          if F <> nil then Event.UserField3 := F.AsString;
+          F := FindField('UserField4');
+          if F <> nil then Event.UserField4 := F.AsString;
+          F := FindField('UserField5');
+          if F <> nil then Event.UserField5 := F.AsString;
+          F := FindField('UserField6');
+          if F <> nil then Event.UserField6 := F.AsString;
+          F := FindField('UserField7');
+          if F <> nil then Event.UserField7 := F.AsString;
+          F := FindField('UserField8');
+          if F <> nil then Event.UserField8 := F.AsString;
+          F := FindField('UserField9');
+          if F <> nil then Event.UserField9 := F.AsString;
 
           Event.Loading := false;
         end;
@@ -1716,6 +1825,7 @@ end;
 procedure TVpCustomDBDataStore.RefreshTasks;
 var
   Task: TVpTask;
+  F: TField;
 begin
   if Resource <> nil then begin
     { Clear the Tasks }
@@ -1736,16 +1846,26 @@ begin
         Task.Priority := FieldByName('Priority').AsInteger;
         Task.Category := FieldByName('Category').AsInteger;
         Task.DueDate := FieldByName('DueDate').AsDateTime;
-        Task.UserField0 := FieldByName('UserField0').AsString;
-        Task.UserField1 := FieldByName('UserField1').AsString;
-        Task.UserField2 := FieldByName('UserField2').AsString;
-        Task.UserField3 := FieldByName('UserField3').AsString;
-        Task.UserField4 := FieldByName('UserField4').AsString;
-        Task.UserField5 := FieldByName('UserField5').AsString;
-        Task.UserField6 := FieldByName('UserField6').AsString;
-        Task.UserField7 := FieldByName('UserField7').AsString;
-        Task.UserField8 := FieldByName('UserField8').AsString;
-        Task.UserField9 := FieldByName('UserField9').AsString;
+        F := FindField('UserField0');
+        if F <> nil then Task.UserField0 := F.AsString;
+        F := FindField('UserField1');
+        if F <> nil then Task.UserField1 := F.AsString;
+        F := FindField('UserField2');
+        if F <> nil then Task.UserField2 := F.AsString;
+        F := FindField('UserField3');
+        if F <> nil then Task.UserField3 := F.AsString;
+        F := FindField('UserField4');
+        if F <> nil then Task.UserField4 := F.AsString;
+        F := FindField('UserField5');
+        if F <> nil then Task.UserField5 := F.AsString;
+        F := FindField('UserField6');
+        if F <> nil then Task.UserField6 := F.AsString;
+        F := FindField('UserField7');
+        if F <> nil then Task.UserField7 := F.AsString;
+        F := FindField('UserField8');
+        if F <> nil then Task.UserField8 := F.AsString;
+        F := FindField('UserField9');
+        if F <> nil then Task.UserField9 := F.AsString;
         Task.Loading := false;
         Next;
       end;
@@ -1756,6 +1876,8 @@ end;
 {=====}
 
 procedure TVpCustomDBDataStore.RefreshResource;
+var
+  F: TField;
 begin
   if (not ResourceTable.Active) or (ResourceID = -1) then
     Exit;
@@ -1777,16 +1899,26 @@ begin
       Resource.Description := FieldByName('Description').AsString;
       Resource.Notes := FieldByName('Notes').AsString;
       Resource.ResourceActive := FieldByName('ResourceActive').AsBoolean;
-      Resource.UserField0 := FieldByName('UserField0').AsString;
-      Resource.UserField1 := FieldByName('UserField1').AsString;
-      Resource.UserField2 := FieldByName('UserField2').AsString;
-      Resource.UserField3 := FieldByName('UserField3').AsString;
-      Resource.UserField4 := FieldByName('UserField4').AsString;
-      Resource.UserField5 := FieldByName('UserField5').AsString;
-      Resource.UserField6 := FieldByName('UserField6').AsString;
-      Resource.UserField7 := FieldByName('UserField7').AsString;
-      Resource.UserField8 := FieldByName('UserField8').AsString;
-      Resource.UserField9 := FieldByName('UserField9').AsString;
+      F := FindField('UserField0');
+      if F <> nil then Resource.UserField0 := F.AsString;
+      F := FindField('UserField1');
+      if F <> nil then Resource.UserField1 := F.AsString;
+      F := FindField('UserField2');
+      if F <> nil then Resource.UserField2 := F.AsString;
+      F := FindField('UserField3');
+      if F <> nil then Resource.UserField3 := F.AsString;
+      F := FindField('UserField4');
+      if F <> nil then Resource.UserField4 := F.AsString;
+      F := FindField('UserField5');
+      if F <> nil then Resource.UserField5 := F.AsString;
+      F := FindField('UserField6');
+      if F <> nil then Resource.UserField6 := F.AsString;
+      F := FindField('UserField7');
+      if F <> nil then Resource.UserField7 := F.AsString;
+      F := FindField('UserField8');
+      if F <> nil then Resource.UserField8 := F.AsString;
+      F := FindField('UserField9');
+      if F <> nil then Resource.UserField9 := F.AsString;
       LoadEvents;
       LoadContacts;
       LoadTasks;
