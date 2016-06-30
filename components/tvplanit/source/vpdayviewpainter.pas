@@ -1630,7 +1630,7 @@ begin
 
     { Now sort times in ascending order. This must be done because the event
       list can contain recurring events which have the wrong date part }
-    EventList.Sort(CompareEventsByTimeOnly);
+  //  EventList.Sort(CompareEventsByTimeOnly);
 
     { Arrange this day's events in the event matrix }
     level := 0;

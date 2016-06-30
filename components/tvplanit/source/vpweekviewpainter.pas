@@ -300,7 +300,7 @@ begin
 
       { Now sort times in ascending order. This must be done because the event
         list can contain recurring events which have the wrong date part }
-      EventList.Sort(CompareEventsByTimeOnly);
+//      EventList.Sort(CompareEventsByTimeOnly);
 
       { initialize TextRect for this day }
       TextRect := DayRect;
