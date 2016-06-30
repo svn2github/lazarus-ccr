@@ -108,7 +108,8 @@ function IncYear(TheDate: TDateTime; NumYears: Integer): TDateTime;
 function GetJulianDate(Date: TDateTime): Word;
 function GetWeekOfYear(ADate: TDateTime): byte;
 function SameDate(dt1, dt2: TDateTime): Boolean;
-function TimeInRange(Time, StartTime, EndTime: TDateTime; Inclusive: Boolean): Boolean;
+function DateInRange(ADate, StartDate, EndDate: TDateTime; Inclusive: Boolean): Boolean;
+function TimeInRange(ATime, StartTime, EndTime: TDateTime; Inclusive: Boolean): Boolean;
 
 function HourToLine(const Value: TVpHours; const Granularity: TVpGranularity): Integer;
 function GetStartLine(StartTime: TDateTime; Granularity: TVpGranularity): Integer;
@@ -526,20 +527,29 @@ begin
 end;
 {=====}
 
-function TimeInRange(Time, StartTime, EndTime: TDateTime;
+function DateInRange(ADate, StartDate, EndDate: TDateTime;
+  Inclusive: Boolean): Boolean;
+begin
+  ADate := trunc(ADate);
+  StartDate := trunc(StartDate);
+  EndDate := trunc(EndDate);
+  Result := (StartDate < ADate) and (ADate < EndDate);
+  if Inclusive and (not Result) then
+    Result := (StartDate = ADate) or (EndDate = ADate);
+end;
+
+function TimeInRange(ATime, StartTime, EndTime: TDateTime;
   Inclusive: Boolean): Boolean;
 var
   equStart, equEnd: Boolean;
 begin
-  equStart := abs(Time - StartTime) < CompareTimeEps;
-  equEnd := abs(Time - EndTime) < CompareTimeEps;
+  equStart := abs(ATime - StartTime) < CompareTimeEps;
+  equEnd := abs(ATime - EndTime) < CompareTimeEps;
 
   if Inclusive then
-    Result := equStart or equEnd  or ((Time > StartTime) and (Time < EndTime))
-//    result := (Time >= StartTime) and (Time <= EndTime)
+    Result := equStart or equEnd  or ((ATime > StartTime) and (ATime < EndTime))
   else
-    Result := (not equStart) and (not equEnd) and (Time > StartTime) and (Time < EndTime);
-//    result := (Time > StartTime) and (Time < EndTime);
+    Result := (not equStart) and (not equEnd) and (ATime > StartTime) and (ATime < EndTime);
 end;
 {=====}
 

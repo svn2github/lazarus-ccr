@@ -1318,20 +1318,16 @@ begin
     EventList.Clear
 
   else begin
-    { Add this days events to the Event List. }
+    { Add this day's events to the Event List. }
     for I := 0 to pred(EventCount) do begin
       Event := GetEvent(I);
 
-      { if this is a repeating event and it falls on "Date" then add it to }
-      { the list.                                                          }
-      if (Event.RepeatCode > rtNone)
-      and (RepeatsOn(Event, Date))
-      then
+      { if this is a repeating event and it falls on "Date" then add it to the list. }
+      if (Event.RepeatCode > rtNone) and RepeatsOn(Event, Date) then
         EventList.Add(Event)
-      { otherwise if this event naturally falls on "Date" then add it to   }
-      { the list.                                                          }
-      else if ((trunc(Date) >= trunc(Event.StartTime))
-           and (trunc(Date) <= trunc(Event.EndTime))) then
+      else
+      { otherwise if this event naturally falls on "Date" then add it to the list. }
+      if DateInRange(Date, Event.StartTime, Event.EndTime, true) then
         EventList.Add(Event);
     end;
   end;
@@ -2323,7 +2319,9 @@ var
 begin
   event1 := TVpEvent(P1);
   event2 := TVpEvent(P2);
-  Result := CompareValue(frac(event1.StartTime), frac(event2.EndTime));
+  Result := CompareValue(frac(event1.StartTime), frac(event2.StartTime));
+  if Result = 0 then
+    Result := CompareValue(frac(event1.EndTime), frac(event2.EndTime));
 end;
 
 end.
