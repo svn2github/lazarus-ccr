@@ -85,7 +85,7 @@ type
     procedure DrawCells(R: TRect; ColDate: TDateTime; Col: Integer);
     procedure DrawColHeader(R: TRect; ARenderDate: TDateTime; Col: Integer);
     procedure DrawEditFrame(R: TRect; AGutter, ALevel: Integer; AColor: TColor);
-    procedure DrawEvent(AEvent: TVpEvent; AEventRec: TVpDvEventRec;
+    procedure DrawEvent(AEvent: TVpEvent; var AEventRec: TVpDvEventRec;
       ARenderDate: TDateTime; Col: Integer);
     procedure DrawEvents(ARenderDate: TDateTime; Col: Integer);
     procedure DrawEventText(const AText: String; const AEventRect, AIconRect: TRect;
@@ -119,7 +119,7 @@ type
 implementation
 
 uses
-  StrUtils,
+  StrUtils, Math,
   VpCanvasUtils, VpMisc;
 
 const
@@ -510,7 +510,6 @@ begin
             RenderCanvas.Brush.Color := FDayView.TimeSlotColors.Weekend;
             TPSFillRect(RenderCanvas, Angle, RenderIn, LineRect);
           end
-
           else begin
             { ColDate is a weekday, so check to see if the active     }
             { range is set. If it isn't then paint all rows the color }
@@ -561,8 +560,8 @@ begin
     TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Bottom);
     TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Top - 1);
 
-    RenderCanvas.Font.Assign(SavedFont);
   finally
+    RenderCanvas.Font.Assign(SavedFont);
     SavedFont.Free;
   end;
 end;
@@ -680,7 +679,7 @@ begin
     end;
 end;
 
-procedure TVpDayViewPainter.DrawEvent(AEvent: TVpEvent; AEventRec: TVpDvEventRec;
+procedure TVpDayViewPainter.DrawEvent(AEvent: TVpEvent; var AEventRec: TVpDvEventRec;
   ARenderDate: TDateTime; Col: Integer);
 var
   EventCategory: TVpCategoryInfo;
@@ -705,6 +704,8 @@ begin
 
   { remove the date portion from the start and end times }
   PrepareEventTimes(AEvent, ARenderDate, EventSTime, EventETime);
+  AEventRec.RealStartTime := EventSTime;
+  AEventRec.RealEndTime := EventETime;
 
   { Find the lines on which this event starts and ends }
   EventSLine := GetStartLine(EventSTime, FDayView.Granularity);
@@ -859,7 +860,8 @@ var
   level: Integer;
 begin
   if (FDayView.DataStore = nil) or (FDayView.DataStore.Resource = nil) or
-     (not FDayView.DataStore.Connected) then
+     (not FDayView.DataStore.Connected)
+  then
     Exit;
 
   { Save the canvas color and font }
@@ -999,7 +1001,6 @@ begin
   if AEventIsEditing then
     exit;
   }
-
   if (FDayView.WrapStyle <> wsNone) then begin
     if (AEventRect.Bottom <> AIconRect.Bottom) and (AEventRect.Left <> AIconRect.Right)
     then begin
@@ -1627,12 +1628,16 @@ begin
         EventList.Delete(I);
     end;
 
+    { Now sort times in ascending order. This must be done because the event
+      list can contain recurring events which have the wrong date part }
+    EventList.Sort(CompareEventsByTimeOnly);
+
     { Arrange this day's events in the event matrix }
     level := 0;
     I := 0;
     while EventList.Count > 0 do begin
-      { Iterate through the events, and place them all in the proper     }
-      { place in the EventMatrix, according to their start and end times }
+      { Iterate through the (corrected) events, and place them all at the proper place
+        in the EventMatrix, according to their start and end times }
       J := 0;
       ThisTime := 0.0;
       while (J < EventList.Count) and (J < MaxVisibleEvents) do begin

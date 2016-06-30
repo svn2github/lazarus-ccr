@@ -14,9 +14,6 @@ type
     FWeekView: TVpWeekView;
     // local parameters of the old TVpWeekView method
     HeadRect: TRect;
-    SaveBrushColor: TColor;
-    SavePenStyle: TPenStyle;
-    SavePenColor: TColor;
     DayRectHeight: Integer;
 //    StrLn: Integer;
     StartDate: TDateTime;
@@ -58,7 +55,7 @@ type
 implementation
 
 uses
-  StrUtils,
+  StrUtils, Math,
   VpCanvasUtils, VpMisc, VpSR;
 
 type
@@ -272,6 +269,7 @@ var
   rowHeight: Integer;
   headerHeight: Integer;
   tmpRect: TRect;
+  event: TVpEvent;
 begin
   // Abbreviations
   dayHeadHeight := TVpWeekviewOpener(FWeekView).wvDayHeadHeight;
@@ -299,6 +297,11 @@ begin
     try
       { populate the eventlist with events for this day }
       FWeekView.DataStore.Resource.Schedule.EventsByDate(StartDate + ADayIndex, EventList);
+
+      { Now sort times in ascending order. This must be done because the event
+        list can contain recurring events which have the wrong date part }
+      EventList.Sort(CompareEventsByTimeOnly);
+
       { initialize TextRect for this day }
       TextRect := DayRect;
       TextRect.Top := DayRect.Top + dayHeadHeight;
@@ -315,7 +318,7 @@ begin
 
       { Discard AllDayEvents, because they are drawn above. }
       for J := pred(EventList.Count) downto 0 do
-        if TVpEvent (EventList[J]).AllDayEvent then
+        if TVpEvent(EventList[J]).AllDayEvent then
           EventList.Delete(J);
 
       { iterate the events, painting them one by one }

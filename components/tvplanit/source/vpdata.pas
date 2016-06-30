@@ -167,7 +167,7 @@ type
     FEventList: TList;
     FBatchUpdate: Integer;
     function Compare(Time1, Time2: TDateTime): Integer;
-    function FindTimeSlot(StartTime, EndTime: TDateTime): Boolean;
+//    function FindTimeSlot(StartTime, EndTime: TDateTime): Boolean;
     function GetCount: Integer;
   public
     constructor Create(Owner: TVpResource);
@@ -556,9 +556,14 @@ type
     property UserField9   : string read FUserField9 write FUserField9;
   end;
 
+
+function CompareEventsByTimeOnly(P1, P2: Pointer): Integer;
+
+
 implementation
 
 uses
+  Math,
   VpException, VpMisc;
 
 { TVpResources }
@@ -1355,13 +1360,13 @@ begin
 end;
 {=====}
 
+(*  wp: Commented because it is not called from anywhere...
 
 { binary search }
 function TVpSchedule.FindTimeSlot(StartTime, EndTime: TDateTime): Boolean;
 var
   L, R, M: Integer;
   CStart, CEnd, CompStart, CompEnd: integer; { comparison results }
-
   HitStart, HitEnd, HitStraddle: Boolean;
 begin
   HitStart := false;
@@ -1403,7 +1408,7 @@ begin
 
       if not HItStraddle then
       { Check to see if the middle item falls completely inside our times     }
-      CompStart := Compare(TVpEvent(FEventList.List^[M]).StartTime, StartTime);
+      CompStart := Compare(TVpEvent(FEventList.List^[M]).StartTime, StartTime);          // wp: Is this correct? Strange indentation!
       CompEnd := Compare(TVpEvent(FEventList.List^[M]).EndTime, EndTime);
       { if the middle item's starttime is less than our starttime AND its     }
       { endtime is greater than our endtime, then teh middle item straddles   }
@@ -1430,7 +1435,7 @@ begin
   { if we got here then we didn't hit an existing item }
   result := false;
 end;
-{=====}
+{=====}        *)
 
 function TVpSchedule.GetCount: Integer;
 begin
@@ -2309,5 +2314,16 @@ begin
   result := FTaskList.Items[Index];
 end;
 {=====}
+
+{ Call back function for TList.Sort. Sorting of events by time onla, date part
+  is ignored. }
+function CompareEventsByTimeOnly(P1, P2: Pointer): Integer;
+var
+  event1, event2: TVpEvent;
+begin
+  event1 := TVpEvent(P1);
+  event2 := TVpEvent(P2);
+  Result := CompareValue(frac(event1.StartTime), frac(event2.EndTime));
+end;
 
 end.

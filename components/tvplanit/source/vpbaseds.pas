@@ -55,15 +55,15 @@ type
                          neInvalidate);
 
   { Printing events }
-  TVpOnGetVariableEvent = procedure (Sender  : TObject; VarName : string;
-    Found   : Boolean; var Value   : string; var Change  : TVpChangeVar)
+  TVpOnGetVariableEvent = procedure (Sender: TObject; VarName: string;
+    Found: Boolean; var Value: string; var Change: TVpChangeVar)
     of object;
 
-  TVpOnPageStartEvent = procedure (Sender  : TObject; PageNum : Integer;
-    ADate   : TDateTime) of object;
+  TVpOnPageStartEvent = procedure (Sender: TObject; PageNum: Integer;
+    ADate: TDateTime) of object;
 
-  TVpOnPageEndEvent = procedure (Sender   : TObject; PageNum  : Integer;
-    ADate    : TDateTime; LastPage : Boolean) of object;
+  TVpOnPageEndEvent = procedure (Sender: TObject; PageNum: Integer;
+    ADate: TDateTime; LastPage: Boolean) of object;
 
   { generic events }
   TVpControlNotifyEvent = procedure(Sender: TComponent;
@@ -72,8 +72,8 @@ type
   TVpNoResources = procedure(Sender: TObject;
     Resource: TVpResource) of object;
 
-  TVpNoLocalizationFile = procedure (Sender   : TObject;                 
-                                     FileName : string) of object;       
+  TVpNoLocalizationFile = procedure (Sender: TObject;
+    FileName: string) of object;
 
   TVpDateChangedEvent = procedure (Sender: TObject;                      
     Date: TDateTime) of object;                                          
