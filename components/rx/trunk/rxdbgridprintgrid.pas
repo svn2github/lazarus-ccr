@@ -83,6 +83,7 @@ type
 
   TRxDBGridPrint = class(TRxDBGridAbstractTools)
   private
+    FModifyPrepared: boolean;
     FOptions: TRxDBGridPrintOptions;
     FOrientation: TPrinterOrientation;
     FPageMargin: TRxPageMargin;
@@ -123,6 +124,7 @@ type
     property PageMargin:TRxPageMargin read FPageMargin write SetPageMargin;
     property ReportTitle:string read FReportTitle write FReportTitle;
     property ShowColumnHeaderOnAllPage:boolean read FShowColumnHeaderOnAllPage write FShowColumnHeaderOnAllPage default false;
+    property ModifyPrepared:boolean read FModifyPrepared write FModifyPrepared default false;
   end;
 
 procedure Register;
@@ -311,14 +313,12 @@ procedure TRxDBGridPrint.DoShowFooter;
 var
   FBand: TfrBandView;
   FView: TfrMemoView;
-  i: Integer;
 begin
   FBand := TfrBandView(frCreateObject(gtBand, '', FPage));
   FBand.BandType := btMasterFooter;
 
   FBand.SetBounds(FXPos, FYPos, 1000, 20);
   FBand.Flags:=FBand.Flags or flStretched;
-//  FPage.Objects.Add(FBand);
 
   FView := frCreateObject(gtMemo, '', FPage) as TfrMemoView;
   FView.SetBounds(FXPos, FYPos, 20, 20);
@@ -326,12 +326,10 @@ begin
   if rxpoShowFooterColor in FOptions then
     FView.FillColor := RxDBGrid.FooterOptions.Color;
 
-//  FView.Font.Assign(FTitleFont);
   FView.Font.Size:=12;
   FView.Frames:=frAllFrames;
   FView.Layout:=tlTop;
-  FView.Memo.Add(Format('Footer', [i]));
-//  FPage.Objects.Add(FView);
+  FView.Memo.Add('Footer');
 
   FYPos := FYPos + 22;
 end;
@@ -367,6 +365,8 @@ begin
           C:=F.Col.Color;
           if Assigned(RxDBGrid.OnGetCellProps) then
             RxDBGrid.OnGetCellProps(RxDBGrid, F.Col.Field, TfrMemoView(View).Font, C);
+          if C = clWindow then
+            C := clNone;
           TfrMemoView(View).FillColor:=C;
         end;
 
@@ -423,7 +423,6 @@ end;
 
 function TRxDBGridPrint.DoExecTools: boolean;
 var
-  C:integer;
   SaveDesign: TfrReportDesigner;
 begin
   Result:=false;
@@ -437,6 +436,7 @@ begin
   FReport:=TfrReport.Create(Self);
   FReport.OnPrintColumn:=@OnPrintColumn;
   FReport.OnEnterRect:=@OnEnterRect;
+  FReport.ModifyPrepared:=FModifyPrepared;
   FReportDataSet := TfrDBDataSet.Create(Self);
   FColumnDataSet := TfrUserDataSet.Create(Self);
 
@@ -454,13 +454,16 @@ begin
 
     FReport.ShowProgress:=FShowProgress;
     DoCreateReport;
+
+    frDesigner:=SaveDesign;
+
     FReport.ShowReport;
     Result:=true;
   finally
     FreeAndNil(FColumnDataSet);
     FreeAndNil(FReportDataSet);
     FreeAndNil(FReport);
-    frDesigner:=SaveDesign;
+//    frDesigner:=SaveDesign;
   end;
 end;
 
@@ -529,6 +532,7 @@ begin
 
   FCaption:=sPrintGrid;
   FShowProgress:=false;
+  FModifyPrepared:=false;
   FRxColInfoList:=TObjectList.Create(true);
   FOrientation:=poPortrait;
   ShowSetupForm:=false;

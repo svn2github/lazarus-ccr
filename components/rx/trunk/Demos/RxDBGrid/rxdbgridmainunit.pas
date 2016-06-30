@@ -7,8 +7,8 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, rxmemds,
   DB, rxdbgrid, RxAboutDialog, RxIniPropStorage, RxDBGridPrintGrid,
-  RxDBGridExportSpreadSheet, RxDBGridFooterTools, tooledit, ExtCtrls, Buttons,
-  Menus, ActnList, StdCtrls, DBGrids, types;
+  RxDBGridExportSpreadSheet, RxDBGridFooterTools, tooledit,
+  ExtCtrls, Buttons, Menus, ActnList, StdCtrls, DBGrids;
 
 type
 
@@ -106,7 +106,7 @@ procedure LocalizeApp;
 var
   Lang, FallbackLang: String;
 begin
-  GetLanguageIDs(Lang,FallbackLang); // in unit gettext
+  GetLanguageIDs(Lang{%H-},FallbackLang{%H-}); // in unit gettext
   TranslateUnitResourceStrings('rxconst',NormalizeDirectoryName('../../languages/rxconst.%s.po'), Lang, FallbackLang);
   TranslateUnitResourceStrings('rxdconst',NormalizeDirectoryName('../../languages/rxdconst.%s.po'), Lang, FallbackLang);
 end;
@@ -143,6 +143,7 @@ begin
   RxMemoryData1.AppendRecord([16, 'Гарант', 480, 'Гарант', EncodeDate(2007, 2, 1), 3]);
 
   RxMemoryData1.First;
+
 end;
 
 procedure TRxDBGridMainForm.hlpAboutExecute(Sender: TObject);
