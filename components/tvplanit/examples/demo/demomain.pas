@@ -475,6 +475,9 @@ begin
     CbAllowInplaceEditing.Checked := ini.ReadBool('Settings', 'AllowInplaceEditing', CbAllowInplaceEditing.Checked);
     CbAllowInplaceEditingChange(nil);
 
+    Cb3D.Checked := ini.ReadBool('Settings', '3dViewstyle', false);
+    Cb3dChange(nil);
+
   finally
     ini.Free;
   end;
@@ -506,6 +509,7 @@ begin
     ini.WriteInteger('Settings', 'VisibleDays', FVisibleDays);
     ini.WriteBool('Settings', 'AllTasks', VpTaskList1.DisplayOptions.ShowAll);
     ini.WriteBool('Settings', 'AllowInplaceEditing', CbAllowInplaceEditing.Checked);
+    ini.WriteBool('Settings', '3dViewStyle', Cb3D.Checked);
   finally
     ini.Free;
   end;

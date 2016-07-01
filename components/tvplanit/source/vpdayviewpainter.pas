@@ -428,6 +428,7 @@ begin
     StartLine := FDayView.TopLine;
 
   dec(R.Top);
+  inc(R.Bottom);
 
   { Set GutterRect size }
   GutterRect.Left := R.Left;
@@ -439,6 +440,7 @@ begin
   { paint gutter area }
   RenderCanvas.Brush.Color := RealColor;
   TPSFillRect(RenderCanvas, Angle, RenderIn, GutterRect);
+
   { draw the line down the right side of the gutter }
   RenderCanvas.Pen.Color := BevelShadow;
   RenderCanvas.Pen.Style := psSolid;
@@ -476,8 +478,8 @@ begin
 
       RenderCanvas.Brush.Color := RealColor;
       RenderCanvas.Font.Assign(SavedFont);
-      LineRect.Top := Round (R.Top + (i * RealRowHeight));
-      LineRect.Bottom := Round (LineRect.Top + (RealRowHeight));
+      LineRect.Top := Round(R.Top + i * RealRowHeight);
+      LineRect.Bottom := Round(LineRect.Top + RealRowHeight);
       if I + StartLine < FDayView.LineCount then
         TVpDayViewOpener(FDayView).dvLineMatrix[Col, I + StartLine].Rec := LineRect;
 
@@ -492,6 +494,8 @@ begin
 //        if ActiveRow = -1 then
 //         ActiveRow := TopLine;
 
+      if i = 0 then
+        dec(LineRect.Top);
       if not DisplayOnly then begin
         if FDayView.Focused and (FDayView.ActiveCol = col) and
            (FDayView.ActiveRow = StartLine + I)
@@ -639,10 +643,10 @@ begin
     if FDayView.DrawingStyle = dsFlat then begin
        // bottom
       RenderCanvas.Pen.Color := BevelShadow;
-      TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right, R.Bottom);
-      TPSLineTo(RenderCanvas, Angle, RenderIn, R.Left - 1, R.Bottom);
+      TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right, R.Bottom - 1);
+      TPSLineTo(RenderCanvas, Angle, RenderIn, R.Left - 2, R.Bottom - 1);
       // right side
-      TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right, R.Bottom);
+      TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right, R.Bottom - 1);
       RenderCanvas.Pen.Color := RealHeadAttrColor;
       TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right, R.Bottom - 4);
       RenderCanvas.Pen.Color := BevelShadow;
@@ -652,6 +656,7 @@ begin
     end
     else
     if FDayView.DrawingStyle = ds3d then begin
+      dec(R.Bottom);
       R := TPSRotateRectangle(Angle, RenderIn, R);
       DrawBevelRect(RenderCanvas, R, BevelHighlight, BevelDarkShadow);
     end;
@@ -1067,43 +1072,47 @@ begin
 end;
 
 procedure TVpDayViewPainter.DrawNavBtns;
+var
+  w: Integer;
 begin
   { size and place the Today button first. }
   with TVpDayViewOpener(FDayView) do begin
+    { Calculate width of buttons }
     dvTodayBtn.Height := trunc(RealColHeadHeight div 2);
+    dvTodayBtn.Width := RealRowHeadWidth;
+    dvWeekDownBtn.Width := RealRowHeadWidth div 4 + 2;
+    dvWeekUpBtn.Width := dvWeekDownBtn.Width;
+    dvDaydownBtn.Width := dvWeekdownBtn.Width - 4;
+    dvDayUpBtn.Width := dvDayDownBtn.Width;
+
+    w := dvWeekDownBtn.Width + dvWeekUpBtn.Width + dvDaydownBtn.Width + dvDayUpBtn.Width;
     if DrawingStyle = dsFlat then begin
-      dvTodayBtn.Left := 1;
+      dvTodayBtn.Left := 1 + (RealRowHeadWidth - w) div 2;
       dvTodayBtn.Top := 1;
-      dvTodayBtn.Width := RealRowHeadWidth + 1;
     end else begin
-      dvTodayBtn.Left := 2;
+      dvTodayBtn.Left := 2 + (RealRowHeadWidth - w) div 2;
       dvTodayBtn.Top := 2;
-      dvTodayBtn.Width := RealRowHeadWidth;
     end;
 
     { size and place the WeekDown button }
     dvWeekDownBtn.Height := dvTodayBtn.Height;
-    dvWeekDownBtn.Width := trunc(RealRowHeadWidth * 0.25) + 2;
     dvWeekDownBtn.Left := dvTodayBtn.Left;
     dvWeekDownBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
 
     { size and place the DayDown button }
     dvDayDownBtn.Height := dvTodayBtn.Height;
-    dvDayDownBtn.Width := dvWeekDownBtn.Width - 4;
     dvDayDownBtn.Left := dvWeekDownBtn.Left + dvWeekDownBtn.Width;
-    dvDayDownBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
+    dvDayDownBtn.Top := dvWeekDownBtn.Top;
 
     { size and place the DayUp button }
     dvDayUpBtn.Height := dvTodayBtn.Height;
-    dvDayUpBtn.Width := dvWeekDownBtn.Width - 4;
     dvDayUpBtn.Left := dvDayDownBtn.Left + dvDayDownBtn.Width;
-    dvDayUpBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
+    dvDayUpBtn.Top := dvWeekDownBtn.Top;
 
     { size and place the WeekUp button }
     dvWeekUpBtn.Height := dvTodayBtn.Height;
-    dvWeekUpBtn.Width := dvTodayBtn.Width - dvWeekDownBtn.Width - dvDayDownBtn.Width - dvDayUpBtn.Width;
     dvWeekUpBtn.Left := dvDayUpBtn.Left + dvDayUpBtn.Width;
-    dvWeekUpBtn.Top := dvTodayBtn.Top + dvTodayBtn.Height;
+    dvWeekUpBtn.Top := dvWeekDownBtn.Top;
   end;
 end;
 
@@ -1115,14 +1124,14 @@ begin
     RealLeft + 1,
     RealTop,
     RealLeft + 3 + RealRowHeadWidth,
-    RealTop + RealColHeadHeight + 2
+    RealTop + RealColHeadHeight  // + 1
   );
 
   RenderCanvas.Brush.Color := RealHeadAttrColor;
   TPSFillRect(RenderCanvas, Angle, RenderIn, R);
 
   if FDayView.DrawingStyle = ds3d then begin
-    R := Rect(R.Left + 1, R.Top + 2, R.Right - 2, R.Bottom - 2);
+    R := Rect(R.Left + 1, R.Top + 2, R.Right - 2, R.Bottom - 1);
     DrawBevelRect(
       RenderCanvas,
       TPSRotateRectangle(Angle, RenderIn, R),
@@ -1132,8 +1141,8 @@ begin
   end else
   begin
     RenderCanvas.Pen.Color := BevelShadow;
-    TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 6, R.Bottom - 2);
-    TPSLineTo(RenderCanvas, Angle, RenderIn, R.Left + 3, R.Bottom - 2);
+    TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 6, R.Bottom- 1);
+    TPSLineTo(RenderCanvas, Angle, RenderIn, R.Left + 3, R.Bottom - 1);
     TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 2, R.Top + 6);
     TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right - 2, R.Bottom - 5);
     {
@@ -1227,10 +1236,12 @@ begin
 
   SaveFont := TFont.Create;
   try
+    //InflateRect(R, 1,1);
     RenderCanvas.Pen.Style := psClear;
     RenderCanvas.Brush.Color := RealRowHeadAttrColor;
     TPSFillRect(RenderCanvas, Angle, RenderIn, R);
     RenderCanvas.Pen.Style := psSolid;
+    //InflateRect(R, -1,-1);
 
     RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
     RealVisibleLines := TVpDayViewOpener(FDayView).dvCalcVisibleLines(
@@ -1313,7 +1324,7 @@ begin
     if FDayView.DrawingStyle = dsFlat then begin
       RenderCanvas.Pen.Color := BevelShadow;
       TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Top);
-      TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Bottom - 2);
+      TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Bottom - 1);
       {
       DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn,
         Rect(R.Left - 1, R.Top, R.Right - 1, R.Bottom - 2)),
@@ -1325,7 +1336,7 @@ begin
     else
     if FDayView.DrawingStyle = ds3d then begin
       DrawBevelRect(RenderCanvas,
-        TPSRotateRectangle(Angle, RenderIn, Rect(R.Left + 1, R.Top, R.Right - 1, R.Bottom - 3)),
+        TPSRotateRectangle(Angle, RenderIn, Rect(R.Left + 1, R.Top, R.Right - 1, R.Bottom - 1)),
         BevelHighlight,
         BevelDarkShadow
       );
@@ -1342,9 +1353,9 @@ procedure TVpDayViewPainter.CalcRowHeadRect(out ARect: TRect);
 begin
   ARect := Rect(
     RealLeft + 1,
-    ADEventsRect.Bottom + 1,
+    ADEventsRect.Bottom, // + 1,
     RealLeft + 2 + RealRowHeadWidth,
-    RealBottom
+    RealBottom //- 1
   );
   if FDayView.DrawingStyle = dsFlat then
     inc(ARect.Left);
