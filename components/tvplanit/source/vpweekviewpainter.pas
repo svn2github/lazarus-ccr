@@ -35,7 +35,6 @@ type
     procedure Clear;
     function DrawAllDayEvents(ADate: TDateTime; DayRect: TRect; var EAIndex: Integer): Boolean;
     procedure DrawBorders;
-    procedure DrawDotDotDot(ARect: TRect; AColor: TColor);
     procedure DrawFocusRect(ADayIndex: Integer; DayRect: TRect);
     procedure DrawDay(ADayIndex: Integer; var DayRect: TRect; var EAIndex: Integer);
     procedure DrawDayHeader(ADayIndex: Integer; var TextRect: TRect);
@@ -333,7 +332,7 @@ begin
         { in the available space }
         if TextRect.Bottom - TextMargin > DayRect.Bottom then begin
           { Draw ". . ." }
-          DrawDotDotDot(RenderCanvas, DayRect, DotDotDotColor);
+          DrawDotDotDot(DayRect, DotDotDotColor);
           break;
         end;
 

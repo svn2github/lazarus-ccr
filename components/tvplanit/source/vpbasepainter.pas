@@ -49,6 +49,7 @@ type
 implementation
 
 uses
+  LCLIntf,
   VpCanvasUtils;
 
 { TBasePainter }
