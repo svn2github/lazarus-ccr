@@ -4,12 +4,13 @@
     <PathDelim Value="\"/>
     <Name Value="laz_visualplanit_sqlite3"/>
     <Type Value="RunAndDesignTime"/>
+    <AddToProjectUsesSection Value="True"/>
     <Author Value="W. Pamler"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <OtherUnitFiles Value="..\source"/>
+        <IncludeFiles Value="..\.."/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
@@ -17,13 +18,13 @@
     <Version Major="1" Release="4"/>
     <Files Count="2">
       <Item1>
-        <Filename Value="..\source\vpsqlite3ds.pas"/>
-        <UnitName Value="VpSQLite3DS"/>
-      </Item1>
-      <Item2>
-        <Filename Value="..\source\vpregsqlite3.pas"/>
+        <Filename Value="vpregsqlite3.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="vpregsqlite3"/>
+      </Item1>
+      <Item2>
+        <Filename Value="vpsqlite3ds.pas"/>
+        <Type Value="Include"/>
       </Item2>
     </Files>
     <RequiredPkgs Count="3">

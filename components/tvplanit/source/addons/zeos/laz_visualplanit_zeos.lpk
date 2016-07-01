@@ -4,13 +4,13 @@
     <PathDelim Value="\"/>
     <Name Value="laz_visualplanit_zeos"/>
     <Type Value="RunAndDesignTime"/>
+    <AddToProjectUsesSection Value="True"/>
     <Author Value="W. Pamler"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <IncludeFiles Value="..\source"/>
-        <OtherUnitFiles Value="..\source"/>
+        <IncludeFiles Value="..\.."/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
@@ -18,13 +18,13 @@
     <Version Major="1" Release="4"/>
     <Files Count="2">
       <Item1>
-        <Filename Value="..\source\vpzeosds.pas"/>
-        <UnitName Value="VpZeosDs"/>
-      </Item1>
-      <Item2>
-        <Filename Value="..\source\vpregzeos.pas"/>
+        <Filename Value="vpregzeos.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="VpRegZEOS"/>
+      </Item1>
+      <Item2>
+        <Filename Value="vpzeosds.pas"/>
+        <Type Value="Include"/>
       </Item2>
     </Files>
     <RequiredPkgs Count="3">
