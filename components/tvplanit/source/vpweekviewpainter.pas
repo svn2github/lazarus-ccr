@@ -35,6 +35,7 @@ type
     procedure Clear;
     function DrawAllDayEvents(ADate: TDateTime; DayRect: TRect; var EAIndex: Integer): Boolean;
     procedure DrawBorders;
+    procedure DrawDotDotDot(ARect: TRect; AColor: TColor);
     procedure DrawFocusRect(ADayIndex: Integer; DayRect: TRect);
     procedure DrawDay(ADayIndex: Integer; var DayRect: TRect; var EAIndex: Integer);
     procedure DrawDayHeader(ADayIndex: Integer; var TextRect: TRect);
@@ -276,14 +277,18 @@ begin
   rowHeight := TVpWeekViewOpener(FWeekView).wvRowHeight;
   headerHeight := TVpWeekViewOpener(FWeekView).wvHeaderHeight;
 
-  { draw day head}
-  RenderCanvas.Font.Assign(FWeekView.DayHeadAttributes.Font);
-  RenderCanvas.Brush.Color := RealDayHeadAttrColor;
+  // Get header rectangle
   TextRect := DayRect;
   TextRect.Bottom := DayRect.Top + dayHeadHeight;
-  TPSFillRect(RenderCanvas, Angle, RenderIn, TextRect);
+
+  { draw day header }
+  tmpRect := TextRect;
+  inc(tmpRect.Right);
+  RenderCanvas.Font.Assign(FWeekView.DayHeadAttributes.Font);
+  RenderCanvas.Brush.Color := RealDayHeadAttrColor;
+  TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
   if FWeekView.DayHeadAttributes.Bordered then
-    TPSRectangle(RenderCanvas, Angle, RenderIn, TextRect);
+    TPSRectangle(RenderCanvas, Angle, RenderIn, tmpRect);
 
   { Fix Header String }
   DrawDayHeader(ADayIndex, TextRect);
@@ -327,15 +332,8 @@ begin
         { dot dot dot to indicate there are more events than can be drawn }
         { in the available space }
         if TextRect.Bottom - TextMargin > DayRect.Bottom then begin
-          RenderCanvas.Brush.Color := DotDotDotColor;
-          { draw dot dot dot }
-          tmpRect := Rect(DayRect.Right, DayRect.Bottom, DayRect.Right + 3, DayRect.Bottom + 3);
-          OffsetRect(tmpRect, -20, -7);
-          TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
-          OffsetRect(tmpRect, 7, 0);
-          TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
-          OffsetRect(tmpRect, 7, 0);
-          TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
+          { Draw ". . ." }
+          DrawDotDotDot(RenderCanvas, DayRect, DotDotDotColor);
           break;
         end;
 

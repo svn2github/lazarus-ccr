@@ -34,6 +34,7 @@ type
     SaveBrushColor: TColor;
     SavePenStyle: TPenStyle;
     SavePenColor: TColor;
+    procedure DrawDotDotDot(ARect: TRect; AColor: TColor);
     procedure InitPenBrush; virtual;
     procedure SavePenBrush; virtual;
     procedure RestorePenBrush; virtual;
@@ -55,6 +56,21 @@ uses
 constructor TVpBasePainter.Create(ARenderCanvas: TCanvas);
 begin
   RenderCanvas := ARenderCanvas;
+end;
+
+procedure TVpBasePainter.DrawDotDotDot(ARect: TRect; AColor: TColor);
+var
+  R: TRect;
+begin
+  RenderCanvas.Brush.Color := AColor;
+  { draw dot dot dot }
+  R := Rect(ARect.Right, ARect.Bottom, ARect.Right + 3, ARect.Bottom + 3);
+  OffsetRect(R, -20, -7);
+  TPSFillRect(RenderCanvas, Angle, RenderIn, R);
+  OffsetRect(R, 7, 0);
+  TPSFillRect(RenderCanvas, Angle, RenderIn, R);
+  OffsetRect(R, 7, 0);
+  TPSFillRect(RenderCanvas, Angle, RenderIn, R);
 end;
 
 procedure TVpBasePainter.InitPenBrush;
