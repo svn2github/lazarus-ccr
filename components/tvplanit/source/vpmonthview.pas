@@ -349,9 +349,9 @@ begin
   mvVisibleEvents := 0;                                                  
 
   { set up fonts and colors }
-  FDayHeadAttributes.Font.Name := 'Tahoma';
-  FDayHeadAttributes.Font.Size := 10;
-  FDayHeadAttributes.Font.Style := [];
+//  FDayHeadAttributes.Font.Name := 'Tahoma';   wp: better use defaults
+//  FDayHeadAttributes.Font.Size := 10;
+//  FDayHeadAttributes.Font.Style := [];
   FDayHeadAttributes.Color := clBtnFace;
 
   { Assign default font to DayNumberFont and EventFont }
