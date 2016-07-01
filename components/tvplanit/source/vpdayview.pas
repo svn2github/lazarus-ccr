@@ -2045,7 +2045,7 @@ begin
     cbSize := SizeOf(SI);
     fMask := SIF_RANGE or SIF_PAGE or SIF_POS;
     nMin := 0;
-    nMax := FLineCount;
+    nMax := FLineCount + 1;
     if FVisibleLines >= FLineCount then
       nPage := nMax
     else
