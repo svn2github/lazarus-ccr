@@ -46,6 +46,7 @@ type
 implementation
 
 uses
+  LazUtf8,
   VpCanvasUtils, VpMisc;
 
 type

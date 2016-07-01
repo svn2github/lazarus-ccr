@@ -119,7 +119,7 @@ type
 implementation
 
 uses
-  StrUtils, Math,
+  StrUtils, Math, LazUtf8,
   VpCanvasUtils, VpMisc;
 
 const

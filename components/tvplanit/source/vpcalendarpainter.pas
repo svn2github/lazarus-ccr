@@ -52,7 +52,7 @@ type
 implementation
 
 uses
-  LCLProc,
+  LCLProc, LazUtf8,
   VpCanvasUtils;
 
 type

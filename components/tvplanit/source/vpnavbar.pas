@@ -1063,7 +1063,8 @@ end;
 
 destructor TVpCustomNavBar.Destroy;
 begin
-  Images := nil; {unregister any image list notification}
+  FImages.OnChange := nil;
+//  Images := nil; {unregister any image list notification}
   nabChanging := True;
 
   nabEdit.Free;
@@ -2036,10 +2037,9 @@ procedure TVpCustomNavBar.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited Notification(AComponent, Operation);
-
   if Operation = opRemove then begin
     if AComponent = FImages then
-      Images := nil;
+      FImages := nil;
   end;
 end;
 {=====}
