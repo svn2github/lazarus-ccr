@@ -427,6 +427,8 @@ begin
   if StartLine < 0 then
     StartLine := FDayView.TopLine;
 
+  dec(R.Top);
+
   { Set GutterRect size }
   GutterRect.Left := R.Left;
   GutterRect.Top := R.Top;
@@ -443,7 +445,7 @@ begin
   TPSMoveTo(RenderCanvas, Angle, RenderIn, GutterRect.Right, GutterRect.Top);
   TPSLineTo(RenderCanvas, Angle, RenderIn, GutterRect.Right, GutterRect.Bottom);
 
-  for I := 0 to FDayView.LineCount - 1 do begin  // wp: was withoug -1
+  for I := 0 to FDayView.LineCount - 1 do begin  // wp: was without -1
     with TVpDayViewOpener(FDayView) do begin
       dvLineMatrix[Col, I].Rec.Left := -1;
       dvLineMatrix[Col, I].Rec.Top := -1;
@@ -575,15 +577,20 @@ var
   StrHt: Integer;
   TextRect: TRect;
   X, Y: Integer;
+  tmpRect: TRect;
 begin
   SaveFont := TFont.Create;
   try
     SaveFont.Assign(RenderCanvas.Font);
+
     { Draw Column Header }
     RenderCanvas.Font.Assign(FDayView.HeadAttributes.Font);
     RenderCanvas.Brush.Color := RealHeadAttrColor;
     RenderCanvas.Pen.Style := psClear;
-    TPSRectangle(RenderCanvas, Angle, RenderIn, R);
+    tmpRect := R;
+    InflateRect(tmpRect, 1, 1);
+    inc(tmpRect.Left);
+    TPSRectangle(RenderCanvas, Angle, RenderIn, tmpRect);
     RenderCanvas.Pen.Style := psSolid;
 
     { Size text rect }
@@ -617,39 +624,36 @@ begin
         Y := TextRect.Top + TextMargin;
         TPSTextOut(RenderCanvas, Angle, RenderIn, X, Y, FDayView.DataStore.Resource.Description);
       end;
-      { center and write the date string }
+      { center the date string }
       X := TextRect.Left + (TextRect.Right - TextRect.Left) div 2 - DateStrLen div 2;
       Y := TextRect.Top + (TextMargin * 2) + StrHt;
-      TPSTextOut(RenderCanvas, Angle, RenderIn, X, Y, DateStr);
     end else begin
-      { center and write the date string }
+      { center the date string }
       Y := TextRect.Top + TextMargin;
       X := TextRect.Left + (TextRect.Right - TextRect.Left) div 2 - DateStrLen div 2;
-      TPSTextOut(RenderCanvas, Angle, RenderIn, X, Y, DateStr);
     end;
+    { Write the date string }
+    TPSTextOut(RenderCanvas, Angle, RenderIn, X, Y, DateStr);
 
     {Draw Column Head Borders }
     if FDayView.DrawingStyle = dsFlat then begin
+       // bottom
       RenderCanvas.Pen.Color := BevelShadow;
-      {bottom}
       TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right, R.Bottom);
       TPSLineTo(RenderCanvas, Angle, RenderIn, R.Left - 1, R.Bottom);
-      {right side}
-      TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right, R.Bottom - 4);
-      TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right, R.Top + 3);
-      RenderCanvas.Pen.Color := BevelHighlight;
-      {left side}
-      TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Left, R.Bottom - 4);
-      TPSLineTo(RenderCanvas, Angle, RenderIn, R.Left, R.Top + 3);
+      // right side
+      TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right, R.Bottom);
+      RenderCanvas.Pen.Color := RealHeadAttrColor;
+      TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right, R.Bottom - 4);
+      RenderCanvas.Pen.Color := BevelShadow;
+      TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right, R.Top + 2);
+      RenderCanvas.Pen.Color := RealHeadAttrColor;
+      TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right, R.Top);
     end
     else
     if FDayView.DrawingStyle = ds3d then begin
-      DrawBevelRect(
-        RenderCanvas,
-        TPSRotateRectangle(Angle, RenderIn, Rect (R.Left, R.Top, R.Right, R.Bottom)),
-        BevelHighlight,
-        BevelDarkShadow
-      );
+      R := TPSRotateRectangle(Angle, RenderIn, R);
+      DrawBevelRect(RenderCanvas, R, BevelHighlight, BevelDarkShadow);
     end;
     RenderCanvas.Font.Assign(SaveFont);
   finally
@@ -1117,28 +1121,26 @@ begin
   RenderCanvas.Brush.Color := RealHeadAttrColor;
   TPSFillRect(RenderCanvas, Angle, RenderIn, R);
 
-  if FDayView.DrawingStyle = ds3d then
+  if FDayView.DrawingStyle = ds3d then begin
+    R := Rect(R.Left + 1, R.Top + 2, R.Right - 2, R.Bottom - 2);
     DrawBevelRect(
       RenderCanvas,
-      TPSRotateRectangle(Angle, RenderIn, Rect(
-        R.Left + 1,
-        R.Top + 2,
-        R.Right - 2,
-        R.Bottom - 2
-      )),
+      TPSRotateRectangle(Angle, RenderIn, R),
       BevelHighlight,
       BevelShadow
     )
-  else begin
+  end else
+  begin
     RenderCanvas.Pen.Color := BevelShadow;
-    TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 2, R.Bottom - 2);
-    TPSLineTo(RenderCanvas, Angle, RenderIn, R.Left, R.Bottom - 2);
+    TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 6, R.Bottom - 2);
+    TPSLineTo(RenderCanvas, Angle, RenderIn, R.Left + 3, R.Bottom - 2);
+    TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 2, R.Top + 6);
+    TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right - 2, R.Bottom - 5);
+    {
     RenderCanvas.Pen.Color := BevelHighlight;
     TPSLineTo(RenderCanvas, Angle, RenderIn, R.Left, R.Top);
     TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right - 2, R.Top);
-    RenderCanvas.Pen.Color := BevelShadow;
-    TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 2, R.Top + 6);
-    TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right - 2, R.Bottom - 5);
+    }
   end;
 end;
 
@@ -1171,18 +1173,10 @@ begin
         DrawMe := False
     end;
     if DrawMe then begin
-      { Draw Column Header }
+      { Calculate Column Header rectangle }
       ColHeadRect := Rect(RPos, RealTop + 2, RPos + DayWidth - 1, RealTop + RealColHeadHeight);
       if (i = RealNumDays - 1) and (ExtraSpace > 0) then
         ColHeadRect.Right := ColHeadRect.Right + ExtraSpace;
-
-      if Assigned(FDayView.OwnerDrawColHeader) then begin
-        Drawn := false;
-        FDayView.OwnerDrawColHeader(self, RenderCanvas, ColHeadRect, Drawn);
-        if not Drawn then
-          DrawColHeader(ColHeadRect, RenderDate + i, RealDay);
-      end else
-        DrawColHeader(ColHeadRect, RenderDate + i, RealDay);
 
       { Calculate the column rect for this day }
       RenderCanvas.Font.Assign(FDayView.Font);
@@ -1204,6 +1198,15 @@ begin
 
       { Draw the regular events }
       DrawEvents(RenderDate + i, RealDay);
+
+      { Draw the column header }
+      if Assigned(FDayView.OwnerDrawColHeader) then begin
+        Drawn := false;
+        FDayView.OwnerDrawColHeader(self, RenderCanvas, ColHeadRect, Drawn);
+        if not Drawn then
+          DrawColHeader(ColHeadRect, RenderDate + i, RealDay);
+      end else
+        DrawColHeader(ColHeadRect, RenderDate + i, RealDay);
 
       Inc(RPos, DayWidth);
       Inc(RealDay);
@@ -1308,15 +1311,21 @@ begin
 
     { Draw Row Header Borders }
     if FDayView.DrawingStyle = dsFlat then begin
-      DrawBevelRect(RenderCanvas, TPSRotateRectangle (Angle, RenderIn,
+      RenderCanvas.Pen.Color := BevelShadow;
+      TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Top);
+      TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Bottom - 2);
+      {
+      DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn,
         Rect(R.Left - 1, R.Top, R.Right - 1, R.Bottom - 2)),
-        BevelHighlight,
-        BevelShadow
+        clRed, //BevelHighlight,
+        clBlue //BevelShadow
       );
+      }
     end
-    else if FDayView.DrawingStyle = ds3d then begin
+    else
+    if FDayView.DrawingStyle = ds3d then begin
       DrawBevelRect(RenderCanvas,
-        TPSRotateRectangle (Angle, RenderIn, Rect(R.Left + 1, R.Top, R.Right - 1, R.Bottom - 3)),
+        TPSRotateRectangle(Angle, RenderIn, Rect(R.Left + 1, R.Top, R.Right - 1, R.Bottom - 3)),
         BevelHighlight,
         BevelDarkShadow
       );
@@ -1573,10 +1582,8 @@ begin
     { Draw borders }
     tmpRect := Rect(RealLeft, RealTop, RealRight-1, RealBottom-1);
     if FDayView.DrawingStyle = dsFlat then begin
-      { Draw an outer and inner bevel }
-      DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn, tmpRect), BevelShadow, BevelHighlight);
-      InflateRect(tmpRect, -1, -1);
-      DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn, tmpRect), BevelHighlight, BevelShadow);
+      { Draw an outer and inner bevel - NO: no 3d effects in flat style! }
+      DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn, tmpRect), BevelShadow, BevelShadow);
     end else
     if FDayView.DrawingStyle = ds3d then begin
       { Draw a 3d bevel }
