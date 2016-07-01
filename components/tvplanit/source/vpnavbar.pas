@@ -1063,8 +1063,10 @@ end;
 
 destructor TVpCustomNavBar.Destroy;
 begin
-  FImages.OnChange := nil;
-//  Images := nil; {unregister any image list notification}
+ {$IFDEF DELPHI}    // not sure if this is correct. In Lazarus, at least, next line causes an error in Linux.
+  Images := nil; {unregister any image list notification}
+ {$ENDIF}
+
   nabChanging := True;
 
   nabEdit.Free;
