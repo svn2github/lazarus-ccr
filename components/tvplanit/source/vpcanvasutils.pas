@@ -752,8 +752,7 @@ begin
   case FCanvas.Font.Pitch of
     fpVariable : LF.lfPitchAndFamily := VARIABLE_PITCH or FF_DONTCARE;
     fpFixed    : LF.lfPitchAndFamily := FIXED_PITCH or FF_DONTCARE;
-  else
-    LF.lfPitchAndFamily := DEFAULT_PITCH;
+    else         LF.lfPitchAndFamily := DEFAULT_PITCH;
   end;
 
   // Create new font to use

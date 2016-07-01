@@ -208,7 +208,11 @@ var
   I: Integer;
   S: string;
   DrawRect: TRect;
+  fontsize: Integer;
 begin
+  {Store the font size}
+  fontsize := RenderCanvas.Font.Size;
+
   {draw the day name column labels}
   RenderCanvas.Font.Color := DayNameColor;
   I := 0;
@@ -236,16 +240,13 @@ begin
     S := SysToUTF8(S);
    {$ENDIF}
 
+    {restore the font size - this is not needed normally, but may solve the
+     issue with growing fonts along this row in MacOSX }
+    RenderCanvas.Font.Size := fontsize;
+
     {draw the day name above each column}
     DrawRect := TVpCalendarOpener(FCalendar).clRowCol[1, I];
     OffsetRect(DrawRect, RealLeft, Realtop);
-    {
-    DrawRect := Rect(
-      clRowCol[1, I].Left + RealLeft,
-      clRowCol[1, I].Top + RealTop,
-      clRowCol[1, I].Right +  RealLeft,
-      clRowCol[1, I].Bottom + RealTop);
-    }
     TPSCenteredTextOut(RenderCanvas, Angle, RenderIn, DrawRect, S);
     Inc(I);
     if DOW < High(DOW) then
