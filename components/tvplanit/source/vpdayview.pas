@@ -1416,7 +1416,9 @@ procedure TVpDayView.SetTopLine(Value: Integer);
 begin
   if Value <> FTopLine then begin
     if Value + VisibleLines >= pred(LineCount) then begin
-      FTopLine := pred(LineCount) - VisibleLines + 2;
+//      FTopLine := pred(LineCount) - VisibleLines + 2;    // why +2?
+      FTopLine := pred(LineCount) - VisibleLines;
+      if FTopLine < 0 then FTopLine := 0;
       { prevent the control from hanging at the bottom }
       if (Value < FTopLine) and (Value > 0) then
         FTopLine := Value;
@@ -1488,8 +1490,12 @@ end;
 procedure TVpDayView.SetGranularity(Value: TVpGranularity);
 begin
   FGranularity := Value;
-  SetTimeIntervals (FGranularity);
+  SetTimeIntervals(FGranularity);
   FTopLine := HourToLine(FTopHour, FGranularity);
+  if dvRowHeight <> 0 then
+    dvCalcVisibleLines(Height, dvColHeadHeight, dvRowHeight, 1, FTopLine, -1);
+  if (FGranularity = gr60Min) and (FVisibleLines = LineCount) then
+    FTopLine := 0;
   Invalidate;
 end;
 {=====}
@@ -2050,7 +2056,7 @@ begin
       nPos := FTopLine;
     nTrackPos := nPos;
   end;
-  SetScrollInfo (Handle, SB_VERT, SI, True);
+  SetScrollInfo(Handle, SB_VERT, SI, True);
 end;
 {=====}
 

@@ -1531,11 +1531,17 @@ begin
 
   if StartLine < 0 then
     StartLine := FDayView.TopLine;
-
+   {
   if DisplayOnly then
     ScrollBarOffset := 2
   else
     ScrollBarOffset := 14;
+
+  }
+
+  if FDayView.VisibleLines < FDayView.LineCount then
+    ScrollbarOffset := 14 else
+    ScrollbarOffset := 0;
 
   Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
   try

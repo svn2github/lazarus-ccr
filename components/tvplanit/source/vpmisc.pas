@@ -445,72 +445,29 @@ end;
 function HourToLine(const Value: TVpHours; const Granularity: TVpGranularity): Integer;
 begin
   Result := Ord(Value) * 60 div GranularityMinutes[Granularity];
-  (*
-  case Granularity of
-    gr60Min : Result := Ord (Value);
-    gr30Min : Result := Ord (Value) * 2;
-    gr20Min : Result := Ord (Value) * 3;
-    gr15Min : Result := Ord (Value) * 4;
-    gr10Min : Result := Ord (Value) * 6;
-    gr06Min : Result := Ord (Value) * 10;
-    gr05Min : Result := Ord (Value) * 12;
-    else
-      Result := Ord (Value) * 2; { Default to 30 minutes }
-  end;
-  *)
 end;
 {=====}
 
 function GetStartLine(StartTime: TDateTime; Granularity: TVpGranularity): Integer;
 var
-  LineDuration: Double; { the percentage of a day covered by each line }
+  LineDuration: Double;    // percentage of a day covered by each line
   Time: Double;
 begin
   { remove the date part, and add one minute to the time }
-//  Time := StartTime - trunc(StartTime) + (1 / MinutesInDay);
   Time := frac(StartTime) + 1 / MinutesInDay;
   LineDuration := GranularityMinutes[Granularity] / MinutesInDay;
-    (*
-  case Granularity of
-    gr60Min : LineDuration := 60 / MinutesInDay;
-    gr30Min : LineDuration := 30 / MinutesInDay;
-    gr20Min : LineDuration := 20 / MinutesInDay;
-    gr15Min : LineDuration := 15 / MinutesInDay;
-    gr10Min : LineDuration := 10 / MinutesInDay;
-    gr06Min : LineDuration :=  6 / MinutesInDay;
-    gr05Min : LineDuration :=  5 / MinutesInDay;
-  else
-    LineDuration := 30 / MinutesInDay;
-  end;
-  *)
-
   result := trunc(Time / LineDuration);
 end;
 {=====}
 
 function GetEndLine(EndTime: TDateTime; Granularity: TVpGranularity): Integer;
 var
-  LineDuration: Double; { the percentage of a day covered by each line }
+  LineDuration: Double;    // percentage of a day covered by each line
   Time: Double;
 begin
   { remove the date part, and subtract one minute from the time }
   Time := frac(EndTime) - 1 / MinutesInDay;
-//  Time := EndTime - trunc(EndTime) - (1 / MinutesInDay);
   LineDuration := GranularityMinutes[Granularity] / MinutesInDay;
-  {
-
-  case Granularity of
-    gr60Min : LineDuration := 60 / MinutesInDay;
-    gr30Min : LineDuration := 30 / MinutesInDay;
-    gr20Min : LineDuration := 20 / MinutesInDay;
-    gr15Min : LineDuration := 15 / MinutesInDay;
-    gr10Min : LineDuration := 10 / MinutesInDay;
-    gr06Min : LineDuration :=  6 / MinutesInDay;
-    gr05Min : LineDuration :=  5 / MinutesInDay;
-  else
-    LineDuration := 30 / MinutesInDay;
-  end;
-   }
   result := trunc(Time / LineDuration);
 end;
 {=====}
