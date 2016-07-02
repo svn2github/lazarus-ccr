@@ -13,7 +13,7 @@ type
   private
     FMonthView: TVpMonthView;
     // local parameters of the old TVpMonthView method
-    HeadRect: TRect;
+//    HeadRect: TRect;
     DisplayDate: TDateTime;
     RealColor: TColor;
     BevelHighlight: TColor;
@@ -699,49 +699,45 @@ end;
 
 procedure TVpMonthViewPainter.DrawHeader;
 var
+  HeadRect: TRect;
   HeadTextRect: TRect;
   HeadStr: string;
   HeadStrLen : Integer;
   dayHeadHeight: Integer;
+  R: TRect;
 begin
   RenderCanvas.Brush.Color := DayHeadAttrColor;
 
   dayHeadHeight := TVpMonthViewOpener(FMonthView).mvDayHeadHeight;
 
+  HeadRect := Rect(RealLeft + 1, RealTop + 1, RealRight - 1, RealTop + dayHeadHeight);
+
   { draw the header cell and borders }
   if FMonthView.DrawingStyle = dsFlat then begin
     { draw an outer and inner bevel }
+    {
     HeadRect.Left := RealLeft + 1;
     HeadRect.Top := RealTop + 1;
     HeadRect.Right := RealRight - 1;
     HeadRect.Bottom := RealTop + dayHeadHeight;
+    }
     TPSFillRect(RenderCanvas, Angle, RenderIn, HeadRect);
-    DrawBevelRect(
-      RenderCanvas,
-      TPSRotateRectangle(Angle, RenderIn, HeadRect),
-      BevelHighlight,
-      BevelShadow
-    );
+    R := TPSRotateRectangle(Angle, RenderIn, HeadRect);
+    DrawBevelRect(RenderCanvas, R, BevelShadow, BevelShadow);
   end else
   if FMonthView.DrawingStyle = ds3d then begin
     { draw a 3d bevel }
-    HeadRect.Left := RealLeft + 2;
-    HeadRect.Top := RealTop + 2;
-    HeadRect.Right := RealRight - 3;
-    HeadRect.Bottom := RealTop + dayHeadHeight;
+    InflateRect(HeadRect, -1, -1);
+    HeadRect.Bottom := HeadRect.Top + dayHeadHeight;
+    {
+    AHeadRect.Left := RealLeft + 2;
+    AHeadRect.Top := RealTop + 2;
+    AHeadRect.Right := RealRight - 3;
+    AHeadRect.Bottom := RealTop + dayHeadHeight;
+    }
     TPSFillRect(RenderCanvas, Angle, RenderIn, HeadRect);
-    DrawBevelRect(
-      RenderCanvas,
-      TPSRotateRectangle(Angle, RenderIn, HeadRect),
-      BevelHighlight,
-      BevelDarkShadow
-    );
-  end
-  else begin
-    HeadRect.Left := RealLeft + 1;
-    HeadRect.Top := RealTop + 1;
-    HeadRect.Right := RealRight - 1;
-    HeadRect.Bottom := RealTop + dayHeadHeight;
+    R := TPSRotateRectangle(Angle, RenderIn, HeadRect);
+    DrawBevelRect(RenderCanvas, R, BevelHighlight, BevelDarkShadow);
   end;
 
   { Acquire startdate and end date }
@@ -751,7 +747,7 @@ begin
   {$ENDIF}
 
   { draw the text }
-  if DisplayOnly and (RenderCanvas.TextWidth (HeadStr) >= RealWidth) then
+  if DisplayOnly and (RenderCanvas.TextWidth(HeadStr) >= RealWidth) then
     HeadTextRect.TopLeft:= Point(
       RealLeft + TextMargin * 2,
       HeadRect.Top
@@ -759,7 +755,7 @@ begin
   else
   if DisplayOnly then
     HeadTextRect.TopLeft := Point(
-      RealLeft + (RealWidth - RenderCanvas.TextWidth (HeadStr)) div 2,
+      RealLeft + (RealWidth - RenderCanvas.TextWidth(HeadStr)) div 2,
       HeadRect.Top
     )
   else

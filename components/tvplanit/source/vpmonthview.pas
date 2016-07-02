@@ -278,7 +278,6 @@ begin
   FMonthView := AOwner;
   FFont := TFont.Create;
   FFont.Assign(FMonthView.Font);
-  FFont.Size := 8;
   FColor := clSilver;
 end;
 {=====}

@@ -721,7 +721,6 @@ var
   OldFont: TFont;
   RealPoint: TPoint;
   OldBrushStyle: TBrushStyle;
-//  savedFontHeight: Integer;
 begin
   if not Assigned(FCanvas) then
     raise EVpCanvasError.Create(RSNoCanvas);
@@ -756,13 +755,12 @@ begin
     else         LF.lfPitchAndFamily := DEFAULT_PITCH;
   end;
 
-  // Create new font to use
-  OldFont := FCanvas.Font;
+  // Store currently used font
   OldFont := TFont.Create;
   try
     OldFont.Assign(FCanvas.Font);
-//    savedFontHeight := FCanvas.Font.Height;
-    FCanvas.Font.Handle:= CreateFontIndirect(LF);
+    // Create new font to use.
+    FCanvas.Font.Handle := CreateFontIndirect(LF);
 
     // Output the text
     if Rotate then
@@ -777,9 +775,8 @@ begin
       FCanvas.Brush.Style := OldBrushStyle;
     end;
   finally
+    // Restore previously used font.
     FCanvas.Font.Assign(OldFont);
-//    FCanvas.Font := OldFont;
-//    FCanvas.Font.Height := savedFontHeight;
   end;
 end;
 

@@ -58,6 +58,7 @@ object MainForm: TMainForm
             KBNavigation = True
             DateLabelFormat = 'mmmm yyyy'
             DayHeadAttributes.Color = clBtnFace
+            DayHeadAttributes.Font.Height = -13
             DayNameStyle = dsShort
             DrawingStyle = dsFlat
             EventDayStyle = [fsItalic]
@@ -244,7 +245,6 @@ object MainForm: TMainForm
           DayHeadAttributes.Color = clBtnFace
           DayHeadAttributes.DateFormat = 'dddd mmmm, dd'
           DayHeadAttributes.Font.Height = -13
-          DayHeadAttributes.Font.Name = 'Tahoma'
           DayHeadAttributes.Bordered = True
           DrawingStyle = dsFlat
           HeadAttributes.Color = clBtnFace

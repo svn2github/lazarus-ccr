@@ -8,7 +8,8 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   StdCtrls, ComCtrls, LCLTranslator, Menus,
   VpBaseDS, VpDayView, VpWeekView, VpTaskList, VpAbout,
-  VpContactGrid, VpMonthView, VpResEditDlg, VpContactButtons, VpBufDS, VpNavBar;
+  VpContactGrid, VpMonthView, VpResEditDlg, VpContactButtons, VpBufDS, VpNavBar,
+  VpData;
 
 type
 
@@ -125,8 +126,8 @@ uses
  {$IFDEF WINDOWS}
   Windows,
  {$ENDIF}
-  LResources, LazUTF8, LazFileUtils, StrUtils, Translations, IniFiles, Math,
-  VpMisc, VpBase, VpData;
+  LResources, LazFileUtils, LazUTF8, StrUtils, Translations, IniFiles, Math,
+  VpMisc, VpBase;
 
 const
   LANGUAGE_DIR = '..\..\languages\';
