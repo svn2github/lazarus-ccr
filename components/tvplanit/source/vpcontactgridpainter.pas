@@ -109,13 +109,11 @@ begin
   dec(R.Bottom, 1);
   case FContactGrid.DrawingStyle of
     dsFlat:
-      begin  { draw an outer and inner bevel }
-        DrawBevelRect(RenderCanvas, R, BevelShadow, BevelHighlight);
-        InflateRect(R, -1, -1);
-        DrawBevelRect(RenderCanvas, R, BevelHighlight, BevelShadow);
+      begin  { Draw a simple border rectangle }
+        DrawBevelRect(RenderCanvas, R, BevelShadow, BevelShadow);
       end;
     ds3d:
-      begin  { draw a 3d bevel }
+      begin  { Draw a 3d bevel }
         DrawBevelRect(RenderCanvas, R, BevelShadow, BevelHighlight);
         InflateRect(R, -1, -1);
         drawBevelRect(RenderCanvas, R, BevelDarkShadow, BevelFace);
