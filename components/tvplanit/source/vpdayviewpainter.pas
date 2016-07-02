@@ -447,7 +447,8 @@ begin
   TPSMoveTo(RenderCanvas, Angle, RenderIn, GutterRect.Right, GutterRect.Top);
   TPSLineTo(RenderCanvas, Angle, RenderIn, GutterRect.Right, GutterRect.Bottom);
 
-  for I := 0 to FDayView.LineCount - 1 do begin  // wp: was without -1
+//  for I := 0 to FDayView.LineCount - 1 do begin  // wp: was without -1
+  for I := 0 to FDayView.LineCount do begin
     with TVpDayViewOpener(FDayView) do begin
       dvLineMatrix[Col, I].Rec.Left := -1;
       dvLineMatrix[Col, I].Rec.Top := -1;
@@ -468,7 +469,7 @@ begin
     RenderCanvas.Pen.Color := FDayView.LineColor;
 
     { Paint the client area }
-    for I := 0 to RealVisibleLines do begin
+    for I := 0 to RealVisibleLines + 1 do begin  // +1 to show the partial line at the bottom
 
       if (I > pred(FDayView.LineCount)) then
         Break;
@@ -723,7 +724,7 @@ begin
   EventELine := GetEndLine(EventETime, FDayView.Granularity);
 
   { If the event doesn't occupy area that is currently visible, then skip it. }
-  if (EventELine < StartLine) or (EventSLine > StartLine + RealVisibleLines) then
+  if (EventELine < StartLine) or (EventSLine > StartLine + RealVisibleLines + 1) then
     Exit;
 
   { Calculate the number of lines this event will cover }
@@ -769,7 +770,7 @@ begin
        (EventETime < TVpDayViewOpener(FDayView).dvLineMatrix[0, EventELine + 1].Time)
     then begin
       { Get the end offset in TDateTime format }
-      EndOffset := TVpDayViewOpener(FDayView).dvLineMatrix[0, EventELine + 1].Time  - EventETime;
+      EndOffset := TVpDayViewOpener(FDayView).dvLineMatrix[0, EventELine + 1].Time - EventETime;
       { determine how many pixels to scooch down before painting the event's color code. }
       EndPixelOffset := trunc(EndOffset / PixelDuration);
     end;
@@ -1261,9 +1262,11 @@ begin
     LineRect := Rect(R.Left, R.Top, R.Right, R.Top + RealRowHeight);
     Hour := Ord(TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine].Hour);
 
-    for I := 0 to RealVisibleLines do begin
+    i := High(TVpDayviewOpener(FDayview).dvLinematrix[0]);
+
+    for I := 0 to RealVisibleLines + 1 do begin    // ok: + 1 needed to see the partial line at the bottom
       { prevent any extraneous drawing below the last hour }
-      if (I + FDayView.TopLine >= FDayView.LineCount) or (Hour > 23) then
+      if (I + FDayView.TopLine > FDayView.LineCount) or (Hour > 23) then
         Break;
 
       case FDayView.TimeFormat of
@@ -1311,8 +1314,13 @@ begin
             HourStr
           );
         end;
-        LastHour := Hour;
-        Hour := Ord(TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine + i + 1].Hour);
+        if StartLine + i + 1 >= High(TVpDayViewOpener(FDayView).dvLineMatrix[0]) then
+          // ">=" avoids seeing a parasitic hour in the last line
+          Hour := 24
+        else begin
+          LastHour := Hour;
+          Hour := Ord(TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine + i + 1].Hour);
+        end;
       end;
 
       TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Right-6, LineRect.Bottom);
@@ -1354,10 +1362,10 @@ end;
 procedure TVpDayViewPainter.CalcRowHeadRect(out ARect: TRect);
 begin
   ARect := Rect(
-    RealLeft, // + 1,
-    ADEventsRect.Bottom, // + 1,
+    RealLeft,
+    ADEventsRect.Bottom,
     RealLeft + 2 + RealRowHeadWidth,
-    RealBottom //- 1
+    RealBottom
   );
   if FDayView.DrawingStyle = dsFlat then
     inc(ARect.Left);
@@ -1380,6 +1388,7 @@ var
   Icons: TVpDVIcons;
   cat: TVpCategoryInfo;
   w, h: Integer;
+  R: TRect;
 begin
   ShowAlarm := False;
   ShowRecurring := False;
@@ -1406,11 +1415,8 @@ begin
       h := cat.Bitmap.Height;
       dvBmpCategory.Width := w;
       dvBmpCategory.Height := h;
-      dvBmpCategory.Canvas.CopyRect(
-        Rect(0, 0, w, h),
-        cat.Bitmap.Canvas,
-        Rect(0, 0, w, h)
-      );
+      R := Rect(0, 0, w, h);
+      dvBmpCategory.Canvas.CopyRect(R, cat.Bitmap.canvas, R);
     end else
     begin
       dvBmpCategory.Width  := 0;
@@ -1579,7 +1585,7 @@ begin
 
     InitializeEventRectangles;
 
-    { Draw the All Day Events }
+    { Draw the all-day events }
     DrawAllDayEvents;
 
     { Draw the area in the top left corner, where the nav buttons go. }
@@ -1701,8 +1707,12 @@ begin
   if AEventRect.Top < VisibleRect.Top then
     AEventRect.Top := VisibleRect.Top;
 
-  if AEventRect.Bottom < VisibleRect.Top then
+  if AEventRect.Bottom = -1 then
+    AEventRect.Bottom := AEventRect.Top + RealRowHeight
+  else
+  if (AEventRect.Bottom < VisibleRect.Top) then
     AEventRect.Bottom := VisibleRect.Bottom;
+
   eventWidth := WidthOf(VisibleRect) div AWidthDivisor;
 
   { Slide the rect over to correspond with the level }
@@ -1711,7 +1721,7 @@ begin
     { added because level 0 events were one pixel too far to the right }
   else
     AEventRect.Left := AEventRect.Left - 1;
-  AEventRect.Right := AEventRect.Left + eventWidth + 1; //- FDayView.GutterWidth + 1;
+  AEventRect.Right := AEventRect.Left + eventWidth + 1;
 end;
 
 { remove the date portion from the start and end times }

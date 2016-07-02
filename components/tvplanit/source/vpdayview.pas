@@ -1204,9 +1204,9 @@ begin
 
   { take into account the number lines that are allowed! }
   vertical := Round(RenderHeight - ColHeadHeight * Scale - 2);
-  Result := trunc (Vertical div RowHeight) + 2;
+  Result := trunc(Vertical div RowHeight) + 1; // - 4; //+2;
   if Result > FLineCount then
-    Result := FLineCOunt;
+    Result := FLineCount;
 
   if (StopLine > 0) and (StopLine > StartLine) then
     if Result > StopLine - StartLine then
@@ -1378,12 +1378,6 @@ begin
     Result := FNumDays;
 end;
 {=====}
-                                    (*
-function TVpDayView.HourToLine(const Value: TVpHours;
-  const UseGran: TVpGranularity): Integer;
-begin
-  Result := Ord(Value) * 60 div GranularityMinutes[UseGran];
-end;                                  *)
 
 procedure TVpDayView.SetDrawingStyle(Value: TVpDrawingStyle);
 begin
@@ -1473,7 +1467,8 @@ begin
 
   SetLength(dvLineMatrix, NumDays);
   for I := 0 to pred(NumDays) do begin
-    SetLength(dvLineMatrix[I], LineCount);    // was +1. Why? Without it, the IDE crashes! - there is an upper loop index of LineCount in DrawCells. After correcting that, the crash is gone.
+    SetLength(dvLineMatrix[I], LineCount + 1);    // was +1. Why? Without it, the IDE crashes! - there is an upper loop index of LineCount in DrawCells. After correcting that, the crash is gone.
+      // wp: the additional line is needed to fully display the last line of the day.
     for J := 0 to pred(LineCount) do begin
       dvLineMatrix[I,J].Hour := TVpHours(J div grPerHour);
       dvLineMatrix[I,J].Minute := (J mod grPerHour) * GranularityMinutes[UseGran];
@@ -2045,7 +2040,7 @@ begin
     cbSize := SizeOf(SI);
     fMask := SIF_RANGE or SIF_PAGE or SIF_POS;
     nMin := 0;
-    nMax := FLineCount + 1;
+    nMax := FLineCount;
     if FVisibleLines >= FLineCount then
       nPage := nMax
     else
