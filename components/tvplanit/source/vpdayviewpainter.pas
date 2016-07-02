@@ -657,6 +657,8 @@ begin
     else
     if FDayView.DrawingStyle = ds3d then begin
       dec(R.Bottom);
+      if Col = FDayView.NumDays - 1 then
+        dec(R.Right, 4);
       R := TPSRotateRectangle(Angle, RenderIn, R);
       DrawBevelRect(RenderCanvas, R, BevelHighlight, BevelDarkShadow);
     end;
@@ -1352,7 +1354,7 @@ end;
 procedure TVpDayViewPainter.CalcRowHeadRect(out ARect: TRect);
 begin
   ARect := Rect(
-    RealLeft + 1,
+    RealLeft, // + 1,
     ADEventsRect.Bottom, // + 1,
     RealLeft + 2 + RealRowHeadWidth,
     RealBottom //- 1
@@ -1709,7 +1711,7 @@ begin
     { added because level 0 events were one pixel too far to the right }
   else
     AEventRect.Left := AEventRect.Left - 1;
-  AEventRect.Right := AEventRect.Left + eventWidth - FDayView.GutterWidth;
+  AEventRect.Right := AEventRect.Left + eventWidth + 1; //- FDayView.GutterWidth + 1;
 end;
 
 { remove the date portion from the start and end times }

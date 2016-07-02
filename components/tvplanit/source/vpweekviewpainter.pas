@@ -13,7 +13,7 @@ type
   private
     FWeekView: TVpWeekView;
     // local parameters of the old TVpWeekView method
-    HeadRect: TRect;
+//    HeadRect: TRect;
     DayRectHeight: Integer;
 //    StrLn: Integer;
     StartDate: TDateTime;
@@ -518,6 +518,7 @@ end;
 
 procedure TVpWeekViewPainter.DrawHeader;
 var
+  HeadRect: TRect;
   HeadTextRect: TRect;
   HeadStr: string;
   HeadStrLen : Integer;
@@ -527,26 +528,16 @@ begin
   RenderCanvas.Font.Assign(TFont(FWeekView.HeadAttributes.Font));
   { draw the header cell and borders }
   if FWeekView.DrawingStyle = dsFlat then begin
-    { draw an outer and inner bevel }
+    { draw simple border rectangle }
     HeadRect := Rect(RealLeft, RealTop, RealRight, RealTop + TVpWeekViewOpener(FWeekView).wvHeaderHeight + 2);
     TPSFillRect(RenderCanvas, Angle, RenderIn, HeadRect);
-    { wp: above lines replace the next ones - no bevel in flat style!
-    HeadRect.Left := RealLeft + 1;
-    HeadRect.Top := RealTop + 1;
-    HeadRect.Right := RealRight - 1;
-    HeadRect.Bottom := HeadRect.Top + wvHeaderHeight;
-    TPSFillRect (RenderCanvas, Angle, RenderIn, HeadRect);
-    DrawBevelRect (RenderCanvas,
-                   TPSRotateRectangle (Angle, RenderIn, HeadRect),
-                   BevelHighlightColor, BevelShadowColor);
-    }
   end else
   if FWeekView.DrawingStyle = ds3d then begin
     { draw a 3d bevel }
     HeadRect.Left := RealLeft + 2;
     HeadRect.Top := RealTop + 2;
     HeadRect.Right := RealRight - 3;
-    HeadRect.Bottom := RealTop + TVpWeekViewOpener(FWeekView).wvHeaderHeight;
+    HeadRect.Bottom := RealTop + TVpWeekViewOpener(FWeekView).wvHeaderHeight + 2;
     TPSFillRect(RenderCanvas, Angle, RenderIn, HeadRect);
     DrawBevelRect(
       RenderCanvas,
@@ -554,12 +545,8 @@ begin
       BevelHighlightColor,
       BevelDarkShadow
     );
-  end else begin
-    HeadRect.Left := RealLeft + 1;
-    HeadRect.Top := RealTop + 1;
-    HeadRect.Right := RealRight - 1;
-    HeadRect.Bottom := HeadRect.Top + TVpWeekViewOpener(FWeekView).wvHeaderHeight;
-  end;
+  end else
+    raise Exception.Create('DrawingStyle not supported.');
 
   { build header caption }
   weekNo := GetWeekOfYear(StartDate);
@@ -568,8 +555,7 @@ begin
   ]);
 
   { draw the text }
-  if DisplayOnly and (RenderCanvas.TextWidth(HeadStr) >= WidthOf(RenderIn))
-  then
+  if DisplayOnly and (RenderCanvas.TextWidth(HeadStr) >= WidthOf(RenderIn)) then
     HeadTextRect.TopLeft:= Point(RealLeft + TextMargin * 2, HeadRect.Top)
   else
   if DisplayOnly then
