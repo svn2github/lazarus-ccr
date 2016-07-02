@@ -228,6 +228,7 @@ begin
     EditForm.VpPrintPreview1.ZoomFactor := ZoomFactor;
     EditForm.cboxZoom.ItemIndex := Integer (ZoomFactor);
     EditForm.VpPrintPreview1.Printer := Printer;
+    EditForm.VpPrintPreview1.ForceUpdate;
     EditForm.VpPrintPreview1.FirstPage;
     EditForm.ShowModal;
     if EditForm.ReturnCode = rtCommit then begin
