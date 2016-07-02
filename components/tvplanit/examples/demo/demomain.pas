@@ -9,7 +9,7 @@ uses
   StdCtrls, ComCtrls, LCLTranslator, Menus,
   VpBaseDS, VpDayView, VpWeekView, VpTaskList, VpAbout,
   VpContactGrid, VpMonthView, VpResEditDlg, VpContactButtons, VpBufDS, VpNavBar,
-  VpData;
+  VpData, Types;
 
 type
 
@@ -24,10 +24,12 @@ type
     CbTimeFormat: TComboBox;
     CbFirstDayOfWeek: TComboBox;
     CbAllowInplaceEditing: TCheckBox;
-    Cb3D: TCheckBox;
     CbAddressBuilder: TComboBox;
+    ComboBox1: TComboBox;
+    CbDrawingStyle: TComboBox;
     Img: TImage;
     ImageList1: TImageList;
+    LblDrawingStyle: TLabel;
     LblAddressBuilder: TLabel;
     LblFirstDayOfWeek: TLabel;
     LblTimeFormat: TLabel;
@@ -76,6 +78,7 @@ type
     procedure Cb3DChange(Sender: TObject);
     procedure CbAddressBuilderChange(Sender: TObject);
     procedure CbAllowInplaceEditingChange(Sender: TObject);
+    procedure CbDrawingStyleChange(Sender: TObject);
     procedure CbFirstDayOfWeekChange(Sender: TObject);
     procedure CbGranularityChange(Sender: TObject);
     procedure CbLanguagesChange(Sender: TObject);
@@ -248,7 +251,7 @@ procedure TMainForm.Cb3DChange(Sender: TObject);
 var
   ds: TVpDrawingStyle;
 begin
- if Cb3D.Checked then ds := ds3d else ds := dsFlat;
+ ds := TVpDrawingStyle(CbDrawingStyle.ItemIndex);
  VpTaskList1.DrawingStyle := ds;
  VpContactGrid1.DrawingStyle := ds;
  VpDayView1.DrawingStyle := ds;
@@ -270,6 +273,18 @@ begin
   VpDayView1.AllowInplaceEditing := CbAllowInplaceEditing.Checked;
   VpWeekView1.AllowInplaceEditing := CbAllowInplaceEditing.Checked;
   VpTaskList1.AllowInplaceEditing := CbAllowInplaceEditing.Checked;
+end;
+
+procedure TMainForm.CbDrawingStyleChange(Sender: TObject);
+var
+  ds: TVpDrawingStyle;
+begin
+ ds := TVpDrawingStyle(CbDrawingStyle.ItemIndex);
+ VpTaskList1.DrawingStyle := ds;
+ VpContactGrid1.DrawingStyle := ds;
+ VpDayView1.DrawingStyle := ds;
+ VpWeekView1.DrawingStyle := ds;
+ VpMonthView1.DrawingStyle := ds;
 end;
 
 procedure TMainForm.CbFirstDayOfWeekChange(Sender: TObject);
@@ -476,8 +491,8 @@ begin
     CbAllowInplaceEditing.Checked := ini.ReadBool('Settings', 'AllowInplaceEditing', CbAllowInplaceEditing.Checked);
     CbAllowInplaceEditingChange(nil);
 
-    Cb3D.Checked := ini.ReadBool('Settings', '3dViewstyle', false);
-    Cb3dChange(nil);
+    CbDrawingStyle.ItemIndex := ini.ReadInteger('Settings', 'DrawingStyle', CbDrawingStyle.ItemIndex);
+    CbDrawingStyleChange(nil);
 
   finally
     ini.Free;
@@ -510,7 +525,7 @@ begin
     ini.WriteInteger('Settings', 'VisibleDays', FVisibleDays);
     ini.WriteBool('Settings', 'AllTasks', VpTaskList1.DisplayOptions.ShowAll);
     ini.WriteBool('Settings', 'AllowInplaceEditing', CbAllowInplaceEditing.Checked);
-    ini.WriteBool('Settings', '3dViewStyle', Cb3D.Checked);
+    ini.WriteInteger('Settings', 'DrawingStyle', CbDrawingStyle.ItemIndex);
   finally
     ini.Free;
   end;
@@ -645,7 +660,8 @@ begin
   CbAddressBuilder.Left := CbLanguages.Left;
   LblAddressBuilder.Left := CbAddressBuilder.Left - 8 - GetLabelWidth(LblAddressBuilder);
   CbAllowInplaceEditing.Left := CbLanguages.Left + CbLanguages.Width + 32;
-  Cb3D.Left := CbAllowInplaceEditing.Left;
+  LblDrawingStyle.Left := CbAllowInplaceEditing.Left;
+  CbDrawingStyle.Left := LblDrawingStyle.Left + GetLabelWidth(LblDrawingStyle) + 8;
   RbHideCompletedTasks.Left := RbAllTasks.Left + RbAllTasks.Width + 48;
 
   // Next settings work correctly only for Windows.

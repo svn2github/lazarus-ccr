@@ -1089,12 +1089,13 @@ begin
     dvDayUpBtn.Width := dvDayDownBtn.Width;
 
     w := dvWeekDownBtn.Width + dvWeekUpBtn.Width + dvDaydownBtn.Width + dvDayUpBtn.Width;
-    if DrawingStyle = dsFlat then begin
-      dvTodayBtn.Left := 1 + (RealRowHeadWidth - w) div 2;
-      dvTodayBtn.Top := 1;
-    end else begin
+    if DrawingStyle = ds3d then begin
       dvTodayBtn.Left := 2 + (RealRowHeadWidth - w) div 2;
       dvTodayBtn.Top := 2;
+    end else
+    begin
+      dvTodayBtn.Left := 1 + (RealRowHeadWidth - w) div 2;
+      dvTodayBtn.Top := 1;
     end;
 
     { size and place the WeekDown button }

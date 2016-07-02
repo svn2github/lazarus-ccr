@@ -526,12 +526,8 @@ var
 begin
   RenderCanvas.Brush.Color := RealHeadAttrColor;
   RenderCanvas.Font.Assign(TFont(FWeekView.HeadAttributes.Font));
+
   { draw the header cell and borders }
-  if FWeekView.DrawingStyle = dsFlat then begin
-    { draw simple border rectangle }
-    HeadRect := Rect(RealLeft, RealTop, RealRight, RealTop + TVpWeekViewOpener(FWeekView).wvHeaderHeight + 2);
-    TPSFillRect(RenderCanvas, Angle, RenderIn, HeadRect);
-  end else
   if FWeekView.DrawingStyle = ds3d then begin
     { draw a 3d bevel }
     HeadRect.Left := RealLeft + 2;
@@ -545,8 +541,12 @@ begin
       BevelHighlightColor,
       BevelDarkShadow
     );
-  end else
-    raise Exception.Create('DrawingStyle not supported.');
+  end else begin
+//  if FWeekView.DrawingStyle = dsFlat then begin
+//    { draw simple border rectangle }
+    HeadRect := Rect(RealLeft, RealTop, RealRight, RealTop + TVpWeekViewOpener(FWeekView).wvHeaderHeight + 2);
+    TPSFillRect(RenderCanvas, Angle, RenderIn, HeadRect);
+  end;
 
   { build header caption }
   weekNo := GetWeekOfYear(StartDate);

@@ -188,10 +188,6 @@ msgstr ""
 msgid "Turbo Power VisualPlanIt Demo"
 msgstr ""
 
-#: tmainform.cb3d.caption
-msgid "3d display mode"
-msgstr ""
-
 #: tmainform.cbaddressbuilder.text
 msgid "(default)"
 msgstr ""
@@ -200,12 +196,24 @@ msgstr ""
 msgid "Allow inplace editing"
 msgstr ""
 
+#: tmainform.cbdrawingstyle.text
+msgid "flat"
+msgstr ""
+
 #: tmainform.cbgranularity.text
 msgid "30 Min"
 msgstr ""
 
+#: tmainform.combobox1.text
+msgid "ComboBox1"
+msgstr ""
+
 #: tmainform.lbladdressbuilder.caption
 msgid "Address builder"
+msgstr ""
+
+#: tmainform.lbldrawingstyle.caption
+msgid "Drawing style:"
 msgstr ""
 
 #: tmainform.lblfirstdayofweek.caption
