@@ -118,6 +118,7 @@ function LineToStartTime(Line: Integer; Granularity: TVpGranularity): TDateTime;
 function GetLineDuration(Granularity: TVpGranularity): Double;
 
 function GetLabelWidth(ALabel: TLabel): Integer;
+function GetRealFontHeight(AFont: TFont): Integer;
 
 function DecodeLineEndings(const AText: String): String;
 function EncodeLineEndings(const AText: String): String;
@@ -560,6 +561,13 @@ begin
   canvas.Control := ALabel;
   Result := canvas.TextWidth(ALabel.Caption);
   canvas.Free;
+end;
+
+function GetRealFontHeight(AFont: TFont): Integer;
+begin
+  if AFont.Size = 0 then
+    Result := GetFontData(AFont.Handle).Height else
+    Result := AFont.Height;
 end;
 
 function SameDate(dt1, dt2: TDateTime): Boolean;

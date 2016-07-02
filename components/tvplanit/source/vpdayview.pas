@@ -477,7 +477,8 @@ type
 implementation
 
 uses
-  SysUtils, Math, Forms, Dialogs, VpEvntEditDlg, VpDayViewPainter;
+  SysUtils, Math, Forms, Dialogs,
+  VpEvntEditDlg, VpDayViewPainter;
 
 (*****************************************************************************)
 { TVpTGInPlaceEdit }
@@ -1342,6 +1343,7 @@ begin
   { font, the standard client font, and a sample character string.     }
   SaveFont := Canvas.Font;
   Canvas.Font.Assign(FRowHeadAttr.FMinuteFont);
+  Canvas.Font.Height := GetRealFontHeight(Canvas.Font);
   Result := Canvas.TextHeight(RSTallShortChars);
   Canvas.Font.Assign(SaveFont);
   Temp := Canvas.TextHeight(RSTallShortChars);

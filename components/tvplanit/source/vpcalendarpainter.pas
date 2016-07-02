@@ -364,7 +364,11 @@ begin
   InitColors;
   SavePenBrush;
   InitPenBrush;
-  TVpCalendarOpener(FCalendar).calRebuildCalArray(RenderDate);
+
+  with TVpCalendarOpener(FCalendar) do begin
+    Font.Height := GetRealFontHeight(Font);
+    calRebuildCalArray(RenderDate);
+  end;
 
   RenderCanvas.Lock;
   try

@@ -1566,6 +1566,14 @@ begin
   try
     SelectClipRgn(RenderCanvas.Handle, Rgn);
 
+    with FDayView do begin
+      AllDayEventAttributes.Font.Height := GetRealFontHeight(AllDayEventAttributes.Font);
+      Font.Height := GetRealFontHeight(Font);
+      HeadAttributes.Font.Height := GetRealFontHeight(HeadAttributes.Font);
+      RowHeadAttributes.HourFont.Height := GetRealFontHeight(RowHeadAttributes.HourFont);
+      RowHeadAttributes.MinuteFont.Height := GetRealFontHeight(RowHeadAttributes.MinuteFont);
+    end;
+
     { Calculate Row Header }
     RealRowHeight := TVpDayViewOpener(FDayView).dvCalcRowHeight(Scale, UseGran);
     RealColHeadHeight := TVpDayViewOpener(FDayView).dvCalcColHeadHeight(Scale);

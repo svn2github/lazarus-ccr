@@ -630,6 +630,14 @@ begin
   SavePenBrush;
   InitPenBrush;
 
+  with FWeekView do begin
+    AllDayEventAttributes.Font.Height := GetRealFontHeight(AllDayEventAttributes.Font);
+    DayHeadAttributes.Font.Height := GetRealFontHeight(DayHeadAttributes.Font);
+    EventFont.Height := GetRealFontHeight(EventFont);
+    Font.Height := GetRealFontHeight(Font);
+    HeadAttributes.Font.Height := GetRealFontHeight(HeadAttributes.Font);
+  end;
+
   Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
   try
     SelectClipRgn(RenderCanvas.Handle, Rgn);

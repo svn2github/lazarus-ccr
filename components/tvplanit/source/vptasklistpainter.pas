@@ -514,6 +514,11 @@ begin
   SavePenBrush;
   InitPenBrush;
 
+  with FTaskList do begin
+    Font.Height := GetRealFontHeight(Font);
+    TaskHeadAttributes.Font.Height := GetRealFontHeight(TaskHeadAttributes.Font);
+  end;
+
   Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
   try
     SelectClipRgn(RenderCanvas.Handle, Rgn);

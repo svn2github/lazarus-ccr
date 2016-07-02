@@ -1775,6 +1775,11 @@ begin
   SavePenBrush;
   InitPenBrush;
 
+  with FContactGrid do begin
+    ContactHeadAttributes.Font.Height := GetRealFontHeight(ContactHeadAttributes.Font);
+    Font.Height := GetRealFontHeight(Font);
+  end;
+
   Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
   try
     SelectClipRgn(RenderCanvas.Handle, Rgn);

@@ -818,6 +818,13 @@ begin
   SavePenBrush;
   InitPenBrush;
 
+  with FMonthView do begin
+    DayHeadAttributes.Font.Height := GetRealFontHeight(DayHeadAttributes.Font);
+    DayNumberFont.Height := GetRealFontHeight(DayNumberFont);
+    EventFont.Height := GetRealFontHeight(EventFont);
+    Font.Height := GetRealFontHeight(Font);
+  end;
+
   Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
   try
     SelectClipRgn(RenderCanvas.Handle, Rgn);
