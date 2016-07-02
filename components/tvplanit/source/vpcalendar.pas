@@ -682,8 +682,7 @@ begin
   clBtnNextYear.Visible := (cdoShowNavBtns in FOptions);
   clBtnPrevYear.Visible := (cdoShowNavBtns in FOptions);
 
-  CalculateSizes (Canvas, ra0, Rect (0, 0, Width, Height), Row, Col,
-                  DisplayOnly);
+  CalculateSizes(Canvas, ra0, Rect (0, 0, Width, Height), Row, Col, DisplayOnly);
 
   {position and size the left and right month buttons}
   {position and size the next and prev year buttons}

@@ -1191,7 +1191,6 @@ begin
 
   TW := FCanvas.TextWidth(AText);
   if TW < ARect.Right - ARect.Left then
-//    ARect.Left := ARect.Left +((ARect.Right - ARect.Left - TW) div 2);
     ARect.Left := (ARect.Left + ARect.Right - TW) div 2;
 
   TPSTextOut(FCanvas, Angle, ViewPort, ARect.Left, ARect.Top, AText);

@@ -40,7 +40,7 @@ type
     procedure DrawFocusBox;
     procedure DrawLine;
     procedure InitColors;
-    procedure SetMeasurements;
+    procedure SetMeasurements; override;
 
   public
     constructor Create(ACalendar: TVpCustomCalendar; ARenderCanvas: TCanvas);
@@ -118,6 +118,17 @@ var
   R: TRect;
   S: string;
 begin
+  // Calculate size of available rectangle
+  with TVpCalendarOpener(FCalendar) do begin
+    R := Rect(clRowCol[0, 1].Left + RealLeft,
+              clRowCol[0, 1].Top + RealTop,
+              clRowCol[0, 1].Right + RealLeft,
+              clRowCol[0, 1].Bottom + RealTop
+    );
+    R.Right := clRowCol[0, 6].Left + RealLeft;
+  end;
+
+  // Calculate string to be displayed
   if FCalendar.DateFormat = dfLong then
     if cdoShowYear in FCalendar.Options then
       S := FormatDateTime('mmmm yyyy', RenderDate)
@@ -129,21 +140,10 @@ begin
     else
       S := FormatDateTime('mmm', RenderDate);
 
-  with TVpCalendarOpener(FCalendar) do begin
-    R := Rect(clRowCol[0, 1].Left + RealLeft,
-              clRowCol[0, 1].Top + RealTop,
-              clRowCol[0, 1].Right + RealLeft,
-              clRowCol[0, 1].Bottom + RealTop
-    );
-    R.Right := clRowCol[0, 6].Left + RealLeft;
-  end;
-
-  {switch to short date format if string won't fit}
+  // switch to short date format if string won't fit
   if FCalendar.DateFormat = dfLong then
-    if RenderCanvas.TextWidth(S) > R.Right-R.Left then
-    begin
+    if RenderCanvas.TextWidth(S) > R.Right - R.Left then
       S := FormatDateTime('mmm yyyy', RenderDate);
-    end;
 
   {$IF FPC_FULLVERSION < 30000}
   S := SysToUTF8(S);
@@ -399,6 +399,7 @@ begin
     if not Assigned(FCalendar.OnDrawItem) then
       if not (cdoHideActive in FCalendar.Options) then
         DrawFocusBox;
+
   finally
     RenderCanvas.Unlock;
   end;
