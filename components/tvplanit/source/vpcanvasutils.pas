@@ -721,7 +721,7 @@ var
   OldFont: TFont;
   RealPoint: TPoint;
   OldBrushStyle: TBrushStyle;
-  savedFontHeight: Integer;
+//  savedFontHeight: Integer;
 begin
   if not Assigned(FCanvas) then
     raise EVpCanvasError.Create(RSNoCanvas);
@@ -758,8 +758,10 @@ begin
 
   // Create new font to use
   OldFont := FCanvas.Font;
+  OldFont := TFont.Create;
   try
-    savedFontHeight := FCanvas.Font.Height;
+    OldFont.Assign(FCanvas.Font);
+//    savedFontHeight := FCanvas.Font.Height;
     FCanvas.Font.Handle:= CreateFontIndirect(LF);
 
     // Output the text
@@ -775,8 +777,9 @@ begin
       FCanvas.Brush.Style := OldBrushStyle;
     end;
   finally
-    FCanvas.Font := OldFont;
-    FCanvas.Font.Height := savedFontHeight;
+    FCanvas.Font.Assign(OldFont);
+//    FCanvas.Font := OldFont;
+//    FCanvas.Font.Height := savedFontHeight;
   end;
 end;
 
