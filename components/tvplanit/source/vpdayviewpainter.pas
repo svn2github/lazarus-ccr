@@ -422,6 +422,7 @@ var
   LineRect: TRect;
   SavedFont: TFont;
   GutterRect: TRect;
+  tmpRect: TRect;
   LineStartTime: Double;
 begin
   if StartLine < 0 then
@@ -439,7 +440,10 @@ begin
 
   { paint gutter area }
   RenderCanvas.Brush.Color := RealColor;
-  TPSFillRect(RenderCanvas, Angle, RenderIn, GutterRect);
+  tmpRect := GutterRect;
+  if FDayView.DrawingStyle = dsNoBorder then
+    inc(tmpRect.Bottom);
+  TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
 
   { draw the line down the right side of the gutter }
   RenderCanvas.Pen.Color := BevelShadow;
@@ -447,8 +451,7 @@ begin
   TPSMoveTo(RenderCanvas, Angle, RenderIn, GutterRect.Right, GutterRect.Top);
   TPSLineTo(RenderCanvas, Angle, RenderIn, GutterRect.Right, GutterRect.Bottom);
 
-//  for I := 0 to FDayView.LineCount - 1 do begin  // wp: was without -1
-  for I := 0 to FDayView.LineCount do begin
+  for I := 0 to FDayView.LineCount do begin     // don't subtract 1 because of partially filled last line
     with TVpDayViewOpener(FDayView) do begin
       dvLineMatrix[Col, I].Rec.Left := -1;
       dvLineMatrix[Col, I].Rec.Top := -1;
@@ -595,6 +598,8 @@ begin
     tmpRect := R;
     InflateRect(tmpRect, 1, 1);
     inc(tmpRect.Left);
+    if FDayView.DrawingStyle = dsNoBorder then
+      InflateRect(tmpRect, 1, 1);
     TPSRectangle(RenderCanvas, Angle, RenderIn, tmpRect);
     RenderCanvas.Pen.Style := psSolid;
 
@@ -737,7 +742,6 @@ begin
   PrepareEventRect(AEventRec.WidthDivisor, AEventRec.Level, EventRect);
 
   { Draw the event rectangle }
-  { paint Event text area clWindow }
   if Assigned(FDayView.DataStore) then begin
     if EventIsEditing then
       RenderCanvas.Brush.Color := WindowColor
@@ -747,7 +751,7 @@ begin
     RenderCanvas.Brush.Color := WindowColor;
   TPSFillRect(RenderCanvas, Angle, RenderIn, EventRect);
 
-  { paint the little area to the left of the text the color corresponding to
+  { Paint the little area to the left of the text the color corresponding to
     the event's category. These colors are used even when printing }
   if Assigned(FDayView.DataStore) then
     RenderCanvas.Brush.Color := EventCategory.Color;
@@ -772,7 +776,7 @@ begin
       { Get the end offset in TDateTime format }
       EndOffset := TVpDayViewOpener(FDayView).dvLineMatrix[0, EventELine + 1].Time - EventETime;
       { determine how many pixels to scooch down before painting the event's color code. }
-      EndPixelOffset := trunc(EndOffset / PixelDuration);
+      EndPixelOffset := trunc(EndOffset / PixelDuration);;
     end;
   end;
 
@@ -783,8 +787,7 @@ begin
     GutterRect.Left := EventRect.Left;
   GutterRect.Right := GutterRect.Left + Round(FDayView.GutterWidth * Scale);
   GutterRect.Top := EventRect.Top + StartPixelOffset;
-  GutterRect.Bottom := EventRect.Bottom - EndPixelOffset;
-
+  GutterRect.Bottom := EventRect.Bottom - EndPixelOffset + 1;
   TPSFillRect(RenderCanvas, Angle, RenderIn, GutterRect);
 
   RenderCanvas.Brush.Color := WindowColor;
@@ -1124,14 +1127,20 @@ procedure TVpDayViewPainter.DrawNavBtnBackground;
 var
   R: TRect;
 begin
+  RenderCanvas.Brush.Color := RealHeadAttrColor;
+
   R := Rect(
     RealLeft + 1,
     RealTop,
     RealLeft + 3 + RealRowHeadWidth,
     RealTop + RealColHeadHeight  // + 1
   );
+  if FDayView.DrawingStyle = dsNoBorder then begin
+    InflateRect(R, 1, 1);
+    TPSFillRect(RenderCanvas, Angle, RenderIn, R);
+    exit;
+  end;
 
-  RenderCanvas.Brush.Color := RealHeadAttrColor;
   TPSFillRect(RenderCanvas, Angle, RenderIn, R);
 
   if FDayView.DrawingStyle = ds3d then begin
@@ -1228,35 +1237,42 @@ begin
 end;
 
 procedure TVpDayViewPainter.DrawRowHeader(R: TRect);
+const
+  MINUTES_BORDER = 7;
+  MINUTES_HOUR_DISTANCE = 4;
 var
-  Temp, I, len: Integer;
+  I, MinutesLen: Integer;
   LineRect: TRect;
   LastHour, Hour: Integer;
   MinuteStr, HourStr: string;
   SaveFont: TFont;
+  x: Integer;
 begin
   if StartLine < 0 then
     StartLine := FDayView.TopLine;
 
   SaveFont := TFont.Create;
   try
-    //InflateRect(R, 1,1);
+    { Draw row header background }
+    if FDayView.DrawingStyle = dsNoBorder then
+      InflateRect(R, 1,1);
     RenderCanvas.Pen.Style := psClear;
     RenderCanvas.Brush.Color := RealRowHeadAttrColor;
     TPSFillRect(RenderCanvas, Angle, RenderIn, R);
     RenderCanvas.Pen.Style := psSolid;
-    //InflateRect(R, -1,-1);
+    if FDayView.DrawingStyle = dsNoBorder then
+      InflateRect(R, -1,-1);
 
     RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
     RealVisibleLines := TVpDayViewOpener(FDayView).dvCalcVisibleLines(
-      R.Bottom - R.Top,
+      HeightOf(R),
       RealColHeadHeight,
       RealRowHeight,
       Scale,
       StartLine,
       StopLine
     );
-    len := RenderCanvas.TextWidth('33') + 10;
+    MinutesLen := RenderCanvas.TextWidth('00') + MINUTES_BORDER + MINUTES_HOUR_DISTANCE div 2;
 
     RenderCanvas.Pen.Style := psSolid;
     RenderCanvas.Pen.Color := RealLineColor;
@@ -1291,7 +1307,7 @@ begin
         { Paint time }
         RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
         TPSTextOut(RenderCanvas, Angle, RenderIn,
-          LineRect.Right - RenderCanvas.TextWidth(HourStr + ':' + MinuteStr) - 7,
+          LineRect.Right - RenderCanvas.TextWidth(HourStr + ':' + MinuteStr) - MINUTES_BORDER,
           LineRect.Top + TextMargin,
           HourStr + ':' + MinuteStr
         );
@@ -1301,16 +1317,17 @@ begin
         { Paint Minute Text}
         if TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine + i].Minute = 0 then begin
           RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
+          x := LineRect.Right - RenderCanvas.TextWidth(MinuteStr) - MINUTES_BORDER;
           TPSTextOut(RenderCanvas, Angle, RenderIn,
-            LineRect.Right - RenderCanvas.TextWidth(MinuteStr) - 7,
+            x,
             LineRect.Top + TextMargin,
             MinuteStr
           );
-          temp := RenderCanvas.TextWidth(MinuteStr) + 4;
           { Paint Hour Text }
           RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.HourFont);
+          dec(x, RenderCanvas.TextWidth(HourStr) + MINUTES_HOUR_DISTANCE);
           TPSTextOut(RenderCanvas, Angle, RenderIn,
-            LineRect.Right - RenderCanvas.TextWidth(HourStr) - 7 - temp,
+            x,
             LineRect.Top + TextMargin - 2,
             HourStr
           );
@@ -1324,11 +1341,11 @@ begin
         end;
       end;
 
-      TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Right-6, LineRect.Bottom);
+      TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Right - 6, LineRect.Bottom);
       if LastHour <> Hour then
         TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Left + 6, LineRect.Bottom)
       else
-        TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right - len, LineRect.Bottom);
+        TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right - MinutesLen, LineRect.Bottom);
     end; {for}
 
     { Draw Row Header Borders }
@@ -1567,6 +1584,7 @@ begin
   try
     SelectClipRgn(RenderCanvas.Handle, Rgn);
 
+    // Fix zero font heights for printer
     with FDayView do begin
       AllDayEventAttributes.Font.Height := GetRealFontHeight(AllDayEventAttributes.Font);
       Font.Height := GetRealFontHeight(Font);
