@@ -98,6 +98,7 @@ type
       procedure actCancelExecute(Sender: TObject);
       procedure FormCreate(Sender: TObject);
       procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+      procedure VpPrintFormatComboBox1Change(Sender: TObject);
 
     private
       procedure SetCaptions;
@@ -189,6 +190,12 @@ begin
   actLastPage.Hint := RSPrintPrvLastPageHint;
   actCancel.Caption := RSPrintPrvCancel;
   actCancel.Hint := RSPrintPrvCancelHint;
+end;
+
+procedure TfrmPrintPreview.VpPrintFormatComboBox1Change(Sender: TObject);
+begin
+  VpPrintPreview1.ForceUpdate;
+  VpPrintPreview1.FirstPage;
 end;
 
 

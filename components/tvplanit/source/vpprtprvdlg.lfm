@@ -50,6 +50,7 @@ object frmPrintPreview: TfrmPrintPreview
       ItemHeight = 15
       Sorted = True
       TabOrder = 1
+      OnChange = VpPrintFormatComboBox1Change
     end
     object ToolBar1: TToolBar
       Left = 1

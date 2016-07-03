@@ -411,11 +411,9 @@ begin
   if not Assigned (FControlLink.Printer) then
     Exit;
 
-//  if FCurrentFormat <> FControlLink.Printer.CurFormat then begin     
-    ClearPageData;
-    GeneratePageImage;
-    Invalidate;
-//  end;                                                               
+  ClearPageData;
+  GeneratePageImage;
+  Invalidate;
 end;
 
 procedure TVpPrintPreview.GeneratePageImage;

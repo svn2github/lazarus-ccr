@@ -170,14 +170,15 @@ end;
 procedure TVpPrintFormatComboBox.Change;
 var
   NewFormat : Integer;
-
 begin
   if not Assigned (FControlLink) then
     Exit;
 
-  NewFormat := FControlLink.Printer.Find (Text);
+  NewFormat := FControlLink.Printer.Find(Text);
   if NewFormat >= 0 then
     FControlLink.Printer.CurFormat := NewFormat;
+
+  inherited;
 end;
 
 function TVpPrintFormatComboBox.GetAbout: string;
