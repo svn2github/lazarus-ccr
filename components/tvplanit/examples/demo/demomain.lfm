@@ -689,15 +689,52 @@ object MainForm: TMainForm
   object VpControlLink1: TVpControlLink
     DataStore = VpBufDSDataStore1
     LocalizationFile = '../../source/vplocalize.xml'
-    Printer.BottomMargin = 0
-    Printer.DayStart = h_08
-    Printer.DayEnd = h_05
-    Printer.Granularity = gr30Min
-    Printer.LeftMargin = 0
-    Printer.MarginUnits = imAbsolutePixel
-    Printer.PrintFormats = <>
-    Printer.RightMargin = 0
-    Printer.TopMargin = 0
+    Printer.BottomMargin = 5
+    Printer.DayStart = h_07
+    Printer.DayEnd = h_18
+    Printer.Granularity = gr60Min
+    Printer.LeftMargin = 5
+    Printer.MarginUnits = imPercent
+    Printer.PrintFormats = <    
+      item
+        Version = 'v1.04'
+        DayInc = 0
+        DayIncUnits = duDay
+        Elements = <        
+          item
+            Version = 'v1.04'
+            Caption.Caption = 'Current week'
+            Caption.Font.Style = [fsItalic]
+            DayOffset = 1
+            DayOffsetUnits = duDay
+            Height = 100
+            Left = 0
+            Shape.Shape = ustRectangle
+            Top = 0
+            Width = 100
+          end>
+        FormatName = 'Current week (dayview)'
+      end    
+      item
+        Version = 'v1.04'
+        DayInc = 0
+        DayIncUnits = duWeek
+        Elements = <        
+          item
+            Version = 'v1.04'
+            DayOffset = 0
+            DayOffsetUnits = duDay
+            Height = 100
+            ItemType = itWeekView
+            Left = 0
+            Shape.Shape = ustRectangle
+            Top = 0
+            Width = 100
+          end>
+        FormatName = 'Current week (Week view)'
+      end>
+    Printer.RightMargin = 5
+    Printer.TopMargin = 5
     left = 312
     top = 200
   end
@@ -1910,6 +1947,13 @@ object MainForm: TMainForm
     top = 221
     object MenuItem1: TMenuItem
       Caption = 'File'
+      object MnuPrintPreview: TMenuItem
+        Caption = 'Print preview...'
+        OnClick = MnuPrintPreviewClick
+      end
+      object MenuItem3: TMenuItem
+        Caption = '-'
+      end
       object MnuQuit: TMenuItem
         Caption = 'Quit'
         OnClick = MnuQuitClick
@@ -1933,5 +1977,29 @@ object MainForm: TMainForm
         OnClick = MnuAboutClick
       end
     end
+  end
+  object PrintDialog1: TPrintDialog
+    left = 560
+    top = 128
+  end
+  object VpPrintPreviewDialog1: TVpPrintPreviewDialog
+    Version = 'v1.04'
+    DataStore = VpBufDSDataStore1
+    BottomMargin = 5
+    ControlLink = VpControlLink1
+    EndDate = 42561.5151169907
+    LeftMargin = 5
+    MarginUnits = imPercent
+    RightMargin = 5
+    StartDate = 42554.5151169907
+    TopMargin = 5
+    Options = [doSizeable]
+    Placement.Position = mpCenter
+    Placement.Top = 10
+    Placement.Left = 10
+    Placement.Height = 500
+    Placement.Width = 1000
+    left = 560
+    top = 192
   end
 end

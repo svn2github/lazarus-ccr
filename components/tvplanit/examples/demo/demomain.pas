@@ -5,11 +5,10 @@ unit demoMain;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, ComCtrls, LCLTranslator, Menus,
-  VpBaseDS, VpDayView, VpWeekView, VpTaskList, VpAbout,
-  VpContactGrid, VpMonthView, VpResEditDlg, VpContactButtons, VpBufDS, VpNavBar,
-  VpData, Types;
+  Classes, SysUtils, FileUtil, PrintersDlgs, Forms, Controls, Graphics, Dialogs,
+  ExtCtrls, StdCtrls, ComCtrls, LCLTranslator, Menus, VpBaseDS, VpDayView,
+  VpWeekView, VpTaskList, VpAbout, VpContactGrid, VpMonthView, VpResEditDlg,
+  VpContactButtons, VpBufDS, VpNavBar, VpData, VpPrtPrvDlg, Types;
 
 type
 
@@ -36,6 +35,9 @@ type
     LblGranularity: TLabel;
     LblLanguage: TLabel;
     LblVisibleDays: TLabel;
+    MenuItem3: TMenuItem;
+    MnuPrintPreview: TMenuItem;
+    PrintDialog1: TPrintDialog;
     TitleLbl: TLabel;
     MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
@@ -68,6 +70,7 @@ type
     VpDayView1: TVpDayView;
     VpMonthView1: TVpMonthView;
     VpNavBar1: TVpNavBar;
+    VpPrintPreviewDialog1: TVpPrintPreviewDialog;
     VpResourceCombo1: TVpResourceCombo;
     VpResourceEditDialog1: TVpResourceEditDialog;
     VpTaskList1: TVpTaskList;
@@ -85,6 +88,7 @@ type
     procedure CbTimeFormatChange(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
+    procedure MnuPrintPreviewClick(Sender: TObject);
     procedure MnuQuitClick(Sender: TObject);
     procedure MnuResourcesClick(Sender: TObject);
     procedure MnuSettingsClick(Sender: TObject);
@@ -129,8 +133,9 @@ uses
  {$IFDEF WINDOWS}
   Windows,
  {$ENDIF}
-  LResources, LazFileUtils, LazUTF8, StrUtils, Translations, IniFiles, Math,
-  VpMisc, VpBase;
+  LResources, LazFileUtils, LazUTF8, StrUtils, DateUtils, Translations,
+  IniFiles, Math, Printers,
+  VpMisc, VpBase, VpPrtFmt;
 
 const
   LANGUAGE_DIR = '..\..\languages\';
@@ -346,6 +351,45 @@ begin
   finally
     F.Free;
   end;
+end;
+
+procedure TMainForm.MnuPrintPreviewClick(Sender: TObject);
+var
+  t1, t2: TDateTime;
+  fmt: TVpPrintFormatItem;
+  fmtidx: Integer;
+begin
+  fmtidx := VpPrintPreviewDialog1.ControlLink.Printer.CurFormat;
+  fmt := VpPrintPreviewDialog1.ControlLink.Printer.PrintFormats.Items[fmtidx];
+  case fmtidx of
+    0: begin // current week in DayView
+         t1 := StartOfTheWeek(now);
+         t2 := t1 + 7 - VpDayView1.NumDays mod 7; // + 7;
+         fmt.DayInc := VpDayView1.NumDays;
+         VpControlLink1.Printer.Granularity := VpDayView1.Granularity;
+         VpControlLink1.Printer.DayStart := h_08; //VpDayView1.DefaultTopHour;
+         VpControlLink1.Printer.DayEnd := h_17;
+       end;
+    1: begin  // current week in WeekView
+         t1 := StartOfTheWeek(now);
+         t2 := t1;     // it all fits on one single page
+       end;
+  end;
+  VpPrintPreviewDialog1.ControlLink := VpControlLink1;
+  VpPrintPreviewDialog1.Printer := Printer;
+  VpPrintPreviewDialog1.StartDate := t1;
+  VPPrintPreviewDialog1.EndDate := t2;
+  if VpPrintPreviewDialog1.Execute then
+    if PrintDialog1.Execute then begin
+      Printer.BeginDoc;
+      try
+        t1 := VpPrintPreviewDialog1.StartDate;
+        t2 := VpPrintPreviewDialog1.EndDate;
+        VpPrintPreviewDialog1.ControlLink.Printer.Print(Printer, t1, t2);
+      finally
+        Printer.EndDoc;
+       end;
+    end;
 end;
 
 procedure TMainForm.MnuSettingsClick(Sender: TObject);

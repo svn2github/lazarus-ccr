@@ -202,7 +202,7 @@ constructor TVpPrintPreviewDialog.Create(AOwner: TComponent);
 begin
   inherited Create (AOwner);
   FPlacement.Height := 480;
-  FPlacement.Width := 640;
+  FPlacement.Width := 720;
   StartDate := Now;
   EndDate := Now + 7;
   FZoomFactor := zfFitToControl;

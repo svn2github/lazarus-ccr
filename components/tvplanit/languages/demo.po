@@ -245,6 +245,10 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
+#: tmainform.menuitem3.caption
+msgid "-"
+msgstr ""
+
 #: tmainform.mnuabout.caption
 msgid "About Visual PlanIt"
 msgstr ""
@@ -252,6 +256,10 @@ msgstr ""
 #: tmainform.mnumaintenance.caption
 msgctxt "TMAINFORM.MNUMAINTENANCE.CAPTION"
 msgid "Maintenance"
+msgstr ""
+
+#: tmainform.mnuprintpreview.caption
+msgid "Print preview..."
 msgstr ""
 
 #: tmainform.mnuquit.caption

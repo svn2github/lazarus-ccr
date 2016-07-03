@@ -7,7 +7,8 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, demoMain, laz_visualplanit, LCLTranslator, DefaultTranslator;
+  Forms, demoMain, laz_visualplanit, LCLTranslator, DefaultTranslator,
+  printer4lazarus;
 
 {$R *.res}
 
