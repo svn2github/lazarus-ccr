@@ -1985,14 +1985,14 @@ object MainForm: TMainForm
   object VpPrintPreviewDialog1: TVpPrintPreviewDialog
     Version = 'v1.04'
     DataStore = VpBufDSDataStore1
-    BottomMargin = 5
+    BottomMargin = 0
     ControlLink = VpControlLink1
     EndDate = 42561.5151169907
-    LeftMargin = 5
+    LeftMargin = 0
     MarginUnits = imPercent
-    RightMargin = 5
+    RightMargin = 0
     StartDate = 42554.5151169907
-    TopMargin = 5
+    TopMargin = 0
     Options = [doSizeable]
     Placement.Position = mpCenter
     Placement.Top = 10

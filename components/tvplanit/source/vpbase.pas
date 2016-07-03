@@ -231,18 +231,6 @@ type
     property Category7: TVpCategoryInfo index 7 read GetCategory write SetCat;
     property Category8: TVpCategoryInfo index 8 read GetCategory write SetCat;
     property Category9: TVpCategoryInfo index 9 read GetCategory write SetCat;
-    {
-    property Category0: TVpCategoryInfo read FCat0 write FCat0;
-    property Category1: TVpCategoryInfo read FCat1 write FCat1;
-    property Category2: TVpCategoryInfo read FCat2 write FCat2;
-    property Category3: TVpCategoryInfo read FCat3 write FCat3;
-    property Category4: TVpCategoryInfo read FCat4 write FCat4;
-    property Category5: TVpCategoryInfo read FCat5 write FCat5;
-    property Category6: TVpCategoryInfo read FCat6 write FCat6;
-    property Category7: TVpCategoryInfo read FCat7 write FCat7;
-    property Category8: TVpCategoryInfo read FCat8 write FCat8;
-    property Category9: TVpCategoryInfo read FCat9 write FCat9;
-    }
   end;
 
   { TVpFont }

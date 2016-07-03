@@ -857,6 +857,12 @@ var
         ScaleY := FPrinter.PageHeight / (ClientHeight - (Offset1 + Offset2))
       else
         ScaleY := 1;
+      Result.TopLeft := Point(Offset1, Offset1);
+      if ScaleX > ScaleY then
+        Result.BottomRight := Point(ClientWidth - Offset2, round(FPrinter.PageHeight / ScaleX))
+      else
+        Result.BottomRight := Point(Round(FPrinter.PageWidth / ScaleY), ClientHeight - Offset2);
+      {
       if ScaleX > ScaleY then
         Result := Rect(
           Offset1,
@@ -871,6 +877,7 @@ var
           Round(FPrinter.PageWidth / ScaleY),
           ClientHeight - Offset2
         );
+        }
     end else
       Result := Rect(3, 3, ClientWidth, ClientHeight);
   end;
@@ -880,6 +887,7 @@ var
     AspectRect: TRect;
     WorkHeight: Integer;
     WorkWidth: Integer;
+    srcRect, dstRect: TRect;
   begin
     if FControlLink.Printer.PrintFormats.Count <= 0 then
       Exit;
@@ -890,32 +898,45 @@ var
     if FZoomFactor = zfFitToControl then
     begin
       AspectRect := GetAspectRectangle;
-      WorkBmp.Canvas.CopyRect(
+      srcRect := Rect(0, 0, RenderBmp.Width, RenderBmp.Height);
+      WorkBmp.Canvas.CopyRect(AspectRect, RenderBmp.Canvas, srcRect);
+      (*
         AspectRect,
         RenderBmp.Canvas,
-        Rect (0, 0, RenderBmp.Width, RenderBmp.Height)
+        Rect(0, 0, RenderBmp.Width, RenderBmp.Height)
       );
+      *)
       RealWidth := AspectRect.Right - AspectRect.Left + 3;
       RealHeight := AspectRect.Bottom - AspectRect.Top + 3;
-     end else
-     begin
-       WorkWidth := Round(RenderBmp.Width * ZOOM_FACTOR_VALUES[FZoomFactor]);
-       WorkHeight := Round(RenderBmp.Height * ZOOM_FACTOR_VALUES[FZoomFactor]);
-       if WorkHeight > ClientHeight - 3 then WorkHeight := ClientHeight - 3;
-       if WorkWidth > ClientWidth - 3 then WorkWidth := ClientWidth - 3;
-       WorkBmp.Canvas.CopyRect(
-         Rect(3, 3, WorkWidth, WorkHeight),
-         RenderBmp.Canvas,
-         Rect(
-           Round(FScrollX / ZOOM_FACTOR_VALUES[FZoomFactor]),
-           Round(FScrollY / ZOOM_FACTOR_VALUES[FZoomFactor]),
-           Round((WorkWidth + FScrollX) / ZOOM_FACTOR_VALUES[FZoomFactor]),
-           Round((WorkHeight + FScrollY) / ZOOM_FACTOR_VALUES[FZoomFactor])
-         )
-       );
-       RealWidth := round(RenderBmp.Width / ZOOM_FACTOR_VALUES[FZoomFactor]);
-       RealHeight := round(RenderBmp.Height / ZOOM_FACTOR_VALUES[FZoomFactor]);
-     end;
+    end else
+    begin
+      WorkWidth := Round(RenderBmp.Width * ZOOM_FACTOR_VALUES[FZoomFactor]);
+      WorkHeight := Round(RenderBmp.Height * ZOOM_FACTOR_VALUES[FZoomFactor]);
+      if WorkHeight > ClientHeight - 3 then
+        WorkHeight := ClientHeight - 3;
+      if WorkWidth > ClientWidth - 3 then
+        WorkWidth := ClientWidth - 3;
+      srcRect := Rect(
+        Round(FScrollX / ZOOM_FACTOR_VALUES[FZoomFactor]),
+        Round(FScrollY / ZOOM_FACTOR_VALUES[FZoomFactor]),
+        Round((WorkWidth + FScrollX) / ZOOM_FACTOR_VALUES[FZoomFactor]),
+        Round((WorkHeight + FScrollY) / ZOOM_FACTOR_VALUES[FZoomFactor])
+      );
+      dstRect := Rect(3, 3, WorkWidth, WorkHeight);
+      WorkBmp.Canvas.CopyRect(dstRect, RenderBmp.Canvas, srcRect);
+      (*
+        Rect(3, 3, WorkWidth, WorkHeight),
+        RenderBmp.Canvas,
+        Rect(
+          Round(FScrollX / ZOOM_FACTOR_VALUES[FZoomFactor]),
+          Round(FScrollY / ZOOM_FACTOR_VALUES[FZoomFactor]),
+          Round((WorkWidth + FScrollX) / ZOOM_FACTOR_VALUES[FZoomFactor]),
+          Round((WorkHeight + FScrollY) / ZOOM_FACTOR_VALUES[FZoomFactor])
+        )
+      );*)
+      RealWidth := round(RenderBmp.Width / ZOOM_FACTOR_VALUES[FZoomFactor]);
+      RealHeight := round(RenderBmp.Height / ZOOM_FACTOR_VALUES[FZoomFactor]);
+    end;
 
                  (*
     case FZoomFactor of
@@ -1044,7 +1065,7 @@ var
 
   procedure RenderImage;
   begin
-    Canvas.CopyRect (ClientRect, WorkBmp.Canvas, ClientRect);
+    Canvas.CopyRect(ClientRect, WorkBmp.Canvas, ClientRect);
   end;
 
 begin

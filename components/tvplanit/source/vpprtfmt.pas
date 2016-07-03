@@ -2427,6 +2427,11 @@ end;
 procedure TVpPrinter.SetUseFormComponents(const v: Boolean);
 begin
   if v <> FUseFormComponents then begin
+   {$IFDEF LCL}
+    if not v then
+      raise Exception.Create('UseFormComponents = false currently not supported by Lazarus.');
+      // wp: This restriction can be dropped once CreateWorkControls does not crash any more.
+   {$ENDIF}
     FUseFormComponents := v;
     NotifyLinked;
   end;

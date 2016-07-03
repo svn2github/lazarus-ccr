@@ -359,6 +359,7 @@ type
     FLocalizationFile : string;
     FDefaultCountry   : string;
     FCityStateZipFormat: String;
+    FScreenOutput     : Boolean;
   protected{private}
     DependentList: TList;
     procedure Attach (Sender : TComponent);
@@ -370,7 +371,7 @@ type
     procedure SetLocalizationFile (const v : string);
     procedure SetPrinter (const v : TVpPrinter);
   public
-    constructor Create (AOwner : TComponent); override;
+    constructor Create (AOwner: TComponent); override;
     destructor Destroy; override;
     function GetDependentList : TList;
     procedure LoadLocalizationInfo (const FileName : string);
@@ -379,6 +380,7 @@ type
     procedure TriggerOnPageEnd (Sender: TObject; PageNum: Integer; ADate: TDateTime; LastPage: Boolean);
     procedure TriggerOnPageStart (Sender: TObject; PageNum: Integer; ADate: TDateTime);
     property Localization : TVpLocalization read FLocalization write FLocalization;
+    property ScreenOutput: Boolean read FScreenOutput write FScreenOutput;
   published
     property CityStateZipFormat: String read FCityStateZipFormat write SetCityStateZipFormat;
       // Use symbols @CITY, @STATE, @ZIP to define the order of these strings
@@ -1199,6 +1201,8 @@ var
   I: Integer;
 begin
   inherited;
+  FScreenOutput := true;
+
   DependentList := TList.Create;
 
   { If the ControlLink is being dropped onto a form for the first time ... }

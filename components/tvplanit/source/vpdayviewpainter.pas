@@ -1576,7 +1576,7 @@ begin
 
   }
 
-  if FDayView.VisibleLines < FDayView.LineCount then
+  if (FDayView.VisibleLines < FDayView.LineCount) and FDayView.ControlLink.ScreenOutput then
     ScrollbarOffset := 14 else
     ScrollbarOffset := 0;
 
