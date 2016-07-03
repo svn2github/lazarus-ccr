@@ -286,7 +286,7 @@ begin
   RenderCanvas.Font.Assign(FWeekView.DayHeadAttributes.Font);
   RenderCanvas.Brush.Color := RealDayHeadAttrColor;
   TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
-  if FWeekView.DayHeadAttributes.Bordered then
+  if FWeekView.DayHeadAttributes.Bordered and (FWeekView.DrawingStyle <> dsNoBorder) then
     TPSRectangle(RenderCanvas, Angle, RenderIn, tmpRect);
 
   { Fix Header String }
@@ -569,6 +569,7 @@ begin
       HeadRect.Top
     );
   HeadTextRect.BottomRight := HeadRect.BottomRight;
+
   { Fix Header String }
   HeadStrLen := RenderCanvas.TextWidth(HeadStr);
   if HeadStrLen > HeadTextRect.Right - HeadTextRect.Left - TextMargin then
@@ -576,6 +577,7 @@ begin
     HeadStr := GetDisplayString(RenderCanvas, HeadStr, 0,
       HeadTextRect.Right - HeadTextRect.Left - TextMargin );
   end;
+
   { position the spinner }
   with TVpWeekViewOpener(FWeekView) do begin
     wvSpinButtons.Height := Trunc(wvHeaderHeight * 0.8);

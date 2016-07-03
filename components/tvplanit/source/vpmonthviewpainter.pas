@@ -71,7 +71,7 @@ var
 begin
   R := Rect(RealLeft, RealTop, RealRight - 1, RealBottom - 1);
   if FMonthView.DrawingStyle = dsFlat then begin
-    { draw an outer and inner bevel }
+    { draw a simple rectangular border }
     DrawBevelRect(
       RenderCanvas,
       TPSRotateRectangle(Angle, RenderIn, R),
@@ -110,15 +110,20 @@ begin
   RenderCanvas.Brush.Color := DayHeadAttrColor;
 
   { build rect }
-  if FMonthView.DrawingStyle = ds3D then begin
-    dhRect.Left := RealLeft + 2;
-    dhRect.Top := RealTop + TVpMonthViewOpener(FMonthView).mvDayHeadHeight + 3;
-    dhRect.Right := RealRight - 3;
+  dhRect.Left := RealLeft;
+  dhRect.Top := RealTop + TVpMonthViewOpener(FMonthView).mvDayHeadHeight;
+  dhRect.Right := RealRight;
+  dhRect.Bottom := dhRect.Top + TVpMonthViewOpener(FMonthView).mvDayHeadHeight;
+  if FMonthView.DrawingStyle = ds3d then begin
+    inc(dhRect.Left, 2);
+    inc(dhRect.Top, 3);
+    dec(dhRect.Right, 3);
     dhRect.Bottom := dhRect.Top + TVpMonthViewOpener(FMonthView).mvDayHeadHeight;
     TPSFillRect(RenderCanvas, Angle, RenderIn, dhRect);
     R := TPSRotateRectangle(Angle, RenderIn, dhRect);
     DrawBevelRect(RenderCanvas, R, BevelHighlight, BevelDarkShadow);
-  end else begin
+  end else
+  if FMonthView.DrawingStyle = dsFlat then begin
     dhRect.Left := RealLeft;
     dhRect.Top := RealTop + TVpMonthViewOpener(FMonthView).mvDayHeadHeight;
     dhRect.Right := RealRight;
@@ -126,6 +131,10 @@ begin
     TPSFillRect(RenderCanvas, Angle, RenderIn, dhRect);
     R := TPSRotateRectangle(Angle, RenderIn, dhRect);
     DrawBevelRect(RenderCanvas, R, BevelShadow, BevelShadow);
+  end else
+  begin
+    dhRect.Left := RealLeft;
+    TPSFillRect(RenderCanvas, Angle, RenderIn, dhRect);
   end;
 
   DayTag := Ord(FMonthView.WeekStartsOn);
@@ -727,7 +736,8 @@ begin
     TPSFillRect(RenderCanvas, Angle, RenderIn, HeadRect);
     R := TPSRotateRectangle(Angle, RenderIn, HeadRect);
     DrawBevelRect(RenderCanvas, R, BevelHighlight, BevelDarkShadow);
-  end;
+  end else
+    TPSFillRect(RenderCanvas, Angle, RenderIn, HeadRect);
 
   { Position the spinner }
   with TVpMonthViewOpener(FMonthView) do begin
@@ -739,9 +749,9 @@ begin
 
   { Acquire startdate and end date }
   HeadStr := FormatDateTime(FMonthView.DateLabelFormat, DisplayDate);
-  {$IF FPC_FULLVERSION < 30000}
+  {$IFDEF FPC}{$IF FPC_FULLVERSION < 30000}
   HeadStr := SysToUTF8(HeadStr);
-  {$ENDIF}
+  {$ENDIF}{$ENDIF}
 
   { Calculate the text rectangle }
   RenderCanvas.Font.Assign(FMonthView.DayHeadAttributes.Font);

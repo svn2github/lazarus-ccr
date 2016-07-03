@@ -25,9 +25,9 @@ object MainForm: TMainForm
       Height = 532
       Top = 48
       Width = 780
-      ActivePage = TabSettings
+      ActivePage = TabEvents
       Align = alClient
-      TabIndex = 4
+      TabIndex = 0
       TabOrder = 0
       object TabEvents: TTabSheet
         Caption = 'Events'
@@ -52,6 +52,8 @@ object MainForm: TMainForm
             DataStore = VpBufDSDataStore1
             ControlLink = VpControlLink1
             Color = clWindow
+            Font.Height = -12
+            ParentFont = False
             Align = alBottom
             TabStop = True
             TabOrder = 0
@@ -60,8 +62,10 @@ object MainForm: TMainForm
             DayHeadAttributes.Color = clBtnFace
             DayHeadAttributes.Font.Height = -13
             DayNameStyle = dsShort
+            DayNumberFont.Height = -12
             DrawingStyle = dsFlat
             EventDayStyle = [fsItalic]
+            EventFont.Height = -12
             LineColor = clGray
             TimeFormat = tf12Hour
             OffDayColor = clSilver
@@ -87,6 +91,8 @@ object MainForm: TMainForm
             DataStore = VpBufDSDataStore1
             ControlLink = VpControlLink1
             Color = clWindow
+            Font.Height = -12
+            ParentFont = False
             ParentShowHint = False
             Align = alClient
             ReadOnly = False
@@ -95,6 +101,7 @@ object MainForm: TMainForm
             AllDayEventAttributes.BackgroundColor = clBtnShadow
             AllDayEventAttributes.EventBorderColor = cl3DDkShadow
             AllDayEventAttributes.EventBackgroundColor = clBtnFace
+            AllDayEventAttributes.Font.Height = -12
             ShowEventTimes = False
             DrawingStyle = dsFlat
             TimeSlotColors.Active = clWhite
@@ -238,15 +245,20 @@ object MainForm: TMainForm
           DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
+          Font.Height = -12
+          ParentFont = False
           AllDayEventAttributes.BackgroundColor = clWindow
           AllDayEventAttributes.EventBorderColor = clGray
           AllDayEventAttributes.EventBackgroundColor = clBtnFace
+          AllDayEventAttributes.Font.Height = -12
           DateLabelFormat = 'dddd, mmmm dd, yyyy'
           DayHeadAttributes.Color = clBtnFace
           DayHeadAttributes.DateFormat = 'dddd mmmm, dd'
           DayHeadAttributes.Font.Height = -13
           DayHeadAttributes.Bordered = True
           DrawingStyle = dsFlat
+          EventFont.Height = -12
+          HeadAttributes.Font.Height = -12
           HeadAttributes.Color = clBtnFace
           LineColor = clGray
           TimeFormat = tf12Hour

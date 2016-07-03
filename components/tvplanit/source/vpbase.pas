@@ -76,7 +76,7 @@ type
   DOMString = WideString;
 
   { miscellaneous stuff }
-  TVpDrawingStyle = (dsFlat, ds3d, dsNone);
+  TVpDrawingStyle = (dsFlat, ds3d, dsNoBorder);    // wp: rename dsNone --> dsNoBorder
 
   { event method types }
   TVpMouseWheelEvent = procedure(Sender: TObject; Shift: TShiftState;

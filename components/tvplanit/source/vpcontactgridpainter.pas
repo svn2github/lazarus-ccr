@@ -116,7 +116,7 @@ begin
       begin  { Draw a 3d bevel }
         DrawBevelRect(RenderCanvas, R, BevelShadow, BevelHighlight);
         InflateRect(R, -1, -1);
-        drawBevelRect(RenderCanvas, R, BevelDarkShadow, BevelFace);
+        DrawBevelRect(RenderCanvas, R, BevelDarkShadow, BevelFace);
       end;
   end;
 end;

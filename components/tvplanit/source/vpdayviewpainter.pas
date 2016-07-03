@@ -1143,7 +1143,7 @@ begin
       BevelShadow
     )
   end else
-  begin
+  if FDayView.DrawingStyle = dsFlat then begin
     RenderCanvas.Pen.Color := BevelShadow;
     TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 6, R.Bottom- 1);
     TPSLineTo(RenderCanvas, Angle, RenderIn, R.Left + 3, R.Bottom - 1);
@@ -1368,7 +1368,7 @@ begin
     RealLeft + 2 + RealRowHeadWidth,
     RealBottom
   );
-  if FDayView.DrawingStyle = dsFlat then
+  if FDayView.DrawingStyle <> ds3d then
     inc(ARect.Left);
 end;
 
@@ -1616,7 +1616,7 @@ begin
     { Draw borders }
     tmpRect := Rect(RealLeft, RealTop, RealRight-1, RealBottom-1);
     if FDayView.DrawingStyle = dsFlat then begin
-      { Draw an outer and inner bevel - NO: no 3d effects in flat style! }
+      { Draw a simple border }
       DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn, tmpRect), BevelShadow, BevelShadow);
     end else
     if FDayView.DrawingStyle = ds3d then begin
