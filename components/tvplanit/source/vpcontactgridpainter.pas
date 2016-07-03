@@ -366,7 +366,8 @@ begin
           TmpBmp.Canvas.Brush.Color := RealContactHeadAttrColor;
           TmpBmp.Canvas.FillRect(HeadRect);
           { paint the header cell's border }
-          if FContactGrid.ContactHeadAttributes.Bordered then begin
+          if FContactGrid.ContactHeadAttributes.Bordered and (FContactGrid.DrawingStyle <> dsNoBorder)
+          then begin
             TmpBmp.Canvas.Pen.Style := psSolid;
             {$IFDEF VERSION5}
             TmpBmp.Canvas.Rectangle(HeadRect);
