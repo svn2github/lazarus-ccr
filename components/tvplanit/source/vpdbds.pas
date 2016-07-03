@@ -1372,7 +1372,7 @@ begin
           end;
           try
             { if a particular descendant datastore uses autoincrementing }
-            { RecordID fields, then  don't overwrite them here. }
+            { RecordID fields, then don't overwrite them here. }
             if Event.RecordID <> -1 then
               EventsTable.FieldByName('RecordID').AsInteger := Event.RecordID;
 
@@ -1473,8 +1473,7 @@ begin
             { this event already exists in the database so update it }
             TasksTable.Edit
           else
-            { this record doesn't exist in the database, so }
-            { it's a new event }
+            { this record doesn't exist in the database, so it's a new event }
             TasksTable.Append;
           try
             TasksTable.FieldByName('ResourceID').AsInteger := Resource.ResourceID;

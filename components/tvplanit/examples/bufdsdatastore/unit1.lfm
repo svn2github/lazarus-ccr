@@ -66,6 +66,8 @@ object Form1: TForm1
         DataStore = VpBufDSDataStore1
         ControlLink = VpControlLink1
         Color = clWindow
+        Font.Height = -12
+        ParentFont = False
         Align = alLeft
         ReadOnly = False
         TabStop = True
@@ -73,6 +75,7 @@ object Form1: TForm1
         AllDayEventAttributes.BackgroundColor = clBtnShadow
         AllDayEventAttributes.EventBorderColor = cl3DDkShadow
         AllDayEventAttributes.EventBackgroundColor = clBtnFace
+        AllDayEventAttributes.Font.Height = -12
         ShowEventTimes = False
         DrawingStyle = dsFlat
         TimeSlotColors.Active = clWhite
@@ -114,9 +117,12 @@ object Form1: TForm1
           DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
+          Font.Height = -12
+          ParentFont = False
           AllDayEventAttributes.BackgroundColor = clWindow
           AllDayEventAttributes.EventBorderColor = clGray
           AllDayEventAttributes.EventBackgroundColor = clBtnFace
+          AllDayEventAttributes.Font.Height = -12
           DateLabelFormat = 'dddd, mmmm dd, yyyy'
           DayHeadAttributes.Color = clBtnFace
           DayHeadAttributes.DateFormat = 'dddd mmmm, dd'
@@ -124,6 +130,8 @@ object Form1: TForm1
           DayHeadAttributes.Font.Name = 'Tahoma'
           DayHeadAttributes.Bordered = True
           DrawingStyle = dsFlat
+          EventFont.Height = -12
+          HeadAttributes.Font.Height = -12
           HeadAttributes.Color = clBtnFace
           LineColor = clGray
           TimeFormat = tf12Hour
@@ -141,6 +149,8 @@ object Form1: TForm1
           DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
+          Font.Height = -12
+          ParentFont = False
           Align = alBottom
           TabStop = True
           TabOrder = 1
@@ -150,8 +160,10 @@ object Form1: TForm1
           DayHeadAttributes.Font.Height = -13
           DayHeadAttributes.Font.Name = 'Tahoma'
           DayNameStyle = dsShort
+          DayNumberFont.Height = -12
           DrawingStyle = dsFlat
           EventDayStyle = []
+          EventFont.Height = -12
           LineColor = clGray
           TimeFormat = tf12Hour
           OffDayColor = clSilver
@@ -178,6 +190,8 @@ object Form1: TForm1
         DataStore = VpBufDSDataStore1
         ControlLink = VpControlLink1
         Color = clWindow
+        Font.Height = -12
+        ParentFont = False
         Align = alClient
         TabStop = True
         TabOrder = 2
@@ -195,6 +209,7 @@ object Form1: TForm1
         LineColor = clGray
         MaxVisibleTasks = 250
         TaskHeadAttributes.Color = clSilver
+        TaskHeadAttributes.Font.Height = -12
         DrawingStyle = dsFlat
         ShowResourceName = True
       end
@@ -296,6 +311,7 @@ object Form1: TForm1
     PlayEventSounds = True
     AutoConnect = True
     AutoCreate = True
+    UseAutoIncFields = False
     left = 136
     top = 192
   end

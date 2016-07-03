@@ -18,7 +18,9 @@ type
     FContactsTable: TBufDataset;
     FTasksTable: TBufDataset;
     FDirectory: String;
+    FUseAutoInc: Boolean;
     procedure SetDirectory(AValue: String);
+    procedure SetUseAutoInc(AValue: Boolean);
 
   protected
     { ancestor property getters }
@@ -28,7 +30,6 @@ type
     function GetTasksTable: TDataset; override;
 
     { ancestor methods }
-    function GetNextID(TableName: string): integer; override;
     procedure Loaded; override;
     procedure SetConnected(const Value: boolean); override;
 
@@ -36,11 +37,13 @@ type
     procedure CloseTables;
     procedure CreateTable(ATableName: String);
     procedure OpenTables;
+    function UniqueID(AValue: Integer): Boolean;
 
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure CreateTables;
+    function GetNextID(TableName: string): Integer; override;
 
     property ResourceTable;
     property EventsTable;
@@ -51,6 +54,7 @@ type
     property Directory: String read FDirectory write SetDirectory;
     property AutoConnect;
     property AutoCreate;
+    property UseAutoIncFields: Boolean read FUseAutoInc write SetUseAutoInc default true;
   end;
 
 
@@ -58,7 +62,7 @@ implementation
 
 uses
   LazFileUtils,
-  VpConst, VpBaseDS;
+  VpConst, VpBaseDS, VpData;
 
 const
   TABLE_EXT = '.db';
@@ -70,6 +74,7 @@ begin
   FEventsTable := TBufDataset.Create(nil);
   FContactsTable := TBufDataset.Create(nil);
   FTasksTable := TBufDataset.Create(nil);
+  FUseAutoInc := true;
 end;
 
 destructor TVpBufDSDatastore.Destroy;
@@ -122,7 +127,8 @@ begin
   if not FileExists(table.FileName) then
   begin
      CreateFieldDefs(ATableName, table.FieldDefs);
-     table.FieldDefs[0].DataType := ftAutoInc;
+     if FUseAutoInc then
+       table.FieldDefs[0].DataType := ftAutoInc;
      table.CreateDataset;
   end;
   table.IndexDefs.Clear;
@@ -153,11 +159,18 @@ begin
   Result := FContactsTable;
 end;
 
-function TVpBufDSDataStore.GetNextID(TableName: string): integer;
+function TVpBufDSDatastore.GetNextID(TableName: string): Integer;
 begin
-  { This is not needed in the BufDataset datastore as these tables use
-    autoincrement fields. }
-  result := -1;
+  if FUseAutoInc then
+    { This is not needed in the BufDataset datastore as these tables use
+      autoincrement fields. }
+    Result := -1
+  else
+    { If autoincrement fields are not wanted the ID values are created from
+      random numbers. }
+    repeat
+      Result := Random(High(Integer));
+    until UniqueID(Result) and (Result <> -1);
 end;
 
 function TVpBufDSDatastore.GetTasksTable : TDataset;
@@ -208,5 +221,54 @@ begin
   FDirectory := AValue;
 end;
 
+procedure TVpBufDSDatastore.SetUseAutoInc(AValue: Boolean);
+var
+  dir: String;
+  table: TBufDataset;
+begin
+  if AValue = FUseAutoInc then
+    exit;
+
+  if ComponentState = [] then begin
+    if FDirectory = '' then
+      dir := ExtractFilePath(ParamStr(0)) else
+      dir := IncludeTrailingPathDelimiter(FDirectory);
+    dir := ExpandFileName(dir);
+    if DirectoryExistsUTF8(dir) then
+    begin
+      if FileExists(dir + ResourceTableName + TABLE_EXT) or
+         FileExists(dir + EventsTableName + TABLE_EXT) or
+         FileExists(dir + ContactsTableName + TABLE_EXT) or
+         FileExists(dir + TasksTableName + TABLE_EXT)
+      then
+        raise Exception.Create('You cannot change the property "UseAutoIncFields" after creation of the tables.');
+    end;
+  end;
+
+  FUseAutoInc := AValue;
+end;
+
+function TVpBufDSDatastore.UniqueID(AValue: Integer): Boolean;
+var
+  i, j: Integer;
+  res: TVpResource;
+begin
+  Result := false;
+  for i:=0 to Resources.Count-1 do begin
+    res := Resources.Items[i];
+    if res.ResourceID = AValue then
+      exit;
+    for j:=0 to res.Contacts.Count-1 do
+      if res.Contacts.GetContact(j).RecordID = AValue then
+        exit;
+    for j:=0 to res.Tasks.Count-1 do
+      if res.Tasks.GetTask(j).RecordID = AValue then
+        exit;
+    for j:=0 to res.Schedule.EventCount-1 do
+      if res.Schedule.GetEvent(j).RecordID = AValue then
+        exit;
+  end;
+  Result := true;
+end;
 
 end.
