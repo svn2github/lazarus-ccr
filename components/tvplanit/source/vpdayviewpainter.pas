@@ -82,6 +82,7 @@ type
     function DetermineIconRect(AEventRect: TRect): TRect;
     function GetMaxOLEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
     procedure DrawAllDayEvents;
+    procedure DrawBorders;
     procedure DrawCells(R: TRect; ColDate: TDateTime; Col: Integer);
     procedure DrawColHeader(R: TRect; ARenderDate: TDateTime; Col: Integer);
     procedure DrawEditFrame(R: TRect; AGutter, ALevel: Integer; AColor: TColor);
@@ -89,7 +90,7 @@ type
       ARenderDate: TDateTime; Col: Integer);
     procedure DrawEvents(ARenderDate: TDateTime; Col: Integer);
     procedure DrawEventText(const AText: String; const AEventRect, AIconRect: TRect;
-      ALevel: Integer; AEventIsEditing: Boolean);
+      ALevel: Integer);
     procedure DrawIcons(AIconRect: TRect);
     procedure DrawNavBtns;
     procedure DrawNavBtnBackground;
@@ -141,6 +142,7 @@ function TVpDayViewPainter.BuildEventString(AEvent: TVpEvent;
 var
   maxW: Integer;
   timeFmt: String;
+  gutter: Integer;
 begin
   if FDayView.ShowEventTimes then begin
     timeFmt := IfThen(FDayView.TimeFormat = tf24Hour, 'h:nn', 'h:nnam/pm');
@@ -155,7 +157,8 @@ begin
   if FDayView.WrapStyle = wsNone then begin
     { if the string is longer than the availble space then chop off the end
       and place those little '...'s at the end }
-    maxW := AEventRect.Right - AIconRect.Right - Round(FDayView.GutterWidth * Scale) - TextMargin;
+    gutter := Round(FDayView.GutterWidth * Scale);
+    maxW := AEventRect.Right - AIconRect.Right - gutter - TextMargin;
     if RenderCanvas.TextWidth(Result) > maxW then
       Result := GetDisplayString(RenderCanvas, Result, 0, maxW);
   end;
@@ -415,6 +418,25 @@ begin
 
   finally
     ADEventsList.Free;
+  end;
+end;
+
+procedure TVpDayViewPainter.DrawBorders;
+var
+  tmpRect: TRect;
+begin
+  tmpRect := Rect(RealLeft, RealTop, RealRight-1, RealBottom-1);
+  tmpRect := TPSRotateRectangle(Angle, RenderIn, tmpRect);
+
+  if FDayView.DrawingStyle = dsFlat then begin
+    { Draw a simple border }
+    DrawBevelRect(RenderCanvas, tmpRect, BevelShadow, BevelShadow);
+  end else
+  if FDayView.DrawingStyle = ds3d then begin
+    { Draw a 3d bevel }
+    DrawBevelRect(RenderCanvas, tmpRect, BevelShadow, BevelHighlight);
+    InflateRect(tmpRect, -1, -1);
+    DrawBevelRect(RenderCanvas, tmpRect, BevelDarkShadow, BevelFace);
   end;
 end;
 
@@ -829,7 +851,7 @@ begin
   EventString := BuildEventString(AEvent, EventRect, IconRect);
 
   { draw the event string }
-  DrawEventText(EventString, EventRect, IconRect, AEventRec.Level, EventIsEditing);
+  DrawEventText(EventString, EventRect, IconRect, AEventRec.Level);
 
   { paint the borders around the event text area }
   TPSPolyline(RenderCanvas, Angle, RenderIn, [
@@ -868,7 +890,7 @@ end;
 
 procedure TVpDayViewPainter.DrawEvents(ARenderDate: TDateTime; Col: Integer);
 var
-  I,J: Integer;
+  I: Integer;
   Event: TVpEvent;
   SaveFont: TFont;
   SaveColor: TColor;
@@ -1007,17 +1029,13 @@ begin
 end;
 
 procedure TVpDayViewPainter.DrawEventText(const AText: String;
-  const AEventRect, AIconRect: TRect; ALevel: Integer; AEventIsEditing: Boolean);
+  const AEventRect, AIconRect: TRect; ALevel: Integer);
 var
   WorkRegion1: HRGN;
   WorkRegion2: HRGN;
   TextRegion: HRGN;
   CW: Integer;
 begin
-  {
-  if AEventIsEditing then
-    exit;
-  }
   if (FDayView.WrapStyle <> wsNone) then begin
     if (AEventRect.Bottom <> AIconRect.Bottom) and (AEventRect.Left <> AIconRect.Right)
     then begin
@@ -1602,8 +1620,6 @@ procedure TVpDayViewPainter.RenderToCanvas(ARenderIn: TRect;
   AStartLine, AStopLine: Integer; AUseGran: TVpGranularity; ADisplayOnly: Boolean);
 {wp: DisplayOnly is poorly-named. It is false during screen output in the form,
   it is true during printing and in print preview }
-var
-  tmpRect: TRect;
 begin
   inherited;
 
@@ -1652,16 +1668,16 @@ begin
     RealRowHeadWidth := CalcRowHeadWidth;
     RealColHeadHeight := TVpDayViewOpener(FDayView).dvCalcColHeadHeight(Scale);
 
-    { Calculate the RealNumDays (The number of days the control covers) }
+    // Calculate the RealNumDays (The number of days the control covers)
     RealNumDays := TVpDayViewOpener(FDayView).GetRealNumDays(RenderDate);
 
-    { Draw the all-day events }
+    // Draw the all-day events
     DrawAllDayEvents;
 
-    { Draw the area in the top left corner, where the nav buttons go. }
+    // Draw the area in the top left corner, where the nav buttons go.
     DrawNavBtnBackground;
 
-    { Draw row headers }
+    // Draw row headers
     CalcRowHeadRect(RowHeadRect);
     if Assigned(FDayView.OwnerDrawRowHeader) then begin
       Drawn := false;
@@ -1671,26 +1687,16 @@ begin
     end else
       DrawRowHeader(RowHeadRect);
 
-    { Draw the regular events }
+    // Draw the regular events
     DrawRegularEvents;
 
-    { Draw borders }
-    tmpRect := Rect(RealLeft, RealTop, RealRight-1, RealBottom-1);
-    if FDayView.DrawingStyle = dsFlat then begin
-      { Draw a simple border }
-      DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn, tmpRect), BevelShadow, BevelShadow);
-    end else
-    if FDayView.DrawingStyle = ds3d then begin
-      { Draw a 3d bevel }
-      DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn, tmpRect), BevelShadow, BevelHighlight);
-      InflateRect(tmpRect, -1, -1);
-      DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn, tmpRect), BevelDarkShadow, BevelFace);
-    end;
+    // Draw borders
+    DrawBorders;
 
-    { Place navigation buttons }
+    // Place and draw navigation buttons
     DrawNavBtns;
 
-    { Reinstate RenderCanvas settings }
+    // Restore RenderCanvas settings
     RestorePenBrush;
 
   finally

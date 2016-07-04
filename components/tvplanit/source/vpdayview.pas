@@ -822,19 +822,17 @@ end;
 
 procedure TVpDayView.DeleteActiveEvent(Verify: Boolean);
 var
-  Str: string;
   DoIt: Boolean;
 begin
   if ReadOnly then
     Exit;
+
   dvClickTimer.Enabled := false;
   EndEdit(self);
 
   DoIt := not Verify;
 
   if FActiveEvent <> nil then begin
-    Str := '"' + FActiveEvent.Description + '"';
-
     if Verify then
       DoIt := (MessageDlg(RSConfirmDeleteEvent + #13#10#10 + RSPermanent,
         mtConfirmation, [mbYes, mbNo], 0) = mrYes);
