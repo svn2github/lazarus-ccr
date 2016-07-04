@@ -359,7 +359,6 @@ type
     FLocalizationFile : string;
     FDefaultCountry   : string;
     FCityStateZipFormat: String;
-    FScreenOutput     : Boolean;
   protected{private}
     DependentList: TList;
     procedure Attach (Sender : TComponent);
@@ -380,7 +379,6 @@ type
     procedure TriggerOnPageEnd (Sender: TObject; PageNum: Integer; ADate: TDateTime; LastPage: Boolean);
     procedure TriggerOnPageStart (Sender: TObject; PageNum: Integer; ADate: TDateTime);
     property Localization : TVpLocalization read FLocalization write FLocalization;
-    property ScreenOutput: Boolean read FScreenOutput write FScreenOutput;
   published
     property CityStateZipFormat: String read FCityStateZipFormat write SetCityStateZipFormat;
       // Use symbols @CITY, @STATE, @ZIP to define the order of these strings
@@ -1201,7 +1199,6 @@ var
   I: Integer;
 begin
   inherited;
-  FScreenOutput := true;
 
   DependentList := TList.Create;
 

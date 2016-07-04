@@ -222,13 +222,10 @@ end;
 function TVpPrintPreviewDialog.Execute: Boolean;
 var
   EditForm: TfrmPrintPreview;
-  scr: Boolean;
 begin
   Result := False;
-  scr := ControlLink.ScreenOutput;
   Application.CreateForm(TfrmPrintPreview, EditForm);
   try
-    ControlLink.ScreenOutput := false;
     DoFormPlacement(EditForm);
     EditForm.WindowState := WindowState;
     EditForm.VpPrintPreview1.ControlLink := ControlLink;
@@ -253,7 +250,6 @@ begin
       end;
     end;
   finally
-    ControlLink.ScreenOutput := scr;
     EditForm.Release;
   end;
 end;

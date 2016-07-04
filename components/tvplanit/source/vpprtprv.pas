@@ -706,7 +706,7 @@ begin
     PPageInfo.Contact := 0;
     PPageInfo.Task := 0;
     PPageInfo.LastPage := False;
-    FPageInfo.Add (PPageInfo);
+    FPageInfo.Add(PPageInfo);
     i := 0;
   end;
 

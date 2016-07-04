@@ -182,7 +182,7 @@ begin
    'ca'   : Result := $0403;    // Catalan
    'cs'   : Result := $0405;    // Czech
    'de'   : Result := $0407;    // German
-   'en'   : Result := $0409;    // English  (US)
+   'en'   : Result := $0409;    // English (US)
    'es'   : Result := $040A;    // Spanisch
    'fi'   : Result := $040B;    // Finnish
    'fr'   : Result := $040C;    // French
@@ -190,7 +190,7 @@ begin
    'hu'   : Result := $040E;    // Hungarian
    'it'   : Result := $0410;    // Italian
    'jp'   : Result := $0411;    // Japanese
-   'nl'   : Result := $0413;    // Netherlands
+   'nl'   : Result := $0413;    // Netherlands (Dutch)
    'pl'   : Result := $0415;    // Polish
    'pt'   : Result := $0816;    // Portuguese (Portugal)
    'ru'   : Result := $0419;    // Russian
@@ -367,9 +367,15 @@ begin
          t1 := StartOfTheWeek(now);
          t2 := t1 + 7 - VpDayView1.NumDays mod 7; // + 7;
          fmt.DayInc := VpDayView1.NumDays;
-         VpControlLink1.Printer.Granularity := VpDayView1.Granularity;
-         VpControlLink1.Printer.DayStart := h_08; //VpDayView1.DefaultTopHour;
-         VpControlLink1.Printer.DayEnd := h_17;
+
+
+         // wp: !!!!!!!!!!!!!!!!!!!!!!!!!!!!  bring back in !!!!!!!!!!!!!
+
+//         VpControlLink1.Printer.Granularity := VpDayView1.Granularity;
+//         VpControlLink1.Printer.DayStart := h_08; //VpDayView1.DefaultTopHour;
+//         VpControlLink1.Printer.DayEnd := h_17;
+
+
        end;
     1: begin  // current week in WeekView
          t1 := StartOfTheWeek(now);
@@ -447,6 +453,7 @@ begin
         'he': po.Add('he - Hebrew');
         'hu': po.Add('hu - magyar');
         'it': po.Add('it - Italian');
+        'nl': po.Add('nl - Dutch');
         'ru': po.Add('ru - русский');
       end;
     end;

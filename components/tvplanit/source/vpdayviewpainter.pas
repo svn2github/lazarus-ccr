@@ -1554,6 +1554,8 @@ end;
 procedure TVpDayViewPainter.RenderToCanvas(ARenderIn: TRect;
   AAngle: TVpRotationAngle; AScale: Extended; ARenderDate: TDateTime;
   AStartLine, AStopLine: Integer; AUseGran: TVpGranularity; ADisplayOnly: Boolean);
+{wp: DisplayOnly is poorly-named. It is false during screen output in the form,
+  it is true during printing and in print preview }
 var
   tmpRect: TRect;
 begin
@@ -1562,15 +1564,12 @@ begin
   // Make sure to use only the date part
   ARenderDate := trunc(ARenderDate);
 
-  // Here begins the original routine...
   InitColors;
   SavePenBrush;
   InitPenBrush;
 
   SetMeasurements;
 
-  if StartLine < 0 then
-    StartLine := FDayView.TopLine;
    {
   if DisplayOnly then
     ScrollBarOffset := 2
@@ -1579,9 +1578,22 @@ begin
 
   }
 
-  if (FDayView.VisibleLines < FDayView.LineCount) and FDayView.ControlLink.ScreenOutput then
-    ScrollbarOffset := 14 else
-    ScrollbarOffset := 0;
+  ScrollbarOffset := 0;
+  with TVpDayViewOpener(FDayView) do
+    if ADisplayOnly then begin
+      // use printer settings
+      SetTimeIntervals(ControlLink.Printer.Granularity);
+      TopLine := StartLine;
+      StartLine := TopLine;
+    end else
+    begin
+      // use screen settings
+      SetTimeIntervals(Granularity);
+      if StartLine < 0 then
+        StartLine := FDayView.TopLine;
+      if VisibleLines < LineCount then
+        ScrollbarOffset := 14;
+    end;
 
   Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
   try
