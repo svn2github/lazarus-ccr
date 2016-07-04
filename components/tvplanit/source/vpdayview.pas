@@ -1907,12 +1907,20 @@ begin
     dvInPlaceEditor.Parent := self;
     dvInPlaceEditor.OnExit := EndEdit;
   end;
-  dvInPlaceEditor.SetBounds(
-    dvActiveIconRec.Right + TextMargin,
-    dvActiveEventRec.Top + TextMargin,
-    dvActiveEventRec.Right - dvActiveIconRec.Right - TextMargin,
-    dvActiveEventRec.Bottom - dvActiveEventRec.Top - TextMargin
-  );
+  if FActiveEvent.AllDayEvent then
+    dvInplaceEditor.SetBounds(
+      dvActiveEventRec.Left + 2 * (TextMargin div 2),  // this way it is calculated in DrawAllDayEvents
+      dvActiveEventRec.Top + 2 * (TextMargin div 2),
+      WidthOf(dvActiveEventRec) - TextMargin div 2,
+      HeightOf(dvActiveEventRec)
+    )
+  else
+    dvInPlaceEditor.SetBounds(
+      dvActiveIconRec.Right + TextMargin,
+      dvActiveEventRec.Top + TextMargin,
+      dvActiveEventRec.Right - dvActiveIconRec.Right - TextMargin,
+      dvActiveEventRec.Bottom - dvActiveEventRec.Top - TextMargin
+    );
   dvInPlaceEditor.Show;
   dvInPlaceEditor.Text := FActiveEvent.Description;
   Invalidate;
