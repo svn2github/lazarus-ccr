@@ -190,6 +190,7 @@ begin
    'hu'   : Result := $040E;    // Hungarian
    'it'   : Result := $0410;    // Italian
    'jp'   : Result := $0411;    // Japanese
+   'nl'   : Result := $0413;    // Netherlands
    'pl'   : Result := $0415;    // Polish
    'pt'   : Result := $0816;    // Portuguese (Portugal)
    'ru'   : Result := $0419;    // Russian
