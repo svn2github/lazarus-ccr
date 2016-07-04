@@ -62,6 +62,9 @@ const
   HoursInDay       = 24;      { Number of hours in a day                 }
   MinutesInHour    = 60;      { Number of minutes in an hour             }
   MinutesInDay     = 1440;    { Number of minutes in a day               }
+  OneSecond        = 1.0 / SecondsInDay;
+  OneMinute        = 1.0 / MinutesInDay;
+  OneHour          = 1.0 / HoursInDay;
   MaxDateLen       = 40;      { maximum length of date picture strings   }
   MaxMonthName     = 15;      { maximum length for month names           }
   MaxDayName       = 15;      { maximum length for day names             }

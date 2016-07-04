@@ -691,17 +691,17 @@ begin
   if PageNum < FPageInfo.Count then
     Exit;
 
-  if not Assigned (FControlLink) then
+  if not Assigned(FControlLink) then
     Exit;
 
-  if not Assigned (FControlLink.Printer) then
+  if not Assigned(FControlLink.Printer) then
     Exit;
 
   i := FPageInfo.Count - 1;
   LastPage := False;
 
   if FPageInfo.Count = 0 then begin
-    GetMem(PPageInfo, SizeOf (TVpPageInfo));
+    GetMem(PPageInfo, SizeOf(TVpPageInfo));
     PPageInfo.Date := StartDate;
     PPageInfo.Contact := 0;
     PPageInfo.Task := 0;

@@ -103,6 +103,8 @@ function MonthOfTheYear(TheDate: TDateTime): Word;
 procedure IncAMonth(var Year, Month, Day: Word; NumMonths: Integer);
 function IncMonth(const TheDate: TDateTime; NumberOfMonths: Integer): TDateTime;
 function IncYear(TheDate: TDateTime; NumYears: Integer): TDateTime;
+function TimeOf(ADateTime: TDateTime): TDateTime;
+function DateOf(ADateTime: TDateTime): TDateTime;
 {$ENDIF}{$ENDIF}
 
 function GetJulianDate(Date: TDateTime): Word;
@@ -127,11 +129,14 @@ function EncodeLineEndings(const AText: String): String;
 implementation
 
 uses
+ {$IFDEF LCL}
+  DateUtils,
+ {$ENDIF}
   VpException, VpSR;
 
 procedure StripString(var Str: string);
 begin
-  if Length (Str) < 1 then
+  if Length(Str) < 1 then
     Exit;
   while (Length(Str) > 0) and (not (Str[1] in ['A'..'Z', 'a'..'z', '0'..'9'])) do
     delete(Str, 1, 1);
@@ -368,20 +373,20 @@ end;
 
 
 {$IFDEF DELPHI} {$IFNDEF Delphi6}
-function MonthOfTheYear (TheDate : TDateTime) : Word;
+function MonthOfTheYear(TheDate: TDateTime): Word;
 var
   Year, Day: Word;
 begin
-  DecodeDate (TheDate, Year, Result, Day);
+  DecodeDate(TheDate, Year, Result, Day);
 end;
 {=====}
 
-procedure IncAMonth (var Year, Month, Day : Word; NumMonths : Integer);
+procedure IncAMonth(var Year, Month, Day: Word; NumMonths: Integer);
 type
   PMonthDayTable = ^TMonthDayTable;
   TMonthDayTable = array[1..12] of Word;
 const
-  MonthDays: array [Boolean] of TMonthDayTable =
+  MonthDays: array[Boolean] of TMonthDayTable =
     ((31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31),
      (31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31));
 var
@@ -392,34 +397,45 @@ begin
     Sign := 1
   else
     Sign := -1;
-  Year := Year + (NumMonths div 12);
+  Year := Year + NumMonths div 12;
   NumMonths := NumMonths mod 12;
   Inc (Month, NumMonths);
-  if Word (Month-1) > 11 then
+  if Word(Month-1) > 11 then
   begin
-    Inc (Year, Sign);
-    Inc (Month, -12 * Sign);
+    Inc(Year, Sign);
+    Inc(Month, -12 * Sign);
   end;
-  DayTable := @MonthDays[IsLeapYear (Year)];
+  DayTable := @MonthDays[IsLeapYear(Year)];
   if Day > DayTable^[Month] then
     Day := DayTable^[Month];
 end;
 {=====}
 
-function IncMonth(const TheDate : TDateTime; NumberOfMonths : Integer) : TDateTime;
+function IncMonth(const TheDate: TDateTime; NumberOfMonths: Integer): TDateTime;
 var
-  Year, Month, Day : Word;
+  Year, Month, Day: Word;
 begin
-  DecodeDate (TheDate, Year, Month, Day);
-  IncAMonth (Year, Month, Day, NumberOfMonths);
-  Result := EncodeDate (Year, Month, Day);
+  DecodeDate(TheDate, Year, Month, Day);
+  IncAMonth(Year, Month, Day, NumberOfMonths);
+  Result := EncodeDate(Year, Month, Day);
 end;
 {=====}
 
-function IncYear (TheDate : TDateTime; NumYears : Integer) : TDateTime;
+function IncYea (TheDate: TDateTime; NumYear : Integer) : TDateTime;
 begin
-  Result := IncMonth (TheDate, NumYears * 12);
+  Result := IncMont (TheDate, NumYears * 12);
 end;
+
+function DateOf(ADateTime: TDateTime): TDateTime;
+begin
+  Result := trunc(ADateTime);
+end;
+
+function TimeOf(ADateTime: TDateTime): TDateTime;
+begin
+  Result := frac(ADateTime);
+end;
+
 {=====}
 {$ENDIF}{$ENDIF}
 
@@ -455,7 +471,7 @@ var
   Time: Double;
 begin
   { remove the date part, and add one minute to the time }
-  Time := frac(StartTime) + 1 / MinutesInDay;
+  Time := TimeOf(StartTime) + OneMinute;
   LineDuration := GranularityMinutes[Granularity] / MinutesInDay;
   result := trunc(Time / LineDuration);
 end;
@@ -467,7 +483,7 @@ var
   Time: Double;
 begin
   { remove the date part, and subtract one minute from the time }
-  Time := frac(EndTime) - 1 / MinutesInDay;
+  Time := TimeOf(EndTime) - OneMinute;
   LineDuration := GranularityMinutes[Granularity] / MinutesInDay;
   result := trunc(Time / LineDuration);
 end;
@@ -478,8 +494,8 @@ function GetAlarmAdvanceTime(Advance: Integer;
 begin
   result := 0.0;
   case AdvanceType of
-    atMinutes : result := Advance / MinutesInDay;
-    atHours   : result := Advance * 60 / MinutesInDay;
+    atMinutes : result := Advance * OneMinute;
+    atHours   : result := Advance * OneHour;
     atDays    : result := Advance;
   end;
 end;
