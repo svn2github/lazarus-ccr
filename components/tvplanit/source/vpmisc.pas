@@ -109,6 +109,7 @@ function DateOf(ADateTime: TDateTime): TDateTime;
 
 function GetJulianDate(Date: TDateTime): Word;
 function GetWeekOfYear(ADate: TDateTime): byte;
+function IsWeekEnd(ADate: TDateTime): Boolean;
 function SameDate(dt1, dt2: TDateTime): Boolean;
 function DateInRange(ADate, StartDate, EndDate: TDateTime; IncludeLimits: Boolean): Boolean;
 function TimeInRange(ATime, StartTime, EndTime: TDateTime; IncludeLimits: Boolean): Boolean;
@@ -601,6 +602,12 @@ begin
   DecodeDate(ADate + (8 - DayOfWeek(ADate)) mod 7 - 3, yr, dummy,dummy);
   First := EncodeDate(yr, 1, 1);
   Result := trunc(ADate - First - 3 + (DayOfWeek(First) + 1) mod 7) div 7 + 1;
+end;
+
+// Returns true if the specified date is on the weekend.
+function IsWeekend(ADate: TDateTime): Boolean;
+begin
+  Result := (DayOfWeek(ADate) in [1, 7]);
 end;
 
 function DecodeLineEndings(const AText: String): String;

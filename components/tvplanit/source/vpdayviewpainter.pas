@@ -283,7 +283,7 @@ var
   Event: TVpEvent;
   ADEvRect: TRect;
   StartsBeforeRange : Boolean;
-  MaxADEvents: Integer;
+  NumADEvents: Integer;
   Skip: Boolean;
   ADTextHeight: Integer;
   EventStr: string;
@@ -293,15 +293,17 @@ var
   OldTop: LongInt;
   txtDist: Integer;
 begin
-  { Initialize the rectangle to be used for all-day events }
+  // Initialize the rectangle to be used for all-day events
   ADEventsRect := InitAllDayEventsRect;
 
+  {
   if (FDayView.DataStore = nil) or (FDayView.DataStore.Resource = nil) then
     Exit;
+  }
 
-  { Collect all of the events for this range and determine the maximum     }
-  { number of all day events for the range of days covered by the control. }
-  MaxADEvents := 0;
+  // Collect all of the events for this range and determine the maximum
+  // number of all day events for the range of days covered by the control.
+  NumADEvents := 0;
 
   AllDayWidth := RealWidth - RealRowHeadWidth - TextMargin - ScrollBarOffset;
   DayWidth := AllDayWidth div FDayView.NumDays;
@@ -311,16 +313,14 @@ begin
     TempList := TList.Create;
     try
       for I := 0 to pred(RealNumDays) do begin
-        { skip weekends }
-        if ((DayOfWeek (RenderDate + i) = 1) or (DayOfWeek (RenderDate + i) = 7)) and
-            (not FDayView.IncludeWeekends)
-        then
+        // Skip weekends
+        if (not FDayView.IncludeWeekends) and IsWeekend(RenderDate + i) then
           Continue;
 
-        { get the all day events for the day specified by RenderDate + I }
+        // Get the all day events for the day specified by RenderDate + I
         FDayView.DataStore.Resource.Schedule.AllDayEventsByDate(RenderDate + I, TempList);
 
-        { Iterate through these events and place them in ADEventsList    }
+        // Iterate through these events and place them in ADEventsList
         Skip := false;
         for J := 0 to pred(TempList.Count) do begin
           if AdEventsList.Count > 0 then begin
@@ -336,14 +336,14 @@ begin
             AdEventsList.Add(TempList[J]);
         end;
 
-        if TempList.Count > MaxADEvents then
-          MaxADEvents := TempList.Count;
+        if TempList.Count > NumADEvents then
+          NumADEvents := TempList.Count;
       end;
     finally
       TempList.Free;
     end;
 
-    if MaxADEvents > 0 then begin
+    if NumADEvents > 0 then begin
       // Measure the AllDayEvent text height
       RenderCanvas.Font.Assign(FDayView.AllDayEventAttributes.Font);
       ADTextHeight := RenderCanvas.TextHeight(VpProductName) + TextMargin;
@@ -354,8 +354,8 @@ begin
       // Store the top of the event's rect
       OldTop := ADEventsRect.Top;
 
-      // Build the AllDayEventsRect based on the value of MaxADEvents
-      ADEventsRect.Bottom := AdEventsRect.Top + TextMargin + MaxADEvents * (ADTextHeight + txtDist);
+      // Build the AllDayEventsRect based on the count of all-day events
+      ADEventsRect.Bottom := AdEventsRect.Top + 2*txtDist + NumADEvents * (ADTextHeight + txtDist);
 
       // Clear the AllDayEvents area using its background color
       RenderCanvas.Brush.Color := RealADEventBkgColor;
@@ -376,7 +376,7 @@ begin
 
             // Set the event's rect
             AdEvRect.Top := OldTop + txtDist + DI * (ADTextHeight + txtDist);
-            AdEvRect.Bottom := ADEvRect.Top + ADTextHeight + txtDist;
+            AdEvRect.Bottom := ADEvRect.Top + ADTextHeight + txtDist*2;
             AdEvRect.Left := AdEventsRect.Left + DayWidth * I + txtDist;
             AdEvRect.Right := AdEventsRect.Left + DayWidth * (I + 1) - txtDist;
 
@@ -386,7 +386,7 @@ begin
               ADEvRect.Left + txtDist,
               ADEvRect.Top + txtDist,
               ADEvRect.Right - txtDist,
-              ADEvRect.Top + ADTextHeight + txtDist
+              ADEvRect.Top + ADTextHeight // + txtDist*2
             );
 
             EventStr := IfThen(StartsBeforeRange, '>> ', '') + Event.Description;
@@ -394,7 +394,7 @@ begin
 
             TPSTextOut(RenderCanvas,Angle, RenderIn,
               AdEvRect.Left + TextMargin,
-              AdEvRect.Top + TextMargin,
+              AdEvRect.Top + txtDist, // AdEvRect.Bottom - ADTextHeight) div 2, //TextMargin,
               EventStr
             );
 
@@ -1129,8 +1129,8 @@ procedure TVpDayViewPainter.DrawNavBtnBackground;
 var
   R: TRect;
 begin
+  // Draw the background
   RenderCanvas.Brush.Color := RealHeadAttrColor;
-
   R := Rect(
     RealLeft + 1,
     RealTop,
@@ -1142,9 +1142,9 @@ begin
     TPSFillRect(RenderCanvas, Angle, RenderIn, R);
     exit;
   end;
-
   TPSFillRect(RenderCanvas, Angle, RenderIn, R);
 
+  // Draw the border
   if FDayView.DrawingStyle = ds3d then begin
     R := Rect(R.Left + 1, R.Top + 2, R.Right - 2, R.Bottom - 1);
     DrawBevelRect(
@@ -1249,13 +1249,18 @@ var
   MinuteStr, HourStr: string;
   SaveFont: TFont;
   x: Integer;
+  adEvHeight: Integer;
 begin
   if StartLine < 0 then
     StartLine := FDayView.TopLine;
 
+  adEvHeight := HeightOf(ADEventsRect);
+
   SaveFont := TFont.Create;
   try
     { Draw row header background }
+    dec(R.Top, adEvHeight); // include the empty area to the left of all-day events
+
     if FDayView.DrawingStyle = dsNoBorder then
       InflateRect(R, 1,1);
     RenderCanvas.Pen.Style := psClear;
@@ -1265,7 +1270,9 @@ begin
     if FDayView.DrawingStyle = dsNoBorder then
       InflateRect(R, -1,-1);
 
-    RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
+    inc(R.Top, adEvHeight);
+
+    // Calculate the number of visible lines
     RealVisibleLines := TVpDayViewOpener(FDayView).dvCalcVisibleLines(
       HeightOf(R),
       RealColHeadHeight,
@@ -1274,14 +1281,22 @@ begin
       StartLine,
       StopLine
     );
+
+    // Calculate length of minutes ticks
+    RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
     MinutesLen := RenderCanvas.TextWidth('00') + MINUTES_BORDER + MINUTES_HOUR_DISTANCE div 2;
 
     RenderCanvas.Pen.Style := psSolid;
     RenderCanvas.Pen.Color := RealLineColor;
     LineRect := Rect(R.Left, R.Top, R.Right, R.Top + RealRowHeight);
-    Hour := Ord(TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine].Hour);
 
-    i := High(TVpDayviewOpener(FDayview).dvLinematrix[0]);
+    // If there are all-day events we must paint the tick line for the first hour
+    if adEvHeight > 0 then begin
+      TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Right - 6, LineRect.Top);
+      TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Left + 6, LineRect.Top)
+    end;
+
+    Hour := Ord(TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine].Hour);
 
     for I := 0 to RealVisibleLines + 1 do begin    // ok: + 1 needed to see the partial line at the bottom
       { prevent any extraneous drawing below the last hour }
@@ -1353,7 +1368,7 @@ begin
     { Draw Row Header Borders }
     if FDayView.DrawingStyle = dsFlat then begin
       RenderCanvas.Pen.Color := BevelShadow;
-      TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Top);
+      TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Top - adEvHeight);
       TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Bottom - 1);
       {
       DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn,
@@ -1366,7 +1381,7 @@ begin
     else
     if FDayView.DrawingStyle = ds3d then begin
       DrawBevelRect(RenderCanvas,
-        TPSRotateRectangle(Angle, RenderIn, Rect(R.Left + 1, R.Top, R.Right - 1, R.Bottom - 1)),
+        TPSRotateRectangle(Angle, RenderIn, Rect(R.Left + 1, R.Top- adEvHeight, R.Right - 1, R.Bottom - 1)),
         BevelHighlight,
         BevelDarkShadow
       );
@@ -1526,7 +1541,7 @@ end;
 { initialize the all-day events area }
 function TVpDayViewPainter.InitAllDayEventsRect: TRect;
 begin
-  Result.Left := RealLeft + 3 + RealRowHeadWidth;
+  Result.Left := RealLeft + 2 + RealRowHeadWidth;  // wp: was 3
   Result.Top := RealTop + RealColHeadHeight;
   Result.Right := FDayView.ClientRect.Right;
   Result.Bottom := Result.Top;
