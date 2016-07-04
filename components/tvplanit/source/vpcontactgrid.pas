@@ -1879,9 +1879,9 @@ begin
   { font, the standard client font, and a sample character string.     }
   SaveFont := Canvas.Font;
   Canvas.Font := FContactHeadAttr.Font;
-  cgRowHeight := Canvas.TextHeight(RSTallShortChars);
+  cgRowHeight := Canvas.TextHeight(TallShortChars);
   Canvas.Font.Assign(SaveFont);
-  Temp := Canvas.TextHeight(RSTallShortChars);
+  Temp := Canvas.TextHeight(TallShortChars);
   if Temp > cgRowHeight then
     cgRowHeight := Temp;
   cgRowHeight := cgRowHeight + TextMargin * 2;

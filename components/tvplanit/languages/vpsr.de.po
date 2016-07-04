@@ -942,10 +942,6 @@ msgstr "Betreff:"
 msgid "Sunday"
 msgstr "Sonntag"
 
-#: vpsr.rstallshortchars
-msgid "Wy"
-msgstr "Wy"
-
 #: vpsr.rstaskcomplete
 msgctxt "vpsr.rstaskcomplete"
 msgid "Task complete"
@@ -1385,3 +1381,4 @@ msgstr "Unbekannte Achsen-Spezifikation: %s"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "Die XML-Deklaration muss vor dem ersten Element erscheinen."
+

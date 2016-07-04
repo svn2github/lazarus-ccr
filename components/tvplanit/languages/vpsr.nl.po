@@ -942,10 +942,6 @@ msgstr "Onderwerp:"
 msgid "Sunday"
 msgstr "Zondag"
 
-#: vpsr.rstallshortchars
-msgid "Wy"
-msgstr "Wy"
-
 #: vpsr.rstaskcomplete
 msgctxt "vpsr.rstaskcomplete"
 msgid "Task complete"

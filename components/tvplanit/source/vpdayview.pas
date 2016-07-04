@@ -1232,9 +1232,9 @@ begin
   Canvas.Font.Assign(FHeadAttr.Font);
 
   if FShowResourceName and (DataStore <> nil) and (DataStore.Resource <> nil) then
-    TextHeight := Canvas.TextHeight(RSTallShortChars) * 2 + TextMargin * 3
+    TextHeight := Canvas.TextHeight(TallShortChars) * 2 + TextMargin * 3
   else
-    TextHeight := Canvas.TextHeight(RSTallShortChars) + TextMargin * 2;
+    TextHeight := Canvas.TextHeight(TallShortChars) + TextMargin * 2;
   Result := Round(TextHeight * Scale);
   dvColHeadHeight := Result; 
 end;
@@ -1344,9 +1344,9 @@ begin
   SaveFont := Canvas.Font;
   Canvas.Font.Assign(FRowHeadAttr.FMinuteFont);
   Canvas.Font.Height := GetRealFontHeight(Canvas.Font);
-  Result := Canvas.TextHeight(RSTallShortChars);
+  Result := Canvas.TextHeight(TallShortChars);
   Canvas.Font.Assign(SaveFont);
-  Temp := Canvas.TextHeight(RSTallShortChars);
+  Temp := Canvas.TextHeight(TallShortChars);
   if Temp > Result then
     Result := Temp;
   Result := Result + TextMargin * 2;
@@ -1371,7 +1371,7 @@ begin
     Result := 0;
     i := 0;
     while i < FNumDays do begin
-      if (DayOfWeek (WorkDate) <> 1) and (DayOfWeek (WorkDate) <> 7) then
+      if (DayOfWeek(WorkDate) <> 1) and (DayOfWeek(WorkDate) <> 7) then
         Inc(i);
       WorkDate := WorkDate + 1;
       Inc (Result);

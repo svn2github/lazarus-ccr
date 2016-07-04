@@ -88,6 +88,9 @@ const
   ContactsTableName = 'Contacts';
   RecordIDTableName = 'RecordIDS';
 
+  TallShortChars    = 'Wy';
+
+
   {virtual key constants not already defined}
   VK_NONE = 0;
   VK_ALT  = VK_MENU;

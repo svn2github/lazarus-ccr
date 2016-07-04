@@ -960,10 +960,6 @@ msgstr "Тема:"
 msgid "Sunday"
 msgstr "Воскресенье"
 
-#: vpsr.rstallshortchars
-msgid "Wy"
-msgstr ""
-
 #: vpsr.rstaskcomplete
 msgctxt "vpsr.rstaskcomplete"
 msgid "Task complete"

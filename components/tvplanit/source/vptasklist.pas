@@ -1213,9 +1213,9 @@ begin
   { font, the standard client font, and a sample character string.     }
   SaveFont := Canvas.Font;
   Canvas.Font := FTaskHeadAttr.Font;
-  tlRowHeight := Canvas.TextHeight(RSTallShortChars);
+  tlRowHeight := Canvas.TextHeight(TallShortChars);
   Canvas.Font.Assign(SaveFont);
-  Temp := Canvas.TextHeight(RSTallShortChars);
+  Temp := Canvas.TextHeight(TallShortChars);
   if Temp > tlRowHeight then
     tlRowHeight := Temp;
   tlRowHeight := tlRowHeight + TextMargin * 2;

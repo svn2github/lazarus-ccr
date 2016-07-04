@@ -36,7 +36,6 @@ resourcestring
   RSNo                      = 'N';
   RSTrue                    = 'T';
   RSFalse                   = 'F';
-  RSTallShortChars          = 'Wy';
   RSDelete                  = 'Delete';
   RSNotDoneYet              = 'This feature is not implemented at this time.';
   RSNoTimersAvail           = 'No Window''s timers are available.';
