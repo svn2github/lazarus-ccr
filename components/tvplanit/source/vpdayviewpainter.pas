@@ -25,7 +25,6 @@ type
   private
     FDayView: TVpDayView;
     // local parameters of the old render procedure
-    TextWidth: Integer;
     ColHeadRect: TRect;
     CellsRect: TRect;
     RowHeadRect: TRect;
@@ -77,6 +76,7 @@ type
   protected
     function BuildEventString(AEvent: TVpEvent; const AEventRect, AIconRect: TRect): String;
     procedure CalcRowHeadRect(out ARect: TRect);
+    function CalcRowHeadWidth: Integer;
     function CountOverlappingEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
     procedure CreateBitmaps;
     function DetermineIconRect(AEventRect: TRect): TRect;
@@ -95,6 +95,7 @@ type
     procedure DrawNavBtnBackground;
     procedure DrawRegularEvents;
     procedure DrawRowHeader(R: TRect);
+    procedure FixFontHeights;
     procedure FreeBitmaps;
     procedure GetIcons(Event: TVpEvent);
     procedure InitColors;
@@ -1389,6 +1390,26 @@ begin
     inc(ARect.Left);
 end;
 
+function TVpDayViewPainter.CalcRowHeadWidth: integer;
+var
+  w: Integer;
+begin
+  RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.HourFont);
+  w := RenderCanvas.TextWidth('33');
+  Result := w * 2 + 10;
+end;
+
+procedure TVpDayViewPainter.FixFontHeights;
+begin
+  with FDayView do begin
+    AllDayEventAttributes.Font.Height := GetRealFontHeight(AllDayEventAttributes.Font);
+    Font.Height := GetRealFontHeight(Font);
+    HeadAttributes.Font.Height := GetRealFontHeight(HeadAttributes.Font);
+    RowHeadAttributes.HourFont.Height := GetRealFontHeight(RowHeadAttributes.HourFont);
+    RowHeadAttributes.MinuteFont.Height := GetRealFontHeight(RowHeadAttributes.MinuteFont);
+  end;
+end;
+
 procedure TVpDayViewPainter.FreeBitmaps;
 begin
   dvBmpRecurring.Free;
@@ -1600,21 +1621,12 @@ begin
     SelectClipRgn(RenderCanvas.Handle, Rgn);
 
     // Fix zero font heights for printer
-    with FDayView do begin
-      AllDayEventAttributes.Font.Height := GetRealFontHeight(AllDayEventAttributes.Font);
-      Font.Height := GetRealFontHeight(Font);
-      HeadAttributes.Font.Height := GetRealFontHeight(HeadAttributes.Font);
-      RowHeadAttributes.HourFont.Height := GetRealFontHeight(RowHeadAttributes.HourFont);
-      RowHeadAttributes.MinuteFont.Height := GetRealFontHeight(RowHeadAttributes.MinuteFont);
-    end;
+    FixFontHeights;
 
     { Calculate Row Header }
     RealRowHeight := TVpDayViewOpener(FDayView).dvCalcRowHeight(Scale, UseGran);
     RealColHeadHeight := TVpDayViewOpener(FDayView).dvCalcColHeadHeight(Scale);
-
-    RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.HourFont);
-    TextWidth := RenderCanvas.TextWidth('33');
-    RealRowHeadWidth := TextWidth * 2 + 10;
+    RealRowHeadWidth := CalcRowHeadWidth;
 
     { initialize the All Day Events area... }
     ADEventsRect.Left := RealLeft + 3 + RealRowHeadWidth;

@@ -86,16 +86,16 @@ type
     procedure CbGranularityChange(Sender: TObject);
     procedure CbLanguagesChange(Sender: TObject);
     procedure CbTimeFormatChange(Sender: TObject);
+    procedure DaysTrackBarChange(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
+    procedure MnuAboutClick(Sender: TObject);
     procedure MnuPrintPreviewClick(Sender: TObject);
     procedure MnuQuitClick(Sender: TObject);
     procedure MnuResourcesClick(Sender: TObject);
     procedure MnuSettingsClick(Sender: TObject);
-    procedure MnuAboutClick(Sender: TObject);
     procedure RbAllTasksChange(Sender: TObject);
     procedure RbHideCompletedTasksChange(Sender: TObject);
-    procedure DaysTrackBarChange(Sender: TObject);
     procedure VpNavBar1ItemClick(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; Index: Integer);
   private
@@ -367,6 +367,12 @@ begin
          t1 := StartOfTheWeek(now);
          t2 := t1 + 7 - VpDayView1.NumDays mod 7; // + 7;
          fmt.DayInc := VpDayView1.NumDays;
+
+         t1 := date;
+         t2 := t1;   // wp: just for debugging of prt to reduce painting calls
+         fmt.dayInc := 0;
+
+
 
 
          // wp: !!!!!!!!!!!!!!!!!!!!!!!!!!!!  bring back in !!!!!!!!!!!!!

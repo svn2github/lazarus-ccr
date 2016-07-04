@@ -705,7 +705,7 @@ object MainForm: TMainForm
             Version = 'v1.04'
             Caption.Caption = 'Current week'
             Caption.Font.Style = [fsItalic]
-            DayOffset = 1
+            DayOffset = 0
             DayOffsetUnits = duDay
             Height = 100
             Left = 0
