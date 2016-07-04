@@ -1197,25 +1197,20 @@ var
 begin
   result := false;
 
-  if (Event.RepeatCode <> rtNone)
-  and (trunc(Event.RepeatRangeEnd + 1) > now)
-  then begin
+  if (Event.RepeatCode <> rtNone) and (trunc(Event.RepeatRangeEnd + 1) > now) then
+  begin
     case Event.RepeatCode of
       rtDaily:
-        if (Day < trunc(Event.RepeatRangeEnd) + 1)
-        and (Day > trunc(Event.StartTime)) then begin
+        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
           result := true;
-        end;
 
       rtWeekly:
-        if (Day < trunc(Event.RepeatRangeEnd) + 1)
-        and (Day > trunc(Event.StartTime)) then begin
+        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
           result := (Trunc(Day) - Trunc(Event.StartTime)) mod 7 = 0;
-        end;
 
       rtMonthlyByDay:
-        if (Day < trunc(Event.RepeatRangeEnd) + 1)
-        and (Day > trunc(Event.StartTime)) then begin
+        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
+        begin
           { get the year, month and day of the first event in the series   }
           DecodeDate(Event.StartTime, EY, EM, ED);
           { get the weekday of the first event in the series               }
@@ -1237,8 +1232,8 @@ begin
         end;
 
       rtMonthlyByDate:
-        if (Day < trunc(Event.RepeatRangeEnd) + 1)
-        and (Day > trunc(Event.StartTime)) then begin
+        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
+        begin
           { get the year, month and day of the first event in the series   }
           DecodeDate(Event.StartTime, EY, EM, ED);
           { get the year, month and day of the "Day" parameter             }
@@ -1249,8 +1244,8 @@ begin
         end;
 
       rtYearlyByDay:
-        if (Day < trunc(Event.RepeatRangeEnd) + 1)
-        and (Day > trunc(Event.StartTime)) then begin
+        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
+        begin
           { get the julian date of the first event in the series           }
           EventJulian := GetJulianDate(Event.StartTime);
           { get the julian date of the "Day" parameter                     }
@@ -1261,8 +1256,8 @@ begin
         end;
 
       rtYearlyByDate:
-        if (Day < trunc(Event.RepeatRangeEnd) + 1)
-        and (Day > trunc(Event.StartTime)) then begin
+        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
+        begin
           { get the year, month and day of the first event in the series   }
           DecodeDate(Event.StartTime, EY, EM, ED);
           { get the year, month and day of the "Day" parameter             }
@@ -1273,13 +1268,12 @@ begin
         end;
 
       rtCustom:
-        if (Day < trunc(Event.RepeatRangeEnd) + 1)
-        and (Day > trunc(Event.StartTime)) then begin
+        if (Day < trunc(Event.RepeatRangeEnd) + 1) and (Day > trunc(Event.StartTime)) then
+        begin
           { if the number of elapsed days between the "Day" parameter and  }
           { the event start time is evenly divisible by the event's custom }
           { interval, then we have a recurrence on this day                }
-           result := (Trunc(Day) - Trunc(Event.StartTime))
-             mod Event.CustomInterval = 0;
+           result := (Trunc(Day) - Trunc(Event.StartTime)) mod Event.CustomInterval = 0;
         end;
     end;
   end;
@@ -1294,16 +1288,14 @@ begin
   result := 0;
   for I := 0 to pred(EventCount) do begin
     Event := GetEvent(I);
-    { if this is a repeating event and it falls on today then inc     }
-    { result                                                          }
-    if (Event.RepeatCode > rtNone)
-    and (RepeatsOn(Event, Value))
-    then
+    { if this is a repeating event and it falls on today then inc result }
+    if (Event.RepeatCode > rtNone) and RepeatsOn(Event, Value) then
       Inc(Result)
-    { otherwise if it is an event that naturally falls on today, then }
-    { inc result                                                      }
-    else if ((trunc(Value) >= trunc(Event.StartTime))
-         and (trunc(Value) <= trunc(Event.EndTime))) then
+    { Otherwise if it is an event that naturally falls on today, then inc result }
+//    else if ((trunc(Value) >= trunc(Event.StartTime))
+//         and (trunc(Value) <= trunc(Event.EndTime))) then
+    else
+    if DateInRange(Value, Event.StartTime, Event.EndTime, true) then
       Inc(Result);
   end;
 end;
@@ -1348,8 +1340,11 @@ begin
     { Add this days events to the Event List. }
     for I := 0 to pred(EventCount) do begin
       Event := GetEvent(I);
-      if (((trunc(Date) >= trunc(Event.StartTime)) and (trunc(Date) <= trunc(Event.EndTime))) or (RepeatsOn(Event,Date)))
-      and (Event.AllDayEvent) then
+      if Event.AllDayEvent and
+        (DateInRange(Date, Event.StartTime, Event.EndTime, true) or RepeatsOn(Event, Date))
+      then
+//      if (((trunc(Date) >= trunc(Event.StartTime)) and (trunc(Date) <= trunc(Event.EndTime))) or (RepeatsOn(Event,Date)))
+//        and (Event.AllDayEvent) then
         EventList.Add(Event);
     end;
   end;

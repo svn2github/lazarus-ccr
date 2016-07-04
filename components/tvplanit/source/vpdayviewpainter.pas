@@ -1559,6 +1559,9 @@ var
 begin
   inherited;
 
+  // Make sure to use only the date part
+  ARenderDate := trunc(ARenderDate);
+
   // Here begins the original routine...
   InitColors;
   SavePenBrush;

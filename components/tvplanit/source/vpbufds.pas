@@ -193,8 +193,6 @@ begin
 end;
 
 procedure TVpBufDSDatastore.SetConnected(const Value: boolean);
-var
-  dir: String;
 begin
   { Don't do anything with live data until run time. }
   if (csDesigning in ComponentState) or (csLoading in ComponentState) then
@@ -211,8 +209,6 @@ begin
 end;
 
 procedure TVpBufDSDatastore.SetDirectory(AValue: String);
-var
-  wasConn: Boolean;
 begin
   if AValue = FDirectory then
     exit;

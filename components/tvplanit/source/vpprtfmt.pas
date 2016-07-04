@@ -1268,34 +1268,6 @@ procedure TVpPrinter.AddDefaultVariables(Date: TDateTime);
       Result := '12'
     else
       Result := IntToStr(ord(Hour) mod 12);
-    {
-      case Hour of
-        h_00 : Result := '12';
-        h_01 : Result := '1';
-        h_02 : Result := '2';
-        h_03 : Result := '3';
-        h_04 : Result := '4';
-        h_05 : Result := '5';
-        h_06 : Result := '6';
-        h_07 : Result := '7';
-        h_08 : Result := '8';
-        h_09 : Result := '9';
-        h_10 : Result := '10';
-        h_11 : Result := '11';
-        h_12 : Result := '12';
-        h_13 : Result := '1';
-        h_14 : Result := '2';
-        h_15 : Result := '3';
-        h_16 : Result := '4';
-        h_17 : Result := '5';
-        h_18 : Result := '6';
-        h_19 : Result := '7';
-        h_20 : Result := '8';
-        h_21 : Result := '9';
-        h_22 : Result := '10';
-        h_23 : Result := '11';
-      end;
-      }
   end;
 
   function GranularityToStr(Gran: TVpGranularity): string;
@@ -1574,8 +1546,8 @@ var
 
     Scale := PixelsPerInchY / Screen.PixelsPerInch;
 
-    StartLine := HourToLine (DayStart, Granularity);
-    EndLine := HourToLine (DayEnd, Granularity);
+    StartLine := HourToLine(DayStart, Granularity);
+    EndLine := HourToLine(DayEnd, Granularity);
   end;
 
   procedure GetPrintRectangle(Element: TVpPrintFormatElementItem);
