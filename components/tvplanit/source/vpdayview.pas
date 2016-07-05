@@ -1197,19 +1197,31 @@ function TVpDayView.dvCalcVisibleLines(RenderHeight, ColHeadHeight, RowHeight: I
   Scale: Extended; StartLine, StopLine: Integer): Integer;
 var
   vertical: integer;
+  d, m: Integer;        // d = result of "div", m = result of "mod"
 begin
   if StartLine < 0 then
     StartLine := TopLine;
 
   { take into account the number lines that are allowed! }
-  vertical := Round(RenderHeight - ColHeadHeight * Scale - 2);
-  Result := trunc(Vertical div RowHeight) + 1; // - 4; //+2;
+//  vertical := Round(RenderHeight - ColHeadHeight * Scale - 2);
+  vertical := Round(RenderHeight - ColHeadHeight * Scale);
+  DivMod(Vertical, RowHeight, d, m);
+  Result := d + ord(m <> 0);
+  {
+  if Vertical mod RowHeight = 0 then
+    Result :=
+  Result := Vertical div RowHeight + 1; // - 4; //+2;
+  }
   if Result > FLineCount then
     Result := FLineCount;
 
+  if (StopLine > 0) and (StopLine > StartLine) and (Result > Stopline-StartLine) then
+    Result := StopLine - StartLine + 1;
+   {
   if (StopLine > 0) and (StopLine > StartLine) then
     if Result > StopLine - StartLine then
       Result := StopLine - StartLine + 2;
+  }
   FVisibleLines := Result;
 end;
 {=====}

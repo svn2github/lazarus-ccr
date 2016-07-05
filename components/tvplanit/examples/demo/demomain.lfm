@@ -690,9 +690,9 @@ object MainForm: TMainForm
     DataStore = VpBufDSDataStore1
     LocalizationFile = '../../source/vplocalize.xml'
     Printer.BottomMargin = 5
-    Printer.DayStart = h_02
+    Printer.DayStart = h_08
     Printer.DayEnd = h_16
-    Printer.Granularity = gr60Min
+    Printer.Granularity = gr30Min
     Printer.LeftMargin = 5
     Printer.MarginUnits = imPercent
     Printer.PrintFormats = <    

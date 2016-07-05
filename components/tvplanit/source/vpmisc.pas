@@ -114,6 +114,10 @@ function SameDate(dt1, dt2: TDateTime): Boolean;
 function DateInRange(ADate, StartDate, EndDate: TDateTime; IncludeLimits: Boolean): Boolean;
 function TimeInRange(ATime, StartTime, EndTime: TDateTime; IncludeLimits: Boolean): Boolean;
 
+function GranularityToStr(Gran: TVpGranularity): string;
+function HourToAMPM(Hour: TVpHours): string;
+function HourToStr(Hour: TVpHours; Mil: Boolean): string;
+
 function HourToLine(const Value: TVpHours; const Granularity: TVpGranularity): Integer;
 function GetStartLine(StartTime: TDateTime; Granularity: TVpGranularity): Integer;
 function GetEndLine (EndTime: TDateTime; Granularity: TVpGranularity): Integer;
@@ -460,11 +464,34 @@ begin
 end;
 {=====}
 
+function GranularityToStr(Gran: TVpGranularity): string;
+begin
+  Result := IntToStr(GranularityMinutes[Gran]);
+end;
+
+function HourToAMPM(Hour: TVpHours): string;
+begin
+  if (Hour >= H_00) and (Hour <= H_11) then
+    Result := 'AM'
+  else
+    Result := 'PM';
+end;
+
 function HourToLine(const Value: TVpHours; const Granularity: TVpGranularity): Integer;
 begin
   Result := Ord(Value) * 60 div GranularityMinutes[Granularity];
 end;
-{=====}
+
+function HourToStr(Hour: TVpHours; Mil: Boolean): string;
+begin
+  if Mil then
+    Result := IntToStr(ord(Hour))
+  else
+  if ord(Hour) mod 12 = 0 then
+    Result := '12'
+  else
+    Result := IntToStr(ord(Hour) mod 12);
+end;
 
 function GetStartLine(StartTime: TDateTime; Granularity: TVpGranularity): Integer;
 var

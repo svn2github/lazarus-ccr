@@ -1259,30 +1259,6 @@ end;
 
 procedure TVpPrinter.AddDefaultVariables(Date: TDateTime);
 
-  function HourToStr(Hour: TVpHours; Mil: Boolean): string;
-  begin
-    if Mil then
-      Result := IntToStr(ord(Hour))
-    else
-    if ord(Hour) mod 12 = 0 then
-      Result := '12'
-    else
-      Result := IntToStr(ord(Hour) mod 12);
-  end;
-
-  function GranularityToStr(Gran: TVpGranularity): string;
-  begin
-    Result := IntToStr(GranularityMinutes[Gran]);
-  end;
-
-  function HourToAMPM(Hour: TVpHours): string;
-  begin
-    if (Hour >= H_00) and (Hour <= h_11) then
-      Result := 'AM'
-    else
-      Result := 'PM';
-  end;
-
   procedure AddDataStoreVars;
   var
     DataStore: TVpCustomDataStore;

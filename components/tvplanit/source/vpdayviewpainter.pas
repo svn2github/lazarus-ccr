@@ -96,6 +96,9 @@ type
     procedure DrawNavBtnBackground;
     procedure DrawRegularEvents;
     procedure DrawRowHeader(R: TRect);
+    procedure DrawRowHeaderBackground(R: TRect);
+    procedure DrawRowHeaderLabels(R: TRect);
+    procedure DrawRowHeaderTicks(R: TRect);
     procedure FixFontHeights;
     procedure FreeBitmaps;
     procedure GetIcons(Event: TVpEvent);
@@ -127,6 +130,9 @@ uses
 
 const
   ICON_MARGIN = 4;
+  MINUTES_BORDER = 7;
+  MINUTES_HOUR_DISTANCE = 4;
+  TICK_DIST = 6;
 
 type
   TVpDayViewOpener = class(TVpDayView);
@@ -749,8 +755,8 @@ begin
   AEventRec.RealEndTime := EventETime;
 
   { Find the lines on which this event starts and ends }
-  EventSLine := GetStartLine(EventSTime, FDayView.Granularity);
-  EventELine := GetEndLine(EventETime, FDayView.Granularity);
+  EventSLine := GetStartLine(EventSTime, UseGran); //FDayView.Granularity);
+  EventELine := GetEndLine(EventETime, UseGran); //FDayView.Granularity);
 
   { If the event doesn't occupy area that is currently visible, then skip it. }
   if (EventELine < StartLine) or (EventSLine > StartLine + RealVisibleLines + 1) then
@@ -784,7 +790,8 @@ begin
   { stop drawing colored area according to the start time and end time of the event. }
   StartPixelOffset := 0;
   EndPixelOffset := 0;
-  if (PixelDuration > 0) and (EventDuration < GetLineDuration(FDayView.Granularity) * EventLineCount)
+  //if (PixelDuration > 0) and (EventDuration < GetLineDuration(FDayView.Granularity) * EventLineCount)
+  if (PixelDuration > 0) and (EventDuration < GetLineDuration(UseGran) * EventLineCount)
   then begin
     if (EventSLine >= StartLine) and (EventSTime > TVpDayViewOpener(FDayView).dvLineMatrix[0, EventSLine].Time)
     then begin
@@ -1257,158 +1264,189 @@ begin
 end;
 
 procedure TVpDayViewPainter.DrawRowHeader(R: TRect);
-const
-  MINUTES_BORDER = 7;
-  MINUTES_HOUR_DISTANCE = 4;
-var
-  I, MinutesLen: Integer;
-  LineRect: TRect;
-  LastHour, Hour: Integer;
-  MinuteStr, HourStr: string;
-  SaveFont: TFont;
-  x: Integer;
-  adEvHeight: Integer;
 begin
   if StartLine < 0 then
     StartLine := FDayView.TopLine;
 
-  adEvHeight := HeightOf(ADEventsRect);
+  // Draw background and border
+  DrawRowHeaderBackground(R);
 
-  SaveFont := TFont.Create;
-  try
-    { Draw row header background }
-    dec(R.Top, adEvHeight); // include the empty area to the left of all-day events
+  // Draw time ticks
+  DrawRowHeaderTicks(R);
 
-    if FDayView.DrawingStyle = dsNoBorder then
-      InflateRect(R, 1,1);
-    RenderCanvas.Pen.Style := psClear;
-    RenderCanvas.Brush.Color := RealRowHeadAttrColor;
-    TPSFillRect(RenderCanvas, Angle, RenderIn, R);
-    RenderCanvas.Pen.Style := psSolid;
-    if FDayView.DrawingStyle = dsNoBorder then
-      InflateRect(R, -1,-1);
+  // Draw time labels
+  DrawRowHeaderLabels(R);
+end;
 
-    inc(R.Top, adEvHeight);
+procedure TVpDayViewPainter.DrawRowHeaderBackground(R: TRect);
+var
+  tmpRect: TRect;
+begin
+  // Expand rect to include the area left of the all-day events
+  dec(R.Top, HeightOf(ADEventsRect));
 
-    // Calculate the number of visible lines
-    RealVisibleLines := TVpDayViewOpener(FDayView).dvCalcVisibleLines(
-      HeightOf(R),
-      RealColHeadHeight,
-      RealRowHeight,
-      Scale,
-      StartLine,
-      StopLine
+  // Draw row header background
+  if FDayView.DrawingStyle = dsNoBorder then
+    InflateRect(R, 1,1);
+  RenderCanvas.Pen.Style := psClear;
+  RenderCanvas.Brush.Color := RealRowHeadAttrColor;
+  TPSFillRect(RenderCanvas, Angle, RenderIn, R);
+  RenderCanvas.Pen.Style := psSolid;
+  if FDayView.DrawingStyle = dsNoBorder then
+    InflateRect(R, -1,-1);
+
+  // Draw row header borders
+  if FDayView.DrawingStyle = dsFlat then begin
+    RenderCanvas.Pen.Color := BevelShadow;
+    TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Top);
+    TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Bottom - 1);
+  end
+  else
+  if FDayView.DrawingStyle = ds3d then begin
+    tmpRect := TPSRotateRectangle(Angle, RenderIn,
+      Rect(R.Left + 1, R.Top, R.Right - 1, R.Bottom - 1)
     );
+    DrawBevelRect(RenderCanvas, tmpRect, BevelHighlight, BevelDarkShadow);
+  end;
+end;
 
-    // Calculate length of minutes ticks
-    RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
-    MinutesLen := RenderCanvas.TextWidth('00') + MINUTES_BORDER + MINUTES_HOUR_DISTANCE div 2;
+procedure TVpDayViewPainter.DrawRowHeaderLabels(R: TRect);
+var
+  I: Integer;
+  x, y: Integer;
+  lineRect: TRect;
+  lineIndex: Integer;
+  maxIndex: Integer;
+  hour: Integer;
+  hourStr, minuteStr, timeStr: String;
+  isFullHour: boolean;
+begin
+  // Calculate the rectangle occupied by a row
+  lineRect := Rect(R.Left, R.Top, R.Right, R.Top + RealRowHeight);
 
-    RenderCanvas.Pen.Style := psSolid;
-    RenderCanvas.Pen.Color := RealLineColor;
-    LineRect := Rect(R.Left, R.Top, R.Right, R.Top + RealRowHeight);
+  maxIndex := High(TVpDayViewOpener(FDayView).dvLineMatrix[0]);
 
-    // If there are all-day events we must paint the tick line for the first hour
-    if adEvHeight > 0 then begin
-      TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Right - 6, LineRect.Top);
-      TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Left + 6, LineRect.Top)
-    end;
+  y := LineRect.Top;
+  I := 0;
+  while true do begin
+    lineIndex := StartLine + I;
+    if lineIndex > maxIndex then
+      break;
 
-    Hour := Ord(TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine].Hour);
-
-    for I := 0 to RealVisibleLines + 1 do begin    // ok: + 1 needed to see the partial line at the bottom
-      { prevent any extraneous drawing below the last hour }
-      if (I + FDayView.TopLine > FDayView.LineCount) or (Hour > 23) then
-        Break;
+    isFullHour := TVpDayViewOpener(FDayView).dvLineMatrix[0, LineIndex].Minute = 0;
+    if isFullHour then begin
+      hour := Ord(TVpDayViewOpener(FDayView).dvLineMatrix[0, LineIndex].Hour);
+      if (hour = 0) and (I > 0) then
+        break;
+      if (StopLine > 0) and (lineIndex > StopLine) then
+        break;
 
       case FDayView.TimeFormat of
-        tf24Hour: MinuteStr := '00';
-        tf12Hour: MinuteStr := IfThen(Hour < 12, 'am', 'pm');
+        tf24Hour: minuteStr := '00';
+        tf12Hour: minuteStr := IfThen(hour < 12, 'am', 'pm');
       end;
-
-      { Position the rect }
-      LineRect.Top := R.Top + i * RealRowHeight;
-      LineRect.Bottom := LineRect.Top + RealRowHeight;
-
       if (Hour > 12) and (FDayView.TimeFormat = tf12Hour) then
-        HourStr := IntToStr(Hour - 12)
+        hourStr := IntToStr(hour - 12)
       else begin
-        HourStr := IntToStr(Hour);
-        if (FDayView.TimeFormat = tf12Hour) and (HourStr = '0') then
-          HourStr := '12';
+        hourStr := IntToStr(hour);
+        if (FDayView.TimeFormat = tf12Hour) and (hourStr = '0') then
+          hourStr := '12';
       end;
 
-      if UseGran = gr60Min then begin
-        { Paint time }
+      if UseGran = gr60Min then
+      begin
+        // In case of 60-min granularity paint time as simple string
         RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
-        TPSTextOut(RenderCanvas, Angle, RenderIn,
-          LineRect.Right - RenderCanvas.TextWidth(HourStr + ':' + MinuteStr) - MINUTES_BORDER,
-          LineRect.Top + TextMargin,
-          HourStr + ':' + MinuteStr
-        );
-        LastHour := Hour;
-        Inc(Hour);
-      end else begin
-        { Paint Minute Text}
-        if TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine + i].Minute = 0 then begin
-          RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
-          x := LineRect.Right - RenderCanvas.TextWidth(MinuteStr) - MINUTES_BORDER;
-          TPSTextOut(RenderCanvas, Angle, RenderIn,
-            x,
-            LineRect.Top + TextMargin,
-            MinuteStr
-          );
-          { Paint Hour Text }
-          RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.HourFont);
-          dec(x, RenderCanvas.TextWidth(HourStr) + MINUTES_HOUR_DISTANCE);
-          TPSTextOut(RenderCanvas, Angle, RenderIn,
-            x,
-            LineRect.Top + TextMargin - 2,
-            HourStr
-          );
-        end;
-        if StartLine + i + 1 >= High(TVpDayViewOpener(FDayView).dvLineMatrix[0]) then
-          // ">=" avoids seeing a parasitic hour in the last line
-          Hour := 24
-        else begin
-          LastHour := Hour;
-          Hour := Ord(TVpDayViewOpener(FDayView).dvLineMatrix[0, StartLine + i + 1].Hour);
-        end;
+        timeStr := Format('%s:%s', [hourStr, minuteStr]);
+        x := lineRect.Right - RenderCanvas.TextWidth(timeStr) - MINUTES_BORDER;
+        TPSTextOut(RenderCanvas, Angle, RenderIn, x, y + TextMargin, timeStr);
+      end else
+      begin
+        // In all other cases, paint large hour and small minutes (or am/pm)
+        // Draw minutes
+        RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
+        x := lineRect.Right - RenderCanvas.TextWidth(MinuteStr) - MINUTES_BORDER;
+        TPSTextOut(RenderCanvas, Angle, RenderIn, x, y + TextMargin, minuteStr);
+
+        // Draw hours
+        RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.HourFont);
+        dec(x, RenderCanvas.TextWidth(HourStr) + MINUTES_HOUR_DISTANCE);
+        TPSTextOut(RenderCanvas, Angle, RenderIn, x, y + TextMargin - 2, hourStr);
       end;
-
-      TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Right - 6, LineRect.Bottom);
-      if LastHour <> Hour then
-        TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Left + 6, LineRect.Bottom)
-      else
-        TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right - MinutesLen, LineRect.Bottom);
-    end; {for}
-
-    { Draw Row Header Borders }
-    if FDayView.DrawingStyle = dsFlat then begin
-      RenderCanvas.Pen.Color := BevelShadow;
-      TPSMoveTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Top - adEvHeight);
-      TPSLineTo(RenderCanvas, Angle, RenderIn, R.Right - 1, R.Bottom - 1);
-      {
-      DrawBevelRect(RenderCanvas, TPSRotateRectangle(Angle, RenderIn,
-        Rect(R.Left - 1, R.Top, R.Right - 1, R.Bottom - 2)),
-        clRed, //BevelHighlight,
-        clBlue //BevelShadow
-      );
-      }
-    end
-    else
-    if FDayView.DrawingStyle = ds3d then begin
-      DrawBevelRect(RenderCanvas,
-        TPSRotateRectangle(Angle, RenderIn, Rect(R.Left + 1, R.Top- adEvHeight, R.Right - 1, R.Bottom - 1)),
-        BevelHighlight,
-        BevelDarkShadow
-      );
     end;
 
-    RenderCanvas.Font.Assign(SaveFont);
+    inc(y, RealRowHeight);
+    inc(I);
+  end;  // while
+end;
 
-  finally
-    SaveFont.Free;
+procedure TVpDayViewPainter.DrawRowHeaderTicks(R: TRect);
+var
+  I: Integer;
+  y: Integer;
+  isFullHour: Boolean;
+  lineRect: TRect;
+  adEvHeight: Integer;
+  lineIndex: Integer;
+  lastIndex: Integer;
+  minutesLen: Integer;
+  maxIndex: Integer;
+  hour: Integer;
+begin
+  // Calculate the rectangle occupied by a row
+  lineRect := Rect(R.Left, R.Top, R.Right, R.Top + RealRowHeight);
+
+  // Calculate height of all-day events rectangle
+  adEvHeight := HeightOf(ADEventsRect);
+
+  // Calculate length of minutes ticks
+  RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
+  minutesLen := RenderCanvas.TextWidth('00') + MINUTES_BORDER + MINUTES_HOUR_DISTANCE div 2;
+
+  // Prepare pen
+  RenderCanvas.Pen.Style := psSolid;
+  RenderCanvas.Pen.Color := RealLineColor;
+
+  y := lineRect.Top;
+
+  // The top-most tick is not drawn, it is identical with the lower edge of
+  // the NavBar block. Only if there are all-day events we must paint it.
+  if adEvHeight > 0 then begin
+    TPSMoveTo(RenderCanvas, Angle, RenderIn, lineRect.Right - TICK_DIST, y);
+    TPSLineTo(RenderCanvas, Angle, RenderIn, lineRect.Left + TICK_DIST, y);
+  end;
+
+  // Begin with I = 1 because top-most tick already has been handled
+  I := 1;
+  maxIndex := High(TVpDayViewOpener(FDayView).dvLineMatrix[0]);
+  lastIndex := GetEndLine(0.9999, UseGran);
+  while not dayComplete do begin
+    lineIndex := StartLine + I;
+    if lineIndex > maxIndex then
+      break;
+    if (StopLine > 0) and (lineIndex > StopLine) then
+      break;
+
+    inc(y, RealRowHeight);
+    if y > R.Bottom then
+      break;
+
+    hour := Ord(TVpDayViewOpener(FDayView).dvLineMatrix[0, LineIndex].Hour);
+
+    if (hour = 0) and (lineIndex > lastIndex) then  // midnight
+      isFullHour := true;   // to draw th 0:00 tick
+    else
+      isFullHour := TVpDayViewOpener(FDayView).dvLineMatrix[0, lineIndex].Minute = 0;
+
+    TPSMoveTo(RenderCanvas, Angle, RenderIn, lineRect.Right - TICK_DIST, y);
+    if isFullHour then
+      // Hour tick line
+      TPSLineTo(RenderCanvas, Angle, RenderIn, lineRect.Left + TICK_DIST, y)
+    else
+      // Minutes tick lines
+      TPSLineTo(RenderCanvas, Angle, RenderIn, lineRect.Right - MinutesLen, y);
+
+    inc(I);
   end;
 end;
 
@@ -1667,6 +1705,7 @@ begin
     RealRowHeight := TVpDayViewOpener(FDayView).dvCalcRowHeight(Scale, UseGran);
     RealRowHeadWidth := CalcRowHeadWidth;
     RealColHeadHeight := TVpDayViewOpener(FDayView).dvCalcColHeadHeight(Scale);
+    // RowHeadRect and RealVisibleLines are calculated below...
 
     // Calculate the RealNumDays (The number of days the control covers)
     RealNumDays := TVpDayViewOpener(FDayView).GetRealNumDays(RenderDate);
@@ -1679,6 +1718,16 @@ begin
 
     // Draw row headers
     CalcRowHeadRect(RowHeadRect);
+
+    RealVisibleLines := TVpDayViewOpener(FDayView).dvCalcVisibleLines(
+      HeightOf(RowHeadRect),
+      RealColHeadHeight,
+      RealRowHeight,
+      Scale,
+      StartLine,
+      StopLine
+    );
+
     if Assigned(FDayView.OwnerDrawRowHeader) then begin
       Drawn := false;
       FDayView.OwnerDrawRowHeader(self, RenderCanvas, RowHeadRect, RealRowHeight, Drawn);
