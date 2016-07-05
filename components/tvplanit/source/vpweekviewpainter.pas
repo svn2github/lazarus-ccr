@@ -153,13 +153,13 @@ begin
       // Clear the AllDayEvents area
       TpsFillRect(RenderCanvas, Angle, RenderIn, ADEventsRect);
 
-      StartsBeforeRange  := false;
+      StartsBeforeRange := false;
 
       // Cycle through the all day events and draw them appropriately
       for I := 0 to pred(ADEventsList.Count) do begin
         Event := ADEventsList[I];
 
-        // Draw ". . ."
+        // Draw "..."
         if ADEventsRect.Top + ((I + 1) * ADTextHeight) > DayRect.Bottom then
         begin
           DrawDotDotDot(DayRect, DotDotDotColor);
@@ -205,7 +205,9 @@ begin
           ADEvRect.Top + TextMargin,
           EventStr
         );
+
         Result := True;
+
         TVpWeekViewOpener(FWeekView).wvEventArray[EAIndex].Rec := Rect(
           ADEvRect.Left + TextMargin,
           ADEvRect.Top + TextMargin,
@@ -290,7 +292,7 @@ begin
   TextRect := DayRect;
   TextRect.Bottom := DayRect.Top + dayHeadHeight;
 
-  { draw day header }
+  // Draw day header
   tmpRect := TextRect;
   inc(tmpRect.Right);
   RenderCanvas.Font.Assign(FWeekView.DayHeadAttributes.Font);
@@ -299,29 +301,29 @@ begin
   if FWeekView.DayHeadAttributes.Bordered and (FWeekView.DrawingStyle <> dsNoBorder) then
     TPSRectangle(RenderCanvas, Angle, RenderIn, tmpRect);
 
-  { Fix Header String }
+  // Fix header string
   DrawDayHeader(ADayIndex, TextRect);
 
   if (FWeekView.DataStore <> nil) and (FWeekView.DataStore.Resource <> nil) and
      (FWeekView.DataStore.Resource.Schedule.EventCountByDay(StartDate + ADayIndex) > 0) and
      (HeightOf(DayRect) >= TextMargin * 2 + dayHeadHeight)
   then begin
-    { events exist for this day }
+    // Events exist for this day
     EventList := TList.Create;
     try
-      { populate the eventlist with events for this day }
+      // Populate the event list with events for this day
       FWeekView.DataStore.Resource.Schedule.EventsByDate(StartDate + ADayIndex, EventList);
 
       { Now sort times in ascending order. This must be done because the event
         list can contain recurring events which have the wrong date part }
       EventList.Sort(CompareEventsByTimeOnly);
 
-      { initialize TextRect for this day }
+      // Initialize TextRect for this day
       TextRect := DayRect;
       TextRect.Top := DayRect.Top + dayHeadHeight;
       TextRect.Bottom := TextRect.Top + rowHeight;
 
-      { Handle All Day Events }
+      // Handle all-day events
       tmpRect := TextRect;
       tmpRect.Bottom := DayRect.Bottom;
       if DrawAllDayEvents(StartDate + ADayIndex, tmpRect, EAIndex) then
@@ -330,12 +332,12 @@ begin
         TextRect.Top := ADEventsRect.Bottom;
       end;
 
-      { Discard AllDayEvents, because they are drawn above. }
+      // Discard AllDayEvents, because they are drawn above.
       for J := pred(EventList.Count) downto 0 do
         if TVpEvent(EventList[J]).AllDayEvent then
           EventList.Delete(J);
 
-      { iterate the events, painting them one by one }
+      // Iterate the events, painting them one by one
       for J := 0 to pred(EventList.Count) do begin
         { if the TextRect extends below the available space then draw a   }
         { dot dot dot to indicate there are more events than can be drawn }
@@ -346,19 +348,20 @@ begin
           break;
         end;
 
-        { write the event text }
+        // Write the event text
         DrawEvent(TVpEvent(EventList.List^[J]), DayRect, TextRect, ADayIndex);
 
-        { update the EventArray }
+        // Update the EventArray
         with TVpWeekViewOpener(FWeekView).wvEventArray[EAIndex] do begin
           Rec := TextRect;
-          Event := TVpEvent(EventList.List^[J]);
+          Event := TVpEvent(EventList[J]);
         end;
         Inc(EAIndex);
 
         TextRect.Top := TextRect.Bottom;
         TextRect.Bottom := TextRect.Top + rowHeight;
       end; { for loop }
+
     finally
       EventList.Free;
     end;
@@ -430,18 +433,20 @@ end;
 procedure TVpWeekViewPainter.DrawDays;
 var
   DayRect: TRect;
-  EAIndex: Integer;
+  EAIndex: Integer;   // Index of last-used item in wvEventArray
   I: Integer;
   headerHeight: Integer;
   realCenter: Integer;
 begin
   with TVpWeekViewOpener(FWeekView) do begin
+
     { Initialize weekday array }
     for I := 0 to pred(Length(wvWeekdayArray)) do begin
       wvWeekdayArray[I].Rec.TopLeft := Point(-1, -1);
       wvWeekdayArray[I].Rec.BottomRight := Point(-1, -1);
       wvWeekdayArray[I].Day := 0;
     end;
+
     { initialize event array }
     EAIndex := 0;
     for I := 0 to pred(Length(wvEventArray)) do begin

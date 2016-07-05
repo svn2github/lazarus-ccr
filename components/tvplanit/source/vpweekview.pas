@@ -258,8 +258,8 @@ type
     property BeforeEdit: TVpBeforeEditEvent read FBeforeEdit write FBeforeEdit;
     property OnAddEvent: TVpOnAddNewEvent read FOnAddEvent write FOnAddEvent;
     property OnOwnerEditEvent: TVpEditEvent read FOwnerEditEvent write FOwnerEditEvent;
-
   end;
+
 
 implementation
 
@@ -749,6 +749,7 @@ procedure TVpWeekView.WMLButtonDown(var Msg: TLMLButtonDown);
 {$ENDIF}
 var
   P: TPoint;
+  oldDate: TDate;
 begin
   inherited;
 
@@ -761,7 +762,15 @@ begin
   if (Msg.YPos > wvHeaderHeight) then
   begin
     { The mouse click landed inside the client area }
+    oldDate := FActiveDate;
     wvSetDateByCoord(P);
+
+    { We must repaint the control here, before evaluation of the click on the
+      events, because if the day has changed by wvSetDateByCoord then events
+      will have different indexes in the event array; and index positions are
+      evaluated during painting. }
+    if oldDate <> FActiveDate then
+      Paint;
 
     { If an active event was clicked, then enable the click timer.  If the
       item is double clicked before the click timer fires, then the edit
@@ -1132,15 +1141,9 @@ var
 begin
   result := false;
   for I := 0 to pred(Length(wvEventArray)) do begin
-    ActiveEvent := nil;
-    wvActiveEventRec.Top := 0;
-    wvActiveEventRec.Bottom := 0;
-    wvActiveEventRec.Right := 0;
-    wvActiveEventRec.Left := 0;
-
     // We've hit the end of visible events without finding a match
     if wvEventArray[I].Event = nil then
-      Exit;
+      Break;
 
     // Point falls inside this event's rectangle
     if PointInRect(Pt, wvEventArray[I].Rec) then
@@ -1152,6 +1155,13 @@ begin
       Exit;
     end;
   end;
+
+  // Not found
+  ActiveEvent := nil;
+  wvActiveEventRec.Top := 0;
+  wvActiveEventRec.Bottom := 0;
+  wvActiveEventRec.Right := 0;
+  wvActiveEventRec.Left := 0;
 end;
 {=====}
 
