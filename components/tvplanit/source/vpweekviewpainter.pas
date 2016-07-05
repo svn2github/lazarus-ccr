@@ -41,6 +41,7 @@ type
     procedure DrawDays;
     procedure DrawEvent(AEvent: TVpEvent; DayRect, TextRect: TRect; ADayIndex: Integer);
     procedure DrawHeader;
+    procedure FixFontHeights;
     procedure InitColors;
     procedure SetMeasurements; override;
 
@@ -55,7 +56,10 @@ type
 implementation
 
 uses
-  StrUtils, Math, LazUtf8,
+  StrUtils, Math,
+ {$IFDEF LCL}
+  LazUtf8, DateUtils,
+ {$ENDIF}
   VpCanvasUtils, VpMisc, VpSR;
 
 type
@@ -81,14 +85,16 @@ var
   TempList: TList;
   I, J, K: Integer;
   Event: TVpEvent;
-  ADEventRect: TRect;
+  ADEvRect: TRect;
   StartsBeforeRange: Boolean;
-  MaxADEvents: Integer;
+  NumADEvents: Integer;
   Skip: Boolean;
   ADTextHeight: Integer;
   EventStr: string;
+  txtDist: Integer;
 begin
   Result := False;
+
   { initialize the All Day Events area... }
   ADEventsRect := DayRect;
 
@@ -97,7 +103,7 @@ begin
 
   { Collect all of the events for this range and determine the maximum     }
   { number of all day events for the range of days covered by the control. }
-  MaxADEvents := 0;
+  NumADEvents := 0;
 
   ADEventsList := TList.Create;
   try
@@ -122,91 +128,95 @@ begin
           AdEventsList.Add(TempList[J]);
       end;
 
-      if TempList.Count > MaxADEvents then
-        MaxADEvents := TempList.Count;
+      if TempList.Count > NumADEvents then
+        NumADEvents := TempList.Count;
     finally
       TempList.Free;
     end;
 
-    if MaxADEvents > 0 then begin
+    if NumADEvents > 0 then begin
       { Set attributes }
       RenderCanvas.Brush.Color := ADBackgroundColor;
-      RenderCanvas.Font.Assign(FWeekView.AllDayEventAttributes.Font);
 
       { Measure the AllDayEvent TextHeight }
-      ADTextHeight := RenderCanvas.TextHeight(VpProductName) + TextMargin + TextMargin div 2;
+      txtDist := TextMargin div 2;
+      RenderCanvas.Font.Assign(FWeekView.AllDayEventAttributes.Font);
+      ADTextHeight := RenderCanvas.TextHeight(VpProductName) + TextMargin + txtDist;
 
-      { Build the AllDayEvent rect based on the value of MaxADEvents }
-      if AdEventsRect.Top + (MaxADEvents * ADTextHeight) + TextMargin * 2 > DayRect.Bottom
+      { Build the AllDayEvent rect based on the value of NumADEvents }
+      if AdEventsRect.Top + (NumADEvents * ADTextHeight) + TextMargin * 2 > DayRect.Bottom
       then
-        ADeventsrect.Bottom := DayRect.Bottom
+        ADEventsRect.Bottom := DayRect.Bottom
       else
-        ADEventsRect.Bottom := AdEventsRect.Top + (MaxADEvents * ADTextHeight) + TextMargin * 2;
+        ADEventsRect.Bottom := AdEventsRect.Top + NumADEvents * ADTextHeight + TextMargin * 2;
 
-      { Clear the AllDayEvents area }
+      // Clear the AllDayEvents area
       TpsFillRect(RenderCanvas, Angle, RenderIn, ADEventsRect);
 
       StartsBeforeRange  := false;
-      { Cycle through the all day events and draw them appropriately }
+
+      // Cycle through the all day events and draw them appropriately
       for I := 0 to pred(ADEventsList.Count) do begin
         Event := ADEventsList[I];
 
-        { set the top of the event's rect }
-        AdEventRect.Top := ADEventsRect.Top + TextMargin + I * ADTextHeight;
+        // Draw ". . ."
+        if ADEventsRect.Top + ((I + 1) * ADTextHeight) > DayRect.Bottom then
+        begin
+          DrawDotDotDot(DayRect, DotDotDotColor);
 
-        if ADEventsRect.Top + TextMargin + ((I + 1)  * ADTextHeight) - TextMargin > DayRect.Bottom
-        then begin
+        {
           RenderCanvas.Brush.Color := DotDotDotColor;
-          { draw dot dot dot }
           TPSFillRect(RenderCanvas, Angle, RenderIn,
             Rect(DayRect.Right - 20,  DayRect.Bottom - 7, DayRect.Right - 17,  DayRect.Bottom - 4));
           TPSFillRect(RenderCanvas, Angle, RenderIn,
             Rect(DayRect.Right - 13,  DayRect.Bottom - 7, DayRect.Right - 10,  DayRect.Bottom - 4));
           TPSFillRect(RenderCanvas, Angle, RenderIn,
             Rect(DayRect.Right - 6,  DayRect.Bottom - 7, DayRect.Right -  3,  DayRect.Bottom - 4));
+            }
           break;
         end;
 
-        { see if the event began before the start of the range }
-        if (Event.StartTime < trunc(RenderDate)) then
+        // See if the event began before the start of the range
+        if (Event.StartTime < DayOf(RenderDate)) then
           StartsBeforeRange := true;
 
-        AdEventRect.Bottom := ADEventRect.Top + ADTextHeight;
-        AdEventRect.Left := AdEventsRect.Left + (TextMargin div 2);
-        AdEventRect.Right := DayRect.Right;
+        // Set the event's rect
+        ADEvRect.Top := ADEventsRect.Top + TextMargin + I * ADTextHeight;
+        ADEvRect.Bottom := ADEvRect.Top + ADTextHeight;
+        ADEvRect.Left := AdEventsRect.Left + txtDist;
+        ADEvRect.Right := DayRect.Right;
 
-        if (StartsBeforeRange) then
-          EventStr := '>> '
-        else
-          EventStr := '';
-
-        EventStr := EventStr + Event.Description;
-
+        // Paint the background of the event rect
         RenderCanvas.Brush.Color := ADEventBackgroundColor;
         RenderCanvas.Pen.Color := ADEventBorderColor;
         TPSRectangle(RenderCanvas, Angle, RenderIn,
-          ADEventRect.Left + TextMargin,
-          ADEventRect.Top + TextMargin div 2,
-          ADEventRect.Right - TextMargin,
-          ADEventRect.Top + ADTextHeight + TextMargin div 2
+          ADEvRect.Left + TextMargin,
+          ADEvRect.Top + txtDist,
+          ADEvRect.Right - TextMargin,
+          ADEvRect.Top + ADTextHeight + txtDist
         );
+
+        // Paint the event string
+        EventStr := IfThen(StartsBeforeRange, '>> ', '') + Event.Description;
+        EventStr := GetDisplayString(RenderCanvas, EventStr, 0, WidthOf(ADEvRect) - 3*TextMargin);
+
         TPSTextOut(RenderCanvas,Angle, RenderIn,
-          AdEventRect.Left + TextMargin * 2 + TextMargin div 2,
-          AdEventRect.Top + TextMargin,
+          ADEvRect.Left + TextMargin * 2 + txtDist,
+          ADEvRect.Top + TextMargin,
           EventStr
         );
         Result := True;
         TVpWeekViewOpener(FWeekView).wvEventArray[EAIndex].Rec := Rect(
-          ADEventRect.Left + TextMargin,
-          ADEventRect.Top + TextMargin,
-          ADEventRect.Right - TextMargin,
-          ADEventRect.Bottom
+          ADEvRect.Left + TextMargin,
+          ADEvRect.Top + TextMargin,
+          ADEvRect.Right - TextMargin,
+          ADEvRect.Bottom
         );
         TVpWeekViewOpener(FWeekView).wvEventArray[EAIndex].Event := Event;
         Inc(EAIndex);
       end; { for I := 0 to pred(ADEventsList.Count) do ... }
 
-    end;   { if MaxADEvents > 0 }
+    end;   { if NumADEvents > 0 }
 
   finally
     ADEventsList.Free;
@@ -592,6 +602,17 @@ begin
   );
 end;
 
+procedure TVpWeekViewPainter.FixFontHeights;
+begin
+  with FWeekView do begin
+    AllDayEventAttributes.Font.Height := GetRealFontHeight(AllDayEventAttributes.Font);
+    DayHeadAttributes.Font.Height := GetRealFontHeight(DayHeadAttributes.Font);
+    EventFont.Height := GetRealFontHeight(EventFont);
+    Font.Height := GetRealFontHeight(Font);
+    HeadAttributes.Font.Height := GetRealFontHeight(HeadAttributes.Font);
+  end;
+end;
+
 procedure TVpWeekViewPainter.InitColors;
 begin
   if DisplayOnly then begin
@@ -631,14 +652,7 @@ begin
   InitColors;
   SavePenBrush;
   InitPenBrush;
-
-  with FWeekView do begin
-    AllDayEventAttributes.Font.Height := GetRealFontHeight(AllDayEventAttributes.Font);
-    DayHeadAttributes.Font.Height := GetRealFontHeight(DayHeadAttributes.Font);
-    EventFont.Height := GetRealFontHeight(EventFont);
-    Font.Height := GetRealFontHeight(Font);
-    HeadAttributes.Font.Height := GetRealFontHeight(HeadAttributes.Font);
-  end;
+  FixFontHeights;
 
   Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
   try

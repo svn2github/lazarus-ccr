@@ -392,7 +392,7 @@ begin
   { Create internal classes and stuff }
   FDayHeadAttributes := TVpDayHeadAttr.Create(self);
   FHeadAttr := TVpWvHeadAttributes.Create(self);
-  FAllDayEventAttr := TVpAllDayEventAttributes.Create (self);
+  FAllDayEventAttr := TVpAllDayEventAttributes.Create(self);
 
   FEventFont := TFont.Create;
   FEventFont.Assign(Font);
@@ -578,17 +578,19 @@ end;
 
 procedure TVpWeekView.DeleteActiveEvent(Verify: Boolean);
 var
-  Str: string;
   DoIt: Boolean;
 begin
+  if ReadOnly then
+    exit;
+
+  wvClickTimer.Enabled := false;
+  EndEdit(nil);
+
   DoIt := not Verify;
 
-  EndEdit(nil);
   if ActiveEvent <> nil then begin
-    Str := '"' + ActiveEvent.Description + '"';
-
     if Verify then
-      DoIt := (MessageDlg(RSDelete + ' ' + Str + ' ' + RSFromSchedule + #13#10#10 + RSPermanent,
+      DoIt := (MessageDlg(RSConfirmDeleteEvent + #13#10#10 + RSPermanent,
         mtConfirmation, [mbYes, mbNo], 0) = mrYes);
 
     if DoIt then begin
@@ -745,6 +747,8 @@ procedure TVpWeekView.WMLButtonDown(var Msg: TWMLButtonDown);
 {$ELSE}
 procedure TVpWeekView.WMLButtonDown(var Msg: TLMLButtonDown);
 {$ENDIF}
+var
+  P: TPoint;
 begin
   inherited;
 
@@ -753,16 +757,17 @@ begin
   if (wvInPlaceEditor <> nil) and wvInPlaceEditor.Visible then
     EndEdit(Self);
 
+  P := Point(Msg.XPos, Msg.YPos);
   if (Msg.YPos > wvHeaderHeight) then
   begin
-    { If an active event was clicked, then enable the click timer.  If the }
-    { item is double clicked before the click timer fires, then the edit   }
-    { dialog will appear, otherwise the in-place editor will appear.       }
-    if EventAtCoord(Point(Msg.XPos, Msg.YPos)) then
-      wvClickTimer.Enabled := true;
-
     { The mouse click landed inside the client area }
-    wvSetDateByCoord(Point(Msg.XPos, Msg.YPos));
+    wvSetDateByCoord(P);
+
+    { If an active event was clicked, then enable the click timer.  If the
+      item is double clicked before the click timer fires, then the edit
+      dialog will appear, otherwise the in-place editor will appear. }
+    if EventAtCoord(P) then
+      wvClickTimer.Enabled := true;
   end;
 end;
 {=====}
@@ -1127,44 +1132,34 @@ var
 begin
   result := false;
   for I := 0 to pred(Length(wvEventArray)) do begin
-    if wvEventArray[I].Event = nil then begin
-      { we've hit the end of visible events without finding a match }
-      ActiveEvent := nil;
-      wvActiveEventRec.Top := 0;
-      wvActiveEventRec.Bottom := 0;
-      wvActiveEventRec.Right := 0;
-      wvActiveEventRec.Left := 0;
-      result := false;
-      Exit;
-    end;
+    ActiveEvent := nil;
+    wvActiveEventRec.Top := 0;
+    wvActiveEventRec.Bottom := 0;
+    wvActiveEventRec.Right := 0;
+    wvActiveEventRec.Left := 0;
 
+    // We've hit the end of visible events without finding a match
+    if wvEventArray[I].Event = nil then
+      Exit;
+
+    // Point falls inside this event's rectangle
     if PointInRect(Pt, wvEventArray[I].Rec) then
     begin
-      { point falls inside this event's rectangle }
       wvHotPoint := Pt;
       ActiveEvent := TVpEvent(wvEventArray[I].Event);
       wvActiveEventRec := wvEventArray[I].Rec;
       result := true;
       Exit;
-    end
-    else begin
-      { point is not within the boundaries of this event's rectangle. }
-      ActiveEvent := nil;
-      wvActiveEventRec.Top := 0;
-      wvActiveEventRec.Bottom := 0;
-      wvActiveEventRec.Right := 0;
-      wvActiveEventRec.Left := 0;
-      result := false;
     end;
   end;
 end;
 {=====}
 
+{ This is the timer event which spawns an in-place editor.
+  If the event is double-clicked before this timer fires, then the event is
+  edited in a dialog based editor. }
 procedure TVpWeekView.wvEditInPlace(Sender: TObject);
 begin
-  { this is the timer event which spawns an in-place editor }
-  { if the event is doublecliked before this timer fires, then the }
-  { event is edited in a dialog based editor. }
   wvClickTimer.Enabled := false;
   EditEvent;
 end;
@@ -1190,12 +1185,20 @@ begin
         wvInPlaceEditor.Parent := self;
         wvInPlaceEditor.OnExit := EndEdit;
       end;
-      wvInPlaceEditor.SetBounds(
-        wvActiveEventRec.Left + TextMargin,
-        wvActiveEventRec.Top,
-        wvActiveEventRec.Right - TextMargin * 2,
-        wvActiveEventRec.Bottom - TextMargin * 2
-      );
+      if ActiveEvent.AllDayEvent then
+        wvInPlaceEditor.SetBounds(
+          wvActiveEventRec.Left + TextMargin,
+          wvActiveEventRec.Top,
+          wvActiveEventRec.Right - TextMargin * 3,
+          wvActiveEventRec.Bottom - TextMargin * 2
+        )
+      else
+        wvInPlaceEditor.SetBounds(
+          wvActiveEventRec.Left + TextMargin,
+          wvActiveEventRec.Top,
+          wvActiveEventRec.Right - TextMargin * 2,
+          wvActiveEventRec.Bottom - TextMargin * 2
+        );
       wvInplaceEditor.Show;
       wvInPlaceEditor.Text := ActiveEvent.Description;
       Invalidate;
