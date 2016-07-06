@@ -19,7 +19,9 @@ type
     FTasksTable: TBufDataset;
     FDirectory: String;
     FUseAutoInc: Boolean;
+    FPersistent: Boolean;
     procedure SetDirectory(AValue: String);
+    procedure SetPersistent(AValue: Boolean);
     procedure SetUseAutoInc(AValue: Boolean);
 
   protected
@@ -51,9 +53,10 @@ type
     property TasksTable;
 
   published
-    property Directory: String read FDirectory write SetDirectory;
     property AutoConnect;
     property AutoCreate;
+    property Directory: String read FDirectory write SetDirectory;
+    property Persistent: Boolean read FPersistent write SetPersistent default true;
     property UseAutoIncFields: Boolean read FUseAutoInc write SetUseAutoInc default true;
   end;
 
@@ -74,6 +77,7 @@ begin
   FEventsTable := TBufDataset.Create(nil);
   FContactsTable := TBufDataset.Create(nil);
   FTasksTable := TBufDataset.Create(nil);
+  FPersistent := true;
   FUseAutoInc := true;
 end;
 
@@ -123,8 +127,9 @@ begin
     raise Exception.CreateFmt('TableName "%s" cannot be processed.', [ATableName]);
 
   table.Close;
-  table.FileName := dir + ATableName + TABLE_EXT;
-  if not FileExists(table.FileName) then
+  if FPersistent then
+    table.FileName := dir + ATableName + TABLE_EXT;
+  if ((not FPersistent) or (not FileExists(table.FileName))) and (table.FieldDefs.Count = 0) then
   begin
      CreateFieldDefs(ATableName, table.FieldDefs);
      if FUseAutoInc then
@@ -215,6 +220,24 @@ begin
   if Connected then
     raise Exception.Create('Set directory before connecting.');
   FDirectory := AValue;
+end;
+
+procedure TVpBufDSDatastore.SetPersistent(AValue: Boolean);
+var
+  wasConn: Boolean;
+begin
+  if AValue <> FPersistent then begin
+    wasConn := Connected;
+    Connected := false;
+    FPersistent := AValue;
+    if not FPersistent then begin
+      FResourceTable.FileName := '';
+      FEventsTable.FileName := '';
+      FContactsTable.FileName := '';
+      FTasksTable.FileName := '';
+    end;
+    Connected := wasConn;
+  end;
 end;
 
 procedure TVpBufDSDatastore.SetUseAutoInc(AValue: Boolean);
