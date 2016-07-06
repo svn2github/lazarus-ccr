@@ -13,7 +13,7 @@ object frmPrnFormat: TfrmPrnFormat
   OnShow = FormShow
   Position = poScreenCenter
   LCLVersion = '1.7'
-  object Label1: TLabel
+  object LblFormats: TLabel
     Left = 8
     Height = 15
     Top = 5
@@ -22,7 +22,7 @@ object frmPrnFormat: TfrmPrnFormat
     FocusControl = lbFormats
     ParentColor = False
   end
-  object Label2: TLabel
+  object LblElements: TLabel
     Left = 8
     Height = 15
     Top = 205
@@ -75,7 +75,7 @@ object frmPrnFormat: TfrmPrnFormat
     NumGlyphs = 2
     OnClick = btnMoveElementDnClick
   end
-  object Label3: TLabel
+  object LblPrintOrder: TLabel
     Left = 232
     Height = 15
     Top = 332
@@ -93,14 +93,14 @@ object frmPrnFormat: TfrmPrnFormat
     OnClick = btnNewFormatClick
     TabOrder = 1
   end
-  object Panel1: TPanel
+  object PrintPreviewPanel: TPanel
     Left = 312
     Height = 439
     Top = 0
     Width = 320
     Align = alRight
     BorderSpacing.Right = 8
-    Caption = 'Panel1'
+    Caption = 'PrintPreviewPanel'
     ClientHeight = 439
     ClientWidth = 320
     TabOrder = 8
@@ -114,7 +114,7 @@ object frmPrnFormat: TfrmPrnFormat
       StartDate = 37370.6447728357
       ZoomFactor = zfActualSize
       Align = alClient
-      Parent = Panel1
+      Parent = PrintPreviewPanel
       TabStop = True
       TabOrder = 0
     end

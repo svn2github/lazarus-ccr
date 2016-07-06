@@ -376,6 +376,12 @@ msgid "Use the default sound"
 msgstr "Standard-Klang verwenden"
 
 #: vpsr.rsdelete
+msgctxt "vpsr.rsdelete"
+msgid "Delete"
+msgstr "Löschen"
+
+#: vpsr.rsdeletebtn
+msgctxt "vpsr.rsdeletebtn"
 msgid "Delete"
 msgstr "Löschen"
 
@@ -426,6 +432,10 @@ msgstr "Fälligkeitsdatum:"
 msgid "Error: Duplicate Resource."
 msgstr "Fehler: Doppelte Ressource."
 
+#: vpsr.rseditbtn
+msgid "Edit"
+msgstr "Bearbeiten"
+
 #: vpsr.rseditingfolders
 msgid "Folder Editor."
 msgstr "Ordner-Editor"
@@ -437,6 +447,10 @@ msgstr "Editor für Ordner-Einträge"
 #: vpsr.rseditprintformat
 msgid "Edit Print Formats..."
 msgstr "Druck-Formate bearbeiten..."
+
+#: vpsr.rselements
+msgid "Elements:"
+msgstr "Elemente:"
 
 #: vpsr.rsemail
 msgid "E-Mail"
@@ -474,6 +488,10 @@ msgstr "F"
 #: vpsr.rsfirstnamelbl
 msgid "First name:"
 msgstr "Vorname:"
+
+#: vpsr.rsformats
+msgid "Formats:"
+msgstr "Formate:"
 
 #: vpsr.rsfriday
 msgid "Friday"
@@ -564,6 +582,10 @@ msgstr "F"
 #: vpsr.rslmonday
 msgid "M"
 msgstr "M"
+
+#: vpsr.rsloadfilebtn
+msgid "Load file"
+msgstr "Datei laden"
 
 #: vpsr.rslocationlbl
 msgid "Location:"
@@ -657,6 +679,14 @@ msgstr "Bitte geben Sie einen Element-Namen an."
 #: vpsr.rsneedformatname
 msgid "FormatName cannot be blank"
 msgstr "Der Format-Name muss angegeben sein."
+
+#: vpsr.rsnewbtn
+msgid "New"
+msgstr "Neu"
+
+#: vpsr.rsnewfilebtn
+msgid "New file"
+msgstr "Neue Datei"
 
 #: vpsr.rsno
 msgid "N"
@@ -823,6 +853,14 @@ msgctxt "vpsr.rsprintbtn"
 msgid "&Print"
 msgstr "&Drucken"
 
+#: vpsr.rsprintformatdesigner
+msgid "Print format designer"
+msgstr "Druckformat-Designer"
+
+#: vpsr.rsprintorder
+msgid "Print order"
+msgstr "Druckreihenfolge"
+
 #: vpsr.rsprintprvcancel
 msgctxt "vpsr.rsprintprvcancel"
 msgid "Cancel"
@@ -896,6 +934,10 @@ msgstr "Ressource"
 #: vpsr.rssaturday
 msgid "Saturday"
 msgstr "Samstag"
+
+#: vpsr.rssavefilebtn
+msgid "Save file"
+msgstr "Datei speichern"
 
 #: vpsr.rsselectasound
 msgid "Select A Sound"
@@ -1381,4 +1423,3 @@ msgstr "Unbekannte Achsen-Spezifikation: %s"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "Die XML-Deklaration muss vor dem ersten Element erscheinen."
-

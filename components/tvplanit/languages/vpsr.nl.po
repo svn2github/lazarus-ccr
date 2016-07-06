@@ -376,6 +376,13 @@ msgid "Use the default sound"
 msgstr "Standaard geluid gebruiken"
 
 #: vpsr.rsdelete
+msgctxt "vpsr.rsdelete"
+msgid "Delete"
+msgstr "Wissen"
+
+#: vpsr.rsdeletebtn
+#, fuzzy
+msgctxt "vpsr.rsdeletebtn"
 msgid "Delete"
 msgstr "Wissen"
 
@@ -426,6 +433,10 @@ msgstr "Vervaldatum:"
 msgid "Error: Duplicate Resource."
 msgstr "Fout: Duplicaat Hulpmiddel."
 
+#: vpsr.rseditbtn
+msgid "Edit"
+msgstr ""
+
 #: vpsr.rseditingfolders
 msgid "Folder Editor."
 msgstr "Map Editor."
@@ -437,6 +448,10 @@ msgstr "Map Items Editor."
 #: vpsr.rseditprintformat
 msgid "Edit Print Formats..."
 msgstr "Afdrukformaten bewerken..."
+
+#: vpsr.rselements
+msgid "Elements:"
+msgstr ""
 
 #: vpsr.rsemail
 msgid "E-Mail"
@@ -474,6 +489,10 @@ msgstr "F"
 #: vpsr.rsfirstnamelbl
 msgid "First name:"
 msgstr "Voornaam:"
+
+#: vpsr.rsformats
+msgid "Formats:"
+msgstr ""
 
 #: vpsr.rsfriday
 msgid "Friday"
@@ -564,6 +583,10 @@ msgstr "V"
 #: vpsr.rslmonday
 msgid "M"
 msgstr "M"
+
+#: vpsr.rsloadfilebtn
+msgid "Load file"
+msgstr ""
 
 #: vpsr.rslocationlbl
 msgid "Location:"
@@ -657,6 +680,14 @@ msgstr "Geeft u aub een Element Naam op"
 #: vpsr.rsneedformatname
 msgid "FormatName cannot be blank"
 msgstr "Formaat Naam mag niet blanko zijn"
+
+#: vpsr.rsnewbtn
+msgid "New"
+msgstr ""
+
+#: vpsr.rsnewfilebtn
+msgid "New file"
+msgstr ""
 
 #: vpsr.rsno
 msgid "N"
@@ -823,6 +854,14 @@ msgctxt "vpsr.rsprintbtn"
 msgid "&Print"
 msgstr "&Printen"
 
+#: vpsr.rsprintformatdesigner
+msgid "Print format designer"
+msgstr ""
+
+#: vpsr.rsprintorder
+msgid "Print order"
+msgstr ""
+
 #: vpsr.rsprintprvcancel
 msgctxt "vpsr.rsprintprvcancel"
 msgid "Cancel"
@@ -896,6 +935,10 @@ msgstr "Hulpmiddel"
 #: vpsr.rssaturday
 msgid "Saturday"
 msgstr "Zaterdag"
+
+#: vpsr.rssavefilebtn
+msgid "Save file"
+msgstr ""
 
 #: vpsr.rsselectasound
 msgid "Select A Sound"

@@ -366,6 +366,12 @@ msgid "Use the default sound"
 msgstr ""
 
 #: vpsr.rsdelete
+msgctxt "vpsr.rsdelete"
+msgid "Delete"
+msgstr ""
+
+#: vpsr.rsdeletebtn
+msgctxt "vpsr.rsdeletebtn"
 msgid "Delete"
 msgstr ""
 
@@ -416,6 +422,10 @@ msgstr ""
 msgid "Error: Duplicate Resource."
 msgstr ""
 
+#: vpsr.rseditbtn
+msgid "Edit"
+msgstr ""
+
 #: vpsr.rseditingfolders
 msgid "Folder Editor."
 msgstr ""
@@ -426,6 +436,10 @@ msgstr ""
 
 #: vpsr.rseditprintformat
 msgid "Edit Print Formats..."
+msgstr ""
+
+#: vpsr.rselements
+msgid "Elements:"
 msgstr ""
 
 #: vpsr.rsemail
@@ -463,6 +477,10 @@ msgstr ""
 
 #: vpsr.rsfirstnamelbl
 msgid "First name:"
+msgstr ""
+
+#: vpsr.rsformats
+msgid "Formats:"
 msgstr ""
 
 #: vpsr.rsfriday
@@ -553,6 +571,10 @@ msgstr ""
 
 #: vpsr.rslmonday
 msgid "M"
+msgstr ""
+
+#: vpsr.rsloadfilebtn
+msgid "Load file"
 msgstr ""
 
 #: vpsr.rslocationlbl
@@ -646,6 +668,14 @@ msgstr ""
 
 #: vpsr.rsneedformatname
 msgid "FormatName cannot be blank"
+msgstr ""
+
+#: vpsr.rsnewbtn
+msgid "New"
+msgstr ""
+
+#: vpsr.rsnewfilebtn
+msgid "New file"
 msgstr ""
 
 #: vpsr.rsno
@@ -813,6 +843,14 @@ msgctxt "vpsr.rsprintbtn"
 msgid "&Print"
 msgstr ""
 
+#: vpsr.rsprintformatdesigner
+msgid "Print format designer"
+msgstr ""
+
+#: vpsr.rsprintorder
+msgid "Print order"
+msgstr ""
+
 #: vpsr.rsprintprvcancel
 msgctxt "vpsr.rsprintprvcancel"
 msgid "Cancel"
@@ -885,6 +923,10 @@ msgstr ""
 
 #: vpsr.rssaturday
 msgid "Saturday"
+msgstr ""
+
+#: vpsr.rssavefilebtn
+msgid "Save file"
 msgstr ""
 
 #: vpsr.rsselectasound

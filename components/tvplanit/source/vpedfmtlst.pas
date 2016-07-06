@@ -62,17 +62,17 @@ type
     btnNewFile: TButton;
     btnNewFormat: TButton;
     btnSaveFile: TButton;
-    Label1: TLabel;
-    Label2: TLabel;
+    LblFormats: TLabel;
+    LblElements: TLabel;
     lbElements: TListBox;
     lbFormats: TListBox;
     OpenDialog1: TOpenDialog;
-    Panel1: TPanel;
+    PrintPreviewPanel: TPanel;
     Panel2: TPanel;
     PrintPreview: TVpPrintPreview;
     SaveDialog1: TSaveDialog;
     btnOk: TButton;
-    Label3: TLabel;
+    LblPrintOrder: TLabel;
     procedure btnDeleteElementClick(Sender: TObject);
     procedure btnDeleteFormatClick(Sender: TObject);
     procedure btnEditElementClick(Sender: TObject);
@@ -102,6 +102,7 @@ type
     IsDirty: Boolean;
     LastX, LastY: Integer;
     DragItem: Integer;
+    procedure SetCaptions;
 
   protected
     function DirtyPrompt: Integer;
@@ -136,7 +137,8 @@ var
 implementation
 
 uses
-  VpEdFmt, VpEdElem;
+  Math,
+  VpMisc, VpEdFmt, VpEdElem;
 
 {$IFDEF DELPHI}
  {$R *.dfm}
@@ -154,6 +156,8 @@ begin
 
   EnableFormatButtons(False);
   EnableElementButtons(False);
+
+  SetCaptions;
 end;
 {=====}
 procedure TfrmPrnFormat.EnableMoveButtons;
@@ -164,7 +168,7 @@ end;
 {=====}
 procedure TfrmPrnFormat.FormShow(Sender: TObject);
 begin
-  PrintPreview.Parent := Panel1;
+  PrintPreview.Parent := PrintPreviewPanel;
 
   if ControlLink.Printer.PrintFormats.Count > 0 then begin
     UpdateFormats;
@@ -638,7 +642,74 @@ begin
       FFormatFileName := FControlLink.Printer.DefaultXMLFileName;
   end;
 end;
-{=====}
+
+procedure TfrmPrnFormat.SetCaptions;
+var
+  cnv: TControlCanvas;
+  w: Integer;
+  wPrv: Integer;
+begin
+  wPrv := PrintPreview.Width;
+
+  Caption := RSPrintFormatDesigner;
+  LblFormats.Caption := RSFormats;
+  LblElements.Caption := RSElements;
+  lblPrintOrder.Caption := RSPrintOrder;
+  btnOK.Caption := RSOKBtn;
+  btnNewFormat.Caption := RSNewBtn;
+  btnEditFormat.Caption := RSEditBtn;
+  btnDeleteFormat.Caption := RSDeleteBtn;
+  btnNewElement.Caption := RSNewBtn;
+  btnEditElement.Caption := RSEditBtn;
+  btnDeleteElement.Caption := RSDeleteBtn;
+  btnNewFile.Caption := RSNewFileBtn;
+  btnLoadFile.Caption := RSLoadFileBtn;
+  btnSaveFile.Caption := RSSaveFileBtn;
+
+  w := 0;
+  cnv := TControlCanvas.Create;
+  try
+    cnv.Control := btnNewFile;
+    cnv.Font.Assign(btnNewFile.Font);
+    w := Max(w, cnv.TextWidth(RSNewFileBtn));
+    w := Max(w, cnv.TextWidth(RSLoadFileBtn));
+    w := Max(W, cnv.TextWidth(RSSaveFileBtn));
+    btnNewFile.Width := w + 16;
+    btnLoadFile.Left := btnNewFile.Left + btnNewFile.Width + 8;
+    btnLoadFile.Width := btnNewFile.Width;
+    btnSaveFile.Left := btnLoadFile.Left + btnLoadFile.Width + 8;
+    btnSaveFile.Width := btnNewFile.Width;
+
+    w := 0;
+    w := Max(w, cnv.TextWidth(RSNewBtn) + 8);
+    w := Max(w, cnv.TextWidth(RSEditBtn) + 8);
+    w := Max(w, cnv.TextWidth(RSDeleteBtn) + 8);
+    w := Max(w, GetLabelWidth(LblPrintOrder));
+
+    BtnNewFormat.Left := lbFormats.Left + lbFormats.Width + 16;
+    BtnEditFormat.Left := BtnNewFormat.Left;
+    BtnDeleteFormat.Left := BtnNewFormat.Left;
+    BtnNewElement.Left := BtnNewFormat.Left;
+    BtnEditElement.Left := BtnNewFormat.Left;
+    BtnDeleteElement.Left := BtnNewFormat.Left;
+    BtnNewFormat.Width := w;
+    BtnEditFormat.Width := w;
+    BtnDeleteFormat.Width := w;
+    BtnNewElement.Width := w;
+    BtnEditElement.Width := w;
+    BtnDeleteElement.Width := w;
+    LblPrintOrder.Left := BtnNewFormat.Left + (BtnNewFormat.Width - GetLabelWidth(LblPrintOrder)) div 2;
+    btnMoveElementUp.Left := BtnNewFormat.Left + (BtnNewFormat.Width - btnMoveElementUp.Width) div 2;
+    btnMoveElementDn.Left := btnMoveElementUp.Left;
+
+    PrintPreviewPanel.Left := BtnNewFormat.Left + BtnNewFormat.Width + 16;
+
+    ClientWidth := PrintPreviewPanel.Left + PrintPreviewPanel.Width + 8;
+  finally
+    cnv.Free;
+  end;
+end;
+
 procedure TfrmPrnFormat.SetFormatFileName(const v: string);
 begin
   if v <> FFormatFileName then begin

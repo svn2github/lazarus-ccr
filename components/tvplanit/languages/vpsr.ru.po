@@ -376,6 +376,13 @@ msgid "Use the default sound"
 msgstr "Использовать звук по умолчанию"
 
 #: vpsr.rsdelete
+msgctxt "vpsr.rsdelete"
+msgid "Delete"
+msgstr "Удалить"
+
+#: vpsr.rsdeletebtn
+#, fuzzy
+msgctxt "vpsr.rsdeletebtn"
 msgid "Delete"
 msgstr "Удалить"
 
@@ -428,6 +435,10 @@ msgstr "Срок:"
 msgid "Error: Duplicate Resource."
 msgstr "Ошибка: Дубликат ресурсов."
 
+#: vpsr.rseditbtn
+msgid "Edit"
+msgstr ""
+
 #: vpsr.rseditingfolders
 msgid "Folder Editor."
 msgstr "Редактор папки"
@@ -439,6 +450,10 @@ msgstr "Редактор элемента папки."
 #: vpsr.rseditprintformat
 msgid "Edit Print Formats..."
 msgstr "Редактор формата печати..."
+
+#: vpsr.rselements
+msgid "Elements:"
+msgstr ""
 
 #: vpsr.rsemail
 msgid "E-Mail"
@@ -477,6 +492,10 @@ msgstr ""
 
 #: vpsr.rsfirstnamelbl
 msgid "First name:"
+msgstr ""
+
+#: vpsr.rsformats
+msgid "Formats:"
 msgstr ""
 
 #: vpsr.rsfriday
@@ -567,6 +586,10 @@ msgstr ""
 
 #: vpsr.rslmonday
 msgid "M"
+msgstr ""
+
+#: vpsr.rsloadfilebtn
+msgid "Load file"
 msgstr ""
 
 #: vpsr.rslocationlbl
@@ -660,6 +683,14 @@ msgstr ""
 
 #: vpsr.rsneedformatname
 msgid "FormatName cannot be blank"
+msgstr ""
+
+#: vpsr.rsnewbtn
+msgid "New"
+msgstr ""
+
+#: vpsr.rsnewfilebtn
+msgid "New file"
 msgstr ""
 
 #: vpsr.rsno
@@ -827,6 +858,14 @@ msgctxt "vpsr.rsprintbtn"
 msgid "&Print"
 msgstr "Печать"
 
+#: vpsr.rsprintformatdesigner
+msgid "Print format designer"
+msgstr ""
+
+#: vpsr.rsprintorder
+msgid "Print order"
+msgstr ""
+
 #: vpsr.rsprintprvcancel
 #, fuzzy
 msgctxt "vpsr.rsprintprvcancel"
@@ -912,6 +951,10 @@ msgstr "Ресурс"
 #: vpsr.rssaturday
 msgid "Saturday"
 msgstr "Суббота"
+
+#: vpsr.rssavefilebtn
+msgid "Save file"
+msgstr ""
 
 #: vpsr.rsselectasound
 msgid "Select A Sound"
