@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, PrintersDlgs, Forms, Controls, Graphics, Dialogs,
   ExtCtrls, StdCtrls, ComCtrls, LCLTranslator, Menus, VpBaseDS, VpDayView,
   VpWeekView, VpTaskList, VpAbout, VpContactGrid, VpMonthView, VpResEditDlg,
-  VpContactButtons, VpBufDS, VpNavBar, VpData, VpPrtPrvDlg, Types;
+  VpContactButtons, VpBufDS, VpNavBar, VpData, VpPrtPrvDlg, VpPrtFmtDlg, Types;
 
 type
 
@@ -36,6 +36,7 @@ type
     LblLanguage: TLabel;
     LblVisibleDays: TLabel;
     MenuItem3: TMenuItem;
+    MnuEditPrintFormats: TMenuItem;
     MnuPrintPreview: TMenuItem;
     PrintDialog1: TPrintDialog;
     TitleLbl: TLabel;
@@ -70,6 +71,7 @@ type
     VpDayView1: TVpDayView;
     VpMonthView1: TVpMonthView;
     VpNavBar1: TVpNavBar;
+    VpPrintFormatEditDialog1: TVpPrintFormatEditDialog;
     VpPrintPreviewDialog1: TVpPrintPreviewDialog;
     VpResourceCombo1: TVpResourceCombo;
     VpResourceEditDialog1: TVpResourceEditDialog;
@@ -90,6 +92,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure MnuAboutClick(Sender: TObject);
+    procedure MnuEditPrintFormatsClick(Sender: TObject);
     procedure MnuPrintPreviewClick(Sender: TObject);
     procedure MnuQuitClick(Sender: TObject);
     procedure MnuResourcesClick(Sender: TObject);
@@ -352,6 +355,11 @@ begin
   finally
     F.Free;
   end;
+end;
+
+procedure TMainForm.MnuEditPrintFormatsClick(Sender: TObject);
+begin
+  VpPrintFormatEditDialog1.Execute;
 end;
 
 procedure TMainForm.MnuPrintPreviewClick(Sender: TObject);

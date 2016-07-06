@@ -253,6 +253,10 @@ msgstr ""
 msgid "About Visual PlanIt"
 msgstr ""
 
+#: tmainform.mnueditprintformats.caption
+msgid "Edit print formats..."
+msgstr ""
+
 #: tmainform.mnumaintenance.caption
 msgctxt "TMAINFORM.MNUMAINTENANCE.CAPTION"
 msgid "Maintenance"

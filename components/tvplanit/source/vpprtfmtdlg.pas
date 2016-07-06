@@ -77,30 +77,30 @@ implementation
 constructor TVpPrintFormatEditDialog.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  FControlLink      := SearchControlLink (Owner);
+  FControlLink := SearchControlLink (Owner);
 
   FPlacement.Height := 480;
-  FPlacement.Width  := 640;
+  FPlacement.Width := 640;
 end;
 
 function TVpPrintFormatEditDialog.Execute: Boolean;
 var
   PrtFmtDlg : TfrmPrnFormat;
 begin
-  Application.CreateForm (TfrmPrnFormat, PrtFmtDlg);
+  PrtFmtDlg := TfrmPrnFormat.Create(Application);
+//  Application.CreateForm(TfrmPrnFormat, PrtFmtDlg);
   try
     DoFormPlacement(PrtFmtDlg);
     PrtFmtDlg.WindowState := WindowState;
     PrtFmtDlg.ControlLink := ControlLink;
     Result := PrtFmtDlg.Execute;
-
   finally
-    PrtFmtDlg.Release;
+    PrtFmtDlg.Free;
   end;
 end;
 
-procedure TVpPrintFormatEditDialog.Notification (AComponent : TComponent;
-                                               Operation  : TOperation);
+procedure TVpPrintFormatEditDialog.Notification(AComponent: TComponent;
+  Operation: TOperation);
   {-Handle new/deleted components}
 begin
   inherited Notification (AComponent, Operation);
