@@ -578,7 +578,10 @@ begin
   Prn.CurFormat := Idx;
 
   PrintPreview.ControlLink := ControlLink;
-  PrintPreview.Invalidate;
+  PrintPreview.ForceUpdate;
+  PrintPreview.FirstPage;
+  //  PrintPreview.Invalidate;
+
 
   for i := 0 to Pred(Prn.PrintFormats.Items[Idx].Elements.Count) do begin
     E := Prn.PrintFormats.Items[Idx].Elements.Items[i];
