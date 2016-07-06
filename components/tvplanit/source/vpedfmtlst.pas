@@ -785,7 +785,7 @@ begin
   if lbFormats.ItemIndex > -1 then begin
     Idx := Prn.Find(lbFormats.Items[lbFormats.ItemIndex]);
     if Idx > - 1 then
-    Prn.CurFormat := Idx;
+      Prn.CurFormat := Idx;
     {Prn.CurFormat := lbFormats.ItemIndex; }
   end;
   Prn.NotifyLinked;

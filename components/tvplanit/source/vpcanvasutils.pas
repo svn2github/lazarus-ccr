@@ -777,6 +777,7 @@ begin
   finally
     // Restore previously used font.
     FCanvas.Font.Assign(OldFont);
+    OldFont.Free;
   end;
 end;
 
