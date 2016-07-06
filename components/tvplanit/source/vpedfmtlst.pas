@@ -68,7 +68,7 @@ type
     lbFormats: TListBox;
     OpenDialog1: TOpenDialog;
     PrintPreviewPanel: TPanel;
-    Panel2: TPanel;
+    ButtonPanel: TPanel;
     PrintPreview: TVpPrintPreview;
     SaveDialog1: TSaveDialog;
     btnOk: TButton;
@@ -102,7 +102,9 @@ type
     IsDirty: Boolean;
     LastX, LastY: Integer;
     DragItem: Integer;
+    FDrawingStyle: TVpDrawingStyle;
     procedure SetCaptions;
+    procedure SetDrawingStyle(const v: TVpDrawingStyle);
 
   protected
     function DirtyPrompt: Integer;
@@ -115,6 +117,7 @@ type
     procedure EnableElementButtons(Enable: Boolean);
     procedure EnableFormatButtons(Enable: Boolean);
     procedure EnableMoveButtons;
+    procedure RebuildPreview;
     procedure SetFormatFileName(const v: string);
     procedure UpdateFormats;
     procedure UpdateCaption;
@@ -124,8 +127,9 @@ type
     procedure SetControlLink(const Value: TVpControlLink);
 
   public
-    function Execute : Boolean;
-    property ControlLink : TVpControlLink read FControlLink write SetControlLink;
+    function Execute: Boolean;
+    property ControlLink: TVpControlLink read FControlLink write SetControlLink;
+    property DrawingStyle: TVpDrawingStyle read FDrawingStyle write SetDrawingStyle;
 
   published
     property FormatFileName : string read FFormatFileName write SetFormatFileName;
@@ -578,10 +582,7 @@ begin
   Prn.CurFormat := Idx;
 
   PrintPreview.ControlLink := ControlLink;
-  PrintPreview.ForceUpdate;
-  PrintPreview.FirstPage;
-  //  PrintPreview.Invalidate;
-
+  RebuildPreview;
 
   for i := 0 to Pred(Prn.PrintFormats.Items[Idx].Elements.Count) do begin
     E := Prn.PrintFormats.Items[Idx].Elements.Items[i];
@@ -636,7 +637,13 @@ begin
   LastY := Y;
   Accept := True;
 end;
-{=====}
+
+procedure TfrmPrnFormat.RebuildPreview;
+begin
+  PrintPreview.ForceUpdate;
+  PrintPreview.FirstPage;
+end;
+
 procedure TfrmPrnFormat.SetControlLink(const Value: TVpControlLink);
 begin
   if FControlLink <> Value then begin
@@ -649,7 +656,7 @@ end;
 procedure TfrmPrnFormat.SetCaptions;
 var
   cnv: TControlCanvas;
-  w: Integer;
+  i, w: Integer;
   wPrv: Integer;
 begin
   wPrv := PrintPreview.Width;
@@ -676,7 +683,7 @@ begin
     cnv.Font.Assign(btnNewFile.Font);
     w := Max(w, cnv.TextWidth(RSNewFileBtn));
     w := Max(w, cnv.TextWidth(RSLoadFileBtn));
-    w := Max(W, cnv.TextWidth(RSSaveFileBtn));
+    w := Max(w, cnv.TextWidth(RSSaveFileBtn));
     btnNewFile.Width := w + 16;
     btnLoadFile.Left := btnNewFile.Left + btnNewFile.Width + 8;
     btnLoadFile.Width := btnNewFile.Width;
@@ -713,6 +720,15 @@ begin
   end;
 end;
 
+procedure TfrmPrnFormat.SetDrawingStyle(const v: TVpDrawingStyle);
+begin
+  FDrawingStyle := v;
+  if FDrawingStyle = dsNoBorder then
+    PrintPreview.BorderStyle := bsNone else
+    PrintPreview.BorderStyle := bsSingle;
+  PrintPreview.DrawingStyle := FDrawingStyle;
+end;
+
 procedure TfrmPrnFormat.SetFormatFileName(const v: string);
 begin
   if v <> FFormatFileName then begin
@@ -731,10 +747,32 @@ procedure TfrmPrnFormat.UpdateFormats;
 var
   i: Integer;
   Prn: TVpPrinter;
+  w: Integer;
+  cnv: TControlCanvas;
 begin
   Prn := ControlLink.Printer;
   for i := 0 to Pred(Prn.PrintFormats.Count) do
     lbFormats.Items.AddObject(Prn.PrintFormats.Items[i].FormatName, Prn.PrintFormats.Items[i]);
+
+  // Show a horizontal scrollbar if list items are too wide
+  w := 0;
+  cnv := TControlCanvas.Create;
+  try
+    cnv.Control := lbFormats;
+    cnv.Font := lbFormats.Font;
+    w := 0;
+    for i:=0 to lbFormats.Items.Count-1 do
+      w := Max(w, cnv.TextWidth(lbFormats.Items[i]));
+    lbFormats.ScrollWidth := w + 8;
+
+    w := 0;
+    for i:=0 to lbElements.Items.Count-1 do
+      w := Max(w, cnv.TextWidth(lbElements.Items[i]));
+    lbElements.ScrollWidth := w + 8;
+  finally
+    cnv.Free;
+  end;
+
   EnableMoveButtons;
 end;
 {=====}
@@ -752,6 +790,7 @@ begin
   end;
   Prn.NotifyLinked;
   EnableMoveButtons;
+  RebuildPreview;
 end;
 {=====}
 

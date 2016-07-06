@@ -773,37 +773,28 @@ var
   end;
 
   procedure DrawBorders;
+  var
+    R: TRect;
   begin
     if FBorderStyle = bsSingle then begin
+      R := ClientRect;
       if FDrawingStyle = dsFlat then begin
-        { draw an outer and inner bevel }
-        DrawBevelRect(
-          WorkBmp.Canvas,
-          Rect(ClientRect.Left, ClientRect.Top, ClientRect.Right - 1, ClientRect.Bottom - 1),
-          clBtnShadow,
-          clBtnHighlight
-        );
-        DrawBevelRect(
-          WorkBmp.Canvas,
-          Rect(ClientRect.Left + 1, ClientRect.Top + 1, ClientRect.Right - 2, ClientRect.Bottom - 2),
-          clBtnHighlight,
-          clBtnShadow
-        );
+        // Draw a simple rectangular border
+        //InflateRect(R, 1, 1);
+        DrawBevelRect(WorkBmp.Canvas, R, clBtnShadow, clBtnShadow);
+        {
+        DrawBevelRect(WorkBmp.Canvas, R, clBtnShadow, clBtnHighlight);
+        InflateRect(R, 1,1);
+        DrawBevelRect(WorkBmp.Canvas, R, clBtnHighlight, clBtnShadow);
+        }
       end else
       if FDrawingStyle = ds3d then begin
-        { draw a 3d bevel }
-        DrawBevelRect(
-          WorkBmp.Canvas,
-          Rect(ClientRect.Left, ClientRect.Top, ClientRect.Right - 1, ClientRect.Bottom - 1),
-          clBtnShadow,
-          clBtnHighlight
-        );
-        DrawBevelRect(
-          WorkBmp.Canvas,
-          Rect(ClientRect.Left + 1, ClientRect.Top + 1, ClientRect.Right - 2, ClientRect.Bottom - 2),
-          cl3DDkShadow,
-          clBtnFace
-        );
+        // Draw a 3d bevel
+        dec(R.Right);
+        dec(R.Bottom);
+        DrawBevelRect(WorkBmp.Canvas, R, clBtnShadow, clBtnHighlight);
+        InflateRect(R, -1, -1);
+        DrawBevelRect(WorkBmp.Canvas, R, cl3DDkShadow, clBtnFace);
       end;
     end;
   end;

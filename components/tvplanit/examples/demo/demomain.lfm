@@ -25,9 +25,9 @@ object MainForm: TMainForm
       Height = 532
       Top = 48
       Width = 780
-      ActivePage = TabEvents
+      ActivePage = TabSettings
       Align = alClient
-      TabIndex = 0
+      TabIndex = 4
       TabOrder = 0
       object TabEvents: TTabSheet
         Caption = 'Events'
@@ -521,15 +521,6 @@ object MainForm: TMainForm
           Caption = 'Drawing style:'
           ParentColor = False
         end
-        object ComboBox1: TComboBox
-          Left = 10
-          Height = 23
-          Top = 10
-          Width = 100
-          ItemHeight = 15
-          TabOrder = 5
-          Text = 'ComboBox1'
-        end
         object CbDrawingStyle: TComboBox
           Left = 439
           Height = 23
@@ -544,7 +535,7 @@ object MainForm: TMainForm
           )
           OnChange = CbDrawingStyleChange
           Style = csDropDownList
-          TabOrder = 6
+          TabOrder = 5
           Text = 'flat'
         end
       end
@@ -707,6 +698,7 @@ object MainForm: TMainForm
             Caption.Font.Style = [fsItalic]
             DayOffset = 0
             DayOffsetUnits = duDay
+            ElementName = 'DayView'
             Height = 100
             Left = 0
             Shape.Shape = ustRectangle
@@ -724,6 +716,7 @@ object MainForm: TMainForm
             Version = 'v1.04'
             DayOffset = 0
             DayOffsetUnits = duDay
+            ElementName = 'WeekView'
             Height = 100
             ItemType = itWeekView
             Left = 0

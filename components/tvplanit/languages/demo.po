@@ -204,10 +204,6 @@ msgstr ""
 msgid "30 Min"
 msgstr ""
 
-#: tmainform.combobox1.text
-msgid "ComboBox1"
-msgstr ""
-
 #: tmainform.lbladdressbuilder.caption
 msgid "Address builder"
 msgstr ""

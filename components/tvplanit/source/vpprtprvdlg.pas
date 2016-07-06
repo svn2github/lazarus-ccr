@@ -38,26 +38,11 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  SysUtils,
-  Classes,
-  Graphics,
-  Controls,
-  Forms,
-  Dialogs,
-  StdCtrls,
-  ExtCtrls,
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls,
+  Buttons, Printers, ImgList, ComCtrls, ToolWin, ActnList,
   {$IFDEF VERSION6} Variants, {$ENDIF}
-  VpMisc,
-  VpBase,
-  VpException,
-  VpData,
-  VpPrtPrv,
-  VpSR,
-  VpBaseDS,
-  VpDlg,
-  Buttons,
-  VpPrtFmtCBox,
-  Printers, ImgList, ComCtrls, ToolWin, ActnList;
+  VpMisc, VpBase, VpException, VpData, VpPrtPrv, VpSR, VpBaseDS, VpDlg,
+  VpPrtFmtCBox;
 
 type
   TVpPrintPreviewDialog = class;
@@ -102,12 +87,15 @@ type
       procedure VpPrintFormatComboBox1Change(Sender: TObject);
 
     private
+      FDrawingStyle: TVpDrawingStyle;
       procedure SetCaptions;
+      procedure SetDrawingStyle(AValue: TVpDrawingStyle);
 
     public
       Resource: TVpResource;
       Contact: TVpContact;
       ReturnCode: TVpEditorReturnCode;
+      property DrawingStyle: TVpDrawingStyle read FDrawingStyle write SetDrawingStyle;
   end;
 
   TVpPrintPreviewDialog = class (TVpBaseDialog)
@@ -115,6 +103,7 @@ type
       FControlLink: TVpControlLink;
       FAutoPrint: Boolean;
       FBottomMargin: Extended;
+      FDrawingStyle: TVpDrawingStyle;
       FEndDate: TDateTime;
       FLeftMargin: Extended;
       FMarginUnits: TVpItemMeasurement;
@@ -148,6 +137,7 @@ type
       property AutoPrint: Boolean read FAutoPrint write SetAutoPrint default False;
       property BottomMargin: Extended read FBottomMargin write SetBottomMargin;
       property ControlLink: TVpControlLink read FControlLink write SetControlLink;
+      property DrawingStyle: TVpDrawingStyle read FDrawingStyle write FDrawingStyle default ds3D;
       property EndDate: TDateTime read FEndDate write SetEndDate;
       property LeftMargin: Extended read FLeftMargin write SetLeftMargin;
       property MarginUnits: TVpItemMeasurement read FMarginUnits write SetMarginUnits default imInches;
@@ -174,6 +164,8 @@ uses
   Math,
   VpPrtFmt;
 
+{ TfrmPrintPreview }
+
 procedure TfrmPrintPreview.FormCreate(Sender: TObject);
 begin
   ReturnCode := rtAbandon;
@@ -197,18 +189,29 @@ begin
   actCancel.Hint := RSPrintPrvCancelHint;
 end;
 
+procedure TfrmPrintPreview.SetDrawingStyle(AValue: TVpDrawingStyle);
+begin
+  FDrawingStyle := AValue;
+  if FDrawingStyle = dsNoBorder then
+    VpPrintPreview1.BorderStyle := bsNone else
+    VpPrintPreview1.BorderStyle := bsSingle;
+  VpPrintPreview1.DrawingStyle := FDrawingStyle;
+end;
+
 procedure TfrmPrintPreview.VpPrintFormatComboBox1Change(Sender: TObject);
 begin
   VpPrintPreview1.ForceUpdate;
   VpPrintPreview1.FirstPage;
 end;
 
-
 procedure TfrmPrintPreview.OKBtnClick(Sender: TObject);
 begin
   ReturnCode := rtCommit;
   Close;
 end;
+
+
+{ TVpPrintPreviewDialog }
 
 constructor TVpPrintPreviewDialog.Create(AOwner: TComponent);
 begin
@@ -222,6 +225,7 @@ begin
   FAutoPrint := False;
   FControlLink := SearchControlLink(Owner);
   FPrinter := Printer;
+  DrawingStyle := ds3D;
 end;
 
 function TVpPrintPreviewDialog.Execute: Boolean;
@@ -229,7 +233,7 @@ var
   EditForm: TfrmPrintPreview;
 begin
   Result := False;
-  Application.CreateForm(TfrmPrintPreview, EditForm);
+  EditForm := TfrmPrintPreview.Create(Application);
   try
     DoFormPlacement(EditForm);
     EditForm.WindowState := WindowState;
@@ -242,6 +246,7 @@ begin
     EditForm.VpPrintPreview1.Printer := Printer;
     EditForm.VpPrintPreview1.ForceUpdate;
     EditForm.VpPrintPreview1.FirstPage;
+    EditForm.DrawingStyle := FDrawingStyle;
     EditForm.ShowModal;
     if EditForm.ReturnCode = rtCommit then begin
       Result := True;
@@ -255,7 +260,7 @@ begin
       end;
     end;
   finally
-    EditForm.Release;
+    EditForm.Free;
   end;
 end;
 

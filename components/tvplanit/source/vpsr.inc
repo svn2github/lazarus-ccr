@@ -413,8 +413,8 @@ resourcestring
   RSDeleteBtn        = 'Delete';
   RSPrintOrder       = 'Print order';
   RSNewFileBtn       = 'New file';
-  RSLoadFileBtn      = 'Load file';
-  RSSaveFileBtn      = 'Save file';
+  RSLoadFileBtn      = 'Load file...';
+  RSSaveFileBtn      = 'Save file...';
 
   { Automatic resource adding/selection}                               {!!.01}
   RSAddNewResource   = 'No resources have been defined. Would you ' +  {!!.01}

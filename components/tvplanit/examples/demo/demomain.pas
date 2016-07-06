@@ -24,7 +24,6 @@ type
     CbFirstDayOfWeek: TComboBox;
     CbAllowInplaceEditing: TCheckBox;
     CbAddressBuilder: TComboBox;
-    ComboBox1: TComboBox;
     CbDrawingStyle: TComboBox;
     Img: TImage;
     ImageList1: TImageList;
@@ -359,6 +358,7 @@ end;
 
 procedure TMainForm.MnuEditPrintFormatsClick(Sender: TObject);
 begin
+  VpPrintFormatEditDialog1.DrawingStyle := VpWeekView1.DrawingStyle;
   VpPrintFormatEditDialog1.Execute;
 end;
 
@@ -387,7 +387,8 @@ begin
   VpPrintPreviewDialog1.ControlLink := VpControlLink1;
   VpPrintPreviewDialog1.Printer := Printer;
   VpPrintPreviewDialog1.StartDate := t1;
-  VPPrintPreviewDialog1.EndDate := t2;
+  VpPrintPreviewDialog1.EndDate := t2;
+  VpPrintPreviewDialog1.DrawingStyle := VpDayView1.DrawingStyle;
   if VpPrintPreviewDialog1.Execute then
     if PrintDialog1.Execute then begin
       Printer.BeginDoc;

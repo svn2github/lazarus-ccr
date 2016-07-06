@@ -49,20 +49,19 @@ type
   TVpPrintFormatEditDialog = class (TVpBaseDialog)
   private
     FControlLink: TVpControlLink;
+    FDrawingStyle: TVpDrawingStyle;
     FWindowState: TWindowState;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure SetControlLink(const Value: TVpControlLink);
   public
-    constructor Create (AOwner : TComponent); override;
-    function Execute : Boolean; override;
+    constructor Create(AOwner: TComponent); override;
+    function Execute: Boolean; override;
 
   published
-    property ControlLink : TVpControlLink
-      read FControlLink write SetControlLink;
-
-    property WindowState : TWindowState
-      read FWindowState write FWindowState default wsNormal;
+    property ControlLink : TVpControlLink read FControlLink write SetControlLink;
+    property DrawingStyle: TVpDrawingStyle read FDrawingStyle write FDrawingStyle default ds3d;
+    property WindowState : TWindowState read FWindowState write FWindowState default wsNormal;
 
     property Options;
     property Placement;
@@ -78,6 +77,7 @@ constructor TVpPrintFormatEditDialog.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FControlLink := SearchControlLink (Owner);
+  FDrawingStyle := ds3d;
 
   FPlacement.Height := 480;
   FPlacement.Width := 640;
@@ -93,6 +93,7 @@ begin
     DoFormPlacement(PrtFmtDlg);
     PrtFmtDlg.WindowState := WindowState;
     PrtFmtDlg.ControlLink := ControlLink;
+    PrtFmtDlg.DrawingStyle := FDrawingStyle;
     Result := PrtFmtDlg.Execute;
   finally
     PrtFmtDlg.Free;

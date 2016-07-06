@@ -585,7 +585,7 @@ msgid "M"
 msgstr "M"
 
 #: vpsr.rsloadfilebtn
-msgid "Load file"
+msgid "Load file..."
 msgstr ""
 
 #: vpsr.rslocationlbl
@@ -937,7 +937,7 @@ msgid "Saturday"
 msgstr "Zaterdag"
 
 #: vpsr.rssavefilebtn
-msgid "Save file"
+msgid "Save file..."
 msgstr ""
 
 #: vpsr.rsselectasound

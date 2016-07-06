@@ -1,13 +1,13 @@
 object frmPrintPreview: TfrmPrintPreview
   Left = 325
-  Height = 791
+  Height = 818
   Top = 118
-  Width = 539
+  Width = 540
   HorzScrollBar.Page = 476
   VertScrollBar.Page = 517
   Caption = 'Print Preview'
-  ClientHeight = 791
-  ClientWidth = 539
+  ClientHeight = 818
+  ClientWidth = 540
   Constraints.MinHeight = 200
   Constraints.MinWidth = 395
   KeyPreview = True
@@ -19,10 +19,10 @@ object frmPrintPreview: TfrmPrintPreview
     Left = 0
     Height = 62
     Top = 0
-    Width = 539
+    Width = 540
     Align = alTop
     ClientHeight = 62
-    ClientWidth = 539
+    ClientWidth = 540
     TabOrder = 0
     object cboxZoom: TComboBox
       Left = 296
@@ -57,7 +57,7 @@ object frmPrintPreview: TfrmPrintPreview
       Left = 1
       Height = 27
       Top = 1
-      Width = 537
+      Width = 538
       AutoSize = True
       ButtonHeight = 25
       ButtonWidth = 25
@@ -125,9 +125,9 @@ object frmPrintPreview: TfrmPrintPreview
   end
   object VpPrintPreview1: TVpPrintPreview
     Left = 0
-    Height = 729
+    Height = 756
     Top = 62
-    Width = 539
+    Width = 540
     CurPage = 0
     EndDate = 37355.4526088079
     StartDate = 37348.4526088079
@@ -137,8 +137,8 @@ object frmPrintPreview: TfrmPrintPreview
     TabOrder = 1
   end
   object imMain: TImageList
-    left = 357
-    top = 195
+    left = 272
+    top = 160
     Bitmap = {
       4C690600000010000000100000005B4848005B4848005B484800564343008679
       799CD1CDCDF3D1CDCDEFD0CCCCEFD1CCCCEFD2CDCDEFD3CDCDF38E8181A75747
@@ -338,8 +338,8 @@ object frmPrintPreview: TfrmPrintPreview
   object actMain: TActionList
     Images = imMain
     OnUpdate = actMainUpdate
-    left = 272
-    top = 152
+    left = 192
+    top = 160
     object actPrint: TAction
       Caption = '&Print'
       Hint = 'Print'
