@@ -162,6 +162,7 @@ uses
  {$IFDEF LCL}
   VpIniDS,                    { IniFile datastore                            }
   VpBufDS,                    { Datastore for TBufDataset                    }
+  VpSqlite3DS,                { Datastore for sqlite3                        }
   //  VpSdfDS                     { Datastore for TSdfDataset                    }
   //  VpDbfDS,                    { Datastore for dbase files                    }
  {$ENDIF}
@@ -621,6 +622,7 @@ begin
 {$IFDEF LCL}
     TVpIniDatastore,
     TVpBufDSDatastore,
+    TVpSqlite3Datastore,
     //TVpSdfDatastore,       // to do (maybe)...
     //TVpDbfDatastore,       // to do...
 {$ENDIF}
