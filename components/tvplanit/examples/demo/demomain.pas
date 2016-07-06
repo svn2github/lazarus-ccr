@@ -367,21 +367,9 @@ begin
          t1 := StartOfTheWeek(now);
          t2 := t1 + 7 - VpDayView1.NumDays mod 7; // + 7;
          fmt.DayInc := VpDayView1.NumDays;
-
-         t1 := VpDayView1.Date;
-         t2 := t1;   // wp: just for debugging of prt to reduce painting calls
-         fmt.dayInc := 0;
-
-
-
-
-         // wp: !!!!!!!!!!!!!!!!!!!!!!!!!!!!  bring back in !!!!!!!!!!!!!
-
-//         VpControlLink1.Printer.Granularity := VpDayView1.Granularity;
-//         VpControlLink1.Printer.DayStart := h_08; //VpDayView1.DefaultTopHour;
-//         VpControlLink1.Printer.DayEnd := h_17;
-
-
+         VpControlLink1.Printer.Granularity := gr30Min;
+         VpControlLink1.Printer.DayStart := h_08;
+         VpControlLink1.Printer.DayEnd := h_18;
        end;
     1: begin  // current week in WeekView
          t1 := StartOfTheWeek(now);

@@ -1,18 +1,19 @@
 object frmPrintPreview: TfrmPrintPreview
-  Left = 285
-  Height = 704
-  Top = 142
+  Left = 325
+  Height = 791
+  Top = 118
   Width = 539
   HorzScrollBar.Page = 476
   VertScrollBar.Page = 517
   Caption = 'Print Preview'
-  ClientHeight = 704
+  ClientHeight = 791
   ClientWidth = 539
   Constraints.MinHeight = 200
   Constraints.MinWidth = 395
   KeyPreview = True
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
+  OnShow = FormShow
   LCLVersion = '1.7'
   object Panel1: TPanel
     Left = 0
@@ -24,7 +25,7 @@ object frmPrintPreview: TfrmPrintPreview
     ClientWidth = 539
     TabOrder = 0
     object cboxZoom: TComboBox
-      Left = 216
+      Left = 296
       Height = 23
       Top = 32
       Width = 145
@@ -46,7 +47,7 @@ object frmPrintPreview: TfrmPrintPreview
       Left = 8
       Height = 23
       Top = 32
-      Width = 201
+      Width = 280
       ItemHeight = 15
       Sorted = True
       TabOrder = 1
@@ -124,7 +125,7 @@ object frmPrintPreview: TfrmPrintPreview
   end
   object VpPrintPreview1: TVpPrintPreview
     Left = 0
-    Height = 642
+    Height = 729
     Top = 62
     Width = 539
     CurPage = 0

@@ -87,6 +87,7 @@ type
       actLastPage: TAction;
       actCancel: TAction;
 
+      procedure FormShow(Sender: TObject);
       procedure OKBtnClick (Sender : TObject);
       procedure cboxZoomChange(Sender: TObject);
       procedure actPrintExecute(Sender: TObject);
@@ -169,6 +170,10 @@ implementation
  {$R *.dfm}
 {$ENDIF}
 
+uses
+  Math,
+  VpPrtFmt;
+
 procedure TfrmPrintPreview.FormCreate(Sender: TObject);
 begin
   ReturnCode := rtAbandon;
@@ -233,7 +238,7 @@ begin
     EditForm.VpPrintPreview1.StartDate := StartDate;
     EditForm.VpPrintPreview1.EndDate := EndDate;
     EditForm.VpPrintPreview1.ZoomFactor := ZoomFactor;
-    EditForm.cboxZoom.ItemIndex := Integer (ZoomFactor);
+    EditForm.cboxZoom.ItemIndex := Integer(ZoomFactor);
     EditForm.VpPrintPreview1.Printer := Printer;
     EditForm.VpPrintPreview1.ForceUpdate;
     EditForm.VpPrintPreview1.FirstPage;
@@ -397,6 +402,32 @@ procedure TfrmPrintPreview.FormKeyDown(Sender: TObject; var Key: Word;
 begin
   if Key = VK_ESCAPE then
     actCancel.Execute;
+end;
+
+procedure TfrmPrintPreview.FormShow(Sender: TObject);
+var
+  maxlen: Integer;
+  cnv: TControlCanvas;
+  i: Integer;
+  fmts: TVpPrintFormat;
+begin
+  if VpPrintPreview1.ControlLink = nil then
+    exit;
+
+  cnv := TControlCanvas.Create;
+  try
+    cnv.Control := VpPrintFormatCombobox1;
+    cnv.Font.Assign(VpPrintFormatCombobox1.Font);
+    cnv.Font.Height := GetRealFontHeight(cnv.Font);
+    maxlen := 0;
+    fmts := VpPrintPreview1.ControlLink.Printer.PrintFormats;
+    for i:=0 to fmts.Count-1 do
+      maxlen := Max(maxlen, cnv.TextWidth(fmts.Items[i].FormatName));
+    VpPrintFormatCombobox1.Width := maxlen + 30;
+    cboxZoom.Left := VpPrintFormatCombobox1.Left + VpPrintFormatCombobox1.Width + 8;
+  finally
+    cnv.Free;
+  end;
 end;
 
 end.

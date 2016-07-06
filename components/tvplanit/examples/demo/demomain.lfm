@@ -713,7 +713,7 @@ object MainForm: TMainForm
             Top = 0
             Width = 100
           end>
-        FormatName = 'Current week (dayview)'
+        FormatName = 'Events of current week (dayview)'
       end    
       item
         Version = 'v1.04'
@@ -731,7 +731,7 @@ object MainForm: TMainForm
             Top = 0
             Width = 100
           end>
-        FormatName = 'Current week (Week view)'
+        FormatName = 'Events of current week (Week view)'
       end>
     Printer.RightMargin = 5
     Printer.TopMargin = 5
@@ -775,9 +775,9 @@ object MainForm: TMainForm
     CategoryColorMap.Category9.Description = 'Category 9'
     EnableEventTimer = True
     PlayEventSounds = True
-    Directory = 'data'
     AutoConnect = True
     AutoCreate = True
+    Directory = 'data'
     left = 312
     top = 128
   end
