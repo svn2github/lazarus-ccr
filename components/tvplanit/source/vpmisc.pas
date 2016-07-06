@@ -120,7 +120,7 @@ function HourToStr(Hour: TVpHours; Mil: Boolean): string;
 
 function HourToLine(const Value: TVpHours; const Granularity: TVpGranularity): Integer;
 function GetStartLine(StartTime: TDateTime; Granularity: TVpGranularity): Integer;
-function GetEndLine (EndTime: TDateTime; Granularity: TVpGranularity): Integer;
+function GetEndLine(EndTime: TDateTime; Granularity: TVpGranularity): Integer;
 function LineToStartTime(Line: Integer; Granularity: TVpGranularity): TDateTime;
 function GetLineDuration(Granularity: TVpGranularity): Double;
 
@@ -558,42 +558,12 @@ end;
 function LineToStartTime(Line: Integer; Granularity: TVpGranularity): TDateTime;
 begin
   Result := frac(Line * GranularityMinutes[Granularity] / MinutesInDay);
-  (*
-  case Granularity of
-    gr60Min : result := (Line * 24) / MinutesInDay;     // shouldn't this be 60?
-    gr30Min : result := (Line * 30) / MinutesInDay;
-    gr20Min : result := (Line * 20) / MinutesInDay;
-    gr15Min : result := (Line * 15) / MinutesInDay;
-    gr10Min : result := (Line * 10) / MinutesInDay;
-    gr06Min : result := (Line *  6) / MinutesInDay;
-    gr05Min : result := (Line *  5) / MinutesInDay;
-  else
-    result := (Line * 30) / MinutesInDay;
-  end;
-  {chop off the date portion}
-  result := result - trunc(Result);
-  *)
 end;
 {=====}
 
 function GetLineDuration(Granularity: TVpGranularity): Double;
 begin
   Result := GranularityMinutes[Granularity] / MinutesInDay;
-  (*
-  case Granularity of
-    gr60Min : result := 24 / MinutesInDay;  // shouldn't this be 60?
-    gr30Min : result := 30 / MinutesInDay;
-    gr20Min : result := 20 / MinutesInDay;
-    gr15Min : result := 15 / MinutesInDay;
-    gr10Min : result := 10 / MinutesInDay;
-    gr06Min : result :=  6 / MinutesInDay;
-    gr05Min : result :=  5 / MinutesInDay;
-  else
-    result := 30 / MinutesInDay;
-  end;
-  { chop off the date portion }
-  result := result - trunc(result);
-  *)
 end;
 {=====}
 

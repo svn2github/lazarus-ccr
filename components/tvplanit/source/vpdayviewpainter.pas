@@ -454,6 +454,7 @@ var
   GutterRect: TRect;
   tmpRect: TRect;
   LineStartTime: Double;
+  lineIndex: Integer;
 begin
   if StartLine < 0 then
     StartLine := FDayView.TopLine;
@@ -502,20 +503,25 @@ begin
     RenderCanvas.Pen.Color := FDayView.LineColor;
 
     { Paint the client area }
-    for I := 0 to RealVisibleLines + 1 do begin  // +1 to show the partial line at the bottom
+    I := 0;
+    while true do begin
+      lineIndex := StartLine + I;
 
       if (I > pred(FDayView.LineCount)) then
         Break;
 
-      if FDayView.TopLine + i >= FDayView.LineCount then
+      if lineIndex >= FDayView.LineCount then
+        Break;
+
+      if (StopLine <> -1) and (lineIndex >= StopLine) then
         Break;
 
       RenderCanvas.Brush.Color := RealColor;
       RenderCanvas.Font.Assign(SavedFont);
       LineRect.Top := Round(R.Top + i * RealRowHeight);
       LineRect.Bottom := Round(LineRect.Top + RealRowHeight);
-      if I + StartLine < FDayView.LineCount then
-        TVpDayViewOpener(FDayView).dvLineMatrix[Col, I + StartLine].Rec := LineRect;
+
+      TVpDayViewOpener(FDayView).dvLineMatrix[Col, lineIndex].Rec := LineRect;
 
       { color-code cells }
 
@@ -530,7 +536,46 @@ begin
 
       if i = 0 then
         dec(LineRect.Top);
-      if not DisplayOnly then begin
+
+      if (not DisplayOnly) and  // this means: during screen output
+         FDayView.Focused and (FDayView.ActiveCol = Col) and (FDayView.ActiveRow = lineIndex)
+      then begin
+        { Paint background hilight color }
+        RenderCanvas.Brush.Color := HighlightBkg;
+        RenderCanvas.Font.Color := HighlightText;
+      end else
+      if IsWeekend(ColDate) then
+        { week end color }
+        RenderCanvas.Brush.Color := FDayView.TimeSlotColors.Weekend
+      else
+      { ColDate is a weekday, so check to see if the active range is set.
+        If it isn't then paint all rows the color corresponding to Weekday.
+        If it is, then paint inactive rows the color corresponding to inactive
+        and the active  rows the color corresponding to Active Rows. }
+      if FDayView.TimeSlotColors.ActiveRange.RangeBegin = FDayView.TimeSlotColors.ActiveRange.RangeEnd then
+        { There is not active range --> Paint all time slots in the weekday color }
+        RenderCanvas.Brush.Color := FDayView.TimeSlotColors.Weekday
+      else begin
+        { There is an active range defined, so we need to see if the current
+          line falls in the active range or not, and paint it accordingly }
+        LineStartTime := TVpDayViewOpener(FDayView).dvLineMatrix[Col, lineIndex].Time;
+        if TimeInRange(
+            LineStartTime,
+            FDayView.TimeSlotColors.ActiveRange.StartTime,
+            FDayView.TimeSlotColors.ActiveRange.EndTime - OneMinute,
+            true
+          )
+        then
+          RenderCanvas.Brush.Color := FDayView.TimeSlotColors.Active
+        else
+          RenderCanvas.Brush.Color := FDayView.TimeSlotColors.Inactive;
+      end;
+
+      TPSFillRect (RenderCanvas, Angle, RenderIn, LineRect);
+        (*
+
+
+      if not DisplayOnly then begin   // this means: during screen output
         if FDayView.Focused and (FDayView.ActiveCol = col) and
            (FDayView.ActiveRow = StartLine + I)
         then begin
@@ -538,7 +583,8 @@ begin
           RenderCanvas.Brush.Color := HighlightBkg;
           RenderCanvas.Font.Color := HighlightText;
           TPSFillRect(RenderCanvas, Angle, RenderIn, LineRect);
-        end else begin
+        end else
+        begin
           { paint the active, inactive, weekend, and holiday colors }
 
           { HOLIDAY COLORS ARE NOT IMPLEMENTED YET }
@@ -582,16 +628,19 @@ begin
           end;
         end;
       end;
+      *)
 
       { Draw the lines }
-      if I + StartLine <= FDayView.LineCount then begin
+//      if I + StartLine <= FDayView.LineCount then begin
         RenderCanvas.Pen.Color := FDayView.LineColor;
         TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Left, LineRect.Top);
         TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right - 1, LineRect.Top);
         TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Left, LineRect.Bottom);
         TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right - 1, LineRect.Bottom);
-      end;
-    end;
+  //    end;
+
+      inc(I);
+    end;  // while true ...
 
     { Draw a line down the right side of the column to close the }
     { cells right sides }
@@ -1338,7 +1387,7 @@ begin
       hour := Ord(TVpDayViewOpener(FDayView).dvLineMatrix[0, LineIndex].Hour);
       if (hour = 0) and (I > 0) then
         break;
-      if (StopLine > 0) and (lineIndex > StopLine) then
+      if (StopLine > -1) and (lineIndex >= StopLine) then
         break;
 
       case FDayView.TimeFormat of
@@ -1388,9 +1437,9 @@ var
   lineRect: TRect;
   adEvHeight: Integer;
   lineIndex: Integer;
-  lastIndex: Integer;
-  minutesLen: Integer;
   maxIndex: Integer;
+  midnightIndex: Integer;
+  minutesLen: Integer;
   hour: Integer;
 begin
   // Calculate the rectangle occupied by a row
@@ -1419,12 +1468,12 @@ begin
   // Begin with I = 1 because top-most tick already has been handled
   I := 1;
   maxIndex := High(TVpDayViewOpener(FDayView).dvLineMatrix[0]);
-  lastIndex := GetEndLine(0.9999, UseGran);
-  while not dayComplete do begin
+  midnightIndex := GetEndLine(0.9999, UseGran);
+  while true do begin
     lineIndex := StartLine + I;
     if lineIndex > maxIndex then
       break;
-    if (StopLine > 0) and (lineIndex > StopLine) then
+    if (StopLine > -1) and (lineIndex > StopLine) then
       break;
 
     inc(y, RealRowHeight);
@@ -1433,8 +1482,11 @@ begin
 
     hour := Ord(TVpDayViewOpener(FDayView).dvLineMatrix[0, LineIndex].Hour);
 
-    if (hour = 0) and (lineIndex > lastIndex) then  // midnight
-      isFullHour := true;   // to draw th 0:00 tick
+    if (hour = 0) and (lineIndex > midnightIndex) then  // midnight
+      isFullHour := true   // to draw the 0:00 tick
+    else
+    if lineIndex = StopLine then
+      isFullHour := true  // to draw the last hour tick
     else
       isFullHour := TVpDayViewOpener(FDayView).dvLineMatrix[0, lineIndex].Minute = 0;
 
