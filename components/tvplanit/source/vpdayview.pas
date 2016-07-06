@@ -418,7 +418,7 @@ type
       UseGran: TVpGranularity);
     procedure PaintToCanvas (ACanvas: TCanvas; ARect: TRect; Angle: TVpRotationAngle;
       ADate: TDateTime; StartHour, EndHour: TVpHours; UseGran: TVpGranularity);
-    procedure RenderToCanvas (RenderCanvas: TCanvas; RenderIn: TRect;
+    procedure RenderToCanvas(RenderCanvas: TCanvas; RenderIn: TRect;
       Angle: TVpRotationAngle; Scale: Extended; RenderDate: TDateTime;
       StartLine, StopLine: Integer; UseGran: TVpGranularity; DisplayOnly: Boolean); override;
 

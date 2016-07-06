@@ -305,10 +305,8 @@ begin
   // Initialize the rectangle to be used for all-day events
   ADEventsRect := InitAllDayEventsRect;
 
-  {
   if (FDayView.DataStore = nil) or (FDayView.DataStore.Resource = nil) then
     Exit;
-  }
 
   // Collect all of the events for this range and determine the maximum
   // number of all day events for the range of days covered by the control.
