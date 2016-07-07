@@ -377,7 +377,7 @@ msgstr ""
 
 #: vpsr.rsdescriptionlbl
 msgctxt "vpsr.rsdescriptionlbl"
-msgid "Subject:"
+msgid "Description:"
 msgstr ""
 
 #: vpsr.rsdetails
@@ -424,6 +424,10 @@ msgstr ""
 
 #: vpsr.rseditbtn
 msgid "Edit"
+msgstr ""
+
+#: vpsr.rseditformatcaption
+msgid "Edit format"
 msgstr ""
 
 #: vpsr.rseditingfolders
@@ -658,8 +662,16 @@ msgctxt "vpsr.rsmonthpopuptoday"
 msgid "Today"
 msgstr ""
 
+#: vpsr.rsmonths
+msgid "Months"
+msgstr ""
+
 #: vpsr.rsnameisrequired
 msgid "Error: Name cannot be empty."
+msgstr ""
+
+#: vpsr.rsnamelbl
+msgid "Name:"
 msgstr ""
 
 #: vpsr.rsneedelementname
@@ -1007,6 +1019,14 @@ msgstr ""
 msgid "Thursday"
 msgstr ""
 
+#: vpsr.rstimeinclbl
+msgid "Time increment:"
+msgstr ""
+
+#: vpsr.rstimeincunits
+msgid "Time increment units:"
+msgstr ""
+
 #: vpsr.rstitle
 msgid "Title"
 msgstr ""
@@ -1098,6 +1118,10 @@ msgctxt "vpsr.rsweekpopupnavtoday"
 msgid "Today"
 msgstr ""
 
+#: vpsr.rsweeks
+msgid "Weeks"
+msgstr ""
+
 #: vpsr.rsxdays
 msgid "%d days"
 msgstr ""
@@ -1120,6 +1144,10 @@ msgstr ""
 
 #: vpsr.rsyearlybyday
 msgid "Yearly By Day"
+msgstr ""
+
+#: vpsr.rsyears
+msgid "Years"
 msgstr ""
 
 #: vpsr.rsyes

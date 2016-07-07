@@ -386,8 +386,10 @@ msgid "Delete"
 msgstr "Löschen"
 
 #: vpsr.rsdescriptionlbl
+#, fuzzy
+#| msgid "Subject:"
 msgctxt "vpsr.rsdescriptionlbl"
-msgid "Subject:"
+msgid "Description:"
 msgstr "Betreff:"
 
 #: vpsr.rsdetails
@@ -435,6 +437,10 @@ msgstr "Fehler: Doppelte Ressource."
 #: vpsr.rseditbtn
 msgid "Edit"
 msgstr "Bearbeiten"
+
+#: vpsr.rseditformatcaption
+msgid "Edit format"
+msgstr "Format bearbeiten"
 
 #: vpsr.rseditingfolders
 msgid "Folder Editor."
@@ -668,9 +674,17 @@ msgctxt "vpsr.rsmonthpopuptoday"
 msgid "Today"
 msgstr "Heute"
 
+#: vpsr.rsmonths
+msgid "Months"
+msgstr "Monate"
+
 #: vpsr.rsnameisrequired
 msgid "Error: Name cannot be empty."
 msgstr "Fehler: Name muss angegeben sein."
+
+#: vpsr.rsnamelbl
+msgid "Name:"
+msgstr "Name:"
 
 #: vpsr.rsneedelementname
 msgid "Please supply an Element Name"
@@ -1017,6 +1031,14 @@ msgstr "bis"
 msgid "Thursday"
 msgstr "Donnerstag"
 
+#: vpsr.rstimeinclbl
+msgid "Time increment:"
+msgstr "Zeitintervall:"
+
+#: vpsr.rstimeincunits
+msgid "Time increment units:"
+msgstr "Einheit:"
+
 #: vpsr.rstitle
 msgid "Title"
 msgstr "Titel"
@@ -1108,6 +1130,10 @@ msgctxt "vpsr.rsweekpopupnavtoday"
 msgid "Today"
 msgstr "Heute"
 
+#: vpsr.rsweeks
+msgid "Weeks"
+msgstr "Wochen"
+
 #: vpsr.rsxdays
 msgid "%d days"
 msgstr "%d Tage"
@@ -1131,6 +1157,10 @@ msgstr "Jährlich, nach Datum"
 #: vpsr.rsyearlybyday
 msgid "Yearly By Day"
 msgstr "Jährlich, nach Wochentag"
+
+#: vpsr.rsyears
+msgid "Years"
+msgstr "Jahre"
 
 #: vpsr.rsyes
 msgid "Y"

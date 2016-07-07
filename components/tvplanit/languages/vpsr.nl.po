@@ -387,8 +387,10 @@ msgid "Delete"
 msgstr "Wissen"
 
 #: vpsr.rsdescriptionlbl
+#, fuzzy
+#| msgid "Subject:"
 msgctxt "vpsr.rsdescriptionlbl"
-msgid "Subject:"
+msgid "Description:"
 msgstr "Onderwerp:"
 
 #: vpsr.rsdetails
@@ -435,6 +437,10 @@ msgstr "Fout: Duplicaat Hulpmiddel."
 
 #: vpsr.rseditbtn
 msgid "Edit"
+msgstr ""
+
+#: vpsr.rseditformatcaption
+msgid "Edit format"
 msgstr ""
 
 #: vpsr.rseditingfolders
@@ -669,9 +675,17 @@ msgctxt "vpsr.rsmonthpopuptoday"
 msgid "Today"
 msgstr "Vandaag"
 
+#: vpsr.rsmonths
+msgid "Months"
+msgstr ""
+
 #: vpsr.rsnameisrequired
 msgid "Error: Name cannot be empty."
 msgstr "Fout: Naam mag niet leeg zijn."
+
+#: vpsr.rsnamelbl
+msgid "Name:"
+msgstr ""
 
 #: vpsr.rsneedelementname
 msgid "Please supply an Element Name"
@@ -1018,6 +1032,14 @@ msgstr "t/m"
 msgid "Thursday"
 msgstr "Donderdag"
 
+#: vpsr.rstimeinclbl
+msgid "Time increment:"
+msgstr ""
+
+#: vpsr.rstimeincunits
+msgid "Time increment units:"
+msgstr ""
+
 #: vpsr.rstitle
 msgid "Title"
 msgstr "Titel"
@@ -1109,6 +1131,10 @@ msgctxt "vpsr.rsweekpopupnavtoday"
 msgid "Today"
 msgstr "Vandaag"
 
+#: vpsr.rsweeks
+msgid "Weeks"
+msgstr ""
+
 #: vpsr.rsxdays
 msgid "%d days"
 msgstr "%d dagen"
@@ -1132,6 +1158,10 @@ msgstr "Jaarlijks, op Datum"
 #: vpsr.rsyearlybyday
 msgid "Yearly By Day"
 msgstr "Jaarlijks, op dag"
+
+#: vpsr.rsyears
+msgid "Years"
+msgstr ""
 
 #: vpsr.rsyes
 msgid "Y"

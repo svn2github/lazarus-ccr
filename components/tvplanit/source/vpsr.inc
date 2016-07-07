@@ -122,6 +122,9 @@ resourcestring
   RSMinutes                 = 'Minutes';
   RSHours                   = 'Hours';
   RSDays                    = 'Days';
+  RSWeeks                   = 'Weeks';
+  RSMonths                  = 'Months';
+  RSYears                   = 'Years';
   RSCalendarWeekAbbr        = 'CW';   // Abbreviation of "calendar week"
 
   {WARNINGS}
@@ -235,7 +238,7 @@ resourcestring
   { Event Edit Dialog Captions }
   RSDlgEventEdit            = 'Event';
   RSAppointmentGroupBox     = 'Appointment';
-  RSDescriptionLbl          = 'Subject:';
+  RSDescriptionLbl          = 'Description:';
   RSLocationLbl             = 'Location:';
   RSCategoryLbl             = 'Category:';
   RSStartTimeLbl            = 'Start time:';
@@ -415,6 +418,13 @@ resourcestring
   RSNewFileBtn       = 'New file';
   RSLoadFileBtn      = 'Load file...';
   RSSaveFileBtn      = 'Save file...';
+
+  { Print Format Item Editor }
+  RSEditFormatCaption= 'Edit format';
+  RSNameLbl          = 'Name:';
+  RSTimeIncLbl       = 'Time increment:';
+  RSTimeIncUnits     = 'Time increment units:';
+
 
   { Automatic resource adding/selection}                               {!!.01}
   RSAddNewResource   = 'No resources have been defined. Would you ' +  {!!.01}

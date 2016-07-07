@@ -43,28 +43,32 @@ uses
   VpPrtFmt;
 
 type
+
+  { TfrmEditFormat }
+
   TfrmEditFormat = class(TForm)
     btnCancel: TButton;
     btnOk: TButton;
     edDescription: TEdit;
     edName: TEdit;
-    Label1: TLabel;
-    Label2: TLabel;
-    Label3: TLabel;
+    LblIncrement: TLabel;
+    LblDescription: TLabel;
+    LblName: TLabel;
     rgDayIncrement: TRadioGroup;
     udIncrement: TUpDown;
     edIncrement: TEdit;
     procedure btnCancelClick(Sender: TObject);
     procedure btnOkClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
+  private
+    procedure SetCaptions;
   protected
     procedure SaveData(AFormat: TVpPrintFormatItem);
     procedure SetData(AFormat: TVpPrintFormatItem);
     function Validate: Boolean;
-    { Private declarations }
   public
     function Execute(AFormat: TVpPrintFormatItem) : Boolean;
-    { Public declarations }
   end;
 
 
@@ -75,6 +79,9 @@ implementation
 {$ELSE}
  {$R *.dfm}
 {$ENDIF}
+
+uses
+  Math, VpMisc, VpSR;
 
 { TfrmEditLayout }
 
@@ -106,6 +113,12 @@ begin
   if Result then
     SaveData(AFormat);
 end;
+
+procedure TfrmEditFormat.FormCreate(Sender: TObject);
+begin
+  SetCaptions;
+end;
+
 {=====}
 procedure TfrmEditFormat.SaveData(AFormat: TVpPrintFormatItem);
 var
@@ -121,7 +134,54 @@ begin
   else
     AFormat.DayIncUnits := duDay;
 end;
-{=====}
+
+procedure TfrmEditFormat.SetCaptions;
+const
+  DELTA = 8;
+  MARGIN = 16;
+var
+  cnv: TControlCanvas;
+  w: Integer;
+begin
+  Caption := RSEditFormatCaption;
+  LblName.Caption := RSNameLbl;
+  LblDescription.Caption := RSDescriptionLbl;
+  LblIncrement.Caption := RsTimeIncLbl;
+  rgDayIncrement.Caption := RsTimeIncUnits;
+  rgDayIncrement.Items[0] := RSDays;
+  rgDayIncrement.Items[1] := RSWeeks;
+  rgDayIncrement.Items[2] := RSMonths;
+  rgDayIncrement.Items[3] := RSYears;
+  btnOK.Caption := RSOKBtn;
+  btnCancel.Caption := RSCancelBtn;
+
+  w := MaxValue([GetLabelWidth(LblName), GetLabelWidth(LblDescription), GetLabelWidth(LblIncrement)]);
+  edName.Left := MARGIN + w + DELTA;
+  edDescription.Left := edName.Left;
+  edDescription.Width := edName.Width;
+  edIncrement.Left := edName.Left;
+  udIncrement.Left := edIncrement.Left + edIncrement.Width;
+  LblName.Left := edName.Left - GetLabelWidth(LblName) - DELTA;
+  LblDescription.Left := edDescription.Left - GetLabelWidth(lblDescription) - DELTA;
+  lblIncrement.Left := edIncrement.Left - GetLabelWidth(lblIncrement) - DELTA;
+
+  ClientWidth := MARGIN + w + DELTA + edName.Width + MARGIN;
+  rgDayIncrement.Width := ClientWidth - 2*MARGIN;
+
+  cnv := TControlCanvas.Create;
+  try
+    cnv.Control := btnOK;
+    cnv.Font.Assign(btnOK.Font);
+    w := Max(cnv.TextWidth(RSOKBtn), cnv.TextWidth(RSCancelBtn));
+  finally
+    cnv.Free;
+  end;
+  btnOK.Width := w + 16;
+  btnCancel.Width := w + 16;
+  btnCancel.Left := ClientWidth - MARGIN - btnCancel.Width;
+  btnOK.Left := btnCancel.Left - 8 - btnOK.Width;
+end;
+
 procedure TfrmEditFormat.SetData(AFormat: TVpPrintFormatItem);
 var
   IncName : string;

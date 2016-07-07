@@ -387,8 +387,10 @@ msgid "Delete"
 msgstr "Удалить"
 
 #: vpsr.rsdescriptionlbl
+#, fuzzy
+#| msgid "Subject:"
 msgctxt "vpsr.rsdescriptionlbl"
-msgid "Subject:"
+msgid "Description:"
 msgstr "Тема:"
 
 #: vpsr.rsdetails
@@ -437,6 +439,10 @@ msgstr "Ошибка: Дубликат ресурсов."
 
 #: vpsr.rseditbtn
 msgid "Edit"
+msgstr ""
+
+#: vpsr.rseditformatcaption
+msgid "Edit format"
 msgstr ""
 
 #: vpsr.rseditingfolders
@@ -673,9 +679,17 @@ msgctxt "vpsr.rsmonthpopuptoday"
 msgid "Today"
 msgstr "Сегодня"
 
+#: vpsr.rsmonths
+msgid "Months"
+msgstr ""
+
 #: vpsr.rsnameisrequired
 msgid "Error: Name cannot be empty."
 msgstr "Ошибка: Имя не может быть пустым."
+
+#: vpsr.rsnamelbl
+msgid "Name:"
+msgstr ""
 
 #: vpsr.rsneedelementname
 msgid "Please supply an Element Name"
@@ -1036,6 +1050,14 @@ msgstr "Через"
 msgid "Thursday"
 msgstr "Четверг"
 
+#: vpsr.rstimeinclbl
+msgid "Time increment:"
+msgstr ""
+
+#: vpsr.rstimeincunits
+msgid "Time increment units:"
+msgstr ""
+
 #: vpsr.rstitle
 msgid "Title"
 msgstr "Заголовок"
@@ -1127,6 +1149,10 @@ msgctxt "vpsr.rsweekpopupnavtoday"
 msgid "Today"
 msgstr "Сегодня"
 
+#: vpsr.rsweeks
+msgid "Weeks"
+msgstr ""
+
 #: vpsr.rsxdays
 msgid "%d days"
 msgstr "%d дней"
@@ -1150,6 +1176,10 @@ msgstr "Ежегодно по дате"
 #: vpsr.rsyearlybyday
 msgid "Yearly By Day"
 msgstr "Ежегодно по дню"
+
+#: vpsr.rsyears
+msgid "Years"
+msgstr ""
 
 #: vpsr.rsyes
 msgid "Y"
