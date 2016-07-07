@@ -1948,6 +1948,10 @@ object MainForm: TMainForm
         Caption = 'Print preview...'
         OnClick = MnuPrintPreviewClick
       end
+      object MnuPrint: TMenuItem
+        Caption = 'Print...'
+        OnClick = MnuPrintClick
+      end
       object MenuItem3: TMenuItem
         Caption = '-'
       end

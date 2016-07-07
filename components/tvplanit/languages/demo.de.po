@@ -36,6 +36,10 @@ msgstr "24 Std."
 msgid "30 min"
 msgstr "30 Min."
 
+#: demomain.rs3d
+msgid "3D"
+msgstr ""
+
 #: demomain.rs5min
 msgid "5 min"
 msgstr "5 Min."
@@ -47,6 +51,10 @@ msgstr "60 Min."
 #: demomain.rs6min
 msgid "6 min"
 msgstr "6 Min."
+
+#: demomain.rsborderless
+msgid "ohne Rand"
+msgstr ""
 
 #: demomain.rsconfirmdeleteres
 msgid "Do you really want to delete resource %s?"
@@ -72,6 +80,10 @@ msgstr "Termine pro Monat"
 #: demomain.rseventsperweek
 msgid "Events per week"
 msgstr "Termine pro Woche"
+
+#: demomain.rsflat
+msgid "flach"
+msgstr ""
 
 #: demomain.rsfriday
 msgid "Friday"
@@ -132,12 +144,12 @@ msgstr "Mittwoch"
 #: tfrmreportsetup.button1.caption
 msgctxt "tfrmreportsetup.button1.caption"
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: tfrmreportsetup.button2.caption
 msgctxt "tfrmreportsetup.button2.caption"
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #: tfrmreportsetup.caption
 msgid "Report Setup"
@@ -146,12 +158,12 @@ msgstr ""
 #: tfrmreportsetup.dateedit1.cancelcaption
 msgctxt "tfrmreportsetup.dateedit1.cancelcaption"
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #: tfrmreportsetup.dateedit1.okcaption
 msgctxt "tfrmreportsetup.dateedit1.okcaption"
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: tfrmreportsetup.dateedit1.text
 msgid "DateEdit1"
@@ -160,12 +172,12 @@ msgstr ""
 #: tfrmreportsetup.dateedit2.cancelcaption
 msgctxt "tfrmreportsetup.dateedit2.cancelcaption"
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #: tfrmreportsetup.dateedit2.okcaption
 msgctxt "tfrmreportsetup.dateedit2.okcaption"
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: tfrmreportsetup.dateedit2.text
 msgid "DateEdit2"
@@ -173,15 +185,15 @@ msgstr ""
 
 #: tfrmreportsetup.label1.caption
 msgid "Start Date:"
-msgstr ""
+msgstr "Startdatum:"
 
 #: tfrmreportsetup.label2.caption
 msgid "End Date:"
-msgstr ""
+msgstr "Enddatum:"
 
 #: tfrmreportsetup.label3.caption
 msgid "Format:"
-msgstr ""
+msgstr "Format:"
 
 #: tmainform.btndeleteres.caption
 msgid "Delete"
@@ -201,7 +213,7 @@ msgstr "Turbo Power VisualPlanIt Demo"
 
 #: tmainform.cbaddressbuilder.text
 msgid "(default)"
-msgstr ""
+msgstr "(Standard)"
 
 #: tmainform.cballowinplaceediting.caption
 msgid "Allow inplace editing"
@@ -209,7 +221,7 @@ msgstr "Editieren an Ort und Stelle erlauben"
 
 #: tmainform.cbdrawingstyle.text
 msgid "flat"
-msgstr ""
+msgstr "flach"
 
 #: tmainform.cbgranularity.text
 msgid "30 Min"
@@ -221,7 +233,7 @@ msgstr "Aufbau der Adresse:"
 
 #: tmainform.lbldrawingstyle.caption
 msgid "Drawing style:"
-msgstr ""
+msgstr "Darstellungs-Stil:"
 
 #: tmainform.lblfirstdayofweek.caption
 msgid "First day of week"
@@ -262,16 +274,20 @@ msgstr "Über Visual PlanIt"
 
 #: tmainform.mnueditprintformats.caption
 msgid "Edit print formats..."
-msgstr ""
+msgstr "Druckformate bearbeiten..."
 
 #: tmainform.mnumaintenance.caption
 msgctxt "tmainform.mnumaintenance.caption"
 msgid "Maintenance"
 msgstr "Wartung"
 
+#: tmainform.mnuprint.caption
+msgid "Print..."
+msgstr "Drucken..."
+
 #: tmainform.mnuprintpreview.caption
 msgid "Print preview..."
-msgstr ""
+msgstr "Druckvorschau..."
 
 #: tmainform.mnuquit.caption
 msgid "Quit"

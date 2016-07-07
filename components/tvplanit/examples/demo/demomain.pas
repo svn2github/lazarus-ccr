@@ -35,6 +35,7 @@ type
     LblLanguage: TLabel;
     LblVisibleDays: TLabel;
     MenuItem3: TMenuItem;
+    MnuPrint: TMenuItem;
     MnuEditPrintFormats: TMenuItem;
     MnuPrintPreview: TMenuItem;
     PrintDialog1: TPrintDialog;
@@ -92,6 +93,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure MnuAboutClick(Sender: TObject);
     procedure MnuEditPrintFormatsClick(Sender: TObject);
+    procedure MnuPrintClick(Sender: TObject);
     procedure MnuPrintPreviewClick(Sender: TObject);
     procedure MnuQuitClick(Sender: TObject);
     procedure MnuResourcesClick(Sender: TObject);
@@ -171,6 +173,9 @@ resourcestring
   RSThursday = 'Thursday';
   RSFriday = 'Friday';
   RSSaturday = 'Saturday';
+  RSFlat = 'flach';
+  RS3d = '3D';
+  RSBorderless = 'ohne Rand';
 
 {$IFDEF WINDOWS}
 { This function determines the LCID from the language code.
@@ -360,6 +365,18 @@ procedure TMainForm.MnuEditPrintFormatsClick(Sender: TObject);
 begin
   VpPrintFormatEditDialog1.DrawingStyle := VpWeekView1.DrawingStyle;
   VpPrintFormatEditDialog1.Execute;
+end;
+
+procedure TMainForm.MnuPrintClick(Sender: TObject);
+begin
+  if PrintDialog1.Execute then begin
+    Printer.BeginDoc;
+    {
+    VpControlLink1.Printer.CurFormat := VpControlLink1.Printer.Find(ReportData.Format);
+    VpControlLink1.Printer.Print(Printer, ReportData.StartDate, ReportData.EndDate);
+    }
+    Printer.EndDoc;
+  end;
 end;
 
 procedure TMainForm.MnuPrintPreviewClick(Sender: TObject);
@@ -701,6 +718,10 @@ begin
   CbFirstDayOfWeek.Items.Add(RSThursday);
   CbFirstDayOfWeek.Items.Add(RSFriday);
   CbFirstDayOfWeek.Items.Add(RSSaturday);
+
+  CbDrawingStyle.Items[0] := RSFlat;
+  CbDrawingStyle.Items[1] := RS3d;
+  CbDrawingStyle.Items[2] := RSBorderless;
 
   DaysTrackbar.Left := GetLabelWidth(LblVisibleDays) + LblVisibleDays.Left + 8;
   LblGranularity.Left := DaysTrackbar.Left + DaysTrackbar.Width + 32;
