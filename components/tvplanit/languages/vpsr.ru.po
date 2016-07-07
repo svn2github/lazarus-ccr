@@ -103,6 +103,10 @@ msgstr ""
 msgid "Unable to start web browser. Make sure you have it properly setup on your system."
 msgstr "Ошибка запуска браузер. Убедитесь в правильности настроек вашей системы."
 
+#: vpsr.rscalendarelement
+msgid "Calendar"
+msgstr ""
+
 #: vpsr.rscalendarnextmonth
 msgctxt "vpsr.rscalendarnextmonth"
 msgid "Next Month"
@@ -171,6 +175,16 @@ msgstr ""
 msgctxt "vpsr.rscancelbtn"
 msgid "Cancel"
 msgstr "Отмена"
+
+#: vpsr.rscaption
+msgctxt "vpsr.rscaption"
+msgid "Caption"
+msgstr ""
+
+#: vpsr.rscaptionelement
+msgctxt "vpsr.rscaptionelement"
+msgid "Caption"
+msgstr ""
 
 #: vpsr.rscategory
 msgid "Category"
@@ -250,6 +264,10 @@ msgstr "Удалить контакт..."
 #: vpsr.rscontactpopupedit
 msgid "Edit Contact..."
 msgstr "Изменить контакт"
+
+#: vpsr.rscontactselement
+msgid "Contacts"
+msgstr ""
 
 #: vpsr.rscountry
 msgid "Country"
@@ -367,6 +385,10 @@ msgstr "Вчера"
 msgid "Days"
 msgstr "Дни"
 
+#: vpsr.rsdayviewelement
+msgid "Day view"
+msgstr ""
+
 #: vpsr.rsdbposterror
 msgid "Error posting data to the database."
 msgstr "Ошибка указания даты в базе данных"
@@ -441,6 +463,10 @@ msgstr "Ошибка: Дубликат ресурсов."
 msgid "Edit"
 msgstr ""
 
+#: vpsr.rseditelementcaption
+msgid "Edit element"
+msgstr ""
+
 #: vpsr.rseditformatcaption
 msgid "Edit format"
 msgstr ""
@@ -459,6 +485,10 @@ msgstr "Редактор формата печати..."
 
 #: vpsr.rselements
 msgid "Elements:"
+msgstr ""
+
+#: vpsr.rselementtypelbl
+msgid "Element type"
 msgstr ""
 
 #: vpsr.rsemail
@@ -500,6 +530,10 @@ msgstr ""
 msgid "First name:"
 msgstr ""
 
+#: vpsr.rsfontbtn
+msgid "Font..."
+msgstr ""
+
 #: vpsr.rsformats
 msgid "Formats:"
 msgstr ""
@@ -511,6 +545,10 @@ msgstr "Пятница"
 #: vpsr.rsfromschedule
 msgid "from your schedule?"
 msgstr "из вашего расписания?"
+
+#: vpsr.rsheight
+msgid "Height"
+msgstr ""
 
 #: vpsr.rshintnextday
 msgid "Next day"
@@ -549,6 +587,10 @@ msgstr "Вчера"
 msgid "Hours"
 msgstr "Часы"
 
+#: vpsr.rsinches
+msgid "Inches"
+msgstr ""
+
 #: vpsr.rsinifilestructure
 msgid "Incorrect structure of ini file."
 msgstr ""
@@ -583,6 +625,10 @@ msgstr "Ошибка: Не верный год."
 
 #: vpsr.rslastnamelbl
 msgid "Last name:"
+msgstr ""
+
+#: vpsr.rsleft
+msgid "Left"
 msgstr ""
 
 #: vpsr.rslfriday
@@ -629,6 +675,10 @@ msgstr ""
 #: vpsr.rsmasterdata
 msgid "Master data"
 msgstr "Главные данные"
+
+#: vpsr.rsmeasurementcaption
+msgid "Measurement"
+msgstr ""
 
 #: vpsr.rsminutes
 msgid "Minutes"
@@ -681,6 +731,10 @@ msgstr "Сегодня"
 
 #: vpsr.rsmonths
 msgid "Months"
+msgstr ""
+
+#: vpsr.rsmonthviewelement
+msgid "Month view"
 msgstr ""
 
 #: vpsr.rsnameisrequired
@@ -785,6 +839,10 @@ msgstr "ПРОСРОЧЕНО!"
 msgid "Owner must be a TWinControl descendent"
 msgstr ""
 
+#: vpsr.rspercent
+msgid "Percent"
+msgstr ""
+
 #: vpsr.rspermanent
 msgid "This operation cannot be undone!"
 msgstr ""
@@ -858,6 +916,10 @@ msgstr "Мобильный"
 msgctxt "vpsr.rsphonetypelabel9"
 msgid "Other"
 msgstr "Другой"
+
+#: vpsr.rspixels
+msgid "Pixels"
+msgstr ""
 
 #: vpsr.rsposition
 msgid "Position"
@@ -962,6 +1024,10 @@ msgstr "Напоминание"
 msgid "Resource"
 msgstr "Ресурс"
 
+#: vpsr.rsrotationcaption
+msgid "Rotation"
+msgstr ""
+
 #: vpsr.rssaturday
 msgid "Saturday"
 msgstr "Суббота"
@@ -976,6 +1042,14 @@ msgstr "Выберите звук"
 
 #: vpsr.rsselectresource
 msgid "No resource has been selected. Would you like to select one now?"
+msgstr ""
+
+#: vpsr.rsshapebtn
+msgid "Shape..."
+msgstr ""
+
+#: vpsr.rsshapeelement
+msgid "Shape"
 msgstr ""
 
 #: vpsr.rssnoozebtn
@@ -1034,6 +1108,10 @@ msgstr "Удалить задачу..."
 msgid "Edit Task..."
 msgstr "Изменить задачу..."
 
+#: vpsr.rstaskselement
+msgid "Tasks"
+msgstr ""
+
 #: vpsr.rstasktitlenoresource
 msgid "Task List"
 msgstr "Список задач"
@@ -1041,6 +1119,10 @@ msgstr "Список задач"
 #: vpsr.rstasktitleresource
 msgid "Task List - "
 msgstr "Список задач - "
+
+#: vpsr.rstextcaption
+msgid "Text"
+msgstr ""
 
 #: vpsr.rsthrough
 msgid "Through"
@@ -1066,6 +1148,10 @@ msgstr "Заголовок"
 msgid "Title:"
 msgstr "Заголовок:"
 
+#: vpsr.rstop
+msgid "Top"
+msgstr ""
+
 #: vpsr.rstrue
 msgctxt "vpsr.rstrue"
 msgid "T"
@@ -1082,6 +1168,14 @@ msgstr "Ошибка открытия"
 #: vpsr.rsuntitled
 msgid "Untitled"
 msgstr "Без имени"
+
+#: vpsr.rsvisible
+msgid "Visible"
+msgstr ""
+
+#: vpsr.rsvisualcaption
+msgid "Visual"
+msgstr ""
 
 #: vpsr.rswednesday
 msgid "Wednesday"
@@ -1151,6 +1245,14 @@ msgstr "Сегодня"
 
 #: vpsr.rsweeks
 msgid "Weeks"
+msgstr ""
+
+#: vpsr.rsweekviewelement
+msgid "Week view"
+msgstr ""
+
+#: vpsr.rswidth
+msgid "Width"
 msgstr ""
 
 #: vpsr.rsxdays

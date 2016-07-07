@@ -43,20 +43,23 @@ uses
   VpBase, VpSR, VpPrtFmt, ComCtrls;
 
 type
+
+  { TfrmEditElement }
+
   TfrmEditElement = class(TForm)
     btnCancel: TButton;
     btnOk: TButton;
     btnShape: TButton;
     edName: TEdit;
-    Label1: TLabel;
-    Label2: TLabel;
-    rgDayOffset: TRadioGroup;
+    gbDayOffset: TGroupBox;
+    lblName: TLabel;
+    rgDayOffsetUnit: TRadioGroup;
     rgItemType: TRadioGroup;
     gbVisual: TGroupBox;
-    Label3: TLabel;
-    Label4: TLabel;
-    Label5: TLabel;
-    Label6: TLabel;
+    LblTop: TLabel;
+    LblLeft: TLabel;
+    LblHeight: TLabel;
+    LblWidth: TLabel;
     rgMeasurement: TRadioGroup;
     rgRotation: TRadioGroup;
     edTop: TEdit;
@@ -68,7 +71,7 @@ type
     btnCaptionFont: TButton;
     FontDialog1: TFontDialog;
     edCaptionText: TEdit;
-    lbCaptionText: TLabel;
+    lblCaptionText: TLabel;
     edOffset: TEdit;
     udOffset: TUpDown;
     udTop: TUpDown;
@@ -88,6 +91,8 @@ type
     procedure PosEditEnter(Sender: TObject);
     procedure UpDownClick(Sender: TObject; Button: TUDBtnType);
   private
+    procedure RepositionControls;
+    procedure SetCaptions;
     procedure SetMaxSpin(Spin: Integer);
   protected
     TheShape : TVpPrintShape;
@@ -108,7 +113,8 @@ type
 
 implementation
 
-uses VpEdShape;
+uses
+  Math, VpMisc, VpEdShape;
 
 {$IFDEF LCL}
  {$R *.lfm}
@@ -127,8 +133,10 @@ begin
 
   gbCaption.Enabled := False;
   edCaptionText.Enabled := False;
-  lbCaptionText.Enabled := False;
+  lblCaptionText.Enabled := False;
   btnCaptionFont.Enabled := False;
+
+  SetCaptions;
 end;
 {=====}
 procedure TfrmEditElement.FormShow(Sender: TObject);
@@ -230,13 +238,163 @@ begin
 
   AnElement.ItemType       :=  TVpItemType(rgItemType.ItemIndex);
 
-  AnElement.DayOffsetUnits :=  TVpDayUnits(rgDayOffset.ItemIndex);
+  AnElement.DayOffsetUnits :=  TVpDayUnits(rgDayOffsetUnit.ItemIndex);
   AnElement.Rotation       :=  TVpRotationAngle(rgRotation.ItemIndex);
   AnElement.Measurement    :=  TVpItemMeasurement(rgMeasurement.ItemIndex);
 
   AnElement.Visible := chkVisible.Checked;
 end;
-{=====}
+
+procedure TfrmEditElement.SetCaptions;
+begin
+  Caption := RSEditElementCaption;
+
+  lblName.Caption := RSNameLbl;
+
+  rgItemType.Caption := RSElementTypeLbl;
+  rgItemType.Items[0] := RSDayViewElement;
+  rgItemType.Items[1] := RSWeekViewElement;
+  rgItemType.Items[2] := RSMonthViewElement;
+  rgItemType.Items[3] := RSCalendarElement;
+  rgItemType.Items[4] := RSShapeElement;
+  rgItemType.Items[5] := RSCaptionElement;
+  rgItemType.Items[6] := RSTasksElement;
+  rgItemType.Items[7] := RSContactsElement;
+
+  gbDayOffset.Caption := RSTimeIncLbl;
+  rgDayOffsetUnit.Caption := RSTimeIncUnits;
+  rgDayOffsetUnit.Items[0] := RSDays;
+  rgDayOffsetUnit.Items[1] := RSWeeks;
+  rgDayOffsetUnit.Items[2] := RSMonths;
+  rgDayOffsetUnit.Items[3] := RSYears;
+
+  gbVisual.Caption := RSVisualCaption;
+  rgRotation.Caption := RSRotationCaption;
+  rgMeasurement.Caption := RSMeasurementCaption;
+  rgMeasurement.Items[0] := RSPixels;
+  rgMeasurement.Items[1] := RSPercent;
+  rgMeasurement.Items[2] := RSInches;
+  lblLeft.Caption := RSLeft;
+  lblTop.Caption := RSTop;
+  lblWidth.Caption := RSWidth;
+  lblHeight.Caption := RSHeight;
+  chkVisible.Caption := RSVisible;
+
+  gbCaption.Caption := RSCaption;
+  lblCaptionText.Caption := RSTextCaption;
+  btnCaptionFont.Caption := RSFontBtn;
+  btnShape.Caption := RSShapeBtn;
+  btnOK.Caption := RSOKBtn;
+  btnCancel.Caption := RSCancelBtn;
+
+  RepositionControls;
+end;
+
+procedure TfrmEditElement.RepositionControls;
+const
+  MARGIN = 16;
+  DELTA = 8;
+  RADIOITEM_CORRECTION = 24 + DELTA;
+  BUTTON_CORRECTION = 16;
+  GROUPBOX_CORRECTION = 16;
+  GROUPBOX_DISTANCE = 16;
+var
+  i, w: Integer;
+  cnv: TControlCanvas;
+begin
+  cnv := TControlCanvas.Create;
+  try
+    cnv.Control := rgItemType;
+
+    // Calculate with of ItemType groupbbox
+    cnv.Font.Assign(rgItemType.Font);
+    w := 0;
+    for i:=0 to rgItemType.Items.Count - 1 do
+      w := Max(w, cnv.TextWidth(rgItemType.Items[i]));
+    rgItemType.ClientWidth := rgItemType.Columns * (w + RADIOITEM_CORRECTION);
+
+    // Calculate width of Visual groupbox
+    cnv.Font.Assign(rgRotation.Font);
+    rgRotation.ClientWidth := Max(
+      cnv.TextWidth(RSRotationCaption) + GROUPBOX_CORRECTION,
+      cnv.TextWidth('270') + RADIOITEM_CORRECTION
+    );
+
+    cnv.Font.Assign(rgMeasurement.Font);
+    w := 0;
+    for i:=0 to RgMeasurement.Items.Count-1 do
+      w := Max(w, cnv.TextWidth(RgMeasurement.Items[i]));
+    rgMeasurement.ClientWidth := Max(
+      cnv.TextWidth(RSMeasurementCaption) + GROUPBOX_CORRECTION,
+      w + RADIOITEM_CORRECTION
+    );
+    rgMeasurement.Left := rgRotation.Left + rgRotation.Width + GROUPBOX_DISTANCE;
+
+    w := Max(GetLabelWidth(lblTop), GetLabelWidth(lblLeft)) + DELTA + EdTop.Width + udTop.Width + 24 +
+         Max(GetLabelWidth(lblHeight), GetLabelWidth(lblWidth) + DELTA) + EdHeight.Width + udHeight.Width;
+
+    gbVisual.ClientWidth := RightOf(rgMeasurement) + 24 + w + rgRotation.Left;
+
+    // The longest box determines the width of the form
+    if gbVisual.ClientWidth > rgItemType.ClientWidth then
+      rgItemType.ClientWidth := gbVisual.ClientWidth
+    else
+      gbVisual.ClientWidth := rgItemType.ClientWidth;
+
+    // Width of the form
+    ClientWidth := gbVisual.ClientWidth + MARGIN * 2;
+
+    // Position Left/Top etc controls
+    edTop.Left := (gbVisual.ClientWidth + RightOf(rgMeasurement) - w) div 2 +
+      Max(GetLabelWidth(lblTop), GetLabelWidth(lblLeft)) + DELTA;
+    edLeft.Left := edTop.Left;
+    udTop.Left := RightOf(edTop);
+    udLeft.Left := udTop.Left;
+    lblTop.Left := edTop.Left - GetLabelWidth(lblTop) - DELTA;
+    lblLeft.Left := edTop.Left - GetLabelWidth(lblLeft) - DELTA;
+
+    edHeight.Left := (gbVisual.ClientWidth + RightOf(rgMeasurement) + w ) div 2 - udHeight.Width - edHeight.Width;
+    edWidth.Left := edHeight.Left;
+    lblHeight.Left := edHeight.Left - GetLabelWidth(lblHeight) - DELTA;
+    lblWidth.Left := edHeight.Left - GetLabelWidth(lblWidth) - DELTA;
+    udHeight.Left := RightOf(edHeight);
+    udWidth.Left := RightOf(edWidth);
+
+    // Name
+    LblName.Left := MARGIN;
+    EdName.Left := LblName.Left + GetLabelWidth(LblName) + DELTA;
+    EdName.Width := RightOf(gbVisual) - EdName.Left;
+
+    // DayOffset groupbox
+    cnv.Font.Assign(gbDayOffset.Font);
+    gbDayOffset.Width := Max(RightOf(udOffset) + DELTA, cnv.TextWidth(gbDayOffset.Caption) + GROUPBOX_CORRECTION);
+
+    // Day Offset Unit groupbox
+    rgDayOffsetUnit.Left := RightOf(gbDayOffset) + GROUPBOX_DISTANCE;
+    rgDayOffsetUnit.Width := RightOf(gbVisual) - rgDayOffsetUnit.Left;
+
+    // Caption groupbox
+    gbCaption.Width := gbVisual.Width;
+    lblCaptionText.Left := DELTA;
+    edCaptionText.Left := lblCaptionText.Left + GetLabelWidth(lblCaptionTExt) + DELTA;
+    cnv.Font.Assign(btnCaptionFont.Font);
+    w := cnv.TextWidth(btnCaptionFont.Caption) + BUTTON_CORRECTION;
+    btnCaptionFont.Left := gbCaption.ClientWidth - DELTA - w;
+    edCaptionText.Width := btnCaptionFont.Left - DELTA - edCaptionText.Left;
+
+    // Buttons at the bottom
+    cnv.Font.Assign(btnOK.Font);
+    w := Max(cnv.TextWidth(btnOK.Caption), cnv.TextWidth(btnCancel.Caption));
+    btnOK.Width := w + BUTTON_CORRECTION;
+    btnCancel.Width := btnOK.Width;
+    btnCancel.Left := RightOf(gbCaption) - btnCancel.Width;
+    btnOK.Left := btnCancel.Left - DELTA - btnOK.Width;
+
+  finally
+    cnv.Free;
+  end;
+end;
+
 procedure TfrmEditElement.SetData(AnElement : TVpPrintFormatElementItem);
 begin
   edName.Text := AnElement.ElementName;
@@ -247,7 +405,7 @@ begin
   TheShape := AnElement.Shape;
   TheCaption := AnElement.Caption;
 
-  rgDayOffset.ItemIndex := Ord(AnElement.DayOffsetUnits);
+  rgDayOffsetUnit.ItemIndex := Ord(AnElement.DayOffsetUnits);
   rgRotation.ItemIndex := Ord(AnElement.Rotation);
   rgMeasurement.ItemIndex := Ord(AnElement.Measurement);
   SetMaxSpin(rgMeasurement.ItemIndex);
@@ -272,7 +430,7 @@ begin
   rgItemType.ItemIndex := Index;
   gbCaption.Enabled := False;
   edCaptionText.Enabled := False;
-  lbCaptionText.Enabled := False;
+  lblCaptionText.Enabled := False;
   btnCaptionFont.Enabled := False;
 
 
@@ -280,7 +438,7 @@ begin
   if Index = 5 then begin
     gbCaption.Enabled := True;
     edCaptionText.Enabled := True;
-    lbCaptionText.Enabled := True;
+    lblCaptionText.Enabled := True;
     btnCaptionFont.Enabled := True;
   end;
 end;

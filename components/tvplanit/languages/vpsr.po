@@ -93,6 +93,10 @@ msgstr ""
 msgid "Unable to start web browser. Make sure you have it properly setup on your system."
 msgstr ""
 
+#: vpsr.rscalendarelement
+msgid "Calendar"
+msgstr ""
+
 #: vpsr.rscalendarnextmonth
 msgctxt "vpsr.rscalendarnextmonth"
 msgid "Next Month"
@@ -160,6 +164,16 @@ msgstr ""
 #: vpsr.rscancelbtn
 msgctxt "vpsr.rscancelbtn"
 msgid "Cancel"
+msgstr ""
+
+#: vpsr.rscaption
+msgctxt "vpsr.rscaption"
+msgid "Caption"
+msgstr ""
+
+#: vpsr.rscaptionelement
+msgctxt "vpsr.rscaptionelement"
+msgid "Caption"
 msgstr ""
 
 #: vpsr.rscategory
@@ -239,6 +253,10 @@ msgstr ""
 
 #: vpsr.rscontactpopupedit
 msgid "Edit Contact..."
+msgstr ""
+
+#: vpsr.rscontactselement
+msgid "Contacts"
 msgstr ""
 
 #: vpsr.rscountry
@@ -357,6 +375,10 @@ msgstr ""
 msgid "Days"
 msgstr ""
 
+#: vpsr.rsdayviewelement
+msgid "Day view"
+msgstr ""
+
 #: vpsr.rsdbposterror
 msgid "Error posting data to the database."
 msgstr ""
@@ -426,6 +448,10 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+#: vpsr.rseditelementcaption
+msgid "Edit element"
+msgstr ""
+
 #: vpsr.rseditformatcaption
 msgid "Edit format"
 msgstr ""
@@ -444,6 +470,10 @@ msgstr ""
 
 #: vpsr.rselements
 msgid "Elements:"
+msgstr ""
+
+#: vpsr.rselementtypelbl
+msgid "Element type"
 msgstr ""
 
 #: vpsr.rsemail
@@ -483,6 +513,10 @@ msgstr ""
 msgid "First name:"
 msgstr ""
 
+#: vpsr.rsfontbtn
+msgid "Font..."
+msgstr ""
+
 #: vpsr.rsformats
 msgid "Formats:"
 msgstr ""
@@ -493,6 +527,10 @@ msgstr ""
 
 #: vpsr.rsfromschedule
 msgid "from your schedule?"
+msgstr ""
+
+#: vpsr.rsheight
+msgid "Height"
 msgstr ""
 
 #: vpsr.rshintnextday
@@ -532,6 +570,10 @@ msgstr ""
 msgid "Hours"
 msgstr ""
 
+#: vpsr.rsinches
+msgid "Inches"
+msgstr ""
+
 #: vpsr.rsinifilestructure
 msgid "Incorrect structure of ini file."
 msgstr ""
@@ -566,6 +608,10 @@ msgstr ""
 
 #: vpsr.rslastnamelbl
 msgid "Last name:"
+msgstr ""
+
+#: vpsr.rsleft
+msgid "Left"
 msgstr ""
 
 #: vpsr.rslfriday
@@ -611,6 +657,10 @@ msgstr ""
 
 #: vpsr.rsmasterdata
 msgid "Master data"
+msgstr ""
+
+#: vpsr.rsmeasurementcaption
+msgid "Measurement"
 msgstr ""
 
 #: vpsr.rsminutes
@@ -664,6 +714,10 @@ msgstr ""
 
 #: vpsr.rsmonths
 msgid "Months"
+msgstr ""
+
+#: vpsr.rsmonthviewelement
+msgid "Month view"
 msgstr ""
 
 #: vpsr.rsnameisrequired
@@ -768,6 +822,10 @@ msgstr ""
 msgid "Owner must be a TWinControl descendent"
 msgstr ""
 
+#: vpsr.rspercent
+msgid "Percent"
+msgstr ""
+
 #: vpsr.rspermanent
 msgid "This operation cannot be undone!"
 msgstr ""
@@ -840,6 +898,10 @@ msgstr ""
 #: vpsr.rsphonetypelabel9
 msgctxt "vpsr.rsphonetypelabel9"
 msgid "Other"
+msgstr ""
+
+#: vpsr.rspixels
+msgid "Pixels"
 msgstr ""
 
 #: vpsr.rsposition
@@ -933,6 +995,10 @@ msgstr ""
 msgid "Resource"
 msgstr ""
 
+#: vpsr.rsrotationcaption
+msgid "Rotation"
+msgstr ""
+
 #: vpsr.rssaturday
 msgid "Saturday"
 msgstr ""
@@ -947,6 +1013,14 @@ msgstr ""
 
 #: vpsr.rsselectresource
 msgid "No resource has been selected. Would you like to select one now?"
+msgstr ""
+
+#: vpsr.rsshapebtn
+msgid "Shape..."
+msgstr ""
+
+#: vpsr.rsshapeelement
+msgid "Shape"
 msgstr ""
 
 #: vpsr.rssnoozebtn
@@ -1003,12 +1077,20 @@ msgstr ""
 msgid "Edit Task..."
 msgstr ""
 
+#: vpsr.rstaskselement
+msgid "Tasks"
+msgstr ""
+
 #: vpsr.rstasktitlenoresource
 msgid "Task List"
 msgstr ""
 
 #: vpsr.rstasktitleresource
 msgid "Task List - "
+msgstr ""
+
+#: vpsr.rstextcaption
+msgid "Text"
 msgstr ""
 
 #: vpsr.rsthrough
@@ -1035,6 +1117,10 @@ msgstr ""
 msgid "Title:"
 msgstr ""
 
+#: vpsr.rstop
+msgid "Top"
+msgstr ""
+
 #: vpsr.rstrue
 msgctxt "vpsr.rstrue"
 msgid "T"
@@ -1050,6 +1136,14 @@ msgstr ""
 
 #: vpsr.rsuntitled
 msgid "Untitled"
+msgstr ""
+
+#: vpsr.rsvisible
+msgid "Visible"
+msgstr ""
+
+#: vpsr.rsvisualcaption
+msgid "Visual"
 msgstr ""
 
 #: vpsr.rswednesday
@@ -1120,6 +1214,14 @@ msgstr ""
 
 #: vpsr.rsweeks
 msgid "Weeks"
+msgstr ""
+
+#: vpsr.rsweekviewelement
+msgid "Week view"
+msgstr ""
+
+#: vpsr.rswidth
+msgid "Width"
 msgstr ""
 
 #: vpsr.rsxdays

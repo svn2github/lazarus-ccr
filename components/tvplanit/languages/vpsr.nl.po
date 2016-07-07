@@ -103,6 +103,10 @@ msgstr "Geboortedatum:"
 msgid "Unable to start web browser. Make sure you have it properly setup on your system."
 msgstr "Webbrowser kan niet gestart worden. Controleer uw systeeminstellingen."
 
+#: vpsr.rscalendarelement
+msgid "Calendar"
+msgstr ""
+
 #: vpsr.rscalendarnextmonth
 msgctxt "vpsr.rscalendarnextmonth"
 msgid "Next Month"
@@ -171,6 +175,16 @@ msgstr "KW"
 msgctxt "vpsr.rscancelbtn"
 msgid "Cancel"
 msgstr "Afbreken"
+
+#: vpsr.rscaption
+msgctxt "vpsr.rscaption"
+msgid "Caption"
+msgstr ""
+
+#: vpsr.rscaptionelement
+msgctxt "vpsr.rscaptionelement"
+msgid "Caption"
+msgstr ""
 
 #: vpsr.rscategory
 msgid "Category"
@@ -250,6 +264,10 @@ msgstr "Contact wissen..."
 #: vpsr.rscontactpopupedit
 msgid "Edit Contact..."
 msgstr "Contact bewerken..."
+
+#: vpsr.rscontactselement
+msgid "Contacts"
+msgstr ""
 
 #: vpsr.rscountry
 msgid "Country"
@@ -367,6 +385,10 @@ msgstr "Gisteren"
 msgid "Days"
 msgstr "Dagen"
 
+#: vpsr.rsdayviewelement
+msgid "Day view"
+msgstr ""
+
 #: vpsr.rsdbposterror
 msgid "Error posting data to the database."
 msgstr "Fout bij opslaan in de database."
@@ -439,6 +461,10 @@ msgstr "Fout: Duplicaat Hulpmiddel."
 msgid "Edit"
 msgstr ""
 
+#: vpsr.rseditelementcaption
+msgid "Edit element"
+msgstr ""
+
 #: vpsr.rseditformatcaption
 msgid "Edit format"
 msgstr ""
@@ -457,6 +483,10 @@ msgstr "Afdrukformaten bewerken..."
 
 #: vpsr.rselements
 msgid "Elements:"
+msgstr ""
+
+#: vpsr.rselementtypelbl
+msgid "Element type"
 msgstr ""
 
 #: vpsr.rsemail
@@ -496,6 +526,10 @@ msgstr "F"
 msgid "First name:"
 msgstr "Voornaam:"
 
+#: vpsr.rsfontbtn
+msgid "Font..."
+msgstr ""
+
 #: vpsr.rsformats
 msgid "Formats:"
 msgstr ""
@@ -507,6 +541,10 @@ msgstr "Vrijdag"
 #: vpsr.rsfromschedule
 msgid "from your schedule?"
 msgstr "van uw tijdschema?"
+
+#: vpsr.rsheight
+msgid "Height"
+msgstr ""
 
 #: vpsr.rshintnextday
 msgid "Next day"
@@ -545,6 +583,10 @@ msgstr "Gisteren"
 msgid "Hours"
 msgstr "Uren"
 
+#: vpsr.rsinches
+msgid "Inches"
+msgstr ""
+
 #: vpsr.rsinifilestructure
 msgid "Incorrect structure of ini file."
 msgstr "Incorrecte structuur van ini bestand."
@@ -580,6 +622,10 @@ msgstr "Fout: Ongeldig Jaar."
 #: vpsr.rslastnamelbl
 msgid "Last name:"
 msgstr "Achternaam:"
+
+#: vpsr.rsleft
+msgid "Left"
+msgstr ""
 
 #: vpsr.rslfriday
 msgctxt "vpsr.rslfriday"
@@ -625,6 +671,10 @@ msgstr "W"
 #: vpsr.rsmasterdata
 msgid "Master data"
 msgstr "Master data"
+
+#: vpsr.rsmeasurementcaption
+msgid "Measurement"
+msgstr ""
 
 #: vpsr.rsminutes
 msgid "Minutes"
@@ -677,6 +727,10 @@ msgstr "Vandaag"
 
 #: vpsr.rsmonths
 msgid "Months"
+msgstr ""
+
+#: vpsr.rsmonthviewelement
+msgid "Month view"
 msgstr ""
 
 #: vpsr.rsnameisrequired
@@ -781,6 +835,10 @@ msgstr "OVER TIJD!"
 msgid "Owner must be a TWinControl descendent"
 msgstr "Owner moet van TWinControl afstammen"
 
+#: vpsr.rspercent
+msgid "Percent"
+msgstr ""
+
 #: vpsr.rspermanent
 msgid "This operation cannot be undone!"
 msgstr "Deze operatie kan niet ongedaan gemaakt worden!"
@@ -854,6 +912,10 @@ msgstr "Mobiel"
 msgctxt "vpsr.rsphonetypelabel9"
 msgid "Other"
 msgstr "Andere"
+
+#: vpsr.rspixels
+msgid "Pixels"
+msgstr ""
 
 #: vpsr.rsposition
 msgid "Position"
@@ -946,6 +1008,10 @@ msgstr "Herinnering"
 msgid "Resource"
 msgstr "Hulpmiddel"
 
+#: vpsr.rsrotationcaption
+msgid "Rotation"
+msgstr ""
+
 #: vpsr.rssaturday
 msgid "Saturday"
 msgstr "Zaterdag"
@@ -961,6 +1027,14 @@ msgstr "Kies een geluid"
 #: vpsr.rsselectresource
 msgid "No resource has been selected. Would you like to select one now?"
 msgstr "Er is geen hulpmiddel gekozen. Wilt u er nu een kiezen?"
+
+#: vpsr.rsshapebtn
+msgid "Shape..."
+msgstr ""
+
+#: vpsr.rsshapeelement
+msgid "Shape"
+msgstr ""
 
 #: vpsr.rssnoozebtn
 msgid "&Snooze"
@@ -1016,6 +1090,10 @@ msgstr "Taak wissen..."
 msgid "Edit Task..."
 msgstr "Taak bewerken..."
 
+#: vpsr.rstaskselement
+msgid "Tasks"
+msgstr ""
+
 #: vpsr.rstasktitlenoresource
 msgid "Task List"
 msgstr "Taaklijst"
@@ -1023,6 +1101,10 @@ msgstr "Taaklijst"
 #: vpsr.rstasktitleresource
 msgid "Task List - "
 msgstr "Taaklijst - "
+
+#: vpsr.rstextcaption
+msgid "Text"
+msgstr ""
 
 #: vpsr.rsthrough
 msgid "Through"
@@ -1048,6 +1130,10 @@ msgstr "Titel"
 msgid "Title:"
 msgstr "Titel:"
 
+#: vpsr.rstop
+msgid "Top"
+msgstr ""
+
 #: vpsr.rstrue
 msgctxt "vpsr.rstrue"
 msgid "T"
@@ -1064,6 +1150,14 @@ msgstr "Fout: Openen niet mogelijk "
 #: vpsr.rsuntitled
 msgid "Untitled"
 msgstr "Zonder titel"
+
+#: vpsr.rsvisible
+msgid "Visible"
+msgstr ""
+
+#: vpsr.rsvisualcaption
+msgid "Visual"
+msgstr ""
 
 #: vpsr.rswednesday
 msgid "Wednesday"
@@ -1133,6 +1227,14 @@ msgstr "Vandaag"
 
 #: vpsr.rsweeks
 msgid "Weeks"
+msgstr ""
+
+#: vpsr.rsweekviewelement
+msgid "Week view"
+msgstr ""
+
+#: vpsr.rswidth
+msgid "Width"
 msgstr ""
 
 #: vpsr.rsxdays

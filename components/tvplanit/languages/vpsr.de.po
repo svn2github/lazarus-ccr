@@ -103,6 +103,10 @@ msgstr "Geburtsdatum:"
 msgid "Unable to start web browser. Make sure you have it properly setup on your system."
 msgstr "Web-Browser kann nicht gestartet werden. Bitte stellen Sie sicher, dass er in Ihrem System korrekt eingerichtet ist."
 
+#: vpsr.rscalendarelement
+msgid "Calendar"
+msgstr "Kalender"
+
 #: vpsr.rscalendarnextmonth
 msgctxt "vpsr.rscalendarnextmonth"
 msgid "Next Month"
@@ -171,6 +175,16 @@ msgstr "KW"
 msgctxt "vpsr.rscancelbtn"
 msgid "Cancel"
 msgstr "Abbrechen"
+
+#: vpsr.rscaption
+msgctxt "vpsr.rscaption"
+msgid "Caption"
+msgstr "Beschriftung"
+
+#: vpsr.rscaptionelement
+msgctxt "vpsr.rscaptionelement"
+msgid "Caption"
+msgstr "Beschriftung"
 
 #: vpsr.rscategory
 msgid "Category"
@@ -250,6 +264,10 @@ msgstr "Kontakt löschen..."
 #: vpsr.rscontactpopupedit
 msgid "Edit Contact..."
 msgstr "Kontakt bearbeiten..."
+
+#: vpsr.rscontactselement
+msgid "Contacts"
+msgstr "Kontakte"
 
 #: vpsr.rscountry
 msgid "Country"
@@ -367,6 +385,10 @@ msgstr "Gestern"
 msgid "Days"
 msgstr "Tage"
 
+#: vpsr.rsdayviewelement
+msgid "Day view"
+msgstr "Tagesansicht"
+
 #: vpsr.rsdbposterror
 msgid "Error posting data to the database."
 msgstr "Fehler beim Speichern in die Datenbank"
@@ -386,11 +408,9 @@ msgid "Delete"
 msgstr "Löschen"
 
 #: vpsr.rsdescriptionlbl
-#, fuzzy
-#| msgid "Subject:"
 msgctxt "vpsr.rsdescriptionlbl"
 msgid "Description:"
-msgstr "Betreff:"
+msgstr "Beschreibung:"
 
 #: vpsr.rsdetails
 msgid "Details:"
@@ -438,6 +458,10 @@ msgstr "Fehler: Doppelte Ressource."
 msgid "Edit"
 msgstr "Bearbeiten"
 
+#: vpsr.rseditelementcaption
+msgid "Edit element"
+msgstr "Element bearbeiten"
+
 #: vpsr.rseditformatcaption
 msgid "Edit format"
 msgstr "Format bearbeiten"
@@ -457,6 +481,10 @@ msgstr "Druck-Formate bearbeiten..."
 #: vpsr.rselements
 msgid "Elements:"
 msgstr "Elemente:"
+
+#: vpsr.rselementtypelbl
+msgid "Element type"
+msgstr "Element-Typ"
 
 #: vpsr.rsemail
 msgid "E-Mail"
@@ -495,6 +523,10 @@ msgstr "F"
 msgid "First name:"
 msgstr "Vorname:"
 
+#: vpsr.rsfontbtn
+msgid "Font..."
+msgstr "Schriftart..."
+
 #: vpsr.rsformats
 msgid "Formats:"
 msgstr "Formate:"
@@ -506,6 +538,10 @@ msgstr "Freitag"
 #: vpsr.rsfromschedule
 msgid "from your schedule?"
 msgstr "Von Ihrem Zeitplan?"
+
+#: vpsr.rsheight
+msgid "Height"
+msgstr "Höhe"
 
 #: vpsr.rshintnextday
 msgid "Next day"
@@ -544,6 +580,10 @@ msgstr "Gestern"
 msgid "Hours"
 msgstr "Stunden"
 
+#: vpsr.rsinches
+msgid "Inches"
+msgstr "Zoll"
+
 #: vpsr.rsinifilestructure
 msgid "Incorrect structure of ini file."
 msgstr "Falscher Aufbau der ini-Datei"
@@ -579,6 +619,10 @@ msgstr "Fehler: Ungültiges Jahr"
 #: vpsr.rslastnamelbl
 msgid "Last name:"
 msgstr "Nachname:"
+
+#: vpsr.rsleft
+msgid "Left"
+msgstr "Links"
 
 #: vpsr.rslfriday
 msgctxt "vpsr.rslfriday"
@@ -624,6 +668,10 @@ msgstr "W"
 #: vpsr.rsmasterdata
 msgid "Master data"
 msgstr "Stammdaten"
+
+#: vpsr.rsmeasurementcaption
+msgid "Measurement"
+msgstr "Messung"
 
 #: vpsr.rsminutes
 msgid "Minutes"
@@ -677,6 +725,10 @@ msgstr "Heute"
 #: vpsr.rsmonths
 msgid "Months"
 msgstr "Monate"
+
+#: vpsr.rsmonthviewelement
+msgid "Month view"
+msgstr "Monatsansicht"
 
 #: vpsr.rsnameisrequired
 msgid "Error: Name cannot be empty."
@@ -780,6 +832,10 @@ msgstr "ABGELAUFEN!"
 msgid "Owner must be a TWinControl descendent"
 msgstr "Owner muss von TWinControl abstammen"
 
+#: vpsr.rspercent
+msgid "Percent"
+msgstr "Prozent"
+
 #: vpsr.rspermanent
 msgid "This operation cannot be undone!"
 msgstr "Diese Operation kann nicht rückgängig gemacht werden!"
@@ -853,6 +909,10 @@ msgstr "Handy"
 msgctxt "vpsr.rsphonetypelabel9"
 msgid "Other"
 msgstr "Andere"
+
+#: vpsr.rspixels
+msgid "Pixels"
+msgstr "Pixel"
 
 #: vpsr.rsposition
 msgid "Position"
@@ -945,6 +1005,10 @@ msgstr "Erinnerung"
 msgid "Resource"
 msgstr "Ressource"
 
+#: vpsr.rsrotationcaption
+msgid "Rotation"
+msgstr "Drehung"
+
 #: vpsr.rssaturday
 msgid "Saturday"
 msgstr "Samstag"
@@ -960,6 +1024,14 @@ msgstr "Einen Klang auswählen"
 #: vpsr.rsselectresource
 msgid "No resource has been selected. Would you like to select one now?"
 msgstr "Keine Ressource ist auswählt worden. Möchten Sie jetzt eine auswählen?"
+
+#: vpsr.rsshapebtn
+msgid "Shape..."
+msgstr "Form..."
+
+#: vpsr.rsshapeelement
+msgid "Shape"
+msgstr "Form"
 
 #: vpsr.rssnoozebtn
 msgid "&Snooze"
@@ -1015,6 +1087,10 @@ msgstr "Aufgabe löschen..."
 msgid "Edit Task..."
 msgstr "Aufgabe bearbeiten..."
 
+#: vpsr.rstaskselement
+msgid "Tasks"
+msgstr "Aufgaben"
+
 #: vpsr.rstasktitlenoresource
 msgid "Task List"
 msgstr "Aufgabenliste"
@@ -1022,6 +1098,10 @@ msgstr "Aufgabenliste"
 #: vpsr.rstasktitleresource
 msgid "Task List - "
 msgstr "Aufgabenliste - "
+
+#: vpsr.rstextcaption
+msgid "Text"
+msgstr "Text"
 
 #: vpsr.rsthrough
 msgid "Through"
@@ -1047,6 +1127,10 @@ msgstr "Titel"
 msgid "Title:"
 msgstr "Titel:"
 
+#: vpsr.rstop
+msgid "Top"
+msgstr "Oben"
+
 #: vpsr.rstrue
 msgctxt "vpsr.rstrue"
 msgid "T"
@@ -1063,6 +1147,14 @@ msgstr "Fehler: Kann nicht öffnen"
 #: vpsr.rsuntitled
 msgid "Untitled"
 msgstr "Ohne Titel"
+
+#: vpsr.rsvisible
+msgid "Visible"
+msgstr "Sichtbar"
+
+#: vpsr.rsvisualcaption
+msgid "Visual"
+msgstr "Aussehen"
 
 #: vpsr.rswednesday
 msgid "Wednesday"
@@ -1133,6 +1225,14 @@ msgstr "Heute"
 #: vpsr.rsweeks
 msgid "Weeks"
 msgstr "Wochen"
+
+#: vpsr.rsweekviewelement
+msgid "Week view"
+msgstr "Wochenansicht"
+
+#: vpsr.rswidth
+msgid "Width"
+msgstr "Breite"
 
 #: vpsr.rsxdays
 msgid "%d days"

@@ -126,6 +126,7 @@ function GetLineDuration(Granularity: TVpGranularity): Double;
 
 function GetLabelWidth(ALabel: TLabel): Integer;
 function GetRealFontHeight(AFont: TFont): Integer;
+function RightOf(AControl: TControl): Integer;
 
 function DecodeLineEndings(const AText: String): String;
 function EncodeLineEndings(const AText: String): String;
@@ -582,6 +583,11 @@ begin
   if AFont.Size = 0 then
     Result := GetFontData(AFont.Handle).Height else
     Result := AFont.Height;
+end;
+
+function RightOf(AControl: TControl): Integer;
+begin
+  Result := AControl.Left + AControl.Width;
 end;
 
 function SameDate(dt1, dt2: TDateTime): Boolean;

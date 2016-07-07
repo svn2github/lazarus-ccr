@@ -425,6 +425,33 @@ resourcestring
   RSTimeIncLbl       = 'Time increment:';
   RSTimeIncUnits     = 'Time increment units:';
 
+  { Format element editor }
+  RSEditElementCaption = 'Edit element';
+  RSElementTypeLbl   = 'Element type';
+  RSDayViewElement   = 'Day view';
+  RSWeekViewElement  = 'Week view';
+  RSMonthViewElement = 'Month view';
+  RSCalendarElement  = 'Calendar';
+  RSShapeElement     = 'Shape';
+  RSCaptionElement   = 'Caption';
+  RSTasksElement     = 'Tasks';
+  RSContactsElement  = 'Contacts';
+  RSVisualCaption    = 'Visual';
+  RSRotationCaption  = 'Rotation';
+  RSMeasurementCaption = 'Measurement';
+  RSPixels           = 'Pixels';
+  RSPercent          = 'Percent';
+  RSInches           = 'Inches';
+  RSLeft             = 'Left';
+  RSTop              = 'Top';
+  RSWidth            = 'Width';
+  RSHeight           = 'Height';
+  RSVisible          = 'Visible';
+  RSCaption          = 'Caption';
+  RSTextCaption      = 'Text';
+  RSShapeBtn         = 'Shape...';
+  RSFontBtn          = 'Font...';
+
 
   { Automatic resource adding/selection}                               {!!.01}
   RSAddNewResource   = 'No resources have been defined. Would you ' +  {!!.01}
