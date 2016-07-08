@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 1.8.8\n"
 
 #: vpsr.rs1day
 msgid "1 day"
@@ -97,7 +97,7 @@ msgstr ""
 
 #: vpsr.rsbirthdatelbl
 msgid "Birth date:"
-msgstr ""
+msgstr "Дата рождения:"
 
 #: vpsr.rsbrowsererror
 msgid "Unable to start web browser. Make sure you have it properly setup on your system."
@@ -105,7 +105,7 @@ msgstr "Ошибка запуска браузер. Убедитесь в пра
 
 #: vpsr.rscalendarelement
 msgid "Calendar"
-msgstr ""
+msgstr "Календарь"
 
 #: vpsr.rscalendarnextmonth
 msgctxt "vpsr.rscalendarnextmonth"
@@ -169,7 +169,7 @@ msgstr "Сегодня"
 
 #: vpsr.rscalendarweekabbr
 msgid "CW"
-msgstr ""
+msgstr "Номер недели:"
 
 #: vpsr.rscancelbtn
 msgctxt "vpsr.rscancelbtn"
@@ -179,12 +179,12 @@ msgstr "Отмена"
 #: vpsr.rscaption
 msgctxt "vpsr.rscaption"
 msgid "Caption"
-msgstr ""
+msgstr "Заголовок"
 
 #: vpsr.rscaptionelement
 msgctxt "vpsr.rscaptionelement"
 msgid "Caption"
-msgstr ""
+msgstr "Заголовок"
 
 #: vpsr.rscategory
 msgid "Category"
@@ -192,7 +192,7 @@ msgstr "Категория"
 
 #: vpsr.rscategorydesc
 msgid "Category %d"
-msgstr ""
+msgstr "Категория %d"
 
 #: vpsr.rscategorylabel1
 msgid "Business"
@@ -242,16 +242,16 @@ msgstr "Завершено на"
 
 #: vpsr.rsconfirmdeletecontact
 msgid "Delete contact %s?"
-msgstr ""
+msgstr "Удалить контакт %s?"
 
 #: vpsr.rsconfirmdeleteevent
 msgctxt "vpsr.rsconfirmdeleteevent"
 msgid "Delete event from schedule?"
-msgstr ""
+msgstr "Удалить событие из расписания?"
 
 #: vpsr.rsconfirmdeletetask
 msgid "Delete this task from your list?"
-msgstr ""
+msgstr "Удалить эту задачу из вашего списка?"
 
 #: vpsr.rscontactpopupadd
 msgid "Add Contact..."
@@ -267,7 +267,7 @@ msgstr "Изменить контакт"
 
 #: vpsr.rscontactselement
 msgid "Contacts"
-msgstr ""
+msgstr "Контакты"
 
 #: vpsr.rscountry
 msgid "Country"
@@ -387,7 +387,7 @@ msgstr "Дни"
 
 #: vpsr.rsdayviewelement
 msgid "Day view"
-msgstr ""
+msgstr "Отображение дня"
 
 #: vpsr.rsdbposterror
 msgid "Error posting data to the database."
@@ -403,17 +403,14 @@ msgid "Delete"
 msgstr "Удалить"
 
 #: vpsr.rsdeletebtn
-#, fuzzy
 msgctxt "vpsr.rsdeletebtn"
 msgid "Delete"
 msgstr "Удалить"
 
 #: vpsr.rsdescriptionlbl
-#, fuzzy
-#| msgid "Subject:"
 msgctxt "vpsr.rsdescriptionlbl"
 msgid "Description:"
-msgstr "Тема:"
+msgstr "Описание:"
 
 #: vpsr.rsdetails
 msgid "Details:"
@@ -433,8 +430,6 @@ msgid "Event"
 msgstr "Событие"
 
 #: vpsr.rsdlgprintpreview
-#, fuzzy
-#| msgid "Print Preview"
 msgid "Print preview"
 msgstr "Предварительный просмотр печати"
 
@@ -461,15 +456,15 @@ msgstr "Ошибка: Дубликат ресурсов."
 
 #: vpsr.rseditbtn
 msgid "Edit"
-msgstr ""
+msgstr "Изменить"
 
 #: vpsr.rseditelementcaption
 msgid "Edit element"
-msgstr ""
+msgstr "Изменить элемент"
 
 #: vpsr.rseditformatcaption
 msgid "Edit format"
-msgstr ""
+msgstr "Изменить формат"
 
 #: vpsr.rseditingfolders
 msgid "Folder Editor."
@@ -485,19 +480,17 @@ msgstr "Редактор формата печати..."
 
 #: vpsr.rselements
 msgid "Elements:"
-msgstr ""
+msgstr "Элементы:"
 
 #: vpsr.rselementtypelbl
 msgid "Element type"
-msgstr ""
+msgstr "Тип элемента"
 
 #: vpsr.rsemail
 msgid "E-Mail"
 msgstr "Электронная почта"
 
 #: vpsr.rsendtimelbl
-#, fuzzy
-#| msgid "End Time:"
 msgid "End time:"
 msgstr "Время окончания:"
 
@@ -528,15 +521,15 @@ msgstr ""
 
 #: vpsr.rsfirstnamelbl
 msgid "First name:"
-msgstr ""
+msgstr "Имя:"
 
 #: vpsr.rsfontbtn
 msgid "Font..."
-msgstr ""
+msgstr "Шрифт..."
 
 #: vpsr.rsformats
 msgid "Formats:"
-msgstr ""
+msgstr "Форматы:"
 
 #: vpsr.rsfriday
 msgid "Friday"
@@ -548,7 +541,7 @@ msgstr "из вашего расписания?"
 
 #: vpsr.rsheight
 msgid "Height"
-msgstr ""
+msgstr "Высота"
 
 #: vpsr.rshintnextday
 msgid "Next day"
@@ -589,11 +582,11 @@ msgstr "Часы"
 
 #: vpsr.rsinches
 msgid "Inches"
-msgstr ""
+msgstr "Дюймы"
 
 #: vpsr.rsinifilestructure
 msgid "Incorrect structure of ini file."
-msgstr ""
+msgstr "Ошибка структуры ini файла."
 
 #: vpsr.rsintervallbl
 msgid "Interval (days):"
@@ -625,11 +618,11 @@ msgstr "Ошибка: Не верный год."
 
 #: vpsr.rslastnamelbl
 msgid "Last name:"
-msgstr ""
+msgstr "Фамилия:"
 
 #: vpsr.rsleft
 msgid "Left"
-msgstr ""
+msgstr "Лево"
 
 #: vpsr.rslfriday
 msgctxt "vpsr.rslfriday"
@@ -642,7 +635,7 @@ msgstr ""
 
 #: vpsr.rsloadfilebtn
 msgid "Load file..."
-msgstr ""
+msgstr "Загрузить файл..."
 
 #: vpsr.rslocationlbl
 msgid "Location:"
@@ -678,7 +671,7 @@ msgstr "Главные данные"
 
 #: vpsr.rsmeasurementcaption
 msgid "Measurement"
-msgstr ""
+msgstr "Измерение"
 
 #: vpsr.rsminutes
 msgid "Minutes"
@@ -698,11 +691,11 @@ msgstr "Ошибка: Необходим месяц."
 
 #: vpsr.rsmonthlybydate
 msgid "Monthly By Date"
-msgstr ""
+msgstr "Ежемесячно"
 
 #: vpsr.rsmonthlybyday
 msgid "Monthly By Day"
-msgstr ""
+msgstr "Ежемесячную"
 
 #: vpsr.rsmonthpopupnextmonth
 msgctxt "vpsr.rsmonthpopupnextmonth"
@@ -731,11 +724,11 @@ msgstr "Сегодня"
 
 #: vpsr.rsmonths
 msgid "Months"
-msgstr ""
+msgstr "Месяц"
 
 #: vpsr.rsmonthviewelement
 msgid "Month view"
-msgstr ""
+msgstr "Отображать месяц"
 
 #: vpsr.rsnameisrequired
 msgid "Error: Name cannot be empty."
@@ -743,7 +736,7 @@ msgstr "Ошибка: Имя не может быть пустым."
 
 #: vpsr.rsnamelbl
 msgid "Name:"
-msgstr ""
+msgstr "Имя:"
 
 #: vpsr.rsneedelementname
 msgid "Please supply an Element Name"
@@ -841,7 +834,7 @@ msgstr ""
 
 #: vpsr.rspercent
 msgid "Percent"
-msgstr ""
+msgstr "Процент"
 
 #: vpsr.rspermanent
 msgid "This operation cannot be undone!"
@@ -885,7 +878,7 @@ msgstr "Рабочий факс"
 
 #: vpsr.rsphonetypelabel2
 msgid "Callback"
-msgstr ""
+msgstr "Обратный вызов"
 
 #: vpsr.rsphonetypelabel3
 msgid "Car"
@@ -936,85 +929,73 @@ msgstr "Печать"
 
 #: vpsr.rsprintformatdesigner
 msgid "Print format designer"
-msgstr ""
+msgstr "Редактор формата для печати"
 
 #: vpsr.rsprintorder
 msgid "Print order"
-msgstr ""
+msgstr "Порядок печати"
 
 #: vpsr.rsprintprvcancel
-#, fuzzy
 msgctxt "vpsr.rsprintprvcancel"
 msgid "Cancel"
 msgstr "Отмена"
 
 #: vpsr.rsprintprvcancelhint
 msgid "Cancel preview"
-msgstr ""
+msgstr "Отмена просмотра"
 
 #: vpsr.rsprintprvfirstpage
-#, fuzzy
-#| msgid "First Page"
 msgid "&First page"
-msgstr "Первая страницы"
+msgstr "Первая страница"
 
 #: vpsr.rsprintprvfirstpagehint
 msgid "Go to first page"
-msgstr ""
+msgstr "На первую страницу"
 
 #: vpsr.rsprintprvlastpage
-#, fuzzy
-#| msgid "Last Page"
 msgid "&Last page"
 msgstr "Последняя страница"
 
 #: vpsr.rsprintprvlastpagehint
 msgid "Go to last page"
-msgstr ""
+msgstr "На последнюю страницу"
 
 #: vpsr.rsprintprvnextpage
-#, fuzzy
-#| msgid "Next Page"
 msgid "&Next page"
 msgstr "Следующая страница"
 
 #: vpsr.rsprintprvnextpagehint
 msgid "Go to next page"
-msgstr ""
+msgstr "На следующую страницу"
 
 #: vpsr.rsprintprvprevpage
-#, fuzzy
-#| msgid "Previous Page"
 msgid "Pre&vious page"
 msgstr "Предыдущая страница"
 
 #: vpsr.rsprintprvprevpagehint
 msgid "Go to previous page"
-msgstr ""
+msgstr "На предыдущую страницу"
 
 #: vpsr.rsprintprvprint
-#, fuzzy
 msgctxt "vpsr.rsprintprvprint"
 msgid "&Print"
 msgstr "Печать"
 
 #: vpsr.rsprintprvprinthint
 msgid "Print"
-msgstr ""
+msgstr "Печать"
 
 #: vpsr.rsprtcontrolowner
 msgid "Print controller is not owned by a TVpControlLink!"
 msgstr ""
 
 #: vpsr.rsrecurrenceendslbl
-#, fuzzy
-#| msgid "Repeat Until:"
 msgid "Repeat until:"
 msgstr "Повторять до:"
 
 #: vpsr.rsrecurringlbl
 msgid "Appointment recurrence:"
-msgstr ""
+msgstr "Повторение встречи:"
 
 #: vpsr.rsreminder
 msgid "Reminder"
@@ -1026,7 +1007,7 @@ msgstr "Ресурс"
 
 #: vpsr.rsrotationcaption
 msgid "Rotation"
-msgstr ""
+msgstr "Поворт"
 
 #: vpsr.rssaturday
 msgid "Saturday"
@@ -1034,7 +1015,7 @@ msgstr "Суббота"
 
 #: vpsr.rssavefilebtn
 msgid "Save file..."
-msgstr ""
+msgstr "Сохранить файл..."
 
 #: vpsr.rsselectasound
 msgid "Select A Sound"
@@ -1576,4 +1557,3 @@ msgstr ""
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr ""
-
