@@ -361,7 +361,13 @@ begin
       AShape.Shape := shape;
       break;
     end;
+  AShape.Pen.Style := TPenStyle(cbPenStyle.ItemIndex);
   AShape.Pen.Width := udPenWidth.Position;
+  AShape.Pen.Color := cbPenColor.Selected;
+  AShape.Pen.Mode := TPenMode(cbPenMode.ItemIndex);
+
+  AShape.Brush.Style := TBrushStyle(cbBrushStyle.ItemIndex);
+  AShape.Brush.Color := cbBrushColor.Selected;
 end;
 {=====}
 procedure TfrmEditShape.SetCaptions;
@@ -393,22 +399,10 @@ begin
   udPenWidth.Position := AShape.Pen.Width;
   cbPenStyle.ItemIndex := ord(AShape.Pen.Style);
   cbPenMode.ItemIndex := ord(AShape.Pen.Mode);
-  {
-//  cgPenColor.ForegroundIndex := cgPenColor.ColorToIndex(AShape.Pen.Color);
-  StyleStr := GetEnumName(TypeInfo(TPenStyle), Ord(AShape.Pen.Style));
-  cbPenStyle.ItemIndex := cbPenStyle.Items.IndexOf(StyleStr);
-  StyleStr := GetEnumName(TypeInfo(TPenMode), Ord(AShape.Pen.Mode));
-  cbPenMode.ItemIndex := cbPenMode.Items.IndexOf(StyleStr);
-   }
 
   { brush settings }
-//  cgBrushColor.ForegroundIndex := cgBrushColor.ColorToIndex(AShape.Brush.Color);
   cbBrushColor.Selected := AShape.Brush.Color;
   cbBrushStyle.ItemIndex := ord(AShape.Brush.Style);
-  {
-  StyleStr := GetEnumName(TypeInfo(TBrushStyle), Ord(AShape.Brush.Style));
-  cbBrushStyle.ItemIndex := cbBrushStyle.Items.IndexOf(StyleStr);
-   }
 end;
 {=====}
 

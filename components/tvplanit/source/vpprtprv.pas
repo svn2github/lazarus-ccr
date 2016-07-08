@@ -454,7 +454,9 @@ begin
     LoadPage(CurPage, FStartDate, FEndDate);
 
   RenderBmp.Canvas.Brush.Color := FPageColor;
+  RenderBmp.Canvas.Brush.Style := bsSolid;
   RenderBmp.Canvas.Pen.Color := FBorderColor;
+  RenderBmp.Canvas.Pen.Style := psSolid;
   RenderBmp.Canvas.FillRect(Rect(0, 0, RenderBmp.Width, RenderBmp.Height));
 
   if not IsPageLoaded(CurPage) then
@@ -766,10 +768,13 @@ var
     RealWidth  := ClientWidth;
     RealHeight := ClientHeight;
 
+    WorkBmp.Canvas.Brush.Style := bsSolid;
     WorkBmp.Canvas.Brush.Color := FOffPageColor;
-    WorkBmp.Canvas.FillRect(ClientRect);
     WorkBmp.Canvas.Brush.Color := FPageColor;
     WorkBmp.Canvas.Pen.Color := FBorderColor;
+    WorkBmp.Canvas.Pen.Style := psSolid;
+
+    WorkBmp.Canvas.FillRect(ClientRect);
   end;
 
   procedure DrawBorders;
@@ -853,22 +858,6 @@ var
         Result.BottomRight := Point(ClientWidth - Offset2, round(FPrinter.PageHeight / ScaleX))
       else
         Result.BottomRight := Point(Round(FPrinter.PageWidth / ScaleY), ClientHeight - Offset2);
-      {
-      if ScaleX > ScaleY then
-        Result := Rect(
-          Offset1,
-          Offset1,
-          ClientWidth - Offset2,
-          Round(FPrinter.PageHeight / ScaleX)
-        )
-      else
-        Result := Rect(
-          Offset1,
-          Offset1,
-          Round(FPrinter.PageWidth / ScaleY),
-          ClientHeight - Offset2
-        );
-        }
     end else
       Result := Rect(3, 3, ClientWidth, ClientHeight);
   end;
@@ -891,12 +880,6 @@ var
       AspectRect := GetAspectRectangle;
       srcRect := Rect(0, 0, RenderBmp.Width, RenderBmp.Height);
       WorkBmp.Canvas.CopyRect(AspectRect, RenderBmp.Canvas, srcRect);
-      (*
-        AspectRect,
-        RenderBmp.Canvas,
-        Rect(0, 0, RenderBmp.Width, RenderBmp.Height)
-      );
-      *)
       RealWidth := AspectRect.Right - AspectRect.Left + 3;
       RealHeight := AspectRect.Bottom - AspectRect.Top + 3;
     end else
@@ -915,143 +898,10 @@ var
       );
       dstRect := Rect(3, 3, WorkWidth, WorkHeight);
       WorkBmp.Canvas.CopyRect(dstRect, RenderBmp.Canvas, srcRect);
-      (*
-        Rect(3, 3, WorkWidth, WorkHeight),
-        RenderBmp.Canvas,
-        Rect(
-          Round(FScrollX / ZOOM_FACTOR_VALUES[FZoomFactor]),
-          Round(FScrollY / ZOOM_FACTOR_VALUES[FZoomFactor]),
-          Round((WorkWidth + FScrollX) / ZOOM_FACTOR_VALUES[FZoomFactor]),
-          Round((WorkHeight + FScrollY) / ZOOM_FACTOR_VALUES[FZoomFactor])
-        )
-      );*)
       RealWidth := round(RenderBmp.Width / ZOOM_FACTOR_VALUES[FZoomFactor]);
       RealHeight := round(RenderBmp.Height / ZOOM_FACTOR_VALUES[FZoomFactor]);
     end;
 
-                 (*
-    case FZoomFactor of
-      zfFitToControl:
-        begin
-          AspectRect := GetAspectRectangle;
-          WorkBmp.Canvas.CopyRect(
-            AspectRect,
-            RenderBmp.Canvas,
-            Rect (0, 0, RenderBmp.Width, RenderBmp.Height)
-          );
-          RealWidth := AspectRect.Right - AspectRect.Left + 3;
-          RealHeight := AspectRect.Bottom - AspectRect.Top + 3;
-        end;
-
-      zf25Percent : begin
-        WorkWidth  := Round (RenderBmp.Width div 4);
-        WorkHeight := Round (RenderBmp.Height div 4);
-        if WorkHeight > ClientHeight - 3 then
-          WorkHeight := ClientHeight - 3;
-        if WorkWidth > ClientWidth - 3 then
-          WorkWidth := ClientWidth - 3;
-        WorkBmp.Canvas.CopyRect (Rect (3, 3,
-                                       WorkWidth,
-                                       WorkHeight), 
-                                 RenderBmp.Canvas,
-                                 Rect (Round (FScrollX * 4),
-                                       Round (FScrollY * 4),
-                                       Round ((WorkWidth + FScrollX) * 4),
-                                       Round ((WorkHeight + FScrollY) * 4)));
-        RealWidth  := RenderBmp.Width div 4;
-        RealHeight := RenderBmp.Height div 4;
-      end;
-
-      zf33Percent : begin
-        WorkWidth  := Round (RenderBmp.Width div 3);
-        WorkHeight := Round (RenderBmp.Height div 3);
-        if WorkHeight > ClientHeight - 3 then
-          WorkHeight := ClientHeight - 3;
-        if WorkWidth > ClientWidth - 3 then
-          WorkWidth := ClientWidth - 3;
-        WorkBmp.Canvas.CopyRect (Rect (3, 3,
-                                       WorkWidth,
-                                       WorkHeight),
-                                 RenderBmp.Canvas,
-                                 Rect (Round (FScrollX * 3),
-                                       Round (FScrollY * 3),
-                                       Round ((WorkWidth + FScrollX) * 3),
-                                       Round ((WorkHeight + FScrollY) * 3)));
-        RealWidth  := RenderBmp.Width div 3;
-        RealHeight := RenderBmp.Height div 3;
-      end;
-
-      zf50Percent : begin
-        WorkWidth  := Round (RenderBmp.Width div 2);
-        WorkHeight := Round (RenderBmp.Height div 2);
-        if WorkHeight > ClientHeight - 3 then
-          WorkHeight := ClientHeight - 3;
-        if WorkWidth > ClientWidth - 3 then
-          WorkWidth := ClientWidth - 3;
-        WorkBmp.Canvas.CopyRect (Rect (3, 3,
-                                       WorkWidth,
-                                       WorkHeight),
-                                 RenderBmp.Canvas,
-                                 Rect (Round (FScrollX * 2),
-                                       Round (FScrollY * 2),
-                                       Round ((WorkWidth + FScrollX) * 2),
-                                       Round ((WorkHeight + FScrollY) * 2)));
-        RealWidth  := RenderBmp.Width div 2;
-        RealHeight := RenderBmp.Height div 2;
-      end;
-
-      zf67Percent : begin
-        WorkWidth  := Round (RenderBmp.Width * 0.67);
-        WorkHeight := Round (RenderBmp.Height * 0.67);
-        if WorkHeight > ClientHeight - 3 then
-          WorkHeight := ClientHeight - 3;
-        if WorkWidth > ClientWidth - 3 then
-          WorkWidth := ClientWidth - 3;
-        WorkBmp.Canvas.CopyRect (Rect (3, 3,
-                                       WorkWidth,
-                                       WorkHeight),
-                                 RenderBmp.Canvas,
-                                 Rect (Round (FScrollX * 1.5),
-                                       Round (FScrollY * 1.5),
-                                       Round ((WorkWidth + FScrollX) * 1.5),
-                                       Round ((WorkHeight + FScrollY) * 1.5)));
-
-        RealWidth  := Round (RenderBmp.Width * 0.67);
-        RealHeight := Round (RenderBmp.Height * 0.67);
-      end;
-
-      zf75Percent : begin
-        WorkWidth  := Round (RenderBmp.Width * 0.75);
-        WorkHeight := Round (RenderBmp.Height * 0.75);
-        if WorkHeight > ClientHeight - 3 then
-          WorkHeight := ClientHeight - 3;
-        if WorkWidth > ClientWidth - 3 then
-          WorkWidth := ClientWidth - 3;
-        WorkBmp.Canvas.CopyRect (Rect (3, 3,
-                                       WorkWidth,
-                                       WorkHeight),
-                                 RenderBmp.Canvas,
-                                 Rect (Round (FScrollX * 1.33333),
-                                       Round (FScrollY * 1.33333),
-                                       Round ((WorkWidth + FScrollX) * 1.33333),
-                                       Round ((WorkHeight + FScrollY) * 1.33333)));
-        RealWidth  := Round (RenderBmp.Width * 0.75);
-        RealHeight := Round (RenderBmp.Height * 0.75);
-      end;
-
-      zfActualSize : begin
-        WorkBmp.Canvas.CopyRect (Rect (3, 3,
-                                       ClientWidth - 3, ClientHeight - 3),
-                                       RenderBmp.Canvas,
-                                       Rect (FScrollX,
-                                             FScrollY,
-                                             FScrollX + ClientWidth - 3,
-                                             FScrollY + ClientHeight - 3));
-        RealWidth  := RenderBmp.Width;
-        RealHeight := RenderBmp.Height;
-      end;
-    end;
-    *)
   end;
 
   procedure RenderImage;
