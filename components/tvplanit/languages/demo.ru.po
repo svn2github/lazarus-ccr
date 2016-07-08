@@ -52,7 +52,7 @@ msgid "6 min"
 msgstr "6 минут"
 
 #: demomain.rsborderless
-msgid "ohne Rand"
+msgid "no border"
 msgstr ""
 
 #: demomain.rsconfirmdeleteres
@@ -81,7 +81,7 @@ msgid "Events per week"
 msgstr "События за неделю"
 
 #: demomain.rsflat
-msgid "flach"
+msgid "flat"
 msgstr ""
 
 #: demomain.rsfriday
@@ -164,6 +164,7 @@ msgctxt "TFRMREPORTSETUP.DATEEDIT1.OKCAPTION"
 msgid "OK"
 msgstr ""
 
+# No need to translate
 #: tfrmreportsetup.dateedit1.text
 msgid "DateEdit1"
 msgstr ""
@@ -178,6 +179,7 @@ msgctxt "TFRMREPORTSETUP.DATEEDIT2.OKCAPTION"
 msgid "OK"
 msgstr ""
 
+# No need to translate
 #: tfrmreportsetup.dateedit2.text
 msgid "DateEdit2"
 msgstr ""
@@ -217,10 +219,6 @@ msgstr "(по умолчанию)"
 #: tmainform.cballowinplaceediting.caption
 msgid "Allow inplace editing"
 msgstr "Разрешить редактор по месту"
-
-#: tmainform.cbdrawingstyle.text
-msgid "flat"
-msgstr "плавающее"
 
 #: tmainform.cbgranularity.text
 msgid "30 Min"
@@ -334,6 +332,7 @@ msgctxt "tmainform.tabtasks.caption"
 msgid "Tasks"
 msgstr "Задачи"
 
+# No need to translate
 #: tmainform.titlelbl.caption
 msgid "TitleLbl"
 msgstr ""

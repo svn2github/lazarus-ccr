@@ -522,21 +522,14 @@ object MainForm: TMainForm
           ParentColor = False
         end
         object CbDrawingStyle: TComboBox
-          Left = 439
+          Left = 440
           Height = 23
           Top = 64
           Width = 113
           ItemHeight = 15
-          ItemIndex = 0
-          Items.Strings = (
-            'flat'
-            '3d'
-            'borderless'
-          )
           OnChange = CbDrawingStyleChange
           Style = csDropDownList
           TabOrder = 5
-          Text = 'flat'
         end
       end
     end

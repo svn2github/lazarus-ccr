@@ -34,49 +34,78 @@ interface
 
 uses
   {$IFDEF LCL}
-  LCLProc, LCLType, LCLIntf,
+  LCLProc, LCLType, LCLIntf, ColorBox,
   {$ELSE}
   Windows, Messages, ColorGrd,
   {$ENDIF}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, TypInfo, ComCtrls,
+  StdCtrls, ExtCtrls, TypInfo, ComCtrls, Buttons,
   VpPrtFmt;
 
 type
+
+  { TfrmEditShape }
+
   TfrmEditShape = class(TForm)
     btnCancel: TButton;
     btnOk: TButton;
     cbBrushStyle: TComboBox;
+    cbBrushColor: TColorBox;
     cbPenMode: TComboBox;
     cbPenStyle: TComboBox;
+    cbPenColor: TColorBox;
     gbBrush: TGroupBox;
     gbPen: TGroupBox;
-    Label1: TLabel;
-    Label2: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
-    rgShapeType: TRadioGroup;
+    gbShapes: TGroupBox;
+    lblBrushStyle: TLabel;
+    lblBrushColor: TLabel;
+    lblPenStyle: TLabel;
+    lblPenColor: TLabel;
+    lblPenWidth: TLabel;
+    lblPenMode: TLabel;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    SpeedButton3: TSpeedButton;
+    SpeedButton4: TSpeedButton;
+    SpeedButton5: TSpeedButton;
+    SpeedButton6: TSpeedButton;
+    SpeedButton7: TSpeedButton;
+    SpeedButton8: TSpeedButton;
     udPenWidth: TUpDown;
     edPenWidth: TEdit;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
+    procedure cbBrushColorChange(Sender: TObject);
+    procedure cbBrushStyleChange(Sender: TObject);
     procedure cbBrushStyleDrawItem(Control: TWinControl; Index: Integer;
       Rect: TRect; State: TOwnerDrawState);
-    procedure FormCreate(Sender: TObject);
+    procedure cbPenColorChange(Sender: TObject);
+    procedure cbPenStyleChange(Sender: TObject);
     procedure cbPenStyleDrawItem(Control: TWinControl; Index: Integer;
       Rect: TRect; State: TOwnerDrawState);
+    procedure edPenWidthChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+
   private
+    FShapeButtons: array[TVpShapeType] of TSpeedButton;
+    FShapeBitmaps: array[TVpShapeType] of TBitmap;
     procedure FillBrushStyleList;
     procedure FillPenStyleList;
     procedure FillPenModeList;
+    procedure PositionControls;
+    procedure SetCaptions;
+
   protected
+    procedure CreateBitmaps;
+    procedure DestroyBitmaps;
     procedure SaveData(AShape: TVpPrintShape);
     procedure SetData(AShape: TVpPrintShape);
+    procedure UpdateBitmap(AShape: TVpShapeType);
+    procedure UpdateBitmaps;
 
-    { Private declarations }
   public
     function Execute(AShape : TVpPrintShape) : Boolean;
-    { Public declarations }
   end;
 
 
@@ -88,13 +117,122 @@ implementation
  {$R *.dfm}
 {$ENDIF}
 
+uses
+  Math, VpMisc, VpSr;
+
+
 { TfrmEditShape }
+
+procedure TfrmEditShape.CreateBitmaps;
+var
+  shape: TVpShapeType;
+  w, h: Integer;
+begin
+  w := SpeedButton1.Width - 8;
+  h := SpeedButton1.Height - 8;
+  for shape := Low(TVpShapeType) to High(TVpShapeType) do begin
+    FShapeBitmaps[shape] := TBitmap.Create;
+    with FShapeBitmaps[shape] do begin
+      PixelFormat := pf24Bit;
+      SetSize(w, h);
+      Transparent := true;
+    end;
+    FShapeButtons[shape].Glyph.Assign(FShapeBitmaps[shape]);
+    case shape of
+      ustRectangle  : FShapeButtons[shape].Hint := RSRectangle;
+      ustTopLine    : FShapeButtons[shape].Hint := RSTopLine;
+      ustBottomLine : FShapeButtons[shape].Hint := RSBottomLine;
+      ustLeftLine   : FShapeButtons[shape].Hint := RSLeftLine;
+      ustRightLine  : FShapeButtons[shape].Hint := RSRightLine;
+      ustTLToBRLine : FShapeButtons[shape].Hint := RSTLToBRLine;
+      ustBLToTRLine : FShapeButtons[shape].Hint := RSBLToTRLine;
+      ustEllipse    : FShapeButtons[shape].Hint := RSEllipse;
+    end;
+  end;
+end;
+
+procedure TfrmEditShape.DestroyBitmaps;
+var
+  shape: TVpShapeType;
+begin
+  for shape := Low(TVpShapeType) to High(TVpShapeType) do
+    FShapeBitmaps[shape].Free;
+end;
+
+procedure TfrmEditShape.edPenWidthChange(Sender: TObject);
+begin
+  UpdateBitmaps;
+end;
+
+procedure TfrmEditShape.UpdateBitmap(AShape: TVpShapeType);
+var
+  pw: Integer;
+  bkcol, pcol, bcol: TColor;
+begin
+  pw := StrToInt(edPenWidth.Text);
+  pcol := cbPenColor.Selected;
+  bcol := cbBrushColor.Selected;
+  bkcol := clWhite;
+  while (bkcol = pcol) or (bkcol = bcol) do
+    bkcol := rgb(random(256), random(256), random(256));
+  with FShapeBitmaps[AShape] do begin
+    TransparentColor := bkcol;
+    Canvas.Brush.Color := bkCol;
+    Canvas.Brush.Style := bsSolid;
+    Canvas.FillRect(0, 0, Width, Height);
+    Canvas.Pen.Width := pw;
+    Canvas.Pen.Style := TPenStyle(cbPenStyle.ItemIndex);
+    Canvas.Pen.Color := pcol;
+    Canvas.Brush.Style := TBrushStyle(cbBrushStyle.ItemIndex);
+    Canvas.Brush.Color := bcol;
+    case AShape of
+      ustRectangle  : Canvas.Rectangle(pw, pw, Width-pw, Height-pw);
+      ustTopLine    : Canvas.Line(pw, pw, Width-pw, pw);
+      ustBottomLine : Canvas.Line(pw, Height-pw, Width, Height-pw);
+      ustLeftLine   : Canvas.Line(pw, pw, pw, Height-pw);
+      ustRightLine  : Canvas.Line(Width-pw, pw, Width-pw, Height);
+      ustTLToBRLine : Canvas.Line(pw, pw, Width-pw, Height-pw);
+      ustBLToTRLine : Canvas.Line(pw, Height-pw, Width-pw, pw);
+      ustEllipse    : Canvas.Ellipse(pw, pw, Width-pw, Height-pw);
+    end;
+  end;
+  FShapeButtons[AShape].Glyph.Assign(FShapeBitmaps[AShape]);
+end;
+
+procedure TfrmEditShape.UpdateBitmaps;
+var
+  shape: TVpShapeType;
+begin
+  for shape := Low(TVpShapeType) to High(TVpShapeType) do
+    UpdateBitmap(shape);
+end;
+
 procedure TfrmEditShape.FormCreate(Sender: TObject);
 begin
+  FShapeButtons[ustRectangle] := SpeedButton1;
+  FShapeButtons[ustTopLine] := SpeedButton2;
+  FShapeButtons[ustBottomLine] := SpeedButton3;
+  FShapeButtons[ustLeftLine] := SpeedButton4;
+  FShapeButtons[ustRightLine] := SpeedButton5;
+  FShapeButtons[ustTLToBRLine] := SpeedButton6;
+  FShapeButtons[ustBLToTRLine] := SpeedButton7;
+  FShapeButtons[ustEllipse] := SpeedButton8;
+
   FillBrushStyleList;
   FillPenStyleList;
   FillPenModeList;
+
+  CreateBitmaps;
+  UpdateBitmaps;
+
+  SetCaptions;
 end;
+
+procedure TfrmEditShape.FormDestroy(Sender: TObject);
+begin
+  DestroyBitmaps;
+end;
+
 {=====}
 function TfrmEditShape.Execute(AShape: TVpPrintShape): Boolean;
 begin
@@ -108,6 +246,17 @@ procedure TfrmEditShape.btnOkClick(Sender: TObject);
 begin
   ModalResult := mrOk;
 end;
+
+procedure TfrmEditShape.cbBrushColorChange(Sender: TObject);
+begin
+  UpdateBitmaps;
+end;
+
+procedure TfrmEditShape.cbBrushStyleChange(Sender: TObject);
+begin
+  UpdateBitmaps;
+end;
+
 {=====}
 procedure TfrmEditShape.btnCancelClick(Sender: TObject);
 begin
@@ -116,8 +265,8 @@ end;
 {=====}
 procedure TfrmEditShape.FillBrushStyleList;
 var
-  Style : TBrushStyle;
-  StyleName : string;
+  Style: TBrushStyle;
+  StyleName: string;
 begin
   for Style := Low(TBrushStyle) to High(TBrushStyle) do begin
     StyleName := GetEnumName(TypeInfo(TBrushStyle), Ord(Style));
@@ -127,8 +276,8 @@ end;
 {=====}
 procedure TfrmEditShape.FillPenModeList;
 var
-  Mode : TPenMode;
-  ModeName : string;
+  Mode: TPenMode;
+  ModeName: string;
 begin
   for Mode := Low(TPenMode) to High(TPenMode) do begin
     ModeName := GetEnumName(TypeInfo(TPenMode), Ord(Mode));
@@ -138,8 +287,8 @@ end;
 {=====}
 procedure TfrmEditShape.FillPenStyleList;
 var
-  Style : TPenStyle;
-  StyleName : string;
+  Style: TPenStyle;
+  StyleName: string;
 begin
   for Style := Low(TPenStyle) to High(TPenStyle) do begin
     StyleName := GetEnumName(TypeInfo(TPenStyle), Ord(Style));
@@ -147,31 +296,119 @@ begin
   end;
 end;
 {=====}
-procedure TfrmEditShape.SaveData(AShape: TVpPrintShape);
+procedure TfrmEditShape.PositionControls;
+const
+  DELTA = 8;
+var
+  w: Integer;
+  cnv: TControlCanvas;
+  d: Integer;
+  shape: TVpShapeType;
 begin
-  AShape.Shape := TVpShapeType(rgShapeType.ItemIndex);
+  w := MaxValue([GetLabelWidth(lblPenColor), GetLabelWidth(lblPenStyle),
+    GetLabelWidth(lblPenWidth), GetLabelWidth(lblPenMode)]) + 2 * DELTA;
+  cbPenColor.Left := w;
+  cbPenStyle.Left := w;
+  edPenWidth.Left := w;
+  cbPenMode.Left := w;
+  lblPenColor.Left := cbPenColor.Left - GetLabelWidth(lblPenColor) - DELTA;
+  lblPenStyle.Left := cbPenColor.Left - GetLabelWidth(lblPenStyle) - DELTA;
+  lblPenWidth.Left := cbPenColor.Left - GetLabelWidth(lblPenWidth) - DELTA;
+  lblPenMode.Left := cbPenColor.Left - GetLabelWidth(lblPenMode) - DELTA;
+  gbPen.Width := RightOf(cbPenColor) + DELTA;
+
+  w := MaxValue([GetLabelWidth(lblBrushColor), GetLabelWidth(lblBrushStyle)]) + 2*DELTA;
+  cbBrushColor.Left := w;
+  cbBrushStyle.Left := w;
+  lblBrushColor.Left := cbBrushColor.Left - GetLabelWidth(lblBrushColor) - DELTA;
+  lblBrushStyle.Left := cbBrushColor.Left - GetLabelWidth(lblBrushStyle) - DELTA;
+  gbBrush.Left := RightOf(gbPen) + 16;
+  gbBrush.Width := RightOf(cbBrushColor) + DELTA;
+
+  cnv := TControlCanvas.Create;
+  try
+    cnv.Control := btnOK;
+    cnv.Font.Assign(btnOK.Font);
+    btnOK.Width := MaxValue([cnv.TextWidth(btnOK.Caption), cnv.TextWidth(btnCancel.Caption)]) + 16;
+  finally
+    cnv.Free;
+  end;
+
+  btnCancel.Width := btnOK.Width;
+  if btnOK.Width + DELTA + btnCancel.Width > gbBrush.Width then
+    gbBrush.Width := btnOK.Width + DELTA + btnCancel.Width;
+  btnCancel.Left := RightOf(gbBrush) - btnCancel.Width;
+  btnOK.Left := btnCancel.Left - DELTA - btnOK.Width;
+
+  ClientWidth := RightOf(gbBrush) + gbPen.Left;
+
+  gbShapes.Width := ClientWidth - gbShapes.Left * 2;
+  w := (gbShapes.ClientWidth - 11 * DELTA) div 8;
+  for shape := Low(TVpShapeType) to High(TVpShapeType) do begin
+    if shape = Low(TVpShapeType) then
+      FShapeButtons[shape].Left := DELTA * 2 else
+      FShapeButtons[shape].Left := RightOf(FShapeButtons[pred(shape)]) + DELTA;
+    FShapeButtons[shape].Width := w;
+  end;
+end;
+
+procedure TfrmEditShape.SaveData(AShape: TVpPrintShape);
+var
+  shape: TVpShapeType;
+begin
+  for shape := Low(TVpShapeType) to High(TVpShapeType) do
+    if FShapeButtons[shape].Down then begin
+      AShape.Shape := shape;
+      break;
+    end;
   AShape.Pen.Width := udPenWidth.Position;
 end;
 {=====}
+procedure TfrmEditShape.SetCaptions;
+begin
+  Caption := RSEditShapeCaption;
+  gbShapes.Caption := RsShapeCaption;
+  gbPen.Caption := RSPenCaption;
+  lblPenColor.Caption := RSColorLbl;
+  lblPenStyle.Caption := RSStyleLbl;
+  lblPenWidth.Caption := RSWidthLbl;
+  lblPenMode.Caption := RSModeLbl;
+  gbBrush.Caption := RSBrushCaption;
+  lblBrushColor.Caption := RSColorLbl;
+  lblBrushStyle.Caption := RSStyleLbl;
+  btnOK.Caption := RSOKBtn;
+  btnCancel.Caption := RSCancelBtn;
+
+  PositionControls;
+end;
+
 procedure TfrmEditShape.SetData(AShape: TVpPrintShape);
 var
   StyleStr : string;
 begin
-  rgShapeType.ItemIndex := Ord(AShape.Shape);
+  FShapeButtons[AShape.Shape].Down := true;
 
   { pen settings }
+  cbPenColor.Selected := AShape.Pen.Color;
   udPenWidth.Position := AShape.Pen.Width;
+  cbPenStyle.ItemIndex := ord(AShape.Pen.Style);
+  cbPenMode.ItemIndex := ord(AShape.Pen.Mode);
+  {
 //  cgPenColor.ForegroundIndex := cgPenColor.ColorToIndex(AShape.Pen.Color);
   StyleStr := GetEnumName(TypeInfo(TPenStyle), Ord(AShape.Pen.Style));
   cbPenStyle.ItemIndex := cbPenStyle.Items.IndexOf(StyleStr);
   StyleStr := GetEnumName(TypeInfo(TPenMode), Ord(AShape.Pen.Mode));
   cbPenMode.ItemIndex := cbPenMode.Items.IndexOf(StyleStr);
+   }
 
   { brush settings }
 //  cgBrushColor.ForegroundIndex := cgBrushColor.ColorToIndex(AShape.Brush.Color);
+  cbBrushColor.Selected := AShape.Brush.Color;
+  cbBrushStyle.ItemIndex := ord(AShape.Brush.Style);
+  {
   StyleStr := GetEnumName(TypeInfo(TBrushStyle), Ord(AShape.Brush.Style));
   cbBrushStyle.ItemIndex := cbBrushStyle.Items.IndexOf(StyleStr);
-
+   }
 end;
 {=====}
 
@@ -179,13 +416,15 @@ procedure TfrmEditShape.cbBrushStyleDrawItem(Control: TWinControl;
   Index: Integer; Rect: TRect; State: TOwnerDrawState);
 var
   SavePenColor, SaveBrushColor: TColor;
-  Rgt: Integer;
+  x: Integer;
   SaveBrushStyle: TBrushStyle;
   Item : string;
   TxtRect : TRect;
+  R: TRect;
+  bs: TBrushStyle;
 begin
   Item := cbBrushStyle.Items[Index];
-  Rgt := (Rect.Bottom - Rect.Top) + Rect.Left;
+  x := Rect.Left + HeightOf(Rect);
   with cbBrushStyle.Canvas do
   try
     { keep old settings }
@@ -193,85 +432,100 @@ begin
     SaveBrushColor := Brush.Color;
     SaveBrushStyle := Brush.Style;
 
+    R := Rect;
+    InflateRect(R, -1, -1);
+    R.Right := x;
+    bs := TBrushStyle(GetEnumValue(TypeInfo(TBrushStyle), Item));
+
+    { draw background }
+    FillRect(Rect);     // Brush is already set
+
     { draw frame }
-    Pen.Color := Brush.Color;
-    Brush.Color := cbBrushStyle.Brush.Color;
-    Rectangle(Rect.Left, Rect.Top, Rgt, Rect.Bottom);
+    if bs <> bsClear then begin
+      Brush.Color := clWindow;
+      Rectangle(R);
+    end;
 
-    { set up for drawing sample }
-    Brush.Style := TBrushStyle(GetEnumValue(TypeInfo(TBrushStyle), Item));
-    Pen.Color := cbBrushStyle.Font.Color;
+    if bs <> bsClear then begin
+      { set up for drawing sample }
+      Brush.Style := bs;
+      Brush.Color := clWindowText; //cbBrushStyle.Font.Color;
+      Pen.Color := clWindowText; //txtColor; //cbBrushStyle.Font.Color;
 
-    { special handling for bsClear }
-    if Brush.Style = bsClear then
-    begin
-      Brush.Color := cbBrushStyle.Brush.Color;
-      Brush.Style := bsSolid;
-    end
-    else
-      Brush.Color := cbBrushStyle.Font.Color;
+      { Draw sample }
+      Rectangle(R);
+    end;
 
-    { Draw sample }
-    Rectangle(Rect.Left + 1, Rect.Top + 1, Rgt - 1, Rect.Bottom - 1);
+    { draw the item text }
+    TxtRect := Classes.Rect(x, Rect.Top, Rect.Right, Rect.Bottom);
+    TextRect(TxtRect, TxtRect.Left + 1, TxtRect.Top + 1, Item);  // Font color already set
 
+  finally
     { restore settings }
     Brush.Color := SaveBrushColor;
     Brush.Style := SaveBrushStyle;
     Pen.Color := SavePenColor;
-  finally
-    { draw the item text }
-    TxtRect := Classes.Rect(Rgt, Rect.Top, Rect.Right, Rect.Bottom);
-    TextRect(TxtRect, TxtRect.Left + 1, TxtRect.Top + 1, Item);
   end;
 end;
+
+procedure TfrmEditShape.cbPenColorChange(Sender: TObject);
+begin
+  UpdateBitmaps;
+end;
+
+procedure TfrmEditShape.cbPenStyleChange(Sender: TObject);
+begin
+  UpdateBitmaps;
+end;
+
 {=====}
 
 procedure TfrmEditShape.cbPenStyleDrawItem(Control: TWinControl;
   Index: Integer; Rect: TRect; State: TOwnerDrawState);
 var
   SavePenColor, SaveBrushColor: TColor;
-  Rgt, Top: Integer;
   SavePenStyle: TPenStyle;
   Item: string;
   TxtRect : TRect;
+  x, y: Integer;
 begin
   Item := cbPenStyle.Items[Index];
-  Rgt := (Rect.Bottom - Rect.Top) * 2 + Rect.Left;
-  Top := (Rect.Bottom - Rect.Top) div 2 + Rect.Top;
+  x := Rect.Left + HeightOf(Rect) * 2;
+  y := Rect.Top + HeightOf(Rect) div 2;
+
   with cbPenStyle.Canvas do
   try
-    { keep old settings }
+    { Keep old settings }
     SavePenColor := Pen.Color;
     SaveBrushColor := Brush.Color;
     SavePenStyle := Pen.Style;
 
-    { draw frame }
-    Pen.Color := Brush.Color;
-    Rectangle(Rect.Left, Rect.Top, Rgt, Rect.Bottom);
+    { Draw background }
+    FillRect(Rect);     // Brush already set by caller
 
-    { set up for drawing sample }
+    { Set up for drawing sample }
     Brush.Color := cbPenStyle.Brush.Color;
     Pen.Color := cbPenStyle.Font.Color;
-    Rectangle(Rect.Left + 1, Rect.Top + 1, Rgt - 1, Rect.Bottom - 1);
+    Rectangle(Rect.Left + 1, Rect.Top + 1, x - 1, Rect.Bottom - 1);
 
     { Draw sample }
     Pen.Style := TPenStyle(GetEnumValue(TypeInfo(TPenStyle), Item));
     Pen.Color := cbPenStyle.Font.Color;
 
-    { Sample Line }
-    MoveTo(Rect.Left + 1, Top);
-    LineTo(Rgt - 1, Top);
-    MoveTo(Rect.Left + 1, Top + 1);
-    LineTo(Rgt - 1, Top + 1);
+    MoveTo(Rect.Left + 1, y);
+    LineTo(x - 1, y);
+    MoveTo(Rect.Left + 1, y + 1);
+    LineTo(x - 1, y + 1);
 
+    { Draw the item text }
+    TxtRect := Classes.Rect(x, Rect.Top, Rect.Right, Rect.Bottom);
+    TextRect(TxtRect, TxtRect.Left + 1, TxtRect.Top + 1, Item);   // Color already set
+
+  finally
     { restore settings }
     Brush.Color := SaveBrushColor;
     Pen.Style := SavePenStyle;
     Pen.Color := SavePenColor;
-  finally
-    { draw the item text }
-    TxtRect := Classes.Rect(Rgt, Rect.Top, Rect.Right, Rect.Bottom);
-    TextRect(TxtRect, TxtRect.Left + 1, TxtRect.Top + 1, Item);
   end;
 end;
 {=====}

@@ -99,9 +99,21 @@ msgstr ""
 msgid "Birth date:"
 msgstr "Дата рождения:"
 
+#: vpsr.rsbltotrline
+msgid "bottom-left to top-right line"
+msgstr ""
+
+#: vpsr.rsbottomline
+msgid "bottom line"
+msgstr ""
+
 #: vpsr.rsbrowsererror
 msgid "Unable to start web browser. Make sure you have it properly setup on your system."
 msgstr "Ошибка запуска браузер. Убедитесь в правильности настроек вашей системы."
+
+#: vpsr.rsbrushcaption
+msgid "Brush"
+msgstr ""
 
 #: vpsr.rscalendarelement
 msgid "Calendar"
@@ -226,6 +238,10 @@ msgstr "Город:"
 #: vpsr.rsclosebtn
 msgid "&Close"
 msgstr "Закрыть"
+
+#: vpsr.rscolorlbl
+msgid "Color:"
+msgstr ""
 
 #: vpsr.rscompany
 msgctxt "vpsr.rscompany"
@@ -478,6 +494,10 @@ msgstr "Редактор элемента папки."
 msgid "Edit Print Formats..."
 msgstr "Редактор формата печати..."
 
+#: vpsr.rseditshapecaption
+msgid "Edit shape"
+msgstr ""
+
 #: vpsr.rselements
 msgid "Elements:"
 msgstr "Элементы:"
@@ -485,6 +505,10 @@ msgstr "Элементы:"
 #: vpsr.rselementtypelbl
 msgid "Element type"
 msgstr "Тип элемента"
+
+#: vpsr.rsellipse
+msgid "ellipse"
+msgstr ""
 
 #: vpsr.rsemail
 msgid "E-Mail"
@@ -624,6 +648,10 @@ msgstr "Фамилия:"
 msgid "Left"
 msgstr "Лево"
 
+#: vpsr.rsleftline
+msgid "left line"
+msgstr ""
+
 #: vpsr.rslfriday
 msgctxt "vpsr.rslfriday"
 msgid "F"
@@ -676,6 +704,10 @@ msgstr "Измерение"
 #: vpsr.rsminutes
 msgid "Minutes"
 msgstr "Минуты"
+
+#: vpsr.rsmodelbl
+msgid "Mode:"
+msgstr ""
 
 #: vpsr.rsmonday
 msgid "Monday"
@@ -830,6 +862,10 @@ msgstr "ПРОСРОЧЕНО!"
 
 #: vpsr.rsownernotwinctrl
 msgid "Owner must be a TWinControl descendent"
+msgstr ""
+
+#: vpsr.rspencaption
+msgid "Pen"
 msgstr ""
 
 #: vpsr.rspercent
@@ -989,6 +1025,10 @@ msgstr "Печать"
 msgid "Print controller is not owned by a TVpControlLink!"
 msgstr ""
 
+#: vpsr.rsrectangle
+msgid "rectangle"
+msgstr ""
+
 #: vpsr.rsrecurrenceendslbl
 msgid "Repeat until:"
 msgstr "Повторять до:"
@@ -1004,6 +1044,10 @@ msgstr "Напоминание"
 #: vpsr.rsresource
 msgid "Resource"
 msgstr "Ресурс"
+
+#: vpsr.rsrightline
+msgid "right line"
+msgstr ""
 
 #: vpsr.rsrotationcaption
 msgid "Rotation"
@@ -1029,7 +1073,13 @@ msgstr ""
 msgid "Shape..."
 msgstr ""
 
+#: vpsr.rsshapecaption
+msgctxt "vpsr.rsshapecaption"
+msgid "Shape"
+msgstr ""
+
 #: vpsr.rsshapeelement
+msgctxt "vpsr.rsshapeelement"
 msgid "Shape"
 msgstr ""
 
@@ -1062,6 +1112,10 @@ msgstr "Время начала:"
 #: vpsr.rsstatelbl
 msgid "State:"
 msgstr "Статус:"
+
+#: vpsr.rsstylelbl
+msgid "Style:"
+msgstr ""
 
 #: vpsr.rssubjectcaption
 msgctxt "vpsr.rssubjectcaption"
@@ -1129,8 +1183,16 @@ msgstr "Заголовок"
 msgid "Title:"
 msgstr "Заголовок:"
 
+#: vpsr.rstltobrline
+msgid "top-left to bottom-right line"
+msgstr ""
+
 #: vpsr.rstop
 msgid "Top"
+msgstr ""
+
+#: vpsr.rstopline
+msgid "top line"
 msgstr ""
 
 #: vpsr.rstrue
@@ -1234,6 +1296,10 @@ msgstr ""
 
 #: vpsr.rswidth
 msgid "Width"
+msgstr ""
+
+#: vpsr.rswidthlbl
+msgid "Width:"
 msgstr ""
 
 #: vpsr.rsxdays
@@ -1557,3 +1623,4 @@ msgstr ""
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr ""
+

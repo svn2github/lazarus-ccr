@@ -173,9 +173,9 @@ resourcestring
   RSThursday = 'Thursday';
   RSFriday = 'Friday';
   RSSaturday = 'Saturday';
-  RSFlat = 'flach';
+  RSFlat = 'flat';
   RS3d = '3D';
-  RSBorderless = 'ohne Rand';
+  RSBorderless = 'no border';
 
 {$IFDEF WINDOWS}
 { This function determines the LCID from the language code.
@@ -664,6 +664,7 @@ begin
     SetDefaultLang(FLang, langdir);
     TranslateUnitResourceStrings('vpsr', langdir + 'vpsr.' + FLang + '.po');
   end;
+
   VpDayView1.LoadLanguage;
   VpWeekView1.LoadLanguage;
   VpMonthView1.LoadLanguage;
@@ -719,9 +720,10 @@ begin
   CbFirstDayOfWeek.Items.Add(RSFriday);
   CbFirstDayOfWeek.Items.Add(RSSaturday);
 
-  CbDrawingStyle.Items[0] := RSFlat;
-  CbDrawingStyle.Items[1] := RS3d;
-  CbDrawingStyle.Items[2] := RSBorderless;
+  CbDrawingStyle.Items.Clear;
+  CbDrawingStyle.Items.Add(RSFlat);
+  CbDrawingStyle.Items.Add(RS3d);
+  CbDrawingStyle.Items.Add(RSBorderless);
 
   DaysTrackbar.Left := GetLabelWidth(LblVisibleDays) + LblVisibleDays.Left + 8;
   LblGranularity.Left := DaysTrackbar.Left + DaysTrackbar.Width + 32;

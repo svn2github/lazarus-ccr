@@ -99,9 +99,21 @@ msgstr "Ungültiges Trigger-Handle"
 msgid "Birth date:"
 msgstr "Geburtsdatum:"
 
+#: vpsr.rsbltotrline
+msgid "bottom-left to top-right line"
+msgstr "Linie links unten nach rechts oben"
+
+#: vpsr.rsbottomline
+msgid "bottom line"
+msgstr "Linie unten"
+
 #: vpsr.rsbrowsererror
 msgid "Unable to start web browser. Make sure you have it properly setup on your system."
 msgstr "Web-Browser kann nicht gestartet werden. Bitte stellen Sie sicher, dass er in Ihrem System korrekt eingerichtet ist."
+
+#: vpsr.rsbrushcaption
+msgid "Brush"
+msgstr "Füllung"
 
 #: vpsr.rscalendarelement
 msgid "Calendar"
@@ -226,6 +238,10 @@ msgstr "Stadt:"
 #: vpsr.rsclosebtn
 msgid "&Close"
 msgstr "&Schließen"
+
+#: vpsr.rscolorlbl
+msgid "Color:"
+msgstr "Farbe:"
 
 #: vpsr.rscompany
 msgctxt "vpsr.rscompany"
@@ -478,6 +494,10 @@ msgstr "Editor für Ordner-Einträge"
 msgid "Edit Print Formats..."
 msgstr "Druck-Formate bearbeiten..."
 
+#: vpsr.rseditshapecaption
+msgid "Edit shape"
+msgstr "Form bearbeiten"
+
 #: vpsr.rselements
 msgid "Elements:"
 msgstr "Elemente:"
@@ -485,6 +505,10 @@ msgstr "Elemente:"
 #: vpsr.rselementtypelbl
 msgid "Element type"
 msgstr "Element-Typ"
+
+#: vpsr.rsellipse
+msgid "ellipse"
+msgstr "Ellipse"
 
 #: vpsr.rsemail
 msgid "E-Mail"
@@ -624,6 +648,10 @@ msgstr "Nachname:"
 msgid "Left"
 msgstr "Links"
 
+#: vpsr.rsleftline
+msgid "left line"
+msgstr "Linie links"
+
 #: vpsr.rslfriday
 msgctxt "vpsr.rslfriday"
 msgid "F"
@@ -676,6 +704,10 @@ msgstr "Messung"
 #: vpsr.rsminutes
 msgid "Minutes"
 msgstr "Minuten"
+
+#: vpsr.rsmodelbl
+msgid "Mode:"
+msgstr "Modus:"
 
 #: vpsr.rsmonday
 msgid "Monday"
@@ -831,6 +863,10 @@ msgstr "ABGELAUFEN!"
 #: vpsr.rsownernotwinctrl
 msgid "Owner must be a TWinControl descendent"
 msgstr "Owner muss von TWinControl abstammen"
+
+#: vpsr.rspencaption
+msgid "Pen"
+msgstr "Umriss"
 
 #: vpsr.rspercent
 msgid "Percent"
@@ -989,6 +1025,10 @@ msgstr "Drucken"
 msgid "Print controller is not owned by a TVpControlLink!"
 msgstr "Print Controll hat nicht TVpControlLink als Owner"
 
+#: vpsr.rsrectangle
+msgid "rectangle"
+msgstr "Rechteck"
+
 #: vpsr.rsrecurrenceendslbl
 msgid "Repeat until:"
 msgstr "Wiederholen bis:"
@@ -1004,6 +1044,10 @@ msgstr "Erinnerung"
 #: vpsr.rsresource
 msgid "Resource"
 msgstr "Ressource"
+
+#: vpsr.rsrightline
+msgid "right line"
+msgstr "Linie rechts"
 
 #: vpsr.rsrotationcaption
 msgid "Rotation"
@@ -1029,7 +1073,13 @@ msgstr "Keine Ressource ist auswählt worden. Möchten Sie jetzt eine auswählen
 msgid "Shape..."
 msgstr "Form..."
 
+#: vpsr.rsshapecaption
+msgctxt "vpsr.rsshapecaption"
+msgid "Shape"
+msgstr "Form"
+
 #: vpsr.rsshapeelement
+msgctxt "vpsr.rsshapeelement"
 msgid "Shape"
 msgstr "Form"
 
@@ -1060,6 +1110,10 @@ msgstr "Start-Zeit:"
 #: vpsr.rsstatelbl
 msgid "State:"
 msgstr "Bundesland:"
+
+#: vpsr.rsstylelbl
+msgid "Style:"
+msgstr "Stil:"
 
 #: vpsr.rssubjectcaption
 msgctxt "vpsr.rssubjectcaption"
@@ -1127,9 +1181,17 @@ msgstr "Titel"
 msgid "Title:"
 msgstr "Titel:"
 
+#: vpsr.rstltobrline
+msgid "top-left to bottom-right line"
+msgstr "Linie von links oben nach rechts unten"
+
 #: vpsr.rstop
 msgid "Top"
 msgstr "Oben"
+
+#: vpsr.rstopline
+msgid "top line"
+msgstr "Linie oben"
 
 #: vpsr.rstrue
 msgctxt "vpsr.rstrue"
@@ -1233,6 +1295,10 @@ msgstr "Wochenansicht"
 #: vpsr.rswidth
 msgid "Width"
 msgstr "Breite"
+
+#: vpsr.rswidthlbl
+msgid "Width:"
+msgstr "Breite:"
 
 #: vpsr.rsxdays
 msgid "%d days"

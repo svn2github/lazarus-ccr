@@ -38,7 +38,7 @@ msgstr "30 Min."
 
 #: demomain.rs3d
 msgid "3D"
-msgstr ""
+msgstr "3D"
 
 #: demomain.rs5min
 msgid "5 min"
@@ -53,8 +53,8 @@ msgid "6 min"
 msgstr "6 Min."
 
 #: demomain.rsborderless
-msgid "ohne Rand"
-msgstr ""
+msgid "no border"
+msgstr "ohne Rahmen"
 
 #: demomain.rsconfirmdeleteres
 msgid "Do you really want to delete resource %s?"
@@ -82,8 +82,8 @@ msgid "Events per week"
 msgstr "Termine pro Woche"
 
 #: demomain.rsflat
-msgid "flach"
-msgstr ""
+msgid "flat"
+msgstr "flach"
 
 #: demomain.rsfriday
 msgid "Friday"
@@ -165,6 +165,7 @@ msgctxt "tfrmreportsetup.dateedit1.okcaption"
 msgid "OK"
 msgstr "OK"
 
+# No need to translate
 #: tfrmreportsetup.dateedit1.text
 msgid "DateEdit1"
 msgstr ""
@@ -179,6 +180,7 @@ msgctxt "tfrmreportsetup.dateedit2.okcaption"
 msgid "OK"
 msgstr "OK"
 
+# No need to translate
 #: tfrmreportsetup.dateedit2.text
 msgid "DateEdit2"
 msgstr ""
@@ -218,10 +220,6 @@ msgstr "(Standard)"
 #: tmainform.cballowinplaceediting.caption
 msgid "Allow inplace editing"
 msgstr "Editieren an Ort und Stelle erlauben"
-
-#: tmainform.cbdrawingstyle.text
-msgid "flat"
-msgstr "flach"
 
 #: tmainform.cbgranularity.text
 msgid "30 Min"
@@ -321,8 +319,6 @@ msgid "Events"
 msgstr "Termine"
 
 #: tmainform.tabresources.caption
-#, fuzzy
-#| msgid "Maintenance"
 msgctxt "tmainform.tabresources.caption"
 msgid "Resources"
 msgstr "Wartung"
@@ -341,4 +337,3 @@ msgstr "Aufgaben"
 #: tmainform.titlelbl.caption
 msgid "TitleLbl"
 msgstr ""
-

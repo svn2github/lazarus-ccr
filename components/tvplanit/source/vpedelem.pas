@@ -379,6 +379,7 @@ begin
     edCaptionText.Left := lblCaptionText.Left + GetLabelWidth(lblCaptionTExt) + DELTA;
     cnv.Font.Assign(btnCaptionFont.Font);
     w := cnv.TextWidth(btnCaptionFont.Caption) + BUTTON_CORRECTION;
+    btnCaptionFont.Width := w;
     btnCaptionFont.Left := gbCaption.ClientWidth - DELTA - w;
     edCaptionText.Width := btnCaptionFont.Left - DELTA - edCaptionText.Left;
 
@@ -389,6 +390,7 @@ begin
     btnCancel.Width := btnOK.Width;
     btnCancel.Left := RightOf(gbCaption) - btnCancel.Width;
     btnOK.Left := btnCancel.Left - DELTA - btnOK.Width;
+    btnShape.Width := cnv.TextWidth(btnShape.Caption) + BUTTON_CORRECTION;
 
   finally
     cnv.Free;

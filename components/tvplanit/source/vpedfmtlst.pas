@@ -575,6 +575,9 @@ var
   Prn: TVpPrinter;
   i, Idx: Integer;
 begin
+  if LbFormats.ItemIndex = -1 then
+    exit;
+
   lbElements.Items.Clear;
   Prn := ControlLink.Printer;
   Idx := Prn.Find(lbFormats.Items[lbFormats.ItemIndex]);

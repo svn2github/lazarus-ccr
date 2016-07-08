@@ -42,7 +42,7 @@ msgid "6 min"
 msgstr ""
 
 #: demomain.rsborderless
-msgid "ohne Rand"
+msgid "no border"
 msgstr ""
 
 #: demomain.rsconfirmdeleteres
@@ -71,7 +71,7 @@ msgid "Events per week"
 msgstr ""
 
 #: demomain.rsflat
-msgid "flach"
+msgid "flat"
 msgstr ""
 
 #: demomain.rsfriday
@@ -206,10 +206,6 @@ msgstr ""
 
 #: tmainform.cballowinplaceediting.caption
 msgid "Allow inplace editing"
-msgstr ""
-
-#: tmainform.cbdrawingstyle.text
-msgid "flat"
 msgstr ""
 
 #: tmainform.cbgranularity.text

@@ -452,6 +452,23 @@ resourcestring
   RSShapeBtn         = 'Shape...';
   RSFontBtn          = 'Font...';
 
+  { Shape editor }
+  RSEditShapeCaption = 'Edit shape';
+  RSShapeCaption     = 'Shape';
+  RSRectangle        = 'rectangle';
+  RSTopLine          = 'top line';
+  RSBottomLine       = 'bottom line';
+  RSLeftLine         = 'left line';
+  RSRightLine        = 'right line';
+  RSTLToBRLine       = 'top-left to bottom-right line';
+  RSBLToTRLine       = 'bottom-left to top-right line';
+  RSEllipse          = 'ellipse';
+  RSPenCaption       = 'Pen';
+  RSBrushCaption     = 'Brush';
+  RSStyleLbl         = 'Style:';
+  RSWidthLbl         = 'Width:';
+  RSModeLbl          = 'Mode:';
+  RSColorLbl         = 'Color:';
 
   { Automatic resource adding/selection}                               {!!.01}
   RSAddNewResource   = 'No resources have been defined. Would you ' +  {!!.01}

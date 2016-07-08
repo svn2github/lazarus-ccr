@@ -99,9 +99,21 @@ msgstr "Ongeldige trigger handle"
 msgid "Birth date:"
 msgstr "Geboortedatum:"
 
+#: vpsr.rsbltotrline
+msgid "bottom-left to top-right line"
+msgstr ""
+
+#: vpsr.rsbottomline
+msgid "bottom line"
+msgstr ""
+
 #: vpsr.rsbrowsererror
 msgid "Unable to start web browser. Make sure you have it properly setup on your system."
 msgstr "Webbrowser kan niet gestart worden. Controleer uw systeeminstellingen."
+
+#: vpsr.rsbrushcaption
+msgid "Brush"
+msgstr ""
 
 #: vpsr.rscalendarelement
 msgid "Calendar"
@@ -226,6 +238,10 @@ msgstr "Plaats:"
 #: vpsr.rsclosebtn
 msgid "&Close"
 msgstr "&Sluiten"
+
+#: vpsr.rscolorlbl
+msgid "Color:"
+msgstr ""
 
 #: vpsr.rscompany
 msgctxt "vpsr.rscompany"
@@ -481,12 +497,20 @@ msgstr "Map Items Editor."
 msgid "Edit Print Formats..."
 msgstr "Afdrukformaten bewerken..."
 
+#: vpsr.rseditshapecaption
+msgid "Edit shape"
+msgstr ""
+
 #: vpsr.rselements
 msgid "Elements:"
 msgstr ""
 
 #: vpsr.rselementtypelbl
 msgid "Element type"
+msgstr ""
+
+#: vpsr.rsellipse
+msgid "ellipse"
 msgstr ""
 
 #: vpsr.rsemail
@@ -627,6 +651,10 @@ msgstr "Achternaam:"
 msgid "Left"
 msgstr ""
 
+#: vpsr.rsleftline
+msgid "left line"
+msgstr ""
+
 #: vpsr.rslfriday
 msgctxt "vpsr.rslfriday"
 msgid "F"
@@ -679,6 +707,10 @@ msgstr ""
 #: vpsr.rsminutes
 msgid "Minutes"
 msgstr "Minuten"
+
+#: vpsr.rsmodelbl
+msgid "Mode:"
+msgstr ""
 
 #: vpsr.rsmonday
 msgid "Monday"
@@ -834,6 +866,10 @@ msgstr "OVER TIJD!"
 #: vpsr.rsownernotwinctrl
 msgid "Owner must be a TWinControl descendent"
 msgstr "Owner moet van TWinControl afstammen"
+
+#: vpsr.rspencaption
+msgid "Pen"
+msgstr ""
 
 #: vpsr.rspercent
 msgid "Percent"
@@ -992,6 +1028,10 @@ msgstr "Afdrukken"
 msgid "Print controller is not owned by a TVpControlLink!"
 msgstr "Print Controller heeft niet TVpControlLink als Owner"
 
+#: vpsr.rsrectangle
+msgid "rectangle"
+msgstr ""
+
 #: vpsr.rsrecurrenceendslbl
 msgid "Repeat until:"
 msgstr "Herhalen totdat:"
@@ -1007,6 +1047,10 @@ msgstr "Herinnering"
 #: vpsr.rsresource
 msgid "Resource"
 msgstr "Hulpmiddel"
+
+#: vpsr.rsrightline
+msgid "right line"
+msgstr ""
 
 #: vpsr.rsrotationcaption
 msgid "Rotation"
@@ -1032,7 +1076,13 @@ msgstr "Er is geen hulpmiddel gekozen. Wilt u er nu een kiezen?"
 msgid "Shape..."
 msgstr ""
 
+#: vpsr.rsshapecaption
+msgctxt "vpsr.rsshapecaption"
+msgid "Shape"
+msgstr ""
+
 #: vpsr.rsshapeelement
+msgctxt "vpsr.rsshapeelement"
 msgid "Shape"
 msgstr ""
 
@@ -1063,6 +1113,10 @@ msgstr "Starttijd:"
 #: vpsr.rsstatelbl
 msgid "State:"
 msgstr "Provincie:"
+
+#: vpsr.rsstylelbl
+msgid "Style:"
+msgstr ""
 
 #: vpsr.rssubjectcaption
 msgctxt "vpsr.rssubjectcaption"
@@ -1130,8 +1184,16 @@ msgstr "Titel"
 msgid "Title:"
 msgstr "Titel:"
 
+#: vpsr.rstltobrline
+msgid "top-left to bottom-right line"
+msgstr ""
+
 #: vpsr.rstop
 msgid "Top"
+msgstr ""
+
+#: vpsr.rstopline
+msgid "top line"
 msgstr ""
 
 #: vpsr.rstrue
@@ -1235,6 +1297,10 @@ msgstr ""
 
 #: vpsr.rswidth
 msgid "Width"
+msgstr ""
+
+#: vpsr.rswidthlbl
+msgid "Width:"
 msgstr ""
 
 #: vpsr.rsxdays

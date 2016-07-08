@@ -110,9 +110,9 @@ object frmPrnFormat: TfrmPrnFormat
       Top = 0
       Width = 320
       CurPage = 0
+      DrawingStyle = dsFlat
       EndDate = 37377.6447728357
       StartDate = 37370.6447728357
-      ZoomFactor = zfActualSize
       Align = alClient
       Parent = PrintPreviewPanel
       TabStop = True

@@ -89,8 +89,20 @@ msgstr ""
 msgid "Birth date:"
 msgstr ""
 
+#: vpsr.rsbltotrline
+msgid "bottom-left to top-right line"
+msgstr ""
+
+#: vpsr.rsbottomline
+msgid "bottom line"
+msgstr ""
+
 #: vpsr.rsbrowsererror
 msgid "Unable to start web browser. Make sure you have it properly setup on your system."
+msgstr ""
+
+#: vpsr.rsbrushcaption
+msgid "Brush"
 msgstr ""
 
 #: vpsr.rscalendarelement
@@ -215,6 +227,10 @@ msgstr ""
 
 #: vpsr.rsclosebtn
 msgid "&Close"
+msgstr ""
+
+#: vpsr.rscolorlbl
+msgid "Color:"
 msgstr ""
 
 #: vpsr.rscompany
@@ -468,12 +484,20 @@ msgstr ""
 msgid "Edit Print Formats..."
 msgstr ""
 
+#: vpsr.rseditshapecaption
+msgid "Edit shape"
+msgstr ""
+
 #: vpsr.rselements
 msgid "Elements:"
 msgstr ""
 
 #: vpsr.rselementtypelbl
 msgid "Element type"
+msgstr ""
+
+#: vpsr.rsellipse
+msgid "ellipse"
 msgstr ""
 
 #: vpsr.rsemail
@@ -614,6 +638,10 @@ msgstr ""
 msgid "Left"
 msgstr ""
 
+#: vpsr.rsleftline
+msgid "left line"
+msgstr ""
+
 #: vpsr.rslfriday
 msgctxt "vpsr.rslfriday"
 msgid "F"
@@ -665,6 +693,10 @@ msgstr ""
 
 #: vpsr.rsminutes
 msgid "Minutes"
+msgstr ""
+
+#: vpsr.rsmodelbl
+msgid "Mode:"
 msgstr ""
 
 #: vpsr.rsmonday
@@ -820,6 +852,10 @@ msgstr ""
 
 #: vpsr.rsownernotwinctrl
 msgid "Owner must be a TWinControl descendent"
+msgstr ""
+
+#: vpsr.rspencaption
+msgid "Pen"
 msgstr ""
 
 #: vpsr.rspercent
@@ -979,6 +1015,10 @@ msgstr ""
 msgid "Print controller is not owned by a TVpControlLink!"
 msgstr ""
 
+#: vpsr.rsrectangle
+msgid "rectangle"
+msgstr ""
+
 #: vpsr.rsrecurrenceendslbl
 msgid "Repeat until:"
 msgstr ""
@@ -993,6 +1033,10 @@ msgstr ""
 
 #: vpsr.rsresource
 msgid "Resource"
+msgstr ""
+
+#: vpsr.rsrightline
+msgid "right line"
 msgstr ""
 
 #: vpsr.rsrotationcaption
@@ -1019,7 +1063,13 @@ msgstr ""
 msgid "Shape..."
 msgstr ""
 
+#: vpsr.rsshapecaption
+msgctxt "vpsr.rsshapecaption"
+msgid "Shape"
+msgstr ""
+
 #: vpsr.rsshapeelement
+msgctxt "vpsr.rsshapeelement"
 msgid "Shape"
 msgstr ""
 
@@ -1049,6 +1099,10 @@ msgstr ""
 
 #: vpsr.rsstatelbl
 msgid "State:"
+msgstr ""
+
+#: vpsr.rsstylelbl
+msgid "Style:"
 msgstr ""
 
 #: vpsr.rssubjectcaption
@@ -1117,8 +1171,16 @@ msgstr ""
 msgid "Title:"
 msgstr ""
 
+#: vpsr.rstltobrline
+msgid "top-left to bottom-right line"
+msgstr ""
+
 #: vpsr.rstop
 msgid "Top"
+msgstr ""
+
+#: vpsr.rstopline
+msgid "top line"
 msgstr ""
 
 #: vpsr.rstrue
@@ -1222,6 +1284,10 @@ msgstr ""
 
 #: vpsr.rswidth
 msgid "Width"
+msgstr ""
+
+#: vpsr.rswidthlbl
+msgid "Width:"
 msgstr ""
 
 #: vpsr.rsxdays
