@@ -46,10 +46,9 @@ type
   TDayList = array[1..12] of Word;
 
 
-  TVpDayType = (dtSunday, dtMonday, dtTuesday, dtWednesday, dtThursday,
-                 dtFriday, dtSaturday);
+  TVpDayType = (dtSunday, dtMonday, dtTuesday, dtWednesday, dtThursday, dtFriday, dtSaturday);
 
-  TVpDateFormat   = (dfShort, dfLong);
+  TVpDateFormat = (dfShort, dfLong);
 
   TVpDayNameWidth = Integer;
 
@@ -85,6 +84,8 @@ function HeightOf(const R : TRect) : Integer;
   {- return the height of the TRect}
 function WidthOf(const R : TRect) : Integer;
   {- return the width of the TRect}
+function RightOf(AControl: TControl): Integer;
+  {- returns the right edge of a control }
 function GetDisplayString(Canvas : TCanvas; const S : string;
   MinChars, MaxWidth : Integer) : string;
   {-given a string, a minimum number of chars to display, and a max width, }
@@ -126,7 +127,6 @@ function GetLineDuration(Granularity: TVpGranularity): Double;
 
 function GetLabelWidth(ALabel: TLabel): Integer;
 function GetRealFontHeight(AFont: TFont): Integer;
-function RightOf(AControl: TControl): Integer;
 
 function DecodeLineEndings(const AText: String): String;
 function EncodeLineEndings(const AText: String): String;

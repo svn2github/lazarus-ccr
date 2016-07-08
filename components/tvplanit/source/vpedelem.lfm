@@ -184,6 +184,7 @@ object frmEditElement: TfrmEditElement
         'Pixels'
         'Percent'
         'Inches'
+        'cm'
       )
       OnClick = rgMeasurementClick
       TabOrder = 1

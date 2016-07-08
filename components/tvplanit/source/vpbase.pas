@@ -54,7 +54,7 @@ const
 
 type
   TVpRotationAngle = (ra0, ra90, ra180, ra270);
-  TVpItemMeasurement = (imAbsolutePixel, imPercent, imInches);
+  TVpItemMeasurement = (imAbsolutePixel, imPercent, imInches, imCentimeters);
   TVpItemType = (itDayView, itWeekView, itMonthView, itCalendar,
                  itShape, itCaption, itTasks, itContacts);
 

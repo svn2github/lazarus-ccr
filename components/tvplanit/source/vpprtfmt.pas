@@ -447,7 +447,7 @@ uses
  {$IFDEF LCL}
   DateUtils,
  {$ENDIF}
-  VpBaseDS, VpPrtFmtCBox, VpPrtPrv, VpDayView, VpWeekView, VpMonthView,
+  VpConst, VpBaseDS, VpPrtFmtCBox, VpPrtPrv, VpDayView, VpWeekView, VpMonthView,
   VpCalendar, VpTaskList, VpContactGrid;
 
 function XMLizeString(const s: string): string;
@@ -1548,9 +1548,17 @@ var
       imInches:
         begin
           StartX := Round(Element.Left * PixelsPerInchX);
-          StartY := Round(Element.Top * PixelsPerInchX);
+          StartY := Round(Element.Top * PixelsPerInchY);
           StopX := Round((Element.Left + Element.Width) * PixelsPerInchX);
           StopY := Round((Element.Top + Element.Height) * PixelsPerInchX);
+        end;
+
+      imCentimeters:
+        begin
+          StartX := Round(Element.Left * PixelsPerInchX / cmPerInch);
+          StartY := Round(Element.Top * PixelsPerInchY / cmPerInch);
+          StopX := Round((Element.Left + Element.Width) * PixelsPerInchX / cmPerInch);
+          StopY := Round((Element.Top + Element.Height) * PixelsPerInchY / cmPerInch);
         end;
     end;
 
@@ -1768,10 +1776,19 @@ var
       imInches:
         begin
           ARect.Left := Round(LeftMargin * PixelsPerInchX);
-          ARect.Top := Round(TopMargin * PixelsPerInchX);
+          ARect.Top := Round(TopMargin * PixelsPerInchY);
           ARect.Right := ARect.Right - Round(RightMargin * PixelsPerInchX);
-          ARect.Bottom := ARect.Bottom - Round(BottomMargin * PixelsPerInchX);
+          ARect.Bottom := ARect.Bottom - Round(BottomMargin * PixelsPerInchY);
         end;
+
+      imCentimeters:
+        begin
+          ARect.Left := Round(LeftMargin * PixelsPerInchX / cmPerInch);
+          ARect.Top := Round(TopMargin * PixelsPerInchY / cmPerInch);
+          ARect.Right := ARect.Right - Round(RightMargin * PixelsPerInchX / cmPerInch);
+          ARect.Bottom := ARect.Bottom - Round(BottomMargin * PixelsPerInchY / cmPerInch);
+        end;
+
     end;
   end;
 
@@ -1937,9 +1954,17 @@ var
       imInches:
         begin
           ARect.Left := Round(LeftMargin * PixelsPerInchX);
-          ARect.Top := Round(TopMargin * PixelsPerInchX);
+          ARect.Top := Round(TopMargin * PixelsPerInchY);
           ARect.Right := ARect.Right - Round(RightMargin * PixelsPerInchX);
-          ARect.Bottom := ARect.Bottom - Round(BottomMargin * PixelsPerInchX);
+          ARect.Bottom := ARect.Bottom - Round(BottomMargin * PixelsPerInchY);
+        end;
+
+      imCentimeters:
+        begin
+          ARect.Left := Round(LeftMargin * PixelsPerInchX / cmPerInch);
+          ARect.Top := Round(TopMargin * PixelsPerInchY / cmPerInch);
+          ARect.Right := ARect.Right - Round(RightMargin * PixelsPerInchX / cmPerInch);
+          ARect.Bottom := ARect.Bottom - Round(BottomMargin * PixelsPerInchY / cmPerInch);
         end;
     end;
   end;
@@ -2178,6 +2203,7 @@ begin
           imAbsolutePixel : Writeln(fpOut, '      Measurement="AbsolutePixel"');
           imPercent       : Writeln(fpOut, '      Measurement="Percent"');
           imInches        : Writeln(fpOut, '      Measurement="Inches"');
+          imCentimeters   : WriteLn(fpOut, '      Measurement="Centimeters"');
         end;
         Writeln(fpOut, '      Left="' + FloatToStr(elem.Left) + '"');
         Writeln(fpOut, '      Top="' + FloatToStr(elem.Top) + '"');
@@ -2585,6 +2611,9 @@ begin
           else
           if attr.Value = 'Inches' then
             NewElement.Measurement := imInches
+          else
+          if attr.Value = 'Centimeters' then
+            NewElement.Measurement := imCentimeters
           else
             raise EVpPrintFormatError.Create(RSBadMeasurement + attr.Value);
         end

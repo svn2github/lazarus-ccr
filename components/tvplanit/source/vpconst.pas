@@ -82,6 +82,8 @@ const
                               { of the Contact Grid's horizontal bars.   }
   CompareTimeEPS   = 1.0 / (24*60*60*10); { Epsilon for time comparison, 0.1 sec }
 
+  cmPerInch        = 2.54;    { 1 inch is 2.54 cm                        }
+
   ResourceTableName = 'Resources';
   TasksTableName    = 'Tasks';
   EventsTableName   = 'Events';
