@@ -1,0 +1,298 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: demomain.rs10min
+msgid "10 min"
+msgstr "10 min"
+
+#: demomain.rs12hours
+msgid "12 hours AM/PM"
+msgstr "12 uur AM/PM"
+
+#: demomain.rs15min
+msgid "15 min"
+msgstr "15 min"
+
+#: demomain.rs20min
+msgid "20 min"
+msgstr "20 min"
+
+#: demomain.rs24hours
+msgid "24 hours"
+msgstr "24 uur"
+
+#: demomain.rs30min
+msgid "30 min"
+msgstr "30 min"
+
+#: demomain.rs5min
+msgid "5 min"
+msgstr "5 min"
+
+#: demomain.rs60min
+msgid "60 min"
+msgstr "60 min"
+
+#: demomain.rs6min
+msgid "6 min"
+msgstr "6 min"
+
+#: demomain.rsconfirmdeleteres
+msgid "Do you really want to delete resource %s?"
+msgstr "Wilt u hulpmiddel %s echt wissen?"
+
+#: demomain.rscontacts
+msgctxt "demomain.rscontacts"
+msgid "Contacts"
+msgstr "Contacten"
+
+#: demomain.rseventsoverview
+msgid "Events overview"
+msgstr "Evenementen overzicht"
+
+#: demomain.rseventsperday
+msgid "Events per day"
+msgstr "Evenementen per dag"
+
+#: demomain.rseventspermonth
+msgid "Events per month"
+msgstr "Evenementen per maand"
+
+#: demomain.rseventsperweek
+msgid "Events per week"
+msgstr "Evenementen per week"
+
+#: demomain.rsfriday
+msgid "Friday"
+msgstr "Vrijdag"
+
+#: demomain.rsmaintenance
+msgctxt "demomain.rsmaintenance"
+msgid "Maintenance"
+msgstr "Onderhoud"
+
+#: demomain.rsmonday
+msgid "Monday"
+msgstr "Maandag"
+
+#: demomain.rsplanner
+msgid "Planner"
+msgstr "Planner"
+
+#: demomain.rsresources
+msgctxt "demomain.rsresources"
+msgid "Resources"
+msgstr "Hulpmiddelen"
+
+#: demomain.rssaturday
+msgid "Saturday"
+msgstr "Zaterdag"
+
+#: demomain.rssettings
+msgid "Program settings"
+msgstr "Programma instellingen"
+
+#: demomain.rssettings_short
+msgctxt "demomain.rssettings_short"
+msgid "Settings"
+msgstr "Instellingen"
+
+#: demomain.rssunday
+msgid "Sunday"
+msgstr "Zondag"
+
+#: demomain.rstasks
+msgctxt "demomain.rstasks"
+msgid "Tasks"
+msgstr "Taken"
+
+#: demomain.rsthursday
+msgid "Thursday"
+msgstr "Donderdag"
+
+#: demomain.rstuesday
+msgid "Tuesday"
+msgstr "Dinsdag"
+
+#: demomain.rswednesday
+msgid "Wednesday"
+msgstr "Woensdag"
+
+#: tfrmreportsetup.button1.caption
+msgctxt "tfrmreportsetup.button1.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tfrmreportsetup.button2.caption
+msgctxt "tfrmreportsetup.button2.caption"
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: tfrmreportsetup.caption
+msgid "Report Setup"
+msgstr "Overzicht Instellingen"
+
+#: tfrmreportsetup.dateedit1.cancelcaption
+msgctxt "TFRMREPORTSETUP.DATEEDIT1.CANCELCAPTION"
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: tfrmreportsetup.dateedit1.okcaption
+msgctxt "TFRMREPORTSETUP.DATEEDIT1.OKCAPTION"
+msgid "OK"
+msgstr "OK"
+
+#: tfrmreportsetup.dateedit1.text
+msgid "DateEdit1"
+msgstr "DateEdit1"
+
+#: tfrmreportsetup.dateedit2.cancelcaption
+msgctxt "TFRMREPORTSETUP.DATEEDIT2.CANCELCAPTION"
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: tfrmreportsetup.dateedit2.okcaption
+msgctxt "TFRMREPORTSETUP.DATEEDIT2.OKCAPTION"
+msgid "OK"
+msgstr "OK"
+
+#: tfrmreportsetup.dateedit2.text
+msgid "DateEdit2"
+msgstr "DateEdit2"
+
+#: tfrmreportsetup.label1.caption
+msgid "Start Date:"
+msgstr "Start Datum:"
+
+#: tfrmreportsetup.label2.caption
+msgid "End Date:"
+msgstr "Eind Datum:"
+
+#: tfrmreportsetup.label3.caption
+msgid "Format:"
+msgstr "Formaat:"
+
+#: tmainform.btndeleteres.caption
+msgid "Delete"
+msgstr "Wissen"
+
+#: tmainform.btneditres.caption
+msgid "Edit"
+msgstr "Bewerken"
+
+#: tmainform.btnnewres.caption
+msgid "New"
+msgstr "Nieuw"
+
+#: tmainform.caption
+msgid "Turbo Power VisualPlanIt Demo"
+msgstr "Turbo Power VisualPlanIt Demo"
+
+#: tmainform.cb3d.caption
+msgid "3d display mode"
+msgstr "3d display mode"
+
+#: tmainform.cbaddressbuilder.text
+msgid "(default)"
+msgstr "(standaard)"
+
+#: tmainform.cballowinplaceediting.caption
+msgid "Allow inplace editing"
+msgstr "Direct bewerken toestaan"
+
+#: tmainform.cbgranularity.text
+msgid "30 Min"
+msgstr "30 Min"
+
+#: tmainform.lbladdressbuilder.caption
+msgid "Address builder"
+msgstr "Adres bouwer"
+
+#: tmainform.lblfirstdayofweek.caption
+msgid "First day of week"
+msgstr "Eerste dag van de week"
+
+#: tmainform.lblgranularity.caption
+msgid "Granularity"
+msgstr "Granulariteit"
+
+#: tmainform.lbllanguage.caption
+msgctxt "TMAINFORM.LBLLANGUAGE.CAPTION"
+msgid "Language"
+msgstr "Taal"
+
+#: tmainform.lbltimeformat.caption
+msgid "Time format"
+msgstr "Tijd formaat"
+
+#: tmainform.lblvisibledays.caption
+msgid "Visible days"
+msgstr "Zichtbare dagen"
+
+#: tmainform.menuitem1.caption
+msgid "File"
+msgstr "Bestand"
+
+#: tmainform.menuitem2.caption
+msgid "Help"
+msgstr "Help"
+
+#: tmainform.mnuabout.caption
+msgid "About Visual PlanIt"
+msgstr "Over Visual PlanIt"
+
+#: tmainform.mnumaintenance.caption
+msgctxt "TMAINFORM.MNUMAINTENANCE.CAPTION"
+msgid "Maintenance"
+msgstr "Onderhoud"
+
+#: tmainform.mnuquit.caption
+msgid "Quit"
+msgstr "Afsluiten"
+
+#: tmainform.mnuresources.caption
+msgctxt "TMAINFORM.MNURESOURCES.CAPTION"
+msgid "Resources"
+msgstr "Hulpmiddelen"
+
+#: tmainform.mnusettings.caption
+msgctxt "TMAINFORM.MNUSETTINGS.CAPTION"
+msgid "Settings"
+msgstr "Instellingen"
+
+#: tmainform.rballtasks.caption
+msgid "All tasks"
+msgstr "Alle taken"
+
+#: tmainform.rbhidecompletedtasks.caption
+msgid "Hide completed tasks"
+msgstr "Verberg afgewerkte taken"
+
+#: tmainform.tabcontacts.caption
+msgctxt "tmainform.tabcontacts.caption"
+msgid "Contacts"
+msgstr "Contacten"
+
+#: tmainform.tabevents.caption
+msgid "Events"
+msgstr "Evenementen"
+
+#: tmainform.tabresources.caption
+msgctxt "TMAINFORM.TABRESOURCES.CAPTION"
+msgid "Resources"
+msgstr "Hulpmiddelen"
+
+#: tmainform.tabsettings.caption
+msgctxt "tmainform.tabsettings.caption"
+msgid "Settings"
+msgstr "Instellingen"
+
+#: tmainform.tabtasks.caption
+msgctxt "tmainform.tabtasks.caption"
+msgid "Tasks"
+msgstr "Taken"
+
+#: tmainform.titlelbl.caption
+msgid "TitleLbl"
+msgstr "TitleLbl"
+
