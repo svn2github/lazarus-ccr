@@ -161,6 +161,7 @@ uses
  {$ENDIF}
  {$IFDEF LCL}
   VpIniDS,                    { IniFile datastore                            }
+  VpXmlDS,                    { XML file datastore                           }
   VpBufDS,                    { Datastore for TBufDataset                    }
   VpSqlite3DS,                { Datastore for sqlite3                        }
   //  VpSdfDS                     { Datastore for TSdfDataset                    }
@@ -621,6 +622,7 @@ begin
 {$ENDIF}
 {$IFDEF LCL}
     TVpIniDatastore,
+    TVpXmlDatastore,
     TVpBufDSDatastore,
     TVpSqlite3Datastore,
     //TVpSdfDatastore,       // to do (maybe)...

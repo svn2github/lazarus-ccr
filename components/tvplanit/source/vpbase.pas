@@ -38,9 +38,8 @@ uses
   {$ELSE}
   Windows, Messages.
   {$ENDIF}
-  Classes, Graphics, Controls, Dialogs, Forms, StdCtrls,
-  ExtCtrls, SysUtils, VpConst,
-  VpSR;
+  Classes, Graphics, Controls, Dialogs, Forms, StdCtrls, ExtCtrls, SysUtils,
+  VpConst, VpSR;
 
 const
   {Message base}

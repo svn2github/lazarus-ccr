@@ -91,6 +91,8 @@ const
   RecordIDTableName = 'RecordIDS';
 
   TallShortChars    = 'Wy';
+  strTRUE           = 'true';
+  strFALSE          = 'false';
 
 
   {virtual key constants not already defined}

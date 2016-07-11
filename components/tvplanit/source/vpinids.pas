@@ -61,11 +61,7 @@ implementation
 
 uses
   typinfo, StrUtils, Strings, IniFiles,
-  VpMisc, VpSR;
-
-const
-  StrTRUE = 'true';
-  StrFALSE = 'false';
+  VpConst, VpMisc, VpSR;
 
 procedure IniError(const AMsg: String);
 begin
