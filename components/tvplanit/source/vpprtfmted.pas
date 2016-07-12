@@ -52,8 +52,8 @@ uses
   {$ELSE}
   DsgnIntf,
   {$ENDIF}
-  StdCtrls, ExtCtrls, Buttons,
-  VpSR, VpBase, VpBaseDS, VpEdFmtLst;
+  ExtCtrls, Buttons,
+  VpSR, VpBaseDS, VpEdFmtLst;
 
 type
   TVpPrtFmtPropertyEditor = class(TComponentEditor)

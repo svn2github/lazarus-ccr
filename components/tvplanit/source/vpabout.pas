@@ -106,7 +106,7 @@ uses
 const
   TURBO_LINK_URL = 'http://sourceforge.net/projects/tpvplanit/';
   HELP_URL = 'http://sourceforge.net/forum/forum.php?forum_id=241880';
-  NEWS_SPECIFIC_URL = 'news://news.turbopower.com/turbopower.public.support.visualplanit';
+  {%H-}NEWS_SPECIFIC_URL = 'news://news.turbopower.com/turbopower.public.support.visualplanit';
   GENERAL_DISCUSSION_URL = 'http://sourceforge.net/forum/forum.php?forum_id=241879';
 
 

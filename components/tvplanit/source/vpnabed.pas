@@ -35,7 +35,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf,
+  LCLProc, LCLType, LCLIntf,
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
@@ -144,6 +144,9 @@ implementation
  {$R *.DFM}
 {$ENDIF}
 
+uses
+  VpMisc;
+
 {$IFDEF VERSION6}
   procedure EditNavBar(Designer : TIDesigner; Bar : TVpNavBar);
 {$ELSE}
@@ -199,6 +202,7 @@ end;
 procedure TfrmNavBarEd.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
+  Unused(Action);
   RefreshTimer.Free;
   Release;
 end;
@@ -335,6 +339,7 @@ end;
 procedure TfrmNavBarEd.lbItemsMeasureItem(Control: TWinControl;
   Index: Integer; var Height: Integer);
 begin
+  Unused(Control, Index);
   if (Bar.Images <> nil) then
     Height := Bar.Images.Height + 4;
 end;
@@ -343,6 +348,7 @@ end;
 procedure TfrmNavBarEd.lbItemsDrawItem(Control: TWinControl;
   Index: Integer; Rect: TRect; State: TOwnerDrawState);
 begin
+  Unused(State);
   with TListBox(Control).Canvas do
     FillRect(Rect);
   if (Bar.Images <> nil)
@@ -364,6 +370,7 @@ end;
 procedure TfrmNavBarEd.lbImagesDrawItem(Control: TWinControl;
   Index: Integer; Rect: TRect; State: TOwnerDrawState);
 begin
+  Unused(State);
   with TListBox(Control).Canvas do
     FillRect(Rect);
   if (Bar.Images <> nil) then

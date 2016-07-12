@@ -34,14 +34,14 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf, LResources,
+  LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls,
-  Buttons, Printers, ImgList, ComCtrls, ToolWin, ActnList,
+  Buttons, Printers, ComCtrls, ActnList,
   {$IFDEF VERSION6} Variants, {$ENDIF}
-  VpMisc, VpBase, VpException, VpData, VpPrtPrv, VpSR, VpBaseDS, VpDlg,
+  VpMisc, VpBase, VpData, VpPrtPrv, VpSR, VpBaseDS, VpDlg,
   VpPrtFmtCBox;
 
 type
@@ -379,6 +379,8 @@ end;
 procedure TfrmPrintPreview.actMainUpdate(Action: TBasicAction;
   var Handled: Boolean);
 begin
+  Unused(Action, Handled);
+
   if VpPrintPreview1.IsFirstPage then begin
     actFirstPage.Enabled := False;
     actPrevPage.Enabled := False;
@@ -405,6 +407,8 @@ end;
 procedure TfrmPrintPreview.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  Unused(Shift);
+
   if Key = VK_ESCAPE then
     actCancel.Execute;
 end;

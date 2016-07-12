@@ -41,7 +41,7 @@ uses
   SysUtils,
   {$IFDEF VERSION6} Variants, {$ENDIF}
   Classes, Graphics, Controls, Forms, Dialogs, VpData, ExtCtrls, StdCtrls,
-  VpException, VpMisc, VpBase, VpSR, VpDlg, VpBaseDS, ComCtrls, EditBtn, Types;
+  VpException, VpMisc, VpBase, VpSR, VpDlg, VpBaseDS, ComCtrls, EditBtn;
 
 type
   { forward declarations }
@@ -634,6 +634,7 @@ end;
 procedure TContactEditForm.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  Unused(Shift);
   if Key = VK_ESCAPE then begin
     ReturnCode := rtAbandon;
     Close;

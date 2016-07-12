@@ -39,51 +39,48 @@ uses
   {$IFDEF LCL}
   LCLProc, LCLType, LCLIntf, LazFileUtils,
   {$ENDIF}
-  Classes, Dialogs,SysUtils, Graphics, StdCtrls, Forms,
-  VpBase, VpMisc, VpData, VpXParsr, VpPrtFmt; { For TVpAttributes }
+  Classes, Dialogs,SysUtils, Graphics, Forms,
+  VpBase, VpMisc, VpXParsr, VpPrtFmt; { For TVpAttributes }
 
 type
   TVpLocalizeLanguage = class;
 
-  TVpLocalizeLanguageItem = class (TVpCollectionItem)
+  TVpLocalizeLanguageItem = class(TVpCollectionItem)
     private
-      FCollection    : TVpLocalizeLanguage;
-      FLanguageID    : Integer;
-      FSubLanguageID : Integer;
-      FName          : string;
-    protected
+      FCollection: TVpLocalizeLanguage;
+      FLanguageID: Integer;
+      FSubLanguageID: Integer;
+      FName: string;
 
     public
-      constructor Create (Collection : TCollection); override;
+      constructor Create(Collection: TCollection); override;
       destructor  Destroy; override;
 
     published
-      property Collection : TVpLocalizeLanguage read FCollection write FCollection;
-      property LanguageID : Integer read FLanguageID write FLanguageID;
-      property Name : string read FName write FName;
-      property SubLanguageID : Integer read FSubLanguageID write FSubLanguageID;
+      property Collection: TVpLocalizeLanguage read FCollection write FCollection;
+      property LanguageID: Integer read FLanguageID write FLanguageID;
+      property Name: string read FName write FName;
+      property SubLanguageID: Integer read FSubLanguageID write FSubLanguageID;
   end;
 
-  TVpLocalizeLanguage = class (TCollection)
+  TVpLocalizeLanguage = class(TCollection)
     private
-      FOwner : TPersistent;
+      FOwner: TPersistent;
 
     protected
-      function  GetItem (Index : Integer) : TVpLocalizeLanguageItem;
+      function  GetItem(Index: Integer): TVpLocalizeLanguageItem;
       function  GetOwner : TPersistent; override;
-      procedure SetItem (Index : Integer; Value : TVpLocalizeLanguageItem);
+      procedure SetItem(Index: Integer; Value: TVpLocalizeLanguageItem);
 
     public
       constructor Create (AOwner : TPersistent);
       {$IFNDEF VERSION5}
       procedure Delete (Item : integer);
       {$ENDIF}
-      function HasLanguage (ALanguage : Integer) : Integer;
-      function HasSubLanguage (ALanguage : Integer;
-                                ASubLanguage : Integer) : Integer;
+      function HasLanguage(ALanguage: Integer) : Integer;
+      function HasSubLanguage(ALanguage : Integer; ASubLanguage: Integer): Integer;
 
-      property Items[Index : Integer] : TVpLocalizeLanguageItem
-               read GetItem write SetItem;
+      property Items[Index: Integer]: TVpLocalizeLanguageItem read GetItem write SetItem;
   end;
 
   TVpLocalizeStates = class;
@@ -205,37 +202,27 @@ type
       FElementIndex : Integer;
       
     protected
-      procedure xmlLocalizeAttribute (oOwner     : TObject;
-                                      sName,
-                                      sValue     : DOMString;
-                                      bSpecified : Boolean);
-      procedure xmlLocalizeEndElement (oOwner : TObject;
-                                       sValue : DOMString);
-      procedure xmlLocalizeStartElement (oOwner : TObject;
-                                         sValue : DOMString);
+      procedure xmlLocalizeAttribute(oOwner: TObject; sName, sValue: DOMString; bSpecified: Boolean);
+      procedure xmlLocalizeEndElement(oOwner: TObject; sValue: DOMString);
+      procedure xmlLocalizeStartElement(oOwner: TObject; sValue: DOMString);
     public
       constructor Create; 
       destructor Destroy; override;
 
-      procedure CountriesByLanguage (ALanguage : Integer;
-                                     AStrings  : TStrings);
-      procedure CountriesBySubLanguage (ALanguage    : Integer;
-                                        ASubLanguage : Integer;
-                                        AStrings     : TStrings);
-      function CountryNameToIndex (ACountry : string) : Integer;
-      procedure CountriesToTStrings (AStrings : TStrings);
-      function GetCurrentCountry : Integer;
-      function GetCountryByLanguage (ALanguage : Integer) : Integer;
-      function GetCountryBySubLanguage (ALanguage    : Integer;
-                                        ASubLanguage : Integer) : Integer;
-      procedure LoadFromFile (const FileName : string;
-                              const Append   : Boolean);
-      function StateNameToIndex (ACountry : Integer;
-                                 AState   : string) : Integer;
-      procedure StatesToTStrings (ACountry : Integer;
-                                  AStrings : TStrings);
+      procedure CountriesByLanguage(ALanguage: Integer; AStrings: TStrings);
+      procedure CountriesBySubLanguage(ALanguage: Integer; ASubLanguage: Integer;
+        AStrings: TStrings);
+      function CountryNameToIndex(ACountry: string): Integer;
+      procedure CountriesToTStrings(AStrings: TStrings);
+      function GetCurrentCountry: Integer;
+      function GetCountryByLanguage(ALanguage: Integer): Integer;
+      function GetCountryBySubLanguage(ALanguage: Integer; ASubLanguage: Integer): Integer;
+      procedure LoadFromFile(const FileName: string; const Append: Boolean);
+      function StateNameToIndex(ACountry: Integer; AState: string): Integer;
+      procedure StatesToTStrings (ACountry: Integer; AStrings: TStrings);
+
     published
-      property Countries : TVpLocalizeCountry read FCountries write FCountries;
+      property Countries: TVpLocalizeCountry read FCountries write FCountries;
   end;
 
 
@@ -243,14 +230,16 @@ type
 
 implementation
 
-constructor TVpLocalizeLanguageItem.Create (Collection : TCollection);
-begin
-  inherited Create (Collection);
-  FCollection := TVpLocalizeLanguage.Create (TVpLocalizeLanguage (Collection).FOwner);
+{ TVpLocalizeLanguageItem }
 
-  FLanguageID    := -1;
+constructor TVpLocalizeLanguageItem.Create(Collection: TCollection);
+begin
+  inherited Create(Collection);
+  FCollection := TVpLocalizeLanguage.Create(TVpLocalizeLanguage(Collection).FOwner);
+
+  FLanguageID := -1;
   FSubLanguageID := -1;
-  FName          := '';
+  FName := '';
 end;
 
 destructor TVpLocalizeLanguageItem.Destroy;
@@ -260,9 +249,12 @@ begin
   inherited Destroy;
 end;
 
-constructor TVpLocalizeLanguage.Create(AOwner : TPersistent);
+
+{ TVpLocalizeLanguage }
+
+constructor TVpLocalizeLanguage.Create(AOwner: TPersistent);
 begin
-  inherited Create (TVpLocalizeLanguageItem);
+  inherited Create(TVpLocalizeLanguageItem);
   FOwner := AOwner;
 end;
 {=====}
@@ -275,22 +267,21 @@ end;
 {=====}
 {$ENDIF}
 
-function TVpLocalizeLanguage.GetItem (Index : Integer) : TVpLocalizeLanguageItem;
+function TVpLocalizeLanguage.GetItem(Index: Integer): TVpLocalizeLanguageItem;
 begin
-  Result := TVpLocalizeLanguageItem (inherited GetItem (Index));
+  Result := TVpLocalizeLanguageItem(inherited GetItem(Index));
 end;
 {=====}
 
-function TVpLocalizeLanguage.GetOwner : TPersistent;
+function TVpLocalizeLanguage.GetOwner: TPersistent;
 begin
   Result := FOwner;
 end;
 {=====}
 
-function TVpLocalizeLanguage.HasLanguage (ALanguage : Integer) : Integer;
+function TVpLocalizeLanguage.HasLanguage (ALanguage: Integer): Integer;
 var
-  i : Integer;
-
+  i: Integer;
 begin
   Result := -1;
   for i := 0 to Count - 1 do
@@ -300,24 +291,23 @@ begin
     end;
 end;
 
-function TVpLocalizeLanguage.HasSubLanguage (ALanguage : Integer;
-                                             ASubLanguage : Integer) : Integer;
+function TVpLocalizeLanguage.HasSubLanguage(ALanguage: Integer;
+  ASubLanguage: Integer): Integer;
 var
-  i : Integer;
-
+  i: Integer;
 begin
   Result := -1;
   for i := 0 to Count - 1 do
-    if (Items[i].LanguageID = ALanguage) and
-       (Items[i].SubLanguageID = ASubLanguage) then begin
+    if (Items[i].LanguageID = ALanguage) and (Items[i].SubLanguageID = ASubLanguage) then
+    begin
       Result := i;
       Break;
     end;
 end;
 
-procedure TVpLocalizeLanguage.SetItem (Index : Integer; Value : TVpLocalizeLanguageItem);
+procedure TVpLocalizeLanguage.SetItem(Index: Integer; Value: TVpLocalizeLanguageItem);
 begin
-  inherited SetItem (Index, Value);
+  inherited SetItem(Index, Value);
 end;
 {=====}
 
@@ -411,9 +401,9 @@ begin
   inherited Destroy;
 end;
 
-constructor TVpLocalizeCountry.Create(AOwner : TPersistent);
+constructor TVpLocalizeCountry.Create(AOwner: TPersistent);
 begin
-  inherited Create (TVpLocalizeCountryItem);
+  inherited Create(TVpLocalizeCountryItem);
   FOwner := AOwner;
 end;
 {=====}
@@ -555,7 +545,6 @@ end;
 function TVpLocalization.GetCountryByLanguage (ALanguage : Integer) : Integer;
 var
   i : Integer;
-
 begin
   Result := -1;
   for i := 0 to Countries.Count - 1 do
@@ -641,14 +630,13 @@ begin
     AStrings.Add (FCountries.Items[ACountry].States.Items[i].Name);
 end;
 
-procedure TVpLocalization.xmlLocalizeAttribute (oOwner     : TObject;
-                                                sName,
-                                                sValue     : DOMString;
-                                                bSpecified : Boolean);
+procedure TVpLocalization.xmlLocalizeAttribute(oOwner: TObject;
+  sName, sValue: DOMString; bSpecified: Boolean);
 var
   Item : TVpAttributeItem;
 begin
-  Item := TVpAttributeItem (FAttributes.Add);
+  Unused(oOwner, bSpecified);
+  Item := TVpAttributeItem(FAttributes.Add);
   Item.Name := sName;
   Item.Value := sValue;
 end;
@@ -656,8 +644,9 @@ end;
 procedure TVpLocalization.xmlLocalizeEndElement (oOwner : TObject;
                                                  sValue : DOMString);
 begin
-  if (sValue = 'Country') or (sValue = 'Countries') or
-     (sValue = 'AddressDefinition') then begin
+  Unused(oOwner);
+  if (sValue = 'Country') or (sValue = 'Countries') or (sValue = 'AddressDefinition') then
+  begin
     FLoadingIndex := -1;
     FElementIndex := -1;
   end else if sValue = 'State' then
@@ -665,27 +654,27 @@ begin
   FAttributes.Clear;
 end;
 
-procedure TVpLocalization.xmlLocalizeStartElement (oOwner : TObject;
-                                                   sValue : DOMString);
+procedure TVpLocalization.xmlLocalizeStartElement(oOwner: TObject; sValue: DOMString);
 
-  function GetBooleanValue (AString  : string;
-                            ADefault : Boolean) : Boolean;
+  function GetBooleanValue(AString: string; ADefault: Boolean): Boolean;
   begin
     Result := ADefault;            
     AString := LowerCase (AString);
     if (AString = 't') or (AString = 'true') or (AString = '1') or
-       (AString = 'on') or (AString = 'yes') then
+       (AString = 'on') or (AString = 'yes')
+    then
       Result := True
-    else if (AString= 'f') or (AString = 'false') or (AString = '0') or
-            (AString = 'off') or (AString = 'no') then
+    else
+    if (AString= 'f') or (AString = 'false') or (AString = '0') or
+       (AString = 'off') or (AString = 'no')
+    then
       Result := False;
   end;                                                                
 
-  function GetIntegerValue (AString  : string;
-                            ADefault : Integer) : Integer;
+  function GetIntegerValue(AString: string; ADefault: Integer): Integer;
   begin
     try
-      Result := StrToInt (AString);
+      Result := StrToInt(AString);
     except on EConvertError do
       Result := ADefault;
     end;
@@ -698,20 +687,21 @@ var
   NewLanguage : TVpLocalizeLanguageItem;
 
 begin
+  Unused(oOwner);
+
   if sValue = 'Countries' then begin
     FLoadingIndex := -1;
     FElementIndex := -1;
-
-  end else if sValue = 'Country' then begin
+  end else
+  if sValue = 'Country' then begin
     NewItem := TVpLocalizeCountryItem (FCountries.Add);
     FLoadingIndex := NewItem.Index;
     for i := 0 to FAttributes.Count - 1 do begin
-      if (FAttributes.Items[i].Name = 'Name') and
-         (Fattributes.Items[i].Value <> '') then
+      if (FAttributes.Items[i].Name = 'Name') and (Fattributes.Items[i].Value <> '') then
         NewItem.Name := FAttributes.Items[i].Value;
     end
-
-  end else if sValue = 'State' then begin
+  end else
+  if sValue = 'State' then begin
     if FLoadingIndex < 0 then
       Exit;
     for i := 0 to FAttributes.Count - 1 do begin
@@ -725,10 +715,10 @@ begin
             GetBooleanValue (FAttributes.Items[i].Value, False)
       else if FAttributes.Items[i].Name = 'Visible' then
         FCountries.Items[FLoadingIndex].StatesVisible :=
-            GetBooleanValue (FAttributes.Items[i].Value, True);
+            GetBooleanValue(FAttributes.Items[i].Value, True);
     end;
-
-  end else if sValue = 'Address1' then begin
+  end else
+  if sValue = 'Address1' then begin
     if FLoadingIndex < 0 then
       Exit;
     for i := 0 to FAttributes.Count - 1 do begin
@@ -736,10 +726,10 @@ begin
         FCountries.Items[FLoadingIndex].Address1Caption := FAttributes.Items[i].Value
       else if FAttributes.Items[i].Name = 'Visible' then
         FCountries.Items[FLoadingIndex].Address1Visible :=
-            GetBooleanValue (FAttributes.Items[i].Value, True);
+            GetBooleanValue(FAttributes.Items[i].Value, True);
     end;
-
-  end else if sValue = 'Address2' then begin
+  end else
+  if sValue = 'Address2' then begin
     if FLoadingIndex < 0 then
       Exit;
     for i := 0 to FAttributes.Count - 1 do begin
@@ -747,10 +737,10 @@ begin
         FCountries.Items[FLoadingIndex].Address2Caption := FAttributes.Items[i].Value
       else if FAttributes.Items[i].Name = 'Visible' then
         FCountries.Items[FLoadingIndex].Address2Visible :=
-            GetBooleanValue (FAttributes.Items[i].Value, True);
+            GetBooleanValue(FAttributes.Items[i].Value, True);
     end;
-
-  end else if sValue = 'Address3' then begin
+  end else
+  if sValue = 'Address3' then begin
     if FLoadingIndex < 0 then
       Exit;
     for i := 0 to FAttributes.Count - 1 do begin
@@ -758,10 +748,10 @@ begin
         FCountries.Items[FLoadingIndex].Address3Caption := FAttributes.Items[i].Value
       else if FAttributes.Items[i].Name = 'Visible' then
         FCountries.Items[FLoadingIndex].Address3Visible :=
-            GetBooleanValue (FAttributes.Items[i].Value, True);
+            GetBooleanValue(FAttributes.Items[i].Value, True);
     end;
-
-  end else if sValue = 'Address4' then begin
+  end else
+  if sValue = 'Address4' then begin
     if FLoadingIndex < 0 then
       Exit;
     for i := 0 to FAttributes.Count - 1 do begin
@@ -769,10 +759,10 @@ begin
         FCountries.Items[FLoadingIndex].Address4Caption := FAttributes.Items[i].Value
       else if FAttributes.Items[i].Name = 'Visible' then
         FCountries.Items[FLoadingIndex].Address4Visible :=
-            GetBooleanValue (FAttributes.Items[i].Value, False);
+            GetBooleanValue(FAttributes.Items[i].Value, False);
     end;
-
-  end else if sValue = 'City' then begin
+  end else
+  if sValue = 'City' then begin
     if FLoadingIndex < 0 then
       Exit;
     for i := 0 to FAttributes.Count - 1 do begin
@@ -780,10 +770,10 @@ begin
         FCountries.Items[FLoadingIndex].CityCaption := FAttributes.Items[i].Value
       else if FAttributes.Items[i].Name = 'Visible' then
         FCountries.Items[FLoadingIndex].CityVisible :=
-            GetBooleanValue (FAttributes.Items[i].Value, True);
+            GetBooleanValue(FAttributes.Items[i].Value, True);
     end;
-
-  end else if sValue = 'Zipcode' then begin
+  end else
+  if sValue = 'Zipcode' then begin
     if FLoadingIndex < 0 then
       Exit;
     for i := 0 to FAttributes.Count - 1 do begin
@@ -791,10 +781,10 @@ begin
         FCountries.Items[FLoadingIndex].ZipCaption := FAttributes.Items[i].Value
       else if FAttributes.Items[i].Name = 'Visible' then
         FCountries.Items[FLoadingIndex].ZipVisible :=
-            GetBooleanValue (FAttributes.Items[i].Value, True);
+            GetBooleanValue(FAttributes.Items[i].Value, True);
     end;
-
-  end else if sValue = 'LegalValue' then begin
+  end else
+  if sValue = 'LegalValue' then begin
     if FLoadingIndex < 0 then
       Exit;
     NewElement := TVpLocalizeStatesItem (FCountries.Items[FLoadingIndex].States.Add);
@@ -805,7 +795,8 @@ begin
       else if FAttributes.Items[i].Name = 'Value' then
         NewElement.Abbr := FAttributes.Items[i].Value;
     end;
-  end else if sValue = 'Language' then begin
+  end else
+  if sValue = 'Language' then begin
     if FLoadingIndex < 0 then
       Exit;
     NewLanguage := TVpLocalizeLanguageItem (FCountries.Items[FLoadingIndex].Languages.Add);
@@ -818,7 +809,6 @@ begin
         NewLanguage.SubLanguageID := GetIntegerValue (FAttributes.Items[i].Value, -1);
     end;
   end;
-
 
   FAttributes.Clear;
 end;

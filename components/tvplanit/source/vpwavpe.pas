@@ -46,7 +46,7 @@ uses
   {$ELSE}
   DsgnIntf,
   {$ENDIF}
-  VpBase, VpWavDlg, Forms;
+  VpWavDlg, Forms;
 
 type
   {TWavFileProperty}

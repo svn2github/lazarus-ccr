@@ -70,7 +70,7 @@ const
      (clBlack,     clBlack,  clAqua,    clGray,   clBlack,  clNavy, clBlack),
      (clRed,       clRed,    clFuchsia, clGray,   clBlue,   clTeal, clBlack)
     );
-  calDefWeekStarts = dtSunday;{ default start of the week               }
+  calDefWeekStarts = dtSunday;  { default start of the week }
 
 type
   TVpCalColors = class(TPersistent)
@@ -197,7 +197,7 @@ type
     procedure calRebuildCalArray(ADate: TDateTime);
       {-recalculate the contents of the calendar array}
     procedure CalculateSizes(WorkCanvas: TCanvas; Angle: TVpRotationAngle;
-      Rect: TRect; var Row: TRowArray; var Col: TColArray; DisplayOnly: Boolean);
+      Rect: TRect; out Row: TRowArray; out Col: TColArray; DisplayOnly: Boolean);
     procedure calRecalcSize (DisplayOnly: Boolean);
       {-calcualte new sizes for rows and columns}
 
@@ -573,7 +573,7 @@ end;
 {=====}
 
 procedure TVpCustomCalendar.CalculateSizes(WorkCanvas: TCanvas;
-  Angle: TVpRotationAngle; Rect: TRect; var Row: TRowArray; var Col: TColArray;
+  Angle: TVpRotationAngle; Rect: TRect; out Row: TRowArray; out Col: TColArray;
   DisplayOnly: Boolean);
   {-calcualte new sizes for rows and columns}
 var

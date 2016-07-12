@@ -34,14 +34,14 @@ interface
 
 uses     
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,
+  LCLProc,LCLType,LCLIntf,
   {$ELSE}
-  Windows,
+  Windows, Messages,
   {$ENDIF}
-  Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, TypInfo, ExtCtrls,
 
-  VpPrtFmt, VpBase, VpBaseDS, VpDBDS,{ VpBDEDS,} VpPrtPrv, Buttons,
+  VpPrtFmt, VpBase, VpBaseDS, VpPrtPrv, Buttons,
   VpException, VpSR;
 
 const
@@ -240,18 +240,11 @@ var
 begin
   if IsDirty then begin
     Rslt := DirtyPrompt;
-
-{    case Rslt of
-      ID_YES: begin
-        DoSave;
-      end;
-
-      ID_NO: begin
-        // nothing
-      end;
-
-      ID_CANCEL: Exit;
-    end;}
+    case Rslt of
+      ID_YES    : DoSave;
+      ID_NO     : ; // nothing
+      ID_CANCEL : Exit;
+    end;
   end;
 
   if OpenDialog1.Execute then begin
@@ -315,19 +308,17 @@ var
 begin
   if IsDirty then begin
     Rslt := DirtyPrompt;
-
-{    case Rslt of
-      ID_YES: begin
-        DoSave;
+    case Rslt of
+      ID_YES:
+        begin
+          DoSave;
+          DoNewFile;
+        end;
+      ID_NO:
         DoNewFile;
-      end;
-
-      ID_NO: begin
-        DoNewFile;
-      end;
-
-      ID_CANCEL: Exit;
-    end;}
+      ID_CANCEL:
+        Exit;
+    end;
   end
   else
     DoNewFile;
@@ -543,24 +534,21 @@ var
 begin
   if IsDirty then begin
     Rslt := DirtyPrompt;
-
-{    case Rslt of
-      ID_YES: begin
-        DoSave;
+    case Rslt of
+      ID_YES:
+        begin
+          DoSave;
+          CanClose := True;
+        end;
+      ID_NO:
         CanClose := True;
-      end;
-
-      ID_NO: begin
-        CanClose := True;
-      end;
-
-      ID_CANCEL: begin
-        CanClose := False;
-        Exit;
-      end;
-    end; }
-  end
-  else
+      ID_CANCEL:
+        begin
+          CanClose := False;
+          Exit;
+        end;
+    end;
+  end else
     CanClose := True;
 end;
 {=====}
@@ -608,6 +596,7 @@ end;
 procedure TfrmPrnFormat.lbElementsMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  Unused(Button, Shift);
   LastX := X;
   LastY := Y;
   DragItem := (Sender as TListBox).ItemAtPos(Point(LastX, LastY), True);
@@ -633,6 +622,7 @@ procedure TfrmPrnFormat.lbElementsDragOver(Sender, Source: TObject; X,Y: Integer
 var
   lb: TListBox;
 begin
+  Unused(State);
   lb := (Source as TListBox);
   lb.Canvas.DrawFocusRect(lb.ItemRect(lb.ItemAtPos(Point(LastX, LastY), True)));
   lb.Canvas.DrawFocusRect(lb.ItemRect(lb.ItemAtPos(Point(X, Y), True)));
@@ -659,11 +649,8 @@ end;
 procedure TfrmPrnFormat.SetCaptions;
 var
   cnv: TControlCanvas;
-  i, w: Integer;
-  wPrv: Integer;
+  w: Integer;
 begin
-  wPrv := PrintPreview.Width;
-
   Caption := RSPrintFormatDesigner;
   LblFormats.Caption := RSFormats;
   LblElements.Caption := RSElements;

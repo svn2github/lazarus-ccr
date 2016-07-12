@@ -1198,7 +1198,8 @@ function TVpDayView.dvCalcVisibleLines(RenderHeight, ColHeadHeight, RowHeight: I
   Scale: Extended; StartLine, StopLine: Integer): Integer;
 var
   vertical: integer;
-  d, m: Integer;        // d = result of "div", m = result of "mod"
+  d: Integer = 0;        // d = result of "div"
+  m: Integer = 0;        // m = result of "mod"
 begin
   if StartLine < 0 then
     StartLine := TopLine;

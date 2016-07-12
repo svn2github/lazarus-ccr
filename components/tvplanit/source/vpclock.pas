@@ -40,7 +40,7 @@ uses
   Windows, Messages,
   {$ENDIF}
   Classes, Controls, Dialogs, Forms, Graphics, Menus,Math,
-  SysUtils, VpBase, VpMisc, VpLEDLabel, VpTimerPool;
+  SysUtils, VpBase, VpLEDLabel, VpTimerPool;
 
 type
   TVpPercent = 0..100;
@@ -207,8 +207,8 @@ type
     procedure ckHandOptionChange(Sender : TObject);
     procedure ckDigitalOptionChange(Sender : TObject);
     procedure SizeDigitalDisplay;
-    procedure ckTimerEvent(Sender : TObject; Handle : Integer;
-                Interval : Cardinal; ElapsedTime : LongInt);
+    procedure ckTimerEvent(Sender: TObject; Handle: Integer; Interval: Cardinal;
+      ElapsedTime: LongInt);
     procedure DoOnHourChange;
     procedure DoOnMinuteChange;
     procedure DoOnSecondChange;
@@ -216,12 +216,12 @@ type
     procedure PaintHands(ACanvas : TCanvas);
     {windows message methods}
     {$IFDEF LCL}
-    procedure WMResize     (var Msg: TLMSize);        message LM_SIZE;
-    procedure WMEraseBkgnd (var Msg : TLMEraseBkgnd); message LM_ERASEBKGND;
+    procedure WMResize     (var Msg: TLMSize);       message LM_SIZE;
+    procedure WMEraseBkgnd (var Msg: TLMEraseBkgnd); message LM_ERASEBKGND;
     {$ELSE}
-    procedure WMResize     (var Msg: TWMSize);        message WM_SIZE;
-    procedure WMEraseBkgnd (var Msg : TWMEraseBkgnd); message WM_ERASEBKGND;
-    procedure WMGetDlgCode (var Msg : TWMGetDlgCode); message WM_GETDLGCODE;
+    procedure WMResize     (var Msg: TWMSize);       message WM_SIZE;
+    procedure WMEraseBkgnd (var Msg: TWMEraseBkgnd); message WM_ERASEBKGND;
+    procedure WMGetDlgCode (var Msg: TWMGetDlgCode); message WM_GETDLGCODE;
     {$ENDIF}
   protected
     procedure Loaded; override;
@@ -300,7 +300,7 @@ type
 implementation
 
 uses
-  VpConst;
+  VpConst, VpMisc;
 
 const
   ckDToR     = (Pi / 180);
@@ -660,12 +660,14 @@ begin
 end;
 {=====}
 
-procedure TVpCustomClock.ckTimerEvent(Sender : TObject; Handle : Integer;
-            Interval : Cardinal; ElapsedTime : LongInt);
+procedure TVpCustomClock.ckTimerEvent(Sender: TObject; Handle: Integer;
+  Interval: Cardinal; ElapsedTime: LongInt);
 var
   Hour, Minute, Second, MSecond : Word;
   C, D                          : Integer;
 begin
+  Unused(Handle, Interval);
+
   if FClockMode = cmClock then begin
     {Clock}
     DecodeTime(Now, Hour, Minute, Second, MSecond);
@@ -678,7 +680,8 @@ begin
       Inc(C, 24);
     Hour := C;
     SetTime(EncodeTime(Hour, Minute, Second, MSecond));
-  end else if FClockMode = cmTimer then begin
+  end else
+  if FClockMode = cmTimer then begin
     {Count Up Timer}
     SetTime(ckConvertMsToDateTime(ElapsedTime));
   end else begin
@@ -923,7 +926,7 @@ var
   MinuteHandLen : Integer;
   SecondHandLen : Integer;
 
-  procedure RotatePoint(OldPoint : TPoint; var NewPoint : TPoint);
+  procedure RotatePoint(OldPoint: TPoint; out NewPoint: TPoint);
   begin
     OldPoint.X := OldPoint.X - HalfWidth;
     OldPoint.Y := OldPoint.Y - HalfHeight;
@@ -1350,6 +1353,8 @@ procedure TVpCustomClock.WMResize(var Msg: TWMSize);
 procedure TVpCustomClock.WMResize(var Msg: TLMSize);
 {$ENDIF}
 begin
+  Unused(Msg);
+
   if DisplayMode = dmDigital then begin
     Width := ckLEDDisplay.Width;
     Height := ckLEDDisplay.Height;

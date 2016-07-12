@@ -83,7 +83,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf, FileUtil,
+  LCLProc, LCLType, LCLIntf, FileUtil,
   {$ELSE}
   Windows, //Messages,
   {$ENDIF}
@@ -725,7 +725,7 @@ begin
   if not Assigned(FCanvas) then
     raise EVpCanvasError.Create(RSNoCanvas);
 
-  FillChar(LF, SizeOf(LF), #0);
+  FillChar(LF{%H-}, SizeOf(LF), #0);
   LF.lfHeight := FCanvas.Font.Height;
   LF.lfWidth :=  0;
   case Angle of
@@ -759,6 +759,7 @@ begin
   OldFont := TFont.Create;
   try
     OldFont.Assign(FCanvas.Font);
+
     // Create new font to use.
     FCanvas.Font.Handle := CreateFontIndirect(LF);
 
@@ -880,6 +881,9 @@ end;
 procedure TVpExCanvas.BrushCopy(const Dest: TRect; Bitmap: TBitmap;
   const Source: TRect; AColor: TColor);
 begin
+  Unused(Dest, Bitmap);
+  Unused(Source, AColor);
+
   if not Assigned(FCanvas) then
     raise EVpCanvasError.Create(RSNoCanvas);
 
@@ -1157,6 +1161,8 @@ end;
 
 procedure TVpExCanvas.TextRect(ARect: TRect; X, Y: Integer; const Text: string);
 begin
+  Unused(ARect, X, Y);
+  Unused(Text);
   if not Assigned(FCanvas) then
     raise EVpCanvasError.Create(RSNoCanvas);
 end;
@@ -1583,7 +1589,7 @@ begin
   DC := GetDC(0);
   SavedFontHandle := SelectObject(DC, ACanvas.Font.Handle);
   try                                                                    
-    GetTextMetrics(DC, Metrics);
+    GetTextMetrics(DC, Metrics{%H-});
     Result := Metrics.tmAveCharWidth;                                    
   finally                                                                
     SelectObject(DC, SavedFontHandle);

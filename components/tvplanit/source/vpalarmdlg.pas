@@ -35,13 +35,12 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf, LResources,
+  LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  VpDlg, VpData, ExtCtrls, StdCtrls, VpBase, VpEvntEditDlg, VpBaseDS, VpConst,
-  VpMisc;
+  VpDlg, VpData, ExtCtrls, StdCtrls, VpEvntEditDlg, VpBaseDS, VpConst;
 
 type
   { forward declarations }
@@ -65,8 +64,7 @@ type
     procedure SnoozeBtnClick(Sender: TObject);
     procedure DismissBtnClick(Sender: TObject);
     procedure OpenItemBtnClick(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
   private
     SnoozeDelay: TDateTime;
@@ -104,7 +102,7 @@ implementation
 {$ENDIF}
 
 uses
-  StrUtils, VpSR;
+  StrUtils, VpMisc, VpSR;
 
 { TVpNotificationDialog }
 
@@ -285,6 +283,7 @@ end;
 procedure TAlarmNotifyForm.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  Unused(Shift);
   if Key = VK_ESCAPE then begin
     CalcSnooze;
     Close;

@@ -63,7 +63,7 @@ function DaysInMonth(Year, Month : Integer) : Integer;
   {-return the number of days in the specified month of a given year}
 function DefaultEpoch : Integer;
   {-return the current century}
-function GetLeftButton : Byte;
+//function GetLeftButton : Byte;
 procedure GetRGB(Clr : TColor; var IR, IG, IB : Byte);
 function IsLeapYear(Year : Integer) : Boolean;
 function GetStartOfWeek(Date: TDateTime; StartOn: TVpDayType): TDateTime;
@@ -348,13 +348,13 @@ begin
   Result := (ThisYear div 100) * 100;
 end;
 {=====}
-
+             (*
 function GetLeftButton : Byte;
 const
   RLButton : array[Boolean] of Word = (VK_LBUTTON, VK_RBUTTON);
 begin
 //TODO:  Result := RLButton[GetSystemMetrics(SM_SWAPBUTTON) <> 0];
-end;
+end;           *)
 {=====}
 
 procedure GetRGB(Clr : TColor; var IR, IG, IB : Byte);
@@ -591,7 +591,12 @@ end;
 function GetRealFontHeight(AFont: TFont): Integer;
 begin
   if AFont.Size = 0 then
-    Result := GetFontData(AFont.Handle).Height else
+   {$IFDEF LCL}
+    Result := GetFontData(AFont.Reference.Handle).Height
+   {$ELSE}
+    Result := GetFontData(AFont.Handle).Height
+   {$ENDIF}
+  else
     Result := AFont.Height;
 end;
 

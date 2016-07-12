@@ -279,6 +279,8 @@ var
   Name: string;
   ColorRect: TRect;
 begin
+  Unused(Control, State);
+
   Category.Canvas.FillRect(ARect);
 
   Color := CatColorMap.GetCategory(Index).Color;
@@ -483,9 +485,9 @@ begin
 end;
 {=====}
 
+{ Inc or Dec AlarmAdvance according to which button was pressed }
 procedure TDlgEventEdit.AdvanceUpDownClick(Sender: TObject; Button: TUDBtnType);
 begin
-  { Inc or Dec AlarmAdvance according to which button was pressed }
 {  case Button of
     btNext:
       AlarmAdvance.Text := IntToStr(StrToIntDef(AlarmAdvance.Text, 0) + 1);

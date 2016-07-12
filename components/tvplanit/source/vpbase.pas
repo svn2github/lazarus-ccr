@@ -38,12 +38,12 @@ uses
   {$ELSE}
   Windows, Messages.
   {$ENDIF}
-  Classes, Graphics, Controls, Dialogs, Forms, StdCtrls, ExtCtrls, SysUtils,
+  Classes, Graphics, Controls, Dialogs, Forms, ExtCtrls, SysUtils,
   VpConst, VpSR;
 
 const
   {Message base}
-  Vp_First              = WM_USER; //$7DF0;   {Sets base for all Vp messages}
+  Vp_First              = WM_USER;  // $7DF0;   {Sets base for all Vp messages}
 
 const
   {Custom message types}
@@ -99,13 +99,13 @@ type
     AMode: TVpPlaySoundMode) of object;
 
   { XML exceptions }
-  EXML = class (Exception);
+  EXML = class(Exception);
 
   EVpStreamError = class(EXML)
   private
     seFilePos : Longint;
   public
-    constructor CreateError(const FilePos: Longint; const Reason: DOMString);
+    constructor CreateError(const FilePos: Longint; const Reason: string);
     property FilePos: Longint read seFilePos;
   end;
 
@@ -115,7 +115,7 @@ type
     feLine: Longint;
     feLinePos: Longint;
   public
-    constructor CreateError(const FilePos, Line, LinePos: Longint; const Reason: DOMString);
+    constructor CreateError(const FilePos, Line, LinePos: Longint; const Reason: string);
     property Reason : DOMString read feReason;
     property Line: Longint read feLine;
     property LinePos: Longint read feLinePos;
@@ -123,7 +123,7 @@ type
 
   EVpParserError = class(EVpFilterError)
   public
-    constructor CreateError(Line, LinePos: Longint; const Reason: DOMString);
+    constructor CreateError(Line, LinePos: Longint; const Reason: String);
   end;
 
   { implements the Version property with its associated design time About box }
@@ -238,7 +238,7 @@ type
     FOwner: TObject;
     procedure Changed; override;
   public
-    constructor Create(AOwner: TObject); virtual;
+    constructor Create(AOwner: TObject); virtual; reintroduce;
     property Owner: TObject read FOwner write FOwner; 
   end;
 
@@ -358,24 +358,25 @@ implementation
 
 {$R vpbase.res}
 
-{$IFNDEF LCL}
 uses
-  CommCtrl;
+{$IFNDEF LCL}
+  CommCtrl,
 {$ENDIF}
+  VpMisc;
 
 { EAdStreamError }
 
 constructor EVpStreamError.CreateError(const FilePos: Integer;
-  const Reason: DOMString);
+  const Reason: String);
 begin
-  inherited Create (Reason);
+  inherited Create(Reason);
   seFilePos := FilePos;
 end;
 
 { EAdFilterError }
 
 constructor EVpFilterError.CreateError(const FilePos, Line, LinePos: Integer;
-  const Reason: DOMString);
+  const Reason: string);
 begin
   inherited CreateError(FilePos, Reason);
   feLine := Line;
@@ -386,7 +387,7 @@ end;
 { EAdParserError }
 
 constructor EVpParserError.CreateError(Line, LinePos: Integer;
-  const Reason: DOMString);
+  const Reason: String);
 begin
   inherited CreateError(FilePos, Line, LinePos, Reason);
 end;
@@ -423,7 +424,8 @@ end;
 
 procedure TVpCustomControl.SetVersion(const Value: string);
 begin
-// This method left intentionally blank.
+  // This method left intentionally blank.
+  Unused(Value);
 end;
 {=====}
 
@@ -574,6 +576,7 @@ end;
 
 procedure TVpCollectionItem.SetVersion(const Value: String);
 begin
+  Unused(Value);
 end;
 {=====}
 
@@ -621,6 +624,7 @@ end;
 procedure TVpComponent.SetVersion(const Value: string);
 begin
 // This method left intentionally blank.
+  Unused(Value);
 end;
 {=====}
 

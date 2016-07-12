@@ -90,19 +90,22 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf,
+  LCLProc, LCLType, LCLIntf,
   {$ELSE}
   Windows,
   {$ENDIF}
-  Classes, Dialogs, SysUtils, Graphics, StdCtrls, Forms, Printers,
-  VpBase, VpMisc, VpData, VpXParsr, VpCanvasUtils, VpSR, VpException;
+  Classes, Dialogs, SysUtils, Graphics, Forms, Printers,
+  VpBase, VpData, VpXParsr, VpCanvasUtils, VpSR, VpException;
 
 type
   TVpChangeVar = (cvRemove, cvIgnore, cvChange);
+
   TVpDayUnits = (duDay, duWeek, duMonth, duYear);
-  TVpShapeType = (ustRectangle, ustTopLine, ustBottomLine,
-                   ustLeftLine, ustRightLine, ustTLToBRLine,
-                   ustBLToTRLine, ustEllipse);
+
+  TVpShapeType = (
+    ustRectangle, ustTopLine, ustBottomLine, ustLeftLine, ustRightLine,
+    ustTLToBRLine, ustBLToTRLine, ustEllipse
+  );
 
   TVpWatcher = record
     Handle: THandle;
@@ -447,8 +450,7 @@ uses
  {$IFDEF LCL}
   DateUtils,
  {$ENDIF}
-  VpConst, VpBaseDS, VpPrtFmtCBox, VpPrtPrv, VpDayView, VpWeekView, VpMonthView,
-  VpCalendar, VpTaskList, VpContactGrid;
+  VpConst, VpMisc, VpBaseDS, VpPrtFmtCBox;
 
 function XMLizeString(const s: string): string;
 var
@@ -557,6 +559,8 @@ var
   OldPen: TPen;
   OldBrush: TBrush;
 begin
+  Unused(Angle, Viewport);
+
   OldPen := TPen.Create;
   try
     OldBrush := TBrush.Create;
@@ -949,6 +953,8 @@ procedure TVpPrintFormatElement.NotifyAll(Item: TCollectionItem);
 var
   Notifier: TPersistent;
 begin
+  Unused(Item);
+
   if not Assigned (FOwner) then
     Exit;
 
@@ -1172,6 +1178,8 @@ end;
 
 procedure TVpPrintFormat.NotifyAll(Item: TCollectionItem);
 begin
+  Unused(Item);
+
   if not Assigned(FOwner) then
     Exit;
 
@@ -1736,7 +1744,6 @@ var
   HeightInPixels: Integer;
   PixelsPerInchX: Integer;
   PixelsPerInchY: Integer;
-  Scale: Extended;
 
   procedure GetMeasurements;
   begin
@@ -1750,8 +1757,6 @@ var
 
     PixelsPerInchX := GetDeviceCaps(APrinter.Canvas.Handle, LOGPIXELSX);
     PixelsPerInchY := GetDeviceCaps(APrinter.Canvas.Handle, LOGPIXELSY);
-
-    Scale := PixelsPerInchY / Screen.PixelsPerInch;
   end;
 
   procedure CalculateMargins;
@@ -1919,7 +1924,6 @@ var
   HeightInPixels: Integer;
   PixelsPerInchX: Integer;
   PixelsPerInchY: Integer;
-  Scale: Extended;
 
   procedure GetMeasurements;
   begin
@@ -1928,8 +1932,6 @@ var
 
     PixelsPerInchX := GetDeviceCaps(ACanvas.Handle, LOGPIXELSX);
     PixelsPerInchY := GetDeviceCaps(ACanvas.Handle, LOGPIXELSY);
-
-    Scale := PixelsPerInchY / Screen.PixelsPerInch;
   end;
 
   procedure CalculateMargins;
@@ -2462,6 +2464,8 @@ procedure TVpPrinter.xmlPrintFormatAttribute(oOwner: TObject;
 var
   Item: TVpAttributeItem;
 begin
+  Unused(oOwner, bSpecified);
+
   Item := TVpAttributeItem(FAttributes.Add);
   Item.Name := sName;
   Item.Value := sValue;
@@ -2471,6 +2475,7 @@ end;
 procedure TVpPrinter.xmlPrintFormatEndElement(oOwner: TObject;
   sValue: DOMString);
 begin
+  Unused(oOwner);
   if (sValue = 'PrintFormat') or (sValue = 'VpPrintFormats') then begin
     FLoadingIndex := -1;
     FElementIndex := -1;
@@ -2487,8 +2492,8 @@ var
   NewItem: TVpPrintFormatItem;
   NewElement: TVpPrintFormatElementItem;
   attr: TVpAttributeItem;
-  elem: TVpPrintFormatItem;
 begin
+  Unused(oOwner);
   if sValue = 'VpPrintFormats' then begin
     FLoadingIndex := -1;
     FElementIndex := -1;

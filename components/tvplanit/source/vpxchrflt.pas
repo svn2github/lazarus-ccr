@@ -92,35 +92,29 @@ type
     protected
       procedure csAdvanceLine;
       procedure csAdvanceLinePos;
-      procedure csGetCharPrim(var aCh : TVpUcs4Char;
-                              var aIsLiteral : Boolean);
-      function csGetNextBuffer : Boolean;
-      function csGetTwoAnsiChars(var Buffer) : Boolean;
-      function csGetUtf8Char : TVpUcs4Char;
+      procedure csGetCharPrim(var aCh: TVpUcs4Char; var aIsLiteral: Boolean);
+      function csGetNextBuffer: Boolean;
+      function csGetTwoAnsiChars(var Buffer): Boolean;
+      function csGetUtf8Char: TVpUcs4Char;
       procedure csIdentifyFormat;
-      procedure csPushCharPrim(aCh : TVpUcs4Char);
-      procedure csSetFormat(const aValue : TVpStreamFormat); override;
-
-      procedure csGetChar(var aCh : TVpUcs4Char;
-                          var aIsLiteral : Boolean);
+      procedure csPushCharPrim(aCh: TVpUcs4Char);
+      procedure csSetFormat(const aValue: TVpStreamFormat); override;
+      procedure csGetChar(var aCh: TVpUcs4Char; var aIsLiteral: Boolean);
 
     public
-      constructor Create(aStream : TStream; const aBufSize : Longint); override;
+      constructor Create(aStream: TStream; const aBufSize: Longint); override;
 
-      property Format : TVpStreamFormat
-         read FFormat
-         write csSetFormat;
-      property EOF : Boolean
-         read FEOF;
+      property Format: TVpStreamFormat read FFormat write csSetFormat;
+      property EOF: Boolean read FEOF;
+
     public
       procedure SkipChar;
-      function TryRead(const S : array of Longint) : Boolean;
-      function ReadChar : DOMChar;
-      function ReadAndSkipChar : DOMChar;
-      property Line : LongInt
-         read FLine;
-      property LinePos : LongInt
-         read FLinePos;
+      function TryRead(const S: array of Longint) : Boolean;
+      function ReadChar: DOMChar;
+      function ReadAndSkipChar: DOMChar;
+
+      property Line : LongInt read FLine;
+      property LinePos : LongInt read FLinePos;
   end;
 
   TVpOutCharFilter = class(TVpBaseCharFilter)
@@ -275,10 +269,7 @@ begin
 
   {check to see that the character is valid according to XML}
   if (aCh <> TVpUCS4Char(VpEndOfStream)) and (not VpIsChar(aCh)) then
-    raise EVpFilterError.CreateError (FStream.Position,
-                                       Line,
-                                       LinePos,
-                                       sInvalidXMLChar);
+    raise EVpFilterError.CreateError(FStream.Position, Line, LinePos, sInvalidXMLChar);
 end;
 {--------}
 function TVpInCharFilter.csGetNextBuffer : Boolean;
@@ -546,7 +537,7 @@ var
   i    : integer;
 begin
   if not VpUcs4ToUtf8(aCh, UTF8) then
-    raise EVpStreamError.CreateError (FStream.Position, sUCS_U8ConverErr);
+    raise EVpStreamError.CreateError(FStream.Position, sUCS_U8ConverErr);
   for i := 1 to length(UTF8) do begin
     if (FBufPos = FBufSize) then
       csWriteBuffer;

@@ -32,12 +32,12 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf, LResources,
+  LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, VpBaseDS, VpBase, VpDlg, VpResEditDlg, ExtCtrls;
+  StdCtrls, VpBaseDS, VpResEditDlg, ExtCtrls;
 
 type
   TfrmSelectResource = class(TForm)

@@ -263,7 +263,7 @@ type
     procedure nabFontChanged(Sender: TObject);
     procedure nabGetEditorCaption(var Caption: string);
     function nabGetFolderArea(Index: Integer): TRect;
-    procedure nabGetHitTest(X, Y: Integer; var FolderIndex: Integer; var ItemIndex: Integer);
+    procedure nabGetHitTest(X, Y: Integer; out FolderIndex, ItemIndex: Integer);
     procedure nabImagesChanged(Sender: TObject);
     procedure nabRecalcDisplayNames;
     procedure nabScrollDownBtnClick(Sender: TObject);
@@ -284,8 +284,8 @@ type
     procedure WMNCHitTest(var Msg: TWMNCHitTest);  message WM_NCHITTEST;
     procedure WMSetCursor(var Msg: TWMSetCursor); message WM_SETCURSOR;
     {$ELSE}
-    procedure CMFontChanged(var Message: TLMessage); message CM_FONTCHANGED;
-    procedure CMParentColorChanged(var Message: TLMessage); message CM_PARENTCOLORCHANGED;
+    procedure CMFontChanged(var Msg: TLMessage); message CM_FONTCHANGED;
+    procedure CMParentColorChanged(var Msg: TLMessage); message CM_PARENTCOLORCHANGED;
     {windows message response methods}
     procedure WMEraseBkGnd(var Msg: TLMEraseBkGnd); message LM_ERASEBKGND;
     procedure WMNCHitTest(var Msg: TLMNCHitTest);  message LM_NCHITTEST;
@@ -673,6 +673,8 @@ var
   I: Integer;
   C: TControl;
 begin
+  Unused(Root);
+
   inherited GetChildren(Proc, Self);
   for I := 0 to ControlCount - 1 do begin
     C := Controls[I];
@@ -956,8 +958,8 @@ end;
 {===== TVpNavBar ================================================}
 
 constructor TVpCustomNavBar.Create(AOwner: TComponent);
-var
-  HSnd: THandle;
+{var
+  HSnd: THandle; }
 begin
   inherited Create(AOwner);
 
@@ -1105,6 +1107,8 @@ end;
 
 procedure TVpCustomNavBar.FolderChanged(FolderIndex: Integer);
 begin
+  Unused(FolderIndex);
+
   Invalidate;
   if not (csDestroying in ComponentState) then
     RecreateWnd{$IFDEF LCL}(self){$ENDIF};
@@ -1119,13 +1123,14 @@ end;
 {$ENDIF}
 {=====}
 
-procedure TVpCustomNavBar.CMFontChanged(var Message: {$IFDEF LCL}TLMessage{$ELSE}TMessage{$ENDIF});
+procedure TVpCustomNavBar.CMFontChanged(var Msg: {$IFDEF LCL}TLMessage{$ELSE}TMessage{$ENDIF});
 begin
+  Unused(Msg);
   nabRecalcDisplayNames;
 end;
 {=====}
 
-procedure TVpCustomNavBar.CMParentColorChanged(var Message: {$IFDEF LCL}TLMessage{$ELSE}TMessage{$ENDIF});
+procedure TVpCustomNavBar.CMParentColorChanged(var Msg: {$IFDEF LCL}TLMessage{$ELSE}TMessage{$ENDIF});
 begin
   inherited;
   if ParentColor then
@@ -1169,6 +1174,7 @@ procedure TVpCustomNavBar.GetChildren(Proc: TGetChildProc; Root: TComponent);
 var
   I: Integer;
 begin
+  Unused(Root);
   for I := 0 to FContainers.Count - 1 do
     Proc(TComponent(FContainers[I]));
 end;
@@ -1226,6 +1232,7 @@ end;
 
 procedure TVpCustomNavBar.DoMouseOverItem(X, Y, ItemIndex: Integer);
 begin
+  Unused(ItemIndex);
   if Assigned(FOnMouseOverItem) then
     FOnMouseOverItem(Self, Folders[ActiveFolder].Items[GetItemAt(X, Y)]);
 end;
@@ -1692,8 +1699,8 @@ begin
 end;
 {=====}
 
-procedure TVpCustomNavBar.nabGetHitTest(X, Y: Integer; var FolderIndex: Integer;
-  var ItemIndex: Integer);
+procedure TVpCustomNavBar.nabGetHitTest(X, Y: Integer;
+  out FolderIndex, ItemIndex: Integer);
 var
   I: Integer;
   Item: TVpNavBtnItem;
@@ -1738,6 +1745,8 @@ function TVpCustomNavBar.nabGetFolderArea(Index: Integer): TRect;
 var
   I : Integer;
 begin
+  Unused(Index);
+
   Result := ClientRect;
   for I := 0 to ActiveFolder do
     Inc(Result.Top, FButtonHeight);
@@ -1810,9 +1819,11 @@ end;
 procedure TVpCustomNavBar.nabTimerEvent(Sender: TObject; Handle: Integer;
   Interval: Cardinal; ElapsedTime: LongInt);
 var
-  Pt: TPoint;
+  Pt: TPoint = (x:0; y:0);
   Form: TCustomForm;
 begin
+  Unused(Handle, Interval, ElapsedTime);
+
   GetCursorPos(Pt);
   Pt := ScreenToClient(Pt);
   if not PtInRect(ClientRect, Pt) then begin
@@ -2058,8 +2069,8 @@ var
   Flags: Integer;
   MyRect: TRect;
   TR: TRect;
-  ContainerRect: TRect;
-  FolderType: TVpFolderType;
+//  ContainerRect: TRect;
+//  FolderType: TVpFolderType;
   BkColor: TColor;
   Folder: TVpNavFolder;
   Item: TVpNavBtnItem;

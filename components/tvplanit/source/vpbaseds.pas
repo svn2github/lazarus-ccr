@@ -40,7 +40,7 @@ uses
   Windows, Messages,
   {$ENDIF}
   Classes, Dialogs, SysUtils, Graphics, Controls, StdCtrls, ExtCtrls,
-  VpBase, VpData, Forms, VpPrtFmt, VpLocalize, VpException;
+  VpBase, VpData, Forms, VpPrtFmt, VpLocalize;
 
 type
   TVpResourceUpdate = (ruOnChange, ruOnExit, ruOnDropDownClose);         
@@ -138,18 +138,18 @@ type
 
   TVpResourceCombo = class(TCustomComboBox)
     protected {private}
-      FDataStore   : TVpCustomDataStore;
+      FDataStore: TVpCustomDataStore;
       {internal variables}
-      rcLoading    : Boolean;
-      OldItemIndex : Integer;
-      FResourceUpdateStyle : TVpResourceUpdate;                                                      
+      rcLoading: Boolean;
+      OldItemIndex: Integer;
+      FResourceUpdateStyle: TVpResourceUpdate;
 
-      procedure VpDataStoreChanged (var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message Vp_DataStoreChanged;
-      procedure SetDataStore (const Value : TVpCustomDataStore);
-      function GetAbout : string;
-      procedure SetAbout (const Value : string);
-      procedure SetResourceUpdateStyle (const v : TVpResourceUpdate);                    
-      procedure ResourceChanged (Sender : TObject);
+      procedure VpDataStoreChanged(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message Vp_DataStoreChanged;
+      procedure SetDataStore(const Value: TVpCustomDataStore);
+      function GetAbout: string;
+      procedure SetAbout(const Value: string);
+      procedure SetResourceUpdateStyle(const v: TVpResourceUpdate);
+      procedure ResourceChanged(Sender: TObject);
       procedure LoadItems;
       {$IFNDEF LCL}
       procedure CNCommand (var Msg: TWMCommand); message CN_COMMAND;     
@@ -404,9 +404,6 @@ uses
 
 (*****************************************************************************)
 { TVpCustomDataStore }
-
-type
-ProtectedTComponent = class(TComponent);
 
 constructor TVpCustomDataStore.Create(AOwner: TComponent);
 var
@@ -811,7 +808,8 @@ end;
 
 { - Added}
 procedure TVpCustomDataStore.PurgeResource(Res: TVpResource);         
-begin                                                                 
+begin
+  Unused(Res);
   if not Loading then                                                 
     NotifyDependents;                                                 
 end;                                                                  
@@ -953,6 +951,7 @@ end;
 
 procedure TVpResourceCombo.VpDataStoreChanged(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 begin
+  Unused(Msg);
   LoadItems;
 end;
 {=====}
@@ -1006,6 +1005,7 @@ end;
 
 procedure TVpResourceCombo.SetAbout(const Value: string);
 begin
+  Unused(Value);
   //Empty on purpose
 end;
 {=====}
@@ -1179,14 +1179,16 @@ begin
 end;
 {=====}
 
-procedure TVpLinkableControl.CMEnter(var Msg : {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
+procedure TVpLinkableControl.CMEnter(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 begin
+  Unused(Msg);
   invalidate;
 end;
 {=====}
 
-procedure TVpLinkableControl.CMExit(var Msg : {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
+procedure TVpLinkableControl.CMExit(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 begin
+  Unused(Msg);
   invalidate;
 end;
 {=====}

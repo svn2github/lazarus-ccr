@@ -39,7 +39,7 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Controls, Graphics, SysUtils, VpBase;
+  Classes, Controls, Graphics, SysUtils;
 
 type
   TSegmentSize = 2..10;
@@ -54,7 +54,7 @@ type
     FSize      : TSegmentSize;
     lbDrawBmp  : TBitmap;
     procedure CMTextChanged(var Message: {$IFDEF LCL}TLMessage{$ELSE}TMessage{$ENDIF}); message CM_TEXTCHANGED;
-    procedure Initialize(var Points: array of TPoint);
+    procedure Initialize(out Points: array of TPoint);
     function  NewOffset(xOry: char; OldOffset: Integer): Integer;
     procedure ProcessCaption(Points: array of TPoint);
     procedure PaintSegment(Segment: Integer; Color: TColor;
@@ -135,7 +135,7 @@ type
 implementation
 
 uses
-  VpConst;
+  VpConst, VpMisc;
 
 {        LED Segment Map            }
 {                                   }
@@ -275,9 +275,10 @@ begin
 end;
 {=====}
 
-procedure TVpCustomLEDLabel.SetAbout(const Value : string);
+procedure TVpCustomLEDLabel.SetAbout(const Value: string);
 begin
   {Leave empty}
+  Unused(Value);
 end;
 {=====}
 
@@ -288,9 +289,9 @@ begin
 end;
 {=====}
 
-procedure TVpCustomLEDLabel.Initialize(var Points: array of TPoint);
+procedure TVpCustomLEDLabel.Initialize(out Points: array of TPoint);
 var
-  I     : Integer;
+  I: Integer;
 begin
   for I := 0 to MAX_POINTS do begin
     Points[i].X := DigitPoints[i].X * (FSize - 1);

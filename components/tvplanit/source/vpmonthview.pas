@@ -770,8 +770,6 @@ procedure TVpMonthView.WMRButtonDown(var Msg : TWMRButtonDown);
 {$ELSE}
 procedure TVpMonthView.WMRButtonDown(var Msg : TLMRButtonDown);
 {$ENDIF}
-var
-  ClientOrigin : TPoint;
 begin
   inherited;
 
@@ -780,7 +778,6 @@ begin
       SetFocus;
     if FRightClickChangeDate then                                        
       mvSetDateByCoord (Point (Msg.XPos, Msg.YPos));                     
-    ClientOrigin := GetClientOrigin;
   end;
 end;
 {=====}

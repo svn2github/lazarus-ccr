@@ -223,14 +223,14 @@ begin
     {get the day name}
     if cdoShortNames in FCalendar.Options then begin
       if FCalendar.DayNameWidth < 1 then
-        S := ShortDayNames[Ord(DOW)+1]
+        S := DefaultFormatSettings.ShortDayNames[Ord(DOW)+1]
       else
-        S := Copy(ShortDayNames[Ord(DOW)+1], 1, FCalendar.DayNameWidth)
+        S := Copy(DefaultFormatSettings.ShortDayNames[Ord(DOW)+1], 1, FCalendar.DayNameWidth)
     end else begin
       if FCalendar.DayNameWidth < 1 then
-        S := LongDayNames[Ord(DOW)+1]
+        S := DefaultFormatSettings.LongDayNames[Ord(DOW)+1]
       else
-        S := Copy(LongDayNames[Ord(DOW)+1], 1, FCalendar.DayNameWidth)
+        S := Copy(DefaultFormatSettings.LongDayNames[Ord(DOW)+1], 1, FCalendar.DayNameWidth)
     end;
    {$IF FPC_FULLVERSION < 30000}
     S := SysToUTF8(S);

@@ -35,14 +35,14 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf, LResources,
+  LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
-  Windows, Messages,
+  Windows, Messages, VpEdPop, VpDateEdit,
   {$ENDIF}
   SysUtils,
   {$IFDEF VERSION6} Variants, {$ENDIF}
   Classes, Graphics, Controls, Forms, Dialogs, VpData, StdCtrls, ExtCtrls,
-  VpEdPop, VpDateEdit, VpBase, VpSR, VpDlg, ComCtrls, EditBtn;
+  VpBase, VpSR, VpDlg, ComCtrls, EditBtn;
 
 type
   { forward declarations }

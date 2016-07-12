@@ -110,11 +110,11 @@ implementation
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,
+  LCLProc, LCLType,
   {$ELSE}
   Windows,
   {$ENDIF}
-  SysUtils;
+  SysUtils, VpMisc;
 
 
 {== Utility methods ==================================================}
@@ -675,6 +675,7 @@ end;
 {==TVpMemoryStream===================================================}
 procedure TVpMemoryStream.SetPointer(Ptr : Pointer; Size : Integer);
 begin
+  Unused(Ptr, Size);
   Assert(not Assigned(Memory));
 //  inherited SetPointer(Ptr);
 end;

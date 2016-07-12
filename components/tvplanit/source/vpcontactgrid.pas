@@ -38,7 +38,7 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Graphics, Controls, ComCtrls, ExtCtrls, StdCtrls,
+  Classes, Graphics, Controls, ExtCtrls, StdCtrls,
   VpBase, VpBaseDS, VpMisc, VpData, VpConst, VpSR, VpCanvasUtils, Menus;
 
 const
@@ -214,8 +214,8 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure LoadLanguage;
-    procedure LinkHandler(Sender: TComponent;
-      NotificationType: TVpNotificationType; const Value: Variant); override;
+    procedure LinkHandler(Sender: TComponent; NotificationType: TVpNotificationType;
+      const Value: Variant); override;
     function GetCityStateZipFormat: String;
     function GetControlType : TVpItemType; override;
     procedure DeleteActiveContact(Verify: Boolean);
@@ -266,7 +266,7 @@ type
 implementation
 
 uses
-  SysUtils, Math, Forms, Dialogs, VpContactEditDlg, VpContactGridPainter;
+  SysUtils, Forms, Dialogs, VpContactEditDlg, VpContactGridPainter;
 
 
 (*****************************************************************************)
@@ -489,6 +489,7 @@ end;
 procedure TVpContactGrid.LinkHandler(Sender: TComponent;
   NotificationType: TVpNotificationType; const Value: Variant);
 begin
+  Unused(Value);
   case NotificationType of
     neDataStoreChange : Invalidate;
     neInvalidate      : Invalidate;
@@ -2154,6 +2155,7 @@ procedure TVpContactGrid.WMKillFocus(var Msg : TWMKillFocus);
 procedure TVpContactGrid.WMKillFocus(var Msg : TLMKillFocus);
 {$ENDIF}
 begin
+  Unused(Msg);
   if Assigned(cgInplaceEditor) and not cgInplaceEditor.Visible then
     Invalidate;
 end;

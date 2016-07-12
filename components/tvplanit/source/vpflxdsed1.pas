@@ -45,7 +45,7 @@ uses
  {$IFDEF VERSION6} DesignIntf, DesignEditors, {$ELSE} DsgnIntf, {$ENDIF}, DBTables,
  {$ENDIF}
  {$ENDIF} {RUNTIMETEST}
-  ExtCtrls, StdCtrls, Db, VpData, VpFlxDS, ComCtrls, Buttons;
+  ExtCtrls, StdCtrls, Db, VpFlxDS, ComCtrls, Buttons;
 
 type
 
@@ -115,7 +115,7 @@ implementation
 {$ENDIF}
 
 uses
-  vpConst;
+  vpConst, VpMisc;
 
 {$IFDEF RUNTIMETEST}
 { Runtime test }
@@ -481,6 +481,7 @@ end;
 procedure TfrmFieldMapper.DatasetFieldLBKeyPress(Sender: TObject;
   var Key: Char);
 begin
+  Unused(Key);
   DbFieldSelected(sender);
 end;
 {=====}
@@ -494,6 +495,7 @@ end;
 procedure TfrmFieldMapper.VPFieldLBKeyPress(Sender: TObject;
   var Key: Char);
 begin
+  Unused(Key);
   VpFieldSelected(Sender);
 end;
 {=====}
@@ -597,6 +599,7 @@ end;
 procedure TfrmFieldMapper.FieldMappingsLBKeyPress(Sender: TObject;
   var Key: Char);
 begin
+  Unused(Key);
   FieldMappingsLBClick(Sender);
 end;
 {=====}
@@ -604,6 +607,7 @@ end;
 procedure TfrmFieldMapper.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
+  Unused(Action);
   {reset all datasets to their original active status}
   if ResDS <> nil then
     ResDS.Active := DSResActive;

@@ -38,7 +38,7 @@ uses
   Windows,
   {$ENDIF}
   Classes, Dialogs, SysUtils, Db,
-  VpBase, VpData, VpSR, VpBaseDS, VpConst, VpException;
+  VpBase, VpData, VpBaseDS, VpConst, VpException;
 
 type
   TVpCustomDBDataStore = class(TVpCustomDataStore)

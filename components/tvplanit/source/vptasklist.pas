@@ -38,7 +38,7 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Graphics, Controls, ComCtrls, ExtCtrls, StdCtrls,
+  Classes, Graphics, Controls, ExtCtrls, StdCtrls,
   VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils, Menus;
 
 type
@@ -228,19 +228,12 @@ type
     procedure LinkHandler(Sender: TComponent;
       NotificationType: TVpNotificationType;
       const Value: Variant); override;
-    function GetControlType : TVpItemType; override;
-    procedure PaintToCanvas (ACanvas : TCanvas;
-                             ARect   : TRect;
-                             Angle   : TVpRotationAngle);
-    procedure RenderToCanvas (RenderCanvas : TCanvas;
-                              RenderIn     : TRect;
-                              Angle        : TVpRotationAngle;
-                              Scale        : Extended;
-                              RenderDate   : TDateTime;
-                              StartLine    : Integer;
-                              StopLine     : Integer;
-                              UseGran      : TVpGranularity;
-                              DisplayOnly  : Boolean); override;
+    function GetControlType: TVpItemType; override;
+    procedure PaintToCanvas(ACanvas: TCanvas; ARect: TRect;
+      Angle: TVpRotationAngle);
+    procedure RenderToCanvas(RenderCanvas: TCanvas; RenderIn: TRect;
+      Angle: TVpRotationAngle; Scale: Extended; RenderDate: TDateTime;
+      StartLine, StopLine: Integer; UseGran: TVpGranularity; DisplayOnly: Boolean); override;
     property ActiveTask: TVpTask read FActiveTask;
     property TaskIndex: Integer read GetTaskIndex write SetTaskIndex;
   published
@@ -282,7 +275,7 @@ type
 implementation
 
 uses
-  SysUtils, Math, Forms, Dialogs, VpTaskEditDlg, VpDlg, VpTasklistPainter;
+  SysUtils, Forms, Dialogs, VpTaskEditDlg, VpDlg, VpTasklistPainter;
 
 
 (*****************************************************************************)
@@ -570,13 +563,10 @@ end;
 
 procedure TVpTaskList.DeleteActiveTask(Verify: Boolean);
 var
-  Str: string;
   DoIt: Boolean;
 begin
   DoIt := not Verify;
   if FActiveTask <> nil then begin
-    Str := FActiveTask.Description;
-
     if Verify then
       DoIt := (MessageDlg(RSConfirmDeleteTask + #13#10#10 + RSPermanent,
         mtConfirmation, [mbYes, mbNo], 0) = mrYes);
@@ -603,9 +593,10 @@ end;
 procedure TVpTaskList.LinkHandler(Sender: TComponent;
   NotificationType: TVpNotificationType; const Value: Variant);
 begin
+  Unused(Value);
   case NotificationType of
-    neDataStoreChange: Invalidate;
-    neInvalidate: Invalidate;
+    neDataStoreChange : Invalidate;
+    neInvalidate      : Invalidate;
   end;
 end;
 {=====}

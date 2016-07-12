@@ -36,12 +36,12 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf, LResources,
+  LCLProc, LCLType, LCLIntf, LResources,
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  FileCtrl, StdCtrls, ExtCtrls, Buttons, VpBase, ComCtrls, ShellCtrls;
+  StdCtrls, ExtCtrls, Buttons, VpBase, ComCtrls, ShellCtrls;
 
 type
 

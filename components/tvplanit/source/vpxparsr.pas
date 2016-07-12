@@ -34,19 +34,12 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType,
+  LCLProc, LCLType,
   {$ELSE}
   Windows,
   {$ENDIF}
-  Graphics,
-  Controls,
-  SysUtils,
-  Classes,
-  VpConst,
-  VpSR,
-  VpBase,
-  VpXBase,
-  VpXChrFlt;
+  Graphics, Controls, SysUtils, Classes,
+  VpConst, VpSR, VpBase, VpXBase, VpXChrFlt;
 
 type
   StringIds = array[0..1] of DOMString;
@@ -341,6 +334,10 @@ type
 implementation
 
 {.$R *.RES}
+
+uses
+  VpMisc;
+
 
 {== TVpEntityInfo ====================================================}
 type
@@ -684,6 +681,8 @@ function TVpParser.DeclaredAttributes(const sName : DOMString;
                                             aIdx  : Integer)
                                                   : TStringList;
 begin
+  Unused(sName);
+
   if aIdx < 0 then
     Result := nil
   else
@@ -722,6 +721,8 @@ var
   oAttr     : TVpAttributeInfo;
   HasEntRef : Boolean;
 begin
+  Unused(sElemName);
+
   SetLength(Result, 0);
   HasEntRef := False;
   if aIdx >= 0 then begin
@@ -749,6 +750,7 @@ function TVpParser.GetElementContentType(const sName : DOMString;
                                                aIdx  : Integer)
                                                      : Integer;
 begin
+  Unused(sName);
   if aIdx < 0 then
     Result := CONTENT_UNDECLARED
   else
@@ -1881,9 +1883,8 @@ begin
             on E:EStringListError do begin
               EntRefs.Free;
               raise EVpParserError.CreateError (FFilter.Line,
-                                                 FFilter.LinePos,
-                                                 sCircularEntRef +
-                                                 TempChar);
+                                                FFilter.LinePos,
+                                                sCircularEntRef + TempChar);
             end;
             on E:EVpParserError do
               raise;
@@ -2252,10 +2253,7 @@ begin
   for i := 1 to Length(aString) do begin
     VpIso88591ToUcs4(AnsiChar(aString[i]), Ucs4Char);
     if (not VpIsPubidChar(Ucs4Char)) then
-      raise EVpParserError.CreateError (FFilter.Line,
-                                         FFilter.LinePos,
-                                         sInvPubIDChar +
-                                         QuotedStr(aString[i]));
+      raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, sInvPubIDChar + QuotedStr(aString[i]));
   end;
 end;
 {--------}

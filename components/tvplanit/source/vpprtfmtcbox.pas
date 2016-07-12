@@ -56,12 +56,12 @@ type
       function GetAbout : string;
       procedure Loaded; override;
       procedure Notification (AComponent: TComponent; Operation: TOperation); override;
-      procedure SetAbout (const Value : string);
-      procedure SetControlLink (const v : TVpControlLink);
-      procedure VpPrintFormatChanged (var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message Vp_PrintFormatChanged;
+      procedure SetAbout(const Value: string);
+      procedure SetControlLink(const v: TVpControlLink);
+      procedure VpPrintFormatChanged(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message Vp_PrintFormatChanged;
 
     public
-      constructor Create (AOwner : TComponent); override;
+      constructor Create(AOwner: TComponent); override;
       destructor Destroy; override;
 
       procedure UpdateItems;
@@ -69,9 +69,8 @@ type
       property Style;
 
     published
-      property Version : string read GetAbout write SetAbout stored False;
-      property ControlLink : TVpControlLink
-               read FControlLink write SetControlLink;
+      property Version: string read GetAbout write SetAbout stored False;
+      property ControlLink: TVpControlLink read FControlLink write SetControlLink;
 
       property Cursor;
       property DragCursor;
@@ -121,11 +120,14 @@ function SearchControlLink (const C : TComponent) : TVpControlLink;
 
 implementation
 
-function SearchControlLink (const C : TComponent) : TVpControlLink;
+uses
+  VpMisc;
 
-  function FindControlLink (const C : TComponent) : TVpControlLink;
+function SearchControlLink(const C: TComponent): TVpControlLink;
+
+  function FindControlLink (const C: TComponent): TVpControlLink;
   var
-    I  : Integer;
+    I: Integer;
   begin
     Result := nil;
     if not Assigned (C) then
@@ -148,21 +150,21 @@ begin
   Result := FindControlLink (C);
 end;
 
-constructor TVpPrintFormatComboBox.Create (AOwner : TComponent);
+constructor TVpPrintFormatComboBox.Create(AOwner: TComponent);
 begin
-  inherited Create (AOwner);
+  inherited Create(AOwner);
 
-  Style  := csDropDownList;
+  Style := csDropDownList;
   Sorted := True;
 
-  FControlLink := SearchControlLink (Owner); 
+  FControlLink := SearchControlLink(Owner);
   UpdateItems;
 end;
 
 destructor TVpPrintFormatComboBox.Destroy;
 begin
-  if (HandleAllocated) and (Assigned (FControlLink)) then
-    FControlLink.Printer.DeregisterWatcher (Handle);
+  if HandleAllocated and Assigned(FControlLink) then
+    FControlLink.Printer.DeregisterWatcher(Handle);
     
   inherited Destroy;
 end;
@@ -219,6 +221,7 @@ end;
 procedure TVpPrintFormatComboBox.SetAbout(const Value: string);
 begin
   //Empty on purpose
+  Unused(Value);
 end;
 
 procedure TVpPrintFormatComboBox.SetControlLink (const v : TVpControlLink);
@@ -235,14 +238,14 @@ end;
 
 procedure TVpPrintFormatComboBox.VpPrintFormatChanged(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 begin
+  Unused(Msg);
   UpdateItems;
 end;
 
 procedure TVpPrintFormatComboBox.UpdateItems;
 var
-  i   : Integer;
-  Ctr : Integer;
-
+  i: Integer;
+  Ctr: Integer;
 begin
   if not Assigned (FControlLink) then
     Exit;

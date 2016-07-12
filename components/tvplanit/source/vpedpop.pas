@@ -35,12 +35,12 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,
+  LCLProc, LCLType, LCLIntf,
   {$ELSE}
   Windows,
   {$ENDIF}
   Buttons, Classes, Controls, ExtCtrls, Forms, Graphics, Menus,
-  Messages, StdCtrls, SysUtils, VpBase, VpConst;
+  StdCtrls, SysUtils, VpConst;
 
 type
   TVpEdButton = class(TBitBtn)
@@ -57,8 +57,8 @@ type
     FShowButton  : Boolean;
 
     function GetVersion : string;
-    procedure SetShowButton(Value : Boolean);
-    procedure SetVersion(const Value : string);
+    procedure SetShowButton(Value: Boolean);
+    procedure SetVersion(const Value: string);
 
     {internal methods}
     function GetButtonWidth : Integer;
@@ -208,6 +208,7 @@ end;
 
 procedure TVpEdPopup.SetVersion(const Value : string);
 begin
+  Unused(Value);
   // Leave empty
 end;
 {=====}
