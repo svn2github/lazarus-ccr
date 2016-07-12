@@ -302,7 +302,6 @@ const
 var
   w: Integer;
   cnv: TControlCanvas;
-  d: Integer;
   shape: TVpShapeType;
 begin
   w := MaxValue([GetLabelWidth(lblPenColor), GetLabelWidth(lblPenStyle),
@@ -389,8 +388,6 @@ begin
 end;
 
 procedure TfrmEditShape.SetData(AShape: TVpPrintShape);
-var
-  StyleStr : string;
 begin
   FShapeButtons[AShape.Shape].Down := true;
 
@@ -417,6 +414,8 @@ var
   R: TRect;
   bs: TBrushStyle;
 begin
+  Unused(Control, State);
+
   Item := cbBrushStyle.Items[Index];
   x := Rect.Left + HeightOf(Rect);
   with cbBrushStyle.Canvas do
@@ -483,6 +482,8 @@ var
   TxtRect : TRect;
   x, y: Integer;
 begin
+  Unused(Control, State);
+
   Item := cbPenStyle.Items[Index];
   x := Rect.Left + HeightOf(Rect) * 2;
   y := Rect.Top + HeightOf(Rect) div 2;

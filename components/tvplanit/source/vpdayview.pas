@@ -70,7 +70,7 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Graphics, Controls, ComCtrls, ExtCtrls, StdCtrls,
+  Classes, Graphics, Controls, ExtCtrls, StdCtrls,
   Buttons, VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst,
   VpCanvasUtils, Menus;
 
@@ -122,9 +122,9 @@ type
     procedure CreateParams(var Params: TCreateParams); override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     {$IFNDEF LCL}
-    procedure WMKillFocus(var Msg : TWMKillFocus); message WM_KILLFOCUS;
+    procedure WMKillFocus(var Msg: TWMKillFocus); message WM_KILLFOCUS;
     {$ELSE}
-    procedure WMKillFocus(var Msg : TLMKillFocus); message LM_KILLFOCUS;
+    procedure WMKillFocus(var Msg: TLMKillFocus); message LM_KILLFOCUS;
     {$ENDIF}
   public
     constructor Create(AOwner: TComponent); override;
@@ -546,6 +546,7 @@ procedure TVpDvInPlaceEdit.WMKillFocus(var Msg: TWMKillFocus);
 procedure TVpDvInPlaceEdit.WMKillFocus(var Msg: TLMKillFocus);
 {$ENDIF}
 begin
+  Unused(Msg);
   TVpDayView(Owner).EndEdit(self);
 end;
 {=====}
@@ -1801,6 +1802,7 @@ procedure TVpDayView.WMSetFocus(var Msg: TWMSetFocus);
 procedure TVpDayView.WMSetFocus(var Msg: TLMSetFocus);
 {$ENDIF}
 begin
+  Unused(Msg);
   if ActiveRow = -1 then ActiveRow := TopLine;
 end;
 {=====}
@@ -2264,6 +2266,8 @@ end;
 {.$IFNDEF LCL}
 procedure TVpDayView.VpDayViewInit(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 begin
+  Unused(Msg);
+
   if csLoading in ComponentState then begin
     PostMessage(Handle, Vp_DayViewInit, 0, 0);
     Exit;

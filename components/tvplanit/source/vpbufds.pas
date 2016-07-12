@@ -65,7 +65,7 @@ implementation
 
 uses
   LazFileUtils,
-  VpConst, VpBaseDS, VpData;
+  VpConst, VpMisc, VpBaseDS, VpData;
 
 const
   TABLE_EXT = '.db';
@@ -166,6 +166,7 @@ end;
 
 function TVpBufDSDatastore.GetNextID(TableName: string): Integer;
 begin
+  Unused(TableName);
   if FUseAutoInc then
     { This is not needed in the BufDataset datastore as these tables use
       autoincrement fields. }
@@ -243,7 +244,6 @@ end;
 procedure TVpBufDSDatastore.SetUseAutoInc(AValue: Boolean);
 var
   dir: String;
-  table: TBufDataset;
 begin
   if AValue = FUseAutoInc then
     exit;

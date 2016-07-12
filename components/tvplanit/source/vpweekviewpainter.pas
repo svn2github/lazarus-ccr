@@ -39,7 +39,7 @@ type
     procedure DrawDay(ADayIndex: Integer; var DayRect: TRect; var EAIndex: Integer);
     procedure DrawDayHeader(ADayIndex: Integer; var TextRect: TRect);
     procedure DrawDays;
-    procedure DrawEvent(AEvent: TVpEvent; DayRect, TextRect: TRect; ADayIndex: Integer);
+    procedure DrawEvent(AEvent: TVpEvent; TextRect: TRect; ADayIndex: Integer);
     procedure DrawHeader;
     procedure FixFontHeights;
     procedure InitColors;
@@ -226,8 +226,6 @@ begin
 end;
 
 procedure TVpWeekViewPainter.DrawBorders;
-var
-  shadow, bright: TColor;
 begin
   if FWeekView.DrawingStyle = dsFlat then begin
     {
@@ -281,7 +279,6 @@ var
   rowHeight: Integer;
   headerHeight: Integer;
   tmpRect: TRect;
-  event: TVpEvent;
 begin
   // Abbreviations
   dayHeadHeight := TVpWeekviewOpener(FWeekView).wvDayHeadHeight;
@@ -349,7 +346,7 @@ begin
         end;
 
         // Write the event text
-        DrawEvent(TVpEvent(EventList.List^[J]), DayRect, TextRect, ADayIndex);
+        DrawEvent(TVpEvent(EventList.List^[J]), TextRect, ADayIndex);
 
         // Update the EventArray
         with TVpWeekViewOpener(FWeekView).wvEventArray[EAIndex] do begin
@@ -482,10 +479,9 @@ begin
   TPSLineTo(RenderCanvas, Angle, RenderIn, realCenter, RealBottom - 1);
 end;
 
-procedure TVpWeekViewPainter.DrawEvent(AEvent: TVpEvent; DayRect, TextRect: TRect;
+procedure TVpWeekViewPainter.DrawEvent(AEvent: TVpEvent; TextRect: TRect;
   ADayIndex: Integer);
 var
-  tmpRect: TRect;
   dayStr: String;
   todayStartTime: TDateTime;
   todayEndTime: TDateTime;

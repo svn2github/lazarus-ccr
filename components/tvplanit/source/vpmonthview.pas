@@ -38,7 +38,7 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Graphics, Controls, ComCtrls, ExtCtrls, StdCtrls,
+  Classes, Graphics, Controls, ComCtrls, ExtCtrls,
   VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils, Menus;
 
 type
@@ -181,8 +181,8 @@ type
       message CM_WANTSPECIALKEY;
     {$ELSE}
     procedure WMSize(var Msg: TLMSize); message LM_SIZE;
-    procedure WMSetFocus(var Msg : TLMSetFocus); message LM_SETFOCUS;
-    procedure WMRButtonDown(var Msg : TLMRButtonDown); message LM_RBUTTONDOWN;
+    procedure WMSetFocus(var Msg: TLMSetFocus); message LM_SETFOCUS;
+    procedure WMRButtonDown(var Msg: TLMRButtonDown); message LM_RBUTTONDOWN;
     {$ENDIF}
     procedure PopupToday (Sender : TObject);
     procedure PopupNextMonth (Sender : TObject);
@@ -268,7 +268,7 @@ type
 implementation
 
 uses
-  SysUtils, Math, LazUTF8, Forms, Dialogs, VpEvntEditDlg, VpMonthViewPainter;
+  SysUtils, LazUTF8, Forms, Dialogs, VpMonthViewPainter;
 
 (*****************************************************************************)
 { TVpContactHeadAttr }
@@ -746,11 +746,12 @@ end;
 {=====}                                                                  
 
 {$IFNDEF LCL}
-procedure TVpMonthView.WMSetFocus(var Msg : TWMSetFocus);
+procedure TVpMonthView.WMSetFocus(var Msg: TWMSetFocus);
 {$ELSE}
-procedure TVpMonthView.WMSetFocus(var Msg : TLMSetFocus);
+procedure TVpMonthView.WMSetFocus(var Msg: TLMSetFocus);
 {$ENDIF}
 begin
+  Unused(Msg);
   // if active event is nil then set active event to the first diaplsyed one.
 end;
 {=====}

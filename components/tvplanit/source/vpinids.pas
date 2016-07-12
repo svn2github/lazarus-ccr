@@ -25,7 +25,7 @@ type
 
     procedure StrToContact(AString: String; AContact: TVpContact);
     procedure StrToEvent(AString: String; AEvent: TVpEvent);
-    procedure StrToEventTimes(AString: String; var AStartTime, AEndTime: TDateTime);
+    procedure StrToEventTimes(AString: String; out AStartTime, AEndTime: TDateTime);
     procedure StrToResource(AString: String; AResource: TVpResource);
     procedure StrToTask(AString: String; ATask: TVpTask);
 
@@ -168,6 +168,7 @@ end;
 
 function TVpIniDatastore.GetNextID(TableName: string): Integer;
 begin
+  Unused(TableName);
   repeat
     Result := Random(High(Integer));
   until UniqueID(Result) and (Result <> -1);
@@ -449,7 +450,7 @@ begin
 end;
 
 procedure TVpIniDatastore.StrToEventTimes(AString: String;
-  var AStartTime, AEndTime: TDateTime);
+  out AStartTime, AEndTime: TDateTime);
 var
   L: TStrings;
 begin

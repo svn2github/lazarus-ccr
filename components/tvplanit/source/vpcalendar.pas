@@ -344,7 +344,7 @@ type
 implementation
 
 uses
-  VpData, VpCalendarPainter;
+  VpCalendarPainter;
 
 const
   calMargin = 4; {left, right, and top margin}
@@ -862,8 +862,10 @@ end;
 {=====}
 
 procedure TVpCustomCalendar.CreateParams(var Params: TCreateParams);
+{$IFNDEF LCL}
 const
   BorderStyles: array[TBorderStyle] of LongInt = (0, WS_BORDER);
+{$ENDIF}
 begin
   inherited CreateParams(Params);
 {$IFNDEF LCL}

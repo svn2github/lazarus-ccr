@@ -264,7 +264,7 @@ type
 implementation
 
 uses
-  SysUtils, Math, LazUTF8, Forms, Dialogs, VpEvntEditDlg, VpWeekViewPainter;
+  SysUtils, LazUTF8, Forms, Dialogs, VpEvntEditDlg, VpWeekViewPainter;
 
 (*****************************************************************************)
 { TVpTGInPlaceEdit }

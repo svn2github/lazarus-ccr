@@ -75,17 +75,22 @@ function AssembleName(Contact: TVpContact): string;
 procedure ParseName(Contact: TVpContact; const Value: string);
   { parses the name into it's elements and updates the contact }
 procedure ParseCSZ(Str: string; var City, State, Zip: string);
-  { parses the string and returns the city, state and zip parameters }
+{ parses the string and returns the city, state and zip parameters }
+
+{$IFDEF DELPHI}
 function LoadBaseBitmap(lpBitmapName : PAnsiChar) : HBITMAP;
   {-load and return the handle to bitmap resource}
 function LoadBaseCursor(lpCursorName : PAnsiChar) : HCURSOR;
-  {-load and return the handle to cursor resource}
+{-load and return the handle to cursor resource}
+{$ENDIF}
+
 function HeightOf(const R : TRect) : Integer;
   {- return the height of the TRect}
 function WidthOf(const R : TRect) : Integer;
   {- return the width of the TRect}
 function RightOf(AControl: TControl): Integer;
   {- returns the right edge of a control }
+
 function GetDisplayString(Canvas : TCanvas; const S : string;
   MinChars, MaxWidth : Integer) : string;
   {-given a string, a minimum number of chars to display, and a max width, }
@@ -131,6 +136,9 @@ function GetRealFontHeight(AFont: TFont): Integer;
 function DecodeLineEndings(const AText: String): String;
 function EncodeLineEndings(const AText: String): String;
 
+procedure Unused(const A1); overload;
+procedure Unused(const A1, A2); overload;
+procedure Unused(const A1, A2, A3); overload;
 
 implementation
 
@@ -227,6 +235,7 @@ begin
 end;
 {=====}
 
+{$IFDEF DELPHI}
 function LoadBaseBitmap(lpBitmapName : PAnsiChar) : HBITMAP;
 begin
   {$IFDEF FPC}
@@ -241,6 +250,7 @@ function LoadBaseCursor(lpCursorName : PAnsiChar) : HCURSOR;
 begin
 //TODO:  Result := LoadCursor(FindClassHInstance(TVpCustomControl), lpCursorName);
 end;
+{$ENDIF}
 
 function WidthOf(const R : TRect) : Integer;
 begin
@@ -622,5 +632,19 @@ function EncodeLineEndings(const AText: String): String;
 begin
   Result := StringReplace(AText, LineEnding, '\n', [rfReplaceAll]);
 end;
+
+{$PUSH}{$HINTS OFF}
+procedure Unused(const A1);
+begin
+end;
+
+procedure Unused(const A1, A2);
+begin
+end;
+
+procedure Unused(const A1, A2, A3);
+begin
+end;
+{$POP}
 
 end.

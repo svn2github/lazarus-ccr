@@ -63,7 +63,7 @@ implementation
 
 uses
   LazFileUtils,
-  VpConst;
+  VpConst, VpMisc;
 
 { TVpZeosDatastore }
 
@@ -279,6 +279,7 @@ end;
 
 function TVpSqlite3DataStore.GetNextID(TableName: string): integer;
 begin
+  Unused(TableName);
   { This is not needed in the SQLITE3 datastore as these tables use
     autoincrement fields. }
   Result := -1;

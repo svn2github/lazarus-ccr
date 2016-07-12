@@ -358,12 +358,10 @@ implementation
 
 {$R vpbase.res}
 
+{$IFNDEF LCL}
 uses
-  Math
-  {$IFNDEF LCL}
-  , CommCtrl
-  {$ENDIF}
-  ;
+  CommCtrl;
+{$ENDIF}
 
 { EAdStreamError }
 

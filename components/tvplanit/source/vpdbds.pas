@@ -58,9 +58,8 @@ type
     { property setters }
     procedure SetReadOnly(const Value: boolean);
 
-    procedure SetFilterCriteria(aTable : TDataset; aUseDateTime : Boolean;
-      aResourceID : Integer; aStartDateTime : TDateTime;
-      aEndDateTime : TDateTime); virtual;
+    procedure SetFilterCriteria(aTable: TDataset; aUseDateTime: Boolean;
+      aResourceID: Integer; aStartDateTime, aEndDateTime: TDateTime); virtual;
 
   protected {properties that may be surfaced later}
       property ReadOnly : boolean
@@ -1943,9 +1942,8 @@ begin
 end;
 {=====}
 
-procedure TVpCustomDBDataStore.SetFilterCriteria(aTable : TDataset;
-  aUseDateTime : Boolean; aResourceID : Integer; aStartDateTime : TDateTime;
-      aEndDateTime : TDateTime);
+procedure TVpCustomDBDataStore.SetFilterCriteria(aTable: TDataset;
+  aUseDateTime: Boolean; aResourceID: Integer; aStartDateTime, aEndDateTime: TDateTime);
 begin
   // error here: "... raised an exception class 'EDatabaseError' with message:
   //              Index based on unknown field '>='.".

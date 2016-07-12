@@ -220,13 +220,15 @@ begin
   {get the date order from windows}
   C[0] := '0'; {default}
 //TODO:
-  {$IFNDEF LCL}
+  {$IFDEF DELPHI}
   GetProfileString('intl', 'iDate', '0', C, 2);
-  {$ENDIF}
-  DateOrder := TVpDateOrder(Ord(C[0])-Ord('0'));
-
   {load button glyph}
   FButton.Glyph.Handle := LoadBaseBitmap('VPBTNCAL');
+  {$ELSE}
+  DateOrder := TVpDateOrder(Ord(C[0])-Ord('0'));
+  {load button glyph}
+  FButton.Glyph.LoadFromResourceName(HINSTANCE,'VPBTNCAL');
+  {$ENDIF}
 
   {create color class}
   FPopupCalColors := TVpCalColors.Create;

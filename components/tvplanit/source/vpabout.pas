@@ -34,7 +34,7 @@ interface
 
 uses
 {$IFDEF LCL}
- LMessages, LCLProc, LCLType, LCLIntf,
+ LCLProc, LCLType, LCLIntf,
 {$ELSE}
  Windows, Messages,
 {$ENDIF}
@@ -71,10 +71,8 @@ type
     Label3: TLabel;
     Label1: TLabel;
     procedure FormActivate(Sender: TObject);
-    procedure lblLinkMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
-    procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
+    procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,Y: Integer);
+    procedure lblLinkMouseMove(Sender: TObject; Shift: TShiftState; X,Y: Integer);
     procedure lblLinkClick(Sender: TObject);
   private
     { Private declarations }
@@ -103,7 +101,7 @@ uses
 {$IFNDEF LCL}
   ShellAPI,
 {$ENDIF}
-  VpConst, VpSR;
+  VpConst, VpMisc, VpSR;
 
 const
   TURBO_LINK_URL = 'http://sourceforge.net/projects/tpvplanit/';
@@ -156,6 +154,7 @@ end;
 procedure TfrmAbout.FormMouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
 begin
+  Unused(Shift, X, Y);
   lblTurboLink.Font.Style := [];
 end;
 
@@ -180,6 +179,7 @@ end;
 procedure TfrmAbout.lblLinkMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
+  Unused(Shift, X, Y);
   TLabel(Sender).Font.Style := [fsUnderline];
 end;
 

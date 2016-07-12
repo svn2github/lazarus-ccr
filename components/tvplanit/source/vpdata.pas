@@ -39,9 +39,9 @@ uses
   {$ELSE}
   Windows,
   {$ENDIF}
-  SysUtils, Classes,
+  SysUtils, Classes, Dialogs,
   {$IFDEF VERSION6} Types, {$ENDIF}
-  VpBase, VpSR, VpConst, Dialogs;
+  VpSR;
 
 type
   TVpEventRec = packed record

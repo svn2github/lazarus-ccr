@@ -13,7 +13,6 @@ uses
 type
   TVpXmlDatastore = class(TVpCustomDatastore)
   private
-    FDoc: TXmlDocument;
     FFilename: String;
     FParentNode: String;
     FXmlSettings: TFormatSettings;
@@ -30,13 +29,13 @@ type
     function FindStoreNode(ADoc: TDOMDocument): TDOMNode;
 
     procedure ReadContact(ANode: TDOMNode; AContacts: TVpContacts);
-    procedure ReadContacts(ADoc: TDOMDocument; ANode: TDOMNode; AContacts: TVpContacts);
+    procedure ReadContacts(ANode: TDOMNode; AContacts: TVpContacts);
     procedure ReadEvent(ANode: TDOMNode; ASchedule: TVpSchedule);
-    procedure ReadEvents(ADoc: TDOMDocument; ANode: TDOMNode; ASchedule: TVpSchedule);
-    procedure ReadResource(ADoc: TDOMDocument; ANode: TDOMNode);
-    procedure ReadResources(ADoc: TDOMDocument; ANode: TDOMNode);
+    procedure ReadEvents(ANode: TDOMNode; ASchedule: TVpSchedule);
+    procedure ReadResource(ANode: TDOMNode);
+    procedure ReadResources(ANode: TDOMNode);
     procedure ReadTask(ANode: TDOMNode; ATasks: TVpTasks);
-    procedure ReadTasks(ADoc: TDOMDocument; ANode: TDOMNode; ATasks: TVpTasks);
+    procedure ReadTasks(ANode: TDOMNode; ATasks: TVpTasks);
 
     procedure WriteContact(ADoc: TDOMDocument; AContactNode: TDOMNode; AContact: TVpContact);
     procedure WriteContacts(ADoc: TDOMDocument; AParentNode: TDOMNode; AResource: TVpResource);
@@ -74,7 +73,7 @@ type
 implementation
 
 uses
-  typinfo, StrUtils, Strings,
+  typinfo,
   VpConst, VpMisc, VpSR;
 
 const
@@ -235,7 +234,7 @@ var
   i, j: Integer;
   node, prevnode: TDOMNode;
   rootnode: TDOMNode;
-  nodename: String;
+  {%H-}nodename: String;
 begin
   L := TStringList.Create;
   try
@@ -368,6 +367,7 @@ end;
 
 function TVpXmlDatastore.GetNextID(TableName: string): Integer;
 begin
+  Unused(TableName);
   repeat
     Result := Random(High(Integer));
   until UniqueID(Result) and (Result <> -1);
@@ -517,7 +517,7 @@ end;
 procedure TVpXmlDatastore.ReadFromXml;
 var
   doc: TXMLDocument;
-  node, child, storeNode: TDOMNode;
+  node, storeNode: TDOMNode;
   nodename: String;
 begin
   if FFileName = '' then
@@ -538,7 +538,7 @@ begin
       while node <> nil do begin
         nodeName := node.NodeName;
         if nodeName = 'Resources' then
-          ReadResources(doc, node);
+          ReadResources(node);
         node := node.NextSibling;
       end;
   finally
@@ -639,8 +639,7 @@ begin
   end;
 end;
 
-procedure TVpXmlDatastore.ReadContacts(ADoc: TDOMDocument; ANode: TDOMNode;
-  AContacts: TVpContacts);
+procedure TVpXmlDatastore.ReadContacts(ANode: TDOMNode; AContacts: TVpContacts);
 var
   node: TDOMNode;
   nodeName: String;
@@ -737,8 +736,7 @@ begin
   end;
 end;
 
-procedure TVpXmlDatastore.ReadEvents(ADoc: TDOMDocument; ANode: TDOMNode;
-  ASchedule: TVpSchedule);
+procedure TVpXmlDatastore.ReadEvents(ANode: TDOMNode; ASchedule: TVpSchedule);
 var
   node: TDOMNode;
   nodeName: String;
@@ -755,7 +753,7 @@ end;
 // <Resource ResourceID="1178568021" ResourceActive="true">
 //    <Description>some test</Description>
 // </Resource>
-procedure TVpXmlDatastore.ReadResource(ADoc: TDOMDocument; ANode: TDOMNode);
+procedure TVpXmlDatastore.ReadResource(ANode: TDOMNode);
 var
   node: TDOMNode;
   nodeName: String;
@@ -780,11 +778,11 @@ begin
     else if nodeName = 'Notes' then
       res.Notes := GetNodeValue(node)
     else if nodeName = 'Contacts' then
-      ReadContacts(ADoc, node, res.Contacts)
+      ReadContacts(node, res.Contacts)
     else if nodeName = 'Events' then
-      ReadEvents(ADoc, node, res.Schedule)
+      ReadEvents(node, res.Schedule)
     else if nodeName = 'Tasks' then
-      ReadTasks(ADoc, node, res.Tasks)
+      ReadTasks(node, res.Tasks)
     else if nodeName = 'UserField0' then
       res.UserField0 := GetNodeValue(node)
     else if nodeName = 'UserField1' then
@@ -809,7 +807,7 @@ begin
   end;
 end;
 
-procedure TVpXmlDatastore.ReadResources(ADoc: TDOMDocument; ANode: TDOMNode);
+procedure TVpXmlDatastore.ReadResources(ANode: TDOMNode);
 var
   node: TDOMNode;
   nodeName: String;
@@ -818,7 +816,7 @@ begin
   while node <> nil do begin
     nodeName := node.NodeName;
     if nodeName = 'Resource' then
-      ReadResource(ADoc, node);
+      ReadResource(node);
     node := node.NextSibling;
   end;
 end;
@@ -876,8 +874,7 @@ begin
   end;
 end;
 
-procedure TVpXmlDatastore.ReadTasks(ADoc: TDOMDocument; ANode: TDOMNode;
-  ATasks: TVpTasks);
+procedure TVpXmlDatastore.ReadTasks(ANode: TDOMNode; ATasks: TVpTasks);
 var
   node: TDOMNode;
   nodeName: String;
@@ -1280,7 +1277,7 @@ procedure TVpXmlDatastore.WriteEvents(ADoc: TDOMDocument; AParentNode: TDOMNode;
   AResource: TVpResource);
 var
   i: Integer;
-  node, evNode, child, txt: TDOMNode;
+  node, evNode: TDOMNode;
   ev: TVpEvent;
 begin
   node := ADoc.CreateElement('Events');
@@ -1511,7 +1508,7 @@ procedure TVpXmlDatastore.WriteTasks(ADoc: TDOMDocument; AParentNode: TDOMNode;
   AResource: TVpResource);
 var
   i: Integer;
-  node, tnode, child, txt: TDOMNode;
+  node, tnode: TDOMNode;
   t: TVpTask;
 begin
   node := ADoc.CreateElement('Tasks');
