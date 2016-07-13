@@ -250,9 +250,8 @@ begin
       Result := ADoc.FindNode(STORE_NODE_NAME);
       // no: attach as child of root
       if Result = nil then begin
-        rootnode := ADoc.FirstChild;
         Result := ADoc.CreateElement(STORE_NODE_NAME);
-        rootnode.AppendChild(Result);
+        ADoc.AppendChild(Result);
       end;
       exit;
     end;
