@@ -368,13 +368,15 @@ end;
 procedure TContactEditForm.ResizeControls;
 const
   ComboArrowWidth  = 32;
-  FieldVertSep     = 25;
+//  FieldVertSep     = 25;
 //  FormRightBorder  = 20;
 //  MinFormWidth     = 265;
 //  FormHeightOffset = 103;
 //  MinFormHeight    = 250;
   TopField         = 8;
   DIST             = 4;   // distance between label and edit/combo
+  HBORDER          = 8;   // distance between container border and label
+  VDIST            = 2;   // vertical distance between edits
 
 type
   TLabelArray = array of TLabel;
@@ -385,14 +387,14 @@ var
   Labels: TLabelArray;
   Comboboxes: TComboboxArray;
   Edits: TEditArray;
-  LargestLabel: Integer;
+  LargestLabelWidth: Integer;
   WidestField: Integer;
   i, j: Integer;
   OldFont: TFont;
   FieldTop: Integer;
   delta: Integer;
-  horMargin: Integer;  // Margin at left and right from tabsheet to label/edit
   corr: Integer;       // difference between form's client width and tabsheet width
+  editHeight: Integer; // Height of an edit control
 
 begin
   { Note: The resizing algorithm is dependent upon the labels having their
@@ -412,17 +414,17 @@ begin
   Labels[10] := CategoryLbl;
   Labels[11] := BirthdateLbl;
 
-  LargestLabel := 0;
+  LargestLabelWidth := 0;
   for i := Low(Labels) to High(Labels) do
-    LargestLabel := Max(LargestLabel, GetLabelWidth(Labels[i]));
+    LargestLabelWidth := Max(LargestLabelWidth, GetLabelWidth(Labels[i]));
 
   { Determine width of label based upon whether large or small fonts are
     in effect. }
   for i := Low(Labels) to High(Labels) do begin
-    Labels[i].Width := LargestLabel;
-    Labels[i].FocusControl.Left := LastNameLbl.Left + LargestLabel + DIST;
+    Labels[i].FocusControl.Left := HBORDER + LargestLabelWidth + DIST;
+    Labels[i].Left := Labels[i].FocusControl.Left - DIST - GetLabelWidth(Labels[i]);
+    Labels[i].Top := Labels[i].FocusControl.Top + (Labels[i].FocusControl.Height - Labels[i].Height) div 2;
   end;
-  horMargin := Labels[0].Left;
 
   widestField := 250;
 
@@ -452,7 +454,7 @@ begin
 
   { Set form width according to widest field }
   corr := ClientWidth - tabMain.ClientWidth;
-  ClientWidth := LastNameEdit.Left + widestfield + horMargin + corr;
+  ClientWidth := LastNameEdit.Left + widestfield + HBORDER + corr;
 
   { Set edit and combo widths }
   for i:= Low(Labels) to High(Labels) do
@@ -464,13 +466,15 @@ begin
   cboxState.Width := widestField;
 
   { Vertically arrange the fields. }
+  editHeight := LastNameEdit.Height;
+
   delta := (Labels[0].FocusControl.Height - labels[0].Height) div 2;
   FieldTop := TopField;
   for i := Low(Labels) to High(Labels) do
     if Labels[i].Visible then begin
       Labels[i].FocusControl.Top := FieldTop;
       Labels[i].Top := FieldTop + delta;
-      inc(FieldTop, FieldVertSep);
+      inc(FieldTop, editHeight + VDIST);
     end;
 
   { Set form height such that first tab is filled completely by controls }
@@ -492,13 +496,13 @@ begin
   Edits[3] := Phone4Edit;
   Edits[4] := Phone5Edit;
 
-  largestLabel := GetLabelWidth(EMailLbl);
+  largestLabelWidth := GetLabelWidth(EMailLbl);
   OldFont := TFont.Create;
   try
     OldFont.Assign(Canvas.Font);
     Canvas.Font.Assign(cboxPhoneLbl1.Font);
     for i:=0 to cboxPhoneLbl1.Items.Count-1 do
-      largestLabel := Max(cboxPhoneLbl1.Canvas.TextWidth(cboxPhoneLbl1.Items[i]) + ComboArrowWidth, largestlabel);
+      largestLabelWidth := Max(cboxPhoneLbl1.Canvas.TextWidth(cboxPhoneLbl1.Items[i]) + ComboArrowWidth, largestlabelWidth);
   finally
     Canvas.Font.Assign(OldFont);
     OldFont.Free;
@@ -506,24 +510,23 @@ begin
 
   FieldTop := TopField;
   for i:=Low(Comboboxes) to High(Comboboxes) do begin
-    Comboboxes[i].Left := horMargin;
-    Comboboxes[i].Width := largestLabel;
+    Comboboxes[i].Left := HBORDER;
+    Comboboxes[i].Width := largestLabelWidth;
     Comboboxes[i].Top := FieldTop;
-    inc(FieldTop, FieldVertSep);
+    inc(FieldTop, editHeight + VDIST);
   end;
 
   for i:= Low(Edits) to High(Edits) do begin
     Edits[i].Left := cboxPhoneLbl1.Left + cboxPhoneLbl1.Width + DIST;
-    Edits[i].Width := ClientWidth - Edits[i].Left - horMargin - corr;
+    Edits[i].Width := ClientWidth - Edits[i].Left - HBORDER - corr;
     Edits[i].Top := Comboboxes[i].Top;
   end;
 
   EMailEdit.Left := Phone1Edit.Left;
   EMailEdit.Width := Phone1Edit.Width;
-  EMailEdit.Top := Phone5Edit.Top + FieldVertSep;
+  EMailEdit.Top := Phone5Edit.Top + editHeight + VDIST;
   EMailLbl.Left := EMailEdit.Left - GetLabelWidth(EMailLbl) - DIST;
   EMailLbl.Top := EMailEdit.Top + delta;
-
 
   { Page "User-defined" }
   SetLength(Labels, 4);
@@ -532,19 +535,19 @@ begin
   Labels[2] := CustomLbl3;
   Labels[3] := CustomLbl4;
 
-  largestLabel := 0;
+  largestLabelWidth := 0;
   for i := Low(Labels) to High(Labels) do
-    largestLabel := Max(largestLabel, GetLabelWidth(Labels[i]));
+    largestLabelWidth := Max(largestLabelWidth, GetLabelWidth(Labels[i]));
 
   FieldTop := TopField;
   for i := Low(Labels) to High(Labels) do begin
-    Labels[i].FocusControl.Left := horMargin + LargestLabel + DIST;
+    Labels[i].FocusControl.Left := HBORDER + LargestLabelWidth + DIST;
     Labels[i].FocusControl.Top := FieldTop;
-    Labels[i].FocusControl.Width := ClientWidth - Labels[i].FocusControl.Left - horMargin - corr;
-    Labels[i].Width := LargestLabel;
+    Labels[i].FocusControl.Width := ClientWidth - Labels[i].FocusControl.Left - HBORDER - corr;
+    Labels[i].Width := LargestLabelWidth;
     Labels[i].Left := Labels[i].FocusControl.Left - GetLabelWidth(Labels[i]) - DIST;
     Labels[i].Top := FieldTop + delta;
-    inc(FieldTop, FieldVertSep);
+    inc(FieldTop, editHeight + VDIST);
   end;
 end;
 

@@ -29,111 +29,101 @@ object ContactEditForm: TContactEditForm
       ClientHeight = 351
       ClientWidth = 425
       object LastNameLbl: TLabel
-        Left = 8
-        Height = 16
+        Left = 9
+        Height = 15
         Top = 6
-        Width = 127
+        Width = 54
         Alignment = taRightJustify
-        AutoSize = False
         Caption = 'Last name'
         FocusControl = LastNameEdit
         ParentColor = False
       end
       object AddrLbl: TLabel
         Left = 8
-        Height = 16
+        Height = 15
         Top = 81
-        Width = 127
+        Width = 42
         Alignment = taRightJustify
-        AutoSize = False
         Caption = 'Address'
         FocusControl = AddressEdit
         ParentColor = False
       end
       object CityLbl: TLabel
         Left = 8
-        Height = 16
-        Top = 105
-        Width = 127
+        Height = 15
+        Top = 104
+        Width = 21
         Alignment = taRightJustify
-        AutoSize = False
         Caption = 'City'
         FocusControl = CityEdit
         ParentColor = False
       end
       object StateLbl: TLabel
         Left = 8
-        Height = 16
+        Height = 15
         Top = 129
-        Width = 127
+        Width = 26
         Alignment = taRightJustify
-        AutoSize = False
         Caption = 'State'
         FocusControl = cboxState
         ParentColor = False
       end
       object ZipLbl: TLabel
         Left = 8
-        Height = 16
+        Height = 15
         Top = 153
-        Width = 127
+        Width = 48
         Alignment = taRightJustify
-        AutoSize = False
         Caption = 'Zip Code'
         FocusControl = ZipCodeEdit
         ParentColor = False
       end
       object CountryLbl: TLabel
         Left = 8
-        Height = 16
+        Height = 15
         Top = 177
-        Width = 127
+        Width = 43
         Alignment = taRightJustify
-        AutoSize = False
         Caption = 'Country'
         FocusControl = cboxCountry
         ParentColor = False
       end
       object PositionLbl: TLabel
         Left = 8
-        Height = 16
+        Height = 15
         Top = 226
-        Width = 127
+        Width = 43
         Alignment = taRightJustify
-        AutoSize = False
         Caption = 'Position'
         FocusControl = PositionEdit
         ParentColor = False
       end
       object TitleLbl: TLabel
         Left = 8
-        Height = 16
+        Height = 15
         Top = 58
-        Width = 127
+        Width = 23
         Alignment = taRightJustify
-        AutoSize = False
         Caption = 'Title'
         FocusControl = TitleEdit
         ParentColor = False
       end
       object CompanyLbl: TLabel
         Left = 8
-        Height = 16
+        Height = 15
         Top = 202
-        Width = 127
+        Width = 52
         Alignment = taRightJustify
-        AutoSize = False
         Caption = 'Company'
         FocusControl = CompanyEdit
         ParentColor = False
       end
       object CategoryLbl: TLabel
         Left = 8
-        Height = 16
+        Height = 15
         Top = 253
-        Width = 127
+        Width = 48
         Alignment = taRightJustify
-        AutoSize = False
         Caption = 'Category'
         FocusControl = cboxCategory
         ParentColor = False
@@ -257,11 +247,10 @@ object ContactEditForm: TContactEditForm
       end
       object FirstNameLbl: TLabel
         Left = 8
-        Height = 16
+        Height = 15
         Top = 31
-        Width = 127
+        Width = 55
         Alignment = taRightJustify
-        AutoSize = False
         Caption = 'First name'
         FocusControl = FirstNameEdit
         ParentColor = False
@@ -283,11 +272,10 @@ object ContactEditForm: TContactEditForm
       end
       object BirthdateLbl: TLabel
         Left = 8
-        Height = 16
+        Height = 15
         Top = 284
-        Width = 127
+        Width = 51
         Alignment = taRightJustify
-        AutoSize = False
         Caption = 'Birth date'
         FocusControl = BirthdateEdit
         ParentColor = False
