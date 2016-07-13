@@ -65,7 +65,7 @@ type
     StartDate: TDateEdit;
     EndDate: TDateEdit;
     RepeatUntil: TDateEdit;
-    Panel1: TPanel;
+    ButtonPanel: TPanel;
     OKBtn: TButton;
     CancelBtn: TButton;
     ResourceNameLbl: TLabel;
@@ -613,9 +613,13 @@ end;
 procedure TDlgEventEdit.PositionControls;
 const
   DELTA = 8;
+  VDIST = 5;
+  VBEVELDIST = 8;
 var
   w: Integer;
 begin
+  // *** Horizontal positions ***
+
   // Position controls according to label widths
   w := MaxValue([GetLabelWidth(DescriptionLbl), GetLabelWidth(LocationLbl), GetLabelWidth(StartTimeLbl), GetLabelWidth(EndTimeLbl)]);
   DescriptionEdit.Left := w + 2*DELTA;
@@ -672,10 +676,55 @@ begin
   end;
   SoundFinderBtn.Left := AlarmAdvanceType.Left + AlarmAdvanceType.Width + 2;
 
-  Width := IntervalUpdown.Left + IntervalUpdown.Width + DELTA + Width - AppointmentGroupbox.ClientWidth;
+  Width := RightOf(IntervalUpdown) + DELTA + Width - AppointmentGroupbox.ClientWidth;
 
   Category.Left := DescriptionEdit.Left + DescriptionEdit.Width - category.Width;
   CategoryLbl.Left := Category.Left - DELTA - GetLabelWidth(CategoryLbl);
+
+  // *** Vertical positions ***
+  DescriptionLbl.Top := DescriptionEdit.Top + (DescriptionEdit.Height - DescriptionLbl.Height) div 2;
+  LocationEdit.Top := BottomOf(DescriptionEdit) + VDIST;
+  LocationLbl.Top := LocationEdit.Top + (LocationEdit.Height - LocationLbl.Height) div 2;
+  CategoryLbl.Top := LocationLbl.Top;
+  Category.Top := LocationEdit.Top;
+
+  Bevel1.Top := BottomOf(LocationEdit) + VBEVELDIST;
+
+  imgClock.Top := Bevel1.Top + 2 + VBEVELDIST;
+  CbAllDay.Top := imgClock.Top;
+  imgRecurring.Top := imgClock.Top;
+
+  StartDate.Top := BottomOf(CbAllDay) + VDIST;
+  StartTime.Top := StartDate.Top;
+  StartTimeLbl.Top := StartDate.Top + (StartDate.Height - StartTimeLbl.Height) div 2;
+  EndDate.Top := BottomOf(StartDate) + VDIST;
+  EndTime.Top := EndDate.Top;
+  EndTimeLbl.Top := EndDate.Top + (EndDate.Height - EndTimeLbl.Height) div 2;
+  RecurringType.Top := StartDate.Top;
+  edtUnusedPlaceHolder.Top := RecurringType.Top;
+  FCustomInterval.Top := RecurringType.Top;
+  IntervalUpDown.Top := FCustomInterval.Top;
+  RecurringLbl.Top := RecurringType.Top - 4 - RecurringLbl.Height;
+  IntervalLbl.Top := RecurringLbl.Top;
+  RepeatUntil.Top := EndDate.Top;
+  RecurrenceEndsLbl.Top := RepeatUntil.Top + (RepeatUntil.Height - RecurrenceEndsLbl.Height) div 2;
+
+  Bevel2.Top := BottomOf(EndDate) + VBEVELDIST;
+
+  imgAlarm.Top := Bevel2.Top + 2 + VBEVELDIST;
+  AlarmAdvance.Top := imgAlarm.Top;
+  AdvanceUpdown.Top := AlarmAdvance.Top;
+  AlarmSet.Top := AlarmAdvance.Top + (AlarmAdvance.Height - AlarmSet.Height) div 2;
+  AlarmAdvanceType.Top := AlarmAdvance.Top;
+  SoundFinderBtn.Height := AlarmAdvanceType.Height;
+  SoundFinderBtn.Width := SoundFinderBtn.Height;
+  SoundFinderBtn.Top := AlarmAdvanceType.Top;
+
+  AppointmentGroupbox.ClientHeight := BottomOf(AlarmAdvance) + VBEVELDIST;
+
+  NotesMemo.Top := BottomOf(AppointmentGroupbox) + VBEVELDIST;
+
+  ClientHeight := BottomOf(NotesMemo) + VBEVELDIST + ButtonPanel.Height;
 end;
 
 

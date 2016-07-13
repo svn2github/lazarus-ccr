@@ -90,6 +90,8 @@ function WidthOf(const R : TRect) : Integer;
   {- return the width of the TRect}
 function RightOf(AControl: TControl): Integer;
   {- returns the right edge of a control }
+function BottomOf(AControl: TControl): Integer;
+  {- returns the bottom edge of a control }
 
 function GetDisplayString(Canvas : TCanvas; const S : string;
   MinChars, MaxWidth : Integer) : string;
@@ -603,6 +605,11 @@ end;
 function RightOf(AControl: TControl): Integer;
 begin
   Result := AControl.Left + AControl.Width;
+end;
+
+function Bottomof(AControl: TControl): Integer;
+begin
+  Result := AControl.Top + AControl.Height;
 end;
 
 function SameDate(dt1, dt2: TDateTime): Boolean;
