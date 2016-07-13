@@ -271,7 +271,8 @@ begin
       if not appending then begin
         Result := node.FindNode(L[i]);
         // Result is nil if the path element L[i] is not found. In this case
-        // set the Flag appending to true to indicate that a new sub-tree begins here.
+        // set the flag "appending" to true to indicate that a new sub-tree
+        // begins here.
         if (Result = nil) then
           appending := true;
       end;
