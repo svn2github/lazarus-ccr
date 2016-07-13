@@ -199,6 +199,8 @@ end;
 { TDlgEventEdit }
 
 procedure TDlgEventEdit.FormCreate(Sender: TObject);
+var
+  h: Integer;
 begin
  {$IFDEF LCL}
   StartTime := TTimeEdit.Create(self);
@@ -246,7 +248,13 @@ begin
   end;
   IntervalUpDown.Associate := FCustomInterval;
 
-  Category.ItemHeight := LocationEdit.Height - 6;
+  // This is needed as workaround for the combobox height at higher dpi.
+  // We design it with Style csDropdown where the height is correct, and then
+  // use the corresponding, correct ItemHeight after switching to csOwnerDrawFixed
+  // (which is needed to draw the color boxes).
+  h := Category.ItemHeight;
+  Category.Style := csOwnerDrawFixed;
+  Category.ItemHeight := h;
 end;
 {=====}
 

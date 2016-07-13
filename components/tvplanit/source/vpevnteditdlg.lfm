@@ -286,13 +286,11 @@ object DlgEventEdit: TDlgEventEdit
     end
     object Category: TComboBox
       Left = 484
-      Height = 21
+      Height = 23
       Top = 40
       Width = 180
       ItemHeight = 15
       OnDrawItem = CategoryDrawItem
-      ReadOnly = True
-      Style = csOwnerDrawFixed
       TabOrder = 2
     end
     object RecurringType: TComboBox
