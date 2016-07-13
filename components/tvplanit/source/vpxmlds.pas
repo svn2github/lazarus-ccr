@@ -234,6 +234,7 @@ var
   i, j: Integer;
   node, prevnode: TDOMNode;
   rootnode: TDOMNode;
+  appending: Boolean;
   {%H-}nodename: String;
 begin
   L := TStringList.Create;
@@ -241,85 +242,53 @@ begin
     if FParentNode <> '' then begin
       L.Delimiter := '/';
       L.StrictDelimiter := true;
-      L.DelimitedText := FParentNode;
-      if L.Count = 0 then begin
-        L.Delimiter := '\';
-        L.DelimitedText := FParentNode;
-      end;
+      L.DelimitedText := StringReplace(FParentNode, '\', '/', [rfReplaceAll]);
     end;
 
-    // Get current root node
-    rootnode := ADoc.FirstChild;
-    nodeName := rootnode.NodeName;
-
     if (L.Count = 0) then begin
-      // no parent node specified --> is it a child of root?
-      Result := rootnode.FindNode(STORE_NODE_NAME);
-      // no: attach as child to root
+      // no parent node specified --> is the root node the node of the data store?
+      Result := ADoc.FindNode(STORE_NODE_NAME);
+      // no: attach as child of root
       if Result = nil then begin
+        rootnode := ADoc.FirstChild;
         Result := ADoc.CreateElement(STORE_NODE_NAME);
         rootnode.AppendChild(Result);
       end;
       exit;
     end;
 
-    // Parent node path is absolute
-    if (L[0] = '') then begin
-      if (L.Count > 1) and (rootnode.NodeName <> L[1]) then begin
-        // ... but root is different from current root --> Error
-        Result := nil;
-        XmlError('Root nodes of xml file and datastore do not match.');
-      end;
-    end;
+    // Remove empty path elements due to consecutive slashes
+    for i := L.Count-1 downto 0 do
+      if L[i] = '' then L.Delete(i);
+    // Add the name of the datastore node to the path list of node names
+    L.Add(STORE_NODE_NAME);
 
-    node := rootnode;
+    // Now iterate through all elements of the path. Begin a new subtree at the
+    // element where the ParehtNode path differs from the path in the document.
+    node := ADoc;
+    appending := false;
     for i:=0 to L.Count-1 do begin
-      if (L[i] = '') then
-        Continue;
-      if node = rootnode then
-        prevnode := rootnode
-      else
-        prevnode := node.ParentNode;
-      // Look for the path segment among the nodes of the current level
-      Result := node.FindNode(L[i]);
-      if Result = nil then begin
-        // Not found -> Build sub-tree starting at prev level
-        for j:= i to L.Count-1 do begin
-          if L[j] = '' then
-            Continue;
-          prevnode := node;
-          node := ADoc.CreateElement(L[i]);
-          prevnode.AppendChild(node);
-        end;
-      end else
-        // Found -> Proceed to next level
-        if i < L.Count-1 then
-          node := prevnode.FirstChild;
+      if not appending then begin
+        Result := node.FindNode(L[i]);
+        // Result is nil if the path element L[i] is not found. In this case
+        // set the Flag appending to true to indicate that a new sub-tree begins here.
+        if (Result = nil) then
+          appending := true;
+      end;
+      if appending then begin
+        Result := ADoc.CreateElement(L[i]);
+        node.AppendChild(Result);
+      end;
+      node := Result;
     end;
-    Result := ADoc.CreateElement(STORE_NODE_NAME);
-    node.AppendChild(Result);
-
   finally
     L.Free;
   end;
 end;
 
+{ Finds the node with the caption STORE_NODE_NAME, or returns nil if not found.
+  Follows the path given by ParentNode }
 function TVpXmlDatastore.FindStoreNode(ADoc: TDOMDocument): TDOMNode;
-
-  function NodeFound(ANode: TDOMNode; ANodeName: String): Boolean;
-  var
-    nodename: String;
-  begin
-    if ANode = nil then begin
-      Result := false;
-      exit;
-    end;
-    nodename := ANode.NodeName;
-    Result := nodename = ANodeName;
-    if not Result then
-      Result := NodeFound(ANode.NextSibling, ANodeName);
-  end;
-
 var
   L: TStringList;
   nodename: String;
@@ -330,15 +299,11 @@ begin
     if FParentNode <> '' then begin
       L.Delimiter := '/';
       L.StrictDelimiter := true;
-      L.DelimitedText := FParentNode;
-      if L.Count = 0 then begin
-        L.Delimiter := '\';
-        L.DelimitedText := FParentNode;
-      end;
+      L.DelimitedText := StringReplace(FParentNode, '\', '/', [rfReplaceAll]);
     end;
 
-    // DataStore node is root node
-    if L.Count = 0 then begin
+    // ParentNode is empty --> DataStore node is root node
+    if (L.Count = 0) then begin
       Result := ADoc.FirstChild;
       if Result <> nil then begin
         nodeName := Result.NodeName;
@@ -346,18 +311,18 @@ begin
           Result := nil;
       end;
     end else begin
-      Result := ADoc.FirstChild;
-      i := 0;
-      while (i < L.Count) do begin
-        if L[i] = '' then
-          Continue;
-        if NodeFound(Result, L[i]) then begin
-          Result := Result.FirstChild;
-          inc(i);
-        end else begin
-          Result := nil;
+      // Remove empty path elements due to consecutive slashes
+      for i := L.Count-1 downto 0 do
+        if L[i] = '' then L.Delete(i);
+      // Add the name of the datastore node to the path list of node names
+      L.Add(STORE_NODE_NAME);
+      // Beginning with root dig deeper along the path specified until the
+      // node of the datastore is found (or not).
+      Result := ADoc;
+      for i:=0 to L.Count-1 do begin
+        Result := Result.FindNode(L[i]);
+        if Result = nil then
           exit;
-        end;
       end;
     end;
   finally
@@ -533,6 +498,7 @@ begin
     if storeNode = nil then
       exit;
 
+    nodeName := storeNode.NodeName;
     Resources.ClearResources;
     node := storeNode.FirstChild;
       while node <> nil do begin
@@ -1545,8 +1511,7 @@ begin
     end else begin
       // If file does not exist then create a new xml document
       doc := TXMLDocument.Create;
-      storeNode := doc.CreateElement(STORE_NODE_NAME);
-      doc.AppendChild(storeNode);
+      storeNode := CreateStoreNode(doc); //doc.CreateElement(STORE_NODE_NAME);
     end;
 
     WriteResources(doc, storeNode);
