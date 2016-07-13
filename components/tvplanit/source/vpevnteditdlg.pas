@@ -245,6 +245,8 @@ begin
     TabOrder := edtUnusedPlaceholder.TabOrder;
   end;
   IntervalUpDown.Associate := FCustomInterval;
+
+  Category.ItemHeight := LocationEdit.Height - 6;
 end;
 {=====}
 
