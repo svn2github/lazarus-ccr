@@ -247,7 +247,7 @@ function ShowRxDBPopUpForm(AControl:TWinControl; ADataSet:TDataSet;
 procedure FillPopupWidth(APopUpFormOptions:TPopUpFormOptions; ARxPopUpForm:TPopUpForm);
 
 implementation
-uses dbutils, math, LCLProc;
+uses dbutils, math, LCLProc, LazUTF8;
 
 function ShowRxDBPopUpForm(AControl:TWinControl; ADataSet:TDataSet;
   AOnPopUpCloseEvent:TPopUpCloseEvent; APopUpFormOptions:TPopUpFormOptions;

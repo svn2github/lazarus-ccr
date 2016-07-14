@@ -67,11 +67,18 @@ begin
 
   if ADataSet is TZAbstractRODataset then
   begin
-    TZAbstractRODataset(ADataSet).SortedFields:=FixFieldName(FieldName);
+    if Asc then
+      FieldName := FixFieldName(FieldName) + ' Asc'
+    else
+      FieldName := FixFieldName(FieldName) + ' Desc';
+    TZAbstractRODataset(ADataSet).SortedFields:=FieldName;
+{
+
+
     if Asc then
       TZAbstractRODataset(ADataSet).SortType:=stAscending
     else
-      TZAbstractRODataset(ADataSet).SortType:=stDescending;
+      TZAbstractRODataset(ADataSet).SortType:=stDescending;}
   end;
 end;
 
