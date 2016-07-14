@@ -55,6 +55,7 @@ uses
   , Types
   {$ENDIF}
   {$IFDEF LAZ_POWERPDF}
+  , LazUTF8
   , LCLProc
   {$ENDIF}
   , PdfTypes
