@@ -297,13 +297,26 @@ begin
 end;
 {=====}
 procedure TfrmEditShape.PositionControls;
-const
-  DELTA = 8;
 var
-  w: Integer;
-  cnv: TControlCanvas;
+  w, h: Integer;
   shape: TVpShapeType;
+  delta: Integer;
+  vdist: Integer;
 begin
+  // This is needed as workaround for the combobox height at higher dpi.
+  // We design it with Style csDropdown where the height is correct, and then
+  // use the corresponding, correct ItemHeight after switching to csOwnerDrawFixed
+  // (which is needed to draw the icons).
+  h := cbPenStyle.ItemHeight;
+  cbPenStyle.Style := csOwnerDrawFixed;
+  cbPenStyle.ItemHeight := h+1;
+  cbBrushStyle.Style := csOwnerDrawFixed;
+  cbBrushStyle.ItemHeight := h+1;
+
+  delta := round(8 * Screen.PixelsPerInch / DesignTimeDPI);
+  vdist := round(4 * Screen.PixelsPerInch / DesignTimeDPI);
+
+  // Horizontal alignment
   w := MaxValue([GetLabelWidth(lblPenColor), GetLabelWidth(lblPenStyle),
     GetLabelWidth(lblPenWidth), GetLabelWidth(lblPenMode)]) + 2 * DELTA;
   cbPenColor.Left := w;
@@ -324,15 +337,7 @@ begin
   gbBrush.Left := RightOf(gbPen) + 16;
   gbBrush.Width := RightOf(cbBrushColor) + DELTA;
 
-  cnv := TControlCanvas.Create;
-  try
-    cnv.Control := btnOK;
-    cnv.Font.Assign(btnOK.Font);
-    btnOK.Width := MaxValue([cnv.TextWidth(btnOK.Caption), cnv.TextWidth(btnCancel.Caption)]) + 16;
-  finally
-    cnv.Free;
-  end;
-
+  btnOK.Width := Max(GetButtonWidth(btnOK), GetButtonWidth(btnCancel));
   btnCancel.Width := btnOK.Width;
   if btnOK.Width + DELTA + btnCancel.Width > gbBrush.Width then
     gbBrush.Width := btnOK.Width + DELTA + btnCancel.Width;
@@ -349,6 +354,27 @@ begin
       FShapeButtons[shape].Left := RightOf(FShapeButtons[pred(shape)]) + DELTA;
     FShapeButtons[shape].Width := w;
   end;
+
+  // Vertical alignment
+  lblPenColor.Top := cbPenColor.Top + (cbPenColor.Height - lblPenColor.Height) div 2;
+  lblBrushColor.Top := lblPenColor.Top;
+  cbPenStyle.Top := BottomOf(cbPenColor) + vdist;
+  cbBrushStyle.Top := cbPenStyle.Top;
+  lblPenstyle.Top := cbPenStyle.Top + (cbPenStyle.Height - lblPenStyle.Height) div 2;
+  lblBrushStyle.Top := lblPenStyle.Top;
+  edPenWidth.Top := BottomOf(cbPenStyle) + vDist;
+  udPenWidth.Top := edPenWidth.Top;
+  lblPenWidth.Top := edPenWidth.Top + (edPenWidth.Height - lblPenWidth.Height) div 2;
+  cbPenMode.Top := BottomOf(edPenWidth) + vDist;
+  lblPenMode.Top := cbPenMode.Top + (cbPenMode.Height - lblPenMode.Height) div 2;
+  gbPen.ClientHeight := BottomOf(cbPenMode) + delta;
+  gbBrush.ClientHeight := BottomOf(cbBrushStyle) + delta;
+
+  btnOK.Top := BottomOf(gbPen) - btnOK.Height;
+  btnCancel.Top := btnOK.Top;
+
+  ClientHeight := BottomOf(btnOK) + delta;
+
 end;
 
 procedure TfrmEditShape.SaveData(AShape: TVpPrintShape);

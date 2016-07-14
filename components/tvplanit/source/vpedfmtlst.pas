@@ -103,6 +103,7 @@ type
     LastX, LastY: Integer;
     DragItem: Integer;
     FDrawingStyle: TVpDrawingStyle;
+    procedure PositionControls;
     procedure SetCaptions;
     procedure SetDrawingStyle(const v: TVpDrawingStyle);
 
@@ -167,7 +168,7 @@ end;
 procedure TfrmPrnFormat.EnableMoveButtons;
 begin
   btnMoveElementUp.Enabled := lbElements.ItemIndex > 0;
-  btnMoveElementDn.Enabled := lbElements.ItemIndex < lbElements.Items.Count - 1;
+  btnMoveElementDn.Enabled := (lbElements.ItemIndex > -1) and (lbElements.ItemIndex < lbElements.Items.Count - 1);
 end;                                                                   
 {=====}
 procedure TfrmPrnFormat.FormShow(Sender: TObject);
@@ -647,9 +648,6 @@ begin
 end;
 
 procedure TfrmPrnFormat.SetCaptions;
-var
-  cnv: TControlCanvas;
-  w: Integer;
 begin
   Caption := RSPrintFormatDesigner;
   LblFormats.Caption := RSFormats;
@@ -665,6 +663,48 @@ begin
   btnNewFile.Caption := RSNewFileBtn;
   btnLoadFile.Caption := RSLoadFileBtn;
   btnSaveFile.Caption := RSSaveFileBtn;
+
+  PositionControls;
+end;
+
+procedure TfrmPrnFormat.PositionControls;
+var
+  w: Integer;
+  dist: Integer;
+  btndist: Integer;
+begin
+  dist := round(8 * Screen.PixelsPerInch / DesignTimeDPI);
+  btnDist := btnEditFormat.Top - BottomOf(btnNewFormat);
+
+  w := MaxValue([GetButtonWidth(btnNewFile), GetButtonWidth(btnLoadFile), GetButtonWidth(btnSaveFile)]);
+  btnNewFile.Width := w;
+  btnLoadFile.Width := w;
+  btnSaveFile.Width := w;
+  btnLoadFile.Left := RightOf(btnNewFile) + dist;
+  btnSaveFile.Left := RightOf(btnLoadFile) + dist;
+
+  w := MaxValue([GetButtonWidth(btnNewFormat), GetButtonWidth(btnEditFormat), GetButtonWidth(btnDeleteFormat)]);
+  btnNewFormat.Left := RightOf(lbFormats) + dist;
+  btnEditFormat.Left := btnNewFormat.Left;
+  btnDeleteFormat.Left := btnNewFormat.Left;
+  btnNewElement.Left := btnNewFormat.Left;
+  btnEditElement.Left := btnNewFormat.Left;
+  btnDeleteElement.Left := btnNewFormat.Left;
+
+  LblPrintOrder.Left := BtnNewFormat.Left + (BtnNewFormat.Width - GetLabelWidth(LblPrintOrder)) div 2;
+  btnMoveElementUp.Left := BtnNewFormat.Left + (BtnNewFormat.Width - btnMoveElementUp.Width) div 2;
+  btnMoveElementDn.Left := btnMoveElementUp.Left;
+  LblPrintOrder.Top := BottomOf(BtnDeleteElement) + btndist;
+  btnMoveElementUp.Top := BottomOf(LblPrintOrder) + Round(8 * Screen.PixelsPerInch / DesignTimeDPI);
+  btnMoveElementDn.Top := BottomOf(BtnMoveElementUp) + Round(8 * Screen.PixelsPerInch / DesignTimeDPI);
+
+  PrintPreviewPanel.Left := BtnNewFormat.Left + BtnNewFormat.Width + dist;
+
+  ClientWidth := PrintPreviewPanel.Left + PrintPreviewPanel.Width + 8;
+end;
+{
+
+
 
   w := 0;
   cnv := TControlCanvas.Create;
@@ -698,6 +738,7 @@ begin
     BtnNewElement.Width := w;
     BtnEditElement.Width := w;
     BtnDeleteElement.Width := w;
+
     LblPrintOrder.Left := BtnNewFormat.Left + (BtnNewFormat.Width - GetLabelWidth(LblPrintOrder)) div 2;
     btnMoveElementUp.Left := BtnNewFormat.Left + (BtnNewFormat.Width - btnMoveElementUp.Width) div 2;
     btnMoveElementDn.Left := btnMoveElementUp.Left;
@@ -709,6 +750,7 @@ begin
     cnv.Free;
   end;
 end;
+      }
 
 procedure TfrmPrnFormat.SetDrawingStyle(const v: TVpDrawingStyle);
 begin

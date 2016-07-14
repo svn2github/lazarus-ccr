@@ -54,7 +54,7 @@ object frmPrnFormat: TfrmPrnFormat
     OnClick = btnMoveElementUpClick
   end
   object btnMoveElementDn: TSpeedButton
-    Left = 305
+    Left = 304
     Height = 22
     Top = 403
     Width = 23

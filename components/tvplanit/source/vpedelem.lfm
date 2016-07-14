@@ -1,13 +1,13 @@
 object frmEditElement: TfrmEditElement
   Left = 691
-  Height = 479
+  Height = 453
   Top = 226
   Width = 413
   HorzScrollBar.Page = 378
   VertScrollBar.Page = 444
   BorderStyle = bsDialog
   Caption = 'Edit Element'
-  ClientHeight = 479
+  ClientHeight = 453
   ClientWidth = 413
   OnCreate = FormCreate
   OnShow = FormShow
@@ -83,7 +83,7 @@ object frmEditElement: TfrmEditElement
   object btnOk: TButton
     Left = 240
     Height = 25
-    Top = 440
+    Top = 416
     Width = 75
     Caption = 'OK'
     Default = True
@@ -91,9 +91,9 @@ object frmEditElement: TfrmEditElement
     TabOrder = 7
   end
   object btnCancel: TButton
-    Left = 320
+    Left = 325
     Height = 25
-    Top = 440
+    Top = 416
     Width = 75
     Cancel = True
     Caption = 'Cancel'
@@ -110,7 +110,7 @@ object frmEditElement: TfrmEditElement
   object btnShape: TButton
     Left = 12
     Height = 25
-    Top = 440
+    Top = 416
     Width = 75
     Caption = 'Shape...'
     Enabled = False
@@ -314,17 +314,17 @@ object frmEditElement: TfrmEditElement
   end
   object gbCaption: TGroupBox
     Left = 12
-    Height = 69
+    Height = 56
     Top = 352
     Width = 388
     Caption = ' Caption '
-    ClientHeight = 49
+    ClientHeight = 36
     ClientWidth = 384
     TabOrder = 5
     object lblCaptionText: TLabel
       Left = 16
       Height = 15
-      Top = 12
+      Top = 10
       Width = 27
       Caption = 'Text: '
       FocusControl = edCaptionText
@@ -333,7 +333,7 @@ object frmEditElement: TfrmEditElement
     object btnCaptionFont: TButton
       Left = 312
       Height = 25
-      Top = 7
+      Top = 5
       Width = 67
       Caption = 'Font...'
       OnClick = btnCaptionFontClick
@@ -342,7 +342,7 @@ object frmEditElement: TfrmEditElement
     object edCaptionText: TEdit
       Left = 52
       Height = 23
-      Top = 8
+      Top = 6
       Width = 253
       OnChange = edCaptionTextChange
       TabOrder = 0
@@ -369,7 +369,7 @@ object frmEditElement: TfrmEditElement
       Left = 62
       Height = 23
       Top = 6
-      Width = 11
+      Width = 12
       Associate = edOffset
       Min = 0
       Position = 0
@@ -382,7 +382,7 @@ object frmEditElement: TfrmEditElement
     Font.Name = 'MS Sans Serif'
     MinFontSize = 0
     MaxFontSize = 0
-    left = 176
-    top = 288
+    left = 144
+    top = 432
   end
 end

@@ -62,6 +62,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
+    procedure PositionControls;
     procedure SetCaptions;
   protected
     procedure SaveData(AFormat: TVpPrintFormatItem);
@@ -136,12 +137,6 @@ begin
 end;
 
 procedure TfrmEditFormat.SetCaptions;
-const
-  DELTA = 8;
-  MARGIN = 16;
-var
-  cnv: TControlCanvas;
-  w: Integer;
 begin
   Caption := RSEditFormatCaption;
   LblName.Caption := RSNameLbl;
@@ -155,31 +150,58 @@ begin
   btnOK.Caption := RSOKBtn;
   btnCancel.Caption := RSCancelBtn;
 
+  PositionControls;
+end;
+
+procedure TfrmEditFormat.PositionControls;
+var
+  delta: integer = 8;
+  margin: Integer = 16;
+  vdist: Integer = 4;
+var
+  w, h: Integer;
+  dummyRB: TRadioButton;
+begin
+  delta := Round(delta * Screen.PixelsPerInch / DesignTimeDPI);
+  margin := Round(margin * Screen.PixelsPerInch / DesignTimeDPI);
+  vdist := Round(vdist * Screen.PixelsPerInch / DesignTimeDPI);
+
   w := MaxValue([GetLabelWidth(LblName), GetLabelWidth(LblDescription), GetLabelWidth(LblIncrement)]);
-  edName.Left := MARGIN + w + DELTA;
+  edName.Left := margin + w + delta;
   edDescription.Left := edName.Left;
   edDescription.Width := edName.Width;
   edIncrement.Left := edName.Left;
   udIncrement.Left := edIncrement.Left + edIncrement.Width;
-  LblName.Left := edName.Left - GetLabelWidth(LblName) - DELTA;
-  LblDescription.Left := edDescription.Left - GetLabelWidth(lblDescription) - DELTA;
-  lblIncrement.Left := edIncrement.Left - GetLabelWidth(lblIncrement) - DELTA;
+  LblName.Left := edName.Left - GetLabelWidth(LblName) - delta;
+  LblDescription.Left := edDescription.Left - GetLabelWidth(lblDescription) - delta;
+  lblIncrement.Left := edIncrement.Left - GetLabelWidth(lblIncrement) - delta;
 
-  ClientWidth := MARGIN + w + DELTA + edName.Width + MARGIN;
-  rgDayIncrement.Width := ClientWidth - 2*MARGIN;
+  ClientWidth := MARGIN + w + delta + edName.Width + margin;
+  rgDayIncrement.Width := ClientWidth - 2*margin;
 
-  cnv := TControlCanvas.Create;
-  try
-    cnv.Control := btnOK;
-    cnv.Font.Assign(btnOK.Font);
-    w := Max(cnv.TextWidth(RSOKBtn), cnv.TextWidth(RSCancelBtn));
-  finally
-    cnv.Free;
-  end;
-  btnOK.Width := w + 16;
-  btnCancel.Width := w + 16;
-  btnCancel.Left := ClientWidth - MARGIN - btnCancel.Width;
-  btnOK.Left := btnCancel.Left - 8 - btnOK.Width;
+  w := Max(GetButtonWidth(btnOK), GetButtonWidth(btnCancel));
+  btnOK.Width := w;
+  btnCancel.Width := w;
+  btnCancel.Left := RightOf(rgDayIncrement) - btnCancel.Width;
+  btnOK.Left := btnCancel.Left - delta - btnOK.Width;
+
+  edDescription.Top := BottomOf(edName) + vDist;
+  lblDescription.Top := edDescription.Top + (edDescription.Height - lblDescription.Height) div 2;
+  edIncrement.Top := BottomOf(edDescription) + vDist;
+  udIncrement.Top := edIncrement.Top;
+  lblIncrement.top := edIncrement.Top + (edIncrement.Height - lblIncrement.Height) div 2;
+  rgDayIncrement.Top := BottomOf(edIncrement) + vDist + vDist;
+
+  DummyRB := TRadioButton.Create(self);
+  DummyRB.Parent := self;
+  h := DummyRB.Height;
+  DummyRB.Free;
+
+  rgdayIncrement.Height := h + 2*LblName.Height;
+  btnOK.Top := Bottomof(rgDayIncrement) + vDist;
+  btnCancel.Top := btnOK.Top;
+
+  ClientHeight := Bottomof(btnOK) + vDist*2;
 end;
 
 procedure TfrmEditFormat.SetData(AFormat: TVpPrintFormatItem);

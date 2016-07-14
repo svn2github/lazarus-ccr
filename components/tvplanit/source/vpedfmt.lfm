@@ -105,7 +105,7 @@ object frmEditFormat: TfrmEditFormat
     Left = 158
     Height = 23
     Top = 68
-    Width = 16
+    Width = 12
     Associate = edIncrement
     Max = 365
     Min = 0

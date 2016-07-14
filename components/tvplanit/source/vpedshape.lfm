@@ -22,7 +22,7 @@ object frmEditShape: TfrmEditShape
     Caption = 'OK'
     Default = True
     OnClick = btnOkClick
-    TabOrder = 2
+    TabOrder = 3
   end
   object btnCancel: TButton
     Left = 272
@@ -32,7 +32,7 @@ object frmEditShape: TfrmEditShape
     Cancel = True
     Caption = 'Cancel'
     OnClick = btnCancelClick
-    TabOrder = 3
+    TabOrder = 4
   end
   object gbBrush: TGroupBox
     Left = 186
@@ -42,7 +42,7 @@ object frmEditShape: TfrmEditShape
     Caption = ' Brush '
     ClientHeight = 66
     ClientWidth = 161
-    TabOrder = 1
+    TabOrder = 2
     object lblBrushStyle: TLabel
       Left = 8
       Height = 15
@@ -54,13 +54,12 @@ object frmEditShape: TfrmEditShape
     end
     object cbBrushStyle: TComboBox
       Left = 52
-      Height = 22
+      Height = 23
       Top = 32
       Width = 97
-      ItemHeight = 16
+      ItemHeight = 15
       OnChange = cbBrushStyleChange
       OnDrawItem = cbBrushStyleDrawItem
-      Style = csOwnerDrawFixed
       TabOrder = 0
     end
     object lblBrushColor: TLabel
@@ -91,7 +90,7 @@ object frmEditShape: TfrmEditShape
     Caption = ' Pen '
     ClientHeight = 120
     ClientWidth = 161
-    TabOrder = 0
+    TabOrder = 1
     object lblPenStyle: TLabel
       Left = 8
       Height = 15
@@ -121,14 +120,13 @@ object frmEditShape: TfrmEditShape
     end
     object cbPenStyle: TComboBox
       Left = 52
-      Height = 22
+      Height = 23
       Top = 32
       Width = 97
-      ItemHeight = 16
+      ItemHeight = 15
       OnChange = cbPenStyleChange
       OnDrawItem = cbPenStyleDrawItem
-      Style = csOwnerDrawFixed
-      TabOrder = 0
+      TabOrder = 1
     end
     object cbPenMode: TComboBox
       Left = 52
@@ -136,13 +134,13 @@ object frmEditShape: TfrmEditShape
       Top = 88
       Width = 97
       ItemHeight = 15
-      TabOrder = 1
+      TabOrder = 4
     end
     object udPenWidth: TUpDown
       Left = 98
       Height = 23
       Top = 60
-      Width = 11
+      Width = 12
       Associate = edPenWidth
       Min = 0
       Position = 0
@@ -166,7 +164,7 @@ object frmEditShape: TfrmEditShape
       Style = [cbStandardColors, cbExtendedColors, cbPrettyNames, cbCustomColors]
       ItemHeight = 16
       OnChange = cbPenColorChange
-      TabOrder = 4
+      TabOrder = 0
     end
     object lblPenColor: TLabel
       Left = 8
@@ -186,7 +184,7 @@ object frmEditShape: TfrmEditShape
     Caption = 'gbShapes'
     ClientHeight = 47
     ClientWidth = 320
-    TabOrder = 4
+    TabOrder = 0
     object SpeedButton1: TSpeedButton
       Left = 12
       Height = 32

@@ -108,6 +108,7 @@ type
     FActiveView: Integer;
     FVisibleDays: Integer;
     procedure PopulateLanguages;
+    procedure PositionControls;
     procedure SetActiveView(AValue: Integer);
     procedure SetLanguage(ALang: String); overload;
     procedure SetLanguage(AIndex: Integer); overload;
@@ -487,6 +488,38 @@ begin
   end;
 end;
 
+procedure TMainForm.PositionControls;
+var
+  w: Integer;
+begin
+  // Settings page
+  w := MaxValue([
+    GetLabelWidth(LblLanguage),
+    GetLabelWidth(LblTimeFormat),
+    GetLabelWidth(LblFirstDayOfWeek),
+    GetLabelWidth(LblAddressBuilder)
+  ]);
+  CbLanguages.Left := 24 + w + 8;
+  CbTimeFormat.Left := CbLanguages.Left;
+  CbFirstDayOfWeek.Left := CbLanguages.Left;
+  CbAddressBuilder.Left := CbLanguages.Left;
+  LblLanguage.Left :=  CbLanguages.Left - 8 - GetLabelWidth(LblLanguage);
+  LblTimeFormat.Left := CbTimeFormat.Left - 8 - GetLabelWidth(LblTimeFormat);
+  LblFirstDayOfWeek.Left := CbFirstDayOfWeek.Left - 8 - GetLabelWidth(LblFirstDayOfWeek);
+  LblAddressBuilder.Left := CbAddressBuilder.Left - 8 - GetLabelWidth(LblAddressBuilder);
+
+  CbAllowInplaceEditing.Left := CbLanguages.Left + CbLanguages.Width + 32;
+  w := GetLabelWidth(LblDrawingStyle);
+  lblDrawingStyle.Left := CbAllowInplaceEditing.Left;
+  CbDrawingStyle.Left := LblDrawingStyle.Left + w + 8;
+
+  // Planner pages
+  DaysTrackbar.Left := GetLabelWidth(LblVisibleDays) + LblVisibleDays.Left + 8;
+  LblGranularity.Left := DaysTrackbar.Left + DaysTrackbar.Width + 32;
+  CbGranularity.Left := LblGranularity.Left + GetLabelWidth(LblGranularity) + 8;
+  RbHideCompletedTasks.Left := RbAllTasks.Left + RbAllTasks.Width + 48;
+end;
+
 procedure TMainForm.RbAllTasksChange(Sender: TObject);
 begin
   VpTaskList1.DisplayOptions.ShowAll := RbAllTasks.Checked;
@@ -725,23 +758,6 @@ begin
   CbDrawingStyle.Items.Add(RS3d);
   CbDrawingStyle.Items.Add(RSBorderless);
 
-  DaysTrackbar.Left := GetLabelWidth(LblVisibleDays) + LblVisibleDays.Left + 8;
-  LblGranularity.Left := DaysTrackbar.Left + DaysTrackbar.Width + 32;
-  CbGranularity.Left := LblGranularity.Left + GetLabelWidth(LblGranularity) + 8;
-  w := MaxValue([GetLabelWidth(LblLanguage), GetLabelWidth(LblTimeFormat), GetLabelWidth(LblFirstDayOfWeek)]);
-  CbLanguages.Left := 24 + w + 8;
-  LblLanguage.Left := CbLanguages.Left - 8 - GetLabelWidth(LblLanguage);
-  CbTimeFormat.Left := CbLanguages.Left;
-  LblTimeFormat.Left := CbTimeFormat.Left - 8 - GetLabelWidth(LblTimeFormat);
-  CbFirstDayOfWeek.Left := CbLanguages.Left;
-  LblFirstDayOfWeek.Left := CbFirstDayOfWeek.Left - 8 - GetLabelWidth(LblFirstDayOfWeek);
-  CbAddressBuilder.Left := CbLanguages.Left;
-  LblAddressBuilder.Left := CbAddressBuilder.Left - 8 - GetLabelWidth(LblAddressBuilder);
-  CbAllowInplaceEditing.Left := CbLanguages.Left + CbLanguages.Width + 32;
-  LblDrawingStyle.Left := CbAllowInplaceEditing.Left;
-  CbDrawingStyle.Left := LblDrawingStyle.Left + GetLabelWidth(LblDrawingStyle) + 8;
-  RbHideCompletedTasks.Left := RbAllTasks.Left + RbAllTasks.Width + 48;
-
   // Next settings work correctly only for Windows.
  {$IFDEF WINDOWS}
   UpdateFormatSettings(ALang);
@@ -758,6 +774,8 @@ begin
   VpMonthView1.WeekStartsOn := firstWeekDay;
   VpWeekView1.WeekStartsOn := firstWeekDay;
  {$ENDIF}
+
+  PositionControls;
 
   SetActiveView(1001);
   Invalidate;

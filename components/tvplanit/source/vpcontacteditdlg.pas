@@ -390,16 +390,16 @@ var
   OldFont: TFont;
   FieldTop: Integer;
   delta: Integer;
-  corr: Integer;       // difference between form's client width and tabsheet width
-  editHeight: Integer; // Height of an edit control
-  vDist: Integer;      // Vertical distance between edits
-  hBorder: Integer;    // Distance between container border and label
-  dist: Integer;       // distance between label and edit/combo
+  corr: Integer;         // difference between form's client width and tabsheet width
+  editHeight: Integer;   // Height of an edit control
+  vDist: Integer = 4;    // Vertical distance between edits
+  hBorder: Integer = 8;  // Distance between container border and label
+  dist: Integer = 4;     // distance between label and edit/combo
 
 begin
-  dist := round(4 * Screen.PixelsPerInch / DesignTimeDPI);
-  vdist := round(2 * Screen.PixelsPerInch / DesignTimeDPI);
-  hBorder := round(8 * Screen.PixelsPerInch / DesignTimeDPI);
+  dist := round(dist * Screen.PixelsPerInch / DesignTimeDPI);
+  vdist := round(vdist * Screen.PixelsPerInch / DesignTimeDPI);
+  hBorder := round(hBorder * Screen.PixelsPerInch / DesignTimeDPI);
   editHeight := LastNameEdit.Height * Screen.PixelsPerInch div DesignTimeDPI;
 
   { Note: The resizing algorithm is dependent upon the labels having their

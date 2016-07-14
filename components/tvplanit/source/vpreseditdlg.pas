@@ -64,6 +64,7 @@ type
     procedure Change(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
+    procedure PositionControls;
     procedure SetControls;
   public
     ReturnCode: TVpEditorReturnCode;
@@ -99,6 +100,7 @@ implementation
 {$ENDIF}
 
 uses
+  Math,
   vpSR, vpMisc;
 
 function ExecuteResourceDlg(Resource: TVpResource): Boolean;
@@ -208,11 +210,32 @@ begin
   OKBtn.Caption := RSOKBtn;
   CancelBtn.Caption := RSCancelBtn;
 
-  DescriptionEdit.Left := lblDescription.Left + GetLabelWidth(lblDescription) + 8;
-  DescriptionEdit.Width := imgResources.Left - 16 - DescriptionEdit.Left;
-
+  PositionControls;
 end;
 {=====}
+
+procedure TResEditForm.PositionControls;
+var
+  Delta: Integer;
+begin
+  delta := round(8 *Screen.PixelsPerInch / DesignTimeDPI);
+
+  DescriptionEdit.Left := lblDescription.Left + GetLabelWidth(lblDescription) + Delta;
+  DescriptionEdit.Width := imgResources.Left - delta - delta - DescriptionEdit.Left;
+  DescriptionEdit.Top := imgResources.Top + (imgResources.Height - DescriptionEdit.Height) div 2;
+  lblDescription.Top := DescriptionEdit.Top + (DescriptionEdit.Height - lblDescription.Height) div 2;
+
+  lblNotes.Top := BottomOf(DescriptionEdit) + delta;
+  NotesMemo.Top := BottomOf(lblNotes) + delta div 2;
+  NotesMemo.Height := tabResource.ClientHeight - NotesMemo.Top - NotesMemo.Left;
+
+  OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
+  CancelBtn.Width := OKBtn.Width;
+  CancelBtn.Left := pnlBottom.ClientWidth - lblDescription.Left - CancelBtn.Width;
+  OKBtn.Left := CancelBtn.Left - OKBtn.Width - delta - (ClientWidth - tabResource.ClientWidth);
+  OKBtn.Top := (pnlBottom.ClientHeight - OKBtn.Height) div 2;
+  CancelBtn.Top := OKBtn.Top;
+end;
 
 procedure TResEditForm.OKBtnClick(Sender: TObject);
 begin

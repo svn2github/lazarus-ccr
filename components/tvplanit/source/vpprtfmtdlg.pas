@@ -44,7 +44,7 @@ uses
 
 type
 
-  TVpPrintFormatEditDialog = class (TVpBaseDialog)
+  TVpPrintFormatEditDialog = class(TVpBaseDialog)
   private
     FControlLink: TVpControlLink;
     FDrawingStyle: TVpDrawingStyle;

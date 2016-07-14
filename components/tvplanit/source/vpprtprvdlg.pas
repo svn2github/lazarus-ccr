@@ -434,6 +434,7 @@ begin
       maxlen := Max(maxlen, cnv.TextWidth(fmts.Items[i].FormatName));
     VpPrintFormatCombobox1.Width := maxlen + 30;
     cboxZoom.Left := VpPrintFormatCombobox1.Left + VpPrintFormatCombobox1.Width + 8;
+
   finally
     cnv.Free;
   end;

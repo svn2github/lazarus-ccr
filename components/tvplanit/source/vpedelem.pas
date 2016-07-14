@@ -299,8 +299,9 @@ const
   GROUPBOX_CORRECTION = 16;
   GROUPBOX_DISTANCE = 16;
 var
-  i, w: Integer;
+  i, w, h: Integer;
   cnv: TControlCanvas;
+  rb: TRadioButton;
 begin
   cnv := TControlCanvas.Create;
   try
@@ -352,6 +353,7 @@ begin
     udLeft.Left := udTop.Left;
     lblTop.Left := edTop.Left - GetLabelWidth(lblTop) - DELTA;
     lblLeft.Left := edTop.Left - GetLabelWidth(lblLeft) - DELTA;
+    chkVisible.Left := edLeft.Left;
 
     edHeight.Left := (gbVisual.ClientWidth + RightOf(rgMeasurement) + w ) div 2 - udHeight.Width - edHeight.Width;
     edWidth.Left := edHeight.Left;
@@ -384,14 +386,42 @@ begin
     edCaptionText.Width := btnCaptionFont.Left - DELTA - edCaptionText.Left;
 
     // Buttons at the bottom
+    w := Max(GetButtonWidth(btnOK), GetButtonWidth(btnCancel));
+    btnOK.Width := w;
+    btnCancel.Width := w;
+    {
     cnv.Font.Assign(btnOK.Font);
     w := Max(cnv.TextWidth(btnOK.Caption), cnv.TextWidth(btnCancel.Caption));
     btnOK.Width := w + BUTTON_CORRECTION;
     btnCancel.Width := btnOK.Width;
+    }
     btnCancel.Left := RightOf(gbCaption) - btnCancel.Width;
     btnOK.Left := btnCancel.Left - DELTA - btnOK.Width;
     btnShape.Width := cnv.TextWidth(btnShape.Caption) + BUTTON_CORRECTION;
 
+    // Height
+    gbDayOffset.ClientHeight := edOffset.Height + DELTA*2;
+    rgDayOffsetUnit.Height := gbDayOffset.Height;
+
+    rb := TRadioButton.Create(self);
+    try
+      rb.Parent := self;
+      h := rb.Height;
+    finally
+      rb.Free;
+    end;
+    rgRotation.Height := 4*h + 28;
+    rgMeasurement.Height := rgRotation.Height;
+    gbVisual.ClientHeight := BottomOf(rgMeasurement) + DELTA;
+
+    gbCaption.Top := BottomOf(gbVisual) + DELTA;
+    gbCaption.ClientHeight := BottomOf(edCaptionText) + DELTA;
+
+    btnOK.Top := BottomOf(gbCaption) + DELTA;
+    btnCancel.Top := btnOK.Top;
+    btnShape.Top := btnOK.Top;
+
+    ClientHeight := BottomOf(btnOK) + DELTA;
   finally
     cnv.Free;
   end;
