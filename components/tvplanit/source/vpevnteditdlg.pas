@@ -59,9 +59,11 @@ type
 
   TDlgEventEdit = class(TForm)
     AlarmAdvance: TEdit;
+    Bevel4: TBevel;
     LocationEdit: TEdit;
     LocationLbl: TLabel;
     NotesMemo: TMemo;
+    Panel1: TPanel;
     StartDate: TDateEdit;
     EndDate: TDateEdit;
     RepeatUntil: TDateEdit;
@@ -199,8 +201,6 @@ end;
 { TDlgEventEdit }
 
 procedure TDlgEventEdit.FormCreate(Sender: TObject);
-var
-  h: Integer;
 begin
  {$IFDEF LCL}
   StartTime := TTimeEdit.Create(self);
@@ -247,14 +247,6 @@ begin
     TabOrder := edtUnusedPlaceholder.TabOrder;
   end;
   IntervalUpDown.Associate := FCustomInterval;
-
-  // This is needed as workaround for the combobox height at higher dpi.
-  // We design it with Style csDropdown where the height is correct, and then
-  // use the corresponding, correct ItemHeight after switching to csOwnerDrawFixed
-  // (which is needed to draw the color boxes).
-  h := Category.ItemHeight;
-  Category.Style := csOwnerDrawFixed;
-  Category.ItemHeight := h;
 end;
 {=====}
 
@@ -621,8 +613,16 @@ const
   VDIST = 5;
   VBEVELDIST = 8;
 var
-  w: Integer;
+  w, h: Integer;
 begin
+  // This is needed as workaround for the combobox height at higher dpi.
+  // We design it with Style csDropdown where the height is correct, and then
+  // use the corresponding, correct ItemHeight after switching to csOwnerDrawFixed
+  // (which is needed to draw the color boxes).
+  h := Category.ItemHeight;
+  Category.Style := csOwnerDrawFixed;
+  Category.ItemHeight := h+1;
+
   // *** Horizontal positions ***
 
   // Position controls according to label widths
@@ -727,9 +727,17 @@ begin
 
   AppointmentGroupbox.ClientHeight := BottomOf(AlarmAdvance) + VBEVELDIST;
 
-  NotesMemo.Top := BottomOf(AppointmentGroupbox) + VBEVELDIST;
+  OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
+  CancelBtn.Width := OKBtn.Width;
+  CancelBtn.Left := ButtonPanel.ClientWidth - ResourcenameLbl.Left - CancelBtn.Width;
+  OKBtn.Left := CancelBtn.Left - DELTA - OKBtn.Width;
+  ResourceNameLbl.Top := (ButtonPanel.ClientHeight - Panel1.BorderWidth - ResourceNameLbl.Height) div 2;
+  OKBtn.Top := (ButtonPanel.ClientHeight - Panel1.BorderWidth - OKBtn.Height) div 2;
+  CancelBtn.Top := OKBtn.Top;
 
-  ClientHeight := BottomOf(NotesMemo) + VBEVELDIST + ButtonPanel.Height;
+//  NotesMemo.Top := BottomOf(AppointmentGroupbox) + VBEVELDIST;
+
+//  ClientHeight := BottomOf(NotesMemo) + VBEVELDIST + ButtonPanel.Height;
 end;
 
 
