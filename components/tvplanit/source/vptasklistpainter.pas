@@ -272,18 +272,9 @@ begin
     Bmp := Graphics.TBitmap.Create;
     try
       Bmp.LoadFromResourceName(HINSTANCE, 'VPCHECKPAD'); //soner changed: Bmp.Handle := LoadBaseBitmap('VPCHECKPAD');
-      { load and return the handle to bitmap resource}
       if Bmp.Height > 0 then begin
-        GlyphRect := Rect(
-          HeadRect.Left + TextMargin,
-          HeadRect.Top + TextMargin,
-          GlyphRect.Left + Bmp.Width,
-          GlyphRect.Top + Bmp.Height
-        );
-          {
         GlyphRect.TopLeft := Point(HeadRect.Left + TextMargin, HeadRect.Top + TextMargin);
         GlyphRect.BottomRight := Point(GlyphRect.Left + Bmp.Width, GlyphRect.Top + Bmp.Height);
-        }
 //TODO:          RenderCanvas.BrushCopy (TPSRotateRectangle (Angle, RenderIn, GlyphRect),
 //                                  Bmp, Rect(0, 0, Bmp.Width, Bmp.Height),
 //            Bmp.Canvas.Pixels[0, Bmp.Height - 1]);

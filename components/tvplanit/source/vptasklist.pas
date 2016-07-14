@@ -178,7 +178,7 @@ type
     procedure SetMaxVisibleTasks(Value: Word);
     procedure SetTaskIndex(Value: Integer);
     procedure SetDrawingStyle(const Value: TVpDrawingStyle);
-    procedure SetColor(const Value: TColor);
+    procedure SetColor(const Value: TColor); reintroduce;
     procedure SetShowIcon (const v : Boolean);                                                             
     procedure SetShowResourceName(Value: Boolean);
     { internal methods }
@@ -285,15 +285,15 @@ uses
 constructor TVpTaskDisplayOptions.Create(Owner: TVpTaskList);
 begin
   inherited Create;
-  FTaskList       := Owner;
-  FDueDateFormat  := ShortDateFormat;
-  FShowDueDate    := true;
-  FCheckColor     := cl3DDkShadow;
-  FCheckBGColor   := clWindow;
-  FCheckStyle     := csCheck;
-  FOverdueColor   := clRed;
+  FTaskList := Owner;
+  FDueDateFormat  := DefaultFormatSettings.ShortDateFormat;
+  FShowDueDate := true;
+  FCheckColor := cl3DDkShadow;
+  FCheckBGColor := clWindow;
+  FCheckStyle := csCheck;
+  FOverdueColor := clRed;
   FCompletedColor := clGray;
-  FNormalColor    := clBlack;
+  FNormalColor := clBlack;
 end;
 {=====}
 

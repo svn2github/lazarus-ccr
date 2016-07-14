@@ -146,11 +146,11 @@ begin
   DetailsMemo.Text := Task.Details;
   CompleteCB.Checked := Task.Complete;
   if Task.CompletedOn <> 0 then
-    CompletedOnLbl.Caption := RSCompletedOn + ' ' + FormatDateTime(ShortDateFormat, Task.CompletedOn)
+    CompletedOnLbl.Caption := RSCompletedOn + ' ' + FormatDateTime(DefaultFormatSettings.ShortDateFormat, Task.CompletedOn)
   else
     CompletedOnLbl.Visible := False;
   CompletedOnLbl.Visible := CompleteCB.Checked;
-  CreatedOnLbl.Caption := RSCreatedOn + ' ' + FormatDateTime(ShortDateFormat, Task.CreatedOn);
+  CreatedOnLbl.Caption := RSCreatedOn + ' ' + FormatDateTime(DefaultFormatSettings.ShortDateFormat, Task.CreatedOn);
 
   PositionControls;
 end;
