@@ -109,14 +109,6 @@ object TaskEditForm: TTaskEditForm
         Anchors = [akTop, akLeft, akRight]
         Shape = bsTopLine
       end
-      object Bevel2: TBevel
-        Left = 4
-        Height = 2
-        Top = 88
-        Width = 529
-        Anchors = [akTop, akLeft, akRight]
-        Shape = bsBottomLine
-      end
       object imgCalendar: TImage
         Left = 8
         Height = 32

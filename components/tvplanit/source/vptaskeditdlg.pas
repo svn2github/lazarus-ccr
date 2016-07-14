@@ -65,7 +65,6 @@ type
     DetailsMemo: TMemo;
     ResourceNameLbl: TLabel;
     Bevel1: TBevel;
-    Bevel2: TBevel;
     imgCalendar: TImage;
     imgCompleted: TImage;
     procedure FormCreate(Sender: TObject);
@@ -77,6 +76,7 @@ type
     FReturnCode: TVpEditorReturnCode;
     FTask: TVpTask;
     FResource: TVpResource;
+    procedure PositionControls;
   public
     procedure PopulateSelf;
     procedure DePopulateSelf;
@@ -152,7 +152,32 @@ begin
   CompletedOnLbl.Visible := CompleteCB.Checked;
   CreatedOnLbl.Caption := RSCreatedOn + ' ' + FormatDateTime(ShortDateFormat, Task.CreatedOn);
 
+  PositionControls;
+end;
+
+procedure TTaskEditForm.PositionControls;
+var
+  VBevelDist: Integer;  // Distance bevel-to-control
+  VDist: Integer;       // Vertical distance between controls
+begin
+  VBevelDist := round(8 * Screen.PixelsPerInch / DesignTimeDPI);
+  VDist := round(8 * Screen.PixelsPerInch / DesignTimeDPI);
+
   DueDateEdit.Left := DueDateLbl.Left + GetLabelWidth(DueDateLbl) + 8;
+
+  Bevel1.Top := BottomOf(DescriptionEdit) + VBevelDist;
+
+  ImgCalendar.Top := Bevel1.Top + 2 + VBevelDist;
+  ImgCompleted.Top := ImgCalendar.Top;
+  DueDateEdit.Top := ImgCalendar.Top + (ImgCalendar.Height - DueDateEdit.Height) div 2;
+  DueDateLbl.Top := DueDateEdit.Top + (DueDateEdit.Height - DueDateLbl.Height) div 2;
+  CompleteCB.Top := ImgCompleted.Top + (ImgCompleted.Height - CompleteCB.Height) div 2;
+
+  CreatedOnLbl.Top := BottomOf(DueDateEdit) + VDist;
+  CompletedOnLbl.Top := CreatedOnLbl.Top;
+
+  DetailsMemo.Top := BottomOf(CreatedOnLbl) + VBevelDist;
+  DetailsMemo.Height :=  tabTask.ClientHeight - DetailsMemo.Top - DescriptionEdit.Top;
 end;
 {=====}
 
