@@ -14,7 +14,7 @@ object TaskEditForm: TTaskEditForm
   OnShow = FormShow
   Position = poScreenCenter
   LCLVersion = '1.7'
-  object Panel2: TPanel
+  object ButtonPanel: TPanel
     Left = 0
     Height = 37
     Top = 303

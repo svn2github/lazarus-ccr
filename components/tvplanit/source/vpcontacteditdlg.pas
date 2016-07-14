@@ -105,14 +105,14 @@ type
     EMailLbl: TLabel;
     EMailEdit: TEdit;
     CategoryLbl: TLabel;
-    procedure OKBtnClick(Sender: TObject);
+    procedure cboxCountryChange(Sender: TObject);
     procedure CancelBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure ItemChanged(Sender: TObject);
-    procedure cboxCountryChange(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure tsContactsChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure OKBtnClick(Sender: TObject);
+    procedure ItemChanged(Sender: TObject);
+    procedure tsContactsChange(Sender: TObject);
   private
     procedure SetCaptions;
     procedure DisplayCurrentCountry;
@@ -426,7 +426,7 @@ begin
   { Determine width of label based upon whether large or small fonts are
     in effect. }
   for i := Low(Labels) to High(Labels) do begin
-    Labels[i].FocusControl.Left := HBORDER + LargestLabelWidth + DIST;
+    Labels[i].FocusControl.Left := HBorder + LargestLabelWidth + Dist;
     Labels[i].Left := Labels[i].FocusControl.Left - DIST - GetLabelWidth(Labels[i]);
     Labels[i].Top := Labels[i].FocusControl.Top + (Labels[i].FocusControl.Height - Labels[i].Height) div 2;
   end;
@@ -459,7 +459,7 @@ begin
 
   { Set form width according to widest field }
   corr := ClientWidth - tabMain.ClientWidth;
-  ClientWidth := LastNameEdit.Left + widestfield + HBORDER + corr;
+  ClientWidth := LastNameEdit.Left + widestfield + HBorder + corr;
 
   { Set edit and combo widths }
   for i:= Low(Labels) to High(Labels) do
@@ -477,7 +477,7 @@ begin
     if Labels[i].Visible then begin
       Labels[i].FocusControl.Top := FieldTop;
       Labels[i].Top := FieldTop + delta;
-      inc(FieldTop, editHeight + VDIST);
+      inc(FieldTop, editHeight + VDist);
     end;
 
   { Set form height such that first tab is filled completely by controls }
@@ -513,22 +513,22 @@ begin
 
   FieldTop := TopField;
   for i:=Low(Comboboxes) to High(Comboboxes) do begin
-    Comboboxes[i].Left := HBORDER;
+    Comboboxes[i].Left := HBorder;
     Comboboxes[i].Width := largestLabelWidth;
     Comboboxes[i].Top := FieldTop;
-    inc(FieldTop, editHeight + VDIST);
+    inc(FieldTop, editHeight + VDist);
   end;
 
   for i:= Low(Edits) to High(Edits) do begin
     Edits[i].Left := cboxPhoneLbl1.Left + cboxPhoneLbl1.Width + DIST;
-    Edits[i].Width := ClientWidth - Edits[i].Left - HBORDER - corr;
+    Edits[i].Width := ClientWidth - Edits[i].Left - HBorder - corr;
     Edits[i].Top := Comboboxes[i].Top;
   end;
 
   EMailEdit.Left := Phone1Edit.Left;
   EMailEdit.Width := Phone1Edit.Width;
-  EMailEdit.Top := Phone5Edit.Top + editHeight + VDIST;
-  EMailLbl.Left := EMailEdit.Left - GetLabelWidth(EMailLbl) - DIST;
+  EMailEdit.Top := Phone5Edit.Top + editHeight + VDist;
+  EMailLbl.Left := EMailEdit.Left - GetLabelWidth(EMailLbl) - Dist;
   EMailLbl.Top := EMailEdit.Top + delta;
 
   { Page "User-defined" }
@@ -544,14 +544,20 @@ begin
 
   FieldTop := TopField;
   for i := Low(Labels) to High(Labels) do begin
-    Labels[i].FocusControl.Left := HBORDER + LargestLabelWidth + DIST;
+    Labels[i].FocusControl.Left := HBorder + LargestLabelWidth + Dist;
     Labels[i].FocusControl.Top := FieldTop;
-    Labels[i].FocusControl.Width := ClientWidth - Labels[i].FocusControl.Left - HBORDER - corr;
+    Labels[i].FocusControl.Width := ClientWidth - Labels[i].FocusControl.Left - HBorder - corr;
     Labels[i].Width := LargestLabelWidth;
-    Labels[i].Left := Labels[i].FocusControl.Left - GetLabelWidth(Labels[i]) - DIST;
+    Labels[i].Left := Labels[i].FocusControl.Left - GetLabelWidth(Labels[i]) - Dist;
     Labels[i].Top := FieldTop + delta;
-    inc(FieldTop, editHeight + VDIST);
+    inc(FieldTop, editHeight + VDist);
   end;
+
+  OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
+  CancelBtn.Width := OKBtn.Width;
+  CancelBtn.Left := pnlBottom.ClientWidth - HBorder - CancelBtn.Width;
+  OKBtn.Left := CancelBtn.Left - Dist - OKBtn.Width;
+
 end;
 
 procedure TContactEditForm.DisplayCurrentCountry;

@@ -51,7 +51,7 @@ type
   { TTaskEditForm }
 
   TTaskEditForm = class(TForm)
-    Panel2: TPanel;
+    ButtonPanel: TPanel;
     OKBtn: TButton;
     CancelBtn: TButton;
     PageControl1: TPageControl;
@@ -106,7 +106,7 @@ type
 implementation
 
 uses
-  VpMisc;
+  Math, VpMisc;
 
 {$IFDEF LCL}
  {$R *.lfm}
@@ -159,11 +159,17 @@ procedure TTaskEditForm.PositionControls;
 var
   VBevelDist: Integer;  // Distance bevel-to-control
   VDist: Integer;       // Vertical distance between controls
+  HDist: Integer;       // Horizontal distance between controls:
 begin
   VBevelDist := round(8 * Screen.PixelsPerInch / DesignTimeDPI);
   VDist := round(8 * Screen.PixelsPerInch / DesignTimeDPI);
+  HDist := round(8 * Screen.PixelsPerInch / DesignTimeDPI);
 
-  DueDateEdit.Left := DueDateLbl.Left + GetLabelWidth(DueDateLbl) + 8;
+  DueDateEdit.Left := DueDateLbl.Left + GetLabelWidth(DueDateLbl) + HDist;
+  OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
+  CancelBtn.Width := OKBtn.Width;
+  CancelBtn.Left := ButtonPanel.ClientWidth - ResourcenameLbl.Left - CancelBtn.Width;
+  OKBtn.Left := CancelBtn.Left - HDist - OKBtn.Width;
 
   Bevel1.Top := BottomOf(DescriptionEdit) + VBevelDist;
 
@@ -178,6 +184,10 @@ begin
 
   DetailsMemo.Top := BottomOf(CreatedOnLbl) + VBevelDist;
   DetailsMemo.Height :=  tabTask.ClientHeight - DetailsMemo.Top - DescriptionEdit.Top;
+
+  OKBtn.Top := (ButtonPanel.Height - OKBtn.Height) div 2;
+  CancelBtn.Top := OKBtn.Top;
+  ResourceNameLbl.Top := (ButtonPanel.Height - ResourceNameLbl.Height) div 2;
 end;
 {=====}
 

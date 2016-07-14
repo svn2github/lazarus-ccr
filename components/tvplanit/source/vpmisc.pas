@@ -132,6 +132,7 @@ function GetEndLine(EndTime: TDateTime; Granularity: TVpGranularity): Integer;
 function LineToStartTime(Line: Integer; Granularity: TVpGranularity): TDateTime;
 function GetLineDuration(Granularity: TVpGranularity): Double;
 
+function GetButtonWidth(AButton: TButton): Integer;
 function GetLabelWidth(ALabel: TLabel): Integer;
 function GetRealFontHeight(AFont: TFont): Integer;
 
@@ -597,6 +598,18 @@ begin
   canvas.Font.Assign(ALabel.Font);
   Result := canvas.TextWidth(ALabel.Caption);
   canvas.Free;
+end;
+
+function GetButtonWidth(AButton: TButton): Integer;
+const
+  MARGIN = 16;
+var
+  canvas: TControlCanvas;
+begin
+  canvas := TControlCanvas.Create;
+  canvas.Control := AButton;
+  canvas.Font.Assign(AButton.Font);
+  Result := canvas.TextWidth(AButton.Caption) + 24 * Screen.PixelsPerInch div DesignTimeDPI;
 end;
 
 function GetRealFontHeight(AFont: TFont): Integer;
