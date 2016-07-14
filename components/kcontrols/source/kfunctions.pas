@@ -498,6 +498,9 @@ implementation
 
 uses
   Forms, Math, SysUtils, TypInfo
+{$IFDEF FPC}
+  , LazUtf8
+{$ENDIF}
 {$IFDEF USE_WINAPI}
   , ShlObj
 {$ENDIF}
