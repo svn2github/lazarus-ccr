@@ -138,6 +138,14 @@ function GetRealFontHeight(AFont: TFont): Integer;
 function DecodeLineEndings(const AText: String): String;
 function EncodeLineEndings(const AText: String): String;
 
+{$IFDEF LCL}
+procedure HighDPI(FromDPI: integer);
+procedure ScaleDPI(Control: TControl; FromDPI: integer);
+
+const
+  DesignTimeDPI = 96;
+{$ENDIF}
+
 procedure Unused(const A1); overload;
 procedure Unused(const A1, A2); overload;
 procedure Unused(const A1, A2, A3); overload;
@@ -586,6 +594,7 @@ var
 begin
   canvas := TControlCanvas.Create;
   canvas.Control := ALabel;
+  canvas.Font.Assign(ALabel.Font);
   Result := canvas.TextWidth(ALabel.Caption);
   canvas.Free;
 end;
@@ -594,7 +603,7 @@ function GetRealFontHeight(AFont: TFont): Integer;
 begin
   if AFont.Size = 0 then
    {$IFDEF LCL}
-    Result := GetFontData(AFont.Reference.Handle).Height
+    Result := GetFontData(AFont.Reference.Handle).Height * Screen.PixelsPerInch div DesignTimeDPI
    {$ELSE}
     Result := GetFontData(AFont.Handle).Height
    {$ENDIF}
@@ -644,6 +653,45 @@ function EncodeLineEndings(const AText: String): String;
 begin
   Result := StringReplace(AText, LineEnding, '\n', [rfReplaceAll]);
 end;
+
+{$IFDEF LCL}
+procedure HighDPI(FromDPI: integer);
+var
+  i: integer;
+begin
+  if Screen.PixelsPerInch = FromDPI then
+    exit;
+
+  for i := 0 to Screen.FormCount - 1 do
+    ScaleDPI(Screen.Forms[i], FromDPI);
+end;
+
+procedure ScaleDPI(Control: TControl; FromDPI: integer);
+var
+  i: integer;
+  WinControl: TWinControl;
+begin
+  if Screen.PixelsPerInch = FromDPI then
+    exit;
+
+  with Control do
+  begin
+    Left := ScaleX(Left, FromDPI);
+    Top := ScaleY(Top, FromDPI);
+    Width := ScaleX(Width, FromDPI);
+    Height := ScaleY(Height, FromDPI);
+  end;
+
+  if Control is TWinControl then
+  begin
+    WinControl := TWinControl(Control);
+    if WinControl.ControlCount = 0 then
+      exit;
+    for i := 0 to WinControl.ControlCount - 1 do
+      ScaleDPI(WinControl.Controls[i], FromDPI);
+  end;
+end;
+{$ENDIF}
 
 {$PUSH}{$HINTS OFF}
 procedure Unused(const A1);

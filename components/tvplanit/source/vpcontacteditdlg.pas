@@ -374,9 +374,6 @@ const
 //  FormHeightOffset = 103;
 //  MinFormHeight    = 250;
   TopField         = 8;
-  DIST             = 4;   // distance between label and edit/combo
-  HBORDER          = 8;   // distance between container border and label
-  VDIST            = 2;   // vertical distance between edits
 
 type
   TLabelArray = array of TLabel;
@@ -395,8 +392,16 @@ var
   delta: Integer;
   corr: Integer;       // difference between form's client width and tabsheet width
   editHeight: Integer; // Height of an edit control
+  vDist: Integer;      // Vertical distance between edits
+  hBorder: Integer;    // Distance between container border and label
+  dist: Integer;       // distance between label and edit/combo
 
 begin
+  dist := round(4 * Screen.PixelsPerInch / DesignTimeDPI);
+  vdist := round(2 * Screen.PixelsPerInch / DesignTimeDPI);
+  hBorder := round(8 * Screen.PixelsPerInch / DesignTimeDPI);
+  editHeight := LastNameEdit.Height * Screen.PixelsPerInch div DesignTimeDPI;
+
   { Note: The resizing algorithm is dependent upon the labels having their
     FocusControl property set to the corresponding edit field or combobox. }
 
@@ -466,8 +471,6 @@ begin
   cboxState.Width := widestField;
 
   { Vertically arrange the fields. }
-  editHeight := LastNameEdit.Height;
-
   delta := (Labels[0].FocusControl.Height - labels[0].Height) div 2;
   FieldTop := TopField;
   for i := Low(Labels) to High(Labels) do
@@ -661,6 +664,11 @@ procedure TContactEditForm.FormShow(Sender: TObject);
 begin
   if tsContacts.ActivePage = tabMain then
     LastNameEdit.SetFocus;
+               (*
+  {$IFDEF LCL}
+  ScaleDPI(Self, DesigntimeDPI);
+  {$ENDIF}
+  *)
 end;
 
 

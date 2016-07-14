@@ -606,6 +606,11 @@ end;
 procedure TDlgEventEdit.FormShow(Sender: TObject);
 begin
   PositionControls;
+  (*
+  {$IFDEF LCL}
+  ScaleDPI(Self, DesigntimeDPI);
+  {$ENDIF}
+    *)
   DescriptionEdit.SetFocus;
 end;
 {=====}
