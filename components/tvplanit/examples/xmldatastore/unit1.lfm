@@ -190,8 +190,6 @@ object Form1: TForm1
         DataStore = VpXmlDatastore1
         ControlLink = VpControlLink1
         Color = clWindow
-        Font.Height = -12
-        ParentFont = False
         Align = alClient
         TabStop = True
         TabOrder = 2

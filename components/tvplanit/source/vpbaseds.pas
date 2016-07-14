@@ -316,18 +316,17 @@ type
     procedure CMEnter(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message CM_ENTER;
     procedure CMExit(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message CM_EXIT;
   public
-    constructor Create (AOwner : TComponent); override;
+    constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    function GetLastPrintLine : Integer;
-    function GetControlType : TVpItemType; virtual; abstract;
-    procedure RenderToCanvas (RenderCanvas: TCanvas; RenderIn: TRect;
+    function GetLastPrintLine: Integer;
+    function GetControlType: TVpItemType; virtual; abstract;
+    procedure RenderToCanvas(RenderCanvas: TCanvas; RenderIn: TRect;
       Angle: TVpRotationAngle; Scale: Extended; RenderDate: TDateTime;
-      StartLine: Integer; StopLine: Integer; UseGran: TVpGranularity;
+      StartLine, StopLine: Integer; UseGran: TVpGranularity;
       DisplayOnly: Boolean); virtual; abstract;
-    procedure LinkHandler(Sender: TComponent;
-      NotificationType: TVpNotificationType; const Value: Variant);
-      virtual; abstract;
-    property ReadOnly : Boolean read FReadOnly write FReadOnly;
+    procedure LinkHandler(Sender: TComponent; NotificationType: TVpNotificationType;
+      const Value: Variant); virtual; abstract;
+    property ReadOnly: Boolean read FReadOnly write FReadOnly;
   published
     property PopupMenu;
     property DataStore: TVpCustomDataStore read FDataStore write SetDataStore;
@@ -1227,6 +1226,7 @@ begin
       Inc(I);
     end;
   end;
+
   FPrinter := TVpPrinter.Create (Self);
   FLocalization := TVpLocalization.Create;
 end;
