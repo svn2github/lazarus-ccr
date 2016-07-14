@@ -669,7 +669,6 @@ var
   firstWeekDay: TVpDayType;
   translator: TUpdateTranslator;
   nf: TVpNavFolder;
-  w: Integer;
 begin
   langdir := ExpandFileName(AppendPathDelim(Application.Location) + LANGUAGE_DIR);
 
@@ -686,13 +685,17 @@ begin
 
     TranslateUnitResourceStrings('demoMain', langDir + 'demo.po');
     TranslateUnitResourceStrings('lclstrconsts', langDir + 'lclstrconsts.po');
-    translator := TPOTranslator.Create(langdir + 'demo.po');
-    if Assigned(LRSTranslator) then
-      LRSTranslator.Free;
-    LRSTranslator := translator;
-    for i := 0 to Screen.CustomFormCount-1 do
-      translator.UpdateTranslation(Screen.CustomForms[i]);
-  end else
+
+    if FileExistsUTF8(langdir + 'demo.po') then begin
+      translator := TPOTranslator.Create(langdir + 'demo.po');
+      if Assigned(LRSTranslator) then
+        LRSTranslator.Free;
+      LRSTranslator := translator;
+      for i := 0 to Screen.CustomFormCount-1 do
+        translator.UpdateTranslation(Screen.CustomForms[i]);
+    end;
+  end
+  else
   begin
     SetDefaultLang(FLang, langdir);
     TranslateUnitResourceStrings('vpsr', langdir + 'vpsr.' + FLang + '.po');
