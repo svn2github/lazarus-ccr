@@ -319,10 +319,18 @@ function RenderTextToRect(ACanvas: TCanvas; const Angle: TVpRotationAngle;
 function RenderTextToRegion(ACanvas: TCanvas; const Angle: TVpRotationAngle;
   const Viewport: TRect; ARegion: HRGN; AString: string): Integer;
 
+{$IFDEF FPC}
+procedure RotateBitmap(ABitmap: TBitmap; Angle: TVpRotationAngle);
+{$ENDIF}
+procedure ScaleBitmap(ABitmap: TBitmap; Scale: Extended);
+
 
 implementation
 
 uses
+ {$IFDEF FPC}
+  IntfGraphics,
+ {$ENDIF}
   VpMisc;
 
 var
@@ -881,11 +889,10 @@ end;
 procedure TVpExCanvas.BrushCopy(const Dest: TRect; Bitmap: TBitmap;
   const Source: TRect; AColor: TColor);
 begin
-  Unused(Dest, Bitmap);
-  Unused(Source, AColor);
-
   if not Assigned(FCanvas) then
     raise EVpCanvasError.Create(RSNoCanvas);
+
+  FCanvas.BrushCopy(TPSRotateRectangle(Angle, ViewPort, Dest), Bitmap, Source, AColor);
 
 //TODO:  FCanvas.BrushCopy(TPSRotateRectangle(Angle, ViewPort, Dest),
 //                     Bitmap, Source, AColor);
@@ -1766,6 +1773,80 @@ begin
   else                                                                   
     Result := #0;                                                        
 end;                                                                     
+
+{$IFDEF FPC}
+procedure RotateBitmap(ABitmap: TBitmap; Angle: TVpRotationAngle);
+Var
+  bmp: TBitmap;
+  tmpIntfImg2, tmpIntfImg: TLazIntfImage;
+  imgHandle, imgMaskHandle: HBitmap;
+  i, j: integer;
+Begin
+  if Angle = ra0 then
+    exit;
+
+  tmpIntfImg2 := TLazIntfImage.Create(0, 0);
+  try
+    bmp := TBitmap.Create;
+    try
+      tmpIntfImg := TLazIntfImage.Create(0, 0);
+      try
+        if Angle in [ra90, ra270] then begin
+          bmp.Width := ABitmap.Height;
+          bmp.Height := ABitmap.Width;
+          tmpIntfImg.LoadFromBitmap(bmp.Handle, bmp.MaskHandle);
+          tmpIntfImg2.LoadFromBitmap(ABitmap.Handle, ABitmap.MaskHandle);
+          if Angle = ra90 then
+            for i:=0 to ABitmap.Width-1 do
+              for j:=0 to ABitmap.Height-1 do
+                tmpIntfImg.Colors[ABitmap.Height-1-j, i] := tmpIntfImg2.Colors[i, j]
+          else
+            for i:=0 to ABitmap.Width-1 do
+              for j:=0 to ABitmap.Height-1 do
+                tmpIntfImg.Colors[j, ABitmap.Width-1-i] := tmpIntfImg2.Colors[i, j];
+        end else
+        if Angle = ra180 then begin
+          bmp.Width := ABitmap.Width;
+          bmp.Height := ABitmap.Height;
+          tmpIntfImg.LoadFromBitmap(bmp.Handle, bmp.MaskHandle);
+          tmpIntfImg2.LoadFromBitmap(ABitmap.Handle, ABitmap.MaskHandle);
+          for i:=0 to ABitmap.Width-1 do
+            for j:=0 to ABitmap.Height-1 do
+              tmpIntfImg.Colors[ABitmap.Width-1-i, ABitmap.Height-1-j] := tmpIntfImg2.Colors[i, j];
+        end;
+        tmpIntfImg.CreateBitmaps(imgHandle, imgMaskHandle, false);
+        bmp.Handle := ImgHandle;
+        bmp.MaskHandle := ImgMaskHandle;
+      finally
+        tmpIntfImg.Free;
+      end;
+      ABitmap.Assign(bmp);
+    finally
+      bmp.Free;
+    end;
+  finally
+    tmpIntfImg2.Free;
+  end;
+end;
+{$ENDIF}
+
+procedure ScaleBitmap(ABitmap: TBitmap; Scale: Extended);
+var
+  bmp: TBitmap;
+  w, h, left, top: integer;
+begin
+  bmp := TBitmap.Create;
+  try
+    w := Round(ABitmap.Width * Scale);
+    h := Round(ABitmap.Height * Scale);
+    bmp.Width := w;
+    bmp.Height := h;
+    bmp.Canvas.CopyRect(Rect(0, 0, w, h), ABitmap.Canvas, Rect(0, 0, ABitmap.Width, ABitmap.Height));
+    ABitmap.Assign(bmp);
+  finally
+    Bmp.free;
+  end;
+end;
 
 
 initialization                                                           

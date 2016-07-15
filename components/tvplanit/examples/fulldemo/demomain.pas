@@ -401,6 +401,10 @@ begin
          t1 := StartOfTheWeek(now);
          t2 := t1;     // it all fits on one single page
        end;
+    2: begin  // Tasks of current week
+         t1 := StartOfTheWeek(now);
+         t2 := t1;
+       end;
   end;
   VpPrintPreviewDialog1.ControlLink := VpControlLink1;
   VpPrintPreviewDialog1.Printer := Printer;

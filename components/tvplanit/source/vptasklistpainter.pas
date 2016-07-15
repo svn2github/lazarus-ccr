@@ -7,7 +7,7 @@ interface
 uses
   SysUtils, LCLType, LCLIntf,
   //SysUtils, LCLType, LCLIntf, Types,
-  Classes, Graphics,
+  Classes, Graphics, Types,
   //VpConst,
   VPBase, //VpData,
   VpTaskList, VpBasePainter;
@@ -91,10 +91,14 @@ var
   W: Integer;    // width of the checkbox
   X, Y: Integer; // Coordinates
   dx, dy: Integer;
+  tm: Integer;   // Scaled text margin;
+  d2: Integer;   // 2*Scale
 begin
-  X := Rec.Left + TextMargin;
-  Y := Rec.Top + TextMargin;
-  W := RowHeight - TextMargin * 2;    // correct: The checkbox is square, its width is determined by the row height
+  tm := Round(Textmargin * Scale);
+
+  X := Rec.Left + tm;
+  Y := Rec.Top + tm;
+  W := RowHeight - tm * 2;    // correct: The checkbox is square, its width is determined by the row height
 
   { draw check box }
   case FTaskList.DrawingStyle of
@@ -120,63 +124,68 @@ begin
         // left and top lines
         RenderCanvas.Pen.Color := RealCheckBoxColor;
         TPSPolyLine(RenderCanvas, Angle, RenderIn, [
-          Point(X + 1, Y + W - 3),
-          Point(X + 1, Y + 1),
+          Point(X + 1,     Y + W - 3),
+          Point(X + 1,     Y + 1),
           Point(X + W - 2, Y + 1)
         ]);
         // right and bottom lines
         RenderCanvas.Pen.Color := RGB(128, 152, 176);
         TPSPolyLine(RenderCanvas, Angle, RenderIn, [
-          Point(X + 1, Y + W - 2),
+          Point(X + 1,     Y + W - 2),
           Point(X + W - 2, Y + W - 2),
-          Point(X+W-2, Y)
+          Point(X + W - 2, Y)
         ]);
       end;
   end;
 
   { build check rect }
-  CR := Rect(X + 3, Y + 3, X + W - 3, Y + W - 3);
+  d2 := Round(2*Scale);
+  if Scale > 1 then
+    CR := Rect(X + d2, Y + d2, X + W - d2, Y + W - d2)
+  else
+    CR := Rect(X + 3, Y + 3, X + W - 3, Y + W - 3);
   if Checked then begin
     RenderCanvas.Pen.Color := RealCheckColor;
+    // Instead of using Pen.Width = 3 we paint 3x - looks better
     case FTaskList.DisplayOptions.CheckStyle of
       csX: {X}
-        begin
-          with RenderCanvas do begin
-            TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left, CR.Top);
-            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right, CR.Bottom);
-            TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left, CR.Top+1);
-            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right-1, CR.Bottom);
-            TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left+1, CR.Top);
-            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right, CR.Bottom-1);
-            TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left, CR.Bottom-1);
-            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right, CR.Top-1);
-            TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left, CR.Bottom-2);
-            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right-1, CR.Top-1);
-            TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left+1, CR.Bottom-1);
-            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right, CR.Top);
-          end;
+        with RenderCanvas do begin
+          { \ }
+          TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left, CR.Top);        // center
+          TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right, CR.Bottom);
+          TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left+1, CR.Top);      // upper
+          TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right, CR.Bottom-1);
+          TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left, CR.Top+1);      // lower
+          TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right-1, CR.Bottom);
+          { / }
+          TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left, CR.Bottom-1);   // center
+          TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right, CR.Top-1);
+          TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left, CR.Bottom-2);   // upper
+          TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right-1, CR.Top-1);
+          TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left+1, CR.Bottom-1); // lower
+          TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right, CR.Top);
         end;
       csCheck: {check}
         begin
-          dx := WidthOf(CR) div 4;
-          dy := HeightOf(CR) div 4;
+          dx := WidthOf(CR) div 3;
+          dy := HeightOf(CR) div 3;
           with RenderCanvas do begin
-            TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left, CR.Bottom - dy);
-            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Left + dx, CR.Bottom);
-            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right, CR.Top + 2);
+            TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left, CR.Bottom-dy);
+            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Left+dx, CR.Bottom);
+            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right, CR.Top-1);
 
-            TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left, CR.Bottom - dy - 1);
-            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Left + dx, CR.Bottom - 1);
-            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right, CR.Top + 1);
+            TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left+1, CR.Bottom-dy);
+            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Left+ dx, CR.Bottom-1);
+            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right-1, CR.Top-1);
 
-            TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left, CR.Bottom - dy - 2);
-            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Left + dx, CR.Bottom - 2);
+            TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left, CR.Bottom-dy+1);
+            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Left+dx, CR.Bottom+1);
             TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right, CR.Top);
           end;
         end;
     end;
   end; {if checked}
-  result := CR;
+  result := Rect(X, Y, X + W, Y + W);  //CR;
 end;
 
 procedure TVpTaskListPainter.DrawBorders;
@@ -239,6 +248,7 @@ var
   GlyphRect: TRect;
   HeadStr: string;
   delta: Integer;
+  w, h: Integer;
 begin
   RenderCanvas.Brush.Color := TaskHeadAttrColor;
   RenderCanvas.Font.Assign(FTaskList.TaskHeadAttributes.Font);
@@ -274,13 +284,30 @@ begin
     try
       Bmp.LoadFromResourceName(HINSTANCE, 'VPCHECKPAD'); //soner changed: Bmp.Handle := LoadBaseBitmap('VPCHECKPAD');
       if Bmp.Height > 0 then begin
+        w := Round(Bmp.Width * Scale);
+        h := Round(Bmp.Height * Scale);
+
         GlyphRect.TopLeft := Point(HeadRect.Left + TextMargin, HeadRect.Top + TextMargin);
-        GlyphRect.BottomRight := Point(GlyphRect.Left + Bmp.Width, GlyphRect.Top + Bmp.Height);
+        GlyphRect.BottomRight := Point(GlyphRect.Left + w, GlyphRect.Top + h);
+
+        {$IFDEF FPC}
+        RotateBitmap(Bmp, Angle);
+        {$ENDIF}
+
+        TPSStretchDraw(RenderCanvas, Angle, RenderIn, GlyphRect, Bmp);
+        {
+        RenderCanvas.BrushCopy(
+          TPSRotateRectangle(Angle, RenderIn, GlyphRect),
+          Bmp,
+          Rect(0, 0, Bmp.Width, Bmp.Height),
+          Bmp.Canvas.Pixels[0, Bmp.Height-1]
+        );
+         }
 //TODO:          RenderCanvas.BrushCopy (TPSRotateRectangle (Angle, RenderIn, GlyphRect),
 //                                  Bmp, Rect(0, 0, Bmp.Width, Bmp.Height),
 //            Bmp.Canvas.Pixels[0, Bmp.Height - 1]);
-        RenderCanvas.Draw(GlyphRect.TopLeft.x, GlyphRect.TopLeft.y, Bmp); //soner added
-        HeadRect.Left := HeadRect.Left + Bmp.Width + TextMargin;
+       // RenderCanvas.Draw(GlyphRect.TopLeft.x, GlyphRect.TopLeft.y, Bmp); //soner added
+        HeadRect.Left := HeadRect.Left + w + TextMargin;
       end;
     finally
       Bmp.Free;

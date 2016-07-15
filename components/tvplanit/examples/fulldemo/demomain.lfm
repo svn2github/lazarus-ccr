@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 325
+  Left = 307
   Height = 600
-  Top = 181
+  Top = 312
   Width = 900
   Caption = 'Turbo Power VisualPlanIt Demo'
   ClientHeight = 580
@@ -238,6 +238,8 @@ object MainForm: TMainForm
           DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
+          Font.Height = -12
+          ParentFont = False
           AllDayEventAttributes.BackgroundColor = clWindow
           AllDayEventAttributes.EventBorderColor = clGray
           AllDayEventAttributes.EventBackgroundColor = clBtnFace
@@ -248,6 +250,8 @@ object MainForm: TMainForm
           DayHeadAttributes.Font.Height = -13
           DayHeadAttributes.Bordered = True
           DrawingStyle = dsFlat
+          EventFont.Height = -12
+          HeadAttributes.Font.Height = -12
           HeadAttributes.Color = clBtnFace
           LineColor = clGray
           TimeFormat = tf12Hour
@@ -302,6 +306,8 @@ object MainForm: TMainForm
           DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
+          Font.Height = -12
+          ParentFont = False
           Align = alClient
           TabStop = True
           TabOrder = 1
@@ -319,6 +325,7 @@ object MainForm: TMainForm
           LineColor = clGray
           MaxVisibleTasks = 250
           TaskHeadAttributes.Color = clSilver
+          TaskHeadAttributes.Font.Height = -12
           DrawingStyle = ds3d
           ShowResourceName = True
         end
@@ -707,6 +714,45 @@ object MainForm: TMainForm
             Width = 100
           end>
         FormatName = 'Events of current week (Week view)'
+      end    
+      item
+        Version = 'v1.04'
+        DayInc = 0
+        DayIncUnits = duDay
+        Elements = <        
+          item
+            Version = 'v1.04'
+            DayOffset = 0
+            DayOffsetUnits = duWeek
+            ElementName = 'TaskList'
+            Height = 100
+            ItemType = itTasks
+            Left = 0
+            Shape.Shape = ustRectangle
+            Top = 0
+            Width = 100
+          end>
+        FormatName = 'Tasks of current week'
+      end    
+      item
+        Version = 'v1.04'
+        DayInc = 0
+        DayIncUnits = duDay
+        Elements = <        
+          item
+            Version = 'v1.04'
+            DayOffset = 0
+            DayOffsetUnits = duDay
+            ElementName = 'TaskList'
+            Height = 100
+            ItemType = itTasks
+            Left = 0
+            Rotation = ra270
+            Shape.Shape = ustRectangle
+            Top = 0
+            Width = 100
+          end>
+        FormatName = 'Tasks of current week (landscape)'
       end>
     Printer.RightMargin = 5
     Printer.TopMargin = 5
