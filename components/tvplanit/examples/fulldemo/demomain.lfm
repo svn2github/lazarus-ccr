@@ -106,6 +106,7 @@ object MainForm: TMainForm
             TimeSlotColors.ActiveRange.RangeEnd = h_00
             HeadAttributes.Color = clBtnFace
             RowHeadAttributes.HourFont.Height = -24
+            RowHeadAttributes.MinuteFont.Height = -12
             RowHeadAttributes.Color = clBtnFace
             IconAttributes.AlarmBitmap.Data = {
               76020000424D760200000000000036000000280000000C0000000C0000000100
@@ -243,6 +244,7 @@ object MainForm: TMainForm
           DateLabelFormat = 'dddd, mmmm dd, yyyy'
           DayHeadAttributes.Color = clBtnFace
           DayHeadAttributes.DateFormat = 'dddd mmmm, dd'
+          DayHeadAttributes.Font.Height = -13
           DayHeadAttributes.Bordered = True
           DrawingStyle = dsFlat
           HeadAttributes.Color = clBtnFace

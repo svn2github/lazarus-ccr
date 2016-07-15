@@ -785,7 +785,7 @@ begin
     Angle,
     RenderIn,
     RealLeft + TVpMonthViewOpener(FMonthView).mvSpinButtons.Width + TextMargin * 2,
-    HeadTextRect.Top, // + TextMargin,
+    HeadTextRect.Top, // this vertical position is already centered
     HeadStr
   );
 end;

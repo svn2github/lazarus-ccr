@@ -148,7 +148,7 @@ type
     wvClickTimer: TTimer;
     wvLoaded: Boolean;
     wvRowHeight: Integer;
-    wvDayHeadHeight: Integer;
+//    wvDayHeadHeight: Integer;
     wvHeaderHeight: Integer;
     wvStartDate: TDateTime;
     wvSpinButtons: TUpDown;
