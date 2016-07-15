@@ -21,6 +21,7 @@ type
     BevelDarkShadow: TColor;
     BevelFace: TColor;
     DayHeadAttrColor: TColor;
+    HeadAttrColor: TColor;
     RealLineColor: TColor;
     RealOffDayColor: TColor;
     RealSelDayColor: TColor;
@@ -246,6 +247,7 @@ var
   OldBrush: TBrush;
   OldPen: TPen;
   OldFont: TFont;
+  dx: Integer;
 begin
   { initialize the MonthDayArray }
   with TVpMonthViewOpener(FMonthView) do
@@ -347,6 +349,9 @@ begin
 
               { set the proper font and style }
               RenderCanvas.Font.Assign(FMonthView.DayNumberFont);
+              fontstyle := Rendercanvas.Font.style;
+
+
               if (DisplayDate = ThisDate) then begin
                 if FMonthView.Focused then begin
                   TPSDrawFocusRect(
@@ -389,23 +394,17 @@ begin
 
               { write the day number at the top of the square. }
               if fsItalic in RenderCanvas.Font.Style then
-                TPSTextOut(
-                  RenderCanvas,
-                  Angle,
-                  RenderIn,
-                  TextRect.Left + TVpMonthViewOpener(FMonthView).mvColWidth - TextAdjust - TextMargin - 2,
-                  TextRect.Top + TextMargin div 2,
-                  Str
-                )
+                dx := -2
               else
-                TPSTextOut(
-                  RenderCanvas,
-                  Angle,
-                  RenderIn,
-                  TextRect.Left + TVpMonthViewOpener(FMonthView).mvColWidth - TextAdjust - TextMargin,
-                  TextRect.Top + TextMargin div 2,
-                  Str
-                );
+                dx := 0;
+              TPSTextOut(
+                RenderCanvas,
+                Angle,
+                RenderIn,
+                TextRect.Left + TVpMonthViewOpener(FMonthView).mvColWidth - TextAdjust - TextMargin + dx,
+                TextRect.Top + TextMargin div 2,
+                Str
+              );
 
               { Update MonthDayArray }
               with TVpMonthViewOpener(FMonthView) do begin
@@ -517,23 +516,17 @@ begin
                 RenderCanvas.Font.Color := FMonthView.OffdayFontColor;
 
               if fsItalic in RenderCanvas.Font.Style then
-                TPSTextOut(
-                  RenderCanvas,
-                  Angle,
-                  RenderIn,
-                  TextRect.Right - TextAdjust - TextMargin - 2,
-                  TextRect.Top + TextMargin div 2,
-                  Str
-                )
+                dx := -2
               else
-                TPSTextOut(
-                  RenderCanvas,
-                  Angle,
-                  RenderIn,
-                  TextRect.Right - TextAdjust - TextMargin,
-                  TextRect.Top + TextMargin div 2,
-                  Str
-                );
+                dx := 0;
+              TPSTextOut(
+                RenderCanvas,
+                Angle,
+                RenderIn,
+                TextRect.Right - TextAdjust - TextMargin + dx,
+                TextRect.Top + TextMargin div 2,
+                Str
+              );
 
               { Update Array }
               with TVpMonthViewOpener(FMonthView) do begin
@@ -716,8 +709,7 @@ var
   dayHeadHeight: Integer;
   R: TRect;
 begin
-  RenderCanvas.Brush.Color := DayHeadAttrColor;
-
+  RenderCanvas.Brush.Color := HeadAttrColor;
   dayHeadHeight := TVpMonthViewOpener(FMonthView).mvDayHeadHeight;
 
   HeadRect := Rect(RealLeft, RealTop, RealRight, RealTop + dayHeadHeight);
@@ -755,7 +747,7 @@ begin
   {$ENDIF}{$ENDIF}
 
   { Calculate the text rectangle }
-  RenderCanvas.Font.Assign(FMonthView.DayHeadAttributes.Font);
+  RenderCanvas.Font.Assign(FMonthView.HeadAttributes.Font);
   if DisplayOnly and (RenderCanvas.TextWidth(HeadStr) >= RealWidth) then
     HeadTextRect.Left:= RealLeft + TextMargin * 2
   else
@@ -779,7 +771,7 @@ begin
   end;
 
   // Draw the text
-  RenderCanvas.Font.Assign(FMonthView.DayHeadAttributes.Font);
+  RenderCanvas.Font.Assign(FMonthView.HeadAttributes.Font);
   TPSTextOut(
     RenderCanvas,
     Angle,
@@ -793,6 +785,7 @@ end;
 procedure TVpMonthViewPainter.FixFontHeights;
 begin
   with FMonthView do begin
+    HeadAttributes.Font.Height := GetRealFontHeight(HeadAttributes.Font);
     DayHeadAttributes.Font.Height := GetRealFontHeight(DayHeadAttributes.Font);
     DayNumberFont.Height := GetRealFontHeight(DayNumberFont);
     EventFont.Height := GetRealFontHeight(EventFont);
@@ -809,6 +802,7 @@ begin
     BevelFace := clBlack;
     RealColor := clWhite;
     DayHeadAttrColor := clSilver;
+    HeadAttrColor := clSilver;
     RealLineColor := clBlack;
     RealOffDayColor := clSilver;
     RealSelDayColor := clWhite;
@@ -819,6 +813,7 @@ begin
     BevelDarkShadow := cl3DDkShadow;
     BevelFace := clBtnFace;
     RealColor := FMonthView.Color;
+    HeadAttrColor := FMonthView.HeadAttributes.Color;
     DayHeadAttrColor := FMonthView.DayHeadAttributes.Color;
     RealLineColor := FMonthView.LineColor;
     RealOffDayColor := FMonthView.OffDayColor;

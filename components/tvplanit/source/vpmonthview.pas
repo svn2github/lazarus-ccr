@@ -59,6 +59,22 @@ type
   TVpOnEventClick =                                                      
     procedure(Sender: TObject; Event: TVpEvent) of object;               
 
+  TVpMvHeadAttributes = class(TPersistent)
+  protected{ private }
+    FOwner: TVpMonthView;
+    FColor: TColor;
+    FFont: TVpFont;
+    procedure SetColor(const Value: TColor);
+    procedure SetFont(Value: TVpFont);
+  public
+    constructor Create(AOwner: TVpMonthView);
+    destructor Destroy; override;
+    property Owner: TVpMonthView read FOwner;
+  published
+    property Font: TVpFont read FFont write SetFont;
+    property Color: TColor read FColor write SetColor;
+  end;
+
   TVpDayHeadAttr = class(TPersistent)
   protected{private}
     FMonthView: TVpMonthView;
@@ -96,6 +112,7 @@ type
     FShowEventTime     : Boolean;
     FTopLine           : Integer;
     FDayHeadAttributes : TVpDayHeadAttr;
+    FHeadAttr          : TVpMvHeadAttributes;
     FDayNumberFont     : TVpFont;
     FEventFont         : TVpFont;
     FTimeFormat        : TVpTimeFormat;
@@ -144,7 +161,7 @@ type
     procedure SetShowEventTime(Value: Boolean);
     procedure SetTimeFormat(Value: TVpTimeFormat);
     procedure SetDate(Value: TDateTime);
-    procedure SetRightClickChangeDate (const v : Boolean);               
+    procedure SetRightClickChangeDate(const v: Boolean);
     procedure SetWeekStartsOn(Value: TVpDayType);
     { internal methods }
     procedure mvHookUp;
@@ -163,7 +180,7 @@ type
     procedure WMLButtonDblClick(var Msg: TWMLButtonDblClk);              
       message WM_LBUTTONDBLCLK;                                          
     {$ELSE}
-    procedure WMLButtonDown(var Msg : TLMLButtonDown);
+    procedure WMLButtonDown(var Msg: TLMLButtonDown);
       message LM_LBUTTONDOWN;
     procedure WMLButtonDblClick(var Msg: TLMLButtonDblClk);
       message LM_LBUTTONDBLCLK;
@@ -175,8 +192,8 @@ type
     { message handlers }
     {$IFNDEF LCL}
     procedure WMSize(var Msg: TWMSize); message WM_SIZE;
-    procedure WMSetFocus(var Msg : TWMSetFocus); message WM_SETFOCUS;
-    procedure WMRButtonDown(var Msg : TWMRButtonDown); message WM_RBUTTONDOWN;
+    procedure WMSetFocus(var Msg: TWMSetFocus); message WM_SETFOCUS;
+    procedure WMRButtonDown(var Msg: TWMRButtonDown); message WM_RBUTTONDOWN;
     procedure CMWantSpecialKey(var Msg: TCMWantSpecialKey);
       message CM_WANTSPECIALKEY;
     {$ELSE}
@@ -184,11 +201,12 @@ type
     procedure WMSetFocus(var Msg: TLMSetFocus); message LM_SETFOCUS;
     procedure WMRButtonDown(var Msg: TLMRButtonDown); message LM_RBUTTONDOWN;
     {$ENDIF}
-    procedure PopupToday (Sender : TObject);
-    procedure PopupNextMonth (Sender : TObject);
-    procedure PopupPrevMonth (Sender : TObject);
-    procedure PopupNextYear (Sender : TObject);
-    procedure PopupPrevYear (Sender : TObject);
+    procedure PopupToday(Sender: TObject);
+    procedure PopupNextMonth(Sender: TObject);
+    procedure PopupPrevMonth(Sender: TObject);
+    procedure PopupNextYear(Sender: TObject);
+    procedure PopupPrevYear(Sender: TObject);
+
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -213,6 +231,7 @@ type
                               DisplayOnly  : Boolean); override;
 
     property Date: TDateTime read FDate write SetDate;
+
   published
     { inherited properties }
     property Align;
@@ -237,6 +256,8 @@ type
       read FEventDayStyle write SetEventDayStyle;
     property EventFont: TVpFont
       read FEventFont write SetEventFont;
+    property HeadAttributes: TVpMvHeadAttributes
+      read FHeadAttr write FHeadAttr;
     property LineColor: TColor
       read FLineColor write SetLineColor;
     property TimeFormat: TVpTimeFormat
@@ -269,6 +290,38 @@ implementation
 
 uses
   SysUtils, LazUTF8, Forms, Dialogs, VpMonthViewPainter;
+
+
+(*****************************************************************************)
+{ TVpMvHeadAttributes }
+
+constructor TVpMvHeadAttributes.Create(AOwner: TVpMonthView);
+begin
+  inherited Create;
+  FOwner := AOwner;
+  FColor := clBtnFace;
+  FFont := TVpFont.Create(AOwner);
+end;
+
+destructor TVpMvHeadAttributes.Destroy;
+begin
+  FFont.Free;
+  inherited;
+end;
+
+procedure TVpMvHeadAttributes.SetColor(const Value: TColor);
+begin
+  if FColor <> Value then begin
+    FColor := Value;
+    FOwner.Invalidate;
+  end;
+end;
+
+procedure TVpMvHeadAttributes.SetFont(Value: TVpFont);
+begin
+  FFont.Assign(Value);
+end;
+
 
 (*****************************************************************************)
 { TVpContactHeadAttr }
@@ -316,6 +369,7 @@ begin
   ControlStyle := [csCaptureMouse, csOpaque, csDoubleClicks];
 
   { Create internal classes and stuff }
+  FHeadAttr := TVpMvHeadAttributes.Create(self);
   FDayHeadAttributes := TVpDayHeadAttr.Create(self);
   mvEventList := TList.Create;
   mvSpinButtons := TUpDown.Create(self);

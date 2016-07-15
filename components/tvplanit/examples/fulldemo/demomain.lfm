@@ -25,9 +25,9 @@ object MainForm: TMainForm
       Height = 532
       Top = 48
       Width = 780
-      ActivePage = TabTasks
+      ActivePage = TabEvents
       Align = alClient
-      TabIndex = 1
+      TabIndex = 0
       TabOrder = 0
       object TabEvents: TTabSheet
         Caption = 'Events'
@@ -61,6 +61,9 @@ object MainForm: TMainForm
             DayNameStyle = dsShort
             DrawingStyle = dsFlat
             EventDayStyle = [fsItalic]
+            HeadAttributes.Font.Height = -13
+            HeadAttributes.Font.Style = [fsItalic]
+            HeadAttributes.Color = clBtnFace
             LineColor = clGray
             TimeFormat = tf12Hour
             OffDayColor = clSilver
@@ -105,6 +108,7 @@ object MainForm: TMainForm
             TimeSlotColors.ActiveRange.RangeBegin = h_00
             TimeSlotColors.ActiveRange.RangeEnd = h_00
             HeadAttributes.Font.Height = -13
+            HeadAttributes.Font.Style = [fsItalic]
             HeadAttributes.Color = clBtnFace
             RowHeadAttributes.HourFont.Height = -24
             RowHeadAttributes.MinuteFont.Height = -12
@@ -251,7 +255,8 @@ object MainForm: TMainForm
           DayHeadAttributes.Bordered = True
           DrawingStyle = dsFlat
           EventFont.Height = -12
-          HeadAttributes.Font.Height = -12
+          HeadAttributes.Font.Height = -13
+          HeadAttributes.Font.Style = [fsItalic]
           HeadAttributes.Color = clBtnFace
           LineColor = clGray
           TimeFormat = tf12Hour
@@ -325,7 +330,8 @@ object MainForm: TMainForm
           LineColor = clGray
           MaxVisibleTasks = 250
           TaskHeadAttributes.Color = clSilver
-          TaskHeadAttributes.Font.Height = -12
+          TaskHeadAttributes.Font.Height = -13
+          TaskHeadAttributes.Font.Style = [fsItalic]
           DrawingStyle = ds3d
           ShowResourceName = True
         end
