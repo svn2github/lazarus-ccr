@@ -182,8 +182,8 @@ type
     procedure ParseXMLDeclaration;
     procedure PopDocument;
     procedure PushDocument;
-    procedure PushString(const sVal : DOMString);
-    function ReadChar(const UpdatePos : Boolean) : DOMChar;
+    procedure PushString(const sVal: DOMString);
+    function ReadChar(const UpdatePos: Boolean): DOMChar;
     procedure ReadExternalIds(bInNotation : Boolean;
                           var sIds        : StringIds);
     function ReadLiteral(wFlags    : Integer;
@@ -377,70 +377,45 @@ type
 {== TVpNotationInfo ==================================================}
   TVpNotationInfo = class(TObject)
   private
-    FPublicId : DOMString;
-    FSystemId : DOMString;
+    FPublicId: DOMString;
+    FSystemId: DOMString;
   public
-    property PublicId : DOMString
-      read FPublicId
-      write FPublicId;
-
-    property SystemId : DOMString
-      read FSystemId
-      write FSystemId;
+    property PublicId: DOMString read FPublicId write FPublicId;
+    property SystemId: DOMString read FSystemId write FSystemId;
   end;
+
 {== TVpAttributeInfo =================================================}
   TVpAttributeInfo = class(TObject)
   private
-    FType      : Integer;
-    FValue     : DOMString;
-    FValueType : Integer;
-    FEnum      : DOMString;
-    FLookup    : DOMString;
+    FType: Integer;
+    FValue: DOMString;
+    FValueType: Integer;
+    FEnum: DOMString;
+    FLookup: DOMString;
   public
-    property AttrType : Integer
-      read FType
-      write FType;
-
-    property Enum : DOMString
-      read FEnum
-      write FEnum;
-
-    property Lookup : DOMString
-      read FLookup
-      write FLookup;
-
-    property Value : DOMString
-      read FValue
-      write FValue;
-
-    property ValueType : Integer
-      read FValueType
-      write FValueType;
+    property AttrType: Integer read FType write FType;
+    property Enum: DOMString read FEnum write FEnum;
+    property Lookup: DOMString read FLookup write FLookup;
+    property Value: DOMString read FValue write FValue;
+    property ValueType: Integer read FValueType write FValueType;
   end;
+
 {== TVpElementInfo ===================================================}
   TVpElementInfo = class(TObject)
   private
-    FAttributeList : TStringList;
-    FContentType   : Integer;
-    FContentModel  : DOMString;
+    FAttributeList: TStringList;
+    FContentType: Integer;
+    FContentModel: DOMString;
   public
     constructor Create;
     destructor Destroy; override;
+    procedure SetAttribute(const sName: DOMString; oAttrInfo: TVpAttributeInfo);
 
-    procedure SetAttribute(const sName     : DOMString;
-                                 oAttrInfo : TVpAttributeInfo);
-
-    property AttributeList : TStringList
-      read FAttributeList;
-
-    property ContentModel : DOMString
-      read FContentModel
-      write FContentModel;
-
-    property ContentType : Integer
-      read FContentType
-      write FContentType;
+    property AttributeList: TStringList read FAttributeList;
+    property ContentModel: DOMString read FContentModel write FContentModel;
+    property ContentType: Integer read FContentType write FContentType;
   end;
+
 {=== TVpElementInfo ==================================================}
 constructor TVpElementInfo.Create;
 begin
@@ -462,20 +437,28 @@ begin
   inherited Destroy;
 end;
 {--------}
-procedure TVpElementInfo.SetAttribute(const sName     : DOMString;
-                                            oAttrInfo : TVpAttributeInfo);
+procedure TVpElementInfo.SetAttribute(const sName: DOMString;
+  oAttrInfo: TVpAttributeInfo);
 var
-  wIdx : Integer;
+  wIdx: Integer;
 begin
   if FAttributeList = nil then begin
     FAttributeList := TStringList.Create;
     FAttributeList.Sorted := True;
     wIdx := -1
   end else
+   {$IFDEF DELPHI}
     wIdx := FAttributeList.IndexOf(sName);
+   {$ELSE}
+    wIdx := FAttributeList.IndexOf(UTF8Encode(sName));
+   {$ENDIF}
 
   if wIdx < 0 then
+   {$IFDEF DELPHI}
     FAttributeList.AddObject(sName, oAttrInfo)
+   {$ELSE}
+    FAttributeList.AddObject(UTF8Encode(sName), oAttrInfo)
+   {$ENDIF}
   else begin
     TVpAttributeInfo(FAttributeList.Objects[wIdx]).Free;
     FAttributeList.Objects[wIdx] := oAttrInfo;
@@ -553,19 +536,22 @@ end;
 {--------}
 procedure TVpParser.CheckParamEntityNesting(const aString : DOMString);
 var
-  OpenPos : Integer;
-  ClosePos : Integer;
+  OpenPos: Integer;
+  ClosePos: Integer;
+  errMsg: DOMString;
 begin
   OpenPos := VpPos('(', aString);
   ClosePos := VpPos(')', aString);
-  if (((OpenPos <> 0) and
-       (ClosePos = 0)) or
-      ((ClosePos <> 0) and
-       (OpenPos = 0))) then
-     raise EVpParserError.CreateError (FFilter.Line,
-                                        FFilter.LinePos,
-                                        sBadParamEntNesting +
-                                        aString);
+  if ((OpenPos <> 0) and (ClosePos = 0)) or
+     ((ClosePos <> 0) and (OpenPos = 0)) then
+  begin
+   {$IFDEF DELPHI}
+    errMsg := sBadParamEntNesting + aString;
+   {$ELSE}
+    errMsg := UTF8Decode(sBadParamEntNesting) + aString;
+   {$ENDIF}
+    raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, errMsg);
+   end;
 end;
 {--------}
 procedure TVpParser.Cleanup;
@@ -669,40 +655,46 @@ begin
   Result := FErrors.Count;
 end;
 {--------}
-function TVpParser.GetErrorMsg(wIdx : Integer) : DOMString;
+function TVpParser.GetErrorMsg(wIdx: Integer): DOMString;
 begin
+ {$IFDEF DELPHI}
   Result := sIndexOutOfBounds;
-  if (wIdx >= 0) and
-     (wIdx < FErrors.Count) then
+  if (wIdx >= 0) and (wIdx < FErrors.Count) then
     Result := FErrors[wIdx];
+ {$ELSE}
+  Result := UTF8Decode(sIndexOutOfBounds);
+  if (wIdx >= 0) and (wIdx < FErrors.Count) then
+    Result := UTF8Decode(FErrors[wIdx]);
+ {$ENDIF}
 end;
 {--------}
-function TVpParser.DeclaredAttributes(const sName : DOMString;
-                                            aIdx  : Integer)
-                                                  : TStringList;
+function TVpParser.DeclaredAttributes(const sName: DOMString;
+  aIdx: Integer): TStringList;
 begin
   Unused(sName);
-
   if aIdx < 0 then
     Result := nil
   else
     Result := TVpElementInfo(FElementInfo.Objects[aIdx]).AttributeList;
 end;
 {--------}
-function TVpParser.GetAttributeDefaultValueType(const sElemName,
-                                                      sAttrName : DOMString)
-                                                                : Integer;
+function TVpParser.GetAttributeDefaultValueType(
+  const sElemName, sAttrName: DOMString): Integer;
 var
-  wIdx      : Integer;
-  oAttrList : TStringList;
-  oAttr     : TVpAttributeInfo;
+  wIdx: Integer;
+  oAttrList: TStringList;
+  oAttr: TVpAttributeInfo;
 begin
   Result := ATTRIBUTE_DEFAULT_UNDECLARED;
   wIdx := GetElementIndexOf(sElemName);
   if wIdx >= 0 then begin
     oAttrList := TVpElementInfo(FElementInfo.Objects[wIdx]).AttributeList;
     if oAttrList <> nil then begin
+     {$IFDEF DELPHI}
       wIdx := oAttrList.IndexOf(sAttrName);
+     {$ELSE}
+      wIdx := oAttrList.IndexOf(UTF8Encode(sAttrName));
+     {$ENDIF}
       if wIdx >= 0 then begin
         oAttr := TVpAttributeInfo(oAttrList.Objects[wIdx]);
         Result := oAttr.AttrType;
@@ -711,15 +703,13 @@ begin
   end;
 end;
 {--------}
-function TVpParser.GetAttributeExpandedValue(const sElemName,
-                                                   sAttrName : DOMString;
-                                                   aIdx      : Integer)
-                                                             : DOMString;
+function TVpParser.GetAttributeExpandedValue(const sElemName, sAttrName: DOMString;
+  aIdx: Integer): DOMString;
 var
-  wIdx      : Integer;
-  oAttrList : TStringList;
-  oAttr     : TVpAttributeInfo;
-  HasEntRef : Boolean;
+  wIdx: Integer;
+  oAttrList: TStringList;
+  oAttr: TVpAttributeInfo;
+  HasEntRef: Boolean;
 begin
   Unused(sElemName);
 
@@ -728,16 +718,17 @@ begin
   if aIdx >= 0 then begin
     oAttrList := TVpElementInfo(FElementInfo.Objects[aIdx]).AttributeList;
     if oAttrList <> nil then begin
+     {$IFDEF DELPHI}
       wIdx := oAttrList.IndexOf(sAttrName);
+     {$ELSE}
+      wIdx := oAttrList.IndexOf(UTF8Encode(sAttrName));
+     {$ENDIF}
       if wIdx >= 0 then begin
         oAttr := TVpAttributeInfo(oAttrList.Objects[wIdx]);
-        if (oAttr.Lookup = '') and
-           (oAttr.Value <> '') then begin
+        if (oAttr.Lookup = '') and (oAttr.Value <> '') then
+        begin
           PushString('"' + oAttr.Value + '"');
-          oAttr.Lookup := ReadLiteral(LIT_NORMALIZE or
-                                      LIT_CHAR_REF or
-                                      LIT_ENTITY_REF,
-                                      HasEntRef);
+          oAttr.Lookup := ReadLiteral(LIT_NORMALIZE or LIT_CHAR_REF or LIT_ENTITY_REF, HasEntRef);
           SkipWhitespace(True);
         end;
         Result := oAttr.Lookup;
@@ -746,9 +737,8 @@ begin
   end;
 end;
 {--------}
-function TVpParser.GetElementContentType(const sName : DOMString;
-                                               aIdx  : Integer)
-                                                     : Integer;
+function TVpParser.GetElementContentType(const sName: DOMString;
+  aIdx: Integer): Integer;
 begin
   Unused(sName);
   if aIdx < 0 then
@@ -757,18 +747,21 @@ begin
     Result := TVpElementInfo(FElementInfo.Objects[aIdx]).ContentType;
 end;
 {--------}
-function TVpParser.GetElementIndexOf(const sElemName : DOMString)
-                                                     : Integer;
+function TVpParser.GetElementIndexOf(const sElemName: DOMString): Integer;
 begin
+ {$IFDEF DELPHI}
   Result := FElementInfo.IndexOf(sElemName);
+ {$ELSE}
+  Result := FElementInfo.IndexOf(UTF8Encode(sElemName));
+ {$ENDIF}
 end;
 {--------}
-function TVpParser.GetEntityIndexOf(const sEntityName : DOMString;
-                                          aPEAllowed  : Boolean)
-                                                      : Integer;
+function TVpParser.GetEntityIndexOf(const sEntityName: DOMString;
+  aPEAllowed: Boolean): Integer;
 begin
   for Result := 0 to FEntityInfo.Count - 1 do
-    if FEntityInfo[Result] = sEntityName then begin
+    if FEntityInfo[Result] = {$IFDEF DELPHI}sEntityName{$ELSE}UTF8Encode(sEntityName){$ENDIF}
+    then begin
       if (not aPEAllowed) then begin
         if (not TVpEntityInfo(FEntityInfo.Objects[Result]).IsParameterEntity) then
           Exit;
@@ -850,12 +843,10 @@ begin
   end;
 end;
 {--------}
-function TVpParser.GetExternalTextEntityValue(const sName,
-                                                    sPublicId : DOMString;
-                                                    sSystemId : DOMString)
-                                                              : DOMString;
+function TVpParser.GetExternalTextEntityValue(const sName, sPublicId: DOMString;
+  sSystemId: DOMString): DOMString;
 var
-  CompletePath : string;
+  CompletePath: string;
 begin
   DataBufferFlush;
   Result := '';
@@ -869,8 +860,7 @@ begin
     exit;
 
   PushDocument;
-  if (VpPos('/', sSystemID) = 0) and
-     (VpPos('\', sSystemID) = 0) then
+  if (VpPos('/', sSystemID) = 0) and (VpPos('\', sSystemID) = 0) then
     CompletePath := FCurrentPath + sSystemID
   else
     CompletePath := sSystemID;
@@ -931,10 +921,9 @@ begin
             (cVal = #$0D) or (cVal = #$0A);
 end;
 {--------}
-function TVpParser.LoadDataSource(sSrcName  : string;
-                                  oErrors   : TStringList) : Boolean;
+function TVpParser.LoadDataSource(sSrcName: string; oErrors: TStringList): Boolean;
 var
-  aFileStream : TVpFileStream;
+  aFileStream: TVpFileStream;
 begin
   begin
     { Must be a local or network file. Eliminate file:// prefix. }
@@ -1209,7 +1198,11 @@ begin
   FErrors.Clear;
   FIsStandAlone := False;
   FHasExternals := False;
+ {$IFDEF DELPHI}
   FUrl := sSource;
+ {$ELSE}
+  FUrl := UTF8Decode(sSource);
+ {$ENDIF}
   Result := LoadDataSource(sSource, FErrors);
   if Result then begin
     FFilter.FreeStream := True;
@@ -1379,14 +1372,17 @@ end;
 procedure TVpParser.ParseEndTag;
 var
   sName : DOMString;
+  msg: DOMString;
 begin
   sName := ReadNameToken(True);
-  if sName <> FCurrentElement then
-    raise EVpParserError.CreateError (FFilter.Line,
-                                       FFilter.LinePos,
-                                       sMismatchEndTag +
-                                       'Start tag = "' + FCurrentElement +
-                                       '" End tag = "' + sName + '"');
+  if sName <> FCurrentElement then begin
+    {$IFDEF DELPHI}
+    msg := sMismatchEndTag + 'Start tag = "' + FCurrentElement + '" End tag = "' + sName + '"';
+    {$ELSE}
+    msg := UTF8Decode(sMismatchEndTag) + 'Start tag = "' + FCurrentElement + '" End tag = "' + sName + '"';
+    {$ENDIF}
+    raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, msg);
+  end;
   SkipWhitespace(True);
   Require(Xpc_BracketAngleRight);
   if Assigned(FOnEndElement) then
@@ -1657,9 +1653,8 @@ var
   HasEntRef : Boolean;
 begin
   if FXMLDecParsed then
-    raise EVpParserError.CreateError (FFilter.Line,
-                                       FFilter.LinePos,
-                                       sXMLDecNotAtBeg);
+    raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, sXMLDecNotAtBeg);
+
   HasEntRef := False;
   SkipWhitespace(True);
   Require(Xpc_Version);
@@ -1676,37 +1671,30 @@ begin
                                        Format(sInvalidXMLVersion,
                                               [VpXMLSpecification]));
   SkipWhitespace(True);
-    if TryRead(Xpc_Encoding) then begin
-      DatabufferAppend('encoding');
-      ParseEq;
-      DataBufferAppend('="');
-      Buffer := Buffer + ' ' + DataBufferToString;
-      sValue := ReadLiteral(LIT_CHAR_REF or
-                            LIT_ENTITY_REF,
-                            HasEntRef);
-      ValidateEncName(sValue);
-      Buffer := Buffer + sValue + '"';
-      if CompareText(sValue, 'ISO-8859-1') = 0 then
-        FFilter.Format := sfISO88591;
-      SkipWhitespace(True);
+  if TryRead(Xpc_Encoding) then begin
+    DatabufferAppend('encoding');
+    ParseEq;
+    DataBufferAppend('="');
+    Buffer := Buffer + ' ' + DataBufferToString;
+    sValue := ReadLiteral(LIT_CHAR_REF or LIT_ENTITY_REF, HasEntRef);
+    ValidateEncName(sValue);
+    Buffer := Buffer + sValue + '"';
+    if CompareText(sValue, 'ISO-8859-1') = 0 then
+      FFilter.Format := sfISO88591;
+    SkipWhitespace(True);
   end;
 
-    if TryRead(Xpc_Standalone) then begin
-      DatabufferAppend('standalone');
-      ParseEq;
-      DatabufferAppend('="');
-      Buffer := Buffer + ' ' + DataBufferToString;
-      sValue := ReadLiteral(LIT_CHAR_REF or
-                            LIT_ENTITY_REF,
-                            HasEntRef);
-      if (not ((sValue = 'yes') or
-               (sValue = 'no'))) then
-        raise EVpParserError.CreateError (FFilter.Line,
-                                           FFilter.LinePos,
-                                           sInvStandAloneVal);
-      Buffer := Buffer + sValue + '"';
-      FIsStandalone := sValue = 'yes';
-      SkipWhitespace(True)
+  if TryRead(Xpc_Standalone) then begin
+    DatabufferAppend('standalone');
+    ParseEq;
+    DatabufferAppend('="');
+    Buffer := Buffer + ' ' + DataBufferToString;
+    sValue := ReadLiteral(LIT_CHAR_REF or LIT_ENTITY_REF, HasEntRef);
+    if (not ((sValue = 'yes') or (sValue = 'no'))) then
+      raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, sInvStandAloneVal);
+    Buffer := Buffer + sValue + '"';
+    FIsStandalone := sValue = 'yes';
+    SkipWhitespace(True)
   end;
 
   Require(Xpc_ProcessInstrEnd);
@@ -1747,13 +1735,12 @@ begin
   end;
 end;
 {--------}
-function TVpParser.ReadChar(const UpdatePos : Boolean) : DOMChar;
+function TVpParser.ReadChar(const UpdatePos: Boolean) : DOMChar;
 begin
   Result := FFilter.ReadChar;
-  if ((Result = VpEndOfStream) and
-      (not IsEndDocument)) then
+  if (Result = VpEndOfStream) and (not IsEndDocument) then
     Result := FFilter.ReadChar;
-  if (UpdatePos) then
+  if UpdatePos then
     FFilter.SkipChar;
 end;
 {--------}
@@ -1784,15 +1771,14 @@ begin
   end;
 end;
 {--------}
-function TVpParser.ReadLiteral(wFlags    : Integer;
-                           var HasEntRef : Boolean) : DOMString;
+function TVpParser.ReadLiteral(wFlags: Integer; var HasEntRef: Boolean): DOMString;
 var
-  TempStr     : DOMString;
-  cDelim,
-  TempChar    : DOMChar;
-  EntRefs     : TStringList;
-  StackLevel  : Integer;
-  CurrCharRef : Boolean;
+  TempStr: DOMString;
+  cDelim, TempChar: DOMChar;
+  EntRefs: TStringList;
+  StackLevel: Integer;
+  CurrCharRef: Boolean;
+  msg: DOMString;
 begin
   StackLevel := 0;
   CurrCharRef := False;
@@ -1802,14 +1788,11 @@ begin
   if (cDelim <> '"') and
      (cDelim <> #39) and
      (cDelim <> #126) and
-     (cDelim <> #0) then
-    raise EVpParserError.CreateError (FFilter.Line,
-                                       FFilter.LinePos,
-                                       sQuoteExpected);
+     (cDelim <> #0)
+  then
+    raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, sQuoteExpected);
   TempChar := ReadChar(False);
-  while (not IsEndDocument) and
-        ((CurrCharRef) or
-         (TempChar <> cDelim)) do begin
+  while (not IsEndDocument) and ((CurrCharRef) or (TempChar <> cDelim)) do begin
     if (TempChar = #$0A) then begin
       TempChar := ' ';
     end else if (TempChar = #$0D) then
@@ -1833,7 +1816,8 @@ begin
              (TempStr <> 'gt') and
              (TempStr <> 'amp') and
              (TempStr <> 'apos') and
-             (TempStr <> 'quot') then begin
+             (TempStr <> 'quot') then
+          begin
             if (not Assigned(EntRefs)) then begin
               EntRefs := TStringList.Create;
               EntRefs.Sorted := True;
@@ -1850,10 +1834,12 @@ begin
             except
               on E:EStringListError do begin
                 EntRefs.Free;
-                raise EVpParserError.CreateError (FFilter.Line,
-                                                   FFilter.LinePos,
-                                                   sCircularEntRef +
-                                                   TempChar);
+               {$IFDEF DELPHI}
+                msg := sCircularEntRef + TempChar;
+               {$ELSE}
+                msg := UTF8Decode(sCircularEntRef) + TempChar;
+               {$ENDIF}
+                raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, msg);
               end;
               on E:EVpParserError do
                 raise;
@@ -1882,9 +1868,12 @@ begin
           except
             on E:EStringListError do begin
               EntRefs.Free;
-              raise EVpParserError.CreateError (FFilter.Line,
-                                                FFilter.LinePos,
-                                                sCircularEntRef + TempChar);
+             {$IFDEF DELPHI}
+              msg := sCircularEntRef + TempChar;
+             {$ELSE}
+              msg := UTF8Decode(sCircularEntRef) + TempChar;
+             {$ENDIF}
+              raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, msg);
             end;
             on E:EVpParserError do
               raise;
@@ -1897,9 +1886,7 @@ begin
     CurrCharRef := False;
   end;
   if TempChar <> cDelim then
-    raise EVpParserError.CreateError (FFilter.Line,
-                                       FFilter.LinePos,
-                                       'Expected: ' + cDelim);
+    raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, 'Expected: ' + cDelim);
 
   SkipChar;
 
@@ -1911,7 +1898,7 @@ begin
   EntRefs.Free;
 end;
 {--------}
-function TVpParser.ReadNameToken(aValFirst : Boolean) : DOMString;
+function TVpParser.ReadNameToken(aValFirst: Boolean): DOMString;
 var
   TempChar : DOMChar;
   First    : Boolean;
@@ -2074,18 +2061,24 @@ begin
   SetEntity(sName, ENTITY_INTERNAL, '', '', sValue, '', aIsPE);
 end;
 {--------}
-procedure TVpParser.SetNotation(const sNotationName,
-                                      sPublicId,
-                                      sSystemId     : DOMString);
+procedure TVpParser.SetNotation(const sNotationName, sPublicId, sSystemId: DOMString);
 var
   oNot : TVpNotationInfo;
   wIdx : Integer;
 begin
+ {$IFDEF DELPHI}
   if not FNotationInfo.Find(sNotationName, wIdx) then begin
+ {$ELSE}
+  if not FNotationInfo.Find(UTF8Encode(sNotationName), wIdx) then begin
+ {$ENDIF}
     oNot := TVpNotationInfo.Create;
     oNot.PublicId := sPublicId;
     oNot.SystemId := sSystemId;
+   {$IFDEF DELPHI}
     FNotationInfo.AddObject(sNotationName, oNot);
+   {$ELSE}
+    FNotationInfo.AddObject(UTF8Encode(sNotationName), oNot);
+   {$ENDIF}
   end;
 end;
 {--------}
@@ -2184,21 +2177,22 @@ begin
   end;
 end;
 {--------}
-procedure TVpParser.ValidateEntityValue(const aValue   : DOMString;
-                                              aQuoteCh : DOMChar);
+procedure TVpParser.ValidateEntityValue(const aValue: DOMString; aQuoteCh: DOMChar);
 var
-  TempChr : DOMChar;
-  i       : Integer;
+  TempChr: DOMChar;
+  i: Integer;
+  msg: String;
 begin
   for i := 1 to Length(aValue) do begin
     TempChr := aValue[i];
-    if (TempChr = '%') or
-       (TempChr = '&') or
-       (TempChr = aQuoteCh) then
-      raise EVpParserError.CreateError (FFilter.Line,
-                                         FFilter.LinePos,
-                                         sInvEntityValue +
-                                         QuotedStr(TempChr));
+    if (TempChr = '%') or (TempChr = '&') or (TempChr = aQuoteCh) then begin
+     {$IFDEF DELPHI}
+      msg := sInvEntityValue + QuotedStr(TempChr));
+     {$ELSE}
+      msg := sInvEntityValue + QuotedStr(UTF8Encode(TempChr));
+     {$ENDIF}
+      raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, msg);
+    end;
   end;
 end;
 {--------}

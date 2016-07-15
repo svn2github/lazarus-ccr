@@ -105,7 +105,10 @@ type
   private
     seFilePos : Longint;
   public
-    constructor CreateError(const FilePos: Longint; const Reason: string);
+    constructor CreateError(const FilePos: Longint; const Reason: DOMString); overload;
+   {$IFDEF FPC}
+    constructor CreateError(const FilePos: Longint; const Reason: String); overload;
+    {$ENDIF}
     property FilePos: Longint read seFilePos;
   end;
 
@@ -115,7 +118,10 @@ type
     feLine: Longint;
     feLinePos: Longint;
   public
-    constructor CreateError(const FilePos, Line, LinePos: Longint; const Reason: string);
+    constructor CreateError(const FilePos, Line, LinePos: Longint; const Reason: DOMstring); overload;
+    {$IFDEF FPC}
+    constructor CreateError(const FilePos, Line, LinePos: Longint; const Reason: string); overload;
+    {$ENDIF}
     property Reason : DOMString read feReason;
     property Line: Longint read feLine;
     property LinePos: Longint read feLinePos;
@@ -123,7 +129,10 @@ type
 
   EVpParserError = class(EVpFilterError)
   public
-    constructor CreateError(Line, LinePos: Longint; const Reason: String);
+    constructor CreateError(Line, LinePos: Longint; const Reason: DOMString); overload;
+   {$IFDEF FPC}
+    constructor CreateError(Line, LinePos: Longint; const Reason: String); overload;
+   {$ENDIF}
   end;
 
   { implements the Version property with its associated design time About box }
@@ -367,16 +376,29 @@ uses
 { EAdStreamError }
 
 constructor EVpStreamError.CreateError(const FilePos: Integer;
+  const Reason: DOMString);
+begin
+  {$IFDEF FPC}
+  inherited Create(UTF8Encode(Reason));
+  {$ELSE}
+  inherited Create(Reason);
+  {$ENDIF}
+  seFilePos := FilePos;
+end;
+
+{$IFDEF FPC}
+constructor EVpStreamError.CreateError(const FilePos: Integer;
   const Reason: String);
 begin
   inherited Create(Reason);
   seFilePos := FilePos;
 end;
+{$ENDIF}
 
 { EAdFilterError }
 
 constructor EVpFilterError.CreateError(const FilePos, Line, LinePos: Integer;
-  const Reason: string);
+  const Reason: DOMString);
 begin
   inherited CreateError(FilePos, Reason);
   feLine := Line;
@@ -384,13 +406,32 @@ begin
   feReason := Reason;
 end;
 
+{$IFDEF FPC}
+constructor EVpFilterError.CreateError(const FilePos, Line, LinePos: Integer;
+  const Reason: String);
+begin
+  feReason := UTF8DEcode(Reason);
+  inherited CreateError(FilePos, feReason);
+  feLine := Line;
+  feLinePos := LinePos;
+end;
+{$ENDIF}
+
 { EAdParserError }
 
+constructor EVpParserError.CreateError(Line, LinePos: Integer;
+  const Reason: DOMString);
+begin
+  inherited CreateError(FilePos, Line, LinePos, Reason);
+end;
+
+{$IFDEF FPC}
 constructor EVpParserError.CreateError(Line, LinePos: Integer;
   const Reason: String);
 begin
   inherited CreateError(FilePos, Line, LinePos, Reason);
 end;
+{$ENDIF}
 
 (*****************************************************************************)
 { TVpCustomControl }

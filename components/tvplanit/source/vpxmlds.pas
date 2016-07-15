@@ -231,9 +231,8 @@ end;
 function TVpXmlDatastore.CreateStoreNode(ADoc: TDOMDocument): TDOMNode;
 var
   L: TStrings;
-  i, j: Integer;
-  node, prevnode: TDOMNode;
-  rootnode: TDOMNode;
+  i: Integer;
+  node: TDOMNode;
   appending: Boolean;
   {%H-}nodename: String;
 begin

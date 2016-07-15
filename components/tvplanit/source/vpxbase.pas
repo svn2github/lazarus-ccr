@@ -55,7 +55,7 @@ type
    method.}
   TVpMemoryStream = class(TMemoryStream)
   public
-    procedure SetPointer(Ptr : Pointer; Size : Longint);
+    procedure SetPointer(Ptr: Pointer; Size: Longint);
   end;
 
  {$IFDEF LCL}
@@ -63,11 +63,10 @@ type
  {$ELSE}
   TVpFileStream = class(TFileStream)
  {$ENDIF}
-    FFileName : string;
+    FFileName: string;
   public
-    constructor CreateEx(Mode : Word; const FileName : string);
-
-    property Filename : string read FFileName;
+    constructor CreateEx(Mode: Word; const FileName: string);
+    property Filename: string read FFileName;
   end;
 
 { Utility methods }
@@ -83,7 +82,7 @@ function VpUcs4ToWideChar(const aInChar : TVpUcs4Char;
 function VpUtf16ToUcs4(aInChI,
                        aInChII   : DOMChar;
                    var aOutCh    : TVpUcs4Char;
-                   var aBothUsed : Boolean) : Boolean;
+                   out aBothUsed : Boolean) : Boolean;
 function VpUcs4ToUtf8(aInCh  : TVpUcs4Char;
                   var aOutCh : TVpUtf8Char) : Boolean;
 function VpUtf8ToUcs4(const aInCh  : TVpUtf8Char;
@@ -120,7 +119,11 @@ uses
 {== Utility methods ==================================================}
 function VpPos(const aSubStr, aString : DOMString) : Integer;
 begin
+ {$IFDEF DELPHI}
   Result := AnsiPos(aSubStr, aString);
+ {$ELSE}
+  Result := Pos(aSubStr, aString);
+ {$ENDIF}
 end;
 {--------}
 function VpRPos(const sSubStr, sTerm : DOMString) : Integer;
@@ -190,7 +193,7 @@ end;
 function VpUtf16ToUcs4(aInChI,
                        aInChII   : DOMChar;
                    var aOutCh    : TVpUcs4Char;
-                   var aBothUsed : Boolean) : Boolean;
+                   out aBothUsed : Boolean) : Boolean;
 begin
   aBothUsed := False;
   if (aInChI < #$D800) or (aInChI > #$DFFF) then begin

@@ -602,14 +602,14 @@ end;
 
 function GetButtonWidth(AButton: TButton): Integer;
 const
-  MARGIN = 16;
+  MARGIN = 24;
 var
   canvas: TControlCanvas;
 begin
   canvas := TControlCanvas.Create;
   canvas.Control := AButton;
   canvas.Font.Assign(AButton.Font);
-  Result := canvas.TextWidth(AButton.Caption) + 24 * Screen.PixelsPerInch div DesignTimeDPI;
+  Result := canvas.TextWidth(AButton.Caption) + MARGIN * Screen.PixelsPerInch div DesignTimeDPI;
 end;
 
 function GetRealFontHeight(AFont: TFont): Integer;

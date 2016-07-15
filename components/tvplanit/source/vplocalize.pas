@@ -637,8 +637,13 @@ var
 begin
   Unused(oOwner, bSpecified);
   Item := TVpAttributeItem(FAttributes.Add);
+ {$IFDEF DELPHI}
   Item.Name := sName;
   Item.Value := sValue;
+ {$ELSE}
+  Item.Name := UTF8Encode(sName);
+  Item.Value := UTF8Encode(sValue);
+ {$ENDIF}
 end;
 
 procedure TVpLocalization.xmlLocalizeEndElement (oOwner : TObject;

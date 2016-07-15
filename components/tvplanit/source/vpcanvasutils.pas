@@ -149,10 +149,12 @@ type
       function RGBToTColor(Red, Green, Blue: Byte): TColor;
       procedure TColorToRGB(Color: TColor; var Red, Green, Blue: Byte);
       procedure CachePalette(ABitmap: TBitmap; var PaletteEntries: TVpPaletteArray);
+      {
       function GetBmpPixel(ABitmap: TBitmap; PaletteCache: TVpPaletteArray;
         x, y: Integer): TColor;
       procedure SetBmpPixel(ABitmap: TBitmap; PaletteCache: TVpPaletteArray;
         x, y: Integer; AColor: TColor);
+      }
       property Viewport: TRect read FViewport write FViewport;
 
     published
@@ -307,12 +309,13 @@ procedure TColorToRGB(Color: TColor; var Red, Green, Blue: Byte);
 
 procedure TPSCachePalette(ABitmap: TBitmap; var PaletteEntries: TVpPaletteArray);
 
+{
 function TPSGetBmpPixel(ABitmap: TBitmap; PaletteCache: TVpPaletteArray;
   x, y: Integer): TColor;
 
 procedure TPSSetBmpPixel(ABitmap: TBitmap; PaletteCache: TVpPaletteArray;
   x, y: Integer; AColor: TColor);
-
+}
 function RenderTextToRect(ACanvas: TCanvas; const Angle: TVpRotationAngle;
   const Viewport: TRect; ARect: TRect; AString: string): Integer;
 
@@ -625,7 +628,7 @@ procedure TPSCachePalette(ABitmap: TBitmap; var PaletteEntries: TVpPaletteArray)
 begin
   VpRotatedCanvas.CachePalette(ABitmap, PaletteEntries);
 end;
-
+{
 function TPSGetBmpPixel(ABitmap: TBitmap; PaletteCache: TVpPaletteArray;
   x, y: Integer): TColor;
 begin
@@ -637,7 +640,7 @@ procedure TPSSetBmpPixel(ABitmap: TBitmap; PaletteCache: TVpPaletteArray;
 begin
   VpRotatedCanvas.SetBmpPixel(ABitmap, PaletteCache, x, y, AColor);
 end;
-
+}
 function RenderTextToRect(ACanvas: TCanvas; const Angle: TVpRotationAngle;
   const Viewport: TRect; ARect: TRect; AString: string): Integer;
 begin
@@ -1257,6 +1260,7 @@ begin
     GetPaletteEntries(ABitmap.Palette, 0, PaletteSize, PaletteEntries);
 end;
 
+(*
 // Fast scanline based pixel access
 function TVpExCanvas.GetBmpPixel(ABitmap: TBitmap;
   PaletteCache: TVpPaletteArray; x, y: Integer): TColor;
@@ -1437,7 +1441,7 @@ begin
   end;
   }
 end;
-
+*)
 
 { TVpLineWrapper ************************************************************ }
 

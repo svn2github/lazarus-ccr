@@ -220,13 +220,22 @@ var
   TmpBmp: TBitmap;
   TmpCon: TVpContact;
   Col, RecsInCol: Integer;
-  HeadRect, AddrRect, CSZRect, Phone1Rect, Phone2Rect, Phone3Rect: TRect;
-  Phone4Rect, Phone5Rect, WholeRect, CompanyRect, EMailRect: TRect;
+  HeadRect: TRect;
+  WholeRect: TRect;
   TmpBmpRect: TRect;
   TextColWidth: Integer;
   TextXOffset: Integer;
   TextYOffset: Integer;
   oldCol1RecCount: Integer;
+  AddrRect: TRect = (Left:0; Top:0; Right:0; Bottom:0);
+  CSZRect: TRect = (Left:0; Top:0; Right:0; Bottom:0);
+  CompanyRect: TRect = (Left:0; Top:0; Right:0; Bottom:0);
+  EMailRect: TRect = (Left:0; Top:0; Right:0; Bottom:0);
+  Phone1Rect: TRect = (Left:0; Top:0; Right:0; Bottom:0);
+  Phone2Rect: TRect = (Left:0; Top:0; Right:0; Bottom:0);
+  Phone3Rect: TRect = (Left:0; Top:0; Right:0; Bottom:0);
+  Phone4Rect: TRect = (Left:0; Top:0; Right:0; Bottom:0);
+  Phone5Rect: TRect = (Left:0; Top:0; Right:0; Bottom:0);
 begin
   oldCol1RecCount := TVpContactGridOpener(FContactGrid).cgCol1RecCount;
   TVpContactGridOpener(FContactGrid).FVisibleContacts := 0;

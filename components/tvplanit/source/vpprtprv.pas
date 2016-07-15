@@ -343,9 +343,9 @@ begin
   with Params do begin
     Style := Style or WS_TABSTOP;
     if FNeedHScroll then
-      Style := Longint (Style) or WS_HSCROLL;
+      Style := Style or WS_HSCROLL;
     if FNeedVScroll then
-      Style := Longint (Style) or WS_VSCROLL;
+      Style := Style or WS_VSCROLL;
   end;
 end;
 
