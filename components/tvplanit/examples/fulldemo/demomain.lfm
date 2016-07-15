@@ -25,9 +25,9 @@ object MainForm: TMainForm
       Height = 532
       Top = 48
       Width = 780
-      ActivePage = TabEvents
+      ActivePage = TabSettings
       Align = alClient
-      TabIndex = 0
+      TabIndex = 4
       TabOrder = 0
       object TabEvents: TTabSheet
         Caption = 'Events'
@@ -104,6 +104,7 @@ object MainForm: TMainForm
             TimeSlotColors.Weekend = 14737632
             TimeSlotColors.ActiveRange.RangeBegin = h_00
             TimeSlotColors.ActiveRange.RangeEnd = h_00
+            HeadAttributes.Font.Height = -13
             HeadAttributes.Color = clBtnFace
             RowHeadAttributes.HourFont.Height = -24
             RowHeadAttributes.MinuteFont.Height = -12

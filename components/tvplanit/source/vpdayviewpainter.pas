@@ -1418,7 +1418,7 @@ begin
         // Draw hours
         RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.HourFont);
         dec(x, RenderCanvas.TextWidth(HourStr) + MINUTES_HOUR_DISTANCE);
-        TPSTextOut(RenderCanvas, Angle, RenderIn, x, y + TextMargin - 2, hourStr);
+        TPSTextOut(RenderCanvas, Angle, RenderIn, x, y + TextMargin{ - 2}, hourStr);
       end;
     end;
 
@@ -1513,12 +1513,12 @@ begin
 end;
 
 function TVpDayViewPainter.CalcRowHeadWidth: integer;
-var
-  w: Integer;
 begin
+  Result := 2 * MINUTES_BORDER + MINUTES_HOUR_DISTANCE;
+  RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
+  inc(Result, RenderCanvas.TextWidth('00'));
   RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.HourFont);
-  w := RenderCanvas.TextWidth('33');
-  Result := w * 2 + 10;
+  inc(Result, RenderCanvas.TextWidth('33'));
 end;
 
 procedure TVpDayViewPainter.FixFontHeights;
@@ -1721,14 +1721,6 @@ begin
   if ADisplayOnly then FixFontHeights;
 
   SetMeasurements;
-
-   {
-  if DisplayOnly then
-    ScrollBarOffset := 2
-  else
-    ScrollBarOffset := 14;
-
-  }
 
   ScrollbarOffset := 0;
   with TVpDayViewOpener(FDayView) do

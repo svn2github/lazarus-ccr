@@ -596,7 +596,7 @@ begin
     CbAllowInplaceEditing.Checked := ini.ReadBool('Settings', 'AllowInplaceEditing', CbAllowInplaceEditing.Checked);
     CbAllowInplaceEditingChange(nil);
 
-    CbDrawingStyle.ItemIndex := ini.ReadInteger('Settings', 'DrawingStyle', CbDrawingStyle.ItemIndex);
+    CbDrawingStyle.ItemIndex := ini.ReadInteger('Settings', 'DrawingStyle', ord(dsFlat));
     CbDrawingStyleChange(nil);
 
   finally
