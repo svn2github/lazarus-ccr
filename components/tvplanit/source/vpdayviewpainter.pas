@@ -1736,7 +1736,8 @@ begin
       if StartLine < 0 then
         StartLine := FDayView.TopLine;
       if VisibleLines < LineCount then
-        ScrollbarOffset := 14;
+        ScrollbarOffset := GetSystemMetrics(SM_CYHSCROLL);
+//        ScrollbarOffset := 14;
     end;
 
   Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
