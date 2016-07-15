@@ -39,6 +39,7 @@ type
     procedure DrawDayNames;
     procedure DrawFocusBox;
     procedure DrawLine;
+    procedure FixFontHeights;
     procedure InitColors;
     procedure SetMeasurements; override;
 
@@ -248,6 +249,14 @@ begin
   until DOW = FCalendar.WeekStarts;
 end;
 
+procedure TVpCalendarPainter.FixFontHeights;
+begin
+  with TVpCalendarOpener(FCalendar) do begin
+    Font.Height := GetRealFontHeight(Font);
+    calRebuildCalArray(RenderDate);
+  end;
+end;
+
 procedure TVpCalendarPainter.InitColors;
 begin
   if DisplayOnly then begin
@@ -364,11 +373,7 @@ begin
   InitColors;
   SavePenBrush;
   InitPenBrush;
-
-  with TVpCalendarOpener(FCalendar) do begin
-    Font.Height := GetRealFontHeight(Font);
-    calRebuildCalArray(RenderDate);
-  end;
+  if ADisplayOnly then FixFontHeights;
 
   RenderCanvas.Lock;
   try

@@ -33,6 +33,7 @@ type
     procedure DrawDayHead;
     procedure DrawDays;
     procedure DrawHeader;
+    procedure FixFontHeights;
     procedure InitColors;
     procedure SetMeasurements; override;
 
@@ -787,7 +788,16 @@ begin
     HeadTextRect.Top, // + TextMargin,
     HeadStr
   );
+end;
 
+procedure TVpMonthViewPainter.FixFontHeights;
+begin
+  with FMonthView do begin
+    DayHeadAttributes.Font.Height := GetRealFontHeight(DayHeadAttributes.Font);
+    DayNumberFont.Height := GetRealFontHeight(DayNumberFont);
+    EventFont.Height := GetRealFontHeight(EventFont);
+    Font.Height := GetRealFontHeight(Font);
+  end;
 end;
 
 procedure TVpMonthViewPainter.InitColors;
@@ -827,13 +837,8 @@ begin
   InitColors;
   SavePenBrush;
   InitPenBrush;
-
-  with FMonthView do begin
-    DayHeadAttributes.Font.Height := GetRealFontHeight(DayHeadAttributes.Font);
-    DayNumberFont.Height := GetRealFontHeight(DayNumberFont);
-    EventFont.Height := GetRealFontHeight(EventFont);
-    Font.Height := GetRealFontHeight(Font);
-  end;
+  if ADisplayOnly then
+    FixFontHeights;
 
   Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
   try

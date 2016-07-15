@@ -91,19 +91,19 @@ type
   TVpContactHeadAttr = class(TPersistent)
   protected{private}
     FGrid: TVpContactGrid;
-    FFont: TFont;
+    FFont: TVpFont;
     FColor: TColor;
     FBordered: Boolean;
-    procedure SetColor (Value: TColor);
-    procedure SetFont (Value: TFont);
-    procedure SetBordered (Value: Boolean);
+    procedure SetColor(Value: TColor);
+    procedure SetFont(Value: TVpFont);
+    procedure SetBordered(Value: Boolean);
   public
     constructor Create(AOwner: TVpContactGrid);
     destructor Destroy; override;
     property Grid: TVpContactGrid read FGrid;
   published
     property Color: TColor read FColor write SetColor;
-    property Font: TFont read FFont write SetFont;
+    property Font: TVpFont read FFont write SetFont;
     property Bordered: Boolean read FBordered write SetBordered;
   end;
 
@@ -274,11 +274,11 @@ uses
 constructor TVpContactHeadAttr.Create(AOwner: TVpContactGrid);
 begin
   inherited Create;
-  FGrid           := AOwner;
-  FFont           := TFont.Create;
+  FGrid := AOwner;
+  FFont := TVpFont.Create(AOwner);
   FFont.Assign(FGrid.Font);
-  FColor          := clSilver;
-  FBordered       := true;
+  FColor := clSilver;
+  FBordered := true;
 end;
 {=====}
 
@@ -306,7 +306,7 @@ begin
 end;
 {=====}
 
-procedure TVpContactHeadAttr.SetFont(Value: TFont);
+procedure TVpContactHeadAttr.SetFont(Value: TVpFont);
 begin
   if Value <> FFont then begin
     FFont.Assign(Value);
@@ -661,17 +661,17 @@ var
   SaveFont: TFont;
   Temp: Integer;
 begin
-  { Calculates row height based on the largest of the RowHead's Minute }
-  { font, the standard client font, and a sample character string.     }
+  { Calculates row height based on the largest of the RowHead's Minute font,
+    the standard client font, and a sample character string. }
   SaveFont := Canvas.Font;
-  Canvas.Font := FContactHeadAttr.Font;
+  Canvas.Font.Assign(FContactHeadAttr.Font);
   cgRowHeight := Canvas.TextHeight(TallShortChars);
   Canvas.Font.Assign(SaveFont);
   Temp := Canvas.TextHeight(TallShortChars);
   if Temp > cgRowHeight then
     cgRowHeight := Temp;
   cgRowHeight := cgRowHeight + TextMargin * 2;
-  Canvas.Font := SaveFont;
+  Canvas.Font.Assign(SaveFont);
 end;
 {=====}
 

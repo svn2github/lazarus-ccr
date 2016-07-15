@@ -106,10 +106,10 @@ type
   TVpTaskHeadAttr = class(TVpPersistent)
   protected{private}
     FTaskList: TVpTaskList;
-    FFont: TFont;
+    FFont: TVpFont;
     FColor: TColor;
     procedure SetColor(Value: TColor);
-    procedure SetFont(Value: TFont);
+    procedure SetFont(Value: TVpFont);
   public
     constructor Create(AOwner: TVpTaskList);
     destructor Destroy; override;
@@ -118,7 +118,7 @@ type
     property TaskList: TVpTaskList read FTaskList;
   published
     property Color: TColor read FColor write SetColor;
-    property Font: TFont read FFont write SetFont;
+    property Font: TVpFont read FFont write SetFont;
   end;
 
   { Task List }
@@ -403,7 +403,7 @@ begin
 end;
 {=====}
 
-procedure TVpTaskHeadAttr.SetFont(Value: TFont);
+procedure TVpTaskHeadAttr.SetFont(Value: TVpFont);
 begin
   if Value <> FFont then begin
     FFont.Assign(Value);
@@ -669,14 +669,14 @@ begin
   { Calculates row height based on the largest of the RowHead's Minute }
   { font, the standard client font, and a sample character string.     }
   SaveFont := Canvas.Font;
-  Canvas.Font := FTaskHeadAttr.Font;
+  Canvas.Font.Assign(FTaskHeadAttr.Font);
   tlRowHeight := Canvas.TextHeight(TallShortChars);
   Canvas.Font.Assign(SaveFont);
   Temp := Canvas.TextHeight(TallShortChars);
   if Temp > tlRowHeight then
     tlRowHeight := Temp;
   tlRowHeight := tlRowHeight + TextMargin * 2;
-  Canvas.Font := SaveFont;
+  Canvas.Font.Assign(SaveFont);
 end;
 {=====}
 

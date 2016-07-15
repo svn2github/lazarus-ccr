@@ -95,12 +95,12 @@ type
   TVpDayHeadAttr = class(TPersistent)
   protected{private}
     FWeekView: TVpWeekView;
-    FFont: TFont;
+    FFont: TVpFont;
     FDateFormat: string;
     FColor: TColor;
     FBordered: Boolean;
     procedure SetColor(Value: TColor);
-    procedure SetFont(Value: TFont);
+    procedure SetFont(Value: TVpFont);
     procedure SetBordered(Value: Boolean);
     procedure SetDateFormat(Value: string);
   public
@@ -110,7 +110,7 @@ type
   published
     property Color: TColor read FColor write SetColor;
     property DateFormat: string read FDateFormat write SetDateFormat;
-    property Font: TFont read FFont write SetFont;
+    property Font: TVpFont read FFont write SetFont;
     property Bordered: Boolean read FBordered write SetBordered;
   end;
 
@@ -128,7 +128,7 @@ type
     FDrawingStyle: TVpDrawingStyle;
     FaActiveEvent: TVpEvent;
     FHeadAttr: TVpWvHeadAttributes;
-    FEventFont: TFont;
+    FEventFont: TVpFont;  // was: TFont
     FLineColor: TColor;
     FLineCount: Integer;
     FTimeFormat: TVpTimeFormat;
@@ -166,7 +166,7 @@ type
     procedure SetColor(Value: TColor);
     procedure SetLineColor(Value: TColor);
     procedure SetDateLabelFormat(Value: string);
-    procedure SetEventFont(Value: TFont);
+    procedure SetEventFont(Value: TVpFont);
     procedure SetShowEventTime(Value: Boolean);
     procedure SetTimeFormat(Value: TVpTimeFormat);
     procedure SetActiveDate(Value: TDateTime);
@@ -240,7 +240,7 @@ type
     property DateLabelFormat: string read FDateLabelFormat write SetDateLabelFormat;
     property DayHeadAttributes: TVpDayHeadAttr read FDayHeadAttributes write FDayHeadAttributes;
     property DrawingStyle: TVpDrawingStyle read FDrawingStyle write SetDrawingStyle stored True;
-    property EventFont: TFont read FEventFont write SetEventFont;
+    property EventFont: TVpFont read FEventFont write SetEventFont;
     property HeadAttributes: TVpWvHeadAttributes read FHeadAttr write FHeadAttr;
     property LineColor: TColor read FLineColor write SetLineColor;
     property TimeFormat: TVpTimeFormat read FTimeFormat write SetTimeFormat;
@@ -331,9 +331,9 @@ begin
   inherited Create;
   FWeekView := AOwner;
   FDateFormat := 'dddd mmmm, dd';
-  FFont := TFont.Create;
-  FFont.Assign(FWeekView.Font);
-  FFont.Size := 8;
+  FFont := TVpFont.Create(AOwner);
+//  FFont.Assign(FWeekView.Font);
+//  FFont.Size := 8;
   FColor := clSilver;
   FBordered := true;
 end;
@@ -372,7 +372,7 @@ begin
 end;
 {=====}
 
-procedure TVpDayHeadAttr.SetFont(Value: TFont);
+procedure TVpDayHeadAttr.SetFont(Value: TVpFont);
 begin
   if Value <> FFont then begin
     FFont.Assign(Value);
@@ -394,7 +394,7 @@ begin
   FHeadAttr := TVpWvHeadAttributes.Create(self);
   FAllDayEventAttr := TVpAllDayEventAttributes.Create(self);
 
-  FEventFont := TFont.Create;
+  FEventFont := TVpFont.Create(self);
   FEventFont.Assign(Font);
   FShowEventTime := true;
   wvInLinkHandler := false;
@@ -654,7 +654,7 @@ begin
 end;
 {=====}
 
-procedure TVpWeekView.SetEventFont(Value: TFont);
+procedure TVpWeekView.SetEventFont(Value: TVpFont);
 begin
   FEventFont.Assign(Value);
   Invalidate;

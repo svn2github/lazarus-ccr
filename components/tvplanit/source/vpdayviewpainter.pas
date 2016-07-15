@@ -1718,7 +1718,7 @@ begin
   SavePenBrush;
   InitPenBrush;
   InitializeEventRectangles;
-  FixFontHeights;
+  if ADisplayOnly then FixFontHeights;
 
   SetMeasurements;
 

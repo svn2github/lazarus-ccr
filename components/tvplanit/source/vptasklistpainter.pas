@@ -44,6 +44,7 @@ type
     procedure DrawHeader;
     procedure DrawLines;
     procedure DrawTasks;
+    procedure FixFontHeights;
     procedure InitColors;
     procedure MeasureRowHeight;
 
@@ -452,6 +453,14 @@ begin
   end;  // with TVpTaskListOpener(FTaskList)...
 end;
 
+procedure TVpTaskListPainter.FixFontHeights;
+begin
+  with FTaskList do begin
+    Font.Height := GetRealFontHeight(Font);
+    TaskHeadAttributes.Font.Height := GetRealFontHeight(TaskHeadAttributes.Font);
+  end;
+end;
+
 procedure TVpTaskListPainter.InitColors;
 begin
   if DisplayOnly then begin
@@ -504,11 +513,7 @@ begin
   InitColors;
   SavePenBrush;
   InitPenBrush;
-
-  with FTaskList do begin
-    Font.Height := GetRealFontHeight(Font);
-    TaskHeadAttributes.Font.Height := GetRealFontHeight(TaskHeadAttributes.Font);
-  end;
+  if ADisplayOnly then FixFontHeights;
 
   Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
   try

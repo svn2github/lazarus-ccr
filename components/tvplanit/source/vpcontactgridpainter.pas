@@ -33,6 +33,7 @@ type
       var AWholeRect, ATextRect: TRect);
     procedure DrawContacts;
     procedure DrawVerticalBars;
+    procedure FixFontHeights;
     procedure InitColors;
 
   public
@@ -1741,6 +1742,14 @@ begin
   end;
 end;
 
+procedure TVpContactGridPainter.FixFontHeights;
+begin
+  with FContactGrid do begin
+    ContactHeadAttributes.Font.Height := GetRealFontHeight(ContactHeadAttributes.Font);
+    Font.Height := GetRealFontHeight(Font);
+  end;
+end;
+
 procedure TVpContactGridPainter.InitColors;
 begin
   if DisplayOnly then begin
@@ -1775,11 +1784,7 @@ begin
   InitColors;
   SavePenBrush;
   InitPenBrush;
-
-  with FContactGrid do begin
-    ContactHeadAttributes.Font.Height := GetRealFontHeight(ContactHeadAttributes.Font);
-    Font.Height := GetRealFontHeight(Font);
-  end;
+  if ADisplayOnly then FixFontHeights;
 
   Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
   try

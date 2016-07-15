@@ -653,7 +653,7 @@ begin
   InitColors;
   SavePenBrush;
   InitPenBrush;
-  FixFontHeights;
+  if ADisplayOnly then FixFontHeights;
 
   Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
   try
