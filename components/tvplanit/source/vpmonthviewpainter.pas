@@ -26,6 +26,8 @@ type
     RealOffDayColor: TColor;
     RealSelDayColor: TColor;
     EventFontColor: TColor;
+    TodayFontColor: TColor;
+    TodayAttrColor: TColor;
     DotDotDotColor: TColor;
 
   protected
@@ -33,6 +35,7 @@ type
     procedure DrawBorders;
     procedure DrawDayHead;
     procedure DrawDays;
+    procedure DrawFocusRect(ARect: TRect; FixRight: Boolean = false);
     procedure DrawHeader;
     procedure FixFontHeights;
     procedure InitColors;
@@ -243,12 +246,16 @@ var
   EventList: TList;
   Drawn: Boolean;
   TextAdjust: Integer;
+  TextH: Integer;
   FontStyle: TFontStyles;
   OldBrush: TBrush;
   OldPen: TPen;
   OldFont: TFont;
-  dx: Integer;
+  todayDate: TDate;
+  tmpRect: TRect;
 begin
+  todayDate := Date();
+
   { initialize the MonthDayArray }
   with TVpMonthViewOpener(FMonthView) do
     for I := 0 to Pred(Length(mvMonthDayArray)) do begin
@@ -291,52 +298,46 @@ begin
       try
         for Row := 0 to 5 do begin
           for Col := 0 to 6 do begin
-            if (Col = 6) then begin
-              { draws the far right day for this week }
-              ThisDate := trunc(StartingDate + DayNumber);
-              DecodeDate(ThisDate, Y, Tmp, D);
+            ThisDate := Trunc(StartingDate + DayNumber);
+            DecodeDate(ThisDate, Y, Tmp, D);
 
-              { Allow the user to draw the day }
-              Drawn  := false;
-              if Assigned(FMonthView.OwnerDrawCells) then begin
-                {  wp: Using Canvas here does not seem correct ...
-                OldBrush.Assign(Canvas.Brush);
-                OldPen.Assign(Canvas.Pen);
-                OldFont.Assign(Canvas.Font); }
-                OldBrush.Assign(RenderCanvas.Brush);
-                OldPen.Assign(RenderCanvas.Pen);
-                OldFont.Assign(RenderCanvas.Font);
-                try
-                  FMonthView.OwnerDrawCells(self, RenderCanvas, TextRect, D, Drawn);
-                  if Drawn then continue;
-                finally
-                  { wp: Again, using Canvas here does not seem correct ...
-                  Canvas.Brush.Assign (OldBrush);
-                  Canvas.Pen.Assign (OldPen);
-                  Canvas.Font.Assign (OldFont); }
-                  RenderCanvas.Brush.Assign(OldBrush);
-                  RenderCanvas.Pen.Assign(OldPen);
-                  RenderCanvas.Font.Assign(OldFont);
-                end;
+            { Allow the user to draw the day }
+            Drawn  := false;
+            if Assigned(FMonthView.OwnerDrawCells) then begin
+              { wp: Using Canvas here does not look correct...
+              OldBrush.Assign (Canvas.Brush);
+              OldPen.Assign (Canvas.Pen);
+              OldFont.Assign (Canvas.Font); }
+              OldBrush.Assign(RenderCanvas.Brush);
+              OldPen.Assign(RenderCanvas.Pen);
+              OldFont.Assign(RenderCanvas.Font);
+              try
+                FMonthView.OwnerDrawCells(self, RenderCanvas, TextRect, D, Drawn);
+                if Drawn then continue;
+              finally
+                { wp: Using Canvas here does not look correct...
+                Canvas.Brush.Assign (OldBrush);
+                Canvas.Pen.Assign (OldPen);
+                Canvas.Font.Assign (OldFont); }
+                RenderCanvas.Brush.Assign(OldBrush);
+                RenderCanvas.Pen.Assign(OldPen);
+                RenderCanvas.Font.Assign(OldFont);
               end;
+            end;
 
+            { draws the far right day for this week }
+            if (Col = 6) then begin
               TextRect.Right := TextRect.Right + 8;
+              tmpRect := TextRect;
+              if TextRect.Bottom > RealBottom then
+                tmpRect.Bottom := RealBottom;
               if Tmp <> M then begin
                 RenderCanvas.Brush.Color := RealOffDayColor;
-                if TextRect.Bottom > RealBottom then
-                  TPSFillRect(
-                    RenderCanvas,
-                    Angle,
-                    RenderIn,
-                    Rect(TextRect.Left, TextRect.Top, RealRight, RealBottom)
-                  )
-                else
-                  TPSFillRect(
-                    RenderCanvas,
-                    Angle,
-                    RenderIn,
-                    Rect(TextRect.Left, TextRect.Top, RealRight, TextRect.Bottom)
-                  );
+                TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
+              end else
+              if ThisDate = todayDate then begin
+                RenderCanvas.Brush.Color := TodayAttrColor;
+                TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
               end else
                 RenderCanvas.Brush.Color := RealColor;
 
@@ -348,24 +349,17 @@ begin
               Str := FormatDateTime('d', ThisDate);
 
               { set the proper font and style }
-              RenderCanvas.Font.Assign(FMonthView.DayNumberFont);
+              if ThisDate = todayDate then
+                RenderCanvas.Font.Assign(FMonthView.TodayAttributes.Font)
+              else
+                RenderCanvas.Font.Assign(FMonthView.DayNumberFont);
               fontstyle := Rendercanvas.Font.style;
-
 
               if (DisplayDate = ThisDate) then begin
                 if FMonthView.Focused then begin
-                  TPSDrawFocusRect(
-                    RenderCanvas,
-                    Angle,
-                    RenderIn,
-                    Rect(TextRect.Left - 2, TextRect.Top - 2, TextRect.Right + 2, TextRect.Bottom + 2)
-                  );
-                  TPSDrawFocusRect(
-                    RenderCanvas,
-                    Angle,
-                    RenderIn,
-                    Rect(TextRect.Left + 2, TextRect.Top + 2, TextRect.Right - 2, TextRect.Bottom - 2)
-                  );
+                  tmpRect := TextRect;
+                  dec(tmpRect.Right, 4);
+                  DrawFocusRect(tmpRect, true);
                 end;
                 RenderCanvas.Font.Color := RealSelDayColor;
                 RenderCanvas.Font.Style := FMonthView.DayNumberFont.Style + [fsBold];
@@ -388,23 +382,29 @@ begin
               FontStyle := RenderCanvas.Font.Style;
               RenderCanvas.Font.Style := [fsBold, fsItalic];
               TextAdjust := RenderCanvas.TextWidth(Str);
+              TextH := RenderCanvas.TextHeight(Str);
               RenderCanvas.Font.Style := FontStyle;
               if Tmp <> M then
                 RenderCanvas.Font.Color := FMonthView.OffDayFontColor;
 
-              { write the day number at the top of the square. }
+              { Write the day number at the top of the TextRect. }
+              tmpRect.Left := TextRect.Left + TVpMonthViewOpener(FMonthView).mvColWidth - TextAdjust - TextMargin;
               if fsItalic in RenderCanvas.Font.Style then
-                dx := -2
-              else
-                dx := 0;
-              TPSTextOut(
-                RenderCanvas,
-                Angle,
-                RenderIn,
-                TextRect.Left + TVpMonthViewOpener(FMonthView).mvColWidth - TextAdjust - TextMargin + dx,
-                TextRect.Top + TextMargin div 2,
-                Str
-              );
+                dec(tmpRect.Left, 2);
+              tmpRect.Top := TextRect.Top + TextMargin div 2;
+              tmpRect.Right := tmpRect.Left + TextAdjust;
+              tmpRect.Bottom := tmpRect.Top + RenderCanvas.TextHeight(Str);
+              TPSTextOut(RenderCanvas, Angle, RenderIn, tmpRect.Left, tmpRect.Top, Str);
+
+              { Highlight today by a border }
+              if ThisDate = todayDate then begin
+                InflateRect(tmpRect, 3, 3);
+                RenderCanvas.Pen.Assign(FMonthView.TodayAttributes.BorderPen);
+                RenderCanvas.Brush.Style := bsClear;
+                RenderCanvas.Rectangle(tmpRect);
+                RenderCanvas.Pen.Assign(OldPen);
+                RenderCanvas.Brush.Assign(OldBrush);
+              end;
 
               { Update MonthDayArray }
               with TVpMonthViewOpener(FMonthView) do begin
@@ -425,37 +425,15 @@ begin
                 TextRect.Top + TVpMonthViewOpener(FMonthView).mvRowHeight
               );
             end  // if Col = 6 ...
-            else begin
-              { draws all days for the week, except the far right one }
-              ThisDate := Trunc(StartingDate + DayNumber);
-              DecodeDate(ThisDate, Y, Tmp, D);
-
-              { Allow the user to draw the day }
-              Drawn  := false;
-              if Assigned(FMonthView.OwnerDrawCells) then begin
-                { wp: Using Canvas here does not look correct...
-                OldBrush.Assign (Canvas.Brush);
-                OldPen.Assign (Canvas.Pen);
-                OldFont.Assign (Canvas.Font); }
-                OldBrush.Assign(RenderCanvas.Brush);
-                OldPen.Assign(RenderCanvas.Pen);
-                OldFont.Assign(RenderCanvas.Font);
-                try
-                  FMonthView.OwnerDrawCells(self, RenderCanvas, TextRect, D, Drawn);
-                  if Drawn then continue;
-                finally
-                  { wp: Using Canvas here does not look correct...
-                  Canvas.Brush.Assign (OldBrush);
-                  Canvas.Pen.Assign (OldPen);
-                  Canvas.Font.Assign (OldFont); }
-                  RenderCanvas.Brush.Assign(OldBrush);
-                  RenderCanvas.Pen.Assign(OldPen);
-                  RenderCanvas.Font.Assign(OldFont);
-                end;
-              end;
-
+            else
+            { draws all days for the week, except the far right one }
+            begin
               if Tmp <> M then begin
                 RenderCanvas.Brush.Color := RealOffDayColor;
+                TPSFillRect(RenderCanvas, Angle, RenderIn, TextRect);
+              end else
+              if ThisDate = todayDate then begin
+                RenderCanvas.Brush.Color := TodayAttrColor;
                 TPSFillRect(RenderCanvas, Angle, RenderIn, TextRect);
               end else
                 RenderCanvas.Brush.Color := RealColor;
@@ -474,22 +452,15 @@ begin
               Str := FormatDateTime('d', ThisDate);
 
               { set the proper font and style }
-              RenderCanvas.Font.Assign(FMonthView.DayNumberFont);
+              if ThisDate = todayDate then
+                RenderCanvas.Font.Assign(FMonthView.TodayAttributes.Font)
+              else
+                RenderCanvas.Font.Assign(FMonthView.DayNumberFont);
+              fontstyle := Rendercanvas.Font.style;
+
               if (DisplayDate = ThisDate) then begin
-                if FMonthView.Focused then begin
-                  TPSDrawFocusRect(
-                    RenderCanvas,
-                    Angle,
-                    RenderIn,
-                    Rect(TextRect.Left - 2, TextRect.Top - 2, TextRect.Right + 2, TextRect.Bottom + 2)
-                  );
-                  TPSDrawFocusRect(
-                    RenderCanvas,
-                    Angle,
-                    RenderIn,
-                    Rect(TextRect.Left + 2, TextRect.Top + 2, TextRect.Right - 2, TextRect.Bottom - 2)
-                  );
-                end;
+                if FMonthView.Focused then
+                  DrawFocusRect(TextRect);
                 RenderCanvas.Font.Color := RealSelDayColor;
                 RenderCanvas.Font.Style := FMonthView.DayNumberFont.Style + [fsBold];
                 if (FMonthView.EventDayStyle <> []) and (FMonthView.DataStore.Resource <> nil) and
@@ -510,23 +481,30 @@ begin
 
               FontStyle := RenderCanvas.Font.Style;
               RenderCanvas.Font.Style := [fsBold, fsItalic];
-              TextAdjust := RenderCanvas.TextWidth (Str);
+              TextAdjust := RenderCanvas.TextWidth(Str);
+              TextH := RenderCanvas.TextHeight(Str);
               RenderCanvas.Font.Style := FontStyle;
               if Tmp <> M then
                 RenderCanvas.Font.Color := FMonthView.OffdayFontColor;
 
+              { Write the day number at the top of the TextRect. }
+              tmpRect.Left := TextRect.Right - TextAdjust - TextMargin;
               if fsItalic in RenderCanvas.Font.Style then
-                dx := -2
-              else
-                dx := 0;
-              TPSTextOut(
-                RenderCanvas,
-                Angle,
-                RenderIn,
-                TextRect.Right - TextAdjust - TextMargin + dx,
-                TextRect.Top + TextMargin div 2,
-                Str
-              );
+                dec(tmpRect.Left, 2);
+              tmpRect.Top := TextRect.Top + TextMargin div 2;
+              tmpRect.Right := tmpRect.Left + TextAdjust;
+              tmpRect.Bottom := tmpRect.Top + TextH;
+              TPSTextOut(RenderCanvas, Angle, RenderIn, tmpRect.Left, tmpRect.Top, Str);
+
+              { Highlight today by a border }
+              if ThisDate = todayDate then begin
+                InflateRect(tmpRect, 3, 3);
+                RenderCanvas.Pen.Assign(FMonthView.TodayAttributes.BorderPen);
+                RenderCanvas.Brush.Style := bsClear;
+                RenderCanvas.Rectangle(tmpRect);
+                RenderCanvas.Pen.Assign(OldPen);
+                RenderCanvas.Brush.Assign(OldBrush);
+              end;
 
               { Update Array }
               with TVpMonthViewOpener(FMonthView) do begin
@@ -700,6 +678,21 @@ begin
   end;
 end;
 
+procedure TVpMonthViewPainter.DrawFocusRect(ARect: TRect; FixRight: Boolean = false);
+var
+  tmpRect: TRect;
+begin
+  tmpRect := ARect;
+  InflateRect(tmpRect, 2, 2);
+  TPSDrawFocusRect(RenderCanvas, Angle, RenderIn, tmpRect);
+
+  tmpRect := ARect;
+  InflateRect(tmpRect, -2, -2);
+  if FixRight then
+    inc(tmpRect.Right);
+  TPSDrawFocusRect(RenderCanvas, Angle, RenderIn, tmpRect);
+end;
+
 procedure TVpMonthViewPainter.DrawHeader;
 var
   HeadRect: TRect;
@@ -807,6 +800,8 @@ begin
     RealOffDayColor := clSilver;
     RealSelDayColor := clWhite;
     EventFontColor := clBlack;
+    TodayFontColor := clBlack;
+    TodayAttrColor := clWhite;
   end else begin
     BevelHighlight := clBtnHighlight;
     BevelShadow := clBtnShadow;
@@ -819,6 +814,8 @@ begin
     RealOffDayColor := FMonthView.OffDayColor;
     RealSelDayColor := FMonthView.SelectedDayColor;
     EventFontColor := FMonthView.DayNumberFont.Color;
+    TodayFontColor := FMonthView.TodayAttributes.Font.Color;
+    TodayAttrColor := FMonthView.TodayAttributes.Color;
   end;
   DotDotDotColor := clBlack;
 end;

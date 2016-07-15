@@ -66,6 +66,10 @@ object MainForm: TMainForm
             HeadAttributes.Color = clBtnFace
             LineColor = clGray
             TimeFormat = tf12Hour
+            TodayAttributes.Color = clSkyBlue
+            TodayAttributes.Font.Color = clBlue
+            TodayAttributes.BorderPen.Color = clBlue
+            TodayAttributes.BorderPen.Width = 3
             OffDayColor = clSilver
             SelectedDayColor = clRed
             ShowEvents = True

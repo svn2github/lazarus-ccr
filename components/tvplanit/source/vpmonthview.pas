@@ -59,7 +59,7 @@ type
   TVpOnEventClick =                                                      
     procedure(Sender: TObject; Event: TVpEvent) of object;               
 
-  TVpMvHeadAttributes = class(TPersistent)
+  TVpMvHeadAttr = class(TPersistent)
   protected{ private }
     FOwner: TVpMonthView;
     FColor: TColor;
@@ -91,6 +91,25 @@ type
     property Font: TVpFont read FFont write SetFont;
   end;
 
+  TVpMvTodayAttr = class(TPersistent)
+  protected
+    FMonthView: TVpMonthView;
+    FFont: TVpFont;
+    FColor: TColor;
+    FBorderPen: TPen;
+    procedure SetColor(Value: TColor);
+    procedure SetFont(Value: TVpFont);
+    procedure SetBorderPen(Value: TPen);
+  public
+    constructor Create(AOwner: TVpMonthView);
+    destructor Destroy; override;
+    property MonthView: TVpMonthView read FMonthView;
+  published
+    property Color: TColor read FColor write SetColor;
+    property Font: TVpFont read FFont write FFont;
+    property BorderPen: TPen read FBorderPen write SetBorderPen;
+  end;
+
   { TVpMonthView }
 
   TVpMonthView = class(TVpLinkableControl)
@@ -111,8 +130,9 @@ type
     FDateLabelFormat   : string;
     FShowEventTime     : Boolean;
     FTopLine           : Integer;
-    FDayHeadAttributes : TVpDayHeadAttr;
-    FHeadAttr          : TVpMvHeadAttributes;
+    FDayHeadAttr       : TVpDayHeadAttr;
+    FHeadAttr          : TVpMvHeadAttr;
+    FTodayAttr         : TVpMvTodayAttr;
     FDayNumberFont     : TVpFont;
     FEventFont         : TVpFont;
     FTimeFormat        : TVpTimeFormat;
@@ -165,6 +185,7 @@ type
     procedure SetWeekStartsOn(Value: TVpDayType);
     { internal methods }
     procedure mvHookUp;
+    procedure mvPenChanged(Sender: TObject);
 //    procedure mvFontChanged(Sender: TObject);
 
     procedure Paint; override;
@@ -245,7 +266,7 @@ type
     property DateLabelFormat:
       string read FDateLabelFormat write SetDateLabelFormat;
     property DayHeadAttributes: TVpDayHeadAttr
-      read FDayHeadAttributes write FDayHeadAttributes;
+      read FDayHeadAttr write FDayHeadAttr;
     property DayNameStyle: TVpMVDayNameStyle
       read FDayNameStyle write SetDayNameStyle;
     property DayNumberFont: TVpFont
@@ -256,12 +277,14 @@ type
       read FEventDayStyle write SetEventDayStyle;
     property EventFont: TVpFont
       read FEventFont write SetEventFont;
-    property HeadAttributes: TVpMvHeadAttributes
+    property HeadAttributes: TVpMvHeadAttr
       read FHeadAttr write FHeadAttr;
     property LineColor: TColor
       read FLineColor write SetLineColor;
     property TimeFormat: TVpTimeFormat
       read FTimeFormat write SetTimeFormat;
+    property TodayAttributes: TVpMvTodayAttr
+      read FTodayAttr write FTodayAttr;
     property OffDayColor: TColor
       read FOffDayColor write SetOffDayColor;
     property OffDayFontColor: TColor
@@ -293,9 +316,9 @@ uses
 
 
 (*****************************************************************************)
-{ TVpMvHeadAttributes }
+{ TVpMvHeadAttr }
 
-constructor TVpMvHeadAttributes.Create(AOwner: TVpMonthView);
+constructor TVpMvHeadAttr.Create(AOwner: TVpMonthView);
 begin
   inherited Create;
   FOwner := AOwner;
@@ -303,13 +326,13 @@ begin
   FFont := TVpFont.Create(AOwner);
 end;
 
-destructor TVpMvHeadAttributes.Destroy;
+destructor TVpMvHeadAttr.Destroy;
 begin
   FFont.Free;
   inherited;
 end;
 
-procedure TVpMvHeadAttributes.SetColor(const Value: TColor);
+procedure TVpMvHeadAttr.SetColor(const Value: TColor);
 begin
   if FColor <> Value then begin
     FColor := Value;
@@ -317,7 +340,7 @@ begin
   end;
 end;
 
-procedure TVpMvHeadAttributes.SetFont(Value: TVpFont);
+procedure TVpMvHeadAttr.SetFont(Value: TVpFont);
 begin
   FFont.Assign(Value);
 end;
@@ -358,7 +381,54 @@ begin
     MonthView.Invalidate;
   end;
 end;
-{=====}
+
+
+(*****************************************************************************)
+{ TVpMvTodayAttr }
+
+constructor TVpMvTodayAttr.Create(AOwner: TVpMonthView);
+begin
+  inherited Create;
+  FMonthView := AOwner;
+  FFont := TVpFont.Create(AOwner);
+  FFont.Assign(FMonthView.Font);
+  FColor := clSilver;
+  FBorderPen := TPen.Create;
+  FBorderPen.Color := clRed;
+  FBorderPen.Width := 3;
+  FBorderPen.OnChange := FMonthView.mvPenChanged;
+end;
+
+destructor TVpMvTodayAttr.Destroy;
+begin
+  FBorderPen.Free;
+  inherited;
+end;
+
+procedure TVpMvTodayAttr.SetColor(Value: TColor);
+begin
+  if Value <> FColor then begin
+    FColor := Value;
+    MonthView.Invalidate;
+  end;
+end;
+
+procedure TVpMvTodayAttr.SetFont(Value: TVpFont);
+begin
+  if Value <> FFont then begin
+    FFont.Assign(Value);
+    MonthView.Invalidate;
+  end;
+end;
+
+procedure TVpMvTodayAttr.SetBorderPen(Value: TPen);
+begin
+  if Value <> FBorderPen then begin
+    FBorderPen.Assign(Value);
+    MonthView.Invalidate;
+  end;
+end;
+
 
 (*****************************************************************************)
 { TVpMonthView }
@@ -369,8 +439,9 @@ begin
   ControlStyle := [csCaptureMouse, csOpaque, csDoubleClicks];
 
   { Create internal classes and stuff }
-  FHeadAttr := TVpMvHeadAttributes.Create(self);
-  FDayHeadAttributes := TVpDayHeadAttr.Create(self);
+  FHeadAttr := TVpMvHeadAttr.Create(self);
+  FDayHeadAttr := TVpDayHeadAttr.Create(self);
+  FTodayAttr := TVpMvTodayAttr.Create(self);
   mvEventList := TList.Create;
   mvSpinButtons := TUpDown.Create(self);
 
@@ -406,7 +477,7 @@ begin
 //  FDayHeadAttributes.Font.Name := 'Tahoma';   wp: better use defaults
 //  FDayHeadAttributes.Font.Size := 10;
 //  FDayHeadAttributes.Font.Style := [];
-  FDayHeadAttributes.Color := clBtnFace;
+  FDayHeadAttr.Color := clBtnFace;
 
   { Assign default font to DayNumberFont and EventFont }
   FDayNumberFont := TVpFont.Create(AOwner);
@@ -434,7 +505,8 @@ end;
 
 destructor TVpMonthView.Destroy;
 begin
-  FDayHeadAttributes.Free;
+  FTodayAttr.Free;
+  FDayHeadAttr.Free;
   FDayNumberFont.Free;
   FEventFont.Free;
   mvSpinButtons.Free;
@@ -487,13 +559,11 @@ begin
       end;
     end;
 end;
-{=====}
-                                 {
-procedure TVpMonthView.mvFontChanged(Sender: TObject);
+
+procedure TVpMonthView.mvPenChanged(Sender: TObject);
 begin
   Invalidate;
-end;                              }
-{=====}
+end;
 
 procedure TVpMonthView.Loaded;
 begin
