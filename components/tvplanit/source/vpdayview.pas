@@ -197,6 +197,7 @@ type
       FShowRecurringBitmap: Boolean;
       FAlarmBitmap: TBitmap;
       FRecurringBitmap: TBitmap;
+      FShowInPrint: Boolean;
       FOwner: TVpLinkableControl;
 
     protected
@@ -221,6 +222,8 @@ type
         read FShowCategoryBitmap write SetShowCategoryBitmap default True;
       property ShowRecurringBitmap : Boolean
         read FShowRecurringBitmap write SetShowRecurringBitmap default True;
+      property ShowInPrint: Boolean
+        read FShowInPrint write FShowInPrint default True;
   end;
 
   { TVpDayView }
@@ -610,6 +613,7 @@ begin
   FShowAlarmBitmap := True;
   FShowCategoryBitmap := True;
   FShowRecurringBitmap := True;
+  FShowInPrint := True;
 end;
 
 destructor TVpDayViewIconAttributes.Destroy;

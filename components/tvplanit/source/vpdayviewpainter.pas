@@ -24,6 +24,8 @@ type
   TVpDayViewPainter = class(TVpBasePainter)
   private
     FDayView: TVpDayView;
+    FScaledGutterWidth: Integer;
+    FScaledIconMargin: Integer;
     // local parameters of the old render procedure
     ColHeadRect: TRect;
     CellsRect: TRect;
@@ -148,7 +150,6 @@ function TVpDayViewPainter.BuildEventString(AEvent: TVpEvent;
 var
   maxW: Integer;
   timeFmt: String;
-  gutter: Integer;
 begin
   if FDayView.ShowEventTimes then begin
     timeFmt := IfThen(FDayView.TimeFormat = tf24Hour, 'h:nn', 'h:nnam/pm');
@@ -163,8 +164,7 @@ begin
   if FDayView.WrapStyle = wsNone then begin
     { if the string is longer than the availble space then chop off the end
       and place those little '...'s at the end }
-    gutter := Round(FDayView.GutterWidth * Scale);
-    maxW := AEventRect.Right - AIconRect.Right - gutter - TextMargin;
+    maxW := AEventRect.Right - AIconRect.Right - FScaledGutterWidth - TextMargin;
     if RenderCanvas.TextWidth(Result) > maxW then
       Result := GetDisplayString(RenderCanvas, Result, 0, maxW);
   end;
@@ -236,14 +236,14 @@ begin
   Result.Left := AEventRect.Left;
   Result.Top := AEventRect.Top;
   Result.Bottom := AEventRect.Bottom;
-  Result.Right := AEventRect.Left + AlarmW + RecurringW + CategoryW + CustomW + ICON_MARGIN + 2;
+  Result.Right := AEventRect.Left + AlarmW + RecurringW + CategoryW + CustomW + FScaledIconMargin + 2;
 
-  MaxHeight := AlarmH + ICON_MARGIN;
-  if RecurringH + ICON_MARGIN > MaxHeight then
+  MaxHeight := AlarmH + FScaledIconMargin;
+  if RecurringH + FScaledIconMargin > MaxHeight then
     MaxHeight := dvBmpRecurring.Height;
-  if CategoryH + ICON_MARGIN > MaxHeight then
+  if CategoryH + FScaledIconMargin > MaxHeight then
     MaxHeight := dvBmpCategory.Height;
-  if CustomH + ICON_MARGIN > MaxHeight then
+  if CustomH + FScaledIconMargin > MaxHeight then
     MaxHeight := dvBmpCustom.Height;
   if MaxHeight > AEventRect.Bottom - AEventRect.Top then
     MaxHeight := AEventRect.Bottom - AEventRect.Top;
@@ -464,8 +464,8 @@ begin
   GutterRect.Left := R.Left;
   GutterRect.Top := R.Top;
   GutterRect.Bottom := R.Bottom;
-  GutterRect.Right := GutterRect.Left + Round(FDayView.GutterWidth * Scale);
-  R.Left := R.Left + Round(FDayView.GutterWidth * Scale) + 1;
+  GutterRect.Right := GutterRect.Left + FScaledGutterWidth;
+  R.Left := R.Left + FScaledGutterWidth + 1;
 
   { paint gutter area }
   RenderCanvas.Brush.Color := RealColor;
@@ -860,10 +860,10 @@ begin
 
   { Paint the gutter inside the EventRect of all events }
   if (AEventRec.Level = 0) then
-    GutterRect.Left := EventRect.Left - Trunc(FDayView.GutterWidth * Scale)
+    GutterRect.Left := EventRect.Left - Trunc(FDayView.GutterWidth * Scale)   // wp: use FGutterWidth? It uses round, though...
   else
     GutterRect.Left := EventRect.Left;
-  GutterRect.Right := GutterRect.Left + Round(FDayView.GutterWidth * Scale);
+  GutterRect.Right := GutterRect.Left + FScaledGutterWidth;
   GutterRect.Top := EventRect.Top + StartPixelOffset;
   GutterRect.Bottom := EventRect.Bottom - EndPixelOffset + 1;
   TPSFillRect(RenderCanvas, Angle, RenderIn, GutterRect);
@@ -874,7 +874,7 @@ begin
   IconRect.Top := EventRect.Top;
   IconRect.Right := EventRect.Left;
   IconRect.Bottom := EventRect.Top;
-  if not DisplayOnly then begin
+  if FDayView.IconAttributes.ShowInPrint then begin
     GetIcons(AEvent);
     if AEventRec.Level = 0 then begin
       ScaleIcons(EventRect);
@@ -898,7 +898,7 @@ begin
     FDayView.OnBeforeDrawEvent(Self, AEvent, FDayView.ActiveEvent = AEvent, RenderCanvas, tmpRect, IconRect);
   end;
 
-  if not DisplayOnly then
+  if FDayView.IconAttributes.ShowInPrint then
     DrawIcons(IconRect);
 
   { build the event string }
@@ -918,8 +918,8 @@ begin
 
   { don't paint gutter area on level 0 items }
   if AEventRec.Level > 0 then begin
-    TPSMoveTo(RenderCanvas, Angle, RenderIn, EventRect.Left + Round(FDayView.GutterWidth * Scale), EventRect.Top);
-    TPSLineTo(RenderCanvas, Angle, RenderIn, EventRect.Left + Round(FDayView.GutterWidth * Scale), EventRect.Bottom);
+    TPSMoveTo(RenderCanvas, Angle, RenderIn, EventRect.Left + FScaledGutterWidth, EventRect.Top);
+    TPSLineTo(RenderCanvas, Angle, RenderIn, EventRect.Left + FScaledGutterWidth, EventRect.Bottom);
   end;
 
   if Assigned(FDayView.OnAfterDrawEvent) then begin
@@ -1052,16 +1052,29 @@ procedure TVpDayViewPainter.DrawIcons(AIconRect: TRect);
 var
   DrawPos: Integer;
 
-  procedure DrawIcon(bmp: TBitmap; w, h: Integer; IncDrawPos: Boolean = false);
+  procedure DrawIcon(ABitmap: TBitmap; w, h: Integer; IncDrawPos: Boolean = false);
   var
     R: TRect;
+    bmp: TBitmap;
   begin
-    if (bmp.Width <> 0) and (bmp.Height <> 0) then
+    if (ABitmap.Width <> 0) and (ABitmap.Height <> 0) then
     begin
-      bmp.Transparent := True;
+      ABitmap.Transparent := True;
       R := Rect(0, 0, w, h);
-      OffsetRect(R, AIconRect.Left + ICON_MARGIN, AIconRect.Top + ICON_MARGIN);
-      RenderCanvas.StretchDraw(R, bmp);
+      OffsetRect(R, AIconRect.Left + FScaledIconMargin, AIconRect.Top + FScaledIconMargin);
+
+      bmp := TBitmap.Create;
+      try
+        bmp.Assign(ABitmap);
+       {$IFDEF FPC}
+        RotateBitmap(Bmp, Angle);
+       {$ENDIF}
+        TPSStretchDraw(RenderCanvas, Angle, RenderIn, R, Bmp);
+      finally
+        bmp.Free;
+      end;
+
+//      RenderCanvas.StretchDraw(R, ABitmap);
       {
       RenderCanvas.CopyRect(  // wp: was FDayview.Canvas -- does not look correct...
         Rect(AIconRect.Left + 1, AIconRect.Top + 1, AIconRect.Left + w + 1, AIconRect.Top + h + 1),
@@ -1070,7 +1083,7 @@ var
       );
       }
       if IncDrawPos then
-        inc(DrawPos, w + ICON_MARGIN);
+        inc(DrawPos, w + FScaledIconMargin);
     end;
   end;
 
@@ -1634,14 +1647,14 @@ begin
     dvBmpCustom.Height := 0;
   end;
 
-  AlarmW := dvBmpAlarm.Width;
-  RecurringW := dvBmpRecurring.Width;
-  CategoryW := dvBmpCategory.Width;
-  CustomW := dvBmpCustom.Width;
-  AlarmH := dvBmpAlarm.Height;
-  RecurringH := dvBmpRecurring.Height;
-  CategoryH := dvBmpCategory.Height;
-  CustomH := dvBmpCustom.Height;
+  AlarmW := Round(dvBmpAlarm.Width * Scale);
+  RecurringW := Round(dvBmpRecurring.Width * Scale);
+  CategoryW := Round(dvBmpCategory.Width * Scale);
+  CustomW := Round(dvBmpCustom.Width);
+  AlarmH := Round(dvBmpAlarm.Height * Scale);
+  RecurringH := Round(dvBmpRecurring.Height * Scale);
+  CategoryH := Round(dvBmpCategory.Height * Scale);
+  CustomH := Round(dvBmpCustom.Height * Scale);
 end;
 
 { initialize the all-day events area }
@@ -1971,6 +1984,8 @@ procedure TVpDayViewPainter.SetMeasurements;
 begin
   inherited;
   TVpDayViewOpener(FDayView).dvCalcColHeadHeight(Scale);
+  FScaledGutterWidth := Round(FDayView.GutterWidth * Scale);
+  FScaledIconMargin := Round(ICON_MARGIN * Scale);
 end;
 
 procedure TVpDayViewPainter.VerifyMaxWidthDevisors;
