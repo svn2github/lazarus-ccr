@@ -1070,7 +1070,7 @@ procedure TVpPrintPreview.SetScrollBars;
 var
   RealWidth: Integer;
   RealHeight: Integer;
-  Style: Integer;
+  Style: DWord;
   NeedRecreate: Boolean;
 begin
   if csDesigning in ComponentState then

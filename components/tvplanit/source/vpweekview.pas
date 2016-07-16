@@ -1089,7 +1089,8 @@ begin
     EventDlg := TVpEventEditDialog.Create(nil);
     try
       EventDlg.DataStore := DataStore;
-      AllowIt := EventDlg.Execute(ActiveEvent, FTimeFormat);
+      EventDlg.TimeFormat := FTimeFormat;
+      AllowIt := EventDlg.Execute(ActiveEvent);
     finally
       EventDlg.Free;
     end;

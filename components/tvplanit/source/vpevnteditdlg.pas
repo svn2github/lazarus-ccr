@@ -155,7 +155,7 @@ type
     ceEvent: TVpEvent;
   public
     constructor Create(AOwner : TComponent); override;
-    function Execute(Event: TVpEvent; TimeFormat: TVpTimeFormat = tf12Hour): Boolean; reintroduce;
+    function Execute(Event: TVpEvent): Boolean; reintroduce;
     function AddNewEvent(StartTime, EndTime: TDateTime): Boolean;
   published
     {properties}
@@ -490,13 +490,12 @@ end;
 { Inc or Dec AlarmAdvance according to which button was pressed }
 procedure TDlgEventEdit.AdvanceUpDownClick(Sender: TObject; Button: TUDBtnType);
 begin
-{  case Button of
+  case Button of
     btNext:
       AlarmAdvance.Text := IntToStr(StrToIntDef(AlarmAdvance.Text, 0) + 1);
     btPrev:
       AlarmAdvance.Text := IntToStr(StrToIntDef(AlarmAdvance.Text, 0) - 1);
-  end;}
-  AlarmAdvance.Text := IntToStr(AdvanceUpDown.Position);
+  end;
 end;
 {=====}
 
@@ -523,6 +522,7 @@ end;
 
 procedure TDlgEventEdit.IntervalUpDownClick(Sender: TObject; Button: TUDBtnType);
 begin
+  Unused(Button);
   FCustomInterval.Text := IntToStr(IntervalUpDown.Position);
 end;
 {=====}
@@ -752,8 +752,7 @@ begin
 end;
 {=====}
 
-function TVpEventEditDialog.Execute(Event: TVpEvent;
-  TimeFormat: TVpTimeFormat = tf12Hour): Boolean;
+function TVpEventEditDialog.Execute(Event: TVpEvent): Boolean;
 var
   DlgEventEdit: TDlgEventEdit;
 begin

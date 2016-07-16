@@ -257,8 +257,8 @@ var
   var
     s: String;
   begin
-    SetLength(s, PtrInt(pEnd) - PtrInt(pStart));
-    StrLCopy(PChar(s), pStart, PtrInt(pEnd) - PtrInt(pStart));
+    SetLength(s, {%H-}PtrInt(pEnd) - {%H-}PtrInt(pStart));
+    StrLCopy(PChar(s), pStart, {%H-}PtrInt(pEnd) - {%H-}PtrInt(pStart));
     AList.Add(s);
   end;
 

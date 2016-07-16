@@ -448,9 +448,6 @@ type
 
 implementation
 
-const
-  nabTimerInterval = 200;
-
 {DrawNavTab - returns the usable text area inside the tab rect.}
 function DrawNavTab(Canvas: TCanvas; const Client: TRect; BevelWidth: Integer;
   TabColor: TColor; TabNumber: Integer; CoolTab, IsFocused, IsMouseOver: Boolean): TRect;

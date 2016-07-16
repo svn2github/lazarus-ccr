@@ -139,8 +139,11 @@ procedure Register;
 implementation
 
 uses
-//  DbTables,                   { VCL - BDE runtime unit                       }
-//  VpWavPE,                    { Wav File Finder - Property Editor            }
+ {$IFDEF DELPHI}
+  DbTables,                   { VCL - BDE runtime unit                       }
+  VpWavPE,                    { Wav File Finder - Property Editor            }
+ {$ENDIF}
+  VpMisc,
 
   { Component Units                                                          }
   VpBase,                     { Base classes for Vp                          }
@@ -198,6 +201,7 @@ end;
 
 procedure TDBStringProperty.GetValueList(List: TStrings);
 begin
+  Unused(List);
 end;
 {=====}
 

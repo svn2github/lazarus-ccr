@@ -92,14 +92,14 @@ type
     protected
       procedure csAdvanceLine;
       procedure csAdvanceLinePos;
-      procedure csGetCharPrim(var aCh: TVpUcs4Char; var aIsLiteral: Boolean);
+      procedure csGetCharPrim(out aCh: TVpUcs4Char); //; var aIsLiteral: Boolean);
       function csGetNextBuffer: Boolean;
       function csGetTwoAnsiChars(var Buffer): Boolean;
       function csGetUtf8Char: TVpUcs4Char;
       procedure csIdentifyFormat;
       procedure csPushCharPrim(aCh: TVpUcs4Char);
       procedure csSetFormat(const aValue: TVpStreamFormat); override;
-      procedure csGetChar(var aCh: TVpUcs4Char; var aIsLiteral: Boolean);
+      procedure csGetChar(out aCh: TVpUcs4Char); //; var aIsLiteral: Boolean);
 
     public
       constructor Create(aStream: TStream; const aBufSize: Longint); override;
@@ -212,8 +212,8 @@ begin
   Inc(FLinePos);
 end;
 {--------}
-procedure TVpInCharFilter.csGetCharPrim(var aCh : TVpUcs4Char;
-                                        var aIsLiteral : Boolean);
+procedure TVpInCharFilter.csGetCharPrim(out aCh: TVpUcs4Char);
+//  var aIsLiteral: Boolean);
 begin
   {Note: as described in the XML spec (2.11) all end-of-lines are
          passed as LF characters no matter what the original document
@@ -231,7 +231,7 @@ begin
    format of the stream of course}
   else begin
     case Format of
-      sfUTF8     : aCh := csGetUtf8Char;
+      sfUTF8: aCh := csGetUtf8Char;
     else
       {it is next to impossible that this else clause is reached; if
        it is we're in deep doggy doo-doo, so pretending that it's the
@@ -250,7 +250,7 @@ begin
     end
     else begin
       case Format of
-        sfUTF8     : aCh := csGetUtf8Char;
+        sfUTF8: aCh := csGetUtf8Char;
       else
         aCh := TVpUCS4Char(VpEndOfStream);
       end;
@@ -269,7 +269,7 @@ function TVpInCharFilter.csGetNextBuffer : Boolean;
 begin
   if FStream.Position > FBufDMZ then
     {Account for necessary buffer overlap}
-    FStream.Position := FStream.Position - (FBufEnd - FBufPos);
+    FStream.Position := FStream.Position - (Int64(FBufEnd) - FBufPos);
   FBufEnd := FStream.Read(FBuffer^, FBufSize);
   FStreamPos := FStream.Position;
   FBufPos := 0;
@@ -398,10 +398,10 @@ begin
     FFormat := aValue;
 end;
 {--------}
-procedure TVpInCharFilter.csGetChar(var aCh: TVpUcs4Char; var aIsLiteral: Boolean);
+procedure TVpInCharFilter.csGetChar(out aCh: TVpUcs4Char); //var aIsLiteral: Boolean);
 begin
   {get the next character; for an EOF raise an exception}
-  csGetCharPrim(aCh, aIsLiteral);
+  csGetCharPrim(aCh); //, aIsLiteral);
   if (aCh = TVpUCS4Char(VpEndOfStream)) then
     FEOF := True
   else
@@ -416,7 +416,7 @@ function TVpInCharFilter.TryRead(const S: array of Longint): Boolean;
 var
   Idx         : Longint;
   Ch          : TVpUcs4Char;
-  IL          : Boolean;
+//  IL          : Boolean;
   OldBufPos   : Longint;
   OldChar     : DOMChar;
   OldUCS4Char : TVpUcs4Char;
@@ -432,7 +432,7 @@ begin
   FInTryRead := True;
   try
     for Idx := Low(s) to High(S) do begin
-      csGetChar(Ch, IL);
+      csGetChar(Ch); //, IL);
       if Ch <> TVpUcs4Char(S[Idx]) then begin
         Result := False;
         Break;
@@ -465,11 +465,11 @@ end;
 {--------}
 function TVpInCharFilter.ReadandSkipChar : DOMChar;
 var
-  Ch     : TVpUCS4Char;
-  IL     : Boolean;
+  Ch: TVpUCS4Char;
+//  IL: Boolean;
 begin
   if FLastChar = '' then begin
-    csGetChar(Ch, IL);
+    csGetChar(Ch); //, IL);
     VpUcs4ToWideChar(Ch, Result);
   end else begin
     Result := FLastChar;
@@ -477,18 +477,17 @@ begin
   end;
   FLastChar := #0;
   FUCS4Char := TVpUCS4Char(VpNullChar);
-  if (FStreamSize = FStreamPos) and
-     (FBufPos = FBufEnd) then
+  if (FStreamSize = FStreamPos) and (FBufPos = FBufEnd) then
     FEOF := True;
 end;
 {--------}
 function TVpInCharFilter.ReadChar: DOMChar;
 var
   Ch: TVpUCS4Char = 0;  // to silence the compiler
-  IL: Boolean = false;  // dto.
+//  IL: Boolean;  // dto.
 begin
   if (FLastChar = '') or (FLastChar = #0) then begin  // wp: added #0
-    csGetChar(Ch, IL);
+    csGetChar(Ch); //, IL);
     VpUcs4ToWideChar(Ch, Result);
     Dec(FLinePos);
     FLastChar := Result;

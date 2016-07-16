@@ -325,7 +325,6 @@ function RenderTextToRegion(ACanvas: TCanvas; const Angle: TVpRotationAngle;
 {$IFDEF FPC}
 procedure RotateBitmap(ABitmap: TBitmap; Angle: TVpRotationAngle);
 {$ENDIF}
-procedure ScaleBitmap(ABitmap: TBitmap; Scale: Extended);
 
 
 implementation
@@ -1833,24 +1832,6 @@ Begin
   end;
 end;
 {$ENDIF}
-
-procedure ScaleBitmap(ABitmap: TBitmap; Scale: Extended);
-var
-  bmp: TBitmap;
-  w, h, left, top: integer;
-begin
-  bmp := TBitmap.Create;
-  try
-    w := Round(ABitmap.Width * Scale);
-    h := Round(ABitmap.Height * Scale);
-    bmp.Width := w;
-    bmp.Height := h;
-    bmp.Canvas.CopyRect(Rect(0, 0, w, h), ABitmap.Canvas, Rect(0, 0, ABitmap.Width, ABitmap.Height));
-    ABitmap.Assign(bmp);
-  finally
-    Bmp.free;
-  end;
-end;
 
 
 initialization                                                           
