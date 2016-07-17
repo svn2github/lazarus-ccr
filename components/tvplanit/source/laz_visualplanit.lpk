@@ -30,7 +30,7 @@ Portions created by TurboPower Software Inc. are Copyright (C) 2002 TurboPower S
 
 Contributor(s): "/>
     <Version Major="1" Release="4"/>
-    <Files Count="74">
+    <Files Count="75">
       <Item1>
         <Filename Value="vpalarmdlg.lfm"/>
         <Type Value="LFM"/>
@@ -328,6 +328,10 @@ Contributor(s): "/>
         <Filename Value="vpxmlds.pas"/>
         <UnitName Value="VpXmlDs"/>
       </Item74>
+      <Item75>
+        <Filename Value="vpnavbarpainter.pas"/>
+        <UnitName Value="VpNavBarPainter"/>
+      </Item75>
     </Files>
     <i18n>
       <EnableI18N Value="True"/>

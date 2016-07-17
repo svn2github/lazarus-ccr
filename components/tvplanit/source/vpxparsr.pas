@@ -301,6 +301,9 @@ implementation
 {.$R *.RES}
 
 uses
+ {$IFDEF FPC}
+  LazUtf8,
+ {$ENDIF}
   VpMisc;
 
 
@@ -989,7 +992,7 @@ begin
        {$IFDEF DELPHI}
         Ucs4Chr := Ucs4Chr + StrToIntDef(TempChar, 0);
        {$ELSE}
-        Ucs4Chr := Ucs4Chr + StrToIntDef(UTF8Encode(TempChar), 0);
+        Ucs4Chr := Ucs4Chr + StrToIntDef(UTF16ToUTF8(TempChar), 0);
        {$ENDIF}
       end else
       if (TempChar = ';') then
@@ -998,7 +1001,7 @@ begin
        {$IFDEF DELPHI}
         msg := sIllCharInRef + QuotedStr(TempChar);
        {$ELSE}
-        msg := UTF8Decode(sIllCharInRef + QuotedStr(UTF8Encode(TempChar)));
+        msg := UTF8Decode(sIllCharInRef + QuotedStr(UTF16ToUTF8(TempChar)));
        {$ENDIF}
         raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, msg);
       end;
@@ -1015,7 +1018,7 @@ begin
        {$IFDEF DELPHI}
         Ucs4Chr := Ucs4Chr + StrToIntDef(TempChar, 0);
        {$ELSE}
-        Ucs4Chr := Ucs4Chr + StrToIntDef(UTF8Encode(TempChar), 0);
+        Ucs4Chr := Ucs4Chr + StrToIntDef(UTF16ToUTF8(TempChar), 0);
        {$ENDIF}
       end else
       if (TempChar = ';') then
@@ -1024,7 +1027,7 @@ begin
        {$IFDEF DELPHI}
         msg := sIllCharInRef + QuotedStr(TempChar);
        {$ELSE}
-        msg := UTF8Decode(sIllCharInRef + QuotedStr(UTF8Encode(TempChar)));
+        msg := UTF8Decode(sIllCharInRef + QuotedStr(UTF16ToUTF8(TempChar)));
        {$ENDIF}
         raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, msg);
       end;
@@ -1045,9 +1048,7 @@ begin
      ((VpPos('--', TempComment) <> 0) or
       (TempComment[Length(TempComment)] = '-')) then
     { Yes. Raise an error. }
-    raise EVpParserError.CreateError (FFilter.Line,
-                                       FFilter.LinePos,
-                                       sInvalidCommentText);
+    raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, sInvalidCommentText);
   if Assigned(FOnComment) then
     FOnComment(self, TempComment);
 end;
@@ -1264,9 +1265,7 @@ begin
   end;
   SkipWhiteSpace(True);
   if (not IsEndDocument) then
-    raise EVpParserError.CreateError (FFilter.Line,
-                                       FFilter.LinePos,
-                                       sDataAfterValDoc);
+    raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, sDataAfterValDoc);
 
   if Assigned(FOnEndDocument) then
     FOnEndDocument(self);
@@ -1886,7 +1885,7 @@ begin
            {$IFDEF DELPHI}
             EntRefs.Add('&' + DOMString(TempChar));
            {$ELSE}
-            EntRefs.Add('&' + UTF8Encode(TempChar));
+            EntRefs.Add('&' + UTF16ToUTF8(TempChar));
            {$ENDIF}
           except
             on E:EStringListError do begin
@@ -1963,7 +1962,7 @@ begin
        {$IFDEF DELPHI}
         msg := sInvalidName + QuotedStr(TempChar);
        {$ELSE}
-        msg := UTF8Decode(sInvalidName + QuotedStr(UTF8Encode(TempChar)));
+        msg := UTF8Decode(sInvalidName + QuotedStr(UTF16ToUTF8(TempChar)));
        {$ENDIF}
         raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, msg);
       end;
@@ -1992,7 +1991,7 @@ begin
         if ParseCharRef = TempStr then
           Exit;
        {$ELSE}
-        if UTF8Encode(ParseCharRef) = TempStr then
+        if UTF16ToUTF8(ParseCharRef) = TempStr then
           Exit;
        {$ENDIF}
       end;
@@ -2212,7 +2211,7 @@ begin
      {$IFDEF DELPHI}
       msg := sInvEntityValue + QuotedStr(TempChr));
      {$ELSE}
-      msg := sInvEntityValue + QuotedStr(UTF8Encode(TempChr));
+      msg := sInvEntityValue + QuotedStr(UTF16ToUTF8(TempChr));
      {$ENDIF}
       raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, msg);
     end;
@@ -2277,7 +2276,7 @@ begin
      {$IFDEF DELPHI}
       msg := sInvPubIDChar + QuotedStr(aString[i]);
      {$ELSE}
-      msg := UTF8Decode(sInvPubIDChar + QuotedStr(UTF8Encode(aString[i])));
+      msg := UTF8Decode(sInvPubIDChar + QuotedStr(UTF16ToUTF8(aString[i])));
      {$ENDIF}
       raise EVpParserError.CreateError(FFilter.Line, FFilter.LinePos, msg);
     end;

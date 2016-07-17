@@ -138,9 +138,16 @@ uses
  {$IFDEF WINDOWS}
   Windows,
  {$ENDIF}
-  LResources, LazFileUtils, LazUTF8, StrUtils, DateUtils, Translations,
+  LCLVersion, LResources, LazFileUtils, LazUTF8, StrUtils, DateUtils, Translations,
   IniFiles, Math, Printers,
   VpMisc, VpBase, VpPrtFmt;
+
+{$UNDEF UTF8_CALLS}
+{$IFDEF LCL}
+  {$IF lcl_fullversion >= 3000000}
+     {$DEFINE UTF8_CALLS}
+  {$ENDIF}
+{$ENDIF}
 
 const
   LANGUAGE_DIR = '..\..\languages\';
@@ -223,7 +230,11 @@ begin
   LCID := LangToLCID(ALang);
 
   // Now we update the format settings to the new language
+  {$IFDEF UTF8_CALLS}
   GetLocaleFormatSettingsUTF8(LCID, DefaultFormatSettings);
+  {$ELSE}
+  GetLocaleFormatSettings(LCID, DefaultFormatSettings);
+  {$ENDIF}
  {$ENDIF}
 end;
 
@@ -484,7 +495,8 @@ begin
     end;
 
     CbLanguages.Items.Assign(po);
-    SetLanguage(GetDefaultLang);
+    SetLanguage(lang);
+//    SetLanguage(GetDefaultLang);
 
   finally
     po.Free;
@@ -566,7 +578,7 @@ begin
     if h < 160 then h := 160;
     VpMonthView1.Height := h;
 
-    lang := ini.ReadString('Settings', 'Language', GetDefaultLang);
+    lang := ini.ReadString('Settings', 'Language', ''); //GetDefaultLang);
     SetLanguage(lang);
 
     SetActiveView(ini.ReadInteger('Settings', 'ActiveView', 0));

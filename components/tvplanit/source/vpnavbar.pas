@@ -28,6 +28,8 @@
 
 {$I vp.inc}
 
+{$DEFINE PAINTER}
+
 unit VpNavBar;
 
 interface
@@ -85,8 +87,9 @@ type
     destructor Destroy; override;
     property Folder: TVpNavFolder read FFolder;
     procedure Assign(Source: TPersistent); override;
-    property IconRect: TRect read FIconRect;
-    property LabelRect: TRect read FLabelRect;
+    property DisplayName: String read liDisplayName write liDisplayName;  // wp: needed by painter
+    property IconRect: TRect read FIconRect write FIconRect;     // wp: Setter needed by painter
+    property LabelRect: TRect read FLabelRect write FLabelRect;  // wp: Setter needed by painter
   published
     property Caption: string read FCaption write SetCaption;
     property Description: string read FDescription write FDescription;
@@ -133,6 +136,8 @@ type
     property Items[Index: Integer]: TVpNavBtnItem read GetItem;
     property ItemCount: Integer read GetItemCount;
     property ContainerIndex: Integer read FContainerIndex write FContainerIndex;
+    property DisplayName: String read lfDisplayName;  // made public for painter
+    property Rect: TRect read lfRect write lfRect;    // made public for painter
 
   published
     property Caption: string read FCaption write SetCaption;
@@ -447,6 +452,10 @@ type
 
 
 implementation
+
+uses
+  Themes,
+  VpNavBarPainter;
 
 {DrawNavTab - returns the usable text area inside the tab rect.}
 function DrawNavTab(Canvas: TCanvas; const Client: TRect; BevelWidth: Integer;
@@ -1455,91 +1464,6 @@ begin
 end;
 {=====}
 
-{ Given a string, and a rectangle, find the string that can be displayed
-  using two lines. Add ellipsis to the end of each line if necessary and
-  possible}
-function GetLargeIconDisplayName(Canvas: TCanvas; Rect: TRect;
-  const Name: string): string;
-var
-  TestRect: TRect;
-  SH, DH: Integer;
-  Buf: array[0..255] of Char;
-  I: Integer;
-  TempName: string;
-  Temp2: string;
-begin
-  TempName := Trim(Name);
-  {get single line height}
-  with TestRect do begin
-    Left := 0;
-    Top := 0;
-    Right := 1;
-    Bottom := 1;
-  end;
-  SH := DrawText(Canvas.Handle, 'W W', 3, TestRect, DT_SINGLELINE or DT_CALCRECT);
-
-  {get double line height}
-  with TestRect do begin
-    Left := 0;
-    Top := 0;
-    Right := 1;
-    Bottom := 1;
-  end;
-  DH := DrawText(Canvas.Handle, 'W W', 3, TestRect, DT_WORDBREAK or DT_CALCRECT);
-
-  {see if the text can fit within the existing rect without growing}
-  TestRect := Rect;
-  StrPLCopy(Buf, TempName, 255);
-  DrawText(Canvas.Handle, Buf, Length(TempName), TestRect, DT_WORDBREAK or DT_CALCRECT);
-  I := Pos(' ', TempName);
-  if (RectHeight(TestRect) = SH) or (I < 2) then
-    Result := GetDisplayString(Canvas, TempName, 1, RectWidth(Rect))
-  else begin
-    {the first line only has ellipsis if there's only one word on it and
-    that word won't fit}
-    Temp2 := GetDisplayString(Canvas, Copy(TempName, 1, I-1), 1, RectWidth(Rect));
-    if CompareStr(Temp2, Copy(TempName, 1, I-1)) <> 0 then begin
-      Result := GetDisplayString(Canvas, Copy(TempName, 1, I-1), 1, RectWidth(Rect)) + ' ' +
-        GetDisplayString(Canvas, Copy(TempName, I+1, Length(TempName) - I), 1, RectWidth(Rect));
-    end else begin
-      {2 or more lines, and the first line isn't getting an ellipsis}
-      if (RectHeight(TestRect) = DH) and (RectWidth(TestRect) <= RectWidth(Rect)) then
-        {it will fit}
-        Result := TempName
-      else begin
-        {it won't fit, but the first line wraps OK - 2nd line needs an ellipsis}
-        TestRect.Right := Rect.Right + 1;
-        while (RectWidth(TestRect) > RectWidth(Rect)) or (RectHeight(TestRect) > DH) do
-        begin
-          if Length(TempName) > 1 then begin
-            TestRect := Rect;
-            Delete(TempName, Length(TempName), 1);
-            TempName := Trim(TempName);
-            StrPLCopy(Buf, TempName + '...', 255);
-            DrawText(Canvas.Handle, Buf, Length(TempName) + 3, TestRect, DT_WORDBREAK or DT_CALCRECT);
-            Result := TempName + '...';
-          end else begin
-            Result := TempName + '..';
-            TestRect := Rect;
-            StrPLCopy(Buf, Result, 255);
-            DrawText(Canvas.Handle, Buf, Length(Result), TestRect, DT_WORDBREAK or DT_CALCRECT);
-            if (RectWidth(TestRect) <= RectWidth(Rect)) and (RectHeight(TestRect) > DH) then
-              Break;
-            Result := TempName + '.';
-            TestRect := Rect;
-            StrPLCopy(Buf, Result, 255);
-            DrawText(Canvas.Handle, Buf, Length(Result), TestRect, DT_WORDBREAK or DT_CALCRECT);
-            if (RectWidth(TestRect) <= RectWidth(Rect)) and (RectHeight(TestRect) > DH) then
-              Break;
-            Result := TempName;
-          end;
-        end;
-      end;
-    end;
-  end;
-end;
-{=====}
-
 function TVpCustomNavBar.nabButtonRect(Index: Integer): TRect;
 begin
   Result := Folders[Index].lfRect;
@@ -2054,6 +1978,20 @@ begin
 end;
 {=====}
 
+{$IFDEF PAINTER}
+procedure TVpCustomNavBar.Paint;
+var
+  painter: TVpNavBarPainter;
+begin
+  painter := TVpNavBarPainter.Create(Self);
+  try
+    painter.Paint;
+  finally
+    painter.Free;
+  end;
+end;
+
+{$ELSE}
 procedure TVpCustomNavBar.Paint;
 var
   I, J: Integer;
@@ -2080,6 +2018,8 @@ var
   ILeft: Integer;
   IHeight: Integer;
   IWidth: integer;
+  Details: TThemedElementDetails;
+  TB: TThemedButton;
 begin
   if nabChanging then
     Exit;
@@ -2147,7 +2087,21 @@ begin
           case FDrawingStyle of
             dsDefButton:
               begin
-              {Draw regular buttons}
+                {Draw regular buttons}
+                if ThemeServices.ThemesEnabled then begin
+                  if (I = nabLastMouseOverItem) then
+                    TB := tbPushButtonHot
+                  else
+                  if (I = FHotFolder) and nabMouseDown then
+                    TB := tbPushButtonPressed
+                  else
+                    TB := tbPushButtonNormal;
+                  Details := ThemeServices.GetElementDetails(TB);
+                  ThemeServices.DrawElement(Handle, details, MyRect);
+                  TR := MyRect;
+                  InflateRect(TR, -1, -1);
+                  if I = FHotFolder then OffsetRect(TR, -1, -1);  // Focused
+                end;
 //TODO:              TR := DrawButtonFace(DrawBmp.Canvas, MyRect, 1, bsNew, False,
 //                (I = FHotFolder) and nabMouseDown, False);
               end;
@@ -2499,11 +2453,27 @@ begin
         MyRect.Bottom := CurPos + FButtonHeight;
         Folders[I].lfRect := MyRect;
         case FDrawingStyle of
-          dsDefButton : begin
-            {Regular Old Buttons}
-//TODO:            TR := DrawButtonFace(DrawBmp.Canvas, MyRect, 1, bsNew, False,
+          dsDefButton :
+            begin
+              {Regular Old Buttons}
+              if ThemeServices.ThemesEnabled then begin
+                if (I = nabLastMouseOverItem) then
+                  TB := tbPushButtonHot
+                else
+                if (I = FHotFolder) and nabMouseDown then
+                  TB := tbPushButtonPressed
+                else
+                  TB := tbPushButtonNormal;
+                Details := ThemeServices.GetElementDetails(TB);
+                ThemeServices.DrawElement(Handle, details, MyRect);
+                TR := MyRect;
+                InflateRect(TR, -1, -1);
+                if I = FHotFolder then OffsetRect(TR, -1, -1);  // Focused
+              end;
+
+            //TODO:            TR := DrawButtonFace(DrawBmp.Canvas, MyRect, 1, bsNew, False,
 //              (I = FHotFolder) and nabMouseDown, False);
-          end;
+            end;
 
           dsEtchedButton :
             begin
@@ -2683,6 +2653,7 @@ begin
       Controls[i].Invalidate;
   end;
 end;
+{$ENDIF}
 {=====}
 
 procedure TVpCustomNavBar.SetActiveFolder(Value: Integer);

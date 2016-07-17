@@ -35,13 +35,22 @@ interface
 
 uses
   {$IFDEF LCL}
-  LCLProc, LCLType, LCLIntf, LResources, EditBtn,
+  LCLProc, LCLType, LCLIntf, LResources, LCLVersion, EditBtn,
   {$ELSE}
   Windows, Messages, Mask,
   {$ENDIF}
   SysUtils, {$IFDEF VERSION6}Variants,{$ENDIF} Classes,
   Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls, ComCtrls, Buttons,
   VpData, VpBase, VpBaseDS, VpDlg, VpConst; //VpEdPop,
+
+const
+ blabla = 1;  // to make the $IF work in Laz 1.4.4. Why?
+{$UNDEF NEW_TIME_EDIT}
+{$IFDEF LCL}
+  {$IF lcl_fullversion >= 3000000}
+    {$DEFINE NEW_TIME_EDIT}
+  {$ENDIF}
+{$ENDIF}
 
 type
   { forward declarations }
@@ -114,13 +123,12 @@ type
     procedure FormShow(Sender: TObject);
 
   private { Private declarations }
-   {$IFDEF LCL}
+   {$IFDEF NEW_TIME_EDIT}
     StartTime: TTimeEdit;
     EndTime: TTimeEdit;
-   {$ENDIF}
-   {$IFDEF DELPHI}
-    StartTime: TComboBox;
-    EndTime: TComboBox;
+   {$ELSE}
+    StartTime: TCombobox;
+    EndTime: TCombobox;
    {$ENDIF}
     FDatastore: TVpCustomDatastore;
     AAVerifying: Boolean;
@@ -168,7 +176,7 @@ type
 implementation
 
 uses
-  Math,
+  Math, DateUtils,
   VpSR, VpMisc, VpWavDlg;
 
 {$IFDEF LCL}
@@ -202,11 +210,11 @@ end;
 
 procedure TDlgEventEdit.FormCreate(Sender: TObject);
 begin
- {$IFDEF LCL}
+ {$IFDEF NEW_TIME_EDIT}
   StartTime := TTimeEdit.Create(self);
  {$ELSE}
   StartTime := TCombobox.Create(self);
-  StartTime.Width := 93;
+  StartTime.Width := 83;
   StartTime.ItemIndex := -1;
  {$ENDIF}
   StartTime.Parent := AppointmentGroupbox;
@@ -214,7 +222,7 @@ begin
   StartTime.Top := StartDate.Top;
   StartTime.TabOrder:= StartDate.TabOrder+ 1;
 
- {$IFDEF LCL}
+ {$IFDEF NEW_TIME_EDIT}
   EndTime := TTimeEdit.Create(self);
  {$ELSE}
   EndTime := TCombobox.Create(self);
@@ -255,17 +263,27 @@ var
   res: Integer;
   tStart, tEnd: TDateTime;
 begin
+ {$IFDEF NEW_TIME_EDIT}
   tStart := trunc(StartDate.Date) + frac(StartTime.Time);
   tEnd := trunc(EndDate.Date) + frac(EndTime.Time);
+ {$ELSE}
+  tStart := trunc(StartDate.Date) + StrToTime(StartTime.Text);
+  tEnd := trunc(EndDate.Date) + StrToTime(EndTime.Text);
+ {$ENDIF}
 
   if (tStart > tEnd) then begin
     res := MessageDlg(RSStartEndTimeError,
       mtConfirmation, [mbYes, mbNo], 0);
     if res = mrYes then begin
       StartDate.Date := trunc(tEnd);
-      StartTime.Time := frac(tEnd);
       EndDate.Date := trunc(tStart);
-      EndTime.Time := frac(tStart);
+     {$IFDEF NEW_TIME_EDIT}
+      StartTime.Time := TimeOf(tEnd);
+      EndTime.Time := timeOf(tStart);
+     {$ELSE}
+      StartTime.Text := FormatDateTime('hh:nn', TimeOf(tEnd));
+      EndTime.Text := FormatDateTime('hh:nn', TimeOf(tStart));
+     {$ENDIF}
     end else
       exit;
   end;
@@ -323,13 +341,13 @@ begin
   StartDate.Date := trunc(Event.StartTime);
   EndDate.Date := trunc(Event.EndTime);
   RepeatUntil.Date := trunc(Event.RepeatRangeEnd);
-  {$IFDEF LCL}
+ {$IFDEF NEW_TIME_EDIT}
   StartTime.Time := frac(Event.StartTime);
   EndTime.Time := frac(Event.EndTime);
-  {$ELSE}
-  StartTime.Text := FormatDateTime('hh:nn',Event.StartTime);
-  EndTime.Text := FormatDateTime('hh:nn',Event.EndTime);
-  {$ENDIF}
+ {$ELSE}
+  StartTime.Text := FormatDateTime('hh:nn', Event.StartTime);
+  EndTime.Text := FormatDateTime('hh:nn', Event.EndTime);
+ {$ENDIF}
 
   CBAllDay.Checked := Event.AllDayEvent;
   AlarmWavPath := Event.DingPath;
@@ -367,13 +385,13 @@ end;
 procedure TDlgEventEdit.DePopulateDialog;
 begin
   { Events }
-  {$IFDEF LCL}
+ {$IFDEF NEW_TIME_EDIT}
   Event.StartTime := StartDate.Date + StartTime.Time;
   Event.EndTime := EndDate.Date + EndTime.Time;
-  {$ELSE}
+ {$ELSE}
   Event.StartTime := StartDate.Date + StrToTime(StartTime.Text);
   Event.EndTime := EndDate.Date + StrToTime(EndTime.Text);
-  {$ENDIF}
+ {$ENDIF}
   Event.RepeatRangeEnd := RepeatUntil.Date;
   Event.Description := DescriptionEdit.Text;
   Event.Location := LocationEdit.Text;
@@ -389,14 +407,14 @@ begin
 end;
 
 procedure TDlgEventEdit.PopLists;
-{$IFDEF DELPHI}
+{$IFNDEF NEW_TIME_EDIT}
 var
   StringList: TStringList;
   I, Hour, Minute: Integer;
   MinStr, AMPMStr: string;
 {$ENDIF}
 begin
- {$IFDEF DELPHI}      // No longer needed for Lazarus using a TTimeEdit now.
+ {$IFNDEF NEW_TIME_EDIT}      // No longer needed for Lazarus using a TTimeEdit now.
  { Time Lists }
   StringList := TStringList.Create;
   try
