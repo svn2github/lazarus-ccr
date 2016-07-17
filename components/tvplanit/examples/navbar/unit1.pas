@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, VpNavBar;
+  StdCtrls, ColorBox, EditBtn, VpNavBar;
 
 type
 
@@ -16,22 +16,35 @@ type
     Bevel1: TBevel;
     BtnAddFolder: TButton;
     BtnAddItem: TButton;
+    BkColor: TColorBox;
+    BtnLoadBkImage: TButton;
+    EdBkImage: TFileNameEdit;
+    GroupBox1: TGroupBox;
     IconsLbl: TLabel;
     IconsLink: TLabel;
-    RadioGroup2: TRadioGroup;
+    Panel2: TPanel;
+    RbBkColor: TRadioButton;
+    RbBkImage: TRadioButton;
+    RbBkImageTile: TRadioButton;
+    RbBkImageStretch: TRadioButton;
+    RbBkImageNormal: TRadioButton;
+    RgIconSize: TRadioGroup;
     Label1: TLabel;
     Images: TImageList;
     Panel1: TPanel;
-    RadioGroup1: TRadioGroup;
+    RgDrawingStyle: TRadioGroup;
     VpNavBar1: TVpNavBar;
+    procedure BackgroundColorChange(Sender: TObject);
     procedure BtnAddFolderClick(Sender: TObject);
     procedure BtnAddItemClick(Sender: TObject);
+    procedure BtnLoadBkImageClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure IconsLinkClick(Sender: TObject);
     procedure IconsLinkMouseEnter(Sender: TObject);
     procedure IconsLinkMouseLeave(Sender: TObject);
-    procedure RadioGroup1Click(Sender: TObject);
-    procedure RadioGroup2Click(Sender: TObject);
+    procedure RgDrawingStyleClick(Sender: TObject);
+    procedure RgIconSizeClick(Sender: TObject);
+    procedure RbBkColorChange(Sender: TObject);
     procedure VpNavBar1FolderChanged(Sender: TObject; Index: Integer);
     procedure VpNavBar1ItemClick(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; Index: Integer);
@@ -52,6 +65,11 @@ uses
   LCLIntf;
 
 { TForm1 }
+
+procedure TForm1.BackgroundColorChange(Sender: TObject);
+begin
+  VpNavBar1.BackgroundColor := BkColor.Selected;
+end;
 
 procedure TForm1.BtnAddFolderClick(Sender: TObject);
 var
@@ -81,11 +99,82 @@ begin
   end;
 end;
 
+procedure TForm1.BtnLoadBkImageClick(Sender: TObject);
+var
+  ext: String;
+  bmp: TBitmap;
+  jpg: TJpegImage;
+  png: TPortableNetworkGraphic;
+begin
+  if EdBkImage.FileName = '' then
+    exit;
+  if not FileExists(EdBkImage.FileName) then
+    exit;
+  ext := Lowercase(ExtractFileExt(EdBkImage.FileName));
+  case ext of
+    '.bmp':
+      VpNavBar1.BackgroundImage.LoadFromFile(EdBkImage.FileName);
+    '.png':
+      begin
+        png := TPortableNetworkGraphic.Create;
+        try
+          png.LoadFromFile(EdBkImage.FileName);
+          VpNavBar1.BackgroundImage.Assign(png);
+        finally
+          png.Free;
+        end;
+      end;
+    '.jpg', '.jpeg':
+      begin
+        jpg := TJpegImage.Create;
+        try
+          jpg.LoadFromFile(EdBkImage.FileName);
+          VpNavBar1.BackgroundImage.Assign(jpg);
+        finally
+          jpg.Free;
+        end;
+      end;
+  end;
+  {
+  pic := TPicture.Create;
+  try
+    pic.LoadFromFile(EdBkImage.FileName);
+    bmp := TBitmap.Create;
+    bmp.Assign(pic);
+    VpNavBar1.BackgroundImage.Assign(bmp);
+  finally
+    pic.Free;
+  end;
+  }
+end;
+
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   RandSeed := 1;
   IconsLink.Left := IconsLbl.Left + IconsLbl.Width;
-  RadioGroup1.ItemIndex := ord(VpNavBar1.DrawingStyle);
+  RgDrawingStyle.ItemIndex := ord(VpNavBar1.DrawingStyle);
+  BkColor.Selected := VpNavBar1.BackgroundColor;
+  case VpNavBar1.BackgroundMethod of
+    bmNone:
+      RbBkColor.Checked := true;
+    bmNormal:
+      begin
+        RbBkImage.Checked := true;
+        RbBkImageNormal.Checked := true;
+      end;
+    bmStretch:
+      begin
+        RbBkImage.Checked := true;
+        RbBkImageStretch.Checked := true;
+      end;
+    bmTile:
+      begin
+        RbBkImage.Checked := true;
+        RbBkImageTile.Checked := true;
+      end;
+  end;
+  BtnLoadBkImageClick(nil);
+
 end;
 
 procedure TForm1.IconsLinkClick(Sender: TObject);
@@ -103,27 +192,47 @@ begin
   IconsLink.Font.style := IconsLink.Font.Style - [fsUnderline];
 end;
 
-procedure TForm1.RadioGroup1Click(Sender: TObject);
+procedure TForm1.RgDrawingStyleClick(Sender: TObject);
 begin
-  VpNavBar1.DrawingStyle := TVpFolderDrawingStyle(Radiogroup1.ItemIndex);
+  VpNavBar1.DrawingStyle := TVpFolderDrawingStyle(RgDrawingStyle.ItemIndex);
 end;
 
-procedure TForm1.RadioGroup2Click(Sender: TObject);
+procedure TForm1.RgIconSizeClick(Sender: TObject);
 var
   folder: TVpNavFolder;
 begin
+  RgIconSize.OnClick := nil;
   folder := VpNavBar1.Folders[VpNavBar1.ActiveFolder];
-  folder.IconSize := TVpIconSize(RadioGroup1.ItemIndex);
+  folder.IconSize := TVpIconSize(RgDrawingStyle.ItemIndex);
+  RgIconSize.OnClick := @RgIconSizeClick;
+end;
+
+procedure TForm1.RbBkColorChange(Sender: TObject);
+begin
+  if RbBkColor.Checked then
+    VpNavBar1.BackgroundMethod := bmNone
+  else
+  if RbBkImage.Checked then begin
+    if RbBkImageNormal.Checked then
+      VpNavBar1.BackgroundMethod := bmNormal
+    else
+    if RbBkImageStretch.Checked then
+      VpNavBar1.BackgroundMethod := bmStretch
+    else
+    if RbBkImageTile.Checked then
+      VpNavBar1.BackgroundMethod := bmTile;
+  end;;
+  VpNavBar1.Invalidate;
 end;
 
 procedure TForm1.VpNavBar1FolderChanged(Sender: TObject; Index: Integer);
 var
   folder: TVpNavFolder;
 begin
-  RadioGroup2.OnClick := nil;
+  RgIconSize.OnClick := nil;
   folder := VpNavBar1.Folders[Index];
-  RadioGroup2.ItemIndex := ord(folder.IconSize);
-  RadioGroup2.OnClick := @RadioGroup2Click;
+  RgIconSize.ItemIndex := ord(folder.IconSize);
+  RgIconSize.OnClick := @RgIconSizeClick;
 end;
 
 procedure TForm1.VpNavBar1ItemClick(Sender: TObject; Button: TMouseButton;

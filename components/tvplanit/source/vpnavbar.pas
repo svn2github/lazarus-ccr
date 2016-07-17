@@ -1106,19 +1106,23 @@ end;
 
 procedure TVpCustomNavBar.ItemChanged(FolderIndex, ItemIndex: Integer);
 begin
-  InvalidateItem(FolderIndex, ItemIndex);
+  Invalidate;
+//  InvalidateItem(FolderIndex, ItemIndex);
+  (*
   if not (csDestroying in ComponentState) then
     RecreateWnd{$IFDEF LCL}(self){$ENDIF};
+    *)
 end;
 {=====}
 
 procedure TVpCustomNavBar.FolderChanged(FolderIndex: Integer);
 begin
   Unused(FolderIndex);
-
   Invalidate;
+  (*
   if not (csDestroying in ComponentState) then
     RecreateWnd{$IFDEF LCL}(self){$ENDIF};
+   *)
 end;
 {=====}
 

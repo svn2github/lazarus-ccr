@@ -220,7 +220,14 @@ begin
   begin
     case FBackgroundMethod of
       bmNormal:
-        Canvas.Draw(R.Left, R.Top, FBackgroundImage);
+        begin
+          if (FBackgroundImage.Width < WidthOf(R)) or (FBackgroundImage.Height < HeightOf(R))
+          then begin
+            Canvas.Brush.Color := FBackgroundColor;
+            Canvas.FillRect(R.Left, R.Top, R.Right, R.Bottom);
+          end;
+          Canvas.Draw(R.Left, R.Top, FBackgroundImage);
+        end;
       bmStretch:
         Canvas.StretchDraw(R, FBackgroundImage);
       bmTile:
@@ -434,10 +441,12 @@ begin
     Canvas.LineTo(R.Right+1, R.Bottom+1);
     Canvas.LineTo(R.Left-1, R.Bottom+1);
     Canvas.Brush.Color := FBackgroundColor;
+    (*
   end else begin
     Canvas.Pen.Color := FBackgroundColor;
     Canvas.Brush.Color := FBackgroundColor;
     Canvas.Rectangle(R.Left - 1, R.Top - 1, R.Right + 1, R.Bottom + 1);
+    *)
   end;
 end;
 
@@ -572,10 +581,9 @@ begin
     if Assigned(FImages) then begin
       bmp := TBitmap.Create;
       try
-        bmp.Width := FImages.Width;
-        bmp.Height := FImages.Height;
-        FImages.Draw(bmp.Canvas, 0, 0, AItem.IconIndex);
-        Canvas.BrushCopy(AItem.IconRect, bmp, Rect(0, 0, bmp.Width, bmp.Height), bmp.Canvas.Pixels[0, bmp.Height-1]);
+        FImages.GetBitmap(AItem.IconIndex, bmp);
+        bmp.Transparent := true;
+        Canvas.StretchDraw(AItem.IconRect, bmp);
       finally
         bmp.Free;
       end;

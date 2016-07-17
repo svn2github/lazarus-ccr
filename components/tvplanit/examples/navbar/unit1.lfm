@@ -1,22 +1,22 @@
 object Form1: TForm1
   Left = 262
-  Height = 367
+  Height = 400
   Top = 155
   Width = 588
   Caption = 'Form1'
-  ClientHeight = 367
+  ClientHeight = 400
   ClientWidth = 588
   OnCreate = FormCreate
   LCLVersion = '1.7'
   object VpNavBar1: TVpNavBar
     Left = 0
-    Height = 337
+    Height = 370
     Top = 0
     Width = 128
     ActiveFolder = 0
     AllowRearrange = True
     BackgroundColor = clInactiveCaption
-    BackgroundMethod = bmNormal
+    BackgroundMethod = bmTile
     BorderStyle = bsNone
     ButtonHeight = 20
     DrawingStyle = dsEtchedButton
@@ -128,7 +128,7 @@ object Form1: TForm1
     Align = alLeft
     ParentColor = False
   end
-  object RadioGroup1: TRadioGroup
+  object RgDrawingStyle: TRadioGroup
     Left = 141
     Height = 116
     Top = 32
@@ -151,7 +151,7 @@ object Form1: TForm1
       'dsCoolTab'
       'dsStandardTab'
     )
-    OnClick = RadioGroup1Click
+    OnClick = RgDrawingStyleClick
     TabOrder = 1
   end
   object Label1: TLabel
@@ -165,7 +165,7 @@ object Form1: TForm1
   object Panel1: TPanel
     Left = 0
     Height = 30
-    Top = 337
+    Top = 370
     Width = 588
     Align = alBottom
     ClientHeight = 30
@@ -203,28 +203,28 @@ object Form1: TForm1
     end
   end
   object BtnAddFolder: TButton
-    Left = 141
+    Left = 296
     Height = 25
-    Top = 160
+    Top = 112
     Width = 83
     Caption = 'Add folder...'
     OnClick = BtnAddFolderClick
     TabOrder = 3
   end
   object BtnAddItem: TButton
-    Left = 141
+    Left = 392
     Height = 25
-    Top = 193
+    Top = 112
     Width = 83
     Caption = 'Add item...'
     OnClick = BtnAddItemClick
     TabOrder = 4
   end
-  object RadioGroup2: TRadioGroup
-    Left = 301
-    Height = 65
+  object RgIconSize: TRadioGroup
+    Left = 296
+    Height = 49
     Top = 32
-    Width = 91
+    Width = 139
     AutoFill = True
     Caption = 'Icons'
     ChildSizing.LeftRightSpacing = 6
@@ -233,22 +233,126 @@ object Form1: TForm1
     ChildSizing.ShrinkHorizontal = crsScaleChilds
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
-    ChildSizing.ControlsPerLine = 1
-    ClientHeight = 45
-    ClientWidth = 87
+    ChildSizing.ControlsPerLine = 2
+    ClientHeight = 29
+    ClientWidth = 135
+    Columns = 2
     ItemIndex = 0
     Items.Strings = (
       'large'
       'small'
     )
-    OnClick = RadioGroup2Click
+    OnClick = RgIconSizeClick
     TabOrder = 5
+  end
+  object GroupBox1: TGroupBox
+    Left = 141
+    Height = 112
+    Top = 168
+    Width = 411
+    Caption = 'Background'
+    ClientHeight = 92
+    ClientWidth = 407
+    TabOrder = 6
+    object BkColor: TColorBox
+      Left = 88
+      Height = 24
+      Top = 3
+      Width = 272
+      Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColors]
+      ItemHeight = 16
+      OnChange = BackgroundColorChange
+      TabOrder = 0
+    end
+    object RbBkColor: TRadioButton
+      Left = 14
+      Height = 19
+      Top = 3
+      Width = 49
+      Caption = 'Color'
+      Checked = True
+      OnChange = RbBkColorChange
+      TabOrder = 3
+      TabStop = True
+    end
+    object RbBkImage: TRadioButton
+      Left = 16
+      Height = 19
+      Top = 34
+      Width = 53
+      Caption = 'Image'
+      OnChange = RbBkColorChange
+      TabOrder = 1
+    end
+    object EdBkImage: TFileNameEdit
+      Left = 88
+      Height = 23
+      Top = 33
+      Width = 299
+      FileName = 'bkimg.jpg'
+      Filter = 'BMP files (*.bmp)|*.bmp|PNG files (*.png)|*.png|JPEG files (*.jpg; *.jpeg)|*.jpg;*.jpeg'
+      FilterIndex = 0
+      HideDirectories = False
+      ButtonWidth = 23
+      NumGlyphs = 1
+      MaxLength = 0
+      TabOrder = 2
+      Text = 'bkimg.jpg'
+    end
+    object Panel2: TPanel
+      Left = 80
+      Height = 26
+      Top = 62
+      Width = 229
+      BevelOuter = bvNone
+      ClientHeight = 26
+      ClientWidth = 229
+      TabOrder = 4
+      object RbBkImageNormal: TRadioButton
+        Left = 8
+        Height = 19
+        Top = 4
+        Width = 58
+        Caption = 'normal'
+        OnChange = RbBkColorChange
+        TabOrder = 1
+      end
+      object RbBkImageStretch: TRadioButton
+        Left = 88
+        Height = 19
+        Top = 4
+        Width = 56
+        Caption = 'stretch'
+        OnChange = RbBkColorChange
+        TabOrder = 0
+      end
+      object RbBkImageTile: TRadioButton
+        Left = 168
+        Height = 19
+        Top = 4
+        Width = 36
+        Caption = 'tile'
+        Checked = True
+        OnChange = RbBkColorChange
+        TabOrder = 2
+        TabStop = True
+      end
+    end
+    object BtnLoadBkImage: TButton
+      Left = 304
+      Height = 25
+      Top = 62
+      Width = 56
+      Caption = 'Load'
+      OnClick = BtnLoadBkImageClick
+      TabOrder = 5
+    end
   end
   object Images: TImageList
     Height = 32
     Width = 32
-    left = 424
-    top = 40
+    left = 488
+    top = 32
     Bitmap = {
       4C690A0000002000000020000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
