@@ -306,6 +306,7 @@ type
     procedure RemoveContainer(Container: TVpFolderContainer);
 
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseLeave; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -1819,6 +1820,12 @@ begin
   inherited MouseDown(Button, Shift, X, Y);
 end;
 {=====}
+
+procedure TVpCustomNavBar.MouseLeave;
+begin
+  FHotFolder := -1;
+  Invalidate;
+end;
 
 procedure TVpCustomNavBar.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
