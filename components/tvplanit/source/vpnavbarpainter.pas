@@ -46,7 +46,6 @@ type
     nabTopItem: Integer;
 
     FFolderArea: TRect;
-    bkMode: Integer;
 
     procedure DrawBackground(Canvas: TCanvas; R: TRect);
 
@@ -56,6 +55,14 @@ type
     function DrawEtchedButton(Canvas: TCanvas; R: TRect; ATabIndex: Integer): TRect;
     function DrawStandardTab(Canvas: TCanvas; R: TRect; ATabIndex: Integer;
       ATabColor: TColor): TRect;
+
+    procedure DrawItemHighlight(Canvas: TCanvas; R: TRect; Enable: Boolean);
+    function DrawItemText(Canvas: TCanvas; AItem: TVpNavBtnItem; CurPos: Integer;
+      AText: String; AtLargeIcon: Boolean; out AWidth: Integer): Boolean;
+    function DrawLargeIcon(Canvas: TCanvas; AItem: TVpNavBtnItem;
+      CurPos: Integer): Boolean;
+    function DrawSmallIcon(Canvas: TCanvas; AItem: TVpNavBtnItem;
+      CurPos: Integer): Boolean;
 
     function IsFocused(ATabIndex: Integer): Boolean;
     function IsMouseOverFolder(ATabIndex: Integer): Boolean;
@@ -79,7 +86,7 @@ function GetLargeIconDisplayName(Canvas: TCanvas; Rect: TRect; const Name: strin
 implementation
 
 uses
-  Themes,
+  Math, Themes,
   VpMisc;
 
 type
@@ -127,12 +134,8 @@ var
   item: TVpNavBtnItem;
   J: Integer;
   text: String;
-  W, H, X: Integer;
+  H, X: Integer;
   R: TRect;
-  Buf: array[0..255] of Char;
-  labelWidth: Integer;
-  lOffset: Integer;
-  bmp: TBitmap;
 begin
   folder := FNavBar.Folders[FActiveFolder];
 
@@ -168,144 +171,26 @@ begin
       else
         text := item.Caption;
 
-      { Large icons }
       if folder.IconSize = isLarge then begin
-        if Assigned(FImages) then begin
-          W := FImages.Width + 2;
-          H := FImages.Height + 2;
-        end else begin
-          W := 32;
-          H := 32;
-        end;
-        { glyph is at the top }
-        { If an image list is assigned then use the image size.
-          If no image list is assinged then assume a 32 x 32 image size. }
-        R.Top := CurPos;
-        R.Bottom := CurPos + H;
-        R.Left := (FNavBar.ClientWidth - W) div 2;
-        R.Right := R.Left + W;
-        if R.Top > nabItemsRect^.Bottom then
-          break;
+        { Large icons }
+        if not DrawLargeIcon(Canvas, item, CurPos) then
+          Continue;
+
+        {make the icon's bottom blend into the label's top}
+        R := item.IconRect;
+        inc(R.Bottom, 4);
         item.IconRect := R;
-
-        if FShowButtons then begin
-          if FActiveItem = J then begin
-            if nabMouseDown then
-              Canvas.Pen.Color := clBlack
-            else
-              Canvas.Pen.Color := clWhite;
-            Canvas.MoveTo(R.Left-1, R.Bottom+1);
-            Canvas.LineTo(R.Left-1, R.Top-1);
-            Canvas.LineTo(R.Right+1, R.Top-1);
-            if nabMouseDown then
-              Canvas.Pen.Color := clWhite
-            else
-              Canvas.Pen.Color := clBlack;
-            Canvas.LineTo(R.Right+1, R.Bottom+1);
-            Canvas.LineTo(R.Left-1, R.Bottom+1);
-          end else begin
-            Canvas.Pen.Color := FBackgroundColor;
-            Canvas.Brush.Color := FBackgroundColor;
-          end;
-
-          if Assigned(FImages) and (item.IconIndex >= 0) and (item.IconIndex < FImages.Count) then
-            FImages.Draw(Canvas, R.Left + 2, R.Top + 2, item.IconIndex);
-
-          {make the icon's bottom blend into the label's top}
-          R := item.IconRect;
-          inc(R.Bottom, 4);
-          item.IconRect := R;
-        end;
-
-        Inc(CurPos, H + 4);
+        CurPos := item.IconRect.Bottom;
 
         {now, draw the text}
-        R.Top := CurPos;
-        R.Bottom := CurPos + FButtonHeight div 2 - 7;
-        R.Left := 0;
-        R.Right := FNavBar.ClientWidth - 1;
-        item.LabelRect := R;
-        item.DisplayName := GetLargeIconDisplayName(Canvas, R, text);
-        X := Canvas.TextWidth(item.DisplayName);
-        R.Left := (FNavBar.ClientWidth - X) div 2;
-        if R.Left < 5 then
-          R.Left := 5;
-        R.Right := R.Left + X;
-        if R.Right > FnavBar.ClientWidth - 5 then
-          R.Right := FNavBar.ClientWidth - 5;
-        item.LabelRect := R;
-        if R.Top > nabItemsRect^.Bottom then
-          Break;
-
-        StrPLCopy(Buf, item.DisplayName, 255);
-        DrawText(Canvas.Handle, Buf, Length(item.DisplayName), R,
-          DT_CENTER or DT_VCENTER or DT_WORDBREAK or DT_CALCRECT);
-        labelWidth := WidthOf(R);
-        R.Left := (FNavBar.ClientWidth - labelWidth) div 2;
-        R.Right := R.Left + labelWidth + 1;
-        item.LabelRect := R;
-
-        bkMode := SetBkMode(Canvas.Handle, TRANSPARENT);
-        X := DrawText(Canvas.Handle, Buf, Length(item.DisplayName), R, DT_CENTER or DT_VCENTER or DT_WORDBREAK);
-        inc(CurPos, X);
-        SetBkMode(Canvas.Handle, bkMode);
-
-        Inc(CurPos, FItemSpacing);
-      end
-      else
-      { Small Icons }
+        if not DrawItemText(Canvas, item, CurPos, text, true, X) then
+          Continue;
+        Inc(CurPos, FItemSpacing + X);
+      end else
       begin
-        W := 16;
-        H := 16;
-        {glyph is at the left}
-        R.Top := CurPos;
-        lOffset := abs(Canvas.Font.Height) div 2;
-        if lOffset > 8 then
-          R.Top := R.Top + lOffset - 8;
-        R.Bottom := R.Top + H;
-        R.Left := 8;
-        R.Right := R.Left + W;
-        item.IconRect := R;
-        if R.Top > nabItemsRect^.Bottom then
-          Break;
-
-        if FShowButtons then begin
-          if FActiveItem = J then begin
-            if nabMouseDown then
-              Canvas.Pen.Color := clBlack
-            else
-              Canvas.Pen.Color := clWhite;
-            Canvas.MoveTo(R.Left-1, R.Bottom+1);
-            Canvas.LineTo(R.Left-1, R.Top-1);
-            Canvas.LineTo(R.Right+1, R.Top-1);
-            if nabMouseDown then
-              Canvas.Pen.Color := clWhite
-            else
-              Canvas.Pen.Color := clBlack;
-            Canvas.LineTo(R.Right+1, R.Bottom+1);
-            Canvas.LineTo(R.Left-1, R.Bottom+1);
-            Canvas.Brush.Color := FBackgroundColor;
-          end else begin
-            Canvas.Pen.Color := FBackgroundColor;
-            Canvas.Brush.Color := FBackgroundColor;
-            Canvas.Rectangle(R.Left - 1, R.Top - 1, R.Right + 1, R.Bottom + 1);
-          end;
-          if Assigned(FImages) then begin
-            bmp := TBitmap.Create;
-            try
-              bmp.Width := FImages.Width;
-              bmp.Height := FImages.Height;
-              FImages.Draw(bmp.Canvas, 0, 0, item.IconIndex);
-              Canvas.BrushCopy(item.IconRect, bmp, Rect(0, 0, bmp.Width, bmp.Height), bmp.Canvas.Pixels[0, bmp.Height-1]);
-
-//TODO:                      DrawBmp.Canvas.BrushCopy(Item.FIconRect, BM,
-//                        Rect(0, 0, BM.Width, BM.Height), BM.Canvas.Pixels[0,
-//                          BM.Height-1]);
-            finally
-              bmp.Free;
-            end;
-          end;
-        end;
+        { Small Icons }
+        if not DrawSmallIcon(Canvas, item, CurPos) then
+          Continue;
 
         {make the icon's right blend into the label's left}
         R := item.IconRect;
@@ -313,29 +198,12 @@ begin
         item.IconRect := R;
 
         {now, draw the text}
-        R.Top := CurPos;
-        R.Bottom := CurPos + FButtonHeight div 2 - 7;
-        R.Left := item.IconRect.Right;
-        X := FNavBar.ClientWidth - R.Left - 7;
-        R.Right := R.Left + X;
-        item.LabelRect := R;
-        if R.Top > nabItemsRect^.Bottom then
-          Break;
-
-        R := item.LabelRect;
-        item.DisplayName := GetDisplayString(Canvas, Text, 1, WidthOf(R));
-        StrPLCopy(Buf, item.DisplayName, 255);
-        DrawText(Canvas.Handle, Buf, Length(item.DisplayName), R, DT_LEFT or DT_VCENTER or DT_CALCRECT);
-        labelWidth := WidthOf(R);
-        R.Right := R.Left + labelWidth + 1;
-        item.LabelRect := R;
-        X := DrawText(Canvas.Handle, Buf, Length(item.DisplayName), R, DT_LEFT or DT_VCENTER);
-        if X < H then X := H;
-
+        if not DrawItemText(Canvas, item, CurPos, text, false, X) then
+          Continue;
         Inc(CurPos, FItemSpacing + X);
-      end;  { Small icons }
+      end;  { if folder.IconSize ... }
     end;  { for J }
-  end;  { if folder.FolderType = ftDefault }
+  end;  { if folder.FolderType = ftDefault ... }
 end;
 
 procedure TVpNavBarPainter.DrawBackground(Canvas: TCanvas; R: TRect);
@@ -546,6 +414,175 @@ begin
       Frame3D(r, 1, bvRaised);
   end;
   Result := R;
+end;
+
+procedure TVpNavBarPainter.DrawItemHighlight(Canvas: TCanvas; R: TRect;
+  Enable: Boolean);
+begin
+  if Enable then begin
+    if nabMouseDown then
+      Canvas.Pen.Color := clBlack
+    else
+      Canvas.Pen.Color := clWhite;
+    Canvas.MoveTo(R.Left-1, R.Bottom+1);
+    Canvas.LineTo(R.Left-1, R.Top-1);
+    Canvas.LineTo(R.Right+1, R.Top-1);
+    if nabMouseDown then
+      Canvas.Pen.Color := clWhite
+    else
+      Canvas.Pen.Color := clBlack;
+    Canvas.LineTo(R.Right+1, R.Bottom+1);
+    Canvas.LineTo(R.Left-1, R.Bottom+1);
+    Canvas.Brush.Color := FBackgroundColor;
+  end else begin
+    Canvas.Pen.Color := FBackgroundColor;
+    Canvas.Brush.Color := FBackgroundColor;
+    Canvas.Rectangle(R.Left - 1, R.Top - 1, R.Right + 1, R.Bottom + 1);
+  end;
+end;
+
+function TVpNavBarPainter.DrawItemText(Canvas: TCanvas; AItem: TVpNavBtnItem;
+  CurPos: Integer; AText: String; AtLargeIcon: Boolean; out AWidth: Integer): Boolean;
+var
+  R: TRect;
+  s: String;
+  txtWidth: Integer;
+  bkMode: Integer;
+begin
+  Result := false;
+
+  if AtLargeIcon then
+  begin
+    R.Top := CurPos;
+    R.Bottom := CurPos + FButtonHeight div 2 - 7;
+    R.Left := 0;
+    R.Right := FNavBar.ClientWidth - 1;
+    AItem.LabelRect := R;
+    AItem.DisplayName := GetLargeIconDisplayName(Canvas, R, AText);
+    AWidth := Canvas.TextWidth(AItem.DisplayName);
+    R.Left := Max(5, (FNavBar.ClientWidth - AWidth) div 2);
+    R.Right := Min(R.Left + AWidth, FNavBar.ClientWidth - 5);
+    AItem.LabelRect := R;
+    if R.Top > nabItemsRect^.Bottom then
+      Exit;
+
+    s := AItem.DisplayName;
+    DrawText(Canvas.Handle, PChar(s), Length(s), R, DT_CENTER or DT_VCENTER or DT_WORDBREAK or DT_CALCRECT);
+    txtWidth := WidthOf(R);
+    R.Left := (FNavBar.ClientWidth - txtWidth) div 2;
+    R.Right := R.Left + txtWidth + 1;
+    AItem.LabelRect := R;
+
+    bkMode := SetBkMode(Canvas.Handle, TRANSPARENT);
+    AWidth := DrawText(Canvas.Handle, PChar(s), Length(s), R, DT_CENTER or DT_VCENTER or DT_WORDBREAK);
+    SetBkMode(Canvas.Handle, bkMode);
+
+  end else
+  begin
+    R.Top := CurPos;
+    R.Bottom := CurPos + FButtonHeight div 2 - 7;
+    R.Left := AItem.IconRect.Right;
+    R.Right := R.Left + FNavBar.ClientWidth - R.Left - 7;
+    AItem.LabelRect := R;
+    if R.Top > nabItemsRect^.Bottom then
+      Exit;
+
+    R := AItem.LabelRect;
+    s := GetDisplayString(Canvas, AText, 1, WidthOf(R));
+    AItem.DisplayName := s;
+    DrawText(Canvas.Handle, PChar(s), Length(s), R, DT_LEFT or DT_VCENTER or DT_CALCRECT);
+    txtWidth := WidthOf(R);
+    R.Right := R.Left + txtWidth + 1;
+    AItem.LabelRect := R;
+
+    bkMode := SetBkMode(Canvas.Handle, TRANSPARENT);
+    AWidth := DrawText(Canvas.Handle, PChar(s), Length(s), R, DT_LEFT or DT_VCENTER);
+    SetBkMode(Canvas.Handle, bkMode);
+
+    if AWidth < 16 then AWidth := 16;  // This it the width of the small icons
+  end;
+  Result := true;
+end;
+
+{ Draw a large icon: centered horizontally, text to be drawn underneath icon. }
+function TVpNavBarPainter.DrawLargeIcon(Canvas: TCanvas; AItem: TVpNavBtnItem;
+  CurPos: Integer): Boolean;
+var
+  W, H: Integer;
+  lOffset: Integer;
+  R: TRect;
+begin
+  Result := false;
+
+  { If an image list is assigned then use the image size.
+    If no image list is assinged then assume a 32 x 32 image size. }
+  if Assigned(FImages) then begin
+    W := FImages.Width + 2;
+    H := FImages.Height + 2;
+  end else begin
+    W := 32;
+    H := 32;
+  end;
+
+  R.Top := CurPos;
+  R.Bottom := CurPos + H;
+  R.Left := (FNavBar.ClientWidth - W) div 2;
+  R.Right := R.Left + W;
+  if R.Top > nabItemsRect^.Bottom then
+    exit;
+
+  AItem.IconRect := R;
+
+  if FShowButtons then begin
+    DrawItemHighlight(Canvas, R, FActiveItem = AItem.Index);
+    if Assigned(FImages) and (AItem.IconIndex >= 0) and (AItem.IconIndex < FImages.Count) then
+      FImages.Draw(Canvas, R.Left + 2, R.Top + 2, AItem.IconIndex);
+  end;
+
+  Result := true;
+end;
+
+{ Draw a small icon (16x16) }
+function TVpNavBarPainter.DrawSmallIcon(Canvas: TCanvas; AItem: TVpNavBtnItem;
+  CurPos: Integer): Boolean;
+const
+  W = 16;
+  H = 16;
+var
+  lOffset: Integer;
+  bmp: TBitmap;
+  R: TRect;
+begin
+  Result := false;
+
+  {glyph is at the left}
+  R.Top := CurPos;
+  lOffset := abs(Canvas.Font.Height) div 2;
+  if lOffset > 8 then
+    R.Top := R.Top + lOffset - 8;
+  R.Bottom := R.Top + H;
+  R.Left := 8;
+  R.Right := R.Left + W;
+  AItem.IconRect := R;
+  if R.Top > nabItemsRect^.Bottom then
+    Exit;  // Returns false
+
+  if FShowButtons then begin
+    DrawItemHighlight(Canvas, R, FActiveItem = AItem.Index);
+    if Assigned(FImages) then begin
+      bmp := TBitmap.Create;
+      try
+        bmp.Width := FImages.Width;
+        bmp.Height := FImages.Height;
+        FImages.Draw(bmp.Canvas, 0, 0, AItem.IconIndex);
+        Canvas.BrushCopy(AItem.IconRect, bmp, Rect(0, 0, bmp.Width, bmp.Height), bmp.Canvas.Pixels[0, bmp.Height-1]);
+      finally
+        bmp.Free;
+      end;
+    end;
+  end;
+
+  Result := true;
 end;
 
 { Draw a "standard" tab button.
