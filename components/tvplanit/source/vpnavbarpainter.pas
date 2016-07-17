@@ -329,9 +329,10 @@ begin
         labelWidth := WidthOf(R);
         R.Right := R.Left + labelWidth + 1;
         item.LabelRect := R;
-        DrawText(Canvas.Handle, Buf, Length(item.DisplayName), R, DT_LEFT or DT_VCENTER);
+        X := DrawText(Canvas.Handle, Buf, Length(item.DisplayName), R, DT_LEFT or DT_VCENTER);
+        if X < H then X := H;
 
-        Inc(CurPos, FItemSpacing);
+        Inc(CurPos, FItemSpacing + X);
       end;  { Small icons }
     end;  { for J }
   end;  { if folder.FolderType = ftDefault }
