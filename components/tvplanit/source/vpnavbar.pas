@@ -188,7 +188,7 @@ type
     FBackgroundColor: TColor;
     FBackgroundImage: TBitmap;
     FBackgroundMethod: TVpBackgroundMethod;
-    FBorderStyle: TBorderStyle;
+//    FBorderStyle: TBorderStyle;
     FButtonHeight: Integer;
     FContainers: TVpContainerList;
     FDrawingStyle: TVpFolderDrawingStyle;
@@ -250,7 +250,7 @@ type
     procedure SetBackgroundImage(Value: TBitmap);
     procedure SetBackgroundMethod(Value: TVpBackgroundMethod);
     procedure SetDrawingStyle(Value: TVpFolderDrawingStyle);
-    procedure SetBorderStyle(const Value: TBorderStyle);
+//    procedure SetBorderStyle(const Value: TBorderStyle);
     procedure SetButtonHeight(Value: Integer);
     procedure SetImages(Value: TImageList);
     procedure SetItemFont(Value: TFont);
@@ -324,7 +324,6 @@ type
     property BackgroundColor: TColor read FBackgroundColor write SetBackgroundColor;
     property BackgroundImage: TBitmap read FBackgroundImage write SetBackgroundImage;
     property BackgroundMethod: TVpBackgroundMethod read FBackgroundMethod write SetBackgroundMethod;
-    property BorderStyle: TBorderStyle read FBorderStyle write SetBorderStyle;
     property ButtonHeight: Integer read FButtonHeight write SetButtonHeight;
     property DrawingStyle: TVpFolderDrawingStyle read FDrawingStyle write SetDrawingStyle;
     property FolderCollection: TVpCollection read FFolders write FFolders;
@@ -392,7 +391,7 @@ type
     property BackgroundColor;
     property BackgroundImage;
     property BackgroundMethod;
-    property BorderStyle;
+    property BorderStyle default bsNone;
     property ButtonHeight;
     property DrawingStyle;
     property FolderCollection;
@@ -969,6 +968,7 @@ constructor TVpCustomNavBar.Create(AOwner: TComponent);
   HSnd: THandle; }
 begin
   inherited Create(AOwner);
+  BorderStyle := bsNone;
 
   FContainers := TVpContainerList.Create(Self);
 
@@ -1047,7 +1047,7 @@ begin
   FBackgroundColor := clInactiveCaption;
   FBackgroundImage := TBitmap.Create;
   FBackgroundMethod := bmNormal;
-  FBorderStyle := bsSingle;
+//  FBorderStyle := bsSingle;
   FButtonHeight := 20;
   FActiveFolder := -1;
   FActiveItem := -1;
@@ -1149,8 +1149,8 @@ procedure TVpCustomNavBar.CreateParams(var Params: TCreateParams);
 begin
   inherited CreateParams(Params);
   with Params do
-    Style := LongInt(Style) or BorderStyles[FBorderStyle];
-  if NewStyleControls {and Ctl3D }and (FBorderStyle = bsSingle) then begin
+    Style := LongInt(Style) or BorderStyles[BorderStyle];
+  if NewStyleControls {and Ctl3D }and (BorderStyle = bsSingle) then begin
     Params.Style := Params.Style and not WS_BORDER;
     Params.ExStyle := Params.ExStyle or WS_EX_CLIENTEDGE;
   end;
@@ -1168,8 +1168,10 @@ end;
 procedure TVpCustomNavBar.Loaded;
 begin
   inherited Loaded;
+  {
   if DrawingStyle = dsEtchedButton then
     BorderStyle := bsNone;
+    }
   if FolderCollection.Count > 0 then
     FActiveFolder := 0
   else
@@ -2772,7 +2774,7 @@ begin
   end;
 end;
 {=====}
-
+                                        (*
 procedure TVpCustomNavBar.SetBorderStyle(const Value: TBorderStyle);
 begin
   if Value <> FBorderStyle then begin
@@ -2781,6 +2783,7 @@ begin
   end;
 end;
 {=====}
+*)
 
 procedure TVpCustomNavBar.SetButtonHeight(Value: Integer);
 begin
