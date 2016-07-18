@@ -76,6 +76,8 @@ type
     procedure DrawTopFolderButtons(Canvas: TCanvas; ARect: TRect;
       DrawFolder: Boolean; var CurPos: Integer);
 
+    procedure ProcessScrollButtons;
+
   public
     constructor Create(ANavBar: TVpCustomNavBar);
     procedure Paint;
@@ -891,38 +893,42 @@ begin
     { Draw the folder buttons at the bottom }
     DrawBottomFolderButtons(DrawBmp.Canvas, MyRect, CurPos);
 
-    if not (csDesigning in FNavBar.ComponentState) then begin
-      {show the top scroll button}
-      if TVpNavBarOpener(FNavBar).nabShowScrollUp then begin
-        nabScrollUpBtn.Top := FNavBar.Folders[FActiveFolder].Rect.Bottom + 5;
-        nabScrollUpBtn.Left := FNavBar.ClientWidth - 20;
-        nabScrollUpBtn.Visible := True;
-      end else
-        nabScrollUpBtn.Visible := False;
-
-      {show the bottom scroll button}
-      if TVpNavBarOpener(FnavBar).nabShowScrollDown then begin
-        if FActiveFolder = FNavBar.FolderCount-1 then
-          {there are no folders beyond the active one}
-          nabScrollDownBtn.Top := FNavBar.ClientHeight -20
-        else
-          nabScrollDownBtn.Top := FNavBar.Folders[FActiveFolder+1].Rect.Top - 20;
-        nabScrollDownBtn.Left := FNavBar.ClientWidth - 20;
-        nabScrollDownBtn.Visible := True;
-      end else
-        nabScrollDownBtn.Visible := False;
-    end;
-
-
-  finally
     { Copy the buffer bitmap to the control }
     FNavBar.Canvas.CopyMode := cmSrcCopy;
     FNavBar.Canvas.CopyRect(MyRect, DrawBmp.Canvas, Rect(0, 0, DrawBmp.Width,DrawBmp.Height));
 
+    { Show/hide scroll buttons }
+    ProcessScrollButtons;
+
+  finally
     DrawBmp.Free;
   end;
 end;
 
+procedure TVpNavBarPainter.ProcessScrollButtons;
+begin
+  if not (csDesigning in FNavBar.ComponentState) then begin
+    {show the top scroll button}
+    if TVpNavBarOpener(FNavBar).nabShowScrollUp() then begin
+      nabScrollUpBtn.Top := FNavBar.Folders[FActiveFolder].Rect.Bottom + 5;
+      nabScrollUpBtn.Left := FNavBar.ClientWidth - 20;
+      nabScrollUpBtn.Visible := True;
+    end else
+      nabScrollUpBtn.Visible := False;
+
+    {show the bottom scroll button}
+    if TVpNavBarOpener(FnavBar).nabShowScrollDown() then begin
+      if FActiveFolder = FNavBar.FolderCount-1 then
+        {there are no folders beyond the active one}
+        nabScrollDownBtn.Top := FNavBar.ClientHeight -20
+      else
+        nabScrollDownBtn.Top := FNavBar.Folders[FActiveFolder+1].Rect.Top - 20;
+      nabScrollDownBtn.Left := FNavBar.ClientWidth - 20;
+      nabScrollDownBtn.Visible := True;
+    end else
+      nabScrollDownBtn.Visible := False;
+  end;
+end;
 
 { Given a string, and a rectangle, find the string that can be displayed
   using two lines. Add ellipsis to the end of each line if necessary and
