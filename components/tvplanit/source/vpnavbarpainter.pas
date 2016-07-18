@@ -6,7 +6,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages, LCLProc, LCLType, LCLIntf,
+  LCLProc, LCLType, LCLIntf,
   {$ELSE}
   Windows, Messages, MMSystem,
   {$ENDIF}
@@ -136,7 +136,7 @@ var
   item: TVpNavBtnItem;
   J: Integer;
   text: String;
-  H, X: Integer;
+  X: Integer;
   R: TRect;
 begin
   folder := FNavBar.Folders[FActiveFolder];
@@ -569,7 +569,6 @@ function TVpNavBarPainter.DrawLargeIcon(Canvas: TCanvas; AItem: TVpNavBtnItem;
   CurPos: Integer): Boolean;
 var
   W, H: Integer;
-  lOffset: Integer;
   R: TRect;
 begin
   Result := false;
@@ -715,7 +714,6 @@ var
   displayTxt: String;
   TR: TRect;
   Flags: Integer;
-  lOffset: Integer;
   folder: TVpNavFolder;
   savedFontstyle: TFontStyles;
 begin
@@ -854,8 +852,7 @@ var
   DrawBmp: TBitmap;
   DrawFolder: Boolean;
   TR: TRect;
-  CurPos: Integer;
-  I: Integer;
+  CurPos: Integer = 0;
   MyRect: TRect;
 begin
   MyRect := FNavBar.ClientRect;

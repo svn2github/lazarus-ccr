@@ -13,7 +13,7 @@ object Form1: TForm1
     Height = 370
     Top = 0
     Width = 128
-    ActiveFolder = 0
+    ActiveFolder = 3
     AllowInplaceEdit = True
     AllowRearrange = True
     BackgroundColor = clInactiveCaption
@@ -113,6 +113,17 @@ object Form1: TForm1
         IconSize = isLarge
         Name = 'NavFolder2'
         Tag = 0
+      end    
+      item
+        Version = 'v1.04'
+        Caption = 'Container'
+        Enabled = True
+        FolderType = ftContainer
+        ItemCollection = <>
+        IconSize = isLarge
+        Name = 'NavFolder3'
+        Tag = 0
+        ContainerIndex = 0
       end>
     Images = Images
     ItemFont.Color = clWhite
@@ -127,6 +138,16 @@ object Form1: TForm1
     OnFolderChanged = VpNavBar1FolderChanged
     Align = alLeft
     ParentColor = False
+    object Container0: TVpFolderContainer
+      Left = 0
+      Height = 290
+      Top = 80
+      Width = 128
+      BevelOuter = bvNone
+      Color = clInactiveCaption
+      ParentColor = False
+      TabOrder = 0
+    end
   end
   object RgDrawingStyle: TRadioGroup
     Left = 141

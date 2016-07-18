@@ -278,6 +278,7 @@ type
     function nabShowScrollUp: Boolean;
     function nabShowScrollDown: Boolean;
     procedure nabTimerEvent(Sender: TObject; Handle: Integer; Interval: Cardinal; ElapsedTime: LongInt);
+    procedure nabProcessContainers;
 
     {VCL message methods}
     {$IFNDEF LCL}
@@ -462,6 +463,7 @@ uses
   Themes,
   VpNavBarPainter;
 
+{$IFNDEF PAINTER}
 {DrawNavTab - returns the usable text area inside the tab rect.}
 function DrawNavTab(Canvas: TCanvas; const Client: TRect; BevelWidth: Integer;
   TabColor: TColor; TabNumber: Integer; CoolTab, IsFocused, IsMouseOver: Boolean): TRect;
@@ -650,7 +652,7 @@ begin
   Result := Rect(Client.Left + 1, Client.Top + 1, Client.Right - 2, Client.Bottom - 2);
   if IsFocused then OffsetRect(Result, 1, 1);
 end;
-
+{$ENDIF}
 
 {===== TVpFolderContainer ===========================================}
 
@@ -798,7 +800,7 @@ end;
 constructor TVpNavFolder.Create(Collection: TCollection);
 begin
   inherited Create(Collection);
-  RegisterClass(TVpFolderContainer);
+//  RegisterClass(TVpFolderContainer);
   FNavBar := TVpCustomNavBar(TVpCollection(Collection).GetOwner);
   FNavBar.ActiveFolder := Index;
   FItems := TVpCollection.Create(Self, TVpNavBtnItem);
@@ -1111,8 +1113,7 @@ end;
 
 procedure TVpCustomNavBar.ItemChanged(FolderIndex, ItemIndex: Integer);
 begin
-  Invalidate;
-//  InvalidateItem(FolderIndex, ItemIndex);
+  InvalidateItem(FolderIndex, ItemIndex);
   if not (csDestroying in ComponentState) then
     RecreateWnd{$IFDEF LCL}(self){$ENDIF};
 end;
@@ -2024,6 +2025,8 @@ begin
   finally
     painter.Free;
   end;
+
+  nabProcessContainers;
 end;
 
 {$ELSE}
@@ -3033,4 +3036,47 @@ begin
   Result := Self;
 end;
 
+procedure TVpCustomNavBar.nabProcessContainers;
+var
+  I: Integer;
+  folder: TVpNavFolder;
+  TR: TRect;
+begin
+  {For container style folders...}
+
+  {Hide the containers for all inactive folders}
+  for I := 0 to FFolders.Count - 1 do begin
+    if I <> FActiveFolder then begin
+      if Folders[i].FolderType = ftContainer then
+        with Containers[Folders[i].ContainerIndex] do begin
+          Width := 0;
+          Height := 0;
+          Visible := false;
+        end;
+    end;
+  end;
+
+  Folder := Folders[FActiveFolder];
+  TR := nabGetFolderArea(FActiveFolder);
+
+  if Folder.FolderType = ftContainer then
+    with Containers[Folder.ContainerIndex] do begin
+      {Position and show the folder's container}
+      Height := TR.Bottom - TR.Top;
+      Top := TR.Top;
+      Left := TR.Left;
+      Width := TR.Right - TR.Left;
+      Visible := true;
+      BringToFront;
+
+      for I := 0 to ControlCount - 1 do
+        Controls[i].Invalidate;
+    end;
+end;
+
+initialization
+  RegisterClass(TVpFolderContainer);
+
 end.
+
+
