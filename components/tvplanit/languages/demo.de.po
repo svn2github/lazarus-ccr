@@ -309,31 +309,8 @@ msgstr "Alle Aufgaben"
 msgid "Hide completed tasks"
 msgstr "Fertiggestellte Aufgaben ausblenden"
 
-#: tmainform.tabcontacts.caption
-msgctxt "tmainform.tabcontacts.caption"
-msgid "Contacts"
-msgstr "Kontakte"
-
-#: tmainform.tabevents.caption
-msgid "Events"
-msgstr "Termine"
-
-#: tmainform.tabresources.caption
-msgctxt "tmainform.tabresources.caption"
-msgid "Resources"
-msgstr "Wartung"
-
-#: tmainform.tabsettings.caption
-msgctxt "tmainform.tabsettings.caption"
-msgid "Settings"
-msgstr "Einstellungen"
-
-#: tmainform.tabtasks.caption
-msgctxt "tmainform.tabtasks.caption"
-msgid "Tasks"
-msgstr "Aufgaben"
-
 # No need to translate
 #: tmainform.titlelbl.caption
 msgid "TitleLbl"
 msgstr ""
+

@@ -25,6 +25,10 @@ msgstr "24 uur"
 msgid "30 min"
 msgstr "30 min"
 
+#: demomain.rs3d
+msgid "3D"
+msgstr ""
+
 #: demomain.rs5min
 msgid "5 min"
 msgstr "5 min"
@@ -36,6 +40,10 @@ msgstr "60 min"
 #: demomain.rs6min
 msgid "6 min"
 msgstr "6 min"
+
+#: demomain.rsborderless
+msgid "no border"
+msgstr ""
 
 #: demomain.rsconfirmdeleteres
 msgid "Do you really want to delete resource %s?"
@@ -61,6 +69,10 @@ msgstr "Evenementen per maand"
 #: demomain.rseventsperweek
 msgid "Events per week"
 msgstr "Evenementen per week"
+
+#: demomain.rsflat
+msgid "flat"
+msgstr ""
 
 #: demomain.rsfriday
 msgid "Friday"
@@ -188,10 +200,6 @@ msgstr "Nieuw"
 msgid "Turbo Power VisualPlanIt Demo"
 msgstr "Turbo Power VisualPlanIt Demo"
 
-#: tmainform.cb3d.caption
-msgid "3d display mode"
-msgstr "3d display mode"
-
 #: tmainform.cbaddressbuilder.text
 msgid "(default)"
 msgstr "(standaard)"
@@ -207,6 +215,10 @@ msgstr "30 Min"
 #: tmainform.lbladdressbuilder.caption
 msgid "Address builder"
 msgstr "Adres bouwer"
+
+#: tmainform.lbldrawingstyle.caption
+msgid "Drawing style:"
+msgstr ""
 
 #: tmainform.lblfirstdayofweek.caption
 msgid "First day of week"
@@ -237,14 +249,30 @@ msgstr "Bestand"
 msgid "Help"
 msgstr "Help"
 
+#: tmainform.menuitem3.caption
+msgid "-"
+msgstr ""
+
 #: tmainform.mnuabout.caption
 msgid "About Visual PlanIt"
 msgstr "Over Visual PlanIt"
+
+#: tmainform.mnueditprintformats.caption
+msgid "Edit print formats..."
+msgstr ""
 
 #: tmainform.mnumaintenance.caption
 msgctxt "TMAINFORM.MNUMAINTENANCE.CAPTION"
 msgid "Maintenance"
 msgstr "Onderhoud"
+
+#: tmainform.mnuprint.caption
+msgid "Print..."
+msgstr ""
+
+#: tmainform.mnuprintpreview.caption
+msgid "Print preview..."
+msgstr ""
 
 #: tmainform.mnuquit.caption
 msgid "Quit"
@@ -267,30 +295,6 @@ msgstr "Alle taken"
 #: tmainform.rbhidecompletedtasks.caption
 msgid "Hide completed tasks"
 msgstr "Verberg afgewerkte taken"
-
-#: tmainform.tabcontacts.caption
-msgctxt "tmainform.tabcontacts.caption"
-msgid "Contacts"
-msgstr "Contacten"
-
-#: tmainform.tabevents.caption
-msgid "Events"
-msgstr "Evenementen"
-
-#: tmainform.tabresources.caption
-msgctxt "TMAINFORM.TABRESOURCES.CAPTION"
-msgid "Resources"
-msgstr "Hulpmiddelen"
-
-#: tmainform.tabsettings.caption
-msgctxt "tmainform.tabsettings.caption"
-msgid "Settings"
-msgstr "Instellingen"
-
-#: tmainform.tabtasks.caption
-msgctxt "tmainform.tabtasks.caption"
-msgid "Tasks"
-msgstr "Taken"
 
 #: tmainform.titlelbl.caption
 msgid "TitleLbl"

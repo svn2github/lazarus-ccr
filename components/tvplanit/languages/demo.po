@@ -296,30 +296,6 @@ msgstr ""
 msgid "Hide completed tasks"
 msgstr ""
 
-#: tmainform.tabcontacts.caption
-msgctxt "tmainform.tabcontacts.caption"
-msgid "Contacts"
-msgstr ""
-
-#: tmainform.tabevents.caption
-msgid "Events"
-msgstr ""
-
-#: tmainform.tabresources.caption
-msgctxt "TMAINFORM.TABRESOURCES.CAPTION"
-msgid "Resources"
-msgstr ""
-
-#: tmainform.tabsettings.caption
-msgctxt "tmainform.tabsettings.caption"
-msgid "Settings"
-msgstr ""
-
-#: tmainform.tabtasks.caption
-msgctxt "tmainform.tabtasks.caption"
-msgid "Tasks"
-msgstr ""
-
 #: tmainform.titlelbl.caption
 msgid "TitleLbl"
 msgstr ""

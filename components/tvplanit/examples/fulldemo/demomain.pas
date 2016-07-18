@@ -38,6 +38,12 @@ type
     MnuPrint: TMenuItem;
     MnuEditPrintFormats: TMenuItem;
     MnuPrintPreview: TMenuItem;
+    Notebook: TNotebook;
+    Events: TPage;
+    Tasks: TPage;
+    Contacts: TPage;
+    Resources: TPage;
+    Settings: TPage;
     PrintDialog1: TPrintDialog;
     TitleLbl: TLabel;
     MainMenu1: TMainMenu;
@@ -48,7 +54,6 @@ type
     MnuMaintenance: TMenuItem;
     MnuQuit: TMenuItem;
     MnuResources: TMenuItem;
-    PageControl1: TPageControl;
     Panel1: TPanel;
     LeftPanel: TPanel;
     DaySelectorPanel: TPanel;
@@ -58,11 +63,6 @@ type
     RbHideCompletedTasks: TRadioButton;
     Splitter2: TSplitter;
     Splitter3: TSplitter;
-    TabEvents: TTabSheet;
-    TabContacts: TTabSheet;
-    TabResources: TTabSheet;
-    TabSettings: TTabSheet;
-    TabTasks: TTabSheet;
     DaysTrackBar: TTrackBar;
     VpBufDSDataStore1: TVpBufDSDataStore;
     VpContactButtonBar1: TVpContactButtonBar;
@@ -802,7 +802,7 @@ end;
 
 procedure TMainForm.ShowAllEvents;
 begin
-  PageControl1.ActivePage := TabEvents;
+  Notebook.PageIndex := 0;
   VpDayView1.Parent := LeftPanel;
   VpMonthView1.Parent := LeftPanel;
   VpMonthView1.Align := alBottom;
@@ -821,11 +821,12 @@ end;
 
 procedure TMainform.ShowEventsPerMonth;
 begin
-  PageControl1.ActivePage := TabEvents;
+  Notebook.PageIndex := 0;
   LeftPanel.Hide;
   Splitter3.Hide;
+  VpDayView1.Hide;
   VpWeekView1.Hide;
-  VpMonthView1.Parent := TabEvents;
+  VpMonthView1.Parent := Notebook.Page[0];
   VpMonthView1.Align := alClient;
   VpMonthView1.Show;
   DaySelectorPanel.Hide;
@@ -835,7 +836,7 @@ end;
 
 procedure TMainForm.ShowEventsPerWeek;
 begin
-  PageControl1.ActivePage := TabEvents;
+  Notebook.PageIndex := 0;
   LeftPanel.Hide;
   Splitter3.Hide;
   VpMonthView1.Hide;
@@ -848,15 +849,15 @@ end;
 
 procedure TMainform.ShowEventsPerDay;
 begin
-  PageControl1.ActivePage := TabEvents;
+  Notebook.PageIndex := 0;
   LeftPanel.Hide;
   Splitter3.Hide;
   VpMonthView1.Hide;
   VpWeekView1.Hide;
-  VpDayView1.Parent := TabEvents;
+  VpDayView1.Parent := Notebook.Page[Notebook.PageIndex];
   VpDayView1.Align := alClient;
   VpDayView1.Show;
-  DaySelectorPanel.Parent := TabEvents;
+  DaySelectorPanel.Parent := Notebook.Page[Notebook.PageIndex];
   DaySelectorPanel.Show;
   DaysTrackbar.Position := FVisibleDays;
   VpDayView1.NumDays := DaysTrackBar.Position;
@@ -866,28 +867,28 @@ end;
 
 procedure TMainForm.ShowTasks;
 begin
-  Pagecontrol1.ActivePage := TabTasks;
+  Notebook.PageIndex := 1;
   titleLbl.Caption := RSTasks;
   ImageList1.GetBitmap(1, Img.Picture.Bitmap);
 end;
 
 procedure TMainForm.ShowContacts;
 begin
-  PageControl1.ActivePage := TabContacts;
+  Notebook.PageIndex := 2;
   TitleLbl.Caption := RSContacts;
   ImageList1.GetBitmap(2, Img.Picture.Bitmap);
 end;
 
 procedure TMainForm.ShowResources;
 begin
-  PageControl1.Activepage := TabResources;
+  Notebook.PageIndex := 3;
   TitleLbl.Caption := RSResources;
   ImageList1.GetBitmap(7, Img.Picture.Bitmap);
 end;
 
 procedure TMainForm.ShowSettings;
 begin
-  PageControl1.ActivePage := TabSettings;
+  Notebook.PageIndex := 4;
   TitleLbl.Caption := RSSettings;
   ImageList1.GetBitmap(8, Img.Picture.Bitmap);
 end;

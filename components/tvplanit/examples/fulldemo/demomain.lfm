@@ -20,34 +20,61 @@ object MainForm: TMainForm
     ClientHeight = 580
     ClientWidth = 780
     TabOrder = 0
-    object PageControl1: TPageControl
+    object HeaderPanel: TPanel
+      Left = 2
+      Height = 48
+      Top = 0
+      Width = 778
+      Align = alTop
+      BorderSpacing.Left = 2
+      BevelOuter = bvNone
+      ClientHeight = 48
+      ClientWidth = 778
+      Color = clActiveCaption
+      ParentColor = False
+      TabOrder = 0
+      object Img: TImage
+        Left = 8
+        Height = 32
+        Top = 8
+        Width = 32
+      end
+      object TitleLbl: TLabel
+        Left = 56
+        Height = 32
+        Top = 8
+        Width = 84
+        Caption = 'TitleLbl'
+        Font.Color = clWhite
+        Font.Height = -24
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+    end
+    object Notebook: TNotebook
       Left = 0
       Height = 532
       Top = 48
       Width = 780
-      ActivePage = TabEvents
+      PageIndex = 0
       Align = alClient
-      TabIndex = 0
-      TabOrder = 0
-      object TabEvents: TTabSheet
-        Caption = 'Events'
-        ClientHeight = 504
-        ClientWidth = 772
-        TabVisible = False
+      TabOrder = 1
+      object Events: TPage
         object LeftPanel: TPanel
           Left = 0
-          Height = 504
+          Height = 532
           Top = 0
           Width = 333
           Align = alLeft
           BevelOuter = bvNone
-          ClientHeight = 504
+          ClientHeight = 532
           ClientWidth = 333
           TabOrder = 0
           object VpMonthView1: TVpMonthView
             Left = 0
             Height = 197
-            Top = 307
+            Top = 335
             Width = 333
             DataStore = VpBufDSDataStore1
             ControlLink = VpControlLink1
@@ -80,14 +107,14 @@ object MainForm: TMainForm
             Cursor = crVSplit
             Left = 0
             Height = 5
-            Top = 302
+            Top = 330
             Width = 333
             Align = alBottom
             ResizeAnchor = akBottom
           end
           object VpDayView1: TVpDayView
             Left = 0
-            Height = 260
+            Height = 288
             Top = 42
             Width = 333
             DataStore = VpBufDSDataStore1
@@ -234,15 +261,15 @@ object MainForm: TMainForm
         end
         object Splitter3: TSplitter
           Left = 333
-          Height = 504
+          Height = 532
           Top = 0
           Width = 5
         end
         object VpWeekView1: TVpWeekView
           Left = 338
-          Height = 504
+          Height = 532
           Top = 0
-          Width = 434
+          Width = 442
           DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
@@ -271,20 +298,16 @@ object MainForm: TMainForm
           TabOrder = 2
         end
       end
-      object TabTasks: TTabSheet
-        Caption = 'Tasks'
-        ClientHeight = 504
-        ClientWidth = 772
-        TabVisible = False
+      object Tasks: TPage
         object Panel6: TPanel
           Left = 0
           Height = 42
           Top = 0
-          Width = 772
+          Width = 626
           Align = alTop
           BevelOuter = bvNone
           ClientHeight = 42
-          ClientWidth = 772
+          ClientWidth = 626
           TabOrder = 0
           object RbAllTasks: TRadioButton
             Left = 8
@@ -309,9 +332,9 @@ object MainForm: TMainForm
         end
         object VpTaskList1: TVpTaskList
           Left = 0
-          Height = 462
+          Height = 393
           Top = 42
-          Width = 772
+          Width = 626
           DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
@@ -340,14 +363,10 @@ object MainForm: TMainForm
           ShowResourceName = True
         end
       end
-      object TabContacts: TTabSheet
-        Caption = 'Contacts'
-        ClientHeight = 504
-        ClientWidth = 772
-        TabVisible = False
+      object Contacts: TPage
         object VpContactButtonBar1: TVpContactButtonBar
           Left = 0
-          Height = 504
+          Height = 435
           Top = 0
           Width = 40
           DrawingStyle = dsFlat
@@ -356,9 +375,9 @@ object MainForm: TMainForm
         end
         object VpContactGrid1: TVpContactGrid
           Left = 40
-          Height = 504
+          Height = 435
           Top = 0
-          Width = 732
+          Width = 586
           DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
@@ -374,27 +393,15 @@ object MainForm: TMainForm
           DrawingStyle = dsFlat
         end
       end
-      object TabResources: TTabSheet
-        Caption = 'Resources'
-        ClientHeight = 504
-        ClientWidth = 772
-        TabVisible = False
-        object VpResourceCombo1: TVpResourceCombo
-          Left = 16
-          Height = 23
-          Top = 24
-          Width = 235
-          DataStore = VpBufDSDataStore1
-          Style = csDropDownList
-        end
-        object BtnNewRes: TButton
-          Left = 16
+      object Resources: TPage
+        object BtnDeleteRes: TButton
+          Left = 176
           Height = 25
           Top = 64
           Width = 75
-          Caption = 'New'
-          OnClick = BtnNewResClick
-          TabOrder = 1
+          Caption = 'Delete'
+          OnClick = BtnDeleteResClick
+          TabOrder = 0
         end
         object BtnEditRes: TButton
           Left = 96
@@ -403,23 +410,27 @@ object MainForm: TMainForm
           Width = 75
           Caption = 'Edit'
           OnClick = BtnEditResClick
-          TabOrder = 2
+          TabOrder = 1
         end
-        object BtnDeleteRes: TButton
-          Left = 176
+        object BtnNewRes: TButton
+          Left = 16
           Height = 25
           Top = 64
           Width = 75
-          Caption = 'Delete'
-          OnClick = BtnDeleteResClick
-          TabOrder = 3
+          Caption = 'New'
+          OnClick = BtnNewResClick
+          TabOrder = 2
+        end
+        object VpResourceCombo1: TVpResourceCombo
+          Left = 16
+          Height = 23
+          Top = 24
+          Width = 235
+          DataStore = VpBufDSDataStore1
+          Style = csDropDownList
         end
       end
-      object TabSettings: TTabSheet
-        Caption = 'Settings'
-        ClientHeight = 504
-        ClientWidth = 772
-        TabVisible = False
+      object Settings: TPage
         object LblLanguage: TLabel
           AnchorSideTop.Control = CbLanguages
           AnchorSideTop.Side = asrCenter
@@ -440,65 +451,22 @@ object MainForm: TMainForm
           Style = csDropDownList
           TabOrder = 0
         end
-        object LblTimeFormat: TLabel
-          AnchorSideTop.Control = CbTimeFormat
-          AnchorSideTop.Side = asrCenter
-          Left = 16
-          Height = 15
-          Top = 68
-          Width = 66
-          Caption = 'Time format'
-          ParentColor = False
-        end
-        object CbTimeFormat: TComboBox
-          Left = 112
+        object CbDrawingStyle: TComboBox
+          Left = 440
           Height = 23
           Top = 64
-          Width = 172
+          Width = 113
           ItemHeight = 15
-          OnChange = CbTimeFormatChange
+          OnChange = CbDrawingStyleChange
           Style = csDropDownList
           TabOrder = 1
         end
-        object LblFirstDayOfWeek: TLabel
-          AnchorSideTop.Control = CbFirstDayOfWeek
-          AnchorSideTop.Side = asrCenter
-          Left = 16
-          Height = 15
-          Top = 108
-          Width = 88
-          Caption = 'First day of week'
-          ParentColor = False
-        end
-        object CbFirstDayOfWeek: TComboBox
-          Left = 112
-          Height = 23
-          Top = 104
-          Width = 172
-          ItemHeight = 15
-          OnChange = CbFirstDayOfWeekChange
-          Style = csDropDownList
-          TabOrder = 2
-        end
-        object CbAllowInplaceEditing: TCheckBox
+        object LblDrawingStyle: TLabel
           Left = 349
-          Height = 19
-          Top = 28
-          Width = 131
-          Caption = 'Allow inplace editing'
-          Checked = True
-          OnChange = CbAllowInplaceEditingChange
-          State = cbChecked
-          TabOrder = 3
-        end
-        object LblAddressBuilder: TLabel
-          AnchorSideTop.Control = CbAddressBuilder
-          AnchorSideTop.Side = asrCenter
-          Left = 16
           Height = 15
-          Top = 148
-          Width = 82
-          Caption = 'Address builder'
+          Top = 68
+          Width = 74
+          Caption = 'Drawing style:'
           ParentColor = False
         end
         object CbAddressBuilder: TComboBox
@@ -516,59 +484,70 @@ object MainForm: TMainForm
           )
           OnChange = CbAddressBuilderChange
           Style = csDropDownList
-          TabOrder = 4
+          TabOrder = 2
           Text = '(default)'
         end
-        object LblDrawingStyle: TLabel
-          Left = 349
+        object LblAddressBuilder: TLabel
+          AnchorSideTop.Control = CbAddressBuilder
+          AnchorSideTop.Side = asrCenter
+          Left = 16
           Height = 15
-          Top = 68
-          Width = 74
-          Caption = 'Drawing style:'
+          Top = 148
+          Width = 82
+          Caption = 'Address builder'
           ParentColor = False
         end
-        object CbDrawingStyle: TComboBox
-          Left = 440
+        object CbAllowInplaceEditing: TCheckBox
+          Left = 349
+          Height = 19
+          Top = 28
+          Width = 131
+          Caption = 'Allow inplace editing'
+          Checked = True
+          OnChange = CbAllowInplaceEditingChange
+          State = cbChecked
+          TabOrder = 3
+        end
+        object CbFirstDayOfWeek: TComboBox
+          Left = 112
+          Height = 23
+          Top = 104
+          Width = 172
+          ItemHeight = 15
+          OnChange = CbFirstDayOfWeekChange
+          Style = csDropDownList
+          TabOrder = 4
+        end
+        object LblFirstDayOfWeek: TLabel
+          AnchorSideTop.Control = CbFirstDayOfWeek
+          AnchorSideTop.Side = asrCenter
+          Left = 16
+          Height = 15
+          Top = 108
+          Width = 88
+          Caption = 'First day of week'
+          ParentColor = False
+        end
+        object CbTimeFormat: TComboBox
+          Left = 112
           Height = 23
           Top = 64
-          Width = 113
+          Width = 172
           ItemHeight = 15
-          OnChange = CbDrawingStyleChange
+          OnChange = CbTimeFormatChange
           Style = csDropDownList
           TabOrder = 5
         end
-      end
-    end
-    object HeaderPanel: TPanel
-      Left = 2
-      Height = 48
-      Top = 0
-      Width = 778
-      Align = alTop
-      BorderSpacing.Left = 2
-      BevelOuter = bvNone
-      ClientHeight = 48
-      ClientWidth = 778
-      Color = clActiveCaption
-      ParentColor = False
-      TabOrder = 1
-      object Img: TImage
-        Left = 8
-        Height = 32
-        Top = 8
-        Width = 32
-      end
-      object TitleLbl: TLabel
-        Left = 56
-        Height = 32
-        Top = 8
-        Width = 84
-        Caption = 'TitleLbl'
-        Font.Color = clWhite
-        Font.Height = -24
-        Font.Style = [fsBold]
-        ParentColor = False
-        ParentFont = False
+        object LblTimeFormat: TLabel
+          AnchorSideTop.Control = CbTimeFormat
+          AnchorSideTop.Side = asrCenter
+          Left = 16
+          Height = 15
+          Top = 68
+          Width = 66
+          Caption = 'Time format'
+          ParentColor = False
+        end
       end
     end
   end
