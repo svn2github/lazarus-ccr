@@ -73,6 +73,9 @@ type
     LocationLbl: TLabel;
     NotesMemo: TMemo;
     Panel1: TPanel;
+    PanelAlarm: TPanel;
+    PanelTimes: TPanel;
+    PanelDescription: TPanel;
     StartDate: TDateEdit;
     EndDate: TDateEdit;
     RepeatUntil: TDateEdit;
@@ -214,10 +217,10 @@ begin
   StartTime := TTimeEdit.Create(self);
  {$ELSE}
   StartTime := TCombobox.Create(self);
-  StartTime.Width := 83;
   StartTime.ItemIndex := -1;
  {$ENDIF}
-  StartTime.Parent := AppointmentGroupbox;
+  StartTime.Width := 83;
+  StartTime.Parent := PanelTimes;
   StartTime.Left := AlarmAdvanceType.Left;
   StartTime.Top := StartDate.Top;
   StartTime.TabOrder:= StartDate.TabOrder+ 1;
@@ -226,10 +229,10 @@ begin
   EndTime := TTimeEdit.Create(self);
  {$ELSE}
   EndTime := TCombobox.Create(self);
-  EndTime.Width := 93;
   EndTime.ItemIndex := -1;
  {$ENDIF}
-  EndTime.Parent := AppointmentGroupbox;
+  EndTime.Width := 83;
+  EndTime.Parent := PanelTimes;
   EndTime.Left := AlarmAdvanceType.Left;
   EndTime.Top := EndDate.Top;
   EndTime.TabOrder := EndDate.TabOrder + 1;
@@ -245,7 +248,7 @@ begin
 
   FCustomInterval := TVpRightAlignedEdit.Create(Self);
   with FCustomInterval do begin
-    Parent := AppointmentGroupbox;
+    Parent := PanelTimes;
     Top := IntervalUpDown.Top + 1;
     Left := IntervalUpDown.Left - 65;
     Height := IntervalUpDown.Height - 1;
@@ -628,6 +631,7 @@ end;
 procedure TDlgEventEdit.PositionControls;
 const
   DELTA = 8;
+  VDELTA = 8;
   VDIST = 5;
   VBEVELDIST = 8;
 var
@@ -646,7 +650,7 @@ begin
   // Position controls according to label widths
   w := MaxValue([GetLabelWidth(DescriptionLbl), GetLabelWidth(LocationLbl), GetLabelWidth(StartTimeLbl), GetLabelWidth(EndTimeLbl)]);
   DescriptionEdit.Left := w + 2*DELTA;
-  DescriptionEdit.Width := AppointmentGroupbox.ClientWidth - DescriptionEdit.Left - DELTA;
+  DescriptionEdit.Width := PanelDescription.ClientWidth - DescriptionEdit.Left - DELTA;
   DescriptionLbl.Left := DescriptionEdit.Left - GetLabelWidth(DescriptionLbl) - DELTA;
 
   LocationEdit.Left := DescriptionEdit.Left;
@@ -705,15 +709,17 @@ begin
   CategoryLbl.Left := Category.Left - DELTA - GetLabelWidth(CategoryLbl);
 
   // *** Vertical positions ***
+  DescriptionEdit.Top := VDELTA;
   DescriptionLbl.Top := DescriptionEdit.Top + (DescriptionEdit.Height - DescriptionLbl.Height) div 2;
   LocationEdit.Top := BottomOf(DescriptionEdit) + VDIST;
   LocationLbl.Top := LocationEdit.Top + (LocationEdit.Height - LocationLbl.Height) div 2;
   CategoryLbl.Top := LocationLbl.Top;
   Category.Top := LocationEdit.Top;
+  PanelDescription.ClientHeight := BottomOf(LocationEdit) + VDIST;
 
-  Bevel1.Top := BottomOf(LocationEdit) + VBEVELDIST;
+ // Bevel1.Top := BottomOf(LocationEdit) + VBEVELDIST;
 
-  imgClock.Top := Bevel1.Top + 2 + VBEVELDIST;
+  imgClock.Top := VDELTA; //Bevel1.Top + 2 + VBEVELDIST;
   CbAllDay.Top := imgClock.Top;
   imgRecurring.Top := imgClock.Top;
 
@@ -731,10 +737,11 @@ begin
   IntervalLbl.Top := RecurringLbl.Top;
   RepeatUntil.Top := EndDate.Top;
   RecurrenceEndsLbl.Top := RepeatUntil.Top + (RepeatUntil.Height - RecurrenceEndsLbl.Height) div 2;
+  PanelTimes.ClientHeight := BottomOf(EndDate) + VDELTA;
+  Bevel3.Top := VDELTA;
+  Bevel3.Height := PanelTimes.ClientHeight - 2*VDELTA;
 
-  Bevel2.Top := BottomOf(EndDate) + VBEVELDIST;
-
-  imgAlarm.Top := Bevel2.Top + 2 + VBEVELDIST;
+  imgAlarm.Top := VDELTA;
   AlarmAdvance.Top := imgAlarm.Top;
   AdvanceUpdown.Top := AlarmAdvance.Top;
   AlarmSet.Top := AlarmAdvance.Top + (AlarmAdvance.Height - AlarmSet.Height) div 2;
@@ -742,8 +749,7 @@ begin
   SoundFinderBtn.Height := AlarmAdvanceType.Height;
   SoundFinderBtn.Width := SoundFinderBtn.Height;
   SoundFinderBtn.Top := AlarmAdvanceType.Top;
-
-  AppointmentGroupbox.ClientHeight := BottomOf(AlarmAdvance) + VBEVELDIST;
+  PanelAlarm.ClientHeight := BottomOf(AlarmAdvance) + VDIST;
 
   OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
   CancelBtn.Width := OKBtn.Width;
@@ -753,9 +759,11 @@ begin
   OKBtn.Top := (ButtonPanel.ClientHeight - Panel1.BorderWidth - OKBtn.Height) div 2;
   CancelBtn.Top := OKBtn.Top;
 
-//  NotesMemo.Top := BottomOf(AppointmentGroupbox) + VBEVELDIST;
+  NotesMemo.Top := BottomOf(AppointmentGroupbox) + Bevel4.Height;
+  NotesMemo.Width := AppointmentGroupbox.Width;
+  NotesMemo.Left := AppointmentGroupbox.Left;
 
-//  ClientHeight := BottomOf(NotesMemo) + VBEVELDIST + ButtonPanel.Height;
+  ClientHeight := AppointmentGroupbox.Height + Bevel4.Height + NotesMemo.Height + ButtonPanel.Height;
 end;
 
 
