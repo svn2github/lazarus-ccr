@@ -143,13 +143,14 @@ begin
     if folder.ItemCount = 0 then
       exit;
 
+    // Distance of top-most icon to the last upper button
     Inc(CurPos, 8);
 
     with nabItemsRect^ do begin
       Top := CurPos;
       Left := 0;
       Right := FNavBar.ClientWidth;
-      Bottom := FNavBar.ClientHeight - (FNavBar.FolderCount - FActiveFolder - 1) * FButtonHeight + 1;
+      Bottom := FNavBar.ClientHeight - (FNavBar.FolderCount - FActiveFolder - 1) * FButtonHeight;
     end;
 
     for J := 0 to folder.ItemCount-1 do begin
@@ -213,9 +214,8 @@ var
 begin
   if FBackgroundImage.Empty or (FBackgroundMethod = bmNone) then
   begin
-    Canvas.Pen.Color := FBackgroundColor;
     Canvas.Brush.Color := FBackgroundColor;
-    Canvas.Rectangle(R.Left, R.Top, R.Right, R.Bottom);
+    Canvas.FillRect(R.Left, R.Top, R.Right, R.Bottom);
   end else
   begin
     case FBackgroundMethod of
@@ -224,7 +224,7 @@ begin
           if (FBackgroundImage.Width < WidthOf(R)) or (FBackgroundImage.Height < HeightOf(R))
           then begin
             Canvas.Brush.Color := FBackgroundColor;
-            Canvas.FillRect(R.Left, R.Top, R.Right, R.Bottom);
+            Canvas.Rectangle(R.Left, R.Top, R.Right, R.Bottom);
           end;
           Canvas.Draw(R.Left, R.Top, FBackgroundImage);
         end;
@@ -285,6 +285,7 @@ var
   Points: array[1..5] of TPoint;
 begin
   Result := R;
+
   with Canvas do begin
     {Fill the tab area}
     Brush.Style := bsSolid;
@@ -293,6 +294,9 @@ begin
     else
       Brush.Color := ATabColor;
     FillRect(R);
+
+    if IsMouseOverFolder(ATabIndex) then
+      ;  // do what?
 
     {Draw the bottom, left line}
     Pen.Color := clBlack;
@@ -392,6 +396,7 @@ begin
   Result := R;
 
   if ThemeServices.ThemesEnabled then begin
+    // themed button
     if IsMouseOverFolder(ATabIndex) and nabMouseDown then
       tb := tbPushButtonPressed
     else
@@ -402,9 +407,47 @@ begin
     details := ThemeServices.GetElementDetails(tb);
     InflateRect(R, 1, 1);
     ThemeServices.DrawElement(Canvas.Handle, details, R);
+  end else
+  begin
+    // non-themed button
+    Canvas.Brush.Color := clBtnFace;
+    Canvas.FillRect(R);
+    if nabMouseDown and IsMouseOverFolder(ATabIndex) then
+    begin
+      if R.Top = 0 then R.Top := 1;
+
+      Canvas.Pen.Color := clBtnHighlight;   // bright at bottom/right
+      Canvas.MoveTo(R.Left, R.Bottom-1);
+      Canvas.LineTo(R.Right-1, R.Bottom-1);
+      Canvas.LineTo(R.Right-1, R.Top-1);
+
+      Canvas.Pen.Color := clGray;           // dark at top/left
+      Canvas.MoveTo(R.Left, R.Bottom-2);
+      Canvas.LineTo(R.Left, R.Top);
+      Canvas.LineTo(R.Right-1, R.Top);
+
+      Canvas.Pen.Color := clBtnShadow;      // shadow at top/left
+      Canvas.MoveTo(R.Left+1, R.Bottom-2);
+      Canvas.LineTo(R.Left+1, R.Top);
+      Canvas.LineTo(R.Right-2, R.Top);
+    end else
+    begin
+      Canvas.Pen.Color := clGray;          // bottom/right
+      Canvas.MoveTo(R.Left, R.Bottom-1);
+      Canvas.LineTo(R.Right-1, R.Bottom-1);
+      Canvas.LineTo(R.Right-1, R.Top-1);
+
+      Canvas.Pen.Color := clBtnHighlight;  // top/left
+      Canvas.MoveTo(R.Left, R.Bottom-2);
+      Canvas.LineTo(R.Left, R.Top);
+      Canvas.LineTo(R.Right-1, R.Top);
+
+      Canvas.Pen.Color := clBtnShadow;     // bottom/right shadow
+      Canvas.MoveTo(R.Left+1, R.Bottom-2);
+      Canvas.LineTo(R.Right-2, R.Bottom-2);
+      Canvas.LineTo(R.Right-2, R.Top);
+    end;
   end;
-//TODO:              TR := DrawButtonFace(DrawBmp.Canvas, MyRect, 1, bsNew, False,
-//                (I = FHotFolder) and nabMouseDown, False);
 end;
 
 { Draw regular etched (Win98 style) buttons
@@ -415,10 +458,16 @@ begin
   with Canvas do begin
     Brush.Color := clBtnFace;
     FillRect(R);
+
+    Frame3D(R, 1, bvLowered);
+    if not IsMouseOverFolder(aTabIndex) then
+      Frame3D(R, 1, bvRaised);
+    {
    // InflateRect(R, -1, -1);
     if IsMouseOverFolder(ATabIndex) then
       Frame3D(R, 1, bvLowered) else
       Frame3D(r, 1, bvRaised);
+      }
   end;
   Result := R;
 end;
@@ -842,11 +891,11 @@ begin
     { Draw the folder buttons at the bottom }
     DrawBottomFolderButtons(DrawBmp.Canvas, MyRect, CurPos);
 
+  finally
     { Copy the buffer bitmap to the control }
     FNavBar.Canvas.CopyMode := cmSrcCopy;
-    FNavBar.Canvas.CopyRect(MyRect, DrawBmp.Canvas, MyRect);
+    FNavBar.Canvas.CopyRect(MyRect, DrawBmp.Canvas, Rect(0, 0, DrawBmp.Width,DrawBmp.Height));
 
-  finally
     DrawBmp.Free;
   end;
 end;

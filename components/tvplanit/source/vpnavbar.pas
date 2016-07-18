@@ -2805,11 +2805,12 @@ procedure TVpCustomNavBar.SetDrawingStyle(Value: TVpFolderDrawingStyle);
 begin
   if Value <> FDrawingStyle then begin
     FDrawingStyle := Value;
+    {
     if FDrawingStyle = dsEtchedButton  then
       BorderStyle := bsNone
     else
       BorderStyle := bsSingle;
-
+    }
     {Minimum ButtonHeight for CoolTabs is 17}
     if (FDrawingStyle = dsCoolTab) and (FButtonHeight < 17) then
       FButtonHeight := 17;

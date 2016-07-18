@@ -23,6 +23,7 @@ type
     IconsLbl: TLabel;
     IconsLink: TLabel;
     Panel2: TPanel;
+    RgBorderStyle: TRadioGroup;
     RbBkColor: TRadioButton;
     RbBkImage: TRadioButton;
     RbBkImageTile: TRadioButton;
@@ -42,6 +43,7 @@ type
     procedure IconsLinkClick(Sender: TObject);
     procedure IconsLinkMouseEnter(Sender: TObject);
     procedure IconsLinkMouseLeave(Sender: TObject);
+    procedure RgBorderStyleClick(Sender: TObject);
     procedure RgDrawingStyleClick(Sender: TObject);
     procedure RgIconSizeClick(Sender: TObject);
     procedure RbBkColorChange(Sender: TObject);
@@ -153,6 +155,7 @@ begin
   RandSeed := 1;
   IconsLink.Left := IconsLbl.Left + IconsLbl.Width;
   RgDrawingStyle.ItemIndex := ord(VpNavBar1.DrawingStyle);
+  RgBorderStyle.ItemIndex := ord(VpNavBar1.BorderStyle);
   BkColor.Selected := VpNavBar1.BackgroundColor;
   case VpNavBar1.BackgroundMethod of
     bmNone:
@@ -223,6 +226,11 @@ begin
       VpNavBar1.BackgroundMethod := bmTile;
   end;;
   VpNavBar1.Invalidate;
+end;
+
+procedure TForm1.RgBorderStyleClick(Sender: TObject);
+begin
+  VpNavBar1.BorderStyle := TBorderStyle(RgBorderStyle.ItemIndex);
 end;
 
 procedure TForm1.VpNavBar1FolderChanged(Sender: TObject; Index: Integer);
