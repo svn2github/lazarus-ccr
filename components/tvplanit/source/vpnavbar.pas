@@ -206,6 +206,8 @@ type
     FShowButtons: Boolean;
     FSoundAlias: string;
     FLoadingFolder: Integer;
+    FMouseDownPt: TPoint;
+    FAllowInplaceEdit: Boolean;
 
     {event variables}
     FOnArrange: TNotifyEvent;
@@ -305,6 +307,7 @@ type
     function AddContainer(Container: TVpFOlderContainer): Integer;
     procedure RemoveContainer(Container: TVpFolderContainer);
 
+    procedure DblClick; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseLeave; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -320,6 +323,7 @@ type
 
     {properties}
     property ActiveFolder: Integer read FActiveFolder write SetActiveFolder;
+    property AllowInplaceEdit: Boolean read FAllowInplaceEdit write FAllowInplaceEdit default false;
     property AllowRearrange: Boolean read FAllowRearrange write FAllowRearrange;
     property BackgroundColor: TColor read FBackgroundColor write SetBackgroundColor;
     property BackgroundImage: TBitmap read FBackgroundImage write SetBackgroundImage;
@@ -373,8 +377,8 @@ type
     procedure RenameFolder(AFolderIndex: Integer);
     procedure InsertItem(const ACaption: string; AFolderIndex, AItemIndex, AIconIndex: Integer);
     procedure AddItem(const ACaption: string; AFolderIndex, AIconIndex: Integer);
-    procedure RemoveItem(AFolderIndex, AItemIndex: Integer);
     procedure InvalidateItem(FolderIndex, ItemIndex: Integer);
+    procedure RemoveItem(AFolderIndex, AItemIndex: Integer);
     procedure RenameItem(AFolderIndex, AItemIndex: Integer);
     property ActiveItem: Integer read FActiveItem;
     property Containers[Index: Integer]: TVpFolderContainer read GetContainer;
@@ -387,6 +391,7 @@ type
   TVpNavBar = class(TVpCustomNavBar)
   published
     property ActiveFolder;
+    property AllowInplaceEdit;
     property AllowRearrange;
     property BackgroundColor;
     property BackgroundImage;
@@ -1454,8 +1459,7 @@ begin
   nabEdit.FolderIndex := AFolderIndex;
   nabEdit.ItemIndex := AItemIndex;
   nabEdit.Font.Size := ItemFont.Size;
-  nabEdit.Font.Size := ItemFont.Size;
-  nabEdit.BorderStyle := bsSingle;
+  nabEdit.BorderStyle := bsNone;
   nabEdit.Top := Item.LabelRect.Top-1;
   nabEdit.Left := 10;
   nabEdit.Height := HeightOf(Item.LabelRect) + 2;
@@ -1788,9 +1792,31 @@ begin
 end;
 {=====}
 
+procedure TVpCustomNavBar.DblClick;
+var
+  folder: TVpNavFolder;
+begin
+  inherited;
+
+  if FAllowInplaceEdit and (FActiveFolder <> -1) then
+  begin
+    folder := Folders[FActiveFolder];
+    if PtInRect(folder.Rect, FMouseDownPt) then
+      RenameFolder(FActiveFolder)
+    else
+    if (FSelectedItem <> -1) then
+    begin
+      if PtInRect(folder.Items[FSelectedItem].LabelRect, FMouseDownPt) then
+        RenameItem(FActiveFolder, FSelectedItem);
+    end;
+  end;
+end;
+
 procedure TVpCustomNavBar.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 begin
+  FMouseDownPt := Point(X,Y);
+
   {complete any editing}
   nabCommitEdit(nil);
 
