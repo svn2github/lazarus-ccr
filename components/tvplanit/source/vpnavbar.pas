@@ -281,9 +281,9 @@ type
     procedure nabProcessContainers;
 
     {VCL message methods}
+    procedure CMDesignHitTest(var Msg: TCMDesignHitTest); message CM_DESIGNHITTEST;
     {$IFNDEF LCL}
     procedure CMCtl3DChanged(var Msg: TMessage); message CM_CTL3DCHANGED;
-    procedure CMDesignHitTest(var Msg: TCMDesignHitTest); message CM_DESIGNHITTEST;
     procedure CMFontChanged(var Message: TMessage); message CM_FONTCHANGED;
     procedure CMParentColorChanged(var Message: TMessage); message CM_PARENTCOLORCHANGED;
     {windows message response methods}
@@ -297,6 +297,7 @@ type
     {windows message response methods}
     procedure WMEraseBkGnd(var Msg: TLMEraseBkGnd); message LM_ERASEBKGND;
     procedure WMNCHitTest(var Msg: TLMNCHitTest);  message LM_NCHITTEST;
+    procedure WMSetCursor(var Msg: TLMSetCursor); message LM_SETCURSOR;
     {$ENDIF}
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
@@ -1128,12 +1129,10 @@ begin
 end;
 {=====}
 
-{$IFNDEF LCL}
 procedure TVpCustomNavBar.CMDesignHitTest(var Msg: TCMDesignHitTest);
 begin
   Msg.Result := LongInt(nabOverButton);
 end;
-{$ENDIF}
 {=====}
 
 procedure TVpCustomNavBar.CMFontChanged(var Msg: {$IFDEF LCL}TLMessage{$ELSE}TMessage{$ENDIF});
@@ -2930,8 +2929,11 @@ begin
 end;
 {=====}
 
-{$IFNDEF LCL}
+{$IFDEF LCL}
+procedure TVpCustomNavBar.WMSetCursor(var Msg: TLMSetCursor);
+{$ELSE}
 procedure TVpCustomNavBar.WMSetCursor(var Msg: TWMSetCursor);
+{$ENDIF}
 var
   I : Integer;
   R : TRect;
@@ -2952,7 +2954,6 @@ begin
   end;
   inherited;
 end;
-{$ENDIF}
 {=====}
 
 { Overridden DragOver method. }
