@@ -72,7 +72,7 @@ implementation
 {$R *.lfm}
 
 uses DOM, XMLRead, wst_fpc_xml, pastree, pascal_parser_intf, wsdl_parser, source_utils,
-     generator, metadata_generator, binary_streamer, wst_resources_utils
+     generator, generatorbase, metadata_generator, binary_streamer, wst_resources_utils
      {$IFDEF WST_IDE},LazIDEIntf, ProjectIntf {$ENDIF},locators,xsd_parser;
 
 type
