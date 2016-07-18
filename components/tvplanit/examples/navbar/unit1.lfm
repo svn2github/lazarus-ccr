@@ -17,7 +17,7 @@ object Form1: TForm1
     AllowRearrange = True
     BackgroundColor = clInactiveCaption
     BackgroundMethod = bmTile
-    BorderStyle = bsSingle
+    BorderStyle = bsNone
     ButtonHeight = 20
     DrawingStyle = dsEtchedButton
     FolderCollection = <    
