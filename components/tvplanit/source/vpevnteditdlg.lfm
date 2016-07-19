@@ -1,7 +1,7 @@
 object DlgEventEdit: TDlgEventEdit
-  Left = 417
+  Left = 512
   Height = 433
-  Top = 211
+  Top = 221
   Width = 697
   BorderStyle = bsToolWindow
   Caption = 'Add / Edit Events'

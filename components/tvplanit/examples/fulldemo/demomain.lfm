@@ -784,6 +784,7 @@ object MainForm: TMainForm
     CategoryColorMap.Category9.Description = 'Category 9'
     EnableEventTimer = True
     PlayEventSounds = True
+    OnPlaySound = VpBufDSDataStore1PlaySound
     AutoConnect = True
     AutoCreate = True
     Directory = 'data'

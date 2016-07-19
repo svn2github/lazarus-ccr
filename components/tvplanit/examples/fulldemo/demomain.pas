@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, PrintersDlgs, Forms, Controls, Graphics, Dialogs,
   ExtCtrls, StdCtrls, ComCtrls, LCLTranslator, Menus, VpBaseDS, VpDayView,
   VpWeekView, VpTaskList, VpAbout, VpContactGrid, VpMonthView, VpResEditDlg,
-  VpContactButtons, VpBufDS, VpNavBar, VpData, VpPrtPrvDlg, VpPrtFmtDlg, Types;
+  VpContactButtons, VpBufDS, VpNavBar, VpData, VpPrtPrvDlg, VpPrtFmtDlg, Types, VpBase;
 
 type
 
@@ -100,6 +100,8 @@ type
     procedure MnuSettingsClick(Sender: TObject);
     procedure RbAllTasksChange(Sender: TObject);
     procedure RbHideCompletedTasksChange(Sender: TObject);
+    procedure VpBufDSDataStore1PlaySound(Sender: TObject;
+      const AWavFile: String; AMode: TVpPlaySoundMode);
     procedure VpNavBar1ItemClick(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; Index: Integer);
   private
@@ -140,7 +142,8 @@ uses
  {$ENDIF}
   LCLVersion, LResources, LazFileUtils, LazUTF8, StrUtils, DateUtils, Translations,
   IniFiles, Math, Printers,
-  VpMisc, VpBase, VpPrtFmt;
+  VpMisc, VpPrtFmt,
+  sound;
 
 {$UNDEF UTF8_CALLS}
 {$IFDEF LCL}
@@ -870,6 +873,12 @@ begin
   Notebook.PageIndex := 1;
   titleLbl.Caption := RSTasks;
   ImageList1.GetBitmap(1, Img.Picture.Bitmap);
+end;
+
+procedure TMainForm.VpBufDSDataStore1PlaySound(Sender: TObject;
+  const AWavFile: String; AMode: TVpPlaySoundMode);
+begin
+  sound.PlaySound(AWavFile, AMode);
 end;
 
 procedure TMainForm.ShowContacts;
