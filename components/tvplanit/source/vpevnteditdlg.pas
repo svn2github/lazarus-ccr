@@ -619,12 +619,11 @@ end;
 procedure TDlgEventEdit.FormShow(Sender: TObject);
 begin
   PositionControls;
-  (*
-  {$IFDEF LCL}
-  ScaleDPI(Self, DesigntimeDPI);
-  {$ENDIF}
-    *)
   DescriptionEdit.SetFocus;
+ {$IFNDEF MSWINDOWS}
+  if not Assigned(FDatastore.OnPlaySound) then
+    SoundFinderBtn.Hide;
+ {$ENDIF}
 end;
 {=====}
 

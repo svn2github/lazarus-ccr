@@ -166,7 +166,8 @@ begin
   Label4.Caption := RSNothingToSelectFrom;
   if DingPath = '' then begin
     CBDefault.Checked := true;
-    ShellTreeView.Path := MediaFolder;
+    if (MediaFolder <> '') and DirectoryExists(MediaFolder) then
+      ShellTreeView.Path := MediaFolder;
   end else
   if FileExists(DingPath) then begin
     ShellTreeview.Path := ExtractFileDir(DingPath);
