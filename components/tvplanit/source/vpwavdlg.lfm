@@ -139,9 +139,22 @@ object FrmSoundDialog: TFrmSoundDialog
           Width = 170
           BevelOuter = bvNone
           BorderStyle = bsSingle
-          Caption = 'Nothing to select from'
+          ClientHeight = 86
+          ClientWidth = 166
           TabOrder = 3
-          Wordwrap = True
+          object Label3: TLabel
+            Left = 0
+            Height = 86
+            Top = 0
+            Width = 166
+            Align = alClient
+            Alignment = taCenter
+            AutoSize = False
+            Caption = 'Nothing to select from'
+            Layout = tlCenter
+            ParentColor = False
+            WordWrap = True
+          end
         end
       end
       object Splitter1: TSplitter
@@ -175,8 +188,22 @@ object FrmSoundDialog: TFrmSoundDialog
         Width = 170
         BevelOuter = bvNone
         BorderStyle = bsSingle
-        Caption = 'Nothing to select from'
+        ClientHeight = 86
+        ClientWidth = 166
         TabOrder = 3
+        object Label4: TLabel
+          Left = 0
+          Height = 86
+          Top = 0
+          Width = 166
+          Align = alClient
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Nothing to select from'
+          Layout = tlCenter
+          ParentColor = False
+          WordWrap = True
+        end
       end
     end
   end

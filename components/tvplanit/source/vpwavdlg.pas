@@ -48,12 +48,14 @@ type
   { TFrmSoundDialog }
 
   TFrmSoundDialog = class(TForm)
+    Label3: TLabel;
     PageControl1: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
     Panel4: TPanel;
     RightPanel: TPanel;
+    Label4: TLabel;
     ShellListView: TShellListView;
     ShellTreeView: TShellTreeView;
     Splitter1: TSplitter;
@@ -160,8 +162,8 @@ begin
   CBDefault.Caption := RSDefaultSound;
   OkBtn.Caption := RSOkBtn;
   CancelBtn.Caption := RSCancelBtn;
-  Panel3.Caption := RSNothingToSelectFrom;
-  Panel4.Caption := RSNothingToSelectFrom;
+  Label3.Caption := RSNothingToSelectFrom;
+  Label4.Caption := RSNothingToSelectFrom;
   if DingPath = '' then begin
     CBDefault.Checked := true;
     ShellTreeView.Path := MediaFolder;

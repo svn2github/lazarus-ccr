@@ -560,7 +560,6 @@ object MainForm: TMainForm
     AllowRearrange = True
     BackgroundColor = clActiveCaption
     BackgroundMethod = bmNormal
-    BorderStyle = bsSingle
     ButtonHeight = 20
     DrawingStyle = dsCoolTab
     FolderCollection = <    
