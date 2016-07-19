@@ -128,8 +128,8 @@ var
   shape: TVpShapeType;
   w, h: Integer;
 begin
-  w := SpeedButton1.Width - 8;
-  h := SpeedButton1.Height - 8;
+  w := SpeedButton1.Width div 2;
+  h := SpeedButton1.Height div 2;
   for shape := Low(TVpShapeType) to High(TVpShapeType) do begin
     FShapeBitmaps[shape] := TBitmap.Create;
     with FShapeBitmaps[shape] do begin
@@ -300,8 +300,8 @@ procedure TfrmEditShape.PositionControls;
 var
   w, h: Integer;
   shape: TVpShapeType;
-  delta: Integer;
-  vdist: Integer;
+  DELTA: Integer = 8;
+  VDIST: Integer = 4;
 begin
   // This is needed as workaround for the combobox height at higher dpi.
   // We design it with Style csDropdown where the height is correct, and then
@@ -313,8 +313,8 @@ begin
   cbBrushStyle.Style := csOwnerDrawFixed;
   cbBrushStyle.ItemHeight := h+1;
 
-  delta := round(8 * Screen.PixelsPerInch / DesignTimeDPI);
-  vdist := round(4 * Screen.PixelsPerInch / DesignTimeDPI);
+  DELTA := round(DELTA * Screen.PixelsPerInch / DesignTimeDPI);
+  VDIST := round(VDIST * Screen.PixelsPerInch / DesignTimeDPI);
 
   // Horizontal alignment
   w := MaxValue([GetLabelWidth(lblPenColor), GetLabelWidth(lblPenStyle),
@@ -328,6 +328,7 @@ begin
   lblPenWidth.Left := cbPenColor.Left - GetLabelWidth(lblPenWidth) - DELTA;
   lblPenMode.Left := cbPenColor.Left - GetLabelWidth(lblPenMode) - DELTA;
   gbPen.Width := RightOf(cbPenColor) + DELTA;
+  udPenWidth.Left := RightOf(edPenWidth);
 
   w := MaxValue([GetLabelWidth(lblBrushColor), GetLabelWidth(lblBrushStyle)]) + 2*DELTA;
   cbBrushColor.Left := w;
@@ -358,22 +359,22 @@ begin
   // Vertical alignment
   lblPenColor.Top := cbPenColor.Top + (cbPenColor.Height - lblPenColor.Height) div 2;
   lblBrushColor.Top := lblPenColor.Top;
-  cbPenStyle.Top := BottomOf(cbPenColor) + vdist;
+  cbPenStyle.Top := BottomOf(cbPenColor) + VDIST;
   cbBrushStyle.Top := cbPenStyle.Top;
   lblPenstyle.Top := cbPenStyle.Top + (cbPenStyle.Height - lblPenStyle.Height) div 2;
   lblBrushStyle.Top := lblPenStyle.Top;
-  edPenWidth.Top := BottomOf(cbPenStyle) + vDist;
+  edPenWidth.Top := BottomOf(cbPenStyle) + VDIST;
   udPenWidth.Top := edPenWidth.Top;
   lblPenWidth.Top := edPenWidth.Top + (edPenWidth.Height - lblPenWidth.Height) div 2;
-  cbPenMode.Top := BottomOf(edPenWidth) + vDist;
+  cbPenMode.Top := BottomOf(edPenWidth) + VDIST;
   lblPenMode.Top := cbPenMode.Top + (cbPenMode.Height - lblPenMode.Height) div 2;
-  gbPen.ClientHeight := BottomOf(cbPenMode) + delta;
-  gbBrush.ClientHeight := BottomOf(cbBrushStyle) + delta;
+  gbPen.ClientHeight := BottomOf(cbPenMode) + DELTA;
+  gbBrush.ClientHeight := BottomOf(cbBrushStyle) + DELTA;
 
   btnOK.Top := BottomOf(gbPen) - btnOK.Height;
   btnCancel.Top := btnOK.Top;
 
-  ClientHeight := BottomOf(btnOK) + delta;
+  ClientHeight := BottomOf(btnOK) + DELTA;
 
 end;
 
