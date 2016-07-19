@@ -218,6 +218,7 @@ type
     FOnFolderClick: TVpFolderClickEvent;
     FOnItemClick: TVpItemClickEvent;
     FOnMouseOverItem: TVpMouseOverItemEvent;
+    FOnPlaySound: TVpPlaySoundEvent;
 
     {internal variables}
     nabChanging: Boolean;
@@ -358,6 +359,7 @@ type
     property OnFolderChange: TVpFolderChangeEvent read FOnFolderChange write FOnFolderChange;
     property OnFolderChanged: TVpFolderChangedEvent read FOnFolderChanged write FOnFolderChanged;
     property OnMouseOverItem: TVpMouseOverItemEvent read FOnMouseOverItem write FOnMouseOverItem;
+    property OnPlaySound: TVpPlaySoundEvent read FOnPlaySound write FOnPlaySound;
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -382,6 +384,7 @@ type
     procedure InvalidateItem(FolderIndex, ItemIndex: Integer);
     procedure RemoveItem(AFolderIndex, AItemIndex: Integer);
     procedure RenameItem(AFolderIndex, AItemIndex: Integer);
+    procedure PlaySound(const AWavFile: String; APlaySoundMode: TVpPlaySoundMode);
     property ActiveItem: Integer read FActiveItem;
     property Containers[Index: Integer]: TVpFolderContainer read GetContainer;
     property Folders[Index: Integer]: TVpNavFolder read GetFolder;
@@ -461,6 +464,9 @@ type
 implementation
 
 uses
+ {$IFDEF WINDOWS}
+  mmSystem,
+ {$ENDIF}
   Themes,
   VpNavBarPainter;
 
@@ -2693,13 +2699,28 @@ end;
 {$ENDIF}
 {=====}
 
+procedure TVpCustomNavBar.PlaySound(const AWavFile: String;
+  APlaySoundMode: TVpPlaySoundMode);
+begin
+  if Assigned(FOnPlaySound) then
+    FOnPlaySound(Self, AWavFile, APlaySoundMode)
+  else begin
+   {$IFDEF WINDOWS}
+    case APlaySoundMode of
+      psmSync  : SndPlaySound(PChar(AWavFile), SND_SYNC);
+      psmAsync : SndPlaySound(PChar(AWavFile), SND_ASYNC);
+      psmStop  : SndPlaySound(nil, 0);
+    end;
+   {$ENDIF}
+  end;
+end;
+
 procedure TVpCustomNavBar.SetActiveFolder(Value: Integer);
 var
   Y: Integer;
   YDelta: Integer;
   R: TRect;
   R2: TRect;
-  Buf: array[0..1023] of Char;
   AllowChange: Boolean;
 begin
   if Value <> FActiveFolder then begin
@@ -2721,12 +2742,16 @@ begin
       {animated scroll}
       if FActiveFolder > -1 then begin
         {play sound}
+        if FPlaySounds and (FSoundAlias <> '') and FileExists(FSoundAlias) then
+          PlaySound(FSoundAlias, psmAsync);
+        (*
         if FPlaySounds and (FSoundAlias > '') then begin
           StrPLCopy(Buf, FSoundAlias, SizeOf(Buf)-1);
           {$IFNDEF LCL}
           FPlaySounds := PlaySound(@Buf, 0, SND_ASYNC);
           {$ENDIF}
         end;
+        *)
 
         if Parent <> nil then begin
           {scroll selection}

@@ -13,7 +13,7 @@ object Form1: TForm1
     Height = 370
     Top = 0
     Width = 128
-    ActiveFolder = 3
+    ActiveFolder = 0
     AllowInplaceEdit = True
     AllowRearrange = True
     BackgroundColor = clInactiveCaption
@@ -128,25 +128,26 @@ object Form1: TForm1
     Images = Images
     ItemFont.Color = clWhite
     ItemSpacing = 5
-    PlaySounds = False
+    PlaySounds = True
     SelectedItem = -1
     SelectedItemFont.Color = clYellow
     SelectedItemFont.Style = [fsBold]
     ShowButtons = True
-    SoundAlias = 'MenuCommand'
+    SoundAlias = 'c:\windows\media\tada.wav'
     OnItemClick = VpNavBar1ItemClick
     OnFolderChanged = VpNavBar1FolderChanged
     Align = alLeft
     ParentColor = False
     object Container0: TVpFolderContainer
       Left = 0
-      Height = 290
+      Height = 0
       Top = 80
-      Width = 128
+      Width = 0
       BevelOuter = bvNone
       Color = clInactiveCaption
       ParentColor = False
       TabOrder = 0
+      Visible = False
     end
   end
   object RgDrawingStyle: TRadioGroup
@@ -392,6 +393,39 @@ object Form1: TForm1
     )
     OnClick = RgBorderStyleClick
     TabOrder = 7
+  end
+  object GroupBox2: TGroupBox
+    Left = 292
+    Height = 66
+    Top = 288
+    Width = 259
+    Caption = 'Sounds'
+    ClientHeight = 46
+    ClientWidth = 255
+    TabOrder = 8
+    object CbPlaySounds: TCheckBox
+      Left = 9
+      Height = 19
+      Top = 0
+      Width = 83
+      Caption = 'Play sounds'
+      OnChange = CbPlaySoundsChange
+      TabOrder = 0
+    end
+    object EdSoundFile: TFileNameEdit
+      Left = 9
+      Height = 23
+      Top = 23
+      Width = 239
+      OnAcceptFileName = EdSoundFileAcceptFileName
+      FilterIndex = 0
+      HideDirectories = False
+      ButtonWidth = 23
+      NumGlyphs = 1
+      MaxLength = 0
+      TabOrder = 1
+      OnEditingDone = EdSoundFileEditingDone
+    end
   end
   object Images: TImageList
     Height = 32

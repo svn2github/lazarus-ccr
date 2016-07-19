@@ -18,8 +18,11 @@ type
     BtnAddItem: TButton;
     BkColor: TColorBox;
     BtnLoadBkImage: TButton;
+    CbPlaySounds: TCheckBox;
     EdBkImage: TFileNameEdit;
+    EdSoundFile: TFileNameEdit;
     GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
     IconsLbl: TLabel;
     IconsLink: TLabel;
     Panel2: TPanel;
@@ -39,6 +42,9 @@ type
     procedure BtnAddFolderClick(Sender: TObject);
     procedure BtnAddItemClick(Sender: TObject);
     procedure BtnLoadBkImageClick(Sender: TObject);
+    procedure CbPlaySoundsChange(Sender: TObject);
+    procedure EdSoundFileAcceptFileName(Sender: TObject; var Value: String);
+    procedure EdSoundFileEditingDone(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure IconsLinkClick(Sender: TObject);
     procedure IconsLinkMouseEnter(Sender: TObject);
@@ -64,7 +70,8 @@ implementation
 {$R *.lfm}
 
 uses
-  LCLIntf;
+  LCLIntf,
+  VpMisc;
 
 { TForm1 }
 
@@ -150,10 +157,25 @@ begin
   }
 end;
 
+procedure TForm1.CbPlaySoundsChange(Sender: TObject);
+begin
+  VpNavBar1.PlaySounds := CbPlaySounds.Checked;
+end;
+
+procedure TForm1.EdSoundFileAcceptFileName(Sender: TObject; var Value: String);
+begin
+  VpNavBar1.SoundAlias := ExpandFilename(Value);
+end;
+
+procedure TForm1.EdSoundFileEditingDone(Sender: TObject);
+begin
+  VpNavBar1.SoundAlias := EdSoundFile.FileName;
+end;
+
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   RandSeed := 1;
-  IconsLink.Left := IconsLbl.Left + IconsLbl.Width;
+  IconsLink.Left := IconsLbl.Left + GetLabelWidth(IconsLbl);
   RgDrawingStyle.ItemIndex := ord(VpNavBar1.DrawingStyle);
   RgBorderStyle.ItemIndex := ord(VpNavBar1.BorderStyle);
   BkColor.Selected := VpNavBar1.BackgroundColor;
@@ -178,6 +200,9 @@ begin
   end;
   BtnLoadBkImageClick(nil);
 
+  EdSoundFile.InitialDir := ExtractFileDir(VpNavBar1.SoundAlias);
+  EdSoundFile.FileName := VpNavBar1.SoundAlias;
+  CbPlaySounds.Checked := VpNavBar1.PlaySounds;
 end;
 
 procedure TForm1.IconsLinkClick(Sender: TObject);
