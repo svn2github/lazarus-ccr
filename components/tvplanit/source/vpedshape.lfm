@@ -11,6 +11,7 @@ object frmEditShape: TfrmEditShape
   ClientWidth = 426
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnShow = FormShow
   Position = poScreenCenter
   ShowHint = True
   LCLVersion = '1.7'
@@ -63,7 +64,7 @@ object frmEditShape: TfrmEditShape
     end
     object cbBrushStyle: TComboBox
       Left = 52
-      Height = 23
+      Height = 21
       Top = 32
       Width = 129
       BorderSpacing.Right = 8
@@ -71,6 +72,7 @@ object frmEditShape: TfrmEditShape
       ItemHeight = 15
       OnChange = cbBrushStyleChange
       OnDrawItem = cbBrushStyleDrawItem
+      Style = csOwnerDrawFixed
       TabOrder = 0
     end
     object lblBrushColor: TLabel
@@ -138,13 +140,15 @@ object frmEditShape: TfrmEditShape
     end
     object cbPenStyle: TComboBox
       Left = 52
-      Height = 23
+      Height = 21
       Top = 32
       Width = 124
       BorderSpacing.Right = 8
       ItemHeight = 15
       OnChange = cbPenStyleChange
       OnDrawItem = cbPenStyleDrawItem
+      ReadOnly = True
+      Style = csOwnerDrawFixed
       TabOrder = 1
     end
     object cbPenMode: TComboBox

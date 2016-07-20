@@ -91,15 +91,15 @@ type
     procedure PosEditEnter(Sender: TObject);
     procedure UpDownClick(Sender: TObject; Button: TUDBtnType);
   private
-    procedure RepositionControls;
+    procedure PositionControls;
     procedure SetCaptions;
     procedure SetMaxSpin(Spin: Integer);
   protected
-    TheShape : TVpPrintShape;
-    TheCaption : TVpPrintCaption;
-    CurEdit : TEdit;
+    TheShape: TVpPrintShape;
+    TheCaption: TVpPrintCaption;
+    CurEdit: TEdit;
 
-    MaxSpin : Integer;
+    MaxSpin: Integer;
     procedure SaveData(AnElement: TVpPrintFormatElementItem);
     procedure SetData(AnElement: TVpPrintFormatElementItem);
     procedure SetItemType(Index: Integer);
@@ -141,6 +141,7 @@ end;
 {=====}
 procedure TfrmEditElement.FormShow(Sender: TObject);
 begin
+  PositionControls;
   edName.SetFocus;
 end;
 {=====}
@@ -286,11 +287,9 @@ begin
   btnShape.Caption := RSShapeBtn;
   btnOK.Caption := RSOKBtn;
   btnCancel.Caption := RSCancelBtn;
-
-  RepositionControls;
 end;
 
-procedure TfrmEditElement.RepositionControls;
+procedure TfrmEditElement.PositionControls;
 const
   MARGIN = 16;
   DELTA = 8;
@@ -299,10 +298,44 @@ const
   GROUPBOX_CORRECTION = 16;
   GROUPBOX_DISTANCE = 16;
 var
-  i, w, h: Integer;
+  i, w, h, hEd, hBtn: Integer;
   cnv: TControlCanvas;
   rb: TRadioButton;
 begin
+  // Fix edit heights at higher dpi
+  with TEdit.Create(self) do
+  try
+    Parent := self;
+    hEd := Height;
+  finally
+    free;
+  end;
+  edName.Height := hEd;
+  edOffset.Height := hEd;
+  udOffset.Height := hEd;
+  edTop.Height := hEd;
+  edLeft.Height := hEd;
+  edHeight.Height := hEd;
+  edWidth.Height := hEd;
+  udTop.Height := hEd;
+  udLeft.Height := hEd;
+  udHeight.Height := hEd;
+  udWidth.Height := hEd;
+  edCaptionText.Height := hEd;
+
+  // Fix button heights a higher dpi
+  with TButton.Create(self) do
+  try
+    Parent := self;
+    hBtn := Height;
+  finally
+    Free;
+  end;
+  btnOK.Height := hBtn;
+  btnCancel.Height := hBtn;
+  btnShape.Height := hBtn;
+  btnCaptionFont.Height := hBtn;
+
   cnv := TControlCanvas.Create;
   try
     cnv.Control := rgItemType;

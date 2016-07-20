@@ -173,6 +173,8 @@ end;
 {=====}
 procedure TfrmPrnFormat.FormShow(Sender: TObject);
 begin
+  PositionControls;
+
   PrintPreview.Parent := PrintPreviewPanel;
 
   if ControlLink.Printer.PrintFormats.Count > 0 then begin
@@ -663,28 +665,53 @@ begin
   btnNewFile.Caption := RSNewFileBtn;
   btnLoadFile.Caption := RSLoadFileBtn;
   btnSaveFile.Caption := RSSaveFileBtn;
-
-  PositionControls;
 end;
 
 procedure TfrmPrnFormat.PositionControls;
 var
   w: Integer;
-  dist: Integer;
+  DIST: Integer = 8;
   btndist: Integer;
+  hBtn: Integer;
 begin
-  dist := round(8 * Screen.PixelsPerInch / DesignTimeDPI);
+  DIST := round(DIST * Screen.PixelsPerInch / DesignTimeDPI);
   btnDist := btnEditFormat.Top - BottomOf(btnNewFormat);
+
+  // Fix button height at higher dpi
+  with TButton.Create(self) do
+  try
+    Parent := self;
+    hBtn := Height;
+  finally
+    Free;
+  end;
+  btnNewFormat.Height := hBtn;
+  btnEditFormat.Height := hBtn;
+  btnDeleteFormat.Height := hBtn;
+  btnNewElement.Height := hBtn;
+  btnEditElement.Height := hbtn;
+  btnDeleteElement.Height := hBtn;
+  btnNewFile.Height := hBtn;
+  btnLoadFile.Height := hBtn;
+  btnSaveFile.Height := hBtn;
+  btnOK.Height := hBtn;
 
   w := MaxValue([GetButtonWidth(btnNewFile), GetButtonWidth(btnLoadFile), GetButtonWidth(btnSaveFile)]);
   btnNewFile.Width := w;
   btnLoadFile.Width := w;
   btnSaveFile.Width := w;
-  btnLoadFile.Left := RightOf(btnNewFile) + dist;
-  btnSaveFile.Left := RightOf(btnLoadFile) + dist;
+  btnLoadFile.Left := RightOf(btnNewFile) + DIST;
+  btnSaveFile.Left := RightOf(btnLoadFile) + DIST;
 
   w := MaxValue([GetButtonWidth(btnNewFormat), GetButtonWidth(btnEditFormat), GetButtonWidth(btnDeleteFormat)]);
-  btnNewFormat.Left := RightOf(lbFormats) + dist;
+  btnNewFormat.Width := w;
+  btnEditFormat.Width := w;
+  btnDeleteFormat.Width := w;
+  btnNewElement.Width := w;
+  btnEditElement.Width := w;
+  btnDeleteElement.Width := w;
+  w := Max(w, GetLabelWidth(LblPrintOrder));
+  btnNewFormat.Left := RightOf(lbFormats) + DIST + (w - btnNewFormat.Width) div 2;
   btnEditFormat.Left := btnNewFormat.Left;
   btnDeleteFormat.Left := btnNewFormat.Left;
   btnNewElement.Left := btnNewFormat.Left;
@@ -698,9 +725,11 @@ begin
   btnMoveElementUp.Top := BottomOf(LblPrintOrder) + Round(8 * Screen.PixelsPerInch / DesignTimeDPI);
   btnMoveElementDn.Top := BottomOf(BtnMoveElementUp) + Round(8 * Screen.PixelsPerInch / DesignTimeDPI);
 
-  PrintPreviewPanel.Left := BtnNewFormat.Left + BtnNewFormat.Width + dist;
+  PrintPreviewPanel.Left := Max(RightOf(btnNewFormat), RightOf(LblPrintOrder)) + DIST; //RightOf(lbFormats) + DIST + w + DIST;
+  PrintPreviewPanel.Width := round(PrintPreview.Height * 210 / 297);  // size ratio of A4 paper
 
-  ClientWidth := PrintPreviewPanel.Left + PrintPreviewPanel.Width + 8;
+  ButtonPanel.ClientHeight := BottomOf(btnOK) + btnOK.Top;
+  ClientWidth := PrintPreviewPanel.Left + PrintPreviewPanel.Width + 4; // + DIST;
 end;
 {
 

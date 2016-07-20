@@ -88,6 +88,7 @@ uses
 
 procedure TfrmEditFormat.FormShow(Sender: TObject);
 begin
+  PositionControls;
   edName.SetFocus;
 end;
 {=====}
@@ -149,48 +150,70 @@ begin
   rgDayIncrement.Items[3] := RSYears;
   btnOK.Caption := RSOKBtn;
   btnCancel.Caption := RSCancelBtn;
-
-  PositionControls;
 end;
 
 procedure TfrmEditFormat.PositionControls;
 var
-  delta: integer = 8;
+  DELTA: integer = 8;
   margin: Integer = 16;
   vdist: Integer = 4;
 var
   w, h: Integer;
   dummyRB: TRadioButton;
+  editHeight: Integer;
+  btnHeight: Integer;
 begin
-  delta := Round(delta * Screen.PixelsPerInch / DesignTimeDPI);
-  margin := Round(margin * Screen.PixelsPerInch / DesignTimeDPI);
-  vdist := Round(vdist * Screen.PixelsPerInch / DesignTimeDPI);
+  // Fix edit and button heights at higher dpi
+  with TEdit.Create(self) do
+  try
+    Parent := self;
+    editHeight := Height;
+  finally
+    Free;
+  end;
+
+  with TButton.Create(self) do
+  try
+    Parent := self;
+    btnHeight := Height;
+  finally
+    Free;
+  end;
+
+  DELTA := Round(DELTA * Screen.PixelsPerInch / DesignTimeDPI);
+  MARGIN := Round(MARGIN * Screen.PixelsPerInch / DesignTimeDPI);
+  VDIST := Round(VDIST * Screen.PixelsPerInch / DesignTimeDPI);
 
   w := MaxValue([GetLabelWidth(LblName), GetLabelWidth(LblDescription), GetLabelWidth(LblIncrement)]);
-  edName.Left := margin + w + delta;
+  edName.Left := margin + w + DELTA;
   edDescription.Left := edName.Left;
   edDescription.Width := edName.Width;
   edIncrement.Left := edName.Left;
   udIncrement.Left := edIncrement.Left + edIncrement.Width;
-  LblName.Left := edName.Left - GetLabelWidth(LblName) - delta;
-  LblDescription.Left := edDescription.Left - GetLabelWidth(lblDescription) - delta;
-  lblIncrement.Left := edIncrement.Left - GetLabelWidth(lblIncrement) - delta;
+  LblName.Left := edName.Left - GetLabelWidth(LblName) - DELTA;
+  LblDescription.Left := edDescription.Left - GetLabelWidth(lblDescription) - DELTA;
+  lblIncrement.Left := edIncrement.Left - GetLabelWidth(lblIncrement) - DELTA;
 
-  ClientWidth := MARGIN + w + delta + edName.Width + margin;
-  rgDayIncrement.Width := ClientWidth - 2*margin;
+  ClientWidth := MARGIN + w + DELTA + edName.Width + MARGIN;
+  rgDayIncrement.Width := ClientWidth - 2*MARGIN;
 
   w := Max(GetButtonWidth(btnOK), GetButtonWidth(btnCancel));
   btnOK.Width := w;
   btnCancel.Width := w;
   btnCancel.Left := RightOf(rgDayIncrement) - btnCancel.Width;
-  btnOK.Left := btnCancel.Left - delta - btnOK.Width;
+  btnOK.Left := btnCancel.Left - DELTA - btnOK.Width;
 
-  edDescription.Top := BottomOf(edName) + vDist;
+  edName.Height := editHeight;
+  edDescription.Height := editHeight;
+  edIncrement.Height := editHeight;
+  udIncrement.Height := editHeight;
+
+  edDescription.Top := BottomOf(edName) + VDIST;
   lblDescription.Top := edDescription.Top + (edDescription.Height - lblDescription.Height) div 2;
-  edIncrement.Top := BottomOf(edDescription) + vDist;
+  edIncrement.Top := BottomOf(edDescription) + VDIST;
   udIncrement.Top := edIncrement.Top;
   lblIncrement.top := edIncrement.Top + (edIncrement.Height - lblIncrement.Height) div 2;
-  rgDayIncrement.Top := BottomOf(edIncrement) + vDist + vDist;
+  rgDayIncrement.Top := BottomOf(edIncrement) + VDISt + VDIST;
 
   DummyRB := TRadioButton.Create(self);
   DummyRB.Parent := self;
@@ -198,10 +221,12 @@ begin
   DummyRB.Free;
 
   rgdayIncrement.Height := h + 2*LblName.Height;
-  btnOK.Top := Bottomof(rgDayIncrement) + vDist;
+  btnOK.Height := btnHeight;
+  btnCancel.Height := btnHeight;
+  btnOK.Top := Bottomof(rgDayIncrement) + VDIST;
   btnCancel.Top := btnOK.Top;
 
-  ClientHeight := Bottomof(btnOK) + vDist*2;
+  ClientHeight := Bottomof(btnOK) + VDIST*2;
 end;
 
 procedure TfrmEditFormat.SetData(AFormat: TVpPrintFormatItem);

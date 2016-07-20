@@ -86,6 +86,7 @@ type
     procedure edPenWidthChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormShow(Sender: TObject);
 
   private
     FShapeButtons: array[TVpShapeType] of TSpeedButton;
@@ -233,6 +234,11 @@ begin
   DestroyBitmaps;
 end;
 
+procedure TfrmEditShape.FormShow(Sender: TObject);
+begin
+  PositionControls;
+end;
+
 {=====}
 function TfrmEditShape.Execute(AShape: TVpPrintShape): Boolean;
 begin
@@ -298,7 +304,7 @@ end;
 {=====}
 procedure TfrmEditShape.PositionControls;
 var
-  w, h: Integer;
+  w, hc, hb: Integer;
   shape: TVpShapeType;
   DELTA: Integer = 8;
   VDIST: Integer = 4;
@@ -307,15 +313,29 @@ begin
   gbPen.AutoSize := false;
   gbBrush.AutoSize := false;
 
-  // This is needed as workaround for the combobox height at higher dpi.
-  // We design it with Style csDropdown where the height is correct, and then
-  // use the corresponding, correct ItemHeight after switching to csOwnerDrawFixed
-  // (which is needed to draw the icons).
-  h := cbPenStyle.ItemHeight;
-  cbPenStyle.Style := csOwnerDrawFixed;
-  cbPenStyle.ItemHeight := h+1;
-  cbBrushStyle.Style := csOwnerDrawFixed;
-  cbBrushStyle.ItemHeight := h+1;
+  // A workaround for the combobox height issue at higher dpi values:
+  // Create a combobox at runtime, it has the correct height, and apply its
+  // ItemHeight to the other comboboxes.
+  with TCombobox.Create(self) do
+  try
+    Parent := self;
+    hc := ItemHeight;
+  finally
+    Free;
+  end;
+  cbPenStyle.ItemHeight := hc;
+  cbPenColor.ItemHeight := hc;
+  cbBrushStyle.ItemHeight := hc;
+  cbBrushColor.ItemHeight := hc;
+
+  // Fix button hight at higher dpi.
+  with TButton.Create(self) do
+  try
+    Parent := self;
+    hb := Height;
+  finally
+    Free;
+  end;
 
   DELTA := round(DELTA * Screen.PixelsPerInch / DesignTimeDPI);
   VDIST := round(VDIST * Screen.PixelsPerInch / DesignTimeDPI);
@@ -375,6 +395,8 @@ begin
   btnOK.Left := btnCancel.Left - DELTA - btnOK.Width;
 
   { Buttons - vert }
+  btnOK.Height := hb;
+  btnCancel.Height := hb;
   btnOK.Top := BottomOf(gbPen) - btnOK.Height;
   btnCancel.Top := btnOK.Top;
 
@@ -423,8 +445,6 @@ begin
   lblBrushStyle.Caption := RSStyleLbl;
   btnOK.Caption := RSOKBtn;
   btnCancel.Caption := RSCancelBtn;
-
-  PositionControls;
 end;
 
 procedure TfrmEditShape.SetData(AShape: TVpPrintShape);

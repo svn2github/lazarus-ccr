@@ -2,12 +2,12 @@ object frmPrnFormat: TfrmPrnFormat
   Left = 250
   Height = 480
   Top = 165
-  Width = 693
+  Width = 694
   HorzScrollBar.Page = 639
   VertScrollBar.Page = 479
   Caption = 'Print Format Designer'
   ClientHeight = 480
-  ClientWidth = 693
+  ClientWidth = 694
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnShow = FormShow
@@ -98,8 +98,8 @@ object frmPrnFormat: TfrmPrnFormat
     Height = 439
     Top = 0
     Width = 320
-    Align = alRight
-    BorderSpacing.Right = 8
+    BorderSpacing.Top = 4
+    BorderSpacing.Right = 4
     BevelOuter = bvNone
     ClientHeight = 439
     ClientWidth = 320
@@ -145,7 +145,7 @@ object frmPrnFormat: TfrmPrnFormat
   object btnEditFormat: TButton
     Left = 280
     Height = 25
-    Top = 61
+    Top = 56
     Width = 75
     Caption = '&Edit'
     Enabled = False
@@ -155,7 +155,7 @@ object frmPrnFormat: TfrmPrnFormat
   object btnDeleteFormat: TButton
     Left = 280
     Height = 25
-    Top = 97
+    Top = 88
     Width = 75
     Caption = '&Delete'
     Enabled = False
@@ -175,7 +175,7 @@ object frmPrnFormat: TfrmPrnFormat
   object btnEditElement: TButton
     Left = 280
     Height = 25
-    Top = 282
+    Top = 280
     Width = 75
     Caption = 'E&dit'
     Enabled = False
@@ -185,7 +185,7 @@ object frmPrnFormat: TfrmPrnFormat
   object btnDeleteElement: TButton
     Left = 280
     Height = 25
-    Top = 318
+    Top = 312
     Width = 75
     Caption = 'De&lete'
     Enabled = False
@@ -196,11 +196,11 @@ object frmPrnFormat: TfrmPrnFormat
     Left = 0
     Height = 41
     Top = 439
-    Width = 693
+    Width = 694
     Align = alBottom
     BevelOuter = bvNone
     ClientHeight = 41
-    ClientWidth = 693
+    ClientWidth = 694
     TabOrder = 9
     object btnLoadFile: TButton
       Left = 88
@@ -230,7 +230,7 @@ object frmPrnFormat: TfrmPrnFormat
       TabOrder = 0
     end
     object btnOk: TButton
-      Left = 609
+      Left = 610
       Height = 25
       Top = 8
       Width = 75
