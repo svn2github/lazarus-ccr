@@ -41,8 +41,8 @@ implementation
 procedure Tmainform.cmd_AsyncClick(Sender: TObject);
 // No gap between sounds. App remains responsive
 begin
- {$IFDEF WINDOWS}
   playsound1.PlayStyle:=psASync;
+ {$IFDEF WINDOWS}
   playsound1.SoundFile:='doorbell.wav';
   playsound1.Execute;
   playsound1.SoundFile:='telephone.wav';
@@ -60,8 +60,8 @@ end;
 
 procedure Tmainform.cmd_SyncClick(Sender: TObject);
 begin
- {$IFDEF WINDOWS}
   playsound1.PlayStyle:=psSync;
+ {$IFDEF WINDOWS}
   playsound1.SoundFile:='doorbell.wav';
   playsound1.Execute;
   playsound1.SoundFile:='telephone.wav';
