@@ -126,11 +126,6 @@ begin
         for i:=1 to L.Count-1 do
           SoundPlayerAsyncProcess.Parameters.Add(L[i]);
         SoundPlayerAsyncProcess.Parameters.Add(ASoundFilename);
-
-        WriteLn;
-        WriteLn(SoundPlayerAsyncProcess.Executable);;
-        for i:=0 to SoundPlayerAsyncProcess.Parameters.Count-1 do
-          WriteLn(i, ': ', SoundPlayerAsyncProcess.Parameters[i]);
         try
           SoundPlayerAsyncProcess.Execute;
         except
