@@ -457,7 +457,6 @@ begin
   Unused(Control, State);
 
   Item := cbBrushStyle.Items[Index];
-  x := Rect.Left + HeightOf(Rect);
   with cbBrushStyle.Canvas do
   try
     { keep old settings }
@@ -467,7 +466,13 @@ begin
 
     R := Rect;
     InflateRect(R, -1, -1);
+    x := Rect.Left + HeightOf(Rect);
     R.Right := x;
+   {$IFDEF LINUX}
+    InflateRect(R, -2, -2);
+    x := Rect.Left + HeightOf(Rect);
+    R.Right := x - 2;
+   {$ENDIF}
     bs := TBrushStyle(GetEnumValue(TypeInfo(TBrushStyle), Item));
 
     { draw background }
@@ -519,7 +524,7 @@ var
   SavePenColor, SaveBrushColor: TColor;
   SavePenStyle: TPenStyle;
   Item: string;
-  TxtRect : TRect;
+  R, TxtRect : TRect;
   x, y: Integer;
 begin
   Unused(Control, State);
@@ -541,15 +546,20 @@ begin
     { Set up for drawing sample }
     Brush.Color := cbPenStyle.Brush.Color;
     Pen.Color := cbPenStyle.Font.Color;
-    Rectangle(Rect.Left + 1, Rect.Top + 1, x - 1, Rect.Bottom - 1);
+    R := Rect;
+    InflateRect(R, -1, -1);
+   {$IFDEF LINUX}
+    InflateRect(R, -2, -2);
+   {$ENDIF}
+    Rectangle(R.Left, R.Top, x - 1, R.Bottom);
 
     { Draw sample }
     Pen.Style := TPenStyle(GetEnumValue(TypeInfo(TPenStyle), Item));
     Pen.Color := cbPenStyle.Font.Color;
 
-    MoveTo(Rect.Left + 1, y);
+    MoveTo(R.Left + 1, y);
     LineTo(x - 1, y);
-    MoveTo(Rect.Left + 1, y + 1);
+    MoveTo(R.Left + 1, y + 1);
     LineTo(x - 1, y + 1);
 
     { Draw the item text }
