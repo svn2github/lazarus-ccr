@@ -10,7 +10,7 @@ object mainform: Tmainform
   DefaultMonitor = dmPrimary
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '1.6.0.1'
+  LCLVersion = '1.7'
   object cmd_Async: TButton
     Left = 264
     Height = 25
@@ -52,20 +52,20 @@ object mainform: Tmainform
     TIObject = playsound1
     ValueFont.Color = clMaroon
   end
-  object cmd_StpSound: TButton
+  object cmd_StopSound: TButton
     Left = 264
     Height = 25
     Top = 112
     Width = 75
     Caption = 'Stop Sound'
-    OnClick = cmd_StpSoundClick
+    OnClick = cmd_StopSoundClick
     TabOrder = 4
   end
   object playsound1: Tplaysound
     About.Description.Strings = (
       'Plays WAVE sounds in Windows or Linux'
     )
-    About.Title = 'About About About PlaySound'
+    About.Title = 'About About About About About About PlaySound'
     About.Height = 400
     About.Width = 400
     About.Font.Color = clNavy
@@ -77,9 +77,7 @@ object mainform: Tmainform
     About.AuthorEmail = 'minesadorada@charcodelvalle.com'
     About.ComponentName = 'PlaySound'
     About.LicenseType = abLGPL
-    SoundFile = '/home/gordon/development/lazarus/'
-    PlayCommand = 'sndPlaySnd'
-    left = 4
-    top = 8
+    left = 104
+    top = 40
   end
 end

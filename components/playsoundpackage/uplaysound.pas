@@ -19,10 +19,12 @@ type
     SoundPlayerSyncProcess: Tprocess;
     {$ENDIF}
     fPlayCommand:String;
+    fDefaultPlayCommand: String;
     fPathToSoundFile: string;
     fPlayStyle: TPlayStyle;
   protected
     { Protected declarations }
+    function GetPlayCommand: String;
     procedure PlaySound(const szSoundFilename: string); virtual;
   public
     { Public declarations }
@@ -100,11 +102,11 @@ constructor Tplaysound.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   fPlayStyle := psASync;
-  fPathToSoundFile := ProgramDirectory;
+//  fPathToSoundFile := ProgramDirectory;
   {$IFDEF WINDOWS}
-  fPlayCommand:='sndPlaySnd';
+  fDefaultPlayCommand := 'sndPlaySound';
   {$ELSE}
-  fPlayCommand:=GetNonWindowsPlayCommand; // Linux, Mac etc.
+  fDefaultPlayCommand := GetNonWindowsPlayCommand; // Linux, Mac etc.
   {$ENDIF}
   // About Dialog properties
   AboutBoxComponentName := 'PlaySound';
@@ -143,6 +145,14 @@ begin
   end;
 end;
 
+function TPlaySound.GetPlayCommand: String;
+begin
+  if FPlayCommand = '' then
+    Result := FDefaultPlayCommand
+  else
+    Result := FPlayCommand;
+end;
+
 procedure Tplaysound.PlaySound(const szSoundFilename: string);
 var
 {$IFDEF WINDOWS}
@@ -150,6 +160,7 @@ var
 {$ELSE}
   L: TStrings;
   i: Integer;
+  playCmd: String;
 {$ENDIF}
 begin
 {$IFDEF WINDOWS}
@@ -166,16 +177,17 @@ begin
   // How to play in Linux? Use generic Linux commands
   // Use asyncprocess to play sound as SND_ASYNC
   // proceed if we managed to find a valid command
-  if (fPlayCommand <> '') then
+  playCmd := GetPlayCommand;
+  if (playCmd <> '') then
   begin
     L := TStringList.Create;
     try
       L.Delimiter := ' ';
-      L.DelimitedText := fPlayCommand;
+      L.DelimitedText := playCmd;
       if fPlayStyle = psASync then
       begin
         if SoundPlayerAsyncProcess = nil then
-          SoundPlayerAsyncProcess := Tasyncprocess.Create(nil);
+          SoundPlayerAsyncProcess := TaSyncProcess.Create(nil);
         SoundPlayerAsyncProcess.CurrentDirectory := ExtractFileDir(szSoundFilename);
         SoundPlayerAsyncProcess.Executable := FindDefaultExecutablePath(L[0]);
         SoundPlayerAsyncProcess.Parameters.Clear;
@@ -193,7 +205,7 @@ begin
       else
       begin
         if SoundPlayerSyncProcess = nil then
-          SoundPlayerSyncProcess := Tprocess.Create(nil);
+          SoundPlayerSyncProcess := TProcess.Create(nil);
         SoundPlayerSyncProcess.CurrentDirectory := ExtractFileDir(szSoundFilename);
         SoundPlayerSyncProcess.Executable := FindDefaultExecutablePath(L[0]);
         SoundPlayersyncProcess.Parameters.Clear;

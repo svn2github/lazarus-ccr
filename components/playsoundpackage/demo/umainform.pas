@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, RTTIGrids, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, Buttons, uplaysound;
+  StdCtrls, Buttons, ExtCtrls, uplaysound;
 
 type
 
@@ -14,13 +14,13 @@ type
 
   Tmainform = class(TForm)
     BitBtn1: TBitBtn;
-    cmd_StpSound: TButton;
+    cmd_StopSound: TButton;
     cmd_Async: TButton;
     cmd_Sync: TButton;
     playsound1: Tplaysound;
     TIPropertyGrid1: TTIPropertyGrid;
     procedure cmd_AsyncClick(Sender: TObject);
-    procedure cmd_StpSoundClick(Sender: TObject);
+    procedure cmd_StopSoundClick(Sender: TObject);
     procedure cmd_SyncClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -41,26 +41,35 @@ implementation
 procedure Tmainform.cmd_AsyncClick(Sender: TObject);
 // No gap between sounds. App remains responsive
 begin
+ {$IFDEF WINDOWS}
   playsound1.PlayStyle:=psASync;
   playsound1.SoundFile:='doorbell.wav';
   playsound1.Execute;
   playsound1.SoundFile:='telephone.wav';
   playsound1.Execute;
+ {$ELSE}
+  // Sound file taken from PropertyGrid
+  playsound1.Execute;
+ {$ENDIF}
 end;
 
-procedure Tmainform.cmd_StpSoundClick(Sender: TObject);
+procedure Tmainform.cmd_StopSoundClick(Sender: TObject);
 begin
   playsound1.StopSound;
 end;
 
 procedure Tmainform.cmd_SyncClick(Sender: TObject);
 begin
+ {$IFDEF WINDOWS}
   playsound1.PlayStyle:=psSync;
   playsound1.SoundFile:='doorbell.wav';
   playsound1.Execute;
   playsound1.SoundFile:='telephone.wav';
   playsound1.Execute;
-
+ {$ELSE}
+  // Sound file taken from PropertyGrid
+  playsound1.Execute;
+ {$ENDIF}
 end;
 
 procedure Tmainform.FormCreate(Sender: TObject);
