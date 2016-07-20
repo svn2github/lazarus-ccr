@@ -145,8 +145,17 @@ type
     function IsHeaderBlock() : Boolean;
     function IsSimpleContentHeaderBlock() : Boolean;
     procedure SetAsGroupType(AType : TPasType; const AValue : Boolean);
-    procedure AddGroup(ADest, AGroup : TPasClassType);
-    procedure ParseGroups(AClassDef : TPasClassType; AGroupCursor : IObjectCursor);
+    procedure AddGroup(
+            ADest,
+            AGroup           : TPasClassType;
+      const AMultiOccurrence : Boolean;
+            AArrayItems      : TPropInfoReferenceList
+    );
+    procedure ParseGroups(
+      AClassDef    : TPasClassType;
+      AGroupCursor : IObjectCursor;
+      AArrayItems  : TPropInfoReferenceList
+    );
   private
     procedure CreateNodeCursors();
     procedure ExtractTypeName();
@@ -186,6 +195,93 @@ type
 implementation
 uses 
   dom_cursors, parserutils, StrUtils, xsd_consts, wst_consts;
+
+type
+  TOccurrenceRec = record
+    Valid      : Boolean;
+    MinOccurs  : Integer;
+    MaxOccurs  : Integer;
+    Unboundded : Boolean;
+  end;
+
+procedure ExtractOccurences(
+      AEntityName,
+      AItemName      : string;
+      AAttCursor     : IObjectCursor;
+  var AMinOccurs,
+      AMaxOccurs     : Integer;
+  var AMaxUnboundded : Boolean
+);overload;
+var
+  locPartCursor : IObjectCursor;
+  locMin, locMax : Integer;
+  locMaxOccurUnbounded : Boolean;
+  locStrBuffer : string;
+begin
+  if (AAttCursor = nil) then begin
+    AMinOccurs := 1;
+    AMaxOccurs := 1;
+    AMaxUnboundded := False;
+    exit;
+  end;
+
+  locMin := 1;
+  locPartCursor :=
+    CreateCursorOn(
+      AAttCursor.Clone() as IObjectCursor,
+      ParseFilter(Format('%s = %s',[s_NODE_NAME,QuotedStr(s_minOccurs)]),
+      TDOMNodeRttiExposer)
+    );
+  locPartCursor.Reset();
+  if locPartCursor.MoveNext() then begin
+    locStrBuffer := (locPartCursor.GetCurrent() as TDOMNodeRttiExposer).NodeValue;
+    if not TryStrToInt(locStrBuffer,locMin) then
+      raise EXsdParserException.CreateFmt(SERR_InvalidMinOccursValue,[AEntityName,AItemName]);
+    if ( locMin < 0 ) then
+      raise EXsdParserException.CreateFmt(SERR_InvalidMinOccursValue,[AEntityName,AItemName]);
+  end;
+
+  locMax := 1;
+  locMaxOccurUnbounded := False;
+  locPartCursor :=
+    CreateCursorOn(
+      AAttCursor.Clone() as IObjectCursor,
+      ParseFilter(
+        Format('%s = %s',[s_NODE_NAME,QuotedStr(s_maxOccurs)]),
+        TDOMNodeRttiExposer
+      )
+    );
+  locPartCursor.Reset();
+  if locPartCursor.MoveNext() then begin
+    locStrBuffer := (locPartCursor.GetCurrent() as TDOMNodeRttiExposer).NodeValue;
+    if AnsiSameText(locStrBuffer,s_unbounded) then begin
+      locMaxOccurUnbounded := True;
+    end else begin
+      if not TryStrToInt(locStrBuffer,locMax) then
+        raise EXsdParserException.CreateFmt(SERR_InvalidMaxOccursValue,[AEntityName,AItemName]);
+      if ( locMin < 0 ) then
+        raise EXsdParserException.CreateFmt(SERR_InvalidMaxOccursValue,[AEntityName,AItemName]);
+    end;
+  end;
+
+  AMinOccurs := locMin;
+  AMaxOccurs := locMax;
+  AMaxUnboundded := locMaxOccurUnbounded;
+end;
+
+procedure ExtractOccurences(
+      AEntityName,
+      AItemName      : string;
+      AAttCursor     : IObjectCursor;
+  var AResult        : TOccurrenceRec
+);overload;
+begin
+  ExtractOccurences(
+    AEntityName,AItemName,AAttCursor,
+    AResult.MinOccurs,AResult.MaxOccurs,AResult.Unboundded
+  );
+  AResult.Valid := True;
+end;
 
 { TAbstractTypeParser }
 
@@ -734,34 +830,52 @@ begin
   FSymbols.Properties.SetValue(AType,sIS_GROUP,s);
 end;
 
-procedure TComplexTypeParser.AddGroup(ADest, AGroup: TPasClassType);
+function MakeUniqueMemberName(
+  ABaseName : string;
+  AParent   : TPasClassType;
+  ASuffix   : string
+) : string;
 var
-  i, k : Integer;
+  locInternalEltName : string;
+  k : Integer;
+begin
+  locInternalEltName := ABaseName;
+  if (FindMember(AParent,locInternalEltName) <> nil) then begin
+    k := 0;
+    while True do begin
+      locInternalEltName := Format('%s%s',[ABaseName,ASuffix]);
+      if (k > 0) then
+        locInternalEltName := locInternalEltName+IntToStr(k);
+      if (FindMember(AParent,locInternalEltName) = nil) then
+        break;
+      k := k+1;
+    end;
+  end;
+  Result := locInternalEltName;
+end;
+
+procedure TComplexTypeParser.AddGroup(
+        ADest,
+        AGroup           : TPasClassType;
+  const AMultiOccurrence : Boolean;
+        AArrayItems      : TPropInfoReferenceList
+);
+var
+  i : Integer;
   src, dest : TPasProperty;
   locIsAttribute, locHasInternalName : Boolean;
-  locInternalEltName : string;
+  locInternalEltName, locStrBuffer : string;
 begin
   for i := 0 to AGroup.Members.Count-1 do begin
     if TObject(AGroup.Members[i]).InheritsFrom(TPasProperty) then begin
       src := TPasProperty(AGroup.Members[i]);
-      locHasInternalName := False;
       locIsAttribute := FSymbols.IsAttributeProperty(src);
-      locInternalEltName := src.Name;
-      if (FindMember(ADest,locInternalEltName) <> nil) then begin
-        locHasInternalName := True;
-        k := 0;
-        while True do begin
-          if locIsAttribute then
-            locInternalEltName := Format('%sAtt',[src.Name])
-          else
-            locInternalEltName := Format('%sElt',[src.Name]);
-          if (k > 0) then
-            locInternalEltName := locInternalEltName+IntToStr(k);
-          if (FindMember(ADest,locInternalEltName) = nil) then
-            break;
-          k := k+1;
-        end;
-      end;
+      if locIsAttribute then
+        locStrBuffer := 'Att'
+      else
+        locStrBuffer := 'Elt';
+      locInternalEltName := MakeUniqueMemberName(src.Name,ADest,locStrBuffer);
+      locHasInternalName := not SameText(src.Name,locInternalEltName);
       dest := TPasProperty(FSymbols.CreateElement(TPasProperty,locInternalEltName,ADest,visPublished,'',0));
       ADest.Members.Add(dest);
       dest.VarType := src.VarType;
@@ -781,6 +895,11 @@ begin
         FSymbols.SetPropertyAsAttribute(dest,True);
       if FSymbols.IsChoiceProperty(src) then
         FSymbols.SetPropertyAsChoice(dest,True);
+      if not(locIsAttribute) and AMultiOccurrence and
+         (AArrayItems <> nil) and not(dest.VarType.InheritsFrom(TPasArrayType))
+      then begin
+        AArrayItems.Add(dest);
+      end;
     {$IFDEF HAS_EXP_TREE}
       if (src.DefaultExpr <> nil) and
          src.DefaultExpr.InheritsFrom(TPrimitiveExpr)
@@ -795,7 +914,8 @@ end;
 
 procedure TComplexTypeParser.ParseGroups(
   AClassDef    : TPasClassType;
-  AGroupCursor : IObjectCursor
+  AGroupCursor : IObjectCursor;
+  AArrayItems  : TPropInfoReferenceList
 );
 var
   locNode : TDOMNode;
@@ -803,8 +923,12 @@ var
   s, locNS, locLN, locLongNS : string;
   elt : TPasElement;
   locParser : IXsdPaser;
+  locOccurrenceInfos : TOccurrenceRec;
+  locMultiOccurrence : Boolean;
 begin
   if (AGroupCursor <> nil) then begin
+    FillChar(locOccurrenceInfos,SizeOf(locOccurrenceInfos),#0);
+    locMultiOccurrence := False;
     AGroupCursor.Reset();
     while AGroupCursor.MoveNext() do begin
       locNode := (AGroupCursor.GetCurrent() as TDOMNodeRttiExposer).InnerObject;
@@ -829,7 +953,13 @@ begin
         if (elt <> nil) then begin
           if not elt.InheritsFrom(TPasClassType) then
             raise EXsdInvalidElementDefinitionException.CreateFmt(SERR_UnableToResolveGroupRef,[FTypeName,elt.Name]);
-          AddGroup(AClassDef,elt as TPasClassType)
+          if (AArrayItems <> nil) then begin
+            ExtractOccurences(AClassDef.Name,elt.Name,locAttCursor,locOccurrenceInfos);
+            locMultiOccurrence :=
+              locOccurrenceInfos.Valid and
+              (locOccurrenceInfos.Unboundded or (locOccurrenceInfos.MaxOccurs > 1));
+          end;
+          AddGroup(AClassDef,elt as TPasClassType,locMultiOccurrence,AArrayItems);
         end;
       end
     end;
@@ -997,14 +1127,6 @@ begin
   end;
 end;
 
-type
-  TOccurrenceRec = record
-    Valid      : Boolean;
-    MinOccurs  : Integer;
-    MaxOccurs  : Integer;
-    Unboundded : Boolean;
-  end;
-
 function TComplexTypeParser.ParseComplexContent(const ATypeName : string) : TPasType;
 var
   classDef : TPasClassType;
@@ -1016,57 +1138,6 @@ var
     strBuffer : string;
   begin
     Result := wst_findCustomAttributeXsd(Context.GetXsShortNames(),AElement,s_WST_collection,strBuffer) and AnsiSameText('true',Trim(strBuffer));
-  end;
-
-  procedure ExtractOccurences(
-        AItemName      : string;
-        AAttCursor     : IObjectCursor;
-    var AMinOccurs,
-        AMaxOccurs     : Integer;
-    var AMaxUnboundded : Boolean
-  );
-  var
-    locPartCursor : IObjectCursor;
-    locMin, locMax : Integer;
-    locMaxOccurUnbounded : Boolean;
-    locStrBuffer : string;
-  begin
-    if (AAttCursor = nil) then begin
-      AMinOccurs := 1;
-      AMaxOccurs := 1;
-      AMaxUnboundded := False;
-      exit;
-    end;
-
-    locMin := 1;
-    locPartCursor := CreateCursorOn(AAttCursor.Clone() as IObjectCursor,ParseFilter(Format('%s = %s',[s_NODE_NAME,QuotedStr(s_minOccurs)]),TDOMNodeRttiExposer));
-    locPartCursor.Reset();
-    if locPartCursor.MoveNext() then begin
-      if not TryStrToInt((locPartCursor.GetCurrent() as TDOMNodeRttiExposer).NodeValue,locMin) then
-        raise EXsdParserException.CreateFmt(SERR_InvalidMinOccursValue,[FTypeName,AItemName]);
-      if ( locMin < 0 ) then
-        raise EXsdParserException.CreateFmt(SERR_InvalidMinOccursValue,[FTypeName,AItemName]);
-    end;
-
-    locMax := 1;
-    locMaxOccurUnbounded := False;
-    locPartCursor := CreateCursorOn(AAttCursor.Clone() as IObjectCursor,ParseFilter(Format('%s = %s',[s_NODE_NAME,QuotedStr(s_maxOccurs)]),TDOMNodeRttiExposer));
-    locPartCursor.Reset();
-    if locPartCursor.MoveNext() then begin
-      locStrBuffer := (locPartCursor.GetCurrent() as TDOMNodeRttiExposer).NodeValue;
-      if AnsiSameText(locStrBuffer,s_unbounded) then begin
-        locMaxOccurUnbounded := True;
-      end else begin
-        if not TryStrToInt(locStrBuffer,locMax) then
-          raise EXsdParserException.CreateFmt(SERR_InvalidMaxOccursValue,[FTypeName,AItemName]);
-        if ( locMin < 0 ) then
-          raise EXsdParserException.CreateFmt(SERR_InvalidMaxOccursValue,[FTypeName,AItemName]);
-      end;
-    end;
-
-    AMinOccurs := locMin;
-    AMaxOccurs := locMax;
-    AMaxUnboundded := locMaxOccurUnbounded;
   end;
 
   procedure ParseElement(
@@ -1332,7 +1403,7 @@ var
           if (locEltCrs <> nil) then begin
             locEltAttCrs := CreateAttributesCursor(locNode,cetRttiNode);
             FillChar(locBoundInfos,SizeOf(locBoundInfos),#0);
-            ExtractOccurences(s_choice,locEltAttCrs,locBoundInfos.MinOccurs,locBoundInfos.MaxOccurs,locBoundInfos.Unboundded);
+            ExtractOccurences(FTypeName,s_choice,locEltAttCrs,locBoundInfos.MinOccurs,locBoundInfos.MaxOccurs,locBoundInfos.Unboundded);
             locBoundInfos.MinOccurs := 0;
             locBoundInfos.Valid := True;
             ParseElementsAndAttributes(locEltCrs,nil,locBoundInfos,True);
@@ -1467,7 +1538,7 @@ begin
               locTempNode := locTempNode.ParentNode;
               if (ExtractNameFromQName(locTempNode.NodeName) = s_choice) then begin
                 ExtractOccurences(
-                  s_choice,
+                  FTypeName,s_choice,
                   CreateAttributesCursor(locTempNode,cetRttiNode),
                   locBoundInfos.MinOccurs,locBoundInfos.MaxOccurs,locBoundInfos.Unboundded
                 );
@@ -1478,8 +1549,8 @@ begin
             end;
           end;
           ParseElementsAndAttributes(eltCrs,eltAttCrs,locBoundInfos,locIsChoiceParent);
-          ParseGroups(classDef,grpCrs);
-          ParseGroups(classDef,attGrpCrs);
+          ParseGroups(classDef,grpCrs,arrayItems);
+          ParseGroups(classDef,attGrpCrs,nil);
           if ( arrayItems.GetCount() > 0 ) then begin
             if ( arrayItems.GetCount() = 1 ) and locDefaultAncestorUsed and
                ( GetElementCount(classDef.Members,TPasProperty) = 1 )
