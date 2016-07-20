@@ -33,7 +33,6 @@ object FrmSoundDialog: TFrmSoundDialog
         Width = 333
         Align = alRight
         BevelOuter = bvNone
-        Caption = 'Nothing to select from...'
         ClientHeight = 446
         ClientWidth = 333
         TabOrder = 2

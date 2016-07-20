@@ -232,7 +232,7 @@ object MainForm: TMainForm
               Left = 320
               Height = 23
               Top = 8
-              Width = 68
+              Width = 120
               ItemHeight = 15
               ItemIndex = 5
               Items.Strings = (

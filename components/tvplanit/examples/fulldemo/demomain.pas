@@ -5,6 +5,9 @@ unit demoMain;
 interface
 
 uses
+ {$IFDEF UNIX}
+  clocale,
+ {$ENDIF}
   Classes, SysUtils, FileUtil, PrintersDlgs, Forms, Controls, Graphics, Dialogs,
   ExtCtrls, StdCtrls, ComCtrls, LCLTranslator, Menus, VpBaseDS, VpDayView,
   VpWeekView, VpTaskList, VpAbout, VpContactGrid, VpMonthView, VpResEditDlg,
