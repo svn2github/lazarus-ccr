@@ -45,59 +45,54 @@ procedure Register;
 
 implementation
 
-{$IFNDEF WINDOWS}
-const // Defined in mmsystem
-  SND_SYNC = 0;
-  SND_ASYNC = 1;
-  SND_NODEFAULT = 2;
-{$ENDIF}
+uses
+  LazFileUtils;
+
 resourcestring
   C_UnableToPlay = 'Unable to play ';
 
 function GetNonWindowsPlayCommand:String;
-Var szNonWindowsPlayCommand: string;
 begin
-  szNonWindowsPlayCommand:='';
+  Result := '';
   // Try play
   if (FindDefaultExecutablePath('play') <> '') then
-    szNonWindowsPlayCommand := 'play';
+    Result := 'play';
   // Try aplay
-  if (szNonWindowsPlayCommand = '') then
+  if (result = '') then
     if (FindDefaultExecutablePath('aplay') <> '') then
-      szNonWindowsPlayCommand := 'aplay -q';
+      Result := 'aplay -q';
   // Try paplay
-  if (szNonWindowsPlayCommand = '') then
+  if (Result = '') then
     if (FindDefaultExecutablePath('paplay') <> '') then
-      szNonWindowsPlayCommand := 'paplay';
+      Result := 'paplay';
   // Try mplayer
-  if (szNonWindowsPlayCommand = '') then
+  if (Result = '') then
     if (FindDefaultExecutablePath('mplayer') <> '') then
-      szNonWindowsPlayCommand := 'mplayer -really-quiet';
+      Result := 'mplayer -really-quiet';
   // Try CMus
-  if (szNonWindowsPlayCommand = '') then
+  if (Result = '') then
     if (FindDefaultExecutablePath('CMus') <> '') then
-      szNonWindowsPlayCommand := 'CMus';
+      Result := 'CMus';
   // Try pacat
-  if (szNonWindowsPlayCommand = '') then
+  if (Result = '') then
     if (FindDefaultExecutablePath('pacat') <> '') then
-      szNonWindowsPlayCommand := 'pacat -p';
+      Result := 'pacat -p';
   // Try ffplay
-  if (szNonWindowsPlayCommand = '') then
+  if (Result = '') then
     if (FindDefaultExecutablePath('ffplay') <> '') then
-      szNonWindowsPlayCommand := 'ffplay -autoexit -nodisp';
+      result := 'ffplay -autoexit -nodisp';
   // Try cvlc
-  if (szNonWindowsPlayCommand = '') then
+  if (Result = '') then
     if (FindDefaultExecutablePath('cvlc') <> '') then
-      szNonWindowsPlayCommand := 'cvlc -q --play-and-exit';
+      result := 'cvlc -q --play-and-exit';
   // Try canberra-gtk-play
-  if (szNonWindowsPlayCommand = '') then
+  if (Result = '') then
     if (FindDefaultExecutablePath('canberra-gtk-play') <> '') then
-      szNonWindowsPlayCommand := 'canberra-gtk-play -c never -f';
+      Result := 'canberra-gtk-play -c never -f';
   // Try Macintosh command?
-  if (szNonWindowsPlayCommand = '') then
+  if (Result = '') then
     if (FindDefaultExecutablePath('afplay') <> '') then
-      szNonWindowsPlayCommand := 'afplay';
-  Result:=szNonWindowsPlayCommand;
+      Result := 'afplay';
 end;
 
 
@@ -150,7 +145,12 @@ end;
 
 procedure Tplaysound.PlaySound(const szSoundFilename: string);
 var
+{$IFDEF WINDOWS}
   flags: word;
+{$ELSE}
+  L: TStrings;
+  i: Integer;
+{$ENDIF}
 begin
 {$IFDEF WINDOWS}
   if fPlayStyle = psASync then
@@ -168,40 +168,49 @@ begin
   // proceed if we managed to find a valid command
   if (fPlayCommand <> '') then
   begin
-    if fPlayStyle = psASync then
-    begin
-      if SoundPlayerAsyncProcess = nil then
-        SoundPlayerAsyncProcess := Tasyncprocess.Create(nil);
-      SoundPlayerAsyncProcess.CurrentDirectory := ExtractFileDir(szSoundFilename);
-      SoundPlayerAsyncProcess.Executable :=
-        FindDefaultExecutablePath(fPlayCommand);
-      SoundPlayerAsyncProcess.Parameters.Clear;
-      SoundPlayerAsyncProcess.Parameters.Add(szSoundFilename);
-      try
-        SoundPlayerAsyncProcess.Execute;
-      except
-        On E: Exception do
-          E.CreateFmt('Playstyle=paASync: ' + C_UnableToPlay +
-            '%s Message:%s', [szSoundFilename, E.Message]);
+    L := TStringList.Create;
+    try
+      L.Delimiter := ' ';
+      L.DelimitedText := fPlayCommand;
+      if fPlayStyle = psASync then
+      begin
+        if SoundPlayerAsyncProcess = nil then
+          SoundPlayerAsyncProcess := Tasyncprocess.Create(nil);
+        SoundPlayerAsyncProcess.CurrentDirectory := ExtractFileDir(szSoundFilename);
+        SoundPlayerAsyncProcess.Executable := FindDefaultExecutablePath(L[0]);
+        SoundPlayerAsyncProcess.Parameters.Clear;
+        for i := 1 to L.Count-1 do
+          SoundPlayerAsyncProcess.Parameters.Add(L[i]);
+        SoundPlayerAsyncProcess.Parameters.Add(szSoundFilename);
+        try
+          SoundPlayerAsyncProcess.Execute;
+        except
+          On E: Exception do
+            E.CreateFmt('Playstyle=paASync: ' + C_UnableToPlay +
+              '%s Message:%s', [szSoundFilename, E.Message]);
+        end;
+      end
+      else
+      begin
+        if SoundPlayerSyncProcess = nil then
+          SoundPlayerSyncProcess := Tprocess.Create(nil);
+        SoundPlayerSyncProcess.CurrentDirectory := ExtractFileDir(szSoundFilename);
+        SoundPlayerSyncProcess.Executable := FindDefaultExecutablePath(L[0]);
+        SoundPlayersyncProcess.Parameters.Clear;
+        for i:=1 to L.Count-1 do
+          SoundPlayerSyncProcess.Parameters.Add(L[i]);
+        SoundPlayerSyncProcess.Parameters.Add(szSoundFilename);
+        try
+          SoundPlayerSyncProcess.Execute;
+          SoundPlayersyncProcess.WaitOnExit;
+        except
+          On E: Exception do
+            E.CreateFmt('Playstyle=paSync: ' + C_UnableToPlay +
+              '%s Message:%s', [szSoundFilename, E.Message]);
+        end;
       end;
-    end
-    else
-    begin
-      if SoundPlayerSyncProcess = nil then
-        SoundPlayerSyncProcess := Tprocess.Create(nil);
-      SoundPlayerSyncProcess.CurrentDirectory := ExtractFileDir(szSoundFilename);
-      SoundPlayerSyncProcess.Executable :=
-        FindDefaultExecutablePath(fPlayCommand);
-      SoundPlayersyncProcess.Parameters.Clear;
-      SoundPlayerSyncProcess.Parameters.Add(szSoundFilename);
-      try
-        SoundPlayerSyncProcess.Execute;
-        SoundPlayersyncProcess.WaitOnExit;
-      except
-        On E: Exception do
-          E.CreateFmt('Playstyle=paSync: ' + C_UnableToPlay +
-            '%s Message:%s', [szSoundFilename, E.Message]);
-      end;
+    finally
+      L.Free;
     end;
   end
   else
@@ -209,13 +218,14 @@ begin
       [fPlayCommand]);
 {$ENDIF}
 end;
+
 procedure Tplaysound.StopSound;
 begin
 {$IFDEF WINDOWS}
-   sndPlaySound(nil, SND_ASYNC or SND_NODEFAULT);
+   sndPlaySound(nil, 0);
 {$ELSE}
-  if SoundPlayerSyncProcess <> nil then SoundPlayerSyncProcess.Terminate;
-  if SoundPlayerAsyncProcess <> nil then SoundPlayerAsyncProcess.Terminate;
+  if SoundPlayerSyncProcess <> nil then SoundPlayerSyncProcess.Terminate(1);
+  if SoundPlayerAsyncProcess <> nil then SoundPlayerAsyncProcess.Terminate(1);
 {$ENDIF}
 end;
 
