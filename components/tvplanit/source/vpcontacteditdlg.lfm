@@ -1,13 +1,13 @@
 object ContactEditForm: TContactEditForm
   Left = 311
-  Height = 420
+  Height = 511
   Top = 245
   Width = 433
   HorzScrollBar.Page = 432
   VertScrollBar.Page = 320
   ActiveControl = tsContacts
   Caption = 'ContactEdit'
-  ClientHeight = 420
+  ClientHeight = 511
   ClientWidth = 433
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
@@ -16,7 +16,7 @@ object ContactEditForm: TContactEditForm
   LCLVersion = '1.7'
   object tsContacts: TPageControl
     Left = 0
-    Height = 379
+    Height = 470
     Top = 0
     Width = 433
     ActivePage = tabMain
@@ -26,7 +26,7 @@ object ContactEditForm: TContactEditForm
     OnChange = tsContactsChange
     object tabMain: TTabSheet
       Caption = 'RSMasterData'
-      ClientHeight = 351
+      ClientHeight = 442
       ClientWidth = 425
       object LastNameLbl: TLabel
         Left = 9
@@ -259,7 +259,7 @@ object ContactEditForm: TContactEditForm
         Left = 136
         Height = 23
         Top = 280
-        Width = 120
+        Width = 121
         CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
         OKCaption = 'OK'
         CancelCaption = 'Cancel'
@@ -491,7 +491,7 @@ object ContactEditForm: TContactEditForm
   object pnlBottom: TPanel
     Left = 0
     Height = 41
-    Top = 379
+    Top = 470
     Width = 433
     Align = alBottom
     BevelOuter = bvNone

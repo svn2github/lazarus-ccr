@@ -481,8 +481,9 @@ begin
     end;
 
   { Set form height such that first tab is filled completely by controls }
-  ClientHeight := BirthdateEdit.Top + BirthdateEdit.Height + TopField +
-    pnlBottom.Height + tsContacts.Height - tabMain.Height;
+  ClientHeight := BirthDateEdit.Top + editHeight + TopField + // required height of tab sheet
+    pnlBottom.Height +  // height of button panel
+    tsContacts.Height - tabMain.ClientHeight;   // Height of tab + border
 
   { Page "Contact" }
   SetLength(Comboboxes, 5);
