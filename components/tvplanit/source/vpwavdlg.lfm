@@ -56,7 +56,7 @@ object FrmSoundDialog: TFrmSoundDialog
             TabOrder = 0
           end
         end
-        object Panel2: TPanel
+        object ButtonPanel: TPanel
           Left = 0
           Height = 38
           Top = 408

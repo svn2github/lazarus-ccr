@@ -51,7 +51,7 @@ type
     Label3: TLabel;
     PageControl1: TPageControl;
     Panel1: TPanel;
-    Panel2: TPanel;
+    ButtonPanel: TPanel;
     Panel3: TPanel;
     Panel4: TPanel;
     RightPanel: TPanel;
@@ -86,7 +86,8 @@ type
 implementation
 
 uses
-  VpSR;
+  Math,
+  VpSR, VpMisc;
 
 {$IFDEF LCL}
  {$R *.lfm}
@@ -156,6 +157,9 @@ begin
 end;
 
 procedure TFrmSoundDialog.Populate;
+var
+  DIST: Integer = 8;
+  HBORDER: Integer = 8;
 begin
   TabSheet1.Caption := RSSelectASound;
   Self.Caption := RSSoundFinder;
@@ -164,6 +168,14 @@ begin
   CancelBtn.Caption := RSCancelBtn;
   Label3.Caption := RSNothingToSelectFrom;
   Label4.Caption := RSNothingToSelectFrom;
+
+  DIST := ScaleX(DIST, DesignTimeDPI);
+  HBORDER := ScaleX(HBORDER, DesignTimeDPI);
+  OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
+  CancelBtn.Width := OKBtn.Width;
+  CancelBtn.Left := ButtonPanel.ClientWidth - HBORDER - CancelBtn.Width;
+  OKBtn.Left := CancelBtn.Left - DIST - OKBtn.Width;
+
   if DingPath = '' then begin
     CBDefault.Checked := true;
     if (MediaFolder <> '') and DirectoryExists(MediaFolder) then
