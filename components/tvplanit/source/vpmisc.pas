@@ -132,6 +132,7 @@ function GetEndLine(EndTime: TDateTime; Granularity: TVpGranularity): Integer;
 function LineToStartTime(Line: Integer; Granularity: TVpGranularity): TDateTime;
 function GetLineDuration(Granularity: TVpGranularity): Double;
 
+function AutoHeight(ARadioGroup: TRadioGroup): Integer;
 function GetButtonWidth(AButton: TButton): Integer;
 function GetLabelWidth(ALabel: TLabel): Integer;
 function GetRealFontHeight(AFont: TFont): Integer;
@@ -588,6 +589,17 @@ begin
   Result := GranularityMinutes[Granularity] / MinutesInDay;
 end;
 {=====}
+
+function AutoHeight(ARadioGroup: TRadioGroup): Integer;
+var
+  w: Integer;
+begin
+  w := ARadioGroup.Width;
+  ARadioGroup.AutoSize := true;
+  Result := ARadioGroup.Height;
+  ARadioGroup.AutoSize := false;
+  ARadioGroup.Width := w;
+end;
 
 function GetLabelWidth(ALabel: TLabel): Integer;
 var

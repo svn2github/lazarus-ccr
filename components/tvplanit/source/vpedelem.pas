@@ -53,6 +53,10 @@ type
     edName: TEdit;
     gbDayOffset: TGroupBox;
     lblName: TLabel;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    ButtonPanel: TPanel;
+    ItemTypePanel: TPanel;
     rgDayOffsetUnit: TRadioGroup;
     rgItemType: TRadioGroup;
     gbVisual: TGroupBox;
@@ -290,18 +294,13 @@ begin
 end;
 
 procedure TfrmEditElement.PositionControls;
-const
-  MARGIN = 16;
-  DELTA = 8;
-  RADIOITEM_CORRECTION = 24 + DELTA;
-  BUTTON_CORRECTION = 16;
-  GROUPBOX_CORRECTION = 16;
-  GROUPBOX_DISTANCE = 16;
 var
-  i, w, h, hEd, hBtn: Integer;
-  cnv: TControlCanvas;
-  rb: TRadioButton;
+  w, hEd, hBtn: Integer;
+  DELTA: Integer = 8;
 begin
+  DELTA := ScaleX(DELTA, DesignTimeDPI);
+  AutoSize := false;
+
   // Fix edit heights at higher dpi
   with TEdit.Create(self) do
   try
@@ -336,128 +335,43 @@ begin
   btnShape.Height := hBtn;
   btnCaptionFont.Height := hBtn;
 
-  cnv := TControlCanvas.Create;
-  try
-    cnv.Control := rgItemType;
+  gbDayOffset.Height := rgDayOffsetUnit.Height;
+  rgRotation.Height := rgMeasurement.Height;
+  rgRotation.Width := rgMeasurement.Width;
 
-    // Calculate with of ItemType groupbbox
-    cnv.Font.Assign(rgItemType.Font);
-    w := 0;
-    for i:=0 to rgItemType.Items.Count - 1 do
-      w := Max(w, cnv.TextWidth(rgItemType.Items[i]));
-    rgItemType.ClientWidth := rgItemType.Columns * (w + RADIOITEM_CORRECTION);
+  // Position Left/Top etc controls
+  w := Max(GetLabelWidth(lblLeft), GetLabelWidth(lblTop));
+  edTop.Left := RightOf(rgMeasurement) + 2*DELTA + w + DELTA;
+  udTop.Left := RightOf(edTop);
+  lblTop.Left := edTop.Left - DELTA - GetLabelWidth(lblTop);
+  edLeft.Left := edTop.Left;
+  udLeft.Left := RightOf(edLeft);
+  lblLeft.Left := edLeft.Left - DELTA - GetLabelWidth(lblLeft);
 
-    // Calculate width of Visual groupbox
-    cnv.Font.Assign(rgRotation.Font);
-    rgRotation.ClientWidth := Max(
-      cnv.TextWidth(RSRotationCaption) + GROUPBOX_CORRECTION,
-      cnv.TextWidth('270') + RADIOITEM_CORRECTION
-    );
+  w := Max(GetLabelWidth(lblWidth), GetLabelWidth(lblHeight));
+  edHeight.Left := RightOf(edTop) + 2*DELTA + w + DELTA;
+  edWidth.Left := edHeight.Left;
+  udHeight.Left := RightOf(edHeight);
+  udWidth.Left := RightOf(edWidth);
+  lblHeight.Left := edHeight.Left - DELTA - GetLabelWidth(lblHeight);
+  lblWidth.Left := edWidth.Left - DELTA - GetLabelWidth(lblWidth);
 
-    cnv.Font.Assign(rgMeasurement.Font);
-    w := 0;
-    for i:=0 to RgMeasurement.Items.Count-1 do
-      w := Max(w, cnv.TextWidth(RgMeasurement.Items[i]));
-    rgMeasurement.ClientWidth := Max(
-      cnv.TextWidth(RSMeasurementCaption) + GROUPBOX_CORRECTION,
-      w + RADIOITEM_CORRECTION
-    );
-    rgMeasurement.Left := rgRotation.Left + rgRotation.Width + GROUPBOX_DISTANCE;
+  chkVisible.Left := edTop.Left;
 
-    w := Max(GetLabelWidth(lblTop), GetLabelWidth(lblLeft)) + DELTA + EdTop.Width + udTop.Width + 24 +
-         Max(GetLabelWidth(lblHeight), GetLabelWidth(lblWidth) + DELTA) + EdHeight.Width + udHeight.Width;
+  // Buttons at the bottom
+  w := Max(GetButtonWidth(btnOK), GetButtonWidth(btnCancel));
+  btnOK.Width := w;
+  btnCancel.Width := w;
+  btnShape.Width := GetButtonWidth(btnShape);
 
-    gbVisual.ClientWidth := RightOf(rgMeasurement) + 24 + w + rgRotation.Left;
+  // Form size
+  rgItemType.Align := alNone;
+  ClientWidth := rgItemType.Width + ItemTypePanel.BorderSpacing.Left + ItemTypePanel.BorderSpacing.Right;
+  rgItemType.Align := alClient;
+  if RightOf(udHeight) > gbVisual.ClientWidth then
+    ClientWidth := RightOf(udHeight) + gbVisual.BorderSpacing.Left + gbVisual.BorderSpacing.Right;
 
-    // The longest box determines the width of the form
-    if gbVisual.ClientWidth > rgItemType.ClientWidth then
-      rgItemType.ClientWidth := gbVisual.ClientWidth
-    else
-      gbVisual.ClientWidth := rgItemType.ClientWidth;
-
-    // Width of the form
-    ClientWidth := gbVisual.ClientWidth + MARGIN * 2;
-
-    // Position Left/Top etc controls
-    edTop.Left := (gbVisual.ClientWidth + RightOf(rgMeasurement) - w) div 2 +
-      Max(GetLabelWidth(lblTop), GetLabelWidth(lblLeft)) + DELTA;
-    edLeft.Left := edTop.Left;
-    udTop.Left := RightOf(edTop);
-    udLeft.Left := udTop.Left;
-    lblTop.Left := edTop.Left - GetLabelWidth(lblTop) - DELTA;
-    lblLeft.Left := edTop.Left - GetLabelWidth(lblLeft) - DELTA;
-    chkVisible.Left := edLeft.Left;
-
-    edHeight.Left := (gbVisual.ClientWidth + RightOf(rgMeasurement) + w ) div 2 - udHeight.Width - edHeight.Width;
-    edWidth.Left := edHeight.Left;
-    lblHeight.Left := edHeight.Left - GetLabelWidth(lblHeight) - DELTA;
-    lblWidth.Left := edHeight.Left - GetLabelWidth(lblWidth) - DELTA;
-    udHeight.Left := RightOf(edHeight);
-    udWidth.Left := RightOf(edWidth);
-
-    // Name
-    LblName.Left := MARGIN;
-    EdName.Left := LblName.Left + GetLabelWidth(LblName) + DELTA;
-    EdName.Width := RightOf(gbVisual) - EdName.Left;
-
-    // DayOffset groupbox
-    cnv.Font.Assign(gbDayOffset.Font);
-    gbDayOffset.Width := Max(RightOf(udOffset) + DELTA, cnv.TextWidth(gbDayOffset.Caption) + GROUPBOX_CORRECTION);
-
-    // Day Offset Unit groupbox
-    rgDayOffsetUnit.Left := RightOf(gbDayOffset) + GROUPBOX_DISTANCE;
-    rgDayOffsetUnit.Width := RightOf(gbVisual) - rgDayOffsetUnit.Left;
-
-    // Caption groupbox
-    gbCaption.Width := gbVisual.Width;
-    lblCaptionText.Left := DELTA;
-    edCaptionText.Left := lblCaptionText.Left + GetLabelWidth(lblCaptionTExt) + DELTA;
-    cnv.Font.Assign(btnCaptionFont.Font);
-    w := cnv.TextWidth(btnCaptionFont.Caption) + BUTTON_CORRECTION;
-    btnCaptionFont.Width := w;
-    btnCaptionFont.Left := gbCaption.ClientWidth - DELTA - w;
-    edCaptionText.Width := btnCaptionFont.Left - DELTA - edCaptionText.Left;
-
-    // Buttons at the bottom
-    w := Max(GetButtonWidth(btnOK), GetButtonWidth(btnCancel));
-    btnOK.Width := w;
-    btnCancel.Width := w;
-    {
-    cnv.Font.Assign(btnOK.Font);
-    w := Max(cnv.TextWidth(btnOK.Caption), cnv.TextWidth(btnCancel.Caption));
-    btnOK.Width := w + BUTTON_CORRECTION;
-    btnCancel.Width := btnOK.Width;
-    }
-    btnCancel.Left := RightOf(gbCaption) - btnCancel.Width;
-    btnOK.Left := btnCancel.Left - DELTA - btnOK.Width;
-    btnShape.Width := cnv.TextWidth(btnShape.Caption) + BUTTON_CORRECTION;
-
-    // Height
-    gbDayOffset.ClientHeight := edOffset.Height + DELTA*2;
-    rgDayOffsetUnit.Height := gbDayOffset.Height;
-
-    rb := TRadioButton.Create(self);
-    try
-      rb.Parent := self;
-      h := rb.Height;
-    finally
-      rb.Free;
-    end;
-    rgRotation.Height := 4*h + 28;
-    rgMeasurement.Height := rgRotation.Height;
-    gbVisual.ClientHeight := BottomOf(rgMeasurement) + DELTA;
-
-    gbCaption.Top := BottomOf(gbVisual) + DELTA;
-    gbCaption.ClientHeight := BottomOf(edCaptionText) + DELTA;
-
-    btnOK.Top := BottomOf(gbCaption) + DELTA;
-    btnCancel.Top := btnOK.Top;
-    btnShape.Top := btnOK.Top;
-
-    ClientHeight := BottomOf(btnOK) + DELTA;
-  finally
-    cnv.Free;
-  end;
+  AutoSize := true;
 end;
 
 procedure TfrmEditElement.SetData(AnElement : TVpPrintFormatElementItem);
