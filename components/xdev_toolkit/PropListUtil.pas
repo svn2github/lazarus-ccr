@@ -131,7 +131,7 @@ begin
   if not Assigned(Value) then  {Key not found?}
     Exit;
   if CFGetTypeID(Value) = CFStringGetTypeID then  {Value is a string?}
-    Result := CFStrToAnsiStr(Value);
+    Result := CFStrToAnsiStr(Value, kCFStringEncodingUTF8);  //will always be UTF8
 end;
 
 
@@ -166,7 +166,7 @@ begin
     ValueRef := CFBundleGetValueForInfoDictionaryKey(BundleRef, KeyRef);
     if CFGetTypeID(ValueRef) <> CFStringGetTypeID then  {Value not a string?}
       Exit;
-    Result := CFStrToAnsiStr(ValueRef);
+    Result := CFStrToAnsiStr(ValueRef, kCFStringEncodingUTF8);  //will always be UTF8
   finally
     FreeCFRef(KeyRef);
     end;

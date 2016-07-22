@@ -123,7 +123,7 @@ begin
     Result := shrSuccess;
  {$ELSE}  
   {$IFDEF DARWIN} 
-    if Shell('Open -a "HelpViewer" "' + Application.HelpFile + '"') = 127 then
+    if fpSystem('Open -a "HelpViewer" "' + Application.HelpFile + '"') = 127 then
 //     Note: Renamed from Help Viewer.app to HelpViewer.app with 10.5.
 //
 //     Note: With OS X earlier than 10.4 (Tiger), if connected to network 
@@ -137,7 +137,7 @@ begin
   {$ELSE}  {For now, shell to first browser found, passing help file name}  
     if GetBrowserPath <> '' then  {Found a browser?}
       begin
-      if Shell(GetBrowserPath + ' ' + Application.HelpFile) = 127 then
+      if fpSystem(GetBrowserPath + ' ' + Application.HelpFile) = 127 then
         Result := shrViewerError
       else
         Result := shrSuccess;
