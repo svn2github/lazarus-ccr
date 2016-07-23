@@ -22,13 +22,13 @@ object frmFieldMapper: TfrmFieldMapper
     ClientHeight = 45
     ClientWidth = 409
     TabOrder = 1
-    object Button2: TButton
+    object BtnClose: TButton
       Left = 325
       Height = 25
       Top = 8
       Width = 75
       Caption = 'Close'
-      OnClick = Button2Click
+      OnClick = BtnCloseClick
       TabOrder = 0
     end
   end
@@ -51,7 +51,7 @@ object frmFieldMapper: TfrmFieldMapper
         Top = 4
         Width = 390
       end
-      object Label2: TLabel
+      object lblDBFieldsAvail: TLabel
         Left = 11
         Height = 15
         Top = 36
@@ -59,7 +59,7 @@ object frmFieldMapper: TfrmFieldMapper
         Caption = 'Available Dataset Fields:'
         ParentColor = False
       end
-      object Label5: TLabel
+      object lblFieldMappings: TLabel
         Left = 35
         Height = 15
         Top = 329
@@ -67,7 +67,7 @@ object frmFieldMapper: TfrmFieldMapper
         Caption = 'Field Mappings:'
         ParentColor = False
       end
-      object Label6: TLabel
+      object lblVPFieldsAvail: TLabel
         Left = 242
         Height = 15
         Top = 36
@@ -75,7 +75,7 @@ object frmFieldMapper: TfrmFieldMapper
         Caption = 'Available Visual PlanIt Fields:'
         ParentColor = False
       end
-      object Label1: TLabel
+      object lblDataset: TLabel
         Left = 11
         Height = 15
         Top = 13

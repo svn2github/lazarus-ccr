@@ -53,14 +53,14 @@ type
 
   TfrmFieldMapper = class(TForm)
     Panel1: TPanel;
-    Button2: TButton;
+    BtnClose: TButton;
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
     Bevel1: TBevel;
-    Label2: TLabel;
-    Label5: TLabel;
-    Label6: TLabel;
-    Label1: TLabel;
+    lblDBFieldsAvail: TLabel;
+    lblFieldMappings: TLabel;
+    lblVPFieldsAvail: TLabel;
+    lblDataset: TLabel;
     DatasetFieldLB: TListBox;
     VPFieldLB: TListBox;
     FieldMappingsLB: TListBox;
@@ -75,7 +75,7 @@ type
     procedure VpFieldSelected(Sender: TObject);
     procedure VPFieldLBKeyPress(Sender: TObject; var Key: Char);
     procedure btnAddMappingClick(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
+    procedure BtnCloseClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure btnDeleteMappingClick(Sender: TObject);
     procedure btnClearMappingsClick(Sender: TObject);
@@ -83,12 +83,13 @@ type
     procedure FieldMappingsLBKeyPress(Sender: TObject; var Key: Char);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
-    DSResActive    : Boolean;
-    DSEventActive  : Boolean;
+    DSResActive: Boolean;
+    DSEventActive: Boolean;
     DSContactActive: Boolean;
-    DSTaskActive   : Boolean;
+    DSTaskActive: Boolean;
     procedure SyncObjects;
     procedure OpenDatasets;
+    procedure PositionControls;
   public
     FlexDS: TVpFlexDataStore;
     ResDS: TDataset;
@@ -101,9 +102,9 @@ type
 procedure RuntimeTest(FlexDS: TVpFlexDataStore);
 {$ELSE}
   TVpFlexDSEditor = class(TComponentEditor)
-    procedure ExecuteVerb(Index : Integer); override;
-    function GetVerb(Index : Integer) : string; override;
-    function GetVerbCount : Integer; override;
+    procedure ExecuteVerb(Index: Integer); override;
+    function GetVerb(Index: Integer): string; override;
+    function GetVerbCount: Integer; override;
   end;
 {$ENDIF}
 
@@ -133,16 +134,16 @@ begin
     frmFieldMapper.FlexDS := FlexDS;
 
     if FlexDS.ResourceDataSource <> nil then
-      frmFieldMapper.ResDS      := FlexDS.ResourceDataSource.DataSet;
+      frmFieldMapper.ResDS := FlexDS.ResourceDataSource.DataSet;
 
     if FlexDS.EventsDataSource <> nil then
-      frmFieldMapper.EventsDS   := FlexDS.EventsDataSource.DataSet;
+      frmFieldMapper.EventsDS := FlexDS.EventsDataSource.DataSet;
 
     if FlexDS.ContactsDataSource <> nil then
       frmFieldMapper.ContactsDS := FlexDS.ContactsDataSource.DataSet;
 
     if FlexDS.TasksDataSource <> nil then
-      frmFieldMapper.TasksDS    := FlexDS.TasksDataSource.DataSet;
+      frmFieldMapper.TasksDS := FlexDS.TasksDataSource.DataSet;
 
     frmFieldMapper.ShowModal;
 
@@ -155,15 +156,15 @@ end;
 {$ELSE} {RUNTIMETEST}
 
 {$IFDEF LCL}
-procedure MapDatabaseFields(Designer : TComponentEditorDesigner;
-  FlexDS : TVpFlexDataStore);
+procedure MapDatabaseFields(Designer: TComponentEditorDesigner;
+  FlexDS: TVpFlexDataStore);
 {$ELSE}
 {$IFDEF VERSION6}
-procedure MapDatabaseFields(Designer : TComponentEditorDesigner;;  // was: Designer : IDesigner;
-  FlexDS : TVpFlexDataStore);
+procedure MapDatabaseFields(Designer: TComponentEditorDesigner;;  // was: Designer : IDesigner;
+  FlexDS: TVpFlexDataStore);
 {$ELSE}
-procedure MapDatabaseFields(Designer : IFormDesigner;
-  FlexDS : TVpFlexDataStore);
+procedure MapDatabaseFields(Designer: IFormDesigner;
+  FlexDS: TVpFlexDataStore);
 {$ENDIF}{$ENDIF}
 var
   frmFieldMapper: TfrmFieldMapper;
@@ -174,16 +175,16 @@ begin
   try
     frmFieldMapper.FlexDS := FlexDS;
     if FlexDS.ResourceDataSource <> nil then
-      frmFieldMapper.ResDS      := FlexDS.ResourceDataSource.DataSet;
+      frmFieldMapper.ResDS := FlexDS.ResourceDataSource.DataSet;
     if FlexDS.EventsDataSource <> nil then
-      frmFieldMapper.EventsDS   := FlexDS.EventsDataSource.DataSet;
+      frmFieldMapper.EventsDS := FlexDS.EventsDataSource.DataSet;
     if FlexDS.ContactsDataSource <> nil then
       frmFieldMapper.ContactsDS := FlexDS.ContactsDataSource.DataSet;
     if FlexDS.TasksDataSource <> nil then
-      frmFieldMapper.TasksDS    := FlexDS.TasksDataSource.DataSet;
+      frmFieldMapper.TasksDS := FlexDS.TasksDataSource.DataSet;
     frmFieldMapper.ShowModal;
   finally
-    frmFieldMapper.release;
+    frmFieldMapper.Release;
   end;
   Designer.Modified;
 end;
@@ -191,19 +192,19 @@ end;
 
 {*** TVpNavBarEditor ***}
 
-procedure TVpFlexDSEditor.ExecuteVerb(Index : Integer);
+procedure TVpFlexDSEditor.ExecuteVerb(Index: Integer);
 begin
   if Index = 0 then
     MapDatabaseFields(Designer, (Component as TVpFlexDataStore));
 end;
 
-function TVpFlexDSEditor.GetVerb(Index : Integer) : string;
+function TVpFlexDSEditor.GetVerb(Index: Integer): string;
 begin
   if Index = 0 then
     Result := 'Map Database Fields...';
 end;
 
-function TVpFlexDSEditor.GetVerbCount : Integer;
+function TVpFlexDSEditor.GetVerbCount: Integer;
 begin
   Result := 1;
 end;
@@ -212,6 +213,8 @@ end;
 
 procedure TfrmFieldMapper.FormShow(Sender: TObject);
 begin
+  PositionControls;
+
   DatasetCombo.Items.Clear;
   DatasetCombo.Text := '';
 
@@ -305,6 +308,31 @@ begin
       + 'errors are corrected.'), 'Error Opening Dataset(s)', 0);
 end;
 {=====}
+
+procedure TfrmFieldMapper.PositionControls;
+var
+  DELTA: Integer = 8;
+  w: Integer;
+begin
+  DELTA := ScaleX(DELTA, DesignTimeDPI);
+
+  DataSetCombo.Left := lblDataset.Left + GetLabelWidth(lblDataset) + DELTA;
+
+  btnDeleteMapping.Width := GetButtonWidth(btnDeleteMapping);
+  w := FieldMappingsLB.Width + DELTA + btnDeleteMapping.Width;
+  if w > ClientWidth then begin
+    ClientWidth := w;
+    DatasetFieldLB.Width := (ClientWidth - DatasetFieldLB.Left *2 - btnAddMapping.Width - 2*DELTA) div 2;
+    VPFieldLB.Width := DatasetFieldLB.Width;
+    DatasetFieldLB.Left := (w - DatasetFieldLB.Width - 2*DELTA - btnAddMapping.Width - VPFieldLB.Width) div 2;
+    FieldMappingsLB.Left := DatasetFieldLB.Left;
+    lblFieldMappings.Left := FieldMappingsLB.Left;
+    btnDeleteMapping.Left := ClientWidth - DatasetFieldLB.Left - btnDeleteMapping.Width;
+    btnClearMappings.Left := btnDeleteMapping.Left;
+    btnClose.Left := w - DatasetFieldLB.Width - btnClose.Width;
+  end;
+  lblVPFieldsAvail.Left := RightOf(VPFieldLB) - GetLabelWidth(lblVPFieldsAvail);
+end;
 
 procedure TfrmFieldMapper.DatasetComboChange(Sender: TObject);
 begin
@@ -529,7 +557,7 @@ begin
 end;
 {=====}
 
-procedure TfrmFieldMapper.Button2Click(Sender: TObject);
+procedure TfrmFieldMapper.BtnCloseClick(Sender: TObject);
 begin
   Close;
 end;
