@@ -22,14 +22,23 @@ object frmFieldMapper: TfrmFieldMapper
     ClientHeight = 45
     ClientWidth = 409
     TabOrder = 1
-    object BtnClose: TButton
-      Left = 325
+    object BtnOK: TButton
+      Left = 240
       Height = 25
       Top = 8
       Width = 75
-      Caption = 'Close'
-      OnClick = BtnCloseClick
+      Caption = 'OK'
+      ModalResult = 1
       TabOrder = 0
+    end
+    object BtnCancel: TButton
+      Left = 320
+      Height = 25
+      Top = 8
+      Width = 75
+      Caption = 'Cancel'
+      ModalResult = 2
+      TabOrder = 1
     end
   end
   object PageControl1: TPageControl

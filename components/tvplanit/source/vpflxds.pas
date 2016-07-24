@@ -58,8 +58,9 @@ type
   TVpFieldMapping = class(TCollectionItem)                               
   public                                                                 
     VPField: string;                                                     
-    DBField: string;                                                     
-  end;                                                                   
+    DBField: string;
+    procedure Assign(Source: TPersistent); override;
+  end;
 
   { The TVpDataSources class is simply for clustering the FlexDataStore's }
   { DataSources together in the Object Inspector                           }
@@ -202,6 +203,18 @@ implementation
 
 uses
 {$IFDEF VERSION6} Variants, {$ELSE} FileCtrl, {$ENDIF} VpConst;
+
+{*****************************************************************************}
+{ TVpFieldMapping }
+
+procedure TVpFieldMapping.Assign(Source: TPersistent);
+begin
+  if Source is TVpFieldMapping then begin
+    VPField := TVpFieldMapping(Source).VPField;
+    DBField := TVpFieldMapping(Source).DBField;
+  end else
+    inherited Assign(Source);
+end;
 
 (*****************************************************************************)
 { TVpFlexDataStore }

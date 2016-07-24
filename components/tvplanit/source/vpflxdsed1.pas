@@ -52,8 +52,9 @@ type
   { TfrmFieldMapper }
 
   TfrmFieldMapper = class(TForm)
+    BtnCancel: TButton;
     Panel1: TPanel;
-    BtnClose: TButton;
+    BtnOK: TButton;
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
     Bevel1: TBevel;
@@ -75,7 +76,6 @@ type
     procedure VpFieldSelected(Sender: TObject);
     procedure VPFieldLBKeyPress(Sender: TObject; var Key: Char);
     procedure btnAddMappingClick(Sender: TObject);
-    procedure BtnCloseClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure btnDeleteMappingClick(Sender: TObject);
     procedure btnClearMappingsClick(Sender: TObject);
@@ -168,25 +168,52 @@ procedure MapDatabaseFields(Designer: IFormDesigner;
 {$ENDIF}{$ENDIF}
 var
   frmFieldMapper: TfrmFieldMapper;
+  savedResourceMappings: TCollection;
+  savedContactMappings: TCollection;
+  savedEventMappings: TCollection;
+  savedTaskMappings: TCollection;
 begin
   if FlexDS = nil then
     Exit;
-  Application.CreateForm(TfrmFieldMapper, frmFieldMapper);
+
+  savedResourceMappings := TCollection.Create(TVpFieldMapping);
+  savedContactMappings := TCollection.Create(TVpFieldMapping);
+  savedEventMappings := TCollection.Create(TVpFieldMapping);
+  savedTaskMappings := TCollection.Create(TVpFieldMapping);
   try
-    frmFieldMapper.FlexDS := FlexDS;
-    if FlexDS.ResourceDataSource <> nil then
-      frmFieldMapper.ResDS := FlexDS.ResourceDataSource.DataSet;
-    if FlexDS.EventsDataSource <> nil then
-      frmFieldMapper.EventsDS := FlexDS.EventsDataSource.DataSet;
-    if FlexDS.ContactsDataSource <> nil then
-      frmFieldMapper.ContactsDS := FlexDS.ContactsDataSource.DataSet;
-    if FlexDS.TasksDataSource <> nil then
-      frmFieldMapper.TasksDS := FlexDS.TasksDataSource.DataSet;
-    frmFieldMapper.ShowModal;
+    savedResourceMappings.Assign(FlexDS.ResourceMappings);
+    savedContactMappings.Assign(FlexDS.ContactMappings);
+    savedEventMappings.Assign(FlexDS.EventMappings);
+    savedTaskMappings.Assign(FlexDS.TaskMappings);
+
+    Application.CreateForm(TfrmFieldMapper, frmFieldMapper);
+    try
+      frmFieldMapper.FlexDS := FlexDS;
+      if FlexDS.ResourceDataSource <> nil then
+        frmFieldMapper.ResDS := FlexDS.ResourceDataSource.DataSet;
+      if FlexDS.EventsDataSource <> nil then
+        frmFieldMapper.EventsDS := FlexDS.EventsDataSource.DataSet;
+      if FlexDS.ContactsDataSource <> nil then
+        frmFieldMapper.ContactsDS := FlexDS.ContactsDataSource.DataSet;
+      if FlexDS.TasksDataSource <> nil then
+        frmFieldMapper.TasksDS := FlexDS.TasksDataSource.DataSet;
+      if frmFieldMapper.ShowModal <> mrOK then begin
+        FlexDS.ResourceMappings.Assign(savedResourceMappings);
+        FlexDS.ContactMappings.Assign(savedContactMappings);
+        FlexDS.EventMappings.Assign(savedEventMappings);
+        FlexDS.TaskMappings.Assign(savedTaskMappings);
+      end;
+    finally
+      frmFieldMapper.Release;
+    end;
+    Designer.Modified;
+
   finally
-    frmFieldMapper.Release;
+    savedResourceMappings.Free;
+    savedContactMappings.Free;
+    savedEventMappings.Free;
+    savedTaskMappings.Free;
   end;
-  Designer.Modified;
 end;
 {=====}
 
@@ -305,7 +332,8 @@ begin
     Application.MessageBox(PChar('There was an error opening the following '
       + 'datasets'#13#10#10 + ErrorStr + #10
       + 'Field mapping for these tables will not be available until the '
-      + 'errors are corrected.'), 'Error Opening Dataset(s)', 0);
+      + 'errors are corrected. Any previously assigned mappings will be kept.'),
+      'Error Opening Dataset(s)', 0);
 end;
 {=====}
 
@@ -329,7 +357,8 @@ begin
     lblFieldMappings.Left := FieldMappingsLB.Left;
     btnDeleteMapping.Left := ClientWidth - DatasetFieldLB.Left - btnDeleteMapping.Width;
     btnClearMappings.Left := btnDeleteMapping.Left;
-    btnClose.Left := w - DatasetFieldLB.Width - btnClose.Width;
+    BtnCancel.Left := w - DatasetFieldLB.Width - BtnCancel.Width;
+    BtnOK.Left := BtnCancel.Left - DELTA - BtnOK.Width;
   end;
   lblVPFieldsAvail.Left := RightOf(VPFieldLB) - GetLabelWidth(lblVPFieldsAvail);
 end;
@@ -554,12 +583,6 @@ begin
 
     SyncObjects;
   end;
-end;
-{=====}
-
-procedure TfrmFieldMapper.BtnCloseClick(Sender: TObject);
-begin
-  Close;
 end;
 {=====}
 
