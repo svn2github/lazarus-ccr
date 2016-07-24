@@ -421,7 +421,6 @@ begin
   wvPainting := false;
   FColor := clWindow;
   FLineColor := clGray;
-  FActiveDate := Now;
   wvStartDate := trunc(GetStartOfWeek(Now, FWeekStartsOn));
   FTimeFormat := tf12Hour;
   FDateLabelFormat := 'dddd, mmmm dd, yyyy';
@@ -452,6 +451,7 @@ begin
   FAllDayEventAttr.Font.Assign (Font);
 
   wvHookUp;
+  SetActiveDate(Now);
 end;
 {=====}
 
