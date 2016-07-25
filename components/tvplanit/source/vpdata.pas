@@ -797,8 +797,8 @@ end;
 procedure TVpResource.SetDescription(const Value: string);
 begin
   if Value <> FDescription then begin
-    if Assigned (Owner) then begin
-      if Owner.FindResourceByName (Value) <> nil then
+    if Assigned(Owner) then begin
+      if Owner.FindResourceByName(Value) <> nil then
         raise EDuplicateResource.Create;
     end;
 

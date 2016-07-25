@@ -1110,6 +1110,7 @@ procedure TVpFlexDataStore.PostEvents;
 var
   J: Integer;
   Event: TVpEvent;
+  F: TField;
   {FieldName}
   FN: string;
 begin
@@ -1125,6 +1126,7 @@ begin
 
 //      FN := GetFieldName(FEventMappings, 'ResourceID');
       FN := GetFieldName(FResourceMappings, 'ResourceID');
+
       if (FN <> '') and FResourceDataSrc.DataSet.Locate(FN, Resource.ResourceID, [])
       then begin
         SetFilterCriteria(FEventsDataSrc.DataSet, False, Resource.ResourceID, 0, 0);
@@ -1153,8 +1155,11 @@ begin
               try
                 { if a particular descendant datastore uses autoincrementing }
                 { RecordID fields, then  don't overwrite them here. }
-                if Event.RecordID <> -1 then
-                  EventsTable.FieldByName(FN).AsInteger := Event.RecordID;
+                if (Event.RecordID <> -1) then begin
+                  F := EventsTable.FieldByName(FN);
+                  if not F.ReadOnly then
+                    F.AsInteger := Event.RecordID;
+                end;
 
                 FN := GetFieldName(FEventMappings, 'StartTime');
                 if FN <> '' then
@@ -1289,13 +1294,14 @@ begin
               if Event.RecordID = -1 then
                 Event.RecordID := EventsTable.FieldByName('RecordID').AsInteger;
 *)
+
               Event.Changed := false;
             end;
           end;
         end;
       end;
       Resource.EventsDirty := false;
-      Resource.Schedule.Sort;                                                
+      Resource.Schedule.Sort;
     end;
   end;
   if not Loading then
@@ -1307,6 +1313,7 @@ procedure TVpFlexDataStore.PostContacts;
 var
   I: Integer;
   Contact: TVpContact;
+  F: TField;
   {FieldName}
   FN : string;
 begin
@@ -1344,8 +1351,11 @@ begin
           { field set the RecordID to -1 by default.  If the RecordID is }
           { -1 then this is a new record and we shouldn't overwrite      }
           { RecordID with a bogus value }
-          if Contact.RecordID > -1 then
-            ContactsTable.FieldByName(FN).AsInteger := Contact.RecordID;
+          if Contact.RecordID > -1 then begin
+            F := ContactsTable.FieldByName(FN);
+            if not F.ReadOnly then
+              F.AsInteger := Contact.RecordID;
+          end;
 
           FN := GetFieldName(FContactMappings, 'ResourceID');
           if FN <> '' then
@@ -1540,6 +1550,7 @@ procedure TVpFlexDataStore.PostTasks;
 var
   I: Integer;
   Task: TVpTask;
+  F: TField;
   {FieldName}
   FN: string;
 begin
@@ -1588,8 +1599,11 @@ begin
           { field set the RecordID to -1 by default.  If the RecordID is }
           { -1 then this is a new record and we shouldn't overwrite      }
           { RecordID with a bogus value }
-            if Task.RecordID > -1 then
-              FieldByName(FN).AsInteger := Task.RecordID;
+            if Task.RecordID > -1 then begin
+              F := FieldByName(FN);
+              if not F.ReadOnly then
+                F.AsInteger := Task.RecordID;
+            end;
 
             FN := GetFieldName(FTaskMappings, 'ResourceID');
             if FN <> '' then
@@ -1699,6 +1713,7 @@ var
   Res: TVpResource;
   {FieldName}
   FN: string;
+  isactive: Boolean;
 begin
   Loading := true;
   try
@@ -1740,7 +1755,7 @@ begin
                 Append;
 
               try
-                if Res.ResourceID > -1 then
+                if (Res.ResourceID > -1) and not FieldByName(FN).ReadOnly then
                   FieldByName(FN).AsInteger := Res.ResourceID;
 
                 FN := GetFieldName(FResourceMappings, 'Description');
@@ -1797,7 +1812,9 @@ begin
                 if FN <> '' then
                   FieldByName(FN).AsString := Res.UserField9;
 
+                isactive := Active;
                 Post;
+                isactive := Active;
               except
                 Cancel;
                 raise EDBPostError.Create;
