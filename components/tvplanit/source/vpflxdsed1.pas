@@ -53,6 +53,7 @@ type
 
   TfrmFieldMapper = class(TForm)
     BtnCancel: TButton;
+    btnAddAll: TButton;
     Panel1: TPanel;
     BtnOK: TButton;
     PageControl1: TPageControl;
@@ -69,24 +70,26 @@ type
     DatasetCombo: TComboBox;
     btnAddMapping: TBitBtn;
     btnClearMappings: TButton;
-    procedure FormShow(Sender: TObject);
-    procedure DatasetComboChange(Sender: TObject);
-    procedure DBFieldSelected(Sender: TObject);
-    procedure DatasetFieldLBKeyPress(Sender: TObject; var Key: Char);
-    procedure VpFieldSelected(Sender: TObject);
-    procedure VPFieldLBKeyPress(Sender: TObject; var Key: Char);
+    procedure btnAddAllClick(Sender: TObject);
     procedure btnAddMappingClick(Sender: TObject);
-    procedure Button5Click(Sender: TObject);
-    procedure btnDeleteMappingClick(Sender: TObject);
     procedure btnClearMappingsClick(Sender: TObject);
+    procedure btnDeleteMappingClick(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+    procedure DatasetComboChange(Sender: TObject);
+    procedure DatasetFieldLBKeyPress(Sender: TObject; var Key: Char);
+    procedure DBFieldSelected(Sender: TObject);
     procedure FieldMappingsLBClick(Sender: TObject);
     procedure FieldMappingsLBKeyPress(Sender: TObject; var Key: Char);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
+    procedure VPFieldLBKeyPress(Sender: TObject; var Key: Char);
+    procedure VpFieldSelected(Sender: TObject);
   private
     DSResActive: Boolean;
     DSEventActive: Boolean;
     DSContactActive: Boolean;
     DSTaskActive: Boolean;
+    function GetSelectedFieldMappings: TCollection;
     procedure SyncObjects;
     procedure OpenDatasets;
     procedure PositionControls;
@@ -365,6 +368,7 @@ end;
 
 procedure TfrmFieldMapper.DatasetComboChange(Sender: TObject);
 begin
+  btnAddAll.Enabled := DatasetCombo.ItemIndex > -1;
   SyncObjects;
 end;
 {=====}
@@ -523,6 +527,7 @@ begin
   btnDeleteMapping.Enabled := false;
   btnClearMappings.Enabled := FieldMappingsLB.Items.Count > 0;
   btnAddMapping.Enabled := false;
+  btnAddAll.Enabled := false;
   
   VpFieldLB.ItemIndex := -1;
   DatasetFieldLB.ItemIndex := -1;
@@ -557,32 +562,41 @@ begin
 end;
 {=====}
 
+procedure TfrmFieldMapper.btnAddAllClick(Sender: TObject);
+var
+  i, j: Integer;
+  MC: TCollection;
+  FM: TVpFieldMapping;
+begin
+  MC := GetSelectedFieldMappings;
+  if MC = nil then
+    exit;
+
+  for i:= 0 to DatasetFieldLB.Items.Count-1 do begin
+    for j:=0 to VPFieldLB.Items.Count-1 do
+      if VPFieldLB.Items[j] = DatasetFieldLB.Items[i] then begin
+        FM := TVpFieldMapping(MC.Add);
+        FM.DBField := DatasetFieldLB.Items[i];
+        FM.VPField := VPFieldLB.Items[j];
+        break;
+      end;
+  end;
+  SyncObjects;
+end;
+
 procedure TfrmFieldMapper.btnAddMappingClick(Sender: TObject);
 var
   FM: TVpFieldMapping;
   MC: TCollection;
 begin
-  MC := nil;
-  if DataSetCombo.Text = ResourceTableName then
-    MC := FlexDS.ResourceMappings
+  MC := GetSelectedFieldMappings;
+  if MC = nil then
+    exit;
 
-  else if DataSetCombo.Text = EventsTableName then
-    MC := FlexDS.EventMappings
-
-  else if DataSetCombo.Text = ContactsTableName then
-    MC := FlexDS.ContactMappings
-
-  else if DataSetCombo.Text = TasksTableName then
-    MC := FlexDS.TaskMappings;
-
-  if MC <> nil then begin
-    FM := TVpFieldMapping(MC.Add);
-
-    FM.DBField := DatasetFieldLB.Items[DatasetFieldLB.ItemIndex];
-    FM.VPField := VPFieldLB.Items[VPFieldLB.ItemIndex];
-
-    SyncObjects;
-  end;
+  FM := TVpFieldMapping(MC.Add);
+  FM.DBField := DatasetFieldLB.Items[DatasetFieldLB.ItemIndex];
+  FM.VPField := VPFieldLB.Items[VPFieldLB.ItemIndex];
+  SyncObjects;
 end;
 {=====}
 
@@ -593,24 +607,18 @@ end;
 {=====}
 
 procedure TfrmFieldMapper.btnDeleteMappingClick(Sender: TObject);
+var
+  MC: TCollection;
 begin
   if FieldMappingsLB.ItemIndex > -1 then begin
-
-    if DataSetCombo.Text = ResourceTableName then
-      FlexDS.ResourceMappings.Items[FieldMappingsLB.ItemIndex].Free
-
-    else if DataSetCombo.Text = EventsTableName then
-      FlexDS.EventMappings.Items[FieldMappingsLB.ItemIndex].Free
-
-    else if DataSetCombo.Text = ContactsTableName then
-      FlexDS.ContactMappings.Items[FieldMappingsLB.ItemIndex].Free
-
-    else if DataSetCombo.Text = TasksTableName then
-      FlexDS.TaskMappings.Items[FieldMappingsLB.ItemIndex].Free;
-
-    SyncObjects;
+    MC := GetSelectedFieldMappings;
+    if MC <> nil then begin
+      MC.Items[FieldMappingsLB.ItemIndex].Free;
+      SyncObjects;
+    end;
   end;
 end;
+
 {=====}
 
 procedure TfrmFieldMapper.btnClearMappingsClick(Sender: TObject);
@@ -619,24 +627,13 @@ var
 begin
   MC := nil;
   if FieldMappingsLB.Items.Count > 0 then begin
-
-    if DataSetCombo.Text = ResourceTableName then
-      MC := FlexDS.ResourceMappings
-
-    else if DataSetCombo.Text = EventsTableName then
-      MC := FlexDS.EventMappings
-
-    else if DataSetCombo.Text = ContactsTableName then
-      MC := FlexDS.ContactMappings
-
-    else if DataSetCombo.Text = TasksTableName then
-      MC := FlexDS.TaskMappings;
-
+    MC := GetSelectedFieldMappings;
     if MC <> nil then begin
       while (MC.Count > 0) do
         MC.Items[0].Free;
       SyncObjects;
     end;
+    btnAddAll.Enabled := DatasetCombo.ItemIndex > -1;
   end;
 end;
 {=====}
@@ -670,6 +667,20 @@ begin
     TasksDS.Active := DSTaskActive;
 end;
 {=====}
+
+function TfrmFieldMapper.GetSelectedFieldMappings: TCollection;
+begin
+  if DataSetCombo.Text = ResourceTableName then
+    Result := FlexDS.ResourceMappings
+  else if DataSetCombo.Text = EventsTableName then
+    Result := FlexDS.EventMappings
+  else if DataSetCombo.Text = ContactsTableName then
+    Result := FlexDS.ContactMappings
+  else if DataSetCombo.Text = TasksTableName then
+    Result := FlexDS.TaskMappings
+  else
+    Result := nil;
+end;
 
 end.
 

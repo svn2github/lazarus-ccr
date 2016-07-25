@@ -144,8 +144,8 @@ object frmFieldMapper: TfrmFieldMapper
       end
       object btnAddMapping: TBitBtn
         Left = 166
-        Height = 49
-        Top = 136
+        Height = 48
+        Top = 128
         Width = 69
         Caption = 'Add'
         Enabled = False
@@ -161,6 +161,16 @@ object frmFieldMapper: TfrmFieldMapper
         Enabled = False
         OnClick = btnClearMappingsClick
         TabOrder = 6
+      end
+      object btnAddAll: TButton
+        Left = 166
+        Height = 48
+        Top = 184
+        Width = 69
+        Caption = 'Add all'
+        Enabled = False
+        OnClick = btnAddAllClick
+        TabOrder = 7
       end
     end
   end
