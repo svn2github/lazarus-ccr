@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   StdCtrls, ComCtrls, DBGrids, DbCtrls, VpBaseDS, VpDayView, VpWeekView,
-  VpTaskList, VpContactGrid, VpMonthView, VpResEditDlg, VpContactButtons, dbf,
+  VpTaskList, VpContactGrid, VpMonthView, VpResEditDlg, VpContactButtons,
   db, sqldb, odbcconn, VpData, VpFlxDS;
 
 type
@@ -82,10 +82,8 @@ implementation
 {$R *.lfm}
 
 uses
-  dbf_Common, LazFileUtils;
+  LazFileUtils;
 
-const
-  DB_DIR = 'data';
 
 { TForm1 }
 
@@ -111,6 +109,13 @@ end;
 // in the resource combo.
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  if not FileExists('data.mdb') then begin
+    MessageDlg('Database file "data.mdb" does not exist. ' + LineEnding +
+      'Please run "CreateAccessDB" to create an empty Access database file.',
+      mtError, [mbOK], 0);
+    Close;exit;
+  end;
+
   try
     // Connection
     ODBCConnection1.Driver := 'Microsoft Access Driver (*.mdb, *.accdb)';
@@ -141,7 +146,7 @@ begin
   except
     on E:Exception do
     begin
-      MessageDlg('ERROR', mtError, [mbOK], 0);
+      MessageDlg(E.Message, mtError, [mbOK], 0);
       Close;
     end;
   end;
