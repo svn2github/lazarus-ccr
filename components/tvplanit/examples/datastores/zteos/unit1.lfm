@@ -280,7 +280,6 @@ object Form1: TForm1
     PlayEventSounds = True
     AutoConnect = False
     AutoCreate = False
-    Connected = False
     left = 136
     top = 200
   end

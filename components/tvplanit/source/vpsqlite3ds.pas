@@ -50,7 +50,7 @@ type
     // inherited
     property AutoConnect;
     property AutoCreate;
-    property Connected;
+    property DayBuffer;
   end;
 
 var

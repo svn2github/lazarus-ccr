@@ -36,7 +36,6 @@ type
     VpTaskList1: TVpTaskList;
     VpWeekView1: TVpWeekView;
     VpXmlDatastore1: TVpXmlDatastore;
-    XMLPropStorage1: TXMLPropStorage;
     procedure BtnNewResClick(Sender: TObject);
     procedure BtnEditResClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

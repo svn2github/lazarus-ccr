@@ -164,8 +164,12 @@ object Form1: TForm1
           DrawingStyle = dsFlat
           EventDayStyle = []
           EventFont.Height = -12
+          HeadAttributes.Color = clBtnFace
           LineColor = clGray
           TimeFormat = tf12Hour
+          TodayAttributes.Color = clSilver
+          TodayAttributes.BorderPen.Color = clRed
+          TodayAttributes.BorderPen.Width = 3
           OffDayColor = clSilver
           SelectedDayColor = clRed
           ShowEvents = True
@@ -315,14 +319,8 @@ object Form1: TForm1
     EnableEventTimer = True
     PlayEventSounds = True
     AutoConnect = True
-    Connected = False
     FileName = 'data.xml'
     left = 136
     top = 202
-  end
-  object XMLPropStorage1: TXMLPropStorage
-    StoredValues = <>
-    left = 222
-    top = 118
   end
 end

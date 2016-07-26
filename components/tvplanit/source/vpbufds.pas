@@ -55,6 +55,7 @@ type
   published
     property AutoConnect;
     property AutoCreate;
+    property DayBuffer;
     property Directory: String read FDirectory write SetDirectory;
     property Persistent: Boolean read FPersistent write SetPersistent default true;
     property UseAutoIncFields: Boolean read FUseAutoInc write SetUseAutoInc default true;

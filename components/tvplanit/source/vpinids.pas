@@ -79,6 +79,7 @@ begin
   FFormatSettings.LongTimeFormat := 'hh:nn:ss';
   FFormatSettings.DateSeparator := '/';
   FFormatSettings.TimeSeparator := ':';
+  FDayBuffer := 1000*365;  // 1000 years, i.e. deactivate daybuffer mechanism
 end;
 
 destructor TVpIniDatastore.Destroy;

@@ -44,9 +44,9 @@ type
     property Connection: TZConnection read FConnection write SetConnection;
 
     // inherited
-    property AutoConnect;
-    property AutoCreate;
-    property Connected;
+    property AutoConnect default false;
+    property AutoCreate default false;
+    property Daybuffer;
   end;
 
 

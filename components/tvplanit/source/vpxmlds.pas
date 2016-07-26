@@ -64,7 +64,6 @@ type
 
   published
     property AutoConnect default false;
-    property Connected;
     property FileName: String read FFileName write SetFileName;
     property ParentNode: String read FParentNode write SetParentNode;
 
@@ -209,6 +208,7 @@ begin
   FXmlSettings.LongTimeFormat := 'hh:nn:ss';
   FXmlSettings.DateSeparator := '/';
   FXmlSettings.TimeSeparator := ':';
+  FDayBuffer := 1000*365;  // 1000 years, i.e. deactivate daybuffer mechanism
 end;
 
 destructor TVpXmlDatastore.Destroy;
