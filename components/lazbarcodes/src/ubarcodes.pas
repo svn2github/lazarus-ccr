@@ -39,6 +39,7 @@ protected
 public
   constructor Create(AOwner: TComponent); override;
   destructor Destroy; override;
+  procedure CopyToClipboard(AWidth: Integer = -1; AHeight: Integer = -1);
   procedure PaintOnCanvas(const aTargetCanvas: TCanvas; const aRect: TRect);
   procedure Generate; virtual; abstract;
 published
@@ -123,6 +124,9 @@ end;
 procedure Register;
 
 implementation
+
+uses
+  clipbrd;
 
 procedure Register;
 begin
@@ -294,6 +298,24 @@ begin
     FQR:=nil;
   end;
   inherited Destroy;
+end;
+
+procedure TLazBarcodeCustomBase.CopyToClipboard(AWidth, AHeight: Integer);
+var
+  bmp: TBitmap;
+begin
+  if AWidth = -1 then AWidth := Width;
+  if AHeight = -1 then AHeight := Height;
+  bmp := TBitmap.Create;
+  try
+    bmp.SetSize(AWidth, AHeight);
+    bmp.Canvas.Brush.Color := clWhite;
+    bmp.Canvas.FillRect(0, 0, AWidth, AHeight);
+    PaintOnCanvas(bmp.Canvas, Rect(0, 0, AWidth, AHeight));
+    Clipboard.Assign(bmp);
+  finally
+    bmp.Free;
+  end;
 end;
 
 procedure TLazBarcodeCustomBase.PaintOnCanvas(const aTargetCanvas: TCanvas;
