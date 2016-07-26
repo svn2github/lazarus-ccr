@@ -1942,36 +1942,21 @@ begin
 end;
 {=====}
 
+{ NOTE: Depending on the syntax dialect used by the dataset components an
+  'EDatabaseError' may be raised here with message: "Index based on unknown field '>='."
+  In this case add an event handler for OnSetFilterCriteria or override the
+  SetFilterCriteria method. TBufDataset, TSQLQuery and TDbf, for example,
+  require this syntax for date checking:
+    Format(' ... (DTOS(StartTime) >= %s) ...', [
+      FormatDateTime('yyyymmdd') ...])
+  }
 procedure TVpCustomDBDataStore.SetFilterCriteria(aTable: TDataset;
   aUseDateTime: Boolean; aResourceID: Integer; aStartDateTime, aEndDateTime: TDateTime);
-begin
-  // error here: "... raised an exception class 'EDatabaseError' with message:
-  //              Index based on unknown field '>='.".
-  // Could it be that it does not recognise StartTime and EndTime
-  // (because they are not mapped?)
-  // however StartTime + EndTime are only found in events not tasks
-
- { if aUseDateTime then
-    aTable.Filter := Format('ResourceID = %d '
-      + 'and (( (StartTime >= %s) and (EndTime <= %s) ) '
-      + '     or ( (RepeatCode > 0) and (%s <= RepeatRangeEnd) ))',
-      [aResourceID,
-       QuotedStr(FormatDateTime('c', aStartDateTime)),
-       QuotedStr(FormatDateTime('c', aEndDateTime)),
-       QuotedStr(FormatDateTime('c', aStartDateTime))])
-  else
-  }
-  aTable.Filter := Format('ResourceID = %d', [aResourceID]);
-  aTable.Filtered := true;
-end;
-                         (*
-procedure TVpCustomDBDataStore.SetFilterCriteria(aTable : TDataset;
-  aUseDateTime : Boolean; aResourceID : Integer; aStartDateTime : TDateTime;
-  aEndDateTime : TDateTime);
 var
   filter: String;
 begin
   if aUseDateTime then
+   {$IFDEF DELPHI}
     filter := Format('ResourceID = %d '
       + 'and ( ( (StartTime >= %s) and (EndTime <= %s) ) '
       + '     or ( (RepeatCode > 0) and (%s <= RepeatRangeEnd) ) )',
@@ -1979,11 +1964,20 @@ begin
        QuotedStr(FormatDateTime('c', aStartDateTime)),
        QuotedStr(FormatDateTime('c', aEndDateTime)),
        QuotedStr(FormatDateTime('c', aStartDateTime))])
+   {$ELSE}
+    filter := Format('ResourceID = %d '
+      + 'and ( ( (DTOS(StartTime) >= %s) and (DTOS(EndTime) <= %s) ) '
+      + '     or ( (RepeatCode > 0) and (%s <= DTOS(RepeatRangeEnd)) ) )',
+      [aResourceID,
+       QuotedStr(FormatDateTime('yyyymmdd', aStartDateTime)),
+       QuotedStr(FormatDateTime('yyyymmdd', aEndDateTime)),
+       QuotedStr(FormatDateTime('yyyymmdd', aStartDateTime))])
+   {$ENDIF}
   else
     filter := Format('ResourceID = %d', [aResourceID]);
   aTable.Filter := filter;
   aTable.Filtered := true;
-end;                       *)
+end;
 {=====}
 
 end.
