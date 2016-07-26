@@ -65,9 +65,6 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
     procedure TabControl1Change(Sender: TObject);
-    procedure VpFlexDataStore1SetFilterCriteria(aTable: TDataset;
-      aUseDateTime: Boolean; aResourceID: Integer; aStartDateTime,
-      aEndDateTime: TDateTime);
   private
     { private declarations }
   public
@@ -175,32 +172,6 @@ begin
   DBNavigator.Datasource := Grid.Datasource;
   for i:=0 to Grid.Columns.Count-1 do
     Grid.Columns[i].Width := 100;;
-end;
-
-{ This event handler is used by the planner to filter those records from the
-  specified table which belong to the requested resource ID and are within
-  the requested time interval.
-  Note that SQLDB uses the DBF syntax for filtering dates, i.e.
-    - Convert DateTime field values to strings using DTOS()
-    - Date parameters must be formatted as yyyymmdd and quoted.
-  See: http://forum.lazarus.freepascal.org/index.php?topic=23077.0 }
-procedure TForm1.VpFlexDataStore1SetFilterCriteria(ATable: TDataset;
-  AUseDateTime: Boolean; AResourceID: Integer; AStartDateTime,
-  AEndDateTime: TDateTime);
-begin
-  if AUseDateTime then
-    ATable.Filter := Format(
-      '(ResourceID = %d) AND (' +
-       '((DTOS(StartTime) >= "%s") and (DTOS(EndTime) <= "%s")) OR ' +
-       '((RepeatCode > 0) and (DTOS(RepeatRangeEnd) >= "%s")) )', [
-       AResourceID,
-       FormatDateTime('yyyymmdd', AStartDateTime),
-       FormatDateTime('yyyymmdd', AEndDateTime),
-       FormatDateTime('yyyymmdd', AStartDateTime)
-      ])
-  else
-    ATable.Filter := Format('ResourceID = %d', [AResourceID]);
-  ATable.Filtered := true;
 end;
 
 end.

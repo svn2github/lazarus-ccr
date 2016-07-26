@@ -307,7 +307,6 @@ object Form1: TForm1
     DataSources.ContactsDataSource = DsContacts
     DataSources.TasksDataSource = DsTasks
     ResourceID = 0
-    OnSetFilterCriteria = VpFlexDataStore1SetFilterCriteria
     left = 136
     top = 101
     ResourceFieldMappings = (

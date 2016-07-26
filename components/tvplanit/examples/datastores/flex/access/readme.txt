@@ -76,10 +76,6 @@ Step-by-step instructions for creating a new application
 - In OnDestroy set 
     ODBCConnection.Connected := false
     
-- Write an event handler for the datastore's OnSetFilterCriteria. Copy the
-  code used in the demo. In case of date-filtering it is important to use
-  the dbf syntax DTOS(dateField).
-      
 - Double-click on the VpFlexDatastore in Form1 to open the field mapper.
 
 - Select "Resources" in the combobox. Click a database field in the left listbox
@@ -97,6 +93,10 @@ Step-by-step instructions for creating a new application
 - Repeat with the Events, Contacts and Tasks tables. 
 
 - Close the field mapper.
+
+- After the field mappings have been established the absolute database path can
+  be removed from the Params of the ODBCConnection and replaced by a relative
+  path or can be set at runtime.
 
 - Done.
 

@@ -51,9 +51,6 @@ type
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure VpFlexDataStore1SetFilterCriteria(aTable: TDataset;
-      aUseDateTime: Boolean; aResourceID: Integer; aStartDateTime,
-      aEndDateTime: TDateTime);
   private
     procedure CreateContacts;
     procedure CreateDB(AFileName: String);
@@ -296,32 +293,6 @@ end;
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
   Sqlite3Connection1.Connected := false;
-end;
-
-{ This event handler is used by the planner to filter those records from the
-  specified table which belong to the requested resource ID and are within
-  the requested time interval.
-  Note that SQLDB uses the DBF syntax for filtering dates, i.e.
-    - Convert DateTime field values to strings using DTOS()
-    - Date parameters must be quoted and formatted as "yyyymmdd".
-  See: http://forum.lazarus.freepascal.org/index.php?topic=23077.0 }
-procedure TForm1.VpFlexDataStore1SetFilterCriteria(ATable: TDataset;
-  AUseDateTime: Boolean; AResourceID: Integer; AStartDateTime,
-  AEndDateTime: TDateTime);
-begin
-  if AUseDateTime then
-    ATable.Filter := Format(
-      '(ResourceID = %d) AND (' +
-       '((DTOS(StartTime) >= "%s") and (DTOS(EndTime) <= "%s")) OR ' +
-       '((RepeatCode > 0) and (DTOS(RepeatRangeEnd) >= "%s")) )', [
-       AResourceID,
-       FormatDateTime('yyyymmdd', AStartDateTime),
-       FormatDateTime('yyyymmdd', AEndDateTime),
-       FormatDateTime('yyyymmdd', AStartDateTime)
-      ])
-  else
-    ATable.Filter := Format('ResourceID = %d', [AResourceID]);
-  ATable.Filtered := true;
 end;
 
 end.
