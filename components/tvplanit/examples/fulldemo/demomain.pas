@@ -150,8 +150,9 @@ uses
 
 {$UNDEF UTF8_CALLS}
 {$IFDEF LCL}
-  {$IF lcl_fullversion >= 3000000}
-     {$DEFINE UTF8_CALLS}
+  {$DEFINE UTF8_CALLS}
+  {$IF lcl_major=1 and (lcl_minor<6)}
+     {$UNDDEF UTF8_CALLS}
   {$ENDIF}
 {$ENDIF}
 

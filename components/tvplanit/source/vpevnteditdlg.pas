@@ -45,10 +45,13 @@ uses
 
 const
  blabla = 1;  // to make the $IF work in Laz 1.4.4. Why?
+
 {$UNDEF NEW_TIME_EDIT}
+
 {$IFDEF LCL}
-  {$IF lcl_fullversion >= 3000000}
-    {$DEFINE NEW_TIME_EDIT}
+  {$DEFINE NEW_TIME_EDIT}
+  {$IF (lcl_major=1) and (lcl_minor<6)}
+    {$UNDEF NEW_TIME_EDIT}
   {$ENDIF}
 {$ENDIF}
 
