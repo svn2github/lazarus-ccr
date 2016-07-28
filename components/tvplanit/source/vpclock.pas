@@ -735,7 +735,13 @@ begin
     cmTimer: { Count-up timer }
       SetTime(elapsed);
     cmCountDownTimer: { Count-down timer }
-      SetTime(FCountdownStartTime - elapsed);
+      if abs(FCountdownStartTime - elapsed) < 0.1 / SecondsInDay then
+      begin
+        SetTime(0);
+        Active := false;
+        DoOnCountdownDone;
+      end else
+        SetTime(FCountdownStartTime - elapsed);
   end;
 end;
 {$ENDIF}
