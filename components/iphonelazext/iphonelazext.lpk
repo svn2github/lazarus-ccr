@@ -31,7 +31,7 @@
     <Description Value="iPhone Development Lazarus extension"/>
     <License Value="LGPL"/>
     <Version Minor="8"/>
-    <Files Count="20">
+    <Files Count="21">
       <Item1>
         <Filename Value="ideext.pas"/>
         <HasRegisterProc Value="True"/>
@@ -116,18 +116,25 @@
         <Filename Value="iphonelog_form.pas"/>
         <UnitName Value="iphonelog_form"/>
       </Item20>
+      <Item21>
+        <Filename Value="environment_buildscript.pas"/>
+        <UnitName Value="environment_buildscript"/>
+      </Item21>
     </Files>
-    <RequiredPkgs Count="3">
+    <RequiredPkgs Count="4">
       <Item1>
-        <PackageName Value="LCL"/>
+        <PackageName Value="SynEdit"/>
       </Item1>
       <Item2>
-        <PackageName Value="IDEIntf"/>
+        <PackageName Value="LCL"/>
       </Item2>
       <Item3>
+        <PackageName Value="IDEIntf"/>
+      </Item3>
+      <Item4>
         <PackageName Value="FCL"/>
         <MinVersion Major="1" Valid="True"/>
-      </Item3>
+      </Item4>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

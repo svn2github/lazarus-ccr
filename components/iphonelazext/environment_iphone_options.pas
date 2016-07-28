@@ -173,8 +173,5 @@ begin
   Result:=TiPhoneEnvironmentOptions;
 end;
 
-initialization
-  RegisterIDEOptionsEditor(iPhoneEnvGroup, TiPhoneSpecificOptions, iPhoneEnvGroup+1);
-
 end.
 

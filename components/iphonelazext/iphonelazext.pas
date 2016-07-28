@@ -4,13 +4,14 @@
 
 unit iphonelazext;
 
+{$warn 5023 off : no warning about unused units}
 interface
 
 uses
   ideext, iPhoneExtStr, iPhoneBundle, environment_iphone_options, 
   project_iphone_options, iPhoneExtOptions, xcodetemplate, LazFilesUtils, 
   XcodeUtils, newXibDialog, xibfile, PlistFile, xcodeprojutils, iphonesimctrl, 
-  iphonelog_form, LazarusPackageIntf;
+  iphonelog_form, environment_buildscript, LazarusPackageIntf;
 
 implementation
 

@@ -83,6 +83,7 @@ type
     fDefaultSDK       : String;
     fDefaultSimType   : String;
     fDefaultDeviceID  : String;
+    fScriptTemplate   : String;
 
     fVersions   : TStringList;
     fDeviceList : TList;
@@ -114,6 +115,7 @@ type
     procedure DeviceListClear;
     procedure DeviceListReload;
 
+    property ScriptTemplate: String read fScriptTemplate write fScriptTemplate;
     property PlatformsBaseDir: String read fPlatformsBaseDir write fPlatformsBaseDir;
     property CompilerPath: String read fCompilerPath write fCompilerPath;
     property BaseRTLPath: String read fBaseRTLPath write fBaseRTLPath;
@@ -143,7 +145,20 @@ function LazToXcodeProjFile(AProject: TLazProject): string;
 function LazToXcodePlistFile(AProject: TLazProject): string;
 procedure ReadUploadFilesList(pbx: PBXProject; lst: TStrings);
 
+const
+  Default_ScriptTemplate = 'def_buildscript.sh';
+
+function DefaultScriptTemplateFileName(const packageDir: string): string;
+
 implementation
+
+function DefaultScriptTemplateFileName(const packageDir: string): string;
+begin
+  if packageDir <> '' then
+    Result:=IncludeTrailingPathDelimiter(packageDir)+Default_ScriptTemplate
+  else
+    Result:='';
+end;
 
 var
   fEnvOptions   : TiPhoneEnvironmentOptions = nil;
@@ -173,14 +188,6 @@ begin
   if not Assigned(fProjOptions) then
     fProjOptions:=TiPhoneProjectOptions.Create;
   Result:=fProjOptions;
-end;
-
-procedure InitOptions;
-begin
-  iPhoneEnvGroup := GetFreeIDEOptionsGroupIndex(GroupEnvironment);
-  iPhonePrjGroup := GetFreeIDEOptionsGroupIndex(GroupProject);
-  RegisterIDEOptionsGroup(iPhoneEnvGroup, TiPhoneEnvironmentOptions);
-  RegisterIDEOptionsGroup(iPhonePrjGroup, TiPhoneProjectOptions);
 end;
 
 procedure FreeOptions;
@@ -307,6 +314,7 @@ begin
       fSimAppsPath  := UTF8Encode(xmlcfg.GetValue('SimAppPath', fSimAppsPath));
       fDefaultSDK := UTF8Encode(xmlcfg.GetValue('DefaultSDK', fDefaultSDK));
       fDefaultDeviceID := UTF8Encode(xmlcfg.GetValue('DefaultDevice', fDefaultDeviceID));
+      fScriptTemplate := UTF8Encode(xmlcfg.GetValue('ScriptTemplate', fScriptTemplate));
 
       RefreshVersions;
       if (fDefaultSDK = '') and (fVersions.Count>0) then
@@ -337,6 +345,8 @@ begin
       xmlcfg.SetValue('SimAppPath', UTF8Decode(fSimAppsPath));
       xmlcfg.SetValue('DefaultSDK', UTF8Decode(fDefaultSDK));
       xmlcfg.SetValue('DefaultDevice', UTF8Decode(fDefaultDeviceID));
+      xmlcfg.SetValue('ScriptTemplate', UTF8Decode(fScriptTemplate));
+      xmlcfg.Flush;
     finally
       xmlcfg.Free;
     end;
@@ -589,7 +599,6 @@ begin
 end;
 
 initialization
-  InitOptions;
 
 finalization
   FreeOptions;

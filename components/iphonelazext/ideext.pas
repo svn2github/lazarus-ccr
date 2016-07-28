@@ -29,7 +29,9 @@ uses
 
   ,project_iphone_options, xcodetemplate, iphonelog_form,
 
-  iPhoneExtOptions, iPhoneExtStr, iPhoneBundle, lazfilesutils, iphonesimctrl;
+  iPhoneExtOptions, iPhoneExtStr, iPhoneBundle, lazfilesutils, iphonesimctrl
+  ,PackageIntf
+  ,environment_iphone_options, environment_buildscript;
 
 procedure Register;
 
@@ -590,12 +592,28 @@ begin
 end;
 
 procedure Register;
+var
+  Pkg: TIDEPackage;
 begin
+  iPhoneEnvGroup := GetFreeIDEOptionsGroupIndex(GroupEnvironment);
+  iPhonePrjGroup := GetFreeIDEOptionsGroupIndex(GroupProject);
+  RegisterIDEOptionsGroup(iPhoneEnvGroup, TiPhoneEnvironmentOptions);
+  RegisterIDEOptionsGroup(iPhonePrjGroup, TiPhoneProjectOptions);
+  RegisterIDEOptionsEditor(iPhoneEnvGroup, TiPhoneSpecificOptions, iPhoneEnvGroup+1);
+  RegisterIDEOptionsEditor(iPhoneEnvGroup, TTiPhoneBuildScriptEditor, iPhoneEnvGroup+2);
+
   // IDE integration is done in constructor
   Extension := TiPhoneExtension.Create;
   try
+    Pkg:=PackageEditingInterface.FindPackageWithName('iphonelazext');
+    if Assigned(Pkg) then begin
+      // default script template.
+      // it would be overriden by the call to .Load()
+      EnvOptions.ScriptTemplate:=DefaultScriptTemplateFileName(ExtractFileDir(pkg.Filename));
+    end;
     EnvOptions.Load;
     EnvOptions.RefreshVersions;
+
   except
   end;
 end;
