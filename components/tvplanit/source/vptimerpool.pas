@@ -169,7 +169,11 @@ begin
   tpList := TList.Create;
 
   {allocate a window handle for the timer}
-//TODO: tpHandle := {$IFDEF VERSION6}Classes.{$ENDIF}AllocateHWnd(tpTimerWndProc);
+ {$IFDEF DELPHI}
+  tpHandle := {$IFDEF VERSION6}Classes.{$ENDIF}AllocateHWnd(tpTimerWndProc);
+ {$ELSE}
+  // ToDo: tpHandle := AllocateHWnd(tpTimerWndProc);
+ {$ENDIF}
 end;
 
 destructor TVpTimerPool.Destroy;
@@ -189,7 +193,11 @@ begin
   tpList := nil;
 
   {deallocate our window handle}
-//TODO:  {$IFDEF VERSION6}Classes.{$ENDIF}DeallocateHWnd(tpHandle);
+ {$IFDEF DELPHI}
+  {$IFDEF VERSION6}Classes.{$ENDIF}DeallocateHWnd(tpHandle);
+ {$ELSE}
+  // ToDo: DeallocateHWnd(tpHandle);
+ {$ENDIF}
 
   inherited Destroy;
 end;

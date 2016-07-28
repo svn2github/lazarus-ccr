@@ -35,12 +35,12 @@ interface
 
 uses
   {$IFDEF LCL}
-  LMessages,LCLProc,LCLType,LCLIntf,
+  LMessages, LCLProc, LCLType, LCLIntf, ExtCtrls,
   {$ELSE}
-  Windows, Messages,
+  Windows, Messages, VpTimerPool,
   {$ENDIF}
   Classes, Controls, Dialogs, Forms, Graphics, Menus,Math,
-  SysUtils, VpBase, VpLEDLabel, VpTimerPool;
+  SysUtils, VpBase, VpLEDLabel;
 
 type
   TVpPercent = 0..100;
@@ -154,74 +154,86 @@ type
 
   TVpCustomClock = class(TVpCustomControl)
   protected {private}
-    FTimerPool        : TVpTimerPool;
-    FActive           : Boolean;
-    FClockMode        : TVpClockMode;
-    FDigitalOptions   : TVpDigitalOptions;
-    FDisplayMode      : TVpClockDisplayMode;
-    FElapsedDays      : Integer;
-    FElapsedHours     : Integer;
-    FElapsedMinutes   : LongInt;
-    FElapsedSeconds   : LongInt;
-    FHandOptions      : TVpHandOptions;
-    FTime             : TDateTime;
-    FMilitaryTime     : Boolean;
-    FStartTime        : TDateTime;
-    FHourOffset       : Integer;   {Hours}
-    FMinuteOffset     : Integer;   {Minutes}
-    FSecondOffset     : Integer;   {Seconds}
+   {$IFDEF DELPHI}
+    FTimerPool: TVpTimerPool;
+   {$ELSE}
+    FTimer: TTimer;
+   {$ENDIF}
+    FActive: Boolean;
+    FClockMode: TVpClockMode;
+    FDigitalOptions: TVpDigitalOptions;
+    FDisplayMode: TVpClockDisplayMode;
+    FElapsedDays: Integer;
+    FElapsedHours: Integer;
+    FElapsedMinutes: LongInt;
+    FElapsedSeconds: LongInt;
+    FHandOptions: TVpHandOptions;
+    FTime: TDateTime;
+    FMilitaryTime: Boolean;
+    FCountdownStartTime: TDateTime;
+    FHourOffset: Integer;     {Hours}
+    FMinuteOffset: Integer;   {Minutes}
+    FSecondOffset: Integer;   {Seconds}
     {event variables}
-    FOnHourChange   : TNotifyEvent;
-    FOnMinuteChange : TNotifyEvent;
-    FOnSecondChange : TNotifyEvent;
+    FOnHourChange: TNotifyEvent;
+    FOnMinuteChange: TNotifyEvent;
+    FOnSecondChange: TNotifyEvent;
     FOnCountdownDone: TNotifyEvent;
     {internal variables}
-    ckAnalogHeight  : Integer;
-    ckAnalogWidth   : Integer;
-    ckLEDDisplay    : TVpLEDClockDisplay;
-    ckDraw          : TBitMap;
-    ckClockHandle   : Integer;
-    ckOldHour       : Integer;
-    ckOldMinute     : Integer;
-    ckOldSecond     : Integer;
-    ckTimerTime     : TDateTime;
-    ckDays          : Integer;
-    ckHours         : Integer;
-    ckMinutes       : Integer;
-    ckSeconds       : Integer;
-    ckTotalSeconds  : Integer;
+    ckAnalogHeight: Integer;
+    ckAnalogWidth: Integer;
+    ckLEDDisplay: TVpLEDClockDisplay;
+    ckDraw: TBitMap;
+   {$IFDEF DELPHI}
+    ckClockHandle: Integer;
+   {$ELSE}
+    FTimeStarted: TDateTime; {time at which the timer is activated }
+   {$ENDIF}
+    ckOldHour: Integer;
+    ckOldMinute: Integer;
+    ckOldSecond: Integer;
+    ckTimerTime: TDateTime;
+    ckDays: Integer;
+    ckHours: Integer;
+    ckMinutes: Integer;
+    ckSeconds: Integer;
+    ckTotalSeconds: Integer;
     {property methods}
-    function GetElapsedDays : Integer;
-    function GetElapsedHours : Integer;
-    function GetElapsedMinutes : LongInt;
-    function GetElapsedSeconds : LongInt;
-    function GetElapsedSecondsTotal : LongInt;
-    procedure SetActive(Value : Boolean);
-    procedure SetClockMode(Value : TVpClockMode);
+    function GetElapsedDays: Integer;
+    function GetElapsedHours: Integer;
+    function GetElapsedMinutes: LongInt;
+    function GetElapsedSeconds: LongInt;
+    function GetElapsedSecondsTotal: LongInt;
+    procedure SetActive(Value: Boolean);
+    procedure SetClockMode(Value: TVpClockMode);
     procedure SetDisplayMode(Value: TVpClockDisplayMode);
-    procedure SetMinuteOffset(Value : Integer);
-    procedure SetHourOffset(Value : Integer);
-    procedure SetSecondOffset(Value : Integer);
+    procedure SetMinuteOffset(Value: Integer);
+    procedure SetHourOffset(Value: Integer);
+    procedure SetSecondOffset(Value: Integer);
     {internal methods}
-    function ckConvertMsToDateTime(Value : LongInt) : TDateTime;
-    procedure ckHandOptionChange(Sender : TObject);
-    procedure ckDigitalOptionChange(Sender : TObject);
+    function ckConvertMsToDateTime(Value: LongInt): TDateTime;
+    procedure ckHandOptionChange(Sender: TObject);
+    procedure ckDigitalOptionChange(Sender: TObject);
     procedure SizeDigitalDisplay;
+   {$IFDEF DELPHI}
     procedure ckTimerEvent(Sender: TObject; Handle: Integer; Interval: Cardinal;
       ElapsedTime: LongInt);
+   {$ELSE}
+    procedure ckTimerEvent(Sender: TObject);
+   {$ENDIF}
     procedure DoOnHourChange;
     procedure DoOnMinuteChange;
     procedure DoOnSecondChange;
     procedure DoOnCountdownDone;
-    procedure PaintHands(ACanvas : TCanvas);
+    procedure PaintHands(ACanvas: TCanvas);
     {windows message methods}
     {$IFDEF LCL}
-    procedure WMResize     (var Msg: TLMSize);       message LM_SIZE;
-    procedure WMEraseBkgnd (var Msg: TLMEraseBkgnd); message LM_ERASEBKGND;
+    procedure WMResize(var Msg: TLMSize); message LM_SIZE;
+    procedure WMEraseBkgnd(var Msg: TLMEraseBkgnd); message LM_ERASEBKGND;
     {$ELSE}
-    procedure WMResize     (var Msg: TWMSize);       message WM_SIZE;
-    procedure WMEraseBkgnd (var Msg: TWMEraseBkgnd); message WM_ERASEBKGND;
-    procedure WMGetDlgCode (var Msg: TWMGetDlgCode); message WM_GETDLGCODE;
+    procedure WMResize(var Msg: TWMSize); message WM_SIZE;
+    procedure WMEraseBkgnd(var Msg: TWMEraseBkgnd); message WM_ERASEBKGND;
+    procedure WMGetDlgCode(var Msg: TWMGetDlgCode); message WM_GETDLGCODE;
     {$ENDIF}
   protected
     procedure Loaded; override;
@@ -229,36 +241,33 @@ type
     procedure PaintAnalog;
     procedure PaintDigital;
     {virtual property methods}
-    procedure SetTime(Value : TDateTime); virtual;
-    property Active : Boolean read FActive write SetActive;
-    property ClockMode : TVpClockMode read FClockMode write SetClockMode;
+    procedure SetTime(Value: TDateTime); virtual;
+    property Active: Boolean read FActive write SetActive;
+    property ClockMode: TVpClockMode read FClockMode write SetClockMode;
     property DigitalOptions: TVpDigitalOptions
       read FDigitalOptions write FDigitalOptions;
-    property AnalogOptions : TVpHandOptions
+    property AnalogOptions: TVpHandOptions
       read FHandOptions write FHandOptions;
-    property MinuteOffset : Integer read FMinuteOffset write SetMinuteOffset;
-    property HourOffset : Integer read FHourOffset write SetHourOffset;
+    property MinuteOffset: Integer read FMinuteOffset write SetMinuteOffset;
+    property HourOffset: Integer read FHourOffset write SetHourOffset;
     property SecondOffset: Integer read FSecondOffset write SetSecondOffset;
     {events}
-    property OnHourChange : TNotifyEvent read FOnHourChange write FOnHourChange;
-    property OnMinuteChange : TNotifyEvent
-      read FOnMinuteChange write FOnMinuteChange;
-    property OnSecondChange : TNotifyEvent
-      read FOnSecondChange write FOnSecondChange;
-    property OnCountdownDone : TNotifyEvent
-      read FOnCountdownDone write FOnCountdownDone;
+    property OnHourChange: TNotifyEvent read FOnHourChange write FOnHourChange;
+    property OnMinuteChange: TNotifyEvent read FOnMinuteChange write FOnMinuteChange;
+    property OnSecondChange: TNotifyEvent read FOnSecondChange write FOnSecondChange;
+    property OnCountdownDone: TNotifyEvent read FOnCountdownDone write FOnCountdownDone;
+
   public
-    constructor Create(AOwner : TComponent); override;
+    constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure SetBounds(ALeft, ATop, AWidth, AHeight : Integer); override;
-    property DisplayMode: TVpClockDisplayMode
-      read FDisplayMode write SetDisplayMode;
-    property ElapsedDays : Integer read GetElapsedDays;
-    property ElapsedHours : Integer read GetElapsedHours;
-    property ElapsedMinutes : LongInt read GetElapsedMinutes;
-    property ElapsedSeconds : LongInt read GetElapsedSeconds;
-    property ElapsedSecondsTotal : LongInt read GetElapsedSecondsTotal;
-    property Time : TDateTime read FTime write SetTime;
+    procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
+    property DisplayMode: TVpClockDisplayMode read FDisplayMode write SetDisplayMode;
+    property ElapsedDays: Integer read GetElapsedDays;
+    property ElapsedHours: Integer read GetElapsedHours;
+    property ElapsedMinutes: LongInt read GetElapsedMinutes;
+    property ElapsedSeconds: LongInt read GetElapsedSeconds;
+    property ElapsedSecondsTotal: LongInt read GetElapsedSecondsTotal;
+    property Time: TDateTime read FTime write SetTime;
   end;
 
   TVpClock = class(TVpCustomClock)
@@ -393,7 +402,6 @@ end;
 constructor TVpHandOptions.Create;
 begin
   inherited;
-
   FClockFace := TBitMap.Create;
   FDrawMarks := True;
 end;
@@ -403,12 +411,11 @@ destructor TVpHandOptions.Destroy;
 begin
   FClockFace.Free;
   FClockFace := nil;
-
   inherited;
 end;
 {=====}
 
-procedure TVpHandOptions.Assign(Source : TPersistent);
+procedure TVpHandOptions.Assign(Source: TPersistent);
 begin
   if Source is TVpHandOptions then begin
     FHourHandColor := TVpHandOptions(Source).FHourHandColor;
@@ -428,7 +435,7 @@ begin
 end;
 {=====}
 
-procedure TVpHandOptions.SetClockFace(Value : TBitMap);
+procedure TVpHandOptions.SetClockFace(Value: TBitMap);
 begin
   if Assigned(Value) then
     FClockFace.Assign(Value)
@@ -440,7 +447,7 @@ begin
 end;
 {=====}
 
-procedure TVpHandOptions.SetDrawMarks(Value : Boolean);
+procedure TVpHandOptions.SetDrawMarks(Value: Boolean);
 begin
   if Value <> FDrawMarks then begin
     FDrawMarks := Value;
@@ -456,7 +463,7 @@ begin
 end;
 {=====}
 
-procedure TVpHandOptions.SetHourHandColor(Value : TColor);
+procedure TVpHandOptions.SetHourHandColor(Value: TColor);
 begin
   if Value <> FHourHandColor then begin
     FHourHandColor := Value;
@@ -465,7 +472,7 @@ begin
 end;
 {=====}
 
-procedure TVpHandOptions.SetHourHandLength(Value : TVpPercent);
+procedure TVpHandOptions.SetHourHandLength(Value: TVpPercent);
 begin
   if Value <> FHourHandLength then begin
     FHourHandLength := Value;
@@ -474,7 +481,7 @@ begin
 end;
 {=====}
 
-procedure TVpHandOptions.SetHourHandWidth(Value : Integer);
+procedure TVpHandOptions.SetHourHandWidth(Value: Integer);
 begin
   if (Value <> FHourHandWidth) and (Value > 0) then begin
     FHourHandWidth := Value;
@@ -483,7 +490,7 @@ begin
 end;
 {=====}
 
-procedure TVpHandOptions.SetMinuteHandColor(Value : TColor);
+procedure TVpHandOptions.SetMinuteHandColor(Value: TColor);
 begin
   if Value <> FMinuteHandColor then begin
     FMinuteHandColor := Value;
@@ -492,7 +499,7 @@ begin
 end;
 {=====}
 
-procedure TVpHandOptions.SetMinuteHandLength(Value : TVpPercent);
+procedure TVpHandOptions.SetMinuteHandLength(Value: TVpPercent);
 begin
   if Value <> FMinuteHandLength then begin
     FMinuteHandLength := Value;
@@ -501,7 +508,7 @@ begin
 end;
 {=====}
 
-procedure TVpHandOptions.SetMinuteHandWidth(Value : Integer);
+procedure TVpHandOptions.SetMinuteHandWidth(Value: Integer);
 begin
   if (Value <> FMinuteHandWidth) and (Value > 0) then begin
     FMinuteHandWidth := Value;
@@ -510,7 +517,7 @@ begin
 end;
 {=====}
 
-procedure TVpHandOptions.SetSecondHandColor(Value : TColor);
+procedure TVpHandOptions.SetSecondHandColor(Value: TColor);
 begin
   if Value <> FSecondHandColor then begin
     FSecondHandColor := Value;
@@ -519,7 +526,7 @@ begin
 end;
 {=====}
 
-procedure TVpHandOptions.SetSecondHandLength(Value : TVpPercent);
+procedure TVpHandOptions.SetSecondHandLength(Value: TVpPercent);
 begin
   if Value <> FSecondHandLength then begin
     FSecondHandLength := Value;
@@ -528,7 +535,7 @@ begin
 end;
 {=====}
 
-procedure TVpHandOptions.SetSecondHandWidth(Value : Integer);
+procedure TVpHandOptions.SetSecondHandWidth(Value: Integer);
 begin
   if (Value <> FSecondHandWidth) and (Value > 0) then begin
     FSecondHandWidth := Value;
@@ -537,7 +544,7 @@ begin
 end;
 {=====}
 
-procedure TVpHandOptions.SetShowSecondHand(Value : Boolean);
+procedure TVpHandOptions.SetShowSecondHand(Value: Boolean);
 begin
   if Value <> FShowSecondHand then begin
     FShowSecondHand := Value;
@@ -546,7 +553,7 @@ begin
 end;
 {=====}
 
-procedure TVpHandOptions.SetSolidHands(Value : Boolean);
+procedure TVpHandOptions.SetSolidHands(Value: Boolean);
 begin
   if Value <> FSolidHands then begin
     FSolidHands := Value;
@@ -556,39 +563,47 @@ end;
 
 {===== TOvcCustomClock ===============================================}
 
-constructor TVpCustomClock.Create(AOwner : TComponent);
+constructor TVpCustomClock.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
-  Width      := 136;
-  Height     := 136;
+  Width := 136;
+  Height := 136;
 
   FClockMode := cmClock;
 
+ {$IFDEF DELPHI}
   FTimerPool := TVpTimerPool.Create(self);
+ {$ELSE}
+  FTimer := TTimer.Create(self);
+ {$ENDIF}
 
   FHandOptions := TVpHandOptions.Create;
-  FHandOptions.OnChange         := ckHandOptionChange;
-  FHandOptions.HourHandColor    := clBlack;
-  FHandOptions.HourHandLength   := 60;
-  FHandOptions.HourHandWidth    := 4;
-  FHandOptions.MinuteHandColor  := clBlack;
+  FHandOptions.OnChange := ckHandOptionChange;
+  FHandOptions.HourHandColor := clBlack;
+  FHandOptions.HourHandLength := 60;
+  FHandOptions.HourHandWidth := 4;
+  FHandOptions.MinuteHandColor := clBlack;
   FHandOptions.MinuteHandLength := 80;
-  FHandOptions.MinuteHandWidth  := 3;
-  FHandOptions.SecondHandColor  := clRed;
+  FHandOptions.MinuteHandWidth := 3;
+  FHandOptions.SecondHandColor := clRed;
   FHandOptions.SecondHandLength := 90;
-  FHandOptions.SecondHandWidth  := 1;
-  FHandOptions.ShowSecondHand   := True;
-  FHandOptions.FSolidHands      := True;
+  FHandOptions.SecondHandWidth := 1;
+  FHandOptions.ShowSecondHand := True;
+  FHandOptions.FSolidHands := True;
 
   FDigitalOptions := TVpDigitalOptions.Create;
-  FDigitalOptions.FOnChange     := ckDigitalOptionChange;
+  FDigitalOptions.FOnChange := ckDigitalOptionChange;
 
-  ckDraw            := TBitMap.Create;
-  ckDraw.Width      := Width;
-  ckDraw.Height     := Height;
+  ckDraw := TBitMap.Create;
+  ckDraw.Width := Width;
+  ckDraw.Height := Height;
 
-  ckClockHandle     := -1;
+ {$IFDEF DELPHI}
+  ckClockHandle := -1;
+ {$ELSE}
+  FTimer.Enabled := false;
+ {$ENDIF}
 end;
 {=====}
 
@@ -608,10 +623,10 @@ begin
 end;
 {=====}
 
-function TVpCustomClock.ckConvertMsToDateTime(Value : LongInt) : TDateTime;
+function TVpCustomClock.ckConvertMsToDateTime(Value: LongInt) : TDateTime;
 var
-  S, Days : LongInt;
-  Hour, Minute, Second : Word;
+  S, Days: LongInt;
+  Hour, Minute, Second: Word;
 begin
   S := Value div 1000;
   Days := S div SecondsInDay;
@@ -624,14 +639,14 @@ begin
 end;
 {=====}
 
-procedure TVpCustomClock.ckHandOptionChange(Sender : TObject);
+procedure TVpCustomClock.ckHandOptionChange(Sender: TObject);
 begin
   if FDisplayMode = dmAnalog then
     Invalidate;
 end;
 {=====}
 
-procedure TVpCustomClock.ckDigitalOptionChange(Sender : TObject);
+procedure TVpCustomClock.ckDigitalOptionChange(Sender: TObject);
 begin
   if FDisplayMode = dmDigital then begin
     ckLEDDisplay.Size := FDigitalOptions.Size;
@@ -660,6 +675,7 @@ begin
 end;
 {=====}
 
+{$IFDEF DELPHI}
 procedure TVpCustomClock.ckTimerEvent(Sender: TObject; Handle: Integer;
   Interval: Cardinal; ElapsedTime: LongInt);
 var
@@ -694,6 +710,35 @@ begin
       SetTime(FStartTime - ckConvertMsToDateTime(ElapsedTime));
   end;
 end;
+{$ELSE}
+procedure TVpCustomClock.ckTimerEvent(Sender: TObject);
+var
+  Hour, Minute, Second, MSecond: Word;
+  C, D: Integer;
+  elapsed: TDateTime;
+begin
+  elapsed := now - FTimeStarted;
+  case FClockMode of
+    cmClock:
+      begin { Clock }
+        DecodeTime(Now, Hour, Minute, Second, MSecond);
+        D := Minute + FMinuteOffset;
+        Minute := Abs(D mod 60);
+        C := Hour + FHourOffset + D div 60;
+        if C > 23 then
+          Dec(C, 24);
+        if C < 0 then
+          Inc(C, 24);
+        Hour := C;
+        SetTime(EncodeTime(Hour, Minute, Second, MSecond));
+      end;
+    cmTimer: { Count-up timer }
+      SetTime(elapsed);
+    cmCountDownTimer: { Count-down timer }
+      SetTime(FCountdownStartTime - elapsed);
+  end;
+end;
+{$ENDIF}
 {=====}
 
 procedure TVpCustomClock.DoOnHourChange;
@@ -728,70 +773,97 @@ function TVpCustomClock.GetElapsedDays: Integer;
 var
   ClockDate : TDateTime;
 begin
+ {$IFDEF DELPHI}
   if ckClockHandle > -1 then begin
     ClockDate := ckConvertMsToDateTime(FTimerPool.ElapsedTime[ckClockHandle]);
     ckDays := Trunc(ClockDate);
   end;
+ {$ELSE}
+  if FTimer.Enabled then begin
+    ClockDate := now - FTimeStarted;
+    ckDays := Trunc(ClockDate);
+  end;
+ {$ENDIF}
   Result := ckDays;
 end;
 {=====}
 
 function TVpCustomClock.GetElapsedHours: Integer;
 var
-  Hour     : Word;
-  Min      : Word;
-  Sec      : Word;
-  MSec     : Word;
+  Hour, Min, Sec, MSec: Word;
   TempTime : TDateTime;
 begin
+  Result := 0;
+ {$IFDEF DELPHI}
   if ckClockHandle > -1 then begin
     TempTime := ckConvertMsToDateTime(FTimerPool.ElapsedTime[ckClockHandle]);
      DecodeTime(TempTime, Hour, Min, Sec, MSec);
-     ckHours := Hour
+     Result := Hour;
   end;
-  Result := ckHours;
+ {$ELSE}
+  if FTimer.Enabled then begin
+    Temptime := now - FTimeStarted;
+    DecodeTime(TempTime, Hour, Min, Sec, MSec);
+    Result := Hour;
+  end;
+ {$ENDIF}
 end;
 {=====}
 
 function TVpCustomClock.GetElapsedMinutes: LongInt;
 var
-  Hour     : Word;
-  Min      : Word;
-  Sec      : Word;
-  MSec     : Word;
+  Hour, Min, Sec, MSec: Word;
   TempTime : TDateTime;
 begin
+  Result := 0;
+ {$IFDEF DELPHI}
   if ckClockHandle > -1 then begin
     TempTime := ckConvertMsToDateTime(FTimerPool.ElapsedTime[ckClockHandle]);
     DecodeTime(TempTime, Hour, Min, Sec, MSec);
-    ckMinutes := Min;
+    Result := Min;
   end;
-  Result := ckMinutes;
+ {$ELSE}
+  if FTimer.Enabled then begin
+    TempTime := now - FTimeStarted;
+    DecodeTime(TempTime, Hour, Min, Sec, MSec);
+    Result := Min;
+  end;
+ {$ENDIF}
 end;
 {=====}
 
 function TVpCustomClock.GetElapsedSeconds : LongInt;
 var
-  Hour     : Word;
-  Min      : Word;
-  Sec      : Word;
-  MSec     : Word;
+  Hour, Min, Sec, MSec: Word;
   TempTime : TDateTime;
 begin
+  Result := 0;
+ {$IFDEF DELPHI}
   if ckClockHandle > -1 then begin
     TempTime := ckConvertMsToDateTime(FTimerPool.ElapsedTime[ckClockHandle]);
     DecodeTime(TempTime, Hour, Min, Sec, MSec);
-    ckSeconds := Sec;
+    Result := Sec;
   end;
-  Result := ckSeconds;
+ {$ELSE}
+  if FTimer.Enabled then begin
+    TempTime := now - FTimeStarted;
+    DecodeTime(TempTime, Hour, Min, Sec, MSec);
+    Result := Sec;
+  end;
+  {$ENDIF}
 end;
 {=====}
 
 function TVpCustomClock.GetElapsedSecondsTotal : LongInt;
 begin
+  Result := 0;
+ {$IFDEF DELPHI}
   if ckClockHandle > -1 then
-    ckTotalSeconds := FTimerPool.ElapsedTime[ckClockHandle] div 1000;
-  Result := ckTotalSeconds;
+    Result := FTimerPool.ElapsedTime[ckClockHandle] div 1000;
+ {$ELSE}
+  if FTimer.Enabled then
+    Result := Round((now - FTimeStarted) * SecondsInDay);
+ {$ENDIF}
 end;
 {=====}
 
@@ -836,9 +908,8 @@ var
   ElRgn       : HRgn;
   R           : TRect;
 
-  procedure DrawTickMark(MarkX, MarkY : Integer;
-                         LColor, MColor, RColor : TColor;
-                         FiveMinute : Boolean);
+  procedure DrawTickMark(MarkX, MarkY: Integer; LColor, MColor, RColor: TColor;
+    FiveMinute: Boolean);
   begin
     with ckDraw.Canvas do begin
       Pixels[MarkX, MarkY]     := MColor;
@@ -860,8 +931,8 @@ var
 begin
   with ckDraw.Canvas do begin
     Brush.Color := Color;
-    Pen.Color   := FHandOptions.HourHandColor;
-    Pen.Width   := 1;
+    Pen.Color := FHandOptions.HourHandColor;
+    Pen.Width := 1;
     FillRect(ClientRect);
 
     if not (FHandOptions. ClockFace.Empty) then begin
@@ -875,14 +946,14 @@ begin
       finally
         DeleteObject(ElRgn);
       end;
-      SelectClipRgn(ckDraw.Canvas.Handle, 0);{remove clipping region}
+      SelectClipRgn(ckDraw.Canvas.Handle, 0);  {remove clipping region}
     end;
 
     {draw marks}
     if FHandOptions.DrawMarks then begin
       with ClientRect do begin
-        HalfWidth   := (Right - Left) shr 1;
-        HalfHeight  := (Bottom - Top) shr 1;
+        HalfWidth := (Right - Left) shr 1;
+        HalfHeight := (Bottom - Top) shr 1;
       end;
       if HalfWidth < 1 then
         HalfWidth := 1;
@@ -909,7 +980,7 @@ begin
 end;
 {=====}
 
-procedure TVpCustomClock.PaintHands(ACanvas : TCanvas);
+procedure TVpCustomClock.PaintHands(ACanvas: TCanvas);
 type
   HandType  = (HourHand, MinuteHand, SecondHand);
 var
@@ -940,10 +1011,8 @@ var
     NewPoint.Y := NewPoint.Y + HalfHeight;
   end;
 
-  procedure DrawNewHand(PenColor   : TColor;
-                        Hand       : HandType;
-                        HandLength : Integer;
-                        HipWidth   : Integer);
+  procedure DrawNewHand(PenColor: TColor; Hand: HandType;
+    HandLength, HipWidth: Integer);
   const
     MaxPoints = 7;
   var
@@ -956,7 +1025,7 @@ var
     Var
       CPoints : array[1..3] of TPoint;
 
-      procedure LoadPoints(Pt1, Pt2, Pt3 : Integer);
+      procedure LoadPoints(Pt1, Pt2, Pt3: Integer);
       begin
         CPoints[1] := HandPoints[Pt1];
         CPoints[2] := HandPoints[Pt2];
@@ -967,71 +1036,78 @@ var
     begin
       ACanvas.Brush.Color := clWhite;
       case Hand of
-        HourHand : begin
-                     case Hour of
-                       0..3,
-                      12..15 : begin
-                                 LoadPoints(2,3,4);
-                                 LoadPoints(1,2,4);
-                               end;
-                       4..5,
-                      16..17 : begin
-                                 LoadPoints(1,2,4);
-                                 LoadPoints(1,2,6);
-                               end;
-                       6..9,
-                      18..21 : begin
-                                 LoadPoints(1,2,6);
-                                 LoadPoints(2,3,6);
-                               end;
-                      10..11,
-                      22..23 : begin
-                                 LoadPoints(2,3,4);
-                                 LoadPoints(2,3,6);
-                               end;
-                     end;
-                   end;
-        MinuteHand: begin
-                     case Minute of
-                       0..15 : begin
-                                 LoadPoints(2,3,4);
-                                 LoadPoints(1,2,4);
-                               end;
-                       16..25: begin
-                                 LoadPoints(1,2,4);
-                                 LoadPoints(1,2,6);
-                               end;
-                       26..50: begin
-                                 LoadPoints(1,2,6);
-                                 LoadPoints(2,3,6);
-                               end;
-                       51..59: begin
-                                 LoadPoints(2,3,4);
-                                 LoadPoints(2,3,6);
-                               end;
-                     end;
-                   end;
-        SecondHand: begin
-                     case Second of
-                       0..15 : begin
-                                 LoadPoints(2,3,4);
-                                 LoadPoints(1,2,4);
-                               end;
-                       16..25: begin
-                                 LoadPoints(1,2,4);
-                                 LoadPoints(1,2,6);
-                               end;
-                       26..50: begin
-                                 LoadPoints(1,2,6);
-                                 LoadPoints(2,3,6);
-                               end;
-                       51..59: begin
-                                 LoadPoints(2,3,4);
-                                 LoadPoints(2,3,6);
-                               end;
-                     end;
-                   end;
-      end;
+        HourHand:
+          case Hour of
+            0..3, 12..15:
+              begin
+                LoadPoints(2,3,4);
+                LoadPoints(1,2,4);
+              end;
+            4..5, 16..17:
+              begin
+                LoadPoints(1,2,4);
+                LoadPoints(1,2,6);
+              end;
+            6..9, 18..21:
+              begin
+                LoadPoints(1,2,6);
+                LoadPoints(2,3,6);
+              end;
+            10..11, 22..23:
+              begin
+                LoadPoints(2,3,4);
+                LoadPoints(2,3,6);
+              end;
+          end;
+
+        MinuteHand:
+          case Minute of
+            0..15:
+              begin
+                LoadPoints(2,3,4);
+                LoadPoints(1,2,4);
+              end;
+            16..25:
+              begin
+                LoadPoints(1,2,4);
+                LoadPoints(1,2,6);
+              end;
+            26..50:
+              begin
+                LoadPoints(1,2,6);
+                LoadPoints(2,3,6);
+              end;
+            51..59:
+              begin
+                LoadPoints(2,3,4);
+                LoadPoints(2,3,6);
+              end;
+          end;
+
+        SecondHand:
+          case Second of
+            0..15:
+              begin
+                LoadPoints(2,3,4);
+                LoadPoints(1,2,4);
+              end;
+            16..25:
+              begin
+                LoadPoints(1,2,4);
+                LoadPoints(1,2,6);
+              end;
+            26..50:
+              begin
+                LoadPoints(1,2,6);
+                LoadPoints(2,3,6);
+              end;
+            51..59:
+              begin
+                LoadPoints(2,3,4);
+                LoadPoints(2,3,6);
+              end;
+          end;
+      end;   // case Hand of...
       ACanvas.Brush.Color := Color;
     end;
 
@@ -1090,8 +1166,8 @@ var
 begin
   DecodeTime(FTime, Hour, Minute, Second, MSecond);
 
-  HalfWidth   := (ClientRect.Right - ClientRect.Left) shr 1;
-  HalfHeight  := (ClientRect.Bottom - ClientRect.Top) shr 1;
+  HalfWidth := (ClientRect.Right - ClientRect.Left) shr 1;
+  HalfHeight := (ClientRect.Bottom - ClientRect.Top) shr 1;
   if HalfWidth < 1 then
     HalfWidth := 1;
   if HalfHeight < 1 then
@@ -1099,7 +1175,7 @@ begin
 
   {based on the Height or Width of the Clock, set the Hand Lengths}
   HandBase := Min(HalfWidth, HalfHeight);
-  HourHandLen   := Trunc(HandBase * FHandOptions.HourHandLength / 100);
+  HourHandLen := Trunc(HandBase * FHandOptions.HourHandLength / 100);
   MinuteHandLen := Trunc(HandBase * FHandOptions.MinuteHandLength / 100);
   SecondHandLen := Trunc(HandBase * FHandOptions.SecondHandLength / 100);
 
@@ -1124,7 +1200,7 @@ begin
 end;
 {=====}
 
-procedure TVpCustomClock.SetActive(Value : Boolean);
+procedure TVpCustomClock.SetActive(Value: Boolean);
 begin
   if csLoading in ComponentState then begin
     FActive := Value;
@@ -1136,31 +1212,45 @@ begin
     if FActive then begin
       if FDisplayMode = dmDigital then
         FMilitaryTime := DigitalOptions.MilitaryTime;
+     {$IFDEF DELPHI}
       if ckClockHandle = -1 then
         ckClockHandle := FTimerPool.Add(ckTimerEvent, ckInterval);
-      if FClockMode = cmClock then
-        FTime := Now
-      else if FClockMode = cmCountdownTimer then
-        FStartTime := EncodeTime(FHourOffset, FMinuteOffset,
-          FSecondOffset, 0)
-      else
-        FTime := 0;
-    end else if ckClockHandle > -1 then begin
+     {$ELSE}
+      FTimeStarted := now;
+      FTimer.Interval := ckInterval;
+      FTimer.Enabled := FActive;
+      FTimer.OnTimer := ckTimerEvent;
+     {$ENDIF}
+      case FClockMode of
+        cmClock:
+          FTime := Now;
+        cmTimer:
+          FTime := 0;
+        cmCountdownTimer:
+          FCountdownStartTime := EncodeTime(FHourOffset, FMinuteOffset, FSecondOffset, 0);
+      end;
+    end
+    else
+   {$IFDEF DELPHI}
+    if ckClockHandle > -1 then begin
       FTimerPool.Remove(ckClockHandle);
       ckClockHandle := -1;
     end;
-
+   {$ELSE}
+    if FTimer.Enabled then
+      FTimer.Enabled := false;
+   {$ENDIF}
     Invalidate;
   end;
 end;
 {=====}
 
-procedure TVpCustomClock.SetBounds(ALeft, ATop, AWidth, AHeight : Integer);
+procedure TVpCustomClock.SetBounds(ALeft, ATop, AWidth, AHeight: Integer);
 begin
   inherited SetBounds(ALeft, ATop, AWidth, AHeight);
 
   if Assigned(ckDraw) then begin
-    ckDraw.Width  := AWidth;
+    ckDraw.Width := AWidth;
     ckDraw.Height := AHeight;
   end;
 
@@ -1168,7 +1258,7 @@ begin
 end;
 {=====}
 
-procedure TVpCustomClock.SetClockMode(Value : TVpClockMode);
+procedure TVpCustomClock.SetClockMode(Value: TVpClockMode);
 begin
   if Value <> FClockMode then begin
     if FActive then Active := false;
@@ -1222,22 +1312,34 @@ begin
 
         {Initialize the LED display}
         if FActive then begin
-          if FClockMode = cmClock then
-          {Clock}
-            SetTime(Now)
-          else if FClockMode = cmTimer then
-          {Timer}
-            SetTime(ckConvertMsToDateTime(FElapsedSeconds * 1000))
-          else
-          {Countdown Timer}
-            if (FStartTime - ckConvertMsToDateTime(
-              FElapsedSeconds * 1000) <= 0) then
-            begin
-              SetTime(0);
-              Active := false;
-              DoOnCountdownDone;
-            end else
-              SetTime(FStartTime - ckConvertMsToDateTime(FElapsedSeconds * 1000));
+          case FClockMode of
+            cmClock:
+              SetTime(Now);
+            cmTimer:
+             {$IFDEF DELPHI}
+              SetTime(ckConvertMsToDateTime(FElapsedSeconds * 1000));
+             {$ELSE}
+              SetTime(Now - FTimeStarted);
+             {$ENDIF}
+            cmCountdownTimer:
+             {$IFDEF DELPHI}
+              if (FStartTime - ckConvertMsToDateTime(FElapsedSeconds * 1000) <= 0) then
+              begin
+                SetTime(0);
+                Active := false;
+                DoOnCountdownDone;
+              end else
+                SetTime(FStartTime - ckConvertMsToDateTime(FElapsedSeconds * 1000));
+             {$ELSE}
+              if (FCountdownStartTime - (now - FTimeStarted) <= 0) then
+              begin
+                SetTime(0);
+                Active := false;
+                DoOnCountdownDone;
+              end else
+                SetTime(FCountdownStartTime - (now - FTimeStarted));
+             {$ENDIF}
+          end;
         end;
 
       end;
@@ -1275,15 +1377,16 @@ begin
 end;
 {=====}
 
-procedure TVpCustomClock.SetTime(Value : TDateTime);
+procedure TVpCustomClock.SetTime(Value: TDateTime);
 var
-  Hour1, Minute1, Second1 : Word;
-  Hour2, Minute2, Second2 : Word;
-  MSecond : Word;
+  Hour1, Minute1, Second1: Word;
+  Hour2, Minute2, Second2: Word;
+  MSecond: Word;
   TimeStr: string;
 begin
   DecodeTime(Value, Hour1, Minute1, Second1, MSecond);
   DecodeTime(FTime, Hour2, Minute2, Second2, MSecond);
+
   if (Hour1 <> Hour2) or (Minute1 <> Minute2) or (Second1 <> Second2) then begin
     FTime := Value;
 
@@ -1300,11 +1403,14 @@ begin
     if DisplayMode = dmDigital then begin
       if FDigitalOptions.ShowSeconds and FMilitaryTime then
         TimeStr := FormatDateTime('hh:nn:ss', FTime)
-      else if FDigitalOptions.ShowSeconds and not FMilitaryTime then
+      else
+      if FDigitalOptions.ShowSeconds and not FMilitaryTime then
         TimeStr := FormatDateTime('hh:nn:ss am/pm', FTime)
-      else if not FDigitalOptions.ShowSeconds and FMilitaryTime then
+      else
+      if not FDigitalOptions.ShowSeconds and FMilitaryTime then
         TimeStr := FormatDateTime('hh:nn', FTime)
-      else if not FDigitalOptions.ShowSeconds and not FMilitaryTime then
+      else
+      if not FDigitalOptions.ShowSeconds and not FMilitaryTime then
         TimeStr := FormatDateTime('hh:nn am/pm', FTime);
       ckLEDDisplay.Caption := TimeStr;
     end;
@@ -1314,7 +1420,7 @@ begin
 end;
 {=====}
 
-procedure TVpCustomClock.SetMinuteOffset(Value : Integer);
+procedure TVpCustomClock.SetMinuteOffset(Value: Integer);
 begin
   if (Value <> FMinuteOffset) and (Abs(Value) <= 60) then begin
     FMinuteOffset := Value;
@@ -1325,7 +1431,7 @@ begin
 end;
 {=====}
 
-procedure TVpCustomClock.SetHourOffset(Value : Integer);
+procedure TVpCustomClock.SetHourOffset(Value: Integer);
 begin
   if (Value <> FHourOffset) and (Abs(Value) <= 24) then begin
     FHourOffset := Value;
@@ -1336,7 +1442,7 @@ begin
 end;
 {=====}
 
-procedure TVpCustomClock.SetSecondOffset(Value : Integer);
+procedure TVpCustomClock.SetSecondOffset(Value: Integer);
 begin
   if (Value <> FSecondOffset) and (Abs(Value) <= 59) then begin
     FSecondOffset := Value;
@@ -1363,9 +1469,9 @@ begin
 end;
 
 {$IFNDEF LCL}
-procedure TVpCustomClock.WMEraseBkgnd(var Msg : TWMEraseBkGnd);
+procedure TVpCustomClock.WMEraseBkgnd(var Msg: TWMEraseBkGnd);
 {$ELSE}
-procedure TVpCustomClock.WMEraseBkgnd(var Msg : TLMEraseBkGnd);
+procedure TVpCustomClock.WMEraseBkgnd(var Msg: TLMEraseBkGnd);
 {$ENDIF}
 begin
   Msg.Result := 1;
@@ -1373,7 +1479,7 @@ end;
 {=====}
 
 {$IFNDEF LCL}
-procedure TVpCustomClock.WMGetDlgCode(var Msg : TWMGetDlgCode);
+procedure TVpCustomClock.WMGetDlgCode(var Msg: TWMGetDlgCode);
 begin
   {tell windows we are a static control to avoid receiving the focus}
   Msg.Result := DLGC_STATIC;
