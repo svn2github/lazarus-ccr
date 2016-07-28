@@ -65,7 +65,8 @@ uses
   LazFileUtils,
   VpConst, VpMisc;
 
-{ TVpZeosDatastore }
+
+{ TVpSqlite3Datastore }
 
 constructor TVpSqlite3Datastore.Create(AOwner: TComponent);
 begin

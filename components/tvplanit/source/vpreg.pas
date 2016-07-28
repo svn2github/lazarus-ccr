@@ -166,6 +166,7 @@ uses
   VpIniDS,                    { IniFile datastore                            }
   VpXmlDS,                    { XML file datastore                           }
   VpBufDS,                    { Datastore for TBufDataset                    }
+  VpFBDS,                     { Datastore for Firebird database              }
   VpSqlite3DS,                { Datastore for sqlite3                        }
   //  VpSdfDS                     { Datastore for TSdfDataset                    }
   //  VpDbfDS,                    { Datastore for dbase files                    }
@@ -629,6 +630,7 @@ begin
     TVpXmlDatastore,
     TVpBufDSDatastore,
     TVpSqlite3Datastore,
+    TVpFirebirdDatastore,
     //TVpSdfDatastore,       // to do (maybe)...
     //TVpDbfDatastore,       // to do...
 {$ENDIF}
