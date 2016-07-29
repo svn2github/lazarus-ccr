@@ -38,11 +38,14 @@ type
     LblLanguage: TLabel;
     LblVisibleDays: TLabel;
     MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    MnuLoadPrintFormats: TMenuItem;
     MnuPrint: TMenuItem;
     MnuEditPrintFormats: TMenuItem;
     MnuPrintPreview: TMenuItem;
     Notebook: TNotebook;
     Events: TPage;
+    OpenDialog: TOpenDialog;
     Tasks: TPage;
     Contacts: TPage;
     Resources: TPage;
@@ -96,6 +99,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure MnuAboutClick(Sender: TObject);
     procedure MnuEditPrintFormatsClick(Sender: TObject);
+    procedure MnuLoadPrintFormatsClick(Sender: TObject);
     procedure MnuPrintClick(Sender: TObject);
     procedure MnuPrintPreviewClick(Sender: TObject);
     procedure MnuQuitClick(Sender: TObject);
@@ -191,6 +195,7 @@ resourcestring
   RSFlat = 'flat';
   RS3d = '3D';
   RSBorderless = 'no border';
+  RSXMLFiles = 'XML files (*.xml)';
 
 {$IFDEF WINDOWS}
 { This function determines the LCID from the language code.
@@ -384,6 +389,15 @@ procedure TMainForm.MnuEditPrintFormatsClick(Sender: TObject);
 begin
   VpPrintFormatEditDialog1.DrawingStyle := VpWeekView1.DrawingStyle;
   VpPrintFormatEditDialog1.Execute;
+end;
+
+procedure TMainForm.MnuLoadPrintFormatsClick(Sender: TObject);
+begin
+  if OpenDialog.Filename = '' then
+    OpenDialog.InitialDir := Application.Location else
+    OpenDialog.InitialDir := ExtractFileDir(OpenDialog.FileName);
+  if OpenDialog.Execute then
+    VpControlLink1.Printer.LoadFromFile(Opendialog.Filename, false);
 end;
 
 procedure TMainForm.MnuPrintClick(Sender: TObject);
@@ -783,6 +797,8 @@ begin
   CbDrawingStyle.Items.Add(RSFlat);
   CbDrawingStyle.Items.Add(RS3d);
   CbDrawingStyle.Items.Add(RSBorderless);
+
+  OpenDialog.Filter := rsXMLFiles + '|*.xml';
 
   // Next settings work correctly only for Windows.
  {$IFDEF WINDOWS}

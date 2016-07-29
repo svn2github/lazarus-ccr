@@ -140,6 +140,10 @@ msgstr "Вторник"
 msgid "Wednesday"
 msgstr "Среда"
 
+#: demomain.rsxmlfiles
+msgid "XML files (*.xml)"
+msgstr ""
+
 #: tfrmreportsetup.button1.caption
 msgctxt "tfrmreportsetup.button1.caption"
 msgid "OK"
@@ -262,6 +266,12 @@ msgid "Help"
 msgstr "Справка"
 
 #: tmainform.menuitem3.caption
+msgctxt "tmainform.menuitem3.caption"
+msgid "-"
+msgstr ""
+
+#: tmainform.menuitem4.caption
+msgctxt "tmainform.menuitem4.caption"
 msgid "-"
 msgstr ""
 
@@ -272,6 +282,10 @@ msgstr "О Visual PlanIt"
 #: tmainform.mnueditprintformats.caption
 msgid "Edit print formats..."
 msgstr "Редактор формата печати..."
+
+#: tmainform.mnuloadprintformats.caption
+msgid "Load print formats..."
+msgstr ""
 
 #: tmainform.mnumaintenance.caption
 msgctxt "TMAINFORM.MNUMAINTENANCE.CAPTION"

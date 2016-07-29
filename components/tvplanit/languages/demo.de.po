@@ -141,6 +141,10 @@ msgstr "Dienstag"
 msgid "Wednesday"
 msgstr "Mittwoch"
 
+#: demomain.rsxmlfiles
+msgid "XML files (*.xml)"
+msgstr "XML-Dateien (*.XML)"
+
 #: tfrmreportsetup.button1.caption
 msgctxt "tfrmreportsetup.button1.caption"
 msgid "OK"
@@ -263,6 +267,12 @@ msgid "Help"
 msgstr "Hilfe"
 
 #: tmainform.menuitem3.caption
+msgctxt "tmainform.menuitem3.caption"
+msgid "-"
+msgstr ""
+
+#: tmainform.menuitem4.caption
+msgctxt "tmainform.menuitem4.caption"
 msgid "-"
 msgstr ""
 
@@ -273,6 +283,10 @@ msgstr "Über Visual PlanIt"
 #: tmainform.mnueditprintformats.caption
 msgid "Edit print formats..."
 msgstr "Druckformate bearbeiten..."
+
+#: tmainform.mnuloadprintformats.caption
+msgid "Load print formats..."
+msgstr "Druckformate laden..."
 
 #: tmainform.mnumaintenance.caption
 msgctxt "tmainform.mnumaintenance.caption"
@@ -313,4 +327,3 @@ msgstr "Fertiggestellte Aufgaben ausblenden"
 #: tmainform.titlelbl.caption
 msgid "TitleLbl"
 msgstr ""
-

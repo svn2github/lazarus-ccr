@@ -130,6 +130,10 @@ msgstr ""
 msgid "Wednesday"
 msgstr ""
 
+#: demomain.rsxmlfiles
+msgid "XML files (*.xml)"
+msgstr ""
+
 #: tfrmreportsetup.button1.caption
 msgctxt "tfrmreportsetup.button1.caption"
 msgid "OK"
@@ -250,6 +254,12 @@ msgid "Help"
 msgstr ""
 
 #: tmainform.menuitem3.caption
+msgctxt "tmainform.menuitem3.caption"
+msgid "-"
+msgstr ""
+
+#: tmainform.menuitem4.caption
+msgctxt "tmainform.menuitem4.caption"
 msgid "-"
 msgstr ""
 
@@ -259,6 +269,10 @@ msgstr ""
 
 #: tmainform.mnueditprintformats.caption
 msgid "Edit print formats..."
+msgstr ""
+
+#: tmainform.mnuloadprintformats.caption
+msgid "Load print formats..."
 msgstr ""
 
 #: tmainform.mnumaintenance.caption

@@ -787,6 +787,7 @@ object MainForm: TMainForm
     OnPlaySound = VpBufDSDataStore1PlaySound
     AutoConnect = True
     AutoCreate = True
+    DayBuffer = 31
     Directory = 'data'
     left = 312
     top = 128
@@ -1961,6 +1962,13 @@ object MainForm: TMainForm
         Caption = 'Edit print formats...'
         OnClick = MnuEditPrintFormatsClick
       end
+      object MnuLoadPrintFormats: TMenuItem
+        Caption = 'Load print formats...'
+        OnClick = MnuLoadPrintFormatsClick
+      end
+      object MenuItem4: TMenuItem
+        Caption = '-'
+      end
       object MnuPrintPreview: TMenuItem
         Caption = 'Print preview...'
         OnClick = MnuPrintPreviewClick
@@ -2032,5 +2040,12 @@ object MainForm: TMainForm
     Placement.Width = 640
     left = 712
     top = 192
+  end
+  object OpenDialog: TOpenDialog
+    DefaultExt = '.xml'
+    Filter = 'xml files (*.xml)|*.xml'
+    Options = [ofFileMustExist, ofEnableSizing, ofViewDetail]
+    left = 560
+    top = 440
   end
 end
