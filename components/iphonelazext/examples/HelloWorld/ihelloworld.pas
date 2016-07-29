@@ -82,8 +82,6 @@ end;
 var
   pool    : NSAutoreleasePool;
 
-{$R *.res}
-
 begin
   // initialize foundation memory manger (aka autorelease pool)
   pool := NSAutoreleasePool.alloc.init;
