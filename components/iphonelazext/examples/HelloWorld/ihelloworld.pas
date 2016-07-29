@@ -5,14 +5,17 @@ program ihelloworld;
 {$linkframework UIKit}
 
 uses
-  iPhoneAll, CGContext, CGGeometry, CFString;
+  // you can probably find a number of different iPhoneAll units available online.
+  // The example is written, using iPhoneAll from https://github.com/genericptr/iOS_8_0
+  // Once you get the headers don't forget to add to search path for the project
+  iPhoneAll;
 
 type
   TAppDelegate = objcclass(NSObject)
     procedure applicationDidFinishLaunching(application: UIApplication); message 'applicationDidFinishLaunching:';
   end;
 
-  TMyWindow = objcclass(UIWindow)
+  TMyView = objcclass(UIView)
   public
     procedure drawRect(c: CGRect); override;
   end;
@@ -21,7 +24,7 @@ const
   helloworld = 'Hello world';
 
 // window paint method
-procedure TMyWindow.drawRect(c: CGRect);
+procedure TMyView.drawRect(c: CGRect);
 var
   cg : CGContextRef;
 begin
@@ -45,18 +48,29 @@ begin
 end;
 
 var
-  mainwindow : TMyWindow;
+  mainwindow : UIWindow;
+  ctrl   : UIViewController;
+  myview : TMyView;
 
 { TAppDelegate }
 
 procedure TAppDelegate.applicationDidFinishLaunching(application: UIApplication);
 begin
   // application has initialized, now we can create the main window
-  mainwindow:=TMyWindow(TMyWindow.alloc);
   // initialize window in Objective-C style
-  mainwindow := TMyWindow(mainwindow.initWithFrame (UIScreen.mainScreen.bounds));
+  mainwindow:=UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds);
+
+  // creating the root controller
+  ctrl:=UIViewController.alloc.init;
+  mainwindow.setRootViewController(ctrl);
+
+  myview := TMyView.alloc.init;
+  myview.setBounds( mainwindow.bounds );
+  ctrl.setView(myview);
+
   // activate and show the window
   mainwindow.makeKeyAndVisible;
+
 end;
 
 function NSStr(const s: string): NSString;
@@ -68,11 +82,13 @@ end;
 var
   pool    : NSAutoreleasePool;
 
+{$R *.res}
+
 begin
   // initialize foundation memory manger (aka autorelease pool)
   pool := NSAutoreleasePool.alloc.init;
   // launching main application loop
-  ExitCode:=UIApplicationMain(argc, argv, nil, NSSTR('TAppDelegate'));
+  ExitCode:=UIApplicationMain(argc, PChar(argv), nil, NSSTR('TAppDelegate'));
   // according to docs the UIApplicationMain never returns,
   // but still the code present in the Obj-C main.m files
   pool.release;
