@@ -185,7 +185,7 @@ end;
 
 procedure DoReadXibDoc(ADoc: TXMLDocument; var Obj: TXibObject);
 const
-  DataNode  = 'data';
+  //DataNode  = 'data';
   XibObject = 'object';
 var
   node  : TDOMNode;
@@ -288,7 +288,7 @@ begin
   n:=fXibNode.FirstChild;
   while Assigned(n) do begin
     if (n.NodeName='string') and (TDOMElement(n).AttribStrings['key']='') then
-      list.Add(n.TextContent);
+      list.Add(UTF8Encode(n.TextContent));
     n:=n.NextSibling;
   end;
 end;
@@ -319,13 +319,13 @@ var
   n : TDOMNode;
 begin
   n:=FindProperty(PropName);
-  if Assigned(n) and (n.NodeName='string') then Result:=n.TextContent
+  if Assigned(n) and (n.NodeName='string') then Result:=UTF8Encode(n.TextContent)
   else Result:='';
 end;
 
 function isKeyAttr(n: TDomNode; const KeyAttrVal: String): Boolean;
 begin
-  Result:=Assigned(n) and (n is TDOMElement) and (TDOMElement(n).AttribStrings['key']=KeyAttrVal)
+  Result:=Assigned(n) and (n is TDOMElement) and (TDOMElement(n).AttribStrings['key']=UTF8Decode(KeyAttrVal))
 end;
 
 function TXibObject.FindProperty(const PropName:String):TDOMNode;
@@ -344,7 +344,7 @@ begin
     Result:='';
     Exit;
   end;
-  Result:=TDOMElement(fXibNode).AttribStrings['key'];
+  Result:=UTF8Encode(TDOMElement(fXibNode).AttribStrings['key']);
 end;
 
 function TXibObject.GetXibClass:String;
@@ -353,7 +353,7 @@ begin
     Result:='';
     Exit;
   end;
-  Result:=TDOMElement(fXibNode).AttribStrings['class'];
+  Result:=UTF8Encode(TDOMElement(fXibNode).AttribStrings['class']);
 end;
 
 procedure ListClassesDescr(const FileName: AnsiString; DstList : TList); overload;

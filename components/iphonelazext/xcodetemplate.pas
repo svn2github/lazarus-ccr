@@ -28,7 +28,7 @@ function UpdateProject(const ProjFileName: string; TemplateValues, ResFiles: TSt
 
 procedure UpdateBldConfig(const proj: PBXProject; optName, optVal: string);
 procedure UpdateMainFile(const proj: PBXProject; mainfile: string);
-procedure UpdateCompileOpts(const proj: PBXProject; const options: string);
+procedure UpdateCompileOpts(const proj: PBXProject; const aoptions: string);
 
 const
   XCodeProjectTemplateIconID : AnsiString ='0AE3FFA610F3C9AF00A9B007,';
@@ -206,42 +206,18 @@ const
     '	rootObject = 0A52AE8310F0D05300478C4F /* Project object */;'#10+
     '}'#10;
 
-  BuildScript =
-     '## start'#13
-    +'echo "compiling FPC project"'#13
-    +''#13
-    +'export RESULT_EXE=${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}'#13
-    +'export IOSHEADERS='#13
-    +'cd $FPC_MAIN_DIR'#13
-    +'#rm $RESULT_EXE'#13
-    +'export TargetCPU=${PLATFORM_PREFERRED_ARCH}'#13
-    +''#13
-    +'if [ "${PLATFORM_NAME}" == "iphonesimulator" ]; then'#13
-    +'  export TargetOS="iphonesim"'#13
-    +'fi'#13
-    +'export Target=${TargetCPU}-${TargetOS}'#13
-    +''#13
-    +'pwd'#13
-    +'echo ${RESULT_EXE}'#13
-    +''#13
-    +'${FPC_DIR}fpc -T${TargetOS} -P${TargetCPU} -MDelphi -Scghi -O1 -l -dIPHONEALL \'#13
-    +' ${FPC_CUSTOM_OPTIONS} \'#13
-    //-Fu~/iOS_6_0 -Fu.
-    +'-Filib/${Target} -FUlib/${Target} \'#13
-    +'-XR${SDKROOT}  -FD${PLATFORM_DEVELOPER_BIN_DIR} $FPC_MAIN_FILE \'#13
-    +' -o${RESULT_EXE}'#13
-    +'export RES=$?'#13
-    +''#13
-    +'if [ $RES != 0 ]; then'#13
-    +'  exit $RES'#13
-    +'fi'#13
-    +''#13
-    +'echo ${RESULT_EXE}'#13
-    +''#13
-    +'exit $FPCRES'#13;
+var
+  // global variable... a bad pattern must be replaced
+  DefaultBuildScript : string = '';
 
+function ReadBuildScriptFile(const fn: string): string;
 
 implementation
+
+function EmptyBuildScript: string;
+begin
+  Result:='';
+end;
 
 function GetValueName(const Source: String; idx: Integer): String;
 var
@@ -355,8 +331,9 @@ begin
   Result:=StringReplace(Result, '$(TargetOS)', os, [rfReplaceAll, rfIgnoreCase]);
 end;
 
-procedure UpdateCompileOpts(const proj: PBXProject; const options: string);
+procedure UpdateCompileOpts(const proj: PBXProject; const aoptions: string);
 var
+  options : string;
   opt    : string;
   i32opt : string;
   i64opt : string;
@@ -367,6 +344,7 @@ var
 begin
   //UpdateBldConfig(proj, 'FPC_CUSTOM_OPTIONS', options);
   UpdateBldConfig(proj, 'FPC_CUSTOM_OPTIONS', '');
+  options:=aoptions+' '; // trailing space, always to consume the last options
   i:=1;
   j:=1;
   l:=length(options);
@@ -521,7 +499,7 @@ begin
 
   if not Assigned(TargetFindRunScript(trg)) then begin
     scr:=TargetAddRunScript(trg);
-    scr.shellScript:=BuildScript;
+    scr.shellScript:=DefaultBuildScript;
     scr.showEnvVarsInLog:=true;
   end;
 
@@ -563,8 +541,9 @@ begin
       prj.Free;
       Exit;
     end;
-  end else
+  end else begin
     prj:=ProjectCreate3_2;
+  end;
 
   try
     PrepareTemplateFile(prj, TemplateValues, Resfiles);

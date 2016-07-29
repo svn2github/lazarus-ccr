@@ -711,7 +711,7 @@ const
   FlagGet = 3;  // 1 + 2                  //ptField = 0;
   FlagSet = 12; // 4 + 8 , 16 + 32        //ptStatic = 1;
   FlagSP  = 16 + 32;                      //ptVirtual = 2;
-  FlagIdx = 64;                           //ptConst = 3; }
+  FlagIdx = 64;                           //ptConst = 3;
 begin
   if (not Assigned(obj)) or (not Assigned(srz)) then Exit;
 

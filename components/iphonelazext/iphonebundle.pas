@@ -61,6 +61,92 @@ function RandomSpaceName: WideString;
 
 implementation
 
+(* Build script:
+## start
+echo "compiling FPC project"
+
+export RESULT_EXE=${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}
+export IOSHEADERS=
+cd $FPC_MAIN_DIR
+
+export TargetCPU=${PLATFORM_PREFERRED_ARCH}
+
+export OPT32=${FPC_OPT_A32}
+export OPT64=${FPC_OPT_A64}
+export CPU32="arm"
+export CPU64="aarch64"
+export TargetOS="darwin"
+
+if [ "${PLATFORM_NAME}" == "iphonesimulator" ]; then
+export OPT32=${FPC_OPT_I32}
+export OPT64=${FPC_OPT_I64}
+export CPU32="i386"
+export CPU64="x86_64"
+export TargetOS="iphonesim"
+fi
+
+# 64-bit compilation
+export Result64=${RESULT_EXE}_64
+export TargetCPU=${CPU64}
+export Target=${TargetCPU}-${TargetOS}
+## making output directory
+export outdir=lib/${Target}
+mkdir -p ${outdir}
+
+echo ${FPC_DIR}fpc -T${TargetOS} -P${TargetCPU} -MDelphi -Scghi -O3 -l -dIPHONEALL \
+${FPC_CUSTOM_OPTIONS} ${OPT64} \
+-Filib/${Target} -FUlib/${Target} \
+-XR${SDKROOT}  -FD${PLATFORM_DEVELOPER_BIN_DIR} $FPC_MAIN_FILE \
+-o${Result64}
+
+${FPC_DIR}fpc -T${TargetOS} -P${TargetCPU} -MDelphi -Scghi -O3 -l -dIPHONEALL \
+ ${FPC_CUSTOM_OPTIONS} ${OPT64} \
+-Filib/${Target} -FUlib/${Target} \
+-XR${SDKROOT}  -FD${PLATFORM_DEVELOPER_BIN_DIR} $FPC_MAIN_FILE \
+ -k-F/Users/dmitry/FPC_laz/paseng/tests/testBomber3UI -k-t \
+ -o${Result64}
+export RES=$?
+
+if [ $RES != 0 ]; then
+  exit $RES
+fi
+
+
+# 32-bit complication
+export Result32=${RESULT_EXE}_32
+export TargetCPU=${CPU32}
+export Target=${TargetCPU}-${TargetOS}
+## making output directory
+export outdir=lib/${Target}
+mkdir -p ${outdir}
+
+echo ${FPC_DIR}fpc -T${TargetOS} -P${TargetCPU} -MDelphi -Scghi -Cg -O3 -l -dIPHONEALL \
+${FPC_CUSTOM_OPTIONS} ${OPT32} \
+-Filib/${Target} -FUlib/${Target} \
+-XR${SDKROOT}  -FD${PLATFORM_DEVELOPER_BIN_DIR} $FPC_MAIN_FILE \
+-k-F/Users/dmitry/FPC_laz/paseng/tests/testBomber3UI \
+-o${Result32}
+
+${FPC_DIR}fpc -T${TargetOS} -P${TargetCPU} -MDelphi -Scghi -Cg -O3 -l -dIPHONEALL \
+${FPC_CUSTOM_OPTIONS} ${OPT32} \
+-Filib/${Target} -FUlib/${Target} \
+-XR${SDKROOT}  -FD${PLATFORM_DEVELOPER_BIN_DIR} $FPC_MAIN_FILE \
+-k-F/Users/dmitry/FPC_laz/paseng/tests/testBomber3UI \
+-o${Result32}
+export RES=$?
+
+if [ $RES != 0 ]; then
+exit $RES
+fi
+
+lipo -create ${Result32} ${Result64} -output ${RESULT_EXE}
+rm ${Result32}
+rm ${Result64}
+
+exit $FPCRES
+
+*)
+
 uses
   iPhoneExtOptions;
 
@@ -72,7 +158,7 @@ begin
   CreateGUID(g);
   id:=GUIDToString(g);
   id:=Copy(id, 2, length(id)-2);
-  Result:=id;
+  Result:=UTF8Decode(id);
 end;
 
 
@@ -119,7 +205,7 @@ begin
   if DirectoryExistsUTF8(p) then
     Result:=UTF8Decode(p)
   else if DirectoryExistsUTF8(path8) then
-    result:=path8
+    result:=UTF8Decode(path8)
   else
     result :='';
 end;
@@ -145,7 +231,7 @@ var
 begin
   s := EnvOptions.SimAppsPath;
   EnvOptions.SubstituteMacros(s);
-  result := s;
+  result := UTF8Decode(s);
 end;
 
 {
@@ -226,12 +312,13 @@ var
   pl : TPListFile;
   arr : TPListValue;
 begin
+  Result:=false;
   pl := TPListFile.Create;
   try
     if not FileExists(InfoFileName) then begin
       InitDefaultPlist(pl);
     end else
-      LoadFromFile(InfoFileName, pl);
+      LoadFromFile( UTF8Encode(InfoFileName), pl);
     SetStr(pl, 'CFBundleDisplayName', info.DisplayName);
     SetStr(pl, 'CFBundleExecutable', ExeName);
     SetStr(pl, 'CFBundleIdentifier', info.AppID);
@@ -241,7 +328,7 @@ begin
     SetStr(pl, 'DTPlatformName', info.iPlatform);
     SetStr(pl, 'DTSDKName', info.SDKVersion);
 
-    SaveToXMLFile(pl, InfoFileName);
+    Result:=SaveToXMLFile(pl, UTF8Encode(InfoFileName));
   finally
     pl.Free;
   end;
@@ -260,7 +347,7 @@ const
     '	<key>CFBundleIdentifier</key>'#10+            '	<string>%s</string>'#10+ {company + bundle name}
     '	<key>CFBundleInfoDictionaryVersion</key>'#10+ '	<string>6.0</string>'#10+
     '	<key>CFBundleName</key>'#10+                  '	<string>%s</string>'#10+    {bundle name}
-    '	<key>CFBundlePackageType</key>'#10+           '	<string>APPL</string>'#10+
+    '	<key>CFBundlePackageType</key>'#10+           '	<string>APPL</string>'#10+  // must be present for AppStore deployment!
     '	<key>CFBundleSignature</key>'#10+             '	<string>????</string>'#10+
     '	<key>CFBundleSupportedPlatforms</key>'#10+    '	<array>'#10+'		<string>%s</string>'#10+'	</array>'#10+ {platform}
     '%s'+ // optional MainNib name

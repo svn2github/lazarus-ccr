@@ -145,7 +145,6 @@ var
   res : integer;
   {$ifdef darwin}
   xs  : string;
-  err : LongWord;
   m   : TStringStream;
   doc : TXMLDocument;
   {$endif}
@@ -255,7 +254,7 @@ begin
     ltDict: begin
       dst.Add(pfx+'<dict>');
       for i:=0 to v.count-1 do begin
-        dst.Add(XMLPFX+'<key>'+XMLEncodeText(v.names[i])+'</key>');
+        dst.Add(XMLPFX+'<key>'+XMLEncodeText(UTF8Decode(v.names[i]))+'</key>');
         WriteXMLValue(v.items[i], dst, pfx+XMLPFX);
       end;
       dst.Add(pfx+'</dict>');
@@ -374,7 +373,7 @@ var
 begin
   Result:=nil;
   if not Assigned(valnode) then Exit;
-  if not NodeNameToPListType(valnode.NodeName, tp) then Exit;
+  if not NodeNameToPListType( UTF8Encode(valnode.NodeName), tp) then Exit;
   Result:=TPListValue.Create(tp);
   case tp of
     ltBoolean: Result.bool:=(valnode.NodeName='true'); // false is false

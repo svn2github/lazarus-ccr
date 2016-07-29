@@ -698,7 +698,7 @@ end;
 function ProjectCreateMin: PBXProject;
 var
   p : PBXProject;
-  cfg : XCBuildConfiguration;
+  //cfg : XCBuildConfiguration;
 begin
   // requirements:
   //  * at least one build configuration
@@ -709,8 +709,8 @@ begin
   p.buildConfigurationList._headerComment:='Build configuration list for PBXProject';
   p.buildConfigurationList.defaultConfigurationIsVisible:='0';
 
-  cfg:=p.buildConfigurationList.addConfig('Debug');
-  cfg:=p.buildConfigurationList.addConfig('Release');
+  p.buildConfigurationList.addConfig('Debug');
+  p.buildConfigurationList.addConfig('Release');
   // default name must be present
   p.buildConfigurationList.defaultConfigurationName:='Release';
   Result:=p;

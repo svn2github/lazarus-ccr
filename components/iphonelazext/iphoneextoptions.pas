@@ -21,7 +21,7 @@ interface
 
 uses
   Classes, SysUtils, IDEOptionsIntf, LazIDEIntf, ProjectIntf, MacroIntf,
-  iPhoneBundle, XMLConf, XcodeUtils, PlistFile
+  iPhoneBundle, XMLConf, XcodeUtils
   , LazFileUtils, LazFilesUtils
   , iphonesimctrl, xcodeproj;
 
@@ -306,15 +306,15 @@ begin
     try
       xmlcfg.RootName:='config';
       xmlcfg.Filename:=XMLFileName;
-      fPlatformsBaseDir := UTF8Encode(xmlcfg.GetValue('Platforms', fPlatformsBaseDir ));
-      fCompilerPath := UTF8Encode(xmlcfg.GetValue('Compiler', fCompilerPath));
-      fBaseRTLPath  := UTF8Encode(xmlcfg.GetValue('RTLPath', fBaseRTLPath));
-      fCommonOpt    := UTF8Encode(xmlcfg.GetValue('CompilerOptions', fCommonOpt));
-      fSimBundle    := UTF8Encode(xmlcfg.GetValue('SimBundle', fSimBundle));
-      fSimAppsPath  := UTF8Encode(xmlcfg.GetValue('SimAppPath', fSimAppsPath));
-      fDefaultSDK := UTF8Encode(xmlcfg.GetValue('DefaultSDK', fDefaultSDK));
-      fDefaultDeviceID := UTF8Encode(xmlcfg.GetValue('DefaultDevice', fDefaultDeviceID));
-      fScriptTemplate := UTF8Encode(xmlcfg.GetValue('ScriptTemplate', fScriptTemplate));
+      fPlatformsBaseDir := UTF8Encode(xmlcfg.GetValue('Platforms', UTF8Decode(fPlatformsBaseDir) ));
+      fCompilerPath := UTF8Encode(xmlcfg.GetValue('Compiler', UTF8Decode(fCompilerPath)));
+      fBaseRTLPath  := UTF8Encode(xmlcfg.GetValue('RTLPath', UTF8Decode(fBaseRTLPath)));
+      fCommonOpt    := UTF8Encode(xmlcfg.GetValue('CompilerOptions', UTF8Decode(fCommonOpt)));
+      fSimBundle    := UTF8Encode(xmlcfg.GetValue('SimBundle', UTF8Decode(fSimBundle)));
+      fSimAppsPath  := UTF8Encode(xmlcfg.GetValue('SimAppPath', UTF8Decode(fSimAppsPath)));
+      fDefaultSDK := UTF8Encode(xmlcfg.GetValue('DefaultSDK', UTF8Decode(fDefaultSDK)));
+      fDefaultDeviceID := UTF8Encode(xmlcfg.GetValue('DefaultDevice', UTF8Decode(fDefaultDeviceID)));
+      fScriptTemplate := UTF8Encode(xmlcfg.GetValue('ScriptTemplate', UTF8Decode(fScriptTemplate)));
 
       RefreshVersions;
       if (fDefaultSDK = '') and (fVersions.Count>0) then

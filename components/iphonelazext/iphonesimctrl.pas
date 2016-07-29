@@ -267,7 +267,6 @@ var
   l  : string;
   st : TStringList;
   i  : integer;
-  j  : integer;
   ip : string; // install path
   fp : string; // content path
 begin

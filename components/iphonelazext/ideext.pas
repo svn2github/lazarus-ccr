@@ -25,6 +25,7 @@ uses
   Graphics, Controls, Forms, Dialogs, LazFileUtils,
   {Lazarus Interface}
   LazIDEIntf, MenuIntf, ProjectIntf, IDEOptionsIntf, IDEMsgIntf
+  ,CompOptsIntf
   ,IDEExternToolIntf
 
   ,project_iphone_options, xcodetemplate, iphonelog_form,
@@ -395,6 +396,7 @@ var
   Info  : TiPhoneBundleInfo;
 
   opt   : string;
+  prjopt  : TLazCompilerOptions;
 begin
   // the create .plist would be used by XCode project
   // the simulator .plist in created with InstallAppToSim.
@@ -413,12 +415,12 @@ begin
 	build.Add('FPC_MAIN_FILE','"'+LazarusIDE.ActiveProject.MainFile.Filename+'"');
   opt:='';
 
-  with LazarusIDE.ActiveProject.LazCompilerOptions do begin
-    opt:=opt + ' ' +BreakPathsStringToOption(OtherUnitFiles, '-Fu', '\"');
-    opt:=opt + ' ' +BreakPathsStringToOption(IncludePath, '-Fi', '\"');
-    opt:=opt + ' ' +BreakPathsStringToOption(ObjectPath, '-Fo', '\"');
-    opt:=opt + ' ' +BreakPathsStringToOption(Libraries, '-Fl', '\"');
-  end;
+  prjopt:=LazarusIDE.ActiveProject.LazCompilerOptions;
+  opt:=opt + ' ' +BreakPathsStringToOption(prjopt.GetUnitPath(true, coptParsedPlatformIndependent), '-Fu', '\"');
+  opt:=opt + ' ' +BreakPathsStringToOption(prjopt.GetIncludePath(true, coptParsedPlatformIndependent), '-Fi', '\"');
+  opt:=opt + ' ' +BreakPathsStringToOption(prjopt.GetObjectPath(true, coptParsedPlatformIndependent), '-Fo', '\"');
+  opt:=opt + ' ' +BreakPathsStringToOption(prjopt.GetLibraryPath(true, coptParsedPlatformIndependent), '-Fl', '\"');
+  opt:=opt + ' ' +prjopt.CustomOptions;
 
   dir:=ResolveProjectPath('xcode');
   dir:=dir+'/';
@@ -468,6 +470,14 @@ begin
     templates.Values['productname']:=tname;
     templates.Values['mainfile']:=LazarusIDE.ActiveProject.MainFile.Filename;
     templates.Values['projoptions']:=opt;
+
+    if FileExists(EnvOptions.ScriptTemplate) then begin
+      try
+        DefaultBuildScript:=ReadBuildScriptFile( EnvOptions.ScriptTemplate );
+      except
+      end;
+    end;
+
 
     if not UpdateProject(projName, templates, ProjOptions.ResFiles) then
       IDEMsg(Format(strXcodeUpdFailed,[projdir]))
