@@ -551,6 +551,10 @@ msgstr "Имя:"
 msgid "Font..."
 msgstr "Шрифт..."
 
+#: vpsr.rsformatlbl
+msgid "Format:"
+msgstr ""
+
 #: vpsr.rsformats
 msgid "Formats:"
 msgstr "Форматы:"
@@ -1040,6 +1044,10 @@ msgstr "Повторение встречи:"
 #: vpsr.rsreminder
 msgid "Reminder"
 msgstr "Напоминание"
+
+#: vpsr.rsreportsetup
+msgid "Report setup"
+msgstr ""
 
 #: vpsr.rsresource
 msgid "Resource"

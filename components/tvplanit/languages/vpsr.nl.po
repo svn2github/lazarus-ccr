@@ -554,6 +554,10 @@ msgstr "Voornaam:"
 msgid "Font..."
 msgstr ""
 
+#: vpsr.rsformatlbl
+msgid "Format:"
+msgstr ""
+
 #: vpsr.rsformats
 msgid "Formats:"
 msgstr ""
@@ -1043,6 +1047,10 @@ msgstr "Afspraak herhaling:"
 #: vpsr.rsreminder
 msgid "Reminder"
 msgstr "Herinnering"
+
+#: vpsr.rsreportsetup
+msgid "Report setup"
+msgstr ""
 
 #: vpsr.rsresource
 msgid "Resource"

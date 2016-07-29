@@ -541,6 +541,10 @@ msgstr ""
 msgid "Font..."
 msgstr ""
 
+#: vpsr.rsformatlbl
+msgid "Format:"
+msgstr ""
+
 #: vpsr.rsformats
 msgid "Formats:"
 msgstr ""
@@ -1029,6 +1033,10 @@ msgstr ""
 
 #: vpsr.rsreminder
 msgid "Reminder"
+msgstr ""
+
+#: vpsr.rsreportsetup
+msgid "Report setup"
 msgstr ""
 
 #: vpsr.rsresource

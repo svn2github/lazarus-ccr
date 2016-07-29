@@ -144,61 +144,60 @@ msgstr "Среда"
 msgid "XML files (*.xml)"
 msgstr ""
 
-#: tfrmreportsetup.button1.caption
-msgctxt "tfrmreportsetup.button1.caption"
-msgid "OK"
-msgstr ""
-
-#: tfrmreportsetup.button2.caption
-msgctxt "tfrmreportsetup.button2.caption"
+#: tfrmreportsetup.btncancel.caption
+#, fuzzy
+msgctxt "tfrmreportsetup.btncancel.caption"
 msgid "Cancel"
 msgstr "Отмена"
+
+#: tfrmreportsetup.btnok.caption
+msgctxt "tfrmreportsetup.btnok.caption"
+msgid "OK"
+msgstr ""
 
 #: tfrmreportsetup.caption
 msgid "Report Setup"
 msgstr "Параметры отчёта"
 
-#: tfrmreportsetup.dateedit1.cancelcaption
-msgctxt "TFRMREPORTSETUP.DATEEDIT1.CANCELCAPTION"
+#: tfrmreportsetup.edenddate.cancelcaption
+#, fuzzy
+msgctxt "tfrmreportsetup.edenddate.cancelcaption"
 msgid "Cancel"
 msgstr "Отмена"
 
-#: tfrmreportsetup.dateedit1.okcaption
-msgctxt "TFRMREPORTSETUP.DATEEDIT1.OKCAPTION"
+#: tfrmreportsetup.edenddate.okcaption
+msgctxt "tfrmreportsetup.edenddate.okcaption"
 msgid "OK"
 msgstr ""
 
-# No need to translate
-#: tfrmreportsetup.dateedit1.text
-msgid "DateEdit1"
-msgstr ""
-
-#: tfrmreportsetup.dateedit2.cancelcaption
-msgctxt "TFRMREPORTSETUP.DATEEDIT2.CANCELCAPTION"
+#: tfrmreportsetup.edstartdate.cancelcaption
+#, fuzzy
+msgctxt "tfrmreportsetup.edstartdate.cancelcaption"
 msgid "Cancel"
 msgstr "Отмена"
 
-#: tfrmreportsetup.dateedit2.okcaption
-msgctxt "TFRMREPORTSETUP.DATEEDIT2.OKCAPTION"
+#: tfrmreportsetup.edstartdate.okcaption
+msgctxt "tfrmreportsetup.edstartdate.okcaption"
 msgid "OK"
 msgstr ""
 
-# No need to translate
-#: tfrmreportsetup.dateedit2.text
-msgid "DateEdit2"
-msgstr ""
-
-#: tfrmreportsetup.label1.caption
-msgid "Start Date:"
-msgstr "Дата начала:"
-
-#: tfrmreportsetup.label2.caption
+#: tfrmreportsetup.lblenddate.caption
+#, fuzzy
+msgctxt "tfrmreportsetup.lblenddate.caption"
 msgid "End Date:"
 msgstr "Дата окончания:"
 
-#: tfrmreportsetup.label3.caption
+#: tfrmreportsetup.lblformat.caption
+#, fuzzy
+msgctxt "tfrmreportsetup.lblformat.caption"
 msgid "Format:"
 msgstr "Формат:"
+
+#: tfrmreportsetup.lblstartdate.caption
+#, fuzzy
+msgctxt "tfrmreportsetup.lblstartdate.caption"
+msgid "Start Date:"
+msgstr "Дата начала:"
 
 #: tmainform.btndeleteres.caption
 msgid "Delete"

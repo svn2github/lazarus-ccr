@@ -551,6 +551,10 @@ msgstr "Vorname:"
 msgid "Font..."
 msgstr "Schriftart..."
 
+#: vpsr.rsformatlbl
+msgid "Format:"
+msgstr "Format:"
+
 #: vpsr.rsformats
 msgid "Formats:"
 msgstr "Formate:"
@@ -1040,6 +1044,10 @@ msgstr "Termin-Wiederholung:"
 #: vpsr.rsreminder
 msgid "Reminder"
 msgstr "Erinnerung"
+
+#: vpsr.rsreportsetup
+msgid "Report setup"
+msgstr "Druck einrichten"
 
 #: vpsr.rsresource
 msgid "Resource"

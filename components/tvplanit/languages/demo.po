@@ -134,58 +134,53 @@ msgstr ""
 msgid "XML files (*.xml)"
 msgstr ""
 
-#: tfrmreportsetup.button1.caption
-msgctxt "tfrmreportsetup.button1.caption"
-msgid "OK"
+#: tfrmreportsetup.btncancel.caption
+msgctxt "tfrmreportsetup.btncancel.caption"
+msgid "Cancel"
 msgstr ""
 
-#: tfrmreportsetup.button2.caption
-msgctxt "tfrmreportsetup.button2.caption"
-msgid "Cancel"
+#: tfrmreportsetup.btnok.caption
+msgctxt "tfrmreportsetup.btnok.caption"
+msgid "OK"
 msgstr ""
 
 #: tfrmreportsetup.caption
 msgid "Report Setup"
 msgstr ""
 
-#: tfrmreportsetup.dateedit1.cancelcaption
-msgctxt "TFRMREPORTSETUP.DATEEDIT1.CANCELCAPTION"
+#: tfrmreportsetup.edenddate.cancelcaption
+msgctxt "tfrmreportsetup.edenddate.cancelcaption"
 msgid "Cancel"
 msgstr ""
 
-#: tfrmreportsetup.dateedit1.okcaption
-msgctxt "TFRMREPORTSETUP.DATEEDIT1.OKCAPTION"
+#: tfrmreportsetup.edenddate.okcaption
+msgctxt "tfrmreportsetup.edenddate.okcaption"
 msgid "OK"
 msgstr ""
 
-#: tfrmreportsetup.dateedit1.text
-msgid "DateEdit1"
-msgstr ""
-
-#: tfrmreportsetup.dateedit2.cancelcaption
-msgctxt "TFRMREPORTSETUP.DATEEDIT2.CANCELCAPTION"
+#: tfrmreportsetup.edstartdate.cancelcaption
+msgctxt "tfrmreportsetup.edstartdate.cancelcaption"
 msgid "Cancel"
 msgstr ""
 
-#: tfrmreportsetup.dateedit2.okcaption
-msgctxt "TFRMREPORTSETUP.DATEEDIT2.OKCAPTION"
+#: tfrmreportsetup.edstartdate.okcaption
+msgctxt "tfrmreportsetup.edstartdate.okcaption"
 msgid "OK"
 msgstr ""
 
-#: tfrmreportsetup.dateedit2.text
-msgid "DateEdit2"
-msgstr ""
-
-#: tfrmreportsetup.label1.caption
-msgid "Start Date:"
-msgstr ""
-
-#: tfrmreportsetup.label2.caption
+#: tfrmreportsetup.lblenddate.caption
+msgctxt "tfrmreportsetup.lblenddate.caption"
 msgid "End Date:"
 msgstr ""
 
-#: tfrmreportsetup.label3.caption
+#: tfrmreportsetup.lblformat.caption
+msgctxt "tfrmreportsetup.lblformat.caption"
 msgid "Format:"
+msgstr ""
+
+#: tfrmreportsetup.lblstartdate.caption
+msgctxt "tfrmreportsetup.lblstartdate.caption"
+msgid "Start Date:"
 msgstr ""
 
 #: tmainform.btndeleteres.caption

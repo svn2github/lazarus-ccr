@@ -150,7 +150,7 @@ uses
   LCLVersion, LResources, LazFileUtils, LazUTF8, StrUtils, DateUtils, Translations,
   IniFiles, Math, Printers,
   VpMisc, VpPrtFmt,
-  sound;
+  sound, ExVpRptSetup;
 
 {$UNDEF UTF8_CALLS}
 {$IFDEF LCL}
@@ -401,14 +401,30 @@ begin
 end;
 
 procedure TMainForm.MnuPrintClick(Sender: TObject);
+var
+  F: TfrmReportSetup;
 begin
-  if PrintDialog1.Execute then begin
-    Printer.BeginDoc;
-    {
-    VpControlLink1.Printer.CurFormat := VpControlLink1.Printer.Find(ReportData.Format);
-    VpControlLink1.Printer.Print(Printer, ReportData.StartDate, ReportData.EndDate);
-    }
-    Printer.EndDoc;
+  if ReportData.StartDate = 0 then
+    ReportData.StartDate := VpMonthView1.Date;
+  if ReportData.EndDate = 0 then
+    ReportData.EndDate := VpMonthView1.Date;
+  if ReportData.Format = '' then
+    ReportData.Format := VpControlLink1.Printer.PrintFormats.Items[0].FormatName;
+
+  F := TfrmReportSetup.Create(nil);
+  try
+    F.ControlLink := VpControlLink1;
+    if not F.Execute(ReportData) then
+      exit;
+
+    if PrintDialog1.Execute then begin
+      Printer.BeginDoc;
+      VpControlLink1.Printer.CurFormat := VpControlLink1.Printer.Find(ReportData.Format);
+      VpControlLink1.Printer.Print(Printer, ReportData.StartDate, ReportData.EndDate);
+      Printer.EndDoc;
+    end;
+  finally
+    F.Free;
   end;
 end;
 

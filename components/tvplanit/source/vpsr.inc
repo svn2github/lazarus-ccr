@@ -409,6 +409,7 @@ resourcestring
   { Print Format Editor }
   RSEditPrintFormat  = 'Edit Print Formats...';
   RSPrintFormatDesigner = 'Print format designer';
+  RSFormatLbl        = 'Format:';
   RSFormats          = 'Formats:';
   RSElements         = 'Elements:';
   RSNewBtn           = 'New';
@@ -418,6 +419,8 @@ resourcestring
   RSNewFileBtn       = 'New file';
   RSLoadFileBtn      = 'Load file...';
   RSSaveFileBtn      = 'Save file...';
+
+  RSReportSetup      = 'Report setup';
 
   { Print Format Item Editor }
   RSEditFormatCaption= 'Edit format';
