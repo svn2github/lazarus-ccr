@@ -402,6 +402,7 @@ end;
 destructor TVpMvTodayAttr.Destroy;
 begin
   FBorderPen.Free;
+  FFont.Free;
   inherited;
 end;
 
