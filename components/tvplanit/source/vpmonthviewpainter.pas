@@ -30,6 +30,14 @@ type
     TodayAttrColor: TColor;
     DotDotDotColor: TColor;
 
+    // protected values from the original monthview needed only for painting
+    mvEventTextHeight: Integer;
+    mvDayNumberHeight: Integer;
+    mvRowHeight: Integer;
+    mvColWidth: Integer;
+    mvLineHeight: Integer;
+    mvVisibleEvents: Integer;
+
   protected
     procedure Clear;
     procedure DrawBorders;
@@ -143,7 +151,7 @@ begin
   end;
 
   DayTag := Ord(FMonthView.WeekStartsOn);
-  dhRect.Right := dhRect.Left + TVpMonthViewOpener(FMonthView).mvColWidth;
+  dhRect.Right := dhRect.Left + mvColWidth;
 
   for I := 0 to 6 do begin
     { draw the little vertical lines between each day }
@@ -206,8 +214,8 @@ begin
 
     { Fix Header String }
     StrL := RenderCanvas.TextWidth(Str);
-    if (StrL > TVpMonthViewOpener(FMonthView).mvColWidth - TextMargin * 2) then
-      Str := GetDisplayString(RenderCanvas, Str, 0, TVpMonthViewOpener(FMonthView).mvColWidth - TextMargin * 2);
+    if (StrL > mvColWidth - TextMargin * 2) then
+      Str := GetDisplayString(RenderCanvas, Str, 0, mvColWidth - TextMargin * 2);
     StrL := RenderCanvas.TextWidth(Str);
 
     TPSTextOut(
@@ -225,7 +233,7 @@ begin
       Inc(DayTag);
 
     dhRect.Left := dhRect.Right;
-    dhRect.Right := dhRect.Left + TVpMonthViewOpener(FMonthView).mvColWidth;
+    dhRect.Right := dhRect.Left + mvColWidth;
   end;
 end;
 
@@ -253,31 +261,32 @@ var
   OldFont: TFont;
   todayDate: TDate;
   tmpRect: TRect;
+  hDayHead: Integer;
 begin
   todayDate := Date();
 
   { initialize the MonthDayArray }
-  with TVpMonthViewOpener(FMonthView) do
+  with TVpMonthViewOpener(FMonthView) do begin
     for I := 0 to Pred(Length(mvMonthDayArray)) do begin
       mvMonthDayArray[I].Rec := Rect(-1, -1, -1, -1);
       mvMonthDayArray[I].Date := 0.0;
     end;
+    hDayHead := mvDayHeadHeight;
+  end;
 
   RenderCanvas.Pen.Color := RealLineColor;
   RenderCanvas.Brush.Color := RealColor;
 
-  with TVpMonthViewOpener(FMonthView) do begin
-    if DrawingStyle = ds3d then
-    begin
-      mvRowHeight := (RealHeight - mvDayHeadHeight * 2 - 4) div 6;
-      TextRect.TopLeft := Point(RealLeft + 1, RealTop + mvDayHeadHeight * 2 + 4);
-    end else
-    begin
-      mvRowHeight := (RealHeight - mvDayHeadHeight * 2) div 6;
-      TextRect.TopLeft := Point(RealLeft + 1, RealTop + mvDayHeadHeight * 2);
-    end;
-    TextRect.BottomRight := Point(TextRect.Left +  mvColWidth, TextRect.Top + mvRowHeight);
+  if FMonthView.DrawingStyle = ds3d then
+  begin
+    mvRowHeight := (RealHeight - hDayHead * 2 - 4) div 6;
+    TextRect.TopLeft := Point(RealLeft + 1, RealTop + hDayHead * 2 + 4);
+  end else
+  begin
+    mvRowHeight := (RealHeight - hDayHead * 2) div 6;
+    TextRect.TopLeft := Point(RealLeft + 1, RealTop + hDayHead * 2);
   end;
+  TextRect.BottomRight := Point(TextRect.Left +  mvColWidth, TextRect.Top + mvRowHeight);
 
   { Determine the starting date and offset }
   DecodeDate(DisplayDate, Y, M, D);
@@ -388,7 +397,7 @@ begin
                 RenderCanvas.Font.Color := FMonthView.OffDayFontColor;
 
               { Write the day number at the top of the TextRect. }
-              tmpRect.Left := TextRect.Left + TVpMonthViewOpener(FMonthView).mvColWidth - TextAdjust - TextMargin;
+              tmpRect.Left := TextRect.Left + mvColWidth - TextAdjust - TextMargin;
               if fsItalic in RenderCanvas.Font.Style then
                 dec(tmpRect.Left, 2);
               tmpRect.Top := TextRect.Top + TextMargin div 2;
@@ -421,8 +430,8 @@ begin
                 TextRect.Bottom + 1
               );
               TextRect.BottomRight := Point(
-                TextRect.Left + TVpMonthViewOpener(FMonthView).mvColWidth,
-                TextRect.Top + TVpMonthViewOpener(FMonthView).mvRowHeight
+                TextRect.Left + mvColWidth,
+                TextRect.Top + mvRowHeight
               );
             end  // if Col = 6 ...
             else
@@ -517,7 +526,7 @@ begin
 
               { slide rect one column to the right }
               TextRect.Left := TextRect.Right + 1;
-              TextRect.Right := TextRect.Right + TVpMonthViewOpener(FMonthView).mvColWidth;
+              TextRect.Right := TextRect.Right + mvColWidth;
             end;
           end;
         end;
@@ -555,8 +564,8 @@ begin
             TVpMonthViewOpener(FMonthView).mvMonthDayArray[I].Rec.Top
           );
           TextRect.BottomRight := Point(
-            TextRect.Left + TVpMonthViewOpener(FMonthView).mvColWidth,
-            TextRect.Top + TVpMonthViewOpener(FMonthView).mvEventTextHeight + TextMargin div 2
+            TextRect.Left + mvColWidth,
+            TextRect.Top + mvEventTextHeight + TextMargin div 2
           );
 
           { set canvas color }
@@ -613,12 +622,11 @@ begin
 
             { shorten events that are next to the day number, in order }
             { to give the day number enough room }
-            with TVpMonthViewOpener(FMonthView) do
-              if (TextRect.Top < mvMonthDayArray[I].Rec.Top + mvDayNumberHeight + TextMargin div 2)
-              then
-                TextRect.Right := TextRect.Left + mvColWidth - mvDayNumberHeight - TextMargin
-              else
-                TextRect.Right := TextRect.Left + mvColWidth;
+            if (TextRect.Top < TVpMonthViewOpener(FMonthView).mvMonthDayArray[I].Rec.Top + mvDayNumberHeight + TextMargin div 2)
+            then
+              TextRect.Right := TextRect.Left + mvColWidth - mvDayNumberHeight - TextMargin
+            else
+              TextRect.Right := TextRect.Left + mvColWidth;
 
             { format the display text }
             if FMonthView.ShowEventTime then begin
@@ -668,7 +676,7 @@ begin
 
             { Move TextRect down one line for the next item... }
             TextRect.Top := TextRect.Bottom + 1;
-            TextRect.Bottom := TextRect.Top + TVpMonthViewOpener(FMonthView).mvLineHeight;
+            TextRect.Bottom := TextRect.Top + mvLineHeight;
           end;
         end;
       end;
@@ -847,7 +855,7 @@ begin
     DrawDayHead;
 
     { draw days }
-    TVpMonthViewOpener(FMonthView).mvVisibleEvents := 0;
+    mvVisibleEvents := 0;
     DrawDays;
 
     { draw the borders }
@@ -878,18 +886,14 @@ begin
     mvDayHeadHeight := RenderCanvas.TextHeight(VpProductName) + TextMargin + 2;
 
   RenderCanvas.Font.Assign(FMonthView.DayNumberFont);
-  with TVpMonthViewOpener(FMonthView) do
-    mvDayNumberHeight := RenderCanvas.TextHeight('00');
+  mvDayNumberHeight := RenderCanvas.TextHeight('00');
 
   RenderCanvas.Font.Assign(FMonthView.EventFont);
-  with TVpMonthViewOpener(FMonthView) do
-    mvEventTextHeight := RenderCanvas.TextHeight(VpProductName);
+  mvEventTextHeight := RenderCanvas.TextHeight(VpProductName);
 
   RenderCanvas.Font.Assign(FMonthView.Font);
-  with TVpMonthViewOpener(FMonthView) do begin
-    mvLineHeight := RenderCanvas.TextHeight(VpProductName) + 2;
-    mvColWidth := (RealWidth - 4) div 7;
-  end;
+  mvLineHeight := RenderCanvas.TextHeight(VpProductName) + 2;
+  mvColWidth := (RealWidth - 4) div 7;
 end;
 
 end.

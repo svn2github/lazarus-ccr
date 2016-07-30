@@ -145,25 +145,25 @@ type
     FOnEventClick      : TVpOnEventClick;                                
     FOnEventDblClick   : TVpOnEventClick;                                
     { internal variables }
-    mvDayNumberHeight  : Integer;
-    mvEventTextHeight  : Integer;
+//    mvDayNumberHeight  : Integer;
+//    mvEventTextHeight  : Integer;
     mvLoaded           : Boolean;
-    mvInLinkHandler    : Boolean;
-    mvRowHeight        : Integer;
-    mvLineHeight       : Integer;
-    mvColWidth         : Integer;
+//    mvInLinkHandler    : Boolean;
+//    mvRowHeight        : Integer;
+//    mvLineHeight       : Integer;
+//    mvColWidth         : Integer;
     mvDayHeadHeight    : Integer;
     mvSpinButtons      : TUpDown;
     mvEventArray       : TVpEventArray;
     mvMonthDayArray    : TVpMonthdayArray;
     mvActiveEvent      : TVpEvent;
     mvActiveEventRec   : TRect;
-    mvEventList        : TList;
-    mvCreatingEditor   : Boolean;
-    mvPainting         : Boolean;
-    mvVScrollDelta     : Integer;
-    mvHotPoint         : TPoint;
-    mvVisibleEvents    : Integer;                                        
+//    mvEventList        : TList;
+//    mvCreatingEditor   : Boolean;
+//    mvPainting         : Boolean;
+//    mvVScrollDelta     : Integer;
+//    mvHotPoint         : TPoint;
+//    mvVisibleEvents    : Integer;                                        
 
     { property methods }
     procedure SetDrawingStyle(Value: TVpDrawingStyle);
@@ -196,15 +196,11 @@ type
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
     {$IFNDEF LCL}
-    procedure WMLButtonDown(var Msg : TWMLButtonDown);
-      message WM_LBUTTONDOWN;
-    procedure WMLButtonDblClick(var Msg: TWMLButtonDblClk);              
-      message WM_LBUTTONDBLCLK;                                          
+    procedure WMLButtonDown(var Msg : TWMLButtonDown); message WM_LBUTTONDOWN;
+    procedure WMLButtonDblClick(var Msg: TWMLButtonDblClk);message WM_LBUTTONDBLCLK;
     {$ELSE}
-    procedure WMLButtonDown(var Msg: TLMLButtonDown);
-      message LM_LBUTTONDOWN;
-    procedure WMLButtonDblClick(var Msg: TLMLButtonDblClk);
-      message LM_LBUTTONDBLCLK;
+    procedure WMLButtonDown(var Msg: TLMLButtonDown); message LM_LBUTTONDOWN;
+    procedure WMLButtonDblClick(var Msg: TLMLButtonDblClk); message LM_LBUTTONDBLCLK;
     {$ENDIF}
     { - renamed from EditEventAtCoord and re-written}
     function  SelectEventAtCoord(Point: TPoint): Boolean;
@@ -443,7 +439,7 @@ begin
   FHeadAttr := TVpMvHeadAttr.Create(self);
   FDayHeadAttr := TVpDayHeadAttr.Create(self);
   FTodayAttr := TVpMvTodayAttr.Create(self);
-  mvEventList := TList.Create;
+//  mvEventList := TList.Create;
   mvSpinButtons := TUpDown.Create(self);
 
   { Set styles and initialize internal variables }
@@ -455,15 +451,15 @@ begin
   FShowEventTime := false;
   FDayNameStyle :=dsShort;
   FKBNavigate := true;
-  mvInLinkHandler := false;
+//  mvInLinkHandler := false;
   mvSpinButtons.OnClick := mvSpinButtonClick;
   mvSpinButtons.Orientation := udHorizontal;
   mvSpinButtons.Min := -32768;
   mvSpinButtons.Max := 32767;
-  mvCreatingEditor := false;
+//  mvCreatingEditor := false;
   FSelectedDayColor := clRed;
   FDrawingStyle := ds3d;
-  mvPainting := false;
+//  mvPainting := false;
   FColor := clWindow;
   FOffDayColor := clSilver;
   FLineColor := clGray;
@@ -472,7 +468,7 @@ begin
   FDateLabelFormat := 'mmmm yyyy';
   FColumnWidth := 200;
   FRightClickChangeDate := vpDefWVRClickChangeDate;                      
-  mvVisibleEvents := 0;                                                  
+//  mvVisibleEvents := 0;                                                  
 
   { set up fonts and colors }
 //  FDayHeadAttributes.Font.Name := 'Tahoma';   wp: better use defaults
@@ -511,7 +507,7 @@ begin
   FDayNumberFont.Free;
   FEventFont.Free;
   mvSpinButtons.Free;
-  mvEventList.Free;
+//  mvEventList.Free;
   FDefaultPopup.Free;
   inherited;
 end;
@@ -533,16 +529,16 @@ end;
 procedure TVpMonthView.LinkHandler(Sender: TComponent;
   NotificationType: TVpNotificationType; const Value: Variant);
 begin
-  mvInLinkHandler := true;
-  try
+//  mvInLinkHandler := true;
+//  try
     case NotificationType of
-      neDateChange: Date := Value;
-      neDataStoreChange: Invalidate;
-      neInvalidate: Invalidate;
+      neDateChange      : Date := Value;
+      neDataStoreChange : Invalidate;
+      neInvalidate      : Invalidate;
     end;
-  finally
-    mvInLinkHandler := false;
-  end;
+//  finally
+//    mvInLinkHandler := false;
+//  end;
 end;
 {=====}
 
@@ -613,14 +609,14 @@ procedure TVpMonthView.RenderToCanvas (RenderCanvas : TCanvas;
 var
   painter: TVpMonthViewPainter;
 begin
-  mvPainting := true;
+//  mvPainting := true;
   painter := TVpMonthViewPainter.Create(Self, RenderCanvas);
   try
     painter.RenderToCanvas(RenderIn, Angle, Scale, RenderDate, StartLine,
       StopLine, UseGran, DisplayOnly);
   finally
     painter.Free;
-    mvPainting := false;
+//    mvPainting := false;
   end;
 end;
 
