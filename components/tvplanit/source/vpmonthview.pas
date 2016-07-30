@@ -471,6 +471,7 @@ end;
 
 destructor TVpMonthView.Destroy;
 begin
+  FHeadAttr.Free;
   FTodayAttr.Free;
   FDayHeadAttr.Free;
   FDayNumberFont.Free;
