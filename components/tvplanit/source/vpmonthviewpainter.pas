@@ -5,8 +5,8 @@ unit VpMonthViewPainter;
 interface
 
 uses
-  SysUtils, LCLType, LCLIntf, Types,
-  Classes, Graphics, VpConst, VPBase, VpData, VpMonthView, VpBasePainter;
+  SysUtils, LCLType, LCLIntf, Types, Classes, Graphics,
+  VpConst, VPBase, VpData, VpMonthView, VpBasePainter;
 
 type
   TVpMonthViewPainter = class(TVpBasePainter)
@@ -30,7 +30,7 @@ type
     TodayAttrColor: TColor;
     DotDotDotColor: TColor;
 
-    // protected values from the original monthview needed only for painting
+    // protected variables of the original monthview needed only for painting
     mvEventTextHeight: Integer;
     mvDayNumberHeight: Integer;
     mvRowHeight: Integer;
