@@ -359,7 +359,11 @@ type
       FUseFormComponents: Boolean;
       { Work copies of all the components - used if the components cannot
         be located when printing }
+     {$IFDEF LCL}
+      FParent: TForm;
+     {$ELSE}
       FParentHandle: THandle;
+     {$ENDIF}
       FDayView: TComponent;
       FWeekView: TComponent;
       FMonthView: TComponent;
@@ -450,7 +454,8 @@ uses
  {$IFDEF LCL}
   DateUtils,
  {$ENDIF}
-  VpConst, VpMisc, VpBaseDS, VpPrtFmtCBox;
+  VpConst, VpMisc, VpBaseDS, VpPrtFmtCBox,
+  VpDayView, VpWeekView, VpMonthView, VpTaskList, VpContactGrid, VpCalendar;
 
 function XMLizeString(const s: string): string;
 var
@@ -1360,12 +1365,27 @@ procedure TVpPrinter.CreateWorkControls;
 begin
 {$IFNDEF LCL}
   FParentHandle := AllocateHWnd(nil);
+  FParentHandle := Application.MainForm.Handle;
   FDayView := TVpDayView.CreateParented(FParentHandle);
   FWeekView := TVpWeekView.CreateParented(FParentHandle);
   FMonthView := TVpMonthView.CreateParented(FParentHandle);
   FCalendar := TVpCalendar.CreateParented(FParentHandle);
   FContactGrid := TVpContactGrid.CreateParented(FParentHandle);
   FTaskList := TVpTaskList.CreateParented(FParentHandle);
+{$ELSE}
+  FParent := TForm.Create(nil);
+  FDayView := TVpDayView.Create(FParent);
+  TVpDayView(FDayView).Parent := FParent;
+  FWeekView := TVpWeekView.Create(FParent);
+  TVpWeekView(FWeekView).Parent := FParent;
+  FMonthView := TVpMonthView.Create(FParent);
+  TVpMonthView(FMonthView).Parent := FParent;
+  FCalendar := TVpCalendar.Create(FParent);
+  TVpCalendar(FCalendar).Parent := FParent;
+  FContactGrid := TVpContactGrid.Create(FParent);
+  TVpContactGrid(FContactGrid).Parent := FParent;
+  FTaskList := TVpTaskList.Create(FParent);
+  TVpTaskList(FTaskList).Parent := FParent;
 {$ENDIF}
 end;
 {=====}
@@ -1380,6 +1400,14 @@ begin
   FCalendar.Free;                                                      
   FContactGrid.Free;                                                   
   FTaskList.Free;
+{$ELSE}
+  FDayView.Free;
+  FWeekView.Free;
+  FMonthView.Free;
+  FCalendar.Free;
+  FContactGrid.Free;
+  FTaskList.Free;
+  FParent.Free;
 {$ENDIF}
 end;
 {=====}
