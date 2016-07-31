@@ -57,6 +57,7 @@ type
     Panel2: TPanel;
     ButtonPanel: TPanel;
     ItemTypePanel: TPanel;
+    Panel3: TPanel;
     rgDayOffsetUnit: TRadioGroup;
     rgItemType: TRadioGroup;
     gbVisual: TGroupBox;
@@ -341,7 +342,7 @@ begin
 
   // Position Left/Top etc controls
   w := Max(GetLabelWidth(lblLeft), GetLabelWidth(lblTop));
-  edTop.Left := RightOf(rgMeasurement) + 2*DELTA + w + DELTA;
+  edTop.Left := 2*DELTA + w + DELTA;
   udTop.Left := RightOf(edTop);
   lblTop.Left := edTop.Left - DELTA - GetLabelWidth(lblTop);
   edLeft.Left := edTop.Left;
@@ -349,14 +350,14 @@ begin
   lblLeft.Left := edLeft.Left - DELTA - GetLabelWidth(lblLeft);
 
   w := Max(GetLabelWidth(lblWidth), GetLabelWidth(lblHeight));
-  edHeight.Left := RightOf(edTop) + 2*DELTA + w + DELTA;
+  edHeight.Left := RightOf(edTop) + 3*DELTA + w + DELTA;
   edWidth.Left := edHeight.Left;
   udHeight.Left := RightOf(edHeight);
   udWidth.Left := RightOf(edWidth);
   lblHeight.Left := edHeight.Left - DELTA - GetLabelWidth(lblHeight);
   lblWidth.Left := edWidth.Left - DELTA - GetLabelWidth(lblWidth);
-
   chkVisible.Left := edTop.Left;
+  Panel3.Width := RightOf(udHeight) + 2*DELTA;
 
   // Buttons at the bottom
   w := Max(GetButtonWidth(btnOK), GetButtonWidth(btnCancel));
