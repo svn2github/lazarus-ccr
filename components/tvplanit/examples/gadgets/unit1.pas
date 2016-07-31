@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, EditBtn, VpLEDLabel, VpClock;
+  ExtCtrls, VpLEDLabel, VpClock;
 
 type
 
@@ -16,12 +16,12 @@ type
     BtnStartStop: TButton;
     CbNewClockFace: TCheckBox;
     CbMilitaryTime: TCheckBox;
+    EdCountDownTime: TEdit;
     LblCountDownTime: TLabel;
     LblElapsedTime: TLabel;
     RgDisplayMode: TRadioGroup;
     RgClockMode: TRadioGroup;
     VpClock1: TVpClock;
-    EdCountDownTime: TTimeEdit;
     VpLEDLabel1: TVpLEDLabel;
     procedure AnalogClockCountdownDone(Sender: TObject);
     procedure CbMilitaryTimeChange(Sender: TObject);
@@ -109,14 +109,16 @@ begin
 end;
 
 procedure TForm1.EdCountDownTimeChange(Sender: TObject);
+var
+  t: TTime;
 begin
   if VpClock1.ClockMode = cmCountDownTimer then
-    VpClock1.Time := EdCountDownTime.Time;
+    if TryStrToTime(EdCountdownTime.Text, t) then
+      VpClock1.Time := t;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  EdCountDownTime.Time := StrToTime(EdCountDownTime.Text);
   CbMilitaryTime.Top := CbNewClockFace.Top;
 end;
 
@@ -138,7 +140,7 @@ begin
       VpClock1.Time := 0;
     cmCountdownTimer:
       begin
-        DecodeTime(EdCountDownTime.Time, h,m,s,ms);
+        DecodeTime(StrToTime(EdCountDownTime.Text), h,m,s,ms);
         VpClock1.HourOffset := h;
         VpClock1.MinuteOffset := m;
         VpClock1.SecondOffset := s;
