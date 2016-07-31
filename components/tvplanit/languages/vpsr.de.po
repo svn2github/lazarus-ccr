@@ -1047,7 +1047,7 @@ msgstr "Erinnerung"
 
 #: vpsr.rsreportsetup
 msgid "Report setup"
-msgstr "Druck einrichten"
+msgstr "Ausdruck einrichten"
 
 #: vpsr.rsresource
 msgid "Resource"
