@@ -27,7 +27,7 @@ unit ExVpRptSetup;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ComCtrls, EditBtn,
 
   VpBaseDS, VpPrtFmtCBox;
@@ -76,7 +76,7 @@ var
 
 implementation
 
-{$R *.LFM}
+{$R *.lfm}
 
 uses
   Math, VpSR, VpMisc;
