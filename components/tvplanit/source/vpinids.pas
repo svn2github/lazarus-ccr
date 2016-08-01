@@ -33,6 +33,7 @@ type
     procedure Split(const AString: String; AList: TStrings);
     function UniqueID(AValue: Integer): Boolean;
 
+    procedure Loaded; override;
     procedure ReadFromIni;
     procedure WriteToIni;
 
@@ -330,6 +331,13 @@ end;
 procedure TVpIniDatastore.LoadContacts;
 begin
   // Nothing to do here...
+end;
+
+procedure TVpIniDatastore.Loaded;
+begin
+  inherited;
+  if not (csDesigning in ComponentState) then
+    Connected := AutoConnect;
 end;
 
 procedure TVpIniDatastore.LoadEvents;
