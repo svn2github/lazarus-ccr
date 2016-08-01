@@ -6,8 +6,9 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, ComCtrls, Menus, VpBaseDS, VpDayView, VpWeekView, VpTaskList,
-  VpContactGrid, VpMonthView, VpResEditDlg, VpContactButtons, VpIniDs;
+  StdCtrls, ComCtrls, Menus,
+  VpBaseDS, VpDayView, VpWeekView, VpTaskList, VpContactGrid, VpMonthView,
+  VpResEditDlg, VpContactButtons, VpIniDs;
 
 type
 

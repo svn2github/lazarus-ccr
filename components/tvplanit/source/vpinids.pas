@@ -52,7 +52,6 @@ type
 
   published
     property AutoConnect default false;
-    property Connected;
     property FileName: String read FFileName write SetfileName;
 
   end;

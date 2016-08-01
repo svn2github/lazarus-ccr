@@ -152,8 +152,12 @@ object Form1: TForm1
           DayNameStyle = dsShort
           DrawingStyle = dsFlat
           EventDayStyle = []
+          HeadAttributes.Color = clBtnFace
           LineColor = clGray
           TimeFormat = tf12Hour
+          TodayAttributes.Color = clSilver
+          TodayAttributes.BorderPen.Color = clRed
+          TodayAttributes.BorderPen.Width = 3
           OffDayColor = clSilver
           SelectedDayColor = clRed
           ShowEvents = True
@@ -295,9 +299,8 @@ object Form1: TForm1
     EnableEventTimer = True
     PlayEventSounds = True
     AutoConnect = True
-    Connected = True
     FileName = 'data.ini'
-    left = 140
+    left = 136
     top = 200
   end
   object PopupMenu1: TPopupMenu
