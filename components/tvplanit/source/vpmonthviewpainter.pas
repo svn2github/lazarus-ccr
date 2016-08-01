@@ -344,10 +344,12 @@ begin
                 RenderCanvas.Brush.Color := RealOffDayColor;
                 TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
               end else
+              {
               if ThisDate = todayDate then begin
                 RenderCanvas.Brush.Color := TodayAttrColor;
                 TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
               end else
+              }
                 RenderCanvas.Brush.Color := RealColor;
 
               { draw bottom line }
@@ -396,24 +398,29 @@ begin
               if Tmp <> M then
                 RenderCanvas.Font.Color := FMonthView.OffDayFontColor;
 
-              { Write the day number at the top of the TextRect. }
+              { Calculate size of rect for the day number at the top of the TextRect. }
               tmpRect.Left := TextRect.Left + mvColWidth - TextAdjust - TextMargin;
               if fsItalic in RenderCanvas.Font.Style then
                 dec(tmpRect.Left, 2);
               tmpRect.Top := TextRect.Top + TextMargin div 2;
               tmpRect.Right := tmpRect.Left + TextAdjust;
               tmpRect.Bottom := tmpRect.Top + RenderCanvas.TextHeight(Str);
-              TPSTextOut(RenderCanvas, Angle, RenderIn, tmpRect.Left, tmpRect.Top, Str);
 
               { Highlight today by a border }
               if ThisDate = todayDate then begin
                 InflateRect(tmpRect, 3, 3);
                 RenderCanvas.Pen.Assign(FMonthView.TodayAttributes.BorderPen);
-                RenderCanvas.Brush.Style := bsClear;
+                RenderCanvas.Brush.Color := FMonthView.TodayAttributes.Color;
+                RenderCanvas.Brush.Style := bsSolid; //bsClear;
                 RenderCanvas.Rectangle(tmpRect);
                 RenderCanvas.Pen.Assign(OldPen);
                 RenderCanvas.Brush.Assign(OldBrush);
+                InflateRect(tmpRect, -3, -3);
+                RenderCanvas.Font.Color := FMonthView.TodayAttributes.Font.Color;
               end;
+
+              { Write the day number at the top of the TextRect. }
+              TPSTextOut(RenderCanvas, Angle, RenderIn, tmpRect.Left, tmpRect.Top, Str);
 
               { Update MonthDayArray }
               with TVpMonthViewOpener(FMonthView) do begin
@@ -441,10 +448,12 @@ begin
                 RenderCanvas.Brush.Color := RealOffDayColor;
                 TPSFillRect(RenderCanvas, Angle, RenderIn, TextRect);
               end else
+              {
               if ThisDate = todayDate then begin
                 RenderCanvas.Brush.Color := TodayAttrColor;
                 TPSFillRect(RenderCanvas, Angle, RenderIn, TextRect);
               end else
+              }
                 RenderCanvas.Brush.Color := RealColor;
 
               { draw right side and bottom lines }
@@ -496,24 +505,30 @@ begin
               if Tmp <> M then
                 RenderCanvas.Font.Color := FMonthView.OffdayFontColor;
 
-              { Write the day number at the top of the TextRect. }
+              { Calculate rectangle for day number at the top of the TextRect. }
               tmpRect.Left := TextRect.Right - TextAdjust - TextMargin;
               if fsItalic in RenderCanvas.Font.Style then
                 dec(tmpRect.Left, 2);
               tmpRect.Top := TextRect.Top + TextMargin div 2;
               tmpRect.Right := tmpRect.Left + TextAdjust;
               tmpRect.Bottom := tmpRect.Top + TextH;
-              TPSTextOut(RenderCanvas, Angle, RenderIn, tmpRect.Left, tmpRect.Top, Str);
 
               { Highlight today by a border }
               if ThisDate = todayDate then begin
                 InflateRect(tmpRect, 3, 3);
                 RenderCanvas.Pen.Assign(FMonthView.TodayAttributes.BorderPen);
-                RenderCanvas.Brush.Style := bsClear;
+                RenderCanvas.Brush.Color := FMonthView.TodayAttributes.Color;
+                RenderCanvas.Brush.Style := bsSolid; //bsClear;
                 RenderCanvas.Rectangle(tmpRect);
                 RenderCanvas.Pen.Assign(OldPen);
                 RenderCanvas.Brush.Assign(OldBrush);
+                InflateRect(tmpRect, -3, -3);
+                RenderCanvas.Font.Color := FMonthView.TodayAttributes.Font.Color;
               end;
+
+              { Write the day number at the top of the TextRect. }
+              TPSTextOut(RenderCanvas, Angle, RenderIn, tmpRect.Left, tmpRect.Top, Str);
+
 
               { Update Array }
               with TVpMonthViewOpener(FMonthView) do begin
