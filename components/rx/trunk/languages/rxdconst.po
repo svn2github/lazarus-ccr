@@ -603,6 +603,10 @@ msgstr ""
 msgid "Show column title"
 msgstr ""
 
+#: rxdconst.stoolsexportpdf
+msgid "Export to PDF file"
+msgstr ""
+
 #: rxdconst.stoolsexportspeadsheet
 msgid "Export to speadsheet"
 msgstr ""

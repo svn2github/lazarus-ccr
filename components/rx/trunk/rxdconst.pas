@@ -174,6 +174,7 @@ resourcestring
 
   sExportParams              = 'Export params';
   sToolsExportSpeadSheet     = 'Export to speadsheet';
+  sToolsExportPDF            = 'Export to PDF file';
   sExportFileName            = 'Export file name';
   sOpenAfterExport           = 'Open after export';
   sPageName                  = 'Page name';

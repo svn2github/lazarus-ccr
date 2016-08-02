@@ -1,6 +1,6 @@
 { RxDBGridExportSpreadSheet unit
 
-  Copyright (C) 2005-2015 Lagunov Aleksey alexs@yandex.ru
+  Copyright (C) 2005-2016 Lagunov Aleksey alexs@yandex.ru
   original conception from rx library for Delphi (c)
 
   This library is free software; you can redistribute it and/or modify it

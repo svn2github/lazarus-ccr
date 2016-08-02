@@ -603,6 +603,10 @@ msgstr "Отображать заголовок отчёта"
 msgid "Show column title"
 msgstr "Отображать заголовки столбцов"
 
+#: rxdconst.stoolsexportpdf
+msgid "Export to PDF file"
+msgstr ""
+
 #: rxdconst.stoolsexportspeadsheet
 msgid "Export to speadsheet"
 msgstr "Экспорт в электронную таблицу"

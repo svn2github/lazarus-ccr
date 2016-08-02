@@ -42,7 +42,7 @@ procedure Register;
 implementation
 uses DB, DBPropEdits, rxdbgrid, RxDBSpinEdit, RxDBTimeEdit, RxDBCtrls, rxmemds,
   ComponentEditors, seldsfrm, PropEdits, RxDBColorBox, dbdateedit, rxdbcomb,
-  rxlookup, dbcurredit, RxDBGridFooterTools;
+  rxlookup, dbcurredit, RxDBGridFooterTools, RxDBGridExportPdf;
 
 type
 
@@ -123,6 +123,11 @@ begin
   RegisterComponents('RX DBAware',[TRxDBGridFooterTools]);
 end;
 
+procedure RegisterRxDBGridExportPDF;
+begin
+  RegisterComponents('RX DBAware',[TRxDBGridExportPDF]);
+end;
+
 procedure RegisterRxMemDS;
 begin
   RegisterComponents('RX DBAware',[TRxMemoryData]);
@@ -162,6 +167,7 @@ begin
   RegisterUnit('rxmemds', @RegisterRxMemDS);
   RegisterUnit('RxDBColorBox', @RegisterRxDBColorBox);
   RegisterUnit('RxDBGridFooterTools', @RegisterRxDbGridFooterTools);
+  RegisterUnit('RxDBGridExportPdf', @RegisterRxDBGridExportPDF);
 
   //Component Editors
   RegisterComponentEditor(TRxMemoryData, TMemDataSetEditor);

@@ -25,7 +25,7 @@ translate to Lazarus by alexs in 2005 - 2016
 "/>
     <License Value="LGPL"/>
     <Version Major="2" Minor="9" Release="2" Build="190"/>
-    <Files Count="67">
+    <Files Count="68">
       <Item1>
         <Filename Value="autopanel.pas"/>
         <UnitName Value="AutoPanel"/>
@@ -297,6 +297,10 @@ translate to Lazarus by alexs in 2005 - 2016
         <Filename Value="rxshortcutunit.pas"/>
         <UnitName Value="rxShortCutUnit"/>
       </Item67>
+      <Item68>
+        <Filename Value="rxdbgridexportpdf.pas"/>
+        <UnitName Value="RxDBGridExportPdf"/>
+      </Item68>
     </Files>
     <LazDoc Paths="docs;\usr\local\share\lazarus\components\rxnew\docs"/>
     <i18n>
