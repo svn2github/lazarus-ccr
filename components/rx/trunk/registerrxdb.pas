@@ -42,7 +42,11 @@ procedure Register;
 implementation
 uses DB, DBPropEdits, rxdbgrid, RxDBSpinEdit, RxDBTimeEdit, RxDBCtrls, rxmemds,
   ComponentEditors, seldsfrm, PropEdits, RxDBColorBox, dbdateedit, rxdbcomb,
-  rxlookup, dbcurredit, RxDBGridFooterTools, RxDBGridExportPdf;
+  rxlookup, dbcurredit, RxDBGridFooterTools
+  {$IF (FPC_FULLVERSION >= 30101)}
+  , RxDBGridExportPdf
+  {$ENDIF}
+  ;
 
 type
 

@@ -35,6 +35,7 @@ unit RxDBGridExportPdf;
 
 interface
 
+{$IF (FPC_FULLVERSION >= 30101)}
 uses
   Classes, SysUtils, DB, rxdbgrid, fpPDF;
 
@@ -114,7 +115,10 @@ type
     property ProducerPdf:string read FProducerPDF write FProducerPDF;
   end;
 
+  {$ENDIF}
 implementation
+
+{$IF (FPC_FULLVERSION >= 30101)}
 uses rxdconst, forms, LCLIntf;
 
 { TPdfExportOptions }
@@ -330,5 +334,6 @@ begin
 end;
 
 
+{$ENDIF}
 end.
 
