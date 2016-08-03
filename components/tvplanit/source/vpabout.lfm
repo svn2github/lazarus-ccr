@@ -1,93 +1,29 @@
 object frmAbout: TfrmAbout
   Left = 282
-  Height = 312
+  Height = 325
   Top = 205
-  Width = 561
+  Width = 605
   HorzScrollBar.Page = 470
   VertScrollBar.Page = 311
   BorderStyle = bsDialog
   Caption = 'About Visual PlanIt'
-  ClientHeight = 312
-  ClientWidth = 561
+  ClientHeight = 325
+  ClientWidth = 605
   OnActivate = FormActivate
-  OnMouseMove = FormMouseMove
   Position = poScreenCenter
   LCLVersion = '1.7'
-  object Bevel3: TBevel
-    Left = 152
-    Height = 96
-    Top = 160
-    Width = 403
-    Anchors = [akTop, akLeft, akRight]
-    Shape = bsFrame
-    OnMouseMove = lblLinkMouseMove
-  end
   object Bevel2: TBevel
     Left = 6
-    Height = 17
-    Top = 265
-    Width = 549
+    Height = 9
+    Top = 272
+    Width = 593
     Anchors = [akTop, akLeft, akRight]
     Shape = bsTopLine
-  end
-  object ProgramName: TLabel
-    Left = 152
-    Height = 16
-    Top = 8
-    Width = 80
-    Caption = 'Visual PlanIt'
-    Font.Height = -13
-    Font.Name = 'Default'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-  end
-  object VisitUsLabel: TLabel
-    Left = 152
-    Height = 15
-    Top = 104
-    Width = 235
-    Caption = 'Visit the Visual PlanIt project on SourceForge'
-    ParentColor = False
-  end
-  object GeneralNewsgroupsLabel: TLabel
-    Left = 160
-    Height = 15
-    Top = 168
-    Width = 148
-    Caption = 'Visual PlanIt support groups'
-    ParentColor = False
-  end
-  object lblTurboLink: TLabel
-    Cursor = crHandPoint
-    Left = 161
-    Height = 15
-    Top = 120
-    Width = 222
-    Caption = 'http://sourceforge.net/projects/tpvplanit/'
-    Font.Color = clBlue
-    ParentColor = False
-    ParentFont = False
-    OnClick = lblLinkClick
-    OnMouseMove = lblLinkMouseMove
-  end
-  object lblHelp: TLabel
-    Cursor = crHandPoint
-    Left = 168
-    Height = 15
-    Top = 198
-    Width = 315
-    Caption = 'http://sourceforge.net/forum/forum.php?forum_id=241880'
-    Font.Color = clBlue
-    ParentColor = False
-    ParentFont = False
-    OnClick = lblLinkClick
-    OnMouseMove = lblLinkMouseMove
   end
   object CopyrightLabel: TLabel
     Left = 7
     Height = 15
-    Top = 273
+    Top = 280
     Width = 277
     Caption = '(C) Copyright 2001, TurboPower Software Company.'
     ParentColor = False
@@ -95,50 +31,10 @@ object frmAbout: TfrmAbout
   object RightsReservedLabel: TLabel
     Left = 7
     Height = 15
-    Top = 289
+    Top = 296
     Width = 97
     Caption = 'All rights reserved.'
     ParentColor = False
-  end
-  object lblGeneralDiscussion: TLabel
-    Cursor = crHandPoint
-    Left = 168
-    Height = 15
-    Top = 230
-    Width = 315
-    Caption = 'http://sourceforge.net/forum/forum.php?forum_id=241879'
-    Font.Color = clBlue
-    ParentColor = False
-    ParentFont = False
-    OnClick = lblLinkClick
-    OnMouseMove = lblLinkMouseMove
-  end
-  object Label2: TLabel
-    Left = 168
-    Height = 15
-    Top = 186
-    Width = 28
-    Caption = 'Help:'
-    ParentColor = False
-  end
-  object Label3: TLabel
-    Left = 168
-    Height = 15
-    Top = 217
-    Width = 102
-    Caption = 'General Discussion:'
-    ParentColor = False
-  end
-  object Label1: TLabel
-    Left = 152
-    Height = 58
-    Top = 40
-    Width = 395
-    Anchors = [akTop, akLeft, akRight]
-    AutoSize = False
-    Caption = 'Visual PlanIt was released under the Mozilla 1.1 license in January, 2003. The project is hosted on SourceForge at sourceforge.net/projects/tpvplanit.'
-    ParentColor = False
-    WordWrap = True
   end
   object Panel1: TPanel
     Left = 6
@@ -1284,14 +1180,217 @@ object frmAbout: TfrmAbout
     end
   end
   object OKButton: TButton
-    Left = 475
+    Left = 519
     Height = 25
-    Top = 277
+    Top = 284
     Width = 75
     Anchors = [akTop, akRight]
     Cancel = True
     Caption = 'OK'
     ModalResult = 1
     TabOrder = 1
+  end
+  object Panel2: TPanel
+    Left = 153
+    Height = 248
+    Top = 8
+    Width = 441
+    Anchors = [akTop, akLeft, akRight]
+    BevelOuter = bvNone
+    ClientHeight = 248
+    ClientWidth = 441
+    TabOrder = 2
+    object ProgramName: TLabel
+      Left = 0
+      Height = 16
+      Top = 0
+      Width = 441
+      Align = alTop
+      Caption = 'Visual PlanIt'
+      Font.Height = -13
+      Font.Name = 'Default'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object Bevel1: TBevel
+      Left = 0
+      Height = 8
+      Top = 16
+      Width = 441
+      Align = alTop
+      Shape = bsSpacer
+    end
+    object Label1: TLabel
+      Left = 0
+      Height = 30
+      Top = 24
+      Width = 441
+      Align = alTop
+      Caption = 'Visual PlanIt was released under the Mozilla 1.1 license in January, 2003. The project is hosted on SourceForge at'
+      ParentColor = False
+      WordWrap = True
+    end
+    object lblTurboLink: TLabel
+      Cursor = crHandPoint
+      Left = 0
+      Height = 15
+      Top = 54
+      Width = 441
+      Align = alTop
+      Caption = 'http://sourceforge.net/projects/tpvplanit/'
+      Font.Color = clBlue
+      ParentColor = False
+      ParentFont = False
+      OnClick = lblLinkClick
+      OnMouseEnter = lblLinkMouseEnter
+      OnMouseLeave = lblLinkMouseLeave
+    end
+    object Bevel4: TBevel
+      Left = 0
+      Height = 8
+      Top = 69
+      Width = 441
+      Align = alTop
+      Shape = bsSpacer
+    end
+    object Label4: TLabel
+      Left = 0
+      Height = 15
+      Top = 77
+      Width = 441
+      Align = alTop
+      Caption = 'The Lazarus port is hosted at'
+      ParentColor = False
+      WordWrap = True
+    end
+    object lblLazPortLink: TLabel
+      Cursor = crHandPoint
+      Left = 0
+      Height = 15
+      Top = 92
+      Width = 441
+      Align = alTop
+      Caption = 'http://sourceforge.net/p/lazarus-ccr/svn/HEAD/tree/components/tvplanit/'
+      Font.Color = clBlue
+      ParentColor = False
+      ParentFont = False
+      OnClick = lblLinkClick
+      OnMouseEnter = lblLinkMouseEnter
+      OnMouseLeave = lblLinkMouseLeave
+    end
+    object Panel3: TPanel
+      Left = 0
+      Height = 133
+      Top = 115
+      Width = 441
+      Align = alBottom
+      BorderSpacing.Top = 4
+      BevelInner = bvRaised
+      BevelOuter = bvLowered
+      ClientHeight = 133
+      ClientWidth = 441
+      TabOrder = 0
+      object GeneralNewsgroupsLabel: TLabel
+        Left = 6
+        Height = 15
+        Top = 6
+        Width = 429
+        Align = alTop
+        BorderSpacing.Left = 4
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 4
+        Caption = 'Visual PlanIt support groups'
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label2: TLabel
+        Left = 18
+        Height = 15
+        Top = 25
+        Width = 417
+        Align = alTop
+        BorderSpacing.Left = 16
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 4
+        Caption = 'Help:'
+        ParentColor = False
+      end
+      object lblHelp: TLabel
+        Cursor = crHandPoint
+        Left = 18
+        Height = 15
+        Top = 40
+        Width = 417
+        Align = alTop
+        BorderSpacing.Left = 16
+        BorderSpacing.Right = 4
+        Caption = 'http://sourceforge.net/forum/forum.php?forum_id=241880'
+        Font.Color = clBlue
+        ParentColor = False
+        ParentFont = False
+        OnClick = lblLinkClick
+        OnMouseEnter = lblLinkMouseEnter
+        OnMouseLeave = lblLinkMouseLeave
+      end
+      object Label3: TLabel
+        Left = 18
+        Height = 15
+        Top = 59
+        Width = 417
+        Align = alTop
+        BorderSpacing.Left = 16
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 4
+        Caption = 'General discussion:'
+        ParentColor = False
+      end
+      object lblGeneralDiscussion: TLabel
+        Cursor = crHandPoint
+        Left = 18
+        Height = 15
+        Top = 74
+        Width = 417
+        Align = alTop
+        BorderSpacing.Left = 16
+        BorderSpacing.Right = 4
+        Caption = 'http://sourceforge.net/forum/forum.php?forum_id=241879'
+        Font.Color = clBlue
+        ParentColor = False
+        ParentFont = False
+        OnClick = lblLinkClick
+        OnMouseEnter = lblLinkMouseEnter
+        OnMouseLeave = lblLinkMouseLeave
+      end
+      object Label5: TLabel
+        Left = 18
+        Height = 15
+        Top = 93
+        Width = 417
+        Align = alTop
+        BorderSpacing.Left = 16
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 4
+        Caption = 'Lazarus port:'
+        ParentColor = False
+      end
+      object lblLazForumLink: TLabel
+        Cursor = crHandPoint
+        Left = 18
+        Height = 15
+        Top = 108
+        Width = 421
+        Align = alTop
+        BorderSpacing.Left = 16
+        BorderSpacing.Bottom = 4
+        Caption = 'http://forum.lazarus.freepascal.org/'
+        Font.Color = clBlue
+        ParentColor = False
+        ParentFont = False
+        OnClick = lblLinkClick
+        OnMouseEnter = lblLinkMouseEnter
+        OnMouseLeave = lblLinkMouseLeave
+      end
+    end
   end
 end

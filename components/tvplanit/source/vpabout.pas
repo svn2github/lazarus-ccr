@@ -54,25 +54,31 @@ type
 
   { TfrmAbout }
   TfrmAbout = class(TForm)
+    Bevel1: TBevel;
     Bevel2: TBevel;
+    Bevel4: TBevel;
+    Label4: TLabel;
+    Label5: TLabel;
+    lblLazForumLink: TLabel;
+    lblLazPortLink: TLabel;
     Panel1: TPanel;
     Image1: TImage;
+    Panel2: TPanel;
+    Panel3: TPanel;
     ProgramName: TLabel;
-    VisitUsLabel: TLabel;
     GeneralNewsgroupsLabel: TLabel;
     lblTurboLink: TLabel;
     lblHelp: TLabel;
     CopyrightLabel: TLabel;
     RightsReservedLabel: TLabel;
     OKButton: TButton;
-    Bevel3: TBevel;
     lblGeneralDiscussion: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label1: TLabel;
     procedure FormActivate(Sender: TObject);
-    procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,Y: Integer);
-    procedure lblLinkMouseMove(Sender: TObject; Shift: TShiftState; X,Y: Integer);
+    procedure lblLinkMouseEnter(Sender: TObject);
+    procedure lblLinkMouseLeave(Sender: TObject);
     procedure lblLinkClick(Sender: TObject);
   private
     { Private declarations }
@@ -108,6 +114,8 @@ const
   HELP_URL = 'http://sourceforge.net/forum/forum.php?forum_id=241880';
   {%H-}NEWS_SPECIFIC_URL = 'news://news.turbopower.com/turbopower.public.support.visualplanit';
   GENERAL_DISCUSSION_URL = 'http://sourceforge.net/forum/forum.php?forum_id=241879';
+  LAZARUS_PORT_URL = 'http://sourceforge.net/p/lazarus-ccr/svn/HEAD/tree/components/tvplanit';
+  LAZARUS_FORUM_URL = 'http://forum.lazarus.freepascal.org';
 
 
 {*** TVpAboutProperty ***}
@@ -149,13 +157,18 @@ begin
   lblTurboLink.Cursor := crHandPoint;
   lblHelp.Cursor := crHandPoint;
   lblGeneralDiscussion.Cursor := crHandPoint;
+  lblLazPortLink.Cursor := crHandPoint;
+  lblLazForumLink.Cursor := crHandpoint;
 end;
 
-procedure TfrmAbout.FormMouseMove(Sender: TObject; Shift: TShiftState;
-  X, Y: Integer);
+procedure TfrmAbout.lblLinkMouseEnter(Sender: TObject);
 begin
-  Unused(Shift, X, Y);
-  lblTurboLink.Font.Style := [];
+  (Sender as TLabel).Font.Style := [fsUnderline];
+end;
+
+procedure TfrmAbout.lblLinkMouseLeave(Sender: TObject);
+begin
+  (Sender as TLabel).Font.Style := [];
 end;
 
 procedure TfrmAbout.lblLinkClick(Sender: TObject);
@@ -163,10 +176,22 @@ var
   url: String;
 begin
   //  if Sender = lblNewsSpecific then url := NEWS_SPECIFIC_URL else
-  if Sender = lblHelp then url := HELP_URL else
-  if Sender = lblGeneralDiscussion then url := GENERAL_DISCUSSION_URL else
-  if Sender = lblTurboLink then url := TURBO_LINK_URL else
-  exit;
+  if Sender = lblHelp then
+    url := HELP_URL
+  else
+  if Sender = lblGeneralDiscussion then
+    url := GENERAL_DISCUSSION_URL
+  else
+  if Sender = lblTurboLink then
+    url := TURBO_LINK_URL
+  else
+  if Sender = lblLazPortLink then
+    url := LAZARUS_PORT_URL
+  else
+  if Sender = lblLazForumLink then
+    url := LAZARUS_FORUM_URL
+  else
+    exit;
 {$IFDEF LCL}
   if not OpenUrl(url)
 {$ELSE}
@@ -175,14 +200,6 @@ begin
   then
     ShowMessage(RSBrowserError);
 end;
-
-procedure TfrmAbout.lblLinkMouseMove(Sender: TObject;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  Unused(Shift, X, Y);
-  TLabel(Sender).Font.Style := [fsUnderline];
-end;
-
 
 end.
   
