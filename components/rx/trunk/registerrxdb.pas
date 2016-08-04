@@ -127,10 +127,12 @@ begin
   RegisterComponents('RX DBAware',[TRxDBGridFooterTools]);
 end;
 
+{$IF (FPC_FULLVERSION >= 30101)}
 procedure RegisterRxDBGridExportPDF;
 begin
   RegisterComponents('RX DBAware',[TRxDBGridExportPDF]);
 end;
+{$ENDIF}
 
 procedure RegisterRxMemDS;
 begin
@@ -171,7 +173,9 @@ begin
   RegisterUnit('rxmemds', @RegisterRxMemDS);
   RegisterUnit('RxDBColorBox', @RegisterRxDBColorBox);
   RegisterUnit('RxDBGridFooterTools', @RegisterRxDbGridFooterTools);
+  {$IF (FPC_FULLVERSION >= 30101)}
   RegisterUnit('RxDBGridExportPdf', @RegisterRxDBGridExportPDF);
+  {$ENDIF}
 
   //Component Editors
   RegisterComponentEditor(TRxMemoryData, TMemDataSetEditor);
