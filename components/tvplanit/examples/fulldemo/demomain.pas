@@ -155,7 +155,7 @@ uses
 {$UNDEF UTF8_CALLS}
 {$IFDEF LCL}
   {$DEFINE UTF8_CALLS}
-  {$IF (lcl_major=1) and (lcl_minor<6)}
+  {$IF (lcl_major=1) and (lcl_minor<=6)}
      {$UNDEF UTF8_CALLS}
   {$ENDIF}
 {$ENDIF}

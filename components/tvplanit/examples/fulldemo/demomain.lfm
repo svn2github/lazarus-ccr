@@ -9,7 +9,7 @@ object MainForm: TMainForm
   Menu = MainMenu1
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  LCLVersion = '1.7'
+  LCLVersion = '1.6.0.4'
   object Panel1: TPanel
     Left = 120
     Height = 580
@@ -60,6 +60,7 @@ object MainForm: TMainForm
       PageIndex = 0
       Align = alClient
       TabOrder = 1
+      TabStop = True
       object Events: TPage
         object LeftPanel: TPanel
           Left = 0
