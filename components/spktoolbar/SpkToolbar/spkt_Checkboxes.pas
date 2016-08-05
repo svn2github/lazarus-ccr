@@ -201,25 +201,25 @@ begin
   Bitmap.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
   TextWidth := Bitmap.Canvas.TextWidth(FCaption);
 
-  BtnWidth := SMALLBUTTON_PADDING + SMALLBUTTON_GLYPH_WIDTH +
-    SMALLBUTTON_PADDING + TextWidth + SMALLBUTTON_PADDING;
-  BtnWidth := Max(SMALLBUTTON_MIN_WIDTH, BtnWidth);
+  BtnWidth := SmallButtonPadding + SmallButtonGlyphWidth +
+    SmallButtonPadding + TextWidth + SmallButtonPadding;
+  BtnWidth := Max(SmallButtonMinWidth, BtnWidth);
 
   if FGroupBehaviour in [gbContinuesGroup, gbEndsGroup] then
-    BtnWidth := BtnWidth + SMALLBUTTON_HALF_BORDER_WIDTH
+    BtnWidth := BtnWidth + SmallButtonHalfBorderWidth
   else
-    BtnWidth := BtnWidth + SMALLBUTTON_BORDER_WIDTH;
+    BtnWidth := BtnWidth + SmallButtonBorderWidth;
 
   // Prawa krawêdŸ przycisku
   if (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) then
-    BtnWidth := BtnWidth + SMALLBUTTON_HALF_BORDER_WIDTH
+    BtnWidth := BtnWidth + SmallButtonHalfBorderWidth
   else
-    BtnWidth := BtnWidth + SMALLBUTTON_BORDER_WIDTH;
+    BtnWidth := BtnWidth + SmallButtonBorderWidth;
 
  {$IFDEF EnhancedRecordSupport}
-  BtnRect := T2DIntRect.Create(0, 0, BtnWidth - 1, PANE_ROW_HEIGHT - 1);
+  BtnRect := T2DIntRect.Create(0, 0, BtnWidth - 1, PaneRowHeight - 1);
  {$ELSE}
-  BtnRect.Create(0, 0, BtnWidth - 1, PANE_ROW_HEIGHT - 1);
+  BtnRect.Create(0, 0, BtnWidth - 1, PaneRowHeight - 1);
  {$ENDIF}
 end;
 
@@ -234,7 +234,7 @@ begin
     exit;
   if FAppearance = nil then
     exit;
-  if (FRect.Width < 2*LARGEBUTTON_RADIUS) or (FRect.Height < 2*LARGEBUTTON_RADIUS) then
+  if (FRect.Width < 2*LargeButtonRadius) or (FRect.Height < 2*LargeButtonRadius) then
     exit;
 
   // Border
@@ -253,7 +253,7 @@ begin
         (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
         false,
         false,
-        SMALLBUTTON_RADIUS,
+        SmallButtonRadius,
         ClipRect
       );
   end else
@@ -272,7 +272,7 @@ begin
         (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
         false,
         false,
-        SMALLBUTTON_RADIUS,
+        SmallButtonRadius,
         ClipRect
       );
   end else
@@ -291,7 +291,7 @@ begin
         (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
         false,
         false,
-        SMALLBUTTON_RADIUS,
+        SmallButtonRadius,
         ClipRect
       );
   end;
@@ -303,9 +303,9 @@ begin
   end else
     h := GetSystemMetrics(SM_CYMENUCHECK);
   if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
-    x := FButtonRect.Left + SMALLBUTTON_HALF_BORDER_WIDTH + SMALLBUTTON_PADDING
+    x := FButtonRect.Left + SmallButtonHalfBorderWidth + SmallButtonPadding
   else
-    x := FButtonRect.Left + SMALLBUTTON_BORDER_WIDTH + SMALLBUTTON_PADDING;
+    x := FButtonRect.Left + SmallButtonBorderWidth + SmallButtonPadding;
   y := FButtonRect.Top + (FButtonRect.Height - h) div 2;
 
   TGUITools.DrawCheckbox(
@@ -339,10 +339,10 @@ begin
     end;
 
   if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
-    x := FButtonRect.Left + SMALLBUTTON_HALF_BORDER_WIDTH
+    x := FButtonRect.Left + SmallButtonHalfBorderWidth
   else
-    x := FButtonRect.Left + SMALLBUTTON_BORDER_WIDTH;
-  x := x + 2 * SMALLBUTTON_PADDING + SMALLBUTTON_GLYPH_WIDTH;
+    x := FButtonRect.Left + SmallButtonBorderWidth;
+  x := x + 2 * SmallButtonPadding + SmallButtonGlyphWidth;
   y := FButtonRect.Top + (FButtonRect.Height - ABuffer.Canvas.TextHeight('Wy')) div 2;
 
   TGUITools.DrawText(

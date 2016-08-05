@@ -14,154 +14,376 @@ unit spkt_Const;
 
 interface
 
-const // ****************
-      // *** Elementy ***
-      // ****************
+procedure SpkInitLayoutConsts(FromDPI: Integer; ToDPI: Integer = 0);
+function SpkScaleX(Size: Integer; FromDPI: Integer; ToDPI: Integer = 0): integer;
+function SpkScaleY(Size: Integer; FromDPI: Integer; ToDPI: Integer = 0): integer;
 
-      LARGEBUTTON_DROPDOWN_FIELD_SIZE = 29;
-      LARGEBUTTON_GLYPH_MARGIN = 1;
-      LARGEBUTTON_CAPTION_HMARGIN = 3;
-      LARGEBUTTON_MIN_WIDTH = 24;
-      LARGEBUTTON_RADIUS = 4;
-      LARGEBUTTON_BORDER_SIZE = 2;
-      LARGEBUTTON_CHEVRON_HMARGIN = 4;
-      LARGEBUTTON_CAPTION_TOP_RAIL = 45;
-      LARGEBUTTON_CAPTION_BOTTOM_RAIL = 58;
+const
+  // ****************
+  // *** Elements ***
+  // ****************
 
-      SMALLBUTTON_GLYPH_WIDTH = 20; //16;
-      SMALLBUTTON_BORDER_WIDTH = 2;
-      SMALLBUTTON_HALF_BORDER_WIDTH = 1;
-      SMALLBUTTON_PADDING = 2;
-      SMALLBUTTON_DROPDOWN_WIDTH = 11;
-      SMALLBUTTON_RADIUS = 4;
-      SMALLBUTTON_MIN_WIDTH = 2 * SMALLBUTTON_PADDING + SMALLBUTTON_GLYPH_WIDTH;
+  LARGEBUTTON_DROPDOWN_FIELD_SIZE = 29;
+  LARGEBUTTON_GLYPH_MARGIN = 1;
+  LARGEBUTTON_CAPTION_HMARGIN = 3;
+  LARGEBUTTON_MIN_WIDTH = 24;
+  LARGEBUTTON_RADIUS = 4;
+  LARGEBUTTON_BORDER_SIZE = 2;
+  LARGEBUTTON_CHEVRON_HMARGIN = 4;
+  LARGEBUTTON_CAPTION_TOP_RAIL = 45;
+  LARGEBUTTON_CAPTION_BOTTOM_RAIL = 58;
 
-      // ********************
-      // *** Obszar tafli ***
-      // ********************
+  SMALLBUTTON_GLYPH_WIDTH = 16; //was: 20; //16;
+  SMALLBUTTON_BORDER_WIDTH = 2;
+  SMALLBUTTON_HALF_BORDER_WIDTH = 1;
+  SMALLBUTTON_PADDING = 2;
+  SMALLBUTTON_DROPDOWN_WIDTH = 11;
+  SMALLBUTTON_RADIUS = 4;
 
-      /// <summary>Maksymalna wysokoœæ obszaru, który mo¿e zaj¹æ zawartoœæ
-      /// tafli z elementami</summary>
-      MAX_ELEMENT_HEIGHT = 67;
+  // ***********************
+  // *** Tab page layout ***
+  // ***********************
 
-      /// <summary>Wysokoœæ pojedynczego wiersza elementów tafli</summary>
-      PANE_ROW_HEIGHT = 22;
+  /// <summary>Maximum area height that can be used by an element</summary>
+  MAX_ELEMENT_HEIGHT = 67;
 
-      PANE_FULL_ROW_HEIGHT = 3 * PANE_ROW_HEIGHT;
+  /// <summary>Maximum row height</summary>
+  PANE_ROW_HEIGHT = 22;
 
-      /// <summary>Wewnêtrzny pionowy margines pomiêdzy pierwszym elementem a
-      /// tafl¹ w przypadku wersji jednowierszowej</summary>
-      PANE_ONE_ROW_TOPPADDING = 22;
-      /// <summary>Wewnêtrzny pionowy margines pomiêdzy ostatnim elementem
-      /// a tafl¹ w przypadku wersji jednowierszowej</summary>
-      PANE_ONE_ROW_BOTTOMPADDING = 23;
+  /// <summary>Single row top margin</summary>
+  PANE_ONE_ROW_TOPPADDING = 22;
+  /// <summary>Single row bottom margin</summary>
+  PANE_ONE_ROW_BOTTOMPADDING = 23;
 
-      /// <summary>Odleg³oœæ pomiêdzy wierszami w przypadku wersji dwuwierszowej
-      /// </summary>
-      PANE_TWO_ROWS_VSPACER = 7;
-      /// <summary>Wewnêtrzny pionowy margines pomiêdzy pierwszym elementem a
-      /// tafl¹ w przypadku wersji dwuwierszowej</summary>
-      PANE_TWO_ROWS_TOPPADDING = 8;
-      /// <summary>Wewnêtrzny pionowy margines pomiêdzy ostatnim elementem
-      /// a tafl¹ w przypadku wersji dwuwierszowej</summary>
-      PANE_TWO_ROWS_BOTTOMPADDING = 8;
+  /// <summary>Space between rows in a double row layout</summary>
+  PANE_TWO_ROWS_VSPACER = 7;
+  /// <summary>Double row layout top margin</summary>
+  PANE_TWO_ROWS_TOPPADDING = 8;
+  /// <summary>Double row layout bottom margin</summary>
+  PANE_TWO_ROWS_BOTTOMPADDING = 8;
 
-      /// <summary>Odleg³oœæ pomiêdzy wierszami w przypadku wersji
-      /// trzywierszowej</summary>
-      PANE_THREE_ROWS_VSPACER = 0;
-      /// <summary>Wewnêtrzny pionowy margines pomiêdzy pierwszym elementem a
-      /// tafl¹ w przypadku wersji trzywierszowej</summary>
-      PANE_THREE_ROWS_TOPPADDING = 0;
-      /// <summary>Wewnêtrzny pionowy margines pomiêdzy ostatnim elementem
-      /// a tafl¹ w przypadku wersji trzywierszowej</summary>
-      PANE_THREE_ROWS_BOTTOMPADDING = 1;
+  /// <summary>Space between rows in triple row layout</summary>
+  PANE_THREE_ROWS_VSPACER = 0;
+  /// <summary>Triple row layout top margin</summary>
+  PANE_THREE_ROWS_TOPPADDING = 0;
+  /// <summary>Triple row layout bottom margin</summary>
+  PANE_THREE_ROWS_BOTTOMPADDING = 1;
 
-      PANE_FULL_ROW_TOPPADDING = PANE_THREE_ROWS_TOPPADDING;
+  /// <summary>Pane left padding, space between left pane border and left element border</summary>
+  PANE_LEFT_PADDING = 2;
+  /// <summary>Pane right padding, space between right pane border and right element border</summary>
+  PANE_RIGHT_PADDING = 2;
+  /// <summary>Space between two columns inside the pane</summary>
+  PANE_COLUMN_SPACER = 4;
+  /// <summary>Space between groups on a row in pane</summary>
+  PANE_GROUP_SPACER = 4;
 
-      PANE_FULL_ROW_BOTTOMPADDING = PANE_THREE_ROWS_BOTTOMPADDING;
 
-      /// <summary>Odleg³oœæ pomiêdzy lew¹ krawêdzi¹ a pierwszym elementem
-      /// tafli</summary>
-      PANE_LEFT_PADDING = 2;
+  // *******************
+  // *** Pane layout ***
+  // *******************
 
-      /// <summary>Odleg³oœæ pomiêdzy ostatnim elementem tafli a praw¹ krawêdzi¹
-      /// </summary>
-      PANE_RIGHT_PADDING = 2;
+  /// <summary>Pane caption height</summary>
+  PANE_CAPTION_HEIGHT = 15;
+  /// <summary>Pane corner radius</summary>
+  PANE_CORNER_RADIUS = 3;
+  /// <summary>Pane border size.</summary>
+  /// <remarks>Do not change?</remarks>
+  PANE_BORDER_SIZE = 2;
+  /// <summary>Half width of pane border?</summary>
+  /// <remarks>Do not change?</remarks>
+  PANE_BORDER_HALF_SIZE = 1;
+  /// <summary>Pane caption horizontal padding</summary>
+  PANE_CAPTION_HMARGIN = 6;
 
-      /// <summary>Odleg³oœæ pomiêdzy dwoma kolumnami wewn¹trz tafli</summary>
-      PANE_COLUMN_SPACER = 4;
 
-      /// <summary>Odleg³oœæ pomiêdzy dwoma osobnymi grupami wewnêtrz wiersza
-      /// w tafli</summary>
-      PANE_GROUP_SPACER = 4;
+  // ************
+  // *** Tabs ***
+  // ************
 
-      // *************
-      // *** Tafla ***
-      // *************
+  /// <summary>Tab corner radius</summary>
+  TAB_CORNER_RADIUS = 4;
+  /// <summary>Tab page left margin</summary>
+  TAB_PANE_LEFTPADDING = 2;
+  /// <summary>Tab page right margin</summary>
+  TAB_PANE_RIGHTPADDING = 2;
+  /// <summary>Tab page top margin</summary>
+  TAB_PANE_TOPPADDING = 2;
+  /// <summary>Tab page bottom margin</summary>
+  TAB_PANE_BOTTOMPADDING = 1;
+  /// <summary>Space between panes</summary>
+  TAB_PANE_HSPACING = 3;
+  /// <summary>Tab border size</summary>
+  TAB_BORDER_SIZE = 1;
 
-      /// <summary>Wysokoœæ obszaru tytu³u tafli</summary>
-      PANE_CAPTION_HEIGHT = 15;
 
-      PANE_CORNER_RADIUS = 3;
+  // ***************
+  // *** Toolbar ***
+  // ***************
 
-      /// <summary>Szerokoœæ/wysokoœæ ramki tafli</summary>
-      /// <remarks>Nie nale¿y zmieniaæ tej sta³ej!</remarks>
-      PANE_BORDER_SIZE = 2;
+  /// <summary>Pane padding?</summary>
+  TOOLBAR_BORDER_WIDTH = 1;
+  TOOLBAR_CORNER_RADIUS = 3;
+  /// <summary>Tab caption height</summary>
+  TOOLBAR_TAB_CAPTIONS_HEIGHT = 22;
+  /// <summary>Tab caption horizontal padding</summary>
+  TOOLBAR_TAB_CAPTIONS_TEXT_HPADDING = 4;
+  /// <summary>Min tab caption width</summary>
+  TOOLBAR_MIN_TAB_CAPTION_WIDTH = 32;
 
-      /// <summary>Po³owa szerokoœci ramki tafli</summary>
-      /// <remarks>Nie nale¿y zmieniaæ tej sta³ej!</remarks>
-      PANE_BORDER_HALF_SIZE = 1;
+var
+  // ****************
+  // *** Elements ***
+  // ****************
+  LargeButtonDropdownFieldSize: Integer;
+  LargeButtonGlyphMargin: Integer;
+  LargeButtonCaptionHMargin: Integer;
+  LargeButtonMinWidth: Integer;
+  LargeButtonRadius: Integer;
+  LargeButtonBorderSize: Integer;
+  LargeButtonChevronHMargin: Integer;
+  LargeButtonCaptionTopRail: Integer;
+  LargeButtonCaptionButtomRail: Integer;
 
-      /// <summary>Wysokoœæ ca³ej tafli (uwzglêdniaj¹c ramkê)</summary>
-      PANE_HEIGHT = MAX_ELEMENT_HEIGHT + PANE_CAPTION_HEIGHT + 2 * PANE_BORDER_SIZE;
+  SmallButtonGlyphWidth: Integer;
+  SmallButtonBorderWidth: Integer;
+  SmallButtonHalfBorderWidth: Integer;
+  SmallButtonPadding: Integer;
+  SmallButtonDropdownWidth: Integer;
+  SmallButtonRadius: Integer;
+  SmallButtonMinWidth: Integer;
 
-      /// <summary>Poziomy margines etykiety zak³adki</summary>
-      PANE_CAPTION_HMARGIN = 6;
 
-      // ***********************
-      // *** Obszar zak³adki ***
-      // ***********************
+  // ***********************
+  // *** Tab page layout ***
+  // ***********************
 
-      /// <summary>Promieñ zaokr¹glenia zak³adki</summary>
-      TAB_CORNER_RADIUS = 4;
+  /// <summary>Maximum area height that can be used by an element</summary>
+  MaxElementHeight: Integer;
 
-      /// <summary>Lewy wewnêtrzny margines zak³adki</summary>
-      TAB_PANE_LEFTPADDING = 2;
-      /// <summary>Prawy wewnêtrzny margines zak³adki</summary>
-      TAB_PANE_RIGHTPADDING = 2;
-      /// <summary>Górny wewnêtrzny margines zak³adki</summary>
-      TAB_PANE_TOPPADDING = 2;
-      /// <summary>Dolny wewnêtrzny margines zak³adki</summary>
-      TAB_PANE_BOTTOMPADDING = 1;
-      /// <summary>Odleg³oœæ pomiêdzy taflami</summary>
-      TAB_PANE_HSPACING = 3;
+  /// <summary>Maximum row height</summary>
+  PaneRowHeight: Integer;
+  PaneFullRowHeight: Integer;
 
-      /// <summary>Szerokoœæ/wysokoœæ ramki zak³adki (nie nale¿y zmieniaæ!)
-      /// </summary>
-      TAB_BORDER_SIZE = 1;
-      /// <summary>Wysokoœæ zak³adki</summary>
-      TAB_HEIGHT = PANE_HEIGHT + TAB_PANE_TOPPADDING + TAB_PANE_BOTTOMPADDING + TAB_BORDER_SIZE;
+  /// <summary>Single row top margin</summary>
+  PaneOneRowTopPadding: Integer;
+  /// <summary>Single row bottom margin</summary>
+  PaneOneRowBottomPadding: Integer;
 
-      // ***************
-      // *** Toolbar ***
-      // ***************
+  /// <summary>Space between rows in a double row layout</summary>
+  PaneTwoRowsVSpacer: Integer;
+  /// <summary>Double row layout top margin</summary>
+  PaneTwoRowsTopPadding: Integer;
+  /// <summary>Double row layout bottom margin</summary>
+  PaneTwoRowsBottomPadding: Integer;
 
-      TOOLBAR_BORDER_WIDTH = 1;
+  /// <summary>Space between rows in triple row layout</summary>
+  PaneThreeRowsVSpacer: Integer;
+  /// <summary>Triple row layout top margin</summary>
+  PaneThreeRowsTopPadding: Integer;
+  /// <summary>Triple row layout bottom margin</summary>
+  PaneThreeRowsBottomPadding: Integer;
 
-      TOOLBAR_CORNER_RADIUS = 3;
+  PaneFullRowTopPadding: Integer;
+  PaneFullRowBottomPadding: Integer;
 
-      /// <summary>Wysokoœæ etykiet z nazwami zak³adek</summary>
-      TOOLBAR_TAB_CAPTIONS_HEIGHT = 22;
-      /// <summary>Poziomy margines wewnêtrznego tytu³u zak³adki</summary>
-      TOOLBAR_TAB_CAPTIONS_TEXT_HPADDING = 4;
+  /// <summary>Pane left padding, space between left pane border and left element border</summary>
+  PaneLeftPadding: Integer;
+  /// <summary>Pane right padding, space between right pane border and right element border</summary>
+  PaneRightPadding: Integer;
+  /// <summary>Space between two columns inside the pane</summary>
+  PaneColumnSpacer: Integer;
+  /// <summary>Space between groups on a row in pane</summary>
+  PaneGroupSpacer: Integer;
 
-      TOOLBAR_MIN_TAB_CAPTION_WIDTH = 32;
 
-      /// <summary>Sumaryczna wysokoœæ toolbara</summary>
-      TOOLBAR_HEIGHT = TOOLBAR_TAB_CAPTIONS_HEIGHT +
-                       TAB_HEIGHT;
+  // *******************
+  // *** Pane layout ***
+  // *******************
+
+  /// <summary>Pane caption height</summary>
+  PaneCaptionHeight: Integer;
+  /// <summary>Pane corner radius</summary>
+  PaneCornerRadius: Integer;
+  /// <summary>Pane border size</summary>
+  /// <remarks>Do not change?</remarks>
+  PaneBorderSize: Integer;
+  /// <summary>Half width of pane border?</summary>
+  /// <remarks>Do not change?</remarks>
+  PaneBorderHalfSize: Integer;
+  /// <summary>Height of pane</summary>
+  PaneHeight: Integer;
+  /// <summary>Pane caption horizontal padding</summary>
+  PaneCaptionHMargin: Integer;
+
+
+  // ************
+  // *** Tabs ***
+  // ************
+
+  /// <summary>Tab corner radius</summary>
+  TabCornerRadius: Integer;
+  /// <summary>Tab page left margin</summary>
+  TabPaneLeftPadding: Integer;
+  /// <summary>Tab page right margin/summary>
+  TabPaneRightPadding: Integer;
+  /// <summary>Tab page top margin</summary>
+  TabPaneTopPadding: Integer;
+  /// <summary>Tab page bottom margin</summary>
+  TabPaneBottomPadding: Integer;
+  /// <summary>Space between panes</summary>
+  TabPaneHSpacing: Integer;
+  /// <summary>Tab border size</summary>
+  TabBorderSize: Integer;
+  /// <summary>Tab height</summary>
+  TabHeight: Integer;
+
+
+  // ***************
+  // *** Toolbar ***
+  // ***************
+
+  /// <summary>Pane padding?</summary>
+  ToolbarBorderWidth: Integer;
+  ToolbarCornerRadius: Integer;
+  /// <summary>Tab caption height</summary>
+  ToolbarTabCaptionsHeight: Integer;
+  /// <summary>Tab caption horizontal padding</summary>
+  ToolbarTabCaptionsTextHPadding: Integer;
+  ToolbarMinTabCaptionWidth: Integer;
+  /// <summary>Toolbar total height</summary>
+  ToolbarHeight: Integer;
+
+
+const
+  DPI_AWARE = true;
+
 
 implementation
+
+uses
+  Graphics, LCLType;
+
+procedure SpkInitLayoutConsts(FromDPI: Integer; ToDPI: Integer = 0);
+begin
+
+  if not(DPI_AWARE) then
+    ToDPI := FromDPI;
+
+  {$IfDef Darwin}
+    ToDPI := FromDPI; //macOS raster scales by itself
+  {$EndIf}
+
+  LargeButtonDropdownFieldSize := SpkScaleX(LARGEBUTTON_DROPDOWN_FIELD_SIZE, FromDPI, ToDPI);
+  LargeButtonGlyphMargin := SpkScaleX(LARGEBUTTON_GLYPH_MARGIN, FromDPI, ToDPI);
+  LargeButtonCaptionHMargin := SpkScaleX(LARGEBUTTON_CAPTION_HMARGIN, FromDPI, ToDPI);
+  LargeButtonMinWidth := SpkScaleX(LARGEBUTTON_MIN_WIDTH, FromDPI, ToDPI);
+  LargeButtonRadius := LARGEBUTTON_RADIUS;
+  LargeButtonBorderSize := SpkScaleX(LARGEBUTTON_BORDER_SIZE, FromDPI, ToDPI);
+  LargeButtonChevronHMargin := SpkScaleX(LARGEBUTTON_CHEVRON_HMARGIN, FromDPI, ToDPI);
+  LargeButtonCaptionTopRail := SpkScaleY(LARGEBUTTON_CAPTION_TOP_RAIL, FromDPI, ToDPI);
+  LargeButtonCaptionButtomRail := SpkScaleY(LARGEBUTTON_CAPTION_BOTTOM_RAIL, FromDPI, ToDPI);
+
+  SmallButtonGlyphWidth := SpkScaleX(SMALLBUTTON_GLYPH_WIDTH, FromDPI, ToDPI);
+  SmallButtonBorderWidth := SpkScaleX(SMALLBUTTON_BORDER_WIDTH, FromDPI, ToDPI);
+  SmallButtonHalfBorderWidth := SpkScaleX(SMALLBUTTON_HALF_BORDER_WIDTH, FromDPI, ToDPI);
+  SmallButtonPadding := SpkScaleX(SMALLBUTTON_PADDING, FromDPI, ToDPI);
+  SmallButtonDropdownWidth := SpkScaleX(SMALLBUTTON_DROPDOWN_WIDTH, FromDPI, ToDPI);
+  SmallButtonRadius := SMALLBUTTON_RADIUS;
+  SmallButtonMinWidth := 2 * SmallButtonPadding + SmallButtonGlyphWidth;
+
+  MaxElementHeight := SpkScaleY(MAX_ELEMENT_HEIGHT, FromDPI, ToDPI);
+  PaneRowHeight := SpkScaleY(PANE_ROW_HEIGHT, FromDPI, ToDPI);
+  PaneFullRowHeight := 3 * PaneRowHeight;
+  PaneOneRowTopPadding := SpkScaleY(PANE_ONE_ROW_TOPPADDING, FromDPI, ToDPI);
+  PaneOneRowBottomPadding := SpkScaleY(PANE_ONE_ROW_BOTTOMPADDING, FromDPI, ToDPI);
+  PaneTwoRowsVSpacer := SpkScaleY(PANE_TWO_ROWS_VSPACER, FromDPI, ToDPI);
+  PaneTwoRowsTopPadding := SpkScaleY(PANE_TWO_ROWS_TOPPADDING, FromDPI, ToDPI);
+  PaneTwoRowsBottomPadding := SpkScaleY(PANE_TWO_ROWS_BOTTOMPADDING, FromDPI, ToDPI);
+  PaneThreeRowsVSpacer := SpkScaleY(PANE_THREE_ROWS_VSPACER, FromDPI, ToDPI);
+  PaneThreeRowsTopPadding := SpkScaleY(PANE_THREE_ROWS_TOPPADDING, FromDPI, ToDPI);
+  PaneThreeRowsBottomPadding := SpkScaleY(PANE_THREE_ROWS_BOTTOMPADDING, FromDPI, ToDPI);
+  PaneFullRowTopPadding := PaneThreeRowsTopPadding;
+  PaneFullRowBottomPadding := PaneThreeRowsBottomPadding;
+  PaneLeftPadding := SpkScaleX(PANE_LEFT_PADDING, FromDPI, ToDPI);
+  PaneRightPadding := SpkScaleX(PANE_RIGHT_PADDING, FromDPI, ToDPI);
+  PaneColumnSpacer := SpkScaleX(PANE_COLUMN_SPACER, FromDPI, ToDPI);
+  PaneGroupSpacer := SpkScaleX(PANE_GROUP_SPACER, FromDPI, ToDPI);
+
+  PaneCaptionHeight := SpkScaleY(PANE_CAPTION_HEIGHT, FromDPI, ToDPI);
+  PaneCornerRadius := PANE_CORNER_RADIUS;
+  PaneBorderSize := SpkScaleX(PANE_BORDER_SIZE, FromDPI, ToDPI);
+  PaneBorderHalfSize := SpkScaleX(PANE_BORDER_HALF_SIZE, FromDPI, ToDPI);
+  PaneHeight := MaxElementHeight + PaneCaptionHeight + 2 * PaneBorderSize;
+  PaneCaptionHMargin := SpkScaleX(PANE_CAPTION_HMARGIN, FromDPI, ToDPI);
+
+  TabCornerRadius := TAB_CORNER_RADIUS;
+  TabPaneLeftPadding := SpkScaleX(TAB_PANE_LEFTPADDING, FromDPI, ToDPI);
+  TabPaneRightPadding := SpkScaleX(TAB_PANE_RIGHTPADDING, FromDPI, ToDPI);
+  TabPaneTopPadding := SpkScaleY(TAB_PANE_TOPPADDING, FromDPI, ToDPI);
+  TabPaneBottomPadding := SpkScaleY(TAB_PANE_BOTTOMPADDING, FromDPI, ToDPI);
+  TabPaneHSpacing := SpkScaleX(TAB_PANE_HSPACING, FromDPI, ToDPI);
+  TabBorderSize := SpkScaleX(TAB_BORDER_SIZE, FromDPI, ToDPI);
+  TabHeight := PaneHeight + TabPaneTopPadding + TabPaneBottomPadding + TabBorderSize;
+
+  ToolbarBorderWidth := SpkScaleX(TOOLBAR_BORDER_WIDTH, FromDPI, ToDPI);
+  ToolbarCornerRadius := TOOLBAR_CORNER_RADIUS;
+  ToolbarTabCaptionsHeight := SpkScaleY(TOOLBAR_TAB_CAPTIONS_HEIGHT, FromDPI, ToDPI);
+  ToolbarTabCaptionsTextHPadding := SpkScaleX(TOOLBAR_TAB_CAPTIONS_TEXT_HPADDING, FromDPI, ToDPI);
+  ToolbarMinTabCaptionWidth := SpkScaleX(TOOLBAR_MIN_TAB_CAPTION_WIDTH, FromDPI, ToDPI);
+  ToolbarHeight := ToolbarTabCaptionsHeight + TabHeight;
+
+  // scaling radius if not square
+  if LargeButtonRadius > 1 then
+    LargeButtonRadius := SpkScaleX(LargeButtonRadius, FromDPI, ToDPI);
+
+  if SmallButtonRadius > 1 then
+    SmallButtonRadius := SpkScaleX(SmallButtonRadius, FromDPI, ToDPI);
+
+  if PaneCornerRadius > 1 then
+    PaneCornerRadius := SpkScaleX(PaneCornerRadius, FromDPI, ToDPI);
+
+  if TabCornerRadius > 1 then
+    TabCornerRadius := SpkScaleX(TabCornerRadius, FromDPI, ToDPI);
+
+  if ToolbarCornerRadius > 1 then
+    ToolbarCornerRadius := SpkScaleX(ToolbarCornerRadius, FromDPI, ToDPI);
+end;
+
+function SpkScaleX(Size: Integer; FromDPI: Integer; ToDPI: Integer): integer;
+begin
+  if ToDPI = 0 then
+    ToDPI := ScreenInfo.PixelsPerInchX;
+
+  if not(DPI_AWARE) or (ToDPI = FromDPI) then
+    Result := Size
+  else
+    begin
+      if (ToDPI/FromDPI <= 1.5) and (Size = 1) then
+        Result := 1 //maintaining 1px on 150% scale for crispness
+      else
+        Result := MulDiv(Size, ToDPI, FromDPI);
+    end;
+
+end;
+
+function SpkScaleY(Size: Integer; FromDPI: Integer; ToDPI: Integer): integer;
+begin
+  if ToDPI = 0 then
+    ToDPI := ScreenInfo.PixelsPerInchY;
+
+  if not(DPI_AWARE) or (ToDPI = FromDPI) then
+    Result := Size
+  else
+    begin
+      if (ToDPI/FromDPI <= 1.5) and (Size = 1) then
+        Result := 1 //maintaining 1px on 150% scale for crispness
+      else
+        Result := MulDiv(Size, ToDPI, FromDPI);
+    end;
+
+end;
+
 
 initialization
 

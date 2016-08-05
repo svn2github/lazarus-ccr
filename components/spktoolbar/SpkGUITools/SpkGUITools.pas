@@ -9,7 +9,7 @@
 
 interface
 
-{$MESSAGE HINT 'W tym module konsekwentnie ka¿dy rect opisuje dok³adny prostok¹t (a nie, jak w przypadku WINAPI - bez dolnej i prawej krawêdzi)'}
+{$MESSAGE HINT 'Every rect in this module are exact rectanges (not like in WINAPI without right and bottom)'}
 
 uses
   LCLType, Graphics, SysUtils, Classes, Controls, StdCtrls, SpkGraphTools, SpkMath;
@@ -1905,9 +1905,11 @@ class procedure TGUITools.DrawImage(ACanvas: TCanvas; Imagelist: TImageList;
 var UseOrgClipRgn: Boolean;
     OrgRgn: HRGN;
     ClipRgn: HRGN;
+    ImageIcon: TIcon;
+    ImageBitmap: TBitmap;
 
 begin
-// Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
+// Storing original ClipRgn and applying a new one
 SaveClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
 
 ClipRgn:=CreateRectRgn(ClipRect.left, ClipRect.Top, ClipRect.Right+1, ClipRect.Bottom+1);
@@ -1916,7 +1918,19 @@ if UseOrgClipRgn then
 
 SelectClipRgn(ACanvas.Handle, ClipRgn);
 
-ImageList.Draw(ACanvas, Point.x, Point.y, ImageIndex);
+// avoid exclusive draw. draw with local canvas itself.
+//ImageList.Draw(ACanvas, Point.x, Point.y, ImageIndex);
+{$IfDef LCLWin32}
+ImageIcon := TIcon.Create;
+ImageList.GetIcon(ImageIndex, ImageIcon);
+ACanvas.Draw(Point.x, Point.y, ImageIcon);
+ImageIcon.Free;
+{$Else}
+ImageBitmap := TBitmap.Create;
+ImageList.GetBitmap(ImageIndex, ImageBitmap);
+ACanvas.Draw(Point.x, Point.y, ImageBitmap);
+ImageBitmap.Free;
+{$EndIf}
 
 RestoreClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
 DeleteObject(ClipRgn);

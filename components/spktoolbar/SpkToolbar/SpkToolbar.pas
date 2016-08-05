@@ -19,7 +19,7 @@ interface
 
 uses
   LCLType, LMessages, Graphics, SysUtils, Controls, Classes, Math, Dialogs,
-  Types, SpkGraphTools, SpkGUITools, SpkMath, ExtCtrls,
+  Forms, Types, SpkGraphTools, SpkGUITools, SpkMath, ExtCtrls,
   spkt_Appearance, spkt_BaseItem, spkt_Const, spkt_Dispatch, spkt_Tab,
   spkt_Pane, spkt_Types;
 
@@ -453,6 +453,8 @@ begin
 end;
 
 constructor TSpkToolbar.Create(AOwner: TComponent);
+var
+  DesignDPI: Integer;
 begin
   inherited Create(AOwner);
 
@@ -460,7 +462,15 @@ begin
   inherited Align := alTop;
   //todo: not found in lcl
   //inherited AlignWithMargins:=true;
-  inherited Height := TOOLBAR_HEIGHT;
+
+  if AOwner is TForm then
+    DesignDPI := TForm(AOwner).DesignTimeDPI
+  else
+    DesignDPI := ScreenInfo.PixelsPerInchX;
+
+  SpkInitLayoutConsts(DesignDPI);
+  inherited Height := ToolbarHeight;
+
   //inherited Doublebuffered:=true;
 
   // Inicjacja wewnêtrznych pól danych
@@ -990,7 +1000,7 @@ end;
 
 procedure TSpkToolbar.DoOnResize;
 begin
-  inherited Height := TOOLBAR_HEIGHT;
+  inherited Height := ToolbarHeight;
 
  {$IFDEF DELAYRUNTIMER}
   FDelayRunTimer.Enabled := False;
@@ -1252,74 +1262,64 @@ procedure TSpkToolbar.ValidateBuffer;
 
     TGuiTools.DrawRoundRect(FBuffer.Canvas,
                           {$IFDEF EnhancedRecordSupport}
-      T2DIntRect.Create(0,
-      TOOLBAR_TAB_CAPTIONS_HEIGHT,
-      self.Width - 1,
-      self.Height - 1),
+      T2DIntRect.Create(0, ToolbarTabCaptionsHeight, self.Width - 1, self.Height - 1),
                           {$ELSE}
-      Create2DIntRect(0,
-      TOOLBAR_TAB_CAPTIONS_HEIGHT,
-      self.Width - 1,
-      self.Height - 1),
+      Create2DIntRect(0, ToolbarTabCaptionsHeight, self.Width - 1, self.Height - 1),
                           {$ENDIF}
-      TOOLBAR_CORNER_RADIUS,
+      ToolbarCornerRadius,
       FocusedAppearance.Tab.GradientFromColor,
       FocusedAppearance.Tab.GradientToColor,
       FocusedAppearance.Tab.GradientType);
     TGuiTools.DrawAARoundCorner(FBuffer,
                               {$IFDEF EnhancedRecordSupport}
-      T2DIntPoint.Create(0, TOOLBAR_TAB_CAPTIONS_HEIGHT),
+      T2DIntPoint.Create(0, ToolbarTabCaptionsHeight),
                               {$ELSE}
-      Create2DIntPoint(0, TOOLBAR_TAB_CAPTIONS_HEIGHT),
+      Create2DIntPoint(0, ToolbarTabCaptionsHeight),
                               {$ENDIF}
-      TOOLBAR_CORNER_RADIUS,
+      ToolbarCornerRadius,
       cpLeftTop,
       FocusedAppearance.Tab.BorderColor);
     TGuiTools.DrawAARoundCorner(FBuffer,
                               {$IFDEF EnhancedRecordSupport}
-      T2DIntPoint.Create(self.Width -
-      TOOLBAR_CORNER_RADIUS, TOOLBAR_TAB_CAPTIONS_HEIGHT),
+      T2DIntPoint.Create(self.Width - ToolbarCornerRadius, ToolbarTabCaptionsHeight),
                               {$ELSE}
-      Create2DIntPoint(self.Width -
-      TOOLBAR_CORNER_RADIUS, TOOLBAR_TAB_CAPTIONS_HEIGHT),
+      Create2DIntPoint(self.Width - ToolbarCornerRadius, ToolbarTabCaptionsHeight),
                               {$ENDIF}
-      TOOLBAR_CORNER_RADIUS,
+      ToolbarCornerRadius,
       cpRightTop,
       FocusedAppearance.Tab.BorderColor);
     TGuiTools.DrawAARoundCorner(FBuffer,
                               {$IFDEF EnhancedRecordSupport}
-      T2DIntPoint.Create(0, self.Height - TOOLBAR_CORNER_RADIUS),
+      T2DIntPoint.Create(0, self.Height - ToolbarCornerRadius),
                               {$ELSE}
-      Create2DIntPoint(0, self.Height - TOOLBAR_CORNER_RADIUS),
+      Create2DIntPoint(0, self.Height - ToolbarCornerRadius),
                               {$ENDIF}
-      TOOLBAR_CORNER_RADIUS,
+      ToolbarCornerRadius,
       cpLeftBottom,
       FocusedAppearance.Tab.BorderColor);
     TGuiTools.DrawAARoundCorner(FBuffer,
                               {$IFDEF EnhancedRecordSupport}
-      T2DIntPoint.Create(self.Width -
-      TOOLBAR_CORNER_RADIUS, self.Height - TOOLBAR_CORNER_RADIUS),
+      T2DIntPoint.Create(self.Width - ToolbarCornerRadius, self.Height - ToolbarCornerRadius),
                               {$ELSE}
-      Create2DIntPoint(self.Width -
-      TOOLBAR_CORNER_RADIUS, self.Height - TOOLBAR_CORNER_RADIUS),
+      Create2DIntPoint(self.Width - ToolbarCornerRadius, self.Height - ToolbarCornerRadius),
                               {$ENDIF}
-      TOOLBAR_CORNER_RADIUS,
+      ToolbarCornerRadius,
       cpRightBottom,
       FocusedAppearance.Tab.BorderColor);
-    TGuiTools.DrawVLine(FBuffer, 0, TOOLBAR_TAB_CAPTIONS_HEIGHT +
-      TOOLBAR_CORNER_RADIUS, self.Height - TOOLBAR_CORNER_RADIUS,
+    TGuiTools.DrawVLine(FBuffer, 0, ToolbarTabCaptionsHeight +
+      ToolbarCornerRadius, self.Height - ToolbarCornerRadius,
       FocusedAppearance.Tab.BorderColor);
-    TGuiTools.DrawHLine(FBuffer, TOOLBAR_CORNER_RADIUS, self.Width - TOOLBAR_CORNER_RADIUS,
+    TGuiTools.DrawHLine(FBuffer, ToolbarCornerRadius, self.Width - ToolbarCornerRadius,
       self.Height - 1, FocusedAppearance.Tab.BorderColor);
-    TGuiTools.DrawVLine(FBuffer, self.Width - 1, TOOLBAR_TAB_CAPTIONS_HEIGHT +
-      TOOLBAR_CORNER_RADIUS, self.Height - TOOLBAR_CORNER_RADIUS,
+    TGuiTools.DrawVLine(FBuffer, self.Width - 1, ToolbarTabCaptionsHeight +
+      ToolbarCornerRadius, self.Height - ToolbarCornerRadius,
       FocusedAppearance.Tab.BorderColor);
 
     if not (AtLeastOneTabVisible) then
     begin
       // Jeœli nie ma zak³adek, rysujemy poziom¹ liniê
-      TGuiTools.DrawHLine(FBuffer, TOOLBAR_CORNER_RADIUS, self.Width -
-        TOOLBAR_CORNER_RADIUS, TOOLBAR_TAB_CAPTIONS_HEIGHT, FocusedAppearance.Tab.BorderColor);
+      TGuiTools.DrawHLine(FBuffer, ToolbarCornerRadius, self.Width -
+        ToolbarCornerRadius, ToolbarTabCaptionsHeight, FocusedAppearance.Tab.BorderColor);
     end
     else
     begin
@@ -1330,9 +1330,9 @@ procedure TSpkToolbar.ValidateBuffer;
         Dec(i);
 
       // Tylko prawa czêœæ, reszta bêdzie narysowana wraz z zak³adkami
-      if FTabRects[i].Right < self.Width - TOOLBAR_CORNER_RADIUS - 1 then
+      if FTabRects[i].Right < self.Width - ToolbarCornerRadius - 1 then
         TGuiTools.DrawHLine(FBuffer, FTabRects[i].Right + 1, self.Width -
-          TOOLBAR_CORNER_RADIUS, TOOLBAR_TAB_CAPTIONS_HEIGHT, FocusedAppearance.Tab.BorderColor);
+          ToolbarCornerRadius, ToolbarTabCaptionsHeight, FocusedAppearance.Tab.BorderColor);
     end;
   end;
 
@@ -1380,49 +1380,49 @@ procedure TSpkToolbar.ValidateBuffer;
       TabRect := FTabRects[index];
 
       // Œrodkowy prostok¹t
-      TabRegion := CreateRectRgn(TabRect.Left + TAB_CORNER_RADIUS - 1,
-        TabRect.Top + TAB_CORNER_RADIUS,
-        TabRect.Right - TAB_CORNER_RADIUS + 1 +
+      TabRegion := CreateRectRgn(TabRect.Left + TabCornerRadius - 1,
+        TabRect.Top + TabCornerRadius,
+        TabRect.Right - TabCornerRadius + 1 +
         1, TabRect.Bottom + 1);
 
       // Górna czêœæ z górnymi zaokr¹gleniami wypuk³ymi
-      TmpRegion := CreateRectRgn(TabRect.Left + 2 * TAB_CORNER_RADIUS - 1,
+      TmpRegion := CreateRectRgn(TabRect.Left + 2 * TabCornerRadius - 1,
         TabRect.Top, TabRect.Right -
-        2 * TAB_CORNER_RADIUS + 1 + 1, TabRect.Top +
-        TAB_CORNER_RADIUS);
+        2 * TabCornerRadius + 1 + 1, TabRect.Top +
+        TabCornerRadius);
       CombineRgn(TabRegion, TabRegion, TmpRegion, RGN_OR);
       DeleteObject(TmpRegion);
 
-      TmpRegion := CreateEllipticRgn(TabRect.Left + TAB_CORNER_RADIUS -
+      TmpRegion := CreateEllipticRgn(TabRect.Left + TabCornerRadius -
         1, TabRect.Top,
-        TabRect.Left + 3 * TAB_CORNER_RADIUS,
-        TabRect.Top + 2 * TAB_CORNER_RADIUS + 1);
+        TabRect.Left + 3 * TabCornerRadius,
+        TabRect.Top + 2 * TabCornerRadius + 1);
       CombineRgn(TabRegion, TabRegion, TmpRegion, RGN_OR);
       DeleteObject(TmpRegion);
 
-      TmpRegion := CreateEllipticRgn(TabRect.Right - 3 * TAB_CORNER_RADIUS + 2,
+      TmpRegion := CreateEllipticRgn(TabRect.Right - 3 * TabCornerRadius + 2,
         TabRect.Top,
-        TabRect.Right - TAB_CORNER_RADIUS +
-        3, TabRect.Top + 2 * TAB_CORNER_RADIUS + 1);
+        TabRect.Right - TabCornerRadius +
+        3, TabRect.Top + 2 * TabCornerRadius + 1);
       CombineRgn(TabRegion, TabRegion, TmpRegion, RGN_OR);
       DeleteObject(TmpRegion);
 
       // Dolna czêœæ z dolnymi zaokr¹gleniami wklês³ymi
 
       TmpRegion := CreateRectRgn(TabRect.Left, TabRect.Bottom -
-        TAB_CORNER_RADIUS, TabRect.Right + 1,
+        TabCornerRadius, TabRect.Right + 1,
         TabRect.Bottom + 1);
 
-      TmpRegion2 := CreateEllipticRgn(TabRect.Left - TAB_CORNER_RADIUS,
-        TabRect.Bottom - 2 * TAB_CORNER_RADIUS + 1,
-        TabRect.Left + TAB_CORNER_RADIUS +
+      TmpRegion2 := CreateEllipticRgn(TabRect.Left - TabCornerRadius,
+        TabRect.Bottom - 2 * TabCornerRadius + 1,
+        TabRect.Left + TabCornerRadius +
         1, TabRect.Bottom + 2);
       CombineRgn(TmpRegion, TmpRegion, TmpRegion2, RGN_DIFF);
       DeleteObject(TmpRegion2);
 
-      TmpRegion2 := CreateEllipticRgn(TabRect.Right - TAB_CORNER_RADIUS +
-        1, TabRect.Bottom - 2 * TAB_CORNER_RADIUS +
-        1, TabRect.Right + TAB_CORNER_RADIUS + 2,
+      TmpRegion2 := CreateEllipticRgn(TabRect.Right - TabCornerRadius +
+        1, TabRect.Bottom - 2 * TabCornerRadius +
+        1, TabRect.Right + TabCornerRadius + 2,
         TabRect.Bottom + 2);
       CombineRgn(TmpRegion, TmpRegion, TmpRegion2, RGN_DIFF);
       DeleteObject(TmpRegion2);
@@ -1442,70 +1442,62 @@ procedure TSpkToolbar.ValidateBuffer;
       // Ramka
       TGuiTools.DrawAARoundCorner(FBuffer,
                                 {$IFDEF EnhancedRecordSupport}
-        T2DIntPoint.Create(TabRect.left,
-        TabRect.bottom - TAB_CORNER_RADIUS + 1),
+        T2DIntPoint.Create(TabRect.left, TabRect.bottom - TabCornerRadius + 1),
                                 {$ELSE}
-        Create2DIntPoint(TabRect.left,
-        TabRect.bottom - TAB_CORNER_RADIUS + 1),
+        Create2DIntPoint(TabRect.left, TabRect.bottom - TabCornerRadius + 1),
                                 {$ENDIF}
-        TAB_CORNER_RADIUS,
+        TabCornerRadius,
         cpRightBottom,
         Border,
         FTabClipRect);
       TGuiTools.DrawAARoundCorner(FBuffer,
                                 {$IFDEF EnhancedRecordSupport}
-        T2DIntPoint.Create(TabRect.right -
-        TAB_CORNER_RADIUS + 1, TabRect.bottom - TAB_CORNER_RADIUS + 1),
+        T2DIntPoint.Create(TabRect.right - TabCornerRadius + 1, TabRect.bottom - TabCornerRadius + 1),
                                 {$ELSE}
-        Create2DIntPoint(TabRect.right -
-        TAB_CORNER_RADIUS + 1, TabRect.bottom - TAB_CORNER_RADIUS + 1),
+        Create2DIntPoint(TabRect.right - TabCornerRadius + 1, TabRect.bottom - TabCornerRadius + 1),
                                 {$ENDIF}
-        TAB_CORNER_RADIUS,
+        TabCornerRadius,
         cpLeftBottom,
         Border,
         FTabClipRect);
 
       TGuiTools.DrawVLine(FBuffer,
-        TabRect.left + TAB_CORNER_RADIUS - 1,
-        TabRect.top + TAB_CORNER_RADIUS,
-        TabRect.Bottom - TAB_CORNER_RADIUS + 1,
+        TabRect.left + TabCornerRadius - 1,
+        TabRect.top + TabCornerRadius,
+        TabRect.Bottom - TabCornerRadius + 1,
         Border,
         FTabClipRect);
       TGuiTools.DrawVLine(FBuffer,
-        TabRect.Right - TAB_CORNER_RADIUS + 1,
-        TabRect.top + TAB_CORNER_RADIUS,
-        TabRect.Bottom - TAB_CORNER_RADIUS + 1,
+        TabRect.Right - TabCornerRadius + 1,
+        TabRect.top + TabCornerRadius,
+        TabRect.Bottom - TabCornerRadius + 1,
         Border,
         FTabClipRect);
 
       TGuiTools.DrawAARoundCorner(FBuffer,
                                 {$IFDEF EnhancedRecordSupport}
-        T2DIntPoint.Create(TabRect.left +
-        TAB_CORNER_RADIUS - 1, 0),
+        T2DIntPoint.Create(TabRect.left + TabCornerRadius - 1, 0),
                                 {$ELSE}
-        Create2DIntPoint(TabRect.left +
-        TAB_CORNER_RADIUS - 1, 0),
+        Create2DIntPoint(TabRect.left + TabCornerRadius - 1, 0),
                                 {$ENDIF}
-        TAB_CORNER_RADIUS,
+        TabCornerRadius,
         cpLeftTop,
         Border,
         FTabClipRect);
       TGuiTools.DrawAARoundCorner(FBuffer,
                                 {$IFDEF EnhancedRecordSupport}
-        T2DIntPoint.Create(TabRect.right -
-        2 * TAB_CORNER_RADIUS + 2, 0),
+        T2DIntPoint.Create(TabRect.right - 2 * TabCornerRadius + 2, 0),
                                 {$ELSE}
-        Create2DIntPoint(TabRect.right -
-        2 * TAB_CORNER_RADIUS + 2, 0),
+        Create2DIntPoint(TabRect.right - 2 * TabCornerRadius + 2, 0),
                                 {$ENDIF}
-        TAB_CORNER_RADIUS,
+        TabCornerRadius,
         cpRightTop,
         Border,
         FTabClipRect);
 
       TGuiTools.DrawHLine(FBuffer,
-        TabRect.left + 2 * TAB_CORNER_RADIUS - 1,
-        TabRect.right - 2 * TAB_CORNER_RADIUS + 2,
+        TabRect.left + 2 * TabCornerRadius - 1,
+        TabRect.right - 2 * TabCornerRadius + 2,
         0,
         Border,
         FTabClipRect);
@@ -1660,21 +1652,24 @@ begin
 
   // Cliprect zak³adek (zawgórn¹ ramkê komponentu)
 {$IFDEF EnhancedRecordSupport}
-  FTabClipRect := T2DIntRect.Create(TOOLBAR_CORNER_RADIUS,
-    0, self.Width -
-    TOOLBAR_CORNER_RADIUS - 1, TOOLBAR_TAB_CAPTIONS_HEIGHT);
-{$ELSE}
-  FTabClipRect.Create(TOOLBAR_CORNER_RADIUS,
+  FTabClipRect := T2DIntRect.Create(
+    ToolbarCornerRadius,
     0,
-    self.Width - TOOLBAR_CORNER_RADIUS - 1,
-    TOOLBAR_TAB_CAPTIONS_HEIGHT);
+    self.Width - ToolbarCornerRadius - 1,
+    ToolbarTabCaptionsHeight);
+{$ELSE}
+  FTabClipRect.Create(
+    ToolbarCornerRadius,
+    0,
+    self.Width - ToolbarCornerRadius - 1,
+    ToolbarTabCaptionsHeight);
 {$ENDIF}
 
   // Recty nag³ówków zak³adek (zawieraj¹ górn¹ ramkê komponentu)
   setlength(FTabRects, FTabs.Count);
   if FTabs.Count > 0 then
   begin
-    x := TOOLBAR_CORNER_RADIUS;
+    x := ToolbarCornerRadius;
     for i := 0 to FTabs.Count - 1 do
       if FTabs[i].Visible then
       begin
@@ -1686,18 +1681,18 @@ begin
         FBuffer.Canvas.font.Assign(TabAppearance.Tab.TabHeaderFont);
 
         TabWidth := 2 +                                                          // Ramka
-          2 * TAB_CORNER_RADIUS +
+          2 * TabCornerRadius +
           // Zaokr¹glenia
-          2 * TOOLBAR_TAB_CAPTIONS_TEXT_HPADDING +
+          2 * ToolbarTabCaptionsTextHPadding +
           // Wewnêtrzne marginesy
-          max(TOOLBAR_MIN_TAB_CAPTION_WIDTH,
+          max(ToolbarMinTabCaptionWidth,
           FBuffer.Canvas.TextWidth(FTabs.Items[i].Caption));
         // Szerokoœæ tekstu
 
         FTabRects[i].Left := x;
         FTabRects[i].Right := x + TabWidth - 1;
         FTabRects[i].Top := 0;
-        FTabRects[i].Bottom := TOOLBAR_TAB_CAPTIONS_HEIGHT;
+        FTabRects[i].Bottom := ToolbarTabCaptionsHeight;
 
         x := FTabRects[i].right + 1;
       end
@@ -1717,20 +1712,15 @@ begin
   begin
     // Rect obszaru zak³adki
    {$IFDEF EnhancedRecordSupport}
-    FTabContentsClipRect := T2DIntRect.Create(TOOLBAR_BORDER_WIDTH +
-      TAB_PANE_LEFTPADDING, TOOLBAR_TAB_CAPTIONS_HEIGHT +
-      TOOLBAR_BORDER_WIDTH + TAB_PANE_TOPPADDING,
-      self.Width - 1 - TOOLBAR_BORDER_WIDTH -
-      TAB_PANE_RIGHTPADDING, self.Height -
-      1 - TOOLBAR_BORDER_WIDTH - TAB_PANE_BOTTOMPADDING);
+    FTabContentsClipRect := T2DIntRect.Create(ToolbarBorderWidth + TabPaneLeftPadding,
+      ToolbarTabCaptionsHeight + ToolbarBorderWidth + TabPaneTopPadding,
+      self.Width - 1 - ToolbarBorderWidth - TabPaneRightPadding,
+      self.Height - 1 - ToolbarBorderWidth - TabPaneBottomPadding);
    {$ELSE}
-    FTabContentsClipRect.Create(TOOLBAR_BORDER_WIDTH + TAB_PANE_LEFTPADDING,
-      TOOLBAR_TAB_CAPTIONS_HEIGHT +
-      TOOLBAR_BORDER_WIDTH + TAB_PANE_TOPPADDING,
-      self.Width - 1 - TOOLBAR_BORDER_WIDTH -
-      TAB_PANE_RIGHTPADDING,
-      self.Height - 1 - TOOLBAR_BORDER_WIDTH -
-      TAB_PANE_BOTTOMPADDING);
+    FTabContentsClipRect.Create(ToolbarBorderWidth + TabPaneLeftPadding,
+      ToolbarTabCaptionsHeight + ToolbarBorderWidth + TabPaneTopPadding,
+      self.Width - 1 - ToolbarBorderWidth - TabPaneRightPadding,
+      self.Height - 1 - ToolbarBorderWidth - TabPaneBottomPadding);
    {$ENDIF}
 
     FTabs[FTabIndex].Rect := FTabContentsClipRect;

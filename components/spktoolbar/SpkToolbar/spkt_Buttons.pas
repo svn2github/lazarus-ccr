@@ -727,8 +727,8 @@ begin
 {$IFDEF EnhancedRecordSupport}
 if FButtonKind = bkButtonDropdown then
    begin
-   FButtonRect:=T2DIntRect.Create(FRect.Left, FRect.Top, FRect.Right, FRect.Bottom - LARGEBUTTON_DROPDOWN_FIELD_SIZE);
-   FDropdownRect:=T2DIntRect.Create(FRect.Left, FRect.Bottom - LARGEBUTTON_DROPDOWN_FIELD_SIZE + 1, FRect.Right, FRect.Bottom);
+   FButtonRect:=T2DIntRect.Create(FRect.Left, FRect.Top, FRect.Right, FRect.Bottom - SpkLayoutSizes.LARGEBUTTON_DROPDOWN_FIELD_SIZE);
+   FDropdownRect:=T2DIntRect.Create(FRect.Left, FRect.Bottom - SpkLayoutSizes.LARGEBUTTON_DROPDOWN_FIELD_SIZE + 1, FRect.Right, FRect.Bottom);
    end
 else
    begin
@@ -738,8 +738,8 @@ else
 {$ELSE}
 if FButtonKind = bkButtonDropdown then
    begin
-   FButtonRect.Create(FRect.Left, FRect.Top, FRect.Right, FRect.Bottom - LARGEBUTTON_DROPDOWN_FIELD_SIZE);
-   FDropdownRect.Create(FRect.Left, FRect.Bottom - LARGEBUTTON_DROPDOWN_FIELD_SIZE + 1, FRect.Right, FRect.Bottom);
+   FButtonRect.Create(FRect.Left, FRect.Top, FRect.Right, FRect.Bottom - LargeButtonDropdownFieldSize);
+   FDropdownRect.Create(FRect.Left, FRect.Bottom - LargeButtonDropdownFieldSize + 1, FRect.Right, FRect.Bottom);
    end
 else
    begin
@@ -779,7 +779,7 @@ if FToolbarDispatch=nil then
 if FAppearance=nil then
    exit;
 
-if (FRect.width<2*LARGEBUTTON_RADIUS) or (FRect.Height<2*LARGEBUTTON_RADIUS) then
+if (FRect.width<2*LargeButtonRadius) or (FRect.Height<2*LargeButtonRadius) then
    exit;
 
 if FButtonKind in [bkButton, bkDropdown] then
@@ -813,7 +813,7 @@ if FButtonKind in [bkButton, bkDropdown] then
                                                 FButtonRect.Right,
                                                 FButtonRect.Bottom),
                               {$ENDIF}
-                              LARGEBUTTON_RADIUS,
+                              LargeButtonRadius,
                               FAppearance.Element.HotTrackGradientFromColor,
                               FAppearance.Element.HotTrackGradientToColor,
                               FAppearance.Element.HotTrackGradientType,
@@ -831,12 +831,12 @@ if FButtonKind in [bkButton, bkDropdown] then
                                                    FButtonRect.right-1,
                                                    FButtonRect.Bottom-1),
                                  {$ENDIF}
-                                 LARGEBUTTON_RADIUS,
+                                 LargeButtonRadius,
                                  FAppearance.Element.HotTrackInnerLightColor,
                                  ClipRect);
       TGuiTools.DrawAARoundFrame(ABuffer,
                                  FButtonRect,
-                                 LARGEBUTTON_RADIUS,
+                                 LargeButtonRadius,
                                  FAppearance.Element.HotTrackFrameColor,
                                  ClipRect);
       {$ENDREGION}
@@ -856,7 +856,7 @@ if FButtonKind in [bkButton, bkDropdown] then
                                                 FButtonRect.Right,
                                                 FButtonRect.Bottom),
                               {$ENDIF}
-                              LARGEBUTTON_RADIUS,
+                              LargeButtonRadius,
                               FAppearance.Element.ActiveGradientFromColor,
                               FAppearance.Element.ActiveGradientToColor,
                               FAppearance.Element.ActiveGradientType,
@@ -875,12 +875,12 @@ if FButtonKind in [bkButton, bkDropdown] then
                                                    FButtonRect.right-1,
                                                    FButtonRect.Bottom-1),
                                  {$ENDIF}
-                                 LARGEBUTTON_RADIUS,
+                                 LargeButtonRadius,
                                  FAppearance.Element.ActiveInnerLightColor,
                                  ClipRect);
       TGuiTools.DrawAARoundFrame(ABuffer,
                                  FButtonRect,
-                                 LARGEBUTTON_RADIUS,
+                                 LargeButtonRadius,
                                  FAppearance.Element.ActiveFrameColor,
                                  ClipRect);
       {$ENDREGION}
@@ -896,7 +896,7 @@ if FButtonKind in [bkButton, bkDropdown] then
          (FLargeImageIndex<FDisabledLargeImages.Count) then
          begin
          x:=FRect.left + (FRect.Width - FLargeImages.Width) div 2;
-         y:=FRect.top + LARGEBUTTON_BORDER_SIZE + LARGEBUTTON_GLYPH_MARGIN;
+         y:=FRect.top + LargeButtonBorderSize + LargeButtonGlyphMargin;
 
          TGuiTools.DrawImage(ABuffer.Canvas,
                              FDisabledLargeImages,
@@ -913,7 +913,7 @@ if FButtonKind in [bkButton, bkDropdown] then
          (FLargeImageIndex<FLargeImages.Count) then
          begin
          x:=FRect.left + (FRect.Width - FLargeImages.Width) div 2;
-         y:=FRect.top + LARGEBUTTON_BORDER_SIZE + LARGEBUTTON_GLYPH_MARGIN;
+         y:=FRect.top + LargeButtonBorderSize + LargeButtonGlyphMargin;
 
          TGuiTools.DrawDisabledImage(ABuffer.Canvas,
                                      FLargeImages,
@@ -935,7 +935,7 @@ if FButtonKind in [bkButton, bkDropdown] then
          (FLargeImageIndex<FLargeImages.Count) then
          begin
          x:=FRect.left + (FRect.Width - FLargeImages.Width) div 2;
-         y:=FRect.top + LARGEBUTTON_BORDER_SIZE + LARGEBUTTON_GLYPH_MARGIN;
+         y:=FRect.top + LargeButtonBorderSize + LargeButtonGlyphMargin;
 
          TGUITools.DrawImage(ABuffer.Canvas,
                              FLargeImages,
@@ -989,12 +989,12 @@ if FButtonKind in [bkButton, bkDropdown] then
 
       s:=copy(FCaption, 1, BreakPos-1);
       x:=FRect.Left + (FRect.width - ABuffer.Canvas.Textwidth(s)) div 2;
-      y:=FRect.Top + LARGEBUTTON_CAPTION_TOP_RAIL - TextHeight div 2;
+      y:=FRect.Top + LargeButtonCaptionTopRail - TextHeight div 2;
       TGUITools.DrawText(ABuffer.Canvas, x, y, s, FontColor, ClipRect);
 
       s:=copy(FCaption, BreakPos+1, length(FCaption) - BreakPos);
       x:=FRect.Left + (FRect.width - ABuffer.Canvas.Textwidth(s)) div 2;
-      y:=FRect.Top + LARGEBUTTON_CAPTION_BOTTOM_RAIL - TextHeight div 2;
+      y:=FRect.Top + LargeButtonCaptionButtomRail - TextHeight div 2;
       TGUITools.DrawText(ABuffer.Canvas, x, y, s, FontColor, ClipRect);
       end
    else
@@ -1003,7 +1003,7 @@ if FButtonKind in [bkButton, bkDropdown] then
       TextHeight:=ABuffer.Canvas.Textheight('Wy');
 
       x:=FButtonRect.Left + (FButtonRect.width - ABuffer.Canvas.Textwidth(FCaption)) div 2;
-      y:=FRect.Top + LARGEBUTTON_CAPTION_TOP_RAIL - TextHeight div 2;
+      y:=FRect.Top + LargeButtonCaptionTopRail - TextHeight div 2;
       TGUITools.DrawText(ABuffer.Canvas, x, y, FCaption, FontColor, ClipRect);
       end;
 
@@ -1039,7 +1039,7 @@ if FButtonKind in [bkButton, bkDropdown] then
       ABuffer.Canvas.Font.Orientation:=0;
 
       x:=FButtonRect.Left + (FButtonRect.width - ABuffer.Canvas.Textwidth('u')) div 2;
-      y:=FButtonRect.bottom - ABuffer.Canvas.Textheight('u') - LARGEBUTTON_CHEVRON_HMARGIN;
+      y:=FButtonRect.bottom - ABuffer.Canvas.Textheight('u') - LargeButtonChevronHMargin;
       TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
       end;
 
@@ -1097,28 +1097,28 @@ else
 
       {$REGION 'T³o przycisku'}
       DrawRgn:=CreateRectRgn(FButtonRect.Left,
-                             FButtonRect.Top + LARGEBUTTON_RADIUS,
+                             FButtonRect.Top + LargeButtonRadius,
                              FButtonRect.Right + 1,
                              FButtonRect.Bottom);
 
-      TmpRgn:=CreateRectRgn(FButtonRect.left + LARGEBUTTON_RADIUS,
+      TmpRgn:=CreateRectRgn(FButtonRect.left + LargeButtonRadius,
                             FButtonRect.Top,
-                            FButtonRect.right - LARGEBUTTON_RADIUS + 1,
-                            FButtonRect.Top + LARGEBUTTON_RADIUS);
+                            FButtonRect.right - LargeButtonRadius + 1,
+                            FButtonRect.Top + LargeButtonRadius);
       CombineRgn(DrawRgn, DrawRgn, TmpRgn, RGN_OR);
       DeleteObject(TmpRgn);
 
       TmpRgn:=CreateEllipticRgn(FButtonRect.Left,
                                 FButtonRect.Top,
-                                FButtonRect.Left + 2 * LARGEBUTTON_RADIUS + 1,
-                                FButtonRect.Top + 2 * LARGEBUTTON_RADIUS + 1);
+                                FButtonRect.Left + 2 * LargeButtonRadius + 1,
+                                FButtonRect.Top + 2 * LargeButtonRadius + 1);
       CombineRgn(DrawRgn, DrawRgn, TmpRgn, RGN_OR);
       DeleteObject(TmpRgn);
 
-      TmpRgn:=CreateEllipticRgn(FButtonRect.Right - 2 * LARGEBUTTON_RADIUS + 1,
+      TmpRgn:=CreateEllipticRgn(FButtonRect.Right - 2 * LargeButtonRadius + 1,
                                 FButtonRect.Top,
                                 FButtonRect.Right + 2,
-                                FButtonRect.Top + 2 * LARGEBUTTON_RADIUS + 1);
+                                FButtonRect.Top + 2 * LargeButtonRadius + 1);
       CombineRgn(DrawRgn, DrawRgn, TmpRgn, RGN_OR);
       DeleteObject(TmpRgn);
 
@@ -1140,35 +1140,35 @@ else
                                   {$ELSE}
                                   Create2DIntPoint(FButtonRect.Left + 1, FButtonRect.Top + 1),
                                   {$ENDIF}
-                                  LARGEBUTTON_RADIUS,
+                                  LargeButtonRadius,
                                   cpLeftTop,
                                   InnerLightColor,
                                   ClipRect);
       TGuiTools.DrawAARoundCorner(ABuffer,
                                   {$IFDEF EnhancedRecordSupport}
-                                  T2DIntPoint.Create(FButtonRect.Right - LARGEBUTTON_RADIUS, FButtonRect.Top + 1),
+                                  T2DIntPoint.Create(FButtonRect.Right - SpkLayoutSizes.LARGEBUTTON_RADIUS, FButtonRect.Top + 1),
                                   {$ELSE}
-                                  Create2DIntPoint(FButtonRect.Right - LARGEBUTTON_RADIUS, FButtonRect.Top + 1),
+                                  Create2DIntPoint(FButtonRect.Right - LargeButtonRadius, FButtonRect.Top + 1),
                                   {$ENDIF}
-                                  LARGEBUTTON_RADIUS,
+                                  LargeButtonRadius,
                                   cpRightTop,
                                   InnerLightColor,
                                   ClipRect);
       TGuiTools.DrawHLine(ABuffer,
-                          FButtonRect.Left + LARGEBUTTON_RADIUS + 1,
-                          FButtonRect.Right - LARGEBUTTON_RADIUS - 1,
+                          FButtonRect.Left + LargeButtonRadius + 1,
+                          FButtonRect.Right - LargeButtonRadius - 1,
                           FButtonRect.Top + 1,
                           InnerLightColor,
                           ClipRect);
       TGuiTools.DrawVLine(ABuffer,
                           FButtonRect.Left + 1,
-                          FButtonRect.Top + LARGEBUTTON_RADIUS + 1,
+                          FButtonRect.Top + LargeButtonRadius + 1,
                           FButtonRect.Bottom,
                           InnerLightColor,
                           ClipRect);
       TGuiTools.DrawVLine(ABuffer,
                           FButtonRect.Right - 1,
-                          FButtonRect.Top + LARGEBUTTON_RADIUS + 1,
+                          FButtonRect.Top + LargeButtonRadius + 1,
                           FButtonRect.Bottom,
                           InnerLightColor,
                           ClipRect);
@@ -1194,35 +1194,35 @@ else
                                   {$ELSE}
                                   Create2DIntPoint(FButtonRect.Left, FButtonRect.Top),
                                   {$ENDIF}
-                                  LARGEBUTTON_RADIUS,
+                                  LargeButtonRadius,
                                   cpLeftTop,
                                   FrameColor,
                                   ClipRect);
       TGuiTools.DrawAARoundCorner(ABuffer,
                                   {$IFDEF EnhancedRecordSupport}
-                                  T2DIntPoint.Create(FButtonRect.Right - LARGEBUTTON_RADIUS + 1, FButtonRect.Top),
+                                  T2DIntPoint.Create(FButtonRect.Right - LargeButtonRadius + 1, FButtonRect.Top),
                                   {$ELSE}
-                                  Create2DIntPoint(FButtonRect.Right - LARGEBUTTON_RADIUS + 1, FButtonRect.Top),
+                                  Create2DIntPoint(FButtonRect.Right - LargeButtonRadius + 1, FButtonRect.Top),
                                   {$ENDIF}
-                                  LARGEBUTTON_RADIUS,
+                                  LargeButtonRadius,
                                   cpRightTop,
                                   FrameColor,
                                   ClipRect);
       TGuiTools.DrawHLine(ABuffer,
-                          FButtonRect.Left + LARGEBUTTON_RADIUS,
-                          FButtonRect.Right - LARGEBUTTON_RADIUS,
+                          FButtonRect.Left + LargeButtonRadius,
+                          FButtonRect.Right - LargeButtonRadius,
                           FButtonRect.Top,
                           FrameColor,
                           ClipRect);
       TGuiTools.DrawVLine(ABuffer,
                           FButtonRect.Left,
-                          FButtonRect.Top + LARGEBUTTON_RADIUS,
+                          FButtonRect.Top + LargeButtonRadius,
                           FButtonRect.Bottom,
                           FrameColor,
                           ClipRect);
       TGuiTools.DrawVLine(ABuffer,
                           FButtonRect.Right,
-                          FButtonRect.Top + LARGEBUTTON_RADIUS,
+                          FButtonRect.Top + LargeButtonRadius,
                           FButtonRect.Bottom,
                           FrameColor,
                           ClipRect);
@@ -1264,24 +1264,24 @@ else
       DrawRgn:=CreateRectRgn(FDropdownRect.left,
                              FDropdownRect.Top,
                              FDropdownRect.Right + 1,
-                             FDropdownRect.Bottom - LARGEBUTTON_RADIUS + 1);
+                             FDropdownRect.Bottom - LargeButtonRadius + 1);
 
-      TmpRgn:=CreateRectRgn(FDropdownRect.left + LARGEBUTTON_RADIUS,
-                            FDropdownRect.Bottom - LARGEBUTTON_RADIUS + 1,
-                            FDropdownRect.Right - LARGEBUTTON_RADIUS + 1,
+      TmpRgn:=CreateRectRgn(FDropdownRect.left + LargeButtonRadius,
+                            FDropdownRect.Bottom - LargeButtonRadius + 1,
+                            FDropdownRect.Right - LargeButtonRadius + 1,
                             FDropdownRect.Bottom + 1);
       CombineRgn(DrawRgn, DrawRgn, TmpRgn, RGN_OR);
       DeleteObject(TmpRgn);
 
       TmpRgn:=CreateEllipticRgn(FDropdownRect.Left,
-                                FDropdownRect.bottom - 2 * LARGEBUTTON_RADIUS + 1,
-                                FDropdownRect.left + 2 * LARGEBUTTON_RADIUS + 1,
+                                FDropdownRect.bottom - 2 * LargeButtonRadius + 1,
+                                FDropdownRect.left + 2 * LargeButtonRadius + 1,
                                 FDropdownRect.Bottom + 2);
       CombineRgn(DrawRgn, DrawRgn, TmpRgn, RGN_OR);
       DeleteObject(TmpRgn);
 
-      TmpRgn:=CreateEllipticRgn(FDropdownRect.Right - 2 * LARGEBUTTON_RADIUS + 1,
-                                FDropdownRect.Bottom - 2 * LARGEBUTTON_RADIUS + 1,
+      TmpRgn:=CreateEllipticRgn(FDropdownRect.Right - 2 * LargeButtonRadius + 1,
+                                FDropdownRect.Bottom - 2 * LargeButtonRadius + 1,
                                 FDropdownRect.Right + 2,
                                 FDropdownRect.Bottom + 2);
       CombineRgn(DrawRgn, DrawRgn, TmpRgn, RGN_OR);
@@ -1302,38 +1302,38 @@ else
 
       TGuiTools.DrawAARoundCorner(ABuffer,
                                   {$IFDEF EnhancedRecordSupport}
-                                  T2DIntPoint.Create(FDropdownRect.Left + 1, FDropdownRect.Bottom - LARGEBUTTON_RADIUS),
+                                  T2DIntPoint.Create(FDropdownRect.Left + 1, FDropdownRect.Bottom - SpkLayoutSizes.LARGEBUTTON_RADIUS),
                                   {$ELSE}
-                                  Create2DIntPoint(FDropdownRect.Left + 1, FDropdownRect.Bottom - LARGEBUTTON_RADIUS),
+                                  Create2DIntPoint(FDropdownRect.Left + 1, FDropdownRect.Bottom - LargeButtonRadius),
                                   {$ENDIF}
-                                  LARGEBUTTON_RADIUS,
+                                  LargeButtonRadius,
                                   cpLeftBottom,
                                   InnerLightColor);
       TGuiTools.DrawAARoundCorner(ABuffer,
                                   {$IFDEF EnhancedRecordSupport}
-                                  T2DIntPoint.Create(FDropdownRect.right - LARGEBUTTON_RADIUS, FDropdownRect.Bottom - LARGEBUTTON_RADIUS),
+                                  T2DIntPoint.Create(FDropdownRect.right - LargeButtonRadius, FDropdownRect.Bottom - LargeButtonRadius),
                                   {$ELSE}
-                                  Create2DIntPoint(FDropdownRect.right - LARGEBUTTON_RADIUS, FDropdownRect.Bottom - LARGEBUTTON_RADIUS),
+                                  Create2DIntPoint(FDropdownRect.right - LargeButtonRadius, FDropdownRect.Bottom - LargeButtonRadius),
                                   {$ENDIF}
-                                  LARGEBUTTON_RADIUS,
+                                  LargeButtonRadius,
                                   cpRightBottom,
                                   InnerLightColor);
       TGuiTools.DrawHLine(ABuffer,
-                          FDropdownRect.Left + LARGEBUTTON_RADIUS + 1,
-                          FDropdownRect.Right - LARGEBUTTON_RADIUS - 1,
+                          FDropdownRect.Left + LargeButtonRadius + 1,
+                          FDropdownRect.Right - LargeButtonRadius - 1,
                           FDropdownRect.Bottom - 1,
                           InnerLightColor,
                           ClipRect);
       TGuiTools.DrawVLine(ABuffer,
                           FDropdownRect.Left + 1,
                           FDropDownRect.Top + 1,
-                          FDropDownRect.Bottom - LARGEBUTTON_RADIUS - 1,
+                          FDropDownRect.Bottom - LargeButtonRadius - 1,
                           InnerLightColor,
                           ClipRect);
       TGuiTools.DrawVLine(ABuffer,
                           FDropdownRect.Right - 1,
                           FDropDownRect.Top + 1,
-                          FDropDownRect.Bottom - LARGEBUTTON_RADIUS - 1,
+                          FDropDownRect.Bottom - LargeButtonRadius - 1,
                           InnerLightColor,
                           ClipRect);
 
@@ -1356,38 +1356,38 @@ else
       // Zewnêtrzna ramka
       TGuiTools.DrawAARoundCorner(ABuffer,
                                   {$IFDEF EnhancedRecordSupport}
-                                  T2DIntPoint.Create(FDropdownRect.Left, FDropdownRect.Bottom - LARGEBUTTON_RADIUS + 1),
+                                  T2DIntPoint.Create(FDropdownRect.Left, FDropdownRect.Bottom - LargeButtonRadius + 1),
                                   {$ELSE}
-                                  Create2DIntPoint(FDropdownRect.Left, FDropdownRect.Bottom - LARGEBUTTON_RADIUS + 1),
+                                  Create2DIntPoint(FDropdownRect.Left, FDropdownRect.Bottom - LargeButtonRadius + 1),
                                   {$ENDIF}
-                                  LARGEBUTTON_RADIUS,
+                                  LargeButtonRadius,
                                   cpLeftBottom,
                                   FrameColor);
       TGuiTools.DrawAARoundCorner(ABuffer,
                                   {$IFDEF EnhancedRecordSupport}
-                                  T2DIntPoint.Create(FDropdownRect.right - LARGEBUTTON_RADIUS + 1, FDropdownRect.Bottom - LARGEBUTTON_RADIUS + 1),
+                                  T2DIntPoint.Create(FDropdownRect.right - LargeButtonRadius + 1, FDropdownRect.Bottom - LargeButtonRadius + 1),
                                   {$ELSE}
-                                  Create2DIntPoint(FDropdownRect.right - LARGEBUTTON_RADIUS + 1, FDropdownRect.Bottom - LARGEBUTTON_RADIUS + 1),
+                                  Create2DIntPoint(FDropdownRect.right - LargeButtonRadius + 1, FDropdownRect.Bottom - LargeButtonRadius + 1),
                                   {$ENDIF}
-                                  LARGEBUTTON_RADIUS,
+                                  LargeButtonRadius,
                                   cpRightBottom,
                                   FrameColor);
       TGuiTools.DrawHLine(ABuffer,
-                          FDropdownRect.Left + LARGEBUTTON_RADIUS,
-                          FDropdownRect.Right - LARGEBUTTON_RADIUS,
+                          FDropdownRect.Left + LargeButtonRadius,
+                          FDropdownRect.Right - LargeButtonRadius,
                           FDropdownRect.Bottom,
                           FrameColor,
                           ClipRect);
       TGuiTools.DrawVLine(ABuffer,
                           FDropdownRect.Left,
                           FDropDownRect.Top,
-                          FDropDownRect.Bottom - LARGEBUTTON_RADIUS,
+                          FDropDownRect.Bottom - LargeButtonRadius,
                           FrameColor,
                           ClipRect);
       TGuiTools.DrawVLine(ABuffer,
                           FDropdownRect.Right,
                           FDropDownRect.Top,
-                          FDropDownRect.Bottom - LARGEBUTTON_RADIUS,
+                          FDropDownRect.Bottom - LargeButtonRadius,
                           FrameColor,
                           ClipRect);
       {$ENDREGION}
@@ -1405,7 +1405,7 @@ else
          (FLargeImageIndex<FDisabledLargeImages.Count) then
          begin
          x:=FRect.left + (FRect.Width - FLargeImages.Width) div 2;
-         y:=FRect.top + LARGEBUTTON_BORDER_SIZE + LARGEBUTTON_GLYPH_MARGIN;
+         y:=FRect.top + LargeButtonBorderSize + LargeButtonGlyphMargin;
 
          TGuiTools.DrawImage(ABuffer.Canvas,
                              FDisabledLargeImages,
@@ -1422,7 +1422,7 @@ else
          (FLargeImageIndex<FLargeImages.Count) then
          begin
          x:=FRect.left + (FRect.Width - FLargeImages.Width) div 2;
-         y:=FRect.top + LARGEBUTTON_BORDER_SIZE + LARGEBUTTON_GLYPH_MARGIN;
+         y:=FRect.top + LargeButtonBorderSize + LargeButtonGlyphMargin;
 
          TGuiTools.DrawDisabledImage(ABuffer.Canvas,
                                      FLargeImages,
@@ -1444,7 +1444,7 @@ else
          (FLargeImageIndex<FLargeImages.Count) then
          begin
          x:=FRect.left + (FRect.Width - FLargeImages.Width) div 2;
-         y:=FRect.top + LARGEBUTTON_BORDER_SIZE + LARGEBUTTON_GLYPH_MARGIN;
+         y:=FRect.top + LargeButtonBorderSize + LargeButtonGlyphMargin;
 
          TGUITools.DrawImage(ABuffer.Canvas,
                              FLargeImages,
@@ -1489,7 +1489,7 @@ else
    TextHeight:=ABuffer.Canvas.Textheight('Wy');
 
    x:=FRect.Left + (FRect.width - ABuffer.Canvas.Textwidth(FCaption)) div 2;
-   y:=FRect.Top + LARGEBUTTON_CAPTION_TOP_RAIL - TextHeight div 2;
+   y:=FRect.Top + LargeButtonCaptionTopRail - TextHeight div 2;
    TGUITools.DrawText(ABuffer.Canvas, x, y, FCaption, FontColor, ClipRect);
 
    // *** Chevron dropdown ***
@@ -1522,7 +1522,7 @@ else
    ABuffer.Canvas.Font.Orientation:=0;
 
    x:=FDropdownRect.Left + (FDropdownRect.width - ABuffer.Canvas.Textwidth('u')) div 2;
-   y:=FDropdownRect.bottom - ABuffer.Canvas.Textheight('u') - LARGEBUTTON_CHEVRON_HMARGIN;
+   y:=FDropdownRect.bottom - ABuffer.Canvas.Textheight('u') - LargeButtonChevronHMargin;
    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
 
    {$ENDREGION}
@@ -1627,7 +1627,7 @@ if Bitmap=nil then
 
 // *** Glyph ***
 if FLargeImages<>nil then
-   GlyphWidth:=2 * LARGEBUTTON_GLYPH_MARGIN + FLargeImages.Width else
+   GlyphWidth:=2 * LargeButtonGlyphMargin + FLargeImages.Width else
    GlyphWidth:=0;
 
 // *** Tekst ***
@@ -1635,16 +1635,16 @@ if FButtonKind = bkButton then
    begin
    // £amiemy etykietê
    FindBreakPlace(FCaption,BreakPos,RowWidth);
-   TextWidth:=2 * LARGEBUTTON_CAPTION_HMARGIN + RowWidth;
+   TextWidth:=2 * LargeButtonCaptionHMargin + RowWidth;
    end
 else
    begin
    // Nie ³amiemy etykiety
    Bitmap.canvas.font.assign(FAppearance.Element.CaptionFont);
-   TextWidth:=2 * LARGEBUTTON_CAPTION_HMARGIN + Bitmap.Canvas.TextWidth(FCaption);
+   TextWidth:=2 * LargeButtonCaptionHMargin + Bitmap.Canvas.TextWidth(FCaption);
    end;
 
-result:=max(LARGEBUTTON_MIN_WIDTH, max(GlyphWidth, TextWidth));
+result := Max(LargeButtonMinWidth, max(GlyphWidth, TextWidth));
 end;
 
 procedure TSpkLargeButton.SetLargeImageIndex(const Value: TImageIndex);
@@ -1706,7 +1706,7 @@ AdditionalPadding:=false;
 // Ikona
 if FImageIndex<>-1 then
    begin
-   BtnWidth:=BtnWidth + SMALLBUTTON_PADDING + SMALLBUTTON_GLYPH_WIDTH;
+   BtnWidth:=BtnWidth + SmallButtonPadding + SmallButtonGlyphWidth;
    AdditionalPadding:=true;
    end;
 
@@ -1716,87 +1716,87 @@ if FShowCaption then
    Bitmap.Canvas.Font.assign(FAppearance.Element.CaptionFont);
    TextWidth:=Bitmap.Canvas.TextWidth(FCaption);
 
-   BtnWidth:=BtnWidth + SMALLBUTTON_PADDING + TextWidth;
+   BtnWidth:=BtnWidth + SmallButtonPadding + TextWidth;
    AdditionalPadding:=true;
    end;
 
 // Padding za tekstem lub ikon¹
 if AdditionalPadding then
-   BtnWidth:=BtnWidth + SMALLBUTTON_PADDING;
+   BtnWidth:=BtnWidth + SmallButtonPadding;
 
 // Szerokoœæ zawartoœci przycisku musi wynosiæ co najmniej SMALLBUTTON_MIN_WIDTH
-BtnWidth:=max(SMALLBUTTON_MIN_WIDTH, BtnWidth);
+BtnWidth := Max(SmallButtonMinWidth, BtnWidth);
 
 // *** Dropdown ***
 case FButtonKind of
      bkButton: begin
                // Lewa krawêdŸ przycisku
                if FGroupBehaviour in [gbContinuesGroup, gbEndsGroup] then
-                  BtnWidth:=BtnWidth + SMALLBUTTON_HALF_BORDER_WIDTH else
-                  BtnWidth:=BtnWidth + SMALLBUTTON_BORDER_WIDTH;
+                  BtnWidth:=BtnWidth + SmallButtonHalfBorderWidth else
+                  BtnWidth:=BtnWidth + SmallButtonBorderWidth;
 
                // Prawa krawêdŸ przycisku
                if (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) then
-                  BtnWidth:=BtnWidth + SMALLBUTTON_HALF_BORDER_WIDTH else
-                  BtnWidth:=BtnWidth + SMALLBUTTON_BORDER_WIDTH;
+                  BtnWidth:=BtnWidth + SmallButtonHalfBorderWidth else
+                  BtnWidth:=BtnWidth + SmallButtonBorderWidth;
 
                {$IFDEF EnhancedRecordSupport}
-               BtnRect:=T2DIntRect.Create(0, 0, BtnWidth - 1, PANE_ROW_HEIGHT - 1);
+               BtnRect:=T2DIntRect.Create(0, 0, BtnWidth - 1, SpkLayoutSizes.PANE_ROW_HEIGHT - 1);
                DropRect:=T2DIntRect.Create(0, 0, 0, 0);
                {$ELSE}
-               BtnRect.Create(0, 0, BtnWidth - 1, PANE_ROW_HEIGHT - 1);
+               BtnRect.Create(0, 0, BtnWidth - 1, PaneRowHeight - 1);
                DropRect.Create(0, 0, 0, 0);
                {$ENDIF}
                end;
      bkButtonDropdown: begin
                        // Lewa krawêdŸ przycisku
                        if FGroupBehaviour in [gbContinuesGroup, gbEndsGroup] then
-                          BtnWidth:=BtnWidth + SMALLBUTTON_HALF_BORDER_WIDTH else
-                          BtnWidth:=BtnWidth + SMALLBUTTON_BORDER_WIDTH;
+                          BtnWidth:=BtnWidth + SmallButtonHalfBorderWidth else
+                          BtnWidth:=BtnWidth + SmallButtonBorderWidth;
 
                        // Prawa krawêdŸ przycisku
-                       BtnWidth:=BtnWidth + SMALLBUTTON_HALF_BORDER_WIDTH;
+                       BtnWidth:=BtnWidth + SmallButtonHalfBorderWidth;
 
                        // Lewa krawêdŸ i zawartoœæ pola dropdown
-                       DropdownWidth:=SMALLBUTTON_HALF_BORDER_WIDTH + SMALLBUTTON_DROPDOWN_WIDTH;
+                       DropdownWidth := SmallButtonHalfBorderWidth + SmallButtonDropdownWidth;
 
                        // Prawa krawêdŸ pola dropdown
                        if (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) then
-                          DropdownWidth:=DropdownWidth + SMALLBUTTON_HALF_BORDER_WIDTH else
-                          DropdownWidth:=DropdownWidth + SMALLBUTTON_BORDER_WIDTH;
+                          DropdownWidth:=DropdownWidth + SmallButtonHalfBorderWidth else
+                          DropdownWidth:=DropdownWidth + SmallButtonBorderWidth;
 
                        {$IFDEF EnhancedRecordSupport}
-                       BtnRect:=T2DIntRect.Create(0, 0, BtnWidth - 1, PANE_ROW_HEIGHT - 1);
+                       BtnRect:=T2DIntRect.Create(0, 0, BtnWidth - 1, PaneRowHeightT - 1);
                        DropRect:=T2DIntRect.Create(BtnRect.right+1,
                                                    0,
                                                    BtnRect.right+DropdownWidth,
-                                                   PANE_ROW_HEIGHT - 1);
+                                                   PaneRowHeight - 1);
                        {$ELSE}
-                       BtnRect.Create(0, 0, BtnWidth - 1, PANE_ROW_HEIGHT - 1);
+                       BtnRect.Create(0, 0, BtnWidth - 1, PaneRowHeight - 1);
                        DropRect.Create(BtnRect.right+1,  0,
-                           BtnRect.right+DropdownWidth, PANE_ROW_HEIGHT - 1);
+                           BtnRect.right+DropdownWidth, PaneRowHeight - 1);
                        {$ENDIF}
                        end;
      bkDropdown: begin
                  // Lewa krawêdŸ przycisku
                  if FGroupBehaviour in [gbContinuesGroup, gbEndsGroup] then
-                    BtnWidth:=BtnWidth + SMALLBUTTON_HALF_BORDER_WIDTH else
-                    BtnWidth:=BtnWidth + SMALLBUTTON_BORDER_WIDTH;
+                    BtnWidth:=BtnWidth + SmallButtonHalfBorderWidth else
+                    BtnWidth:=BtnWidth + SmallButtonBorderWidth;
 
                  // Prawa krawêdŸ przycisku
                  if (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) then
-                    BtnWidth:=BtnWidth + SMALLBUTTON_HALF_BORDER_WIDTH else
-                    BtnWidth:=BtnWidth + SMALLBUTTON_BORDER_WIDTH;
+                    BtnWidth:=BtnWidth + SmallButtonHalfBorderWidth else
+                    BtnWidth:=BtnWidth + SmallButtonBorderWidth;
 
                  // Dodatkowy obszar na dropdown + miejsce na œrodkow¹ krawêdŸ,
                  // dla kompatybilnoœci wymiarów z dkButtonDropdown
-                 BtnWidth:=BtnWidth + SMALLBUTTON_BORDER_WIDTH + SMALLBUTTON_DROPDOWN_WIDTH;
+                 BtnWidth:=BtnWidth + SmallButtonBorderWidth + SmallButtonDropdownWidth;
 
                  {$IFDEF EnhancedRecordSupport}
-                 BtnRect:=T2DIntRect.Create(0, 0, BtnWidth - 1, PANE_ROW_HEIGHT - 1);
+                 BtnRect:=T2DIntRect.Create(0, 0, BtnWidth - 1, PaneRowHeight - 1);
                  DropRect:=T2DIntRect.Create(0, 0, 0, 0);
                  {$ELSE}
-                 BtnRect.Create(0, 0, BtnWidth - 1, PANE_ROW_HEIGHT - 1);
+                 BtnRect.Create(0, 0, BtnWidth - 1, PaneRowHeight - 1);
                  DropRect.Create(0, 0, 0, 0);
                  {$ENDIF}
                  end;
@@ -1824,7 +1824,7 @@ if FToolbarDispatch=nil then
 if FAppearance=nil then
    exit;
 
-if (FRect.width<2*LARGEBUTTON_RADIUS) or (FRect.Height<2*LARGEBUTTON_RADIUS) then
+if (FRect.width < 2*LargeButtonRadius) or (FRect.Height < 2*LargeButtonRadius) then
    exit;
 
 // *** Przycisk ***
@@ -1846,7 +1846,7 @@ if (FButtonState = bsIdle) and (not(FHideFrameWhenIdle)) then
                                 (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
                                 false,
                                 false,
-                                SMALLBUTTON_RADIUS,
+                                SmallButtonRadius,
                                 ClipRect);
    end else
 if (FButtonState=bsBtnHottrack) then
@@ -1864,7 +1864,7 @@ if (FButtonState=bsBtnHottrack) then
                                 (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
                                 false,
                                 false,
-                                SMALLBUTTON_RADIUS,
+                                SmallButtonRadius,
                                 ClipRect);
    end else
 if (FButtonState = bsBtnPressed) then
@@ -1882,7 +1882,7 @@ if (FButtonState = bsBtnPressed) then
                                 (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
                                 false,
                                 false,
-                                SMALLBUTTON_RADIUS,
+                                SmallButtonRadius,
                                 ClipRect);
    end else
 if (FButtonState in [bsDropdownHottrack, bsDropdownPressed]) then
@@ -1900,7 +1900,7 @@ if (FButtonState in [bsDropdownHottrack, bsDropdownPressed]) then
                                 (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
                                 false,
                                 false,
-                                SMALLBUTTON_RADIUS,
+                                SmallButtonRadius,
                                 ClipRect);
    end;
 {$ENDREGION}
@@ -1914,8 +1914,8 @@ if not(FEnabled) then
       (FImageIndex<FDisabledImages.Count) then
       begin
       if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
-         x:=FButtonRect.Left + SMALLBUTTON_HALF_BORDER_WIDTH + SMALLBUTTON_PADDING else
-         x:=FButtonRect.Left + SMALLBUTTON_BORDER_WIDTH + SMALLBUTTON_PADDING;
+         x:=FButtonRect.Left + SmallButtonHalfBorderWidth + SmallButtonPadding else
+         x:=FButtonRect.Left + SmallButtonBorderWidth + SmallButtonPadding;
       y:=FButtonRect.top + (FButtonRect.height - FDisabledImages.Height) div 2;
 
       TGuiTools.DrawImage(ABuffer.Canvas,
@@ -1933,8 +1933,8 @@ if not(FEnabled) then
       (FImageIndex<FImages.Count) then
       begin
       if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
-         x:=FButtonRect.Left + SMALLBUTTON_HALF_BORDER_WIDTH + SMALLBUTTON_PADDING else
-         x:=FButtonRect.Left + SMALLBUTTON_BORDER_WIDTH + SMALLBUTTON_PADDING;
+         x:=FButtonRect.Left + SmallButtonHalfBorderWidth + SmallButtonPadding else
+         x:=FButtonRect.Left + SmallButtonBorderWidth + SmallButtonPadding;
       y:=FButtonRect.top + (FButtonRect.height - FImages.Height) div 2;
 
       TGuiTools.DrawDisabledImage(ABuffer.Canvas,
@@ -1957,8 +1957,8 @@ else
       (FImageIndex<FImages.Count) then
       begin
       if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
-         x:=FButtonRect.Left + SMALLBUTTON_HALF_BORDER_WIDTH + SMALLBUTTON_PADDING else
-         x:=FButtonRect.Left + SMALLBUTTON_BORDER_WIDTH + SMALLBUTTON_PADDING;
+         x:=FButtonRect.Left + SmallButtonHalfBorderWidth + SmallButtonPadding else
+         x:=FButtonRect.Left + SmallButtonBorderWidth + SmallButtonPadding;
       y:=FButtonRect.top + (FButtonRect.height - FImages.Height) div 2;
 
       TGUITools.DrawImage(ABuffer.Canvas,
@@ -2003,12 +2003,12 @@ if FShowCaption then
       end;
 
    if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
-      x:=FButtonRect.Left + SMALLBUTTON_HALF_BORDER_WIDTH else
-      x:=FButtonRect.Left + SMALLBUTTON_BORDER_WIDTH;
+      x:=FButtonRect.Left + SmallButtonHalfBorderWidth else
+      x:=FButtonRect.Left + SmallButtonBorderWidth;
 
    if FImageIndex<>-1 then
-      x:=x + 2 * SMALLBUTTON_PADDING + SMALLBUTTON_GLYPH_WIDTH else
-      x:=x + SMALLBUTTON_PADDING;
+      x:=x + 2 * SmallButtonPadding + SmallButtonGlyphWidth else
+      x:=x + SmallButtonPadding;
    y:=FButtonRect.Top + (FButtonRect.Height - ABuffer.Canvas.TextHeight('Wy')) div 2;
 
    TGUITools.DrawText(ABuffer.Canvas,
@@ -2043,7 +2043,7 @@ if FButtonKind = bkButtonDropdown then
                                    (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]),
                                    false,
                                    false,
-                                   SMALLBUTTON_RADIUS,
+                                   SmallButtonRadius,
                                    ClipRect);
       end else
    if (FButtonState in [bsBtnHottrack, bsBtnPressed]) then
@@ -2061,7 +2061,7 @@ if FButtonKind = bkButtonDropdown then
                                    (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]),
                                    false,
                                    false,
-                                   SMALLBUTTON_RADIUS,
+                                   SmallButtonRadius,
                                    ClipRect);
 
       end else
@@ -2080,7 +2080,7 @@ if FButtonKind = bkButtonDropdown then
                                    (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]),
                                    false,
                                    false,
-                                   SMALLBUTTON_RADIUS,
+                                   SmallButtonRadius,
                                    ClipRect);
       end else
    if (FButtonState = bsDropdownPressed) then
@@ -2098,7 +2098,7 @@ if FButtonKind = bkButtonDropdown then
                                    (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]),
                                    false,
                                    false,
-                                   SMALLBUTTON_RADIUS,
+                                   SmallButtonRadius,
                                    ClipRect);
       end;
 
@@ -2133,8 +2133,8 @@ if FButtonKind = bkButtonDropdown then
    ABuffer.Canvas.Font.Orientation:=0;
 
    if FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup] then
-      x:=FDropdownRect.Right - SMALLBUTTON_HALF_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + ABuffer.Canvas.Textwidth('u')) div 2 + 1 else
-      x:=FDropdownRect.Right - SMALLBUTTON_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + ABuffer.Canvas.Textwidth('u')) div 2 + 1;
+      x:=FDropdownRect.Right - SmallButtonHalfBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1 else
+      x:=FDropdownRect.Right - SmallButtonBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1;
    y:=FDropdownRect.top + (FDropdownRect.height - ABuffer.Canvas.Textheight('u')) div 2;
    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
    {$ENDREGION}
@@ -2173,8 +2173,8 @@ if FButtonKind = bkDropdown then
    ABuffer.Canvas.Font.Orientation:=0;
 
    if FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup] then
-      x:=FButtonRect.Right - SMALLBUTTON_HALF_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + ABuffer.Canvas.Textwidth('u')) div 2 + 1 else
-      x:=FButtonRect.Right - SMALLBUTTON_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + ABuffer.Canvas.Textwidth('u')) div 2 + 1;
+      x:=FButtonRect.Right - SmallButtonHalfBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1 else
+      x:=FButtonRect.Right - SmallButtonBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1;
    y:=FButtonRect.top + (FButtonRect.height - ABuffer.Canvas.Textheight('u')) div 2;
    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
    end;

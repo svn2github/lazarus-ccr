@@ -160,9 +160,9 @@ FRect:=ARect;
 Layout:=GenerateLayout;
 
 {$IFDEF EnhancedRecordSupport}
-Pt:=T2DIntPoint.create(ARect.left + PANE_BORDER_SIZE + PANE_LEFT_PADDING, ARect.top + PANE_BORDER_SIZE);
+Pt:=T2DIntPoint.create(ARect.left + SpkLayoutSizes.PANE_BORDER_SIZE + SpkLayoutSizes.PANE_LEFT_PADDING, ARect.top + SpkLayoutSizes.PANE_BORDER_SIZE);
 {$ELSE}
-Pt.create(ARect.left + PANE_BORDER_SIZE + PANE_LEFT_PADDING, ARect.top + PANE_BORDER_SIZE);
+Pt.create(ARect.left + PaneBorderSize + PaneLeftPadding, ARect.top + PaneBorderSize);
 {$ENDIF}
 
 if length(Layout.Rects)>0 then
@@ -265,15 +265,15 @@ TGuiTools.DrawRoundRect(ABuffer.Canvas,
                         {$IFDEF EnhancedRecordSupport}
                         T2DIntRect.Create(FRect.left,
                                           FRect.top,
-                                          FRect.right - PANE_BORDER_HALF_SIZE,
-                                          FRect.Bottom - PANE_BORDER_HALF_SIZE),
+                                          FRect.right - PaneBorderHalfSize,
+                                          FRect.Bottom - PaneBorderHalfSize),
                         {$ELSE}
                         Create2DIntRect(FRect.left,
                                           FRect.top,
-                                          FRect.right - PANE_BORDER_HALF_SIZE,
-                                          FRect.Bottom - PANE_BORDER_HALF_SIZE),
+                                          FRect.right - PaneBorderHalfSize,
+                                          FRect.Bottom - PaneBorderHalfSize),
                         {$ENDIF}
-                        PANE_CORNER_RADIUS,
+                        PaneCornerRadius,
                         BgFromColor,
                         BgToColor,
                         FAppearance.Pane.GradientType,
@@ -283,16 +283,16 @@ TGuiTools.DrawRoundRect(ABuffer.Canvas,
 TGuiTools.DrawRoundRect(ABuffer.Canvas,
                         {$IFDEF EnhancedRecordSupport}
                         T2DIntRect.Create(FRect.Left,
-                                          FRect.Bottom - PANE_CAPTION_HEIGHT - PANE_BORDER_HALF_SIZE,
-                                          FRect.right - PANE_BORDER_HALF_SIZE,
-                                          FRect.bottom - PANE_BORDER_HALF_SIZE),
+                                          FRect.Bottom - PaneCaptionHeight - PaneBorderHalfSize,
+                                          FRect.right - PaneBorderHalfSize,
+                                          FRect.bottom - PaneBorderHalfSize),
                         {$ELSE}
                         Create2DIntRect(FRect.Left,
-                                          FRect.Bottom - PANE_CAPTION_HEIGHT - PANE_BORDER_HALF_SIZE,
-                                          FRect.right - PANE_BORDER_HALF_SIZE,
-                                          FRect.bottom - PANE_BORDER_HALF_SIZE),
+                                          FRect.Bottom - PaneCaptionHeight - PaneBorderHalfSize,
+                                          FRect.Right - PaneBorderHalfSize,
+                                          FRect.Bottom - PaneBorderHalfSize),
                         {$ENDIF}
-                        PANE_CORNER_RADIUS,
+                        PaneCornerRadius,
                         CaptionColor,
                         clNone,
                         bkSolid,
@@ -305,8 +305,8 @@ TGuiTools.DrawRoundRect(ABuffer.Canvas,
 // Etykieta tafli
 ABuffer.Canvas.Font.assign(FAppearance.Pane.CaptionFont);
 x:=FRect.left + (FRect.width - ABuffer.Canvas.TextWidth(FCaption)) div 2;
-y:=FRect.Bottom - PANE_BORDER_SIZE - PANE_CAPTION_HEIGHT + 1 +
-   (PANE_CAPTION_HEIGHT - ABuffer.Canvas.TextHeight('Wy')) div 2;
+y:=FRect.Bottom - PaneBorderSize - PaneCaptionHeight + 1 +
+   (PaneCaptionHeight - ABuffer.Canvas.TextHeight('Wy')) div 2;
 
 TGUITools.DrawText(ABuffer.Canvas,
                    x,
@@ -328,7 +328,7 @@ TGUITools.DrawAARoundFrame(ABuffer,
                                              FRect.Right,
                                              FRect.bottom),
                            {$ENDIF}
-                           PANE_CORNER_RADIUS,
+                           PaneCornerRadius,
                            BorderLightColor,
                            ClipRect);
 TGUITools.DrawAARoundFrame(ABuffer,
@@ -343,7 +343,7 @@ TGUITools.DrawAARoundFrame(ABuffer,
                                              FRect.Right-1,
                                              FRect.bottom-1),
                            {$ENDIF}
-                           PANE_CORNER_RADIUS,
+                           PaneCornerRadius,
                            BorderDarkColor,
                            ClipRect);
 
@@ -498,7 +498,7 @@ if length(Layout)>0 then
        begin
        if c>0 then
           begin
-          LastX:=MaxRowX + PANE_COLUMN_SPACER;
+          LastX:=MaxRowX + PaneColumnSpacer;
           MaxRowX:=LastX;
           end
        else
@@ -523,8 +523,8 @@ if length(Layout)>0 then
 
                      if ItemSize = isLarge then
                         begin
-                        tmpRect.top:=PANE_FULL_ROW_TOPPADDING;
-                        tmpRect.bottom:=tmpRect.top + PANE_FULL_ROW_HEIGHT - 1;
+                        tmpRect.top:=PaneFullRowTopPadding;
+                        tmpRect.bottom:=tmpRect.top + PaneFullRowHeight - 1;
                         tmpRect.left:=LastX;
                         tmpRect.right:=LastX + ItemWidth - 1;
 
@@ -544,7 +544,7 @@ if length(Layout)>0 then
                            // Jeœli element nie jest pierwszy, musi zostaæ
                            // odsuniêty marginesem od poprzedniego
                            if i>0 then
-                              tmpRect.Left:=LastX + PANE_GROUP_SPACER else
+                              tmpRect.Left:=LastX + PaneGroupSpacer else
                               tmpRect.Left:=LastX;
                            tmpRect.right:=tmpRect.Left + ItemWidth - 1;
                            end;
@@ -552,34 +552,34 @@ if length(Layout)>0 then
                         {$REGION 'Obliczanie tmpRect.top i bottom'}
                         case rows of
                              1 : begin
-                                 tmpRect.top:=PANE_ONE_ROW_TOPPADDING;
-                                 tmpRect.bottom:=tmpRect.top + PANE_ROW_HEIGHT - 1;
+                                 tmpRect.top:=PaneOneRowTopPadding;
+                                 tmpRect.bottom:=tmpRect.top + PaneRowHeight - 1;
                                  end;
                              2 : begin
                                  case r of
                                       0 : begin
-                                          tmpRect.top:=PANE_TWO_ROWS_TOPPADDING;
-                                          tmpRect.bottom:=tmpRect.top + PANE_ROW_HEIGHT - 1;
+                                          tmpRect.top:=PaneTwoRowsTopPadding;
+                                          tmpRect.bottom:=tmpRect.top + PaneRowHeight - 1;
                                           end;
                                       1 : begin
-                                          tmpRect.top:=PANE_TWO_ROWS_TOPPADDING + PANE_ROW_HEIGHT + PANE_TWO_ROWS_VSPACER;
-                                          tmpRect.bottom:=tmpRect.top + PANE_ROW_HEIGHT - 1;
+                                          tmpRect.top:=PaneTwoRowsTopPadding + PaneRowHeight + PaneTwoRowsVSpacer;
+                                          tmpRect.bottom:=tmpRect.top + PaneRowHeight - 1;
                                           end;
                                  end;
                                  end;
                              3 : begin
                                  case r of
                                       0 : begin
-                                          tmpRect.top:=PANE_THREE_ROWS_TOPPADDING;
-                                          tmpRect.bottom:=tmpRect.top + PANE_ROW_HEIGHT - 1;
+                                          tmpRect.top:=PaneThreeRowsTopPadding;
+                                          tmpRect.bottom:=tmpRect.top + PaneRowHeight - 1;
                                           end;
                                       1 : begin
-                                          tmpRect.top:=PANE_THREE_ROWS_TOPPADDING + PANE_ROW_HEIGHT + PANE_THREE_ROWS_VSPACER;
-                                          tmpRect.bottom:=tmpRect.top + PANE_ROW_HEIGHT - 1;
+                                          tmpRect.top:=PaneThreeRowsTopPadding + PaneRowHeight + PaneThreeRowsVSpacer;
+                                          tmpRect.bottom:=tmpRect.top + PaneRowHeight - 1;
                                           end;
                                       2 : begin
-                                          tmpRect.top:=PANE_THREE_ROWS_TOPPADDING + 2 * PANE_ROW_HEIGHT + 2 * PANE_THREE_ROWS_VSPACER;
-                                          tmpRect.bottom:=tmpRect.top + PANE_ROW_HEIGHT - 1;
+                                          tmpRect.top:=PaneThreeRowsTopPadding + 2 * PaneRowHeight + 2 * PaneThreeRowsVSpacer;
+                                          tmpRect.bottom:=tmpRect.top + PaneRowHeight - 1;
                                           end;
                                  end;
                                  end;
@@ -634,14 +634,12 @@ tmpBitmap.Canvas.font.assign(FAppearance.Pane.CaptionFont);
 
 // *** Minimalna szerokoœæ tafli (tekstu) ***
 TextW:=tmpBitmap.Canvas.TextWidth(FCaption);
-PaneCaptionWidth:=2*PANE_BORDER_SIZE +
-                  2*PANE_CAPTION_HMARGIN +
-                  TextW;
+PaneCaptionWidth := 2*PaneBorderSize + 2*PaneCaptionHMargin + TextW;
 
 // *** Szerokoœæ elementów tafli ***
 Layout:=GenerateLayout;
 ElementsW:=Layout.Width;
-PaneElementsWidth:=PANE_BORDER_SIZE + PANE_LEFT_PADDING + ElementsW + PANE_RIGHT_PADDING + PANE_BORDER_SIZE;
+PaneElementsWidth:=PaneBorderSize + PaneLeftPadding + ElementsW + PaneRightPadding + PaneBorderSize;
 
 // *** Ustawianie szerokoœci tafli ***
 result:=max(PaneCaptionWidth, PaneElementsWidth);

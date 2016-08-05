@@ -226,7 +226,7 @@ if AtLeastOnePaneVisible then
 
           FPanes[i].Rect:=tmpRect;
 
-          x:=x + tw + TAB_PANE_HSPACING;
+          x:=x + tw + TabPaneHSpacing;
           end
        else
           begin
