@@ -159,6 +159,10 @@ type
       constructor Create (AOwner : TComponent); override;
       destructor Destroy; override;
 
+     {$IFDEF LCL}
+      property ChildSizing;
+     {$ENDIF}
+
     published
       property DataStore : TVpCustomDataStore
                read FDataStore write SetDataStore;
@@ -167,10 +171,14 @@ type
                default ruOnChange;                                       
       property Version : string
         read   GetAbout write SetAbout stored False;
-        
+
+      property Align;
       property Anchors;
       property Constraints;
       property Style;
+     {$IFDEF LCL}
+      property Borderspacing;
+     {$ENDIF}
   end;
 
 

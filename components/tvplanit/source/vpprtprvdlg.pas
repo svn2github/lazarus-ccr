@@ -50,9 +50,11 @@ type
   { TfrmPrintPreview }
 
   TfrmPrintPreview = class(TForm)
+      Bevel1: TBevel;
       Panel1: TPanel;
       cboxZoom: TComboBox;
       btnCancel: TToolButton;
+      Panel2: TPanel;
       VpPrintPreview1: TVpPrintPreview;
       VpPrintFormatComboBox1: TVpPrintFormatComboBox;
       ToolBar1: TToolBar;
@@ -170,6 +172,7 @@ procedure TfrmPrintPreview.FormCreate(Sender: TObject);
 begin
   ReturnCode := rtAbandon;
   SetCaptions;
+  Toolbar1.ButtonHeight := ScaleY(Toolbar1.ButtonHeight, DesignTimeDPI);
 end;
 
 procedure TfrmPrintPreview.SetCaptions;
@@ -422,7 +425,7 @@ var
 begin
   if VpPrintPreview1.ControlLink = nil then
     exit;
-
+                                                       (*
   cnv := TControlCanvas.Create;
   try
     cnv.Control := VpPrintFormatCombobox1;
@@ -437,7 +440,7 @@ begin
 
   finally
     cnv.Free;
-  end;
+  end;*)
 end;
 
 end.

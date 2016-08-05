@@ -67,11 +67,19 @@ type
       procedure UpdateItems;
 
       property Style;
+     {$IFDEF LCL}
+      property ChildSizing;
+     {$ENDIF}
 
     published
       property Version: string read GetAbout write SetAbout stored False;
       property ControlLink: TVpControlLink read FControlLink write SetControlLink;
 
+      property Align;
+      property Anchors;
+     {$IFDEF LCL}
+      property Borderspacing;
+     {$ENDIF}
       property Cursor;
       property DragCursor;
       property DragMode;
