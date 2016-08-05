@@ -58,6 +58,8 @@ uses
   Dialogs, ComponentEditors, DBPropEdits, rxctrls, AutoPanel, pickdate, tooledit, rxclock,
   rxspin, RxTimeEdit, rxDateRangeEditUnit, RxAboutDialog, RxViewsPanel, RxMDI;
 
+{$R rx.res}
+
 {$IFDEF USE_TRxAppIcon}
 procedure RegisterRxAppIcon;
 begin
@@ -199,6 +201,6 @@ begin
 
 end;
 
-initialization
-  {$i rx.lrs}
+//initialization
+//  {$i rx.lrs}
 end.

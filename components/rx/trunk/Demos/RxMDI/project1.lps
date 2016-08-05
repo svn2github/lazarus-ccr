@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectSession>
     <Version Value="9"/>
@@ -7,7 +7,6 @@
       <Unit0>
         <Filename Value="project1.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="project1"/>
         <UsageCount Value="22"/>
       </Unit0>
       <Unit1>
@@ -17,8 +16,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
-        <EditorIndex Value="0"/>
-        <WindowIndex Value="0"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="56"/>
         <CursorPos X="34" Y="67"/>
         <UsageCount Value="22"/>
@@ -33,7 +31,6 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit2"/>
         <EditorIndex Value="3"/>
-        <WindowIndex Value="0"/>
         <TopLine Value="7"/>
         <CursorPos X="6" Y="11"/>
         <UsageCount Value="22"/>
@@ -48,9 +45,7 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit3"/>
         <EditorIndex Value="2"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="1" Y="19"/>
+        <CursorPos Y="19"/>
         <UsageCount Value="22"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -63,8 +58,6 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit4"/>
         <EditorIndex Value="4"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
         <CursorPos X="32" Y="8"/>
         <UsageCount Value="22"/>
         <Loaded Value="True"/>
@@ -73,18 +66,13 @@
       <Unit5>
         <Filename Value="../../rxmdi.pas"/>
         <UnitName Value="RxMDI"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <WindowIndex Value="0"/>
         <TopLine Value="295"/>
         <CursorPos X="10" Y="303"/>
         <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit5>
     </Units>
-    <General>
-      <ActiveWindowIndexAtStart Value="0"/>
-    </General>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="unit4.pas"/>
@@ -124,7 +112,7 @@
       </Position9>
       <Position10>
         <Filename Value="../../rxmdi.pas"/>
-        <Caret Line="52" Column="1" TopLine="30"/>
+        <Caret Line="52" TopLine="30"/>
       </Position10>
       <Position11>
         <Filename Value="../../rxmdi.pas"/>
@@ -140,43 +128,43 @@
       </Position13>
       <Position14>
         <Filename Value="../../rxmdi.pas"/>
-        <Caret Line="608" Column="1" TopLine="594"/>
+        <Caret Line="608" TopLine="594"/>
       </Position14>
       <Position15>
         <Filename Value="../../rxmdi.pas"/>
-        <Caret Line="609" Column="1" TopLine="594"/>
+        <Caret Line="609" TopLine="594"/>
       </Position15>
       <Position16>
         <Filename Value="../../rxmdi.pas"/>
-        <Caret Line="610" Column="1" TopLine="594"/>
+        <Caret Line="610" TopLine="594"/>
       </Position16>
       <Position17>
         <Filename Value="../../rxmdi.pas"/>
-        <Caret Line="611" Column="1" TopLine="594"/>
+        <Caret Line="611" TopLine="594"/>
       </Position17>
       <Position18>
         <Filename Value="../../rxmdi.pas"/>
-        <Caret Line="613" Column="1" TopLine="594"/>
+        <Caret Line="613" TopLine="594"/>
       </Position18>
       <Position19>
         <Filename Value="../../rxmdi.pas"/>
-        <Caret Line="608" Column="1" TopLine="594"/>
+        <Caret Line="608" TopLine="594"/>
       </Position19>
       <Position20>
         <Filename Value="../../rxmdi.pas"/>
-        <Caret Line="609" Column="1" TopLine="594"/>
+        <Caret Line="609" TopLine="594"/>
       </Position20>
       <Position21>
         <Filename Value="../../rxmdi.pas"/>
-        <Caret Line="610" Column="1" TopLine="594"/>
+        <Caret Line="610" TopLine="594"/>
       </Position21>
       <Position22>
         <Filename Value="../../rxmdi.pas"/>
-        <Caret Line="611" Column="1" TopLine="594"/>
+        <Caret Line="611" TopLine="594"/>
       </Position22>
       <Position23>
         <Filename Value="../../rxmdi.pas"/>
-        <Caret Line="613" Column="1" TopLine="594"/>
+        <Caret Line="613" TopLine="594"/>
       </Position23>
       <Position24>
         <Filename Value="unit4.pas"/>
@@ -204,7 +192,7 @@
       </Position29>
       <Position30>
         <Filename Value="../../rxmdi.pas"/>
-        <Caret Line="739" Column="1" TopLine="705"/>
+        <Caret Line="739" TopLine="705"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>
@@ -219,5 +207,4 @@
       </Item1>
     </BreakPoints>
   </Debugging>
-  <EditorMacros Count="0"/>
 </CONFIG>
