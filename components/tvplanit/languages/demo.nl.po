@@ -150,30 +150,6 @@ msgstr "OK"
 msgid "Report Setup"
 msgstr "Overzicht Instellingen"
 
-#: tfrmreportsetup.edenddate.cancelcaption
-#, fuzzy
-msgctxt "tfrmreportsetup.edenddate.cancelcaption"
-msgid "Cancel"
-msgstr "Annuleren"
-
-#: tfrmreportsetup.edenddate.okcaption
-#, fuzzy
-msgctxt "tfrmreportsetup.edenddate.okcaption"
-msgid "OK"
-msgstr "OK"
-
-#: tfrmreportsetup.edstartdate.cancelcaption
-#, fuzzy
-msgctxt "tfrmreportsetup.edstartdate.cancelcaption"
-msgid "Cancel"
-msgstr "Annuleren"
-
-#: tfrmreportsetup.edstartdate.okcaption
-#, fuzzy
-msgctxt "tfrmreportsetup.edstartdate.okcaption"
-msgid "OK"
-msgstr "OK"
-
 #: tfrmreportsetup.lblenddate.caption
 #, fuzzy
 msgctxt "tfrmreportsetup.lblenddate.caption"

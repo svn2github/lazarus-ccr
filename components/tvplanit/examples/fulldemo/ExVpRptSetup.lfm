@@ -2,11 +2,11 @@ object frmReportSetup: TfrmReportSetup
   Left = 380
   Height = 138
   Top = 138
-  Width = 254
+  Width = 291
   BorderStyle = bsDialog
   Caption = 'Report Setup'
   ClientHeight = 138
-  ClientWidth = 254
+  ClientWidth = 291
   Color = clBtnFace
   Font.Color = clWindowText
   OnCreate = FormCreate
@@ -41,7 +41,7 @@ object frmReportSetup: TfrmReportSetup
     ParentColor = False
   end
   object btnOK: TButton
-    Left = 90
+    Left = 128
     Height = 25
     Top = 104
     Width = 75
@@ -51,7 +51,7 @@ object frmReportSetup: TfrmReportSetup
     TabOrder = 3
   end
   object btnCancel: TButton
-    Left = 170
+    Left = 208
     Height = 25
     Top = 104
     Width = 75
@@ -64,7 +64,7 @@ object frmReportSetup: TfrmReportSetup
     Left = 76
     Height = 23
     Top = 72
-    Width = 169
+    Width = 207
     ItemHeight = 15
     Sorted = True
     TabOrder = 2
@@ -73,10 +73,8 @@ object frmReportSetup: TfrmReportSetup
     Left = 76
     Height = 23
     Top = 12
-    Width = 171
+    Width = 207
     CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
-    OKCaption = 'OK'
-    CancelCaption = 'Cancel'
     DateOrder = doNone
     ButtonWidth = 23
     NumGlyphs = 1
@@ -87,10 +85,8 @@ object frmReportSetup: TfrmReportSetup
     Left = 76
     Height = 23
     Top = 36
-    Width = 171
+    Width = 207
     CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
-    OKCaption = 'OK'
-    CancelCaption = 'Cancel'
     DateOrder = doNone
     ButtonWidth = 23
     NumGlyphs = 1

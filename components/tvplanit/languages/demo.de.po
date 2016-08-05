@@ -159,26 +159,6 @@ msgstr "OK"
 msgid "Report Setup"
 msgstr "Ausdruck einrichten"
 
-#: tfrmreportsetup.edenddate.cancelcaption
-msgctxt "tfrmreportsetup.edenddate.cancelcaption"
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: tfrmreportsetup.edenddate.okcaption
-msgctxt "tfrmreportsetup.edenddate.okcaption"
-msgid "OK"
-msgstr "OK"
-
-#: tfrmreportsetup.edstartdate.cancelcaption
-msgctxt "tfrmreportsetup.edstartdate.cancelcaption"
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: tfrmreportsetup.edstartdate.okcaption
-msgctxt "tfrmreportsetup.edstartdate.okcaption"
-msgid "OK"
-msgstr "OK"
-
 #: tfrmreportsetup.lblenddate.caption
 msgctxt "tfrmreportsetup.lblenddate.caption"
 msgid "End Date:"
@@ -322,3 +302,4 @@ msgstr "Fertiggestellte Aufgaben ausblenden"
 #: tmainform.titlelbl.caption
 msgid "TitleLbl"
 msgstr ""
+
