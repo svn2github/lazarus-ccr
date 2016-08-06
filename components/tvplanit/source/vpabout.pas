@@ -54,23 +54,22 @@ type
 
   { TfrmAbout }
   TfrmAbout = class(TForm)
-    Bevel1: TBevel;
-    Bevel2: TBevel;
-    Bevel4: TBevel;
+    Bevel3: TBevel;
     Label4: TLabel;
     Label5: TLabel;
     lblLazForumLink: TLabel;
     lblLazPortLink: TLabel;
-    Panel1: TPanel;
+    ImagePanel: TPanel;
     Image1: TImage;
-    Panel2: TPanel;
-    Panel3: TPanel;
+    Panel1: TPanel;
+    TextPanel: TPanel;
+    SupportPanel: TPanel;
+    ButtonPanel: TPanel;
     ProgramName: TLabel;
     GeneralNewsgroupsLabel: TLabel;
     lblTurboLink: TLabel;
     lblHelp: TLabel;
     CopyrightLabel: TLabel;
-    RightsReservedLabel: TLabel;
     OKButton: TButton;
     lblGeneralDiscussion: TLabel;
     Label2: TLabel;
@@ -82,6 +81,7 @@ type
     procedure lblLinkClick(Sender: TObject);
   private
     { Private declarations }
+    procedure PositionControls;
   public
     { Public declarations }
     IsServer : boolean;
@@ -107,6 +107,7 @@ uses
 {$IFNDEF LCL}
   ShellAPI,
 {$ENDIF}
+  Math,
   VpConst, VpMisc, VpSR;
 
 const
@@ -151,7 +152,8 @@ var
 begin
   ProgramName.Caption := VpProductName + ' ' + VpVersionStr;
   DecodeDate(Now, Year, junk, junk);
-  CopyrightLabel.Caption := Format('%s Copyright 2000 - %d, TurboPower Software Company.',
+  CopyrightLabel.Caption := Format('%s Copyright 2000 - %d, TurboPower Software Company and Lazarus team.' +
+    LineEnding + 'All rights reserved.',
     [COPYRIGHT, Year]);
 
   lblTurboLink.Cursor := crHandPoint;
@@ -159,6 +161,8 @@ begin
   lblGeneralDiscussion.Cursor := crHandPoint;
   lblLazPortLink.Cursor := crHandPoint;
   lblLazForumLink.Cursor := crHandpoint;
+
+  PositionControls;
 end;
 
 procedure TfrmAbout.lblLinkMouseEnter(Sender: TObject);
@@ -199,6 +203,26 @@ begin
 {$ENDIF}
   then
     ShowMessage(RSBrowserError);
+end;
+
+procedure TfrmAbout.PositionControls;
+var
+  VDIST: Integer = 8;
+begin
+  VDIST := ScaleY(VDIST, DesignTimeDPI);
+
+  ProgramName.Font.Size := ScaleY(Programname.Font.Size, DesignTimeDPI);
+  ClientWidth := GetLabelWidth(LblLazPortLink) + Panel1.Width + 48; //ScaleX(ClientWidth, DesignTimeDPI);
+//  ClientHeight := ScaleY(ClientHeight, DesignTimeDPI);
+
+  //SupportPanel.ClientHeight := BottomOf(lblLazForumLink) + VDIST;
+  ButtonPanel.ClientHeight :=  CopyRightLabel.Height + 2 * VDIST;
+
+  OKButton.Height := ScaleY(OKButton.Height, DesignTimeDPI);
+//  OKButton.Top := (ButtonPanel.Height - OKButton.Height) div 2;
+//  CopyrightLabel.Top := (ButtonPanel.Height - CopyrightLabel.Height) div 2;
+
+  //ClientHeight := Max(BottomOf(ImagePanel), BottomOf(SupportPanel)) + VDIST + ButtonPanel.Height;
 end;
 
 end.

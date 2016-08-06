@@ -216,25 +216,32 @@ end;
 
 procedure TResEditForm.PositionControls;
 var
-  Delta: Integer;
+  HDelta: Integer = 8;
+  VDelta: Integer = 8;
 begin
-  delta := round(8 *Screen.PixelsPerInch / DesignTimeDPI);
+  HDelta := ScaleX(HDelta, DesignTimeDPI);
+  VDelta := ScaleY(VDelta, DesignTimeDPI);
 
-  DescriptionEdit.Left := lblDescription.Left + GetLabelWidth(lblDescription) + Delta;
-  DescriptionEdit.Width := imgResources.Left - delta - delta - DescriptionEdit.Left;
-  DescriptionEdit.Top := imgResources.Top + (imgResources.Height - DescriptionEdit.Height) div 2;
+  DescriptionEdit.Left := lblDescription.Left + GetLabelWidth(lblDescription) + HDelta;
+  DescriptionEdit.Width := imgResources.Left - 2*HDelta - DescriptionEdit.Left;
+  DescriptionEdit.Top := imgResources.Top; // + (imgResources.Height - DescriptionEdit.Height) div 2;
   lblDescription.Top := DescriptionEdit.Top + (DescriptionEdit.Height - lblDescription.Height) div 2;
 
-  lblNotes.Top := BottomOf(DescriptionEdit) + delta;
-  NotesMemo.Top := BottomOf(lblNotes) + delta div 2;
-  NotesMemo.Height := tabResource.ClientHeight - NotesMemo.Top - NotesMemo.Left;
+  lblNotes.Top := BottomOf(DescriptionEdit) + VDelta;
+  NotesMemo.Top := BottomOf(lblNotes) + VDelta;
+  ClientHeight := ClientHeight + ScaleY(NotesMemo.Height, DesignTimeDPI) - NotesMemo.Height;
+  NotesMemo.Height := tabResource.ClientHeight - NotesMemo.Top - VDelta;
+
+  OKBtn.Height := ScaleY(OKBtn.Height, DesignTimeDPI);
+  CancelBtn.Height := OKBtn.Height;
+  pnlBottom.Height := VDelta + OKBtn.Height + VDelta;
+  OKBtn.Top := VDelta;
+  CancelBtn.Top := VDelta;
 
   OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
   CancelBtn.Width := OKBtn.Width;
   CancelBtn.Left := pnlBottom.ClientWidth - lblDescription.Left - CancelBtn.Width;
-  OKBtn.Left := CancelBtn.Left - OKBtn.Width - delta - (ClientWidth - tabResource.ClientWidth);
-  OKBtn.Top := (pnlBottom.ClientHeight - OKBtn.Height) div 2;
-  CancelBtn.Top := OKBtn.Top;
+  OKBtn.Left := CancelBtn.Left - OKBtn.Width - HDelta; // - (ClientWidth - tabResource.ClientWidth);
 end;
 
 procedure TResEditForm.OKBtnClick(Sender: TObject);

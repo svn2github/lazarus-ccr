@@ -155,7 +155,7 @@ end;
 procedure TfrmEditFormat.PositionControls;
 var
   DELTA: integer = 8;
-  margin: Integer = 16;
+  margin: Integer = 8;
   vdist: Integer = 4;
 var
   w, h: Integer;
@@ -172,17 +172,11 @@ begin
     Free;
   end;
 
-  with TButton.Create(self) do
-  try
-    Parent := self;
-    btnHeight := Height;
-  finally
-    Free;
-  end;
+  btnHeight := ScaleY(btnOK.Height, DesignTimeDPI);
 
-  DELTA := Round(DELTA * Screen.PixelsPerInch / DesignTimeDPI);
-  MARGIN := Round(MARGIN * Screen.PixelsPerInch / DesignTimeDPI);
-  VDIST := Round(VDIST * Screen.PixelsPerInch / DesignTimeDPI);
+  DELTA := ScaleX(DELTA, DesignTimeDPI);
+  MARGIN := ScaleX(MARGIN, DesignTimeDPI);
+  VDIST := ScaleY(VDIST, DesignTimeDPI);
 
   w := MaxValue([GetLabelWidth(LblName), GetLabelWidth(LblDescription), GetLabelWidth(LblIncrement)]);
   edName.Left := margin + w + DELTA;
@@ -195,6 +189,7 @@ begin
   lblIncrement.Left := edIncrement.Left - GetLabelWidth(lblIncrement) - DELTA;
 
   ClientWidth := MARGIN + w + DELTA + edName.Width + MARGIN;
+  rgDayIncrement.Left := MARGIN;
   rgDayIncrement.Width := ClientWidth - 2*MARGIN;
 
   w := Max(GetButtonWidth(btnOK), GetButtonWidth(btnCancel));
@@ -223,7 +218,7 @@ begin
   rgdayIncrement.Height := h + 2*LblName.Height;
   btnOK.Height := btnHeight;
   btnCancel.Height := btnHeight;
-  btnOK.Top := Bottomof(rgDayIncrement) + VDIST;
+  btnOK.Top := Bottomof(rgDayIncrement) + MARGIN;
   btnCancel.Top := btnOK.Top;
 
   ClientHeight := Bottomof(btnOK) + VDIST*2;

@@ -638,7 +638,17 @@ const
   VBEVELDIST = 8;
 var
   w, h: Integer;
+  cnv: TControlCanvas;
+  editHeight: Integer;
 begin
+  editHeight := startDate.Height; //ScaleY(startDate.Height, DesigntimeDPI);
+  startDate.ButtonWidth := editHeight;
+  endDate.ButtonWidth := editHeight;
+ {$IFDEF NEW_TIME_EDIT}
+  startTime.ButtonWidth := editHeight;
+  endTime.ButtonWidth := editHeight;
+ {$ENDIF}
+
   // This is needed as workaround for the combobox height at higher dpi.
   // We design it with Style csDropdown where the height is correct, and then
   // use the corresponding, correct ItemHeight after switching to csOwnerDrawFixed
@@ -651,12 +661,27 @@ begin
 
   // Position controls according to label widths
   w := MaxValue([GetLabelWidth(DescriptionLbl), GetLabelWidth(LocationLbl), GetLabelWidth(StartTimeLbl), GetLabelWidth(EndTimeLbl)]);
+  if w < GetlabelWidth(StartTimeLbl) + imgClock.Picture.Width + DELTA then
+    w := GetLabelWidth(StartTimeLbl) + imgClock.Picture.Width + DELTA;
   DescriptionEdit.Left := w + 2*DELTA;
   DescriptionEdit.Width := PanelDescription.ClientWidth - DescriptionEdit.Left - DELTA;
   DescriptionLbl.Left := DescriptionEdit.Left - GetLabelWidth(DescriptionLbl) - DELTA;
 
   LocationEdit.Left := DescriptionEdit.Left;
   LocationLbl.Left := LocationEdit.Left - GetLabelWidth(LocationLbl) - DELTA;
+
+  cnv := TControlCanvas.Create;
+  try
+    cnv.Control := startDate;
+    cnv.Font.Assign(startDate.Font);
+    w := cnv.TextWidth('99.99.9999') + startDate.ButtonWidth + 10;
+  finally
+    cnv.Free;
+  end;;
+  StartDate.Width := w;
+  EndDate.Width := w;
+  StartTime.Width := w;
+  EndTime.Width := w;
 
   StartDate.Left := DescriptionEdit.Left;
   StartTimeLbl.Left := StartDate.Left - GetLabelWidth(StartTimeLbl) - DELTA;
@@ -667,13 +692,13 @@ begin
   StartTime.Left := StartDate.Left + StartDate.Width + DELTA;
   EndTime.Left := StartTime.Left;
 
-  CbAllDay.Left := ImgClock.Left + ImgClock.Picture.Width + DELTA;
+  CbAllDay.Left := StartDate.Left; //ImgClock.Left + ImgClock.Picture.Width + DELTA;
   AlarmSet.Left := ImgAlarm.Left + ImgAlarm.Picture.Width + DELTA;
 
   Bevel3.Left := StartTime.Left + StartTime.Width + 2*DELTA;
 
   ImgRecurring.Left := Bevel3.Left + Bevel3.Width + 2*DELTA;
-  RecurringType.Left := ImgRecurring.Left;
+  RecurringType.Left := RightOf(ImgRecurring) + DELTA;
 
   RecurringLbl.Left := ImgRecurring.Left + ImgRecurring.Picture.Width + DELTA;
   w := Max(
@@ -682,7 +707,7 @@ begin
   );
   if w > RecurringType.Width then RecurringType.Width := w;
 
-  RepeatUntil.Left := RecurringType.Left + Recurringtype.Width - RepeatUntil.Width;
+  RepeatUntil.Left := RightOf(RecurringType) - RepeatUntil.Width;
   RecurrenceEndsLbl.Left := RepeatUntil.Left - DELTA - GetLabelWIdth(RecurrenceEndsLbl);
 
   w := GetLabelWidth(IntervalLbl);
@@ -692,7 +717,7 @@ begin
   IntervalUpdown.Left := FCustomInterval.Left + FCustomInterval.Width;
   IntervalLbl.Left := FCustomInterval.Left;
 
-  LocationEdit.Width := Bevel3.Left - LocationEdit.Left;
+  LocationEdit.Width := Bevel3.Left - LocationEdit.Left - DELTA;
 
   if AlarmSet.Left + AlarmSet.Width + DELTA < StartDate.Left + StartDate.Width - AdvanceUpdown.Width - AlarmAdvance.Width then
   begin
@@ -707,9 +732,13 @@ begin
 
   Width := RightOf(IntervalUpdown) + DELTA + Width - AppointmentGroupbox.ClientWidth;
 
+  CategoryLbl.Left := Bevel3.Left + Bevel3.Width + DELTA;
+  Category.Left := CategoryLbl.Left + GetLabelWidth(CategoryLbl) + DELTA;
+  Category.Width := RightOf(DescriptionEdit) - Category.Left;
+  {
   Category.Left := DescriptionEdit.Left + DescriptionEdit.Width - category.Width;
   CategoryLbl.Left := Category.Left - DELTA - GetLabelWidth(CategoryLbl);
-
+   }
   // *** Vertical positions ***
   DescriptionEdit.Top := VDELTA;
   DescriptionLbl.Top := DescriptionEdit.Top + (DescriptionEdit.Height - DescriptionLbl.Height) div 2;
@@ -719,9 +748,7 @@ begin
   Category.Top := LocationEdit.Top;
   PanelDescription.ClientHeight := BottomOf(LocationEdit) + VDIST;
 
- // Bevel1.Top := BottomOf(LocationEdit) + VBEVELDIST;
-
-  imgClock.Top := VDELTA; //Bevel1.Top + 2 + VBEVELDIST;
+  imgClock.Top := VDELTA;
   CbAllDay.Top := imgClock.Top;
   imgRecurring.Top := imgClock.Top;
 
@@ -751,21 +778,27 @@ begin
   SoundFinderBtn.Height := AlarmAdvanceType.Height;
   SoundFinderBtn.Width := SoundFinderBtn.Height;
   SoundFinderBtn.Top := AlarmAdvanceType.Top;
-  PanelAlarm.ClientHeight := BottomOf(AlarmAdvance) + VDIST;
+  PanelAlarm.ClientHeight := Max(BottomOf(ImgAlarm), BottomOf(AlarmAdvance)) + VDIST;
 
   OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
   CancelBtn.Width := OKBtn.Width;
   CancelBtn.Left := ButtonPanel.ClientWidth - ResourcenameLbl.Left - CancelBtn.Width;
   OKBtn.Left := CancelBtn.Left - DELTA - OKBtn.Width;
+  ResourceNameLbl.Font.Size := ScaleY(ResourceNameLbl.Font.Size, DesignTimeDPI);
   ResourceNameLbl.Top := (ButtonPanel.ClientHeight - Panel1.BorderWidth - ResourceNameLbl.Height) div 2;
   OKBtn.Top := (ButtonPanel.ClientHeight - Panel1.BorderWidth - OKBtn.Height) div 2;
   CancelBtn.Top := OKBtn.Top;
+
+  OKBtn.Height := ScaleY(OKBtn.Height, DesigntimeDPI);
+  CancelBtn.Height := OKBtn.Height;
+  ButtonPanel.ClientHeight := OKBtn.Height + Bevel4.Height;
+  ResourceNameLbl.Top := OKBtn.Top + (OKBtn.Height - ResourceNameLbl.Height) div 2;
 
   NotesMemo.Top := BottomOf(AppointmentGroupbox) + Bevel4.Height;
   NotesMemo.Width := AppointmentGroupbox.Width;
   NotesMemo.Left := AppointmentGroupbox.Left;
 
-  ClientHeight := AppointmentGroupbox.Height + Bevel4.Height + NotesMemo.Height + ButtonPanel.Height;
+  ClientHeight := AppointmentGroupbox.Height + Bevel4.Height + ScaleY(NotesMemo.Height, DesignTimeDPI) + ButtonPanel.Height;
 end;
 
 

@@ -1,12 +1,12 @@
 object frmPrnFormat: TfrmPrnFormat
   Left = 250
-  Height = 480
+  Height = 471
   Top = 165
   Width = 694
   HorzScrollBar.Page = 639
   VertScrollBar.Page = 479
   Caption = 'Print Format Designer'
-  ClientHeight = 480
+  ClientHeight = 471
   ClientWidth = 694
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
@@ -94,29 +94,35 @@ object frmPrnFormat: TfrmPrnFormat
     TabOrder = 1
   end
   object PrintPreviewPanel: TPanel
-    Left = 365
-    Height = 439
+    Left = 368
+    Height = 430
     Top = 0
     Width = 320
-    BorderSpacing.Top = 4
-    BorderSpacing.Right = 4
+    Align = alRight
     BevelOuter = bvNone
-    ClientHeight = 439
+    ClientHeight = 430
     ClientWidth = 320
     TabOrder = 8
     object PrintPreview: TVpPrintPreview
       Left = 0
-      Height = 439
-      Top = 0
+      Height = 401
+      Top = 21
       Width = 320
       CurPage = 0
       DrawingStyle = dsFlat
       EndDate = 37377.6447728357
       StartDate = 37370.6447728357
-      Align = alClient
       Parent = PrintPreviewPanel
       TabStop = True
       TabOrder = 0
+    end
+    object LblPrintPreview: TLabel
+      Left = 1
+      Height = 15
+      Top = 2
+      Width = 44
+      Caption = 'Preview:'
+      ParentColor = False
     end
   end
   object lbFormats: TListBox
@@ -132,7 +138,7 @@ object frmPrnFormat: TfrmPrnFormat
   end
   object lbElements: TListBox
     Left = 8
-    Height = 193
+    Height = 179
     Top = 246
     Width = 257
     ItemHeight = 0
@@ -195,7 +201,7 @@ object frmPrnFormat: TfrmPrnFormat
   object ButtonPanel: TPanel
     Left = 0
     Height = 41
-    Top = 439
+    Top = 430
     Width = 694
     Align = alBottom
     BevelOuter = bvNone
@@ -234,12 +240,20 @@ object frmPrnFormat: TfrmPrnFormat
       Height = 25
       Top = 8
       Width = 75
-      Anchors = [akRight, akBottom]
+      Anchors = [akTop, akRight]
       Caption = 'OK'
       Default = True
       OnClick = btnOkClick
       TabOrder = 3
     end
+  end
+  object Bevel1: TBevel
+    Left = 688
+    Height = 430
+    Top = 0
+    Width = 6
+    Align = alRight
+    Shape = bsSpacer
   end
   object OpenDialog1: TOpenDialog
     Title = 'Open filter file'

@@ -308,6 +308,8 @@ var
   shape: TVpShapeType;
   DELTA: Integer = 8;
   VDIST: Integer = 4;
+  cnv: TControlCanvas;
+  i: Integer;
 begin
   AutoSize := false;
   gbPen.AutoSize := false;
@@ -329,16 +331,15 @@ begin
   cbBrushColor.ItemHeight := hc;
 
   // Fix button hight at higher dpi.
-  with TButton.Create(self) do
-  try
-    Parent := self;
-    hb := Height;
-  finally
-    Free;
-  end;
+  hb := ScaleY(btnOK.Height, DesignTimeDPI);
 
-  DELTA := round(DELTA * Screen.PixelsPerInch / DesignTimeDPI);
-  VDIST := round(VDIST * Screen.PixelsPerInch / DesignTimeDPI);
+  DELTA := ScaleX(DELTA, DesignTimeDPI);
+  VDIST := ScaleY(VDIST, DesignTimeDPI);
+
+  { gsShapes - vert }
+  gbShapes.ClientHeight := SpeedButton1.Height + 3 * VDIST;
+  for shape := Low(TVpShapeType) to High(TVpShapeType) do
+    FShapeButtons[shape].Top := VDIST;
 
   { gbPen - hor }
   w := MaxValue([GetLabelWidth(lblPenColor), GetLabelWidth(lblPenStyle),
@@ -353,6 +354,23 @@ begin
   lblPenMode.Left := cbPenColor.Left - GetLabelWidth(lblPenMode) - DELTA;
   udPenWidth.Left := RightOf(edPenWidth);
 
+  { gbPen - Width }
+  cnv := TControlCanvas.Create;
+  try
+    cnv.Control := cbPenStyle;
+    cnv.Font.Assign(cbPenStyle.Font);
+    w := 0;
+    for i:=0 to cbPenStyle.Items.Count-1 do
+      w := Max(w, cnv.TextWidth(cbPenStyle.Items[i]));
+    w := w + 10 + 2*cbPenStyle.Height;
+  finally
+    cnv.Free;
+  end;
+
+  cbPenColor.Width := w;
+  cbPenStyle.Width := w;
+  cbPenMode.Width := w;
+
   { gbPen - vert }
   lblPenColor.Top := cbPenColor.Top + (cbPenColor.Height - lblPenColor.Height) div 2;
   cbPenStyle.Top := BottomOf(cbPenColor) + VDIST;
@@ -365,6 +383,7 @@ begin
 
   { gpPen - set size }
   gbPen.AutoSize := true;
+  gbPen.Top := BottomOf(gbShapes) + VDIST*2;
 
   { gbBrush - hor }
   w := MaxValue([GetLabelWidth(lblBrushColor), GetLabelWidth(lblBrushStyle)]) + 2*DELTA;
@@ -383,6 +402,7 @@ begin
 
   { gbBrush - set size }
   gbBrush.AutoSize := true;
+  gbBrush.Top := gbPen.Top;
 
   { Buttons - hor }
   btnOK.Width := Max(GetButtonWidth(btnOK), GetButtonWidth(btnCancel));
@@ -465,6 +485,8 @@ end;
 
 procedure TfrmEditShape.cbBrushStyleDrawItem(Control: TWinControl;
   Index: Integer; Rect: TRect; State: TOwnerDrawState);
+const
+  DIST = 2;
 var
   SavePenColor, SaveBrushColor: TColor;
   x: Integer;
@@ -515,8 +537,9 @@ begin
     end;
 
     { draw the item text }
+    inc(x, ScaleX(DIST, DesignTimeDPI));
     TxtRect := Classes.Rect(x, Rect.Top, Rect.Right, Rect.Bottom);
-    TextRect(TxtRect, TxtRect.Left + 1, TxtRect.Top + 1, Item);  // Font color already set
+    TextRect(TxtRect, TxtRect.Left, TxtRect.Top + 1, Item);  // Font color already set
 
   finally
     { restore settings }
@@ -540,6 +563,8 @@ end;
 
 procedure TfrmEditShape.cbPenStyleDrawItem(Control: TWinControl;
   Index: Integer; Rect: TRect; State: TOwnerDrawState);
+const
+  DIST = 2;
 var
   SavePenColor, SaveBrushColor: TColor;
   SavePenStyle: TPenStyle;
@@ -583,8 +608,9 @@ begin
     LineTo(x - 1, y + 1);
 
     { Draw the item text }
+    inc(x, ScaleX(DIST, DesignTimeDPI));
     TxtRect := Classes.Rect(x, Rect.Top, Rect.Right, Rect.Bottom);
-    TextRect(TxtRect, TxtRect.Left + 1, TxtRect.Top + 1, Item);   // Color already set
+    TextRect(TxtRect, TxtRect.Left, TxtRect.Top + 1, Item);   // Color already set
 
   finally
     { restore settings }

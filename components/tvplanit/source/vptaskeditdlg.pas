@@ -157,37 +157,74 @@ end;
 
 procedure TTaskEditForm.PositionControls;
 var
-  VBevelDist: Integer;  // Distance bevel-to-control
-  VDist: Integer;       // Vertical distance between controls
-  HDist: Integer;       // Horizontal distance between controls:
+  VBevelDist: Integer = 8;  // Distance bevel-to-control
+  VDist: Integer = 8;       // Vertical distance between controls
+  HDist: Integer = 8;       // Horizontal distance between controls:
+  w: Integer;
+  cnv: TControlCanvas;
+  cb: TCheckbox;
+  editHeight: Integer;
 begin
-  VBevelDist := round(8 * Screen.PixelsPerInch / DesignTimeDPI);
-  VDist := round(8 * Screen.PixelsPerInch / DesignTimeDPI);
-  HDist := round(8 * Screen.PixelsPerInch / DesignTimeDPI);
+  VBevelDist := ScaleY(VBevelDist, DesignTimeDPI);
+  VDist := ScaleY(VDist, DesignTimeDPI);
+  HDist := ScaleX(HDist, DesignTimeDPI);
+  editHeight := ScaleY(DueDateEdit.Height, DesignTimeDPI);
 
+  OKBtn.Height := ScaleY(OKBtn.Height, DesignTimeDPI);
+  OKBtn.Top := VDist;
+  CancelBtn.Height := OKBtn.Height;
+  CancelBtn.Top := OKBtn.Top;
+  ButtonPanel.Height := OKBtn.Height + VDIST*2;
+  ResourceNameLbl.Font.Size := ScaleY(ResourceNameLbl.Font.Size, DesignTimeDPI);
+  ResourceNameLbl.Top := OKBtn.Top + (OKBtn.Height - ScaleY(ResourceNameLbl.Height, DesignTimeDPI)) div 2;
+
+  DueDateEdit.ButtonWidth := ScaleX(DueDateEdit.Height, DesigntimeDPI);
   DueDateEdit.Left := DueDateLbl.Left + GetLabelWidth(DueDateLbl) + HDist;
+  cnv := TControlCanvas.Create;
+  try
+    cnv.Control := DueDateEdit;
+    cnv.Font.Assign(DueDateEdit.Font);
+    w := cnv.TextWidth(' 99-99-9999 ') + DueDateEdit.ButtonWidth + 10;
+  finally
+    cnv.Free;
+  end;
+  DueDateEdit.Width := w;
+
+  if RightOf(DueDateEdit) + 3*HDist > ImgCompleted.Left then begin
+    ImgCompleted.Left := RightOf(DueDateEdit) + 3*HDist;
+    CompleteCB.Left := RightOf(ImgCompleted) + HDist;
+    CompletedOnLbl.Left := CompleteCB.Left;
+
+    cnv := TControlCanvas.Create;
+    try
+      cnv.Control := CompleteCB;
+      cnv.Font.Assign(CompleteCB.Font);
+      w := cnv.TextWidth(CompleteCB.Caption) + GetSystemMetrics(SM_CXMENUCHECK);
+    finally
+      cnv.Free;
+    end;
+    w := Max(GetlabelWidth(CompletedOnLbl), w);
+    ClientWidth := ClientWidth - tabTask.ClientWidth + CompleteCB.Left + w + HDist*2;
+  end;
+
   OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
   CancelBtn.Width := OKBtn.Width;
   CancelBtn.Left := ButtonPanel.ClientWidth - ResourcenameLbl.Left - CancelBtn.Width;
   OKBtn.Left := CancelBtn.Left - HDist - OKBtn.Width;
 
-  Bevel1.Top := BottomOf(DescriptionEdit) + VBevelDist;
+  Bevel1.Top := DescriptionEdit.Top + editHeight + VBevelDist; //BottomOf(DescriptionEdit) + VBevelDist;
 
   ImgCalendar.Top := Bevel1.Top + 2 + VBevelDist;
   ImgCompleted.Top := ImgCalendar.Top;
-  DueDateEdit.Top := ImgCalendar.Top + (ImgCalendar.Height - DueDateEdit.Height) div 2;
+  DueDateEdit.Top := ImgCalendar.Top; // + (ImgCalendar.Height - DueDateEdit.Height) div 2;
   DueDateLbl.Top := DueDateEdit.Top + (DueDateEdit.Height - DueDateLbl.Height) div 2;
-  CompleteCB.Top := ImgCompleted.Top + (ImgCompleted.Height - CompleteCB.Height) div 2;
+  CompleteCB.Top := ImgCompleted.Top; // + (ImgCompleted.Height - CompleteCB.Height) div 2;
 
-  CreatedOnLbl.Top := BottomOf(DueDateEdit) + VDist;
+  CreatedOnLbl.Top := DueDateEdit.Top + editHeight + VDist; //BottomOf(DueDateEdit) + VDist;
   CompletedOnLbl.Top := CreatedOnLbl.Top;
 
   DetailsMemo.Top := BottomOf(CreatedOnLbl) + VBevelDist;
   DetailsMemo.Height :=  tabTask.ClientHeight - DetailsMemo.Top - DescriptionEdit.Top;
-
-  OKBtn.Top := (ButtonPanel.Height - OKBtn.Height) div 2;
-  CancelBtn.Top := OKBtn.Top;
-  ResourceNameLbl.Top := (ButtonPanel.Height - ResourceNameLbl.Height) div 2;
 end;
 {=====}
 

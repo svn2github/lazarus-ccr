@@ -1648,7 +1648,7 @@ begin
     for I := 0 to FolderCount-1 do begin
       Folder := Folders[I];
       if PtInRect(Folder.lfRect, Point(X, Y)) then begin
-      nabCursorOverItem := False;
+        nabCursorOverItem := False;
         FolderIndex := I;
         Exit;
       end;

@@ -2,34 +2,34 @@ object MainForm: TMainForm
   Left = 301
   Height = 600
   Top = 177
-  Width = 900
+  Width = 978
   Caption = 'Turbo Power VisualPlanIt Demo'
   ClientHeight = 580
-  ClientWidth = 900
+  ClientWidth = 978
   Menu = MainMenu1
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  LCLVersion = '1.6.0.4'
+  LCLVersion = '1.7'
   object Panel1: TPanel
-    Left = 120
+    Left = 125
     Height = 580
     Top = 0
-    Width = 780
+    Width = 853
     Align = alClient
     BevelOuter = bvNone
     ClientHeight = 580
-    ClientWidth = 780
+    ClientWidth = 853
     TabOrder = 0
     object HeaderPanel: TPanel
       Left = 2
       Height = 48
       Top = 0
-      Width = 778
+      Width = 851
       Align = alTop
       BorderSpacing.Left = 2
       BevelOuter = bvNone
       ClientHeight = 48
-      ClientWidth = 778
+      ClientWidth = 851
       Color = clActiveCaption
       ParentColor = False
       TabOrder = 0
@@ -56,8 +56,8 @@ object MainForm: TMainForm
       Left = 0
       Height = 532
       Top = 48
-      Width = 780
-      PageIndex = 0
+      Width = 853
+      PageIndex = 1
       Align = alClient
       TabOrder = 1
       TabStop = True
@@ -270,7 +270,7 @@ object MainForm: TMainForm
           Left = 338
           Height = 532
           Top = 0
-          Width = 442
+          Width = 515
           DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
@@ -302,18 +302,18 @@ object MainForm: TMainForm
       object Tasks: TPage
         object Panel6: TPanel
           Left = 0
-          Height = 42
+          Height = 36
           Top = 0
-          Width = 626
+          Width = 853
           Align = alTop
           BevelOuter = bvNone
-          ClientHeight = 42
-          ClientWidth = 626
+          ClientHeight = 36
+          ClientWidth = 853
           TabOrder = 0
           object RbAllTasks: TRadioButton
             Left = 8
             Height = 19
-            Top = 13
+            Top = 8
             Width = 63
             Caption = 'All tasks'
             Checked = True
@@ -322,10 +322,13 @@ object MainForm: TMainForm
             TabStop = True
           end
           object RbHideCompletedTasks: TRadioButton
-            Left = 120
+            AnchorSideLeft.Control = RbAllTasks
+            AnchorSideLeft.Side = asrBottom
+            Left = 101
             Height = 19
-            Top = 13
+            Top = 8
             Width = 134
+            BorderSpacing.Left = 30
             Caption = 'Hide completed tasks'
             OnChange = RbHideCompletedTasksChange
             TabOrder = 1
@@ -333,9 +336,9 @@ object MainForm: TMainForm
         end
         object VpTaskList1: TVpTaskList
           Left = 0
-          Height = 393
-          Top = 42
-          Width = 626
+          Height = 496
+          Top = 36
+          Width = 853
           DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
@@ -367,18 +370,22 @@ object MainForm: TMainForm
       object Contacts: TPage
         object VpContactButtonBar1: TVpContactButtonBar
           Left = 0
-          Height = 435
+          Height = 532
           Top = 0
           Width = 40
-          DrawingStyle = dsFlat
-          RadioStyle = False
+          BorderWidth = 3
+          ButtonHeight = 20
+          ButtonWidth = 36
+          ContactGrid = VpContactGrid1
+          DrawingStyle = dsNoBorder
+          RadioStyle = True
           Align = alLeft
         end
         object VpContactGrid1: TVpContactGrid
           Left = 40
-          Height = 435
+          Height = 532
           Top = 0
-          Width = 586
+          Width = 813
           DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
@@ -426,7 +433,7 @@ object MainForm: TMainForm
           Left = 16
           Height = 23
           Top = 24
-          Width = 235
+          Width = 323
           DataStore = VpBufDSDataStore1
           Style = csDropDownList
         end
@@ -654,6 +661,12 @@ object MainForm: TMainForm
     OnItemClick = VpNavBar1ItemClick
     Align = alLeft
     ParentColor = False
+  end
+  object Splitter1: TSplitter
+    Left = 120
+    Height = 580
+    Top = 0
+    Width = 5
   end
   object VpControlLink1: TVpControlLink
     DataStore = VpBufDSDataStore1

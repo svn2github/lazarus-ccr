@@ -239,18 +239,6 @@ msgstr "Datei"
 msgid "Help"
 msgstr "Hilfe"
 
-# No need to translate
-#: tmainform.menuitem3.caption
-msgctxt "tmainform.menuitem3.caption"
-msgid "-"
-msgstr ""
-
-# No need to translate
-#: tmainform.menuitem4.caption
-msgctxt "tmainform.menuitem4.caption"
-msgid "-"
-msgstr ""
-
 #: tmainform.mnuabout.caption
 msgid "About Visual PlanIt"
 msgstr "Über Visual PlanIt"

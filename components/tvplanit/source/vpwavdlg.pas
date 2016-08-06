@@ -105,7 +105,7 @@ begin
   ShellTreeview.Visible := not CBDefault.Checked;
   ShellListview.Visible := not CBDefault.Checked;
   Panel3.Visible := CBDefault.Checked;
-  Panel4.Visible := CBDefault.Checked;
+  Label4.Visible := CBDefault.Checked;
   PlayButton.Visible := not CBDefault.Checked;
 end;
 {=====}
@@ -126,7 +126,9 @@ end;
 procedure TFrmSoundDialog.FormCreate(Sender: TObject);
 begin
   Panel3.Align := alClient;
-  Panel4.Align := alClient;
+  Panel4.Align := alLeft;
+  ShellTreeView.Align := alClient;
+  Label4.Align := alClient;
 end;
 {=====}
 
@@ -159,6 +161,7 @@ end;
 procedure TFrmSoundDialog.Populate;
 var
   DIST: Integer = 8;
+  VDIST: Integer = 8;
   HBORDER: Integer = 8;
 begin
   TabSheet1.Caption := RSSelectASound;
@@ -170,7 +173,16 @@ begin
   Label4.Caption := RSNothingToSelectFrom;
 
   DIST := ScaleX(DIST, DesignTimeDPI);
+  VDist := ScaleY(VDist, DesignTimeDPI);
   HBORDER := ScaleX(HBORDER, DesignTimeDPI);
+
+  OKBtn.Height := ScaleX(OKBtn.Height, DesignTimeDPI);
+  CancelBtn.Height := OKBtn.Height;
+  ButtonPanel.Height := VDist + OKBtn.Height + VDist;
+  OKBtn.Top := VDist;
+  CancelBtn.Top := VDist;
+  PlayButton.Top := (ButtonPanel.Height - PlayButton.Height) div 2;
+
   OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
   CancelBtn.Width := OKBtn.Width;
   CancelBtn.Left := ButtonPanel.ClientWidth - HBORDER - CancelBtn.Width;

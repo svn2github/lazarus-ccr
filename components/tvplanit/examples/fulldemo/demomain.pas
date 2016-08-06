@@ -46,6 +46,7 @@ type
     Notebook: TNotebook;
     Events: TPage;
     OpenDialog: TOpenDialog;
+    Splitter1: TSplitter;
     Tasks: TPage;
     Contacts: TPage;
     Resources: TPage;
@@ -365,6 +366,34 @@ begin
   PopulateLanguages;
   ReadIni;
 
+  with VpDayview1 do begin
+    AllDayEventAttributes.Font.Size := ScaleY(AllDayEventAttributes.Font.Size, DesignTimeDPI);
+    Font.Size := ScaleY(Font.Size, DesignTimeDPI);
+    HeadAttributes.Font.Size := ScaleY(HeadAttributes.Font.Size, DesignTimeDPI);
+    RowHeadAttributes.HourFont.Size := ScaleY(RowHeadAttributes.HourFont.Size, DesignTimeDPI);
+    RowHeadAttributes.MinuteFont.Size := ScaleY(RowHeadAttributes.MinuteFont.Size, DesignTimeDPI);
+  end;
+  with VpWeekView1 do begin
+    AllDayEventAttributes.Font.Size := ScaleY(AllDayEventAttributes.Font.Size, DesignTimeDPI);
+    DayHeadAttributes.Font.Size := ScaleY(DayHeadAttributes.Font.Size, DesignTimeDPI);
+    HeadAttributes.Font.Size := ScaleY(HeadAttributes.Font.Size, DesignTimeDPI);
+  end;
+  with VpMonthView1 do begin
+    DayHeadAttributes.Font.Size := ScaleY(DayHeadAttributes.Font.Size, DesignTimeDPI);
+    DayNumberFont.Size := ScaleY(DayNumberFont.Size, DesignTimeDPI);
+    EventFont.Size := ScaleY(EventFont.Size, DesignTimeDPI);
+    Font.Size := ScaleY(Font.Size, DesignTimeDPI);
+    HeadAttributes.Font.Size := ScaleY(HeadAttributes.Font.Size, DesignTimeDPI);
+    TodayAttributes.Font.Size := ScaleY(TodayAttributes.Font.Size, DesignTimeDPI);
+  end;
+  with VpTaskList1 do begin
+    Font.Size := ScaleY(Font.Size, DesignTimeDPI);
+    TaskHeadAttributes.Font.Size := ScaleY(TaskHeadAttributes.Font.Size, DesignTimeDPI);
+  end;
+  with VpContactGrid1 do begin
+    Font.Size := ScaleY(Font.Size, DesignTimeDPI);
+  end;
+
   ds := VpControlLink1.Datastore;
   if ds.Resources.Count > 0 then
   begin
@@ -544,7 +573,27 @@ end;
 procedure TMainForm.PositionControls;
 var
   w: Integer;
+  cnv: TControlCanvas;
 begin
+  // DayView page
+  DaySelectorPanel.Height := 2*CbGranularity.Top + CbGranularity.Height;
+
+  // Tasks page
+  Panel6.ClientHeight := 2*RbAllTasks.Top + ScaleY(RbAllTasks.Height, DesignTimeDPI);
+
+  // Resources page
+  w := MaxValue([
+    GetButtonWidth(BtnNewRes),
+    GetButtonWidth(BtnEditRes),
+    GetButtonWidth(BtnDeleteRes)
+  ]);
+  BtnNewRes.Width := w;
+  BtnEditRes.Width := w;
+  BtnDeleteRes.Width := w;
+  BtnEditRes.Left := RightOf(BtnNewRes) + 8;
+  BtnDeleteRes.Left := RightOf(BtnEditRes) + 8;
+  VpResourceCombo1.Width := RightOf(BtnDeleteRes) - BtnNewRes.Left;
+
   // Settings page
   w := MaxValue([
     GetLabelWidth(LblLanguage),

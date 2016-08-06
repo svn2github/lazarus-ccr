@@ -50,7 +50,11 @@ const
   UnnamedFile = '<Unnamed>';
 
 type
+
+  { TfrmPrnFormat }
+
   TfrmPrnFormat = class(TForm)
+    Bevel1: TBevel;
     btnDeleteElement: TButton;
     btnDeleteFormat: TButton;
     btnEditElement: TButton;
@@ -62,6 +66,7 @@ type
     btnNewFile: TButton;
     btnNewFormat: TButton;
     btnSaveFile: TButton;
+    LblPrintPreview: TLabel;
     LblFormats: TLabel;
     LblElements: TLabel;
     lbElements: TListBox;
@@ -84,12 +89,12 @@ type
     procedure btnNewFileClick(Sender: TObject);
     procedure btnNewFormatClick(Sender: TObject);
     procedure btnSaveFileClick(Sender: TObject);
+    procedure btnOkClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure lbElementsClick(Sender: TObject);
     procedure lbFormatsClick(Sender: TObject);
-    procedure btnOkClick(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure lbElementsMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure lbElementsDragDrop(Sender, Source: TObject; X, Y: Integer);
@@ -655,6 +660,7 @@ begin
   LblFormats.Caption := RSFormats;
   LblElements.Caption := RSElements;
   lblPrintOrder.Caption := RSPrintOrder;
+  LblPrintPreview.Caption := RSDlgPrintPreview;
   btnOK.Caption := RSOKBtn;
   btnNewFormat.Caption := RSNewBtn;
   btnEditFormat.Caption := RSEditBtn;
@@ -670,38 +676,53 @@ end;
 procedure TfrmPrnFormat.PositionControls;
 var
   w: Integer;
-  DIST: Integer = 8;
+  HDist: Integer = 8;
+  VDist: Integer = 8;
   btndist: Integer;
   hBtn: Integer;
+  btnHeight: Integer;
+  po: TPosition;
 begin
-  DIST := round(DIST * Screen.PixelsPerInch / DesignTimeDPI);
-  btnDist := btnEditFormat.Top - BottomOf(btnNewFormat);
+  po := Position;
 
-  // Fix button height at higher dpi
-  with TButton.Create(self) do
-  try
-    Parent := self;
-    hBtn := Height;
-  finally
-    Free;
-  end;
+  HDist := ScaleX(HDist, DesignTimeDPI);
+  VDist := ScaleY(VDist, DesignTimeDPI);
+  hBtn := ScaleY(btnOK.Height, DesignTimeDPI);
+
   btnNewFormat.Height := hBtn;
   btnEditFormat.Height := hBtn;
   btnDeleteFormat.Height := hBtn;
   btnNewElement.Height := hBtn;
   btnEditElement.Height := hbtn;
   btnDeleteElement.Height := hBtn;
+  btnMoveElementUp.Height := hBtn;   btnMoveElementUp.Width := hBtn;
+  btnMoveElementDn.Height := hBtn;   btnMoveElementDn.Width := hBtn;
   btnNewFile.Height := hBtn;
   btnLoadFile.Height := hBtn;
   btnSaveFile.Height := hBtn;
   btnOK.Height := hBtn;
 
+  LblFormats.Top := VDist div 2;
+  lbFormats.Top := BottomOf(LblFormats) + VDist div 2;
+  lbFormats.Height := 5*hBtn + lblPrintOrder.Height + 3*VDist; //ScaleY(lbFormats.Height, DesignTimeDPI);
+  LblElements.Top := BottomOf(lbFormats) + VDist;
+  lbElements.Top := Bottomof(LblElements) + VDist div 2;
+  lbElements.Height := lbFormats.Height;
+
+  btnNewFormat.Top := lbFormats.Top;
+  btnEditFormat.Top := BottomOf(btnNewFormat) + VDist div 2;
+  btnDeleteFormat.Top := BottomOf(btnEditFormat) + VDist div 2;
+
+  btnNewElement.Top := lbElements.Top;
+  btnEditElement.Top := BottomOf(btnNewElement) + VDist div 2;
+  btnDeleteElement.Top := BottomOf(btnEditElement) + VDist div 2;
+
   w := MaxValue([GetButtonWidth(btnNewFile), GetButtonWidth(btnLoadFile), GetButtonWidth(btnSaveFile)]);
   btnNewFile.Width := w;
   btnLoadFile.Width := w;
   btnSaveFile.Width := w;
-  btnLoadFile.Left := RightOf(btnNewFile) + DIST;
-  btnSaveFile.Left := RightOf(btnLoadFile) + DIST;
+  btnLoadFile.Left := RightOf(btnNewFile) + HDist;
+  btnSaveFile.Left := RightOf(btnLoadFile) + HDist;
 
   w := MaxValue([GetButtonWidth(btnNewFormat), GetButtonWidth(btnEditFormat), GetButtonWidth(btnDeleteFormat)]);
   btnNewFormat.Width := w;
@@ -711,7 +732,7 @@ begin
   btnEditElement.Width := w;
   btnDeleteElement.Width := w;
   w := Max(w, GetLabelWidth(LblPrintOrder));
-  btnNewFormat.Left := RightOf(lbFormats) + DIST + (w - btnNewFormat.Width) div 2;
+  btnNewFormat.Left := RightOf(lbFormats) + HDist + (w - btnNewFormat.Width) div 2;
   btnEditFormat.Left := btnNewFormat.Left;
   btnDeleteFormat.Left := btnNewFormat.Left;
   btnNewElement.Left := btnNewFormat.Left;
@@ -721,15 +742,30 @@ begin
   LblPrintOrder.Left := BtnNewFormat.Left + (BtnNewFormat.Width - GetLabelWidth(LblPrintOrder)) div 2;
   btnMoveElementUp.Left := BtnNewFormat.Left + (BtnNewFormat.Width - btnMoveElementUp.Width) div 2;
   btnMoveElementDn.Left := btnMoveElementUp.Left;
-  LblPrintOrder.Top := BottomOf(BtnDeleteElement) + btndist;
-  btnMoveElementUp.Top := BottomOf(LblPrintOrder) + Round(8 * Screen.PixelsPerInch / DesignTimeDPI);
-  btnMoveElementDn.Top := BottomOf(BtnMoveElementUp) + Round(8 * Screen.PixelsPerInch / DesignTimeDPI);
+  LblPrintOrder.Top := BottomOf(BtnDeleteElement) + VDist;
+  btnMoveElementUp.Top := BottomOf(LblPrintOrder) + VDist div 2;
+  btnMoveElementDn.Top := BottomOf(BtnMoveElementUp) + VDist div 2;
 
-  PrintPreviewPanel.Left := Max(RightOf(btnNewFormat), RightOf(LblPrintOrder)) + DIST; //RightOf(lbFormats) + DIST + w + DIST;
-  PrintPreviewPanel.Width := round(PrintPreview.Height * 210 / 297);  // size ratio of A4 paper
+  btnOK.Top := VDist;
+  btnNewFile.Top := VDist;
+  btnSaveFile.Top := VDist;
+  btnLoadFile.Top := VDist;
 
-  ButtonPanel.ClientHeight := BottomOf(btnOK) + btnOK.Top;
-  ClientWidth := PrintPreviewPanel.Left + PrintPreviewPanel.Width + 4; // + DIST;
+  ButtonPanel.ClientHeight := VDist + hBtn + VDist;
+  ClientHeight := BottomOf(lbElements) + ButtonPanel.Height;
+
+  Bevel1.Width := lbFormats.Left;
+
+  PrintPreview.Top := lbFormats.Top;
+  LblPrintPreview.Top := LblFormats.Top;
+  PrintPreview.Height := PrintPreviewPanel.ClientHeight - PrintPreview.Top;
+  PrintPreviewPanel.Width := Round(PrintPreview.Height * 210 / 297);  // size ratio of A4 paper
+  PrintPreview.Width := PrintPreviewPanel.ClientWidth;
+  ClientWidth := Max(RightOf(btnNewFormat), RightOf(LblPrintOrder) + HDist) + PrintPreviewPanel.Width + Bevel1.Width;
+  PrintPreviewPanel.Left := 0;  // make sure that spacer is at right
+
+  Position := poDefault;
+  Position := poScreenCenter;
 end;
 {
 

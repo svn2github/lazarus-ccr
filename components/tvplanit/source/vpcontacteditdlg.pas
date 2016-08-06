@@ -391,16 +391,20 @@ var
   FieldTop: Integer;
   delta: Integer;
   corr: Integer;         // difference between form's client width and tabsheet width
-  editHeight: Integer;   // Height of an edit control
+  editHeight: Integer;   // DPI-aware height of an edit control
+  btnHeight: Integer;    // DPI-aware height of a button control
   vDist: Integer = 4;    // Vertical distance between edits
   hBorder: Integer = 8;  // Distance between container border and label
-  dist: Integer = 4;     // distance between label and edit/combo
+  dist: Integer = 4;     // Distance between label and edit/combo
 
 begin
-  dist := round(dist * Screen.PixelsPerInch / DesignTimeDPI);
-  vdist := round(vdist * Screen.PixelsPerInch / DesignTimeDPI);
-  hBorder := round(hBorder * Screen.PixelsPerInch / DesignTimeDPI);
-  editHeight := LastNameEdit.Height * Screen.PixelsPerInch div DesignTimeDPI;
+  dist := ScaleX(dist , DesignTimeDPI);
+  vdist := ScaleY(vdist, DesignTimeDPI);
+  hBorder := ScaleX(hBorder, DesignTimeDPI);
+  editHeight := ScaleY(LastNameEdit.Height, DesignTimeDPI);
+  btnHeight := ScaleY(OKBtn.Height, DesignTimeDPI);
+
+  BirthdateEdit.ButtonWidth := editHeight;
 
   { Note: The resizing algorithm is dependent upon the labels having their
     FocusControl property set to the corresponding edit field or combobox. }
@@ -423,8 +427,7 @@ begin
   for i := Low(Labels) to High(Labels) do
     LargestLabelWidth := Max(LargestLabelWidth, GetLabelWidth(Labels[i]));
 
-  { Determine width of label based upon whether large or small fonts are
-    in effect. }
+  { Determine width of label based upon dpi of screen }
   for i := Low(Labels) to High(Labels) do begin
     Labels[i].FocusControl.Left := HBorder + LargestLabelWidth + Dist;
     Labels[i].Left := Labels[i].FocusControl.Left - DIST - GetLabelWidth(Labels[i]);
@@ -439,13 +442,11 @@ begin
     OldFont := TFont.Create;
     try
       OldFont.Assign(Canvas.Font);
-
       if cboxCountry.Visible then begin
         Canvas.Font.Assign(cboxCountry.Font);
         for j := 0 to cboxCountry.Items.Count - 1 do
           widestField := Max(widestField, Canvas.TextWidth(cboxCountry.Items[j]) + ComboArrowWidth);
       end;
-
       if cboxState.Visible then begin
         Canvas.Font.Assign(cboxCountry.Font);
         for j := 0 to cboxState.Items.Count - 1 do
@@ -480,8 +481,14 @@ begin
       inc(FieldTop, editHeight + VDist);
     end;
 
+  OKBtn.Top := vDist;
+  OKBtn.Height := btnHeight;
+  CancelBtn.Top := OKBtn.Top;
+  CancelBtn.Height := OKBtn.Height;
+  pnlBottom.ClientHeight := btnHeight + vDist*2;
+
   { Set form height such that first tab is filled completely by controls }
-  ClientHeight := BirthDateEdit.Top + editHeight + TopField + // required height of tab sheet
+  ClientHeight := BirthDateEdit.Top + editHeight + TopField + VDist + // required height of tab sheet
     pnlBottom.Height +  // height of button panel
     tsContacts.Height - tabMain.ClientHeight;   // Height of tab + border
 

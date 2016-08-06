@@ -324,13 +324,7 @@ begin
   edCaptionText.Height := hEd;
 
   // Fix button heights a higher dpi
-  with TButton.Create(self) do
-  try
-    Parent := self;
-    hBtn := Height;
-  finally
-    Free;
-  end;
+  hBtn := ScaleY(btnOK.Height, DesignTimeDPI);
   btnOK.Height := hBtn;
   btnCancel.Height := hBtn;
   btnShape.Height := hBtn;
@@ -358,6 +352,9 @@ begin
   lblWidth.Left := edWidth.Left - DELTA - GetLabelWidth(lblWidth);
   chkVisible.Left := edTop.Left;
   Panel3.Width := RightOf(udHeight) + 2*DELTA;
+
+  // Caption
+  btnCaptionFont.Width := GetButtonWidth(btnCaptionFont);
 
   // Buttons at the bottom
   w := Max(GetButtonWidth(btnOK), GetButtonWidth(btnCancel));

@@ -1,5 +1,5 @@
 object frmEditElement: TfrmEditElement
-  Left = 954
+  Left = 1069
   Height = 503
   Top = 231
   Width = 489
@@ -12,7 +12,7 @@ object frmEditElement: TfrmEditElement
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.4.4.0'
+  LCLVersion = '1.7'
   object gbVisual: TGroupBox
     Left = 12
     Height = 152

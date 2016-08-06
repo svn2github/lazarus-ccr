@@ -27,30 +27,32 @@ object FrmSoundDialog: TFrmSoundDialog
       ClientHeight = 446
       ClientWidth = 728
       object RightPanel: TPanel
-        Left = 395
+        Left = 209
         Height = 446
         Top = 0
-        Width = 333
-        Align = alRight
+        Width = 519
+        Align = alClient
         BevelOuter = bvNone
         ClientHeight = 446
-        ClientWidth = 333
-        TabOrder = 2
+        ClientWidth = 519
+        TabOrder = 1
         object Panel1: TPanel
           Left = 0
-          Height = 34
+          Height = 27
           Top = 0
-          Width = 333
+          Width = 519
           Align = alTop
+          AutoSize = True
           BevelOuter = bvNone
-          ClientHeight = 34
-          ClientWidth = 333
+          ClientHeight = 27
+          ClientWidth = 519
           TabOrder = 0
           object CBDefault: TCheckBox
-            Left = 8
+            Left = 4
             Height = 19
-            Top = 8
+            Top = 4
             Width = 73
+            BorderSpacing.Around = 4
             Caption = 'CBDefault'
             OnClick = CBDefaultClick
             TabOrder = 0
@@ -60,14 +62,14 @@ object FrmSoundDialog: TFrmSoundDialog
           Left = 0
           Height = 38
           Top = 408
-          Width = 333
+          Width = 519
           Align = alBottom
           BevelOuter = bvNone
           ClientHeight = 38
-          ClientWidth = 333
+          ClientWidth = 519
           TabOrder = 2
           object PlayButton: TSpeedButton
-            Left = 8
+            Left = 4
             Height = 25
             Top = 8
             Width = 29
@@ -93,7 +95,7 @@ object FrmSoundDialog: TFrmSoundDialog
             OnClick = PlayButtonClick
           end
           object OkBtn: TButton
-            Left = 170
+            Left = 356
             Height = 25
             Top = 8
             Width = 75
@@ -105,7 +107,7 @@ object FrmSoundDialog: TFrmSoundDialog
             TabOrder = 0
           end
           object CancelBtn: TButton
-            Left = 250
+            Left = 436
             Height = 25
             Top = 8
             Width = 75
@@ -119,9 +121,9 @@ object FrmSoundDialog: TFrmSoundDialog
         end
         object ShellListView: TShellListView
           Left = 0
-          Height = 374
-          Top = 34
-          Width = 329
+          Height = 381
+          Top = 27
+          Width = 515
           Align = alClient
           BorderSpacing.Right = 4
           Color = clDefault
@@ -157,45 +159,44 @@ object FrmSoundDialog: TFrmSoundDialog
         end
       end
       object Splitter1: TSplitter
-        Left = 390
+        Left = 204
         Height = 446
         Top = 0
         Width = 5
-        Align = alRight
-        ResizeAnchor = akRight
       end
-      object ShellTreeView: TShellTreeView
+      object Panel4: TPanel
         Left = 4
         Height = 438
         Top = 4
-        Width = 386
-        Align = alClient
+        Width = 200
+        Align = alLeft
         BorderSpacing.Left = 4
         BorderSpacing.Top = 4
         BorderSpacing.Bottom = 4
-        FileSortType = fstNone
-        ReadOnly = True
-        TabOrder = 0
-        Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
-        ObjectTypes = [otFolders]
-        ShellListView = ShellListView
-      end
-      object Panel4: TPanel
-        Left = 61
-        Height = 90
-        Top = 110
-        Width = 170
         BevelOuter = bvNone
         BorderStyle = bsSingle
-        ClientHeight = 86
-        ClientWidth = 166
-        TabOrder = 3
+        ClientHeight = 434
+        ClientWidth = 196
+        Constraints.MinWidth = 200
+        TabOrder = 2
+        object ShellTreeView: TShellTreeView
+          Left = 4
+          Height = 306
+          Top = 136
+          Width = 180
+          BorderStyle = bsNone
+          FileSortType = fstNone
+          ReadOnly = True
+          TabOrder = 0
+          Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
+          ObjectTypes = [otFolders]
+          ShellListView = ShellListView
+        end
         object Label4: TLabel
           Left = 0
           Height = 86
-          Top = 0
+          Top = 16
           Width = 166
-          Align = alClient
           Alignment = taCenter
           AutoSize = False
           Caption = 'Nothing to select from'

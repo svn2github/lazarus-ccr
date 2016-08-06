@@ -173,6 +173,7 @@ begin
   ReturnCode := rtAbandon;
   SetCaptions;
   Toolbar1.ButtonHeight := ScaleY(Toolbar1.ButtonHeight, DesignTimeDPI);
+  Toolbar1.ButtonWidth := Toolbar1.ButtonHeight;
 end;
 
 procedure TfrmPrintPreview.SetCaptions;
