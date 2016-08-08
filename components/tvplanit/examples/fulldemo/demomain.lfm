@@ -1,35 +1,35 @@
 object MainForm: TMainForm
   Left = 301
-  Height = 600
+  Height = 596
   Top = 177
-  Width = 978
+  Width = 959
   Caption = 'Turbo Power VisualPlanIt Demo'
-  ClientHeight = 580
-  ClientWidth = 978
+  ClientHeight = 576
+  ClientWidth = 959
   Menu = MainMenu1
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   LCLVersion = '1.7'
   object Panel1: TPanel
     Left = 125
-    Height = 580
+    Height = 576
     Top = 0
-    Width = 853
+    Width = 834
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 580
-    ClientWidth = 853
+    ClientHeight = 576
+    ClientWidth = 834
     TabOrder = 0
     object HeaderPanel: TPanel
       Left = 2
       Height = 48
       Top = 0
-      Width = 851
+      Width = 832
       Align = alTop
       BorderSpacing.Left = 2
       BevelOuter = bvNone
       ClientHeight = 48
-      ClientWidth = 851
+      ClientWidth = 832
       Color = clActiveCaption
       ParentColor = False
       TabOrder = 0
@@ -54,28 +54,28 @@ object MainForm: TMainForm
     end
     object Notebook: TNotebook
       Left = 0
-      Height = 532
+      Height = 528
       Top = 48
-      Width = 853
-      PageIndex = 1
+      Width = 834
+      PageIndex = 0
       Align = alClient
       TabOrder = 1
       TabStop = True
       object Events: TPage
         object LeftPanel: TPanel
           Left = 0
-          Height = 532
+          Height = 528
           Top = 0
           Width = 333
           Align = alLeft
           BevelOuter = bvNone
-          ClientHeight = 532
+          ClientHeight = 528
           ClientWidth = 333
           TabOrder = 0
           object VpMonthView1: TVpMonthView
             Left = 0
             Height = 197
-            Top = 335
+            Top = 331
             Width = 333
             DataStore = VpBufDSDataStore1
             ControlLink = VpControlLink1
@@ -108,14 +108,14 @@ object MainForm: TMainForm
             Cursor = crVSplit
             Left = 0
             Height = 5
-            Top = 330
+            Top = 326
             Width = 333
             Align = alBottom
             ResizeAnchor = akBottom
           end
           object VpDayView1: TVpDayView
             Left = 0
-            Height = 288
+            Height = 284
             Top = 42
             Width = 333
             DataStore = VpBufDSDataStore1
@@ -262,15 +262,15 @@ object MainForm: TMainForm
         end
         object Splitter3: TSplitter
           Left = 333
-          Height = 532
+          Height = 528
           Top = 0
           Width = 5
         end
         object VpWeekView1: TVpWeekView
           Left = 338
-          Height = 532
+          Height = 528
           Top = 0
-          Width = 515
+          Width = 496
           DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
@@ -561,7 +561,7 @@ object MainForm: TMainForm
   end
   object VpNavBar1: TVpNavBar
     Left = 0
-    Height = 580
+    Height = 576
     Top = 0
     Width = 120
     ActiveFolder = 0
@@ -664,7 +664,7 @@ object MainForm: TMainForm
   end
   object Splitter1: TSplitter
     Left = 120
-    Height = 580
+    Height = 576
     Top = 0
     Width = 5
   end

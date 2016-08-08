@@ -380,6 +380,7 @@ begin
     SetMeasurements;
 
     RenderCanvas.Font.Assign(FCalendar.Font);
+    RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
 
     with TVpCalendarOpener(FCalendar) do
       if (RealRight - RealLeft <> FLastRenderX) or

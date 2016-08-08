@@ -122,6 +122,7 @@ function SameDate(dt1, dt2: TDateTime): Boolean;
 function DateInRange(ADate, StartDate, EndDate: TDateTime; IncludeLimits: Boolean): Boolean;
 function TimeInRange(ATime, StartTime, EndTime: TDateTime; IncludeLimits: Boolean): Boolean;
 
+function GetTimeFormat: TVpTimeFormat;
 function GranularityToStr(Gran: TVpGranularity): string;
 function HourToAMPM(Hour: TVpHours): string;
 function HourToStr(Hour: TVpHours; Mil: Boolean): string;
@@ -486,6 +487,16 @@ begin
   result := Julian;
 end;
 {=====}
+
+function GetTimeFormat: TVpTimeFormat;
+var
+  s: String;
+begin
+  s := lowercase(FormatDateTime('hh:nn ampm', 0.25));
+  if pos(lowercase(FormatSettings.TimeAMString), s) = Length(s) - Length(FormatSettings.TimeAMString) then
+    Result := tf12Hour else
+    Result := tf24Hour;
+end;
 
 function GranularityToStr(Gran: TVpGranularity): string;
 begin

@@ -168,6 +168,7 @@ type
     clRevertDate     : TDateTime; {date on entry}
     clRowCount       : Integer;   {7 if no header, otherwise 8}
     clStartRow       : Integer;   {first row number}
+    calMargin        : Integer;
 
     {property methods}
     function GetDay: Integer;
@@ -239,6 +240,8 @@ type
     constructor Create(AOwner: TComponent); override;
     constructor CreateEx(AOwner: TComponent; AsPopup: Boolean); virtual;
     destructor Destroy; override;
+    procedure LoadLanguage;
+
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
 
     function GetControlType: TVpItemType; override;
@@ -268,6 +271,11 @@ type
     property Year : Integer read GetYear;
 
     {properties}
+    property Align;
+    property Anchors;
+   {$IFDEF LCL}
+    property BorderSpacing;
+   {$ENDIF}
     property BorderStyle: TBorderStyle read FBorderStyle write SetBorderStyle;
     property Color;
     property Colors: TVpCalColors read FColors write FColors;
@@ -347,7 +355,7 @@ uses
   VpCalendarPainter;
 
 const
-  calMargin = 4; {left, right, and top margin}
+  CAL_MARGIN = 4; {left, right, and top margin}
 
 function SumOf(const A: array of Integer; First, Last: Integer): Integer;
 var
@@ -775,6 +783,8 @@ begin
   Height := 140;
   TabStop := True;
   Width := 200;
+
+  calMargin := ScaleX(CAL_MARGIN, DesignTimeDPI);
 
  {$IFNDEF LCL}
   Font.Name := 'MS Sans Serif';
@@ -1425,6 +1435,12 @@ end;
 function TVpCustomCalendar.GetControlType: TVpItemType;
 begin
   Result := itCalendar;
+end;
+
+procedure TVpCustomCalendar.LoadLanguage;
+begin
+  FDefaultPopup.Items.Clear;
+  InitializeDefaultPopup;
 end;
 
 procedure TVpCustomCalendar.PaintToCanvas(ACanvas: TCanvas; ARect: TRect;

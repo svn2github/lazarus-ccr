@@ -107,7 +107,6 @@ uses
 {$IFNDEF LCL}
   ShellAPI,
 {$ENDIF}
-  Math,
   VpConst, VpMisc, VpSR;
 
 const

@@ -252,6 +252,7 @@ var
 begin
   RenderCanvas.Brush.Color := TaskHeadAttrColor;
   RenderCanvas.Font.Assign(FTaskList.TaskHeadAttributes.Font);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
 
   if FTaskList.DrawingStyle = dsFlat then delta := 1 else delta := 2;
   HeadRect.Left := RealLeft + delta;
@@ -321,6 +322,7 @@ begin
     else
       HeadStr := RSTaskTitleNoResource;
     RenderCanvas.Font.Assign(TaskHeadAttributes.Font);
+    RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
     TPSTextOut(
       RenderCanvas,
       Angle,
@@ -396,6 +398,7 @@ begin
     end;
 
     RenderCanvas.Font.Assign(Font);
+    RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
     for I := StartLine to pred(tlAllTaskList.Count) do begin
       Task := tlAllTaskList[I];
       if (LineRect.Top + Trunc(RowHeight * 0.5) <= RealBottom) then begin
@@ -528,6 +531,7 @@ end;
 procedure TVpTaskListPainter.MeasureRowHeight;
 begin
   RenderCanvas.Font.Assign(FTaskList.Font);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   RowHeight := RenderCanvas.TextHeight(VpProductName) + TextMargin * 2;
 end;
 

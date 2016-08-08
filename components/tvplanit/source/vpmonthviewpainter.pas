@@ -120,6 +120,7 @@ var
 begin
   { clear day head area }
   RenderCanvas.Font.Assign(FMonthView.DayHeadAttributes.Font);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   RenderCanvas.Brush.Color := DayHeadAttrColor;
 
   { build rect }
@@ -364,7 +365,8 @@ begin
                 RenderCanvas.Font.Assign(FMonthView.TodayAttributes.Font)
               else
                 RenderCanvas.Font.Assign(FMonthView.DayNumberFont);
-              fontstyle := Rendercanvas.Font.style;
+              RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+              fontstyle := RenderCanvas.Font.style;
 
               if (DisplayDate = ThisDate) then begin
                 if FMonthView.Focused then begin
@@ -474,7 +476,8 @@ begin
                 RenderCanvas.Font.Assign(FMonthView.TodayAttributes.Font)
               else
                 RenderCanvas.Font.Assign(FMonthView.DayNumberFont);
-              fontstyle := Rendercanvas.Font.style;
+              RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+              fontstyle := Rendercanvas.Font.Style;
 
               if (DisplayDate = ThisDate) then begin
                 if FMonthView.Focused then
@@ -657,6 +660,7 @@ begin
 
             { set the event font }
             RenderCanvas.Font.Assign(FMonthView.EventFont);
+            RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
             if TVpMonthViewOpener(FMonthView).mvMonthDayArray[I].OffDay then
               RenderCanvas.Font.Color := FMonthView.OffDayFontColor;
 
@@ -764,6 +768,7 @@ begin
 
   { Calculate the text rectangle }
   RenderCanvas.Font.Assign(FMonthView.HeadAttributes.Font);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   if DisplayOnly and (RenderCanvas.TextWidth(HeadStr) >= RealWidth) then
     HeadTextRect.Left:= RealLeft + TextMargin * 2
   else
@@ -788,6 +793,7 @@ begin
 
   // Draw the text
   RenderCanvas.Font.Assign(FMonthView.HeadAttributes.Font);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   TPSTextOut(
     RenderCanvas,
     Angle,
@@ -897,16 +903,20 @@ begin
   { we use the VpProductName because is is a good representation of some }
   { generic text }
   RenderCanvas.Font.Assign(FMonthView.DayHeadAttributes.Font);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   with TVpMonthViewOpener(FMonthView) do
     mvDayHeadHeight := RenderCanvas.TextHeight(VpProductName) + TextMargin + 2;
 
   RenderCanvas.Font.Assign(FMonthView.DayNumberFont);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   mvDayNumberHeight := RenderCanvas.TextHeight('00');
 
   RenderCanvas.Font.Assign(FMonthView.EventFont);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   mvEventTextHeight := RenderCanvas.TextHeight(VpProductName);
 
   RenderCanvas.Font.Assign(FMonthView.Font);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   mvLineHeight := RenderCanvas.TextHeight(VpProductName) + 2;
   mvColWidth := (RealWidth - 4) div 7;
 end;

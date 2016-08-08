@@ -267,6 +267,7 @@ begin
     end;
     TmpBmpRect := Rect(0, 0, TmpBmp.Width, TmpBmp.Height);
     TmpBmp.Canvas.Font.Assign(FContactGrid.Font);
+    TmpBmp.Canvas.Font.Size := ScaleY(TmpBmp.Canvas.Font.Size, DesignTimeDPI);
 
     { Calculate Phone Lbl Width }
     PhoneLblWidth := TmpBmp.Canvas.TextWidth(RSEmail);
@@ -317,6 +318,7 @@ begin
         TmpBmp.Canvas.Pen.Color := BevelDarkShadow;
         TmpBmp.Canvas.Brush.Style := bsSolid;
         TmpBmp.Canvas.Font.Assign(FContactGrid.ContactHeadAttributes.Font);
+        TmpBmp.Canvas.Font.Size := ScaleY(TmpBmp.Canvas.Font.Size, DesignTimeDPI);
         case Angle of
           ra0:
             begin
@@ -414,6 +416,7 @@ begin
 
           { restore font and colors }
           TmpBmp.Canvas.Font.Assign(FContactGrid.Font);
+          TmpBmp.Canvas.Font.Size := ScaleY(TmpBmp.Canvas.Font.Size, DesignTimeDPI);
           TmpBmp.Canvas.Brush.Color := RealColor;
           TmpBmp.Canvas.Pen.Color := BevelDarkShadow;
           TmpBmp.Canvas.Pen.Style := psSolid;

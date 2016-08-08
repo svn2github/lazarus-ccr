@@ -62,7 +62,7 @@ implementation
 
 uses
   LazFileUtils,
-  VpConst, VpException, VpMisc, VpData;
+  VpConst, VpMisc;
 
 { TVpIBDatastore }
 

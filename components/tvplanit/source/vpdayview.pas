@@ -1246,6 +1246,7 @@ var
   TextHeight: Integer;
 begin
   Canvas.Font.Assign(FHeadAttr.Font);
+  Canvas.Font.Size := ScaleY(Canvas.Font.Size, DesignTimeDPI);
 
   if FShowResourceName and (DataStore <> nil) and (DataStore.Resource <> nil) then
     TextHeight := Canvas.TextHeight(TallShortChars) * 2 + TextMargin * 3
@@ -1359,6 +1360,7 @@ begin
   { font, the standard client font, and a sample character string.     }
   SaveFont := Canvas.Font;
   Canvas.Font.Assign(FRowHeadAttr.FMinuteFont);
+  Canvas.Font.Size := ScaleY(Canvas.Font.Size, DesignTimeDPI);
   Canvas.Font.Height := GetRealFontHeight(Canvas.Font);
   Result := Canvas.TextHeight(TallShortChars);
   Canvas.Font.Assign(SaveFont);

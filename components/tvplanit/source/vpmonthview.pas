@@ -448,10 +448,8 @@ begin
   { Assign default font to DayNumberFont and EventFont }
   FDayNumberFont := TVpFont.Create(AOwner);
   FDayNumberFont.Assign(Font);
-//  FDayNumberFont.OnChange := mvFontChanged;
   FEventFont := TVpFont.Create(AOwner);
   FEventFont.Assign(Font);
-//  FEventFont.OnChange := mvFontChanged;
   FOffDayFontColor := clGray;
 
   SetLength(mvEventArray, MaxVisibleEvents);

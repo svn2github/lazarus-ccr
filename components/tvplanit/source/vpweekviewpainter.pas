@@ -143,6 +143,7 @@ begin
       { Measure the AllDayEvent TextHeight }
       txtDist := TextMargin div 2;
       RenderCanvas.Font.Assign(FWeekView.AllDayEventAttributes.Font);
+      RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
       ADTextHeight := RenderCanvas.TextHeight(VpProductName) + TextMargin + txtDist;
 
       { Build the AllDayEvent rect based on the value of NumADEvents }
@@ -295,6 +296,7 @@ begin
   tmpRect := TextRect;
   inc(tmpRect.Right);
   RenderCanvas.Font.Assign(FWeekView.DayHeadAttributes.Font);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   RenderCanvas.Brush.Color := RealDayHeadAttrColor;
   TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
   if FWeekView.DayHeadAttributes.Bordered and (FWeekView.DrawingStyle <> dsNoBorder) then
@@ -505,6 +507,7 @@ begin
 
   { set the event font }
   RenderCanvas.Font.Assign(FWeekView.EventFont);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   RenderCanvas.Brush.Color := RealColor;
 
   { Build the event text }
@@ -540,6 +543,7 @@ var
 begin
   RenderCanvas.Brush.Color := RealHeadAttrColor;
   RenderCanvas.Font.Assign(TFont(FWeekView.HeadAttributes.Font));
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
 
   { draw the header cell and borders }
   if FWeekView.DrawingStyle = ds3d then begin
@@ -697,11 +701,16 @@ begin
       StartDate := GetStartOfWeek(RenderDate, WeekStartsOn);
 
   RenderCanvas.Font.Assign(FWeekView.DayHeadAttributes.Font);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   FDayHeadHeight := RenderCanvas.TextHeight(VpProductName) + TextMargin + 2 ;
+
   RenderCanvas.Font.Assign(FWeekView.EventFont);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   with TVpWeekViewOpener(FWeekView) do
     wvRowHeight := RenderCanvas.TextHeight(VpProductName) + TextMargin div 2;
+
   RenderCanvas.Font.Assign(TFont(FWeekView.HeadAttributes.Font));
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   with TVpWeekViewOpener(FWeekView) do
     wvHeaderHeight := RenderCanvas.TextHeight(VpProductName) + TextMargin * 2;
 end;

@@ -11,7 +11,8 @@ uses
   Classes, SysUtils, FileUtil, PrintersDlgs, Forms, Controls, Graphics, Dialogs,
   ExtCtrls, StdCtrls, ComCtrls, LCLTranslator, Menus, VpBaseDS, VpDayView,
   VpWeekView, VpTaskList, VpAbout, VpContactGrid, VpMonthView, VpResEditDlg,
-  VpContactButtons, VpBufDS, VpNavBar, VpData, VpPrtPrvDlg, VpPrtFmtDlg, Types, VpBase;
+  VpContactButtons, VpBufDS, VpNavBar, VpData, VpPrtPrvDlg, VpPrtFmtDlg, Types,
+  VpBase, VpCalendar;
 
 type
 
@@ -366,34 +367,6 @@ begin
   PopulateLanguages;
   ReadIni;
 
-  with VpDayview1 do begin
-    AllDayEventAttributes.Font.Size := ScaleY(AllDayEventAttributes.Font.Size, DesignTimeDPI);
-    Font.Size := ScaleY(Font.Size, DesignTimeDPI);
-    HeadAttributes.Font.Size := ScaleY(HeadAttributes.Font.Size, DesignTimeDPI);
-    RowHeadAttributes.HourFont.Size := ScaleY(RowHeadAttributes.HourFont.Size, DesignTimeDPI);
-    RowHeadAttributes.MinuteFont.Size := ScaleY(RowHeadAttributes.MinuteFont.Size, DesignTimeDPI);
-  end;
-  with VpWeekView1 do begin
-    AllDayEventAttributes.Font.Size := ScaleY(AllDayEventAttributes.Font.Size, DesignTimeDPI);
-    DayHeadAttributes.Font.Size := ScaleY(DayHeadAttributes.Font.Size, DesignTimeDPI);
-    HeadAttributes.Font.Size := ScaleY(HeadAttributes.Font.Size, DesignTimeDPI);
-  end;
-  with VpMonthView1 do begin
-    DayHeadAttributes.Font.Size := ScaleY(DayHeadAttributes.Font.Size, DesignTimeDPI);
-    DayNumberFont.Size := ScaleY(DayNumberFont.Size, DesignTimeDPI);
-    EventFont.Size := ScaleY(EventFont.Size, DesignTimeDPI);
-    Font.Size := ScaleY(Font.Size, DesignTimeDPI);
-    HeadAttributes.Font.Size := ScaleY(HeadAttributes.Font.Size, DesignTimeDPI);
-    TodayAttributes.Font.Size := ScaleY(TodayAttributes.Font.Size, DesignTimeDPI);
-  end;
-  with VpTaskList1 do begin
-    Font.Size := ScaleY(Font.Size, DesignTimeDPI);
-    TaskHeadAttributes.Font.Size := ScaleY(TaskHeadAttributes.Font.Size, DesignTimeDPI);
-  end;
-  with VpContactGrid1 do begin
-    Font.Size := ScaleY(Font.Size, DesignTimeDPI);
-  end;
-
   ds := VpControlLink1.Datastore;
   if ds.Resources.Count > 0 then
   begin
@@ -573,7 +546,6 @@ end;
 procedure TMainForm.PositionControls;
 var
   w: Integer;
-  cnv: TControlCanvas;
 begin
   // DayView page
   DaySelectorPanel.Height := 2*CbGranularity.Top + CbGranularity.Height;
@@ -636,7 +608,6 @@ procedure TMainForm.ReadIni;
 var
   ini: TCustomIniFile;
   lang: String;
-  idx: Integer;
   L,T, W,H: Integer;
   R: TRect;
 begin
@@ -752,17 +723,6 @@ begin
 end;
 
 procedure TMainForm.SetLanguage(ALang: String);
-
-  function GetTimeFormat: TVpTimeFormat;
-  var
-    s: String;
-  begin
-    s := lowercase(FormatDateTime('hh:nn ampm', 0.25));
-    if pos(lowercase(FormatSettings.TimeAMString), s) = Length(s) - Length(FormatSettings.TimeAMString) then
-      Result := tf12Hour else
-      Result := tf24Hour;
-  end;
-
 var
   i: Integer;
   langdir: String;
@@ -802,13 +762,14 @@ begin
     SetDefaultLang(FLang, langdir);
     TranslateUnitResourceStrings('vpsr', langdir + 'vpsr.' + FLang + '.po');
   end;
-
+                        {
   VpDayView1.LoadLanguage;
   VpWeekView1.LoadLanguage;
   VpMonthView1.LoadLanguage;
   VpTaskList1.LoadLanguage;
   VpContactGrid1.LoadLanguage;
-
+  //VpCalendar1.LoadLanguage;
+                         }
   // Select language in language combobox.
   if ALang = '' then ALang := 'en';
   found := false;
@@ -877,10 +838,11 @@ begin
   VpDayView1.TimeFormat := tfmt;
   VpWeekView1.TimeFormat := tfmt;
   VpMonthView1.TimeFormat := tfmt;
+ {$ENDIF}
   firstWeekDay := GetFirstDayofWeek(ALang);   // not correct at the moment
   VpMonthView1.WeekStartsOn := firstWeekDay;
   VpWeekView1.WeekStartsOn := firstWeekDay;
- {$ENDIF}
+  //VpCalendar1.WeekStarts := firstWeekDay;
 
   PositionControls;
 

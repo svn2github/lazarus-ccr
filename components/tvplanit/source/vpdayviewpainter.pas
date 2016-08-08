@@ -353,6 +353,7 @@ begin
     if NumADEvents > 0 then begin
       // Measure the AllDayEvent text height
       RenderCanvas.Font.Assign(FDayView.AllDayEventAttributes.Font);
+      RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
       ADTextHeight := RenderCanvas.TextHeight(VpProductName) + TextMargin;
 
       // Distance between text and border
@@ -493,6 +494,7 @@ begin
   SavedFont.Assign(RenderCanvas.Font);
   try
     RenderCanvas.Font.Assign(FDayView.Font);
+    RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
     RenderCanvas.Brush.Color := RealColor;
     TPSFillRect(RenderCanvas, Angle, RenderIn, R);
 
@@ -515,7 +517,7 @@ begin
         Break;
 
       RenderCanvas.Brush.Color := RealColor;
-      RenderCanvas.Font.Assign(SavedFont);
+      RenderCanvas.Font.Assign(SavedFont); // no further scaling needed here
       LineRect.Top := Round(R.Top + i * RealRowHeight);
       LineRect.Bottom := Round(LineRect.Top + RealRowHeight);
 
@@ -670,6 +672,7 @@ begin
 
     { Draw Column Header }
     RenderCanvas.Font.Assign(FDayView.HeadAttributes.Font);
+    RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
     RenderCanvas.Brush.Color := RealHeadAttrColor;
     RenderCanvas.Pen.Style := psClear;
     tmpRect := R;
@@ -1289,6 +1292,7 @@ begin
 
       { Calculate the column rect for this day }
       RenderCanvas.Font.Assign(FDayView.Font);
+      RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
       CellsRect := Rect(RPos, ADEventsRect.Bottom + 1, RPos + DayWidth, RealBottom - 2);
       if (i = RealNumDays - 1) and (ExtraSpace > 0) then
         CellsRect.Right := CellsRect.Right + ExtraSpace;
@@ -1417,6 +1421,7 @@ begin
       begin
         // In case of 60-min granularity paint time as simple string
         RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
+        RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
         timeStr := Format('%s:%s', [hourStr, minuteStr]);
         x := lineRect.Right - RenderCanvas.TextWidth(timeStr) - MINUTES_BORDER;
         TPSTextOut(RenderCanvas, Angle, RenderIn, x, y + TextMargin, timeStr);
@@ -1425,11 +1430,13 @@ begin
         // In all other cases, paint large hour and small minutes (or am/pm)
         // Draw minutes
         RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
+        RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
         x := lineRect.Right - RenderCanvas.TextWidth(MinuteStr) - MINUTES_BORDER;
         TPSTextOut(RenderCanvas, Angle, RenderIn, x, y + TextMargin, minuteStr);
 
         // Draw hours
         RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.HourFont);
+        RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
         dec(x, RenderCanvas.TextWidth(HourStr) + MINUTES_HOUR_DISTANCE);
         TPSTextOut(RenderCanvas, Angle, RenderIn, x, y + TextMargin{ - 2}, hourStr);
       end;
@@ -1461,6 +1468,7 @@ begin
 
   // Calculate length of minutes ticks
   RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   minutesLen := RenderCanvas.TextWidth('00') + MINUTES_BORDER + MINUTES_HOUR_DISTANCE div 2;
 
   // Prepare pen
@@ -1529,8 +1537,10 @@ function TVpDayViewPainter.CalcRowHeadWidth: integer;
 begin
   Result := 2 * MINUTES_BORDER + MINUTES_HOUR_DISTANCE;
   RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   inc(Result, RenderCanvas.TextWidth('00'));
   RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.HourFont);
+  RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   inc(Result, RenderCanvas.TextWidth('33'));
 end;
 
