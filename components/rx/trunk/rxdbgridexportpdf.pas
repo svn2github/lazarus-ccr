@@ -159,19 +159,36 @@ procedure TRxDBGridExportPDF.DoExportTitle;
 var
   P: TPDFPage;
   Pt: TPDFCoord;
-  i: Integer;
+  i, X: Integer;
   C: TRxColumn;
+  S: String;
 begin
+  X:=20;
+
   for i:=0 to FRxDBGrid.Columns.Count - 1 do
   begin
     P:=TPDFPage(FWorkPages[0]);
     C:=FRxDBGrid.Columns[i];
-    Pt.X := 20 + i * 40;
+    Pt.X := X;
     Pt.Y := FPosY;
     P.SetColor(C.Color);
-    P.DrawRect(Pt.X, Pt.Y, 40, FRxDBGrid.DefaultRowHeight, 1, true, true);
+    P.DrawRect(Pt.X, Pt.Y, C.Width, FRxDBGrid.DefaultRowHeight, 1, false, true);
+
+
+    P.SetFont(FHeaderFont, 10);
+    //P.SetColor(clBlue, false);
+    P.WriteText(Pt.X+2, Pt.Y-10, C.Title.Caption);
+
+
+    Inc(X, C.Width);
   end;
-  Inc(FPosY, FRxDBGrid.DefaultRowHeight)
+
+  Inc(FPosY, FRxDBGrid.DefaultRowHeight);
+{
+  S:='Russian: Привет мир!';
+
+  P.SetFont(FBodyFont, 11);
+  P.WriteText(40, 160, S);}
 end;
 
 procedure TRxDBGridExportPDF.DoExportBody;
@@ -181,11 +198,22 @@ end;
 
 procedure TRxDBGridExportPDF.DoSetupFonts;
 begin
-  FHeaderFont := FPDFDocument.AddFont('Helvetica');
+  //FPDFDocument.FontDirectory := '/usr/share/fonts/liberation';
+  FPDFDocument.FontDirectory := '/usr/share/fonts/liberation';
+  FHeaderFont := FPDFDocument.AddFont('LiberationSans-Regular.ttf', 'LiberationSans', clGreen);
+
+  FPDFDocument.FontDirectory := 'fonts';
+  FBodyFont := FPDFDocument.AddFont('FreeSans.ttf', 'FreeSans', clGreen); // TODO: this color value means nothing - not used at all
+//  FHeaderFont := FPDFDocument.AddFont('Helvetica');
 //  FBodyFont := D.AddFont('Helvetica');
 //  FFooterFont := D.AddFont('Helvetica');
-  FBodyFont := FHeaderFont;
+//  FBodyFont := FHeaderFont;
   FFooterFont := FHeaderFont;
+
+  {FtTitle := D.AddFont('Helvetica', clRed);
+  FtText1 := D.AddFont('FreeSans.ttf', 'FreeSans', clGreen); // TODO: this color value means nothing - not used at all
+  FtText2 := D.AddFont('Times-BoldItalic', clBlack);}
+
 end;
 
 procedure TRxDBGridExportPDF.DoExportFooter;
@@ -248,7 +276,7 @@ begin
     FWorkPages.Add(P);
   end;
 
-  FPosY:=20;
+  FPosY:=40;
 
   if repExportTitle in FOptions then
     DoExportTitle;

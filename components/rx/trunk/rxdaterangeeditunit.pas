@@ -18,6 +18,7 @@ type
   TRxCustomDateRangeEdit = class(TCustomControl)
   private
     FFlat: Boolean;
+    FLockCount:integer;
     FOnEditChange: TNotifyEvent;
     FOnEditClick: TNotifyEvent;
     FOnEditEnter: TNotifyEvent;
@@ -50,6 +51,8 @@ type
     procedure InternalOnEditClick(Sender: TObject);
     procedure InternalOnEditEnter(Sender: TObject);
     procedure InternalOnEditExit(Sender: TObject);
+    procedure Lock;
+    procedure UnLock;
   protected
     class function GetControlClassDefaultSize: TSize; override;
     procedure FillMonthNames;
@@ -158,6 +161,7 @@ begin
   end
   else
     FEditMonth.ItemIndex := 0;
+  InternalOnEditChange(Self);
 end;
 
 procedure TRxCustomDateRangeEdit.DoIncYear(Sender: TObject);
@@ -206,6 +210,7 @@ begin
   end
   else
     FEditMonth.ItemIndex := 0;
+  InternalOnEditChange(Self);
 end;
 
 procedure TRxCustomDateRangeEdit.DoDecYear(Sender: TObject);
@@ -316,7 +321,8 @@ end;
 
 procedure TRxCustomDateRangeEdit.InternalOnEditChange(Sender: TObject);
 begin
-  EditChange;
+  if FLockCount = 0 then
+    EditChange;
 end;
 
 procedure TRxCustomDateRangeEdit.InternalOnEditClick(Sender: TObject);
@@ -332,6 +338,19 @@ end;
 procedure TRxCustomDateRangeEdit.InternalOnEditExit(Sender: TObject);
 begin
   EditExit;
+end;
+
+procedure TRxCustomDateRangeEdit.Lock;
+begin
+  Inc(FLockCount);
+end;
+
+procedure TRxCustomDateRangeEdit.UnLock;
+begin
+  if FLockCount > 0 then
+    Dec(FLockCount)
+  else
+    InternalOnEditChange(Self);
 end;
 
 class function TRxCustomDateRangeEdit.GetControlClassDefaultSize: TSize;
@@ -410,6 +429,7 @@ end;
 constructor TRxCustomDateRangeEdit.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+  FLockCount:=0;
   FOptions:=[reoMonth];
 
   FEditYear:=TSpinEdit.Create(Self);
