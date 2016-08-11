@@ -42,8 +42,28 @@ uses
   Classes, SysUtils, Graphics, Controls, Forms, LResources
   ;
 
+
 type
   TTextOrientation = (toHorizontal, toVertical90, toHorizontal180, toVertical270, toHorizontal360);
+
+  { TRxPageMargin }
+
+  TRxPageMargin = class(TPersistent)
+  private
+    FBottom: integer;
+    FLeft: integer;
+    FRight: integer;
+    FTop: integer;
+  protected
+    procedure AssignTo(Dest: TPersistent); override;
+  public
+    constructor Create;
+  published
+    property Left:integer read FLeft write FLeft default 20;
+    property Top:integer read FTop write FTop default 20;
+    property Right:integer read FRight write FRight default 20;
+    property Bottom:integer read FBottom write FBottom default 20;
+  end;
 
 function WidthOf(R: TRect): Integer; inline;
 function HeightOf(R: TRect): Integer; inline;
@@ -108,6 +128,30 @@ uses LCLProc, LCLIntf, LCLType, LCLStrConsts;
 {$IFNDEF RX_USE_LAZARUS_RESOURCE}
 {$R rx_lcl.res}
 {$ENDIF}
+
+{ TRxPageMargin }
+
+procedure TRxPageMargin.AssignTo(Dest: TPersistent);
+begin
+  if (Dest is TRxPageMargin) then
+  begin
+    TRxPageMargin(Dest).FBottom:=FBottom;
+    TRxPageMargin(Dest).FLeft:=FLeft;
+    TRxPageMargin(Dest).FRight:=FRight;
+    TRxPageMargin(Dest).FTop:=FTop;
+  end
+  else
+    inherited AssignTo(Dest);
+end;
+
+constructor TRxPageMargin.Create;
+begin
+  inherited Create;
+  FBottom:=20;
+  FLeft:=20;
+  FRight:=20;
+  FTop:=20;
+end;
 
 function WidthOf(R: TRect): Integer;
 begin

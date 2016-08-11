@@ -36,7 +36,7 @@ interface
 
 uses
   Classes, SysUtils, DB, rxdbgrid, LR_Class, LR_DSet, LR_DBSet, contnrs,
-  Graphics, Printers;
+  Graphics, Printers, vclutils;
 
 type
   TRxDBGridPrintOption =
@@ -58,25 +58,6 @@ type
     ColTitles:TStringList;
     constructor Create;
     destructor Destroy; override;
-  end;
-
-  { TRxPageMargin }
-
-  TRxPageMargin = class(TPersistent)
-  private
-    FBottom: integer;
-    FLeft: integer;
-    FRight: integer;
-    FTop: integer;
-  protected
-    procedure AssignTo(Dest: TPersistent); override;
-  public
-    constructor Create;
-  published
-    property Left:integer read FLeft write FLeft default 20;
-    property Top:integer read FTop write FTop default 20;
-    property Right:integer read FRight write FRight default 20;
-    property Bottom:integer read FBottom write FBottom default 20;
   end;
 
   { TRxDBGridPrint }
@@ -137,30 +118,6 @@ uses math, RxDBGridPrintGrid_SetupUnit, Forms, Controls, rxdconst;
 procedure Register;
 begin
   RegisterComponents('RX DBAware',[TRxDBGridPrint]);
-end;
-
-{ TRxPageMargin }
-
-procedure TRxPageMargin.AssignTo(Dest: TPersistent);
-begin
-  if (Dest is TRxPageMargin) then
-  begin
-    TRxPageMargin(Dest).FBottom:=FBottom;
-    TRxPageMargin(Dest).FLeft:=FLeft;
-    TRxPageMargin(Dest).FRight:=FRight;
-    TRxPageMargin(Dest).FTop:=FTop;
-  end
-  else
-    inherited AssignTo(Dest);
-end;
-
-constructor TRxPageMargin.Create;
-begin
-  inherited Create;
-  FBottom:=20;
-  FLeft:=20;
-  FRight:=20;
-  FTop:=20;
 end;
 
 { TRxColInfo }

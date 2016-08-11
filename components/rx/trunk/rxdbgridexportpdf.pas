@@ -37,7 +37,7 @@ interface
 
 {$IF (FPC_FULLVERSION >= 30101)}
 uses
-  Classes, SysUtils, DB, rxdbgrid, fpPDF;
+  Classes, SysUtils, DB, rxdbgrid, LazFreeTypeFontCollection, vclutils, fpPDF;
 
 type
 
@@ -72,6 +72,10 @@ type
 
   TRxDBGridExportPDF = class(TRxDBGridAbstractTools)
   private
+    FPageMargin: TRxPageMargin;
+    FPageHeight:integer;
+    FPageWidth:integer;
+
     FAuthorPDF: string;
     FFileName: string;
     FOpenAfterExport: boolean;
@@ -80,14 +84,17 @@ type
     FPdfOptions:TPdfExportOptions;
     FWorkPages:TFPList;
     FWorkPagesNeedCount:integer;
+
+    FFontCollection:TFreeTypeFontCollection;
+
     function GetPdfOptions: TPdfExportOptions;
+    procedure SetPageMargin(AValue: TRxPageMargin);
     procedure SetPdfOptions(AValue: TPdfExportOptions);
   protected
     FPDFDocument:TPDFDocument;
     FCurSection: TPDFSection;
     FDataSet:TDataSet;
     FPosY : integer;
-    FPageHeight:integer;
 
     FHeaderFont:integer;
     FBodyFont:integer;
@@ -103,6 +110,8 @@ type
     function DoExecTools:boolean;override;
     function DoSetupTools:boolean; override;
     procedure DoSaveDocument;
+    //
+    procedure InitFonts(AFontCollection:TFreeTypeFontCollection);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -113,13 +122,14 @@ type
     property OpenAfterExport:boolean read FOpenAfterExport write FOpenAfterExport default false;
     property AuthorPdf:string read FAuthorPDF write FAuthorPDF;
     property ProducerPdf:string read FProducerPDF write FProducerPDF;
+    property PageMargin:TRxPageMargin read FPageMargin write SetPageMargin;
   end;
 
   {$ENDIF}
 implementation
 
 {$IF (FPC_FULLVERSION >= 30101)}
-uses rxdconst, forms, LCLIntf;
+uses rxdconst, FileUtil, forms, LCLIntf, LazFileUtils, EasyLazFreeType;
 
 { TPdfExportOptions }
 
@@ -150,6 +160,11 @@ begin
   Result:=FPdfOptions;
 end;
 
+procedure TRxDBGridExportPDF.SetPageMargin(AValue: TRxPageMargin);
+begin
+  FPageMargin.Assign(AValue);
+end;
+
 procedure TRxDBGridExportPDF.SetPdfOptions(AValue: TPdfExportOptions);
 begin
   FPdfOptions.Assign(AValue);
@@ -159,16 +174,19 @@ procedure TRxDBGridExportPDF.DoExportTitle;
 var
   P: TPDFPage;
   Pt: TPDFCoord;
-  i, X: Integer;
+  i, X, CP: Integer;
   C: TRxColumn;
   S: String;
 begin
-  X:=20;
+  X:=FPageMargin.Left;
+  CP:=0;
+  P:=TPDFPage(FWorkPages[CP]);
 
   for i:=0 to FRxDBGrid.Columns.Count - 1 do
   begin
-    P:=TPDFPage(FWorkPages[0]);
     C:=FRxDBGrid.Columns[i];
+
+
     Pt.X := X;
     Pt.Y := FPosY;
     P.SetColor(C.Color);
@@ -176,44 +194,76 @@ begin
 
 
     P.SetFont(FHeaderFont, 10);
-    //P.SetColor(clBlue, false);
     P.WriteText(Pt.X+2, Pt.Y-10, C.Title.Caption);
 
-
-    Inc(X, C.Width);
+    if X + C.Width > FPageWidth - FPageMargin.Right then
+    begin
+      Inc(CP);
+      P:=TPDFPage(FWorkPages[CP]);
+      X:=FPageMargin.Left;
+    end
+    else
+      Inc(X, C.Width);
   end;
 
   Inc(FPosY, FRxDBGrid.DefaultRowHeight);
-{
-  S:='Russian: Привет мир!';
-
-  P.SetFont(FBodyFont, 11);
-  P.WriteText(40, 160, S);}
 end;
 
 procedure TRxDBGridExportPDF.DoExportBody;
+procedure DoWriteRow;
 begin
+  //
+end;
 
+begin
+  while not FDataSet.EOF do
+  begin
+    DoWriteRow;
+    FDataSet.Next;
+    Inc(FPosY, FRxDBGrid.DefaultRowHeight);
+    if FPosY > FPageHeight - FPageMargin.Bottom then
+    begin
+      FPosY:=FPageMargin.Top + 20;
+      exit;
+    end;
+  end;
 end;
 
 procedure TRxDBGridExportPDF.DoSetupFonts;
+var
+  FM: TCustomFamilyCollectionItem;
+  FIH, FI: TCustomFontCollectionItem;
 begin
-  //FPDFDocument.FontDirectory := '/usr/share/fonts/liberation';
-  FPDFDocument.FontDirectory := '/usr/share/fonts/liberation';
-  FHeaderFont := FPDFDocument.AddFont('LiberationSans-Regular.ttf', 'LiberationSans', clGreen);
 
-  FPDFDocument.FontDirectory := 'fonts';
-  FBodyFont := FPDFDocument.AddFont('FreeSans.ttf', 'FreeSans', clGreen); // TODO: this color value means nothing - not used at all
-//  FHeaderFont := FPDFDocument.AddFont('Helvetica');
-//  FBodyFont := D.AddFont('Helvetica');
-//  FFooterFont := D.AddFont('Helvetica');
-//  FBodyFont := FHeaderFont;
-  FFooterFont := FHeaderFont;
+  FFontCollection:=TFreeTypeFontCollection.Create;
+  InitFonts(FFontCollection);
 
-  {FtTitle := D.AddFont('Helvetica', clRed);
-  FtText1 := D.AddFont('FreeSans.ttf', 'FreeSans', clGreen); // TODO: this color value means nothing - not used at all
-  FtText2 := D.AddFont('Times-BoldItalic', clBlack);}
+  FM:=FFontCollection.Family['Arial'];
+  if Assigned(FM) then
+  begin
+    FIH:=FM.GetFont(['Bold']);
+    if Assigned(FIH) then
+    begin
+      FPDFDocument.FontDirectory := ExtractFileDir(FIH.Filename);
+      FHeaderFont := FPDFDocument.AddFont(ExtractFileName(FIH.Filename), FIH.Information[ftiFullName]);
+    end;
 
+    FI:=FM.GetFont('Regular');
+    if Assigned(FI) then
+    begin
+      FPDFDocument.FontDirectory := ExtractFileDir(FIH.Filename);
+      FBodyFont := FPDFDocument.AddFont(ExtractFileName(FIH.Filename), FIH.Information[ftiFullName]);
+    end;
+
+    if not Assigned(FIH) then
+      FHeaderFont:=FBodyFont;
+
+    FFooterFont := FHeaderFont;
+  end;
+  FFontCollection.Free;
+
+  if not Assigned(FM) then
+   raise Exception.Create('Not found arial font');
 end;
 
 procedure TRxDBGridExportPDF.DoExportFooter;
@@ -223,7 +273,7 @@ end;
 
 procedure TRxDBGridExportPDF.DoSetupDocHeader;
 var
-  MaxW, W, i: Integer;
+  W, i: Integer;
 begin
   FPDFDocument.Infos.Title := Application.Title;
   FPDFDocument.Infos.Author := FAuthorPDF;
@@ -235,30 +285,32 @@ begin
   FPDFDocument.DefaultOrientation:=FPdfOptions.PaperOrientation;
 
   //calc need count pages for all columns
-  FWorkPagesNeedCount:=0;
+  FWorkPagesNeedCount:=1;
   if FPdfOptions.FPaperType <> ptCustom then
   begin
     if FPdfOptions.PaperOrientation = ppoPortrait then
-      MaxW:=PDFPaperSizes[FPdfOptions.FPaperType, 0]
+    begin
+      FPageWidth := PDFPaperSizes[FPdfOptions.FPaperType, 0];
+      FPageHeight := PDFPaperSizes[FPdfOptions.FPaperType, 1];
+    end
     else
-      MaxW:=PDFPaperSizes[FPdfOptions.FPaperType, 1];
+    begin
+      FPageWidth := PDFPaperSizes[FPdfOptions.FPaperType, 1];
+      FPageHeight := PDFPaperSizes[FPdfOptions.FPaperType, 0];
+    end;
 
-    W:=0;
+    W:=FPageMargin.Left;
     for i:=0 to FRxDBGrid.Columns.Count-1 do
     begin
       W:=W + FRxDBGrid.Columns[i].Width;
 
-      if W > MaxW then
+      if W > FPageWidth - FPageMargin.Right then
       begin
         Inc(FWorkPagesNeedCount);
-        W:=0;
+        W:=FPageMargin.Left;
       end;
     end;
   end;
-
-  if FWorkPagesNeedCount = 0 then
-    FWorkPagesNeedCount:=1;
-
 end;
 
 procedure TRxDBGridExportPDF.DoExportPage;
@@ -276,7 +328,7 @@ begin
     FWorkPages.Add(P);
   end;
 
-  FPosY:=40;
+  FPosY:=FPageMargin.Top + 20;
 
   if repExportTitle in FOptions then
     DoExportTitle;
@@ -307,7 +359,6 @@ begin
     FDataSet.First;
     repeat
       DoExportPage;
-      FDataSet.Next;
     until FDataSet.EOF;
 
     DoSaveDocument;
@@ -346,9 +397,66 @@ begin
   end;
 end;
 
+procedure TRxDBGridExportPDF.InitFonts(AFontCollection: TFreeTypeFontCollection
+  );
+var
+  FontDirList: TStringList;
+
+procedure CreateFontDirList;
+var
+  s: String;
+begin
+ {$IFDEF WINDOWS}
+  s := SHGetFolderPathUTF8(20); // CSIDL_FONTS = 20
+  if s <> '' then
+    FontDirList.Add(s);
+ {$ENDIF}
+ {$IFDEF linux}
+  //tested on Fedora 24
+  FontDirList.Add('/usr/share/cups/fonts/');
+  FontDirList.Add('/usr/share/fonts/');
+  FontDirList.Add('/usr/local/lib/X11/fonts/');
+  FontDirList.Add(GetUserDir + '.fonts/');
+ {$ENDIF}
+end;
+
+procedure AddFolder(AFolder: string);
+var
+  Files: TStringList;
+  i: integer;
+begin
+  AFolder := AppendPathDelim(ExpandFileName(AFolder));
+  Files := TStringList.Create;
+  AFontCollection.BeginUpdate;
+  try
+    FindAllFiles(Files, AFolder, '*.ttf', true);
+    Files.Sort;
+    for i := 0 to Files.Count-1 do
+      try
+        AFontCollection.AddFile(Files[i]);
+      except
+      end;
+  finally
+    AFontCollection.EndUpdate;
+    Files.Free;
+  end;
+end;
+
+var
+  i: Integer;
+begin
+  FontDirList := TStringList.Create;
+  CreateFontDirList;
+
+  for i:=0 to FontDirList.Count-1 do
+    AddFolder(FontDirList[i]);
+  FreeAndNil(FontDirList);
+end;
+
 constructor TRxDBGridExportPDF.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+  FPageMargin:=TRxPageMargin.Create;
   FPdfOptions:=TPdfExportOptions.Create(Self);
 
   FCaption:=sToolsExportPDF;
@@ -358,6 +466,7 @@ end;
 destructor TRxDBGridExportPDF.Destroy;
 begin
   FreeAndNil(FPdfOptions);
+  FreeAndNil(FPageMargin);
   inherited Destroy;
 end;
 
