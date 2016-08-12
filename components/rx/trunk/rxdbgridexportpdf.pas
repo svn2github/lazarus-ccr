@@ -174,6 +174,47 @@ procedure TRxDBGridExportPDF.DoExportTitle;
 var
   P: TPDFPage;
   Pt: TPDFCoord;
+  i, X, CP, PX: Integer;
+  C: TRxColumn;
+  S: String;
+  PU: TPDFUnitOfMeasure;
+begin
+  X:=FPageWidth + FPageMargin.Right;
+  CP:=-1;
+  PX:=0;
+
+  for i:=0 to FRxDBGrid.Columns.Count - 1 do
+  begin
+    C:=FRxDBGrid.Columns[i];
+
+    if X + C.Width > FPageWidth - FPageMargin.Right then
+    begin
+      Inc(CP);
+      P:=TPDFPage(FWorkPages[CP]);
+      X:=FPageMargin.Left;
+      PX:=0;
+    end;
+
+    Pt.X := X;
+    Pt.Y := FPosY;
+    P.SetColor(C.Color);
+    P.DrawRect(Pt.X, Pt.Y, C.Width, FRxDBGrid.DefaultRowHeight, 1, false, true);
+
+
+    P.SetFont(FHeaderFont, 10);
+    P.WriteText(Pt.X+2, Pt.Y-10, C.Title.Caption);
+
+    X:=X + C.Width;
+  end;
+
+  Inc(FPosY, FRxDBGrid.DefaultRowHeight);
+end;
+
+procedure TRxDBGridExportPDF.DoExportBody;
+procedure DoWriteRow;
+var
+  P: TPDFPage;
+  Pt: TPDFCoord;
   i, X, CP: Integer;
   C: TRxColumn;
   S: String;
@@ -193,8 +234,11 @@ begin
     P.DrawRect(Pt.X, Pt.Y, C.Width, FRxDBGrid.DefaultRowHeight, 1, false, true);
 
 
-    P.SetFont(FHeaderFont, 10);
-    P.WriteText(Pt.X+2, Pt.Y-10, C.Title.Caption);
+    if Assigned(C.Field) then
+    begin
+      P.SetFont(FBodyFont, 10);
+      P.WriteText(Pt.X+2, Pt.Y-10, C.Field.DisplayText);
+    end;
 
     if X + C.Width > FPageWidth - FPageMargin.Right then
     begin
@@ -205,14 +249,6 @@ begin
     else
       Inc(X, C.Width);
   end;
-
-  Inc(FPosY, FRxDBGrid.DefaultRowHeight);
-end;
-
-procedure TRxDBGridExportPDF.DoExportBody;
-procedure DoWriteRow;
-begin
-  //
 end;
 
 begin
@@ -290,13 +326,13 @@ begin
   begin
     if FPdfOptions.PaperOrientation = ppoPortrait then
     begin
-      FPageWidth := PDFPaperSizes[FPdfOptions.FPaperType, 0];
-      FPageHeight := PDFPaperSizes[FPdfOptions.FPaperType, 1];
+      FPageWidth := PDFPaperSizes[FPdfOptions.FPaperType, 1];
+      FPageHeight := PDFPaperSizes[FPdfOptions.FPaperType, 0];
     end
     else
     begin
-      FPageWidth := PDFPaperSizes[FPdfOptions.FPaperType, 1];
-      FPageHeight := PDFPaperSizes[FPdfOptions.FPaperType, 0];
+      FPageWidth := PDFPaperSizes[FPdfOptions.FPaperType, 0];
+      FPageHeight := PDFPaperSizes[FPdfOptions.FPaperType, 1];
     end;
 
     W:=FPageMargin.Left;

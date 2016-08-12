@@ -37,7 +37,7 @@ unit rxmemds;
 interface
 
 
-uses SysUtils, Classes, DB, ex_rx_datapacket;
+uses SysUtils, Classes, DB, ex_rx_datapacket, bufdataset_parser;
 
 { TRxMemoryData }
 
@@ -72,6 +72,7 @@ type
     FFilterBuffer   : pchar;
     FNullmaskSize   : byte;
     FBRecordCount   : integer;
+    FParser         : TBufDatasetParser;
     function  IntAllocRecordBuffer: PChar;
     procedure IntLoadFielddefsFromFile;
     procedure IntLoadRecordsFromFile;
@@ -94,6 +95,7 @@ type
     procedure SetCapacity(Value: Integer);
     procedure ClearRecords;
     procedure InitBufferPointers(GetProps: Boolean);
+    procedure ParseFilter(const AFilter: string);
   protected
     procedure AssignMemoryRecord(Rec: TMemoryRecord; Buffer: PChar);
     function GetActiveRecBuf(var RecBuf: PChar): Boolean; virtual;
@@ -146,6 +148,7 @@ type
     procedure SetRecNo(Value: Integer); override;
     property Records[Index: Integer]: TMemoryRecord read GetMemoryRecord;
     function GetAnyRecField(SrcRecNo:integer; AField:TField):variant;
+    procedure SetFilterText(const Value: String); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -483,6 +486,7 @@ end;
 constructor TRxMemoryData.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+  FParser := nil;
   FRecordPos := -1;
   FLastID := Low(Integer);
   FAutoInc := 1;
@@ -496,6 +500,7 @@ begin
   ClearRecords;
   FRecords.Free;
   ReallocMem(FOffsets, 0);
+  if Assigned(FParser) then FreeAndNil(FParser);
 end;
 
 { Records Management }
@@ -636,6 +641,27 @@ begin
   FBookmarkOfs := FRecordSize + CalcFieldsSize;
   FBlobOfs := FBookmarkOfs + SizeOf(TMemBookmarkInfo);
   FRecBufSize := FBlobOfs + BlobFieldCount * SizeOf(TMemBlobData);//Pointer);
+end;
+
+procedure TRxMemoryData.ParseFilter(const AFilter: string);
+begin
+  // parser created?
+  if Length(AFilter) > 0 then
+  begin
+    if (FParser = nil) and IsCursorOpen then
+    begin
+      FParser := TBufDatasetParser.Create(Self);
+    end;
+    // is there a parser now?
+    if FParser <> nil then
+    begin
+      // set options
+      FParser.PartialMatch := not (foNoPartialCompare in FilterOptions);
+      FParser.CaseInsensitive := foCaseInsensitive in FilterOptions;
+      // parse expression
+      FParser.ParseExpression(AFilter);
+    end;
+  end;
 end;
 
 procedure TRxMemoryData.ClearRecords;
@@ -987,6 +1013,7 @@ end;
 function TRxMemoryData.RecordFilter: Boolean;
 var
   SaveState: TDataSetState;
+  RecBuf: PChar;
 begin
   Result := True;
   if Assigned(OnFilterRecord) then
@@ -1000,6 +1027,13 @@ begin
       except
         CustomApplication.HandleException(Self);
       end;
+
+      if Result and (Length(Filter) > 0) then
+      begin
+        if GetActiveRecBuf(RecBuf) then
+          Result := Boolean((FParser.ExtractFromBuffer(RecBuf))^);
+      end;
+
       RestoreState(SaveState);
     end
     else
@@ -1340,6 +1374,18 @@ begin
   else
     Result:=null;
   end;
+end;
+
+procedure TRxMemoryData.SetFilterText(const Value: String);
+begin
+  if Value = Filter then
+    exit;
+  // parse
+  ParseFilter(Value);
+  // call dataset method
+  inherited;
+  // refilter dataset if filtered
+  if IsCursorOpen and Filtered then Resync([]);
 end;
 
 function TRxMemoryData.IsSequenced: Boolean;
