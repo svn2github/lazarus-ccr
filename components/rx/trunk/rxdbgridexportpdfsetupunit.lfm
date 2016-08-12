@@ -1,0 +1,132 @@
+object RxDBGridExportPdfSetupForm: TRxDBGridExportPdfSetupForm
+  Left = 544
+  Height = 254
+  Top = 387
+  Width = 518
+  Caption = 'Export params'
+  ClientHeight = 254
+  ClientWidth = 518
+  OnCreate = FormCreate
+  LCLVersion = '1.7'
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 6
+    Height = 20
+    Top = 6
+    Width = 105
+    BorderSpacing.Around = 6
+    Caption = 'Export file name'
+    FocusControl = FileNameEdit1
+    ParentColor = False
+  end
+  object FileNameEdit1: TFileNameEdit
+    AnchorSideLeft.Control = Label1
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 12
+    Height = 37
+    Top = 32
+    Width = 500
+    Filter = 'All files (*.*)|*.*|LibreOffice/OpenOffice (*.ods)|*.ods|Excell 97-2003|*.xls|Excell 2007-2013|*.xlxs'
+    FilterIndex = 0
+    HideDirectories = False
+    ButtonWidth = 23
+    NumGlyphs = 1
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Around = 6
+    MaxLength = 0
+    TabOrder = 0
+  end
+  object cbOpenAfterExport: TCheckBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = FileNameEdit1
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 24
+    Top = 75
+    Width = 141
+    BorderSpacing.Around = 6
+    Caption = 'Open after export'
+    TabOrder = 1
+  end
+  object cbExportColumnHeader: TCheckBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = cbOpenAfterExport
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 24
+    Top = 105
+    Width = 167
+    BorderSpacing.Around = 6
+    Caption = 'Export column header'
+    TabOrder = 2
+  end
+  object cbExportColumnFooter: TCheckBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = cbExportColumnHeader
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 24
+    Top = 135
+    Width = 162
+    BorderSpacing.Around = 6
+    Caption = 'Export column footer'
+    Enabled = False
+    TabOrder = 3
+  end
+  object cbExportCellColors: TCheckBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = cbExportColumnFooter
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 24
+    Top = 165
+    Width = 138
+    BorderSpacing.Around = 6
+    Caption = 'Export cell colors'
+    Enabled = False
+    TabOrder = 4
+  end
+  object cbOverwriteExisting: TCheckBox
+    AnchorSideLeft.Control = Label4
+    AnchorSideTop.Control = FileNameEdit1
+    AnchorSideTop.Side = asrBottom
+    Left = 265
+    Height = 24
+    Top = 75
+    Width = 168
+    BorderSpacing.Around = 6
+    Caption = 'Overwrite existing file'
+    Enabled = False
+    TabOrder = 5
+  end
+  object ButtonPanel1: TButtonPanel
+    Left = 6
+    Height = 46
+    Top = 202
+    Width = 506
+    OKButton.Name = 'OKButton'
+    OKButton.DefaultCaption = True
+    HelpButton.Name = 'HelpButton'
+    HelpButton.DefaultCaption = True
+    CloseButton.Name = 'CloseButton'
+    CloseButton.DefaultCaption = True
+    CancelButton.Name = 'CancelButton'
+    CancelButton.DefaultCaption = True
+    TabOrder = 6
+    ShowButtons = [pbOK, pbCancel, pbHelp]
+  end
+  object Label4: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Owner
+    Left = 259
+    Height = 1
+    Top = 0
+    Width = 1
+    ParentColor = False
+  end
+end

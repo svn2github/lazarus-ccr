@@ -37,7 +37,7 @@ interface
 
 {$IF (FPC_FULLVERSION >= 30101)}
 uses
-  Classes, SysUtils, DB, rxdbgrid, LazFreeTypeFontCollection, vclutils, fpPDF;
+  Classes, SysUtils, DB, rxdbgrid, LazFreeTypeFontCollection, vclutils, Graphics, fpPDF, EasyLazFreeType;
 
 type
 
@@ -82,6 +82,7 @@ type
     FOptions: TRxDBGridExportPdfOptions;
     FProducerPDF: string;
     FPdfOptions:TPdfExportOptions;
+    FCurPage: TPDFPage;
     FWorkPages:TFPList;
     FWorkPagesNeedCount:integer;
 
@@ -99,7 +100,10 @@ type
     FHeaderFont:integer;
     FBodyFont:integer;
     FFooterFont:integer;
+    FExportFontHeader: TFreeTypeFont;
+    FExportFontBody: TFreeTypeFont;
 
+    procedure WriteTextRect(AExportFont:TFreeTypeFont; X, Y, W, H:integer; AText:string; ATextAlign:TAlignment);
     procedure DoExportTitle;
     procedure DoExportBody;
     procedure DoSetupFonts;
@@ -129,7 +133,14 @@ type
 implementation
 
 {$IF (FPC_FULLVERSION >= 30101)}
-uses rxdconst, FileUtil, forms, LCLIntf, LazFileUtils, EasyLazFreeType;
+uses Grids, rxdconst, FileUtil, Forms, Controls, LCLIntf, LazFileUtils, RxDBGridExportPdfSetupUnit;
+
+function ColorToDdfColor(C:TColor):TARGBColor;
+var
+  A:array [1..4] of byte absolute C;
+begin
+  Result:={A[1] shl 24 +} A[1] shl 16 + A[2] shl 8 + A[3];
+end;
 
 { TPdfExportOptions }
 
@@ -170,19 +181,50 @@ begin
   FPdfOptions.Assign(AValue);
 end;
 
+procedure TRxDBGridExportPDF.WriteTextRect(AExportFont: TFreeTypeFont; X, Y, W,
+  H: integer; AText: string; ATextAlign: TAlignment);
+var
+  FTW, FTH: Single;
+  X1: TPDFFloat;
+  Y1: TPDFFloat;
+begin
+  FTW:=AExportFont.TextWidth(AText);
+  FTH:=AExportFont.TextHeight(AText);
+  case ATextAlign of
+    taLeftJustify:
+      begin
+        Y1:=Y;
+        X1:=X + constCellPadding;
+      end;
+    taRightJustify:
+      begin
+        Y1:=Y;
+        X1:=X + W - FTW - 2;
+        if X1 < X then
+          X1:=X;
+      end;
+    taCenter:
+      begin
+        Y1:=Y;
+        X1:=(X + W) / 2 - FTW / 2 - constCellPadding;
+        if X1 < X then
+          X1:=X;
+      end;
+  end;
+  FCurPage.WriteText(X1, Y1 - FTH, AText);
+end;
+
 procedure TRxDBGridExportPDF.DoExportTitle;
 var
-  P: TPDFPage;
-  Pt: TPDFCoord;
-  i, X, CP, PX: Integer;
+  i, X, CP: Integer;
   C: TRxColumn;
   S: String;
   PU: TPDFUnitOfMeasure;
+  WW: Single;
 begin
   X:=FPageWidth + FPageMargin.Right;
   CP:=-1;
-  PX:=0;
-
+  FCurPage:=nil;
   for i:=0 to FRxDBGrid.Columns.Count - 1 do
   begin
     C:=FRxDBGrid.Columns[i];
@@ -190,19 +232,18 @@ begin
     if X + C.Width > FPageWidth - FPageMargin.Right then
     begin
       Inc(CP);
-      P:=TPDFPage(FWorkPages[CP]);
+      FCurPage:=TPDFPage(FWorkPages[CP]);
       X:=FPageMargin.Left;
-      PX:=0;
     end;
 
-    Pt.X := X;
-    Pt.Y := FPosY;
-    P.SetColor(C.Color);
-    P.DrawRect(Pt.X, Pt.Y, C.Width, FRxDBGrid.DefaultRowHeight, 1, false, true);
+    FCurPage.SetColor(ColorToDdfColor(FRxDBGrid.BorderColor), true);
+    FCurPage.DrawRect(X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, 1, false, true);
 
 
-    P.SetFont(FHeaderFont, 10);
-    P.WriteText(Pt.X+2, Pt.Y-10, C.Title.Caption);
+    FCurPage.SetFont(FHeaderFont, 10);
+    FExportFontHeader.SizeInPoints:=10;
+    FCurPage.SetColor(ColorToDdfColor(C.Title.Font.Color), false);
+    WriteTextRect(FExportFontHeader, X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, C.Title.Caption, C.Title.Alignment);
 
     X:=X + C.Width;
   end;
@@ -213,41 +254,38 @@ end;
 procedure TRxDBGridExportPDF.DoExportBody;
 procedure DoWriteRow;
 var
-  P: TPDFPage;
-  Pt: TPDFCoord;
   i, X, CP: Integer;
   C: TRxColumn;
   S: String;
 begin
-  X:=FPageMargin.Left;
-  CP:=0;
-  P:=TPDFPage(FWorkPages[CP]);
+  X:=FPageWidth + FPageMargin.Right;
+  CP:=-1;
+  FCurPage:=nil;
 
   for i:=0 to FRxDBGrid.Columns.Count - 1 do
   begin
     C:=FRxDBGrid.Columns[i];
-
-
-    Pt.X := X;
-    Pt.Y := FPosY;
-    P.SetColor(C.Color);
-    P.DrawRect(Pt.X, Pt.Y, C.Width, FRxDBGrid.DefaultRowHeight, 1, false, true);
-
-
-    if Assigned(C.Field) then
-    begin
-      P.SetFont(FBodyFont, 10);
-      P.WriteText(Pt.X+2, Pt.Y-10, C.Field.DisplayText);
-    end;
-
     if X + C.Width > FPageWidth - FPageMargin.Right then
     begin
       Inc(CP);
-      P:=TPDFPage(FWorkPages[CP]);
+      FCurPage:=TPDFPage(FWorkPages[CP]);
       X:=FPageMargin.Left;
-    end
-    else
-      Inc(X, C.Width);
+    end;
+
+    FCurPage.SetColor(ColorToDdfColor(FRxDBGrid.BorderColor), true); //Border
+    //FCurPage.SetColor(ColorToDdfColor(C.Color), false); // Fill color
+    FCurPage.DrawRect(X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, 1, false, true);
+
+    if Assigned(C.Field) then
+    begin
+      FCurPage.SetFont(FBodyFont, 10);
+      FExportFontBody.SizeInPoints:=10;
+      FCurPage.SetColor(ColorToDdfColor(C.Font.Color), false);
+      WriteTextRect(FExportFontBody, X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, C.Field.DisplayText, C.Alignment);
+    end;
+
+
+    X:=X + C.Width;
   end;
 end;
 
@@ -269,26 +307,34 @@ procedure TRxDBGridExportPDF.DoSetupFonts;
 var
   FM: TCustomFamilyCollectionItem;
   FIH, FI: TCustomFontCollectionItem;
+  B: Boolean;
 begin
-
+  FExportFontHeader:=nil;
   FFontCollection:=TFreeTypeFontCollection.Create;
   InitFonts(FFontCollection);
 
-  FM:=FFontCollection.Family['Arial'];
+  FM:=FFontCollection.Family['Liberation Sans'];
+  if not Assigned(FM) then
+    FM:=FFontCollection.Family['Arial'];
+
   if Assigned(FM) then
   begin
-    FIH:=FM.GetFont(['Bold']);
+    FIH:=FM.GetFont('Bold');
     if Assigned(FIH) then
     begin
+      B:=FIH.Bold;
       FPDFDocument.FontDirectory := ExtractFileDir(FIH.Filename);
       FHeaderFont := FPDFDocument.AddFont(ExtractFileName(FIH.Filename), FIH.Information[ftiFullName]);
+      FExportFontHeader:=FIH.CreateFont;
     end;
 
     FI:=FM.GetFont('Regular');
     if Assigned(FI) then
     begin
-      FPDFDocument.FontDirectory := ExtractFileDir(FIH.Filename);
-      FBodyFont := FPDFDocument.AddFont(ExtractFileName(FIH.Filename), FIH.Information[ftiFullName]);
+      B:=FI.Bold;
+      FPDFDocument.FontDirectory := ExtractFileDir(FI.Filename);
+      FBodyFont := FPDFDocument.AddFont(ExtractFileName(FI.Filename), FI.Information[ftiFullName]);
+      FExportFontBody:=FI.CreateFont;
     end;
 
     if not Assigned(FIH) then
@@ -299,7 +345,7 @@ begin
   FFontCollection.Free;
 
   if not Assigned(FM) then
-   raise Exception.Create('Not found arial font');
+   raise Exception.Create('Not found Sans font');
 end;
 
 procedure TRxDBGridExportPDF.DoExportFooter;
@@ -310,6 +356,7 @@ end;
 procedure TRxDBGridExportPDF.DoSetupDocHeader;
 var
   W, i: Integer;
+  C: TRxColumn;
 begin
   FPDFDocument.Infos.Title := Application.Title;
   FPDFDocument.Infos.Author := FAuthorPDF;
@@ -335,16 +382,17 @@ begin
       FPageHeight := PDFPaperSizes[FPdfOptions.FPaperType, 1];
     end;
 
-    W:=FPageMargin.Left;
-    for i:=0 to FRxDBGrid.Columns.Count-1 do
+    W:=FPageWidth + FPageMargin.Right;
+    FWorkPagesNeedCount:=0;
+    for i:=0 to FRxDBGrid.Columns.Count - 1 do
     begin
-      W:=W + FRxDBGrid.Columns[i].Width;
-
-      if W > FPageWidth - FPageMargin.Right then
+      C:=FRxDBGrid.Columns[i];
+      if W + C.Width > FPageWidth - FPageMargin.Right then
       begin
         Inc(FWorkPagesNeedCount);
         W:=FPageMargin.Left;
       end;
+      W:=W + C.Width;
     end;
   end;
 end;
@@ -410,6 +458,9 @@ begin
 
     FreeAndNil(FWorkPages);
     FreeAndNil(FPDFDocument);
+
+    if Assigned(FExportFontHeader) then
+      FreeAndNil(FExportFontHeader);
   end;
 
   if Result and FOpenAfterExport then
@@ -418,7 +469,22 @@ end;
 
 function TRxDBGridExportPDF.DoSetupTools: boolean;
 begin
-  Result:=inherited DoSetupTools;
+  RxDBGridExportPdfSetupForm:=TRxDBGridExportPdfSetupForm.Create(Application);
+  RxDBGridExportPdfSetupForm.FileNameEdit1.FileName:=FileName;
+  RxDBGridExportPdfSetupForm.cbOpenAfterExport.Checked:=FOpenAfterExport;
+  RxDBGridExportPdfSetupForm.cbExportColumnHeader.Checked:=repExportTitle in FOptions;
+
+  Result:=RxDBGridExportPdfSetupForm.ShowModal = mrOk;
+  if Result then
+  begin
+    FileName:=RxDBGridExportPdfSetupForm.FileNameEdit1.FileName;
+    FOpenAfterExport:=RxDBGridExportPdfSetupForm.cbOpenAfterExport.Checked;
+    if  RxDBGridExportPdfSetupForm.cbExportColumnHeader.Checked then
+      FOptions:=FOptions + [repExportTitle]
+    else
+      FOptions:=FOptions - [repExportTitle];
+  end;
+  RxDBGridExportPdfSetupForm.Free;
 end;
 
 procedure TRxDBGridExportPDF.DoSaveDocument;

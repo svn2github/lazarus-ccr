@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <Version Value="9"/>
+    <BuildModes Active="Default"/>
+    <Units Count="61">
+      <Unit0>
+        <Filename Value="project1.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="81" Y="12"/>
+        <UsageCount Value="59"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit1"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="59"/>
+        <CursorPos X="34" Y="61"/>
+        <UsageCount Value="59"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
+        <UnitName Value="RxDBGridExportSpreadSheet"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="143"/>
+        <CursorPos X="31" Y="32"/>
+        <UsageCount Value="16"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="../../rxdbgrid.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2312"/>
+        <CursorPos X="30" Y="2329"/>
+        <UsageCount Value="24"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="rxdbgridexportpdf.pas"/>
+        <UnitName Value="RxDBGridExportPdf"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="51"/>
+        <CursorPos X="69" Y="76"/>
+        <UsageCount Value="17"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="../../rxdconst.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="161"/>
+        <CursorPos X="18" Y="177"/>
+        <UsageCount Value="7"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="../../../install/source/fpcsrc/rtl/objpas/classes/reader.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="964"/>
+        <CursorPos Y="986"/>
+        <UsageCount Value="7"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="../../../OPTORG/alexs/3/examples/testfppdf.lpr"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="107"/>
+        <CursorPos Y="133"/>
+        <UsageCount Value="8"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="../../../install/source/fpcsrc/packages/fcl-pdf/src/fppdf.pp"/>
+        <UnitName Value="fpPDF"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="530"/>
+        <CursorPos X="15" Y="544"/>
+        <UsageCount Value="25"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="../../registerrxdb.pas"/>
+        <UnitName Value="RegisterRxDB"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="23" Y="10"/>
+        <UsageCount Value="8"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="../../rxdbgridexportpdf.pas"/>
+        <UnitName Value="RxDBGridExportPdf"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="548"/>
+        <CursorPos X="19" Y="515"/>
+        <UsageCount Value="27"/>
+        <Bookmarks Count="1">
+          <Item0 X="3" Y="361" ID="1"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="../../rxdbgridprintgrid.pas"/>
+        <UnitName Value="RxDBGridPrintGrid"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="140"/>
+        <CursorPos X="3" Y="145"/>
+        <UsageCount Value="17"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="../../../OPTORG/alexs/1/1/testfppdf.lpr"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="145"/>
+        <CursorPos X="13" Y="166"/>
+        <UsageCount Value="21"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="../../../install/source/fpcsrc/packages/fcl-pdf/src/fpparsettf.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="344"/>
+        <CursorPos Y="365"/>
+        <UsageCount Value="13"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="../../../install/source/fpcsrc/rtl/objpas/sysutils/sysutilh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="97"/>
+        <CursorPos X="19" Y="112"/>
+        <UsageCount Value="7"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="../../../install/source/fpcsrc/packages/fcl-pdf/src/fpttfencodings.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2025"/>
+        <CursorPos X="3" Y="2100"/>
+        <UsageCount Value="7"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="../../../lazutils/lazfreetypefontcollection.pas"/>
+        <UnitName Value="LazFreeTypeFontCollection"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="345"/>
+        <CursorPos X="3" Y="347"/>
+        <UsageCount Value="21"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="../../../lazutils/easylazfreetype.pas"/>
+        <UnitName Value="EasyLazFreeType"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1563"/>
+        <CursorPos X="3" Y="1550"/>
+        <UsageCount Value="21"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="../../../../examples/lazfreetype/mainform.pas"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="51"/>
+        <CursorPos X="78" Y="61"/>
+        <UsageCount Value="7"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="../../../lazutils/ttfile.pas"/>
+        <UnitName Value="TTFile"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="233"/>
+        <CursorPos Y="249"/>
+        <UsageCount Value="9"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="../../../install/source/fpcsrc/rtl/objpas/sysutils/finah.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="10"/>
+        <CursorPos X="10" Y="25"/>
+        <UsageCount Value="9"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="../../../install/source/fpcsrc/rtl/objpas/sysutils/fina.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="100"/>
+        <CursorPos X="3" Y="105"/>
+        <UsageCount Value="9"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="../../../install/source/fpcsrc/rtl/inc/fexpand.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="226"/>
+        <CursorPos X="10" Y="106"/>
+        <UsageCount Value="7"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="../../../tachart/tadraweropengl.pas"/>
+        <UnitName Value="TADrawerOpenGL"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="218"/>
+        <CursorPos Y="220"/>
+        <UsageCount Value="13"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="../../../lazutils/fileutil.pas"/>
+        <UnitName Value="FileUtil"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="14" Y="22"/>
+        <UsageCount Value="9"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="../../../lazutils/fileutil.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1013"/>
+        <CursorPos Y="1031"/>
+        <UsageCount Value="7"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="../../../lazutils/lazfileutils.pas"/>
+        <UnitName Value="LazFileUtils"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="719"/>
+        <CursorPos Y="736"/>
+        <UsageCount Value="7"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="../../../tachart/backup/tadraweropengl.pas"/>
+        <UnitName Value="TADrawerOpenGL"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="208"/>
+        <CursorPos X="20" Y="224"/>
+        <UsageCount Value="7"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="unit1.lfm"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="231"/>
+        <UsageCount Value="8"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="../../../lazreport/source/lr_class.pas"/>
+        <UnitName Value="LR_Class"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3503"/>
+        <CursorPos X="3" Y="3506"/>
+        <UsageCount Value="8"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="C:/lazarus/components/lazutils/easylazfreetype.pas"/>
+        <UnitName Value="EasyLazFreeType"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="14" Y="160"/>
+        <UsageCount Value="8"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="C:/lazarus/components/lazutils/lazfreetypefontcollection.pas"/>
+        <UnitName Value="LazFreeTypeFontCollection"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="127"/>
+        <CursorPos X="50" Y="141"/>
+        <UsageCount Value="8"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="../../../install/source/fpcsrc/rtl/objpas/classes/classesh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="76"/>
+        <CursorPos X="56" Y="91"/>
+        <UsageCount Value="10"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="../../../install/source/fpcsrc/rtl/objpas/sysutils/sysinth.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="122"/>
+        <CursorPos X="58" Y="137"/>
+        <UsageCount Value="8"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="../../vclutils.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="125"/>
+        <CursorPos Y="155"/>
+        <UsageCount Value="8"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="../../rxshortcutunit.pas"/>
+        <ComponentName Value="rxShortCutForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="rxShortCutUnit"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="13"/>
+        <UsageCount Value="8"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="../../rxctrls.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="40"/>
+        <UsageCount Value="8"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="../../rxapputils.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="28"/>
+        <CursorPos X="83" Y="64"/>
+        <UsageCount Value="8"/>
+      </Unit37>
+      <Unit38>
+        <Filename Value="../../../install/source/fpcsrc/packages/fcl-db/src/sqldb/sqldb.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="439"/>
+        <CursorPos X="3" Y="454"/>
+        <UsageCount Value="10"/>
+      </Unit38>
+      <Unit39>
+        <Filename Value="../../../install/source/fpcsrc/packages/fcl-db/src/base/db.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1339"/>
+        <CursorPos X="3" Y="1354"/>
+        <UsageCount Value="9"/>
+      </Unit39>
+      <Unit40>
+        <Filename Value="../../../install/source/fpcsrc/packages/fcl-db/src/base/dataset.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="473"/>
+        <CursorPos X="3" Y="476"/>
+        <UsageCount Value="10"/>
+      </Unit40>
+      <Unit41>
+        <Filename Value="../../../install/source/fpcsrc/packages/fcl-db/src/base/bufdataset.pas"/>
+        <UnitName Value="BufDataset"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="458"/>
+        <CursorPos X="3" Y="446"/>
+        <UsageCount Value="10"/>
+        <Bookmarks Count="1">
+          <Item0 X="3" Y="3449" ID="1"/>
+        </Bookmarks>
+      </Unit41>
+      <Unit42>
+        <Filename Value="../../../install/source/fpcsrc/packages/fcl-db/src/base/bufdataset_parser.pp"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="20" Y="18"/>
+        <UsageCount Value="9"/>
+      </Unit42>
+      <Unit43>
+        <Filename Value="../../../install/source/fpcsrc/packages/fcl-db/src/dbase/dbf_prscore.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="34"/>
+        <CursorPos X="3" Y="43"/>
+        <UsageCount Value="9"/>
+      </Unit43>
+      <Unit44>
+        <Filename Value="../../rxmemds.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="25"/>
+        <CursorPos X="47" Y="40"/>
+        <UsageCount Value="10"/>
+        <Bookmarks Count="1">
+          <Item0 X="33" Y="131" ID="2"/>
+        </Bookmarks>
+      </Unit44>
+      <Unit45>
+        <Filename Value="../../../install/source/fpcsrc/packages/fcl-db/src/memds/memds.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="136"/>
+        <CursorPos X="14" Y="155"/>
+        <UsageCount Value="8"/>
+      </Unit45>
+      <Unit46>
+        <Filename Value="../../../install/source/fpcsrc/packages/fcl-db/src/dbase/dbf.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2336"/>
+        <CursorPos X="3" Y="2338"/>
+        <UsageCount Value="8"/>
+      </Unit46>
+      <Unit47>
+        <Filename Value="../../../install/source/fpcsrc/packages/fcl-db/src/dbase/dbf_parser.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="162"/>
+        <CursorPos X="5" Y="87"/>
+        <UsageCount Value="8"/>
+      </Unit47>
+      <Unit48>
+        <Filename Value="../../rxdb/rxmemds_parser.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="186"/>
+        <CursorPos X="3" Y="189"/>
+        <UsageCount Value="9"/>
+      </Unit48>
+      <Unit49>
+        <Filename Value="../../../install/source/fpcsrc/packages/fcl-db/src/dbase/dbf_common.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="95"/>
+        <CursorPos X="10" Y="110"/>
+        <UsageCount Value="9"/>
+      </Unit49>
+      <Unit50>
+        <Filename Value="../../../../lcl/grids.pas"/>
+        <UnitName Value="Grids"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1972"/>
+        <CursorPos X="21" Y="1976"/>
+        <UsageCount Value="12"/>
+      </Unit50>
+      <Unit51>
+        <Filename Value="../../../lazutils/lazfreetype.pas"/>
+        <UnitName Value="LazFreeType"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="76"/>
+        <CursorPos Y="76"/>
+        <UsageCount Value="9"/>
+      </Unit51>
+      <Unit52>
+        <Filename Value="../../../lazutils/ttobjs.pas"/>
+        <UnitName Value="TTObjs"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="9"/>
+      </Unit52>
+      <Unit53>
+        <Filename Value="../../../lazutils/tttables.pas"/>
+        <UnitName Value="TTTables"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="9"/>
+      </Unit53>
+      <Unit54>
+        <Filename Value="../../../../lcl/dbgrids.pas"/>
+        <UnitName Value="DBGrids"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="4071"/>
+        <CursorPos Y="4090"/>
+        <UsageCount Value="11"/>
+      </Unit54>
+      <Unit55>
+        <Filename Value="../../../../lcl/graphics.pp"/>
+        <UnitName Value="Graphics"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1959"/>
+        <CursorPos X="29" Y="1970"/>
+        <UsageCount Value="10"/>
+      </Unit55>
+      <Unit56>
+        <Filename Value="../../../../lcl/lcltype.pp"/>
+        <UnitName Value="LCLType"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1629"/>
+        <CursorPos X="3" Y="1644"/>
+        <UsageCount Value="10"/>
+      </Unit56>
+      <Unit57>
+        <Filename Value="../../../install/source/fpcsrc/packages/fcl-image/src/fpimage.pp"/>
+        <UnitName Value="FPimage"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="37"/>
+        <CursorPos X="4" Y="45"/>
+        <UsageCount Value="10"/>
+      </Unit57>
+      <Unit58>
+        <Filename Value="../../rxdbgridexportpdfsetupunit.pas"/>
+        <ComponentName Value="RxDBGridExportPdfSetupForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="RxDBGridExportPdfSetupUnit"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="56"/>
+        <CursorPos X="5" Y="83"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit58>
+      <Unit59>
+        <Filename Value="../../rxdbgridexportspreadsheet_paramsunit.pas"/>
+        <ComponentName Value="RxDBGridExportSpreadSheet_ParamsForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="RxDBGridExportSpreadSheet_ParamsUnit"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="31"/>
+        <CursorPos X="3" Y="46"/>
+        <UsageCount Value="10"/>
+      </Unit59>
+      <Unit60>
+        <Filename Value="../../../../lcl/controls.pp"/>
+        <UnitName Value="Controls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="5"/>
+        <CursorPos X="14" Y="19"/>
+        <UsageCount Value="10"/>
+      </Unit60>
+    </Units>
+    <JumpHistory Count="27" HistoryIndex="26">
+      <Position1>
+        <Filename Value="../../rxdbgridexportpdf.pas"/>
+        <Caret Line="277" Column="53" TopLine="252"/>
+      </Position1>
+      <Position2>
+        <Filename Value="../../rxdbgridexportpdf.pas"/>
+        <Caret Line="142" Column="15" TopLine="127"/>
+      </Position2>
+      <Position3>
+        <Filename Value="../../rxdbgridexportpdf.pas"/>
+        <Caret Line="275" Column="70" TopLine="261"/>
+      </Position3>
+      <Position4>
+        <Filename Value="../../rxdbgridexportpdf.pas"/>
+        <Caret Line="285" TopLine="226"/>
+      </Position4>
+      <Position5>
+        <Filename Value="../../rxdbgridexportpdf.pas"/>
+        <Caret Line="239" Column="61" TopLine="236"/>
+      </Position5>
+      <Position6>
+        <Filename Value="../../rxdbgridexportpdf.pas"/>
+        <Caret Line="208" Column="20" TopLine="203"/>
+      </Position6>
+      <Position7>
+        <Filename Value="../../rxdbgridexportpdfsetupunit.pas"/>
+        <Caret Line="18" Column="30"/>
+      </Position7>
+      <Position8>
+        <Filename Value="../../rxdbgridexportpdf.pas"/>
+        <Caret Line="136" Column="89" TopLine="129"/>
+      </Position8>
+      <Position9>
+        <Filename Value="../../rxdbgridexportpdf.pas"/>
+        <Caret Line="477" Column="34" TopLine="457"/>
+      </Position9>
+      <Position10>
+        <Filename Value="../../rxdbgridexportpdfsetupunit.pas"/>
+        <Caret Line="67" TopLine="39"/>
+      </Position10>
+      <Position11>
+        <Filename Value="../../rxdbgridexportpdfsetupunit.pas"/>
+        <Caret Line="83" TopLine="53"/>
+      </Position11>
+      <Position12>
+        <Filename Value="../../rxdbgridexportpdfsetupunit.pas"/>
+        <Caret Line="82" Column="5" TopLine="56"/>
+      </Position12>
+      <Position13>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="166" Column="3" TopLine="148"/>
+      </Position13>
+      <Position14>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="165" Column="3" TopLine="147"/>
+      </Position14>
+      <Position15>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="164" Column="3" TopLine="146"/>
+      </Position15>
+      <Position16>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="167" Column="54" TopLine="146"/>
+      </Position16>
+      <Position17>
+        <Filename Value="unit1.pas"/>
+      </Position17>
+      <Position18>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="157" Column="44" TopLine="127"/>
+      </Position18>
+      <Position19>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="156" Column="44" TopLine="126"/>
+      </Position19>
+      <Position20>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="137" Column="65" TopLine="127"/>
+      </Position20>
+      <Position21>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="10" Column="22" TopLine="166"/>
+      </Position21>
+      <Position22>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="150" TopLine="161"/>
+      </Position22>
+      <Position23>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="188" TopLine="164"/>
+      </Position23>
+      <Position24>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="155" TopLine="139"/>
+      </Position24>
+      <Position25>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="156" TopLine="139"/>
+      </Position25>
+      <Position26>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="157" TopLine="139"/>
+      </Position26>
+      <Position27>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="164" Column="42" TopLine="153"/>
+      </Position27>
+    </JumpHistory>
+  </ProjectSession>
+  <Debugging>
+    <BreakPoints Count="1">
+      <Item1>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="../../../lazutils/lazfreetypefontcollection.pas"/>
+        <Line Value="423"/>
+      </Item1>
+    </BreakPoints>
+    <Watches Count="4">
+      <Item1>
+        <Expression Value="fName"/>
+      </Item1>
+      <Item2>
+        <Expression Value="C"/>
+        <DisplayStyle Value="wdfHex"/>
+      </Item2>
+      <Item3>
+        <Expression Value="A"/>
+      </Item3>
+      <Item4>
+        <Expression Value="Result"/>
+        <DisplayStyle Value="wdfHex"/>
+      </Item4>
+    </Watches>
+  </Debugging>
+</CONFIG>
