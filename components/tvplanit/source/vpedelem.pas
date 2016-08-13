@@ -378,7 +378,7 @@ begin
    btnOK.TabOrder := 1;
    btnCancel.TabOrder := 2;
   {$ELSE}
-   btnOK.Left := ButtonCancel.ClientWidth - btnOK.Width;
+   btnOK.Left := ButtonPanel.ClientWidth - btnOK.Width;
    btnCancel.Left := btnOK.Left - btnCancel.Width - DELTA;
    btnCancel.TabOrder := 1;
    btnOK.TabOrder := 2;
