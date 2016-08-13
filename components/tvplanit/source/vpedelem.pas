@@ -329,6 +329,7 @@ begin
   btnCancel.Height := hBtn;
   btnShape.Height := hBtn;
   btnCaptionFont.Height := hBtn;
+  ButtonPanel.Height := btnOK.Top + btnOK.Height + btnOK.Top;
 
   gbDayOffset.Height := rgDayOffsetUnit.Height;
   rgRotation.Height := rgMeasurement.Height;
@@ -362,15 +363,20 @@ begin
   btnCancel.Width := w;
   btnShape.Width := GetButtonWidth(btnShape);
  {$IFDEF MSWINDOWS}
+  btnOK.BorderSpacing.Right := 8;
   btnOK.AnchorSideRight.Control := btnCancel;
   btnOK.TabOrder := 1;
+  btnCancel.BorderSpacing.Left := 0;
   btnCancel.AnchorSideRight.Control := ButtonPanel;
   btnCancel.AnchorSideRight.Side := asrBottom;
   btnCancel.TabOrder := 2;
  {$ELSE}
+  btnOK.BorderSpacing.Right := 0;
+  btnOK.BorderSpacing.Left := 8;
   btnOK.AnchorSideRight.Control := ButtonPanel;
   btnOK.AnchorSideRight.Side := asrBottom;
   btnCancel.AnchorSideRight.Control := btnOK;
+  btnCancel.BorderSpacing.Right := 0;
   btnCancel.TabOrder := 1;
   btnOK.TabOrder := 2;
  {$ENDIF}

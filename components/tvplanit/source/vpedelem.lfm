@@ -423,7 +423,6 @@ object frmEditElement: TfrmEditElement
     Top = 403
     Width = 465
     Align = alTop
-    AutoSize = True
     BorderSpacing.Left = 12
     BorderSpacing.Top = 8
     BorderSpacing.Right = 12
@@ -445,12 +444,13 @@ object frmEditElement: TfrmEditElement
     end
     object btnOk: TButton
       AnchorSideRight.Control = btnCancel
-      Left = 309
+      Left = 308
       Height = 25
       Top = 0
       Width = 75
       Anchors = [akTop, akRight]
-      BorderSpacing.Right = 7
+      BorderSpacing.Left = 8
+      BorderSpacing.Right = 8
       Caption = 'OK'
       Default = True
       OnClick = btnOkClick
