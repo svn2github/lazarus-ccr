@@ -782,8 +782,17 @@ begin
 
   OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
   CancelBtn.Width := OKBtn.Width;
+ {$IFDEF MSWINDOWS}
   CancelBtn.Left := ButtonPanel.ClientWidth - ResourcenameLbl.Left - CancelBtn.Width;
   OKBtn.Left := CancelBtn.Left - DELTA - OKBtn.Width;
+  OKBtn.TabOrder := 0;
+  CancelBtn.TabOrder := 1;
+ {$ELSE}
+  OKBtn.Left := ButtonPanel.ClientWidth - ResourcenameLbl.Left - OKBtn.Width;
+  CancelBtn.Left := OKBtn.Left - DELTA - CancelBtn.Width;
+  CancelBtn.TabOrder := 0;
+  OKBtn.TabOrder := 1;
+ {$ENDIF}
   ResourceNameLbl.Font.Size := ScaleY(ResourceNameLbl.Font.Size, DesignTimeDPI);
   ResourceNameLbl.Top := (ButtonPanel.ClientHeight - Panel1.BorderWidth - ResourceNameLbl.Height) div 2;
   OKBtn.Top := (ButtonPanel.ClientHeight - Panel1.BorderWidth - OKBtn.Height) div 2;

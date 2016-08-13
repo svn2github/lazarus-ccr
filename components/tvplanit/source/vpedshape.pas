@@ -411,8 +411,17 @@ begin
     cbBrushColor.Width := cbBrushColor.Width + btnOK.Width + DELTA + btnCancel.Width - gbBrush.Width;
     cbBrushStyle.Width := cbBrushColor.Width;
   end;
+ {$IFDEF MSWINDOWS}
   btnCancel.Left := RightOf(gbBrush) - btnCancel.Width;
   btnOK.Left := btnCancel.Left - DELTA - btnOK.Width;
+  btnOK.TabOrder := gbBrush.TabOrder + 1;
+  btnCancel.TabOrder := btnOK.TabOrder + 1;
+ {$ELSE}
+  btnOK.Left := RightOf(gbBrush) - btnOK.Width;
+  btnCancel.Left := btnOK.Left - DELTA - btnCancel.Width;
+  btnCancel.TabOrder := gbBrush.TabOrder + 1;
+  btnOK.TabOrder := btnCancel.TabOrder + 1;
+ {$ENDIF}
 
   { Buttons - vert }
   btnOK.Height := hb;

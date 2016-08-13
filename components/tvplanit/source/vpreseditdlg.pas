@@ -240,8 +240,17 @@ begin
 
   OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
   CancelBtn.Width := OKBtn.Width;
+ {$IFDEF MSWINDOWS}
   CancelBtn.Left := pnlBottom.ClientWidth - lblDescription.Left - CancelBtn.Width;
   OKBtn.Left := CancelBtn.Left - OKBtn.Width - HDelta; // - (ClientWidth - tabResource.ClientWidth);
+  OKBtn.TabOrder := 0;
+  CancelBtn.TabOrder := 1;
+ {$ELSE}
+  OKBtn.Left := pnlBottom.ClientWidth - lblDescription.Left - OKBtn.Width;
+  CancelBtn.Left := OKBtn.Left - CancelBtn.Width - HDelta; // - (ClientWidth - tabResource.ClientWidth);
+  CancelBtn.TabOrder := 0;
+  OKBtn.TabOrder := 1;
+ {$ENDIF}
 end;
 
 procedure TResEditForm.OKBtnClick(Sender: TObject);

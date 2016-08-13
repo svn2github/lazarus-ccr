@@ -22,7 +22,7 @@ object DlgEventEdit: TDlgEventEdit
     BevelOuter = bvNone
     ClientHeight = 36
     ClientWidth = 697
-    TabOrder = 0
+    TabOrder = 1
     object ResourceNameLbl: TLabel
       Left = 8
       Height = 16
@@ -47,7 +47,6 @@ object DlgEventEdit: TDlgEventEdit
       Default = True
       OnClick = OKBtnClick
       TabOrder = 0
-      TabStop = False
     end
     object CancelBtn: TButton
       Left = 608
@@ -59,7 +58,6 @@ object DlgEventEdit: TDlgEventEdit
       Caption = '&Cancel'
       OnClick = CancelBtnClick
       TabOrder = 1
-      TabStop = False
     end
   end
   object Panel1: TPanel
@@ -72,7 +70,7 @@ object DlgEventEdit: TDlgEventEdit
     BorderWidth = 8
     ClientHeight = 397
     ClientWidth = 697
-    TabOrder = 1
+    TabOrder = 0
     object AppointmentGroupBox: TGroupBox
       Left = 8
       Height = 215

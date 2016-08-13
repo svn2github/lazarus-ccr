@@ -563,9 +563,14 @@ begin
 
   OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
   CancelBtn.Width := OKBtn.Width;
+ {$IFDEF MSWINDOWS}   // button order: OK - Cancel
   CancelBtn.Left := pnlBottom.ClientWidth - HBorder - CancelBtn.Width;
   OKBtn.Left := CancelBtn.Left - Dist - OKBtn.Width;
-
+ {$ELSE}              // button order: Cancel - OK
+  OKBtn.Left := pnlBottom.ClientWidth - HBorder - OKBtn.Width;
+  CancelBtn.Left := OKBtn.Left - Dist - CancelBtn.Width;
+  OKBtn.TabOrder := 1;
+ {$ENDIF}
 end;
 
 procedure TContactEditForm.DisplayCurrentCountry;

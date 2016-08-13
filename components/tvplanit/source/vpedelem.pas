@@ -361,6 +361,19 @@ begin
   btnOK.Width := w;
   btnCancel.Width := w;
   btnShape.Width := GetButtonWidth(btnShape);
+ {$IFDEF MSWINDOWS}
+  btnOK.AnchorSideRight.Control := btnCancel;
+  btnOK.TabOrder := 1;
+  btnCancel.AnchorSideRight.Control := ButtonPanel;
+  btnCancel.AnchorSideRight.Side := asrBottom;
+  btnCancel.TabOrder := 2;
+ {$ELSE}
+  btnCancel.AnchorSideRight.Control := ButtonPanel;
+  btnCancel.TabOrder := 1;
+  btnOK.AnchorSideRight.Control := ButtonPanel;
+  btnOK.AnchorSideRight.Side := asrBottom;
+  btnOK.TabOrder := 2;
+ {$ENDIF}
 
   // Form size
   rgItemType.Align := alNone;

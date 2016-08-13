@@ -360,8 +360,17 @@ begin
     lblFieldMappings.Left := FieldMappingsLB.Left;
     btnDeleteMapping.Left := ClientWidth - DatasetFieldLB.Left - btnDeleteMapping.Width;
     btnClearMappings.Left := btnDeleteMapping.Left;
+   {$IFDEF MSWINDOWS}
     BtnCancel.Left := w - DatasetFieldLB.Width - BtnCancel.Width;
     BtnOK.Left := BtnCancel.Left - DELTA - BtnOK.Width;
+    BtnOK.TabOrder := 0;
+    BtnCancel.TabOrder := 1;
+   {$ELSE}
+    BtnOK.Left := w - DatasetFieldLB.Width - BtnOK.Width;
+    BtnCancel.Left := BtnOK.Left - DELTA - BtnCancel.Width;
+    BtnCancel.TabOrder := 0;
+    BtnOK.TabOrder := 1;
+   {$ENDIF}
   end;
   lblVPFieldsAvail.Left := RightOf(VPFieldLB) - GetLabelWidth(lblVPFieldsAvail);
 end;

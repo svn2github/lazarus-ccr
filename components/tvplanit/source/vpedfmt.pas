@@ -195,8 +195,17 @@ begin
   w := Max(GetButtonWidth(btnOK), GetButtonWidth(btnCancel));
   btnOK.Width := w;
   btnCancel.Width := w;
+ {$IFDEF MSWINDOWS}
   btnCancel.Left := RightOf(rgDayIncrement) - btnCancel.Width;
   btnOK.Left := btnCancel.Left - DELTA - btnOK.Width;
+  btnOK.TabOrder := rgDayIncrement.TabOrder + 1;
+  btnCancel.TabOrder := btnOK.TabOrder + 1;
+ {$ELSE}
+  btnOK.Left := RightOf(rgDayIncrement) - btnOK.Width;
+  btnCancel.Left := btnOK.Left - DELTA - btnCancel.Width;
+  btnCancel.TabOrder := rgDayIncrement.TabOrder + 1;
+  btnOK.TabOrder := btnCancel.TabOrder + 1;
+ {$ENDIF}
 
   edName.Height := editHeight;
   edDescription.Height := editHeight;

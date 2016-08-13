@@ -1,6 +1,6 @@
 object frmAbout: TfrmAbout
   Left = 282
-  Height = 488
+  Height = 313
   Top = 205
   Width = 582
   HorzScrollBar.Page = 470
@@ -8,7 +8,7 @@ object frmAbout: TfrmAbout
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'About Visual PlanIt'
-  ClientHeight = 488
+  ClientHeight = 313
   ClientWidth = 582
   OnActivate = FormActivate
   Position = poScreenCenter

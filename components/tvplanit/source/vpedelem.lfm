@@ -1,13 +1,13 @@
 object frmEditElement: TfrmEditElement
   Left = 1069
-  Height = 503
+  Height = 449
   Top = 231
   Width = 489
   HorzScrollBar.Page = 378
   VertScrollBar.Page = 444
   BorderStyle = bsDialog
   Caption = 'Edit Element'
-  ClientHeight = 503
+  ClientHeight = 449
   ClientWidth = 489
   OnCreate = FormCreate
   OnShow = FormShow
@@ -26,7 +26,7 @@ object frmEditElement: TfrmEditElement
     Caption = ' Visual '
     ClientHeight = 132
     ClientWidth = 461
-    TabOrder = 0
+    TabOrder = 3
     object rgMeasurement: TRadioGroup
       Left = 104
       Height = 124
@@ -251,7 +251,7 @@ object frmEditElement: TfrmEditElement
     Caption = ' Caption '
     ClientHeight = 34
     ClientWidth = 461
-    TabOrder = 1
+    TabOrder = 4
     object lblCaptionText: TLabel
       AnchorSideLeft.Control = gbCaption
       AnchorSideTop.Control = edCaptionText
@@ -312,7 +312,7 @@ object frmEditElement: TfrmEditElement
     BevelOuter = bvNone
     ClientHeight = 23
     ClientWidth = 465
-    TabOrder = 2
+    TabOrder = 0
     object lblName: TLabel
       AnchorSideTop.Control = edName
       AnchorSideTop.Side = asrCenter
@@ -349,7 +349,7 @@ object frmEditElement: TfrmEditElement
     BevelOuter = bvNone
     ClientHeight = 56
     ClientWidth = 467
-    TabOrder = 3
+    TabOrder = 2
     object gbDayOffset: TGroupBox
       Left = 0
       Height = 56
@@ -431,7 +431,7 @@ object frmEditElement: TfrmEditElement
     BevelOuter = bvNone
     ClientHeight = 25
     ClientWidth = 465
-    TabOrder = 4
+    TabOrder = 5
     object btnShape: TButton
       AnchorSideLeft.Control = ButtonPanel
       Left = 0
@@ -483,7 +483,7 @@ object frmEditElement: TfrmEditElement
     BevelOuter = bvNone
     ClientHeight = 70
     ClientWidth = 467
-    TabOrder = 5
+    TabOrder = 1
     object rgItemType: TRadioGroup
       Left = 0
       Height = 70

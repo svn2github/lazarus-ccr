@@ -209,8 +209,17 @@ begin
 
   OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
   CancelBtn.Width := OKBtn.Width;
+ {$IFDEF MSWINDOWS}
   CancelBtn.Left := ButtonPanel.ClientWidth - ResourcenameLbl.Left - CancelBtn.Width;
   OKBtn.Left := CancelBtn.Left - HDist - OKBtn.Width;
+  OKBtn.TabOrder := 0;
+  CancelBtn.TabOrder := 1;
+ {$ELSE}
+  OKBtn.Left := ButtonPanel.ClientWidth - ResourcenameLbl.Left - OKBtn.Width;
+  CancelBtn.Left := OKBtn.Left - HDist - CancelBtn.Width;
+  CancelBtn.TabOrder := 0;
+  OKBtn.TabOrder := 1;
+ {$ENDIF}
 
   Bevel1.Top := DescriptionEdit.Top + editHeight + VBevelDist; //BottomOf(DescriptionEdit) + VBevelDist;
 

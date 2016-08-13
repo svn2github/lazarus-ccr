@@ -185,9 +185,17 @@ begin
 
   OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
   CancelBtn.Width := OKBtn.Width;
+ {$IFDEF MSWINDOWS}
   CancelBtn.Left := ButtonPanel.ClientWidth - HBORDER - CancelBtn.Width;
   OKBtn.Left := CancelBtn.Left - DIST - OKBtn.Width;
-
+  OKBtn.TabOrder := 0;
+  CancelBtn.TabOrder := 1;
+ {$ELSE}
+  OKBtn.Left := ButtonPanel.ClientWidth - HBORDER - OKBtn.Width;
+  CancelBtn.Left := OKBtn.Left - DIST - CancelBtn.Width;
+  CancelBtn.TabOrder := 0;
+  OKBtn.TabOrder := 1;
+ {$ENDIF}
   if DingPath = '' then begin
     CBDefault.Checked := true;
     if (MediaFolder <> '') and DirectoryExists(MediaFolder) then

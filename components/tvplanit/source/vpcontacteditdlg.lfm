@@ -506,7 +506,6 @@ object ContactEditForm: TContactEditForm
       Default = True
       OnClick = OKBtnClick
       TabOrder = 0
-      TabStop = False
     end
     object CancelBtn: TButton
       Left = 351
@@ -518,7 +517,6 @@ object ContactEditForm: TContactEditForm
       Caption = 'Cancel'
       OnClick = CancelBtnClick
       TabOrder = 1
-      TabStop = False
     end
   end
 end

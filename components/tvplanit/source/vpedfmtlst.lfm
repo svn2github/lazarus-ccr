@@ -5,6 +5,7 @@ object frmPrnFormat: TfrmPrnFormat
   Width = 694
   HorzScrollBar.Page = 639
   VertScrollBar.Page = 479
+  ActiveControl = lbFormats
   Caption = 'Print Format Designer'
   ClientHeight = 471
   ClientWidth = 694
@@ -113,7 +114,6 @@ object frmPrnFormat: TfrmPrnFormat
       EndDate = 37377.6447728357
       StartDate = 37370.6447728357
       Parent = PrintPreviewPanel
-      TabStop = True
       TabOrder = 0
     end
     object LblPrintPreview: TLabel

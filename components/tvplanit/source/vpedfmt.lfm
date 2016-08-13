@@ -86,6 +86,7 @@ object frmEditFormat: TfrmEditFormat
       'Year'
     )
     TabOrder = 4
+    TabStop = True
   end
   object edDescription: TEdit
     Left = 88

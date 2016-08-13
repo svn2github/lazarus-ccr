@@ -121,6 +121,8 @@ object MainForm: TMainForm
             DataStore = VpBufDSDataStore1
             ControlLink = VpControlLink1
             Color = clWindow
+            Font.Height = -12
+            ParentFont = False
             ParentShowHint = False
             Align = alClient
             ReadOnly = False

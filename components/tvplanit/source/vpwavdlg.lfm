@@ -35,7 +35,7 @@ object FrmSoundDialog: TFrmSoundDialog
         BevelOuter = bvNone
         ClientHeight = 446
         ClientWidth = 519
-        TabOrder = 1
+        TabOrder = 2
         object Panel1: TPanel
           Left = 0
           Height = 27
@@ -178,7 +178,7 @@ object FrmSoundDialog: TFrmSoundDialog
         ClientHeight = 434
         ClientWidth = 196
         Constraints.MinWidth = 200
-        TabOrder = 2
+        TabOrder = 0
         object ShellTreeView: TShellTreeView
           Left = 4
           Height = 306
