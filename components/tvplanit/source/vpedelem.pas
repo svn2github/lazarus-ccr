@@ -368,10 +368,10 @@ begin
   btnCancel.AnchorSideRight.Side := asrBottom;
   btnCancel.TabOrder := 2;
  {$ELSE}
-  btnCancel.AnchorSideRight.Control := ButtonPanel;
-  btnCancel.TabOrder := 1;
   btnOK.AnchorSideRight.Control := ButtonPanel;
   btnOK.AnchorSideRight.Side := asrBottom;
+  btnCancel.AnchorSideRight.Control := btnOK;
+  btnCancel.TabOrder := 1;
   btnOK.TabOrder := 2;
  {$ENDIF}
 
