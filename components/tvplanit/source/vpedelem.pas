@@ -362,24 +362,6 @@ begin
   btnOK.Width := w;
   btnCancel.Width := w;
   btnShape.Width := GetButtonWidth(btnShape);
- {$IFDEF MSWINDOWS}
-  btnOK.BorderSpacing.Right := 8;
-  btnOK.AnchorSideRight.Control := btnCancel;
-  btnOK.TabOrder := 1;
-  btnCancel.BorderSpacing.Left := 0;
-  btnCancel.AnchorSideRight.Control := ButtonPanel;
-  btnCancel.AnchorSideRight.Side := asrBottom;
-  btnCancel.TabOrder := 2;
- {$ELSE}
-  btnOK.BorderSpacing.Right := 0;
-  btnOK.BorderSpacing.Left := 8;
-  btnOK.AnchorSideRight.Control := ButtonPanel;
-  btnOK.AnchorSideRight.Side := asrBottom;
-  btnCancel.AnchorSideRight.Control := btnOK;
-  btnCancel.BorderSpacing.Right := 0;
-  btnCancel.TabOrder := 1;
-  btnOK.TabOrder := 2;
- {$ENDIF}
 
   // Form size
   rgItemType.Align := alNone;
@@ -389,6 +371,18 @@ begin
     ClientWidth := RightOf(udHeight) + gbVisual.BorderSpacing.Left + gbVisual.BorderSpacing.Right;
 
   AutoSize := true;
+
+  {$IFDEF MSWINDOWS}
+   btnCancel.Left := ButtonPanel.ClientWidth - btnCancel.Width;
+   btnOK.Left := btnCancel.Left - btnOK.Width - DELTA;
+   btnOK.TabOrder := 1;
+   btnCancel.TabOrder := 2;
+  {$ELSE}
+   btnOK.Left := ButtonCancel.ClientWidth - btnOK.Width;
+   btnCancel.Left := btnOK.Left - btnCancel.Width - DELTA;
+   btnCancel.TabOrder := 1;
+   btnOK.TabOrder := 2;
+  {$ENDIF}
 end;
 
 procedure TfrmEditElement.SetData(AnElement : TVpPrintFormatElementItem);
