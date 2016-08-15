@@ -139,7 +139,10 @@ function ColorToDdfColor(C:TColor):TARGBColor;
 var
   A:array [1..4] of byte absolute C;
 begin
-  Result:={A[1] shl 24 +} A[1] shl 16 + A[2] shl 8 + A[3];
+  if C = clWindow then
+    Result:=clWhite
+  else
+    Result:={A[1] shl 24 +} A[1] shl 16 + A[2] shl 8 + A[3];
 end;
 
 { TPdfExportOptions }
@@ -262,6 +265,7 @@ begin
   CP:=-1;
   FCurPage:=nil;
 
+
   for i:=0 to FRxDBGrid.Columns.Count - 1 do
   begin
     C:=FRxDBGrid.Columns[i];
@@ -273,8 +277,8 @@ begin
     end;
 
     FCurPage.SetColor(ColorToDdfColor(FRxDBGrid.BorderColor), true); //Border
-    //FCurPage.SetColor(ColorToDdfColor(C.Color), false); // Fill color
-    FCurPage.DrawRect(X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, 1, false, true);
+    FCurPage.SetColor(ColorToDdfColor(C.Color), false);              // Fill color
+    FCurPage.DrawRect(X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, 1, true, true);
 
     if Assigned(C.Field) then
     begin
@@ -283,7 +287,6 @@ begin
       FCurPage.SetColor(ColorToDdfColor(C.Font.Color), false);
       WriteTextRect(FExportFontBody, X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, C.Field.DisplayText, C.Alignment);
     end;
-
 
     X:=X + C.Width;
   end;
