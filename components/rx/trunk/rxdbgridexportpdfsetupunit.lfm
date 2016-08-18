@@ -74,7 +74,6 @@ object RxDBGridExportPdfSetupForm: TRxDBGridExportPdfSetupForm
     Width = 162
     BorderSpacing.Around = 6
     Caption = 'Export column footer'
-    Enabled = False
     TabOrder = 3
   end
   object cbExportCellColors: TCheckBox

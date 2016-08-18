@@ -18,6 +18,7 @@ type
     CheckBox1: TCheckBox;
     DataSource1: TDataSource;
     Edit1: TEdit;
+    Label1: TLabel;
     Memo1: TMemo;
     PageControl1: TPageControl;
     Panel1: TPanel;
@@ -58,6 +59,7 @@ uses EasyLazFreeType, LazFreeTypeFontCollection,
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  RxDBGridExportPDF1.ShowSetupForm:=true;
   PageControl1.ActivePageIndex:=0;
   RxMemoryData1.Open;
   RxMemoryData1.AppendRecord([1, 'Строка с длинным текстом 1', now, 100, 'Россия', 'Москва']);
@@ -119,6 +121,7 @@ end;
     FontCollection.BeginUpdate;
     try
       FindAllFiles(files, AFolder, '*.ttf', true);
+      //FindAllFiles(files, AFolder, '*.otf', true);
       files.Sort;
       for i := 0 to files.Count-1 do
         try
@@ -153,6 +156,7 @@ var
   FFM: TCustomFamilyCollectionItem;
   I: Integer;
   FFI: TCustomFontCollectionItem;
+  tiInf: TFreeTypeInformation;
 begin
   FFM:=FontCollection.Family[AFontFamely];
   if not Assigned(FFM) then
@@ -171,7 +175,12 @@ begin
 
   FFI:=FFM.GetFont('Regular');
   if Assigned(FFI) then
-    ShowInfo('REGULAR Font in file %s - NAME: %s', [FFI.Filename, FFI.Information[ftiFullName]])
+  begin
+    ShowInfo('REGULAR Font in file %s - NAME: %s', [FFI.Filename, FFI.Information[ftiFullName]]);
+
+    for tiInf := Low(TFreeTypeInformation) to high(TFreeTypeInformation) do
+      ShowInfo('%s - %s', [FreeTypeInformationStr[tiInf], FFI.Information[tiInf]]);
+  end
   else
     ShowInfo('Regular font not found', []);
 end;
@@ -187,6 +196,10 @@ begin
     DumpFamaly('Sans');
     DumpFamaly('Serif');
     DumpFamaly('Liberation Sans');
+    DumpFamaly('Gootville');
+    DumpFamaly('Oxygen Mono');
+    DumpFamaly('FreeSans');
+    DumpFamaly('Noto Sans Tai Viet');
   end
   else
     Memo1.Text:='FontCollection not assigned';
@@ -194,7 +207,9 @@ end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
+  RxDBGridExportPDF1.ShowSetupForm:=false;
   RxDBGridExportPDF1.Execute;
+  RxDBGridExportPDF1.ShowSetupForm:=true;
 end;
 
 procedure TForm1.CheckBox1Change(Sender: TObject);
