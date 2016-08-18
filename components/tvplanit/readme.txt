@@ -8,6 +8,7 @@ Table of contents
 3.  Installation
 4.  Version history
 4.1   Release 1.03
+4.2   Release 1.04
 
 ==============================================
 
@@ -91,6 +92,8 @@ steps:
   
 4.2 Release 1.04
 
+  This release is Lazarus-only. It won't compile under Delphi any more.
+  
   misc - Replace hard-coded MS Sans Serif font by "default" to use the system 
          font
   misc - Fix crashes due to inplace editors being destroyed.
@@ -98,7 +101,12 @@ steps:
   misc - Add FlexDatastore and its component editor to package.
   4710 - Rename package to laz_visualplanit.
   4717 - Add new event field "Location". Rename some fields for more consistency. 
-  4719 - Add a datastore (TVpBufDSDatastore) for TBufDataset.
+  misc - Add datastores for TBufDataset, Sqlite3, ZEOS, Firebird
+  misc - Add non-database datastores for xml and ini files
+  misc - Fix NavBar, PrintPreview, VpClock etc.
+  misc - Translate user interface in po files
+  misc - DPI-aware and translation-tolerant form layout
+  misc - Add new sample projects
 
   
 
