@@ -159,7 +159,7 @@ type
     //
     procedure WriteTextRect(AExportFont:TExportFontItem; X, Y, W, H:integer; AText:string; ATextAlign:TAlignment);
     procedure DrawRect(X, Y, W, H: integer; ABorderColor, AFillColor: TColor);
-    //procedure DrawImage(X, Y, W, H: integer; ABorderColor, AFillColor: TColor);
+    procedure DrawImage(X, Y, W, H: integer; ABmp:TBitmap; ATextAlign:TAlignment);
 
     procedure StartNewPage;
 
@@ -193,7 +193,7 @@ type
 implementation
 
 {$IF (FPC_FULLVERSION >= 30101)}
-uses Grids, rxdconst, FileUtil, Forms, Controls, LCLIntf, LazFileUtils, RxDBGridExportPdfSetupUnit;
+uses Grids, rxdconst, FileUtil, Forms, Controls, LCLIntf, LazFileUtils, FPReadBMP, RxDBGridExportPdfSetupUnit;
 
 const
   cInchToMM = 25.4;
@@ -469,6 +469,54 @@ begin
   FCurPage.DrawRect(fX, fY, fW, fH, 1, AFillColor <> clNone, ABorderColor <> clNone);
 end;
 
+procedure TRxDBGridExportPDF.DrawImage(X, Y, W, H: integer; ABmp: TBitmap;
+  ATextAlign: TAlignment);
+var
+  S:TMemoryStream;
+  IDX: Integer;
+  fW, fH, fX, fY, X1, Y1, fW1, fH1: TPDFFloat;
+begin
+  S:=TMemoryStream.Create;
+  try
+    ABmp.SaveToStream(S);
+    S.Position:=0;
+    IDX := FPDFDocument.Images.AddFromStream(S, TFPReaderBMP, False);
+    fW1 := ConvetUnits(FPDFDocument.Images[IDX].Width);
+    fH1 := ConvetUnits(FPDFDocument.Images[IDX].Height);
+    fX:=ConvetUnits(X);
+    fY:=ConvetUnits(Y);
+    fW:=ConvetUnits(W);
+    fH:=ConvetUnits(H);
+
+    case ATextAlign of
+      taLeftJustify:
+        begin
+          Y1:=fY {+ ConvetUnits(constCellPadding)};
+          X1:=fX + ConvetUnits(constCellPadding);
+        end;
+      taRightJustify:
+        begin
+          Y1:=fY {+ ConvetUnits(constCellPadding)};
+          X1:=fX + fW - fW1 - ConvetUnits(constCellPadding);
+          if X1 < fX then
+            X1:=fX;
+        end;
+      taCenter:
+        begin
+          Y1:=fY {+ ConvetUnits(constCellPadding)};
+          X1:=fX + fW / 2 - fW1 / 2 - ConvetUnits(constCellPadding);
+          if X1 < fX then
+            X1:=fX;
+        end;
+    end;
+
+    FCurPage.DrawImage(X1, Y1, fW1, fH1, IDX);  // left-bottom coordinate of image
+
+  finally
+    S.Free;
+  end;
+end;
+
 procedure TRxDBGridExportPDF.StartNewPage;
 var
   P: TPDFPage;
@@ -530,6 +578,8 @@ var
   i, X, CP: Integer;
   C: TRxColumn;
   S: String;
+  B: TBitmap;
+  AImageIndex: LongInt;
 begin
   X:=FPageWidth + FPageMargin.Right;
   CP:=-1;
@@ -551,7 +601,29 @@ begin
       DrawRect(X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, FRxDBGrid.BorderColor, C.Color);
 
       if Assigned(C.Field) then
-        WriteTextRect(ActivateFont(C.Font, FRxDBGrid.Font), X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, C.Field.DisplayText, C.Alignment);
+      begin
+        if Assigned(C.ImageList) then
+        begin
+          AImageIndex := StrToIntDef(C.KeyList.Values[C.Field.AsString], C.NotInKeyListIndex);
+          if (AImageIndex > -1) and (AImageIndex < C.ImageList.Count) then
+          begin
+            B:=TBitmap.Create;
+            try
+              B.Width:=C.ImageList.Width;
+              B.Height:=C.ImageList.Height;
+              B.Canvas.Brush.Color:=clWhite;
+              B.Canvas.FillRect(0, 0, B.Width, B.Height);
+
+              C.ImageList.StretchDraw(B.Canvas, AImageIndex, Rect(0, 0,  B.Width, B.Height));
+              DrawImage(X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, B, C.Alignment);
+            finally
+              B.Free
+            end;
+          end
+        end
+        else
+          WriteTextRect(ActivateFont(C.Font, FRxDBGrid.Font), X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, C.Field.DisplayText, C.Alignment);
+      end;
 
       X:=X + C.Width;
     end;

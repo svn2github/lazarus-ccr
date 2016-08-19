@@ -15,11 +15,8 @@ type
 
   TForm1 = class(TForm)
     Button1: TButton;
-    CheckBox1: TCheckBox;
     DataSource1: TDataSource;
-    Edit1: TEdit;
     ImageList1: TImageList;
-    Label1: TLabel;
     Memo1: TMemo;
     PageControl1: TPageControl;
     Panel1: TPanel;
@@ -36,7 +33,6 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     procedure Button1Click(Sender: TObject);
-    procedure CheckBox1Change(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
   private
@@ -123,13 +119,9 @@ end;
 
 procedure TForm1.DebugFonts;
 var
-  i, C, L1, L3: Integer;
-  K: TFPFontCacheItem;
-  L: Single;
-
+  i: Integer;
 begin
   Memo1.Lines.Clear;
-  C:=FontDirList.Count;
   gTTFontCache.BuildFontFacheIgnoresErrors:=true;
   gTTFontCache.SearchPath.Assign(FontDirList);
   gTTFontCache.BuildFontCache;
@@ -145,15 +137,6 @@ begin
   RxDBGridExportPDF1.ShowSetupForm:=false;
   RxDBGridExportPDF1.Execute;
   RxDBGridExportPDF1.ShowSetupForm:=true;
-end;
-
-procedure TForm1.CheckBox1Change(Sender: TObject);
-begin
-  if CheckBox1.Checked then
-  begin
-    RxMemoryData1.Filter:=Edit1.Text;
-  end;
-  RxMemoryData1.Filtered:=CheckBox1.Checked;
 end;
 
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);

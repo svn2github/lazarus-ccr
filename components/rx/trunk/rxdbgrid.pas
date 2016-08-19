@@ -3834,7 +3834,7 @@ begin
       Assigned(RxColumn.ImageList) then
     begin
       AImageIndex := StrToIntDef(RxColumn.KeyList.Values[RxColumn.Field.AsString],
-        RxColumn.FNotInKeyListIndex);
+        RxColumn.NotInKeyListIndex);
       if (AImageIndex > -1) and (AImageIndex < RxColumn.ImageList.Count) then
         DrawCellBitmap(RxColumn, aRect, aState, AImageIndex);
     end
