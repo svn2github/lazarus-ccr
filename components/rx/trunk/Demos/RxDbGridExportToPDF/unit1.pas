@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, rxmemds, rxdbgrid,
   RxDBGridExportPdf, Forms, Controls, Graphics,
-  Dialogs, ExtCtrls, StdCtrls, ComCtrls, db;
+  Dialogs, ExtCtrls, StdCtrls, ComCtrls, Spin, db;
 
 type
 
@@ -18,6 +18,7 @@ type
     CheckBox1: TCheckBox;
     DataSource1: TDataSource;
     Edit1: TEdit;
+    ImageList1: TImageList;
     Label1: TLabel;
     Memo1: TMemo;
     PageControl1: TPageControl;
@@ -26,6 +27,7 @@ type
     RxDBGridExportPDF1: TRxDBGridExportPDF;
     RxMemoryData1: TRxMemoryData;
     RxMemoryData1Country: TStringField;
+    RxMemoryData1FLAG: TLongintField;
     RxMemoryData1ID: TAutoIncField;
     RxMemoryData1NAME: TStringField;
     RxMemoryData1PDATE: TDateField;
@@ -42,6 +44,7 @@ type
     procedure InitFonts;
     procedure ShowInfo(AText:string; AParams : array of const);
     procedure DebugFonts;
+    procedure CreateFontDirList;
   public
     { public declarations }
   end;
@@ -50,10 +53,11 @@ var
   Form1: TForm1;
 
 implementation
-uses EasyLazFreeType, LazFreeTypeFontCollection,
-  LazFileUtils;
+uses fpTTF, LazFileUtils;
 
 {$R *.lfm}
+const
+  TestText = 'Образец текста';
 
 { TForm1 }
 
@@ -62,32 +66,33 @@ begin
   RxDBGridExportPDF1.ShowSetupForm:=true;
   PageControl1.ActivePageIndex:=0;
   RxMemoryData1.Open;
-  RxMemoryData1.AppendRecord([1, 'Строка с длинным текстом 1', now, 100, 'Россия', 'Москва']);
-  RxMemoryData1.AppendRecord([2, 'Строка с длинным текстом 2', now - 1, 100, 'Россия', 'Ставрополь']);
-  RxMemoryData1.AppendRecord([3, 'Строка с длинным текстом 3', now - 2, 110, 'Россия', 'Калининград']);
-  RxMemoryData1.AppendRecord([4, 'Строка с длинным текстом 4', now - 3, 5000, 'Россия', 'Владивасток']);
-  RxMemoryData1.AppendRecord([5, 'Строка с длинным текстом 5', now - 4, 123.31, 'USA', 'New-York']);
-  RxMemoryData1.AppendRecord([6, 'Строка с длинным текстом 6', now, 100, 'Россия', 'Москва']);
-  RxMemoryData1.AppendRecord([7, 'Строка с длинным текстом 7', now - 1, 100, 'Россия', 'Ставрополь']);
-  RxMemoryData1.AppendRecord([8, 'Строка с длинным текстом 8', now - 2, 110, 'Россия', 'Калининград']);
-  RxMemoryData1.AppendRecord([9, 'Строка с длинным текстом 9', now - 3, 5000, 'Россия', 'Владивасток']);
-  RxMemoryData1.AppendRecord([10,'Строка с длинным текстом 10', now - 4, 123.31, 'USA', 'New-York']);
-  RxMemoryData1.AppendRecord([11,'Строка с длинным текстом 11', now, 100, 'Россия', 'Москва']);
-  RxMemoryData1.AppendRecord([12,'Строка с длинным текстом 12', now - 1, 100, 'Россия', 'Ставрополь']);
-  RxMemoryData1.AppendRecord([13,'Строка с длинным текстом 13', now - 2, 110, 'Россия', 'Калининград']);
-  RxMemoryData1.AppendRecord([14,'Строка с длинным текстом 14', now - 3, 5000, 'Россия', 'Владивасток']);
-  RxMemoryData1.AppendRecord([15,'Строка с длинным текстом 15', now - 4, 123.31, 'USA', 'New-York']);
-  RxMemoryData1.AppendRecord([16,'Строка с длинным текстом 16', now, 100, 'Россия', 'Москва']);
-  RxMemoryData1.AppendRecord([17,'Строка с длинным текстом 17', now - 1, 100, 'Россия', 'Ставрополь']);
-  RxMemoryData1.AppendRecord([18,'Строка с длинным текстом 18', now - 2, 110, 'Россия', 'Калининград']);
-  RxMemoryData1.AppendRecord([19,'Строка с длинным текстом 19', now - 3, 5000, 'Россия', 'Владивасток']);
-  RxMemoryData1.AppendRecord([20,'Строка с длинным текстом 20', now - 4, 123.31, 'USA', 'New-York']);
+  RxMemoryData1.AppendRecord([1, 'Строка с длинным текстом 1', now, 100, 'Россия', 'Москва', 0]);
+  RxMemoryData1.AppendRecord([2, 'Строка с длинным текстом 2', now - 1, 100, 'Россия', 'Ставрополь', 1]);
+  RxMemoryData1.AppendRecord([3, 'Строка с длинным текстом 3', now - 2, 110, 'Россия', 'Калининград', 2]);
+  RxMemoryData1.AppendRecord([4, 'Строка с длинным текстом 4', now - 3, 5000, 'Россия', 'Владивасток', 0]);
+  RxMemoryData1.AppendRecord([5, 'Строка с длинным текстом 5', now - 4, 123.31, 'USA', 'New-York', 0]);
+  RxMemoryData1.AppendRecord([6, 'Строка с длинным текстом 6', now, 100, 'Россия', 'Москва', 0]);
+  RxMemoryData1.AppendRecord([7, 'Строка с длинным текстом 7', now - 1, 100, 'Россия', 'Ставрополь', 2]);
+  RxMemoryData1.AppendRecord([8, 'Строка с длинным текстом 8', now - 2, 110, 'Россия', 'Калининград', 1]);
+  RxMemoryData1.AppendRecord([9, 'Строка с длинным текстом 9', now - 3, 5000, 'Россия', 'Владивасток', 0]);
+  RxMemoryData1.AppendRecord([10,'Строка с длинным текстом 10', now - 4, 123.31, 'USA', 'New-York', 3]);
+  RxMemoryData1.AppendRecord([11,'Строка с длинным текстом 11', now, 100, 'Россия', 'Москва', 2]);
+  RxMemoryData1.AppendRecord([12,'Строка с длинным текстом 12', now - 1, 100, 'Россия', 'Ставрополь', 1]);
+  RxMemoryData1.AppendRecord([13,'Строка с длинным текстом 13', now - 2, 110, 'Россия', 'Калининград', 0]);
+  RxMemoryData1.AppendRecord([14,'Строка с длинным текстом 14', now - 3, 5000, 'Россия', 'Владивасток', 3]);
+  RxMemoryData1.AppendRecord([15,'Строка с длинным текстом 15', now - 4, 123.31, 'USA', 'New-York', 2]);
+  RxMemoryData1.AppendRecord([16,'Строка с длинным текстом 16', now, 100, 'Россия', 'Москва', 1]);
+  RxMemoryData1.AppendRecord([17,'Строка с длинным текстом 17', now - 1, 100, 'Россия', 'Ставрополь', 0]);
+  RxMemoryData1.AppendRecord([18,'Строка с длинным текстом 18', now - 2, 110, 'Россия', 'Калининград', 3]);
+  RxMemoryData1.AppendRecord([19,'Строка с длинным текстом 19', now - 3, 5000, 'Россия', 'Владивасток', 2]);
+  RxMemoryData1.AppendRecord([20,'Строка с длинным текстом 20', now - 4, 123.31, 'USA', 'New-York', 1]);
+  RxMemoryData1.First;
 
+  CreateFontDirList;
   DebugFonts;
 end;
 
-procedure TForm1.InitFonts;
-procedure CreateFontDirList;
+procedure TForm1.CreateFontDirList;
 var
   s: String;
 begin
@@ -105,43 +110,10 @@ begin
  {$ENDIF}
 end;
 
-
-  { Duplicates functionality in FontCollection.AddFolder in order to be able to
-    ignore exceptions due to font read errors (occur on Linux Mint with font
-    NanumMyeongjo.ttf }
-  procedure AddFolder(AFolder: string);
-  var
-    files: TStringList;
-    i: integer;
-  begin
-    AFolder := ExpandFileName(AFolder);
-    if (length(AFolder) <> 0) and (AFolder[length(AFolder)] <> PathDelim) then
-      AFolder += PathDelim;
-    files := TStringList.Create;
-    FontCollection.BeginUpdate;
-    try
-      FindAllFiles(files, AFolder, '*.ttf', true);
-      //FindAllFiles(files, AFolder, '*.otf', true);
-      files.Sort;
-      for i := 0 to files.Count-1 do
-        try
-          FontCollection.AddFile(files[i]);
-        except
-        end;
-    finally
-      FontCollection.EndUpdate;
-      files.Free;
-    end;
-  end;
-
-var
-  i: Integer;
+procedure TForm1.InitFonts;
 begin
   if FontDirList = nil then
     CreateFontDirList;
-
-  for i:=0 to FontDirList.Count-1 do
-    AddFolder(FontDirList[i]);
 end;
 
 procedure TForm1.ShowInfo(AText: string; AParams: array of const);
@@ -150,59 +122,22 @@ begin
 end;
 
 procedure TForm1.DebugFonts;
-
-procedure DumpFamaly(AFontFamely:string);
 var
-  FFM: TCustomFamilyCollectionItem;
-  I: Integer;
-  FFI: TCustomFontCollectionItem;
-  tiInf: TFreeTypeInformation;
-begin
-  FFM:=FontCollection.Family[AFontFamely];
-  if not Assigned(FFM) then
-  begin
-    ShowInfo('Font Family %s NOT FOUND!', [AFontFamely]);
-    exit;
-  end;
-
-
-  ShowInfo('In Family %s count fonts : %d', [AFontFamely, FFM.FontCount]);
-  for I:=0 to FFM.FontCount-1 do
-  begin
-    FFI:=FFM.Font[i];
-    ShowInfo('Font in file %s - NAME: %s. Styles = %s', [FFI.Filename, FFI.Information[ftiFullName], FFI.Styles]);
-  end;
-
-  FFI:=FFM.GetFont('Regular');
-  if Assigned(FFI) then
-  begin
-    ShowInfo('REGULAR Font in file %s - NAME: %s', [FFI.Filename, FFI.Information[ftiFullName]]);
-
-    for tiInf := Low(TFreeTypeInformation) to high(TFreeTypeInformation) do
-      ShowInfo('%s - %s', [FreeTypeInformationStr[tiInf], FFI.Information[tiInf]]);
-  end
-  else
-    ShowInfo('Regular font not found', []);
-end;
+  i, C, L1, L3: Integer;
+  K: TFPFontCacheItem;
+  L: Single;
 
 begin
-  InitFonts;
   Memo1.Lines.Clear;
-  if Assigned(FontCollection) then
+  C:=FontDirList.Count;
+  gTTFontCache.BuildFontFacheIgnoresErrors:=true;
+  gTTFontCache.SearchPath.Assign(FontDirList);
+  gTTFontCache.BuildFontCache;
+
+  for i:=0 to gTTFontCache.Count-1 do
   begin
-    ShowInfo('FontCollection.FontFileCount = %d', [FontCollection.FontFileCount]);
-    ShowInfo('FontCollection.FamilyCount = %d', [FontCollection.FamilyCount]);
-    DumpFamaly('Arial');
-    DumpFamaly('Sans');
-    DumpFamaly('Serif');
-    DumpFamaly('Liberation Sans');
-    DumpFamaly('Gootville');
-    DumpFamaly('Oxygen Mono');
-    DumpFamaly('FreeSans');
-    DumpFamaly('Noto Sans Tai Viet');
-  end
-  else
-    Memo1.Text:='FontCollection not assigned';
+    ShowInfo('%s - %s - %s', [gTTFontCache.Items[i].FileName, gTTFontCache.Items[i].FamilyName,  gTTFontCache.Items[i].PostScriptName]);
+  end;
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);

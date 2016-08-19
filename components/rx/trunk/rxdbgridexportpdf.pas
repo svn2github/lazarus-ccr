@@ -37,8 +37,8 @@ interface
 
 {$IF (FPC_FULLVERSION >= 30101)}
 uses
-  Classes, SysUtils, DB, rxdbgrid, LazFreeTypeFontCollection, vclutils, Graphics, fpPDF, EasyLazFreeType,
-  contnrs;
+  Classes, SysUtils, DB, rxdbgrid, vclutils, Graphics, fpPDF, contnrs,  fpparsettf,
+  fpTTF;
 
 type
 
@@ -75,23 +75,27 @@ type
 
   TExportFontItem = class
   private
+    FFontColor: TColor;
     FFontName: string;
+    FFontSize: Integer;
+    FFontStyle: TFontStyles;
     FOwner:TExportFonts;
-    FBold: boolean;
     FDefaultFont: boolean;
-    FFont: TFont;
     //
-    FFreeTypeFont:TFreeTypeFont;
     FPdfFont:integer;
-    function GetFontSize: Single;
-    procedure SetFontSize(AValue: Single);
-
+    FTTFFontInfo: TFPFontCacheItem;
+    function GetBold: boolean;
+    function GetItalic: boolean;
+    procedure SetFontSize(AValue: Integer);
   public
-    constructor Create(AOwner:TExportFonts; AFont:TFont; AFreeTypeFont:TFreeTypeFont);
+    constructor Create(AOwner:TExportFonts; AFontName:string; AFontStyle: TFontStyles);
     destructor Destroy; override;
     procedure Activate;
-    property FontSize:Single read GetFontSize write SetFontSize;
-    property Bold:boolean read FBold;
+    property FontStyle: TFontStyles read FFontStyle;
+    property FontSize:Integer read FFontSize write SetFontSize;
+    property FontColor:TColor read FFontColor write FFontColor;
+    property Bold:boolean read GetBold;
+    property Italic:boolean read GetItalic;
     property DefaultFont:boolean read FDefaultFont;
     property FontName:string read FFontName;
   end;
@@ -110,8 +114,8 @@ type
     constructor Create(AOwner:TRxDBGridExportPDF);
     destructor Destroy; override;
     procedure Clear;
-    function AddItem(AFont: TFont; AFontCollectionItem:TCustomFontCollectionItem; ADefStyle:TFontStyles = []): TExportFontItem;
-    function FindItem(AFont:TFont; ADefStyle:TFontStyles = []):TExportFontItem;
+    function AddItem(AFontName: string; AFontStyle:TFontStyles = []): TExportFontItem;
+    function FindItem(AFontName: string; AFontStyle:TFontStyles = []):TExportFontItem;
     property DefaultFontNormal:TExportFontItem read FDefaultFontNormal;
     property DefaultFontBold:TExportFontItem read FDefaultFontBold;
     property Count:integer read GetCount;
@@ -137,13 +141,11 @@ type
     FWorkPages:TFPList;
     FWorkPagesNeedCount:integer;
 
-    FFontCollection:TFreeTypeFontCollection;
     FFontItems:TExportFonts;
 
     function GetPdfOptions: TPdfExportOptions;
     procedure SetPageMargin(AValue: TRxPageMargin);
     procedure SetPdfOptions(AValue: TPdfExportOptions);
-    function SelectFont(AFont:TFont):TExportFontItem;
     function ActivateFont(AFont:TFont; AOwnerFont:TFont):TExportFontItem;
   protected
     FPDFDocument:TPDFDocument;
@@ -154,7 +156,11 @@ type
     procedure DoSetupDocHeader;
     procedure DoSetupFonts;
 
+    //
     procedure WriteTextRect(AExportFont:TExportFontItem; X, Y, W, H:integer; AText:string; ATextAlign:TAlignment);
+    procedure DrawRect(X, Y, W, H: integer; ABorderColor, AFillColor: TColor);
+    //procedure DrawImage(X, Y, W, H: integer; ABorderColor, AFillColor: TColor);
+
     procedure StartNewPage;
 
     procedure DoExportPage;
@@ -163,10 +169,13 @@ type
     procedure DoExportFooter;
     procedure DoSaveDocument;
 
+
     function DoExecTools:boolean;override;
     function DoSetupTools:boolean; override;
     //
-    procedure InitFonts(AFontCollection:TFreeTypeFontCollection);
+    //procedure DoTest;
+    //
+    procedure InitFonts;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -185,6 +194,13 @@ implementation
 
 {$IF (FPC_FULLVERSION >= 30101)}
 uses Grids, rxdconst, FileUtil, Forms, Controls, LCLIntf, LazFileUtils, RxDBGridExportPdfSetupUnit;
+
+const
+  cInchToMM = 25.4;
+function ConvetUnits(AUnits:TPDFFloat):TPDFFloat; inline;
+begin
+  Result := (AUnits * cInchToMM) / gTTFontCache.DPI;
+end;
 
 function ColorToDdfColor(C:TColor):TARGBColor;
 var
@@ -231,126 +247,96 @@ begin
   FList.Clear;
 end;
 
-function TExportFonts.AddItem(AFont: TFont;
-  AFontCollectionItem: TCustomFontCollectionItem; ADefStyle: TFontStyles
+function TExportFonts.AddItem(AFontName: string; AFontStyle: TFontStyles
   ): TExportFontItem;
 var
   S1, S2, S3: String;
 begin
-  Result:=nil;
-  if not Assigned(AFont) then exit;
+  Result:=FindItem(AFontName, AFontStyle);
+  if Assigned(Result) then exit;
 
-  Result:=FindItem(AFont, ADefStyle);
-  if not Assigned(AFont) then exit;
+  Result:=TExportFontItem.Create(Self, AFontName, AFontStyle);
 
-  Result:=TExportFontItem.Create(Self, AFont, AFontCollectionItem.CreateFont);
+  S1:=ExtractFileDir(Result.FTTFFontInfo.FileName);
+  S2:=ExtractFileName(Result.FTTFFontInfo.FileName);
+  S3:=AFontName; //AFontCollectionItem.Information[ftiFullName];
 
-  S1:=ExtractFileDir(AFontCollectionItem.Filename);
-  S2:=ExtractFileName(AFontCollectionItem.Filename);
-  S3:=AFontCollectionItem.Information[ftiFullName];
   FOwner.FPDFDocument.FontDirectory:=S1;
+
   Result.FPdfFont:=FOwner.FPDFDocument.AddFont(S2, S3);
 end;
 
-function TExportFonts.FindItem(AFont: TFont; ADefStyle: TFontStyles
+function TExportFonts.FindItem(AFontName: string; AFontStyle: TFontStyles
   ): TExportFontItem;
 var
   K: TExportFontItem;
   i: Integer;
 begin
   Result:=nil;
-  if not Assigned(AFont) then exit;
 
-  if ADefStyle = [] then
-    ADefStyle:=AFont.Style;
-
-  if AFont.Name = 'default' then
+  if AFontName = 'default' then
   begin
-    for i:=0 to FList.Count - 1 do
-    begin
-      //Стили!
-      K:=TExportFontItem(FList[i]);
-      if K.DefaultFont then
-      begin
-        if (fsBold in ADefStyle) and K.Bold then
-        begin
-          Result:=K;
-          exit;
-        end
-        else
-        if (not (fsBold in ADefStyle)) and not K.Bold then
-        begin
-          Result:=K;
-          exit;
-        end;
-      end;
-    end;
+    if Graphics.fsBold in AFontStyle then
+      Result:=FDefaultFontBold
+    else
+      Result:=FDefaultFontNormal;
   end
   else
   begin
     for i:=0 to FList.Count-1 do
     begin
       K:=TExportFontItem(FList[i]);
-      if K.FontName = AFont.Name then
+      if (K.FontName = AFontName) and (K.FontStyle = AFontStyle) then
       begin
-        if (fsBold in ADefStyle) and K.Bold then
-        begin
-          Result:=K;
-          exit;
-        end
-        else
-        if (not (fsBold in ADefStyle)) and not K.Bold then
-        begin
-          Result:=K;
-          exit;
-        end;
-      end;
+        Result:=K;
+        exit;
+      end
     end;
   end;
 end;
 
 { TExportFontItem }
 
-function TExportFontItem.GetFontSize: Single;
+function TExportFontItem.GetBold: boolean;
 begin
-  Result:=FFreeTypeFont.SizeInPixels;
+  Result:=Graphics.fsBold in FFontStyle;
 end;
 
-procedure TExportFontItem.SetFontSize(AValue: Single);
+function TExportFontItem.GetItalic: boolean;
 begin
-  FFreeTypeFont.SizeInPixels:=AValue;
+  Result:=Graphics.fsItalic in FFontStyle;
 end;
 
+procedure TExportFontItem.SetFontSize(AValue: Integer);
+begin
+  if AValue = 0 then
+    FFontSize:=10
+  else
+    FFontSize:=AValue;
+end;
 
-constructor TExportFontItem.Create(AOwner: TExportFonts; AFont: TFont;
-  AFreeTypeFont: TFreeTypeFont);
+constructor TExportFontItem.Create(AOwner: TExportFonts; AFontName: string;
+  AFontStyle: TFontStyles);
 begin
   inherited Create;
   FOwner:=AOwner;
   FOwner.FList.Add(Self);
-  FFont:=AFont;
-  FFreeTypeFont:=AFreeTypeFont;
-  FFontName:=AFont.Name;
+  FFontStyle:=AFontStyle;
+  FFontName:=AFontName;
+  FTTFFontInfo:=gTTFontCache.Find(AFontName, Graphics.fsBold in AFontStyle, Graphics.fsItalic in AFontStyle);
+  if not Assigned(FTTFFontInfo) then
+    raise Exception.CreateFmt('fpTTF:in gTTFontCache not found font "%s" info.', [AFontName]);
 end;
 
 destructor TExportFontItem.Destroy;
 begin
-  FreeAndNil(FFreeTypeFont);
   inherited Destroy;
 end;
 
 procedure TExportFontItem.Activate;
-var
-  FS: Integer;
 begin
-  if FFont.Size = 0 then
-    FS:=10
-  else
-    FS:=FFont.Size;
-
-  FFreeTypeFont.SizeInPoints:=FS;
-  FOwner.FOwner.FCurPage.SetFont(FPdfFont, FS);
-  FOwner.FOwner.FCurPage.SetColor(ColorToDdfColor(FFont.Color), false);
+  FOwner.FOwner.FCurPage.SetFont(FPdfFont, FontSize);
+  FOwner.FOwner.FCurPage.SetColor(ColorToDdfColor(FontColor), false);
 end;
 
 { TPdfExportOptions }
@@ -392,66 +378,95 @@ begin
   FPdfOptions.Assign(AValue);
 end;
 
-function TRxDBGridExportPDF.SelectFont(AFont: TFont): TExportFontItem;
-var
-  i: Integer;
-begin
-  Result:=nil;
-  for i:=0 to FFontItems.Count-1 do
-    if FFontItems.Item[i].FFont = AFont then
-    begin
-      Result:=FFontItems.Item[i];
-      Exit;
-    end;
-end;
-
 function TRxDBGridExportPDF.ActivateFont(AFont: TFont; AOwnerFont: TFont
   ): TExportFontItem;
 begin
-  Result:=SelectFont(AFont);
-  if not Assigned(Result) then
+  //Result:=SelectFont(AFont);
+  Result:=FFontItems.FindItem(AFont.Name, AFont.Style);
+{  if not Assigned(Result) then
     Result:=SelectFont(AOwnerFont);
   if not Assigned(Result) then
     Result:=FFontItems.FDefaultFontNormal;
-
+}
   if Assigned(Result) then
+  begin
+    Result.FontSize:=AFont.Size;
+    Result.FontColor:=AFont.Color;
     Result.Activate
+  end
   else
-    raise Exception.Create('Font not found');
-
+    raise Exception.CreateFmt('Font "%s" not found', [AFont.Name]);
 end;
 
 procedure TRxDBGridExportPDF.WriteTextRect(AExportFont: TExportFontItem; X, Y,
   W, H: integer; AText: string; ATextAlign: TAlignment);
 var
-  FTW, FTH: Single;
+  FTW, FTH, ADescender, FTH1, FTH2: Single;
   X1: TPDFFloat;
-  Y1: TPDFFloat;
+  Y1, fX, fY: TPDFFloat;
+  fW, fH: Extended;
 begin
-  FTW:=AExportFont.FFreeTypeFont.TextWidth(AText);
-  FTH:=AExportFont.FFreeTypeFont.TextHeight(AText);
+
+  fX := ConvetUnits(X);
+  fY := ConvetUnits(Y);
+  fW := ConvetUnits(W);
+  fH := ConvetUnits(H);
+
+  //Calc text width
+  FTW:=ConvetUnits(AExportFont.FTTFFontInfo.TextWidth(AText, AExportFont.FontSize));
+  //FTW := (FTW1 * 25.4) / gTTFontCache.DPI;
+
+  //Calc text height
+  FTH1 := AExportFont.FTTFFontInfo.FontData.CapHeight * AExportFont.FontSize * gTTFontCache.DPI / (72 * AExportFont.FTTFFontInfo.FontData.Head.UnitsPerEm);
+  FTH2 := Abs(AExportFont.FTTFFontInfo.FontData.Descender) * AExportFont.FontSize * gTTFontCache.DPI / (72 * AExportFont.FTTFFontInfo.FontData.Head.UnitsPerEm);
+
+  FTH :=  (FTH1 * 25.4) / gTTFontCache.DPI + (FTH2 * 25.4) / gTTFontCache.DPI;
+
+
   case ATextAlign of
     taLeftJustify:
       begin
-        Y1:=Y;
-        X1:=X + constCellPadding;
+        Y1:=fY - FTH2;
+        X1:=fX + ConvetUnits(constCellPadding);
       end;
     taRightJustify:
       begin
-        Y1:=Y;
-        X1:=X + W - FTW - 2;
-        if X1 < X then
-          X1:=X;
+        Y1:=fY - FTH2;
+        X1:=fX + fW - FTW - ConvetUnits(constCellPadding);
+        if X1 < fX then
+          X1:=fX;
       end;
     taCenter:
       begin
-        Y1:=Y;
-        X1:=(X + W) / 2 - FTW / 2 - constCellPadding;
-        if X1 < X then
-          X1:=X;
+        Y1:=fY - FTH2;
+        X1:=fX + fW / 2 - FTW / 2 - ConvetUnits(constCellPadding);
+        if X1 < fX then
+          X1:=fX;
       end;
   end;
-  FCurPage.WriteText(X1, Y1 - FTH, AText);
+
+  FCurPage.WriteText(X1, Y1, AText);
+end;
+
+procedure TRxDBGridExportPDF.DrawRect(X, Y, W, H: integer; ABorderColor,
+  AFillColor: TColor);
+var
+  fX, fY, fW, fH: Extended;
+begin
+  if (AFillColor = clNone) and (ABorderColor = clNone) then exit;
+
+  if ABorderColor <> clNone then
+    FCurPage.SetColor(ColorToDdfColor(ABorderColor), true);
+
+  if AFillColor <> clNone then
+    FCurPage.SetColor(ColorToDdfColor(AFillColor), false);
+
+  fX:= ConvetUnits(X);
+  fY:= ConvetUnits(Y);
+  fW:= ConvetUnits(W);
+  fH:= ConvetUnits(H);
+
+  FCurPage.DrawRect(fX, fY, fW, fH, 1, AFillColor <> clNone, ABorderColor <> clNone);
 end;
 
 procedure TRxDBGridExportPDF.StartNewPage;
@@ -464,7 +479,8 @@ begin
   begin
     P := FPDFDocument.Pages.AddPage;
     P.PaperType := FPdfOptions.PaperType;
-    P.UnitOfMeasure := uomPixels;
+    //P.UnitOfMeasure := uomPixels;
+    P.UnitOfMeasure := uomMillimeters; //normal work only whis mm ??
     FCurSection.AddPage(P);
     FWorkPages.Add(P);
   end;
@@ -495,11 +511,11 @@ begin
         X:=FPageMargin.Left;
       end;
 
-      FCurPage.SetColor(ColorToDdfColor(FRxDBGrid.BorderColor), true);
-      FCurPage.DrawRect(X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, 1, false, true);
+      DrawRect(X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, FRxDBGrid.BorderColor, clNone);
 
 
-      WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont), X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, C.Title.Caption, C.Title.Alignment);
+      WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont),
+         X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, C.Title.Caption, C.Title.Alignment);
 
       X:=X + C.Width;
     end;
@@ -532,9 +548,7 @@ begin
         X:=FPageMargin.Left;
       end;
 
-      FCurPage.SetColor(ColorToDdfColor(FRxDBGrid.BorderColor), true); //Border
-      FCurPage.SetColor(ColorToDdfColor(C.Color), false);              // Fill color
-      FCurPage.DrawRect(X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, 1, true, true);
+      DrawRect(X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, FRxDBGrid.BorderColor, C.Color);
 
       if Assigned(C.Field) then
         WriteTextRect(ActivateFont(C.Font, FRxDBGrid.Font), X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, C.Field.DisplayText, C.Alignment);
@@ -551,84 +565,48 @@ begin
     FDataSet.Next;
     Inc(FPosY, FRxDBGrid.DefaultRowHeight);
     if FPosY > FPageHeight - FPageMargin.Bottom then
-{    begin
-      FPosY:=FPageMargin.Top + 20;}
       exit;
-//    end;
   end;
 end;
 
 procedure TRxDBGridExportPDF.DoSetupFonts;
-
-procedure AddFonts(AFont:TFont);
+//Find default font name
+function DefFontName:string;
+const
+  DefFontNames : array [1..3] of string =
+     ('Liberation Sans', 'Arial', 'FreeSans');
 var
-  FM: TCustomFamilyCollectionItem;
-  S: String;
-  FIH: TCustomFontCollectionItem;
+  i: Integer;
 begin
-  S:=AFont.Name;
-  FM:=FFontCollection.Family[S];
-  if Assigned(FM) then
-  begin
-    if fsBold in AFont.Style then
-      FIH:=FM.GetFont('Bold')
-    else
-      FIH:=FM.GetFont('Regular');
-
-    if Assigned(FIH) then
-      FFontItems.AddItem(AFont, FIH);
-  end;
+  for i:=1 to 3 do
+    if Assigned(gTTFontCache.Find(DefFontNames[i], false, false)) then
+    begin
+      Result:=DefFontNames[i];
+      exit;
+    end;
+  raise Exception.Create('Not found Sans font');
 end;
 
 var
-  FM: TCustomFamilyCollectionItem;
-  FIH: TCustomFontCollectionItem;
   F: TExportFontItem;
   i: Integer;
+  sDefFontName:string;
 begin
-  InitFonts(FFontCollection);
-  FM:=nil;
-
-  if FRxDBGrid.Font.Name <> 'default' then
-    FM:=FFontCollection.Family[FRxDBGrid.Font.Name];
-  if not Assigned(FM) then //Fill default fonts
-    FM:=FFontCollection.Family['Liberation Sans'];
-  if not Assigned(FM) then
-    FM:=FFontCollection.Family['Arial'];
-
-  if Assigned(FM) then
-  begin
-    FIH:=FM.GetFont('Bold');
-    if Assigned(FIH) then
-    begin
-      F:=FFontItems.AddItem(FRxDBGrid.TitleFont, FIH, [fsBold]);
-      F.FBold:=true;
-      F.FDefaultFont:=true;
-      FFontItems.FDefaultFontBold:=F;
-    end;
-
-    FIH:=FM.GetFont('Regular');
-    if Assigned(FIH) then
-    begin
-      F:=FFontItems.AddItem(FRxDBGrid.Font, FIH, []);
-      F.FDefaultFont:=true;
-      FFontItems.FDefaultFontNormal:=F;
-    end;
-  end;
-
-  if not Assigned(FM) then
-   raise Exception.Create('Not found Sans font');
+  InitFonts;
+  sDefFontName:=DefFontName;
+  FFontItems.FDefaultFontNormal:=FFontItems.AddItem(sDefFontName, []);
+  FFontItems.FDefaultFontBold:=FFontItems.AddItem(sDefFontName, [Graphics.fsBold]);
 
   for i:=0 to FRxDBGrid.Columns.Count-1 do
   begin
     if FRxDBGrid.Columns[i].Font.Name <> 'default' then
-      AddFonts(FRxDBGrid.Columns[i].Font);
+      FFontItems.AddItem(FRxDBGrid.Columns[i].Font.Name, FRxDBGrid.Columns[i].Font.Style);
 
     if FRxDBGrid.Columns[i].Footer.Font.Name <> 'default' then
-      AddFonts(FRxDBGrid.Columns[i].Footer.Font);
+      FFontItems.AddItem(FRxDBGrid.Columns[i].Footer.Font.Name, FRxDBGrid.Columns[i].Footer.Font.Style);
 
     if FRxDBGrid.Columns[i].Title.Font.Name <> 'default' then
-      AddFonts(FRxDBGrid.Columns[i].Title.Font);
+      FFontItems.AddItem(FRxDBGrid.Columns[i].Title.Font.Name, FRxDBGrid.Columns[i].Title.Font.Style);
   end;
 end;
 
@@ -656,9 +634,7 @@ begin
         X:=FPageMargin.Left;
       end;
 
-      FCurPage.SetColor(ColorToDdfColor(FRxDBGrid.BorderColor), true); //Border
-      FCurPage.SetColor(ColorToDdfColor(FRxDBGrid.FooterOptions.Color), false);              // Fill color
-      FCurPage.DrawRect(X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, 1, true, true);
+      DrawRect(X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, FRxDBGrid.BorderColor, FRxDBGrid.FooterOptions.Color);
 
       if FRxDBGrid.FooterOptions.RowCount = 1 then
         S:=C.Footer.DisplayText
@@ -682,11 +658,11 @@ end;
 var
   j: Integer;
 begin
-  if FRxDBGrid.FooterRowCount = 1 then
+  if FRxDBGrid.FooterOptions.RowCount = 1 then
     WriteFooterRow(1)
   else
   begin
-    for j:=0 to FRxDBGrid.FooterRowCount-1 do
+    for j:=0 to FRxDBGrid.FooterOptions.RowCount-1 do
     begin
       if FPosY > FPageHeight - FPageMargin.Bottom then
         StartNewPage;
@@ -767,7 +743,6 @@ begin
   P:=FDataSet.Bookmark;
   {$ENDIF}
 
-  FFontCollection:=TFreeTypeFontCollection.Create;
   FPDFDocument:=TPDFDocument.Create(nil);
   FFontItems:=TExportFonts.Create(Self);
   FWorkPages:=TFPList.Create;
@@ -781,13 +756,15 @@ begin
       DoExportPage;
     until FDataSet.EOF;
 
-    if repExportTitle in FOptions then
+    if repExportFooter in FOptions then
     begin
       if FPosY > FPageHeight - FPageMargin.Bottom then
         StartNewPage;
 
       DoExportFooter;
     end;
+
+    //DoTest; //!!!!
 
     DoSaveDocument;
     Result:=true;
@@ -803,7 +780,6 @@ begin
     FreeAndNil(FWorkPages);
     FreeAndNil(FPDFDocument);
     FreeAndNil(FFontItems);
-    FreeAndNil(FFontCollection);
   end;
 
   if Result and FOpenAfterExport then
@@ -835,7 +811,85 @@ begin
   end;
   RxDBGridExportPdfSetupForm.Free;
 end;
+(*
+procedure TRxDBGridExportPDF.DoTest;
+var
+  lPt1:TPDFCoord;
+  lFntPtSize, FtText1: Integer;
+  lFC: TFPFontCacheItem;
+  lFntInfo: TTFFileInfo;
+  lHeight, lTextHeightInMM, lDescenderHeightInMM, A1: Extended;
+  lWidth, lTextWidthInMM: Single;
+  sFontName, sSampleText: String;
+begin
+  //setup
+  sSampleText:='Это привет мир!';
+  lFntPtSize := 23;
+  lPt1.X := 25;  // units in MM
+  lPt1.Y := 40;  // units in MM
 
+  StartNewPage;
+
+
+{  sFontName:='FreeSans';
+
+  lFC := gTTFontCache.Find(sFontName, False, False);
+  if not Assigned(lFC) then
+      raise Exception.Create('FreeSans font not found');
+  lFntInfo := lFC.FontData;
+
+  FPDFDocument.FontDirectory:=ExtractFileDir(lFC.FileName);
+  FtText1 := FPDFDocument.AddFont(ExtractFileName(lFC.FileName), sFontName); // TODO: this color value means nothing - not used at all
+}
+  sFontName:=FFontItems.FDefaultFontNormal.FontName;
+  lFC := gTTFontCache.Find(sFontName, False, False);
+  if not Assigned(lFC) then
+      raise Exception.Create('FreeSans font not found');
+  lFntInfo := lFC.FontData;
+  FtText1 := FFontItems.FDefaultFontNormal.FPdfFont;
+
+  FCurPage:=TPDFPage(FWorkPages[0]);
+  FCurPage.UnitOfMeasure := uomMillimeters;
+    { Page title }
+
+  //FCurPage.SetFont(FFontItems.DefaultFontNormal.FPdfFont, 23);
+  FCurPage.SetFont(FtText1, lFntPtSize);
+
+
+  FCurPage.SetColor(clBlack, false);
+  FCurPage.WriteText(lPt1.X, lPt1.Y, sSampleText);
+
+  { draw a rectangle around the Page Title text }
+
+
+  { result is in pixels }
+  lHeight := lFntInfo.CapHeight * lFntPtSize * gTTFontCache.DPI / (72 * lFntInfo.Head.UnitsPerEm);
+
+  { convert pixels to mm as our PDFPage.UnitOfMeasure is set to mm. }
+  lTextHeightInMM :=  (lHeight * 25.4) / gTTFontCache.DPI;
+//  lTextHeightInMM := lHeight;
+
+  lWidth := lFC.TextWidth(sSampleText, lFntPtSize);
+  { convert the Font Units to Millimeters }
+    lTextWidthInMM := (lWidth * 25.4) / gTTFontCache.DPI;
+//  lTextWidthInMM := lWidth;
+
+  { result is in pixels }
+  lHeight := Abs(lFntInfo.Descender) * lFntPtSize * gTTFontCache.DPI / (72 * lFntInfo.Head.UnitsPerEm);
+  A1:=lHeight;
+  { convert pixels to mm as you PDFPage.UnitOfMeasure is set to mm. }
+  lDescenderHeightInMM :=  (lHeight * 25.4) / gTTFontCache.DPI;
+//  lDescenderHeightInMM := lHeight;
+
+    { adjust the Y coordinate for the font Descender, because
+      WriteUTF8Text draws on the baseline. Also adjust the TextHeight
+      because CapHeight doesn't take into account the Descender. }
+  FCurPage.SetColor(clRed, true);
+  FCurPage.DrawRect(lPt1.X, lPt1.Y+lDescenderHeightInMM, lTextWidthInMM, lTextHeightInMM+lDescenderHeightInMM, 1, false, true);
+  //lFntInfo.Free;
+  DrawRect(10, 100, Round(lWidth), Round(lHeight + A1), Graphics.clBlack, Graphics.clRed);
+end;
+*)
 procedure TRxDBGridExportPDF.DoSaveDocument;
 var
   F: TFileStream;
@@ -848,14 +902,15 @@ begin
   end;
 end;
 
-procedure TRxDBGridExportPDF.InitFonts(AFontCollection: TFreeTypeFontCollection
-  );
+procedure TRxDBGridExportPDF.InitFonts;
 var
   FontDirList: TStringList;
 
 procedure CreateFontDirList;
+{$IFDEF WINDOWS}
 var
   s: String;
+{$ENDIF}
 begin
  {$IFDEF WINDOWS}
   s := SHGetFolderPathUTF8(20); // CSIDL_FONTS = 20
@@ -870,38 +925,17 @@ begin
   FontDirList.Add(GetUserDir + '.fonts/');
  {$ENDIF}
 end;
-
-procedure AddFolder(AFolder: string);
-var
-  Files: TStringList;
-  i: integer;
-begin
-  AFolder := AppendPathDelim(ExpandFileName(AFolder));
-  Files := TStringList.Create;
-  AFontCollection.BeginUpdate;
-  try
-    FindAllFiles(Files, AFolder, '*.ttf', true);
-    Files.Sort;
-    for i := 0 to Files.Count-1 do
-      try
-        AFontCollection.AddFile(Files[i]);
-      except
-      end;
-  finally
-    AFontCollection.EndUpdate;
-    Files.Free;
-  end;
-end;
-
-var
-  i: Integer;
 begin
   FontDirList := TStringList.Create;
   CreateFontDirList;
-
-  for i:=0 to FontDirList.Count-1 do
-    AddFolder(FontDirList[i]);
-  FreeAndNil(FontDirList);
+  if gTTFontCache.Count = 0 then
+  begin
+    gTTFontCache.BuildFontFacheIgnoresErrors:=true;
+    CreateFontDirList;
+    gTTFontCache.SearchPath.Assign(FontDirList);
+    FreeAndNil(FontDirList);
+    gTTFontCache.BuildFontCache;
+  end;
 end;
 
 constructor TRxDBGridExportPDF.Create(AOwner: TComponent);
@@ -920,7 +954,6 @@ begin
   FreeAndNil(FPageMargin);
   inherited Destroy;
 end;
-
 
 {$ENDIF}
 end.
