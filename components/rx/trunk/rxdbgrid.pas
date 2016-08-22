@@ -235,7 +235,7 @@ type
   TMLCaptionItem = class
     Caption: string;
     Width: integer;
-    Hegth: integer;
+    Height: integer;
     Next: TMLCaptionItem;
     Prior: TMLCaptionItem;
     FInvalidDraw:integer;
@@ -2812,18 +2812,18 @@ begin
                 end;
                 W1 := tmpCanvas.TextWidth(MLRec1.Caption) + 2;
                 if W1 > W then
-                  MLRec1.Hegth := Min(W1 div Max(W, 1) + 1, UTF8Length(MLRec1.Caption))
+                  MLRec1.Height := Min(W1 div Max(W, 1) + 1, UTF8Length(MLRec1.Caption))
                 else
-                  MLRec1.Hegth := 1;
+                  MLRec1.Height := 1;
 
                 P := MLRec1.Next;
                 while Assigned(P) do
                 begin
-                  P.Hegth := MLRec1.Hegth;
+                  P.Height := MLRec1.Height;
                   P := P.Next;
                 end;
               end;
-              H1 := H1 + MLRec1.Hegth;
+              H1 := H1 + MLRec1.Height;
             end;
 
           end;
@@ -3582,7 +3582,7 @@ begin
           end
           else
           begin
-            aRect2.Bottom := aRect2.Top + MLI.Hegth * DefaultRowHeight;
+            aRect2.Bottom := aRect2.Top + MLI.Height * DefaultRowHeight;
             aState := aState - [gdPushed];
           end;
 
@@ -5599,20 +5599,7 @@ begin
 
   FSortColumns:=TRxDbGridColumnsSortList.Create;
 
-//  FMarkerUp := LoadBitmapFromLazarusResource('rx_markerup');
-//  FMarkerDown := LoadBitmapFromLazarusResource('rx_markerdown');
-//  F_MenuBMP := LoadBitmapFromLazarusResource('menu_grid');
-
   F_MenuBMP := CreateResBitmap('rx_menu_grid');
-(*
-  FMarkerUp := CreateResBitmap('rx_markerup');
-  FMarkerDown := CreateResBitmap('rx_markerdown');
-  FEllipsisRxBMP:=CreateResBitmap('rx_Ellipsis');
-  FGlyphRxBMP:=CreateResBitmap('rx_Glyph');
-  FUpDownRxBMP:=CreateResBitmap('rx_UpDown');
-  FPlusRxBMP:=CreateResBitmap('rx_plus');
-  FMinusRxBMP:=CreateResBitmap('rx_minus');
-*)
 
   Options := Options - [dgTabs];
   OptionsRx := OptionsRx + [rdgAllowColumnsForm, rdgAllowDialogFind, rdgAllowQuickFilter];
@@ -5627,7 +5614,6 @@ begin
   FKeyStrokes.ResetDefaults;
 
   F_LastFilter := TStringList.Create;
-  //F_SortListField := TStringList.Create;
 
   FPropertyStorageLink := TPropertyStorageLink.Create;
   FPropertyStorageLink.OnSave := @OnIniSave;

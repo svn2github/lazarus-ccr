@@ -37,7 +37,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  EditBtn, ButtonPanel;
+  EditBtn, ButtonPanel, ExtCtrls, ComCtrls, ColorBox, fpPDF;
 
 type
 
@@ -50,9 +50,24 @@ type
     cbExportColumnHeader: TCheckBox;
     cbOpenAfterExport: TCheckBox;
     cbOverwriteExisting: TCheckBox;
+    CheckBox1: TCheckBox;
+    CheckBox2: TCheckBox;
+    CheckBox3: TCheckBox;
+    CheckBox4: TCheckBox;
+    CheckBox5: TCheckBox;
+    CheckBox6: TCheckBox;
+    ColorBox1: TColorBox;
+    ComboBox1: TComboBox;
     FileNameEdit1: TFileNameEdit;
     Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
     Label4: TLabel;
+    Label5: TLabel;
+    PageControl1: TPageControl;
+    RadioGroup1: TRadioGroup;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
@@ -63,6 +78,21 @@ type
 var
   RxDBGridExportPdfSetupForm: TRxDBGridExportPdfSetupForm;
 
+const
+  pdfPaperNames : array [TPDFPaperType] of string =
+    ('Custom',       //ptCustom
+     'A4',           //ptA4
+     'A5',           //ptA5
+     'Letter',       // ptLetter
+     'Legal',        // ptLegal
+     'Executive',    // ptExecutive
+     'Comm10',       // ptComm10
+     'Monarch',      // ptMonarch
+     'DL',           // ptDL
+     'C5',           // ptC5
+     'B5'            // ptB5
+   );
+
 implementation
 uses rxdconst;
 
@@ -71,7 +101,11 @@ uses rxdconst;
 { TRxDBGridExportPdfSetupForm }
 
 procedure TRxDBGridExportPdfSetupForm.FormCreate(Sender: TObject);
+var
+  c: TPDFPaperType;
 begin
+  PageControl1.ActivePageIndex:=0;
+
   Caption:=sExportParams;
   Label1.Caption:=sExportFileName;
   //Label3.Caption:=sPageName;
@@ -80,7 +114,15 @@ begin
   cbExportColumnFooter.Caption:=sExportColumnFooter;
   cbExportCellColors.Caption:=sExportCellColors;
   cbOverwriteExisting.Caption:=sOverwriteExisting;
-  //cbExportFormula.Caption:=sExportFormula;
+  Label2.Caption:=sPaperType;
+
+  RadioGroup1.Caption:=sOrientation;
+  RadioGroup1.Items[0]:=sPortrait;
+  RadioGroup1.Items[1]:=sLandscape;
+
+  ComboBox1.Items.Clear;
+  for C:=ptA4 to High(TPDFPaperType) do
+    ComboBox1.Items.Add(pdfPaperNames[C]);
 end;
 
 end.

@@ -41,6 +41,7 @@ cp ../rx.inc rx.inc
   --input=../boxprocs.pas --descr=boxprocs.xml \
   --input=../rxspin.pas --descr=rxspin \
   --input=../vclutils.pas --descr=vclutils.xml \
+  --input=../rxdbgridexportpdf.pas --descr=rxdbgridexportpdf.xml \
   --input=../rxinipropstorage.pas --descr=rxinipropstorage.xml 
 
 

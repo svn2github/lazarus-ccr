@@ -45,7 +45,8 @@ type
   TRxDBGridExportPdfOption = (repExportTitle,
     repExportColors,
     repExportFooter,
-    repOverwriteExisting
+    repOverwriteExisting,
+    repExportImages
     );
   TRxDBGridExportPdfOptions = set of TRxDBGridExportPdfOption;
 
@@ -138,6 +139,7 @@ type
     FProducerPDF: string;
     FPdfOptions:TPdfExportOptions;
     FCurPage: TPDFPage;
+    FTitleColor: TColor;
     FWorkPages:TFPList;
     FWorkPagesNeedCount:integer;
 
@@ -155,7 +157,6 @@ type
 
     procedure DoSetupDocHeader;
     procedure DoSetupFonts;
-
     //
     procedure WriteTextRect(AExportFont:TExportFontItem; X, Y, W, H:integer; AText:string; ATextAlign:TAlignment);
     procedure DrawRect(X, Y, W, H: integer; ABorderColor, AFillColor: TColor);
@@ -187,6 +188,7 @@ type
     property AuthorPdf:string read FAuthorPDF write FAuthorPDF;
     property ProducerPdf:string read FProducerPDF write FProducerPDF;
     property PageMargin:TRxPageMargin read FPageMargin write SetPageMargin;
+    property TitleColor:TColor read FTitleColor write FTitleColor default clSilver;
   end;
 
   {$ENDIF}
@@ -211,6 +213,9 @@ begin
   else
     Result:={A[1] shl 24 +} A[1] shl 16 + A[2] shl 8 + A[3];
 end;
+
+type
+  THackExDBGrid = class(TRxDBGrid);
 
 { TExportFonts }
 
@@ -259,7 +264,7 @@ begin
 
   S1:=ExtractFileDir(Result.FTTFFontInfo.FileName);
   S2:=ExtractFileName(Result.FTTFFontInfo.FileName);
-  S3:=AFontName; //AFontCollectionItem.Information[ftiFullName];
+  S3:=AFontName;
 
   FOwner.FPDFDocument.FontDirectory:=S1;
 
@@ -381,7 +386,6 @@ end;
 function TRxDBGridExportPDF.ActivateFont(AFont: TFont; AOwnerFont: TFont
   ): TExportFontItem;
 begin
-  //Result:=SelectFont(AFont);
   Result:=FFontItems.FindItem(AFont.Name, AFont.Style);
 {  if not Assigned(Result) then
     Result:=SelectFont(AOwnerFont);
@@ -414,12 +418,9 @@ begin
 
   //Calc text width
   FTW:=ConvetUnits(AExportFont.FTTFFontInfo.TextWidth(AText, AExportFont.FontSize));
-  //FTW := (FTW1 * 25.4) / gTTFontCache.DPI;
-
   //Calc text height
   FTH1 := AExportFont.FTTFFontInfo.FontData.CapHeight * AExportFont.FontSize * gTTFontCache.DPI / (72 * AExportFont.FTTFFontInfo.FontData.Head.UnitsPerEm);
   FTH2 := Abs(AExportFont.FTTFFontInfo.FontData.Descender) * AExportFont.FontSize * gTTFontCache.DPI / (72 * AExportFont.FTTFFontInfo.FontData.Head.UnitsPerEm);
-
   FTH :=  (FTH1 * 25.4) / gTTFontCache.DPI + (FTH2 * 25.4) / gTTFontCache.DPI;
 
 
@@ -445,7 +446,7 @@ begin
       end;
   end;
 
-  FCurPage.WriteText(X1, Y1, AText);
+  FCurPage.WriteText(X1, Y1 + fH, AText);
 end;
 
 procedure TRxDBGridExportPDF.DrawRect(X, Y, W, H: integer; ABorderColor,
@@ -458,15 +459,15 @@ begin
   if ABorderColor <> clNone then
     FCurPage.SetColor(ColorToDdfColor(ABorderColor), true);
 
-  if AFillColor <> clNone then
+  if (AFillColor <> clNone) and (repExportColors in FOptions) then
     FCurPage.SetColor(ColorToDdfColor(AFillColor), false);
 
-  fX:= ConvetUnits(X);
-  fY:= ConvetUnits(Y);
   fW:= ConvetUnits(W);
   fH:= ConvetUnits(H);
+  fX:= ConvetUnits(X);
+  fY:= ConvetUnits(Y) + fH;
 
-  FCurPage.DrawRect(fX, fY, fW, fH, 1, AFillColor <> clNone, ABorderColor <> clNone);
+  FCurPage.DrawRect(fX, fY, fW, fH, 1, (AFillColor <> clNone) and (repExportColors in FOptions), (ABorderColor <> clNone));
 end;
 
 procedure TRxDBGridExportPDF.DrawImage(X, Y, W, H: integer; ABmp: TBitmap;
@@ -491,25 +492,26 @@ begin
     case ATextAlign of
       taLeftJustify:
         begin
-          Y1:=fY {+ ConvetUnits(constCellPadding)};
+          Y1:=fY;
           X1:=fX + ConvetUnits(constCellPadding);
         end;
       taRightJustify:
         begin
-          Y1:=fY {+ ConvetUnits(constCellPadding)};
+          Y1:=fY;
           X1:=fX + fW - fW1 - ConvetUnits(constCellPadding);
           if X1 < fX then
             X1:=fX;
         end;
       taCenter:
         begin
-          Y1:=fY {+ ConvetUnits(constCellPadding)};
+          Y1:=fY;
           X1:=fX + fW / 2 - fW1 / 2 - ConvetUnits(constCellPadding);
           if X1 < fX then
             X1:=fX;
         end;
     end;
 
+    Y1:=Y1 + fW1;
     FCurPage.DrawImage(X1, Y1, fW1, fH1, IDX);  // left-bottom coordinate of image
 
   finally
@@ -533,18 +535,18 @@ begin
     FWorkPages.Add(P);
   end;
 
-  FPosY:=FPageMargin.Top + 20;
+  FPosY:=FPageMargin.Top;
 end;
 
 procedure TRxDBGridExportPDF.DoExportTitle;
 var
-  i, X, CP: Integer;
+  i, X, CP, K, KY, TH1: Integer;
   C: TRxColumn;
-  S: String;
-  PU: TPDFUnitOfMeasure;
-  WW: Single;
+  CT: TRxColumnTitle;
+  H: LongInt;
 begin
   X:=FPageWidth + FPageMargin.Right;
+  H:=THackExDBGrid(FRxDBGrid).RowHeights[0];
   CP:=-1;
   FCurPage:=nil;
   for i:=0 to FRxDBGrid.Columns.Count - 1 do
@@ -559,17 +561,41 @@ begin
         X:=FPageMargin.Left;
       end;
 
-      DrawRect(X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, FRxDBGrid.BorderColor, clNone);
+      CT:=C.Title as TRxColumnTitle;
+      if CT.CaptionLinesCount > 0 then
+      begin
+        KY:=FPosY;
+        for K:=0 to CT.CaptionLinesCount - 1 do
+        begin
+          TH1:=CT.CaptionLine(K).Height * RxDBGrid.DefaultRowHeight;
+          if K < CT.CaptionLinesCount-1 then
+          begin
+            DrawRect(X, KY, {CT.CaptionLine(K).Width} C.Width, TH1, FRxDBGrid.BorderColor, FTitleColor);
 
+            WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont),
+               X, KY, C.Width, TH1, CT.CaptionLine(K).Caption, C.Title.Alignment);
+            KY:=KY + TH1;
+          end
+          else
+          begin
+            DrawRect(X, KY, {CT.CaptionLine(K).Width} C.Width, FPosY + H - KY, FRxDBGrid.BorderColor, FTitleColor);
 
-      WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont),
-         X, FPosY, C.Width, FRxDBGrid.DefaultRowHeight, C.Title.Caption, C.Title.Alignment);
-
+            WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont),
+               X, KY, C.Width, FPosY + H - KY, CT.CaptionLine(K).Caption, C.Title.Alignment);
+          end;
+        end;
+      end
+      else
+      begin
+        DrawRect(X, FPosY, C.Width, H, FRxDBGrid.BorderColor, FTitleColor);
+        WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont),
+           X, FPosY, C.Width, H, C.Title.Caption, C.Title.Alignment);
+      end;
       X:=X + C.Width;
     end;
   end;
 
-  Inc(FPosY, FRxDBGrid.DefaultRowHeight);
+  Inc(FPosY, H); // DefaultRowHeight);
 end;
 
 procedure TRxDBGridExportPDF.DoExportBody;
@@ -602,7 +628,7 @@ begin
 
       if Assigned(C.Field) then
       begin
-        if Assigned(C.ImageList) then
+        if (repExportImages in FOptions) and Assigned(C.ImageList) then
         begin
           AImageIndex := StrToIntDef(C.KeyList.Values[C.Field.AsString], C.NotInKeyListIndex);
           if (AImageIndex > -1) and (AImageIndex < C.ImageList.Count) then
@@ -865,12 +891,26 @@ begin
   RxDBGridExportPdfSetupForm.cbOpenAfterExport.Checked:=FOpenAfterExport;
   RxDBGridExportPdfSetupForm.cbExportColumnHeader.Checked:=repExportTitle in FOptions;
   RxDBGridExportPdfSetupForm.cbExportColumnFooter.Checked:=repExportFooter in FOptions;
+  RxDBGridExportPdfSetupForm.cbExportCellColors.Checked:=repExportColors in FOptions;
+  RxDBGridExportPdfSetupForm.CheckBox6.Checked:=repExportImages in FOptions;
+  RxDBGridExportPdfSetupForm.ColorBox1.Selected:=FTitleColor;
+
+  RxDBGridExportPdfSetupForm.RadioGroup1.ItemIndex:=Ord(FPdfOptions.PaperOrientation = ppoLandscape);
+  RxDBGridExportPdfSetupForm.ComboBox1.ItemIndex:=Ord(FPdfOptions.PaperType)-1;
+
+  RxDBGridExportPdfSetupForm.CheckBox1.Checked:=poOutLine in FPdfOptions.Options;
+  RxDBGridExportPdfSetupForm.CheckBox2.Checked:=poCompressText in FPdfOptions.Options;
+  RxDBGridExportPdfSetupForm.CheckBox3.Checked:=poCompressFonts in FPdfOptions.Options;
+  RxDBGridExportPdfSetupForm.CheckBox4.Checked:=poCompressImages in FPdfOptions.Options;
+  RxDBGridExportPdfSetupForm.CheckBox5.Checked:=poUseRawJPEG in FPdfOptions.Options;
 
   Result:=RxDBGridExportPdfSetupForm.ShowModal = mrOk;
   if Result then
   begin
     FileName:=RxDBGridExportPdfSetupForm.FileNameEdit1.FileName;
     FOpenAfterExport:=RxDBGridExportPdfSetupForm.cbOpenAfterExport.Checked;
+    FTitleColor:=RxDBGridExportPdfSetupForm.ColorBox1.Selected;
+
     if  RxDBGridExportPdfSetupForm.cbExportColumnHeader.Checked then
       FOptions:=FOptions + [repExportTitle]
     else
@@ -880,6 +920,50 @@ begin
       FOptions:=FOptions + [repExportFooter]
     else
       FOptions:=FOptions - [repExportFooter];
+
+    if RxDBGridExportPdfSetupForm.cbExportCellColors.Checked then
+      FOptions:=FOptions + [repExportColors]
+    else
+      FOptions:=FOptions - [repExportColors];
+
+    if RxDBGridExportPdfSetupForm.CheckBox6.Checked then
+      FOptions:=FOptions + [repExportImages]
+    else
+      FOptions:=FOptions - [repExportImages];
+
+
+    if RxDBGridExportPdfSetupForm.RadioGroup1.ItemIndex = 0 then
+     FPdfOptions.PaperOrientation:=ppoPortrait
+    else
+      FPdfOptions.PaperOrientation:=ppoLandscape;
+
+    FPdfOptions.PaperType:=TPDFPaperType(RxDBGridExportPdfSetupForm.ComboBox1.ItemIndex+1);
+
+    if RxDBGridExportPdfSetupForm.CheckBox1.Checked then
+      FPdfOptions.Options:=FPdfOptions.Options + [poOutLine]
+    else
+      FPdfOptions.Options:=FPdfOptions.Options - [poOutLine];
+
+    if RxDBGridExportPdfSetupForm.CheckBox2.Checked then
+      FPdfOptions.Options:=FPdfOptions.Options + [poCompressText]
+    else
+      FPdfOptions.Options:=FPdfOptions.Options - [poCompressText];
+
+    if RxDBGridExportPdfSetupForm.CheckBox3.Checked then
+      FPdfOptions.Options:=FPdfOptions.Options + [poCompressFonts]
+    else
+      FPdfOptions.Options:=FPdfOptions.Options - [poCompressFonts];
+
+    if RxDBGridExportPdfSetupForm.CheckBox4.Checked then
+      FPdfOptions.Options:=FPdfOptions.Options + [poCompressImages]
+    else
+      FPdfOptions.Options:=FPdfOptions.Options - [poCompressImages];
+
+    if RxDBGridExportPdfSetupForm.CheckBox5.Checked then
+      FPdfOptions.Options:=FPdfOptions.Options + [poUseRawJPEG]
+    else
+      FPdfOptions.Options:=FPdfOptions.Options - [poUseRawJPEG];
+
   end;
   RxDBGridExportPdfSetupForm.Free;
 end;
@@ -1015,6 +1099,7 @@ begin
   inherited Create(AOwner);
   FPageMargin:=TRxPageMargin.Create;
   FPdfOptions:=TPdfExportOptions.Create(Self);
+  FTitleColor:=clSilver;
 
   FCaption:=sToolsExportPDF;
   FOpenAfterExport:=false;

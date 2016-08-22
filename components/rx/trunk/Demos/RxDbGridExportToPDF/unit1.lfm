@@ -115,6 +115,7 @@ object Form1: TForm1
                 Value = 'Максимум:'
                 ValueType = fvtStaticText
               end>
+            WordWrap = True
           end        
           item
             Title.Alignment = taCenter
@@ -176,7 +177,7 @@ object Form1: TForm1
             Alignment = taCenter
             Title.Alignment = taCenter
             Title.Orientation = toHorizontal
-            Title.Caption = 'Страна'
+            Title.Caption = 'Адрес|Страна'
             Width = 200
             FieldName = 'Country'
             EditButtons = <>
@@ -189,7 +190,7 @@ object Form1: TForm1
           item
             Title.Alignment = taCenter
             Title.Orientation = toHorizontal
-            Title.Caption = 'Город'
+            Title.Caption = 'Адрес|Город'
             Width = 200
             FieldName = 'Sity'
             EditButtons = <>
@@ -259,7 +260,7 @@ object Form1: TForm1
         FooterOptions.Color = clYellow
         FooterOptions.RowCount = 3
         FooterOptions.DrawFullLine = True
-        OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgFooterRows, rdgAllowQuickFilter, rdgAllowToolMenu, rdgWordWrapTitles]
+        OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgFooterRows, rdgAllowQuickFilter, rdgAllowToolMenu, rdgWordWrap]
         FooterColor = clYellow
         FooterRowCount = 3
         Align = alClient
@@ -415,12 +416,12 @@ object Form1: TForm1
     RxDBGrid = RxDBGrid1
     Caption = 'Export to PDF file'
     FileName = 'test111.pdf'
-    Options = [repExportTitle, repExportColors, repExportFooter, repOverwriteExisting]
+    Options = [repExportTitle, repExportColors, repExportFooter, repOverwriteExisting, repExportImages]
     PdfOptions.PaperOrientation = ppoLandscape
     PdfOptions.Options = [poCompressText, poCompressFonts, poCompressImages, poUseRawJPEG]
     OpenAfterExport = True
-    AuthorPdf = 'Лагунов А.А.'
-    ProducerPdf = 'alexs'
+    AuthorPdf = 'Lagunov A.A.'
+    ProducerPdf = 'Test project'
     PageMargin.Left = 40
     PageMargin.Top = 40
     PageMargin.Right = 40
@@ -530,5 +531,25 @@ object Form1: TForm1
       0000000000000000000000000000000000FF0000000000000000000000000000
       0000000000000000000000000000
     }
+  end
+  object frReport1: TfrReport
+    InitialZoom = pzDefault
+    Options = []
+    PreviewButtons = [pbZoom, pbLoad, pbSave, pbPrint, pbFind, pbHelp, pbExit]
+    DataType = dtDataSet
+    left = 304
+    top = 88
+  end
+  object RxDBGridExportSpreadSheet1: TRxDBGridExportSpreadSheet
+    Caption = 'Экспорт в электронную таблицу'
+    Options = []
+    left = 304
+    top = 154
+  end
+  object RxDBGridPrint1: TRxDBGridPrint
+    Caption = 'Печать списка'
+    Options = [rxpoShowTitle, rxpoShowFooter, rxpoShowGridColor, rxpoShowFooterColor, rxpoShowReportTitle]
+    left = 346
+    top = 154
   end
 end

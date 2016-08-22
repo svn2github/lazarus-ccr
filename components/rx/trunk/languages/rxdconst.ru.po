@@ -293,6 +293,10 @@ msgstr "Отступы на странице"
 msgid "Page name"
 msgstr "Имя страницы"
 
+#: rxdconst.spapertype
+msgid "Paper type"
+msgstr ""
+
 #: rxdconst.spasswordchanged
 msgid "Password changed"
 msgstr "Пароль изменён"

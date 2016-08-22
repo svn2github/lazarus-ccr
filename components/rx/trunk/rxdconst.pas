@@ -194,6 +194,7 @@ resourcestring
   sPortrait                  = 'Portrait';
   sLandscape                 = 'Landscape';
   sPrintOptions              = 'Print options';
+  sPaperType                 = 'Paper type';
 
   sShowTitle                 = 'Show column title';
   sShowFooter                = 'Show footer';
