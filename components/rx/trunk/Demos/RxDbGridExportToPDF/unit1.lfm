@@ -53,7 +53,7 @@ object Form1: TForm1
         Top = 0
         Width = 1033
         ColumnDefValues.BlobText = '(данные)'
-        TitleButtons = False
+        TitleButtons = True
         AutoSort = True
         Columns = <        
           item
@@ -70,7 +70,7 @@ object Form1: TForm1
             Footers = <>
           end        
           item
-            Color = clYellow
+            Color = clSkyBlue
             Title.Alignment = taCenter
             Title.Orientation = toHorizontal
             Title.Caption = 'Дата поставки'
@@ -259,7 +259,7 @@ object Form1: TForm1
         FooterOptions.Color = clYellow
         FooterOptions.RowCount = 3
         FooterOptions.DrawFullLine = True
-        OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgFooterRows, rdgAllowQuickFilter, rdgAllowToolMenu]
+        OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgFooterRows, rdgAllowQuickFilter, rdgAllowToolMenu, rdgWordWrapTitles]
         FooterColor = clYellow
         FooterRowCount = 3
         Align = alClient
@@ -269,9 +269,11 @@ object Form1: TForm1
         SelectedColor = clHighlight
         GridLineStyle = psSolid
         DataSource = DataSource1
-        Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
+        Flat = True
+        Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgHeaderPushedLook]
         ParentColor = False
         TabOrder = 0
+        TitleStyle = tsNative
       end
     end
     object TabSheet2: TTabSheet
