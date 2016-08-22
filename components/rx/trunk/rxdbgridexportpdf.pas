@@ -540,10 +540,11 @@ end;
 
 procedure TRxDBGridExportPDF.DoExportTitle;
 var
-  i, X, CP, K, KY, TH1: Integer;
-  C: TRxColumn;
+  i, X, CP, K, KY, TH1, J, X1, W1: Integer;
+  C, FStartCol: TRxColumn;
   CT: TRxColumnTitle;
   H: LongInt;
+  KL: TMLCaptionItem;
 begin
   X:=FPageWidth + FPageMargin.Right;
   H:=THackExDBGrid(FRxDBGrid).RowHeights[0];
@@ -559,6 +560,7 @@ begin
         Inc(CP);
         FCurPage:=TPDFPage(FWorkPages[CP]);
         X:=FPageMargin.Left;
+        FStartCol:=C;
       end;
 
       CT:=C.Title as TRxColumnTitle;
@@ -570,26 +572,40 @@ begin
           TH1:=CT.CaptionLine(K).Height * RxDBGrid.DefaultRowHeight;
           if K < CT.CaptionLinesCount-1 then
           begin
-            DrawRect(X, KY, {CT.CaptionLine(K).Width} C.Width, TH1, FRxDBGrid.BorderColor, FTitleColor);
+            if not Assigned(CT.CaptionLine(K).Next) then
+            begin
+              KL:=CT.CaptionLine(K);
+              X1:=X;
+              W1:=C.Width;
+              while Assigned(KL.Prior) and (KL.Col <> FStartCol) do
+              begin
+                KL:=KL.Prior;
+                X1:=X1 - KL.Col.Width;
+                W1:=W1 + KL.Col.Width;
+              end;
 
-            WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont),
-               X, KY, C.Width, TH1, CT.CaptionLine(K).Caption, C.Title.Alignment);
+
+
+              //DrawRect(X, KY, {CT.CaptionLine(K).Width} C.Width, TH1, FRxDBGrid.BorderColor, FTitleColor);
+              DrawRect(X1, KY, W1, TH1, FRxDBGrid.BorderColor, FTitleColor);
+
+              //WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont), X, KY, C.Width, TH1, CT.CaptionLine(K).Caption, C.Title.Alignment);
+              WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont), X1, KY, W1, TH1, CT.CaptionLine(K).Caption, C.Title.Alignment);
+            end;
             KY:=KY + TH1;
           end
           else
           begin
             DrawRect(X, KY, {CT.CaptionLine(K).Width} C.Width, FPosY + H - KY, FRxDBGrid.BorderColor, FTitleColor);
 
-            WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont),
-               X, KY, C.Width, FPosY + H - KY, CT.CaptionLine(K).Caption, C.Title.Alignment);
+            WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont), X, KY, C.Width, FPosY + H - KY, CT.CaptionLine(K).Caption, C.Title.Alignment);
           end;
         end;
       end
       else
       begin
         DrawRect(X, FPosY, C.Width, H, FRxDBGrid.BorderColor, FTitleColor);
-        WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont),
-           X, FPosY, C.Width, H, C.Title.Caption, C.Title.Alignment);
+        WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont), X, FPosY, C.Width, H, C.Title.Caption, C.Title.Alignment);
       end;
       X:=X + C.Width;
     end;

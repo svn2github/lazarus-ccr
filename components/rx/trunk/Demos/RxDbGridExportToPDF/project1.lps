@@ -9,7 +9,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="81" Y="12"/>
-        <UsageCount Value="117"/>
+        <UsageCount Value="118"/>
       </Unit0>
       <Unit1>
         <Filename Value="unit1.pas"/>
@@ -18,9 +18,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
-        <IsVisibleTab Value="True"/>
         <CursorPos X="7" Y="21"/>
-        <UsageCount Value="117"/>
+        <UsageCount Value="118"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -35,9 +34,9 @@
       <Unit3>
         <Filename Value="../../rxdbgrid.pas"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="3486"/>
-        <CursorPos X="3" Y="3503"/>
-        <UsageCount Value="32"/>
+        <TopLine Value="635"/>
+        <CursorPos X="50" Y="659"/>
+        <UsageCount Value="33"/>
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
@@ -87,16 +86,17 @@
       <Unit10>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
         <UnitName Value="RxDBGridExportPdf"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="772"/>
-        <CursorPos Y="781"/>
-        <UsageCount Value="56"/>
+        <TopLine Value="572"/>
+        <CursorPos X="87" Y="593"/>
+        <UsageCount Value="57"/>
         <Bookmarks Count="5">
           <Item0 X="3" Y="457" ID="2"/>
           <Item1 Y="421" ID="3"/>
-          <Item2 Y="594" ID="4"/>
+          <Item2 Y="610" ID="4"/>
           <Item3 X="15" Y="334" ID="5"/>
-          <Item4 X="12" Y="631" ID="1"/>
+          <Item4 X="12" Y="647" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit10>
@@ -461,7 +461,7 @@
         <EditorIndex Value="2"/>
         <TopLine Value="43"/>
         <CursorPos X="11" Y="66"/>
-        <UsageCount Value="21"/>
+        <UsageCount Value="22"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit58>
@@ -487,7 +487,7 @@
       <Unit61>
         <Filename Value="/home/OPTORG/alexs/1/1/testfppdf.lpr"/>
         <EditorIndex Value="4"/>
-        <UsageCount Value="38"/>
+        <UsageCount Value="39"/>
         <Loaded Value="True"/>
       </Unit61>
       <Unit62>
@@ -626,7 +626,7 @@
         <EditorIndex Value="5"/>
         <TopLine Value="10"/>
         <CursorPos X="3" Y="25"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="15"/>
         <Loaded Value="True"/>
       </Unit80>
       <Unit81>
@@ -656,38 +656,38 @@
         <UsageCount Value="10"/>
       </Unit83>
     </Units>
-    <JumpHistory Count="29" HistoryIndex="28">
+    <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="592" TopLine="578"/>
+        <Caret Line="551" TopLine="535"/>
       </Position1>
       <Position2>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="569" TopLine="556"/>
+        <Caret Line="575" TopLine="561"/>
       </Position2>
       <Position3>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="571" TopLine="556"/>
+        <Caret Line="595" TopLine="580"/>
       </Position3>
       <Position4>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="569" TopLine="556"/>
+        <Caret Line="570" TopLine="555"/>
       </Position4>
       <Position5>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="572" TopLine="550"/>
+        <Caret Line="572" TopLine="555"/>
       </Position5>
       <Position6>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="569" TopLine="550"/>
+        <Caret Line="573" TopLine="555"/>
       </Position6>
       <Position7>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="575" Column="25" TopLine="555"/>
+        <Caret Line="599" TopLine="584"/>
       </Position7>
       <Position8>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="569" TopLine="555"/>
+        <Caret Line="601" TopLine="584"/>
       </Position8>
       <Position9>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
@@ -695,88 +695,92 @@
       </Position9>
       <Position10>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="569" TopLine="555"/>
+        <Caret Line="610" TopLine="595"/>
       </Position10>
       <Position11>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="581" Column="32" TopLine="555"/>
+        <Caret Line="553" TopLine="537"/>
       </Position11>
       <Position12>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="569" TopLine="555"/>
+        <Caret Line="555" TopLine="537"/>
       </Position12>
       <Position13>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="570" TopLine="555"/>
+        <Caret Line="556" TopLine="537"/>
       </Position13>
       <Position14>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="572" TopLine="555"/>
+        <Caret Line="558" TopLine="537"/>
       </Position14>
       <Position15>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="574" TopLine="555"/>
+        <Caret Line="566" TopLine="560"/>
       </Position15>
       <Position16>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="573" TopLine="555"/>
+        <Caret Line="567" TopLine="560"/>
       </Position16>
       <Position17>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="574" TopLine="555"/>
+        <Caret Line="569" TopLine="560"/>
       </Position17>
       <Position18>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="573" TopLine="555"/>
+        <Caret Line="570" TopLine="560"/>
       </Position18>
       <Position19>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="574" TopLine="555"/>
+        <Caret Line="572" TopLine="560"/>
       </Position19>
       <Position20>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="573" TopLine="555"/>
+        <Caret Line="573" TopLine="560"/>
       </Position20>
       <Position21>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="575" TopLine="555"/>
+        <Caret Line="575" TopLine="560"/>
       </Position21>
       <Position22>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="567" TopLine="555"/>
+        <Caret Line="577" TopLine="560"/>
       </Position22>
       <Position23>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="569" TopLine="555"/>
+        <Caret Line="578" TopLine="560"/>
       </Position23>
       <Position24>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="570" TopLine="555"/>
+        <Caret Line="579" TopLine="560"/>
       </Position24>
       <Position25>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="574" Column="13" TopLine="567"/>
+        <Caret Line="580" TopLine="560"/>
       </Position25>
       <Position26>
-        <Filename Value="../../rxdbgrid.pas"/>
-        <Caret Line="3503" Column="3" TopLine="3486"/>
+        <Filename Value="../../rxdbgridexportpdf.pas"/>
+        <Caret Line="582" TopLine="560"/>
       </Position26>
       <Position27>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="192" Column="66" TopLine="169"/>
+        <Caret Line="583" TopLine="560"/>
       </Position27>
       <Position28>
-        <Filename Value="../../rxdbgridexportpdfsetupunit.pas"/>
-        <Caret Line="58" Column="5" TopLine="43"/>
+        <Filename Value="../../rxdbgridexportpdf.pas"/>
+        <Caret Line="584" TopLine="560"/>
       </Position28>
       <Position29>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
-        <Caret Line="780" TopLine="772"/>
+        <Caret Line="580" TopLine="560"/>
       </Position29>
+      <Position30>
+        <Filename Value="../../rxdbgridexportpdf.pas"/>
+        <Caret Line="590" TopLine="566"/>
+      </Position30>
     </JumpHistory>
   </ProjectSession>
   <Debugging>
-    <BreakPoints Count="3">
+    <BreakPoints Count="2">
       <Item1>
         <Kind Value="bpkSource"/>
         <WatchScope Value="wpsLocal"/>
@@ -791,13 +795,6 @@
         <Source Value="/home/install/source/fpcsrc/packages/fcl-pdf/src/fpttf.pp"/>
         <Line Value="320"/>
       </Item2>
-      <Item3>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="../../rxdbgridexportpdf.pas"/>
-        <Line Value="780"/>
-      </Item3>
     </BreakPoints>
     <Watches Count="1">
       <Item1>
