@@ -533,6 +533,14 @@
               <td>rdgCaseInsensitiveSort</td>
               <td>Параметр включает режим сортировки без учёта регистра символов в столбце  <link id="TRxDBGrid">RxDBGrid</link>-а</td>
             </tr>
+            <tr>
+              <td>rdgWordWrap</td>
+              <td>Разрешить использование TRxColumn.WordWrap для переноса строк</td>
+            </tr>
+            <tr>
+              <td>rdgWordWrapTitles</td>
+              <td>Перенос строк в заголовках</td>
+            </tr>
           </table>
         </descr>
       </element>

@@ -97,7 +97,8 @@ type
     rdgAllowSortForm,
     rdgAllowToolMenu,
     rdgCaseInsensitiveSort,
-    rdgWordWrap
+    rdgWordWrap,
+    rdgDisableWordWrapTitles
     );
 
   TOptionsRx = set of TOptionRx;
@@ -2833,7 +2834,10 @@ begin
         H := H1;
     end;
 
-    RowHeights[0] := DefaultRowHeight * H;
+    if not (rdgDisableWordWrapTitles in OptionsRx) then
+      RowHeights[0] := DefaultRowHeight * H
+    else
+      RowHeights[0] := DefaultRowHeight;
 
     if rdgFilter in OptionsRx then
     begin
@@ -2916,7 +2920,10 @@ begin
     Canvas.TextStyle:=T1;
     DrawCellText(aCol, aRow, aRect, aState, ACaption);
     Canvas.TextStyle:=T2;     }
-    WriteTextHeader(Canvas, aRect, ACaption, GetColumnAlignment(aCol, True));
+    if not (rdgDisableWordWrapTitles in OptionsRx) then
+      WriteTextHeader(Canvas, aRect, ACaption, GetColumnAlignment(aCol, True))
+    else
+      DrawCellText(aCol, aRow, aRect, aState, ACaption);
   end;
 end;
 
