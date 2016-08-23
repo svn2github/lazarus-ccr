@@ -155,6 +155,7 @@ type
     FDataSet:TDataSet;
     FPosY : integer;
 
+    procedure InitFonts;
     procedure DoSetupDocHeader;
     procedure DoSetupFonts;
     //
@@ -170,13 +171,9 @@ type
     procedure DoExportFooter;
     procedure DoSaveDocument;
 
-
     function DoExecTools:boolean;override;
     function DoSetupTools:boolean; override;
-    //
-    //procedure DoTest;
-    //
-    procedure InitFonts;
+
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -405,7 +402,7 @@ end;
 procedure TRxDBGridExportPDF.WriteTextRect(AExportFont: TExportFontItem; X, Y,
   W, H: integer; AText: string; ATextAlign: TAlignment);
 var
-  FTW, FTH, ADescender, FTH1, FTH2: Single;
+  FTW, FTH, FTH1, FTH2: Single;
   X1: TPDFFloat;
   Y1, fX, fY: TPDFFloat;
   fW, fH: Extended;
@@ -485,7 +482,7 @@ begin
     fW1 := ConvetUnits(FPDFDocument.Images[IDX].Width);
     fH1 := ConvetUnits(FPDFDocument.Images[IDX].Height);
     fX:=ConvetUnits(X);
-    fY:=ConvetUnits(Y);
+    fY:=ConvetUnits(Y + constCellPadding);
     fW:=ConvetUnits(W);
     fH:=ConvetUnits(H);
 
@@ -540,7 +537,7 @@ end;
 
 procedure TRxDBGridExportPDF.DoExportTitle;
 var
-  i, X, CP, K, KY, TH1, J, X1, W1: Integer;
+  i, X, CP, K, KY, TH1, X1, W1, WNext: Integer;
   C, FStartCol: TRxColumn;
   CT: TRxColumnTitle;
   H: LongInt;
@@ -572,7 +569,13 @@ begin
           TH1:=CT.CaptionLine(K).Height * RxDBGrid.DefaultRowHeight;
           if K < CT.CaptionLinesCount-1 then
           begin
-            if not Assigned(CT.CaptionLine(K).Next) then
+
+            if i < FRxDBGrid.Columns.Count-1 then
+              WNext:=FRxDBGrid.Columns[i+1].Width
+            else
+              WNext:=0;
+
+            if (not Assigned(CT.CaptionLine(K).Next)) or (X + C.Width + WNext > FPageWidth - FPageMargin.Right) then
             begin
               KL:=CT.CaptionLine(K);
               X1:=X;
@@ -584,20 +587,14 @@ begin
                 W1:=W1 + KL.Col.Width;
               end;
 
-
-
-              //DrawRect(X, KY, {CT.CaptionLine(K).Width} C.Width, TH1, FRxDBGrid.BorderColor, FTitleColor);
               DrawRect(X1, KY, W1, TH1, FRxDBGrid.BorderColor, FTitleColor);
-
-              //WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont), X, KY, C.Width, TH1, CT.CaptionLine(K).Caption, C.Title.Alignment);
               WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont), X1, KY, W1, TH1, CT.CaptionLine(K).Caption, C.Title.Alignment);
             end;
             KY:=KY + TH1;
           end
           else
           begin
-            DrawRect(X, KY, {CT.CaptionLine(K).Width} C.Width, FPosY + H - KY, FRxDBGrid.BorderColor, FTitleColor);
-
+            DrawRect(X, KY, C.Width, FPosY + H - KY, FRxDBGrid.BorderColor, FTitleColor);
             WriteTextRect(ActivateFont(C.Title.Font, FRxDBGrid.TitleFont), X, KY, C.Width, FPosY + H - KY, CT.CaptionLine(K).Caption, C.Title.Alignment);
           end;
         end;
@@ -619,7 +616,6 @@ procedure DoWriteRow;
 var
   i, X, CP: Integer;
   C: TRxColumn;
-  S: String;
   B: TBitmap;
   AImageIndex: LongInt;
 begin
@@ -702,7 +698,6 @@ begin
 end;
 
 var
-  F: TExportFontItem;
   i: Integer;
   sDefFontName:string;
 begin
@@ -728,7 +723,7 @@ procedure TRxDBGridExportPDF.DoExportFooter;
 
 procedure WriteFooterRow(AFooterRow:Integer);
 var
-  i, X, CP, FS: Integer;
+  i, X, CP: Integer;
   S: String;
   C: TRxColumn;
 begin
@@ -833,9 +828,6 @@ begin
 end;
 
 procedure TRxDBGridExportPDF.DoExportPage;
-var
-  P: TPDFPage;
-  i: Integer;
 begin
   StartNewPage;
 
@@ -983,85 +975,7 @@ begin
   end;
   RxDBGridExportPdfSetupForm.Free;
 end;
-(*
-procedure TRxDBGridExportPDF.DoTest;
-var
-  lPt1:TPDFCoord;
-  lFntPtSize, FtText1: Integer;
-  lFC: TFPFontCacheItem;
-  lFntInfo: TTFFileInfo;
-  lHeight, lTextHeightInMM, lDescenderHeightInMM, A1: Extended;
-  lWidth, lTextWidthInMM: Single;
-  sFontName, sSampleText: String;
-begin
-  //setup
-  sSampleText:='Это привет мир!';
-  lFntPtSize := 23;
-  lPt1.X := 25;  // units in MM
-  lPt1.Y := 40;  // units in MM
 
-  StartNewPage;
-
-
-{  sFontName:='FreeSans';
-
-  lFC := gTTFontCache.Find(sFontName, False, False);
-  if not Assigned(lFC) then
-      raise Exception.Create('FreeSans font not found');
-  lFntInfo := lFC.FontData;
-
-  FPDFDocument.FontDirectory:=ExtractFileDir(lFC.FileName);
-  FtText1 := FPDFDocument.AddFont(ExtractFileName(lFC.FileName), sFontName); // TODO: this color value means nothing - not used at all
-}
-  sFontName:=FFontItems.FDefaultFontNormal.FontName;
-  lFC := gTTFontCache.Find(sFontName, False, False);
-  if not Assigned(lFC) then
-      raise Exception.Create('FreeSans font not found');
-  lFntInfo := lFC.FontData;
-  FtText1 := FFontItems.FDefaultFontNormal.FPdfFont;
-
-  FCurPage:=TPDFPage(FWorkPages[0]);
-  FCurPage.UnitOfMeasure := uomMillimeters;
-    { Page title }
-
-  //FCurPage.SetFont(FFontItems.DefaultFontNormal.FPdfFont, 23);
-  FCurPage.SetFont(FtText1, lFntPtSize);
-
-
-  FCurPage.SetColor(clBlack, false);
-  FCurPage.WriteText(lPt1.X, lPt1.Y, sSampleText);
-
-  { draw a rectangle around the Page Title text }
-
-
-  { result is in pixels }
-  lHeight := lFntInfo.CapHeight * lFntPtSize * gTTFontCache.DPI / (72 * lFntInfo.Head.UnitsPerEm);
-
-  { convert pixels to mm as our PDFPage.UnitOfMeasure is set to mm. }
-  lTextHeightInMM :=  (lHeight * 25.4) / gTTFontCache.DPI;
-//  lTextHeightInMM := lHeight;
-
-  lWidth := lFC.TextWidth(sSampleText, lFntPtSize);
-  { convert the Font Units to Millimeters }
-    lTextWidthInMM := (lWidth * 25.4) / gTTFontCache.DPI;
-//  lTextWidthInMM := lWidth;
-
-  { result is in pixels }
-  lHeight := Abs(lFntInfo.Descender) * lFntPtSize * gTTFontCache.DPI / (72 * lFntInfo.Head.UnitsPerEm);
-  A1:=lHeight;
-  { convert pixels to mm as you PDFPage.UnitOfMeasure is set to mm. }
-  lDescenderHeightInMM :=  (lHeight * 25.4) / gTTFontCache.DPI;
-//  lDescenderHeightInMM := lHeight;
-
-    { adjust the Y coordinate for the font Descender, because
-      WriteUTF8Text draws on the baseline. Also adjust the TextHeight
-      because CapHeight doesn't take into account the Descender. }
-  FCurPage.SetColor(clRed, true);
-  FCurPage.DrawRect(lPt1.X, lPt1.Y+lDescenderHeightInMM, lTextWidthInMM, lTextHeightInMM+lDescenderHeightInMM, 1, false, true);
-  //lFntInfo.Free;
-  DrawRect(10, 100, Round(lWidth), Round(lHeight + A1), Graphics.clBlack, Graphics.clRed);
-end;
-*)
 procedure TRxDBGridExportPDF.DoSaveDocument;
 var
   F: TFileStream;

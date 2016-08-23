@@ -48,6 +48,18 @@ msgstr "Перехресне посилання даних"
 msgid "Column name"
 msgstr "Назва стовпця"
 
+#: rxdconst.scompressfonts
+msgid "Compress fonts"
+msgstr ""
+
+#: rxdconst.scompressimages
+msgid "Compress images"
+msgstr ""
+
+#: rxdconst.scompresstext
+msgid "Compress text"
+msgstr ""
+
 #: rxdconst.sconfirmpasswordlabel
 msgid "&Confirm:"
 msgstr "&Підтвердження:"
@@ -102,6 +114,10 @@ msgstr "Експортувати назву файлу"
 
 #: rxdconst.sexportformula
 msgid "Export footer formula"
+msgstr ""
+
+#: rxdconst.sexportimages
+msgid "Export images"
 msgstr ""
 
 #: rxdconst.sexportparams
@@ -209,6 +225,10 @@ msgstr "Статичний текст"
 msgid "Sum"
 msgstr "Сума"
 
+#: rxdconst.sglobal
+msgid "Global"
+msgstr ""
+
 #: rxdconst.shidezerovalues
 msgid "Hide zero values"
 msgstr "Ховати нульові значення"
@@ -293,6 +313,10 @@ msgstr "Орієнтація"
 msgid "Other options"
 msgstr ""
 
+#: rxdconst.soutline
+msgid "Out line"
+msgstr ""
+
 #: rxdconst.soverwriteexisting
 msgid "Overwrite existing"
 msgstr "Переписати існуючий"
@@ -324,6 +348,10 @@ msgstr "Пароль не змінено"
 #: rxdconst.spasswordsmismatch
 msgid "New password and confirmation not equal"
 msgstr "Новий пароль і підтвердження не співпадають"
+
+#: rxdconst.spdfoptions
+msgid "PDF options"
+msgstr ""
 
 #: rxdconst.sportrait
 msgid "Portrait"
@@ -621,6 +649,10 @@ msgstr "Показати заголовок звіту"
 msgid "Show column title"
 msgstr "Показати заголовок стовпця"
 
+#: rxdconst.stitlecolor
+msgid "Title color"
+msgstr ""
+
 #: rxdconst.stoolsexportpdf
 msgid "Export to PDF file"
 msgstr ""
@@ -648,6 +680,10 @@ msgstr "Розблокувати"
 #: rxdconst.sunlockhint
 msgid "Enter your password"
 msgstr "Введіть ваш пароль"
+
+#: rxdconst.suserawjpeg
+msgid "Use raw JPEG"
+msgstr ""
 
 #: rxdconst.susernamelabel
 msgid "&User name:"

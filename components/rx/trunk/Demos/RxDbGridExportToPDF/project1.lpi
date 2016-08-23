@@ -24,25 +24,16 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="6">
+    <RequiredPackages Count="3">
       <Item1>
-        <PackageName Value="rxdbgrid_print"/>
+        <PackageName Value="FCL"/>
       </Item1>
       <Item2>
-        <PackageName Value="rxdbgrid_export_spreadsheet"/>
+        <PackageName Value="rxnew"/>
       </Item2>
       <Item3>
-        <PackageName Value="lazreport"/>
-      </Item3>
-      <Item4>
-        <PackageName Value="FCL"/>
-      </Item4>
-      <Item5>
-        <PackageName Value="rxnew"/>
-      </Item5>
-      <Item6>
         <PackageName Value="LCL"/>
-      </Item6>
+      </Item3>
     </RequiredPackages>
     <Units Count="2">
       <Unit0>

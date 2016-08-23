@@ -37,6 +37,18 @@ msgstr ""
 msgid "Column name"
 msgstr ""
 
+#: rxdconst.scompressfonts
+msgid "Compress fonts"
+msgstr ""
+
+#: rxdconst.scompressimages
+msgid "Compress images"
+msgstr ""
+
+#: rxdconst.scompresstext
+msgid "Compress text"
+msgstr ""
+
 #: rxdconst.sconfirmpasswordlabel
 msgid "&Confirm:"
 msgstr ""
@@ -91,6 +103,10 @@ msgstr ""
 
 #: rxdconst.sexportformula
 msgid "Export footer formula"
+msgstr ""
+
+#: rxdconst.sexportimages
+msgid "Export images"
 msgstr ""
 
 #: rxdconst.sexportparams
@@ -197,6 +213,10 @@ msgstr ""
 msgid "Sum"
 msgstr ""
 
+#: rxdconst.sglobal
+msgid "Global"
+msgstr ""
+
 #: rxdconst.shidezerovalues
 msgid "Hide zero values"
 msgstr ""
@@ -281,6 +301,10 @@ msgstr ""
 msgid "Other options"
 msgstr ""
 
+#: rxdconst.soutline
+msgid "Out line"
+msgstr ""
+
 #: rxdconst.soverwriteexisting
 msgid "Overwrite existing"
 msgstr ""
@@ -311,6 +335,10 @@ msgstr ""
 
 #: rxdconst.spasswordsmismatch
 msgid "New password and confirmation not equal"
+msgstr ""
+
+#: rxdconst.spdfoptions
+msgid "PDF options"
 msgstr ""
 
 #: rxdconst.sportrait
@@ -607,6 +635,10 @@ msgstr ""
 msgid "Show column title"
 msgstr ""
 
+#: rxdconst.stitlecolor
+msgid "Title color"
+msgstr ""
+
 #: rxdconst.stoolsexportpdf
 msgid "Export to PDF file"
 msgstr ""
@@ -633,6 +665,10 @@ msgstr ""
 
 #: rxdconst.sunlockhint
 msgid "Enter your password"
+msgstr ""
+
+#: rxdconst.suserawjpeg
+msgid "Use raw JPEG"
 msgstr ""
 
 #: rxdconst.susernamelabel

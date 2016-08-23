@@ -107,14 +107,22 @@ begin
   PageControl1.ActivePageIndex:=0;
 
   Caption:=sExportParams;
+  TabSheet1.Caption:=sGlobal;
+  TabSheet2.Caption:=sPDFOptions;
   Label1.Caption:=sExportFileName;
-  //Label3.Caption:=sPageName;
   cbOpenAfterExport.Caption:=sOpenAfterExport;
   cbExportColumnHeader.Caption:=sExportColumnHeader;
   cbExportColumnFooter.Caption:=sExportColumnFooter;
   cbExportCellColors.Caption:=sExportCellColors;
   cbOverwriteExisting.Caption:=sOverwriteExisting;
+  CheckBox6.Caption:=sExportImages;
   Label2.Caption:=sPaperType;
+  Label5.Caption:=sTitleColor;
+  CheckBox1.Caption:=sOutLine;
+  CheckBox2.Caption:=sCompressText;
+  CheckBox3.Caption:=sCompressFonts;
+  CheckBox4.Caption:=sCompressImages;
+  CheckBox5.Caption:=sUseRawJPEG;
 
   RadioGroup1.Caption:=sOrientation;
   RadioGroup1.Items[0]:=sPortrait;

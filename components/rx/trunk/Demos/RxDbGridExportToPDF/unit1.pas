@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, rxmemds, rxdbgrid, RxDBGridExportPdf,
-  RxDBGridExportSpreadSheet, RxDBGridPrintGrid, LR_Class, Forms, Controls,
+  Forms, Controls,
   Graphics, Dialogs, ExtCtrls, StdCtrls, ComCtrls, Spin, db;
 
 type
@@ -16,15 +16,12 @@ type
   TForm1 = class(TForm)
     Button1: TButton;
     DataSource1: TDataSource;
-    frReport1: TfrReport;
     ImageList1: TImageList;
     Memo1: TMemo;
     PageControl1: TPageControl;
     Panel1: TPanel;
     RxDBGrid1: TRxDBGrid;
     RxDBGridExportPDF1: TRxDBGridExportPDF;
-    RxDBGridExportSpreadSheet1: TRxDBGridExportSpreadSheet;
-    RxDBGridPrint1: TRxDBGridPrint;
     RxMemoryData1: TRxMemoryData;
     RxMemoryData1Country: TStringField;
     RxMemoryData1FLAG: TLongintField;

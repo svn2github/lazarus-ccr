@@ -182,6 +182,7 @@ resourcestring
   sExportColumnFooter        = 'Export column footer';
   sExportCellColors          = 'Export cell colors';
   sExportFormula             = 'Export footer formula';
+  sExportImages              = 'Export images';
   sOverwriteExisting         = 'Overwrite existing';
   sShowColumnHeaderOnAllPage = 'Show column header on all pages';
   sPageMargins               = 'Page margins';
@@ -195,6 +196,14 @@ resourcestring
   sLandscape                 = 'Landscape';
   sPrintOptions              = 'Print options';
   sPaperType                 = 'Paper type';
+  sTitleColor                = 'Title color';
+  sGlobal                    = 'Global';
+  sPDFOptions                = 'PDF options';
+  sOutLine                   = 'Out line';
+  sCompressText              = 'Compress text';
+  sCompressFonts             = 'Compress fonts';
+  sCompressImages            = 'Compress images';
+  sUseRawJPEG                = 'Use raw JPEG';
 
   sShowTitle                 = 'Show column title';
   sShowFooter                = 'Show footer';

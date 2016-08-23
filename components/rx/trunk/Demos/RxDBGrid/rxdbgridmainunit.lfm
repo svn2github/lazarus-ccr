@@ -14,8 +14,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
   LCLVersion = '1.7'
   object RxDBGrid1: TRxDBGrid
     Left = 0
-    Height = 634
-    Top = 70
+    Height = 627
+    Top = 77
     Width = 1151
     ColumnDefValues.BlobText = '(примечание)'
     TitleButtons = True
@@ -428,19 +428,19 @@ object RxDBGridMainForm: TRxDBGridMainForm
   end
   object Panel1: TPanel
     Left = 0
-    Height = 70
+    Height = 77
     Top = 0
     Width = 1151
     Align = alTop
     AutoSize = True
-    ClientHeight = 70
+    ClientHeight = 77
     ClientWidth = 1151
     TabOrder = 1
     object Label1: TLabel
       AnchorSideLeft.Control = Button2
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 270
+      Left = 274
       Height = 20
       Top = 7
       Width = 36
@@ -452,9 +452,9 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = Panel1
       AnchorSideTop.Control = Panel1
       Left = 7
-      Height = 32
+      Height = 36
       Top = 7
-      Width = 87
+      Width = 89
       Action = actCalcTotal
       AutoSize = True
       BorderSpacing.Around = 6
@@ -464,10 +464,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = Button1
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 100
-      Height = 32
+      Left = 102
+      Height = 36
       Top = 7
-      Width = 164
+      Width = 166
       Action = actOptimizeColumnsWidthAll
       AutoSize = True
       BorderSpacing.Around = 6
@@ -478,11 +478,11 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = CheckBox2
       AnchorSideTop.Side = asrBottom
-      Left = 499
+      Left = 503
       Height = 24
       Hint = 'Use filter line'
       Top = 37
-      Width = 84
+      Width = 85
       BorderSpacing.Left = 6
       Caption = 'Use filter'
       OnChange = CheckBox1Change
@@ -492,8 +492,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = Label1
       AnchorSideTop.Control = Label1
       AnchorSideTop.Side = asrBottom
-      Left = 276
-      Height = 30
+      Left = 280
+      Height = 32
       Top = 33
       Width = 217
       BorderSpacing.Around = 6
@@ -512,11 +512,11 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = ComboBox1
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 499
+      Left = 503
       Height = 24
       Hint = 'Auto fill column width'
       Top = 7
-      Width = 133
+      Width = 134
       BorderSpacing.Around = 6
       Caption = 'Auto fill columns'
       OnChange = CheckBox2Change
@@ -526,10 +526,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = CheckBox2
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 638
+      Left = 643
       Height = 24
       Top = 7
-      Width = 120
+      Width = 121
       BorderSpacing.Around = 6
       Caption = 'Show indicator'
       Checked = True
@@ -542,10 +542,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = CheckBox3
       AnchorSideTop.Side = asrBottom
-      Left = 638
+      Left = 643
       Height = 24
       Top = 37
-      Width = 116
+      Width = 118
       BorderSpacing.Around = 6
       Caption = 'Show headers'
       Checked = True
@@ -557,10 +557,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = CheckBox3
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 764
+      Left = 770
       Height = 24
       Top = 7
-      Width = 95
+      Width = 97
       BorderSpacing.Around = 6
       Caption = 'Word wrap'
       OnChange = CheckBox5Change
@@ -570,7 +570,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = CheckBox5
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 865
+      Left = 873
       Height = 20
       Top = 7
       Width = 32
@@ -582,8 +582,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = Label2
       AnchorSideTop.Control = Label2
       AnchorSideTop.Side = asrBottom
-      Left = 871
-      Height = 30
+      Left = 879
+      Height = 37
       Top = 33
       Width = 129
       BorderSpacing.Around = 6
@@ -1496,7 +1496,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
   end
   object RxDBGridExportSpreadSheet1: TRxDBGridExportSpreadSheet
     RxDBGrid = RxDBGrid1
-    Caption = 'Export data'
+    Caption = 'Export data to spreadsheet'
     ShowSetupForm = True
     FileName = 'RxDBGridDemo.ods'
     PageName = 'RxDBGrid demo'
@@ -1519,6 +1519,20 @@ object RxDBGridMainForm: TRxDBGridMainForm
     RxDBGrid = RxDBGrid1
     Caption = 'Totals row'
     left = 591
+    top = 270
+  end
+  object RxDBGridExportPDF1: TRxDBGridExportPDF
+    RxDBGrid = RxDBGrid1
+    Caption = 'Export to PDF file'
+    ShowSetupForm = True
+    FileName = 'RxDBGridDemo.pdf'
+    Options = [repExportTitle, repExportColors, repExportFooter, repOverwriteExisting, repExportImages]
+    PdfOptions.PaperOrientation = ppoLandscape
+    PdfOptions.Options = []
+    OpenAfterExport = True
+    AuthorPdf = 'Lagunov A.A.'
+    ProducerPdf = 'RxDBGrid demo program'
+    left = 640
     top = 270
   end
 end

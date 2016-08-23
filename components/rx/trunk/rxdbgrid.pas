@@ -2901,8 +2901,6 @@ end;
 
 procedure TRxDBGrid.OutCaptionCellText(aCol, aRow: integer; const aRect: TRect;
   aState: TGridDrawState; const ACaption: string);
-//var
-//  T1, T2: TTextStyle;
 begin
   if (TitleStyle = tsNative) then
     DrawThemedCell(aCol, aRow, aRect, aState)
@@ -2914,12 +2912,6 @@ begin
 
   if ACaption <> '' then
   begin
-{    T1:=Canvas.TextStyle;
-    T2:=T1;
-    T1.Wordbreak:=true;
-    Canvas.TextStyle:=T1;
-    DrawCellText(aCol, aRow, aRect, aState, ACaption);
-    Canvas.TextStyle:=T2;     }
     if not (rdgDisableWordWrapTitles in OptionsRx) then
       WriteTextHeader(Canvas, aRect, ACaption, GetColumnAlignment(aCol, True))
     else

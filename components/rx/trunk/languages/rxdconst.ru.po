@@ -1,5 +1,15 @@
 msgid ""
-msgstr "Content-Type: text/plain; charset=UTF-8"
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
+"X-Generator: Poedit 1.8.8\n"
 
 #: rxdconst.sapptitlelabel
 msgid "Application \"%s\""
@@ -36,6 +46,18 @@ msgstr "Перекрёстная ссылка данных"
 #: rxdconst.scollumnname
 msgid "Column name"
 msgstr "Имя столбца"
+
+#: rxdconst.scompressfonts
+msgid "Compress fonts"
+msgstr "Сжимать шрифты"
+
+#: rxdconst.scompressimages
+msgid "Compress images"
+msgstr "Сжимать изображения"
+
+#: rxdconst.scompresstext
+msgid "Compress text"
+msgstr "Сжимать текст"
 
 #: rxdconst.sconfirmpasswordlabel
 msgid "&Confirm:"
@@ -92,6 +114,10 @@ msgstr "Имя файла экспорта"
 #: rxdconst.sexportformula
 msgid "Export footer formula"
 msgstr "Экспортирововать формулы итоговой строки"
+
+#: rxdconst.sexportimages
+msgid "Export images"
+msgstr "Экспорт изображений"
 
 #: rxdconst.sexportparams
 msgid "Export params"
@@ -197,6 +223,10 @@ msgstr "Текст"
 msgid "Sum"
 msgstr "Сумма"
 
+#: rxdconst.sglobal
+msgid "Global"
+msgstr "Общее"
+
 #: rxdconst.shidezerovalues
 msgid "Hide zero values"
 msgstr "Не отображать нулевые значения"
@@ -281,6 +311,10 @@ msgstr "Ориентация"
 msgid "Other options"
 msgstr "Прочие параметры"
 
+#: rxdconst.soutline
+msgid "Out line"
+msgstr "Контуры"
+
 #: rxdconst.soverwriteexisting
 msgid "Overwrite existing"
 msgstr "Перезаписать существующее"
@@ -295,7 +329,7 @@ msgstr "Имя страницы"
 
 #: rxdconst.spapertype
 msgid "Paper type"
-msgstr ""
+msgstr "Тип бумаги"
 
 #: rxdconst.spasswordchanged
 msgid "Password changed"
@@ -312,6 +346,10 @@ msgstr "Пароль не изменён"
 #: rxdconst.spasswordsmismatch
 msgid "New password and confirmation not equal"
 msgstr "Новый пароль и подтверждение не совпадают"
+
+#: rxdconst.spdfoptions
+msgid "PDF options"
+msgstr "Параметры PDF"
 
 #: rxdconst.sportrait
 msgid "Portrait"
@@ -607,9 +645,13 @@ msgstr "Отображать заголовок отчёта"
 msgid "Show column title"
 msgstr "Отображать заголовки столбцов"
 
+#: rxdconst.stitlecolor
+msgid "Title color"
+msgstr "Цвет заголовков"
+
 #: rxdconst.stoolsexportpdf
 msgid "Export to PDF file"
-msgstr ""
+msgstr "Экспорт в PDF файл"
 
 #: rxdconst.stoolsexportspeadsheet
 msgid "Export to speadsheet"
@@ -635,7 +677,10 @@ msgstr "Разблокировать"
 msgid "Enter your password"
 msgstr "Введите ваш пароль"
 
+#: rxdconst.suserawjpeg
+msgid "Use raw JPEG"
+msgstr "Использовать сырой JPEG"
+
 #: rxdconst.susernamelabel
 msgid "&User name:"
 msgstr "&Имя пользователя"
-
