@@ -136,6 +136,7 @@ begin
     // Show debug tokens
     TokensTreeView.Items.Clear;
     FVec.GenerateDebugTree(@FPVDebugAddItemProc);
+    memoDebug.Lines.AddStrings(lPage.RenderInfo.Errors);
   finally
     Render_FreeFile();
   end;
@@ -556,9 +557,12 @@ begin
 
   // checkbox options
   {$ifdef Windows}
-  gSVGVecReader_RSVG_Path := ExtractFilePath(paramstr(0))+'rsvg\rsvg-convert.exe';
+  FVec.ReaderSettings.HelperToolPath := ExtractFilePath(paramstr(0))+'rsvg\rsvg-convert.exe';
   {$endif}
-  gSVGVecReader_UseTopLeftCoords := not checkboxForceBottomLeftOrigin.Checked;
+  if checkboxForceBottomLeftOrigin.Checked then
+    FVec.ReaderSettings.VecReaderFlags := []
+  else
+    FVec.ReaderSettings.VecReaderFlags := [vrfSVG_UseTopLeftCoords];
   if checkboxSVGviaRSVG.Checked then
     RegisterVectorialReader(TvSVGVectorialReader_RSVG, vfSVG)
   else

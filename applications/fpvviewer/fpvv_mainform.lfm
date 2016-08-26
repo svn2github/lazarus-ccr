@@ -327,8 +327,6 @@ object frmFPVViewer: TfrmFPVViewer
       Top = 168
       Width = 147
       Caption = 'SVG Rendering via RSVG'
-      Checked = True
-      State = cbChecked
       TabOrder = 17
     end
   end
