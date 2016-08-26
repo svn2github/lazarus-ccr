@@ -67,7 +67,11 @@ type
   TGetCellPropsEvent = procedure(Sender: TObject; Field: TField;
     AFont: TFont; var Background: TColor) of object;
 
-//Freeman35 added
+  TRxDBGridDataHintShowEvent = procedure(Sender: TObject; CursorPos: TPoint;
+      Cell: TGridCoord; Column: TRxColumn; var HintStr: string;
+      var Processed: boolean) of object;
+
+  //Freeman35 added
   TOnRxCalcFooterValues = procedure(Sender: TObject; Column: TRxColumn; var AValue : Variant) of object;
   TOnRxColumnFooterDraw = procedure(Sender: TObject; ABrush: TBrush; AFont : TFont;
     const Rect: TRect; Column: TRxColumn; var AText :String) of object;
@@ -615,6 +619,7 @@ type
     FToolsList:TFPList;
 
     FOnSortChanged: TNotifyEvent;
+    FOnDataHintShow:TRxDBGridDataHintShowEvent;
 
     procedure DoCreateJMenu;
     function GetColumns: TRxDbGridColumns;
@@ -814,6 +819,7 @@ type
 
     property OnFiltred: TNotifyEvent read FOnFiltred write FOnFiltred;
     property OnSortChanged: TNotifyEvent read FOnSortChanged write FOnSortChanged;
+    property OnDataHintShow: TRxDBGridDataHintShowEvent read FOnDataHintShow write FOnDataHintShow;
 
     //from DBGrid
     property Align;
@@ -4658,7 +4664,7 @@ begin
 //  result := (ClientHeight - GCache.FixedHeight - DefaultRowHeight) div DefaultRowHeight;
 end;
 
-procedure TRxDBGrid.CMHintShow(var Message: TLMessage);
+{procedure TRxDBGrid.CMHintShow(var Message: TLMessage);
 var
   Cell: TGridCoord;
   tCol: TRxColumn;
@@ -4674,6 +4680,51 @@ begin
         if Assigned(tCol) and (TRxColumnTitle(tCol.Title).Hint <> '') and
           (TRxColumnTitle(tCol.Title).FShowHint) then
           HintStr := TRxColumnTitle(tCol.Title).Hint;
+      end;
+    end;
+  end;
+  inherited CMHintShow(Message);
+end;}
+
+procedure TRxDBGrid.CMHintShow(var Message: TLMessage);
+var
+  Cell: TGridCoord;
+  tCol: TRxColumn;
+  HintStr_: string;
+  Processed: boolean;
+  rec: integer;
+  CellRect_: TRect;
+begin
+  if Assigned(TCMHintShow(Message).HintInfo) then
+  begin
+    with TCMHintShow(Message).HintInfo^ do
+    begin
+      Cell := MouseCoord(CursorPos.X, CursorPos.Y);
+      tCol := TRxColumn(ColumnFromGridColumn(Cell.X));
+      if (Cell.Y = 0) and (Cell.X >= Ord(dgIndicator in Options)) then
+      begin
+        if Assigned(tCol) and (TRxColumnTitle(tCol.Title).Hint <> '') and
+          (TRxColumnTitle(tCol.Title).FShowHint) then
+          HintStr := TRxColumnTitle(tCol.Title).Hint;
+      end
+      else
+      begin
+        CellRect_ := CellRect(Cell.X, Cell.Y);
+        if (CellRect_.Bottom > CursorPos.Y) and (CellRect_.Right > CursorPos.X) then
+          if Assigned(FOnDataHintShow) then
+          begin
+            rec := DataLink.ActiveRecord;
+            try
+              DataLink.ActiveRecord := Cell.y - 1;
+              HintStr_ := tCol.Field.DisplayText;
+            finally
+              DataLink.ActiveRecord := rec;
+            end;
+            Processed := False;
+            FOnDataHintShow(Self, CursorPos, Cell, tCol, HintStr_, Processed);
+            if Processed then
+              HintStr := HintStr_;
+          end;
       end;
     end;
   end;

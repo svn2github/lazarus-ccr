@@ -1,20 +1,23 @@
 object Form1: TForm1
-  Left = 609
+  Left = 381
   Height = 527
-  Top = 272
+  Top = 195
   Width = 746
   Caption = 'Form1'
   ClientHeight = 527
   ClientWidth = 746
   OnCreate = FormCreate
+  Position = poScreenCenter
+  ShowHint = True
   LCLVersion = '1.7'
   object RxDBGrid1: TRxDBGrid
     Left = 0
-    Height = 457
-    Top = 70
+    Height = 463
+    Hint = 'Список данных'
+    Top = 64
     Width = 746
     ColumnDefValues.BlobText = '(blob)'
-    TitleButtons = False
+    TitleButtons = True
     AutoSort = True
     Columns = <    
       item
@@ -150,9 +153,11 @@ object Form1: TForm1
     FooterOptions.Active = True
     FooterOptions.Color = clYellow
     FooterOptions.RowCount = 3
+    FooterOptions.DrawFullLine = False
     OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgFooterRows, rdgAllowToolMenu]
     FooterColor = clYellow
     FooterRowCount = 3
+    OnDataHintShow = RxDBGrid1DataHintShow
     Align = alClient
     Color = clWindow
     DrawFullLine = False
@@ -160,28 +165,28 @@ object Form1: TForm1
     SelectedColor = clHighlight
     GridLineStyle = psSolid
     DataSource = DataSource1
-    Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
+    Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgHeaderPushedLook]
     ParentColor = False
     TabOrder = 0
     TitleStyle = tsNative
   end
   object Panel1: TPanel
     Left = 0
-    Height = 70
+    Height = 64
     Top = 0
     Width = 746
     Align = alTop
     AutoSize = True
-    ClientHeight = 70
+    ClientHeight = 64
     ClientWidth = 746
     TabOrder = 1
     object Label1: TLabel
       AnchorSideLeft.Control = Panel1
       AnchorSideTop.Control = Panel1
       Left = 7
-      Height = 20
+      Height = 17
       Top = 7
-      Width = 146
+      Width = 132
       BorderSpacing.Around = 6
       Caption = 'SpeadSheet file name '
       ParentColor = False
@@ -191,8 +196,9 @@ object Form1: TForm1
       AnchorSideTop.Control = Label1
       AnchorSideTop.Side = asrBottom
       Left = 13
-      Height = 30
-      Top = 33
+      Height = 27
+      Hint = 'Укажите имя файла'
+      Top = 30
       Width = 275
       FilterIndex = 0
       HideDirectories = False
@@ -209,7 +215,8 @@ object Form1: TForm1
       AnchorSideTop.Side = asrCenter
       Left = 294
       Height = 33
-      Top = 32
+      Hint = 'Начать выгрузку'
+      Top = 27
       Width = 87
       Caption = 'Export data'
       OnClick = Button1Click

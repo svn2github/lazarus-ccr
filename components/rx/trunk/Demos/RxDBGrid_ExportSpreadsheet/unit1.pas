@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, rxdbgrid, rxmemds, RxDBGridExportSpreadSheet,
-  Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, EditBtn, db;
+  Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, EditBtn, db, Types, Grids;
 
 type
 
@@ -26,6 +26,9 @@ type
     RxMemoryData1PRICE: TCurrencyField;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure RxDBGrid1DataHintShow(Sender: TObject; CursorPos: TPoint;
+      Cell: TGridCoord; Column: TRxColumn; var HintStr: string;
+      var Processed: boolean);
     procedure RxDBGridExportSpreadSheet1BeforeExecute(Sender: TObject);
   private
     { private declarations }
@@ -50,7 +53,7 @@ var
 begin
   RxMemoryData1.Open;
   //fill test values
-  for i:=1 to 20 do
+  for i:=1 to 50 do
   begin
     RxMemoryData1.Append;
     RxMemoryData1CODE.AsInteger:=i;
@@ -58,9 +61,17 @@ begin
     RxMemoryData1PRICE.AsFloat:=Random * 100 + 5;
     RxMemoryData1.Post;
   end;
-  RxMemoryData1.Open;
+  RxMemoryData1.First;
 
   FileNameEdit1.Text:='test1.ods';
+end;
+
+procedure TForm1.RxDBGrid1DataHintShow(Sender: TObject; CursorPos: TPoint;
+  Cell: TGridCoord; Column: TRxColumn; var HintStr: string;
+  var Processed: boolean);
+begin
+  HintStr:='Это очень чётная строка! ' + HintStr;
+  Processed:=true;
 end;
 
 procedure TForm1.RxDBGridExportSpreadSheet1BeforeExecute(Sender: TObject);
