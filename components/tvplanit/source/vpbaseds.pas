@@ -124,17 +124,25 @@ type
   { Is created by the control where dragging starts.  The Event property  }
   { holds a reference to the event being dragged, and the Sender contains }
   { a reference to the control where dragging started.                    }
-  TVpEventDragObject = class(TDragObject)
+  TVpEventDragObject = class({$IFDEF LCL}TDragObjectEx{$ELSE}TDragObject{$ENDIF})
   protected {private}
     FEvent: TVpEvent;
     FSender: TObject;
+   {$IFDEF LCL}
+    FDragTitle: string;
+    FDragImages: TDragImageList;
+    function GetDragImages: TDragImageList; override;
+   {$ENDIF}
   public
-    property Event: TVpEvent
-      read FEvent write FEvent;
-    property Sender: TObject
-      read FSender write FSender;
+   {$IFDEF LCL}
+    constructor CreateWithDragImages(AControl: TControl; AHotspot: TPoint;
+      ACellRect: TRect; const ADragTitle: string; const ATransparent: boolean);
+    destructor Destroy; override;
+    property DragTitle: string read FDragTitle;
+   {$ENDIF}
+    property Event: TVpEvent read FEvent write FEvent;
+    property Sender: TObject read FSender write FSender;
   end;
-
 
   TVpResourceCombo = class(TCustomComboBox)
     protected {private}
@@ -164,13 +172,12 @@ type
      {$ENDIF}
 
     published
-      property DataStore : TVpCustomDataStore
-               read FDataStore write SetDataStore;
-      property ResourceUpdateStyle : TVpResourceUpdate                   
-               read FResourceUpdateStyle write SetResourceUpdateStyle    
-               default ruOnChange;                                       
-      property Version : string
-        read   GetAbout write SetAbout stored False;
+      property DataStore: TVpCustomDataStore
+        read FDataStore write SetDataStore;
+      property ResourceUpdateStyle: TVpResourceUpdate
+        read FResourceUpdateStyle write SetResourceUpdateStyle default ruOnChange;
+      property Version: string
+        read GetAbout write SetAbout stored False;
 
       property Align;
       property Anchors;
@@ -909,7 +916,65 @@ end;
 {=====}
 
 
+{ TVpEventDragObject }
+
+function TVpEventDragObject.GetDragImages: TDragImageList;
+begin
+  Result := FDragImages;
+end;
+
+constructor TVpEventDragObject.CreateWithDragImages(AControl: TControl;
+  AHotspot: TPoint; ACellRect: TRect; const ADragTitle: string;
+  const ATransparent: boolean);
+const
+  OffsX = 0;
+  OffsY = 0;
+var
+  bmp: TBitmap;
+  bmpIdx: Integer;
+  R: TRect;
+begin
+  Create(AControl);
+  FDragTitle := ADragTitle;
+  bmp := TBitmap.Create;
+  try
+//    bmp.Canvas.Font.Name := 'Arial';
+    bmp.Canvas.Font.Style := Bmp.Canvas.Font.Style + [fsItalic];
+    bmp.Height := ACellRect.Bottom - ACellRect.Top;
+    bmp.Width := ACellRect.Right - ACellRect.Left;
+    R := bmp.Canvas.ClipRect;
+    if ATransparent
+      then bmp.Canvas.Brush.Color := clOlive
+      else bmp.Canvas.Brush.Color := clSilver;
+    bmp.Canvas.FillRect(R);
+    bmp.Canvas.TextOut(OffsX, OffsY, FDragTitle);
+
+    // if a real picture is needed ...
+    //if AControl is TWinControl then
+    //    (AControl as TWinControl).PaintTo(Bmp.Canvas, 0, 0);
+
+    FDragImages := TDragImageList.Create(AControl);
+    AlwaysShowDragImages := True;
+    FDragImages.Width := bmp.Width;
+    FDragImages.Height := bmp.Height;
+    if ATransparent
+      then bmpIdx := FDragImages.AddMasked(bmp, clOlive)
+      else bmpIdx := FDragImages.Add(bmp, nil);
+    FDragImages.SetDragImage(bmpIdx, AHotspot.X, AHotspot.Y);
+  finally
+    Bmp.Free;
+  end;
+end;
+
+destructor TVpEventDragObject.Destroy;
+begin
+  if (Assigned(FDragImages)) then FDragImages.Free;
+  inherited Destroy;
+end;
+
+
 { TVpResourceCombo }
+
 constructor TVpResourceCombo.Create(AOwner: TComponent);
 var
   I: Integer;
@@ -934,7 +999,6 @@ begin
       else
         Inc(I);
 end;
-{=====}
 
 destructor TVpResourceCombo.Destroy;
 begin

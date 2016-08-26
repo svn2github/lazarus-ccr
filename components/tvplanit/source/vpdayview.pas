@@ -53,13 +53,6 @@
 
 {.$DEFINE DEBUGDV} { Causes the DayView to operate in debug mode }
 
-{ Include drag-and-drop, not working with Lazarus }
-{$IFDEF DELPHI}
- {$DEFINE DRAGDROP}
-{$ELSE}
- {$UNDEF DRAGDROP}
-{$ENDIF}
-
 unit VpDayView;
 
 interface
@@ -259,6 +252,8 @@ type
     FDotDotDotColor: TColor;
     FShowEventTimes: Boolean;
     FAllowInplaceEdit: Boolean;
+    FDragDropTransparent: Boolean;
+    FAllowDragAndDrop: Boolean;
     { event variables }
     FOwnerDrawRowHead: TVpOwnerDrawRowEvent;
     FOwnerDrawCells: TVpOwnerDrawRowEvent;
@@ -283,10 +278,8 @@ type
     dvMouseDownPoint: TPoint;
     dvMouseDown: Boolean;
     dvEndingEditing: Boolean;
-   {$IFDEF DRAGDROP}
     dvDragging: Boolean;
     dvDragStartTime: TDateTime;
-   {$ENDIF}
 
     { Nav Buttons }
     dvDayUpBtn: TSpeedButton;
@@ -332,12 +325,10 @@ type
     procedure SetDotDotDotColor(const v: TColor);
     procedure SetShowEventTimes(Value: Boolean);
     { drag-drop methods }
-   {$IFDEF DRAGDROP}
     procedure DoStartDrag(var DragObject: TDragObject); override;
     procedure DoEndDrag(Target: TObject; X, Y: Integer); override;
     procedure DragOver(Source: TObject; X, Y: Integer; State: TDragState;
       var Accept: Boolean); override;
-   {$ENDIF}
     { internal methods }
     function dvCalcRowHeight(Scale: Extended; UseGran: TVpGranularity): Integer;
     function dvCalcVisibleLines(RenderHeight, ColHeadHeight, RowHeight: Integer;
@@ -406,9 +397,7 @@ type
     procedure LoadLanguage;
 
     procedure DeleteActiveEvent(Verify: Boolean);
-   {$IFDEF DRAGDROP}
     procedure DragDrop(Source: TObject; X, Y: Integer); override;
-   {$ENDIF}
 //    function HourToLine(const Value: TVpHours; const UseGran: TVpGranularity): Integer;
     procedure Invalidate; override;
     procedure LinkHandler(Sender: TComponent; NotificationType: TVpNotificationType;
@@ -444,9 +433,11 @@ type
     property TabOrder;
     property Font;
     property AllDayEventAttributes: TVpAllDayEventAttributes read FAllDayEventAttr write FAllDayEventAttr;
+    property AllowDragAndDrop: Boolean read FAllowDragAndDrop write FAllowDragAndDrop default false;
     property AllowInplaceEditing: Boolean read FAllowInplaceEdit write FAllowInplaceEdit default true;
     property DotDotDotColor: TColor read FDotDotDotColor write SetDotDotDotColor default clBlack;
     property ShowEventTimes: Boolean read FShowEventTimes write SetShowEventTimes default true;
+    property DragDropTransparent: Boolean read FDragDropTransparent write FDragDropTransparent default false;
     property DrawingStyle: TVpDrawingStyle read FDrawingStyle write SetDrawingStyle stored True;
     property TimeSlotColors: TVpTimeSlotColor read FTimeSlotColors write FTimeSlotColors;
     property HeadAttributes: TVpCHAttributes read FHeadAttr write FHeadAttr;
@@ -772,10 +763,9 @@ begin
 
   SetLength(dvEventArray, MaxVisibleEvents);
 
- {$IFDEF DRAGDROP}
   DragMode := dmManual;
   dvDragging := false;
- {$ENDIF}
+
   dvMouseDownPoint := Point(0, 0);
   dvMouseDown := false;
 
@@ -1257,36 +1247,59 @@ begin
 end;
 {=====}
 
-{$IFDEF DRAGDROP}
 procedure TVpDayView.DoStartDrag(var DragObject: TDragObject);
-begin //exit;
+{$IFDEF LCL}
+var
+  P, HotSpot: TPoint;
+  EventName: string;
+{$ENDIF}
+begin
   DvDragStartTime := 0.0;
-  if ReadOnly then
+  if ReadOnly or not FAllowDragAndDrop then
     Exit;
   if FActiveEvent <> nil then begin
     // Set the time from which this event was dragged
+
     DvDragStartTime := trunc(Date + ActiveCol) + dvLineMatrix[ActiveCol, ActiveRow].Time;
 
-    DragObject := TVpEventDragObject.Create(Self);
+   {$IFDEF LCL}
+    EventName := FActiveEvent.Description;
+    GetCursorPos(P);
+    P := TVpDayView(Self).ScreenToClient(P);
+    HotSpot := Point(P.X - Self.dvActiveEventRec.Left, P.Y - Self.dvActiveEventRec.Top);
+
+    DragObject := TVpEventDragObject.CreateWithDragImages(Self as TControl,
+      HotSpot, Self.dvActiveEventRec, EventName, FDragDropTransparent);
+   {$ELSE}
+    DragObject := DragObject := TVpEventDragObject.Create(Self);
+   {$ENDIF}
+
     TVpEventDragObject(DragObject).Event := FActiveEvent;
   end
   else
+   {$IFDEF LCL}
+    CancelDrag;
+   {$ELSE}
     DragObject.Free;//EndDrag(false);
+   {$ENDIF}
 end;
 {=====}
 
 procedure TVpDayView.DoEndDrag(Target: TObject; X, Y: Integer);
-begin //exit;
-  if ReadOnly then
+begin
+  if ReadOnly or (not FAllowDragAndDrop) then
     Exit;
+ {$IFNDEF LCL}
   TVpEventDragObject(Target).Free;
+ {$ENDIF}
+ // not needed for LCL: we use DragObjectEx !!
 end;
 {=====}
 
 procedure TVpDayView.DragOver(Source: TObject; X, Y: Integer; State: TDragState;
   var Accept: Boolean);
-begin //exit;
-  if ReadOnly then begin
+begin
+  if ReadOnly or (not FAllowDragAndDrop) then begin
     Accept := False;
     Exit;
   end;
@@ -1306,29 +1319,27 @@ var
   Duration: TDateTime;
   DragToTime: TDateTime;
   i: Integer;
-begin //exit;
-  if ReadOnly then
+begin
+  if ReadOnly or (not FAllowDragAndDrop) then
     Exit;
-  Event := TVpEventDragObject(Source).Event;
 
+  Event := TVpEventDragObject(Source).Event;
   if Event <> nil then begin
     Duration := Event.EndTime - Event.StartTime;
     DragToTime := trunc(Date + ActiveCol)
       + dvLineMatrix[ActiveCol, ActiveRow].Time;
 
     if Ord(Event.RepeatCode) = 0 then
-      { if this is not a recurring event then just drop it here          }
+      { if this is not a recurring event then just drop it here }
       Event.StartTime := DragToTime
     else
-      { if this is a recurring event, then modify the event's start time }
-      { according to how far the event was dragged                       }
+      { if this is a recurring event, then modify the event's start time
+        according to how far the event was dragged }
       Event.StartTime := Event.StartTime + (DragToTime - DvDragStartTime);
-
     Event.EndTime := Event.StartTime + Duration;
-
     DataStore.PostEvents;
 
-    { Force a repaint.  This will update the rectangles for the event }
+    { Force a repaint. This will update the rectangles for the event }
     Repaint;
 
     { Reset the active event rectangle }
@@ -1343,12 +1354,11 @@ begin //exit;
       end;
     end;
 
-    { Invalidate;                                                      } 
+    { Invalidate; }
   end;
 //  TVpEventDragObject(Source).EndDrag(False);
 end;
 {=====}
-{$ENDIF}
 
 function TVpDayView.dvCalcRowHeight(Scale: Extended;
   UseGran: TVpGranularity): Integer;
@@ -1592,9 +1602,7 @@ begin
     begin
       dvMouseDownPoint := Point(0, 0);
       dvMouseDown := false;
-     {$IFDEF DRAGDROP}
       dvDragging := false;
-     {$ENDIF}
     end
   else
     begin
@@ -1605,15 +1613,13 @@ procedure TVpDayView.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
   inherited MouseMove(Shift, X, Y);
   if (FActiveEvent <> nil) and (not ReadOnly) then begin
-   {$IFDEF DRAGDROP}
-    if (not dvDragging) and dvMouseDown
-    and ((dvMouseDownPoint.x <> x) or (dvMouseDownPoint.y <> y))
+    if (not dvDragging) and dvMouseDown and
+       ((dvMouseDownPoint.x <> x) or (dvMouseDownPoint.y <> y))
     then begin
       dvDragging := true;
       dvClickTimer.Enabled := false;
       BeginDrag(true);
     end;
-   {$ENDIF}
   end;
 end;
 

@@ -633,6 +633,7 @@ begin
   canvas.Control := AButton;
   canvas.Font.Assign(AButton.Font);
   Result := canvas.TextWidth(AButton.Caption) + MARGIN * Screen.PixelsPerInch div DesignTimeDPI;
+  canvas.Free;
 end;
 
 function GetRealFontHeight(AFont: TFont): Integer;

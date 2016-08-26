@@ -188,9 +188,17 @@ msgstr "Turbo Power VisualPlanIt Demo"
 msgid "(default)"
 msgstr "(standaard)"
 
+#: tmainform.cballowdraganddrop.caption
+msgid "Allow drag and drop of events"
+msgstr ""
+
 #: tmainform.cballowinplaceediting.caption
 msgid "Allow inplace editing"
 msgstr "Direct bewerken toestaan"
+
+#: tmainform.cbdragdroptransparent.caption
+msgid "Transparent drag and drop"
+msgstr ""
 
 #: tmainform.cbgranularity.text
 msgid "30 Min"

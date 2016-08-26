@@ -194,9 +194,17 @@ msgstr "Turbo Power VisualPlanIt Demo"
 msgid "(default)"
 msgstr "(Standard)"
 
+#: tmainform.cballowdraganddrop.caption
+msgid "Allow drag and drop of events"
+msgstr "\"Ziehen und Fallenlassen\" (Drag&&Drop) von Ereignissen erlauben"
+
 #: tmainform.cballowinplaceediting.caption
 msgid "Allow inplace editing"
 msgstr "Editieren an Ort und Stelle erlauben"
+
+#: tmainform.cbdragdroptransparent.caption
+msgid "Transparent drag and drop"
+msgstr "\"Ziehen und Fallenlassen\" (Drag&&Drop)  mit transparentem Hintergrund"
 
 #: tmainform.cbgranularity.text
 msgid "30 Min"
@@ -290,4 +298,3 @@ msgstr "Fertiggestellte Aufgaben ausblenden"
 #: tmainform.titlelbl.caption
 msgid "TitleLbl"
 msgstr ""
-

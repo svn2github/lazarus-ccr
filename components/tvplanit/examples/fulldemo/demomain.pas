@@ -29,6 +29,8 @@ type
     CbAllowInplaceEditing: TCheckBox;
     CbAddressBuilder: TComboBox;
     CbDrawingStyle: TComboBox;
+    CbAllowDragAndDrop: TCheckBox;
+    CbDragDropTransparent: TCheckBox;
     Img: TImage;
     ImageList1: TImageList;
     LblDrawingStyle: TLabel;
@@ -90,7 +92,9 @@ type
     procedure BtnEditResClick(Sender: TObject);
     procedure Cb3DChange(Sender: TObject);
     procedure CbAddressBuilderChange(Sender: TObject);
+    procedure CbAllowDragAndDropChange(Sender: TObject);
     procedure CbAllowInplaceEditingChange(Sender: TObject);
+    procedure CbDragDropTransparentChange(Sender: TObject);
     procedure CbDrawingStyleChange(Sender: TObject);
     procedure CbFirstDayOfWeekChange(Sender: TObject);
     procedure CbGranularityChange(Sender: TObject);
@@ -306,6 +310,11 @@ begin
    VpControlLink1.CityStateZipFormat := CbAddressBuilder.Items[CbAddressBuilder.ItemIndex];
 end;
 
+procedure TMainForm.CbAllowDragAndDropChange(Sender: TObject);
+begin
+  VpDayView1.AllowDragAndDrop := CbAllowDragAndDrop.Checked;
+end;
+
 procedure TMainForm.CbAllowInplaceEditingChange(Sender: TObject);
 begin
   VpContactGrid1.AllowInplaceEditing := CbAllowInplaceEditing.Checked;
@@ -314,16 +323,21 @@ begin
   VpTaskList1.AllowInplaceEditing := CbAllowInplaceEditing.Checked;
 end;
 
+procedure TMainForm.CbDragDropTransparentChange(Sender: TObject);
+begin
+  VpDayView1.DragDropTransparent := CbDragDropTransparent.Checked;
+end;
+
 procedure TMainForm.CbDrawingStyleChange(Sender: TObject);
 var
   ds: TVpDrawingStyle;
 begin
- ds := TVpDrawingStyle(CbDrawingStyle.ItemIndex);
- VpTaskList1.DrawingStyle := ds;
- VpContactGrid1.DrawingStyle := ds;
- VpDayView1.DrawingStyle := ds;
- VpWeekView1.DrawingStyle := ds;
- VpMonthView1.DrawingStyle := ds;
+  ds := TVpDrawingStyle(CbDrawingStyle.ItemIndex);
+  VpTaskList1.DrawingStyle := ds;
+  VpContactGrid1.DrawingStyle := ds;
+  VpDayView1.DrawingStyle := ds;
+  VpWeekView1.DrawingStyle := ds;
+  VpMonthView1.DrawingStyle := ds;
 end;
 
 procedure TMainForm.CbFirstDayOfWeekChange(Sender: TObject);
@@ -577,15 +591,17 @@ begin
   CbTimeFormat.Left := CbLanguages.Left;
   CbFirstDayOfWeek.Left := CbLanguages.Left;
   CbAddressBuilder.Left := CbLanguages.Left;
+  CbDrawingStyle.Left := CbLanguages.Left;;
   LblLanguage.Left :=  CbLanguages.Left - 8 - GetLabelWidth(LblLanguage);
   LblTimeFormat.Left := CbTimeFormat.Left - 8 - GetLabelWidth(LblTimeFormat);
   LblFirstDayOfWeek.Left := CbFirstDayOfWeek.Left - 8 - GetLabelWidth(LblFirstDayOfWeek);
   LblAddressBuilder.Left := CbAddressBuilder.Left - 8 - GetLabelWidth(LblAddressBuilder);
+  LblDrawingStyle.Left := CbDrawingStyle.Left - 8 - GetlabelWidth(LblDrawingStyle);
 
   CbAllowInplaceEditing.Left := CbLanguages.Left + CbLanguages.Width + 32;
+  CbAllowDragAndDrop.Left := CbAllowInplaceEditing.Left;
+  CbDragDropTransparent.Left := CbAllowInplaceEditing.Left;
   w := GetLabelWidth(LblDrawingStyle);
-  lblDrawingStyle.Left := CbAllowInplaceEditing.Left;
-  CbDrawingStyle.Left := LblDrawingStyle.Left + w + 8;
 
   // Planner pages
   DaysTrackbar.Left := GetLabelWidth(LblVisibleDays) + LblVisibleDays.Left + 8;
@@ -666,11 +682,21 @@ begin
       CbAddressBuilder.ItemIndex := 0 else
       CbAddressBuilder.ItemIndex := CbAddressBuilder.Items.Indexof(VpControlLink1.CityStateZipFormat);
 
-    CbAllowInplaceEditing.Checked := ini.ReadBool('Settings', 'AllowInplaceEditing', CbAllowInplaceEditing.Checked);
+    CbDrawingStyle.ItemIndex := ini.ReadInteger('Settings', 'DrawingStyle',
+      ord(dsFlat));
+    CbDrawingStyleChange(nil);
+
+    CbAllowInplaceEditing.Checked := ini.ReadBool('Settings', 'AllowInplaceEditing',
+      CbAllowInplaceEditing.Checked);
     CbAllowInplaceEditingChange(nil);
 
-    CbDrawingStyle.ItemIndex := ini.ReadInteger('Settings', 'DrawingStyle', ord(dsFlat));
-    CbDrawingStyleChange(nil);
+    CbAllowDragAndDrop.Checked := ini.ReadBool('Settings', 'AllowDragAndDrop',
+      CbAllowDragAndDrop.Checked);
+    CbAllowDragAndDropChange(nil);
+
+    CbDragDropTransparent.Checked := ini.ReadBool('Settings', 'DragAndDropTransparent',
+      CbDragDropTransparent.Checked);
+    CbDragDropTransparentChange(nil);
 
   finally
     ini.Free;
@@ -700,10 +726,12 @@ begin
     ini.WriteInteger('Settings', 'Granularity', ord(VpDayView1.Granularity));
     ini.WriteInteger('Settings', 'FirstDayOfWeek', ord(VpWeekView1.WeekStartsOn));
     ini.WriteString('Settings', 'CityStateZip', VpControlLink1.CityStateZipFormat);
+    ini.WriteInteger('Settings', 'DrawingStyle', CbDrawingStyle.ItemIndex);
     ini.WriteInteger('Settings', 'VisibleDays', FVisibleDays);
     ini.WriteBool('Settings', 'AllTasks', VpTaskList1.DisplayOptions.ShowAll);
     ini.WriteBool('Settings', 'AllowInplaceEditing', CbAllowInplaceEditing.Checked);
-    ini.WriteInteger('Settings', 'DrawingStyle', CbDrawingStyle.ItemIndex);
+    ini.WriteBool('Settings', 'AllowDragAndDrop', CbAllowDragAndDrop.Checked);
+    ini.WriteBool('Settings', 'DragAndDropTransparent', CbDragDropTransparent.Checked);
   finally
     ini.Free;
   end;
