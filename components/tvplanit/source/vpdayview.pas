@@ -1688,6 +1688,10 @@ var
 begin
   inherited;
   dvClickTimer.Enabled := false;
+  dvMouseDownPoint := Point(0, 0);
+  dvMouseDown := false;
+  dvDragging := false;
+
   { if the mouse was pressed down in the client area, then select the cell. }
   if not focused then SetFocus;
 
