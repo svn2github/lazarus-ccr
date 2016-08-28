@@ -1381,7 +1381,7 @@ var
   lineRect: TRect;
   lineIndex: Integer;
   maxIndex: Integer;
-  hour: Integer;
+  hour, prevHour: Integer;
   hourStr, minuteStr, timeStr: String;
   isFullHour: boolean;
 begin
@@ -1392,6 +1392,7 @@ begin
 
   y := LineRect.Top;
   I := 0;
+  prevHour := 0;
   while true do begin
     lineIndex := StartLine + I;
     if lineIndex > maxIndex then
@@ -1400,10 +1401,13 @@ begin
     isFullHour := TVpDayViewOpener(FDayView).dvLineMatrix[0, LineIndex].Minute = 0;
     if isFullHour then begin
       hour := Ord(TVpDayViewOpener(FDayView).dvLineMatrix[0, LineIndex].Hour);
+      if (hour < prevHour) then
+        break;
       if (hour = 0) and (I > 0) then
         break;
       if (StopLine > -1) and (lineIndex >= StopLine) then
         break;
+      prevHour := hour;
 
       case FDayView.TimeFormat of
         tf24Hour: minuteStr := '00';
