@@ -9,7 +9,8 @@ uses
   clocale,
  {$ENDIF}
   Classes, SysUtils, FileUtil, PrintersDlgs, Forms, Controls, Graphics, Dialogs,
-  ExtCtrls, StdCtrls, ComCtrls, LCLTranslator, Menus, VpBaseDS, VpDayView,
+  ExtCtrls, StdCtrls, ComCtrls, LCLTranslator, Menus, LCLVersion,
+ VpBaseDS, VpDayView,
   VpWeekView, VpTaskList, VpAbout, VpContactGrid, VpMonthView, VpResEditDlg,
   VpContactButtons, VpBufDS, VpNavBar, VpData, VpPrtPrvDlg, VpPrtFmtDlg, Types,
   VpBase, VpCalendar;
@@ -149,15 +150,6 @@ implementation
 
 {$R *.lfm}
 
-uses
- {$IFDEF WINDOWS}
-  Windows,
- {$ENDIF}
-  LCLVersion, LResources, LazFileUtils, LazUTF8, StrUtils, DateUtils, Translations,
-  IniFiles, Math, Printers,
-  VpMisc, VpPrtFmt,
-  sound, ExVpRptSetup;
-
 {$UNDEF UTF8_CALLS}
 {$IFDEF LCL}
   {$DEFINE UTF8_CALLS}
@@ -165,6 +157,19 @@ uses
      {$UNDEF UTF8_CALLS}
   {$ENDIF}
 {$ENDIF}
+
+
+uses
+ {$IFDEF WINDOWS}
+  Windows,
+ {$ENDIF}
+  LResources, LazFileUtils, LazUTF8, StrUtils, DateUtils, Translations,
+ {$IFNDEF UTF8_CALLS}
+  lConvEncoding,
+ {$ENDIF}
+  IniFiles, Math, Printers,
+  VpMisc, VpPrtFmt,
+  sound, ExVpRptSetup;
 
 const
   LANGUAGE_DIR = '..\..\languages\';
@@ -235,12 +240,27 @@ begin
    else  raise Exception.CreateFmt('Language "%s" not supported. Please add to GetLCIDFromLangCode.',[ALang]);
  end;
 end;
+
+function GetLocaleStr(LCID, LT: Longint; const Def: string): ShortString;
+// borrowed from SysUtils
+var
+  L: Integer;
+  Buf: array[0..255] of Char;
+begin
+  L := GetLocaleInfo(LCID, LT, Buf, SizeOf(Buf));
+  if L > 0 then
+    SetString(Result, @Buf[0], L - 1)
+  else
+    Result := Def;
+end;
 {$ENDIF}
 
 procedure UpdateFormatSettings(ALang: String);
 {$IFDEF WINDOWS}
 var
   LCID: Integer;
+  i: Integer;
+  codepage: String;
 {$ENDIF}
 begin
  {$IFDEF WINDOWS}
@@ -252,6 +272,17 @@ begin
   GetLocaleFormatSettingsUTF8(LCID, DefaultFormatSettings);
   {$ELSE}
   GetLocaleFormatSettings(LCID, DefaultFormatSettings);
+  codepage := 'cp' + GetLocaleStr(LCID, LOCALE_IDEFAULTANSICODEPAGE, '');
+  with DefaultFormatSettings do begin
+    for i:=1 to 12 do begin
+      LongMonthNames[i] := ConvertEncoding(LongMonthNames[i], codepage, 'utf8');
+      ShortMonthNames[i] := ConvertEncoding(ShortMonthNames[i], codepage, 'utf8');
+    end;
+    for i:=1 to 7 do begin
+      LongDayNames[i] := ConvertEncoding(LongDayNames[i], codepage, 'utf8');
+      ShortDayNames[i] := ConvertEncoding(ShortDayNames[i], codepage, 'utf8');
+    end;
+  end;
   {$ENDIF}
  {$ENDIF}
 end;
