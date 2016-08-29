@@ -560,9 +560,9 @@ begin
   FVec.ReaderSettings.HelperToolPath := ExtractFilePath(paramstr(0))+'rsvg\rsvg-convert.exe';
   {$endif}
   if checkboxForceBottomLeftOrigin.Checked then
-    FVec.ReaderSettings.VecReaderFlags := []
+    FVec.ReaderSettings.VecReaderFlags := [vrfSVG_UseBottomLeftCoords]
   else
-    FVec.ReaderSettings.VecReaderFlags := [vrfSVG_UseTopLeftCoords];
+    FVec.ReaderSettings.VecReaderFlags := [];
   if checkboxSVGviaRSVG.Checked then
     RegisterVectorialReader(TvSVGVectorialReader_RSVG, vfSVG)
   else
