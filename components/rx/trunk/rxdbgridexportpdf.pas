@@ -1,7 +1,7 @@
 { RxDBGridExportPdf unit
 
-  Copyright (C) 2005-2016 Lagunov Aleksey alexs@yandex.ru
-  original conception from rx library for Delphi (c)
+Copyright (C) 2005-2016 Lagunov Aleksey alexs75@yandex.ru and Lazarus team
+original conception from rx library for Delphi (c)
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -1007,6 +1007,7 @@ begin
   //tested on Fedora 24
   FontDirList.Add('/usr/share/cups/fonts/');
   FontDirList.Add('/usr/share/fonts/');
+  FontDirList.Add('/usr/share/wine/fonts/');
   FontDirList.Add('/usr/local/lib/X11/fonts/');
   FontDirList.Add(GetUserDir + '.fonts/');
  {$ENDIF}

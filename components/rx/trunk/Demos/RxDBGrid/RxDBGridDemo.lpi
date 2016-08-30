@@ -61,7 +61,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="47" Y="18"/>
-        <UsageCount Value="112"/>
+        <UsageCount Value="113"/>
       </Unit0>
       <Unit1>
         <Filename Value="rxdbgridmainunit.pas"/>
@@ -71,7 +71,7 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="RxDBGridMainUnit"/>
         <CursorPos X="134" Y="14"/>
-        <UsageCount Value="112"/>
+        <UsageCount Value="113"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -180,11 +180,10 @@
       </Unit17>
       <Unit18>
         <Filename Value="../../rxdconst.pas"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="159"/>
         <CursorPos X="3" Y="177"/>
         <UsageCount Value="12"/>
-        <Loaded Value="True"/>
       </Unit18>
       <Unit19>
         <Filename Value="../../../lcl/include/winapih.inc"/>
@@ -948,8 +947,8 @@
         <UnitName Value="RxDBGridExportPdf"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="483"/>
-        <CursorPos Y="503"/>
+        <TopLine Value="470"/>
+        <CursorPos X="29" Y="470"/>
         <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit135>
@@ -973,7 +972,7 @@
         <UsageCount Value="10"/>
       </Unit137>
     </Units>
-    <JumpHistory Count="12" HistoryIndex="11">
+    <JumpHistory Count="11" HistoryIndex="10">
       <Position1>
         <Filename Value="rxdbgridmainunit.pas"/>
         <Caret Line="150" TopLine="127"/>
@@ -1015,13 +1014,9 @@
         <Caret Line="129" Column="3" TopLine="177"/>
       </Position10>
       <Position11>
-        <Filename Value="../../rxdconst.pas"/>
-        <Caret Line="199" Column="40" TopLine="170"/>
-      </Position11>
-      <Position12>
         <Filename Value="../../rxdbgridexportpdf.pas"/>
         <Caret Line="1113" Column="3" TopLine="1098"/>
-      </Position12>
+      </Position11>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>
