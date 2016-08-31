@@ -35,6 +35,7 @@ unit RxDBGridExportPdfSetupUnit;
 
 interface
 
+{$IF (FPC_FULLVERSION >= 30101)}
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   EditBtn, ButtonPanel, ExtCtrls, ComCtrls, ColorBox, fpPDF;
@@ -93,7 +94,9 @@ const
      'B5'            // ptB5
    );
 
+  {$ENDIF}
 implementation
+{$IF (FPC_FULLVERSION >= 30101)}
 uses rxdconst;
 
 {$R *.lfm}
@@ -133,5 +136,6 @@ begin
     ComboBox1.Items.Add(pdfPaperNames[C]);
 end;
 
+{$ENDIF}
 end.
 
