@@ -16,6 +16,12 @@
           <UseAnsiStrings Value="False"/>
         </SyntaxOptions>
       </Parsing>
+      <Other>
+        <CustomOptions Value="-dWITHRTTI"/>
+        <OtherDefines Count="1">
+          <Define0 Value="WITHRTTI"/>
+        </OtherDefines>
+      </Other>
     </CompilerOptions>
     <Description Value="Lazarus Port of Turbo Power's VisualPlanIt components based on version 1.0.3."/>
     <License Value="The contents of these files are subject to the Mozilla Public License  Version 1.1 (the &quot;License&quot;); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.mozilla.org/MPL/.
