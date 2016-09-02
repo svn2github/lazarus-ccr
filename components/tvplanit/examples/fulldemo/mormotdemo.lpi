@@ -6,7 +6,7 @@
     <General>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
-      <Title Value="mORMot Demo"/>
+      <Title Value="TurboPower VisualPlanIt &amp; mORMot Demo"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
     </General>
@@ -26,6 +26,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
+        <CommandLineParams Value="-noserver"/>
       </local>
     </RunParams>
     <RequiredPackages Count="3">

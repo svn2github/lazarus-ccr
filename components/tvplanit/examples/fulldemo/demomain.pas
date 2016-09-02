@@ -450,6 +450,8 @@ begin
     if Resources.Count > 0 then
       Resource := Resources.Items[Resources.Count-1];
   end;
+
+  Caption := Application.Title;
 end;
 
 procedure TMainForm.MnuAboutClick(Sender: TObject);

@@ -15,7 +15,7 @@
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Visual PlanIt datastore for ZEOS database components"/>
-    <Version Major="1" Release="4"/>
+    <Version Major="1" Release="5"/>
     <Files Count="2">
       <Item1>
         <Filename Value="vpregzeos.pas"/>

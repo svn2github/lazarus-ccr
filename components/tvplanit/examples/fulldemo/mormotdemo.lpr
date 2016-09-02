@@ -1,5 +1,8 @@
 program mormotdemo;
 
+{ commandline parameters:
+  -noserver ---> run without server, otherwise HostIP is localhost }
+
 {$mode objfpc}{$H+}
 
 uses
@@ -13,7 +16,7 @@ uses
 {$R *.res}
 
 begin
-  Application.Title := 'mORMot Demo';
+  Application.Title := 'TurboPower VisualPlanIt & mORMot Demo';
   RequireDerivedFormResource := True;
   Application.Initialize;
   Application.CreateForm(TDemoDM, DemoDM);

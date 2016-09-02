@@ -35,7 +35,7 @@ The Initial Developer of the Original Code is TurboPower Software.
 Portions created by TurboPower Software Inc. are Copyright (C) 2002 TurboPower Software Inc. All Rights Reserved. 
 
 Contributor(s): "/>
-    <Version Major="1" Release="4"/>
+    <Version Major="1" Release="5"/>
     <Files Count="78">
       <Item1>
         <Filename Value="vpalarmdlg.lfm"/>
