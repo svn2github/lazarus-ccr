@@ -1,0 +1,14 @@
+object DemoDM: TDemoDM
+  OldCreateOrder = False
+  Height = 150
+  HorizontalOffset = 280
+  VerticalOffset = 130
+  Width = 447
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 250
+    OnTimer = Timer1Timer
+    left = 62
+    top = 34
+  end
+end

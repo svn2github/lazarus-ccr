@@ -6,7 +6,7 @@
     <General>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
-      <Title Value="demo"/>
+      <Title Value="mORMot Demo"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
     </General>
@@ -41,7 +41,7 @@
     </RequiredPackages>
     <Units Count="5">
       <Unit0>
-        <Filename Value="demo.lpr"/>
+        <Filename Value="mormotdemo.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
@@ -64,7 +64,7 @@
         <ResourceBaseClass Value="Form"/>
       </Unit3>
       <Unit4>
-        <Filename Value="bufdsdatamodule.pas"/>
+        <Filename Value="mormotdatamodule.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="DemoDM"/>
         <HasResources Value="True"/>
@@ -76,10 +76,12 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="demo"/>
+      <Filename Value="mormotdemo"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir)"/>
+      <IncludeFiles Value="$(ProjOutDir);..\mormot\mORMotSourceHere;..\..\source"/>
+      <Libraries Value="..\mormot\mORMotSourceHere\fpc-win32"/>
+      <OtherUnitFiles Value="..\mormot;..\mormot\mORMotSourceHere;..\mormot\mORMotSourceHere\SQLite3"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
@@ -93,9 +95,9 @@
       </Options>
     </Linking>
     <Other>
-      <CustomOptions Value="-dBUFDATASET"/>
+      <CustomOptions Value="-dMORMOT"/>
       <OtherDefines Count="1">
-        <Define0 Value="BUFDATASET"/>
+        <Define0 Value="MORMOT"/>
       </OtherDefines>
     </Other>
   </CompilerOptions>

@@ -1,0 +1,37 @@
+object DemoDM: TDemoDM
+  OldCreateOrder = False
+  Height = 150
+  HorizontalOffset = 603
+  VerticalOffset = 519
+  Width = 277
+  object Datastore: TVpBufDSDataStore
+    CategoryColorMap.Category0.Color = clNavy
+    CategoryColorMap.Category0.Description = 'Category 0'
+    CategoryColorMap.Category1.Color = clRed
+    CategoryColorMap.Category1.Description = 'Category 1'
+    CategoryColorMap.Category2.Color = clYellow
+    CategoryColorMap.Category2.Description = 'Category 2'
+    CategoryColorMap.Category3.Color = clLime
+    CategoryColorMap.Category3.Description = 'Category 3'
+    CategoryColorMap.Category4.Color = clPurple
+    CategoryColorMap.Category4.Description = 'Category 4'
+    CategoryColorMap.Category5.Color = clTeal
+    CategoryColorMap.Category5.Description = 'Category 5'
+    CategoryColorMap.Category6.Color = clFuchsia
+    CategoryColorMap.Category6.Description = 'Category 6'
+    CategoryColorMap.Category7.Color = clOlive
+    CategoryColorMap.Category7.Description = 'Category 7'
+    CategoryColorMap.Category8.Color = clAqua
+    CategoryColorMap.Category8.Description = 'Category 8'
+    CategoryColorMap.Category9.Color = clMaroon
+    CategoryColorMap.Category9.Description = 'Category 9'
+    EnableEventTimer = True
+    PlayEventSounds = True
+    AutoConnect = True
+    AutoCreate = True
+    DayBuffer = 31
+    Directory = 'data'
+    left = 87
+    top = 32
+  end
+end

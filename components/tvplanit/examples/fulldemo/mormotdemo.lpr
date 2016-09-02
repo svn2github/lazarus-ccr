@@ -1,4 +1,4 @@
-program demo;
+program mormotdemo;
 
 {$mode objfpc}{$H+}
 
@@ -8,11 +8,12 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, demoMain, laz_visualplanit, LCLTranslator, DefaultTranslator,
-  bufdsdatamodule, printer4lazarus;
+  printer4lazarus, mormotdatamodule;
 
 {$R *.res}
 
 begin
+  Application.Title := 'mORMot Demo';
   RequireDerivedFormResource := True;
   Application.Initialize;
   Application.CreateForm(TDemoDM, DemoDM);

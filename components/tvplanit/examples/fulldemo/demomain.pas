@@ -9,12 +9,10 @@ uses
   clocale,
  {$ENDIF}
   Classes, SysUtils, FileUtil, PrintersDlgs, Forms, Controls, Graphics, Dialogs,
-  ExtCtrls, StdCtrls, ComCtrls, LCLTranslator, Menus, LCLVersion,
-//  VpBufDS,
-  VpBaseDS, VpDayView,
-  VpWeekView, VpTaskList, VpAbout, VpContactGrid, VpMonthView, VpResEditDlg,
-  VpContactButtons, VpNavBar, VpData, VpPrtPrvDlg, VpPrtFmtDlg, Types,
-  VpBase, VpCalendar;
+  ExtCtrls, StdCtrls, ComCtrls, LCLTranslator, Menus, Types, LCLVersion,
+  VpBaseDS, VpDayView, VpWeekView, VpTaskList, VpAbout, VpContactGrid,
+  VpMonthView, VpResEditDlg, VpContactButtons, VpNavBar, VpData,
+  VpPrtPrvDlg, VpPrtFmtDlg, VpBase, VpCalendar;
 
 type
 
@@ -171,8 +169,13 @@ uses
  {$ENDIF}
   IniFiles, Math, Printers,
   VpMisc, VpPrtFmt,
-  demoDatamodule,
-  sound, ExVpRptSetup;
+  sound, ExVpRptSetup,
+
+  // Using the defines BUFDATASET or MORMOT (defined in project options) we
+  // select the datastore to use in this demo.
+ {$IFDEF BUFDATASET}BufDSDatamodule{$ENDIF}
+ {$IFDEF MORMOT}mORMotDatamodule{$ENDIF}
+  ;
 
 const
   LANGUAGE_DIR = '..\..\languages\';
@@ -408,13 +411,19 @@ end;
 
 // Load the last resource.
 procedure TMainForm.FormCreate(Sender: TObject);
-var
-  lastRes: TVpResource;
 begin
- (*
-  Datastore := TVpBufDSDatastore.Create(self);
+  PopulateLanguages;
+  ReadIni;
 
-  with Datastore as TVpBufDSDatastore do begin
+  // Establish connection of datastore (resides in a datamodule) to all
+  // dependent controls.
+  VpControlLink1.Datastore := DemoDM.Datastore;
+
+  with VpControlLink1.Datastore do begin
+
+    // These properties could be set also in Object Inspector.
+    // But we do it here at runtime because the mORMot datastore is
+    // created at runtime, and we want both versions to behave the same.
     CategoryColorMap.Category0.BackgroundColor := clSkyBlue;
     CategoryColorMap.Category0.Color := clNavy;
     CategoryColorMap.Category0.Description := 'Appointment';
@@ -430,32 +439,17 @@ begin
     CategoryColorMap.Category4.BackgroundColor := 15332329;
     CategoryColorMap.Category4.Color := clMoneyGreen;
     CategoryColorMap.Category4.Description := 'Private';
-    EnableEventTimer := True;
-    PlayEventSounds := True;
+
+    PlayEventSounds := true;
     OnPlaySound := @VpBufDSDataStore1PlaySound;
    {$IFDEF WINDOWS}
     MediaFolder := AppendPathDelim(SysUtils.GetEnvironmentVariable('SYSTEMROOT')) + 'media';
    {$ENDIF}
-    DayBuffer := 31;
-    Directory := 'data';
-    Connected := true;
-  end;
-  VpControlLink1.Datastore := Datastore;
-  *)
 
-  // Establish connection of datastore (resides in a datamodule) to all
-  // dependent controls.
-  VpControlLink1.Datastore := DemoDM.VpBufDSDatastore1;
-
-  PopulateLanguages;
-  ReadIni;
-
-  with VpControlLink1.Datastore do
+    // By default select the last resource entered.
     if Resources.Count > 0 then
-    begin
-      lastRes := Resources.Items[Resources.Count-1];
-      Resource := lastRes;
-    end;
+      Resource := Resources.Items[Resources.Count-1];
+  end;
 end;
 
 procedure TMainForm.MnuAboutClick(Sender: TObject);

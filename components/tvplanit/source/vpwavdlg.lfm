@@ -129,6 +129,7 @@ object FrmSoundDialog: TFrmSoundDialog
           Color = clDefault
           HideSelection = False
           Mask = '*.wav'
+          ReadOnly = True
           TabOrder = 1
           ObjectTypes = [otNonFolders]
           ShellTreeView = ShellTreeView
