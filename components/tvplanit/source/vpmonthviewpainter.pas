@@ -376,13 +376,15 @@ begin
                 end;
                 RenderCanvas.Font.Color := RealSelDayColor;
                 RenderCanvas.Font.Style := FMonthView.DayNumberFont.Style + [fsBold];
-                if (FMonthView.EventDayStyle <> []) and (FMonthView.DataStore.Resource <> nil) and
+                if (FMonthView.EventDayStyle <> []) and (FMonthView.Datastore <> nil) and
+                   (FMonthView.DataStore.Resource <> nil) and
                    (FMonthView.DataStore.Resource.Schedule.EventCountByDay(ThisDate) > 0)
                 then
                   RenderCanvas.Font.Style := RenderCanvas.Font.Style + FMonthView.EventDayStyle;
               end else begin
                 { Set the font style for days which have events. }
-                if (FMonthView.EventDayStyle <> []) and (FMonthView.DataStore.Resource <> nil) and
+                if (FMonthView.EventDayStyle <> []) and (FMonthview.Datastore <> nil) and
+                   (FMonthView.DataStore.Resource <> nil) and
                    (FMonthView.DataStore.Resource.Schedule.EventCountByDay(ThisDate) > 0)
                 then
                   RenderCanvas.Font.Style := RenderCanvas.Font.Style + FMonthView.EventDayStyle
@@ -484,13 +486,15 @@ begin
                   DrawFocusRect(TextRect);
                 RenderCanvas.Font.Color := RealSelDayColor;
                 RenderCanvas.Font.Style := FMonthView.DayNumberFont.Style + [fsBold];
-                if (FMonthView.EventDayStyle <> []) and (FMonthView.DataStore.Resource <> nil) and
+                if (FMonthView.EventDayStyle <> []) and (FMonthview.Datastore <> nil) and
+                   (FMonthView.DataStore.Resource <> nil) and
                    (FMonthView.DataStore.Resource.Schedule.EventCountByDay(ThisDate) > 0)
                 then
                   RenderCanvas.Font.Style := RenderCanvas.Font.Style + FMonthView.EventDayStyle;
               end else begin
                 { Set the font style for days which have events. }
-                if (FMonthView.EventDayStyle <> []) and (FMonthView.DataStore.Resource <> nil) and
+                if (FMonthView.EventDayStyle <> []) and (FMonthView.Datastore <> nil) and
+                   (FMonthView.DataStore.Resource <> nil) and
                    (FMonthView.DataStore.Resource.Schedule.EventCountByDay(ThisDate) > 0)
                 then
                   RenderCanvas.Font.Style := RenderCanvas.Font.Style + FMonthView.EventDayStyle
