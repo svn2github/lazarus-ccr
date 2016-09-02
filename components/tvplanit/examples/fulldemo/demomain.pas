@@ -10,9 +10,10 @@ uses
  {$ENDIF}
   Classes, SysUtils, FileUtil, PrintersDlgs, Forms, Controls, Graphics, Dialogs,
   ExtCtrls, StdCtrls, ComCtrls, LCLTranslator, Menus, LCLVersion,
- VpBaseDS, VpDayView,
+//  VpBufDS,
+  VpBaseDS, VpDayView,
   VpWeekView, VpTaskList, VpAbout, VpContactGrid, VpMonthView, VpResEditDlg,
-  VpContactButtons, VpBufDS, VpNavBar, VpData, VpPrtPrvDlg, VpPrtFmtDlg, Types,
+  VpContactButtons, VpNavBar, VpData, VpPrtPrvDlg, VpPrtFmtDlg, Types,
   VpBase, VpCalendar;
 
 type
@@ -75,7 +76,6 @@ type
     Splitter2: TSplitter;
     Splitter3: TSplitter;
     DaysTrackBar: TTrackBar;
-    VpBufDSDataStore1: TVpBufDSDataStore;
     VpContactButtonBar1: TVpContactButtonBar;
     VpContactGrid1: TVpContactGrid;
     VpControlLink1: TVpControlLink;
@@ -118,11 +118,13 @@ type
       const AWavFile: String; AMode: TVpPlaySoundMode);
     procedure VpNavBar1ItemClick(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; Index: Integer);
+
   private
     { private declarations }
     FLang: String;
     FActiveView: Integer;
     FVisibleDays: Integer;
+//    Datastore: TVpCustomDatastore;
     procedure PopulateLanguages;
     procedure PositionControls;
     procedure SetActiveView(AValue: Integer);
@@ -169,6 +171,7 @@ uses
  {$ENDIF}
   IniFiles, Math, Printers,
   VpMisc, VpPrtFmt,
+  demoDatamodule,
   sound, ExVpRptSetup;
 
 const
@@ -407,17 +410,52 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   lastRes: TVpResource;
-  ds: TVpCustomDataStore;
 begin
+ (*
+  Datastore := TVpBufDSDatastore.Create(self);
+
+  with Datastore as TVpBufDSDatastore do begin
+    CategoryColorMap.Category0.BackgroundColor := clSkyBlue;
+    CategoryColorMap.Category0.Color := clNavy;
+    CategoryColorMap.Category0.Description := 'Appointment';
+    CategoryColorMap.Category1.BackgroundColor := 13290239;
+    CategoryColorMap.Category1.Color := clRed;
+    CategoryColorMap.Category1.Description := 'Urgent';
+    CategoryColorMap.Category2.BackgroundColor := 16777175;
+    CategoryColorMap.Category2.Color := clTeal;
+    CategoryColorMap.Category2.Description := 'Meetings';
+    CategoryColorMap.Category3.BackgroundColor := 11468799;
+    CategoryColorMap.Category3.Color := clYellow;
+    CategoryColorMap.Category3.Description := 'Travel';
+    CategoryColorMap.Category4.BackgroundColor := 15332329;
+    CategoryColorMap.Category4.Color := clMoneyGreen;
+    CategoryColorMap.Category4.Description := 'Private';
+    EnableEventTimer := True;
+    PlayEventSounds := True;
+    OnPlaySound := @VpBufDSDataStore1PlaySound;
+   {$IFDEF WINDOWS}
+    MediaFolder := AppendPathDelim(SysUtils.GetEnvironmentVariable('SYSTEMROOT')) + 'media';
+   {$ENDIF}
+    DayBuffer := 31;
+    Directory := 'data';
+    Connected := true;
+  end;
+  VpControlLink1.Datastore := Datastore;
+  *)
+
+  // Establish connection of datastore (resides in a datamodule) to all
+  // dependent controls.
+  VpControlLink1.Datastore := DemoDM.VpBufDSDatastore1;
+
   PopulateLanguages;
   ReadIni;
 
-  ds := VpControlLink1.Datastore;
-  if ds.Resources.Count > 0 then
-  begin
-    lastRes := ds.Resources.Items[ds.Resources.Count-1];
-    ds.ResourceID := lastRes.ResourceID;
-  end;
+  with VpControlLink1.Datastore do
+    if Resources.Count > 0 then
+    begin
+      lastRes := Resources.Items[Resources.Count-1];
+      Resource := lastRes;
+    end;
 end;
 
 procedure TMainForm.MnuAboutClick(Sender: TObject);

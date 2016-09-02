@@ -39,7 +39,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="4">
+    <Units Count="5">
       <Unit0>
         <Filename Value="demo.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -63,6 +63,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit3>
+      <Unit4>
+        <Filename Value="demodatamodule.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="DemoDM"/>
+        <ResourceBaseClass Value="DataModule"/>
+        <UnitName Value="demoDatamodule"/>
+      </Unit4>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

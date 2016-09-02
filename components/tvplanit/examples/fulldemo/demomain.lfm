@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 301
+  Left = 368
   Height = 596
-  Top = 177
+  Top = 134
   Width = 959
   Caption = 'Turbo Power VisualPlanIt Demo'
   ClientHeight = 576
@@ -9,7 +9,7 @@ object MainForm: TMainForm
   Menu = MainMenu1
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  LCLVersion = '1.6.0.4'
+  LCLVersion = '1.7'
   object Panel1: TPanel
     Left = 125
     Height = 576
@@ -77,7 +77,6 @@ object MainForm: TMainForm
             Height = 197
             Top = 331
             Width = 333
-            DataStore = VpBufDSDataStore1
             ControlLink = VpControlLink1
             Color = clWindow
             Align = alBottom
@@ -118,7 +117,6 @@ object MainForm: TMainForm
             Height = 284
             Top = 42
             Width = 333
-            DataStore = VpBufDSDataStore1
             ControlLink = VpControlLink1
             Color = clWindow
             Font.Height = -12
@@ -273,7 +271,6 @@ object MainForm: TMainForm
           Height = 528
           Top = 0
           Width = 496
-          DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
           Font.Height = -12
@@ -341,7 +338,6 @@ object MainForm: TMainForm
           Height = 496
           Top = 36
           Width = 853
-          DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
           Font.Height = -12
@@ -388,7 +384,6 @@ object MainForm: TMainForm
           Height = 532
           Top = 0
           Width = 813
-          DataStore = VpBufDSDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
           Align = alClient
@@ -436,7 +431,6 @@ object MainForm: TMainForm
           Height = 23
           Top = 24
           Width = 323
-          DataStore = VpBufDSDataStore1
           Style = csDropDownList
         end
       end
@@ -689,7 +683,6 @@ object MainForm: TMainForm
     Width = 5
   end
   object VpControlLink1: TVpControlLink
-    DataStore = VpBufDSDataStore1
     LocalizationFile = '../../source/vplocalize.xml'
     Printer.BottomMargin = 5
     Printer.DayStart = h_08
@@ -783,7 +776,6 @@ object MainForm: TMainForm
   end
   object VpResourceEditDialog1: TVpResourceEditDialog
     Version = 'v1.04'
-    DataStore = VpBufDSDataStore1
     Options = []
     Placement.Position = mpCenter
     Placement.Top = 10
@@ -792,42 +784,6 @@ object MainForm: TMainForm
     Placement.Width = 400
     left = 312
     top = 280
-  end
-  object VpBufDSDataStore1: TVpBufDSDataStore
-    CategoryColorMap.Category0.BackgroundColor = clSkyBlue
-    CategoryColorMap.Category0.Color = clNavy
-    CategoryColorMap.Category0.Description = 'Appointment'
-    CategoryColorMap.Category1.BackgroundColor = 13290239
-    CategoryColorMap.Category1.Color = clRed
-    CategoryColorMap.Category1.Description = 'Urgent'
-    CategoryColorMap.Category2.BackgroundColor = 16777175
-    CategoryColorMap.Category2.Color = clTeal
-    CategoryColorMap.Category2.Description = 'Meetings'
-    CategoryColorMap.Category3.BackgroundColor = 11468799
-    CategoryColorMap.Category3.Color = clYellow
-    CategoryColorMap.Category3.Description = 'Travel'
-    CategoryColorMap.Category4.BackgroundColor = 15332329
-    CategoryColorMap.Category4.Color = clMoneyGreen
-    CategoryColorMap.Category4.Description = 'Private'
-    CategoryColorMap.Category5.Color = clTeal
-    CategoryColorMap.Category5.Description = 'Category 5'
-    CategoryColorMap.Category6.Color = clFuchsia
-    CategoryColorMap.Category6.Description = 'Category 6'
-    CategoryColorMap.Category7.Color = clOlive
-    CategoryColorMap.Category7.Description = 'Category 7'
-    CategoryColorMap.Category8.Color = clAqua
-    CategoryColorMap.Category8.Description = 'Category 8'
-    CategoryColorMap.Category9.Color = clMaroon
-    CategoryColorMap.Category9.Description = 'Category 9'
-    EnableEventTimer = True
-    PlayEventSounds = True
-    OnPlaySound = VpBufDSDataStore1PlaySound
-    AutoConnect = True
-    AutoCreate = True
-    DayBuffer = 31
-    Directory = 'data'
-    left = 312
-    top = 128
   end
   object ImageList1: TImageList
     Height = 32
@@ -2047,7 +2003,6 @@ object MainForm: TMainForm
   end
   object VpPrintPreviewDialog1: TVpPrintPreviewDialog
     Version = 'v1.04'
-    DataStore = VpBufDSDataStore1
     BottomMargin = 0
     ControlLink = VpControlLink1
     EndDate = 42561.5151169907
@@ -2067,7 +2022,6 @@ object MainForm: TMainForm
   end
   object VpPrintFormatEditDialog1: TVpPrintFormatEditDialog
     Version = 'v1.04'
-    DataStore = VpBufDSDataStore1
     ControlLink = VpControlLink1
     Options = []
     Placement.Position = mpCenter

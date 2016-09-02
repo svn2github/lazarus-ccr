@@ -8,13 +8,14 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, demoMain, laz_visualplanit, LCLTranslator, DefaultTranslator,
-  printer4lazarus;
+  printer4lazarus, demoDatamodule;
 
 {$R *.res}
 
 begin
   RequireDerivedFormResource := True;
   Application.Initialize;
+  Application.CreateForm(TDemoDM, DemoDM);
   Application.CreateForm(TMainForm, MainForm);
   Application.Run;
 end.
