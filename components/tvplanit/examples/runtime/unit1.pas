@@ -38,8 +38,6 @@ implementation
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  ControlLink := TVpControlLink.Create(self);
-
   Datastore := TVpBufDSDatastore.Create(self);
   Datastore.Directory := '.';
   Datastore.AutoCreate := true;
@@ -48,30 +46,28 @@ begin
   DayView := TVpDayview.Create(self);
   DayView.Parent := self;
   DayView.Align := alLeft;
-  DayView.ControlLink := ControlLink;
-  DayView.Datastore := Datastore;
 
   WeekView := TVpWeekView.Create(self);
   WeekView.Parent := self;
   Weekview.Align := alClient;
-  WeekView.ControlLink := ControlLink;
-  WeekView.Datastore := Datastore;
 
   MonthView := TVpMonthView.Create(self);
   MonthView.Parent := self;
   MonthView.Align := alRight;
-  MonthView.ControlLink := ControlLink;
-  MonthView.Datastore := Datastore;
 
   Combo := TVpResourceCombo.Create(Self);
   Combo.Parent := Panel1;
   Combo.Left := 8;
   Combo.Top := 8;
   Combo.Width := 200;
-  Combo.Datastore := Datastore;
+
+  ControlLink := TVpControlLink.Create(self);
+  ControlLink.Datastore := Datastore;
+  // This establishes the links to all controls that depend on Datastore.
+  // Must be called when all dependent controls are created.
 
   if Datastore.Resources.Count > 0 then
-    Datastore.ResourceID := Datastore.Resources.Items[0].ResourceID;
+    Datastore.Resource := Datastore.Resources.Items[0];
 end;
 
 end.

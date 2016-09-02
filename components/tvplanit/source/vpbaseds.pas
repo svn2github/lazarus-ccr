@@ -164,7 +164,7 @@ type
       {$ENDIF}
 
     public
-      constructor Create (AOwner : TComponent); override;
+      constructor Create(AOwner: TComponent); override;
       destructor Destroy; override;
 
      {$IFDEF LCL}
@@ -222,6 +222,7 @@ type
     FResource          : TVpResource;
     dsAlertTimer       : TTimer;           { fires the alerts }
     FNotifiers         : TList;
+    FLinkedOwner: TComponent;
 
     {events}
     FOnConnect         : TNotifyEvent;
@@ -242,6 +243,8 @@ type
     procedure SetDayBuffer(Value: Integer);
     procedure SetRange(StartTime, EndTime: TDateTime);
     procedure NotifyLinked;
+    procedure LinkToControls(AOwner: TComponent);
+    procedure UnlinkFromControls(AOwner: TComponent);
 
     property AutoConnect: Boolean
       read FAutoConnect write SetAutoConnect;
@@ -279,6 +282,7 @@ type
     procedure PostResources; virtual; abstract;
     procedure RegisterWatcher (Watcher : THandle);
     procedure PlaySound(const AWavFile: String; APlaySoundMode: TVpPlaySoundMode);
+
     property Loading : Boolean
       read FLoading write FLoading;
     property Resource: TVpResource
@@ -291,6 +295,7 @@ type
       read FActiveDate write SetActiveDate;
     property TimeRange: TVpTimeRange
       read FTimeRange;
+
   published
     property CategoryColorMap: TVpCategoryColorMap
       read FCategoryColorMap write FCategoryColorMap;
@@ -407,6 +412,7 @@ type
   end;
 
 
+
 implementation
 
 uses
@@ -420,8 +426,6 @@ uses
 { TVpCustomDataStore }
 
 constructor TVpCustomDataStore.Create(AOwner: TComponent);
-var
-  I: Integer;
 begin
   inherited;
 
@@ -452,40 +456,7 @@ begin
 
   { If the DataStore is being dropped onto a form for the first time... }
   if (csDesigning in ComponentState) and not (csLoading in ComponentState) then
-  begin
-    I := 0;
-    { Auto connect to the first available ControlLink component found }
-    while (I < Owner.ComponentCount) do begin
-      if (Owner.Components[I] is TVpControlLink)
-      and (TVpControlLink(Owner.Components[I]).DataStore = nil) then begin
-        TVpControlLink(Owner.Components[I]).DataStore := self;
-        Break;
-      end;
-      Inc(I);
-    end;
-
-    I := 0;
-    { Then Auto connect to all available LinkableControl components found   }
-    while (I < Owner.ComponentCount) do begin
-      if (Owner.Components[I] is TVpLinkableControl) then begin
-        if TVpLinkableControl(Owner.Components[I]).DataStore = nil then
-          TVpLinkableControl(Owner.Components[I]).DataStore := self;
-      end
-      else if (Owner.Components[I] is TVpResourceCombo) then begin
-        if TVpResourceCombo(Owner.Components[I]).DataStore = nil then
-          TVpResourceCombo(Owner.Components[I]).DataStore := self;
-      end
-      else if (Owner.Components[I] is TVpBaseDialog) then begin
-        if TVpBaseDialog(Owner.Components[I]).DataStore = nil then
-          TVpBaseDialog(Owner.Components[I]).DataStore := self;
-      end
-      else if (Owner.Components[I] is TVpControlLink) then begin
-        if TVpControlLink(Owner.Components[I]).DataStore = nil then
-          TVpControlLink(Owner.Components[I]).DataStore := self;
-      end;
-      Inc(I);
-    end;
-  end;
+    LinkToControls(Owner);
 
   { enable the event timer }
   if not (csDesigning in ComponentState) then
@@ -494,43 +465,13 @@ end;
 {=====}
 
 destructor TVpCustomDataStore.Destroy;
-var
-  I: Integer;
 begin
   DeregisterAllWatchers;
   FNotifiers.Free;
   FNotifiers := nil;
   
   { Remove self from all dependent controls }
-  if Owner <> nil then begin
-    I := 0;
-    { Remove self from dependent Control Links first }
-    while (I < Owner.ComponentCount) do begin
-      if (Owner.Components[I] is TVpControlLink) then begin
-        if TVpControlLink(Owner.Components[I]).DataStore = self then
-          TVpControlLink(Owner.Components[I]).DataStore := nil;
-      end;
-      Inc(I);
-    end;
-
-    I := 0;
-    { Then remove self from dependent controls }
-    while (I < Owner.ComponentCount) do begin
-      if (Owner.Components[I] is TVpLinkableControl) then begin
-        if TVpLinkableControl(Owner.Components[I]).DataStore = self then
-          TVpLinkableControl(Owner.Components[I]).DataStore := nil;
-      end
-      else if (Owner.Components[I] is TVpResourceCombo) then begin
-        if TVpResourceCombo(Owner.Components[I]).DataStore = self then
-          TVpResourceCombo(Owner.Components[I]).DataStore := nil;
-      end
-      else if (Owner.Components[I] is TVpBaseDialog) then begin
-        if TVpBaseDialog(Owner.Components[I]).DataStore = self then
-          TVpBaseDialog(Owner.Components[I]).DataStore := nil;
-      end;
-      Inc(I);
-    end;
-  end;
+  UnlinkFromControls(FLinkedOwner);
 
   FResources.Free;
   FTimeRange.Free;
@@ -545,29 +486,29 @@ end;
 
 procedure TVpCustomDataStore.DeregisterAllWatchers;
 var
-  i : Integer;
-
+  i: Integer;
 begin
-  for i := FNotifiers.Count - 1 downto 0 do
-    if Assigned (FNotifiers[i]) then begin
-      FreeMem (FNotifiers[i]);
-      FNotifiers.Delete (i);
-    end;
+  if FNotifiers <> nil then
+    for i := FNotifiers.Count - 1 downto 0 do
+      if Assigned(FNotifiers[i]) then begin
+        FreeMem(FNotifiers[i]);
+        FNotifiers.Delete (i);
+      end;
 end;
 {=====}
 
 procedure TVpCustomDataStore.DeregisterWatcher (Watcher : THandle);
 var
-  i : Integer;
-
+  i: Integer;
 begin
-  for i := FNotifiers.Count - 1 downto 0 do
-    if Assigned (FNotifiers[i]) then
-      if PVpWatcher (FNotifiers[i]).Handle = Watcher then begin
-        FreeMem (FNotifiers[i]);
-        FNotifiers.Delete (i);
-        Exit;
-      end;
+  if FNotifiers <> nil then
+    for i := FNotifiers.Count - 1 downto 0 do
+      if Assigned(FNotifiers[i]) then
+        if PVpWatcher (FNotifiers[i]).Handle = Watcher then begin
+          FreeMem(FNotifiers[i]);
+          FNotifiers.Delete (i);
+          Exit;
+        end;
 end;
 {=====}
 
@@ -913,8 +854,91 @@ begin
    {$ENDIF}
   end;
 end;
-{=====}
 
+{ This code links the datastore to the Datastore property of all dependent
+  components.
+  AOwner is normally a TForm and is stored in FLinkedOwner to be unlinked by
+  destructor.
+  The method is useful if datastores are created at runtime. }
+procedure TVpCustomDatastore.LinkToControls(AOwner: TComponent);
+var
+  i: Integer;
+begin
+  UnlinkFromControls(FLinkedOwner);
+
+  if (AOwner = nil) then
+    exit;
+
+  { Auto connect to the first available ControlLink component found }
+  for i := 0 to AOwner.ComponentCount - 1 do begin
+    if (AOwner.Components[I] is TVpControlLink) and
+       (TVpControlLink(AOwner.Components[I]).DataStore = nil) then
+    begin
+      TVpControlLink(AOwner.Components[I]).DataStore := Self;
+      Break;
+    end;
+  end;
+
+  { Then Auto connect to all available LinkableControl components found }
+  for i := 0 to AOwner.ComponentCount - 1 do begin
+    if (AOwner.Components[I] is TVpLinkableControl) then begin
+      if TVpLinkableControl(AOwner.Components[I]).DataStore = nil then
+        TVpLinkableControl(AOwner.Components[I]).DataStore := Self;
+    end
+    else if (AOwner.Components[I] is TVpResourceCombo) then begin
+      if TVpResourceCombo(AOwner.Components[I]).DataStore = nil then
+        TVpResourceCombo(AOwner.Components[I]).DataStore := Self;
+    end
+    else if (AOwner.Components[I] is TVpBaseDialog) then begin
+      if TVpBaseDialog(AOwner.Components[I]).DataStore = nil then
+        TVpBaseDialog(AOwner.Components[I]).DataStore := Self;
+    end;
+    {
+    else if (AOwner.Components[I] is TVpControlLink) then begin
+      if TVpControlLink(AOwner.Components[I]).DataStore = nil then
+        TVpControlLink(AOwner.Components[I]).DataStore := Self;
+    end;
+    }
+  end;
+
+  FLinkedOwner := AOwner;
+end;
+
+{ Removes the "Datastore" links from dependent controls.
+  Is called automatically by destructor. }
+procedure TVpCustomDatastore.UnlinkFromControls(AOwner: TComponent);
+var
+  i: Integer;
+begin
+  if AOwner = nil then
+    exit;
+
+  { Remove self from dependent Control Links first }
+  for i:= 0 to AOwner.ComponentCount-1 do begin
+    if (AOwner.Components[I] is TVpControlLink) then begin
+      if TVpControlLink(AOwner.Components[I]).DataStore = self then
+        TVpControlLink(AOwner.Components[I]).DataStore := nil;
+    end;
+  end;
+
+  { Then remove self from dependent controls }
+  for i := 0 to AOwner.ComponentCount-1 do begin
+    if (AOwner.Components[I] is TVpLinkableControl) then begin
+      if TVpLinkableControl(AOwner.Components[I]).DataStore = self then
+        TVpLinkableControl(AOwner.Components[I]).DataStore := nil;
+    end
+    else if (AOwner.Components[I] is TVpResourceCombo) then begin
+      if TVpResourceCombo(AOwner.Components[I]).DataStore = self then
+        TVpResourceCombo(AOwner.Components[I]).DataStore := nil;
+    end
+    else if (AOwner.Components[I] is TVpBaseDialog) then begin
+      if TVpBaseDialog(AOwner.Components[I]).DataStore = self then
+        TVpBaseDialog(AOwner.Components[I]).DataStore := nil;
+    end;
+  end;
+
+  FLinkedOwner := nil;
+end;
 
 { TVpEventDragObject }
 
@@ -1425,8 +1449,10 @@ end;
 
 procedure TVpControlLink.SetDataStore(const Value: TVpCustomDataStore);
 begin
-  if FDataStore <> Value then
+  if FDataStore <> Value then begin
     FDataStore := Value;
+    if FDatastore <> nil then FDatastore.LinkToControls(Owner);
+  end;
 end;
 {=====}
 procedure TVpControlLink.SetDefaultCountry (const v : string);
