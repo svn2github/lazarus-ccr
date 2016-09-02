@@ -27,10 +27,13 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="1">
+    <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="LCL"/>
+        <PackageName Value="laz_visualplanit"/>
       </Item1>
+      <Item2>
+        <PackageName Value="LCL"/>
+      </Item2>
     </RequiredPackages>
     <Units Count="2">
       <Unit0>
@@ -54,8 +57,8 @@
       <Filename Value="VpClient"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir);..\..\..\source;..\mORMotSourceHere"/>
-      <OtherUnitFiles Value="..\..\..\source;..;..\mORMotSourceHere;..\mORMotSourceHere\SQLite3"/>
+      <IncludeFiles Value="$(ProjOutDir);..\mORMotSourceHere;..\..\..\source"/>
+      <OtherUnitFiles Value="..;..\mORMotSourceHere;..\mORMotSourceHere\SQLite3"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
