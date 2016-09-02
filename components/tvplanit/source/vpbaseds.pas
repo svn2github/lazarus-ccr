@@ -815,13 +815,13 @@ procedure TVpCustomDataStore.NotifyDependents;
 var
   I: Integer;
 begin
-  if (Owner = nil) or Loading then                                    
+  if (FLinkedOwner = nil) or Loading then                                    
     Exit;
 
-  for I := 0 to pred(Owner.ComponentCount) do begin
-    if (Owner.Components[I] is TVpLinkableControl) then begin
-      if (TVpLinkableControl(Owner.Components[I]).DataStore = self) then
-        TVpLinkableControl(Owner.Components[I]).Invalidate;
+  for I := 0 to pred(FLinkedOwner.ComponentCount) do begin
+    if (FLinkedOwner.Components[I] is TVpLinkableControl) then begin
+      if (TVpLinkableControl(FLinkedOwner.Components[I]).DataStore = self) then
+        TVpLinkableControl(FLinkedOwner.Components[I]).Invalidate;
     end
   end;
   NotifyLinked;
