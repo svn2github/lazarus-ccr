@@ -126,7 +126,7 @@ type
     FDateLabelFormat: string;
     FDayHeadAttributes: TVpDayHeadAttr;
     FDrawingStyle: TVpDrawingStyle;
-    FaActiveEvent: TVpEvent;
+    FActiveEvent: TVpEvent;
     FHeadAttr: TVpWvHeadAttributes;
     FEventFont: TVpFont;  // was: TFont
     FLineColor: TColor;
@@ -139,6 +139,7 @@ type
     FAllDayEventAttr: TVpAllDayEventAttributes;
     FAllowInplaceEdit: Boolean;
     FAllowDragAndDrop: Boolean;
+    FDragDropTransparent: Boolean;
     { event variables }
     FBeforeEdit: TVpBeforeEditEvent;
     FAfterEdit: TVpAfterEditEvent;
@@ -160,6 +161,9 @@ type
     wvInPlaceEditor: TVpWvInPlaceEdit;
     wvCreatingEditor: Boolean;
     wvPainting: Boolean;
+    wvDragging: Boolean;
+    wvMouseDown: Boolean;
+    wvMouseDownPoint: TPoint;
     wvHotPoint: TPoint;
 
     { property methods }
@@ -199,26 +203,26 @@ type
     procedure EditEvent;
     procedure EndEdit(Sender: TObject);
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
 
     { drag and drop }
     procedure DoEndDrag(Target: TObject; X, Y: Integer); override;
+    procedure DoStartDrag(var DragObject: TDragObject); override;
     procedure DragOver(Source: TObject; X, Y: Integer; State: TDragState;
       var Accept: Boolean); override;
 
     { message handlers }
     {$IFNDEF LCL}
     procedure WMSize(var Msg: TWMSize); message WM_SIZE;
-    procedure WMLButtonDown(var Msg : TWMLButtonDown); message WM_LBUTTONDOWN;
-    procedure WMLButtonDblClk(var Msg : TWMLButtonDblClk); message WM_LBUTTONDBLCLK;
     procedure WMRButtonDown(var Msg : TWMRButtonDown); message WM_RBUTTONDOWN;
     procedure CMWantSpecialKey(var Msg: TCMWantSpecialKey);
               message CM_WANTSPECIALKEY;
     {$ELSE}
     procedure WMSize(var Msg: TLMSize); message LM_SIZE;
-    procedure WMLButtonDown(var Msg : TLMLButtonDown); message LM_LBUTTONDOWN;
     procedure WMLButtonDblClk(var Msg : TLMLButtonDblClk); message LM_LBUTTONDBLCLK;
     //TODO: Bug 0020755 braks this in GTK2...
-    procedure WMRButtonDown(var Msg : TLMRButtonDown); message LM_RBUTTONDOWN;
     {$ENDIF}
 
   public
@@ -239,7 +243,7 @@ type
       StartLine: Integer; StopLine: Integer; UseGran: TVpGranularity;
       DisplayOnly: Boolean); override;
 
-    property ActiveEvent: TVpEvent read FaActiveEvent write SetActiveEvent;
+    property ActiveEvent: TVpEvent read FActiveEvent write SetActiveEvent;
     property Date: TDateTime read FActiveDate write SetActiveDate;
     property VisibleLines: Integer read FVisibleLines;
 
@@ -250,6 +254,7 @@ type
     property Color: TColor read FColor write SetColor;
     property DateLabelFormat: string read FDateLabelFormat write SetDateLabelFormat;
     property DayHeadAttributes: TVpDayHeadAttr read FDayHeadAttributes write FDayHeadAttributes;
+    property DragDropTransparent: Boolean read FDragDropTransparent write FDragDropTransparent default false;
     property DrawingStyle: TVpDrawingStyle read FDrawingStyle write SetDrawingStyle stored True;
     property EventFont: TVpFont read FEventFont write SetEventFont;
     property HeadAttributes: TVpWvHeadAttributes read FHeadAttr write FHeadAttr;
@@ -417,6 +422,10 @@ begin
   wvSpinButtons.Min := -32768;
   wvSpinButtons.Max := 32767;
   wvHotPoint := Point(0, 0);
+  wvDragging := false;
+  wvMouseDownPoint := Point(0, 0);
+  wvMouseDown := false;
+  DragMode := dmManual;
 
   { Set styles and initialize internal variables }
   {$IFDEF VERSION4}
@@ -634,8 +643,8 @@ end;
 
 procedure TVpWeekView.SetActiveEvent(AValue: TVpEvent);
 begin
-  if FaActiveEvent = AValue then Exit;
-  FaActiveEvent := AValue;
+  if FActiveEvent = AValue then Exit;
+  FActiveEvent := AValue;
 end;
 
 procedure TVpWeekView.SetDrawingStyle(Value: TVpDrawingStyle);
@@ -762,7 +771,37 @@ begin
  {$ENDIF}
  // not needed for LCL: we use DragObjectEx !!
 end;
-{=====}
+
+procedure TVpWeekView.DoStartDrag(var DragObject: TDragObject);
+{$IFDEF LCL}
+var
+  P, HotSpot: TPoint;
+  EventName: string;
+{$ENDIF}
+begin
+  if ReadOnly or not FAllowDragAndDrop then
+    Exit;
+
+  if FActiveEvent <> nil then begin
+    {$IFDEF LCL}
+    GetCursorPos(P);
+    P := TVpWeekView(Self).ScreenToClient(P);
+    EventName := FActiveEvent.Description;
+    HotSpot := Point(P.X - Self.wvActiveEventRec.Left, P.Y - Self.wvActiveEventRec.Top);
+    DragObject := TVpEventDragObject.CreateWithDragImages(Self as TControl,
+      HotSpot, Self.wvActiveEventRec, EventName, FDragDropTransparent);
+   {$ELSE}
+    DragObject := DragObject := TVpEventDragObject.Create(Self);
+   {$ENDIF}
+    TVpEventDragObject(DragObject).Event := FActiveEvent;
+  end
+  else
+   {$IFDEF LCL}
+    CancelDrag;
+   {$ELSE}
+    DragObject.Free;//EndDrag(false);
+   {$ENDIF}
+end;
 
 procedure TVpWeekView.DragDrop(Source: TObject; X, Y: Integer);
 var
@@ -779,7 +818,6 @@ begin
   for i := 0 to pred(Length(wvWeekdayArray)) do
     if PointInRect(P, wvWeekdayArray[i].Rec) then begin
       newDate := wvWeekdayArray[i].Day;
-      WriteLn(FormatDateTime('dd.mm.yyyy', newdate));
       break;
     end;
   if newDate = -1 then
@@ -807,45 +845,6 @@ begin
 end;
 
 {$IFNDEF LCL}
-procedure TVpWeekView.WMLButtonDown(var Msg: TWMLButtonDown);
-{$ELSE}
-procedure TVpWeekView.WMLButtonDown(var Msg: TLMLButtonDown);
-{$ENDIF}
-var
-  P: TPoint;
-  oldDate: TDate;
-begin
-  inherited;
-
-  if not Focused then SetFocus; 
-
-  if (wvInPlaceEditor <> nil) and wvInPlaceEditor.Visible then
-    EndEdit(Self);
-
-  P := Point(Msg.XPos, Msg.YPos);
-  if (Msg.YPos > wvHeaderHeight) then
-  begin
-    { The mouse click landed inside the client area }
-    oldDate := FActiveDate;
-    wvSetDateByCoord(P);
-
-    { We must repaint the control here, before evaluation of the click on the
-      events, because if the day has changed by wvSetDateByCoord then events
-      will have different indexes in the event array; and index positions are
-      evaluated during painting. }
-    if oldDate <> FActiveDate then
-      Paint;
-
-    { If an active event was clicked, then enable the click timer.  If the
-      item is double clicked before the click timer fires, then the edit
-      dialog will appear, otherwise the in-place editor will appear. }
-    if EventAtCoord(P) then
-      wvClickTimer.Enabled := true;
-  end;
-end;
-{=====}
-
-{$IFNDEF LCL}
 procedure TVpWeekView.WMLButtonDblClk(var Msg: TWMLButtonDblClk);
 {$ELSE}
 procedure TVpWeekView.WMLButtonDblClk(var Msg: TLMLButtonDblClk);
@@ -855,6 +854,9 @@ var
 begin
   inherited;
   wvClickTimer.Enabled := false;
+  wvMouseDownPoint := Point(0, 0);
+  wvMouseDown := false;
+  wvDragging := false;
 
   if not CheckCreateResource then
     Exit;
@@ -866,7 +868,8 @@ begin
   EventAtCoord(Point (Msg.XPos, Msg.YPos));
 
   // if the mouse was pressed down in the client area, then select the cell.
-  if not focused then SetFocus; 
+  if not focused then
+    SetFocus;
 
   if (Msg.YPos > wvHeaderHeight) then
   begin
@@ -889,34 +892,6 @@ begin
       { edit this new event }
       wvSpawnEventEditDialog(True);  // true = new event
     end;
-  end;
-end;
-{=====}
-
-{$IFNDEF LCL}
-procedure TVpWeekView.WMRButtonDown(var Msg: TWMRButtonDown);
-{$ELSE}
-procedure TVpWeekView.WMRButtonDown(var Msg: TLMRButtonDown);
-{$ENDIF}
-var
-  i: Integer;
-begin
-  inherited;
-  if not Assigned(PopupMenu) then
-    exit;
-
-  { The mouse click landed inside the client area }
-  wvSetDateByCoord(Point(Msg.XPos, Msg.YPos));
-  EventAtCoord(Point(Msg.XPos, Msg.YPos));
-  wvClickTimer.Enabled := false;
-
-  if not Assigned(ActiveEvent) then begin
-    for i := 0 to FDefaultPopup.Items.Count - 1 do
-      if (FDefaultPopup.Items[i].Tag = 1) or (ReadOnly) then
-        FDefaultPopup.Items[i].Enabled := False;
-  end else begin
-    for i := 0 to FDefaultPopup.Items.Count - 1 do
-      FDefaultPopup.Items[i].Enabled := True;
   end;
 end;
 {=====}
@@ -1390,6 +1365,93 @@ begin
   end;
 end;
 {=====}
+
+procedure TVpWeekView.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X,Y: Integer);
+var
+  oldDate: TDate;
+  i: Integer;
+begin
+  inherited;
+
+  if not Focused then SetFocus;
+
+  { Left button }
+  if Button = mbLeft then
+  begin
+    if (wvInPlaceEditor <> nil) and wvInPlaceEditor.Visible then
+      EndEdit(Self);
+
+    wvMouseDown := true;
+    wvMouseDownPoint := Point(X, Y);
+
+    if (Y > wvHeaderHeight) then
+    begin
+      { The mouse click landed inside the client area }
+      oldDate := FActiveDate;
+      wvSetDateByCoord(wvMouseDownPoint);
+
+      { We must repaint the control here, before evaluation of the click on the
+        events, because if the day has changed by wvSetDateByCoord then events
+        will have different indexes in the event array; and index positions are
+        evaluated during painting. }
+      if oldDate <> FActiveDate then
+        Paint;
+
+      { If an active event was clicked, then enable the click timer.  If the
+        item is double clicked before the click timer fires, then the edit
+        dialog will appear, otherwise the in-place editor will appear. }
+      if EventAtCoord(wvMouseDownPoint) then
+        wvClickTimer.Enabled := true;
+    end;
+  end;
+
+  { Right button }
+  if Button = mbRight then
+  begin
+    if not Assigned(PopupMenu) then
+      exit;
+
+    { The mouse click landed inside the client area }
+    wvSetDateByCoord(Point(X, Y));
+    EventAtCoord(Point(X, Y));
+    wvClickTimer.Enabled := false;
+
+    if not Assigned(ActiveEvent) then begin
+      for i := 0 to FDefaultPopup.Items.Count - 1 do
+        if (FDefaultPopup.Items[i].Tag = 1) or (ReadOnly) then
+          FDefaultPopup.Items[i].Enabled := False;
+    end else begin
+      for i := 0 to FDefaultPopup.Items.Count - 1 do
+        FDefaultPopup.Items[i].Enabled := True;
+    end;
+  end;
+end;
+
+procedure TVpWeekView.MouseMove(Shift: TShiftState; X, Y: Integer);
+begin
+  inherited MouseMove(Shift, X, Y);
+  if (FActiveEvent <> nil) and (not ReadOnly) then begin
+    if (not wvDragging) and wvMouseDown and
+       ((wvMouseDownPoint.x <> x) or (wvMouseDownPoint.y <> y))
+    then begin
+      wvDragging := true;
+      wvClickTimer.Enabled := false;
+      BeginDrag(true);
+    end;
+  end;
+end;
+
+procedure TVpWeekView.MouseUp(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  inherited MouseUp(Button, Shift, X, Y);
+  if Button = mbLeft then begin
+    wvMouseDownPoint := Point(0, 0);
+    wvMouseDown := false;
+    wvDragging := false;
+  end;
+end;
 
 { TVpWvHeadAttributes }
 
