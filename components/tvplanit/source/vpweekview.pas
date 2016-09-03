@@ -138,6 +138,7 @@ type
     FDefaultPopup: TPopupMenu;
     FAllDayEventAttr: TVpAllDayEventAttributes;
     FAllowInplaceEdit: Boolean;
+    FAllowDragAndDrop: Boolean;
     { event variables }
     FBeforeEdit: TVpBeforeEditEvent;
     FAfterEdit: TVpAfterEditEvent;
@@ -171,6 +172,7 @@ type
     procedure SetTimeFormat(Value: TVpTimeFormat);
     procedure SetActiveDate(Value: TDateTime);
     procedure SetWeekStartsOn(Value: TVpDayType);
+
     { internal methods }
     procedure wvEditInPlace(Sender: TObject);
     procedure wvHookUp;
@@ -197,6 +199,12 @@ type
     procedure EditEvent;
     procedure EndEdit(Sender: TObject);
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+
+    { drag and drop }
+    procedure DoEndDrag(Target: TObject; X, Y: Integer); override;
+    procedure DragOver(Source: TObject; X, Y: Integer; State: TDragState;
+      var Accept: Boolean); override;
+
     { message handlers }
     {$IFNDEF LCL}
     procedure WMSize(var Msg: TWMSize); message WM_SIZE;
@@ -218,6 +226,7 @@ type
     destructor Destroy; override;
     procedure LoadLanguage;
     procedure DeleteActiveEvent(Verify: Boolean);
+    procedure DragDrop(Source: TObject; X, Y: Integer); override;
     procedure Invalidate; override;
     procedure LinkHandler(Sender: TComponent;
       NotificationType: TVpNotificationType; const Value: Variant); override;
@@ -229,12 +238,14 @@ type
       Angle: TVpRotationAngle; Scale: Extended; RenderDate: TDateTime;
       StartLine: Integer; StopLine: Integer; UseGran: TVpGranularity;
       DisplayOnly: Boolean); override;
+
     property ActiveEvent: TVpEvent read FaActiveEvent write SetActiveEvent;
     property Date: TDateTime read FActiveDate write SetActiveDate;
     property VisibleLines: Integer read FVisibleLines;
 
   published
     property AllDayEventAttributes: TVpAllDayEventAttributes read FAllDayEventAttr write FAllDayEventAttr;
+    property AllowDragAndDrop: Boolean read FAllowDragAndDrop write FAllowDragAndDrop default false;
     property AllowInplaceEditing: Boolean read FAllowInplaceEdit write FAllowInplaceEdit default true;
     property Color: TColor read FColor write SetColor;
     property DateLabelFormat: string read FDateLabelFormat write SetDateLabelFormat;
@@ -741,6 +752,59 @@ begin
   wvSpinButtons.Parent := self;
 end;
 {=====}
+
+procedure TVpWeekView.DoEndDrag(Target: TObject; X, Y: Integer);
+begin
+  if ReadOnly or (not FAllowDragAndDrop) then
+    Exit;
+ {$IFNDEF LCL}
+  TVpEventDragObject(Target).Free;
+ {$ENDIF}
+ // not needed for LCL: we use DragObjectEx !!
+end;
+{=====}
+
+procedure TVpWeekView.DragDrop(Source: TObject; X, Y: Integer);
+var
+  Event: TVpEvent;
+  i: Integer;
+  P: TPoint;
+  newDate, dateDiff: TDate;
+begin
+  if ReadOnly or (not FAllowDragAndDrop) then
+    Exit;
+
+  P := Point(X, Y);
+  newDate := -1;
+  for i := 0 to pred(Length(wvWeekdayArray)) do
+    if PointInRect(P, wvWeekdayArray[i].Rec) then begin
+      newDate := wvWeekdayArray[i].Day;
+      WriteLn(FormatDateTime('dd.mm.yyyy', newdate));
+      break;
+    end;
+  if newDate = -1 then
+    exit;
+
+  Event := TVpEventDragObject(Source).Event;
+  if Event <> nil then begin
+    dateDiff := trunc(newDate) - trunc(Event.StartTime);
+    Event.StartTime := newDate + frac(Event.StartTime);
+    Event.EndTime := Event.EndTime + dateDiff;
+    DataStore.PostEvents;
+    Repaint;
+  end;
+end;
+
+procedure TVpWeekView.DragOver(Source: TObject; X, Y: Integer; State: TDragState;
+  var Accept: Boolean);
+begin
+  Accept := false;
+  if ReadOnly or (not FAllowDragAndDrop) then
+    Exit;
+
+  if (Y > wvHeaderHeight) then
+    Accept := true;
+end;
 
 {$IFNDEF LCL}
 procedure TVpWeekView.WMLButtonDown(var Msg: TWMLButtonDown);

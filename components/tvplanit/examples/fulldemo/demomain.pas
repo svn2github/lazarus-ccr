@@ -350,6 +350,7 @@ end;
 procedure TMainForm.CbAllowDragAndDropChange(Sender: TObject);
 begin
   VpDayView1.AllowDragAndDrop := CbAllowDragAndDrop.Checked;
+  VpWeekView1.AllowDragAndDrop := CbAllowDragAndDrop.Checked;
 end;
 
 procedure TMainForm.CbAllowInplaceEditingChange(Sender: TObject);

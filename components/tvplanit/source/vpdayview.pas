@@ -1326,8 +1326,7 @@ begin
   Event := TVpEventDragObject(Source).Event;
   if Event <> nil then begin
     Duration := Event.EndTime - Event.StartTime;
-    DragToTime := trunc(Date + ActiveCol)
-      + dvLineMatrix[ActiveCol, ActiveRow].Time;
+    DragToTime := trunc(Date + ActiveCol) + dvLineMatrix[ActiveCol, ActiveRow].Time;
 
     if Ord(Event.RepeatCode) = 0 then
       { if this is not a recurring event then just drop it here }
