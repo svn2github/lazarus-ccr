@@ -28,6 +28,8 @@
 
 {$I Vp.INC}
 
+{$I Synopse.inc}
+
 unit VpmORMotDS;
 
 interface
@@ -60,12 +62,15 @@ type
     FDatabase         : TSQLRest;
     FModel            : TSQLModel;
     FHostIP           : string;
+    FHostPort         : string;
     FDirectory        : string;
 
     aSQLResourceTable : TSQLTable;
     aSQLEventTable    : TSQLTable;
     aSQLContactTable  : TSQLTable;
     aSQLTaskTable     : TSQLTable;
+
+    FEnableLogging    : boolean;
 
     procedure RefreshTable(aTable:TDataset);
 
@@ -79,6 +84,7 @@ type
     { property setters }
     procedure SetConnected(const Value: boolean); override;
     procedure SetHostIP(const Value: string);
+    procedure SetHostPort(const Value: string);
     procedure SetDirectory(const Value: string);
   public
     constructor Create(AOwner: TComponent); override;
@@ -102,7 +108,9 @@ type
     procedure PurgeTasks(Res: TVpResource); override;
 
     property HostIP: string read FHostIP write SetHostIP;
+    property HostPort: string read FHostPort write SetHostPort;
     property Directory: string read FDirectory write SetDirectory;
+    property EnableLogging: boolean read FEnableLogging write FEnableLogging;
 
     property CheckUpdate:boolean read CheckServer;
   end;
@@ -116,6 +124,9 @@ uses
   TypInfo,
   {$endif}
   Variants,
+  {$ifdef WITHLOG}
+  SynLog,
+  {$endif}
   SynSQLite3,
   RESTdata;
 
@@ -197,7 +208,9 @@ constructor TVpmORMotDataStore.Create(AOwner: TComponent);
 begin
   inherited;
   FHostIP          := '';
+  FHostPort        := HTTP_PORT;
   FModel           := DataModel;
+  FEnableLogging   := False;
 end;
 {=====}
 
@@ -758,6 +771,7 @@ var
   aFieldType : TSQLFieldType;
   i,j        : integer;
   aDBFile    : string;
+  ErrMsg     : string;
 begin
 
   { Don't do anything with live data until run time. }
@@ -778,17 +792,71 @@ begin
 
     if Assigned(FDatabase) then FDatabase.Free;
     if length(HostIP)>0
-       then FDatabase:=TSQLHttpClient.Create(FHostIP,HTTP_PORT,FModel)
+       then FDatabase:=TSQLHttpClient.Create(HostIP,HostPort,FModel)
        else FDatabase:=TSQLRestServerDB.Create(FModel,aDBFile,True);
 
-    if FDatabase.InheritsFrom(TSQLRestClient) then
+    if FDatabase.InheritsFrom(TSQLRestClientURI) then with (FDatabase AS TSQLRestClientURI) do
     begin
-      if NOT TSQLHttpClient(FDatabase).SetUser('User','synopse') then
+
+      {$ifdef WITHLOG}
+      if FEnableLogging then
+      begin
+        with TSQLLog.Family do
+        begin
+          Level := LOG_VERBOSE; // LOG_STACKTRACE;
+          PerThreadLog := ptIdentifiedInOnFile;
+        end;
+        TSQLLog.Add.Log(sllInfo,'Going to contact server at IP:'+HostIP+' on port #'+HostPort);
+      end;
+      {$endif}
+
+
+      ErrMsg:=LastErrorMessage;
+      if Length(ErrMsg)>0 then
+      begin
+        FConnected:=False;
+        {$ifdef WITHLOG}
+        if FEnableLogging then TSQLLog.Add.Log(sllError,'Could not contact server due to: '+ErrMsg);
+        {$endif}
+      end;
+
+      if ServerTimeStamp=0 then
+      begin
+        FConnected:=False;
+        {$ifdef WITHLOG}
+        if FEnableLogging then TSQLLog.Add.Log(sllError,'Could not connect with server');
+        {$endif}
+      end;
+
+      if NOT ServerTimeStampSynchronize then
+      begin
+        FConnected:=False;
+        {$ifdef WITHLOG}
+        if FEnableLogging then TSQLLog.Add.Log(sllError,'Could not synchronize time with server');
+        {$endif}
+      end;
+
+      MaximumAuthentificationRetry:=5;
+      RetryOnceOnTimeout:=True;
+
+      if NOT SetUser('User','synopse') then
+      begin
+        FConnected:=False;
+        {$ifdef WITHLOG}
+        if FEnableLogging then TSQLLog.Add.Log(sllError,'Authentication failure');
+        {$endif}
+      end;
+
+      if NOT Connected then
       begin
         inherited SetConnected(False);
-        FConnected:=False;
         exit;
       end;
+
+      {$ifdef WITHLOG}
+      if FEnableLogging then TSQLLog.Add.Log(sllInfo,'Connected successfully with server at IP:'+HostIP+' on port #'+HostPort+' !!');
+      {$endif}
+
     end;
 
     if FDatabase.InheritsFrom(TSQLRestServer) then
@@ -810,9 +878,16 @@ begin
       if aTable=nil then continue;
 
       // fill readonly table
-      if j=0
-         then aSQLTable:=FDatabase.MultiFieldValues(aTable,'*','order by ID')
-         else aSQLTable:=FDatabase.MultiFieldValues(aTable,'*','%=?',['ResourceID'],[ResourceID]);
+      case j of
+       0:aSQLTable:=FDatabase.MultiFieldValues(aTable,'*','order by ID');
+       1:aSQLTable:=FDatabase.MultiFieldValues(
+                         aTable,'*',
+                         '(%=?) AND (%>=? AND %<=?) OR (RepeatCode>0 AND ?<=%)',
+                         ['ResourceID','StartTime','EndTime','RepeatRangeEnd'],
+                         [ResourceID,DateTimeToSQL(FTimeRange.StartTime),DateTimeToSQL(FTimeRange.EndTime),DateTimeToSQL(FTimeRange.StartTime)]);
+       else
+         aSQLTable:=FDatabase.MultiFieldValues(aTable,'*','%=?',['ResourceID'],[ResourceID]);
+      end;
 
       // tricky ... force set field size
       for i := 0 to aSQLTable.FieldCount-1 do
@@ -843,6 +918,10 @@ begin
 
     Load;
 
+    {$ifdef WITHLOG}
+    if FEnableLogging then TSQLLog.Add.Log(sllInfo,'All data successfully loaded from database');
+    {$endif}
+
   end else if Assigned(FDatabase) then FDatabase.Free;
 
 end;
@@ -854,6 +933,15 @@ begin
     FHostIP:=Value;
   end;
 end;
+
+procedure TVpmORMotDataStore.SetHostPort(const Value: string);
+begin
+  if FHostPort<>Value then
+  begin
+    FHostPort:=Value;
+  end;
+end;
+
 
 procedure TVpmORMotDataStore.SetDirectory(const Value: string);
 begin
@@ -929,9 +1017,16 @@ begin
   aSQLRecordClass:=aSQLTable.QueryRecordType;
 
   aSQLTable.Free;
+
   if aTable=ResourceTable
      then aSQLTable:=FDatabase.MultiFieldValues(aSQLRecordClass,'*','order by ID')
-     else aSQLTable:=FDatabase.MultiFieldValues(aSQLRecordClass,'*','%=?',['ResourceID'],[ResourceID]);
+     else if aTable=EventsTable
+          then aSQLTable:=FDatabase.MultiFieldValues(
+                     aSQLRecordClass,'*',
+                     '(%=?) AND (%>=? AND %<=?) OR (RepeatCode>0 AND ?<=%)',
+                     ['ResourceID','StartTime','EndTime','RepeatRangeEnd'],
+                     [ResourceID,DateTimeToSQL(FTimeRange.StartTime),DateTimeToSQL(FTimeRange.EndTime),DateTimeToSQL(FTimeRange.StartTime)])
+          else aSQLTable:=FDatabase.MultiFieldValues(aSQLRecordClass,'*','%=?',['ResourceID'],[ResourceID]);
 
   TSynSQLTableDatasetWithLocate(aTable).Table:=aSQLTable;
 

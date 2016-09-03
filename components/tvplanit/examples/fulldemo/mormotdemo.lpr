@@ -1,7 +1,16 @@
 program mormotdemo;
 
+{ IMPORTANT NOTE:
+  If compilation aborts with an error that libkernel32a, libgcc.a and libmsvcrt.a
+  cannot be found then do a rebuild ("Run" / "Build"). Or add the corresponding
+  folder to the library path of the project, the obj files are in folder
+  mORMotSourceHere/fpc-win32, etc. }
+
 { commandline parameters:
-  -noserver ---> run without server, otherwise HostIP is localhost }
+  - noserver ---> run without server
+  - localhost ---> server ip is localhost
+  - empty ---> server is tvplanit demo server on Amazon Web Services
+  - xxx.xxx.xxx.xxx  ---> ip address for server connection. }
 
 {$mode objfpc}{$H+}
 

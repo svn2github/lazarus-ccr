@@ -80,7 +80,6 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);..\mormot\mORMotSourceHere;..\..\source"/>
-      <Libraries Value="..\mormot\mORMotSourceHere\fpc-win32"/>
       <OtherUnitFiles Value="..\mormot;..\mormot\mORMotSourceHere;..\mormot\mORMotSourceHere\SQLite3"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>

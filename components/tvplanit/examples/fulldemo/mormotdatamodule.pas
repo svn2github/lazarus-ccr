@@ -9,17 +9,19 @@ uses
 
 type
 
+
   { TDemoDM }
 
   TDemoDM = class(TDataModule)
     Timer1: TTimer;
     procedure Timer1Timer(Sender: TObject);
   private
-    FNoServer: Boolean;
+    FHostIP: String;
     procedure ReadCmdLine;
   public
     Datastore: TVpmORMotDatastore;
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy;
   end;
 
 var
@@ -28,6 +30,11 @@ var
 implementation
 
 {$R *.lfm}
+
+const
+  // IP address of AWS (amazon web service) tvplanit demoserver
+  AWS_HOST_IP = '54.194.211.233';
+
 
 constructor TDemoDM.Create(AOwner: TComponent);
 begin
@@ -39,12 +46,14 @@ begin
 
   with Datastore do
   begin
-    // if the HostIP is set, it will look for a running server on this IP address when connecting.
-    // leave blank (comment out) for a local (and private) database
 
-    if FNoServer then
-      HostIP := '' else
-      HostIP := 'localhost';
+    // if the HostIP is set, it will look for a running server on this IP
+    // address when connecting.
+    // leave blank (comment out) for a local (and private) database
+    HostIP := FHostIP;
+    HostPort := '8888';
+    EnableLogging := True;
+
     Directory := 'data';
     Connected := true;
 
@@ -58,18 +67,29 @@ begin
   Timer1.Enabled := true;
 end;
 
+destructor TDemoDM.Destroy;
+begin
+  Timer1.Enabled := false;
+  inherited;
+end;
+
+{ Use to commandline to switch between different servers.
+  - noserver  --> don't use server, for a local (and private) database)
+  - localhost --> use server on local system
+  - (empty)   --> use AWS (amazon web service) tvplanit demo server
+  - else      --> specify ip address of server }
 procedure TDemoDM.ReadCmdLine;
 var
   s: String;
   i: Integer;
 begin
+  FHostIP := AWS_HOST_IP;
   for i:=1 to ParamCount do begin
     s := lowercase(ParamStr(i));
-    if (s[1] = '-') or (s[1] = '/') then begin
-      Delete(s, 1, 1);
-      if s = 'noserver' then
-        FNoServer := true;
-    end;
+    if s = 'noserver' then
+      FHostIP := ''
+    else
+      FHostIP := s;
   end;
 end;
 

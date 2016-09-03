@@ -9,6 +9,7 @@ Table of contents
 4.  Version history
 4.1   Release 1.03
 4.2   Release 1.04
+4.3   Release 1.05
 
 ==============================================
 
@@ -107,6 +108,12 @@ steps:
   misc - Translate user interface in po files
   misc - DPI-aware and translation-tolerant form layout
   misc - Add new sample projects
+  
+  
+4.3 Release 1.05
+
+  misc - Add mORMot datastore
+  5103 - Add drag and drop of events within DayView
 
   
 

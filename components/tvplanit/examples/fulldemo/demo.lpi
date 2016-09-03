@@ -26,6 +26,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="localhost"/>
       </local>
     </RunParams>
     <RequiredPackages Count="3">
