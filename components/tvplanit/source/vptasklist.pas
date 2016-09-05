@@ -709,9 +709,10 @@ end;
 function TVpTaskList.GetTaskIndex: Integer;
 begin
   if FActiveTask = nil then
-    result := -1
+    Result := -1
   else
-    result := FActiveTask.ItemIndex;
+    Result := FActiveTask.Owner.IndexOf(FActiveTask);
+//    result := FActiveTask.ItemIndex;
 end;
 {=====}
 

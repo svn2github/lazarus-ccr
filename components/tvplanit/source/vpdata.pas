@@ -97,7 +97,7 @@ type
     FOwner: TVpResources;
     FActive: Boolean;    { Internal flag used to determine whether to display }
                          { this resource                                      }
-    FItemIndex: integer;
+//    FItemIndex: integer;
     FChanged: Boolean;
     FDeleted: Boolean;
     FEventsDirty: Boolean;
@@ -140,7 +140,7 @@ type
     property TasksDirty: Boolean read FTasksDirty write FTasksDirty;
     property Active: Boolean read FActive write FActive; deprecated 'Use "ResourceActive" instead';
     property Owner: TVpResources read FOwner;
-    property ItemIndex: integer read FItemIndex;
+//    property ItemIndex: integer read FItemIndex;
     property Schedule: TVpSchedule read GetSchedule write SetSchedule;
     property Tasks: TVpTasks read FTasks write SetTasks;
     property Contacts: TVpContacts read FContacts write SetContacts;
@@ -195,7 +195,7 @@ type
   TVpEvent = class
   protected{private}
     FOwner: TVpSchedule;
-    FItemIndex: Integer;
+//    FItemIndex: Integer;
     FChanged: Boolean;
     FDeleted: Boolean;
     FLoading: Boolean;
@@ -229,7 +229,7 @@ type
     FUserField8: string;
     FUserField9: string;
     procedure SetAllDayEvent(Value: Boolean);
-    procedure SetItemIndex(Value: Integer);
+//    procedure SetItemIndex(Value: Integer);
     procedure SetChanged(Value: Boolean);
     procedure SetDeleted(Value: Boolean);
     procedure SetDingPath(Value: string);
@@ -254,7 +254,7 @@ type
     property Loading : Boolean read FLoading write FLoading;
     property Changed: Boolean read FChanged write SetChanged;
     property Deleted: Boolean read FDeleted write SetDeleted;
-    property ItemIndex: Integer read FItemIndex;
+//    property ItemIndex: Integer read FItemIndex;
 {$ifdef WITHRTTI}
   published
 {$else}
@@ -308,16 +308,17 @@ type
   public
     constructor Create(Owner: TVpResource);
     destructor Destroy; override;
-    procedure BatchUpdate(value: Boolean);
-    procedure Sort;
-    function Compare(Item1, Item2: TVpTask): Integer;
     function AddTask(RecordID: Integer): TVpTask;
+    procedure BatchUpdate(value: Boolean);
+    function Compare(Item1, Item2: TVpTask): Integer;
     function Count : Integer;
     function CountByDay(Date: TDateTime): Integer;
+    function IndexOf(ATask: TVpTask): Integer;
     function Last: TVpTask;
     function LastByDay(Date: TDateTime): TVpTask;
     function First: TVpTask;
     function FirstByDay(Date: TDateTime): TVpTask;
+    procedure Sort;
 
     procedure DeleteTask(Task: TVpTask);
     function GetTask(Index: Integer): TVpTask;
@@ -439,7 +440,7 @@ type
     FLoading      : Boolean;
     FOwner        : TVpContacts;
     FChanged      : Boolean;
-    FItemIndex    : Integer;
+//    FItemIndex    : Integer;
     FRecordID     : Integer;
     FDeleted      : Boolean;
     FPosition     : string;
@@ -639,11 +640,12 @@ begin
   Resource := TVpResource.Create(Self);
   try
     Resource.Loading := true;
-    Resource.FItemIndex := FResourceList.Add(Resource);
+    FResourceList.Add(Resource);
+//    Resource.FItemIndex := FResourceList.Add(Resource);
     Resource.ResourceID := ResID;
     Resource.ResourceActive := true;
     Resource.Loading := false;
-    result := Resource;
+    Result := Resource;
   except
     Resource.Free;
     raise EFailToCreateResource.Create;
@@ -698,10 +700,10 @@ end;
 
 procedure TVpResources.Sort;
 var
-  i, j       : integer;
-  IndexOfMin : integer;
-  Temp       : pointer;
-  CompResult : integer; {Comparison Result}
+  i, j: integer;
+  IndexOfMin: integer;
+  Temp: pointer;
+  CompResult: integer; {Comparison Result}
 begin
   for i := 0 to pred(FResourceList.Count) do begin
     IndexOfMin := i;
@@ -720,11 +722,12 @@ begin
     FResourceList.List^[i] := FResourceList.List^[IndexOfMin];
     FResourceList.List^[IndexOfMin] := Temp;
   end;
-
+                                 (*
   { Fix object embedded ItemIndexes }
   for i := 0 to pred(FResourceList.Count) do begin
     TVpResource(FResourceList.List^[i]).FItemIndex := i;
   end;
+  *)
 end;
 {=====}
 
@@ -756,12 +759,14 @@ begin
   FSchedule := TVpSchedule.Create(Self);
   FTasks := TVpTasks.Create(Self);
   FContacts := TVpContacts.Create(Self);
-  FItemIndex := -1;
+//  FItemIndex := -1;
   FActive := false;
 end;
 {=====}
 
 destructor TVpResource.Destroy;
+var
+  idx: Integer;
 begin
   { Clear and free the schedule, tasks and contacts }
   FSchedule.ClearEvents;
@@ -772,9 +777,15 @@ begin
   FContacts.Free;
 
   { remove self from Resources list }
+  if FOwner <> nil then begin
+    idx := FOwner.FResourceList.IndexOf(self);
+    if idx > -1 then FOwner.FResourceList.Delete(idx);
+  end;
+  {
+  FOwner.FResourceList.Delete(idx);
   if (FItemIndex > -1) and (FOwner <> nil) then
     FOwner.FResourceList.Delete(FItemIndex);
-
+   }
   inherited;
 end;
 {=====}
@@ -858,17 +869,25 @@ begin
   FAlertDisplayed := false;
   FOwner := Owner;
   FChanged := false;
-  FItemIndex := -1;
+//  FItemIndex := -1;
   FSnoozeTime := 0.0;
 end;
 {=====}
 
 destructor TVpEvent.Destroy;
+var
+  idx: Integer;
 begin
+  if (FOwner <> nil) then begin
+    idx := FOwner.FEventList.IndexOf(self);
+    FOwner.FEventList.Delete(idx);
+  end;
+  {
   if (FOwner <> nil) and (FItemIndex <> -1) then begin
     FOwner.FEventList.Delete(FItemIndex);
     FOwner.Sort;
   end;
+  }
   inherited;
 end;
 {=====}
@@ -946,6 +965,7 @@ begin
 end;
 {=====}
 
+(*
 procedure TVpEvent.SetItemIndex(Value: Integer);
 begin
   if Value <> FItemIndex then begin
@@ -954,7 +974,7 @@ begin
   end;
 end;
 {=====}
-
+  *)
 procedure TVpEvent.SetChanged(Value: Boolean);
 begin
   if Loading then Exit;
@@ -1115,11 +1135,12 @@ begin
     FEventList.List^[i] := FEventList.List^[IndexOfMin];
     FEventList.List^[IndexOfMin] := Temp;
   end;
-
+                      (*
   { Fix object embedded ItemIndexes }
   for i := 0 to pred(FEventList.Count) do begin
     TVpEvent(FEventList.List^[i]).FItemIndex := i;
   end;
+  *)
 end;
 {=====}
 
@@ -1145,19 +1166,20 @@ end;
 function TVpSchedule.AddEvent(RecordID: Integer; StartTime,
   EndTime: TDateTime): TVpEvent;
 begin
-  result := nil;
+  Result := nil;
   if EndTime > StartTime then begin
-    result := TVpEvent.Create(Self);
+    Result := TVpEvent.Create(Self);
     try
-      result.Loading := true;
-      result.FItemIndex := FEventList.Add(result);
-      result.RecordID := RecordID;
-      result.StartTime := StartTime;
-      result.EndTime := EndTime;
-      result.Loading := false;
+      Result.Loading := true;
+      FEventList.Add(Result);
+      //result.FItemIndex := FEventList.Add(result);
+      Result.RecordID := RecordID;
+      Result.StartTime := StartTime;
+      Result.EndTime := EndTime;
+      Result.Loading := false;
       Sort;
     except
-      result.free;
+      Result.free;
       raise EFailToCreateEvent.Create;
     end;
   end;
@@ -1461,7 +1483,7 @@ begin
   inherited Create;
   FChanged := false;
   FOwner := Owner;
-  FItemIndex := -1;
+//  FItemIndex := -1;
   FPhoneType1 := Ord(ptWork);
   FPhoneType2 := Ord(ptHome);
   FPhoneType3 := Ord(ptWorkFax);
@@ -1471,10 +1493,18 @@ end;
 {=====}
 
 destructor TVpContact.Destroy;
+var
+  idx: Integer;
 begin
   { Remove self from owners list }
+  if (FOwner <> nil) then begin
+    idx := FOwner.FContactsList.IndexOf(self);
+    if idx > -1 then FOwner.FContactsList.Delete(idx);
+  end;
+  {
   if (FItemIndex > -1) and (FOwner <> nil) then
     FOwner.FContactsList.Delete(FItemIndex);
+    }
   inherited;
 end;
 {=====}
@@ -1831,11 +1861,12 @@ begin
     FContactsList.List^[i] := FContactsList.List^[IndexOfMin];
     FContactsList.List^[IndexOfMin] := Temp;
   end;
-
+                                 (*
   { Fix object embedded ItemIndexes }
   for i := 0 to pred(FContactsList.Count) do begin
     TVpContact(FContactsList.List^[i]).FItemIndex := i;
   end;
+  *)
 end;
 {=====}
 
@@ -1885,7 +1916,8 @@ begin
   Contact := TVpContact.Create(Self);
   try
     Contact.Loading := true;
-    Contact.FItemIndex := FContactsList.Add(Contact);
+    FContactsList.Add(Contact);
+//    Contact.FItemIndex := FContactsList.Add(Contact);
     Contact.RecordID := RecordID;
     Contact.Loading := false;
     result := Contact;
@@ -2016,16 +2048,26 @@ begin
   FOwner := Owner;
   SetCreatedOn(Now);
   FDescription := '';
+  FItemIndex := -1;
 end;
 {=====}
 
 destructor TVpTask.Destroy;
+var
+  idx: Integer;
 begin
   { Remove self from owners list }
+  if (FOwner <> nil) then begin
+    idx := FOwner.FTaskList.IndexOf(Self);
+    if idx > -1 then FOwner.FTasklist.Delete(idx);
+    FOwner.Sort;
+  end;
+  {
   if (FItemIndex > -1) and (FOwner <> nil) then begin
     FOwner.FTaskList.Delete(FItemIndex);
     FOwner.Sort;
   end;
+  }
   inherited;
 end;
 {=====}
@@ -2152,7 +2194,7 @@ var
 begin
   Task := TVpTask.Create(Self);
   try
-    result := Task;
+    Result := Task;
     Task.Loading := true;
     Task.FItemIndex := FTaskList.Add(result);
     Task.RecordID := RecordID;
@@ -2167,11 +2209,16 @@ begin
 end;
 {=====}
 
-function TVpTasks.Count : Integer;
+function TVpTasks.Count: Integer;
 begin
   result := FTaskList.Count;
 end;
 {=====}
+
+function TVpTasks.IndexOf(ATask: TVpTask): Integer;
+begin
+  Result := FTaskList.IndexOf(ATask);
+end;
 
 function TVpTasks.Last: TVpTask;
 begin
