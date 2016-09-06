@@ -615,8 +615,8 @@ begin
     end;
 
     CbLanguages.Items.Assign(po);
-    SetLanguage(lang);
-//    SetLanguage(GetDefaultLang);
+//    SetLanguage(lang);
+    SetLanguage(GetDefaultLang);
 
   finally
     po.Free;
@@ -779,7 +779,7 @@ begin
     if WindowState = wsNormal then begin
       ini.WriteInteger('Form', 'Width', Width);
       ini.WriteInteger('Form', 'Height', Height);
-      ini.WriteInteger('Left', 'Left', Left);
+      ini.WriteInteger('Form', 'Left', Left);
       ini.WriteInteger('Form', 'Top', Top);
     end;
     if FActiveView = 0 then begin
