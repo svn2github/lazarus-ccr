@@ -122,7 +122,7 @@ type
     FLang: String;
     FActiveView: Integer;
     FVisibleDays: Integer;
-//    Datastore: TVpCustomDatastore;
+    FResID: Integer;
     procedure PopulateLanguages;
     procedure PositionControls;
     procedure SetActiveView(AValue: Integer);
@@ -448,9 +448,12 @@ begin
     MediaFolder := AppendPathDelim(SysUtils.GetEnvironmentVariable('SYSTEMROOT')) + 'media';
    {$ENDIF}
 
-    // By default select the last resource entered.
-    if Resources.Count > 0 then
-      Resource := Resources.Items[Resources.Count-1];
+    if (Resources.Count > 0) then begin
+      if FResID = -1 then
+        Resource := Resources.Items[0]
+      else
+        ResourceID := FResID;
+    end;
   end;
 
   Caption := Application.Title;
@@ -765,6 +768,7 @@ begin
       CbDragDropTransparent.Checked);
     CbDragDropTransparentChange(nil);
 
+    FResID := ini.ReadInteger('Data', 'ResourceID', -1);
   finally
     ini.Free;
   end;
@@ -799,6 +803,8 @@ begin
     ini.WriteBool('Settings', 'AllowInplaceEditing', CbAllowInplaceEditing.Checked);
     ini.WriteBool('Settings', 'AllowDragAndDrop', CbAllowDragAndDrop.Checked);
     ini.WriteBool('Settings', 'DragAndDropTransparent', CbDragDropTransparent.Checked);
+
+    ini.WriteInteger('Data', 'ResourceID', VpControlLink1.Datastore.ResourceID);
   finally
     ini.Free;
   end;
