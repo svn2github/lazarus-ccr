@@ -72,8 +72,11 @@ object Form1: TForm1
         Width = 90
         FieldName = 'ID'
         EditButtons = <>
+        Filter.IsNull = False
+        Filter.IsAll = True
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Нет)'
+        Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footers = <>
@@ -85,8 +88,11 @@ object Form1: TForm1
         Width = 500
         FieldName = 'NAME'
         EditButtons = <>
+        Filter.IsNull = False
+        Filter.IsAll = True
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Нет)'
+        Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footers = <>
@@ -98,8 +104,11 @@ object Form1: TForm1
         Width = 100
         FieldName = 'CODE'
         EditButtons = <>
+        Filter.IsNull = False
+        Filter.IsAll = True
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Нет)'
+        Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footers = <>
@@ -161,7 +170,7 @@ object Form1: TForm1
         Enabled = True
       end>
     FooterOptions.DrawFullLine = False
-    OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgAllowQuickFilter, rdgAllowToolMenu]
+    OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgAllowQuickSearch, rdgAllowQuickFilter, rdgAllowToolMenu]
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clWindow
     DrawFullLine = False
@@ -169,8 +178,9 @@ object Form1: TForm1
     SelectedColor = clHighlight
     GridLineStyle = psSolid
     DataSource = DataSource1
-    Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
     ParentColor = False
+    ReadOnly = True
     TabOrder = 2
   end
   object Memo1: TMemo

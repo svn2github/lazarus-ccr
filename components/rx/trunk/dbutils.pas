@@ -394,7 +394,7 @@ var
     S,S1: string;
     
   begin
-    if Field.DataType = ftString then
+    if (Field.DataType = ftString) or (loPartialKey in Options) then
     begin
       if loCaseInsensitive in Options then
       begin
