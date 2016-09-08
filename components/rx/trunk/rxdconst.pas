@@ -115,6 +115,7 @@ resourcestring
   sRxDBGridSortByColumns   = 'Sort data for columns';//     Ctrl+C';'Ordenar por Columnas     Ctrl+C';
   sRxDBGridSelectColumns   = 'Select visible columns';//      Ctrl+W';'Seleccionar Columnas      Ctrl+W';
   sRxDBGridEmptiFilter     = '(Empty)';
+  sRxDBGridAllFilter       = '(All values)';
   sRxDBGridSelectAllRows   = 'Select all rows';//      Ctrl+W';'Seleccionar Columnas      Ctrl+W';
   sRxDBGridCopyCellValue   = 'Copy cell value';//      Ctrl+W';'Seleccionar Columnas      Ctrl+W';
 

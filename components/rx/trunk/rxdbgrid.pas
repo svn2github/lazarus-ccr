@@ -361,7 +361,10 @@ type
 
   TRxColumnFilter = class(TPersistent)
   private
+    FAllValue: string;
     FEnabled: boolean;
+    FIsAll: boolean;
+    FIsNull: boolean;
     FOwner: TRxColumn;
     FValue: string;
     FValueList: TStringList;
@@ -380,6 +383,8 @@ type
     destructor Destroy; override;
   published
     property Value: string read FValue write FValue;
+    property IsNull:boolean read FIsNull write FIsNull;
+    property IsAll:boolean read FIsAll write FIsAll;
     property Font: TFont read FFont write SetFont;
     property Alignment: TAlignment read FAlignment write FAlignment default
       taLeftJustify;
@@ -387,6 +392,7 @@ type
     property Color: TColor read FColor write SetColor default clWhite;
     property ValueList: TStringList read FValueList write FValueList;
     property EmptyValue: string read FEmptyValue write FEmptyValue;
+    property AllValue: string read FAllValue write FAllValue;
     property EmptyFont: TFont read FEmptyFont write FEmptyFont;
     property ItemIndex: integer read GetItemIndex write SetItemIndex;
     property Enabled:boolean read FEnabled write FEnabled default true;
@@ -3735,8 +3741,11 @@ begin
           TxS.Alignment := taLeftJustify;
 
         Canvas.TextStyle := TxS;
-        DrawCellText(aCol, aRow, aRect, aState,
-          TRxColumn(Columns[MyCol]).Filter.EmptyValue);
+        if IsNull then
+          DrawCellText(aCol, aRow, aRect, aState, TRxColumn(Columns[MyCol]).Filter.EmptyValue)
+        else
+        if IsAll then
+          DrawCellText(aCol, aRow, aRect, aState, TRxColumn(Columns[MyCol]).Filter.AllValue)
       end;
     end;
 
@@ -4736,10 +4745,25 @@ begin
   FFilterListEditor.Hide;
   with TRxColumn(Columns[Columns.RealIndex(FFilterListEditor.Col)]).Filter do
   begin
-    if FFilterListEditor.Text = EmptyValue then
-      Value := ''
+    if (FFilterListEditor.Text = EmptyValue) then
+    begin
+      Value := '';
+      IsNull:=true;
+      IsAll:=false;
+    end
     else
+    if (FFilterListEditor.Text = AllValue) then
+    begin
+      Value := '';
+      IsNull:=false;
+      IsAll:=true;
+    end
+    else
+    begin
       Value := FFilterListEditor.Text;
+      IsNull:=false;
+      IsAll:=false;
+    end;
   end;
 
 //  DataSource.DataSet.Refresh;
@@ -5139,6 +5163,12 @@ begin
   begin
     with TRxColumn(Columns[i]) do
     begin
+      if Filter.IsAll then
+        Accept:=true
+      else
+      if Filter.IsNull then
+        Accept:=Field.IsNull
+      else
       if (Filter.Value <> '') then
       begin
         if (Filter.Value <> Field.DisplayText) then
@@ -5147,6 +5177,7 @@ begin
           break;
         end;
       end;
+
     end;
   end;
   if Assigned(F_EventOnFilterRec) then
@@ -5278,6 +5309,7 @@ begin
     C.Filter.Value := '';
     C.Filter.ItemIndex := -1;
     C.Filter.ValueList.Add(C.Filter.EmptyValue);
+    C.Filter.ValueList.Add(C.Filter.AllValue);
   end;
 
   if DatalinkActive then
@@ -6143,9 +6175,12 @@ begin
   FValueList := TStringList.Create;
   FValueList.Sorted := True;
   FColor := clWhite;
+  FIsNull:=false;
+  FIsAll:=true;
 
   FEmptyFont.Style := [fsItalic];
   FEmptyValue := sRxDBGridEmptiFilter;
+  FAllValue := sRxDBGridAllFilter;
   FEnabled:=true;
 end;
 

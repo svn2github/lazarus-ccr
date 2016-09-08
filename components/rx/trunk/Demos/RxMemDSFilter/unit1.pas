@@ -71,7 +71,7 @@ begin
   except
     on E:Exception do
       Memo1.Lines.Text:=E.Message;
-  end;     mon
+  end;
 end;
 
 end.

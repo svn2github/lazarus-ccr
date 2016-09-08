@@ -161,7 +161,7 @@ object Form1: TForm1
         Enabled = True
       end>
     FooterOptions.DrawFullLine = False
-    OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgAllowQuickFilter]
+    OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgAllowQuickFilter, rdgAllowToolMenu]
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clWindow
     DrawFullLine = False

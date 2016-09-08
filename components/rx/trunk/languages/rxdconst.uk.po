@@ -401,6 +401,10 @@ msgstr "Огляд структури ..."
 msgid "Copy only metadata"
 msgstr "Копіювати тільки метадані ..."
 
+#: rxdconst.srxdbgridallfilter
+msgid "(All values)"
+msgstr ""
+
 #: rxdconst.srxdbgridcopycellvalue
 msgid "Copy cell value"
 msgstr "Копіювати значення комірки"
