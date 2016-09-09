@@ -37,7 +37,7 @@ interface
 
 uses
   Classes, SysUtils, Controls, LR_Class, LRDialogControls, Graphics, LResources,
-  rxlookup, DB;
+  rxlookup, DB, rxDateRangeEditUnit;
 
 type
 
@@ -97,6 +97,44 @@ type
     property OnClick;
   end;
 
+  { TlrSelectPeriodControl }
+
+  TlrSelectPeriodControl  = class(TlrVisualControl)
+  private
+    function GetFlat: Boolean;
+    function GetHalfYear: word;
+    function GetMonth: word;
+    function GetOptions: TRxDateRangeEditOptions;
+    function GetPeriod: TDateTime;
+    function GetPeriodEnd: TDateTime;
+    function GetQuarter: word;
+    function GetYear: word;
+    procedure SetFlat(AValue: Boolean);
+    procedure SetHalfYear(AValue: word);
+    procedure SetMonth(AValue: word);
+    procedure SetOptions(AValue: TRxDateRangeEditOptions);
+    procedure SetPeriod(AValue: TDateTime);
+    procedure SetQuarter(AValue: word);
+    procedure SetYear(AValue: word);
+  protected
+    procedure PaintDesignControl; override;
+    function CreateControl:TControl;override;
+  public
+    constructor Create(AOwnerPage:TfrPage); override;
+    procedure LoadFromXML(XML: TLrXMLConfig; const Path: String); override;
+    procedure SaveToXML(XML: TLrXMLConfig; const Path: String); override;
+  published
+    property AutoSize;
+    property Quarter:word read GetQuarter write SetQuarter;
+    property HalfYear:word read GetHalfYear write SetHalfYear;
+    property Flat: Boolean read GetFlat write SetFlat default False;
+    property Year:word read GetYear write SetYear;
+    property Month:word read GetMonth write SetMonth;
+    property Period:TDateTime read GetPeriod write SetPeriod;
+    property PeriodEnd:TDateTime read GetPeriodEnd;
+    property Options:TRxDateRangeEditOptions read GetOptions write SetOptions default [reoMonth];
+  end;
+
 implementation
 uses DBPropEdits, LR_DBRel, LR_Utils, PropEdits, duallist, rxstrutils, tooledit,
   LCLIntf, LCLType, Forms, LR_DBComponent;
@@ -113,14 +151,19 @@ begin
 end;
 
 var
-  lrBMP_LRDBLookupComboBox:TBitmap = nil;
-  lrBMP_LRRxDateEdit:TBitmap = nil;
+  lrBMP_LRDBLookupComboBox : TBitmap = nil;
+  lrBMP_LRRxDateEdit : TBitmap = nil;
+  lrBMP_LRSelectPeriod : TBitmap = nil;
 
 procedure InitLRComp;
 begin
   DoRegsiterControl(lrBMP_LRDBLookupComboBox, TlrRxDBLookupComboBox);
   DoRegsiterControl(lrBMP_LRRxDateEdit, TlrRxDateEdit);
+  DoRegsiterControl(lrBMP_lrSelectPeriod, TlrSelectPeriodControl);
 end;
+
+var
+  lrBMP_SelectClient:TBitmap = nil;
 
 { TlrRxDateEdit }
 
@@ -339,6 +382,123 @@ begin
   end;
 end;
 
+{ TlrSelectPeriodControl }
+
+function TlrSelectPeriodControl.GetFlat: Boolean;
+begin
+  Result:=TRxDateRangeEdit(Control).Flat;
+end;
+
+function TlrSelectPeriodControl.GetHalfYear: word;
+begin
+  Result:=TRxDateRangeEdit(Control).HalfYear;
+end;
+
+function TlrSelectPeriodControl.GetMonth: word;
+begin
+  Result:=TRxDateRangeEdit(Control).Month;
+end;
+
+function TlrSelectPeriodControl.GetOptions: TRxDateRangeEditOptions;
+begin
+  Result:=TRxDateRangeEdit(Control).Options;
+end;
+
+function TlrSelectPeriodControl.GetPeriod: TDateTime;
+begin
+  Result:=TRxDateRangeEdit(Control).Period;
+end;
+
+function TlrSelectPeriodControl.GetPeriodEnd: TDateTime;
+begin
+  Result:=TRxDateRangeEdit(Control).PeriodEnd;
+end;
+
+function TlrSelectPeriodControl.GetQuarter: word;
+begin
+  Result:=TRxDateRangeEdit(Control).Quarter;
+end;
+
+function TlrSelectPeriodControl.GetYear: word;
+begin
+  Result:=TRxDateRangeEdit(Control).Year;
+end;
+
+procedure TlrSelectPeriodControl.SetFlat(AValue: Boolean);
+begin
+  TRxDateRangeEdit(Control).Flat:=AValue;
+end;
+
+procedure TlrSelectPeriodControl.SetHalfYear(AValue: word);
+begin
+  TRxDateRangeEdit(Control).HalfYear:=AValue;
+end;
+
+procedure TlrSelectPeriodControl.SetMonth(AValue: word);
+begin
+  TRxDateRangeEdit(Control).Month:=AValue;
+end;
+
+procedure TlrSelectPeriodControl.SetOptions(AValue: TRxDateRangeEditOptions);
+begin
+  TRxDateRangeEdit(Control).Options:=AValue;
+end;
+
+procedure TlrSelectPeriodControl.SetPeriod(AValue: TDateTime);
+begin
+  TRxDateRangeEdit(Control).Period:=AValue;
+end;
+
+procedure TlrSelectPeriodControl.SetQuarter(AValue: word);
+begin
+  TRxDateRangeEdit(Control).Quarter:=AValue;
+end;
+
+procedure TlrSelectPeriodControl.SetYear(AValue: word);
+begin
+  TRxDateRangeEdit(Control).Year:=AValue;
+end;
+
+procedure TlrSelectPeriodControl.PaintDesignControl;
+begin
+  inherited PaintDesignControl;
+end;
+
+function TlrSelectPeriodControl.CreateControl: TControl;
+begin
+  Result:=TRxDateRangeEdit.Create(nil);
+  TRxDateRangeEdit(Result).AutoSize:=false;
+end;
+
+constructor TlrSelectPeriodControl.Create(AOwnerPage: TfrPage);
+begin
+  inherited Create(AOwnerPage);
+  BaseName:='lrSelectPeriod';
+  AutoSize:=false;
+end;
+
+procedure TlrSelectPeriodControl.LoadFromXML(XML: TLrXMLConfig;
+  const Path: String);
+var
+  S: String;
+begin
+  inherited LoadFromXML(XML, Path);
+  Flat:=XML.GetValue(Path+'Flat/Value'{%H-}, false);
+  S:=XML.GetValue(Path+'Options/Value','');
+  if S<>'' then
+    RestoreProperty('Options',S)
+  else
+    Options:=[];
+end;
+
+procedure TlrSelectPeriodControl.SaveToXML(XML: TLrXMLConfig; const Path: String
+  );
+begin
+  inherited SaveToXML(XML, Path);
+  XML.SetValue(Path+'Flat/Value'{%H-}, Flat);
+  XML.SetValue(Path+'Options/Value', GetSaveProperty('Options'));
+end;
+
 type
   { TlrDBLookupComboBoxListSourceProperty }
 
@@ -462,5 +622,11 @@ initialization
 finalization
   if Assigned(lrBMP_LRDBLookupComboBox) then
     FreeAndNil(lrBMP_LRDBLookupComboBox);
+
+  if Assigned(lrBMP_LRRxDateEdit) then
+    FreeAndNil(lrBMP_LRRxDateEdit);
+
+  if Assigned(lrBMP_LRSelectPeriod) then
+    FreeAndNil(lrBMP_LRSelectPeriod);
 end.
 
