@@ -5167,7 +5167,11 @@ begin
         Accept:=true
       else
       if Filter.IsNull then
-        Accept:=Field.IsNull
+      begin
+        Accept:=Field.IsNull;
+        if not Accept then
+          Break;
+      end
       else
       if (Filter.Value <> '') then
       begin
