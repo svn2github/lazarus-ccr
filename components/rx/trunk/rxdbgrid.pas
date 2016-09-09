@@ -785,6 +785,7 @@ type
     procedure DeSelectAllRows;
     procedure InvertSelection;
     procedure CopyCellValue;
+    procedure CreateToolMenuItem(ShortCut: char; const ACaption: string; MenuAction: TNotifyEvent);
 
     procedure SetSort(AFields: array of String; ASortMarkers: array of TSortMarker; PreformSort: Boolean = False);
 
@@ -2505,33 +2506,32 @@ begin
   FFooterOptions.DrawFullLine := Value;
 end;
 
+procedure TRxDBGrid.CreateToolMenuItem(ShortCut: char; const ACaption: string;
+  MenuAction: TNotifyEvent);
+var
+  R: TMenuItem;
+begin
+  R := TMenuItem.Create(F_PopupMenu);
+  F_PopupMenu.Items.Add(R);
+  R.Caption := ACaption;
+  if ShortCut <> #0 then
+    R.ShortCut := KeyToShortCut(Ord(ShortCut), [ssCtrl]);
+  R.OnClick := MenuAction;
+end;
+
 procedure TRxDBGrid.DoCreateJMenu;
-
-  procedure CreateMenuItem(ShortCut: char; const ACaption: string;
-    MenuAction: TNotifyEvent);
-  var
-    R: TMenuItem;
-  begin
-    R := TMenuItem.Create(F_PopupMenu);
-    F_PopupMenu.Items.Add(R);
-    R.Caption := ACaption;
-    if ShortCut <> #0 then
-      R.ShortCut := KeyToShortCut(Ord(ShortCut), [ssCtrl]);
-    R.OnClick := MenuAction;
-  end;
-
 begin
   F_PopupMenu := TPopupMenu.Create(Self);
   F_PopupMenu.Name := 'OptionsMenu';
-  CreateMenuItem('F', sRxDBGridFind, @OnFind);
-  CreateMenuItem('T', sRxDBGridFilter, @OnFilterBy);
-  CreateMenuItem('E', sRxDBGridFilterSimple, @OnFilter);
-  CreateMenuItem('Q', sRxDBGridFilterClear, @OnFilterClose);
-  CreateMenuItem(#0, '-', nil);
-  CreateMenuItem('C', sRxDBGridSortByColumns, @OnSortBy);
-  CreateMenuItem('W', sRxDBGridSelectColumns, @OnChooseVisibleFields);
-  CreateMenuItem('A', sRxDBGridSelectAllRows, @OnSelectAllRows);
-  CreateMenuItem(#0, sRxDBGridCopyCellValue, @OnCopyCellValue);
+  CreateToolMenuItem('F', sRxDBGridFind, @OnFind);
+  CreateToolMenuItem('T', sRxDBGridFilter, @OnFilterBy);
+  CreateToolMenuItem('E', sRxDBGridFilterSimple, @OnFilter);
+  CreateToolMenuItem('Q', sRxDBGridFilterClear, @OnFilterClose);
+  CreateToolMenuItem(#0, '-', nil);
+  CreateToolMenuItem('C', sRxDBGridSortByColumns, @OnSortBy);
+  CreateToolMenuItem('W', sRxDBGridSelectColumns, @OnChooseVisibleFields);
+  CreateToolMenuItem('A', sRxDBGridSelectAllRows, @OnSelectAllRows);
+  CreateToolMenuItem(#0, sRxDBGridCopyCellValue, @OnCopyCellValue);
 end;
 
 function TRxDBGrid.GetPropertyStorage: TCustomPropertyStorage;

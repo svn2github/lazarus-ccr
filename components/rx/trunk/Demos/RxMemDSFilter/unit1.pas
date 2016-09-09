@@ -27,7 +27,7 @@ type
     procedure CheckBox1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
-
+    procedure RxDBGridInfoBox(Sender: TObject);
   public
 
   end;
@@ -58,6 +58,13 @@ begin
     RxMemoryData1.Post;
 
   end;
+  RxDBGrid1.CreateToolMenuItem(#0, '-', nil);
+  RxDBGrid1.CreateToolMenuItem(#0, 'Show info box', @RxDBGridInfoBox);
+end;
+
+procedure TForm1.RxDBGridInfoBox(Sender: TObject);
+begin
+  ShowMessage('Hello world form RXDBGrid tools menu');
 end;
 
 procedure TForm1.CheckBox1Change(Sender: TObject);
