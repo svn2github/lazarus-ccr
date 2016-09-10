@@ -717,10 +717,6 @@ begin
       datastore.Resource.GetResourceGroups(list);
       if list.Count > 0 then begin
         newItem := TMenuItem.Create(AMenu.Owner);
-        newItem.Caption := '-';
-        AMenu.Add(newItem);
-
-        newItem := TMenuItem.Create(AMenu.Owner);
         newItem.Caption := RSPopupResourceGroups;
         newItem.Tag := 0;
         AMenu.Add(newItem);

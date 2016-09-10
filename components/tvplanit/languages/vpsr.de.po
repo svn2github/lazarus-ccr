@@ -188,6 +188,10 @@ msgctxt "vpsr.rscancelbtn"
 msgid "Cancel"
 msgstr "Abbrechen"
 
+#: vpsr.rscannoteditoverlayedevent
+msgid "Cannot edit this overlayed event."
+msgstr ""
+
 #: vpsr.rscaption
 msgctxt "vpsr.rscaption"
 msgid "Caption"

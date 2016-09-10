@@ -141,6 +141,7 @@ resourcestring
   RSConfirmDeleteEvent      = 'Delete event from schedule?';
   RSStartEndTimeError       = 'Incorrect order of start and end times. ' +
                               'Do you want to flip them?';
+  RSCannotEditOverlayedEvent= 'Cannot edit this overlayed event.';
 
   {Task Specific}
   RSConfirmDeleteTask       = 'Delete this task from your list?';

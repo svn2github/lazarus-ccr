@@ -185,6 +185,7 @@ type
     FResourceID: Integer;
     FCaption: String;
     FIDs: Array of Integer;
+    FReadOnly: Boolean;
     function GetCount: integer;
     function GetItem(AIndex: Integer): TVpResource;
   public
@@ -199,6 +200,7 @@ type
     property Count: Integer read GetCount;
     property Items[AIndex: Integer]: TVpResource read GetItem; default;
     property ResourceID: Integer read FResourceID;
+    property ReadOnly: boolean read FReadOnly write FReadOnly;
   end;
 
   TVpSchedule = class
@@ -287,6 +289,8 @@ type
   public
     constructor Create(Owner: TVpSchedule);
     destructor Destroy; override;
+    function CanEdit: Boolean;
+    function GetResource: TVpResource;
     function IsOverlayed: Boolean;
     property Owner: TVpSchedule read FOwner;
     property ResourceID: Integer read FResourceID write FResourceID;
@@ -1095,6 +1099,29 @@ begin
     if idx > -1 then FOwner.FEventList.Delete(idx);
   end;
   inherited;
+end;
+
+{ Returs false if the event cannot be edited. This is happens if the event is
+  overlayed and its resourcegroup is readonly }
+function TVpEvent.CanEdit: Boolean;
+var
+  res: TVpResource;
+  grp: TVpResourceGroup;
+begin
+  Result := true;
+  if IsOverlayed then begin
+    res := GetResource;
+    if res <> nil then begin
+      grp := res.Group;
+      if grp.ReadOnly then Result := false;
+    end;
+  end;
+end;
+
+{ Returns the resource to which the event belongs. }
+function TVpEvent.GetResource: TVpResource;
+begin
+  Result := FOwner.Owner;
 end;
 
 { The event is overlayed if its ResourceID is different from that of the

@@ -826,6 +826,8 @@ var
 begin
   if ReadOnly then
     Exit;
+  if (FActiveEvent <> nil) and (not FActiveEvent.CanEdit) then
+    exit;
 
   dvClickTimer.Enabled := false;
   EndEdit(self);
@@ -888,7 +890,9 @@ procedure TVpDayView.InitializeDefaultPopup;
 var
   NewItem: TMenuItem;
   NewSubItem: TMenuItem;
+  canEdit: Boolean;
 begin
+  canEdit := (FActiveEvent <> nil) and FActiveEvent.CanEdit;
   FDefaultPopup.Items.Clear;
 
   if RSDayPopupAdd <> '' then begin
@@ -902,6 +906,7 @@ begin
   if RSDayPopupEdit <> '' then begin
     NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSDayPopupEdit;
+    NewItem.Enabled := canEdit;
     NewItem.OnClick := PopupEditEvent;
     NewItem.Tag := 1;
     FDefaultPopup.Items.Add(NewItem);
@@ -910,10 +915,15 @@ begin
   if RSDayPopupDelete <> '' then begin
     NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSDayPopupDelete;
+    NewItem.Enabled := canEdit;
     NewItem.OnClick := PopupDeleteEvent;
     NewItem.Tag := 1;
     FDefaultPopup.Items.Add(NewItem);
   end;
+
+  NewItem := TMenuItem.Create(Self);
+  NewItem.Caption := '-';
+  FDefaultPopup.Items.Add(NewItem);
 
   if RSDayPopupNav <> '' then begin
     NewItem := TMenuItem.Create(Self);
@@ -1634,7 +1644,8 @@ begin
   inherited MouseMove(Shift, X, Y);
   if (FActiveEvent <> nil) and (not ReadOnly) then begin
     if (not dvDragging) and dvMouseDown and
-       ((dvMouseDownPoint.x <> x) or (dvMouseDownPoint.y <> y))
+       ((dvMouseDownPoint.x <> x) or (dvMouseDownPoint.y <> y)) and
+       FActiveEvent.CanEdit
     then begin
       dvDragging := true;
       dvClickTimer.Enabled := false;
@@ -1800,6 +1811,11 @@ begin
   if (DataStore = nil) or (DataStore.Resource = nil) or ReadOnly then
     Exit;
 
+  if (not NewEvent) and (not FActiveEvent.CanEdit) then begin
+    MessageDlg(RSCannotEditOverlayedEvent, mtInformation, [mbOK], 0);
+    exit;
+  end;
+
   AllowIt := false;
   if Assigned(FOwnerEditEvent) then
     FOwnerEditEvent(self, FActiveEvent, DataStore.Resource, AllowIt)
@@ -1941,6 +1957,8 @@ begin
   if ReadOnly then
     Exit;
   if not FAllowInplaceEdit then
+    Exit;
+  if (FActiveEvent <> nil) and (not FActiveEvent.CanEdit) then
     Exit;
 
   { call the user defined BeforeEdit event }

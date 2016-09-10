@@ -411,6 +411,7 @@ var
 begin
   datastore := VpControlLink1.Datastore;
   grp := datastore.Resources.AddResourceGroup('Res2 overlayed', [1, 2]);
+  grp.ReadOnly := true;
   if datastore.Resource <> nil then
     datastore.Resource.Group := grp else
     datastore.Resource.Group := nil;

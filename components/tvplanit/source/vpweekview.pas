@@ -605,6 +605,8 @@ var
 begin
   if ReadOnly then
     exit;
+  if (FActiveEvent <> nil) and (not FActiveEvent.CanEdit) then
+    exit;
 
   wvClickTimer.Enabled := false;
   EndEdit(nil);
@@ -903,93 +905,101 @@ procedure TVpWeekView.InitializeDefaultPopup;
 var
   NewItem: TMenuItem;
   NewSubItem: TMenuItem;
+  canEdit: Boolean;
 begin
+  canEdit := (FActiveEvent <> nil) and FActiveEvent.CanEdit;
   FDefaultPopup.Items.Clear;
 
   if RSWeekPopupAdd <> '' then begin
-    NewItem := TMenuItem.Create (Self);
+    NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSWeekPopupAdd;
     NewItem.OnClick := PopupAddEvent;
     NewItem.Tag := 0;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
   end;
 
   if RSWeekPopupEdit <> '' then begin
-    NewItem := TMenuItem.Create (Self);
+    NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSWeekPopupEdit;
+    NewItem.Enabled := canEdit;
     NewItem.OnClick := PopupEditEvent;
     NewItem.Tag := 1;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
   end;
 
   if RSWeekPopupDelete <> '' then begin
-    NewItem := TMenuItem.Create (Self);
+    NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSWeekPopupDelete;
+    NewItem.Enabled := canEdit;
     NewItem.OnClick := PopupDeleteEvent;
     NewItem.Tag := 1;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
   end;
 
+  NewItem := TMenuItem.Create(Self);
+  NewItem.Caption := '-';
+  FDefaultPopup.Items.Add(NewItem);
+
   if RSWeekPopupNav <> '' then begin
-    NewItem := TMenuItem.Create (Self);
+    NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSWeekPopupNav;
     NewItem.Tag := 0;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
 
     if RSWeekPopupNavToday <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSWeekPopupNavToday;
       NewSubItem.OnClick := PopupToday;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSWeekPopupNavNextWeek <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSWeekPopupNavNextWeek;
       NewSubItem.OnClick := PopupNextWeek;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSWeekPopupNavPrevWeek <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSWeekPopupNavPrevWeek;
       NewSubItem.OnClick := PopupPrevWeek;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSWeekPopupNavNextMonth <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSWeekPopupNavNextMonth;
       NewSubItem.OnClick := PopupNextMonth;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSWeekPopupNavPrevMonth <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSWeekPopupNavPrevMonth;
       NewSubItem.OnClick := PopupPrevMonth;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSWeekPopupNavNextYear <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSWeekPopupNavNextYear;
       NewSubItem.OnClick := PopupNextYear;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
 
     if RSWeekPopupNavPrevYear <> '' then begin
-      NewSubItem := TMenuItem.Create (Self);
+      NewSubItem := TMenuItem.Create(Self);
       NewSubItem.Caption := RSWeekPopupNavPrevYear;
       NewSubItem.OnClick := PopupPrevYear;
       NewSubItem.Tag := 0;
-      NewItem.Add (NewSubItem);
+      NewItem.Add(NewSubItem);
     end;
   end;
 
@@ -1138,6 +1148,11 @@ var
 begin
   if DataStore = nil then Exit;
 
+  if (not NewEvent) and (not ActiveEvent.CanEdit) then begin
+    MessageDlg(RSCannotEditOverlayedEvent, mtInformation, [mbOk], 0);
+    exit;
+  end;
+
   AllowIt := false;
   if Assigned(FOwnerEditEvent) then
     FOwnerEditEvent(self, ActiveEvent, DataStore.Resource, AllowIt)
@@ -1237,7 +1252,7 @@ var
   AllowIt: Boolean;
 begin
   if ActiveEvent <> nil then begin
-    if not FAllowInplaceEdit then
+    if (not FAllowInplaceEdit) or (not ActiveEvent.CanEdit) then
       exit;
 
     AllowIt := true;
@@ -1450,7 +1465,8 @@ begin
   inherited MouseMove(Shift, X, Y);
   if (FActiveEvent <> nil) and (not ReadOnly) then begin
     if (not wvDragging) and wvMouseDown and
-       ((wvMouseDownPoint.x <> x) or (wvMouseDownPoint.y <> y))
+       ((wvMouseDownPoint.x <> x) or (wvMouseDownPoint.y <> y)) and
+       FActiveEvent.CanEdit
     then begin
       wvDragging := true;
       wvClickTimer.Enabled := false;
