@@ -144,7 +144,7 @@ type
     destructor Destroy; override;
     procedure Load; override;
 
-    procedure LoadEvents; override;                                      
+    procedure LoadEventsOfResource(AResID: Integer); override;
     procedure LoadContacts; override;                                    
     procedure LoadTasks; override;                                       
     procedure RefreshEvents; override;                                   
@@ -540,6 +540,150 @@ begin
 end;
 {=====}
 
+procedure TVpFlexDataStore.LoadEventsOfResource(AResID: Integer);
+var
+  res: TVpResource;
+  Event: TVpEvent;
+  {Field Name}
+  FN1, FN2, FN3: string;
+begin
+  res := Resources.GetResource(AResID);
+  if (FEventsDataSrc = nil) or (FEventsDataSrc.DataSet = nil) then
+    Exit;
+
+  if (res <> nil) then begin
+    SetFilterCriteria(FEventsDataSrc.DataSet, True, AResID,
+      TimeRange.StartTime, TimeRange.EndTime);
+
+    if (FEventsDataSrc = nil) or
+       (FEventsDataSrc.DataSet = nil) or (not FEventsDataSrc.DataSet.Active)
+    then
+      Exit;
+
+    with FEventsDataSrc.Dataset do begin
+      First;
+
+      while not EOF do begin
+        FN1 := GetFieldName(FEventMappings, 'RecordID');
+        FN2 := GetFieldName(FEventMappings, 'StartTime');
+        FN3 := GetFieldName(FEventMappings, 'EndTime');
+        if (FN1 <> '') and (FN2 <> '') and (FN3 <> '') then begin
+          Event := res.Schedule.AddEvent(FieldByName(FN1).AsInteger,
+            FieldByName(FN2).AsDateTime, FieldByName(FN3).AsDateTime);
+
+          if Event <> nil then begin
+            Event.Loading := true;
+
+            FN1 := GetFieldName(FEventMappings, 'Description');
+            if (FN1 <> '') then
+              Event.Description := FieldByName(FN1).AsString;
+
+            FN1 := GetFieldName(FEventMappings, 'Location');  // new
+            if (FN1 <> '') then
+              Event.Location := FieldByName(FN1).AsString;
+
+            FN1 := GetFieldName(FEventMappings, 'Notes');
+            if (FN1 = '') then FN1 := GetFieldName(FEventMappings, 'Note');  // deprecated
+            if (FN1 <> '') then
+              Event.Notes := FieldByName(FN1).AsString;
+
+            FN1 := GetFieldName(FEventMappings, 'Category');
+            if (FN1 <> '') then
+              Event.Category := FieldByName(FN1).AsInteger;
+
+            FN1 := GetFieldName(FEventMappings, 'DingPath');
+            if FN1 = '' then
+              FN1 := GetFieldName(FEventMappings, 'AlarmWavPath');  // deprectated
+            if (FN1 <> '') then
+              Event.DingPath := FieldByName(FN1).AsString;
+
+            FN1 := GetFieldName(FEventMappings, 'AllDayEvent');
+            if (FN1 <> '') then
+              Event.AllDayEvent := FieldByName(FN1).AsBoolean;
+
+            FN1 := GetFieldName(FEventMappings, 'AlarmSet');
+            if (FN1 <> '') then
+              Event.AlarmSet := FieldByName(FN1).AsBoolean;
+
+            FN1 := GetFieldName(FEventMappings, 'AlarmAdvance');
+            if FN1 = '' then
+              FN1 := GetFieldName(FEventMappings, 'AlarmAdv');      // deprecated
+            if (FN1 <> '') then
+              Event.AlarmAdvance := FieldByName(FN1).AsInteger;
+
+            FN1 := GetFieldName(FEventMappings, 'AlarmAdvanceType');
+            if FN1 = '' then
+              FN1 := GetFieldName(FEventMappings, 'AlarmAdvType');  // deprecated
+            if (FN1 <> '') then
+              Event.AlarmAdvanceType := TVpAlarmAdvType(FieldByName(FN1).AsInteger);
+
+            FN1 := GetFieldName(FEventMappings, 'SnoozeTime');
+            if (FN1 <> '') then
+              Event.SnoozeTime := FieldByName(FN1).AsDateTime;
+
+            FN1 := GetFieldName(FEventMappings, 'RepeatCode');
+            if (FN1 <> '') then
+              Event.RepeatCode := TVpRepeatType(FieldByName(FN1).AsInteger);
+
+            FN1 := GetFieldName(FEventMappings, 'RepeatRangeEnd');
+            if (FN1 <> '') then
+              Event.RepeatRangeEnd := FieldByName(FN1).AsDateTime;
+
+            FN1 := GetfieldName(FEventMappings, 'CustomInterval');
+            if FN1 = '' then
+              FN1 := GetFieldName(FEventMappings, 'CustInterval');
+            if (FN1 <> '') then
+              Event.CustomInterval := FieldByName(FN1).AsInteger;
+
+            FN1 := GetFieldName(FEventMappings, 'UserField0');
+            if (FN1 <> '') then
+              Event.UserField0 := FieldByName(FN1).AsString;
+
+            FN1 := GetFieldName(FEventMappings, 'UserField1');
+            if (FN1 <> '') then
+              Event.UserField1 := FieldByName(FN1).AsString;
+
+            FN1 := GetFieldName(FEventMappings, 'UserField2');
+            if (FN1 <> '') then
+              Event.UserField2 := FieldByName(FN1).AsString;
+
+            FN1 := GetFieldName(FEventMappings, 'UserField3');
+            if (FN1 <> '') then
+              Event.UserField3 := FieldByName(FN1).AsString;
+
+            FN1 := GetFieldName(FEventMappings, 'UserField4');
+            if (FN1 <> '') then
+              Event.UserField4 := FieldByName(FN1).AsString;
+
+            FN1 := GetFieldName(FEventMappings, 'UserField5');
+            if (FN1 <> '') then
+              Event.UserField5 := FieldByName(FN1).AsString;
+
+            FN1 := GetFieldName(FEventMappings, 'UserField6');
+            if (FN1 <> '') then
+              Event.UserField6 := FieldByName(FN1).AsString;
+
+            FN1 := GetFieldName(FEventMappings, 'UserField7');
+            if (FN1 <> '') then
+              Event.UserField7 := FieldByName(FN1).AsString;
+
+            FN1 := GetFieldName(FEventMappings, 'UserField8');
+            if (FN1 <> '') then
+              Event.UserField8 := FieldByName(FN1).AsString;
+
+            FN1 := GetFieldName(FEventMappings, 'UserField9');
+            if (FN1 <> '') then
+              Event.UserField9 := FieldByName(FN1).AsString;
+
+            Event.Loading := false;
+          end; {if Event <> nil}
+        end; {if (FN1 <> '') and (FN2 <> '') and (FN3 <> '')}
+        Next;
+      end; {while}
+    end; {with FEventsDataSrc.Dataset}
+  end; {if resource <> nil}
+end;
+      (*
 procedure TVpFlexDataStore.LoadEvents;
 var
   Event: TVpEvent;
@@ -681,7 +825,7 @@ begin
       end; {while}
     end; {with FEventsDataSrc.Dataset}
   end; {if resource <> nil}
-end;
+end;*)
 {=====}
 
 procedure TVpFlexDataStore.LoadContacts;

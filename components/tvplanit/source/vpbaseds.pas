@@ -264,6 +264,7 @@ type
 
     procedure Load; virtual;
     procedure LoadEvents; virtual; abstract;
+    procedure LoadEventsOfResource(AResID: Integer); virtual; abstract;
     procedure LoadContacts; virtual; abstract;
     procedure LoadTasks; virtual; abstract;
 

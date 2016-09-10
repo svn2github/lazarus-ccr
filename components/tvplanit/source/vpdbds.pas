@@ -79,22 +79,25 @@ type
 
     procedure Load; override;
     procedure LoadEvents; override;
+    procedure LoadEventsOfResource(AResID: integer); override;
     procedure LoadContacts; override;
     procedure LoadTasks; override;
+
     procedure RefreshEvents; override;
     procedure RefreshContacts; override;
     procedure RefreshTasks; override;
     procedure RefreshResource; override;
+
     procedure PostEvents; override;
     procedure PostContacts; override;
     procedure PostTasks; override;
     procedure PostResources; override;
-{ - Added}
+
     procedure PurgeResource(Res: TVpResource); override;
     procedure PurgeEvents(Res: TVpResource); override;
     procedure PurgeContacts(Res: TVpResource); override;
     procedure PurgeTasks(Res: TVpResource); override;
-{ - End}
+
     procedure SetResourceByName(Value: string); override;
     procedure CreateFieldDefs(const TableName : string;
       FieldDefs : TFieldDefs); virtual;
@@ -1028,24 +1031,28 @@ begin
 end;
 {=====}
 
+{ Load this resource's events into memory }
 procedure TVpCustomDBDataStore.LoadEvents;
+begin
+  if Resource <> nil then
+    LoadEventsOfResource(Resource.ResourceID);
+end;
+
+{ Load the events of the specified resource into memory }
+procedure TVpCustomDBDataStore.LoadEventsOfResource(AResID: Integer);
 var
+  res: TVpResource;
   Event: TVpEvent;
   F: TField;
 begin
-  if Resource <> nil then
-    { Load this resource's events into memory }
+  // Find the resource belonging to the specified ID.
+  res := Resources.GetResource(AResID);
+  if res <> nil then
     with EventsTable do begin
-      SetFilterCriteria(
-        EventsTable,
-        True,
-        ResourceTable.FieldByName('ResourceID').AsInteger,
-        TimeRange.StartTime,
-        TimeRange.EndTime
-      );
+      SetFilterCriteria(EventsTable, true, AResID, TimeRange.StartTime, TimeRange.EndTime);
       First;
       while not EventsTable.EOF do begin
-        Event := Resource.Schedule.AddEvent(
+        Event := res.Schedule.AddEvent(
           FieldByName('RecordID').AsInteger,
           FieldByName('StartTime').AsDateTime,
           FieldByName('EndTime').AsDateTime
@@ -1053,7 +1060,7 @@ begin
         if Event <> nil then begin
           Event.Loading := true;
           Event.Description := FieldByName('Description').AsString;
-          F := FieldByName('Location');   // new
+          F := FieldByName('Location');
           if F <> nil then Event.Location := F.AsString;
           Event.Notes := FieldByName('Notes').AsString;
           Event.Category := FieldByName('Category').AsInteger;
@@ -1086,12 +1093,10 @@ begin
           if F <> nil then Event.UserField8 := F.AsString;
           F := FindField('UserField9');
           if F <> nil then Event.UserField9 := F.AsString;
-
           Event.Loading := false;
         end;
         Next;
       end; {while}
-
     end; {with EventsTable}
 end;
 {=====}
