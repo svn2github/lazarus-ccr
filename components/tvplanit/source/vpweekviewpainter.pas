@@ -34,6 +34,7 @@ type
     ADEventBorderColor: TColor;
 
   protected
+    function BuildEventString(AEvent: TVpEvent; AStartTime, AEndTime: TDateTime): String;
     procedure Clear;
     function DrawAllDayEvents(ADate: TDateTime; DayRect: TRect; var EAIndex: Integer): Boolean;
     procedure DrawBorders;
@@ -72,6 +73,30 @@ constructor TVpWeekViewPainter.Create(AWeekView: TVpWeekView;
 begin
   inherited Create(ARenderCanvas);
   FWeekView := AWeekView;
+end;
+
+function TVpWeekViewPainter.BuildEventString(AEvent: TVpEvent;
+  AStartTime, AEndTime: TDateTime): String;
+var
+  timeFmt: String;
+  res: TVpResource;
+begin
+  if FWeekView.ShowEventTime then
+  begin
+    timefmt := IfThen(FWeekView.TimeFormat = tf24Hour, 'hh:nn', 'hh:nn AM/PM');
+    Result := Format('%s - %s: ', [
+      FormatDateTime(timeFmt, AStartTime),
+      FormatDateTime(timeFmt, AEndTime)
+    ]);
+    Result := Result + ' ' + AEvent.Description;
+  end else
+    Result := AEvent.Description;
+
+  if AEvent.IsOverlayed then
+  begin
+    res := FWeekView.Datastore.Resources.GetResource(AEvent.ResourceID);
+    Result := Format('[%s] %s', [res.Description, Result]);
+  end;
 end;
 
 procedure TVpWeekViewPainter.Clear;
@@ -491,8 +516,10 @@ var
   todayStartTime: TDateTime;
   todayEndTime: TDateTime;
   strLen: Integer;
-  timefmt: String;
+  oldFontColor: TColor;
 begin
+  oldFontColor := RenderCanvas.Font.Color;
+
   { format the display text }
   todayStartTime := AEvent.StartTime;
   todayEndTime := AEvent.EndTime;
@@ -508,22 +535,14 @@ begin
   { set the event font }
   RenderCanvas.Font.Assign(FWeekView.EventFont);
   RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+  if AEvent.IsOverlayed then
+    RenderCanvas.Font.Color := clGray;
   RenderCanvas.Brush.Color := RealColor;
 
   { Build the event text }
-  if FWeekView.ShowEventTime then
-  begin
-    timefmt := IfThen(FWeekView.TimeFormat = tf24Hour, 'hh:nn', 'hh:nn AM/PM');
-    dayStr := Format('%s - %s: ', [
-      FormatDateTime(timeFmt, todayStartTime),
-      FormatDateTime(timeFmt, todayEndTime)
-    ]);
-  end else
-    dayStr := '';
-  dayStr := IfThen(dayStr = '', AEvent.Description, dayStr + ' ' + AEvent.Description);
-
+  dayStr := BuildEventString(AEvent, todayStartTime, todayEndTime);
   strLen := RenderCanvas.TextWidth(dayStr);
-  if (strLen > WidthOf(TextRect) - TextMargin) then                                           // wp: shouldn't this be 2*TextMargin ?
+  if (strLen > WidthOf(TextRect) - TextMargin) then      // wp: shouldn't this be 2*TextMargin ?
     dayStr := GetDisplayString(RenderCanvas, dayStr, 0, WidthOf(TextRect) - TextMargin * 2);
 
   { Write the event text }
@@ -531,6 +550,8 @@ begin
     TextRect.Left + TextMargin, TextRect.Top + TextMargin div 2,
     dayStr
   );
+
+  RenderCanvas.Font.Color := oldFontColor;
 end;
 
 procedure TVpWeekViewPainter.DrawHeader;

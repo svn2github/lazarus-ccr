@@ -39,7 +39,7 @@ uses
   {$ELSE}
   Windows, Consts, Messages,
   {$ENDIF}
-  Buttons, Classes, Controls, StdCtrls, ExtCtrls, Forms, Graphics,
+  Buttons, Classes, Controls, StdCtrls, ExtCtrls, Forms, Graphics, Menus,
   SysUtils, VpBase, VpData, VpConst;
 
 type
@@ -141,6 +141,9 @@ function GetRealFontHeight(AFont: TFont): Integer;
 function DecodeLineEndings(const AText: String): String;
 function EncodeLineEndings(const AText: String): String;
 
+procedure AddResourceGroupMenu(AMenu: TMenuItem; AResource: TVpResource;
+  AEventHandler: TNotifyEvent);
+
 {$IFDEF LCL}
 procedure HighDPI(FromDPI: integer);
 procedure ScaleDPI(Control: TControl; FromDPI: integer);
@@ -159,7 +162,7 @@ uses
  {$IFDEF LCL}
   DateUtils,
  {$ENDIF}
-  VpException, VpSR;
+  VpException, VpSR, VpBaseDS;
 
 procedure StripString(var Str: string);
 begin
@@ -689,6 +692,70 @@ end;
 function EncodeLineEndings(const AText: String): String;
 begin
   Result := StringReplace(AText, LineEnding, '\n', [rfReplaceAll]);
+end;
+
+procedure AddResourceGroupMenu(AMenu: TMenuItem; AResource: TVpResource;
+  AEventHandler: TNotifyEvent);
+var
+  datastore: TVpCustomDatastore;
+  grp: TVpResourceGroup;
+  list: TList;
+  newItem: TMenuItem;
+  newSubItem: TMenuItem;
+  i: Integer;
+begin
+  if (AMenu = nil) or (AResource = nil) or (AResource.Owner = nil) then
+    exit;
+
+  datastore := AResource.Owner.Owner as TVpCustomDatastore;
+
+  if (RSPopupResourceGroups <> '') and
+     (datastore <> nil) and (datastore.Resource <> nil) then
+  begin
+    list := TList.Create;
+    try
+      datastore.Resource.GetResourceGroups(list);
+      if list.Count > 0 then begin
+        newItem := TMenuItem.Create(AMenu.Owner);
+        newItem.Caption := '-';
+        AMenu.Add(newItem);
+
+        newItem := TMenuItem.Create(AMenu.Owner);
+        newItem.Caption := RSPopupResourceGroups;
+        newItem.Tag := 0;
+        AMenu.Add(newItem);
+
+        newSubItem := TMenuItem.Create(AMenu.Owner);
+        newSubItem.Caption := 'none';
+        newSubItem.OnClick := AEventHandler;
+        newSubItem.GroupIndex := 1;
+        newSubItem.AutoCheck := true;
+        newSubItem.Checked := datastore.Resource.Group = '';
+        newSubItem.Tag := 0;
+        newItem.Add(newSubItem);
+
+        if list.Count > 1 then begin
+          newSubItem := TMenuItem.Create(AMenu.Owner);
+          newSubItem.Caption := '-';
+          newItem.Add(newSubItem);
+        end;
+
+        for i:=0 to list.Count-1 do begin
+          grp := TVpResourceGroup(list[i]);
+          newSubItem := TMenuItem.Create(AMenu.Owner);
+          newSubItem.Caption := grp.Caption;
+          newSubItem.OnClick := AEventHandler;
+          newSubItem.GroupIndex := 1;
+          newSubItem.AutoCheck := true;
+          newSubItem.Checked := (datastore.Resource.Group = grp.Caption);
+          newSubItem.Tag := PtrInt(grp);
+          newItem.Add(NewSubItem);
+        end;
+      end;
+    finally
+      list.Free;
+    end;
+  end;
 end;
 
 {$IFDEF LCL}

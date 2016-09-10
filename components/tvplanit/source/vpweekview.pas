@@ -190,6 +190,8 @@ type
     procedure PopupPrevMonth(Sender: TObject);
     procedure PopupNextYear(Sender: TObject);
     procedure PopupPrevYear(Sender: TObject);
+    procedure PopupPickResourceGroupEvent(Sender: TObject);
+    procedure PopupDropdownEvent(Sender: TObject);
     procedure InitializeDefaultPopup;
     procedure Paint; override;
     procedure Loaded; override;
@@ -463,6 +465,7 @@ begin
 
   FDefaultPopup := TPopupMenu.Create (Self);
   Self.PopupMenu := FDefaultPopup;
+  FDefaultPopup.OnPopup := PopupDropDownEvent;
   LoadLanguage;
 
   FAllDayEventAttr.BackgroundColor := Color;
@@ -901,6 +904,8 @@ var
   NewItem: TMenuItem;
   NewSubItem: TMenuItem;
 begin
+  FDefaultPopup.Items.Clear;
+
   if RSWeekPopupAdd <> '' then begin
     NewItem := TMenuItem.Create (Self);
     NewItem.Caption := RSWeekPopupAdd;
@@ -987,6 +992,9 @@ begin
       NewItem.Add (NewSubItem);
     end;
   end;
+
+  if (Datastore <> nil) and (Datastore.Resource <> nil) then
+    AddResourceGroupMenu(FDefaultPopup.Items, Datastore.Resource, PopupPickResourceGroupEvent);
 end;
 {=====}
 
@@ -994,7 +1002,6 @@ procedure TVpWeekView.PopupAddEvent(Sender: TObject);
 var
   StartTime: TDateTime;
   EndTime: TDateTime;
-
 begin
   if ReadOnly then
     Exit;
@@ -1112,7 +1119,22 @@ begin
   DecodeDate(Date, Y, M, D);
   Date := EncodeDate(Y - 1, M, 1);
 end;
-{=====}
+
+procedure TVpWeekView.PopupPickResourceGroupEvent(Sender: TObject);
+var
+  grp: TVpResourceGroup;
+begin
+  if TMenuItem(Sender).Tag = 0 then
+    Datastore.Resource.Group := ''
+  else
+    Datastore.Resource.Group := TMenuItem(Sender).Caption;
+  Datastore.UpdateGroupEvents;
+end;
+
+procedure TVpWeekView.PopupDropDownEvent(Sender: TObject);
+begin
+  InitializeDefaultPopup;
+end;
 
 procedure TVpWeekView.wvSpawnEventEditDialog(NewEvent: Boolean);
 var

@@ -413,7 +413,8 @@ begin
   datastore := VpControlLink1.Datastore;
   datastore.Resources.AddResourceGroup(GROUP_NAME, [1, 2]);
   if datastore.Resource <> nil then
-    datastore.Resource.Group := GROUP_NAME;
+    datastore.Resource.Group := GROUP_NAME else
+    datastore.Resource.Group := '';
   // Important: This is not called internally so far!
   datastore.RefreshEvents;
 end;

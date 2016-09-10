@@ -954,6 +954,10 @@ msgstr "Другой"
 msgid "Pixels"
 msgstr ""
 
+#: vpsr.rspopupresourcegroups
+msgid "Overlay events"
+msgstr ""
+
 #: vpsr.rsposition
 msgid "Position"
 msgstr "Позиция"

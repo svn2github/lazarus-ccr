@@ -143,6 +143,7 @@ type
   public
     constructor Create(Owner: TVpResources);
     destructor Destroy; override;
+    procedure GetResourceGroups(AList: TList);
     property Loading: Boolean read FLoading write FLoading;
     property Changed: Boolean read FChanged write SetChanged;
     property Deleted: Boolean read FDeleted write SetDeleted;
@@ -886,6 +887,19 @@ begin
   end;
 
   inherited;
+end;
+
+{ Returns all resource groups attached to this resource }
+procedure TVpResource.GetResourceGroups(AList: TList);
+var
+  i: Integer;
+  grp: TVpResourceGroup;
+begin
+  for i:=0 to Owner.ResourceGroupCount - 1 do begin
+    grp := Owner.ResourceGroups[i];
+    if grp.ResourceID = FResourceID then
+      AList.Add(grp);
+  end;
 end;
 
 procedure TVpResource.SetContacts(const Value: TVpContacts);

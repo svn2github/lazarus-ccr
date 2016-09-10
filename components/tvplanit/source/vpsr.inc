@@ -207,6 +207,7 @@ resourcestring
   RSHintPrevWeek            = 'Previous week';                           {!!.01}
   RSHintPrevDay             = 'Previous day';
   RsHintNextDay             = 'Next day';
+  RSPopupResourceGroups     = 'Overlay events';
 
   { field names }
   RSPosition                = 'Position';
