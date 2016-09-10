@@ -123,6 +123,7 @@ type
     FActiveView: Integer;
     FVisibleDays: Integer;
     FResID: Integer;
+    procedure CreateResourceGroup;
     procedure PopulateLanguages;
     procedure PositionControls;
     procedure SetActiveView(AValue: Integer);
@@ -402,6 +403,19 @@ begin
   VpMonthView1.TimeFormat := TVpTimeFormat(CbTimeFormat.ItemIndex);
 end;
 
+// Creates a resource group at runtime
+procedure TMainForm.CreateResourceGroup;
+const
+  GROUP_NAME = 'Res2 overlayed';
+var
+  datastore: TVpCustomDatastore;
+begin
+  datastore := VpControlLink1.Datastore;
+  datastore.Resources.AddResourceGroup(GROUP_NAME, [1, 2]);
+  if datastore.Resource <> nil then
+    datastore.Resource.Group := GROUP_NAME;
+end;
+
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   if CanClose then
@@ -453,6 +467,8 @@ begin
         Resource := Resources.Items[0]
       else
         ResourceID := FResID;
+
+      CreateResourceGroup;
     end;
   end;
 

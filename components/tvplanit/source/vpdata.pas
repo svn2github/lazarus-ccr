@@ -45,9 +45,9 @@ uses
 
 type
   TVpEventRec = packed record
-    Rec      : TRect;
-    IconRect : TRect;                                                                                                               
-    Event    : Pointer;
+    Rec: TRect;
+    IconRect: TRect;
+    Event: Pointer;
   end;
 
 type
@@ -62,18 +62,22 @@ type
 
   { forward declarations }
   TVpResource = class;
-  TVpTasks    = class;
+  TVpResourceGroup = class;
+  TVpTasks = class;
   TVpSchedule = class;
-  TVpEvent    = class;
+  TVpEvent = class;
   TVpContacts = class;
-  TVpContact  = class;
-  TVpTask     = class;
+  TVpContact = class;
+  TVpTask = class;
 
   TVpResources = class
   private
     FOwner: TObject;
+    FResourceGroups: TList;
     function GetCount: Integer;
     function GetItem(Index: Integer): TVpResource;
+    function GetResourceGroup(Index: Integer): TVpResourceGroup;
+    function GetResourceGroupCount: Integer;
   protected
     FResourceList: TList;
     function NextResourceID: Integer;
@@ -81,14 +85,20 @@ type
     constructor Create(Owner: TObject);
     destructor Destroy; override;
     function AddResource(ResID: Integer): TVpResource;
+    function AddResourceGroup(ACaption: String; const AResIDs: array of Integer): TVpResourceGroup;
     procedure ClearResources;
+    procedure ClearResourceGroups;
     function FindResourceByName(AName : string) : TVpResource;
+    function FindResourceGroupByName(AName: String): TVpResourceGroup;
     function GetResource(ID: Integer): TVpResource;
     procedure RemoveResource(Resource: TVpResource);
+    procedure RemoveResourceGroup(AGroup: TVpResourceGroup);
     procedure Sort;
     property Count: Integer read GetCount;
     property Items[Index: Integer]: TVpResource read GetItem;
     property Owner: TObject read FOwner;
+    property ResourceGroupCount: Integer read GetResourceGroupCount;
+    property ResourceGroups[Index: Integer]: TVpResourceGroup read GetResourceGroup;
   end;
 
   TVpResource = class
@@ -103,6 +113,7 @@ type
     FSchedule: TVpSchedule;
     FTasks: TVpTasks;
     FContacts: TVpContacts;
+    FGroup: String;      // Name of ResourceGroup to be overlayed in event list.
     FActive: Boolean;    // Internal flag whether to display  this resource
     FNotes: string;
     FDescription: string;
@@ -123,10 +134,12 @@ type
     procedure SetContacts(const Value: TVpContacts);
     procedure SetDeleted(Value: Boolean);
     procedure SetDescription(const Value: string);
+    procedure SetGroup(const AValue: String);
     procedure SetNotes(const Value: string);
     procedure SetResourceID(const Value: Integer);
     procedure SetSchedule(const Value: TVpSchedule);
     procedure SetTasks(const Value: TVpTasks);
+
   public
     constructor Create(Owner: TVpResources);
     destructor Destroy; override;
@@ -142,6 +155,8 @@ type
     property Schedule: TVpSchedule read GetSchedule write SetSchedule;
     property Tasks: TVpTasks read FTasks write SetTasks;
     property Contacts: TVpContacts read FContacts write SetContacts;
+    property Group: String read FGroup write SetGroup;
+
 {$ifdef WITHRTTI}
   published
 {$else}
@@ -161,6 +176,28 @@ type
     property UserField7: string read FUserField7 write FUserField7;
     property UserField8: string read FUserField8 write FUserField8;
     property UserField9: string read FUserField9 write FUserField9;
+  end;
+
+  TVpResourceGroup = class
+  private
+    FOwner: TVpResources;
+    FResourceID: Integer;
+    FCaption: String;
+    FIDs: Array of Integer;
+    function GetCount: integer;
+    function GetItem(AIndex: Integer): TVpResource;
+  public
+    constructor Create(AOwner: TVpResources; ACaption: String; AResourceID: Integer);
+    destructor Destroy; override;
+    function AddID(AResourceID: Integer): Integer;
+    function AsString(ASeparator: Char = ';'): String;
+    procedure Clear;
+    function IndexOfID(AResourceID: Integer): Integer;
+    procedure Remove(AResourceID: Integer);
+    property Caption: String read FCaption;
+    property Count: Integer read GetCount;
+    property Items[AIndex: Integer]: TVpResource read GetItem; default;
+    property ResourceID: Integer read FResourceID;
   end;
 
   TVpSchedule = class
@@ -646,39 +683,18 @@ begin
   inherited Create;
   FOwner := Owner;
   FResourceList := TList.Create;
+  FResourceGroups := TList.Create;
 end;
 
 destructor TVpResources.Destroy;
 begin
+  ClearResourceGroups;
+  FResourceGroups.Free;
+
   ClearResources;
   FResourceList.Free;
+
   inherited;
-end;
-
-function TVpResources.GetItem(Index: Integer): TVpResource;
-begin
-  Result := TVpResource(FResourceList.List^[Index]);
-end;
-
-function TVpResources.GetCount: Integer;
-begin
-  Result := FResourceList.Count;
-end;
-
-function TVpResources.NextResourceID: Integer;
-var
-  I : Integer;
-  ID: Integer;
-  Res: TVpResource;
-begin
-  ID := 0;
-  for I := 0 to pred(FResourceList.Count) do begin
-    Res := GetResource(I);
-    if (Res <> nil)
-    and (ID <= Res.ResourceID) then
-      Inc(ID);
-  end;
-  Result := ID;
 end;
 
 function TVpResources.AddResource(ResID: Integer): TVpResource;
@@ -699,6 +715,44 @@ begin
   end;
 end;
 
+function TVpResources.AddResourceGroup(ACaption: String;
+  const AResIDs: Array of Integer): TVpResourceGroup;
+var
+  grp: TVpResourceGroup;
+  i: Integer;
+begin
+  if (ACaption = '') then
+    raise Exception.Create('Caption of resource group must not be empty');
+
+  if Length(AResIDs) < 2 then
+    raise Exception.Create('Resource group must contain at least one additional resource.');
+
+  // Enforce unique group name.
+  grp := FindResourceGroupByName(ACaption);
+  if grp = nil then begin
+    // Index 0 refers to the resource to which the other resources are added.
+    Result := TVpResourceGroup.Create(Self, ACaption, AResIDs[0]);
+    FResourceGroups.Add(Result);
+  end else begin
+    grp.Clear;  // Make sure that the group is empty before adding overlayed resources
+    Result := grp;
+  end;
+  for i:=1 to High(AResIDs) do
+    Result.AddID(AResIDs[i]);
+end;
+
+procedure TVpResources.ClearResources;
+begin
+  while FResourceList.Count > 0 do
+    TVpResource(FResourceList.Last).Free;
+end;
+
+procedure TVpResources.ClearResourceGroups;
+begin
+  while FResourceGroups.Count > 0 do
+    TVpResourceGroup(FResourceGroups.Last).Free;
+end;
+
 function TVpResources.FindResourceByName (AName : string) : TVpResource;
 var
   i: Integer;
@@ -710,6 +764,28 @@ begin
       Result := Items[i];
       Break;
     end;
+end;
+
+function TVpResources.FindResourceGroupByName(AName: String): TVpResourceGroup;
+var
+  i: Integer;
+begin
+  for i:=0 to FResourceGroups.Count-1 do begin
+    Result := TVpResourceGroup(FResourceGroups.Items[i]);
+    if Result.Caption = AName then
+      exit;
+  end;
+  Result := nil;
+end;
+
+function TVpResources.GetCount: Integer;
+begin
+  Result := FResourceList.Count;
+end;
+
+function TVpResources.GetItem(Index: Integer): TVpResource;
+begin
+  Result := TVpResource(FResourceList.List^[Index]);
 end;
 
 function TVpResources.GetResource(ID: integer): TVpResource;
@@ -727,16 +803,44 @@ begin
   end;
 end;
 
-procedure TVpResources.ClearResources;
+function TVpResources.GetResourceGroupCount: Integer;
 begin
-  while FResourceList.Count > 0 do
-    TVpResource(FResourceList.Last).Free;
+  Result := FResourceGroups.Count;
+end;
+
+function TVpResources.GetResourceGroup(Index: Integer): TVpResourceGroup;
+begin
+  Result := TVpResourceGroup(FResourceGroups[Index]);
+end;
+
+function TVpResources.NextResourceID: Integer;
+var
+  I : Integer;
+  ID: Integer;
+  Res: TVpResource;
+begin
+  ID := 0;
+  for I := 0 to pred(FResourceList.Count) do begin
+    Res := GetResource(I);
+    if (Res <> nil)
+    and (ID <= Res.ResourceID) then
+      Inc(ID);
+  end;
+  Result := ID;
 end;
 
 procedure TVpResources.RemoveResource(Resource: TVpREsource);
 begin
   // The resource removes the list entry in its destructor
   Resource.Free;
+end;
+
+procedure TVpResources.RemoveResourceGroup(AGroup: TVpResourceGroup);
+var
+  idx: Integer;
+begin
+  // The resource group removes the list entry in its destructor.
+  AGroup.Free;
 end;
 
 procedure TVpResources.Sort;
@@ -756,7 +860,6 @@ begin
   FSchedule := TVpSchedule.Create(Self);
   FTasks := TVpTasks.Create(Self);
   FContacts := TVpContacts.Create(Self);
-//  FItemIndex := -1;
   FActive := false;
 end;
 
@@ -823,6 +926,12 @@ begin
   end;
 end;
 
+procedure TVpResource.SetGroup(const AValue: String);
+begin
+  FGroup := AValue;
+  FChanged := true;
+end;
+
 procedure TVpResource.SetNotes(const Value: string);
 begin
   FNotes := Value;
@@ -845,6 +954,110 @@ begin
 end;
 
 
+(*****************************************************************************)
+{ TVpResourceGroup }
+(*****************************************************************************)
+constructor TVpResourceGroup.Create(AOwner: TVpResources; ACaption: String;
+  AResourceID: Integer);
+begin
+  inherited Create;
+  FOwner := AOwner;
+  FResourceID := AResourceID;
+  FCaption := ACaption;
+  Clear;
+end;
+
+destructor TVpResourceGroup.Destroy;
+var
+  idx: Integer;
+begin
+  Clear;
+  { remove self from Owner's resource group list }
+  if FOwner <> nil then begin
+    idx := FOwner.FResourceGroups.IndexOf(self);
+    if idx > -1 then FOwner.FResourceGroups.Delete(idx);
+  end;
+  inherited Destroy;
+end;
+
+function TVpResourceGroup.AddID(AResourceID: Integer): Integer;
+begin
+  Result := -1;
+  if (AResourceID = FResourceID) then
+    exit;
+  Result := IndexOfID(AResourceID);
+  if Result = -1 then begin
+    SetLength(FIDs, Length(FIDs) + 1);
+    FIDs[High(FIDs)] := AResourceID;
+  end;
+end;
+
+function TVpResourceGroup.AsString(ASeparator: Char = ';'): String;
+var
+  list: TStrings;
+  i: Integer;
+begin
+  list := TStringList.Create;
+  try
+    list.Delimiter := ASeparator;
+    list.StrictDelimiter := true;
+    list.Add(IntToStr(FResourceID));
+    for i:=0 to High(FIDs) do
+      list.Add(IntToStr(FIDs[i]));
+    Result := list.DelimitedText;
+  finally
+    list.Free;
+  end;
+end;
+
+procedure TVpResourceGroup.Clear;
+begin
+  SetLength(FIDs, 0);
+end;
+
+function TVpResourceGroup.GetCount: Integer;
+begin
+  Result := Length(FIDs);
+end;
+
+function TVpResourceGroup.GetItem(AIndex: Integer): TVpResource;
+begin
+  Result := FOwner.GetResource(FIDs[AIndex]);
+end;
+
+function TVpResourceGroup.IndexOfID(AResourceID: Integer): Integer;
+var
+  i: Integer;
+begin
+  for i := 0 to High(FIDs) do
+    if FIDs[i] = AResourceID then begin
+      Result := i;
+      exit;
+    end;
+  Result := -1;
+end;
+
+procedure TVpResourceGroup.Remove(AResourceID: Integer);
+var
+  i: Integer;
+begin
+  i := 0;
+  while i < Length(FIDs) do begin
+    if FIDs[i] = AResourceID then begin
+      inc(i);
+      while i < Length(FIDs) do begin
+        FIDs[i-1] := FIDs[i];
+        inc(i);
+      end;
+      SetLength(FIDs, Length(FIDs)-1);
+      exit;
+    end;
+    inc(i);
+  end;
+end;
+
+
+(*****************************************************************************)
 { TVpEvent }
 (*****************************************************************************)
 constructor TVpEvent.Create(Owner: TVpSchedule);
