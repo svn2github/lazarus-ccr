@@ -95,7 +95,8 @@ begin
   if AEvent.IsOverlayed then
   begin
     res := FWeekView.Datastore.Resources.GetResource(AEvent.ResourceID);
-    Result := Format('[%s] %s', [res.Description, Result]);
+    if res <> nil then
+      Result := Format('[%s] %s', [res.Description, Result]);
   end;
 end;
 

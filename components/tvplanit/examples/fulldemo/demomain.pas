@@ -405,16 +405,15 @@ end;
 
 // Creates a resource group at runtime
 procedure TMainForm.CreateResourceGroup;
-const
-  GROUP_NAME = 'Res2 overlayed';
 var
   datastore: TVpCustomDatastore;
+  grp: TVpResourceGroup;
 begin
   datastore := VpControlLink1.Datastore;
-  datastore.Resources.AddResourceGroup(GROUP_NAME, [1, 2]);
+  grp := datastore.Resources.AddResourceGroup('Res2 overlayed', [1, 2]);
   if datastore.Resource <> nil then
-    datastore.Resource.Group := GROUP_NAME else
-    datastore.Resource.Group := '';
+    datastore.Resource.Group := grp else
+    datastore.Resource.Group := nil;
   // Important: This is not called internally so far!
   datastore.RefreshEvents;
 end;

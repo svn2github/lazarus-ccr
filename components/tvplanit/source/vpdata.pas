@@ -113,7 +113,7 @@ type
     FSchedule: TVpSchedule;
     FTasks: TVpTasks;
     FContacts: TVpContacts;
-    FGroup: String;      // Name of ResourceGroup to be overlayed in event list.
+    FGroup: TVpResourceGroup;
     FActive: Boolean;    // Internal flag whether to display  this resource
     FNotes: string;
     FDescription: string;
@@ -134,7 +134,7 @@ type
     procedure SetContacts(const Value: TVpContacts);
     procedure SetDeleted(Value: Boolean);
     procedure SetDescription(const Value: string);
-    procedure SetGroup(const AValue: String);
+    procedure SetGroup(const AValue: TVpResourceGroup);
     procedure SetNotes(const Value: string);
     procedure SetResourceID(const Value: Integer);
     procedure SetSchedule(const Value: TVpSchedule);
@@ -156,7 +156,7 @@ type
     property Schedule: TVpSchedule read GetSchedule write SetSchedule;
     property Tasks: TVpTasks read FTasks write SetTasks;
     property Contacts: TVpContacts read FContacts write SetContacts;
-    property Group: String read FGroup write SetGroup;
+    property Group: TVpResourceGroup read FGroup write SetGroup;
 
 {$ifdef WITHRTTI}
   published
@@ -944,7 +944,7 @@ begin
   end;
 end;
 
-procedure TVpResource.SetGroup(const AValue: String);
+procedure TVpResource.SetGroup(const AValue: TVpResourceGroup);
 begin
   FGroup := AValue;
 end;

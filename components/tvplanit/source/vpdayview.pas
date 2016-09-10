@@ -1159,13 +1159,8 @@ end;
 {=====}
 
 procedure TVpDayView.PopupPickResourceGroupEvent(Sender: TObject);
-var
-  grp: TVpResourceGroup;
 begin
-  if TMenuItem(Sender).Tag = 0 then
-    Datastore.Resource.Group := ''
-  else
-    Datastore.Resource.Group := TMenuItem(Sender).Caption;
+  Datastore.Resource.Group := TVpResourceGroup(TMenuItem(Sender).Tag);
   Datastore.UpdateGroupEvents;
 end;
 

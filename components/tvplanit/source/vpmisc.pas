@@ -730,7 +730,7 @@ begin
         newSubItem.OnClick := AEventHandler;
         newSubItem.GroupIndex := 1;
         newSubItem.AutoCheck := true;
-        newSubItem.Checked := datastore.Resource.Group = '';
+        newSubItem.Checked := datastore.Resource.Group = nil;
         newSubItem.Tag := 0;
         newItem.Add(newSubItem);
 
@@ -747,7 +747,7 @@ begin
           newSubItem.OnClick := AEventHandler;
           newSubItem.GroupIndex := 1;
           newSubItem.AutoCheck := true;
-          newSubItem.Checked := (datastore.Resource.Group = grp.Caption);
+          newSubItem.Checked := (datastore.Resource.Group = grp);
           newSubItem.Tag := PtrInt(grp);
           newItem.Add(NewSubItem);
         end;

@@ -805,22 +805,17 @@ procedure TVpCustomDatastore.UpdateGroupEvents;
 var
   i: Integer;
   event: TVpEvent;
-  grp: TVpResourceGroup;
   id: Integer;
 begin
   Resource.Schedule.ClearGroupEvents;
 
-  if Resource.Group = '' then begin
+  if Resource.Group = nil then begin
     NotifyDependents;
     exit;
   end;
 
-  grp := Resources.FindResourceGroupByName(Resource.Group);
-  if grp = nil then
-    exit;
-
-  for i:=0 to grp.Count-1 do begin
-    id := grp[i].ResourceID;
+  for i:=0 to Resource.Group.Count-1 do begin
+    id := Resource.Group[i].ResourceID;
     if id = ResourceID then
       exit;
     LoadEventsOfResource(id);
