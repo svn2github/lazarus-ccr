@@ -946,57 +946,69 @@ begin
     NewItem.Tag := 0;
     FDefaultPopup.Items.Add(NewItem);
 
-    if RSWeekPopupNavToday <> '' then begin
+    if RSToday <> '' then begin
       NewSubItem := TMenuItem.Create(Self);
-      NewSubItem.Caption := RSWeekPopupNavToday;
+      NewSubItem.Caption := RSToday;
       NewSubItem.OnClick := PopupToday;
       NewSubItem.Tag := 0;
       NewItem.Add(NewSubItem);
     end;
 
-    if RSWeekPopupNavNextWeek <> '' then begin
+    NewSubItem := TMenuItem.Create(Self);
+    NewSubItem.Caption := '-';
+    NewItem.Add(NewSubItem);
+
+    if RSNextWeek <> '' then begin
       NewSubItem := TMenuItem.Create(Self);
-      NewSubItem.Caption := RSWeekPopupNavNextWeek;
+      NewSubItem.Caption := RSNextWeek;
       NewSubItem.OnClick := PopupNextWeek;
       NewSubItem.Tag := 0;
       NewItem.Add(NewSubItem);
     end;
 
-    if RSWeekPopupNavPrevWeek <> '' then begin
+    if RSPrevWeek <> '' then begin
       NewSubItem := TMenuItem.Create(Self);
-      NewSubItem.Caption := RSWeekPopupNavPrevWeek;
+      NewSubItem.Caption := RSPrevWeek;
       NewSubItem.OnClick := PopupPrevWeek;
       NewSubItem.Tag := 0;
       NewItem.Add(NewSubItem);
     end;
 
-    if RSWeekPopupNavNextMonth <> '' then begin
+    NewSubItem := TMenuItem.Create(Self);
+    NewSubItem.Caption := '-';
+    NewItem.Add(NewSubItem);
+
+    if RSNextMonth <> '' then begin
       NewSubItem := TMenuItem.Create(Self);
-      NewSubItem.Caption := RSWeekPopupNavNextMonth;
+      NewSubItem.Caption := RSNextMonth;
       NewSubItem.OnClick := PopupNextMonth;
       NewSubItem.Tag := 0;
       NewItem.Add(NewSubItem);
     end;
 
-    if RSWeekPopupNavPrevMonth <> '' then begin
+    if RSPrevMonth <> '' then begin
       NewSubItem := TMenuItem.Create(Self);
-      NewSubItem.Caption := RSWeekPopupNavPrevMonth;
+      NewSubItem.Caption := RSPrevMonth;
       NewSubItem.OnClick := PopupPrevMonth;
       NewSubItem.Tag := 0;
       NewItem.Add(NewSubItem);
     end;
 
-    if RSWeekPopupNavNextYear <> '' then begin
+    NewSubItem := TMenuItem.Create(Self);
+    NewSubItem.Caption := '-';
+    NewItem.Add(NewSubItem);
+
+    if RSNextYear <> '' then begin
       NewSubItem := TMenuItem.Create(Self);
-      NewSubItem.Caption := RSWeekPopupNavNextYear;
+      NewSubItem.Caption := RSNextYear;
       NewSubItem.OnClick := PopupNextYear;
       NewSubItem.Tag := 0;
       NewItem.Add(NewSubItem);
     end;
 
-    if RSWeekPopupNavPrevYear <> '' then begin
+    if RSPrevYear <> '' then begin
       NewSubItem := TMenuItem.Create(Self);
-      NewSubItem.Caption := RSWeekPopupNavPrevYear;
+      NewSubItem.Caption := RSPrevYear;
       NewSubItem.OnClick := PopupPrevYear;
       NewSubItem.Tag := 0;
       NewItem.Add(NewSubItem);

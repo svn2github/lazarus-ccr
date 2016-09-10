@@ -837,7 +837,7 @@ begin
   end else
     RenderCanvas.Brush.Color := WindowColor;
   if AEvent.IsOverlayed then
-    RenderCanvas.Brush.Style := bsBDiagonal;
+    RenderCanvas.Brush.Style := OverlayPatternToBrushStyle(AEvent.GetResource.Group.Pattern);
   TPSFillRect(RenderCanvas, Angle, RenderIn, EventRect);
   RenderCanvas.Brush.Style := bsSolid;
 

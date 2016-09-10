@@ -60,6 +60,9 @@ type
 
   TVpContactSort = (csLastFirst, csFirstLast);
 
+  TVpOverlayPattern = (opHorizontal=2, opVertical, opFDiagonal,
+                       opBDiagonal, opCross, opDiagCross);
+
   { forward declarations }
   TVpResource = class;
   TVpResourceGroup = class;
@@ -186,8 +189,10 @@ type
     FCaption: String;
     FIDs: Array of Integer;
     FReadOnly: Boolean;
+    FPattern: TVpOverlayPattern;
     function GetCount: integer;
     function GetItem(AIndex: Integer): TVpResource;
+    procedure SetPattern(AValue: TVpOverlayPattern);
   public
     constructor Create(AOwner: TVpResources; ACaption: String; AResourceID: Integer);
     destructor Destroy; override;
@@ -201,6 +206,7 @@ type
     property Items[AIndex: Integer]: TVpResource read GetItem; default;
     property ResourceID: Integer read FResourceID;
     property ReadOnly: boolean read FReadOnly write FReadOnly;
+    property Pattern: TVpOverlayPattern read FPattern write SetPattern;
   end;
 
   TVpSchedule = class
@@ -985,6 +991,7 @@ begin
   FOwner := AOwner;
   FResourceID := AResourceID;
   FCaption := ACaption;
+  FPattern := opBDiagonal;
   Clear;
 end;
 
@@ -1075,6 +1082,13 @@ begin
     end;
     inc(i);
   end;
+end;
+
+procedure TVpResourceGroup.SetPattern(AValue: TVpOverlayPattern);
+begin
+  if FPattern = AValue then
+    exit;
+  FPattern := AValue;
 end;
 
 

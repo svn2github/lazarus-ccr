@@ -859,37 +859,45 @@ procedure TVpMonthView.InitializeDefaultPopup;
 var
   NewItem : TMenuItem;
 begin
-  if RSMonthPopupToday <> '' then begin
+  if RSToday <> '' then begin
     NewItem := TMenuItem.Create(Self);
-    NewItem.Caption := RSMonthPopupToday;
+    NewItem.Caption := RSToday;
     NewItem.OnClick := PopupToday;
     FDefaultPopup.Items.Add (NewItem);
   end;
 
-  if RSMonthPopupNextMonth <> '' then begin
+  NewItem := TMenuItem.Create(Self);
+  NewItem.Caption := '-';
+  FDefaultPopup.Items.Add(NewItem);
+
+  if RSNextMonth <> '' then begin
     NewItem := TMenuItem.Create(Self);
-    NewItem.Caption := RSMonthPopupNextMonth;
+    NewItem.Caption := RSNextMonth;
     NewItem.OnClick := PopupNextMonth;
     FDefaultPopup.Items.Add (NewItem);
   end;
 
-  if RSMonthPopupPrevMonth <> '' then begin
+  if RSPrevMonth <> '' then begin
     NewItem := TMenuItem.Create(Self);
-    NewItem.Caption := RSMonthPopupPrevMonth;
+    NewItem.Caption := RSPrevMonth;
     NewItem.OnClick := PopupPrevMonth;
     FDefaultPopup.Items.Add (NewItem);
   end;
 
-  if RSMonthPopupNextYear <> '' then begin
+  NewItem := TMenuItem.Create(Self);
+  NewItem.Caption := '-';
+  FDefaultPopup.Items.Add(NewItem);
+
+  if RSNextYear <> '' then begin
     NewItem := TMenuItem.Create(Self);
-    NewItem.Caption := RSMonthPopupNextYear;
+    NewItem.Caption := RSNextYear;
     NewItem.OnClick := PopupNextYear;
     FDefaultPopup.Items.Add (NewItem);
   end;
 
-  if RSMonthPopupPrevYear <> '' then begin
+  if RSPrevYear <> '' then begin
     NewItem := TMenuItem.Create(Self);
-    NewItem.Caption := RSMonthPopupPrevYear;
+    NewItem.Caption := RSPrevYear;
     NewItem.OnClick := PopupPrevYear;
     FDefaultPopup.Items.Add (NewItem);
   end;

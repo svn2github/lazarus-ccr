@@ -143,6 +143,7 @@ function EncodeLineEndings(const AText: String): String;
 
 procedure AddResourceGroupMenu(AMenu: TMenuItem; AResource: TVpResource;
   AEventHandler: TNotifyEvent);
+function OverlayPatternToBrushStyle(APattern: TVpOverlayPattern): TBrushStyle;
 
 {$IFDEF LCL}
 procedure HighDPI(FromDPI: integer);
@@ -752,6 +753,11 @@ begin
       list.Free;
     end;
   end;
+end;
+
+function OverlayPatternToBrushStyle(APattern: TVpOverlayPattern): TBrushStyle;
+begin
+  Result := TBrushStyle(APattern);
 end;
 
 {$IFDEF LCL}

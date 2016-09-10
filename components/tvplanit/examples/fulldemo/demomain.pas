@@ -412,11 +412,12 @@ begin
   datastore := VpControlLink1.Datastore;
   grp := datastore.Resources.AddResourceGroup('Res2 overlayed', [1, 2]);
   grp.ReadOnly := true;
+  grp.Pattern := opDiagCross;
   if datastore.Resource <> nil then
     datastore.Resource.Group := grp else
     datastore.Resource.Group := nil;
   // Important: This is not called internally so far!
-  datastore.RefreshEvents;
+  datastore.RefreshEvents;  // or: datastore.UpdateGroupEvents;
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: boolean);

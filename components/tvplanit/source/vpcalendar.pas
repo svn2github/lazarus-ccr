@@ -808,28 +808,28 @@ begin
   clBtnLeft.Parent := Self;
   clBtnLeft.Glyph.LoadFromResourceName(HINSTANCE,'VPLEFTARROW'); //soner geändert: clBtnLeft.Glyph.Handle := LoadBaseBitmap('VPLEFTARROW');
   clBtnLeft.OnClick := calBtnClick;
-  clBtnLeft.Hint := RSCalendarPrevMonth;
+  clBtnLeft.Hint := RSPrevMonth;
   clBtnLeft.ShowHint := True;
 
   clBtnRight := TSpeedButton.Create(Self);
   clBtnRight.Parent := Self;
   clBtnRight.Glyph.LoadFromResourceName(HINSTANCE,'VPRIGHTARROW'); //soner geändert: clBtnRight.Glyph.Handle := LoadBaseBitmap('VPRIGHTARROW');
   clBtnRight.OnClick := calBtnClick;
-  clBtnRight.Hint := RSCalendarNextMonth;
+  clBtnRight.Hint := RSNextMonth;
   clBtnRight.ShowHint := True;
 
   clBtnNextYear := TSpeedButton.Create(Self);
   clBtnNextYear.Parent := Self;
   clBtnNextYear.Glyph.LoadFromResourceName(HINSTANCE,'VPRIGHTARROWS'); //soner geöndert: clBtnNextYear.Glyph.Handle := LoadBaseBitmap('VPRIGHTARROWS');
   clBtnNextYear.OnClick := calBtnClick;
-  clBtnNextYear.Hint := RSCalendarNextYear;
+  clBtnNextYear.Hint := RSNextYear;
   clBtnNextYear.ShowHint := True;
 
   clBtnPrevYear := TSpeedButton.Create(Self);
   clBtnPrevYear.Parent := Self;
   clBtnPrevYear.Glyph.LoadFromResourceName(HINSTANCE,'VPLEFTARROWS'); //soner geöndert: clBtnPrevYear.Glyph.Handle := LoadBaseBitmap('VPLEFTARROWS');
   clBtnPrevYear.OnClick := calBtnClick;
-  clBtnPrevYear.Hint := RSCalendarPrevYear;
+  clBtnPrevYear.Hint := RSPrevYear;
   clBtnPrevYear.ShowHint := True;
 
   {create "revert" button}
@@ -845,7 +845,7 @@ begin
   clBtnToday.Parent := Self;
   clBtnToday.Glyph.LoadFromResourceName(HINSTANCE,'VPTODAY'); //soner geändert: clBtnToday.Glyph.Handle := LoadBaseBitmap('VPTODAY');
   clBtnToday.OnClick := calBtnClick;
-  clBtnToday.Hint := RSCalendarToday;
+  clBtnToday.Hint := RSToday;
   clBtnToday.ShowHint := True;
 
   {assign default color scheme}
@@ -1653,37 +1653,37 @@ procedure TVpCustomCalendar.InitializeDefaultPopup;
 var
   NewItem: TMenuItem;
 begin
-  if RSCalendarPopupToday <> '' then begin
+  if RSToday <> '' then begin
     NewItem := TMenuItem.Create (Self);
-    NewItem.Caption := RSCalendarPopupToday;
+    NewItem.Caption := RSToday;
     NewItem.OnClick := PopupToday;
     FDefaultPopup.Items.Add (NewItem);
   end;
 
-  if RSCalendarPopupNextMonth <> '' then begin
+  if RSNextMonth <> '' then begin
     NewItem := TMenuItem.Create (Self);
-    NewItem.Caption := RSCalendarPopupNextMonth;
+    NewItem.Caption := RSNextMonth;
     NewItem.OnClick := PopupNextMonth;
     FDefaultPopup.Items.Add (NewItem);
   end;
 
-  if RSCalendarPopupPrevMonth <> '' then begin
+  if RSPrevMonth <> '' then begin
     NewItem := TMenuItem.Create (Self);
-    NewItem.Caption := RSCalendarPopupPrevMonth;
+    NewItem.Caption := RSPrevMonth;
     NewItem.OnClick := PopupPrevMonth;
     FDefaultPopup.Items.Add (NewItem);
   end;
 
-  if RSCalendarPopupNextYear <> '' then begin
+  if RSNextYear <> '' then begin
     NewItem := TMenuItem.Create (Self);
-    NewItem.Caption := RSCalendarPopupNextYear;
+    NewItem.Caption := RSNextYear;
     NewItem.OnClick := PopupNextYear;
     FDefaultPopup.Items.Add (NewItem);
   end;
 
-  if RSCalendarPopupPrevYear <> '' then begin
+  if RSPrevYear <> '' then begin
     NewItem := TMenuItem.Create (Self);
-    NewItem.Caption := RSCalendarPopupPrevYear;
+    NewItem.Caption := RSPrevYear;
     NewItem.OnClick := PopupPrevYear;
     FDefaultPopup.Items.Add (NewItem);
   end;

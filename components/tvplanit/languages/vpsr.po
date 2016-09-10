@@ -109,64 +109,14 @@ msgstr ""
 msgid "Calendar"
 msgstr ""
 
-#: vpsr.rscalendarnextmonth
-msgctxt "vpsr.rscalendarnextmonth"
-msgid "Next Month"
-msgstr ""
-
-#: vpsr.rscalendarnextyear
-msgctxt "vpsr.rscalendarnextyear"
-msgid "Next Year"
-msgstr ""
-
-#: vpsr.rscalendarpopupnextmonth
-msgctxt "vpsr.rscalendarpopupnextmonth"
-msgid "Next Month"
-msgstr ""
-
-#: vpsr.rscalendarpopupnextyear
-msgctxt "vpsr.rscalendarpopupnextyear"
-msgid "Next Year"
-msgstr ""
-
-#: vpsr.rscalendarpopupprevmonth
-msgctxt "vpsr.rscalendarpopupprevmonth"
-msgid "Previous Month"
-msgstr ""
-
-#: vpsr.rscalendarpopupprevyear
-msgctxt "vpsr.rscalendarpopupprevyear"
-msgid "Previous Year"
-msgstr ""
-
 #: vpsr.rscalendarpopuprevert
 msgctxt "vpsr.rscalendarpopuprevert"
 msgid "Revert"
 msgstr ""
 
-#: vpsr.rscalendarpopuptoday
-msgctxt "vpsr.rscalendarpopuptoday"
-msgid "Today"
-msgstr ""
-
-#: vpsr.rscalendarprevmonth
-msgctxt "vpsr.rscalendarprevmonth"
-msgid "Previous Month"
-msgstr ""
-
-#: vpsr.rscalendarprevyear
-msgctxt "vpsr.rscalendarprevyear"
-msgid "Previous Year"
-msgstr ""
-
 #: vpsr.rscalendarrevert
 msgctxt "vpsr.rscalendarrevert"
 msgid "Revert"
-msgstr ""
-
-#: vpsr.rscalendartoday
-msgctxt "vpsr.rscalendartoday"
-msgid "Today"
 msgstr ""
 
 #: vpsr.rscalendarweekabbr
@@ -264,15 +214,15 @@ msgid "Delete this task from your list?"
 msgstr ""
 
 #: vpsr.rscontactpopupadd
-msgid "Add Contact..."
+msgid "Add contact..."
 msgstr ""
 
 #: vpsr.rscontactpopupdelete
-msgid "Delete Contact..."
+msgid "Delete contact..."
 msgstr ""
 
 #: vpsr.rscontactpopupedit
-msgid "Edit Contact..."
+msgid "Edit contact..."
 msgstr ""
 
 #: vpsr.rscontactselement
@@ -321,74 +271,21 @@ msgstr ""
 
 #: vpsr.rsdaypopupadd
 msgctxt "vpsr.rsdaypopupadd"
-msgid "Add Event..."
+msgid "Add event..."
 msgstr ""
 
 #: vpsr.rsdaypopupdelete
-msgid "Delete Event..."
+msgid "Delete event..."
 msgstr ""
 
 #: vpsr.rsdaypopupedit
 msgctxt "vpsr.rsdaypopupedit"
-msgid "Edit Event..."
+msgid "Edit event..."
 msgstr ""
 
 #: vpsr.rsdaypopupnav
 msgctxt "vpsr.rsdaypopupnav"
-msgid "Change Date"
-msgstr ""
-
-#: vpsr.rsdaypopupnavnextday
-msgid "Next Day"
-msgstr ""
-
-#: vpsr.rsdaypopupnavnextmonth
-msgctxt "vpsr.rsdaypopupnavnextmonth"
-msgid "Next Month"
-msgstr ""
-
-#: vpsr.rsdaypopupnavnextweek
-msgctxt "vpsr.rsdaypopupnavnextweek"
-msgid "Next Week"
-msgstr ""
-
-#: vpsr.rsdaypopupnavnextyear
-msgctxt "vpsr.rsdaypopupnavnextyear"
-msgid "Next Year"
-msgstr ""
-
-#: vpsr.rsdaypopupnavprevday
-msgid "Previous Day"
-msgstr ""
-
-#: vpsr.rsdaypopupnavprevmonth
-msgctxt "vpsr.rsdaypopupnavprevmonth"
-msgid "Previous Month"
-msgstr ""
-
-#: vpsr.rsdaypopupnavprevweek
-msgctxt "vpsr.rsdaypopupnavprevweek"
-msgid "Previous Week"
-msgstr ""
-
-#: vpsr.rsdaypopupnavprevyear
-msgctxt "vpsr.rsdaypopupnavprevyear"
-msgid "Previous Year"
-msgstr ""
-
-#: vpsr.rsdaypopupnavtoday
-msgctxt "vpsr.rsdaypopupnavtoday"
-msgid "Today"
-msgstr ""
-
-#: vpsr.rsdaypopupnavtomorrow
-msgctxt "vpsr.rsdaypopupnavtomorrow"
-msgid "Tomorrow"
-msgstr ""
-
-#: vpsr.rsdaypopupnavyesterday
-msgctxt "vpsr.rsdaypopupnavyesterday"
-msgid "Yesterday"
+msgid "Change date"
 msgstr ""
 
 #: vpsr.rsdays
@@ -461,7 +358,7 @@ msgid "Due Date:"
 msgstr ""
 
 #: vpsr.rsduplicateresource
-msgid "Error: Duplicate Resource."
+msgid "Error: Duplicate resource."
 msgstr ""
 
 #: vpsr.rseditbtn
@@ -477,11 +374,11 @@ msgid "Edit format"
 msgstr ""
 
 #: vpsr.rseditingfolders
-msgid "Folder Editor."
+msgid "Folder editor."
 msgstr ""
 
 #: vpsr.rseditingitems
-msgid "Folder Items Editor."
+msgid "Folder items editor."
 msgstr ""
 
 #: vpsr.rseditprintformat
@@ -565,39 +462,6 @@ msgstr ""
 msgid "Height"
 msgstr ""
 
-#: vpsr.rshintnextday
-msgid "Next day"
-msgstr ""
-
-#: vpsr.rshintnextweek
-msgctxt "vpsr.rshintnextweek"
-msgid "Next week"
-msgstr ""
-
-#: vpsr.rshintprevday
-msgid "Previous day"
-msgstr ""
-
-#: vpsr.rshintprevweek
-msgctxt "vpsr.rshintprevweek"
-msgid "Previous week"
-msgstr ""
-
-#: vpsr.rshinttoday
-msgctxt "vpsr.rshinttoday"
-msgid "Today"
-msgstr ""
-
-#: vpsr.rshinttomorrow
-msgctxt "vpsr.rshinttomorrow"
-msgid "Tomorrow"
-msgstr ""
-
-#: vpsr.rshintyesterday
-msgctxt "vpsr.rshintyesterday"
-msgid "Yesterday"
-msgstr ""
-
 #: vpsr.rshours
 msgid "Hours"
 msgstr ""
@@ -615,19 +479,19 @@ msgid "Interval (days):"
 msgstr ""
 
 #: vpsr.rsinvaliddate
-msgid "Error: Invalid Date."
+msgid "Error: Invalid date."
 msgstr ""
 
 #: vpsr.rsinvalidday
-msgid "Error: Invalid Day."
+msgid "Error: Invalid day."
 msgstr ""
 
 #: vpsr.rsinvalidmonth
-msgid "Error: Invalid Month."
+msgid "Error: Invalid month."
 msgstr ""
 
 #: vpsr.rsinvalidmonthname
-msgid "Error: Invalid Month Name."
+msgid "Error: Invalid month name."
 msgstr ""
 
 #: vpsr.rsinvalidtablespecified
@@ -635,7 +499,7 @@ msgid "Error: Invalid table specified."
 msgstr ""
 
 #: vpsr.rsinvalidyear
-msgid "Error: Invalid Year."
+msgid "Error: Invalid year."
 msgstr ""
 
 #: vpsr.rslastnamelbl
@@ -720,36 +584,11 @@ msgid "Error: Month Is Required."
 msgstr ""
 
 #: vpsr.rsmonthlybydate
-msgid "Monthly By Date"
+msgid "Monthly by date"
 msgstr ""
 
 #: vpsr.rsmonthlybyday
-msgid "Monthly By Day"
-msgstr ""
-
-#: vpsr.rsmonthpopupnextmonth
-msgctxt "vpsr.rsmonthpopupnextmonth"
-msgid "Next Month"
-msgstr ""
-
-#: vpsr.rsmonthpopupnextyear
-msgctxt "vpsr.rsmonthpopupnextyear"
-msgid "Next Year"
-msgstr ""
-
-#: vpsr.rsmonthpopupprevmonth
-msgctxt "vpsr.rsmonthpopupprevmonth"
-msgid "Previous Month"
-msgstr ""
-
-#: vpsr.rsmonthpopupprevyear
-msgctxt "vpsr.rsmonthpopupprevyear"
-msgid "Previous Year"
-msgstr ""
-
-#: vpsr.rsmonthpopuptoday
-msgctxt "vpsr.rsmonthpopuptoday"
-msgid "Today"
+msgid "Monthly by day"
 msgstr ""
 
 #: vpsr.rsmonths
@@ -782,6 +621,24 @@ msgstr ""
 
 #: vpsr.rsnewfilebtn
 msgid "New file"
+msgstr ""
+
+#: vpsr.rsnextday
+msgctxt "vpsr.rsnextday"
+msgid "Next day"
+msgstr ""
+
+#: vpsr.rsnextmonth
+msgid "Next month"
+msgstr ""
+
+#: vpsr.rsnextweek
+msgctxt "vpsr.rsnextweek"
+msgid "Next week"
+msgstr ""
+
+#: vpsr.rsnextyear
+msgid "Next year"
 msgstr ""
 
 #: vpsr.rsno
@@ -879,7 +736,7 @@ msgid "Assistant"
 msgstr ""
 
 #: vpsr.rsphonetypelabel10
-msgid "Other Fax"
+msgid "Other fax"
 msgstr ""
 
 #: vpsr.rsphonetypelabel11
@@ -907,7 +764,7 @@ msgid "Work"
 msgstr ""
 
 #: vpsr.rsphonetypelabel17
-msgid "Work Fax"
+msgid "Work fax"
 msgstr ""
 
 #: vpsr.rsphonetypelabel2
@@ -928,7 +785,7 @@ msgid "Home"
 msgstr ""
 
 #: vpsr.rsphonetypelabel6
-msgid "Home Fax"
+msgid "Home fax"
 msgstr ""
 
 #: vpsr.rsphonetypelabel7
@@ -958,6 +815,24 @@ msgstr ""
 
 #: vpsr.rspositionlbl
 msgid "Position:"
+msgstr ""
+
+#: vpsr.rsprevday
+msgctxt "vpsr.rsprevday"
+msgid "Previous day"
+msgstr ""
+
+#: vpsr.rsprevmonth
+msgid "Previous month"
+msgstr ""
+
+#: vpsr.rsprevweek
+msgctxt "vpsr.rsprevweek"
+msgid "Previous week"
+msgstr ""
+
+#: vpsr.rsprevyear
+msgid "Previous year"
 msgstr ""
 
 #: vpsr.rsprintbtn
@@ -1136,15 +1011,15 @@ msgid "Task complete"
 msgstr ""
 
 #: vpsr.rstaskpopupadd
-msgid "Add Task..."
+msgid "Add task..."
 msgstr ""
 
 #: vpsr.rstaskpopupdelete
-msgid "Delete Task..."
+msgid "Delete task..."
 msgstr ""
 
 #: vpsr.rstaskpopupedit
-msgid "Edit Task..."
+msgid "Edit task..."
 msgstr ""
 
 #: vpsr.rstaskselement
@@ -1152,11 +1027,11 @@ msgid "Tasks"
 msgstr ""
 
 #: vpsr.rstasktitlenoresource
-msgid "Task List"
+msgid "Task list"
 msgstr ""
 
 #: vpsr.rstasktitleresource
-msgid "Task List - "
+msgid "Task list - "
 msgstr ""
 
 #: vpsr.rstextcaption
@@ -1189,6 +1064,16 @@ msgstr ""
 
 #: vpsr.rstltobrline
 msgid "top-left to bottom-right line"
+msgstr ""
+
+#: vpsr.rstoday
+msgctxt "vpsr.rstoday"
+msgid "Today"
+msgstr ""
+
+#: vpsr.rstomorrow
+msgctxt "vpsr.rstomorrow"
+msgid "Tomorrow"
 msgstr ""
 
 #: vpsr.rstop
@@ -1238,56 +1123,21 @@ msgstr ""
 
 #: vpsr.rsweekpopupadd
 msgctxt "vpsr.rsweekpopupadd"
-msgid "Add Event..."
+msgid "Add event..."
 msgstr ""
 
 #: vpsr.rsweekpopupdelete
-msgid "&Delete Event..."
+msgid "&Delete event..."
 msgstr ""
 
 #: vpsr.rsweekpopupedit
 msgctxt "vpsr.rsweekpopupedit"
-msgid "Edit Event..."
+msgid "Edit event..."
 msgstr ""
 
 #: vpsr.rsweekpopupnav
 msgctxt "vpsr.rsweekpopupnav"
-msgid "Change Date"
-msgstr ""
-
-#: vpsr.rsweekpopupnavnextmonth
-msgctxt "vpsr.rsweekpopupnavnextmonth"
-msgid "Next Month"
-msgstr ""
-
-#: vpsr.rsweekpopupnavnextweek
-msgctxt "vpsr.rsweekpopupnavnextweek"
-msgid "Next Week"
-msgstr ""
-
-#: vpsr.rsweekpopupnavnextyear
-msgctxt "vpsr.rsweekpopupnavnextyear"
-msgid "Next Year"
-msgstr ""
-
-#: vpsr.rsweekpopupnavprevmonth
-msgctxt "vpsr.rsweekpopupnavprevmonth"
-msgid "Previous Month"
-msgstr ""
-
-#: vpsr.rsweekpopupnavprevweek
-msgctxt "vpsr.rsweekpopupnavprevweek"
-msgid "Previous Week"
-msgstr ""
-
-#: vpsr.rsweekpopupnavprevyear
-msgctxt "vpsr.rsweekpopupnavprevyear"
-msgid "Previous Year"
-msgstr ""
-
-#: vpsr.rsweekpopupnavtoday
-msgctxt "vpsr.rsweekpopupnavtoday"
-msgid "Today"
+msgid "Change date"
 msgstr ""
 
 #: vpsr.rsweeks
@@ -1323,11 +1173,11 @@ msgid "Error: Year is required."
 msgstr ""
 
 #: vpsr.rsyearlybydate
-msgid "Yearly By Date"
+msgid "Yearly by date"
 msgstr ""
 
 #: vpsr.rsyearlybyday
-msgid "Yearly By Day"
+msgid "Yearly by day"
 msgstr ""
 
 #: vpsr.rsyears
@@ -1336,6 +1186,11 @@ msgstr ""
 
 #: vpsr.rsyes
 msgid "Y"
+msgstr ""
+
+#: vpsr.rsyesterday
+msgctxt "vpsr.rsyesterday"
+msgid "Yesterday"
 msgstr ""
 
 #: vpsr.rszipcodelbl
