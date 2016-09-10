@@ -665,6 +665,10 @@ msgstr ""
 msgid "(None)"
 msgstr ""
 
+#: vpsr.rsnooverlayedevents
+msgid "none"
+msgstr ""
+
 #: vpsr.rsnoprintformats
 msgid "No print formats have been defined"
 msgstr ""

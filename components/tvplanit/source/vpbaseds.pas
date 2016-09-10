@@ -75,8 +75,8 @@ type
   TVpNoLocalizationFile = procedure (Sender: TObject;
     FileName: string) of object;
 
-  TVpDateChangedEvent = procedure (Sender: TObject;                      
-    Date: TDateTime) of object;                                          
+  TVpDateChangedEvent = procedure (Sender: TObject;
+    Date: TDateTime) of object;
 
   { contact events }
   TVpContactEvent = procedure(Sender: TObject; Contact: TVpContact) of object;
@@ -87,8 +87,8 @@ type
   TVpOwnerDrawContactEvent = procedure(Sender: TObject; const Canvas: TCanvas;
     R: TRect; Contact: TVpContact; var Drawn: Boolean) of object;
 
-  TVpCGColWidthChangeEvent = procedure(Sender: TObject;                  
-    NewColWidth: Integer) of object;                                     
+  TVpCGColWidthChangeEvent = procedure(Sender: TObject;
+    NewColWidth: Integer) of object;
 
   { task events }
   TVpBeforeEditTask = procedure(Sender: TObject; Task: TVpTask;
@@ -97,7 +97,7 @@ type
   TVpAfterEditTask = procedure(Sender: TObject; Task: TVpTask) of object;
 
   TVpEditTask = procedure(Sender: TObject; Task: TVpTask;
-    Resource: TVpResource; var AllowIt: Boolean) of object;              
+    Resource: TVpResource; var AllowIt: Boolean) of object;
 
   TVpOwnerDrawTask = procedure(Sender: TObject; const Canvas: TCanvas;
     R: TRect; Task: TVpTask; var Drawn: Boolean) of object;
@@ -113,8 +113,8 @@ type
   TVpEditEvent = procedure(Sender: TObject; Event: TVpEvent;
     Resource:TVpResource; var AllowIt: Boolean) of object;
 
-  TVpOnAddNewEvent = procedure (Sender: TObject;                         
-    Event: TVpEvent) of object;                                          
+  TVpOnAddNewEvent = procedure (Sender: TObject;
+    Event: TVpEvent) of object;
 
   { resource events }
 
@@ -229,7 +229,7 @@ type
     FOnDisconnect      : TNotifyEvent;
     FOnAlert           : TVpEventEvent;
     FOnResourceChange  : TVpResourceEvent;
-    FOnDateChanged     : TVpDateChangedEvent;                            
+    FOnDateChanged     : TVpDateChangedEvent;
     FOnPlaySound       : TVpPlaySoundEvent;
 
     procedure dsOnTimer(Sender: TObject);
@@ -243,6 +243,7 @@ type
     procedure SetDayBuffer(Value: Integer);
     procedure SetRange(StartTime, EndTime: TDateTime);
 
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure NotifyLinked;
     procedure LinkToControls(AOwner: TComponent);
     procedure UnlinkFromControls(AOwner: TComponent);
@@ -310,8 +311,8 @@ type
       read FOnAlert write FOnAlert;
     property OnConnect: TNotifyEvent
       read FOnConnect write FOnConnect;
-    property OnDateChanged: TVpDateChangedEvent                          
-      read FOnDateChanged write FOnDateChanged;                          
+    property OnDateChanged: TVpDateChangedEvent
+      read FOnDateChanged write FOnDateChanged;
     property OnDisconnect: TNotifyEvent
       read FOnDisconnect write FOnDisconnect;
     property OnResourceChange: TVpResourceEvent
@@ -324,11 +325,12 @@ type
   {TVpLinkableControl}
   TVpLinkableControl = class(TVpCustomControl)
   protected{private}
-    FDataStore     : TVpCustomDataStore;
-    FReadOnly      : Boolean;
-    FControlLink   : TVpControlLink;
-    FLastPrintLine : Integer;
+    FDataStore: TVpCustomDataStore;
+    FReadOnly: Boolean;
+    FControlLink: TVpControlLink;
+    FLastPrintLine: Integer;
     function CheckCreateResource : Boolean;                                   
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure SetDataStore (const Value : TVpCustomDataStore); virtual;
     procedure SetControlLink (const Value : TVpControlLink);
     procedure CMEnter(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message CM_ENTER;
@@ -350,15 +352,15 @@ type
     property DataStore: TVpCustomDataStore read FDataStore write SetDataStore;
     property ControlLink: TVpControlLink read FControlLink write SetControlLink;
 
-    property Color;                                                      
+    property Color;
     property Font;
-    property ParentColor;                                                
-    property ParentFont;                                                 
-    property ParentShowHint;                                             
+    property ParentColor;
+    property ParentFont;
+    property ParentShowHint;
 
-    property AfterEnter;                                                 
-    property AfterExit;                                                  
-    property OnMouseWheel;                                               
+    property AfterEnter;
+    property AfterExit;
+    property OnMouseWheel;
 
   end;
 
@@ -369,7 +371,7 @@ type
     FPrinter          : TVpPrinter;
     FDataStore        : TVpCustomDataStore;
     FOnGetVariable    : TVpOnGetVariableEvent;
-    FOnNoLocalizationFile : TVpNoLocalizationFile;                       
+    FOnNoLocalizationFile : TVpNoLocalizationFile;
     FOnPageStart      : TVpOnPageStartEvent;
     FOnPageEnd        : TVpOnPageEndEvent;
     FLocalization     : TVpLocalization;
@@ -433,10 +435,10 @@ begin
   FResources := TVpResources.Create(Self);
   FTimeRange := TVpTimeRange.Create(Self);
   FCategoryColorMap := TVpCategoryColorMap.Create;
-  FActiveDate := Now;                                                 
+  FActiveDate := Now;
   FDayBuffer := 31;  {One full month before and after the current date. }
-  FTimeRange.StartTime := Now - FDayBuffer;                           
-  FTimeRange.EndTime := Now + FDayBuffer;                             
+  FTimeRange.StartTime := Now - FDayBuffer;
+  FTimeRange.EndTime := Now + FDayBuffer;
 
   FPlayEventSounds := true;
 
@@ -600,16 +602,21 @@ begin
   Result := FMediaFolder <> '';
 end;
 
+procedure TVpCustomDatastore.Notification(AComponent: TComponent; Operation: TOperation);
+begin
+  inherited Notification(AComponent, Operation);
+  if (Operation = opRemove) and (AComponent = FLinkedOwner) then
+    FLinkedOwner := nil;
+end;
+
 procedure TVpCustomDataStore.NotifyLinked;
 var
-  i : Integer;
-  
+  i: Integer;
 begin
   for i := 0 to FNotifiers.Count - 1 do
-    if Assigned (FNotifiers[i]) then
-      PostMessage (PVpWatcher (FNotifiers[i]).Handle, Vp_DataStoreChanged, 0, 0);
+    if Assigned(FNotifiers[i]) then
+      PostMessage(PVpWatcher(FNotifiers[i]).Handle, Vp_DataStoreChanged, 0, 0);
 end;
-{=====}
 
 procedure TVpCustomDataStore.SetActiveDate(Value: TDateTime);
 var
@@ -632,8 +639,8 @@ begin
     RefreshEvents;
   end;
 
-  if Assigned(FOnDateChanged) then                                       
-    FOnDateChanged(Self, FActiveDate);                                   
+  if Assigned(FOnDateChanged) then
+    FOnDateChanged(Self, FActiveDate);
 end;
 {=====}
 
@@ -675,9 +682,9 @@ begin
     if FResource = nil then
       Exit;
     FResourceID := Value;
-    RefreshEvents;                                                     
-    RefreshContacts;                                                   
-    RefreshTasks;                                                      
+    RefreshEvents;
+    RefreshContacts;
+    RefreshTasks;
     if Assigned(FOnResourceChange) then
       FOnResourceChange(Self, FResource);
     if not Loading then
@@ -690,12 +697,12 @@ procedure TVpCustomDataStore.SetResource(Value: TVpResource);
 begin
   if Value <> FResource then begin
     FResource := Value;
-    if FResource <> nil then begin                                     
-      FResourceID := FResource.ResourceID;                             
-      RefreshEvents;                                                   
-      RefreshContacts;                                                 
-      RefreshTasks;                                                    
-    end else                                                           
+    if FResource <> nil then begin
+      FResourceID := FResource.ResourceID;
+      RefreshEvents;
+      RefreshContacts;
+      RefreshTasks;
+    end else
       FResourceID := -1;
     if not Loading then
       NotifyDependents;
@@ -769,37 +776,33 @@ begin
 end;
 {=====}
 
-procedure TVpCustomDataStore.PurgeResource(Res: TVpResource);         
+procedure TVpCustomDataStore.PurgeResource(Res: TVpResource);
 begin
   Unused(Res);
-  if not Loading then                                                 
-    NotifyDependents;                                                 
-end;                                                                  
-{=====}                                                               
+  if not Loading then
+    NotifyDependents;
+end;
 
-procedure TVpCustomDataStore.PurgeEvents(Res: TVpResource);           
-begin                                                                 
-  Res.Schedule.ClearEvents;                                           
-  if not Loading then                                                 
-    NotifyDependents;                                                 
-end;                                                                  
-{=====}                                                               
+procedure TVpCustomDataStore.PurgeEvents(Res: TVpResource);
+begin
+  Res.Schedule.ClearEvents;
+  if not Loading then
+    NotifyDependents;
+end;
 
-procedure TVpCustomDataStore.PurgeContacts(Res: TVpResource);         
-begin                                                                 
-  Res.Contacts.ClearContacts;                                         
-  if not Loading then                                                 
-    NotifyDependents;                                                 
-end;                                                                  
-{=====}                                                               
+procedure TVpCustomDataStore.PurgeContacts(Res: TVpResource);
+begin
+  Res.Contacts.ClearContacts;
+  if not Loading then
+    NotifyDependents;
+end;
 
-procedure TVpCustomDataStore.PurgeTasks(Res: TVpResource);            
-begin                                                                 
-  Res.Tasks.ClearTasks;                                               
-  if not Loading then                                                 
-    NotifyDependents;                                                 
-end;                                                                  
-{=====}                                                               
+procedure TVpCustomDataStore.PurgeTasks(Res: TVpResource);
+begin
+  Res.Tasks.ClearTasks;
+  if not Loading then
+    NotifyDependents;
+end;
 
 procedure TVpCustomDatastore.UpdateGroupEvents;
 var
@@ -1034,11 +1037,8 @@ begin
   inherited;
 
   OnChange := ResourceChanged;
-
-  FResourceUpdateStyle := ruOnChange;                                    
-
+  FResourceUpdateStyle := ruOnChange;
   Style := csDropDownList;
-
   DoubleBuffered := true;
 
   { If the ResourceCombo is being dropped onto a form for the first }
@@ -1059,15 +1059,15 @@ end;
 {=====}
 
 {$IFNDEF LCL}
-procedure TVpResourceCombo.CNCommand (var Msg: TWMCommand);              
-begin                                                                    
-  if Msg.NotifyCode = CBN_CLOSEUP then begin                             
-    if (FResourceUpdateStyle = ruOnDropDownClose) then                   
-      ResourceChanged (Self)                                             
-    else                                                                 
-      inherited;                                                         
-  end else                                                               
-    inherited;                                                           
+procedure TVpResourceCombo.CNCommand (var Msg: TWMCommand);
+begin
+  if Msg.NotifyCode = CBN_CLOSEUP then begin
+    if (FResourceUpdateStyle = ruOnDropDownClose) then
+      ResourceChanged(Self)
+    else
+      inherited;
+  end else
+    inherited;
 end;
 {$ENDIF}
 {=====}
@@ -1132,27 +1132,29 @@ begin
   //Empty on purpose
 end;
 {=====}
-procedure TVpResourceCombo.SetResourceUpdateStyle (                      
-              const v : TVpResourceUpdate);                              
-begin                                                                    
-  if v <> FResourceUpdateStyle then begin                                
-    FResourceUpdateStyle := v;                                           
-    case FResourceUpdateStyle of                                         
-      ruOnChange  : begin                                                
-        OnChange := ResourceChanged;                                     
-        OnExit   := nil;                                                 
-      end;                                                               
-      ruOnExit : begin                                                   
-        OnChange := nil;                                                 
-        OnExit   := ResourceChanged;                                     
-      end;                                                               
-      ruOnDropDownClose : begin                                          
-        OnChange := nil;                                                 
-        OnExit   := nil;                                                 
-      end;                                                               
-    end;                                                                 
-  end;                                                                   
-end;                                                                     
+procedure TVpResourceCombo.SetResourceUpdateStyle(const v: TVpResourceUpdate);
+begin
+  if v <> FResourceUpdateStyle then begin
+    FResourceUpdateStyle := v;
+    case FResourceUpdateStyle of
+      ruOnChange:
+        begin
+          OnChange := ResourceChanged;
+          OnExit   := nil;
+        end;
+      ruOnExit:
+        begin
+          OnChange := nil;
+          OnExit   := ResourceChanged;
+        end;
+      ruOnDropDownClose:
+        begin
+          OnChange := nil;
+          OnExit   := nil;
+        end;
+    end;
+  end;
+end;
 {=====}
 
 procedure TVpResourceCombo.SetDataStore(const Value: TVpCustomDataStore);
@@ -1181,8 +1183,8 @@ var
   I: Integer;
 begin
   inherited;
-  { If the control is being dropped onto a form for the first time then }
-  { Auto connect to the first ControlLink component found               }
+  { If the control is being dropped onto a form for the first time then
+    auto-connect to the first ControlLink component found }
   if (csDesigning in ComponentState) and not (csLoading in ComponentState) then
   begin
     I := 0;
@@ -1204,58 +1206,69 @@ begin
 end;
 {=====}
 
-function TVpLinkableControl.CheckCreateResource : Boolean;             
-var                                                                    
-  ResEdit           : TVpResourceEditDialog;                           
-  frmSelectResource : TfrmSelectResource;
-
-begin                                                                  
-  Result := False;                                                     
-  if not Assigned (DataStore) then                                     
-    Exit;                                                              
-  if not Assigned (DataStore.Resource) then begin                      
-    if DataStore.Resources.Count > 0 then begin                        
-      { No resource is selected, select one }                          
-      if MessageDlg (RSSelectResource, mtConfirmation,                 
-                     [mbYes, mbNo], 0) = mrYes then begin              
-        frmSelectResource := TfrmSelectResource.Create (Self);         
-        try                                                            
-          frmSelectResource.VpResourceCombo1.DataStore := DataStore;   
-          frmSelectResource.VpResourceEditDialog1.DataStore := DataStore; 
-          if frmSelectResource.ShowModal = mrOk then begin             
-            Result := True;                                            
-          end else                                                     
-            Exit;                                                                
-        finally                                                        
-          frmSelectResource.Free;                                      
-        end;                                                           
-      end else                                                         
-        Exit;                                                          
-    end else begin                                                     
-      { There are no resources at all, add one }                       
-      if MessageDlg (RSAddNewResource, mtConfirmation,                 
-                     [mbYes, mbNo], 0) = mrYes then begin              
-        ResEdit := TVpResourceEditDialog.Create (Self);                
-        try                                                            
-          ResEdit.DataStore := DataStore;                              
-          Result := ResEdit.AddNewResource;                            
-          Exit;                                                        
-        finally                                                        
-          ResEdit.Free;                                                
-        end;                                                           
-      end else                                                         
-        Exit;                                                          
-    end;                                                               
-  end else                                                             
-    Result := True;                                                    
+function TVpLinkableControl.CheckCreateResource : Boolean;
+var
+  ResEdit: TVpResourceEditDialog;
+  frmSelectResource: TfrmSelectResource;
+begin
+  Result := False;
+  if not Assigned(DataStore) then
+    Exit;
+  if not Assigned(DataStore.Resource) then begin
+    if DataStore.Resources.Count > 0 then begin
+      { No resource is selected, select one }
+      if MessageDlg(RSSelectResource, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+      begin
+        frmSelectResource := TfrmSelectResource.Create(Self);
+        try
+          frmSelectResource.VpResourceCombo1.DataStore := DataStore;
+          frmSelectResource.VpResourceEditDialog1.DataStore := DataStore;
+          if frmSelectResource.ShowModal = mrOk then begin
+            Result := True;
+          end else
+            Exit;
+        finally
+          frmSelectResource.Free;
+        end;
+      end else
+        Exit;
+    end else
+    begin
+      { There are no resources at all, add one }
+      if MessageDlg(RSAddNewResource, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+      begin
+        ResEdit := TVpResourceEditDialog.Create(Self);
+        try
+          ResEdit.DataStore := DataStore;
+          Result := ResEdit.AddNewResource;
+          Exit;
+        finally
+          ResEdit.Free;
+        end;
+      end else
+        Exit;
+    end;
+  end else
+    Result := True;
 end;
 
-{=====}
-function TVpLinkableControl.GetLastPrintLine : Integer;
+function TVpLinkableControl.GetLastPrintLine: Integer;
 begin
   Result := FLastPrintLine;
 end;
-{=====}
+
+procedure TVpLinkableControl.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited Notification(AComponent, Operation);
+  if (Operation = opRemove) then begin
+    if (AComponent = FDatastore) then
+      FDatastore := nil;
+    if (AComponent = FControlLink) then
+      FControlLink := nil;
+  end;
+end;
+
 procedure TVpLinkableControl.SetDataStore(const Value: TVpCustomDataStore);
 begin
   if Value = nil then begin
@@ -1398,7 +1411,7 @@ procedure TVpControlLink.Detach(Sender: TComponent);
 var
   I: Integer;
 begin
-  try                                                                    
+  try
     for I := 0 to pred(DependentList.Count) do
 //      if TVpDependentInfo(DependentList.List^[I]).Component = Sender then
       if TVpDependentInfo(DependentList[I]).Component = Sender then
@@ -1410,9 +1423,9 @@ begin
           TVpLinkableControl(Sender).ControlLink := nil;
         Exit;
       end;
-  except                                                                 
-    // swallow exceptions                                                
-  end;                                                                   
+  except
+    // swallow exceptions
+  end;
 end;
 {=====}
 
@@ -1503,9 +1516,9 @@ begin
       if not FileExists(fn) then begin
         if Assigned(FOnNoLocalizationFile) then
           FOnNoLocalizationFile(Self, fn);
-      end else                                                                                                                             
+      end else
         FLocalization.LoadFromFile(fn, False);
-    end;                                                                 
+    end;
   end;
 end;
 {=====}

@@ -723,7 +723,7 @@ begin
         AMenu.Add(newItem);
 
         newSubItem := TMenuItem.Create(AMenu.Owner);
-        newSubItem.Caption := 'none';
+        newSubItem.Caption := RSNoOverlayedEvents;
         newSubItem.OnClick := AEventHandler;
         newSubItem.GroupIndex := 1;
         newSubItem.AutoCheck := true;

@@ -95,9 +95,6 @@
     </Linking>
     <Other>
       <CustomOptions Value="-dBUFDATASET"/>
-      <OtherDefines Count="1">
-        <Define0 Value="BUFDATASET"/>
-      </OtherDefines>
     </Other>
   </CompilerOptions>
   <Debugging>

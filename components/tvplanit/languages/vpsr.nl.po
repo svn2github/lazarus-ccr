@@ -675,6 +675,10 @@ msgstr "Geen"
 msgid "(None)"
 msgstr "(Geen)"
 
+#: vpsr.rsnooverlayedevents
+msgid "none"
+msgstr ""
+
 #: vpsr.rsnoprintformats
 msgid "No print formats have been defined"
 msgstr "Er zijn geen afdrukformaten gedefinieerd."
@@ -1490,3 +1494,4 @@ msgstr "Onbekende as specificatie: %s"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "De XML declaratie moet voor het eerste element staan"
+

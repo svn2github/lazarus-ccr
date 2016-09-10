@@ -154,6 +154,7 @@ resourcestring
   RSStartEndTimeError       = 'Incorrect order of start and end times. ' +
                               'Do you want to flip them?';
   RSCannotEditOverlayedEvent= 'Cannot edit this overlayed event.';
+  RSNoOverlayedEvents       = 'none';
 
   {Task Specific}
   RSConfirmDeleteTask       = 'Delete this task from your list?';

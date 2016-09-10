@@ -681,6 +681,10 @@ msgstr "Aucun"
 msgid "(None)"
 msgstr "(Aucun)"
 
+#: vpsr.rsnooverlayedevents
+msgid "none"
+msgstr ""
+
 #: vpsr.rsnoprintformats
 msgid "No print formats have been defined"
 msgstr "Formats d'impression non-défini"
@@ -1496,3 +1500,4 @@ msgstr "Spécificateur d'axe inconnu"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "La déclaration XML doit apparaître avant le premier élément"
+
