@@ -242,59 +242,54 @@ type
     procedure SetEventTimerEnabled(Value: Boolean);
     procedure SetDayBuffer(Value: Integer);
     procedure SetRange(StartTime, EndTime: TDateTime);
+
     procedure NotifyLinked;
     procedure LinkToControls(AOwner: TComponent);
     procedure UnlinkFromControls(AOwner: TComponent);
 
-    property AutoConnect: Boolean
-      read FAutoConnect write SetAutoConnect;
-    property AutoCreate: Boolean
-      read FAutoCreate write FAutoCreate;
+    property AutoConnect: Boolean read FAutoConnect write SetAutoConnect;
+    property AutoCreate: Boolean read FAutoCreate write FAutoCreate;
 
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
     procedure DeregisterAllWatchers;
-    procedure DeregisterWatcher (Watcher : THandle);
+    procedure DeregisterWatcher(Watcher: THandle);
     function GetNextID(TableName: string): Integer; virtual; abstract;
-    property Resources: TVpResources read FResources;
+    procedure NotifyDependents;
+    procedure RegisterWatcher(Watcher: THandle);
+    procedure PlaySound(const AWavFile: String; APlaySoundMode: TVpPlaySoundMode);
+    procedure SetResourceByName(Value: string); virtual; abstract;
+
     procedure Load; virtual;
     procedure LoadEvents; virtual; abstract;
     procedure LoadContacts; virtual; abstract;
     procedure LoadTasks; virtual; abstract;
-    procedure NotifyDependents;
+
     procedure RefreshEvents; virtual;
     procedure RefreshContacts; virtual;
     procedure RefreshTasks; virtual;
     procedure RefreshResource; virtual;
-{ - Increased visibility to Public}
+
     procedure PurgeResource(Res: TVpResource); virtual; {abstract;}   
     procedure PurgeEvents(Res: TVpResource); virtual; {abstract;}     
     procedure PurgeContacts(Res: TVpResource); virtual; {abstract;}   
     procedure PurgeTasks(Res: TVpResource); virtual; {abstract;}      
-{ - End}
-    procedure SetResourceByName(Value: string); virtual; abstract;
-    property Connected : boolean read FConnected write SetConnected;
+
     procedure PostEvents; virtual; abstract;
     procedure PostContacts; virtual; abstract;
     procedure PostTasks; virtual; abstract;
     procedure PostResources; virtual; abstract;
-    procedure RegisterWatcher (Watcher : THandle);
-    procedure PlaySound(const AWavFile: String; APlaySoundMode: TVpPlaySoundMode);
 
-    property Loading : Boolean
-      read FLoading write FLoading;
-    property Resource: TVpResource
-      read FResource write SetResource;
-    property ResourceID: Integer
-      read FResourceID write SetResourceID;
-    property DayBuffer: Integer
-      read FDayBuffer write SetDayBuffer;
-    property Date: TDateTime
-      read FActiveDate write SetActiveDate;
-    property TimeRange: TVpTimeRange
-      read FTimeRange;
+    property Connected : boolean read FConnected write SetConnected;
+    property Loading : Boolean read FLoading write FLoading;
+    property Resource: TVpResource read FResource write SetResource;
+    property ResourceID: Integer read FResourceID write SetResourceID;
+    property Resources: TVpResources read FResources;
+    property DayBuffer: Integer read FDayBuffer write SetDayBuffer;
+    property Date: TDateTime read FActiveDate write SetActiveDate;
+    property TimeRange: TVpTimeRange read FTimeRange;
 
   published
     property CategoryColorMap: TVpCategoryColorMap
@@ -497,16 +492,16 @@ begin
 end;
 {=====}
 
-procedure TVpCustomDataStore.DeregisterWatcher (Watcher : THandle);
+procedure TVpCustomDataStore.DeregisterWatcher(Watcher: THandle);
 var
   i: Integer;
 begin
   if FNotifiers <> nil then
     for i := FNotifiers.Count - 1 downto 0 do
       if Assigned(FNotifiers[i]) then
-        if PVpWatcher (FNotifiers[i]).Handle = Watcher then begin
+        if PVpWatcher(FNotifiers[i]).Handle = Watcher then begin
           FreeMem(FNotifiers[i]);
-          FNotifiers.Delete (i);
+          FNotifiers.Delete(i);
           Exit;
         end;
 end;
@@ -795,19 +790,18 @@ end;
 {=====}                                                               
 { - End}
 
-procedure TVpCustomDataStore.RegisterWatcher (Watcher : THandle);
+procedure TVpCustomDataStore.RegisterWatcher(Watcher: THandle);
 var
-  i          : Integer;
-  NewHandle  : PVpWatcher;
-
+  i: Integer;
+  NewHandle: PVpWatcher;
 begin
   for i := 0 to FNotifiers.Count - 1 do
     if Assigned (FNotifiers[i]) then
-      if PVpWatcher (FNotifiers[i]).Handle = Watcher then
+      if PVpWatcher(FNotifiers[i]).Handle = Watcher then
         Exit;
-  GetMem (NewHandle, SizeOf (TVpWatcher));
+  GetMem(NewHandle, SizeOf(TVpWatcher));
   NewHandle.Handle := Watcher;
-  FNotifiers.Add (NewHandle);
+  FNotifiers.Add(NewHandle);
 end;
 {=====}
 
