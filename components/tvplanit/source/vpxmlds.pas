@@ -53,14 +53,16 @@ type
     destructor Destroy; override;
 
     function GetNextID(TableName: string): Integer; override;
+    procedure SetResourceByName(Value: String); override;
+
     procedure LoadEvents; override;
     procedure LoadContacts; override;
     procedure LoadTasks; override;
+
     procedure PostContacts; override;
     procedure PostEvents; override;
     procedure PostResources; override;
     procedure PostTasks; override;
-    procedure SetResourceByName(Value: String); override;
 
   published
     property AutoConnect default false;
@@ -707,12 +709,14 @@ var
   nodeName: String;
 begin
   node := ANode.FirstChild;
+  ASchedule.BatchUpdate(true);
   while node <> nil do begin
     nodeName := node.NodeName;
     if nodeName = 'Event' then
       ReadEvent(node, ASchedule);
     node := node.NextSibling;
   end;
+  ASchedule.BatchUpdate(false);
 end;
 
 // <Resource ResourceID="1178568021" ResourceActive="true">

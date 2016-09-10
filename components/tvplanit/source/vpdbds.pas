@@ -1029,7 +1029,6 @@ begin
   
   inherited;
 end;
-{=====}
 
 { Load this resource's events into memory }
 procedure TVpCustomDBDataStore.LoadEvents;
@@ -1680,201 +1679,32 @@ end;
 {=====}
 
 procedure TVpCustomDBDataStore.RefreshContacts;
-var
-  Contact: TVpContact;
-  F: TField;
 begin
   if Resource <> nil then begin
-    { Clear the Contacts }
     Resource.Contacts.ClearContacts;
-    { Load this resource's contacts into memory }
-    with ContactsTable do begin
-      SetFilterCriteria(ContactsTable, False, Resource.ResourceID, 0, 0);
-      First;
-      while not EOF do begin
-        Contact := Resource.Contacts.AddContact(FieldByName('RecordID').AsInteger);
-        Contact.Loading := true;
-//        Contact.RecordID := FieldByName('RecordID').AsInteger;      
-        Contact.FirstName := FieldByName('FirstName').AsString;
-        Contact.LastName := FieldByName('LastName').AsString;
-        Contact.Birthdate := FieldByName('Birthdate').AsDateTime;
-        Contact.Anniversary := FieldByName('Anniversary').AsDateTime;
-        Contact.Title := FieldByName('Title').AsString;
-        Contact.Company := FieldByName('Company').AsString;
-        Contact.Job_Position := FieldByName('Job_Position').AsString;
-        Contact.EMail := FieldByName('EMail').AsString;
-        Contact.Address := FieldByName('Address').AsString;
-        Contact.City := FieldByName('City').AsString;
-        Contact.State := FieldByName('State').AsString;
-        Contact.Zip := FieldByName('Zip').AsString;
-        Contact.Country := FieldByName('Country').AsString;
-        F := FieldByName('Notes');
-        if F = nil then F := FieldByName('Note');  // deprecated
-        if F <> nil then Contact.Notes := F.AsString;
-        Contact.Phone1 := FieldByName('Phone1').AsString;
-        Contact.Phone2 := FieldByName('Phone2').AsString;
-        Contact.Phone3 := FieldByName('Phone3').AsString;
-        Contact.Phone4 := FieldByName('Phone4').AsString;
-        Contact.Phone5 := FieldByName('Phone5').AsString;
-        Contact.PhoneType1 := FieldByName('PhoneType1').AsInteger;
-        Contact.PhoneType2 := FieldByName('PhoneType2').AsInteger;
-        Contact.PhoneType3 := FieldByName('PhoneType3').AsInteger;
-        Contact.PhoneType4 := FieldByName('PhoneType4').AsInteger;
-        Contact.PhoneType5 := FieldByName('PhoneType5').AsInteger;
-        Contact.Category := FieldByName('Category').AsInteger;
-        Contact.Custom1 := FieldByName('Custom1').AsString;
-        Contact.Custom2 := FieldByName('Custom2').AsString;
-        Contact.Custom3 := FieldByName('Custom3').AsString;
-        Contact.Custom4 := FieldByName('Custom4').AsString;
-        F := FindField('UserField0');
-        if F <> nil then Contact.UserField0 := F.AsString;
-        F := FindField('UserField1');
-        if F <> nil then Contact.UserField1 := F.AsString;
-        F := FindField('UserField2');
-        if F <> nil then Contact.UserField2 := F.AsString;
-        F := FindField('UserField3');
-        if F <> nil then Contact.UserField3 := F.AsString;
-        F := FindField('UserField4');
-        if F <> nil then Contact.UserField4 := F.AsString;
-        F := FindField('UserField5');
-        if F <> nil then Contact.UserField5 := F.AsString;
-        F := FindField('UserField6');
-        if F <> nil then Contact.UserField6 := F.AsString;
-        F := FindField('UserField7');
-        if F <> nil then Contact.UserField7 := F.AsString;
-        F := FindField('UserField8');
-        if F <> nil then Contact.UserField8 := F.AsString;
-        F := FindField('UserField9');
-        if F <> nil then Contact.UserField9 := F.AsString;
-        Contact.Loading := false;
-        Next;
-      end;
-    end;
-    inherited;
+    LoadContacts;
   end;
+  inherited;
 end;
 {=====}
 
 procedure TVpCustomDBDataStore.RefreshEvents;
-var
-  Event: TVpEvent;
-  F: TField;
 begin
   if Resource <> nil then begin
-    { Clear the Events }
     Resource.Schedule.ClearEvents;
-
-    { Load this resource's events into memory }
-    with EventsTable do begin
-      SetFilterCriteria(EventsTable, True, Resource.ResourceID, TimeRange.StartTime, TimeRange.EndTime);
-      First;
-
-      while not EventsTable.EOF  do
-      begin
-        Event := Resource.Schedule.AddEvent(
-          FieldByName('RecordID').AsInteger,
-          FieldByName('StartTime').AsDateTime,
-          FieldByName('EndTime').AsDateTime
-        );
-        if Event <> nil then begin
-          Event.Loading := true; {prevents the events changed flag from being set}
-//          Event.RecordID := FieldByName('RecordID').AsInteger;      
-          Event.Description := FieldByName('Description').AsString;
-          F := FieldByName('Location');               // new
-          if F <> nil then Event.Location := F.AsString;
-          Event.Notes := FieldByName('Notes').AsString;
-          Event.Category := FieldByName('Category').AsInteger;
-          Event.DingPath := FieldByName('DingPath').AsString;
-          Event.AllDayEvent := FieldByName('AllDayEvent').AsBoolean;
-          Event.AlarmSet := FieldByName('AlarmSet').AsBoolean;
-          Event.AlarmAdvance := FieldByName('AlarmAdvance').AsInteger;
-          Event.AlarmAdvanceType := TVpAlarmAdvType(
-            FieldByName('AlarmAdvanceType').AsInteger);
-          Event.RepeatCode := TVpRepeatType(FieldByName('RepeatCode').AsInteger);
-          Event.RepeatRangeEnd := FieldByName('RepeatRangeEnd').AsDateTime;
-          Event.CustomInterval := FieldByName('CustomInterval').AsInteger;
-
-          F := FindField('UserField0');
-          if F <> nil then Event.UserField0 := F.AsString;
-          F := FindField('UserField1');
-          if F <> nil then Event.UserField1 := F.AsString;
-          F := FindField('UserField2');
-          if F <> nil then Event.UserField2 := F.AsString;
-          F := FindField('UserField3');
-          if F <> nil then Event.UserField3 := F.AsString;
-          F := FindField('UserField4');
-          if F <> nil then Event.UserField4 := F.AsString;
-          F := FindField('UserField5');
-          if F <> nil then Event.UserField5 := F.AsString;
-          F := FindField('UserField6');
-          if F <> nil then Event.UserField6 := F.AsString;
-          F := FindField('UserField7');
-          if F <> nil then Event.UserField7 := F.AsString;
-          F := FindField('UserField8');
-          if F <> nil then Event.UserField8 := F.AsString;
-          F := FindField('UserField9');
-          if F <> nil then Event.UserField9 := F.AsString;
-
-          Event.Loading := false;
-        end;
-        Next;
-      end;
-    end;
-    inherited;
+    LoadEvents;
   end;
+  inherited;
 end;
 {=====}
 
 procedure TVpCustomDBDataStore.RefreshTasks;
-var
-  Task: TVpTask;
-  F: TField;
 begin
   if Resource <> nil then begin
-    { Clear the Tasks }
     Resource.Tasks.ClearTasks;
-    { Load this resource's tasks into memory }
-    with TasksTable do begin
-      SetFilterCriteria(TasksTable, False, Resource.ResourceID, 0, 0);
-      First;
-      while not EOF do begin
-        Task := Resource.Tasks.AddTask(FieldByName('RecordID').AsInteger);
-        Task.Loading := true;
-//        Task.RecordID := FieldByName('RecordID').AsInteger;         
-        Task.Complete := FieldByName('Complete').AsBoolean;
-        Task.Description := FieldByName('Description').AsString;
-        Task.Details := FieldByName('Details').AsString;
-        Task.CreatedOn := FieldByName('CreatedOn').AsDateTime;
-        Task.CompletedOn := FieldByName('CompletedOn').AsDateTime;
-        Task.Priority := FieldByName('Priority').AsInteger;
-        Task.Category := FieldByName('Category').AsInteger;
-        Task.DueDate := FieldByName('DueDate').AsDateTime;
-        F := FindField('UserField0');
-        if F <> nil then Task.UserField0 := F.AsString;
-        F := FindField('UserField1');
-        if F <> nil then Task.UserField1 := F.AsString;
-        F := FindField('UserField2');
-        if F <> nil then Task.UserField2 := F.AsString;
-        F := FindField('UserField3');
-        if F <> nil then Task.UserField3 := F.AsString;
-        F := FindField('UserField4');
-        if F <> nil then Task.UserField4 := F.AsString;
-        F := FindField('UserField5');
-        if F <> nil then Task.UserField5 := F.AsString;
-        F := FindField('UserField6');
-        if F <> nil then Task.UserField6 := F.AsString;
-        F := FindField('UserField7');
-        if F <> nil then Task.UserField7 := F.AsString;
-        F := FindField('UserField8');
-        if F <> nil then Task.UserField8 := F.AsString;
-        F := FindField('UserField9');
-        if F <> nil then Task.UserField9 := F.AsString;
-        Task.Loading := false;
-        Next;
-      end;
-    end;
-    inherited;
+    LoadTasks;
   end;
+  inherited;
 end;
 {=====}
 

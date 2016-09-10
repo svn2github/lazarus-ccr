@@ -147,9 +147,9 @@ type
     procedure LoadEventsOfResource(AResID: Integer); override;
     procedure LoadContacts; override;                                    
     procedure LoadTasks; override;                                       
-    procedure RefreshEvents; override;                                   
-    procedure RefreshContacts; override;                                 
-    procedure RefreshTasks; override;                                    
+//    procedure RefreshEvents; override;                                   
+//    procedure RefreshContacts; override;                                 
+//    procedure RefreshTasks; override;                                    
     procedure RefreshResource; override;                                 
     procedure PostEvents; override;                                      
     procedure PostContacts; override;                                    
@@ -1125,9 +1125,7 @@ end;
 
 procedure TVpFlexDataStore.RefreshResource;                              
 var
-//  Resource: TVpResource;
-  {Field Name}
-  FN : string;
+  FN: string;
 begin
   if Resource = nil then
     Resource := Resources.GetResource(ResourceID);
@@ -1216,7 +1214,7 @@ begin
     NotifyDependents;
 end;
 {=====}
-
+                    (*
 procedure TVpFlexDataStore.RefreshEvents;
 begin
   if Resource <> nil then begin
@@ -1249,7 +1247,7 @@ begin
     NotifyDependents;
 end;
 {=====}
-
+                  *)
 procedure TVpFlexDataStore.PostEvents;
 var
   J: Integer;
