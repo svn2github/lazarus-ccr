@@ -215,6 +215,7 @@ type
     procedure AllDayEventsByDate(Date: TDateTime; EventList: TList);
     procedure BatchUpdate(Value: Boolean);
     procedure ClearEvents;
+    procedure ClearGroupEvents;
     procedure DeleteEvent(Event: TVpEvent);
     function EventCountByDay(Value: TDateTime): Integer;
     procedure EventsByDate(Date: TDateTime; EventList: TList);
@@ -242,6 +243,7 @@ type
     FAlertDisplayed: Boolean;
     FAlarmAdvType: TVpAlarmAdvType;
     FRecordID: Integer;
+    FResourceID: Integer;
     FLocation: string;
     FNotes: string;
     FDescription: string;
@@ -284,7 +286,9 @@ type
   public
     constructor Create(Owner: TVpSchedule);
     destructor Destroy; override;
+    function IsOverlayed: Boolean;
     property Owner: TVpSchedule read FOwner;
+    property ResourceID: Integer read FResourceID write FResourceID;
     property Loading : Boolean read FLoading write FLoading;
     property Changed: Boolean read FChanged write SetChanged;
     property Deleted: Boolean read FDeleted write SetDeleted;
@@ -929,7 +933,6 @@ end;
 procedure TVpResource.SetGroup(const AValue: String);
 begin
   FGroup := AValue;
-  FChanged := true;
 end;
 
 procedure TVpResource.SetNotes(const Value: string);
@@ -1078,6 +1081,20 @@ begin
     if idx > -1 then FOwner.FEventList.Delete(idx);
   end;
   inherited;
+end;
+
+{ The event is overlayed if its ResourceID is different from that of the
+  resource to which it belongs. }
+function TVpEvent.IsOverlayed: Boolean;
+var
+  res: TVpResource;  // resource to which the event belongs
+begin
+  Result := false;
+  if (FOwner <> nil) then begin
+    res := FOwner.FOwner;
+    if (res <> nil) and (res.ResourceID <> FResourceID) then
+      Result := true;
+  end;
 end;
 
 procedure TVpEvent.SetAlarmAdv(Value: Integer);
@@ -1366,6 +1383,20 @@ begin
       TVpEvent(FEventList.Last).Free;
   finally
     BatchUpdate(false);
+  end;
+end;
+
+procedure TVpSchedule.ClearGroupEvents;
+var
+  i: Integer;
+  event: TVpEvent;
+begin
+  for i := FEventList.Count-1 downto 0 do begin
+    event := TVpEvent(FEventList[i]);
+    if event.IsOverlayed then begin
+      FEventList.Delete(i);
+      event.Free;
+    end;
   end;
 end;
 

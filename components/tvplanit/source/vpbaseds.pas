@@ -263,7 +263,7 @@ type
     procedure SetResourceByName(Value: string); virtual; abstract;
 
     procedure Load; virtual;
-    procedure LoadEvents; virtual; abstract;
+    procedure LoadEvents; virtual;
     procedure LoadEventsOfResource(AResID: Integer); virtual; abstract;
     procedure LoadContacts; virtual; abstract;
     procedure LoadTasks; virtual; abstract;
@@ -282,6 +282,8 @@ type
     procedure PostContacts; virtual; abstract;
     procedure PostTasks; virtual; abstract;
     procedure PostResources; virtual; abstract;
+
+    procedure UpdateGroupEvents; virtual;
 
     property Connected : boolean read FConnected write SetConnected;
     property Loading : Boolean read FLoading write FLoading;
@@ -727,7 +729,17 @@ begin
   FResources.Sort;
   NotifyDependents;
 end;
-{=====}
+
+{ Load this resource's events into memory }
+procedure TVpCustomDataStore.LoadEvents;
+begin
+  if Resource <> nil then begin
+    // Load regular events ...
+    LoadEventsOfResource(Resource.ResourceID);
+    // ... and overlayed events
+    UpdateGroupEvents;
+  end;
+end;
 
 procedure TVpCustomDataStore.RefreshEvents;
 begin
@@ -757,7 +769,6 @@ begin
 end;
 {=====}
 
-{ - Added}
 procedure TVpCustomDataStore.PurgeResource(Res: TVpResource);         
 begin
   Unused(Res);
@@ -789,7 +800,34 @@ begin
     NotifyDependents;                                                 
 end;                                                                  
 {=====}                                                               
-{ - End}
+
+procedure TVpCustomDatastore.UpdateGroupEvents;
+var
+  i: Integer;
+  event: TVpEvent;
+  grp: TVpResourceGroup;
+  id: Integer;
+begin
+  Resource.Schedule.ClearGroupEvents;
+
+  if Resource.Group = '' then begin
+    NotifyDependents;
+    exit;
+  end;
+
+  grp := Resources.FindResourceGroupByName(Resource.Group);
+  if grp = nil then
+    exit;
+
+  for i:=0 to grp.Count-1 do begin
+    id := grp[i].ResourceID;
+    if id = ResourceID then
+      exit;
+    LoadEventsOfResource(id);
+  end;
+
+  NotifyDependents;
+end;
 
 procedure TVpCustomDataStore.RegisterWatcher(Watcher: THandle);
 var

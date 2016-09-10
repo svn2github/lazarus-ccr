@@ -78,7 +78,6 @@ type
     destructor Destroy; override;
 
     procedure Load; override;
-    procedure LoadEvents; override;
     procedure LoadEventsOfResource(AResID: integer); override;
     procedure LoadContacts; override;
     procedure LoadTasks; override;
@@ -99,10 +98,8 @@ type
     procedure PurgeTasks(Res: TVpResource); override;
 
     procedure SetResourceByName(Value: string); override;
-    procedure CreateFieldDefs(const TableName : string;
-      FieldDefs : TFieldDefs); virtual;
-    procedure CreateIndexDefs(const TableName : string;
-      IndexDefs : TIndexDefs); virtual;
+    procedure CreateFieldDefs(const TableName: string; FieldDefs: TFieldDefs); virtual;
+    procedure CreateIndexDefs(const TableName: string; IndexDefs: TIndexDefs); virtual;
 
   published
     {events}
@@ -1030,34 +1027,27 @@ begin
   inherited;
 end;
 
-{ Load this resource's events into memory }
-procedure TVpCustomDBDataStore.LoadEvents;
-begin
-  if Resource <> nil then
-    LoadEventsOfResource(Resource.ResourceID);
-end;
-
-{ Load the events of the specified resource into memory }
+{ Load the events of the specified resource into memory. The loaded events are
+  attached to the current resource. Note that if AResID is different from the
+  current resource id then the events are used for overlaying. }
 procedure TVpCustomDBDataStore.LoadEventsOfResource(AResID: Integer);
 var
-  res: TVpResource;
   Event: TVpEvent;
   F: TField;
 begin
-  // Find the resource belonging to the specified ID.
-  res := Resources.GetResource(AResID);
-  if res <> nil then
+  if Resource <> nil then
     with EventsTable do begin
       SetFilterCriteria(EventsTable, true, AResID, TimeRange.StartTime, TimeRange.EndTime);
       First;
       while not EventsTable.EOF do begin
-        Event := res.Schedule.AddEvent(
+        Event := Resource.Schedule.AddEvent(
           FieldByName('RecordID').AsInteger,
           FieldByName('StartTime').AsDateTime,
           FieldByName('EndTime').AsDateTime
         );
         if Event <> nil then begin
           Event.Loading := true;
+          Event.ResourceID := AResID;
           Event.Description := FieldByName('Description').AsString;
           F := FieldByName('Location');
           if F <> nil then Event.Location := F.AsString;

@@ -573,6 +573,7 @@ begin
 
           if Event <> nil then begin
             Event.Loading := true;
+            Event.ResourceID := AResID;
 
             FN1 := GetFieldName(FEventMappings, 'Description');
             if (FN1 <> '') then

@@ -150,6 +150,7 @@ function TVpDayViewPainter.BuildEventString(AEvent: TVpEvent;
 var
   maxW: Integer;
   timeFmt: String;
+  res: TVpResource;
 begin
   if FDayView.ShowEventTimes then begin
     timeFmt := IfThen(FDayView.TimeFormat = tf24Hour, 'h:nn', 'h:nnam/pm');
@@ -160,6 +161,11 @@ begin
     ]);
   end else
     Result := AEvent.Description;
+
+  if AEvent.IsOverlayed then begin
+    res := FDayView.Datastore.Resources.GetResource(AEvent.ResourceID);
+    Result := Format('[%s] %s', [res.Description, Result]);
+  end;
 
   if FDayView.WrapStyle = wsNone then begin
     { if the string is longer than the availble space then chop off the end
@@ -829,7 +835,10 @@ begin
       RenderCanvas.Brush.Color := EventCategory.BackgroundColor
   end else
     RenderCanvas.Brush.Color := WindowColor;
+  if AEvent.IsOverlayed then
+    RenderCanvas.Brush.Style := bsBDiagonal;
   TPSFillRect(RenderCanvas, Angle, RenderIn, EventRect);
+  RenderCanvas.Brush.Style := bsSolid;
 
   { Paint the little area to the left of the text the color corresponding to
     the event's category. These colors are used even when printing }
