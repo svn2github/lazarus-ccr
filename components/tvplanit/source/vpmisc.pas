@@ -140,6 +140,7 @@ function GetRealFontHeight(AFont: TFont): Integer;
 
 function DecodeLineEndings(const AText: String): String;
 function EncodeLineEndings(const AText: String): String;
+function StripLastLineEnding(const AText: String): String;
 
 procedure AddResourceGroupMenu(AMenu: TMenuItem; AResource: TVpResource;
   AEventHandler: TNotifyEvent);
@@ -693,6 +694,13 @@ end;
 function EncodeLineEndings(const AText: String): String;
 begin
   Result := StringReplace(AText, LineEnding, '\n', [rfReplaceAll]);
+end;
+
+function StripLastLineEnding(const AText: String): String;
+begin
+  Result := AText;
+  while (Length(Result) > 0) and (Result[Length(Result)] in [#10, #13]) do
+    Delete(Result, Length(Result), 1);
 end;
 
 procedure AddResourceGroupMenu(AMenu: TMenuItem; AResource: TVpResource;

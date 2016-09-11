@@ -271,10 +271,12 @@ object MainForm: TMainForm
           Height = 528
           Top = 0
           Width = 496
+          ShowHint = True
           ControlLink = VpControlLink1
           Color = clWindow
           Font.Height = -12
           ParentFont = False
+          ParentShowHint = False
           AllDayEventAttributes.BackgroundColor = clWindow
           AllDayEventAttributes.EventBorderColor = clGray
           AllDayEventAttributes.EventBackgroundColor = clBtnFace

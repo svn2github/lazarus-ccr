@@ -52,7 +52,7 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Graphics, Controls, ComCtrls, ExtCtrls, StdCtrls,
+  Classes, Graphics, Controls, ComCtrls, ExtCtrls, StdCtrls, Forms,
   VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils, Menus,
   VpDayView;
 
@@ -140,6 +140,8 @@ type
     FAllowInplaceEdit: Boolean;
     FAllowDragAndDrop: Boolean;
     FDragDropTransparent: Boolean;
+    FMouseEvent: TVpEvent;
+    FHintWindow: THintWindow;
     { event variables }
     FBeforeEdit: TVpBeforeEditEvent;
     FAfterEdit: TVpAfterEditEvent;
@@ -201,6 +203,8 @@ type
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
     function EventAtCoord(Pt: TPoint): Boolean;
+    function GetEventAtCoord(Pt: TPoint): TVpEvent;
+    function GetEventRect(AEvent: TVpEvent): TRect;
     procedure wvSetDateByCoord(Point: TPoint);
     procedure EditEvent;
     procedure EndEdit(Sender: TObject);
@@ -214,6 +218,10 @@ type
     procedure DoStartDrag(var DragObject: TDragObject); override;
     procedure DragOver(Source: TObject; X, Y: Integer; State: TDragState;
       var Accept: Boolean); override;
+
+    { hints }
+    procedure ShowHintWindow(APoint: TPoint; AEvent: TVpEvent);
+    procedure HideHintWindow;
 
     { message handlers }
     {$IFNDEF LCL}
@@ -282,7 +290,7 @@ type
 implementation
 
 uses
-  SysUtils, LazUTF8, Forms, Dialogs, VpEvntEditDlg, VpWeekViewPainter;
+  SysUtils, LazUTF8, Dialogs, VpEvntEditDlg, VpWeekViewPainter;
 
 (*****************************************************************************)
 { TVpTGInPlaceEdit }
@@ -899,7 +907,81 @@ begin
     end;
   end;
 end;
-{=====}
+
+{ Hints }
+
+procedure TVpWeekView.ShowHintWindow(APoint: TPoint; AEvent: TVpEvent);
+const
+  MaxWidth = 400;
+var
+  txt, s: String;
+  grp: TVpResourceGroup;
+  showDetails: Boolean;
+  res: TVpResource;
+  R, REv: TRect;
+begin
+  if (AEvent = nil) or
+     ((Datastore = nil) or (Datastore.Resource = nil)) then
+  begin
+    HideHintWindow;
+    exit;
+  end;
+
+  if AEvent.IsOverlayed then begin
+    grp := Datastore.Resource.Group;
+    showDetails := (odEventDescription in grp.ShowDetails);
+    if (odResource in grp.ShowDetails) then begin
+      res := Datastore.Resources.GetResource(AEvent.ResourceID);
+      txt := 'Overlayed resource: ' + res.Description;
+    end else
+      txt := 'Overlayed resource';
+  end else begin
+    showDetails := true;
+    txt := '';
+  end;
+
+  if txt <> '' then
+    txt := txt + LineEnding;
+
+  txt := txt + Format('%s - %s', [
+    FormatDateTime('hh:nn', AEvent.StartTime),
+    FormatDateTime('hh:nn', AEvent.EndTime)]);
+
+  if showDetails then begin
+    txt := txt + LineEnding + LineEnding + 'Event:' + LineEnding + AEvent.Description;
+    if (AEvent.Notes <> '') then begin
+      s := WrapText(AEvent.Notes, MaxWidth);
+      s := StripLastLineEnding(s);
+      txt := txt + LineEnding + LineEnding + 'Notes:' + LineEnding + s;
+    end;
+    if AEvent.Location <> '' then
+      txt := txt + LineEnding + LineEnding + 'Location:' + LineEnding + AEvent.Location;
+  end;
+
+  if (txt <> '') and
+     not ((wvInPlaceEditor <> nil) and wvInplaceEditor.Visible) and
+     not (csDesigning in ComponentState) then
+  begin
+    if FHintWindow = nil then
+      FHintWindow := THintWindow.Create(nil);
+    REv := GetEventRect(AEvent);
+    REv.TopLeft := ClientToScreen(REv.TopLeft);
+    REv.BottomRight := ClientToScreen(REv.BottomRight);
+    APoint := ClientToScreen(APoint);
+    R := FHintWindow.CalcHintRect(MaxWidth, txt, nil);
+    OffsetRect(R, APoint.X - WidthOf(R), REv.Bottom);
+    FHintWindow.ActivateHint(R, txt);
+  end else
+    HideHintWindow;
+end;
+
+procedure TVpWeekView.HideHintWindow;
+begin
+  FreeAndNil(FHintWindow);
+end;
+
+
+{ Popup menu }
 
 procedure TVpWeekView.InitializeDefaultPopup;
 var
@@ -1247,6 +1329,37 @@ begin
   wvActiveEventRec.Right := 0;
   wvActiveEventRec.Left := 0;
 end;
+
+function TVpWeekView.GetEventAtCoord(Pt: TPoint): TVpEvent;
+var
+  i: Integer;
+begin
+  for i:=0 to High(wvEventArray) do begin
+    // We've hit the end of visible events without finding a match
+    if wvEventArray[i].Event = nil then
+      Break;
+
+    // Point falls inside this event's rectangle
+    if PointInRect(Pt, wvEventArray[i].Rec) then
+    begin
+      Result := wvEventArray[i].Event;
+      Exit;
+    end;
+  end;
+  Result := nil;
+end;
+
+function TVpWeekView.GetEventRect(AEvent: TVpEvent): TRect;
+var
+  i: Integer;
+begin
+  for i:=0 to High(wvEventArray) do
+    if wvEventArray[i].Event = AEvent then begin
+      Result := wvEventArray[i].Rec;
+      exit;
+    end;
+end;
+
 {=====}
 
 { This is the timer event which spawns an in-place editor.
@@ -1473,6 +1586,8 @@ begin
 end;
 
 procedure TVpWeekView.MouseMove(Shift: TShiftState; X, Y: Integer);
+var
+  event: TVpEvent;
 begin
   inherited MouseMove(Shift, X, Y);
   if (FActiveEvent <> nil) and (not ReadOnly) then begin
@@ -1484,6 +1599,13 @@ begin
       wvClickTimer.Enabled := false;
       BeginDrag(true);
     end;
+  end;
+
+  event := GetEventAtCoord(Point(X, Y));
+  if FMouseEvent <> event then begin
+    Application.CancelHint;
+    ShowHintWindow(Point(X, Y), event);
+    FMouseEvent := event;
   end;
 end;
 
