@@ -139,6 +139,8 @@ resourcestring
   RSPrevMonth               = 'Previous month';
   RSPrevYear                = 'Previous year';
 
+  RSAllDay                  = 'All day';
+
   {WARNINGS}
   RSPermanent               = 'This operation cannot be undone!';
 

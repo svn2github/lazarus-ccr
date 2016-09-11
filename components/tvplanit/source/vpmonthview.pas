@@ -38,7 +38,7 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Graphics, Controls, ComCtrls, ExtCtrls,
+  Classes, Graphics, Controls, ComCtrls, ExtCtrls, Forms,
   VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils, Menus;
 
 type
@@ -139,30 +139,22 @@ type
     FDate: TDateTime;
     FDefaultPopup: TPopupMenu;
     FRightClickChangeDate: Boolean;
+    FHintWindow: THintWindow;
+    FMouseDate: TDateTime;
+
     { event variables }
     FOwnerDrawCells: TVpOwnerDrawDayEvent;
     FOnEventClick: TVpOnEventClick;
     FOnEventDblClick: TVpOnEventClick;
+
     { internal variables }
-//    mvDayNumberHeight  : Integer;
-//    mvEventTextHeight  : Integer;
     mvLoaded: Boolean;
-//    mvInLinkHandler    : Boolean;
-//    mvRowHeight        : Integer;
-//    mvLineHeight       : Integer;
-//    mvColWidth         : Integer;
     mvDayHeadHeight: Integer;
     mvSpinButtons: TUpDown;
     mvEventArray: TVpEventArray;
     mvMonthDayArray: TVpMonthdayArray;
     mvActiveEvent: TVpEvent;
     mvActiveEventRec: TRect;
-//    mvEventList        : TList;
-//    mvCreatingEditor   : Boolean;
-//    mvPainting         : Boolean;
-//    mvVScrollDelta     : Integer;
-//    mvHotPoint         : TPoint;
-//    mvVisibleEvents    : Integer;                                        
 
     { property methods }
     procedure SetDrawingStyle(Value: TVpDrawingStyle);
@@ -182,6 +174,7 @@ type
     procedure SetDate(Value: TDateTime);
     procedure SetRightClickChangeDate(const v: Boolean);
     procedure SetWeekStartsOn(Value: TVpDayType);
+
     { internal methods }
     procedure mvHookUp;
     procedure mvPenChanged(Sender: TObject);
@@ -201,10 +194,16 @@ type
     procedure WMLButtonDown(var Msg: TLMLButtonDown); message LM_LBUTTONDOWN;
     procedure WMLButtonDblClick(var Msg: TLMLButtonDblClk); message LM_LBUTTONDBLCLK;
     {$ENDIF}
+
     { - renamed from EditEventAtCoord and re-written}
     function  SelectEventAtCoord(Point: TPoint): Boolean;
-    procedure mvSetDateByCoord(Point: TPoint);
+    procedure mvSetDateByCoord(APoint: TPoint);
+    function GetDateAtCoord(APoint: TPoint): TDateTime;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    procedure MouseMove(Shift: TShiftState; X,Y: Integer); override;
+    procedure MouseEnter; override;
+    procedure MouseLeave; override;
+
     { message handlers }
     {$IFNDEF LCL}
     procedure WMSize(var Msg: TWMSize); message WM_SIZE;
@@ -217,6 +216,12 @@ type
     procedure WMSetFocus(var Msg: TLMSetFocus); message LM_SETFOCUS;
     procedure WMRButtonDown(var Msg: TLMRButtonDown); message LM_RBUTTONDOWN;
     {$ENDIF}
+
+    { Hints }
+    procedure ShowHintWindow(APoint: TPoint; ADate: TDateTime);
+    procedure HideHintWindow;
+
+    { Popup menu }
     procedure PopupToday(Sender: TObject);
     procedure PopupNextMonth(Sender: TObject);
     procedure PopupPrevMonth(Sender: TObject);
@@ -226,6 +231,8 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    function BuildEventString(AEvent: TVpEvent;
+      AShowEventTime, AStartTimeOnly: Boolean): String;
     procedure LoadLanguage;
     procedure Invalidate; override;
     procedure LinkHandler(Sender: TComponent;
@@ -277,7 +284,8 @@ type
 implementation
 
 uses
-  SysUtils, LazUTF8, Forms, Dialogs, VpMonthViewPainter;
+  SysUtils, LazUTF8, Dialogs, StrUtils,
+  VpMonthViewPainter;
 
 
 (*****************************************************************************)
@@ -478,6 +486,53 @@ begin
 //  mvEventList.Free;
   FDefaultPopup.Free;
   inherited;
+end;
+
+function TVpMonthView.BuildEventString(AEvent: TVpEvent;
+  AShowEventTime, AStartTimeOnly: Boolean): String;
+var
+  timefmt: String;
+  timeStr: String;
+  descrStr: String;
+  grp: TVpResourceGroup;
+  res: TVpResource;
+begin
+  Result := '';
+  if (AEvent = nil) or (Datastore = nil) or (Datastore.Resource = nil) then
+    exit;
+
+  timeStr := '';
+  descrStr := '';
+  if AShowEventTime then
+  begin
+    if AEvent.AllDayEvent then
+      timeStr := RSAllDay
+    else begin
+      timefmt := IfThen(TimeFormat = tf24Hour, 'hh:nn', 'hh:nn AM/PM');
+      timeStr := FormatDateTime(timefmt, AEvent.StartTime);
+      if not AStartTimeOnly then
+        timeStr := timeStr + ' - ' + FormatDateTime(timeFmt, AEvent.EndTime);
+    end;
+  end;
+
+  if AEvent.IsOverlayed then
+  begin
+    res := Datastore.Resources.GetResource(AEvent.ResourceID);
+    grp := Datastore.Resource.Group;
+    if (grp <> nil) then
+      descrStr := Format('[%s]%s', [
+        IfThen(odResource in grp.ShowDetails, res.Description, res.Description),
+        IfThen(odEventDescription in grp.ShowDetails, ' ' + AEvent.Description)
+      ]);
+  end else
+    descrStr := AEvent.Description;
+
+  if (timeStr <> '') and (descrStr <> '') then
+    Result := timeStr + ': ' + descrStr
+  else if (timeStr <> '') then
+    Result := timeStr
+  else
+    Result := descrStr;
 end;
 
 procedure TVpMonthView.LoadLanguage;
@@ -855,6 +910,63 @@ begin
 end;
 {=====}
 
+procedure TVpMonthView.ShowHintWindow(APoint: TPoint; ADate: TDateTime);
+const
+  MaxWidth = 400;
+var
+  txt, s: String;
+  i: Integer;
+  event: TVpEvent;
+  list: TList;
+  R: TRect;
+begin
+  if (ADate = 0) or ((Datastore = nil) or (Datastore.Resource = nil)) then
+  begin
+    HideHintWindow;
+    exit;
+  end;
+
+  // Collect all events of this day and add them separated by line feeds to
+  // the hint string (txt).
+  txt := '';
+  list := TList.Create;
+  try
+    Datastore.Resource.Schedule.EventsByDate(ADate, List);
+    for i:=0 to list.Count-1 do begin
+      event := TVpEvent(list[i]);
+      s := BuildEventString(event, true, false);
+      txt := IfThen(txt = '', s, txt + LineEnding + s);
+    end;
+  finally
+    list.Free;
+  end;
+
+  // If we have any events then we put the current date at the top.
+  if txt <> '' then begin
+    txt := FormatDateTime('dddddd', ADate) + LineEnding + LineEnding + txt;
+    if ADate = SysUtils.Date then
+      txt := RSToday + LineEnding + txt;
+  end;
+
+  if (txt <> '') and not (csDesigning in ComponentState) then
+  begin
+    // Build and show the hint window
+    if FHintWindow = nil then
+      FHintWindow := THintWindow.Create(nil);
+    APoint := ClientToScreen(APoint);
+    R := FHintWindow.CalcHintRect(MaxWidth, txt, nil);
+    OffsetRect(R, APoint.X - WidthOf(R), APoint.Y);
+    FHintWindow.ActivateHint(R, txt);
+  end else
+    // Hide the hint window
+    HideHintWindow;
+end;
+
+procedure TVpMonthView.HideHintWindow;
+begin
+  FreeAndNil(FHintWindow);
+end;
+
 procedure TVpMonthView.InitializeDefaultPopup;
 var
   NewItem : TMenuItem;
@@ -863,7 +975,7 @@ begin
     NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSToday;
     NewItem.OnClick := PopupToday;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
   end;
 
   NewItem := TMenuItem.Create(Self);
@@ -874,14 +986,14 @@ begin
     NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSNextMonth;
     NewItem.OnClick := PopupNextMonth;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
   end;
 
   if RSPrevMonth <> '' then begin
     NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSPrevMonth;
     NewItem.OnClick := PopupPrevMonth;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
   end;
 
   NewItem := TMenuItem.Create(Self);
@@ -892,14 +1004,14 @@ begin
     NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSNextYear;
     NewItem.OnClick := PopupNextYear;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
   end;
 
   if RSPrevYear <> '' then begin
     NewItem := TMenuItem.Create(Self);
     NewItem.Caption := RSPrevYear;
     NewItem.OnClick := PopupPrevYear;
-    FDefaultPopup.Items.Add (NewItem);
+    FDefaultPopup.Items.Add(NewItem);
   end;
 end;
 {=====}
@@ -970,16 +1082,29 @@ begin
 end;
 {=====}
 
-procedure TVpMonthView.mvSetDateByCoord(Point: TPoint);
+procedure TVpMonthView.mvSetDateByCoord(APoint: TPoint);
 var
   I: Integer;
 begin
   for I := 0 to pred(Length(mvMonthdayArray)) do
-    if PointInRect(Point, mvMonthdayArray[I].Rec) then begin
+    if PointInRect(APoint, mvMonthdayArray[I].Rec) then begin
       Date := mvMonthdayArray[I].Date;
       break;
     end;
 end;
+
+function TVpMonthView.GetDateAtCoord(APoint: TPoint): TDateTime;
+var
+  i: Integer;
+begin
+  for i:=0 to High(mvMonthDayArray) do
+    if PointInRect(APoint, mvMonthDayArray[i].Rec) then begin
+      Result := mvMonthDayArray[i].Date;
+      exit;
+    end;
+  Result := 0;
+end;
+
 {=====}
 
 procedure TVpMonthView.KeyDown(var Key: Word; Shift: TShiftState);
@@ -1054,7 +1179,30 @@ begin
         end;
     end;
 end;
-{=====}
+
+procedure TVpMonthView.MouseEnter;
+begin
+  FMouseDate := 0;
+end;
+
+procedure TVpMonthView.MouseLeave;
+begin
+  HideHintWindow;
+end;
+
+procedure TVpMonthView.MouseMove(Shift: TShiftState; X, Y: Integer);
+var
+  day: TDateTime;
+begin
+  inherited MouseMove(Shift, X, Y);
+  day := GetDateAtCoord(Point(X, Y));
+  if FMouseDate <> day then begin
+    Application.CancelHint;
+    ShowHintWindow(Point(X, Y), day);
+    FMouseDate := day;
+  end;
+end;
+
 procedure TVpMonthView.SetRightClickChangeDate(const v: Boolean);
 begin                                                                    
   if v <> FRightClickChangeDate then                                     

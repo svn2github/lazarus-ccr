@@ -59,7 +59,7 @@ type
 implementation
 
 uses
-  LazUtf8,
+  LazUtf8, StrUtils,
   VpCanvasUtils, VpMisc;
 
 type
@@ -650,17 +650,8 @@ begin
             else
               TextRect.Right := TextRect.Left + mvColWidth;
 
-            { format the display text }
-            if FMonthView.ShowEventTime then begin
-              if (FMonthView.TimeFormat = tf24Hour) then
-                Str := FormatDateTime('hh:nn',
-                  TVpEvent(EventList.List^[j]).StartTime)
-              else
-                Str := FormatDateTime('hh:nn AM/PM',
-                  TVpEvent(EventList.List^[j]).StartTime);
-              Str := Str + ' - ' + TVpEvent(EventList.List^[j]).Description;
-            end else
-              Str := TVpEvent(EventList.List^[j]).Description;
+            { Construct the display text }
+            Str := FMonthView.BuildEventString(TVpEvent(EventList[j]), FMonthView.ShowEventTime, true);
 
             { set the event font }
             RenderCanvas.Font.Assign(FMonthView.EventFont);

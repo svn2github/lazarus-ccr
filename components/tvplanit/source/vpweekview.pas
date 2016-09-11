@@ -943,9 +943,12 @@ begin
   if txt <> '' then
     txt := txt + LineEnding;
 
-  txt := txt + Format('%s - %s', [
-    FormatDateTime('hh:nn', AEvent.StartTime),
-    FormatDateTime('hh:nn', AEvent.EndTime)]);
+  if AEvent.AllDayEvent then
+    txt := txt + 'All day'
+  else
+    txt := txt + Format('%s - %s', [
+      FormatDateTime('hh:nn', AEvent.StartTime),
+      FormatDateTime('hh:nn', AEvent.EndTime)]);
 
   if showDetails then begin
     txt := txt + LineEnding + LineEnding + 'Event:' + LineEnding + AEvent.Description;

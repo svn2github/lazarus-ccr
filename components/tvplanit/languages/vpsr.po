@@ -33,6 +33,10 @@ msgstr ""
 msgid "&Reminder"
 msgstr ""
 
+#: vpsr.rsallday
+msgid "All day"
+msgstr ""
+
 #: vpsr.rsalldayevent
 msgid "&All Day Event"
 msgstr ""

@@ -43,6 +43,10 @@ msgstr "Fre"
 msgid "&Reminder"
 msgstr "E&rinnerung"
 
+#: vpsr.rsallday
+msgid "All day"
+msgstr ""
+
 #: vpsr.rsalldayevent
 msgid "&All Day Event"
 msgstr "G&anztägiges Ereignis"
