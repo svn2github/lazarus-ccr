@@ -88,7 +88,8 @@ type
     constructor Create(Owner: TObject);
     destructor Destroy; override;
     function AddResource(ResID: Integer): TVpResource;
-    function AddResourceGroup(ACaption: String; const AResIDs: array of Integer): TVpResourceGroup;
+    function AddResourceGroup(const AResIDs: array of Integer;
+      ACaption: String = ''): TVpResourceGroup;
     procedure ClearResources;
     procedure ClearResourceGroups;
     function FindResourceByName(AName : string) : TVpResource;
@@ -194,7 +195,7 @@ type
     function GetItem(AIndex: Integer): TVpResource;
     procedure SetPattern(AValue: TVpOverlayPattern);
   public
-    constructor Create(AOwner: TVpResources; ACaption: String; AResourceID: Integer);
+    constructor Create(AOwner: TVpResources; AResourceID: Integer; ACaption: String);
     destructor Destroy; override;
     function AddID(AResourceID: Integer): Integer;
     function AsString(ASeparator: Char = ';'): String;
@@ -730,23 +731,30 @@ begin
   end;
 end;
 
-function TVpResources.AddResourceGroup(ACaption: String;
-  const AResIDs: Array of Integer): TVpResourceGroup;
+function TVpResources.AddResourceGroup(const AResIDs: Array of Integer;
+  ACaption: String = ''): TVpResourceGroup;
 var
   grp: TVpResourceGroup;
+  res: TVpResource;
   i: Integer;
 begin
-  if (ACaption = '') then
-    raise Exception.Create('Caption of resource group must not be empty');
-
   if Length(AResIDs) < 2 then
     raise Exception.Create('Resource group must contain at least one additional resource.');
+
+  // Use resource descriptions if ACaption is not specified or empty.
+  if ACaption = '' then begin
+    for i:=Low(AResIDs) + 1 to High(AResIDs) do begin
+      res := GetResource(AResIDs[i]);
+      ACaption := ACaption + ', ' + res.Description;
+    end;
+    if ACaption <> '' then Delete(ACaption, 1, 2);
+  end;
 
   // Enforce unique group name.
   grp := FindResourceGroupByName(ACaption);
   if grp = nil then begin
     // Index 0 refers to the resource to which the other resources are added.
-    Result := TVpResourceGroup.Create(Self, ACaption, AResIDs[0]);
+    Result := TVpResourceGroup.Create(Self, AResIDs[0], ACaption);
     FResourceGroups.Add(Result);
   end else begin
     grp.Clear;  // Make sure that the group is empty before adding overlayed resources
@@ -984,14 +992,15 @@ end;
 (*****************************************************************************)
 { TVpResourceGroup }
 (*****************************************************************************)
-constructor TVpResourceGroup.Create(AOwner: TVpResources; ACaption: String;
-  AResourceID: Integer);
+constructor TVpResourceGroup.Create(AOwner: TVpResources; AResourceID: Integer;
+  ACaption: String);
 begin
   inherited Create;
   FOwner := AOwner;
   FResourceID := AResourceID;
   FCaption := ACaption;
   FPattern := opBDiagonal;
+  FReadOnly := true;
   Clear;
 end;
 
