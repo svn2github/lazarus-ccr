@@ -729,6 +729,10 @@ msgstr "Buiten geldig bereik"
 msgid "OVERDUE!"
 msgstr "OVER TIJD!"
 
+#: vpsr.rsoverlayedevent
+msgid "overlayed"
+msgstr ""
+
 #: vpsr.rsownernotwinctrl
 msgid "Owner must be a TWinControl descendent"
 msgstr "Owner moet van TWinControl afstammen"

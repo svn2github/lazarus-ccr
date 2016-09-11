@@ -60,8 +60,12 @@ type
 
   TVpContactSort = (csLastFirst, csFirstLast);
 
-  TVpOverlayPattern = (opHorizontal=2, opVertical, opFDiagonal,
-                       opBDiagonal, opCross, opDiagCross);
+  TVpOverlayPattern = (opSolid, opClear, opHorizontal, opVertical,
+                       opFDiagonal, opBDiagonal, opCross, opDiagCross);
+
+  TVpOverlayDetail = (odResource, odEventDescription, odEventCategory);
+  TVpOverlayDetails = set of TVpOverlayDetail;
+
 
   { forward declarations }
   TVpResource = class;
@@ -191,9 +195,11 @@ type
     FIDs: Array of Integer;
     FReadOnly: Boolean;
     FPattern: TVpOverlayPattern;
+    FShowDetails: TVpOverlayDetails;
     function GetCount: integer;
     function GetItem(AIndex: Integer): TVpResource;
     procedure SetPattern(AValue: TVpOverlayPattern);
+    procedure SetShowDetails(AValue: TVpOverlayDetails);
   public
     constructor Create(AOwner: TVpResources; AResourceID: Integer; ACaption: String);
     destructor Destroy; override;
@@ -205,9 +211,10 @@ type
     property Caption: String read FCaption;
     property Count: Integer read GetCount;
     property Items[AIndex: Integer]: TVpResource read GetItem; default;
+    property Pattern: TVpOverlayPattern read FPattern write SetPattern;
     property ResourceID: Integer read FResourceID;
     property ReadOnly: boolean read FReadOnly write FReadOnly;
-    property Pattern: TVpOverlayPattern read FPattern write SetPattern;
+    property ShowDetails: TVpOverlayDetails read FShowDetails write SetShowDetails;
   end;
 
   TVpSchedule = class
@@ -1001,6 +1008,7 @@ begin
   FCaption := ACaption;
   FPattern := opBDiagonal;
   FReadOnly := true;
+  FShowDetails := [odResource];
   Clear;
 end;
 
@@ -1098,8 +1106,16 @@ begin
   if FPattern = AValue then
     exit;
   FPattern := AValue;
+  // to do: repaint the controls
 end;
 
+procedure TVpResourceGroup.SetShowDetails(AValue: TVpOverlayDetails);
+begin
+  if FShowDetails = AValue then
+    exit;
+  FShowDetails := AValue;
+  // To do: repaint the controls
+end;
 
 (*****************************************************************************)
 { TVpEvent }

@@ -210,6 +210,7 @@ type
     FAutoConnect       : Boolean;
     FLoading           : Boolean;
     FCategoryColorMap  : TVpCategoryColorMap;
+    FHiddenCategories  : TVpCategoryInfo;
     FResources         : TVpResources;
     FTimeRange         : TVpTimeRange;
     FActiveDate        : TDateTime;
@@ -298,6 +299,8 @@ type
   published
     property CategoryColorMap: TVpCategoryColorMap
       read FCategoryColorMap write FCategoryColorMap;
+    property HiddenCategories: TVpCategoryInfo
+      read FHiddenCategories write FHiddenCategories;
     property DefaultEventSound: string
       read FDefaultEventSound write FDefaultEventSound;
     property EnableEventTimer: Boolean
@@ -434,7 +437,14 @@ begin
   FAutoCreate := true;
   FResources := TVpResources.Create(Self);
   FTimeRange := TVpTimeRange.Create(Self);
+
   FCategoryColorMap := TVpCategoryColorMap.Create;
+  FHiddenCategories := TVpCategoryInfo.Create;
+  with FHiddenCategories do begin
+    BackgroundColor := clSilver;
+    Color := clGray;
+  end;
+
   FActiveDate := Now;
   FDayBuffer := 31;  {One full month before and after the current date. }
   FTimeRange.StartTime := Now - FDayBuffer;
@@ -452,7 +462,6 @@ begin
     dsAlertTimer.OnTimer := dsOnTimer;
     dsAlertTimer.Interval := 500;
   end;
-
 
   { If the DataStore is being dropped onto a form for the first time... }
   if (csDesigning in ComponentState) and not (csLoading in ComponentState) then
@@ -476,6 +485,7 @@ begin
   FResources.Free;
   FTimeRange.Free;
   FCategoryColorMap.Free;
+  FHiddenCategories.Free;
 
   if dsAlertTimer <> nil then
     dsAlertTimer.Free;

@@ -719,6 +719,10 @@ msgstr ""
 msgid "OVERDUE!"
 msgstr ""
 
+#: vpsr.rsoverlayedevent
+msgid "overlayed"
+msgstr ""
+
 #: vpsr.rsownernotwinctrl
 msgid "Owner must be a TWinControl descendent"
 msgstr ""

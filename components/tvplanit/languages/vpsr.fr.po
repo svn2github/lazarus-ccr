@@ -735,6 +735,10 @@ msgstr "Hors de portée"
 msgid "OVERDUE!"
 msgstr "EN RETARD!"
 
+#: vpsr.rsoverlayedevent
+msgid "overlayed"
+msgstr ""
+
 #: vpsr.rsownernotwinctrl
 msgid "Owner must be a TWinControl descendent"
 msgstr "Le propriétaire doit être un descendant de TWinControl"

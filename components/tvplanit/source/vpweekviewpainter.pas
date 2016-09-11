@@ -80,23 +80,37 @@ function TVpWeekViewPainter.BuildEventString(AEvent: TVpEvent;
 var
   timeFmt: String;
   res: TVpResource;
+  grp: TVpResourceGroup;
+  isOverlayed: Boolean;
 begin
-  if FWeekView.ShowEventTime then
-  begin
-    timefmt := IfThen(FWeekView.TimeFormat = tf24Hour, 'hh:nn', 'hh:nn AM/PM');
-    Result := Format('%s - %s: ', [
-      FormatDateTime(timeFmt, AStartTime),
-      FormatDateTime(timeFmt, AEndTime)
-    ]);
-    Result := Result + ' ' + AEvent.Description;
-  end else
-    Result := AEvent.Description;
+  grp := FWeekView.Datastore.Resource.Group;
+  isOverlayed := AEvent.IsOverlayed;
 
-  if AEvent.IsOverlayed then
+  if isOverlayed then
   begin
-    res := FWeekView.Datastore.Resources.GetResource(AEvent.ResourceID);
-    if res <> nil then
-      Result := Format('[%s] %s', [res.Description, Result]);
+    if (grp <> nil) and (odResource in grp.ShowDetails) then
+    begin
+      res := FWeekView.Datastore.Resources.GetResource(AEvent.ResourceID);
+      if res <> nil then
+        Result := '[' + res.Description + ']';
+    end else
+      Result := '[' + RSOverlayedEvent + ']';
+  end;
+
+  if (not isOverlayed) or ((grp <> nil) and (odEventDescription in grp.ShowDetails)) then
+  begin
+    if Result <> '' then
+      Result := Result + ' ';
+    if FWeekView.ShowEventTime then
+    begin
+      timefmt := IfThen(FWeekView.TimeFormat = tf24Hour, 'hh:nn', 'hh:nn AM/PM');
+      Result := Result + Format('%s - %s: %s', [
+        FormatDateTime(timeFmt, AStartTime),
+        FormatDateTime(timeFmt, AEndTime),
+        AEvent.Description
+      ]);
+    end else
+      Result := Result + AEvent.Description;
   end;
 end;
 

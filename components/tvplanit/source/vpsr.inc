@@ -155,6 +155,7 @@ resourcestring
                               'Do you want to flip them?';
   RSCannotEditOverlayedEvent= 'Cannot edit this overlayed event.';
   RSNoOverlayedEvents       = 'none';
+  RSOverlayedEvent          = 'overlayed';
 
   {Task Specific}
   RSConfirmDeleteTask       = 'Delete this task from your list?';

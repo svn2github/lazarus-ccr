@@ -729,6 +729,10 @@ msgstr "За пределами диапазона"
 msgid "OVERDUE!"
 msgstr "ПРОСРОЧЕНО!"
 
+#: vpsr.rsoverlayedevent
+msgid "overlayed"
+msgstr ""
+
 #: vpsr.rsownernotwinctrl
 msgid "Owner must be a TWinControl descendent"
 msgstr ""

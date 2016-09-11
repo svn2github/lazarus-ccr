@@ -413,12 +413,19 @@ var
 begin
   datastore := VpControlLink1.Datastore;
   grp := datastore.Resources.AddResourceGroup([1, 2], NAME_OF_GROUP);
-  grp.ReadOnly := true;
   grp.Pattern := opDiagCross;
-  if datastore.Resource <> nil then
-    datastore.Resource.Group := grp else
+
+  // Optionally uncomment these lines to get not-default behavior:
+  //grp.ReadOnly := false;
+  //grp.ShowDetails := [odResource, odEventDescription, odEventCategory];
+
+  // Assign the resource group to the active resource of the datastore.
+ if datastore.Resource <> nil then
+    datastore.Resource.Group := grp
+  else
     datastore.Resource.Group := nil;
-  // Important: This is not called internally so far!
+
+ // Important: This is not called internally so far!
   datastore.RefreshEvents;  // or: datastore.UpdateGroupEvents;
 end;
 
@@ -449,6 +456,8 @@ begin
     CategoryColorMap.Category0.BackgroundColor := clSkyBlue;
     CategoryColorMap.Category0.Color := clNavy;
     CategoryColorMap.Category0.Description := 'Appointment';
+//    CategoryColorMap.Category0.Bitmap.Transparent := true;  // <-- not working
+    CategoryColorMap.Category0.Bitmap.LoadFromResourceName(HINSTANCE, 'VPUPARROW');
     CategoryColorMap.Category1.BackgroundColor := 13290239;
     CategoryColorMap.Category1.Color := clRed;
     CategoryColorMap.Category1.Description := 'Urgent';

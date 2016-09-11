@@ -166,25 +166,25 @@ type
     property AfterExit: TNotifyEvent read FAfterExit write FAfterExit;
     property OnMouseWheel: TVpMouseWheelEvent read FOnMouseWheel write FOnMouseWheel;
 
-  public                                                                 
+  public
     constructor Create (AOwner : TComponent); override;                  
 
   published
     property Version: string read GetVersion write SetVersion stored False;
     {$IFNDEF LCL}
-    {$IFDEF VERSION6}                                                    
-    property BevelEdges;                                                 
-    property BevelInner;                                                 
-    property BevelOuter;                                                 
-    property BevelKind;                                                  
-    property BevelWidth;                                                 
+    {$IFDEF VERSION6}
+    property BevelEdges;
+    property BevelInner;
+    property BevelOuter;
+    property BevelKind;
+    property BevelWidth;
     {$ENDIF}
     {$ENDIF}
 
-    { The Hint property is published in TControl, but the ShowHint }     
-    { property is left public. odd.                                }     
-    { surfacing here will make it published in all our descendants }     
-    property ShowHint;                                                   
+    { The Hint property is published in TControl, but the ShowHint }
+    { property is left public. odd.                                }
+    { surfacing here will make it published in all our descendants }
+    property ShowHint;
   end;
 
   TVpPersistent = class(TPersistent)
@@ -202,8 +202,8 @@ type
     FDescription: string;
     FIndex: Integer;
     FBitmap: TBitmap;
-    procedure SetBackgroundColor (const v : TColor);
-    procedure SetBitmap (v : TBitmap);
+    procedure SetBackgroundColor(const v: TColor);
+    procedure SetBitmap(v: TBitmap);
     procedure SetColor(Value: TColor);
     procedure SetDescription(Value: string);
   public
@@ -212,7 +212,7 @@ type
   published
     property BackgroundColor: TColor
       read FBackgroundColor write SetBackgroundColor default clWindow;
-    property Bitmap : TBitmap read FBitmap write SetBitmap;
+    property Bitmap: TBitmap read FBitmap write SetBitmap;
     property Color: TColor read FColor write SetColor;
     property Description: string read FDescription write SetDescription;
     property CategoryIndex: Integer read FCategoryIndex;

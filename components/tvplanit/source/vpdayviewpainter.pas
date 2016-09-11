@@ -76,7 +76,7 @@ type
     OldFont: TFont;
 
   protected
-    function BuildEventString(AEvent: TVpEvent; const AEventRect, AIconRect: TRect): String;
+    function BuildEventString(AEvent: TVpEvent): String;
     procedure CalcRowHeadRect(out ARect: TRect);
     function CalcRowHeadWidth: Integer;
     function CountOverlappingEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
@@ -128,7 +128,7 @@ implementation
 
 uses
   StrUtils, Math, LazUtf8,
-  VpCanvasUtils, VpMisc;
+  VpSR, VpCanvasUtils, VpMisc;
 
 const
   ICON_MARGIN = 4;
@@ -145,35 +145,41 @@ begin
   FDayView := ADayView;
 end;
 
-function TVpDayViewPainter.BuildEventString(AEvent: TVpEvent;
-  const AEventRect, AIconRect: TRect): String;
+function TVpDayViewPainter.BuildEventString(AEvent: TVpEvent): String;
 var
   maxW: Integer;
   timeFmt: String;
   res: TVpResource;
+  grp: TVpResourceGroup;
+  isOverlayed: Boolean;
 begin
-  if FDayView.ShowEventTimes then begin
-    timeFmt := IfThen(FDayView.TimeFormat = tf24Hour, 'h:nn', 'h:nnam/pm');
-    Result := Format('%s - %s: %s', [
-      FormatDateTime(timeFmt, AEvent.StartTime),
-      FormatDateTime(timeFmt, AEvent.EndTime),
-      AEvent.Description
-    ]);
-  end else
-    Result := AEvent.Description;
+  Result := '';
 
-  if AEvent.IsOverlayed then begin
-    res := FDayView.Datastore.Resources.GetResource(AEvent.ResourceID);
-    if res <> nil then
-      Result := Format('[%s] %s', [res.Description, Result]);
+  grp := FDayView.Datastore.Resource.Group;
+  isOverlayed := AEvent.IsOverlayed;
+
+  if isOverlayed then begin
+    if (grp <> nil) and (odResource in grp.ShowDetails) then begin
+      res := FDayView.Datastore.Resources.GetResource(AEvent.ResourceID);
+      if res <> nil then
+        Result := '[' + res.Description + '] ';
+    end else
+      Result := '[' + RSOverlayedEvent + '] ';
   end;
 
-  if FDayView.WrapStyle = wsNone then begin
-    { if the string is longer than the availble space then chop off the end
-      and place those little '...'s at the end }
-    maxW := AEventRect.Right - AIconRect.Right - FScaledGutterWidth - TextMargin;
-    if RenderCanvas.TextWidth(Result) > maxW then
-      Result := GetDisplayString(RenderCanvas, Result, 0, maxW);
+  if (not isOverlayed) or ((grp <> nil) and (odEventDescription in grp.ShowDetails)) then
+  begin
+    if Result <> '' then
+      Result := Result + ' ';
+    if FDayView.ShowEventTimes then begin
+      timeFmt := IfThen(FDayView.TimeFormat = tf24Hour, 'h:nn', 'h:nnam/pm');
+      Result := Result + Format('%s - %s: %s', [
+        FormatDateTime(timeFmt, AEvent.StartTime),
+        FormatDateTime(timeFmt, AEvent.EndTime),
+        AEvent.Description
+      ]);
+    end else
+      Result := Result + AEvent.Description;
   end;
 end;
 
@@ -788,6 +794,7 @@ procedure TVpDayViewPainter.DrawEvent(AEvent: TVpEvent; var AEventRec: TVpDvEven
 var
   EventCategory: TVpCategoryInfo;
   EventIsEditing: Boolean;
+  EventIsOverlayed: Boolean;
   EventSTime, EventETime: Double;
   EventDuration: Double;
   EventSLine, EventELine, EventLineCount: Integer;
@@ -796,9 +803,19 @@ var
   StartOffset, EndOffset: Double;
   EventString: String;
   tmpRect: TRect;
+  maxW: Integer;
+  grp: TVpResourceGroup;
 begin
   { Initialize, collect useful information needed later }
-  EventCategory := FDayView.Datastore.CategoryColorMap.GetCategory(AEvent.Category);
+  if Assigned(FDayView.Datastore) then
+  begin
+    EventCategory := FDayView.Datastore.CategoryColorMap.GetCategory(AEvent.Category);
+    grp := FDayView.Datastore.Resource.Group;
+  end else begin
+    EventCategory := nil;
+    grp := nil;
+  end;
+  EventIsOverlayed := AEvent.IsOverlayed;
 
   with TVpDayViewOpener(FDayView) do
     if (dvInplaceEditor <> nil) and dvInplaceEditor.Visible then
@@ -812,8 +829,8 @@ begin
   AEventRec.RealEndTime := EventETime;
 
   { Find the lines on which this event starts and ends }
-  EventSLine := GetStartLine(EventSTime, UseGran); //FDayView.Granularity);
-  EventELine := GetEndLine(EventETime, UseGran); //FDayView.Granularity);
+  EventSLine := GetStartLine(EventSTime, UseGran);
+  EventELine := GetEndLine(EventETime, UseGran);
 
   { If the event doesn't occupy area that is currently visible, then skip it. }
   if (EventELine < StartLine) or (EventSLine > StartLine + RealVisibleLines + 1) then
@@ -829,22 +846,32 @@ begin
   PrepareEventRect(AEventRec.WidthDivisor, AEventRec.Level, EventRect);
 
   { Draw the event rectangle }
+  RenderCanvas.Brush.Color := WindowColor;
   if Assigned(FDayView.DataStore) then begin
     if EventIsEditing then
       RenderCanvas.Brush.Color := WindowColor
     else
+    if Assigned(EventCategory) then
       RenderCanvas.Brush.Color := EventCategory.BackgroundColor
-  end else
-    RenderCanvas.Brush.Color := WindowColor;
-  if AEvent.IsOverlayed then
-    RenderCanvas.Brush.Style := OverlayPatternToBrushStyle(AEvent.GetResource.Group.Pattern);
+  end;
+  if EventIsOverlayed then begin
+    if (grp <> nil) and (not (odEventCategory in grp.ShowDetails)) then
+      RenderCanvas.Brush.Color := FDayView.Datastore.HiddenCategories.BackgroundColor
+    else
+      RenderCanvas.Brush.Style := OverlayPatternToBrushStyle(AEvent.GetResource.Group.Pattern);
+  end;
   TPSFillRect(RenderCanvas, Angle, RenderIn, EventRect);
   RenderCanvas.Brush.Style := bsSolid;
 
   { Paint the little area to the left of the text the color corresponding to
     the event's category. These colors are used even when printing }
-  if Assigned(FDayView.DataStore) then
+  RenderCanvas.Brush.Color := clNavy;
+  if Assigned(FDayView.Datastore) then
+  begin
     RenderCanvas.Brush.Color := EventCategory.Color;
+    if EventIsOverlayed and (grp <> nil) and (not (odEventCategory in grp.ShowDetails)) then
+      RenderCanvas.Brush.Color := FDayView.Datastore.HiddenCategories.Color;
+  end;
 
   { find the pixel offset to use for determining where to start and }
   { stop drawing colored area according to the start time and end time of the event. }
@@ -914,10 +941,18 @@ begin
   if FDayView.IconAttributes.ShowInPrint then
     DrawIcons(IconRect);
 
-  { build the event string }
-  EventString := BuildEventString(AEvent, EventRect, IconRect);
+  { Build the event string }
+  EventString := BuildEventString(AEvent);
 
-  { draw the event string }
+  { If the string is longer than the availble space then chop off the end
+    and place those little '...'s at the end }
+  if FDayView.WrapStyle = wsNone then begin
+    maxW := EventRect.Right - IconRect.Right - FScaledGutterWidth - TextMargin;
+    if RenderCanvas.TextWidth(EventString) > maxW then
+      EventString := GetDisplayString(RenderCanvas, EventString, 0, maxW);
+  end;
+
+  { Draw the event string }
   DrawEventText(EventString, EventRect, IconRect, AEventRec.Level);
 
   { paint the borders around the event text area }
@@ -1587,6 +1622,8 @@ var
   cat: TVpCategoryInfo;
   w, h: Integer;
   R: TRect;
+  isOverlayed: Boolean;
+  grp: TVpResourceGroup;
 begin
   ShowAlarm := False;
   ShowRecurring := False;
@@ -1601,13 +1638,23 @@ begin
     ShowAlarm := (dvBmpAlarm.Width <> 0) and (dvBmpAlarm.Height <> 0);
   end;
 
-  if Event.RepeatCode <> rtNone then begin
+  if Event.RepeatCode <> rtNone then
+  begin
     dvBmpRecurring.Assign(FDayView.IconAttributes.RecurringBitmap);
     ShowRecurring := (dvBmpRecurring.Width <> 0) and (dvBmpRecurring.Height <> 0);
   end;
 
-  if Assigned(FDayView.DataStore) then begin
-    if Event.Category < 10 then begin
+  if Assigned(FDayView.DataStore) then
+  begin
+    isOverlayed := Event.IsOverlayed;
+    grp := FDayView.Datastore.Resource.Group;
+    if isOverlayed and (grp <> nil) and (not (odEventCategory in grp.ShowDetails)) then
+    begin
+      dvBmpCategory.Width := 0;
+      dvBmpCategory.Height := 0;
+    end else
+    if Event.Category < 10 then
+    begin
       cat := FDayView.Datastore.CategoryColorMap.GetCategory(Event.Category);
       w := cat.Bitmap.Width;
       h := cat.Bitmap.Height;
