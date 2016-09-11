@@ -1154,7 +1154,7 @@ var
   res: TVpResource;  // resource to which the event belongs
 begin
   Result := false;
-  if (FOwner <> nil) then begin
+  if (FOwner <> nil) and (FResourceID > 0) then begin
     res := FOwner.FOwner;
     if (res <> nil) and (res.ResourceID <> FResourceID) then
       Result := true;
