@@ -238,6 +238,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    function BuildEventString(AEvent: TVpEvent; AStartTime, AEndTime: TDateTime): String;
     procedure LoadLanguage;
     procedure DeleteActiveEvent(Verify: Boolean);
     procedure DragDrop(Source: TObject; X, Y: Integer); override;
@@ -290,10 +291,13 @@ type
 implementation
 
 uses
-  SysUtils, LazUTF8, Dialogs, VpEvntEditDlg, VpWeekViewPainter;
+  SysUtils, StrUtils, LazUTF8, Dialogs,
+  VpEvntEditDlg, VpWeekViewPainter;
+
 
 (*****************************************************************************)
 { TVpTGInPlaceEdit }
+(*****************************************************************************)
 
 constructor TVpWvInPlaceEdit.Create(AOwner: TComponent);
 begin
@@ -499,6 +503,48 @@ begin
   FDefaultPopup.Free;
   inherited;
 end;
+
+function TVpWeekView.BuildEventString(AEvent: TVpEvent;
+  AStartTime, AEndTime: TDateTime): String;
+var
+  timeFmt: String;
+  res: TVpResource;
+  grp: TVpResourceGroup;
+  isOverlayed: Boolean;
+begin
+  Result := '';
+
+  if (AEvent = nil) or (Datastore = nil) or (Datastore.Resource = nil) then
+    exit;
+
+  grp := Datastore.Resource.Group;
+  isOverlayed := AEvent.IsOverlayed;
+
+  if ShowEventTime then
+  begin
+    timefmt := IfThen(TimeFormat = tf24Hour, 'hh:nn', 'hh:nn AM/PM');
+    Result := Result + Format('%s - %s: ', [
+      FormatDateTime(timeFmt, AStartTime),
+      FormatDateTime(timeFmt, AEndTime)
+    ]);
+  end else
+    Result := '';
+
+  if isOverlayed then
+  begin
+    if (grp <> nil) and (odResource in grp.ShowDetails) then
+    begin
+      res := Datastore.Resources.GetResource(AEvent.ResourceID);
+      if res <> nil then
+        Result := Result + '[' + res.Description + '] ';
+    end else
+      Result := Result + '[' + RSOverlayedEvent + '] ';
+  end;
+
+  if (not isOverlayed) or ((grp <> nil) and (odEventDescription in grp.ShowDetails)) then
+    Result := Result + AEvent.Description;
+end;
+
 
 procedure TVpWeekView.LoadLanguage;
 begin

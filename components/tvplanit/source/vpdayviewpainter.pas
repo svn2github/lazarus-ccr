@@ -1194,7 +1194,7 @@ begin
   else begin
   if ALevel = 0 then
     { don't draw the gutter in the EventRect for level 0 events. }
-    TPSTextOut(RenderCanvas,                                         // wp: both cases are the same ?!
+    TPSTextOut(RenderCanvas,             // wp: both cases are the same ?!
       Angle,
       RenderIn,
       AIconRect.Right + FDayView.GutterWidth + TextMargin,

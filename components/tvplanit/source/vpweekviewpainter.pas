@@ -15,9 +15,7 @@ type
     FDayHeadHeight: Integer;
 
     // local parameters of the old TVpWeekView method
-//    HeadRect: TRect;
     DayRectHeight: Integer;
-//    StrLn: Integer;
     StartDate: TDateTime;
     ADEventsRect: TRect;
     DotDotDotColor: TColor;
@@ -34,7 +32,6 @@ type
     ADEventBorderColor: TColor;
 
   protected
-    function BuildEventString(AEvent: TVpEvent; AStartTime, AEndTime: TDateTime): String;
     procedure Clear;
     function DrawAllDayEvents(ADate: TDateTime; DayRect: TRect; var EAIndex: Integer): Boolean;
     procedure DrawBorders;
@@ -73,42 +70,6 @@ constructor TVpWeekViewPainter.Create(AWeekView: TVpWeekView;
 begin
   inherited Create(ARenderCanvas);
   FWeekView := AWeekView;
-end;
-
-function TVpWeekViewPainter.BuildEventString(AEvent: TVpEvent;
-  AStartTime, AEndTime: TDateTime): String;
-var
-  timeFmt: String;
-  res: TVpResource;
-  grp: TVpResourceGroup;
-  isOverlayed: Boolean;
-begin
-  grp := FWeekView.Datastore.Resource.Group;
-  isOverlayed := AEvent.IsOverlayed;
-
-  if FWeekView.ShowEventTime then
-  begin
-    timefmt := IfThen(FWeekView.TimeFormat = tf24Hour, 'hh:nn', 'hh:nn AM/PM');
-    Result := Result + Format('%s - %s: ', [
-      FormatDateTime(timeFmt, AStartTime),
-      FormatDateTime(timeFmt, AEndTime)
-    ]);
-  end else
-    Result := '';
-
-  if isOverlayed then
-  begin
-    if (grp <> nil) and (odResource in grp.ShowDetails) then
-    begin
-      res := FWeekView.Datastore.Resources.GetResource(AEvent.ResourceID);
-      if res <> nil then
-        Result := Result + '[' + res.Description + '] ';
-    end else
-      Result := Result + '[' + RSOverlayedEvent + '] ';
-  end;
-
-  if (not isOverlayed) or ((grp <> nil) and (odEventDescription in grp.ShowDetails)) then
-    Result := Result + AEvent.Description;
 end;
 
 procedure TVpWeekViewPainter.Clear;
@@ -552,7 +513,7 @@ begin
   RenderCanvas.Brush.Color := RealColor;
 
   { Build the event text }
-  dayStr := BuildEventString(AEvent, todayStartTime, todayEndTime);
+  dayStr := FWeekView.BuildEventString(AEvent, todayStartTime, todayEndTime);
   strLen := RenderCanvas.TextWidth(dayStr);
   if (strLen > WidthOf(TextRect) - TextMargin) then      // wp: shouldn't this be 2*TextMargin ?
     dayStr := GetDisplayString(RenderCanvas, dayStr, 0, WidthOf(TextRect) - TextMargin * 2);
