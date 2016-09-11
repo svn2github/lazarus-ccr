@@ -413,9 +413,9 @@ var
 begin
   datastore := VpControlLink1.Datastore;
   grp := datastore.Resources.AddResourceGroup([1, 2], NAME_OF_GROUP);
-  grp.Pattern := opDiagCross;
 
   // Optionally uncomment these lines to get not-default behavior:
+  //grp.Pattern := opDiagCross;
   //grp.ReadOnly := false;
   //grp.ShowDetails := [odResource, odEventDescription, odEventCategory];
 
