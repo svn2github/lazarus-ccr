@@ -118,6 +118,9 @@ type
 
   TVpWeekView = class(TVpLinkableControl)
   private
+    FHintMode: TVpHintMode;
+    FMouseEvent: TVpEvent;
+    FHintWindow: THintWindow;
     procedure SetActiveEvent(AValue: TVpEvent);
   protected{ private }
     FActiveDate: TDateTime;
@@ -140,8 +143,6 @@ type
     FAllowInplaceEdit: Boolean;
     FAllowDragAndDrop: Boolean;
     FDragDropTransparent: Boolean;
-    FMouseEvent: TVpEvent;
-    FHintWindow: THintWindow;
     { event variables }
     FBeforeEdit: TVpBeforeEditEvent;
     FAfterEdit: TVpAfterEditEvent;
@@ -209,6 +210,8 @@ type
     procedure EditEvent;
     procedure EndEdit(Sender: TObject);
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    procedure MouseEnter; override;
+    procedure MouseLeave; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
@@ -238,7 +241,8 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    function BuildEventString(AEvent: TVpEvent; AStartTime, AEndTime: TDateTime): String;
+    function BuildEventString(AEvent: TVpEvent; AStartTime, AEndTime: TDateTime;
+      UseAsHint: Boolean): String;
     procedure LoadLanguage;
     procedure DeleteActiveEvent(Verify: Boolean);
     procedure DragDrop(Source: TObject; X, Y: Integer); override;
@@ -269,6 +273,7 @@ type
     property DrawingStyle: TVpDrawingStyle read FDrawingStyle write SetDrawingStyle stored True;
     property EventFont: TVpFont read FEventFont write SetEventFont;
     property HeadAttributes: TVpWvHeadAttributes read FHeadAttr write FHeadAttr;
+    property HintMode: TVpHintMode read FHintMode write FHintMode default hmEventHint;
     property LineColor: TColor read FLineColor write SetLineColor;
     property TimeFormat: TVpTimeFormat read FTimeFormat write SetTimeFormat;
     property ShowEventTime: Boolean read FShowEventTime write SetShowEventTime;
@@ -293,7 +298,6 @@ implementation
 uses
   SysUtils, StrUtils, LazUTF8, Dialogs,
   VpEvntEditDlg, VpWeekViewPainter;
-
 
 (*****************************************************************************)
 { TVpTGInPlaceEdit }
@@ -488,10 +492,10 @@ begin
   wvHookUp;
   SetActiveDate(Now);
 end;
-{=====}
 
 destructor TVpWeekView.Destroy;
 begin
+  FreeAndNil(FHintWindow);
   FreeAndNil(wvInplaceEditor);
   FDayHeadAttributes.Free;
   FAllDayEventAttr.Free;
@@ -505,12 +509,15 @@ begin
 end;
 
 function TVpWeekView.BuildEventString(AEvent: TVpEvent;
-  AStartTime, AEndTime: TDateTime): String;
+  AStartTime, AEndTime: TDateTime; UseAsHint: Boolean): String;
 var
   timeFmt: String;
+  timeStr: String;
+  s: String;
   res: TVpResource;
   grp: TVpResourceGroup;
   isOverlayed: Boolean;
+  showDetails: Boolean;
 begin
   Result := '';
 
@@ -518,31 +525,75 @@ begin
     exit;
 
   grp := Datastore.Resource.Group;
+  showDetails := (grp <> nil) and (odEventDescription in grp.ShowDetails);
   isOverlayed := AEvent.IsOverlayed;
+  timefmt := GetTimeFormatStr(TimeFormat);
 
-  if ShowEventTime then
+  if UseAsHint then begin
+    { Usage as hint }
+    if isOverlayed then begin
+      grp := Datastore.Resource.Group;
+      if (odResource in grp.ShowDetails) then begin
+        res := Datastore.Resources.GetResource(AEvent.ResourceID);
+        Result := RSOverlayed + ': ' + res.Description;
+      end else
+        Result := RSOverlayed;
+    end else
+      showDetails := true;
+
+    timeStr := IfThen(AEvent.AllDayEvent,
+      RSAllDay,
+      FormatDateTime(timeFmt, AEvent.StartTime) + ' - ' + FormatDateTime(timeFmt, AEvent.EndTime)
+    );
+
+    Result := IfThen(Result = '',
+      timeStr,
+      Result + LineEnding + timeStr
+    );
+
+    if showDetails then begin
+      // Event description
+      Result := Result + LineEnding + LineEnding +
+        RSEvent + ':' + LineEnding + AEvent.Description;
+
+      // Event notes
+      if (AEvent.Notes <> '') then begin
+        s := WrapText(AEvent.Notes, MAX_HINT_WIDTH);
+        s := StripLastLineEnding(s);
+        Result := Result + LineEnding + LineEnding +
+          RSNotes + ':' + LineEnding + s;
+      end;
+
+      // Event location
+      if (AEvent.Location <> '') then
+        Result := Result + LineEnding + LineEnding +
+          RSLocation + ':' + LineEnding + AEvent.Location;
+    end;
+  end
+  else
   begin
-    timefmt := IfThen(TimeFormat = tf24Hour, 'hh:nn', 'hh:nn AM/PM');
-    Result := Result + Format('%s - %s: ', [
+    { Usage as cell text }
+    timeStr := IfThen(ShowEventTime, Format('%s - %s: ', [
       FormatDateTime(timeFmt, AStartTime),
       FormatDateTime(timeFmt, AEndTime)
-    ]);
-  end else
-    Result := '';
+    ]));
+    Result := timeStr;
 
-  if isOverlayed then
-  begin
-    if (grp <> nil) and (odResource in grp.ShowDetails) then
+    if isOverlayed then
     begin
-      res := Datastore.Resources.GetResource(AEvent.ResourceID);
-      if res <> nil then
-        Result := Result + '[' + res.Description + '] ';
+      if (grp <> nil) and (odResource in grp.ShowDetails) then
+      begin
+        res := Datastore.Resources.GetResource(AEvent.ResourceID);
+        if res <> nil then
+          Result := Result + '[' + res.Description + '] ';
+      end else
+        Result := Result + '[' + RSOverlayedEvent + '] ';
     end else
-      Result := Result + '[' + RSOverlayedEvent + '] ';
-  end;
+      showDetails := True;
 
-  if (not isOverlayed) or ((grp <> nil) and (odEventDescription in grp.ShowDetails)) then
-    Result := Result + AEvent.Description;
+    if showDetails then
+      Result := Result + AEvent.Description;
+  end;
 end;
 
 
@@ -957,76 +1008,53 @@ end;
 { Hints }
 
 procedure TVpWeekView.ShowHintWindow(APoint: TPoint; AEvent: TVpEvent);
-const
-  MaxWidth = 400;
 var
-  txt, s: String;
-  grp: TVpResourceGroup;
-  showDetails: Boolean;
-  res: TVpResource;
-  R, REv: TRect;
+  txt: String;
+  R, eventR: TRect;
 begin
-  if (AEvent = nil) or
-     ((Datastore = nil) or (Datastore.Resource = nil)) then
+  if FHintMode = hmEventHint then
   begin
-    HideHintWindow;
-    exit;
-  end;
-
-  if AEvent.IsOverlayed then begin
-    grp := Datastore.Resource.Group;
-    showDetails := (odEventDescription in grp.ShowDetails);
-    if (odResource in grp.ShowDetails) then begin
-      res := Datastore.Resources.GetResource(AEvent.ResourceID);
-      txt := 'Overlayed resource: ' + res.Description;
-    end else
-      txt := 'Overlayed resource';
-  end else begin
-    showDetails := true;
-    txt := '';
-  end;
-
-  if txt <> '' then
-    txt := txt + LineEnding;
-
-  if AEvent.AllDayEvent then
-    txt := txt + 'All day'
-  else
-    txt := txt + Format('%s - %s', [
-      FormatDateTime('hh:nn', AEvent.StartTime),
-      FormatDateTime('hh:nn', AEvent.EndTime)]);
-
-  if showDetails then begin
-    txt := txt + LineEnding + LineEnding + 'Event:' + LineEnding + AEvent.Description;
-    if (AEvent.Notes <> '') then begin
-      s := WrapText(AEvent.Notes, MaxWidth);
-      s := StripLastLineEnding(s);
-      txt := txt + LineEnding + LineEnding + 'Notes:' + LineEnding + s;
+    if (AEvent = nil) or
+       ((Datastore = nil) or (Datastore.Resource = nil)) then
+    begin
+      HideHintWindow;
+      exit;
     end;
-    if AEvent.Location <> '' then
-      txt := txt + LineEnding + LineEnding + 'Location:' + LineEnding + AEvent.Location;
-  end;
 
-  if (txt <> '') and
-     not ((wvInPlaceEditor <> nil) and wvInplaceEditor.Visible) and
-     not (csDesigning in ComponentState) then
+    txt := BuildEventString(AEvent, AEvent.StartTime, AEvent.EndTime, true);
+
+    if (txt <> '') and
+       not ((wvInPlaceEditor <> nil) and wvInplaceEditor.Visible) and
+       not (csDesigning in ComponentState) then
+    begin
+      if FHintWindow = nil then
+        FHintWindow := THintWindow.Create(nil);
+      eventR := GetEventRect(AEvent);
+      eventR.TopLeft := ClientToScreen(eventR.TopLeft);
+      eventR.BottomRight := ClientToScreen(eventR.BottomRight);
+      APoint := ClientToScreen(APoint);
+      R := FHintWindow.CalcHintRect(MAX_HINT_WIDTH, txt, nil);
+      OffsetRect(R, APoint.X - WidthOf(R), eventR.Bottom);
+      FHintWindow.ActivateHint(R, txt);
+    end else
+      HideHintWindow;
+  end
+  else
+  if FHintMode = hmComponentHint then
   begin
-    if FHintWindow = nil then
-      FHintWindow := THintWindow.Create(nil);
-    REv := GetEventRect(AEvent);
-    REv.TopLeft := ClientToScreen(REv.TopLeft);
-    REv.BottomRight := ClientToScreen(REv.BottomRight);
-    APoint := ClientToScreen(APoint);
-    R := FHintWindow.CalcHintRect(MaxWidth, txt, nil);
-    OffsetRect(R, APoint.X - WidthOf(R), REv.Bottom);
-    FHintWindow.ActivateHint(R, txt);
-  end else
-    HideHintWindow;
+    Application.Hint := Hint;
+    Application.ActivateHint(ClientToScreen(APoint), true);
+  end;
 end;
 
 procedure TVpWeekView.HideHintWindow;
 begin
-  FreeAndNil(FHintWindow);
+  case FHintMode of
+    hmEventHint:
+      FreeAndNil(FHintWindow);
+    hmComponentHint:
+      Application.CancelHint;
+  end;
 end;
 
 
@@ -1041,26 +1069,26 @@ begin
   canEdit := (FActiveEvent <> nil) and FActiveEvent.CanEdit;
   FDefaultPopup.Items.Clear;
 
-  if RSWeekPopupAdd <> '' then begin
+  if RSPopupAddEvent <> '' then begin
     NewItem := TMenuItem.Create(Self);
-    NewItem.Caption := RSWeekPopupAdd;
+    NewItem.Caption := RSPopupAddEvent;
     NewItem.OnClick := PopupAddEvent;
     NewItem.Tag := 0;
     FDefaultPopup.Items.Add(NewItem);
   end;
 
-  if RSWeekPopupEdit <> '' then begin
+  if RSPopupEditEvent <> '' then begin
     NewItem := TMenuItem.Create(Self);
-    NewItem.Caption := RSWeekPopupEdit;
+    NewItem.Caption := RSPopupEditEvent;
     NewItem.Enabled := canEdit;
     NewItem.OnClick := PopupEditEvent;
     NewItem.Tag := 1;
     FDefaultPopup.Items.Add(NewItem);
   end;
 
-  if RSWeekPopupDelete <> '' then begin
+  if RSPopupDeleteEvent <> '' then begin
     NewItem := TMenuItem.Create(Self);
-    NewItem.Caption := RSWeekPopupDelete;
+    NewItem.Caption := RSPopupDeleteEvent;
     NewItem.Enabled := canEdit;
     NewItem.OnClick := PopupDeleteEvent;
     NewItem.Tag := 1;
@@ -1071,9 +1099,9 @@ begin
   NewItem.Caption := '-';
   FDefaultPopup.Items.Add(NewItem);
 
-  if RSWeekPopupNav <> '' then begin
+  if RSPopupChangeDate <> '' then begin
     NewItem := TMenuItem.Create(Self);
-    NewItem.Caption := RSWeekPopupNav;
+    NewItem.Caption := RSPopupChangeDate;
     NewItem.Tag := 0;
     FDefaultPopup.Items.Add(NewItem);
 
@@ -1570,7 +1598,16 @@ begin
 //    SetFocus;
   end;
 end;
-{=====}
+
+procedure TVpWeekView.MouseEnter;
+begin
+  FMouseEvent := nil;
+end;
+
+procedure TVpWeekView.MouseLeave;
+begin
+  HideHintWindow;
+end;
 
 procedure TVpWeekView.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X,Y: Integer);
@@ -1650,11 +1687,14 @@ begin
     end;
   end;
 
-  event := GetEventAtCoord(Point(X, Y));
-  if FMouseEvent <> event then begin
-    Application.CancelHint;
-    ShowHintWindow(Point(X, Y), event);
-    FMouseEvent := event;
+  if ShowHint then
+  begin
+    event := GetEventAtCoord(Point(X, Y));
+    if FMouseEvent <> event then begin
+      Application.CancelHint;
+      ShowHintWindow(Point(X, Y), event);
+      FMouseEvent := event;
+    end;
   end;
 end;
 

@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.9\n"
 "Language: de\n"
 
 #: demomain.rs10min
@@ -209,6 +209,10 @@ msgstr "\"Ziehen und Fallenlassen\" (Drag&&Drop)  mit transparentem Hintergrund"
 #: tmainform.cbgranularity.text
 msgid "30 Min"
 msgstr "30 Min"
+
+#: tmainform.cbshoweventhints.caption
+msgid "Show event hints"
+msgstr "Ereignis-Hinweise anzeigen"
 
 #: tmainform.lbladdressbuilder.caption
 msgid "Address builder"

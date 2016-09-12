@@ -256,11 +256,14 @@ const
   VpXSLImplementation = 0.0;
   VpXMLSpecification = '1.0';
 
-{ Defaults }
+  { Defaults }
 
   { MonthView }
-
   vpDefWVRClickChangeDate = True;
+
+  { Hint support }
+  MAX_HINT_WIDTH = 400;
+
 
 implementation
 

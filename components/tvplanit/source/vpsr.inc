@@ -151,6 +151,7 @@ resourcestring
   RSConfirmDeleteContact    = 'Delete contact %s?';
 
   {Event Specific}
+  RSEvent                   = 'Event';
   RSFromSchedule            = 'from your schedule?';
   RSConfirmDeleteEvent      = 'Delete event from schedule?';
   RSStartEndTimeError       = 'Incorrect order of start and end times. ' +
@@ -158,6 +159,7 @@ resourcestring
   RSCannotEditOverlayedEvent= 'Cannot edit this overlayed event.';
   RSNoOverlayedEvents       = 'none';
   RSOverlayedEvent          = 'overlayed';
+  RSOverlayed               = 'Overlayed';
 
   {Task Specific}
   RSConfirmDeleteTask       = 'Delete this task from your list?';
@@ -167,27 +169,12 @@ resourcestring
   RSTaskTitleResource       = 'Task list - ';                            {!!.01}
   RSTaskTitleNoResource     = 'Task list';                               {!!.01}
 
-  {MonthView Specific}
-  (*
-  RSMonthPopupToday         = 'Today';
-  RSMonthPopupNextMonth     = 'Next month';
-  RSMonthPopupPrevMonth     = 'Previous month';
-  RSMonthPopupNextYear      = 'Next year';
-  RSMonthPopupPrevYear      = 'Previous year'; *)
-
-  {WeekView Specific}
-  RSWeekPopupAdd            = 'Add event...';
-  RSWeekPopupEdit           = 'Edit event...';
-  RSWeekPopupDelete         = '&Delete event...';
-  RSWeekPopupNav            = 'Change date';
-  (*
-  RSWeekPopupNavToday       = 'Today';
-  RSWeekPopupNavNextWeek    = 'Next week';
-  RSWeekPopupNavPrevWeek    = 'Previous week';
-  RSWeekPopupNavNextMonth   = 'Next month';
-  RSWeekPopupNavPrevMonth   = 'Previous month';
-  RSWeekPopupNavNextYear    = 'Next year';
-  RSWeekPopupNavPrevYear    = 'Previous year';*)
+  { Popup specific }
+  RSPopupAddEvent           = 'Add event...';
+  RSPopupEditEvent          = 'Edit event...';
+  RSPopupDeleteEvent        = '&Delete event...';
+  RSPopupChangeDate         = 'Change date';
+  RSPopupResourceGroups     = 'Overlay events';
 
   { Print Preview Specific }
   RSPrintPrvPrint           = '&Print';
@@ -203,33 +190,6 @@ resourcestring
   RSPrintPrvCancel          = 'Cancel';
   RSPrintPrvCancelHint      = 'Cancel preview';
 
-  { DayView Specific }
-  RSDayPopupAdd             = 'Add event...';
-  RSDayPopupEdit            = 'Edit event...';
-  RSDayPopupDelete          = 'Delete event...';
-  RSDayPopupNav             = 'Change date';
-  (*
-  RSDayPopupNavToday        = 'Today';
-  RSDayPopupNavTomorrow     = 'Tomorrow';
-  RSDayPopupNavYesterday    = 'Yesterday';
-  RSDayPopupNavNextDay      = 'Next day';
-  RSDayPopupNavPrevDay      = 'Previous day';
-  RSDayPopupNavNextWeek     = 'Next week';
-  RSDayPopupNavPrevWeek     = 'Previous week';
-  RSDayPopupNavNextMonth    = 'Next month';
-  RSDayPopupNavPrevMonth    = 'Previous month';
-  RSDayPopupNavNextYear     = 'Next year';
-  RSDayPopupNavPrevYear     = 'Previous year';
-  RSHintToday               = 'Today';                                   {!!.01}
-  RSHintTomorrow            = 'Tomorrow';                                {!!.01}
-  RSHintYesterday           = 'Yesterday';                               {!!.01}
-  RSHintNextWeek            = 'Next week';                               {!!.01}
-  RSHintPrevWeek            = 'Previous week';                           {!!.01}
-  RSHintPrevDay             = 'Previous day';
-  RsHintNextDay             = 'Next day';
-  *)
-  RSPopupResourceGroups     = 'Overlay events';
-
   { field names }
   RSPosition                = 'Position';
   RSCompany                 = 'Company';
@@ -238,6 +198,7 @@ resourcestring
   RSCountry                 = 'Country';
   RSCategory                = 'Category';
   RSNotes                   = 'Notes';
+  RSLocation                = 'Location';
 
   RSCustom1                 = 'Custom 1';
   RSCustom2                 = 'Custom 2';
@@ -321,19 +282,6 @@ resourcestring
   RS1Week                  = '1 week';
 
   { Calendar }
-  (*
-  RSCalendarPrevMonth      = 'Previous Month';
-  RSCalendarNextMonth      = 'Next Month';
-  RSCalendarPrevYear       = 'Previous Year';
-  RSCalendarNextYear       = 'Next Year';
-  RSCalendarToday          = 'Today';
-
-  RSCalendarPopupToday     = 'Today';
-  RSCalendarPopupNextMonth = 'Next Month';
-  RSCalendarPopupPrevMonth = 'Previous Month';
-  RSCalendarPopupNextYear  = 'Next Year';
-  RSCalendarPopupPrevYear  = 'Previous Year';
-  *)
   RSCalendarRevert         = 'Revert';
   RSCalendarPopupRevert    = 'Revert';
 

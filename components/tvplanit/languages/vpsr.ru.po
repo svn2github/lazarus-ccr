@@ -283,25 +283,6 @@ msgstr "Ежедневное"
 msgid "Error: Day is required."
 msgstr "Ошибка: Необходимо указать день"
 
-#: vpsr.rsdaypopupadd
-msgctxt "vpsr.rsdaypopupadd"
-msgid "Add event..."
-msgstr "Добавить событие..."
-
-#: vpsr.rsdaypopupdelete
-msgid "Delete event..."
-msgstr "Удалить событие..."
-
-#: vpsr.rsdaypopupedit
-msgctxt "vpsr.rsdaypopupedit"
-msgid "Edit event..."
-msgstr "Изменить событие..."
-
-#: vpsr.rsdaypopupnav
-msgctxt "vpsr.rsdaypopupnav"
-msgid "Change date"
-msgstr "Изменить дату"
-
 #: vpsr.rsdays
 msgid "Days"
 msgstr "Дни"
@@ -347,6 +328,7 @@ msgid "Contact"
 msgstr "Контакт"
 
 #: vpsr.rsdlgeventedit
+msgctxt "vpsr.rsdlgeventedit"
 msgid "Event"
 msgstr "Событие"
 
@@ -422,6 +404,11 @@ msgstr "Электронная почта"
 #: vpsr.rsendtimelbl
 msgid "End time:"
 msgstr "Время окончания:"
+
+#: vpsr.rsevent
+msgctxt "vpsr.rsevent"
+msgid "Event"
+msgstr "Событие"
 
 #: vpsr.rsexclusiveeventconflict
 msgid "Conflicts with another exclusive event."
@@ -540,6 +527,10 @@ msgstr ""
 #: vpsr.rsloadfilebtn
 msgid "Load file..."
 msgstr "Загрузить файл..."
+
+#: vpsr.rslocation
+msgid "Location"
+msgstr ""
 
 #: vpsr.rslocationlbl
 msgid "Location:"
@@ -733,6 +724,10 @@ msgstr "За пределами диапазона"
 msgid "OVERDUE!"
 msgstr "ПРОСРОЧЕНО!"
 
+#: vpsr.rsoverlayed
+msgid "Overlayed"
+msgstr ""
+
 #: vpsr.rsoverlayedevent
 msgid "overlayed"
 msgstr ""
@@ -826,6 +821,26 @@ msgstr "Другой"
 #: vpsr.rspixels
 msgid "Pixels"
 msgstr ""
+
+#: vpsr.rspopupaddevent
+msgctxt "vpsr.rspopupaddevent"
+msgid "Add event..."
+msgstr "Добавить событие..."
+
+#: vpsr.rspopupchangedate
+msgctxt "vpsr.rspopupchangedate"
+msgid "Change date"
+msgstr "Изменить дату"
+
+#: vpsr.rspopupdeleteevent
+msgctxt "vpsr.rspopupdeleteevent"
+msgid "&Delete event..."
+msgstr "Удалить событие..."
+
+#: vpsr.rspopupeditevent
+msgctxt "vpsr.rspopupeditevent"
+msgid "Edit event..."
+msgstr "Изменить событие..."
 
 #: vpsr.rspopupresourcegroups
 msgid "Overlay events"
@@ -1142,25 +1157,6 @@ msgstr "Еженедельно"
 #: vpsr.rsweekof
 msgid "Week of"
 msgstr "Неделя"
-
-#: vpsr.rsweekpopupadd
-msgctxt "vpsr.rsweekpopupadd"
-msgid "Add event..."
-msgstr "Добавить событие..."
-
-#: vpsr.rsweekpopupdelete
-msgid "&Delete event..."
-msgstr "Удалить событие..."
-
-#: vpsr.rsweekpopupedit
-msgctxt "vpsr.rsweekpopupedit"
-msgid "Edit event..."
-msgstr "Изменить событие..."
-
-#: vpsr.rsweekpopupnav
-msgctxt "vpsr.rsweekpopupnav"
-msgid "Change date"
-msgstr "Изменить дату"
 
 #: vpsr.rsweeks
 msgid "Weeks"

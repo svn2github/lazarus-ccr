@@ -12,7 +12,7 @@ uses
   ExtCtrls, StdCtrls, ComCtrls, LCLTranslator, Menus, Types, LCLVersion,
   VpBaseDS, VpDayView, VpWeekView, VpTaskList, VpAbout, VpContactGrid,
   VpMonthView, VpResEditDlg, VpContactButtons, VpNavBar, VpData,
-  VpPrtPrvDlg, VpPrtFmtDlg, VpBase, VpCalendar;
+  VpPrtPrvDlg, VpPrtFmtDlg, VpBase;
 
 type
 
@@ -31,6 +31,7 @@ type
     CbDrawingStyle: TComboBox;
     CbAllowDragAndDrop: TCheckBox;
     CbDragDropTransparent: TCheckBox;
+    CbShowEventHints: TCheckBox;
     Img: TImage;
     ImageList1: TImageList;
     LblDrawingStyle: TLabel;
@@ -98,6 +99,7 @@ type
     procedure CbFirstDayOfWeekChange(Sender: TObject);
     procedure CbGranularityChange(Sender: TObject);
     procedure CbLanguagesChange(Sender: TObject);
+    procedure CbShowEventHintsChange(Sender: TObject);
     procedure CbTimeFormatChange(Sender: TObject);
     procedure DaysTrackBarChange(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -394,6 +396,17 @@ end;
 procedure TMainForm.CbLanguagesChange(Sender: TObject);
 begin
   SetLanguage(CbLanguages.ItemIndex);
+end;
+
+procedure TMainForm.CbShowEventHintsChange(Sender: TObject);
+begin
+ VpDayView1.HintMode := hmEventHint;
+ VpWeekView1.HintMode := hmEventHint;
+ VpMonthView1.HintMode := hmEventHint;
+
+ VpDayView1.ShowHint := CbShowEventHints.Checked;
+ VpWeekView1.ShowHint := CbShowEventHints.Checked;
+ VpMonthView1.ShowHint := CbShowEventHints.Checked;
 end;
 
 procedure TMainForm.CbTimeFormatChange(Sender: TObject);
@@ -702,7 +715,7 @@ begin
   CbAllowInplaceEditing.Left := CbLanguages.Left + CbLanguages.Width + 32;
   CbAllowDragAndDrop.Left := CbAllowInplaceEditing.Left;
   CbDragDropTransparent.Left := CbAllowInplaceEditing.Left;
-  w := GetLabelWidth(LblDrawingStyle);
+  CbShowEventHints.Left := CbAllowInplaceEditing.Left;
 
   // Planner pages
   DaysTrackbar.Left := GetLabelWidth(LblVisibleDays) + LblVisibleDays.Left + 8;
@@ -799,6 +812,10 @@ begin
       CbDragDropTransparent.Checked);
     CbDragDropTransparentChange(nil);
 
+    CbShowEventHints.Checked := ini.ReadBool('Settings', 'ShowEventHints',
+      CbShowEventHints.Checked);
+    CbShowEventHintsChange(nil);
+
     FResID := ini.ReadInteger('Data', 'ResourceID', -1);
   finally
     ini.Free;
@@ -834,6 +851,7 @@ begin
     ini.WriteBool('Settings', 'AllowInplaceEditing', CbAllowInplaceEditing.Checked);
     ini.WriteBool('Settings', 'AllowDragAndDrop', CbAllowDragAndDrop.Checked);
     ini.WriteBool('Settings', 'DragAndDropTransparent', CbDragDropTransparent.Checked);
+    ini.WriteBool('Settings', 'ShowEventHints', CbShowEventHints.Checked);
 
     ini.WriteInteger('Data', 'ResourceID', VpControlLink1.Datastore.ResourceID);
   finally

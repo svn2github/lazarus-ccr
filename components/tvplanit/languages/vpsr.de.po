@@ -45,7 +45,7 @@ msgstr "E&rinnerung"
 
 #: vpsr.rsallday
 msgid "All day"
-msgstr ""
+msgstr "Ganztags"
 
 #: vpsr.rsalldayevent
 msgid "&All Day Event"
@@ -283,25 +283,6 @@ msgstr "Täglich"
 msgid "Error: Day is required."
 msgstr "Fehler: Tag wird benötigt"
 
-#: vpsr.rsdaypopupadd
-msgctxt "vpsr.rsdaypopupadd"
-msgid "Add event..."
-msgstr "Ereignis hinzufügen..."
-
-#: vpsr.rsdaypopupdelete
-msgid "Delete event..."
-msgstr "Ereignis löschen..."
-
-#: vpsr.rsdaypopupedit
-msgctxt "vpsr.rsdaypopupedit"
-msgid "Edit event..."
-msgstr "Ereignis bearbeiten..."
-
-#: vpsr.rsdaypopupnav
-msgctxt "vpsr.rsdaypopupnav"
-msgid "Change date"
-msgstr "Datum ändern"
-
 #: vpsr.rsdays
 msgid "Days"
 msgstr "Tage"
@@ -347,6 +328,7 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #: vpsr.rsdlgeventedit
+msgctxt "vpsr.rsdlgeventedit"
 msgid "Event"
 msgstr "Ereignis"
 
@@ -422,6 +404,11 @@ msgstr "E-Mail"
 #: vpsr.rsendtimelbl
 msgid "End time:"
 msgstr "Ende-Zeit:"
+
+#: vpsr.rsevent
+msgctxt "vpsr.rsevent"
+msgid "Event"
+msgstr "Ereignis"
 
 #: vpsr.rsexclusiveeventconflict
 msgid "Conflicts with another exclusive event."
@@ -540,6 +527,10 @@ msgstr "M"
 #: vpsr.rsloadfilebtn
 msgid "Load file..."
 msgstr "Datei laden..."
+
+#: vpsr.rslocation
+msgid "Location"
+msgstr "Ort"
 
 #: vpsr.rslocationlbl
 msgid "Location:"
@@ -733,9 +724,13 @@ msgstr "Außerhalb des zulässigen Bereichs"
 msgid "OVERDUE!"
 msgstr "ABGELAUFEN!"
 
+#: vpsr.rsoverlayed
+msgid "Overlayed"
+msgstr "Überlagert"
+
 #: vpsr.rsoverlayedevent
 msgid "overlayed"
-msgstr ""
+msgstr "überlagert"
 
 #: vpsr.rsownernotwinctrl
 msgid "Owner must be a TWinControl descendent"
@@ -826,6 +821,26 @@ msgstr "Andere"
 #: vpsr.rspixels
 msgid "Pixels"
 msgstr "Pixel"
+
+#: vpsr.rspopupaddevent
+msgctxt "vpsr.rspopupaddevent"
+msgid "Add event..."
+msgstr "Ereignis hinzufügen..."
+
+#: vpsr.rspopupchangedate
+msgctxt "vpsr.rspopupchangedate"
+msgid "Change date"
+msgstr "Datum ändern"
+
+#: vpsr.rspopupdeleteevent
+msgctxt "vpsr.rspopupdeleteevent"
+msgid "&Delete event..."
+msgstr "Ereignis löschen..."
+
+#: vpsr.rspopupeditevent
+msgctxt "vpsr.rspopupeditevent"
+msgid "Edit event..."
+msgstr "Ereignis bearbeiten..."
 
 #: vpsr.rspopupresourcegroups
 msgid "Overlay events"
@@ -1142,25 +1157,6 @@ msgstr "Wöchentlich"
 #: vpsr.rsweekof
 msgid "Week of"
 msgstr "Woche mit"
-
-#: vpsr.rsweekpopupadd
-msgctxt "vpsr.rsweekpopupadd"
-msgid "Add event..."
-msgstr "Ereignis hinzufügen..."
-
-#: vpsr.rsweekpopupdelete
-msgid "&Delete event..."
-msgstr "Ereignis löschen..."
-
-#: vpsr.rsweekpopupedit
-msgctxt "vpsr.rsweekpopupedit"
-msgid "Edit event..."
-msgstr "Ereignis bearbeiten..."
-
-#: vpsr.rsweekpopupnav
-msgctxt "vpsr.rsweekpopupnav"
-msgid "Change date"
-msgstr "Datum ändern"
 
 #: vpsr.rsweeks
 msgid "Weeks"
@@ -1502,4 +1498,3 @@ msgstr "Unbekannte Achsen-Spezifikation: %s"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "Die XML-Deklaration muss vor dem ersten Element erscheinen."
-

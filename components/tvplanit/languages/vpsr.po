@@ -273,25 +273,6 @@ msgstr ""
 msgid "Error: Day is required."
 msgstr ""
 
-#: vpsr.rsdaypopupadd
-msgctxt "vpsr.rsdaypopupadd"
-msgid "Add event..."
-msgstr ""
-
-#: vpsr.rsdaypopupdelete
-msgid "Delete event..."
-msgstr ""
-
-#: vpsr.rsdaypopupedit
-msgctxt "vpsr.rsdaypopupedit"
-msgid "Edit event..."
-msgstr ""
-
-#: vpsr.rsdaypopupnav
-msgctxt "vpsr.rsdaypopupnav"
-msgid "Change date"
-msgstr ""
-
 #: vpsr.rsdays
 msgid "Days"
 msgstr ""
@@ -337,6 +318,7 @@ msgid "Contact"
 msgstr ""
 
 #: vpsr.rsdlgeventedit
+msgctxt "vpsr.rsdlgeventedit"
 msgid "Event"
 msgstr ""
 
@@ -411,6 +393,11 @@ msgstr ""
 
 #: vpsr.rsendtimelbl
 msgid "End time:"
+msgstr ""
+
+#: vpsr.rsevent
+msgctxt "vpsr.rsevent"
+msgid "Event"
 msgstr ""
 
 #: vpsr.rsexclusiveeventconflict
@@ -529,6 +516,10 @@ msgstr ""
 
 #: vpsr.rsloadfilebtn
 msgid "Load file..."
+msgstr ""
+
+#: vpsr.rslocation
+msgid "Location"
 msgstr ""
 
 #: vpsr.rslocationlbl
@@ -723,6 +714,10 @@ msgstr ""
 msgid "OVERDUE!"
 msgstr ""
 
+#: vpsr.rsoverlayed
+msgid "Overlayed"
+msgstr ""
+
 #: vpsr.rsoverlayedevent
 msgid "overlayed"
 msgstr ""
@@ -815,6 +810,26 @@ msgstr ""
 
 #: vpsr.rspixels
 msgid "Pixels"
+msgstr ""
+
+#: vpsr.rspopupaddevent
+msgctxt "vpsr.rspopupaddevent"
+msgid "Add event..."
+msgstr ""
+
+#: vpsr.rspopupchangedate
+msgctxt "vpsr.rspopupchangedate"
+msgid "Change date"
+msgstr ""
+
+#: vpsr.rspopupdeleteevent
+msgctxt "vpsr.rspopupdeleteevent"
+msgid "&Delete event..."
+msgstr ""
+
+#: vpsr.rspopupeditevent
+msgctxt "vpsr.rspopupeditevent"
+msgid "Edit event..."
 msgstr ""
 
 #: vpsr.rspopupresourcegroups
@@ -1131,25 +1146,6 @@ msgstr ""
 
 #: vpsr.rsweekof
 msgid "Week of"
-msgstr ""
-
-#: vpsr.rsweekpopupadd
-msgctxt "vpsr.rsweekpopupadd"
-msgid "Add event..."
-msgstr ""
-
-#: vpsr.rsweekpopupdelete
-msgid "&Delete event..."
-msgstr ""
-
-#: vpsr.rsweekpopupedit
-msgctxt "vpsr.rsweekpopupedit"
-msgid "Edit event..."
-msgstr ""
-
-#: vpsr.rsweekpopupnav
-msgctxt "vpsr.rsweekpopupnav"
-msgid "Change date"
 msgstr ""
 
 #: vpsr.rsweeks

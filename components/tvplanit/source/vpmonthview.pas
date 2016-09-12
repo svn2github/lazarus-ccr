@@ -112,6 +112,8 @@ type
   { TVpMonthView }
 
   TVpMonthView = class(TVpLinkableControl)
+  private
+    FHintMode: TVpHintMode;
   protected{ private }
     FKBNavigate: Boolean;
     FColumnWidth: Integer;
@@ -263,6 +265,7 @@ type
     property EventDayStyle: TFontStyles read FEventDayStyle write SetEventDayStyle;
     property EventFont: TVpFont read FEventFont write SetEventFont;
     property HeadAttributes: TVpMvHeadAttr read FHeadAttr write FHeadAttr;
+    property HintMode: TVpHintMode read FHintMode write FHintMode default hmEventHint;
     property LineColor: TColor read FLineColor write SetLineColor;
     property TimeFormat: TVpTimeFormat read FTimeFormat write SetTimeFormat;
     property TodayAttributes: TVpMvTodayAttr read FTodayAttr write FTodayAttr;
@@ -477,13 +480,13 @@ end;
 
 destructor TVpMonthView.Destroy;
 begin
+  FreeAndNil(FHintWindow);
   FHeadAttr.Free;
   FTodayAttr.Free;
   FDayHeadAttr.Free;
   FDayNumberFont.Free;
   FEventFont.Free;
   mvSpinButtons.Free;
-//  mvEventList.Free;
   FDefaultPopup.Free;
   inherited;
 end;
@@ -508,7 +511,7 @@ begin
     if AEvent.AllDayEvent then
       timeStr := RSAllDay
     else begin
-      timefmt := IfThen(TimeFormat = tf24Hour, 'hh:nn', 'hh:nn AM/PM');
+      timeFmt := GetTimeFormatStr(TimeFormat);
       timeStr := FormatDateTime(timefmt, AEvent.StartTime);
       if not AStartTimeOnly then
         timeStr := timeStr + ' - ' + FormatDateTime(timeFmt, AEvent.EndTime);
@@ -920,51 +923,63 @@ var
   list: TList;
   R: TRect;
 begin
-  if (ADate = 0) or ((Datastore = nil) or (Datastore.Resource = nil)) then
+  if FHintMode = hmEventHint then
   begin
-    HideHintWindow;
-    exit;
-  end;
-
-  // Collect all events of this day and add them separated by line feeds to
-  // the hint string (txt).
-  txt := '';
-  list := TList.Create;
-  try
-    Datastore.Resource.Schedule.EventsByDate(ADate, List);
-    for i:=0 to list.Count-1 do begin
-      event := TVpEvent(list[i]);
-      s := BuildEventString(event, true, false);
-      txt := IfThen(txt = '', s, txt + LineEnding + s);
+    if (ADate = 0) or ((Datastore = nil) or (Datastore.Resource = nil)) then
+    begin
+      HideHintWindow;
+      exit;
     end;
-  finally
-    list.Free;
-  end;
 
-  // If we have any events then we put the current date at the top.
-  if txt <> '' then begin
-    txt := FormatDateTime('dddddd', ADate) + LineEnding + LineEnding + txt;
-    if ADate = SysUtils.Date then
-      txt := RSToday + LineEnding + txt;
-  end;
+    // Collect all events of this day and add them separated by line feeds to
+    // the hint string (txt).
+    txt := '';
+    list := TList.Create;
+    try
+      Datastore.Resource.Schedule.EventsByDate(ADate, List);
+      for i:=0 to list.Count-1 do begin
+        event := TVpEvent(list[i]);
+        s := BuildEventString(event, true, false);
+        txt := IfThen(txt = '', s, txt + LineEnding + s);
+      end;
+    finally
+      list.Free;
+    end;
 
-  if (txt <> '') and not (csDesigning in ComponentState) then
+    // If we have any events then we put the current date at the top.
+    if txt <> '' then begin
+      txt := FormatDateTime('dddddd', ADate) + LineEnding + LineEnding + txt;
+      if ADate = SysUtils.Date then
+        txt := RSToday + LineEnding + txt;
+    end;
+
+    if (txt <> '') and not (csDesigning in ComponentState) then
+    begin
+      // Build and show the hint window
+      if FHintWindow = nil then
+        FHintWindow := THintWindow.Create(nil);
+      APoint := ClientToScreen(APoint);
+      R := FHintWindow.CalcHintRect(MaxWidth, txt, nil);
+      OffsetRect(R, APoint.X - WidthOf(R), APoint.Y);
+      FHintWindow.ActivateHint(R, txt);
+    end else
+      // Hide the hint window
+      HideHintWindow;
+  end
+  else
+  if FHintMode = hmComponentHint then
   begin
-    // Build and show the hint window
-    if FHintWindow = nil then
-      FHintWindow := THintWindow.Create(nil);
-    APoint := ClientToScreen(APoint);
-    R := FHintWindow.CalcHintRect(MaxWidth, txt, nil);
-    OffsetRect(R, APoint.X - WidthOf(R), APoint.Y);
-    FHintWindow.ActivateHint(R, txt);
-  end else
-    // Hide the hint window
-    HideHintWindow;
+    Application.Hint := Hint;
+    Application.ActivateHint(ClientToScreen(APoint), true);
+  end;
 end;
 
 procedure TVpMonthView.HideHintWindow;
 begin
-  FreeAndNil(FHintWindow);
+  case FHintMode of
+    hmEventHint: FreeAndNil(FHintWindow);
+    hmComponentHint: Application.CancelHint;
+  end;
 end;
 
 procedure TVpMonthView.InitializeDefaultPopup;
@@ -1195,11 +1210,13 @@ var
   day: TDateTime;
 begin
   inherited MouseMove(Shift, X, Y);
-  day := GetDateAtCoord(Point(X, Y));
-  if FMouseDate <> day then begin
-    Application.CancelHint;
-    ShowHintWindow(Point(X, Y), day);
-    FMouseDate := day;
+  if ShowHint then
+  begin
+    day := GetDateAtCoord(Point(X, Y));
+    if FMouseDate <> day then begin
+      ShowHintWindow(Point(X, Y), day);
+      FMouseDate := day;
+    end;
   end;
 end;
 

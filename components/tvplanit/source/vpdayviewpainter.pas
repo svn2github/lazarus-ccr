@@ -76,7 +76,6 @@ type
     OldFont: TFont;
 
   protected
-    function BuildEventString(AEvent: TVpEvent): String;
     procedure CalcRowHeadRect(out ARect: TRect);
     function CalcRowHeadWidth: Integer;
     function CountOverlappingEvents(Event: TVpEvent; const EArray: TVpDvEventArray): Integer;
@@ -143,44 +142,6 @@ constructor TVpDayViewPainter.Create(ADayView: TVpDayView; ARenderCanvas: TCanva
 begin
   inherited Create(ARenderCanvas);
   FDayView := ADayView;
-end;
-
-function TVpDayViewPainter.BuildEventString(AEvent: TVpEvent): String;
-var
-  maxW: Integer;
-  timeFmt: String;
-  res: TVpResource;
-  grp: TVpResourceGroup;
-  isOverlayed: Boolean;
-begin
-  Result := '';
-
-  grp := FDayView.Datastore.Resource.Group;
-  isOverlayed := AEvent.IsOverlayed;
-
-  if isOverlayed then begin
-    if (grp <> nil) and (odResource in grp.ShowDetails) then begin
-      res := FDayView.Datastore.Resources.GetResource(AEvent.ResourceID);
-      if res <> nil then
-        Result := '[' + res.Description + '] ';
-    end else
-      Result := '[' + RSOverlayedEvent + '] ';
-  end;
-
-  if (not isOverlayed) or ((grp <> nil) and (odEventDescription in grp.ShowDetails)) then
-  begin
-    if Result <> '' then
-      Result := Result + ' ';
-    if FDayView.ShowEventTimes then begin
-      timeFmt := IfThen(FDayView.TimeFormat = tf24Hour, 'h:nn', 'h:nnam/pm');
-      Result := Result + Format('%s - %s: %s', [
-        FormatDateTime(timeFmt, AEvent.StartTime),
-        FormatDateTime(timeFmt, AEvent.EndTime),
-        AEvent.Description
-      ]);
-    end else
-      Result := Result + AEvent.Description;
-  end;
 end;
 
 { returns the number of events which overlap the specified event }
@@ -942,7 +903,7 @@ begin
     DrawIcons(IconRect);
 
   { Build the event string }
-  EventString := BuildEventString(AEvent);
+  EventString := FDayView.BuildEventString(AEvent, false);
 
   { If the string is longer than the availble space then chop off the end
     and place those little '...'s at the end }

@@ -63,8 +63,8 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Graphics, Controls, ExtCtrls, StdCtrls,
-  Buttons, VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst,
+  Classes, Graphics, Controls, ExtCtrls, StdCtrls, Buttons, Forms,
+  VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst,
   VpCanvasUtils, Menus;
 
 type
@@ -222,6 +222,11 @@ type
   { TVpDayView }
 
   TVpDayView = class(TVpLinkableControl)
+  private
+    FHintMode: TVpHintMode;
+    FHintWindow: THintWindow;
+    FMouseEvent: TVpEvent;
+
   protected{ private }
     FGranularity: TVpGranularity;
     FColumnWidth: Integer;
@@ -324,11 +329,17 @@ type
     procedure SetWrapStyle(const v: TVpDVWrapStyle);
     procedure SetDotDotDotColor(const v: TColor);
     procedure SetShowEventTimes(Value: Boolean);
+
     { drag-drop methods }
     procedure DoStartDrag(var DragObject: TDragObject); override;
     procedure DoEndDrag(Target: TObject; X, Y: Integer); override;
     procedure DragOver(Source: TObject; X, Y: Integer; State: TDragState;
       var Accept: Boolean); override;
+
+    { Hints }
+    procedure ShowHintWindow(APoint: TPoint; AEvent: TVpEvent);
+    procedure HideHintWindow;
+
     { internal methods }
     function dvCalcRowHeight(Scale: Extended; UseGran: TVpGranularity): Integer;
     function dvCalcVisibleLines(RenderHeight, ColHeadHeight, RowHeight: Integer;
@@ -363,16 +374,20 @@ type
     procedure dvScrollVertical(Lines: Integer);
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
+    procedure MouseEnter; override;
+    procedure MouseLeave; override;
     procedure MouseMove(Shift: TShiftState; X,Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure SetActiveEventByCoord(APoint: TPoint);
-    function EditEventAtCoord(Point: TPoint): Boolean;
-    function GetEventAtCoord(Point: TPoint): TVpEvent;
+    function EditEventAtCoord(APoint: TPoint): Boolean;
+    function GetEventAtCoord(APoint: TPoint): TVpEvent;
+    function GetEventRect(AEvent: TVpEvent): TRect;
     procedure EditEvent;
     procedure EndEdit(Sender: TObject);
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure SetTimeIntervals(UseGran: TVpGranularity);
+
     { message handlers }
     procedure VpDayViewInit(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message Vp_DayViewInit;
     {$IFNDEF LCL}
@@ -396,6 +411,8 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+
+    function BuildEventString(AEvent: TVpEvent; UseAsHint: Boolean): String;
     procedure LoadLanguage;
 
     procedure DeleteActiveEvent(Verify: Boolean);
@@ -459,6 +476,7 @@ type
     property IncludeWeekends: Boolean read FIncludeWeekends write SetIncludeWeekends default True;
     property NumDays: Integer read FNumDays write SetNumDays default 1;
     property WrapStyle: TVpDVWrapStyle read FWrapStyle Write SetWrapStyle default wsIconFlow;
+    property HintMode: TVpHintMode read FHintMode write FHintMode default hmEventHint;
     {events}
     property AfterEdit: TVpAfterEditEvent read FAfterEdit write FAfterEdit;
     property BeforeEdit: TVpBeforeEditEvent read FBeforeEdit write FBeforeEdit;
@@ -473,7 +491,7 @@ type
 implementation
 
 uses
-  SysUtils, Math, Forms, Dialogs,
+  SysUtils, StrUtils, Math, Dialogs,
   VpEvntEditDlg, VpDayViewPainter;
 
 (*****************************************************************************)
@@ -746,6 +764,7 @@ begin
   FDotDotDotColor := clBlack;
   FIncludeWeekends := True;
   FAllowInplaceEdit := true;
+  FShowEventTimes := true;
 
   { set up fonts and colors }
   FHeadAttr.Font.Size := 10;
@@ -789,6 +808,7 @@ end;
 destructor TVpDayView.Destroy;
 begin
   FreeAndNil(dvInplaceEditor);
+  FreeAndNil(FHintWindow);
 
   FTimeSlotColors.Free;
   FHeadAttr.Free;
@@ -805,6 +825,97 @@ begin
   dvWeekDownBtn.Free;
 
   inherited;
+end;
+
+function TVpDayView.BuildEventString(AEvent: TVpEvent;
+  UseAsHint: Boolean): String;
+var
+  timeFmt: String;
+  timeStr: String;
+  s: String;
+  res: TVpResource;
+  grp: TVpResourceGroup;
+  isOverlayed: Boolean;
+  showDetails: Boolean;
+begin
+  Result := '';
+
+  if (AEvent = nil) or (Datastore = nil) or (Datastore.Resource = nil) then
+    exit;
+
+  grp := Datastore.Resource.Group;
+  showDetails := (grp <> nil) and (odEventDescription in grp.ShowDetails);
+  isOverlayed := AEvent.IsOverlayed;
+  timefmt := GetTimeFormatStr(TimeFormat);
+
+  if UseAsHint then begin
+    { Usage as hint }
+    if isOverlayed then begin
+      grp := Datastore.Resource.Group;
+      if (odResource in grp.ShowDetails) then begin
+        res := Datastore.Resources.GetResource(AEvent.ResourceID);
+        Result := RSOverlayed + ': ' + res.Description;
+      end else
+        Result := RSOverlayed;
+    end else
+      showDetails := true;
+
+    timeStr := IfThen(AEvent.AllDayEvent,
+      RSAllDay,
+      FormatDateTime(timeFmt, AEvent.StartTime) + ' - ' + FormatDateTime(timeFmt, AEvent.EndTime)
+    );
+
+    Result := IfThen(Result = '',
+      timeStr,
+      Result + LineEnding + timeStr
+    );
+
+    if showDetails then begin
+      // Event description
+      Result := Result + LineEnding + LineEnding +
+        RSEvent + ':' + LineEnding + AEvent.Description;
+
+      // Event notes
+      if (AEvent.Notes <> '') then begin
+        s := WrapText(AEvent.Notes, MAX_HINT_WIDTH);
+        s := StripLastLineEnding(s);
+        Result := Result + LineEnding + LineEnding +
+          RSNotes + ':' + LineEnding + s;
+      end;
+
+      // Event location
+      if (AEvent.Location <> '') then
+        Result := Result + LineEnding + LineEnding +
+          RSLocation + ':' + LineEnding + AEvent.Location;
+    end;
+  end
+  else
+  begin
+    { Usage as cell text }
+    if isOverlayed then begin
+      Result := '[' + RSOverlayedEvent + '] ';
+      if showDetails then begin
+        res := Datastore.Resources.GetResource(AEvent.ResourceID);
+        if res <> nil then
+          Result := '[' + res.Description + '] '
+      end;
+    end else
+      showDetails := true;
+
+    timeStr := IfThen(ShowEventTimes, Format('%s - %s: ', [
+      FormatDateTime(timeFmt, AEvent.StartTime),
+      FormatDateTime(timeFmt, AEvent.EndTime)
+    ]));
+
+    if showDetails then
+      Result := IfThen(Result = '',
+        timeStr + AEvent.Description,
+        Result + timeStr + AEvent.Description)
+    else
+      Result := IfThen(Result = '',
+        timeStr,
+        Result + timeStr);
+  end;
 end;
 
 procedure TVpDayView.LoadLanguage;
@@ -884,7 +995,60 @@ begin
       end;
     end;
 end;
-{=====}
+
+{ Hint support }
+procedure TVpDayView.ShowHintWindow(APoint: TPoint; AEvent: TVpEvent);
+var
+  txt: String;
+  R, eventR: TRect;
+begin
+  if FHintMode = hmEventHint then
+  begin
+    if (AEvent = nil) or
+       ((Datastore = nil) or (Datastore.Resource = nil)) then
+    begin
+      HideHintWindow;
+      exit;
+    end;
+
+    txt := BuildEventString(AEvent, true);
+
+    if (txt <> '') and
+       not ((dvInPlaceEditor <> nil) and dvInplaceEditor.Visible) and
+       not (csDesigning in ComponentState) then
+    begin
+      if FHintWindow = nil then
+        FHintWindow := THintWindow.Create(nil);
+      eventR := GetEventRect(AEvent);
+      eventR.TopLeft := ClientToScreen(eventR.TopLeft);
+      eventR.BottomRight := ClientToScreen(eventR.BottomRight);
+      APoint := ClientToScreen(APoint);
+      R := FHintWindow.CalcHintRect(MAX_HINT_WIDTH, txt, nil);
+      OffsetRect(R, APoint.X - WidthOf(R), eventR.Bottom);
+      FHintWindow.ActivateHint(R, txt);
+    end else
+      HideHintWindow;
+  end
+  else
+  if FHintMode = hmComponentHint then
+  begin
+    Application.Hint := Hint;
+    Application.ActivateHint(ClientToScreen(APoint), true);
+  end;
+end;
+
+procedure TVpDayView.HideHintWindow;
+begin
+  case FHintMode of
+    hmEventHint:
+      FreeAndNil(FHintWindow);
+    hmComponentHint:
+      Application.CancelHint;
+  end;
+end;
+
+
+{ Popup menu }
 
 procedure TVpDayView.InitializeDefaultPopup;
 var
@@ -895,26 +1059,26 @@ begin
   canEdit := (FActiveEvent <> nil) and FActiveEvent.CanEdit;
   FDefaultPopup.Items.Clear;
 
-  if RSDayPopupAdd <> '' then begin
+  if RSPopupAddEvent <> '' then begin
     NewItem := TMenuItem.Create(Self);
-    NewItem.Caption := RSDayPopupAdd;
+    NewItem.Caption := RSPopupAddEvent;
     NewItem.OnClick := PopupAddEvent;
     NewItem.Tag := 0;
     FDefaultPopup.Items.Add(NewItem);
   end;
 
-  if RSDayPopupEdit <> '' then begin
+  if RSPopupEditEvent <> '' then begin
     NewItem := TMenuItem.Create(Self);
-    NewItem.Caption := RSDayPopupEdit;
+    NewItem.Caption := RSPopupEditEvent;
     NewItem.Enabled := canEdit;
     NewItem.OnClick := PopupEditEvent;
     NewItem.Tag := 1;
     FDefaultPopup.Items.Add(NewItem);
   end;
 
-  if RSDayPopupDelete <> '' then begin
+  if RSPopupDeleteEvent <> '' then begin
     NewItem := TMenuItem.Create(Self);
-    NewItem.Caption := RSDayPopupDelete;
+    NewItem.Caption := RSPopupDeleteEvent;
     NewItem.Enabled := canEdit;
     NewItem.OnClick := PopupDeleteEvent;
     NewItem.Tag := 1;
@@ -925,9 +1089,9 @@ begin
   NewItem.Caption := '-';
   FDefaultPopup.Items.Add(NewItem);
 
-  if RSDayPopupNav <> '' then begin
+  if RSPopupChangeDate <> '' then begin
     NewItem := TMenuItem.Create(Self);
-    NewItem.Caption := RSDayPopupNav;
+    NewItem.Caption := RSPopupChangeDate;
     NewItem.Tag := 0;
     FDefaultPopup.Items.Add(NewItem);
 
@@ -1644,6 +1808,16 @@ begin
 end;
 
 
+procedure TVpDayView.MouseEnter;
+begin
+  FMouseEvent := nil;
+end;
+
+procedure TVpDayView.MouseLeave;
+begin
+  HideHintWindow;
+end;
+
 procedure TVpDayView.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 begin
@@ -1660,6 +1834,8 @@ begin
 end;
 
 procedure TVpDayView.MouseMove(Shift: TShiftState; X, Y: Integer);
+var
+  event: TVpEvent;
 begin
   inherited MouseMove(Shift, X, Y);
   if (FActiveEvent <> nil) and (not ReadOnly) then begin
@@ -1670,6 +1846,16 @@ begin
       dvDragging := true;
       dvClickTimer.Enabled := false;
       BeginDrag(true);
+    end;
+  end;
+
+  if ShowHint then
+  begin
+    event := GetEventAtCoord(Point(X, Y));
+    if FMouseEvent <> event then begin
+      Application.CancelHint;
+      ShowHintWindow(Point(X, Y), event);
+      FMouseEvent := event;
     end;
   end;
 end;
@@ -1916,7 +2102,7 @@ begin
   end;
 end;
 
-function TVpDayView.EditEventAtCoord(Point: TPoint): Boolean;
+function TVpDayView.EditEventAtCoord(APoint: TPoint): Boolean;
 var
   I: Integer;
 begin
@@ -1930,7 +2116,7 @@ begin
     if dvEventArray[I].Event = nil then
       { we've hit the end of visible events without finding a match }
       Exit;
-    if PointInRect(Point, dvEventArray[I].Rec) then
+    if PointInRect(APoint, dvEventArray[I].Rec) then
     begin
       FActiveEvent := TVpEvent(dvEventArray[I].Event);
       dvActiveEventRec := dvEventArray[I].Rec;
@@ -1943,7 +2129,7 @@ begin
 end;
 {=====}
 
-function TVpDayView.GetEventAtCoord(Point: TPoint): TVpEvent;
+function TVpDayView.GetEventAtCoord(APoint: TPoint): TVpEvent;
 var
   I: Integer;
 begin
@@ -1951,14 +2137,24 @@ begin
   for I := 0 to pred(Length(dvEventArray)) do begin
     if dvEventArray[I].Event = nil then
       Exit;
-    if PointInRect(Point, dvEventArray[I].Rec) then
+    if PointInRect(APoint, dvEventArray[I].Rec) then
     begin
       result := TVpEvent(dvEventArray[I].Event);
       Exit;
     end;
   end;
 end;
-{=====}
+
+function TVpDayView.GetEventRect(AEvent: TVpEvent): TRect;
+var
+  i: Integer;
+begin
+  for i:=0 to High(dvEventArray) do
+    if dvEventArray[i].Event = AEvent then begin
+      Result := dvEventArray[i].Rec;
+      exit;
+    end;
+end;
 
 procedure TVpDayView.dvEditInPlace(Sender: TObject);
 begin

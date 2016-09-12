@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-09-10 21:58+0200\n"
+"PO-Revision-Date: 2016-09-12 22:32+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -289,25 +289,6 @@ msgstr "Quotidien"
 msgid "Error: Day is required."
 msgstr "Erreur: Il faut choisir un jour"
 
-#: vpsr.rsdaypopupadd
-msgctxt "vpsr.rsdaypopupadd"
-msgid "Add event..."
-msgstr "Ajouter un événement..."
-
-#: vpsr.rsdaypopupdelete
-msgid "Delete event..."
-msgstr "Supprimer un événement..."
-
-#: vpsr.rsdaypopupedit
-msgctxt "vpsr.rsdaypopupedit"
-msgid "Edit event..."
-msgstr "Modifier un événement"
-
-#: vpsr.rsdaypopupnav
-msgctxt "vpsr.rsdaypopupnav"
-msgid "Change date"
-msgstr "Changez la date"
-
 #: vpsr.rsdays
 msgid "Days"
 msgstr "Jours"
@@ -353,6 +334,7 @@ msgid "Contact"
 msgstr "Contact"
 
 #: vpsr.rsdlgeventedit
+msgctxt "vpsr.rsdlgeventedit"
 msgid "Event"
 msgstr "Événement"
 
@@ -428,6 +410,11 @@ msgstr "E-mail"
 #: vpsr.rsendtimelbl
 msgid "End time:"
 msgstr "Fin:"
+
+#: vpsr.rsevent
+msgctxt "vpsr.rsevent"
+msgid "Event"
+msgstr "Événement"
 
 #: vpsr.rsexclusiveeventconflict
 msgid "Conflicts with another exclusive event."
@@ -545,6 +532,10 @@ msgstr ""
 
 #: vpsr.rsloadfilebtn
 msgid "Load file..."
+msgstr ""
+
+#: vpsr.rslocation
+msgid "Location"
 msgstr ""
 
 #: vpsr.rslocationlbl
@@ -739,6 +730,10 @@ msgstr "Hors de portée"
 msgid "OVERDUE!"
 msgstr "EN RETARD!"
 
+#: vpsr.rsoverlayed
+msgid "Overlayed"
+msgstr ""
+
 #: vpsr.rsoverlayedevent
 msgid "overlayed"
 msgstr ""
@@ -832,6 +827,26 @@ msgstr "Autre"
 #: vpsr.rspixels
 msgid "Pixels"
 msgstr ""
+
+#: vpsr.rspopupaddevent
+msgctxt "vpsr.rspopupaddevent"
+msgid "Add event..."
+msgstr "Ajouter un événement..."
+
+#: vpsr.rspopupchangedate
+msgctxt "vpsr.rspopupchangedate"
+msgid "Change date"
+msgstr "Changer la date"
+
+#: vpsr.rspopupdeleteevent
+msgctxt "vpsr.rspopupdeleteevent"
+msgid "&Delete event..."
+msgstr "&Supprimer un événement..."
+
+#: vpsr.rspopupeditevent
+msgctxt "vpsr.rspopupeditevent"
+msgid "Edit event..."
+msgstr "Modifier un événement"
 
 #: vpsr.rspopupresourcegroups
 msgid "Overlay events"
@@ -1148,25 +1163,6 @@ msgstr "Hebdomadaire"
 #: vpsr.rsweekof
 msgid "Week of"
 msgstr "Semaine du"
-
-#: vpsr.rsweekpopupadd
-msgctxt "vpsr.rsweekpopupadd"
-msgid "Add event..."
-msgstr "Ajouter un événement..."
-
-#: vpsr.rsweekpopupdelete
-msgid "&Delete event..."
-msgstr "&Supprimer un événement..."
-
-#: vpsr.rsweekpopupedit
-msgctxt "vpsr.rsweekpopupedit"
-msgid "Edit event..."
-msgstr "Modifier un événement..."
-
-#: vpsr.rsweekpopupnav
-msgctxt "vpsr.rsweekpopupnav"
-msgid "Change date"
-msgstr "Changer la date"
 
 #: vpsr.rsweeks
 msgid "Weeks"

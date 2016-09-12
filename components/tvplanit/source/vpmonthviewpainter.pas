@@ -37,7 +37,6 @@ type
     mvRowHeight: Integer;
     mvColWidth: Integer;
     mvLineHeight: Integer;
-    mvVisibleEvents: Integer;
 
   protected
     procedure Clear;
@@ -63,7 +62,7 @@ type
 implementation
 
 uses
-  LazUtf8, StrUtils,
+  LazUtf8, StrUtils, Math,
   VpCanvasUtils, VpMisc;
 
 type
@@ -477,6 +476,7 @@ var
   Str: String;
   StrLen: Integer;
   P: TPoint;
+  visibleEvents: Integer;
 begin
   RenderCanvas.Pen.Color := RealLineColor;
   RenderCanvas.Pen.Style := psSolid;
@@ -487,6 +487,7 @@ begin
      (FMonthView.DataStore.Resource <> nil) and
      (FMonthView.DataStore.Resource.Schedule.EventCount <> 0)
   then begin
+    visibleEvents := 0;
     EventList := TList.Create;
     try
       for I := 0 to 43 do begin
@@ -547,9 +548,9 @@ begin
 
             { Store TextRect and Event in EventArray }
             with TVpMonthViewOpener(FMonthView) do begin
-              Inc(mvVisibleEvents);
-              mvEventArray[mvVisibleEvents - 1].Rec := TextRect;
-              mvEventArray[mvVisibleEvents - 1].Event := TVpEvent(EventList.List^[j]);
+              Inc(visibleEvents);
+              mvEventArray[visibleEvents - 1].Rec := TextRect;
+              mvEventArray[visibleEvents - 1].Event := TVpEvent(EventList.List^[j]);
             end;
 
             { Move TextRect down one line for the next item... }
@@ -735,7 +736,6 @@ begin
     DrawDayHead;
 
     { draw days }
-    mvVisibleEvents := 0;
     DrawDays;
 
     { draw the borders }
@@ -754,10 +754,7 @@ procedure TVpMonthViewPainter.SetMeasurements;
 begin
   inherited;
 
-  if RenderDate = 0 then
-    DisplayDate := Date
-  else
-    DisplayDate := RenderDate;
+  DisplayDate := IfThen(RenderDate = 0, Date, RenderDate);
 
   { we use the VpProductName because is is a good representation of some }
   { generic text }

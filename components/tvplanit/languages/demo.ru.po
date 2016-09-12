@@ -213,6 +213,10 @@ msgstr ""
 msgid "30 Min"
 msgstr "30 минут"
 
+#: tmainform.cbshoweventhints.caption
+msgid "Show event hints"
+msgstr ""
+
 #: tmainform.lbladdressbuilder.caption
 msgid "Address builder"
 msgstr "Конструктор адреса"

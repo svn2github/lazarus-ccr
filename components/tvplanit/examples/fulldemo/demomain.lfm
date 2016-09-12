@@ -77,8 +77,10 @@ object MainForm: TMainForm
             Height = 197
             Top = 331
             Width = 333
+            ShowHint = True
             ControlLink = VpControlLink1
             Color = clWindow
+            ParentShowHint = False
             Align = alBottom
             TabStop = True
             TabOrder = 0
@@ -117,6 +119,7 @@ object MainForm: TMainForm
             Height = 284
             Top = 42
             Width = 333
+            ShowHint = True
             ControlLink = VpControlLink1
             Color = clWindow
             Font.Height = -12
@@ -571,6 +574,17 @@ object MainForm: TMainForm
           Caption = 'Transparent drag and drop'
           OnChange = CbDragDropTransparentChange
           TabOrder = 7
+        end
+        object CbShowEventHints: TCheckBox
+          Left = 349
+          Height = 19
+          Top = 117
+          Width = 110
+          Caption = 'Show event hints'
+          Checked = True
+          OnChange = CbShowEventHintsChange
+          State = cbChecked
+          TabOrder = 8
         end
       end
     end

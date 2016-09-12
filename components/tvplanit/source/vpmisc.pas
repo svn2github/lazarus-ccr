@@ -123,6 +123,7 @@ function DateInRange(ADate, StartDate, EndDate: TDateTime; IncludeLimits: Boolea
 function TimeInRange(ATime, StartTime, EndTime: TDateTime; IncludeLimits: Boolean): Boolean;
 
 function GetTimeFormat: TVpTimeFormat;
+function GetTimeFormatStr(ATimeFormat: TVpTimeFormat): String;
 function GranularityToStr(Gran: TVpGranularity): string;
 function HourToAMPM(Hour: TVpHours): string;
 function HourToStr(Hour: TVpHours; Mil: Boolean): string;
@@ -496,11 +497,22 @@ end;
 function GetTimeFormat: TVpTimeFormat;
 var
   s: String;
+  p: Integer;
 begin
   s := lowercase(FormatDateTime('hh:nn ampm', 0.25));
-  if pos(lowercase(FormatSettings.TimeAMString), s) = Length(s) - Length(FormatSettings.TimeAMString) then
-    Result := tf12Hour else
+  p := pos(lowercase(FormatSettings.TimeAMString), s);
+  if p = Length(s) - Length(FormatSettings.TimeAMString) then
+    Result := tf12Hour
+  else
     Result := tf24Hour;
+end;
+
+function GetTimeFormatStr(ATimeFormat: TVpTimeFormat): String;
+begin
+  case ATimeFormat of
+    tf12Hour: Result := 'hh:nn am/pm';
+    tf24Hour: Result := 'hh:nn';
+  end;
 end;
 
 function GranularityToStr(Gran: TVpGranularity): string;

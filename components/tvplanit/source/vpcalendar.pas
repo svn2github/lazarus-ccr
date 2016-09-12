@@ -132,7 +132,7 @@ type
     FMonth           : Integer;               {calendar month}
     FReadOnly        : Boolean;               {true if in read only mode}
     FWantDblClicks   : Boolean;               {true to include cs_dblclks style}
-    FWeekStarts      : TVpDayType;           {the day that begins the week}
+    FWeekStarts      : TVpDayType;            {the day that begins the week}
     FYear            : Integer;               {calendar year}
     FLastRenderX     : Integer;
     FLastRenderY     : Integer;

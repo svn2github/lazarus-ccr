@@ -513,7 +513,7 @@ begin
   RenderCanvas.Brush.Color := RealColor;
 
   { Build the event text }
-  dayStr := FWeekView.BuildEventString(AEvent, todayStartTime, todayEndTime);
+  dayStr := FWeekView.BuildEventString(AEvent, todayStartTime, todayEndTime, false);
   strLen := RenderCanvas.TextWidth(dayStr);
   if (strLen > WidthOf(TextRect) - TextMargin) then      // wp: shouldn't this be 2*TextMargin ?
     dayStr := GetDisplayString(RenderCanvas, dayStr, 0, WidthOf(TextRect) - TextMargin * 2);
