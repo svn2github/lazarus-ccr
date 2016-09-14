@@ -752,7 +752,8 @@ begin
   if ACaption = '' then begin
     for i:=Low(AResIDs) + 1 to High(AResIDs) do begin
       res := GetResource(AResIDs[i]);
-      ACaption := ACaption + ', ' + res.Description;
+      if res <> nil then
+        ACaption := ACaption + ', ' + res.Description;
     end;
     if ACaption <> '' then Delete(ACaption, 1, 2);
   end;

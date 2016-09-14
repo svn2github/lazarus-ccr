@@ -819,6 +819,7 @@ var
   i: Integer;
   event: TVpEvent;
   id: Integer;
+  res: TVpResource;
 begin
   Resource.Schedule.ClearGroupEvents;
 
@@ -828,10 +829,16 @@ begin
   end;
 
   for i:=0 to Resource.Group.Count-1 do begin
-    id := Resource.Group[i].ResourceID;
-    if id = ResourceID then
-      exit;
-    LoadEventsOfResource(id);
+    // current resource of group
+    res := Resource.Group[i];
+    if res <> nil then begin
+      id := res.ResourceID;
+      // Ignore active resource in group
+      if id = ResourceID then
+        Continue;
+      // Load events of the current resource of the group
+      LoadEventsOfResource(id);
+    end;
   end;
 
   NotifyDependents;
