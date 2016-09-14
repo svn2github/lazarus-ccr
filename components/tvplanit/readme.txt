@@ -113,7 +113,8 @@ steps:
 4.3 Release 1.05
 
   misc - Add mORMot datastore
-  5103 - Add drag and drop of events within DayView
+  misc - Add drag and drop of events to DayView and WeekView
+  misc - Add hint support to DayView, WeekView and MonthView
 
   
 
