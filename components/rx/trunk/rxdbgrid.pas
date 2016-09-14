@@ -1724,42 +1724,24 @@ begin
 end;
 
 procedure TRxColumnEditButton.SetStyle(AValue: TRxColumnEditButtonStyle);
-{var
-  G: TRxDBGrid;
-  P: TPersistent;}
 begin
   if FStyle=AValue then Exit;
   FStyle:=AValue;
-
-{  if Assigned(Collection) and Assigned(Collection.Owner)
-    and Assigned(TRxColumn(Collection.Owner).Collection)
-    and Assigned(TRxColumn(Collection.Owner).Collection.Owner) then
-  begin
-    P:=Collection;
-    P:=Collection.Owner;
-    P:=TRxColumn(Collection.Owner).Collection;
-    P:=TRxColumn(Collection.Owner).Collection.Owner;
-    G:=TRxDBGrid(TRxColumn(Collection.Owner).Collection.Owner);
-}
-    case FStyle of
-      ebsDropDownRx:FButton.Glyph.Assign(FMarkerDown);
-      ebsEllipsisRx:FButton.Glyph.Assign(FEllipsisRxBMP);
-      ebsGlyphRx:FButton.Glyph.Assign(FGlyphRxBMP);
-      ebsUpDownRx:FButton.Glyph.Assign(FUpDownRxBMP);
-      ebsPlusRx:FButton.Glyph.Assign(FPlusRxBMP);
-      ebsMinusRx:FButton.Glyph.Assign(FMinusRxBMP);
-    else
-      FButton.Glyph.Assign(nil);
-    end;
-
-//  end;
+  case FStyle of
+    ebsDropDownRx:FButton.Glyph.Assign(FMarkerDown);
+    ebsEllipsisRx:FButton.Glyph.Assign(FEllipsisRxBMP);
+    ebsGlyphRx:FButton.Glyph.Assign(FGlyphRxBMP);
+    ebsUpDownRx:FButton.Glyph.Assign(FUpDownRxBMP);
+    ebsPlusRx:FButton.Glyph.Assign(FPlusRxBMP);
+    ebsMinusRx:FButton.Glyph.Assign(FMinusRxBMP);
+  else
+    FButton.Glyph.Assign(nil);
+  end;
 end;
 
 procedure TRxColumnEditButton.SetVisible(AValue: Boolean);
 begin
-//  if FVisible=AValue then Exit;
   FVisible:=AValue;
-
   if AValue then
   begin
     if Style = ebsUpDownRx then
@@ -4652,25 +4634,15 @@ function TRxDBGrid.GetBufferCount: integer;
 var
   H:integer;
 begin
-{  Result := ClientHeight div DefaultRowHeight;
-  if rdgWordWrap in FOptionsRx then
+  if DefaultRowHeight > 0 then
   begin
-    H:=UpdateRowsHeight;
-//    if H>0 then
-//      Result := H;
-  end;
-  if dgTitles in Options then
-  begin
-    Dec(Result, RowHeights[0] div DefaultRowHeight);
-  end;
-  if FFooterOptions.Active then
-    Dec(Result, FFooterOptions.RowCount);}
-  H:=ClientHeight - GCache.FixedHeight;
-  if FFooterOptions.Active then
-    H:=H - DefaultRowHeight * FFooterOptions.RowCount;
-
-  Result := H div DefaultRowHeight;
-//  result := (ClientHeight - GCache.FixedHeight - DefaultRowHeight) div DefaultRowHeight;
+    H:=ClientHeight - GCache.FixedHeight;
+    if FFooterOptions.Active then
+      H:=H - DefaultRowHeight * FFooterOptions.RowCount;
+    Result := H div DefaultRowHeight;
+  end
+  else
+    Result := 1;
 end;
 
 {procedure TRxDBGrid.CMHintShow(var Message: TLMessage);

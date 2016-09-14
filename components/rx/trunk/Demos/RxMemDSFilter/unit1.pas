@@ -13,9 +13,12 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    Button1: TButton;
+    Button2: TButton;
     CheckBox1: TCheckBox;
     DataSource1: TDataSource;
     Edit1: TEdit;
+    Edit2: TEdit;
     Label1: TLabel;
     Memo1: TMemo;
     RxDBGrid1: TRxDBGrid;
@@ -24,6 +27,8 @@ type
     RxMemoryData1CODE: TLongintField;
     RxMemoryData1ID: TLongintField;
     RxMemoryData1NAME: TStringField;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -36,6 +41,7 @@ var
   Form1: TForm1;
 
 implementation
+uses DBGrids;
 
 {$R *.lfm}
 
@@ -45,6 +51,7 @@ procedure TForm1.FormCreate(Sender: TObject);
 var
   i: Integer;
 begin
+  RxDBGrid1.Options:=RxDBGrid1.Options + [dgAlwaysShowEditor];
   RxMemoryData1.Open;
   for i:=1 to 20 do
   begin
@@ -60,6 +67,7 @@ begin
   end;
   RxDBGrid1.CreateToolMenuItem(#0, '-', nil);
   RxDBGrid1.CreateToolMenuItem(#0, 'Show info box', @RxDBGridInfoBox);
+//  RxDBGrid1.DefaultRowHeight:=;
 end;
 
 procedure TForm1.RxDBGridInfoBox(Sender: TObject);
@@ -79,6 +87,19 @@ begin
     on E:Exception do
       Memo1.Lines.Text:=E.Message;
   end;
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+  RxDBGrid1.DefaultRowHeight:=StrToInt(Edit2.Text);
+end;
+
+type
+  THackGrid = class(TRxDBGrid);
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  RxDBGrid1.DefaultRowHeight:=THackGrid(RxDBGrid1).GetDefaultRowHeight;
 end;
 
 end.
