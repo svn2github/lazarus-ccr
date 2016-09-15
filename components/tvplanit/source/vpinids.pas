@@ -211,6 +211,9 @@ begin
   FFormatSettings.DateSeparator := '/';
   FFormatSettings.TimeSeparator := ':';
   FDayBuffer := 1000*365;  // 1000 years, i.e. deactivate daybuffer mechanism
+
+  // For testing of compatibility:
+  // FIniVersionWrite := iv104;
 end;
 
 destructor TVpIniDatastore.Destroy;
@@ -224,10 +227,13 @@ var
   L: TVpIniStrings;
 begin
   case FIniVersionWrite of
-    iv104: L := TVpIniStrings_v104.Create(@FFormatSettings);
-    iv105: L := TVpIniStrings_v105.Create(@FFormatSettings);
-    else    raise Exception.CreateFmt('Writing of ini version "%s" not supported.',
-              [GetEnumName(TypeInfo(TVpIniVersion), ord(FIniVersionWrite))]);
+    iv104:
+      L := TVpIniStrings_v104.Create(@FFormatSettings);
+    iv105:
+      L := TVpIniStrings_v105.Create(@FFormatSettings);
+    else
+      raise Exception.CreateFmt('Writing of ini version "%s" not supported.',
+            [GetEnumName(TypeInfo(TVpIniVersion), ord(FIniVersionWrite))]);
   end;
   try
     L.AddField('FirstName', AContact.FirstName);                          // 0
@@ -302,10 +308,13 @@ var
   L: TVpIniStrings;
 begin
   case FIniVersionWrite of
-    iv104: L := TVpIniStrings_v104.Create(@FFormatSettings);
-    iv105: L := TVpIniStrings_v105.Create(@FFormatSettings);
-    else    raise Exception.CreateFmt('Writing of ini version "%s" not supported.',
-              [GetEnumName(TypeInfo(TVpIniVersion), ord(FIniVersionWrite))]);
+    iv104:
+      L := TVpIniStrings_v104.Create(@FFormatSettings);
+    iv105:
+      L := TVpIniStrings_v105.Create(@FFormatSettings);
+    else
+      raise Exception.CreateFmt('Writing of ini version "%s" not supported.',
+            [GetEnumName(TypeInfo(TVpIniVersion), ord(FIniVersionWrite))]);
   end;
   try
     L.AddDateTimeField('StartTime', AEvent.StartTime, 'c');   // short date + long time
@@ -375,10 +384,13 @@ var
   L: TVpIniStrings;
 begin
   case FIniVersionWrite of
-    iv104: L := TVpIniStrings_v104.Create(@FFormatSettings);
-    iv105: L := TVpIniStrings_v105.Create(@FFormatSettings);
-    else   raise Exception.CreateFmt('Writing of ini version "%s" not supported.',
-             [GetEnumName(TypeInfo(TVpIniVersion), ord(FIniVersionWrite))]);
+    iv104:
+      L := TVpIniStrings_v104.Create(@FFormatSettings);
+    iv105:
+      L := TVpIniStrings_v105.Create(@FFormatSettings);
+    else
+      raise Exception.CreateFmt('Writing of ini version "%s" not supported.',
+            [GetEnumName(TypeInfo(TVpIniVersion), ord(FIniVersionWrite))]);
   end;
   try
     L.AddField('Description', AResource.Description);                      // 0
@@ -439,10 +451,13 @@ var
   L: TVpIniStrings;
 begin
   case FIniVersionWrite of
-    iv104: L := TVpIniStrings_v104.Create(@FFormatSettings);
-    iv105: L := TVpIniStrings_v105.Create(@FFormatSettings);
-    else   raise Exception.CreateFmt('Writing of ini version "%s" not supported.',
-             [GetEnumName(TypeInfo(TVpIniVersion), ord(FIniVersionWrite))]);
+    iv104:
+      L := TVpIniStrings_v104.Create(@FFormatSettings);
+    iv105:
+      L := TVpIniStrings_v105.Create(@FFormatSettings);
+    else
+      raise Exception.CreateFmt('Writing of ini version "%s" not supported.',
+            [GetEnumName(TypeInfo(TVpIniVersion), ord(FIniVersionWrite))]);
   end;
   try
     L.AddField('Complete', BoolToStr(ATask.Complete, strTRUE, strFALSE));  // 0
@@ -778,7 +793,7 @@ begin
           AEvent.AlarmSet := StrToBool(L.Extract(8));
           AEvent.AlarmAdvance := StrToInt(L.Extract(9));
           AEvent.AlarmAdvanceType := TVpAlarmAdvType(GetEnumValue(TypeInfo(TVpAlarmAdvType), L.Extract(10)));
-          AEvent.SnoozeTime := StrToTime(L[11]);
+          AEvent.SnoozeTime := StrToTime(L.Extract(11));
           AEvent.RepeatCode := TVpRepeatType(GetEnumValue(TypeInfo(TVpRepeatType), L.Extract(12)));
           if L[13] = '' then
             AEvent.RepeatRangeEnd := 0 else
