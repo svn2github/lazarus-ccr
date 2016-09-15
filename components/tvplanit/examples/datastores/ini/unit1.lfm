@@ -191,7 +191,7 @@ object Form1: TForm1
         DisplayOptions.CheckStyle = csCheck
         DisplayOptions.DueDateFormat = 'dd.MM.yyyy'
         DisplayOptions.ShowCompletedTasks = False
-        DisplayOptions.ShowAll = False
+        DisplayOptions.ShowAll = True
         DisplayOptions.ShowDueDate = True
         DisplayOptions.OverdueColor = clRed
         DisplayOptions.NormalColor = clBlack
@@ -296,6 +296,8 @@ object Form1: TForm1
     CategoryColorMap.Category8.Description = 'Category 8'
     CategoryColorMap.Category9.Color = clMaroon
     CategoryColorMap.Category9.Description = 'Category 9'
+    HiddenCategories.BackgroundColor = clSilver
+    HiddenCategories.Color = clGray
     EnableEventTimer = True
     PlayEventSounds = True
     AutoConnect = True

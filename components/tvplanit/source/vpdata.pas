@@ -610,6 +610,7 @@ type
     property Changed: Boolean read FChanged write SetChanged;
     property Deleted: Boolean read FDeleted write SetDeleted;
     property Owner: TVpContacts read FOwner write FOwner;
+
 {$ifdef WITHRTTI}
   published
 {$else}
@@ -1814,11 +1815,22 @@ begin
   inherited Create;
   FChanged := false;
   FOwner := Owner;
+
   FPhoneType1 := Ord(ptWork);
   FPhoneType2 := Ord(ptHome);
   FPhoneType3 := Ord(ptWorkFax);
   FPhoneType4 := Ord(ptMobile);
   FPhoneType5 := Ord(ptAssistant);
+
+  FEMailType1 := ord(mtWork);
+  FEMailType2 := ord(mtHome);
+  FEMailType3 := ord(mtOther);
+
+  FWebsiteType1 := ord(wtBusiness);
+  FWebsiteType2 := ord(wtPersonal);
+
+  FAddressType1 := ord(atWork);
+  FAddressType2 := ord(atHome);
 end;
 
 destructor TVpContact.Destroy;

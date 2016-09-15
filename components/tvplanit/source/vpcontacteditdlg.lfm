@@ -19,9 +19,9 @@ object ContactEditForm: TContactEditForm
     Height = 341
     Top = 0
     Width = 433
-    ActivePage = tabMain
+    ActivePage = tabContact
     Align = alClient
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 0
     OnChange = tsContactsChange
     object tabMain: TTabSheet
@@ -281,7 +281,7 @@ object ContactEditForm: TContactEditForm
     end
     object tabContact: TTabSheet
       Caption = 'RSContact'
-      ClientHeight = 286
+      ClientHeight = 313
       ClientWidth = 425
       ImageIndex = 1
       object EMailLbl: TLabel
