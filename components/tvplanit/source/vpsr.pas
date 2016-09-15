@@ -38,19 +38,45 @@ interface
 {$I vpsr.inc}
 
 type
-  { For acquiring the labels that go with each telephone field }
-  { ie. Home, work, fax etc...                                 }
+  // For acquiring the labels that go with each telephone field, i.e. Home, work, fax etc...                                 }
   TVpPhoneType = (ptAssistant, ptCallback, ptCar, ptCompany, ptHome, ptHomeFax,
                   ptISDN, ptMobile, ptOther, ptOtherFax, ptPager, ptPrimary,
                   ptRadio, ptTelex, ptTTYTDD, ptWork, ptWorkFax);
 
+  TVpEMailType = (mtHome, mtOther, mtWork);
+
+  TVpWebSiteType = (wtBusiness, wtPersonal);
+
+  TVpAddressType = (atHome, atWork);
+
   TVpCategoryType = (ctBusiness, ctClients, ctFamily, ctOther, ctPersonal);
 
-function PhoneLabel (PhoneType : TVpPhoneType) : string;
-
-function CategoryLabel (CategoryType : TVpCategoryType) : string;
+function AddressLabel(AddressType: TVpAddressType): String;
+function EMailLabel(EMailType: TVpEMailType): string;
+function PhoneLabel(PhoneType: TVpPhoneType): string;
+function WebSiteLabel(WebSiteType: TVpWebSiteType): String;
+function CategoryLabel(CategoryType: TVpCategoryType): string;
 
 implementation
+
+function AddressLabel(AddressType: TVpAddressType): String;
+begin
+  Result := '';
+  case AddressType of
+    atWork : Result := RSWorkAddressLabel;
+    atHome : Result := RSHomeAddressLabel;
+  end;
+end;
+
+function EMailLabel(EmailType: TVpEmaiLType): String;
+begin
+  Result := '';
+  case EMailType of
+    mtHome      : Result := RSHomeEMailLabel;
+    mtOther     : Result := RSOtherEMailLabel;
+    mtWork      : Result := RSWorkEMailLabel;
+  end;
+end;
 
 function PhoneLabel(PhoneType: TVpPhoneType): string;
 begin
@@ -76,7 +102,16 @@ begin
   end;
 end;
 
-function CategoryLabel (CategoryType : TVpCategoryType) : string;
+function WebSiteLabel(WebsiteType: TVpWebsiteType): String;
+begin
+  Result := '';
+  case WebsiteType of
+    wtBusiness : Result := RSBusinessWebSiteLabel;
+    wtPersonal : Result := RSPersonalWebsiteLabel;
+  end;
+end;
+
+function CategoryLabel(CategoryType: TVpCategoryType): string;
 begin
   Result := '';
   case CategoryType of

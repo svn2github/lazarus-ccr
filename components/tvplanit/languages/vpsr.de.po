@@ -119,6 +119,12 @@ msgstr "Web-Browser kann nicht gestartet werden. Bitte stellen Sie sicher, dass 
 msgid "Brush"
 msgstr "Füllung"
 
+#: vpsr.rsbusinesswebsitelabel
+#, fuzzy
+msgctxt "vpsr.rsbusinesswebsitelabel"
+msgid "Business"
+msgstr "Geschäftlich"
+
 #: vpsr.rscalendarelement
 msgid "Calendar"
 msgstr "Kalender"
@@ -165,6 +171,7 @@ msgid "Category %d"
 msgstr "Kategorie %d"
 
 #: vpsr.rscategorylabel1
+msgctxt "vpsr.rscategorylabel1"
 msgid "Business"
 msgstr "Geschäftlich"
 
@@ -177,6 +184,7 @@ msgid "Family"
 msgstr "Familie"
 
 #: vpsr.rscategorylabel4
+msgctxt "vpsr.rscategorylabel4"
 msgid "Personal"
 msgstr "Persönlich"
 
@@ -463,6 +471,18 @@ msgstr "Von Ihrem Zeitplan?"
 msgid "Height"
 msgstr "Höhe"
 
+#: vpsr.rshomeaddresslabel
+#, fuzzy
+msgctxt "vpsr.rshomeaddresslabel"
+msgid "Home"
+msgstr "Zuhause"
+
+#: vpsr.rshomeemaillabel
+#, fuzzy
+msgctxt "vpsr.rshomeemaillabel"
+msgid "Home"
+msgstr "Zuhause"
+
 #: vpsr.rshours
 msgid "Hours"
 msgstr "Stunden"
@@ -716,6 +736,12 @@ msgstr "OK"
 msgid "&Open Item"
 msgstr "Eintrag ö&ffnen"
 
+#: vpsr.rsotheremaillabel
+#, fuzzy
+msgctxt "vpsr.rsotheremaillabel"
+msgid "Other"
+msgstr "Andere"
+
 #: vpsr.rsoutofrange
 msgid "Out of range"
 msgstr "Außerhalb des zulässigen Bereichs"
@@ -748,6 +774,12 @@ msgstr "Prozent"
 msgid "This operation cannot be undone!"
 msgstr "Diese Operation kann nicht rückgängig gemacht werden!"
 
+#: vpsr.rspersonalwebsitelabel
+#, fuzzy
+msgctxt "vpsr.rspersonalwebsitelabel"
+msgid "Personal"
+msgstr "Persönlich"
+
 #: vpsr.rsphonetypelabel1
 msgid "Assistant"
 msgstr "Assistent"
@@ -777,6 +809,7 @@ msgid "TTY/TDD"
 msgstr "TTY/TDD"
 
 #: vpsr.rsphonetypelabel16
+msgctxt "vpsr.rsphonetypelabel16"
 msgid "Work"
 msgstr "Arbeit"
 
@@ -798,6 +831,7 @@ msgid "Company"
 msgstr "Firma"
 
 #: vpsr.rsphonetypelabel5
+msgctxt "vpsr.rsphonetypelabel5"
 msgid "Home"
 msgstr "Zuhause"
 
@@ -1174,6 +1208,18 @@ msgstr "Breite"
 msgid "Width:"
 msgstr "Breite:"
 
+#: vpsr.rsworkaddresslabel
+#, fuzzy
+msgctxt "vpsr.rsworkaddresslabel"
+msgid "Work"
+msgstr "Arbeit"
+
+#: vpsr.rsworkemaillabel
+#, fuzzy
+msgctxt "vpsr.rsworkemaillabel"
+msgid "Work"
+msgstr "Arbeit"
+
 #: vpsr.rsxdays
 msgid "%d days"
 msgstr "%d Tage"
@@ -1498,3 +1544,4 @@ msgstr "Unbekannte Achsen-Spezifikation: %s"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "Die XML-Deklaration muss vor dem ersten Element erscheinen."
+

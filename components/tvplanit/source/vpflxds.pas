@@ -133,19 +133,17 @@ type
     procedure LoadTaskMapping(Reader: TReader);                          
     procedure StoreTaskMapping(Writer: TWriter);                         
     { Internal Methods }
+    procedure LoadContact(AContact: TVpContact); override;
     procedure Loaded; override;
-    procedure SetFilterCriteria(aTable : TDataset;                       
-      aUseDateTime : Boolean;                                            
-      aResourceID : Integer;                                             
-      aStartDateTime : TDateTime;                                        
-      aEndDateTime : TDateTime); override;                               
+    procedure SetFilterCriteria(ATable: TDataset; AUseDateTime: Boolean;
+      AResourceID: Integer; AStartDateTime, AEndDateTime: TDateTime); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Load; override;
 
     procedure LoadEventsOfResource(AResID: Integer); override;
-    procedure LoadContacts; override;                                    
+//    procedure LoadContacts; override;                                    
     procedure LoadTasks; override;                                       
 //    procedure RefreshEvents; override;                                   
 //    procedure RefreshContacts; override;                                 
@@ -419,9 +417,8 @@ begin
     Load;                                                                
   end                                                                    
 
-//  Load;                                                                
-
-  else begin                                                             
+  else
+  begin
      if FResourceDataSrc <> nil then
        FResourceDataSrc.DataSet.Close;
      if FEventsDataSrc <> nil then
@@ -829,6 +826,293 @@ begin
 end;*)
 {=====}
 
+{ Loads the contact from the current cursor position of the contacts table }
+procedure TVpFlexDatastore.LoadContact(AContact: TVpContact);
+var
+  F: TField;
+  FN: String;
+begin
+  with ContactsTable do
+  begin
+    FN := GetFieldName(FContactMappings, 'RecordID');
+    if FN <> '' then
+      AContact.RecordID := FieldByName(FN).AsInteger;
+
+    FN := GetFieldName(FContactMappings, 'FirstName');
+    if FN <> '' then
+      AContact.FirstName := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'LastName');
+    if FN <> '' then
+      AContact.LastName := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'BirthDate');
+    if FN <> '' then
+      AContact.Birthdate := FieldByName(FN).AsDateTime;
+
+    FN := GetFieldName(FContactMappings, 'Anniversary');
+    if FN <> '' then
+      AContact.Anniversary := FieldByName(FN).AsDateTime;
+
+    FN := GetFieldName(FContactMappings, 'Title');
+    if FN <> '' then
+      AContact.Title := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'Company');
+    if FN <> '' then
+      AContact.Company := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'Job_Position');
+    if FN <> '' then
+      AContact.Job_Position := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'Category');
+    if FN <> '' then
+      AContact.Category := FieldByName(FN).AsInteger;
+
+    // Photo file name, new in 1.05
+    FN := GetFieldName(FContactMappings, 'PathToPhoto');
+    if FN <> '' then
+      AContact.PathToPhoto := FieldByName(FN).AsString;
+
+    // "Notes" instead of "Note" - new in 1.04
+    FN := GetFieldName(FContactMappings, 'Notes');
+    if FN = '' then
+      FN := GetFieldName(FContactMappings, 'Note');   // "Note" is deprecated
+    if FN <> '' then
+      AContact.Notes := FieldByName(FN).AsString;
+
+    // two address types - new in 1.05
+    FN := GetFieldName(FContactMappings, 'AddressType1');
+    if FN <> '' then begin
+      F := FindField(FN);
+      if F <> nil then AContact.AddressType1 := F.AsInteger;
+    end;
+
+    FN := GetFieldName(FContactMappings, 'AddressType2');
+    if FN <> '' then begin
+      F := FindField(FN);
+      if F <> nil then AContact.AddressType2 := F.AsInteger;
+    end;
+
+    FN := GetFieldName(FContactMappings, 'Address1');
+    if FN = '' then
+      FN := GetFieldName(FContactMappings, 'Address');
+    if FN <> '' then begin
+      F := FindField(FN);
+      if F <> nil then AContact.Address1 := F.AsString;
+    end;
+
+    FN := GetFieldName(FContactMappings, 'Address2');
+    if FN <> '' then begin
+      F := FindField(FN);
+      if F <> nil then AContact.Address2 := F.AsString;
+    end;
+
+    FN := GetFieldName(FContactMappings, 'City1');
+    if FN = '' then
+      FN := GetFieldName(FContactMappings, 'City');
+    if FN <> '' then begin
+      F := FindField(FN);
+      if F <> nil then AContact.City1 := F.AsString;
+    end;
+
+    FN := GetFieldName(FContactMappings, 'City2');
+    if FN <> '' then begin
+      F := FindField(FN);
+      if F <> nil then AContact.City2 := F.AsString;
+    end;
+
+    FN := GetFieldName(FContactMappings, 'State1');
+    if FN = '' then
+      FN := GetFieldName(FContactMappings, 'State');
+    if FN <> '' then begin
+      F := FindField(FN);
+      if F <> nil then AContact.State1 := F.AsString;
+    end;
+
+    FN := GetFieldName(FContactMappings, 'State2');
+    if FN <> '' then begin
+      F := FindField(FN);
+      if F <> nil then AContact.State2 := F.AsString;
+    end;
+
+    FN := GetFieldName(FContactMappings, 'Zip1');
+    if FN = '' then
+      FN := GetFieldName(FContactMappings, 'Zip');
+    if FN <> '' then begin
+      F := FindField(FN);
+      if F <> nil then AContact.Zip1 := F.AsString;
+    end;
+
+    FN := GetFieldName(FContactMappings, 'Zip2');
+    if FN <> '' then begin
+      F := FindField(FN);
+      if F <> nil then AContact.Zip2 := F.AsString;
+    end;
+
+    FN := GetFieldName(FContactMappings, 'Country1');
+    if FN = '' then
+      FN := GetFieldName(FContactMappings, 'Country');
+    if FN <> '' then begin
+      F := FindField(FN);
+      if F <> nil then AContact.Country1 := F.AsString;
+    end;
+
+    FN := GetFieldName(FContactMappings, 'Country2');
+    if FN = '' then
+      FN := GetFieldName(FContactMappings, 'Country');
+    if FN <> '' then begin
+      F := FindField(FN);
+      if F <> nil then AContact.Country2 := F.AsString;
+    end;
+
+    // Telephone numbers
+    FN := GetFieldName(FContactMappings, 'Phone1');
+    if FN <> '' then
+      AContact.Phone1 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'Phone2');
+    if FN <> '' then
+      AContact.Phone2 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'Phone3');
+    if FN <> '' then
+      AContact.Phone3 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'Phone4');
+    if FN <> '' then
+      AContact.Phone4 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'Phone5');
+    if FN <> '' then
+      AContact.Phone5 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'PhoneType1');
+    if FN <> '' then
+      AContact.PhoneType1 := FieldByName(FN).AsInteger;
+
+    FN := GetFieldName(FContactMappings, 'PhoneType2');
+    if FN <> '' then
+      AContact.PhoneType2 := FieldByName(FN).AsInteger;
+
+    FN := GetFieldName(FContactMappings, 'PhoneType3');
+    if FN <> '' then
+      AContact.PhoneType3 := FieldByName(FN).AsInteger;
+
+    FN := GetFieldName(FContactMappings, 'PhoneType4');
+    if FN <> '' then
+      AContact.PhoneType4 := FieldByName(FN).AsInteger;
+
+    FN := GetFieldName(FContactMappings, 'PhoneType5');
+    if FN <> '' then
+      AContact.PhoneType5 := FieldByName(FN).AsInteger;
+
+    // EMail fields - new in 1.05
+    FN := GetFieldName(FContactMappings, 'EMail1');
+    if FN = '' then
+      FN := GetFieldName(FContactMappings, 'EMail');
+    if FN <> '' then
+      AContact.EMail1 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'EMail2');
+    if FN <> '' then
+      AContact.EMail2 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'EMail3');
+    if FN <> '' then
+      AContact.EMail3 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'EMailType1');
+    if FN <> '' then
+      AContact.EMailType1 := FieldByName(FN).AsInteger;
+
+    FN := GetFieldName(FContactMappings, 'EMailType2');
+    if FN <> '' then
+      AContact.EMailType2 := FieldByName(FN).AsInteger;
+
+    FN := GetFieldName(FContactMappings, 'EMailType3');
+    if FN <> '' then
+      AContact.EMailType3 := FieldByName(FN).AsInteger;
+
+    // Website fields - new in 1.05
+    FN := GetFieldName(FContactMappings, 'WebSite1');
+    if FN <> '' then
+      AContact.Website1 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'WebSite2');
+    if FN <> '' then
+      AContact.Website2 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'WebsiteType1');
+    if FN <> '' then
+      AContact.WebsiteType1 := FieldByName(FN).AsInteger;
+
+    FN := GetFieldName(FContactMappings, 'WebsiteType2');
+    if FN <> '' then
+      AContact.WebsiteType2 := FieldByName(FN).AsInteger;
+
+    // Custom fields
+    FN := GetFieldName(FContactMappings, 'Custom1');
+    if FN <> '' then
+      AContact.Custom1 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'Custom2');
+    if FN <> '' then
+      AContact.Custom2 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'Custom3');
+    if FN <> '' then
+      AContact.Custom3 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'Custom4');
+    if FN <> '' then
+      AContact.Custom4 := FieldByName(FN).AsString;
+
+    // User-defined fields
+    FN := GetFieldName(FContactMappings, 'UserField0');
+    if FN <> '' then
+      AContact.UserField0 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'UserField1');
+    if FN <> '' then
+      AContact.UserField1 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'UserField2');
+    if FN <> '' then
+      AContact.UserField2 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'UserField3');
+    if FN <> '' then
+      AContact.UserField3 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'UserField4');
+    if FN <> '' then
+      AContact.UserField4 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'UserField5');
+    if FN <> '' then
+      AContact.UserField5 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'UserField6');
+    if FN <> '' then
+      AContact.UserField6 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'UserField7');
+    if FN <> '' then
+      AContact.UserField7 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'UserField8');
+    if FN <> '' then
+      AContact.UserField8 := FieldByName(FN).AsString;
+
+    FN := GetFieldName(FContactMappings, 'UserField9');
+    if FN <> '' then
+      AContact.UserField9 := FieldByName(FN).AsString;
+  end;
+end;
+
+(*
 procedure TVpFlexDataStore.LoadContacts;
 var
   Contact: TVpContact;
@@ -1019,7 +1303,7 @@ begin
   end; {if Resource <> nil}
 end;
 {=====}
-
+        *)
 procedure TVpFlexDataStore.LoadTasks;
 var
   Task: TVpTask;
@@ -1534,35 +1818,95 @@ begin
           if FN <> '' then
             ContactsTable.FieldByName(FN).AsString := Contact.Job_Position;
 
-          FN := GetFieldName(FContactMappings, 'EMail');
+          FN := GetFieldName(FContactMappings, 'AddressType1');
           if FN <> '' then
-            ContactsTable.FieldByName(FN).AsString := Contact.EMail;
+            ContactsTable.FieldByName(FN).AsInteger := Contact.AddressType1;
 
-          FN := GetFieldName(FContactMappings, 'Address');
+          FN := GetFieldName(FContactMappings, 'Address1');
+          if FN = '' then
+            FN := GetFieldName(FContactMappings, 'Address');
           if FN <> '' then
-            ContactsTable.FieldByName(FN).AsString := Contact.Address;
+            ContactsTable.FieldByName(FN).AsString := Contact.Address1;
 
-          FN := GetFieldName(FContactMappings, 'City');
+          FN := GetFieldName(FContactMappings, 'City1');
+          if FN = '' then
+            FN := GetFieldName(FContactMappings, 'City');
           if FN <> '' then
-            ContactsTable.FieldByName(FN).AsString := Contact.City;
+            ContactsTable.FieldByName(FN).AsString := Contact.City1;
 
-          FN := GetFieldName(FContactMappings, 'State');
+          FN := GetFieldName(FContactMappings, 'State1');
+          if FN = '' then
+            FN := GetFieldName(FContactMappings, 'State');
           if FN <> '' then
-            ContactsTable.FieldByName(FN).AsString := Contact.State;
+            ContactsTable.FieldByName(FN).AsString := Contact.State1;
 
-          FN := GetFieldName(FContactMappings, 'Zip');
+          FN := GetFieldName(FContactMappings, 'Zip1');
+          if FN = '' then
+            FN := GetFieldName(FContactMappings, 'Zip');
           if FN <> '' then
-            ContactsTable.FieldByName(FN).AsString := Contact.Zip;
+            ContactsTable.FieldByName(FN).AsString := Contact.Zip1;
 
-          FN := GetFieldName(FContactMappings, 'Country');
+          FN := GetFieldName(FContactMappings, 'Country1');
+          if FN = '' then
+            FN := GetFieldName(FContactMappings, 'Country');
           if FN <> '' then
-            ContactsTable.FieldByName(FN).AsString := Contact.Country;
+            ContactsTable.FieldByName(FN).AsString := Contact.Country1;
+
+          FN := GetFieldName(FContactMappings, 'AddressType2');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsInteger := Contact.AddressType2;
+
+          FN := GetFieldName(FContactMappings, 'Address2');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsString := Contact.Address2;
+
+          FN := GetFieldName(FContactMappings, 'City2');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsString := Contact.City2;
+
+          FN := GetFieldName(FContactMappings, 'State2');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsString := Contact.State2;
+
+          FN := GetFieldName(FContactMappings, 'Zip2');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsString := Contact.Zip2;
+
+          FN := GetFieldName(FContactMappings, 'Country2');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsString := Contact.Country2;
 
           FN := GetFieldName(FContactMappings, 'Notes');
           if FN = '' then
             FN := GetFieldName(FContactMappings, 'Note');  // deprecated
           if FN <> '' then
             ContactsTable.FieldByName(FN).AsString := Contact.Notes;
+
+          FN := GetFieldName(FContactMappings, 'EMail1');
+          if FN = '' then
+            FN := GetFieldName(FContactMappings, 'EMail');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsString := Contact.EMail1;
+
+          FN := GetFieldName(FContactMappings, 'EMail2');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsString := Contact.EMail2;
+
+          FN := GetFieldName(FContactMappings, 'EMail3');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsString := Contact.EMail3;
+
+          FN := GetFieldName(FContactMappings, 'EMailType1');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsInteger := Contact.EMailType1;
+
+          FN := GetFieldName(FContactMappings, 'EMailType2');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsInteger := Contact.EMailType2;
+
+          FN := GetFieldName(FContactMappings, 'EMailType3');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsInteger := Contact.EMailType3;
 
           FN := GetFieldName(FContactMappings, 'Phone1');
           if FN <> '' then
@@ -1604,9 +1948,29 @@ begin
           if FN <> '' then
             ContactsTable.FieldByName(FN).AsInteger := Contact.PhoneType5;
 
+          FN := GetFieldName(FContactMappings, 'Website1');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsString := Contact.WebSite1;
+
+          FN := GetFieldName(FContactMappings, 'Website2');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsString := Contact.WebSite2;
+
+          FN := GetFieldName(FContactMappings, 'WebSiteType1');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsInteger := Contact.WebSiteType1;
+
+          FN := GetFieldName(FContactMappings, 'WebSiteType2');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsInteger := Contact.WebSiteType2;
+
           FN := GetFieldName(FContactMappings, 'Category');
           if FN <> '' then
             ContactsTable.FieldByName(FN).AsInteger := Contact.Category;
+
+          FN := GetFieldName(FContactMappings, 'PathToPhoto');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsString := Contact.PathToPhoto;
 
           FN := GetFieldName(FContactMappings, 'Custom1');
           if FN <> '' then
@@ -2292,13 +2656,12 @@ begin
 end;
 {=====}
 
-procedure TVpFlexDataStore.SetFilterCriteria(aTable: TDataset;           
-  aUseDateTime: Boolean; aResourceID: Integer; aStartDateTime,           
-  aEndDateTime: TDateTime);                                              
+procedure TVpFlexDataStore.SetFilterCriteria(ATable: TDataset; AUseDateTime: Boolean;
+  AResourceID: Integer; AStartDateTime, aEndDateTime: TDateTime);
 begin                                                                    
   if Assigned(OnSetFilterCriteria) then                                  
-    OnSetFilterCriteria(aTable, aUseDateTime, aResourceID,               
-      aStartDateTime, aEndDateTime)                                      
+    OnSetFilterCriteria(ATable, AUseDateTime, AResourceID,
+      AStartDateTime, AEndDateTime)
   else                                                                   
     inherited;                                                           
 end;                                                                     

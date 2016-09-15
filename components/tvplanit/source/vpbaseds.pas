@@ -817,7 +817,6 @@ end;
 procedure TVpCustomDatastore.UpdateGroupEvents;
 var
   i: Integer;
-  event: TVpEvent;
   id: Integer;
   res: TVpResource;
 begin
@@ -831,14 +830,14 @@ begin
   for i:=0 to Resource.Group.Count-1 do begin
     // current resource of group
     res := Resource.Group[i];
-    if res <> nil then begin
-      id := res.ResourceID;
-      // Ignore active resource in group
-      if id = ResourceID then
-        Continue;
-      // Load events of the current resource of the group
-      LoadEventsOfResource(id);
-    end;
+    if res = nil then
+      Continue;
+    id := res.ResourceID;
+    // Ignore active resource in resource group (it shouldn't be there anyway)
+    if id = ResourceID then
+      Continue;
+    // load events of current group
+    LoadEventsOfResource(id);
   end;
 
   NotifyDependents;

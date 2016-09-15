@@ -2,10 +2,10 @@ object Form1: TForm1
   Left = 225
   Height = 686
   Top = 155
-  Width = 980
+  Width = 895
   Caption = 'Form1'
   ClientHeight = 686
-  ClientWidth = 980
+  ClientWidth = 895
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   LCLVersion = '1.7'
@@ -13,11 +13,11 @@ object Form1: TForm1
     Left = 0
     Height = 34
     Top = 0
-    Width = 980
+    Width = 895
     Align = alTop
     BevelOuter = bvNone
     ClientHeight = 34
-    ClientWidth = 980
+    ClientWidth = 895
     TabOrder = 0
     object VpResourceCombo1: TVpResourceCombo
       Left = 8
@@ -50,7 +50,7 @@ object Form1: TForm1
     Left = 0
     Height = 652
     Top = 34
-    Width = 980
+    Width = 895
     ActivePage = TabSheet1
     Align = alClient
     TabIndex = 0
@@ -58,12 +58,12 @@ object Form1: TForm1
     object TabSheet1: TTabSheet
       Caption = 'Events and tasks'
       ClientHeight = 624
-      ClientWidth = 972
+      ClientWidth = 887
       object VpDayView1: TVpDayView
         Left = 0
         Height = 624
         Top = 0
-        Width = 301
+        Width = 283
         DataStore = VpFirebirdDatastore1
         ControlLink = VpControlLink1
         Color = clWindow
@@ -97,21 +97,21 @@ object Form1: TForm1
         TimeFormat = tf12Hour
       end
       object Panel2: TPanel
-        Left = 306
+        Left = 288
         Height = 624
         Top = 0
-        Width = 386
+        Width = 339
         Align = alLeft
         BevelOuter = bvNone
         Caption = 'Panel2'
         ClientHeight = 624
-        ClientWidth = 386
+        ClientWidth = 339
         TabOrder = 1
         object VpWeekView1: TVpWeekView
           Left = 0
           Height = 378
           Top = 0
-          Width = 386
+          Width = 339
           DataStore = VpFirebirdDatastore1
           ControlLink = VpControlLink1
           Color = clWindow
@@ -138,7 +138,7 @@ object Form1: TForm1
           Left = 0
           Height = 241
           Top = 383
-          Width = 386
+          Width = 339
           DataStore = VpFirebirdDatastore1
           ControlLink = VpControlLink1
           Color = clWindow
@@ -170,16 +170,16 @@ object Form1: TForm1
           Left = 0
           Height = 5
           Top = 378
-          Width = 386
+          Width = 339
           Align = alBottom
           ResizeAnchor = akBottom
         end
       end
       object VpTaskList1: TVpTaskList
-        Left = 697
+        Left = 632
         Height = 624
         Top = 0
-        Width = 275
+        Width = 255
         DataStore = VpFirebirdDatastore1
         ControlLink = VpControlLink1
         Color = clWindow
@@ -204,13 +204,13 @@ object Form1: TForm1
         ShowResourceName = True
       end
       object Splitter1: TSplitter
-        Left = 692
+        Left = 627
         Height = 624
         Top = 0
         Width = 5
       end
       object Splitter3: TSplitter
-        Left = 301
+        Left = 283
         Height = 624
         Top = 0
         Width = 5
@@ -305,6 +305,8 @@ object Form1: TForm1
     CategoryColorMap.Category8.Description = 'Category 8'
     CategoryColorMap.Category9.Color = clMaroon
     CategoryColorMap.Category9.Description = 'Category 9'
+    HiddenCategories.BackgroundColor = clSilver
+    HiddenCategories.Color = clGray
     EnableEventTimer = True
     PlayEventSounds = True
     Connection = IBConnection1

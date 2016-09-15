@@ -109,6 +109,11 @@ msgstr ""
 msgid "Brush"
 msgstr ""
 
+#: vpsr.rsbusinesswebsitelabel
+msgctxt "vpsr.rsbusinesswebsitelabel"
+msgid "Business"
+msgstr ""
+
 #: vpsr.rscalendarelement
 msgid "Calendar"
 msgstr ""
@@ -155,6 +160,7 @@ msgid "Category %d"
 msgstr ""
 
 #: vpsr.rscategorylabel1
+msgctxt "vpsr.rscategorylabel1"
 msgid "Business"
 msgstr ""
 
@@ -167,6 +173,7 @@ msgid "Family"
 msgstr ""
 
 #: vpsr.rscategorylabel4
+msgctxt "vpsr.rscategorylabel4"
 msgid "Personal"
 msgstr ""
 
@@ -453,6 +460,16 @@ msgstr ""
 msgid "Height"
 msgstr ""
 
+#: vpsr.rshomeaddresslabel
+msgctxt "vpsr.rshomeaddresslabel"
+msgid "Home"
+msgstr ""
+
+#: vpsr.rshomeemaillabel
+msgctxt "vpsr.rshomeemaillabel"
+msgid "Home"
+msgstr ""
+
 #: vpsr.rshours
 msgid "Hours"
 msgstr ""
@@ -706,6 +723,11 @@ msgstr ""
 msgid "&Open Item"
 msgstr ""
 
+#: vpsr.rsotheremaillabel
+msgctxt "vpsr.rsotheremaillabel"
+msgid "Other"
+msgstr ""
+
 #: vpsr.rsoutofrange
 msgid "Out of range"
 msgstr ""
@@ -738,6 +760,11 @@ msgstr ""
 msgid "This operation cannot be undone!"
 msgstr ""
 
+#: vpsr.rspersonalwebsitelabel
+msgctxt "vpsr.rspersonalwebsitelabel"
+msgid "Personal"
+msgstr ""
+
 #: vpsr.rsphonetypelabel1
 msgid "Assistant"
 msgstr ""
@@ -767,6 +794,7 @@ msgid "TTY/TDD"
 msgstr ""
 
 #: vpsr.rsphonetypelabel16
+msgctxt "vpsr.rsphonetypelabel16"
 msgid "Work"
 msgstr ""
 
@@ -788,6 +816,7 @@ msgid "Company"
 msgstr ""
 
 #: vpsr.rsphonetypelabel5
+msgctxt "vpsr.rsphonetypelabel5"
 msgid "Home"
 msgstr ""
 
@@ -1162,6 +1191,16 @@ msgstr ""
 
 #: vpsr.rswidthlbl
 msgid "Width:"
+msgstr ""
+
+#: vpsr.rsworkaddresslabel
+msgctxt "vpsr.rsworkaddresslabel"
+msgid "Work"
+msgstr ""
+
+#: vpsr.rsworkemaillabel
+msgctxt "vpsr.rsworkemaillabel"
+msgid "Work"
 msgstr ""
 
 #: vpsr.rsxdays

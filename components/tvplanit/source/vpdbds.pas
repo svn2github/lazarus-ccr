@@ -58,8 +58,10 @@ type
     { property setters }
     procedure SetReadOnly(const Value: boolean);
 
-    procedure SetFilterCriteria(aTable: TDataset; aUseDateTime: Boolean;
-      aResourceID: Integer; aStartDateTime, aEndDateTime: TDateTime); virtual;
+    { internal methods }
+    procedure LoadContact(AContact: TVpContact); virtual;
+    procedure SetFilterCriteria(ATable: TDataset; AUseDateTime: Boolean;
+      AResourceID: Integer; AStartDateTime, AEndDateTime: TDateTime); virtual;
 
   protected {properties that may be surfaced later}
       property ReadOnly : boolean
@@ -484,37 +486,84 @@ begin
         Size := 30;
         Required := false;
       end;
-      { Address }
+      { AddressType1 }
       with AddFieldDef do begin
-        Name := 'Address';
+        Name := 'AddressType1';
+        DataType := ftInteger;
+        Required := false;
+      end;
+      { Address1 }
+      with AddFieldDef do begin
+        Name := 'Address1';
         DataType := ftString;
         Size := 100;
         Required := false;
       end;
-      { City }
+      { City1 }
       with AddFieldDef do begin
-        Name := 'City';
+        Name := 'City1';
         DataType := ftString;
         Size := 50;
         Required := false;
       end;
-      { State }
+      { State1 }
       with AddFieldDef do begin
-        Name := 'State';
+        Name := 'State1';
         DataType := ftString;
         Size := 25;
         Required := false;
       end;
-      { Zip }
+      { Zip1 }
       with AddFieldDef do begin
-        Name := 'Zip';
+        Name := 'Zip1';
         DataType := ftString;
         Size := 10;
         Required := false;
       end;
-      { Country }
+      { Country1 }
       with AddFieldDef do begin
-        Name := 'Country';
+        Name := 'Country1';
+        DataType := ftString;
+        Size := 25;
+        Required := false;
+      end;
+      { AddressType2 }
+      with AddFieldDef do begin
+        Name := 'AddressType2';
+        DataType := ftInteger;
+        Required := false;
+      end;
+      { Address2 }
+      with AddFieldDef do begin
+        Name := 'Address2';
+        DataType := ftString;
+        Size := 100;
+        Required := false;
+      end;
+      { City2 }
+      with AddFieldDef do begin
+        Name := 'City2';
+        DataType := ftString;
+        Size := 50;
+        Required := false;
+      end;
+      { State2 }
+      with AddFieldDef do begin
+        Name := 'State2';
+        DataType := ftString;
+        Size := 25;
+        Required := false;
+      end;
+      { Zip2 }
+      with AddFieldDef do begin
+        Name := 'Zip2';
+        DataType := ftString;
+        Size := 10;
+        Required := false;
+      end;
+      { Country2 }
+      with AddFieldDef do begin
+        Name := 'Country2';
         DataType := ftString;
         Size := 25;
         Required := false;
@@ -561,33 +610,98 @@ begin
         Size := 25;
         Required := false;
       end;
-      { Phone1 }
+      { PhoneType1 }
       with AddFieldDef do begin
         Name := 'PhoneType1';
         DataType := ftInteger;
         Required := false;
       end;
-      { Phone2 }
+      { PhoneType2 }
       with AddFieldDef do begin
         Name := 'PhoneType2';
         DataType := ftInteger;
         Required := false;
       end;
-      { Phone3 }
+      { PhoneType3 }
       with AddFieldDef do begin
         Name := 'PhoneType3';
         DataType := ftInteger;
         Required := false;
       end;
-      { Phone4 }
+      { PhoneType4 }
       with AddFieldDef do begin
         Name := 'PhoneType4';
         DataType := ftInteger;
         Required := false;
       end;
-      { Phone5 }
+      { PhoneType5 }
       with AddFieldDef do begin
         Name := 'PhoneType5';
+        DataType := ftInteger;
+        Required := false;
+      end;
+      { EMail1 }
+      with AddFieldDef do begin
+        Name := 'EMail1';
+        DataType := ftString;
+        Size := 100;
+        Required := false;
+      end;
+      { EMail2 }
+      with AddFieldDef do begin
+        Name := 'EMail2';
+        DataType := ftString;
+        Size := 100;
+        Required := false;
+      end;
+      { EMail3 }
+      with AddFieldDef do begin
+        Name := 'EMail3';
+        DataType := ftString;
+        Size := 100;
+        Required := false;
+      end;
+      { EMailType1 }
+      with AddFieldDef do begin
+        Name := 'EMailType1';
+        DataType := ftInteger;
+        Required := false;
+      end;
+      { EMailType2 }
+      with AddFieldDef do begin
+        Name := 'EMailType2';
+        DataType := ftInteger;
+        Required := false;
+      end;
+      { EMailType3 }
+      with AddFieldDef do begin
+        Name := 'EMailType3';
+        DataType := ftInteger;
+        Required := false;
+      end;
+      { Website1 }
+      with AddFieldDef do begin
+        Name := 'Website1';
+        DataType := ftString;
+        Size := 100;
+        Required := false;
+      end;
+      { Website2 }
+      with AddFieldDef do begin
+        Name := 'Website2';
+        DataType := ftString;
+        Size := 100;
+        Required := false;
+      end;
+      { WebsiteType1 }
+      with AddFieldDef do begin
+        Name := 'WebsiteType1';
+        DataType := ftInteger;
+        Required := false;
+      end;
+      { WebsiteType2 }
+      with AddFieldDef do begin
+        Name := 'WebsiteType2';
         DataType := ftInteger;
         Required := false;
       end;
@@ -597,11 +711,11 @@ begin
         DataType := ftInteger;
         Required := false;
       end;
-      { EMail }
+      { PathToPhoto }
       with AddFieldDef do begin
-        Name := 'EMail';
+        Name := 'PathToPhoto';
         DataType := ftString;
-        Size := 100;
+        Size := 255;
         Required := false;
       end;
       { Custom1 }
@@ -1089,11 +1203,142 @@ begin
     end; {with EventsTable}
 end;
 {=====}
+{ Loads the contact from the current cursor position of the contacts table }
+procedure TVpCustomDBDataStore.LoadContact(AContact: TVpContact);
+var
+  F: TField;
+begin
+  with ContactsTable do
+  begin
+    AContact.RecordID := FieldByName('RecordID').AsInteger;
+    AContact.FirstName := FieldByName('FirstName').AsString;
+    AContact.LastName := FieldByName('LastName').AsString;
+    AContact.Birthdate := FieldByName('BirthDate').AsDateTime;
+    AContact.Anniversary := FieldByName('Anniversary').AsDateTime;
+    AContact.Title := FieldByName('Title').AsString;
+    AContact.Company := FieldByName('Company').AsString;
+    AContact.Job_Position := FieldByName('Job_Position').AsString;
+    AContact.Category := FieldByName('Category').AsInteger;
+
+    F := FindField('Notes');
+    if F = nil then F := FindField('Note');  // deprecated
+    if F <> nil then AContact.Notes := F.AsString;
+
+    // photo file name - new in 1.05
+    F := FindField('PathToPhoto');
+    if F <> nil then AContact.PathToPhoto := F.AsString;
+
+    // two address types - new in 1.05
+    F := FindField('AddressType1');
+    if F <> nil then AContact.AddressType1 := F.AsInteger;
+    F := FindField('AddressType2');
+    if F <> nil then AContact.AddressType2 := F.AsInteger;
+    F := FindField('Address1');
+    if F = nil then F := FindField('Address');
+    if F <> nil then AContact.Address1 := F.AsString;
+    F := FindField('Address2');
+    if F <> nil then AContact.Address2 := F.AsString;
+    F := FindField('City1');
+    if F = nil then F := FindField('City');
+    if F <> nil then AContact.City1 := F.AsString;
+    F := FindField('City2');
+    if F <> nil then AContact.City2 := F.AsString;
+    F := FindField('State1');
+    if F = nil then F := FindField('State');
+    if F <> nil then AContact.State1 := F.AsString;
+    F := FindField('State2');
+    if F <> nil then AContact.State2 := F.AsString;
+    F := FindField('Zip1');
+    if F = nil then F := FindField('Zip');
+    if F <> nil then AContact.Zip1 := F.AsString;
+    F := FindField('Zip2');
+    if F <> nil then AContact.Zip2 := F.AsString;
+    F := FindField('Country1');
+    if F = nil then F := FindField('Country');
+    if F <> nil then AContact.Country1 := F.AsString;
+    F := FindField('Country2');
+    if F <> nil then AContact.Country2 := F.AsString;
+    {
+    Contact.Address := FieldByName('Address').AsString;
+    Contact.City := FieldByName('City').AsString;
+    Contact.State := FieldByName('State').AsString;
+    Contact.Zip := FieldByName('Zip').AsString;
+    Contact.Country := FieldByName('Country').AsString;
+    }
+
+    AContact.Phone1 := FieldByName('Phone1').AsString;
+    AContact.Phone2 := FieldByName('Phone2').AsString;
+    AContact.Phone3 := FieldByName('Phone3').AsString;
+    AContact.Phone4 := FieldByName('Phone4').AsString;
+    AContact.Phone5 := FieldByName('Phone5').AsString;
+    AContact.PhoneType1 := FieldByName('PhoneType1').AsInteger;
+    AContact.PhoneType2 := FieldByName('PhoneType2').AsInteger;
+    AContact.PhoneType3 := FieldByName('PhoneType3').AsInteger;
+    AContact.PhoneType4 := FieldByName('PhoneType4').AsInteger;
+    AContact.PhoneType5 := FieldByName('PhoneType5').AsInteger;
+
+    // EMail fields - new in 1.05
+    F := FindField('EMail1');
+    if F = nil then F := FindField('EMail');
+    if F <> nil then AContact.EMail1 := F.AsString;
+    F := FindField('EMail2');
+    if F <> nil then AContact.EMail2 := F.AsString;
+    F := FindField('EMail3');
+    if F <> nil then AContact.EMail := F.AsString;
+    F := FindField('EMailType1');
+    if F <> nil then AContact.EMailType1 := F.AsInteger;
+    F := FindField('EMailType2');
+    if F <> nil then AContact.EMailType2 := F.AsInteger;
+    F := FindField('EMailType3');
+    if F <> nil then AContact.EMailType3 := F.AsInteger;
+
+    // Website fields - new in 1.05
+    F := FindField('Website1');
+    if F <> nil then AContact.Website1 := F.AsString;
+    F := FindField('Website2');
+    if F <> nil then AContact.Website2 := F.AsString;
+    F := FindField('WebsiteType1');
+    if F <> nil then AContact.WebsiteType1 := F.AsInteger;
+    F := FindField('WebsiteType2');
+    if F <> nil then AContact.WebsiteType2 := F.AsInteger;
+
+    // Custom fields
+    F := FindField('Custom1');
+    if F <> nil then AContact.Custom1 := F.AsString;
+    F := FindField('Custom2');
+    if F <> nil then AContact.Custom2 := F.AsString;
+    F := FindField('Custom3');
+    if F <> nil then AContact.Custom3 := F.AsString;
+    F := FindField('Custom4');
+    if F <> nil then AContact.Custom4 := F.AsString;
+
+    // User-defined fields
+    F := FindField('UserField0');
+    if F <> nil then AContact.UserField0 := F.AsString;
+    F := FindField('UserField1');
+    if F <> nil then AContact.UserField1 := F.AsString;
+    F := FindField('UserField2');
+    if F <> nil then AContact.UserField2 := F.AsString;
+    F := FindField('UserField3');
+    if F <> nil then AContact.UserField3 := F.AsString;
+    F := FindField('UserField4');
+    if F <> nil then AContact.UserField4 := F.AsString;
+    F := FindField('UserField5');
+    if F <> nil then AContact.UserField5 := F.AsString;
+    F := FindField('UserField6');
+    if F <> nil then AContact.UserField6 := F.AsString;
+    F := FindField('UserField7');
+    if F <> nil then AContact.UserField7 := F.AsString;
+    F := FindField('UserField8');
+    if F <> nil then AContact.UserField8 := F.AsString;
+    F := FindField('UserField9');
+    if F <> nil then AContact.UserField9 := F.AsString;
+  end;
+end;
 
 procedure TVpCustomDBDataStore.LoadContacts;
 var
-  Contact: TVpContact;
-  F: TField;
+  contact: TVpContact;
 begin
   if (Resource <> nil) then
     with ContactsTable do begin
@@ -1103,66 +1348,14 @@ begin
       );
       First;
       while not EOF do begin
-        Contact := Resource.Contacts.AddContact(GetNextID(ContactsTableName));
-        Contact.Loading := true;
-        Contact.RecordID := FieldByName('RecordID').AsInteger;
-        Contact.FirstName := FieldByName('FirstName').AsString;
-        Contact.LastName := FieldByName('LastName').AsString;
-        Contact.Birthdate := FieldByName('BirthDate').AsDateTime;
-        Contact.Anniversary := FieldByName('Anniversary').AsDateTime;
-        Contact.Title := FieldByName('Title').AsString;
-        Contact.Company := FieldByName('Company').AsString;
-        Contact.Job_Position := FieldByName('Job_Position').AsString;
-        Contact.EMail := FieldByName('EMail').AsString;
-        Contact.Address := FieldByName('Address').AsString;
-        Contact.City := FieldByName('City').AsString;
-        Contact.State := FieldByName('State').AsString;
-        Contact.Zip := FieldByName('Zip').AsString;
-        Contact.Country := FieldByName('Country').AsString;
-        F := FieldByName('Notes');
-        if F = nil then F := FieldByName('Note');  // deprecated
-        if F <> nil then Contact.Notes := F.AsString;
-        Contact.Phone1 := FieldByName('Phone1').AsString;
-        Contact.Phone2 := FieldByName('Phone2').AsString;
-        Contact.Phone3 := FieldByName('Phone3').AsString;
-        Contact.Phone4 := FieldByName('Phone4').AsString;
-        Contact.Phone5 := FieldByName('Phone5').AsString;
-        Contact.PhoneType1 := FieldByName('PhoneType1').AsInteger;
-        Contact.PhoneType2 := FieldByName('PhoneType2').AsInteger;
-        Contact.PhoneType3 := FieldByName('PhoneType3').AsInteger;
-        Contact.PhoneType4 := FieldByName('PhoneType4').AsInteger;
-        Contact.PhoneType5 := FieldByName('PhoneType5').AsInteger;
-        Contact.Category := FieldByName('Category').AsInteger;
-        Contact.Custom1 := FieldByName('Custom1').AsString;
-        Contact.Custom2 := FieldByName('Custom2').AsString;
-        Contact.Custom3 := FieldByName('Custom3').AsString;
-        Contact.Custom4 := FieldByName('Custom4').AsString;
-        F := FindField('UserField0');
-        if F <> nil then Contact.UserField0 := F.AsString;
-        F := FindField('UserField1');
-        if F <> nil then Contact.UserField1 := F.AsString;
-        F := FindField('UserField2');
-        if F <> nil then Contact.UserField2 := F.AsString;
-        F := FindField('UserField3');
-        if F <> nil then Contact.UserField3 := F.AsString;
-        F := FindField('UserField4');
-        if F <> nil then Contact.UserField4 := F.AsString;
-        F := FindField('UserField5');
-        if F <> nil then Contact.UserField5 := F.AsString;
-        F := FindField('UserField6');
-        if F <> nil then Contact.UserField6 := F.AsString;
-        F := FindField('UserField7');
-        if F <> nil then Contact.UserField7 := F.AsString;
-        F := FindField('UserField8');
-        if F <> nil then Contact.UserField8 := F.AsString;
-        F := FindField('UserField9');
-        if F <> nil then Contact.UserField9 := F.AsString;
-        Contact.Loading := false;
+        contact := Resource.Contacts.AddContact(GetNextID(ContactsTableName));
+        contact.Loading := true;
+        LoadContact(contact);
+        contact.Loading := false;
         Next;
-      end; {while}
-    end; {with ContactsTable}
+      end;
+    end;
 end;
-{=====}
 
 procedure TVpCustomDBDataStore.LoadTasks;
 var
@@ -1215,6 +1408,200 @@ begin
 end;
 {=====}
 
+procedure TVpCustomDBDataStore.PostContacts;
+var
+  I: Integer;
+  Contact: TVpContact;
+  F: TField;
+begin
+  if (Resource <> nil) and Resource.ContactsDirty then begin
+    { Dump this resource's dirty contacts to the DB }
+    if ResourceTable.Locate('ResourceID', Resource.ResourceID, []) then begin
+      SetFilterCriteria(ContactsTable, False, Resource.ResourceID, 0, 0);
+
+      for I := pred(Resource.Contacts.Count) downto 0 do begin
+        Contact := Resource.Contacts.GetContact(I);
+        { if the delete flag is set then delete the record }
+        { and free the event instance }
+        if Contact.Deleted then begin
+          if ContactsTable.Locate('RecordID', Contact.RecordID, [])
+          then ContactsTable.Delete;
+          Contact.Free;
+          Continue;
+        end;
+
+        if Contact.Changed then begin
+          if ContactsTable.Locate('RecordID', Contact.RecordID, []) then
+            { this event already exists in the database so update it }
+            ContactsTable.Edit
+          else begin
+            { this record doesn't exist in the database, so it's a new event }
+            ContactsTable.Append;
+          end;
+          try
+            { DataStore descendants that can use an autoincrement RecordID }
+            { field set the RecordID to -1 by default.  If the RecordID is }
+            { -1 then this is a new record and we shouldn't overwrite      }
+            { RecordID with a bogus value }
+            if Contact.RecordID > -1 then
+              ContactsTable.FieldByName('RecordID').AsInteger := Contact.RecordID;
+
+            ContactsTable.FieldByName('ResourceID').AsInteger := Resource.ResourceID;
+            ContactsTable.FieldByName('FirstName').AsString := Contact.FirstName;
+            ContactsTable.FieldByName('LastName').AsString := Contact.LastName;
+            ContactsTable.FieldByName('Birthdate').AsDateTime := Contact.Birthdate;
+            ContactsTable.FieldByName('Anniversary').AsDateTime := Contact.Anniversary;
+            ContactsTable.FieldByName('Title').AsString := Contact.Title;
+            ContactsTable.FieldByName('Company').AsString := Contact.Company;
+            ContactsTable.FieldByName('Job_Position').AsString := Contact.Job_Position;
+            ContactsTable.FieldByName('Category').AsInteger := Contact.Category;
+
+            F := ContactsTable.FindField('Notes');
+            if F = nil then F := ContactsTable.FindField('Note');
+            if F <> nil then F.AsString := Contact.Notes;
+
+            // File name of picture -- new in 1.05
+            F := ContactsTable.FindField('PathToPhoto');
+            if F <> nil then F.AsString := Contact.PathToPhoto;
+
+            // two address types -- new in 1.05
+            F := ContactsTable.FindField('AddressType1');
+            if F <> nil then F.AsInteger := Contact.AddressType1;
+            F := ContactsTable.FindField('AddressType2');
+            if F <> nil then F.AsInteger := Contact.AddressType2;
+            F := ContactsTable.FindField('Address1');
+            if F = nil then F := ContactsTable.FindField('Address');
+            if F <> nil then F.AsString := Contact.Address1;
+            F := ContactsTable.FindField('Address2');
+            if F <> nil then F.AsString := Contact.Address2;
+            F := ContactsTable.FindField('City1');
+            if F = nil then F := ContactsTable.FindField('City');
+            if F <> nil then F.AsString := Contact.City1;
+            F := ContactsTable.FindField('City2');
+            if F <> nil then F.AsString := Contact.City2;
+            F := ContactsTable.FindField('State1');
+            if F = nil then F := ContactsTable.FindField('State');
+            if F <> nil then F.AsString := Contact.State1;
+            F := ContactsTable.FindField('State2');
+            if F <> nil then F.AsString := Contact.State2;
+            F := ContactsTable.FindField('Zip1');
+            if F = nil then F := ContactsTable.FindField('Zip');
+            if F <> nil then F.AsString := Contact.Zip1;
+            F := ContactsTable.FindField('Zip2');
+            if F <> nil then F.AsString := Contact.Zip2;
+            F := ContactsTable.FindField('Country1');
+            if F = nil then F := ContactsTable.FindField('Country');
+            if F <> nil then F.AsString := Contact.Country1;
+            F := ContactsTable.FindField('Country2');
+            if F <> nil then F.AsString := Contact.Country2;
+            {
+            ContactsTable.FieldByName('Address').AsString := Contact.Address;
+            ContactsTable.FieldByName('City').AsString := Contact.City;
+            ContactsTable.FieldByName('State').AsString := Contact.State;
+            ContactsTable.FieldByName('Zip').AsString := Contact.Zip;
+            ContactsTable.FieldByName('Country').AsString := Contact.Country;
+            }
+
+            // Telephones
+            ContactsTable.FieldByName('Phone1').AsString := Contact.Phone1;
+            ContactsTable.FieldByName('Phone2').AsString := Contact.Phone2;
+            ContactsTable.FieldByName('Phone3').AsString := Contact.Phone3;
+            ContactsTable.FieldByName('Phone4').AsString := Contact.Phone4;
+            ContactsTable.FieldByName('Phone5').AsString := Contact.Phone5;
+            ContactsTable.FieldByName('PhoneType1').AsInteger := Contact.PhoneType1;
+            ContactsTable.FieldByName('PhoneType2').AsInteger := Contact.PhoneType2;
+            ContactsTable.FieldByName('PhoneType3').AsInteger := Contact.PhoneType3;
+            ContactsTable.FieldByName('PhoneType4').AsInteger := Contact.PhoneType4;
+            ContactsTable.FieldByName('PhoneType5').AsInteger := Contact.PhoneType5;
+
+            // Three e-mail types -- new in 1.05
+            F := ContactsTable.FindField('EMail1');
+            if F = nil then F := ContactsTable.FindField('EMail');
+            if F <> nil then F.AsString := Contact.EMail1;
+            F := ContactsTable.FindField('EMail2');
+            if F <> nil then F.AsString := Contact.EMail2;
+            F := ContactsTable.FindField('EMail3');
+            if F <> nil then F.AsString := Contact.EMail3;
+            F := ContactsTable.FindField('EMailType1');
+            if F <> nil then F.AsInteger := Contact.EMailType1;
+            F := ContactsTable.FindField('EMailType2');
+            if F <> nil then F.AsInteger := Contact.EMailType2;
+            F := ContactsTable.FindField('EMailType3');
+            if F <> nil then F.AsInteger := Contact.EMailType3;
+            //ContactsTable.FieldByName('EMail').AsString := Contact.EMail;
+
+            // two websites -- new in 1.05
+            F := ContactsTable.FindField('Website1');
+            if F <> nil then F.AsString := Contact.Website1;
+            F := ContactsTable.FindField('Website2');
+            if F <> nil then F.AsString := Contact.Website2;
+            F := ContactsTable.FindField('WebsiteType1');
+            if F <> nil then F.AsInteger := Contact.WebsiteType1;
+            F := ContactsTable.FindField('WebsiteType2');
+            if F <> nil then F.AsInteger := Contact.WebsiteType2;
+
+            // Custom fields
+            F := ContactsTable.FindField('Custom1');
+            if F <> nil then F.AsString := Contact.Custom1;
+            F := ContactsTable.FindField('Custom2');
+            if F <> nil then F.AsString := Contact.Custom2;
+            F := ContactsTable.FindField('Custom3');
+            if F <> nil then F.AsString := Contact.Custom3;
+            F := ContactsTable.FindField('Custom4');
+            if F <> nil then F.AsString := Contact.Custom4;
+
+            // User-defined fields
+            F := ContactsTable.FindField('UserField0');
+            if F <> nil then F.AsString := Contact.UserField0;
+            F := ContactsTable.FindField('UserField1');
+            if F <> nil then F.AsString := Contact.UserField1;
+            F := ContactsTable.FindField('UserField2');
+            if F <> nil then F.AsString := Contact.UserField2;
+            F := ContactsTable.FindField('UserField3');
+            if F <> nil then F.AsString := Contact.UserField3;
+            F := ContactsTable.FindField('UserField4');
+            if F <> nil then F.AsString := Contact.UserField4;
+            F := ContactsTable.FindField('UserField5');
+            if F <> nil then F.AsString := Contact.UserField5;
+            F := ContactsTable.FindField('UserField6');
+            if F <> nil then F.AsString := Contact.UserField6;
+            F := ContactsTable.FindField('UserField7');
+            if F <> nil then F.AsString := Contact.UserField7;
+            F := ContactsTable.FindField('UserField8');
+            if F <> nil then F.AsString := Contact.UserField8;
+            F := ContactsTable.FindField('UserField9');
+            if F <> nil then F.AsString := Contact.UserField9;
+
+            ContactsTable.Post;
+
+          except
+            ContactsTable.Cancel;
+            raise EDBPostError.Create;
+          end;
+
+          { DataStore descendants that can use an autoincrement RecordID }
+          { field set the RecordID to -1 by default.  If the RecordID is }
+          { -1 then this is a new record and we need to assign the real  }
+          { record ID value from the dataset. }
+          if Contact.RecordID = -1 then
+            Contact.RecordID := ContactsTable.FieldByName('RecordID').AsInteger;
+
+          Contact.Changed := false;
+        end;
+      end;
+    end;
+    Resource.ContactsDirty := false;
+
+    if not Loading then
+      NotifyDependents;
+
+    if Assigned(AfterPostContacts) then
+      FAfterPostContacts(self);
+  end;
+end;
+{=====}
+
+(*
 procedure TVpCustomDBDataStore.PostContacts;
 var
   I: Integer;
@@ -1331,6 +1718,7 @@ begin
   end;
 end;
 {=====}
+*)
 
 procedure TVpCustomDBDataStore.PostEvents;
 var
@@ -1669,10 +2057,23 @@ end;
 {=====}
 
 procedure TVpCustomDBDataStore.RefreshContacts;
+var
+  contact: TVpContact;
 begin
   if Resource <> nil then begin
     Resource.Contacts.ClearContacts;
-    LoadContacts;
+    with ContactsTable do begin
+      SetFilterCriteria(ContactsTable, False, Resource.ResourceID, 0, 0);
+      First;
+      while not EOF do begin
+        contact := Resource.Contacts.AddContact(FieldByName('RecordID').AsInteger);
+        contact.Loading := true;
+        LoadContact(contact);
+        contact.Loading := false;
+        Next;
+      end;
+    end;
+//    LoadContacts;
   end;
   inherited;
 end;
@@ -1775,33 +2176,33 @@ end;
     Format(' ... (DTOS(StartTime) >= %s) ...', [
       FormatDateTime('yyyymmdd') ...])
   }
-procedure TVpCustomDBDataStore.SetFilterCriteria(aTable: TDataset;
-  aUseDateTime: Boolean; aResourceID: Integer; aStartDateTime, aEndDateTime: TDateTime);
+procedure TVpCustomDBDataStore.SetFilterCriteria(ATable: TDataset;
+  AUseDateTime: Boolean; AResourceID: Integer; AStartDateTime, AEndDateTime: TDateTime);
 var
   filter: String;
 begin
-  if aUseDateTime then
+  if AUseDateTime then
    {$IFDEF DELPHI}
     filter := Format('ResourceID = %d '
       + 'and ( ( (StartTime >= %s) and (EndTime <= %s) ) '
       + '     or ( (RepeatCode > 0) and (%s <= RepeatRangeEnd) ) )',
-      [aResourceID,
-       QuotedStr(FormatDateTime('c', aStartDateTime)),
-       QuotedStr(FormatDateTime('c', aEndDateTime)),
-       QuotedStr(FormatDateTime('c', aStartDateTime))])
+      [AResourceID,
+       QuotedStr(FormatDateTime('c', AStartDateTime)),
+       QuotedStr(FormatDateTime('c', AEndDateTime)),
+       QuotedStr(FormatDateTime('c', AStartDateTime))])
    {$ELSE}
     filter := Format('ResourceID = %d '
       + 'and ( ( (DTOS(StartTime) >= %s) and (DTOS(EndTime) <= %s) ) '
       + '     or ( (RepeatCode > 0) and (%s <= DTOS(RepeatRangeEnd)) ) )',
-      [aResourceID,
-       QuotedStr(FormatDateTime('yyyymmdd', aStartDateTime)),
-       QuotedStr(FormatDateTime('yyyymmdd', aEndDateTime)),
-       QuotedStr(FormatDateTime('yyyymmdd', aStartDateTime))])
+      [AResourceID,
+       QuotedStr(FormatDateTime('yyyymmdd', AStartDateTime)),
+       QuotedStr(FormatDateTime('yyyymmdd', AEndDateTime)),
+       QuotedStr(FormatDateTime('yyyymmdd', AStartDateTime))])
    {$ENDIF}
   else
-    filter := Format('ResourceID = %d', [aResourceID]);
-  aTable.Filter := filter;
-  aTable.Filtered := true;
+    filter := Format('ResourceID = %d', [AResourceID]);
+  ATable.Filter := filter;
+  ATable.Filtered := true;
 end;
 {=====}
 

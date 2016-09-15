@@ -502,7 +502,12 @@ type
     FAnniversary: TDateTime;
     FTitle: string;
     FCompany: string;
-    FEmail: string;
+    FEMail1: string;
+    FEMail2: String;
+    FEMail3: String;
+    FEMailType1: integer;
+    FEMailType2: integer;
+    FEMailType3: integer;
     FPhone1: string;
     FPhone2: string;
     FPhone3: string;
@@ -513,13 +518,25 @@ type
     FPhoneType3: integer;
     FPhoneType4: integer;
     FPhoneType5: integer;
-    FAddress: string;
-    FCity: string;
-    FState: string;
-    FZip: string;
-    FCountry: string;
+    FWebsite1: String;
+    FWebsite2: String;
+    FWebsiteType1: Integer;
+    FWebsiteType2: Integer;
+    FAddressType1: Integer;
+    FAddressType2: Integer;
+    FAddress1: string;
+    FAddress2: String;
+    FCity1: string;
+    FCity2: String;
+    FState1: string;
+    FState2: String;
+    FZip1: string;
+    FZip2: String;
+    FCountry1: string;
+    FCountry2: String;
     FNotes: string;
     FPrivateRec: boolean;
+    FPathToPhoto: String;
     FCategory: integer;
     FCustom1: string;
     FCustom2: string;
@@ -536,23 +553,34 @@ type
     FUserField7: string;
     FUserField8: string;
     FUserField9: string;
-    procedure SetAddress(const Value: string);
+    procedure SetAddress1(const Value: string);
+    procedure SetAddress2(const Value: String);
+    procedure SetAddressType1(Value: Integer);
+    procedure SetAddressType2(Value: Integer);
     procedure SetBirthDate(Value: TDateTime);
     procedure SetAnniversary(Value: TDateTime);
     procedure SetCategory(Value: integer);
     procedure SetChanged(Value: Boolean);
-    procedure SetCity(const Value: string);
+    procedure SetCity1(const Value: string);
+    procedure SetCity2(const Value: String);
     procedure SetCompany(const Value: string);
-    procedure SetCountry(const Value: string);
+    procedure SetCountry1(const Value: string);
+    procedure SetCountry2(const Value: string);
     procedure SetCustom1(const Value: string);
     procedure SetCustom2(const Value: string);
     procedure SetCustom3(const Value: string);
     procedure SetCustom4(const Value: string);
     procedure SetDeleted(Value: Boolean);
-    procedure SetEMail(const Value: string);
+    procedure SetEMail1(const Value: string);
+    procedure SetEMail2(const Value: string);
+    procedure SetEMail3(const Value: string);
+    procedure SetEMailType1(const Value: Integer);
+    procedure SetEMailType2(const Value: Integer);
+    procedure SetEMailType3(const Value: Integer);
     procedure SetFirstName(const Value: string);
     procedure SetLastName(const Value: string);
     procedure SetNotes(const Value: string);
+    procedure SetPathToPhoto(const Value: String);
     procedure SetPhone1(const Value: string);
     procedure SetPhone2(const Value: string);
     procedure SetPhone3(const Value: string);
@@ -565,9 +593,15 @@ type
     procedure SetPhoneType5(Value: integer);
     procedure SetPosition(const Value: string);
     procedure SetRecordID(Value: Integer);
-    procedure SetState(const Value: string);
+    procedure SetState1(const Value: string);
+    procedure SetState2(const Value: string);
     procedure SetTitle(const Value: string);
-    procedure SetZip(const Value: string);
+    procedure SetWebsite1(Value: String);
+    procedure SetWebsite2(Value: String);
+    procedure SetWebsiteType1(Value: integer);
+    procedure SetWebsiteType2(Value: integer);
+    procedure SetZip1(const Value: string);
+    procedure SetZip2(const Value: string);
   public
     constructor Create(Owner: TVpContacts);
     destructor Destroy; override;
@@ -590,7 +624,13 @@ type
     property Anniversary: TDateTime read FAnniversary write SetAnniversary;
     property Title: string read FTitle write SetTitle;
     property Company: string read FCompany write SetCompany;
-    property EMail: string read FEmail write SetEMail;
+    property EMail: string read FEmail1 write SetEMail1; deprecated 'Use "EMail1" instead';
+    property EMail1: String read FEmail1 write SetEMail1;
+    property EMail2: String read FEmail2 write SetEmail2;
+    property EMail3: String read FEmail3 write SetEmail3;
+    property EMailType1: integer read FEMailType1 write SetEMailType1;
+    property EMailType2: integer read FEMailType2 write SetEMailType2;
+    property EMailType3: integer read FEMailType3 write SetEMailType3;
     property Phone1: string read FPhone1 write SetPhone1;
     property Phone2: string read FPhone2 write SetPhone2;
     property Phone3: string read FPhone3 write SetPhone3;
@@ -601,13 +641,30 @@ type
     property PhoneType3: integer read FPhoneType3 write SetPhoneType3;
     property PhoneType4: integer read FPhoneType4 write SetPhoneType4;
     property PhoneType5: integer read FPhoneType5 write SetPhoneType5;
-    property Address: string read FAddress write SetAddress;
-    property City: string read FCity write SetCity;
-    property State: string read FState write SetState;
-    property Zip: string read FZip write SetZip;
-    property Country: string read FCountry write SetCountry;
+    property Website1: string read FWebsite1 write SetWebsite1;
+    property Website2: string read FWebsite2 write SetWebsite2;
+    property WebsiteType1: integer read FWebsiteType1 write SetWebsiteType1;
+    property WebsiteType2: integer read FWebsiteType2 write SetWebsiteType2;
+    property Address: string read FAddress1 write SetAddress1; deprecated 'Use "Address1" instead';
+    property Address1: string read FAddress1 write SetAddress1;
+    property Address2: string read FAddress2 write SetAddress2;
+    property City: string read FCity1 write SetCity1; deprecated 'Use "City1" instead';
+    property City1: string read FCity1 write SetCity1;
+    property City2: string read FCity2 write SetCity2;
+    property State: string read FState1 write SetState1; deprecated 'Use "State1" instead';
+    property State1: string read FState1 write SetState1;
+    property State2: string read FState2 write SetState2;
+    property Zip: string read FZip1 write SetZip1; deprecated 'Use "Zip1" instead';
+    property Zip1: string read FZip1 write SetZip1;
+    property Zip2: string read FZip2 write SetZip2;
+    property Country: string read FCountry1 write SetCountry1; deprecated 'Use "Country1" instead';
+    property Country1: string read FCountry1 write SetCountry1;
+    property Country2: string read FCountry2 write SetCountry2;
+    property AddressType1: integer read FAddressType1 write SetAddressType1;
+    property AddressType2: integer read FAddressType2 write SetAddressType2;
     property Note: string read FNotes write SetNotes; deprecated 'Use "Notes" instead';
     property Notes: string read FNotes write SetNotes;
+    property PathToPhoto: String read FPathToPhoto write SetPathToPhoto;
     property Category: integer read FCategory write SetCategory;
     property Custom1: string read FCustom1 write SetCustom1;
     property Custom2: string read FCustom2 write SetCustom2;
@@ -1800,10 +1857,34 @@ begin
   end;
 end;
 
-procedure TVpContact.SetAddress(const Value: string);
+procedure TVpContact.SetAddress1(const Value: string);
 begin
-  if Value <> FAddress then begin
-    FAddress := Value;
+  if Value <> FAddress1 then begin
+    FAddress1 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetAddress2(const Value: string);
+begin
+  if Value <> FAddress2 then begin
+    FAddress2 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetAddressType1(Value: integer);
+begin
+  if Value <> FAddressType1 then begin
+    FAddressType1 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetAddressType2(Value: integer);
+begin
+  if Value <> FAddressType2 then begin
+    FAddressType2 := Value;
     Changed := true;
   end;
 end;
@@ -1827,10 +1908,18 @@ begin
   end;
 end;
 
-procedure TVpContact.SetCity(const Value: string);
+procedure TVpContact.SetCity1(const Value: string);
 begin
-  if Value <> FCity then begin
-    FCity := Value;
+  if Value <> FCity1 then begin
+    FCity1 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetCity2(const Value: string);
+begin
+  if Value <> FCity2 then begin
+    FCity2 := Value;
     Changed := true;
   end;
 end;
@@ -1843,10 +1932,18 @@ begin
   end;
 end;
 
-procedure TVpContact.SetCountry(const Value: string);
+procedure TVpContact.SetCountry1(const Value: string);
 begin
-  if Value <> FCountry then begin
-    FCountry := Value;
+  if Value <> FCountry1 then begin
+    FCountry1 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetCountry2(const Value: string);
+begin
+  if Value <> FCountry2 then begin
+    FCountry2 := Value;
     Changed := true;
   end;
 end;
@@ -1891,10 +1988,50 @@ begin
   end;
 end;
 
-procedure TVpContact.SetEMail(const Value: string);
+procedure TVpContact.SetEMail1(const Value: string);
 begin
-  if Value <> FEmail then begin
-    FEMail := Value;
+  if Value <> FEMail1 then begin
+    FEMail1 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetEMail2(const Value: string);
+begin
+  if Value <> FEMail2 then begin
+    FEMail2 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetEMail3(const Value: string);
+begin
+  if Value <> FEMail3 then begin
+    FEMail3 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetEMailType1(const Value: Integer);
+begin
+  if Value <> FEMailType1 then begin
+    FEMailType1 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetEMailType2(const Value: Integer);
+begin
+  if Value <> FEMailType2 then begin
+    FEMailType2 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetEMailType3(const Value: Integer);
+begin
+  if Value <> FEMailType3 then begin
+    FEMailType3 := Value;
     Changed := true;
   end;
 end;
@@ -1919,6 +2056,14 @@ procedure TVpContact.SetNotes(const Value: string);
 begin
   if Value <> FNotes then begin
     FNotes := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetPathToPhoto(const Value: string);
+begin
+  if Value <> FPathToPhoto then begin
+    FPathToPhoto := Value;
     Changed := true;
   end;
 end;
@@ -2019,10 +2164,18 @@ begin
   end;
 end;
 
-procedure TVpContact.SetState(const Value: string);
+procedure TVpContact.SetState1(const Value: string);
 begin
-  if Value <> FState then begin
-    FState := Value;
+  if Value <> FState1 then begin
+    FState1 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetState2(const Value: string);
+begin
+  if Value <> FState2 then begin
+    FState2 := Value;
     Changed := true;
   end;
 end;
@@ -2035,10 +2188,50 @@ begin
   end;
 end;
 
-procedure TVpContact.SetZip(const Value: string);
+procedure TVpContact.SetWebsite1(Value: String);
 begin
-  if Value <> FZip then begin
-    FZip := Value;
+  if Value <> FWebsite1 then begin
+    FWebsite1 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetWebsite2(Value: String);
+begin
+  if Value <> FWebsite1 then begin
+    FWebsite2 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetWebsiteType1(Value: Integer);
+begin
+  if Value <> FWebsiteType1 then begin
+    FWebsiteType1 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetWebsiteType2(Value: Integer);
+begin
+  if Value <> FWebsiteType2 then begin
+    FWebsiteType1 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetZip1(const Value: string);
+begin
+  if Value <> FZip1 then begin
+    FZip1 := Value;
+    Changed := true;
+  end;
+end;
+
+procedure TVpContact.SetZip2(const Value: string);
+begin
+  if Value <> FZip2 then begin
+    FZip2 := Value;
     Changed := true;
   end;
 end;

@@ -119,6 +119,12 @@ msgstr "Webbrowser kan niet gestart worden. Controleer uw systeeminstellingen."
 msgid "Brush"
 msgstr ""
 
+#: vpsr.rsbusinesswebsitelabel
+#, fuzzy
+msgctxt "vpsr.rsbusinesswebsitelabel"
+msgid "Business"
+msgstr "Zakelijk"
+
 #: vpsr.rscalendarelement
 msgid "Calendar"
 msgstr ""
@@ -165,6 +171,7 @@ msgid "Category %d"
 msgstr "Categorie %d"
 
 #: vpsr.rscategorylabel1
+msgctxt "vpsr.rscategorylabel1"
 msgid "Business"
 msgstr "Zakelijk"
 
@@ -177,6 +184,7 @@ msgid "Family"
 msgstr "Familie"
 
 #: vpsr.rscategorylabel4
+msgctxt "vpsr.rscategorylabel4"
 msgid "Personal"
 msgstr "Persoonlijk"
 
@@ -463,6 +471,18 @@ msgstr "van uw tijdschema?"
 msgid "Height"
 msgstr ""
 
+#: vpsr.rshomeaddresslabel
+#, fuzzy
+msgctxt "vpsr.rshomeaddresslabel"
+msgid "Home"
+msgstr "Thuis"
+
+#: vpsr.rshomeemaillabel
+#, fuzzy
+msgctxt "vpsr.rshomeemaillabel"
+msgid "Home"
+msgstr "Thuis"
+
 #: vpsr.rshours
 msgid "Hours"
 msgstr "Uren"
@@ -716,6 +736,12 @@ msgstr "OK"
 msgid "&Open Item"
 msgstr "&Open Item"
 
+#: vpsr.rsotheremaillabel
+#, fuzzy
+msgctxt "vpsr.rsotheremaillabel"
+msgid "Other"
+msgstr "Andere"
+
 #: vpsr.rsoutofrange
 msgid "Out of range"
 msgstr "Buiten geldig bereik"
@@ -748,6 +774,12 @@ msgstr ""
 msgid "This operation cannot be undone!"
 msgstr "Deze operatie kan niet ongedaan gemaakt worden!"
 
+#: vpsr.rspersonalwebsitelabel
+#, fuzzy
+msgctxt "vpsr.rspersonalwebsitelabel"
+msgid "Personal"
+msgstr "Persoonlijk"
+
 #: vpsr.rsphonetypelabel1
 msgid "Assistant"
 msgstr "Assistent"
@@ -777,6 +809,7 @@ msgid "TTY/TDD"
 msgstr "TTY/TDD"
 
 #: vpsr.rsphonetypelabel16
+msgctxt "vpsr.rsphonetypelabel16"
 msgid "Work"
 msgstr "Werk"
 
@@ -798,6 +831,7 @@ msgid "Company"
 msgstr "Firma"
 
 #: vpsr.rsphonetypelabel5
+msgctxt "vpsr.rsphonetypelabel5"
 msgid "Home"
 msgstr "Thuis"
 
@@ -1173,6 +1207,18 @@ msgstr ""
 #: vpsr.rswidthlbl
 msgid "Width:"
 msgstr ""
+
+#: vpsr.rsworkaddresslabel
+#, fuzzy
+msgctxt "vpsr.rsworkaddresslabel"
+msgid "Work"
+msgstr "Werk"
+
+#: vpsr.rsworkemaillabel
+#, fuzzy
+msgctxt "vpsr.rsworkemaillabel"
+msgid "Work"
+msgstr "Werk"
 
 #: vpsr.rsxdays
 msgid "%d days"

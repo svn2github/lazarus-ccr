@@ -2,10 +2,10 @@ object Form1: TForm1
   Left = 344
   Height = 686
   Top = 169
-  Width = 980
+  Width = 910
   Caption = 'Form1'
   ClientHeight = 686
-  ClientWidth = 980
+  ClientWidth = 910
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   LCLVersion = '1.7'
@@ -13,11 +13,11 @@ object Form1: TForm1
     Left = 0
     Height = 34
     Top = 0
-    Width = 980
+    Width = 910
     Align = alTop
     BevelOuter = bvNone
     ClientHeight = 34
-    ClientWidth = 980
+    ClientWidth = 910
     TabOrder = 0
     object VpResourceCombo1: TVpResourceCombo
       Left = 8
@@ -50,7 +50,7 @@ object Form1: TForm1
     Left = 0
     Height = 652
     Top = 34
-    Width = 980
+    Width = 910
     ActivePage = TabSheet1
     Align = alClient
     TabIndex = 0
@@ -58,12 +58,12 @@ object Form1: TForm1
     object TabSheet1: TTabSheet
       Caption = 'Events and tasks'
       ClientHeight = 624
-      ClientWidth = 972
+      ClientWidth = 902
       object VpDayView1: TVpDayView
         Left = 0
         Height = 624
         Top = 0
-        Width = 301
+        Width = 283
         DataStore = VpFlexDataStore1
         ControlLink = VpControlLink1
         Color = clWindow
@@ -97,21 +97,21 @@ object Form1: TForm1
         TimeFormat = tf12Hour
       end
       object Panel2: TPanel
-        Left = 306
+        Left = 288
         Height = 624
         Top = 0
-        Width = 386
+        Width = 363
         Align = alLeft
         BevelOuter = bvNone
         Caption = 'Panel2'
         ClientHeight = 624
-        ClientWidth = 386
+        ClientWidth = 363
         TabOrder = 1
         object VpWeekView1: TVpWeekView
           Left = 0
           Height = 378
           Top = 0
-          Width = 386
+          Width = 363
           DataStore = VpFlexDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
@@ -138,7 +138,7 @@ object Form1: TForm1
           Left = 0
           Height = 241
           Top = 383
-          Width = 386
+          Width = 363
           DataStore = VpFlexDataStore1
           ControlLink = VpControlLink1
           Color = clWindow
@@ -170,16 +170,16 @@ object Form1: TForm1
           Left = 0
           Height = 5
           Top = 378
-          Width = 386
+          Width = 363
           Align = alBottom
           ResizeAnchor = akBottom
         end
       end
       object VpTaskList1: TVpTaskList
-        Left = 697
+        Left = 656
         Height = 624
         Top = 0
-        Width = 275
+        Width = 246
         DataStore = VpFlexDataStore1
         ControlLink = VpControlLink1
         Color = clWindow
@@ -204,13 +204,13 @@ object Form1: TForm1
         ShowResourceName = True
       end
       object Splitter1: TSplitter
-        Left = 692
+        Left = 651
         Height = 624
         Top = 0
         Width = 5
       end
       object Splitter3: TSplitter
-        Left = 301
+        Left = 283
         Height = 624
         Top = 0
         Width = 5
@@ -297,6 +297,8 @@ object Form1: TForm1
     CategoryColorMap.Category8.Description = 'Category 8'
     CategoryColorMap.Category9.Color = clMaroon
     CategoryColorMap.Category9.Description = 'Category 9'
+    HiddenCategories.BackgroundColor = clSilver
+    HiddenCategories.Color = clGray
     EnableEventTimer = True
     PlayEventSounds = True
     AutoConnect = False
@@ -396,16 +398,32 @@ object Form1: TForm1
       'Company'
       'Job_Position'
       'Job_Position'
-      'Address'
-      'Address'
-      'City'
-      'City'
-      'State'
-      'State'
-      'Zip'
-      'Zip'
-      'Country'
-      'Country'
+      'AddressType1'
+      'AddressType1'
+      'AddressType2'
+      'AddressType2'
+      'Address1'
+      'Address1'
+      'Address2'
+      'Address2'
+      'City1'
+      'City1'
+      'City2'
+      'City2'
+      'State1'
+      'State1'
+      'State2'
+      'State2'
+      'Zip1'
+      'Zip1'
+      'Zip2'
+      'Zip2'
+      'Country1'
+      'Country1'
+      'Country2'
+      'Country2'
+      'PathToPhoto'
+      'PathToPhoto'
       'Notes'
       'Notes'
       'Phone1'
@@ -430,8 +448,26 @@ object Form1: TForm1
       'PhoneType5'
       'Category'
       'Category'
-      'EMail'
-      'EMail'
+      'EMail1'
+      'EMail1'
+      'EMail2'
+      'EMail2'
+      'EMail3'
+      'EMail3'
+      'EMailType1'
+      'EMailType1'
+      'EMailType2'
+      'EMailType2'
+      'EMailType3'
+      'EMailType3'
+      'Website1'
+      'Website1'
+      'Website2'
+      'Website2'
+      'WebsiteType1'
+      'WebsiteType1'
+      'WebsiteType2'
+      'WebsiteType2'
       'Custom1'
       'Custom1'
       'Custom2'
@@ -489,7 +525,6 @@ object Form1: TForm1
     FieldDefs = <    
       item
         Name = 'ResourceID'
-        Attributes = [faReadonly]
         DataType = ftAutoInc
         Precision = -1
       end    
@@ -503,7 +538,7 @@ object Form1: TForm1
         Name = 'Notes'
         DataType = ftString
         Precision = -1
-        Size = 255
+        Size = 1024
       end    
       item
         Name = 'ImageIndex'
@@ -514,66 +549,6 @@ object Form1: TForm1
         Name = 'ResourceActive'
         DataType = ftBoolean
         Precision = -1
-      end    
-      item
-        Name = 'UserField0'
-        DataType = ftString
-        Precision = -1
-        Size = 100
-      end    
-      item
-        Name = 'UserField1'
-        DataType = ftString
-        Precision = -1
-        Size = 100
-      end    
-      item
-        Name = 'UserField2'
-        DataType = ftString
-        Precision = -1
-        Size = 100
-      end    
-      item
-        Name = 'UserField3'
-        DataType = ftString
-        Precision = -1
-        Size = 100
-      end    
-      item
-        Name = 'UserField4'
-        DataType = ftString
-        Precision = -1
-        Size = 100
-      end    
-      item
-        Name = 'UserField5'
-        DataType = ftString
-        Precision = -1
-        Size = 100
-      end    
-      item
-        Name = 'UserField6'
-        DataType = ftString
-        Precision = -1
-        Size = 100
-      end    
-      item
-        Name = 'UserField7'
-        DataType = ftString
-        Precision = -1
-        Size = 100
-      end    
-      item
-        Name = 'UserField8'
-        DataType = ftString
-        Precision = -1
-        Size = 100
-      end    
-      item
-        Name = 'UserField9'
-        DataType = ftString
-        Precision = -1
-        Size = 100
       end>
     Database = SQLite3Connection1
     Transaction = SQLTransaction1
@@ -596,7 +571,6 @@ object Form1: TForm1
     FieldDefs = <    
       item
         Name = 'RecordID'
-        Attributes = [faReadonly]
         DataType = ftAutoInc
         Precision = -1
       end    
@@ -679,7 +653,7 @@ object Form1: TForm1
         Name = 'Notes'
         DataType = ftString
         Precision = -1
-        Size = 255
+        Size = 1024
       end    
       item
         Name = 'Phone1'
@@ -792,7 +766,6 @@ object Form1: TForm1
     FieldDefs = <    
       item
         Name = 'RecordID'
-        Attributes = [faReadonly]
         DataType = ftAutoInc
         Precision = -1
       end    
@@ -827,7 +800,7 @@ object Form1: TForm1
         Name = 'Notes'
         DataType = ftString
         Precision = -1
-        Size = 255
+        Size = 1024
       end    
       item
         Name = 'Category'
@@ -901,7 +874,6 @@ object Form1: TForm1
     FieldDefs = <    
       item
         Name = 'RecordID'
-        Attributes = [faReadonly]
         DataType = ftAutoInc
         Precision = -1
       end    
@@ -925,7 +897,7 @@ object Form1: TForm1
         Name = 'Details'
         DataType = ftString
         Precision = -1
-        Size = 255
+        Size = 1024
       end    
       item
         Name = 'CreatedOn'
@@ -978,7 +950,6 @@ object Form1: TForm1
   object SQLite3Connection1: TSQLite3Connection
     Connected = False
     LoginPrompt = False
-    DatabaseName = 'data.db'
     KeepConnection = False
     Transaction = SQLTransaction1
     Options = []

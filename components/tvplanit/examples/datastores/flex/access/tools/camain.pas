@@ -176,12 +176,25 @@ begin
       'Title VARCHAR(50) ,'+
       'Company VARCHAR(50) ,'+
       'Job_Position VARCHAR(30), '+
-      'Address VARCHAR(100), '+
-      'City VARCHAR(50), '+
-      'State VARCHAR(25), '+
-      'Zip VARCHAR(10), '+
-      'Country VARCHAR(25), '+
+      'AddressType1 INTEGER, '+
+      'Address1 VARCHAR(100), '+
+      'City1 VARCHAR(50), '+
+      'State1 VARCHAR(25), '+
+      'Zip1 VARCHAR(10), '+
+      'Country1 VARCHAR(25), '+
+      'AddressType2 INTEGER, '+
+      'Address2 VARCHAR(100), '+
+      'City2 VARCHAR(50), '+
+      'State2 VARCHAR(25), '+
+      'Zip2 VARCHAR(10), '+
+      'Country2 VARCHAR(25), '+
       'Notes VARCHAR, '+
+      'EMail1 VARCHAR(100), '+
+      'EMail2 VARCHAR(100), '+
+      'EMail3 VARCHAR(100), '+
+      'EMailType1 INTEGER, '+
+      'EMailType2 INTEGER, '+
+      'EMailType3 INTEGER, '+
       'Phone1 VARCHAR(25), '+
       'Phone2 VARCHAR(25), '+
       'Phone3 VARCHAR(25), '+
@@ -192,8 +205,12 @@ begin
       'PhoneType3 INTEGER, '+
       'PhoneType4 INTEGER, '+
       'PhoneType5 INTEGER, '+
+      'Website1 VARCHAR(100), '+
+      'Website2 VARCHAR(100), '+
+      'WebsiteType1 INTEGER, '+
+      'WebsiteType2 INTEGER, '+
       'Category INTEGER, '+
-      'EMail VARCHAR(100), '+
+      'PathToPhoto VARCHAR(255), '+
       'Custom1 VARCHAR(100), '+
       'Custom2 VARCHAR(100),'+
       'Custom3 VARCHAR(100), '+

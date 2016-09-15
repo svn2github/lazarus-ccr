@@ -125,6 +125,12 @@ msgstr "Échec de démarrage de votre browser internet. Veuillez verifier que vo
 msgid "Brush"
 msgstr ""
 
+#: vpsr.rsbusinesswebsitelabel
+#, fuzzy
+msgctxt "vpsr.rsbusinesswebsitelabel"
+msgid "Business"
+msgstr "Professionnel"
+
 #: vpsr.rscalendarelement
 msgid "Calendar"
 msgstr ""
@@ -171,6 +177,7 @@ msgid "Category %d"
 msgstr "Catégorie %d"
 
 #: vpsr.rscategorylabel1
+msgctxt "vpsr.rscategorylabel1"
 msgid "Business"
 msgstr "Professionnel"
 
@@ -183,6 +190,7 @@ msgid "Family"
 msgstr "Famille"
 
 #: vpsr.rscategorylabel4
+msgctxt "vpsr.rscategorylabel4"
 msgid "Personal"
 msgstr "Personnel"
 
@@ -469,6 +477,18 @@ msgstr "de votre agenda?"
 msgid "Height"
 msgstr ""
 
+#: vpsr.rshomeaddresslabel
+#, fuzzy
+msgctxt "vpsr.rshomeaddresslabel"
+msgid "Home"
+msgstr "Maison"
+
+#: vpsr.rshomeemaillabel
+#, fuzzy
+msgctxt "vpsr.rshomeemaillabel"
+msgid "Home"
+msgstr "Maison"
+
 #: vpsr.rshours
 msgid "Hours"
 msgstr "Heures"
@@ -722,6 +742,12 @@ msgstr "OK"
 msgid "&Open Item"
 msgstr "&Item ouvert"
 
+#: vpsr.rsotheremaillabel
+#, fuzzy
+msgctxt "vpsr.rsotheremaillabel"
+msgid "Other"
+msgstr "Autre"
+
 #: vpsr.rsoutofrange
 msgid "Out of range"
 msgstr "Hors de portée"
@@ -754,6 +780,12 @@ msgstr ""
 msgid "This operation cannot be undone!"
 msgstr "Ce processus est irreversible!"
 
+#: vpsr.rspersonalwebsitelabel
+#, fuzzy
+msgctxt "vpsr.rspersonalwebsitelabel"
+msgid "Personal"
+msgstr "Personnel"
+
 #: vpsr.rsphonetypelabel1
 msgid "Assistant"
 msgstr "Assistante"
@@ -783,6 +815,7 @@ msgid "TTY/TDD"
 msgstr "ATS/ATM"
 
 #: vpsr.rsphonetypelabel16
+msgctxt "vpsr.rsphonetypelabel16"
 msgid "Work"
 msgstr "Travail"
 
@@ -804,6 +837,7 @@ msgid "Company"
 msgstr "Société"
 
 #: vpsr.rsphonetypelabel5
+msgctxt "vpsr.rsphonetypelabel5"
 msgid "Home"
 msgstr "Maison"
 
@@ -1179,6 +1213,18 @@ msgstr ""
 #: vpsr.rswidthlbl
 msgid "Width:"
 msgstr ""
+
+#: vpsr.rsworkaddresslabel
+#, fuzzy
+msgctxt "vpsr.rsworkaddresslabel"
+msgid "Work"
+msgstr "Travail"
+
+#: vpsr.rsworkemaillabel
+#, fuzzy
+msgctxt "vpsr.rsworkemaillabel"
+msgid "Work"
+msgstr "Travail"
 
 #: vpsr.rsxdays
 msgid "%d days"

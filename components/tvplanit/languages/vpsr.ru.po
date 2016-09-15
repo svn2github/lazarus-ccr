@@ -119,6 +119,12 @@ msgstr "Ошибка запуска браузер. Убедитесь в пра
 msgid "Brush"
 msgstr ""
 
+#: vpsr.rsbusinesswebsitelabel
+#, fuzzy
+msgctxt "vpsr.rsbusinesswebsitelabel"
+msgid "Business"
+msgstr "Дела"
+
 #: vpsr.rscalendarelement
 msgid "Calendar"
 msgstr "Календарь"
@@ -165,6 +171,7 @@ msgid "Category %d"
 msgstr "Категория %d"
 
 #: vpsr.rscategorylabel1
+msgctxt "vpsr.rscategorylabel1"
 msgid "Business"
 msgstr "Дела"
 
@@ -177,6 +184,7 @@ msgid "Family"
 msgstr "Семья"
 
 #: vpsr.rscategorylabel4
+msgctxt "vpsr.rscategorylabel4"
 msgid "Personal"
 msgstr "Персонал"
 
@@ -463,6 +471,18 @@ msgstr "из вашего расписания?"
 msgid "Height"
 msgstr "Высота"
 
+#: vpsr.rshomeaddresslabel
+#, fuzzy
+msgctxt "vpsr.rshomeaddresslabel"
+msgid "Home"
+msgstr "Домашний"
+
+#: vpsr.rshomeemaillabel
+#, fuzzy
+msgctxt "vpsr.rshomeemaillabel"
+msgid "Home"
+msgstr "Домашний"
+
 #: vpsr.rshours
 msgid "Hours"
 msgstr "Часы"
@@ -716,6 +736,12 @@ msgstr ""
 msgid "&Open Item"
 msgstr "Открыть эелемент"
 
+#: vpsr.rsotheremaillabel
+#, fuzzy
+msgctxt "vpsr.rsotheremaillabel"
+msgid "Other"
+msgstr "Другой"
+
 #: vpsr.rsoutofrange
 msgid "Out of range"
 msgstr "За пределами диапазона"
@@ -748,6 +774,12 @@ msgstr "Процент"
 msgid "This operation cannot be undone!"
 msgstr ""
 
+#: vpsr.rspersonalwebsitelabel
+#, fuzzy
+msgctxt "vpsr.rspersonalwebsitelabel"
+msgid "Personal"
+msgstr "Персонал"
+
 #: vpsr.rsphonetypelabel1
 msgid "Assistant"
 msgstr "Ассистент"
@@ -777,6 +809,7 @@ msgid "TTY/TDD"
 msgstr ""
 
 #: vpsr.rsphonetypelabel16
+msgctxt "vpsr.rsphonetypelabel16"
 msgid "Work"
 msgstr "Рабочий"
 
@@ -798,6 +831,7 @@ msgid "Company"
 msgstr "Компания"
 
 #: vpsr.rsphonetypelabel5
+msgctxt "vpsr.rsphonetypelabel5"
 msgid "Home"
 msgstr "Домашний"
 
@@ -1173,6 +1207,18 @@ msgstr ""
 #: vpsr.rswidthlbl
 msgid "Width:"
 msgstr ""
+
+#: vpsr.rsworkaddresslabel
+#, fuzzy
+msgctxt "vpsr.rsworkaddresslabel"
+msgid "Work"
+msgstr "Рабочий"
+
+#: vpsr.rsworkemaillabel
+#, fuzzy
+msgctxt "vpsr.rsworkemaillabel"
+msgid "Work"
+msgstr "Рабочий"
 
 #: vpsr.rsxdays
 msgid "%d days"

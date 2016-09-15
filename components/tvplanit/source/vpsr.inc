@@ -82,6 +82,16 @@ resourcestring
   RSPhoneTypeLabel16        = 'Work';
   RSPhoneTypeLabel17        = 'Work fax';
 
+  RSHomeAddressLabel        = 'Home';
+  RSWorkAddressLabel        = 'Work';
+
+  RSHomeEmailLabel          = 'Home';
+  RSWorkEMailLabel          = 'Work';
+  RSOtherEMaillabel         = 'Other';
+
+  RSPersonalWebSiteLabel    = 'Personal';
+  RSBusinessWebSiteLabel    = 'Business';
+
   RSCategoryLabel1          = 'Business';
   RSCategoryLabel2          = 'Clients';
   RSCategoryLabel3          = 'Family';
