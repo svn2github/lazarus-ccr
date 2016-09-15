@@ -183,6 +183,42 @@ begin
     Result := 0;
 end;
 
+function GetAddressTypeAttrValue(ANode: TDOMNode; AAttrName: String;
+  ANr: Integer): TVpAddressType;
+var
+  s: String;
+  n: Integer;
+begin
+  s := GetAttrValue(ANode, AAttrName);
+  if s = '' then
+    Result := atWork
+  else begin
+    n := GetEnumValue(TypeInfo(TVpAddressType), s);
+    if (n >= ord(Low(TVpAddressType))) and (n <= ord(High(TVpAddressType))) then
+      Result := TVpAddressType(n)
+    else
+      XMLError(Format('Illegal AddressType%d value: "%s"', [ANr, s]));
+  end;
+end;
+
+function GetEMailTypeAttrValue(ANode: TDOMNode; AAttrName: String;
+  ANr: Integer): TVpEMailType;
+var
+  s: String;
+  n: Integer;
+begin
+  s := GetAttrValue(ANode, AAttrName);
+  if s = '' then
+    Result := mtWork
+  else begin
+    n := GetEnumValue(TypeInfo(TVpEMailType), s);
+    if (n >= ord(Low(TVpEMailType))) and (n <= ord(High(TVpEMailType))) then
+      Result := TVpEMailType(n)
+    else
+      XMLError(Format('Illegal EMailType%d value: "%s"', [ANr, s]));
+  end;
+end;
+
 function GetPhoneTypeAttrValue(ANode: TDOMNode; AAttrName: String;
   ANr: Integer): TVpPhoneType;
 var
@@ -190,13 +226,34 @@ var
   n: Integer;
 begin
   s := GetAttrValue(ANode, AAttrName);
-  n := GetEnumValue(TypeInfo(TVpPhoneType), s);
-  if (n >= ord(Low(TVpPhoneType))) and (n <= ord(High(TVpPhoneType))) then
-    Result := TVpPhoneType(n)
-  else
-    XMLError(Format('Illegal PhoneType%d value: "%s"', [ANr, s]));
+  if s = '' then
+    Result := ptWork
+  else begin
+    n := GetEnumValue(TypeInfo(TVpPhoneType), s);
+    if (n >= ord(Low(TVpPhoneType))) and (n <= ord(High(TVpPhoneType))) then
+      Result := TVpPhoneType(n)
+    else
+      XMLError(Format('Illegal PhoneType%d value: "%s"', [ANr, s]));
+  end;
 end;
 
+function GetWebsiteTypeAttrValue(ANode: TDOMNode; AAttrName: String;
+  ANr: Integer): TVpWebsiteType;
+var
+  s: String;
+  n: Integer;
+begin
+  s := GetAttrValue(ANode, AAttrName);
+  if s = '' then
+    Result := wtBusiness
+  else begin
+    n := GetEnumValue(TypeInfo(TVpWebsiteType), s);
+    if (n >= ord(Low(TVpWebsiteType))) and (n <= ord(High(TVpWebsiteType))) then
+      Result := TVpWebsiteType(n)
+    else
+      XMLError(Format('Illegal WebsiteType%d value: "%s"', [ANr, s]));
+  end;
+end;
 
 { TVpXmlDatastore }
 
@@ -539,25 +596,54 @@ begin
       cont.FirstName := GetNodeValue(node)
     else if nodeName = 'LastName' then
       cont.LastName := GetNodeValue(node)
-    else if nodeName = 'Job_Position' then
-      cont.Job_Position := GetNodeValue(node)
     else if nodeName = 'Title' then
       cont.Title := GetNodeValue(node)
+    else if nodeName = 'PathToPhoto' then
+      cont.PathToPhoto := GetNodeValue(node)
+    else if nodeName = 'Job_Position' then
+      cont.Job_Position := GetNodeValue(node)
     else if nodeName = 'Company' then
       cont.Company := GetNodeValue(node)
-    else if nodeName = 'Address' then
-      cont.Address := GetNodeValue(node)
-    else if nodeName = 'City' then
-      cont.City := GetNodeValue(node)
-    else if nodeName = 'Zip' then
-      cont.Zip := GetNodeValue(node)
-    else if nodeName = 'State' then
-      cont.State := GetNodeValue(node)
-    else if nodeName = 'Country' then
-      cont.Country := GetNodeValue(node)
-    else if nodeName = 'EMail'  then
-      cont.EMail := GetNodeValue(node)
-    else if nodeName = 'Phone1' then begin
+    else if (nodeName = 'Address1') or (nodeName = 'Address') then begin
+      cont.Address1 := GetNodeValue(node);
+      cont.AddressType1 := ord(GetAddressTypeAttrValue(node, 'Type', 1));
+    end else if (nodeName = 'City1') or (nodeName = 'City') then begin
+      cont.City1 := GetNodeValue(node);
+      cont.AddressType1 := ord(GetAddressTypeAttrValue(node, 'Type', 1));
+    end else if (nodeName = 'Zip1') or (nodeName = 'Zip') then begin
+      cont.Zip1 := GetNodeValue(node);
+      cont.AddressType1 := ord(GetAddressTypeAttrValue(node, 'Type', 1));
+    end else if (nodeName = 'State1') or (nodeName = 'State') then begin
+      cont.State1 := GetNodeValue(node);
+      cont.AddressType1 := ord(GetAddressTypeAttrValue(node, 'Type', 1));
+    end else if (nodeName = 'Country1') or (nodeName = 'Country') then begin
+      cont.Country1 := GetNodeValue(node);
+      cont.AddressType1 := ord(GetAddressTypeAttrValue(node, 'Type', 1));
+    end else if (nodeName = 'Address2') then begin
+      cont.Address2 := GetNodeValue(node);
+      cont.AddressType2 := ord(GetAddressTypeAttrValue(node, 'Type', 2));
+    end else if (nodeName = 'City2') then begin
+      cont.City2 := GetNodeValue(node);
+      cont.AddressType2 := ord(GetAddressTypeAttrValue(node, 'Type', 2));
+    end else if (nodeName = 'Zip2') then begin
+      cont.Zip2 := GetNodeValue(node);
+      cont.AddressType2 := ord(GetAddressTypeAttrValue(node, 'Type', 2));
+    end else if (nodeName = 'State2') then begin
+      cont.State2 := GetNodeValue(node);
+      cont.AddressType2 := ord(GetAddressTypeAttrValue(node, 'Type', 2));
+    end else if (nodeName = 'Country2') then begin
+      cont.Country2 := GetNodeValue(node);
+      cont.AddressType2 := ord(GetAddressTypeAttrValue(node, 'Type', 2));
+    end else if (nodeName = 'EMail1') or (nodename = 'EMail')  then  begin
+      cont.EMail1 := GetNodeValue(node);
+      cont.EMailType1 := ord(GetEMailTypeAttrValue(node, 'Type', 1));
+    end else if (nodeName = 'EMail2') then  begin
+      cont.EMail2 := GetNodeValue(node);
+      cont.EMailType2 := ord(GetEMailTypeAttrValue(node, 'Type', 2));
+    end else if (nodeName = 'EMail3') then  begin
+      cont.EMail3 := GetNodeValue(node);
+      cont.EMailType3 := ord(GetEMailTypeAttrValue(node, 'Type', 3));
+    end else if nodeName = 'Phone1' then begin
       cont.Phone1 := GetNodeValue(node);
       cont.PhoneType1 := ord(GetPhoneTypeAttrValue(node, 'Type', 1));
     end else if nodeName = 'Phone2' then begin
@@ -572,6 +658,12 @@ begin
     end else if nodeName = 'Phone5' then begin
       cont.Phone5 := GetNodeValue(node);
       cont.PhoneType5 := ord(GetPhoneTypeAttrValue(node, 'Type', 5));
+    end else if (nodeName = 'Website1') then  begin
+      cont.Website1 := GetNodeValue(node);
+      cont.WebsiteType1 := ord(GetWebsiteTypeAttrValue(node, 'Type', 1));
+    end else if (nodeName = 'Website2') then  begin
+      cont.Website2 := GetNodeValue(node);
+      cont.WebsiteType2 := ord(GetWebsiteTypeAttrValue(node, 'Type', 2));
     end else if nodeName = 'Notes' then
       cont.Notes := GetNodeValue(node)
     else if nodeName = 'Custom1' then
@@ -892,6 +984,14 @@ begin
     AContactNode.AppendChild(child);
   end;
 
+  if AContact.PathToPhoto <> '' then begin
+    child := ADoc.CreateElement('PathToPhoto');
+    txt := ADoc.CreateTextNode(AContact.PathToPhoto);
+    child.AppendChild(txt);
+    AContactNode.AppendChild(child);
+  end;
+
+
   if AContact.Company <> '' then begin
     child := ADoc.CreateElement('Company');
     txt := ADoc.CreateTextNode(AContact.Company);
@@ -906,9 +1006,29 @@ begin
     AContactNode.AppendChild(child);
   end;
 
-  if AContact.EMail <> '' then begin
-    child := ADoc.CreateElement('EMail');
-    txt := ADoc.CreateTextNode(AContact.EMail);
+  if AContact.EMail1 <> '' then begin
+    child := ADoc.CreateElement('EMail1');
+    TDOMElement(child).SetAttribute('Type',
+      GetEnumName(TypeInfo(TVpEMailType), ord(AContact.EMailType1)));
+    txt := ADoc.CreateTextNode(AContact.EMail1);
+    child.AppendChild(txt);
+    AContactNode.AppendChild(child);
+  end;
+
+  if AContact.EMail2 <> '' then begin
+    child := ADoc.CreateElement('EMail2');
+    TDOMElement(child).SetAttribute('Type',
+      GetEnumName(TypeInfo(TVpEMailType), ord(AContact.EMailType2)));
+    txt := ADoc.CreateTextNode(AContact.EMail2);
+    child.AppendChild(txt);
+    AContactNode.AppendChild(child);
+  end;
+
+  if AContact.EMail3 <> '' then begin
+    child := ADoc.CreateElement('EMail3');
+    TDOMElement(child).SetAttribute('Type',
+      GetEnumName(TypeInfo(TVpEMailType), ord(AContact.EMailType3)));
+    txt := ADoc.CreateTextNode(AContact.EMail3);
     child.AppendChild(txt);
     AContactNode.AppendChild(child);
   end;
@@ -958,37 +1078,110 @@ begin
     AContactNode.AppendChild(child);
   end;
 
-  if AContact.Address <> '' then begin
-    child := ADoc.CreateElement('Address');
-    txt := ADoc.CreateTextNode(AContact.Address);
+  if AContact.Website1 <> '' then begin
+    child := ADoc.CreateElement('Website1');
+    TDOMElement(child).SetAttribute('Type',
+      GetEnumName(TypeInfo(TVpWebsiteType), ord(AContact.WebsiteType1)));
+    txt := ADoc.CreateTextNode(AContact.Website1);
     child.AppendChild(txt);
     AContactNode.AppendChild(child);
   end;
 
-  if AContact.City <> '' then begin
-    child := ADoc.CreateElement('City');
-    txt := ADoc.CreateTextNode(AContact.City);
+  if AContact.Website2 <> '' then begin
+    child := ADoc.CreateElement('Website2');
+    TDOMElement(child).SetAttribute('Type',
+      GetEnumName(TypeInfo(TVpWebsiteType), ord(AContact.WebsiteType2)));
+    txt := ADoc.CreateTextNode(AContact.Website2);
     child.AppendChild(txt);
     AContactNode.AppendChild(child);
   end;
 
-  if AContact.State <> '' then begin
-    child := ADoc.CreateElement('State');
-    txt := ADoc.CreateTextNode(AContact.State);
+  if AContact.Address1 <> '' then begin
+    child := ADoc.CreateElement('Address1');
+    TDOMElement(child).SetAttribute('Type',
+      GetEnumName(TypeInfo(TVpAddressType), ord(AContact.AddressType1)));
+    txt := ADoc.CreateTextNode(AContact.Address1);
     child.AppendChild(txt);
     AContactNode.AppendChild(child);
   end;
 
-  if AContact.Zip <> '' then begin
-    child := ADoc.CreateElement('Zip');
-    txt := ADoc.CreateTextNode(AContact.Zip);
+  if AContact.City1 <> '' then begin
+    child := ADoc.CreateElement('City1');
+    TDOMElement(child).SetAttribute('Type',
+      GetEnumName(TypeInfo(TVpAddressType), ord(AContact.AddressType1)));
+    txt := ADoc.CreateTextNode(AContact.City1);
     child.AppendChild(txt);
     AContactNode.AppendChild(child);
   end;
 
-  if AContact.Country <> '' then begin
-    child := ADoc.CreateElement('Country');
-    txt := ADoc.CreateTextNode(AContact.Country);
+  if AContact.State1 <> '' then begin
+    child := ADoc.CreateElement('State1');
+    TDOMElement(child).SetAttribute('Type',
+      GetEnumName(TypeInfo(TVpAddressType), ord(AContact.AddressType1)));
+    txt := ADoc.CreateTextNode(AContact.State1);
+    child.AppendChild(txt);
+    AContactNode.AppendChild(child);
+  end;
+
+  if AContact.Zip1 <> '' then begin
+    child := ADoc.CreateElement('Zip1');
+    TDOMElement(child).SetAttribute('Type',
+      GetEnumName(TypeInfo(TVpAddressType), ord(AContact.AddressType1)));
+    txt := ADoc.CreateTextNode(AContact.Zip1);
+    child.AppendChild(txt);
+    AContactNode.AppendChild(child);
+  end;
+
+  if AContact.Country1 <> '' then begin
+    child := ADoc.CreateElement('Country1');
+    TDOMElement(child).SetAttribute('Type',
+      GetEnumName(TypeInfo(TVpAddressType), ord(AContact.AddressType1)));
+    txt := ADoc.CreateTextNode(AContact.Country1);
+    child.AppendChild(txt);
+    AContactNode.AppendChild(child);
+  end;
+
+  if AContact.Address2 <> '' then begin
+    child := ADoc.CreateElement('Address2');
+    TDOMElement(child).SetAttribute('Type',
+      GetEnumName(TypeInfo(TVpAddressType), ord(AContact.AddressType2)));
+    txt := ADoc.CreateTextNode(AContact.Address2);
+    child.AppendChild(txt);
+    AContactNode.AppendChild(child);
+  end;
+
+  if AContact.City2 <> '' then begin
+    child := ADoc.CreateElement('City2');
+    TDOMElement(child).SetAttribute('Type',
+      GetEnumName(TypeInfo(TVpAddressType), ord(AContact.AddressType2)));
+    txt := ADoc.CreateTextNode(AContact.City2);
+    child.AppendChild(txt);
+    AContactNode.AppendChild(child);
+  end;
+
+  if AContact.State2 <> '' then begin
+    child := ADoc.CreateElement('State2');
+    TDOMElement(child).SetAttribute('Type',
+      GetEnumName(TypeInfo(TVpAddressType), ord(AContact.AddressType2)));
+    txt := ADoc.CreateTextNode(AContact.State2);
+    child.AppendChild(txt);
+    AContactNode.AppendChild(child);
+  end;
+
+  if AContact.Zip2 <> '' then begin
+    child := ADoc.CreateElement('Zip2');
+    TDOMElement(child).SetAttribute('Type',
+      GetEnumName(TypeInfo(TVpAddressType), ord(AContact.AddressType2)));
+    txt := ADoc.CreateTextNode(AContact.Zip2);
+    child.AppendChild(txt);
+    AContactNode.AppendChild(child);
+  end;
+
+  if AContact.Country2 <> '' then begin
+    child := ADoc.CreateElement('Country2');
+    TDOMElement(child).SetAttribute('Type',
+      GetEnumName(TypeInfo(TVpAddressType), ord(AContact.AddressType2)));
+    txt := ADoc.CreateTextNode(AContact.Country2);
     child.AppendChild(txt);
     AContactNode.AppendChild(child);
   end;
