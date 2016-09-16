@@ -424,7 +424,8 @@ begin
         Required := false;
       end;
     end; {with FieldDefs do}
-  end else if TableName = ContactsTableName then begin
+  end else
+  if TableName = ContactsTableName then begin
     with FieldDefs do begin
       Clear;
       { Record ID }
@@ -475,6 +476,13 @@ begin
       { Company }
       with AddFieldDef do begin
         Name := 'Company';
+        DataType := ftString;
+        Size := 50;
+        Required := false;
+      end;
+      { Department }
+      with AddFieldDef do begin
+        Name := 'Department';
         DataType := ftString;
         Size := 50;
         Required := false;
@@ -709,13 +717,6 @@ begin
       with AddFieldDef do begin
         Name := 'Category';
         DataType := ftInteger;
-        Required := false;
-      end;
-      { PathToPhoto }
-      with AddFieldDef do begin
-        Name := 'PathToPhoto';
-        DataType := ftString;
-        Size := 255;
         Required := false;
       end;
       { Custom1 }
@@ -1213,20 +1214,20 @@ begin
     AContact.RecordID := FieldByName('RecordID').AsInteger;
     AContact.FirstName := FieldByName('FirstName').AsString;
     AContact.LastName := FieldByName('LastName').AsString;
+    AContact.Category := FieldByName('Category').AsInteger;
     AContact.Birthdate := FieldByName('BirthDate').AsDateTime;
     AContact.Anniversary := FieldByName('Anniversary').AsDateTime;
     AContact.Title := FieldByName('Title').AsString;
     AContact.Company := FieldByName('Company').AsString;
     AContact.Job_Position := FieldByName('Job_Position').AsString;
-    AContact.Category := FieldByName('Category').AsInteger;
+
+    // Department -- new in 1.05
+    F := FindField('Department');
+    if F <> nil then AContact.Department := F.AsString;
 
     F := FindField('Notes');
     if F = nil then F := FindField('Note');  // deprecated
     if F <> nil then AContact.Notes := F.AsString;
-
-    // photo file name - new in 1.05
-    F := FindField('PathToPhoto');
-    if F <> nil then AContact.PathToPhoto := F.AsString;
 
     // two address types - new in 1.05
     F := FindField('AddressType1');
@@ -1460,9 +1461,9 @@ begin
             if F = nil then F := ContactsTable.FindField('Note');
             if F <> nil then F.AsString := Contact.Notes;
 
-            // File name of picture -- new in 1.05
-            F := ContactsTable.FindField('PathToPhoto');
-            if F <> nil then F.AsString := Contact.PathToPhoto;
+            // Department -- new in 1.05
+            F := ContactsTable.FindField('Department');
+            if F <> nil then F.AsString := Contact.Department;
 
             // two address types -- new in 1.05
             F := ContactsTable.FindField('AddressType1');
@@ -1494,13 +1495,6 @@ begin
             if F <> nil then F.AsString := Contact.Country1;
             F := ContactsTable.FindField('Country2');
             if F <> nil then F.AsString := Contact.Country2;
-            {
-            ContactsTable.FieldByName('Address').AsString := Contact.Address;
-            ContactsTable.FieldByName('City').AsString := Contact.City;
-            ContactsTable.FieldByName('State').AsString := Contact.State;
-            ContactsTable.FieldByName('Zip').AsString := Contact.Zip;
-            ContactsTable.FieldByName('Country').AsString := Contact.Country;
-            }
 
             // Telephones
             ContactsTable.FieldByName('Phone1').AsString := Contact.Phone1;

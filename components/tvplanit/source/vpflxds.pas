@@ -862,6 +862,11 @@ begin
     if FN <> '' then
       AContact.Company := FieldByName(FN).AsString;
 
+    // Department, new in 1.05
+    FN := GetFieldName(FContactMappings, 'Department');
+    if FN <> '' then
+      AContact.Department := FieldByName(FN).AsString;
+
     FN := GetFieldName(FContactMappings, 'Job_Position');
     if FN <> '' then
       AContact.Job_Position := FieldByName(FN).AsString;
@@ -869,11 +874,6 @@ begin
     FN := GetFieldName(FContactMappings, 'Category');
     if FN <> '' then
       AContact.Category := FieldByName(FN).AsInteger;
-
-    // Photo file name, new in 1.05
-    FN := GetFieldName(FContactMappings, 'PathToPhoto');
-    if FN <> '' then
-      AContact.PathToPhoto := FieldByName(FN).AsString;
 
     // "Notes" instead of "Note" - new in 1.04
     FN := GetFieldName(FContactMappings, 'Notes');
@@ -1812,6 +1812,10 @@ begin
           if FN <> '' then
             ContactsTable.FieldByName(FN).AsString := Contact.Company;
 
+          FN := GetFieldName(FContactMappings, 'Department');
+          if FN <> '' then
+            ContactsTable.FieldByName(FN).AsString := Contact.Department;
+
           FN := GetFieldName(FContactMappings, 'Job_Position');
           if FN = '' then
             FN := GetFieldName(FContactMappings, 'Position');  // deprecated
@@ -1967,10 +1971,6 @@ begin
           FN := GetFieldName(FContactMappings, 'Category');
           if FN <> '' then
             ContactsTable.FieldByName(FN).AsInteger := Contact.Category;
-
-          FN := GetFieldName(FContactMappings, 'PathToPhoto');
-          if FN <> '' then
-            ContactsTable.FieldByName(FN).AsString := Contact.PathToPhoto;
 
           FN := GetFieldName(FContactMappings, 'Custom1');
           if FN <> '' then

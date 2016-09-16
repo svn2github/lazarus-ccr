@@ -179,6 +179,7 @@ begin
         'Title          VARCHAR(50), '+
         'Category       INTEGER, '+
         'Company        VARCHAR(50), '+
+        'Department     VARCHAR(50), '+
         'Job_Position   VARCHAR(30), '+
         'AddressType1   INTEGER, '+
         'Address1       VARCHAR(100), '+
@@ -212,7 +213,6 @@ begin
         'WebSite2       VARCHAR (100), '+
         'WebSiteType1   INTEGER, '+
         'WebSiteType2   INTEGER, '+
-        'PathToPhoto    VARCHAR (255), '+
         'Notes          VARCHAR(1024), '+
         'Custom1        VARCHAR (100), '+
         'Custom2        VARCHAR (100), '+

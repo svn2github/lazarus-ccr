@@ -173,8 +173,9 @@ begin
       'LastName VARCHAR(50) , '+
       'Birthdate DATE, '+
       'Anniversary DATE, '+
-      'Title VARCHAR(50) ,'+
-      'Company VARCHAR(50) ,'+
+      'Title VARCHAR(50), '+
+      'Company VARCHAR(50), '+
+      'Department VARCHAR(50), '+
       'Job_Position VARCHAR(30), '+
       'AddressType1 INTEGER, '+
       'Address1 VARCHAR(100), '+
@@ -210,7 +211,6 @@ begin
       'WebsiteType1 INTEGER, '+
       'WebsiteType2 INTEGER, '+
       'Category INTEGER, '+
-      'PathToPhoto VARCHAR(255), '+
       'Custom1 VARCHAR(100), '+
       'Custom2 VARCHAR(100),'+
       'Custom3 VARCHAR(100), '+

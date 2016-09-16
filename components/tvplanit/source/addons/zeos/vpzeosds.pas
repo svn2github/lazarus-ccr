@@ -94,10 +94,10 @@ begin
         'LastName VARCHAR(50), '+
         'Title VARCHAR(20) ,'+
         'Category INTEGER, '+
-        'PathToPhoto VARCHAR(255), '+
         'Birthdate DATE, '+
         'Anniversary DATE, '+
-        'Company VARCHAR(50) ,'+
+        'Company VARCHAR(50), '+
+        'Department VARCHAR(50), '+
         'Job_Position VARCHAR(30), '+
         'AddressType1 INTEGER, '+
         'Address1 VARCHAR(100), '+

@@ -598,12 +598,12 @@ begin
       cont.LastName := GetNodeValue(node)
     else if nodeName = 'Title' then
       cont.Title := GetNodeValue(node)
-    else if nodeName = 'PathToPhoto' then
-      cont.PathToPhoto := GetNodeValue(node)
     else if nodeName = 'Job_Position' then
       cont.Job_Position := GetNodeValue(node)
     else if nodeName = 'Company' then
       cont.Company := GetNodeValue(node)
+    else if nodeName = 'Department' then
+      cont.Department := GetNodeValue(node)
     else if (nodeName = 'Address1') or (nodeName = 'Address') then begin
       cont.Address1 := GetNodeValue(node);
       cont.AddressType1 := ord(GetAddressTypeAttrValue(node, 'Type', 1));
@@ -984,17 +984,16 @@ begin
     AContactNode.AppendChild(child);
   end;
 
-  if AContact.PathToPhoto <> '' then begin
-    child := ADoc.CreateElement('PathToPhoto');
-    txt := ADoc.CreateTextNode(AContact.PathToPhoto);
+  if AContact.Company <> '' then begin
+    child := ADoc.CreateElement('Company');
+    txt := ADoc.CreateTextNode(AContact.Company);
     child.AppendChild(txt);
     AContactNode.AppendChild(child);
   end;
 
-
-  if AContact.Company <> '' then begin
-    child := ADoc.CreateElement('Company');
-    txt := ADoc.CreateTextNode(AContact.Company);
+  if AContact.Department <> '' then begin
+    child := ADoc.CreateElement('Department');
+    txt := ADoc.CreateTextNode(AContact.Department);
     child.AppendChild(txt);
     AContactNode.AppendChild(child);
   end;

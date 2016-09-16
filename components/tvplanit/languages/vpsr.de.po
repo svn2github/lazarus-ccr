@@ -31,6 +31,10 @@ msgstr "1 Woche"
 msgid "No resources have been defined. Would you like to add one now?"
 msgstr "Es sind noch keine Ressourcen definiert. Möchten Sie jetzt eine hinzufügen?"
 
+#: vpsr.rsaddresses
+msgid "Addresses"
+msgstr "Adressen"
+
 #: vpsr.rsaddresslbl
 msgid "Address:"
 msgstr "Adresse:"
@@ -120,7 +124,6 @@ msgid "Brush"
 msgstr "Füllung"
 
 #: vpsr.rsbusinesswebsitelabel
-#, fuzzy
 msgctxt "vpsr.rsbusinesswebsitelabel"
 msgid "Business"
 msgstr "Geschäftlich"
@@ -317,6 +320,10 @@ msgctxt "vpsr.rsdeletebtn"
 msgid "Delete"
 msgstr "Löschen"
 
+#: vpsr.rsdepartmentlbl
+msgid "Department:"
+msgstr "Abteilung:"
+
 #: vpsr.rsdescriptionlbl
 msgctxt "vpsr.rsdescriptionlbl"
 msgid "Description:"
@@ -345,7 +352,7 @@ msgid "Print preview"
 msgstr "Druckvorschau"
 
 #: vpsr.rsdlgreseditcaption
-msgid "Resource Edit"
+msgid "Resource edit"
 msgstr "Ressource bearbeiten"
 
 #: vpsr.rsdlgreseditdescription
@@ -358,7 +365,7 @@ msgid "Task"
 msgstr "Aufgabe"
 
 #: vpsr.rsduedate
-msgid "Due Date:"
+msgid "Due date:"
 msgstr "Fälligkeitsdatum:"
 
 #: vpsr.rsduplicateresource
@@ -471,14 +478,16 @@ msgstr "Von Ihrem Zeitplan?"
 msgid "Height"
 msgstr "Höhe"
 
+#: vpsr.rshomeaddress
+msgid "Home address"
+msgstr "Zuhause"
+
 #: vpsr.rshomeaddresslabel
-#, fuzzy
 msgctxt "vpsr.rshomeaddresslabel"
 msgid "Home"
 msgstr "Zuhause"
 
 #: vpsr.rshomeemaillabel
-#, fuzzy
 msgctxt "vpsr.rshomeemaillabel"
 msgid "Home"
 msgstr "Zuhause"
@@ -737,7 +746,6 @@ msgid "&Open Item"
 msgstr "Eintrag ö&ffnen"
 
 #: vpsr.rsotheremaillabel
-#, fuzzy
 msgctxt "vpsr.rsotheremaillabel"
 msgid "Other"
 msgstr "Andere"
@@ -775,10 +783,13 @@ msgid "This operation cannot be undone!"
 msgstr "Diese Operation kann nicht rückgängig gemacht werden!"
 
 #: vpsr.rspersonalwebsitelabel
-#, fuzzy
 msgctxt "vpsr.rspersonalwebsitelabel"
 msgid "Personal"
 msgstr "Persönlich"
+
+#: vpsr.rsphonefax
+msgid "Phone/fax"
+msgstr "Telefon/Fax"
 
 #: vpsr.rsphonetypelabel1
 msgid "Assistant"
@@ -1180,6 +1191,10 @@ msgstr "Sichtbar"
 msgid "Visual"
 msgstr "Aussehen"
 
+#: vpsr.rswebsites
+msgid "Websites"
+msgstr "Internet-Seiten"
+
 #: vpsr.rswednesday
 msgid "Wednesday"
 msgstr "Mittwoch"
@@ -1208,14 +1223,16 @@ msgstr "Breite"
 msgid "Width:"
 msgstr "Breite:"
 
+#: vpsr.rsworkaddress
+msgid "Work address"
+msgstr "Arbeit"
+
 #: vpsr.rsworkaddresslabel
-#, fuzzy
 msgctxt "vpsr.rsworkaddresslabel"
 msgid "Work"
 msgstr "Arbeit"
 
 #: vpsr.rsworkemaillabel
-#, fuzzy
 msgctxt "vpsr.rsworkemaillabel"
 msgid "Work"
 msgstr "Arbeit"
@@ -1544,4 +1561,3 @@ msgstr "Unbekannte Achsen-Spezifikation: %s"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "Die XML-Deklaration muss vor dem ersten Element erscheinen."
-

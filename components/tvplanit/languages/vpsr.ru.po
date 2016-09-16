@@ -31,6 +31,10 @@ msgstr "1 неделя"
 msgid "No resources have been defined. Would you like to add one now?"
 msgstr "Не определены ресурсы. Вы хотите добавить ресурс сейчас?"
 
+#: vpsr.rsaddresses
+msgid "Addresses"
+msgstr ""
+
 #: vpsr.rsaddresslbl
 msgid "Address:"
 msgstr "Адрес:"
@@ -317,6 +321,10 @@ msgctxt "vpsr.rsdeletebtn"
 msgid "Delete"
 msgstr "Удалить"
 
+#: vpsr.rsdepartmentlbl
+msgid "Department:"
+msgstr ""
+
 #: vpsr.rsdescriptionlbl
 msgctxt "vpsr.rsdescriptionlbl"
 msgid "Description:"
@@ -345,7 +353,9 @@ msgid "Print preview"
 msgstr "Предварительный просмотр печати"
 
 #: vpsr.rsdlgreseditcaption
-msgid "Resource Edit"
+#, fuzzy
+#| msgid "Resource Edit"
+msgid "Resource edit"
 msgstr "Редактор ресурсов"
 
 #: vpsr.rsdlgreseditdescription
@@ -358,7 +368,9 @@ msgid "Task"
 msgstr "Задача"
 
 #: vpsr.rsduedate
-msgid "Due Date:"
+#, fuzzy
+#| msgid "Due Date:"
+msgid "Due date:"
 msgstr "Срок:"
 
 #: vpsr.rsduplicateresource
@@ -470,6 +482,10 @@ msgstr "из вашего расписания?"
 #: vpsr.rsheight
 msgid "Height"
 msgstr "Высота"
+
+#: vpsr.rshomeaddress
+msgid "Home address"
+msgstr ""
 
 #: vpsr.rshomeaddresslabel
 #, fuzzy
@@ -779,6 +795,10 @@ msgstr ""
 msgctxt "vpsr.rspersonalwebsitelabel"
 msgid "Personal"
 msgstr "Персонал"
+
+#: vpsr.rsphonefax
+msgid "Phone/fax"
+msgstr ""
 
 #: vpsr.rsphonetypelabel1
 msgid "Assistant"
@@ -1180,6 +1200,10 @@ msgstr ""
 msgid "Visual"
 msgstr ""
 
+#: vpsr.rswebsites
+msgid "Websites"
+msgstr ""
+
 #: vpsr.rswednesday
 msgid "Wednesday"
 msgstr "Среда"
@@ -1206,6 +1230,10 @@ msgstr ""
 
 #: vpsr.rswidthlbl
 msgid "Width:"
+msgstr ""
+
+#: vpsr.rsworkaddress
+msgid "Work address"
 msgstr ""
 
 #: vpsr.rsworkaddresslabel

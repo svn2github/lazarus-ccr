@@ -236,6 +236,7 @@ begin
             [GetEnumName(TypeInfo(TVpIniVersion), ord(FIniVersionWrite))]);
   end;
   try
+    // Don't change the order of these fields to keep readability of v104 files.
     L.AddField('FirstName', AContact.FirstName);                          // 0
     L.AddField('LastName', AContact.LastName);
     L.AddDateTimeField('BirthDate', AContact.BirthDate, 'ddddd');
@@ -294,7 +295,7 @@ begin
       L.AddField('Zip2', AContact.Zip2);
       L.AddField('Country2', AContact.Country2);
       L.AddField('AddressType2', IntToStr(AContact.AddressType2));
-      L.AddField('PathToPhoto', AContact.PathToPhoto);
+      L.AddField('Department', AContact.Department);
     end;
 
     Result := L.DelimitedText;
@@ -571,6 +572,7 @@ var
 begin
   case FIniVersionRead of
     iv104:
+      // Important: DON'T CHANGE THE ORDER OF THESE FIELDS.
       begin
         L := TVpIniStrings_v104.Create;
         try
@@ -588,12 +590,12 @@ begin
           AContact.Title := L.Extract(4);
           AContact.Company := L.Extract(5);
           AContact.Job_Position := L.Extract(6);
-          AContact.EMail := L.Extract(7);
-          AContact.Address := L.Extract(8);
-          AContact.City := L.Extract(9);
-          AContact.State := L.Extract(10);
-          AContact.Zip := L.Extract(11);
-          AContact.Country := L.Extract(12);
+          AContact.EMail1 := L.Extract(7);
+          AContact.Address1 := L.Extract(8);
+          AContact.City1 := L.Extract(9);
+          AContact.State1 := L.Extract(10);
+          AContact.Zip1 := L.Extract(11);
+          AContact.Country1 := L.Extract(12);
           AContact.Notes := DecodeLineEndings(L.Extract(13));
           AContact.Phone1 := L.Extract(14);
           AContact.Phone2 := L.Extract(15);
@@ -648,14 +650,14 @@ begin
             end else
             if fn = 'title' then
               AContact.Title := fv
-            else if fn = 'pathtophoto' then
-              AContact.PathToPhoto := fv
             else if fn = 'category' then
               AContact.Category := StrToInt(fv)
             else if fn = 'notes' then
               AContact.Notes := DecodeLineEndings(fv)
             else if fn = 'company' then
               AContact.Company := fv
+            else if fn = 'department' then
+              AContact.Department := fv
             else if fn = 'job_position' then
               AContact.Job_Position := fv
             else if fn = 'addresstype1' then

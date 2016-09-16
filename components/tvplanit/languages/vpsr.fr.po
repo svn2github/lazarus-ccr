@@ -37,6 +37,10 @@ msgstr "1 semaine"
 msgid "No resources have been defined. Would you like to add one now?"
 msgstr "Aucune ressource à été defini. Voulez-vous ajouter une maintenant?"
 
+#: vpsr.rsaddresses
+msgid "Addresses"
+msgstr ""
+
 #: vpsr.rsaddresslbl
 msgid "Address:"
 msgstr "Adresse:"
@@ -323,6 +327,10 @@ msgctxt "vpsr.rsdeletebtn"
 msgid "Delete"
 msgstr "Supprimer"
 
+#: vpsr.rsdepartmentlbl
+msgid "Department:"
+msgstr ""
+
 #: vpsr.rsdescriptionlbl
 msgctxt "vpsr.rsdescriptionlbl"
 msgid "Description:"
@@ -351,7 +359,9 @@ msgid "Print preview"
 msgstr "Aperçu avant impression"
 
 #: vpsr.rsdlgreseditcaption
-msgid "Resource Edit"
+#, fuzzy
+#| msgid "Resource Edit"
+msgid "Resource edit"
 msgstr "Modifier la resource"
 
 #: vpsr.rsdlgreseditdescription
@@ -364,7 +374,9 @@ msgid "Task"
 msgstr "Tache"
 
 #: vpsr.rsduedate
-msgid "Due Date:"
+#, fuzzy
+#| msgid "Due Date:"
+msgid "Due date:"
 msgstr "Date d'échéance:"
 
 #: vpsr.rsduplicateresource
@@ -475,6 +487,10 @@ msgstr "de votre agenda?"
 
 #: vpsr.rsheight
 msgid "Height"
+msgstr ""
+
+#: vpsr.rshomeaddress
+msgid "Home address"
 msgstr ""
 
 #: vpsr.rshomeaddresslabel
@@ -785,6 +801,10 @@ msgstr "Ce processus est irreversible!"
 msgctxt "vpsr.rspersonalwebsitelabel"
 msgid "Personal"
 msgstr "Personnel"
+
+#: vpsr.rsphonefax
+msgid "Phone/fax"
+msgstr ""
 
 #: vpsr.rsphonetypelabel1
 msgid "Assistant"
@@ -1186,6 +1206,10 @@ msgstr ""
 msgid "Visual"
 msgstr ""
 
+#: vpsr.rswebsites
+msgid "Websites"
+msgstr ""
+
 #: vpsr.rswednesday
 msgid "Wednesday"
 msgstr "Mercredi"
@@ -1212,6 +1236,10 @@ msgstr ""
 
 #: vpsr.rswidthlbl
 msgid "Width:"
+msgstr ""
+
+#: vpsr.rsworkaddress
+msgid "Work address"
 msgstr ""
 
 #: vpsr.rsworkaddresslabel

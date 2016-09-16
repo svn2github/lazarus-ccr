@@ -254,46 +254,136 @@ resourcestring
   RSCountryLbl              = 'Country:';
   RSZipCodeLbl              = 'Zip code:';
   RSCompanyLbl              = 'Company:';
+  RSDepartmentLbl           = 'Department:';
   RSPositionLbl             = 'Position:';
   RSBirthDateLbl            = 'Birth date:';
+  RSPhoneFax                = 'Phone/fax';
+  RSWebsites                = 'Websites';
+
   RSMasterData              = 'Master data';
+  RSAddresses               = 'Addresses';
+  RSWorkAddress             = 'Work address';
+  RSHomeAddress             = 'Home address';
 
   { Print Preview dialog captions }
   RSDlgPrintPreview        = 'Print preview';
 
   { Task Edit Dialog Captions }
-  RSDlgTaskEdit            = 'Task';
-  RSDueDate                = 'Due Date:';
-  RSDetails                = 'Details:';
-  RSTaskComplete           = 'Task complete';
-  RSCreatedOn              = 'Created on';
-  RSCompletedOn            = 'Completed on';
+  RSDlgTaskEdit             = 'Task';
+  RSDueDate                 = 'Due date:';
+  RSDetails                 = 'Details:';
+  RSTaskComplete            = 'Task complete';
+  RSCreatedOn               = 'Created on';
+  RSCompletedOn             = 'Completed on';
 
   { Resource Edit Dialog Captions }
-  RSDlgResEditCaption      = 'Resource Edit';
-  RSDlgResEditDescription  = 'Description';
-  RSResource               = 'Resource';
+  RSDlgResEditCaption       = 'Resource edit';
+  RSDlgResEditDescription   = 'Description';
+  RSResource                = 'Resource';
 
   { Reminder Dialog Captions}
-  RSReminder               = 'Reminder';
-  RSOverdue                = 'OVERDUE!';
-  RSSnoozeCaption          = 'Click &Snooze to be reminded again in:';
-  RSSubjectCaption         = 'Subject:';
-  RSNotesCaption           = 'Notes:';
-  RSDismissBtn             = '&Dismiss';
-  RSSnoozeBtn              = '&Snooze';
-  RSOpenItemBtn            = '&Open Item';
-  RS1Minute                = '1 minute';
-  RSXMinutes               = '%d minutes';
-  RS1Hour                  = '1 hour';
-  RSXHours                 = '%d hours';
-  RS1Day                   = '1 day';
-  RSXDays                  = '%d days';
-  RS1Week                  = '1 week';
+  RSReminder                = 'Reminder';
+  RSOverdue                 = 'OVERDUE!';
+  RSSnoozeCaption           = 'Click &Snooze to be reminded again in:';
+  RSSubjectCaption          = 'Subject:';
+  RSNotesCaption            = 'Notes:';
+  RSDismissBtn              = '&Dismiss';
+  RSSnoozeBtn               = '&Snooze';
+  RSOpenItemBtn             = '&Open Item';
+  RS1Minute                 = '1 minute';
+  RSXMinutes                = '%d minutes';
+  RS1Hour                   = '1 hour';
+  RSXHours                  = '%d hours';
+  RS1Day                    = '1 day';
+  RSXDays                   = '%d days';
+  RS1Week                   = '1 week';
 
   { Calendar }
-  RSCalendarRevert         = 'Revert';
-  RSCalendarPopupRevert    = 'Revert';
+  RSCalendarRevert          = 'Revert';
+  RSCalendarPopupRevert     = 'Revert';
+
+  { Misc strings }
+  RSCategoryDesc            = 'Category %d';
+
+  { Print Format Editor }
+  RSEditPrintFormat         = 'Edit Print Formats...';
+  RSPrintFormatDesigner     = 'Print format designer';
+  RSFormatLbl               = 'Format:';
+  RSFormats                 = 'Formats:';
+  RSElements                = 'Elements:';
+  RSNewBtn                  = 'New';
+  RSEditBtn                 = 'Edit';
+  RSDeleteBtn               = 'Delete';
+  RSPrintOrder              = 'Print order';
+  RSNewFileBtn              = 'New file';
+  RSLoadFileBtn             = 'Load file...';
+  RSSaveFileBtn             = 'Save file...';
+
+  RSReportSetup             = 'Report setup';
+
+  { Print Format Item Editor }
+  RSEditFormatCaption       = 'Edit format';
+  RSNameLbl                 = 'Name:';
+  RSTimeIncLbl              = 'Time increment:';
+  RSTimeIncUnits            = 'Time increment units:';
+
+  { Format element editor }
+  RSEditElementCaption      = 'Edit element';
+  RSElementTypeLbl          = 'Element type';
+  RSDayViewElement          = 'Day view';
+  RSWeekViewElement         = 'Week view';
+  RSMonthViewElement        = 'Month view';
+  RSCalendarElement         = 'Calendar';
+  RSShapeElement            = 'Shape';
+  RSCaptionElement          = 'Caption';
+  RSTasksElement            = 'Tasks';
+  RSContactsElement         = 'Contacts';
+  RSVisualCaption           = 'Visual';
+  RSRotationCaption         = 'Rotation';
+  RSMeasurementCaption      = 'Measurement';
+  RSPixels                  = 'Pixels';
+  RSPercent                 = 'Percent';
+  RSInches                  = 'Inches';
+  RSLeft                    = 'Left';
+  RSTop                     = 'Top';
+  RSWidth                   = 'Width';
+  RSHeight                  = 'Height';
+  RSVisible                 = 'Visible';
+  RSCaption                 = 'Caption';
+  RSTextCaption             = 'Text';
+  RSShapeBtn                = 'Shape...';
+  RSFontBtn                 = 'Font...';
+
+  { Shape editor }
+  RSEditShapeCaption        = 'Edit shape';
+  RSShapeCaption            = 'Shape';
+  RSRectangle               = 'rectangle';
+  RSTopLine                 = 'top line';
+  RSBottomLine              = 'bottom line';
+  RSLeftLine                = 'left line';
+  RSRightLine               = 'right line';
+  RSTLToBRLine              = 'top-left to bottom-right line';
+  RSBLToTRLine              = 'bottom-left to top-right line';
+  RSEllipse                 = 'ellipse';
+  RSPenCaption              = 'Pen';
+  RSBrushCaption            = 'Brush';
+  RSStyleLbl                = 'Style:';
+  RSWidthLbl                = 'Width:';
+  RSModeLbl                 = 'Mode:';
+  RSColorLbl                = 'Color:';
+
+  { Automatic resource adding/selection}
+  RSAddNewResource          = 'No resources have been defined. Would you ' +
+                              'like to add one now?';
+  RSSelectResource          = 'No resource has been selected. Would you ' +
+                              'like to select one now?';
+
+  { AboutBox }
+  RSBrowserError            = 'Unable to start web browser. Make sure you have ' +
+                              'it properly setup on your system.';
+
+  { Ini storage }
+  RSIniFileStructure        = 'Incorrect structure of ini file.';
 
   { XML }
   sIENotInstalled    = 'Cannot open WININET, Microsoft IE required';
@@ -384,87 +474,4 @@ resourcestring
   RSNoPrintFormats   = 'No print formats have been defined';             {!!.01}
   RSNoCanvas         = 'TCanvas not assigned';                           {!!.01}
   RSNoLocalizationFile = 'Localization file not found.';                 {!!.02}
-
-  { Misc strings }
-  RSCategoryDesc     = 'Category %d';
-
-  { Print Format Editor }
-  RSEditPrintFormat  = 'Edit Print Formats...';
-  RSPrintFormatDesigner = 'Print format designer';
-  RSFormatLbl        = 'Format:';
-  RSFormats          = 'Formats:';
-  RSElements         = 'Elements:';
-  RSNewBtn           = 'New';
-  RSEditBtn          = 'Edit';
-  RSDeleteBtn        = 'Delete';
-  RSPrintOrder       = 'Print order';
-  RSNewFileBtn       = 'New file';
-  RSLoadFileBtn      = 'Load file...';
-  RSSaveFileBtn      = 'Save file...';
-
-  RSReportSetup      = 'Report setup';
-
-  { Print Format Item Editor }
-  RSEditFormatCaption= 'Edit format';
-  RSNameLbl          = 'Name:';
-  RSTimeIncLbl       = 'Time increment:';
-  RSTimeIncUnits     = 'Time increment units:';
-
-  { Format element editor }
-  RSEditElementCaption = 'Edit element';
-  RSElementTypeLbl   = 'Element type';
-  RSDayViewElement   = 'Day view';
-  RSWeekViewElement  = 'Week view';
-  RSMonthViewElement = 'Month view';
-  RSCalendarElement  = 'Calendar';
-  RSShapeElement     = 'Shape';
-  RSCaptionElement   = 'Caption';
-  RSTasksElement     = 'Tasks';
-  RSContactsElement  = 'Contacts';
-  RSVisualCaption    = 'Visual';
-  RSRotationCaption  = 'Rotation';
-  RSMeasurementCaption = 'Measurement';
-  RSPixels           = 'Pixels';
-  RSPercent          = 'Percent';
-  RSInches           = 'Inches';
-  RSLeft             = 'Left';
-  RSTop              = 'Top';
-  RSWidth            = 'Width';
-  RSHeight           = 'Height';
-  RSVisible          = 'Visible';
-  RSCaption          = 'Caption';
-  RSTextCaption      = 'Text';
-  RSShapeBtn         = 'Shape...';
-  RSFontBtn          = 'Font...';
-
-  { Shape editor }
-  RSEditShapeCaption = 'Edit shape';
-  RSShapeCaption     = 'Shape';
-  RSRectangle        = 'rectangle';
-  RSTopLine          = 'top line';
-  RSBottomLine       = 'bottom line';
-  RSLeftLine         = 'left line';
-  RSRightLine        = 'right line';
-  RSTLToBRLine       = 'top-left to bottom-right line';
-  RSBLToTRLine       = 'bottom-left to top-right line';
-  RSEllipse          = 'ellipse';
-  RSPenCaption       = 'Pen';
-  RSBrushCaption     = 'Brush';
-  RSStyleLbl         = 'Style:';
-  RSWidthLbl         = 'Width:';
-  RSModeLbl          = 'Mode:';
-  RSColorLbl         = 'Color:';
-
-  { Automatic resource adding/selection}                               {!!.01}
-  RSAddNewResource   = 'No resources have been defined. Would you ' +  {!!.01}
-                       'like to add one now?';                         {!!.01}
-  RSSelectResource   = 'No resource has been selected. Would you ' +   {!!.01}
-                       'like to select one now?';
-
-  { AboutBox }
-  RSBrowserError     = 'Unable to start web browser. Make sure you have ' +
-                       'it properly setup on your system.';
-
-  { Ini storage }
-  RSIniFileStructure = 'Incorrect structure of ini file.';
 

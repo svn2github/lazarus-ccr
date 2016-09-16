@@ -50,81 +50,115 @@ type
   { TContactEditForm }
 
   TContactEditForm = class(TForm)
-    BirthdateEdit: TDateEdit;
-    BirthdateLbl: TLabel;
-    FirstNameEdit: TEdit;
-    FirstNameLbl: TLabel;
-    tsContacts: TPageControl;
-    tabMain: TTabSheet;
-    LastNameLbl: TLabel;
-    AddrLbl: TLabel;
-    CityLbl: TLabel;
-    StateLbl: TLabel;
-    ZipLbl: TLabel;
-    CountryLbl: TLabel;
-    PositionLbl: TLabel;
-    TitleLbl: TLabel;
-    CompanyLbl: TLabel;
-    LastNameEdit: TEdit;
-    AddressEdit: TEdit;
-    CityEdit: TEdit;
-    StateEdit: TEdit;
-    ZipCodeEdit: TEdit;
-    PositionEdit: TEdit;
-    TitleEdit: TEdit;
-    CompanyEdit: TEdit;
-    cboxCategory: TComboBox;
-    cboxCountry: TComboBox;
-    cboxState: TComboBox;
-    edtCountry: TEdit;
+    cbCountryH: TComboBox;
+    cbStateW: TComboBox;
+    cbStateH: TComboBox;
+    cbWebsite2: TComboBox;
+    cbEMail1: TComboBox;
+    cbEMail2: TComboBox;
+    cbEMail3: TComboBox;
+    cbWebsite1: TComboBox;
+    edAddressH: TEdit;
+    edCityH: TEdit;
+    edCompany: TEdit;
+    edCountryH: TEdit;
+    edDepartment: TEdit;
+    edStateH: TEdit;
+    edZipCodeH: TEdit;
+    gbWorkAddress: TGroupBox;
+    gbHomeAddress: TGroupBox;
+    lblAddressH: TLabel;
+    lblCityH: TLabel;
+    lblCompany: TLabel;
+    lblCountryComboH: TLabel;
+    lblCountryW: TLabel;
+    lblCountryH: TLabel;
+    lblDepartment: TLabel;
+    edBirthdate: TDateEdit;
+    edEMail2: TEdit;
+    edEMail3: TEdit;
+    edWebsite1: TEdit;
+    edWebsite2: TEdit;
+    gbPhone: TGroupBox;
+    gbEMail: TGroupBox;
+    gbWebsites: TGroupBox;
+    lblBirthdate: TLabel;
+    lblCategory: TLabel;
+    cbCategory: TComboBox;
+    edFirstName: TEdit;
+    lblFirstName: TLabel;
+    edLastName: TEdit;
+    lblLastName: TLabel;
+    lblStateComboW: TLabel;
+    lblStateComboH: TLabel;
+    lblStateH: TLabel;
+    lblZipCodeH: TLabel;
+    tabBaseData: TTabSheet;
+    edTitle: TEdit;
+    lblTitle: TLabel;
+    PageControl: TPageControl;
+    tabAddresses: TTabSheet;
+    lblAddressW: TLabel;
+    lblCityW: TLabel;
+    lblStateW: TLabel;
+    lblZipCodeW: TLabel;
+    lblCountryComboW: TLabel;
+    lblPosition: TLabel;
+    edAddressW: TEdit;
+    edCityW: TEdit;
+    edStateW: TEdit;
+    edZipCodeW: TEdit;
+    edPosition: TEdit;
+    cbCountryW: TComboBox;
+    edCountryW: TEdit;
     tabContact: TTabSheet;
     tabCustom: TTabSheet;
     pnlBottom: TPanel;
     OKBtn: TButton;
     CancelBtn: TButton;
     tabNotes: TTabSheet;
-    NoteEdit: TMemo;
-    CustomLbl1: TLabel;
-    CustomLbl2: TLabel;
-    CustomLbl3: TLabel;
-    CustomLbl4: TLabel;
-    Custom1Edit: TEdit;
-    Custom2Edit: TEdit;
-    Custom3Edit: TEdit;
-    Custom4Edit: TEdit;
-    cboxPhoneLbl1: TComboBox;
-    cboxPhoneLbl2: TComboBox;
-    cboxPhoneLbl3: TComboBox;
-    cboxPhoneLbl4: TComboBox;
-    Phone4Edit: TEdit;
-    Phone3Edit: TEdit;
-    Phone2Edit: TEdit;
-    Phone1Edit: TEdit;
-    cboxPhoneLbl5: TComboBox;
-    Phone5Edit: TEdit;
-    EMailLbl: TLabel;
-    EMailEdit: TEdit;
-    CategoryLbl: TLabel;
-    procedure cboxCountryChange(Sender: TObject);
+    memoNotes: TMemo;
+    lblCustom1: TLabel;
+    lblCustom2: TLabel;
+    lblCustom3: TLabel;
+    lblCustom4: TLabel;
+    edCustom1: TEdit;
+    edCustom2: TEdit;
+    edCustom3: TEdit;
+    edCustom4: TEdit;
+    cbPhone1: TComboBox;
+    cbPhone2: TComboBox;
+    cbPhone3: TComboBox;
+    cbPhone4: TComboBox;
+    edPhone4: TEdit;
+    edPhone3: TEdit;
+    edPhone2: TEdit;
+    edPhone1: TEdit;
+    cbPhone5: TComboBox;
+    edPhone5: TEdit;
+    edEMail1: TEdit;
+    procedure cbCountryChange(Sender: TObject);
     procedure CancelBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
-    procedure OKBtnClick(Sender: TObject);
     procedure ItemChanged(Sender: TObject);
-    procedure tsContactsChange(Sender: TObject);
+    procedure OKBtnClick(Sender: TObject);
+    procedure PageControlChange(Sender: TObject);
   private
-    procedure SetCaptions;
-    procedure DisplayCurrentCountry;
+    FBtnHeight: Integer;
+    FEditHeight: Integer;
+    procedure DisplayCurrentCountry(AddressType: TVpAddressType);
     procedure ResizeControls;
+    procedure SetCaptions;
   public
     Resource: TVpResource;
     Contact: TVpContact;
     ReturnCode: TVpEditorReturnCode;
     ControlLink: TVpControlLink;
-    procedure PopulateSelf;
-    procedure DePopulateSelf;
     procedure ArrangeControls;
+    procedure DePopulateSelf;
+    procedure PopulateSelf;
   end;
 
   TVpContactEditDialog = class(TVpBaseDialog)
@@ -133,8 +167,8 @@ type
     ceContact: TVpContact;
     ceResource: TVpResource;
   public
-    function Execute(Contact: TVpContact): Boolean; reintroduce;
     function AddNewContact: Boolean;
+    function Execute(Contact: TVpContact): Boolean; reintroduce;
   published
     {properties}
     property ControlLink;
@@ -171,39 +205,60 @@ procedure TContactEditForm.FormCreate(Sender: TObject);
 begin
   ReturnCode := rtAbandon;
   SetCaptions;
+  FBtnHeight := ScaleY(OKBtn.Height, DesignTimeDPI);
+  FEditHeight := ScaleY(edCompany.Height, DesigntimeDPI);
 end;
 
 procedure TContactEditForm.SetCaptions;
 begin
-  tabMain.Caption := RSMasterData;
+  tabBaseData.Caption := RSMasterData;
+  tabAddresses.Caption := RSAddresses;
   tabContact.Caption := RSDlgContactEdit;
   tabCustom.Caption := RSCustom;
   tabNotes.Caption := RSNotes;
 
+  gbWorkAddress.Caption := RSWorkAddress;
+  gbHomeAddress.Caption := RSHomeAddress;
+  gbPhone.Caption := RSPhoneFax;
+  gbEMail.Caption := RSEmail;
+  gbWebsites.Caption := RSWebsites;
+
   OkBtn.Caption := RSOKBtn;
   CancelBtn.Caption := RSCancelBtn;
-  LastNameLbl.Caption := RSLastNameLbl;
-  FirstNameLbl.Caption := RSFirstNameLbl;
-  TitleLbl.Caption := RSTitleLbl;
-  AddrLbl.Caption := RSAddressLbl;
-  CityLbl.Caption := RSCityLbl;
-  StateLbl.Caption := RSStateLbl;
-  ZipLbl.Caption := RSZipCodeLbl;
-  CountryLbl.Caption := RSCountryLbl;
-  CompanyLbl.Caption := RSCompanyLbl;
-  PositionLbl.Caption := RSPositionLbl;
-  CategoryLbl.Caption := RSCategoryLbl;
-  BirthdateLbl.Caption := RSBirthDateLbl;
-  EmailLbl.Caption := RSEmail;
-  CustomLbl1.Caption := RSCustom1;
-  CustomLbl2.Caption := RSCustom2;
-  CustomLbl3.Caption := RSCustom3;
-  CustomLbl4.Caption := RSCustom4;
+  lblLastName.Caption := RSLastNameLbl;
+  lblFirstName.Caption := RSFirstNameLbl;
+  lblTitle.Caption := RSTitleLbl;
+  lblCategory.Caption := RSCategoryLbl;
+  lblBirthdate.Caption := RSBirthDateLbl;
+
+  lblCompany.Caption := RSCompanyLbl;
+  lblDepartment.Caption := RSDepartmentLbl;
+  lblPosition.Caption := RSPositionLbl;
+
+  lblAddressW.Caption := RSAddressLbl;
+  lblAddressH.Caption := RSAddressLbl;
+  lblCityW.Caption := RSCityLbl;
+  lblCityH.Caption := RSCityLbl;
+  lblStateW.Caption := RSStateLbl;
+  lblStateH.Caption := RSStateLbl;
+  lblStateComboW.Caption := RSStateLbl;
+  lblStateComboH.Caption := RSStateLBL;
+  lblZipCodeW.Caption := RSZipCodeLbl;
+  lblZipCodeH.Caption := RSZipCodeLbl;
+  lblCountryComboW.Caption := RSCountryLbl;
+  lblCountryComboH.Caption := RSCountryLbl;
+  lblCountryW.Caption := RSCountryLbl;
+  lblCountryH.Caption := RSCountryLbl;
+
+  lblCustom1.Caption := RSCustom1;
+  lblCustom2.Caption := RSCustom2;
+  lblCustom3.Caption := RSCustom3;
+  lblCustom4.Caption := RSCustom4;
 end;
 
 procedure TContactEditForm.OKBtnClick(Sender: TObject);
 begin
-  if LastNameEdit.Text = '' then begin
+  if (edLastName.Text = '') and (edFirstName.Text = '') then begin
     raise EVpContactEditError.Create(RSNameIsRequired);
     exit;
   end;
@@ -219,150 +274,231 @@ end;
 
 procedure TContactEditForm.DePopulateSelf;
 begin
-//  ParseName(Contact, LastNameEdit.Text);
-  Contact.LastName := LastNameEdit.Text;
-  Contact.FirstName := FirstNameEdit.Text;
-  Contact.Address := AddressEdit.Text;
-  Contact.City := CityEdit.Text;
-  if cboxState.Visible then
-    Contact.State := cboxState.Text
-  else
-    Contact.State := StateEdit.Text;
-  Contact.Zip := ZipCodeEdit.Text;
-  Contact.Job_Position := PositionEdit.Text;
-  Contact.Title := TitleEdit.Text;
-  Contact.EMail := EMailEdit.Text;
-  Contact.Company := CompanyEdit.Text;
-  Contact.Birthdate := BirthdateEdit.Date;
-  Contact.Phone1 := Phone1Edit.Text;
-  Contact.Phone2 := Phone2Edit.Text;
-  Contact.Phone3 := Phone3Edit.Text;
-  Contact.Phone4 := Phone4Edit.Text;
-  Contact.Phone5 := Phone5Edit.Text;
-  if cboxCountry.Visible then
-    Contact.Country := cboxCountry.Text
-  else
-    Contact.Country := edtCountry.Text;
-  Contact.Notes := NoteEdit.Text;
-  Contact.Category := cboxCategory.ItemIndex;
-  Contact.Custom1 := Custom1Edit.Text;
-  Contact.Custom2 := Custom2Edit.Text;
-  Contact.Custom3 := Custom3Edit.Text;
-  Contact.Custom4 := Custom4Edit.Text;
+  Contact.LastName := edLastName.Text;
+  Contact.FirstName := edFirstName.Text;
+  Contact.Title := edTitle.Text;
+  Contact.Category := cbCategory.ItemIndex;
+  Contact.Birthdate := edBirthdate.Date;
 
-  Contact.PhoneType1 := cboxPhoneLbl1.ItemIndex;
-  Contact.PhoneType2 := cboxPhoneLbl2.ItemIndex;
-  Contact.PhoneType3 := cboxPhoneLbl3.ItemIndex;
-  Contact.PhoneType4 := cboxPhoneLbl4.ItemIndex;
-  Contact.PhoneType5 := cboxPhoneLbl5.ItemIndex;
+  Contact.Company := edCompany.Text;
+  Contact.Department := edDepartment.Text;
+  Contact.Job_Position := edPosition.Text;
 
-  Contact.Category := cboxCategory.ItemIndex;
+  Contact.AddressType1 := ord(atWork);
+  Contact.Address1 := edAddressW.Text;
+  Contact.City1 := edCityW.Text;
+  if cbStateW.Visible then
+    Contact.State1 := cbStateW.Text
+  else
+    Contact.State1 := edStateW.Text;
+  Contact.Zip1 := edZipCodeW.Text;
+  if cbCountryW.Visible then
+    Contact.Country1 := cbCountryW.Text
+  else
+    Contact.Country1 := edCountryW.Text;
+
+  Contact.AddressType2 := ord(atHome);
+  Contact.Address2 := edAddressH.Text;
+  Contact.City2 := edCityH.Text;
+  if cbStateH.Visible then
+    Contact.State2 := cbStateH.Text
+  else
+    Contact.State2 := edStateH.Text;
+  Contact.Zip2 := edZipCodeH.Text;
+  if cbCountryH.Visible then
+    Contact.Country2 := cbCountryH.Text
+  else
+    Contact.Country2 := edCountryH.Text;
+
+  Contact.Phone1 := edPhone1.Text;
+  Contact.Phone2 := edPhone2.Text;
+  Contact.Phone3 := edPhone3.Text;
+  Contact.Phone4 := edPhone4.Text;
+  Contact.Phone5 := edPhone5.Text;
+  Contact.PhoneType1 := cbPhone1.ItemIndex;
+  Contact.PhoneType2 := cbPhone2.ItemIndex;
+  Contact.PhoneType3 := cbPhone3.ItemIndex;
+  Contact.PhoneType4 := cbPhone4.ItemIndex;
+  Contact.PhoneType5 := cbPhone5.ItemIndex;
+
+  Contact.EMail1 := edEMail1.Text;
+  Contact.EMail2 := edEMail2.Text;
+  contact.EMail3 := edEMail3.Text;
+  Contact.EMailType1 := cbEMail1.ItemIndex;
+  Contact.EMailType2 := cbEMail2.ItemIndex;
+  Contact.EMailType3 := cbEMail3.ItemIndex;
+
+  Contact.Website1 := edWebsite1.Text;
+  Contact.Website2 := edWebsite2.Text;
+  Contact.WebsiteType1 := cbWebsite1.ItemIndex;
+  Contact.WebsiteType2 := cbWebsite2.ItemIndex;
+
+  Contact.Custom1 := edCustom1.Text;
+  Contact.Custom2 := edCustom2.Text;
+  Contact.Custom3 := edCustom3.Text;
+  Contact.Custom4 := edCustom4.Text;
+
+  Contact.Notes := memoNotes.Text;
 end;
 
 procedure TContactEditForm.PopulateSelf;
 var
   CurCountry: Integer;
   pt: TVpPhoneType;
+  mt: TVpEMailType;
+  wt: TVpWebsiteType;
   ct: TVpCategoryType;
-
 begin
-  LastNameEdit.Text := Contact.LastName;
-  FirstNameEdit.Text := Contact.FirstName; //AssembleName(Contact);
-  AddressEdit.Text := Contact.Address;
-  CityEdit.Text := Contact.City;
-  ZipCodeEdit.Text := Contact.Zip;
-  PositionEdit.Text := Contact.Job_Position;
-  TitleEdit.Text := Contact.Title;
-  EMailEdit.Text := Contact.EMail;
-  CompanyEdit.Text := Contact.Company;
-  Phone1Edit.Text := Contact.Phone1;
-  Phone2Edit.Text := Contact.Phone2;
-  Phone3Edit.Text := Contact.Phone3;
-  Phone4Edit.Text := Contact.Phone4;
-  Phone5Edit.Text := Contact.Phone5;
-  NoteEdit.Text := Contact.Notes;
-  cboxCategory.ItemIndex := Contact.Category;
-  Custom1Edit.Text := Contact.Custom1;
-  Custom2Edit.Text := Contact.Custom2;
-  Custom3Edit.Text := Contact.Custom3;
-  Custom4Edit.Text := Contact.Custom4;
-  cboxCountry.Text := Contact.Country;
-  edtCountry.Text := Contact.Country;
-  if (Contact.Country = '') and (Assigned (ControlLink)) then begin
+  edLastName.Text := Contact.LastName;
+  edFirstName.Text := Contact.FirstName;
+  edTitle.Text := Contact.Title;
+  if contact.Birthdate = 0.0 then
+    edBirthdate.Clear else
+    edBirthdate.Date := Contact.Birthdate;
+
+  cbCategory.Items.Clear;
+  for ct := Low (TVpCategoryType) to High (TVpCategoryType) do
+    cbCategory.Items.Add(CategoryLabel(ct));
+  cbCategory.ItemIndex := Contact.Category;
+
+  if Contact.Birthdate = 0.0 then
+    edBirthdate.Clear else
+    edBirthdate.Date := Contact.Birthdate;
+
+  edCompany.Text := Contact.Company;
+  edDepartment.Text := Contact.Department;
+  edPosition.Text := Contact.Job_Position;
+
+  edAddressW.Text := Contact.Address1;
+  edCityW.Text := Contact.City1;
+  edZipCodeW.Text := Contact.Zip1;
+  cbCountryW.Text := Contact.Country1;
+  edCountryW.Text := Contact.Country1;
+  if (Contact.Country1 = '') and Assigned(ControlLink) then begin
     if ControlLink.DefaultCountry <> '' then begin
-      cboxCountry.Text := ControlLink.DefaultCountry;
-      edtCountry.Text := ControlLink.DefaultCountry;
+      cbCountryW.Text := ControlLink.DefaultCountry;
+      edCountryW.Text := ControlLink.DefaultCountry;
     end else begin
       CurCountry := ControlLink.Localization.GetCurrentCountry;
       if CurCountry >= 0 then begin
-        cboxCountry.Text := ControlLink.Localization.Countries.Items[CurCountry].Name;
-        edtCountry.Text := ControlLink.Localization.Countries.Items[CurCountry].Name;
+        cbCountryW.Text := ControlLink.Localization.Countries.Items[CurCountry].Name;
+        edCountryW.Text := ControlLink.Localization.Countries.Items[CurCountry].Name;
       end;
     end;
   end;
-  StateEdit.Text := Contact.State;
-  cboxState.Text := Contact.State;
-  if Contact.Birthdate = 0.0 then
-    BirthdateEdit.Clear else
-    BirthdateEdit.Date := Contact.Birthdate;
+  edStateW.Text := Contact.State1;
+  cbStateW.Text := Contact.State1;
 
-  for pt := Low (TVpPhoneType) to High (TVpPhoneType) do begin
-    cboxPhoneLbl1.Items.Add(PhoneLabel(pt));
-    cboxPhoneLbl2.Items.Add(PhoneLabel(pt));
-    cboxPhoneLbl3.Items.Add(PhoneLabel(pt));
-    cboxPhoneLbl4.Items.Add(PhoneLabel(pt));
-    cboxPhoneLbl5.Items.Add(PhoneLabel(pt));
+  edAddressH.Text := Contact.Address2;
+  edCityH.Text := Contact.City2;
+  edZipCodeH.Text := Contact.Zip2;
+  cbCountryH.Text := Contact.Country2;
+  edCountryH.Text := Contact.Country2;
+  if (Contact.Country2 = '') and Assigned(ControlLink) then begin
+    if ControlLink.DefaultCountry <> '' then begin
+      cbCountryH.Text := ControlLink.DefaultCountry;
+      edCountryH.Text := ControlLink.DefaultCountry;
+    end else begin
+      CurCountry := ControlLink.Localization.GetCurrentCountry;
+      if CurCountry >= 0 then begin
+        cbCountryH.Text := ControlLink.Localization.Countries.Items[CurCountry].Name;
+        edCountryH.Text := ControlLink.Localization.Countries.Items[CurCountry].Name;
+      end;
+    end;
   end;
-  cboxPhoneLbl1.ItemIndex := Contact.PhoneType1;
-  cboxPhoneLbl2.ItemIndex := Contact.PhoneType2;
-  cboxPhoneLbl3.ItemIndex := Contact.PhoneType3;
-  cboxPhoneLbl4.ItemIndex := Contact.PhoneType4;
-  cboxPhoneLbl5.ItemIndex := Contact.PhoneType5;
+  edStateH.Text := Contact.State2;
+  cbStateH.Text := Contact.State2;
 
-  for ct := Low (TVpCategoryType) to High (TVpCategoryType) do
-    cboxCategory.Items.Add(CategoryLabel(ct));
-  cboxCategory.ItemIndex := Contact.Category;
+  memoNotes.Text := Contact.Notes;
 
-  DisplayCurrentCountry;
+  edCustom1.Text := Contact.Custom1;
+  edCustom2.Text := Contact.Custom2;
+  edCustom3.Text := Contact.Custom3;
+  edCustom4.Text := Contact.Custom4;
+
+  edPhone1.Text := Contact.Phone1;
+  edPhone2.Text := Contact.Phone2;
+  edPhone3.Text := Contact.Phone3;
+  edPhone4.Text := Contact.Phone4;
+  edPhone5.Text := Contact.Phone5;
+  cbPhone1.Items.Clear;
+  cbPhone2.Items.Clear;
+  cbPhone3.Items.Clear;
+  cbPhone4.Items.Clear;
+  cbPhone5.Items.Clear;
+  for pt := Low (TVpPhoneType) to High (TVpPhoneType) do begin
+    cbPhone1.Items.Add(PhoneLabel(pt));
+    cbPhone2.Items.Add(PhoneLabel(pt));
+    cbPhone3.Items.Add(PhoneLabel(pt));
+    cbPhone4.Items.Add(PhoneLabel(pt));
+    cbPhone5.Items.Add(PhoneLabel(pt));
+  end;
+  cbPhone1.ItemIndex := Contact.PhoneType1;
+  cbPhone2.ItemIndex := Contact.PhoneType2;
+  cbPhone3.ItemIndex := Contact.PhoneType3;
+  cbPhone4.ItemIndex := Contact.PhoneType4;
+  cbPhone5.ItemIndex := Contact.PhoneType5;
+
+  edEMail1.Text := Contact.EMail1;
+  edEMail2.Text := Contact.EMail2;
+  edEMail3.Text := Contact.EMail3;
+  cbEMail1.Items.Clear;
+  cbEMail2.Items.Clear;
+  cbEMail3.Items.Clear;
+  for mt := Low(TVpEMailType) to High(TVpEMailType) do begin
+    cbEMail1.Items.Add(EMailLabel(mt));
+    cbEMail2.Items.Add(EMailLabel(mt));
+    cbEMail3.Items.Add(EMailLabel(mt));
+  end;
+  cbEMail1.ItemIndex := Contact.EMailType1;
+  cbEMail2.ItemIndex := Contact.EMailType2;
+  cbEMail3.ItemIndex := Contact.EMailType3;
+
+  edWebsite1.Text := Contact.Website1;
+  edWebsite2.Text := Contact.Website2;
+  cbWebsite1.Items.Clear;
+  cbWebsite2.Items.Clear;
+  for wt := Low(TVpWebsiteType) to High(TVpWebsiteType) do begin
+    cbWebsite1.Items.Add(WebsiteLabel(wt));
+    cbWebsite2.Items.Add(WebsiteLabel(wt));
+  end;
+  cbWebsite1.ItemIndex := Contact.WebsiteType1;
+  cbWebsite2.ItemIndex := Contact.WebsiteType2;
+
+  DisplayCurrentCountry(atWork);
+  DisplayCurrentCountry(atHome);
+  ResizeControls;
 end;
 
 procedure TContactEditForm.ItemChanged(Sender: TObject);
 begin
   Contact.Changed := true;
-
-  { if there is a comma in the LastNameEdit, then it is assumed that the name is  }
-  { formatted as last, first. Since the comma & space aren't actually part of }
-  { the name, we need to allow two extra characters in the namefield's width. }
-  if Pos(',', LastNameEdit.Text) > 0 then
-    LastNameEdit.MaxLength := 102
-  else
-    LastNameEdit.MaxLength := 100;
 end;
 
 procedure TContactEditForm.ArrangeControls;
 begin
-  edtCountry.Left := cboxCountry.Left;
-  StateEdit.Left := cboxState.Left;
-
-  if (not Assigned (ControlLink)) or
-     (ControlLink.Localization.Countries.Count = 0) then begin
-    edtCountry.Visible := True;
-    CountryLbl.FocusControl := edtCountry;
-    cboxCountry.Visible := False;
-    StateEdit.Visible := True;
-    StateLbl.FocusControl := StateEdit;
-    cboxState.Visible := False;
+  if (not Assigned (ControlLink)) or (ControlLink.Localization.Countries.Count = 0)
+  then begin
+    edCountryW.Show;
+    cbCountryW.Hide;
+    edCountryH.Show;
+    cbCountryH.Hide;
   end
   else begin
-    ControlLink.Localization.CountriesToTStrings(cboxCountry.Items);
-    CountryLbl.FocusControl := cboxCountry;
-    cboxCountry.Visible := True;
-    edtCountry.Visible := False;
-    StateLbl.FocusControl := cboxState;
-    cboxState.Visible := True;
-    StateEdit.Visible := False;
+    ControlLink.Localization.CountriesToTStrings(cbCountryW.Items);
+    edCountryW.Hide;
+    cbCountryW.Show;
+    ControlLink.Localization.CountriesToTStrings(cbCountryH.Items);
+    edCountryH.Hide;
+    cbCountryH.Show;
   end;
-  tsContacts.ActivePage := tabMain;
+
+  lblCountryComboW.Visible := cbCountryW.Visible;
+  lblCountryW.Visible := edCountryW.Visible;
+  lblCountryComboH.Visible := cbCountryH.Visible;
+  lblCountryH.Visible := edCountryH.Visible;
+
+  PageControl.ActivePage := tabBaseData;
 end;
 
 procedure TContactEditForm.ResizeControls;
@@ -384,276 +520,363 @@ var
   Labels: TLabelArray;
   Comboboxes: TComboboxArray;
   Edits: TEditArray;
-  LargestLabelWidth: Integer;
-  WidestField: Integer;
+  largestLabelWidth: Integer;
   i, j: Integer;
   OldFont: TFont;
   FieldTop: Integer;
   delta: Integer;
-  corr: Integer;         // difference between form's client width and tabsheet width
-  editHeight: Integer;   // DPI-aware height of an edit control
-  btnHeight: Integer;    // DPI-aware height of a button control
+  hdist: Integer = 4;    // Horizontal distance between label and edit/combo
   vDist: Integer = 4;    // Vertical distance between edits
-  hBorder: Integer = 8;  // Distance between container border and label
-  dist: Integer = 4;     // Distance between label and edit/combo
-
+  hBorder: Integer = 8;  // Horizontal distance between container border and label
+  vBorder: Integer = 8;  // Vertical distance between container border and 1st control
 begin
-  dist := ScaleX(dist , DesignTimeDPI);
+  {----------------------------------------------------------------------------}
+  { Preparations                                                               }
+  {----------------------------------------------------------------------------}
+  hdist := ScaleX(hdist, DesignTimeDPI);
   vdist := ScaleY(vdist, DesignTimeDPI);
   hBorder := ScaleX(hBorder, DesignTimeDPI);
-  editHeight := ScaleY(LastNameEdit.Height, DesignTimeDPI);
-  btnHeight := ScaleY(OKBtn.Height, DesignTimeDPI);
+  vBorder := ScaleY(vBorder, DesignTimeDPI);
+  edBirthdate.ButtonWidth := FEditHeight;
 
-  BirthdateEdit.ButtonWidth := editHeight;
-
-  { Note: The resizing algorithm is dependent upon the labels having their
-    FocusControl property set to the corresponding edit field or combobox. }
-
-  SetLength(Labels, 12);
-  Labels[0] := LastNameLbl;
-  Labels[1] := FirstNameLbl;
-  Labels[2] := TitleLbl;
-  Labels[3] := AddrLbl;
-  Labels[4] := CityLbl;
-  Labels[5] := StateLbl;
-  Labels[6] := ZipLbl;
-  Labels[7] := CountryLbl;
-  Labels[8] := CompanyLbl;
-  Labels[9] := PositionLbl;
-  Labels[10] := CategoryLbl;
-  Labels[11] := BirthdateLbl;
-
-  LargestLabelWidth := 0;
-  for i := Low(Labels) to High(Labels) do
-    LargestLabelWidth := Max(LargestLabelWidth, GetLabelWidth(Labels[i]));
-
-  { Determine width of label based upon dpi of screen }
-  for i := Low(Labels) to High(Labels) do begin
-    Labels[i].FocusControl.Left := HBorder + LargestLabelWidth + Dist;
-    Labels[i].Left := Labels[i].FocusControl.Left - DIST - GetLabelWidth(Labels[i]);
-    Labels[i].Top := Labels[i].FocusControl.Top + (Labels[i].FocusControl.Height - Labels[i].Height) div 2;
-  end;
-
-  widestField := 250;
-
-  { If localization file is loaded determine the width of the country and state
-    comboboxes }
-  if cboxCountry.Visible or cboxState.Visible then begin
-    OldFont := TFont.Create;
-    try
-      OldFont.Assign(Canvas.Font);
-      if cboxCountry.Visible then begin
-        Canvas.Font.Assign(cboxCountry.Font);
-        for j := 0 to cboxCountry.Items.Count - 1 do
-          widestField := Max(widestField, Canvas.TextWidth(cboxCountry.Items[j]) + ComboArrowWidth);
-      end;
-      if cboxState.Visible then begin
-        Canvas.Font.Assign(cboxCountry.Font);
-        for j := 0 to cboxState.Items.Count - 1 do
-          widestField := Max(widestfield, Canvas.TextWidth(cboxState.Items[j]) + ComboArrowWidth);
-      end;
-    finally
-      Canvas.Font.Assign(OldFont);
-      OldFont.Free;
-    end;
-  end;
-
-  { Set form width according to widest field }
-  corr := ClientWidth - tabMain.ClientWidth;
-  ClientWidth := LastNameEdit.Left + widestfield + HBorder + corr;
-
-  { Set edit and combo widths }
-  for i:= Low(Labels) to High(Labels) do
-    if (Labels[i].FocusControl <> ZipCodeEdit) and
-       (Labels[i].FocusControl <> BirthdateEdit)
-    then
-      Labels[i].FocusControl.Width := widestfield;
-  cboxCountry.Width := widestField;
-  cboxState.Width := widestField;
-
-  { Vertically arrange the fields. }
-  delta := (Labels[0].FocusControl.Height - labels[0].Height) div 2;
-  FieldTop := TopField;
-  for i := Low(Labels) to High(Labels) do
-    if Labels[i].Visible then begin
-      Labels[i].FocusControl.Top := FieldTop;
-      Labels[i].Top := FieldTop + delta;
-      inc(FieldTop, editHeight + VDist);
-    end;
-
-  OKBtn.Top := vDist;
-  OKBtn.Height := btnHeight;
-  CancelBtn.Top := OKBtn.Top;
-  CancelBtn.Height := OKBtn.Height;
-  pnlBottom.ClientHeight := btnHeight + vDist*2;
-
-  { Set form height such that first tab is filled completely by controls }
-  ClientHeight := BirthDateEdit.Top + editHeight + TopField + VDist + // required height of tab sheet
-    pnlBottom.Height +  // height of button panel
-    tsContacts.Height - tabMain.ClientHeight;   // Height of tab + border
-
-  { Page "Contact" }
-  SetLength(Comboboxes, 5);
-  Comboboxes[0] := cboxPhoneLbl1;
-  Comboboxes[1] := cboxPhoneLbl2;
-  Comboboxes[2] := cboxPhoneLbl3;
-  Comboboxes[3] := cboxPhoneLbl4;
-  Comboboxes[4] := cboxPhoneLbl5;
-
-  SetLength(Edits, 5);
-  Edits[0] := Phone1Edit;
-  Edits[1] := Phone2Edit;
-  Edits[2] := Phone3Edit;
-  Edits[3] := Phone4Edit;
-  Edits[4] := Phone5Edit;
-
-  largestLabelWidth := GetLabelWidth(EMailLbl);
-  OldFont := TFont.Create;
-  try
-    OldFont.Assign(Canvas.Font);
-    Canvas.Font.Assign(cboxPhoneLbl1.Font);
-    for i:=0 to cboxPhoneLbl1.Items.Count-1 do
-      largestLabelWidth := Max(cboxPhoneLbl1.Canvas.TextWidth(cboxPhoneLbl1.Items[i]) + ComboArrowWidth, largestlabelWidth);
-  finally
-    Canvas.Font.Assign(OldFont);
-    OldFont.Free;
-  end;
-
-  FieldTop := TopField;
-  for i:=Low(Comboboxes) to High(Comboboxes) do begin
-    Comboboxes[i].Left := HBorder;
-    Comboboxes[i].Width := largestLabelWidth;
-    Comboboxes[i].Top := FieldTop;
-    inc(FieldTop, editHeight + VDist);
-  end;
-
-  for i:= Low(Edits) to High(Edits) do begin
-    Edits[i].Left := cboxPhoneLbl1.Left + cboxPhoneLbl1.Width + DIST;
-    Edits[i].Width := ClientWidth - Edits[i].Left - HBorder - corr;
-    Edits[i].Top := Comboboxes[i].Top;
-  end;
-
-  EMailEdit.Left := Phone1Edit.Left;
-  EMailEdit.Width := Phone1Edit.Width;
-  EMailEdit.Top := Phone5Edit.Top + editHeight + VDist;
-  EMailLbl.Left := EMailEdit.Left - GetLabelWidth(EMailLbl) - Dist;
-  EMailLbl.Top := EMailEdit.Top + delta;
-
-  { Page "User-defined" }
-  SetLength(Labels, 4);
-  Labels[0] := CustomLbl1;
-  Labels[1] := CustomLbl2;
-  Labels[2] := CustomLbl3;
-  Labels[3] := CustomLbl4;
+  {----------------------------------------------------------------------------}
+  { Page "Base data"                                                           }
+  {----------------------------------------------------------------------------}
+  SetLength(Labels, 5);
+  Labels[0] := lblLastName;
+  Labels[1] := lblFirstName;
+  Labels[2] := lblTitle;
+  Labels[3] := lblCategory;
+  Labels[4] := lblBirthdate;
 
   largestLabelWidth := 0;
   for i := Low(Labels) to High(Labels) do
     largestLabelWidth := Max(largestLabelWidth, GetLabelWidth(Labels[i]));
 
-  FieldTop := TopField;
+  // Determine width of label based upon dpi of screen
   for i := Low(Labels) to High(Labels) do begin
-    Labels[i].FocusControl.Left := HBorder + LargestLabelWidth + Dist;
-    Labels[i].FocusControl.Top := FieldTop;
-    Labels[i].FocusControl.Width := ClientWidth - Labels[i].FocusControl.Left - HBorder - corr;
-    Labels[i].Width := LargestLabelWidth;
-    Labels[i].Left := Labels[i].FocusControl.Left - GetLabelWidth(Labels[i]) - Dist;
-    Labels[i].Top := FieldTop + delta;
-    inc(FieldTop, editHeight + VDist);
+    Labels[i].FocusControl.Left := HBorder + largestLabelWidth + hDist;
+    Labels[i].Left := Labels[i].FocusControl.Left - hDist - GetLabelWidth(Labels[i]);
   end;
 
+  // Set edit and combo widths
+  edLastName.Width := edLastName.Parent.ClientWidth - hBorder - edLastName.Left;
+  edFirstname.Width := edLastName.Width;
+  edBirthdate.Width := edTitle.Width;
+  cbCategory.Width := edTitle.Width;
+
+  // Vertically arrange the fields. }
+  delta := (Labels[0].FocusControl.Height - labels[0].Height) div 2;
+  FieldTop := vBorder;
+  for i := Low(Labels) to High(Labels) do
+    if Labels[i].Visible then begin
+      Labels[i].FocusControl.Top := FieldTop;
+      Labels[i].Top := FieldTop + delta;
+      inc(FieldTop, FEditHeight + VDist);
+    end;
+
+  {----------------------------------------------------------------------------}
+  { Page "Contact"                                                             }
+  {----------------------------------------------------------------------------}
+  gbPhone.Left := hBorder;
+  gbPhone.Width := gbPhone.Parent.ClientWidth - 2*hBorder;
+
+  gbEMail.Left := hBorder;
+  gbEMail.Width := gbPhone.Width;
+
+  gbWebsites.Left := hBorder;
+  gbWebsites.Width := gbPhone.Width;
+
+  SetLength(Comboboxes, 10);
+  Comboboxes[0] := cbPhone1;
+  Comboboxes[1] := cbPhone2;
+  Comboboxes[2] := cbPhone3;
+  Comboboxes[3] := cbPhone4;
+  Comboboxes[4] := cbPhone5;
+  Comboboxes[5] := cbEMail1;
+  Comboboxes[6] := cbEMail2;
+  Comboboxes[7] := cbEMail3;
+  Comboboxes[8] := cbWebsite1;
+  Comboboxes[9] := cbWebsite1;
+
+  SetLength(Edits, 10);
+  Edits[0] := edPhone1;
+  Edits[1] := edPhone2;
+  Edits[2] := edPhone3;
+  Edits[3] := edPhone4;
+  Edits[4] := edPhone5;
+  Edits[5] := edEMail1;
+  Edits[6] := edEMail2;
+  Edits[7] := edEMail3;
+  Edits[8] := edWebsite1;
+  Edits[9] := edWebsite2;
+
+  largestLabelWidth := 0;
+  OldFont := TFont.Create;
+  try
+    OldFont.Assign(Canvas.Font);
+    Canvas.Font.Assign(cbPhone1.Font);
+    for i:=0 to cbPhone1.Items.Count-1 do
+      largestLabelWidth := Max(Canvas.TextWidth(cbPhone1.Items[i]) + ComboArrowWidth, largestlabelWidth);
+    canvas.Font.Assign(cbEmail1.Font);
+    for i:=0 to cbEMail1.Items.Count-1 do
+      largestLabelWidth := Max(Canvas.TextWidth(cbEMail1.Items[i]) + ComboArrowWidth, largestLabelWidth);
+    canvas.Font.Assign(cbWebsite1.Font);
+    for i:=0 to cbWebsite1.Items.Count-1 do
+      largestlabelWidth := Max(Canvas.TextWidth(cbWebsite1.Items[i]) + ComboArrowWidth, largestLabelWidth);
+  finally
+    Canvas.Font.Assign(OldFont);
+    OldFont.Free;
+  end;
+
+  for i:=Low(Comboboxes) to High(Comboboxes) do begin
+    Comboboxes[i].Left := HBorder;
+    Comboboxes[i].Width := largestLabelWidth;
+  end;
+
+  for i:= Low(Edits) to High(Edits) do begin
+    Edits[i].Left := cbPhone1.Left + cbPhone1.Width + hDist;
+    Edits[i].Width := Edits[i].Parent.ClientWidth - Edits[i].Left - HBorder;
+  end;
+
+  gbPhone.AutoSize := true;
+  gbEMail.AutoSize := true;
+  gbWebsites.AutoSize := true;
+
+
+  {----------------------------------------------------------------------------}
+  { Page "Addresses"                                                             }
+  {----------------------------------------------------------------------------}
+  { Note: The resizing algorithm is dependent upon the labels having their
+    FocusControl property set to the corresponding edit field or combobox. }
+
+  SetLength(Labels, 17);
+  Labels[0] := lblCompany;
+  Labels[1] := lblDepartment;
+  Labels[2] := lblPosition;
+  Labels[3] := lblAddressW;
+  Labels[4] := lblCityW;
+  Labels[5] := lblStateW;
+  Labels[6] := lblStateComboW;
+  Labels[7] := lblZipCodeW;
+  Labels[8] := lblCountryW;
+  Labels[9] := lblCountryComboW;
+  Labels[10] := lblAddressH;
+  Labels[11] := lblCityH;
+  Labels[12] := lblStateH;
+  Labels[13] := lblStateComboH;
+  Labels[14] := lblZipCodeH;
+  Labels[15] := lblCountryH;
+  Labels[16] := lblCountryComboH;
+
+  largestLabelWidth := 0;
+  for i := Low(Labels) to High(Labels) do begin
+    largestLabelWidth := Max(largestLabelWidth, GetLabelWidth(Labels[i]));
+    Labels[i].FocusControl.Height := FEditHeight;
+  end;
+
+  edCompany.Left := HBorder + largestLabelWidth + hDist;
+  edCompany.Width := edCompany.Parent.ClientWidth - hBorder - edCompany.Left;
+
+  edAddressH.Left := edCompany.Left;
+  edAddressH.Width := edCompany.Width;
+
+  {----------------------------------------------------------------------------}
+  { Page "User-defined"                                                        }
+  {----------------------------------------------------------------------------}
+  SetLength(Labels, 4);
+  Labels[0] := lblCustom1;
+  Labels[1] := lblCustom2;
+  Labels[2] := lblCustom3;
+  Labels[3] := lblCustom4;
+
+  largestLabelWidth := 0;
+  for i := Low(Labels) to High(Labels) do
+    largestLabelWidth := Max(largestLabelWidth, GetLabelWidth(Labels[i]));
+
+  FieldTop := vBorder;
+  edCustom1.Left := hBorder + largestLabelWidth + hDist;
+  edCustom1.Width := edCustom1.Parent.ClientWidth - hBorder - edCustom1.Left;
+  for i := Low(Labels) to High(Labels) do begin
+    Labels[i].FocusControl.Top := FieldTop;
+    Labels[i].FocusControl.Left := edCustom1.Left;
+    Labels[i].FocusControl.Width := edCustom1.Width;
+    Labels[i].FocusControl.Height := FEditHeight;
+    labels[i].Top := FieldTop + delta;
+    Labels[i].Width := LargestLabelWidth;
+    Labels[i].Left := Labels[i].FocusControl.Left - GetLabelWidth(Labels[i]) - hDist;
+    inc(FieldTop, FEditHeight + vDist);
+  end;
+
+  {----------------------------------------------------------------------------}
+  { Buttons                                                                    }
+  {----------------------------------------------------------------------------}
   OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
   CancelBtn.Width := OKBtn.Width;
  {$IFDEF MSWINDOWS}   // button order: OK - Cancel
   CancelBtn.Left := pnlBottom.ClientWidth - HBorder - CancelBtn.Width;
-  OKBtn.Left := CancelBtn.Left - Dist - OKBtn.Width;
+  OKBtn.Left := CancelBtn.Left - hDist - OKBtn.Width;
  {$ELSE}              // button order: Cancel - OK
   OKBtn.Left := pnlBottom.ClientWidth - HBorder - OKBtn.Width;
-  CancelBtn.Left := OKBtn.Left - Dist - CancelBtn.Width;
+  CancelBtn.Left := OKBtn.Left - hDist - CancelBtn.Width;
   OKBtn.TabOrder := 1;
  {$ENDIF}
+  OKBtn.Height := FBtnHeight;
+  CancelBtn.Height := FBtnHeight;
+  OKBtn.Top := vDist;
+  CancelBtn.Top := vDist;
+  pnlBottom.ClientHeight := OKBtn.Height + vDist*2; // Centering is done by anchors
+
+  {----------------------------------------------------------------------------}
+  { Set form size                                                              }
+  {----------------------------------------------------------------------------}
+  AutoSize := true;
 end;
 
-procedure TContactEditForm.DisplayCurrentCountry;
+procedure TContactEditForm.DisplayCurrentCountry(AddressType: TVpAddressType);
 var
-  Idx : Integer;
+  idx : Integer;
+  countryCombo: TCombobox;
+  countryComboLabel: TLabel;
+  countryEdit: TEdit;
+  countryLabel: TLabel;
+  stateCombo: TCombobox;
+  stateComboLabel: TLabel;
+  stateLabel: TLabel;
+  stateEdit: TEdit;
+  addressLabel: TLabel;
+  addressEdit: TEdit;
+  cityLabel: TLabel;
+  cityEdit: TEdit;
+  zipcodeLabel: TLabel;
+  zipcodeEdit: TEdit;
 begin
+ // ArrangeControls;
+
   if not Assigned(ControlLink) then
     Exit;
 
-  Idx := ControlLink.Localization.CountryNameToIndex(cboxCountry.Text);
-  if Idx > -1 then begin
-    ControlLink.Localization.StatesToTStrings(Idx, cboxState.Items);
-
-    if ControlLink.Localization.Countries.Items[Idx].Address1Visible then begin
-      AddrLbl.Visible := True;
-      AddressEdit.Visible := True;
-      if ControlLink.Localization.Countries.Items[Idx].Address1Caption <> '' then
-        AddrLbl.Caption := ControlLink.Localization.Countries.Items[Idx].Address1Caption
-      else
-        AddrLbl.Caption := RSAddressLbl;
-    end else begin
-      AddrLbl.Visible := False;
-      AddressEdit.Visible := False;
-    end;
-
-    if ControlLink.Localization.Countries.Items[Idx].CityVisible then begin
-      CityLbl.Visible := True;
-      CityEdit.Visible := True;
-      if ControlLink.Localization.Countries.Items[Idx].CityCaption <> '' then
-        CityLbl.Caption := ControlLink.Localization.Countries.Items[Idx].CityCaption
-      else
-        CityLbl.Caption := RSCityLbl;
-    end else begin
-      CityLbl.Visible := False;
-      CityEdit.Visible := False;
-    end;
-
-    if ControlLink.Localization.Countries.Items[Idx].StatesVisible then begin
-      StateLbl.Visible := True;
-      if ControlLink.Localization.Countries.Items[Idx].States.Count > 0 then begin
-        StateLbl.FocusControl := cboxState;
-        cboxState.Visible := True;
-        StateEdit.Visible := False;
-      end else begin
-        StateLbl.FocusControl := StateEdit;
-        StateEdit.Visible := True;
-        cboxState.Visible := False;
-        StateEdit.Left := cboxState.Left;
+  case AddressType of
+    atWork:
+      begin
+        countryCombo := cbCountryW;
+        stateCombo := cbStateW;
+        stateComboLabel := lblStateComboW;
+        stateEdit := edStateW;
+        stateLabel := lblStateW;
+        addressEdit := edAddressW;
+        addressLabel := lblAddressW;
+        cityEdit := edCityW;
+        cityLabel := lblCityW;
+        zipcodeLabel := lblZipCodeW;
+        zipcodeEdit := edZipCodeW;
       end;
-      if ControlLink.Localization.Countries.Items[Idx].StateCaption <> '' then
-        StateLbl.Caption := ControlLink.Localization.Countries.Items[Idx].StateCaption
+    atHome:
+      begin
+        countryCombo := cbCountryH;
+        stateCombo := cbStateH;
+        stateComboLabel := lblStateComboH;
+        stateEdit := edStateH;
+        stateLabel := lblStateH;
+        addressEdit := edAddressH;
+        addressLabel := lblAddressH;
+        cityEdit := edCityH;
+        cityLabel := lblCityH;
+        zipcodeLabel := lblZipCodeH;
+        zipcodeEdit := edZipCodeH;
+      end;
+  end;
+
+  idx := ControlLink.Localization.CountryNameToIndex(countryCombo.Text);
+  if idx > -1 then begin
+    ControlLink.Localization.StatesToTStrings(idx, stateCombo.Items);
+
+    if ControlLink.Localization.Countries.Items[idx].Address1Visible then begin
+      addressEdit.Show;
+      addressLabel.Show;
+      if ControlLink.Localization.Countries.Items[idx].Address1Caption <> '' then
+        addressLabel.Caption := ControlLink.Localization.Countries.Items[idx].Address1Caption
       else
-        StateLbl.Caption := RSStateLbl;
+        addressLabel.Caption := RSAddressLbl;
     end else begin
-      StateLbl.Visible := False;
-      StateEdit.Visible := False;
-      cboxState.Visible := False;
+      addressEdit.Hide;
+      addressLabel.Hide;
     end;
 
-    if ControlLink.Localization.Countries.Items[Idx].ZipVisible then begin
-      ZipLbl.Visible := True;
-      ZipCodeEdit.Visible := True;
-      if ControlLink.Localization.Countries.Items[Idx].ZipCaption <> '' then
-        ZipLbl.Caption := ControlLink.Localization.Countries.Items[Idx].ZipCaption
+    if ControlLink.Localization.Countries.Items[idx].CityVisible then begin
+      cityEdit.Show;
+      cityLabel.Show;
+      if ControlLink.Localization.Countries.Items[idx].CityCaption <> '' then
+        cityLabel.Caption := ControlLink.Localization.Countries.Items[idx].CityCaption
       else
-        ZipLbl.Caption := RSZipCodeLbl;
+        cityLabel.Caption := RSCityLbl;
     end else begin
-      ZipLbl.Visible := False;
-      ZipCodeEdit.Visible := False;
+      cityEdit.Hide;
+      cityLabel.Show;
+    end;
+
+    if ControlLink.Localization.Countries.Items[idx].StatesVisible then begin
+      stateLabel.Visible := True;
+      if ControlLink.Localization.Countries.Items[Idx].States.Count > 0 then begin
+        stateComboLabel.Show;
+        stateCombo.Show;
+        stateLabel.Hide;
+        stateEdit.Hide;
+      end else begin
+        stateComboLabel.Hide;
+        stateCombo.Hide;
+        stateLabel.Show;
+        stateEdit.Show;
+      end;
+      if ControlLink.Localization.Countries.Items[idx].StateCaption <> '' then begin
+        stateComboLabel.Caption := ControlLink.Localization.Countries.Items[idx].StateCaption;
+        stateLabel.Caption := StateComboLabel.Caption;
+      end else begin
+        stateLabel.Caption := RSStateLbl;
+        stateComboLabel.Caption := stateLabel.Caption;
+      end;
+    end else begin
+      stateComboLabel.Hide;
+      stateCombo.Hide;
+      stateLabel.Hide;
+      stateEdit.Hide;
+    end;
+
+    if ControlLink.Localization.Countries.Items[idx].ZipVisible then begin
+      zipcodeEdit.Show;
+      zipcodeLabel.Show;
+      if ControlLink.Localization.Countries.Items[idx].ZipCaption <> '' then
+        zipcodeLabel.Caption := ControlLink.Localization.Countries.Items[idx].ZipCaption
+      else
+        zipcodeLabel.Caption := RSZipCodeLbl;
+    end else begin
+      zipcodeEdit.Hide;
+      zipcodeLabel.Hide;
     end;
 
   end else begin
-    cboxState.Items.Clear;
-
+    stateEdit.Show;
+    stateLabel.Show;
+    stateCombo.Hide;
+    stateComboLabel.Hide;
+    stateCombo.Items.Clear;
   end;
-  ResizeControls;
+
+//  ResizeControls;
 end;
 
-procedure TContactEditForm.cboxCountryChange(Sender: TObject);
+procedure TContactEditForm.cbCountryChange(Sender: TObject);
 begin
-  StateEdit.Text := '';
-  cboxState.Text := '';
-  DisplayCurrentCountry;
+  if Sender = cbCountryW then begin
+    edStateW.Text := '';
+    cbStateW.Text := '';
+    DisplayCurrentCountry(atWork);
+  end else begin
+    edStateH.Text := '';
+    cbStateH.Text := '';
+    DisplayCurrentCountry(atHome);
+  end;
+  ResizeControls;
 end;
 
 procedure TContactEditForm.FormKeyDown(Sender: TObject; var Key: Word;
@@ -666,28 +889,26 @@ begin
   end;
 end;
 
-procedure TContactEditForm.tsContactsChange(Sender: TObject);
+procedure TContactEditForm.PageControlChange(Sender: TObject);
 begin
   if Visible then
-    if tsContacts.ActivePage = tabMain then
-      LastNameEdit.SetFocus
-    else if tsContacts.ActivePage = tabContact then
-      Phone1Edit.SetFocus
-    else if tsContacts.ActivePage = tabCustom then
-      Custom1Edit.SetFocus
-    else if tsContacts.ActivePage = tabNotes then
-      NoteEdit.SetFocus;
+    if PageControl.ActivePage = tabBaseData then
+      edLastName.SetFocus
+    else if PageControl.ActivePage = tabAddresses then
+      edCompany.SetFocus
+    else if PageControl.ActivePage = tabContact then
+      edPhone1.SetFocus
+    else if PageControl.ActivePage = tabCustom then
+      edCustom1.SetFocus
+    else if PageControl.ActivePage = tabNotes then
+      memoNotes.SetFocus;
 end;
 
 procedure TContactEditForm.FormShow(Sender: TObject);
 begin
-  if tsContacts.ActivePage = tabMain then
-    LastNameEdit.SetFocus;
-               (*
-  {$IFDEF LCL}
-  ScaleDPI(Self, DesigntimeDPI);
-  {$ENDIF}
-  *)
+  PageControl.ActivePage := tabBaseData;
+  if PageControl.ActivePage = tabBaseData then
+    edLastName.SetFocus;
 end;
 
 

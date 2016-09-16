@@ -39,7 +39,7 @@ uses
   {$ELSE}
   Windows,
   {$ENDIF}
-  SysUtils, Classes, Dialogs,
+  SysUtils, Classes, Dialogs, Graphics,
   {$IFDEF VERSION6} Types, {$ENDIF}
   VpSR;
 
@@ -490,6 +490,7 @@ type
   end;
 
   TVpContact = class
+  private
     FOwner: TVpContacts;
     FLoading: Boolean;
     FChanged: Boolean;
@@ -502,6 +503,7 @@ type
     FAnniversary: TDateTime;
     FTitle: string;
     FCompany: string;
+    FDepartment: String;
     FEMail1: string;
     FEMail2: String;
     FEMail3: String;
@@ -536,7 +538,6 @@ type
     FCountry2: String;
     FNotes: string;
     FPrivateRec: boolean;
-    FPathToPhoto: String;
     FCategory: integer;
     FCustom1: string;
     FCustom2: string;
@@ -571,6 +572,7 @@ type
     procedure SetCustom3(const Value: string);
     procedure SetCustom4(const Value: string);
     procedure SetDeleted(Value: Boolean);
+    procedure SetDepartment(const Value: String);
     procedure SetEMail1(const Value: string);
     procedure SetEMail2(const Value: string);
     procedure SetEMail3(const Value: string);
@@ -580,7 +582,6 @@ type
     procedure SetFirstName(const Value: string);
     procedure SetLastName(const Value: string);
     procedure SetNotes(const Value: string);
-    procedure SetPathToPhoto(const Value: String);
     procedure SetPhone1(const Value: string);
     procedure SetPhone2(const Value: string);
     procedure SetPhone3(const Value: string);
@@ -602,6 +603,7 @@ type
     procedure SetWebsiteType2(Value: integer);
     procedure SetZip1(const Value: string);
     procedure SetZip2(const Value: string);
+
   public
     constructor Create(Owner: TVpContacts);
     destructor Destroy; override;
@@ -625,6 +627,7 @@ type
     property Anniversary: TDateTime read FAnniversary write SetAnniversary;
     property Title: string read FTitle write SetTitle;
     property Company: string read FCompany write SetCompany;
+    property Department: String read FDepartment write SetDepartment;
     property EMail: string read FEmail1 write SetEMail1; deprecated 'Use "EMail1" instead';
     property EMail1: String read FEmail1 write SetEMail1;
     property EMail2: String read FEmail2 write SetEmail2;
@@ -665,7 +668,6 @@ type
     property AddressType2: integer read FAddressType2 write SetAddressType2;
     property Note: string read FNotes write SetNotes; deprecated 'Use "Notes" instead';
     property Notes: string read FNotes write SetNotes;
-    property PathToPhoto: String read FPathToPhoto write SetPathToPhoto;
     property Category: integer read FCategory write SetCategory;
     property Custom1: string read FCustom1 write SetCustom1;
     property Custom2: string read FCustom2 write SetCustom2;
@@ -1813,6 +1815,7 @@ end;
 constructor TVpContact.Create(Owner: TVpContacts);
 begin
   inherited Create;
+
   FChanged := false;
   FOwner := Owner;
 
@@ -2000,6 +2003,14 @@ begin
   end;
 end;
 
+procedure TVpContact.SetDepartment(const Value: String);
+begin
+  if Value <> FDepartment then begin
+    FDepartment := Value;
+    Changed := True;
+  end;
+end;
+
 procedure TVpContact.SetEMail1(const Value: string);
 begin
   if Value <> FEMail1 then begin
@@ -2068,14 +2079,6 @@ procedure TVpContact.SetNotes(const Value: string);
 begin
   if Value <> FNotes then begin
     FNotes := Value;
-    Changed := true;
-  end;
-end;
-
-procedure TVpContact.SetPathToPhoto(const Value: string);
-begin
-  if Value <> FPathToPhoto then begin
-    FPathToPhoto := Value;
     Changed := true;
   end;
 end;

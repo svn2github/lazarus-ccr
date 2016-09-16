@@ -153,6 +153,7 @@ begin
       '"Anniversary"    DATETIME, '+
       '"Title"          VARCHAR(50), '+
       '"Company"        VARCHAR(50), '+
+      '"Department"     VARCHAR(50), '+
       '"Job_Position"   VARCHAR(30), '+
       '"AddressType1"   INTEGER, '+
       '"Address1"       VARCHAR(100), '+
@@ -167,7 +168,6 @@ begin
       '"Zip2"           VARCHAR(10), '+
       '"Country2"       VARCHAR(25), '+
       '"Notes"          VARCHAR(1024), '+
-      '"PathToPhoto"    VARCHAR(255), '+
       '"Category"       INTEGER, '+
       '"Phone1"         VARCHAR(25), '+
       '"Phone2"         VARCHAR(25), '+

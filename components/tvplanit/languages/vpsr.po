@@ -21,6 +21,10 @@ msgstr ""
 msgid "No resources have been defined. Would you like to add one now?"
 msgstr ""
 
+#: vpsr.rsaddresses
+msgid "Addresses"
+msgstr ""
+
 #: vpsr.rsaddresslbl
 msgid "Address:"
 msgstr ""
@@ -306,6 +310,10 @@ msgctxt "vpsr.rsdeletebtn"
 msgid "Delete"
 msgstr ""
 
+#: vpsr.rsdepartmentlbl
+msgid "Department:"
+msgstr ""
+
 #: vpsr.rsdescriptionlbl
 msgctxt "vpsr.rsdescriptionlbl"
 msgid "Description:"
@@ -334,7 +342,7 @@ msgid "Print preview"
 msgstr ""
 
 #: vpsr.rsdlgreseditcaption
-msgid "Resource Edit"
+msgid "Resource edit"
 msgstr ""
 
 #: vpsr.rsdlgreseditdescription
@@ -347,7 +355,7 @@ msgid "Task"
 msgstr ""
 
 #: vpsr.rsduedate
-msgid "Due Date:"
+msgid "Due date:"
 msgstr ""
 
 #: vpsr.rsduplicateresource
@@ -458,6 +466,10 @@ msgstr ""
 
 #: vpsr.rsheight
 msgid "Height"
+msgstr ""
+
+#: vpsr.rshomeaddress
+msgid "Home address"
 msgstr ""
 
 #: vpsr.rshomeaddresslabel
@@ -763,6 +775,10 @@ msgstr ""
 #: vpsr.rspersonalwebsitelabel
 msgctxt "vpsr.rspersonalwebsitelabel"
 msgid "Personal"
+msgstr ""
+
+#: vpsr.rsphonefax
+msgid "Phone/fax"
 msgstr ""
 
 #: vpsr.rsphonetypelabel1
@@ -1165,6 +1181,10 @@ msgstr ""
 msgid "Visual"
 msgstr ""
 
+#: vpsr.rswebsites
+msgid "Websites"
+msgstr ""
+
 #: vpsr.rswednesday
 msgid "Wednesday"
 msgstr ""
@@ -1191,6 +1211,10 @@ msgstr ""
 
 #: vpsr.rswidthlbl
 msgid "Width:"
+msgstr ""
+
+#: vpsr.rsworkaddress
+msgid "Work address"
 msgstr ""
 
 #: vpsr.rsworkaddresslabel
