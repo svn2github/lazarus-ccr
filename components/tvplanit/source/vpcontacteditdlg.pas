@@ -730,16 +730,15 @@ begin
   {----------------------------------------------------------------------------}
   { Set form size                                                              }
   {----------------------------------------------------------------------------}
+//  ClientHeight := h1 + h2 + pnlBottom.Height + vDist + 16 + PageControl.Height - tabAddresses.ClientHeight;
   AutoSize := true;
+//  AdjustSize;
 end;
 
 procedure TContactEditForm.DisplayCurrentCountry(AddressType: TVpAddressType);
 var
   idx : Integer;
   countryCombo: TCombobox;
-  countryComboLabel: TLabel;
-  countryEdit: TEdit;
-  countryLabel: TLabel;
   stateCombo: TCombobox;
   stateComboLabel: TLabel;
   stateLabel: TLabel;

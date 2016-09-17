@@ -23,8 +23,13 @@ type
     procedure SetConnection(const AValue: TIBConnection);
 
   protected
+    procedure Addfield(ATableName, AFieldName: String; AFieldType: TFieldType;
+      ASize: Integer=0);
+    procedure RenameField(ATableName, AOldFieldName, ANewFieldName: String);
+
     procedure CreateAllTables(dbIsNew: Boolean);
     procedure CreateTable(const ATableName: String);
+    procedure FixContactsTable;
     function GetContactsTable: TDataset; override;
     function GetEventsTable: TDataset; override;
     function GetResourceTable: TDataset; override;
@@ -95,6 +100,32 @@ begin
    }
   FTasksTable := TSQLQuery.Create(self);
   FTasksTable.SQL.Add('SELECT * FROM Tasks');
+end;
+
+procedure TVpFirebirdDatastore.AddField(ATableName, AFieldName: String;
+  AFieldType: TFieldType; ASize: Integer=0);
+var
+  ft: String;
+  sql: String;
+begin
+  if AFieldType = ftInteger then
+    ft := 'INTEGER' else
+  if (AFieldType = ftString) then
+    ft := 'VARCHAR(' + intToStr(ASize) + ')'
+  else
+    raise Exception.Create('Field type not supported here.');
+  sql := Format('ALTER TABLE %s ADD %s %s;', [ATablename, AFieldName, ft]);
+  FConnection.ExecuteDirect(sql);
+end;
+
+procedure TVpFirebirdDatastore.RenameField(
+  ATableName, AOldFieldName, ANewFieldName: String);
+var
+  sql: String;
+begin
+  sql := Format('ALTER TABLE %s ALTER %s TO %s;',
+    [ContactsTableName, AOldFieldName, ANewFieldName]);
+  FConnection.ExecuteDirect(sql);
 end;
 
 procedure TVpFirebirdDatastore.CreateAllTables(dbIsNew: Boolean);
@@ -198,21 +229,21 @@ begin
         'PhoneType3     INTEGER, '+
         'PhoneType4     INTEGER, '+
         'PhoneType5     INTEGER, '+
-        'EMail1         VARCHAR (100), '+
-        'EMail2         VARCHAR (100), '+
-        'EMail3         VARCHAR (100), '+
+        'EMail1         VARCHAR(100), '+
+        'EMail2         VARCHAR(100), '+
+        'EMail3         VARCHAR(100), '+
         'EMailType1     INTEGER, '+
         'EMailType2     INTEGER, '+
         'EMailType3     INTEGER, '+
-        'WebSite1       VARCHAR (100), '+
-        'WebSite2       VARCHAR (100), '+
+        'WebSite1       VARCHAR(100), '+
+        'WebSite2       VARCHAR(100), '+
         'WebSiteType1   INTEGER, '+
         'WebSiteType2   INTEGER, '+
         'Notes          VARCHAR(1024), '+
-        'Custom1        VARCHAR (100), '+
-        'Custom2        VARCHAR (100), '+
-        'Custom3        VARCHAR (100), '+
-        'Custom4        VARCHAR (100), '+
+        'Custom1        VARCHAR(100), '+
+        'Custom2        VARCHAR(100), '+
+        'Custom3        VARCHAR(100), '+
+        'Custom4        VARCHAR(100), '+
         'UserField0     VARCHAR(100), '+
         'UserField1     VARCHAR(100), '+
         'UserField2     VARCHAR(100), '+
@@ -374,6 +405,68 @@ begin
   end;
 end;
 
+procedure TVpFirebirdDatastore.FixContactsTable;
+var
+  list: TStrings;
+begin
+  ContactsTable.Close;
+  list := TStringList.Create;
+  try
+    FConnection.GetFieldNames(ContactsTableName, list);
+    // Fields renamed in 1.05
+    if list.IndexOf('Address') > -1 then
+      RenameField(ContactsTableName, 'Address', 'Address1');
+    if list.IndexOf('City') > -1 then
+      RenameField(ContactsTableName, 'City', 'City1');
+    if list.IndexOf('State') > -1 then
+      RenameField(ContactsTableName, 'State', 'State1');
+    if list.IndexOf('Zip') > -1 then
+      RenameField(ContactsTableName, 'Zip', 'Zip1');
+    if list.IndexOf('Country') > -1 then
+      RenameField(ContactsTableName, 'Country', 'Country1');
+    if list.IndexOf('EMail') > -1 then
+      RenameField(ContactsTableName, 'EMail', 'EMail1');
+
+    // Fields added in 1.05
+    if list.IndexOf('Department') = -1 then
+      AddField(ContactsTableName, 'Department', ftString, 50);
+    if list.IndexOf('AddressType1') = -1 then
+      AddField(ContactsTableName, 'AddressType1', ftInteger);
+    if list.IndexOf('AddressType2') = -1 then
+      AddField(ContactsTableName, 'AddressType2', ftInteger);
+    if list.IndexOf('Address2') = -1 then
+      AddField(ContactsTableName, 'Address2', ftString, 100);
+    if list.IndexOf('City2') = -1 then
+      AddField(ContactsTableName, 'City2', ftString, 50);
+    if list.IndexOf('State2') = -1 then
+      AddField(ContactsTableName, 'State2', ftString, 25);
+    if list.IndexOf('Zip2') = -1 then
+      AddField(ContactsTableName, 'Zip2', ftString, 25);
+    if list.IndexOf('country2') = -1 then
+      AddField(ContactsTableName, 'Country2', ftString, 25);
+    if list.IndexOf('EMail2') = -1 then
+      AddField(ContactsTableName, 'EMail2', ftString, 100);
+    if list.IndexOf('EMail3') = -1 then
+      AddField(ContactsTableName, 'EMail3', ftString, 100);
+    if list.IndexOf('EMailType1') = -1 then
+      AddField(ContactsTableName, 'EMailType1', ftInteger);
+    if list.IndexOf('EMailType2') = -1 then
+      AddField(ContactsTableName, 'EMailType2', ftInteger);
+    if list.IndexOf('EMailType3') = -1 then
+      AddField(ContactsTableName, 'EMailType3', ftInteger);
+    if list.IndexOf('Website1') = -1 then
+      AddField(ContactsTableName, 'Website1', ftString, 100);
+    if list.IndexOf('Website2') = -1 then
+      AddField(ContactsTableName, 'Website2', ftString, 100);
+    if list.IndexOf('WebsiteType1') = -1 then
+      AddField(ContactsTableName, 'WebsiteType1', ftInteger);
+    if list.IndexOf('WebsiteType2') = -1 then
+      AddField(ContactsTableName, 'WebsiteType2', ftInteger);
+  finally
+    list.Free;
+  end;
+end;
+
 function TVpFirebirdDatastore.GetContactsTable: TDataset;
 begin
   Result := FContactsTable;
@@ -424,6 +517,7 @@ procedure TVpFirebirdDatastore.OpenTables;
 begin
   if FContactsTable.Transaction = nil then
     FContactsTable.Transaction := FConnection.Transaction;
+  FixContactsTable;
   FContactsTable.Open;
   FContactsTable.Fields[0].Required := false;
 

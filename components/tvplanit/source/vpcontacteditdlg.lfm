@@ -26,8 +26,8 @@ object ContactEditForm: TContactEditForm
     OnChange = PageControlChange
     object tabBaseData: TTabSheet
       Caption = 'tabBaseData'
-      ClientHeight = 560
-      ClientWidth = 472
+      ClientHeight = 564
+      ClientWidth = 567
       ImageIndex = 0
       object lblLastName: TLabel
         Left = 9
