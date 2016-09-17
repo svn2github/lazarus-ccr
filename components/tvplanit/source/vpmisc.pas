@@ -59,21 +59,22 @@ const
 
   GranularityMinutes: Array[TVpGranularity] of Integer = (5, 6, 10, 15, 20, 30, 60);
 
-function DaysInMonth(Year, Month : Integer) : Integer;
-  {-return the number of days in the specified month of a given year}
 function DefaultEpoch : Integer;
   {-return the current century}
+
 //function GetLeftButton : Byte;
 procedure GetRGB(Clr : TColor; var IR, IG, IB : Byte);
-function IsLeapYear(Year : Integer) : Boolean;
 function GetStartOfWeek(Date: TDateTime; StartOn: TVpDayType): TDateTime;
 
 procedure StripString(var Str: string);
   { strips non-alphanumeric characters from the beginning and end of the string}
+
 function AssembleName(Contact: TVpContact): string;
   { returns an assembled name string }
+
 procedure ParseName(Contact: TVpContact; const Value: string);
   { parses the name into it's elements and updates the contact }
+
 procedure ParseCSZ(Str: string; var City, State, Zip: string);
 { parses the string and returns the city, state and zip parameters }
 
@@ -85,34 +86,44 @@ function LoadBaseCursor(lpCursorName : PAnsiChar) : HCURSOR;
 {$ENDIF}
 
 function HeightOf(const R : TRect) : Integer;
-  {- return the height of the TRect}
+  {- returns the height of the TRect}
+
 function WidthOf(const R : TRect) : Integer;
-  {- return the width of the TRect}
+  {- returns the width of the TRect}
+
 function RightOf(AControl: TControl): Integer;
   {- returns the right edge of a control }
+
 function BottomOf(AControl: TControl): Integer;
   {- returns the bottom edge of a control }
 
 function GetDisplayString(Canvas : TCanvas; const S : string;
   MinChars, MaxWidth : Integer) : string;
-  {-given a string, a minimum number of chars to display, and a max width, }
-  { find the string that can be displayed in that width - add ellipsis to  }
-  { the end if necessary and possible                                      }
+  { given a string, a minimum number of chars to display, and a max width,
+    find the string that can be displayed in that width - add ellipsis to
+    the end if necessary and possible }
+
 procedure DrawBevelRect(const Canvas: TCanvas; R: TRect;
   Shadow, Highlight: TColor);
-  {-draws a bevel in the specified TRect, using the specified colors }
+  { Draws a bevel in the specified TRect, using the specified colors }
+
 function PointInRect(Point: TPoint; Rect: TRect): Boolean;
-  {-determines if the specified point resides inside the specified TRect }
+  { Determines if the specified point resides inside the specified TRect }
 
 function GetAlarmAdvanceTime(Advance: Integer; AdvanceType: TVpAlarmAdvType): TDateTime;
 
 {$IFDEF DELPHI}{$IFNDEF Delphi6}
+function IsLeapYear(Year: Integer): Boolean;
+
 function MonthOfTheYear(TheDate: TDateTime): Word;
 procedure IncAMonth(var Year, Month, Day: Word; NumMonths: Integer);
 function IncMonth(const TheDate: TDateTime; NumberOfMonths: Integer): TDateTime;
 function IncYear(TheDate: TDateTime; NumYears: Integer): TDateTime;
 function TimeOf(ADateTime: TDateTime): TDateTime;
 function DateOf(ADateTime: TDateTime): TDateTime;
+
+function DaysInAMonth(Year, Month: Integer): Integer;
+  {-return the number of days in the specified month of a given year}
 {$ENDIF}{$ENDIF}
 
 function GetJulianDate(Date: TDateTime): Word;
@@ -124,7 +135,6 @@ function TimeInRange(ATime, StartTime, EndTime: TDateTime; IncludeLimits: Boolea
 
 function GetTimeFormat: TVpTimeFormat;
 function GetTimeFormatStr(ATimeFormat: TVpTimeFormat): String;
-function GranularityToStr(Gran: TVpGranularity): string;
 function HourToAMPM(Hour: TVpHours): string;
 function HourToStr(Hour: TVpHours; Mil: Boolean): string;
 
@@ -133,6 +143,8 @@ function GetStartLine(StartTime: TDateTime; Granularity: TVpGranularity): Intege
 function GetEndLine(EndTime: TDateTime; Granularity: TVpGranularity): Integer;
 function LineToStartTime(Line: Integer; Granularity: TVpGranularity): TDateTime;
 function GetLineDuration(Granularity: TVpGranularity): Double;
+
+function GranularityToStr(Gran: TVpGranularity): string;
 
 function TaskPriorityToStr(APriority: TVpTaskPriority): String;
 
@@ -287,12 +299,14 @@ end;
 
 function GetDisplayString(Canvas : TCanvas; const S : string;
   MinChars, MaxWidth : Integer) : string;
+const
+  ELLIPSIS = '...';
 var
   iDots, EllipsisWidth, Extent, Len, Width : Integer;
   ShowEllipsis : Boolean;
 begin
   {be sure that the Canvas Font is set before entering this routine}
-  EllipsisWidth := Canvas.TextWidth('...');
+  EllipsisWidth := Canvas.TextWidth(ELLIPSIS);
   Len := Length(S);
   Result := S;
   Extent := Canvas.TextWidth(Result);
@@ -309,7 +323,7 @@ begin
     Extent := Canvas.TextWidth(Result);
   end;
   if ShowEllipsis then begin
-    Result := Result + '...';
+    Result := Result + ELLIPSIS;
     inc(Len, 3);
     Extent := Canvas.TextWidth(Result);
     iDots := 3;
@@ -345,20 +359,6 @@ begin
 end;
 {=====}
 
-function DaysInMonth(Year, Month : Integer) : Integer;
-begin
-  if (Year < 100) then
-    raise EVpDateException.Create(RSInvalidYear + ' "' + IntToStr(Year) + '"');
-  case Month of
-    1, 3, 5, 7, 8, 10, 12 : Result := 31;
-    4, 6, 9, 11           : Result := 30;
-    2                     : Result := 28+Ord(IsLeapYear(Year));
-  else
-    Result := 0;
-  end;
-end;
-{=====}
-
 function DefaultEpoch : Integer;
 var
   ThisYear   : Word;
@@ -386,13 +386,6 @@ begin
 end;
 {=====}
 
-function IsLeapYear(Year : Integer) : Boolean;
-begin
-  Result := (Year mod 4 = 0) and (Year mod 4000 <> 0) and
-    ((Year mod 100 <> 0) or (Year mod 400 = 0));
-end;
-{=====}
-
 function GetStartOfWeek(Date: TDateTime; StartOn: TVpDayType): TDateTime;
 begin
   result := Date;
@@ -410,13 +403,18 @@ end;
 
 
 {$IFDEF DELPHI} {$IFNDEF Delphi6}
+function IsLeapYear(Year: Integer): Boolean;
+begin
+  Result := (Year mod 4 = 0) and (Year mod 4000 <> 0) and
+    ((Year mod 100 <> 0) or (Year mod 400 = 0));
+end;
+
 function MonthOfTheYear(TheDate: TDateTime): Word;
 var
   Year, Day: Word;
 begin
   DecodeDate(TheDate, Year, Result, Day);
 end;
-{=====}
 
 procedure IncAMonth(var Year, Month, Day: Word; NumMonths: Integer);
 type
@@ -446,7 +444,6 @@ begin
   if Day > DayTable^[Month] then
     Day := DayTable^[Month];
 end;
-{=====}
 
 function IncMonth(const TheDate: TDateTime; NumberOfMonths: Integer): TDateTime;
 var
@@ -456,9 +453,8 @@ begin
   IncAMonth(Year, Month, Day, NumberOfMonths);
   Result := EncodeDate(Year, Month, Day);
 end;
-{=====}
 
-function IncYea (TheDate: TDateTime; NumYear : Integer) : TDateTime;
+function IncYear(TheDate: TDateTime; NumYear : Integer) : TDateTime;
 begin
   Result := IncMont (TheDate, NumYears * 12);
 end;
@@ -473,7 +469,18 @@ begin
   Result := frac(ADateTime);
 end;
 
-{=====}
+function DaysInAMonth(Year, Month: Integer): Integer;
+begin
+  if (Year < 100) then
+    raise EVpDateException.Create(RSInvalidYear + ' "' + IntToStr(Year) + '"');
+  case Month of
+    1, 3, 5, 7, 8, 10, 12 : Result := 31;
+    4, 6, 9, 11           : Result := 30;
+    2                     : Result := 28 + Ord(IsLeapYear(Year));
+  else
+    Result := 0;
+  end;
+end;
 {$ENDIF}{$ENDIF}
 
 function GetJulianDate(Date: TDateTime): Word;
@@ -486,7 +493,7 @@ begin
 
   { Inc Julian by the number of days in each of the elapsed months }
   for I := 1 to M do
-    Inc(Julian, DaysInMonth(Y, I));
+    Inc(Julian, DaysInAMonth(Y, I));
 
   { add in the elapsed days from this month }
   Julian := Julian + D;
@@ -582,6 +589,10 @@ begin
 end;
 {=====}
 
+{ Checks whether the given date value is within the specified date interval
+  between StartDate and EndDate. If IncludeLimits is true then the function
+  result is true also if the date is equal to the date parts of the StartDate
+  or EndDate. }
 function DateInRange(ADate, StartDate, EndDate: TDateTime;
   IncludeLimits: Boolean): Boolean;
 begin
@@ -593,6 +604,10 @@ begin
     Result := (StartDate = ADate) or (EndDate = ADate);
 end;
 
+{ Checks whether the given time value is within the specified time interval
+  between StartTime and EndTime. If IncludeLimits is true then the function
+  result is true also if time is equal to the start or end times. Equality is
+  checked with a precision of 0.1 sec (see: CompareTimeEps). }
 function TimeInRange(ATime, StartTime, EndTime: TDateTime;
   IncludeLimits: Boolean): Boolean;
 var
@@ -606,7 +621,30 @@ begin
   else
     Result := (not equStart) and (not equEnd) and (ATime > StartTime) and (ATime < EndTime);
 end;
-{=====}
+
+{ Returns true of the two specified date/time variables have the same date part }
+function SameDate(dt1, dt2: TDateTime): Boolean;
+begin
+  Result := trunc(dt1) = trunc(dt2);
+end;
+
+// Calculates ISO week number (checked with Jan 1, 2016, which is in week 53).
+function GetWeekOfYear(ADate: TDateTime): byte;
+// wp: was in TvWeekView.
+var
+  yr, dummy: word;
+  First: TDateTime;
+begin
+  DecodeDate(ADate + (8 - DayOfWeek(ADate)) mod 7 - 3, yr, dummy,dummy);
+  First := EncodeDate(yr, 1, 1);
+  Result := trunc(ADate - First - 3 + (DayOfWeek(First) + 1) mod 7) div 7 + 1;
+end;
+
+// Returns true if the specified date is on the weekend.
+function IsWeekend(ADate: TDateTime): Boolean;
+begin
+  Result := (DayOfWeek(ADate) in [1, 7]);
+end;
 
 function LineToStartTime(Line: Integer; Granularity: TVpGranularity): TDateTime;
 begin
@@ -676,49 +714,34 @@ begin
     Result := AFont.Height;
 end;
 
+{ Returns the coordinate of the control's right boundary }
 function RightOf(AControl: TControl): Integer;
 begin
   Result := AControl.Left + AControl.Width;
 end;
 
+{ Returns the coordinate of the control's bottom boundary }
 function Bottomof(AControl: TControl): Integer;
 begin
   Result := AControl.Top + AControl.Height;
 end;
 
-function SameDate(dt1, dt2: TDateTime): Boolean;
-begin
-  Result := trunc(dt1) = trunc(dt2);
-end;
-
-// Calculates ISO week number (checked with Jan 1, 2016, which is in week 53).
-function GetWeekOfYear(ADate: TDateTime): byte;
-// was in TvWeekView.
-var
-  yr, dummy: word;
-  First: TDateTime;
-begin
-  DecodeDate(ADate + (8 - DayOfWeek(ADate)) mod 7 - 3, yr, dummy,dummy);
-  First := EncodeDate(yr, 1, 1);
-  Result := trunc(ADate - First - 3 + (DayOfWeek(First) + 1) mod 7) div 7 + 1;
-end;
-
-// Returns true if the specified date is on the weekend.
-function IsWeekend(ADate: TDateTime): Boolean;
-begin
-  Result := (DayOfWeek(ADate) in [1, 7]);
-end;
-
+{ Replaces embedded C-style line endings (\n) by FPC line endings (#13#10, #13,
+  #10, depending on system) }
 function DecodeLineEndings(const AText: String): String;
 begin
   Result := StringReplace(AText, '\n', LineEnding, [rfReplaceAll]);
 end;
 
+{ Replaces FPC line endings (#13#10, #13, #10, depending on system) by
+  embedded C-style line endings (\n) }
 function EncodeLineEndings(const AText: String): String;
 begin
   Result := StringReplace(AText, LineEnding, '\n', [rfReplaceAll]);
 end;
 
+{ Makes sure that the string AText does not end with a line ending (#13#10,
+  #13, #10, depending on system). }
 function StripLastLineEnding(const AText: String): String;
 begin
   Result := AText;

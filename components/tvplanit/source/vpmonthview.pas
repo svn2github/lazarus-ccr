@@ -287,6 +287,9 @@ type
 implementation
 
 uses
+ {$IFDEF LCL}
+  DateUtils,
+ {$ENDIF}
   SysUtils, LazUTF8, Dialogs, StrUtils,
   VpMonthViewPainter;
 
@@ -655,8 +658,8 @@ begin
     end else
       M := M - 1;
   end;
-  if (D > DaysInMonth(Y, M)) then
-    D := DaysInMonth(Y, M);
+  if (D > DaysInAMonth(Y, M)) then
+    D := DaysInAMonth(Y, M);
 
   Date := EncodeDate(Y, M, D);
 end;
@@ -1166,14 +1169,14 @@ begin
       VK_END:
         begin
           DecodeDate(Date, Y, M, D);
-          if D = DaysInMonth(Y, M) then begin
+          if D = DaysInAMonth(Y, M) then begin
             if M = 12 then begin
               M := 1;
               Inc(Y);
             end else
               Inc(M);
           end;
-          Date := EncodeDate(Y, M, DaysInMonth(Y, M));
+          Date := EncodeDate(Y, M, DaysInAMonth(Y, M));
         end;
 {$IFNDEF LCL}
       VK_TAB:

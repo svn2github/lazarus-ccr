@@ -491,6 +491,9 @@ type
 implementation
 
 uses
+ {$IFDEF LCL}
+  DateUtils,
+ {$ENDIF}
   SysUtils, StrUtils, Math, Dialogs,
   VpEvntEditDlg, VpDayViewPainter;
 
@@ -1310,8 +1313,8 @@ begin
     Y := Y + 1;
   end else
     M := M + 1;
-  if (D > DaysInMonth(Y, M)) then
-    D := DaysInMonth(Y, M);
+  if (D > DaysInAMonth(Y, M)) then
+    D := DaysInAMonth(Y, M);
 
   Date := EncodeDate(Y, M, D);
 end;
@@ -1327,8 +1330,8 @@ begin
     Y := Y - 1;
   end else
     M := M - 1;
-  if (D > DaysInMonth(Y, M)) then
-    D := DaysInMonth(Y, M);
+  if (D > DaysInAMonth(Y, M)) then
+    D := DaysInAMonth(Y, M);
 
   Date := EncodeDate(Y, M, D);
 end;

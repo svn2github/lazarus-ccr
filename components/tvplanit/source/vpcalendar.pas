@@ -352,6 +352,9 @@ type
 implementation
 
 uses
+ {$IFDEF LCL}
+  DateUtils,
+ {$ENDIF}
   VpCalendarPainter;
 
 const
@@ -479,8 +482,8 @@ begin
     Inc(Y);
   M := M + MO;
   {set day}
-  if D > DaysInMonth(Y, MO) then
-    D := DaysInMonth(Y, MO);
+  if D > DaysInAMonth(Y, MO) then
+    D := DaysInAMonth(Y, MO);
   SetDate(calGetValidDate(EncodeDate(Y, MO, D)-1, +1));
   if (Assigned(FOnChange)) then
     FOnChange(Self, FDate);
@@ -556,13 +559,13 @@ begin
   clFirst := I;
 
   {find the index of the last day in the month}
-  clLast := clFirst + DaysInMonth(clYear, clMonth) - 1;
+  clLast := clFirst + DaysInAMonth(clYear, clMonth) - 1;
 
   {initialize the first part of the calendar}
   if clMonth = 1 then
-    J := DaysInMonth(clYear - 1, 12)
+    J := DaysInAMonth(clYear - 1, 12)
   else
-    J := DaysInMonth(clYear, clMonth-1);
+    J := DaysInAMonth(clYear, clMonth-1);
   for I := clFirst-1 downto 1 do begin
     clCalendar[I] := J;
     Dec(J);
@@ -1046,10 +1049,10 @@ begin
     VK_END:
       if ssCtrl in Shift then begin
         DecodeDate(FDate, Y, M, D);
-        SetDate(calGetValidDate(EncodeDate(Y, 12, DaysInMonth(Y, 12))+1, -1));
+        SetDate(calGetValidDate(EncodeDate(Y, 12, DaysInAMonth(Y, 12))+1, -1));
       end else if Shift = [] then begin
         DecodeDate(FDate, Y, M, D);
-        SetDate(calGetValidDate(EncodeDate(Y, M, DaysInMonth(Y, M))+1, -1));
+        SetDate(calGetValidDate(EncodeDate(Y, M, DaysInAMonth(Y, M))+1, -1));
       end;
 
     VK_PRIOR:
@@ -1363,8 +1366,8 @@ begin
     iM := iM + 12;
     Dec(iY);
   end;
-  if iD > DaysInMonth(iY, iM) then
-    iD := DaysInMonth(iY, iM);
+  if iD > DaysInAMonth(iY, iM) then
+    iD := DaysInAMonth(iY, iM);
 
   SetDate(calGetValidDate(EncodeDate(iY, iM, iD)-1, +1));
 end;
@@ -1378,8 +1381,8 @@ begin
   DecodeDate(FDate, Y, M, D);
   iY := Y; iM := M; iD := D;
   Inc(iY, Delta);
-  if iD > DaysInMonth(iY, iM) then
-    iD := DaysInMonth(iY, iM);
+  if iD > DaysInAMonth(iY, iM) then
+    iD := DaysInAMonth(iY, iM);
   SetDate(calGetValidDate(EncodeDate(iY, iM, iD)-1, +1));
 end;
 {=====}
