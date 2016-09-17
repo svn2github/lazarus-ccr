@@ -39,7 +39,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="5">
+    <Units Count="10">
       <Unit0>
         <Filename Value="mormotdemo.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -70,6 +70,28 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="DataModule"/>
       </Unit4>
+      <Unit5>
+        <Filename Value="..\..\fulldemo\demomain.lfm"/>
+        <IsPartOfProject Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="..\..\fulldemo\demomain.pas"/>
+        <IsPartOfProject Value="True"/>
+        <HasResources Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="..\..\fulldemo\ExVpRptSetup.lfm"/>
+        <IsPartOfProject Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="..\..\fulldemo\ExVpRptSetup.pas"/>
+        <IsPartOfProject Value="True"/>
+        <HasResources Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="..\..\fulldemo\sound.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit9>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -79,8 +101,8 @@
       <Filename Value="mormotdemo"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir);..\mormot\mORMotSourceHere;..\..\source"/>
-      <OtherUnitFiles Value="..\mormot;..\mormot\mORMotSourceHere;..\mormot\mORMotSourceHere\SQLite3"/>
+      <IncludeFiles Value="$(ProjOutDir);..\mORMotSourceHere;..\..\..\source"/>
+      <OtherUnitFiles Value="..;..\mORMotSourceHere;..\mORMotSourceHere\SQLite3;..\..\fulldemo"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
@@ -95,9 +117,6 @@
     </Linking>
     <Other>
       <CustomOptions Value="-dMORMOT"/>
-      <OtherDefines Count="1">
-        <Define0 Value="MORMOT"/>
-      </OtherDefines>
     </Other>
   </CompilerOptions>
   <Debugging>

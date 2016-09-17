@@ -17,6 +17,9 @@ VisualPlanIt components can be applied.
   
 - gadgets: demonstrates usage of TVpClock and TVpLEDDisplay
 
+- mormot: demonstrates cooperation of VisualPlanIt with mORMot. The folder 
+  contains a dedicated mORMot datastore and a server and simple client project.
+
 - navbar: demonstrates usage of TVpNavBar
 
 - runtime: a simple demo in which components are created at runtime. Does not

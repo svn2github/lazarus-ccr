@@ -48,7 +48,7 @@ uses
 
 const
   BuildTime = {$I %DATE%} + {$I %TIME}; //'09/13/2002 09:25 AM';
-  VpVersionStr = 'v1.04';    {Visual PlanIt library version}
+  VpVersionStr = 'v1.05';    {Visual PlanIt library version}
   VpProductName = 'Visual PlanIt';
 
   BorderStyles    : array[TBorderStyle] of LongInt =

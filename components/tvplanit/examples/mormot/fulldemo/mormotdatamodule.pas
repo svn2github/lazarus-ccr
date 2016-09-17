@@ -21,7 +21,7 @@ type
   public
     Datastore: TVpmORMotDatastore;
     constructor Create(AOwner: TComponent); override;
-    destructor Destroy;
+    destructor Destroy; override;
   end;
 
 var
