@@ -6,6 +6,7 @@ Login parameters for the created database:
   password: masterkey
 
 NOTE:
-The project creates a new database on the fly. For reasons unknown at the moment,
-an exception is raised here if started from the IDE. This does not happen any
-more once the database exists.
+The project creates a new database on the fly using above-menitoned login
+parameters. For reasons unknown at the moment, the first program entries after 
+adding a resource are not stored --> a restart of the demo program is required
+after adding the first resource.

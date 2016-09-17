@@ -278,7 +278,7 @@ object Form1: TForm1
   end
   object SQLTransaction1: TSQLTransaction
     Active = False
-    Action = caCommit
+    Action = caCommitRetaining
     Database = IBConnection1
     Options = []
     left = 256
@@ -321,6 +321,7 @@ object Form1: TForm1
     LoginPrompt = False
     KeepConnection = True
     Transaction = SQLTransaction1
+    HostName = 'localhost'
     Options = []
     left = 136
     top = 120

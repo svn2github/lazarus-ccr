@@ -100,15 +100,13 @@ end;
 procedure TVpFirebirdDatastore.CreateAllTables(dbIsNew: Boolean);
 var
   tableNames: TStringList;
-  needCommit: Boolean;
 begin
-  needCommit := false;
   if dbIsNew then begin
     CreateTable(ContactsTableName);
     CreateTable(EventsTableName);
     CreateTable(ResourceTableName);
     CreateTable(TasksTableName);
-    needCommit := true;
+    FConnection.Transaction.Commit;
   end else
   begin
     tablenames := TStringList.Create;
@@ -118,30 +116,27 @@ begin
 
       if tablenames.IndexOf(ContactsTableName) = -1 then begin
         CreateTable(ContactsTableName);
-        needCommit := true;
+        FConnection.Transaction.Commit;
       end;
 
       if tablenames.IndexOf(EventsTableName) = -1 then begin
         CreateTable(EventsTableName);
-        needCommit := true;
+        FConnection.Transaction.Commit;
       end;
 
       if tablenames.IndexOf(ResourceTableName) = -1 then begin
         CreateTable(ResourceTableName);
-        needCommit := true;
+        FConnection.Transaction.Commit;
       end;
 
       if tablenames.IndexOf(TasksTableName) = -1 then begin
         CreateTable(TasksTableName);
-        needCommit := true;
+        FConnection.Transaction.Commit;
       end;
     finally
       tablenames.Free;
     end;
   end;
-
-  if needCommit then
-    FConnection.Transaction.Commit;
 end;
 
 // Connection and tables are active afterwards!

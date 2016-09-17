@@ -89,8 +89,6 @@ begin
 
     VpFirebirdDatastore1.Connection := IBConnection1;
     VpFirebirdDatastore1.AutoCreate := true;
-    VpFirebirdDatastore1.CreateTables;
-
 
     VpFirebirdDatastore1.Connected := true;
 
