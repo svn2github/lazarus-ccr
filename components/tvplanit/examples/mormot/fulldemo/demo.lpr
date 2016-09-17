@@ -1,4 +1,4 @@
-program mormotdemo;
+program demo;
 
 { IMPORTANT NOTE:
   If compilation aborts with an error that libkernel32a, libgcc.a and libmsvcrt.a
@@ -30,6 +30,14 @@ begin
   Application.Initialize;
   Application.CreateForm(TDemoDM, DemoDM);
   Application.CreateForm(TMainForm, MainForm);
+
+  // Fix the location of the localization and language files - their relative
+  // path is different here from those in the other "fulldemo".
+  MainForm.VpControlLink1.LocalizationFile := '../../../source/vplocalize.xml';
+  MainForm.LanguageDir := '../../../languages';
+  // ... and expand the form caption
+  MainForm.Caption := 'TurboPower VisualPlanIt & mORMot Demo';
+
   Application.Run;
 end.
 

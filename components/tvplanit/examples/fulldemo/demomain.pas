@@ -125,12 +125,15 @@ type
     FActiveView: Integer;
     FVisibleDays: Integer;
     FResID: Integer;
+    FLanguageDir: String;
     procedure CreateResourceGroup;
+    function GetlanguageDir: String;
     procedure PopulateLanguages;
     procedure PositionControls;
     procedure SetActiveView(AValue: Integer);
     procedure SetLanguage(ALang: String); overload;
     procedure SetLanguage(AIndex: Integer); overload;
+    procedure SetLanguageDir(const AValue: String);
     procedure ShowAllEvents;
     procedure ShowContacts;
     procedure ShowEventsPerDay;
@@ -144,6 +147,7 @@ type
     procedure WriteIni;
   public
     { public declarations }
+    property LanguageDir: String read GetLanguageDir write SetLanguageDir;
   end;
 
 var
@@ -503,6 +507,17 @@ begin
   Caption := Application.Title;
 end;
 
+function TMainForm.GetLanguageDir: String;
+begin
+  if FLanguageDir = '' then
+    Result := ExpandFileName(AppendPathDelim(Application.Location) + LANGUAGE_DIR)
+  else
+  if FilenameIsAbsolute(FLanguageDir) then
+    Result := FLanguageDir
+  else
+    Result := ExpandFileName(AppendPathDelim(Application.Location) + FLanguageDir);
+end;
+
 procedure TMainForm.MnuAboutClick(Sender: TObject);
 var
   F: TfrmAbout;
@@ -641,7 +656,7 @@ begin
   L := TStringList.Create;
   po := TStringList.Create;
   try
-    langdir := ExpandFileName(AppendPathDelim(Application.Location) + LANGUAGE_DIR);
+    langdir := AppendPathDelim(GetLanguageDir);
     FindAllFiles(L, langdir, '*.po');
     po.Sorted := true;
     po.Duplicates := dupIgnore;
@@ -882,7 +897,7 @@ var
   translator: TUpdateTranslator;
   nf: TVpNavFolder;
 begin
-  langdir := ExpandFileName(AppendPathDelim(Application.Location) + LANGUAGE_DIR);
+  langdir := AppendPathDelim(GetLanguageDir);
 
   // Select new language
   if ALang = 'en' then
@@ -998,6 +1013,12 @@ begin
 
   SetActiveView(1001);
   Invalidate;
+end;
+
+procedure TMainForm.SetLanguageDir(const AValue: String);
+begin
+  FLanguageDir := AValue;
+  PopulateLanguages;
 end;
 
 procedure TMainForm.ShowAllEvents;
