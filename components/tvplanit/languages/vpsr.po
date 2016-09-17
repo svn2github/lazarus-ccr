@@ -163,6 +163,11 @@ msgstr ""
 msgid "Category %d"
 msgstr ""
 
+#: vpsr.rscategorylabel
+msgctxt "vpsr.rscategorylabel"
+msgid "Category:"
+msgstr ""
+
 #: vpsr.rscategorylabel1
 msgctxt "vpsr.rscategorylabel1"
 msgid "Business"
@@ -187,6 +192,7 @@ msgid "Other"
 msgstr ""
 
 #: vpsr.rscategorylbl
+msgctxt "vpsr.rscategorylbl"
 msgid "Category:"
 msgstr ""
 
@@ -319,7 +325,8 @@ msgctxt "vpsr.rsdescriptionlbl"
 msgid "Description:"
 msgstr ""
 
-#: vpsr.rsdetails
+#: vpsr.rsdetailslabel
+msgctxt "vpsr.rsdetailslabel"
 msgid "Details:"
 msgstr ""
 
@@ -354,7 +361,8 @@ msgstr ""
 msgid "Task"
 msgstr ""
 
-#: vpsr.rsduedate
+#: vpsr.rsduedatelabel
+msgctxt "vpsr.rsduedatelabel"
 msgid "Due date:"
 msgstr ""
 
@@ -468,6 +476,10 @@ msgstr ""
 msgid "Height"
 msgstr ""
 
+#: vpsr.rshigh
+msgid "High"
+msgstr ""
+
 #: vpsr.rshomeaddress
 msgid "Home address"
 msgstr ""
@@ -553,6 +565,10 @@ msgstr ""
 
 #: vpsr.rslocationlbl
 msgid "Location:"
+msgstr ""
+
+#: vpsr.rslow
+msgid "Low"
 msgstr ""
 
 #: vpsr.rslsaturday
@@ -695,6 +711,10 @@ msgstr ""
 
 #: vpsr.rsnoprintformats
 msgid "No print formats have been defined"
+msgstr ""
+
+#: vpsr.rsnormal
+msgid "Normal"
 msgstr ""
 
 #: vpsr.rsnotdoneyet
@@ -968,6 +988,10 @@ msgstr ""
 
 #: vpsr.rsprintprvprinthint
 msgid "Print"
+msgstr ""
+
+#: vpsr.rsprioritylabel
+msgid "Priority:"
 msgstr ""
 
 #: vpsr.rsprtcontrolowner

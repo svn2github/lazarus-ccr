@@ -124,7 +124,6 @@ msgid "Brush"
 msgstr ""
 
 #: vpsr.rsbusinesswebsitelabel
-#, fuzzy
 msgctxt "vpsr.rsbusinesswebsitelabel"
 msgid "Business"
 msgstr "Дела"
@@ -174,6 +173,11 @@ msgstr "Категория"
 msgid "Category %d"
 msgstr "Категория %d"
 
+#: vpsr.rscategorylabel
+msgctxt "vpsr.rscategorylabel"
+msgid "Category:"
+msgstr "Категория:"
+
 #: vpsr.rscategorylabel1
 msgctxt "vpsr.rscategorylabel1"
 msgid "Business"
@@ -198,6 +202,7 @@ msgid "Other"
 msgstr "Другое"
 
 #: vpsr.rscategorylbl
+msgctxt "vpsr.rscategorylbl"
 msgid "Category:"
 msgstr "Категория:"
 
@@ -330,7 +335,8 @@ msgctxt "vpsr.rsdescriptionlbl"
 msgid "Description:"
 msgstr "Описание:"
 
-#: vpsr.rsdetails
+#: vpsr.rsdetailslabel
+msgctxt "vpsr.rsdetailslabel"
 msgid "Details:"
 msgstr "Детали:"
 
@@ -353,8 +359,6 @@ msgid "Print preview"
 msgstr "Предварительный просмотр печати"
 
 #: vpsr.rsdlgreseditcaption
-#, fuzzy
-#| msgid "Resource Edit"
 msgid "Resource edit"
 msgstr "Редактор ресурсов"
 
@@ -367,9 +371,8 @@ msgstr "Описание"
 msgid "Task"
 msgstr "Задача"
 
-#: vpsr.rsduedate
-#, fuzzy
-#| msgid "Due Date:"
+#: vpsr.rsduedatelabel
+msgctxt "vpsr.rsduedatelabel"
 msgid "Due date:"
 msgstr "Срок:"
 
@@ -483,18 +486,20 @@ msgstr "из вашего расписания?"
 msgid "Height"
 msgstr "Высота"
 
+#: vpsr.rshigh
+msgid "High"
+msgstr ""
+
 #: vpsr.rshomeaddress
 msgid "Home address"
 msgstr ""
 
 #: vpsr.rshomeaddresslabel
-#, fuzzy
 msgctxt "vpsr.rshomeaddresslabel"
 msgid "Home"
 msgstr "Домашний"
 
 #: vpsr.rshomeemaillabel
-#, fuzzy
 msgctxt "vpsr.rshomeemaillabel"
 msgid "Home"
 msgstr "Домашний"
@@ -571,6 +576,10 @@ msgstr ""
 #: vpsr.rslocationlbl
 msgid "Location:"
 msgstr "Расположение:"
+
+#: vpsr.rslow
+msgid "Low"
+msgstr ""
 
 #: vpsr.rslsaturday
 msgctxt "vpsr.rslsaturday"
@@ -714,6 +723,10 @@ msgstr ""
 msgid "No print formats have been defined"
 msgstr "Не определён формат печати"
 
+#: vpsr.rsnormal
+msgid "Normal"
+msgstr ""
+
 #: vpsr.rsnotdoneyet
 msgid "This feature is not implemented at this time."
 msgstr "Эта возможность не рализована."
@@ -753,7 +766,6 @@ msgid "&Open Item"
 msgstr "Открыть эелемент"
 
 #: vpsr.rsotheremaillabel
-#, fuzzy
 msgctxt "vpsr.rsotheremaillabel"
 msgid "Other"
 msgstr "Другой"
@@ -791,7 +803,6 @@ msgid "This operation cannot be undone!"
 msgstr ""
 
 #: vpsr.rspersonalwebsitelabel
-#, fuzzy
 msgctxt "vpsr.rspersonalwebsitelabel"
 msgid "Personal"
 msgstr "Персонал"
@@ -988,6 +999,10 @@ msgstr "Печать"
 #: vpsr.rsprintprvprinthint
 msgid "Print"
 msgstr "Печать"
+
+#: vpsr.rsprioritylabel
+msgid "Priority:"
+msgstr ""
 
 #: vpsr.rsprtcontrolowner
 msgid "Print controller is not owned by a TVpControlLink!"
@@ -1237,13 +1252,11 @@ msgid "Work address"
 msgstr ""
 
 #: vpsr.rsworkaddresslabel
-#, fuzzy
 msgctxt "vpsr.rsworkaddresslabel"
 msgid "Work"
 msgstr "Рабочий"
 
 #: vpsr.rsworkemaillabel
-#, fuzzy
 msgctxt "vpsr.rsworkemaillabel"
 msgid "Work"
 msgstr "Рабочий"
@@ -1572,4 +1585,3 @@ msgstr ""
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr ""
-

@@ -124,7 +124,6 @@ msgid "Brush"
 msgstr ""
 
 #: vpsr.rsbusinesswebsitelabel
-#, fuzzy
 msgctxt "vpsr.rsbusinesswebsitelabel"
 msgid "Business"
 msgstr "Zakelijk"
@@ -174,6 +173,11 @@ msgstr "Categorie"
 msgid "Category %d"
 msgstr "Categorie %d"
 
+#: vpsr.rscategorylabel
+msgctxt "vpsr.rscategorylabel"
+msgid "Category:"
+msgstr "Categorie:"
+
 #: vpsr.rscategorylabel1
 msgctxt "vpsr.rscategorylabel1"
 msgid "Business"
@@ -198,6 +202,7 @@ msgid "Other"
 msgstr "Anders"
 
 #: vpsr.rscategorylbl
+msgctxt "vpsr.rscategorylbl"
 msgid "Category:"
 msgstr "Categorie:"
 
@@ -330,7 +335,8 @@ msgctxt "vpsr.rsdescriptionlbl"
 msgid "Description:"
 msgstr "Onderwerp:"
 
-#: vpsr.rsdetails
+#: vpsr.rsdetailslabel
+msgctxt "vpsr.rsdetailslabel"
 msgid "Details:"
 msgstr "Details:"
 
@@ -353,8 +359,6 @@ msgid "Print preview"
 msgstr "Afdruk voorbeeld"
 
 #: vpsr.rsdlgreseditcaption
-#, fuzzy
-#| msgid "Resource Edit"
 msgid "Resource edit"
 msgstr "Middel bewerken"
 
@@ -367,9 +371,8 @@ msgstr "Omschrijving"
 msgid "Task"
 msgstr "Taak"
 
-#: vpsr.rsduedate
-#, fuzzy
-#| msgid "Due Date:"
+#: vpsr.rsduedatelabel
+msgctxt "vpsr.rsduedatelabel"
 msgid "Due date:"
 msgstr "Vervaldatum:"
 
@@ -483,18 +486,20 @@ msgstr "van uw tijdschema?"
 msgid "Height"
 msgstr ""
 
+#: vpsr.rshigh
+msgid "High"
+msgstr ""
+
 #: vpsr.rshomeaddress
 msgid "Home address"
 msgstr ""
 
 #: vpsr.rshomeaddresslabel
-#, fuzzy
 msgctxt "vpsr.rshomeaddresslabel"
 msgid "Home"
 msgstr "Thuis"
 
 #: vpsr.rshomeemaillabel
-#, fuzzy
 msgctxt "vpsr.rshomeemaillabel"
 msgid "Home"
 msgstr "Thuis"
@@ -571,6 +576,10 @@ msgstr ""
 #: vpsr.rslocationlbl
 msgid "Location:"
 msgstr "Plaats:"
+
+#: vpsr.rslow
+msgid "Low"
+msgstr ""
 
 #: vpsr.rslsaturday
 msgctxt "vpsr.rslsaturday"
@@ -714,6 +723,10 @@ msgstr ""
 msgid "No print formats have been defined"
 msgstr "Er zijn geen afdrukformaten gedefinieerd."
 
+#: vpsr.rsnormal
+msgid "Normal"
+msgstr ""
+
 #: vpsr.rsnotdoneyet
 msgid "This feature is not implemented at this time."
 msgstr "Dit onderdeel is nog niet geimplementeerd."
@@ -753,7 +766,6 @@ msgid "&Open Item"
 msgstr "&Open Item"
 
 #: vpsr.rsotheremaillabel
-#, fuzzy
 msgctxt "vpsr.rsotheremaillabel"
 msgid "Other"
 msgstr "Andere"
@@ -791,7 +803,6 @@ msgid "This operation cannot be undone!"
 msgstr "Deze operatie kan niet ongedaan gemaakt worden!"
 
 #: vpsr.rspersonalwebsitelabel
-#, fuzzy
 msgctxt "vpsr.rspersonalwebsitelabel"
 msgid "Personal"
 msgstr "Persoonlijk"
@@ -988,6 +999,10 @@ msgstr "&Afdrukken"
 #: vpsr.rsprintprvprinthint
 msgid "Print"
 msgstr "Afdrukken"
+
+#: vpsr.rsprioritylabel
+msgid "Priority:"
+msgstr ""
 
 #: vpsr.rsprtcontrolowner
 msgid "Print controller is not owned by a TVpControlLink!"
@@ -1237,13 +1252,11 @@ msgid "Work address"
 msgstr ""
 
 #: vpsr.rsworkaddresslabel
-#, fuzzy
 msgctxt "vpsr.rsworkaddresslabel"
 msgid "Work"
 msgstr "Werk"
 
 #: vpsr.rsworkemaillabel
-#, fuzzy
 msgctxt "vpsr.rsworkemaillabel"
 msgid "Work"
 msgstr "Werk"
@@ -1572,4 +1585,3 @@ msgstr "Onbekende as specificatie: %s"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "De XML declaratie moet voor het eerste element staan"
-

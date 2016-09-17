@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-09-12 22:32+0200\n"
+"PO-Revision-Date: 2016-09-17 17:11+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -130,7 +130,6 @@ msgid "Brush"
 msgstr ""
 
 #: vpsr.rsbusinesswebsitelabel
-#, fuzzy
 msgctxt "vpsr.rsbusinesswebsitelabel"
 msgid "Business"
 msgstr "Professionnel"
@@ -180,6 +179,11 @@ msgstr "Catégorie"
 msgid "Category %d"
 msgstr "Catégorie %d"
 
+#: vpsr.rscategorylabel
+msgctxt "vpsr.rscategorylabel"
+msgid "Category:"
+msgstr "Catégorie:"
+
 #: vpsr.rscategorylabel1
 msgctxt "vpsr.rscategorylabel1"
 msgid "Business"
@@ -204,6 +208,7 @@ msgid "Other"
 msgstr "Autre"
 
 #: vpsr.rscategorylbl
+msgctxt "vpsr.rscategorylbl"
 msgid "Category:"
 msgstr "Catégorie:"
 
@@ -336,7 +341,8 @@ msgctxt "vpsr.rsdescriptionlbl"
 msgid "Description:"
 msgstr "Sujet:"
 
-#: vpsr.rsdetails
+#: vpsr.rsdetailslabel
+msgctxt "vpsr.rsdetailslabel"
 msgid "Details:"
 msgstr "Détails:"
 
@@ -359,8 +365,6 @@ msgid "Print preview"
 msgstr "Aperçu avant impression"
 
 #: vpsr.rsdlgreseditcaption
-#, fuzzy
-#| msgid "Resource Edit"
 msgid "Resource edit"
 msgstr "Modifier la resource"
 
@@ -373,9 +377,8 @@ msgstr "Déscription"
 msgid "Task"
 msgstr "Tache"
 
-#: vpsr.rsduedate
-#, fuzzy
-#| msgid "Due Date:"
+#: vpsr.rsduedatelabel
+msgctxt "vpsr.rsduedatelabel"
 msgid "Due date:"
 msgstr "Date d'échéance:"
 
@@ -489,18 +492,20 @@ msgstr "de votre agenda?"
 msgid "Height"
 msgstr ""
 
+#: vpsr.rshigh
+msgid "High"
+msgstr ""
+
 #: vpsr.rshomeaddress
 msgid "Home address"
 msgstr ""
 
 #: vpsr.rshomeaddresslabel
-#, fuzzy
 msgctxt "vpsr.rshomeaddresslabel"
 msgid "Home"
 msgstr "Maison"
 
 #: vpsr.rshomeemaillabel
-#, fuzzy
 msgctxt "vpsr.rshomeemaillabel"
 msgid "Home"
 msgstr "Maison"
@@ -577,6 +582,10 @@ msgstr ""
 #: vpsr.rslocationlbl
 msgid "Location:"
 msgstr "Lieu:"
+
+#: vpsr.rslow
+msgid "Low"
+msgstr ""
 
 #: vpsr.rslsaturday
 msgctxt "vpsr.rslsaturday"
@@ -720,6 +729,10 @@ msgstr ""
 msgid "No print formats have been defined"
 msgstr "Formats d'impression non-défini"
 
+#: vpsr.rsnormal
+msgid "Normal"
+msgstr ""
+
 #: vpsr.rsnotdoneyet
 msgid "This feature is not implemented at this time."
 msgstr "Cette fonctionnalité n'est pas mise en œuvre à ce moment"
@@ -759,7 +772,6 @@ msgid "&Open Item"
 msgstr "&Item ouvert"
 
 #: vpsr.rsotheremaillabel
-#, fuzzy
 msgctxt "vpsr.rsotheremaillabel"
 msgid "Other"
 msgstr "Autre"
@@ -797,7 +809,6 @@ msgid "This operation cannot be undone!"
 msgstr "Ce processus est irreversible!"
 
 #: vpsr.rspersonalwebsitelabel
-#, fuzzy
 msgctxt "vpsr.rspersonalwebsitelabel"
 msgid "Personal"
 msgstr "Personnel"
@@ -994,6 +1005,10 @@ msgstr "&Imprimer"
 #: vpsr.rsprintprvprinthint
 msgid "Print"
 msgstr "Imprimer"
+
+#: vpsr.rsprioritylabel
+msgid "Priority:"
+msgstr ""
 
 #: vpsr.rsprtcontrolowner
 msgid "Print controller is not owned by a TVpControlLink!"
@@ -1243,13 +1258,11 @@ msgid "Work address"
 msgstr ""
 
 #: vpsr.rsworkaddresslabel
-#, fuzzy
 msgctxt "vpsr.rsworkaddresslabel"
 msgid "Work"
 msgstr "Travail"
 
 #: vpsr.rsworkemaillabel
-#, fuzzy
 msgctxt "vpsr.rsworkemaillabel"
 msgid "Work"
 msgstr "Travail"
@@ -1578,4 +1591,3 @@ msgstr "Spécificateur d'axe inconnu"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "La déclaration XML doit apparaître avant le premier élément"
-

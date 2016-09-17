@@ -98,6 +98,10 @@ resourcestring
   RSCategoryLabel4          = 'Personal';
   RSCategoryLabel5          = 'Other';
 
+  RSLow                     = 'Low';
+  RSNormal                  = 'Normal';
+  RSHigh                    = 'High';
+
   RSWeekOf                  = 'Week of';
   RSThrough                 = 'Through';
   RSSunday                  = 'Sunday';
@@ -270,11 +274,13 @@ resourcestring
 
   { Task Edit Dialog Captions }
   RSDlgTaskEdit             = 'Task';
-  RSDueDate                 = 'Due date:';
-  RSDetails                 = 'Details:';
   RSTaskComplete            = 'Task complete';
   RSCreatedOn               = 'Created on';
   RSCompletedOn             = 'Completed on';
+  RSDueDateLabel            = 'Due date:';
+  RSDetailsLabel            = 'Details:';
+  RSPriorityLabel           = 'Priority:';
+  RSCategoryLabel           = 'Category:';
 
   { Resource Edit Dialog Captions }
   RSDlgResEditCaption       = 'Resource edit';

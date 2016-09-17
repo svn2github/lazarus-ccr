@@ -267,7 +267,7 @@ begin
     'CREATE TABLE Resources ( '+
        'ResourceID COUNTER, ' +
        'Description VARCHAR(255), '+
-       'Notes VARCHAR, '+                        // 1024 --> -
+       'Notes VARCHAR, '+                           // 1024 --> -
        'ImageIndex INTEGER, '+
        'ResourceActive LOGICAL, '+                  // BOOL --> LOGICAL
        'UserField0 VARCHAR(100), '+

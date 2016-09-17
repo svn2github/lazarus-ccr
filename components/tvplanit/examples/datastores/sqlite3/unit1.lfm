@@ -54,6 +54,7 @@ object Form1: TForm1
     Align = alClient
     TabIndex = 0
     TabOrder = 1
+    OnChange = PageControl1Change
     object TabSheet1: TTabSheet
       Caption = 'Events and tasks'
       ClientHeight = 624
@@ -152,8 +153,12 @@ object Form1: TForm1
           DayNameStyle = dsShort
           DrawingStyle = dsFlat
           EventDayStyle = []
+          HeadAttributes.Color = clBtnFace
           LineColor = clGray
           TimeFormat = tf12Hour
+          TodayAttributes.Color = clSilver
+          TodayAttributes.BorderPen.Color = clRed
+          TodayAttributes.BorderPen.Width = 3
           OffDayColor = clSilver
           SelectedDayColor = clRed
           ShowEvents = True
@@ -244,6 +249,64 @@ object Form1: TForm1
         DrawingStyle = dsFlat
       end
     end
+    object TabSheet3: TTabSheet
+      Caption = 'Grids'
+      ClientHeight = 624
+      ClientWidth = 972
+      object DBNavigator: TDBNavigator
+        Left = 8
+        Height = 25
+        Top = 8
+        Width = 241
+        BevelOuter = bvNone
+        ChildSizing.EnlargeHorizontal = crsScaleChilds
+        ChildSizing.EnlargeVertical = crsScaleChilds
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 100
+        ClientHeight = 25
+        ClientWidth = 241
+        Options = []
+        TabOrder = 0
+      end
+      object Button1: TButton
+        Left = 264
+        Height = 25
+        Top = 8
+        Width = 120
+        Caption = 'Apply to planner'
+        TabOrder = 1
+      end
+      object TabControl1: TTabControl
+        Left = 8
+        Height = 577
+        Top = 39
+        Width = 960
+        OnChange = TabControl1Change
+        TabIndex = 0
+        Tabs.Strings = (
+          'Resources'
+          'Contacts'
+          'Events'
+          'Tasks'
+        )
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Around = 8
+        TabOrder = 2
+        object Grid: TDBGrid
+          Left = 2
+          Height = 552
+          Top = 23
+          Width = 956
+          Align = alClient
+          Color = clWindow
+          Columns = <>
+          Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgThumbTracking]
+          TabOrder = 1
+        end
+      end
+    end
   end
   object VpControlLink1: TVpControlLink
     DataStore = VpSqlite3Datastore1
@@ -292,11 +355,14 @@ object Form1: TForm1
     CategoryColorMap.Category8.Description = 'Category 8'
     CategoryColorMap.Category9.Color = clMaroon
     CategoryColorMap.Category9.Description = 'Category 9'
+    HiddenCategories.BackgroundColor = clSilver
+    HiddenCategories.Color = clGray
     EnableEventTimer = True
     PlayEventSounds = True
     Connection = SQLite3Connection1
     AutoConnect = False
     AutoCreate = False
+    DayBuffer = 31
     left = 136
     top = 192
   end
@@ -316,5 +382,346 @@ object Form1: TForm1
     Options = []
     left = 256
     top = 120
+  end
+  object QryAllResources: TSQLQuery
+    PacketRecords = -1
+    FieldDefs = <    
+      item
+        Name = 'ResourceID'
+        Attributes = [faReadonly]
+        DataType = ftAutoInc
+        Precision = -1
+      end    
+      item
+        Name = 'Description'
+        DataType = ftString
+        Precision = -1
+        Size = 255
+      end    
+      item
+        Name = 'Notes'
+        DataType = ftString
+        Precision = -1
+        Size = 255
+      end    
+      item
+        Name = 'ImageIndex'
+        DataType = ftInteger
+        Precision = -1
+      end    
+      item
+        Name = 'ResourceActive'
+        DataType = ftBoolean
+        Precision = -1
+      end    
+      item
+        Name = 'UserField0'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'UserField1'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'UserField2'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'UserField3'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'UserField4'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'UserField5'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'UserField6'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'UserField7'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'UserField8'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'UserField9'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end>
+    Database = SQLite3Connection1
+    Transaction = SQLTransaction1
+    SQL.Strings = (
+      'SELECT * FROM Resources'
+    )
+    Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
+    Params = <>
+    UsePrimaryKeyAsKey = False
+    left = 560
+    top = 160
+  end
+  object QryAllContacts: TSQLQuery
+    PacketRecords = -1
+    FieldDefs = <    
+      item
+        Name = 'RecordID'
+        Attributes = [faReadonly]
+        DataType = ftAutoInc
+        Precision = -1
+      end    
+      item
+        Name = 'ResourceID'
+        DataType = ftInteger
+        Precision = -1
+      end    
+      item
+        Name = 'FirstName'
+        DataType = ftString
+        Precision = -1
+        Size = 50
+      end    
+      item
+        Name = 'LastName'
+        DataType = ftString
+        Precision = -1
+        Size = 50
+      end    
+      item
+        Name = 'Birthdate'
+        DataType = ftDateTime
+        Precision = -1
+      end    
+      item
+        Name = 'Anniversary'
+        DataType = ftDateTime
+        Precision = -1
+      end    
+      item
+        Name = 'Title'
+        DataType = ftString
+        Precision = -1
+        Size = 50
+      end    
+      item
+        Name = 'Company'
+        DataType = ftString
+        Precision = -1
+        Size = 50
+      end    
+      item
+        Name = 'Job_Position'
+        DataType = ftString
+        Precision = -1
+        Size = 30
+      end    
+      item
+        Name = 'Address'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'City'
+        DataType = ftString
+        Precision = -1
+        Size = 50
+      end    
+      item
+        Name = 'State'
+        DataType = ftString
+        Precision = -1
+        Size = 25
+      end    
+      item
+        Name = 'Zip'
+        DataType = ftString
+        Precision = -1
+        Size = 10
+      end    
+      item
+        Name = 'Country'
+        DataType = ftString
+        Precision = -1
+        Size = 25
+      end    
+      item
+        Name = 'Notes'
+        DataType = ftString
+        Precision = -1
+        Size = 255
+      end    
+      item
+        Name = 'Phone1'
+        DataType = ftString
+        Precision = -1
+        Size = 25
+      end    
+      item
+        Name = 'Phone2'
+        DataType = ftString
+        Precision = -1
+        Size = 25
+      end    
+      item
+        Name = 'Phone3'
+        DataType = ftString
+        Precision = -1
+        Size = 25
+      end    
+      item
+        Name = 'Phone4'
+        DataType = ftString
+        Precision = -1
+        Size = 25
+      end    
+      item
+        Name = 'Phone5'
+        DataType = ftString
+        Precision = -1
+        Size = 25
+      end    
+      item
+        Name = 'PhoneType1'
+        DataType = ftInteger
+        Precision = -1
+      end    
+      item
+        Name = 'PhoneType2'
+        DataType = ftInteger
+        Precision = -1
+      end    
+      item
+        Name = 'PhoneType3'
+        DataType = ftInteger
+        Precision = -1
+      end    
+      item
+        Name = 'PhoneType4'
+        DataType = ftInteger
+        Precision = -1
+      end    
+      item
+        Name = 'PhoneType5'
+        DataType = ftInteger
+        Precision = -1
+      end    
+      item
+        Name = 'Category'
+        DataType = ftInteger
+        Precision = -1
+      end    
+      item
+        Name = 'EMail'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'Custom1'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'Custom2'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'Custom3'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end    
+      item
+        Name = 'Custom4'
+        DataType = ftString
+        Precision = -1
+        Size = 100
+      end>
+    Database = SQLite3Connection1
+    Transaction = SQLTransaction1
+    SQL.Strings = (
+      'SELECT * FROM Contacts'
+    )
+    Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
+    Params = <>
+    UsePrimaryKeyAsKey = False
+    left = 560
+    top = 214
+  end
+  object QryAllEvents: TSQLQuery
+    PacketRecords = -1
+    FieldDefs = <>
+    Database = SQLite3Connection1
+    Transaction = SQLTransaction1
+    SQL.Strings = (
+      'SELECT * FROM Events'
+    )
+    Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
+    Params = <>
+    UsePrimaryKeyAsKey = False
+    left = 560
+    top = 274
+  end
+  object QryAllTasks: TSQLQuery
+    PacketRecords = -1
+    FieldDefs = <>
+    Database = SQLite3Connection1
+    Transaction = SQLTransaction1
+    SQL.Strings = (
+      'SELECT * FROM Tasks'
+    )
+    Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
+    Params = <>
+    UsePrimaryKeyAsKey = False
+    left = 560
+    top = 341
+  end
+  object DsAllResources: TDataSource
+    DataSet = QryAllResources
+    left = 656
+    top = 160
+  end
+  object DsAllContacts: TDataSource
+    DataSet = QryAllContacts
+    left = 659
+    top = 214
+  end
+  object DsAllEvents: TDataSource
+    DataSet = QryAllEvents
+    left = 654
+    top = 274
+  end
+  object DsAllTasks: TDataSource
+    DataSet = QryAllTasks
+    left = 656
+    top = 341
   end
 end

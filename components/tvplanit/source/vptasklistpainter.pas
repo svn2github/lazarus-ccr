@@ -429,6 +429,9 @@ begin
           else
             RenderCanvas.Font.Color := RealNormalColor;
         end;
+        if Task.Priority = ord(tpHigh) then
+          RenderCanvas.Font.Style := RenderCanvas.Font.Style + [fsBold] else
+          RenderCanvas.Font.Style := RenderCanvas.Font.style - [fsBold];
 
         { if this is the selected task, set highlight text color }
         if (Task = FActiveTask) and

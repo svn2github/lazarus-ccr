@@ -60,12 +60,13 @@ type
 
   TVpContactSort = (csLastFirst, csFirstLast);
 
+  TVpTaskPriority = (tpLow=-1, tpNormal=0, tpHigh=1);
+
   TVpOverlayPattern = (opSolid, opClear, opHorizontal, opVertical,
                        opFDiagonal, opBDiagonal, opCross, opDiagCross);
 
   TVpOverlayDetail = (odResource, odEventDescription, odEventCategory);
   TVpOverlayDetails = set of TVpOverlayDetail;
-
 
   { forward declarations }
   TVpResource = class;
@@ -440,8 +441,6 @@ type
     property Complete: Boolean read FComplete write SetComplete;
     property CreatedOn: TDateTime read FCreatedOn write SetCreatedOn;
     property CompletedOn: TDateTIme read FCompletedOn write SetCompletedOn;
-
-    { Not implemented yet }
     property Priority: Integer read FPriority write SetPriority;
     property Category: Integer read FCategory write SetCategory;
 

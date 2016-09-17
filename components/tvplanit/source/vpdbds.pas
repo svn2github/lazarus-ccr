@@ -60,20 +60,16 @@ type
 
     { internal methods }
     procedure LoadContact(AContact: TVpContact); virtual;
+    procedure LoadTask(ATask: TVpTask); virtual;
     procedure SetFilterCriteria(ATable: TDataset; AUseDateTime: Boolean;
       AResourceID: Integer; AStartDateTime, AEndDateTime: TDateTime); virtual;
 
   protected {properties that may be surfaced later}
-      property ReadOnly : boolean
-         read FReadOnly write SetReadOnly default False;
-      property ResourceTable : TDataset
-         read GetResourceTable;
-      property EventsTable : TDataset
-         read GetEventsTable;
-      property ContactsTable : TDataset
-         read GetContactsTable;
-      property TasksTable : TDataset
-         read GetTasksTable;
+    property ReadOnly: boolean read FReadOnly write SetReadOnly default False;
+    property ResourceTable: TDataset read GetResourceTable;
+    property EventsTable: TDataset read GetEventsTable;
+    property ContactsTable: TDataset read GetContactsTable;
+    property TasksTable: TDataset read GetTasksTable;
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -244,7 +240,8 @@ begin
         Required := false;
       end;
     end; {with FieldDefs do}
-  end else if TableName = EventsTableName then begin
+  end else
+  if TableName = EventsTableName then begin
     with FieldDefs do begin
       Clear;
       { Record ID }
@@ -818,7 +815,8 @@ begin
         Required := false;
       end;
     end; {with FieldDefs do}
-  end else if TableName = TasksTableName then begin
+  end else
+  if TableName = TasksTableName then begin
     with FieldDefs do begin
       Clear;
       { Record ID }
@@ -1203,7 +1201,7 @@ begin
       end; {while}
     end; {with EventsTable}
 end;
-{=====}
+
 { Loads the contact from the current cursor position of the contacts table }
 procedure TVpCustomDBDataStore.LoadContact(AContact: TVpContact);
 var
@@ -1358,6 +1356,44 @@ begin
     end;
 end;
 
+{ Loads the task from the current cursor position of the task table }
+procedure TVpCustomDBDatastore.LoadTask(ATask: TVpTask);
+var
+  F: TField;
+begin
+  with TasksTable do begin
+    ATask.RecordID := FieldByName('RecordID').AsInteger;
+    ATask.Complete := FieldByName('Complete').AsBoolean;
+    ATask.Description := FieldByName('Description').AsString;
+    ATask.Details := FieldByName('Details').AsString;
+    ATask.CreatedOn := FieldByName('CreatedOn').AsDateTime;
+    ATask.CompletedOn := FieldByName('CompletedOn').AsDateTime;
+    ATask.Priority := FieldByName('Priority').AsInteger;
+    ATask.Category := FieldByName('Category').AsInteger;
+    ATask.DueDate := FieldByName('DueDate').AsDateTime;
+    F := FindField('UserField0');
+    if F <> nil then ATask.UserField0 := F.AsString;
+    F := FindField('UserField1');
+    if F <> nil then ATask.UserField1 := F.AsString;
+    F := FindField('UserField2');
+    if F <> nil then ATask.UserField2 := F.AsString;
+    F := FindField('UserField3');
+    if F <> nil then ATask.UserField3 := F.AsString;
+    F := FindField('UserField4');
+    if F <> nil then ATask.UserField4 := F.AsString;
+    F := FindField('UserField5');
+    if F <> nil then ATask.UserField5 := F.AsString;
+    F := FindField('UserField6');
+    if F <> nil then ATask.UserField6 := F.AsString;
+    F := FindField('UserField7');
+    if F <> nil then ATask.UserField7 := F.AsString;
+    F := FindField('UserField8');
+    if F <> nil then ATask.UserField8 := F.AsString;
+    F := FindField('UserField9');
+    if F <> nil then ATask.UserField9 := F.AsString;
+  end;
+end;
+
 procedure TVpCustomDBDataStore.LoadTasks;
 var
   Task: TVpTask;
@@ -1372,36 +1408,8 @@ begin
       First;
       while not EOF do begin
         Task := Resource.Tasks.AddTask(GetNextID(TasksTableName));
-        task.loading := true;
-        Task.RecordID := FieldByName('RecordID').AsInteger;
-        Task.Complete := FieldByName('Complete').AsBoolean;
-        Task.Description := FieldByName('Description').AsString;
-        Task.Details := FieldByName('Details').AsString;
-        Task.CreatedOn := FieldByName('CreatedOn').AsDateTime;
-        Task.CompletedOn := FieldByName('CompletedOn').AsDateTime;
-        Task.Priority := FieldByName('Priority').AsInteger;
-        Task.Category := FieldByName('Category').AsInteger;
-        Task.DueDate := FieldByName('DueDate').AsDateTime;
-        F := FindField('UserField0');
-        if F <> nil then Task.UserField0 := F.AsString;
-        F := FindField('UserField1');
-        if F <> nil then Task.UserField1 := F.AsString;
-        F := FindField('UserField2');
-        if F <> nil then Task.UserField2 := F.AsString;
-        F := FindField('UserField3');
-        if F <> nil then Task.UserField3 := F.AsString;
-        F := FindField('UserField4');
-        if F <> nil then Task.UserField4 := F.AsString;
-        F := FindField('UserField5');
-        if F <> nil then Task.UserField5 := F.AsString;
-        F := FindField('UserField6');
-        if F <> nil then Task.UserField6 := F.AsString;
-        F := FindField('UserField7');
-        if F <> nil then Task.UserField7 := F.AsString;
-        F := FindField('UserField8');
-        if F <> nil then Task.UserField8 := F.AsString;
-        F := FindField('UserField9');
-        if F <> nil then Task.UserField9 := F.AsString;
+        Task.loading := true;
+        LoadTask(Task);
         Task.Loading := false;
         Next;
       end; {while}
@@ -2084,14 +2092,34 @@ end;
 {=====}
 
 procedure TVpCustomDBDataStore.RefreshTasks;
+var
+  task: TVpTask;
 begin
+  if Resource <> nil then begin
+    Resource.Tasks.ClearTasks;
+    with TasksTable do begin
+      SetFilterCriteria(TasksTable, False, Resource.ResourceID, 0, 0);
+      First;
+      while not EOF do begin
+        task := Resource.Tasks.AddTask(FieldByName('RecordID').AsInteger);
+        task.Loading := true;
+        LoadTask(task);
+        task.Loading := false;
+        Next;
+      end;
+    end;
+  //    LoadContacts;
+  end;
+  inherited;
+end;
+(*
   if Resource <> nil then begin
     Resource.Tasks.ClearTasks;
     LoadTasks;
   end;
   inherited;
 end;
-{=====}
+*)
 
 procedure TVpCustomDBDataStore.RefreshResource;
 var

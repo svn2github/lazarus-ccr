@@ -134,6 +134,8 @@ function GetEndLine(EndTime: TDateTime; Granularity: TVpGranularity): Integer;
 function LineToStartTime(Line: Integer; Granularity: TVpGranularity): TDateTime;
 function GetLineDuration(Granularity: TVpGranularity): Double;
 
+function TaskPriorityToStr(APriority: TVpTaskPriority): String;
+
 function AutoHeight(ARadioGroup: TRadioGroup): Integer;
 function GetButtonWidth(AButton: TButton): Integer;
 function GetLabelWidth(ALabel: TLabel): Integer;
@@ -616,7 +618,16 @@ function GetLineDuration(Granularity: TVpGranularity): Double;
 begin
   Result := GranularityMinutes[Granularity] / MinutesInDay;
 end;
-{=====}
+
+function TaskPriorityToStr(APriority: TVpTaskPriority): String;
+begin
+  Result := '';
+  case APriority of
+    tpLow    : Result := RSLow;
+    tpNormal : Result := RSNormal;
+    tpHigh   : Result := RSHigh;
+  end;
+end;
 
 function AutoHeight(ARadioGroup: TRadioGroup): Integer;
 var

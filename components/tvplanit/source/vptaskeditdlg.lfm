@@ -1,12 +1,12 @@
 object TaskEditForm: TTaskEditForm
   Left = 284
-  Height = 378
-  Top = 286
+  Height = 411
+  Top = 253
   Width = 547
   HorzScrollBar.Page = 545
   VertScrollBar.Page = 339
   Caption = 'TaskEditForm'
-  ClientHeight = 378
+  ClientHeight = 411
   ClientWidth = 547
   OnCreate = FormCreate
   OnShow = FormShow
@@ -15,7 +15,7 @@ object TaskEditForm: TTaskEditForm
   object ButtonPanel: TPanel
     Left = 0
     Height = 37
-    Top = 341
+    Top = 374
     Width = 547
     Align = alBottom
     BevelOuter = bvNone
@@ -61,7 +61,7 @@ object TaskEditForm: TTaskEditForm
   end
   object PageControl1: TPageControl
     Left = 0
-    Height = 341
+    Height = 374
     Top = 0
     Width = 547
     TabStop = False
@@ -71,29 +71,29 @@ object TaskEditForm: TTaskEditForm
     TabOrder = 0
     object tabTask: TTabSheet
       Caption = 'Task'
-      ClientHeight = 313
+      ClientHeight = 346
       ClientWidth = 539
       object DueDateLbl: TLabel
         Left = 52
         Height = 15
-        Top = 44
+        Top = 78
         Width = 50
         Caption = 'Due date:'
         FocusControl = DueDateEdit
         ParentColor = False
       end
-      object CreatedOnLbl: TLabel
+      object LblCreatedOn: TLabel
         Left = 52
         Height = 15
-        Top = 69
+        Top = 103
         Width = 61
         Caption = 'Created on:'
         ParentColor = False
       end
-      object CompletedOnLbl: TLabel
+      object LblCompletedOn: TLabel
         Left = 333
         Height = 15
-        Top = 69
+        Top = 103
         Width = 79
         Caption = 'Completed on:'
         ParentColor = False
@@ -101,7 +101,7 @@ object TaskEditForm: TTaskEditForm
       object Bevel1: TBevel
         Left = 4
         Height = 2
-        Top = 32
+        Top = 64
         Width = 529
         Anchors = [akTop, akLeft, akRight]
         Shape = bsTopLine
@@ -109,7 +109,7 @@ object TaskEditForm: TTaskEditForm
       object imgCalendar: TImage
         Left = 8
         Height = 32
-        Top = 38
+        Top = 72
         Width = 32
         AutoSize = True
         Picture.Data = {
@@ -218,7 +218,7 @@ object TaskEditForm: TTaskEditForm
       object imgCompleted: TImage
         Left = 290
         Height = 32
-        Top = 38
+        Top = 72
         Width = 32
         AutoSize = True
         Picture.Data = {
@@ -257,18 +257,18 @@ object TaskEditForm: TTaskEditForm
         TabOrder = 0
         Text = 'DescriptionEdit'
       end
-      object CompleteCB: TCheckBox
+      object CbComplete: TCheckBox
         Left = 333
         Height = 19
-        Top = 43
+        Top = 77
         Width = 72
         Caption = 'Complete'
         TabOrder = 2
       end
       object DetailsMemo: TMemo
         Left = 4
-        Height = 208
-        Top = 96
+        Height = 209
+        Top = 128
         Width = 529
         Anchors = [akTop, akLeft, akRight, akBottom]
         Lines.Strings = (
@@ -282,8 +282,8 @@ object TaskEditForm: TTaskEditForm
       object DueDateEdit: TDateEdit
         Left = 128
         Height = 23
-        Top = 41
-        Width = 103
+        Top = 75
+        Width = 120
         CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
         DateOrder = doNone
         ButtonWidth = 23
@@ -327,6 +327,58 @@ object TaskEditForm: TTaskEditForm
         MaxLength = 0
         TabOrder = 1
         Text = 'DueDateEdit'
+      end
+      object LblCategory: TLabel
+        Left = 62
+        Height = 15
+        Top = 36
+        Width = 51
+        Caption = 'Category:'
+        FocusControl = CbCategory
+        ParentColor = False
+      end
+      object CbCategory: TComboBox
+        Left = 128
+        Height = 23
+        Top = 32
+        Width = 120
+        ItemHeight = 15
+        ItemIndex = 0
+        Items.Strings = (
+          'Business'
+          'Clients'
+          'Family'
+          'Other'
+          'Personal'
+        )
+        Style = csDropDownList
+        TabOrder = 4
+        Text = 'Business'
+      end
+      object LblPriority: TLabel
+        Left = 281
+        Height = 15
+        Top = 36
+        Width = 41
+        Caption = 'Priority:'
+        FocusControl = CbPriority
+        ParentColor = False
+      end
+      object CbPriority: TComboBox
+        Left = 333
+        Height = 23
+        Top = 32
+        Width = 120
+        ItemHeight = 15
+        ItemIndex = 1
+        Items.Strings = (
+          'low'
+          'normal'
+          'high'
+        )
+        Style = csDropDownList
+        TabOrder = 5
+        Text = 'normal'
       end
     end
   end

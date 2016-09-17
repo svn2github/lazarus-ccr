@@ -173,6 +173,11 @@ msgstr "Kategorie"
 msgid "Category %d"
 msgstr "Kategorie %d"
 
+#: vpsr.rscategorylabel
+msgctxt "vpsr.rscategorylabel"
+msgid "Category:"
+msgstr "Kategorie:"
+
 #: vpsr.rscategorylabel1
 msgctxt "vpsr.rscategorylabel1"
 msgid "Business"
@@ -197,6 +202,7 @@ msgid "Other"
 msgstr "Andere"
 
 #: vpsr.rscategorylbl
+msgctxt "vpsr.rscategorylbl"
 msgid "Category:"
 msgstr "Kategorie:"
 
@@ -329,7 +335,8 @@ msgctxt "vpsr.rsdescriptionlbl"
 msgid "Description:"
 msgstr "Beschreibung:"
 
-#: vpsr.rsdetails
+#: vpsr.rsdetailslabel
+msgctxt "vpsr.rsdetailslabel"
 msgid "Details:"
 msgstr "Details:"
 
@@ -364,9 +371,10 @@ msgstr "Beschreibung"
 msgid "Task"
 msgstr "Aufgabe"
 
-#: vpsr.rsduedate
+#: vpsr.rsduedatelabel
+msgctxt "vpsr.rsduedatelabel"
 msgid "Due date:"
-msgstr "Fälligkeitsdatum:"
+msgstr "Fällig am:"
 
 #: vpsr.rsduplicateresource
 msgid "Error: Duplicate resource."
@@ -478,6 +486,10 @@ msgstr "Von Ihrem Zeitplan?"
 msgid "Height"
 msgstr "Höhe"
 
+#: vpsr.rshigh
+msgid "High"
+msgstr "Hoch"
+
 #: vpsr.rshomeaddress
 msgid "Home address"
 msgstr "Zuhause"
@@ -564,6 +576,10 @@ msgstr "Ort"
 #: vpsr.rslocationlbl
 msgid "Location:"
 msgstr "Ort:"
+
+#: vpsr.rslow
+msgid "Low"
+msgstr "Niedrig"
 
 #: vpsr.rslsaturday
 msgctxt "vpsr.rslsaturday"
@@ -706,6 +722,10 @@ msgstr "keine"
 #: vpsr.rsnoprintformats
 msgid "No print formats have been defined"
 msgstr "Es sind keine Druckformate definiert."
+
+#: vpsr.rsnormal
+msgid "Normal"
+msgstr "Normal"
 
 #: vpsr.rsnotdoneyet
 msgid "This feature is not implemented at this time."
@@ -979,6 +999,10 @@ msgstr "&Drucken"
 #: vpsr.rsprintprvprinthint
 msgid "Print"
 msgstr "Drucken"
+
+#: vpsr.rsprioritylabel
+msgid "Priority:"
+msgstr "Priorität:"
 
 #: vpsr.rsprtcontrolowner
 msgid "Print controller is not owned by a TVpControlLink!"
