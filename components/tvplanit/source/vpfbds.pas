@@ -79,15 +79,16 @@ begin
 
   FContactsTable := TSQLQuery.Create(self);
   FContactsTable.SQL.Add('SELECT * FROM Contacts');
+  FContactsTable.UpdateMode := upWhereAll;
 
   FEventsTable := TSQLQuery.Create(Self);
   FEventsTable.SQL.Add('SELECT * FROM Events');
+  FEventsTable.UpdateMode := upWhereAll;
 
   FResourceTable := TSQLQuery.Create(self);
-  FResourceTable.SQL.Add(
-    'SELECT * '+
-    'FROM Resources'
-  );
+  FResourceTable.SQL.Add('SELECT * FROM Resources');
+  FResourceTable.UpdateMode := upWhereAll;
+
   {
   FResourceTable.InsertSQL.Add(
     'INSERT INTO Resources (' +
@@ -102,6 +103,7 @@ begin
    }
   FTasksTable := TSQLQuery.Create(self);
   FTasksTable.SQL.Add('SELECT * FROM Tasks');
+  FTasksTable.UpdateMode := upWhereAll;
 end;
 
 procedure TVpFirebirdDatastore.AddField(ATableName, AFieldName: String;
@@ -517,24 +519,32 @@ end;
   Firebird will complain about this field not being specified when posting. }
 procedure TVpFirebirdDatastore.OpenTables;
 begin
+  {
   if FContactsTable.Transaction = nil then
     FContactsTable.Transaction := FConnection.Transaction;
+    }
   FixContactsTable;
   FContactsTable.Open;
   FContactsTable.Fields[0].Required := false;
 
+  {
   if FEventsTable.Transaction = nil then
     FEventsTable.Transaction := FConnection.Transaction;
+    }
   FEventsTable.Open;
   FEventsTable.Fields[0].Required := false;
 
+  {
   if FResourceTable.Transaction = nil then
     FResourceTable.Transaction := FConnection.Transaction;
+    }
   FResourceTable.Open;
   FResourceTable.Fields[0].Required := false;
 
+  {
   if FTasksTable.Transaction = nil then
     FTasksTable.Transaction := FConnection.Transaction;
+    }
   FTasksTable.Open;
   FTasksTable.Fields[0].Required := false;
 end;
@@ -543,24 +553,35 @@ procedure TVpFirebirdDatastore.PostContacts;
 begin
   inherited;
   FContactsTable.ApplyUpdates;
+  FConnection.Transaction.CommitRetaining;
+  FContactsTable.Refresh;
 end;
 
 procedure TVpFirebirdDatastore.PostEvents;
 begin
   inherited;
   FEventsTable.ApplyUpdates;
+  FConnection.Transaction.CommitRetaining;
+  FEventsTable.Refresh;
 end;
 
 procedure TVpFirebirdDatastore.PostResources;
 begin
   inherited;
   FResourceTable.ApplyUpdates;
+  FConnection.Transaction.CommitRetaining;
+  // Refresh needed in order to get the resource id for the other tables.
+  // Without it the other datasets would not be stored after adding a resource.
+  // Seems to be pecularity of Firebird.
+  FResourceTable.Refresh;
 end;
 
 procedure TVpFirebirdDatastore.PostTasks;
 begin
   inherited;
   FTasksTable.ApplyUpdates;
+  FConnection.Transaction.CommitRetaining;
+  FTasksTable.Refresh;
 end;
 
 procedure TVpFirebirdDatastore.SetConnected(const AValue: Boolean);

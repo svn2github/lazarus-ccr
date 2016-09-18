@@ -331,6 +331,6 @@ object Form1: TForm1
     Options = []
     Params = <>
     left = 149
-    top = 511
+    top = 512
   end
 end
