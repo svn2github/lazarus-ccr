@@ -1283,7 +1283,7 @@ begin
     F := FindField('EMail2');
     if F <> nil then AContact.EMail2 := F.AsString;
     F := FindField('EMail3');
-    if F <> nil then AContact.EMail := F.AsString;
+    if F <> nil then AContact.EMail3 := F.AsString;
     F := FindField('EMailType1');
     if F <> nil then AContact.EMailType1 := F.AsInteger;
     F := FindField('EMailType2');

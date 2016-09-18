@@ -43,11 +43,11 @@ type
                   ptISDN, ptMobile, ptOther, ptOtherFax, ptPager, ptPrimary,
                   ptRadio, ptTelex, ptTTYTDD, ptWork, ptWorkFax);
 
-  TVpEMailType = (mtHome, mtOther, mtWork);
+  TVpEMailType = (mtWork, mtHome, mtOther);
 
   TVpWebSiteType = (wtBusiness, wtPersonal);
 
-  TVpAddressType = (atHome, atWork);
+  TVpAddressType = (atWork, atHome);
 
   TVpCategoryType = (ctBusiness, ctClients, ctFamily, ctOther, ctPersonal);
 

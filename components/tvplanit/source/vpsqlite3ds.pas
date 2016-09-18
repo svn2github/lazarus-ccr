@@ -20,7 +20,7 @@ type
     procedure SetConnection(const AValue: TSqlite3Connection);
 
   protected
-    procedure CreateTable(const ATableName: String);
+    procedure CreateTable(const ATableName: String; WithIndex: Boolean = true);
     function GetContactsTable: TDataset; override;
     function GetEventsTable: TDataset; override;
     function GetResourceTable: TDataset; override;
@@ -29,6 +29,13 @@ type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure OpenTables;
     procedure SetConnected(const AValue: Boolean); override;
+
+  protected
+    // Fix old tables
+    procedure AddField(ATableName, AFieldName: String; AFieldType: TFieldType;
+      ASize: Integer=0);
+    procedure RenameFields(ATableName: String; AFields: TStrings);
+    procedure FixContactsTable;
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -85,6 +92,112 @@ begin
   FTasksTable.SQL.Add('SELECT * FROM Tasks');
 end;
 
+procedure TVpSqlite3Datastore.AddField(ATableName, AFieldName: String;
+  AFieldType: TFieldType; ASize: Integer=0);
+var
+  ft: String;
+  sql: String;
+begin
+  if AFieldType = ftInteger then
+    ft := 'INTEGER' else
+  if (AFieldType = ftString) then
+    ft := 'VARCHAR(' + intToStr(ASize) + ')'
+  else
+    raise Exception.Create('Field type not supported here.');
+  sql := Format('ALTER TABLE %s ADD COLUMN %s %s;', [ATablename, AFieldName, ft]);
+  FConnection.ExecuteDirect(sql);
+end;
+
+{ Renames the fields specified in the list. Each list item contains old and new
+  fieldnames separated by a bar character (|).
+
+  Note that sqlite3 does not provide a command for renaming of fields. Therefore,
+  the old table is renamed to a temp table, a new table with the renamed fields
+  is created and the content of the temp table is copied to the new table.
+  Finally the temp table is deleted.
+
+  See:
+  https://stackoverflow.com/questions/805363/how-do-i-rename-a-column-in-a-sqlite-database-table
+
+  TO DO:
+  Take care of the case that a renamed field belongs to an index, constraint, etc.
+  (this case is ignored currently).
+}
+procedure TVpSqlite3Datastore.RenameFields(ATableName: String; AFields: TStrings);
+const
+  NO_INDEX = false;
+var
+  sql: String;
+  oldFields: TStrings;
+  oldfn, newfn: String;
+  srcfn, destfn: String;
+  i, j, p: Integer;
+  done: Boolean;
+begin
+  { 1 - Rename old table (append _TMP to tablename) }
+  sql := Format('ALTER TABLE %0:s RENAME TO %0:s_TMP;', [ContactsTableName]);
+  FConnection.ExecuteDirect(sql);
+
+  { 2 - Create new table }
+  if ATableName = ContactsTableName then
+    CreateTable(ContactsTableName, NO_INDEX) else
+  if ATablename = EventsTableName then
+    CreateTable(EventsTablename, NO_INDEX) else
+  if ATableName = ResourceTableName then
+    CreateTable(ResourceTableName, NO_INDEX) else
+  if ATableName = TasksTableName then
+    CreateTable(TasksTableName, NO_INDEX)
+  else
+    raise Exception.Create('Unknown table in RenameFields.');
+
+  { 3 - Copy contents from temp table to new table }
+  oldFields := TStringList.Create;
+  try
+    // Get old field list
+    FConnection.GetFieldNames(ATableName + '_TMP', oldfields);
+    // Combine comma-separated old and new field names in srcfn and destfn
+    // strings ready for use by INSERT command.
+    srcfn := '';
+    destfn := '';
+    for i:=0 to oldfields.Count-1 do begin
+      done := false;
+      // Is field "oldfields[i]" contained in the list of fields to be renamed?
+      for j:=0 to AFields.Count-1 do begin
+        p := pos('|', AFields[j]);
+        oldfn := copy(AFields[j], 1, p-1);
+        newfn := copy(AFields[j], p+1, MaxInt);
+        if oldfn = oldfields[i] then begin
+          // yes: add old field name to srcfn, new field name to destfn
+          srcfn := srcfn + ',' + oldfn;
+          destfn := destfn + ',' + newfn;
+          done := true;
+          break;
+        end;
+      end;
+      if not done then begin
+        // no: add current field name to srcfn and destfn
+        srcfn := srcfn + ',' + oldfields[i];
+        destfn := destfn + ',' + oldfields[i];
+      end;
+    end;
+    // Remove the beginning comma added above.
+    if srcfn <> '' then System.Delete(srcfn, 1, 1);
+    if destfn <> '' then System.Delete(destfn, 1, 1);
+    // Execute INSERT command
+    sql := Format(
+      'INSERT INTO %0:s (%1:s) SELECT %2:s FROM %0:s_TMP;', [
+      ATableName, destfn, srcfn
+    ]);
+    FConnection.ExecuteDirect(sql);
+  finally
+    oldfields.Free;
+  end;
+
+  { 4 - Finally delete the temp table }
+  sql := Format('DROP TABLE %s_TMP;', [ATableName]);
+  FConnection.ExecuteDirect(sql);
+end;
+
 // Connection and tables are active afterwards!
 procedure TVpSqlite3Datastore.CreateTables;
 var
@@ -114,7 +227,8 @@ begin
   SetConnected(wasConnected or AutoConnect);
 end;
 
-procedure TVpSqlite3Datastore.CreateTable(const ATableName: String);
+procedure TVpSqlite3Datastore.CreateTable(const ATableName: String;
+  WithIndex: Boolean = true);
 begin
   if ATableName = ContactsTableName then begin
     FConnection.ExecuteDirect(
@@ -130,13 +244,13 @@ begin
         'Company VARCHAR(50), '+
         'Department VARCHAR(50), '+
         'Job_Position VARCHAR(30), '+
-        'AddressType1 INTEGER, '+
+        'AddressType1 INTEGER DEFAULT 0, '+
         'Address1 VARCHAR(100), '+
         'City1 VARCHAR(50), '+
         'State1 VARCHAR(25), '+
         'Zip1 VARCHAR(10), '+
         'Country1 VARCHAR(25), '+
-        'AddressType2 INTEGER, '+
+        'AddressType2 INTEGER DEFAULT 1, '+
         'Address2 VARCHAR(100), '+
         'City2 VARCHAR(50), '+
         'State2 VARCHAR(25), '+
@@ -156,13 +270,13 @@ begin
         'EMail1 VARCHAR(100), '+
         'EMail2 VARCHAR(100), '+
         'EMail3 VARCHAR(100), '+
-        'EMailType1 INTEGER, '+
-        'EMailType2 INTEGER, '+
-        'EMailType3 INTEGER, '+
+        'EMailType1 INTEGER DEFAULT 0, '+
+        'EMailType2 INTEGER DEFAULT 1, '+
+        'EMailType3 INTEGER DEFAULT 2, '+
         'Website1 VARCHAR(100), '+
         'Website2 VARCHAR(100), '+
-        'WebsiteType1 INTEGER, '+
-        'WebsiteType2 INTEGER, '+
+        'WebsiteType1 INTEGER DEFAULT 0, '+
+        'WebsiteType2 INTEGER DEFAULT 1, '+
         'Custom1 VARCHAR(100), '+
         'Custom2 VARCHAR(100),'+
         'Custom3 VARCHAR(100), '+
@@ -178,15 +292,17 @@ begin
         'UserField8 VARCHAR(100), '+
         'UserField9 VARCHAR(100) )'
     );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX ContactsResourceID_idx ON Contacts(ResourceID)'
-    );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX ContactsName_idx ON Contacts(LastName, FirstName)'
-    );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX ContactsCompany_idx ON Contacts(Company)'
-    );
+    if WithIndex then begin
+      FConnection.ExecuteDirect(
+        'CREATE INDEX ContactsResourceID_idx ON Contacts(ResourceID)'
+      );
+      FConnection.ExecuteDirect(
+        'CREATE INDEX ContactsName_idx ON Contacts(LastName, FirstName)'
+      );
+      FConnection.ExecuteDirect(
+        'CREATE INDEX ContactsCompany_idx ON Contacts(Company)'
+      );
+    end;
   end else
   if ATableName = EventsTableName then begin
     FConnection.ExecuteDirect(
@@ -219,15 +335,17 @@ begin
         'UserField8 VARCHAR(100), '+
         'UserField9 VARCHAR(100) )'
     );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX EventsResourceID_idx ON Events(ResourceID)'
-    );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX EventsStartTime_idx ON Events(StartTime)'
-    );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX EventsEndTime_idx ON Events(EndTime)'
-    );
+    if WithIndex then begin
+      FConnection.ExecuteDirect(
+        'CREATE INDEX EventsResourceID_idx ON Events(ResourceID)'
+      );
+      FConnection.ExecuteDirect(
+        'CREATE INDEX EventsStartTime_idx ON Events(StartTime)'
+      );
+      FConnection.ExecuteDirect(
+        'CREATE INDEX EventsEndTime_idx ON Events(EndTime)'
+      );
+    end;
   end else
   if ATableName = ResourceTableName then begin
     FConnection.ExecuteDirect(
@@ -273,15 +391,87 @@ begin
         'UserField8 VARCHAR(100), '+
         'UserField9 VARCHAR(100) )'
     );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX TasksResourceID_idx ON Tasks(ResourceID)'
-    );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX TasksDueDate_idx ON Tasks(DueDate)'
-    );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX TasksCompletedOn_idx ON Tasks(CompletedOn)'
-    );
+    if WithIndex then begin
+      FConnection.ExecuteDirect(
+        'CREATE INDEX TasksResourceID_idx ON Tasks(ResourceID)'
+      );
+      FConnection.ExecuteDirect(
+        'CREATE INDEX TasksDueDate_idx ON Tasks(DueDate)'
+      );
+      FConnection.ExecuteDirect(
+        'CREATE INDEX TasksCompletedOn_idx ON Tasks(CompletedOn)'
+      );
+    end;
+  end;
+end;
+
+{ Updates the contacts table and adds/renames new fields in the current version.
+  IMPORTANT: The renaming process assumes that the renamed column is not part of
+  any index. }
+procedure TVpSqlite3Datastore.FixContactsTable;
+var
+  list: TStrings;
+  fnames: TStrings;
+begin
+  ContactsTable.Close;
+  list := TStringList.Create;
+  try
+    FConnection.GetFieldNames(ContactsTableName, list);
+
+    // Fields renamed in 1.05
+    fnames := TStringList.Create;
+    try
+      if list.IndexOf('Address') > -1 then fnames.Add('Address|Address1');
+      if list.IndexOf('City') > -1 then fnames.Add('City|City1');
+      if list.IndexOf('State') > -1 then fnames.Add('State|State1');
+      if list.IndexOf('Zip') > -1 then fnames.Add('Zip|Zip1');
+      if list.IndexOf('Country') > -1 then fnames.Add('Country|Country1');
+      if list.IndexOf('EMail') > -1 then fnames.Add('EMail|EMail1');
+      if fnames.Count > 0 then begin
+        RenameFields(ContactsTableName, fnames);
+        exit;   // This automatically creates the new fields
+      end;
+    finally
+      fnames.Free;
+    end;
+
+    // Fields added in 1.05
+    if list.IndexOf('Department') = -1 then
+      AddField(ContactsTableName, 'Department', ftString, 50);
+    if list.IndexOf('AddressType1') = -1 then
+      AddField(ContactsTableName, 'AddressType1', ftInteger);
+    if list.IndexOf('AddressType2') = -1 then
+      AddField(ContactsTableName, 'AddressType2', ftInteger);
+    if list.IndexOf('Address2') = -1 then
+      AddField(ContactsTableName, 'Address2', ftString, 100);
+    if list.IndexOf('City2') = -1 then
+      AddField(ContactsTableName, 'City2', ftString, 50);
+    if list.IndexOf('State2') = -1 then
+      AddField(ContactsTableName, 'State2', ftString, 25);
+    if list.IndexOf('Zip2') = -1 then
+      AddField(ContactsTableName, 'Zip2', ftString, 10);
+    if list.IndexOf('country2') = -1 then
+      AddField(ContactsTableName, 'Country2', ftString, 25);
+    if list.IndexOf('EMail2') = -1 then
+      AddField(ContactsTableName, 'EMail2', ftString, 100);
+    if list.IndexOf('EMail3') = -1 then
+      AddField(ContactsTableName, 'EMail3', ftString, 100);
+    if list.IndexOf('EMailType1') = -1 then
+      AddField(ContactsTableName, 'EMailType1', ftInteger);
+    if list.IndexOf('EMailType2') = -1 then
+      AddField(ContactsTableName, 'EMailType2', ftInteger);
+    if list.IndexOf('EMailType3') = -1 then
+      AddField(ContactsTableName, 'EMailType3', ftInteger);
+    if list.IndexOf('Website1') = -1 then
+      AddField(ContactsTableName, 'Website1', ftString, 100);
+    if list.IndexOf('Website2') = -1 then
+      AddField(ContactsTableName, 'Website2', ftString, 100);
+    if list.IndexOf('WebsiteType1') = -1 then
+      AddField(ContactsTableName, 'WebsiteType1', ftInteger);
+    if list.IndexOf('WebsiteType2') = -1 then
+      AddField(ContactsTableName, 'WebsiteType2', ftInteger);
+  finally
+    list.Free;
   end;
 end;
 
@@ -332,6 +522,7 @@ procedure TVpSqlite3Datastore.OpenTables;
 begin
   if FContactsTable.Transaction = nil then
     FContactsTable.Transaction := FConnection.Transaction;
+  FixContactsTable;
   FContactsTable.Open;
 
   if FEventsTable.Transaction = nil then

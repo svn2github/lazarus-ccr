@@ -377,7 +377,7 @@ object Form1: TForm1
   end
   object SQLTransaction1: TSQLTransaction
     Active = False
-    Action = caCommit
+    Action = caCommitRetaining
     Database = SQLite3Connection1
     Options = []
     left = 256

@@ -23,13 +23,8 @@ type
     procedure SetConnection(const AValue: TIBConnection);
 
   protected
-    procedure Addfield(ATableName, AFieldName: String; AFieldType: TFieldType;
-      ASize: Integer=0);
-    procedure RenameField(ATableName, AOldFieldName, ANewFieldName: String);
-
     procedure CreateAllTables(dbIsNew: Boolean);
     procedure CreateTable(const ATableName: String);
-    procedure FixContactsTable;
     function GetContactsTable: TDataset; override;
     function GetEventsTable: TDataset; override;
     function GetResourceTable: TDataset; override;
@@ -38,6 +33,13 @@ type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure OpenTables;
     procedure SetConnected(const AValue: Boolean); override;
+
+  protected
+    // Fix old tables
+    procedure AddField(ATableName, AFieldName: String; AFieldType: TFieldType;
+      ASize: Integer=0);
+    procedure RenameField(ATableName, AOldFieldName, ANewFieldName: String);
+    procedure FixContactsTable;
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -441,7 +443,7 @@ begin
     if list.IndexOf('State2') = -1 then
       AddField(ContactsTableName, 'State2', ftString, 25);
     if list.IndexOf('Zip2') = -1 then
-      AddField(ContactsTableName, 'Zip2', ftString, 25);
+      AddField(ContactsTableName, 'Zip2', ftString, 10);
     if list.IndexOf('country2') = -1 then
       AddField(ContactsTableName, 'Country2', ftString, 25);
     if list.IndexOf('EMail2') = -1 then
