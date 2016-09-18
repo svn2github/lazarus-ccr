@@ -673,7 +673,7 @@ begin
     else if nodeName = 'Custom3' then
       cont.Custom3 := GetNodeValue(node)
     else if nodeName = 'Custom4' then
-      cont.Custom3 := GetNodeValue(node)
+      cont.Custom4 := GetNodeValue(node)
     else if nodeName = 'UserField0' then
       cont.UserField0 := GetNodeValue(node)
     else if nodeName = 'UserField1' then
@@ -1045,7 +1045,7 @@ begin
     child := ADoc.CreateElement('Phone2');
     TDOMElement(child).SetAttribute('Type',
       GetEnumName(TypeInfo(TVpPhoneType), ord(AContact.PhoneType2)));
-    txt := ADoc.CreateTextNode(IntToStr(AContact.PhoneType2));
+    txt := ADoc.CreateTextNode(AContact.Phone2);
     child.AppendChild(txt);
     AContactNode.AppendChild(child);
   end;
