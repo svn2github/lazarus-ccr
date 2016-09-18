@@ -19,9 +19,9 @@ object ContactEditForm: TContactEditForm
     Height = 592
     Top = 0
     Width = 575
-    ActivePage = tabAddresses
+    ActivePage = tabBaseData
     Align = alClient
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 0
     OnChange = PageControlChange
     object tabBaseData: TTabSheet
@@ -1095,7 +1095,7 @@ object ContactEditForm: TContactEditForm
           BorderSpacing.Left = 4
           BorderSpacing.Right = 8
           ParentFont = False
-          TabOrder = 2
+          TabOrder = 1
         end
         object edWebsite2: TEdit
           AnchorSideLeft.Control = cbWebsite2
@@ -1142,7 +1142,7 @@ object ContactEditForm: TContactEditForm
           ItemHeight = 15
           MaxLength = 65535
           ParentFont = False
-          TabOrder = 1
+          TabOrder = 2
         end
       end
     end

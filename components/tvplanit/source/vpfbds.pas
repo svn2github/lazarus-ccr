@@ -417,55 +417,63 @@ begin
   list := TStringList.Create;
   try
     FConnection.GetFieldNames(ContactsTableName, list);
-    // Fields renamed in 1.05
-    if list.IndexOf('Address') > -1 then
-      RenameField(ContactsTableName, 'Address', 'Address1');
-    if list.IndexOf('City') > -1 then
-      RenameField(ContactsTableName, 'City', 'City1');
-    if list.IndexOf('State') > -1 then
-      RenameField(ContactsTableName, 'State', 'State1');
-    if list.IndexOf('Zip') > -1 then
-      RenameField(ContactsTableName, 'Zip', 'Zip1');
-    if list.IndexOf('Country') > -1 then
-      RenameField(ContactsTableName, 'Country', 'Country1');
-    if list.IndexOf('EMail') > -1 then
-      RenameField(ContactsTableName, 'EMail', 'EMail1');
 
-    // Fields added in 1.05
-    if list.IndexOf('Department') = -1 then
-      AddField(ContactsTableName, 'Department', ftString, 50);
-    if list.IndexOf('AddressType1') = -1 then
-      AddField(ContactsTableName, 'AddressType1', ftInteger);
-    if list.IndexOf('AddressType2') = -1 then
-      AddField(ContactsTableName, 'AddressType2', ftInteger);
-    if list.IndexOf('Address2') = -1 then
-      AddField(ContactsTableName, 'Address2', ftString, 100);
-    if list.IndexOf('City2') = -1 then
-      AddField(ContactsTableName, 'City2', ftString, 50);
-    if list.IndexOf('State2') = -1 then
-      AddField(ContactsTableName, 'State2', ftString, 25);
-    if list.IndexOf('Zip2') = -1 then
-      AddField(ContactsTableName, 'Zip2', ftString, 10);
-    if list.IndexOf('country2') = -1 then
-      AddField(ContactsTableName, 'Country2', ftString, 25);
-    if list.IndexOf('EMail2') = -1 then
-      AddField(ContactsTableName, 'EMail2', ftString, 100);
-    if list.IndexOf('EMail3') = -1 then
-      AddField(ContactsTableName, 'EMail3', ftString, 100);
-    if list.IndexOf('EMailType1') = -1 then
-      AddField(ContactsTableName, 'EMailType1', ftInteger);
-    if list.IndexOf('EMailType2') = -1 then
-      AddField(ContactsTableName, 'EMailType2', ftInteger);
-    if list.IndexOf('EMailType3') = -1 then
-      AddField(ContactsTableName, 'EMailType3', ftInteger);
-    if list.IndexOf('Website1') = -1 then
-      AddField(ContactsTableName, 'Website1', ftString, 100);
-    if list.IndexOf('Website2') = -1 then
-      AddField(ContactsTableName, 'Website2', ftString, 100);
-    if list.IndexOf('WebsiteType1') = -1 then
-      AddField(ContactsTableName, 'WebsiteType1', ftInteger);
-    if list.IndexOf('WebsiteType2') = -1 then
-      AddField(ContactsTableName, 'WebsiteType2', ftInteger);
+    try
+      // Fields renamed in 1.05
+      if list.IndexOf('Address') > -1 then
+        RenameField(ContactsTableName, 'Address', 'Address1');
+      if list.IndexOf('City') > -1 then
+        RenameField(ContactsTableName, 'City', 'City1');
+      if list.IndexOf('State') > -1 then
+        RenameField(ContactsTableName, 'State', 'State1');
+      if list.IndexOf('Zip') > -1 then
+        RenameField(ContactsTableName, 'Zip', 'Zip1');
+      if list.IndexOf('Country') > -1 then
+        RenameField(ContactsTableName, 'Country', 'Country1');
+      if list.IndexOf('EMail') > -1 then
+        RenameField(ContactsTableName, 'EMail', 'EMail1');
+
+      // Fields added in 1.05
+      if list.IndexOf('Department') = -1 then
+        AddField(ContactsTableName, 'Department', ftString, 50);
+      if list.IndexOf('AddressType1') = -1 then
+        AddField(ContactsTableName, 'AddressType1', ftInteger);
+      if list.IndexOf('AddressType2') = -1 then
+        AddField(ContactsTableName, 'AddressType2', ftInteger);
+      if list.IndexOf('Address2') = -1 then
+        AddField(ContactsTableName, 'Address2', ftString, 100);
+      if list.IndexOf('City2') = -1 then
+        AddField(ContactsTableName, 'City2', ftString, 50);
+      if list.IndexOf('State2') = -1 then
+        AddField(ContactsTableName, 'State2', ftString, 25);
+      if list.IndexOf('Zip2') = -1 then
+        AddField(ContactsTableName, 'Zip2', ftString, 10);
+      if list.IndexOf('country2') = -1 then
+        AddField(ContactsTableName, 'Country2', ftString, 25);
+      if list.IndexOf('EMail2') = -1 then
+        AddField(ContactsTableName, 'EMail2', ftString, 100);
+      if list.IndexOf('EMail3') = -1 then
+        AddField(ContactsTableName, 'EMail3', ftString, 100);
+      if list.IndexOf('EMailType1') = -1 then
+        AddField(ContactsTableName, 'EMailType1', ftInteger);
+      if list.IndexOf('EMailType2') = -1 then
+        AddField(ContactsTableName, 'EMailType2', ftInteger);
+      if list.IndexOf('EMailType3') = -1 then
+        AddField(ContactsTableName, 'EMailType3', ftInteger);
+      if list.IndexOf('Website1') = -1 then
+        AddField(ContactsTableName, 'Website1', ftString, 100);
+      if list.IndexOf('Website2') = -1 then
+        AddField(ContactsTableName, 'Website2', ftString, 100);
+      if list.IndexOf('WebsiteType1') = -1 then
+        AddField(ContactsTableName, 'WebsiteType1', ftInteger);
+      if list.IndexOf('WebsiteType2') = -1 then
+        AddField(ContactsTableName, 'WebsiteType2', ftInteger);
+
+      FConnection.Transaction.Commit;
+    except
+      FConnection.Transaction.Rollback;
+      raise Exception.Create('Failure to update table structure to current VisualPlanIt version');
+    end;
   finally
     list.Free;
   end;
@@ -519,32 +527,16 @@ end;
   Firebird will complain about this field not being specified when posting. }
 procedure TVpFirebirdDatastore.OpenTables;
 begin
-  {
-  if FContactsTable.Transaction = nil then
-    FContactsTable.Transaction := FConnection.Transaction;
-    }
   FixContactsTable;
   FContactsTable.Open;
   FContactsTable.Fields[0].Required := false;
 
-  {
-  if FEventsTable.Transaction = nil then
-    FEventsTable.Transaction := FConnection.Transaction;
-    }
   FEventsTable.Open;
   FEventsTable.Fields[0].Required := false;
 
-  {
-  if FResourceTable.Transaction = nil then
-    FResourceTable.Transaction := FConnection.Transaction;
-    }
   FResourceTable.Open;
   FResourceTable.Fields[0].Required := false;
 
-  {
-  if FTasksTable.Transaction = nil then
-    FTasksTable.Transaction := FConnection.Transaction;
-    }
   FTasksTable.Open;
   FTasksTable.Fields[0].Required := false;
 end;
@@ -553,7 +545,7 @@ procedure TVpFirebirdDatastore.PostContacts;
 begin
   inherited;
   FContactsTable.ApplyUpdates;
-  FConnection.Transaction.CommitRetaining;
+  //FConnection.Transaction.CommitRetaining;
   FContactsTable.Refresh;
 end;
 
@@ -561,7 +553,7 @@ procedure TVpFirebirdDatastore.PostEvents;
 begin
   inherited;
   FEventsTable.ApplyUpdates;
-  FConnection.Transaction.CommitRetaining;
+  //FConnection.Transaction.CommitRetaining;
   FEventsTable.Refresh;
 end;
 
@@ -569,7 +561,8 @@ procedure TVpFirebirdDatastore.PostResources;
 begin
   inherited;
   FResourceTable.ApplyUpdates;
-  FConnection.Transaction.CommitRetaining;
+  //FConnection.Transaction.CommitRetaining;
+
   // Refresh needed in order to get the resource id for the other tables.
   // Without it the other datasets would not be stored after adding a resource.
   // Seems to be pecularity of Firebird.
@@ -580,7 +573,7 @@ procedure TVpFirebirdDatastore.PostTasks;
 begin
   inherited;
   FTasksTable.ApplyUpdates;
-  FConnection.Transaction.CommitRetaining;
+  //FConnection.Transaction.CommitRetaining;
   FTasksTable.Refresh;
 end;
 
