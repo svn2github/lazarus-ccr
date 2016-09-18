@@ -954,9 +954,12 @@ begin
       DataStore.GetNextID(ContactsTableName));
     if ceContact <> nil then begin
       Result := Execute(ceContact);
+      if not Result then
+      (*
       if Result then
         DataStore.PostContacts
       else
+        *)
         ceContact.Free;
     end;
   end;

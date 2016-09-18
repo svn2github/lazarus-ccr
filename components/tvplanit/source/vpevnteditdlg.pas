@@ -859,7 +859,7 @@ begin
     );
     if ceEvent <> nil then begin
       Result := Execute(ceEvent);
-      if (not Result) or (ceEvent = nil) then
+      if (not Result) then
         ceEvent.Free;
     end;
   end;
