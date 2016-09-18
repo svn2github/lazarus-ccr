@@ -2212,7 +2212,7 @@ end;
 
 procedure TVpContact.SetWebsite2(Value: String);
 begin
-  if Value <> FWebsite1 then begin
+  if Value <> FWebsite2 then begin
     FWebsite2 := Value;
     Changed := true;
   end;
@@ -2229,7 +2229,7 @@ end;
 procedure TVpContact.SetWebsiteType2(Value: Integer);
 begin
   if Value <> FWebsiteType2 then begin
-    FWebsiteType1 := Value;
+    FWebsiteType2 := Value;
     Changed := true;
   end;
 end;
