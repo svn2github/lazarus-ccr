@@ -95,26 +95,30 @@ steps:
 
   This release is Lazarus-only. It won't compile under Delphi any more.
   
-  misc - Replace hard-coded MS Sans Serif font by "default" to use the system 
-         font
-  misc - Fix crashes due to inplace editors being destroyed.
-  misc - Replace lrs resources by res resources. FPC 2.4 or greater required!
-  misc - Add FlexDatastore and its component editor to package.
-  4710 - Rename package to laz_visualplanit.
-  4717 - Add new event field "Location". Rename some fields for more consistency. 
-  misc - Add datastores for TBufDataset, Sqlite3, ZEOS, Firebird
-  misc - Add non-database datastores for xml and ini files
-  misc - Fix NavBar, PrintPreview, VpClock etc.
-  misc - Translate user interface in po files
-  misc - DPI-aware and translation-tolerant form layout
-  misc - Add new sample projects
+  - Replace hard-coded MS Sans Serif font by "default" to use the system font
+  - Fix crashes due to inplace editors being destroyed.
+  - Replace lrs resources by res resources. FPC 2.4 or greater required!
+  - Add FlexDatastore and its component editor to package.
+  - Rename package to laz_visualplanit.
+  - Add new event field "Location". Rename some fields for more consistency. 
+  - Add datastores for TBufDataset, Sqlite3, ZEOS, Firebird
+  - Add non-database datastores for xml and ini files
+  - Fix NavBar, PrintPreview, VpClock etc.
+  - Translate user interface by means of po files
+  - DPI-aware and translation-tolerant form layout
+  - Add new sample projects
   
   
 4.3 Release 1.05
 
-  misc - Add mORMot datastore
-  misc - Add drag and drop of events to DayView and WeekView
-  misc - Add hint support to DayView, WeekView and MonthView
-
-  
-
+  - Add mORMot datastore
+  - Add drag and drop of events to DayView and WeekView
+  - Add hint support to DayView, WeekView and MonthView
+  - New contact fields for
+    - three email addresses (in total)
+    - two websites
+    - 2nd address (work address, home address)
+    - department
+    and add them to the contact editor
+  - Activate task fields Priority and Category in task editor.
+ 
