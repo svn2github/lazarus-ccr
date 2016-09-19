@@ -20,7 +20,7 @@ type
     procedure SetConnection(const AValue: TZConnection);
 
   protected
-    procedure CreateTable(const ATableName: String);
+    procedure CreateTable(const ATableName: String; CreateIndex: Boolean = true);
     procedure CreateAllTables;
     function GetContactsTable: TDataset; override;
     function GetEventsTable: TDataset; override;
@@ -29,6 +29,13 @@ type
     procedure Loaded; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure SetConnected(const AValue: Boolean); override;
+
+  protected
+    // Fix old tables
+    procedure AddField(ATableName, AFieldName: String; AFieldType: TFieldType;
+      ASize: Integer=0);
+    procedure RenameFields(ATableName: String; AFields: TStrings);
+    procedure FixContactsTable;
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -53,7 +60,7 @@ type
 implementation
 
 uses
-  LazFileUtils,
+  LazFileUtils, ZAbstractDataset,
   VpConst;
 
 { TVpZeosDatastore }
@@ -64,15 +71,35 @@ begin
 
   FContactsTable := TZTable.Create(self);
   FContactsTable.TableName := 'Contacts';
+  FContactsTable.UpdateMode := umUpdateAll;
 
   FEventsTable := TZTable.Create(Self);
   FEventsTable.TableName := 'Events';
+  FEventsTable.UpdateMode := umUpdateAll;
 
   FResourceTable := TZTable.Create(self);
   FResourceTable.TableName := 'Resources';
+  FResourceTable.UpdateMode := umUpdateAll;
 
   FTasksTable := TZTable.Create(self);
   FTasksTable.TableName := 'Tasks';
+  FTasksTable.UpdateMode := umUpdateAll;
+end;
+
+procedure TVpZeosDatastore.AddField(ATableName, AFieldName: String;
+  AFieldType: TFieldType; ASize: Integer=0);
+var
+  ft: String;
+  sql: String;
+begin
+  if AFieldType = ftInteger then
+    ft := 'INTEGER' else
+  if (AFieldType = ftString) then
+    ft := 'VARCHAR(' + intToStr(ASize) + ')'
+  else
+    raise Exception.Create('Field type not supported here.');
+  sql := Format('ALTER TABLE %s ADD COLUMN %s %s;', [ATablename, AFieldName, ft]);
+  FConnection.ExecuteDirect(sql);
 end;
 
 procedure TVpZeosDatastore.CreateAllTables;
@@ -83,7 +110,8 @@ begin
   if not FTasksTable.Exists then CreateTable(TasksTableName);
 end;
 
-procedure TVpZeosDatastore.CreateTable(const ATableName: String);
+procedure TVpZeosDatastore.CreateTable(const ATableName: String;
+  CreateIndex: Boolean = true);
 begin
   if ATableName = ContactsTableName then begin
     FConnection.ExecuteDirect(
@@ -147,15 +175,17 @@ begin
         'UserField8 VARCHAR(100), '+
         'UserField9 VARCHAR(100) )'
     );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX ContactsResourceID_idx ON Contacts(ResourceID)'
-    );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX ContactsName_idx ON Contacts(LastName, FirstName)'
-    );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX ContactsCompany_idx ON Contacts(Company)'
-    );
+    if CreateIndex then begin
+      FConnection.ExecuteDirect(
+        'CREATE INDEX ContactsResourceID_idx ON Contacts(ResourceID)'
+      );
+      FConnection.ExecuteDirect(
+        'CREATE INDEX ContactsName_idx ON Contacts(LastName, FirstName)'
+      );
+      FConnection.ExecuteDirect(
+        'CREATE INDEX ContactsCompany_idx ON Contacts(Company)'
+      );
+    end;
   end else
   if ATableName = EventsTableName then begin
     FConnection.ExecuteDirect(
@@ -188,15 +218,17 @@ begin
         'UserField8 VARCHAR(100), '+
         'UserField9 VARCHAR(100) )'
     );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX EventsResourceID_idx ON Events(ResourceID)'
-    );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX EventsStartTime_idx ON Events(StartTime)'
-    );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX EventsEndTime_idx ON Events(EndTime)'
-    );
+    if CreateIndex then begin
+      FConnection.ExecuteDirect(
+        'CREATE INDEX EventsResourceID_idx ON Events(ResourceID)'
+      );
+      FConnection.ExecuteDirect(
+        'CREATE INDEX EventsStartTime_idx ON Events(StartTime)'
+      );
+      FConnection.ExecuteDirect(
+        'CREATE INDEX EventsEndTime_idx ON Events(EndTime)'
+      );
+    end;
   end else
   if ATableName = ResourceTableName then begin
     FConnection.ExecuteDirect(
@@ -242,15 +274,17 @@ begin
         'UserField8 VARCHAR(100), '+
         'UserField9 VARCHAR(100) )'
     );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX TasksResourceID_idx ON Tasks(ResourceID)'
-    );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX TasksDueDate_idx ON Tasks(DueDate)'
-    );
-    FConnection.ExecuteDirect(
-      'CREATE INDEX TasksCompletedOn_idx ON Tasks(CompletedOn)'
-    );
+    if CreateIndex then begin
+      FConnection.ExecuteDirect(
+        'CREATE INDEX TasksResourceID_idx ON Tasks(ResourceID)'
+      );
+      FConnection.ExecuteDirect(
+        'CREATE INDEX TasksDueDate_idx ON Tasks(DueDate)'
+      );
+      FConnection.ExecuteDirect(
+        'CREATE INDEX TasksCompletedOn_idx ON Tasks(CompletedOn)'
+      );
+    end;
   end;
 end;
 
@@ -262,6 +296,86 @@ begin
   FConnection.Connected := true;
   CreateAllTables;
   SetConnected(wasConnected or AutoConnect);
+end;
+
+procedure TVpZeosDatastore.FixContactsTable;
+var
+  list: TStrings;
+  autocommit: Boolean;
+  fieldnames: TStrings;
+begin
+  autocommit := FConnection.AutoCommit;
+  ContactsTable.Close;
+  list := TStringList.Create;
+  try
+    FConnection.GetColumnNames(ContactsTableName, '', list);
+    FConnection.AutoCommit := false;
+    try
+      // Fields renamed in 1.05
+      fieldnames := TStringList.Create;
+      try
+        if list.IndexOf('Address') > -1 then fieldnames.Add('Address|Address1');
+        if list.IndexOf('City') > -1 then fieldnames.Add('City|City1');
+        if list.IndexOf('State') > -1 then fieldnames.Add('State|State1');
+        if list.IndexOf('Zip') > -1 then fieldnames.Add('Zip|Zip1');
+        if list.IndexOf('Country') > -1 then fieldnames.Add('Country|Country1');
+        if list.IndexOf('EMail') > -1 then fieldnames.Add('EMail|EMail1');
+        if fieldnames.Count > 0 then begin
+          RenameFields(ContactsTableName, fieldnames);
+          exit;   // This automatically creates the new fields
+        end;
+      finally
+        fieldnames.Free;
+      end;
+
+      // Fields added in 1.05
+      if list.IndexOf('Department') = -1 then
+        AddField(ContactsTableName, 'Department', ftString, 50);
+      if list.IndexOf('AddressType1') = -1 then
+        AddField(ContactsTableName, 'AddressType1', ftInteger);
+      if list.IndexOf('AddressType2') = -1 then
+        AddField(ContactsTableName, 'AddressType2', ftInteger);
+      if list.IndexOf('Address2') = -1 then
+        AddField(ContactsTableName, 'Address2', ftString, 100);
+      if list.IndexOf('City2') = -1 then
+        AddField(ContactsTableName, 'City2', ftString, 50);
+      if list.IndexOf('State2') = -1 then
+        AddField(ContactsTableName, 'State2', ftString, 25);
+      if list.IndexOf('Zip2') = -1 then
+        AddField(ContactsTableName, 'Zip2', ftString, 10);
+      if list.IndexOf('country2') = -1 then
+        AddField(ContactsTableName, 'Country2', ftString, 25);
+      if list.IndexOf('EMail2') = -1 then
+        AddField(ContactsTableName, 'EMail2', ftString, 100);
+      if list.IndexOf('EMail3') = -1 then
+        AddField(ContactsTableName, 'EMail3', ftString, 100);
+      if list.IndexOf('EMailType1') = -1 then
+        AddField(ContactsTableName, 'EMailType1', ftInteger);
+      if list.IndexOf('EMailType2') = -1 then
+        AddField(ContactsTableName, 'EMailType2', ftInteger);
+      if list.IndexOf('EMailType3') = -1 then
+        AddField(ContactsTableName, 'EMailType3', ftInteger);
+      if list.IndexOf('Website1') = -1 then
+        AddField(ContactsTableName, 'Website1', ftString, 100);
+      if list.IndexOf('Website2') = -1 then
+        AddField(ContactsTableName, 'Website2', ftString, 100);
+      if list.IndexOf('WebsiteType1') = -1 then
+        AddField(ContactsTableName, 'WebsiteType1', ftInteger);
+      if list.IndexOf('WebsiteType2') = -1 then
+        AddField(ContactsTableName, 'WebsiteType2', ftInteger);
+
+      FConnection.Commit;
+    except
+      FConnection.Rollback;
+      raise Exception.Create('Failure to update table structure to current VisualPlanIt version');
+    end;
+  finally
+    list.Free;
+  end;
+
+  FConnection.Connected := false;
+  FConnection.AutoCommit := autocommit;
+  FConnection.Connected := true;
 end;
 
 function TVpZeosDatastore.GetContactsTable: TDataset;
@@ -309,6 +423,96 @@ begin
     FConnection := nil;
 end;
 
+{ Renames the fields specified in the list. Each list item contains old and new
+  fieldnames separated by a bar character (|).
+
+  Note that sqlite3 does not provide a command for renaming of fields. Therefore,
+  the old table is renamed to a temp table, a new table with the renamed fields
+  is created and the content of the temp table is copied to the new table.
+  Finally the temp table is deleted.
+
+  See:
+  https://stackoverflow.com/questions/805363/how-do-i-rename-a-column-in-a-sqlite-database-table
+
+  TO DO:
+  Take care of the case that a renamed field belongs to an index, constraint, etc.
+  (this case is ignored currently). }
+procedure TVpZeosDatastore.RenameFields(ATableName: String; AFields: TStrings);
+const
+  NO_INDEX = false;
+var
+  sql: String;
+  oldFields: TStrings;
+  oldfn, newfn: String;
+  srcfn, destfn: String;
+  i, j, p: Integer;
+  done: Boolean;
+begin
+  oldfields := TStringList.Create;
+  try
+    FConnection.GetColumnNames(ATableName, '', oldfields);
+
+    { 1 - Rename old table (append _TMP to tablename) }
+    sql := Format('ALTER TABLE %0:s RENAME TO %0:s_TMP;', [ATableName]);
+    FConnection.ExecuteDirect(sql);
+
+    { 2 - Create new table }
+    if ATableName = ContactsTableName then
+      CreateTable(ContactsTableName, NO_INDEX) else
+    if ATablename = EventsTableName then
+      CreateTable(EventsTablename, NO_INDEX) else
+    if ATableName = ResourceTableName then
+      CreateTable(ResourceTableName, NO_INDEX) else
+    if ATableName = TasksTableName then
+      CreateTable(TasksTableName, NO_INDEX)
+    else
+      raise Exception.Create('Unknown table in RenameFields.');
+
+    { 3 - Copy contents from temp table to new table }
+    srcfn := '';
+    destfn := '';
+    for i:=0 to oldfields.Count-1 do begin
+      done := false;
+      // Is field "oldfields[i]" contained in the list of fields to be renamed?
+      for j:=0 to AFields.Count-1 do begin
+        p := pos('|', AFields[j]);
+        oldfn := copy(AFields[j], 1, p-1);
+        newfn := copy(AFields[j], p+1, MaxInt);
+        if oldfn = oldfields[i] then begin
+          // yes: add old field name to srcfn, new field name to destfn
+          srcfn := srcfn + ',' + oldfn;
+          destfn := destfn + ',' + newfn;
+          done := true;
+          break;
+        end;
+      end;
+      if not done then begin
+        // no: add current field name to srcfn and destfn
+        srcfn := srcfn + ',' + oldfields[i];
+        destfn := destfn + ',' + oldfields[i];
+      end;
+    end;
+    // Remove the beginning comma added above.
+    if srcfn <> '' then System.Delete(srcfn, 1, 1);
+    if destfn <> '' then System.Delete(destfn, 1, 1);
+    // Execute INSERT command
+    sql := Format(
+      'INSERT INTO %0:s (%1:s) SELECT %2:s FROM %0:s_TMP;', [
+      ATableName, destfn, srcfn
+    ]);
+    FConnection.ExecuteDirect(sql);
+
+    { 4 - Finally delete the temp table }
+    sql := Format('DROP TABLE %s_TMP;', [ATableName]);
+    FConnection.ExecuteDirect(sql);
+
+    FConnection.Disconnect;
+    FConnection.Connect;
+  finally
+    oldfields.Free;
+  end;
+end;
+
 procedure TVpZeosDatastore.SetConnected(const AValue: Boolean);
 begin
   if (AValue = Connected) or (FConnection = nil) then
@@ -319,6 +523,7 @@ begin
 
   FConnection.Connected := AValue;
   if FConnection.Connected then begin
+    FixContactsTable;
     FContactsTable.Open;
     FEventsTable.Open;
     FResourceTable.Open;

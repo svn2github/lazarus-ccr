@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   StdCtrls, ComCtrls, VpBaseDS, VpZeosDs, VpDayView, VpWeekView, VpTaskList,
-  VpContactGrid, VpMonthView, VpResEditDlg, VpContactButtons, ZConnection;
+  VpContactGrid, VpMonthView, VpResEditDlg, VpContactButtons, ZConnection,
+  ZDataset;
 
 type
 
@@ -35,6 +36,7 @@ type
     VpWeekView1: TVpWeekView;
     VpZeosDatastore1: TVpZeosDatastore;
     ZConnection1: TZConnection;
+    ZTable1: TZTable;
     procedure BtnNewResClick(Sender: TObject);
     procedure BtnEditResClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

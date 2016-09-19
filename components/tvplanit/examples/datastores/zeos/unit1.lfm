@@ -117,9 +117,6 @@ object Form1: TForm1
           AllDayEventAttributes.BackgroundColor = clWindow
           AllDayEventAttributes.EventBorderColor = clGray
           AllDayEventAttributes.EventBackgroundColor = clBtnFace
-          Align = alClient
-          TabStop = True
-          TabOrder = 0
           DateLabelFormat = 'dddd, mmmm dd, yyyy'
           DayHeadAttributes.Color = clBtnFace
           DayHeadAttributes.DateFormat = 'dddd mmmm, dd'
@@ -132,6 +129,9 @@ object Form1: TForm1
           TimeFormat = tf12Hour
           ShowEventTime = True
           WeekStartsOn = dtMonday
+          Align = alClient
+          TabStop = True
+          TabOrder = 0
         end
         object VpMonthView1: TVpMonthView
           Left = 0
@@ -152,8 +152,12 @@ object Form1: TForm1
           DayNameStyle = dsShort
           DrawingStyle = dsFlat
           EventDayStyle = []
+          HeadAttributes.Color = clBtnFace
           LineColor = clGray
           TimeFormat = tf12Hour
+          TodayAttributes.Color = clSilver
+          TodayAttributes.BorderPen.Color = clRed
+          TodayAttributes.BorderPen.Width = 3
           OffDayColor = clSilver
           SelectedDayColor = clRed
           ShowEvents = True
@@ -247,9 +251,8 @@ object Form1: TForm1
   end
   object ZConnection1: TZConnection
     ControlsCodePage = cCP_UTF8
-    AutoEncodeStrings = False
     Properties.Strings = (
-      'AutoEncodeStrings='
+      'AutoEncodeStrings=ON'
     )
     Port = 0
     left = 136
@@ -276,10 +279,11 @@ object Form1: TForm1
     CategoryColorMap.Category8.Description = 'Category 8'
     CategoryColorMap.Category9.Color = clMaroon
     CategoryColorMap.Category9.Description = 'Category 9'
+    HiddenCategories.BackgroundColor = clSilver
+    HiddenCategories.Color = clGray
     EnableEventTimer = True
     PlayEventSounds = True
-    AutoConnect = False
-    AutoCreate = False
+    Daybuffer = 31
     left = 136
     top = 200
   end
@@ -308,5 +312,9 @@ object Form1: TForm1
     Placement.Width = 400
     left = 136
     top = 335
+  end
+  object ZTable1: TZTable
+    left = 136
+    top = 536
   end
 end

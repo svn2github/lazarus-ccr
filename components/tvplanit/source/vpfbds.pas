@@ -128,7 +128,7 @@ var
   sql: String;
 begin
   sql := Format('ALTER TABLE %s ALTER %s TO %s;',
-    [ContactsTableName, AOldFieldName, ANewFieldName]);
+    [ATableName, AOldFieldName, ANewFieldName]);
   FConnection.ExecuteDirect(sql);
 end;
 

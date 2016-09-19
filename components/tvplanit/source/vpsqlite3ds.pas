@@ -135,7 +135,7 @@ var
   done: Boolean;
 begin
   { 1 - Rename old table (append _TMP to tablename) }
-  sql := Format('ALTER TABLE %0:s RENAME TO %0:s_TMP;', [ContactsTableName]);
+  sql := Format('ALTER TABLE %0:s RENAME TO %0:s_TMP;', [ATableName]);
   FConnection.ExecuteDirect(sql);
 
   { 2 - Create new table }
