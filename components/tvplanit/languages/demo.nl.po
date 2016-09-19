@@ -205,7 +205,7 @@ msgid "30 Min"
 msgstr "30 Min"
 
 #: tmainform.cbshoweventhints.caption
-msgid "Show event hints"
+msgid "Show event and contact hints"
 msgstr ""
 
 #: tmainform.lbladdressbuilder.caption

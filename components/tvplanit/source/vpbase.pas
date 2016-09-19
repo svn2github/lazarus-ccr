@@ -71,7 +71,7 @@ type
 
   TVpPlaySoundMode = (psmSync, psmAsync, psmStop);
 
-  TVpHintMode = (hmEventHint, hmComponentHint);
+  TVpHintMode = (hmPlannerHint, hmComponentHint);
 
   { XML definitions }
   DOMString = WideString;

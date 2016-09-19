@@ -33,6 +33,10 @@ msgstr ""
 msgid "Fri"
 msgstr ""
 
+#: vpsr.rsagelbl
+msgid "Age:"
+msgstr ""
+
 #: vpsr.rsalarmset
 msgid "&Reminder"
 msgstr ""
@@ -47,6 +51,10 @@ msgstr ""
 
 #: vpsr.rsamonday
 msgid "Mon"
+msgstr ""
+
+#: vpsr.rsanniversarylbl
+msgid "Anniversary:"
 msgstr ""
 
 #: vpsr.rsappointmentgroupbox
@@ -1195,6 +1203,22 @@ msgstr ""
 
 #: vpsr.rsuntitled
 msgid "Untitled"
+msgstr ""
+
+#: vpsr.rsuppercasecontact
+msgid "CONTACT"
+msgstr ""
+
+#: vpsr.rsuppercasecustom
+msgid "CUSTOM"
+msgstr ""
+
+#: vpsr.rsuppercasehome
+msgid "HOME"
+msgstr ""
+
+#: vpsr.rsuppercasework
+msgid "WORK"
 msgstr ""
 
 #: vpsr.rsvisible

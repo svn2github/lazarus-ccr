@@ -404,13 +404,15 @@ end;
 
 procedure TMainForm.CbShowEventHintsChange(Sender: TObject);
 begin
- VpDayView1.HintMode := hmEventHint;
- VpWeekView1.HintMode := hmEventHint;
- VpMonthView1.HintMode := hmEventHint;
+ VpDayView1.HintMode := hmPlannerHint;
+ VpWeekView1.HintMode := hmPlannerHint;
+ VpMonthView1.HintMode := hmPlannerHint;
+ VpContactGrid1.HintMode := hmPlannerHint;
 
  VpDayView1.ShowHint := CbShowEventHints.Checked;
  VpWeekView1.ShowHint := CbShowEventHints.Checked;
  VpMonthView1.ShowHint := CbShowEventHints.Checked;
+ VpContactGrid1.ShowHint := CbShowEventHints.Checked;
 end;
 
 procedure TMainForm.CbTimeFormatChange(Sender: TObject);

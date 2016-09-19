@@ -38,7 +38,7 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Graphics, Controls, ExtCtrls, StdCtrls,
+  Classes, Graphics, Controls, ExtCtrls, StdCtrls, Forms,
   VpBase, VpBaseDS, VpMisc, VpData, VpConst, VpSR, VpCanvasUtils, Menus;
 
 const
@@ -109,6 +109,8 @@ type
 
   { Contact Grid }
   TVpContactGrid = class(TVpLinkableControl)
+  private
+    FHintMode: TVpHintMode;
   protected{ private }
     FColumnWidth       : Integer;
     FColor             : TColor;
@@ -153,6 +155,8 @@ type
     cgColCount         : Integer;
     cgVScrollDelta     : Integer;
     FOldCursor : TCursor;
+    FHintWindow: THintWindow;
+    FMouseContactIndex: Integer;
 
     { property methods }
     function GetBarWidth: Integer;
@@ -166,6 +170,7 @@ type
     procedure SetPrintNumColumns (const v : Integer);
     procedure SetSortBy (const v : TVpContactSort);
     procedure SetDataStore (const Value : TVpCustomDataStore); override;
+
     { internal methods }
     procedure cgCalcRowHeight;
     procedure cgEditInPlace(Sender: TObject);
@@ -174,19 +179,22 @@ type
     procedure Loaded; override;
     procedure cgSpawnContactEditDialog(NewContact: Boolean);
     procedure cgSetActiveContactByCoord(Pnt: TPoint);
+    function GetContactIndexByCoord(Pnt: TPoint): Integer;
     procedure cgScrollHorizontal(Rows: Integer);
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
+    procedure MouseEnter; override;
+    procedure MouseLeave; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
-                      X, Y: Integer); override;
-    procedure PopupAddContact (Sender : TObject);
-    procedure PopupDeleteContact (Sender : TObject);
-    procedure PopupEditContact (Sender : TObject);
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure PopupAddContact(Sender: TObject);
+    procedure PopupDeleteContact(Sender: TObject);
+    procedure PopupEditContact(Sender: TObject);
     procedure EditContact;
     procedure EndEdit(Sender: TObject);
     procedure InitializeDefaultPopup;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+
     { message handlers }
     {$IFNDEF LCL}
     procedure WMSize(var Msg: TWMSize); message WM_SIZE;
@@ -210,6 +218,11 @@ type
     function  DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): Boolean; override;
     function  DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): Boolean; override;
     {$ENDIF}
+
+    { Hints }
+    procedure ShowHintWindow(APoint: TPoint; AContactIndex: Integer);
+    procedure HideHintWindow;
+
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -217,9 +230,9 @@ type
     procedure LinkHandler(Sender: TComponent; NotificationType: TVpNotificationType;
       const Value: Variant); override;
     function GetCityStateZipFormat: String;
-    function GetControlType : TVpItemType; override;
+    function GetControlType: TVpItemType; override;
     procedure DeleteActiveContact(Verify: Boolean);
-    procedure PaintToCanvas (ACanvas: TCanvas; ARect: TRect; Angle: TVpRotationAngle);
+    procedure PaintToCanvas(ACanvas: TCanvas; ARect: TRect; Angle: TVpRotationAngle);
     procedure RenderToCanvas(RenderCanvas: TCanvas; RenderIn: TRect;
       Angle: TVpRotationAngle; Scale: Extended; RenderDate: TDateTime;
       StartLine, StopLine: Integer; UseGran: TVpGranularity;
@@ -237,40 +250,45 @@ type
     property TabStop;
     property TabOrder;
     property AllowInPlaceEditing: Boolean
-      read FAllowInPlaceEdit write FAllowInPlaceEdit;
+     read FAllowInPlaceEdit write FAllowInPlaceEdit;
     property BarWidth: Integer read GetBarWidth write SetBarWidth;
     property BarColor: TColor read FBarColor write SetBarColor;
+    property Color: TColor read FColor write SetColor;
     property ColumnWidth: Integer read FColumnWidth write SetColumnWidth;
     property ContactHeadAttributes: TVpContactHeadAttr
       read FContactHeadAttr write FContactHeadAttr;
     property DrawingStyle: TVpDrawingStyle
       read FDrawingStyle write SetDrawingStyle;
-    property Color: TColor read FColor write SetColor;
-    property PrintNumColumns : Integer
-             read FPrintNumColumns write SetPrintNumColumns default 3;
-    property SortBy : TVpContactSort read FSortBy write SetSortBy
-             default csLastFirst;
+    property HintMode: TVpHintMode
+      read FHintMode write FHintMode default hmPlannerHint;
+    property PrintNumColumns: Integer
+      read FPrintNumColumns write SetPrintNumColumns default 3;
+    property SortBy: TVpContactSort
+      read FSortBy write SetSortBy default csLastFirst;
+
     { events }
     property BeforeEdit: TVpEditContactEvent
       read FBeforeEdit write FBeforeEdit;
-    property AfterEdit : TVpContactEvent
+    property AfterEdit: TVpContactEvent
       read FAfterEdit write FAfterEdit;
     property OnOwnerEditContact: TVpEditContactEvent
       read FOwnerEditContact write FOwnerEditContact;
-    property OnColWidthChange : TVpCGColWidthChangeEvent              
+    property OnColWidthChange: TVpCGColWidthChangeEvent
       read FOnColWidthChange write FOnColWidthChange;                 
     property OnContactChange: TVpContactEvent
-     read FOnClickContact write FOnClickContact;
+      read FOnClickContact write FOnClickContact;
   end;
 
 implementation
 
 uses
-  SysUtils, Forms, Dialogs, VpContactEditDlg, VpContactGridPainter;
+  SysUtils, DateUtils, Dialogs,
+  VpContactEditDlg, VpContactGridPainter;
 
 
 (*****************************************************************************)
 { TVpContactHeadAttr }
+(*****************************************************************************)
 constructor TVpContactHeadAttr.Create(AOwner: TVpContactGrid);
 begin
   inherited Create;
@@ -452,12 +470,13 @@ begin
   end;
 
   cgDragBarNumber := -1;
+  FMouseContactIndex := -1;
 
   { size }
   Height := 299;
   Width  := 225;
 
-  FDefaultPopup := TPopupMenu.Create (Self);
+  FDefaultPopup := TPopupMenu.Create(Self);
   InitializeDefaultPopup;
 
   cgHookUp;
@@ -764,16 +783,184 @@ begin
   cgCalcRowHeight;
   SetHScrollPos;
 end;
-{=====}
+
+procedure TVpContactGrid.ShowHintWindow(APoint: TPoint; AContactIndex: Integer);
+const
+  MaxWidth = 400;
+var
+  txt, s: String;
+  i: Integer;
+  contact: TVpContact;
+  list: TStrings;
+  R: TRect;
+begin
+  if FHintMode = hmPlannerHint then
+  begin
+    if (AContactIndex = -1) or ((Datastore = nil) or (Datastore.Resource = nil)) then
+    begin
+      HideHintWindow;
+      exit;
+    end;
+
+    list := TStringList.Create;
+    try
+      contact := TVpContact(cgContactArray[AContactIndex].Contact);
+      if (contact.LastName <> '') or (contact.FirstName <> '') then begin
+        s := AssembleName(contact);
+        if contact.Title <> '' then
+        s := s + ', ' + contact.Title;
+        list.Add(s);
+        list.Add('');
+      end;
+      if contact.Category > -1 then
+        list.Add(RSCategoryLbl + ' ' + CategoryLabel(TVpCategoryType(contact.Category)));
+      if contact.Birthdate > 0 then begin
+        list.Add(Format('%s %s', [RSBirthdateLbl, FormatDateTime('ddddd', contact.Birthdate)]));
+        list.Add(Format('%s %d', [RSAgeLbl, YearsBetween(date, contact.Birthdate)]));
+      end;
+      if list.Count > 0 then
+        list.Add('');
+
+      list.Add(Format('--- %s ---', [RSUppercaseWORK]));
+      if contact.Company <> '' then
+        list.Add(RSCompanyLbl + ' ' + contact.Company);
+      if contact.Department <> '' then
+        list.Add(RSDepartmentLbl + ' ' + contact.Department);
+      if contact.Job_Position <> '' then
+        list.Add(RSPositionLbl + ' ' + contact.Job_Position);
+      if contact.Anniversary > 0 then
+        list.Add(Format('%s %s', [RSAnniversaryLbl, FormatDateTime('ddddd', contact.Anniversary)]));
+      if (contact.Address1 <> '') or (contact.Zip1 <> '') or (contact.City1 <> '') then begin
+        list.Add(RSAddressLbl);
+        if contact.Address1 <> '' then
+          list.Add('   ' + contact.Address1);
+        s := AssembleCSZ(contact, 1, GetCityStateZipFormat);
+        if s <> '' then
+          list.Add('   ' + s);
+      end;
+      list.Add('');
+      list.Add(Format('--- %s ---', [RSUppercaseHOME]));
+      if (contact.Address2 <> '') or (contact.Zip2 <> '') or (contact.City2 <> '') then begin
+        list.Add(RSAddressLbl);
+        if contact.Address1 <> '' then
+          list.Add('   ' + contact.Address2);
+        s := AssembleCSZ(contact, 2, GetCityStateZipFormat);
+        if s <> '' then
+          list.Add('   ' + s);
+      end;
+      list.Add('');
+      list.Add(Format('--- %s ---', [RSUppercaseCONTACT]));
+      if (contact.Phone1 <> '') or (contact.Phone2 <> '') or (contact.Phone3 <> '') or
+         (contact.Phone4 <> '') or (contact.Phone5 <> '')
+      then begin
+        list.Add(RSPhoneFax + ':');
+        if contact.Phone1 <> '' then
+          list.Add('   ' + PhoneLabel(TVpPhoneType(contact.PhoneType1)) + ': ' + contact.Phone1);
+        if contact.Phone2 <> '' then
+          list.Add('   ' + PhoneLabel(TVpPhoneType(contact.PhoneType2)) + ': ' + contact.Phone2);
+        if contact.Phone3 <> '' then
+          list.Add('   ' + PhoneLabel(TVpPhoneType(contact.PhoneType3)) + ': ' + contact.Phone3);
+        if contact.Phone4 <> '' then
+          list.Add('   ' + PhoneLabel(TVpPhoneType(contact.PhoneType4)) + ': ' + contact.Phone4);
+        if contact.Phone5 <> '' then
+          list.Add('   ' + PhoneLabel(TVpPhoneType(contact.PhoneType5)) + ': ' + contact.Phone5);
+      end;
+      if (contact.EMail1 <> '') or (contact.EMail2 <> '') or (contact.EMail3 <> '')
+      then begin
+        list.Add(RSEmail + ':');
+        if contact.EMail1 <> '' then
+          list.Add('   ' + EMailLabel(TVpEMailType(contact.EMailType1)) + ': ' + contact.EMail1);
+        if contact.EMail2 <> '' then
+          list.Add('   ' + EMailLabel(TVpEMailType(contact.EMailType2)) + ': ' + contact.EMail2);
+        if contact.EMail3 <> '' then
+          list.Add('   ' + EMailLabel(TVpEMailType(contact.EMailType2)) + ': ' + contact.EMail3);
+      end;
+      if (contact.Website1 <> '') or (contact.Website2 <> '')
+      then begin
+        list.Add(RSWebSites + ':');
+        if contact.Website1 <> '' then
+          list.Add('   ' + WebsiteLabel(TVpWebsiteType(contact.WebsiteType1)) + ': ' + contact.Website1);
+        if contact.Website2 <> '' then
+          list.Add('   ' + WebsiteLabel(TVpWebsiteType(contact.WebsiteType2)) + ': ' + contact.Website2);
+      end;
+      if (contact.Custom1 <> '') or (contact.Custom2 <> '') or
+         (contact.Custom3 <> '') or (contact.Custom4 <> '') then
+      begin
+        list.Add('');
+        list.Add(Format('--- %s ---', [RSUppercaseCUSTOM]));
+        if contact.Custom1 <> '' then
+          list.Add(contact.Custom1);
+        if contact.Custom2 <> '' then
+          list.Add(contact.Custom2);
+        if contact.Custom3 <> '' then
+          list.Add(contact.Custom3);
+        if contact.Custom4 <> '' then
+          list.Add(contact.Custom4);
+      end;
+
+      txt := list.Text;
+    finally
+      list.Free;
+    end;
+
+    if (txt <> '') and not (csDesigning in ComponentState) then
+    begin
+      // Build and show the hint window
+      if FHintWindow = nil then
+        FHintWindow := THintWindow.Create(nil);
+      APoint := ClientToScreen(APoint);
+      R := FHintWindow.CalcHintRect(MaxWidth, txt, nil);
+      OffsetRect(R, APoint.X - WidthOf(R), APoint.Y);
+      FHintWindow.ActivateHint(R, txt);
+    end else
+      // Hide the hint window
+      HideHintWindow;
+  end
+  else
+  if FHintMode = hmComponentHint then
+  begin
+    Application.Hint := Hint;
+    Application.ActivateHint(ClientToScreen(APoint), true);
+  end;
+end;
+
+procedure TVpContactGrid.HideHintWindow;
+begin
+  case FHintMode of
+    hmPlannerHint   : FreeAndNil(FHintWindow);
+    hmComponentHint : Application.CancelHint;
+  end;
+end;
+
+procedure TVpContactGrid.MouseEnter;
+begin
+  FMouseContactIndex := -1;
+end;
+
+procedure TVpContactGrid.MouseLeave;
+begin
+  HideHintWindow;
+end;
 
 procedure TVpContactGrid.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
-  J, I: Integer;
+  J, I, idx: Integer;
 begin
-  if cgGridState = gsNormal then
-    inherited MouseMove(Shift, X, Y)
+  if cgGridState = gsNormal then begin
+    inherited MouseMove(Shift, X, Y);
 
-  else begin
+    if ShowHint then
+    begin
+      idx := GetContactIndexByCoord(Point(X, Y));
+      if FMouseContactIndex <> idx then begin
+        ShowHintWindow(Point(X, Y), idx);
+        FMouseContactIndex := idx;
+      end;
+    end;
+
+  end else
+  begin
+
     { Column sizing happens here...}
     { if the in-place editor is active then kill it. }
     if Assigned(cgInplaceEditor) and cgInPlaceEditor.Visible then
@@ -1509,6 +1696,18 @@ begin
   end;
 end;
 {=====}
+
+function TVpContactGrid.GetContactIndexByCoord(Pnt: TPoint): Integer;
+var
+  i: Integer;
+begin
+  Result := -1;
+  for i:=0 to High(cgContactArray) do
+    if PointInRect(Pnt, cgContactArray[i].WholeRect) then begin
+      Result := i;
+      exit;
+    end;
+end;
 
 procedure TVpContactGrid.cgSetActiveContactByCoord(Pnt: TPoint);
 var

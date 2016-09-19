@@ -211,8 +211,8 @@ msgid "30 Min"
 msgstr "30 Min"
 
 #: tmainform.cbshoweventhints.caption
-msgid "Show event hints"
-msgstr "Ereignis-Hinweise anzeigen"
+msgid "Show event and contact hints"
+msgstr "Ereignis- und Kontakt-Hinweise anzeigen"
 
 #: tmainform.lbladdressbuilder.caption
 msgid "Address builder"
@@ -302,4 +302,3 @@ msgstr "Fertiggestellte Aufgaben ausblenden"
 #: tmainform.titlelbl.caption
 msgid "TitleLbl"
 msgstr ""
-

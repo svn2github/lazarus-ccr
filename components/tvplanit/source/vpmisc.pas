@@ -69,8 +69,11 @@ function GetStartOfWeek(Date: TDateTime; StartOn: TVpDayType): TDateTime;
 procedure StripString(var Str: string);
   { strips non-alphanumeric characters from the beginning and end of the string}
 
-function AssembleName(Contact: TVpContact): string;
+function AssembleName(AContact: TVpContact): string;
   { returns an assembled name string }
+
+function AssembleCSZ(AContact: TVpContact; AType: Integer; AFormat: String): String;
+  { returns an assembled city-state-zip string }
 
 procedure ParseName(Contact: TVpContact; const Value: string);
   { parses the name into it's elements and updates the contact }
@@ -177,7 +180,7 @@ implementation
 
 uses
  {$IFDEF LCL}
-  DateUtils,
+  DateUtils, StrUtils,
  {$ENDIF}
   VpException, VpSR, VpBaseDS;
 
@@ -192,23 +195,63 @@ begin
 end;
 {=====}
 
-function AssembleName(Contact: TVpContact): string;
+function AssembleName(AContact: TVpContact): string;
 begin
-  result := Contact.LastName;
-  if Assigned (Contact.Owner) then begin
-    if Contact.Owner.ContactSort = csFirstLast then begin
-      if Contact.FirstName <> '' then
-        result := Contact.FirstName + ' ' + Result;
+  Result := AContact.LastName;
+  if Assigned(AContact.Owner) then begin
+    if AContact.Owner.ContactSort = csFirstLast then begin
+      if AContact.FirstName <> '' then
+        Result := AContact.FirstName + ' ' + Result;
     end else begin
-      if Contact.FirstName <> '' then
-        result := result + ', ' + Contact.FirstName;
+      if AContact.FirstName <> '' then
+        Result := Result + ', ' + AContact.FirstName;
     end;
   end else begin
-    if Contact.FirstName <> '' then
-      result := result + ', ' + Contact.FirstName;
+    if AContact.FirstName <> '' then
+      Result := Result + ', ' + AContact.FirstName;
   end;
 end;
-{=====}
+
+function AssembleCSZ(AContact: TVpContact; AType: Integer; AFormat: String): String;
+var
+  city: String;
+  state: String;
+  zip: String;
+begin
+  case AType of
+    1:  // work address
+      begin
+        city := AContact.City1;
+        state := AContact.State1;
+        zip := AContact.Zip1;
+      end;
+    2:  // home address
+      begin
+        city := AContact.City2;
+        state := AContact.State2;
+        zip := AContact.Zip2;
+      end;
+  end;
+  if AFormat = '' then
+  begin
+    Result := city;
+    if (Result <> '') and (state <> '') then
+      Result := Result + ', ' + state;
+    if (Result <> '') and (zip <> '') then
+      Result := Result + ' ' + zip;
+  end else
+  begin
+    Result := AFormat;
+    Result := ReplaceStr(Result, '@CITY', city);
+    Result := ReplaceStr(Result, '@STATE', state);
+    Result := ReplaceStr(Result, '@ZIP', zip);
+    while (Length(Result) > 0) and (Result[1] in [' ', ',', '.']) do
+      Delete(Result, 1, 1);
+    while (Length(Result) > 0) and (Result[Length(Result)] in [' ', ',', '.']) do
+      Delete(Result, Length(Result), 1);
+  end;
+end;
+
 
 procedure ParseName(Contact: TVpContact; const Value: string);
 var

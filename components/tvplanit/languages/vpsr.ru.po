@@ -43,6 +43,10 @@ msgstr "Адрес:"
 msgid "Fri"
 msgstr "Пт."
 
+#: vpsr.rsagelbl
+msgid "Age:"
+msgstr ""
+
 #: vpsr.rsalarmset
 msgid "&Reminder"
 msgstr "Напоминание"
@@ -58,6 +62,10 @@ msgstr "Событие на весь день"
 #: vpsr.rsamonday
 msgid "Mon"
 msgstr "Пон."
+
+#: vpsr.rsanniversarylbl
+msgid "Anniversary:"
+msgstr ""
 
 #: vpsr.rsappointmentgroupbox
 msgid "Appointment"
@@ -1207,6 +1215,22 @@ msgstr "Ошибка открытия"
 msgid "Untitled"
 msgstr "Без имени"
 
+#: vpsr.rsuppercasecontact
+msgid "CONTACT"
+msgstr ""
+
+#: vpsr.rsuppercasecustom
+msgid "CUSTOM"
+msgstr ""
+
+#: vpsr.rsuppercasehome
+msgid "HOME"
+msgstr ""
+
+#: vpsr.rsuppercasework
+msgid "WORK"
+msgstr ""
+
 #: vpsr.rsvisible
 msgid "Visible"
 msgstr ""
@@ -1585,3 +1609,4 @@ msgstr ""
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr ""
+

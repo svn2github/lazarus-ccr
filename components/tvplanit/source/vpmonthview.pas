@@ -265,7 +265,7 @@ type
     property EventDayStyle: TFontStyles read FEventDayStyle write SetEventDayStyle;
     property EventFont: TVpFont read FEventFont write SetEventFont;
     property HeadAttributes: TVpMvHeadAttr read FHeadAttr write FHeadAttr;
-    property HintMode: TVpHintMode read FHintMode write FHintMode default hmEventHint;
+    property HintMode: TVpHintMode read FHintMode write FHintMode default hmPlannerHint;
     property LineColor: TColor read FLineColor write SetLineColor;
     property TimeFormat: TVpTimeFormat read FTimeFormat write SetTimeFormat;
     property TodayAttributes: TVpMvTodayAttr read FTodayAttr write FTodayAttr;
@@ -926,7 +926,7 @@ var
   list: TList;
   R: TRect;
 begin
-  if FHintMode = hmEventHint then
+  if FHintMode = hmPlannerHint then
   begin
     if (ADate = 0) or ((Datastore = nil) or (Datastore.Resource = nil)) then
     begin
@@ -980,7 +980,7 @@ end;
 procedure TVpMonthView.HideHintWindow;
 begin
   case FHintMode of
-    hmEventHint: FreeAndNil(FHintWindow);
+    hmPlannerHint: FreeAndNil(FHintWindow);
     hmComponentHint: Application.CancelHint;
   end;
 end;

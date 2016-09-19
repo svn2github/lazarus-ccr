@@ -43,6 +43,10 @@ msgstr "Adresse:"
 msgid "Fri"
 msgstr "Fre"
 
+#: vpsr.rsagelbl
+msgid "Age:"
+msgstr "Alter:"
+
 #: vpsr.rsalarmset
 msgid "&Reminder"
 msgstr "E&rinnerung"
@@ -58,6 +62,10 @@ msgstr "G&anztägiges Ereignis"
 #: vpsr.rsamonday
 msgid "Mon"
 msgstr "Mon"
+
+#: vpsr.rsanniversarylbl
+msgid "Anniversary:"
+msgstr "Jubiläum:"
 
 #: vpsr.rsappointmentgroupbox
 msgid "Appointment"
@@ -917,7 +925,7 @@ msgstr "Position"
 
 #: vpsr.rspositionlbl
 msgid "Position:"
-msgstr "Position"
+msgstr "Position:"
 
 #: vpsr.rsprevday
 msgctxt "vpsr.rsprevday"
@@ -1206,6 +1214,22 @@ msgstr "Fehler: Kann nicht öffnen"
 #: vpsr.rsuntitled
 msgid "Untitled"
 msgstr "Ohne Titel"
+
+#: vpsr.rsuppercasecontact
+msgid "CONTACT"
+msgstr "KONTAKT"
+
+#: vpsr.rsuppercasecustom
+msgid "CUSTOM"
+msgstr "BENUTZER-DEFINIERT"
+
+#: vpsr.rsuppercasehome
+msgid "HOME"
+msgstr "ZUHAUSE"
+
+#: vpsr.rsuppercasework
+msgid "WORK"
+msgstr "ARBEIT"
 
 #: vpsr.rsvisible
 msgid "Visible"

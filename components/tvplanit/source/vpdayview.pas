@@ -476,7 +476,7 @@ type
     property IncludeWeekends: Boolean read FIncludeWeekends write SetIncludeWeekends default True;
     property NumDays: Integer read FNumDays write SetNumDays default 1;
     property WrapStyle: TVpDVWrapStyle read FWrapStyle Write SetWrapStyle default wsIconFlow;
-    property HintMode: TVpHintMode read FHintMode write FHintMode default hmEventHint;
+    property HintMode: TVpHintMode read FHintMode write FHintMode default hmPlannerHint;
     {events}
     property AfterEdit: TVpAfterEditEvent read FAfterEdit write FAfterEdit;
     property BeforeEdit: TVpBeforeEditEvent read FBeforeEdit write FBeforeEdit;
@@ -1005,7 +1005,7 @@ var
   txt: String;
   R, eventR: TRect;
 begin
-  if FHintMode = hmEventHint then
+  if FHintMode = hmPlannerHint then
   begin
     if (AEvent = nil) or
        ((Datastore = nil) or (Datastore.Resource = nil)) then
@@ -1043,7 +1043,7 @@ end;
 procedure TVpDayView.HideHintWindow;
 begin
   case FHintMode of
-    hmEventHint:
+    hmPlannerHint:
       FreeAndNil(FHintWindow);
     hmComponentHint:
       Application.CancelHint;

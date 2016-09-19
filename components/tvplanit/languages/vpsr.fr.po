@@ -49,6 +49,10 @@ msgstr "Adresse:"
 msgid "Fri"
 msgstr "Ven"
 
+#: vpsr.rsagelbl
+msgid "Age:"
+msgstr ""
+
 #: vpsr.rsalarmset
 msgid "&Reminder"
 msgstr "&Rappel"
@@ -64,6 +68,10 @@ msgstr "&Événement d'une journée"
 #: vpsr.rsamonday
 msgid "Mon"
 msgstr "Lun"
+
+#: vpsr.rsanniversarylbl
+msgid "Anniversary:"
+msgstr ""
 
 #: vpsr.rsappointmentgroupbox
 msgid "Appointment"
@@ -1213,6 +1221,22 @@ msgstr "Erreur: Incapable d'ouvrir"
 msgid "Untitled"
 msgstr "Sans titre"
 
+#: vpsr.rsuppercasecontact
+msgid "CONTACT"
+msgstr ""
+
+#: vpsr.rsuppercasecustom
+msgid "CUSTOM"
+msgstr ""
+
+#: vpsr.rsuppercasehome
+msgid "HOME"
+msgstr ""
+
+#: vpsr.rsuppercasework
+msgid "WORK"
+msgstr ""
+
 #: vpsr.rsvisible
 msgid "Visible"
 msgstr ""
@@ -1591,3 +1615,4 @@ msgstr "Spécificateur d'axe inconnu"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "La déclaration XML doit apparaître avant le premier élément"
+

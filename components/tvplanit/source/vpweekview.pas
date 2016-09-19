@@ -273,7 +273,7 @@ type
     property DrawingStyle: TVpDrawingStyle read FDrawingStyle write SetDrawingStyle stored True;
     property EventFont: TVpFont read FEventFont write SetEventFont;
     property HeadAttributes: TVpWvHeadAttributes read FHeadAttr write FHeadAttr;
-    property HintMode: TVpHintMode read FHintMode write FHintMode default hmEventHint;
+    property HintMode: TVpHintMode read FHintMode write FHintMode default hmPlannerHint;
     property LineColor: TColor read FLineColor write SetLineColor;
     property TimeFormat: TVpTimeFormat read FTimeFormat write SetTimeFormat;
     property ShowEventTime: Boolean read FShowEventTime write SetShowEventTime;
@@ -1015,7 +1015,7 @@ var
   txt: String;
   R, eventR: TRect;
 begin
-  if FHintMode = hmEventHint then
+  if FHintMode = hmPlannerHint then
   begin
     if (AEvent = nil) or
        ((Datastore = nil) or (Datastore.Resource = nil)) then
@@ -1053,7 +1053,7 @@ end;
 procedure TVpWeekView.HideHintWindow;
 begin
   case FHintMode of
-    hmEventHint:
+    hmPlannerHint:
       FreeAndNil(FHintWindow);
     hmComponentHint:
       Application.CancelHint;

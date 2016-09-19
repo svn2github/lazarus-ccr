@@ -261,8 +261,15 @@ resourcestring
   RSDepartmentLbl           = 'Department:';
   RSPositionLbl             = 'Position:';
   RSBirthDateLbl            = 'Birth date:';
+  RSAgeLbl                  = 'Age:';
+  RSAnniversaryLbl          = 'Anniversary:';
   RSPhoneFax                = 'Phone/fax';
   RSWebsites                = 'Websites';
+  RSUppercaseContact        = 'CONTACT';
+  RSUppercaseHOME           = 'HOME';
+  RSUppercaseWORK           = 'WORK';
+  RSUppercaseCUSTOM         = 'CUSTOM';
+
 
   RSMasterData              = 'Master data';
   RSAddresses               = 'Addresses';

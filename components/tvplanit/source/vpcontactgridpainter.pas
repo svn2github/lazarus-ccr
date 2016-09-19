@@ -428,24 +428,7 @@ begin
           DrawContactLine(TmpBmp, TmpCon.Address, '', WholeRect, AddrRect);
 
           { do City, State, Zip }
-          str := FContactGrid.GetCityStateZipFormat;
-          if str = '' then
-          begin
-            str := TmpCon.City;
-            if (str <> '') and (TmpCon.State <> '') then
-              Str := Str + ', ' + TmpCon.State;
-            if (str <> '') and (TmpCon.Zip <> '') then
-              Str := Str + ' ' + TmpCon.Zip;
-          end else
-          begin
-            Str := ReplaceStr(Str, '@CITY', TmpCon.City);
-            Str := ReplaceStr(Str, '@STATE', TmpCon.State);
-            Str := ReplaceStr(Str, '@ZIP', TmpCon.Zip);
-            while (Length(Str) > 0) and (Str[1] in [' ', ',', '.']) do
-              Delete(Str, 1, 1);
-            while (Length(Str) > 0) and (Str[Length(Str)] in [' ', ',', '.']) do
-              Delete(Str, Length(Str), 1);
-          end;
+          Str := AssembleCSZ(TmpCon, 1, FContactGrid.GetCityStateZipFormat);
           DrawContactLine(TmpBmp, Str, '', WholeRect, CSZRect);
 
           { do Phone1 }
