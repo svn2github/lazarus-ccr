@@ -50,9 +50,9 @@ object Form1: TForm1
     Height = 652
     Top = 34
     Width = 980
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alClient
-    TabIndex = 0
+    TabIndex = 2
     TabOrder = 1
     OnChange = PageControl1Change
     object TabSheet1: TTabSheet
@@ -270,12 +270,13 @@ object Form1: TForm1
         Options = []
         TabOrder = 0
       end
-      object Button1: TButton
+      object BtnApplyToPlanner: TButton
         Left = 264
         Height = 25
         Top = 8
         Width = 120
         Caption = 'Apply to planner'
+        OnClick = BtnApplyToPlannerClick
         TabOrder = 1
       end
       object TabControl1: TTabControl
@@ -323,7 +324,7 @@ object Form1: TForm1
     top = 264
   end
   object VpResourceEditDialog1: TVpResourceEditDialog
-    Version = 'v1.04'
+    Version = 'v1.05'
     DataStore = VpSqlite3Datastore1
     Options = []
     Placement.Position = mpCenter
@@ -474,6 +475,9 @@ object Form1: TForm1
         Precision = -1
         Size = 100
       end>
+    AfterEdit = QryGridAfterEdit
+    AfterInsert = QryGridAfterEdit
+    AfterPost = QryGridAfterPost
     Database = SQLite3Connection1
     Transaction = SQLTransaction1
     SQL.Strings = (
@@ -481,6 +485,7 @@ object Form1: TForm1
     )
     Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
     Params = <>
+    UpdateMode = upWhereAll
     UsePrimaryKeyAsKey = False
     left = 560
     top = 160
@@ -665,13 +670,17 @@ object Form1: TForm1
         Precision = -1
         Size = 100
       end>
+    AfterEdit = QryGridAfterEdit
+    AfterInsert = QryGridAfterEdit
+    AfterPost = QryGridAfterPost
     Database = SQLite3Connection1
     Transaction = SQLTransaction1
     SQL.Strings = (
       'SELECT * FROM Contacts'
     )
-    Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
+    Options = [sqoKeepOpenOnCommit]
     Params = <>
+    UpdateMode = upWhereAll
     UsePrimaryKeyAsKey = False
     left = 560
     top = 214
@@ -679,13 +688,17 @@ object Form1: TForm1
   object QryAllEvents: TSQLQuery
     PacketRecords = -1
     FieldDefs = <>
+    AfterEdit = QryGridAfterEdit
+    AfterInsert = QryGridAfterEdit
+    AfterPost = QryGridAfterPost
     Database = SQLite3Connection1
     Transaction = SQLTransaction1
     SQL.Strings = (
       'SELECT * FROM Events'
     )
-    Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
+    Options = [sqoKeepOpenOnCommit, sqoAutoApplyUpdates]
     Params = <>
+    UpdateMode = upWhereAll
     UsePrimaryKeyAsKey = False
     left = 560
     top = 274
@@ -693,6 +706,9 @@ object Form1: TForm1
   object QryAllTasks: TSQLQuery
     PacketRecords = -1
     FieldDefs = <>
+    AfterEdit = QryGridAfterPost
+    AfterInsert = QryGridAfterEdit
+    AfterPost = QryGridAfterPost
     Database = SQLite3Connection1
     Transaction = SQLTransaction1
     SQL.Strings = (
@@ -700,6 +716,7 @@ object Form1: TForm1
     )
     Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
     Params = <>
+    UpdateMode = upWhereAll
     UsePrimaryKeyAsKey = False
     left = 560
     top = 341
