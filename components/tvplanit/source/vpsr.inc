@@ -269,6 +269,7 @@ resourcestring
   RSUppercaseHOME           = 'HOME';
   RSUppercaseWORK           = 'WORK';
   RSUppercaseCUSTOM         = 'CUSTOM';
+  RSUppercaseNOTES          = 'NOTES';
 
 
   RSMasterData              = 'Master data';

@@ -1227,6 +1227,10 @@ msgstr ""
 msgid "HOME"
 msgstr ""
 
+#: vpsr.rsuppercasenotes
+msgid "NOTES"
+msgstr ""
+
 #: vpsr.rsuppercasework
 msgid "WORK"
 msgstr ""

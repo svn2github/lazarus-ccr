@@ -606,7 +606,11 @@ type
   public
     constructor Create(Owner: TVpContacts);
     destructor Destroy; override;
+    function ContainsContactData: Boolean;
+    function ContainsWorkData: Boolean;
+    function ContainsHomeData: Boolean;
     function FullName: string;
+
     property Loading: Boolean read FLoading write FLoading;
     property Changed: Boolean read FChanged write SetChanged;
     property Deleted: Boolean read FDeleted write SetDeleted;
@@ -744,6 +748,8 @@ begin
   Result := CompareText(TVpContact(Item1).FirstName, TVpContact(Item2).Firstname);
   if Result = 0 then
     Result := CompareText(TVpContact(Item1).LastName, TVpContact(Item2).LastName);
+  if Result = 0 then
+    Result := CompareText(TVpContact(Item1).Company, TVpContact(Item2).Company);
 end;
 
 { Compare function for sorting contacts: Compare the last names of the contacts,
@@ -753,6 +759,8 @@ begin
   Result := CompareText(TVpContact(Item1).LastName, TVpContact(Item2).Lastname);
   if Result = 0 then
     Result := CompareText(TVpContact(Item1).FirstName, TVpContact(Item2).FirstName);
+  if Result = 0 then
+    Result := CompareText(TVpContact(Item1).Company, TVpContact(Item2).Company);
 end;
 
 
@@ -1845,6 +1853,24 @@ begin
     if idx > -1 then FOwner.FContactsList.Delete(idx);
   end;
   inherited;
+end;
+
+function TVpContact.ContainsContactData: Boolean;
+begin
+  Result := (FPhone1 <> '') or (FPhone3 <> '') or (FPhone3 <> '') or
+            (FPhone4 <> '') or (FPhone5 <> '') or
+            (FEMail1 <> '') or (FEMail2 <> '') or (FEMail3 <> '') or
+            (FWebsite1 <> '') or (FWebsite2 <> '');
+end;
+
+function TVpContact.ContainsHomeData: Boolean;
+begin
+  Result := (FAddress2 <> '') or (FCity2 <> '') or (FState2 <> '') or (FCountry2 <> '');
+end;
+
+function TVpContact.ContainsWorkData: Boolean;
+begin
+  Result := (Address1 <> '') or (FCity1 <> '') or (FState1 <> '') or (FCountry1 <> '');
 end;
 
 function TVpContact.FullName : string;

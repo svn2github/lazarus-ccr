@@ -220,6 +220,7 @@ type
     {$ENDIF}
 
     { Hints }
+    function BuildHintString(AContact: TVpContact): String;
     procedure ShowHintWindow(APoint: TPoint; AContactIndex: Integer);
     procedure HideHintWindow;
 
@@ -497,7 +498,143 @@ begin
 
   inherited;
 end;
-{=====}
+
+function TVpContactGrid.BuildHintString(AContact: TVpContact): String;
+const
+  SPACE = '   ';
+var
+  list: TStrings;
+  s: String;
+begin
+  Result := '';
+  if AContact = nil then
+    exit;
+
+  list := TStringList.Create;
+  try
+    if (AContact.LastName <> '') or (AContact.FirstName <> '') then begin
+      s := AssembleName(AContact);
+      if AContact.Title <> '' then
+      s := s + ', ' + AContact.Title;
+      list.Add(s);
+      list.Add('');
+    end;
+    if AContact.Category > -1 then
+      list.Add(RSCategoryLbl + ' ' + CategoryLabel(TVpCategoryType(AContact.Category)));
+    if AContact.Birthdate > 0 then begin
+      list.Add(Format('%s %s', [RSBirthdateLbl, FormatDateTime('ddddd', AContact.Birthdate)]));
+      list.Add(Format('%s %d', [RSAgeLbl, YearsBetween(Date(), AContact.Birthdate)]));
+    end;
+
+    if AContact.ContainsWorkData then
+    begin
+      if list.Count > 0 then
+        list.Add('');
+      list.Add(Format('--- %s ---', [RSUppercaseWORK]));
+      if AContact.Company <> '' then
+        list.Add(RSCompanyLbl + ' ' + AContact.Company);
+      if AContact.Department <> '' then
+        list.Add(RSDepartmentLbl + ' ' + AContact.Department);
+      if AContact.Job_Position <> '' then
+        list.Add(RSPositionLbl + ' ' + AContact.Job_Position);
+      if AContact.Anniversary > 0 then
+        list.Add(Format('%s %s', [RSAnniversaryLbl, FormatDateTime('ddddd', AContact.Anniversary)]));
+      if (AContact.Address1 <> '') or (AContact.Zip1 <> '') or (AContact.City1 <> '') then begin
+        list.Add(RSAddressLbl);
+        if AContact.Address1 <> '' then
+          list.Add(SPACE + AContact.Address1);
+        s := AssembleCSZ(AContact, 1, GetCityStateZipFormat);
+        if s <> '' then
+          list.Add(SPACE + s);
+      end;
+    end;
+
+    if AContact.ContainsHomeData then
+    begin
+      if list.Count > 0 then
+        list.Add('');
+      list.Add(Format('--- %s ---', [RSUppercaseHOME]));
+      if (AContact.Address2 <> '') or (AContact.Zip2 <> '') or (AContact.City2 <> '') then
+      begin
+        list.Add(RSAddressLbl);
+        if AContact.Address1 <> '' then
+          list.Add(SPACE + AContact.Address2);
+        s := AssembleCSZ(AContact, 2, GetCityStateZipFormat);
+        if s <> '' then
+          list.Add(SPACE + s);
+      end;
+    end;
+
+    if AContact.ContainsContactData then
+    begin
+      if list.Count > 0 then
+        list.Add('');
+      list.Add(Format('--- %s ---', [RSUppercaseCONTACT]));
+      if (AContact.Phone1 <> '') or (AContact.Phone2 <> '') or (AContact.Phone3 <> '') or
+         (AContact.Phone4 <> '') or (AContact.Phone5 <> '')
+      then begin
+        list.Add(RSPhoneFax + ':');
+        if AContact.Phone1 <> '' then
+          list.Add(SPACE + PhoneLabel(TVpPhoneType(AContact.PhoneType1)) + ': ' + AContact.Phone1);
+        if AContact.Phone2 <> '' then
+          list.Add(SPACE + PhoneLabel(TVpPhoneType(AContact.PhoneType2)) + ': ' + AContact.Phone2);
+        if AContact.Phone3 <> '' then
+          list.Add(SPACE + PhoneLabel(TVpPhoneType(AContact.PhoneType3)) + ': ' + AContact.Phone3);
+        if AContact.Phone4 <> '' then
+          list.Add(SPACE + PhoneLabel(TVpPhoneType(AContact.PhoneType4)) + ': ' + AContact.Phone4);
+        if AContact.Phone5 <> '' then
+          list.Add(SPACE + PhoneLabel(TVpPhoneType(AContact.PhoneType5)) + ': ' + AContact.Phone5);
+      end;
+      if (AContact.EMail1 <> '') or (AContact.EMail2 <> '') or (AContact.EMail3 <> '')
+      then begin
+        list.Add(RSEmail + ':');
+        if AContact.EMail1 <> '' then
+          list.Add(SPACE + EMailLabel(TVpEMailType(AContact.EMailType1)) + ': ' + AContact.EMail1);
+        if AContact.EMail2 <> '' then
+          list.Add(SPACE + EMailLabel(TVpEMailType(AContact.EMailType2)) + ': ' + AContact.EMail2);
+        if AContact.EMail3 <> '' then
+          list.Add(SPACE + EMailLabel(TVpEMailType(AContact.EMailType2)) + ': ' + AContact.EMail3);
+      end;
+      if (AContact.Website1 <> '') or (AContact.Website2 <> '')
+      then begin
+        list.Add(RSWebSites + ':');
+        if AContact.Website1 <> '' then
+          list.Add(SPACE + WebsiteLabel(TVpWebsiteType(AContact.WebsiteType1)) + ': ' + AContact.Website1);
+        if AContact.Website2 <> '' then
+          list.Add(SPACE + WebsiteLabel(TVpWebsiteType(AContact.WebsiteType2)) + ': ' + AContact.Website2);
+      end;
+    end;
+
+    if (AContact.Custom1 <> '') or (AContact.Custom2 <> '') or
+       (AContact.Custom3 <> '') or (AContact.Custom4 <> '') then
+    begin
+      if list.Count > 0 then
+        list.Add('');
+      list.Add(Format('--- %s ---', [RSUppercaseCUSTOM]));
+      if AContact.Custom1 <> '' then
+        list.Add(AContact.Custom1);
+      if AContact.Custom2 <> '' then
+        list.Add(AContact.Custom2);
+      if AContact.Custom3 <> '' then
+        list.Add(Acontact.Custom3);
+      if AContact.Custom4 <> '' then
+        list.Add(AContact.Custom4);
+    end;
+
+    if AContact.Notes <> '' then begin
+      if list.Count > 0 then
+        list.Add('');
+      list.Add(Format('--- %s ---', [RSUppercaseNOTES]));
+      s := WrapText(AContact.Notes, MAX_HINT_WIDTH);
+      s := StripLastLineEnding(s);
+      list.Add(s);
+    end;
+
+    Result := list.Text;
+  finally
+    list.Free;
+  end;
+end;
 
 procedure TVpContactGrid.LoadLanguage;
 begin
@@ -788,10 +925,9 @@ procedure TVpContactGrid.ShowHintWindow(APoint: TPoint; AContactIndex: Integer);
 const
   MaxWidth = 400;
 var
-  txt, s: String;
+  txt: String;
   i: Integer;
   contact: TVpContact;
-  list: TStrings;
   R: TRect;
 begin
   if FHintMode = hmPlannerHint then
@@ -802,106 +938,8 @@ begin
       exit;
     end;
 
-    list := TStringList.Create;
-    try
-      contact := TVpContact(cgContactArray[AContactIndex].Contact);
-      if (contact.LastName <> '') or (contact.FirstName <> '') then begin
-        s := AssembleName(contact);
-        if contact.Title <> '' then
-        s := s + ', ' + contact.Title;
-        list.Add(s);
-        list.Add('');
-      end;
-      if contact.Category > -1 then
-        list.Add(RSCategoryLbl + ' ' + CategoryLabel(TVpCategoryType(contact.Category)));
-      if contact.Birthdate > 0 then begin
-        list.Add(Format('%s %s', [RSBirthdateLbl, FormatDateTime('ddddd', contact.Birthdate)]));
-        list.Add(Format('%s %d', [RSAgeLbl, YearsBetween(date, contact.Birthdate)]));
-      end;
-      if list.Count > 0 then
-        list.Add('');
-
-      list.Add(Format('--- %s ---', [RSUppercaseWORK]));
-      if contact.Company <> '' then
-        list.Add(RSCompanyLbl + ' ' + contact.Company);
-      if contact.Department <> '' then
-        list.Add(RSDepartmentLbl + ' ' + contact.Department);
-      if contact.Job_Position <> '' then
-        list.Add(RSPositionLbl + ' ' + contact.Job_Position);
-      if contact.Anniversary > 0 then
-        list.Add(Format('%s %s', [RSAnniversaryLbl, FormatDateTime('ddddd', contact.Anniversary)]));
-      if (contact.Address1 <> '') or (contact.Zip1 <> '') or (contact.City1 <> '') then begin
-        list.Add(RSAddressLbl);
-        if contact.Address1 <> '' then
-          list.Add('   ' + contact.Address1);
-        s := AssembleCSZ(contact, 1, GetCityStateZipFormat);
-        if s <> '' then
-          list.Add('   ' + s);
-      end;
-      list.Add('');
-      list.Add(Format('--- %s ---', [RSUppercaseHOME]));
-      if (contact.Address2 <> '') or (contact.Zip2 <> '') or (contact.City2 <> '') then begin
-        list.Add(RSAddressLbl);
-        if contact.Address1 <> '' then
-          list.Add('   ' + contact.Address2);
-        s := AssembleCSZ(contact, 2, GetCityStateZipFormat);
-        if s <> '' then
-          list.Add('   ' + s);
-      end;
-      list.Add('');
-      list.Add(Format('--- %s ---', [RSUppercaseCONTACT]));
-      if (contact.Phone1 <> '') or (contact.Phone2 <> '') or (contact.Phone3 <> '') or
-         (contact.Phone4 <> '') or (contact.Phone5 <> '')
-      then begin
-        list.Add(RSPhoneFax + ':');
-        if contact.Phone1 <> '' then
-          list.Add('   ' + PhoneLabel(TVpPhoneType(contact.PhoneType1)) + ': ' + contact.Phone1);
-        if contact.Phone2 <> '' then
-          list.Add('   ' + PhoneLabel(TVpPhoneType(contact.PhoneType2)) + ': ' + contact.Phone2);
-        if contact.Phone3 <> '' then
-          list.Add('   ' + PhoneLabel(TVpPhoneType(contact.PhoneType3)) + ': ' + contact.Phone3);
-        if contact.Phone4 <> '' then
-          list.Add('   ' + PhoneLabel(TVpPhoneType(contact.PhoneType4)) + ': ' + contact.Phone4);
-        if contact.Phone5 <> '' then
-          list.Add('   ' + PhoneLabel(TVpPhoneType(contact.PhoneType5)) + ': ' + contact.Phone5);
-      end;
-      if (contact.EMail1 <> '') or (contact.EMail2 <> '') or (contact.EMail3 <> '')
-      then begin
-        list.Add(RSEmail + ':');
-        if contact.EMail1 <> '' then
-          list.Add('   ' + EMailLabel(TVpEMailType(contact.EMailType1)) + ': ' + contact.EMail1);
-        if contact.EMail2 <> '' then
-          list.Add('   ' + EMailLabel(TVpEMailType(contact.EMailType2)) + ': ' + contact.EMail2);
-        if contact.EMail3 <> '' then
-          list.Add('   ' + EMailLabel(TVpEMailType(contact.EMailType2)) + ': ' + contact.EMail3);
-      end;
-      if (contact.Website1 <> '') or (contact.Website2 <> '')
-      then begin
-        list.Add(RSWebSites + ':');
-        if contact.Website1 <> '' then
-          list.Add('   ' + WebsiteLabel(TVpWebsiteType(contact.WebsiteType1)) + ': ' + contact.Website1);
-        if contact.Website2 <> '' then
-          list.Add('   ' + WebsiteLabel(TVpWebsiteType(contact.WebsiteType2)) + ': ' + contact.Website2);
-      end;
-      if (contact.Custom1 <> '') or (contact.Custom2 <> '') or
-         (contact.Custom3 <> '') or (contact.Custom4 <> '') then
-      begin
-        list.Add('');
-        list.Add(Format('--- %s ---', [RSUppercaseCUSTOM]));
-        if contact.Custom1 <> '' then
-          list.Add(contact.Custom1);
-        if contact.Custom2 <> '' then
-          list.Add(contact.Custom2);
-        if contact.Custom3 <> '' then
-          list.Add(contact.Custom3);
-        if contact.Custom4 <> '' then
-          list.Add(contact.Custom4);
-      end;
-
-      txt := list.Text;
-    finally
-      list.Free;
-    end;
+    contact := TVpContact(cgContactArray[AContactIndex].Contact);
+    txt := BuildHintString(contact);
 
     if (txt <> '') and not (csDesigning in ComponentState) then
     begin
