@@ -470,6 +470,10 @@ msgstr "Hacia Delante"
 msgid "Text to find"
 msgstr "Texto a Buscar"
 
+#: rxdconst.srxdbgridoptimizecolwidth
+msgid "Optimize column width"
+msgstr ""
+
 #: rxdconst.srxdbgridselapplycaption
 #, fuzzy
 msgctxt "rxdconst.srxdbgridselapplycaption"

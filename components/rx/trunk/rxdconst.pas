@@ -108,16 +108,17 @@ resourcestring
   SFieldReadOnly           = 'SFieldReadOnly %s';
 
   //RXDBgrid
-  sRxDBGridFind            = 'Find data';  ////  'Buscar                              Ctrl+F';
-  sRxDBGridFilter          = 'Filter data';//'Filtrar                               Ctrl+T';
-  sRxDBGridFilterSimple    = 'Filter in table';//      Ctrl+E';  'Filtrar en Encabezado      Ctrl+E';
-  sRxDBGridFilterClear     = 'Clear filter';//                      Ctrl+Q';'Quitar Filtro                      Ctrl+Q';
-  sRxDBGridSortByColumns   = 'Sort data for columns';//     Ctrl+C';'Ordenar por Columnas     Ctrl+C';
-  sRxDBGridSelectColumns   = 'Select visible columns';//      Ctrl+W';'Seleccionar Columnas      Ctrl+W';
-  sRxDBGridEmptiFilter     = '(Empty)';
-  sRxDBGridAllFilter       = '(All values)';
-  sRxDBGridSelectAllRows   = 'Select all rows';//      Ctrl+W';'Seleccionar Columnas      Ctrl+W';
-  sRxDBGridCopyCellValue   = 'Copy cell value';//      Ctrl+W';'Seleccionar Columnas      Ctrl+W';
+  sRxDBGridFind               = 'Find data';
+  sRxDBGridFilter             = 'Filter data';
+  sRxDBGridFilterSimple       = 'Filter in table';
+  sRxDBGridFilterClear        = 'Clear filter';
+  sRxDBGridSortByColumns      = 'Sort data for columns';
+  sRxDBGridSelectColumns      = 'Select visible columns';
+  sRxDBGridEmptiFilter        = '(Empty)';
+  sRxDBGridAllFilter          = '(All values)';
+  sRxDBGridSelectAllRows      = 'Select all rows';
+  sRxDBGridCopyCellValue      = 'Copy cell value';
+  sRxDBGridOptimizeColWidth   = 'Optimize column width';
 
   //RxDBGrid filter form
   sRxFilterFormSelectExp   = 'Enter filter expression for data in table:';

@@ -456,6 +456,10 @@ msgstr ""
 msgid "Text to find"
 msgstr ""
 
+#: rxdconst.srxdbgridoptimizecolwidth
+msgid "Optimize column width"
+msgstr ""
+
 #: rxdconst.srxdbgridselapplycaption
 msgctxt "rxdconst.srxdbgridselapplycaption"
 msgid "Apply"

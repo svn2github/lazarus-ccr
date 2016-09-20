@@ -738,6 +738,7 @@ type
     procedure OnChooseVisibleFields(Sender: TObject);
     procedure OnSelectAllRows(Sender: TObject);
     procedure OnCopyCellValue(Sender: TObject);
+    procedure OnOptimizeColWidth(Sender: TObject);
     procedure Loaded; override;
     procedure UpdateFooterRowOnUpdateActive;
 
@@ -2499,6 +2500,7 @@ begin
   CreateToolMenuItem('W', sRxDBGridSelectColumns, @OnChooseVisibleFields);
   CreateToolMenuItem('A', sRxDBGridSelectAllRows, @OnSelectAllRows);
   CreateToolMenuItem(#0, sRxDBGridCopyCellValue, @OnCopyCellValue);
+  CreateToolMenuItem(#0, sRxDBGridOptimizeColWidth, @OnOptimizeColWidth);
 end;
 
 function TRxDBGrid.GetPropertyStorage: TCustomPropertyStorage;
@@ -5414,6 +5416,11 @@ begin
       Clipboard.Close;
     end;
   end;
+end;
+
+procedure TRxDBGrid.OnOptimizeColWidth(Sender: TObject);
+begin
+  OptimizeColumnsWidthAll;
 end;
 
 procedure TRxDBGrid.Loaded;
