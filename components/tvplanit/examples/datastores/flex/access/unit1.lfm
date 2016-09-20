@@ -3,7 +3,7 @@ object Form1: TForm1
   Height = 686
   Top = 169
   Width = 980
-  Caption = 'Form1'
+  Caption = 'VpFlexDatastore demo (MS Access via ODBC)'
   ClientHeight = 686
   ClientWidth = 980
   OnCreate = FormCreate
@@ -193,7 +193,7 @@ object Form1: TForm1
         DisplayOptions.CheckStyle = csCheck
         DisplayOptions.DueDateFormat = 'dd.MM.yyyy'
         DisplayOptions.ShowCompletedTasks = False
-        DisplayOptions.ShowAll = False
+        DisplayOptions.ShowAll = True
         DisplayOptions.ShowDueDate = True
         DisplayOptions.OverdueColor = clRed
         DisplayOptions.NormalColor = clBlack
@@ -279,6 +279,7 @@ object Form1: TForm1
           Color = clWindow
           Columns = <>
           DataSource = DsResources
+          Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgThumbTracking]
           TabOrder = 1
         end
       end
@@ -299,13 +300,13 @@ object Form1: TForm1
         Options = []
         TabOrder = 1
       end
-      object Button1: TButton
+      object BtnApplyToPlanner: TButton
         Left = 264
         Height = 25
         Top = 8
         Width = 120
         Caption = 'Apply to planner'
-        OnClick = Button1Click
+        OnClick = BtnApplyToPlannerClick
         TabOrder = 2
       end
     end
@@ -325,7 +326,7 @@ object Form1: TForm1
     top = 168
   end
   object VpResourceEditDialog1: TVpResourceEditDialog
-    Version = 'v1.04'
+    Version = 'v1.05'
     DataStore = VpFlexDataStore1
     Options = []
     Placement.Position = mpCenter
@@ -1270,6 +1271,9 @@ object Form1: TForm1
         Precision = -1
         Size = 100
       end>
+    AfterEdit = QryGridAfterEdit
+    AfterInsert = QryGridAfterInsert
+    AfterPost = QryGridAfterPost
     Database = ODBCConnection1
     Transaction = SQLTransaction1
     SQL.Strings = (
@@ -1277,6 +1281,7 @@ object Form1: TForm1
     )
     Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
     Params = <>
+    UpdateMode = upWhereAll
     UsePrimaryKeyAsKey = False
     left = 531
     top = 171
@@ -1461,6 +1466,9 @@ object Form1: TForm1
         Precision = -1
         Size = 100
       end>
+    AfterEdit = QryGridAfterEdit
+    AfterInsert = QryGridAfterInsert
+    AfterPost = QryGridAfterPost
     Database = ODBCConnection1
     Transaction = SQLTransaction1
     SQL.Strings = (
@@ -1468,6 +1476,7 @@ object Form1: TForm1
     )
     Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
     Params = <>
+    UpdateMode = upWhereAll
     UsePrimaryKeyAsKey = False
     left = 531
     top = 225
@@ -1475,6 +1484,9 @@ object Form1: TForm1
   object QryAllEvents: TSQLQuery
     PacketRecords = -1
     FieldDefs = <>
+    AfterEdit = QryGridAfterEdit
+    AfterInsert = QryGridAfterInsert
+    AfterPost = QryGridAfterPost
     Database = ODBCConnection1
     Transaction = SQLTransaction1
     SQL.Strings = (
@@ -1482,6 +1494,7 @@ object Form1: TForm1
     )
     Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
     Params = <>
+    UpdateMode = upWhereAll
     UsePrimaryKeyAsKey = False
     left = 531
     top = 285
@@ -1489,6 +1502,9 @@ object Form1: TForm1
   object QryAllTasks: TSQLQuery
     PacketRecords = -1
     FieldDefs = <>
+    AfterEdit = QryGridAfterEdit
+    AfterInsert = QryGridAfterInsert
+    AfterPost = QryGridAfterPost
     Database = ODBCConnection1
     Transaction = SQLTransaction1
     SQL.Strings = (
@@ -1496,6 +1512,7 @@ object Form1: TForm1
     )
     Options = [sqoKeepOpenOnCommit, sqoAutoCommit]
     Params = <>
+    UpdateMode = upWhereAll
     UsePrimaryKeyAsKey = False
     left = 531
     top = 352

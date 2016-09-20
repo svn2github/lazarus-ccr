@@ -17,7 +17,7 @@ type
   TForm1 = class(TForm)
     BtnNewRes: TButton;
     BtnEditRes: TButton;
-    Button1: TButton;
+    BtnApplyToPlanner: TButton;
     DsAllResources: TDataSource;
     DsAllContacts: TDataSource;
     DsAllEvents: TDataSource;
@@ -60,10 +60,13 @@ type
     VpWeekView1: TVpWeekView;
     procedure BtnNewResClick(Sender: TObject);
     procedure BtnEditResClick(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
+    procedure BtnApplyToPlannerClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
+    procedure QryGridAfterPost(DataSet: TDataSet);
+    procedure QryGridAfterInsert(DataSet: TDataSet);
+    procedure QryGridAfterEdit(DataSet: TDataSet);
     procedure TabControl1Change(Sender: TObject);
   private
     { private declarations }
@@ -97,9 +100,29 @@ begin
   VpResourceEditDialog1.Execute;
 end;
 
-procedure TForm1.Button1Click(Sender: TObject);
+procedure TForm1.BtnApplyToPlannerClick(Sender: TObject);
+var
+  resID: Integer;
 begin
+  // Remember id of currently selected resource
+  resID := VpFlexDatastore1.ResourceID;
+
+  // Since the datastore does not know about the changes made in the grid
+  // we have to force the datastore to re-read everything.
+  // Maybe there's better way...
+  VpFlexDatastore1.Connected := false;
+  VpFlexDatastore1.Connected := true;
+
+  // Return to previous resource
+  VpFlexDatastore1.Resources.ClearResources;
   VpFlexDatastore1.Load;
+  VpFlexDatastore1.ResourceID := resID;
+
+  // Don't forget to re-activate the grid's datasources
+  QryAllResources.Open;
+  QryAllEvents.Open;
+  QryAllContacts.Open;
+  QryAllTasks.Open;
 end;
 
 // Setting up the database connection and the datastore. Preselect a resource
@@ -159,10 +182,38 @@ begin
   if PageControl1.PageIndex = 2 then TabControl1Change(nil);
 end;
 
+procedure TForm1.QryGridAfterEdit(DataSet: TDataSet);
+begin
+  BtnApplyToPlanner.Enabled := false;
+end;
+
+procedure TForm1.QryGridAfterInsert(DataSet: TDataSet);
+begin
+  BtnApplyToPlanner.Enabled := false;
+end;
+
+procedure TForm1.QryGridAfterPost(DataSet: TDataSet);
+begin
+  // Note: UpdateMode must be upWhereAll! Otherwise there's an error "No update
+  // query specified and failed to generate one. (No fields for inclusion in
+  // where statement found)".
+  // http://wiki.freepascal.org/SqlDBHowto#How_does_SqlDB_send_the_changes_to_the_database_server.3F
+
+  TSQLQuery(Dataset).ApplyUpdates;
+  SQLTransaction1.CommitRetaining;
+
+  BtnApplyToPlanner.Enabled := true;
+end;
+
 procedure TForm1.TabControl1Change(Sender: TObject);
 var
   i: Integer;
 begin
+  DsAllResources.Dataset.Close;
+  DsAllContacts.Dataset.Close;
+  DsAllEvents.Dataset.Close;
+  DsAllTasks.Dataset.Close;
+
   case TabControl1.TabIndex of
     0: Grid.Datasource := DsAllResources;
     1: Grid.Datasource := DsAllContacts;
@@ -170,6 +221,7 @@ begin
     3: Grid.Datasource := DsAllTasks;
   end;
   DBNavigator.Datasource := Grid.Datasource;
+  Grid.Datasource.Dataset.Open;
   for i:=0 to Grid.Columns.Count-1 do
     Grid.Columns[i].Width := 100;;
 end;
