@@ -19,9 +19,9 @@ object ContactEditForm: TContactEditForm
     Height = 592
     Top = 0
     Width = 575
-    ActivePage = tabBaseData
+    ActivePage = tabContact
     Align = alClient
-    TabIndex = 0
+    TabIndex = 2
     TabOrder = 0
     OnChange = PageControlChange
     object tabBaseData: TTabSheet
@@ -796,6 +796,7 @@ object ContactEditForm: TContactEditForm
           ItemHeight = 15
           MaxLength = 65535
           ParentFont = False
+          Style = csDropDownList
           TabOrder = 0
         end
         object cbPhone2: TComboBox
@@ -814,6 +815,7 @@ object ContactEditForm: TContactEditForm
           ItemHeight = 15
           MaxLength = 65535
           ParentFont = False
+          Style = csDropDownList
           TabOrder = 2
         end
         object cbPhone3: TComboBox
@@ -832,6 +834,7 @@ object ContactEditForm: TContactEditForm
           ItemHeight = 15
           MaxLength = 65535
           ParentFont = False
+          Style = csDropDownList
           TabOrder = 4
         end
         object cbPhone4: TComboBox
@@ -850,6 +853,7 @@ object ContactEditForm: TContactEditForm
           ItemHeight = 15
           MaxLength = 65535
           ParentFont = False
+          Style = csDropDownList
           TabOrder = 6
         end
         object edPhone4: TEdit
@@ -938,6 +942,7 @@ object ContactEditForm: TContactEditForm
           ItemHeight = 15
           MaxLength = 65535
           ParentFont = False
+          Style = csDropDownList
           TabOrder = 8
         end
         object edPhone5: TEdit
@@ -1028,6 +1033,7 @@ object ContactEditForm: TContactEditForm
           ItemHeight = 15
           MaxLength = 65535
           ParentFont = False
+          Style = csDropDownList
           TabOrder = 0
         end
         object cbEMail2: TComboBox
@@ -1046,6 +1052,7 @@ object ContactEditForm: TContactEditForm
           ItemHeight = 15
           MaxLength = 65535
           ParentFont = False
+          Style = csDropDownList
           TabOrder = 2
         end
         object cbEMail3: TComboBox
@@ -1064,6 +1071,7 @@ object ContactEditForm: TContactEditForm
           ItemHeight = 15
           MaxLength = 65535
           ParentFont = False
+          Style = csDropDownList
           TabOrder = 4
         end
       end
@@ -1123,6 +1131,7 @@ object ContactEditForm: TContactEditForm
           ItemHeight = 15
           MaxLength = 65535
           ParentFont = False
+          Style = csDropDownList
           TabOrder = 0
         end
         object cbWebsite2: TComboBox
@@ -1142,6 +1151,7 @@ object ContactEditForm: TContactEditForm
           ItemHeight = 15
           MaxLength = 65535
           ParentFont = False
+          Style = csDropDownList
           TabOrder = 2
         end
       end
