@@ -410,18 +410,19 @@ end;
 
 procedure TRxDBGridExportSpreadSheet.DoExportColWidth;
 var
-  FW:integer;
+  //FW:integer;
   C:TRxColumn;
   i: Integer;
 begin
-  FW:=FRxDBGrid.Canvas.TextWidth('W');
+  //FW:=FRxDBGrid.Canvas.TextWidth('W');
   FCurCol:=0;
   for i:=0 to FRxDBGrid.Columns.Count - 1 do
   begin
     C:=FRxDBGrid.Columns[i] as TRxColumn;
     if C.Visible then
     begin
-      FWorksheet.WriteColWidth(FCurCol, Max(C.Width div FW, 20));
+      //FWorksheet.WriteColWidth(FCurCol, Max(C.Width div FW, 20));
+      FWorksheet.WriteColWidth(FCurCol, C.Width, suPoints);
       inc(FCurCol);
     end;
   end;
