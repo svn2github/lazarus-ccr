@@ -587,16 +587,6 @@ type
     F_Clicked: boolean;
     F_PopupMenu: TPopupMenu;
     F_MenuBMP: TBitmap;
-    //glyph for collumns buttons
-{
-    FMarkerUp   : TBitmap;
-    FMarkerDown : TBitmap;
-    FEllipsisRxBMP: TBitmap;
-    FGlyphRxBMP: TBitmap;
-    FUpDownRxBMP: TBitmap;
-    FPlusRxBMP: TBitmap;
-    FMinusRxBMP: TBitmap;
-}
 
     F_EventOnFilterRec: TFilterRecordEvent;
     F_EventOnBeforeDelete: TDataSetNotifyEvent;
@@ -604,7 +594,6 @@ type
     F_EventOnDeleteError: TDataSetErrorEvent;
     F_EventOnPostError: TDataSetErrorEvent;
     F_LastFilter: TStringList;
-    //F_SortListField: TStringList;
     F_CreateLookup: TCreateLookup;
     F_DisplayLookup: TDisplayLookup;
 
@@ -631,8 +620,6 @@ type
     function GetColumns: TRxDbGridColumns;
     function GetFooterColor: TColor;
     function GetFooterRowCount: integer;
-    //function GetMarkerDown: TBitmap;
-    //function GetMarkerUp: TBitmap;
     function GetPropertyStorage: TCustomPropertyStorage;
     function GetSortField: string;
     function GetSortOrder: TSortMarker;
@@ -646,8 +633,6 @@ type
     procedure SetFooterOptions(AValue: TRxDBGridFooterOptions);
     procedure SetFooterRowCount(const AValue: integer);
     procedure SetKeyStrokes(const AValue: TRxDBGridKeyStrokes);
-    //procedure SetMarkerDown(AValue: TBitmap);
-    //procedure SetMarkerUp(AValue: TBitmap);
     procedure SetOptionsRx(const AValue: TOptionsRx);
     procedure SetPropertyStorage(const AValue: TCustomPropertyStorage);
     procedure SetTitleButtons(const AValue: boolean);
@@ -4645,28 +4630,6 @@ begin
     Result := 1;
 end;
 
-{procedure TRxDBGrid.CMHintShow(var Message: TLMessage);
-var
-  Cell: TGridCoord;
-  tCol: TRxColumn;
-begin
-  if Assigned(TCMHintShow(Message).HintInfo) then
-  begin
-    with TCMHintShow(Message).HintInfo^ do
-    begin
-      Cell := MouseCoord(CursorPos.X, CursorPos.Y);
-      if (Cell.Y = 0) and (Cell.X >= Ord(dgIndicator in Options)) then
-      begin
-        tCol := TRxColumn(ColumnFromGridColumn(Cell.X));
-        if Assigned(tCol) and (TRxColumnTitle(tCol.Title).Hint <> '') and
-          (TRxColumnTitle(tCol.Title).FShowHint) then
-          HintStr := TRxColumnTitle(tCol.Title).Hint;
-      end;
-    end;
-  end;
-  inherited CMHintShow(Message);
-end;}
-
 procedure TRxDBGrid.CMHintShow(var Message: TLMessage);
 var
   Cell: TGridCoord;
@@ -4689,6 +4652,7 @@ begin
           HintStr := TRxColumnTitle(tCol.Title).Hint;
       end
       else
+      if Cell.X >= Ord(dgIndicator in Options) then
       begin
         CellRect_ := CellRect(Cell.X, Cell.Y);
         if (CellRect_.Bottom > CursorPos.Y) and (CellRect_.Right > CursorPos.X) then

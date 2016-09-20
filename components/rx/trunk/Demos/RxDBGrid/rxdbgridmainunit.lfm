@@ -33,9 +33,12 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Constraints.MinWidth = 50
         Constraints.MaxWidth = 150
         EditButtons = <>
+        Filter.IsNull = False
+        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Нет)'
+        Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footers = <>
@@ -56,10 +59,13 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Width = 100
         FieldName = 'ID'
         EditButtons = <>
+        Filter.IsNull = False
+        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.Color = clLime
         Filter.EmptyValue = '(Нет)'
+        Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footer.Alignment = taRightJustify
@@ -77,10 +83,13 @@ object RxDBGridMainForm: TRxDBGridMainForm
         FieldName = 'Developer'
         Constraints.MinWidth = 10
         EditButtons = <>
+        Filter.IsNull = False
+        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.Color = clLime
         Filter.EmptyValue = '(Нет)'
+        Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footer.Value = 'This is test'
@@ -101,10 +110,13 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Width = 110
         FieldName = 'NAME'
         EditButtons = <>
+        Filter.IsNull = False
+        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.Color = clLime
         Filter.EmptyValue = '(Нет)'
+        Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footers = <>
@@ -133,10 +145,13 @@ object RxDBGridMainForm: TRxDBGridMainForm
             Hint = 'Clear value'
             OnClick = TRxColumnEditButtons2Click
           end>
+        Filter.IsNull = False
+        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.Color = clLime
         Filter.EmptyValue = '(Нет)'
+        Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footer.Alignment = taRightJustify
@@ -166,9 +181,12 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Width = 136
         FieldName = 'Date_Present'
         EditButtons = <>
+        Filter.IsNull = False
+        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Нет)'
+        Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footers = <>
@@ -182,9 +200,12 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Width = 141
         FieldName = 'DEVELOPER_ID'
         EditButtons = <>
+        Filter.IsNull = False
+        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Нет)'
+        Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footers = <>
@@ -198,6 +219,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
         )
         Title.Alignment = taCenter
         Title.Orientation = toHorizontal
+        Title.Hint = 'Developer raiting'
+        Title.ShowHint = True
         Title.Caption = 'Rait'
         FieldName = 'RAIT'
         DirectInput = False
@@ -340,9 +363,12 @@ object RxDBGridMainForm: TRxDBGridMainForm
             Hint = 'Style "UpDownRx"'
             Style = ebsUpDownRx
           end>
+        Filter.IsNull = False
+        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Нет)'
+        Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footers = <>
@@ -412,6 +438,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
     FooterColor = clYellow
     FooterRowCount = 2
     OnFiltred = RxDBGrid1Filtred
+    OnDataHintShow = RxDBGrid1DataHintShow
     Align = alClient
     Color = clWindow
     DrawFullLine = True

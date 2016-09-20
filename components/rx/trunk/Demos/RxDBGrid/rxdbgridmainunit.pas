@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, rxmemds,
   DB, rxdbgrid, RxAboutDialog, RxIniPropStorage, RxDBGridPrintGrid,
   RxDBGridExportSpreadSheet, RxDBGridFooterTools, tooledit, RxDBGridExportPdf,
-  ExtCtrls, Buttons, Menus, ActnList, StdCtrls, DBGrids;
+  ExtCtrls, Buttons, Menus, ActnList, StdCtrls, DBGrids, Types, Grids;
 
 type
 
@@ -81,6 +81,9 @@ type
     procedure ComboBox1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure hlpAboutExecute(Sender: TObject);
+    procedure RxDBGrid1DataHintShow(Sender: TObject; CursorPos: TPoint;
+      Cell: TGridCoord; Column: TRxColumn; var HintStr: string;
+      var Processed: boolean);
     procedure RxDBGrid1Filtred(Sender: TObject);
     procedure RxDBGrid1GetCellProps(Sender: TObject; Field: TField;
       AFont: TFont; var Background: TColor);
@@ -150,6 +153,24 @@ end;
 procedure TRxDBGridMainForm.hlpAboutExecute(Sender: TObject);
 begin
   RxAboutDialog1.Execute;
+end;
+
+procedure TRxDBGridMainForm.RxDBGrid1DataHintShow(Sender: TObject;
+  CursorPos: TPoint; Cell: TGridCoord; Column: TRxColumn; var HintStr: string;
+  var Processed: boolean);
+begin
+  if Assigned(Column.Field) and  (Column.Field = RxMemoryData1RAIT) then
+  begin
+    Processed:=true;
+    if HintStr = '' then
+      HintStr:='Not defined'
+    else
+    if HintStr = 'Positive' then
+      HintStr:='A very good result'
+    else
+    if HintStr = 'Negative' then
+      HintStr:='It''s too bad';
+  end;
 end;
 
 procedure TRxDBGridMainForm.RxDBGrid1Filtred(Sender: TObject);

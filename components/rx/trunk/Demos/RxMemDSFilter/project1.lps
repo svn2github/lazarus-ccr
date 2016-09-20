@@ -11,7 +11,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="24"/>
+        <UsageCount Value="26"/>
       </Unit0>
       <Unit1>
         <Filename Value="unit1.pas"/>
@@ -20,21 +20,21 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
-        <TopLine Value="73"/>
-        <CursorPos X="4" Y="84"/>
-        <UsageCount Value="24"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="64"/>
+        <CursorPos X="29" Y="102"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="../../rxdbgrid.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="417"/>
-        <CursorPos X="79" Y="433"/>
-        <UsageCount Value="12"/>
+        <TopLine Value="4622"/>
+        <CursorPos X="52" Y="4655"/>
+        <UsageCount Value="13"/>
         <Bookmarks Count="1">
-          <Item0 Y="5153" ID="1"/>
+          <Item0 Y="5132" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit2>
@@ -43,7 +43,7 @@
         <EditorIndex Value="6"/>
         <TopLine Value="102"/>
         <CursorPos X="73" Y="118"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="13"/>
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
@@ -51,7 +51,7 @@
         <EditorIndex Value="4"/>
         <TopLine Value="381"/>
         <CursorPos X="30" Y="386"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="13"/>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
@@ -59,7 +59,7 @@
         <EditorIndex Value="5"/>
         <TopLine Value="1358"/>
         <CursorPos X="51" Y="1372"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="13"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
@@ -68,7 +68,7 @@
         <EditorIndex Value="3"/>
         <TopLine Value="8595"/>
         <CursorPos X="41" Y="8597"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="12"/>
         <Bookmarks Count="1">
           <Item0 X="3" Y="8601" ID="2"/>
         </Bookmarks>
@@ -80,7 +80,7 @@
         <EditorIndex Value="2"/>
         <TopLine Value="41"/>
         <CursorPos X="23" Y="58"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit7>
       <Unit8>
@@ -99,7 +99,7 @@
         <UsageCount Value="10"/>
       </Unit9>
     </Units>
-    <JumpHistory Count="28" HistoryIndex="27">
+    <JumpHistory Count="29" HistoryIndex="28">
       <Position1>
         <Filename Value="../../../../lcl/grids.pas"/>
         <Caret Line="1127" Column="14" TopLine="1115"/>
@@ -210,6 +210,10 @@
         <Filename Value="../../rxdbgrid.pas"/>
         <Caret Line="83" Column="14" TopLine="58"/>
       </Position28>
+      <Position29>
+        <Filename Value="../../rxdbgrid.pas"/>
+        <Caret Line="433" Column="79" TopLine="417"/>
+      </Position29>
     </JumpHistory>
   </ProjectSession>
 </CONFIG>
