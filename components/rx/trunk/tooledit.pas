@@ -37,7 +37,7 @@ interface
 
 uses
   Classes, SysUtils, LCLType, LMessages, Graphics, MaskEdit, Controls, EditBtn,
-  pickdate, dateutil;
+  rxpickdate, rxdateutil;
 
 type
   { TCustomDateEdit }

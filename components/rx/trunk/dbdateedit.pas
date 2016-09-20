@@ -114,7 +114,7 @@ type
   end;
   
 implementation
-uses DateUtil;
+uses rxdateutil;
 
 { TRxDBDateEdit }
 

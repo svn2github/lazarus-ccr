@@ -147,7 +147,7 @@ type
   end;
 
 implementation
-uses dateutil, rxconst;
+uses rxdateutil, rxconst;
 
 { TRxCustomDateRangeEdit }
 

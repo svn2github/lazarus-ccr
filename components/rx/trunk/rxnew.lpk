@@ -25,11 +25,11 @@ Copyright (c) 1998 Master-Bank
 translate to Lazarus by alexs in 2005 - 2016
 "/>
     <License Value="LGPL"/>
-    <Version Major="2" Minor="9" Release="3" Build="192"/>
+    <Version Major="2" Minor="9" Release="4" Build="200"/>
     <Files Count="70">
       <Item1>
-        <Filename Value="autopanel.pas"/>
-        <UnitName Value="AutoPanel"/>
+        <Filename Value="rxautopanel.pas"/>
+        <UnitName Value="rxautopanel"/>
       </Item1>
       <Item2>
         <Filename Value="boxprocs.pas"/>
@@ -68,8 +68,8 @@ translate to Lazarus by alexs in 2005 - 2016
         <UnitName Value="pagemngr"/>
       </Item10>
       <Item11>
-        <Filename Value="pickdate.pas"/>
-        <UnitName Value="pickdate"/>
+        <Filename Value="rxpickdate.pas"/>
+        <UnitName Value="rxpickdate"/>
       </Item11>
       <Item12>
         <Filename Value="registerrx.pas"/>

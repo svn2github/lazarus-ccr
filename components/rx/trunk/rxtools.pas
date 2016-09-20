@@ -8,7 +8,7 @@ unit rxtools;
 interface
 
 uses
-  rxConfigValues, rxstrutils, dateutil, rxFileUtils, LazarusPackageIntf;
+  rxConfigValues, rxstrutils, rxdateutil, rxFileUtils, LazarusPackageIntf;
 
 implementation
 

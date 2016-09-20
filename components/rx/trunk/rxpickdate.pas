@@ -29,14 +29,14 @@ original conception from rx library for Delphi (c)
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
 
-unit pickdate;
+unit rxpickdate;
 
 {$I rx.inc}
 
 interface
 
 uses
-  LCLType, Classes, Controls, SysUtils, Graphics, DateUtil, Grids,
+  LCLType, Classes, Controls, SysUtils, Graphics, rxdateutil, Grids,
   LCLProc, LMessages, ExtCtrls, StdCtrls, Buttons, Forms, Menus;
 
 { TRxCalendar }

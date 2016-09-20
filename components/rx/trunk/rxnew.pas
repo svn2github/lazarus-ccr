@@ -8,8 +8,8 @@ unit rxnew;
 interface
 
 uses
-  AutoPanel, boxprocs, curredit, dbcurredit, dbdateedit, dbutils, duallist, 
-  fduallst, folderlister, pagemngr, pickdate, registerrx, RegisterRxDB, 
+  RxAutoPanel, boxprocs, curredit, dbcurredit, dbdateedit, dbutils, duallist, 
+  fduallst, folderlister, pagemngr, rxpickdate, registerrx, RegisterRxDB, 
   RegisterRxTools, RxAboutDialog, rxAboutFormUnit, rxappicon, rxapputils, 
   rxclock, rxconst, rxctrls, RxDBColorBox, rxdbcomb, RxDBCtrls, rxdbgrid, 
   rxdbgrid_columsunit, rxdbgrid_findunit, RxDBSpinEdit, RxDBTimeEdit, 

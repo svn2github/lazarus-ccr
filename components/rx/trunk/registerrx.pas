@@ -55,7 +55,7 @@ uses
   {$IFDEF USE_TRxAppIcon}
   RxAppIcon,
   {$ENDIF}
-  Dialogs, ComponentEditors, DBPropEdits, rxctrls, AutoPanel, pickdate, tooledit, rxclock,
+  Dialogs, ComponentEditors, DBPropEdits, rxctrls, RxAutoPanel, rxpickdate, tooledit, rxclock,
   rxspin, RxTimeEdit, rxDateRangeEditUnit, RxAboutDialog, RxViewsPanel, RxMDI;
 
 {$R rx.res}
@@ -187,8 +187,8 @@ begin
   RegisterUnit('rxappicon', @RegisterRxAppIcon);
   {$ENDIF}
   RegisterUnit('rxctrls', @RegisterRxCtrls);
-  RegisterUnit('AutoPanel', @RegisterAutoPanel);
-  RegisterUnit('pickdate', @RegisterPickDate);
+  RegisterUnit('RxAutoPanel', @RegisterAutoPanel);
+  RegisterUnit('rxpickdate', @RegisterPickDate);
   RegisterUnit('tooledit', @RegisterToolEdit);
   RegisterUnit('rxclock', @RegisterRxClock);
   RegisterUnit('rxspin', @RegisterRxSpin);

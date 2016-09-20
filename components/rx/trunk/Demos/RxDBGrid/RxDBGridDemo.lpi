@@ -55,7 +55,7 @@
         <MinVersion Major="1" Release="18" Build="56" Valid="True"/>
       </Item5>
     </RequiredPackages>
-    <Units Count="5">
+    <Units Count="13">
       <Unit0>
         <Filename Value="RxDBGridDemo.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -78,12 +78,10 @@
       </Unit1>
       <Unit2>
         <Filename Value="../../rxdbgrid.pas"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="2489"/>
         <CursorPos X="72" Y="2503"/>
         <UsageCount Value="11"/>
-        <Loaded Value="True"/>
       </Unit2>
       <Unit3>
         <Filename Value="../../rxdbgridexportspreadsheet.pas"/>
@@ -95,53 +93,114 @@
       </Unit3>
       <Unit4>
         <Filename Value="../../rxdconst.pas"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="100"/>
-        <CursorPos X="12" Y="121"/>
+        <CursorPos X="55" Y="121"/>
+        <UsageCount Value="10"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="../../rxautopanel.pas"/>
+        <UnitName Value="RxAutoPanel"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="32"/>
+        <CursorPos X="74" Y="56"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
-      </Unit4>
+      </Unit5>
+      <Unit6>
+        <Filename Value="../../registerrx.pas"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="26"/>
+        <CursorPos X="72" Y="59"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="../../rxpickdate.pas"/>
+        <EditorIndex Value="8"/>
+        <CursorPos X="16" Y="32"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="../../tooledit.pas"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="19"/>
+        <CursorPos X="25" Y="40"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="../../rxdateutil.pas"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="16"/>
+        <CursorPos X="16" Y="32"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="../../dbdateedit.pas"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="97"/>
+        <CursorPos X="16" Y="117"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="../../dbutils.pas"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="145"/>
+        <CursorPos X="53" Y="168"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="../../rxdaterangeeditunit.pas"/>
+        <UnitName Value="rxDateRangeEditUnit"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="133"/>
+        <CursorPos X="8" Y="150"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit12>
     </Units>
-    <JumpHistory Count="10" HistoryIndex="7">
+    <JumpHistory Count="9" HistoryIndex="8">
       <Position1>
         <Filename Value="rxdbgridmainunit.pas"/>
         <Caret Line="14" Column="134"/>
       </Position1>
       <Position2>
-        <Filename Value="../../rxdbgrid.pas"/>
-      </Position2>
-      <Position3>
         <Filename Value="rxdbgridmainunit.pas"/>
         <Caret Line="172" Column="21" TopLine="158"/>
+      </Position2>
+      <Position3>
+        <Filename Value="../../registerrx.pas"/>
+        <Caret Line="58" Column="59" TopLine="38"/>
       </Position3>
       <Position4>
-        <Filename Value="../../rxdbgrid.pas"/>
-        <Caret Line="4649" Column="19" TopLine="4638"/>
+        <Filename Value="../../registerrx.pas"/>
+        <Caret Line="119" Column="24" TopLine="86"/>
       </Position4>
       <Position5>
-        <Filename Value="../../rxdbgrid.pas"/>
-        <Caret Line="114" Column="19" TopLine="82"/>
+        <Filename Value="../../registerrx.pas"/>
+        <Caret Line="120" Column="45" TopLine="88"/>
       </Position5>
       <Position6>
-        <Filename Value="../../rxdbgrid.pas"/>
-        <Caret Line="163" TopLine="131"/>
+        <Filename Value="../../registerrx.pas"/>
+        <Caret Line="191" Column="19" TopLine="158"/>
       </Position6>
       <Position7>
-        <Filename Value="../../rxdbgrid.pas"/>
-        <Caret Line="609" Column="21" TopLine="587"/>
+        <Filename Value="../../registerrx.pas"/>
+        <Caret Line="123" Column="11" TopLine="103"/>
       </Position7>
       <Position8>
-        <Filename Value="../../rxdbgrid.pas"/>
-        <Caret Line="2502" Column="51" TopLine="2491"/>
+        <Filename Value="../../registerrx.pas"/>
       </Position8>
       <Position9>
-        <Filename Value="../../rxdbgrid.pas"/>
-        <Caret Line="741" Column="33" TopLine="722"/>
+        <Filename Value="../../rxdateutil.pas"/>
+        <Caret Line="32" Column="16" TopLine="16"/>
       </Position9>
-      <Position10>
-        <Filename Value="../../rxdbgrid.pas"/>
-        <Caret Line="5423" Column="27" TopLine="5421"/>
-      </Position10>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>
