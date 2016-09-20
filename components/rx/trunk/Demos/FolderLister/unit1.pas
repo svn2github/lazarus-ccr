@@ -48,6 +48,8 @@ var
 implementation
 uses AboutUnit;
 
+{$R *.lfm}
+
 { TMainForm }
 
 procedure TMainForm.hlpAboutExecute(Sender: TObject);
@@ -84,9 +86,6 @@ begin
   FolderLister1.DefaultExt:=Edit1.Text;
   FolderLister1.Execute;
 end;
-
-initialization
-  {$I unit1.lrs}
 
 end.
 

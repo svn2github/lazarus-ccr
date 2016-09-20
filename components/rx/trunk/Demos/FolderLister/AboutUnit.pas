@@ -28,8 +28,7 @@ var
 
 implementation
 
-initialization
-  {$I AboutUnit.lrs}
+{$R *.lfm}
 
 end.
 

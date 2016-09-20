@@ -42,6 +42,8 @@ var
 
 implementation
 
+{$R *.lfm}
+
 { TForm1 }
 
 procedure TForm1.Button1Click(Sender: TObject);
@@ -68,9 +70,6 @@ begin
   rxLookUpData.AppendRecord([7, 'Fedora Linux 11', 0]);
   Label2.Caption:='';
 end;
-
-initialization
-  {$I unit1.lrs}
 
 end.
 

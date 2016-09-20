@@ -7,14 +7,14 @@ object Form1: TForm1
   ClientHeight = 300
   ClientWidth = 400
   OnCreate = FormCreate
-  LCLVersion = '1.3'
+  LCLVersion = '1.7'
   object Label1: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
     Left = 6
-    Height = 15
+    Height = 20
     Top = 6
-    Width = 43
+    Width = 42
     BorderSpacing.Left = 6
     BorderSpacing.Top = 6
     Caption = 'Label1'
@@ -22,11 +22,11 @@ object Form1: TForm1
   end
   object Label2: TLabel
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = DBDateEdit1
+    AnchorSideTop.Control = RxDBDateEdit1
     AnchorSideTop.Side = asrBottom
     Left = 6
-    Height = 15
-    Top = 58
+    Height = 20
+    Top = 75
     Width = 87
     BorderSpacing.Around = 6
     Caption = 'Currency edit'
@@ -37,8 +37,8 @@ object Form1: TForm1
     AnchorSideTop.Control = Label2
     AnchorSideTop.Side = asrBottom
     Left = 12
-    Height = 25
-    Top = 79
+    Height = 37
+    Top = 101
     Width = 148
     Alignment = taCenter
     BorderSpacing.Around = 6
@@ -49,7 +49,7 @@ object Form1: TForm1
   end
   object Button1: TButton
     Left = 248
-    Height = 27
+    Height = 36
     Top = 80
     Width = 77
     AutoSize = True
@@ -59,35 +59,34 @@ object Form1: TForm1
   end
   object RxDateEdit1: TRxDateEdit
     Left = 12
-    Height = 25
-    Top = 135
+    Height = 37
+    Top = 160
     Width = 80
     ButtonWidth = 23
-    CharCase = ecNormal
     MaxLength = 10
     NumGlyphs = 2
+    PasswordChar = #0
     PopupColor = clWindow
     TabOrder = 2
     Text = '  .  .    '
   end
-  object DBDateEdit1: TDBDateEdit
+  object RxDBDateEdit1: TRxDBDateEdit
     AnchorSideLeft.Control = Label1
     AnchorSideTop.Control = Label1
     AnchorSideTop.Side = asrBottom
     Left = 12
-    Height = 25
-    Top = 27
-    Width = 139
-    BorderSpacing.Left = 6
-    BorderSpacing.Top = 6
+    Height = 37
+    Top = 32
+    Width = 151
+    BorderSpacing.Around = 6
     ButtonWidth = 23
-    CharCase = ecNormal
     Enabled = False
     MaxLength = 10
     NumGlyphs = 2
+    PasswordChar = #0
     PopupColor = clWindow
     TabOrder = 3
-    Text = '  .  .    '
+    Text = 't1.  .    '
     DataField = 'DOC_DATE'
     DataSource = dsData
   end
@@ -101,8 +100,6 @@ object Form1: TForm1
       item
         Name = 'DOC_DATE'
         DataType = ftDate
-        Precision = 0
-        Size = 0
       end>
     PacketRecords = 0
     left = 304

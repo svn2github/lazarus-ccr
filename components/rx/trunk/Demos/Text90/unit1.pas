@@ -37,6 +37,8 @@ var
 
 implementation
 
+{$R *.lfm}
+
 { TForm1 }
 
 procedure TForm1.PaintBox1Paint(Sender: TObject);
@@ -81,9 +83,6 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   RxMemoryData1.Open;
 end;
-
-initialization
-  {$I unit1.lrs}
 
 end.
 

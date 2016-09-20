@@ -15,13 +15,13 @@ type
   TForm1 = class(TForm)
     Button1: TButton;
     CurrencyEdit1: TCurrencyEdit;
-    DBDateEdit1: TDBDateEdit;
     dsData: TDatasource;
     Label1: TLabel;
     Label2: TLabel;
     rxData: TRxMemoryData;
     rxDataDOC_DATE: TDateField;
     RxDateEdit1: TRxDateEdit;
+    RxDBDateEdit1: TRxDBDateEdit;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private

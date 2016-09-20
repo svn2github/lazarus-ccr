@@ -54,6 +54,7 @@ var
 
 implementation
 
+{$R *.lfm}
 { TForm1 }
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -74,9 +75,6 @@ begin
   RxDBGrid1.AutoSort:=CheckBox2.Checked;
   RxDBGrid1.TitleButtons:=CheckBox1.Checked;
 end;
-
-initialization
-  {$I asdmainunit.lrs}
 
 end.
 

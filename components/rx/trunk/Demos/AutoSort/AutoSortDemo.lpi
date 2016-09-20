@@ -1,17 +1,16 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
     <Version Value="9"/>
     <General>
       <MainUnit Value="0"/>
+      <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
       <Icon Value="0"/>
-      <ActiveWindowIndexAtStart Value="0"/>
     </General>
     <VersionInfo>
       <Language Value=""/>
       <CharSet Value=""/>
-      <StringTable ProductVersion=""/>
     </VersionInfo>
     <BuildModes Count="1">
       <Item1 Name="default" Default="True"/>
@@ -45,61 +44,65 @@
       <Unit0>
         <Filename Value="AutoSortDemo.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="AutoSortDemo"/>
-        <TopLine Value="1"/>
-        <CursorPos X="1" Y="20"/>
+        <CursorPos Y="20"/>
         <UsageCount Value="20"/>
       </Unit0>
       <Unit1>
         <Filename Value="asdmainunit.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="asdMainUnit"/>
         <IsVisibleTab Value="True"/>
-        <EditorIndex Value="0"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="22"/>
-        <CursorPos X="20" Y="39"/>
+        <TopLine Value="41"/>
+        <CursorPos X="50" Y="50"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
-        <Filename Value="/usr/local/share/lazarus/components/rxnew/rxsortmemds.pas"/>
-        <UnitName Value="rxsortmemds"/>
+        <Filename Value="../../rxsortmemds.pas"/>
         <TopLine Value="24"/>
         <CursorPos X="69" Y="52"/>
         <UsageCount Value="10"/>
       </Unit2>
       <Unit3>
-        <Filename Value="/usr/local/share/lazarus/components/rxnew/rxdbgrid.pas"/>
-        <UnitName Value="rxdbgrid"/>
-        <TopLine Value="1393"/>
-        <CursorPos X="1" Y="1410"/>
+        <Filename Value="../../rxdbgrid.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="953"/>
+        <CursorPos Y="992"/>
         <UsageCount Value="10"/>
       </Unit3>
       <Unit4>
-        <Filename Value="/usr/local/share/lazarus/lcl/dbgrids.pas"/>
+        <Filename Value="../../../../lcl/dbgrids.pas"/>
         <UnitName Value="DBGrids"/>
         <TopLine Value="671"/>
-        <CursorPos X="1" Y="688"/>
+        <CursorPos Y="688"/>
         <UsageCount Value="10"/>
       </Unit4>
       <Unit5>
-        <Filename Value="/usr/local/share/lazarus/components/rxnew/rxmemds.pas"/>
-        <UnitName Value="rxmemds"/>
+        <Filename Value="../../rxmemds.pas"/>
         <TopLine Value="1329"/>
-        <CursorPos X="1" Y="1346"/>
+        <CursorPos Y="1346"/>
         <UsageCount Value="10"/>
       </Unit5>
     </Units>
-    <JumpHistory Count="0" HistoryIndex="-1"/>
+    <JumpHistory Count="1">
+      <Position1>
+        <Filename Value="asdmainunit.pas"/>
+        <Caret Line="39" Column="20" TopLine="22"/>
+      </Position1>
+    </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
+    <Target>
+      <Filename Value="AutoSortDemo"/>
+    </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
+      <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
       <SyntaxOptions>
@@ -113,20 +116,8 @@
         </Win32>
       </Options>
     </Linking>
-    <Other>
-      <CompilerPath Value="$(CompPath)"/>
-    </Other>
   </CompilerOptions>
   <Debugging>
-    <BreakPoints Count="1">
-      <Item1>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsGlobal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="/usr/local/share/lazarus/components/rxnew/rxdbgrid.pas"/>
-        <Line Value="741"/>
-      </Item1>
-    </BreakPoints>
     <Exceptions Count="3">
       <Item1>
         <Name Value="EAbort"/>
