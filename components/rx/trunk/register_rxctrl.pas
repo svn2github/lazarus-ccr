@@ -49,7 +49,7 @@ type
     procedure ExecuteVerb(Index:integer);override;
   end;
 
-
+(*
   { TRxAppIcon }
 
   TRxAppIconEditor = class(TComponentEditor)
@@ -61,15 +61,15 @@ type
     function GetVerb(Index:integer):string;override;
     procedure ExecuteVerb(Index:integer);override;
   end;
-
+*)
 procedure Register;
 implementation
-uses RxLogin, RxAppIcon, Dialogs, rxconst, RxHistoryNavigator, rxpopupunit,
+uses RxLogin, Dialogs, rxconst, RxHistoryNavigator, rxpopupunit,
   rxceEditLookupFields, rxdbgrid, rxdconst, rxduallist, rxstrutils, Forms;
 
 resourcestring
   sTestTRxLoginDialog = 'Test TRxLoginDialog';
-  sLoadIcon        = 'Load icon';
+//  sLoadIcon        = 'Load icon';
 
 
 { TRxLoginDialogEditor }
@@ -123,7 +123,7 @@ begin
     end;
   end;
 end;
-
+(*
 { TRxAppIcon }
 
 type
@@ -190,7 +190,7 @@ begin
     end;
   end;
 end;
-
+*)
 { THistoryButtonProperty }
 
 function THistoryButtonProperty.GetAttributes: TPropertyAttributes;
@@ -323,7 +323,7 @@ procedure Register;
 begin
   //
   RegisterComponentEditor(TRxLoginDialog, TRxLoginDialogEditor);
-  RegisterComponentEditor(TRxAppIcon, TRxAppIconEditor);
+  //RegisterComponentEditor(TRxAppIcon, TRxAppIconEditor);
   //
   RegisterPropertyEditor(TypeInfo(string), TPopUpColumn, 'FieldName', TPopUpColumnFieldProperty);
   RegisterPropertyEditor(TypeInfo(string), TRxHistoryNavigator, 'BackBtn', THistoryButtonProperty);
