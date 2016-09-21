@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ActnList,
-  Menus, FolderLister, Buttons, EditBtn, StdCtrls;
+  Menus, rxFolderLister, Buttons, EditBtn, StdCtrls;
 
 type
 

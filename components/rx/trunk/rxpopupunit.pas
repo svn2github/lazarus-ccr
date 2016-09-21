@@ -37,7 +37,7 @@ interface
 
 uses
   Classes, SysUtils, DB, Forms, DBGrids, rxdbgrid, LCLType, Controls, ComCtrls,
-  Buttons, Grids, Graphics, vclutils;
+  Buttons, Grids, Graphics, rxvclutils;
 
 type
   TPopUpCloseEvent = procedure(AResult:boolean) of object;
@@ -247,7 +247,7 @@ function ShowRxDBPopUpForm(AControl:TWinControl; ADataSet:TDataSet;
 procedure FillPopupWidth(APopUpFormOptions:TPopUpFormOptions; ARxPopUpForm:TPopUpForm);
 
 implementation
-uses dbutils, math, LCLProc, LazUTF8;
+uses rxdbutils, math, LCLProc, LazUTF8;
 
 function ShowRxDBPopUpForm(AControl:TWinControl; ADataSet:TDataSet;
   AOnPopUpCloseEvent:TPopUpCloseEvent; APopUpFormOptions:TPopUpFormOptions;

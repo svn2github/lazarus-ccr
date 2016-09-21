@@ -38,7 +38,7 @@ interface
 uses
   LCLType, LCLProc, LCLIntf, Classes, SysUtils, LResources, Forms, types,
   Controls, Graphics, Dialogs, DB, EditBtn, DBGrids, Buttons,
-  LMessages, DbCtrls, GraphType, dbutils, RxDbGrid, rxpopupunit, Themes;
+  LMessages, DbCtrls, GraphType, rxdbutils, RxDbGrid, rxpopupunit, Themes;
 
 const
   TextMargin = 5;
@@ -388,7 +388,7 @@ type
   end;
   
 implementation
-uses VCLUtils, Math, rxdconst;
+uses rxVCLUtils, Math, rxdconst;
 
 type
   TDbGridAccess = class(TDbGrid)

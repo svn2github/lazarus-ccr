@@ -69,7 +69,7 @@ type
 procedure ShowRxDBGridFindForm(Grid:TRxDBGrid);
 
 implementation
-uses dbutils, DBGrids, rxdconst, LCLStrConsts;
+uses rxdbutils, DBGrids, rxdconst, LCLStrConsts;
 
 {$R *.lfm}
 

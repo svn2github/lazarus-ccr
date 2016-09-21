@@ -261,7 +261,7 @@ type
 implementation
 
 
-uses CustApp, rxdconst, LazUTF8, dbutils, dbconst, Variants, math, LResources;
+uses CustApp, rxdconst, LazUTF8, rxdbutils, dbconst, Variants, math, LResources;
 
 const
   ftBlobTypes = [ftBlob, ftMemo, ftGraphic, ftFmtMemo, ftParadoxOle,

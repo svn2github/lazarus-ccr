@@ -61,7 +61,7 @@ procedure RegisterCEEditLookupFields;
 implementation
 uses
   //
-  db, duallist, Forms, rxstrutils, TypInfo, rxdconst,
+  db, rxduallist, Forms, rxstrutils, TypInfo, rxdconst,
   //unit for edits
   rxlookup;
 

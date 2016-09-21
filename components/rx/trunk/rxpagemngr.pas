@@ -29,7 +29,7 @@ original conception from rx library for Delphi (c)
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
 
-unit pagemngr;
+unit rxpagemngr;
 
 {$mode objfpc}{$H+}
 

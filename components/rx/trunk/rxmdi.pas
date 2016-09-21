@@ -156,8 +156,7 @@ type
   end;
 
 implementation
-uses LResources, vclutils, rxconst;
-//  LCLProc;
+uses LResources, rxvclutils, rxconst;
 
 
 { TRxMDICloseButton }

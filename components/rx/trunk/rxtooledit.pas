@@ -29,7 +29,7 @@ original conception from rx library for Delphi (c)
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
 
-unit tooledit;
+unit rxtooledit;
 
 {$I rx.inc}
 
@@ -969,7 +969,7 @@ end;
 
 {$IFDEF RX_USE_LAZARUS_RESOURCE}
 initialization
-  {$I tooledit.lrs}
+  {$I rxtooledit.lrs}
 {$ENDIF}
 
 end.

@@ -62,11 +62,9 @@
       <Unit0>
         <Filename Value="PhoneBookDemo.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="3" Y="12"/>
         <UsageCount Value="27"/>
-        <Loaded Value="True"/>
       </Unit0>
       <Unit1>
         <Filename Value="pbmainunit.pas"/>
@@ -75,6 +73,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="pbMainUnit"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="70"/>
         <CursorPos X="137" Y="84"/>
         <UsageCount Value="27"/>
@@ -101,11 +100,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="pbEditDataUnit"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="5"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="9"/>
         <CursorPos X="3" Y="42"/>
         <UsageCount Value="25"/>
-        <Loaded Value="True"/>
       </Unit4>
       <Unit5>
         <Filename Value="../../rxcloseformvalidator.pas"/>

@@ -139,7 +139,7 @@ type
 
 
 implementation
-uses dbutils, LCLVersion;
+uses rxdbutils, LCLVersion;
 
 type
   TFieldDataLinkHack = class(TFieldDataLink)

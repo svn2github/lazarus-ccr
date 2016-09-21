@@ -29,7 +29,7 @@ original conception from rx library for Delphi (c)
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
 
-unit dbutils;
+unit rxdbutils;
 
 {$I rx.inc}
 
@@ -164,7 +164,7 @@ procedure _DBError(const Msg: string);
 
 implementation
 
-uses Forms, Controls, Dialogs, RXDConst, VCLUtils, FileUtil,
+uses Forms, Controls, Dialogs, RXDConst, rxvclutils, FileUtil,
   AppUtils, RxAppUtils, RxStrUtils, Math, rxdateutil, LazUTF8;
 
 { Utility routines }

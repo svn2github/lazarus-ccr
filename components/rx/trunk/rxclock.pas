@@ -34,7 +34,7 @@ unit rxclock;
 interface
 
 {$I rx.inc}
-uses LCLType, LMessages, SysUtils, Classes, Graphics, Controls, Forms, {StdCtrls,}
+uses LCLType, LMessages, SysUtils, Classes, Graphics, Controls, Forms,
   ExtCtrls, Menus, messages;
 
 type
@@ -178,7 +178,7 @@ type
 
 implementation
 
-uses VCLUtils, RTLConsts{, LConsts}, LCLIntf;
+uses rxvclutils, RTLConsts, LCLIntf;
 
 const
   Registered: Boolean = False;

@@ -31,7 +31,7 @@ original conception from rx library for Delphi (c)
   First version By Daniel Simões de Almeida
 }
 
-unit dbcurredit ;
+unit rxdbcurredit;
 
 {$I rx.inc}
 
@@ -39,7 +39,7 @@ interface
 
 uses
   Classes, SysUtils, LResources, LMessages, LCLType, Controls, Graphics,
-  DB, DbCtrls, curredit ;
+  DB, DbCtrls, rxcurredit ;
 
 type
 

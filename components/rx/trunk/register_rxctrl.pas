@@ -65,7 +65,7 @@ type
 procedure Register;
 implementation
 uses RxLogin, RxAppIcon, Dialogs, rxconst, RxHistoryNavigator, rxpopupunit,
-  rxceEditLookupFields, rxdbgrid, rxdconst, duallist, rxstrutils, Forms;
+  rxceEditLookupFields, rxdbgrid, rxdconst, rxduallist, rxstrutils, Forms;
 
 resourcestring
   sTestTRxLoginDialog = 'Test TRxLoginDialog';

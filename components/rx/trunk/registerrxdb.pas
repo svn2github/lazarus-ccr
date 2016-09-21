@@ -41,8 +41,8 @@ uses
 procedure Register;
 implementation
 uses DB, DBPropEdits, rxdbgrid, RxDBSpinEdit, RxDBTimeEdit, RxDBCtrls, rxmemds,
-  ComponentEditors, seldsfrm, PropEdits, RxDBColorBox, dbdateedit, rxdbcomb,
-  rxlookup, dbcurredit, RxDBGridFooterTools
+  ComponentEditors, rxseldsfrm, PropEdits, RxDBColorBox, rxdbdateedit, rxdbcomb,
+  rxlookup, rxdbcurredit, RxDBGridFooterTools
   {$IF (FPC_FULLVERSION >= 30101)}
   , RxDBGridExportPdf
   {$ENDIF}
@@ -162,7 +162,7 @@ end;
 procedure Register;
 begin
   //RX DBAware
-  RegisterUnit('dbdateedit', @RegisterUnitDBDateEdit);
+  RegisterUnit('rxdbdateedit', @RegisterUnitDBDateEdit);
   RegisterUnit('rxlookup', @RegisterRXLookup);
   RegisterUnit('rxdbcomb', @RegisterRxDBComb);
 

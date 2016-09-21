@@ -29,7 +29,7 @@ original conception from rx library for Delphi (c)
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
 
-unit dbdateedit;
+unit rxdbdateedit;
 
 {$I rx.inc}
 
@@ -37,7 +37,7 @@ interface
 
 uses
   Classes, SysUtils, LResources, LMessages, LCLType, Controls, Graphics,
-  DB, DbCtrls, EditBtn, tooledit;
+  DB, DbCtrls, EditBtn, rxtooledit;
 
 type
 

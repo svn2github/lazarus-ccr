@@ -66,7 +66,7 @@ const
   rxFooterFunctionNames : array [TFooterValueType] of string =
     (sfvtNon, sfvtSum, sfvtAvg, sfvtCount, sfvtFieldValue, sfvtStaticText, sfvtMax, sfvtMin, sfvtRecNo);
 implementation
-uses dbutils;
+uses rxdbutils;
 
 {$R *.lfm}
 

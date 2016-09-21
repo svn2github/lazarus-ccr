@@ -37,7 +37,7 @@ interface
 
 {$IF (FPC_FULLVERSION >= 30101)}
 uses
-  Classes, SysUtils, DB, rxdbgrid, vclutils, Graphics, fpPDF, contnrs,  fpparsettf,
+  Classes, SysUtils, DB, rxdbgrid, rxvclutils, Graphics, fpPDF, contnrs,  fpparsettf,
   fpTTF;
 
 type

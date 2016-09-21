@@ -26,46 +26,46 @@ translate to Lazarus by alexs in 2005 - 2016
 "/>
     <License Value="LGPL"/>
     <Version Major="2" Minor="9" Release="4" Build="200"/>
-    <Files Count="70">
+    <Files Count="69">
       <Item1>
         <Filename Value="rxautopanel.pas"/>
-        <UnitName Value="rxautopanel"/>
+        <UnitName Value="RxAutoPanel"/>
       </Item1>
       <Item2>
-        <Filename Value="boxprocs.pas"/>
-        <UnitName Value="boxprocs"/>
+        <Filename Value="rxboxprocs.pas"/>
+        <UnitName Value="rxboxprocs"/>
       </Item2>
       <Item3>
-        <Filename Value="curredit.pas"/>
-        <UnitName Value="curredit"/>
+        <Filename Value="rxcurredit.pas"/>
+        <UnitName Value="rxcurredit"/>
       </Item3>
       <Item4>
-        <Filename Value="dbcurredit.pas"/>
-        <UnitName Value="dbcurredit"/>
+        <Filename Value="rxdbcurredit.pas"/>
+        <UnitName Value="rxdbcurredit"/>
       </Item4>
       <Item5>
-        <Filename Value="dbdateedit.pas"/>
-        <UnitName Value="dbdateedit"/>
+        <Filename Value="rxdbdateedit.pas"/>
+        <UnitName Value="rxdbdateedit"/>
       </Item5>
       <Item6>
-        <Filename Value="dbutils.pas"/>
-        <UnitName Value="dbutils"/>
+        <Filename Value="rxdbutils.pas"/>
+        <UnitName Value="rxdbutils"/>
       </Item6>
       <Item7>
-        <Filename Value="duallist.pas"/>
-        <UnitName Value="duallist"/>
+        <Filename Value="rxduallist.pas"/>
+        <UnitName Value="rxduallist"/>
       </Item7>
       <Item8>
-        <Filename Value="fduallst.pas"/>
-        <UnitName Value="fduallst"/>
+        <Filename Value="rxfduallst.pas"/>
+        <UnitName Value="rxfduallst"/>
       </Item8>
       <Item9>
-        <Filename Value="folderlister.pas"/>
-        <UnitName Value="folderlister"/>
+        <Filename Value="rxfolderlister.pas"/>
+        <UnitName Value="rxfolderlister"/>
       </Item9>
       <Item10>
-        <Filename Value="pagemngr.pas"/>
-        <UnitName Value="pagemngr"/>
+        <Filename Value="rxpagemngr.pas"/>
+        <UnitName Value="rxpagemngr"/>
       </Item10>
       <Item11>
         <Filename Value="rxpickdate.pas"/>
@@ -219,97 +219,93 @@ translate to Lazarus by alexs in 2005 - 2016
         <UnitName Value="RxViewsPanel"/>
       </Item47>
       <Item48>
-        <Filename Value="rxxpman.pas"/>
-        <UnitName Value="rxxpman"/>
+        <Filename Value="rxseldsfrm.pas"/>
+        <UnitName Value="rxseldsfrm"/>
       </Item48>
       <Item49>
-        <Filename Value="seldsfrm.pas"/>
-        <UnitName Value="seldsfrm"/>
+        <Filename Value="rxtooledit.pas"/>
+        <UnitName Value="rxtooledit"/>
       </Item49>
       <Item50>
-        <Filename Value="tooledit.pas"/>
-        <UnitName Value="tooledit"/>
+        <Filename Value="rxvclutils.pas"/>
+        <UnitName Value="rxvclutils"/>
       </Item50>
       <Item51>
-        <Filename Value="vclutils.pas"/>
-        <UnitName Value="vclutils"/>
-      </Item51>
-      <Item52>
         <Filename Value="rxcloseformvalidator.pas"/>
         <UnitName Value="RxCloseFormValidator"/>
-      </Item52>
-      <Item53>
+      </Item51>
+      <Item52>
         <Filename Value="rxhistorynavigator.pas"/>
         <UnitName Value="RxHistoryNavigator"/>
-      </Item53>
-      <Item54>
+      </Item52>
+      <Item53>
         <Filename Value="ex_rx_bin_datapacket.pas"/>
         <UnitName Value="ex_rx_bin_datapacket"/>
-      </Item54>
-      <Item55>
+      </Item53>
+      <Item54>
         <Filename Value="ex_rx_datapacket.pas"/>
         <UnitName Value="ex_rx_datapacket"/>
-      </Item55>
-      <Item56>
+      </Item54>
+      <Item55>
         <Filename Value="ex_rx_xml_datapacket.pas"/>
         <UnitName Value="ex_rx_xml_datapacket"/>
-      </Item56>
-      <Item57>
+      </Item55>
+      <Item56>
         <Filename Value="rxsortby.lfm"/>
         <Type Value="LFM"/>
-      </Item57>
-      <Item58>
+      </Item56>
+      <Item57>
         <Filename Value="rxsortby.pas"/>
         <UnitName Value="rxsortby"/>
-      </Item58>
-      <Item59>
+      </Item57>
+      <Item58>
         <Filename Value="rxmdi.pas"/>
         <UnitName Value="RxMDI"/>
-      </Item59>
-      <Item60>
+      </Item58>
+      <Item59>
         <Filename Value="rxinipropstorage.pas"/>
         <UnitName Value="RxIniPropStorage"/>
-      </Item60>
-      <Item61>
+      </Item59>
+      <Item60>
         <Filename Value="rx_lcl.res"/>
         <Type Value="Binary"/>
-      </Item61>
-      <Item62>
+      </Item60>
+      <Item61>
         <Filename Value="rxdaterangeeditunit.pas"/>
         <UnitName Value="rxDateRangeEditUnit"/>
-      </Item62>
-      <Item63>
+      </Item61>
+      <Item62>
         <Filename Value="rxdbgridfootertools.pas"/>
         <UnitName Value="RxDBGridFooterTools"/>
-      </Item63>
-      <Item64>
+      </Item62>
+      <Item63>
         <Filename Value="rxdbgridfootertools_setup.lfm"/>
         <Type Value="LFM"/>
-      </Item64>
-      <Item65>
+      </Item63>
+      <Item64>
         <Filename Value="rxdbgridfootertools_setup.pas"/>
         <UnitName Value="rxdbgridfootertools_setup"/>
-      </Item65>
-      <Item66>
+      </Item64>
+      <Item65>
         <Filename Value="rxshortcutunit.lfm"/>
         <Type Value="LFM"/>
-      </Item66>
-      <Item67>
+      </Item65>
+      <Item66>
         <Filename Value="rxshortcutunit.pas"/>
         <UnitName Value="rxShortCutUnit"/>
-      </Item67>
-      <Item68>
+      </Item66>
+      <Item67>
         <Filename Value="rxdbgridexportpdf.pas"/>
         <UnitName Value="RxDBGridExportPdf"/>
-      </Item68>
-      <Item69>
+      </Item67>
+      <Item68>
         <Filename Value="rxdbgridexportpdfsetupunit.lfm"/>
         <Type Value="LFM"/>
-      </Item69>
-      <Item70>
+      </Item68>
+      <Item69>
         <Filename Value="rxdbgridexportpdfsetupunit.pas"/>
         <UnitName Value="RxDBGridExportPdfSetupUnit"/>
-      </Item70>
+      </Item69>
     </Files>
     <LazDoc Paths="docs;\usr\local\share\lazarus\components\rxnew\docs"/>
     <i18n>

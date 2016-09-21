@@ -29,7 +29,7 @@ original conception from rx library for Delphi (c)
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
 
-unit curredit;
+unit rxcurredit;
 
 {$I rx.inc}
 
@@ -198,7 +198,7 @@ type
   end;
 
 implementation
-uses strutils, Math, tooledit, rxconst;
+uses strutils, Math, rxtooledit, rxconst;
 
 function IsValidFloat(const Value: string; var RetValue: Extended): Boolean;
 var

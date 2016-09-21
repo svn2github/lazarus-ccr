@@ -37,7 +37,7 @@ interface
 
 uses
   Classes, SysUtils, LResources, LCLType, LCLIntf, Forms, Controls, Buttons,
-  Graphics, Dialogs, Grids, dbutils, DBGrids, DB, PropertyStorage, vclutils,
+  Graphics, Dialogs, Grids, rxdbutils, DBGrids, DB, PropertyStorage, rxvclutils,
   LMessages, types, StdCtrls, Menus, rxspin;
 
 const
@@ -951,7 +951,7 @@ procedure RegisterRxDBGridSortEngine(RxDBGridSortEngineClass: TRxDBGridSortEngin
 implementation
 
 uses Math, rxdconst, rxstrutils, strutils, rxdbgrid_findunit, rxdbgrid_columsunit,
-  rxlookup, tooledit, LCLProc, Clipbrd, rxfilterby, rxsortby, variants, LazUTF8;
+  rxlookup, rxtooledit, LCLProc, Clipbrd, rxfilterby, rxsortby, variants, LazUTF8;
 
 {$R rxdbgrid.res}
 

@@ -46,16 +46,16 @@ procedure Register;
 
 implementation
 uses
-  PropEdits, folderlister, duallist, RxHistoryNavigator,
-  curredit, rxswitch, rxdice, rxtoolbar,
+  PropEdits, rxfolderlister, rxduallist, RxHistoryNavigator,
+  rxcurredit, rxswitch, rxdice, rxtoolbar,
   {$IFDEF USE_TRXXPManifest}
   rxxpman,
   {$ENDIF}
-  PageMngr,
+  rxpagemngr,
   {$IFDEF USE_TRxAppIcon}
   RxAppIcon,
   {$ENDIF}
-  Dialogs, ComponentEditors, DBPropEdits, rxctrls, RxAutoPanel, rxpickdate, tooledit, rxclock,
+  Dialogs, ComponentEditors, DBPropEdits, rxctrls, RxAutoPanel, rxpickdate, rxtooledit, rxclock,
   rxspin, RxTimeEdit, rxDateRangeEditUnit, RxAboutDialog, RxViewsPanel, RxMDI;
 
 {$R rx.res}
@@ -173,15 +173,15 @@ end;
 procedure Register;
 begin
   //RX
-  RegisterUnit('folderlister', @RegisterFolderLister);
-  RegisterUnit('duallist', @RegisterDualList);
-  RegisterUnit('curredit', @RegisterCurrEdit);
+  RegisterUnit('rxfolderlister', @RegisterFolderLister);
+  RegisterUnit('rxduallist', @RegisterDualList);
+  RegisterUnit('rxcurredit', @RegisterCurrEdit);
   RegisterUnit('rxswitch', @RegisterRXSwitch);
   RegisterUnit('rxdice', @RegisterRXDice);
   {$IFDEF USE_TRXXPManifest}
   RegisterUnit('RxXPMan', @RegisterRxXPMan);
   {$ENDIF}
-  RegisterUnit('PageMngr', @RegisterPageMngr);
+  RegisterUnit('rxPageMngr', @RegisterPageMngr);
   RegisterUnit('rxtoolbar', @RegisterRxToolBar);
   {$IFDEF USE_TRxAppIcon}
   RegisterUnit('rxappicon', @RegisterRxAppIcon);
@@ -189,7 +189,7 @@ begin
   RegisterUnit('rxctrls', @RegisterRxCtrls);
   RegisterUnit('RxAutoPanel', @RegisterAutoPanel);
   RegisterUnit('rxpickdate', @RegisterPickDate);
-  RegisterUnit('tooledit', @RegisterToolEdit);
+  RegisterUnit('rxtooledit', @RegisterToolEdit);
   RegisterUnit('rxclock', @RegisterRxClock);
   RegisterUnit('rxspin', @RegisterRxSpin);
   RegisterUnit('RxTimeEdit', @RegisterRxTimeEdit);

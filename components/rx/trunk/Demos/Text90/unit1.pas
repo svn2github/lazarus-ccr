@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  Buttons, StdCtrls, rxdbgrid, vclutils, rxmemds, db, IniPropStorage;
+  Buttons, StdCtrls, rxdbgrid, rxvclutils, rxmemds, db, IniPropStorage;
 
 type
 

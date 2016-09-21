@@ -821,7 +821,7 @@ type
 implementation
 
 
-uses SysUtils, Dialogs, VCLUtils, Math, RxAppUtils, ImgList,
+uses SysUtils, Dialogs, rxVCLUtils, Math, RxAppUtils, ImgList,
  ActnList, InterfaceBase;
 const
   Alignments: array [TAlignment] of Word = (DT_LEFT, DT_RIGHT, DT_CENTER);

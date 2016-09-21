@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, rxmemds,
   DB, rxdbgrid, RxAboutDialog, RxIniPropStorage, RxDBGridPrintGrid,
-  RxDBGridExportSpreadSheet, RxDBGridFooterTools, tooledit, RxDBGridExportPdf,
+  RxDBGridExportSpreadSheet, RxDBGridFooterTools, rxtooledit, RxDBGridExportPdf,
   ExtCtrls, Buttons, Menus, ActnList, StdCtrls, DBGrids, Types, Grids;
 
 type

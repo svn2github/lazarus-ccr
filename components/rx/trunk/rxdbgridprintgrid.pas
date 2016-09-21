@@ -36,7 +36,7 @@ interface
 
 uses
   Classes, SysUtils, DB, rxdbgrid, LR_Class, LR_DSet, LR_DBSet, contnrs,
-  Graphics, Printers, vclutils;
+  Graphics, Printers, rxvclutils;
 
 type
   TRxDBGridPrintOption =

@@ -88,7 +88,7 @@ procedure Register;
 
 implementation
 uses fpsallformats, LCLType, Forms, math, LazUTF8, rxdconst, Controls, LCLIntf,
-  RxDBGridExportSpreadSheet_ParamsUnit, dbutils, fpsutils;
+  RxDBGridExportSpreadSheet_ParamsUnit, rxdbutils, fpsutils;
 
 {$R rxdbgridexportspreadsheet.res}
 

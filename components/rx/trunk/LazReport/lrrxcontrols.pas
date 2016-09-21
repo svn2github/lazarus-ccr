@@ -136,7 +136,7 @@ type
   end;
 
 implementation
-uses DBPropEdits, LR_DBRel, LR_Utils, PropEdits, duallist, rxstrutils, tooledit,
+uses DBPropEdits, LR_DBRel, LR_Utils, PropEdits, rxduallist, rxstrutils, rxtooledit,
   LCLIntf, LCLType, Forms, LR_DBComponent;
 
 

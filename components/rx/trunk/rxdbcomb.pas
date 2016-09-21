@@ -170,7 +170,7 @@ type
 
 implementation
 
-uses DBUtils, rxdconst;
+uses rxDBUtils, rxdconst;
 
 { TCustomDBComboBox }
 

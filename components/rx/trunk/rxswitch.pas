@@ -36,7 +36,7 @@ unit rxswitch;
 interface
 
 uses SysUtils, LCLType, LCLProc, LCLIntf, LMessages, Classes, Graphics,
-  Controls, Forms, {StdCtrls,} ExtCtrls, Menus;
+  Controls, Forms, ExtCtrls, Menus;
 
 type
 
@@ -154,7 +154,7 @@ type
 
 implementation
 
-uses VCLUtils;
+uses rxvclutils;
 
 const
   BorderStyles: array[TBorderStyle] of Longint = (0, WS_BORDER);

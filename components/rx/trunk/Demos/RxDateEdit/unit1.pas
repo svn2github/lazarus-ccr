@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, db, FileUtil, LResources, Forms, Controls, Graphics,
-  Dialogs, StdCtrls, rxmemds, dbdateedit, curredit, tooledit;
+  Dialogs, StdCtrls, rxmemds, rxdbdateedit, rxcurredit, rxtooledit;
 
 type
 

@@ -278,7 +278,7 @@ type
   end;
 
 implementation
-uses Math, RxTBRSetup, LCLProc, vclutils, Dialogs, typinfo, rxdconst, GraphType,
+uses Math, RxTBRSetup, LCLProc, rxvclutils, Dialogs, typinfo, rxdconst, GraphType,
   LResources;
 
 const
