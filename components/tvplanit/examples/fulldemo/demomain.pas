@@ -116,6 +116,8 @@ type
     procedure RbHideCompletedTasksChange(Sender: TObject);
     procedure VpBufDSDataStore1PlaySound(Sender: TObject;
       const AWavFile: String; AMode: TVpPlaySoundMode);
+    procedure VpHoliday(Sender: TObject; ADate: TDateTime;
+      var AHolidayName: String);
     procedure VpNavBar1ItemClick(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; Index: Integer);
 
@@ -304,6 +306,39 @@ function GetFirstDayOfWeek(ALang: String): TVpDayType;
 // Don't know how to determine this from the OS
 begin
    Result := dtSunday;
+end;
+
+function Easter(AYear: integer): TDateTime;
+// Calculates the date of the Easter holiday
+var
+  day, month: integer;
+  a,b,c,d,e,m,n: integer;
+begin
+  result := 0;
+  case AYear div 100 of
+    17    : begin m := 23; n := 3; end;
+    18    : begin m := 23; n := 4; end;
+    19,20 : begin m := 24; n := 5; end;
+    21    : begin m := 24; n := 6; end;
+  else
+    raise Exception.Create('Easter date can only be calculated for years between 1700 and 2199');
+  end;
+  a := AYear mod 19;
+  b := AYear mod 4;
+  c := AYear mod 7;
+  d := (19*a + m) mod 30;
+  e := (2*b + 4*c + 6*d + n) mod 7;
+  day := 22 + d + e;
+  month := 3;
+  if day > 31 then begin
+    day := d + e - 9;
+    month := 4;
+    if (d = 28) and (e = 6) and (a > 10) then begin
+      if day = 26 then day := 19;
+      if day = 25 then day := 18;
+    end;
+  end;
+  result := EncodeDate(AYear, month, day);
 end;
 
 
@@ -1099,6 +1134,40 @@ procedure TMainForm.VpBufDSDataStore1PlaySound(Sender: TObject;
   const AWavFile: String; AMode: TVpPlaySoundMode);
 begin
   sound.PlaySound(AWavFile, AMode);
+end;
+
+procedure TMainForm.VpHoliday(Sender: TObject; ADate: TDateTime;
+  var AHolidayName: String);
+var
+  d,m,y: Word;
+  tmp: Word;
+  easterDate: TDate;
+begin
+  DecodeDate(ADate, y,m,d);
+  if (d=1) and (m=1) then
+    AHolidayName := 'New Year'
+  else
+  if (d = 25) and (m = 12) then
+    AHolidayName := 'Christmas'
+  else
+  if m = 9 then begin
+    tmp := 1;
+    while DayOfWeek(EncodeDate(y, m, tmp)) <> 2 do inc(tmp);
+    if tmp = d then
+      AHolidayName := 'Labor Day (U.S.)';  // 1st Monday in September
+  end
+  else begin
+    // Holidays depending on the date of Easter.
+    easterDate := Easter(y);
+    if ADate = easterDate - 2 then
+      AHolidayName := 'Good Friday'
+    else
+    if ADate = easterDate then
+      AHolidayName := 'Easter'
+    else
+    if ADate = easterDate + 49 then
+      AHolidayName := 'Whitsunday'
+  end;
 end;
 
 procedure TMainForm.ShowContacts;

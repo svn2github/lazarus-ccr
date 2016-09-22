@@ -58,6 +58,23 @@ type
 
   TVpOnEventClick = procedure(Sender: TObject; Event: TVpEvent) of object;
 
+  TVpMonthViewAttr = class(TPersistent)
+  private
+    FMonthView: TVpMonthView;
+    FColor: TColor;
+    FFont: TVpFont;
+    procedure SetColor(AValue: TColor);
+    procedure SetFont(AValue: TVpFont);
+  public
+    constructor Create(AOwner: TVpMonthView);
+    destructor Destroy; override;
+    property MonthView: TVpMonthView read FMonthVIew;
+  published
+    property Font: TVpFont read FFont write SetFont;
+    property Color: TColor read FColor write SetColor;
+  end;
+
+  (*
   TVpMvHeadAttr = class(TPersistent)
   protected{ private }
     FOwner: TVpMonthView;
@@ -89,16 +106,25 @@ type
     property Color: TColor read FColor write SetColor;
     property Font: TVpFont read FFont write SetFont;
   end;
-
-  TVpMvTodayAttr = class(TPersistent)
+    *)
+  TVpMvTodayAttr = class(TVpMonthViewAttr)
+  protected
+    FBorderPen: TPen;
+    procedure SetBorderPen(Value: TPen);
+  public
+    constructor Create(AOwner: TVpMonthView);
+    destructor Destroy; override;
+  published
+    property BorderPen: TPen read FBorderPen write SetBorderPen;
+  end;
+      (*
+  TVpMvHolidayAttr = class(TPersistent)
   protected
     FMonthView: TVpMonthView;
     FFont: TVpFont;
     FColor: TColor;
-    FBorderPen: TPen;
     procedure SetColor(Value: TColor);
     procedure SetFont(Value: TVpFont);
-    procedure SetBorderPen(Value: TPen);
   public
     constructor Create(AOwner: TVpMonthView);
     destructor Destroy; override;
@@ -106,8 +132,8 @@ type
   published
     property Color: TColor read FColor write SetColor;
     property Font: TVpFont read FFont write FFont;
-    property BorderPen: TPen read FBorderPen write SetBorderPen;
   end;
+        *)
 
   { TVpMonthView }
 
@@ -131,9 +157,17 @@ type
     FDateLabelFormat: string;
     FShowEventTime: Boolean;
     FTopLine: Integer;
+    FDayHeadAttr: TVpMonthViewAttr;
+    FHeadAttr: TVpMonthViewAttr;
+    FHolidayAttr: TVpMonthViewAttr;
+    FTodayAttr: TVpMvTodayAttr;
+    FWeekendAttr: TVpMonthViewAttr;
+                                   {
     FDayHeadAttr: TVpDayHeadAttr;
     FHeadAttr: TVpMvHeadAttr;
-    FTodayAttr: TVpMvTodayAttr;
+    FHolidayAttr: TVpMvHolidayAttr;
+    FTodayAttr: TVpMvTodayAttr;     }
+
     FDayNumberFont: TVpFont;
     FEventFont: TVpFont;
     FTimeFormat: TVpTimeFormat;
@@ -148,6 +182,7 @@ type
     FOwnerDrawCells: TVpOwnerDrawDayEvent;
     FOnEventClick: TVpOnEventClick;
     FOnEventDblClick: TVpOnEventClick;
+    FOnHoliday: TVpHolidayEvent;
 
     { internal variables }
     mvLoaded: Boolean;
@@ -178,42 +213,35 @@ type
     procedure SetWeekStartsOn(Value: TVpDayType);
 
     { internal methods }
-    procedure mvHookUp;
-    procedure mvPenChanged(Sender: TObject);
-//    procedure mvFontChanged(Sender: TObject);
-
-    procedure Paint; override;
-    procedure Loaded; override;
-    procedure InitializeDefaultPopup;
+    function GetDateAtCoord(APoint: TPoint): TDateTime;
     procedure mvPopulate;
     procedure mvSpinButtonClick(Sender: TObject; Button: TUDBtnType);
+    procedure mvSetDateByCoord(APoint: TPoint);
+    procedure mvHookUp;
+    procedure mvPenChanged(Sender: TObject);
+    function SelectEventAtCoord(Point: TPoint): Boolean;
+
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
-    {$IFNDEF LCL}
-    procedure WMLButtonDown(var Msg: TWMLButtonDown); message WM_LBUTTONDOWN;
-    procedure WMLButtonDblClick(var Msg: TWMLButtonDblClk);message WM_LBUTTONDBLCLK;
-    {$ELSE}
-    procedure WMLButtonDown(var Msg: TLMLButtonDown); message LM_LBUTTONDOWN;
-    procedure WMLButtonDblClick(var Msg: TLMLButtonDblClk); message LM_LBUTTONDBLCLK;
-    {$ENDIF}
-
-    { - renamed from EditEventAtCoord and re-written}
-    function  SelectEventAtCoord(Point: TPoint): Boolean;
-    procedure mvSetDateByCoord(APoint: TPoint);
-    function GetDateAtCoord(APoint: TPoint): TDateTime;
+    procedure Loaded; override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X,Y: Integer); override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
+    procedure Paint; override;
 
     { message handlers }
     {$IFNDEF LCL}
+    procedure WMLButtonDown(var Msg: TWMLButtonDown); message WM_LBUTTONDOWN;
+    procedure WMLButtonDblClick(var Msg: TWMLButtonDblClk);message WM_LBUTTONDBLCLK;
     procedure WMSize(var Msg: TWMSize); message WM_SIZE;
     procedure WMSetFocus(var Msg: TWMSetFocus); message WM_SETFOCUS;
     procedure WMRButtonDown(var Msg: TWMRButtonDown); message WM_RBUTTONDOWN;
     procedure CMWantSpecialKey(var Msg: TCMWantSpecialKey);
       message CM_WANTSPECIALKEY;
     {$ELSE}
+    procedure WMLButtonDown(var Msg: TLMLButtonDown); message LM_LBUTTONDOWN;
+    procedure WMLButtonDblClick(var Msg: TLMLButtonDblClk); message LM_LBUTTONDBLCLK;
     procedure WMSize(var Msg: TLMSize); message LM_SIZE;
     procedure WMSetFocus(var Msg: TLMSetFocus); message LM_SETFOCUS;
     procedure WMRButtonDown(var Msg: TLMRButtonDown); message LM_RBUTTONDOWN;
@@ -224,6 +252,7 @@ type
     procedure HideHintWindow;
 
     { Popup menu }
+    procedure InitializeDefaultPopup;
     procedure PopupToday(Sender: TObject);
     procedure PopupNextMonth(Sender: TObject);
     procedure PopupPrevMonth(Sender: TObject);
@@ -237,6 +266,7 @@ type
       AShowEventTime, AStartTimeOnly: Boolean): String;
     procedure LoadLanguage;
     procedure Invalidate; override;
+    function IsHoliday(ADate: TDate; out AHolidayName: String): Boolean;
     procedure LinkHandler(Sender: TComponent;
       NotificationType: TVpNotificationType; const Value: Variant); override;
     function GetControlType: TVpItemType; override;
@@ -258,13 +288,17 @@ type
     property KBNavigation: Boolean read FKBNavigate write FKBNavigate;
     property Color: TColor read FColor write SetColor;
     property DateLabelFormat: string read FDateLabelFormat write SetDateLabelFormat;
-    property DayHeadAttributes: TVpDayHeadAttr read FDayHeadAttr write FDayHeadAttr;
+    property DayHeadAttributes: TVpMonthviewAttr read FDayHeadAttr write FDayHeadAttr;
+//    property DayHeadAttributes: TVpDayHeadAttr read FDayHeadAttr write FDayHeadAttr;
     property DayNameStyle: TVpMVDayNameStyle read FDayNameStyle write SetDayNameStyle;
     property DayNumberFont: TVpFont read FDayNumberFont write SetDayNumberFont;
     property DrawingStyle: TVpDrawingStyle read FDrawingStyle write SetDrawingStyle stored True;
     property EventDayStyle: TFontStyles read FEventDayStyle write SetEventDayStyle;
     property EventFont: TVpFont read FEventFont write SetEventFont;
-    property HeadAttributes: TVpMvHeadAttr read FHeadAttr write FHeadAttr;
+//    property HeadAttributes: TVpMvHeadAttr read FHeadAttr write FHeadAttr;
+    property HeadAttributes: TVpMonthViewAttr read FHeadAttr write FHeadAttr;
+    property HolidayAttributes: TVpMonthViewAttr read FHolidayAttr write FHolidayAttr;
+//    property HolidayAttributes: TVpMvHolidayAttr read FHolidayAttr write FHolidayAttr;
     property HintMode: TVpHintMode read FHintMode write FHintMode default hmPlannerHint;
     property LineColor: TColor read FLineColor write SetLineColor;
     property TimeFormat: TVpTimeFormat read FTimeFormat write SetTimeFormat;
@@ -277,10 +311,12 @@ type
     property SelectedDayColor: TColor read FSelectedDayColor write SetSelectedDayColor;
     property ShowEvents: Boolean read FShowEvents write SetShowEvents;
     property ShowEventTime: Boolean read FShowEventTime write SetShowEventTime;
+    property WeekendAttributes: TVpMonthViewAttr read FWeekendAttr write FWeekendAttr;
     property WeekStartsOn: TVpDayType read FWeekStartsOn write SetWeekStartsOn;
     {events}
     property OnEventClick: TVpOnEventClick read FOnEventClick write FOnEventClick;
     property OnEventDblClick: TVpOnEventClick read FOnEventDblClick write FOnEventDblClick;
+    property OnHoliday: TVpHolidayEvent read FOnHoliday write FOnHoliday;
   end;
 
 
@@ -293,85 +329,43 @@ uses
   SysUtils, LazUTF8, Dialogs, StrUtils,
   VpMonthViewPainter;
 
-
 (*****************************************************************************)
-{ TVpMvHeadAttr }
-
-constructor TVpMvHeadAttr.Create(AOwner: TVpMonthView);
+{ TVpMonthViewAttr                                                            }
+(*****************************************************************************)
+constructor TVpMonthViewAttr.Create(AOwner: TVpMonthView);
 begin
   inherited Create;
-  FOwner := AOwner;
+  FMonthView := AOwner;
   FColor := clBtnFace;
   FFont := TVpFont.Create(AOwner);
 end;
 
-destructor TVpMvHeadAttr.Destroy;
+destructor TVpMonthViewAttr.Destroy;
 begin
   FFont.Free;
   inherited;
 end;
 
-procedure TVpMvHeadAttr.SetColor(const Value: TColor);
+procedure TVpMonthViewAttr.SetColor(AValue: TColor);
 begin
-  if FColor <> Value then begin
-    FColor := Value;
-    FOwner.Invalidate;
+  if FColor <> AValue then begin
+    FColor := AValue;
+    FMonthView.Invalidate;
   end;
 end;
 
-procedure TVpMvHeadAttr.SetFont(Value: TVpFont);
+procedure TVpMonthViewAttr.SetFont(AValue: TVpFont);
 begin
-  FFont.Assign(Value);
+  FFont.Assign(AValue);
 end;
 
 
 (*****************************************************************************)
-{ TVpContactHeadAttr }
-constructor TVpDayHeadAttr.Create(AOwner: TVpMonthView);
-begin
-  inherited Create;
-  FMonthView := AOwner;
-  FFont := TVpFont.Create(AOwner);
-  FFont.Assign(FMonthView.Font);
-  FColor := clSilver;
-end;
-{=====}
-
-destructor TVpDayHeadAttr.Destroy;
-begin
-  FFont.Free;
-  inherited;
-end;
-{=====}
-
-procedure TVpDayHeadAttr.SetColor(Value: TColor);
-begin
-  if Value <> FColor then begin
-    FColor := Value;
-    MonthView.Invalidate;
-  end;
-end;
-{=====}
-
-procedure TVpDayHeadAttr.SetFont(Value: TVpFont);
-begin
-  if Value <> FFont then begin
-    FFont.Assign(Value);
-    MonthView.Invalidate;
-  end;
-end;
-
-
+{ TVpMvTodayAttr                                                              }
 (*****************************************************************************)
-{ TVpMvTodayAttr }
-
 constructor TVpMvTodayAttr.Create(AOwner: TVpMonthView);
 begin
-  inherited Create;
-  FMonthView := AOwner;
-  FFont := TVpFont.Create(AOwner);
-  FFont.Assign(FMonthView.Font);
-  FColor := clSilver;
+  inherited Create(AOwner);
   FBorderPen := TPen.Create;
   FBorderPen.Color := clRed;
   FBorderPen.Width := 3;
@@ -381,24 +375,7 @@ end;
 destructor TVpMvTodayAttr.Destroy;
 begin
   FBorderPen.Free;
-  FFont.Free;
   inherited;
-end;
-
-procedure TVpMvTodayAttr.SetColor(Value: TColor);
-begin
-  if Value <> FColor then begin
-    FColor := Value;
-    MonthView.Invalidate;
-  end;
-end;
-
-procedure TVpMvTodayAttr.SetFont(Value: TVpFont);
-begin
-  if Value <> FFont then begin
-    FFont.Assign(Value);
-    MonthView.Invalidate;
-  end;
 end;
 
 procedure TVpMvTodayAttr.SetBorderPen(Value: TPen);
@@ -411,20 +388,27 @@ end;
 
 
 (*****************************************************************************)
-{ TVpMonthView }
-
+{ TVpMonthView                                                                }
+(*****************************************************************************)
 constructor TVpMonthView.Create(AOwner: TComponent);
 begin
   inherited;
   ControlStyle := [csCaptureMouse, csOpaque, csDoubleClicks];
 
   { Create internal classes and stuff }
+  FHeadAttr := TVpMonthViewAttr.Create(self);
+  FDayHeadAttr := TVpMonthViewAttr.Create(self);
+  FHolidayAttr := TVpMonthViewAttr.Create(self);
+  FWeekendAttr := TVpMonthviewAttr.Create(self);
+  FTodayAttr := TVpMvTodayAttr.Create(Self);
+  mvSpinButtons := TUpDown.Create(self);
+  {
   FHeadAttr := TVpMvHeadAttr.Create(self);
   FDayHeadAttr := TVpDayHeadAttr.Create(self);
   FTodayAttr := TVpMvTodayAttr.Create(self);
-//  mvEventList := TList.Create;
+  FHolidayAttr := TvpMvHolidayAttr.Create(self);
   mvSpinButtons := TUpDown.Create(self);
-
+   }
   { Set styles and initialize internal variables }
   {$IFDEF VERSION4}
   DoubleBuffered := true;
@@ -462,9 +446,19 @@ begin
   { Assign default font to DayNumberFont and EventFont }
   FDayNumberFont := TVpFont.Create(AOwner);
   FDayNumberFont.Assign(Font);
+
   FEventFont := TVpFont.Create(AOwner);
   FEventFont.Assign(Font);
+
   FOffDayFontColor := clGray;
+  FOffDayColor := OFF_COLOR;
+
+  FHolidayAttr.Font.Assign(FDayNumberFont);
+  FHolidayAttr.Font.Color := clBlack;
+  FHolidayAttr.Color := HOLIDAY_COLOR;
+
+  FWeekendAttr.Font.Assign(FHolidayAttr.Font);
+  FWeekendAttr.Color := WEEKEND_COLOR;
 
   SetLength(mvEventArray, MaxVisibleEvents);
   SetLength(mvMonthdayArray, 45);
@@ -485,12 +479,14 @@ destructor TVpMonthView.Destroy;
 begin
   FreeAndNil(FHintWindow);
   FHeadAttr.Free;
+  FHolidayAttr.Free;
   FTodayAttr.Free;
   FDayHeadAttr.Free;
+  FWeekendAttr.Free;
   FDayNumberFont.Free;
   FEventFont.Free;
-  mvSpinButtons.Free;
-  FDefaultPopup.Free;
+//  mvSpinButtons.Free;
+//  FDefaultPopup.Free;
   inherited;
 end;
 
@@ -553,7 +549,14 @@ procedure TVpMonthView.Invalidate;
 begin
   inherited;
 end;
-{=====}
+
+function TVpMonthView.IsHoliday(ADate: TDate; out AHolidayName: String): Boolean;
+begin
+  AHolidayName := '';
+  if Assigned(FOnHoliday) then
+    FOnHoliday(Self, ADate, AHolidayName);
+  Result := AHolidayName <> '';
+end;
 
 procedure TVpMonthView.LinkHandler(Sender: TComponent;
   NotificationType: TVpNotificationType; const Value: Variant);
@@ -925,6 +928,8 @@ var
   event: TVpEvent;
   list: TList;
   R: TRect;
+  holiday: String = '';
+  todayDate: TDate;
 begin
   if FHintMode = hmPlannerHint then
   begin
@@ -934,26 +939,40 @@ begin
       exit;
     end;
 
+    // If the date is a holiday we put the holidayname at the top
+    IsHoliday(ADate, holiday);
+
     // Collect all events of this day and add them separated by line feeds to
     // the hint string (txt).
-    txt := '';
     list := TList.Create;
+    txt := '';
     try
       Datastore.Resource.Schedule.EventsByDate(ADate, List);
       for i:=0 to list.Count-1 do begin
         event := TVpEvent(list[i]);
         s := BuildEventString(event, true, false);
-        txt := IfThen(txt = '', s, txt + LineEnding + s);
+        txt := IfThen(txt = '', s, txt + LineEnding  + s);
       end;
     finally
       list.Free;
     end;
 
     // If we have any events then we put the current date at the top.
-    if txt <> '' then begin
-      txt := FormatDateTime('dddddd', ADate) + LineEnding + LineEnding + txt;
-      if ADate = SysUtils.Date then
-        txt := RSToday + LineEnding + txt;
+    todayDate := SysUtils.Date();
+    if (txt = '') and (holiday = '') and (ADate = todayDate) then
+      txt := RSToday + LineEnding + FormatDateTime('ddddd', ADate)
+    else
+    if (txt <> '') or (holiday <> '') then begin
+      if (txt = '') and (holiday <> '') then
+        txt := FormatDateTime('ddddd', ADate) + LineEnding + holiday
+      else begin
+        txt := LineEnding + txt;
+        if holiday <> '' then
+          txt := holiday + LineEnding + txt;
+        txt := FormatDateTime('ddddd', ADate) + LineEnding + txt;
+        if ADate = todayDate then
+          txt := RSToday + LineEnding + txt;
+      end;
     end;
 
     if (txt <> '') and not (csDesigning in ComponentState) then

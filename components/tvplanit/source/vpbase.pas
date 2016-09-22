@@ -100,6 +100,9 @@ type
   TVpPlaySoundEvent = procedure(Sender: TObject; const AWavFile: String;
     AMode: TVpPlaySoundMode) of object;
 
+  TVpHolidayEvent = procedure(Sender: TObject; ADate: TDateTime;
+    var AHolidayName: String) of object;
+
   { XML exceptions }
   EXML = class(Exception);
 

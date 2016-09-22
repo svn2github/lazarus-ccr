@@ -57,7 +57,7 @@ object MainForm: TMainForm
       Height = 528
       Top = 48
       Width = 834
-      PageIndex = 4
+      PageIndex = 0
       Align = alClient
       TabOrder = 1
       TabStop = True
@@ -93,17 +93,22 @@ object MainForm: TMainForm
             HeadAttributes.Font.Height = -13
             HeadAttributes.Font.Style = [fsItalic]
             HeadAttributes.Color = clBtnFace
+            HolidayAttributes.Font.Color = clBlack
+            HolidayAttributes.Color = 8421631
             LineColor = clGray
             TimeFormat = tf12Hour
-            TodayAttributes.Color = clSkyBlue
             TodayAttributes.Font.Color = clBlue
+            TodayAttributes.Color = 16761024
             TodayAttributes.BorderPen.Color = clBlue
             TodayAttributes.BorderPen.Width = 3
-            OffDayColor = clSilver
+            OffDayColor = 15263976
             SelectedDayColor = clRed
             ShowEvents = True
             ShowEventTime = False
+            WeekendAttributes.Font.Color = clBlack
+            WeekendAttributes.Color = 12632319
             WeekStartsOn = dtSunday
+            OnHoliday = VpHoliday
           end
           object Splitter2: TSplitter
             Cursor = crVSplit

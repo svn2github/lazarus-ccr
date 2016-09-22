@@ -30,6 +30,7 @@ type
     TodayFontColor: TColor;
     TodayAttrColor: TColor;
     DotDotDotColor: TColor;
+    FCurrHoliday: String;
 
     // protected variables of the original monthview needed only for painting
     mvEventTextHeight: Integer;
@@ -41,7 +42,7 @@ type
   protected
     procedure Clear;
     procedure DrawBorders;
-    procedure DrawDayCell(ADate: TDate; ACol: Integer;
+    procedure DrawDayCell(ADate: TDate; ACol, ARow: Integer;
       var AIndex, ADayNumber: Integer; var ATextRect: TRect);
     procedure DrawDayHead;
     procedure DrawDays;
@@ -113,7 +114,7 @@ begin
   end;
 end;
 
-procedure TVpMonthViewPainter.DrawDayCell(ADate: TDate; ACol: Integer;
+procedure TVpMonthViewPainter.DrawDayCell(ADate: TDate; ACol, ARow: Integer;
   var AIndex, ADayNumber: Integer; var ATextRect: TRect);
 var
   tmpRect: TRect;
@@ -134,9 +135,17 @@ begin
       tmpRect.Bottom := RealBottom;
   end else
     tmpRect := ATextRect;
+  if ARow = 0 then
+    inc(tmpRect.Top);
 
-  if DisplayMonth <> M then begin
+  if FCurrHoliday <> '' then begin
+    RenderCanvas.Brush.Color := FMonthView.HolidayAttributes.Color;
+    TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
+  end else if DisplayMonth <> M then begin
     RenderCanvas.Brush.Color := RealOffDayColor;
+    TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
+  end else if DayOfWeek(ADate) in [1, 7] then begin
+    RenderCanvas.Brush.Color := FMonthView.WeekendAttributes.Color;
     TPSFillRect(RenderCanvas, Angle, RenderIn, tmpRect);
   end else
     RenderCanvas.Brush.Color := RealColor;
@@ -157,10 +166,10 @@ begin
     end;
   end;
 
-  { Paint the day number }
+  { Prepare the day number as string}
   Str := FormatDateTime('d', ADate);
 
-  { set the proper font and style }
+  { Set the proper font and style }
   if ADate = todayDate then
     RenderCanvas.Font.Assign(FMonthView.TodayAttributes.Font)
   else
@@ -204,6 +213,8 @@ begin
   RenderCanvas.Font.Style := FontStyle;
   if DisplayMonth <> M then
     RenderCanvas.Font.Color := FMonthView.OffDayFontColor;
+  if FCurrHoliday <> '' then
+    RenderCanvas.Font.Assign(FMonthView.HolidayAttributes.Font);
 
   { Calculate size of rect for the day number at the top of the TextRect. }
   if ACol = 6 then
@@ -433,6 +444,9 @@ begin
           for Col := 0 to 6 do begin
             ThisDate := Trunc(StartingDate + DayNumber);
 
+            { Check and store if the this date is a holiday }
+            FMonthView.IsHoliday(ThisDate, FCurrHoliday);
+
             OldBrush.Assign(RenderCanvas.Brush);
             OldPen.Assign(RenderCanvas.Pen);
             OldFont.Assign(RenderCanvas.Font);
@@ -445,7 +459,7 @@ begin
                 if Drawn then
                   Continue;
               end else
-                DrawDayCell(ThisDate, Col, I, DayNumber, TextRect);
+                DrawDayCell(ThisDate, Col, Row, I, DayNumber, TextRect);
             finally
               RenderCanvas.Brush.Assign(OldBrush);
               RenderCanvas.Pen.Assign(OldPen);
