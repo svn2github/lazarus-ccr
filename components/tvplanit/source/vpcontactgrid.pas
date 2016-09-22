@@ -183,8 +183,10 @@ type
     procedure cgScrollHorizontal(Rows: Integer);
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure PopupAddContact(Sender: TObject);
@@ -193,7 +195,6 @@ type
     procedure EditContact;
     procedure EndEdit(Sender: TObject);
     procedure InitializeDefaultPopup;
-    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
 
     { message handlers }
     {$IFNDEF LCL}
@@ -201,19 +202,15 @@ type
     procedure WMHScroll(var Msg: TWMHScroll); message WM_HSCROLL;
     procedure WMNCHitTest(var Msg: TWMNCHitTest); message WM_NCHITTEST;
     procedure WMSetCursor(var Msg: TWMSetCursor);
-    procedure WMLButtonDown(var Msg : TWMLButtonDown); message WM_LBUTTONDOWN;
     procedure WMLButtonDblClk(var Msg : TWMLButtonDblClk); message WM_LBUTTONDBLCLK;
     procedure WMKillFocus(var Msg : TWMKillFocus); message WM_KILLFOCUS;
-    procedure WMRButtonDown(var Msg : TWMRButtonDown); message WM_RBUTTONDOWN;
     procedure VpDataStoreChanged (var Msg : TMessage); message Vp_DataStoreChanged;
     {$ELSE}
     procedure WMSize(var Msg: TLMSize); message LM_SIZE;
     procedure WMHScroll(var Msg: TLMHScroll); message LM_HSCROLL;
     procedure WMNCHitTest(var Msg: TLMNCHitTest); message LM_NCHITTEST;
-    procedure WMLButtonDown(var Msg : TLMLButtonDown); message LM_LBUTTONDOWN;
     procedure WMLButtonDblClk(var Msg : TLMLButtonDblClk); message LM_LBUTTONDBLCLK;
     procedure WMKillFocus(var Msg : TLMKillFocus); message LM_KILLFOCUS;
-    procedure WMRButtonDown(var Msg : TLMRButtonDown); message LM_RBUTTONDOWN;
     function  DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean; override;
     function  DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): Boolean; override;
     function  DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): Boolean; override;
@@ -980,6 +977,67 @@ begin
   HideHintWindow;
 end;
 
+procedure TVpContactGrid.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X,Y: Integer);
+var
+  I: Integer;
+  Sizing: Boolean;
+  ClientOrigin: TPoint;
+begin
+  inherited;
+
+  if Button = mbLeft then begin
+    Sizing := false;
+
+    cgClickPoint := Point(X, Y);
+    if not Focused then
+      SetFocus;
+
+    if not (csDesigning in ComponentState) then begin
+      { Don't allow column dragging at designtime }
+      for I := 0 to pred(Length(cgBarArray)) do begin
+        if PointInRect(cgClickPoint, cgBarArray[I].Rec) then begin
+          Sizing := true;
+          Break;
+        end
+      end;
+
+      if Sizing then begin
+        cgGridState := gsColSizing;
+        cgLastXPos := cgClickPoint.X;
+        cgNewColWidth := ColumnWidth;
+      end else begin
+        cgGridState := gsNormal;
+        cgSetActiveContactByCoord(cgClickPoint);
+        if AllowInPlaceEditing then
+          cgClickTimer.Enabled := true;
+      end;
+    end;
+  end else
+  if Button = mbRight then begin
+    HideHintWindow;
+    if not Assigned (PopupMenu) then begin
+      if not Focused then
+        SetFocus;
+      cgClickPoint := Point(X, Y);
+      cgSetActiveContactByCoord(cgClickPoint);
+      cgClickTimer.Enabled := False;
+      ClientOrigin := GetClientOrigin;
+
+      if not Assigned(FActiveContact) then
+        for i := 0 to FDefaultPopup.Items.Count - 1 do begin
+          if (FDefaultPopup.Items[i].Tag = 1) or ReadOnly then
+            FDefaultPopup.Items[i].Enabled := False;
+        end
+      else
+        for i := 0 to FDefaultPopup.Items.Count - 1 do
+          FDefaultPopup.Items[i].Enabled := True;
+
+      FDefaultPopup.Popup(cgClickPoint.x + ClientOrigin.x, cgClickPoint.y + ClientOrigin.y);
+    end;
+  end;
+end;
+
 procedure TVpContactGrid.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
   J, I, idx: Integer;
@@ -988,13 +1046,15 @@ begin
     inherited MouseMove(Shift, X, Y);
 
     if ShowHint then
-    begin
-      idx := GetContactIndexByCoord(Point(X, Y));
-      if FMouseContactIndex <> idx then begin
-        ShowHintWindow(Point(X, Y), idx);
-        FMouseContactIndex := idx;
+      if (cgInPlaceEditor <> nil) and cgInPlaceEditor.Visible then
+        HideHintWindow
+      else begin
+        idx := GetContactIndexByCoord(Point(X, Y));
+        if FMouseContactIndex <> idx then begin
+          ShowHintWindow(Point(X, Y), idx);
+          FMouseContactIndex := idx;
+        end;
       end;
-    end;
 
   end else
   begin
@@ -1088,48 +1148,9 @@ end;
 {=====}
 
 {$IFNDEF LCL}
-procedure TVpContactGrid.WMLButtonDown(var Msg : TWMLButtonDown);
+procedure TVpContactGrid.WMLButtonDblClk(var Msg: TWMLButtonDblClk);
 {$ELSE}
-procedure TVpContactGrid.WMLButtonDown(var Msg : TLMLButtonDown);
-{$ENDIF}
-var
-  I: Integer;
-  Sizing: Boolean;
-begin
-  inherited;
-  Sizing := false;
-
-  cgClickPoint := Point(Msg.XPos, Msg.YPos);
-
-  if not focused then SetFocus;
-
-  if not (csDesigning in ComponentState) then begin
-    { Don't allow column dragging at designtime }
-    for I := 0 to pred(Length(cgBarArray)) do begin
-      if PointInRect(cgClickPoint, cgBarArray[I].Rec) then begin
-        Sizing := true;
-        Break;
-      end
-    end;
-
-    if Sizing then begin
-      cgGridState := gsColSizing;
-      cgLastXPos := cgClickPoint.X;
-      cgNewColWidth := ColumnWidth;
-    end else begin
-      cgGridState := gsNormal;
-      cgSetActiveContactByCoord(cgClickPoint);
-      if AllowInPlaceEditing then
-        cgClickTimer.Enabled := true;
-    end;
-  end;
-end;
-{=====}
-
-{$IFNDEF LCL}
-procedure TVpContactGrid.WMLButtonDblClk(var Msg : TWMLButtonDblClk);
-{$ELSE}
-procedure TVpContactGrid.WMLButtonDblClk(var Msg : TLMLButtonDblClk);
+procedure TVpContactGrid.WMLButtonDblClk(var Msg: TLMLButtonDblClk);
 {$ENDIF}
 begin
   if not CheckCreateResource then                                      
@@ -1157,6 +1178,7 @@ begin
     cgSpawnContactEditDialog(True);
   end;
 end;
+
 {=====}
 
 {$IFNDEF LCL}
@@ -1168,41 +1190,6 @@ begin
   Unused(Msg);
   if Assigned(cgInplaceEditor) and not cgInplaceEditor.Visible then
     Invalidate;
-end;
-{=====}
-
-{$IFNDEF LCL}
-procedure TVpContactGrid.WMRButtonDown(var Msg : TWMRButtonDown);
-{$ELSE}
-procedure TVpContactGrid.WMRButtonDown(var Msg : TLMRButtonDown);
-{$ENDIF}
-var
-  ClientOrigin : TPoint;
-  i            : Integer;
-
-begin
-  inherited;
-
-  if not Assigned (PopupMenu) then begin
-    if not focused then
-      SetFocus;
-    cgClickPoint := Point (Msg.XPos, Msg.YPos);
-    cgSetActiveContactByCoord (cgClickPoint);
-    cgClickTimer.Enabled := False;
-    ClientOrigin := GetClientOrigin;
-
-    if not Assigned (FActiveContact) then
-      for i := 0 to FDefaultPopup.Items.Count - 1 do begin
-        if (FDefaultPopup.Items[i].Tag = 1) or ReadOnly then             
-          FDefaultPopup.Items[i].Enabled := False;
-      end
-    else
-      for i := 0 to FDefaultPopup.Items.Count - 1 do
-        FDefaultPopup.Items[i].Enabled := True;
-
-    FDefaultPopup.Popup (cgClickPoint.x + ClientOrigin.x,
-                         cgClickPoint.y + ClientOrigin.y);
-  end;
 end;
 {=====}
 
