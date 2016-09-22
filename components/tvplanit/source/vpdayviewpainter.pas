@@ -54,6 +54,7 @@ type
     RealADEventBkgColor: TColor;
     ADEventAttrBkgColor: TColor;
     ADEventBorderColor: TColor;
+    FRenderHoliday: String;
     // variables from local procedures for better access
     dvBmpRecurring: TBitmap;
     dvBmpCategory: TBitmap;
@@ -100,6 +101,8 @@ type
     procedure DrawRowHeaderBackground(R: TRect);
     procedure DrawRowHeaderLabels(R: TRect);
     procedure DrawRowHeaderTicks(R: TRect);
+    function FixDateStr(ADate: TDateTime; AFormat, AHoliday: String;
+      AWidth: Integer): String;
     procedure FixFontHeights;
     procedure FreeBitmaps;
     procedure GetIcons(Event: TVpEvent);
@@ -518,8 +521,11 @@ begin
         RenderCanvas.Brush.Color := HighlightBkg;
         RenderCanvas.Font.Color := HighlightText;
       end else
+      if (FRenderHoliday <> '') then
+        RenderCanvas.Brush.Color := FDayview.TimeSlotColors.Holiday
+      else
       if IsWeekend(ColDate) then
-        { week end color }
+        { weekend color }
         RenderCanvas.Brush.Color := FDayView.TimeSlotColors.Weekend
       else
       { ColDate is a weekday, so check to see if the active range is set.
@@ -527,7 +533,7 @@ begin
         If it is, then paint inactive rows the color corresponding to inactive
         and the active  rows the color corresponding to Active Rows. }
       if FDayView.TimeSlotColors.ActiveRange.RangeBegin = FDayView.TimeSlotColors.ActiveRange.RangeEnd then
-        { There is not active range --> Paint all time slots in the weekday color }
+        { There is no active range --> Paint all time slots in the weekday color }
         RenderCanvas.Brush.Color := FDayView.TimeSlotColors.Weekday
       else begin
         { There is an active range defined, so we need to see if the current
@@ -633,9 +639,9 @@ procedure TVpDayViewPainter.DrawColHeader(R: TRect; ARenderDate: TDateTime;
   Col: Integer);
 var
   SaveFont: TFont;
-  DateStr, ResStr: string;
+  DateStr, DateOnlyStr, ResStr: string;
   DateStrLen, ResStrLen: integer;
-  StrHt: Integer;
+  DateStrHt: Integer;
   TextRect: TRect;
   X, Y: Integer;
   tmpRect: TRect;
@@ -663,14 +669,10 @@ begin
     TextRect.Right := TextRect.Right - 3;
     TextRect.Left := TextRect.Left + 2;
 
-    { Fix Date String }
-    DateStr := FormatDateTime(FDayView.DateLabelFormat, ARenderDate);
+    { Fix date string for best usage of the available width }
+    DateStr := FixDateStr(ARenderDate, FDayView.DateLabelFormat, FRenderHoliday, WidthOf(TextRect));
     DateStrLen := RenderCanvas.TextWidth(DateStr);
-    StrHt := RenderCanvas.TextHeight(DateStr);
-    if DateStrLen > TextRect.Right - TextRect.Left then begin
-      DateStr := GetDisplayString(RenderCanvas, DateStr, 0, TextRect.Right - TextRect.Left);
-      DateStrLen := RenderCanvas.TextWidth(DateStr);
-    end;
+    DateStrHt := RenderCanvas.TextHeight(DateStr);
 
     if (FDayView.DataStore <> nil) and (FDayView.DataStore.Resource <> nil)
        and FDayView.ShowResourceName
@@ -690,7 +692,7 @@ begin
       end;
       { center the date string }
       X := TextRect.Left + (TextRect.Right - TextRect.Left) div 2 - DateStrLen div 2;
-      Y := TextRect.Top + (TextMargin * 2) + StrHt;
+      Y := TextRect.Top + (TextMargin * 2) + DateStrHt;
     end else begin
       { center the date string }
       Y := TextRect.Top + TextMargin;
@@ -1291,6 +1293,9 @@ begin
         DrawMe := False
     end;
     if DrawMe then begin
+      { Check if the currently rendered day is a holiday and store its name }
+      FDayView.IsHoliday(RenderDate + i, FRenderHoliday);
+
       { Calculate Column Header rectangle }
       ColHeadRect := Rect(RPos, RealTop + 2, RPos + DayWidth - 1, RealTop + RealColHeadHeight);
       if (i = RealNumDays - 1) and (ExtraSpace > 0) then
@@ -1554,6 +1559,39 @@ begin
   inc(Result, RenderCanvas.TextWidth('33'));
 end;
 
+function TVpDayViewPainter.FixDateStr(ADate: TDateTime; AFormat, AHoliday: String;
+  AWidth: Integer): String;
+begin
+  // Check long date format with holiday name
+  if AHoliday <> '' then begin
+    Result := Format('%s - %s', [FormatDateTime(AFormat, ADate), AHoliday]);
+    if RenderCanvas.TextWidth(Result) <= AWidth then
+      exit;
+
+    // Check short date format with holiday name
+    if AFormat <> 'ddddd' then begin
+      Result := Format('%s - %s', [FormatDateTime('ddddd', ADate), AHoliday]);
+      if RenderCanvas.TextWidth(Result) <= AWidth then
+        exit;
+    end;
+  end;
+
+  // Check long date format without holiday name
+  Result := FormatDateTime(AFormat, ADate);
+  if RenderCanvas.TextWidth(Result) <= AWidth then
+    exit;
+
+  // Check short date format without holiday name
+  if AFormat <> 'ddddd' then begin
+    Result := FormatDateTime('ddddd', ADate);
+    if RenderCanvas.TextWidth(Result) <= AWidth then
+      exit;
+  end;
+
+  // Chop off the short-date-format string and add '...'
+  Result := GetDisplayString(RenderCanvas, Result, 0, AWidth);
+end;
+
 procedure TVpDayViewPainter.FixFontHeights;
 begin
   with FDayView do begin
@@ -1782,21 +1820,20 @@ begin
         StartLine := FDayView.TopLine;
       if VisibleLines < LineCount then
         ScrollbarOffset := GetSystemMetrics(SM_CYHSCROLL);
-//        ScrollbarOffset := 14;
     end;
 
   Rgn := CreateRectRgn(RenderIn.Left, RenderIn.Top, RenderIn.Right, RenderIn.Bottom);
   try
     SelectClipRgn(RenderCanvas.Handle, Rgn);
 
+    // Calculate the RealNumDays (The number of days the control covers)
+    RealNumDays := TVpDayViewOpener(FDayView).GetRealNumDays(RenderDate);
+
     // Calculate row and column header
     RealRowHeight := TVpDayViewOpener(FDayView).dvCalcRowHeight(Scale, UseGran);
     RealRowHeadWidth := CalcRowHeadWidth;
     RealColHeadHeight := TVpDayViewOpener(FDayView).dvCalcColHeadHeight(Scale);
     // RowHeadRect and RealVisibleLines are calculated below...
-
-    // Calculate the RealNumDays (The number of days the control covers)
-    RealNumDays := TVpDayViewOpener(FDayView).GetRealNumDays(RenderDate);
 
     // Draw the all-day events
     DrawAllDayEvents;

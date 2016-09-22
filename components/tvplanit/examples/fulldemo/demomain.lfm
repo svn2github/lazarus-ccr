@@ -94,19 +94,15 @@ object MainForm: TMainForm
             HeadAttributes.Font.Style = [fsItalic]
             HeadAttributes.Color = clBtnFace
             HolidayAttributes.Font.Color = clBlack
-            HolidayAttributes.Color = 8421631
-            LineColor = clGray
+            SelectedDayColor = clRed
+            ShowEvents = True
+            ShowEventTime = False
             TimeFormat = tf12Hour
             TodayAttributes.Font.Color = clBlue
             TodayAttributes.Color = 16761024
             TodayAttributes.BorderPen.Color = clBlue
             TodayAttributes.BorderPen.Width = 3
-            OffDayColor = 15263976
-            SelectedDayColor = clRed
-            ShowEvents = True
-            ShowEventTime = False
             WeekendAttributes.Font.Color = clBlack
-            WeekendAttributes.Color = 12632319
             WeekStartsOn = dtSunday
             OnHoliday = VpHoliday
           end
@@ -141,10 +137,6 @@ object MainForm: TMainForm
             ShowEventTimes = False
             DrawingStyle = dsFlat
             TimeSlotColors.Active = clWhite
-            TimeSlotColors.Inactive = 8454143
-            TimeSlotColors.Holiday = 16744703
-            TimeSlotColors.Weekday = clWhite
-            TimeSlotColors.Weekend = 14737632
             TimeSlotColors.ActiveRange.RangeBegin = h_00
             TimeSlotColors.ActiveRange.RangeEnd = h_00
             HeadAttributes.Font.Height = -13
@@ -200,11 +192,12 @@ object MainForm: TMainForm
             ShowResourceName = True
             LineColor = clGray
             GutterWidth = 5
-            DateLabelFormat = 'dddd, mmmm dd, yyyy'
+            DateLabelFormat = 'dddddd'
             Granularity = gr30Min
             DefaultTopHour = h_07
             TimeFormat = tf12Hour
             WrapStyle = wsNoFlow
+            OnHoliday = VpHoliday
           end
           object DaySelectorPanel: TPanel
             Left = 0

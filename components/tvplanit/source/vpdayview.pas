@@ -226,6 +226,7 @@ type
     FHintMode: TVpHintMode;
     FHintWindow: THintWindow;
     FMouseEvent: TVpEvent;
+    FOnHoliday: TVpHolidayEvent;
 
   protected{ private }
     FGranularity: TVpGranularity;
@@ -259,6 +260,8 @@ type
     FAllowInplaceEdit: Boolean;
     FDragDropTransparent: Boolean;
     FAllowDragAndDrop: Boolean;
+    FNumDays: Integer;
+    FIncludeWeekends: Boolean;
     { event variables }
     FOwnerDrawRowHead: TVpOwnerDrawRowEvent;
     FOwnerDrawCells: TVpOwnerDrawRowEvent;
@@ -270,8 +273,6 @@ type
     FOnBeforeDrawEvent: TVpOnDVBeforeDrawEvent;
     FOnAfterDrawEvent: TVpOnDVAfterDrawEvent;
     FOnAddEvent: TVpOnAddNewEvent;
-    FNumDays: Integer;
-    FIncludeWeekends: Boolean;
     { internal variables }
     dvClickTimer: TTimer;
     dvLoaded: Boolean;
@@ -413,12 +414,11 @@ type
     destructor Destroy; override;
 
     function BuildEventString(AEvent: TVpEvent; UseAsHint: Boolean): String;
-    procedure LoadLanguage;
-
     procedure DeleteActiveEvent(Verify: Boolean);
     procedure DragDrop(Source: TObject; X, Y: Integer); override;
-//    function HourToLine(const Value: TVpHours; const UseGran: TVpGranularity): Integer;
     procedure Invalidate; override;
+    function IsHoliday(ADate: TDate; out AHolidayName: String): Boolean;
+    procedure LoadLanguage;
     procedure LinkHandler(Sender: TComponent; NotificationType: TVpNotificationType;
       const Value: Variant); override;
     procedure EditSelectedEvent;
@@ -484,6 +484,7 @@ type
     property OnAfterDrawEvent: TVpOnDVAfterDrawEvent read FOnAfterDrawEvent write FOnAfterDrawEvent;
     property OnBeforeDrawEvent: TVpOnDVBeforeDrawEvent read FOnBeforeDrawEvent write FOnBeforeDrawEvent;
     property OnDrawIcons: TVpOnDVDrawIcons read FOnDrawIcons Write FOnDrawIcons;
+    property OnHoliday: TVpHolidayEvent read FOnHoliday write FOnHoliday;
     property OnOwnerEditEvent: TVpEditEvent read FOwnerEditEvent write FOwnerEditEvent;
     property OnClick;
   end;
@@ -757,7 +758,7 @@ begin
   FDisplayDate := Now;
   TopHour := FDefTopHour;
   FTimeFormat := tf12Hour;
-  FDateLabelFormat := 'dddd, mmmm dd, yyyy';
+  FDateLabelFormat := 'dddddd'; //'dddd, mmmm dd, yyyy';
   FColumnWidth := 200;
   FScrollBars := ssVertical;
   FActiveRow := -1;
@@ -966,7 +967,14 @@ procedure TVpDayView.Invalidate;
 begin
   inherited;
 end;
-{=====}
+
+function TVpDayView.IsHoliday(ADate: TDate; out AHolidayName: String): Boolean;
+begin
+  AHolidayName := '';
+  if Assigned(FOnHoliday) then
+    FOnHoliday(Self, ADate, AHolidayName);
+  Result := AHolidayName <> '';
+end;
 
 procedure TVpDayView.LinkHandler(Sender: TComponent;
   NotificationType: TVpNotificationType; const Value: Variant);
@@ -1619,7 +1627,7 @@ begin
       if (DayOfWeek(WorkDate) <> 1) and (DayOfWeek(WorkDate) <> 7) then
         Inc(i);
       WorkDate := WorkDate + 1;
-      Inc (Result);
+      Inc(Result);
     end;
   end else
     Result := FNumDays;

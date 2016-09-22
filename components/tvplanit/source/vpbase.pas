@@ -361,10 +361,10 @@ type
     procedure Changed;
   published
     property Active: TColor read FActive write SetActive;
-    property Inactive: TColor read FInactive write SetInactive;
-    property Holiday: TColor read FHoliday write SetHoliday;
-    property Weekday: TColor read FWeekday write SetWeekday;
-    property Weekend: TColor read FWeekend write SetWeekend;
+    property Inactive: TColor read FInactive write SetInactive default OFF_COLOR;
+    property Holiday: TColor read FHoliday write SetHoliday default HOLIDAY_COLOR;
+    property Weekday: TColor read FWeekday write SetWeekday default WEEKDAY_COLOR;
+    property Weekend: TColor read FWeekend write SetWeekend default WEEKEND_COLOR;
     property ActiveRange: TVpTimeRange read FActiveRange write FActiveRange;
   end;
 
@@ -951,11 +951,11 @@ begin
   inherited Create;
   FOwner := AOwner;
   FActiveRange := TVpTimeRange.Create(Self);
-  FInactive := $0080FFFF;
-  FHoliday := $00FF80FF;
-  FWeekend := $00FFFF80;
+  FInactive := OFF_COLOR;  //$0080FFFF;
+  FHoliday := HOLIDAY_COLOR; //$00FF80FF;
+  FWeekend := WEEKEND_COLOR; //$00FFFF80;
   FActive := clWhite;
-  FWeekday := clWhite;
+  FWeekday := WEEKDAY_COLOR; //clWhite;
 end;
 {=====}
 

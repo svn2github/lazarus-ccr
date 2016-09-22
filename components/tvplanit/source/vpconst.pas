@@ -94,10 +94,11 @@ const
   strTRUE           = 'true';
   strFALSE          = 'false';
 
-  WEEKEND_COLOR     = $C0C0FF;
+  WEEKDAY_COLOR     = $FFFFFF;
+  WEEKEND_COLOR     = $C0C0C0; //$C0C0FF;
   HOLIDAY_COLOR     = $8080FF;
   TODAY_COLOR       = $FFC0C0;
-  OFF_COLOR         = $C0C0C0;
+  OFF_COLOR         = $E0E0E0;
 
   {virtual key constants not already defined}
   VK_NONE = 0;

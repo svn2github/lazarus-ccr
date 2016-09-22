@@ -74,6 +74,20 @@ type
     property Color: TColor read FColor write SetColor;
   end;
 
+  TVpMvHolidayAttr = class(TVpMonthViewAttr)
+  public
+    constructor Create(AOwner: TVpMonthView);
+  published
+    property Color default HOLIDAY_COLOR;
+  end;
+
+  TVpMvWeekendAttr = class(TVpMonthViewAttr)
+  public
+    constructor Create(AOwner: TVpMonthView);
+  published
+    property Color default WEEKEND_COLOR;
+  end;
+
   (*
   TVpMvHeadAttr = class(TPersistent)
   protected{ private }
@@ -117,29 +131,14 @@ type
   published
     property BorderPen: TPen read FBorderPen write SetBorderPen;
   end;
-      (*
-  TVpMvHolidayAttr = class(TPersistent)
-  protected
-    FMonthView: TVpMonthView;
-    FFont: TVpFont;
-    FColor: TColor;
-    procedure SetColor(Value: TColor);
-    procedure SetFont(Value: TVpFont);
-  public
-    constructor Create(AOwner: TVpMonthView);
-    destructor Destroy; override;
-    property MonthView: TVpMonthView read FMonthView;
-  published
-    property Color: TColor read FColor write SetColor;
-    property Font: TVpFont read FFont write FFont;
-  end;
-        *)
+
 
   { TVpMonthView }
 
   TVpMonthView = class(TVpLinkableControl)
   private
     FHintMode: TVpHintMode;
+    FOnHoliday: TVpHolidayEvent;
   protected{ private }
     FKBNavigate: Boolean;
     FColumnWidth: Integer;
@@ -159,15 +158,9 @@ type
     FTopLine: Integer;
     FDayHeadAttr: TVpMonthViewAttr;
     FHeadAttr: TVpMonthViewAttr;
-    FHolidayAttr: TVpMonthViewAttr;
-    FTodayAttr: TVpMvTodayAttr;
-    FWeekendAttr: TVpMonthViewAttr;
-                                   {
-    FDayHeadAttr: TVpDayHeadAttr;
-    FHeadAttr: TVpMvHeadAttr;
     FHolidayAttr: TVpMvHolidayAttr;
-    FTodayAttr: TVpMvTodayAttr;     }
-
+    FTodayAttr: TVpMvTodayAttr;
+    FWeekendAttr: TVpMvWeekendAttr;
     FDayNumberFont: TVpFont;
     FEventFont: TVpFont;
     FTimeFormat: TVpTimeFormat;
@@ -182,7 +175,6 @@ type
     FOwnerDrawCells: TVpOwnerDrawDayEvent;
     FOnEventClick: TVpOnEventClick;
     FOnEventDblClick: TVpOnEventClick;
-    FOnHoliday: TVpHolidayEvent;
 
     { internal variables }
     mvLoaded: Boolean;
@@ -297,13 +289,10 @@ type
     property EventFont: TVpFont read FEventFont write SetEventFont;
 //    property HeadAttributes: TVpMvHeadAttr read FHeadAttr write FHeadAttr;
     property HeadAttributes: TVpMonthViewAttr read FHeadAttr write FHeadAttr;
-    property HolidayAttributes: TVpMonthViewAttr read FHolidayAttr write FHolidayAttr;
-//    property HolidayAttributes: TVpMvHolidayAttr read FHolidayAttr write FHolidayAttr;
+    property HolidayAttributes: TVpMvHolidayAttr read FHolidayAttr write FHolidayAttr;
     property HintMode: TVpHintMode read FHintMode write FHintMode default hmPlannerHint;
-    property LineColor: TColor read FLineColor write SetLineColor;
-    property TimeFormat: TVpTimeFormat read FTimeFormat write SetTimeFormat;
-    property TodayAttributes: TVpMvTodayAttr read FTodayAttr write FTodayAttr;
-    property OffDayColor: TColor read FOffDayColor write SetOffDayColor;
+    property LineColor: TColor read FLineColor write SetLineColor default clGray;
+    property OffDayColor: TColor read FOffDayColor write SetOffDayColor default OFF_COLOR;
     property OffDayFontColor: TColor read FOffDayFontColor write SetOffDayFontColor default clGray;
     property OwnerDrawCells: TVpOwnerDrawDayEvent read FOwnerDrawCells write FOwnerDrawCells;
     property RightClickChangeDate: Boolean
@@ -311,7 +300,9 @@ type
     property SelectedDayColor: TColor read FSelectedDayColor write SetSelectedDayColor;
     property ShowEvents: Boolean read FShowEvents write SetShowEvents;
     property ShowEventTime: Boolean read FShowEventTime write SetShowEventTime;
-    property WeekendAttributes: TVpMonthViewAttr read FWeekendAttr write FWeekendAttr;
+    property TimeFormat: TVpTimeFormat read FTimeFormat write SetTimeFormat;
+    property TodayAttributes: TVpMvTodayAttr read FTodayAttr write FTodayAttr;
+    property WeekendAttributes: TVpMvWeekendAttr read FWeekendAttr write FWeekendAttr;
     property WeekStartsOn: TVpDayType read FWeekStartsOn write SetWeekStartsOn;
     {events}
     property OnEventClick: TVpOnEventClick read FOnEventClick write FOnEventClick;
@@ -361,6 +352,26 @@ end;
 
 
 (*****************************************************************************)
+{ TVpMvHolidayAttr                                                            }
+(*****************************************************************************)
+constructor TVpMvHolidayAttr.Create(AOwner: TVpMonthView);
+begin
+  inherited Create(AOwner);
+  FColor := HOLIDAY_COLOR;
+end;
+
+
+(*****************************************************************************)
+{ TVpMvWeekendAttr                                                            }
+(*****************************************************************************)
+constructor TVpMvWeekendAttr.Create(AOwner: TVpMonthView);
+begin
+  inherited Create(AOwner);
+  FColor := WEEKEND_COLOR;
+end;
+
+
+(*****************************************************************************)
 { TVpMvTodayAttr                                                              }
 (*****************************************************************************)
 constructor TVpMvTodayAttr.Create(AOwner: TVpMonthView);
@@ -398,8 +409,8 @@ begin
   { Create internal classes and stuff }
   FHeadAttr := TVpMonthViewAttr.Create(self);
   FDayHeadAttr := TVpMonthViewAttr.Create(self);
-  FHolidayAttr := TVpMonthViewAttr.Create(self);
-  FWeekendAttr := TVpMonthviewAttr.Create(self);
+  FHolidayAttr := TVpMvHolidayAttr.Create(self);
+  FWeekendAttr := TVpMvWeekendAttr.Create(self);
   FTodayAttr := TVpMvTodayAttr.Create(Self);
   mvSpinButtons := TUpDown.Create(self);
   {
@@ -428,7 +439,6 @@ begin
   FDrawingStyle := ds3d;
 //  mvPainting := false;
   FColor := clWindow;
-  FOffDayColor := clSilver;
   FLineColor := clGray;
   FDate := Trunc(Now);
   FTimeFormat := tf12Hour;
@@ -454,11 +464,8 @@ begin
   FOffDayColor := OFF_COLOR;
 
   FHolidayAttr.Font.Assign(FDayNumberFont);
-  FHolidayAttr.Font.Color := clBlack;
-  FHolidayAttr.Color := HOLIDAY_COLOR;
 
   FWeekendAttr.Font.Assign(FHolidayAttr.Font);
-  FWeekendAttr.Color := WEEKEND_COLOR;
 
   SetLength(mvEventArray, MaxVisibleEvents);
   SetLength(mvMonthdayArray, 45);

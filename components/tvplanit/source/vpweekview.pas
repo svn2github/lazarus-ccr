@@ -121,6 +121,7 @@ type
     FHintMode: TVpHintMode;
     FMouseEvent: TVpEvent;
     FHintWindow: THintWindow;
+    FOnHoliday: TVpHolidayEvent;
     procedure SetActiveEvent(AValue: TVpEvent);
   protected{ private }
     FActiveDate: TDateTime;
@@ -247,6 +248,7 @@ type
     procedure DeleteActiveEvent(Verify: Boolean);
     procedure DragDrop(Source: TObject; X, Y: Integer); override;
     procedure Invalidate; override;
+    function IsHoliday(ADate: TDate; out AHolidayName: String): Boolean;
     procedure LinkHandler(Sender: TComponent;
       NotificationType: TVpNotificationType; const Value: Variant); override;
     function GetControlType: TVpItemType; override;
@@ -289,6 +291,7 @@ type
     property AfterEdit : TVpAfterEditEvent read FAfterEdit write FAfterEdit;
     property BeforeEdit: TVpBeforeEditEvent read FBeforeEdit write FBeforeEdit;
     property OnAddEvent: TVpOnAddNewEvent read FOnAddEvent write FOnAddEvent;
+    property OnHoliday: TVpHolidayEvent read FOnHoliday write FOnHoliday;
     property OnOwnerEditEvent: TVpEditEvent read FOwnerEditEvent write FOwnerEditEvent;
   end;
 
@@ -612,7 +615,14 @@ procedure TVpWeekView.Invalidate;
 begin
   inherited;
 end;
-{=====}
+
+function TVpWeekView.IsHoliday(ADate: TDate; out AHolidayName: String): Boolean;
+begin
+  AHolidayName := '';
+  if Assigned(FOnHoliday) then
+    FOnHoliday(Self, ADate, AHolidayName);
+  Result := AHolidayName <> '';
+end;
 
 procedure TVpWeekView.LinkHandler(Sender: TComponent;
   NotificationType: TVpNotificationType; const Value: Variant);
@@ -628,7 +638,6 @@ begin
     wvInLinkHandler := false;
   end;
 end;
-{=====}
 
 procedure TVpWeekView.wvHookUp;
 var

@@ -113,12 +113,13 @@ steps:
 
   - Add mORMot datastore
   - Add drag and drop of events to DayView and WeekView
-  - Add hint support to DayView, WeekView and MonthView
+  - Add hint support to DayView, WeekView, MonthView, and Contact Grid
   - New contact fields for
     - three email addresses (in total)
     - two websites
     - 2nd address (work address, home address)
     - department
-    and add them to the contact editor
+    and add them to the contact editor; redesigned contact editor.
   - Activate task fields Priority and Category in task editor.
+  - Holiday support
  
