@@ -106,6 +106,9 @@ function GetDisplayString(Canvas : TCanvas; const S : string;
     find the string that can be displayed in that width - add ellipsis to
     the end if necessary and possible }
 
+function GetDateDisplayString(ACanvas: TCanvas; ADate: TDateTime;
+  AFormat, AHoliday: String; AWidth: Integer): String;
+
 procedure DrawBevelRect(const Canvas: TCanvas; R: TRect;
   Shadow, Highlight: TColor);
   { Draws a bevel in the specified TRect, using the specified colors }
@@ -378,7 +381,40 @@ begin
     end;
   end;
 end;
-{=====}
+
+function GetDateDisplayString(ACanvas: TCanvas; ADate: TDateTime;
+  AFormat, AHoliday: String; AWidth: Integer): String;
+begin
+  // Check long date format with holiday name
+  if AHoliday <> '' then begin
+    Result := Format('%s - %s', [FormatDateTime(AFormat, ADate), AHoliday]);
+    if ACanvas.TextWidth(Result) <= AWidth then
+      exit;
+
+    // Check short date format with holiday name
+    if AFormat <> 'ddddd' then begin
+      Result := Format('%s - %s', [FormatDateTime('ddddd', ADate), AHoliday]);
+      if ACanvas.TextWidth(Result) <= AWidth then
+        exit;
+    end;
+  end;
+
+  // Check long date format without holiday name
+  Result := FormatDateTime(AFormat, ADate);
+  if ACanvas.TextWidth(Result) <= AWidth then
+    exit;
+
+  // Check short date format without holiday name
+  if AFormat <> 'ddddd' then begin
+    Result := FormatDateTime('ddddd', ADate);
+    if ACanvas.TextWidth(Result) <= AWidth then
+      exit;
+  end;
+
+  // Chop off the short-date-format string and add '...'
+  Result := GetDisplayString(ACanvas, Result, 0, AWidth);
+end;
+
 
 procedure DrawBevelRect(const Canvas: TCanvas; R: TRect;
   Shadow, Highlight: TColor);

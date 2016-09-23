@@ -101,8 +101,6 @@ type
     procedure DrawRowHeaderBackground(R: TRect);
     procedure DrawRowHeaderLabels(R: TRect);
     procedure DrawRowHeaderTicks(R: TRect);
-    function FixDateStr(ADate: TDateTime; AFormat, AHoliday: String;
-      AWidth: Integer): String;
     procedure FixFontHeights;
     procedure FreeBitmaps;
     procedure GetIcons(Event: TVpEvent);
@@ -670,7 +668,8 @@ begin
     TextRect.Left := TextRect.Left + 2;
 
     { Fix date string for best usage of the available width }
-    DateStr := FixDateStr(ARenderDate, FDayView.DateLabelFormat, FRenderHoliday, WidthOf(TextRect));
+    DateStr := GetDateDisplayString(RenderCanvas, ARenderDate,
+      FDayView.DateLabelFormat, FRenderHoliday, WidthOf(TextRect));
     DateStrLen := RenderCanvas.TextWidth(DateStr);
     DateStrHt := RenderCanvas.TextHeight(DateStr);
 
@@ -1557,39 +1556,6 @@ begin
   RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.HourFont);
   RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   inc(Result, RenderCanvas.TextWidth('33'));
-end;
-
-function TVpDayViewPainter.FixDateStr(ADate: TDateTime; AFormat, AHoliday: String;
-  AWidth: Integer): String;
-begin
-  // Check long date format with holiday name
-  if AHoliday <> '' then begin
-    Result := Format('%s - %s', [FormatDateTime(AFormat, ADate), AHoliday]);
-    if RenderCanvas.TextWidth(Result) <= AWidth then
-      exit;
-
-    // Check short date format with holiday name
-    if AFormat <> 'ddddd' then begin
-      Result := Format('%s - %s', [FormatDateTime('ddddd', ADate), AHoliday]);
-      if RenderCanvas.TextWidth(Result) <= AWidth then
-        exit;
-    end;
-  end;
-
-  // Check long date format without holiday name
-  Result := FormatDateTime(AFormat, ADate);
-  if RenderCanvas.TextWidth(Result) <= AWidth then
-    exit;
-
-  // Check short date format without holiday name
-  if AFormat <> 'ddddd' then begin
-    Result := FormatDateTime('ddddd', ADate);
-    if RenderCanvas.TextWidth(Result) <= AWidth then
-      exit;
-  end;
-
-  // Chop off the short-date-format string and add '...'
-  Result := GetDisplayString(RenderCanvas, Result, 0, AWidth);
 end;
 
 procedure TVpDayViewPainter.FixFontHeights;

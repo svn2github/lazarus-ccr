@@ -411,17 +411,14 @@ var
   dayStr: String;
   strWid: Integer;
   strH: Integer;
+  savedFontstyle: TFontStyles;
 begin
-  dayStr := FormatDateTime(FWeekView.DayHeadAttributes.DateFormat, StartDate + ADayIndex);
-  {$IFDEF LCL}
-  {$IF FPC_FULLVERSION < 30000}DayStr := SysToUTF8(DayStr); {$ENDIF}
-  {$ENDIF}
-  if AHolidayName <> '' then
-    dayStr := dayStr + ' - ' + AHolidayName;
+  savedFontstyle := RenderCanvas.Font.Style;
+  if (not DisplayOnly) and SameDate(StartDate + ADayIndex, FWeekView.Date) then
+    RenderCanvas.Font.Style := RenderCanvas.Font.Style + [fsBold];
 
-  strWid := RenderCanvas.TextWidth(dayStr);
-  if strWid > WidthOf(TextRect) then
-    dayStr := GetDisplayString(RenderCanvas, dayStr, 0, WidthOf(TextRect) - TextMargin);
+  dayStr := GetDateDisplayString(RenderCanvas, StartDate + ADayIndex,
+    FWeekView.DayHeadAttributes.DateFormat, AHolidayName, WidthOf(TextRect) - TextMargin);
   strWid := RenderCanvas.TextWidth(dayStr);
   strH := RenderCanvas.TextHeight(dayStr);
 
@@ -434,6 +431,8 @@ begin
     (TextRect.Top + TextRect.Bottom - strH) div 2,
     dayStr
   );
+
+  RenderCanvas.Font.Style := savedFontstyle;
 end;
 
 procedure TVpWeekViewPainter.DrawDays;
