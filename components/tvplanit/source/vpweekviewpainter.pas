@@ -37,7 +37,8 @@ type
     procedure DrawBorders;
     procedure DrawFocusRect(ADayIndex: Integer; DayRect: TRect);
     procedure DrawDay(ADayIndex: Integer; var DayRect: TRect; var EAIndex: Integer);
-    procedure DrawDayHeader(ADayIndex: Integer; var TextRect: TRect);
+    procedure DrawDayHeader(ADayIndex: Integer; AHolidayName: String;
+      var TextRect: TRect);
     procedure DrawDays;
     procedure DrawEvent(AEvent: TVpEvent; TextRect: TRect; ADayIndex: Integer);
     procedure DrawHeader;
@@ -276,15 +277,17 @@ var
   TextRect: TRect;
   J: Integer;
   EventList: TList;
-//  dayHeadHeight: Integer;
   rowHeight: Integer;
   headerHeight: Integer;
   tmpRect: TRect;
+  holiday: String;
 begin
   // Abbreviations
-//  dayHeadHeight := TVpWeekviewOpener(FWeekView).wvDayHeadHeight;
   rowHeight := TVpWeekViewOpener(FWeekView).wvRowHeight;
   headerHeight := TVpWeekViewOpener(FWeekView).wvHeaderHeight;
+
+  // Check for holiday
+  FWeekView.IsHoliday(StartDate + ADayIndex, holiday);
 
   // Get header rectangle
   TextRect := DayRect;
@@ -301,7 +304,7 @@ begin
     TPSRectangle(RenderCanvas, Angle, RenderIn, tmpRect);
 
   // Fix header string
-  DrawDayHeader(ADayIndex, TextRect);
+  DrawDayHeader(ADayIndex, holiday, TextRect);
 
   if (FWeekView.DataStore <> nil) and (FWeekView.DataStore.Resource <> nil) and
      (FWeekView.DataStore.Resource.Schedule.EventCountByDay(StartDate + ADayIndex) > 0) and
@@ -402,7 +405,8 @@ begin
   end;
 end;
 
-procedure TVpWeekViewPainter.DrawDayHeader(ADayIndex: Integer; var TextRect: TRect);
+procedure TVpWeekViewPainter.DrawDayHeader(ADayIndex: Integer; AHolidayName: String;
+  var TextRect: TRect);
 var
   dayStr: String;
   strWid: Integer;
@@ -412,6 +416,8 @@ begin
   {$IFDEF LCL}
   {$IF FPC_FULLVERSION < 30000}DayStr := SysToUTF8(DayStr); {$ENDIF}
   {$ENDIF}
+  if AHolidayName <> '' then
+    dayStr := dayStr + ' - ' + AHolidayName;
 
   strWid := RenderCanvas.TextWidth(dayStr);
   if strWid > WidthOf(TextRect) then

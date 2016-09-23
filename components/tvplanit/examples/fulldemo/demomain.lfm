@@ -299,6 +299,7 @@ object MainForm: TMainForm
           Align = alClient
           TabStop = True
           TabOrder = 2
+          OnHoliday = VpHoliday
         end
       end
       object Tasks: TPage
