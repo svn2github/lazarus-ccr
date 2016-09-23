@@ -423,7 +423,8 @@ end;
 
 procedure TMainForm.CbFirstDayOfWeekChange(Sender: TObject);
 begin
-  VpWeekView1.WeekStartsOn := TVpDayType(CbFirstDayOfWeek.ItemIndex);
+//  VpWeekView1.WeekStartsOn := TVpDayType(CbFirstDayOfWeek.ItemIndex);
+  VpWeekView1.WeekStartsOn := dtMonday;  // Always! Otherwise the small boxes are wrong.
   VpMonthView1.WeekStartsOn := TVpDayType(CbFirstDayOfWeek.ItemIndex);
 end;
 

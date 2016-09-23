@@ -293,6 +293,7 @@ object MainForm: TMainForm
           HeadAttributes.Font.Style = [fsItalic]
           HeadAttributes.Color = clBtnFace
           LineColor = clGray
+          Layout = wvlHorizontal
           TimeFormat = tf12Hour
           ShowEventTime = True
           WeekStartsOn = dtMonday

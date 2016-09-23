@@ -62,6 +62,8 @@ type
     Day: TDateTime;
   end;
 
+  TVpWeekViewLayout = (wvlVertical, wvlHorizontal);
+
 type
   TVpWeekdayArray = array of TVpWeekdayRec;
 
@@ -121,8 +123,10 @@ type
     FHintMode: TVpHintMode;
     FMouseEvent: TVpEvent;
     FHintWindow: THintWindow;
+    FLayout: TVpWeekviewLayout;
     FOnHoliday: TVpHolidayEvent;
     procedure SetActiveEvent(AValue: TVpEvent);
+    procedure SetLayout(AValue: TVpWeekviewLayout);
   protected{ private }
     FActiveDate: TDateTime;
     FColumnWidth: Integer;
@@ -277,6 +281,7 @@ type
     property HeadAttributes: TVpWvHeadAttributes read FHeadAttr write FHeadAttr;
     property HintMode: TVpHintMode read FHintMode write FHintMode default hmPlannerHint;
     property LineColor: TColor read FLineColor write SetLineColor;
+    property Layout: TVpWeekviewLayout read FLayout write SetLayout default wvlVertical;
     property TimeFormat: TVpTimeFormat read FTimeFormat write SetTimeFormat;
     property ShowEventTime: Boolean read FShowEventTime write SetShowEventTime;
     property WeekStartsOn: TVpDayType read FWeekStartsOn write SetWeekStartsOn;
@@ -802,6 +807,14 @@ begin
   Invalidate;
 end;
 {=====}
+
+procedure TVpWeekView.SetLayout(AValue: TVpWeekviewLayout);
+begin
+  if AValue <> FLayout then begin
+    FLayout := AValue;
+    Invalidate;
+  end;
+end;
 
 procedure TVpWeekView.SetShowEventTime(Value: Boolean);
 begin

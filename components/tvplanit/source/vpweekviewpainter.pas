@@ -16,6 +16,7 @@ type
 
     // local parameters of the old TVpWeekView method
     DayRectHeight: Integer;
+    DayRectWidth: Integer;
     StartDate: TDateTime;
     ADEventsRect: TRect;
     DotDotDotColor: TColor;
@@ -303,7 +304,7 @@ begin
   if FWeekView.DayHeadAttributes.Bordered and (FWeekView.DrawingStyle <> dsNoBorder) then
     TPSRectangle(RenderCanvas, Angle, RenderIn, tmpRect);
 
-  // Fix header string
+  // Fix header string and paint it
   DrawDayHeader(ADayIndex, holiday, TextRect);
 
   if (FWeekView.DataStore <> nil) and (FWeekView.DataStore.Resource <> nil) and
@@ -379,30 +380,60 @@ begin
   end;
 
   { adjust the DayRect for the next day }
-  if (ADayIndex = 2) then begin
-    { move the dayrect to the top of the next column }
-    DayRect := Rect(
-      RealLeft + (RealRight - RealLeft) div 2,
-      RealTop + headerHeight + 2,
-      RealRight - 2,
-      RealTop + headerHeight + DayRectHeight
-    );
-    if FWeekView.DrawingStyle = ds3D then begin
-      inc(DayRect.Top);
-      dec(DayRect.Right);
-    end;
-  end
-  else
-  if (ADayIndex = 4 {Friday}) then begin
-    { shrink DayRect for weekend days }
-    DayRectHeight := DayRectHeight div 2;
-    DayRect.Top := DayRect.Bottom;
-    DayRect.Bottom := DayRect.Top + DayRectHeight;
-  end
-  else begin
-    DayRect.Top := DayRect.Bottom;
-    DayRect.Bottom := DayRect.Top + DayRectHeight;
-  end;
+  case FWeekView.Layout of
+    wvlVertical:
+      if (ADayIndex = 2) then begin
+        { move the dayrect to the top of the next column }
+        DayRect := Rect(
+          RealLeft + DayRectWidth, //(RealRight - RealLeft) div 2,
+          RealTop + headerHeight + 2,
+          RealRight - 2,
+          RealTop + headerHeight + DayRectHeight
+        );
+        if FWeekView.DrawingStyle = ds3D then begin
+          inc(DayRect.Top);
+          dec(DayRect.Right);
+        end;
+      end
+      else
+      if (ADayIndex = 4 {Friday}) then begin
+        { shrink DayRect for weekend days }
+        DayRectHeight := DayRectHeight div 2;
+        DayRect.Top := DayRect.Bottom;
+        DayRect.Bottom := DayRect.Top + DayRectHeight;
+      end
+      else begin
+        DayRect.Top := DayRect.Bottom;
+        DayRect.Bottom := DayRect.Top + DayRectHeight;
+      end;
+
+    wvlHorizontal:
+      if (ADayIndex = 1) or (ADayIndex = 3) then begin
+        { move the day rect to the left of the next row }
+        DayRect := Rect(
+          RealLeft + 1,
+          DayRect.Bottom,
+          RealLeft + DayRectWidth + 1,
+          DayRect.Bottom + DayRectHeight);
+        if FWeekView.DrawingStyle = ds3D then begin
+          inc(DayRect.Top);
+          dec(DayRect.Right);
+        end;
+      end else
+      if (ADayIndex in [4, 5]) {Friday or Saturday} then begin
+        if ADayIndex = 4 then begin
+          DayRectHeight := DayRectHeight div 2;
+          DayRect.Left := DayRect.Right - 1;
+          DayRect.Right := RealRight - 2;
+        end else
+          DayRect.Top := DayRect.Bottom;
+        DayRect.Bottom := DayRect.Top + DayRectHeight;
+      end else
+      begin
+        DayRect.Left := DayRect.Right - 1;
+        DayRect.Right := RealRight - 2;
+      end;
+  end;  // case
 end;
 
 procedure TVpWeekViewPainter.DrawDayHeader(ADayIndex: Integer; AHolidayName: String;
@@ -467,11 +498,12 @@ begin
   { build the first day rect }
   headerHeight := TVpWeekViewOpener(FWeekView).wvHeaderHeight;
   DayRectHeight := (RealBottom - RealTop - headerHeight) div 3;
+  DayRectWidth := (RealRight - RealLeft) div 2;
   DayRect := Rect(
     RealLeft + 1,
     RealTop + headerHeight + 2,
-    RealLeft + (RealRight - RealLeft) div 2 + 1,
-    Realtop + headerHeight + DayRectHeight
+    RealLeft + DayRectWidth + 1,
+    RealTop + headerHeight + DayRectHeight
   );
   if FWeekView.DrawingStyle = ds3D then
     inc(DayRect.Top, 1);
