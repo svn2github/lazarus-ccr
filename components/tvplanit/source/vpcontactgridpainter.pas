@@ -1688,10 +1688,8 @@ begin
     );
     TVpContactGridOpener(FContactGrid).cgBarArray[BarCount].Index := BarCount;
     for I := 1 to FContactGrid.BarWidth do begin
-      TPSMoveTo (RenderCanvas, Angle, RenderIn,
-                 BarPos, RealTop + 2 + TextMargin * 2);
-      TPSLineTo (RenderCanvas, Angle, RenderIn,
-                 BarPos, RealBottom - TextMargin * 2);
+      TPSMoveTo(RenderCanvas, Angle, RenderIn, BarPos, RealTop + 2 + TextMargin * 2);
+      TPSLineTo(RenderCanvas, Angle, RenderIn, BarPos, RealBottom - TextMargin * 2);
       Inc(BarPos);
     end;
     Inc(BarPos, RealColumnWidth);

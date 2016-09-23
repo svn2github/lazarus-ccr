@@ -57,7 +57,7 @@ object MainForm: TMainForm
       Height = 528
       Top = 48
       Width = 834
-      PageIndex = 0
+      PageIndex = 2
       Align = alClient
       TabOrder = 1
       TabStop = True
@@ -373,7 +373,7 @@ object MainForm: TMainForm
       object Contacts: TPage
         object VpContactButtonBar1: TVpContactButtonBar
           Left = 0
-          Height = 532
+          Height = 528
           Top = 0
           Width = 40
           BorderWidth = 3
@@ -386,16 +386,16 @@ object MainForm: TMainForm
         end
         object VpContactGrid1: TVpContactGrid
           Left = 40
-          Height = 532
+          Height = 528
           Top = 0
-          Width = 813
+          Width = 794
           ControlLink = VpControlLink1
           Color = clWindow
           Align = alClient
           TabStop = True
           TabOrder = 1
           AllowInPlaceEditing = True
-          BarWidth = 3
+          BarWidth = 1
           BarColor = clSilver
           ColumnWidth = 200
           ContactHeadAttributes.Color = clSilver

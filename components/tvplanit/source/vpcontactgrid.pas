@@ -925,7 +925,7 @@ var
   txt: String;
   i: Integer;
   contact: TVpContact;
-  R: TRect;
+  R, RHint,RCont, RScr: TRect;
 begin
   if FHintMode = hmPlannerHint then
   begin
@@ -943,9 +943,21 @@ begin
       // Build and show the hint window
       if FHintWindow = nil then
         FHintWindow := THintWindow.Create(nil);
-      APoint := ClientToScreen(APoint);
-      R := FHintWindow.CalcHintRect(MaxWidth, txt, nil);
-      OffsetRect(R, APoint.X - WidthOf(R), APoint.Y);
+      RScr := Screen.WorkAreaRect;
+      RCont.TopLeft := ClientToScreen(cgContactArray[AContactIndex].WholeRect.TopLeft);
+      RCont.BottomRight := ClientToScreen(cgContactArray[AContactIndex].WholeRect.BottomRight);
+      RHint := FHintWindow.CalcHintRect(MaxWidth, txt, nil);
+      R := RHint;
+      OffsetRect(R, RCont.Left - WidthOf(R), RCont.Top);
+      if R.Left < RScr.Left then begin
+        R := RHint;
+        OffsetRect(R, RCont.Right, RCont.Top);
+      end;
+      RHint := R;
+      if (R.Bottom > RScr.Bottom) then begin
+        R := RHint;
+        OffsetRect(R, 0, R.Bottom - RScr.Bottom);
+      end;
       FHintWindow.ActivateHint(R, txt);
     end else
       // Hide the hint window
