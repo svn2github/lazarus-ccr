@@ -13,7 +13,7 @@
       </SearchPaths>
     </CompilerOptions>
     <Version Major="1" Release="1"/>
-    <Files Count="3">
+    <Files Count="2">
       <Item1>
         <Filename Value="rxlazreport.pas"/>
         <HasRegisterProc Value="True"/>
@@ -23,10 +23,6 @@
         <Filename Value="lrrxcontrols.pas"/>
         <UnitName Value="lrRxControls"/>
       </Item2>
-      <Item3>
-        <Filename Value="lrrxdbdialogcontrols_img.inc"/>
-        <Type Value="Include"/>
-      </Item3>
     </Files>
     <LazDoc Paths="docs"/>
     <RequiredPkgs Count="4">

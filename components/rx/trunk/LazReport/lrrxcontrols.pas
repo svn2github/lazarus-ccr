@@ -139,13 +139,14 @@ implementation
 uses DBPropEdits, LR_DBRel, LR_Utils, PropEdits, rxduallist, rxstrutils, rxtooledit,
   LCLIntf, LCLType, Forms, LR_DBComponent;
 
+{$R lrrxdbdialogcontrols_img.res}
 
 procedure DoRegsiterControl(var cmpBMP:TBitmap; lrClass:TlrVisualControlClass);
 begin
   if not assigned(cmpBMP) then
   begin
     cmpBMP := TBitmap.Create;
-    cmpBMP.LoadFromLazarusResource(lrClass.ClassName);
+    cmpBMP.LoadFromResourceName(0, lrClass.ClassName);
     frRegisterObject(lrClass, cmpBMP, lrClass.ClassName, nil, otlUIControl, nil);
   end;
 end;
@@ -161,10 +162,10 @@ begin
   DoRegsiterControl(lrBMP_LRRxDateEdit, TlrRxDateEdit);
   DoRegsiterControl(lrBMP_lrSelectPeriod, TlrSelectPeriodControl);
 end;
-
+{
 var
   lrBMP_SelectClient:TBitmap = nil;
-
+}
 { TlrRxDateEdit }
 
 function TlrRxDateEdit.GetDate: TDateTime;
@@ -612,7 +613,6 @@ begin
 end;
 
 initialization
-  {$I lrrxdbdialogcontrols_img.inc}
   InitLRComp;
 
   RegisterPropertyEditor(TypeInfo(string), TlrRxDBLookupComboBox, 'ListSource', TlrDBLookupComboBoxListSourceProperty);
