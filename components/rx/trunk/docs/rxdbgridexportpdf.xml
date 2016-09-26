@@ -17,6 +17,7 @@
       </element><element name="TRxDBGridExportPdfOption.repOverwriteExisting"><short>Перезаписывать существующий файл</short>
       </element><element name="TRxDBGridExportPdfOption.repExportImages"><short>Экспортировать изображения</short>
       </element>
+    <short>Набор инструментов для экспорта данных из RxDBGrid в pdf файл</short>
     </module>
   </package>
 </fpdoc-descriptions>

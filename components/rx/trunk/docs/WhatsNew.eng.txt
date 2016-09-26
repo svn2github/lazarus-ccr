@@ -1,7 +1,0 @@
- + rename TDBDateEdit to TRxDBDateEdit.
-    !!!!Warning - this version of RxFPC ONLY for Lazarus 1.3 and later
-06.01.2015 - version 2.2 for Lazarus 1.2
- - create version in folder "version/v2.6_laz_1.2"
- 
-  Lagunov Aleksey (alexs)
-  ALEXS75-at-YANDEX-dot-RU
