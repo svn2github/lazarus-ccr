@@ -103,6 +103,10 @@ msgstr ""
 msgid "Flat buttons"
 msgstr "Botones planos"
 
+#: rxconst.sfolderlistererr
+msgid "%s. Not assigned property MenuItem"
+msgstr ""
+
 #: rxconst.sfourthquarter
 msgid "Fourth quarter"
 msgstr ""

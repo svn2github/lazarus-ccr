@@ -136,6 +136,9 @@ resourcestring
   sFirstHalfOfYear      = 'First half of year';
   sSecondHalfOfYear     = 'Second half of year';
 
+  { TFolderLister }
+  sFolderListerErr      = '%s. Not assigned property MenuItem';
+
 implementation
 
 end.

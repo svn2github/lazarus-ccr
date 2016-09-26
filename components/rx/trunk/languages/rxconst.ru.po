@@ -101,6 +101,10 @@ msgstr "Первый квартал"
 msgid "Flat buttons"
 msgstr "Плавающие кнопки"
 
+#: rxconst.sfolderlistererr
+msgid "%s. Not assigned property MenuItem"
+msgstr "%s. Не определено свойство MenuItem"
+
 #: rxconst.sfourthquarter
 msgid "Fourth quarter"
 msgstr "Четвёртый квартал"

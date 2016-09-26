@@ -79,7 +79,7 @@ type
   end;
   
 implementation
-uses FileUtil, strutils, RxAppUtils, LazUTF8, LazFileUtils;
+uses FileUtil, strutils, RxAppUtils, LazUTF8, LazFileUtils, rxconst;
 
 function MenuItemStr(S:string):string;
 var
@@ -127,7 +127,7 @@ var
 begin
   for i:=0 to AFolderList.Count-1 do
   begin
-    M:=TMenuItem.Create(Application.MainForm);
+    M:=TMenuItem.Create(MenuItem.Owner);//Application.MainForm);
     S:=AFolderList[i];
     M.Caption:=MenuItemStr(S);
     MenuItem.Add(M);
@@ -206,7 +206,7 @@ begin
   if Assigned(FMenuItem) then
     DoFind(FFileFolder, FMenuItem)
   else
-    raise Exception.Create(Name+'. Not assigned property MenuItem');
+    raise Exception.CreateFmt( sFolderListerErr, [Name]);
 end;
 
 constructor TCustomFolderLister.Create(AOwner: TComponent);
