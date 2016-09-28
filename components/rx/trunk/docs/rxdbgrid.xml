@@ -167,6 +167,12 @@
       </element><element name="TRxDBGridToolsEvent.rxteKeyUp"><short>В расширение передаётся событие OnKeyUp</short>
       </element><element name="TRxDBGridAbstractTools.FToolsEvents"><short>Перечень события, которые принимает от списка расширение</short><descr>В случае необходимости взаимодействия расширения с пользователем в данное поле вносится наборе флагов, описывающих какие именно события от оператора расширение должно получать.</descr>
       </element>
+    <element name="TRxDBGrid.ShowSortDialog"><short>Метод отображает диалоговое окно настроек сортировки данных списка</short>
+      </element><element name="TRxDBGrid.ColumnByFieldName"><short>Функция возвращает указатель на колонку по имени поля данных, отображаемых в колонке</short>
+      </element><element name="TRxDBGrid.ColumnByCaption"><short>Функция возвращает указатель на колонку по заголовку колонки</short>
+      </element><element name="TRxDBGrid.SelectAllRows"><short>Метод выделяет помечает все строки грида</short>
+      </element><element name="TRxDBGrid.DeSelectAllRows"><short>Метод снимает пометку со всех строк грида</short>
+      </element>
     </module>
   </package>
 </fpdoc-descriptions>

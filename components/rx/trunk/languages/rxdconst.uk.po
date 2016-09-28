@@ -39,8 +39,6 @@ msgid "Change password"
 msgstr "Змінити пароль"
 
 #: rxdconst.scirculardatalink
-#, fuzzy
-#| msgid "SCircularDataLink"
 msgid "Circular data link"
 msgstr "Перехресне посилання даних"
 
@@ -50,15 +48,15 @@ msgstr "Назва стовпця"
 
 #: rxdconst.scompressfonts
 msgid "Compress fonts"
-msgstr ""
+msgstr "Ущільнені шрифти"
 
 #: rxdconst.scompressimages
 msgid "Compress images"
-msgstr ""
+msgstr "Ущільнені зображення"
 
 #: rxdconst.scompresstext
 msgid "Compress text"
-msgstr ""
+msgstr "Ущільнений текс"
 
 #: rxdconst.sconfirmpasswordlabel
 msgid "&Confirm:"
@@ -114,15 +112,15 @@ msgstr "Експортувати назву файлу"
 
 #: rxdconst.sexportformula
 msgid "Export footer formula"
-msgstr ""
+msgstr "Експортувати підсумкову формулу"
 
 #: rxdconst.sexportimages
 msgid "Export images"
-msgstr ""
+msgstr "Експортувати зображення"
 
 #: rxdconst.sexportparams
 msgid "Export params"
-msgstr ""
+msgstr "Експортувати параметри"
 
 # msgid "Compare opertion need fielad and const"
 #: rxdconst.sexprbadcompare
@@ -183,7 +181,7 @@ msgstr "Неспівпадіння типів для стовпця '%s', нео
 
 #: rxdconst.sfooterrowcolor
 msgid "Footer row color"
-msgstr ""
+msgstr "Колір підсумкового рядка"
 
 #: rxdconst.sfunction
 msgid "Function"
@@ -199,7 +197,7 @@ msgstr "Кількість"
 
 #: rxdconst.sfvtfieldvalue
 msgid "Field value"
-msgstr ""
+msgstr "Значення поля"
 
 #: rxdconst.sfvtmax
 msgid "Max value"
@@ -227,7 +225,7 @@ msgstr "Сума"
 
 #: rxdconst.sglobal
 msgid "Global"
-msgstr ""
+msgstr "Загальний"
 
 #: rxdconst.shidezerovalues
 msgid "Hide zero values"
@@ -259,7 +257,7 @@ msgstr "Помилка в імені користувача або паролі"
 
 #: rxdconst.slandscape
 msgid "Landscape"
-msgstr ""
+msgstr "Ландшафт"
 
 #: rxdconst.sleftcaption
 msgid "Left"
@@ -311,11 +309,11 @@ msgstr "Орієнтація"
 
 #: rxdconst.sotheroptions
 msgid "Other options"
-msgstr ""
+msgstr "Інші налаштування"
 
 #: rxdconst.soutline
 msgid "Out line"
-msgstr ""
+msgstr "Поза межами"
 
 #: rxdconst.soverwriteexisting
 msgid "Overwrite existing"
@@ -331,7 +329,7 @@ msgstr "Назва сторінки"
 
 #: rxdconst.spapertype
 msgid "Paper type"
-msgstr ""
+msgstr "Тип листка"
 
 #: rxdconst.spasswordchanged
 msgid "Password changed"
@@ -351,7 +349,7 @@ msgstr "Новий пароль і підтвердження не співпа�
 
 #: rxdconst.spdfoptions
 msgid "PDF options"
-msgstr ""
+msgstr "PDF налаштування"
 
 #: rxdconst.sportrait
 msgid "Portrait"
@@ -403,7 +401,7 @@ msgstr "Копіювати тільки метадані ..."
 
 #: rxdconst.srxdbgridallfilter
 msgid "(All values)"
-msgstr ""
+msgstr "(Усі значення)"
 
 #: rxdconst.srxdbgridcopycellvalue
 msgid "Copy cell value"
@@ -470,11 +468,9 @@ msgstr "Текст для пошуку"
 
 #: rxdconst.srxdbgridoptimizecolwidth
 msgid "Optimize column width"
-msgstr ""
+msgstr "Оптимізувати ширину колонок"
 
 #: rxdconst.srxdbgridselapplycaption
-#, fuzzy
-msgctxt "rxdconst.srxdbgridselapplycaption"
 msgid "Apply"
 msgstr "Застосувати"
 
@@ -517,15 +513,15 @@ msgstr "За зменшенням"
 
 #: rxdconst.srxfieldslookupdisplay
 msgid "Fields as LookupDisplay"
-msgstr ""
+msgstr "Поле як LookupDisplay"
 
 #: rxdconst.srxfillfieldslookupdisp
 msgid "Fill fields in LookupDisplay property"
-msgstr ""
+msgstr "Заповнити поля в LookupDisplay властивостях"
 
 #: rxdconst.srxfillsortfieldsdisp
 msgid "Fill fields in SortField property"
-msgstr ""
+msgstr "Заповнити поля в SortField властивостях"
 
 #: rxdconst.srxfilterformapply
 msgctxt "rxdconst.srxfilterformapply"
@@ -659,11 +655,11 @@ msgstr "Показати заголовок стовпця"
 
 #: rxdconst.stitlecolor
 msgid "Title color"
-msgstr ""
+msgstr "Колір заголовка"
 
 #: rxdconst.stoolsexportpdf
 msgid "Export to PDF file"
-msgstr ""
+msgstr "Експорт до PDF файлу"
 
 #: rxdconst.stoolsexportspeadsheet
 msgid "Export to speadsheet"
@@ -691,7 +687,7 @@ msgstr "Введіть ваш пароль"
 
 #: rxdconst.suserawjpeg
 msgid "Use raw JPEG"
-msgstr ""
+msgstr "Використати необроблений JPEG"
 
 #: rxdconst.susernamelabel
 msgid "&User name:"

@@ -401,7 +401,7 @@ msgstr "Копировать только метаданные..."
 
 #: rxdconst.srxdbgridallfilter
 msgid "(All values)"
-msgstr ""
+msgstr "(Все значения)"
 
 #: rxdconst.srxdbgridcopycellvalue
 msgid "Copy cell value"
@@ -468,7 +468,7 @@ msgstr "Текст для поиска"
 
 #: rxdconst.srxdbgridoptimizecolwidth
 msgid "Optimize column width"
-msgstr ""
+msgstr "Подобрать ширину колонки"
 
 #: rxdconst.srxdbgridselapplycaption
 msgctxt "rxdconst.srxdbgridselapplycaption"
