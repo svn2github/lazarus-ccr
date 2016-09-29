@@ -130,35 +130,35 @@ begin
 end;
 
 procedure TrxFilterByForm.ComboBoxChange(Sender: TObject);
-Var
- CBN : Integer;
- CB  : TComboBox;
+var
+  CBN : Integer;
+  CB  : TComboBox;
 begin
- CB  := (Sender AS TComboBox);
- CBN := FindCombo(CB);
- if CBN=0 Then Exit;
- if (CB.Text=' IS NULL ') Or (CB.Text=' IS NOT NULL ') Then
-    Begin
+  CB  := (Sender AS TComboBox);
+  CBN := FindCombo(CB);
+  if CBN=0 Then Exit;
+  if (CB.Text=' IS NULL ') Or (CB.Text=' IS NOT NULL ') Then
+  begin
      Edit_1[CBN].Text    := '';
      Edit_1[CBN].Enabled := False;
      Edit_1[CBN].Color   := clInactiveCaption;
-    End
- Else
-    Begin
+  end
+  else
+  begin
      Edit_1[CBN].Enabled := True;
      Edit_1[CBN].Color   := clWindow;
-    End;
+  end;
 end;
 
 procedure TrxFilterByForm.EditChange(Sender: TObject);
-Var
- EDN : Integer;
- ED  : TEdit;
+var
+  EDN : Integer;
+  ED  : TEdit;
 begin
- ED  := (Sender AS TEdit);
- EDN := FindEdit(ED);
- if EDN=0 Then Exit;
- if ED.Text='' Then Combo_1[EDN].ItemIndex:=-1;
+  ED  := (Sender AS TEdit);
+  EDN := FindEdit(ED);
+  if EDN=0 Then Exit;
+  if ED.Text='' Then Combo_1[EDN].ItemIndex:=-1;
 end;
 
 procedure TrxFilterByForm.FormCreate(Sender: TObject);
@@ -176,28 +176,28 @@ end;
 
 procedure TrxFilterByForm.Button1Click(Sender: TObject);
 begin
- ModalResult := mrOK;
+  ModalResult := mrOK;
 end;
 
 procedure TrxFilterByForm.ClearALL(AGrid: TRxDBGrid);
 var
   i : Integer;
 begin
- //*****************************************************************************
- Combo_1[1].Items.Clear;
- Combo_1[1].Items.Add('');
- for i := 0 To AGrid.Columns.Count-1 do
- begin
-   if (AGrid.Columns[i].Field.FieldKind=fkData) and (AGrid.Columns[i].Visible) then
-     Combo_1[1].Items.Objects[Combo_1[1].Items.Add(AGrid.Columns[i].Title.Caption)]:=AGrid.Columns[i].Field;
- end;
+  //*****************************************************************************
+  Combo_1[1].Items.Clear;
+  Combo_1[1].Items.Add('');
+  for i := 0 To AGrid.Columns.Count-1 do
+  begin
+    if Assigned(AGrid.Columns[i].Field) and (AGrid.Columns[i].Field.FieldKind=fkData) and (AGrid.Columns[i].Visible) then
+      Combo_1[1].Items.Objects[Combo_1[1].Items.Add(AGrid.Columns[i].Title.Caption)]:=AGrid.Columns[i].Field;
+  end;
 
   Combo_1[1].ItemIndex := 0;
   for i := 2 To 9 do
-  Begin
+  begin
     Combo_1[i].Items.Assign(Combo_1[1].Items);
     Combo_1[i].ItemIndex := 0;
-  End;
+  end;
 
   Combo_2[1].Items.Clear;
   Combo_2[1].Items.Add(' = ');
@@ -225,13 +225,13 @@ end;
 
 function TrxFilterByForm.Execute(AGrid: TRxDBGrid; var FilterStr: String;
   var LastFilter: TstringList): Boolean;
-Var
- X  : Integer;
- P  : Integer;
- S, S1 : String;
- SD : String;
- C : TColumn;
-Begin
+var
+  X  : Integer;
+  P  : Integer;
+  S, S1 : String;
+  SD : String;
+  C : TColumn;
+begin
   Result := False;
   //*****************************************************************************
   Combo_1[1]:= ComboBox1;
