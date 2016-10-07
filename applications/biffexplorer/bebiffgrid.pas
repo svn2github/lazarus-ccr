@@ -1830,7 +1830,7 @@ begin
       else
         FDetails.Add('Bit $8000 = 1: Row height not changed manually');
     end;
-    ShowInRow(FCurrRow, FBufferIndex, numBytes, Format('%d ($%.4x)', [w, w]),
+    ShowInRow(FCurrRow, FBufferIndex, numBytes, Format('%d ($%.4x) = %.1fpt', [w, w, w/20]),
       'Default height for unused rows, in twips = 1/20 of a point');
   end else begin
     numBytes := 2;
@@ -1856,7 +1856,8 @@ begin
 
     numBytes := 2;
     Move(FBuffer[FBufferIndex], w, numBytes);
-    ShowInRow(FCurrRow, FBufferIndex, numBytes, IntToStr(WordLEToN(w)),
+    w := WordLEToN(w);
+    ShowInRow(FCurrRow, FBufferIndex, numBytes, Format('%d ($%.4x) = %.1fpt', [w, w, w/20]),
       'Default height for unused rows, in twips = 1/20 of a point');
   end;
 end;
@@ -5041,7 +5042,7 @@ begin
       else FDetails.Add('Bit 15 = 1: Row has default height');
   end;
   ShowInRow(FCurrRow, FBufferIndex, numBytes, Format('$%.4x', [w]),
-    'Bits 14-0: Height of row in twips (1/20 pt), Bit 15: Row has default height');
+    'Bits 14-0: Height of row in twips (1/20 pt), Bit 15: Row has default height?');
 
   numBytes := 2;
   Move(FBuffer[FBufferIndex], w, numbytes);
