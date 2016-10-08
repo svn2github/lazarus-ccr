@@ -220,14 +220,19 @@ begin
 end;
 
 procedure TForm1.Button8CLICK(Sender: TObject);
-Var CorrelatedTickFrequency:TickType;
+Var
+  CorrelatedTickFrequency:TickType;
+  tbdata: TimeBaseData;
 begin
   CorrelatedTickFrequency:=ET.GetTimebaseCorrelation;
   Edit9.text:=format('%.0n',[extended(CorrelationJitter-CorrelatedTickFrequency)]);
   Edit7.text:=format('%.0n',[extended(CorrelatedTickFrequency)]);
   CorrelationJitter:= CorrelatedTickFrequency;
-  If checkbox4.checked then
-    ET.HWTimebase.TicksFrequency:=trunc(CorrelatedTickFrequency);
+  If checkbox4.checked then begin
+    tbdata := ET.HWTimebase;
+    tbdata.TicksFrequency := trunc(CorrelatedTickFrequency);
+    ET.HWTimebase := tbdata;
+  end;
 end;
 
 procedure TForm1.Checkbox2CLICK(Sender: TObject);

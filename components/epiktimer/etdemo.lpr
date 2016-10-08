@@ -7,6 +7,9 @@ uses
   Forms, main, EpikTimer, newsw, splash;
 
 var i:Integer;
+
+{$R *.res}
+
 begin
   Application.Initialize;
   Form3 := TForm3.Create(nil);
