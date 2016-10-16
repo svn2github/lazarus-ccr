@@ -322,13 +322,18 @@ end;
 
 function isCPUorOS(const s: string): boolean;
 begin
-  Result:=(Pos('$(TargetCPU)', s)>0) or (Pos('$(TargetOS)', s)>0)
+  Result:=(Pos('$(TargetCPU)', s)>0)
+       or (Pos('$(TargetOS)', s)>0)
+       or (Pos('%(CPU_TARGET)', s)>0)
+       or (Pos('%(OS_TARGET)', s)>0)
 end;
 
 function ResolveCPUOS(const s: string; const cpu, os: string): string;
 begin
   Result:=StringReplace(s, '$(TargetCPU)', cpu, [rfReplaceAll, rfIgnoreCase]);
   Result:=StringReplace(Result, '$(TargetOS)', os, [rfReplaceAll, rfIgnoreCase]);
+  Result:=StringReplace(s, '%(CPU_TARGET)', cpu, [rfReplaceAll, rfIgnoreCase]);
+  Result:=StringReplace(Result, '%(OS_TARGET)', os, [rfReplaceAll, rfIgnoreCase]);
 end;
 
 procedure UpdateCompileOpts(const proj: PBXProject; const aoptions: string);
