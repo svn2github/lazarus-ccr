@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
     <Version Value="9"/>
@@ -12,9 +12,6 @@
     <i18n>
       <EnableI18N LFM="False"/>
     </i18n>
-    <VersionInfo>
-      <StringTable ProductVersion=""/>
-    </VersionInfo>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
     </BuildModes>
@@ -41,7 +38,6 @@
       <Unit0>
         <Filename Value="lazspreadsheet.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="lazspreadsheet"/>
       </Unit0>
       <Unit1>
         <Filename Value="about.pas"/>
@@ -49,7 +45,6 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="about"/>
       </Unit1>
       <Unit2>
         <Filename Value="mainform.pas"/>
@@ -57,7 +52,6 @@
         <ComponentName Value="lazfpsmainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="mainform"/>
       </Unit2>
     </Units>
   </ProjectOptions>
@@ -77,12 +71,6 @@
         </Win32>
       </Options>
     </Linking>
-    <Other>
-      <CompilerMessages>
-        <MsgFileName Value=""/>
-      </CompilerMessages>
-      <CompilerPath Value="$(CompPath)"/>
-    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">

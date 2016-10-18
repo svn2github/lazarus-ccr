@@ -8,7 +8,7 @@ object lazfpsmainform: Tlazfpsmainform
   ClientWidth = 700
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  LCLVersion = '1.1'
+  LCLVersion = '1.7'
   object pagesSheets: TPageControl
     Left = 0
     Height = 289
@@ -37,7 +37,7 @@ object lazfpsmainform: Tlazfpsmainform
     end
     object editSourceFile: TFileNameEdit
       Left = 136
-      Height = 21
+      Height = 23
       Top = 8
       Width = 136
       DialogOptions = []
@@ -52,7 +52,7 @@ object lazfpsmainform: Tlazfpsmainform
       Left = 8
       Height = 15
       Top = 14
-      Width = 116
+      Width = 106
       Caption = 'Source Spreadsheet:'
       ParentColor = False
     end
@@ -69,7 +69,7 @@ object lazfpsmainform: Tlazfpsmainform
       Left = 424
       Height = 96
       Top = 8
-      Width = 230
+      Width = 264
       Lines.Strings = (
         'memoCellData'
       )
@@ -80,7 +80,7 @@ object lazfpsmainform: Tlazfpsmainform
       Left = 8
       Height = 15
       Top = 40
-      Width = 72
+      Width = 66
       Caption = 'Current Cell:'
       ParentColor = False
     end

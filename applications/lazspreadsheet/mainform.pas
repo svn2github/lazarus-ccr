@@ -9,7 +9,7 @@ uses
   StdCtrls, Grids, EditBtn, ExtCtrls, ComCtrls, fpspreadsheetchart,
   fpspreadsheetgrid, TAGraph, TASeries, TypInfo,
   // FPSpreadsheet and supported formats
-  fpspreadsheet, fpsallformats
+  fpstypes, fpspreadsheet, fpsallformats
   ;
 
 type
@@ -46,6 +46,10 @@ implementation
 
 {$R *.lfm}
 
+uses
+  fpsUtils;
+
+
 { Tlazfpsmainform }
 
 procedure Tlazfpsmainform.btnLoadSpreadsheetClick(Sender: TObject);
@@ -73,7 +77,7 @@ begin
     Worksheets[i].Parent := lCurPage;
     Worksheets[i].Align := alClient;
     //Worksheets[i].Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goSmoothScroll]
-    Worksheets[i].LoadFromWorksheet(lCurWorksheet);
+    Worksheets[i].LoadFromWorkbook(Workbook, i); //LoadFromWorksheet(lCurWorksheet);
     Worksheets[i].OnSelection := @HandleSelectionChanged;
     lCurPage.Caption := lCurWorksheet.Name;
   end;
@@ -84,12 +88,14 @@ var
   lX, lY, lCurTab: LongInt;
   lCurWorksheet: TsWorksheet;
   lCurCell: PCell;
+  fmt: PsCellFormat;
 begin
   lCurTab := pagesSheets.TabIndex;
-  lX := Worksheets[lCurTab].Selection.Left;
-  lY := Worksheets[lCurTab].Selection.Top;
+  lX := Worksheets[lCurTab].Selection.Left - 1; // -1 for fixed rows/cols
+  lY := Worksheets[lCurTab].Selection.Top - 1;
   lCurWorksheet := Workbook.GetWorksheetByIndex(lCurTab);
   lCurCell := lCurWorksheet.GetCell(lY, lX);
+  fmt := Workbook.GetPointerToCellFormat(lCurCell^.FormatIndex);
   memoCellData.Lines.Text := '';
   memoCellData.Lines.Add(Format('Row: %d Col: %d (zero-based)', [lY, lX]));
   memoCellData.Lines.Add(Format('ContentType: %s', [GetEnumName(TypeInfo(TCellContentType), integer(lCurCell^.ContentType))]));
@@ -97,11 +103,11 @@ begin
   memoCellData.Lines.Add(Format('UTF8StringValue: %s', [lCurCell^.UTF8StringValue]));
   //memoCellData.Lines.Add(Format('DateTimeValue: %s', [lCurCell^.DateTimeValue]));
   //memoCellData.Lines.Add(Format('UsedFormattingFields: %f', [lCurCell^.NumberValue]));
-  memoCellData.Lines.Add(Format('TextRotation: %s', [GetEnumName(TypeInfo(TsTextRotation), integer(lCurCell^.TextRotation))]));
+  memoCellData.Lines.Add(Format('TextRotation: %s', [GetEnumName(TypeInfo(TsTextRotation), integer(fmt^.TextRotation))]));
   //memoCellData.Lines.Add(Format('Border: %f', [lCurCell^.NumberValue]));
-  memoCellData.Lines.Add(Format('BackgroundColor: %s', [GetEnumName(TypeInfo(TsColor), integer(lCurCell^.BackgroundColor))]));
+  memoCellData.Lines.Add(Format('BackgroundColor: %s', [GetColorName(fmt^.Background.BgColor)]));
   memoCellData.Lines.Add('');
-  memoCellData.Lines.Add(Format('ReadAsUTF8Text(): %s', [lCurWorksheet.ReadAsUTF8Text(lY, lX)]));
+  memoCellData.Lines.Add(Format('ReadAsText(): %s', [lCurWorksheet.ReadAsText(lY, lX)]));
 end;
 
 procedure Tlazfpsmainform.DeleteAllSheets;
