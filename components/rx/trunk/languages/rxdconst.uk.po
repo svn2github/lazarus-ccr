@@ -471,6 +471,7 @@ msgid "Optimize column width"
 msgstr "Оптимізувати ширину колонок"
 
 #: rxdconst.srxdbgridselapplycaption
+msgctxt "rxdconst.srxdbgridselapplycaption"
 msgid "Apply"
 msgstr "Застосувати"
 

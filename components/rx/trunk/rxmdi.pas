@@ -59,6 +59,8 @@ type
   private
     FMenu:TPopupMenu;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     constructor CreateButton(AOwner:TRxMDITasks; AForm:TForm);
     procedure Click; override; // make Click public
@@ -130,6 +132,7 @@ type
     procedure SetTaskPanel(AValue: TRxMDITasks);
     function MDIButtonByForm(AForm:TForm):TRxMDIButton;
     procedure HideCurrentWindow;
+    procedure ScreenEventRemoveForm(Sender: TObject; Form: TCustomForm);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure Loaded; override;
@@ -218,7 +221,7 @@ begin
   begin
     FMDIPanel:=nil;
     OnClick:=nil;
-  end;
+  end
 end;
 
 procedure TRxMDICloseButton.CreateInternalLabel;
@@ -320,6 +323,20 @@ begin
   end;
 end;
 
+procedure TRxMDIPanel.ScreenEventRemoveForm(Sender: TObject; Form: TCustomForm);
+var
+  i: Integer;
+begin
+  if Assigned(FTaskPanel) then
+  begin
+    for i:=0 to FTaskPanel.ComponentCount-1 do
+    begin;
+      if (FTaskPanel.Components[i] is TRxMDIButton) and (TRxMDIButton(FTaskPanel.Components[i]).NavForm = Form) then
+        TRxMDIButton(FTaskPanel.Components[i]).FActiveControl:=nil;
+    end;
+  end;
+end;
+
 procedure TRxMDIPanel.Notification(AComponent: TComponent; Operation: TOperation
   );
 begin
@@ -343,10 +360,13 @@ begin
   Caption:='';
   Align:=alClient;
   BevelOuter:=bvLowered;
+
+  Screen.AddHandlerRemoveForm(@ScreenEventRemoveForm);
 end;
 
 destructor TRxMDIPanel.Destroy;
 begin
+  Screen.RemoveHandlerRemoveForm(@ScreenEventRemoveForm);
   inherited Destroy;
 end;
 
@@ -734,6 +754,14 @@ begin
   Owner.RemoveComponent(Self);
   FNavPanel.FMainPanel.RemoveControl(Sender as TCustomForm);
   Application.ReleaseComponent(Self);
+end;
+
+procedure TRxMDIButton.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited Notification(AComponent, Operation);
+  if (AComponent = FActiveControl) and (Operation = opRemove) then
+    FActiveControl := nil
 end;
 
 constructor TRxMDIButton.CreateButton(AOwner: TRxMDITasks; AForm: TForm);
