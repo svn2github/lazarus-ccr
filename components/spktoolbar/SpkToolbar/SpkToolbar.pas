@@ -1,17 +1,26 @@
-unit SpkToolbar;
+unit spktoolbar;
 
 {$mode delphi}
 
 {.$DEFINE EnhancedRecordSupport}
 {.$DEFINE DELAYRUNTIMER}
 
+ //Translation from Polish into English by Raf20076, Poland, 2016
+//I do my best but if you find any mistakes in English comments
+//please correct it.
+
+//To Lazarus Team, my suggestion is:
+//Add info about licence that author agreed for new licence
+//expressed in Lazarus forum etc in source file
+
 (*******************************************************************************
 *                                                                              *
-*  Plik: SpkToolbar.pas                                                        *
-*  Opis: G³ówny komponent toolbara                                             *
-*  Copyright: (c) 2009 by Spook. Jakiekolwiek u¿ycie komponentu bez            *
-*             uprzedniego uzyskania licencji od autora stanowi z³amanie        *
-*             prawa autorskiego!                                               *
+*  File: SpkToolbar.pas                                                        *
+*  Description: Main toolbar component                                         *
+*  Copyright: (c) 2009 by Spook. Any use of the component without              *
+*                 prior getting a licence from the author would be a           *
+*                 a violation of copyright laws!                               *
+*                                                                              *
 *                                                                              *
 *******************************************************************************)
 
@@ -23,8 +32,9 @@ uses
   spkt_Appearance, spkt_BaseItem, spkt_Const, spkt_Dispatch, spkt_Tab,
   spkt_Pane, spkt_Types;
 
-type /// <summary>Typ opisuj¹cy regiony toolbara, które s¹ u¿ywane podczas
-  /// obs³ugi interakcji z mysz¹</summary>
+type
+  { Type describes regions of the toolbar which are used during handling
+    of interaction with the mouse }
   TSpkMouseToolbarElement = (teNone, teToolbarArea, teTabs, teTabContents);
 
   TSpkTabChangingEvent = procedure(Sender: TObject; OldIndex, NewIndex: integer;
@@ -33,99 +43,109 @@ type /// <summary>Typ opisuj¹cy regiony toolbara, które s¹ u¿ywane podczas
 type
   TSpkToolbar = class;
 
-  /// <summary>Klasa dyspozytora s³u¿¹ca do bezpiecznego przyjmowania
-  /// informacji oraz ¿¹dañ od pod-elementów</summary>
+  { Dispatcher class which is used for safe accepting of information
+    and requests from sub-elements. }
+
   TSpkToolbarDispatch = class(TSpkBaseToolbarDispatch)
   private
-    /// <summary>Komponent toolbara, który przyjmuje informacje i ¿¹dania
-    /// od pod-elementów</summary>
+    { Toolbar component which is accepting information and
+      requests from sub-elements }
     FToolbar: TSpkToolbar;
   protected
+
   public
     // *******************
-    // *** Konstruktor ***
+    // *** Constructor ***
     // *******************
 
-    /// <summary>Konstruktor</summary>
+    //Constructor
     constructor Create(AToolbar: TSpkToolbar);
 
     // ******************************************************************
-    // *** Implementacja abstrakcyjnych metod TSpkBaseToolbarDispatch ***
+    // *** Implementation of abstract methods TSpkBaseToolbarDispatch ***
     // ******************************************************************
 
-    /// <summary>Metoda wywo³ywana, gdy zmieni siê zawartoœæ obiektu wygl¹du
-    /// zawieraj¹cego kolory i czcionki u¿ywane do rysowania toolbara.
-    /// </summary>
+    { Method (NotifyAppearanceChanged) called when a content of the
+      object of the appearance changes
+      The object of the appearance contains colours and fonts used
+      to draw the toolbar }
     procedure NotifyAppearanceChanged; override;
-    /// <summary>Metoda wywo³ywana, gdy zmieni siê lista pod-elementów jednego
-    /// z elementów toolbara</summary>
+
+    { Method (NotifyItemsChanged) called when list of the sub-elements
+      of one of toolbar elements changes }
     procedure NotifyItemsChanged; override;
-    /// <summary>Metoda wywo³ywana, gdy zmieni siê rozmiar lub po³o¿enie
-    /// (metryka) jednego z elementów toolbara</summary>
+
+    { Method (NotifyMetricsChanged) called when the size and position (metric)
+      of one of toolbar elements change }
     procedure NotifyMetricsChanged; override;
-    /// <summary>Metoda wywo³ywana, gdy zmieni siê wygl¹d jednego z elementów
-    /// toolbara, nie wymagaj¹cy jednak przebudowania metryk.</summary>
+
+    { Method (NotifyVisualsChanged) called when the appearance of one of
+      toolbar elements changes
+      if the toolbar element however doesn't need rebuilding of metrics }
     procedure NotifyVisualsChanged; override;
-    /// <summary>Metoda ¿¹da dostarczenia przez toolbar pomocniczej
-    /// bitmapy u¿ywanej - przyk³adowo - do obliczania rozmiarów renderowanego
-    /// tekstu</summary>
+
+    { Method (GetTempBitmap) requests for suppporting bitmap delivered by toolbar
+      For example, used to calculate the size of rendered text }
     function GetTempBitmap: TBitmap; override;
-    /// <summary>Metoda przelicza wspó³rzêdne toolbara na wspó³rzêdne
-    /// ekranu, co umo¿liwia - na przyk³ad - rozwiniêcie popup menu.</summary>
+
+    { Method (ClientToScreen) converts the toolbar coordinates to screen coordinates
+      For example, used to unfold popup menu }
     function ClientToScreen(Point: T2DIntPoint): T2DIntPoint; override;
   end;
 
-  /// <summary>Rozszerzony pasek narzêdzi inspirowany Microsoft Fluent
-  /// UI</summary>
+  //Extended toolbar inspired by Microsoft Fluent UI
 
   { TSpkToolbar }
 
   TSpkToolbar = class(TCustomControl)
   private
-    /// <summary>Instancja obiektu dyspozytora przekazywanego elementom
-    /// toolbara</summary>
+
+    { Instance of dispatcher object
+      Dispatcher is transfered to toolbar elements }
     FToolbarDispatch: TSpkToolbarDispatch;
 
-    /// <summary>Bufor w którym rysowany jest toolbar</summary>
+    { Buffer bitmap to which toolbar is drawn }
     FBuffer: TBitmap;
-    /// <summary>Pomocnicza bitmapa przekazywana na ¿yczenie elementom
-    /// toolbara</summary>
+
+    { Supporting bitmap is sent when toolbar elements request it }
     FTemporary: TBitmap;
    {$IFDEF DELAYRUNTIMER}
     FDelayRunTimer: TTimer;
    {$ENDIF}
 
-    /// <summary>Tablica rectów "uchwytów" zak³adek</summary>
+    { Array of Rects of "handles" of tabs }
     FTabRects: array of T2DIntRect;
-    /// <summary>Cliprect obszaru "uchwytów" zak³adek</summary>
+
+    { Cliprect region of "handles" of tabs }
     FTabClipRect: T2DIntRect;
-    /// <summary>Cliprect obszaru zawartoœci zak³adki</summary>
+
+    { ClipRect of region content of tab }
     FTabContentsClipRect: T2DIntRect;
 
-    /// <summary>Element toolbara znajduj¹cy siê obecnie pod myszk¹</summary>
+    { The element over which the mouse pointer is }
     FMouseHoverElement: TSpkMouseToolbarElement;
-    /// <summary>Element toolbara maj¹cy obecnie wy³¹cznoœæ na otrzymywanie
-    /// komunikatów od myszy</summary>
+
+    { The element over which the mouse pointer is and in which a mouse
+      button is pressed }
     FMouseActiveElement: TSpkMouseToolbarElement;
 
-    /// <summary>"Uchwyt" zak³adki, nad którym znajduje siê obecnie mysz
-    /// </summary>
+    { The mouse pointer is now on the "handle" of tab }
     FTabHover: integer;
 
-    /// <summary>Flaga informuj¹ca o tym, czy metryki toolbara i jego elementów
-    /// s¹ aktualne</summary>
+    { Flag which informs about validity of metrics of toolbar and its elements }
     FMetricsValid: boolean;
-    /// <summary>Flaga informuj¹ca o tym, czy zawartoœæ bufora jest aktualna
-    /// </summary>
+
+    { Flag which informs about validity of buffer content }
     FBufferValid: boolean;
-    /// <summary>Flaga InternalUpdating pozwala na zablokowanie walidacji
-    /// metryk i bufora w momencie, gdy komponent przebudowuje swoj¹ zawartoœæ.
-    /// FInternalUpdating jest zapalana i gaszona wewnêtrznie, przez komponent.
-    /// </summary>
+
+    { Flag FInternalUpdating allows to block the validation of metrics and buffer
+      when component is rebuilding its content
+      The flag is switched on and off internally by component }
     FInternalUpdating: boolean;
-    /// <summary>Flaga IUpdating pozwala na zablokowanie walidacji
-    /// metryk i bufora w momencie, gdy u¿ytkownik przebudowuje zawartoœæ
-    /// komponentu. FUpdating jest sterowana przez u¿ytkownika.</summary>
+
+    { Flag FUpdating allows to block the validation of metrics and buffer
+      when user is rebuilding content of the component.
+      FUpdating is controlled by user }
     FUpdating: boolean;
 
     FOnTabChanging: TSpkTabChangingEvent;
@@ -136,223 +156,258 @@ type
    {$ENDIF}
 
   protected
-    /// <summary>Instancja obiektu wygl¹du, przechowuj¹cego kolory i czcionki
-    /// u¿ywane podczas renderowania komponentu</summary>
+
+    { Instance of the Appearance object storing colours and fonts used during
+      rendering of the component }
     FAppearance: TSpkToolbarAppearance;
-    /// <summary>Zak³adki toolbara</summary>
+
+    { Tabs of the toolbar }
     FTabs: TSpkTabs;
-    /// <summary>Indeks wybranej zak³adki</summary>
+
+    { Index of the selected tab }
     FTabIndex: integer;
-    /// <summary>Lista ma³ych obrazków elementów toolbara</summary>
+
+    { Imagelist of the small pictures of toolbar elements }
     FImages: TImageList;
-    /// <summary>Lista ma³ych obrazków w stanie "disabled". Jeœli nie jest
-    /// przypisana, obrazki w stanie "disabled" bêd¹ generowane automatycznie.
-    /// </summary>
+
+    { Image list of the small pictures in the state "disabled".
+      If the list is not assigned, small "disabled" pictures will be generated
+      automatically }
     FDisabledImages: TImageList;
-    /// <summary>Lista du¿ych obrazków elementów toolbara</summary>
+
+    { Imagelist of the large pictures of toolbar elements }
     FLargeImages: TImageList;
-    /// <summary>Lista du¿ych obrazków w stanie "disabled". Jeœli nie jest
-    /// przypisana, obrazki w stanie "disabled" bêd¹ generowane automatycznie.
-    /// </summary>
+
+    { Image list of the large pictures in the state "disabled".
+      If the list is not assigned, large "disabled" pictures will be generated
+      automatically }
     FDisabledLargeImages: TImageList;
 
     function DoTabChanging(OldIndex, NewIndex: integer): boolean;
-    // *******************************************
-    // *** Zarz¹dzanie stanem metryki i bufora ***
-    // *******************************************
 
-    /// <summary>Metoda gasi flagi: FMetricsValid oraz FBufferValid</summary>
+    // *****************************************************
+    // *** Management of the metric and the buffer state ***
+    // *****************************************************
+
+    { Method switches flags FMetricsValid and FBufferValid off }
     procedure SetMetricsInvalid;
-    /// <summary>Metoda gasi flagê FBufferValid</summary>
+
+    { Method swiches flag FBufferValid off }
     procedure SetBufferInvalid;
-    /// <summary>Metoda waliduje metryki toolbara i jego elementów</summary>
+
+    { Method validates toolbar metrics and toolbar elements }
     procedure ValidateMetrics;
-    /// <summary>Metoda waliduje zawartoœæ bufora</summary>
+
+    { Method validates the content of the buffer }
     procedure ValidateBuffer;
-    /// <summary>Metoda w³¹cza tryb wewnêtrznej przebudowy - zapala flagê
-    /// FInternalUpdating</summary>
+
+    { Method switches on the mode of internal rebuilding
+      and swiches flag FInternalUpdating on }
     procedure InternalBeginUpdate;
-    /// <summary>Metoda wy³¹cza tryb wewnêtrznej przebudowy - gasi flagê
-    /// FInternalUpdating</summary>
+
+    { Method switches on the mode of internal rebuilding
+      and swiches the flag FInternalUpdating off}
     procedure InternalEndUpdate;
 
-    // ********************************************
-    // *** Pokrycie metod z dziedziczonych klas ***
-    // ********************************************
+    // ************************************************
+    // *** Covering of methods from derived classes ***
+    // ************************************************
 
-    /// <summary>Zmiana rozmiaru komponentu</summary>
+    { The Change of component size }
     procedure DoOnResize; override;
     procedure EraseBackground(DC: HDC); override;
-    /// <summary>Metoda wywo³ywana po opuszczeniu obszaru komponentu przez
-    /// wskaŸnik myszy</summary>
+
+    { Method called when mouse pointer left component region }
     procedure MouseLeave;
-    /// <summary>Metoda wywo³ywana po wciœniêciu przycisku myszy</summary>
+
+    { Method called when mouse button is pressed }
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X, Y: integer); override;
-    /// <summary>Metoda wywo³ywana, gdy nad komponentem przesunie siê wskaŸnik
-    /// myszy</summary>
+
+    { Method called when mouse pointer is moved over component }
     procedure MouseMove(Shift: TShiftState; X, Y: integer); override;
-    /// <summary>Metoda wywo³ywana po puszczeniu przycisku myszy</summary>
+
+    { Method called when the mouse button is released }
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X, Y: integer); override;
-    /// <summary>Metoda wywo³ywana, gdy ca³y komponent wczyta siê z DFMa
-    /// </summary>
+
+    { Method called when the whole component has finished loading from LFM file }
     procedure Loaded; override;
-    /// <summary>Metoda wywo³ywana, gdy komponent staje siê Ownerem innego
-    /// komponentu, b¹dŸ gdy jeden z jego pod-komponentów jest zwalniany
-    /// </summary>
-    procedure Notification(AComponent: TComponent; Operation: TOperation);
-      override;
+
+    { Method called when component becomes the owner of other component,
+      or one of its sub-components is released }
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
 
     // ******************************************
-    // *** Obs³uga zdarzeñ myszy dla zak³adek ***
+    // *** Handling of mouse events for tabs  ***
     // ******************************************
 
-    /// <summary>Metoda wywo³ywana po opuszczeniu przez wskaŸnik myszy obszaru
-    /// "uchwytów" zak³adek</summary>
+    { Method called when mouse pointer left the region of tab "handles" }
     procedure TabMouseLeave;
-    /// <summary>Metoda wywo³ywana po wciœniêciu przycisku myszy, gdy wskaŸnik
-    /// jest nad obszarem zak³adek</summary>
+
+    { Method called when the mouse button is pressed
+      and at the same time the mouse pointer is over the region of tabs }
     procedure TabMouseDown(Button: TMouseButton; Shift: TShiftState;
       X, Y: integer);
-    /// <summary>Metoda wywo³ywana, gdy mysz przesunie siê ponad obszarem
-    /// "uchwytów" zak³adek</summary>
+
+    { Method called when the mouse will move over the region of tab "handles" }
     procedure TabMouseMove(Shift: TShiftState; X, Y: integer);
-    /// <summary>Metoda wywo³ywana, gdy jeden z przycisków myszy zostanie
-    /// puszczony, gdy obszar zak³adek by³ aktywnym elementem toolbara
-    /// </summary>
+
+    { Method called when one of the mouse buttons is released
+      and at the same time the region of tabs was active element of toolbar }
     procedure TabMouseUp(Button: TMouseButton; Shift: TShiftState;
       X, Y: integer);
 
-    // ******************
-    // *** Pomocnicze ***
-    // ******************
+    // *********************
+    // *** Extra support ***
+    // *********************
 
-    /// <summary>Metoda sprawdza, czy choæ jedna zak³adka ma ustawion¹ flagê
-    /// widocznoœci (Visible)</summary>
+    { Metchod checks if at least one of the tabs is switched on by flag Visible }
     function AtLeastOneTabVisible: boolean;
 
-    // ***************************
-    // *** Obs³uga komunikatów ***
-    // ***************************
+    // ****************
+    // *** Messages ***
+    // ****************
 
-    /// <summary>Komunikat odbierany, gdy mysz opuœci obszar komponentu
-    /// </summary>
+    { Message is received when mouse left the region of component }
     procedure CMMouseLeave(var msg: TLMessage); message CM_MOUSELEAVE;
 
-    // ********************************
-    // *** Obs³uga designtime i DFM ***
-    // ********************************
+    // **************************
+    // *** Designtime and LFM ***
+    // **************************
 
-    /// <summary>Metoda zwraca elementy, które maj¹ zostaæ zapisane jako
-    /// pod-elementy komponentu</summary>
+    {Method gives back elements which will be saved as sub-elements of component }
     procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
-    /// <summary>Metoda pozwala na zapisanie lub odczytanie dodatkowych
-    /// w³asnoœci komponentu</summary>
+
+    { Method allows for saving and reading additional properties of component }
     procedure DefineProperties(Filer: TFiler); override;
 
-    // *************************
-    // *** Gettery i settery ***
-    // *************************
+    // ***************************
+    // *** Getters and setters ***
+    // ***************************
 
-    /// <summary>Getter dla w³asnoœci Height</summary>
+    {Getter for property Height }
     function GetHeight: integer;
-    /// <summary>Setter dla w³asnoœci Appearance</summary>
+
+    { Setter for property Appearance }
     procedure SetAppearance(const Value: TSpkToolbarAppearance);
-    /// <summary>Getter dla w³asnoœci Color</summary>
+
+    { Getter for property Color }
     function GetColor: TColor;
-    /// <summary>Setter dla w³asnoœci Color</summary>
+
+    { Setter for property Color }
     procedure SetColor(const Value: TColor);
-    /// <summary>Setter dla w³asnoœci TabIndex</summary>
+
+    { Setter for property TabIndex }
     procedure SetTabIndex(const Value: integer);
-    /// <summary>Setter dla w³asnoœci Images</summary>
+
+    { Setter for property Images }
     procedure SetImages(const Value: TImageList);
-    /// <summary>Setter dla w³asnoœci DisabledImages</summary>
+
+    { Setter for property DisabledImages }
     procedure SetDisabledImages(const Value: TImageList);
-    /// <summary>Setter dla w³asnoœci LargeImages</summary>
+
+    { Setter for property LargeImages }
     procedure SetLargeImages(const Value: TImageList);
-    /// <summary>Setter dla w³asnoœci DisabledLargeImages</summary>
+
+    { Setter for property DisabledLargeImages }
     procedure SetDisabledLargeImages(const Value: TImageList);
+
   public
 
-    // ***********************************
-    // *** Obs³uga zdarzeñ dyspozytora ***
-    // ***********************************
+    // *************************
+    // *** Dispatcher events ***
+    // *************************
 
-    /// <summary>Reakcja na zmianê struktury elementów toolbara</summary>
+    { Reaction to change of toolbar elements structure }
     procedure NotifyItemsChanged;
-    /// <summary>Reakcja na zmianê metryki elementów toolbara</summary>
+
+    { Reaction to change of toolbar elements metric }
     procedure NotifyMetricsChanged;
-    /// <summary>Reakcja na zmianê wygl¹du elementów toolbara</summary>
+
+    { Reaction to change of toolbar elements appearance }
     procedure NotifyVisualsChanged;
-    /// <summary>Reakcja na zmianê zawartoœci klasy wygl¹du toolbara</summary>
+
+    { Reaction to change of content of toolbar class appearance }
     procedure NotifyAppearanceChanged;
-    /// <summary>Metoda zwraca instancjê pomocniczej bitmapy</summary>
+
+    { Method gives back the instance of supporting bitmap }
     function GetTempBitmap: TBitmap;
 
-    // ********************************
-    // *** Konstruktor i destruktor ***
-    // ********************************
+    // **********************************
+    // *** Constructor and Destructor ***
+    // **********************************
 
-    /// <summary>Konstruktor</summary>
+    { Constructor }
     constructor Create(AOwner: TComponent); override;
-    /// <summary>Destruktor</summary>
+
+    { Destructor }
     destructor Destroy; override;
 
-    // *****************
-    // *** Rysowanie ***
-    // *****************
+    // ***************
+    // *** Drawing ***
+    // ***************
 
-    /// <summary>Metoda odrysowuje zawartoœæ komponentu</summary>
+    { Method draws the content of the component }
     procedure Paint; override;
-    /// <summary>Metoda wymusza przebudowanie metryk i bufora</summary>
+
+    { Method enforces the rebuilding of metrics and buffer }
     procedure ForceRepaint;
-    /// <summary>Metoda prze³¹cza komponent w tryb aktualizacji zawartoœci
-    /// poprzez zapalenie flagi FUpdating</summary>
+
+    { Method swiches over the component in update mode of the content
+      by switching on flag FUpdating }
     procedure BeginUpdate;
-    /// <summary>Metoda wy³¹cza tryb aktualizacji zawartoœci poprzez zgaszenie
-    /// flagi FUpdating</summary>
+
+    { Method switches off the update mode of the content
+      by switching off flag FUpdating }
     procedure EndUpdate;
 
-    // *************************
-    // *** Obs³uga elementów ***
-    // *************************
+    // ****************
+    // *** Elements ***
+    // ****************
 
-    /// <summary>Metoda wywo³ywana w momencie, gdy jedna z zak³adek
-    /// jest zwalniana</summary>
-    /// <remarks>Nie nale¿y wywo³ywaæ metody FreeingTab z kodu! Jest ona
-    /// wywo³ywana wewnêtrznie, a jej zadaniem jest zaktualizowanie wewnêtrznej
-    /// listy zak³adek.</remarks>
+    { Method called when one of the tabs is released
+      You cannot call method FreeingTab from code (by writing it in code)
+      It's called internally and its purpuse is to update internal list of tabs }
     procedure FreeingTab(ATab: TSpkTab);
 
-    // **************************
-    // *** Dostêp do zak³adek ***
-    // **************************
+    // **********************
+    // *** Access to tabs ***
+    // **********************
 
-    /// <summary>W³asnoœæ daje dostê do zak³adek w trybie runtime. Do edycji
-    /// zak³adek w trybie designtime s³u¿y odpowiedni edytor, zaœ zapisywanie
-    /// i odczytywanie z DFMa jest zrealizowane manualnie.</summary>
+    { Property gives accesss to tabs in runtime mode
+      To edit tabs in designtime mode use proper editor
+      Savings and readings from LFM is done manually }
     property Tabs: TSpkTabs read FTabs;
+
   published
-    /// <summary>Kolor t³a komponentu</summary>
+
+    { Component background color }
     property Color: TColor read GetColor write SetColor default clSkyBlue;
-    /// <summary>Obiekt zawieraj¹cy atrybuty wygl¹du toolbara</summary>
+
+    { Object containing attributes of toolbar appearance }
     property Appearance: TSpkToolbarAppearance read FAppearance write SetAppearance;
-    /// <summary>Wysokoœæ toolbara (tylko do odczytu)</summary>
+
+    { Height of toolbar (read-only) }
     property Height: integer read GetHeight;
-    /// <summary>Aktywna zak³adka</summary>
+
+    { Index of active tab }
     property TabIndex: integer read FTabIndex write SetTabIndex;
-    /// <summary>Lista ma³ych obrazków</summary>
+
+    { ImageList with the small pictures }
     property Images: TImageList read FImages write SetImages;
-    /// <summary>Lista ma³ych obrazków w stanie "disabled"</summary>
+
+    { ImageList with the small pictures in state "disabled" }
     property DisabledImages: TImageList read FDisabledImages write SetDisabledImages;
-    /// <summary>Lista du¿ych obrazków</summary>
+
+    { ImageList with the large pictures }
     property LargeImages: TImageList read FLargeImages write SetLargeImages;
-    /// <summary>Lista du¿ych obrazków w stanie "disabled"</summary>
+
+    { ImageList with the large pictures in state "disabled" }
     property DisabledLargeImages: TImageList
       read FDisabledLargeImages write SetDisabledLargeImages;
 
-    // <summary>Events called before and after a different tab is selected</summary>
+    { Events called before and after another tab is selected }
     property OnTabChanging: TSpkTabChangingEvent
       read FOnTabChanging write FOnTabChanging;
     property OnTabChanged: TNotifyEvent read FOnTabChanged write FOnTabChanged;
@@ -458,7 +513,7 @@ var
 begin
   inherited Create(AOwner);
 
-  // Inicjacja dziedziczonych w³asnoœci
+  // Initialization of inherited property
   inherited Align := alTop;
   //todo: not found in lcl
   //inherited AlignWithMargins:=true;
@@ -473,7 +528,7 @@ begin
 
   //inherited Doublebuffered:=true;
 
-  // Inicjacja wewnêtrznych pól danych
+  // Initialization of internal data fields
   FToolbarDispatch := TSpkToolbarDispatch.Create(self);
 
   FBuffer := TBitmap.Create;
@@ -497,7 +552,7 @@ begin
 
   FTabHover := -1;
 
-  // Inicjacja pól
+  // Initialization of fields
   FAppearance := TSpkToolbarAppearance.Create(FToolbarDispatch);
 
   FTabs := TSpkTabs.Create(self);
@@ -534,12 +589,12 @@ end;
 
 destructor TSpkToolbar.Destroy;
 begin
-  // Zwalniamy pola
+  // Release the fields
   FTabs.Free;
 
   FAppearance.Free;
 
-  // Zwalniamy wewnêtrzne pola
+  // Release the internal fields
   FTemporary.Free;
   FBuffer.Free;
 
@@ -574,10 +629,8 @@ begin
 end;
 
 procedure TSpkToolbar.GetChildren(Proc: TGetChildProc; Root: TComponent);
-
 var
   i: integer;
-
 begin
   inherited;
 
@@ -610,7 +663,7 @@ procedure TSpkToolbar.InternalEndUpdate;
 begin
   FInternalUpdating := False;
 
-  // Po wewnêtrznych zmianach odœwie¿amy metryki i bufor
+  //After internal changes the metrics and buffers are refreshed
   ValidateMetrics;
   ValidateBuffer;
   Repaint;
@@ -629,22 +682,21 @@ begin
 
   InternalEndUpdate;
 
-  // Proces wewnêtrznego update'u zawsze odœwie¿a na koñcu metryki i bufor oraz
-  // odrysowuje komponent.
+  //The process of internal update always refreshes metrics and buffer at the end
+  //and draws component
 end;
 
 procedure TSpkToolbar.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: integer);
-
 begin
-  // Podczas procesu przebudowy mysz jest ignorowana.
+  //During rebuilding procees the mouse is ignored
   if FInternalUpdating or FUpdating then
     exit;
 
   inherited MouseDown(Button, Shift, X, Y);
 
-  // Mo¿liwe, ¿e zosta³ wciœniêty kolejny przycisk myszy. W takiej sytuacji
-  // aktywny obiekt otrzymuje kolejn¹ notyfikacjê.
+  //It is possible that the other mouse button was pressed
+  //In this situation active object receives next notification
   if FMouseActiveElement = teTabs then
   begin
     TabMouseDown(Button, Shift, X, Y);
@@ -658,11 +710,11 @@ begin
   else
   if FMouseActiveElement = teToolbarArea then
   begin
-    // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia
+    //Placeholder if there will be need to use this event
   end
   else
-  // Jeœli nie ma aktywnego elementu, aktywnym staje siê ten, który obecnie
-  // jest pod mysz¹.
+  //If there is no active element, the active element will be one
+  //which is now under the mouse
   if FMouseActiveElement = teNone then
   begin
     if FMouseHoverElement = teTabs then
@@ -681,27 +733,25 @@ begin
     if FMouseHoverElement = teToolbarArea then
     begin
       FMouseActiveElement := teToolbarArea;
-
-      // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia
+      //Placeholder if there will be need to use this event
     end;
   end;
 end;
 
 procedure TSpkToolbar.MouseLeave;
-
 begin
-  // Podczas procesu przebudowy mysz jest ignorowana.
+  //During rebuilding procees the mouse is ignored
   if FInternalUpdating or FUpdating then
     exit;
 
-  // MouseLeave nie ma szans byæ zawo³ane dla obiektu aktywnego, bo po
-  // wciœniêciu przycisku myszy ka¿dy jej ruch jest przekazywany jako
-  // MouseMove. Jeœli mysz wyjedzie za obszar komponentu, MouseLeave
-  // zostanie zawo³any zaraz po MouseUp - ale MouseUp czyœci aktywny
-  // obiekt.
+  //MouseLeave has no chance to be called for active object
+  //because when the mouse button is pressed every mouse move is transfered
+  //as MouseMove. If the mouse left from component region then
+  //MouseLeave will be called just after MouseUp but MouseUp cleans the
+  //active object
   if FMouseActiveElement = teNone then
   begin
-    // Jeœli nie ma obiektu aktywnego, obs³ugujemy elementy pod mysz¹
+    //If there is no active element, the elements under mouse will be supported
     if FMouseHoverElement = teTabs then
     begin
       TabMouseLeave;
@@ -715,7 +765,7 @@ begin
     else
     if FMouseHoverElement = teToolbarArea then
     begin
-      // Placeholder, jeœli bêdzie potrzeba obs³ugi tego zdarzenia
+      //Placeholder if there will be need to use this event
     end;
   end;
 
@@ -723,19 +773,17 @@ begin
 end;
 
 procedure TSpkToolbar.MouseMove(Shift: TShiftState; X, Y: integer);
-
 var
   NewMouseHoverElement: TSpkMouseToolbarElement;
   MousePoint: T2DIntVector;
-
 begin
-  // Podczas procesu przebudowy mysz jest ignorowana.
+  //During rebuilding procees the mouse is ignored
   if FInternalUpdating or FUpdating then
     exit;
 
   inherited MouseMove(Shift, X, Y);
 
-  // Sprawdzamy, który obiekt jest pod mysz¹
+  //Checking which element is under the mouse
   {$IFDEF EnhancedRecordSupport}
   MousePoint := T2DIntVector.Create(x, y);
   {$ELSE}
@@ -753,7 +801,7 @@ begin
   else
     NewMouseHoverElement := teNone;
 
-  // Jeœli jest jakiœ aktywny obiekt, to on ma wy³¹cznoœæ na komunikaty
+  //If there is an active element then it has exlusiveness for messages
   if FMouseActiveElement = teTabs then
   begin
     TabMouseMove(Shift, X, Y);
@@ -767,13 +815,13 @@ begin
   else
   if FMouseActiveElement = teToolbarArea then
   begin
-    // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia
+    //Placeholder if there will be need to use this event
   end
   else
   if FMouseActiveElement = teNone then
   begin
-    // Jeœli element pod mysz¹ siê zmienia, informujemy poprzedni element o
-    // tym, ¿e mysz opuszcza jego obszar
+    //If element changes under the mouse, then previous element will be informed
+    //that mouse is leaving its region
     if NewMouseHoverElement <> FMouseHoverElement then
     begin
       if FMouseHoverElement = teTabs then
@@ -789,11 +837,11 @@ begin
       else
       if FMouseHoverElement = teToolbarArea then
       begin
-        // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia
+        //Placeholder if there will be need to use this event
       end;
     end;
 
-    // Element pod mysz¹ otrzymuje MouseMove
+    //Element under mouse receives MouseMove
     if NewMouseHoverElement = teTabs then
     begin
       TabMouseMove(Shift, X, Y);
@@ -807,7 +855,7 @@ begin
     else
     if NewMouseHoverElement = teToolbarArea then
     begin
-      // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia
+      //Placeholder if there will be need to use this event
     end;
   end;
 
@@ -815,12 +863,10 @@ begin
 end;
 
 procedure TSpkToolbar.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: integer);
-
 var
   ClearActive: boolean;
-
 begin
-  // Podczas procesu przebudowy mysz jest ignorowana.
+  //During rebuilding procees the mouse is ignored
   if FInternalUpdating or FUpdating then
     exit;
 
@@ -828,8 +874,7 @@ begin
 
   ClearActive := not (ssLeft in Shift) and not (ssMiddle in Shift) and not (ssRight in Shift);
 
-  // Jeœli jest jakiœ aktywny obiekt, to on ma wy³¹cznoœæ na otrzymywanie
-  // komunikatów
+  //If there is an active element then it has exlusiveness for messages
   if FMouseActiveElement = teTabs then
   begin
     TabMouseUp(Button, Shift, X, Y);
@@ -843,12 +888,12 @@ begin
   else
   if FMouseActiveElement = teToolbarArea then
   begin
-    // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia
+    //Placeholder if there will be need to use this event
   end;
 
-  // Jeœli puszczono ostatni przycisk i mysz nie znajduje siê nad aktywnym
-  // obiektem, trzeba dodatkowo wywo³aæ MouseLeave dla aktywnego i MouseMove
-  // dla obiektu pod mysz¹.
+  //If the last mouse button is released and mouse doesn't locate over
+  //the active object, it must additionally call MouseLeave for active one
+  //and MouseMove for object being under mouse
   if ClearActive and (FMouseActiveElement <> FMouseHoverElement) then
   begin
     if FMouseActiveElement = teTabs then
@@ -862,7 +907,7 @@ begin
     else
     if FMouseActiveElement = teToolbarArea then
     begin
-      // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia
+      //Placeholder if there will be need to use this event
     end;
 
     if FMouseHoverElement = teTabs then
@@ -876,23 +921,20 @@ begin
     else
     if FMouseHoverElement = teToolbarArea then
     begin
-      // Placeholder, jeœli zajdzie potrzeba obs³ugi tego zdarzenia
+      //Placeholder if there will be need to use this event
     end;
   end;
 
-  // MouseUp gasi aktywny obiekt, o ile zosta³y puszczone wszystkie
-  // przyciski
+  //MouseUp swiches off active object, when all mouse buttons were released
   if ClearActive then
     FMouseActiveElement := teNone;
 end;
 
 procedure TSpkToolbar.Notification(AComponent: TComponent; Operation: TOperation);
-
 var
   Tab: TSpkTab;
   Pane: TSpkPane;
   Item: TSpkBaseItem;
-
 begin
   inherited;
 
@@ -946,15 +988,15 @@ var
   OldTabIndex: integer;
 begin
   OldTabIndex := FTabIndex;
-  // Poprawianie TabIndex o ile zachodzi taka potrzeba
+  // Fixed TabIndex when you need it
   if not (AtLeastOneTabVisible) then
     FTabIndex := -1
   else
   begin
     FTabIndex := max(0, min(FTabs.Count - 1, FTabIndex));
 
-    // Wiem, ¿e przynajmniej jedna zak³adka jest widoczna (z wczeœniejszego
-    // warunku), wiêc poni¿sza pêtla na pewno siê zakoñczy.
+    //I know that at least one tab is visible (from previous condition)
+    //so below loop will finish
     while not (FTabs[FTabIndex].Visible) do
       FTabIndex := (FTabIndex + 1) mod FTabs.Count;
   end;
@@ -985,9 +1027,9 @@ end;
 
 procedure TSpkToolbar.Paint;
 begin
-  // Jeœli trwa proces przebudowy (wewnêtrznej lub u¿ytkownika), walidacja metryk
-  // i bufora nie jest przeprowadzana, jednak bufor jest rysowany w takiej
-  // postaci, w jakiej zosta³ zapamiêtany przed rozpoczêciem procesu przebudowy.
+  //If the rebuilding process (internal or by user) is running now
+  //then validation of metrics and buffer is not running, however
+  //the buffer is drawn in a shape what was remembered before rebuilding process
   if not (FInternalUpdating or FUpdating) then
   begin
     if not (FMetricsValid) then
@@ -1104,8 +1146,8 @@ begin
   begin
     FTabIndex := max(0, min(FTabs.Count - 1, Value));
 
-    // Wiem, ¿e przynajmniej jedna zak³adka jest widoczna (z wczeœniejszego
-    // warunku), wiêc poni¿sza pêtla na pewno siê zakoñczy.
+    //I know that at least one tab is visible (from previous condition)
+    //so below loop will finish
     while not (FTabs[FTabIndex].Visible) do
       FTabIndex := (FTabIndex + 1) mod FTabs.Count;
   end;
@@ -1125,14 +1167,12 @@ end;
 
 procedure TSpkToolbar.TabMouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: integer);
-
 var
   SelTab: integer;
   TabRect: T2DIntRect;
   i: integer;
-
 begin
-  // Podczas procesu przebudowy mysz jest ignorowana.
+  //During rebuilding procees the mouse is ignored
   if FInternalUpdating or FUpdating then
     exit;
 
@@ -1150,8 +1190,7 @@ begin
               SelTab := i;
       end;
 
-  // Jeœli klikniêta zosta³a któraœ zak³adka, ró¿na od obecnie zaznaczonej,
-  // zmieñ zaznaczenie.
+  //If any tab was clicked but one (not being selected) then change selection
   if (Button = mbLeft) and (SelTab <> -1) and (SelTab <> FTabIndex) then
   begin
     if DoTabChanging(FTabIndex, SelTab) then
@@ -1167,7 +1206,7 @@ end;
 
 procedure TSpkToolbar.TabMouseLeave;
 begin
-  // Podczas procesu przebudowy mysz jest ignorowana.
+  //During rebuilding procees the mouse is ignored
   if FInternalUpdating or FUpdating then
     exit;
 
@@ -1180,14 +1219,12 @@ begin
 end;
 
 procedure TSpkToolbar.TabMouseMove(Shift: TShiftState; X, Y: integer);
-
 var
   NewTabHover: integer;
   TabRect: T2DIntRect;
   i: integer;
-
 begin
-  // Podczas procesu przebudowy mysz jest ignorowana.
+ //During rebuilding procees the mouse is ignored
   if FInternalUpdating or FUpdating then
     exit;
 
@@ -1216,14 +1253,15 @@ end;
 procedure TSpkToolbar.TabMouseUp(Button: TMouseButton; Shift: TShiftState;
   X, Y: integer);
 begin
-  // Podczas procesu przebudowy mysz jest ignorowana.
+ //During rebuilding procees the mouse is ignored
   if FInternalUpdating or FUpdating then
     exit;
 
   if (FTabIndex > -1) then
     FTabs[FTabIndex].ExecOnClick;
 
-  // Zak³adki nie potrzebuj¹ obs³ugi MouseUp.
+
+  //Tabs don't need MouseUp
 end;
 
 procedure TSpkToolbar.SetAppearance(const Value: TSpkToolbarAppearance);
@@ -1238,7 +1276,6 @@ end;
 procedure TSpkToolbar.ValidateBuffer;
 
   procedure DrawBackgroundColor;
-
   begin
     FBuffer.canvas.brush.color := Color;
     FBuffer.canvas.brush.style := bsSolid;
@@ -1246,15 +1283,12 @@ procedure TSpkToolbar.ValidateBuffer;
   end;
 
   procedure DrawBody;
-
   var
     FocusedAppearance: TSpkToolbarAppearance;
     i: integer;
-
   begin
-    // Pobieramy appearance aktualnie zaznaczonej zak³adki (b¹dŸ
-    // FToolbarAppearance, jeœli zaznaczona zak³adka nie ma ustawionego
-    // OverrideAppearance
+    //Loading appearance of selected tab
+    //or FToolbarAppearance if selected tab has no set OverrideAppearance
     if (FTabIndex <> -1) and (FTabs[FTabIndex].OverrideAppearance) then
       FocusedAppearance := FTabs[FTabIndex].CustomAppearance
     else
@@ -1317,19 +1351,20 @@ procedure TSpkToolbar.ValidateBuffer;
 
     if not (AtLeastOneTabVisible) then
     begin
-      // Jeœli nie ma zak³adek, rysujemy poziom¹ liniê
+
+      //If there are no tabs then the horizontal line will be drawn
       TGuiTools.DrawHLine(FBuffer, ToolbarCornerRadius, self.Width -
         ToolbarCornerRadius, ToolbarTabCaptionsHeight, FocusedAppearance.Tab.BorderColor);
     end
     else
     begin
-      // Jeœli s¹, pozostawiamy miejsce na zak³adki
-      // Szukamy ostatniej widocznej
+      //If there are tabs then the place will be left for them
+      //Last visible tab is looked for
       i := FTabs.Count - 1;
       while not (FTabs[i].Visible) do
         Dec(i);
 
-      // Tylko prawa czêœæ, reszta bêdzie narysowana wraz z zak³adkami
+      //Only right part, the rest will be drawn with tabs
       if FTabRects[i].Right < self.Width - ToolbarCornerRadius - 1 then
         TGuiTools.DrawHLine(FBuffer, FTabRects[i].Right + 1, self.Width -
           ToolbarCornerRadius, ToolbarTabCaptionsHeight, FocusedAppearance.Tab.BorderColor);
@@ -1337,7 +1372,6 @@ procedure TSpkToolbar.ValidateBuffer;
   end;
 
   procedure DrawTabs;
-
   var
     i: integer;
     TabRect: T2DIntRect;
@@ -1345,11 +1379,9 @@ procedure TSpkToolbar.ValidateBuffer;
     FocusedAppearance: TSpkToolbarAppearance;
 
     procedure DrawTabText(index: integer; AFont: TFont);
-
     var
       x, y: integer;
       TabRect: T2DIntRect;
-
     begin
       TabRect := FTabRects[index];
 
@@ -1368,24 +1400,22 @@ procedure TSpkToolbar.ValidateBuffer;
 
     procedure DrawTab(index: integer;
       Border, GradientFrom, GradientTo, TextColor: TColor);
-
     var
       TabRect: T2DIntRect;
       TabRegion: HRGN;
       TmpRegion, TmpRegion2: HRGN;
-
     begin
-      // * Notatka! * Zak³adki zachodz¹ jednym pikslem na obszar toolbara,
-      // poniewa¿ musz¹ narysowaæ krawêdŸ, która zgra siê z krawêdzi¹ obszaru.
+      //Note!! Tabs cover one pixel of toolbar region, because
+      // the they must draw edge, which fits in with region edge
       TabRect := FTabRects[index];
 
-      // Œrodkowy prostok¹t
+      //Middle rectangle
       TabRegion := CreateRectRgn(TabRect.Left + TabCornerRadius - 1,
         TabRect.Top + TabCornerRadius,
         TabRect.Right - TabCornerRadius + 1 +
         1, TabRect.Bottom + 1);
 
-      // Górna czêœæ z górnymi zaokr¹gleniami wypuk³ymi
+      //Top part with top convex curves
       TmpRegion := CreateRectRgn(TabRect.Left + 2 * TabCornerRadius - 1,
         TabRect.Top, TabRect.Right -
         2 * TabCornerRadius + 1 + 1, TabRect.Top +
@@ -1407,8 +1437,7 @@ procedure TSpkToolbar.ValidateBuffer;
       CombineRgn(TabRegion, TabRegion, TmpRegion, RGN_OR);
       DeleteObject(TmpRegion);
 
-      // Dolna czêœæ z dolnymi zaokr¹gleniami wklês³ymi
-
+      //Bottom part with bottom convex curves
       TmpRegion := CreateRectRgn(TabRect.Left, TabRect.Bottom -
         TabCornerRadius, TabRect.Right + 1,
         TabRect.Bottom + 1);
@@ -1439,7 +1468,7 @@ procedure TSpkToolbar.ValidateBuffer;
 
       DeleteObject(TabRegion);
 
-      // Ramka
+      // Frame
       TGuiTools.DrawAARoundCorner(FBuffer,
                                 {$IFDEF EnhancedRecordSupport}
         T2DIntPoint.Create(TabRect.left, TabRect.bottom - TabCornerRadius + 1),
@@ -1505,10 +1534,8 @@ procedure TSpkToolbar.ValidateBuffer;
 
     procedure DrawBottomLine(index: integer;
       Border: TColor);
-
     var
       TabRect: T2DIntRect;
-
     begin
       TabRect := FTabRects[index];
 
@@ -1521,11 +1548,11 @@ procedure TSpkToolbar.ValidateBuffer;
     end;
 
   begin
-    // Zak³adam, ¿e zak³adki maj¹ rozs¹dne rozmiary
+    //I assume that the tabs size is reasonable
 
-    // Pobieramy appearance aktualnie zaznaczonej zak³adki (jej appearance, jeœli
-    // ma zapalon¹ flagê OverrideAppearance, FToolbarAppearance w przeciwnym
-    // wypadku)
+    //Loading appearance of selected now tab (her appearance, if
+    //its flag - OverrideAppearance is switched on otherwise
+    //FToolbarAppearance
     if (FTabIndex <> -1) and (FTabs[FTabIndex].OverrideAppearance) then
       FocusedAppearance := FTabs[FTabIndex].CustomAppearance
     else
@@ -1535,11 +1562,11 @@ procedure TSpkToolbar.ValidateBuffer;
       for i := 0 to FTabs.Count - 1 do
         if FTabs[i].Visible then
         begin
-          // Jest sens rysowaæ?
+          // Is there any sense to draw?
           if not (FTabClipRect.IntersectsWith(FTabRects[i])) then
             continue;
 
-          // Pobieramy appearance rysowanej w³aœnie zak³adki
+          //Loading appearance of now drawn tab
           if (FTabs[i].OverrideAppearance) then
             CurrentAppearance := FTabs[i].CustomAppearance
           else
@@ -1547,7 +1574,7 @@ procedure TSpkToolbar.ValidateBuffer;
 
           TabRect := FTabRects[i];
 
-          // Rysujemy zak³adkê
+          // Tab is drawn
           if i = FTabIndex then
           begin
             if i = FTabHover then
@@ -1585,19 +1612,18 @@ procedure TSpkToolbar.ValidateBuffer;
                 CurrentAppearance.Tab.TabHeaderFont.color);
             end;
 
-            // Dolna kreska
-            // Uwaga: Niezale¿nie od zak³adki rysowana kolorem appearance
-            // aktualnie zaznaczonej zak³adki!
+            // Bottom line
+            //Warning!! Irrespective of tab , the appearance will be drawn
+            //with color now selected tab
             DrawBottomLine(i, FocusedAppearance.Tab.BorderColor);
 
-            // Tekst
+            // Text
             DrawTabText(i, CurrentAppearance.Tab.TabHeaderFont);
           end;
         end;
   end;
 
   procedure DrawTabContents;
-
   begin
     if FTabIndex <> -1 then
       FTabs[FTabIndex].Draw(FBuffer, FTabContentsClipRect);
@@ -1609,35 +1635,32 @@ begin
   if FBufferValid then
     exit;
 
-  // ValidateBuffer mo¿e byæ wywo³ane tylko wtedy, gdy metrics zosta³y obliczone.
-  // Metoda zak³ada, ¿e bufor ma ju¿ odpowiednie rozmiary oraz ¿e wszystkie
-  // recty, zarówno toolbara jak i elementów podrzêdnych, zosta³y poprawnie
-  // obliczone.
+  // ValidateBuffer could be called only when metrics is calulated
+  //Method assumes that buffer has proper sizes and all rects of toolbar and
+  //sub-elements are correctly calculated
 
-  // *** T³o komponentu ***
+  // *** Component background ***
   DrawBackgroundColor;
 
-  // *** Generowanie t³a dla toolbara ***
+  // *** The toolbar background is generated ***
   DrawBody;
 
-  // *** Zak³adki ***
+  // *** Tabs ***
   DrawTabs;
 
-  // *** Zawartoœæ zak³adek ***
+  // *** Tabs content ***
   DrawTabContents;
 
-  // Bufor jest poprawny
+  // Buffer is correct
   FBufferValid := True;
 end;
 
 procedure TSpkToolbar.ValidateMetrics;
-
 var
   i: integer;
   x: integer;
   TabWidth: integer;
   TabAppearance: TSpkToolbarAppearance;
-
 begin
   if FInternalUpdating or FUpdating then
     exit;
@@ -1648,9 +1671,9 @@ begin
   FBuffer := TBitmap.Create;
   FBuffer.SetSize(self.Width, self.Height);
 
-  // *** Zak³adki ***
+  // *** Tabs ***
 
-  // Cliprect zak³adek (zawgórn¹ ramkê komponentu)
+  // Cliprect of tabs (containg top frame of component)
 {$IFDEF EnhancedRecordSupport}
   FTabClipRect := T2DIntRect.Create(
     ToolbarCornerRadius,
@@ -1665,29 +1688,29 @@ begin
     ToolbarTabCaptionsHeight);
 {$ENDIF}
 
-  // Recty nag³ówków zak³adek (zawieraj¹ górn¹ ramkê komponentu)
-  setlength(FTabRects, FTabs.Count);
+  // Rects of tabs headings (containg top frame of component)
+  Setlength(FTabRects, FTabs.Count);
   if FTabs.Count > 0 then
   begin
     x := ToolbarCornerRadius;
     for i := 0 to FTabs.Count - 1 do
       if FTabs[i].Visible then
       begin
-        // Pobieramy appearance zak³adki
+        // Loading appearance of tab
         if FTabs[i].OverrideAppearance then
           TabAppearance := FTabs[i].CustomAppearance
         else
           TabAppearance := FAppearance;
         FBuffer.Canvas.font.Assign(TabAppearance.Tab.TabHeaderFont);
 
-        TabWidth := 2 +                                                          // Ramka
+        TabWidth := 2 +  // Frame
           2 * TabCornerRadius +
-          // Zaokr¹glenia
+          // Curves
           2 * ToolbarTabCaptionsTextHPadding +
-          // Wewnêtrzne marginesy
+          // Internal margins
           max(ToolbarMinTabCaptionWidth,
           FBuffer.Canvas.TextWidth(FTabs.Items[i].Caption));
-        // Szerokoœæ tekstu
+        // Breadth of text
 
         FTabRects[i].Left := x;
         FTabRects[i].Right := x + TabWidth - 1;
@@ -1706,11 +1729,11 @@ begin
       end;
   end;
 
-  // *** Tafle ***
+  // *** Panes ***
 
   if FTabIndex <> -1 then
   begin
-    // Rect obszaru zak³adki
+    // Rect of tab region
    {$IFDEF EnhancedRecordSupport}
     FTabContentsClipRect := T2DIntRect.Create(ToolbarBorderWidth + TabPaneLeftPadding,
       ToolbarTabCaptionsHeight + ToolbarBorderWidth + TabPaneTopPadding,
