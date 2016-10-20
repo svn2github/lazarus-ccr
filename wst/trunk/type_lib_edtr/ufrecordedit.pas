@@ -268,12 +268,7 @@ begin
   end;
   itm.Caption := extName;
   itm.SubItems.Add(FSymbolTable.GetExternalName(AFieldDef.VarType));
-  if FSymbolTable.IsAttributeProperty(AFieldDef) then begin
-    s := 'Y';
-  end else begin
-    s := 'N';
-  end;
-  itm.SubItems.Add(s);
+  itm.SubItems.Add(BOOL_STR[FSymbolTable.IsAttributeProperty(AFieldDef)]);
   itm.Data := AFieldDef;
   Result := itm;
 end;
