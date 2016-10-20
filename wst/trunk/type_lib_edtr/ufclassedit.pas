@@ -365,7 +365,8 @@ end;
 function TfClassEdit.LoadProperty(APropDef: TPasProperty; const AIndex : Integer) : TListItem;
 var
   itm : TListItem;
-  s, extName : string;
+  extName : string;
+  optionalProp : Boolean;
 begin
   extName := FSymbolTable.GetExternalName(APropDef);
   itm := FindItem(extName,edtProp.Items);
@@ -377,12 +378,9 @@ begin
   end;
   itm.Caption := extName;
   itm.SubItems.Add(FSymbolTable.GetExternalName(APropDef.VarType));
-  if FSymbolTable.IsAttributeProperty(APropDef) then begin
-    s := 'Y';
-  end else begin
-    s := 'N';
-  end;
-  itm.SubItems.Add(s);
+  itm.SubItems.Add(BOOL_STR[FSymbolTable.IsAttributeProperty(APropDef)]);
+  optionalProp := (AnsiPos(sWST_PROP_STORE_PREFIX,APropDef.StoredAccessorName) = 1);
+  itm.SubItems.Add(BOOL_STR[optionalProp]);
   itm.Data := APropDef;
   Result := itm;
 end;

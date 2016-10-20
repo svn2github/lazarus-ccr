@@ -8,7 +8,7 @@ object fClassEdit: TfClassEdit
   ClientHeight = 556
   ClientWidth = 552
   Position = poDesktopCenter
-  LCLVersion = '1.2.2.0'
+  LCLVersion = '1.6.1.0'
   object Panel1: TPanel
     Left = 0
     Height = 50
@@ -63,27 +63,27 @@ object fClassEdit: TfClassEdit
     OnChange = PCChange
     object TabSheet1: TTabSheet
       Caption = 'Compound Object'
-      ClientHeight = 478
+      ClientHeight = 480
       ClientWidth = 544
       object Label1: TLabel
         Left = 4
-        Height = 15
+        Height = 13
         Top = 18
-        Width = 32
+        Width = 27
         Caption = 'Name'
         ParentColor = False
       end
       object Label2: TLabel
         Left = 4
-        Height = 15
+        Height = 13
         Top = 59
-        Width = 72
+        Width = 66
         Caption = 'Inheritts from'
         ParentColor = False
       end
       object edtName: TEdit
         Left = 92
-        Height = 23
+        Height = 21
         Top = 18
         Width = 440
         Anchors = [akTop, akLeft, akRight]
@@ -91,17 +91,17 @@ object fClassEdit: TfClassEdit
       end
       object GroupBox1: TGroupBox
         Left = 4
-        Height = 303
+        Height = 305
         Top = 98
         Width = 529
         Anchors = [akTop, akLeft, akRight, akBottom]
         Caption = '  Properties  '
-        ClientHeight = 285
+        ClientHeight = 287
         ClientWidth = 525
         TabOrder = 2
         object edtProp: TListView
           Left = 0
-          Height = 285
+          Height = 287
           Top = 0
           Width = 525
           Align = alClient
@@ -113,11 +113,15 @@ object fClassEdit: TfClassEdit
             end          
             item
               Caption = 'Type'
-              Width = 200
+              Width = 190
             end          
             item
               Caption = 'Attribute'
-              Width = 107
+              Width = 60
+            end          
+            item
+              Caption = 'Optional'
+              Width = 55
             end>
           HideSelection = False
           PopupMenu = PopupMenu1
@@ -131,7 +135,7 @@ object fClassEdit: TfClassEdit
       object Button3: TButton
         Left = 4
         Height = 25
-        Top = 411
+        Top = 413
         Width = 100
         Action = actPropAdd
         Anchors = [akLeft, akBottom]
@@ -141,7 +145,7 @@ object fClassEdit: TfClassEdit
       object Button4: TButton
         Left = 116
         Height = 25
-        Top = 411
+        Top = 413
         Width = 100
         Action = actPropEdit
         Anchors = [akLeft, akBottom]
@@ -151,7 +155,7 @@ object fClassEdit: TfClassEdit
       object Button5: TButton
         Left = 228
         Height = 25
-        Top = 411
+        Top = 413
         Width = 100
         Action = actPropDelete
         Anchors = [akLeft, akBottom]
@@ -160,18 +164,18 @@ object fClassEdit: TfClassEdit
       end
       object edtParent: TComboBox
         Left = 92
-        Height = 23
+        Height = 21
         Top = 58
         Width = 440
         Anchors = [akTop, akLeft, akRight]
-        ItemHeight = 15
+        ItemHeight = 13
         Style = csDropDownList
         TabOrder = 1
       end
       object Button7: TButton
         Left = 372
         Height = 25
-        Top = 411
+        Top = 413
         Width = 70
         Action = actMoveUp
         Anchors = [akRight, akBottom]
@@ -181,7 +185,7 @@ object fClassEdit: TfClassEdit
       object Button8: TButton
         Left = 452
         Height = 25
-        Top = 411
+        Top = 413
         Width = 70
         Action = actMoveDown
         Anchors = [akRight, akBottom]
@@ -191,7 +195,7 @@ object fClassEdit: TfClassEdit
       object Button9: TButton
         Left = 372
         Height = 25
-        Top = 440
+        Top = 442
         Width = 70
         Action = actMoveFirst
         Anchors = [akRight, akBottom]
@@ -200,7 +204,7 @@ object fClassEdit: TfClassEdit
       object Button10: TButton
         Left = 452
         Height = 25
-        Top = 440
+        Top = 442
         Width = 70
         Action = actMoveLast
         Anchors = [akRight, akBottom]
@@ -640,7 +644,6 @@ object fClassEdit: TfClassEdit
           end>
         VisibleSpecialChars = [vscSpace, vscTabAtLast]
         ReadOnly = True
-        SelectedColor.FrameEdges = sfeAround
         SelectedColor.BackPriority = 50
         SelectedColor.ForePriority = 50
         SelectedColor.FramePriority = 50
@@ -648,23 +651,17 @@ object fClassEdit: TfClassEdit
         SelectedColor.ItalicPriority = 50
         SelectedColor.UnderlinePriority = 50
         SelectedColor.StrikeOutPriority = 50
-        IncrementColor.FrameEdges = sfeAround
-        HighlightAllColor.FrameEdges = sfeAround
         BracketHighlightStyle = sbhsBoth
         BracketMatchColor.Background = clNone
         BracketMatchColor.Foreground = clNone
-        BracketMatchColor.FrameEdges = sfeAround
         BracketMatchColor.Style = [fsBold]
         FoldedCodeColor.Background = clNone
         FoldedCodeColor.Foreground = clGray
         FoldedCodeColor.FrameColor = clGray
-        FoldedCodeColor.FrameEdges = sfeAround
         MouseLinkColor.Background = clNone
         MouseLinkColor.Foreground = clBlue
-        MouseLinkColor.FrameEdges = sfeAround
         LineHighlightColor.Background = clNone
         LineHighlightColor.Foreground = clNone
-        LineHighlightColor.FrameEdges = sfeAround
         inline SynLeftGutterPartList1: TSynGutterPartList
         end
       end
@@ -780,19 +777,6 @@ object fClassEdit: TfClassEdit
   object SynXMLSyn1: TSynXMLSyn
     DefaultFilter = 'Documents XML (*.xml,*.xsd,*.xsl,*.xslt,*.dtd)|*.xml;*.xsd;*.xsl;*.xslt;*.dtd'
     Enabled = False
-    ElementAttri.FrameEdges = sfeAround
-    AttributeAttri.FrameEdges = sfeAround
-    NamespaceAttributeAttri.FrameEdges = sfeAround
-    AttributeValueAttri.FrameEdges = sfeAround
-    NamespaceAttributeValueAttri.FrameEdges = sfeAround
-    TextAttri.FrameEdges = sfeAround
-    CDATAAttri.FrameEdges = sfeAround
-    EntityRefAttri.FrameEdges = sfeAround
-    ProcessingInstructionAttri.FrameEdges = sfeAround
-    CommentAttri.FrameEdges = sfeAround
-    DocTypeAttri.FrameEdges = sfeAround
-    SpaceAttri.FrameEdges = sfeAround
-    SymbolAttri.FrameEdges = sfeAround
     WantBracesParsed = False
     left = 210
     top = 171
