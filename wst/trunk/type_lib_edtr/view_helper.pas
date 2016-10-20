@@ -20,6 +20,9 @@ uses
   Classes, SysUtils, ComCtrls, Contnrs,
   pastree, pascal_parser_intf;
 
+const
+  BOOL_STR : array[Boolean] of Char = ('N','Y');
+
 type
 
   ISymbolPainter = interface
