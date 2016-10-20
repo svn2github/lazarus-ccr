@@ -668,13 +668,15 @@ end;
 
 procedure TfWstTypeLibraryEdit.actSaveXSDExecute(Sender : TObject);
 var
-  oldFilter : string;
+  oldFilter, locFileName : string;
 begin
   oldFilter := SD.Filter;
   SD.Filter := 'XSD files ( *.xsd )|*.xsd';
   try
     if SD.Execute() then begin
-      SaveToFile(ChangeFileExt(SD.FileName,'.xsd'));
+      locFileName := ChangeFileExt(SD.FileName,'.xsd');
+      SaveToFile(locFileName);
+      FCurrentFileName := locFileName;
     end;
   finally
     SD.Filter := oldFilter;
