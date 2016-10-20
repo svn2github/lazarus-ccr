@@ -1,0 +1,123 @@
+object RowHeightForm: TRowHeightForm
+  Left = 479
+  Height = 203
+  Top = 289
+  Width = 325
+  HorzScrollBar.Page = 304
+  HorzScrollBar.Range = 304
+  VertScrollBar.Page = 168
+  VertScrollBar.Range = 168
+  BorderStyle = bsDialog
+  Caption = 'RowHeightForm'
+  ClientHeight = 203
+  ClientWidth = 325
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '1.7'
+  object ButtonPanel1: TButtonPanel
+    Left = 6
+    Height = 34
+    Top = 163
+    Width = 313
+    OKButton.Name = 'OKButton'
+    OKButton.DefaultCaption = True
+    HelpButton.Name = 'HelpButton'
+    HelpButton.DefaultCaption = True
+    CloseButton.Name = 'CloseButton'
+    CloseButton.Caption = 'Close'
+    CloseButton.DefaultCaption = False
+    CancelButton.Name = 'CancelButton'
+    CancelButton.DefaultCaption = True
+    TabOrder = 0
+    ShowButtons = [pbOK, pbCancel]
+  end
+  object EdRowHeight: TFloatSpinEdit
+    AnchorSideLeft.Control = LblRowHeight
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = RbCustom
+    AnchorSideTop.Side = asrBottom
+    Left = 108
+    Height = 23
+    Top = 121
+    Width = 74
+    Alignment = taRightJustify
+    BorderSpacing.Left = 24
+    BorderSpacing.Top = 24
+    BorderSpacing.Bottom = 24
+    Increment = 1
+    MaxValue = 100
+    MinValue = 0
+    TabOrder = 1
+    Value = 15
+  end
+  object LblRowHeight: TLabel
+    AnchorSideTop.Control = EdRowHeight
+    AnchorSideTop.Side = asrCenter
+    Left = 24
+    Height = 15
+    Top = 125
+    Width = 60
+    BorderSpacing.Left = 24
+    BorderSpacing.Bottom = 24
+    Caption = 'Row height'
+    ParentColor = False
+  end
+  object CbUnits: TComboBox
+    AnchorSideLeft.Control = EdRowHeight
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = EdRowHeight
+    AnchorSideTop.Side = asrCenter
+    Left = 190
+    Height = 23
+    Top = 121
+    Width = 114
+    BorderSpacing.Left = 8
+    ItemHeight = 15
+    OnChange = CbUnitsChange
+    Style = csDropDownList
+    TabOrder = 2
+  end
+  object RbDefault: TRadioButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 24
+    Height = 19
+    Top = 24
+    Width = 102
+    BorderSpacing.Left = 24
+    BorderSpacing.Top = 24
+    Caption = 'Reset to default'
+    OnChange = RowHeightTypeChanged
+    TabOrder = 3
+  end
+  object RbAuto: TRadioButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = RbDefault
+    AnchorSideTop.Side = asrBottom
+    Left = 24
+    Height = 19
+    Top = 51
+    Width = 76
+    BorderSpacing.Left = 24
+    BorderSpacing.Top = 8
+    Caption = 'Automatic'
+    OnChange = RowHeightTypeChanged
+    TabOrder = 4
+  end
+  object RbCustom: TRadioButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = RbAuto
+    AnchorSideTop.Side = asrBottom
+    Left = 24
+    Height = 19
+    Top = 78
+    Width = 62
+    BorderSpacing.Left = 24
+    BorderSpacing.Top = 8
+    Caption = 'Custom'
+    Checked = True
+    OnChange = RowHeightTypeChanged
+    TabOrder = 5
+    TabStop = True
+  end
+end
