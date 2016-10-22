@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, mrumanager, Forms, Controls, Graphics, Dialogs,
   ExtCtrls, ComCtrls, ActnList, Menus, StdActns, Buttons, fpstypes,
   fpspreadsheet, fpspreadsheetctrls, fpspreadsheetgrid, fpsActions,
-  fpsRegFileFormats, fpsSYLK, xlsxml, Grids, Types;
+  fpsSYLK, xlsxml, Grids, Types;
 
 type
 
@@ -470,7 +470,7 @@ implementation
 
 uses
   LCLIntf, inifiles, uriparser, ValEdit,
-  fpsUtils, fpsCSV,
+  fpsUtils, fpsCSV, fpsReaderWriter,
   sCSVParamsForm, sCurrencyForm, sFormatSettingsForm, sSortParamsForm,
   sHyperlinkForm, sNumFormatForm, sSearchForm, sColWidthForm, sRowHeightForm,
   sAbout;
@@ -583,13 +583,10 @@ end;
 procedure TMainForm.AcFileSaveAsAccept(Sender: TObject);
 var
   fmt: TsSpreadFormatID;
-  fmts: TsSpreadFormatIDArray;
-  ext: String;
 begin
   Screen.Cursor := crHourglass;
   try
     fmt := FSaveFormats[AcFileSaveAs.Dialog.FilterIndex - 1];
-    ext := ExtractFileExt(ACFileSaveAs.Dialog.Filename);
     WorkbookSource.SaveToSpreadsheetFile(UTF8ToAnsi(AcFileSaveAs.Dialog.FileName), fmt);
     UpdateCaption;
   finally

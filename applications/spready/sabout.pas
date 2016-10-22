@@ -5,7 +5,7 @@ unit sAbout;
 interface
 
 uses
-  Classes, IpHtml, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
   ExtCtrls, StdCtrls;
 
 type
@@ -17,13 +17,28 @@ type
     BtnClose: TButton;
     IconImage: TImage;
     Image1: TImage;
+    LblBulletFPSpreadsheet1: TLabel;
+    lblBulletFreePascal1: TLabel;
+    LblBulletLazarus1: TLabel;
+    LblCompilerAndLibs: TLabel;
+    LblIcons: TLabel;
+    lblTango: TLabel;
+    LblFreePascal: TLabel;
+    LblFugueIcons: TLabel;
+    LblLazarus: TLabel;
+    LblFPSpreadsheet: TLabel;
+    lblBulletFreePascal: TLabel;
+    LblBulletLazarus: TLabel;
+    LblBulletFPSpreadsheet: TLabel;
+    LblSilkIcons: TLabel;
     LblVersion: TLabel;
     Panel1: TPanel;
     procedure FormCreate(Sender: TObject);
-    procedure HTMLViewerHotClick(Sender: TObject);
+    procedure LabelClick(Sender: TObject);
+    procedure LabelMouseEnter(Sender: TObject);
+    procedure LabelMouseLeave(Sender: TObject);
   private
     { private declarations }
-    FHTMLViewer: TIpHtmlPanel;
   public
     { public declarations }
   end;
@@ -37,39 +52,6 @@ implementation
 
 uses
   LCLIntf, Types, resource, versiontypes, versionresource;
-
-const
-  LE = LineEnding;
-
-  HTMLStr =
-    '<!DOCTYPE html ' +
-      'PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" '+
-      '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> '+ LE +
-    '<html xmlns="http://www.w3.org/1999/xhtml">'+LE+
-    '<head>' + LE +
-    '  <meta http-equiv="content-type" content="text/html; charset=UTF-8">' + LE +
-    '  <style type="text/css">' + LE +
-    '    body {background-color:ffffff;}' + LE +
-    '    h3{color:003366;}' + LE +
-    '    li{font-size:9pt}' + LE +
-    '  </style>' + LE +
-    '<body>' + LE +
-    '  <h3>Compiler and libaries:</h3>' + LE +
-    '  <ul>'+ LE +
-    '    <li><a href="www.freepascal.org">Free Pascal</a></li>' + LE +
-    '    <li><a href="www.lazarus.freepascal.org">Lazarus</a></li>' + LE +
-    '    <li><a href="http://sourceforge.net/p/lazarus-ccr/svn/HEAD/tree/components/fpspreadsheet/">fpspreadsheet</a></li>' + LE +
-    '  </ul>' + LE +
-    '  <h3>Icons:</h3>' + LE +
-    '  <ul>' + LE +
-    '    <li><a href="p.yusukekamiyamane.com">Fugue Icons</a></li>' + LE +
-    '    <li><a href="www.famfamfam.com/lab/icons/silk/">famfamfam silk icons</a></li>' + LE +
-    '    <li><a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango icon library</a></li>' + LE +
-//    '    <li><a href="https://github.com/pasnox/oxygen-icons-png">Oxygen cons</a></li>' + LE +
-    '  </ul>' + LE +
-    '</body>' + LE +
-    '</html>';
-
 
 function ResourceVersionInfo: String;
 var
@@ -111,18 +93,30 @@ begin
   IconImage.Picture.Icon := Application.Icon;
   IconImage.Picture.Icon.Current := Application.Icon.GetBestIndexForSize(sz); //4;
   LblVersion.Caption := 'Version ' + ResourceVersionInfo;
-
-  FHTMLViewer := TIpHtmlPanel.Create(self);
-  FHTMLViewer.Parent := self;
-  FHTMLViewer.Align := alClient;
-  FHTMLViewer.DefaultFontSize := 9;
-  FHTMLViewer.OnHotClick := @HTMLViewerHotClick;
-  FHTMLViewer.SetHtmlFromStr(HTMLStr);
 end;
 
-procedure TAboutForm.HTMLViewerHotClick(Sender: TObject);
+procedure TAboutForm.LabelClick(Sender: TObject);
+var
+  url: String;
 begin
-  OpenURL((Sender as TIpHtmlPanel).HotURL);
+  url := TLabel(Sender).Hint;
+  OpenURL(url);
+end;
+
+procedure TAboutForm.LabelMouseEnter(Sender: TObject);
+var
+  lbl: TLabel;
+begin
+  lbl := TLabel(Sender);
+  lbl.Font.Style := [fsUnderline];
+end;
+
+procedure TAboutForm.LabelMouseLeave(Sender: TObject);
+var
+  lbl: TLabel;
+begin
+  lbl := TLabel(Sender);
+  lbl.Font.Style := [];
 end;
 
 

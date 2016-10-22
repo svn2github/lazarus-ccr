@@ -50,6 +50,9 @@ implementation
 
 {$R *.lfm}
 
+uses
+  fpsPatches;
+
 { TRowHeightForm }
 
 procedure TRowHeightForm.CbUnitsChange(Sender: TObject);

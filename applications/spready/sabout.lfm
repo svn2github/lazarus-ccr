@@ -1,35 +1,40 @@
 object AboutForm: TAboutForm
   Left = 338
-  Height = 294
+  Height = 313
   Top = 153
-  Width = 375
+  Width = 377
   BorderStyle = bsSizeToolWin
   Caption = 'About Spready'
-  ClientHeight = 294
-  ClientWidth = 375
+  ClientHeight = 313
+  ClientWidth = 377
   Color = clWindow
   Constraints.MinHeight = 275
   Constraints.MinWidth = 330
   OnCreate = FormCreate
   Position = poMainFormCenter
-  LCLVersion = '1.7'
+  ShowHint = True
+  LCLVersion = '1.6.0.4'
   object Panel1: TPanel
     Left = 0
-    Height = 90
+    Height = 82
     Top = 0
-    Width = 375
+    Width = 377
     Align = alTop
     BevelOuter = bvNone
-    ClientHeight = 90
-    ClientWidth = 375
+    ClientHeight = 82
+    ClientWidth = 377
     Color = clWindow
     ParentColor = False
     TabOrder = 0
     object IconImage: TImage
-      Left = 8
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 10
       Height = 64
-      Top = 16
+      Top = 8
       Width = 64
+      BorderSpacing.Left = 10
+      BorderSpacing.Top = 8
     end
     object BtnClose: TButton
       AnchorSideTop.Control = Panel1
@@ -38,9 +43,9 @@ object AboutForm: TAboutForm
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = IconImage
       AnchorSideBottom.Side = asrBottom
-      Left = 292
+      Left = 294
       Height = 29
-      Top = 51
+      Top = 43
       Width = 75
       Anchors = [akRight, akBottom]
       BorderSpacing.Right = 8
@@ -56,9 +61,9 @@ object AboutForm: TAboutForm
       AnchorSideTop.Side = asrBottom
       AnchorSideBottom.Control = IconImage
       AnchorSideBottom.Side = asrBottom
-      Left = 84
+      Left = 86
       Height = 15
-      Top = 65
+      Top = 57
       Width = 54
       Anchors = [akLeft, akBottom]
       BorderSpacing.Left = 12
@@ -71,9 +76,9 @@ object AboutForm: TAboutForm
       AnchorSideLeft.Control = IconImage
       AnchorSideLeft.Side = asrBottom
       AnchorSideBottom.Control = LblVersion
-      Left = 84
+      Left = 86
       Height = 44
-      Top = 21
+      Top = 13
       Width = 156
       Anchors = [akLeft, akBottom]
       AutoSize = True
@@ -132,9 +137,233 @@ object AboutForm: TAboutForm
   object Bevel1: TBevel
     Left = 0
     Height = 6
-    Top = 90
-    Width = 375
+    Top = 82
+    Width = 377
     Align = alTop
     Shape = bsTopLine
+  end
+  object LblCompilerAndLibs: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    Left = 10
+    Height = 32
+    Top = 88
+    Width = 254
+    BorderSpacing.Left = 10
+    Caption = 'Compiler and libraries'
+    Font.Color = clNavy
+    Font.Height = -24
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object LblFreePascal: TLabel
+    AnchorSideLeft.Control = lblBulletFreePascal
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = LblCompilerAndLibs
+    AnchorSideTop.Side = asrBottom
+    Cursor = crHandPoint
+    Left = 44
+    Height = 15
+    Hint = 'www.freepascal.org'
+    Top = 123
+    Width = 58
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 3
+    Caption = 'Free Pascal'
+    Font.Color = clNavy
+    ParentColor = False
+    ParentFont = False
+    OnClick = LabelClick
+    OnMouseEnter = LabelMouseEnter
+    OnMouseLeave = LabelMouseLeave
+  end
+  object LblLazarus: TLabel
+    AnchorSideLeft.Control = LblFreePascal
+    AnchorSideTop.Control = LblFreePascal
+    AnchorSideTop.Side = asrBottom
+    Cursor = crHandPoint
+    Left = 44
+    Height = 15
+    Hint = 'www.lazarus.freepascal.org'
+    Top = 141
+    Width = 39
+    BorderSpacing.Top = 3
+    Caption = 'Lazarus'
+    Font.Color = clNavy
+    ParentColor = False
+    ParentFont = False
+    OnClick = LabelClick
+    OnMouseEnter = LabelMouseEnter
+    OnMouseLeave = LabelMouseLeave
+  end
+  object LblFPSpreadsheet: TLabel
+    AnchorSideLeft.Control = LblFreePascal
+    AnchorSideTop.Control = LblLazarus
+    AnchorSideTop.Side = asrBottom
+    Cursor = crHandPoint
+    Left = 44
+    Height = 15
+    Hint = 'http://sourceforge.net/p/lazarus-ccr/svn/HEAD/tree/components/fpspreadsheet/'
+    Top = 159
+    Width = 77
+    BorderSpacing.Top = 3
+    Caption = 'FPSpreadsheet'
+    Font.Color = clNavy
+    ParentColor = False
+    ParentFont = False
+    OnClick = LabelClick
+    OnMouseEnter = LabelMouseEnter
+    OnMouseLeave = LabelMouseLeave
+  end
+  object lblBulletFreePascal: TLabel
+    AnchorSideLeft.Control = LblCompilerAndLibs
+    AnchorSideTop.Control = LblFreePascal
+    Left = 26
+    Height = 15
+    Top = 123
+    Width = 10
+    BorderSpacing.Left = 16
+    Caption = '⚫'
+    Font.Color = clNavy
+    ParentColor = False
+    ParentFont = False
+  end
+  object LblBulletLazarus: TLabel
+    AnchorSideLeft.Control = lblBulletFreePascal
+    AnchorSideTop.Control = LblLazarus
+    Left = 26
+    Height = 15
+    Top = 141
+    Width = 10
+    Caption = '⚫'
+    Font.Color = clNavy
+    ParentColor = False
+    ParentFont = False
+  end
+  object LblBulletFPSpreadsheet: TLabel
+    AnchorSideLeft.Control = lblBulletFreePascal
+    AnchorSideTop.Control = LblFPSpreadsheet
+    Left = 26
+    Height = 15
+    Top = 159
+    Width = 10
+    Caption = '⚫'
+    Font.Color = clNavy
+    ParentColor = False
+    ParentFont = False
+  end
+  object LblIcons: TLabel
+    AnchorSideLeft.Control = LblCompilerAndLibs
+    AnchorSideTop.Control = LblFPSpreadsheet
+    AnchorSideTop.Side = asrBottom
+    Left = 10
+    Height = 32
+    Top = 190
+    Width = 61
+    BorderSpacing.Top = 16
+    Caption = 'Icons'
+    Font.Color = clNavy
+    Font.Height = -24
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object LblFugueIcons: TLabel
+    AnchorSideLeft.Control = lblBulletFreePascal1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = LblIcons
+    AnchorSideTop.Side = asrBottom
+    Cursor = crHandPoint
+    Left = 44
+    Height = 15
+    Hint = 'p.yusukekamiyamane.com'
+    Top = 225
+    Width = 64
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 3
+    Caption = 'Fugue icons'
+    Font.Color = clNavy
+    ParentColor = False
+    ParentFont = False
+    OnClick = LabelClick
+    OnMouseEnter = LabelMouseEnter
+    OnMouseLeave = LabelMouseLeave
+  end
+  object lblBulletFreePascal1: TLabel
+    AnchorSideLeft.Control = LblIcons
+    AnchorSideTop.Control = LblFugueIcons
+    Left = 26
+    Height = 15
+    Top = 225
+    Width = 10
+    BorderSpacing.Left = 16
+    Caption = '⚫'
+    Font.Color = clNavy
+    ParentColor = False
+    ParentFont = False
+  end
+  object LblBulletLazarus1: TLabel
+    AnchorSideLeft.Control = lblBulletFreePascal1
+    AnchorSideTop.Control = LblSilkIcons
+    Left = 26
+    Height = 15
+    Top = 243
+    Width = 10
+    Caption = '⚫'
+    Font.Color = clNavy
+    ParentColor = False
+    ParentFont = False
+  end
+  object LblSilkIcons: TLabel
+    AnchorSideLeft.Control = LblFugueIcons
+    AnchorSideTop.Control = LblFugueIcons
+    AnchorSideTop.Side = asrBottom
+    Cursor = crHandPoint
+    Left = 44
+    Height = 15
+    Hint = 'www.famfamfam.com/lab/icons/silk/'
+    Top = 243
+    Width = 114
+    BorderSpacing.Top = 3
+    Caption = 'famfamfam silk icons'
+    Font.Color = clNavy
+    ParentColor = False
+    ParentFont = False
+    OnClick = LabelClick
+    OnMouseEnter = LabelMouseEnter
+    OnMouseLeave = LabelMouseLeave
+  end
+  object LblBulletFPSpreadsheet1: TLabel
+    AnchorSideLeft.Control = lblBulletFreePascal1
+    AnchorSideTop.Control = lblTango
+    Left = 26
+    Height = 15
+    Top = 261
+    Width = 10
+    Caption = '⚫'
+    Font.Color = clNavy
+    ParentColor = False
+    ParentFont = False
+  end
+  object lblTango: TLabel
+    AnchorSideLeft.Control = LblFugueIcons
+    AnchorSideTop.Control = LblSilkIcons
+    AnchorSideTop.Side = asrBottom
+    Cursor = crHandPoint
+    Left = 44
+    Height = 15
+    Hint = 'tango.freedesktop.org/Tango_Icon_Library'
+    Top = 261
+    Width = 95
+    BorderSpacing.Top = 3
+    Caption = 'Tango icon library'
+    Font.Color = clNavy
+    ParentColor = False
+    ParentFont = False
+    OnClick = LabelClick
+    OnMouseEnter = LabelMouseEnter
+    OnMouseLeave = LabelMouseLeave
   end
 end

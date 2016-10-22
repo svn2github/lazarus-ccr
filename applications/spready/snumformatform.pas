@@ -92,7 +92,7 @@ implementation
 
 uses
   LCLType, Math, DateUtils, TypInfo, variants,
-  fpsUtils, fpsNumFormatParser, fpsCurrency,
+  fpsUtils, fpsCurrency,
   sCurrencyForm;
 
 const

@@ -19,7 +19,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="7"/>
-      <BuildNr Value="2"/>
+      <BuildNr Value="3"/>
       <StringTable InternalName="Spready" ProductName="Spready" ProductVersion="0.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="2">
@@ -56,16 +56,13 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="3">
+    <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="TurboPowerIPro"/>
+        <PackageName Value="laz_fpspreadsheet_visual"/>
       </Item1>
       <Item2>
-        <PackageName Value="laz_fpspreadsheet_visual"/>
-      </Item2>
-      <Item3>
         <PackageName Value="LCL"/>
-      </Item3>
+      </Item2>
     </RequiredPackages>
     <Units Count="14">
       <Unit0>
@@ -106,12 +103,18 @@
       <Unit7>
         <Filename Value="snumformatform.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="NumFormatForm"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="sNumFormatForm"/>
       </Unit7>
       <Unit8>
         <Filename Value="ssearchform.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="SearchForm"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="sSearchForm"/>
       </Unit8>
       <Unit9>
         <Filename Value="ssortparamsform.pas"/>

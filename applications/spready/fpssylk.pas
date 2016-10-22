@@ -86,7 +86,7 @@ var
 implementation
 
 uses
-  fpsRegFileFormats, fpsUtils, fpsNumFormat;
+  fpsUtils, fpsNumFormat;
 
 {==============================================================================}
 {                               TsSYLKReader                                   }
