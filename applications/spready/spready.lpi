@@ -56,19 +56,16 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="4">
+    <RequiredPackages Count="3">
       <Item1>
         <PackageName Value="TurboPowerIPro"/>
       </Item1>
       <Item2>
-        <PackageName Value="lazmrumenu"/>
+        <PackageName Value="laz_fpspreadsheet_visual"/>
       </Item2>
       <Item3>
-        <PackageName Value="laz_fpspreadsheet_visual"/>
-      </Item3>
-      <Item4>
         <PackageName Value="LCL"/>
-      </Item4>
+      </Item3>
     </RequiredPackages>
     <Units Count="14">
       <Unit0>
