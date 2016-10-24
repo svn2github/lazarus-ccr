@@ -588,6 +588,7 @@ begin
   try
     fmt := FSaveFormats[AcFileSaveAs.Dialog.FilterIndex - 1];
     WorkbookSource.SaveToSpreadsheetFile(UTF8ToAnsi(AcFileSaveAs.Dialog.FileName), fmt);
+    FMRUMenuManager.AddToRecent(AcFileSaveAs.Dialog.FileName);
     UpdateCaption;
   finally
     Screen.Cursor := crDefault;
