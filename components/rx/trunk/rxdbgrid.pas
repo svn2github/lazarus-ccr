@@ -3741,10 +3741,13 @@ var
   S: string;
   F: TField;
   C: TRxColumn;
-  j: integer;
+  j, DataCol: integer;
 begin
   if Assigned(OnDrawColumnCell) and not (CsDesigning in ComponentState) then
-    OnDrawColumnCell(Self, aRect, aCol, TColumn(ColumnFromGridColumn(aCol)), aState)
+  begin
+    DataCol := ColumnIndexFromGridColumn(aCol);
+    OnDrawColumnCell(Self, aRect, {aCol}DataCol, TColumn(ColumnFromGridColumn(aCol)), aState)
+  end
   else
   begin
     F := GetFieldFromGridColumn(aCol);
