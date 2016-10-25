@@ -372,7 +372,7 @@ end;
 
 procedure TRxDBCalcEdit.UpdateData(Sender: TObject);
 begin
-  if Assigned(FDataLink.Field) then
+  if Assigned(FDataLink.Field) and FDataLink.Edit then
   begin
     if Self.Text<>'' then
       FDataLink.Field.AsFloat := Self.AsFloat
