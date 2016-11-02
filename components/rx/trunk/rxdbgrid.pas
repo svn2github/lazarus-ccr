@@ -655,7 +655,7 @@ type
     procedure UpdateJMenuStates;
     procedure UpdateJMenuKeys;
     function SortEngineOptions: TRxSortEngineOptions;
-    procedure WMVScroll(var Message : TLMVScroll); message LM_VScroll;
+//    procedure WMVScroll(var Message : TLMVScroll); message LM_VScroll;
     procedure GetScrollbarParams(out aRange, aPage, aPos: Integer);
     procedure RestoreEditor;
     //storage
@@ -825,6 +825,7 @@ type
     property BorderSpacing;
     property BorderStyle;
     property Color;
+    property CellHintPriority;
     property BorderColor;
     property DrawFullLine: boolean read GetDrawFullLine write SetDrawFullLine; deprecated;
     property FocusColor;
@@ -866,6 +867,7 @@ type
     property ShowHint;
     property TabOrder;
     property TabStop;
+    property TabAdvance;
     property TitleFont;
     property TitleImageList;
     property TitleStyle;
@@ -2361,7 +2363,7 @@ begin
     EditorMode := True;
   end;
 end;
-
+{
 procedure TRxDBGrid.WMVScroll(var Message: TLMVScroll);
 var
   IsSeq: boolean;
@@ -2421,7 +2423,7 @@ begin
   DebugLn('---- Diff=',dbgs(DeltaRec), ' FinalPos=',dbgs(aPos));
   {$endif}
 end;
-
+}
 procedure TRxDBGrid.SetAutoSort(const AValue: boolean);
 var
   S: string;
