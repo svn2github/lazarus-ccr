@@ -72,6 +72,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    property OnClick;
     // Can be set in design mode. Note URL links are inactive in design mode
     property Active: boolean read FActive write SetActive;
     // Inherited property
