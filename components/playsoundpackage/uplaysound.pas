@@ -115,7 +115,7 @@ begin
   AboutBoxBackgroundColor := clCream;
   //AboutBoxFontName (string)
   //AboutBoxFontSize (integer)
-  AboutBoxVersion := '0.0.3';
+  AboutBoxVersion := '0.0.5';
   AboutBoxAuthorname := 'Gordon Bamber';
   AboutBoxOrganisation := 'Public Domain';
   AboutBoxAuthorEmail := 'minesadorada@charcodelvalle.com';
@@ -134,7 +134,7 @@ end;
 
 procedure Tplaysound.Execute;
 begin
-  if not FileExistsUTF8(fPathToSoundFile) then
+  if not FileExists(fPathToSoundFile) then
     Exit;
   Try
     PlaySound(fPathToSoundFile);

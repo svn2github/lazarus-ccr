@@ -1,7 +1,8 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <Package Version="4">
     <Name Value="playwavepackage"/>
+    <Type Value="RunAndDesignTime"/>
     <Author Value="minesadorada"/>
     <CompilerOptions>
       <Version Value="11"/>
@@ -13,16 +14,10 @@
           <GenerateDebugInfo Value="False"/>
         </Debugging>
       </Linking>
-      <Other>
-        <CompilerMessages>
-          <MsgFileName Value=""/>
-        </CompilerMessages>
-        <CompilerPath Value="$(CompPath)"/>
-      </Other>
     </CompilerOptions>
     <Description Value="Simple component to play wave files under Windows or Linux"/>
     <License Value="LGPLv2"/>
-    <Version Release="3"/>
+    <Version Release="5"/>
     <Files Count="2">
       <Item1>
         <Filename Value="uplaysound.pas"/>
@@ -40,7 +35,6 @@
       <OutDir Value="locale"/>
       <EnableI18NForLFM Value="True"/>
     </i18n>
-    <Type Value="RunAndDesignTime"/>
     <RequiredPkgs Count="1">
       <Item1>
         <PackageName Value="IDEIntf"/>
