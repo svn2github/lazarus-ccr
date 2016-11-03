@@ -254,31 +254,20 @@ begin
     //skip empty lines
     if Length(s) > 0 then
     begin
+      //check for url
+      if (Pos('http://', s) <> 0)
+      OR (Pos('https://', s) <> 0)
+      OR  (Pos('mailto:', s) <> 0) then
+      begin
+        FBuffer.Canvas.Font := FLinkFont;
+        if i = FActiveLine then FBuffer.Canvas.Font.Style := FBuffer.Canvas.Font.Style+[fsUnderline];
+      end;
       //check for bold format token
       if s[1] = '#' then
       begin
         s := copy(s, 2, Length(s) - 1);
         FBuffer.Canvas.Font.Style := [fsBold];
       end;
-      begin
-        //check for url
-        if (Pos('http://', s) <> 0)
-        OR (Pos('https://', s) <> 0)
-        OR  (Pos('mailto:', s) <> 0) then
-        begin
-          FBuffer.Canvas.Font := FLinkFont;
-          if i = FActiveLine then
-          begin
-            FBuffer.Canvas.Font.Style := FBuffer.Canvas.Font.Style+[fsUnderline];
-            //FBuffer.Canvas.Font.Color := clRed;
-          end
-          else
-            //FBuffer.Canvas.Font.Color := clBlue;
-        end
-        else FBuffer.Canvas.Font := FFont;
-
-      end;
-
       w := FBuffer.Canvas.TextWidth(s);
       FBuffer.Canvas.TextOut((FBuffer.Width - w) div 2, FOffset + i * FLineHeight, s);
     end;

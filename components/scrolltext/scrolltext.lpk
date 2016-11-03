@@ -14,7 +14,7 @@
     </CompilerOptions>
     <Description Value="Graphic surface that scrolls (when Active=True) that can be loaded with a Stringlist"/>
     <License Value="LGPL"/>
-    <Version Major="1" Minor="1"/>
+    <Version Major="1" Minor="1" Release="1"/>
     <Files Count="2">
       <Item1>
         <Filename Value="scrollingtext.pas"/>
