@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <PathDelim Value="\"/>
+    <Name Value="lazupdate"/>
+    <Type Value="RunAndDesignTime"/>
+    <Author Value="minesadorada@charcodelvalle.com"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <IncludeFiles Value="synapse\source\lib"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+      <CodeGeneration>
+        <Optimizations>
+          <OptimizationLevel Value="3"/>
+        </Optimizations>
+      </CodeGeneration>
+      <Linking>
+        <Debugging>
+          <GenerateDebugInfo Value="False"/>
+        </Debugging>
+      </Linking>
+    </CompilerOptions>
+    <Description Value="Laz AutoUpdater
+A component for SourceForge Project Developers and end-users to update their apps easily"/>
+    <License Value="LGPL v2"/>
+    <Version Minor="1" Release="26"/>
+    <Files Count="5">
+      <Item1>
+        <Filename Value="ulazautoupdate.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="ulazautoupdate"/>
+      </Item1>
+      <Item2>
+        <Filename Value="aboutlazautoupdateunit.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="aboutlazautoupdateunit"/>
+      </Item2>
+      <Item3>
+        <Filename Value="versionsupport.pas"/>
+        <UnitName Value="VersionSupport"/>
+      </Item3>
+      <Item4>
+        <Filename Value="uappisrunning.pas"/>
+        <UnitName Value="uappisrunning"/>
+      </Item4>
+      <Item5>
+        <Filename Value="synapse\source\lib\laz_synapse.lpk"/>
+        <Type Value="Text"/>
+      </Item5>
+    </Files>
+    <i18n>
+      <EnableI18N Value="True"/>
+      <OutDir Value="locale"/>
+      <EnableI18NForLFM Value="True"/>
+    </i18n>
+    <RequiredPkgs Count="2">
+      <Item1>
+        <PackageName Value="laz_synapse"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="IDEIntf"/>
+      </Item2>
+    </RequiredPkgs>
+    <UsageOptions>
+      <CustomOptions Value="-dUseCThreads"/>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+      <DestinationDirectory Value="D:\Lazarusprojects\lazautoupdate\svn\trunk\deploy\packagesource"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>
