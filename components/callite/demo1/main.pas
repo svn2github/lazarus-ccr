@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  LclType, Buttons, StdCtrls, ComCtrls, Grids, DateUtils, CalendarLite;
+  LclType, Buttons, StdCtrls, DateUtils, CalendarLite;
 
 type
 
@@ -17,8 +17,8 @@ type
     edtMonth: TEdit;
     Label1: TLabel;
     procedure btnCloseClick(Sender: TObject);
-    procedure edtYearKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure edtMonthKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure edtYearKeyDown(Sender: TObject; var Key: Word; {%H-}Shift: TShiftState);
+    procedure edtMonthKeyDown(Sender: TObject; var Key: Word; {%H-}Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
   private
@@ -64,7 +64,7 @@ begin
   
   MonthsList:= TStringList.Create;
   for I:= 0 to 11 do begin
-    MonthsList.Add(AnsiToUTF8(ShortMonthNames[I+1]));
+    MonthsList.Add(AnsiToUTF8(FormatSettings.ShortMonthNames[I+1]));
   end;
 
   AYear:= YearOf(Now);

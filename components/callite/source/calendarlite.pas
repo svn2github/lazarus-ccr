@@ -302,10 +302,15 @@ end;
 
 procedure TCalDrawer.CalcSettings;
 var
-  rem, i, cellWidths, totalSpace, cw, cellHeights, hSpc,
-  adjSpace, sp, borderh, borderv, ch, numRows: integer;
-  sz: TSize;
+  rem: Integer = 0;
+  hSpc: Integer = 0;
+  ch: Integer = 0;
+  sp: Integer = 0;
+  cw: Integer = 0;
   bit: integer=0;
+  i, cellWidths, totalSpace, cellHeights,
+  adjSpace, borderh, borderv, numRows: integer;
+  sz: TSize;
 begin
   if (FOwner.BiDiMode = bdLeftToRight) then
     FTStyle.RightToLeft:= False
@@ -448,13 +453,15 @@ end;
 
 procedure TCalDrawer.DrawDayCells;
 var
-  r, c, startCol, startRow, startSpan: integer;
+  remDays: integer = 0;
+  startRow: Integer = 0;
+  holidays: THolidays = 0;
+  r, c, startCol, startSpan: integer;
   rec: TRect;
   s: string;
   dow, y, m, d: word;
-  partWeeks, remDays: integer;
+  partWeeks: Integer;
   dt, todayDate: TDateTime;
-  holidays: THolidays;
 begin
   todayDate := Date;
   dow := DayOfWeek(FOwner.FDate);
@@ -850,7 +857,7 @@ begin
         2: PrevMonth;
         3..5:
           begin
-            GetMonthYearRects(Rm, Ry);
+            GetMonthYearRects(Rm{%H-}, Ry{%H-});
             if PtInRect(Rm, p) then begin
               FOwner.PopulateMonthPopupMenu;
               ppopup := FOwner.ClientToScreen(Point(Rm.Left, Rm.Bottom));
@@ -1097,7 +1104,7 @@ var
   item: TMenuItem;
   m, d, dayCount: Integer;
   population: integer = 0;
-  hols: THolidays;
+  hols: THolidays = 0;
   dt: TDateTime;
 begin
   with FPopupMenu.Items do begin
