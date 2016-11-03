@@ -11,7 +11,7 @@ object mainform: Tmainform
   DefaultMonitor = dmPrimary
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '1.2.4.0'
+  LCLVersion = '1.7'
   object cmd_Close: TBitBtn
     Left = 104
     Height = 30
@@ -30,6 +30,8 @@ object mainform: Tmainform
     Lines.Strings = (
       'Memo1'
     )
+    ReadOnly = True
+    ScrollBars = ssAutoVertical
     TabOrder = 1
   end
   object cmd_StopTimer: TButton
@@ -56,10 +58,9 @@ object mainform: Tmainform
     Top = 8
     Width = 184
     Caption = 'Set up LongTimer'
-    ClientHeight = 158
+    ClientHeight = 156
     ClientWidth = 180
     TabOrder = 4
-    OnClick = crp_SetTimerClick
     object Label1: TLabel
       Left = 16
       Height = 15
@@ -145,6 +146,17 @@ object mainform: Tmainform
       Caption = 'Sample'
       ParentColor = False
     end
+  end
+  object cmd_clearmemo: TBitBtn
+    Left = 16
+    Height = 30
+    Top = 224
+    Width = 75
+    Caption = 'Clear'
+    Kind = bkCancel
+    ModalResult = 2
+    OnClick = cmd_clearmemoClick
+    TabOrder = 5
   end
   object LongTimer1: TLongTimer
     About.Description.Strings = (
