@@ -1,0 +1,1295 @@
+{ TCalendarLite is a lightweight calendar component, a TGraphiccontrol
+  descendant, which is consequently not dependent on any widgetset.
+  It is not a fixed-size component, as are most calendars, but will align
+  and resize as needed
+
+  Originator    : H Page-Clark, 2013
+  Contributions : Ariel Rodriguez, 2013
+                  Werner Pamler, 2013/2016
+
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version with the following modification:
+
+  As a special exception, the copyright holders of this library give you
+  permission to link this library with independent modules to produce an
+  executable, regardless of the license terms of these independent modules,and
+  to copy and distribute the resulting executable under terms of your choice,
+  provided that you also meet, for each linked independent module, the terms
+  and conditions of the license of that module. An independent module is a
+  module which is not derived from or based on this library. If you modify
+  this library, you may extend this exception to your version of the library,
+  but you are not obligated to do so. If you do not wish to do so, delete this
+  exception statement from your version.
+
+  This program is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE. See the GNU Library General Public License
+  for more details.
+
+  You should have received a copy of the GNU Library General Public License
+  along with this library; if not, write to the Free Software Foundation,
+  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+}
+
+unit CalendarLite;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, types,
+  menus;
+
+const
+  TopRow = 0;
+  DayRow = 1;
+  FirstDateRow = 2;
+  LastDateRow = 7;
+  LastCol = 7;
+  TodayRow = 8;
+  LastRow: word = 0;
+  DefCalHeight = 160;
+  DefCalWidth = 210;
+  DefMinHeight = 120;
+  DefMinWidth = 120;
+  DefaultDisplayText = 'Today is,dd/mm/yyyy,Holidays during,There are no holidays set for';
+  DefTStyle: TTextStyle = (Alignment  : taCenter; Layout     : tlCenter;
+                           SingleLine : True;     Clipping   : True;
+                           ExpandTabs : False;    ShowPrefix : False;
+                           Wordbreak  : False;    Opaque     : False;
+                           SystemFont : False;    RightToLeft: False;
+                           EndEllipsis: False);
+
+   //Ariel Rodriguez 12/09/2013
+  EnglishDays = 'Sun,Mon,Tue,Wed,Thu,Fri,Sat';
+  EnglishMonths = 'January,February,March,April,May,June,July,August,September,October,November,December';
+  HebrewDays = 'א,ב,ג,ד,ה,ו,ש';
+  HebrewMonths = ('ינואר,פברואר,מרץ,אפריל,מאי,יוני,    יולי,אוגוסט,ספטמבר,אוקטובר,נובמבר,דצמבר');
+  HebrewTexts = 'היום הוא,yyyy-mm-dd,במהלך החגים, אין חגים מוגדרים עבור';
+  FrenchDays = 'dim,lun,mar,mer,jeu,ven,sm';
+  FrenchMonths = 'janvier,février,mars,avril,mai,juin,juillet,août,septembre,octobre,novembre,décembre';
+  FrenchTexts = 'Est aujourd''hui,yyyy/mm/dd,vacances pendant,Il n''y a pas de jours fériés fixés pour';
+  GermanMonths = 'Januar,Februar,März,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember';
+  GermanDays = 'Son,Mon,Die,Mit,Don,Fre,Sam';
+  GermamTexts = 'Heute ist,yyyy/mm/dd,Urlaub während,Es gibt keine Feiertage eingestellt für';
+  SpanishDays = 'Dom,Lun,Mar,Mie,Jue,Vie,Sab';
+  SpanishMonths = 'Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre';
+  SpanishTexts = 'Hoy es,dd/mm/yyyy,Dias de fiestas,No hay dias feriados establecidos para';
+   //Ariel Rodriguez 12/09/2013
+
+type
+  TCalendarLite = class;
+
+  TColArray = array[1..LastCol] of word;
+  TRowArray = array of word;
+
+  TArrowDirection = (adLeft, adRight);
+  TArrowhead = (ahSingle, ahDouble);
+  TArrowPoints = array[1..3] of TPoint;
+
+  TDayOfWeek = (dowSunday=1, dowMonday=2, dowTuesday=3, dowWednesday=4,
+    dowThursday=5, dowFriday=6, dowSaturday=7);
+  TDaysOfWeek = set of TDayOfWeek;
+
+  TDisplayText = (dtToday=0, dtTodayFormat=1, dtHolidaysDuring=2, dtNoHolidaysDuring=3);
+
+  THolidays = DWord;
+  TGetHolidaysEvent = procedure (Sender: TObject; AMonth, AYear: Integer;
+    var Holidays: THolidays) of object;
+
+  TCalOption = (coBoldDayNames, coBoldHolidays, coBoldToday, coBoldTopRow,
+                coBoldWeekend, coDayLine, coShowBorder, coShowHolidays,
+                coShowTodayFrame, coShowTodayName, coShowTodayRow,
+                coShowWeekend, coUseTopRowColors);
+  TCalOptions = set of TCalOption;
+  TLanguage = (lgEnglish, lgFrench, lgGerman, lgHebrew, lgSpanish); //Ariel Rodriguez 12/09/2013
+
+
+  { TCalDrawer }
+
+  TCalDrawer = class
+  private
+    FBoundsRect: TRect;
+    FCanvas: TCanvas;
+    FCellSize: TSize;
+    FColPositions: TColArray;
+    FOwner: TCalendarLite;
+    FRowPositions: TRowArray;
+    FStartDate: TDateTime;
+    FThisDay: word;
+    FThisMonth: word;
+    FThisYear: word;
+    FTStyle: TTextStyle;
+    procedure CalcSettings;
+    procedure ChangeDateTo(aCell: TSize);
+    procedure DrawArrow(aRect: TRect; aHead: TArrowhead; aDirn: TArrowDirection);
+    procedure DrawDayCells;
+    procedure DrawDayLabels;
+    procedure DrawTodayRow;
+    procedure DrawTopRow;
+    function  GetCellAt(aPoint: TPoint): TSize;
+    function  GetCellAtColRow(aCol, aRow: integer): TRect;
+    function  GetColRowPosition(aCol, aRow: integer): TSize;
+    function  GetLeftColIndex: Integer;
+    procedure GetMonthYearRects(var AMonthRect, AYearRect: TRect);
+    function  GetRightColIndex: Integer;
+    procedure GotoDay(aDate: word);
+    procedure GotoMonth(AMonth: word);
+    procedure GotoToday;
+    procedure GotoYear(AYear: word);
+    procedure LeftClick;
+    procedure NextMonth;
+    procedure NextYear;
+    procedure PrevMonth;
+    procedure PrevYear;
+    procedure RightClick;
+  public
+    constructor Create(aCanvas: TCanvas);
+    procedure Draw;
+  end;
+
+
+  { TCalColors }
+
+  TCalColors = class(TPersistent)
+  private
+    FOwner: TCalendarLite;
+    FColors: Array[0..12] of TColor;
+    function GetColor(AIndex: Integer): TColor;
+    procedure SetColor(AIndex: Integer; AValue: TColor);
+  public
+    constructor Create(AOwner: TCalendarLite);
+  published
+    property ArrowBorderColor: TColor index 0 read GetColor write SetColor default clSilver;
+    property ArrowColor: TColor index 1 read GetColor write SetColor default clSilver;
+    property BackgroundColor: TColor index 2 read GetColor write SetColor default clWhite;
+    property BorderColor: TColor index 3 read GetColor write SetColor default clSilver;
+    property DaylineColor: TColor index 4 read GetColor write SetColor default clSilver;
+    property HolidayColor: TColor index 5 read GetColor write SetColor default clRed;
+    property PastMonthColor: TColor index 6 read GetColor write SetColor default clSilver;
+    property SelectedDateColor: TColor index 7 read GetColor write SetColor default clMoneyGreen;
+    property TextColor: TColor index 8 read GetColor write SetColor default clBlack;
+    property TodayFrameColor: TColor index 9 read GetColor write SetColor default clLime;
+    property TopRowColor: TColor index 10 read GetColor write SetColor default clHighlight;
+    property TopRowTextColor: TColor index 11 read GetColor write SetColor default clHighlightText;
+    property WeekendColor: TColor index 12 read GetColor write SetColor default clRed;
+  end;
+
+
+  { TCalendarLite }
+
+  TCalendarLite = class(TGraphicControl)
+  private
+    FCalDrawer: TCalDrawer;
+    FColors: TCalColors;
+    FDate: TDateTime;
+    FDayNames: TStringList;
+    FDisplayTexts: TStringList;
+    FMonthNames: TStringList;
+    FOnDateChange: TNotifyEvent;
+    FOnGetHolidays: TGetHolidaysEvent;
+    FOptions: TCalOptions;
+    FPopupMenu: TPopupMenu;
+    FStartingDayOfWeek: TDayOfWeek;
+    FWeekendDays: TDaysOfWeek;
+    FLanguage: TLanguage; //Ariel Rodriguez 12/09/2013
+    procedure DateChange;
+    function GetDayNames: String;
+    function GetDisplaytexts: String;
+    function GetMonthNames: String;
+    procedure HolidayMenuItemClicked(Sender: TObject);
+    procedure MonthMenuItemClicked(Sender: TObject);
+    procedure PopulateHolidayPopupMenu;
+    procedure PopulateMonthPopupMenu;
+    procedure PopulateYearPopupMenu;
+    procedure SetDate(AValue: TDateTime);
+    procedure SetDayNames(const AValue: String);
+    procedure SetDefaultDisplayTexts;
+    procedure SetDisplayTexts(AValue: String);
+    procedure SetMonthNames(const AValue: String);
+    procedure SetOptions(AValue: TCalOptions);
+    procedure SetStartingDayOfWeek(AValue: TDayOfWeek);
+    procedure SetWeekendDays(AValue: TDaysOfWeek);
+    procedure YearMenuItemClicked(Sender: TObject);
+    procedure SetLanguage(AValue: TLanguage); //Ariel Rodriguez 12/09/2013
+  protected
+//    procedure CreateHandle; override;
+    class function GetControlClassDefaultSize: TSize; override;
+    function GetDayName(ADayOfWeek: TDayOfWeek): String;
+    function GetDisplayText(aTextIndex: TDisplayText): String;
+    function GetMonthName(AMonth: Integer): String;
+    procedure MouseDown(Button: TMouseButton; Shift:TShiftState; X,Y:Integer); override;
+    procedure Paint; override;
+  public
+    constructor Create(anOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Anchors;
+    property Align;
+    property BiDiMode;
+    property BorderSpacing;
+    property Constraints;
+    property Font;
+    property Hint;
+    property ParentColor;
+    property ParentFont;
+    property ParentShowHint;
+    property ShowHint;
+    property Visible;
+    // new properties
+    property Colors: TCalColors read FColors;
+    property Date: TDateTime read FDate write SetDate;
+    property DayNames: String read GetDayNames write SetDayNames;
+    property DisplayTexts: String read GetDisplaytexts write SetDisplayTexts;
+    property MonthNames: String read GetMonthnames write SetMonthNames;
+    property Options: TCalOptions read FOptions write SetOptions
+      default [coShowTodayFrame, coBoldHolidays, coShowWeekend, coShowHolidays, coShowTodayRow];
+    property StartingDayOfWeek: TDayOfWeek read FStartingDayOfWeek
+      write SetStartingDayOfWeek default dowSunday;
+    property WeekendDays: TDaysOfWeek read FWeekendDays
+      write SetWeekendDays default [dowSunday];
+    property Languages: TLanguage read FLanguage
+      write SetLanguage default lgEnglish; //Ariel Rodriguez 12/09/2013
+  // new event properties
+    property OnDateChange: TNotifyEvent read FOnDateChange write FOnDateChange;
+    property OnGetHolidays: TGetHolidaysEvent read FOnGetHolidays write FOnGetHolidays;
+  end;
+
+procedure ClearHolidays(var AHolidays: THolidays);
+procedure AddHoliday(ADay: Integer; var AHolidays: THolidays);
+function  IsHoliday(ADay: Integer; AHolidays: THolidays): Boolean;
+
+procedure Register; //Ariel Rodriguez 12/09/2013
+
+implementation
+
+uses
+  LazUTF8, dateutils, math;
+
+
+{ Holiday helpers }
+
+{ Clears the per month holiday buffer }
+procedure ClearHolidays(var AHolidays: DWord);
+begin
+  AHolidays := 0;
+end;
+
+{ Set bit for given day to mark the day as a holiday }
+procedure AddHoliday(ADay: Integer; var AHolidays: DWord);
+begin
+  AHolidays := DWord(1 shl ADay) or AHolidays;
+end;
+
+{ Check if the bit for the given day is set in AHolidays }
+function IsHoliday(ADay: Integer; AHolidays: THolidays): Boolean;
+begin
+  Result := (AHolidays and DWord(1 shl ADay)) <> 0;
+end;
+
+
+{ TCalDrawer }
+
+constructor TCalDrawer.Create(aCanvas: TCanvas);
+begin
+  inherited Create;
+  FCanvas:= aCanvas;
+  FTStyle:= DefTStyle;
+end;
+
+procedure TCalDrawer.CalcSettings;
+var
+  rem, i, cellWidths, totalSpace, cw, cellHeights, hSpc,
+  adjSpace, sp, borderh, borderv, ch, numRows: integer;
+  sz: TSize;
+  bit: integer=0;
+begin
+  if (FOwner.BiDiMode = bdLeftToRight) then
+    FTStyle.RightToLeft:= False
+  else
+    FTStyle.RightToLeft:= True;
+  SetLength(FRowPositions, 0);
+  if (coShowTodayRow in FOwner.Options) then
+    LastRow := TodayRow
+  else
+    LastRow := LastDateRow;
+  SetLength(FRowPositions, LastRow+1);
+
+  totalspace := Succ(LastCol)*3;
+  sz := Size(FBoundsRect);
+  cellWidths := sz.cx - totalSpace;
+  DivMod(cellWidths, LastCol, cw, rem);
+  FCellSize.cx := cw;
+  adjSpace := sz.cx - LastCol*cw;
+  DivMod(adjSpace, LastCol+1, hSpc, rem);
+  borderh := (rem div 2) + 1;
+  for i := Low(FColPositions) to High(FColPositions) do
+    case FOwner.BiDiMode = bdLeftToRight of
+      False : FColPositions[8-i]:= borderh + Pred(i)*cw + hSpc*i;
+      True  : FColPositions[i]:= borderh + Pred(i)*cw + hSpc*i;
+    end;
+  case LastRow of
+    LastDateRow : totalSpace := 12;
+    TodayRow    : totalSpace := 14;
+  end;
+
+  cellHeights := sz.cy - totalSpace;
+  numRows := Succ(LastRow);
+  DivMod(cellHeights, numRows, ch, rem);
+  FCellSize.cy := ch;
+  adjSpace := sz.cy - numRows*ch;
+  DivMod(adjSpace, totalSpace, sp, rem);
+  rem := sz.cy - ch*numRows - totalSpace*sp;
+  borderv := rem div 3;
+  if (borderv = 0) then
+    bit := rem + 1;
+  rem := sp shl 1;
+  cw := bit + borderv + rem;
+  FRowPositions[TopRow] := cw;
+  inc(cw, rem);
+  FRowPositions[DayRow] := cw + ch;
+  for i := FirstDateRow to LastDateRow do
+    FRowPositions[i] := cw + i*ch + (i-1)*sp;
+  if (LastRow = TodayRow) then
+   FRowPositions[TodayRow] := FRowPositions[LastDateRow] + borderv + ch + rem;
+end;
+
+procedure TCalDrawer.ChangeDateTo(aCell: TSize);
+var
+  diff: integer;
+  newDate: TDateTime;
+  d, m, y: word;
+begin
+  diff := aCell.cx + LastCol * (aCell.cy - 2);
+  newDate:= FStartDate + diff - 1;
+  FOwner.FDate := newDate;
+  FOwner.DateChange;
+  FCanvas.Brush.Color := FOwner.Colors.BackgroundColor;
+  FCanvas.FillRect(FBoundsRect);
+  Self.Draw;
+  DecodeDate(newDate, y, m, d);
+end;
+
+procedure TCalDrawer.Draw;
+begin
+  if not Assigned(FCanvas) then Exit;
+  DecodeDate(FOwner.FDate, FThisYear, FThisMonth, FThisDay);
+  CalcSettings;
+  DrawTopRow;
+  DrawDayLabels;
+  DrawDayCells;
+  DrawTodayRow;
+end;
+
+procedure TCalDrawer.DrawArrow(aRect: TRect; aHead: TArrowhead; aDirn: TArrowDirection);
+var
+  sz: TSize;
+  d, ox, oy, half: integer;
+  pts: TArrowPoints;
+begin
+  if (FCanvas.Brush.Color <> FOwner.Colors.ArrowColor) then
+    FCanvas.Brush.Color:= FOwner.Colors.ArrowColor;
+  if (FCanvas.Pen.Color <> FOwner.Colors.ArrowBorderColor) then
+    FCanvas.Pen.Color := FOwner.Colors.ArrowBorderColor;
+  sz := Size(aRect);
+  d := Min(sz.cy, sz.cx) div 3;
+  half := d div 2;
+  ox := aRect.Left + (sz.cx - d) div 2;
+  oy := aRect.Top + (sz.cy - d) div 2;
+  case aHead of
+   ahSingle:
+     begin
+       case aDirn of
+         adLeft:
+           begin
+             pts[1]:= Point(ox+d, oy);
+             pts[2]:= Point(ox, oy+half);
+             pts[3]:= Point(ox+d, oy+d);
+           end;
+         adRight:
+           begin
+             pts[1]:= Point(ox, oy);
+             pts[2]:= Point(ox, oy+d);
+             pts[3]:= Point(ox+d, oy+half);
+           end;
+       end;
+       FCanvas.Polygon(pts);
+     end;
+   ahDouble:
+     case aDirn of
+       adLeft:
+         begin
+           pts[1]:= Point(ox+half-1, oy);
+           pts[2]:= Point(ox-1, oy+half);
+           pts[3]:= Point(ox+half-1, oy+d);
+           FCanvas.Polygon(pts);
+           pts[1]:= Point(ox+d, oy);
+           pts[2]:= Point(ox+half, oy+half);
+           pts[3]:= Point(ox+d, oy+d);
+           FCanvas.Polygon(pts);
+         end;
+       adRight:
+         begin
+           pts[1]:= Point(ox, oy);
+           pts[2]:= Point(ox+half, oy+half);
+           pts[3]:= Point(ox, oy+d);
+           FCanvas.Polygon(pts);
+           pts[1]:= Point(ox+half+1, oy);
+           pts[2]:= Point(ox+d+1, oy+half);
+           pts[3]:= Point(ox+half+1, oy+d);
+           FCanvas.Polygon(pts);
+         end;
+     end;
+  end;
+end;
+
+procedure TCalDrawer.DrawDayCells;
+var
+  r, c, startCol, startRow, startSpan: integer;
+  rec: TRect;
+  s: string;
+  dow, y, m, d: word;
+  partWeeks, remDays: integer;
+  dt, todayDate: TDateTime;
+  holidays: THolidays;
+begin
+  todayDate := Date;
+  dow := DayOfWeek(FOwner.FDate);
+  c := dow - integer(FOwner.FStartingDayOfWeek);
+  if (c < 0) then Inc(c, 7);
+  startCol := Succ(c);
+  partweeks := FThisDay - startCol;
+  DivMod(partWeeks, 7, startRow, remDays);
+  if (remDays > 0) then Inc(startRow, 1);
+  startspan := startRow*7 + startCol - 1;
+  FStartDate := FOwner.FDate - startSpan;
+  dt := FStartDate;
+  ClearHolidays(holidays);
+  if Assigned(FOwner.FOnGetHolidays) then
+    FOwner.FOnGetHolidays(FOwner, FThisMonth, FThisYear, holidays);
+  for r:= FirstDateRow to LastDateRow do
+    for c:= Low(FColPositions) to High(FColPositions) do
+    begin
+      rec := GetCellAtColRow(c, r);
+      DecodeDate(dt, y, m, d);
+      case (m = FThisMonth) of
+        False:
+          begin
+            FCanvas.Font.Color:= FOwner.Colors.PastMonthColor;
+            FCanvas.Font.Style := [];
+          end;
+        True:
+          begin
+            FCanvas.Font.Color:= FOwner.Colors.TextColor;
+            FCanvas.Font.Style := [];
+            if (coShowHolidays in FOwner.Options) and IsHoliday(d, holidays) then
+            begin
+              FCanvas.Font.Color := FOwner.Colors.HolidayColor;
+              if coBoldHolidays in FOwner.Options then
+                FCanvas.Font.Style := [fsBold];
+            end else
+            if (coShowWeekend in FOwner.Options) and
+               (TDayOfWeek(DayOfWeek(dt)) in FOwner.FWeekendDays) then
+            begin
+              FCanvas.Font.Color := FOwner.Colors.WeekendColor;
+              if coBoldWeekend in FOwner.Options then
+                FCanvas.Font.Style := [fsBold];
+            end;
+          end;
+      end;
+      s := IntToStr(d);
+      if (dt = FOwner.FDate) then
+      begin
+        FCanvas.Brush.Color:= FOwner.FColors.SelectedDateColor;
+        FCanvas.FillRect(rec);
+      end
+      else
+        FCanvas.Brush.Color:= FOwner.Colors.BackgroundColor;
+
+      FCanvas.TextRect(rec, 0, 0, s, FTStyle);
+      if (dt = todayDate) and (coShowTodayFrame in FOwner.Options) then
+      begin
+        FCanvas.Pen.Color:= FOwner.Colors.TodayFrameColor;
+        FCanvas.Pen.Width:= 2;
+        Inc(rec.Top); Inc(rec.Bottom);
+        FCanvas.Frame(rec);
+        FCanvas.Pen.Width:= 1;
+      end;
+      dt:= dt + 1;
+    end;  // for c
+end;
+
+procedure TCalDrawer.DrawDayLabels;
+var
+  c, map: integer;
+  rec: TRect;
+  lbls: TWeekNameArray;
+begin
+  FCanvas.Font.Color:= FOwner.Colors.TextColor;
+  if (coBoldDayNames in FOwner.Options) then
+    FCanvas.Font.Style := [fsBold]
+  else
+    FCanvas.Font.Style := [];
+  map := Integer(FOwner.FStartingDayOfWeek);
+  for c:= Low(TWeekNameArray) to High(TWeekNameArray) do
+  begin
+    if (map > High(TWeekNameArray)) then map := Low(TWeekNameArray);
+    lbls[c] := FOwner.GetDayName(TDayOfWeek(map));
+    inc(map);
+  end;
+  for c:= Low(FColPositions) to High(FColPositions) do
+  begin
+    rec := GetCellAtColRow(c, DayRow);
+    FCanvas.TextRect(rec, 0, 0, lbls[c], FTStyle);
+  end;
+  if (coDayLine in FOwner.Options) then begin
+    rec := GetCellAtColRow(GetLeftColIndex, DayRow);
+    rec.Right := GetCellAtColRow(GetRightColIndex, DayRow).Right;
+    rec.Bottom := rec.Top;
+    FCanvas.Pen.Color := FOwner.Colors.DayLineColor;
+    FCanvas.Line(rec);
+  end;
+end;
+
+procedure TCalDrawer.DrawTodayRow;
+var
+  r1, r2: TRect;
+  w1, w2, w3, rem, halfRem: integer;
+  s: String;
+begin
+  if (LastRow <> TodayRow) then Exit;
+  r1 := GetCellAtColRow(2, TodayRow);
+
+  if coUseTopRowColors in FOwner.Options then begin
+    if (FCanvas.Font.Color <> FOwner.Colors.TopRowTextColor)
+      then FCanvas.Font.Color:= FOwner.Colors.TopRowTextColor;
+    FCanvas.Brush.Color := FOwner.Colors.TopRowColor;
+    FCanvas.FillRect(r1);
+  end else
+  if (FCanvas.Font.Color <> FOwner.Colors.TextColor) then
+    FCanvas.Font.Color:= FOwner.Colors.TextColor;
+
+  s:= FOwner.GetDisplayText(dtToday);
+  if (coShowTodayName in FOwner.Options) then
+    s := Format('%s %s',[s, FOwner.GetDayName(TDayOfWeek(DayOfWeek(Date())))]);
+  AppendStr(s, ' ' + FormatDateTime(FOwner.GetDisplayText(dtTodayFormat), Date()));
+  w1 := FCanvas.TextWidth('aaa');
+  w2 := FCanvas.TextWidth(' ');
+  w3 := FCanvas.TextWidth(s);
+  rem := Size(r1).cx - w1 - w2 - w3;
+  halfRem := rem div 2;
+  if (rem < 0) then
+  begin
+    Inc(r1.Left, halfRem);
+    Dec(r1.Right, halfRem);
+    rem := 0;
+  end;
+  r2:= r1;
+
+  r1.Left := r1.Left + halfRem;
+  r1.Right := r1.Left + w1;
+  InflateRect(r1, 0, -FCellSize.cy div 5);
+  if (FCanvas.Pen.Color <> FOwner.Colors.TodayFrameColor) then
+    FCanvas.Pen.Color := FOwner.Colors.TodayFrameColor;
+  FCanvas.Pen.Width := 2;
+  FCanvas.Frame(r1);
+  FCanvas.Pen.Width := 1;
+
+  r2.Left := r1.Right + w2;
+  r2.Right := r2.Left + w3 + 2;
+  if (coBoldToday in FOwner.Options) then
+    FCanvas.Font.Style := [fsBold]
+  else
+    FCanvas.Font.Style := [];
+  FCanvas.TextRect(r2, 0, 0, s, FTStyle);
+end;
+
+procedure TCalDrawer.DrawTopRow;
+var
+  r: TRect;
+  s: String;
+begin
+  if coUseTopRowColors in FOwner.Options then begin
+    FCanvas.Font.Color:= FOwner.Colors.TopRowTextColor;
+    FCanvas.Brush.Color := FOwner.Colors.TopRowColor;
+    r := GetCellAtColRow(GetLeftColIndex, TopRow);
+    r.Right := GetCellAtColRow(GetRightColIndex, TopRow).Right;
+    FCanvas.FillRect(r);
+  end else
+  if (FCanvas.Font.Color <> FOwner.Colors.TextColor) then
+    FCanvas.Font.Color:= FOwner.Colors.TextColor;
+  if (coBoldTopRow in FOwner.Options) then
+    FCanvas.Font.Style := [fsBold]
+  else
+    FCanvas.Font.Style := [];
+
+  case (FOwner.BiDiMode = bdLeftToRight) of
+    False: begin
+             r:= GetCellAtColRow(7, TopRow); DrawArrow(r, ahDouble, adLeft);
+             r:= GetCellAtColRow(6, TopRow); DrawArrow(r, ahSingle, adLeft);
+             r:= GetCellAtColRow(1, TopRow); DrawArrow(r, ahDouble, adRight);
+             r:= GetCellAtColRow(2, TopRow); DrawArrow(r, ahSingle, adRight);
+             r:= GetCellAtColRow(3, TopRow);
+           end;
+    True: begin
+            r:= GetCellAtColRow(1, TopRow); DrawArrow(r, ahDouble, adLeft);
+            r:= GetCellAtColRow(2, TopRow); DrawArrow(r, ahSingle, adLeft);
+            r:= GetCellAtColRow(7, TopRow); DrawArrow(r, ahDouble, adRight);
+            r:= GetCellAtColRow(6, TopRow); DrawArrow(r, ahSingle, adRight);
+            r:= GetCellAtColRow(3, TopRow);
+          end;
+  end;
+  s := FOwner.GetMonthName(FThisMonth) + ' ' + IntToStr(FThisYear);
+  FCanvas.TextRect(r, 0, 0, s, FTStyle);
+end;
+
+function TCalDrawer.GetCellAt(aPoint: TPoint): TSize;
+var
+  x: integer;
+begin
+  case FOwner.BiDiMode <> bdLeftToRight of
+   False:
+     for x := Low(FColPositions) to High(FColPositions) do
+       if FColPositions[x] >= aPoint.x then
+       begin
+         Result.cx := x-1;
+         Break;
+       end else
+         Result.cx := LastCol;
+   True:
+     for x:= High(FColPositions) downto Low(FColPositions) do
+       if FColPositions[x] >= aPoint.x then
+       begin
+         Result.cx := x+1;
+         Break;
+       end else
+         Result.cx := 1;
+  end;
+  for x := 1 to High(FRowPositions) do
+    if FRowPositions[x] >= aPoint.y then
+    begin
+      Result.cy := x-1;
+      Break;
+    end
+    else
+      Result.cy := High(FRowPositions);
+end;
+
+function TCalDrawer.GetCellAtColRow(aCol, aRow: integer): TRect;
+var
+  sz: TSize;
+  mid, midmid, midhi, midmidhi, half, fraction: integer;
+begin
+  sz := GetColRowPosition(aCol, aRow);
+  Result.Top := sz.cy;
+  Result.Bottom := Result.Top + FCellSize.cy;
+  half := FCellSize.cx div 2;
+  case aRow of
+    TopRow:
+      begin
+        case (FOwner.BiDiMode = bdLeftToRight) of
+          True:
+            begin                             // LeftToRight
+              mid := FColPositions[2] + half;
+              fraction := (mid - FColPositions[1]) div 2;
+              midmid := FColPositions[1] + fraction;
+              midhi := FColPositions[6] + half;
+              midmidhi := midhi + fraction;
+            end;
+          False:
+            begin                            // RightToLeft
+              mid := FColPositions[6] + half;
+              fraction := (mid - FColPositions[7]) div 2;
+              midmid := FColPositions[7] + fraction;
+              midhi := FColPositions[2] + half;
+              midmidhi := midhi + fraction;
+              aCol := 8 - aCol;
+            end;
+        end;
+        case aCol of
+          1:
+            begin
+              Result.Left := sz.cx;
+              Result.Right := midmid;
+            end;
+          2:
+            begin
+              Result.Left := midmid;
+              Result.Right := mid;
+            end;
+          3..5:
+            begin
+              Result.Left := mid;
+              Result.Right := midhi;
+            end;
+          6:
+            begin
+              Result.Right := midmidhi;
+              Result.Left := midhi;
+            end;
+          7:
+            begin
+              Result.Left := midmidhi;
+              Result.Right := midmidhi + fraction;
+            end;
+        end;
+      end;
+
+    TodayRow:
+      begin
+        Result.Left := GetColRowPosition(GetLeftColIndex, TodayRow).cx;
+        Result.Right := GetColRowPosition(GetRightColIndex, TodayRow).cx + FCellSize.cx;
+      end;
+
+    else
+      Result.Left := sz.cx;
+      Result.Right := Result.Left + FCellSize.cx;
+  end;
+end;
+
+function TCalDrawer.GetColRowPosition(aCol, aRow: integer): TSize;
+begin
+  Result.cy:= FRowPositions[aRow];
+  Result.cx:= FColPositions[aCol];
+end;
+
+function TCalDrawer.GetLeftColIndex: Integer;
+begin
+  if FOwner.BiDiMode = bdLeftToRight then
+    Result := 1
+  else
+    Result := 7;
+end;
+
+procedure TCalDrawer.GetMonthYearRects(var AMonthRect, AYearRect: TRect);
+var
+  sm, sy: string;
+  w: Integer;
+  r: TRect;
+begin
+  AMonthRect := GetCellAtColRow(3, TopRow);
+  AYearRect := AMonthRect;
+  if (coBoldTopRow in FOwner.Options) then
+    FCanvas.Font.Style := [fsBold]
+  else
+    FCanvas.Font.Style := [];
+  sm := FOwner.GetMonthName(FThisMonth);
+  sy := IntToStr(FThisYear);
+  w := FCanvas.TextWidth(sm + ' ' + sy);
+  AMonthRect.Left := (FOwner.Width - w) div 2;
+  AMonthRect.Right := AMonthRect.Left + FCanvas.TextWidth(sm);
+  AYearRect.Right := (FOwner.Width + w) div 2;
+  AYearRect.Left := AYearRect.Right - FCanvas.TextWidth(sy);
+  if (FOwner.BiDiMode <> bdLeftToRight) then
+  begin
+    r := AMonthRect;
+    AMonthRect := AYearRect;
+    AYearRect := r;
+  end;
+end;
+
+function TCalDrawer.GetRightColIndex: Integer;
+begin
+  if FOwner.BiDiMode = bdLeftToRight then
+    Result := 7
+  else
+    Result := 1;
+end;
+
+procedure TCalDrawer.GotoDay(aDate: word);
+begin
+  FOwner.FDate := aDate;
+  FOwner.DateChange;
+  FOwner.Invalidate;
+end;
+
+procedure TCalDrawer.GotoMonth(AMonth: word);
+var
+  d: TDate;
+begin
+  if not TryEncodeDate(FThisYear, AMonth, FThisDay, d) then  // Feb 29 in leap year!
+    d := EncodeDate(FThisYear, AMonth, FThisDay);
+  FOwner.FDate := d;
+  FOwner.DateChange;
+  FOwner.Invalidate;
+end;
+
+procedure TCalDrawer.GotoToday;
+begin
+  FOwner.FDate:= Date();
+  FOwner.DateChange;
+  FOwner.Invalidate;
+end;
+
+procedure TCalDrawer.GotoYear(AYear: word);
+var
+  d: TDate;
+begin
+  if not TryEncodeDate(AYear, FThisMonth, FThisDay, d) then  // Feb 29 in leap year!
+    d := EncodeDate(AYear, FThisMonth, FThisDay);
+  FOwner.FDate := d;
+  FOwner.DateChange;
+  FOwner.Invalidate;
+end;
+
+procedure TCalDrawer.LeftClick;
+var
+  p, ppopup: TPoint;
+  cell: TSize;
+  Rm, Ry: TRect;
+begin
+  p := FOwner.ScreenToClient(Mouse.CursorPos);
+  cell := GetCellAt(p);
+  case cell.cy of
+    TopRow:
+      case cell.cx of
+        1: PrevYear;
+        2: PrevMonth;
+        3..5:
+          begin
+            GetMonthYearRects(Rm, Ry);
+            if PtInRect(Rm, p) then begin
+              FOwner.PopulateMonthPopupMenu;
+              ppopup := FOwner.ClientToScreen(Point(Rm.Left, Rm.Bottom));
+              FOwner.FPopupMenu.PopUp(ppopup.x, ppopup.y);
+            end;
+            if PtInRect(Ry, p) then begin
+              FOwner.PopulateYearPopupMenu;
+              ppopup := FOwner.ClientToScreen(Point(Ry.Left, Ry.Bottom));
+              FOwner.FPopupMenu.Popup(ppopup.x, ppopup.y);
+            end;
+          end;
+        6: NextMonth;
+        7: NextYear;
+      end;
+    DayRow: ;
+    FirstDateRow..LastDateRow :
+      ChangeDateTo(cell);
+    else
+      GotoToday;
+  end;
+end;
+
+procedure TCalDrawer.NextMonth;
+begin
+  FOwner.FDate := IncMonth(FOwner.FDate, 1);
+  FOwner.DateChange;
+  FOwner.Invalidate;
+end;
+
+procedure TCalDrawer.NextYear;
+begin
+  FOwner.FDate := IncYear(FOwner.FDate, 1);
+  FOwner.DateChange;
+  FOwner.Invalidate;
+end;
+
+procedure TCalDrawer.PrevMonth;
+begin
+  FOwner.FDate := IncMonth(FOwner.FDate, -1);
+  FOwner.DateChange;
+  FOwner.Invalidate;
+end;
+
+procedure TCalDrawer.PrevYear;
+begin
+  FOwner.FDate := IncYear(FOwner.FDate, -1);
+  FOwner.DateChange;
+  FOwner.Invalidate;
+end;
+
+procedure TCalDrawer.RightClick;
+begin
+  if Assigned(FOwner.FOnGetHolidays) then
+  begin
+    FOwner.PopulateHolidayPopupMenu;
+    FOwner.FPopupMenu.PopUp(Mouse.CursorPos.x, Mouse.CursorPos.y);
+  end;
+end;
+
+
+{ TCalColors }
+
+constructor TCalColors.Create(AOwner: TCalendarLite);
+begin
+  inherited Create;
+  FOwner := AOwner;
+  FColors[0] := clSilver;          //  ArrowBorderColor: clSilver;
+  FColors[1] := clSilver;          //  ArrowColor:  clSilver;
+  FColors[2] := clWhite;           //  BackgroundColor:  clWhite;
+  FColors[3] := clSilver;          //  BorderColor:  clSilver;
+  FColors[4] := clSilver;          //  DaylineColor: clSilver;
+  FColors[5] := clRed;             //  HolidayColor: clRed;
+  FColors[6] := clSilver;          //  PastMonthColor:  clSilver;
+  FColors[7] := clMoneyGreen;      //  SelectedDateColor: clMoneyGreen;
+  FColors[8] := clBlack;           //  TextColor: clBlack;
+  FColors[9] := clGray;            //  TodayFrameColor:  clGray;
+  FColors[10] := clHighlight;      //  TopRowColor:  clHighlight;
+  FColors[11] := clHighlightText;  //  TopRowTextColor:  clHighlightText;
+  FColors[12] := clRed;            //  WeekendColor:  clRed;
+end;
+
+function TCalColors.GetColor(AIndex: Integer): TColor;
+begin
+  Result := FColors[AIndex];
+end;
+
+procedure TCalColors.SetColor(AIndex: Integer; AValue: TColor);
+begin
+  if FColors[AIndex] = AValue then exit;
+  FColors[AIndex] := AValue;
+  FOwner.Invalidate;
+end;
+
+
+{ TCalendarLite }
+
+constructor TCalendarLite.Create(anOwner: TComponent);
+begin
+  inherited Create(anOwner);
+  FColors := TCalColors.Create(self);
+  FDate:= SysUtils.Date;
+  Color:= clWhite;
+  FStartingDayOfWeek:= dowSunday;
+  with GetControlClassDefaultSize do
+    SetInitialBounds(0, 0, cx, cy);
+  Constraints.MinHeight := DefMinHeight;
+  Constraints.MinWidth := DefMinWidth;
+  Canvas.Brush.Style:= bsSolid;
+  FDayNames := TStringList.Create;
+  FMonthNames := TStringList.Create;
+  FDisplayTexts := TStringList.Create;
+  FDisplayTexts.StrictDelimiter := True;
+  FDisplayTexts.Delimiter:= ',';
+  SetDefaultDisplayTexts;
+  FPopupMenu := TPopupMenu.Create(Self);
+  FCalDrawer:= TCalDrawer.Create(Canvas);
+  FCalDrawer.FOwner:= Self;
+  FWeekendDays := [dowSunday, dowSaturday];
+  FOptions := [coShowTodayFrame, coBoldHolidays, coShowWeekend, coShowHolidays,
+               coShowTodayRow];
+  FLanguage := lgEnglish; //Ariel Rodriguez 12/09/2013
+end;
+
+destructor TCalendarLite.Destroy;
+begin
+  FreeAndNil(FDayNames);
+  FreeAndNil(FMonthNames);
+  FreeAndNil(FDisplayTexts);
+  FreeAndNil(FColors);
+  SetLength(FCalDrawer.FRowPositions, 0);
+  FreeAndNil(FCalDrawer);
+  inherited Destroy;
+end;
+
+procedure TCalendarLite.DateChange;
+begin
+  if Assigned(FOnDateChange) then
+    FOnDateChange(Self);
+end;
+
+class function TCalendarLite.GetControlClassDefaultSize: TSize;
+begin
+  Result.cx := DefCalWidth;
+  Result.cy := DefCalHeight;
+end;
+
+function TCalendarLite.GetDayName(ADayOfWeek: TDayOfWeek): String;
+begin
+  Result := SysToUTF8(DefaultFormatSettings.ShortDayNames[integer(ADayOfWeek)]);
+  if Pred(integer(ADayOfWeek)) < FDayNames.Count then
+    Result := FDayNames[Pred(integer(ADayOfWeek))];
+end;
+
+function TCalendarLite.GetDayNames: String;
+begin
+  Result := FDayNames.CommaText;
+end;
+
+function TCalendarLite.GetDisplayText(aTextIndex: TDisplayText): String;
+begin
+  Result := FDisplayTexts[Integer(aTextIndex)];
+end;
+
+function TCalendarLite.GetDisplayTexts: String;
+begin
+  Result := FDisplayTexts.CommaText;
+end;
+
+function TCalendarLite.GetMonthName(AMonth: Integer): String;
+begin
+  Result := SysToUTF8(DefaultFormatSettings.LongMonthNames[AMonth]);
+  if pred(AMonth) < FMonthnames.Count then
+    Result := FMonthNames[pred(AMonth)];
+end;
+
+function TCalendarLite.GetMonthNames: String;
+begin
+  Result := FMonthNames.CommaText;
+end;
+
+procedure TCalendarLite.HolidayMenuItemClicked(Sender: TObject);
+begin
+  FCalDrawer.GotoDay(TMenuItem(Sender).Tag);
+end;
+
+procedure TCalendarLite.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  inherited MouseDown(Button, Shift, X, Y);
+  case Button of
+    mbLeft  : FCalDrawer.LeftClick;
+    mbRight : FCalDrawer.RightClick;
+  end;
+end;
+
+procedure TCalendarLite.MonthMenuItemClicked(Sender: TObject);
+begin
+  FCalDrawer.GotoMonth(TMenuItem(Sender).Tag);
+end;
+
+procedure TCalendarLite.Paint;
+var
+  r: TRect;
+begin
+  if Assigned(FCalDrawer) then
+  begin
+    if ParentColor then
+      Colors.BackgroundColor := Parent.Color;
+    if ParentFont then
+    begin
+      if (Parent.Font <> FCalDrawer.FCanvas.Font)
+        then FCalDrawer.FCanvas.Font := Parent.Font
+      else if (Canvas.Font.Color <> Colors.TextColor)
+        then FColors.TextColor := Canvas.Font.Color;
+    end;
+
+    case (BiDiMode = bdLeftToRight) of
+     False: if not FCalDrawer.FTStyle.RightToLeft then
+              FCalDrawer.FTStyle.RightToLeft := True;
+     True : if FCalDrawer.FTStyle.RightToLeft then
+             FCalDrawer.FTStyle.RightToLeft := False;
+    end;
+
+    Canvas.Brush.Color:= Colors.BackGroundColor;
+    Canvas.FillRect(ClientRect);
+    if (coShowBorder in FOptions) then
+    begin
+      if (Canvas.Pen.Color <> FColors.BorderColor) then
+        Canvas.Pen.Color := FColors.BorderColor;
+      Canvas.Frame(ClientRect);
+    end;
+
+    r:= ClientRect;
+    if (coShowBorder in FOptions) then InflateRect(r, -1, -1);
+    FCalDrawer.FBoundsRect:= r;
+    FCalDrawer.Draw;
+  end;
+
+  inherited Paint;
+end;
+
+procedure TCalendarLite.PopulateHolidayPopupMenu;
+var
+  item: TMenuItem;
+  m, d, dayCount: Integer;
+  population: integer = 0;
+  hols: THolidays;
+  dt: TDateTime;
+begin
+  with FPopupMenu.Items do begin
+    Clear;
+    item:= TMenuItem.Create(Self);
+    item.Caption:= Format('%s %d', [GetDisplayText(dtHolidaysDuring), FCalDrawer.FThisYear]);
+    Add(item);
+    item:= TMenuItem.Create(Self);
+    item.Caption:= '-';
+    Add(item);
+    for m:= 1 to 12 do
+    begin
+      ClearHolidays(hols);
+      FOnGetHolidays(Self, m, FCalDrawer.FThisYear, hols);
+      dayCount:= DaysInAMonth(FCalDrawer.FThisYear, m);
+      d := 1;
+      repeat
+        if IsHoliday(d, hols) then
+        begin
+          item := TMenuItem.Create(Self);
+          inc(population);
+          item.Caption:= IntToStr(d) + ' ' + GetMonthName(m);
+          if (m = FCalDrawer.FThisMonth) then
+            item.Checked := True;
+          dt := EncodeDate(FCalDrawer.FThisYear, m, d);
+          item.Tag := trunc(dt);
+          item.OnClick := @HolidayMenuItemClicked;
+          Add(item);
+        end;
+        inc(d)
+      until d > dayCount;
+    end;
+    Items[0].Enabled := (population <> 0);
+    if not Items[0].Enabled then
+      Items[0].Caption := Format('%s %d', [GetDisplayText(dtNoHolidaysDuring), FCalDrawer.FThisYear]);
+  end;
+end;
+
+procedure TCalendarLite.PopulateMonthPopupMenu;
+var
+  m: Integer;
+  item: TMenuItem;
+begin
+  with FPopupMenu.Items do begin
+    Clear;
+    for m := 1 to 12 do
+    begin
+      item := TMenuItem.Create(self);
+      item.Caption := GetMonthName(m);
+      item.OnClick := @MonthMenuItemClicked;
+      item.Tag := m;
+      if m = FCalDrawer.FThisMonth then
+        item.Checked := true;
+      Add(item);
+    end;
+  end;
+end;
+
+procedure TCalendarLite.PopulateYearPopupMenu;
+var
+  y: Integer;
+  item: TMenuItem;
+begin
+  with FPopupMenu.Items do begin
+    Clear;
+    for y := FCalDrawer.FThisYear - 10 to FCalDrawer.FThisYear + 10 do
+    begin
+      item := TMenuItem.Create(self);
+      item.Caption := IntToStr(y);
+      item.OnClick := @YearMenuItemClicked;
+      item.Tag := y;
+      if y = FCalDrawer.FThisYear then
+        item.Checked := true;
+      if (FCalDrawer.FThisDay = 29) and (FCalDrawer.FThisMonth = 2) and not IsLeapYear(y)
+        then item.Enabled:= False;
+      Add(item);
+    end;
+  end;
+end;
+
+procedure TCalendarLite.SetDate(AValue: TDateTime);
+begin
+  if FDate = AValue then Exit;
+  FDate := AValue;
+  DateChange;
+  Invalidate;
+end;
+
+procedure TCalendarLite.SetDayNames(const AValue: String);
+begin
+  FDayNames.CommaText := AValue;
+  Invalidate;
+end;
+
+procedure TCalendarLite.SetDefaultDisplayTexts;
+begin
+  FDisplayTexts.CommaText := DefaultDisplayText;
+end;
+
+procedure TCalendarLite.SetDisplayTexts(AValue: String);
+begin
+  FDisplayTexts.CommaText := AValue;
+  Invalidate;
+end;
+
+//Ariel Rodriguez 12/09/2013
+procedure TCalendarLite.SetLanguage(AValue : TLanguage);
+begin
+  if FLanguage = AValue then Exit;
+  FLanguage := AValue;
+
+  case FLanguage of
+    lgEnglish: begin
+                 DayNames := EnglishDays;
+                 MonthNames := EnglishMonths;
+                 DisplayTexts := DefaultDisplayText;
+                 BiDiMode:= bdLeftToRight;
+               end;
+    lgFrench: begin
+                 DayNames := FrenchDays;
+                 MonthNames := FrenchMonths;
+                 DisplayTexts := FrenchTexts;
+                 BiDiMode:= bdLeftToRight;
+             end;
+    lgGerman: begin
+                 DayNames := GermanDays;
+                 MonthNames := GermanMonths;
+                 DisplayTexts := GermamTexts;
+                 BiDiMode:= bdLeftToRight;
+               end;
+    lgHebrew: begin
+                 DayNames := HebrewDays;
+                 MonthNames := HebrewMonths;
+                 DisplayTexts := HebrewTexts;
+                 BiDiMode:= bdRightToLeft;
+               end;
+    lgSpanish: begin
+                 DayNames := SpanishDays;
+                 MonthNames := SpanishMonths;
+                 DisplayTexts := SpanishTexts;
+                 BiDiMode:= bdLeftToRight;
+               end;
+  end;
+
+  Invalidate;
+end;
+
+//Ariel Rodriguez 12/09/2013
+procedure TCalendarLite.SetMonthNames(const AValue: String);
+begin
+  FMonthNames.CommaText := AValue;
+  Invalidate;
+end;
+
+procedure TCalendarLite.SetStartingDayOfWeek(AValue: TDayOfWeek);
+begin
+  if FStartingDayOfWeek = AValue then Exit;
+  FStartingDayOfWeek := AValue;
+  Invalidate;
+end;
+
+procedure TCalendarLite.SetOptions(AValue: TCalOptions);
+begin
+  if FOptions = AValue then Exit;
+  FOptions := AValue;
+  case (coShowTodayRow in FOptions) of
+    False: if LastRow <> LastDateRow then LastRow := LastDateRow;
+    True : if LastRow <> TodayRow then LastRow := TodayRow;
+  end;
+  if Length(FCalDrawer.FRowPositions) <> LastRow+1 then
+    SetLength(FCalDrawer.FRowPositions, LastRow+1);
+  Invalidate;
+end;
+
+procedure TCalendarLite.SetWeekendDays(AValue: TDaysOfWeek);
+begin
+  if FWeekendDays = AValue then Exit;
+  FWeekendDays := AValue;
+  Invalidate;
+end;
+
+procedure TCalendarLite.YearMenuItemClicked(Sender: TObject);
+begin
+  FCalDrawer.GotoYear(TMenuItem(Sender).Tag);
+end;
+
+//Ariel Rodriguez 12/09/2013
+procedure Register;
+begin
+  {$I calendarlite_icon.lrs}
+  RegisterComponents('Misc', [TCalendarLite]);
+end;
+//Ariel Rodriguez 12/09/2013
+
+end.

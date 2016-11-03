@@ -1,0 +1,58 @@
+object Form1: TForm1
+  Left = 400
+  Height = 272
+  Top = 115
+  Width = 256
+  Caption = 'Form1'
+  ClientHeight = 272
+  ClientWidth = 256
+  Font.Height = -13
+  Font.Name = 'Tahoma'
+  KeyPreview = True
+  OnCreate = FormCreate
+  OnResize = FormResize
+  Position = poScreenCenter
+  LCLVersion = '1.7'
+  object edtYear: TEdit
+    Left = 122
+    Height = 18
+    Top = 15
+    Width = 38
+    Alignment = taCenter
+    AutoSize = False
+    BorderStyle = bsNone
+    OnKeyDown = edtYearKeyDown
+    ParentColor = True
+    TabOrder = 1
+    Text = 'Year'
+  end
+  object edtMonth: TEdit
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtYear
+    AnchorSideRight.Control = edtYear
+    Left = 84
+    Height = 18
+    Top = 15
+    Width = 38
+    Alignment = taCenter
+    Anchors = [akTop, akRight]
+    AutoSize = False
+    BorderStyle = bsNone
+    OnKeyDown = edtMonthKeyDown
+    ParentColor = True
+    TabOrder = 0
+    Text = 'Month'
+  end
+  object Label1: TLabel
+    Left = 5
+    Height = 30
+    Top = 237
+    Width = 246
+    Align = alBottom
+    BorderSpacing.Around = 5
+    Caption = 'Use Up/Down Arrows to change the Month/Year.  Press and hold for long jumps.'
+    ParentColor = False
+    ParentFont = False
+    WordWrap = True
+  end
+end
