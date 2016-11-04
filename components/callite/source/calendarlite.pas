@@ -105,6 +105,7 @@ type
                 coShowTodayFrame, coShowTodayName, coShowTodayRow,
                 coShowWeekend, coUseTopRowColors);
   TCalOptions = set of TCalOption;
+
   TLanguage = (lgEnglish, lgFrench, lgGerman, lgHebrew, lgSpanish); //Ariel Rodriguez 12/09/2013
 
 
@@ -124,8 +125,8 @@ type
     FThisYear: word;
     FTStyle: TTextStyle;
     procedure CalcSettings;
-    procedure ChangeDateTo(aCell: TSize);
-    procedure DrawArrow(aRect: TRect; aHead: TArrowhead; aDirn: TArrowDirection);
+    procedure ChangeDateTo(ACell: TSize);
+    procedure DrawArrow(ARect: TRect; AHead: TArrowhead; ADirec: TArrowDirection);
     procedure DrawDayCells;
     procedure DrawDayLabels;
     procedure DrawTodayRow;
@@ -136,18 +137,14 @@ type
     function  GetLeftColIndex: Integer;
     procedure GetMonthYearRects(var AMonthRect, AYearRect: TRect);
     function  GetRightColIndex: Integer;
-    procedure GotoDay(aDate: word);
+    procedure GotoDay(ADate: word);
     procedure GotoMonth(AMonth: word);
     procedure GotoToday;
     procedure GotoYear(AYear: word);
     procedure LeftClick;
-    procedure NextMonth;
-    procedure NextYear;
-    procedure PrevMonth;
-    procedure PrevYear;
     procedure RightClick;
   public
-    constructor Create(aCanvas: TCanvas);
+    constructor Create(ACanvas: TCanvas);
     procedure Draw;
   end;
 
@@ -181,7 +178,8 @@ type
 
   { TCalendarLite }
 
-  TCalendarLite = class(TGraphicControl)
+//  TCalendarLite = class(TGraphicControl)
+  TCalendarLite = class(TCustomControl)
   private
     FCalDrawer: TCalDrawer;
     FColors: TCalColors;
@@ -215,30 +213,64 @@ type
     procedure SetWeekendDays(AValue: TDaysOfWeek);
     procedure YearMenuItemClicked(Sender: TObject);
     procedure SetLanguage(AValue: TLanguage); //Ariel Rodriguez 12/09/2013
+
   protected
-//    procedure CreateHandle; override;
     class function GetControlClassDefaultSize: TSize; override;
     function GetDayName(ADayOfWeek: TDayOfWeek): String;
     function GetDisplayText(aTextIndex: TDisplayText): String;
     function GetMonthName(AMonth: Integer): String;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseDown(Button: TMouseButton; Shift:TShiftState; X,Y:Integer); override;
     procedure Paint; override;
+
   public
     constructor Create(anOwner: TComponent); override;
     destructor Destroy; override;
+
   published
-    property Anchors;
     property Align;
+    property Anchors;
     property BiDiMode;
     property BorderSpacing;
     property Constraints;
+    property Cursor;
     property Font;
+    property Height;
+    property HelpContext;
+    property HelpKeyword;
+    property HelpType;
     property Hint;
+    property Left;
+    property Name;
+    property ParentBiDiMode;
     property ParentColor;
     property ParentFont;
+    property PopupMenu;
     property ParentShowHint;
     property ShowHint;
+    property TabOrder;
+    property TabStop;
+    property Tag;
+    property Top;
     property Visible;
+    property Width;
+    property OnChangeBounds;
+    property OnClick;
+    property OnContextPopup;
+    property OnDblClick;
+    property OnEnter;
+    property OnExit;
+    property OnKeyDown;
+    property OnKeyPress;
+    property OnKeyUp;
+    property OnMouseDown;
+    property OnMouseEnter;
+    property OnMouseLeave;
+    property OnMouseMove;
+    property OnMouseUp;
+    property OnMouseWheel;
+    property OnMouseWheelDown;
+    property OnMouseWheelUp;
     // new properties
     property Colors: TCalColors read FColors;
     property Date: TDateTime read FDate write SetDate;
@@ -267,7 +299,7 @@ procedure Register; //Ariel Rodriguez 12/09/2013
 implementation
 
 uses
-  LazUTF8, dateutils, math;
+  LCLType, LazUTF8, dateutils, math;
 
 
 { Holiday helpers }
@@ -293,10 +325,10 @@ end;
 
 { TCalDrawer }
 
-constructor TCalDrawer.Create(aCanvas: TCanvas);
+constructor TCalDrawer.Create(ACanvas: TCanvas);
 begin
   inherited Create;
-  FCanvas:= aCanvas;
+  FCanvas:= ACanvas;
   FTStyle:= DefTStyle;
 end;
 
@@ -362,13 +394,13 @@ begin
    FRowPositions[TodayRow] := FRowPositions[LastDateRow] + borderv + ch + rem;
 end;
 
-procedure TCalDrawer.ChangeDateTo(aCell: TSize);
+procedure TCalDrawer.ChangeDateTo(ACell: TSize);
 var
   diff: integer;
   newDate: TDateTime;
   d, m, y: word;
 begin
-  diff := aCell.cx + LastCol * (aCell.cy - 2);
+  diff := ACell.cx + LastCol * (ACell.cy - 2);
   newDate:= FStartDate + diff - 1;
   FOwner.FDate := newDate;
   FOwner.DateChange;
@@ -389,7 +421,8 @@ begin
   DrawTodayRow;
 end;
 
-procedure TCalDrawer.DrawArrow(aRect: TRect; aHead: TArrowhead; aDirn: TArrowDirection);
+procedure TCalDrawer.DrawArrow(ARect: TRect; AHead: TArrowhead;
+  ADirec: TArrowDirection);
 var
   sz: TSize;
   d, ox, oy, half: integer;
@@ -402,12 +435,12 @@ begin
   sz := Size(aRect);
   d := Min(sz.cy, sz.cx) div 3;
   half := d div 2;
-  ox := aRect.Left + (sz.cx - d) div 2;
-  oy := aRect.Top + (sz.cy - d) div 2;
-  case aHead of
+  ox := ARect.Left + (sz.cx - d) div 2;
+  oy := ARect.Top + (sz.cy - d) div 2;
+  case AHead of
    ahSingle:
      begin
-       case aDirn of
+       case ADirec of
          adLeft:
            begin
              pts[1]:= Point(ox+d, oy);
@@ -424,7 +457,7 @@ begin
        FCanvas.Polygon(pts);
      end;
    ahDouble:
-     case aDirn of
+     case ADirec of
        adLeft:
          begin
            pts[1]:= Point(ox+half-1, oy);
@@ -806,11 +839,9 @@ begin
     Result := 1;
 end;
 
-procedure TCalDrawer.GotoDay(aDate: word);
+procedure TCalDrawer.GotoDay(ADate: word);
 begin
-  FOwner.FDate := aDate;
-  FOwner.DateChange;
-  FOwner.Invalidate;
+  FOwner.Date := ADate;
 end;
 
 procedure TCalDrawer.GotoMonth(AMonth: word);
@@ -819,16 +850,12 @@ var
 begin
   if not TryEncodeDate(FThisYear, AMonth, FThisDay, d) then  // Feb 29 in leap year!
     d := EncodeDate(FThisYear, AMonth, FThisDay);
-  FOwner.FDate := d;
-  FOwner.DateChange;
-  FOwner.Invalidate;
+  FOwner.Date := d;
 end;
 
 procedure TCalDrawer.GotoToday;
 begin
-  FOwner.FDate:= Date();
-  FOwner.DateChange;
-  FOwner.Invalidate;
+  FOwner.Date:= Date();
 end;
 
 procedure TCalDrawer.GotoYear(AYear: word);
@@ -837,9 +864,7 @@ var
 begin
   if not TryEncodeDate(AYear, FThisMonth, FThisDay, d) then  // Feb 29 in leap year!
     d := EncodeDate(AYear, FThisMonth, FThisDay);
-  FOwner.FDate := d;
-  FOwner.DateChange;
-  FOwner.Invalidate;
+  FOwner.Date := d;
 end;
 
 procedure TCalDrawer.LeftClick;
@@ -853,8 +878,8 @@ begin
   case cell.cy of
     TopRow:
       case cell.cx of
-        1: PrevYear;
-        2: PrevMonth;
+        1: FOwner.Date := IncYear(FOwner.Date, -1);
+        2: FOwner.Date := IncMonth(FOwner.Date, -1);
         3..5:
           begin
             GetMonthYearRects(Rm{%H-}, Ry{%H-});
@@ -869,45 +894,59 @@ begin
               FOwner.FPopupMenu.Popup(ppopup.x, ppopup.y);
             end;
           end;
-        6: NextMonth;
-        7: NextYear;
+        6: FOwner.Date := IncMonth(FOwner.Date, +1);
+        7: FOwner.Date := IncYear(FOwner.Date, +1);
       end;
+
     DayRow: ;
+
     FirstDateRow..LastDateRow :
       ChangeDateTo(cell);
     else
       GotoToday;
   end;
 end;
+  (*
+procedure TCalDrawer.NextDay;
+begin
+  FOwner.Date := IncDay(FOwner.FDate, 1);
+end;
 
 procedure TCalDrawer.NextMonth;
 begin
-  FOwner.FDate := IncMonth(FOwner.FDate, 1);
-  FOwner.DateChange;
-  FOwner.Invalidate;
+  FOwner.Date := IncMonth(FOwner.FDate, 1);
+end;
+
+procedure TCalDrawer.NextWeek;
+begin
+  FOwner.Date := IncWeek(FOwner.FDate, 1);
 end;
 
 procedure TCalDrawer.NextYear;
 begin
-  FOwner.FDate := IncYear(FOwner.FDate, 1);
-  FOwner.DateChange;
-  FOwner.Invalidate;
+  FOwner.Date := IncYear(FOwner.FDate, 1);
+end;
+
+procedure TCalDrawer.PrevDay;
+begin
+  FOwner.Date := IncDay(FOwner.FDate, -1);
 end;
 
 procedure TCalDrawer.PrevMonth;
 begin
-  FOwner.FDate := IncMonth(FOwner.FDate, -1);
-  FOwner.DateChange;
-  FOwner.Invalidate;
+  FOwner.Date := IncMonth(FOwner.FDate, -1);
+end;
+
+procedure TCalDrawer.PrevWeek;
+begin
+  FOwner.Date := IncWeek(FOwner.FDate, -1);
 end;
 
 procedure TCalDrawer.PrevYear;
 begin
-  FOwner.FDate := IncYear(FOwner.FDate, -1);
-  FOwner.DateChange;
-  FOwner.Invalidate;
+  FOwner.Date := IncYear(FOwner.FDate, -1);
 end;
-
+             *)
 procedure TCalDrawer.RightClick;
 begin
   if Assigned(FOwner.FOnGetHolidays) then
@@ -958,22 +997,23 @@ constructor TCalendarLite.Create(anOwner: TComponent);
 begin
   inherited Create(anOwner);
   FColors := TCalColors.Create(self);
-  FDate:= SysUtils.Date;
-  Color:= clWhite;
+  FDate := SysUtils.Date;
+  Color := clWhite;
   FStartingDayOfWeek:= dowSunday;
   with GetControlClassDefaultSize do
     SetInitialBounds(0, 0, cx, cy);
   Constraints.MinHeight := DefMinHeight;
   Constraints.MinWidth := DefMinWidth;
-  Canvas.Brush.Style:= bsSolid;
+  Canvas.Brush.Style := bsSolid;
+  TabStop := true;
   FDayNames := TStringList.Create;
   FMonthNames := TStringList.Create;
   FDisplayTexts := TStringList.Create;
   FDisplayTexts.StrictDelimiter := True;
-  FDisplayTexts.Delimiter:= ',';
+  FDisplayTexts.Delimiter := ',';
   SetDefaultDisplayTexts;
   FPopupMenu := TPopupMenu.Create(Self);
-  FCalDrawer:= TCalDrawer.Create(Canvas);
+  FCalDrawer := TCalDrawer.Create(Canvas);
   FCalDrawer.FOwner:= Self;
   FWeekendDays := [dowSunday, dowSaturday];
   FOptions := [coShowTodayFrame, coBoldHolidays, coShowWeekend, coShowHolidays,
@@ -1043,10 +1083,41 @@ begin
   FCalDrawer.GotoDay(TMenuItem(Sender).Tag);
 end;
 
+procedure TCalendarLite.KeyDown(var Key: Word; Shift: TShiftState);
+
+  function Delta(Increase: Boolean): Integer;
+  begin
+    if Increase then Result := +1 else Result := -1;
+  end;
+
+begin
+  case Key of
+    VK_UP,
+    VK_DOWN  : Date := IncWeek(FDate, Delta(Key = VK_DOWN));
+    VK_LEFT,
+    VK_RIGHT : Date := IncDay(FDate, Delta(Key = VK_RIGHT));
+    VK_HOME  : Date := StartOfTheMonth(FDate);
+    VK_END   : Date := EndOfTheMonth(FDate);
+    VK_PRIOR,
+    VK_NEXT  : if (ssCtrl in Shift) then
+                 Date := IncYear(FDate, Delta(Key = VK_NEXT)) else
+                 Date := IncMonth(FDate, Delta(Key = VK_NEXT));
+    else       inherited;
+               exit;
+  end;
+
+  Key := 0;
+  inherited;
+end;
+
 procedure TCalendarLite.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 begin
   inherited MouseDown(Button, Shift, X, Y);
+
+  if not Focused and not(csNoFocus in ControlStyle) then
+    SetFocus;
+
   case Button of
     mbLeft  : FCalDrawer.LeftClick;
     mbRight : FCalDrawer.RightClick;

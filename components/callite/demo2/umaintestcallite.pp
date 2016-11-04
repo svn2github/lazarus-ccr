@@ -6,16 +6,16 @@ interface
 
 uses
   Classes, SysUtils, Forms, Graphics, ExtCtrls, StdCtrls, Spin, CalendarLite;
-//  Easysize;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
+    CalendarLite1: TCalendarLite;
     cbUseHolidays: TCheckBox;
     cgOptions: TCheckGroup;
-    //FormResizer1: TFormResizer;
+    Label1: TLabel;
     LTitle: TLabel;
     LWidth: TLabel;
     lHeight: TLabel;
@@ -27,14 +27,13 @@ type
     procedure cbUseHolidaysChange(Sender: TObject);
     procedure cgOptionsItemClick(Sender: TObject; Index: integer);
     procedure FormCreate(Sender: TObject);
-    procedure FormResize(Sender: TObject);
     procedure rgLanguageClick(Sender: TObject);
     procedure rgStartingDOWClick(Sender: TObject);
     procedure seHeightChange(Sender: TObject);
     procedure seWidthChange(Sender: TObject);
   private
     copyCal, demoCal: TCalendarLite;
-    FnoHolidays: boolean;
+    FNoHolidays: boolean;
     procedure RespondToDateChange(Sender: tObject);
     procedure GetHolidays(Sender: TObject; AMonth, AYear: Integer;  // wp
       var Holidays: THolidays);
@@ -47,6 +46,9 @@ var
 implementation
 
 {$R *.lfm}
+
+uses
+  Dialogs;
 
 function Easter(year:integer) : TDateTime;  // wp
 var
@@ -82,7 +84,6 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 var opt: TCalOption;
 begin
-//  FormResizer1.InitializeForm;
   demoCal:= TCalendarLite.Create(Self);
   demoCal.Parent:= Self;
   demoCal.Left:= 10;
@@ -115,11 +116,6 @@ begin
   copyCal.Options := copyCal.Options + [coShowBorder,coUseTopRowColors,coDayLine];
 end;
 
-procedure TForm1.FormResize(Sender: TObject);
-begin
-//  FormResizer1.ResizeAll;
-end;
-
 procedure TForm1.rgLanguageClick(Sender: TObject);
 begin
   case rgLanguage.ItemIndex of
@@ -129,41 +125,6 @@ begin
     3: demoCal.Languages := lgHebrew;
     4: demoCal.Languages := lgSpanish;
   end;
-
-  {
-  case rgLanguage.ItemIndex of
-    0: begin
-        demoCal.DayNames := EnglishDays;
-        demoCal.MonthNames := EnglishMonths;
-        demoCal.DisplayTexts := DefaultDisplayText;
-        demoCal.BiDiMode:= bdLeftToRight;
-       end;
-    1: begin
-        demoCal.DayNames := FrenchDays;
-        demoCal.MonthNames := FrenchMonths;
-        demoCal.DisplayTexts := FrenchTexts;
-        demoCal.BiDiMode:= bdLeftToRight;
-       end;
-    2: begin
-        demoCal.DayNames := GermanDays;
-        demoCal.MonthNames := GermanMonths;
-        demoCal.DisplayTexts := GermamTexts;
-        demoCal.BiDiMode:= bdLeftToRight;
-       end;
-    3: begin
-        demoCal.DayNames := HebrewDays;
-        demoCal.MonthNames := HebrewMonths;
-        demoCal.DisplayTexts := HebrewTexts;
-        demoCal.BiDiMode:= bdRightToLeft;
-       end;
-    4: begin
-        demoCal.DayNames := SpanishDays;
-        demoCal.MonthNames := SpanishMonths;
-        demoCal.DisplayTexts := SpanishTexts;
-        demoCal.BiDiMode:= bdLeftToRight;
-       end;
-  end;
-  }
 end;
 
 procedure TForm1.rgStartingDOWClick(Sender: TObject);
@@ -183,7 +144,7 @@ end;
 
 procedure TForm1.cbUseHolidaysChange(Sender: TObject);
 begin
-  FnoHolidays := not FnoHolidays;
+  FNoHolidays := not FNoHolidays;
 end;
 
 procedure TForm1.cgOptionsItemClick(Sender: TObject; Index: integer);
