@@ -13,6 +13,7 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    BtnFont: TButton;
     cbUseHolidays: TCheckBox;
     cgOptions: TCheckGroup;
     CbArrowBorder: TColorButton;
@@ -28,6 +29,8 @@ type
     CbPastMonth: TColorButton;
     CbSelectedDate: TColorButton;
     CbText: TColorButton;
+    CbPrepareCanvas: TCheckBox;
+    FontDialog: TFontDialog;
     GroupBox1: TGroupBox;
     Label10: TLabel;
     Label11: TLabel;
@@ -50,6 +53,8 @@ type
     rgStartingDOW: TRadioGroup;
     seWidth: TSpinEdit;
     seHeight: TSpinEdit;
+    procedure BtnFontClick(Sender: TObject);
+    procedure CbPrepareCanvasChange(Sender: TObject);
     procedure ColorButtonChanged(Sender: TObject);
     procedure cbUseHolidaysChange(Sender: TObject);
     procedure cgOptionsItemClick(Sender: TObject; Index: integer);
@@ -64,6 +69,8 @@ type
     procedure RespondToDateChange(Sender: tObject);
     procedure GetHolidays(Sender: TObject; AMonth, AYear: Integer;  // wp
       var Holidays: THolidays);
+    procedure PrepareCanvas(Sender: TObject; AYear, AMonth, ADay: Word;
+      AState: TCalPrepareCanvasStates; ACanvas: TCanvas);
   end;
 
 var
@@ -74,6 +81,8 @@ implementation
 
 {$R *.lfm}
 
+uses
+  Controls;
 
 function Easter(year:integer) : TDateTime;  // wp
 var
@@ -117,6 +126,9 @@ begin
   demoCal.Height := seHeight.Value;
   demoCal.OnGetHolidays := @GetHolidays;
   demoCal.OnDateChange:= @RespondToDateChange;
+  if CbPrepareCanvas.Checked then
+    demoCal.OnPrepareCanvas := @PrepareCanvas else
+    demoCal.OnPrepareCanvas := nil;
   FNoHolidays:= False;
   for opt in demoCal.Options do
    if (opt in demoCal.Options) then cgOptions.Checked[integer(opt)] := True;
@@ -190,7 +202,7 @@ begin
   col := (Sender as TColorButton).ButtonColor;
   case (Sender as TColorButton).Name of
     'CbArrowBorder': calendar.Colors.ArrowBorderColor := col;
-    'CbArror': calendar.Colors.ArrowColor := col;
+    'CbArrow': calendar.Colors.ArrowColor := col;
     'CbBackground': calendar.Colors.BackgroundColor := col;
     'CbBorder': calendar.Colors.BorderColor := col;
     'CbDayLine': calendar.Colors.DayLineColor := col;
@@ -218,6 +230,21 @@ begin
   if (opt in demoCal.Options) then
     demoCal.Options := demoCal.Options - [opt]
   else demoCal.Options := demoCal.Options + [opt];
+end;
+
+procedure TForm1.BtnFontClick(Sender: TObject);
+begin
+  FontDialog.Font.Assign(demoCal.Font);
+  if FontDialog.Execute then
+    demoCal.Font.Assign(FontDialog.Font);
+end;
+
+procedure TForm1.CbPrepareCanvasChange(Sender: TObject);
+begin
+  if CbPrepareCanvas.Checked then
+    demoCal.OnPrepareCanvas := @PrepareCanvas else
+    demoCal.OnPrepareCanvas := nil;
+  demoCal.Invalidate;
 end;
 
 procedure TForm1.RespondToDateChange(Sender: tObject);
@@ -249,6 +276,21 @@ begin
     DecodeDate(e+49, y,m,d);
     if m = AMonth then
       AddHoliday(d, Holidays);
+  end;
+end;
+
+procedure TForm1.PrepareCanvas(Sender: TObject; AYear,AMonth,ADay: word;
+  AState: TCalPrepareCanvasStates; ACanvas: TCanvas);
+begin
+  if (ADay = 1) and not (pcsOtherMonth in AState) then
+  begin
+    ACanvas.Font.Size := 12;
+    ACanvas.Font.Style := [fsUnderline, fsItalic, fsBold];
+    ACanvas.Font.Color := clGreen;
+    ACanvas.Brush.Color := clSilver;
+    ACanvas.Brush.Style := bsFDiagonal;
+    ACanvas.Pen.Color := clSilver;
+    ACanvas.Pen.Style := psSolid;
   end;
 end;
 
