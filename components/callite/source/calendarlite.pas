@@ -100,6 +100,9 @@ type
   TGetHolidaysEvent = procedure (Sender: TObject; AMonth, AYear: Integer;
     var Holidays: THolidays) of object;
 
+  TFormatEvent = procedure (Sender: TObject; ADate: TDate;
+    AFont: TFont; ABkColor: TColor) of object;
+
   TCalOption = (coBoldDayNames, coBoldHolidays, coBoldToday, coBoldTopRow,
                 coBoldWeekend, coDayLine, coShowBorder, coShowHolidays,
                 coShowTodayFrame, coShowTodayName, coShowTodayRow,
@@ -611,6 +614,10 @@ begin
   end else
   if (FCanvas.Font.Color <> FOwner.Colors.TextColor) then
     FCanvas.Font.Color:= FOwner.Colors.TextColor;
+
+  if coBoldToday in FOwner.Options then
+    FCanvas.Font.Style := [fsBold] else
+    FCanvas.Font.Style := [];
 
   s:= FOwner.GetDisplayText(dtToday);
   if (coShowTodayName in FOwner.Options) then

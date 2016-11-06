@@ -5,17 +5,43 @@ unit uMainTestCalLite;
 interface
 
 uses
-  Classes, SysUtils, Forms, Graphics, ExtCtrls, StdCtrls, Spin, CalendarLite;
+  Classes, SysUtils, Forms, Graphics, ExtCtrls, StdCtrls, Spin, Dialogs,
+  CalendarLite;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
-    CalendarLite1: TCalendarLite;
     cbUseHolidays: TCheckBox;
     cgOptions: TCheckGroup;
-    Label1: TLabel;
+    CbArrowBorder: TColorButton;
+    CbTodayFrame: TColorButton;
+    CbTopRow: TColorButton;
+    CbTopRowText: TColorButton;
+    CbWeekend: TColorButton;
+    CbArrow: TColorButton;
+    CbBackground: TColorButton;
+    CbBorder: TColorButton;
+    CbDayLine: TColorButton;
+    CbHolidays: TColorButton;
+    CbPastMonth: TColorButton;
+    CbSelectedDate: TColorButton;
+    CbText: TColorButton;
+    GroupBox1: TGroupBox;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
     LTitle: TLabel;
     LWidth: TLabel;
     lHeight: TLabel;
@@ -24,6 +50,7 @@ type
     rgStartingDOW: TRadioGroup;
     seWidth: TSpinEdit;
     seHeight: TSpinEdit;
+    procedure ColorButtonChanged(Sender: TObject);
     procedure cbUseHolidaysChange(Sender: TObject);
     procedure cgOptionsItemClick(Sender: TObject; Index: integer);
     procedure FormCreate(Sender: TObject);
@@ -47,8 +74,6 @@ implementation
 
 {$R *.lfm}
 
-uses
-  Dialogs;
 
 function Easter(year:integer) : TDateTime;  // wp
 var
@@ -114,6 +139,20 @@ begin
   copyCal.StartingDayOfWeek:= dowSaturday;
   copyCal.OnGetHolidays := @GetHolidays;
   copyCal.Options := copyCal.Options + [coShowBorder,coUseTopRowColors,coDayLine];
+
+  CbArrowBorder.ButtonColor := demoCal.Colors.ArrowBorderColor;
+  CbArrow.ButtonColor := demoCal.Colors.ArrowColor;
+  CbBackground.ButtonColor := demoCal.Colors.BackgroundColor;
+  CbBorder.ButtonColor := demoCal.Colors.BorderColor;
+  CbDayLine.ButtonColor := demoCal.Colors.DayLineColor;
+  CbHolidays.Buttoncolor := demoCal.colors.HolidayColor;
+  CbPastMonth.ButtonColor := demoCal.Colors.PastMonthColor;
+  CbSelectedDate.ButtonColor := demoCal.Colors.SelectedDateColor;
+  CbText.ButtonColor := demoCal.Colors.TextColor;
+  CbTodayFrame.ButtonColor := demoCal.Colors.TodayFrameColor;
+  CbTopRow.ButtonColor := demoCal.Colors.TopRowColor;
+  CbTopRowText.ButtonColor := democal.Colors.TopRowTextColor;
+  CbWeekend.ButtonColor := demoCal.Colors.WeekendColor;
 end;
 
 procedure TForm1.rgLanguageClick(Sender: TObject);
@@ -140,6 +179,31 @@ end;
 procedure TForm1.seWidthChange(Sender: TObject);
 begin
   demoCal.Width := seWidth.Value;
+end;
+
+procedure TForm1.ColorButtonChanged(Sender: TObject);
+var
+  calendar: TCalendarLite;
+  col: TColor;
+begin
+  calendar := demoCal;
+  col := (Sender as TColorButton).ButtonColor;
+  case (Sender as TColorButton).Name of
+    'CbArrowBorder': calendar.Colors.ArrowBorderColor := col;
+    'CbArror': calendar.Colors.ArrowColor := col;
+    'CbBackground': calendar.Colors.BackgroundColor := col;
+    'CbBorder': calendar.Colors.BorderColor := col;
+    'CbDayLine': calendar.Colors.DayLineColor := col;
+    'CbHolidays': calendar.Colors.HolidayColor := col;
+    'CbPastMonth': calendar.Colors.PastMonthColor := col;
+    'CbSelectedDate': calendar.Colors.SelectedDateColor := col;
+    'CbText': calendar.Colors.TextColor := col;
+    'CbTodayFrame': calendar.Colors.TodayFrameColor := col;
+    'CbTopRow': calendar.Colors.TopRowColor := col;
+    'CbTopRowText': calendar.Colors.TopRowTextColor := col;
+    'CbWeekend': calendar.Colors.WeekendColor := col;
+  end;
+  calendar.Invalidate;
 end;
 
 procedure TForm1.cbUseHolidaysChange(Sender: TObject);
