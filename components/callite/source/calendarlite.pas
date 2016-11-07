@@ -100,11 +100,15 @@ type
   TGetHolidaysEvent = procedure (Sender: TObject; AMonth, AYear: Integer;
     var Holidays: THolidays) of object;
 
-  TCalPrepareCanvasState = (pcsSelectedDay, pcsToday, pcsOtherMonth);
-  TCalPrepareCanvasStates = set of TCalPrepareCanvasState;
+  TCalCellState = (csSelectedDay, csToday, csOtherMonth);
+  TCalCellStates = set of TCalCellState;
 
   TCalPrepareCanvasEvent = procedure (Sender: TObject; AYear, AMonth, ADay: Word;
-    AState: TCalPrepareCanvasStates; ACanvas: TCanvas) of object;
+    AState: TCalCellStates; ACanvas: TCanvas) of object;
+
+  TCalDrawCellEvent = procedure (Sender: TObject; AYear, AMonth, ADay: Word;
+    AState: TCalCellStates; ARect: TRect; ACanvas: TCanvas;
+    var AContinueDrawing: Boolean) of object;
 
   TCalOption = (coBoldDayNames, coBoldHolidays, coBoldToday, coBoldTopRow,
                 coBoldWeekend, coDayLine, coShowBorder, coShowHolidays,
@@ -194,6 +198,7 @@ type
     FDisplayTexts: TStringList;
     FMonthNames: TStringList;
     FOnDateChange: TNotifyEvent;
+    FOnDrawCell: TCalDrawCellEvent;
     FOnGetHolidays: TGetHolidaysEvent;
     FOnPrepareCanvas: TCalPrepareCanvasEvent;
     FOptions: TCalOptions;
@@ -278,6 +283,7 @@ type
     property OnMouseWheel;
     property OnMouseWheelDown;
     property OnMouseWheelUp;
+
     // new properties
     property Colors: TCalColors read FColors;
     property Date: TDateTime read FDate write SetDate;
@@ -292,8 +298,10 @@ type
       write SetWeekendDays default [dowSunday];
     property Languages: TLanguage read FLanguage
       write SetLanguage default lgEnglish; //Ariel Rodriguez 12/09/2013
-  // new event properties
+
+    // new event properties
     property OnDateChange: TNotifyEvent read FOnDateChange write FOnDateChange;
+    property OnDrawCell: TCalDrawCellEvent read FOnDrawCell write FOnDrawCell;
     property OnGetHolidays: TGetHolidaysEvent read FOnGetHolidays write FOnGetHolidays;
     property OnPrepareCanvas: TCalPrepareCanvasEvent read FOnPrepareCanvas write FOnPrepareCanvas;
   end;
@@ -506,7 +514,8 @@ var
   dt, todayDate: TDateTime;
   oldBrush: TBrush;
   oldPen: TPen;
-  state: TCalPrepareCanvasStates;
+  state: TCalCellStates;
+  continueDrawing: Boolean;
 begin
   todayDate := Date;
   dow := DayOfWeek(FOwner.FDate);
@@ -566,13 +575,13 @@ begin
       begin
         { color of days from previous and next months }
         FCanvas.Font.Color:= FOwner.Colors.PastMonthColor;
-        Include(state, pcsOtherMonth);
+        Include(state, csOtherMonth);
       end;
 
       { Set default background color }
       if (dt = FOwner.FDate) then begin
         FCanvas.Brush.Color:= FOwner.FColors.SelectedDateColor;
-        Include(state, pcsSelectedDay);
+        Include(state, csSelectedDay);
       end else
         FCanvas.Brush.Color:= FOwner.Colors.BackgroundColor;
 
@@ -582,7 +591,7 @@ begin
         FCanvas.Pen.Color := FOwner.Colors.TodayFrameColor;
         FCanvas.Pen.Width := 2;
         FCanvas.Pen.Style := psSolid;
-        Include(state, pcsToday);
+        Include(state, csToday);
       end else
         FCanvas.Pen.Style := psClear;
 
@@ -590,29 +599,37 @@ begin
       oldPen.Assign(FCanvas.Pen);
       oldBrush.Assign(FCanvas.Brush);
       if Assigned(FOwner.FOnPrepareCanvas) then
-        FOwner.FOnPrepareCanvas(Self, y, m, d, state, FCanvas);
+        FOwner.FOnPrepareCanvas(FOwner, y, m, d, state, FCanvas);
 
-      { Paint the background of the selected date }
-      if (dt = FOwner.FDate) or
-        (oldBrush.Color <> FCanvas.Brush.Color) or
-        (oldBrush.Style <> FCanvas.brush.Style) or
-        (oldPen.Color <> FCanvas.Pen.Color) or
-        (oldPen.Style <> FCanvas.Pen.Style) or
-        (oldPen.Width <> FCanvas.Pen.Width)
-      then
-        FCanvas.Rectangle(rec);
+      continueDrawing := true;
+      if Assigned(FOwner.FOnDrawCell) then
+        { Custom-draw the cell }
+        FOwner.FOnDrawCell(FOwner, y, m, d, state, rec, FCanvas, continueDrawing);
 
-      { Paint the frame around the "today" cell }
-      if (dt = todayDate) and (coShowTodayFrame in FOwner.Options) then
+      if continueDrawing then
       begin
-        Inc(rec.Top);
-        Inc(rec.Bottom);
-        FCanvas.Rectangle(rec);
-      end;
+        { Paint the background of the selected date }
+        if (dt = FOwner.FDate) or
+          (oldBrush.Color <> FCanvas.Brush.Color) or
+          (oldBrush.Style <> FCanvas.brush.Style) or
+          (oldPen.Color <> FCanvas.Pen.Color) or
+          (oldPen.Style <> FCanvas.Pen.Style) or
+          (oldPen.Width <> FCanvas.Pen.Width)
+        then
+          FCanvas.Rectangle(rec);
 
-      { Paint the day number }
-      s := IntToStr(d);
-      FCanvas.TextRect(rec, 0, 0, s, FTStyle);
+        { Paint the frame around the "today" cell }
+        if (dt = todayDate) and (coShowTodayFrame in FOwner.Options) then
+        begin
+          Inc(rec.Top);
+          Inc(rec.Bottom);
+          FCanvas.Rectangle(rec);
+        end;
+
+        { Paint the day number }
+        s := IntToStr(d);
+        FCanvas.TextRect(rec, 0, 0, s, FTStyle);
+      end;
 
       dt:= dt + 1;
     end;  // for c

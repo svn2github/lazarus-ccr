@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Graphics, ExtCtrls, StdCtrls, Spin, Dialogs,
-  CalendarLite;
+  Controls, CalendarLite;
 
 type
 
@@ -30,8 +30,10 @@ type
     CbSelectedDate: TColorButton;
     CbText: TColorButton;
     CbPrepareCanvas: TCheckBox;
+    CbDrawCell: TCheckBox;
     FontDialog: TFontDialog;
     GroupBox1: TGroupBox;
+    ImageList1: TImageList;
     Label10: TLabel;
     Label11: TLabel;
     Label12: TLabel;
@@ -54,6 +56,7 @@ type
     seWidth: TSpinEdit;
     seHeight: TSpinEdit;
     procedure BtnFontClick(Sender: TObject);
+    procedure CbDrawCellChange(Sender: TObject);
     procedure CbPrepareCanvasChange(Sender: TObject);
     procedure ColorButtonChanged(Sender: TObject);
     procedure cbUseHolidaysChange(Sender: TObject);
@@ -70,7 +73,10 @@ type
     procedure GetHolidays(Sender: TObject; AMonth, AYear: Integer;  // wp
       var Holidays: THolidays);
     procedure PrepareCanvas(Sender: TObject; AYear, AMonth, ADay: Word;
-      AState: TCalPrepareCanvasStates; ACanvas: TCanvas);
+      AState: TCalCellStates; ACanvas: TCanvas);
+    procedure DrawCell(Sender: TObject; AYear, AMonth, ADay: Word;
+      AState: TCalCellStates; ARect: TRect; ACanvas: TCanvas;
+      var AContinueDrawing: Boolean);
   end;
 
 var
@@ -81,8 +87,6 @@ implementation
 
 {$R *.lfm}
 
-uses
-  Controls;
 
 function Easter(year:integer) : TDateTime;  // wp
 var
@@ -129,6 +133,9 @@ begin
   if CbPrepareCanvas.Checked then
     demoCal.OnPrepareCanvas := @PrepareCanvas else
     demoCal.OnPrepareCanvas := nil;
+  if CbDrawCell.Checked then
+    demoCal.OnDrawCell := @DrawCell else
+    demoCal.OnDrawCell := nil;
   FNoHolidays:= False;
   for opt in demoCal.Options do
    if (opt in demoCal.Options) then cgOptions.Checked[integer(opt)] := True;
@@ -239,6 +246,14 @@ begin
     demoCal.Font.Assign(FontDialog.Font);
 end;
 
+procedure TForm1.CbDrawCellChange(Sender: TObject);
+begin
+  if CbDrawCell.Checked then
+    demoCal.OnDrawCell := @DrawCell else
+    demoCal.OnDrawCell := nil;
+  demoCal.Invalidate;
+end;
+
 procedure TForm1.CbPrepareCanvasChange(Sender: TObject);
 begin
   if CbPrepareCanvas.Checked then
@@ -280,9 +295,9 @@ begin
 end;
 
 procedure TForm1.PrepareCanvas(Sender: TObject; AYear,AMonth,ADay: word;
-  AState: TCalPrepareCanvasStates; ACanvas: TCanvas);
+  AState: TCalCellStates; ACanvas: TCanvas);
 begin
-  if (ADay = 1) and not (pcsOtherMonth in AState) then
+  if (ADay = 1) and not (csOtherMonth in AState) then
   begin
     ACanvas.Font.Size := 12;
     ACanvas.Font.Style := [fsUnderline, fsItalic, fsBold];
@@ -291,6 +306,22 @@ begin
     ACanvas.Brush.Style := bsFDiagonal;
     ACanvas.Pen.Color := clSilver;
     ACanvas.Pen.Style := psSolid;
+  end;
+end;
+
+procedure TForm1.DrawCell(Sender: TObject; AYear,AMonth,ADay: Word;
+  AState: TCalCellStates; ARect: TRect; ACanvas: TCanvas;
+  var AContinueDrawing: Boolean);
+var
+  bmp: TBitmap;
+begin
+  if (AMonth = 11) and (ADay = 11) and not (csOtherMonth in AState) then begin
+    bmp := TBitmap.Create;
+    ImageList1.GetBitmap(0, bmp);
+    ACanvas.Draw(ARect.Left, (ARect.Top + ARect.Bottom - bmp.Height) div 2, bmp);
+    inc(ARect.Left, bmp.Width + 2);
+    ACanvas.TextOut(ARect.Left, (ARect.Top + ARect.Bottom - ACanvas.TextHeight('Tg')) div 2, intToStr(ADay));
+    AContinueDrawing := false;  // Skips built-in painting of this day cell
   end;
 end;
 
