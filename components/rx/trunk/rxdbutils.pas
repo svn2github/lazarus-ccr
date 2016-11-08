@@ -50,7 +50,6 @@ const
 
 type
   TRxSearchDirection = (rsdAll, rsdForward, rsdBackward);
-
 type
 
 { TLocateObject }
@@ -110,7 +109,7 @@ procedure InternalRestoreFields(DataSet: TDataSet; IniFile: TObject;
   const Section: string; RestoreVisible: Boolean);}
   
 function DataSetLocateThrough(DataSet: TDataSet; const KeyFields: string;
-  const KeyValues: Variant; Options: TLocateOptions; SearchOrigin:TRxSearchDirection = rsdAll): Boolean;
+  const KeyValues: Variant; Options: TLocateOptions; SearchOrigin:TRxSearchDirection = rsdAll; ASearchFromStart:boolean = false): Boolean;
 
 procedure SaveFieldsReg(DataSet: TDataSet; IniFile: TRegIniFile);
 procedure RestoreFieldsReg(DataSet: TDataSet; IniFile: TRegIniFile;
@@ -384,7 +383,8 @@ end;
 
 { DataSet locate routines }
 function DataSetLocateThrough(DataSet: TDataSet; const KeyFields: string;
-  const KeyValues: Variant; Options: TLocateOptions; SearchOrigin:TRxSearchDirection = rsdAll): Boolean;
+  const KeyValues: Variant; Options: TLocateOptions; SearchOrigin:TRxSearchDirection = rsdAll;
+  ASearchFromStart:boolean = false): Boolean;
 var
   FieldCount: Integer;
   Fields: TList;
@@ -415,7 +415,15 @@ var
         Result := UTF8CompareStr(S, S1) = 0;}
 
       if (loPartialKey in Options) then
-        Result := UTF8Pos(S1, S) > 0
+      begin
+        if ASearchFromStart then
+        begin
+          UTF8Delete(S, UTF8Length(S1) + 1, MaxInt);
+          Result := UTF8CompareStr(S, S1) = 0;
+        end
+        else
+          Result := UTF8Pos(S1, S) > 0
+      end
       else
       begin
         Result := UTF8CompareStr(S, S1) = 0;

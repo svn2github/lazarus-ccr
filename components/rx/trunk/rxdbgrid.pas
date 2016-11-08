@@ -118,9 +118,8 @@ type
 
     );
 
-  //TRxDSState = (rxdsInactive, rxdsActive);
-
   TRxFilterOpCode = (fopEQ, fopNotEQ, fopStartFrom, fopEndTo, fopLike, fopNotLike);
+
   { TRxDBGridKeyStroke }
 
   TRxDBGridKeyStroke = class(TCollectionItem)
@@ -160,6 +159,22 @@ type
     function FindRxKeyStrokes(ACommand: TRxDBGridCommand): TRxDBGridKeyStroke;
   public
     property Items[Index: integer]: TRxDBGridKeyStroke read GetItem write SetItem; default;
+  end;
+
+  { TRxDBGridSearchOptions }
+
+  TRxDBGridSearchOptions = class(TPersistent)
+  private
+    FFromStart: boolean;
+    FOwner:TRxDBGrid;
+    FQuickSearchOptions: TLocateOptions;
+  protected
+    procedure AssignTo(Dest: TPersistent); override;
+  public
+    constructor Create(AOwner: TRxDBGrid);
+  published
+    property QuickSearchOptions:TLocateOptions read FQuickSearchOptions write FQuickSearchOptions;
+    property FromStart:boolean read FFromStart write FFromStart;
   end;
 
   { TRxDBGridCollumnConstraint }
@@ -561,6 +576,7 @@ type
     FColumnDefValues: TRxDBGridColumnDefValues;
     //FrxDSState:TRxDSState;
     FFooterOptions: TRxDBGridFooterOptions;
+    FSearchOptions: TRxDBGridSearchOptions;
     FSortColumns: TRxDbGridColumnsSortList;
     FSortingNow:Boolean;
     FInProcessCalc: integer;
@@ -635,6 +651,7 @@ type
     procedure SetKeyStrokes(const AValue: TRxDBGridKeyStrokes);
     procedure SetOptionsRx(const AValue: TOptionsRx);
     procedure SetPropertyStorage(const AValue: TCustomPropertyStorage);
+    procedure SetSearchOptions(AValue: TRxDBGridSearchOptions);
     procedure SetTitleButtons(const AValue: boolean);
     procedure TrackButton(X, Y: integer);
     function GetDrawFullLine: boolean;
@@ -789,8 +806,6 @@ type
     property SortOrder:TSortMarker read GetSortOrder;
 
     property SortColumns:TRxDbGridColumnsSortList read FSortColumns;
-    //property MarkerUp : TBitmap read GetMarkerUp write SetMarkerUp;
-    //property MarkerDown : TBitmap read GetMarkerDown write SetMarkerDown;
   published
     property AfterQuickSearch: TRxQuickSearchNotifyEvent read FAfterQuickSearch write FAfterQuickSearch;
     property ColumnDefValues:TRxDBGridColumnDefValues read FColumnDefValues write SetColumnDefValues;
@@ -802,6 +817,7 @@ type
     property Columns: TRxDbGridColumns read GetColumns write SetColumns stored IsColumnsStored;
     property KeyStrokes: TRxDBGridKeyStrokes read FKeyStrokes write SetKeyStrokes;
     property FooterOptions:TRxDBGridFooterOptions read FFooterOptions write SetFooterOptions;
+    property SearchOptions:TRxDBGridSearchOptions read FSearchOptions write SetSearchOptions;
 
     //storage
     property PropertyStorage: TCustomPropertyStorage read GetPropertyStorage write SetPropertyStorage;
@@ -1054,6 +1070,27 @@ type
     //procedure SetBounds(aLeft, aTop, aWidth, aHeight: integer); override;
     procedure EditingDone; override;
   end;
+
+{ TRxDBGridSearchOptions }
+
+procedure TRxDBGridSearchOptions.AssignTo(Dest: TPersistent);
+begin
+  if Dest is TRxDBGridSearchOptions then
+  begin
+    TRxDBGridSearchOptions(Dest).FQuickSearchOptions:=FQuickSearchOptions;
+    TRxDBGridSearchOptions(Dest).FFromStart:=FFromStart;
+  end
+  else
+    inherited AssignTo(Dest);
+end;
+
+constructor TRxDBGridSearchOptions.Create(AOwner: TRxDBGrid);
+begin
+  inherited Create;
+  FOwner:=AOwner;
+  FQuickSearchOptions:=[loPartialKey, loCaseInsensitive];
+  FFromStart:=false;
+end;
 
 { TRxDBGridColumnDefValues }
 
@@ -2615,6 +2652,11 @@ end;
 procedure TRxDBGrid.SetPropertyStorage(const AValue: TCustomPropertyStorage);
 begin
   FPropertyStorageLink.Storage := AValue;
+end;
+
+procedure TRxDBGrid.SetSearchOptions(AValue: TRxDBGridSearchOptions);
+begin
+  FSearchOptions.Assign(AValue);
 end;
 
 function TRxDBGrid.DatalinkActive: boolean;
@@ -4372,7 +4414,7 @@ begin
         begin
           //1.Вызываем процедурку поиска...
           if DataSetLocateThrough(Self.DataSource.DataSet,
-            Self.SelectedField.FieldName, AValue, [loPartialKey, loCaseInsensitive]) then
+            Self.SelectedField.FieldName, AValue, FSearchOptions.FQuickSearchOptions, rsdAll, FSearchOptions.FFromStart) then
             Self.FQuickUTF8Search := AValue;
           ClearSearchValue := False;
         end;
@@ -5630,6 +5672,7 @@ begin
 {$ENDIF}
   FToolsList:=TFPList.Create;
   FColumnDefValues:=TRxDBGridColumnDefValues.Create(Self);
+  FSearchOptions:=TRxDBGridSearchOptions.Create(Self);
 
   FSortColumns:=TRxDbGridColumnsSortList.Create;
 
@@ -5681,29 +5724,19 @@ end;
 destructor TRxDBGrid.Destroy;
 begin
   CleanDSEvent;
-
   FreeAndNil(FFooterOptions);
-
   FreeAndNil(FRxDbGridLookupComboEditor);
   FreeAndNil(FRxDbGridDateEditor);
-  //FreeAndNil(FMarkerDown);
-  //FreeAndNil(FMarkerUp);
   FreeAndNil(FPropertyStorageLink);
   FreeAndNil(FFilterListEditor);
-
   FreeAndNil(F_PopupMenu);
   FreeAndNil(F_MenuBMP);
-{  FreeAndNil(FEllipsisRxBMP);
-  FreeAndNil(FGlyphRxBMP);
-  FreeAndNil(FUpDownRxBMP);
-  FreeAndNil(FPlusRxBMP);
-  FreeAndNil(FMinusRxBMP);}
-
   FreeAndNil(F_LastFilter);
-
   FreeAndNil(FKeyStrokes);
   FreeAndNil(FToolsList);
   FreeAndNil(FColumnDefValues);
+  FreeAndNil(FSearchOptions);
+
   inherited Destroy;
   FreeAndNil(FSortColumns);
 end;
