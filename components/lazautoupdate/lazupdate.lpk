@@ -52,8 +52,8 @@ A component for SourceForge Project Developers and end-users to update their app
   along with this library; if not, write to the Free Software Foundation,
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 "/>
-    <Version Minor="1" Release="27"/>
-    <Files Count="5">
+    <Version Minor="1" Release="28"/>
+    <Files Count="4">
       <Item1>
         <Filename Value="ulazautoupdate.pas"/>
         <HasRegisterProc Value="True"/>
@@ -72,10 +72,6 @@ A component for SourceForge Project Developers and end-users to update their app
         <Filename Value="uappisrunning.pas"/>
         <UnitName Value="uappisrunning"/>
       </Item4>
-      <Item5>
-        <Filename Value="synapse\source\lib\laz_synapse.lpk"/>
-        <Type Value="Text"/>
-      </Item5>
     </Files>
     <i18n>
       <EnableI18N Value="True"/>
