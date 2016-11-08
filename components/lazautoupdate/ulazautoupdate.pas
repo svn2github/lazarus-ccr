@@ -42,10 +42,12 @@ uses
   VersionSupport, inifiles, aboutlazautoupdateunit, uappisrunning, LCLProc;
 
 const
+//  C_OnlineAppPath =
+//    'https://downloads.sourceforge.net/project/%s/files/%s/%s/download';
   C_OnlineAppPath =
-    'http://sourceforge.net/projects/%s/files/%s/%s/download';
+    'http://downloads.sourceforge.net/project/%s/%s/%s';
   // [updatepath,projectname,filename]
-  C_TLazAutoUpdateComponentVersion = '0.1.27';
+  C_TLazAutoUpdateComponentVersion = '0.1.28';
   C_LAUTRayINI = 'lauimport.ini';
 
 {
@@ -95,7 +97,8 @@ const
  V0.1.24:Bugfix to CreateLocalLauImportFile
          More checks on PrettyName
  V0.1.25:Changed default: CopyTree = TRUE
- V0.1.26:??
+ V0.1.26:Updated uses clause for FileUtils.
+ V0.1.27: ??
 }
   C_TThreadedDownloadComponentVersion = '0.0.2';
 {
@@ -179,7 +182,7 @@ type
     OnlineVersion: string) of object;
   TOnDownloaded = procedure(Sender: TObject; ResultCode, BytesDownloaded: integer) of
     object;
-  TOnDebugEvent = procedure(Sender: TObject; MethodName, Message: string) of object;
+  TOnDebugEvent = procedure(Sender: TObject; lauMethodName, lauMessage: string) of object;
 
   TLazAutoUpdate = class(TAboutLazAutoUpdate)
   private
@@ -842,8 +845,16 @@ begin
     szURL := Format(C_OnlineAppPath, [fSourceForgeProjectName,
       fUpdatesFolder, fVersionsININame]);
 
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'NewVersionAvailable',
+        Format('SourceForgeURL is %s', [szURL]));
+
     szTargetPath := AppendPathDelim(ExtractFilePath(fAppFilename)) +
       Format(C_TempVersionsININame, [fVersionsININame]);
+
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'NewVersionAvailable',
+        Format('Target Path %s', [szTargetPath]));
 
     if fProjectType = auOther then
       // fauOtherSourceURL ends with '/'
@@ -863,7 +874,7 @@ begin
     except
       if fFireDebugEvent then
         fOndebugEvent(Self, 'NewVersionAvailable',
-          Format('Faile to delete old file %s', [szTargetPath]));
+          Format('Failed to delete old file %s', [szTargetPath]));
       // No error if the delete can't be done
     end;
     with fThreadDownload do
@@ -881,6 +892,13 @@ begin
         fParentForm.Caption := C_Checking;
       // Start the thread
       ThreadDownloadHTTP;
+      if fFireDebugEvent then
+        fOndebugEvent(Self, 'NewVersionAvailable',
+          Format('ThreadDownloadHTTP return Code was %d', [fReturnCode]));
+      if fFireDebugEvent then
+        fOndebugEvent(Self, 'NewVersionAvailable',
+          Format('ThreadDownloadHTTP Last Error was %s', [fLastError]));
+
       cCount := 0;
       // Update the GUI during the thread
       try
@@ -920,6 +938,9 @@ begin
             C_ThreadDownloadCrash);
         Exit;
       end;
+      if fFireDebugEvent then
+        fOndebugEvent(Self, 'NewVersionAvailable',
+          Format('After Threadfinished: Return Code was %d', [fReturnCode]));
       Sleep(1);
       fDownloadInprogress := False;
       if fDownloadSize > 0 then
@@ -932,7 +953,12 @@ begin
         if fFireDebugEvent then
           fOndebugEvent(Self, 'NewVersionAvailable',
             Format(C_DownloadedBytes, [szTargetPath, fDownloadSize]));
-      end;
+      end
+      else
+      if fFireDebugEvent then
+      fOndebugEvent(Self, 'NewVersionAvailable',
+        Format('DownloadSize was %d', [fDownloadSize]));
+
     end;
   end;
   if not fSilentMode then
@@ -1897,77 +1923,77 @@ const
   Refresh = '<meta http-equiv="refresh"';
   URLMarker = 'url=';
 var
-  Counter: integer;
-  HTMLBody: TStringList;
-  RefreshStart: integer;
-  URLStart: integer;
+  Counter  : integer;
+  HTMLBody  : TStringList;
+  RefreshStart  : integer;
+  URLStart  : integer;
 begin
   HTMLBody := TStringList.Create;
-  try
+   try
     HTMLBody.LoadFromStream(Document);
     for Counter := 0 to HTMLBody.Count - 1 do
-    begin
+     begin
       // This line should be between noscript tags and give the direct download locations:
       RefreshStart := Ansipos(Refresh, HTMLBody[Counter]);
       if RefreshStart > 0 then
-      begin
+       begin
         URLStart := AnsiPos(URLMarker, HTMLBody[Counter]) + Length(URLMarker);
         if URLStart > RefreshStart then
-        begin
+         begin
           // Look for closing "
           URL := Copy(HTMLBody[Counter], URLStart,
             PosEx('"', HTMLBody[Counter], URLStart + 1) - URLStart);
           //infoln('debug: new url after sf noscript:');
           //infoln(URL);
           break;
-        end;
-      end;
-    end;
-  finally
+         end;
+       end;
+     end;
+   finally
     HTMLBody.Free;
-  end;
+   end;
   Result := URL;
 end;
 
 function SourceForgeURL(URL: string; fDebugmode: boolean;
-  var AReturnCode: integer): string;
+var AReturnCode: integer): string;
   // Detects sourceforge download and tries to deal with
   // redirection, and extracting direct download link.
   // Thanks to
   // Ocye: http://lazarus.freepascal.org/index.php/topic,13425.msg70575.html#msg70575
 const
-  SFProjectPart = '//sourceforge.net/projects/';
+  SFProjectPart = '//downloads.sourceforge.net/project/';
   SFFilesPart = '/files/';
   SFDownloadPart = '/download';
 var
-  HTTPSender: THTTPSend;
-  i, j: integer;
-  FoundCorrectURL: boolean;
-  SFDirectory: string; //Sourceforge directory
-  SFDirectoryBegin: integer;
-  SFFileBegin: integer;
-  SFFilename: string; //Sourceforge name of file
-  SFProject: string;
-  SFProjectBegin: integer;
+  HTTPSender  : THTTPSend;
+  i, j  : integer;
+  FoundCorrectURL  : boolean;
+  SFDirectory  : string; //Sourceforge directory
+  SFDirectoryBegin  : integer;
+  SFFileBegin  : integer;
+  SFFilename  : string; //Sourceforge name of file
+  SFProject  : string;
+  SFProjectBegin  : integer;
 begin
   // Detect SourceForge download; e.g. from URL
   //          1         2         3         4         5         6         7         8         9
   // 1234557890123456789012345578901234567890123455789012345678901234557890123456789012345578901234567890
   // http://sourceforge.net/projects/base64decoder/files/base64decoder/version%202.0/b64util.zip/download
   //                                 ^^^project^^^       ^^^directory............^^^ ^^^file^^^
-  FoundCorrectURL := True; //Assume not a SF download
+  FoundCorrectURL := False; //Assume not a SF download
   i := Pos(SFProjectPart, URL);
   if i > 0 then
-  begin
+   begin
     // Possibly found project; now extract project, directory and filename parts.
     SFProjectBegin := i + Length(SFProjectPart);
     j := PosEx(SFFilesPart, URL, SFProjectBegin);
     if (j > 0) then
-    begin
+     begin
       SFProject := Copy(URL, SFProjectBegin, j - SFProjectBegin);
       SFDirectoryBegin := PosEx(SFFilesPart, URL, SFProjectBegin) + Length(SFFilesPart);
       if SFDirectoryBegin > 0 then
-      begin
+       begin
         // Find file
         // URL might have trailing arguments... so: search for first
         // /download coming up from the right, but it should be after
@@ -1978,19 +2004,19 @@ begin
         SFFileBegin := RPosEx('/', URL, i - 1) + 1;
 
         if SFFileBegin > 0 then
-        begin
-          SFFilename := Copy(URL, SFFileBegin, i - SFFileBegin);
+         begin
+          SFFilename      := Copy(URL, SFFileBegin, i - SFFileBegin);
           //Include trailing /
-          SFDirectory := Copy(URL, SFDirectoryBegin, SFFileBegin - SFDirectoryBegin);
+          SFDirectory     := Copy(URL, SFDirectoryBegin, SFFileBegin - SFDirectoryBegin);
           FoundCorrectURL := False;
-        end;
-      end;
-    end;
-  end;
+         end;
+       end;
+     end;
+   end;
 
   if not FoundCorrectURL then
-  begin
-    try
+   begin
+     try
       // Rewrite URL if needed for Sourceforge download redirection
       // Detect direct link in HTML body and get URL from that
       HTTPSender := THTTPSend.Create;
@@ -1998,72 +2024,72 @@ begin
       HTTPSender.UserAgent :=
         'curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
       while not FoundCorrectURL do
-      begin
+       begin
         HTTPSender.HTTPMethod('GET', URL);
         // SEE: http_ReturnCodes.txt
         case HTTPSender.Resultcode of
-          301, 302, 307:
-          begin
+          301, 302, 307: // Redirect
+           begin
             for i := 0 to HTTPSender.Headers.Count - 1 do
               if (Pos('Location: ', HTTPSender.Headers.Strings[i]) > 0) or
                 (Pos('location: ', HTTPSender.Headers.Strings[i]) > 0) then
-              begin
+               begin
                 j := Pos('use_mirror=', HTTPSender.Headers.Strings[i]);
                 if j > 0 then
                   URL :=
                     'http://' + RightStr(HTTPSender.Headers.Strings[i],
                     length(HTTPSender.Headers.Strings[i]) - j - 10) +
-                    '.dl.sourceforge.net/project/' + SFProject +
+                    '.downloads.sourceforge.net/project/' + SFProject +
                     '/' + SFDirectory + SFFilename
                 else
                   URL := StringReplace(HTTPSender.Headers.Strings[i],
                     'Location: ', '', []);
                 HTTPSender.Clear;//httpsend
                 FoundCorrectURL := True;
-                AReturnCode := HTTPSender.Resultcode;
+                AReturnCode     := HTTPSender.Resultcode;
                 break; //out of rewriting loop
-              end;
-          end;
+               end;
+           end;
           100..200:
-          begin
+           begin
             //Could be a sourceforge timer/direct link page, but...
             if AnsiPos('Content-Type: text/html', HTTPSender.Headers.Text) > 0 then
-            begin
+             begin
               // find out... it's at least not a binary
               URL := SFDirectLinkURL(URL, HTTPSender.Document);
-            end;
+             end;
             FoundCorrectURL := True; //We're done by now
-            AReturnCode := HTTPSender.Resultcode;
-          end;
+            AReturnCode     := HTTPSender.Resultcode;
+           end;
           500:
-          begin
+           begin
             // if fDebugMode then ShowMessageFmt(C_Error500, [HTTPSender.ResultCode]);
             AReturnCode := HTTPSender.Resultcode;
             Break;
-          end;
+           end;
           //Raise Exception.Create('No internet connection available');
           //Internal Server Error ('+aURL+')');
           404:
-          begin
+           begin
             // if fDebugMode then ShowMessageFmt(C_Error404, [HTTPSender.ResultCode]);
             AReturnCode := HTTPSender.Resultcode;
             Break;
-          end;
+           end;
           else
             raise Exception.Create(C_DownloadFailedErrorCode +
               IntToStr(HTTPSender.ResultCode) + ' (' + HTTPSender.ResultString + ')');
-        end;//case
-      end;//while
-    finally
+         end;//case
+       end;//while
+     finally
       AReturnCode := HTTPSender.Resultcode;
       HTTPSender.Free;
-    end;
-  end;
+     end;
+   end;
   Result := URL;
 end;
 
-function DownloadHTTP(URL, TargetFile: string;
-  var ReturnCode, DownloadSize: integer; bIsSourceForge, fDebugmode: boolean): boolean;
+function DownloadHTTP(URL, TargetFile: string; var ReturnCode, DownloadSize: integer;
+bIsSourceForge, fDebugmode: boolean): boolean;
   // Download file; retry if necessary.
   // Deals with SourceForge download links
   // Could use Synapse HttpGetBinary, but that doesn't deal
@@ -2071,60 +2097,59 @@ function DownloadHTTP(URL, TargetFile: string;
 const
   MaxRetries = 3;
 var
-  HTTPGetResult: boolean;
-  HTTPSender: THTTPSend;
-  RetryAttempt: integer;
+  HTTPGetResult  : boolean;
+  HTTPSender  : THTTPSend;
+  RetryAttempt  : integer;
 begin
   Result := False;
   RetryAttempt := 1;
   //Optional: mangling of Sourceforge file download URLs; see below.
   if bIsSourceForge then
-    URL := SourceForgeURL(URL, fDebugMode, ReturnCode); //Deal with sourceforge URLs
+    URL      := SourceForgeURL(URL, fDebugMode, ReturnCode); //Deal with sourceforge URLs
   // ReturnCode may not be useful, but it's provided here
   HTTPSender := THTTPSend.Create;
-  try
-    try
+   try
+     try
       // Try to get the file
       HTTPGetResult := HTTPSender.HTTPMethod('GET', URL);
       while (HTTPGetResult = False) and (RetryAttempt < MaxRetries) do
-      begin
+       begin
         WaitFor(500 * RetryAttempt);
         // sleep(500 * RetryAttempt);
         HTTPGetResult := HTTPSender.HTTPMethod('GET', URL);
-        RetryAttempt := RetryAttempt + 1;
-      end;
+        RetryAttempt  := RetryAttempt + 1;
+       end;
       // If we have an answer from the server, check if the file
       // was sent to us
-      ReturnCode := HTTPSender.Resultcode;
+      ReturnCode   := HTTPSender.Resultcode;
       DownloadSize := HTTPSender.DownloadSize;
       case HTTPSender.Resultcode of
         100..299:
-        begin
+         begin
           with TFileStream.Create(TargetFile, fmCreate or fmOpenWrite) do
-            try
+             try
               Seek(0, soFromBeginning);
               CopyFrom(HTTPSender.Document, 0);
-            finally
+             finally
               Free;
-            end;
+             end;
           Result := True;
-        end; //informational, success
+         end; //informational, success
         300..399: Result := False; //redirection. Not implemented, but could be.
         400..499: Result := False; //client error; 404 not found etc
         500..599: Result := False; //internal server error
         else
           Result := False; //unknown code
-      end;
-    except
+       end;
+     except
       // We don't care for the reason for this error; the download failed.
       Result := False;
-    end;
-  finally
+     end;
+   finally
     HTTPSender.Free;
-  end;
-
-
+   end;
 
 end;
+
 
 end.
