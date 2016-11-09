@@ -19,6 +19,9 @@
     <i18n>
       <EnableI18N LFM="False"/>
     </i18n>
+    <VersionInfo>
+      <StringTable ProductVersion=""/>
+    </VersionInfo>
     <BuildModes Count="3">
       <Item1 Name="Default" Default="True"/>
       <Item2 Name="Debug">
@@ -122,6 +125,7 @@
         <ComponentName Value="mainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <UnitName Value="umainform"/>
       </Unit1>
     </Units>
   </ProjectOptions>

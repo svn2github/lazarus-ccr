@@ -59,7 +59,7 @@ procedure Tmainform.LongTimer1Timer(Sender: TObject);
 begin
   // memo_ReportTimerEvent.Lines.Add('LastFired at ' + FormatDateTime('hh:nn:ss', LongTimer1.LastFired));
   memo_ReportTimerEvent.Lines.Add('Timer fired at ' + FormatDateTime('hh:nn:ss dd-mm-yyyy', Now));
-  //memo_ReportTimerEvent.Lines.Add(LongTimer1.fDebugString);
+  memo_ReportTimerEvent.Lines.Add(LongTimer1.fDebugString);
 
 end;
 
@@ -89,7 +89,7 @@ end;
 procedure Tmainform.LongTimer1Sample(Sender: TObject);
 begin
   memo_ReportTimerEvent.Lines.Add('Sampled at ' + FormatDateTime('hh:nn:ss', Now));
-  //memo_ReportTimerEvent.Lines.Add(LongTimer1.fDebugString);
+  memo_ReportTimerEvent.Lines.Add(LongTimer1.fDebugString);
 end;
 
 procedure Tmainform.LongTimer1StartTimer(Sender: TObject);

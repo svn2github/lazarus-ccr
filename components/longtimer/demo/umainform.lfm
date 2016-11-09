@@ -11,7 +11,7 @@ object mainform: Tmainform
   DefaultMonitor = dmPrimary
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '1.7'
+  LCLVersion = '1.3'
   object cmd_Close: TBitBtn
     Left = 104
     Height = 30
