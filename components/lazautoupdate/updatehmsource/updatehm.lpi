@@ -22,8 +22,8 @@
     </i18n>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
-      <RevisionNr Value="13"/>
-      <StringTable Comments="updatehm -h for list of parameters" CompanyName="minesadorada@charcodelvalle.com" FileDescription="Console updater for LazAutoUpdate component" InternalName="updatehm" LegalCopyright="LGPLv2" OriginalFilename="updatehm.exe" ProductName="LazAutoUpdate"/>
+      <RevisionNr Value="14"/>
+      <StringTable Comments="updatehm -h for list of parameters" CompanyName="minesadorada@charcodelvalle.com" FileDescription="Console updater for LazAutoUpdate component" InternalName="updatehm" LegalCopyright="LGPLv2" OriginalFilename="updatehm.exe" ProductName="LazAutoUpdate" ProductVersion="0.0.13.0"/>
     </VersionInfo>
     <BuildModes Count="6">
       <Item1 Name="Default" Default="True"/>
