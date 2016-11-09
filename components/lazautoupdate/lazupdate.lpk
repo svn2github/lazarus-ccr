@@ -92,7 +92,7 @@ A component for SourceForge Project Developers and end-users to update their app
     </UsageOptions>
     <PublishOptions>
       <Version Value="2"/>
-      <DestinationDirectory Value="C:\NewPascal\projects\lazautoupdate\svn\trunk\packagesource\published"/>
+      <DestinationDirectory Value="C:\NewPascal\lazarus\components\lazautoupdate\published"/>
     </PublishOptions>
   </Package>
 </CONFIG>
