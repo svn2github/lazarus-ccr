@@ -73,10 +73,10 @@ type
     procedure GetHint(Sender: TObject; AYear, AMonth, ADay: Word; out AHintText: String);
     procedure GetHolidays(Sender: TObject; AMonth, AYear: Integer;  // wp
       var Holidays: THolidays);
-    procedure PrepareCanvas(Sender: TObject; AYear, AMonth, ADay: Word;
-      AState: TCalCellStates; ACanvas: TCanvas);
-    procedure DrawCell(Sender: TObject; AYear, AMonth, ADay: Word;
-      AState: TCalCellStates; ARect: TRect; ACanvas: TCanvas;
+    procedure PrepareCanvas(Sender: TObject; ACanvas: TCanvas;
+      AYear, AMonth, ADay: Word; AState: TCalCellStates);
+    procedure DrawCell(Sender: TObject; ACanvas: TCanvas;
+      AYear, AMonth, ADay: Word; AState: TCalCellStates; var ARect: TRect;
       var AContinueDrawing: Boolean);
   end;
 
@@ -316,8 +316,8 @@ begin
   end;
 end;
 
-procedure TForm1.PrepareCanvas(Sender: TObject; AYear,AMonth,ADay: word;
-  AState: TCalCellStates; ACanvas: TCanvas);
+procedure TForm1.PrepareCanvas(Sender: TObject; ACanvas: TCanvas;
+  AYear,AMonth,ADay: word; AState: TCalCellStates);
 begin
   if (ADay = 1) and not (csOtherMonth in AState) then
   begin
@@ -331,8 +331,8 @@ begin
   end;
 end;
 
-procedure TForm1.DrawCell(Sender: TObject; AYear,AMonth,ADay: Word;
-  AState: TCalCellStates; ARect: TRect; ACanvas: TCanvas;
+procedure TForm1.DrawCell(Sender: TObject; ACanvas: TCanvas;
+  AYear,AMonth,ADay: Word; AState: TCalCellStates; var ARect: TRect;
   var AContinueDrawing: Boolean);
 var
   bmp: TBitmap;
@@ -342,8 +342,10 @@ begin
     ImageList1.GetBitmap(0, bmp);
     ACanvas.Draw(ARect.Left, (ARect.Top + ARect.Bottom - bmp.Height) div 2, bmp);
     inc(ARect.Left, bmp.Width + 2);
+    (*
     ACanvas.TextOut(ARect.Left, (ARect.Top + ARect.Bottom - ACanvas.TextHeight('Tg')) div 2, intToStr(ADay));
     AContinueDrawing := false;  // Skips built-in painting of this day cell
+    *)
   end;
 end;
 

@@ -103,11 +103,11 @@ type
   TCalCellState = (csSelectedDay, csToday, csOtherMonth);
   TCalCellStates = set of TCalCellState;
 
-  TCalPrepareCanvasEvent = procedure (Sender: TObject; AYear, AMonth, ADay: Word;
-    AState: TCalCellStates; ACanvas: TCanvas) of object;
+  TCalPrepareCanvasEvent = procedure (Sender: TObject; ACanvas: TCanvas;
+    AYear, AMonth, ADay: Word; AState: TCalCellStates) of object;
 
-  TCalDrawCellEvent = procedure (Sender: TObject; AYear, AMonth, ADay: Word;
-    AState: TCalCellStates; ARect: TRect; ACanvas: TCanvas;
+  TCalDrawCellEvent = procedure (Sender: TObject; ACanvas: TCanvas;
+    AYear, AMonth, ADay: Word; AState: TCalCellStates; var ARect: TRect;
     var AContinueDrawing: Boolean) of object;
 
   TCalHintEvent = procedure (Sender: TObject; AYear, AMonth, ADay: Word;
@@ -614,12 +614,12 @@ begin
       oldPen.Assign(FCanvas.Pen);
       oldBrush.Assign(FCanvas.Brush);
       if Assigned(FOwner.FOnPrepareCanvas) then
-        FOwner.FOnPrepareCanvas(FOwner, y, m, d, state, FCanvas);
+        FOwner.FOnPrepareCanvas(FOwner, FCanvas, y, m, d, state);
 
       continueDrawing := true;
       if Assigned(FOwner.FOnDrawCell) then
         { Custom-draw the cell }
-        FOwner.FOnDrawCell(FOwner, y, m, d, state, rec, FCanvas, continueDrawing);
+        FOwner.FOnDrawCell(FOwner, FCanvas, y, m, d, state, rec, continueDrawing);
 
       if continueDrawing then
       begin
