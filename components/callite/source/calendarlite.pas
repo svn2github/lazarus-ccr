@@ -110,6 +110,9 @@ type
     AState: TCalCellStates; ARect: TRect; ACanvas: TCanvas;
     var AContinueDrawing: Boolean) of object;
 
+  TCalHintEvent = procedure (Sender: TObject; AYear, AMonth, ADay: Word;
+    out AHintText: String) of object;
+
   TCalOption = (coBoldDayNames, coBoldHolidays, coBoldToday, coBoldTopRow,
                 coBoldWeekend, coDayLine, coShowBorder, coShowHolidays,
                 coShowTodayFrame, coShowTodayName, coShowTodayRow,
@@ -117,7 +120,6 @@ type
   TCalOptions = set of TCalOption;
 
   TLanguage = (lgEnglish, lgFrench, lgGerman, lgHebrew, lgSpanish); //Ariel Rodriguez 12/09/2013
-
 
   { TCalDrawer }
 
@@ -144,6 +146,7 @@ type
     function  GetCellAt(aPoint: TPoint): TSize;
     function  GetCellAtColRow(aCol, aRow: integer): TRect;
     function  GetColRowPosition(aCol, aRow: integer): TSize;
+    function  GetDateOfCell(ACell: TSize): TDate;
     function  GetLeftColIndex: Integer;
     procedure GetMonthYearRects(var AMonthRect, AYearRect: TRect);
     function  GetRightColIndex: Integer;
@@ -200,11 +203,14 @@ type
     FOnDateChange: TNotifyEvent;
     FOnDrawCell: TCalDrawCellEvent;
     FOnGetHolidays: TGetHolidaysEvent;
+    FOnHint: TCalHintEvent;
     FOnPrepareCanvas: TCalPrepareCanvasEvent;
     FOptions: TCalOptions;
     FPopupMenu: TPopupMenu;
     FStartingDayOfWeek: TDayOfWeek;
     FWeekendDays: TDaysOfWeek;
+    FPrevMouseDate: TDate;
+    FSavedHint: String;
     FLanguage: TLanguage; //Ariel Rodriguez 12/09/2013
     procedure DateChange;
     function GetDayNames: String;
@@ -233,7 +239,15 @@ type
     function GetMonthName(AMonth: Integer): String;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseDown(Button: TMouseButton; Shift:TShiftState; X,Y:Integer); override;
+    procedure MouseEnter; override;
+    procedure MouseLeave; override;
+    procedure MouseMove(Shift: TShiftState; X,Y: Integer); override;
+
     procedure Paint; override;
+
+    { Hints }
+    procedure ShowHintWindow(APoint: TPoint; ADate: TDate);
+    procedure HideHintWindow;
 
   public
     constructor Create(anOwner: TComponent); override;
@@ -303,6 +317,7 @@ type
     property OnDateChange: TNotifyEvent read FOnDateChange write FOnDateChange;
     property OnDrawCell: TCalDrawCellEvent read FOnDrawCell write FOnDrawCell;
     property OnGetHolidays: TGetHolidaysEvent read FOnGetHolidays write FOnGetHolidays;
+    property OnHint: TCalHintEvent read FOnHint write FOnHint;
     property OnPrepareCanvas: TCalPrepareCanvasEvent read FOnPrepareCanvas write FOnPrepareCanvas;
   end;
 
@@ -877,6 +892,18 @@ begin
   Result.cx:= FColPositions[aCol];
 end;
 
+function TCalDrawer.GetDateOfCell(ACell: TSize): TDate;
+var
+  diff: Integer;
+begin
+  if (ACell.cy > 1) and (ACell.cy < 8) then
+  begin
+    diff := ACell.cx + LastCol * (ACell.cy - 2);
+    Result := FStartDate + diff - 1;
+  end else
+    Result := 0;
+end;
+
 function TCalDrawer.GetLeftColIndex: Integer;
 begin
   if FOwner.BiDiMode = bdLeftToRight then
@@ -1061,6 +1088,7 @@ begin
   FOptions := [coShowTodayFrame, coBoldHolidays, coShowWeekend, coShowHolidays,
                coShowTodayRow];
   FLanguage := lgEnglish; //Ariel Rodriguez 12/09/2013
+  FPrevMouseDate := 0;
 end;
 
 destructor TCalendarLite.Destroy;
@@ -1165,6 +1193,39 @@ begin
     mbRight : FCalDrawer.RightClick;
   end;
 end;
+
+procedure TCalendarLite.MouseEnter;
+begin
+  FSavedHint := Hint;
+end;
+
+procedure TCalendarLite.MouseLeave;
+begin
+  HideHintWindow;
+  FPrevMouseDate := 0;
+end;
+
+procedure TCalendarLite.MouseMove(Shift: TShiftState; X, Y: Integer);
+var
+  c: TSize;
+  dt: TDate;
+begin
+  inherited MouseMove(Shift, X, Y);
+
+  if ShowHint and Assigned(FCalDrawer) then
+  begin
+    c := FCalDrawer.GetCellAt(Point(X,Y));
+    dt := FCalDrawer.GetDateOfCell(c);
+    if (dt > 0) and (dt <> FPrevMouseDate) then begin
+      HideHintWindow;
+      ShowHintWindow(Point(X, Y), dt);
+    end else
+    if (dt = 0) then
+      HideHintWindow;
+    FPrevMouseDate := dt;
+  end;
+end;
+
 
 procedure TCalendarLite.MonthMenuItemClicked(Sender: TObject);
 begin
@@ -1405,6 +1466,41 @@ procedure TCalendarLite.YearMenuItemClicked(Sender: TObject);
 begin
   FCalDrawer.GotoYear(TMenuItem(Sender).Tag);
 end;
+
+{ Hints }
+
+procedure TCalendarLite.ShowHintWindow(APoint: TPoint; ADate: TDate);
+const
+  MAX_HINT_WIDTH = 300;
+var
+  txt: String;
+  y, m, d: Word;
+  R: TRect;
+begin
+  if Assigned(FOnHint) then begin
+    DecodeDate(ADate, y, m, d);
+    FOnHint(Self, y, m, d, txt);
+    if Hint <> '' then begin
+      if txt = '' then txt := Hint else txt := Hint + LineEnding + txt;
+    end;
+  end else
+    txt := Hint;
+
+  if txt = '' then
+    exit;
+
+  APoint := ClientToScreen(APoint);
+  Hint := txt;
+  Application.Hint := txt;
+  Application.ActivateHint(APoint);
+end;
+
+procedure TCalendarLite.HideHintWindow;
+begin
+  Hint := FSavedHint;
+  Application.CancelHint;
+end;
+
 
 //Ariel Rodriguez 12/09/2013
 procedure Register;

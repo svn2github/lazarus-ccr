@@ -70,6 +70,7 @@ type
     copyCal, demoCal: TCalendarLite;
     FNoHolidays: boolean;
     procedure RespondToDateChange(Sender: tObject);
+    procedure GetHint(Sender: TObject; AYear, AMonth, ADay: Word; out AHintText: String);
     procedure GetHolidays(Sender: TObject; AMonth, AYear: Integer;  // wp
       var Holidays: THolidays);
     procedure PrepareCanvas(Sender: TObject; AYear, AMonth, ADay: Word;
@@ -120,7 +121,8 @@ end;
 
 
 procedure TForm1.FormCreate(Sender: TObject);
-var opt: TCalOption;
+var
+  opt: TCalOption;
 begin
   demoCal:= TCalendarLite.Create(Self);
   demoCal.Parent:= Self;
@@ -130,6 +132,9 @@ begin
   demoCal.Height := seHeight.Value;
   demoCal.OnGetHolidays := @GetHolidays;
   demoCal.OnDateChange:= @RespondToDateChange;
+  demoCal.OnHint := @GetHint;
+  demoCal.ShowHint := true;
+  demoCal.Hint := 'Calendar';
   if CbPrepareCanvas.Checked then
     demoCal.OnPrepareCanvas := @PrepareCanvas else
     demoCal.OnPrepareCanvas := nil;
@@ -267,7 +272,24 @@ begin
   copyCal.Date:= TCalendarLite(Sender).Date;
 end;
 
-// wp
+procedure TForm1.GetHint(Sender: TObject; AYear, AMonth, ADay: Word;
+  out AHintText: String);
+var
+  dt, e: TDate;
+begin
+  case AMonth of
+    1: if ADay = 1 then AHintText := 'New Year';
+   12: if ADay = 25 then AHintText := 'Christmas';
+   else
+       e := Easter(AYear);
+       dt := EncodeDate(AYear, AMonth, ADay);
+       if (dt = e) then
+         AHintText := 'Easter'
+       else if (dt = e + 49) then
+         AHintText := 'Whit Sunday';
+  end;
+end;
+
 procedure TForm1.GetHolidays(Sender: TObject; AMonth, AYear: Integer;
   var Holidays: THolidays);
 var
