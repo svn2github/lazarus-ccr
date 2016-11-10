@@ -124,7 +124,6 @@ begin
   result := EncodeDate(year, month, day);
 end;
 
-
 procedure TForm1.FormCreate(Sender: TObject);
 var
   opt: TCalOption;
@@ -193,6 +192,7 @@ begin
     3: demoCal.Languages := lgHebrew;
     4: demoCal.Languages := lgSpanish;
   end;
+  copyCal.Languages := demoCal.Languages;
 end;
 
 procedure TForm1.rgStartingDOWClick(Sender: TObject);
@@ -246,7 +246,9 @@ begin
   opt := TCalOption(Index);
   if (opt in demoCal.Options) then
     demoCal.Options := demoCal.Options - [opt]
-  else demoCal.Options := demoCal.Options + [opt];
+  else
+    demoCal.Options := demoCal.Options + [opt];
+  copyCal.Options := demoCal.Options;
 end;
 
 procedure TForm1.CbAddHolidayNameToCellChange(Sender: TObject);
@@ -368,13 +370,13 @@ var
 begin
   if (AMonth = 11) and (ADay = 11) and not (csOtherMonth in AState) then begin
     bmp := TBitmap.Create;
-    ImageList1.GetBitmap(0, bmp);
-    ACanvas.Draw(ARect.Left, (ARect.Top + ARect.Bottom - bmp.Height) div 2, bmp);
-    inc(ARect.Left, bmp.Width + 2);
-    (*
-    ACanvas.TextOut(ARect.Left, (ARect.Top + ARect.Bottom - ACanvas.TextHeight('Tg')) div 2, intToStr(ADay));
-    AContinueDrawing := false;  // Skips built-in painting of this day cell
-    *)
+    try
+      ImageList1.GetBitmap(0, bmp);
+      ACanvas.Draw(ARect.Left, (ARect.Top + ARect.Bottom - bmp.Height) div 2, bmp);
+      inc(ARect.Left, bmp.Width + 2);
+    finally
+      bmp.Free;
+    end;
   end;
 end;
 

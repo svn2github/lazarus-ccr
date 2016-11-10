@@ -55,7 +55,7 @@ const
   DefCalWidth = 210;
   DefMinHeight = 120;
   DefMinWidth = 120;
-  DefaultDisplayText = 'Today is,dd/mm/yyyy,Holidays during,There are no holidays set for';
+  DefaultDisplayText = 'Today is|mmm dd", " yyyy|Holidays during|There are no holidays set for';
   DefTStyle: TTextStyle = (Alignment  : taCenter; Layout     : tlCenter;
                            SingleLine : False;    Clipping   : True;
                            ExpandTabs : False;    ShowPrefix : False;
@@ -64,20 +64,20 @@ const
                            EndEllipsis: False);
 
    //Ariel Rodriguez 12/09/2013
-  EnglishDays = 'Sun,Mon,Tue,Wed,Thu,Fri,Sat';
-  EnglishMonths = 'January,February,March,April,May,June,July,August,September,October,November,December';
-  HebrewDays = 'א,ב,ג,ד,ה,ו,ש';
-  HebrewMonths = ('ינואר,פברואר,מרץ,אפריל,מאי,יוני,    יולי,אוגוסט,ספטמבר,אוקטובר,נובמבר,דצמבר');
-  HebrewTexts = 'היום הוא,yyyy-mm-dd,במהלך החגים, אין חגים מוגדרים עבור';
-  FrenchDays = 'dim,lun,mar,mer,jeu,ven,sm';
-  FrenchMonths = 'janvier,février,mars,avril,mai,juin,juillet,août,septembre,octobre,novembre,décembre';
-  FrenchTexts = 'Est aujourd''hui,yyyy/mm/dd,vacances pendant,Il n''y a pas de jours fériés fixés pour';
-  GermanMonths = 'Januar,Februar,März,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember';
-  GermanDays = 'Son,Mon,Die,Mit,Don,Fre,Sam';
-  GermamTexts = 'Heute ist,yyyy/mm/dd,Urlaub während,Es gibt keine Feiertage eingestellt für';
-  SpanishDays = 'Dom,Lun,Mar,Mie,Jue,Vie,Sab';
-  SpanishMonths = 'Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre';
-  SpanishTexts = 'Hoy es,dd/mm/yyyy,Dias de fiestas,No hay dias feriados establecidos para';
+  EnglishDays = 'Sun|Mon|Tue|Wed|Thu|Fri|Sat';
+  EnglishMonths = 'January|February|March|April|May|June|July|August|September|October|November|December';
+  HebrewDays = 'א|ב|ג|ד|ה|ו|ש';
+  HebrewMonths = ('ינואר|פברואר|מרץ|אפריל|מאי|יוני|    יולי|אוגוסט|ספטמבר|אוקטובר|נובמב|דצמבר');
+  HebrewTexts = 'היום הוא|yyyy-mm-dd|במהלך החגים| אין חגים מוגדרים עבור';
+  FrenchDays = 'dim|lun|mar|mer|jeu|ven|sm';
+  FrenchMonths = 'janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre';
+  FrenchTexts = 'Est aujourd''hui|dd/mm/yyyy|vacances pendant|Il n''y a pas de jours fériés fixés pour';
+  GermanMonths = 'Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember';
+  GermanDays = 'So|Mo|Di|Mi|Do|Fr|Sa';
+  GermamTexts = 'Heute ist|dd/mm/yyyy|Urlaub während|Es sind keine Feiertage vorhanden im';
+  SpanishDays = 'Dom<Lun|Mar|Mie|Jue|Vie|Sab';
+  SpanishMonths = 'Enero|Febrero|Marzo|Abril|Mayo|Junio|Julio|Agosto|Septiembre|Octubre|Noviembre|Diciembre';
+  SpanishTexts = 'Hoy es|dd/mm/yyyy|Dias de fiestas|No hay dias feriados establecidos para';
    //Ariel Rodriguez 12/09/2013
 
 type
@@ -1091,7 +1091,7 @@ begin
   FWeekendDays := [dowSunday, dowSaturday];
   FOptions := [coShowTodayFrame, coBoldHolidays, coShowWeekend, coShowHolidays,
                coShowTodayRow];
-  FLanguage := lgEnglish; //Ariel Rodriguez 12/09/2013
+  SetLanguage(lgEnglish); //Ariel Rodriguez 12/09/2013
   FPrevMouseDate := 0;
 end;
 
@@ -1127,7 +1127,7 @@ end;
 
 function TCalendarLite.GetDayNames: String;
 begin
-  Result := FDayNames.CommaText;
+  Result := FDayNames.DelimitedText;
 end;
 
 function TCalendarLite.GetDisplayText(aTextIndex: TDisplayText): String;
@@ -1149,7 +1149,7 @@ end;
 
 function TCalendarLite.GetMonthNames: String;
 begin
-  Result := FMonthNames.CommaText;
+  Result := FMonthNames.DelimitedText;
 end;
 
 procedure TCalendarLite.HolidayMenuItemClicked(Sender: TObject);
@@ -1375,25 +1375,28 @@ end;
 
 procedure TCalendarLite.SetDayNames(const AValue: String);
 begin
-  FDayNames.CommaText := AValue;
+  FDayNames.Delimiter := '|';
+  FDayNames.DelimitedText := AValue;
   Invalidate;
 end;
 
 procedure TCalendarLite.SetDefaultDisplayTexts;
 begin
-  FDisplayTexts.CommaText := DefaultDisplayText;
+  FDisplayTexts.Delimiter := '|';
+  FDisplayTexts.DelimitedText := DefaultDisplayText;
 end;
 
 procedure TCalendarLite.SetDisplayTexts(AValue: String);
 begin
-  FDisplayTexts.CommaText := AValue;
+  FDisplayTexts.Delimiter := '|';
+  FDisplayTexts.DelimitedText := AValue;
   Invalidate;
 end;
 
 //Ariel Rodriguez 12/09/2013
 procedure TCalendarLite.SetLanguage(AValue : TLanguage);
 begin
-  if FLanguage = AValue then Exit;
+//  if FLanguage = AValue then Exit;
   FLanguage := AValue;
 
   case FLanguage of
@@ -1435,7 +1438,8 @@ end;
 //Ariel Rodriguez 12/09/2013
 procedure TCalendarLite.SetMonthNames(const AValue: String);
 begin
-  FMonthNames.CommaText := AValue;
+  FMonthNames.Delimiter := '|';
+  FMonthNames.DelimitedText := AValue;
   Invalidate;
 end;
 
