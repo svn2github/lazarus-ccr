@@ -31,6 +31,8 @@ type
     CbText: TColorButton;
     CbPrepareCanvas: TCheckBox;
     CbDrawCell: TCheckBox;
+    CbAddHolidayNameToCell: TCheckBox;
+    CbShowHints: TCheckBox;
     FontDialog: TFontDialog;
     GroupBox1: TGroupBox;
     ImageList1: TImageList;
@@ -56,8 +58,10 @@ type
     seWidth: TSpinEdit;
     seHeight: TSpinEdit;
     procedure BtnFontClick(Sender: TObject);
+    procedure CbAddHolidayNameToCellChange(Sender: TObject);
     procedure CbDrawCellChange(Sender: TObject);
     procedure CbPrepareCanvasChange(Sender: TObject);
+    procedure CbShowHintsChange(Sender: TObject);
     procedure ColorButtonChanged(Sender: TObject);
     procedure cbUseHolidaysChange(Sender: TObject);
     procedure cgOptionsItemClick(Sender: TObject; Index: integer);
@@ -70,7 +74,8 @@ type
     copyCal, demoCal: TCalendarLite;
     FNoHolidays: boolean;
     procedure RespondToDateChange(Sender: tObject);
-    procedure GetHint(Sender: TObject; AYear, AMonth, ADay: Word; out AHintText: String);
+    procedure GetDayText(Sender: TObject; AYear, AMonth, ADay: Word; var AText: String);
+    procedure GetHintText(Sender: TObject; AYear, AMonth, ADay: Word; var AText: String);
     procedure GetHolidays(Sender: TObject; AMonth, AYear: Integer;  // wp
       var Holidays: THolidays);
     procedure PrepareCanvas(Sender: TObject; ACanvas: TCanvas;
@@ -132,7 +137,7 @@ begin
   demoCal.Height := seHeight.Value;
   demoCal.OnGetHolidays := @GetHolidays;
   demoCal.OnDateChange:= @RespondToDateChange;
-  demoCal.OnHint := @GetHint;
+  demoCal.OnHint := @GetHintText;
   demoCal.ShowHint := true;
   demoCal.Hint := 'Calendar';
   if CbPrepareCanvas.Checked then
@@ -244,6 +249,14 @@ begin
   else demoCal.Options := demoCal.Options + [opt];
 end;
 
+procedure TForm1.CbAddHolidayNameToCellChange(Sender: TObject);
+begin
+  if CbAddHolidayNameToCell.Checked then
+    demoCal.OnGetDayText := @GetDayText else
+    demoCal.OnGetDayText := nil;
+  demoCal.Invalidate;
+end;
+
 procedure TForm1.BtnFontClick(Sender: TObject);
 begin
   FontDialog.Font.Assign(demoCal.Font);
@@ -267,26 +280,42 @@ begin
   demoCal.Invalidate;
 end;
 
+procedure TForm1.CbShowHintsChange(Sender: TObject);
+begin
+  demoCal.ShowHint := CbShowHints.Checked;
+end;
+
 procedure TForm1.RespondToDateChange(Sender: tObject);
 begin
   copyCal.Date:= TCalendarLite(Sender).Date;
 end;
 
-procedure TForm1.GetHint(Sender: TObject; AYear, AMonth, ADay: Word;
-  out AHintText: String);
+procedure TForm1.GetDayText(Sender: TObject; AYear, AMonth, ADay: Word;
+  var AText: String);
+var
+  s: String;
+begin
+  GetHintText(Sender, AYear, AMonth, ADay, s);
+  if s <> '' then
+    AText := IntToStr(ADay) + LineEnding + s;
+end;
+
+procedure TForm1.GetHintText(Sender: TObject; AYear, AMonth, ADay: Word;
+  var AText: String);
 var
   dt, e: TDate;
 begin
+  AText := '';
   case AMonth of
-    1: if ADay = 1 then AHintText := 'New Year';
-   12: if ADay = 25 then AHintText := 'Christmas';
+    1: if ADay = 1 then AText := 'New Year';
+   12: if ADay = 25 then AText := 'Christmas';
    else
        e := Easter(AYear);
        dt := EncodeDate(AYear, AMonth, ADay);
        if (dt = e) then
-         AHintText := 'Easter'
+         AText := 'Easter'
        else if (dt = e + 49) then
-         AHintText := 'Whit Sunday';
+         AText := 'Whit Sunday';
   end;
 end;
 

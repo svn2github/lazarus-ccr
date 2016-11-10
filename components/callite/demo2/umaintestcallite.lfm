@@ -90,22 +90,22 @@ object Form1: TForm1
       Height = 23
       Top = 87
       Width = 66
-      MaxValue = 430
+      MaxValue = 1000
       MinValue = 120
       OnChange = seWidthChange
       TabOrder = 2
-      Value = 300
+      Value = 400
     end
     object seHeight: TSpinEdit
       Left = 617
       Height = 23
       Top = 120
       Width = 66
-      MaxValue = 250
+      MaxValue = 1000
       MinValue = 120
       OnChange = seHeightChange
       TabOrder = 3
-      Value = 200
+      Value = 300
     end
     object lHeight: TLabel
       Left = 560
@@ -432,7 +432,7 @@ object Form1: TForm1
     object CbPrepareCanvas: TCheckBox
       Left = 560
       Height = 19
-      Top = 168
+      Top = 192
       Width = 144
       Caption = 'Override font of 1st day'
       OnChange = CbPrepareCanvasChange
@@ -441,7 +441,7 @@ object Form1: TForm1
     object BtnFont: TButton
       Left = 560
       Height = 25
-      Top = 232
+      Top = 272
       Width = 75
       Caption = 'Font...'
       OnClick = BtnFontClick
@@ -450,18 +450,38 @@ object Form1: TForm1
     object CbDrawCell: TCheckBox
       Left = 560
       Height = 19
-      Top = 192
+      Top = 216
       Width = 161
       Caption = 'Owner draw (icon, Nov 11)'
       OnChange = CbDrawCellChange
       TabOrder = 9
     end
+    object CbAddHolidayNameToCell: TCheckBox
+      Left = 560
+      Height = 19
+      Top = 168
+      Width = 152
+      Caption = 'Add holiday name to cell'
+      OnChange = CbAddHolidayNameToCellChange
+      TabOrder = 10
+    end
+    object CbShowHints: TCheckBox
+      Left = 560
+      Height = 19
+      Top = 240
+      Width = 92
+      Caption = 'CbShowHints'
+      Checked = True
+      OnChange = CbShowHintsChange
+      State = cbChecked
+      TabOrder = 11
+    end
   end
   object FontDialog: TFontDialog
     MinFontSize = 0
     MaxFontSize = 0
-    left = 662
-    top = 232
+    left = 664
+    top = 272
   end
   object ImageList1: TImageList
     left = 564

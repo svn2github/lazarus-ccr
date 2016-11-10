@@ -57,9 +57,9 @@ const
   DefMinWidth = 120;
   DefaultDisplayText = 'Today is,dd/mm/yyyy,Holidays during,There are no holidays set for';
   DefTStyle: TTextStyle = (Alignment  : taCenter; Layout     : tlCenter;
-                           SingleLine : True;     Clipping   : True;
+                           SingleLine : False;    Clipping   : True;
                            ExpandTabs : False;    ShowPrefix : False;
-                           Wordbreak  : False;    Opaque     : False;
+                           Wordbreak  : True;     Opaque     : False;
                            SystemFont : False;    RightToLeft: False;
                            EndEllipsis: False);
 
@@ -110,8 +110,8 @@ type
     AYear, AMonth, ADay: Word; AState: TCalCellStates; var ARect: TRect;
     var AContinueDrawing: Boolean) of object;
 
-  TCalHintEvent = procedure (Sender: TObject; AYear, AMonth, ADay: Word;
-    out AHintText: String) of object;
+  TCalGetDayTextEvent = procedure (Sender: TObject; AYear, AMonth, ADay: Word;
+    var AText: String) of object;
 
   TCalOption = (coBoldDayNames, coBoldHolidays, coBoldToday, coBoldTopRow,
                 coBoldWeekend, coDayLine, coShowBorder, coShowHolidays,
@@ -201,9 +201,10 @@ type
     FDisplayTexts: TStringList;
     FMonthNames: TStringList;
     FOnDateChange: TNotifyEvent;
+    FOnGetDayText: TCalGetDayTextEvent;
     FOnDrawCell: TCalDrawCellEvent;
     FOnGetHolidays: TGetHolidaysEvent;
-    FOnHint: TCalHintEvent;
+    FOnHint: TCalGetDayTextEvent;
     FOnPrepareCanvas: TCalPrepareCanvasEvent;
     FOptions: TCalOptions;
     FPopupMenu: TPopupMenu;
@@ -316,8 +317,9 @@ type
     // new event properties
     property OnDateChange: TNotifyEvent read FOnDateChange write FOnDateChange;
     property OnDrawCell: TCalDrawCellEvent read FOnDrawCell write FOnDrawCell;
+    property OnGetDayText: TCalGetDayTextEvent read FOnGetDayText write FOnGetDayText;
     property OnGetHolidays: TGetHolidaysEvent read FOnGetHolidays write FOnGetHolidays;
-    property OnHint: TCalHintEvent read FOnHint write FOnHint;
+    property OnHint: TCalGetDayTextEvent read FOnHint write FOnHint;
     property OnPrepareCanvas: TCalPrepareCanvasEvent read FOnPrepareCanvas write FOnPrepareCanvas;
   end;
 
@@ -643,6 +645,8 @@ begin
 
         { Paint the day number }
         s := IntToStr(d);
+        if Assigned(FOwner.FOnGetDayText) then
+          FOwner.FOnGetDayText(FOwner, y, m, d, s);
         FCanvas.TextRect(rec, 0, 0, s, FTStyle);
       end;
 
