@@ -140,7 +140,34 @@ type
                 coShowWeekend, coUseTopRowColors);
   TCalOptions = set of TCalOption;
 
+  TCalDateArray = array of TDate;
+
+  TCalSelMode = (smFirstSingle, smNextSingle, smFirstRange, smNextRange, smFirstWeek, smNextWeek);
+
   TLanguage = (lgEnglish, lgFrench, lgGerman, lgHebrew, lgSpanish); //Ariel Rodriguez 12/09/2013
+
+  { TCalDateList }
+
+  TCalDateList = class
+  private
+    FList: TFPList;
+    function GetCount: Integer;
+    function GetDate(AIndex: Integer): TDate;
+    procedure SetDate(AIndex: Integer; AValue: TDate);
+  protected
+    procedure Sort;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure AddDate(ADate: TDate);
+    function AsArray: TCalDateArray;
+    procedure Clear;
+    procedure DeleteDate(ADate: TDate);
+    function IndexOfDate(ADate: TDate): Integer;
+    procedure Insert(AIndex: Integer; ADate: TDate);
+    property Count: Integer read GetCount;
+    property Values[AIndex: Integer]: TDate read GetDate write SetDate; default;
+  end;
 
   { TCalDrawer }
 
@@ -158,7 +185,7 @@ type
     FThisYear: word;
     FTStyle: TTextStyle;
     procedure CalcSettings;
-    procedure ChangeDateTo(ACell: TSize);
+//    procedure ChangeDateTo(ACell: TSize; AddToSel: Boolean = false);
     procedure DrawArrow(ARect: TRect; AHead: TArrowhead; ADirec: TArrowDirection);
     procedure DrawDayCells;
     procedure DrawDayLabels;
@@ -175,8 +202,8 @@ type
     procedure GotoMonth(AMonth: word);
     procedure GotoToday;
     procedure GotoYear(AYear: word);
-    procedure LeftClick;
-    procedure RightClick;
+    procedure LeftClick(Shift: TShiftState);
+    procedure RightClick(Shift: TShiftState);
   public
     constructor Create(ACanvas: TCanvas);
     procedure Draw;
@@ -232,7 +259,10 @@ type
     FStartingDayOfWeek: TDayOfWeek;
     FWeekendDays: TDaysOfWeek;
     FPrevMouseDate: TDate;
+    FPrevDate: TDate;
     FSavedHint: String;
+    FMultiSelect: Boolean;
+    FSelDates: TCalDateList;
     FLanguage: TLanguage; //Ariel Rodriguez 12/09/2013
     procedure DateChange;
     function GetDayNames: String;
@@ -248,6 +278,7 @@ type
     procedure SetDefaultDisplayTexts;
     procedure SetDisplayTexts(AValue: String);
     procedure SetMonthNames(const AValue: String);
+    procedure SetMultiSelect(AValue: Boolean);
     procedure SetOptions(AValue: TCalOptions);
     procedure SetStartingDayOfWeek(AValue: TDayOfWeek);
     procedure SetWeekendDays(AValue: TDaysOfWeek);
@@ -255,6 +286,7 @@ type
     procedure SetLanguage(AValue: TLanguage); //Ariel Rodriguez 12/09/2013
 
   protected
+    procedure ChangeDateTo(ADate: TDate; ASelMode: TCalSelMode);
     class function GetControlClassDefaultSize: TSize; override;
     function GetDayName(ADayOfWeek: TDayOfWeek): String;
     function GetDisplayText(aTextIndex: TDisplayText): String;
@@ -264,6 +296,7 @@ type
     procedure MouseEnter; override;
     procedure MouseLeave; override;
     procedure MouseMove(Shift: TShiftState; X,Y: Integer); override;
+    function SelMode(Shift: TShiftState): TCalSelMode;
 
     procedure Paint; override;
 
@@ -274,6 +307,9 @@ type
   public
     constructor Create(anOwner: TComponent); override;
     destructor Destroy; override;
+
+    function IsSelected(ADate: TDate): Boolean;
+    function SelectedDates: TCalDateArray;
 
   published
     property Align;
@@ -326,6 +362,7 @@ type
     property DayNames: String read GetDayNames write SetDayNames;
     property DisplayTexts: String read GetDisplaytexts write SetDisplayTexts;
     property MonthNames: String read GetMonthnames write SetMonthNames;
+    property MultiSelect: Boolean read FMultiSelect write SetMultiSelect;
     property Options: TCalOptions read FOptions write SetOptions
       default [coShowTodayFrame, coBoldHolidays, coShowWeekend, coShowHolidays, coShowTodayRow];
     property StartingDayOfWeek: TDayOfWeek read FStartingDayOfWeek
@@ -374,6 +411,143 @@ end;
 function IsHoliday(ADay: Integer; AHolidays: THolidays): Boolean;
 begin
   Result := (AHolidays and DWord(1 shl ADay)) <> 0;
+end;
+
+
+{ TCalSortedDateList }
+
+type
+  TDateItem = TDate;
+  PDateItem = ^TDateItem;
+
+function CompareDates(P1, P2: Pointer): Integer;
+begin
+  Result := CompareDate(PDateItem(P1)^, PDateItem(P2)^);
+end;
+
+constructor TCalDateList.Create;
+begin
+  inherited;
+  FList := TFPList.Create;
+end;
+
+destructor TCalDateList.Destroy;
+begin
+  Clear;
+  FList.Free;
+  inherited;
+end;
+
+procedure TCalDateList.AddDate(ADate: TDate);
+var
+  i: Integer;
+  P: PDateItem;
+begin
+  i := IndexOfDate(ADate);
+  if i > -1 then begin
+    P := PDateItem(FList.Items[i]);
+    Dispose(P);
+    FList.Delete(i);
+    exit;
+  end;
+
+  // Assume that the list is sorted
+  for i:= FList.Count-1 downto 0 do begin
+    P := PDateItem(FList.Items[i]);
+    // Add new date
+    if P^ < ADate then begin
+      Insert(i+1, ADate);   // meaning: "insert BEFORE index i"
+      exit;
+    end;
+  end;
+  Insert(0, ADate);
+end;
+
+function TCalDateList.AsArray: TCalDateArray;
+var
+  i: Integer;
+begin
+  SetLength(Result, Count);
+  for i:=0 to High(Result) do
+    Result[i] := Values[i];
+end;
+
+procedure TCalDateList.Clear;
+var
+  i: Integer;
+  P: PDateItem;
+begin
+  for i := FList.Count-1 downto 0 do begin
+    P := PDateItem(FList.Items[i]);
+    Dispose(P);
+    FList.Delete(i);
+  end;
+  FList.Clear;
+end;
+
+procedure TCalDateList.DeleteDate(ADate: TDate);
+var
+  i: Integer;
+  P: PDateItem;
+begin
+  i := IndexOfDate(ADate);
+  if i > -1 then begin
+    P := PDateItem(FList.Items[i]);
+    Dispose(P);
+    FList.Delete(i);
+  end;
+end;
+
+function TCalDateList.GetCount: Integer;
+begin
+  Result := FList.Count;
+end;
+
+function TCalDateList.GetDate(AIndex: Integer): TDate;
+var
+  P: PDateItem;
+begin
+  P := PDateItem(FList.Items[AIndex]);
+  Result := P^;
+end;
+
+function TCalDateList.IndexOfDate(ADate: TDate): Integer;
+// to do: Since the list is always ordered use a binary search here
+var
+  i: Integer;
+begin
+  for i:=0 to FList.Count-1 do
+    if SameDate(GetDate(i), ADate) then begin
+      Result := i;
+      exit;
+    end;
+  Result := -1;
+end;
+
+procedure TCalDateList.Insert(AIndex: Integer; ADate: TDate);
+var
+  P: PDateItem;
+begin
+  New(P);
+  P^ := ADate;
+  if AIndex >= FList.Count then
+    FList.Add(P)
+  else
+    FList.Insert(AIndex, P);
+end;
+
+procedure TCalDateList.SetDate(AIndex: Integer; AValue: TDate);
+var
+  P: PDateItem;
+begin
+  P := PDateItem(FList.Items[AIndex]);
+  P^ := AValue;
+  Sort;
+end;
+
+procedure TCalDateList.Sort;
+begin
+  FList.Sort(@CompareDates);
 end;
 
 
@@ -447,12 +621,12 @@ begin
   if (LastRow = TodayRow) then
    FRowPositions[TodayRow] := FRowPositions[LastDateRow] + borderv + ch + rem;
 end;
-
-procedure TCalDrawer.ChangeDateTo(ACell: TSize);
+                          {
+procedure TCalDrawer.ChangeDateTo(ACell: TSize; AddToSel: Boolean = false);
 var
   diff: integer;
   newDate: TDateTime;
-  d, m, y: word;
+  //d, m, y: word;
 begin
   diff := ACell.cx + LastCol * (ACell.cy - 2);
   newDate := FStartDate + diff - 1;
@@ -461,8 +635,8 @@ begin
   FCanvas.Brush.Color := FOwner.Colors.BackgroundColor;
   FCanvas.FillRect(FBoundsRect);
   Draw;
-  DecodeDate(newDate, y, m, d);
-end;
+  //DecodeDate(newDate, y, m, d);
+end;                       }
 
 procedure TCalDrawer.Draw;
 begin
@@ -617,7 +791,7 @@ begin
       end;
 
       { Set default background color }
-      if (dt = FOwner.FDate) then begin
+      if FOwner.IsSelected(dt) then begin
         FCanvas.Brush.Color:= FOwner.FColors.SelectedDateColor;
         Include(state, csSelectedDay);
       end else
@@ -647,7 +821,7 @@ begin
       if continueDrawing then
       begin
         { Paint the background of the selected date }
-        if (dt = FOwner.FDate) or
+        if FOwner.IsSelected(dt) or
           (oldBrush.Color <> FCanvas.Brush.Color) or
           (oldBrush.Style <> FCanvas.brush.Style) or
           (oldPen.Color <> FCanvas.Pen.Color) or
@@ -1000,12 +1174,14 @@ begin
   FOwner.Date := d;
 end;
 
-procedure TCalDrawer.LeftClick;
+procedure TCalDrawer.LeftClick(Shift: TShiftState);
 var
   p, ppopup: TPoint;
   cell: TSize;
   Rm, Ry: TRect;
+  sm: TCalSelMode;
 begin
+  sm := FOwner.SelMode(Shift);
   p := FOwner.ScreenToClient(Mouse.CursorPos);
   cell := GetCellAt(p);
   case cell.cy of
@@ -1034,14 +1210,14 @@ begin
     DayRow: ;
 
     FirstDateRow..LastDateRow :
-      ChangeDateTo(cell);
+      FOwner.ChangeDateTo(GetDateOfCell(cell), sm);
 
     else
       GotoToday;
   end;
 end;
 
-procedure TCalDrawer.RightClick;
+procedure TCalDrawer.RightClick(Shift: TShiftState);
 begin
   if Assigned(FOwner.FOnGetHolidays) then
   begin
@@ -1090,8 +1266,8 @@ end;
 constructor TCalendarLite.Create(anOwner: TComponent);
 begin
   inherited Create(anOwner);
+  FSelDates := TCalDateList.Create;
   FColors := TCalColors.Create(self);
-  FDate := SysUtils.Date;
   Color := clWhite;
   FStartingDayOfWeek:= dowSunday;
   with GetControlClassDefaultSize do
@@ -1114,10 +1290,12 @@ begin
                coShowTodayRow];
   SetLanguage(lgEnglish); //Ariel Rodriguez 12/09/2013
   FPrevMouseDate := 0;
+  Date := SysUtils.Date;
 end;
 
 destructor TCalendarLite.Destroy;
 begin
+  FreeAndNil(FSelDates);
   FreeAndNil(FDayNames);
   FreeAndNil(FMonthNames);
   FreeAndNil(FDisplayTexts);
@@ -1125,6 +1303,59 @@ begin
   SetLength(FCalDrawer.FRowPositions, 0);
   FreeAndNil(FCalDrawer);
   inherited Destroy;
+end;
+
+procedure TCalendarLite.ChangeDateTo(ADate: TDate; ASelMode: TCalSelMode);
+var
+  d, d1, d2: TDate;
+begin
+  FDate := ADate;
+
+  case ASelMode of
+    smFirstSingle:
+      begin
+        FSelDates.Clear;
+        FSelDates.AddDate(ADate);
+      end;
+
+    smNextSingle:
+      FSelDates.AddDate(ADate);
+
+    smFirstRange, smNextRange,
+    smFirstWeek, smNextWeek:
+      begin
+        if (ASelMode = smFirstRange) or (ASelMode = smFirstWeek) then
+          FSelDates.Clear;
+        if (ASelMode = smFirstRange) or (ASelMode = smNextRange) then begin
+          if FPrevDate < ADate then begin
+            d1 := FPrevDate;
+            d2 := ADate;
+          end else begin
+            d1 := ADate;
+            d2 := FPrevDate;
+          end;
+        end else
+        if (ASelMode = smFirstWeek) or (ASelMode = smNextWeek) then begin
+          d1 := ADate;
+          while DayOfWeek(d1) <> ord(dowMonday) do d1 := d1 - 1;
+          d2 := ADate;
+          while DayOfWeek(d2) <> ord(dowFriday) do d2 := d2 + 1;
+        end;
+        d := d1;
+        while (d <= d2) do begin
+          FSelDates.AddDate(d);
+          d := d + 1;
+        end;
+      end;
+  end;
+
+  FPrevDate := ADate;
+  DateChange;
+  with FCalDrawer do begin
+    FCanvas.Brush.Color := Colors.BackgroundColor;
+    FCanvas.FillRect(FBoundsRect);
+    Draw;
+  end;
 end;
 
 procedure TCalendarLite.DateChange;
@@ -1178,6 +1409,14 @@ begin
   FCalDrawer.GotoDay(TMenuItem(Sender).Tag);
 end;
 
+function TCalendarLite.IsSelected(ADate: TDate): Boolean;
+begin
+  if FMultiSelect then
+    Result := FSelDates.IndexOfDate(ADate) > -1
+  else
+    Result := (ADate = FDate);
+end;
+
 procedure TCalendarLite.KeyDown(var Key: Word; Shift: TShiftState);
 
   function Delta(Increase: Boolean): Integer;
@@ -1185,16 +1424,21 @@ procedure TCalendarLite.KeyDown(var Key: Word; Shift: TShiftState);
     if Increase then Result := +1 else Result := -1;
   end;
 
+var
+  sm: TCalSelMode;
+
 begin
+  sm := SelMode(Shift);
+
   case Key of
     VK_UP,
-    VK_DOWN  : Date := IncWeek(FDate, Delta(Key = VK_DOWN));
+    VK_DOWN  : ChangeDateTo(IncWeek(FDate, Delta(Key = VK_DOWN)), sm);
     VK_LEFT,
-    VK_RIGHT : Date := IncDay(FDate, Delta(Key = VK_RIGHT));
-    VK_HOME  : Date := StartOfTheMonth(FDate);
-    VK_END   : Date := EndOfTheMonth(FDate);
+    VK_RIGHT : ChangeDateTo(IncDay(FDate, Delta(Key = VK_RIGHT)), sm);
+    VK_HOME  : ChangeDateTo(StartOfTheMonth(FDate), sm);
+    VK_END   : ChangeDateTo(EndOfTheMonth(FDate), sm);
     VK_PRIOR,
-    VK_NEXT  : if (ssCtrl in Shift) then
+    VK_NEXT  : if not FMultiSelect and (ssCtrl in Shift) then
                  Date := IncYear(FDate, Delta(Key = VK_NEXT)) else
                  Date := IncMonth(FDate, Delta(Key = VK_NEXT));
     else       inherited;
@@ -1214,8 +1458,8 @@ begin
     SetFocus;
 
   case Button of
-    mbLeft  : FCalDrawer.LeftClick;
-    mbRight : FCalDrawer.RightClick;
+    mbLeft  : FCalDrawer.LeftClick(Shift);
+    mbRight : FCalDrawer.RightClick(Shift);
   end;
 end;
 
@@ -1386,10 +1630,38 @@ begin
   end;
 end;
 
+function TCalendarLite.SelectedDates: TCalDateArray;
+begin
+  Result := FSelDates.AsArray;
+end;
+
+function TCalendarLite.SelMode(Shift: TShiftState): TCalSelMode;
+begin
+  Result := smFirstSingle;
+  if not FMultiSelect then
+    exit;
+
+  if (ssShift in Shift) then begin
+    Result := smFirstRange;
+    if (ssCtrl in Shift) and (FPrevDate > 0) then
+      Result := smNextRange;
+  end else
+  if (ssAlt in Shift) then begin
+    Result := smFirstWeek;
+    if (ssCtrl in Shift) and (FPrevDate > 0) then
+      Result := smNextWeek;
+  end else
+  if (ssCtrl in Shift) and (FPrevDate > 0) then
+    Result := smNextSingle;
+end;
+
+
 procedure TCalendarLite.SetDate(AValue: TDateTime);
 begin
   if FDate = AValue then Exit;
   FDate := AValue;
+  FPrevDate := AValue;
+  FSelDates.Clear;
   DateChange;
   Invalidate;
 end;
@@ -1458,6 +1730,18 @@ procedure TCalendarLite.SetMonthNames(const AValue: String);
 begin
   FMonthNames.CommaText := AValue;
   Invalidate;
+end;
+
+procedure TCalendarLite.SetMultiSelect(AValue: Boolean);
+var
+  d: TDate;
+begin
+  if AValue = FMultiSelect then
+    exit;
+  FMultiSelect := AValue;
+  FSelDates.Clear;
+  FSelDates.AddDate(FDate);
+  FPrevDate := FDate;
 end;
 
 procedure TCalendarLite.SetStartingDayOfWeek(AValue: TDayOfWeek);

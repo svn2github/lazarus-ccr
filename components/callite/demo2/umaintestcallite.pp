@@ -33,6 +33,7 @@ type
     CbDrawCell: TCheckBox;
     CbAddHolidayNameToCell: TCheckBox;
     CbShowHints: TCheckBox;
+    CbMultiSelect: TCheckBox;
     FontDialog: TFontDialog;
     GroupBox1: TGroupBox;
     ImageList1: TImageList;
@@ -49,6 +50,7 @@ type
     Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
+    SelDateListbox: TListBox;
     LTitle: TLabel;
     LWidth: TLabel;
     lHeight: TLabel;
@@ -60,6 +62,7 @@ type
     procedure BtnFontClick(Sender: TObject);
     procedure CbAddHolidayNameToCellChange(Sender: TObject);
     procedure CbDrawCellChange(Sender: TObject);
+    procedure CbMultiSelectChange(Sender: TObject);
     procedure CbPrepareCanvasChange(Sender: TObject);
     procedure CbShowHintsChange(Sender: TObject);
     procedure ColorButtonChanged(Sender: TObject);
@@ -274,6 +277,11 @@ begin
   demoCal.Invalidate;
 end;
 
+procedure TForm1.CbMultiSelectChange(Sender: TObject);
+begin
+  demoCal.MultiSelect := CbMultiSelect.Checked;
+end;
+
 procedure TForm1.CbPrepareCanvasChange(Sender: TObject);
 begin
   if CbPrepareCanvas.Checked then
@@ -288,8 +296,17 @@ begin
 end;
 
 procedure TForm1.RespondToDateChange(Sender: tObject);
+var
+  s: TCalDateArray;
+  i: Integer;
 begin
   copyCal.Date:= TCalendarLite(Sender).Date;
+
+  s := demoCal.SelectedDates;
+  SelDateListbox.Clear;
+  for i:=0 to High(s) do
+    SelDateListbox.Items.Add(DateToStr(s[i]));
+
 end;
 
 procedure TForm1.GetDayText(Sender: TObject; AYear, AMonth, ADay: Word;
