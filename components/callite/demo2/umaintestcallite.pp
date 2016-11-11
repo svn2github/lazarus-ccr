@@ -104,7 +104,7 @@ begin
     18    : begin m := 23; n := 4; end;
     19,20 : begin m := 24; n := 5; end;
     21    : begin m := 24; n := 6; end;
-    else    raise Exception.Create('Only years above 1700 supported.');
+    else    raise Exception.Create('Only years after 1700 supported.');
   end;
   a := Year mod 19;
   b := Year mod 4;

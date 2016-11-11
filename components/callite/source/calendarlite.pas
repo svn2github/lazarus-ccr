@@ -1083,7 +1083,7 @@ begin
   FMonthNames := TStringList.Create;
   FDisplayTexts := TStringList.Create;
   FDisplayTexts.StrictDelimiter := True;
-  FDisplayTexts.Delimiter := ',';
+  FDisplayTexts.Delimiter := '|';
   SetDefaultDisplayTexts;
   FPopupMenu := TPopupMenu.Create(Self);
   FCalDrawer := TCalDrawer.Create(Canvas);
@@ -1137,7 +1137,7 @@ end;
 
 function TCalendarLite.GetDisplayTexts: String;
 begin
-  Result := FDisplayTexts.CommaText;
+  Result := FDisplayTexts.DelimitedText;
 end;
 
 function TCalendarLite.GetMonthName(AMonth: Integer): String;
