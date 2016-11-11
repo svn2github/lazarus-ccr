@@ -203,7 +203,7 @@ type
     procedure GotoToday;
     procedure GotoYear(AYear: word);
     procedure LeftClick(Shift: TShiftState);
-    procedure RightClick(Shift: TShiftState);
+    procedure RightClick;
   public
     constructor Create(ACanvas: TCanvas);
     procedure Draw;
@@ -239,7 +239,6 @@ type
 
   { TCalendarLite }
 
-//  TCalendarLite = class(TGraphicControl)
   TCalendarLite = class(TCustomControl)
   private
     FCalDrawer: TCalDrawer;
@@ -360,7 +359,7 @@ type
     property OnMouseWheelUp;
 
     // new properties
-    property Colors: TCalColors read FColors;
+    property Colors: TCalColors read FColors write FColors;
     property Date: TDateTime read FDate write SetDate;
     property DayNames: String read GetDayNames write SetDayNames;
     property DisplayTexts: String read GetDisplaytexts write SetDisplayTexts;
@@ -1221,7 +1220,7 @@ begin
   end;
 end;
 
-procedure TCalDrawer.RightClick(Shift: TShiftState);
+procedure TCalDrawer.RightClick;
 begin
   if Assigned(FOwner.FOnGetHolidays) then
   begin
@@ -1473,7 +1472,7 @@ begin
 
   case Button of
     mbLeft  : FCalDrawer.LeftClick(Shift);
-    mbRight : FCalDrawer.RightClick(Shift);
+    mbRight : FCalDrawer.RightClick;
   end;
 end;
 
@@ -1752,8 +1751,6 @@ begin
 end;
 
 procedure TCalendarLite.SetMultiSelect(AValue: Boolean);
-var
-  d: TDate;
 begin
   if AValue = FMultiSelect then
     exit;
@@ -1798,12 +1795,9 @@ end;
 { Hints }
 
 procedure TCalendarLite.ShowHintWindow(APoint: TPoint; ADate: TDate);
-const
-  MAX_HINT_WIDTH = 300;
 var
   txt: String;
   y, m, d: Word;
-  R: TRect;
 begin
   if Assigned(FOnHint) then begin
     DecodeDate(ADate, y, m, d);
