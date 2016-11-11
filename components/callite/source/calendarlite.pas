@@ -249,6 +249,7 @@ type
     FDisplayTexts: TStringList;
     FMonthNames: TStringList;
     FOnDateChange: TNotifyEvent;
+    FOnMonthChange: TNotifyEvent;
     FOnGetDayText: TCalGetDayTextEvent;
     FOnDrawCell: TCalDrawCellEvent;
     FOnGetHolidays: TGetHolidaysEvent;
@@ -264,9 +265,9 @@ type
     FMultiSelect: Boolean;
     FSelDates: TCalDateList;
     FLanguage: TLanguage; //Ariel Rodriguez 12/09/2013
-    procedure DateChange;
     function GetDayNames: String;
-    function GetDisplaytexts: String;
+    function GetDisplayText(aTextIndex: TDisplayText): String;
+    function GetDisplayTexts: String;
     function GetMonthNames: String;
     procedure HolidayMenuItemClicked(Sender: TObject);
     procedure MonthMenuItemClicked(Sender: TObject);
@@ -287,11 +288,10 @@ type
 
   protected
     procedure ChangeDateTo(ADate: TDate; ASelMode: TCalSelMode);
+    procedure DateChange; virtual;
     class function GetControlClassDefaultSize: TSize; override;
-    function GetDayName(ADayOfWeek: TDayOfWeek): String;
-    function GetDisplayText(aTextIndex: TDisplayText): String;
-    function GetMonthName(AMonth: Integer): String;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    procedure MonthChange; virtual;
     procedure MouseDown(Button: TMouseButton; Shift:TShiftState; X,Y:Integer); override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
@@ -307,6 +307,9 @@ type
   public
     constructor Create(anOwner: TComponent); override;
     destructor Destroy; override;
+
+    function GetDayName(ADayOfWeek: TDayOfWeek): String;
+    function GetMonthName(AMonth: Integer): String;
 
     function IsSelected(ADate: TDate): Boolean;
     function SelectedDates: TCalDateArray;
@@ -378,6 +381,7 @@ type
     property OnGetDayText: TCalGetDayTextEvent read FOnGetDayText write FOnGetDayText;
     property OnGetHolidays: TGetHolidaysEvent read FOnGetHolidays write FOnGetHolidays;
     property OnHint: TCalGetDayTextEvent read FOnHint write FOnHint;
+    property OnMonthChange: TNotifyEvent read FOnMonthChange write FOnMonthChange;
     property OnPrepareCanvas: TCalPrepareCanvasEvent read FOnPrepareCanvas write FOnPrepareCanvas;
   end;
 
@@ -1308,7 +1312,9 @@ end;
 procedure TCalendarLite.ChangeDateTo(ADate: TDate; ASelMode: TCalSelMode);
 var
   d, d1, d2: TDate;
+  oldMonth: Integer;
 begin
+  oldMonth := MonthOf(FDate);
   FDate := ADate;
 
   case ASelMode of
@@ -1351,6 +1357,8 @@ begin
 
   FPrevDate := ADate;
   DateChange;
+  if MonthOf(FDate) <> oldMonth then
+    MonthChange;
   with FCalDrawer do begin
     FCanvas.Brush.Color := Colors.BackgroundColor;
     FCanvas.FillRect(FBoundsRect);
@@ -1447,6 +1455,12 @@ begin
 
   Key := 0;
   inherited;
+end;
+
+procedure TCalendarLite.MonthChange;
+begin
+  if Assigned(FOnMonthChange) then
+    FOnMonthChange(Self);
 end;
 
 procedure TCalendarLite.MouseDown(Button: TMouseButton; Shift: TShiftState;
@@ -1657,12 +1671,17 @@ end;
 
 
 procedure TCalendarLite.SetDate(AValue: TDateTime);
+var
+  oldMonth: Integer;
 begin
   if FDate = AValue then Exit;
+  oldMonth := MonthOf(FDate);
   FDate := AValue;
   FPrevDate := AValue;
   FSelDates.Clear;
   DateChange;
+  if MonthOf(FDate) <> oldMonth then
+    MonthChange;
   Invalidate;
 end;
 

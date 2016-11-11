@@ -495,6 +495,14 @@ object Form1: TForm1
       TabOrder = 13
     end
   end
+  object Label1: TLabel
+    Left = 15
+    Height = 15
+    Top = 818
+    Width = 34
+    Caption = 'Label1'
+    ParentColor = False
+  end
   object FontDialog: TFontDialog
     MinFontSize = 0
     MaxFontSize = 0

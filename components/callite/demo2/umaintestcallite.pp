@@ -37,6 +37,7 @@ type
     FontDialog: TFontDialog;
     GroupBox1: TGroupBox;
     ImageList1: TImageList;
+    Label1: TLabel;
     Label10: TLabel;
     Label11: TLabel;
     Label12: TLabel;
@@ -76,7 +77,8 @@ type
   private
     copyCal, demoCal: TCalendarLite;
     FNoHolidays: boolean;
-    procedure RespondToDateChange(Sender: tObject);
+    procedure RespondToDateChange(Sender: TObject);
+    procedure RespondToMonthChange(Sender: TObject);
     procedure GetDayText(Sender: TObject; AYear, AMonth, ADay: Word; var AText: String);
     procedure GetHintText(Sender: TObject; AYear, AMonth, ADay: Word; var AText: String);
     procedure GetHolidays(Sender: TObject; AMonth, AYear: Integer;  // wp
@@ -96,6 +98,8 @@ implementation
 
 {$R *.lfm}
 
+uses
+  DateUtils;
 
 function Easter(year:integer) : TDateTime;  // wp
 var
@@ -139,6 +143,7 @@ begin
   demoCal.Height := seHeight.Value;
   demoCal.OnGetHolidays := @GetHolidays;
   demoCal.OnDateChange:= @RespondToDateChange;
+  demoCal.OnMonthChange := @RespondToMonthChange;
   demoCal.OnHint := @GetHintText;
   demoCal.ShowHint := true;
   demoCal.Hint := 'Calendar';
@@ -306,7 +311,11 @@ begin
   SelDateListbox.Clear;
   for i:=0 to High(s) do
     SelDateListbox.Items.Add(DateToStr(s[i]));
+end;
 
+procedure TForm1.RespondToMonthChange(Sender: TObject);
+begin
+  Label1.Caption := 'Month changed to ' + demoCal.GetMonthName(MonthOf(democal.Date));
 end;
 
 procedure TForm1.GetDayText(Sender: TObject; AYear, AMonth, ADay: Word;
