@@ -515,16 +515,33 @@ begin
 end;
 
 function TCalDateList.IndexOfDate(ADate: TDate): Integer;
-// to do: Since the list is always ordered use a binary search here
 var
-  i: Integer;
+  lower, higher, mid, truncADate, truncMidDate: integer;
+
+  function Compare: integer;
+  begin
+    if (truncMidDate < truncADate) then
+      Exit(-1)
+    else if (truncMidDate > truncADate) then
+      Exit(+1)
+    else
+      Exit(0);
+  end;
+
 begin
-  for i:=0 to FList.Count-1 do
-    if SameDate(GetDate(i), ADate) then begin
-      Result := i;
-      exit;
+  lower := 0;
+  higher := Pred(FList.Count);
+  truncADate := trunc(ADate);
+  while (lower <= higher) do begin
+    mid := (lower + higher) shr 1;
+    truncMidDate:=trunc(GetDate(mid));
+    case Compare of
+      -1: lower := Succ(mid);
+      +1: higher := Pred(mid);
+      0:  Exit(mid);
     end;
-  Result := -1;
+  end;
+  Exit(-1);
 end;
 
 procedure TCalDateList.Insert(AIndex: Integer; ADate: TDate);
