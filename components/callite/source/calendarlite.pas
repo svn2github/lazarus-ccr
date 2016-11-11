@@ -55,7 +55,8 @@ const
   DefCalWidth = 210;
   DefMinHeight = 120;
   DefMinWidth = 120;
-  DefaultDisplayText = 'Today is|mmm dd", " yyyy|Holidays during|There are no holidays set for';
+  DefaultDisplayText = 'Today is,"mmm"","" dd yyyy",Holidays during,There are no holidays set for';
+//  DefaultDisplayText = 'Today is|mmm dd", " yyyy|Holidays during|There are no holidays set for';
   DefTStyle: TTextStyle = (Alignment  : taCenter; Layout     : tlCenter;
                            SingleLine : False;    Clipping   : True;
                            ExpandTabs : False;    ShowPrefix : False;
@@ -64,6 +65,25 @@ const
                            EndEllipsis: False);
 
    //Ariel Rodriguez 12/09/2013
+   EnglishDays = 'Sun,Mon,Tue,Wed,Thu,Fri,Sat';
+   EnglishMonths = 'January,February,March,April,May,June,July,August,September,October,November,December';
+
+   HebrewDays = 'א,ב,ג,ד,ה,ו,ש';
+   HebrewMonths = ('ינואר,פברואר,מרץ,אפריל,מאי,יוני,    יולי,אוגוסט,ספטמבר,אוקטובר,נובמבר,דצמבר');
+   HebrewTexts = 'היום הוא,yyyy-mm-dd,במהלך החגים, אין חגים מוגדרים עבור';
+
+   FrenchDays = 'dim,lun,mar,mer,jeu,ven,sm';
+   FrenchMonths = 'janvier,février,mars,avril,mai,juin,juillet,août,septembre,octobre,novembre,décembre';
+   FrenchTexts = 'Est aujourd''hui,dd/mm/yyyy,vacances pendant,Il n''y a pas de jours fériés fixés pour';
+
+   GermanMonths = 'Januar,Februar,März,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember';
+   GermanDays = 'So,Mo,Di,Mi,Do,Fr,Sa';
+   GermamTexts = 'Heute ist,dd.mm.yyyy,Urlaub während,Es gibt keine Feiertage im';
+
+   SpanishDays = 'Dom,Lun,Mar,Mie,Jue,Vie,Sab';
+   SpanishMonths = 'Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre';
+   SpanishTexts = 'Hoy es,dd/mm/yyyy,Dias de fiestas,No hay dias feriados establecidos para';
+{
   EnglishDays = 'Sun|Mon|Tue|Wed|Thu|Fri|Sat';
   EnglishMonths = 'January|February|March|April|May|June|July|August|September|October|November|December';
   HebrewDays = 'א|ב|ג|ד|ה|ו|ש';
@@ -78,6 +98,7 @@ const
   SpanishDays = 'Dom<Lun|Mar|Mie|Jue|Vie|Sab';
   SpanishMonths = 'Enero|Febrero|Marzo|Abril|Mayo|Junio|Julio|Agosto|Septiembre|Octubre|Noviembre|Diciembre';
   SpanishTexts = 'Hoy es|dd/mm/yyyy|Dias de fiestas|No hay dias feriados establecidos para';
+  }
    //Ariel Rodriguez 12/09/2013
 
 type
@@ -1127,7 +1148,7 @@ end;
 
 function TCalendarLite.GetDayNames: String;
 begin
-  Result := FDayNames.DelimitedText;
+  Result := FDayNames.CommaText;
 end;
 
 function TCalendarLite.GetDisplayText(aTextIndex: TDisplayText): String;
@@ -1137,7 +1158,7 @@ end;
 
 function TCalendarLite.GetDisplayTexts: String;
 begin
-  Result := FDisplayTexts.DelimitedText;
+  Result := FDisplayTexts.CommaText;
 end;
 
 function TCalendarLite.GetMonthName(AMonth: Integer): String;
@@ -1149,7 +1170,7 @@ end;
 
 function TCalendarLite.GetMonthNames: String;
 begin
-  Result := FMonthNames.DelimitedText;
+  Result := FMonthNames.CommaText;
 end;
 
 procedure TCalendarLite.HolidayMenuItemClicked(Sender: TObject);
@@ -1375,21 +1396,18 @@ end;
 
 procedure TCalendarLite.SetDayNames(const AValue: String);
 begin
-  FDayNames.Delimiter := '|';
-  FDayNames.DelimitedText := AValue;
+  FDayNames.CommaText := AValue;
   Invalidate;
 end;
 
 procedure TCalendarLite.SetDefaultDisplayTexts;
 begin
-  FDisplayTexts.Delimiter := '|';
-  FDisplayTexts.DelimitedText := DefaultDisplayText;
+  FDisplayTexts.CommaText := DefaultDisplayText;
 end;
 
 procedure TCalendarLite.SetDisplayTexts(AValue: String);
 begin
-  FDisplayTexts.Delimiter := '|';
-  FDisplayTexts.DelimitedText := AValue;
+  FDisplayTexts.CommaText := AValue;
   Invalidate;
 end;
 
@@ -1438,8 +1456,7 @@ end;
 //Ariel Rodriguez 12/09/2013
 procedure TCalendarLite.SetMonthNames(const AValue: String);
 begin
-  FMonthNames.Delimiter := '|';
-  FMonthNames.DelimitedText := AValue;
+  FMonthNames.CommaText := AValue;
   Invalidate;
 end;
 
