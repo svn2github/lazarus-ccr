@@ -56,7 +56,6 @@ const
   DefMinHeight = 120;
   DefMinWidth = 120;
   DefaultDisplayText = 'Today is,"mmm"","" dd yyyy",Holidays during,There are no holidays set for';
-//  DefaultDisplayText = 'Today is|mmm dd", " yyyy|Holidays during|There are no holidays set for';
   DefTStyle: TTextStyle = (Alignment  : taCenter; Layout     : tlCenter;
                            SingleLine : False;    Clipping   : True;
                            ExpandTabs : False;    ShowPrefix : False;
@@ -64,7 +63,6 @@ const
                            SystemFont : False;    RightToLeft: False;
                            EndEllipsis: False);
 
-   //Ariel Rodriguez 12/09/2013
    EnglishDays = 'Sun,Mon,Tue,Wed,Thu,Fri,Sat';
    EnglishMonths = 'January,February,March,April,May,June,July,August,September,October,November,December';
 
@@ -83,23 +81,6 @@ const
    SpanishDays = 'Dom,Lun,Mar,Mie,Jue,Vie,Sab';
    SpanishMonths = 'Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre';
    SpanishTexts = 'Hoy es,dd/mm/yyyy,Dias de fiestas,No hay dias feriados establecidos para';
-{
-  EnglishDays = 'Sun|Mon|Tue|Wed|Thu|Fri|Sat';
-  EnglishMonths = 'January|February|March|April|May|June|July|August|September|October|November|December';
-  HebrewDays = 'א|ב|ג|ד|ה|ו|ש';
-  HebrewMonths = ('ינואר|פברואר|מרץ|אפריל|מאי|יוני|    יולי|אוגוסט|ספטמבר|אוקטובר|נובמב|דצמבר');
-  HebrewTexts = 'היום הוא|yyyy-mm-dd|במהלך החגים| אין חגים מוגדרים עבור';
-  FrenchDays = 'dim|lun|mar|mer|jeu|ven|sm';
-  FrenchMonths = 'janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre';
-  FrenchTexts = 'Est aujourd''hui|dd/mm/yyyy|vacances pendant|Il n''y a pas de jours fériés fixés pour';
-  GermanMonths = 'Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember';
-  GermanDays = 'So|Mo|Di|Mi|Do|Fr|Sa';
-  GermamTexts = 'Heute ist|dd/mm/yyyy|Urlaub während|Es sind keine Feiertage vorhanden im';
-  SpanishDays = 'Dom<Lun|Mar|Mie|Jue|Vie|Sab';
-  SpanishMonths = 'Enero|Febrero|Marzo|Abril|Mayo|Junio|Julio|Agosto|Septiembre|Octubre|Noviembre|Diciembre';
-  SpanishTexts = 'Hoy es|dd/mm/yyyy|Dias de fiestas|No hay dias feriados establecidos para';
-  }
-   //Ariel Rodriguez 12/09/2013
 
 type
   TCalendarLite = class;
@@ -146,6 +127,7 @@ type
 
   TLanguage = (lgEnglish, lgFrench, lgGerman, lgHebrew, lgSpanish); //Ariel Rodriguez 12/09/2013
 
+
   { TCalDateList }
 
   TCalDateList = class
@@ -169,6 +151,7 @@ type
     property Values[AIndex: Integer]: TDate read GetDate write SetDate; default;
   end;
 
+
   { TCalDrawer }
 
   TCalDrawer = class
@@ -185,7 +168,6 @@ type
     FThisYear: word;
     FTStyle: TTextStyle;
     procedure CalcSettings;
-//    procedure ChangeDateTo(ACell: TSize; AddToSel: Boolean = false);
     procedure DrawArrow(ARect: TRect; AHead: TArrowhead; ADirec: TArrowDirection);
     procedure DrawDayCells;
     procedure DrawDayLabels;
@@ -263,7 +245,7 @@ type
     FSavedHint: String;
     FMultiSelect: Boolean;
     FSelDates: TCalDateList;
-    FLanguage: TLanguage; //Ariel Rodriguez 12/09/2013
+    FLanguage: TLanguage;
     function GetDayNames: String;
     function GetDisplayText(aTextIndex: TDisplayText): String;
     function GetDisplayTexts: String;
@@ -283,7 +265,7 @@ type
     procedure SetStartingDayOfWeek(AValue: TDayOfWeek);
     procedure SetWeekendDays(AValue: TDaysOfWeek);
     procedure YearMenuItemClicked(Sender: TObject);
-    procedure SetLanguage(AValue: TLanguage); //Ariel Rodriguez 12/09/2013
+    procedure SetLanguage(AValue: TLanguage);
 
   protected
     procedure ChangeDateTo(ADate: TDate; ASelMode: TCalSelMode);
@@ -372,7 +354,7 @@ type
     property WeekendDays: TDaysOfWeek read FWeekendDays
       write SetWeekendDays default [dowSunday];
     property Languages: TLanguage read FLanguage
-      write SetLanguage default lgEnglish; //Ariel Rodriguez 12/09/2013
+      write SetLanguage default lgEnglish;
 
     // new event properties
     property OnDateChange: TNotifyEvent read FOnDateChange write FOnDateChange;
@@ -388,7 +370,8 @@ procedure ClearHolidays(var AHolidays: THolidays);
 procedure AddHoliday(ADay: Integer; var AHolidays: THolidays);
 function  IsHoliday(ADay: Integer; AHolidays: THolidays): Boolean;
 
-procedure Register; //Ariel Rodriguez 12/09/2013
+procedure Register;
+
 
 implementation
 
@@ -641,22 +624,6 @@ begin
   if (LastRow = TodayRow) then
    FRowPositions[TodayRow] := FRowPositions[LastDateRow] + borderv + ch + rem;
 end;
-                          {
-procedure TCalDrawer.ChangeDateTo(ACell: TSize; AddToSel: Boolean = false);
-var
-  diff: integer;
-  newDate: TDateTime;
-  //d, m, y: word;
-begin
-  diff := ACell.cx + LastCol * (ACell.cy - 2);
-  newDate := FStartDate + diff - 1;
-  FOwner.FDate := newDate;
-  FOwner.DateChange;
-  FCanvas.Brush.Color := FOwner.Colors.BackgroundColor;
-  FCanvas.FillRect(FBoundsRect);
-  Draw;
-  //DecodeDate(newDate, y, m, d);
-end;                       }
 
 procedure TCalDrawer.Draw;
 begin
@@ -1308,7 +1275,7 @@ begin
   FWeekendDays := [dowSunday, dowSaturday];
   FOptions := [coShowTodayFrame, coBoldHolidays, coShowWeekend, coShowHolidays,
                coShowTodayRow];
-  SetLanguage(lgEnglish); //Ariel Rodriguez 12/09/2013
+  SetLanguage(lgEnglish);
   FPrevMouseDate := 0;
   Date := SysUtils.Date;
 end;
@@ -1378,8 +1345,8 @@ begin
   with FCalDrawer do begin
     FCanvas.Brush.Color := Colors.BackgroundColor;
     FCanvas.FillRect(FBoundsRect);
-    Draw;
   end;
+  Invalidate;
 end;
 
 procedure TCalendarLite.DateChange;
@@ -1718,10 +1685,10 @@ begin
   Invalidate;
 end;
 
-//Ariel Rodriguez 12/09/2013
 procedure TCalendarLite.SetLanguage(AValue : TLanguage);
 begin
-//  if FLanguage = AValue then Exit;
+  // Don't check for "FLanguage = AValue" because otherwise the code would not
+  // execute after being called from the constructor.
   FLanguage := AValue;
 
   case FLanguage of
@@ -1760,7 +1727,6 @@ begin
   Invalidate;
 end;
 
-//Ariel Rodriguez 12/09/2013
 procedure TCalendarLite.SetMonthNames(const AValue: String);
 begin
   FMonthNames.CommaText := AValue;
@@ -1841,12 +1807,11 @@ begin
 end;
 
 
-//Ariel Rodriguez 12/09/2013
 procedure Register;
 begin
   {$I calendarlite_icon.lrs}
   RegisterComponents('Misc', [TCalendarLite]);
 end;
-//Ariel Rodriguez 12/09/2013
+
 
 end.
