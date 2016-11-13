@@ -3,7 +3,7 @@
   It is not a fixed-size component, as are most calendars, but will align
   and resize as needed
 
-  Originator    : H Page-Clark, 2013
+  Originator    : H Page-Clark, 2013/2016
   Contributions : Ariel Rodriguez, 2013
                   Werner Pamler, 2013/2016
 
@@ -40,8 +40,8 @@ unit CalendarLite;
 interface
 
 uses
-  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, types,
-  menus;
+  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, Types,
+  ExtCtrls, Menus;
 
 const
   TopRow = 0;
@@ -123,9 +123,10 @@ type
 
   TCalDateArray = array of TDate;
 
-  TCalSelMode = (smFirstSingle, smNextSingle, smFirstRange, smNextRange, smFirstWeek, smNextWeek);
+  TCalSelMode = (smFirstSingle, smNextSingle, smFirstRange, smNextRange,
+    smFirstWeek, smNextWeek, smNextWeekRange);
 
-  TLanguage = (lgEnglish, lgFrench, lgGerman, lgHebrew, lgSpanish); //Ariel Rodriguez 12/09/2013
+  TLanguage = (lgEnglish, lgFrench, lgGerman, lgHebrew, lgSpanish);
 
 
   { TCalDateList }
@@ -245,7 +246,11 @@ type
     FSavedHint: String;
     FMultiSelect: Boolean;
     FSelDates: TCalDateList;
+    FClickShift: TShiftState;
+    FClickPoint: TPoint;
+    FClickButton: TMouseButton;
     FLanguage: TLanguage;
+    FDblClickTimer: TTimer;
     function GetDayNames: String;
     function GetDisplayText(aTextIndex: TDisplayText): String;
     function GetDisplayTexts: String;
@@ -264,13 +269,17 @@ type
     procedure SetOptions(AValue: TCalOptions);
     procedure SetStartingDayOfWeek(AValue: TDayOfWeek);
     procedure SetWeekendDays(AValue: TDaysOfWeek);
-    procedure YearMenuItemClicked(Sender: TObject);
     procedure SetLanguage(AValue: TLanguage);
+    procedure TimerExpired(Sender: TObject);
+    procedure YearMenuItemClicked(Sender: TObject);
 
   protected
     procedure ChangeDateTo(ADate: TDate; ASelMode: TCalSelMode);
+    procedure Click; override;
     procedure DateChange; virtual;
+    procedure DblClick; override;
     class function GetControlClassDefaultSize: TSize; override;
+    procedure InternalClick;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MonthChange; virtual;
     procedure MouseDown(Button: TMouseButton; Shift:TShiftState; X,Y:Integer); override;
@@ -377,6 +386,9 @@ implementation
 
 uses
   LCLType, LazUTF8, dateutils, math;
+
+const
+   DBLCLICK_INTERVAL = 300;   // Interval (ms) for detection of a double-click
 
 
 { Holiday helpers }
@@ -1272,6 +1284,10 @@ begin
   FPopupMenu := TPopupMenu.Create(Self);
   FCalDrawer := TCalDrawer.Create(Canvas);
   FCalDrawer.FOwner:= Self;
+  FDblClickTimer := TTimer.Create(self);
+  FDblClickTimer.Enabled := false;
+  FDblClickTimer.Interval := DBLCLICK_INTERVAL;
+  FDblClickTimer.OnTimer := @TimerExpired;
   FWeekendDays := [dowSunday, dowSaturday];
   FOptions := [coShowTodayFrame, coBoldHolidays, coShowWeekend, coShowHolidays,
                coShowTodayRow];
@@ -1305,30 +1321,55 @@ begin
       begin
         FSelDates.Clear;
         FSelDates.AddDate(ADate);
+        FPrevDate := ADate;
       end;
 
     smNextSingle:
-      FSelDates.AddDate(ADate);
-
-    smFirstRange, smNextRange,
-    smFirstWeek, smNextWeek:
       begin
-        if (ASelMode = smFirstRange) or (ASelMode = smFirstWeek) then
+        FSelDates.AddDate(ADate);
+        FPrevDate := ADate;
+      end;
+
+    smFirstWeek, smNextWeek, smNextWeekRange:
+      begin
+        if (DayOfWeek(ADate) in [ord(dowSunday), ord(dowSaturday)]) then
+          exit;
+        if ASelMode = smFirstWeek then
           FSelDates.Clear;
-        if (ASelMode = smFirstRange) or (ASelMode = smNextRange) then begin
-          if FPrevDate < ADate then begin
-            d1 := FPrevDate;
+        // Collect all weekdays
+        if ASelMode = smNextWeekRange then begin
+          if FPRevDate < ADate then begin
+            d1 := FPrevDate + 7;
             d2 := ADate;
           end else begin
             d1 := ADate;
-            d2 := FPrevDate;
+            d2 := FPrevDate + 7;
           end;
-        end else
-        if (ASelMode = smFirstWeek) or (ASelMode = smNextWeek) then begin
+        end else begin
           d1 := ADate;
-          while DayOfWeek(d1) <> ord(dowMonday) do d1 := d1 - 1;
           d2 := ADate;
-          while DayOfWeek(d2) <> ord(dowFriday) do d2 := d2 + 1;
+        end;
+        while DayOfWeek(d1) <> ord(dowMonday) do d1 := d1 - 1;
+        while DayOfWeek(d2) <> ord(dowFriday) do d2 := d2 + 1;
+        d := d1;
+        while d <= d2 do begin
+          if not (DayOfWeek(d) in [ord(dowSunday), ord(dowSaturday)]) then
+            FSelDates.AddDate(d);
+          d := d + 1;
+        end;
+        FPrevDate := ADate;
+      end;
+
+    smFirstRange, smNextRange:
+      begin
+        if (ASelMode = smFirstRange) then
+          FSelDates.Clear;
+        if FPrevDate < ADate then begin
+          d1 := FPrevDate + ord(ASelMode = smNextRange);
+          d2 := ADate;
+        end else begin
+          d1 := ADate;
+          d2 := FPrevDate - ord(ASelMode = smNextRange);
         end;
         d := d1;
         while (d <= d2) do begin
@@ -1338,10 +1379,10 @@ begin
       end;
   end;
 
-  FPrevDate := ADate;
   DateChange;
   if MonthOf(FDate) <> oldMonth then
     MonthChange;
+
   with FCalDrawer do begin
     FCanvas.Brush.Color := Colors.BackgroundColor;
     FCanvas.FillRect(FBoundsRect);
@@ -1349,10 +1390,29 @@ begin
   Invalidate;
 end;
 
+procedure TCalendarLite.Click;
+begin
+  inherited;
+
+  // Multi-select is handled by DblClickTimer
+  if not FMultiSelect then
+    InternalClick;
+end;
+
 procedure TCalendarLite.DateChange;
 begin
   if Assigned(FOnDateChange) then
     FOnDateChange(Self);
+end;
+
+procedure TCalendarLite.DblClick;
+begin
+  FDblClickTimer.Enabled := false;
+  inherited;
+  case FClickButton of
+    mbLeft  : FCalDrawer.LeftClick(FClickShift + [ssDouble]);
+    mbRight : ;
+  end;
 end;
 
 class function TCalendarLite.GetControlClassDefaultSize: TSize;
@@ -1398,6 +1458,14 @@ end;
 procedure TCalendarLite.HolidayMenuItemClicked(Sender: TObject);
 begin
   FCalDrawer.GotoDay(TMenuItem(Sender).Tag);
+end;
+
+procedure TCalendarLite.InternalClick;
+begin
+  case FClickButton of
+    mbLeft  : FCalDrawer.LeftClick(FClickShift);
+    mbRight : FCalDrawer.RightClick;
+  end;
 end;
 
 function TCalendarLite.IsSelected(ADate: TDate): Boolean;
@@ -1454,10 +1522,10 @@ begin
   if not Focused and not(csNoFocus in ControlStyle) then
     SetFocus;
 
-  case Button of
-    mbLeft  : FCalDrawer.LeftClick(Shift);
-    mbRight : FCalDrawer.RightClick;
-  end;
+  FClickPoint := Point(X, Y);
+  FClickShift := Shift;
+  FClickButton := Button;
+  FDblClickTimer.Enabled := true;
 end;
 
 procedure TCalendarLite.MouseEnter;
@@ -1638,20 +1706,21 @@ begin
   if not FMultiSelect then
     exit;
 
+  if (ssDouble in Shift) then begin
+    Result := smFirstWeek;
+    if (ssCtrl in Shift) and (FPrevDate > 0) then
+      Result := smNextWeek
+    else if (ssShift in Shift) and (FPrevDate > 0) then
+      Result := smNextWeekRange
+  end else
   if (ssShift in Shift) then begin
     Result := smFirstRange;
     if (ssCtrl in Shift) and (FPrevDate > 0) then
       Result := smNextRange;
   end else
-  if (ssAlt in Shift) then begin
-    Result := smFirstWeek;
-    if (ssCtrl in Shift) and (FPrevDate > 0) then
-      Result := smNextWeek;
-  end else
   if (ssCtrl in Shift) and (FPrevDate > 0) then
     Result := smNextSingle;
 end;
-
 
 procedure TCalendarLite.SetDate(AValue: TDateTime);
 var
@@ -1768,6 +1837,16 @@ begin
   if FWeekendDays = AValue then Exit;
   FWeekendDays := AValue;
   Invalidate;
+end;
+
+{ The DblClickTimer was triggered by a mouse-down event; its purpose is to
+  prevent the Click method in addition to the DblClick method. In case of
+  a single click the TimerExpired event is reached. In case of a double-click
+  the click handled directly by the DblClick }
+procedure TCalendarLite.TimerExpired(Sender: TObject);
+begin
+  FDblClickTimer.Enabled := false;
+  InternalClick;
 end;
 
 procedure TCalendarLite.YearMenuItemClicked(Sender: TObject);
