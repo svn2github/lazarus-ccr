@@ -31,7 +31,6 @@ type TSpkTabAppearance = class(TPersistent)
      // *** Gettery i settery ***
 
        procedure SetHeaderFont(const Value: TFont);
-       function GetTabHeaderFont: TFont;
        procedure SetBorderColor(const Value: TColor);
        procedure SetGradientFromColor(const Value: TColor);
        procedure SetGradientToColor(const Value: TColor);
@@ -47,7 +46,7 @@ type TSpkTabAppearance = class(TPersistent)
        destructor Destroy; override;
        procedure Reset;
      published
-       property TabHeaderFont : TFont read GetTabHeaderFont write SetHeaderFont;
+       property TabHeaderFont : TFont read FTabHeaderFont write SetHeaderFont;
        property BorderColor : TColor read FBorderColor write SetBorderColor;
        property GradientFromColor : TColor read FGradientFromColor write SetGradientFromColor;
        property GradientToColor : TColor read FGradientToColor write SetGradientToColor;
@@ -67,7 +66,6 @@ type TSpkPaneAppearance = class(TPersistent)
        FGradientType : TBackgroundKind;
 
        procedure SetCaptionFont(const Value: TFont);
-       function GetCaptionFont: TFont;
        procedure SetBorderDarkColor(const Value: TColor);
        procedure SetBorderLightColor(const Value: TColor);
        procedure SetGradientFromColor(const Value: TColor);
@@ -82,7 +80,7 @@ type TSpkPaneAppearance = class(TPersistent)
        destructor Destroy; override;
        procedure Reset;
      published
-       property CaptionFont : TFont read GetCaptionFont write SetCaptionFont;
+       property CaptionFont : TFont read FCaptionFont write SetCaptionFont;
        property BorderDarkColor : TColor read FBorderDarkColor write SetBorderDarkColor;
        property BorderLightColor : TColor read FBorderLightColor write SetBorderLightColor;
        property GradientFromColor : TColor read FGradientFromColor write SetGradientFromColor;
@@ -126,7 +124,6 @@ type TSpkElementAppearance = class(TPersistent)
        procedure SetActiveInnerDarkColor(const Value: TColor);
        procedure SetActiveInnerLightColor(const Value: TColor);
        procedure SetCaptionFont(const Value: TFont);
-       function GetCaptionFont: TFont;
        procedure SetHotTrackCaptionColor(const Value: TColor);
        procedure SetHotTrackFrameColor(const Value: TColor);
        procedure SetHotTrackGradientFromColor(const Value: TColor);
@@ -149,7 +146,7 @@ type TSpkElementAppearance = class(TPersistent)
        destructor Destroy; override;
        procedure Reset;
      published
-       property CaptionFont : TFont read GetCaptionFont write SetCaptionFont;
+       property CaptionFont : TFont read FCaptionFont write SetCaptionFont;
        property IdleFrameColor : TColor read FIdleFrameColor write SetIdleFrameColor;
        property IdleGradientFromColor : TColor read FIdleGradientFromColor write SetIdleGradientFromColor;
        property IdleGradientToColor : TColor read FIdleGradientToColor write SetIdleGradientToColor;
@@ -383,32 +380,15 @@ begin
      FDispatch.NotifyAppearanceChanged;
 end;
 
-function TSpkTabAppearance.GetTabHeaderFont: TFont;
-var
-  ScaledFont: TFont;
-begin
-  if DPI_AWARE then
-    begin
-      ScaledFont := TFont.Create;
-      ScaledFont.Assign(FTabHeaderFont);
-      //ScaledFont.Height :=  SpkScaleY(ScaledFont.Height, 96); // leave it to uscaledpi
-      Result := ScaledFont;
-    end
-  else
-    Result := FTabHeaderFont;
-end;
-
-
 
 { TSpkPaneAppearance }
 
 procedure TSpkPaneAppearance.Assign(Source: TPersistent);
-
-var SrcAppearance : TSpkPaneAppearance;
-
+var
+  SrcAppearance : TSpkPaneAppearance;
 begin
   if Source is TSpkPaneAppearance then
-     begin
+  begin
      SrcAppearance:=TSpkPaneAppearance(Source);
 
      FCaptionFont.assign(SrcAppearance.CaptionFont);
@@ -428,11 +408,8 @@ end;
 constructor TSpkPaneAppearance.Create(ADispatch: TSpkBaseAppearanceDispatch);
 begin
   inherited Create;
-
   FDispatch:=ADispatch;
-
   FCaptionFont:=TFont.Create;
-  
   Reset;
 end;
 
@@ -597,22 +574,6 @@ begin
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
-
-function TSpkPaneAppearance.GetCaptionFont: TFont;
-var
-  ScaledFont: TFont;
-begin
-  if DPI_AWARE then
-    begin
-      ScaledFont := TFont.Create;
-      ScaledFont.Assign(FCaptionFont);
-      //ScaledFont.Height :=  SpkScaleY(ScaledFont.Height, 96); // leave it to uscaledpi
-      Result := ScaledFont;
-    end
-  else
-    Result := FCaptionFont;
-end;
-
 
 
 { TSpkElementAppearance }
@@ -972,21 +933,6 @@ begin
   FCaptionFont.assign(Value);
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
-end;
-
-function TSpkElementAppearance.GetCaptionFont: TFont;
-var
-  ScaledFont: TFont;
-begin
-  if DPI_AWARE then
-    begin
-      ScaledFont := TFont.Create;
-      ScaledFont.Assign(FCaptionFont);
-      //ScaledFont.Height :=  SpkScaleY(ScaledFont.Height, 96); // leave it to uscaledpi
-      Result := ScaledFont;
-    end
-  else
-    Result := FCaptionFont;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackCaptionColor(
