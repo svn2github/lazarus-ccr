@@ -27,6 +27,7 @@ type TSpkTabAppearance = class(TPersistent)
        FGradientFromColor : TColor;
        FGradientToColor : TColor;
        FGradientType : TBackgroundKind;
+       FInactiveHeaderFontColor: TColor;
 
      // *** Gettery i settery ***
 
@@ -35,6 +36,7 @@ type TSpkTabAppearance = class(TPersistent)
        procedure SetGradientFromColor(const Value: TColor);
        procedure SetGradientToColor(const Value: TColor);
        procedure SetGradientType(const Value: TBackgroundKind);
+       procedure SetInactiveHeaderFontColor(const Value: TColor);
      public
      // *** Konstruktor, destruktor, assign ***
      // <remarks>Appearance musi mieæ assign, bo wystêpuje jako w³asnoœæ
@@ -51,6 +53,7 @@ type TSpkTabAppearance = class(TPersistent)
        property GradientFromColor : TColor read FGradientFromColor write SetGradientFromColor;
        property GradientToColor : TColor read FGradientToColor write SetGradientToColor;
        property GradientType : TBackgroundKind read FGradientType write SetGradientType;
+       property InactiveTabHeaderFontColor: TColor read FInactiveHeaderFontColor write SetInactiveHeaderFontColor;
      end;
 
 type TSpkPaneAppearance = class(TPersistent)
@@ -73,20 +76,20 @@ type TSpkPaneAppearance = class(TPersistent)
        procedure SetGradientType(const Value: TBackgroundKind);
        procedure SetCaptionBgColor(const Value: TColor);
      public
-       procedure Assign(Source : TPersistent); override;
-       constructor Create(ADispatch : TSpkBaseAppearanceDispatch);
-       procedure SaveToXML(Node : TSpkXMLNode);
-       procedure LoadFromXML(Node : TSpkXMLNode);
+       procedure Assign(Source: TPersistent); override;
+       constructor Create(ADispatch: TSpkBaseAppearanceDispatch);
+       procedure SaveToXML(Node: TSpkXMLNode);
+       procedure LoadFromXML(Node: TSpkXMLNode);
        destructor Destroy; override;
        procedure Reset;
      published
-       property CaptionFont : TFont read FCaptionFont write SetCaptionFont;
-       property BorderDarkColor : TColor read FBorderDarkColor write SetBorderDarkColor;
-       property BorderLightColor : TColor read FBorderLightColor write SetBorderLightColor;
-       property GradientFromColor : TColor read FGradientFromColor write SetGradientFromColor;
-       property GradientToColor : TColor read FGradientToColor write SetGradientToColor;
-       property GradientType : TBackgroundKind read FGradientType write SetGradientType;
-       property CaptionBgColor : TColor read FCaptionBgColor write SetCaptionBgColor;
+       property BorderDarkColor: TColor read FBorderDarkColor write SetBorderDarkColor;
+       property BorderLightColor: TColor read FBorderLightColor write SetBorderLightColor;
+       property CaptionBgColor: TColor read FCaptionBgColor write SetCaptionBgColor;
+       property CaptionFont: TFont read FCaptionFont write SetCaptionFont;
+       property GradientFromColor: TColor read FGradientFromColor write SetGradientFromColor;
+       property GradientToColor: TColor read FGradientToColor write SetGradientToColor;
+       property GradientType: TBackgroundKind read FGradientType write SetGradientType;
      end;
 
 type TSpkElementAppearance = class(TPersistent)
@@ -217,24 +220,23 @@ uses
 { TSpkBaseToolbarAppearance }
 
 procedure TSpkTabAppearance.Assign(Source: TPersistent);
-
-var SrcAppearance : TSpkTabAppearance;
-
+var
+  SrcAppearance: TSpkTabAppearance;
 begin
   if Source is TSpkTabAppearance then
-     begin
+  begin
      SrcAppearance:=TSpkTabAppearance(Source);
-
-     FTabHeaderFont.assign(SrcAppearance.TabHeaderFont);
+     FTabHeaderFont.Assign(SrcAppearance.TabHeaderFont);
      FBorderColor:=SrcAppearance.BorderColor;
      FGradientFromColor:=SrcAppearance.GradientFromColor;
      FGradientToColor:=SrcAppearance.GradientToColor;
      FGradientType:=SrcAppearance.GradientType;
+     FInactiveHeaderFontColor := SrcAppearance.InactiveTabHeaderFontColor;
 
      if FDispatch<>nil then
         FDispatch.NotifyAppearanceChanged;
-     end else
-         raise AssignException.create('TSpkToolbarAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkToolbarAppearance!');
+  end else
+    raise AssignException.create('TSpkToolbarAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkToolbarAppearance!');
 end;
 
 constructor TSpkTabAppearance.Create(
@@ -255,32 +257,35 @@ begin
 end;
 
 procedure TSpkTabAppearance.LoadFromXML(Node: TSpkXMLNode);
-
-var Subnode : TSpkXMLNode;
-
+var
+  Subnode : TSpkXMLNode;
 begin
-if not(assigned(Node)) then
-   exit;
+  if not(assigned(Node)) then
+    exit;
 
-Subnode:=Node['TabHeaderFont',false];
-if assigned(Subnode) then
-   TSpkXMLTools.Load(Subnode, FTabHeaderFont);
+  Subnode:=Node['TabHeaderFont',false];
+  if Assigned(Subnode) then
+    TSpkXMLTools.Load(Subnode, FTabHeaderFont);
 
-Subnode:=Node['BorderColor',false];
-if assigned(Subnode) then
-   FBorderColor:=Subnode.TextAsColor;
+  Subnode:=Node['BorderColor',false];
+  if assigned(Subnode) then
+    FBorderColor:=Subnode.TextAsColor;
 
-Subnode:=Node['GradientFromColor',false];
-if assigned(Subnode) then
-   FGradientFromColor:=Subnode.TextAsColor;
+  Subnode:=Node['GradientFromColor',false];
+  if assigned(Subnode) then
+    FGradientFromColor:=Subnode.TextAsColor;
 
-Subnode:=Node['GradientToColor',false];
-if assigned(Subnode) then
-   FGradientToColor:=Subnode.TextAsColor;
+  Subnode:=Node['GradientToColor',false];
+  if assigned(Subnode) then
+    FGradientToColor:=Subnode.TextAsColor;
 
-Subnode:=Node['GradientType',false];
-if assigned(Subnode) then
-   FGradientType:=TBackgroundKind(Subnode.TextAsInteger);
+  Subnode:=Node['GradientType',false];
+  if assigned(Subnode) then
+    FGradientType:=TBackgroundKind(Subnode.TextAsInteger);
+
+  Subnode := Node['InactiveTabHeaderFontColor', false];
+  if Assigned(Subnode) then
+    FInactiveHeaderFontColor := Subnode.TextAsColor;
 end;
 
 procedure TSpkTabAppearance.Reset;
@@ -319,30 +324,33 @@ begin
   FGradientFromColor := rgb(222, 232, 245);
   FGradientToColor := rgb(199, 216, 237);
   FGradientType := bkConcave;
+  FInactiveHeaderFontColor := FTabHeaderFont.Color;
 end;
 
 procedure TSpkTabAppearance.SaveToXML(Node: TSpkXMLNode);
-
-var Subnode : TSpkXMLNode;
-
+var
+  Subnode: TSpkXMLNode;
 begin
-if not(assigned(Node)) then
-   exit;
+  if not(assigned(Node)) then
+    exit;
 
-Subnode:=Node['TabHeaderFont',true];
-TSpkXMLTools.Save(Subnode, FTabHeaderFont);
+  Subnode:=Node['TabHeaderFont',true];
+  TSpkXMLTools.Save(Subnode, FTabHeaderFont);
 
-Subnode:=Node['BorderColor',true];
-Subnode.TextAsColor:=FBorderColor;
+  Subnode:=Node['BorderColor',true];
+  Subnode.TextAsColor:=FBorderColor;
 
-Subnode:=Node['GradientFromColor',true];
-Subnode.TextAsColor:=FGradientFromColor;
+  Subnode:=Node['GradientFromColor',true];
+  Subnode.TextAsColor:=FGradientFromColor;
 
-Subnode:=Node['GradientToColor',true];
-Subnode.TextAsColor:=FGradientToColor;
+  Subnode:=Node['GradientToColor',true];
+  Subnode.TextAsColor:=FGradientToColor;
 
-Subnode:=Node['GradientType',true];
-Subnode.TextAsInteger:=integer(FGradientType);
+  Subnode:=Node['GradientType',true];
+  Subnode.TextAsInteger:=integer(FGradientType);
+
+  Subnode := Node['InactiveTabHeaderFontColor', true];
+  Subnode.TextAsColor := FInactiveHeaderFontColor;
 end;
 
 procedure TSpkTabAppearance.SetBorderColor(const Value: TColor);
@@ -379,6 +387,14 @@ begin
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
+
+procedure TSpkTabAppearance.SetInactiveHeaderFontColor(const Value: TColor);
+begin
+  FInactiveHeaderFontColor := Value;
+  if FDispatch <> nil then
+    FDispatch.NotifyAppearanceChanged;
+end;
+
 
 
 { TSpkPaneAppearance }

@@ -1374,7 +1374,7 @@ procedure TSpkToolbar.ValidateBuffer;
     CurrentAppearance: TSpkToolbarAppearance;
     FocusedAppearance: TSpkToolbarAppearance;
 
-    procedure DrawTabText(index: integer; AFont: TFont);
+    procedure DrawTabText(index: integer; AFont: TFont; AOverrideTextColor: TColor = clNone);
     var
       x, y: integer;
       TabRect: T2DIntRect;
@@ -1382,6 +1382,8 @@ procedure TSpkToolbar.ValidateBuffer;
       TabRect := FTabRects[index];
 
       FBuffer.canvas.font.Assign(AFont);
+      if AOverrideTextColor <> clNone then
+        FBuffer.Canvas.Font.Color := AOverrideTextColor;
       x := TabRect.left + (TabRect.Width - FBuffer.Canvas.textwidth(
         FTabs[index].Caption)) div 2;
       y := TabRect.top + (TabRect.Height - FBuffer.Canvas.Textheight('Wy')) div 2;
@@ -1571,7 +1573,7 @@ procedure TSpkToolbar.ValidateBuffer;
           TabRect := FTabRects[i];
 
           // Tab is drawn
-          if i = FTabIndex then
+          if i = FTabIndex then      // active tab
           begin
             if i = FTabHover then
             begin
@@ -1595,7 +1597,7 @@ procedure TSpkToolbar.ValidateBuffer;
             DrawTabText(i, CurrentAppearance.Tab.TabHeaderFont);
           end
           else
-          begin
+          begin                     // inactive tab
             if i = FTabHover then
             begin
               DrawTab(i,
@@ -1614,7 +1616,8 @@ procedure TSpkToolbar.ValidateBuffer;
             DrawBottomLine(i, FocusedAppearance.Tab.BorderColor);
 
             // Text
-            DrawTabText(i, CurrentAppearance.Tab.TabHeaderFont);
+            DrawTabText(i, CurrentAppearance.Tab.TabHeaderFont,
+              CurrentAppearance.Tab.InactiveTabHeaderFontColor);
           end;
         end;
   end;
