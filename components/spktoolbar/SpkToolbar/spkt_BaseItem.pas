@@ -4,9 +4,9 @@ unit spkt_BaseItem;
 *                                                                              *
 *  Plik: spkt_BaseItem.pas                                                     *
 *  Opis: Modu³ zawieraj¹cy bazow¹ klasê dla elementu tafli.                    *
-*  Copyright: (c) 2009 by Spook. Jakiekolwiek u¿ycie komponentu bez            *
-*             uprzedniego uzyskania licencji od autora stanowi z³amanie        *
-*             prawa autorskiego!                                               *
+*  Copyright: (c) 2009 by Spook.                                               *
+*  License:   Modified LGPL (with linking exception, like Lazarus LCL)         *
+'             See "license.txt" in this installation                           *
 *                                                                              *
 *******************************************************************************)
 

@@ -7,9 +7,9 @@ unit spkt_Tab;
 *                                                                              *
 *  Plik: spkt_Tab.pas                                                          *
 *  Opis: Komponent zak³adki toolbara                                           *
-*  Copyright: (c) 2009 by Spook. Jakiekolwiek u¿ycie komponentu bez            *
-*             uprzedniego uzyskania licencji od autora stanowi z³amanie        *
-*             prawa autorskiego!                                               *
+*  Copyright: (c) 2009 by Spook.                                               *
+*  License:   Modified LGPL (with linking exception, like Lazarus LCL)         *
+'             See "license.txt" in this installation                           *
 *                                                                              *
 *******************************************************************************)
 

@@ -714,29 +714,29 @@ end;
 
 procedure TfrmAppearanceEditWindow.pTabGradientToClick(Sender: TObject);
 begin
-if ChangeColor(Sender as TPanel) then
-   begin
-   tbPreview.Appearance.Tab.GradientToColor:=(Sender as TPanel).Color;
+  if ChangeColor(Sender as TPanel) then
+  begin
+    tbPreview.Appearance.Tab.GradientToColor:=(Sender as TPanel).Color;
 
    if cbLinkTab.Checked then
-      SetLinkedGradientToColor((Sender as TPanel).Color);
-   end;
+     SetLinkedGradientToColor((Sender as TPanel).Color);
+  end;
 end;
 
 procedure TfrmAppearanceEditWindow.pTabHeaderFontClick(Sender: TObject);
 begin
-if ChangeFont(Sender as TPanel) then
+  if ChangeFont(Sender as TPanel) then
    tbPreview.Appearance.Tab.TabHeaderFont.Assign((Sender as TPanel).Font);
-tbPreview.ForceRepaint;
+  tbPreview.ForceRepaint;
 end;
 
 procedure TfrmAppearanceEditWindow.pTabHeaderFontColorClick(Sender: TObject);
 begin
-if ChangeColor(Sender as TPanel) then
-   begin
-   tbPreview.Appearance.Tab.TabHeaderFont.Color:=((Sender as TPanel).Color);
-   pTabHeaderFont.Font.color:=((Sender as TPanel).Color);
-   end;
+  if ChangeColor(Sender as TPanel) then
+  begin
+    tbPreview.Appearance.Tab.TabHeaderFont.Color:=((Sender as TPanel).Color);
+    pTabHeaderFont.Font.color:=((Sender as TPanel).Color);
+  end;
 end;
 
 end.

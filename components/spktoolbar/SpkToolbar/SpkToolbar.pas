@@ -9,17 +9,13 @@ unit spktoolbar;
 //I do my best but if you find any mistakes in English comments
 //please correct it.
 
-//To Lazarus Team, my suggestion is:
-//Add info about licence that author agreed for new licence
-//expressed in Lazarus forum etc in source file
-
 (*******************************************************************************
 *                                                                              *
 *  File: SpkToolbar.pas                                                        *
 *  Description: Main toolbar component                                         *
-*  Copyright: (c) 2009 by Spook. Any use of the component without              *
-*                 prior getting a licence from the author would be a           *
-*                 a violation of copyright laws!                               *
+*  Copyright: (c) 2009 by Spook.                                               *
+*  License:   Modified LGPL (with linking exception, like Lazarus LCL)         *
+'             See "license.txt" in this installation                           *
 *                                                                              *
 *                                                                              *
 *******************************************************************************)
