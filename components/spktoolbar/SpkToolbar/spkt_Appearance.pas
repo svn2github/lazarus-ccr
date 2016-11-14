@@ -18,6 +18,10 @@ uses Graphics, Classes, Forms, SysUtils,
      SpkGUITools, SpkXMLParser, SpkXMLTools,
      spkt_Dispatch, spkt_Exceptions, spkt_Const;
 
+type
+  TSpkPaneStyle = (psRectangleFlat, psRectangleEtched, psRectangleRaised,
+    psDividerFlat, psDividerEtched, psDividerRaised);
+
 type TSpkTabAppearance = class(TPersistent)
      private
        FDispatch : TSpkBaseAppearanceDispatch;
@@ -67,14 +71,16 @@ type TSpkPaneAppearance = class(TPersistent)
        FGradientFromColor : TColor;
        FGradientToColor : TColor;
        FGradientType : TBackgroundKind;
+       FStyle: TSpkPaneStyle;
 
+       procedure SetCaptionBgColor(const Value: TColor);
        procedure SetCaptionFont(const Value: TFont);
        procedure SetBorderDarkColor(const Value: TColor);
        procedure SetBorderLightColor(const Value: TColor);
        procedure SetGradientFromColor(const Value: TColor);
        procedure SetGradientToColor(const Value: TColor);
        procedure SetGradientType(const Value: TBackgroundKind);
-       procedure SetCaptionBgColor(const Value: TColor);
+       procedure SetStyle(const Value: TSpkPaneStyle);
      public
        procedure Assign(Source: TPersistent); override;
        constructor Create(ADispatch: TSpkBaseAppearanceDispatch);
@@ -90,6 +96,7 @@ type TSpkPaneAppearance = class(TPersistent)
        property GradientFromColor: TColor read FGradientFromColor write SetGradientFromColor;
        property GradientToColor: TColor read FGradientToColor write SetGradientToColor;
        property GradientType: TBackgroundKind read FGradientType write SetGradientType;
+       property Style: TSpkPaneStyle read FStyle write SetStyle default psRectangleEtched;
      end;
 
 type TSpkElementAppearance = class(TPersistent)
@@ -414,6 +421,7 @@ begin
      FGradientFromColor := SrcAppearance.GradientFromColor;
      FGradientToColor := SrcAppearance.GradientToColor;
      FGradientType := SrcAppearance.GradientType;
+     FStyle := SrcAppearance.Style;
 
      if FDispatch<>nil then
         FDispatch.NotifyAppearanceChanged;
@@ -426,6 +434,7 @@ begin
   inherited Create;
   FDispatch:=ADispatch;
   FCaptionFont:=TFont.Create;
+  FStyle := psRectangleEtched;
   Reset;
 end;
 
@@ -436,40 +445,43 @@ begin
 end;
 
 procedure TSpkPaneAppearance.LoadFromXML(Node: TSpkXMLNode);
-
-var Subnode : TSpkXMLNode;
-
+var
+  Subnode: TSpkXMLNode;
 begin
-if not(assigned(Node)) then
-   exit;
+  if not(Assigned(Node)) then
+    exit;
 
-Subnode:=Node['CaptionFont',false];
-if assigned(Subnode) then
-   TSpkXMLTools.Load(Subnode, FCaptionFont);
+  Subnode := Node['CaptionFont', false];
+  if Assigned(Subnode) then
+    TSpkXMLTools.Load(Subnode, FCaptionFont);
 
-Subnode:=Node['BorderDarkColor',false];
-if assigned(Subnode) then
-   FBorderDarkColor:=Subnode.TextAsColor;
+  Subnode := Node['BorderDarkColor', false];
+  if Assigned(Subnode) then
+    FBorderDarkColor := Subnode.TextAsColor;
 
-Subnode:=Node['BorderLightColor',false];
-if assigned(Subnode) then
-   FBorderLightColor:=Subnode.TextAsColor;
+  Subnode := Node['BorderLightColor', false];
+  if Assigned(Subnode) then
+    FBorderLightColor := Subnode.TextAsColor;
 
-Subnode:=Node['CaptionBgColor',false];
-if assigned(Subnode) then
-   FCaptionBgColor:=Subnode.TextAsColor;
+  Subnode := Node['CaptionBgColor', false];
+  if Assigned(Subnode) then
+    FCaptionBgColor := Subnode.TextAsColor;
 
-Subnode:=Node['GradientFromColor',false];
-if assigned(Subnode) then
-   FGradientFromColor:=Subnode.TextAsColor;
+  Subnode := Node['GradientFromColor', false];
+  if Assigned(Subnode) then
+    FGradientFromColor := Subnode.TextAsColor;
 
-Subnode:=Node['GradientToColor',false];
-if assigned(Subnode) then
-   FGradientToColor:=Subnode.TextAsColor;
+  Subnode := Node['GradientToColor', false];
+  if Assigned(Subnode) then
+    FGradientToColor := Subnode.TextAsColor;
 
-Subnode:=Node['GradientType',false];
-if assigned(Subnode) then
-   FGradientType:=TBackgroundKind(Subnode.TextAsInteger);
+  Subnode := Node['GradientType', false];
+  if assigned(Subnode) then
+    FGradientType := TBackgroundKind(Subnode.TextAsInteger);
+
+  Subnode := Node['Style', false];
+  if Assigned(Subnode) then
+    FStyle := TSpkPaneStyle(SubNode.TextAsInteger);
 end;
 
 procedure TSpkPaneAppearance.Reset;
@@ -510,36 +522,39 @@ begin
   FGradientFromColor := rgb(222, 232, 245);
   FGradientToColor := rgb(199, 216, 237);
   FGradientType := bkConcave;
+  FStyle := psRectangleEtched;
 end;
 
 procedure TSpkPaneAppearance.SaveToXML(Node: TSpkXMLNode);
-
-var Subnode : TSpkXMLNode;
-
+var
+  Subnode: TSpkXMLNode;
 begin
-if not(assigned(Node)) then
-   exit;
+  if not(Assigned(Node)) then
+    exit;
 
-Subnode:=Node['CaptionFont',true];
-TSpkXMLTools.Save(Subnode, FCaptionFont);
+  Subnode := Node['CaptionFont',true];
+  TSpkXMLTools.Save(Subnode, FCaptionFont);
 
-Subnode:=Node['BorderDarkColor',true];
-Subnode.TextAsColor:=FBorderDarkColor;
+  Subnode := Node['BorderDarkColor',true];
+  Subnode.TextAsColor := FBorderDarkColor;
 
-Subnode:=Node['BorderLightColor',true];
-Subnode.TextAsColor:=FBorderLightColor;
+  Subnode := Node['BorderLightColor',true];
+  Subnode.TextAsColor := FBorderLightColor;
 
-Subnode:=Node['CaptionBgColor',true];
-Subnode.TextAsColor:=FCaptionBgColor;
+  Subnode := Node['CaptionBgColor',true];
+  Subnode.TextAsColor := FCaptionBgColor;
 
-Subnode:=Node['GradientFromColor',true];
-Subnode.TextAsColor:=FGradientFromColor;
+  Subnode := Node['GradientFromColor',true];
+  Subnode.TextAsColor := FGradientFromColor;
 
-Subnode:=Node['GradientToColor',true];
-Subnode.TextAsColor:=FGradientToColor;
+  Subnode := Node['GradientToColor',true];
+  Subnode.TextAsColor := FGradientToColor;
 
-Subnode:=Node['GradientType',true];
-Subnode.TextAsInteger:=integer(FGradientType);
+  Subnode := Node['GradientType',true];
+  Subnode.TextAsInteger := integer(FGradientType);
+
+  Subnode := Node['Style', true];
+  Subnode.TextAsInteger := integer(FStyle);
 end;
 
 procedure TSpkPaneAppearance.SetBorderDarkColor(const Value: TColor);
@@ -589,6 +604,13 @@ begin
   FCaptionFont.assign(Value);
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
+end;
+
+procedure TSpkPaneAppearance.SetStyle(const Value: TSpkPaneStyle);
+begin
+  FStyle := Value;
+  if FDispatch <> nil then
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 

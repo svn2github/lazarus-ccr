@@ -16,7 +16,9 @@ type
   { TfrmAppearanceEditWindow }
 
   TfrmAppearanceEditWindow = class(TForm)
+    cbPaneStyle: TComboBox;
     gbPreview: TGroupBox;
+    Label12: TLabel;
     SmallImages: TImageList;
     LargeImages: TImageList;
     Label18: TLabel;
@@ -128,9 +130,11 @@ type
     procedure cbItemActiveGradientKindChange(Sender: TObject);
     procedure cbItemHottrackGradientKindChange(Sender: TObject);
     procedure cbItemIdleGradientKindChange(Sender: TObject);
-    procedure cbTabGradientKindChange(Sender: TObject);
     procedure cbPaneGradientKindChange(Sender: TObject);
+    procedure cbPaneStyleChange(Sender: TObject);
+    procedure cbTabGradientKindChange(Sender: TObject);
 
+    procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
 
@@ -206,6 +210,9 @@ var
 implementation
 
 {$R *.lfm}
+
+var
+  CurrPageIndex: Integer = 0;
 
 { TForm3 }
 
@@ -362,6 +369,12 @@ begin
     Result := false;
 end;
 
+procedure TfrmAppearanceEditWindow.FormCloseQuery(Sender: TObject;
+  var CanClose: boolean);
+begin
+  if CanClose then CurrPageIndex := PageControl1.PageIndex;
+end;
+
 procedure TfrmAppearanceEditWindow.FormCreate(Sender: TObject);
 begin
   bOK.AutoSize := false;
@@ -369,6 +382,8 @@ begin
 
   LargeImages.AddIcon(Application.Icon);
   SmallImages.AddIcon(Application.Icon);
+
+  PageControl1.PageIndex := CurrPageIndex;
 end;
 
 procedure TfrmAppearanceEditWindow.FormShow(Sender: TObject);
@@ -406,6 +421,7 @@ begin
       SetPanelColor(pPaneCaptionBackground, CaptionBgColor);
       SetPanelFont(pPaneCaptionFont, CaptionFont);
       SetPanelColor(pPaneCaptionFontColor, CaptionFont.Color);
+      cbPaneStyle.ItemIndex := ord(Style);
     end;
 
     with Element do
@@ -669,6 +685,12 @@ begin
     GradientType := TBackgroundKind((Sender as TCombobox).ItemIndex);
   if cbLinkPane.Checked then
     SetLinkedGradientKind((Sender as TComboBox).ItemIndex);
+end;
+
+procedure TfrmAppearanceEditWindow.cbPaneStyleChange(Sender: TObject);
+begin
+  with tbPreview.Appearance.Pane do
+    Style := TSpkPaneStyle((Sender as TCombobox).ItemIndex);
 end;
 
 procedure TfrmAppearanceEditWindow.pPaneGradientToClick(Sender: TObject);

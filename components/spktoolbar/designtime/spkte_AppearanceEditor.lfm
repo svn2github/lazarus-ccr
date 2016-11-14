@@ -9,8 +9,10 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
   Color = clBtnFace
   Font.Color = clWindowText
   Font.Height = -12
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnShow = FormShow
+  ShowHint = True
   LCLVersion = '1.7'
   object gbPreview: TGroupBox
     Left = 0
@@ -319,14 +321,14 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     Height = 347
     Top = 132
     Width = 536
-    ActivePage = TabSheet3
+    ActivePage = TabSheet2
     Align = alClient
-    TabIndex = 2
+    TabIndex = 1
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Tab'
-      ClientHeight = 326
-      ClientWidth = 549
+      ClientHeight = 319
+      ClientWidth = 528
       object Label2: TLabel
         AnchorSideTop.Control = pTabFrame
         AnchorSideTop.Side = asrCenter
@@ -677,6 +679,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Width = 137
         BorderSpacing.Left = 12
         BorderSpacing.Top = 4
+        Visible = False
       end
       object pPaneBorderDark: TPanel
         AnchorSideLeft.Control = cbLinkPane
@@ -820,6 +823,46 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Caption = 'Link with tab and idle item'
         OnClick = cbLinkPaneClick
         TabOrder = 8
+      end
+      object cbPaneStyle: TComboBox
+        AnchorSideLeft.Control = pPaneCaptionFont
+        AnchorSideTop.Control = pPaneCaptionFont
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = pPaneCaptionFontColor
+        AnchorSideRight.Side = asrBottom
+        Left = 141
+        Height = 23
+        Top = 265
+        Width = 121
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 6
+        ItemHeight = 15
+        ItemIndex = 1
+        Items.Strings = (
+          'Rectangle flat'
+          'Rectangle etched'
+          'Rectangle raised'
+          'Divider flat'
+          'Divider etched'
+          'Divider raised'
+        )
+        OnChange = cbPaneStyleChange
+        Style = csDropDownList
+        TabOrder = 9
+        Text = 'Rectangle etched'
+      end
+      object Label12: TLabel
+        AnchorSideTop.Control = cbPaneStyle
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = LblCaptionBackground
+        AnchorSideRight.Side = asrBottom
+        Left = 68
+        Height = 15
+        Top = 269
+        Width = 53
+        Anchors = [akTop, akRight]
+        Caption = 'Pane style'
+        ParentColor = False
       end
     end
     object TabSheet3: TTabSheet

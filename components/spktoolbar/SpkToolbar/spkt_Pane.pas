@@ -224,136 +224,209 @@ begin
 end;
 
 procedure TSpkPane.Draw(ABuffer: TBitmap; ClipRect: T2DIntRect);
-
-var x: Integer;
-    y: Integer;
-    BgFromColor, BgToColor, CaptionColor, FontColor, BorderLightColor,
-    BorderDarkColor : TColor;
-    i: Integer;
-
+var
+  x: Integer;
+  y: Integer;
+  BgFromColor, BgToColor, CaptionColor: TColor;
+  FontColor, BorderLightColor, BorderDarkColor, c: TColor;
+  i: Integer;
+  R: T2DIntRect;
 begin
-// W niektórych warunkach nie jesteœmy w stanie rysowaæ:
-// * Brak dyspozytora
-if FToolbarDispatch=nil then
-   exit;
-// * Brak appearance
-if FAppearance=nil then
-   exit;
+  // W niektórych warunkach nie jesteœmy w stanie rysowaæ:
+  // * Brak dyspozytora
+  if FToolbarDispatch = nil then
+     exit;
+  // * Brak appearance
+  if FAppearance = nil then
+     exit;
 
-if FPaneState = psIdle then
-   begin
-   // psIdle
-   BgFromColor:=FAppearance.Pane.GradientFromColor;
-   BgToColor:=FAppearance.Pane.GradientToColor;
-   CaptionColor:=FAppearance.Pane.CaptionBgColor;
-   FontColor:=FAppearance.Pane.CaptionFont.Color;
-   BorderLightColor:=FAppearance.Pane.BorderLightColor;
-   BorderDarkColor:=FAppearance.Pane.BorderDarkColor;
-   end else
-       begin
-       // psHover
-       BgFromColor:=TColorTools.Brighten(FAppearance.Pane.GradientFromColor,20);
-       BgToColor:=TColorTools.Brighten(FAppearance.Pane.GradientToColor,20);
-       CaptionColor:=TColorTools.Brighten(FAppearance.Pane.CaptionBgColor,20);
-       FontColor:=TColorTools.Brighten(FAppearance.Pane.CaptionFont.Color,20);
-       BorderLightColor:=TColorTools.Brighten(FAppearance.Pane.BorderLightColor,20);
-       BorderDarkColor:=TColorTools.Brighten(FAppearance.Pane.BorderDarkColor,20);
-       end;
+  if FPaneState = psIdle then
+  begin
+    // psIdle
+    BgFromColor:=FAppearance.Pane.GradientFromColor;
+    BgToColor:=FAppearance.Pane.GradientToColor;
+    CaptionColor:=FAppearance.Pane.CaptionBgColor;
+    FontColor:=FAppearance.Pane.CaptionFont.Color;
+    BorderLightColor:=FAppearance.Pane.BorderLightColor;
+    BorderDarkColor:=FAppearance.Pane.BorderDarkColor;
+  end else
+  begin
+    // psHover
+    BgFromColor:=TColorTools.Brighten(FAppearance.Pane.GradientFromColor,20);
+    BgToColor:=TColorTools.Brighten(FAppearance.Pane.GradientToColor,20);
+    CaptionColor:=TColorTools.Brighten(FAppearance.Pane.CaptionBgColor,20);
+    FontColor:=TColorTools.Brighten(FAppearance.Pane.CaptionFont.Color,20);
+    BorderLightColor:=TColorTools.Brighten(FAppearance.Pane.BorderLightColor,20);
+    BorderDarkColor:=TColorTools.Brighten(FAppearance.Pane.BorderDarkColor,20);
+  end;
 
-// T³o
-TGuiTools.DrawRoundRect(ABuffer.Canvas,
-                        {$IFDEF EnhancedRecordSupport}
-                        T2DIntRect.Create(FRect.left,
-                                          FRect.top,
-                                          FRect.right - PaneBorderHalfSize,
-                                          FRect.Bottom - PaneBorderHalfSize),
-                        {$ELSE}
-                        Create2DIntRect(FRect.left,
-                                          FRect.top,
-                                          FRect.right - PaneBorderHalfSize,
-                                          FRect.Bottom - PaneBorderHalfSize),
-                        {$ENDIF}
-                        PaneCornerRadius,
-                        BgFromColor,
-                        BgToColor,
-                        FAppearance.Pane.GradientType,
-                        ClipRect);
+  // T³o
+  {$IFDEF EnhancedRecordSupport}
+  R := T2DIntRect.Create(
+  {$ELSE}
+  R := Create2DIntRect(
+  {$ENDIF}
+    FRect.Left,
+    FRect.Top,
+    FRect.Right - PaneBorderHalfSize,
+    FRect.Bottom - PaneBorderHalfSize
+  );
+  TGuiTools.DrawRoundRect(
+    ABuffer.Canvas,
+    R,
+    PaneCornerRadius,
+    BgFromColor,
+    BgToColor,
+    FAppearance.Pane.GradientType,
+    ClipRect
+  );
 
-// T³o etykiety tafli
-TGuiTools.DrawRoundRect(ABuffer.Canvas,
-                        {$IFDEF EnhancedRecordSupport}
-                        T2DIntRect.Create(FRect.Left,
-                                          FRect.Bottom - PaneCaptionHeight - PaneBorderHalfSize,
-                                          FRect.right - PaneBorderHalfSize,
-                                          FRect.bottom - PaneBorderHalfSize),
-                        {$ELSE}
-                        Create2DIntRect(FRect.Left,
-                                          FRect.Bottom - PaneCaptionHeight - PaneBorderHalfSize,
-                                          FRect.Right - PaneBorderHalfSize,
-                                          FRect.Bottom - PaneBorderHalfSize),
-                        {$ENDIF}
-                        PaneCornerRadius,
-                        CaptionColor,
-                        clNone,
-                        bkSolid,
-                        ClipRect,
-                        false,
-                        false,
-                        true,
-                        true);
+  // T³o etykiety tafli
+  {$IFDEF EnhancedRecordSupport}
+  R := T2DIntRect.Create(
+  {$ELSE}
+  R := Create2DIntRect(
+  {$ENDIF}
+    FRect.Left,
+    FRect.Bottom - PaneCaptionHeight - PaneBorderHalfSize,
+    FRect.Right - PaneBorderHalfSize,
+    FRect.Bottom - PaneBorderHalfSize
+  );
+  TGuiTools.DrawRoundRect(
+    ABuffer.Canvas,
+    R,
+    PaneCornerRadius,
+    CaptionColor,
+    clNone,
+    bkSolid,
+    ClipRect,
+    false,
+    false,
+    true,
+    true
+  );
 
-// Etykieta tafli
-ABuffer.Canvas.Font.assign(FAppearance.Pane.CaptionFont);
-x:=FRect.left + (FRect.width - ABuffer.Canvas.TextWidth(FCaption)) div 2;
-y:=FRect.Bottom - PaneBorderSize - PaneCaptionHeight + 1 +
-   (PaneCaptionHeight - ABuffer.Canvas.TextHeight('Wy')) div 2;
+  // Etykieta tafli
+  ABuffer.Canvas.Font.Assign(FAppearance.Pane.CaptionFont);
+  x := FRect.Left + (FRect.Width - ABuffer.Canvas.TextWidth(FCaption)) div 2;
+  y := FRect.Bottom - PaneBorderSize - PaneCaptionHeight + 1 +
+        (PaneCaptionHeight - ABuffer.Canvas.TextHeight('Wy')) div 2;
 
-TGUITools.DrawText(ABuffer.Canvas,
-                   x,
-                   y,
-                   FCaption,
-                   FontColor,
-                   ClipRect);
+  TGUITools.DrawText(
+    ABuffer.Canvas,
+    x,
+    y,
+    FCaption,
+    FontColor,
+    ClipRect
+  );
 
-// Ramki
-TGUITools.DrawAARoundFrame(ABuffer,
-                           {$IFDEF EnhancedRecordSupport}
-                           T2DIntRect.create(FRect.left+1,
-                                             FRect.top+1,
-                                             FRect.Right,
-                                             FRect.bottom),
-                           {$ELSE}
-                           Create2DIntRect(FRect.left+1,
-                                             FRect.top+1,
-                                             FRect.Right,
-                                             FRect.bottom),
-                           {$ENDIF}
-                           PaneCornerRadius,
-                           BorderLightColor,
-                           ClipRect);
-TGUITools.DrawAARoundFrame(ABuffer,
-                           {$IFDEF EnhancedRecordSupport}
-                           T2DIntRect.create(FRect.left,
-                                             FRect.top,
-                                             FRect.Right-1,
-                                             FRect.bottom-1),
-                           {$ELSE}
-                           Create2DIntRect(FRect.left,
-                                             FRect.top,
-                                             FRect.Right-1,
-                                             FRect.bottom-1),
-                           {$ENDIF}
-                           PaneCornerRadius,
-                           BorderDarkColor,
-                           ClipRect);
+  // Frames
+  case FAppearance.Pane.Style of
+    psRectangleFlat:
+      begin
+         {$IFDEF EnhancedRecordSupport}
+         R := T2DIntRect.Create(
+         {$ELSE}
+         R := Create2DIntRect(
+         {$ENDIF}
+           FRect.Left,
+           FRect.Top,
+           FRect.Right,
+           FRect.bottom
+         );
+         TGUITools.DrawAARoundFrame(
+           ABuffer,
+           R,
+           PaneCornerRadius,
+           BorderDarkColor,
+           ClipRect
+         );
+      end;
 
-// Elementy
-if FItems.Count>0 then
-   for i := 0 to FItems.Count - 1 do
-       begin
-       if FItems[i].Visible then
-          Fitems[i].Draw(ABuffer, ClipRect);
-       end;
+    psRectangleEtched, psRectangleRaised:
+      begin
+        {$IFDEF EnhancedRecordSupport}
+        R := T2DIntRect.Create(
+        {$ELSE}
+        R := Create2DIntRect(
+        {$ENDIF}
+          FRect.Left + 1,
+          FRect.Top + 1,
+          FRect.Right,
+          FRect.bottom
+        );
+        if FAppearance.Pane.Style = psRectangleEtched then
+          c := BorderLightColor else
+          c := BorderDarkColor;
+        TGUITools.DrawAARoundFrame(
+          ABuffer,
+          R,
+          PaneCornerRadius,
+          c,
+          ClipRect
+        );
+
+        {$IFDEF EnhancedRecordSupport}
+        R := T2DIntRect.Create(
+        {$ELSE}
+        R := Create2DIntRect(
+        {$ENDIF}
+          FRect.Left,
+          FRect.Top,
+          FRect.Right-1,
+          FRect.Bottom-1
+        );
+        if FAppearance.Pane.Style = psRectangleEtched then
+          c := BorderDarkColor else
+          c := BorderLightColor;
+        TGUITools.DrawAARoundFrame(
+          ABuffer,
+          R,
+          PaneCornerRadius,
+          c,
+          ClipRect
+        );
+      end;
+
+    psDividerRaised, psDividerEtched:
+      begin
+        if FAppearance.Pane.Style = psDividerRaised then
+          c := BorderLightColor else
+          c := BorderDarkColor;
+        TGUITools.DrawVLine(
+          ABuffer,
+          FRect.Right + PaneBorderHalfSize - 1,
+          FRect.Top,
+          FRect.Bottom,
+          c
+        );
+        if FAppearance.Pane.Style = psDividerRaised then
+          c := BorderDarkColor else
+          c := BorderLightColor;
+        TGUITools.DrawVLine(
+          ABuffer,
+          FRect.Right + PaneBorderHalfSize,
+          FRect.Top,
+          FRect.Bottom,
+          c
+        );
+      end;
+
+    psDividerFlat:
+       TGUITools.DrawVLine(
+         ABuffer,
+         FRect.Right + PaneBorderHalfSize,
+         FRect.Top,
+         FRect.Bottom,
+         BorderDarkColor
+      );
+  end;
+
+  // Elementy
+  for i := 0 to FItems.Count - 1 do
+    if FItems[i].Visible then
+      Fitems[i].Draw(ABuffer, ClipRect);
 end;
 
 function TSpkPane.FindItemAt(x, y : integer) : integer;
