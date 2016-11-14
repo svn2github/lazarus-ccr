@@ -130,6 +130,7 @@ type
     procedure cbItemIdleGradientKindChange(Sender: TObject);
     procedure cbTabGradientKindChange(Sender: TObject);
     procedure cbPaneGradientKindChange(Sender: TObject);
+
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
 
@@ -365,6 +366,9 @@ procedure TfrmAppearanceEditWindow.FormCreate(Sender: TObject);
 begin
   bOK.AutoSize := false;
   bOK.Width := bCancel.Width;
+
+  LargeImages.AddIcon(Application.Icon);
+  SmallImages.AddIcon(Application.Icon);
 end;
 
 procedure TfrmAppearanceEditWindow.FormShow(Sender: TObject);
