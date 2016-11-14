@@ -1378,12 +1378,14 @@ procedure TSpkToolbar.ValidateBuffer;
     var
       x, y: integer;
       TabRect: T2DIntRect;
+      clr: TColor;
     begin
       TabRect := FTabRects[index];
 
       FBuffer.canvas.font.Assign(AFont);
       if AOverrideTextColor <> clNone then
-        FBuffer.Canvas.Font.Color := AOverrideTextColor;
+        clr := AOverrideTextColor else
+        clr := AFont.Color;
       x := TabRect.left + (TabRect.Width - FBuffer.Canvas.textwidth(
         FTabs[index].Caption)) div 2;
       y := TabRect.top + (TabRect.Height - FBuffer.Canvas.Textheight('Wy')) div 2;
@@ -1392,7 +1394,7 @@ procedure TSpkToolbar.ValidateBuffer;
         x,
         y,
         FTabs[index].Caption,
-        AFont.Color,
+        clr,
         FTabClipRect);
     end;
 
