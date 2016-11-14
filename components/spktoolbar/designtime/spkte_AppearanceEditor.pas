@@ -6,7 +6,7 @@ interface
 
 uses
   LCLIntf, LCLType, LMessages, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls, ComCtrls,
+  Dialogs, ExtCtrls, StdCtrls, ComCtrls, Buttons,
   SpkGUITools, SpkXMLParser,
   spkt_Buttons, spkt_BaseItem, spkt_Pane, spkt_Types, spkt_Tab, SpkToolbar,
   spkt_Appearance;
@@ -16,15 +16,29 @@ type
   { TfrmAppearanceEditWindow }
 
   TfrmAppearanceEditWindow = class(TForm)
+    bInactiveTabHeaderFontColor: TSpeedButton;
+    bPaneBorderDarkColor: TSpeedButton;
+    bPaneBorderLightColor: TSpeedButton;
+    bPaneGradientFromColor: TSpeedButton;
+    bPaneGradientToColor: TSpeedButton;
+    bPaneCaptionBackgroundColor: TSpeedButton;
+    bPaneCaptionFontColor: TSpeedButton;
+    bTabGradientFromColor: TSpeedButton;
+    bTabGradientToColor: TSpeedButton;
+    bActiveTabHeaderFontColor: TSpeedButton;
     cbPaneStyle: TComboBox;
+    ColorView: TShape;
     gbPreview: TGroupBox;
     Label12: TLabel;
+    LblCaptionBackground1: TLabel;
+    LblRGB: TLabel;
     SmallImages: TImageList;
     LargeImages: TImageList;
     Label18: TLabel;
     LblInactiveTabHeaderFontColor: TLabel;
-    pInactiveTabHeaderFontColor: TPanel;
-    Panel1: TPanel;
+    pInactiveTabHeaderFont: TPanel;
+    ButtonPanel: TPanel;
+    bTabFrameColor: TSpeedButton;
     SpkTab2: TSpkTab;
     tbPreview: TSpkToolbar;
     SpkTab1: TSpkTab;
@@ -107,7 +121,7 @@ type
     bCancel: TButton;
     cdColorDialog: TColorDialog;
     fdFontDialog: TFontDialog;
-    pActiveTabHeaderFontColor: TPanel;
+    pActiveTabHeaderFont: TPanel;
     pPaneCaptionFontColor: TPanel;
     TabSheet4: TTabSheet;
     bImport: TButton;
@@ -125,7 +139,19 @@ type
 
     procedure bExportClick(Sender: TObject);
     procedure bImportClick(Sender: TObject);
+    procedure bInactiveTabHeaderFontColorClick(Sender: TObject);
+    procedure bPaneBorderDarkColorClick(Sender: TObject);
+    procedure bPaneBorderLightColorClick(Sender: TObject);
+    procedure bPaneCaptionBackgroundColorClick(Sender: TObject);
+    procedure bPaneCaptionFontColorClick(Sender: TObject);
+    procedure bPaneGradientFromColorClick(Sender: TObject);
+    procedure bPaneGradientToColorClick(Sender: TObject);
     procedure bResetClick(Sender: TObject);
+
+    procedure bTabBorderColorClick(Sender: TObject);
+    procedure bTabGradientFromColorClick(Sender: TObject);
+    procedure bTabGradientToColorClick(Sender: TObject);
+    procedure bActiveTabHeaderFontColorClick(Sender: TObject);
 
     procedure cbItemActiveGradientKindChange(Sender: TObject);
     procedure cbItemHottrackGradientKindChange(Sender: TObject);
@@ -134,16 +160,16 @@ type
     procedure cbPaneStyleChange(Sender: TObject);
     procedure cbTabGradientKindChange(Sender: TObject);
 
+    procedure cbLinkItemClick(Sender: TObject);
+    procedure cbLinkPaneClick(Sender: TObject);
+    procedure cbLinkTabClick(Sender: TObject);
+
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
 
-    procedure pActiveTabHeaderFontColorClick(Sender: TObject);
-    procedure pInactiveTabHeaderFontColorClick(Sender: TObject);
-
-    procedure cbLinkItemClick(Sender: TObject);
-    procedure cbLinkPaneClick(Sender: TObject);
-    procedure cbLinkTabClick(Sender: TObject);
+    procedure pActiveTabHeaderFontClick(Sender: TObject);
+    procedure pInactiveTabHeaderFontClick(Sender: TObject);
 
     procedure pTabFrameClick(Sender: TObject);
     procedure pTabGradientFromClick(Sender: TObject);
@@ -182,7 +208,6 @@ type
     procedure pTabHeaderFontClick(Sender: TObject);
 
   private
-    { Private declarations }
     procedure SetLinkedFrameColor(AColor : TColor);
     procedure SetLinkedGradientFromColor(AColor : TColor);
     procedure SetLinkedGradientToColor(AColor : TColor);
@@ -199,6 +224,19 @@ type
     procedure SetPanelFont(Panel : TPanel; AFont : TFont);
     procedure SetComboGradientKind(Combo : TComboBox; GradientType : TBackgroundKind);
     procedure LoadAppearance(AAppearance : TSpkToolbarAppearance);
+
+  private  { Color picker }
+    FScreenBitmap: TBitmap;
+    FScreenshotForm: TForm;
+    function PickColor(APanel: TPanel): Boolean;
+    procedure ScreenshotKeyDown(Sender: TObject;
+      var Key: Word; Shift: TShiftState);
+    procedure ScreenshotMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: integer);
+    procedure ScreenshotMouseMove(Sender: TObject;
+      Shift: TShiftState; X, Y: integer);
+    procedure ScreenshotMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: integer);
   public
     property Appearance : TSpkToolbarAppearance read GetAppearance write SetAppearance;
     { Public declarations }
@@ -297,6 +335,124 @@ begin
   Panel.Caption := AFont.Name + ', ' + IntToStr(AFont.Size);
 end;
 
+procedure TfrmAppearanceEditWindow.bTabBorderColorClick(Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pTabFrame) then begin
+    tbPreview.Appearance.Tab.BorderColor := pTabFrame.Color;
+    if cbLinkTab.checked then
+      SetLinkedFrameColor(pTabFrame.Color)
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bTabGradientFromColorClick(Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pTabGradientFrom) then begin
+    tbPreview.Appearance.Tab.GradientFromColor := pTabGradientFrom.Color;
+    if cbLinkTab.checked then
+      SetLinkedFrameColor(pTabGradientFrom.Color)
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bTabGradientToColorClick(Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pTabGradientTo) then begin
+    tbPreview.Appearance.Tab.GradientToColor := pTabGradientTo.Color;
+    if cbLinkTab.checked then
+      SetLinkedFrameColor(pTabGradientTo.Color)
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bActiveTabHeaderFontColorClick(
+  Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pActiveTabHeaderFont) then begin
+    tbPreview.Appearance.Tab.TabHeaderFont.Color := pActiveTabHeaderFont.Color;
+    tbPreview.ForceRepaint;
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bInactiveTabHeaderFontColorClick(
+  Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pInactiveTabHeaderFont) then begin
+    tbPreview.Appearance.Tab.InactiveTabHeaderFontColor := pInactiveTabHeaderFont.Color;
+    tbPreview.ForceRepaint;
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bPaneBorderDarkColorClick(Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pPaneBorderDark) then begin
+    tbPreview.Appearance.Pane.BorderDarkColor := pPaneBorderDark.Color;
+    if cbLinkPane.Checked then
+      SetLinkedFrameColor(pPaneBorderDark.Color)
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bPaneBorderLightColorClick(Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pPaneBorderLight) then begin
+    tbPreview.Appearance.Pane.BorderLightColor := pPaneBorderLight.Color;
+    if cbLinkPane.Checked then
+      SetLinkedFrameColor(pPaneBorderLight.Color)
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bPaneCaptionBackgroundColorClick(
+  Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pPaneCaptionBackground) then
+    tbPreview.Appearance.Pane.CaptionBgColor := pPaneCaptionBackground.Color;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bPaneCaptionFontColorClick(Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pPaneCaptionFontColor) then begin
+    tbPreview.Appearance.Pane.CaptionFont.Color := pPaneCaptionFontColor.Color;
+    tbPreview.ForceRepaint;
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bPaneGradientFromColorClick(Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pPaneGradientFrom) then begin
+    tbPreview.Appearance.Pane.GradientFromColor := pPaneGradientFrom.Color;
+    if cbLinkPane.Checked then
+      SetLinkedFrameColor(pPaneGradientFrom.Color)
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bPaneGradientToColorClick(Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pPaneGradientTo) then begin
+    tbPreview.Appearance.Pane.GradientToColor := pPaneGradientTo.Color;
+    if cbLinkPane.Checked then
+      SetLinkedFrameColor(pPaneGradientTo.Color)
+    end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
 procedure TfrmAppearanceEditWindow.SwitchAttributesLink(const Value: boolean);
 begin
   cbLinkTab.checked := Value;
@@ -383,6 +539,19 @@ begin
   LargeImages.AddIcon(Application.Icon);
   SmallImages.AddIcon(Application.Icon);
 
+  SmallImages.GetBitmap(0, bTabFrameColor.Glyph);
+  SmallImages.GetBitmap(0, bTabGradientFromColor.Glyph);
+  SmallImages.GetBitmap(0, bTabGradientToColor.Glyph);
+  SmallImages.GetBitmap(0, bActiveTabHeaderFontColor.Glyph);
+  SmallImages.GetBitmap(0, bInactiveTabHeaderFontColor.Glyph);
+
+  SmallImages.GetBitmap(0, bPaneBorderDarkColor.Glyph);
+  SmallImages.GetBitmap(0, bPaneBorderLightColor.Glyph);
+  SmallImages.GetBitmap(0, bPaneGradientFromColor.Glyph);
+  SmallImages.GetBitmap(0, bPaneGradientToColor.Glyph);
+  SmallImages.GetBitmap(0, bPaneCaptionBackgroundColor.Glyph);
+  SmallImages.GetBitmap(0, bPaneCaptionFontColor.Glyph);
+
   PageControl1.PageIndex := CurrPageIndex;
 end;
 
@@ -407,8 +576,8 @@ begin
       SetPanelColor(pTabGradientTo, GradientToColor);
       SetComboGradientKind(cbTabGradientKind, GradientType);
       SetPanelFont(pTabHeaderFont, TabHeaderFont);
-      SetPanelColor(pActiveTabHeaderFontColor, TabHeaderFont.Color);
-      SetPanelColor(pInactiveTabHeaderFontColor, InactiveTabHeaderFontColor);
+      SetPanelColor(pActiveTabHeaderFont, TabHeaderFont.Color);
+      SetPanelColor(pInactiveTabHeaderFont, InactiveTabHeaderFontColor);
     end;
 
     with Pane do
@@ -673,7 +842,6 @@ begin
   if ChangeColor(Sender as TPanel) then
   begin
     tbPreview.Appearance.Pane.GradientFromColor:=(Sender as TPanel).Color;
-
     if cbLinkPane.Checked then
       SetLinkedGradientFromColor((Sender as TPanel).Color);
   end;
@@ -728,7 +896,6 @@ begin
   if ChangeColor(Sender as TPanel) then
   begin
     tbPreview.Appearance.Tab.GradientToColor := (Sender as TPanel).Color;
-
     if cbLinkTab.Checked then
       SetLinkedGradientToColor((Sender as TPanel).Color);
   end;
@@ -742,7 +909,7 @@ begin
   end;
 end;
 
-procedure TfrmAppearanceEditWindow.pActiveTabHeaderFontColorClick(Sender: TObject);
+procedure TfrmAppearanceEditWindow.pActiveTabHeaderFontClick(Sender: TObject);
 begin
   if ChangeColor(Sender as TPanel) then
   begin
@@ -751,7 +918,7 @@ begin
   end;
 end;
 
-procedure TfrmAppearanceEditWindow.pInactiveTabHeaderFontColorClick(
+procedure TfrmAppearanceEditWindow.pInactiveTabHeaderFontClick(
   Sender: TObject);
 begin
   if ChangeColor(Sender as TPanel) then
@@ -759,6 +926,105 @@ begin
     tbPreview.Appearance.Tab.InactiveTabHeaderFontColor := (Sender as TPanel).Color;
     tbPreview.ForceRepaint;
   end;
+end;
+
+function TfrmAppearanceEditWindow.PickColor(APanel: TPanel): Boolean;
+var
+  screenDC: HDC;
+  cvOrigin: TPoint;
+  rgbOrigin: TPoint;
+  P: TPoint;
+  img: TImage;
+begin
+  FScreenshotForm := TForm.Create(self);
+  FScreenBitmap := TBitmap.Create;
+  try
+    screenDC := GetDC(0);
+    try
+      FScreenBitmap.LoadFromDevice(ScreenDC);
+    finally
+      ReleaseDC(0, screenDC);
+    end;
+
+    FScreenshotForm.BorderStyle := bsNone;
+    FScreenshotForm.FormStyle := fsStayOnTop;
+    FScreenshotForm.SetBounds(0, 0, Screen.Width, Screen.Height);
+
+    img := TImage.Create(FScreenshotForm);
+    img.Picture.Bitmap := FScreenBitmap;
+    img.Parent := FScreenshotForm;
+    img.Align := alClient;
+
+    cvOrigin := ColorView.BoundsRect.TopLeft;
+    P := ColorView.ClientToScreen(Point(0, 0));
+    ColorView.Parent := FScreenshotForm;
+    ColorView.Top := P.Y;
+    ColorView.Left := P.X;
+    ColorView.Show;
+
+    rgbOrigin := LblRGB.BoundsRect.TopLeft;
+    P := LblRGB.ClientToScreen(Point(0, 0));
+    LblRGB.Parent := FScreenshotForm;
+    LblRGB.Top := P.Y;
+    LblRGB.Left := P.X;
+    LblRGB.Show;
+
+    //  Screen.Cursors[1] := LoadCursorFromLazarusResource('picker');
+    FScreenshotForm.Cursor := crCross; //1;
+    img.Cursor := crCross; //1;
+
+    FScreenshotForm.OnKeyDown := ScreenshotKeyDown;
+    img.OnMouseUp := ScreenshotMouseUp;
+    img.OnMouseDown := ScreenshotMouseDown;
+    img.OnMouseMove := ScreenshotMouseMove;
+
+    Result := FScreenshotForm.ShowModal = mrOK;
+    if Result then
+      SetPanelColor(APanel, ColorView.Brush.Color);
+
+    ColorView.Hide;
+    ColorView.Top := cvOrigin.Y;
+    ColorView.Left := cvOrigin.X;
+    ColorView.Parent := ButtonPanel;
+
+    LblRGB.Hide;
+    LblRGB.Top := rgbOrigin.Y;
+    LblRGB.Left := rgbOrigin.X;
+    LblRGB.Parent := ButtonPanel;
+
+  finally
+    FScreenshotForm.Free;
+    FScreenBitmap.Free;
+  end;
+end;
+
+procedure TfrmAppearanceEditWindow.ScreenshotKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  case Key of
+    VK_ESCAPE: FScreenshotForm.ModalResult := mrCancel;
+    VK_RETURN: FScreenshotForm.ModalResult := mrOK;
+  end;
+end;
+
+procedure TfrmAppearanceEditWindow.ScreenshotMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  ColorView.Brush.Color := FScreenBitmap.Canvas.Pixels[X, Y];
+  LblRGB.Caption := '$' + IntToHex(ColorView.Brush.Color, 8);
+end;
+
+procedure TfrmAppearanceEditWindow.ScreenshotMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: integer);
+begin
+  ColorView.Brush.Color := FScreenBitmap.Canvas.Pixels[X, Y];
+  LblRGB.Caption := '$' + IntToHex(ColorView.Brush.Color, 8);
+end;
+
+procedure TfrmAppearanceEditWindow.ScreenshotMouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  FScreenshotForm.ModalResult := mrOK;
 end;
 
 end.
