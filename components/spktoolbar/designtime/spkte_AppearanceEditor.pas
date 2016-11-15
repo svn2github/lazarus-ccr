@@ -17,12 +17,30 @@ type
 
   TfrmAppearanceEditWindow = class(TForm)
     bInactiveTabHeaderFontColor: TSpeedButton;
+    bItemActiveInnerDarkColor: TSpeedButton;
+    bItemActiveGradientFromColor: TSpeedButton;
+    bItemActiveGradientToColor: TSpeedButton;
+    bItemActiveCaptionColor: TSpeedButton;
+    bItemActiveInnerLightColor: TSpeedButton;
+    bItemHotTrackInnerDarkColor: TSpeedButton;
+    bItemHotTrackFrameColor: TSpeedButton;
+    bItemActiveFrameColor: TSpeedButton;
+    bItemHotTrackGradientFromColor: TSpeedButton;
+    bItemHotTrackGradientToColor: TSpeedButton;
+    bItemHotTrackCaptionColor: TSpeedButton;
+    bItemHotTrackInnerLightColor: TSpeedButton;
+    bItemIdleInnerDarkColor: TSpeedButton;
+    bItemIdleGradientFromColor: TSpeedButton;
+    bItemIdleGradientToColor: TSpeedButton;
+    bItemIdleCaptionColor: TSpeedButton;
+    bItemIdleInnerLightColor: TSpeedButton;
     bPaneBorderDarkColor: TSpeedButton;
     bPaneBorderLightColor: TSpeedButton;
     bPaneGradientFromColor: TSpeedButton;
     bPaneGradientToColor: TSpeedButton;
     bPaneCaptionBackgroundColor: TSpeedButton;
     bPaneCaptionFontColor: TSpeedButton;
+    bItemIdleFrameColor: TSpeedButton;
     bTabGradientFromColor: TSpeedButton;
     bTabGradientToColor: TSpeedButton;
     bActiveTabHeaderFontColor: TSpeedButton;
@@ -140,6 +158,24 @@ type
     procedure bExportClick(Sender: TObject);
     procedure bImportClick(Sender: TObject);
     procedure bInactiveTabHeaderFontColorClick(Sender: TObject);
+    procedure bItemActiveCaptionColorClick(Sender: TObject);
+    procedure bItemActiveFrameColorClick(Sender: TObject);
+    procedure bItemActiveGradientFromColorClick(Sender: TObject);
+    procedure bItemActiveGradientToColorClick(Sender: TObject);
+    procedure bItemActiveInnerDarkColorClick(Sender: TObject);
+    procedure bItemActiveInnerLightColorClick(Sender: TObject);
+    procedure bItemHotTrackCaptionColorClick(Sender: TObject);
+    procedure bItemHotTrackFrameColorClick(Sender: TObject);
+    procedure bItemHotTrackGradientFromColorClick(Sender: TObject);
+    procedure bItemHotTrackGradientToColorClick(Sender: TObject);
+    procedure bItemHotTrackInnerDarkColorClick(Sender: TObject);
+    procedure bItemHotTrackInnerLightColorClick(Sender: TObject);
+    procedure bItemIdleCaptionColorClick(Sender: TObject);
+    procedure bItemIdleFrameColorClick(Sender: TObject);
+    procedure bItemIdleGradientFromColorClick(Sender: TObject);
+    procedure bItemIdleGradientToColorClick(Sender: TObject);
+    procedure bItemIdleInnerDarkColorClick(Sender: TObject);
+    procedure bItemIdleInnerLightColorClick(Sender: TObject);
     procedure bPaneBorderDarkColorClick(Sender: TObject);
     procedure bPaneBorderLightColorClick(Sender: TObject);
     procedure bPaneCaptionBackgroundColorClick(Sender: TObject);
@@ -390,6 +426,186 @@ begin
   (Sender as TSpeedButton).Down := false;
 end;
 
+procedure TfrmAppearanceEditWindow.bItemActiveCaptionColorClick(Sender: TObject
+  );
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemActiveCaptionColor) then begin
+    tbPreview.Appearance.Element.ActiveCaptionColor := pItemActiveCaptionColor.Color;
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemActiveFrameColorClick(Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemActiveFrame) then begin
+    tbPreview.Appearance.Element.ActiveFrameColor := pItemactiveFrame.Color;
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemActiveGradientFromColorClick(
+  Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemActiveGradientFrom) then
+    tbPreview.Appearance.Element.ActiveGradientFromColor := pItemActiveGradientFrom.Color;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemActiveGradientToColorClick(
+  Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemActiveGradientTo) then
+    tbPreview.Appearance.Element.ActiveGradientToColor := pItemActiveGradientTo.Color;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemActiveInnerDarkColorClick(
+  Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemActiveInnerDark) then
+    tbPreview.Appearance.Element.ActiveInnerDarkColor := pItemActiveInnerDark.Color;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemActiveInnerLightColorClick(
+  Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemActiveInnerLight) then
+    tbPreview.Appearance.Element.ActiveInnerLightColor := pItemActiveInnerLight.Color;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemHotTrackCaptionColorClick(
+  Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemHotTrackCaptionColor) then begin
+    tbPreview.Appearance.Element.HotTrackCaptionColor := pItemHotTrackCaptionColor.Color;
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemHotTrackFrameColorClick(Sender: TObject
+  );
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemHotTrackFrame) then begin
+    tbPreview.Appearance.Element.HotTrackFrameColor := pItemHotTrackFrame.Color;
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemHotTrackGradientFromColorClick(
+  Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemHotTrackGradientFrom) then
+    tbPreview.Appearance.Element.HotTrackGradientFromColor := pItemHotTrackGradientFrom.Color;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemHotTrackGradientToColorClick(
+  Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemHotTrackGradientTo) then
+    tbPreview.Appearance.Element.HotTrackGradientToColor := pItemHotTrackGradientTo.Color;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemHotTrackInnerDarkColorClick(
+  Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemHotTrackInnerDark) then
+    tbPreview.Appearance.Element.HotTrackInnerDarkColor := pItemHotTrackInnerDark.Color;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemHotTrackInnerLightColorClick(
+  Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemHotTrackInnerLight) then
+    tbPreview.Appearance.Element.HotTrackInnerLightColor := pItemHotTrackInnerLight.Color;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemIdleCaptionColorClick(Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemIdleFrame) then begin
+    tbPreview.Appearance.Element.IdleCaptionColor := pItemIdleCaptionColor.Color;
+    if cbLinkTab.checked then
+      SetLinkedFrameColor(pItemIdleCaptionColor.Color)
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemIdleFrameColorClick(Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemIdleFrame) then begin
+    tbPreview.Appearance.Element.IdleFrameColor := pItemIdleFrame.Color;
+    if cbLinkTab.checked then
+      SetLinkedFrameColor(pItemIdleFrame.Color)
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemIdleGradientFromColorClick(Sender: TObject);
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemIdleGradientFrom) then begin
+    tbPreview.Appearance.Element.IdleGradientFromColor := pItemIdleGradientFrom.Color;
+    if cbLinkTab.checked then
+      SetLinkedFrameColor(pItemIdleGradientFrom.Color)
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemIdleGradientToColorClick(Sender: TObject
+  );
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemIdleGradientTo) then begin
+    tbPreview.Appearance.Element.IdleGradientToColor := pItemIdleGradientTo.Color;
+    if cbLinkTab.checked then
+      SetLinkedFrameColor(pItemIdleGradientTo.Color)
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemIdleInnerDarkColorClick(Sender: TObject
+  );
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemIdleInnerDark) then begin
+    tbPreview.Appearance.Element.IdleInnerDarkColor := pItemIdleInnerDark.Color;
+    if cbLinkTab.checked then
+      SetLinkedFrameColor(pItemIdleInnerDark.Color)
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bItemIdleInnerLightColorClick(Sender: TObject
+  );
+begin
+  (Sender as TSpeedButton).Down := true;
+  if PickColor(pItemIdleInnerLight) then begin
+    tbPreview.Appearance.Element.IdleInnerLightColor := pItemIdleInnerLight.Color;
+    if cbLinkPane.Checked then
+      SetLinkedFrameColor(pItemIdleInnerLight.Color)
+  end;
+  (Sender as TSpeedButton).Down := false;
+end;
+
 procedure TfrmAppearanceEditWindow.bPaneBorderDarkColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
@@ -551,6 +767,27 @@ begin
   SmallImages.GetBitmap(0, bPaneGradientToColor.Glyph);
   SmallImages.GetBitmap(0, bPaneCaptionBackgroundColor.Glyph);
   SmallImages.GetBitmap(0, bPaneCaptionFontColor.Glyph);
+
+  SmallImages.GetBitmap(0, bItemIdleCaptionColor.Glyph);
+  SmallImages.GetBitmap(0, bItemIdleFrameColor.Glyph);
+  SmallImages.GetBitmap(0, bItemIdleGradientFromColor.Glyph);
+  SmallImages.GetBitmap(0, bItemIdleGradientToColor.Glyph);
+  SmallImages.GetBitmap(0, bItemIdleInnerDarkColor.Glyph);
+  SmallImages.GetBitmap(0, bItemIdleInnerLightColor.Glyph);
+
+  SmallImages.GetBitmap(0, bItemHotTrackCaptionColor.Glyph);
+  SmallImages.GetBitmap(0, bItemHotTrackFrameColor.Glyph);
+  SmallImages.GetBitmap(0, bItemHotTrackGradientFromColor.Glyph);
+  SmallImages.GetBitmap(0, bItemHotTrackGradientToColor.Glyph);
+  SmallImages.GetBitmap(0, bItemHotTrackInnerDarkColor.Glyph);
+  SmallImages.GetBitmap(0, bItemHotTrackInnerLightColor.Glyph);
+
+  SmallImages.GetBitmap(0, bItemActiveCaptionColor.Glyph);
+  SmallImages.GetBitmap(0, bItemActiveFrameColor.Glyph);
+  SmallImages.GetBitmap(0, bItemActiveGradientFromColor.Glyph);
+  SmallImages.GetBitmap(0, bItemActiveGradientToColor.Glyph);
+  SmallImages.GetBitmap(0, bItemActiveInnerDarkColor.Glyph);
+  SmallImages.GetBitmap(0, bItemActiveInnerLightColor.Glyph);
 
   PageControl1.PageIndex := CurrPageIndex;
 end;
