@@ -44,6 +44,8 @@ type
     bTabGradientFromColor: TSpeedButton;
     bTabGradientToColor: TSpeedButton;
     bActiveTabHeaderFontColor: TSpeedButton;
+    bExportToPascal: TButton;
+    bCopyToClipboard: TButton;
     cbPaneStyle: TComboBox;
     ColorView: TShape;
     gbPreview: TGroupBox;
@@ -143,7 +145,7 @@ type
     pPaneCaptionFontColor: TPanel;
     TabSheet4: TTabSheet;
     bImport: TButton;
-    bExport: TButton;
+    bExportToXML: TButton;
     mXML: TMemo;
     sTabRectangle: TShape;
     cbLinkTab: TCheckBox;
@@ -155,7 +157,8 @@ type
     Label17: TLabel;
     bReset: TButton;
 
-    procedure bExportClick(Sender: TObject);
+    procedure bExportToPascalClick(Sender: TObject);
+    procedure bExportToXMLClick(Sender: TObject);
     procedure bImportClick(Sender: TObject);
     procedure bInactiveTabHeaderFontColorClick(Sender: TObject);
     procedure bItemActiveCaptionColorClick(Sender: TObject);
@@ -188,7 +191,7 @@ type
     procedure bTabGradientFromColorClick(Sender: TObject);
     procedure bTabGradientToColorClick(Sender: TObject);
     procedure bActiveTabHeaderFontColorClick(Sender: TObject);
-
+    procedure bCopyToClipboardClick(Sender: TObject);
     procedure cbItemActiveGradientKindChange(Sender: TObject);
     procedure cbItemHottrackGradientKindChange(Sender: TObject);
     procedure cbItemIdleGradientKindChange(Sender: TObject);
@@ -284,6 +287,9 @@ var
 implementation
 
 {$R *.lfm}
+
+uses
+  clipbrd;
 
 var
   CurrPageIndex: Integer = 0;
@@ -404,6 +410,12 @@ begin
   (Sender as TSpeedButton).Down := false;
 end;
 
+procedure TfrmAppearanceEditWindow.bCopyToClipboardClick(Sender: TObject);
+begin
+  if mXML.Lines.Count > 0 then
+    Clipboard.AsText := mXML.Text;
+end;
+
 procedure TfrmAppearanceEditWindow.bActiveTabHeaderFontColorClick(
   Sender: TObject);
 begin
@@ -413,6 +425,36 @@ begin
     tbPreview.ForceRepaint;
   end;
   (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.bExportToPascalClick(Sender: TObject);
+var
+  L: TStrings;
+begin
+  L := TStringList.Create;
+  try
+    tbPreview.Appearance.SaveToPascal(L);
+    mXML.Clear;
+    mXML.Lines.Assign(L);
+  finally
+    L.Free;
+  end;
+end;
+
+procedure TfrmAppearanceEditWindow.bExportToXMLClick(Sender: TObject);
+var
+  Xml: TSpkXMLParser;
+  Node: TSpkXMLNode;
+begin
+  XML:=TSpkXMLParser.Create;
+  try
+    Node := XML['Appearance', true];
+    tbPreview.Appearance.SaveToXML(Node);
+    mXML.Clear;
+    mXml.Text:=XML.Generate;
+  finally
+    XML.Free;
+  end;
 end;
 
 procedure TfrmAppearanceEditWindow.bInactiveTabHeaderFontColorClick(
@@ -540,7 +582,7 @@ end;
 procedure TfrmAppearanceEditWindow.bItemIdleCaptionColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pItemIdleFrame) then begin
+  if PickColor(pItemIdleCaptionColor) then begin
     tbPreview.Appearance.Element.IdleCaptionColor := pItemIdleCaptionColor.Color;
     if cbLinkTab.checked then
       SetLinkedFrameColor(pItemIdleCaptionColor.Color)
@@ -877,22 +919,6 @@ procedure TfrmAppearanceEditWindow.pItemActiveGradientFromClick(Sender: TObject)
 begin
   if ChangeColor(Sender as TPanel) then
     tbPreview.Appearance.Element.ActiveGradientFromColor:=(Sender as TPanel).Color;
-end;
-
-procedure TfrmAppearanceEditWindow.bExportClick(Sender: TObject);
-var
-  Xml: TSpkXMLParser;
-  Node: TSpkXMLNode;
-begin
-  XML:=TSpkXMLParser.Create;
-  try
-    Node := XML['Appearance', true];
-    tbPreview.Appearance.SaveToXML(Node);
-    mXML.Clear;
-    mXml.Text:=XML.Generate;
-  finally
-    XML.Free;
-  end;
 end;
 
 procedure TfrmAppearanceEditWindow.bImportClick(Sender: TObject);
@@ -1265,3 +1291,5 @@ begin
 end;
 
 end.
+
+

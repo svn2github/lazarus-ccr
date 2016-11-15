@@ -321,9 +321,9 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     Height = 368
     Top = 132
     Width = 562
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alClient
-    TabIndex = 0
+    TabIndex = 2
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Tab'
@@ -1985,14 +1985,14 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     end
     object TabSheet4: TTabSheet
       Caption = 'Import / export'
-      ClientHeight = 326
-      ClientWidth = 549
+      ClientHeight = 340
+      ClientWidth = 554
       ImageIndex = 3
       object bImport: TButton
-        AnchorSideLeft.Control = bExport
+        AnchorSideLeft.Control = bExportToXML
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = TabSheet4
-        Left = 118
+        Left = 260
         Height = 25
         Top = 4
         Width = 110
@@ -2002,17 +2002,18 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         OnClick = bImportClick
         TabOrder = 0
       end
-      object bExport: TButton
-        AnchorSideLeft.Control = TabSheet4
+      object bExportToXML: TButton
+        AnchorSideLeft.Control = bExportToPascal
+        AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = TabSheet4
-        Left = 4
+        Left = 146
         Height = 25
         Top = 4
         Width = 110
         BorderSpacing.Left = 4
         BorderSpacing.Top = 4
         Caption = 'Export to XML'
-        OnClick = bExportClick
+        OnClick = bExportToXMLClick
         TabOrder = 1
       end
       object mXML: TMemo
@@ -2024,9 +2025,9 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideBottom.Control = TabSheet4
         AnchorSideBottom.Side = asrBottom
         Left = 4
-        Height = 289
+        Height = 303
         Top = 33
-        Width = 541
+        Width = 546
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Left = 4
         BorderSpacing.Top = 4
@@ -2036,7 +2037,36 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Font.Height = -11
         Font.Name = 'Courier New'
         ParentFont = False
+        ScrollBars = ssAutoBoth
         TabOrder = 2
+      end
+      object bExportToPascal: TButton
+        AnchorSideLeft.Control = TabSheet4
+        AnchorSideTop.Control = TabSheet4
+        Left = 4
+        Height = 25
+        Top = 4
+        Width = 138
+        BorderSpacing.Left = 4
+        BorderSpacing.Top = 4
+        Caption = 'Export to Pascal code'
+        OnClick = bExportToPascalClick
+        TabOrder = 3
+      end
+      object bCopyToClipboard: TButton
+        AnchorSideTop.Control = TabSheet4
+        AnchorSideRight.Control = TabSheet4
+        AnchorSideRight.Side = asrBottom
+        Left = 475
+        Height = 25
+        Top = 4
+        Width = 75
+        Anchors = [akTop, akRight]
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 4
+        Caption = 'Copy'
+        OnClick = bCopyToClipboardClick
+        TabOrder = 4
       end
     end
     object TabSheet5: TTabSheet
