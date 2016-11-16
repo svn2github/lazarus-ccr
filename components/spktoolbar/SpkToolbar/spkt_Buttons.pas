@@ -117,20 +117,19 @@ type TSpkBaseButton = class;
 
 type TSpkLargeButton = class(TSpkBaseButton)
      private
-       procedure FindBreakPlace(s : string; out Position : integer; out Width : integer);
-     protected
        FLargeImageIndex: TImageIndex;
-
+       procedure FindBreakPlace(s: string; out Position: integer; out Width: integer);
+       procedure SetLargeImageIndex(const Value: TImageIndex);
+     protected
        procedure CalcRects; override;
        function GetDropdownPoint : T2DIntPoint; override;
-       procedure SetLargeImageIndex(const Value: TImageIndex);
      public
-       constructor Create(AOwner : TComponent); override;
-       function GetWidth : integer; override;
-       function GetTableBehaviour : TSpkItemTableBehaviour; override;
-       function GetGroupBehaviour : TSpkItemGroupBehaviour; override;
-       function GetSize : TSpkItemSize; override;
-       procedure Draw(ABuffer : TBitmap; ClipRect : T2DIntRect); override;
+       constructor Create(AOwner: TComponent); override;
+       procedure Draw(ABuffer: TBitmap; ClipRect: T2DIntRect); override;
+       function GetWidth: integer; override;
+       function GetTableBehaviour: TSpkItemTableBehaviour; override;
+       function GetGroupBehaviour: TSpkItemGroupBehaviour; override;
+       function GetSize: TSpkItemSize; override;
      published
        property LargeImageIndex: TImageIndex read FLargeImageIndex write SetLargeImageIndex default -1;
        property ButtonKind;
@@ -139,36 +138,33 @@ type TSpkLargeButton = class(TSpkBaseButton)
 
 type TSpkSmallButton = class(TSpkBaseButton)
      private
-     protected
-       FImageIndex : TImageIndex;
-
-       FTableBehaviour : TSpkItemTableBehaviour;
-       FGroupBehaviour : TSPkItemGroupBehaviour;
-       FHideFrameWhenIdle : boolean;
-       FShowCaption : boolean;
-
-       procedure CalcRects; override;
-       function GetDropdownPoint : T2DIntPoint; override;
-       procedure ConstructRects(var BtnRect, DropRect : T2DIntRect);
-       procedure SetImageIndex(const Value : TImageIndex);
+       FImageIndex: TImageIndex;
+       FTableBehaviour: TSpkItemTableBehaviour;
+       FGroupBehaviour: TSPkItemGroupBehaviour;
+       FHideFrameWhenIdle: boolean;
+       FShowCaption: boolean;
+       procedure ConstructRects(out BtnRect, DropRect: T2DIntRect);
+       procedure SetImageIndex(const Value: TImageIndex);
        procedure SetGroupBehaviour(const Value: TSpkItemGroupBehaviour);
        procedure SetHideFrameWhenIdle(const Value: boolean);
        procedure SetTableBehaviour(const Value: TSpkItemTableBehaviour);
        procedure SetShowCaption(const Value: boolean);
+     protected
+       procedure CalcRects; override;
+       function GetDropdownPoint: T2DIntPoint; override;
      public
-       constructor Create(AOwner : TComponent); override;
-
-       function GetWidth : integer; override;
-       function GetTableBehaviour : TSpkItemTableBehaviour; override;
-       function GetGroupBehaviour : TSpkItemGroupBehaviour; override;
-       function GetSize : TSpkItemSize; override;
-       procedure Draw(ABuffer : TBitmap; ClipRect : T2DIntRect); override;
+       constructor Create(AOwner: TComponent); override;
+       procedure Draw(ABuffer: TBitmap; ClipRect: T2DIntRect); override;
+       function GetWidth: integer; override;
+       function GetTableBehaviour: TSpkItemTableBehaviour; override;
+       function GetGroupBehaviour: TSpkItemGroupBehaviour; override;
+       function GetSize: TSpkItemSize; override;
      published
-       property ShowCaption : boolean read FShowCaption write SetShowCaption;
-       property TableBehaviour : TSpkItemTableBehaviour read FTableBehaviour write SetTableBehaviour;
-       property GroupBehaviour : TSpkItemGroupBehaviour read FGroupBehaviour write SetGroupBehaviour;
-       property HideFrameWhenIdle : boolean read FHideFrameWhenIdle write SetHideFrameWhenIdle;
-       property ImageIndex : TImageIndex read FImageIndex write SetImageIndex default -1;
+       property ShowCaption: boolean read FShowCaption write SetShowCaption;
+       property TableBehaviour: TSpkItemTableBehaviour read FTableBehaviour write SetTableBehaviour;
+       property GroupBehaviour: TSpkItemGroupBehaviour read FGroupBehaviour write SetGroupBehaviour;
+       property HideFrameWhenIdle: boolean read FHideFrameWhenIdle write SetHideFrameWhenIdle;
+       property ImageIndex: TImageIndex read FImageIndex write SetImageIndex default -1;
        property ButtonKind;
        property DropdownMenu;
      end;
@@ -176,28 +172,28 @@ type TSpkSmallButton = class(TSpkBaseButton)
 implementation
 
 uses
-  LCLType, LCLIntf, LCLProc, SysUtils, spkt_Pane;
+  LCLType, LCLIntf, LCLProc, SysUtils, spkt_Pane, spkt_Appearance;
 
 { TSpkButtonActionLink }
 
 procedure TSpkButtonActionLink.AssignClient(AClient: TObject);
 begin
   inherited AssignClient(AClient);
-  FClient:=TSpkBaseButton(AClient);
+  FClient := TSpkBaseButton(AClient);
 end;
 
 function TSpkButtonActionLink.IsCaptionLinked: Boolean;
 begin
-result:=(inherited IsCaptionLinked) and
-        (assigned(FClient)) and
-        (FClient.Caption = (Action as TCustomAction).Caption);
+  Result := inherited IsCaptionLinked and
+            Assigned(FClient) and
+            (FClient.Caption = (Action as TCustomAction).Caption);
 end;
 
 function TSpkButtonActionLink.IsEnabledLinked: Boolean;
 begin
-result:=(inherited IsEnabledLinked) and
-        (assigned(FClient)) and
-        (FClient.Enabled = (Action as TCustomAction).Enabled);
+  Result := inherited IsEnabledLinked and
+            Assigned(FClient) and
+           (FClient.Enabled = (Action as TCustomAction).Enabled);
 end;
 
 function TSpkButtonActionLink.IsOnExecuteLinked: Boolean;
@@ -220,9 +216,9 @@ end;
 
 function TSpkButtonActionLink.IsVisibleLinked: Boolean;
 begin
-result:=(inherited IsVisibleLinked) and
-        (assigned(FClient)) and
-        (FClient.Visible = (Action as TCustomAction).Visible);
+  Result := inherited IsVisibleLinked and
+            Assigned(FClient) and
+            (FClient.Visible = (Action as TCustomAction).Visible);
 end;
 
 procedure TSpkButtonActionLink.SetCaption(const Value: string);
@@ -673,45 +669,44 @@ end;
 
 procedure TSpkBaseButton.SetButtonKind(const Value: TSpkButtonKind);
 begin
-  FButtonKind:=Value;
-  if assigned(FToolbarDispatch) then
+  FButtonKind := Value;
+  if Assigned(FToolbarDispatch) then
      FToolbarDispatch.NotifyMetricsChanged;
 end;
 
 procedure TSpkBaseButton.SetCaption(const Value: string);
 begin
-  FCaption:=Value;
-  if assigned(FToolbarDispatch) then
+  FCaption := Value;
+  if Assigned(FToolbarDispatch) then
      FToolbarDispatch.NotifyMetricsChanged;
 end;
 
 procedure TSpkBaseButton.SetDropdownMenu(const Value: TPopupMenu);
 begin
-  FDropdownMenu:=Value;
-  if assigned(FToolbarDispatch) then
+  FDropdownMenu := Value;
+  if Assigned(FToolbarDispatch) then
      FToolbarDispatch.NotifyMetricsChanged;
 end;
 
 procedure TSpkBaseButton.SetEnabled(const Value: boolean);
 begin
   inherited;
-  if not(FEnabled) then
-     begin
-     // Jeœli przycisk zosta³ wy³¹czony, zostaje natychmiast prze³¹czony
-     // w stan Idle i zerowane s¹ elementy aktywne i pod mysz¹. Jeœli zosta³
-     // w³¹czony, jego stan zmieni siê podczas pierwszej akcji myszy.
+  if not FEnabled then
+  begin
+    // Jeœli przycisk zosta³ wy³¹czony, zostaje natychmiast prze³¹czony
+    // w stan Idle i zerowane s¹ elementy aktywne i pod mysz¹. Jeœli zosta³
+    // w³¹czony, jego stan zmieni siê podczas pierwszej akcji myszy.
 
-     FMouseHoverElement:=beNone;
-     FMouseActiveElement:=beNone;
+    FMouseHoverElement := beNone;
+    FMouseActiveElement := beNone;
 
-     if FButtonState<>bsIdle then
-        begin
-        FButtonState:=bsIdle;
-
-        if assigned(FToolbarDispatch) then
-           FToolbarDispatch.NotifyVisualsChanged;
-        end;
-     end;
+    if FButtonState <> bsIdle then
+    begin
+      FButtonState := bsIdle;
+      if Assigned(FToolbarDispatch) then
+        FToolbarDispatch.NotifyVisualsChanged;
+    end;
+  end;
 end;
 
 procedure TSpkBaseButton.SetRect(const Value: T2DIntRect);
@@ -724,955 +719,422 @@ end;
 
 procedure TSpkLargeButton.CalcRects;
 begin
-{$IFDEF EnhancedRecordSupport}
-if FButtonKind = bkButtonDropdown then
-   begin
-   FButtonRect:=T2DIntRect.Create(FRect.Left, FRect.Top, FRect.Right, FRect.Bottom - SpkLayoutSizes.LARGEBUTTON_DROPDOWN_FIELD_SIZE);
-   FDropdownRect:=T2DIntRect.Create(FRect.Left, FRect.Bottom - SpkLayoutSizes.LARGEBUTTON_DROPDOWN_FIELD_SIZE + 1, FRect.Right, FRect.Bottom);
-   end
-else
-   begin
-   FButtonRect:=FRect;
-   FDropdownRect:=T2DIntRect.Create(0, 0, 0, 0);
-   end;
-{$ELSE}
-if FButtonKind = bkButtonDropdown then
-   begin
-   FButtonRect.Create(FRect.Left, FRect.Top, FRect.Right, FRect.Bottom - LargeButtonDropdownFieldSize);
-   FDropdownRect.Create(FRect.Left, FRect.Bottom - LargeButtonDropdownFieldSize + 1, FRect.Right, FRect.Bottom);
-   end
-else
-   begin
-   FButtonRect:=FRect;
-   FDropdownRect.Create(0, 0, 0, 0);
-   end;
-{$ENDIF}
+ {$IFDEF EnhancedRecordSupport}
+  if FButtonKind = bkButtonDropdown then
+  begin
+    FButtonRect := T2DIntRect.Create(FRect.Left, FRect.Top, FRect.Right, FRect.Bottom - LargeButtonDropdownFieldSize);
+    FDropdownRect := T2DIntRect.Create(FRect.Left, FRect.Bottom - LargeButtonDropdownFieldSize, FRect.Right, FRect.Bottom);
+    //FDropdownRect := T2DIntRect.Create(FRect.Left, FRect.Bottom - LargeButtonDropdownFieldSize + 1, FRect.Right, FRect.Bottom);
+  end else
+  begin
+    FButtonRect := FRect;
+    FDropdownRect := T2DIntRect.Create(0, 0, 0, 0);
+  end;
+ {$ELSE}
+  if FButtonKind = bkButtonDropdown then
+  begin
+    FButtonRect.Create(FRect.Left, FRect.Top, FRect.Right, FRect.Bottom - LargeButtonDropdownFieldSize);
+    FDropdownRect.Create(FRect.Left, FRect.Bottom - LargeButtonDropdownFieldSize, FRect.Right, FRect.Bottom);
+//    FDropdownRect.Create(FRect.Left, FRect.Bottom - LargeButtonDropdownFieldSize + 1, FRect.Right, FRect.Bottom);
+  end else
+  begin
+    FButtonRect := FRect;
+    FDropdownRect.Create(0, 0, 0, 0);
+  end;
+ {$ENDIF}
 end;
 
 constructor TSpkLargeButton.Create(AOwner: TComponent);
 begin
   inherited;
-  FLargeImageIndex:=-1;
+  FLargeImageIndex := -1;
 end;
 
 procedure TSpkLargeButton.Draw(ABuffer: TBitmap; ClipRect: T2DIntRect);
-
-var FrameColor: TColor;
-    InnerLightColor: TColor;
-    InnerDarkColor: TColor;
-    GradientFromColor: TColor;
-    GradientToColor: TColor;
-    GradientKind : TBackgroundKind;
-    DrawRgn, TmpRgn : HRGN;
-    x: Integer;
-    y: Integer;
-
-    FontColor: TColor;
-    BreakPos: Integer;
-    BreakWidth: Integer;
-    s: string;
-    TextHeight: Integer;
-
+var
+  fontColor, frameColor: TColor;
+  gradientFromColor, gradientToColor: TColor;
+  innerLightColor, innerDarkColor: TColor;
+  gradientKind: TBackgroundKind;
+  x: Integer;
+  y: Integer;
+  cornerRadius: Integer;
+  imgList: TImageList;
+  txtHeight: Integer;
+  breakPos, breakWidth: Integer;
+  s: String;
+  P: T2DIntPoint;
+  drawBtn: Boolean;
 begin
-if FToolbarDispatch=nil then
-   exit;
-if FAppearance=nil then
-   exit;
+  if FToolbarDispatch = nil then
+    exit;
+  if FAppearance = nil then
+    exit;
 
-if (FRect.width<2*LargeButtonRadius) or (FRect.Height<2*LargeButtonRadius) then
-   exit;
+  if (FRect.Width < 2*LargeButtonRadius) or (FRect.Height < 2*LargeButtonRadius) then
+    exit;
 
-if FButtonKind in [bkButton, bkDropdown] then
-   begin
-   {$REGION 'Tryb bez dodatkowego przycisku z rozwijanym menu'}
-   // *** T³o ***
-   if not(FEnabled) then
-      begin
-      {$REGION 'T³o dla disabled'}
-      // Brak t³a
-      {$ENDREGION}
-      end else
-   if FButtonState = bsIdle then
-      begin
-      {$REGION 'T³o dla Idle'}
-      // Brak t³a
-      {$ENDREGION}
-      end else
-   if FButtonState = bsBtnHottrack then
-      begin
-      {$REGION 'T³o dla HotTrack'}
-      TGuiTools.DrawRoundRect(ABuffer.Canvas,
-                              {$IFDEF EnhancedRecordSupport}
-                              T2DIntRect.Create(FButtonRect.left,
-                                                FButtonRect.Top,
-                                                FButtonRect.Right,
-                                                FButtonRect.Bottom),
-                              {$ELSE}
-                              Create2DIntRect(FButtonRect.left,
-                                                FButtonRect.Top,
-                                                FButtonRect.Right,
-                                                FButtonRect.Bottom),
-                              {$ENDIF}
-                              LargeButtonRadius,
-                              FAppearance.Element.HotTrackGradientFromColor,
-                              FAppearance.Element.HotTrackGradientToColor,
-                              FAppearance.Element.HotTrackGradientType,
-                              ClipRect);
+  case FAppearance.Element.Style of
+    esRounded:
+      cornerRadius := LargeButtonRadius;
+    esRectangle:
+      cornerRadius := 0;
+  end;
 
-      TGuiTools.DrawAARoundFrame(ABuffer,
-                                 {$IFDEF EnhancedRecordSupport}
-                                 T2DIntRect.Create(FButtonRect.left+1,
-                                                   FButtonRect.top+1,
-                                                   FButtonRect.right-1,
-                                                   FButtonRect.Bottom-1),
-                                 {$ELSE}
-                                 Create2DIntRect(FButtonRect.left+1,
-                                                   FButtonRect.top+1,
-                                                   FButtonRect.right-1,
-                                                   FButtonRect.Bottom-1),
-                                 {$ENDIF}
-                                 LargeButtonRadius,
-                                 FAppearance.Element.HotTrackInnerLightColor,
-                                 ClipRect);
-      TGuiTools.DrawAARoundFrame(ABuffer,
-                                 FButtonRect,
-                                 LargeButtonRadius,
-                                 FAppearance.Element.HotTrackFrameColor,
-                                 ClipRect);
-      {$ENDREGION}
-      end else
-   if FButtonState = bsBtnPressed then
-      begin
-      {$REGION 'T³o dla Pressed'}
-      TGuiTools.DrawRoundRect(ABuffer.Canvas,
-                              {$IFDEF EnhancedRecordSupport}
-                              T2DIntRect.Create(FButtonRect.left,
-                                                FButtonRect.Top,
-                                                FButtonRect.Right,
-                                                FButtonRect.Bottom),
-                              {$ELSE}
-                              Create2DIntRect(FButtonRect.left,
-                                                FButtonRect.Top,
-                                                FButtonRect.Right,
-                                                FButtonRect.Bottom),
-                              {$ENDIF}
-                              LargeButtonRadius,
-                              FAppearance.Element.ActiveGradientFromColor,
-                              FAppearance.Element.ActiveGradientToColor,
-                              FAppearance.Element.ActiveGradientType,
-                              ClipRect);
+  // Prepare text color
+  fontColor := clNone;
+  case FButtonState of
+    bsIdle:
+      fontColor := FAppearance.Element.IdleCaptionColor;
+    bsBtnHottrack,
+    bsDropdownHottrack:
+      fontColor := FAppearance.Element.HotTrackCaptionColor;
+    bsBtnPressed,
+    bsDropdownPressed:
+      fontColor := FAppearance.ELement.ActiveCaptionColor;
+  end;
+  if not FEnabled then
+    fontColor := TColorTools.ColorToGrayscale(fontColor);
 
+  // Dropdown button
+  // Draw full rect, otherwise the DropDownRect will contain the full gradient
+  if FButtonKind = bkButtonDropdown then
+  begin
+    drawBtn := true;
+    if (FButtonState in [bsBtnHottrack, bsBtnPressed]) then
+    begin
+      frameColor := TColorTools.Brighten(FAppearance.Element.HotTrackFrameColor, 40);
+      innerLightColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerLightColor, 40);
+      innerDarkColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerDarkColor, 40);
+      gradientFromColor := TColorTools.Brighten(FAppearance.Element.HotTrackGradientFromColor, 40);
+      gradientToColor := TColorTools.Brighten(FAppearance.Element.HotTrackGradientToColor, 40);
+      gradientKind := FAppearance.Element.HotTrackGradientType;
+    end else
+    if (FButtonState = bsDropdownHottrack) then
+    begin
+      frameColor := FAppearance.Element.HotTrackFrameColor;
+      innerLightColor := FAppearance.Element.HotTrackInnerLightColor;
+      innerDarkColor := FAppearance.Element.HotTrackInnerDarkColor;
+      gradientFromColor := FAppearance.Element.HotTrackGradientFromColor;
+      gradientToColor := FAppearance.Element.HotTrackGradientToColor;
+      gradientKind := FAppearance.Element.HotTrackGradientType;
+    end else
+    if (FButtonState = bsDropdownPressed) then
+    begin
+      frameColor := FAppearance.Element.ActiveFrameColor;
+      innerlightColor := FAppearance.Element.ActiveInnerLightColor;
+      innerDarkColor := FAppearance.Element.ActiveInnerDarkColor;
+      gradientFromColor := FAppearance.Element.ActiveGradientFromColor;
+      gradientToColor := FAppearance.Element.ActiveGradientToColor;
+      gradientKind := FAppearance.Element.ActiveGradientType;
+    end else
+      drawBtn := false;
 
-      TGuiTools.DrawAARoundFrame(ABuffer,
-                                 {$IFDEF EnhancedRecordSupport}
-                                 T2DIntRect.Create(FButtonRect.left+1,
-                                                   FButtonRect.top+1,
-                                                   FButtonRect.right-1,
-                                                   FButtonRect.Bottom-1),
-                                 {$ELSE}
-                                 Create2DIntRect(FButtonRect.left+1,
-                                                   FButtonRect.top+1,
-                                                   FButtonRect.right-1,
-                                                   FButtonRect.Bottom-1),
-                                 {$ENDIF}
-                                 LargeButtonRadius,
-                                 FAppearance.Element.ActiveInnerLightColor,
-                                 ClipRect);
-      TGuiTools.DrawAARoundFrame(ABuffer,
-                                 FButtonRect,
-                                 LargeButtonRadius,
-                                 FAppearance.Element.ActiveFrameColor,
-                                 ClipRect);
-      {$ENDREGION}
-      end else
-          raise InternalException.create('TSpkLargeButton.Draw: Nieprawid³owa wartoœæ FButtonState!');
+    if drawBtn then begin
+      TButtonTools.DrawButton(
+        ABuffer,
+        FRect,
+        frameColor,
+        innerLightColor,
+        innerDarkColor,
+        gradientFromColor,
+        gradientToColor,
+        gradientKind,
+        false,
+        false,
+        false,
+        false,
+        cornerRadius,
+        ClipRect
+      );
+    end;
+  end;
 
-   // *** Ikona ***
-   if not(FEnabled) then
-      begin
-      {$REGION 'Ikona wy³¹czona'}
-      if (FLargeImageIndex>=0) and
-         (FDisabledLargeImages<>nil) and
-         (FLargeImageIndex<FDisabledLargeImages.Count) then
-         begin
-         x:=FRect.left + (FRect.Width - FLargeImages.Width) div 2;
-         y:=FRect.top + LargeButtonBorderSize + LargeButtonGlyphMargin;
+  // Button (Background and frame)
+  drawBtn := true;
+  if FButtonState = bsBtnHottrack then
+  begin
+    frameColor := FAppearance.Element.HotTrackFrameColor;
+    innerLightColor := FAppearance.Element.HotTrackInnerLightColor;
+    innerDarkColor := FAppearance.Element.HotTrackInnerDarkColor;
+    gradientFromColor := FAppearance.Element.HotTrackGradientFromColor;
+    gradientToColor := FAppearance.Element.HotTrackGradientToColor;
+    gradientKind := FAppearance.Element.HotTrackGradientType;
+  end else
+  if FButtonState = bsBtnPressed then
+  begin
+    frameColor := FAppearance.Element.ActiveFrameColor;
+    innerDarkColor := FAppearance.Element.ActiveInnerDarkColor;
+    innerLightColor := FAppearance.Element.ActiveInnerLightColor;
+    gradientFromColor := FAppearance.Element.ActiveGradientFromColor;
+    gradientToColor := FAppearance.Element.ActiveGradientToColor;
+    gradientKind := FAppearance.Element.ActiveGradientType;
+  end else
+  if (FButtonState in [bsDropdownHotTrack, bsDropdownPressed]) then
+  begin
+    frameColor := TColorTools.Brighten(FAppearance.Element.HotTrackFrameColor, 40);
+    innerDarkColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerDarkColor, 40);
+    innerLightColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerLightColor, 40);
+    gradientFromColor := TColorTools.Brighten(FAppearance.Element.HotTrackGradientFromColor, 40);
+    gradientToColor := TColorTools.Brighten(FAppearance.Element.HotTrackGradientToColor, 40);
+    gradientKind := FAppearance.Element.HotTrackGradientType;
+  end else
+    drawBtn := false;
 
-         TGuiTools.DrawImage(ABuffer.Canvas,
-                             FDisabledLargeImages,
-                             FLargeImageIndex,
-                             {$IFDEF EnhancedRecordSupport}
-                             T2DIntPoint.Create(x, y),
-                             {$ELSE}
-                             Create2DIntPoint(x, y),
-                             {$ENDIF}
-                             ClipRect);
-         end else
-      if (FLargeImageIndex>=0) and
-         (FLargeImages<>nil) and
-         (FLargeImageIndex<FLargeImages.Count) then
-         begin
-         x:=FRect.left + (FRect.Width - FLargeImages.Width) div 2;
-         y:=FRect.top + LargeButtonBorderSize + LargeButtonGlyphMargin;
+  if drawBtn then
+  begin
+    TButtonTools.DrawButton(
+      ABuffer,
+      FButtonRect,       // draw button part only
+      frameColor,
+      innerLightColor,
+      innerDarkColor,
+      gradientFromColor,
+      gradientToColor,
+      gradientKind,
+      false,
+      false,
+      false,
+      FButtonKind = bkButtonDropdown,
+      cornerRadius,
+      ClipRect
+    );
+  end;
 
-         TGuiTools.DrawDisabledImage(ABuffer.Canvas,
-                                     FLargeImages,
-                                     FLargeImageIndex,
-                                     {$IFDEF EnhancedRecordSupport}
-                                     T2DIntPoint.Create(x, y),
-                                     {$ELSE}
-                                     Create2DIntPoint(x, y),
-                                     {$ENDIF}
-                                     ClipRect);
-         end;
-      {$ENDREGION}
-      end
-   else
-      begin
-      {$REGION 'Ikona zwyk³a'}
-      if (FLargeImageIndex>=0) and
-         (FLargeImages<>nil) and
-         (FLargeImageIndex<FLargeImages.Count) then
-         begin
-         x:=FRect.left + (FRect.Width - FLargeImages.Width) div 2;
-         y:=FRect.top + LargeButtonBorderSize + LargeButtonGlyphMargin;
+  // Dropdown button - draw horizontal dividing line
+  if FButtonKind = bkButtonDropdown then
+  begin
+    drawBtn := true;
+    if (FButtonState in [bsDropdownHotTrack, bsBtnHotTrack]) then
+      frameColor := FAppearance.element.HotTrackFrameColor
+    else
+    if (FButtonState in [bsDropDownPressed, bsBtnPressed]) then
+      frameColor := FAppearance.Element.ActiveFrameColor
+    else
+      drawBtn := false;
+    if drawBtn then
+      TGuiTools.DrawHLine(
+        ABuffer,
+        FDropDownRect.Left,
+        FDropDownRect.Right,
+        FDropDownRect.Top,
+        frameColor,
+        ClipRect
+     );
+  end;
 
-         TGUITools.DrawImage(ABuffer.Canvas,
-                             FLargeImages,
-                             FLargeImageIndex,
-                             {$IFDEF EnhancedRecordSupport}
-                             T2DIntPoint.Create(x,y),
-                             {$ELSE}
-                             Create2DIntPoint(x,y),
-                             {$ENDIF}
-                             ClipRect);
-         end;
-      {$ENDREGION}
-      end;
+  // Icon
+  if not FEnabled and (FDisabledLargeImages <> nil) then
+    imgList := FDisabledLargeImages
+  else
+    imgList := FLargeImages;
 
-   // *** Tekst ***
+  if (imgList <> nil) and (FLargeImageIndex >= 0) and (FLargeImageIndex < imgList.Count) then
+  begin
+    P := {$IFDEF EnhancedRecordSupport}T2DIntPoint.Create{$ELSE}Create2DIntPoint{$ENDIF}(
+      FButtonRect.Left + (FButtonRect.Width - imgList.Width) div 2,
+      FButtonRect.Top + LargeButtonBorderSize + LargeButtonGlyphMargin
+    );
+    TGUITools.DrawImage(
+      ABuffer.Canvas,
+      imgList,
+      FLargeImageIndex,
+      P,
+      ClipRect
+    );
+  end;
 
-   if not(FEnabled) then
-      begin
-      FontColor:=clNone;
-      case FButtonState of
-           bsIdle: FontColor:=TColorTools.ColorToGrayscale(FAppearance.Element.IdleCaptionColor);
-           bsBtnHottrack,
-           bsDropdownHottrack : FontColor:=TColorTools.ColorToGrayscale(FAppearance.Element.HotTrackCaptionColor);
-           bsBtnPressed,
-           bsDropdownPressed: FontColor:=TColorTools.ColorToGrayscale(FAppearance.ELement.ActiveCaptionColor);
-      end;
-      end
-   else
-      begin
-      FontColor:=clNone;
-      case FButtonState of
-           bsIdle: FontColor:=FAppearance.Element.IdleCaptionColor;
-           bsBtnHottrack,
-           bsDropdownHottrack : FontColor:=FAppearance.Element.HotTrackCaptionColor;
-           bsBtnPressed,
-           bsDropdownPressed: FontColor:=FAppearance.ELement.ActiveCaptionColor;
-      end;
-      end;
+  // Text
+  ABuffer.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
+  ABuffer.Canvas.Font.Height := SpkScaleY(ABuffer.Canvas.Font.Height, 96);
+  ABuffer.Canvas.Font.Color := fontColor;
 
-   ABuffer.Canvas.Font.assign(FAppearance.Element.CaptionFont);
-   ABuffer.Canvas.Font.Color:=FontColor;
+  if FButtonKind = bkButton then
+    FindBreakPlace(FCaption, breakPos, breakWidth)
+  else
+    breakPos := 0;
+  txtHeight := ABuffer.Canvas.TextHeight('Wy');
 
-   if FButtonKind = bkButton then
-      FindBreakPlace(FCaption, BreakPos, BreakWidth) else
-      BreakPos:=0;
+  if breakPos > 0 then
+  begin
+    s := Copy(FCaption, 1, breakPos - 1);
+    x := FRect.Left + (FRect.Width - ABuffer.Canvas.Textwidth(s)) div 2;
+    y := FRect.Top + LargeButtonCaptionTopRail - txtHeight div 2;
+    TGUITools.DrawText(ABuffer.Canvas, x, y, s, fontColor, ClipRect);
 
-   if BreakPos>0 then
-      begin
-      // Tekst z³amany
-      TextHeight:=ABuffer.Canvas.Textheight('Wy');
+    s := Copy(FCaption, breakPos+1, Length(FCaption) - breakPos);
+    x := FRect.Left + (FRect.Width - ABuffer.Canvas.Textwidth(s)) div 2;
+    y := FRect.Top + LargeButtonCaptionButtomRail - txtHeight div 2;
+    TGUITools.DrawText(ABuffer.Canvas, x, y, s, fontColor, ClipRect);
+  end else
+  begin
+    // Tekst nie z³amany
+    x := FButtonRect.Left + (FButtonRect.Width - ABuffer.Canvas.Textwidth(FCaption)) div 2;
+    y := FRect.Top + LargeButtonCaptionTopRail - txtHeight div 2;
+    TGUITools.DrawText(ABuffer.Canvas, x, y, FCaption, FontColor, ClipRect);
+  end;
 
-      s:=copy(FCaption, 1, BreakPos-1);
-      x:=FRect.Left + (FRect.width - ABuffer.Canvas.Textwidth(s)) div 2;
-      y:=FRect.Top + LargeButtonCaptionTopRail - TextHeight div 2;
-      TGUITools.DrawText(ABuffer.Canvas, x, y, s, FontColor, ClipRect);
+  // Chevron
+  ABuffer.Canvas.Font.Charset := DEFAULT_CHARSET;
+  ABuffer.Canvas.Font.Name := 'Marlett';
+  ABuffer.Canvas.Font.Style := [];
+  ABuffer.Canvas.Font.Orientation := 0;
 
-      s:=copy(FCaption, BreakPos+1, length(FCaption) - BreakPos);
-      x:=FRect.Left + (FRect.width - ABuffer.Canvas.Textwidth(s)) div 2;
-      y:=FRect.Top + LargeButtonCaptionButtomRail - TextHeight div 2;
-      TGUITools.DrawText(ABuffer.Canvas, x, y, s, FontColor, ClipRect);
-      end
-   else
-      begin
-      // Tekst nie z³amany
-      TextHeight:=ABuffer.Canvas.Textheight('Wy');
-
-      x:=FButtonRect.Left + (FButtonRect.width - ABuffer.Canvas.Textwidth(FCaption)) div 2;
-      y:=FRect.Top + LargeButtonCaptionTopRail - TextHeight div 2;
-      TGUITools.DrawText(ABuffer.Canvas, x, y, FCaption, FontColor, ClipRect);
-      end;
-
-   if FButtonKind = bkDropdown then
-      begin
-      // Chevron strza³ki w dó³
-
-      if not(FEnabled) then
-         begin
-         case FButtonState of
-              bsIdle: FontColor:=TColorTools.ColorToGrayscale(FAppearance.Element.IdleCaptionColor);
-              bsBtnHottrack,
-              bsDropdownHottrack : FontColor:=TColorTools.ColorToGrayscale(FAppearance.Element.HotTrackCaptionColor);
-              bsBtnPressed,
-              bsDropdownPressed: FontColor:=TColorTools.ColorToGrayscale(FAppearance.ELement.ActiveCaptionColor);
-         end;
-         end
-      else
-         begin
-         case FButtonState of
-              bsIdle: FontColor:=FAppearance.Element.IdleCaptionColor;
-              bsBtnHottrack,
-              bsDropdownHottrack : FontColor:=FAppearance.Element.HotTrackCaptionColor;
-              bsBtnPressed,
-              bsDropdownPressed: FontColor:=FAppearance.ELement.ActiveCaptionColor;
-         end;
-         end;
-
-      ABuffer.Canvas.Font.Charset:=DEFAULT_CHARSET;
-      ABuffer.Canvas.Font.Name:='Marlett';
-      ABuffer.Canvas.Font.Size:=8;
-      ABuffer.Canvas.Font.Style:=[];
-      ABuffer.Canvas.Font.Orientation:=0;
-
-      x:=FButtonRect.Left + (FButtonRect.width - ABuffer.Canvas.Textwidth('u')) div 2;
-      y:=FButtonRect.bottom - ABuffer.Canvas.Textheight('u') - LargeButtonChevronHMargin;
-      TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
-      end;
-
-   {$ENDREGION}
-   end
-else
-   begin
-   {$REGION 'Tryb z rozwijanym menu'}
-   // *** T³o ***
-   if not(FEnabled) then
-      begin
-      {$REGION 'T³o dla Disabled'}
-      //
-      {$ENDREGION}
-      end else
-   if FButtonState = bsIdle then
-      begin
-      {$REGION 'T³o dla Idle'}
-      //
-      {$ENDREGION}
-      end else
-   if (FButtonState = bsBtnHottrack) or (FButtonState = bsDropdownHottrack) or
-      (FButtonState = bsBtnPressed) or (FButtonState = bsDropdownPressed) then
-      begin
-      {$REGION 'T³o dla aktywnego'}
-
-      // *** Przycisk ***
-
-      {$REGION 'Ustalanie kolorów'}
-      if FButtonState = bsBtnHottrack then
-         begin
-         FrameColor:=FAppearance.Element.HotTrackFrameColor;
-         InnerLightColor:=FAppearance.Element.HotTrackInnerLightColor;
-         GradientFromColor:=FAppearance.Element.HotTrackGradientFromColor;
-         GradientToColor:=FAppearance.Element.HotTrackGradientToColor;
-         GradientKind:=FAppearance.Element.HotTrackGradientType;
-         end else
-      if FButtonState = bsBtnPressed then
-         begin
-         FrameColor:=FAppearance.Element.ActiveFrameColor;
-         InnerLightColor:=FAppearance.Element.ActiveInnerLightColor;
-         GradientFromColor:=FAppearance.Element.ActiveGradientFromColor;
-         GradientToColor:=FAppearance.Element.ActiveGradientToColor;
-         GradientKind:=FAppearance.Element.ActiveGradientType;
-         end
-      else
-         begin
-         FrameColor:=TColorTools.Brighten(FAppearance.Element.HotTrackFrameColor,40);
-         InnerLightColor:=TColorTools.Brighten(FAppearance.Element.HotTrackInnerLightColor,40);
-         GradientFromColor:=TColorTools.Brighten(FAppearance.Element.HotTrackGradientFromColor,40);
-         GradientToColor:=TColorTools.Brighten(FAppearance.Element.HotTrackGradientToColor,40);
-         GradientKind:=FAppearance.Element.HotTrackGradientType;
-         end;
-      {$ENDREGION}
-
-      {$REGION 'T³o przycisku'}
-      DrawRgn:=CreateRectRgn(FButtonRect.Left,
-                             FButtonRect.Top + LargeButtonRadius,
-                             FButtonRect.Right + 1,
-                             FButtonRect.Bottom);
-
-      TmpRgn:=CreateRectRgn(FButtonRect.left + LargeButtonRadius,
-                            FButtonRect.Top,
-                            FButtonRect.right - LargeButtonRadius + 1,
-                            FButtonRect.Top + LargeButtonRadius);
-      CombineRgn(DrawRgn, DrawRgn, TmpRgn, RGN_OR);
-      DeleteObject(TmpRgn);
-
-      TmpRgn:=CreateEllipticRgn(FButtonRect.Left,
-                                FButtonRect.Top,
-                                FButtonRect.Left + 2 * LargeButtonRadius + 1,
-                                FButtonRect.Top + 2 * LargeButtonRadius + 1);
-      CombineRgn(DrawRgn, DrawRgn, TmpRgn, RGN_OR);
-      DeleteObject(TmpRgn);
-
-      TmpRgn:=CreateEllipticRgn(FButtonRect.Right - 2 * LargeButtonRadius + 1,
-                                FButtonRect.Top,
-                                FButtonRect.Right + 2,
-                                FButtonRect.Top + 2 * LargeButtonRadius + 1);
-      CombineRgn(DrawRgn, DrawRgn, TmpRgn, RGN_OR);
-      DeleteObject(TmpRgn);
-
-      TGuiTools.DrawRegion(ABuffer.Canvas,
-                           DrawRgn,
-                           FRect,
-                           GradientFromColor,
-                           GradientToColor,
-                           GradientKind,
-                           ClipRect);
-      DeleteObject(DrawRgn);
-      {$ENDREGION}
-
-      {$REGION 'Ramka przycisku'}
-      // Wewnêtrzna ramka
-      TGuiTools.DrawAARoundCorner(ABuffer,
-                                  {$IFDEF EnhancedRecordSupport}
-                                  T2DIntPoint.Create(FButtonRect.Left + 1, FButtonRect.Top + 1),
-                                  {$ELSE}
-                                  Create2DIntPoint(FButtonRect.Left + 1, FButtonRect.Top + 1),
-                                  {$ENDIF}
-                                  LargeButtonRadius,
-                                  cpLeftTop,
-                                  InnerLightColor,
-                                  ClipRect);
-      TGuiTools.DrawAARoundCorner(ABuffer,
-                                  {$IFDEF EnhancedRecordSupport}
-                                  T2DIntPoint.Create(FButtonRect.Right - SpkLayoutSizes.LARGEBUTTON_RADIUS, FButtonRect.Top + 1),
-                                  {$ELSE}
-                                  Create2DIntPoint(FButtonRect.Right - LargeButtonRadius, FButtonRect.Top + 1),
-                                  {$ENDIF}
-                                  LargeButtonRadius,
-                                  cpRightTop,
-                                  InnerLightColor,
-                                  ClipRect);
-      TGuiTools.DrawHLine(ABuffer,
-                          FButtonRect.Left + LargeButtonRadius + 1,
-                          FButtonRect.Right - LargeButtonRadius - 1,
-                          FButtonRect.Top + 1,
-                          InnerLightColor,
-                          ClipRect);
-      TGuiTools.DrawVLine(ABuffer,
-                          FButtonRect.Left + 1,
-                          FButtonRect.Top + LargeButtonRadius + 1,
-                          FButtonRect.Bottom,
-                          InnerLightColor,
-                          ClipRect);
-      TGuiTools.DrawVLine(ABuffer,
-                          FButtonRect.Right - 1,
-                          FButtonRect.Top + LargeButtonRadius + 1,
-                          FButtonRect.Bottom,
-                          InnerLightColor,
-                          ClipRect);
-
-      if FButtonState = bsBtnPressed then
-         TGuiTools.DrawHLine(ABuffer,
-                             FButtonRect.Left + 1,
-                             FButtonRect.Right - 1,
-                             FButtonRect.Bottom,
-                             FrameColor,
-                             ClipRect) else
-         TGuiTools.DrawHLine(ABuffer,
-                             FButtonRect.Left + 1,
-                             FButtonRect.Right - 1,
-                             FButtonRect.Bottom,
-                             InnerLightColor,
-                             ClipRect);
-
-      // Zewnêtrzna ramka
-      TGuiTools.DrawAARoundCorner(ABuffer,
-                                  {$IFDEF EnhancedRecordSupport}
-                                  T2DIntPoint.Create(FButtonRect.Left, FButtonRect.Top),
-                                  {$ELSE}
-                                  Create2DIntPoint(FButtonRect.Left, FButtonRect.Top),
-                                  {$ENDIF}
-                                  LargeButtonRadius,
-                                  cpLeftTop,
-                                  FrameColor,
-                                  ClipRect);
-      TGuiTools.DrawAARoundCorner(ABuffer,
-                                  {$IFDEF EnhancedRecordSupport}
-                                  T2DIntPoint.Create(FButtonRect.Right - LargeButtonRadius + 1, FButtonRect.Top),
-                                  {$ELSE}
-                                  Create2DIntPoint(FButtonRect.Right - LargeButtonRadius + 1, FButtonRect.Top),
-                                  {$ENDIF}
-                                  LargeButtonRadius,
-                                  cpRightTop,
-                                  FrameColor,
-                                  ClipRect);
-      TGuiTools.DrawHLine(ABuffer,
-                          FButtonRect.Left + LargeButtonRadius,
-                          FButtonRect.Right - LargeButtonRadius,
-                          FButtonRect.Top,
-                          FrameColor,
-                          ClipRect);
-      TGuiTools.DrawVLine(ABuffer,
-                          FButtonRect.Left,
-                          FButtonRect.Top + LargeButtonRadius,
-                          FButtonRect.Bottom,
-                          FrameColor,
-                          ClipRect);
-      TGuiTools.DrawVLine(ABuffer,
-                          FButtonRect.Right,
-                          FButtonRect.Top + LargeButtonRadius,
-                          FButtonRect.Bottom,
-                          FrameColor,
-                          ClipRect);
-      {$ENDREGION}
-
-      // *** Dropdown ***
-
-      {$REGION 'Ustalanie kolorów'}
-      if FButtonState = bsDropdownHottrack then
-         begin
-         FrameColor:=FAppearance.Element.HotTrackFrameColor;
-         InnerLightColor:=FAppearance.Element.HotTrackInnerLightColor;
-         InnerDarkColor:=FAppearance.Element.HotTrackInnerDarkColor;
-         GradientFromColor:=FAppearance.Element.HotTrackGradientFromColor;
-         GradientToColor:=FAppearance.Element.HotTrackGradientToColor;
-         GradientKind:=FAppearance.Element.HotTrackGradientType;
-         end else
-      if FButtonState = bsDropdownPressed then
-         begin
-         FrameColor:=FAppearance.Element.ActiveFrameColor;
-         InnerLightColor:=FAppearance.Element.ActiveInnerLightColor;
-         InnerDarkColor:=FAppearance.Element.ActiveInnerDarkColor;
-         GradientFromColor:=FAppearance.Element.ActiveGradientFromColor;
-         GradientToColor:=FAppearance.Element.ActiveGradientToColor;
-         GradientKind:=FAppearance.Element.ActiveGradientType;
-         end
-      else
-         begin
-         FrameColor:=TColorTools.Brighten(FAppearance.Element.HotTrackFrameColor,20);
-         InnerLightColor:=TColorTools.Brighten(FAppearance.Element.HotTrackInnerLightColor,20);
-         InnerDarkColor:=TColorTools.Brighten(FAppearance.Element.HotTrackInnerDarkColor,20);
-         GradientFromColor:=TColorTools.Brighten(FAppearance.Element.HotTrackGradientFromColor,20);
-         GradientToColor:=TColorTools.Brighten(FAppearance.Element.HotTrackGradientToColor,20);
-         GradientKind:=FAppearance.Element.HotTrackGradientType;
-         end;
-      {$ENDREGION}
-
-      {$REGION 'T³o dropdown'}
-      DrawRgn:=CreateRectRgn(FDropdownRect.left,
-                             FDropdownRect.Top,
-                             FDropdownRect.Right + 1,
-                             FDropdownRect.Bottom - LargeButtonRadius + 1);
-
-      TmpRgn:=CreateRectRgn(FDropdownRect.left + LargeButtonRadius,
-                            FDropdownRect.Bottom - LargeButtonRadius + 1,
-                            FDropdownRect.Right - LargeButtonRadius + 1,
-                            FDropdownRect.Bottom + 1);
-      CombineRgn(DrawRgn, DrawRgn, TmpRgn, RGN_OR);
-      DeleteObject(TmpRgn);
-
-      TmpRgn:=CreateEllipticRgn(FDropdownRect.Left,
-                                FDropdownRect.bottom - 2 * LargeButtonRadius + 1,
-                                FDropdownRect.left + 2 * LargeButtonRadius + 1,
-                                FDropdownRect.Bottom + 2);
-      CombineRgn(DrawRgn, DrawRgn, TmpRgn, RGN_OR);
-      DeleteObject(TmpRgn);
-
-      TmpRgn:=CreateEllipticRgn(FDropdownRect.Right - 2 * LargeButtonRadius + 1,
-                                FDropdownRect.Bottom - 2 * LargeButtonRadius + 1,
-                                FDropdownRect.Right + 2,
-                                FDropdownRect.Bottom + 2);
-      CombineRgn(DrawRgn, DrawRgn, TmpRgn, RGN_OR);
-      DeleteObject(TmpRgn);
-
-      TGuiTools.DrawRegion(ABuffer.Canvas,
-                           DrawRgn,
-                           FRect,
-                           GradientFromColor,
-                           GradientToColor,
-                           GradientKind,
-                           ClipRect);
-      DeleteObject(DrawRgn);
-      {$ENDREGION}
-
-      {$REGION 'Ramka dropdown'}
-      // Wewnêtrzna ramka
-
-      TGuiTools.DrawAARoundCorner(ABuffer,
-                                  {$IFDEF EnhancedRecordSupport}
-                                  T2DIntPoint.Create(FDropdownRect.Left + 1, FDropdownRect.Bottom - SpkLayoutSizes.LARGEBUTTON_RADIUS),
-                                  {$ELSE}
-                                  Create2DIntPoint(FDropdownRect.Left + 1, FDropdownRect.Bottom - LargeButtonRadius),
-                                  {$ENDIF}
-                                  LargeButtonRadius,
-                                  cpLeftBottom,
-                                  InnerLightColor);
-      TGuiTools.DrawAARoundCorner(ABuffer,
-                                  {$IFDEF EnhancedRecordSupport}
-                                  T2DIntPoint.Create(FDropdownRect.right - LargeButtonRadius, FDropdownRect.Bottom - LargeButtonRadius),
-                                  {$ELSE}
-                                  Create2DIntPoint(FDropdownRect.right - LargeButtonRadius, FDropdownRect.Bottom - LargeButtonRadius),
-                                  {$ENDIF}
-                                  LargeButtonRadius,
-                                  cpRightBottom,
-                                  InnerLightColor);
-      TGuiTools.DrawHLine(ABuffer,
-                          FDropdownRect.Left + LargeButtonRadius + 1,
-                          FDropdownRect.Right - LargeButtonRadius - 1,
-                          FDropdownRect.Bottom - 1,
-                          InnerLightColor,
-                          ClipRect);
-      TGuiTools.DrawVLine(ABuffer,
-                          FDropdownRect.Left + 1,
-                          FDropDownRect.Top + 1,
-                          FDropDownRect.Bottom - LargeButtonRadius - 1,
-                          InnerLightColor,
-                          ClipRect);
-      TGuiTools.DrawVLine(ABuffer,
-                          FDropdownRect.Right - 1,
-                          FDropDownRect.Top + 1,
-                          FDropDownRect.Bottom - LargeButtonRadius - 1,
-                          InnerLightColor,
-                          ClipRect);
-
-      if FButtonState = bsDropdownPressed then
-         TGuiTools.DrawHLine(ABuffer,
-                             FDropdownRect.Left + 1,
-                             FDropdownRect.Right - 1,
-                             FDropdownRect.Top,
-                             FrameColor,
-                             ClipRect)
-      else
-         TGuiTools.DrawHLine(ABuffer,
-                             FDropdownRect.Left + 1,
-                             FDropdownRect.Right - 1,
-                             FDropdownRect.Top,
-                             InnerDarkColor,
-                             ClipRect);
-
-
-      // Zewnêtrzna ramka
-      TGuiTools.DrawAARoundCorner(ABuffer,
-                                  {$IFDEF EnhancedRecordSupport}
-                                  T2DIntPoint.Create(FDropdownRect.Left, FDropdownRect.Bottom - LargeButtonRadius + 1),
-                                  {$ELSE}
-                                  Create2DIntPoint(FDropdownRect.Left, FDropdownRect.Bottom - LargeButtonRadius + 1),
-                                  {$ENDIF}
-                                  LargeButtonRadius,
-                                  cpLeftBottom,
-                                  FrameColor);
-      TGuiTools.DrawAARoundCorner(ABuffer,
-                                  {$IFDEF EnhancedRecordSupport}
-                                  T2DIntPoint.Create(FDropdownRect.right - LargeButtonRadius + 1, FDropdownRect.Bottom - LargeButtonRadius + 1),
-                                  {$ELSE}
-                                  Create2DIntPoint(FDropdownRect.right - LargeButtonRadius + 1, FDropdownRect.Bottom - LargeButtonRadius + 1),
-                                  {$ENDIF}
-                                  LargeButtonRadius,
-                                  cpRightBottom,
-                                  FrameColor);
-      TGuiTools.DrawHLine(ABuffer,
-                          FDropdownRect.Left + LargeButtonRadius,
-                          FDropdownRect.Right - LargeButtonRadius,
-                          FDropdownRect.Bottom,
-                          FrameColor,
-                          ClipRect);
-      TGuiTools.DrawVLine(ABuffer,
-                          FDropdownRect.Left,
-                          FDropDownRect.Top,
-                          FDropDownRect.Bottom - LargeButtonRadius,
-                          FrameColor,
-                          ClipRect);
-      TGuiTools.DrawVLine(ABuffer,
-                          FDropdownRect.Right,
-                          FDropDownRect.Top,
-                          FDropDownRect.Bottom - LargeButtonRadius,
-                          FrameColor,
-                          ClipRect);
-      {$ENDREGION}
-
-      {$ENDREGION}
-      end else
-          raise InternalException.create('TSpkLargeButton.Draw: Nieprawid³owa wartoœæ FButtonState!');
-
-   // *** Ikona ***
-   if not(FEnabled) then
-      begin
-      {$REGION 'Ikona wy³¹czona'}
-      if (FLargeImageIndex>=0) and
-         (FDisabledLargeImages<>nil) and
-         (FLargeImageIndex<FDisabledLargeImages.Count) then
-         begin
-         x:=FRect.left + (FRect.Width - FLargeImages.Width) div 2;
-         y:=FRect.top + LargeButtonBorderSize + LargeButtonGlyphMargin;
-
-         TGuiTools.DrawImage(ABuffer.Canvas,
-                             FDisabledLargeImages,
-                             FLargeImageIndex,
-                             {$IFDEF EnhancedRecordSupport}
-                             T2DIntPoint.Create(x, y),
-                             {$ELSE}
-                             Create2DIntPoint(x, y),
-                             {$ENDIF}
-                             ClipRect);
-         end else
-      if (FLargeImageIndex>=0) and
-         (FLargeImages<>nil) and
-         (FLargeImageIndex<FLargeImages.Count) then
-         begin
-         x:=FRect.left + (FRect.Width - FLargeImages.Width) div 2;
-         y:=FRect.top + LargeButtonBorderSize + LargeButtonGlyphMargin;
-
-         TGuiTools.DrawDisabledImage(ABuffer.Canvas,
-                                     FLargeImages,
-                                     FLargeImageIndex,
-                                     {$IFDEF EnhancedRecordSupport}
-                                     T2DIntPoint.Create(x, y),
-                                     {$ELSE}
-                                     Create2DIntPoint(x, y),
-                                     {$ENDIF}
-                                     ClipRect);
-         end;
-      {$ENDREGION}
-      end
-   else
-      begin
-      {$REGION 'Ikona zwyk³a'}
-      if (FLargeImageIndex>=0) and
-         (FLargeImages<>nil) and
-         (FLargeImageIndex<FLargeImages.Count) then
-         begin
-         x:=FRect.left + (FRect.Width - FLargeImages.Width) div 2;
-         y:=FRect.top + LargeButtonBorderSize + LargeButtonGlyphMargin;
-
-         TGUITools.DrawImage(ABuffer.Canvas,
-                             FLargeImages,
-                             FLargeImageIndex,
-                             {$IFDEF EnhancedRecordSupport}
-                             T2DIntPoint.Create(x,y),
-                             {$ELSE}
-                             Create2DIntPoint(x,y),
-                             {$ENDIF}
-                             ClipRect);
-         end;
-      {$ENDREGION}
-      end;
-
-   // *** Tekst ***
-   if not(FEnabled) then
-      begin
-      FontColor:=clNone;
-      case FButtonState of
-           bsIdle: FontColor:=TColorTools.ColorToGrayscale(FAppearance.Element.IdleCaptionColor);
-           bsBtnHottrack,
-           bsDropdownHottrack : FontColor:=TColorTools.ColorToGrayscale(FAppearance.Element.HotTrackCaptionColor);
-           bsBtnPressed,
-           bsDropdownPressed: FontColor:=TColorTools.ColorToGrayscale(FAppearance.ELement.ActiveCaptionColor);
-      end;
-      end
-   else
-      begin
-      FontColor:=clNone;
-      case FButtonState of
-           bsIdle: FontColor:=FAppearance.Element.IdleCaptionColor;
-           bsBtnHottrack,
-           bsDropdownHottrack : FontColor:=FAppearance.Element.HotTrackCaptionColor;
-           bsBtnPressed,
-           bsDropdownPressed: FontColor:=FAppearance.ELement.ActiveCaptionColor;
-      end;
-      end;
-
-   ABuffer.Canvas.Font.assign(FAppearance.Element.CaptionFont);
-   ABuffer.Canvas.Font.Color:=FontColor;
-
-   TextHeight:=ABuffer.Canvas.Textheight('Wy');
-
-   x:=FRect.Left + (FRect.width - ABuffer.Canvas.Textwidth(FCaption)) div 2;
-   y:=FRect.Top + LargeButtonCaptionTopRail - TextHeight div 2;
-   TGUITools.DrawText(ABuffer.Canvas, x, y, FCaption, FontColor, ClipRect);
-
-   // *** Chevron dropdown ***
-
-   if not(FEnabled) then
-      begin
-      case FButtonState of
-           bsIdle: FontColor:=TColorTools.ColorToGrayscale(FAppearance.Element.IdleCaptionColor);
-           bsBtnHottrack,
-           bsDropdownHottrack : FontColor:=TColorTools.ColorToGrayscale(FAppearance.Element.HotTrackCaptionColor);
-           bsBtnPressed,
-           bsDropdownPressed: FontColor:=TColorTools.ColorToGrayscale(FAppearance.ELement.ActiveCaptionColor);
-      end;
-      end
-   else
-      begin
-      case FButtonState of
-           bsIdle: FontColor:=FAppearance.Element.IdleCaptionColor;
-           bsBtnHottrack,
-           bsDropdownHottrack : FontColor:=FAppearance.Element.HotTrackCaptionColor;
-           bsBtnPressed,
-           bsDropdownPressed: FontColor:=FAppearance.ELement.ActiveCaptionColor;
-      end;
-      end;
-
-   ABuffer.Canvas.Font.Charset:=DEFAULT_CHARSET;
-   ABuffer.Canvas.Font.Name:='Marlett';
-   ABuffer.Canvas.Font.Size:=8;
-   ABuffer.Canvas.Font.Style:=[];
-   ABuffer.Canvas.Font.Orientation:=0;
-
-   x:=FDropdownRect.Left + (FDropdownRect.width - ABuffer.Canvas.Textwidth('u')) div 2;
-   y:=FDropdownRect.bottom - ABuffer.Canvas.Textheight('u') - LargeButtonChevronHMargin;
-   TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
-
-   {$ENDREGION}
-   end;
+  if FButtonKind = bkDropdown then
+  begin
+    x := FButtonRect.Left + (FButtonRect.width - ABuffer.Canvas.Textwidth('u')) div 2;
+    y := FButtonRect.bottom - ABuffer.Canvas.Textheight('u') - LargeButtonChevronHMargin;
+    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
+  end else
+  if FButtonKind = bkButtonDropdown then
+  begin
+    x := FDropdownRect.Left + (FDropdownRect.width - ABuffer.Canvas.Textwidth('u')) div 2;
+    y := FDropdownRect.bottom - ABuffer.Canvas.Textheight('u') - LargeButtonChevronHMargin;
+    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
+  end;
 end;
 
-procedure TSpkLargeButton.FindBreakPlace(s: string; out Position : integer; out Width : integer);
-
-var i : integer;
-    Bitmap : TBitmap;
-    BeforeWidth, AfterWidth : integer;
-
+procedure TSpkLargeButton.FindBreakPlace(s: string; out Position: integer; out Width: integer);
+var
+  i: integer;
+  Bitmap: TBitmap;
+  BeforeWidth, AfterWidth: integer;
 begin
-Position:=-1;
-Width:=-1;
+  Position := -1;
+  Width := -1;
 
-if FToolbarDispatch=nil then
-   exit;
-if FAppearance=nil then
-   exit;
+  if FToolbarDispatch=nil then
+     exit;
+  if FAppearance=nil then
+     exit;
 
-Bitmap:=FToolbarDispatch.GetTempBitmap;
-if Bitmap=nil then
-   exit;
+  Bitmap := FToolbarDispatch.GetTempBitmap;
+  if Bitmap=nil then
+    exit;
 
-Bitmap.canvas.font.assign(FAppearance.Element.CaptionFont);
+  Bitmap.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
 
-Width:=Bitmap.Canvas.TextWidth(FCaption);
+  Width := Bitmap.Canvas.TextWidth(FCaption);
 
-if length(s)>0 then
-   for i := 1 to length(s) do
-       if s[i]=' ' then
-          begin
-          if i>1 then
-             BeforeWidth:=Bitmap.Canvas.TextWidth(copy(s,1,i-1)) else
-             BeforeWidth:=0;
+  for i := 1 to Length(s) do
+    if s[i] = ' ' then
+    begin
+      if i > 1 then
+        BeforeWidth := Bitmap.Canvas.TextWidth(Copy(s, 1, i-1))
+      else
+        BeforeWidth := 0;
 
-          if i<length(s) then
-             AfterWidth:=Bitmap.Canvas.TextWidth(copy(s,i+1,length(s)-i)) else
-             AfterWidth:=0;
+      if i < Length(s) then
+        AfterWidth := Bitmap.Canvas.TextWidth(Copy(s, i+1, Length(s)-i))
+      else
+        AfterWidth := 0;
 
-          if (Position=-1) or (max(BeforeWidth,AfterWidth)<Width) then
-             begin
-             Width:=max(BeforeWidth,AfterWidth);
-             Position:=i;
-             end;
-          end;
+      if (Position = -1) or (Max(BeforeWidth, AfterWidth) < Width) then
+      begin
+        Width := Max(BeforeWidth, AfterWidth);
+        Position := i;
+      end;
+    end;
 end;
 
 function TSpkLargeButton.GetDropdownPoint: T2DIntPoint;
 begin
   {$IFDEF EnhancedRecordSupport}
   case FButtonKind of
-    bkDropdown: result:=T2DIntPoint.Create(FButtonRect.left, FButtonRect.Bottom+1);
-    bkButtonDropdown: result:=T2DIntPoint.Create(FDropdownRect.left, FDropdownRect.Bottom+1);
+    bkDropdown       : Result := T2DIntPoint.Create(FButtonRect.left, FButtonRect.Bottom+1);
+    bkButtonDropdown : Result := T2DIntPoint.Create(FDropdownRect.left, FDropdownRect.Bottom+1);
   else
-    result:=T2DIntPoint.Create(0,0);
+    Result := T2DIntPoint.Create(0,0);
   end;
   {$ELSE}
   case FButtonKind of
-    bkDropdown: result.Create(FButtonRect.left, FButtonRect.Bottom+1);
-    bkButtonDropdown: result.Create(FDropdownRect.left, FDropdownRect.Bottom+1);
+    bkDropdown       : Result.Create(FButtonRect.left, FButtonRect.Bottom+1);
+    bkButtonDropdown : Result.Create(FDropdownRect.left, FDropdownRect.Bottom+1);
   else
-    result.Create(0,0);
+    Result.Create(0,0);
   end;
   {$ENDIF}
 end;
 
 function TSpkLargeButton.GetGroupBehaviour: TSpkItemGroupBehaviour;
 begin
-result:=gbSingleItem;
+  Result := gbSingleItem;
 end;
 
 function TSpkLargeButton.GetSize: TSpkItemSize;
 begin
-result:=isLarge;
+  Result := isLarge;
 end;
 
 function TSpkLargeButton.GetTableBehaviour: TSpkItemTableBehaviour;
 begin
-result:=tbBeginsColumn;
+  Result := tbBeginsColumn;
 end;
 
 function TSpkLargeButton.GetWidth: integer;
-
-var GlyphWidth : integer;
-    TextWidth : integer;
-    Bitmap : TBitmap;
-    BreakPos, RowWidth : integer;
-
+var
+  GlyphWidth: integer;
+  TextWidth: integer;
+  Bitmap: TBitmap;
+  BreakPos, RowWidth: integer;
 begin
-result:=-1;
+  Result := -1;
 
-if FToolbarDispatch=nil then
-   exit;
-if FAppearance=nil then
-   exit;
+  if FToolbarDispatch = nil then
+    exit;
+  if FAppearance = nil then
+    exit;
 
-Bitmap:=FToolbarDispatch.GetTempBitmap;
-if Bitmap=nil then
-   exit;
+  Bitmap := FToolbarDispatch.GetTempBitmap;
+  if Bitmap = nil then
+    exit;
 
-// *** Glyph ***
-if FLargeImages<>nil then
-   GlyphWidth:=2 * LargeButtonGlyphMargin + FLargeImages.Width else
-   GlyphWidth:=0;
+  // Glyph
+  if FLargeImages <> nil then
+    GlyphWidth := 2 * LargeButtonGlyphMargin + FLargeImages.Width
+  else
+    GlyphWidth := 0;
 
-// *** Tekst ***
-if FButtonKind = bkButton then
-   begin
-   // £amiemy etykietê
-   FindBreakPlace(FCaption,BreakPos,RowWidth);
-   TextWidth:=2 * LargeButtonCaptionHMargin + RowWidth;
-   end
-else
-   begin
-   // Nie ³amiemy etykiety
-   Bitmap.canvas.font.assign(FAppearance.Element.CaptionFont);
-   TextWidth:=2 * LargeButtonCaptionHMargin + Bitmap.Canvas.TextWidth(FCaption);
-   end;
+  // Text
+  if FButtonKind = bkButton then
+  begin
+    // £amiemy etykietê
+    FindBreakPlace(FCaption,BreakPos,RowWidth);
+    TextWidth := 2 * LargeButtonCaptionHMargin + RowWidth;
+  end else
+  begin
+    // Nie ³amiemy etykiety
+    Bitmap.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
+    TextWidth := 2 * LargeButtonCaptionHMargin + Bitmap.Canvas.TextWidth(FCaption);
+  end;
 
-result := Max(LargeButtonMinWidth, max(GlyphWidth, TextWidth));
+  Result := Max(LargeButtonMinWidth, Max(GlyphWidth, TextWidth));
 end;
 
 procedure TSpkLargeButton.SetLargeImageIndex(const Value: TImageIndex);
 begin
-FLargeImageIndex:=Value;
-
-if assigned(FToolbarDispatch) then
-   FToolbarDispatch.NotifyMetricsChanged;
+  FLargeImageIndex := Value;
+  if Assigned(FToolbarDispatch) then
+    FToolbarDispatch.NotifyMetricsChanged;
 end;
 
 { TSpkSmallButton }
 
 procedure TSpkSmallButton.CalcRects;
-
-var RectVector : T2DIntVector;
-
+var
+  RectVector: T2DIntVector;
 begin
-ConstructRects(FButtonRect, FDropdownRect);
-{$IFDEF EnhancedRecordSupport}
-RectVector:=T2DIntVector.Create(FRect.Left, FRect.Top);
-{$ELSE}
-RectVector.Create(FRect.Left, FRect.Top);
-{$ENDIF}
-FButtonRect:=FButtonRect + RectVector;
-FDropdownRect:=FDropdownRect + RectVector;
+  ConstructRects(FButtonRect, FDropdownRect);
+ {$IFDEF EnhancedRecordSupport}
+  RectVector := T2DIntVector.Create(FRect.Left, FRect.Top);
+ {$ELSE}
+  RectVector.Create(FRect.Left, FRect.Top);
+ {$ENDIF}
+  FButtonRect := FButtonRect + RectVector;
+  FDropdownRect := FDropdownRect + RectVector;
 end;
 
-procedure TSpkSmallButton.ConstructRects(var BtnRect, DropRect: T2DIntRect);
+procedure TSpkSmallButton.ConstructRects(out BtnRect, DropRect: T2DIntRect);
 
 var BtnWidth : integer;
     DropdownWidth: Integer;
@@ -1806,469 +1268,389 @@ end;
 constructor TSpkSmallButton.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  FImageIndex:=-1;
-  FTableBehaviour:=tbContinuesRow;
-  FGroupBehaviour:=gbSingleItem;
-  FHideFrameWhenIdle:=false;
-  FShowCaption:=true;
+  FImageIndex := -1;
+  FTableBehaviour := tbContinuesRow;
+  FGroupBehaviour := gbSingleItem;
+  FHideFrameWhenIdle := false;
+  FShowCaption := true;
 end;
 
 procedure TSpkSmallButton.Draw(ABuffer: TBitmap; ClipRect: T2DIntRect);
 var
-  FontColor: TColor;
+  fontColor: TColor;
   x: Integer;
   y: Integer;
+  cornerRadius: Integer;
+  imgList: TImageList;
 begin
-if FToolbarDispatch=nil then
-   exit;
-if FAppearance=nil then
-   exit;
+  if FToolbarDispatch = nil then
+    exit;
+  if FAppearance = nil then
+    exit;
 
-if (FRect.width < 2*LargeButtonRadius) or (FRect.Height < 2*LargeButtonRadius) then
-   exit;
+  if (FRect.Width < 2*SmallButtonRadius) or (FRect.Height < 2*SmallButtonRadius) then
+    exit;
 
-// *** Przycisk ***
+  case FAppearance.Element.Style of
+    esRounded:
+      cornerRadius := SmallButtonRadius;
+    esRectangle:
+      cornerRadius := 0;
+  end;
 
-// T³o i ramka
-{$REGION 'Rysowanie przycisku'}
-if (FButtonState = bsIdle) and (not(FHideFrameWhenIdle)) then
-   begin
-   with FAppearance.Element do
-        TButtonTools.DrawButton(ABuffer,
-                                FButtonRect,
-                                IdleFrameColor,
-                                IdleInnerLightColor,
-                                IdleInnerDarkColor,
-                                IdleGradientFromColor,
-                                IdleGradientToColor,
-                                IdleGradientType,
-                                (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]),
-                                (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
-                                false,
-                                false,
-                                SmallButtonRadius,
-                                ClipRect);
-   end else
-if (FButtonState=bsBtnHottrack) then
-   begin
-   with FAppearance.Element do
-        TButtonTools.DrawButton(ABuffer,
-                                FButtonRect,
-                                HotTrackFrameColor,
-                                HotTrackInnerLightColor,
-                                HotTrackInnerDarkColor,
-                                HotTrackGradientFromColor,
-                                HotTrackGradientToColor,
-                                HotTrackGradientType,
-                                (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]),
-                                (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
-                                false,
-                                false,
-                                SmallButtonRadius,
-                                ClipRect);
-   end else
-if (FButtonState = bsBtnPressed) then
-   begin
-   with FAppearance.Element do
-        TButtonTools.DrawButton(ABuffer,
-                                FButtonRect,
-                                ActiveFrameColor,
-                                ActiveInnerLightColor,
-                                ActiveInnerDarkColor,
-                                ActiveGradientFromColor,
-                                ActiveGradientToColor,
-                                ActiveGradientType,
-                                (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]),
-                                (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
-                                false,
-                                false,
-                                SmallButtonRadius,
-                                ClipRect);
-   end else
-if (FButtonState in [bsDropdownHottrack, bsDropdownPressed]) then
-   begin
-   with FAppearance.Element do
-        TButtonTools.DrawButton(ABuffer,
-                                FButtonRect,
-                                TColorTools.Brighten(HotTrackFrameColor,40),
-                                TColorTools.Brighten(HotTrackInnerLightColor,40),
-                                TColorTools.Brighten(HotTrackInnerDarkColor,40),
-                                TColorTools.Brighten(HotTrackGradientFromColor,40),
-                                TColorTools.Brighten(HotTrackGradientToColor,40),
-                                HotTrackGradientType,
-                                (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]),
-                                (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
-                                false,
-                                false,
-                                SmallButtonRadius,
-                                ClipRect);
+  fontColor := clNone;
+  case FButtonState of
+    bsIdle:
+      fontColor := FAppearance.Element.IdleCaptionColor;
+    bsBtnHottrack,
+    bsDropdownHottrack:
+      fontColor := FAppearance.Element.HotTrackCaptionColor;
+    bsBtnPressed,
+    bsDropdownPressed:
+      fontColor := FAppearance.ELement.ActiveCaptionColor;
+  end;
+  if not FEnabled then
+    fontColor := TColorTools.ColorToGrayscale(fontColor);
+
+  // *** Przycisk ***
+
+  // T³o i ramka
+
+  {$REGION 'Rysowanie przycisku'}
+  if (FButtonState = bsIdle) and (not(FHideFrameWhenIdle)) then
+  begin
+    with FAppearance.Element do
+      TButtonTools.DrawButton(
+        ABuffer,
+        FButtonRect,
+        IdleFrameColor,
+        IdleInnerLightColor,
+        IdleInnerDarkColor,
+        IdleGradientFromColor,
+        IdleGradientToColor,
+        IdleGradientType,
+        (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]),
+        (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
+        false,
+        false,
+        cornerRadius,
+        ClipRect
+      );
+  end
+  else if (FButtonState = bsBtnHottrack) then
+  begin
+    with FAppearance.Element do
+      TButtonTools.DrawButton(
+        ABuffer,
+        FButtonRect,
+        HotTrackFrameColor,
+        HotTrackInnerLightColor,
+        HotTrackInnerDarkColor,
+        HotTrackGradientFromColor,
+        HotTrackGradientToColor,
+        HotTrackGradientType,
+        (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]),
+        (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
+        false,
+        false,
+        cornerRadius,
+        ClipRect
+      );
+  end else
+  if (FButtonState = bsBtnPressed) then
+  begin
+    with FAppearance.Element do
+      TButtonTools.DrawButton(ABuffer,
+        FButtonRect,
+        ActiveFrameColor,
+        ActiveInnerLightColor,
+        ActiveInnerDarkColor,
+        ActiveGradientFromColor,
+        ActiveGradientToColor,
+        ActiveGradientType,
+        (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]),
+        (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
+        false,
+        false,
+        cornerRadius,
+        ClipRect
+      );
+  end else
+  if (FButtonState in [bsDropdownHotTrack, bsDropdownPressed]) then
+  begin
+     with FAppearance.Element do
+      TButtonTools.DrawButton(
+        ABuffer,
+        FButtonRect,
+        TColorTools.Brighten(HotTrackFrameColor, 40),
+        TColorTools.Brighten(HotTrackInnerLightColor, 40),
+        TColorTools.Brighten(HotTrackInnerDarkColor, 40),
+        TColorTools.Brighten(HotTrackGradientFromColor, 40),
+        TColorTools.Brighten(HotTrackGradientToColor, 40),
+        HotTrackGradientType,
+        (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]),
+        (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
+        false,
+        false,
+        cornerRadius,
+        ClipRect
+      );
    end;
-{$ENDREGION}
+  {$ENDREGION}
 
-// Ikona
-if not(FEnabled) then
-   begin
-   {$REGION 'Ikona wy³¹czona'}
-   if (FImageIndex>=0) and
-      (FDisabledImages<>nil) and
-      (FImageIndex<FDisabledImages.Count) then
-      begin
-      if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
-         x:=FButtonRect.Left + SmallButtonHalfBorderWidth + SmallButtonPadding else
-         x:=FButtonRect.Left + SmallButtonBorderWidth + SmallButtonPadding;
-      y:=FButtonRect.top + (FButtonRect.height - FDisabledImages.Height) div 2;
+  // Icon
+  if not FEnabled and (FDisabledImages <> nil) then
+    imgList := FDisabledImages
+  else
+    imgList := FImages;
 
-      TGuiTools.DrawImage(ABuffer.Canvas,
-                          FDisabledImages,
-                          FImageIndex,
-                          {$IFDEF EnhancedRecordSupport}
-                          T2DIntPoint.Create(x, y),
-                          {$ELSE}
-                          Create2DIntPoint(x, y),
-                          {$ENDIF}
-                          ClipRect);
-      end else
-   if (FImageIndex>=0) and
-      (FImages<>nil) and
-      (FImageIndex<FImages.Count) then
-      begin
-      if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
-         x:=FButtonRect.Left + SmallButtonHalfBorderWidth + SmallButtonPadding else
-         x:=FButtonRect.Left + SmallButtonBorderWidth + SmallButtonPadding;
-      y:=FButtonRect.top + (FButtonRect.height - FImages.Height) div 2;
+  if (imgList <> nil) and (FImageIndex >= 0) and (FImageIndex < imgList.Count) then
+  begin
+    if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
+      x := FButtonRect.Left + SmallButtonHalfBorderWidth + SmallButtonPadding
+    else
+      x := FButtonRect.Left + SmallButtonBorderWidth + SmallButtonPadding;
+    y := FButtonRect.top + (FButtonRect.height - imgList.Height) div 2;
 
-      TGuiTools.DrawDisabledImage(ABuffer.Canvas,
-                                  FImages,
-                                  FImageIndex,
-                                  {$IFDEF EnhancedRecordSupport}
-                                  T2DIntPoint.Create(x, y),
-                                  {$ELSE}
-                                  Create2DIntPoint(x, y),
-                                  {$ENDIF}
-                                  ClipRect);
-      end;
-   {$ENDREGION}
-   end
-else
-   begin
-   {$REGION 'Ikona zwyk³a'}
-   if (FImageIndex>=0) and
-      (FImages<>nil) and
-      (FImageIndex<FImages.Count) then
-      begin
-      if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
-         x:=FButtonRect.Left + SmallButtonHalfBorderWidth + SmallButtonPadding else
-         x:=FButtonRect.Left + SmallButtonBorderWidth + SmallButtonPadding;
-      y:=FButtonRect.top + (FButtonRect.height - FImages.Height) div 2;
+    TGUITools.DrawImage(
+      ABuffer.Canvas,
+      imgList,
+      FImageIndex,
+      {$IFDEF EnhancedRecordSupport}
+      T2DIntPoint.Create(x,y),
+      {$ELSE}
+      Create2DIntPoint(x,y),
+      {$ENDIF}
+      ClipRect
+    );
+  end;
 
-      TGUITools.DrawImage(ABuffer.Canvas,
-                          FImages,
-                          FImageIndex,
-                          {$IFDEF EnhancedRecordSupport}
-                          T2DIntPoint.Create(x,y),
-                          {$ELSE}
-                          Create2DIntPoint(x,y),
-                          {$ENDIF}
-                          ClipRect);
-      end;
-   {$ENDREGION}
-   end;
+  // Text
+  if FShowCaption then
+  begin
+    ABuffer.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
+    ABuffer.Canvas.Font.Height := SpkScaleY(ABuffer.Canvas.Font.Height, 96);
 
-// Tekst
-if FShowCaption then
-   begin
-   ABuffer.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
+    if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
+      x := FButtonRect.Left + SmallButtonHalfBorderWidth
+    else
+      x := FButtonRect.Left + SmallButtonBorderWidth;
 
-   if not(FEnabled) then
-      begin
-      FontColor:=clNone;
-      case FButtonState of
-           bsIdle: FontColor:=TColorTools.ColorToGrayscale(FAppearance.Element.IdleCaptionColor);
-           bsBtnHottrack,
-           bsDropdownHottrack : FontColor:=TColorTools.ColorToGrayscale(FAppearance.Element.HotTrackCaptionColor);
-           bsBtnPressed,
-           bsDropdownPressed: FontColor:=TColorTools.ColorToGrayscale(FAppearance.ELement.ActiveCaptionColor);
-      end;
-      end
-   else
-      begin
-      FontColor:=clNone;
-      case FButtonState of
-           bsIdle: FontColor:=FAppearance.Element.IdleCaptionColor;
-           bsBtnHottrack,
-           bsDropdownHottrack : FontColor:=FAppearance.Element.HotTrackCaptionColor;
-           bsBtnPressed,
-           bsDropdownPressed: FontColor:=FAppearance.ELement.ActiveCaptionColor;
-      end;
-      end;
+    if FImageIndex <> -1 then
+      x := x + 2 * SmallButtonPadding + SmallButtonGlyphWidth
+    else
+      x := x + SmallButtonPadding;
+    y := FButtonRect.Top + (FButtonRect.Height - ABuffer.Canvas.TextHeight('Wy')) div 2;
 
-   if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
-      x:=FButtonRect.Left + SmallButtonHalfBorderWidth else
-      x:=FButtonRect.Left + SmallButtonBorderWidth;
+    TGUITools.DrawText(ABuffer.Canvas, x, y, FCaption, fontColor, ClipRect);
+  end;
 
-   if FImageIndex<>-1 then
-      x:=x + 2 * SmallButtonPadding + SmallButtonGlyphWidth else
-      x:=x + SmallButtonPadding;
-   y:=FButtonRect.Top + (FButtonRect.Height - ABuffer.Canvas.TextHeight('Wy')) div 2;
-
-   TGUITools.DrawText(ABuffer.Canvas,
-                      x,
-                      y,
-                      FCaption,
-                      FontColor,
-                      ClipRect);
-   end;
-
-// *** Dropdown ***
-if FButtonKind = bkButton then
-   begin
-   // Nic dodatkowego do rysowania
-   end else
-if FButtonKind = bkButtonDropdown then
-   begin
-   // T³o i ramka
-   {$REGION 'Rysowanie dropdowna'}
-   if (FButtonState = bsIdle) and (not(FHideFrameWhenIdle)) then
-      begin
+  // Dropdown
+  if FButtonKind = bkButton then
+  begin
+    // Nic dodatkowego do rysowania
+  end else
+  if FButtonKind = bkButtonDropdown then
+  begin
+    // T³o i ramka
+    {$REGION 'Rysowanie dropdowna'}
+    if (FButtonState = bsIdle) and (not FHideFrameWhenIdle) then
+    begin
       with FAppearance.Element do
-           TButtonTools.DrawButton(ABuffer,
-                                   FDropdownRect,
-                                   IdleFrameColor,
-                                   IdleInnerLightColor,
-                                   IdleInnerDarkColor,
-                                   IdleGradientFromColor,
-                                   IdleGradientToColor,
-                                   IdleGradientType,
-                                   true,
-                                   (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]),
-                                   false,
-                                   false,
-                                   SmallButtonRadius,
-                                   ClipRect);
-      end else
-   if (FButtonState in [bsBtnHottrack, bsBtnPressed]) then
-      begin
+        TButtonTools.DrawButton(
+          ABuffer,
+          FDropdownRect,
+          IdleFrameColor,
+          IdleInnerLightColor,
+          IdleInnerDarkColor,
+          IdleGradientFromColor,
+          IdleGradientToColor,
+          IdleGradientType,
+          true,
+          (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]),
+          false,
+          false,
+          cornerRadius,
+          ClipRect
+        );
+    end else
+    if (FButtonState in [bsBtnHotTrack, bsBtnPressed]) then
+    begin
       with FAppearance.Element do
-           TButtonTools.DrawButton(ABuffer,
-                                   FDropdownRect,
-                                   TColorTools.Brighten(HottrackFrameColor, 40),
-                                   TColorTools.Brighten(HottrackInnerLightColor, 40),
-                                   TColorTools.Brighten(HottrackInnerDarkColor, 40),
-                                   TColorTools.Brighten(HottrackGradientFromColor, 40),
-                                   TColorTools.Brighten(HottrackGradientToColor, 40),
-                                   HottrackGradientType,
-                                   true,
-                                   (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]),
-                                   false,
-                                   false,
-                                   SmallButtonRadius,
-                                   ClipRect);
-
-      end else
-   if (FButtonState = bsDropdownHottrack) then
-      begin
+        TButtonTools.DrawButton(
+          ABuffer,
+          FDropdownRect,
+          TColorTools.Brighten(HotTrackFrameColor, 40),
+          TColorTools.Brighten(HotTrackInnerLightColor, 40),
+          TColorTools.Brighten(HotTrackInnerDarkColor, 40),
+          TColorTools.Brighten(HotTrackGradientFromColor, 40),
+          TColorTools.Brighten(HotTrackGradientToColor, 40),
+          HotTrackGradientType,
+          true,
+          (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]),
+          false,
+          false,
+          cornerRadius,
+          ClipRect
+        );
+    end else
+    if (FButtonState = bsDropdownHottrack) then
+    begin
       with FAppearance.Element do
-           TButtonTools.DrawButton(ABuffer,
-                                   FDropdownRect,
-                                   HottrackFrameColor,
-                                   HottrackInnerLightColor,
-                                   HottrackInnerDarkColor,
-                                   HottrackGradientFromColor,
-                                   HottrackGradientToColor,
-                                   HottrackGradientType,
-                                   true,
-                                   (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]),
-                                   false,
-                                   false,
-                                   SmallButtonRadius,
-                                   ClipRect);
-      end else
-   if (FButtonState = bsDropdownPressed) then
-      begin
+        TButtonTools.DrawButton(
+          ABuffer,
+          FDropdownRect,
+          HotTrackFrameColor,
+          HotTrackInnerLightColor,
+          HotTrackInnerDarkColor,
+          HotTrackGradientFromColor,
+          HotTrackGradientToColor,
+          HotTrackGradientType,
+          true,
+          (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]),
+          false,
+          false,
+          cornerRadius,
+          ClipRect
+        );
+    end else
+    if (FButtonState = bsDropdownPressed) then
+    begin
       with FAppearance.Element do
-           TButtonTools.DrawButton(ABuffer,
-                                   FDropdownRect,
-                                   ActiveFrameColor,
-                                   ActiveInnerLightColor,
-                                   ActiveInnerDarkColor,
-                                   ActiveGradientFromColor,
-                                   ActiveGradientToColor,
-                                   ActiveGradientType,
-                                   true,
-                                   (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]),
-                                   false,
-                                   false,
-                                   SmallButtonRadius,
-                                   ClipRect);
-      end;
+        TButtonTools.DrawButton(
+          ABuffer,
+          FDropdownRect,
+          ActiveFrameColor,
+          ActiveInnerLightColor,
+          ActiveInnerDarkColor,
+          ActiveGradientFromColor,
+          ActiveGradientToColor,
+          ActiveGradientType,
+          true,
+          (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]),
+          false,
+          false,
+          cornerRadius,
+          ClipRect
+        );
+    end;
 
-   // Chevron
-   if not(FEnabled) then
-      begin
-      FontColor:=clNone;
-      case FButtonState of
-           bsIdle: FontColor:=TColorTools.ColorToGrayscale(FAppearance.Element.IdleCaptionColor);
-           bsBtnHottrack,
-           bsDropdownHottrack : FontColor:=TColorTools.ColorToGrayscale(FAppearance.Element.HotTrackCaptionColor);
-           bsBtnPressed,
-           bsDropdownPressed: FontColor:=TColorTools.ColorToGrayscale(FAppearance.ELement.ActiveCaptionColor);
-      end;
-      end
-   else
-      begin
-      FontColor:=clNone;
-      case FButtonState of
-           bsIdle: FontColor:=FAppearance.Element.IdleCaptionColor;
-           bsBtnHottrack,
-           bsDropdownHottrack : FontColor:=FAppearance.Element.HotTrackCaptionColor;
-           bsBtnPressed,
-           bsDropdownPressed: FontColor:=FAppearance.ELement.ActiveCaptionColor;
-      end;
-      end;
+    // Chevron
+    // to do: what if font 'Marlett' does not exist?
+    ABuffer.Canvas.Font.Charset := DEFAULT_CHARSET;
+    ABuffer.Canvas.Font.Name := 'Marlett';
+    ABuffer.Canvas.Font.Style := [];
+    ABuffer.Canvas.Font.Orientation := 0;
 
-   ABuffer.Canvas.Font.Charset:=DEFAULT_CHARSET;
-   ABuffer.Canvas.Font.Name:='Marlett';
-   ABuffer.Canvas.Font.Size:=8;
-   ABuffer.Canvas.Font.Style:=[];
-   ABuffer.Canvas.Font.Orientation:=0;
+    if FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup] then
+      x := FDropdownRect.Right - SmallButtonHalfBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1
+    else
+      x := FDropdownRect.Right - SmallButtonBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1;
+    y := FDropdownRect.top + (FDropdownRect.Height - ABuffer.Canvas.Textheight('u')) div 2;
+    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', fontColor, ClipRect);
+    {$ENDREGION}
+  end else
+  if FButtonKind = bkDropdown then
+  begin
+    // Chevron dropdown
+    // to do: what if font 'Marlett' does not exist?
+    ABuffer.Canvas.Font.Charset := DEFAULT_CHARSET;
+    ABuffer.Canvas.Font.Name := 'Marlett';
+    ABuffer.Canvas.Font.Style := [];
+    ABuffer.Canvas.Font.Orientation := 0;
 
-   if FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup] then
-      x:=FDropdownRect.Right - SmallButtonHalfBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1 else
-      x:=FDropdownRect.Right - SmallButtonBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1;
-   y:=FDropdownRect.top + (FDropdownRect.height - ABuffer.Canvas.Textheight('u')) div 2;
-   TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
-   {$ENDREGION}
-   end else
-if FButtonKind = bkDropdown then
-   begin
-   // Chevron dropdown
-
-   if not(FEnabled) then
-      begin
-      FontColor:=clNone;
-      case FButtonState of
-           bsIdle: FontColor:=TColorTools.ColorToGrayscale(FAppearance.Element.IdleCaptionColor);
-           bsBtnHottrack,
-           bsDropdownHottrack : FontColor:=TColorTools.ColorToGrayscale(FAppearance.Element.HotTrackCaptionColor);
-           bsBtnPressed,
-           bsDropdownPressed: FontColor:=TColorTools.ColorToGrayscale(FAppearance.ELement.ActiveCaptionColor);
-      end;
-      end
-   else
-      begin
-      FontColor:=clNone;
-      case FButtonState of
-           bsIdle: FontColor:=FAppearance.Element.IdleCaptionColor;
-           bsBtnHottrack,
-           bsDropdownHottrack : FontColor:=FAppearance.Element.HotTrackCaptionColor;
-           bsBtnPressed,
-           bsDropdownPressed: FontColor:=FAppearance.ELement.ActiveCaptionColor;
-      end;
-      end;
-
-   ABuffer.Canvas.Font.Charset:=DEFAULT_CHARSET;
-   ABuffer.Canvas.Font.Name:='Marlett';
-   ABuffer.Canvas.Font.Size:=8;
-   ABuffer.Canvas.Font.Style:=[];
-   ABuffer.Canvas.Font.Orientation:=0;
-
-   if FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup] then
-      x:=FButtonRect.Right - SmallButtonHalfBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1 else
-      x:=FButtonRect.Right - SmallButtonBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1;
-   y:=FButtonRect.top + (FButtonRect.height - ABuffer.Canvas.Textheight('u')) div 2;
-   TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
-   end;
-
-{$ENDREGION}
+    if FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup] then
+      x := FButtonRect.Right - SmallButtonHalfBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1
+    else
+      x := FButtonRect.Right - SmallButtonBorderWidth - (SmallButtonDropdownWidth + ABuffer.Canvas.Textwidth('u')) div 2 + 1;
+    y := FButtonRect.top + (FButtonRect.height - ABuffer.Canvas.Textheight('u')) div 2;
+    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', fontColor, ClipRect);
+  end;
+  {$ENDREGION}
 end;
 
 function TSpkSmallButton.GetDropdownPoint: T2DIntPoint;
 begin
-{$IFDEF EnhancedRecordSupport}
-if FButtonKind in [bkButtonDropdown, bkDropdown] then
-   result:=T2DIntPoint.Create(FButtonRect.left, FButtonRect.bottom+1) else
-   result:=T2DIntPoint.Create(0,0);
-{$ELSE}
-if FButtonKind in [bkButtonDropdown, bkDropdown] then
-   result.Create(FButtonRect.left, FButtonRect.bottom+1) else
-   result.Create(0,0);
-{$ENDIF}
+ {$IFDEF EnhancedRecordSupport}
+  if FButtonKind in [bkButtonDropdown, bkDropdown] then
+    Result := T2DIntPoint.Create(FButtonRect.Left, FButtonRect.Bottom+1)
+  else
+    Result := T2DIntPoint.Create(0,0);
+ {$ELSE}
+  if FButtonKind in [bkButtonDropdown, bkDropdown] then
+    Result.Create(FButtonRect.Left, FButtonRect.Bottom+1)
+  else
+    Result.Create(0,0);
+ {$ENDIF}
 end;
 
 function TSpkSmallButton.GetGroupBehaviour: TSpkItemGroupBehaviour;
 begin
-  result:=FGroupBehaviour;
+  Result := FGroupBehaviour;
 end;
 
 function TSpkSmallButton.GetSize: TSpkItemSize;
 begin
-  result:=isNormal;
+  Result := isNormal;
 end;
 
 function TSpkSmallButton.GetTableBehaviour: TSpkItemTableBehaviour;
 begin
-  result:=FTableBehaviour;
+  Result := FTableBehaviour;
 end;
 
 function TSpkSmallButton.GetWidth: integer;
-
-var BtnRect, DropRect : T2DIntRect;
-
+var
+  BtnRect, DropRect: T2DIntRect;
 begin
-result:=-1;
+  Result := -1;
 
-if FToolbarDispatch=nil then
-   exit;
-if FAppearance=nil then
-   exit;
+  if FToolbarDispatch = nil then
+    exit;
+  if FAppearance = nil then
+    exit;
 
-ConstructRects(BtnRect, DropRect);
+  ConstructRects(BtnRect, DropRect);
 
-if FButtonKind = bkButtonDropdown then
-   result:=DropRect.Right+1 else
-   result:=BtnRect.Right+1;
+  if FButtonKind = bkButtonDropdown then
+    Result := DropRect.Right+1
+  else
+    Result := BtnRect.Right+1;
 end;
 
-procedure TSpkSmallButton.SetGroupBehaviour(
-  const Value: TSpkItemGroupBehaviour);
+procedure TSpkSmallButton.SetGroupBehaviour(const Value: TSpkItemGroupBehaviour);
 begin
   FGroupBehaviour := Value;
-
-  if assigned(FToolbarDispatch) then
-     FToolbarDispatch.NotifyMetricsChanged;
+  if Assigned(FToolbarDispatch) then
+    FToolbarDispatch.NotifyMetricsChanged;
 end;
 
 procedure TSpkSmallButton.SetHideFrameWhenIdle(const Value: boolean);
 begin
   FHideFrameWhenIdle := Value;
-
-  if assigned(FToolbarDispatch) then
-     FToolbarDispatch.NotifyVisualsChanged;
+  if Assigned(FToolbarDispatch) then
+    FToolbarDispatch.NotifyVisualsChanged;
 end;
 
 procedure TSpkSmallButton.SetImageIndex(const Value: TImageIndex);
 begin
   FImageIndex:=Value;
-
-  if assigned(FToolbarDispatch) then
-     FToolbarDispatch.NotifyMetricsChanged;
+  if Assigned(FToolbarDispatch) then
+    FToolbarDispatch.NotifyMetricsChanged;
 end;
 
 procedure TSpkSmallButton.SetShowCaption(const Value: boolean);
 begin
   FShowCaption := Value;
-
-  if assigned(FToolbarDispatch) then
-     FToolbarDispatch.NotifyMetricsChanged;
+  if Assigned(FToolbarDispatch) then
+    FToolbarDispatch.NotifyMetricsChanged;
 end;
 
-procedure TSpkSmallButton.SetTableBehaviour(
-  const Value: TSpkItemTableBehaviour);
+procedure TSpkSmallButton.SetTableBehaviour(const Value: TSpkItemTableBehaviour);
 begin
   FTableBehaviour := Value;
-
-  if assigned(FToolbarDispatch) then
-     FToolbarDispatch.NotifyMetricsChanged;
+  if Assigned(FToolbarDispatch) then
+    FToolbarDispatch.NotifyMetricsChanged;
 end;
 
 

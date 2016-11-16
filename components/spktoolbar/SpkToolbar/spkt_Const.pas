@@ -355,7 +355,7 @@ begin
   if ToDPI = 0 then
     ToDPI := ScreenInfo.PixelsPerInchX;
 
-  if not(DPI_AWARE) or (ToDPI = FromDPI) then
+  if (not DPI_AWARE) or (ToDPI = FromDPI) then
     Result := Size
   else
     begin
@@ -372,7 +372,7 @@ begin
   if ToDPI = 0 then
     ToDPI := ScreenInfo.PixelsPerInchY;
 
-  if not(DPI_AWARE) or (ToDPI = FromDPI) then
+  if (not DPI_AWARE) or (ToDPI = FromDPI) then
     Result := Size
   else
     begin

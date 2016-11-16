@@ -2218,37 +2218,36 @@ class procedure TGUITools.DrawRoundRect(ACanvas: TCanvas; Rect: T2DIntRect;
   Radius: integer; ColorFrom, ColorTo: TColor; GradientKind: TBackgroundKind;
   ClipRect: T2DIntRect; LeftTopRound, RightTopRound, LeftBottomRound,
   RightBottomRound: boolean);
-
-var UseOrgClipRgn : boolean;
-    ClipRgn : HRGN;
-    OrgRgn : HRGN;
-
+var
+  UseOrgClipRgn: boolean;
+  ClipRgn: HRGN;
+  OrgRgn: HRGN;
 begin
-// Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
-SaveClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
+  // Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
+  SaveClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
 
-ClipRgn:=CreateRectRgn(ClipRect.left, ClipRect.Top, ClipRect.Right+1, ClipRect.Bottom+1);
-if UseOrgClipRgn then
-   CombineRgn(ClipRgn, ClipRgn, OrgRgn, RGN_AND);
+  ClipRgn := CreateRectRgn(ClipRect.left, ClipRect.Top, ClipRect.Right+1, ClipRect.Bottom+1);
+  if UseOrgClipRgn then
+    CombineRgn(ClipRgn, ClipRgn, OrgRgn, RGN_AND);
 
-SelectClipRgn(ACanvas.Handle, ClipRgn);
+  SelectClipRgn(ACanvas.Handle, ClipRgn);
 
-DrawRoundRect(ACanvas, Rect, Radius, ColorFrom, ColorTo, GradientKind, LeftTopRound, RightTopRound, LeftBottomRound, RightBottomRound);
+  DrawRoundRect(ACanvas, Rect, Radius, ColorFrom, ColorTo, GradientKind, LeftTopRound, RightTopRound, LeftBottomRound, RightBottomRound);
 
-// Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych regionów
-RestoreClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
-DeleteObject(ClipRgn);
+  // Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych regionów
+  RestoreClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
+  DeleteObject(ClipRgn);
 end;
 
 class procedure TGUITools.DrawText(ACanvas: TCanvas; x, y: integer;
- const AText: string; TextColor: TColor);
+  const AText: string; TextColor: TColor);
 begin
-with Acanvas do
-     begin
-     brush.style:=bsClear;
-     font.color:=TextColor;
-     TextOut(x, y, AText);
-     end;
+  with ACanvas do
+  begin
+    Brush.Style := bsClear;
+    Font.Color := TextColor;
+    TextOut(x, y, AText);
+  end;
 end;
 
 class procedure TGUITools.DrawText(ACanvas: TCanvas; x, y: integer;
@@ -2269,81 +2268,89 @@ end;
 class procedure TGUITools.DrawRoundRect(ACanvas: TCanvas; Rect: T2DIntRect;
   Radius: integer; ColorFrom, ColorTo: TColor; GradientKind: TBackgroundKind;
   LeftTopRound, RightTopRound, LeftBottomRound, RightBottomRound: boolean);
-
-var RoundRgn : HRGN;
-    TmpRgn : HRGN;
-    OrgRgn : HRGN;
-    UseOrgClipRgn: Boolean;
-
+var
+  RoundRgn: HRGN;
+  TmpRgn: HRGN;
+  OrgRgn: HRGN;
+  UseOrgClipRgn: Boolean;
 begin
-if Radius<1 then
-   exit;
+  if Radius < 0 then
+    exit;
 
-//WriteLn('Radius: ', Radius, ' Rect.Width: ', Rect.Width, ' Rect.Height: ', Rect.Height);
+  if Radius > 0 then
+  begin
+    //WriteLn('Radius: ', Radius, ' Rect.Width: ', Rect.Width, ' Rect.Height: ', Rect.Height);
 
-//there's a bug in fpc that evaluates the expression below erroneous when using inline
-// Radius = 3 and Rect.Width >=128 and <= 261 will evaluate to true
-{$ifdef FpcBugWorkAround}
-if (CompareValue(Radius*2, Rect.width) > 0) and (CompareValue(Radius*2, Rect.Height) > 0) then
-   exit;
-{$else}
-if (Radius*2>Rect.width) or (Radius*2>Rect.height) then
-   exit;
-{$endif}
+    // There's a bug in fpc that evaluates the expression below erroneous when using inline
+    // Radius = 3 and Rect.Width >= 128 and <= 261 will evaluate to true
+    {$ifdef FpcBugWorkAround}
+    if (CompareValue(Radius*2, Rect.width) > 0) and (CompareValue(Radius*2, Rect.Height) > 0) then
+      exit;
+    {$else}
+    if (Radius*2 > Rect.Width) or (Radius*2 > Rect.Height) then
+      exit;
+    {$endif}
 
-// Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
-SaveClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
+    // Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
+    SaveClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
 
-if not(LeftTopRound) and not(RightTopRound) and not(LeftBottomRound) and not (RightBottomRound) then
-   begin
-   RoundRgn:=CreateRectRgn(Rect.Left, Rect.Top, Rect.Right + 1, Rect.Bottom + 1);
-   end
-else
-   begin
-   RoundRgn:=CreateRoundRectRgn(Rect.Left, Rect.Top, Rect.Right +2, Rect.Bottom + 2, Radius*2, Radius*2);
+    if not(LeftTopRound) and
+       not(RightTopRound) and
+       not(LeftBottomRound) and
+       not (RightBottomRound) then
+    begin
+      RoundRgn := CreateRectRgn(Rect.Left, Rect.Top, Rect.Right + 1, Rect.Bottom + 1);
+    end
+    else
+    begin
+      RoundRgn := CreateRoundRectRgn(Rect.Left, Rect.Top, Rect.Right +2, Rect.Bottom + 2, Radius*2, Radius*2);
 
-   if not(LeftTopRound) then
+      if not(LeftTopRound) then
       begin
-      TmpRgn:=CreateRectRgn(Rect.left, Rect.Top, Rect.left + Radius, Rect.Top + Radius);
-      CombineRgn(RoundRgn, RoundRgn, TmpRgn, RGN_OR);
-      DeleteObject(TmpRgn);
+        TmpRgn := CreateRectRgn(Rect.Left, Rect.Top, Rect.Left + Radius, Rect.Top + Radius);
+        CombineRgn(RoundRgn, RoundRgn, TmpRgn, RGN_OR);
+        DeleteObject(TmpRgn);
       end;
 
-   if not(RightTopRound) then
+      if not(RightTopRound) then
       begin
-      TmpRgn:=CreateRectRgn(Rect.right - Radius + 1, Rect.Top, Rect.Right + 1, Rect.Top + Radius);
-      CombineRgn(RoundRgn, RoundRgn, TmpRgn, RGN_OR);
-      DeleteObject(TmpRgn);
+        TmpRgn := CreateRectRgn(Rect.Right - Radius + 1, Rect.Top, Rect.Right + 1, Rect.Top + Radius);
+        CombineRgn(RoundRgn, RoundRgn, TmpRgn, RGN_OR);
+        DeleteObject(TmpRgn);
       end;
 
-   if not(LeftBottomRound) then
+      if not(LeftBottomRound) then
       begin
-      TmpRgn:=CreateRectRgn(Rect.left, Rect.Bottom - Radius + 1, Rect.Left + Radius, Rect.Bottom + 1);
-      CombineRgn(RoundRgn, RoundRgn, TmpRgn, RGN_OR);
-      DeleteObject(TmpRgn);
+        TmpRgn := CreateRectRgn(Rect.Left, Rect.Bottom - Radius + 1, Rect.Left + Radius, Rect.Bottom + 1);
+        CombineRgn(RoundRgn, RoundRgn, TmpRgn, RGN_OR);
+        DeleteObject(TmpRgn);
       end;
 
-   if not(RightBottomRound) then
+      if not(RightBottomRound) then
       begin
-      TmpRgn:=CreateRectRgn(Rect.right - Radius + 1, Rect.Bottom - Radius + 1, Rect.Right + 1, Rect.Bottom + 1);
-      CombineRgn(RoundRgn, RoundRgn, TmpRgn, RGN_OR);
-      DeleteObject(TmpRgn);
+        TmpRgn := CreateRectRgn(Rect.Right - Radius + 1, Rect.Bottom - Radius + 1, Rect.Right + 1, Rect.Bottom + 1);
+        CombineRgn(RoundRgn, RoundRgn, TmpRgn, RGN_OR);
+        DeleteObject(TmpRgn);
       end;
-   end;
+    end;
 
-if UseOrgClipRgn then
-   CombineRgn(RoundRgn, RoundRgn, OrgRgn, RGN_AND);
+    if UseOrgClipRgn then
+      CombineRgn(RoundRgn, RoundRgn, OrgRgn, RGN_AND);
 
-SelectClipRgn(ACanvas.Handle, RoundRgn);
+    SelectClipRgn(ACanvas.Handle, RoundRgn);
+  end;  // if Radius > 0
 
-ColorFrom:=ColorToRGB(ColorFrom);
-ColorTo:=ColorToRGB(ColorTo);
+  ColorFrom := ColorToRGB(ColorFrom);
+  ColorTo := ColorToRGB(ColorTo);
 
-FillGradientRectangle(ACanvas, Rect, ColorFrom, ColorTo, GradientKind);
+  FillGradientRectangle(ACanvas, Rect, ColorFrom, ColorTo, GradientKind);
 
-// Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych regionów
-RestoreClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
-DeleteObject(RoundRgn);
+  if Radius > 0 then
+  begin
+    // Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych regionów
+    RestoreClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
+    DeleteObject(RoundRgn);
+  end;
 end;
 
 class procedure TGUITools.DrawOutlinedText(ABitmap: TBitmap; x, y: integer;

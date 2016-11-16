@@ -22,6 +22,8 @@ type
   TSpkPaneStyle = (psRectangleFlat, psRectangleEtched, psRectangleRaised,
     psDividerFlat, psDividerEtched, psDividerRaised);
 
+  TSpkElementStyle = (esRounded, esRectangle);
+
 type TSpkTabAppearance = class(TPersistent)
      private
        FDispatch: TSpkBaseAppearanceDispatch;
@@ -104,7 +106,6 @@ type TSpkPaneAppearance = class(TPersistent)
 type TSpkElementAppearance = class(TPersistent)
      private
        FDispatch: TSpkBaseAppearanceDispatch;
-     protected
        FCaptionFont: TFont;
        FIdleFrameColor: TColor;
        FIdleGradientFromColor: TColor;
@@ -127,7 +128,7 @@ type TSpkElementAppearance = class(TPersistent)
        FActiveInnerLightColor: TColor;
        FActiveInnerDarkColor: TColor;
        FActiveCaptionColor: TColor;
-
+       FStyle: TSpkElementStyle;
        procedure SetActiveCaptionColor(const Value: TColor);
        procedure SetActiveFrameColor(const Value: TColor);
        procedure SetActiveGradientFromColor(const Value: TColor);
@@ -150,6 +151,7 @@ type TSpkElementAppearance = class(TPersistent)
        procedure SetIdleGradientType(const Value: TBackgroundKind);
        procedure SetIdleInnerDarkColor(const Value: TColor);
        procedure SetIdleInnerLightColor(const Value: TColor);
+       procedure SetStyle(const Value: TSpkElementStyle);
      public
        constructor Create(ADispatch: TSpkBaseAppearanceDispatch);
        destructor Destroy; override;
@@ -181,6 +183,7 @@ type TSpkElementAppearance = class(TPersistent)
        property ActiveInnerLightColor: TColor read FActiveInnerLightColor write SetActiveInnerLightColor;
        property ActiveInnerDarkColor: TColor read FActiveInnerDarkColor write SetActiveInnerDarkColor;
        property ActiveCaptionColor: TColor read FActiveCaptionColor write SetActiveCaptionColor;
+       property Style: TSpkElementStyle read FStyle write SetStyle;
      end;
 
 type TSpkToolbarAppearance = class;
@@ -220,6 +223,7 @@ type TSpkToolbarAppearance = class;
        property Element: TSpkElementAppearance read FElement write SetElementAppearance;
      end;
 
+     procedure SetDefaultFont(AFont: TFont);
 
 implementation
 
@@ -317,36 +321,8 @@ end;
 
 procedure TSpkTabAppearance.Reset;
 begin
-  if screen.fonts.IndexOf('Calibri') >= 0 then
-  begin
-    FTabHeaderFont.Charset := DEFAULT_CHARSET;
-    FTabHeaderFont.Color := rgb(21, 66, 139);
-    FTabHeaderFont.Name := 'Calibri';
-    FTabHeaderFont.Orientation := 0;
-    FTabHeaderFont.Pitch := fpDefault;
-    FTabHeaderFont.Size := 10;
-    FTabHeaderFont.Style := [];
-  end
-  else if screen.fonts.IndexOf('Verdana') >= 0 then
-  begin
-    FTabHeaderFont.Charset := DEFAULT_CHARSET;
-    FTabHeaderFont.Color := rgb(21, 66, 139);
-    FTabHeaderFont.Name := 'Verdana';
-    FTabHeaderFont.Orientation := 0;
-    FTabHeaderFont.Pitch := fpDefault;
-    FTabHeaderFont.Size := 10;
-    FTabHeaderFont.Style := [];
-  end
-  else
-  begin
-    FTabHeaderFont.Charset := DEFAULT_CHARSET;
-    FTabHeaderFont.Color := rgb(21, 66, 139);
-    FTabHeaderFont.Name := 'Arial';
-    FTabHeaderFont.Orientation := 0;
-    FTabHeaderFont.Pitch := fpDefault;
-    FTabHeaderFont.Size := 10;
-    FTabHeaderFont.Style := [];
-  end;
+  SetDefaultFont(FTabHeaderFont);
+  FTabHeaderFont.Size := FTabHeaderFont.Size + 1;
   FBorderColor := rgb(141, 178, 227);
   FGradientFromColor := rgb(222, 232, 245);
   FGradientToColor := rgb(199, 216, 237);
@@ -520,36 +496,7 @@ end;
 
 procedure TSpkPaneAppearance.Reset;
 begin
-  if screen.fonts.IndexOf('Calibri') >= 0 then
-  begin
-    FCaptionFont.Name := 'Calibri';
-    FCaptionFont.Size := 9;
-    FCaptionFont.color := rgb(62, 106, 170);
-    FCaptionFont.Style := [];
-    FCaptionFont.Charset := DEFAULT_CHARSET;
-    FCaptionFont.Orientation := 0;
-    FCaptionFont.Pitch := fpDefault;
-  end
-  else if screen.fonts.IndexOf('Verdana') >= 0 then
-  begin
-    FCaptionFont.Name := 'Verdana';
-    FCaptionFont.Size := 9;
-    FCaptionFont.color := rgb(62, 106, 170);
-    FCaptionFont.Style := [];
-    FCaptionFont.Charset := DEFAULT_CHARSET;
-    FCaptionFont.Orientation := 0;
-    FCaptionFont.Pitch := fpDefault;
-  end
-  else
-  begin
-    FCaptionFont.Name := 'Arial';
-    FCaptionFont.Size := 9;
-    FCaptionFont.color := rgb(62, 106, 170);
-    FCaptionFont.Style := [];
-    FCaptionFont.Charset := DEFAULT_CHARSET;
-    FCaptionFont.Orientation := 0;
-    FCaptionFont.Pitch := fpDefault;
-  end;
+  SetDefaultFont(FCaptionFont);
   FBorderDarkColor := rgb(158, 190, 218);
   FBorderLightColor := rgb(237, 242, 248);
   FCaptionBgColor := rgb(194, 217, 241);
@@ -667,51 +614,48 @@ end;
 { TSpkElementAppearance }
 
 procedure TSpkElementAppearance.Assign(Source: TPersistent);
-
-var SrcAppearance : TSpkElementAppearance;
-
+var
+  SrcAppearance: TSpkElementAppearance;
 begin
   if Source is TSpkElementAppearance then
-     begin
-     SrcAppearance:=TSpkElementAppearance(Source);
+  begin
+    SrcAppearance := TSpkElementAppearance(Source);
 
-     FCaptionFont.assign(SrcAppearance.CaptionFont);
-     FIdleFrameColor := SrcAppearance.IdleFrameColor;
-     FIdleGradientFromColor := SrcAppearance.IdleGradientFromColor;
-     FIdleGradientToColor := SrcAppearance.IdleGradientToColor;
-     FIdleGradientType := SrcAppearance.IdleGradientType;
-     FIdleInnerLightColor := SrcAppearance.IdleInnerLightColor;
-     FIdleInnerDarkColor := SrcAppearance.IdleInnerDarkColor;
-     FIdleCaptionColor := SrcAppearance.IdleCaptionColor;
-     FHotTrackFrameColor := SrcAppearance.HotTrackFrameColor;
-     FHotTrackGradientFromColor := SrcAppearance.HotTrackGradientFromColor;
-     FHotTrackGradientToColor := SrcAppearance.HotTrackGradientToColor;
-     FHotTrackGradientType := SrcAppearance.HotTrackGradientType;
-     FHotTrackInnerLightColor := SrcAppearance.HotTrackInnerLightColor;
-     FHotTrackInnerDarkColor := SrcAppearance.HotTrackInnerDarkColor;
-     FHotTrackCaptionColor := SrcAppearance.HotTrackCaptionColor;
-     FActiveFrameColor := SrcAppearance.ActiveFrameColor;
-     FActiveGradientFromColor := SrcAppearance.ActiveGradientFromColor;
-     FActiveGradientToColor := SrcAppearance.ActiveGradientToColor;
-     FActiveGradientType := SrcAppearance.ActiveGradientType;
-     FActiveInnerLightColor := SrcAppearance.ActiveInnerLightColor;
-     FActiveInnerDarkColor := SrcAppearance.ActiveInnerDarkColor;
-     FActiveCaptionColor := SrcAppearance.ActiveCaptionColor;
+    FCaptionFont.Assign(SrcAppearance.CaptionFont);
+    FIdleFrameColor := SrcAppearance.IdleFrameColor;
+    FIdleGradientFromColor := SrcAppearance.IdleGradientFromColor;
+    FIdleGradientToColor := SrcAppearance.IdleGradientToColor;
+    FIdleGradientType := SrcAppearance.IdleGradientType;
+    FIdleInnerLightColor := SrcAppearance.IdleInnerLightColor;
+    FIdleInnerDarkColor := SrcAppearance.IdleInnerDarkColor;
+    FIdleCaptionColor := SrcAppearance.IdleCaptionColor;
+    FHotTrackFrameColor := SrcAppearance.HotTrackFrameColor;
+    FHotTrackGradientFromColor := SrcAppearance.HotTrackGradientFromColor;
+    FHotTrackGradientToColor := SrcAppearance.HotTrackGradientToColor;
+    FHotTrackGradientType := SrcAppearance.HotTrackGradientType;
+    FHotTrackInnerLightColor := SrcAppearance.HotTrackInnerLightColor;
+    FHotTrackInnerDarkColor := SrcAppearance.HotTrackInnerDarkColor;
+    FHotTrackCaptionColor := SrcAppearance.HotTrackCaptionColor;
+    FActiveFrameColor := SrcAppearance.ActiveFrameColor;
+    FActiveGradientFromColor := SrcAppearance.ActiveGradientFromColor;
+    FActiveGradientToColor := SrcAppearance.ActiveGradientToColor;
+    FActiveGradientType := SrcAppearance.ActiveGradientType;
+    FActiveInnerLightColor := SrcAppearance.ActiveInnerLightColor;
+    FActiveInnerDarkColor := SrcAppearance.ActiveInnerDarkColor;
+    FActiveCaptionColor := SrcAppearance.ActiveCaptionColor;
+    FStyle := SrcAppearance.Style;
 
-     if FDispatch<>nil then
-        FDispatch.NotifyAppearanceChanged;
-     end else
-         raise AssignException.create('TSpkElementAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkElementAppearance!');
+    if FDispatch <> nil then
+      FDispatch.NotifyAppearanceChanged;
+  end else
+    raise AssignException.create('TSpkElementAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkElementAppearance!');
 end;
 
 constructor TSpkElementAppearance.Create(ADispatch: TSpkBaseAppearanceDispatch);
 begin
   inherited Create;
-
-  FDispatch:=ADispatch;
-
-  FCaptionFont:=TFont.Create;
-  
+  FDispatch := ADispatch;
+  FCaptionFont := TFont.Create;
   Reset;
 end;
 
@@ -722,141 +666,113 @@ begin
 end;
 
 procedure TSpkElementAppearance.LoadFromXML(Node: TSpkXMLNode);
-
-var Subnode : TSpkXMLNode;
-
+var
+  Subnode: TSpkXMLNode;
 begin
-if not(assigned(Node)) then
-   exit;
+  if not Assigned(Node) then
+    exit;
 
-Subnode:=Node['CaptionFont',false];
-if assigned(Subnode) then
-   TSpkXMLTools.Load(Subnode, FCaptionFont);
+  Subnode := Node['CaptionFont', false];
+  if Assigned(Subnode) then
+    TSpkXMLTools.Load(Subnode, FCaptionFont);
 
-// *** Idle ***
+  // Idle
+  Subnode := Node['IdleFrameColor', false];
+  if Assigned(Subnode) then
+    FIdleFrameColor := Subnode.TextAsColor;
 
-Subnode:=Node['IdleFrameColor',false];
-if assigned(Subnode) then
-   FIdleFrameColor:=Subnode.TextAsColor;
+  Subnode := Node['IdleGradientFromColor', false];
+  if Assigned(Subnode) then
+    FIdleGradientFromColor := Subnode.TextAsColor;
 
-Subnode:=Node['IdleGradientFromColor',false];
-if assigned(Subnode) then
-   FIdleGradientFromColor:=Subnode.TextAsColor;
+  Subnode := Node['IdleGradientToColor', false];
+  if Assigned(Subnode) then
+    FIdleGradientToColor := Subnode.TextAsColor;
 
-Subnode:=Node['IdleGradientToColor',false];
-if assigned(Subnode) then
-   FIdleGradientToColor:=Subnode.TextAsColor;
+  Subnode := Node['IdleGradientType', false];
+  if Assigned(Subnode) then
+    FIdleGradientType := TBackgroundKind(Subnode.TextAsInteger);
 
-Subnode:=Node['IdleGradientType',false];
-if assigned(Subnode) then
-   FIdleGradientType:=TBackgroundKind(Subnode.TextAsInteger);
+  Subnode := Node['IdleInnerLightColor', false];
+  if Assigned(Subnode) then
+    FIdleInnerLightColor := Subnode.TextAsColor;
 
-Subnode:=Node['IdleInnerLightColor',false];
-if assigned(Subnode) then
-   FIdleInnerLightColor:=Subnode.TextAsColor;
+  Subnode := Node['IdleInnerDarkColor', false];
+  if Assigned(Subnode) then
+    FIdleInnerDarkColor := Subnode.TextAsColor;
 
-Subnode:=Node['IdleInnerDarkColor',false];
-if assigned(Subnode) then
-   FIdleInnerDarkColor:=Subnode.TextAsColor;
+  Subnode := Node['IdleCaptionColor', false];
+  if Assigned(Subnode) then
+    FIdleCaptionColor := Subnode.TextAsColor;
 
-Subnode:=Node['IdleCaptionColor',false];
-if assigned(Subnode) then
-   FIdleCaptionColor:=Subnode.TextAsColor;
+  // Hottrack
+  Subnode := Node['HottrackFrameColor', false];
+  if Assigned(Subnode) then
+    FHottrackFrameColor := Subnode.TextAsColor;
 
-// *** Hottrack ***
+  Subnode := Node['HottrackGradientFromColor', false];
+  if Assigned(Subnode) then
+    FHottrackGradientFromColor := Subnode.TextAsColor;
 
-Subnode:=Node['HottrackFrameColor',false];
-if assigned(Subnode) then
-   FHottrackFrameColor:=Subnode.TextAsColor;
+  Subnode := Node['HottrackGradientToColor', false];
+  if Assigned(Subnode) then
+    FHottrackGradientToColor := Subnode.TextAsColor;
 
-Subnode:=Node['HottrackGradientFromColor',false];
-if assigned(Subnode) then
-   FHottrackGradientFromColor:=Subnode.TextAsColor;
+  Subnode := Node['HottrackGradientType', false];
+  if Assigned(Subnode) then
+    FHottrackGradientType := TBackgroundKind(Subnode.TextAsInteger);
 
-Subnode:=Node['HottrackGradientToColor',false];
-if assigned(Subnode) then
-   FHottrackGradientToColor:=Subnode.TextAsColor;
+  Subnode := Node['HottrackInnerLightColor', false];
+  if Assigned(Subnode) then
+    FHottrackInnerLightColor := Subnode.TextAsColor;
 
-Subnode:=Node['HottrackGradientType',false];
-if assigned(Subnode) then
-   FHottrackGradientType:=TBackgroundKind(Subnode.TextAsInteger);
+  Subnode := Node['HottrackInnerDarkColor', false];
+  if Assigned(Subnode) then
+    FHottrackInnerDarkColor := Subnode.TextAsColor;
 
-Subnode:=Node['HottrackInnerLightColor',false];
-if assigned(Subnode) then
-   FHottrackInnerLightColor:=Subnode.TextAsColor;
+  Subnode := Node['HottrackCaptionColor', false];
+  if Assigned(Subnode) then
+    FHottrackCaptionColor := Subnode.TextAsColor;
 
-Subnode:=Node['HottrackInnerDarkColor',false];
-if assigned(Subnode) then
-   FHottrackInnerDarkColor:=Subnode.TextAsColor;
+  // Active
+  Subnode := Node['ActiveFrameColor', false];
+  if Assigned(Subnode) then
+    FActiveFrameColor := Subnode.TextAsColor;
 
-Subnode:=Node['HottrackCaptionColor',false];
-if assigned(Subnode) then
-   FHottrackCaptionColor:=Subnode.TextAsColor;
+  Subnode := Node['ActiveGradientFromColor', false];
+  if Assigned(Subnode) then
+    FActiveGradientFromColor := Subnode.TextAsColor;
 
-// *** Active ***
+  Subnode := Node['ActiveGradientToColor', false];
+  if Assigned(Subnode) then
+    FActiveGradientToColor := Subnode.TextAsColor;
 
-Subnode:=Node['ActiveFrameColor',false];
-if assigned(Subnode) then
-   FActiveFrameColor:=Subnode.TextAsColor;
+  Subnode := Node['ActiveGradientType', false];
+  if Assigned(Subnode) then
+    FActiveGradientType := TBackgroundKind(Subnode.TextAsInteger);
 
-Subnode:=Node['ActiveGradientFromColor',false];
-if assigned(Subnode) then
-   FActiveGradientFromColor:=Subnode.TextAsColor;
+  Subnode := Node['ActiveInnerLightColor', false];
+  if Assigned(Subnode) then
+    FActiveInnerLightColor := Subnode.TextAsColor;
 
-Subnode:=Node['ActiveGradientToColor',false];
-if assigned(Subnode) then
-   FActiveGradientToColor:=Subnode.TextAsColor;
+  Subnode := Node['ActiveInnerDarkColor', false];
+  if Assigned(Subnode) then
+    FActiveInnerDarkColor := Subnode.TextAsColor;
 
-Subnode:=Node['ActiveGradientType',false];
-if assigned(Subnode) then
-   FActiveGradientType:=TBackgroundKind(Subnode.TextAsInteger);
+  Subnode := Node['ActiveCaptionColor', false];
+  if Assigned(Subnode) then
+    FActiveCaptionColor := Subnode.TextAsColor;
 
-Subnode:=Node['ActiveInnerLightColor',false];
-if assigned(Subnode) then
-   FActiveInnerLightColor:=Subnode.TextAsColor;
-
-Subnode:=Node['ActiveInnerDarkColor',false];
-if assigned(Subnode) then
-   FActiveInnerDarkColor:=Subnode.TextAsColor;
-
-Subnode:=Node['ActiveCaptionColor',false];
-if assigned(Subnode) then
-   FActiveCaptionColor:=Subnode.TextAsColor;
+  // Other
+  Subnode := Node['Style', false];
+  if Assigned(SubNode) then
+    FStyle := TSpkElementStyle(Subnode.TextAsInteger);
 end;
 
 procedure TSpkElementAppearance.Reset;
 begin
-  if screen.fonts.IndexOf('Calibri') >= 0 then
-  begin
-    FCaptionFont.Name := 'Calibri';
-    FCaptionFont.Size := 9;
-    FCaptionFont.Style := [];
-    FCaptionFont.Charset := DEFAULT_CHARSET;
-    FCaptionFont.Orientation := 0;
-    FCaptionFont.Pitch := fpDefault;
-    FCaptionFont.Color := rgb(21, 66, 139);
-  end
-  else if screen.fonts.IndexOf('Verdana') >= 0 then
-  begin
-    FCaptionFont.Name := 'Verdana';
-    FCaptionFont.Size := 8;
-    FCaptionFont.Style := [];
-    FCaptionFont.Charset := DEFAULT_CHARSET;
-    FCaptionFont.Orientation := 0;
-    FCaptionFont.Pitch := fpDefault;
-    FCaptionFont.Color := rgb(21, 66, 139);
-  end
-  else
-  begin
-    FCaptionFont.Name := 'Arial';
-    FCaptionFont.Size := 8;
-    FCaptionFont.Style := [];
-    FCaptionFont.Charset := DEFAULT_CHARSET;
-    FCaptionFont.Orientation := 0;
-    FCaptionFont.Pitch := fpDefault;
-    FCaptionFont.Color := rgb(21, 66, 139);
-  end;
-  
+  SetDefaultFont(FCaptionFont);
+  FCaptionFont.Size := FCaptionFont.Size - 1;
   FIdleFrameColor := rgb(155, 183, 224);
   FIdleGradientFromColor := rgb(200, 219, 238);
   FIdleGradientToColor := rgb(188, 208, 233);
@@ -878,6 +794,7 @@ begin
   FActiveInnerLightColor := rgb(252, 169, 14);
   FActiveInnerDarkColor := rgb(252, 169, 14);
   FActiveCaptionColor := rgb(110, 66, 128);
+  FStyle := esRounded;
 end;
 
 procedure TSpkElementAppearance.SaveToPascal(AList: TStrings);
@@ -909,6 +826,8 @@ begin
     Add('    ActiveInnerDarkColor := $' + IntToHex(FActiveInnerDarkColor, 8) + ';');
     Add('    ActiveInnerLightColor := $' + IntToHex(FActiveInnerLightColor, 8) + ';');
     Add('    ActiveCaptionColor := $' + IntToHex(FActiveCaptionColor, 8) + ';');
+
+    Add('    Style := ' + GetEnumName(TypeInfo(TSpkElementStyle), ord(FStyle)) + ';');
     Add('  end;');
   end;
 end;
@@ -920,78 +839,80 @@ begin
   if not Assigned(Node) then
     exit;
 
-  Subnode := Node['CaptionFont',true];
+  Subnode := Node['CaptionFont', true];
   TSpkXMLTools.Save(Subnode, FCaptionFont);
 
   // *** Idle ***
-  Subnode := Node['IdleFrameColor',true];
-  Subnode.TextAsColor:=FIdleFrameColor;
+  Subnode := Node['IdleFrameColor', true];
+  Subnode.TextAsColor := FIdleFrameColor;
 
-  Subnode := Node['IdleGradientFromColor',true];
-  Subnode.TextAsColor:=FIdleGradientFromColor;
+  Subnode := Node['IdleGradientFromColor', true];
+  Subnode.TextAsColor := FIdleGradientFromColor;
 
-  Subnode := Node['IdleGradientToColor',true];
-  Subnode.TextAsColor:=FIdleGradientToColor;
+  Subnode := Node['IdleGradientToColor', true];
+  Subnode.TextAsColor := FIdleGradientToColor;
 
-  Subnode := Node['IdleGradientType',true];
-  Subnode.TextAsInteger:=integer(FIdleGradientType);
+  Subnode := Node['IdleGradientType', true];
+  Subnode.TextAsInteger := integer(FIdleGradientType);
 
-  Subnode := Node['IdleInnerLightColor',true];
-  Subnode.TextAsColor:=FIdleInnerLightColor;
+  Subnode := Node['IdleInnerLightColor', true];
+  Subnode.TextAsColor := FIdleInnerLightColor;
 
-  Subnode := Node['IdleInnerDarkColor',true];
-  Subnode.TextAsColor:=FIdleInnerDarkColor;
+  Subnode := Node['IdleInnerDarkColor', true];
+  Subnode.TextAsColor := FIdleInnerDarkColor;
 
-  Subnode := Node['IdleCaptionColor',true];
-  Subnode.TextAsColor:=FIdleCaptionColor;
+  Subnode := Node['IdleCaptionColor', true];
+  Subnode.TextAsColor := FIdleCaptionColor;
 
   // *** Hottrack ***
-  Subnode := Node['HottrackFrameColor',true];
-  Subnode.TextAsColor:=FHottrackFrameColor;
+  Subnode := Node['HottrackFrameColor', true];
+  Subnode.TextAsColor := FHottrackFrameColor;
 
-  Subnode := Node['HottrackGradientFromColor',true];
-  Subnode.TextAsColor:=FHottrackGradientFromColor;
+  Subnode := Node['HottrackGradientFromColor', true];
+  Subnode.TextAsColor := FHottrackGradientFromColor;
 
-  Subnode := Node['HottrackGradientToColor',true];
-  Subnode.TextAsColor:=FHottrackGradientToColor;
+  Subnode := Node['HottrackGradientToColor', true];
+  Subnode.TextAsColor := FHottrackGradientToColor;
 
-  Subnode := Node['HottrackGradientType',true];
-  Subnode.TextAsInteger:=integer(FHottrackGradientType);
+  Subnode := Node['HottrackGradientType', true];
+  Subnode.TextAsInteger := integer(FHottrackGradientType);
 
-  Subnode := Node['HottrackInnerLightColor',true];
-  Subnode.TextAsColor:=FHottrackInnerLightColor;
+  Subnode := Node['HottrackInnerLightColor', true];
+  Subnode.TextAsColor := FHottrackInnerLightColor;
 
-  Subnode := Node['HottrackInnerDarkColor',true];
-  Subnode.TextAsColor:=FHottrackInnerDarkColor;
+  Subnode := Node['HottrackInnerDarkColor', true];
+  Subnode.TextAsColor := FHottrackInnerDarkColor;
 
-  Subnode := Node['HottrackCaptionColor',true];
-  Subnode.TextAsColor:=FHottrackCaptionColor;
+  Subnode := Node['HottrackCaptionColor', true];
+  Subnode.TextAsColor := FHottrackCaptionColor;
 
   // *** Active ***
-  Subnode := Node['ActiveFrameColor',true];
-  Subnode.TextAsColor:=FActiveFrameColor;
+  Subnode := Node['ActiveFrameColor', true];
+  Subnode.TextAsColor := FActiveFrameColor;
 
-  Subnode := Node['ActiveGradientFromColor',true];
-  Subnode.TextAsColor:=FActiveGradientFromColor;
+  Subnode := Node['ActiveGradientFromColor', true];
+  Subnode.TextAsColor := FActiveGradientFromColor;
 
-  Subnode := Node['ActiveGradientToColor',true];
-  Subnode.TextAsColor:=FActiveGradientToColor;
+  Subnode := Node['ActiveGradientToColor', true];
+  Subnode.TextAsColor := FActiveGradientToColor;
 
-  Subnode := Node['ActiveGradientType',true];
-  Subnode.TextAsInteger:=integer(FActiveGradientType);
+  Subnode := Node['ActiveGradientType', true];
+  Subnode.TextAsInteger := integer(FActiveGradientType);
 
-  Subnode := Node['ActiveInnerLightColor',true];
-  Subnode.TextAsColor:=FActiveInnerLightColor;
+  Subnode := Node['ActiveInnerLightColor', true];
+  Subnode.TextAsColor := FActiveInnerLightColor;
 
-  Subnode := Node['ActiveInnerDarkColor',true];
-  Subnode.TextAsColor:=FActiveInnerDarkColor;
+  Subnode := Node['ActiveInnerDarkColor', true];
+  Subnode.TextAsColor := FActiveInnerDarkColor;
 
-  Subnode := Node['ActiveCaptionColor',true];
-  Subnode.TextAsColor:=FActiveCaptionColor;
+  Subnode := Node['ActiveCaptionColor', true];
+  Subnode.TextAsColor := FActiveCaptionColor;
+
+  Subnode := Node['Style', true];
+  Subnode.TextAsInteger := integer(FStyle);
 end;
 
-procedure TSpkElementAppearance.SetActiveCaptionColor(
-  const Value: TColor);
+procedure TSpkElementAppearance.SetActiveCaptionColor(const Value: TColor);
 begin
   FActiveCaptionColor := Value;
   if FDispatch<>nil then
@@ -1005,40 +926,35 @@ begin
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetActiveGradientFromColor(
-  const Value: TColor);
+procedure TSpkElementAppearance.SetActiveGradientFromColor(const Value: TColor);
 begin
   FActiveGradientFromColor := Value;
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetActiveGradientToColor(
-  const Value: TColor);
+procedure TSpkElementAppearance.SetActiveGradientToColor(const Value: TColor);
 begin
   FActiveGradientToColor := Value;
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetActiveGradientType(
-  const Value: TBackgroundKind);
+procedure TSpkElementAppearance.SetActiveGradientType(const Value: TBackgroundKind);
 begin
   FActiveGradientType := Value;
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetActiveInnerDarkColor(
-  const Value: TColor);
+procedure TSpkElementAppearance.SetActiveInnerDarkColor(const Value: TColor);
 begin
   FActiveInnerDarkColor := Value;
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetActiveInnerLightColor(
-  const Value: TColor);
+procedure TSpkElementAppearance.SetActiveInnerLightColor(const Value: TColor);
 begin
   FActiveInnerLightColor := Value;
   if FDispatch<>nil then
@@ -1052,56 +968,49 @@ begin
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetHotTrackCaptionColor(
-  const Value: TColor);
+procedure TSpkElementAppearance.SetHotTrackCaptionColor(const Value: TColor);
 begin
   FHotTrackCaptionColor := Value;
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetHotTrackFrameColor(
-  const Value: TColor);
+procedure TSpkElementAppearance.SetHotTrackFrameColor(const Value: TColor);
 begin
   FHotTrackFrameColor := Value;
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetHotTrackGradientFromColor(
-  const Value: TColor);
+procedure TSpkElementAppearance.SetHotTrackGradientFromColor(const Value: TColor);
 begin
   FHotTrackGradientFromColor := Value;
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetHotTrackGradientToColor(
-  const Value: TColor);
+procedure TSpkElementAppearance.SetHotTrackGradientToColor(const Value: TColor);
 begin
   FHotTrackGradientToColor := Value;
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetHotTrackGradientType(
-  const Value: TBackgroundKind);
+procedure TSpkElementAppearance.SetHotTrackGradientType(const Value: TBackgroundKind);
 begin
   FHotTrackGradientType := Value;
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetHotTrackInnerDarkColor(
-  const Value: TColor);
+procedure TSpkElementAppearance.SetHotTrackInnerDarkColor(const Value: TColor);
 begin
   FHotTrackInnerDarkColor := Value;
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetHotTrackInnerLightColor(
-  const Value: TColor);
+procedure TSpkElementAppearance.SetHotTrackInnerLightColor(const Value: TColor);
 begin
   FHotTrackInnerLightColor := Value;
   if FDispatch<>nil then
@@ -1122,44 +1031,46 @@ begin
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetIdleGradientFromColor(
-  const Value: TColor);
+procedure TSpkElementAppearance.SetIdleGradientFromColor(const Value: TColor);
 begin
   FIdleGradientFromColor := Value;
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetIdleGradientToColor(
-  const Value: TColor);
+procedure TSpkElementAppearance.SetIdleGradientToColor(const Value: TColor);
 begin
   FIdleGradientToColor := Value;
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetIdleGradientType(
-  const Value: TBackgroundKind);
+procedure TSpkElementAppearance.SetIdleGradientType(const Value: TBackgroundKind);
 begin
   FIdleGradientType := Value;
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetIdleInnerDarkColor(
-  const Value: TColor);
+procedure TSpkElementAppearance.SetIdleInnerDarkColor(const Value: TColor);
 begin
   FIdleInnerDarkColor := Value;
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkElementAppearance.SetIdleInnerLightColor(
-  const Value: TColor);
+procedure TSpkElementAppearance.SetIdleInnerLightColor(const Value: TColor);
 begin
   FIdleInnerLightColor := Value;
   if FDispatch<>nil then
      FDispatch.NotifyAppearanceChanged;
+end;
+
+procedure TSpkElementAppearance.SetStyle(const Value: TSpkElementStyle);
+begin
+  FStyle := Value;
+  if FDispatch <> nil then
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 { TSpkToolbarAppearanceDispatch }
@@ -1294,6 +1205,32 @@ end;
 procedure TSpkToolbarAppearance.SetTabAppearance(const Value: TSpkTabAppearance);
 begin
   FTab.assign(Value);
+end;
+
+procedure SetDefaultFont(AFont: TFont);
+begin
+  AFont.Assign(Screen.MenuFont);
+  {
+  if Screen.Fonts.IndexOf('Calibri') >= 0 then
+  begin
+    AFont.Name := 'Calibri';
+    AFont.Size := 9;
+  end
+  else if Screen.Fonts.IndexOf('Verdana') >= 0 then
+  begin
+    AFont.Name := 'Verdana';
+    AFont.Size := 8;
+  end else
+  begin
+    AFont.Name := 'Arial';
+    AFont.Size := 8;
+  end;
+  AFont.Style := [];
+  AFont.Charset := DEFAULT_CHARSET;
+  AFont.Orientation := 0;
+  AFont.Pitch := fpDefault;
+  }
+  AFont.Color := rgb(21, 66, 139);
 end;
 
 end.

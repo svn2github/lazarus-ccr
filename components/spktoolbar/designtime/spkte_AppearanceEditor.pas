@@ -46,10 +46,12 @@ type
     bActiveTabHeaderFontColor: TSpeedButton;
     bExportToPascal: TButton;
     bCopyToClipboard: TButton;
+    cbItemStyle: TComboBox;
     cbPaneStyle: TComboBox;
     ColorView: TShape;
     gbPreview: TGroupBox;
     Label12: TLabel;
+    Label27: TLabel;
     LblCaptionBackground1: TLabel;
     LblRGB: TLabel;
     SmallImages: TImageList;
@@ -195,6 +197,7 @@ type
     procedure cbItemActiveGradientKindChange(Sender: TObject);
     procedure cbItemHottrackGradientKindChange(Sender: TObject);
     procedure cbItemIdleGradientKindChange(Sender: TObject);
+    procedure cbItemStyleChange(Sender: TObject);
     procedure cbPaneGradientKindChange(Sender: TObject);
     procedure cbPaneStyleChange(Sender: TObject);
     procedure cbTabGradientKindChange(Sender: TObject);
@@ -736,6 +739,12 @@ begin
      SetLinkedGradientKind((Sender as TComboBox).ItemIndex);
 end;
 
+procedure TfrmAppearanceEditWindow.cbItemStyleChange(Sender: TObject);
+begin
+  with tbPreview.Appearance.Element do
+    Style := TSpkElementStyle((Sender as TCombobox).ItemIndex);
+end;
+
 procedure TfrmAppearanceEditWindow.cbLinkItemClick(Sender: TObject);
 begin
   SwitchAttributesLink(cbLinkItem.Checked);
@@ -899,6 +908,8 @@ begin
       SetPanelColor(pItemActiveCaptionColor, ActiveCaptionColor);
       SetPanelColor(pItemActiveInnerDark, ActiveInnerDarkColor);
       SetPanelColor(pItemActiveInnerLight, ActiveInnerLightColor);
+
+      cbItemStyle.ItemIndex := ord(Style);
     end;
   end;
 end;

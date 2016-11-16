@@ -1,10 +1,10 @@
 object frmAppearanceEditWindow: TfrmAppearanceEditWindow
   Left = 617
-  Height = 540
+  Height = 561
   Top = 138
   Width = 562
   Caption = 'Toolbar appearance editor'
-  ClientHeight = 540
+  ClientHeight = 561
   ClientWidth = 562
   Color = clBtnFace
   Font.Color = clWindowText
@@ -318,7 +318,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
   end
   object PageControl1: TPageControl
     Left = 0
-    Height = 368
+    Height = 389
     Top = 132
     Width = 562
     ActivePage = TabSheet3
@@ -1096,7 +1096,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     end
     object TabSheet3: TTabSheet
       Caption = 'Item'
-      ClientHeight = 340
+      ClientHeight = 361
       ClientWidth = 554
       ImageIndex = 2
       object sItemRectangle: TShape
@@ -1254,10 +1254,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideLeft.Control = pItemIdleInnerLight
         AnchorSideTop.Control = pItemIdleInnerLight
         AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = pItemIdleInnerLight
+        AnchorSideRight.Side = asrBottom
         Left = 116
         Height = 25
         Top = 279
-        Width = 121
+        Width = 100
+        Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 20
         BorderSpacing.Bottom = 4
         BevelInner = bvRaised
@@ -1982,6 +1985,42 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         GroupIndex = 1
         OnClick = bItemActiveInnerLightColorClick
       end
+      object cbItemStyle: TComboBox
+        AnchorSideLeft.Control = pItemIdleGradientFrom
+        AnchorSideTop.Control = pItemFont
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = pItemIdleGradientTo
+        AnchorSideRight.Side = asrBottom
+        Left = 116
+        Height = 23
+        Top = 310
+        Width = 100
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 6
+        ItemHeight = 15
+        ItemIndex = 0
+        Items.Strings = (
+          'Rounded'
+          'Rectangle'
+        )
+        OnChange = cbItemStyleChange
+        Style = csDropDownList
+        TabOrder = 23
+        Text = 'Rounded'
+      end
+      object Label27: TLabel
+        AnchorSideTop.Control = cbItemStyle
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = LblInnerLightColor
+        AnchorSideRight.Side = asrBottom
+        Left = 71
+        Height = 15
+        Top = 314
+        Width = 25
+        Anchors = [akTop, akRight]
+        Caption = 'Style'
+        ParentColor = False
+      end
     end
     object TabSheet4: TTabSheet
       Caption = 'Import / export'
@@ -2105,7 +2144,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
   object ButtonPanel: TPanel
     Left = 8
     Height = 24
-    Top = 508
+    Top = 529
     Width = 546
     Align = alBottom
     BorderSpacing.Around = 8
@@ -2191,8 +2230,8 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       'ColorS=F0FBFF'
       'ColorT=A4A0A0'
     )
-    left = 216
-    top = 464
+    left = 280
+    top = 512
   end
   object fdFontDialog: TFontDialog
     Font.Color = clWindowText
@@ -2200,18 +2239,18 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     Font.Name = 'Tahoma'
     MinFontSize = 0
     MaxFontSize = 0
-    left = 312
-    top = 464
+    left = 376
+    top = 512
   end
   object LargeImages: TImageList
     Height = 32
     Width = 32
-    left = 48
-    top = 464
+    left = 112
+    top = 512
   end
   object SmallImages: TImageList
-    left = 128
-    top = 464
+    left = 192
+    top = 512
     Bitmap = {
       4C69010000001000000010000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000000000005BA36C7380C4
