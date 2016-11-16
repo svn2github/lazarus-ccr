@@ -16,6 +16,9 @@ type
   { TfrmAppearanceEditWindow }
 
   TfrmAppearanceEditWindow = class(TForm)
+    PaneHSpacer: TBevel;
+    ItemHSpacer: TBevel;
+    TabVSpacer: TBevel;
     bInactiveTabHeaderFontColor: TSpeedButton;
     bItemActiveInnerDarkColor: TSpeedButton;
     bItemActiveGradientFromColor: TSpeedButton;
@@ -49,6 +52,7 @@ type
     cbItemStyle: TComboBox;
     cbPaneStyle: TComboBox;
     ColorView: TShape;
+    ItemVSpacer: TBevel;
     gbPreview: TGroupBox;
     Label12: TLabel;
     Label27: TLabel;
@@ -62,6 +66,7 @@ type
     ButtonPanel: TPanel;
     bTabFrameColor: TSpeedButton;
     SpkTab2: TSpkTab;
+    TabHSpacer: TBevel;
     tbPreview: TSpkToolbar;
     SpkTab1: TSpkTab;
     SpkPane1: TSpkPane;
@@ -103,7 +108,7 @@ type
     Label11: TLabel;
     cbPaneGradientKind: TComboBox;
     pPaneCaptionBackground: TPanel;
-    LblCaptionBackground: TLabel;
+    LblPaneCaptionBackground: TLabel;
     Label13: TLabel;
     pPaneCaptionFont: TPanel;
     Label1: TLabel;
@@ -121,7 +126,7 @@ type
     pItemIdleCaptionColor: TPanel;
     Label29: TLabel;
     pItemIdleInnerDark: TPanel;
-    LblInnerLightColor: TLabel;
+    LblLinkInnerLightColor: TLabel;
     pItemIdleInnerLight: TPanel;
     cbItemHottrackGradientKind: TComboBox;
     pItemHottrackGradientTo: TPanel;
@@ -206,6 +211,7 @@ type
     procedure cbLinkPaneClick(Sender: TObject);
     procedure cbLinkTabClick(Sender: TObject);
 
+    procedure FormActivate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -292,7 +298,7 @@ implementation
 {$R *.lfm}
 
 uses
-  clipbrd;
+  clipbrd, Spkt_Const;
 
 var
   CurrPageIndex: Integer = 0;
@@ -792,6 +798,48 @@ begin
     Result := false;
 end;
 
+procedure TfrmAppearanceEditWindow.FormActivate(Sender: TObject);
+var
+  w, h: Integer;
+begin
+  ColorView.Width := ColorView.Height;
+
+  w := SpkScaleX(pTabFrame.Width, 96);
+  h := SpkScaleY(pTabFrame.Height, 96);
+
+  pTabFrame.Width := w;
+  pTabFrame.Height := h;
+  pTabGradientFrom.Height := h;
+  pTabGradientTo.Height := h;
+  pActiveTabHeaderFont.Height := h;
+  pInactiveTabHeaderFont.Height := h;
+  pTabHeaderFont.Height := h;
+
+  pPaneBorderDark.Width := w;
+  pPaneBorderDark.Height := h;
+  pPaneBorderLight.Height := h;
+  pPaneGradientFrom.Height := h;
+  pPaneGradientTo.Height := h;
+  pPaneCaptionBackground.Height := h;
+  pPaneCaptionFontColor.Height := h;
+  pPaneCaptionFont.Height := h;
+
+  pItemIdleFrame.Width := w;
+  pItemHotTrackFrame.Width := w;
+  pItemActiveFrame.Width := w;
+  pItemIdleFrame.Height := h;
+  pItemIdleGradientFrom.Height := h;
+  pItemIdleGradientTo.Height := h;
+  pItemIdleCaptionColor.Height := h;
+  pItemIdleInnerDark.Height := h;
+  pItemIdleInnerLight.Height := h;
+  pItemFont.Height := h;
+
+  Width := SpkScaleX(Width, 96);
+  Height := SpkScaleY(Height, 96);
+  Position := poScreenCenter;
+end;
+
 procedure TfrmAppearanceEditWindow.FormCloseQuery(Sender: TObject;
   var CanClose: boolean);
 begin
@@ -916,8 +964,10 @@ end;
 
 procedure TfrmAppearanceEditWindow.pItemActiveCaptionColorClick(Sender: TObject);
 begin
-  if ChangeColor(Sender as TPanel) then
+  if ChangeColor(Sender as TPanel) then begin
     tbPreview.Appearance.Element.ActiveCaptionColor:=(Sender as TPanel).Color;
+    tbPreview.ForceRepaint;
+  end;
 end;
 
 procedure TfrmAppearanceEditWindow.pItemActiveFrameClick(Sender: TObject);
@@ -984,8 +1034,10 @@ end;
 
 procedure TfrmAppearanceEditWindow.pItemHottrackCaptionColorClick(Sender: TObject);
 begin
-  if ChangeColor(Sender as TPanel) then
+  if ChangeColor(Sender as TPanel) then begin
     tbPreview.Appearance.Element.HotTrackCaptionColor := (Sender as TPanel).Color;
+    tbPreview.ForceRepaint;
+  end;
 end;
 
 procedure TfrmAppearanceEditWindow.pItemHottrackFrameClick(Sender: TObject);
@@ -1020,8 +1072,10 @@ end;
 
 procedure TfrmAppearanceEditWindow.pItemIdleCaptionColorClick(Sender: TObject);
 begin
-  if ChangeColor(Sender as TPanel) then
+  if ChangeColor(Sender as TPanel) then begin
     tbPreview.Appearance.Element.IdleCaptionColor := (Sender as TPanel).Color;
+    tbPreview.ForceRepaint;
+  end;
 end;
 
 procedure TfrmAppearanceEditWindow.pItemIdleFrameClick(Sender: TObject);
@@ -1108,6 +1162,7 @@ begin
   begin
      tbPreview.Appearance.Pane.CaptionFont.Color:=((Sender as TPanel).Color);
      pPaneCaptionFont.Font.color:=((Sender as TPanel).Color);
+     tbPreview.ForceRepaint;
   end;
 end;
 
@@ -1187,8 +1242,9 @@ procedure TfrmAppearanceEditWindow.pActiveTabHeaderFontClick(Sender: TObject);
 begin
   if ChangeColor(Sender as TPanel) then
   begin
-    tbPreview.Appearance.Tab.TabHeaderFont.Color:=((Sender as TPanel).Color);
-    pTabHeaderFont.Font.color := (Sender as TPanel).Color;
+    tbPreview.Appearance.Tab.TabHeaderFont.Color := (Sender as TPanel).Color;
+    pTabHeaderFont.Font.Color := (Sender as TPanel).Color;
+    tbPreview.ForceRepaint;
   end;
 end;
 

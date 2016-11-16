@@ -322,7 +322,7 @@ end;
 procedure TSpkTabAppearance.Reset;
 begin
   SetDefaultFont(FTabHeaderFont);
-  FTabHeaderFont.Size := FTabHeaderFont.Size + 1;
+  FTabHeaderFont.Size := FTabHeaderFont.Size;
   FBorderColor := rgb(141, 178, 227);
   FGradientFromColor := rgb(222, 232, 245);
   FGradientToColor := rgb(199, 216, 237);
@@ -772,7 +772,7 @@ end;
 procedure TSpkElementAppearance.Reset;
 begin
   SetDefaultFont(FCaptionFont);
-  FCaptionFont.Size := FCaptionFont.Size - 1;
+  FCaptionFont.Size := FCaptionFont.Size;
   FIdleFrameColor := rgb(155, 183, 224);
   FIdleGradientFromColor := rgb(200, 219, 238);
   FIdleGradientToColor := rgb(188, 208, 233);

@@ -1,14 +1,14 @@
 object frmAppearanceEditWindow: TfrmAppearanceEditWindow
   Left = 617
-  Height = 561
+  Height = 544
   Top = 138
-  Width = 562
+  Width = 558
   Caption = 'Toolbar appearance editor'
-  ClientHeight = 561
-  ClientWidth = 562
+  ClientHeight = 544
+  ClientWidth = 558
   Color = clBtnFace
   Font.Color = clWindowText
-  Font.Height = -12
+  OnActivate = FormActivate
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnShow = FormShow
@@ -18,17 +18,17 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     Left = 0
     Height = 132
     Top = 0
-    Width = 562
+    Width = 558
     Align = alTop
     AutoSize = True
     Caption = ' Preview '
     ClientHeight = 112
-    ClientWidth = 558
+    ClientWidth = 554
     TabOrder = 0
     object tbPreview: TSpkToolbar
       Left = 0
       Top = 0
-      Width = 558
+      Width = 554
       Color = clBtnFace
       Appearance.Tab.TabHeaderFont.Color = 9126421
       Appearance.Tab.TabHeaderFont.Height = -13
@@ -71,6 +71,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       Appearance.Element.ActiveInnerLightColor = 961020
       Appearance.Element.ActiveInnerDarkColor = 961020
       Appearance.Element.ActiveCaptionColor = 8405614
+      Appearance.Element.Style = esRounded
       TabIndex = 0
       Images = SmallImages
       LargeImages = LargeImages
@@ -120,6 +121,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         CustomAppearance.Element.ActiveInnerLightColor = 961020
         CustomAppearance.Element.ActiveInnerDarkColor = 961020
         CustomAppearance.Element.ActiveCaptionColor = 8405614
+        CustomAppearance.Element.Style = esRounded
         Caption = 'Sample toolbar'
         OverrideAppearance = False
         Visible = True
@@ -309,6 +311,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         CustomAppearance.Element.ActiveInnerLightColor = 961020
         CustomAppearance.Element.ActiveInnerDarkColor = 961020
         CustomAppearance.Element.ActiveCaptionColor = 8405614
+        CustomAppearance.Element.Style = esRounded
         Caption = 'Another tab'
         OverrideAppearance = False
         Visible = True
@@ -318,26 +321,31 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
   end
   object PageControl1: TPageControl
     Left = 0
-    Height = 389
+    Height = 371
     Top = 132
-    Width = 562
+    Width = 558
     ActivePage = TabSheet3
     Align = alClient
     TabIndex = 2
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Tab'
-      ClientHeight = 340
-      ClientWidth = 554
+      ClientHeight = 360
+      ClientWidth = 579
       object sTabRectangle: TShape
         AnchorSideLeft.Control = LblInactiveTabHeaderFontColor
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = cbLinkTab
         AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TabHSpacer
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = TabVSpacer
+        AnchorSideBottom.Side = asrBottom
         Left = 179
-        Height = 136
+        Height = 133
         Top = 27
-        Width = 142
+        Width = 141
+        Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Left = 12
         BorderSpacing.Top = 4
         Visible = False
@@ -401,7 +409,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideRight.Side = asrBottom
         Left = 84
         Height = 15
-        Top = 239
+        Top = 235
         Width = 83
         Anchors = [akTop, akRight]
         Caption = 'Tab header font'
@@ -491,7 +499,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideRight.Side = asrBottom
         Left = 187
         Height = 25
-        Top = 234
+        Top = 230
         Width = 127
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
@@ -509,10 +517,10 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideRight.Side = asrBottom
         Left = 187
         Height = 25
-        Top = 172
+        Top = 168
         Width = 100
         Anchors = [akTop, akLeft, akRight]
-        BorderSpacing.Top = 20
+        BorderSpacing.Top = 16
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
@@ -540,7 +548,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideRight.Side = asrBottom
         Left = 20
         Height = 15
-        Top = 177
+        Top = 173
         Width = 147
         Anchors = [akTop, akRight]
         Caption = 'Active tab header font color'
@@ -552,7 +560,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideTop.Side = asrCenter
         Left = 12
         Height = 15
-        Top = 208
+        Top = 204
         Width = 155
         BorderSpacing.Left = 12
         Caption = 'Inactive tab header font color'
@@ -566,7 +574,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideRight.Side = asrBottom
         Left = 187
         Height = 25
-        Top = 203
+        Top = 199
         Width = 100
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
@@ -639,7 +647,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideBottom.Side = asrBottom
         Left = 289
         Height = 25
-        Top = 172
+        Top = 168
         Width = 25
         AllowAllUp = True
         BorderSpacing.Left = 2
@@ -656,7 +664,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideBottom.Side = asrBottom
         Left = 289
         Height = 25
-        Top = 203
+        Top = 199
         Width = 25
         AllowAllUp = True
         BorderSpacing.Left = 2
@@ -664,16 +672,38 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         GroupIndex = 1
         OnClick = bInactiveTabHeaderFontColorClick
       end
+      object TabVSpacer: TBevel
+        AnchorSideTop.Control = cbTabGradientKind
+        AnchorSideTop.Side = asrBottom
+        Left = 192
+        Height = 8
+        Top = 152
+        Width = 50
+        Shape = bsSpacer
+      end
+      object TabHSpacer: TBevel
+        AnchorSideLeft.Control = bTabFrameColor
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = pTabFrame
+        AnchorSideBottom.Control = cbTabGradientKind
+        AnchorSideBottom.Side = asrBottom
+        Left = 314
+        Height = 116
+        Top = 36
+        Width = 6
+        Anchors = [akTop, akLeft, akBottom]
+        Shape = bsSpacer
+      end
     end
     object TabSheet2: TTabSheet
       Caption = 'Pane'
-      ClientHeight = 340
-      ClientWidth = 554
+      ClientHeight = 360
+      ClientWidth = 579
       ImageIndex = 1
       object Label8: TLabel
         AnchorSideTop.Control = pPaneBorderDark
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblCaptionBackground
+        AnchorSideRight.Control = LblPaneCaptionBackground
         AnchorSideRight.Side = asrBottom
         Left = 60
         Height = 15
@@ -686,7 +716,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       object Label21: TLabel
         AnchorSideTop.Control = pPaneBorderLight
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblCaptionBackground
+        AnchorSideRight.Control = LblPaneCaptionBackground
         AnchorSideRight.Side = asrBottom
         Left = 59
         Height = 15
@@ -699,7 +729,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       object Label9: TLabel
         AnchorSideTop.Control = pPaneGradientFrom
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblCaptionBackground
+        AnchorSideRight.Control = LblPaneCaptionBackground
         AnchorSideRight.Side = asrBottom
         Left = 47
         Height = 15
@@ -712,7 +742,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       object Label10: TLabel
         AnchorSideTop.Control = pPaneGradientTo
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblCaptionBackground
+        AnchorSideRight.Control = LblPaneCaptionBackground
         AnchorSideRight.Side = asrBottom
         Left = 62
         Height = 15
@@ -725,7 +755,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       object Label11: TLabel
         AnchorSideTop.Control = cbPaneGradientKind
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblCaptionBackground
+        AnchorSideRight.Control = LblPaneCaptionBackground
         AnchorSideRight.Side = asrBottom
         Left = 50
         Height = 15
@@ -735,13 +765,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Caption = 'Gradient kind'
         ParentColor = False
       end
-      object LblCaptionBackground: TLabel
+      object LblPaneCaptionBackground: TLabel
         AnchorSideLeft.Control = TabSheet2
         AnchorSideTop.Control = pPaneCaptionBackground
         AnchorSideTop.Side = asrCenter
         Left = 12
         Height = 15
-        Top = 208
+        Top = 204
         Width = 109
         BorderSpacing.Left = 12
         Caption = 'Caption background'
@@ -750,27 +780,32 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       object Label13: TLabel
         AnchorSideTop.Control = pPaneCaptionFont
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblCaptionBackground
+        AnchorSideRight.Control = LblPaneCaptionBackground
         AnchorSideRight.Side = asrBottom
         Left = 27
         Height = 15
-        Top = 270
+        Top = 266
         Width = 94
         Anchors = [akTop, akRight]
         Caption = 'Pane caption font'
         ParentColor = False
       end
       object sPaneRectangle: TShape
-        AnchorSideLeft.Control = LblCaptionBackground
+        AnchorSideLeft.Control = LblPaneCaptionBackground
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = cbLinkPane
         AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = PaneHSpacer
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = bPaneCaptionBackgroundColor
         Left = 133
-        Height = 165
+        Height = 164
         Top = 27
-        Width = 142
+        Width = 143
+        Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Left = 12
         BorderSpacing.Top = 4
+        BorderSpacing.Bottom = 8
         Visible = False
       end
       object pPaneBorderDark: TPanel
@@ -875,10 +910,10 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideRight.Side = asrBottom
         Left = 141
         Height = 25
-        Top = 203
+        Top = 199
         Width = 100
         Anchors = [akTop, akLeft, akRight]
-        BorderSpacing.Top = 20
+        BorderSpacing.Top = 16
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
@@ -886,14 +921,14 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         OnClick = pPaneCaptionBackgroundClick
       end
       object pPaneCaptionFont: TPanel
-        AnchorSideLeft.Control = pPaneCaptionBackground
+        AnchorSideLeft.Control = pPaneCaptionFontColor
         AnchorSideTop.Control = pPaneCaptionFontColor
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = bPaneCaptionFontColor
         AnchorSideRight.Side = asrBottom
         Left = 141
         Height = 25
-        Top = 265
+        Top = 261
         Width = 127
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
@@ -911,7 +946,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideRight.Side = asrBottom
         Left = 141
         Height = 25
-        Top = 234
+        Top = 230
         Width = 100
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
@@ -922,7 +957,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         OnClick = pPaneCaptionFontColorClick
       end
       object cbLinkPane: TCheckBox
-        AnchorSideLeft.Control = LblCaptionBackground
+        AnchorSideLeft.Control = LblPaneCaptionBackground
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = TabSheet2
         Left = 141
@@ -943,7 +978,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideRight.Side = asrBottom
         Left = 141
         Height = 23
-        Top = 296
+        Top = 292
         Width = 127
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
@@ -965,11 +1000,11 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       object Label12: TLabel
         AnchorSideTop.Control = cbPaneStyle
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblCaptionBackground
+        AnchorSideRight.Control = LblPaneCaptionBackground
         AnchorSideRight.Side = asrBottom
         Left = 68
         Height = 15
-        Top = 300
+        Top = 296
         Width = 53
         Anchors = [akTop, akRight]
         Caption = 'Pane style'
@@ -1048,11 +1083,11 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideLeft.Control = TabSheet2
         AnchorSideTop.Control = pPaneCaptionFontColor
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblCaptionBackground
+        AnchorSideRight.Control = LblPaneCaptionBackground
         AnchorSideRight.Side = asrBottom
         Left = 49
         Height = 15
-        Top = 239
+        Top = 235
         Width = 72
         Anchors = [akTop, akRight]
         BorderSpacing.Left = 12
@@ -1068,7 +1103,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideBottom.Side = asrBottom
         Left = 243
         Height = 25
-        Top = 203
+        Top = 199
         Width = 25
         AllowAllUp = True
         BorderSpacing.Left = 2
@@ -1085,7 +1120,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideBottom.Side = asrBottom
         Left = 243
         Height = 25
-        Top = 234
+        Top = 230
         Width = 25
         AllowAllUp = True
         BorderSpacing.Left = 2
@@ -1093,26 +1128,43 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         GroupIndex = 1
         OnClick = bPaneCaptionFontColorClick
       end
+      object PaneHSpacer: TBevel
+        AnchorSideLeft.Control = bPaneBorderDarkColor
+        AnchorSideLeft.Side = asrBottom
+        Left = 268
+        Height = 26
+        Top = 36
+        Width = 8
+        Shape = bsSpacer
+      end
     end
     object TabSheet3: TTabSheet
       Caption = 'Item'
-      ClientHeight = 361
-      ClientWidth = 554
+      ClientHeight = 343
+      ClientWidth = 550
       ImageIndex = 2
       object sItemRectangle: TShape
+        AnchorSideLeft.Control = LblLinkInnerLightColor
+        AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = cbLinkItem
         AnchorSideTop.Side = asrBottom
-        Left = 107
-        Height = 242
+        AnchorSideRight.Control = ItemHSpacer
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = ItemVSpacer
+        AnchorSideBottom.Side = asrBottom
+        Left = 108
+        Height = 239
         Top = 27
-        Width = 142
+        Width = 141
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Left = 12
         BorderSpacing.Top = 4
         Visible = False
       end
       object Label1: TLabel
         AnchorSideTop.Control = pItemIdleFrame
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblInnerLightColor
+        AnchorSideRight.Control = LblLinkInnerLightColor
         AnchorSideRight.Side = asrBottom
         Left = 63
         Height = 15
@@ -1125,7 +1177,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       object Label7: TLabel
         AnchorSideTop.Control = pItemIdleGradientFrom
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblInnerLightColor
+        AnchorSideRight.Control = LblLinkInnerLightColor
         AnchorSideRight.Side = asrBottom
         Left = 22
         Height = 15
@@ -1138,7 +1190,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       object Label14: TLabel
         AnchorSideTop.Control = pItemIdleGradientTo
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblInnerLightColor
+        AnchorSideRight.Control = LblLinkInnerLightColor
         AnchorSideRight.Side = asrBottom
         Left = 37
         Height = 15
@@ -1151,7 +1203,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       object Label25: TLabel
         AnchorSideTop.Control = cbItemIdleGradientKind
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblInnerLightColor
+        AnchorSideRight.Control = LblLinkInnerLightColor
         AnchorSideRight.Side = asrBottom
         Left = 25
         Height = 15
@@ -1164,26 +1216,26 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       object Label26: TLabel
         AnchorSideTop.Control = pItemFont
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblInnerLightColor
+        AnchorSideRight.Control = LblLinkInnerLightColor
         AnchorSideRight.Side = asrBottom
         Left = 47
         Height = 15
-        Top = 284
+        Top = 278
         Width = 49
         Anchors = [akTop, akRight]
         Caption = 'Item font'
         ParentColor = False
       end
       object LblIdle: TLabel
-        AnchorSideLeft.Control = cbLinkItem
+        AnchorSideLeft.Control = pItemIdleFrame
+        AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = cbLinkItem
         AnchorSideTop.Side = asrBottom
-        Left = 116
-        Height = 13
+        Left = 157
+        Height = 15
         Top = 31
-        Width = 121
+        Width = 19
         Alignment = taCenter
-        AutoSize = False
         BorderSpacing.Top = 8
         Caption = 'Idle'
         ParentColor = False
@@ -1191,7 +1243,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       object Label28: TLabel
         AnchorSideTop.Control = pItemIdleCaptionColor
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblInnerLightColor
+        AnchorSideRight.Control = LblLinkInnerLightColor
         AnchorSideRight.Side = asrBottom
         Left = 24
         Height = 15
@@ -1204,7 +1256,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       object Label29: TLabel
         AnchorSideTop.Control = pItemIdleInnerDark
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblInnerLightColor
+        AnchorSideRight.Control = LblLinkInnerLightColor
         AnchorSideRight.Side = asrBottom
         Left = 13
         Height = 15
@@ -1214,7 +1266,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Caption = 'Inner dark color'
         ParentColor = False
       end
-      object LblInnerLightColor: TLabel
+      object LblLinkInnerLightColor: TLabel
         AnchorSideLeft.Control = TabSheet3
         AnchorSideTop.Control = pItemIdleInnerLight
         AnchorSideTop.Side = asrCenter
@@ -1228,25 +1280,31 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       end
       object LblHotTrack: TLabel
         AnchorSideLeft.Control = pItemHottrackFrame
+        AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = LblIdle
-        Left = 259
-        Height = 13
+        AnchorSideBottom.Control = LblIdle
+        AnchorSideBottom.Side = asrBottom
+        Left = 286
+        Height = 15
         Top = 31
-        Width = 121
+        Width = 46
         Alignment = taCenter
-        AutoSize = False
+        Anchors = [akTop, akLeft, akBottom]
         Caption = 'Hottrack'
         ParentColor = False
       end
       object LblActive: TLabel
         AnchorSideLeft.Control = pItemActiveFrame
+        AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = LblHotTrack
-        Left = 402
-        Height = 13
+        AnchorSideBottom.Control = LblHotTrack
+        AnchorSideBottom.Side = asrBottom
+        Left = 436
+        Height = 15
         Top = 31
-        Width = 121
+        Width = 33
         Alignment = taCenter
-        AutoSize = False
+        Anchors = [akTop, akLeft, akBottom]
         Caption = 'Active'
         ParentColor = False
       end
@@ -1258,10 +1316,10 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideRight.Side = asrBottom
         Left = 116
         Height = 25
-        Top = 279
+        Top = 273
         Width = 100
         Anchors = [akTop, akLeft, akRight]
-        BorderSpacing.Top = 20
+        BorderSpacing.Top = 14
         BorderSpacing.Bottom = 4
         BevelInner = bvRaised
         BevelOuter = bvLowered
@@ -1331,14 +1389,14 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         OnClick = pItemIdleGradientFromClick
       end
       object pItemIdleFrame: TPanel
-        AnchorSideLeft.Control = LblIdle
+        AnchorSideLeft.Control = cbLinkItem
         AnchorSideTop.Control = LblIdle
         AnchorSideTop.Side = asrBottom
         Left = 116
         Height = 25
         Top = 50
         Width = 100
-        BorderSpacing.Top = 6
+        BorderSpacing.Top = 4
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Color'
@@ -1430,11 +1488,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = pItemHottrackGradientFrom
         AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = pItemIdleGradientTo
+        AnchorSideBottom.Side = asrBottom
         Left = 259
         Height = 25
         Top = 112
         Width = 100
-        Anchors = [akTop, akLeft, akRight]
+        Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Top = 6
         BevelInner = bvRaised
         BevelOuter = bvLowered
@@ -1448,11 +1508,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = pItemHottrackFrame
         AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = pItemIdleGradientFrom
+        AnchorSideBottom.Side = asrBottom
         Left = 259
         Height = 25
         Top = 81
         Width = 100
-        Anchors = [akTop, akLeft, akRight]
+        Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Top = 6
         BevelInner = bvRaised
         BevelOuter = bvLowered
@@ -1464,10 +1526,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideLeft.Control = pItemIdleFrame
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = pItemIdleFrame
+        AnchorSideBottom.Control = pItemIdleFrame
+        AnchorSideBottom.Side = asrBottom
         Left = 259
         Height = 25
         Top = 50
         Width = 100
+        Anchors = [akTop, akLeft, akBottom]
         BorderSpacing.Left = 43
         BevelInner = bvRaised
         BevelOuter = bvLowered
@@ -1481,11 +1546,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = pItemHottrackGradientTo
         AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = pItemIdleCaptionColor
+        AnchorSideBottom.Side = asrBottom
         Left = 259
         Height = 25
         Top = 172
         Width = 100
-        Anchors = [akTop, akLeft, akRight]
+        Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Top = 6
         BevelInner = bvRaised
         BevelOuter = bvLowered
@@ -1499,11 +1566,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = pItemHottrackCaptionColor
         AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = pItemIdleInnerDark
+        AnchorSideBottom.Side = asrBottom
         Left = 259
         Height = 25
         Top = 203
         Width = 100
-        Anchors = [akTop, akLeft, akRight]
+        Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Top = 6
         BevelInner = bvRaised
         BevelOuter = bvLowered
@@ -1517,11 +1586,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = pItemHottrackInnerDark
         AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = pItemIdleInnerLight
+        AnchorSideBottom.Side = asrBottom
         Left = 259
         Height = 25
         Top = 234
         Width = 100
-        Anchors = [akTop, akLeft, akRight]
+        Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Top = 6
         BevelInner = bvRaised
         BevelOuter = bvLowered
@@ -1560,11 +1631,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = pItemActiveGradientFrom
         AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = pItemHottrackGradientTo
+        AnchorSideBottom.Side = asrBottom
         Left = 402
         Height = 25
         Top = 112
         Width = 100
-        Anchors = [akTop, akLeft, akRight]
+        Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Top = 6
         BevelInner = bvRaised
         BevelOuter = bvLowered
@@ -1578,11 +1651,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = pItemActiveFrame
         AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = pItemHottrackGradientFrom
+        AnchorSideBottom.Side = asrBottom
         Left = 402
         Height = 25
         Top = 81
         Width = 100
-        Anchors = [akTop, akLeft, akRight]
+        Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Top = 6
         BevelInner = bvRaised
         BevelOuter = bvLowered
@@ -1594,10 +1669,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideLeft.Control = pItemHottrackFrame
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = pItemHottrackFrame
+        AnchorSideBottom.Control = pItemHottrackFrame
+        AnchorSideBottom.Side = asrBottom
         Left = 402
         Height = 25
         Top = 50
         Width = 100
+        Anchors = [akTop, akLeft, akBottom]
         BorderSpacing.Left = 43
         BevelInner = bvRaised
         BevelOuter = bvLowered
@@ -1611,11 +1689,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = cbItemActiveGradientKind
         AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = pItemHottrackCaptionColor
+        AnchorSideBottom.Side = asrBottom
         Left = 402
         Height = 25
         Top = 172
         Width = 100
-        Anchors = [akTop, akLeft, akRight]
+        Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Top = 6
         BevelInner = bvRaised
         BevelOuter = bvLowered
@@ -1629,11 +1709,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = pItemActiveCaptionColor
         AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = pItemHottrackInnerDark
+        AnchorSideBottom.Side = asrBottom
         Left = 402
         Height = 25
         Top = 203
         Width = 100
-        Anchors = [akTop, akLeft, akRight]
+        Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Top = 6
         BevelInner = bvRaised
         BevelOuter = bvLowered
@@ -1647,11 +1729,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = pItemActiveInnerDark
         AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = pItemHottrackInnerLight
+        AnchorSideBottom.Side = asrBottom
         Left = 402
         Height = 25
         Top = 234
         Width = 100
-        Anchors = [akTop, akLeft, akRight]
+        Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Top = 6
         BevelInner = bvRaised
         BevelOuter = bvLowered
@@ -1660,7 +1744,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         OnClick = pItemActiveInnerLightClick
       end
       object cbLinkItem: TCheckBox
-        AnchorSideLeft.Control = LblInnerLightColor
+        AnchorSideLeft.Control = LblLinkInnerLightColor
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = TabSheet3
         Left = 116
@@ -1993,7 +2077,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideRight.Side = asrBottom
         Left = 116
         Height = 23
-        Top = 310
+        Top = 304
         Width = 100
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
@@ -2011,30 +2095,53 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       object Label27: TLabel
         AnchorSideTop.Control = cbItemStyle
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = LblInnerLightColor
+        AnchorSideRight.Control = LblLinkInnerLightColor
         AnchorSideRight.Side = asrBottom
         Left = 71
         Height = 15
-        Top = 314
+        Top = 308
         Width = 25
         Anchors = [akTop, akRight]
         Caption = 'Style'
         ParentColor = False
       end
+      object ItemVSpacer: TBevel
+        AnchorSideTop.Control = bItemIdleInnerLightColor
+        AnchorSideTop.Side = asrBottom
+        Left = 192
+        Height = 8
+        Top = 258
+        Width = 50
+        Shape = bsSpacer
+      end
+      object ItemHSpacer: TBevel
+        AnchorSideLeft.Control = bItemIdleFrameColor
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = pItemIdleFrame
+        AnchorSideBottom.Control = pItemIdleInnerLight
+        AnchorSideBottom.Side = asrBottom
+        Left = 243
+        Height = 209
+        Top = 50
+        Width = 6
+        Anchors = [akTop, akLeft, akBottom]
+        Shape = bsSpacer
+      end
     end
     object TabSheet4: TTabSheet
       Caption = 'Import / export'
-      ClientHeight = 340
+      ClientHeight = 360
       ClientWidth = 554
       ImageIndex = 3
       object bImport: TButton
         AnchorSideLeft.Control = bExportToXML
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = TabSheet4
-        Left = 260
+        Left = 250
         Height = 25
         Top = 4
-        Width = 110
+        Width = 118
+        AutoSize = True
         BorderSpacing.Left = 4
         BorderSpacing.Top = 4
         Caption = 'Import from XML'
@@ -2048,7 +2155,8 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Left = 146
         Height = 25
         Top = 4
-        Width = 110
+        Width = 100
+        AutoSize = True
         BorderSpacing.Left = 4
         BorderSpacing.Top = 4
         Caption = 'Export to XML'
@@ -2064,7 +2172,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideBottom.Control = TabSheet4
         AnchorSideBottom.Side = asrBottom
         Left = 4
-        Height = 303
+        Height = 323
         Top = 33
         Width = 546
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -2086,6 +2194,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Height = 25
         Top = 4
         Width = 138
+        AutoSize = True
         BorderSpacing.Left = 4
         BorderSpacing.Top = 4
         Caption = 'Export to Pascal code'
@@ -2096,11 +2205,12 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideTop.Control = TabSheet4
         AnchorSideRight.Control = TabSheet4
         AnchorSideRight.Side = asrBottom
-        Left = 475
+        Left = 496
         Height = 25
         Top = 4
-        Width = 75
+        Width = 54
         Anchors = [akTop, akRight]
+        AutoSize = True
         BorderSpacing.Top = 4
         BorderSpacing.Right = 4
         Caption = 'Copy'
@@ -2110,8 +2220,8 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     end
     object TabSheet5: TTabSheet
       Caption = 'Tools'
-      ClientHeight = 326
-      ClientWidth = 549
+      ClientHeight = 360
+      ClientWidth = 554
       ImageIndex = 4
       object Label17: TLabel
         AnchorSideLeft.Control = TabSheet5
@@ -2132,7 +2242,8 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Left = 115
         Height = 25
         Top = 4
-        Width = 105
+        Width = 54
+        AutoSize = True
         BorderSpacing.Left = 24
         BorderSpacing.Top = 4
         Caption = 'Reset'
@@ -2143,23 +2254,26 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
   end
   object ButtonPanel: TPanel
     Left = 8
-    Height = 24
-    Top = 529
-    Width = 546
+    Height = 25
+    Top = 511
+    Width = 542
     Align = alBottom
+    AutoSize = True
     BorderSpacing.Around = 8
     BevelOuter = bvNone
-    ClientHeight = 24
-    ClientWidth = 546
+    ClientHeight = 25
+    ClientWidth = 542
     TabOrder = 2
     object bOK: TButton
       AnchorSideTop.Control = ButtonPanel
       AnchorSideRight.Control = bCancel
-      Left = 436
+      AnchorSideBottom.Control = bCancel
+      AnchorSideBottom.Side = asrBottom
+      Left = 432
       Height = 25
       Top = 0
       Width = 42
-      Anchors = [akTop, akRight]
+      Anchors = [akTop, akRight, akBottom]
       AutoSize = True
       BorderSpacing.Right = 6
       Caption = 'OK'
@@ -2171,7 +2285,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       AnchorSideTop.Control = ButtonPanel
       AnchorSideRight.Control = ButtonPanel
       AnchorSideRight.Side = asrBottom
-      Left = 484
+      Left = 480
       Height = 25
       Top = 0
       Width = 62
@@ -2183,19 +2297,23 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       TabOrder = 1
     end
     object LblRGB: TLabel
+      AnchorSideLeft.Control = ColorView
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = bOK
       AnchorSideTop.Side = asrCenter
-      Left = 31
+      Left = 30
       Height = 15
       Top = 5
       Width = 38
+      BorderSpacing.Left = 5
       Caption = 'LblRGB'
       ParentColor = False
       Visible = False
     end
     object ColorView: TShape
       AnchorSideLeft.Control = ButtonPanel
-      AnchorSideTop.Control = bOK
-      AnchorSideBottom.Control = bOK
+      AnchorSideTop.Control = bCancel
+      AnchorSideBottom.Control = bCancel
       AnchorSideBottom.Side = asrBottom
       Left = 0
       Height = 24

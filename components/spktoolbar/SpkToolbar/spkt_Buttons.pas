@@ -946,7 +946,6 @@ begin
 
   // Text
   ABuffer.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
-  ABuffer.Canvas.Font.Height := SpkScaleY(ABuffer.Canvas.Font.Height, 96);
   ABuffer.Canvas.Font.Color := fontColor;
 
   if FButtonKind = bkButton then
@@ -1429,8 +1428,7 @@ begin
   if FShowCaption then
   begin
     ABuffer.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
-    ABuffer.Canvas.Font.Height := SpkScaleY(ABuffer.Canvas.Font.Height, 96);
-
+    ABuffer.Canvas.Font.Color := fontColor;
     if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
       x := FButtonRect.Left + SmallButtonHalfBorderWidth
     else
