@@ -193,13 +193,7 @@ end;
 
 procedure TForm1.rgLanguageClick(Sender: TObject);
 begin
-  case rgLanguage.ItemIndex of
-    0: demoCal.Languages := lgEnglish;
-    1: demoCal.Languages := lgFrench;
-    2: demoCal.Languages := lgGerman;
-    3: demoCal.Languages := lgHebrew;
-    4: demoCal.Languages := lgSpanish;
-  end;
+  demoCal.Languages := TLanguage(rgLanguage.ItemIndex);
   copyCal.Languages := demoCal.Languages;
 end;
 

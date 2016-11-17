@@ -6,6 +6,7 @@
   Originator    : H Page-Clark, 2013/2016
   Contributions : Ariel Rodriguez, 2013
                   Werner Pamler, 2013/2016
+                  John Greetham, 2016
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -63,24 +64,32 @@ const
                            SystemFont : False;    RightToLeft: False;
                            EndEllipsis: False);
 
-   EnglishDays = 'Sun,Mon,Tue,Wed,Thu,Fri,Sat';
-   EnglishMonths = 'January,February,March,April,May,June,July,August,September,October,November,December';
+  EnglishDays = 'Sun,Mon,Tue,Wed,Thu,Fri,Sat';
+  EnglishMonths = 'January,February,March,April,May,June,July,August,September,October,November,December';
 
-   HebrewDays = 'א,ב,ג,ד,ה,ו,ש';
-   HebrewMonths = ('ינואר,פברואר,מרץ,אפריל,מאי,יוני,    יולי,אוגוסט,ספטמבר,אוקטובר,נובמבר,דצמבר');
-   HebrewTexts = 'היום הוא,yyyy-mm-dd,במהלך החגים, אין חגים מוגדרים עבור';
+  HebrewDays = 'א,ב,ג,ד,ה,ו,ש';
+  HebrewMonths = ('ינואר,פברואר,מרץ,אפריל,מאי,יוני,    יולי,אוגוסט,ספטמבר,אוקטובר,נובמבר,דצמבר');
+  HebrewTexts = 'היום הוא,yyyy-mm-dd,במהלך החגים, אין חגים מוגדרים עבור';
 
-   FrenchDays = 'dim,lun,mar,mer,jeu,ven,sm';
-   FrenchMonths = 'janvier,février,mars,avril,mai,juin,juillet,août,septembre,octobre,novembre,décembre';
-   FrenchTexts = 'Est aujourd''hui,dd/mm/yyyy,vacances pendant,Il n''y a pas de jours fériés fixés pour';
+  FrenchDays = 'dim,lun,mar,mer,jeu,ven,sm';
+  FrenchMonths = 'janvier,février,mars,avril,mai,juin,juillet,août,septembre,octobre,novembre,décembre';
+  FrenchTexts = 'Est aujourd''hui,dd/mm/yyyy,vacances pendant,Il n''y a pas de jours fériés fixés pour';
 
-   GermanMonths = 'Januar,Februar,März,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember';
-   GermanDays = 'So,Mo,Di,Mi,Do,Fr,Sa';
-   GermamTexts = 'Heute ist,dd.mm.yyyy,Urlaub während,Es gibt keine Feiertage im';
+  GermanMonths = 'Januar,Februar,März,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember';
+  GermanDays = 'So,Mo,Di,Mi,Do,Fr,Sa';
+  GermamTexts = 'Heute ist,dd.mm.yyyy,Urlaub während,Es gibt keine Feiertage im';
 
-   SpanishDays = 'Dom,Lun,Mar,Mie,Jue,Vie,Sab';
-   SpanishMonths = 'Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre';
-   SpanishTexts = 'Hoy es,dd/mm/yyyy,Dias de fiestas,No hay dias feriados establecidos para';
+  SpanishDays = 'Dom,Lun,Mar,Mie,Jue,Vie,Sab';
+  SpanishMonths = 'Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre';
+  SpanishTexts = 'Hoy es,dd/mm/yyyy,Dias de fiestas,No hay dias feriados establecidos para';
+
+  ItalianDays = 'dom,lun,mar,mer,gio,ven,sab';
+  ItalianMonths = 'gennaio,febbraio,marzo,aprile,maggio,giugno,luglio,agosto,settembre,ottobre,novembre,dicembre';
+  ItalianTexts = 'Oggi è,dd/mmm/yyyy,Vacanze durante,Non ci sono vacanze fissati per';
+
+  PolishDays = 'nie,pon,wto,Śro,czw,pią,sob';
+  PolishMonths = 'Styczeń,Luty,Marzec,Kwiecień,Maj,Czerwiec,Lipiec,Sierpień,Wrzesień,Październik,Listopad,Grudzień';
+  PolishTexts = 'Dziś jest,dd/mmm/yyyy,urlop w czasie,Brak święta określone dla';
 
 type
   TCalendarLite = class;
@@ -126,7 +135,7 @@ type
   TCalSelMode = (smFirstSingle, smNextSingle, smFirstRange, smNextRange,
     smFirstWeek, smNextWeek, smNextWeekRange);
 
-  TLanguage = (lgEnglish, lgFrench, lgGerman, lgHebrew, lgSpanish);
+  TLanguage = (lgEnglish, lgFrench, lgGerman, lgHebrew, lgSpanish, lgItalian, lgPolish);
 
 
   { TCalDateList }
@@ -1789,6 +1798,18 @@ begin
                  DayNames := SpanishDays;
                  MonthNames := SpanishMonths;
                  DisplayTexts := SpanishTexts;
+                 BiDiMode:= bdLeftToRight;
+               end;
+    lgItalian: begin
+                 DayNames := ItalianDays;
+                 MonthNames := ItalianMonths;
+                 DisplayTexts := ItalianTexts;
+                 BiDiMode:= bdLeftToRight;
+               end;
+    lgPolish:  begin
+                 DayNames := PolishDays;
+                 MonthNames := PolishMonths;
+                 DisplayTexts := PolishTexts;
                  BiDiMode:= bdLeftToRight;
                end;
   end;
