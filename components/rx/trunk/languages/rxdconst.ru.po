@@ -123,6 +123,10 @@ msgstr "Экспорт изображений"
 msgid "Export params"
 msgstr "Параметры экспорта"
 
+#: rxdconst.sexportselectedrows
+msgid "Export only selected rows"
+msgstr "Экспорт только помеченных строк"
+
 #: rxdconst.sexprbadcompare
 msgid "Compare opertion needs field and const"
 msgstr "Операции сравнения требуют наличия поля и константы"

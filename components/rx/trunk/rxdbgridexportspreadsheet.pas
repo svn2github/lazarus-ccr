@@ -43,7 +43,8 @@ type
     ressExportColors,
     ressExportFooter,
     ressExportFormula,
-    ressOverwriteExisting
+    ressOverwriteExisting,
+    ressExportSelectedRows
     );
 
   TRxDBGridExportSpreadSheetOptions = set of TRxDBGridExportSpreadSheetOption;
@@ -59,6 +60,9 @@ type
     FOptions: TRxDBGridExportSpreadSheetOptions;
     FPageName: string;
     function ColIndex(ACol:TRxColumn):integer;
+    procedure ExpCurRow(AFont: TFont);
+    procedure ExpAllRow;
+    procedure ExpSelectedRow;
   protected
     FDataSet:TDataSet;
     FWorkbook: TsWorkbook;
@@ -88,7 +92,7 @@ procedure Register;
 
 implementation
 uses fpsallformats, LCLType, Forms, math, LazUTF8, rxdconst, Controls, LCLIntf,
-  RxDBGridExportSpreadSheet_ParamsUnit, rxdbutils, fpsutils;
+  RxDBGridExportSpreadSheet_ParamsUnit, rxdbutils, fpsutils, DBGrids;
 
 {$R rxdbgridexportspreadsheet.res}
 
@@ -117,6 +121,106 @@ begin
     if ACol = C then
       Exit;
   end;
+end;
+
+procedure TRxDBGridExportSpreadSheet.ExpCurRow(AFont:TFont);
+var
+  i, J: Integer;
+  C: TRxColumn;
+  CT: TRxColumnTitle;
+  S: String;
+  CC: TColor;
+begin
+  FCurCol:=0;
+  for i:=0 to FRxDBGrid.Columns.Count - 1 do
+  begin
+    C:=FRxDBGrid.Columns[i] as TRxColumn;
+    CT:=C.Title as TRxColumnTitle;
+    if C.Visible then
+    begin
+      if Assigned(C.Field) then
+      begin
+        S:=C.Field.DisplayText;
+        if (C.KeyList.Count > 0) and (C.PickList.Count > 0) then
+        begin
+          J := C.KeyList.IndexOf(S);
+          if (J >= 0) and (J < C.PickList.Count) then
+            S := C.PickList[j];
+          FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S);
+        end
+        else
+        if Assigned(C.Field.OnGetText) then
+          FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S)
+        else
+        if C.Field.DataType in [ftCurrency] then
+          FWorksheet.WriteCurrency(FCurRow, FCurCol, C.Field.AsCurrency, nfCurrency, '')
+        else
+        if C.Field.DataType in IntegerDataTypes then
+          FWorksheet.WriteNumber(FCurRow, FCurCol, C.Field.AsInteger, nfFixed, 0)
+        else
+        if C.Field.DataType in NumericDataTypes then
+          FWorksheet.WriteNumber(FCurRow, FCurCol, C.Field.AsFloat, nfFixed, 2)
+        else
+          FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S);
+      end;
+
+      if ressExportColors in FOptions then
+      begin
+        CC:=C.Color;
+        if Assigned(RxDBGrid.OnGetCellProps) then
+          RxDBGrid.OnGetCellProps(RxDBGrid, C.Field, AFont, CC);
+        if (CC and SYS_COLOR_BASE) = 0  then
+        begin
+          {$IFDEF OLD_fpSPREADSHEET}
+          scColor:=FWorkbook.AddColorToPalette(CC);
+          FWorksheet.WriteBackgroundColor(FCurRow,FCurCol, scColor);
+          {$ELSE}
+          FWorksheet.WriteBackgroundColor(FCurRow,FCurCol, CC);
+          {$ENDIF}
+        end;
+      end;
+
+      FWorksheet.WriteBorders(FCurRow,FCurCol, [cbNorth, cbWest, cbEast, cbSouth]);
+      FWorksheet.WriteBorderColor(FCurRow,FCurCol, cbNorth, scColorBlack);
+      FWorksheet.WriteBorderColor(FCurRow,FCurCol, cbWest, scColorBlack);
+      FWorksheet.WriteBorderColor(FCurRow,FCurCol, cbEast, scColorBlack);
+      FWorksheet.WriteBorderColor(FCurRow,FCurCol, cbSouth, scColorBlack);
+
+      FWorksheet.WriteHorAlignment(FCurRow, FCurCol, ssAligns[C.Alignment]);
+      inc(FCurCol);
+    end;
+  end;
+end;
+
+procedure TRxDBGridExportSpreadSheet.ExpAllRow;
+var
+  F: TFont;
+begin
+  F:=TFont.Create;
+  FDataSet.First;
+  while not FDataSet.EOF do
+  begin
+    ExpCurRow(F);
+    inc(FCurRow);
+    FDataSet.Next;
+  end;
+  F.Free;
+end;
+
+procedure TRxDBGridExportSpreadSheet.ExpSelectedRow;
+var
+  F: TFont;
+  k: Integer;
+begin
+  F:=TFont.Create;
+  FDataSet.First;
+  for k:=0 to FRxDBGrid.SelectedRows.Count-1 do
+  begin
+    FDataSet.Bookmark:=FRxDBGrid.SelectedRows[k];
+    ExpCurRow(F);
+    inc(FCurRow);
+  end;
+  F.Free;
 end;
 
 procedure TRxDBGridExportSpreadSheet.DoExportTitle;
@@ -242,83 +346,12 @@ begin
 end;
 
 procedure TRxDBGridExportSpreadSheet.DoExportBody;
-var
-  i : Integer;
-  C : TRxColumn;
-  CT : TRxColumnTitle;
-  CC : TColor;
-  scColor : TsColor;
-  F:TFont;
-  S: String;
-  J: Integer;
 begin
-  F:=TFont.Create;
-  FDataSet.First;
-  while not FDataSet.EOF do
-  begin
-    FCurCol:=0;
-    for i:=0 to FRxDBGrid.Columns.Count - 1 do
-    begin
-      C:=FRxDBGrid.Columns[i] as TRxColumn;
-      CT:=C.Title as TRxColumnTitle;
-      if C.Visible then
-      begin
-        if Assigned(C.Field) then
-        begin
-          S:=C.Field.DisplayText;
-          if (C.KeyList.Count > 0) and (C.PickList.Count > 0) then
-          begin
-            J := C.KeyList.IndexOf(S);
-            if (J >= 0) and (J < C.PickList.Count) then
-              S := C.PickList[j];
-            FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S);
-          end
-          else
-          if Assigned(C.Field.OnGetText) then
-            FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S)
-          else
-          if C.Field.DataType in [ftCurrency] then
-            FWorksheet.WriteCurrency(FCurRow, FCurCol, C.Field.AsCurrency, nfCurrency, '')
-          else
-          if C.Field.DataType in IntegerDataTypes then
-            FWorksheet.WriteNumber(FCurRow, FCurCol, C.Field.AsInteger, nfFixed, 0)
-          else
-          if C.Field.DataType in NumericDataTypes then
-            FWorksheet.WriteNumber(FCurRow, FCurCol, C.Field.AsFloat, nfFixed, 2)
-          else
-            FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S);
-        end;
+  if (dgMultiselect in RxDBGrid.Options) and (RxDBGrid.SelectedRows.Count > 0) and (ressExportSelectedRows in FOptions) then
+    ExpSelectedRow
+  else
+    ExpAllRow;
 
-        if ressExportColors in FOptions then
-        begin
-          CC:=C.Color;
-          if Assigned(RxDBGrid.OnGetCellProps) then
-            RxDBGrid.OnGetCellProps(RxDBGrid, C.Field, F, CC);
-          if (CC and SYS_COLOR_BASE) = 0  then
-          begin
-            {$IFDEF OLD_fpSPREADSHEET}
-            scColor:=FWorkbook.AddColorToPalette(CC);
-            FWorksheet.WriteBackgroundColor(FCurRow,FCurCol, scColor);
-            {$ELSE}
-            FWorksheet.WriteBackgroundColor(FCurRow,FCurCol, CC);
-            {$ENDIF}
-          end;
-        end;
-
-        FWorksheet.WriteBorders(FCurRow,FCurCol, [cbNorth, cbWest, cbEast, cbSouth]);
-        FWorksheet.WriteBorderColor(FCurRow,FCurCol, cbNorth, scColorBlack);
-        FWorksheet.WriteBorderColor(FCurRow,FCurCol, cbWest, scColorBlack);
-        FWorksheet.WriteBorderColor(FCurRow,FCurCol, cbEast, scColorBlack);
-        FWorksheet.WriteBorderColor(FCurRow,FCurCol, cbSouth, scColorBlack);
-
-        FWorksheet.WriteHorAlignment(FCurRow, FCurCol, ssAligns[C.Alignment]);
-        inc(FCurCol);
-      end;
-    end;
-    inc(FCurRow);
-    FDataSet.Next;
-  end;
-  F.Free;
   FLastDataRow:=FCurRow-1;
 end;
 
@@ -497,6 +530,8 @@ begin
   F.cbExportCellColors.Checked:=ressExportColors in FOptions;
   F.cbOverwriteExisting.Checked:=ressOverwriteExisting in FOptions;
   F.cbExportFormula.Checked:=ressExportFormula in FOptions;
+  F.cbExportSelectedRows.Checked:=ressExportSelectedRows in FOptions;
+  F.cbExportSelectedRows.Enabled:=(dgMultiselect in RxDBGrid.Options) and (RxDBGrid.SelectedRows.Count > 0);
 
   F.edtPageName.Text:=FPageName;
 
@@ -518,7 +553,8 @@ begin
       FOptions :=FOptions + [ressOverwriteExisting];
     if F.cbExportFormula.Checked then
       FOptions :=FOptions + [ressExportFormula];
-
+    if F.cbExportSelectedRows.Enabled and F.cbExportSelectedRows.Checked then
+      FOptions :=FOptions + [ressExportSelectedRows];
   end;
   F.Free;
 end;

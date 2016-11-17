@@ -1,10 +1,10 @@
 object RxDBGridExportSpreadSheet_ParamsForm: TRxDBGridExportSpreadSheet_ParamsForm
   Left = 732
-  Height = 246
+  Height = 294
   Top = 338
   Width = 548
   Caption = 'Export params'
-  ClientHeight = 246
+  ClientHeight = 294
   ClientWidth = 548
   OnCreate = FormCreate
   Position = poScreenCenter
@@ -96,7 +96,7 @@ object RxDBGridExportSpreadSheet_ParamsForm: TRxDBGridExportSpreadSheet_ParamsFo
   object ButtonPanel1: TButtonPanel
     Left = 6
     Height = 46
-    Top = 194
+    Top = 242
     Width = 536
     OKButton.Name = 'OKButton'
     OKButton.DefaultCaption = True
@@ -166,5 +166,17 @@ object RxDBGridExportSpreadSheet_ParamsForm: TRxDBGridExportSpreadSheet_ParamsFo
     BorderSpacing.Around = 6
     Caption = 'Export formula'
     TabOrder = 5
+  end
+  object cbExportSelectedRows: TCheckBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = cbExportCellColors
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 24
+    Top = 195
+    Width = 163
+    BorderSpacing.Around = 6
+    Caption = 'Export selected rows'
+    TabOrder = 9
   end
 end

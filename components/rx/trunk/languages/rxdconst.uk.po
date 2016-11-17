@@ -122,6 +122,10 @@ msgstr "Експортувати зображення"
 msgid "Export params"
 msgstr "Експортувати параметри"
 
+#: rxdconst.sexportselectedrows
+msgid "Export only selected rows"
+msgstr ""
+
 # msgid "Compare opertion need fielad and const"
 #: rxdconst.sexprbadcompare
 msgid "Compare opertion needs field and const"

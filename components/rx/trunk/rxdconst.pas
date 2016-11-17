@@ -185,6 +185,7 @@ resourcestring
   sExportCellColors          = 'Export cell colors';
   sExportFormula             = 'Export footer formula';
   sExportImages              = 'Export images';
+  sExportSelectedRows        = 'Export only selected rows';
   sOverwriteExisting         = 'Overwrite existing';
   sShowColumnHeaderOnAllPage = 'Show column header on all pages';
   sPageMargins               = 'Page margins';

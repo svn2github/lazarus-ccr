@@ -113,6 +113,10 @@ msgstr ""
 msgid "Export params"
 msgstr ""
 
+#: rxdconst.sexportselectedrows
+msgid "Export only selected rows"
+msgstr ""
+
 #: rxdconst.sexprbadcompare
 msgid "Compare opertion needs field and const"
 msgstr ""
