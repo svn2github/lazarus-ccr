@@ -12,9 +12,9 @@ object Form1: TForm1
   LCLVersion = '1.7'
   object RxDBGrid1: TRxDBGrid
     Left = 0
-    Height = 463
+    Height = 450
     Hint = 'Список данных'
-    Top = 64
+    Top = 77
     Width = 746
     ColumnDefValues.BlobText = '(blob)'
     TitleButtons = True
@@ -28,8 +28,11 @@ object Form1: TForm1
         Width = 90
         FieldName = 'CODE'
         EditButtons = <>
+        Filter.IsNull = False
+        Filter.IsAll = True
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Нет)'
+        Filter.AllValue = '(Все значения)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footers = <>
@@ -42,8 +45,11 @@ object Form1: TForm1
         Width = 350
         FieldName = 'NAME'
         EditButtons = <>
+        Filter.IsNull = False
+        Filter.IsAll = True
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Нет)'
+        Filter.AllValue = '(Все значения)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footers = <        
@@ -70,8 +76,11 @@ object Form1: TForm1
         Width = 120
         FieldName = 'PRICE'
         EditButtons = <>
+        Filter.IsNull = False
+        Filter.IsAll = True
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Нет)'
+        Filter.AllValue = '(Все значения)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footer.Alignment = taRightJustify
@@ -154,6 +163,8 @@ object Form1: TForm1
     FooterOptions.Color = clYellow
     FooterOptions.RowCount = 3
     FooterOptions.DrawFullLine = False
+    SearchOptions.QuickSearchOptions = [loCaseInsensitive, loPartialKey]
+    SearchOptions.FromStart = False
     OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgFooterRows, rdgAllowToolMenu]
     FooterColor = clYellow
     FooterRowCount = 3
@@ -165,28 +176,28 @@ object Form1: TForm1
     SelectedColor = clHighlight
     GridLineStyle = psSolid
     DataSource = DataSource1
-    Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgHeaderPushedLook]
+    Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgMultiselect, dgHeaderPushedLook]
     ParentColor = False
     TabOrder = 0
     TitleStyle = tsNative
   end
   object Panel1: TPanel
     Left = 0
-    Height = 64
+    Height = 77
     Top = 0
     Width = 746
     Align = alTop
     AutoSize = True
-    ClientHeight = 64
+    ClientHeight = 77
     ClientWidth = 746
     TabOrder = 1
     object Label1: TLabel
       AnchorSideLeft.Control = Panel1
       AnchorSideTop.Control = Panel1
       Left = 7
-      Height = 17
+      Height = 20
       Top = 7
-      Width = 132
+      Width = 145
       BorderSpacing.Around = 6
       Caption = 'SpeadSheet file name '
       ParentColor = False
@@ -196,9 +207,9 @@ object Form1: TForm1
       AnchorSideTop.Control = Label1
       AnchorSideTop.Side = asrBottom
       Left = 13
-      Height = 27
+      Height = 37
       Hint = 'Укажите имя файла'
-      Top = 30
+      Top = 33
       Width = 275
       FilterIndex = 0
       HideDirectories = False
@@ -216,7 +227,7 @@ object Form1: TForm1
       Left = 294
       Height = 33
       Hint = 'Начать выгрузку'
-      Top = 27
+      Top = 35
       Width = 87
       Caption = 'Export data'
       OnClick = Button1Click

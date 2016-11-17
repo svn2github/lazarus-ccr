@@ -5402,10 +5402,58 @@ procedure TRxDBGrid.OnCopyCellValue(Sender: TObject);
 var
   P:TBookMark;
   S:string;
-  i, k:integer;
+  i, k, j:integer;
 begin
   if DatalinkActive then
   begin
+    if (dgMultiselect in Options) and (SelectedRows.Count>1) then
+    begin
+      S:='';
+      DataSource.DataSet.DisableControls;
+      {$IFDEF NoAutomatedBookmark}
+      P:=DataSource.DataSet.GetBookmark;
+      {$ELSE}
+      P:=DataSource.DataSet.Bookmark;
+      {$ENDIF}
+      try
+        for j:=0 to SelectedRows.Count-1 do
+        begin
+          DataSource.DataSet.Bookmark:=SelectedRows[j];
+          if S<>'' then
+            S:=S+LineEnding;
+          K:=0;
+          for i:=0 to Columns.Count-1 do
+          begin
+            if Assigned(Columns[i].Field) then
+            begin
+              if K<>0 then
+                S:=S+#9;
+              S:=S+Columns[i].Field.DisplayText;
+              inc(K);
+            end;
+          end;
+        end;
+      finally
+      {$IFDEF NoAutomatedBookmark}
+        DataSource.DataSet.GotoBookmark(P);
+        DataSource.DataSet.FreeBookmark(P);
+      {$ELSE}
+        DataSource.DataSet.Bookmark:=P;
+      {$ENDIF}
+        DataSource.DataSet.EnableControls;
+      end;
+      Invalidate;
+      if S<>'' then
+      begin
+        try
+          Clipboard.Open;
+          Clipboard.AsText:=S;
+        finally
+          Clipboard.Close;
+        end;
+      end;
+    end
+    else
     if (dgMultiselect in Options) and (SelectedRows.Count>1) then
     begin
       S:='';
