@@ -429,6 +429,8 @@ begin
   MonthStartsOn := DayOfWeek(StartingDate);
   DayTag := Ord(FMonthView.WeekStartsOn);
   DayOffset := DayTag - MonthStartsOn;
+  if DayOffset = 0 then
+    DayOffset := -7;
 
   I := 0;
   DayNumber := DayOffset + 1;
