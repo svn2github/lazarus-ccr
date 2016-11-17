@@ -324,9 +324,9 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     Height = 371
     Top = 132
     Width = 558
-    ActivePage = TabSheet3
+    ActivePage = TabSheet5
     Align = alClient
-    TabIndex = 2
+    TabIndex = 4
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Tab'
@@ -697,8 +697,8 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     end
     object TabSheet2: TTabSheet
       Caption = 'Pane'
-      ClientHeight = 360
-      ClientWidth = 579
+      ClientHeight = 343
+      ClientWidth = 550
       ImageIndex = 1
       object Label8: TLabel
         AnchorSideTop.Control = pPaneBorderDark
@@ -2130,8 +2130,8 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     end
     object TabSheet4: TTabSheet
       Caption = 'Import / export'
-      ClientHeight = 360
-      ClientWidth = 554
+      ClientHeight = 343
+      ClientWidth = 550
       ImageIndex = 3
       object bImport: TButton
         AnchorSideLeft.Control = bExportToXML
@@ -2172,9 +2172,9 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideBottom.Control = TabSheet4
         AnchorSideBottom.Side = asrBottom
         Left = 4
-        Height = 323
+        Height = 306
         Top = 33
-        Width = 546
+        Width = 542
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Left = 4
         BorderSpacing.Top = 4
@@ -2205,7 +2205,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideTop.Control = TabSheet4
         AnchorSideRight.Control = TabSheet4
         AnchorSideRight.Side = asrBottom
-        Left = 496
+        Left = 492
         Height = 25
         Top = 4
         Width = 54
@@ -2220,34 +2220,40 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     end
     object TabSheet5: TTabSheet
       Caption = 'Tools'
-      ClientHeight = 360
-      ClientWidth = 554
+      ClientHeight = 343
+      ClientWidth = 550
       ImageIndex = 4
       object Label17: TLabel
         AnchorSideLeft.Control = TabSheet5
-        AnchorSideTop.Control = bReset
+        AnchorSideTop.Control = CbAppearanceStyle
         AnchorSideTop.Side = asrCenter
         Left = 4
         Height = 15
-        Top = 9
+        Top = 8
         Width = 87
         BorderSpacing.Left = 4
         Caption = 'Reset to defaults'
         ParentColor = False
       end
-      object bReset: TButton
+      object CbAppearanceStyle: TComboBox
         AnchorSideLeft.Control = Label17
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = TabSheet5
         Left = 115
-        Height = 25
+        Height = 23
         Top = 4
-        Width = 54
-        AutoSize = True
+        Width = 172
         BorderSpacing.Left = 24
         BorderSpacing.Top = 4
-        Caption = 'Reset'
-        OnClick = bResetClick
+        ItemHeight = 15
+        Items.Strings = (
+          'Office2007 blue'
+          'Office2007 silver'
+          'Metro light'
+          'Metro dark'
+        )
+        OnChange = CbAppearanceStyleChange
+        Style = csDropDownList
         TabOrder = 0
       end
     end

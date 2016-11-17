@@ -16,6 +16,7 @@ type
   { TfrmAppearanceEditWindow }
 
   TfrmAppearanceEditWindow = class(TForm)
+    CbAppearanceStyle: TComboBox;
     PaneHSpacer: TBevel;
     ItemHSpacer: TBevel;
     TabVSpacer: TBevel;
@@ -162,7 +163,6 @@ type
     sItemRectangle: TShape;
     TabSheet5: TTabSheet;
     Label17: TLabel;
-    bReset: TButton;
 
     procedure bExportToPascalClick(Sender: TObject);
     procedure bExportToXMLClick(Sender: TObject);
@@ -199,6 +199,7 @@ type
     procedure bTabGradientToColorClick(Sender: TObject);
     procedure bActiveTabHeaderFontColorClick(Sender: TObject);
     procedure bCopyToClipboardClick(Sender: TObject);
+    procedure CbAppearanceStyleChange(Sender: TObject);
     procedure cbItemActiveGradientKindChange(Sender: TObject);
     procedure cbItemHottrackGradientKindChange(Sender: TObject);
     procedure cbItemIdleGradientKindChange(Sender: TObject);
@@ -285,9 +286,9 @@ type
       Shift: TShiftState; X, Y: integer);
     procedure ScreenshotMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
+
   public
     property Appearance : TSpkToolbarAppearance read GetAppearance write SetAppearance;
-    { Public declarations }
   end;
 
 var
@@ -417,6 +418,12 @@ begin
       SetLinkedFrameColor(pTabGradientTo.Color)
   end;
   (Sender as TSpeedButton).Down := false;
+end;
+
+procedure TfrmAppearanceEditWindow.CbAppearanceStyleChange(Sender: TObject);
+begin
+  tbPreview.Appearance.Reset(TSpkStyle(CbAppearanceStyle.ItemIndex));
+  LoadAppearance(tbPreview.Appearance);
 end;
 
 procedure TfrmAppearanceEditWindow.bCopyToClipboardClick(Sender: TObject);

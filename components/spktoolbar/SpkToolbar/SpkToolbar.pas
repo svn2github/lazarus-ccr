@@ -144,6 +144,9 @@ type
       FUpdating is controlled by user }
     FUpdating: boolean;
 
+    { Quick selection of different appearances }
+    FStyle: TSpkStyle;
+
     FOnTabChanging: TSpkTabChangingEvent;
     FOnTabChanged: TNotifyEvent;
 
@@ -309,6 +312,9 @@ type
     { Setter for property DisabledLargeImages }
     procedure SetDisabledLargeImages(const Value: TImageList);
 
+    { Setter for toolbar style, i.e. quick selection of new appearance theme }
+    procedure SetStyle(const Value: TSpkStyle);
+
   public
 
     // *************************
@@ -380,6 +386,9 @@ type
 
     { Component background color }
     property Color: TColor read GetColor write SetColor default clSkyBlue;
+
+    { Appearance style - don't move after Appearance! }
+    property Style: TSpkStyle read FStyle write SetStyle default spkOffice2007Blue;
 
     { Object containing attributes of toolbar appearance }
     property Appearance: TSpkToolbarAppearance read FAppearance write SetAppearance;
@@ -1115,6 +1124,13 @@ begin
 
   if not (FInternalUpdating or FUpdating) then
     Repaint;
+end;
+
+procedure TSpkToolbar.SetStyle(const Value: TSpkStyle);
+begin
+  FStyle := Value;
+  FAppearance.Reset(FStyle);
+  ForceRepaint;
 end;
 
 function TSpkToolbar.DoTabChanging(OldIndex, NewIndex: integer): boolean;

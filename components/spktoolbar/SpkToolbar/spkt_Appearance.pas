@@ -24,7 +24,9 @@ type
 
   TSpkElementStyle = (esRounded, esRectangle);
 
-type TSpkTabAppearance = class(TPersistent)
+  TSpkStyle = (spkOffice2007Blue, spkOffice2007Silver, spkMetroLight, spkMetroDark);
+
+  TSpkTabAppearance = class(TPersistent)
      private
        FDispatch: TSpkBaseAppearanceDispatch;
      protected
@@ -53,7 +55,7 @@ type TSpkTabAppearance = class(TPersistent)
        procedure SaveToXML(Node: TSpkXMLNode);
        procedure LoadFromXML(Node: TSpkXMLNode);
        destructor Destroy; override;
-       procedure Reset;
+       procedure Reset(AStyle: TSpkStyle = spkOffice2007Blue);
      published
        property TabHeaderFont: TFont read FTabHeaderFont write SetHeaderFont;
        property BorderColor: TColor read FBorderColor write SetBorderColor;
@@ -75,7 +77,6 @@ type TSpkPaneAppearance = class(TPersistent)
        FGradientToColor: TColor;
        FGradientType: TBackgroundKind;
        FStyle: TSpkPaneStyle;
-
        procedure SetCaptionBgColor(const Value: TColor);
        procedure SetCaptionFont(const Value: TFont);
        procedure SetBorderDarkColor(const Value: TColor);
@@ -91,7 +92,7 @@ type TSpkPaneAppearance = class(TPersistent)
        procedure SaveToPascal(AList: TStrings);
        procedure SaveToXML(Node: TSpkXMLNode);
        procedure LoadFromXML(Node: TSpkXMLNode);
-       procedure Reset;
+       procedure Reset(AStyle: TSpkStyle = spkOffice2007Blue);
      published
        property BorderDarkColor: TColor read FBorderDarkColor write SetBorderDarkColor;
        property BorderLightColor: TColor read FBorderLightColor write SetBorderLightColor;
@@ -159,7 +160,7 @@ type TSpkElementAppearance = class(TPersistent)
        procedure SaveToPascal(AList: TStrings);
        procedure SaveToXML(Node: TSpkXMLNode);
        procedure LoadFromXML(Node: TSpkXMLNode);
-       procedure Reset;
+       procedure Reset(AStyle: TSpkStyle = spkOffice2007Blue);
      published
        property CaptionFont: TFont read FCaptionFont write SetCaptionFont;
        property IdleFrameColor: TColor read FIdleFrameColor write SetIdleFrameColor;
@@ -200,7 +201,6 @@ type TSpkToolbarAppearance = class;
      TSpkToolbarAppearance = class(TPersistent)
      private
        FAppearanceDispatch: TSpkToolbarAppearanceDispatch;
-     protected
        FTab: TSpkTabAppearance;
        FPane: TSpkPaneAppearance;
        FElement: TSpkElementAppearance;
@@ -208,12 +208,14 @@ type TSpkToolbarAppearance = class;
        procedure SetElementAppearance(const Value: TSpkElementAppearance);
        procedure SetPaneAppearance(const Value: TSpkPaneAppearance);
        procedure SetTabAppearance(const Value: TSpkTabAppearance);
+     protected
+       //
      public
        constructor Create(ADispatch: TSpkBaseAppearanceDispatch); reintroduce;
        destructor Destroy; override;
        procedure Assign(Source: TPersistent); override;
        procedure NotifyAppearanceChanged;
-       procedure Reset;
+       procedure Reset(AStyle: TSpkStyle = spkOffice2007Blue);
        procedure SaveToPascal(AList: TStrings);
        procedure SaveToXML(Node: TSpkXMLNode);
        procedure LoadFromXML(Node: TSpkXMLNode);
@@ -223,7 +225,8 @@ type TSpkToolbarAppearance = class;
        property Element: TSpkElementAppearance read FElement write SetElementAppearance;
      end;
 
-     procedure SetDefaultFont(AFont: TFont);
+procedure SetDefaultFont(AFont: TFont);
+
 
 implementation
 
@@ -319,15 +322,54 @@ begin
     FInactiveHeaderFontColor := Subnode.TextAsColor;
 end;
 
-procedure TSpkTabAppearance.Reset;
+procedure TSpkTabAppearance.Reset(AStyle: TSpkStyle);
 begin
   SetDefaultFont(FTabHeaderFont);
-  FTabHeaderFont.Size := FTabHeaderFont.Size;
-  FBorderColor := rgb(141, 178, 227);
-  FGradientFromColor := rgb(222, 232, 245);
-  FGradientToColor := rgb(199, 216, 237);
-  FGradientType := bkConcave;
-  FInactiveHeaderFontColor := FTabHeaderFont.Color;
+
+  case AStyle of
+    spkOffice2007Blue:
+      begin
+        FTabHeaderFont.Color := rgb(21, 66, 139);
+        FBorderColor := rgb(141, 178, 227);
+        FGradientFromColor := rgb(222, 232, 245);
+        FGradientToColor := rgb(199, 216, 237);
+        FGradientType := bkConcave;
+        FInactiveHeaderFontColor := FTabHeaderFont.Color;
+      end;
+
+    spkOffice2007Silver:
+      begin
+        FTabHeaderFont.Style := [];
+        FTabHeaderFont.Color := $007A534C;
+        FBorderColor := $00BEBEBE;
+        FGradientFromColor := $00F4F2F2;
+        FGradientToColor := $00EFE6E1;
+        FGradientType := bkConcave;
+        FInactiveHeaderFontColor := $007A534C;
+      end;
+
+    spkMetroLight:
+      begin
+        FTabHeaderFont.Style := [];
+        FTabHeaderFont.Color := $0095572A;
+        FBorderColor := $00D2D0CF;
+        FGradientFromColor := $00F1F1F1;
+        FGradientToColor := $00F1F1F1;
+        FGradientType := bkSolid;
+        FInactiveHeaderFontColor := $00696969;
+      end;
+
+    spkMetroDark:
+      begin
+        FTabHeaderFont.Style := [];
+        FTabHeaderFont.Color := $00FFFFFF;
+        FBorderColor := $00000000;
+        FGradientFromColor := $00464646;
+        FGradientToColor := $00464646;
+        FGradientType := bkSolid;
+        FInactiveHeaderFontColor := $00787878;
+      end;
+  end;
 end;
 
 procedure TSpkTabAppearance.SaveToPascal(AList: TStrings);
@@ -339,7 +381,7 @@ begin
     Add('    GradientFromColor := $' + IntToHex(FGradientFromColor, 8) + ';');
     Add('    GradientToColor := $' + IntToHex(FGradientToColor, 8) + ';');
     Add('    GradientType := ' + GetEnumName(TypeInfo(TBackgroundKind), ord(FGradientType)) + ';');
-    Add('    InactiveTabHeaderFontColor := $' + IntToHex(FInactiveHeaderFontColor, 8) + ';');
+    Add('    InactiveHeaderFontColor := $' + IntToHex(FInactiveHeaderFontColor, 8) + ';');
     Add('  end;');
   end;
 end;
@@ -494,16 +536,63 @@ begin
     FStyle := TSpkPaneStyle(SubNode.TextAsInteger);
 end;
 
-procedure TSpkPaneAppearance.Reset;
+procedure TSpkPaneAppearance.Reset(AStyle: TSpkStyle = spkOffice2007Blue);
 begin
   SetDefaultFont(FCaptionFont);
-  FBorderDarkColor := rgb(158, 190, 218);
-  FBorderLightColor := rgb(237, 242, 248);
-  FCaptionBgColor := rgb(194, 217, 241);
-  FGradientFromColor := rgb(222, 232, 245);
-  FGradientToColor := rgb(199, 216, 237);
-  FGradientType := bkConcave;
-  FStyle := psRectangleEtched;
+
+  case AStyle of
+    spkOffice2007Blue:
+      begin
+        FCaptionFont.Style := [];
+        FCaptionFont.Color := rgb(21, 66, 139);
+        FBorderDarkColor := rgb(158, 190, 218);
+        FBorderLightColor := rgb(237, 242, 248);
+        FCaptionBgColor := rgb(194, 217, 241);
+        FGradientFromColor := rgb(222, 232, 245);
+        FGradientToColor := rgb(199, 216, 237);
+        FGradientType := bkConcave;
+        FStyle := psRectangleEtched;
+      end;
+
+    spkOffice2007Silver:
+      begin
+        FCaptionFont.Style := [];
+        FCaptionFont.Color := $00363636;
+        FBorderDarkColor := $00A6A6A6;
+        FBorderLightColor := $00FFFFFF;
+        FCaptionBgColor := $00E4E4E4;
+        FGradientFromColor := $00F8F8F8;
+        FGradientToColor := $00E9E9E9;
+        FGradientType := bkConcave;
+        FStyle := psRectangleEtched;
+      end;
+
+    spkMetroLight:
+      begin
+        FCaptionFont.Style := [];
+        FCaptionFont.Color := $00696969;
+        FBorderDarkColor := $00D2D0CF;
+        FBorderLightColor := $00F8F2ED;
+        FCaptionBgColor := $00F1F1F1;
+        FGradientFromColor := $00F1F1F1;
+        FGradientToColor := $00F1F1F1;
+        FGradientType := bkSolid;
+        FStyle := psDividerFlat;
+      end;
+
+    spkMetroDark:
+      begin
+        FCaptionFont.Style := [];
+        FCaptionFont.Color := $00FFFFFF;
+        FBorderDarkColor := $008C8482;
+        FBorderLightColor := $00A29D9B;
+        FCaptionBgColor := $00464646;
+        FGradientFromColor := $00464646;
+        FGradientToColor := $00F1F1F1;
+        FGradientType := bkSolid;
+        FStyle := psDividerFlat;
+      end;
+  end;
 end;
 
 procedure TSpkPaneAppearance.SaveToPascal(AList: TStrings);
@@ -517,7 +606,7 @@ begin
     Add('    GradientFromColor := $' + IntToHex(FGradientFromColor, 8) + ';');
     Add('    GradientToColor := $' + IntToHex(FGradientToColor, 8) + ';');
     Add('    GradientType := ' + GetEnumName(TypeInfo(TBackgroundKind), ord(FGradientType)) + ';');
-    Add('    Style := ' + GetEnumName(TypeInfo(TSpkPaneStyle), ord(FStyle)));
+    Add('    Style := ' + GetEnumName(TypeInfo(TSpkPaneStyle), ord(FStyle)) +';');
     Add('  end;');
   end;
 end;
@@ -769,32 +858,121 @@ begin
     FStyle := TSpkElementStyle(Subnode.TextAsInteger);
 end;
 
-procedure TSpkElementAppearance.Reset;
+procedure TSpkElementAppearance.Reset(AStyle: TSpkStyle = spkOffice2007Blue);
 begin
   SetDefaultFont(FCaptionFont);
-  FCaptionFont.Size := FCaptionFont.Size;
-  FIdleFrameColor := rgb(155, 183, 224);
-  FIdleGradientFromColor := rgb(200, 219, 238);
-  FIdleGradientToColor := rgb(188, 208, 233);
-  FIdleGradientType := bkConcave;
-  FIdleInnerLightColor := rgb(213, 227, 241);
-  FIdleInnerDarkColor := rgb(190, 211, 236);
-  FIdleCaptionColor := rgb(86, 125, 177);
-  FHotTrackFrameColor := rgb(221, 207, 155);
-  FHotTrackGradientFromColor := rgb(255, 252, 218);
-  FHotTrackGradientToColor := rgb(255, 215, 77);
-  FHotTrackGradientType := bkConcave;
-  FHotTrackInnerLightColor := rgb(255, 241, 197);
-  FHotTrackInnerDarkColor := rgb(216, 194, 122);
-  FHotTrackCaptionColor := rgb(111, 66, 135);
-  FActiveFrameColor := rgb(139, 118, 84);
-  FActiveGradientFromColor := rgb(254, 187, 108);
-  FActiveGradientToColor := rgb(252, 146, 61);
-  FActiveGradientType := bkConcave;
-  FActiveInnerLightColor := rgb(252, 169, 14);
-  FActiveInnerDarkColor := rgb(252, 169, 14);
-  FActiveCaptionColor := rgb(110, 66, 128);
-  FStyle := esRounded;
+
+  case AStyle of
+    spkOffice2007Blue:
+      begin
+        FIdleFrameColor := rgb(155, 183, 224);
+        FIdleGradientFromColor := rgb(200, 219, 238);
+        FIdleGradientToColor := rgb(188, 208, 233);
+        FIdleGradientType := bkConcave;
+        FIdleInnerLightColor := rgb(213, 227, 241);
+        FIdleInnerDarkColor := rgb(190, 211, 236);
+        FIdleCaptionColor := rgb(86, 125, 177);
+        FHotTrackFrameColor := rgb(221, 207, 155);
+        FHotTrackGradientFromColor := rgb(255, 252, 218);
+        FHotTrackGradientToColor := rgb(255, 215, 77);
+        FHotTrackGradientType := bkConcave;
+        FHotTrackInnerLightColor := rgb(255, 241, 197);
+        FHotTrackInnerDarkColor := rgb(216, 194, 122);
+        FHotTrackCaptionColor := rgb(111, 66, 135);
+        FActiveFrameColor := rgb(139, 118, 84);
+        FActiveGradientFromColor := rgb(254, 187, 108);
+        FActiveGradientToColor := rgb(252, 146, 61);
+        FActiveGradientType := bkConcave;
+        FActiveInnerLightColor := rgb(252, 169, 14);
+        FActiveInnerDarkColor := rgb(252, 169, 14);
+        FActiveCaptionColor := rgb(110, 66, 128);
+        FStyle := esRounded;
+      end;
+
+    spkOffice2007Silver:
+      begin
+        FCaptionFont.Style := [];
+        FCaptionFont.Color := $008B4215;
+        FIdleFrameColor := $00B8B1A9;
+        FIdleGradientFromColor := $00F4F4F2;
+        FIdleGradientToColor := $00E6E5E3;
+        FIdleGradientType := bkConcave;
+        FIdleInnerDarkColor := $00C7C0BA;
+        FIdleInnerLightColor := $00F6F2F0;
+        FIdleCaptionColor := $0060655F;
+        FHotTrackFrameColor := $009BCFDD;
+        FHotTrackGradientFromColor := $00DAFCFF;
+        FHotTrackGradientToColor := $004DD7FF;
+        FHotTrackGradientType := bkConcave;
+        FHotTrackInnerDarkColor := $007AC2D8;
+        FHotTrackInnerLightColor := $00C5F1FF;
+        FHotTrackCaptionColor := $0087426F;
+        FActiveFrameColor := $0054768B;
+        FActiveGradientFromColor := $006CBBFE;
+        FActiveGradientToColor := $003D92FC;
+        FActiveGradientType := bkConcave;
+        FActiveInnerDarkColor := $000EA9FC;
+        FActiveInnerLightColor := $000EA9FC;
+        FActiveCaptionColor := $0080426E;
+        FStyle := esRounded;
+      end;
+
+    spkMetroLight:
+      begin
+        FCaptionFont.Style := [];
+        FCaptionFont.Color := $003F3F3F;
+        FIdleFrameColor := $00CDCDCD;
+        FIdleGradientFromColor := $00DFDFDF;
+        FIdleGradientToColor := $00DFDFDF;
+        FIdleGradientType := bkSolid;
+        FIdleInnerDarkColor := $00CDCDCD;
+        FIdleInnerLightColor := $00EBEBEB;
+        FIdleCaptionColor := $00696969;
+        FHotTrackFrameColor := $00F9CEA4;
+        FHotTrackGradientFromColor := $00F7EFE8;
+        FHotTrackGradientToColor := $00F7EFE8;
+        FHotTrackGradientType := bkSolid;
+        FHotTrackInnerDarkColor := $00F7EFE8;
+        FHotTrackInnerLightColor := $00F7EFE8;
+        FHotTrackCaptionColor := $003F3F3F;
+        FActiveFrameColor := $00E4A262;
+        FActiveGradientFromColor := $00F7E0C9;
+        FActiveGradientToColor := $00F7E0C9;
+        FActiveGradientType := bkSolid;
+        FActiveInnerDarkColor := $00F7E0C9;
+        FActiveInnerLightColor := $00F7E0C9;
+        FActiveCaptionColor := $002C2C2C;
+        FStyle := esRectangle;
+      end;
+
+    spkMetroDark:
+      begin
+        FCaptionFont.Style := [];
+        FCaptionFont.Color := $003F3F3F;
+        FIdleFrameColor := $008C8482;
+        FIdleGradientFromColor := $00444444;
+        FIdleGradientToColor := $00444444;
+        FIdleGradientType := bkSolid;
+        FIdleInnerDarkColor := $008C8482;
+        FIdleInnerLightColor := $00444444;
+        FIdleCaptionColor := $00B6B6B6;
+        FHotTrackFrameColor := $00C4793C;
+        FHotTrackGradientFromColor := $00805B3D;
+        FHotTrackGradientToColor := $00805B3D;
+        FHotTrackGradientType := bkSolid;
+        FHotTrackInnerDarkColor := $00A56733;
+        FHotTrackInnerLightColor := $00A56733;
+        FHotTrackCaptionColor := $00F2F2F2;
+        FActiveFrameColor := $00000000;
+        FActiveGradientFromColor := $00000000;
+        FActiveGradientToColor := $00000000;
+        FActiveGradientType := bkSolid;
+        FActiveInnerDarkColor := $00000000;
+        FActiveInnerLightColor := $00000000;
+        FActiveCaptionColor := $00E4E4E4;
+        FStyle := esRectangle;
+      end;
+  end;
 end;
 
 procedure TSpkElementAppearance.SaveToPascal(AList: TStrings);
@@ -1091,22 +1269,21 @@ end;
 { TSpkToolbarAppearance }
 
 procedure TSpkToolbarAppearance.Assign(Source: TPersistent);
-
-var Src : TSpkToolbarAppearance;
-
+var
+  Src: TSpkToolbarAppearance;
 begin
   if Source is TSpkToolbarAppearance then
-     begin
-     Src:=TSpkToolbarAppearance(Source);
+  begin
+    Src := TSpkToolbarAppearance(Source);
 
-     self.FTab.assign(Src.Tab);
-     self.FPane.assign(Src.Pane);
-     self.FElement.Assign(Src.Element);
+    self.FTab.Assign(Src.Tab);
+    self.FPane.Assign(Src.Pane);
+    self.FElement.Assign(Src.Element);
 
-     if FDispatch<>nil then
-        FDispatch.NotifyAppearanceChanged;
-     end else
-         raise AssignException.create('TSpkToolbarAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkToolbarAppearance!');
+    if FDispatch <> nil then
+      FDispatch.NotifyAppearanceChanged;
+    end else
+      raise AssignException.create('TSpkToolbarAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkToolbarAppearance!');
 end;
 
 constructor TSpkToolbarAppearance.Create(ADispatch : TSpkBaseAppearanceDispatch);
@@ -1159,12 +1336,12 @@ begin
      FDispatch.NotifyAppearanceChanged;
 end;
 
-procedure TSpkToolbarAppearance.Reset;
+procedure TSpkToolbarAppearance.Reset(AStyle: TSpkStyle = spkOffice2007Blue);
 begin
-  FTab.Reset;
-  FPane.Reset;
-  FElement.Reset;
-  if assigned(FAppearanceDispatch) then
+  FTab.Reset(AStyle);
+  FPane.Reset(AStyle);
+  FElement.Reset(AStyle);
+  if Assigned(FAppearanceDispatch) then
      FAppearanceDispatch.NotifyAppearanceChanged;
 end;
 
@@ -1194,43 +1371,22 @@ end;
 procedure TSpkToolbarAppearance.SetElementAppearance(
   const Value: TSpkElementAppearance);
 begin
-  FElement.assign(Value);
+  FElement.Assign(Value);
 end;
 
 procedure TSpkToolbarAppearance.SetPaneAppearance(const Value: TSpkPaneAppearance);
 begin
-  FPane.assign(Value);
+  FPane.Assign(Value);
 end;
 
 procedure TSpkToolbarAppearance.SetTabAppearance(const Value: TSpkTabAppearance);
 begin
-  FTab.assign(Value);
+  FTab.Assign(Value);
 end;
 
 procedure SetDefaultFont(AFont: TFont);
 begin
   AFont.Assign(Screen.MenuFont);
-  {
-  if Screen.Fonts.IndexOf('Calibri') >= 0 then
-  begin
-    AFont.Name := 'Calibri';
-    AFont.Size := 9;
-  end
-  else if Screen.Fonts.IndexOf('Verdana') >= 0 then
-  begin
-    AFont.Name := 'Verdana';
-    AFont.Size := 8;
-  end else
-  begin
-    AFont.Name := 'Arial';
-    AFont.Size := 8;
-  end;
-  AFont.Style := [];
-  AFont.Charset := DEFAULT_CHARSET;
-  AFont.Orientation := 0;
-  AFont.Pitch := fpDefault;
-  }
-  AFont.Color := rgb(21, 66, 139);
 end;
 
 end.

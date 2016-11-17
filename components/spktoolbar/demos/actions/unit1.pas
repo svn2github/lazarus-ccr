@@ -37,7 +37,11 @@ type
     MenuItem14: TMenuItem;
     MenuItem15: TMenuItem;
     MenuItem16: TMenuItem;
+    MenuItem17: TMenuItem;
+    MenuItem18: TMenuItem;
+    MenuItem19: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItem20: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
@@ -46,18 +50,21 @@ type
     MenuItem8: TMenuItem;
     MenuItem9: TMenuItem;
     Panel1: TPanel;
+    StyleMenu: TPopupMenu;
     SpkCheckbox1: TSpkCheckbox;
     SpkLargeButton1: TSpkLargeButton;
     SpkLargeButton2: TSpkLargeButton;
     SpkLargeButton3: TSpkLargeButton;
     SpkPane1: TSpkPane;
     SpkPane2: TSpkPane;
+    SpkPane3: TSpkPane;
     SpkPane5: TSpkPane;
     SpkPane6: TSpkPane;
     SpkRadioButton1: TSpkRadioButton;
     SpkRadioButton2: TSpkRadioButton;
     SpkSmallButton1: TSpkSmallButton;
     SpkSmallButton2: TSpkSmallButton;
+    SpkSmallButton3: TSpkSmallButton;
     SpkSmallButton5: TSpkSmallButton;
     SpkSmallButton7: TSpkSmallButton;
     SpkTab1: TSpkTab;
@@ -85,6 +92,7 @@ type
     procedure AcSaveNowExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
+    procedure StyleMenuClick(Sender: TObject);
   private
     { private declarations }
     procedure LoadFromIni;
@@ -183,9 +191,15 @@ begin
   ini := TMemIniFile.Create(ChangeFileExt(ParamStr(0), '.ini'));
   try
     SetUserInterface(ini.ReadBool('MainForm', 'RibbonInterface', AcRibbonGUI.Checked));
+    SpkToolbar1.Style := TSpkStyle(ini.ReadInteger('MainForm', 'RibbonStyle', 0));
   finally
     ini.Free;
   end;
+end;
+
+procedure TForm1.StyleMenuClick(Sender: TObject);
+begin
+  SpkToolbar1.Style := TSpkStyle((Sender as TMenuItem).Tag);
 end;
 
 procedure TForm1.SaveToIni;
@@ -195,6 +209,7 @@ begin
   ini := TMemIniFile.Create(ChangeFileExt(ParamStr(0), '.ini'));
   try
     ini.WriteBool('MainForm', 'RibbonInterface', AcRibbonGUI.Checked);
+    ini.WriteInteger('MainForm', 'RibbonStyle', ord(SpkToolbar1.Style));
   finally
     ini.Free;
   end;
