@@ -80,7 +80,7 @@ implementation
 
 uses
   LCLType, LCLIntf, Math, Themes,
-  SpkGraphTools, spkt_Const, spkt_Tools, spkt_Pane;
+  SpkGraphTools, spkt_Const, spkt_Tools, spkt_Pane, spkt_Appearance;
 
 
 { TSpkCheckboxActionLink }
@@ -225,10 +225,11 @@ end;
 
 procedure TSpkCustomCheckbox.Draw(ABuffer: TBitmap; ClipRect: T2DIntRect);
 var
-  FontColor: TColor;
+  fontColor: TColor;
   x, y: Integer;
   h: Integer;
   te: TThemedElementDetails;
+  cornerRadius: Integer;
 begin
   if FToolbarDispatch = nil then
     exit;
@@ -236,6 +237,13 @@ begin
     exit;
   if (FRect.Width < 2*LargeButtonRadius) or (FRect.Height < 2*LargeButtonRadius) then
     exit;
+
+  case FAppearance.Element.Style of
+    esRounded:
+      cornerRadius := SmallButtonRadius;
+    esRectangle:
+      cornerRadius := 0;
+  end;
 
   // Border
   if (FButtonState = bsIdle) and (not(FHideFrameWhenIdle)) then begin
@@ -253,7 +261,7 @@ begin
         (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
         false,
         false,
-        SmallButtonRadius,
+        cornerRadius,
         ClipRect
       );
   end else
@@ -272,7 +280,7 @@ begin
         (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
         false,
         false,
-        SmallButtonRadius,
+        cornerRadius,
         ClipRect
       );
   end else
@@ -291,7 +299,7 @@ begin
         (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) or (FButtonKind = bkButtonDropdown),
         false,
         false,
-        SmallButtonRadius,
+        cornerRadius,
         ClipRect
       );
   end;
@@ -320,23 +328,15 @@ begin
   // Text
   ABuffer.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
 
-  FontColor := clNone;
+  case FButtonState of
+    bsIdle             : fontColor := FAppearance.Element.IdleCaptionColor;
+    bsBtnHottrack,
+    bsDropdownHottrack : fontColor := FAppearance.Element.HotTrackCaptionColor;
+    bsBtnPressed,
+    bsDropdownPressed  : fontColor := FAppearance.ELement.ActiveCaptionColor;
+  end;
   if not(FEnabled) then
-    case FButtonState of
-      bsIdle             : FontColor := TColorTools.ColorToGrayscale(FAppearance.Element.IdleCaptionColor);
-      bsBtnHottrack,
-      bsDropdownHottrack : FontColor := TColorTools.ColorToGrayscale(FAppearance.Element.HotTrackCaptionColor);
-      bsBtnPressed,
-      bsDropdownPressed  : FontColor := TColorTools.ColorToGrayscale(FAppearance.ELement.ActiveCaptionColor);
-    end
-  else
-    case FButtonState of
-      bsIdle             : FontColor := FAppearance.Element.IdleCaptionColor;
-      bsBtnHottrack,
-      bsDropdownHottrack : FontColor := FAppearance.Element.HotTrackCaptionColor;
-      bsBtnPressed,
-      bsDropdownPressed  : FontColor := FAppearance.ELement.ActiveCaptionColor;
-    end;
+    fontColor := TColorTools.ColorToGrayscale(fontColor);
 
   if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
     x := FButtonRect.Left + SmallButtonHalfBorderWidth
@@ -345,14 +345,7 @@ begin
   x := x + 2 * SmallButtonPadding + SmallButtonGlyphWidth;
   y := FButtonRect.Top + (FButtonRect.Height - ABuffer.Canvas.TextHeight('Wy')) div 2;
 
-  TGUITools.DrawText(
-    ABuffer.Canvas,
-    x,
-    y,
-    FCaption,
-    FontColor,
-    ClipRect
-  );
+  TGUITools.DrawText(ABuffer.Canvas, x, y, FCaption, fontColor, ClipRect);
 end;
 
 function TSpkCustomCheckbox.GetChecked: Boolean;
