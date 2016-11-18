@@ -24,7 +24,11 @@ type
 
   TSpkElementStyle = (esRounded, esRectangle);
 
-  TSpkStyle = (spkOffice2007Blue, spkOffice2007Silver, spkMetroLight, spkMetroDark);
+  TSpkStyle = (
+    spkOffice2007Blue,
+    spkOffice2007Silver, spkOffice2007SilverTurquoise,
+    spkMetroLight, spkMetroDark
+  );
 
   TSpkTabAppearance = class(TPersistent)
      private
@@ -340,7 +344,8 @@ begin
         FInactiveHeaderFontColor := FTabHeaderFont.Color;
       end;
 
-    spkOffice2007Silver:
+    spkOffice2007Silver,
+    spkOffice2007SilverTurquoise:
       begin
         FTabHeaderFont.Style := [];
         FTabHeaderFont.Color := $007A534C;
@@ -564,7 +569,8 @@ begin
         FStyle := psRectangleEtched;
       end;
 
-    spkOffice2007Silver:
+    spkOffice2007Silver,
+    spkOffice2007SilverTurquoise:
       begin
         FCaptionFont.Style := [];
         FCaptionFont.Color := $00363636;
@@ -913,7 +919,8 @@ begin
         FStyle := esRounded;
       end;
 
-    spkOffice2007Silver:
+    spkOffice2007Silver,
+    spkOffice2007SilverTurquoise:
       begin
         FCaptionFont.Style := [];
         FCaptionFont.Color := $008B4215;
@@ -931,6 +938,14 @@ begin
         FHotTrackInnerDarkColor := $007AC2D8;
         FHotTrackInnerLightColor := $00C5F1FF;
         FHotTrackCaptionColor := $0087426F;
+        if AStyle = spkOffice2007SilverTurquoise then
+        begin
+          FHotTrackFrameColor := $009E7D0E;
+          FHotTrackGradientFromColor := $00FBF1D0;
+          FHotTrackGradientToColor := $00F4DD8A;
+          FHotTrackInnerDarkColor := $00C19A11;
+          FHotTrackInnerLightColor := $00FAEFC9;
+        end;
         FActiveFrameColor := $0054768B;
         FActiveGradientFromColor := $006CBBFE;
         FActiveGradientToColor := $003D92FC;
@@ -938,6 +953,14 @@ begin
         FActiveInnerDarkColor := $000EA9FC;
         FActiveInnerLightColor := $000EA9FC;
         FActiveCaptionColor := $0080426E;
+        if AStyle = spkOffice2007SilverTurquoise then
+        begin
+          FActiveFrameColor := $0077620B;
+          FActiveGradientFromColor := $00F4DB82;
+          FActiveGradientToColor := $00ECC53E;
+          FActiveInnerDarkColor := $00735B0B;
+          FActiveInnerLightColor := $00F3D87A;
+        end;
         FStyle := esRounded;
       end;
 
@@ -984,8 +1007,8 @@ begin
         FHotTrackGradientFromColor := $00805B3D;
         FHotTrackGradientToColor := $00805B3D;
         FHotTrackGradientType := bkSolid;
-        FHotTrackInnerDarkColor := $00A56733;
-        FHotTrackInnerLightColor := $00A56733;
+        FHotTrackInnerDarkColor := $00805B3D;
+        FHotTrackInnerLightColor := $00805B3D;
         FHotTrackCaptionColor := $00F2F2F2;
         FActiveFrameColor := $00000000;
         FActiveGradientFromColor := $00000000;

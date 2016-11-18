@@ -131,7 +131,7 @@ object Form1: TForm1
     Appearance.Element.ActiveInnerDarkColor = 961020
     Appearance.Element.ActiveCaptionColor = 8405614
     Appearance.Element.Style = esRounded
-    TabIndex = 2
+    TabIndex = 0
     Images = ImageList
     LargeImages = LargeImageList
     Tabs = (
@@ -1610,13 +1610,18 @@ object Form1: TForm1
       Caption = 'Office2007 silver'
       OnClick = StyleMenuClick
     end
-    object MenuItem19: TMenuItem
+    object MenuItem21: TMenuItem
       Tag = 2
+      Caption = 'Office2007 silver / turquoise'
+      OnClick = StyleMenuClick
+    end
+    object MenuItem19: TMenuItem
+      Tag = 3
       Caption = 'Metro light'
       OnClick = StyleMenuClick
     end
     object MenuItem20: TMenuItem
-      Tag = 3
+      Tag = 4
       Caption = 'Metro dark'
       OnClick = StyleMenuClick
     end

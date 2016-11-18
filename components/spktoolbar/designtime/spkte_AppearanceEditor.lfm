@@ -324,9 +324,9 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     Height = 395
     Top = 132
     Width = 558
-    ActivePage = TabSheet2
+    ActivePage = TabSheet5
     Align = alClient
-    TabIndex = 1
+    TabIndex = 4
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Tab'
@@ -2264,7 +2264,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     end
     object TabSheet5: TTabSheet
       Caption = 'Tools'
-      ClientHeight = 343
+      ClientHeight = 367
       ClientWidth = 550
       ImageIndex = 4
       object Label17: TLabel
@@ -2293,6 +2293,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Items.Strings = (
           'Office2007 blue'
           'Office2007 silver'
+          'Office2007 silver / turquoise'
           'Metro light'
           'Metro dark'
         )
