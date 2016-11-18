@@ -64,6 +64,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       Appearance.Element.HotTrackInnerLightColor = 12972543
       Appearance.Element.HotTrackInnerDarkColor = 8045272
       Appearance.Element.HotTrackCaptionColor = 8864367
+      Appearance.Element.HotTrackBrightnessChange = 40
       Appearance.Element.ActiveFrameColor = 5535371
       Appearance.Element.ActiveGradientFromColor = 7126014
       Appearance.Element.ActiveGradientToColor = 4035324
@@ -114,6 +115,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         CustomAppearance.Element.HotTrackInnerLightColor = 12972543
         CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
         CustomAppearance.Element.HotTrackCaptionColor = 8864367
+        CustomAppearance.Element.HotTrackBrightnessChange = 40
         CustomAppearance.Element.ActiveFrameColor = 5535371
         CustomAppearance.Element.ActiveGradientFromColor = 7126014
         CustomAppearance.Element.ActiveGradientToColor = 4035324
@@ -304,6 +306,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         CustomAppearance.Element.HotTrackInnerLightColor = 12972543
         CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
         CustomAppearance.Element.HotTrackCaptionColor = 8864367
+        CustomAppearance.Element.HotTrackBrightnessChange = 40
         CustomAppearance.Element.ActiveFrameColor = 5535371
         CustomAppearance.Element.ActiveGradientFromColor = 7126014
         CustomAppearance.Element.ActiveGradientToColor = 4035324
@@ -324,9 +327,9 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     Height = 395
     Top = 132
     Width = 558
-    ActivePage = TabSheet5
+    ActivePage = TabSheet2
     Align = alClient
-    TabIndex = 4
+    TabIndex = 1
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Tab'
@@ -940,7 +943,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       end
       object pPaneCaptionFontColor: TPanel
         AnchorSideLeft.Control = pPaneCaptionBackground
-        AnchorSideTop.Control = ePaneHotTrackBrightnessChange
+        AnchorSideTop.Control = edPaneHotTrackBrightnessChange
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = pPaneCaptionBackground
         AnchorSideRight.Side = asrBottom
@@ -1138,7 +1141,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Shape = bsSpacer
       end
       object Label15: TLabel
-        AnchorSideTop.Control = ePaneHotTrackBrightnessChange
+        AnchorSideTop.Control = edPaneHotTrackBrightnessChange
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = LblPaneCaptionBackground
         AnchorSideRight.Side = asrBottom
@@ -1151,7 +1154,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Caption = 'HotTrack brightness'#13#10'change'
         ParentColor = False
       end
-      object ePaneHotTrackBrightnessChange: TSpinEdit
+      object edPaneHotTrackBrightnessChange: TSpinEdit
         AnchorSideLeft.Control = pPaneCaptionBackground
         AnchorSideTop.Control = pPaneCaptionBackground
         AnchorSideTop.Side = asrBottom
@@ -1165,13 +1168,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
         MinValue = -100
-        OnChange = ePaneHotTrackBrightnessChangeChange
+        OnChange = edPaneHotTrackBrightnessChangeChange
         TabOrder = 10
       end
       object Label16: TLabel
-        AnchorSideLeft.Control = ePaneHotTrackBrightnessChange
+        AnchorSideLeft.Control = edPaneHotTrackBrightnessChange
         AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = ePaneHotTrackBrightnessChange
+        AnchorSideTop.Control = edPaneHotTrackBrightnessChange
         AnchorSideTop.Side = asrCenter
         Left = 247
         Height = 15
@@ -2170,6 +2173,48 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Width = 6
         Anchors = [akTop, akLeft, akBottom]
         Shape = bsSpacer
+      end
+      object Label19: TLabel
+        AnchorSideLeft.Control = edItemHotTrackBrightnessChange
+        AnchorSideBottom.Control = edItemHotTrackBrightnessChange
+        Left = 259
+        Height = 15
+        Top = 285
+        Width = 97
+        Alignment = taRightJustify
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Bottom = 4
+        Caption = 'Brightness change'
+        ParentColor = False
+      end
+      object edItemHotTrackBrightnessChange: TSpinEdit
+        AnchorSideLeft.Control = pItemHottrackInnerLight
+        AnchorSideTop.Control = cbItemStyle
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = pItemHottrackInnerLight
+        AnchorSideRight.Side = asrBottom
+        Left = 259
+        Height = 23
+        Top = 304
+        Width = 100
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        MinValue = -100
+        OnChange = edItemHotTrackBrightnessChangeChange
+        TabOrder = 24
+      end
+      object Label20: TLabel
+        AnchorSideLeft.Control = edItemHotTrackBrightnessChange
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = edItemHotTrackBrightnessChange
+        AnchorSideTop.Side = asrCenter
+        Left = 363
+        Height = 15
+        Top = 308
+        Width = 10
+        BorderSpacing.Left = 4
+        Caption = '%'
+        ParentColor = False
       end
     end
     object TabSheet4: TTabSheet

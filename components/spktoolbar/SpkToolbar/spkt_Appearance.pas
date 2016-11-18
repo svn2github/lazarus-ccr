@@ -129,6 +129,7 @@ type TSpkPaneAppearance = class(TPersistent)
        FHotTrackInnerLightColor: TColor;
        FHotTrackInnerDarkColor: TColor;
        FHotTrackCaptionColor: TColor;
+       FHotTrackBrightnessChange: Integer;
        FActiveFrameColor: TColor;
        FActiveGradientFromColor: TColor;
        FActiveGradientToColor: TColor;
@@ -152,6 +153,7 @@ type TSpkPaneAppearance = class(TPersistent)
        procedure SetHotTrackGradientType(const Value: TBackgroundKind);
        procedure SetHotTrackInnerDarkColor(const Value: TColor);
        procedure SetHotTrackInnerLightColor(const Value: TColor);
+       procedure SetHotTrackBrightnessChange(const Value: Integer);
        procedure SetIdleCaptionColor(const Value: TColor);
        procedure SetIdleFrameColor(const Value: TColor);
        procedure SetIdleGradientFromColor(const Value: TColor);
@@ -184,6 +186,7 @@ type TSpkPaneAppearance = class(TPersistent)
        property HotTrackInnerLightColor: TColor read FHotTrackInnerLightColor write SetHotTrackInnerLightColor;
        property HotTrackInnerDarkColor: TColor read FHotTrackInnerDarkColor write SetHotTrackInnerDarkColor;
        property HotTrackCaptionColor: TColor read FHotTrackCaptionColor write SetHotTrackCaptionColor;
+       property HotTrackBrightnessChange: Integer read FHotTrackBrightnessChange write SetHotTrackBrightnessChange default 20;
        property ActiveFrameColor: TColor read FActiveFrameColor write SetActiveFrameColor;
        property ActiveGradientFromColor: TColor read FActiveGradientFromColor write SetActiveGradientFromColor;
        property ActiveGradientToColor: TColor read FActiveGradientToColor write SetActiveGradientToColor;
@@ -755,6 +758,7 @@ begin
     FHotTrackInnerLightColor := SrcAppearance.HotTrackInnerLightColor;
     FHotTrackInnerDarkColor := SrcAppearance.HotTrackInnerDarkColor;
     FHotTrackCaptionColor := SrcAppearance.HotTrackCaptionColor;
+    FHotTrackBrightnessChange := SrcAppearance.HotTrackBrightnessChange;
     FActiveFrameColor := SrcAppearance.ActiveFrameColor;
     FActiveGradientFromColor := SrcAppearance.ActiveGradientFromColor;
     FActiveGradientToColor := SrcAppearance.ActiveGradientToColor;
@@ -775,6 +779,7 @@ begin
   inherited Create;
   FDispatch := ADispatch;
   FCaptionFont := TFont.Create;
+  FHotTrackBrightnessChange := 40;
   Reset;
 end;
 
@@ -824,7 +829,7 @@ begin
   if Assigned(Subnode) then
     FIdleCaptionColor := Subnode.TextAsColor;
 
-  // Hottrack
+  // HotTrack
   Subnode := Node['HottrackFrameColor', false];
   if Assigned(Subnode) then
     FHottrackFrameColor := Subnode.TextAsColor;
@@ -852,6 +857,10 @@ begin
   Subnode := Node['HottrackCaptionColor', false];
   if Assigned(Subnode) then
     FHottrackCaptionColor := Subnode.TextAsColor;
+
+  Subnode := Node['HottrackBrightnessChange', false];
+  if Assigned(Subnode) then
+    FHottrackBrightnessChange := Subnode.TextAsInteger;
 
   // Active
   Subnode := Node['ActiveFrameColor', false];
@@ -909,6 +918,7 @@ begin
         FHotTrackInnerLightColor := rgb(255, 241, 197);
         FHotTrackInnerDarkColor := rgb(216, 194, 122);
         FHotTrackCaptionColor := rgb(111, 66, 135);
+        FHotTrackBrightnessChange := 40;
         FActiveFrameColor := rgb(139, 118, 84);
         FActiveGradientFromColor := rgb(254, 187, 108);
         FActiveGradientToColor := rgb(252, 146, 61);
@@ -931,6 +941,7 @@ begin
         FIdleInnerDarkColor := $00C7C0BA;
         FIdleInnerLightColor := $00F6F2F0;
         FIdleCaptionColor := $0060655F;
+        FHotTrackBrightnessChange := 40;
         FHotTrackFrameColor := $009BCFDD;
         FHotTrackGradientFromColor := $00DAFCFF;
         FHotTrackGradientToColor := $004DD7FF;
@@ -982,6 +993,7 @@ begin
         FHotTrackInnerDarkColor := $00F7EFE8;
         FHotTrackInnerLightColor := $00F7EFE8;
         FHotTrackCaptionColor := $003F3F3F;
+        FHotTrackBrightnessChange := 20;
         FActiveFrameColor := $00E4A262;
         FActiveGradientFromColor := $00F7E0C9;
         FActiveGradientToColor := $00F7E0C9;
@@ -1010,6 +1022,7 @@ begin
         FHotTrackInnerDarkColor := $00805B3D;
         FHotTrackInnerLightColor := $00805B3D;
         FHotTrackCaptionColor := $00F2F2F2;
+        FHotTrackBrightnessChange := 10;
         FActiveFrameColor := $00000000;
         FActiveGradientFromColor := $00000000;
         FActiveGradientToColor := $00000000;
@@ -1043,6 +1056,7 @@ begin
     Add('    HotTrackInnerDarkColor := $' + IntToHex(FHotTrackInnerDarkColor, 8) + ';');
     Add('    HotTrackInnerLightColor := $' + IntToHex(FHotTrackInnerLightColor, 8) + ';');
     Add('    HotTrackCaptionColor := $' + IntToHex(FHotTrackCaptionColor, 8) + ';');
+    Add('    HotTrackBrightnessChange := ' + IntToStr(FHotTrackBrightnessChange) + ';');
 
     Add('    ActiveFrameColor := $' + IntToHex(FActiveFrameColor, 8) + ';');
     Add('    ActiveGradientFromColor := $' + IntToHex(FActiveGradientFromColor, 8) + ';');
@@ -1067,7 +1081,7 @@ begin
   Subnode := Node['CaptionFont', true];
   TSpkXMLTools.Save(Subnode, FCaptionFont);
 
-  // *** Idle ***
+  // Idle
   Subnode := Node['IdleFrameColor', true];
   Subnode.TextAsColor := FIdleFrameColor;
 
@@ -1089,7 +1103,7 @@ begin
   Subnode := Node['IdleCaptionColor', true];
   Subnode.TextAsColor := FIdleCaptionColor;
 
-  // *** Hottrack ***
+  // HotTrack
   Subnode := Node['HottrackFrameColor', true];
   Subnode.TextAsColor := FHottrackFrameColor;
 
@@ -1111,7 +1125,10 @@ begin
   Subnode := Node['HottrackCaptionColor', true];
   Subnode.TextAsColor := FHottrackCaptionColor;
 
-  // *** Active ***
+  Subnode := Node['HottrackBrightnessChange', true];
+  Subnode.TextAsInteger := FHotTrackBrightnessChange;
+
+  // Active
   Subnode := Node['ActiveFrameColor', true];
   Subnode.TextAsColor := FActiveFrameColor;
 
@@ -1133,6 +1150,7 @@ begin
   Subnode := Node['ActiveCaptionColor', true];
   Subnode.TextAsColor := FActiveCaptionColor;
 
+  // Other
   Subnode := Node['Style', true];
   Subnode.TextAsInteger := integer(FStyle);
 end;
@@ -1140,154 +1158,161 @@ end;
 procedure TSpkElementAppearance.SetActiveCaptionColor(const Value: TColor);
 begin
   FActiveCaptionColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetActiveFrameColor(const Value: TColor);
 begin
   FActiveFrameColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetActiveGradientFromColor(const Value: TColor);
 begin
   FActiveGradientFromColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetActiveGradientToColor(const Value: TColor);
 begin
   FActiveGradientToColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetActiveGradientType(const Value: TBackgroundKind);
 begin
   FActiveGradientType := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetActiveInnerDarkColor(const Value: TColor);
 begin
   FActiveInnerDarkColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetActiveInnerLightColor(const Value: TColor);
 begin
   FActiveInnerLightColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetCaptionFont(const Value: TFont);
 begin
-  FCaptionFont.assign(Value);
-  if FDispatch<>nil then
+  FCaptionFont.Assign(Value);
+  if FDispatch <> nil then
+     FDispatch.NotifyAppearanceChanged;
+end;
+
+procedure TSpkElementAppearance.SetHotTrackBrightnessChange(const Value: Integer);
+begin
+  FHotTrackBrightnessChange := Value;
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackCaptionColor(const Value: TColor);
 begin
   FHotTrackCaptionColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackFrameColor(const Value: TColor);
 begin
   FHotTrackFrameColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackGradientFromColor(const Value: TColor);
 begin
   FHotTrackGradientFromColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackGradientToColor(const Value: TColor);
 begin
   FHotTrackGradientToColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackGradientType(const Value: TBackgroundKind);
 begin
   FHotTrackGradientType := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackInnerDarkColor(const Value: TColor);
 begin
   FHotTrackInnerDarkColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackInnerLightColor(const Value: TColor);
 begin
   FHotTrackInnerLightColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetIdleCaptionColor(const Value: TColor);
 begin
   FIdleCaptionColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetIdleFrameColor(const Value: TColor);
 begin
   FIdleFrameColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetIdleGradientFromColor(const Value: TColor);
 begin
   FIdleGradientFromColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetIdleGradientToColor(const Value: TColor);
 begin
   FIdleGradientToColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetIdleGradientType(const Value: TBackgroundKind);
 begin
   FIdleGradientType := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetIdleInnerDarkColor(const Value: TColor);
 begin
   FIdleInnerDarkColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetIdleInnerLightColor(const Value: TColor);
 begin
   FIdleInnerLightColor := Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
@@ -1303,8 +1328,8 @@ end;
 constructor TSpkToolbarAppearanceDispatch.Create(
   AToolbarAppearance: TSpkToolbarAppearance);
 begin
-inherited Create;
-FToolbarAppearance:=AToolbarAppearance;
+  inherited Create;
+  FToolbarAppearance := AToolbarAppearance;
 end;
 
 procedure TSpkToolbarAppearanceDispatch.NotifyAppearanceChanged;

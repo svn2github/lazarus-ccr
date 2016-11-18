@@ -19,9 +19,12 @@ type
     CbAppearanceStyle: TComboBox;
     Label15: TLabel;
     Label16: TLabel;
+    Label19: TLabel;
+    Label20: TLabel;
     PaneHSpacer: TBevel;
     ItemHSpacer: TBevel;
-    ePaneHotTrackBrightnessChange: TSpinEdit;
+    edPaneHotTrackBrightnessChange: TSpinEdit;
+    edItemHotTrackBrightnessChange: TSpinEdit;
     TabVSpacer: TBevel;
     bInactiveTabHeaderFontColor: TSpeedButton;
     bItemActiveInnerDarkColor: TSpeedButton;
@@ -214,7 +217,8 @@ type
     procedure cbLinkItemClick(Sender: TObject);
     procedure cbLinkPaneClick(Sender: TObject);
     procedure cbLinkTabClick(Sender: TObject);
-    procedure ePaneHotTrackBrightnessChangeChange(Sender: TObject);
+    procedure edItemHotTrackBrightnessChangeChange(Sender: TObject);
+    procedure edPaneHotTrackBrightnessChangeChange(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
@@ -808,7 +812,15 @@ begin
     Result := false;
 end;
 
-procedure TfrmAppearanceEditWindow.ePaneHotTrackBrightnessChangeChange(
+procedure TfrmAppearanceEditWindow.edItemHotTrackBrightnessChangeChange(
+  Sender: TObject);
+begin
+  with tbPreview.Appearance.Element do
+    HotTrackBrightnessChange := (Sender as TSpinEdit).Value;
+  tbPreview.Invalidate;
+end;
+
+procedure TfrmAppearanceEditWindow.edPaneHotTrackBrightnessChangeChange(
   Sender: TObject);
 begin
   with tbPreview.Appearance.Pane do
@@ -945,6 +957,7 @@ begin
       SetPanelFont(pPaneCaptionFont, CaptionFont);
       SetPanelColor(pPaneCaptionFontColor, CaptionFont.Color);
       cbPaneStyle.ItemIndex := ord(Style);
+      edPaneHotTrackBrightnessChange.Value := HotTrackBrightnessChange;
     end;
 
     with Element do
@@ -976,6 +989,7 @@ begin
       SetPanelColor(pItemActiveInnerLight, ActiveInnerLightColor);
 
       cbItemStyle.ItemIndex := ord(Style);
+      edItemHotTrackBrightnessChange.Value := HotTrackBrightnessChange;
     end;
   end;
 end;

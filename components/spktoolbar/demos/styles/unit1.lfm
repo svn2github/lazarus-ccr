@@ -3,7 +3,7 @@ object Form1: TForm1
   Height = 660
   Top = 130
   Width = 506
-  Caption = 'Form1'
+  Caption = 'spkToolbar Styles'
   ClientHeight = 660
   ClientWidth = 506
   Color = clMedGray
@@ -47,6 +47,7 @@ object Form1: TForm1
     Appearance.Element.HotTrackInnerLightColor = 12972543
     Appearance.Element.HotTrackInnerDarkColor = 8045272
     Appearance.Element.HotTrackCaptionColor = 8864367
+    Appearance.Element.HotTrackBrightnessChange = 40
     Appearance.Element.ActiveFrameColor = 5535371
     Appearance.Element.ActiveGradientFromColor = 7126014
     Appearance.Element.ActiveGradientToColor = 4035324
@@ -96,6 +97,7 @@ object Form1: TForm1
       CustomAppearance.Element.HotTrackInnerLightColor = 12972543
       CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
       CustomAppearance.Element.HotTrackCaptionColor = 8864367
+      CustomAppearance.Element.HotTrackBrightnessChange = 40
       CustomAppearance.Element.ActiveFrameColor = 5535371
       CustomAppearance.Element.ActiveGradientFromColor = 7126014
       CustomAppearance.Element.ActiveGradientToColor = 4035324
@@ -271,6 +273,7 @@ object Form1: TForm1
     Appearance.Element.HotTrackInnerLightColor = 12972543
     Appearance.Element.HotTrackInnerDarkColor = 8045272
     Appearance.Element.HotTrackCaptionColor = 8864367
+    Appearance.Element.HotTrackBrightnessChange = 40
     Appearance.Element.ActiveFrameColor = 5535371
     Appearance.Element.ActiveGradientFromColor = 7126014
     Appearance.Element.ActiveGradientToColor = 4035324
@@ -320,6 +323,7 @@ object Form1: TForm1
       CustomAppearance.Element.HotTrackInnerLightColor = 12972543
       CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
       CustomAppearance.Element.HotTrackCaptionColor = 8864367
+      CustomAppearance.Element.HotTrackBrightnessChange = 40
       CustomAppearance.Element.ActiveFrameColor = 5535371
       CustomAppearance.Element.ActiveGradientFromColor = 7126014
       CustomAppearance.Element.ActiveGradientToColor = 4035324
@@ -495,6 +499,7 @@ object Form1: TForm1
     Appearance.Element.HotTrackInnerLightColor = 16445385
     Appearance.Element.HotTrackInnerDarkColor = 12687889
     Appearance.Element.HotTrackCaptionColor = 8864367
+    Appearance.Element.HotTrackBrightnessChange = 40
     Appearance.Element.ActiveFrameColor = 7823883
     Appearance.Element.ActiveGradientFromColor = 16046978
     Appearance.Element.ActiveGradientToColor = 15516990
@@ -544,6 +549,7 @@ object Form1: TForm1
       CustomAppearance.Element.HotTrackInnerLightColor = 12972543
       CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
       CustomAppearance.Element.HotTrackCaptionColor = 8864367
+      CustomAppearance.Element.HotTrackBrightnessChange = 40
       CustomAppearance.Element.ActiveFrameColor = 5535371
       CustomAppearance.Element.ActiveGradientFromColor = 7126014
       CustomAppearance.Element.ActiveGradientToColor = 4035324
@@ -770,6 +776,7 @@ object Form1: TForm1
       CustomAppearance.Element.HotTrackInnerLightColor = 12972543
       CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
       CustomAppearance.Element.HotTrackCaptionColor = 8864367
+      CustomAppearance.Element.HotTrackBrightnessChange = 40
       CustomAppearance.Element.ActiveFrameColor = 5535371
       CustomAppearance.Element.ActiveGradientFromColor = 7126014
       CustomAppearance.Element.ActiveGradientToColor = 4035324
@@ -947,6 +954,7 @@ object Form1: TForm1
     Appearance.Element.HotTrackInnerLightColor = 8411965
     Appearance.Element.HotTrackInnerDarkColor = 8411965
     Appearance.Element.HotTrackCaptionColor = 15921906
+    Appearance.Element.HotTrackBrightnessChange = 10
     Appearance.Element.ActiveFrameColor = clBlack
     Appearance.Element.ActiveGradientFromColor = clBlack
     Appearance.Element.ActiveGradientToColor = clBlack
@@ -996,6 +1004,7 @@ object Form1: TForm1
       CustomAppearance.Element.HotTrackInnerLightColor = 12972543
       CustomAppearance.Element.HotTrackInnerDarkColor = 8045272
       CustomAppearance.Element.HotTrackCaptionColor = 8864367
+      CustomAppearance.Element.HotTrackBrightnessChange = 40
       CustomAppearance.Element.ActiveFrameColor = 5535371
       CustomAppearance.Element.ActiveGradientFromColor = 7126014
       CustomAppearance.Element.ActiveGradientToColor = 4035324

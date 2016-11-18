@@ -48,6 +48,7 @@ type TSpkBaseButton = class;
       function IsVisibleLinked: Boolean; override;
      end;
 
+
      { TSpkBaseButton }
 
      TSpkBaseButton = class abstract(TSpkBaseItem)
@@ -115,7 +116,10 @@ type TSpkBaseButton = class;
        property OnClick : TNotifyEvent read FOnClick write FOnClick;
      end;
 
-type TSpkLargeButton = class(TSpkBaseButton)
+
+     { TSpkLargeButton }
+
+     TSpkLargeButton = class(TSpkBaseButton)
      private
        FLargeImageIndex: TImageIndex;
        procedure FindBreakPlace(s: string; out Position: integer; out Width: integer);
@@ -136,7 +140,10 @@ type TSpkLargeButton = class(TSpkBaseButton)
        property DropdownMenu;
      end;
 
-type TSpkSmallButton = class(TSpkBaseButton)
+
+     { TSpkSmallButton }
+
+     TSpkSmallButton = class(TSpkBaseButton)
      private
        FImageIndex: TImageIndex;
        FTableBehaviour: TSpkItemTableBehaviour;
@@ -775,7 +782,7 @@ begin
   if (FRect.Width < 2*LargeButtonRadius) or (FRect.Height < 2*LargeButtonRadius) then
     exit;
 
-  delta := 40;
+  delta := FAppearance.Element.HotTrackBrightnessChange;
   case FAppearance.Element.Style of
     esRounded:
       cornerRadius := LargeButtonRadius;
@@ -1295,6 +1302,7 @@ begin
   if (FRect.Width < 2*SmallButtonRadius) or (FRect.Height < 2*SmallButtonRadius) then
     exit;
 
+  delta := FAppearance.Element.HotTrackBrightnessChange;
   case FAppearance.Element.Style of
     esRounded:
       cornerRadius := SmallButtonRadius;
@@ -1333,7 +1341,6 @@ begin
   end else
   if (FButtonState in [bsDropdownHotTrack, bsDropdownPressed]) then
   begin
-    delta := 40;
     frameColor := TColorTools.Brighten(FAppearance.Element.HotTrackFrameColor, delta);
     innerDarkColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerDarkColor, delta);
     innerLightColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerLightColor, delta);
@@ -1436,7 +1443,6 @@ begin
     end else
     if (FButtonState in [bsBtnHottrack, bsBtnPressed]) then
     begin
-      delta := 40;
       frameColor := TColorTools.Brighten(FAppearance.Element.HotTrackFrameColor, delta);
       innerLightColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerLightColor, delta);
       innerDarkColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerDarkColor, delta);
