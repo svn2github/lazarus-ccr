@@ -71,7 +71,7 @@ const
   HebrewMonths = ('ינואר,פברואר,מרץ,אפריל,מאי,יוני,    יולי,אוגוסט,ספטמבר,אוקטובר,נובמבר,דצמבר');
   HebrewTexts = 'היום הוא,yyyy-mm-dd,במהלך החגים, אין חגים מוגדרים עבור';
 
-  FrenchDays = 'dim,lun,mar,mer,jeu,ven,sm';
+  FrenchDays = 'dim,lun,mar,mer,jeu,ven,sam';
   FrenchMonths = 'janvier,février,mars,avril,mai,juin,juillet,août,septembre,octobre,novembre,décembre';
   FrenchTexts = 'Est aujourd''hui,dd/mm/yyyy,vacances pendant,Il n''y a pas de jours fériés fixés pour';
 
@@ -79,8 +79,8 @@ const
   GermanDays = 'So,Mo,Di,Mi,Do,Fr,Sa';
   GermamTexts = 'Heute ist,dd.mm.yyyy,Urlaub während,Es gibt keine Feiertage im';
 
-  SpanishDays = 'Dom,Lun,Mar,Mie,Jue,Vie,Sab';
-  SpanishMonths = 'Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre';
+  SpanishDays = 'dom,lun,mar,mié,jue,vie,sáb';
+  SpanishMonths = 'enero,febrero,marzo,abril,mayo,junio,julio,agosto,septiembre,octubre,noviembre,diciembre';
   SpanishTexts = 'Hoy es,dd/mm/yyyy,Dias de fiestas,No hay dias feriados establecidos para';
 
   ItalianDays = 'dom,lun,mar,mer,gio,ven,sab';
