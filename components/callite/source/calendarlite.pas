@@ -1404,7 +1404,7 @@ begin
   inherited;
 
   // Multi-select is handled by DblClickTimer
-  if not FMultiSelect then
+  if not FMultiSelect then //and not FDblClickTimer.Enabled then
     InternalClick;
 end;
 
@@ -1531,10 +1531,12 @@ begin
   if not Focused and not(csNoFocus in ControlStyle) then
     SetFocus;
 
-  FClickPoint := Point(X, Y);
-  FClickShift := Shift;
-  FClickButton := Button;
-  FDblClickTimer.Enabled := true;
+  if FMultiSelect then begin
+    FClickPoint := Point(X, Y);
+    FClickShift := Shift;
+    FClickButton := Button;
+    FDblClickTimer.Enabled := true;
+  end;
 end;
 
 procedure TCalendarLite.MouseEnter;
