@@ -1,10 +1,10 @@
 object frmAppearanceEditWindow: TfrmAppearanceEditWindow
-  Left = 617
-  Height = 544
-  Top = 138
+  Left = 554
+  Height = 568
+  Top = 248
   Width = 558
   Caption = 'Toolbar appearance editor'
-  ClientHeight = 544
+  ClientHeight = 568
   ClientWidth = 558
   Color = clBtnFace
   Font.Color = clWindowText
@@ -321,12 +321,12 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
   end
   object PageControl1: TPageControl
     Left = 0
-    Height = 371
+    Height = 395
     Top = 132
     Width = 558
-    ActivePage = TabSheet5
+    ActivePage = TabSheet2
     Align = alClient
-    TabIndex = 4
+    TabIndex = 1
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Tab'
@@ -697,7 +697,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     end
     object TabSheet2: TTabSheet
       Caption = 'Pane'
-      ClientHeight = 343
+      ClientHeight = 367
       ClientWidth = 550
       ImageIndex = 1
       object Label8: TLabel
@@ -784,7 +784,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideRight.Side = asrBottom
         Left = 27
         Height = 15
-        Top = 266
+        Top = 295
         Width = 94
         Anchors = [akTop, akRight]
         Caption = 'Pane caption font'
@@ -928,7 +928,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideRight.Side = asrBottom
         Left = 141
         Height = 25
-        Top = 261
+        Top = 290
         Width = 127
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
@@ -940,13 +940,13 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       end
       object pPaneCaptionFontColor: TPanel
         AnchorSideLeft.Control = pPaneCaptionBackground
-        AnchorSideTop.Control = pPaneCaptionBackground
+        AnchorSideTop.Control = ePaneHotTrackBrightnessChange
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = pPaneCaptionBackground
         AnchorSideRight.Side = asrBottom
         Left = 141
         Height = 25
-        Top = 230
+        Top = 259
         Width = 100
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
@@ -978,7 +978,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideRight.Side = asrBottom
         Left = 141
         Height = 23
-        Top = 292
+        Top = 321
         Width = 127
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
@@ -1004,7 +1004,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideRight.Side = asrBottom
         Left = 68
         Height = 15
-        Top = 296
+        Top = 325
         Width = 53
         Anchors = [akTop, akRight]
         Caption = 'Pane style'
@@ -1087,7 +1087,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideRight.Side = asrBottom
         Left = 49
         Height = 15
-        Top = 235
+        Top = 264
         Width = 72
         Anchors = [akTop, akRight]
         BorderSpacing.Left = 12
@@ -1120,7 +1120,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideBottom.Side = asrBottom
         Left = 243
         Height = 25
-        Top = 230
+        Top = 259
         Width = 25
         AllowAllUp = True
         BorderSpacing.Left = 2
@@ -1137,10 +1137,54 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Width = 8
         Shape = bsSpacer
       end
+      object Label15: TLabel
+        AnchorSideTop.Control = ePaneHotTrackBrightnessChange
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = LblPaneCaptionBackground
+        AnchorSideRight.Side = asrBottom
+        Left = 16
+        Height = 30
+        Top = 226
+        Width = 105
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        Caption = 'HotTrack brightness'#13#10'change'
+        ParentColor = False
+      end
+      object ePaneHotTrackBrightnessChange: TSpinEdit
+        AnchorSideLeft.Control = pPaneCaptionBackground
+        AnchorSideTop.Control = pPaneCaptionBackground
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = pPaneCaptionBackground
+        AnchorSideRight.Side = asrBottom
+        Left = 141
+        Height = 23
+        Top = 230
+        Width = 100
+        Alignment = taRightJustify
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 6
+        MinValue = -100
+        OnChange = ePaneHotTrackBrightnessChangeChange
+        TabOrder = 10
+      end
+      object Label16: TLabel
+        AnchorSideLeft.Control = ePaneHotTrackBrightnessChange
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = ePaneHotTrackBrightnessChange
+        AnchorSideTop.Side = asrCenter
+        Left = 247
+        Height = 15
+        Top = 234
+        Width = 10
+        BorderSpacing.Left = 6
+        Caption = '%'
+        ParentColor = False
+      end
     end
     object TabSheet3: TTabSheet
       Caption = 'Item'
-      ClientHeight = 343
+      ClientHeight = 367
       ClientWidth = 550
       ImageIndex = 2
       object sItemRectangle: TShape
@@ -2261,7 +2305,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
   object ButtonPanel: TPanel
     Left = 8
     Height = 25
-    Top = 511
+    Top = 535
     Width = 542
     Align = alBottom
     AutoSize = True

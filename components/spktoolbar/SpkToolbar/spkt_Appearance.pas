@@ -76,6 +76,7 @@ type TSpkPaneAppearance = class(TPersistent)
        FGradientFromColor: TColor;
        FGradientToColor: TColor;
        FGradientType: TBackgroundKind;
+       FHotTrackBrightnessChange: Integer;
        FStyle: TSpkPaneStyle;
        procedure SetCaptionBgColor(const Value: TColor);
        procedure SetCaptionFont(const Value: TFont);
@@ -84,6 +85,7 @@ type TSpkPaneAppearance = class(TPersistent)
        procedure SetGradientFromColor(const Value: TColor);
        procedure SetGradientToColor(const Value: TColor);
        procedure SetGradientType(const Value: TBackgroundKind);
+       procedure SetHotTrackBrightnessChange(const Value: Integer);
        procedure SetStyle(const Value: TSpkPaneStyle);
      public
        constructor Create(ADispatch: TSpkBaseAppearanceDispatch);
@@ -101,10 +103,11 @@ type TSpkPaneAppearance = class(TPersistent)
        property GradientFromColor: TColor read FGradientFromColor write SetGradientFromColor;
        property GradientToColor: TColor read FGradientToColor write SetGradientToColor;
        property GradientType: TBackgroundKind read FGradientType write SetGradientType;
+       property HotTrackBrightnessChange: Integer read FHotTrackBrightnessChange write SetHotTrackBrightnessChange default 20;
        property Style: TSpkPaneStyle read FStyle write SetStyle default psRectangleEtched;
      end;
 
-type TSpkElementAppearance = class(TPersistent)
+     TSpkElementAppearance = class(TPersistent)
      private
        FDispatch: TSpkBaseAppearanceDispatch;
        FCaptionFont: TFont;
@@ -460,32 +463,34 @@ end;
 
 procedure TSpkPaneAppearance.Assign(Source: TPersistent);
 var
-  SrcAppearance : TSpkPaneAppearance;
+  SrcAppearance: TSpkPaneAppearance;
 begin
   if Source is TSpkPaneAppearance then
   begin
-     SrcAppearance:=TSpkPaneAppearance(Source);
+    SrcAppearance := TSpkPaneAppearance(Source);
 
-     FCaptionFont.assign(SrcAppearance.CaptionFont);
-     FBorderDarkColor := SrcAppearance.BorderDarkColor;
-     FBorderLightColor := SrcAppearance.BorderLightColor;
-     FCaptionBgColor := SrcAppearance.CaptionBgColor;
-     FGradientFromColor := SrcAppearance.GradientFromColor;
-     FGradientToColor := SrcAppearance.GradientToColor;
-     FGradientType := SrcAppearance.GradientType;
-     FStyle := SrcAppearance.Style;
+    FCaptionFont.Assign(SrcAppearance.CaptionFont);
+    FBorderDarkColor := SrcAppearance.BorderDarkColor;
+    FBorderLightColor := SrcAppearance.BorderLightColor;
+    FCaptionBgColor := SrcAppearance.CaptionBgColor;
+    FGradientFromColor := SrcAppearance.GradientFromColor;
+    FGradientToColor := SrcAppearance.GradientToColor;
+    FGradientType := SrcAppearance.GradientType;
+    FHotTrackBrightnessChange := SrcAppearance.HotTrackBrightnessChange;
+    FStyle := SrcAppearance.Style;
 
-     if FDispatch<>nil then
-        FDispatch.NotifyAppearanceChanged;
-     end else
-         raise AssignException.create('TSpkPaneAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkPaneAppearance!');
+    if FDispatch <> nil then
+      FDispatch.NotifyAppearanceChanged;
+  end else
+    raise AssignException.create('TSpkPaneAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkPaneAppearance!');
 end;
 
 constructor TSpkPaneAppearance.Create(ADispatch: TSpkBaseAppearanceDispatch);
 begin
   inherited Create;
-  FDispatch:=ADispatch;
-  FCaptionFont:=TFont.Create;
+  FDispatch := ADispatch;
+  FCaptionFont := TFont.Create;
+  FHotTrackBrightnessChange := 20;
   FStyle := psRectangleEtched;
   Reset;
 end;
@@ -528,8 +533,12 @@ begin
     FGradientToColor := Subnode.TextAsColor;
 
   Subnode := Node['GradientType', false];
-  if assigned(Subnode) then
+  if Assigned(Subnode) then
     FGradientType := TBackgroundKind(Subnode.TextAsInteger);
+
+  Subnode := Node['HotTrackBrightnessChange', false];
+  if Assigned(Subnode) then
+    FHotTrackBrightnessChange := Subnode.TextAsInteger;
 
   Subnode := Node['Style', false];
   if Assigned(Subnode) then
@@ -551,6 +560,7 @@ begin
         FGradientFromColor := rgb(222, 232, 245);
         FGradientToColor := rgb(199, 216, 237);
         FGradientType := bkConcave;
+        FHotTrackBrightnessChange := 20;
         FStyle := psRectangleEtched;
       end;
 
@@ -564,6 +574,7 @@ begin
         FGradientFromColor := $00F8F8F8;
         FGradientToColor := $00E9E9E9;
         FGradientType := bkConcave;
+        FHotTrackBrightnessChange := 20;
         FStyle := psRectangleEtched;
       end;
 
@@ -577,6 +588,7 @@ begin
         FGradientFromColor := $00F1F1F1;
         FGradientToColor := $00F1F1F1;
         FGradientType := bkSolid;
+        FHotTrackBrightnessChange := 0;
         FStyle := psDividerFlat;
       end;
 
@@ -590,6 +602,7 @@ begin
         FGradientFromColor := $00464646;
         FGradientToColor := $00F1F1F1;
         FGradientType := bkSolid;
+        FHotTrackBrightnessChange := 0;
         FStyle := psDividerFlat;
       end;
   end;
@@ -606,6 +619,7 @@ begin
     Add('    GradientFromColor := $' + IntToHex(FGradientFromColor, 8) + ';');
     Add('    GradientToColor := $' + IntToHex(FGradientToColor, 8) + ';');
     Add('    GradientType := ' + GetEnumName(TypeInfo(TBackgroundKind), ord(FGradientType)) + ';');
+    Add('    HotTrackBrightnessChange = ' + IntToStr(FHotTrackBrightnessChange) + ';');
     Add('    Style := ' + GetEnumName(TypeInfo(TSpkPaneStyle), ord(FStyle)) +';');
     Add('  end;');
   end;
@@ -639,56 +653,66 @@ begin
   Subnode := Node['GradientType',true];
   Subnode.TextAsInteger := integer(FGradientType);
 
+  Subnode := Node['HotTrackBrightnessChange',true];
+  Subnode.TextAsInteger := FHotTrackBrightnessChange;
+
   Subnode := Node['Style', true];
   Subnode.TextAsInteger := integer(FStyle);
 end;
 
 procedure TSpkPaneAppearance.SetBorderDarkColor(const Value: TColor);
 begin
-FBorderDarkColor:=Value;
-if assigned(FDispatch) then
-   FDispatch.NotifyAppearanceChanged;
+  FBorderDarkColor := Value;
+  if Assigned(FDispatch) then
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkPaneAppearance.SetBorderLightColor(const Value: TColor);
 begin
-  FBorderLightColor:=Value;
-  if FDispatch<>nil then
+  FBorderLightColor := Value;
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkPaneAppearance.SetCaptionBgColor(const Value: TColor);
 begin
   FCaptionBgColor := Value;
-  if FDispatch<>nil then
-     FDispatch.NotifyAppearanceChanged;
-end;
-
-procedure TSpkPaneAppearance.SetGradientFromColor(const Value: TColor);
-begin
-  FGradientFromColor:=Value;
-  if FDispatch<>nil then
-     FDispatch.NotifyAppearanceChanged;
-end;
-
-procedure TSpkPaneAppearance.SetGradientToColor(const Value: TColor);
-begin
-  FGradientToColor:=Value;
-  if FDispatch<>nil then
-     FDispatch.NotifyAppearanceChanged;
-end;
-
-procedure TSpkPaneAppearance.SetGradientType(const Value: TBackgroundKind);
-begin
-  FGradientType:=Value;
-  if FDispatch<>nil then
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkPaneAppearance.SetCaptionFont(const Value: TFont);
 begin
-  FCaptionFont.assign(Value);
-  if FDispatch<>nil then
+  FCaptionFont.Assign(Value);
+  if FDispatch <> nil then
+     FDispatch.NotifyAppearanceChanged;
+end;
+
+procedure TSpkPaneAppearance.SetGradientFromColor(const Value: TColor);
+begin
+  FGradientFromColor := Value;
+  if FDispatch <> nil then
+     FDispatch.NotifyAppearanceChanged;
+end;
+
+procedure TSpkPaneAppearance.SetGradientToColor(const Value: TColor);
+begin
+  FGradientToColor := Value;
+  if FDispatch <> nil then
+     FDispatch.NotifyAppearanceChanged;
+end;
+
+procedure TSpkPaneAppearance.SetGradientType(const Value: TBackgroundKind);
+begin
+  FGradientType := Value;
+  if FDispatch <> nil then
+     FDispatch.NotifyAppearanceChanged;
+end;
+
+procedure TSpkPaneAppearance.SetHotTrackBrightnessChange(const Value: Integer);
+begin
+  FHotTrackBrightnessChange := Value;
+  if FDispatch <> nil then
      FDispatch.NotifyAppearanceChanged;
 end;
 

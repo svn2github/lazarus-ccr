@@ -46,8 +46,8 @@ type
   TColorTools = class
   public
     class function Darken(AColor: TColor; APercentage: byte): TColor;
-    class function Brighten(AColor: TColor; APercentage: byte): TColor;
-    class function Shade(AColor1, AColor2: TColor; APercentage: byte): TColor; overload;
+    class function Brighten(AColor: TColor; APercentage: Integer): TColor;
+    class function Shade(AColor1, AColor2: TColor; APercentage: Integer): TColor; overload;
     class function Shade(AColor1, AColor2: TColor; AStep: extended): TColor; overload;
     class function AddColors(AColor1, AColor2: TColor): TColor;
     class function MultiplyColors(AColor1, AColor2: TColor): TColor;
@@ -111,7 +111,7 @@ begin
   );
 end;
 
-class function TColorTools.Brighten(AColor: TColor; APercentage: byte): TColor;
+class function TColorTools.Brighten(AColor: TColor; APercentage: Integer): TColor;
 var
   c: TRgbColor;
   p: Extended;
@@ -119,14 +119,14 @@ begin
   c := TRgbColor(ColorToRGB(AColor));
   p := APercentage/100;
   result := rgb(
-    round(c.R + (255-c.R)*p),
-    round(c.G + (255-c.G)*p),
-    round(c.B + (255-c.B)*p)
+    EnsureRange(round(c.R + (255-c.R)*p), 0, 255),
+    EnsureRange(round(c.G + (255-c.G)*p), 0, 255),
+    EnsureRange(round(c.B + (255-c.B)*p), 0, 255)
   );
 end;
 
 class function TColorTools.Shade(AColor1, AColor2: TColor;
-  APercentage: byte): TColor;
+  APercentage: Integer): TColor;
 var
   c1, c2: TRgbColor;
   Step: Extended;  // percentage as floating point number
@@ -135,9 +135,9 @@ begin
   c2 := TRGBColor(ColorToRGB(AColor2));
   Step := APercentage / 100;
   result := rgb(
-    round(c1.R + (c2.R - c1.R) * Step),
-    round(c1.G + (c2.G - c1.G) * Step),
-    round(c1.B + (c2.B - c1.B) * Step)
+    EnsureRange(round(c1.R + (c2.R - c1.R) * Step), 0, 255),
+    EnsureRange(round(c1.G + (c2.G - c1.G) * Step), 0, 255),
+    EnsureRange(round(c1.B + (c2.B - c1.B) * Step), 0, 255)
   );
 end;
 

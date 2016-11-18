@@ -6,7 +6,7 @@ interface
 
 uses
   LCLIntf, LCLType, LMessages, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls, ComCtrls, Buttons,
+  Dialogs, ExtCtrls, StdCtrls, ComCtrls, Buttons, Spin,
   SpkGUITools, SpkXMLParser,
   spkt_Buttons, spkt_BaseItem, spkt_Pane, spkt_Types, spkt_Tab, SpkToolbar,
   spkt_Appearance;
@@ -17,8 +17,11 @@ type
 
   TfrmAppearanceEditWindow = class(TForm)
     CbAppearanceStyle: TComboBox;
+    Label15: TLabel;
+    Label16: TLabel;
     PaneHSpacer: TBevel;
     ItemHSpacer: TBevel;
+    ePaneHotTrackBrightnessChange: TSpinEdit;
     TabVSpacer: TBevel;
     bInactiveTabHeaderFontColor: TSpeedButton;
     bItemActiveInnerDarkColor: TSpeedButton;
@@ -211,7 +214,7 @@ type
     procedure cbLinkItemClick(Sender: TObject);
     procedure cbLinkPaneClick(Sender: TObject);
     procedure cbLinkTabClick(Sender: TObject);
-
+    procedure ePaneHotTrackBrightnessChangeChange(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
@@ -803,6 +806,14 @@ begin
   end
   else
     Result := false;
+end;
+
+procedure TfrmAppearanceEditWindow.ePaneHotTrackBrightnessChangeChange(
+  Sender: TObject);
+begin
+  with tbPreview.Appearance.Pane do
+    HotTrackBrightnessChange := (Sender as TSpinEdit).Value;
+  tbPreview.Invalidate;
 end;
 
 procedure TfrmAppearanceEditWindow.FormActivate(Sender: TObject);

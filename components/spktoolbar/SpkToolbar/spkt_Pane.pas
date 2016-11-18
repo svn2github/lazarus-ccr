@@ -231,6 +231,7 @@ var
   FontColor, BorderLightColor, BorderDarkColor, c: TColor;
   i: Integer;
   R: T2DIntRect;
+  delta: Integer;
 begin
   // W niektórych warunkach nie jesteœmy w stanie rysowaæ:
   // * Brak dyspozytora
@@ -243,21 +244,22 @@ begin
   if FPaneState = psIdle then
   begin
     // psIdle
-    BgFromColor:=FAppearance.Pane.GradientFromColor;
-    BgToColor:=FAppearance.Pane.GradientToColor;
-    CaptionColor:=FAppearance.Pane.CaptionBgColor;
-    FontColor:=FAppearance.Pane.CaptionFont.Color;
-    BorderLightColor:=FAppearance.Pane.BorderLightColor;
-    BorderDarkColor:=FAppearance.Pane.BorderDarkColor;
+    BgFromColor := FAppearance.Pane.GradientFromColor;
+    BgToColor := FAppearance.Pane.GradientToColor;
+    CaptionColor := FAppearance.Pane.CaptionBgColor;
+    FontColor := FAppearance.Pane.CaptionFont.Color;
+    BorderLightColor := FAppearance.Pane.BorderLightColor;
+    BorderDarkColor := FAppearance.Pane.BorderDarkColor;
   end else
   begin
     // psHover
-    BgFromColor:=TColorTools.Brighten(FAppearance.Pane.GradientFromColor,20);
-    BgToColor:=TColorTools.Brighten(FAppearance.Pane.GradientToColor,20);
-    CaptionColor:=TColorTools.Brighten(FAppearance.Pane.CaptionBgColor,20);
-    FontColor:=TColorTools.Brighten(FAppearance.Pane.CaptionFont.Color,20);
-    BorderLightColor:=TColorTools.Brighten(FAppearance.Pane.BorderLightColor,20);
-    BorderDarkColor:=TColorTools.Brighten(FAppearance.Pane.BorderDarkColor,20);
+    delta := FAppearance.Pane.HotTrackBrightnessChange;
+    BgFromColor := TColorTools.Brighten(FAppearance.Pane.GradientFromColor, delta);
+    BgToColor := TColorTools.Brighten(FAppearance.Pane.GradientToColor, delta);
+    CaptionColor := TColorTools.Brighten(FAppearance.Pane.CaptionBgColor, delta);
+    FontColor := TColorTools.Brighten(FAppearance.Pane.CaptionFont.Color, delta);
+    BorderLightColor := TColorTools.Brighten(FAppearance.Pane.BorderLightColor, delta);
+    BorderDarkColor := TColorTools.Brighten(FAppearance.Pane.BorderDarkColor, delta);
   end;
 
   // T³o
