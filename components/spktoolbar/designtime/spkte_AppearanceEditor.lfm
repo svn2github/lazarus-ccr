@@ -327,9 +327,9 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     Height = 395
     Top = 132
     Width = 558
-    ActivePage = TabSheet2
+    ActivePage = TabSheet5
     Align = alClient
-    TabIndex = 1
+    TabIndex = 4
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Tab'
@@ -2314,27 +2314,24 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       ImageIndex = 4
       object Label17: TLabel
         AnchorSideLeft.Control = TabSheet5
-        AnchorSideTop.Control = CbAppearanceStyle
         AnchorSideTop.Side = asrCenter
-        Left = 4
+        Left = 8
         Height = 15
         Top = 8
         Width = 87
-        BorderSpacing.Left = 4
+        BorderSpacing.Left = 8
         Caption = 'Reset to defaults'
         ParentColor = False
       end
-      object CbAppearanceStyle: TComboBox
+      object LbAppearanceStyle: TListBox
         AnchorSideLeft.Control = Label17
-        AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = TabSheet5
-        Left = 115
-        Height = 23
-        Top = 4
-        Width = 172
-        BorderSpacing.Left = 24
+        AnchorSideTop.Control = Label17
+        AnchorSideTop.Side = asrBottom
+        Left = 8
+        Height = 149
+        Top = 27
+        Width = 224
         BorderSpacing.Top = 4
-        ItemHeight = 15
         Items.Strings = (
           'Office2007 blue'
           'Office2007 silver'
@@ -2342,8 +2339,8 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
           'Metro light'
           'Metro dark'
         )
-        OnChange = CbAppearanceStyleChange
-        Style = csDropDownList
+        ItemHeight = 15
+        OnClick = LbAppearanceStyleClick
         TabOrder = 0
       end
     end

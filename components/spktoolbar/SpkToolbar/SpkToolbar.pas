@@ -1289,9 +1289,9 @@ procedure TSpkToolbar.ValidateBuffer;
 
   procedure DrawBackgroundColor;
   begin
-    FBuffer.canvas.brush.color := Color;
-    FBuffer.canvas.brush.style := bsSolid;
-    FBuffer.canvas.fillrect(Rect(0, 0, self.Width, self.Height));
+    FBuffer.Canvas.Brush.Color := Color;
+    FBuffer.Canvas.Brush.Style := bsSolid;
+    FBuffer.Canvas.FillRect(Rect(0, 0, self.Width, self.Height));
   end;
 
   procedure DrawBody;
@@ -1415,7 +1415,7 @@ procedure TSpkToolbar.ValidateBuffer;
     end;
 
     procedure DrawTab(index: integer;
-      Border, GradientFrom, GradientTo, TextColor: TColor);
+      Border, GradientFrom, GradientTo: TColor);
     var
       TabRect: T2DIntRect;
       TabRegion: HRGN;
@@ -1426,49 +1426,64 @@ procedure TSpkToolbar.ValidateBuffer;
       TabRect := FTabRects[index];
 
       //Middle rectangle
-      TabRegion := CreateRectRgn(TabRect.Left + TabCornerRadius - 1,
+      TabRegion := CreateRectRgn(
+        TabRect.Left + TabCornerRadius - 1,
         TabRect.Top + TabCornerRadius,
-        TabRect.Right - TabCornerRadius + 1 +
-        1, TabRect.Bottom + 1);
+        TabRect.Right - TabCornerRadius + 1 + 1,
+        TabRect.Bottom + 1
+      );
 
       //Top part with top convex curves
-      TmpRegion := CreateRectRgn(TabRect.Left + 2 * TabCornerRadius - 1,
-        TabRect.Top, TabRect.Right -
-        2 * TabCornerRadius + 1 + 1, TabRect.Top +
-        TabCornerRadius);
-      CombineRgn(TabRegion, TabRegion, TmpRegion, RGN_OR);
-      DeleteObject(TmpRegion);
-
-      TmpRegion := CreateEllipticRgn(TabRect.Left + TabCornerRadius -
-        1, TabRect.Top,
-        TabRect.Left + 3 * TabCornerRadius,
-        TabRect.Top + 2 * TabCornerRadius + 1);
-      CombineRgn(TabRegion, TabRegion, TmpRegion, RGN_OR);
-      DeleteObject(TmpRegion);
-
-      TmpRegion := CreateEllipticRgn(TabRect.Right - 3 * TabCornerRadius + 2,
+      TmpRegion := CreateRectRgn(
+        TabRect.Left + 2 * TabCornerRadius - 1,
         TabRect.Top,
-        TabRect.Right - TabCornerRadius +
-        3, TabRect.Top + 2 * TabCornerRadius + 1);
+        TabRect.Right - 2 * TabCornerRadius + 1 + 1,
+        TabRect.Top + TabCornerRadius
+      );
+      CombineRgn(TabRegion, TabRegion, TmpRegion, RGN_OR);
+      DeleteObject(TmpRegion);
+
+      TmpRegion := CreateEllipticRgn(
+        TabRect.Left + TabCornerRadius - 1,
+        TabRect.Top,
+        TabRect.Left + 3 * TabCornerRadius,
+        TabRect.Top + 2 * TabCornerRadius + 1
+      );
+      CombineRgn(TabRegion, TabRegion, TmpRegion, RGN_OR);
+      DeleteObject(TmpRegion);
+
+      TmpRegion := CreateEllipticRgn(
+        TabRect.Right - 3 * TabCornerRadius + 2,
+        TabRect.Top,
+        TabRect.Right - TabCornerRadius + 3,
+        TabRect.Top + 2 * TabCornerRadius + 1
+      );
       CombineRgn(TabRegion, TabRegion, TmpRegion, RGN_OR);
       DeleteObject(TmpRegion);
 
       //Bottom part with bottom convex curves
-      TmpRegion := CreateRectRgn(TabRect.Left, TabRect.Bottom -
-        TabCornerRadius, TabRect.Right + 1,
-        TabRect.Bottom + 1);
+      TmpRegion := CreateRectRgn(
+        TabRect.Left,
+        TabRect.Bottom - TabCornerRadius,
+        TabRect.Right + 1,
+        TabRect.Bottom + 1
+      );
 
-      TmpRegion2 := CreateEllipticRgn(TabRect.Left - TabCornerRadius,
+      TmpRegion2 := CreateEllipticRgn(
+        TabRect.Left - TabCornerRadius,
         TabRect.Bottom - 2 * TabCornerRadius + 1,
-        TabRect.Left + TabCornerRadius +
-        1, TabRect.Bottom + 2);
+        TabRect.Left + TabCornerRadius + 1,
+        TabRect.Bottom + 2
+      );
       CombineRgn(TmpRegion, TmpRegion, TmpRegion2, RGN_DIFF);
       DeleteObject(TmpRegion2);
 
-      TmpRegion2 := CreateEllipticRgn(TabRect.Right - TabCornerRadius +
-        1, TabRect.Bottom - 2 * TabCornerRadius +
-        1, TabRect.Right + TabCornerRadius + 2,
-        TabRect.Bottom + 2);
+      TmpRegion2 := CreateEllipticRgn(
+        TabRect.Right - TabCornerRadius + 1,
+        TabRect.Bottom - 2 * TabCornerRadius + 1,
+        TabRect.Right + TabCornerRadius + 2,
+        TabRect.Bottom + 2
+      );
       CombineRgn(TmpRegion, TmpRegion, TmpRegion2, RGN_DIFF);
       DeleteObject(TmpRegion2);
 
@@ -1495,6 +1510,7 @@ procedure TSpkToolbar.ValidateBuffer;
         cpRightBottom,
         Border,
         FTabClipRect);
+
       TGuiTools.DrawAARoundCorner(FBuffer,
                                 {$IFDEF EnhancedRecordSupport}
         T2DIntPoint.Create(TabRect.right - TabCornerRadius + 1, TabRect.bottom - TabCornerRadius + 1),
@@ -1512,6 +1528,7 @@ procedure TSpkToolbar.ValidateBuffer;
         TabRect.Bottom - TabCornerRadius + 1,
         Border,
         FTabClipRect);
+
       TGuiTools.DrawVLine(FBuffer,
         TabRect.Right - TabCornerRadius + 1,
         TabRect.top + TabCornerRadius,
@@ -1521,19 +1538,20 @@ procedure TSpkToolbar.ValidateBuffer;
 
       TGuiTools.DrawAARoundCorner(FBuffer,
                                 {$IFDEF EnhancedRecordSupport}
-        T2DIntPoint.Create(TabRect.left + TabCornerRadius - 1, 0),
+        T2DIntPoint.Create(TabRect.Left + TabCornerRadius - 1, 0),
                                 {$ELSE}
-        Create2DIntPoint(TabRect.left + TabCornerRadius - 1, 0),
+        Create2DIntPoint(TabRect.Left + TabCornerRadius - 1, 0),
                                 {$ENDIF}
         TabCornerRadius,
         cpLeftTop,
         Border,
         FTabClipRect);
+
       TGuiTools.DrawAARoundCorner(FBuffer,
                                 {$IFDEF EnhancedRecordSupport}
-        T2DIntPoint.Create(TabRect.right - 2 * TabCornerRadius + 2, 0),
+        T2DIntPoint.Create(TabRect.Right - 2 * TabCornerRadius + 2, 0),
                                 {$ELSE}
-        Create2DIntPoint(TabRect.right - 2 * TabCornerRadius + 2, 0),
+        Create2DIntPoint(TabRect.Right - 2 * TabCornerRadius + 2, 0),
                                 {$ENDIF}
         TabCornerRadius,
         cpRightTop,
@@ -1541,8 +1559,8 @@ procedure TSpkToolbar.ValidateBuffer;
         FTabClipRect);
 
       TGuiTools.DrawHLine(FBuffer,
-        TabRect.left + 2 * TabCornerRadius - 1,
-        TabRect.right - 2 * TabCornerRadius + 2,
+        TabRect.Left + 2 * TabCornerRadius - 1,
+        TabRect.Right - 2 * TabCornerRadius + 2,
         0,
         Border,
         FTabClipRect);
@@ -1563,6 +1581,8 @@ procedure TSpkToolbar.ValidateBuffer;
         FTabClipRect);
     end;
 
+  var
+    delta: Integer;
   begin
     //I assume that the tabs size is reasonable
 
@@ -1588,6 +1608,10 @@ procedure TSpkToolbar.ValidateBuffer;
           else
             CurrentAppearance := FAppearance;
 
+          if CurrentAppearance.Tab.GradientType = bkSolid then
+            delta := 0 else
+            delta := 50;
+
           TabRect := FTabRects[i];
 
           // Tab is drawn
@@ -1598,18 +1622,16 @@ procedure TSpkToolbar.ValidateBuffer;
               DrawTab(i,
                 CurrentAppearance.Tab.BorderColor,
                 TColorTools.Brighten(TColorTools.Brighten(
-                CurrentAppearance.Tab.GradientFromColor, 50), 50),
-                CurrentAppearance.Tab.GradientFromColor,
-                CurrentAppearance.Tab.TabHeaderFont.Color);
+                  CurrentAppearance.Tab.GradientFromColor, delta), delta),
+                CurrentAppearance.Tab.GradientFromColor);
             end
             else
             begin
               DrawTab(i,
                 CurrentAppearance.Tab.BorderColor,
                 TColorTools.Brighten(
-                CurrentAppearance.Tab.GradientFromColor, 50),
-                CurrentAppearance.Tab.GradientFromColor,
-                CurrentAppearance.Tab.TabHeaderFont.color);
+                  CurrentAppearance.Tab.GradientFromColor, delta),
+                CurrentAppearance.Tab.GradientFromColor);
             end;
 
             DrawTabText(i, CurrentAppearance.Tab.TabHeaderFont);
@@ -1620,12 +1642,11 @@ procedure TSpkToolbar.ValidateBuffer;
             begin
               DrawTab(i,
                 TColorTools.Shade(
-                self.Color, CurrentAppearance.Tab.BorderColor, 50),
-                TColorTools.Shade(self.color, TColorTools.brighten(
-                CurrentAppearance.Tab.GradientFromColor, 50), 50),
+                  self.Color, CurrentAppearance.Tab.BorderColor, delta),
+                TColorTools.Shade(self.color,
+                  TColorTools.Brighten(CurrentAppearance.Tab.GradientFromColor, delta), 50),
                 TColorTools.Shade(
-                self.color, CurrentAppearance.Tab.GradientFromColor, 50),
-                CurrentAppearance.Tab.TabHeaderFont.color);
+                  self.color, CurrentAppearance.Tab.GradientFromColor, 50) );
             end;
 
             // Bottom line

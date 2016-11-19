@@ -16,7 +16,6 @@ type
   { TfrmAppearanceEditWindow }
 
   TfrmAppearanceEditWindow = class(TForm)
-    CbAppearanceStyle: TComboBox;
     Label15: TLabel;
     Label16: TLabel;
     Label19: TLabel;
@@ -169,6 +168,7 @@ type
     sItemRectangle: TShape;
     TabSheet5: TTabSheet;
     Label17: TLabel;
+    LbAppearanceStyle: TListbox;
 
     procedure bExportToPascalClick(Sender: TObject);
     procedure bExportToXMLClick(Sender: TObject);
@@ -205,7 +205,6 @@ type
     procedure bTabGradientToColorClick(Sender: TObject);
     procedure bActiveTabHeaderFontColorClick(Sender: TObject);
     procedure bCopyToClipboardClick(Sender: TObject);
-    procedure CbAppearanceStyleChange(Sender: TObject);
     procedure cbItemActiveGradientKindChange(Sender: TObject);
     procedure cbItemHottrackGradientKindChange(Sender: TObject);
     procedure cbItemIdleGradientKindChange(Sender: TObject);
@@ -223,7 +222,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-
+    procedure LbAppearanceStyleClick(Sender: TObject);
     procedure pActiveTabHeaderFontClick(Sender: TObject);
     procedure pInactiveTabHeaderFontClick(Sender: TObject);
 
@@ -425,12 +424,6 @@ begin
       SetLinkedFrameColor(pTabGradientTo.Color)
   end;
   (Sender as TSpeedButton).Down := false;
-end;
-
-procedure TfrmAppearanceEditWindow.CbAppearanceStyleChange(Sender: TObject);
-begin
-  tbPreview.Appearance.Reset(TSpkStyle(CbAppearanceStyle.ItemIndex));
-  LoadAppearance(tbPreview.Appearance);
 end;
 
 procedure TfrmAppearanceEditWindow.bCopyToClipboardClick(Sender: TObject);
@@ -929,6 +922,12 @@ end;
 function TfrmAppearanceEditWindow.GetAppearance: TSpkToolbarAppearance;
 begin
   result := tbPreview.Appearance;
+end;
+
+procedure TfrmAppearanceEditWindow.LbAppearanceStyleClick(Sender: TObject);
+begin
+  tbPreview.Appearance.Reset(TSpkStyle(LbAppearanceStyle.ItemIndex));
+  LoadAppearance(tbPreview.Appearance);
 end;
 
 procedure TfrmAppearanceEditWindow.LoadAppearance(AAppearance: TSpkToolbarAppearance);
