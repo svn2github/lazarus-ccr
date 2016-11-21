@@ -176,6 +176,7 @@ type
   end;
 
 implementation
+
 { TVpContactButtonBar }
 
 constructor TVpContactButtonBar.Create(AOwner: TComponent);

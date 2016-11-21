@@ -39,8 +39,8 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  VpDlg, VpData, ExtCtrls, StdCtrls, VpEvntEditDlg, VpBaseDS, VpConst;
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls, StdCtrls,
+  VpDlg, VpData, VpEvntEditDlg, VpBaseDS, VpConst;
 
 type
   { forward declarations }
@@ -102,7 +102,8 @@ implementation
 {$ENDIF}
 
 uses
-  StrUtils, VpMisc, VpSR;
+  StrUtils,
+  VpMisc, VpSR;
 
 { TVpNotificationDialog }
 

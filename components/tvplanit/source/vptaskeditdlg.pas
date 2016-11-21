@@ -35,14 +35,14 @@ interface
 
 uses
   {$IFDEF LCL}
-  LCLProc, LCLType, LCLIntf, LResources,
+  LCLProc, LCLType, LCLIntf, LResources, EditBtn,
   {$ELSE}
   Windows, Messages, VpEdPop, VpDateEdit,
   {$ENDIF}
   SysUtils,
   {$IFDEF VERSION6} Variants, {$ENDIF}
-  Classes, Graphics, Controls, Forms, Dialogs, VpData, StdCtrls, ExtCtrls,
-  VpBase, VpSR, VpDlg, ComCtrls, EditBtn;
+  Classes, Graphics, Controls, Forms, Dialogs, VpData, StdCtrls, ExtCtrls, ComCtrls,
+  VpBase, VpSR, VpDlg;
 
 type
   { forward declarations }
@@ -193,7 +193,6 @@ var
   HDist: Integer = 8;       // Horizontal distance between controls:
   w: Integer;
   cnv: TControlCanvas;
-  cb: TCheckbox;
 begin
   VBevelDist := ScaleY(VBevelDist, DesignTimeDPI);
   VDist := ScaleY(VDist, DesignTimeDPI);

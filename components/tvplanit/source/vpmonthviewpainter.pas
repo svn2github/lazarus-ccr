@@ -63,7 +63,7 @@ type
 implementation
 
 uses
-  LazUtf8, StrUtils, Math,
+  LazUtf8, Math,
   VpCanvasUtils, VpMisc;
 
 type
@@ -393,7 +393,7 @@ var
   DayOffset: Integer;
   StartingDate: TDateTime;
   ThisDate: TDateTime;
-  I, J: Integer;
+  I: Integer;
   Drawn: Boolean;
   OldBrush: TBrush;
   OldPen: TPen;

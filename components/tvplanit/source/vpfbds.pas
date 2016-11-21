@@ -7,9 +7,8 @@ unit VpFBDS;
 interface
 
 uses
-  SysUtils, Classes, DB,
-  VpBaseDS, VpDBDS,
-  IBConnection, sqldb;
+  SysUtils, Classes, DB, IBConnection, sqldb,
+  VpBaseDS, VpDBDS;
 
 type
   TVpFirebirdDatastore = class(TVpCustomDBDatastore)

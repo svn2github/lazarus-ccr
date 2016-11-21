@@ -2,41 +2,33 @@
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
-    <Name Value="laz_visualplanit_zeos"/>
+    <Name Value="laz_visualplanit_zeos_design"/>
     <Type Value="RunAndDesignTime"/>
-    <AddToProjectUsesSection Value="True"/>
     <Author Value="W. Pamler"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <IncludeFiles Value="..\.."/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\$(LCLWidgetType)"/>
+        <IncludeFiles Value="source\include;source\addons\zeos"/>
+        <OtherUnitFiles Value="source\addons\zeos"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="Visual PlanIt datastore for ZEOS database components"/>
     <Version Major="1" Release="5"/>
-    <Files Count="2">
+    <Files Count="1">
       <Item1>
-        <Filename Value="vpregzeos.pas"/>
+        <Filename Value="source\addons\zeos\vpregzeos.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="VpRegZEOS"/>
       </Item1>
-      <Item2>
-        <Filename Value="vpzeosds.pas"/>
-        <Type Value="Include"/>
-      </Item2>
     </Files>
-    <RequiredPkgs Count="3">
+    <RequiredPkgs Count="2">
       <Item1>
-        <PackageName Value="zcomponent"/>
+        <PackageName Value="laz_visualplanit_zeos"/>
       </Item1>
       <Item2>
-        <PackageName Value="laz_visualplanit"/>
-      </Item2>
-      <Item3>
         <PackageName Value="FCL"/>
-      </Item3>
+      </Item2>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

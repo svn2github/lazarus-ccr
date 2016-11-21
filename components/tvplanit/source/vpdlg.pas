@@ -38,7 +38,8 @@ uses
   Controls,
   {$ELSE}
   {$ENDIF}
-  Classes, Forms, Graphics, VpBase, VpBaseDS, VpConst, VpSR;
+  Classes, Forms, Graphics,
+  VpBase, VpBaseDS, VpConst, VpSR;
 
 type
   TVpDialogPosition = (mpCenter, mpCenterTop, mpCustom);

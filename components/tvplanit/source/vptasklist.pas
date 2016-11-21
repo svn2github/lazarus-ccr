@@ -38,8 +38,8 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Graphics, Controls, ExtCtrls, StdCtrls,
-  VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils, Menus;
+  Classes, Graphics, Controls, ExtCtrls, StdCtrls, Menus,
+  VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils;
 
 type
   TVpTaskRec = packed record

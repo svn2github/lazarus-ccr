@@ -38,8 +38,8 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Graphics, Controls, ExtCtrls, StdCtrls, Forms,
-  VpBase, VpBaseDS, VpMisc, VpData, VpConst, VpSR, VpCanvasUtils, Menus;
+  Classes, Graphics, Controls, ExtCtrls, StdCtrls, Forms, Menus,
+  VpBase, VpBaseDS, VpMisc, VpData, VpConst, VpSR, VpCanvasUtils;
 
 const
   MaxColumns = 100;  { An arbitrary number representing the maximum number of }
@@ -923,7 +923,6 @@ const
   MaxWidth = 400;
 var
   txt: String;
-  i: Integer;
   contact: TVpContact;
   R, RHint,RCont, RScr: TRect;
 begin

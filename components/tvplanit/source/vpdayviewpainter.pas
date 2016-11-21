@@ -5,8 +5,8 @@ unit VpDayViewPainter;
 interface
 
 uses
-  SysUtils, LCLType, LCLIntf, Types,
-  Classes, Graphics, VpConst, VPBase, VpData, VpBasePainter, VpDayView;
+  SysUtils, LCLType, LCLIntf, Types, Classes, Graphics,
+  VpConst, VPBase, VpData, VpBasePainter, VpDayView;
 
 type
   { Defines matrix of event records for managing how events overlap with each other. }
@@ -128,7 +128,7 @@ implementation
 
 uses
   StrUtils, Math, LazUtf8,
-  VpSR, VpCanvasUtils, VpMisc;
+  VpCanvasUtils, VpMisc;
 
 const
   ICON_MARGIN = 4;
@@ -637,7 +637,7 @@ procedure TVpDayViewPainter.DrawColHeader(R: TRect; ARenderDate: TDateTime;
   Col: Integer);
 var
   SaveFont: TFont;
-  DateStr, DateOnlyStr, ResStr: string;
+  DateStr, ResStr: string;
   DateStrLen, ResStrLen: integer;
   DateStrHt: Integer;
   TextRect: TRect;

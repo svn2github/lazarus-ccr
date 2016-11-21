@@ -36,12 +36,9 @@ interface
 uses
   {$IFDEF VERSION6}
   {$IFNDEF LCL}
-  DesignIntf, DesignEditors,VCLEditors,
+  DesignIntf, DesignEditors, VCLEditors,
   {$ELSE}
-  PropEdits,
-  LazarusPackageIntf,
-  FieldsEditor,
-  ComponentEditors,
+  PropEdits, LazarusPackageIntf, FieldsEditor, ComponentEditors,
   {$ENDIF}
   {$ELSE}
   DsgnIntf,

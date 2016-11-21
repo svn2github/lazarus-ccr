@@ -82,7 +82,8 @@ implementation
 {$ENDIF}
 
 uses
-  Math, VpMisc, VpSR;
+  Math,
+  VpMisc, VpSR;
 
 { TfrmEditLayout }
 

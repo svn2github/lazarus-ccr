@@ -40,8 +40,8 @@ uses
   {$ELSE}
   Windows, Messages, MMSystem,
   {$ENDIF}
-  Controls, Graphics, Forms, Buttons, SysUtils,
-  StdCtrls, Classes, ExtCtrls, VpBase, VpConst, VpMisc, VpSR, Math;
+  Controls, Graphics, Forms, Buttons, SysUtils, StdCtrls, Classes, ExtCtrls, Math,
+  VpBase, VpConst, VpMisc, VpSR;
 
 type
   {Forward Declaration}

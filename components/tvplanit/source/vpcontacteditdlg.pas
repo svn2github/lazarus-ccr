@@ -40,8 +40,8 @@ uses
   {$ENDIF}
   SysUtils,
   {$IFDEF VERSION6} Variants, {$ENDIF}
-  Classes, Graphics, Controls, Forms, Dialogs, VpData, ExtCtrls, StdCtrls,
-  VpException, VpMisc, VpBase, VpSR, VpDlg, VpBaseDS, ComCtrls, EditBtn;
+  Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls, StdCtrls, ComCtrls, EditBtn,
+  VpData, VpException, VpMisc, VpBase, VpSR, VpDlg, VpBaseDS;
 
 type
   { forward declarations }
@@ -504,24 +504,16 @@ end;
 procedure TContactEditForm.ResizeControls;
 const
   ComboArrowWidth  = 32;
-//  FieldVertSep     = 25;
-//  FormRightBorder  = 20;
-//  MinFormWidth     = 265;
-//  FormHeightOffset = 103;
-//  MinFormHeight    = 250;
-  TopField         = 8;
-
 type
   TLabelArray = array of TLabel;
   TComboboxArray = array of TCombobox;
   TEditArray = array of TEdit;
-
 var
   Labels: TLabelArray;
   Comboboxes: TComboboxArray;
   Edits: TEditArray;
   largestLabelWidth: Integer;
-  i, j: Integer;
+  i: Integer;
   OldFont: TFont;
   FieldTop: Integer;
   delta: Integer;

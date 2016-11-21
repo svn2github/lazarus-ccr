@@ -39,7 +39,7 @@ uses
   Windows, Messages, ColorGrd,
   {$ENDIF}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, TypInfo, ComCtrls, Buttons,
+  StdCtrls, ExtCtrls, ComCtrls, Buttons,
   VpPrtFmt;
 
 type
@@ -119,7 +119,8 @@ implementation
 {$ENDIF}
 
 uses
-  Math, VpMisc, VpSr;
+  Math, TypInfo,
+  VpMisc, VpSr;
 
 
 { TfrmEditShape }

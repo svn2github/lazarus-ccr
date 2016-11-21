@@ -41,7 +41,7 @@ uses
   {$ENDIF}
   SysUtils, {$IFDEF VERSION6}Variants,{$ENDIF} Classes,
   Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls, ComCtrls, Buttons,
-  VpData, VpBase, VpBaseDS, VpDlg, VpConst; //VpEdPop,
+  VpData, VpBase, VpBaseDS, VpDlg, VpConst;
 
 const
  blabla = 1;  // to make the $IF work in Laz 1.4.4. Why?
@@ -635,7 +635,6 @@ const
   DELTA = 8;
   VDELTA = 8;
   VDIST = 5;
-  VBEVELDIST = 8;
 var
   w, h: Integer;
   cnv: TControlCanvas;

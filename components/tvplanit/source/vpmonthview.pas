@@ -38,8 +38,8 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Graphics, Controls, ComCtrls, ExtCtrls, Forms,
-  VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils, Menus;
+  Classes, Graphics, Controls, ComCtrls, ExtCtrls, Forms, Menus,
+  VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils;
 
 type
   TVpMonthdayRec = packed record

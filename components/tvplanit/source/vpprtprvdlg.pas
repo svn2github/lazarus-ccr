@@ -163,7 +163,6 @@ implementation
 {$ENDIF}
 
 uses
-  Math,
   VpPrtFmt;
 
 { TfrmPrintPreview }
@@ -418,11 +417,13 @@ begin
 end;
 
 procedure TfrmPrintPreview.FormShow(Sender: TObject);
+{
 var
   maxlen: Integer;
   cnv: TControlCanvas;
   i: Integer;
   fmts: TVpPrintFormat;
+  }
 begin
   if VpPrintPreview1.ControlLink = nil then
     exit;

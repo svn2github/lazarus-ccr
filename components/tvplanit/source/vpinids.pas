@@ -63,7 +63,8 @@ type
 implementation
 
 uses
-  typinfo, StrUtils, Strings, IniFiles,
+  typinfo,
+  IniFiles,
   VpConst, VpMisc, VpSR;
 
 procedure IniError(const AMsg: String);
@@ -131,6 +132,7 @@ end;
 { TVpIniStrings_v104 }
 procedure TVpIniStrings_v104.AddField(AName, AValue: String);
 begin
+  Unused(AName);
   Add('{' + AValue + '}');
 end;
 
@@ -147,6 +149,7 @@ end;
 
 function TVpIniStrings_v104.Extract(AName: String): String;
 begin
+  Unused(AName);
   Result := '';
 end;
 

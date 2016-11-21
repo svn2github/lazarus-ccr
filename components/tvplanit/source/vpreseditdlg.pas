@@ -40,8 +40,8 @@ uses
   {$ENDIF}
   SysUtils,
   {$IFDEF VERSION6} Variants, {$ENDIF}
-  Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls,
-  VpDlg, VpBase, VpData, ComCtrls, VpConst;
+  Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls, ComCtrls,
+  VpDlg, VpBase, VpData, VpConst;
 
 type
   { forward declarations }

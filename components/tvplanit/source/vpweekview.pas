@@ -52,9 +52,8 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Graphics, Controls, ComCtrls, ExtCtrls, StdCtrls, Forms,
-  VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils, Menus,
-  VpDayView;
+  Classes, Graphics, Controls, ComCtrls, ExtCtrls, StdCtrls, Forms, Menus,
+  VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils, VpDayView;
 
 type
   TVpWeekdayRec = packed record
@@ -899,6 +898,8 @@ end;
 
 procedure TVpWeekView.DoEndDrag(Target: TObject; X, Y: Integer);
 begin
+  Unused(Target, X, Y);
+
   if ReadOnly or (not FAllowDragAndDrop) then
     Exit;
  {$IFNDEF LCL}
@@ -919,7 +920,7 @@ begin
 
   if FActiveEvent <> nil then begin
     {$IFDEF LCL}
-    GetCursorPos(P);
+    GetCursorPos(P{%H-});
     P := TVpWeekView(Self).ScreenToClient(P);
     EventName := FActiveEvent.Description;
     HotSpot := Point(P.X - Self.wvActiveEventRec.Left, P.Y - Self.wvActiveEventRec.Top);
@@ -971,6 +972,8 @@ end;
 procedure TVpWeekView.DragOver(Source: TObject; X, Y: Integer; State: TDragState;
   var Accept: Boolean);
 begin
+  Unused(Source, X, State);
+
   Accept := false;
   if ReadOnly or (not FAllowDragAndDrop) then
     Exit;

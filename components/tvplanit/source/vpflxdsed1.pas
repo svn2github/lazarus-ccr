@@ -37,6 +37,7 @@ interface
 
 uses
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  (*
  {$IFNDEF RUNTIMETEST}
  {$IFDEF LCL}
   propedits, componenteditors, FormEditingIntf, lclintf, IDEIntf,
@@ -45,7 +46,9 @@ uses
  {$IFDEF VERSION6} DesignIntf, DesignEditors, {$ELSE} DsgnIntf, {$ENDIF}, DBTables,
  {$ENDIF}
  {$ENDIF} {RUNTIMETEST}
-  ExtCtrls, StdCtrls, Db, VpFlxDS, ComCtrls, Buttons;
+ *)
+  ExtCtrls, StdCtrls, Db, ComCtrls, Buttons,
+  VpFlxDS;
 
 type
 
@@ -100,7 +103,7 @@ type
     ContactsDS: TDataset;
     TasksDS: TDataset;
   end;
-
+              (*
 {$IFDEF RUNTIMETEST}
 procedure RuntimeTest(FlexDS: TVpFlexDataStore);
 {$ELSE}
@@ -110,6 +113,7 @@ procedure RuntimeTest(FlexDS: TVpFlexDataStore);
     function GetVerbCount: Integer; override;
   end;
 {$ENDIF}
+                *)
 
 implementation
 {$IFDEF LCL}
@@ -120,7 +124,7 @@ implementation
 
 uses
   vpConst, VpMisc;
-
+  (*
 {$IFDEF RUNTIMETEST}
 { Runtime test }
 
@@ -239,7 +243,7 @@ begin
   Result := 1;
 end;
 {$ENDIF} {RuntimeTest}
-
+*)
 
 procedure TfrmFieldMapper.FormShow(Sender: TObject);
 begin

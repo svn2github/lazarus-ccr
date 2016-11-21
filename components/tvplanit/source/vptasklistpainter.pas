@@ -6,11 +6,8 @@ interface
 
 uses
   SysUtils, LCLType, LCLIntf,
-  //SysUtils, LCLType, LCLIntf, Types,
   Classes, Graphics, Types,
-  //VpConst,
-  VPBase, //VpData,
-  VpTaskList, VpBasePainter;
+  VPBase, VpTaskList, VpBasePainter;
 
 type
   TVpTaskListPainter = class(TVpBasePainter)

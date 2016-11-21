@@ -39,8 +39,8 @@ uses
   Windows, Messages,
   {$ENDIF}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls,
-  VpBase, VpSR, VpPrtFmt, ComCtrls;
+  StdCtrls, ExtCtrls, ComCtrls,
+  VpBase, VpSR, VpPrtFmt;
 
 type
 
@@ -119,7 +119,8 @@ type
 implementation
 
 uses
-  Math, VpMisc, VpEdShape;
+  Math,
+  VpMisc, VpEdShape;
 
 {$IFDEF LCL}
  {$R *.lfm}

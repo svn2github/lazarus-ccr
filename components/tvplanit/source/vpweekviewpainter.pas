@@ -5,8 +5,8 @@ unit VpWeekViewPainter;
 interface
 
 uses
-  SysUtils, LCLType, LCLIntf, Types,
-  Classes, Graphics, VpConst, VPBase, VpData, VpBasePainter, VpWeekView;
+  SysUtils, LCLType, LCLIntf, Types, Classes, Graphics,
+  VpConst, VPBase, VpData, VpBasePainter, VpWeekView;
 
 type
   TVpWeekViewPainter = class(TVpBasePainter)

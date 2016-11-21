@@ -45,32 +45,27 @@ type
   StringIds = array[0..1] of DOMString;
 
 {== Event types ======================================================}
-  TVpDocTypeDeclEvent = procedure(oOwner : TObject;
-                                  sDecl,
-                                  sId0,
-                                  sId1   : DOMString) of object;
-  TVpValueEvent = procedure(oOwner : TObject;
-                            sValue : DOMString) of object;
-  TVpAttributeEvent = procedure(oOwner     : TObject;
-                                sName,
-                                sValue     : DOMString;
-                                bSpecified : Boolean) of object;
-  TVpProcessInstrEvent = procedure(oOwner : TObject;
-                                   sName,
-                                   sValue : DOMString) of object;
-  TVpResolveEvent = procedure(oOwner     : TObject;
-                        const sName,
-                              sPublicId,
-                              sSystemId  : DOMString;
-                          var sValue     : DOMString) of object;
-  TVpNonXMLEntityEvent = procedure(oOwner        : TObject;
-                                   sEntityName,
-                                   sPublicId,
-                                   sSystemId,
-                                   sNotationName : DOMString) of object;
-  TVpPreserveSpaceEvent = procedure(oOwner       : TObject;
-                                    sElementName : DOMString;
-                                var bPreserve    : Boolean) of object;
+  TVpDocTypeDeclEvent = procedure(oOwner: TObject;
+    sDecl, sId0, sId1: DOMString) of object;
+
+  TVpValueEvent = procedure(oOwner: TObject; sValue: DOMString) of object;
+
+  TVpAttributeEvent = procedure(oOwner: TObject;
+    sName, sValue: DOMString; bSpecified: Boolean) of object;
+
+  TVpProcessInstrEvent = procedure(oOwner: TObject;
+    sName, sValue: DOMString) of object;
+
+  TVpResolveEvent = procedure(oOwner: TObject;
+    const sName, sPublicId, sSystemId: DOMString;
+    var sValue: DOMString) of object;
+
+  TVpNonXMLEntityEvent = procedure(oOwner: TObject;
+    sEntityName, sPublicId, sSystemId, sNotationName: DOMString) of object;
+
+  TVpPreserveSpaceEvent = procedure(oOwner: TObject; sElementName: DOMString;
+    var bPreserve: Boolean) of object;
+
 {== Class types ======================================================}
   TVpParser = class(TVpComponent)
   protected

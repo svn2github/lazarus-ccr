@@ -79,7 +79,6 @@ object Form1: TForm1
         TimeSlotColors.Active = clWhite
         TimeSlotColors.Inactive = 8454143
         TimeSlotColors.Holiday = 16744703
-        TimeSlotColors.Weekday = clWhite
         TimeSlotColors.Weekend = 16777088
         TimeSlotColors.ActiveRange.RangeBegin = h_00
         TimeSlotColors.ActiveRange.RangeEnd = h_00
@@ -147,22 +146,21 @@ object Form1: TForm1
           TabOrder = 1
           KBNavigation = True
           DateLabelFormat = 'mmmm yyyy'
-          DayHeadAttributes.Color = clBtnFace
           DayHeadAttributes.Font.Height = -13
           DayHeadAttributes.Font.Name = 'Tahoma'
+          DayHeadAttributes.Color = clBtnFace
           DayNameStyle = dsShort
           DrawingStyle = dsFlat
           EventDayStyle = []
           HeadAttributes.Color = clBtnFace
-          LineColor = clGray
-          TimeFormat = tf12Hour
-          TodayAttributes.Color = clSilver
-          TodayAttributes.BorderPen.Color = clRed
-          TodayAttributes.BorderPen.Width = 3
           OffDayColor = clSilver
           SelectedDayColor = clRed
           ShowEvents = True
           ShowEventTime = False
+          TimeFormat = tf12Hour
+          TodayAttributes.Color = clSilver
+          TodayAttributes.BorderPen.Color = clRed
+          TodayAttributes.BorderPen.Width = 3
           WeekStartsOn = dtMonday
         end
         object Splitter2: TSplitter
@@ -265,7 +263,7 @@ object Form1: TForm1
     top = 168
   end
   object VpResourceEditDialog1: TVpResourceEditDialog
-    Version = 'v1.04'
+    Version = 'v1.05'
     DataStore = VpFlexDataStore1
     Options = []
     Placement.Position = mpCenter

@@ -63,9 +63,8 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, Graphics, Controls, ExtCtrls, StdCtrls, Buttons, Forms,
-  VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst,
-  VpCanvasUtils, Menus;
+  Classes, Graphics, Controls, ExtCtrls, StdCtrls, Buttons, Forms, Menus,
+  VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils;
 
 type
   TVpLineRec = packed record
@@ -1490,7 +1489,7 @@ begin
 
    {$IFDEF LCL}
     EventName := FActiveEvent.Description;
-    GetCursorPos(P);
+    GetCursorPos(P{%H-});
     P := TVpDayView(Self).ScreenToClient(P);
     HotSpot := Point(P.X - Self.dvActiveEventRec.Left, P.Y - Self.dvActiveEventRec.Top);
 
@@ -1513,6 +1512,7 @@ end;
 
 procedure TVpDayView.DoEndDrag(Target: TObject; X, Y: Integer);
 begin
+  Unused(Target, X, Y);
   if ReadOnly or (not FAllowDragAndDrop) then
     Exit;
  {$IFNDEF LCL}
@@ -1525,6 +1525,8 @@ end;
 procedure TVpDayView.DragOver(Source: TObject; X, Y: Integer; State: TDragState;
   var Accept: Boolean);
 begin
+  Unused(Source, State);
+
   if ReadOnly or (not FAllowDragAndDrop) then begin
     Accept := False;
     Exit;
@@ -1546,6 +1548,8 @@ var
   DragToTime: TDateTime;
   i: Integer;
 begin
+  Unused(X, Y);
+
   if ReadOnly or (not FAllowDragAndDrop) then
     Exit;
 

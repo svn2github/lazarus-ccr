@@ -39,7 +39,8 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Classes, SysUtils, Forms, VpException;
+  Classes, SysUtils, Forms,
+  VpException;
 
 type
   TVpTimerTriggerEvent =

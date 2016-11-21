@@ -39,9 +39,8 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  Buttons, Classes, Controls, Forms, Graphics, Menus,
-  SysUtils, VpBase, VpSR, VpConst, VpMisc, VpBaseDS, VpCanvasUtils,
-  VpException;
+  SysUtils, Buttons, Classes, Controls, Forms, Graphics, Menus,
+  VpBase, VpSR, VpConst, VpMisc, VpBaseDS, VpCanvasUtils, VpException;
 
 type
   TVpCalDisplayOption = (cdoShortNames, cdoShowYear, cdoShowInactive,
@@ -559,7 +558,7 @@ begin
   clFirst := I;
 
   {find the index of the last day in the month}
-  clLast := clFirst + DaysInAMonth(clYear, clMonth) - 1;
+  clLast := clFirst + DaysInAMonth(clYear, clMonth) {%H-}- 1;
 
   {initialize the first part of the calendar}
   if clMonth = 1 then
@@ -1297,7 +1296,7 @@ begin
       {create the menu items}
       repeat
         MI := TMenuItem.Create(M);
-        MI.Caption := LongMonthNames[I];
+        MI.Caption := FormatSettings.LongMonthNames[I];
         MI.Enabled := Enabled;
         MI.OnClick := calChangeMonth;
         MI.Tag := I;

@@ -57,9 +57,8 @@ type
     procedure Initialize(out Points: array of TPoint);
     function  NewOffset(xOry: char; OldOffset: Integer): Integer;
     procedure ProcessCaption(Points: array of TPoint);
-    procedure PaintSegment(Segment: Integer; Color: TColor;
-                           Points: array of TPoint;
-                           OffsetX, OffsetY: Integer);
+    procedure PaintSegment(Segment: Integer; Color: TColor; Points: array of TPoint;
+      OffsetX, OffsetY: Integer);
     procedure ResizeControl(Row, Col, Size: Integer);
     function  GetAbout: string;
     procedure SetAbout(const Value: string);
@@ -69,9 +68,8 @@ type
     procedure SetRows(Value: Integer);
     procedure SetColumns(Value: Integer);
     procedure SetbgColor(Value: TColor);
-    procedure SelectSegments(Segment: Word;
-                              Points: array of TPoint;
-                              OffsetX, OffsetY: Integer);
+    procedure SelectSegments(Segment: Word; Points: array of TPoint;
+      OffsetX, OffsetY: Integer);
   protected
     procedure Paint; override;
   public

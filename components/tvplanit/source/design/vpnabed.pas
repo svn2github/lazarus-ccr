@@ -40,6 +40,7 @@ uses
   Windows, Messages,
   {$ENDIF}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+
   {$IFDEF VERSION6}
   {$IFNDEF LCL}
   DesignIntf, DesignEditors,
@@ -52,6 +53,7 @@ uses
   {$ELSE}
   DsgnIntf,
   {$ENDIF}
+
   StdCtrls, ExtCtrls, Buttons,
   VpBase, VpNavBar;
 
@@ -186,6 +188,7 @@ begin
   Result := 1;
 end;
 
+
 {*** TfrmNavBarEd ***}
 
 procedure TfrmNavBarEd.FormCreate(Sender: TObject);
@@ -292,7 +295,7 @@ var
 {$ELSE}
   SelList : TComponentList;
 {$ENDIF}
-  i : Integer;
+  {%H-}i : Integer;
 begin
 {$IFNDEF LCL}
   PopulateItemList;
@@ -392,7 +395,7 @@ var
 {$ELSE}
   SelList : TComponentList;
 {$ENDIF}
-  i : Integer;
+  {%H-}i : Integer;
 begin
 {$IFNDEF LCL}
   if (lbItems.ItemIndex <> -1) then begin

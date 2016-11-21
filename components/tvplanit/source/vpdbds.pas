@@ -1397,7 +1397,6 @@ end;
 procedure TVpCustomDBDataStore.LoadTasks;
 var
   Task: TVpTask;
-  F: TField;
 begin
   if (Resource <> nil) then
     with TasksTable do begin

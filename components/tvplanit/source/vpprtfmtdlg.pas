@@ -38,8 +38,7 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  TypInfo, ExtCtrls,
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls,
   VpBase, VpBaseDS, VpDlg, VpPrtFmtCBox, VpEdFmtLst;
 
 type
@@ -68,6 +67,8 @@ type
 
 implementation
 
+uses
+  TypInfo;
 
 { TVpPrintFormatEditDialog }
 

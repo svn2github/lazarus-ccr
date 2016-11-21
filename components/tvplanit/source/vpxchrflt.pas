@@ -33,11 +33,8 @@ unit VpXChrFlt;
 interface
 
 uses
-  SysUtils,
-  Classes,
-  VpSR,
-  VpBase,
-  VpXBase;
+  SysUtils, Classes, VpSR,
+  VpBase, VpXBase;
 
 const
   VpEndOfStream = #1;
@@ -144,8 +141,8 @@ type
 implementation
 
 const
-  CR      = 13; {Carriage return}
-  LF      = 10; {Line feed}
+  CR = 13; {Carriage return}
+  LF = 10; {Line feed}
 
 {====================================================================}
 constructor TVpBaseCharFilter.Create(aStream  : TStream;

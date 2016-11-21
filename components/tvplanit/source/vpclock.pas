@@ -39,8 +39,8 @@ uses
   {$ELSE}
   Windows, Messages, VpTimerPool,
   {$ENDIF}
-  Classes, Controls, Dialogs, Forms, Graphics, Menus,Math,
-  SysUtils, VpBase, VpLEDLabel;
+  SysUtils, Classes, Controls, Dialogs, Forms, Graphics, Menus, Math,
+  VpBase, VpLEDLabel;
 
 type
   TVpPercent = 0..100;

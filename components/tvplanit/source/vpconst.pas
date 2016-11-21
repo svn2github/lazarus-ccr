@@ -95,7 +95,7 @@ const
   strFALSE          = 'false';
 
   WEEKDAY_COLOR     = $FFFFFF;
-  WEEKEND_COLOR     = $C0C0C0; //$C0C0FF;
+  WEEKEND_COLOR     = $C0C0C0;
   HOLIDAY_COLOR     = $8080FF;
   TODAY_COLOR       = $FFC0C0;
   OFF_COLOR         = $E0E0E0;

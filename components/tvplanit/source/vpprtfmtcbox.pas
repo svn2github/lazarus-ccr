@@ -38,13 +38,8 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  SysUtils,
-  Classes,
-  Controls,
-  StdCtrls,
-  VpBase,
-  VpBaseDS,
-  VpConst;
+  SysUtils, Classes, Controls, StdCtrls,
+  VpBase, VpBaseDS, VpConst;
 
 type
   TVpPrintFormatComboBox = class (TCustomComboBox)

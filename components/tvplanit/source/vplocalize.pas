@@ -39,7 +39,7 @@ uses
   {$IFDEF LCL}
   LCLProc, LCLType, LCLIntf, LazFileUtils,
   {$ENDIF}
-  Classes, Dialogs,SysUtils, Graphics, Forms,
+  Classes, Dialogs, SysUtils, Graphics, Forms,
   VpBase, VpMisc, VpXParsr, VpPrtFmt; { For TVpAttributes }
 
 type
@@ -224,8 +224,6 @@ type
     published
       property Countries: TVpLocalizeCountry read FCountries write FCountries;
   end;
-
-
 
 
 implementation

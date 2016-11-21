@@ -2218,9 +2218,7 @@ procedure TVpFlexDataStore.PostResources;
 var
   I: Integer;
   Res: TVpResource;
-  {FieldName}
   FN: string;
-  isactive: Boolean;
 begin
   Loading := true;
   try
@@ -2319,9 +2317,7 @@ begin
                 if FN <> '' then
                   FieldByName(FN).AsString := Res.UserField9;
 
-                isactive := Active;
                 Post;
-                isactive := Active;
               except
                 Cancel;
                 raise EDBPostError.Create;

@@ -252,7 +252,7 @@ type
     FChanged: Boolean;
     FDeleted: Boolean;
     FLoading: Boolean;
-    FPrivateEvent: Boolean;
+    //FPrivateEvent: Boolean;
     FAlarmSet: Boolean;
     FDingPath: string;
     FAllDayEvent: Boolean;
@@ -536,7 +536,7 @@ type
     FCountry1: string;
     FCountry2: String;
     FNotes: string;
-    FPrivateRec: boolean;
+    //FPrivateRec: boolean;
     FCategory: integer;
     FCustom1: string;
     FCustom2: string;
@@ -934,8 +934,6 @@ begin
 end;
 
 procedure TVpResources.RemoveResourceGroup(AGroup: TVpResourceGroup);
-var
-  idx: Integer;
 begin
   // The resource group removes the list entry in its destructor.
   AGroup.Free;

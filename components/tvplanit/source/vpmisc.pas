@@ -39,8 +39,8 @@ uses
   {$ELSE}
   Windows, Consts, Messages,
   {$ENDIF}
-  Buttons, Classes, Controls, StdCtrls, ExtCtrls, Forms, Graphics, Menus,
-  SysUtils, VpBase, VpData, VpConst;
+  SysUtils, Buttons, Classes, Controls, StdCtrls, ExtCtrls, Forms, Graphics, Menus,
+  VpBase, VpData, VpConst;
 
 type
   TDayList = array[1..12] of Word;
@@ -185,7 +185,7 @@ uses
  {$IFDEF LCL}
   DateUtils, StrUtils,
  {$ENDIF}
-  VpException, VpSR, VpBaseDS;
+  VpSR, VpBaseDS;
 
 procedure StripString(var Str: string);
 begin

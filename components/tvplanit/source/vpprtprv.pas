@@ -418,7 +418,7 @@ end;
 
 procedure TVpPrintPreview.GeneratePageImage;
 var
-  LastPage: Boolean;
+  LastPage: Boolean = false;
   UseDate: TDateTime;
   UseContact: Integer;
   UseTask: Integer;
@@ -689,6 +689,8 @@ var
   ATask: Integer;
   AContact: Integer;
 begin
+  Unused(EndDate);
+
   Result := PageNum;
   if PageNum < FPageInfo.Count then
     Exit;

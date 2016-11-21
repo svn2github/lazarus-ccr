@@ -109,7 +109,7 @@ steps:
   - Add new sample projects
   
   
-4.3 Release 1.05
+4.3 Release 1.06
 
   - Add mORMot datastore
   - Add drag and drop of events to DayView and WeekView
@@ -122,4 +122,5 @@ steps:
     and add them to the contact editor; redesigned contact editor.
   - Activate task fields Priority and Category in task editor.
   - Holiday support
+  - Separate design-time and run-time packages
  

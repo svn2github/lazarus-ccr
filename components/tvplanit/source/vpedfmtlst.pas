@@ -34,15 +34,13 @@ interface
 
 uses     
   {$IFDEF LCL}
-  LCLProc,LCLType,LCLIntf,
+  LCLProc, LCLType, LCLIntf,
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, TypInfo, ExtCtrls,
-
-  VpPrtFmt, VpBase, VpBaseDS, VpPrtPrv, Buttons,
-  VpException, VpSR;
+  StdCtrls, ExtCtrls, Buttons,
+  VpPrtFmt, VpBase, VpBaseDS, VpPrtPrv, VpException, VpSR;
 
 const
   BaseCaption = 'Print Format Designer';
@@ -147,7 +145,7 @@ var
 implementation
 
 uses
-  Math,
+  Math, TypInfo,
   VpMisc, VpEdFmt, VpEdElem;
 
 {$IFDEF DELPHI}
@@ -678,13 +676,8 @@ var
   w: Integer;
   HDist: Integer = 8;
   VDist: Integer = 8;
-  btndist: Integer;
   hBtn: Integer;
-  btnHeight: Integer;
-  po: TPosition;
 begin
-  po := Position;
-
   HDist := ScaleX(HDist, DesignTimeDPI);
   VDist := ScaleY(VDist, DesignTimeDPI);
   hBtn := ScaleY(btnOK.Height, DesignTimeDPI);

@@ -36,8 +36,8 @@ uses
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
-  SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, VpBaseDS, VpResEditDlg, ExtCtrls;
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls,
+  VpBaseDS, VpResEditDlg;
 
 type
   TfrmSelectResource = class(TForm)

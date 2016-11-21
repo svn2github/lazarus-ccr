@@ -107,7 +107,8 @@ uses
   {$ELSE}
   Windows,
   {$ENDIF}
-  SysUtils, VpMisc;
+  SysUtils,
+  VpMisc;
 
 
 {== Utility methods ==================================================}

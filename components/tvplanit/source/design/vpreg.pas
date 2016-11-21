@@ -27,7 +27,8 @@
 {* ***** END LICENSE BLOCK *****                                              *}
 
 {$I Vp.INC}    { Compiler Version Defines }
-{$R vpreg.res} { Palette Glyphs           }
+
+{$R vpreg.res} { Palette Glyphs }
 
 unit VpReg;
   {Registration unit for the Visual PlanIt design-time interface}
@@ -40,7 +41,7 @@ uses
   {$ELSE}
   Windows,
   {$ENDIF}
-  Dialogs,
+
   {$IFDEF VERSION6}
   {$IFNDEF LCL}
   DesignIntf, DesignEditors, VCLEditors,
@@ -50,7 +51,7 @@ uses
   {$ELSE}
   DsgnIntf,
   {$ENDIF}
-  Classes, Controls, TypInfo, Forms, SysUtils,
+  Dialogs, Classes, Controls, TypInfo, Forms, SysUtils,
   VpDatePropEdit;
 
 type
@@ -134,7 +135,22 @@ type
     procedure SetValue(const Value: string); override;
   end;
 
+  TVpAboutProperty = class(TStringProperty)
+  public
+    function GetAttributes: TPropertyAttributes;
+      override;
+    procedure Edit;
+      override;
+  end;
+
+  TVpFlexDSEditor = class(TComponentEditor)
+    procedure ExecuteVerb(Index: Integer); override;
+    function GetVerb(Index: Integer): string; override;
+    function GetVerbCount: Integer; override;
+  end;
+
 procedure Register;
+
 
 implementation
 
@@ -186,7 +202,7 @@ uses
   { Designtime Interfaces (Property and Component Editors)                   }
   VpAbout,                    { About form for the About property editor     }
  {$IFDEF DELPHI}
-  VpNabEd,                    { component editor for the VpNavBar            }
+  VpNabEd,                    { component editor for the VpNavBar            } // crashes in Lazarus
  {$ENDIF}
   VpFlxDSEd1;                 { Field mapper component editor for the FlexDS }
 
@@ -198,13 +214,11 @@ function TDBStringProperty.GetAttributes: TPropertyAttributes;
 begin
   Result := [paValueList, paSortList, paMultiSelect];
 end;
-{=====}
 
 procedure TDBStringProperty.GetValueList(List: TStrings);
 begin
   Unused(List);
 end;
-{=====}
 
 procedure TDBStringProperty.GetValues(Proc: TGetStrProc);
 var
@@ -219,7 +233,6 @@ begin
     Values.Free;
   end;
 end;
-{=====}
 
 {$IFDEF DELPHI}
 (*****************************************************************************)
@@ -257,7 +270,6 @@ begin
   FCheckProc := Proc;
   inherited GetValues(CheckComponent);
 end;
-{=====}
 {$ENDIF}
 
 (*****************************************************************************)
@@ -275,25 +287,21 @@ begin
     frmDatePropertyEditor.Free;
   end;
 end;
-{=====}
 
 function TVpDateProperty.GetAttributes : TPropertyAttributes;
 begin
   Result := [paDialog, paMultiSelect];
 end;
-{=====}
 
 function TVpDateProperty.GetValue : string;
 begin
   Result := FormatDateTime('ddddd', GetFloatValue);
 end;
-{=====}
 
 procedure TVpDateProperty.SetValue (const Value : string);
 begin
   SetFloatValue(StrToDate (Value));
 end;
-{=====}
 
 (*****************************************************************************)
 { TVpGeneralFileNameProperty }
@@ -365,40 +373,6 @@ begin
   Result := 'Localization files (*.xml)|*.xml|' + inherited;
 end;
 
-{
-procedure TVpGenericFileNameProperty.Edit;
-const
-  VpRegLocalizeFilter = 'Localization Files (*.XML)|*.XML';
-  VpRegDefFilter      = 'All Files (*.*)|*.*';
-
-var
-  Dlg    : TOpenDialog;
-  Filter : string;
-
-begin
-  Filter := '';
-  if Self is TVpLocalizeFileNameProperty then
-    Filter := VpRegLocalizeFilter;
-
-  if Filter = '' then
-    Filter := VpRegDefFilter
-  else
-    Filter := Filter + '|' + VpRegDefFilter;
-
-  Dlg := TOpenDialog.Create (Application);
-  try
-    Dlg.DefaultExt := '*.*';
-    Dlg.Filter := Filter;
-    Dlg.FilterIndex := 0;
-    Dlg.Options := [ofHideReadOnly];
-//    Dlg.FileName := Value;
-//    if Dlg.Execute then
-//      Value := Dlg.FileName;
-  finally
-    Dlg.Free;
-  end;
-end;
-                               }
 
 { TVpWavFilenameProperty }
 
@@ -427,51 +401,6 @@ begin
     Result := '';
 end;
 
-
-{ TVpWavFileProperty }
-            {
-function TVpWavFileProperty.GetAttributes: TPropertyAttributes;
-begin
-  Result := [paDialog];
-end;
-
-function TVpWavFileProperty.GetValue: string;
-begin
-  Result := GetStrValue;
-end;
-
-procedure TVpWavFileProperty.SetValue(const Value: string);
-begin
-  SetStrValue(Value);
-end;
-
-procedure TVpWavFileProperty.Edit;
-var
-  dlg: TOpenDialog;
-  ds: TVpCustomDatastore;
-begin
-  ds := GetComponent(0) as TVpCustomDatastore;
-  if Assigned(ds) then
-  begin
-    dlg := TOpenDialog.Create(nil);
-    try
-      dlg.Filter := 'Wav files (*.wav)|*.wav|All files (*.*)|*.*';
-      dlg.FilterIndex := 1;
-      dlg.DefaultExt := '*.wav';
-      if ds.DefaultEventSound = '' then
-        dlg.InitialDir := ds.MediaFolder
-      else
-        dlg.InitialDir := ExtractFilePath(ds.DefaultEventSound);
-      if dlg.Execute then
-        ds.DefaultEventSound := dlg.FileName;
-    finally
-      dlg.Free;
-    end;
-  end
-  else
-    inherited;
-end;
-     }
 
 { TVpMediaFolderProperty }
 
@@ -518,7 +447,110 @@ begin
 end;
 
 
-{*** component registration ***}
+{ TVpAboutProperty }
+
+function TVpAboutProperty.GetAttributes: TPropertyAttributes;
+begin
+  Result := [paDialog, paReadOnly];
+end;
+
+procedure TVpAboutProperty.Edit;
+begin
+  with TfrmAbout.Create(Application) do begin
+    try
+      ShowModal;
+    finally
+      Free;
+    end;
+  end;
+end;
+
+
+{ TVpFlexDSEditor }
+
+{$IFDEF LCL}
+procedure MapDatabaseFields(Designer: TComponentEditorDesigner;
+  FlexDS: TVpFlexDataStore);
+{$ELSE}
+{$IFDEF VERSION6}
+procedure MapDatabaseFields(Designer: TComponentEditorDesigner;;  // was: Designer : IDesigner;
+  FlexDS: TVpFlexDataStore);
+{$ELSE}
+procedure MapDatabaseFields(Designer: IFormDesigner;
+  FlexDS: TVpFlexDataStore);
+{$ENDIF}{$ENDIF}
+var
+  frmFieldMapper: TfrmFieldMapper;
+  savedResourceMappings: TCollection;
+  savedContactMappings: TCollection;
+  savedEventMappings: TCollection;
+  savedTaskMappings: TCollection;
+begin
+  if FlexDS = nil then
+    Exit;
+
+  savedResourceMappings := TCollection.Create(TVpFieldMapping);
+  savedContactMappings := TCollection.Create(TVpFieldMapping);
+  savedEventMappings := TCollection.Create(TVpFieldMapping);
+  savedTaskMappings := TCollection.Create(TVpFieldMapping);
+  try
+    savedResourceMappings.Assign(FlexDS.ResourceMappings);
+    savedContactMappings.Assign(FlexDS.ContactMappings);
+    savedEventMappings.Assign(FlexDS.EventMappings);
+    savedTaskMappings.Assign(FlexDS.TaskMappings);
+
+    Application.CreateForm(TfrmFieldMapper, frmFieldMapper);
+    try
+      frmFieldMapper.FlexDS := FlexDS;
+      if FlexDS.ResourceDataSource <> nil then
+        frmFieldMapper.ResDS := FlexDS.ResourceDataSource.DataSet;
+      if FlexDS.EventsDataSource <> nil then
+        frmFieldMapper.EventsDS := FlexDS.EventsDataSource.DataSet;
+      if FlexDS.ContactsDataSource <> nil then
+        frmFieldMapper.ContactsDS := FlexDS.ContactsDataSource.DataSet;
+      if FlexDS.TasksDataSource <> nil then
+        frmFieldMapper.TasksDS := FlexDS.TasksDataSource.DataSet;
+      if frmFieldMapper.ShowModal <> mrOK then begin
+        FlexDS.ResourceMappings.Assign(savedResourceMappings);
+        FlexDS.ContactMappings.Assign(savedContactMappings);
+        FlexDS.EventMappings.Assign(savedEventMappings);
+        FlexDS.TaskMappings.Assign(savedTaskMappings);
+      end;
+    finally
+      frmFieldMapper.Release;
+    end;
+    Designer.Modified;
+
+  finally
+    savedResourceMappings.Free;
+    savedContactMappings.Free;
+    savedEventMappings.Free;
+    savedTaskMappings.Free;
+  end;
+end;
+
+procedure TVpFlexDSEditor.ExecuteVerb(Index: Integer);
+begin
+  if Index = 0 then
+    MapDatabaseFields(Designer, (Component as TVpFlexDataStore));
+end;
+
+function TVpFlexDSEditor.GetVerb(Index: Integer): string;
+begin
+  if Index = 0 then
+    Result := 'Map Database Fields...';
+end;
+
+function TVpFlexDSEditor.GetVerbCount: Integer;
+begin
+  Result := 1;
+end;
+
+
+{******************************************************************************}
+{                          Component registration                              }
+{******************************************************************************}
+
 procedure Register;
 begin
   {----------------------------------------------------------------------------}
@@ -621,11 +653,11 @@ begin
     TVpCalendar,
     TVpNavBar,
     TVpFlexDataStore,
-{$IFDEF DELPHI}
+   {$IFDEF DELPHI}
     TVpBDEDataStore,    // BDE is not available in Lazarus
     TVpDateEdit,        // Does not work in Lazarus
-{$ENDIF}
-{$IFDEF LCL}
+   {$ENDIF}
+   {$IFDEF LCL}
     TVpIniDatastore,
     TVpXmlDatastore,
     TVpBufDSDatastore,
@@ -633,7 +665,7 @@ begin
     TVpFirebirdDatastore,
     //TVpSdfDatastore,       // to do (maybe)...
     //TVpDbfDatastore,       // to do...
-{$ENDIF}
+   {$ENDIF}
     TVpControlLink,
     TVpPrintPreview,
     TVpPrintFormatComboBox,
@@ -650,7 +682,8 @@ begin
     TVpContactEditDialog,
     TVpTaskEditDialog,
     TVpPrintFormatEditDialog,
-    TVpPrintPreviewDialog]);
+    TVpPrintPreviewDialog
+   ]);
 end;
 
 end.

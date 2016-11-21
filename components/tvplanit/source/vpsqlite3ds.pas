@@ -5,9 +5,8 @@ unit VpSQLite3DS;
 interface
 
 uses
-  SysUtils, Classes, DB,
-  VpBaseDS, VpDBDS,
-  sqlite3conn, sqldb;
+  SysUtils, Classes, DB, sqlite3conn, sqldb,
+  VpBaseDS, VpDBDS;
 
 type
   TVpSqlite3Datastore = class(TVpCustomDBDatastore)

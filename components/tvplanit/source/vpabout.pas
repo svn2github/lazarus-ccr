@@ -39,6 +39,7 @@ uses
  Windows, Messages,
 {$ENDIF}
  Forms, Graphics, Controls, Dialogs, StdCtrls, ExtCtrls,
+(*
 {$IFDEF VERSION6}
  {$IFDEF DELPHI}
  DesignIntf, DesignEditors,
@@ -48,6 +49,7 @@ uses
 {$ELSE}
  DsgnIntf,
 {$ENDIF}
+*)
  Classes, SysUtils;
 
 type
@@ -87,13 +89,6 @@ type
     IsServer : boolean;
   end;
 
-  TVpAboutProperty = class(TStringProperty)
-  public
-    function GetAttributes: TPropertyAttributes;
-      override;
-    procedure Edit;
-      override;
-  end;
 
 implementation
 
@@ -118,25 +113,6 @@ const
   LAZARUS_FORUM_URL = 'http://forum.lazarus.freepascal.org';
 
 
-{*** TVpAboutProperty ***}
-
-function TVpAboutProperty.GetAttributes: TPropertyAttributes;
-begin
-  Result := [paDialog, paReadOnly];
-end;
-
-procedure TVpAboutProperty.Edit;
-begin
-  with TfrmAbout.Create(Application) do begin
-    try
-      ShowModal;
-    finally
-      Free;
-    end;
-  end;
-end;
-
-
 { FrmAbout }
 
 procedure TfrmAbout.FormActivate(Sender: TObject);
@@ -151,7 +127,8 @@ var
 begin
   ProgramName.Caption := VpProductName + ' ' + VpVersionStr;
   DecodeDate(Now, Year, junk, junk);
-  CopyrightLabel.Caption := Format('%s Copyright 2000 - %d, TurboPower Software Company and Lazarus team.' +
+  CopyrightLabel.Caption := Format(
+    '%s Copyright 2000 - %d, TurboPower Software Company and Lazarus team.' +
     LineEnding + 'All rights reserved.',
     [COPYRIGHT, Year]);
 

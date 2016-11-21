@@ -41,7 +41,8 @@ uses
   Windows, Messages,
   {$ENDIF}
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, Buttons, VpBase, ComCtrls, ShellCtrls;
+  StdCtrls, ExtCtrls, Buttons, ComCtrls, ShellCtrls,
+  VpBase;
 
 type
 
