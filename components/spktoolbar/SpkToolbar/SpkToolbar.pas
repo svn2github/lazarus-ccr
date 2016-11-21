@@ -1,4 +1,4 @@
-unit spktoolbar;
+unit SpkToolbar;
 
 {$mode delphi}
 
