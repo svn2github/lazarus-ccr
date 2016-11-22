@@ -1226,7 +1226,7 @@ end;
 
 procedure TCalDrawer.RightClick;
 begin
-  if Assigned(FOwner.FOnGetHolidays) then
+  if (FOwner.PopupMenu = nil) and Assigned(FOwner.FOnGetHolidays) then
   begin
     FOwner.PopulateHolidayPopupMenu;
     FOwner.FPopupMenu.PopUp(Mouse.CursorPos.x, Mouse.CursorPos.y);

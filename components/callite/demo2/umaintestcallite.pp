@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Graphics, ExtCtrls, StdCtrls, Spin, Dialogs,
-  Controls, CalendarLite;
+  Controls, Menus, CalendarLite;
 
 type
 
@@ -34,6 +34,7 @@ type
     CbAddHolidayNameToCell: TCheckBox;
     CbShowHints: TCheckBox;
     CbMultiSelect: TCheckBox;
+    CbUseBuiltinPopup: TCheckBox;
     FontDialog: TFontDialog;
     GroupBox1: TGroupBox;
     ImageList1: TImageList;
@@ -51,6 +52,10 @@ type
     Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
+    MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    PopupMenu1: TPopupMenu;
     SelDateListbox: TListBox;
     LTitle: TLabel;
     LWidth: TLabel;
@@ -66,6 +71,7 @@ type
     procedure CbMultiSelectChange(Sender: TObject);
     procedure CbPrepareCanvasChange(Sender: TObject);
     procedure CbShowHintsChange(Sender: TObject);
+    procedure CbUseBuiltinPopupChange(Sender: TObject);
     procedure ColorButtonChanged(Sender: TObject);
     procedure cbUseHolidaysChange(Sender: TObject);
     procedure cgOptionsItemClick(Sender: TObject; Index: integer);
@@ -251,6 +257,13 @@ begin
   else
     demoCal.Options := demoCal.Options + [opt];
   copyCal.Options := demoCal.Options;
+end;
+
+procedure TForm1.CbUseBuiltinPopupChange(Sender: TObject);
+begin
+  if CbUseBuiltinPopup.Checked then
+    demoCal.PopupMenu := nil else
+    demoCal.PopupMenu := PopupMenu1;
 end;
 
 procedure TForm1.CbAddHolidayNameToCellChange(Sender: TObject);
