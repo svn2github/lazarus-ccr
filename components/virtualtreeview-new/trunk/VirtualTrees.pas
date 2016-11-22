@@ -1,3 +1,7 @@
+This repository is not being maintained anymore. A copy of it exists at https://github.com/blikblum/VirtualTreeView-Lazarus-History
+The current development is being done at https://github.com/blikblum/VirtualTreeView-Lazarus
+If you want to continue to use this code, just comment these lines. Eventually the repository will be deleted.
+
 unit VirtualTrees;
 
 {$mode delphi}{$H+}
