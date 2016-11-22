@@ -284,7 +284,6 @@ type
 
   protected
     procedure ChangeDateTo(ADate: TDate; ASelMode: TCalSelMode);
-    procedure Click; override;
     procedure DateChange; virtual;
     procedure DblClick; override;
     class function GetControlClassDefaultSize: TSize; override;
@@ -1288,7 +1287,7 @@ begin
   FMonthNames := TStringList.Create;
   FDisplayTexts := TStringList.Create;
   FDisplayTexts.StrictDelimiter := True;
-  FDisplayTexts.Delimiter := '|';
+  FDisplayTexts.Delimiter := ',';
   SetDefaultDisplayTexts;
   FPopupMenu := TPopupMenu.Create(Self);
   FCalDrawer := TCalDrawer.Create(Canvas);
@@ -1397,15 +1396,6 @@ begin
     FCanvas.FillRect(FBoundsRect);
   end;
   Invalidate;
-end;
-
-procedure TCalendarLite.Click;
-begin
-  inherited;
-
-  // Multi-select is handled by DblClickTimer
-  if not FMultiSelect then //and not FDblClickTimer.Enabled then
-    InternalClick;
 end;
 
 procedure TCalendarLite.DateChange;
@@ -1531,12 +1521,13 @@ begin
   if not Focused and not(csNoFocus in ControlStyle) then
     SetFocus;
 
-  if FMultiSelect then begin
-    FClickPoint := Point(X, Y);
-    FClickShift := Shift;
-    FClickButton := Button;
-    FDblClickTimer.Enabled := true;
-  end;
+  FClickPoint := Point(X, Y);
+  FClickShift := Shift;
+  FClickButton := Button;
+  if FMultiSelect then
+    FDblClickTimer.Enabled := true
+  else
+    InternalClick;
 end;
 
 procedure TCalendarLite.MouseEnter;

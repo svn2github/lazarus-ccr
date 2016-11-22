@@ -135,10 +135,10 @@ procedure TForm1.FormCreate(Sender: TObject);
 var
   opt: TCalOption;
 begin
-  demoCal:= TCalendarLite.Create(Self);
-  demoCal.Parent:= Self;
-  demoCal.Left:= 10;
-  demoCal.Top:= PSettings.Height + 10;
+  demoCal := TCalendarLite.Create(Self);
+  demoCal.Parent := Self;
+  demoCal.Left := 10;
+  demoCal.Top := PSettings.Height + 10;
   demoCal.Width := seWidth.Value;
   demoCal.Height := seHeight.Value;
   demoCal.OnGetHolidays := @GetHolidays;
@@ -153,12 +153,12 @@ begin
   if CbDrawCell.Checked then
     demoCal.OnDrawCell := @DrawCell else
     demoCal.OnDrawCell := nil;
-  FNoHolidays:= False;
+  FNoHolidays := False;
   for opt in demoCal.Options do
-   if (opt in demoCal.Options) then cgOptions.Checked[integer(opt)] := True;
+    if (opt in demoCal.Options) then cgOptions.Checked[integer(opt)] := True;
   seHeight.Value := demoCal.Height;
-  seWidth.Value:= demoCal.Width;
-  rgStartingDOW.ItemIndex:= integer(demoCal.StartingDayOfWeek)-1;
+  seWidth.Value := demoCal.Width;
+  rgStartingDOW.ItemIndex := integer(demoCal.StartingDayOfWeek)-1;
 
   copyCal:= TCalendarLite.Create(Self);
   copyCal.Parent := Self;
