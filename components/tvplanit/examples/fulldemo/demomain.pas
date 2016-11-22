@@ -705,6 +705,7 @@ begin
         '',
         'en': po.Add('en - English');
         'es': po.Add('es - Español');
+        'fi': po.Add('fi - Finnish');
         'fr': po.Add('fr - Français');
         'he': po.Add('he - Hebrew');
         'hu': po.Add('hu - magyar');
@@ -942,13 +943,17 @@ begin
     FLang := '' else
     FLang := ALang;
 
-  // Translate VisualPlanIt strings.
   if FLang = '' then begin
+    // Translate VisualPlanIt strings.
     TranslateUnitResourceStrings('vpsr', langdir + 'vpsr.po');
 
     { NOTE: Translation of app strings back to english not working }
 
+    // Translate demo strings
     TranslateUnitResourceStrings('demoMain', langDir + 'demo.po');
+
+    // Translate LCL strings (please copy lclstrconsts.* from Lazarus/lcl/langauges
+    // to tvplanit/languages.
     TranslateUnitResourceStrings('lclstrconsts', langDir + 'lclstrconsts.po');
 
     if FileExistsUTF8(langdir + 'demo.po') then begin
