@@ -56,7 +56,6 @@ const
   DefCalWidth = 210;
   DefMinHeight = 120;
   DefMinWidth = 120;
-  DefaultDisplayText = 'Today is,"mmm"","" dd yyyy",Holidays during,There are no holidays set for';
   DefTStyle: TTextStyle = (Alignment  : taCenter; Layout     : tlCenter;
                            SingleLine : False;    Clipping   : True;
                            ExpandTabs : False;    ShowPrefix : False;
@@ -64,6 +63,7 @@ const
                            SystemFont : False;    RightToLeft: False;
                            EndEllipsis: False);
 
+  DefaultDisplayText = 'Today is,"mmm dd"","" yyyy",Holidays during,There are no holidays set for';
   EnglishDays = 'Sun,Mon,Tue,Wed,Thu,Fri,Sat';
   EnglishMonths = 'January,February,March,April,May,June,July,August,September,October,November,December';
 
