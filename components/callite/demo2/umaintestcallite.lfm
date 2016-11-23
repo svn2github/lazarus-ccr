@@ -117,8 +117,8 @@ object Form1: TForm1
     end
     object rgLanguage: TRadioGroup
       Left = 200
-      Height = 184
-      Top = 240
+      Height = 200
+      Top = 224
       Width = 160
       AutoFill = True
       Caption = 'Language to use'
@@ -130,7 +130,7 @@ object Form1: TForm1
       ChildSizing.ShrinkVertical = crsScaleChilds
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
-      ClientHeight = 164
+      ClientHeight = 180
       ClientWidth = 156
       ItemIndex = 0
       Items.Strings = (
@@ -141,13 +141,14 @@ object Form1: TForm1
         'Spanish'
         'Italian'
         'Polish'
+        'Finnish'
       )
       OnClick = rgLanguageClick
       TabOrder = 4
     end
     object rgStartingDOW: TRadioGroup
       Left = 200
-      Height = 184
+      Height = 176
       Top = 40
       Width = 160
       AutoFill = True
@@ -160,7 +161,7 @@ object Form1: TForm1
       ChildSizing.ShrinkVertical = crsScaleChilds
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
-      ClientHeight = 164
+      ClientHeight = 156
       ClientWidth = 156
       Items.Strings = (
         'Sunday'

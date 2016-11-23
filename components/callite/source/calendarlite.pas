@@ -91,6 +91,10 @@ const
   PolishMonths = 'Styczeń,Luty,Marzec,Kwiecień,Maj,Czerwiec,Lipiec,Sierpień,Wrzesień,Październik,Listopad,Grudzień';
   PolishTexts = 'Dziś jest,dd/mmm/yyyy,urlop w czasie,Brak święta określone dla';
 
+  FinnishTexts ='Tänään on,dd.mm.yyyy,Lomapäivät,Lomapäiviä ei ole asetettu';
+  FinnishMonths = 'Tammikuu,Helmikuu,Maaliskuu,Huhtikuu,Toukokuu,Kesäkuu,Heinäkuu,Elokuu,Syyskuu,Lokakuu,Marraskuu,Joulukuu';
+  FinnishDays = 'Su,Ma,Ti,ke,To,Pe,La';
+
 type
   TCalendarLite = class;
 
@@ -135,7 +139,8 @@ type
   TCalSelMode = (smFirstSingle, smNextSingle, smFirstRange, smNextRange,
     smFirstWeek, smNextWeek, smNextWeekRange);
 
-  TLanguage = (lgEnglish, lgFrench, lgGerman, lgHebrew, lgSpanish, lgItalian, lgPolish);
+  TLanguage = (lgEnglish, lgFrench, lgGerman, lgHebrew, lgSpanish, lgItalian,
+               lgPolish, lgFinnish);
 
 
   { TCalDateList }
@@ -1804,6 +1809,12 @@ begin
                  MonthNames := PolishMonths;
                  DisplayTexts := PolishTexts;
                  BiDiMode:= bdLeftToRight;
+               end;
+    lgFinnish: begin
+                 DayNames := FinnishDays;
+                 MonthNames := FinnishMonths;
+                 DisplayTexts := FinnishTexts;
+                 BiDiMode := bdLeftToRight;
                end;
   end;
 
