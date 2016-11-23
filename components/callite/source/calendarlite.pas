@@ -1240,19 +1240,19 @@ constructor TCalColors.Create(AOwner: TCalendarLite);
 begin
   inherited Create;
   FOwner := AOwner;
-  FColors[0] := clSilver;          //  ArrowBorderColor: clSilver;
-  FColors[1] := clSilver;          //  ArrowColor:  clSilver;
-  FColors[2] := clWhite;           //  BackgroundColor:  clWhite;
-  FColors[3] := clSilver;          //  BorderColor:  clSilver;
-  FColors[4] := clSilver;          //  DaylineColor: clSilver;
-  FColors[5] := clRed;             //  HolidayColor: clRed;
-  FColors[6] := clSilver;          //  PastMonthColor:  clSilver;
-  FColors[7] := clMoneyGreen;      //  SelectedDateColor: clMoneyGreen;
-  FColors[8] := clBlack;           //  TextColor: clBlack;
-  FColors[9] := clGray;            //  TodayFrameColor:  clGray;
-  FColors[10] := clHighlight;      //  TopRowColor:  clHighlight;
-  FColors[11] := clHighlightText;  //  TopRowTextColor:  clHighlightText;
-  FColors[12] := clRed;            //  WeekendColor:  clRed;
+  FColors[0] := clSilver;          //  ArrowBorderColor
+  FColors[1] := clSilver;          //  ArrowColor
+  FColors[2] := clWhite;           //  BackgroundColor
+  FColors[3] := clSilver;          //  BorderColor
+  FColors[4] := clSilver;          //  DaylineColor
+  FColors[5] := clRed;             //  HolidayColor
+  FColors[6] := clSilver;          //  PastMonthColor
+  FColors[7] := clMoneyGreen;      //  SelectedDateColor
+  FColors[8] := clBlack;           //  TextColor
+  FColors[9] := clGray;            //  TodayFrameColor
+  FColors[10] := clHighlight;      //  TopRowColor
+  FColors[11] := clHighlightText;  //  TopRowTextColor
+  FColors[12] := clRed;            //  WeekendColor
 end;
 
 function TCalColors.GetColor(AIndex: Integer): TColor;

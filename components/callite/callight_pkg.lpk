@@ -13,7 +13,7 @@
     </CompilerOptions>
     <Description Value="A lightweight calendar component"/>
     <License Value="Modified LGL2 (with linking exception)"/>
-    <Version Minor="1"/>
+    <Version Minor="3"/>
     <Files Count="1">
       <Item1>
         <Filename Value="source/calendarlite.pas"/>
