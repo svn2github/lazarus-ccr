@@ -31,7 +31,7 @@ object RxDBGridExportSpreadSheet_ParamsForm: TRxDBGridExportSpreadSheet_ParamsFo
     Height = 37
     Top = 32
     Width = 530
-    Filter = 'All files (*.*)|*.*|LibreOffice/OpenOffice (*.ods)|*.ods|Excell 97-2003|*.xls|Excell 2007-2013|*.xlxs'
+    Filter = 'All files (*.*)|*.*|LibreOffice/OpenOffice (*.ods)|*.ods|Excel 97-2003|*.xls|Excel 2007-2013|*.xlsx'
     FilterIndex = 0
     HideDirectories = False
     ButtonWidth = 23
