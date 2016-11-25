@@ -59,6 +59,7 @@ type
     procedure UpdateData(Sender: TObject);
     function GetComboText: string; virtual;
     procedure SetComboText(const Value: string); virtual;
+    procedure CMGetDataLink(var Message: TLMessage); message CM_GETDATALINK;
   protected
     procedure EditingDone; override;
     procedure Change; override;
@@ -255,6 +256,11 @@ begin
     end;
     if Style in [csDropDown, csSimple] then Text := Value;
   end;
+end;
+
+procedure TCustomDBComboBox.CMGetDataLink(var Message: TLMessage);
+begin
+  Message.Result := PtrUInt(FDataLink);
 end;
 
 function TCustomDBComboBox.GetComboText: string;

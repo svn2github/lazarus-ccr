@@ -229,6 +229,7 @@ type
     procedure WMSetFocus(var Message: TLMSetFocus); message LM_SETFOCUS;
     procedure WMKillFocus(var Message: TLMKillFocus); message LM_KILLFOCUS;
     procedure CMExit(var Message:TLMessage); message CM_EXIT;
+    procedure CMGetDataLink(var Message: TLMessage); message CM_GETDATALINK;
     procedure PaintDisplayValues(ACanvas: TCanvas; R: TRect; ALeft: Integer);
     procedure CheckNotCircular;
     procedure DisplayValueChanged;
@@ -894,6 +895,11 @@ end;
 procedure TRxCustomDBLookupCombo.CMExit(var Message: TLMessage);
 begin
   inherited;
+end;
+
+procedure TRxCustomDBLookupCombo.CMGetDataLink(var Message: TLMessage);
+begin
+  Message.Result := PtrUInt(FDataLink);
 end;
 
 procedure TRxCustomDBLookupCombo.PaintDisplayValues(ACanvas: TCanvas; R: TRect;

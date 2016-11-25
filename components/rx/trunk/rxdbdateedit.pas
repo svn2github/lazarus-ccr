@@ -53,6 +53,7 @@ type
     procedure SetDataField(const AValue: string);
     procedure SetDataSource(const AValue: TDataSource);
     procedure SetReadOnly(const AValue: Boolean);
+    procedure CMGetDataLink(var Message: TLMessage); message CM_GETDATALINK;
   protected
     procedure ActiveChange(Sender:TObject);
     procedure DataChange(Sender:TObject);
@@ -91,6 +92,7 @@ type
     procedure SetDataField(const AValue: string);
     procedure SetDataSource(const AValue: TDataSource);
     procedure SetReadOnly(const AValue: Boolean);
+    procedure CMGetDataLink(var Message: TLMessage); message CM_GETDATALINK;
   protected
     procedure ActiveChange(Sender:TObject);
     procedure DataChange(Sender:TObject);
@@ -157,6 +159,11 @@ procedure TRxDBDateEdit.SetReadOnly(const AValue: Boolean);
 begin
   inherited ReadOnly:=AValue;
   FDataLink.ReadOnly:=AValue;
+end;
+
+procedure TRxDBDateEdit.CMGetDataLink(var Message: TLMessage);
+begin
+  Message.Result := PtrUInt(FDataLink);
 end;
 
 procedure TRxDBDateEdit.CMExit(var Message: TLMessage);
@@ -342,6 +349,11 @@ end;
 procedure TRxDBCalcEdit.SetReadOnly(const AValue: Boolean);
 begin
   FDataLink.ReadOnly:=AValue;
+end;
+
+procedure TRxDBCalcEdit.CMGetDataLink(var Message: TLMessage);
+begin
+  Message.Result := PtrUInt(FDataLink);
 end;
 
 procedure TRxDBCalcEdit.ActiveChange(Sender: TObject);

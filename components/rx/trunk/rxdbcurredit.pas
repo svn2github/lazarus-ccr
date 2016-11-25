@@ -55,6 +55,7 @@ type
     procedure SetDataField(const AValue: string);
     procedure SetDataSource(const AValue: TDataSource);
     procedure SetReadOnly(const AValue: Boolean);
+    procedure CMGetDataLink(var Message: TLMessage); message CM_GETDATALINK;
   protected
     procedure ActiveChange(Sender:TObject);
     procedure DataChange(Sender:TObject);
@@ -120,6 +121,11 @@ end;
 procedure TRxDBCurrEdit.SetReadOnly(const AValue: Boolean);
 begin
   FDataLink.ReadOnly:=AValue;
+end;
+
+procedure TRxDBCurrEdit.CMGetDataLink(var Message: TLMessage);
+begin
+  Message.Result := PtrUInt(FDataLink);
 end;
 
 procedure TRxDBCurrEdit.ActiveChange(Sender: TObject);
