@@ -266,7 +266,6 @@ uses
 
 procedure SpkInitLayoutConsts(FromDPI: Integer; ToDPI: Integer = 0);
 begin
-
   if not(DPI_AWARE) then
     ToDPI := FromDPI;
 
@@ -391,21 +390,21 @@ initialization
 // Sprawdzanie poprawnoœci
 
 // £uk du¿ego przycisku
-assert(LARGEBUTTON_RADIUS * 2 <= LARGEBUTTON_DROPDOWN_FIELD_SIZE);
+Assert(LARGEBUTTON_RADIUS * 2 <= LARGEBUTTON_DROPDOWN_FIELD_SIZE);
 
 // Tafla, wersja z jednym wierszem
-assert(PANE_ROW_HEIGHT +
+Assert(PANE_ROW_HEIGHT +
        PANE_ONE_ROW_TOPPADDING +
        PANE_ONE_ROW_BOTTOMPADDING <= MAX_ELEMENT_HEIGHT);
 
 // Tafla, wersja z dwoma wierszami
-assert(2*PANE_ROW_HEIGHT +
+Assert(2*PANE_ROW_HEIGHT +
        PANE_TWO_ROWS_TOPPADDING +
        PANE_TWO_ROWS_VSPACER +
        PANE_TWO_ROWS_BOTTOMPADDING <= MAX_ELEMENT_HEIGHT);
 
 // Tafla, wersja z trzema wierszami
-assert(3*PANE_ROW_HEIGHT +
+Assert(3*PANE_ROW_HEIGHT +
        PANE_THREE_ROWS_TOPPADDING +
        2*PANE_THREE_ROWS_VSPACER +
        PANE_THREE_ROWS_BOTTOMPADDING <= MAX_ELEMENT_HEIGHT);

@@ -15,32 +15,30 @@ unit spkt_Dispatch;
 
 interface
 
-uses Classes, Controls, Graphics,
-     SpkMath;
+uses
+  Classes, Controls, Graphics,
+  SpkMath;
 
-type TSpkBaseDispatch = class abstract(TObject)
-     private
-     protected
-     public
-     end;
+type
+  TSpkBaseDispatch = class abstract(TObject)
+  private
+  protected
+  public
+  end;
 
-type TSpkBaseAppearanceDispatch = class abstract(TSpkBaseDispatch)
-     private
-     protected
-     public
-       procedure NotifyAppearanceChanged; virtual; abstract;
-     end;
+  TSpkBaseAppearanceDispatch = class abstract(TSpkBaseDispatch)
+  public
+    procedure NotifyAppearanceChanged; virtual; abstract;
+  end;
 
-type TSpkBaseToolbarDispatch = class abstract(TSpkBaseAppearanceDispatch)
-     private
-     protected
-     public
-       procedure NotifyItemsChanged; virtual; abstract;
-       procedure NotifyMetricsChanged; virtual; abstract;
-       procedure NotifyVisualsChanged; virtual; abstract;
-       function GetTempBitmap : TBitmap; virtual; abstract;
-       function ClientToScreen(Point : T2DIntPoint) : T2DIntPoint; virtual; abstract;
-     end;
+  TSpkBaseToolbarDispatch = class abstract(TSpkBaseAppearanceDispatch)
+  public
+    procedure NotifyItemsChanged; virtual; abstract;
+    procedure NotifyMetricsChanged; virtual; abstract;
+    procedure NotifyVisualsChanged; virtual; abstract;
+    function GetTempBitmap: TBitmap; virtual; abstract;
+    function ClientToScreen(Point: T2DIntPoint): T2DIntPoint; virtual; abstract;
+  end;
 
 implementation
 

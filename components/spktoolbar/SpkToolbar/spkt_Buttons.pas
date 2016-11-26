@@ -17,164 +17,163 @@ interface
 
 uses
   Graphics, Classes, Controls, Menus, ActnList, Math,
-     Dialogs, ImgList, Forms,
-     SpkGUITools, SpkGraphTools, SpkMath,
-     spkt_Const, spkt_BaseItem, spkt_Exceptions, spkt_Tools;
+  Dialogs, ImgList, Forms,
+  SpkGUITools, SpkGraphTools, SpkMath,
+  spkt_Const, spkt_BaseItem, spkt_Exceptions, spkt_Tools;
 
-type TSpkButtonState = (bsIdle,
-                        bsBtnHottrack, bsBtnPressed,
-                        bsDropdownHottrack, bsDropdownPressed);
-     TSpkMouseButtonElement = (beNone, beButton, beDropdown);
-     TSpkButtonKind = (bkButton, bkButtonDropdown, bkDropdown);
+type
+  TSpkButtonState = (
+    bsIdle,
+    bsBtnHottrack, bsBtnPressed,
+    bsDropdownHottrack, bsDropdownPressed
+  );
 
-type TSpkBaseButton = class;
+  TSpkMouseButtonElement = (beNone, beButton, beDropdown);
 
-     TSpkButtonActionLink = class(TActionLink)
-     private
-     protected
-       FClient : TSpkBaseButton;
+  TSpkButtonKind = (bkButton, bkButtonDropdown, bkDropdown);
 
-       procedure AssignClient(AClient: TObject); override;
-       function IsOnExecuteLinked: Boolean; override;
-       procedure SetCaption(const Value: string); override;
-       procedure SetEnabled(Value: Boolean); override;
-       procedure SetImageIndex(Value: integer); override;
-       procedure SetVisible(Value: Boolean); override;
-       procedure SetOnExecute(Value: TNotifyEvent); override;
-     public
-      function IsCaptionLinked: Boolean; override;
-      function IsEnabledLinked: Boolean; override;
-      function IsImageIndexLinked: Boolean; override;
-      function IsVisibleLinked: Boolean; override;
-     end;
+  TSpkBaseButton = class;
 
-
-     { TSpkBaseButton }
-
-     TSpkBaseButton = class abstract(TSpkBaseItem)
-     private
-       FMouseHoverElement : TSpkMouseButtonElement;
-       FMouseActiveElement : TSpkMouseButtonElement;
-     protected
-       FCaption : string;
-       FOnClick : TNotifyEvent;
-
-       FActionLink : TSpkButtonActionLink;
-
-       FButtonState : TSpkButtonState;
-
-       FButtonRect : T2DIntRect;
-       FDropdownRect : T2DIntRect;
-
-       FButtonKind : TSpkButtonKind;
-       FDropdownMenu : TPopupMenu;
-
-     // *** Obs³uga rysowania ***
-
-     /// <summary>Zadaniem metody w odziedziczonych klasach jest obliczenie
-     /// rectów przycisku i menu dropdown w zale¿noœci od FButtonState</summary>
-       procedure CalcRects; virtual; abstract;
-
-       function GetDropdownPoint : T2DIntPoint; virtual; abstract;
-
-     // *** Obs³uga akcji ***
-
-       procedure ActionChange(Sender: TObject; CheckDefaults: Boolean); virtual;
-       procedure DoActionChange(Sender: TObject);
-       procedure Click; virtual;
-       function GetDefaultCaption: String; virtual;
-
-     // *** Gettery i settery ***
-
-       procedure SetEnabled(const Value : boolean); override;
-       procedure SetDropdownMenu(const Value : TPopupMenu);
-       procedure SetRect(const Value: T2DIntRect); override;
-       procedure SetCaption(const Value : string);
-       procedure SetAction(const Value : TBasicAction); virtual;
-       procedure SetButtonKind(const Value : TSpkButtonKind);
-       function GetAction: TBasicAction;
-
-       property ButtonKind : TSpkButtonKind read FButtonKind write SetButtonKind;
-       property DropdownMenu : TPopupMenu read FDropdownMenu write SetDropdownMenu;
-
-     public
-       constructor Create(AOwner : TComponent); override;
-       destructor Destroy; override;
-
-       procedure MouseLeave; override;
-       procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
-         X, Y: Integer); override;
-       procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-       procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
-         X, Y: Integer); override;
-
-       function GetRootComponent: TComponent;
-
-     published
-       property Caption : string read FCaption write SetCaption;
-       property Action : TBasicAction read GetAction write SetAction;
-       property OnClick : TNotifyEvent read FOnClick write FOnClick;
-     end;
+  TSpkButtonActionLink = class(TActionLink)
+  protected
+    FClient: TSpkBaseButton;
+    procedure AssignClient(AClient: TObject); override;
+    function IsOnExecuteLinked: Boolean; override;
+    procedure SetCaption(const Value: string); override;
+    procedure SetEnabled(Value: Boolean); override;
+    procedure SetImageIndex(Value: integer); override;
+    procedure SetVisible(Value: Boolean); override;
+    procedure SetOnExecute(Value: TNotifyEvent); override;
+  public
+    function IsCaptionLinked: Boolean; override;
+    function IsEnabledLinked: Boolean; override;
+    function IsImageIndexLinked: Boolean; override;
+    function IsVisibleLinked: Boolean; override;
+  end;
 
 
-     { TSpkLargeButton }
+  { TSpkBaseButton }
 
-     TSpkLargeButton = class(TSpkBaseButton)
-     private
-       FLargeImageIndex: TImageIndex;
-       procedure FindBreakPlace(s: string; out Position: integer; out Width: integer);
-       procedure SetLargeImageIndex(const Value: TImageIndex);
-     protected
-       procedure CalcRects; override;
-       function GetDropdownPoint : T2DIntPoint; override;
-     public
-       constructor Create(AOwner: TComponent); override;
-       procedure Draw(ABuffer: TBitmap; ClipRect: T2DIntRect); override;
-       function GetWidth: integer; override;
-       function GetTableBehaviour: TSpkItemTableBehaviour; override;
-       function GetGroupBehaviour: TSpkItemGroupBehaviour; override;
-       function GetSize: TSpkItemSize; override;
-     published
-       property LargeImageIndex: TImageIndex read FLargeImageIndex write SetLargeImageIndex default -1;
-       property ButtonKind;
-       property DropdownMenu;
-     end;
+  TSpkBaseButton = class abstract(TSpkBaseItem)
+  private
+    FMouseHoverElement: TSpkMouseButtonElement;
+    FMouseActiveElement: TSpkMouseButtonElement;
+
+    // Getters and Setters
+    function GetAction: TBasicAction;
+    procedure SetCaption(const Value: string);
+    procedure SetButtonKind(const Value: TSpkButtonKind);
+    procedure SetDropdownMenu(const Value: TPopupMenu);
+
+  protected
+    FCaption: string;
+    FOnClick: TNotifyEvent;
+    FActionLink: TSpkButtonActionLink;
+    FButtonState: TSpkButtonState;
+    FButtonRect: T2DIntRect;
+    FDropdownRect: T2DIntRect;
+    FButtonKind: TSpkButtonKind;
+    FDropdownMenu: TPopupMenu;
+
+    // *** Obs³uga rysowania ***
+    /// <summary>Zadaniem metody w odziedziczonych klasach jest obliczenie
+    /// rectów przycisku i menu dropdown w zale¿noœci od FButtonState</summary>
+    procedure CalcRects; virtual; abstract;
+    function GetDropdownPoint: T2DIntPoint; virtual; abstract;
+
+    // *** Obs³uga akcji ***
+    procedure ActionChange(Sender: TObject; CheckDefaults: Boolean); virtual;
+    procedure Click; virtual;
+    procedure DoActionChange(Sender: TObject);
+    function GetDefaultCaption: String; virtual;
+
+    // Getters and Setters
+    procedure SetEnabled(const Value: boolean); override;
+    procedure SetRect(const Value: T2DIntRect); override;
+    procedure SetAction(const Value: TBasicAction); virtual;
+
+    property ButtonKind: TSpkButtonKind read FButtonKind write SetButtonKind;
+    property DropdownMenu: TPopupMenu read FDropdownMenu write SetDropdownMenu;
+
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+
+    procedure MouseLeave; override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      X, Y: Integer); override;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
+      X, Y: Integer); override;
+
+    function GetRootComponent: TComponent;
+
+  published
+    property Action: TBasicAction read GetAction write SetAction;
+    property Caption: string read FCaption write SetCaption;
+    property OnClick: TNotifyEvent read FOnClick write FOnClick;
+  end;
 
 
-     { TSpkSmallButton }
+  { TSpkLargeButton }
 
-     TSpkSmallButton = class(TSpkBaseButton)
-     private
-       FImageIndex: TImageIndex;
-       FTableBehaviour: TSpkItemTableBehaviour;
-       FGroupBehaviour: TSPkItemGroupBehaviour;
-       FHideFrameWhenIdle: boolean;
-       FShowCaption: boolean;
-       procedure ConstructRects(out BtnRect, DropRect: T2DIntRect);
-       procedure SetImageIndex(const Value: TImageIndex);
-       procedure SetGroupBehaviour(const Value: TSpkItemGroupBehaviour);
-       procedure SetHideFrameWhenIdle(const Value: boolean);
-       procedure SetTableBehaviour(const Value: TSpkItemTableBehaviour);
-       procedure SetShowCaption(const Value: boolean);
-     protected
-       procedure CalcRects; override;
-       function GetDropdownPoint: T2DIntPoint; override;
-     public
-       constructor Create(AOwner: TComponent); override;
-       procedure Draw(ABuffer: TBitmap; ClipRect: T2DIntRect); override;
-       function GetWidth: integer; override;
-       function GetTableBehaviour: TSpkItemTableBehaviour; override;
-       function GetGroupBehaviour: TSpkItemGroupBehaviour; override;
-       function GetSize: TSpkItemSize; override;
-     published
-       property ShowCaption: boolean read FShowCaption write SetShowCaption;
-       property TableBehaviour: TSpkItemTableBehaviour read FTableBehaviour write SetTableBehaviour;
-       property GroupBehaviour: TSpkItemGroupBehaviour read FGroupBehaviour write SetGroupBehaviour;
-       property HideFrameWhenIdle: boolean read FHideFrameWhenIdle write SetHideFrameWhenIdle;
-       property ImageIndex: TImageIndex read FImageIndex write SetImageIndex default -1;
-       property ButtonKind;
-       property DropdownMenu;
-     end;
+  TSpkLargeButton = class(TSpkBaseButton)
+  private
+    FLargeImageIndex: TImageIndex;
+    procedure FindBreakPlace(s: string; out Position: integer; out Width: integer);
+    procedure SetLargeImageIndex(const Value: TImageIndex);
+  protected
+    procedure CalcRects; override;
+    function GetDropdownPoint : T2DIntPoint; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    procedure Draw(ABuffer: TBitmap; ClipRect: T2DIntRect); override;
+    function GetGroupBehaviour: TSpkItemGroupBehaviour; override;
+    function GetSize: TSpkItemSize; override;
+    function GetTableBehaviour: TSpkItemTableBehaviour; override;
+    function GetWidth: integer; override;
+  published
+    property LargeImageIndex: TImageIndex read FLargeImageIndex write SetLargeImageIndex default -1;
+    property ButtonKind;
+    property DropdownMenu;
+  end;
+
+
+  { TSpkSmallButton }
+
+  TSpkSmallButton = class(TSpkBaseButton)
+  private
+    FImageIndex: TImageIndex;
+    FTableBehaviour: TSpkItemTableBehaviour;
+    FGroupBehaviour: TSPkItemGroupBehaviour;
+    FHideFrameWhenIdle: boolean;
+    FShowCaption: boolean;
+    procedure ConstructRects(out BtnRect, DropRect: T2DIntRect);
+    procedure SetGroupBehaviour(const Value: TSpkItemGroupBehaviour);
+    procedure SetHideFrameWhenIdle(const Value: boolean);
+    procedure SetImageIndex(const Value: TImageIndex);
+    procedure SetShowCaption(const Value: boolean);
+    procedure SetTableBehaviour(const Value: TSpkItemTableBehaviour);
+  protected
+    procedure CalcRects; override;
+    function GetDropdownPoint: T2DIntPoint; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    procedure Draw(ABuffer: TBitmap; ClipRect: T2DIntRect); override;
+    function GetGroupBehaviour: TSpkItemGroupBehaviour; override;
+    function GetSize: TSpkItemSize; override;
+    function GetTableBehaviour: TSpkItemTableBehaviour; override;
+    function GetWidth: integer; override;
+  published
+    property GroupBehaviour: TSpkItemGroupBehaviour read FGroupBehaviour write SetGroupBehaviour;
+    property HideFrameWhenIdle: boolean read FHideFrameWhenIdle write SetHideFrameWhenIdle;
+    property ImageIndex: TImageIndex read FImageIndex write SetImageIndex default -1;
+    property ShowCaption: boolean read FShowCaption write SetShowCaption;
+    property TableBehaviour: TSpkItemTableBehaviour read FTableBehaviour write SetTableBehaviour;
+    property ButtonKind;
+    property DropdownMenu;
+  end;
+
 
 implementation
 
@@ -191,58 +190,58 @@ end;
 
 function TSpkButtonActionLink.IsCaptionLinked: Boolean;
 begin
-  Result := inherited IsCaptionLinked and
-            Assigned(FClient) and
+  Result := inherited IsCaptionLinked and Assigned(FClient) and
             (FClient.Caption = (Action as TCustomAction).Caption);
 end;
 
 function TSpkButtonActionLink.IsEnabledLinked: Boolean;
 begin
-  Result := inherited IsEnabledLinked and
-            Assigned(FClient) and
-           (FClient.Enabled = (Action as TCustomAction).Enabled);
+  Result := inherited IsEnabledLinked and Assigned(FClient) and
+            (FClient.Enabled = (Action as TCustomAction).Enabled);
 end;
 
 function TSpkButtonActionLink.IsOnExecuteLinked: Boolean;
 begin
   Result := inherited IsOnExecuteLinked and
-    (@TSpkBaseButton(FClient).OnClick = @Action.OnExecute);
+            (@TSpkBaseButton(FClient).OnClick = @Action.OnExecute);
 end;
 
 function TSpkButtonActionLink.IsImageIndexLinked: Boolean;
 begin
-  Result := (inherited IsImageIndexLinked) and
-    (
-      ((FClient is TSpkSmallButton)
-        and (TSpkSmallButton(FClient).ImageIndex = (Action as TCustomAction).ImageIndex))
-      or
-      ((FClient is TSpkLargeButton)
-        and (TSpkLargeButton(FClient).LargeImageIndex = (Action as TCustomAction).ImageIndex))
-    );
+  Result := inherited IsImageIndexLinked;
+  if (FClient is TSpkSmallButton) then
+    Result := Result and (TSpkSmallButton(FClient).ImageIndex = (Action as TCustomAction).ImageIndex)
+  else
+  if (FClient is TSpkLargeButton) then
+    Result := Result and (TSpkLargeButton(FClient).LargeImageIndex = (Action as TCustomAction).ImageIndex)
+  else
+    Result := false;
 end;
 
 function TSpkButtonActionLink.IsVisibleLinked: Boolean;
 begin
-  Result := inherited IsVisibleLinked and
-            Assigned(FClient) and
+  Result := inherited IsVisibleLinked and Assigned(FClient) and
             (FClient.Visible = (Action as TCustomAction).Visible);
 end;
 
 procedure TSpkButtonActionLink.SetCaption(const Value: string);
 begin
-  if IsCaptionLinked then FClient.Caption := Value;
+  if IsCaptionLinked then
+    FClient.Caption := Value;
 end;
 
 procedure TSpkButtonActionLink.SetEnabled(Value: Boolean);
 begin
-  if IsEnabledLinked then FClient.Enabled := Value;
+  if IsEnabledLinked then
+    FClient.Enabled := Value;
 end;
 
 procedure TSpkButtonActionLink.SetImageIndex(Value: integer);
 begin
   if IsImageIndexLinked then begin
     if (FClient is TSpkSmallButton) then
-      (TSpkSmallButton(FClient)).ImageIndex := Value;
+      (TSpkSmallButton(FClient)).ImageIndex := Value
+    else
     if (FClient is TSpkLargeButton) then
       (TSpkLargeButton(FClient)).LargeImageIndex := Value;
   end;
@@ -250,15 +249,41 @@ end;
 
 procedure TSpkButtonActionLink.SetOnExecute(Value: TNotifyEvent);
 begin
-  if IsOnExecuteLinked then FClient.OnClick := Value;
+  if IsOnExecuteLinked then
+    FClient.OnClick := Value;
 end;
 
 procedure TSpkButtonActionLink.SetVisible(Value: Boolean);
 begin
-  if IsVisibleLinked then FClient.Visible := Value;
+  if IsVisibleLinked then
+    FClient.Visible := Value;
 end;
 
+
 { TSpkBaseButton }
+
+constructor TSpkBaseButton.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  FCaption := GetDefaultCaption;
+  FButtonState := bsIdle;
+  FButtonKind := bkButton;
+  {$IFDEF EnhancedRecordSupport}
+  FButtonRect := T2DIntRect.Create(0, 0, 1, 1);
+  FDropdownRect := T2DIntRect.Create(0, 0, 1, 1);
+  {$ELSE}
+  FButtonRect.Create(0, 0, 1, 1);
+  FDropdownRect.Create(0, 0, 1, 1);
+  {$ENDIF}
+  FMouseHoverElement := beNone;
+  FMouseActiveElement := beNone;
+end;
+
+destructor TSpkBaseButton.Destroy;
+begin
+  FreeAndNil(FActionLink);
+  inherited Destroy;
+end;
 
 procedure TSpkBaseButton.ActionChange(Sender: TObject; CheckDefaults: Boolean);
 begin
@@ -284,29 +309,6 @@ begin
     end;
 end;
 
-constructor TSpkBaseButton.Create(AOwner : TComponent);
-begin
-  inherited Create(AOwner);
-  FCaption:=GetDefaultCaption;
-  FButtonState:=bsIdle;
-  FButtonKind:=bkButton;
-  {$IFDEF EnhancedRecordSupport}
-  FButtonRect:=T2DIntRect.Create(0, 0, 1, 1);
-  FDropdownRect:=T2DIntRect.Create(0, 0, 1, 1);
-  {$ELSE}
-  FButtonRect.Create(0, 0, 1, 1);
-  FDropdownRect.Create(0, 0, 1, 1);
-  {$ENDIF}
-  FMouseHoverElement:=beNone;
-  FMouseActiveElement:=beNone;
-end;
-
-destructor TSpkBaseButton.Destroy;
-begin
-  FreeAndNil(FActionLink);
-  inherited Destroy;
-end;
-
 procedure TSpkBaseButton.Click;
 begin
   if Assigned(FOnClick) then
@@ -315,19 +317,21 @@ end;
 
 procedure TSpkBaseButton.DoActionChange(Sender: TObject);
 begin
-  if Sender = Action then ActionChange(Sender, False);
+  if Sender = Action then
+    ActionChange(Sender, False);
 end;
 
 function TSpkBaseButton.GetAction: TBasicAction;
 begin
-if assigned(FActionLink) then
-   result:=FActionLink.Action else
-   result:=nil;
+  if Assigned(FActionLink) then
+    Result := FActionLink.Action
+  else
+    Result := nil;
 end;
 
 function TSpkBaseButton.GetDefaultCaption: String;
 begin
-  result := 'Button';
+  Result := 'Button';
 end;
 
 function TSpkBaseButton.GetRootComponent: TComponent;
@@ -348,313 +352,305 @@ begin
     result := tab.Collection.RootComponent;
 end;
 
-procedure TSpkBaseButton.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
-  Y: Integer);
+procedure TSpkBaseButton.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
 begin
-if FEnabled then
-   begin
-   // Przyciski reaguj¹ tylko na lewy przycisk myszy
-   if Button <> mbLeft then
+  if FEnabled then
+  begin
+    // Przyciski reaguj¹ tylko na lewy przycisk myszy
+    if Button <> mbLeft then
       exit;
 
-   if FMouseActiveElement = beButton then
+    if FMouseActiveElement = beButton then
+    begin
+      if FButtonState <> bsBtnPressed then
       begin
-      if FButtonState<>bsBtnPressed then
-         begin
-         FButtonState:=bsBtnPressed;
-         if assigned(FToolbarDispatch) then
-            FToolbarDispatch.NotifyVisualsChanged;
-         end;
-      end else
-   if FMouseActiveElement = beDropdown then
+        FButtonState := bsBtnPressed;
+        if Assigned(FToolbarDispatch) then
+          FToolbarDispatch.NotifyVisualsChanged;
+      end;
+    end else
+    if FMouseActiveElement = beDropdown then
+    begin
+      if FButtonState <> bsDropdownPressed then
       begin
-      if FButtonState<>bsDropdownPressed then
-         begin
-         FButtonState:=bsDropdownPressed;
-         if assigned(FToolbarDispatch) then
-            FToolbarDispatch.NotifyVisualsChanged;
-         end;
-      end else
-   if FMouseActiveElement = beNone then
-      begin
+        FButtonState := bsDropdownPressed;
+        if Assigned(FToolbarDispatch) then
+          FToolbarDispatch.NotifyVisualsChanged;
+      end;
+    end else
+    if FMouseActiveElement = beNone then
+    begin
       if FMouseHoverElement = beButton then
-         begin
-         FMouseActiveElement:=beButton;
-
-         if FButtonState<>bsBtnPressed then
-            begin
-            FButtonState:=bsBtnPressed;
-            if FToolbarDispatch<>nil then
-               FToolbarDispatch.NotifyVisualsChanged;
-            end;
-         end else
-      if FMouseHoverElement = beDropdown then
-         begin
-         FMouseActiveElement:=beDropdown;
-
-         if FButtonState<>bsDropdownPressed then
-            begin
-            FButtonState:=bsDropdownPressed;
-            if FToolbarDispatch<>nil then
-               FToolbarDispatch.NotifyVisualsChanged;
-            end;
-         end;
-      end;
-   end
-else
-   begin
-   FMouseHoverElement:=beNone;
-   FMouseActiveElement:=beNone;
-   if FButtonState<>bsIdle then
       begin
-      FButtonState:=bsIdle;
-
-      if assigned(FToolbarDispatch) then
-         FToolbarDispatch.NotifyVisualsChanged;
+        FMouseActiveElement := beButton;
+        if FButtonState <> bsBtnPressed then
+        begin
+          FButtonState := bsBtnPressed;
+          if FToolbarDispatch <> nil then
+            FToolbarDispatch.NotifyVisualsChanged;
+        end;
+      end else
+      if FMouseHoverElement = beDropdown then
+      begin
+        FMouseActiveElement := beDropdown;
+        if FButtonState <> bsDropdownPressed then
+        begin
+          FButtonState := bsDropdownPressed;
+          if FToolbarDispatch <> nil then
+            FToolbarDispatch.NotifyVisualsChanged;
+        end;
       end;
-   end;
+    end;
+  end    // if FEnabled
+  else
+  begin
+    FMouseHoverElement := beNone;
+    FMouseActiveElement := beNone;
+    if FButtonState <> bsIdle then
+    begin
+      FButtonState := bsIdle;
+      if Assigned(FToolbarDispatch) then
+        FToolbarDispatch.NotifyVisualsChanged;
+    end;
+  end;
 end;
 
 procedure TSpkBaseButton.MouseLeave;
 begin
-if FEnabled then
-   begin
-   if FMouseActiveElement = beNone then
-      begin
+  if FEnabled then
+  begin
+    if FMouseActiveElement = beNone then
+    begin
       if FMouseHoverElement = beButton then
-         begin
-         // Placeholder, gdyby zasz³a potrzeba obs³ugi tego zdarzenia
-         end else
+      begin
+        // Placeholder, gdyby zasz³a potrzeba obs³ugi tego zdarzenia
+      end else
       if FMouseHoverElement = beDropdown then
-         begin
-         // Placeholder, gdyby zasz³a potrzeba obs³ugi tego zdarzenia
-         end;
-      end;
-
-   if FButtonState<>bsIdle then
       begin
-      FButtonState:=bsIdle;
-      if assigned(FToolbarDispatch) then
-         FToolbarDispatch.NotifyVisualsChanged;
+        // Placeholder, gdyby zasz³a potrzeba obs³ugi tego zdarzenia
       end;
-   end
-else
-   begin
-   FMouseHoverElement:=beNone;
-   FMouseActiveElement:=beNone;
-   if FButtonState<>bsIdle then
-      begin
-      FButtonState:=bsIdle;
-
-      if assigned(FToolbarDispatch) then
-         FToolbarDispatch.NotifyVisualsChanged;
-      end;
-   end;
+    end;
+    if FButtonState <> bsIdle then
+    begin
+      FButtonState := bsIdle;
+      if Assigned(FToolbarDispatch) then
+        FToolbarDispatch.NotifyVisualsChanged;
+    end;
+  end  // if FEnabled
+  else
+  begin
+    FMouseHoverElement := beNone;
+    FMouseActiveElement := beNone;
+    if FButtonState <> bsIdle then
+    begin
+      FButtonState := bsIdle;
+      if Assigned(FToolbarDispatch) then
+        FToolbarDispatch.NotifyVisualsChanged;
+    end;
+  end;
 end;
 
 procedure TSpkBaseButton.MouseMove(Shift: TShiftState; X, Y: Integer);
-
-var NewMouseHoverElement : TSpkMouseButtonElement;
-
+var
+  NewMouseHoverElement: TSpkMouseButtonElement;
 begin
-if FEnabled then
-   begin
-   {$IFDEF EnhancedRecordSupport}
-   if FButtonRect.Contains(T2DIntPoint.Create(X,Y)) then
-   {$ELSE}
-   if FButtonRect.Contains(X,Y) then
-   {$ENDIF}
-      NewMouseHoverElement:=beButton else
-   if (FButtonKind = bkButtonDropdown) and
+  if FEnabled then
+  begin
+    {$IFDEF EnhancedRecordSupport}
+    if FButtonRect.Contains(T2DIntPoint.Create(X,Y)) then
+    {$ELSE}
+    if FButtonRect.Contains(X,Y)
+    {$ENDIF}
+    then
+      NewMouseHoverElement := beButton
+    else
+    if (FButtonKind = bkButtonDropdown) and
       {$IFDEF EnhancedRecordSupport}
       (FDropdownRect.Contains(T2DIntPoint.Create(X,Y))) then
       {$ELSE}
-      (FDropdownRect.Contains(X,Y)) then
+      (FDropdownRect.Contains(X,Y))
       {$ENDIF}
-      NewMouseHoverElement:=beDropdown else
-      NewMouseHoverElement:=beNone;
+    then
+      NewMouseHoverElement := beDropdown
+    else
+      NewMouseHoverElement := beNone;
 
-   if FMouseActiveElement = beButton then
+    if FMouseActiveElement = beButton then
+    begin
+      if (NewMouseHoverElement = beNone) and (FButtonState <> bsIdle) then
       begin
-      if (NewMouseHoverElement = beNone) and (FButtonState<>bsIdle) then
-         begin
-         FButtonState:=bsIdle;
-         if FToolbarDispatch<>nil then
-            FToolbarDispatch.NotifyVisualsChanged;
-         end else
-      if (NewMouseHoverElement = beButton) and (FButtonState<>bsBtnPressed) then
-         begin
-         FButtonState:=bsBtnPressed;
-         if FToolbarDispatch<>nil then
-            FToolbarDispatch.NotifyVisualsChanged;
-         end;
+        FButtonState := bsIdle;
+        if FToolbarDispatch <> nil then
+          FToolbarDispatch.NotifyVisualsChanged;
       end else
-   if FMouseActiveElement = beDropdown then
+      if (NewMouseHoverElement = beButton) and (FButtonState <> bsBtnPressed) then
       begin
-      if (NewMouseHoverElement = beNone) and (FButtonState<>bsIdle) then
-         begin
-         FButtonState:=bsIdle;
-         if FToolbarDispatch<>nil then
-            FToolbarDispatch.NotifyVisualsChanged;
-         end else
-      if (NewMouseHoverElement = beDropdown) and (FButtonState<>bsDropdownPressed) then
-         begin
-         FButtonState:=bsDropdownPressed;
-         if FToolbarDispatch<>nil then
-            FToolbarDispatch.NotifyVisualsChanged;
-         end;
+        FButtonState := bsBtnPressed;
+        if FToolbarDispatch <> nil then
+          FToolbarDispatch.NotifyVisualsChanged;
+      end;
+    end else
+    if FMouseActiveElement = beDropdown then
+    begin
+      if (NewMouseHoverElement = beNone) and (FButtonState <> bsIdle) then
+      begin
+        FButtonState := bsIdle;
+        if FToolbarDispatch <> nil then
+          FToolbarDispatch.NotifyVisualsChanged;
       end else
-   if FMouseActiveElement = beNone then
+      if (NewMouseHoverElement = beDropdown) and (FButtonState <> bsDropdownPressed) then
       begin
+        FButtonState := bsDropdownPressed;
+        if FToolbarDispatch <> nil then
+          FToolbarDispatch.NotifyVisualsChanged;
+      end;
+    end else
+    if FMouseActiveElement = beNone then
+    begin
       // Z uwagi na uproszczon¹ obs³ugê myszy w przycisku, nie ma potrzeby
       // informowaæ poprzedniego elementu o tym, ¿e mysz opuœci³a jego obszar.
-
       if NewMouseHoverElement = beButton then
-         begin
-         if FButtonState<>bsBtnHottrack then
-            begin
-            FButtonState:=bsBtnHottrack;
-            if FToolbarDispatch<>nil then
-               FToolbarDispatch.NotifyVisualsChanged;
-            end;
-         end else
-      if NewMouseHoverElement = beDropdown then
-         begin
-         if FButtonState<>bsDropdownHottrack then
-            begin
-            FButtonState:=bsDropdownHottrack;
-            if FToolbarDispatch<>nil then
-               FToolbarDispatch.NotifyVisualsChanged;
-            end;
-         end;
-      end;
-
-   FMouseHoverElement:=NewMouseHoverElement;
-   end
-else
-   begin
-   FMouseHoverElement:=beNone;
-   FMouseActiveElement:=beNone;
-   if FButtonState<>bsIdle then
       begin
-      FButtonState:=bsIdle;
-
-      if assigned(FToolbarDispatch) then
-         FToolbarDispatch.NotifyVisualsChanged;
+        if FButtonState <> bsBtnHottrack then
+        begin
+          FButtonState := bsBtnHottrack;
+          if FToolbarDispatch <> nil then
+            FToolbarDispatch.NotifyVisualsChanged;
+        end;
+      end else
+      if NewMouseHoverElement = beDropdown then
+      begin
+        if FButtonState <> bsDropdownHottrack then
+        begin
+          FButtonState := bsDropdownHottrack;
+          if FToolbarDispatch <> nil then
+            FToolbarDispatch.NotifyVisualsChanged;
+        end;
       end;
-   end;
+    end;
+
+    FMouseHoverElement := NewMouseHoverElement;
+  end    // if FEnabled
+  else
+  begin
+    FMouseHoverElement := beNone;
+    FMouseActiveElement := beNone;
+    if FButtonState <> bsIdle then
+    begin
+      FButtonState := bsIdle;
+      if Assigned(FToolbarDispatch) then
+        FToolbarDispatch.NotifyVisualsChanged;
+    end;
+  end;
 end;
 
-procedure TSpkBaseButton.MouseUp(Button: TMouseButton; Shift: TShiftState; X,
-  Y: Integer);
-
-var ClearActive : boolean;
+procedure TSpkBaseButton.MouseUp(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
+var
+  ClearActive: boolean;
   DropPoint: T2DIntPoint;
-
 begin
-if FEnabled then
-   begin
-   // Przyciski reaguj¹ tylko na lewy przycisk myszy
-   if Button <> mbLeft then
+  if FEnabled then
+  begin
+    // Przyciski reaguj¹ tylko na lewy przycisk myszy
+    if Button <> mbLeft then
       exit;
 
-   ClearActive:=not(ssLeft in Shift);
+    ClearActive := not (ssLeft in Shift);
 
-   if FMouseActiveElement = beButton then
-      begin
+    if FMouseActiveElement = beButton then
+    begin
       // Zdarzenie zadzia³a tylko wtedy, gdy przycisk myszy zosta³ puszczony nad
       // przyciskiem
       if FMouseHoverElement = beButton then
-         begin
-         if FButtonKind in [bkButton, bkButtonDropdown] then
-            begin
-              Click;
-              FButtonState:=bsBtnHottrack;
-              if assigned(FToolbarDispatch) then
-                 FToolbarDispatch.NotifyVisualsChanged;
-            end else
-         if FButtonKind = bkDropdown then
-            begin
-            if assigned(FDropdownMenu) then
-               begin
-               DropPoint:=FToolbarDispatch.ClientToScreen(GetDropdownPoint);
-               FDropdownMenu.Popup(DropPoint.x, DropPoint.y);
-               FButtonState:=bsBtnHottrack;
-               if assigned(FToolbarDispatch) then
-                  FToolbarDispatch.NotifyVisualsChanged;
-               end;
-            end;
-         end;
-      end else
-   if FMouseActiveElement = beDropDown then
       begin
+        if FButtonKind in [bkButton, bkButtonDropdown] then
+        begin
+          Click;
+          FButtonState := bsBtnHottrack;
+          if Assigned(FToolbarDispatch) then
+            FToolbarDispatch.NotifyVisualsChanged;
+        end else
+        if FButtonKind = bkDropdown then
+        begin
+          if Assigned(FDropdownMenu) then
+          begin
+            DropPoint := FToolbarDispatch.ClientToScreen(GetDropdownPoint);
+            FDropdownMenu.Popup(DropPoint.x, DropPoint.y);
+            FButtonState := bsBtnHottrack;
+            if Assigned(FToolbarDispatch) then
+              FToolbarDispatch.NotifyVisualsChanged;
+          end;
+        end;
+      end;
+    end else
+    if FMouseActiveElement = beDropDown then
+    begin
       // Zdarzenie zadzia³a tylko wtedy, gdy przycisk myszy zosta³ puszczony nad
       // przyciskiem DropDown
-
       if FMouseHoverElement = beDropDown then
-         begin
-         if assigned(FDropdownMenu) then
-            begin
-            DropPoint:=FToolbarDispatch.ClientToScreen(GetDropdownPoint);
-            FDropdownMenu.Popup(DropPoint.x, DropPoint.y);
-            FButtonState:=bsBtnHottrack;
-            if assigned(FToolbarDispatch) then
-               FToolbarDispatch.NotifyVisualsChanged;
-            end;
-         end;
-      end;
-
-   if (ClearActive) and (FMouseActiveElement<>FMouseHoverElement) then
       begin
+        if Assigned(FDropdownMenu) then
+        begin
+          DropPoint := FToolbarDispatch.ClientToScreen(GetDropdownPoint);
+          FDropdownMenu.Popup(DropPoint.x, DropPoint.y);
+          FButtonState := bsBtnHottrack;
+          if Assigned(FToolbarDispatch) then
+            FToolbarDispatch.NotifyVisualsChanged;
+        end;
+      end;
+    end;
+
+    if ClearActive and (FMouseActiveElement <> FMouseHoverElement) then
+    begin
       // Z uwagi na uproszczon¹ obs³ugê, nie ma potrzeby informowaæ poprzedniego
       // elementu o tym, ¿e mysz opuœci³a jego obszar.
-
       if FMouseHoverElement = beButton then
-         begin
-         if FButtonState<>bsBtnHottrack then
-            begin
-            FButtonState:=bsBtnHottrack;
-            if assigned(FToolbarDispatch) then
-               FToolbarDispatch.NotifyVisualsChanged;
-            end;
-         end else
+      begin
+        if FButtonState <> bsBtnHottrack then
+        begin
+          FButtonState := bsBtnHottrack;
+          if Assigned(FToolbarDispatch) then
+            FToolbarDispatch.NotifyVisualsChanged;
+        end;
+      end else
       if FMouseHoverElement = beDropdown then
-         begin
-         if FButtonState<>bsDropdownHottrack then
-            begin
-            FButtonState:=bsDropdownHottrack;
-            if assigned(FToolbarDispatch) then
-               FToolbarDispatch.NotifyVisualsChanged;
-            end;
-         end else
+      begin
+        if FButtonState <> bsDropdownHottrack then
+        begin
+          FButtonState := bsDropdownHottrack;
+          if Assigned(FToolbarDispatch) then
+            FToolbarDispatch.NotifyVisualsChanged;
+        end;
+      end else
       if FMouseHoverElement = beNone then
-         begin
-         if FButtonState <> bsIdle then
-            begin
-            FButtonState:=bsIdle;
-            if assigned(FToolbarDispatch) then
-               FToolbarDispatch.NotifyVisualsChanged;
-            end;
-         end;
-      end;
-
-   if ClearActive then
       begin
+        if FButtonState <> bsIdle then
+        begin
+          FButtonState := bsIdle;
+          if Assigned(FToolbarDispatch) then
+            FToolbarDispatch.NotifyVisualsChanged;
+        end;
+      end;
+    end;
+
+    if ClearActive then
+    begin
       FMouseActiveElement:=beNone;
-      end;
-   end
-else
-   begin
-   FMouseHoverElement:=beNone;
-   FMouseActiveElement:=beNone;
-   if FButtonState<>bsIdle then
-      begin
-      FButtonState:=bsIdle;
-
-      if assigned(FToolbarDispatch) then
-         FToolbarDispatch.NotifyVisualsChanged;
-      end;
-   end;
+    end;
+  end   // if FEnabled
+  else
+  begin
+    FMouseHoverElement := beNone;
+    FMouseActiveElement := beNone;
+    if FButtonState <> bsIdle then
+    begin
+      FButtonState := bsIdle;
+      if Assigned(FToolbarDispatch) then
+        FToolbarDispatch.NotifyVisualsChanged;
+    end;
+  end;
 end;
 
 procedure TSpkBaseButton.SetAction(const Value: TBasicAction);
@@ -721,6 +717,7 @@ begin
   inherited;
   CalcRects;
 end;
+
 
 { TSpkLargeButton }
 
@@ -1128,6 +1125,16 @@ end;
 
 { TSpkSmallButton }
 
+constructor TSpkSmallButton.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  FImageIndex := -1;
+  FTableBehaviour := tbContinuesRow;
+  FGroupBehaviour := gbSingleItem;
+  FHideFrameWhenIdle := false;
+  FShowCaption := true;
+end;
+
 procedure TSpkSmallButton.CalcRects;
 var
   RectVector: T2DIntVector;
@@ -1143,144 +1150,140 @@ begin
 end;
 
 procedure TSpkSmallButton.ConstructRects(out BtnRect, DropRect: T2DIntRect);
-
-var BtnWidth : integer;
-    DropdownWidth: Integer;
-    Bitmap : TBitmap;
-    TextWidth: Integer;
+var
+  BtnWidth: integer;
+  DropdownWidth: Integer;
+  Bitmap: TBitmap;
+  TextWidth: Integer;
   AdditionalPadding: Boolean;
-
 begin
-{$IFDEF EnhancedRecordSupport}
-BtnRect:=T2DIntRect.Create(0, 0, 0, 0);
-DropRect:=T2DIntRect.Create(0, 0, 0, 0);
-{$ELSE}
-BtnRect.Create(0, 0, 0, 0);
-DropRect.Create(0, 0, 0, 0);
-{$ENDIF}
+  {$IFDEF EnhancedRecordSupport}
+  BtnRect := T2DIntRect.Create(0, 0, 0, 0);
+  DropRect := T2DIntRect.Create(0, 0, 0, 0);
+  {$ELSE}
+  BtnRect.Create(0, 0, 0, 0);
+  DropRect.Create(0, 0, 0, 0);
+  {$ENDIF}
 
-if not(assigned(FToolbarDispatch)) then
-   exit;
-if not(assigned(FAppearance)) then
-   exit;
+  if not Assigned(FToolbarDispatch) then
+    exit;
+  if not Assigned(FAppearance) then
+    exit;
 
-Bitmap:=FToolbarDispatch.GetTempBitmap;
-if not(assigned(Bitmap)) then
-   exit;
+  Bitmap := FToolbarDispatch.GetTempBitmap;
+  if not Assigned(Bitmap) then
+    exit;
 
-// *** Niezale¿nie od rodzaju, musi byæ miejsce dla ikony i/lub tekstu ***
+  // *** Niezale¿nie od rodzaju, musi byæ miejsce dla ikony i/lub tekstu ***
 
-BtnWidth:=0;
-AdditionalPadding:=false;
+  BtnWidth := 0;
+  AdditionalPadding := false;
 
-// Ikona
-if FImageIndex<>-1 then
-   begin
-   BtnWidth:=BtnWidth + SmallButtonPadding + SmallButtonGlyphWidth;
-   AdditionalPadding:=true;
-   end;
+  // Ikona
+  if FImageIndex <> -1 then
+  begin
+    BtnWidth := BtnWidth + SmallButtonPadding + SmallButtonGlyphWidth;
+    AdditionalPadding := true;
+  end;
 
-// Tekst
-if FShowCaption then
-   begin
-   Bitmap.Canvas.Font.assign(FAppearance.Element.CaptionFont);
-   TextWidth:=Bitmap.Canvas.TextWidth(FCaption);
+  // Tekst
+  if FShowCaption then
+  begin
+    Bitmap.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
+    TextWidth := Bitmap.Canvas.TextWidth(FCaption);
 
-   BtnWidth:=BtnWidth + SmallButtonPadding + TextWidth;
-   AdditionalPadding:=true;
-   end;
+    BtnWidth := BtnWidth + SmallButtonPadding + TextWidth;
+    AdditionalPadding := true;
+  end;
 
-// Padding za tekstem lub ikon¹
-if AdditionalPadding then
-   BtnWidth:=BtnWidth + SmallButtonPadding;
+  // Padding za tekstem lub ikon¹
+  if AdditionalPadding then
+    BtnWidth := BtnWidth + SmallButtonPadding;
 
-// Szerokoœæ zawartoœci przycisku musi wynosiæ co najmniej SMALLBUTTON_MIN_WIDTH
-BtnWidth := Max(SmallButtonMinWidth, BtnWidth);
+  // Szerokoœæ zawartoœci przycisku musi wynosiæ co najmniej SMALLBUTTON_MIN_WIDTH
+  BtnWidth := Max(SmallButtonMinWidth, BtnWidth);
 
-// *** Dropdown ***
-case FButtonKind of
-     bkButton: begin
-               // Lewa krawêdŸ przycisku
-               if FGroupBehaviour in [gbContinuesGroup, gbEndsGroup] then
-                  BtnWidth:=BtnWidth + SmallButtonHalfBorderWidth else
-                  BtnWidth:=BtnWidth + SmallButtonBorderWidth;
+  // *** Dropdown ***
+  case FButtonKind of
+    bkButton:
+      begin
+        // Lewa krawêdŸ przycisku
+        if FGroupBehaviour in [gbContinuesGroup, gbEndsGroup] then
+          BtnWidth := BtnWidth + SmallButtonHalfBorderWidth
+        else
+          BtnWidth := BtnWidth + SmallButtonBorderWidth;
 
-               // Prawa krawêdŸ przycisku
-               if (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) then
-                  BtnWidth:=BtnWidth + SmallButtonHalfBorderWidth else
-                  BtnWidth:=BtnWidth + SmallButtonBorderWidth;
+        // Prawa krawêdŸ przycisku
+        if (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) then
+          BtnWidth := BtnWidth + SmallButtonHalfBorderWidth
+        else
+          BtnWidth := BtnWidth + SmallButtonBorderWidth;
 
-               {$IFDEF EnhancedRecordSupport}
-               BtnRect:=T2DIntRect.Create(0, 0, BtnWidth - 1, SpkLayoutSizes.PANE_ROW_HEIGHT - 1);
-               DropRect:=T2DIntRect.Create(0, 0, 0, 0);
-               {$ELSE}
-               BtnRect.Create(0, 0, BtnWidth - 1, PaneRowHeight - 1);
-               DropRect.Create(0, 0, 0, 0);
-               {$ENDIF}
-               end;
-     bkButtonDropdown: begin
-                       // Lewa krawêdŸ przycisku
-                       if FGroupBehaviour in [gbContinuesGroup, gbEndsGroup] then
-                          BtnWidth:=BtnWidth + SmallButtonHalfBorderWidth else
-                          BtnWidth:=BtnWidth + SmallButtonBorderWidth;
+        {$IFDEF EnhancedRecordSupport}
+        BtnRect := T2DIntRect.Create(0, 0, BtnWidth - 1, SpkLayoutSizes.PANE_ROW_HEIGHT - 1);
+        DropRect := T2DIntRect.Create(0, 0, 0, 0);
+        {$ELSE}
+        BtnRect.Create(0, 0, BtnWidth - 1, PaneRowHeight - 1);
+        DropRect.Create(0, 0, 0, 0);
+        {$ENDIF}
+      end;
 
-                       // Prawa krawêdŸ przycisku
-                       BtnWidth:=BtnWidth + SmallButtonHalfBorderWidth;
+    bkButtonDropdown:
+      begin
+        // Lewa krawêdŸ przycisku
+        if FGroupBehaviour in [gbContinuesGroup, gbEndsGroup] then
+          BtnWidth := BtnWidth + SmallButtonHalfBorderWidth
+        else
+          BtnWidth := BtnWidth + SmallButtonBorderWidth;
 
-                       // Lewa krawêdŸ i zawartoœæ pola dropdown
-                       DropdownWidth := SmallButtonHalfBorderWidth + SmallButtonDropdownWidth;
+        // Prawa krawêdŸ przycisku
+        BtnWidth := BtnWidth + SmallButtonHalfBorderWidth;
 
-                       // Prawa krawêdŸ pola dropdown
-                       if (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) then
-                          DropdownWidth:=DropdownWidth + SmallButtonHalfBorderWidth else
-                          DropdownWidth:=DropdownWidth + SmallButtonBorderWidth;
+        // Lewa krawêdŸ i zawartoœæ pola dropdown
+        DropdownWidth := SmallButtonHalfBorderWidth + SmallButtonDropdownWidth;
 
-                       {$IFDEF EnhancedRecordSupport}
-                       BtnRect:=T2DIntRect.Create(0, 0, BtnWidth - 1, PaneRowHeightT - 1);
-                       DropRect:=T2DIntRect.Create(BtnRect.right+1,
-                                                   0,
-                                                   BtnRect.right+DropdownWidth,
-                                                   PaneRowHeight - 1);
-                       {$ELSE}
-                       BtnRect.Create(0, 0, BtnWidth - 1, PaneRowHeight - 1);
-                       DropRect.Create(BtnRect.right+1,  0,
-                           BtnRect.right+DropdownWidth, PaneRowHeight - 1);
-                       {$ENDIF}
-                       end;
-     bkDropdown: begin
-                 // Lewa krawêdŸ przycisku
-                 if FGroupBehaviour in [gbContinuesGroup, gbEndsGroup] then
-                    BtnWidth:=BtnWidth + SmallButtonHalfBorderWidth else
-                    BtnWidth:=BtnWidth + SmallButtonBorderWidth;
+        // Prawa krawêdŸ pola dropdown
+        if (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) then
+          DropdownWidth := DropdownWidth + SmallButtonHalfBorderWidth
+        else
+          DropdownWidth := DropdownWidth + SmallButtonBorderWidth;
 
-                 // Prawa krawêdŸ przycisku
-                 if (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) then
-                    BtnWidth:=BtnWidth + SmallButtonHalfBorderWidth else
-                    BtnWidth:=BtnWidth + SmallButtonBorderWidth;
+        {$IFDEF EnhancedRecordSupport}
+        BtnRect := T2DIntRect.Create(0, 0, BtnWidth - 1, PaneRowHeightT - 1);
+        DropRect := T2DIntRect.Create(BtnRect.Right+1, 0, BtnRect.Right+DropdownWidth, PaneRowHeight - 1);
+        {$ELSE}
+        BtnRect.Create(0, 0, BtnWidth - 1, PaneRowHeight - 1);
+        DropRect.Create(BtnRect.Right+1,  0, BtnRect.Right+DropdownWidth, PaneRowHeight - 1);
+        {$ENDIF}
+      end;
 
-                 // Dodatkowy obszar na dropdown + miejsce na œrodkow¹ krawêdŸ,
-                 // dla kompatybilnoœci wymiarów z dkButtonDropdown
-                 BtnWidth:=BtnWidth + SmallButtonBorderWidth + SmallButtonDropdownWidth;
+    bkDropdown:
+      begin
+        // Lewa krawêdŸ przycisku
+        if FGroupBehaviour in [gbContinuesGroup, gbEndsGroup] then
+          BtnWidth := BtnWidth + SmallButtonHalfBorderWidth
+        else
+          BtnWidth := BtnWidth + SmallButtonBorderWidth;
 
-                 {$IFDEF EnhancedRecordSupport}
-                 BtnRect:=T2DIntRect.Create(0, 0, BtnWidth - 1, PaneRowHeight - 1);
-                 DropRect:=T2DIntRect.Create(0, 0, 0, 0);
-                 {$ELSE}
-                 BtnRect.Create(0, 0, BtnWidth - 1, PaneRowHeight - 1);
-                 DropRect.Create(0, 0, 0, 0);
-                 {$ENDIF}
-                 end;
-end;
-end;
+        // Prawa krawêdŸ przycisku
+        if (FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup]) then
+          BtnWidth := BtnWidth + SmallButtonHalfBorderWidth
+        else
+          BtnWidth := BtnWidth + SmallButtonBorderWidth;
 
-constructor TSpkSmallButton.Create(AOwner: TComponent);
-begin
-  inherited Create(AOwner);
-  FImageIndex := -1;
-  FTableBehaviour := tbContinuesRow;
-  FGroupBehaviour := gbSingleItem;
-  FHideFrameWhenIdle := false;
-  FShowCaption := true;
+        // Dodatkowy obszar na dropdown + miejsce na œrodkow¹ krawêdŸ,
+        // dla kompatybilnoœci wymiarów z dkButtonDropdown
+        BtnWidth := BtnWidth + SmallButtonBorderWidth + SmallButtonDropdownWidth;
+
+        {$IFDEF EnhancedRecordSupport}
+        BtnRect := T2DIntRect.Create(0, 0, BtnWidth - 1, PaneRowHeight - 1);
+        DropRect := T2DIntRect.Create(0, 0, 0, 0);
+        {$ELSE}
+        BtnRect.Create(0, 0, BtnWidth - 1, PaneRowHeight - 1);
+        DropRect.Create(0, 0, 0, 0);
+        {$ENDIF}
+      end;
+  end;
 end;
 
 procedure TSpkSmallButton.Draw(ABuffer: TBitmap; ClipRect: T2DIntRect);
@@ -1581,7 +1584,7 @@ end;
 
 procedure TSpkSmallButton.SetImageIndex(const Value: TImageIndex);
 begin
-  FImageIndex:=Value;
+  FImageIndex := Value;
   if Assigned(FToolbarDispatch) then
     FToolbarDispatch.NotifyMetricsChanged;
 end;

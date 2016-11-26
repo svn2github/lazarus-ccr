@@ -14,12 +14,14 @@ unit spkt_Exceptions;
 
 interface
 
-uses SysUtils;
+uses
+  SysUtils;
 
-type InternalException = class(Exception);
-     AssignException = class(Exception);
-     RuntimeException = class(Exception);
-     ListException = class(Exception);
+type
+  InternalException = class(Exception);
+  AssignException = class(Exception);
+  RuntimeException = class(Exception);
+  ListException = class(Exception);
 
 implementation
 

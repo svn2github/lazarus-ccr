@@ -14,13 +14,16 @@ unit spkt_Appearance;
 
 interface
 
-uses Graphics, Classes, Forms, SysUtils,
-     SpkGUITools, SpkXMLParser, SpkXMLTools,
-     spkt_Dispatch, spkt_Exceptions, spkt_Const;
+uses
+  Graphics, Classes, Forms, SysUtils,
+  SpkGUITools, SpkXMLParser, SpkXMLTools,
+  spkt_Dispatch, spkt_Exceptions, spkt_Const;
 
 type
-  TSpkPaneStyle = (psRectangleFlat, psRectangleEtched, psRectangleRaised,
-    psDividerFlat, psDividerEtched, psDividerRaised);
+  TSpkPaneStyle = (
+    psRectangleFlat, psRectangleEtched, psRectangleRaised,
+    psDividerFlat, psDividerEtched, psDividerRaised
+  );
 
   TSpkElementStyle = (esRounded, esRectangle);
 
@@ -30,210 +33,223 @@ type
     spkMetroLight, spkMetroDark
   );
 
+
+  { TSpkTabAppearance }
+
   TSpkTabAppearance = class(TPersistent)
-     private
-       FDispatch: TSpkBaseAppearanceDispatch;
-     protected
-       FTabHeaderFont: TFont;
-       FBorderColor: TColor;
-       FGradientFromColor: TColor;
-       FGradientToColor: TColor;
-       FGradientType: TBackgroundKind;
-       FInactiveHeaderFontColor: TColor;
+  private
+    FDispatch: TSpkBaseAppearanceDispatch;
+    FTabHeaderFont: TFont;
+    FBorderColor: TColor;
+    FGradientFromColor: TColor;
+    FGradientToColor: TColor;
+    FGradientType: TBackgroundKind;
+    FInactiveHeaderFontColor: TColor;
+    // Getter & setter methods
+    procedure SetHeaderFont(const Value: TFont);
+    procedure SetBorderColor(const Value: TColor);
+    procedure SetGradientFromColor(const Value: TColor);
+    procedure SetGradientToColor(const Value: TColor);
+    procedure SetGradientType(const Value: TBackgroundKind);
+    procedure SetInactiveHeaderFontColor(const Value: TColor);
 
-       // Getter & setter methods
-       procedure SetHeaderFont(const Value: TFont);
-       procedure SetBorderColor(const Value: TColor);
-       procedure SetGradientFromColor(const Value: TColor);
-       procedure SetGradientToColor(const Value: TColor);
-       procedure SetGradientType(const Value: TBackgroundKind);
-       procedure SetInactiveHeaderFontColor(const Value: TColor);
+  public
+    // *** Konstruktor, destruktor, assign ***
+    // <remarks>Appearance musi mieæ assign, bo wystêpuje jako w³asnoœæ
+    // opublikowana.</remarks>
+    constructor Create(ADispatch: TSpkBaseAppearanceDispatch);
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
 
-     public
-     // *** Konstruktor, destruktor, assign ***
-     // <remarks>Appearance musi mieæ assign, bo wystêpuje jako w³asnoœæ
-     // opublikowana.</remarks>
-       procedure Assign(Source: TPersistent); override;
-       constructor Create(ADispatch: TSpkBaseAppearanceDispatch);
-       procedure SaveToPascal(AList: TStrings);
-       procedure SaveToXML(Node: TSpkXMLNode);
-       procedure LoadFromXML(Node: TSpkXMLNode);
-       destructor Destroy; override;
-       procedure Reset(AStyle: TSpkStyle = spkOffice2007Blue);
-     published
-       property TabHeaderFont: TFont read FTabHeaderFont write SetHeaderFont;
-       property BorderColor: TColor read FBorderColor write SetBorderColor;
-       property GradientFromColor: TColor read FGradientFromColor write SetGradientFromColor;
-       property GradientToColor: TColor read FGradientToColor write SetGradientToColor;
-       property GradientType: TBackgroundKind read FGradientType write SetGradientType;
-       property InactiveTabHeaderFontColor: TColor read FInactiveHeaderFontColor write SetInactiveHeaderFontColor;
-     end;
+    procedure LoadFromXML(Node: TSpkXMLNode);
+    procedure SaveToPascal(AList: TStrings);
+    procedure SaveToXML(Node: TSpkXMLNode);
+    procedure Reset(AStyle: TSpkStyle = spkOffice2007Blue);
 
-type TSpkPaneAppearance = class(TPersistent)
-     private
-       FDispatch: TSpkBaseAppearanceDispatch;
-     protected
-       FCaptionFont: TFont;
-       FBorderDarkColor: TColor;
-       FBorderLightColor: TColor;
-       FCaptionBgColor: TColor;
-       FGradientFromColor: TColor;
-       FGradientToColor: TColor;
-       FGradientType: TBackgroundKind;
-       FHotTrackBrightnessChange: Integer;
-       FStyle: TSpkPaneStyle;
-       procedure SetCaptionBgColor(const Value: TColor);
-       procedure SetCaptionFont(const Value: TFont);
-       procedure SetBorderDarkColor(const Value: TColor);
-       procedure SetBorderLightColor(const Value: TColor);
-       procedure SetGradientFromColor(const Value: TColor);
-       procedure SetGradientToColor(const Value: TColor);
-       procedure SetGradientType(const Value: TBackgroundKind);
-       procedure SetHotTrackBrightnessChange(const Value: Integer);
-       procedure SetStyle(const Value: TSpkPaneStyle);
-     public
-       constructor Create(ADispatch: TSpkBaseAppearanceDispatch);
-       destructor Destroy; override;
-       procedure Assign(Source: TPersistent); override;
-       procedure SaveToPascal(AList: TStrings);
-       procedure SaveToXML(Node: TSpkXMLNode);
-       procedure LoadFromXML(Node: TSpkXMLNode);
-       procedure Reset(AStyle: TSpkStyle = spkOffice2007Blue);
-     published
-       property BorderDarkColor: TColor read FBorderDarkColor write SetBorderDarkColor;
-       property BorderLightColor: TColor read FBorderLightColor write SetBorderLightColor;
-       property CaptionBgColor: TColor read FCaptionBgColor write SetCaptionBgColor;
-       property CaptionFont: TFont read FCaptionFont write SetCaptionFont;
-       property GradientFromColor: TColor read FGradientFromColor write SetGradientFromColor;
-       property GradientToColor: TColor read FGradientToColor write SetGradientToColor;
-       property GradientType: TBackgroundKind read FGradientType write SetGradientType;
-       property HotTrackBrightnessChange: Integer read FHotTrackBrightnessChange write SetHotTrackBrightnessChange default 20;
-       property Style: TSpkPaneStyle read FStyle write SetStyle default psRectangleEtched;
-     end;
+  published
+    property TabHeaderFont: TFont read FTabHeaderFont write SetHeaderFont;
+    property BorderColor: TColor read FBorderColor write SetBorderColor;
+    property GradientFromColor: TColor read FGradientFromColor write SetGradientFromColor;
+    property GradientToColor: TColor read FGradientToColor write SetGradientToColor;
+    property GradientType: TBackgroundKind read FGradientType write SetGradientType;
+    property InactiveTabHeaderFontColor: TColor read FInactiveHeaderFontColor write SetInactiveHeaderFontColor;
+  end;
 
-     TSpkElementAppearance = class(TPersistent)
-     private
-       FDispatch: TSpkBaseAppearanceDispatch;
-       FCaptionFont: TFont;
-       FIdleFrameColor: TColor;
-       FIdleGradientFromColor: TColor;
-       FIdleGradientToColor: TColor;
-       FIdleGradientType: TBackgroundKind;
-       FIdleInnerLightColor: TColor;
-       FIdleInnerDarkColor: TColor;
-       FIdleCaptionColor: TColor;
-       FHotTrackFrameColor: TColor;
-       FHotTrackGradientFromColor: TColor;
-       FHotTrackGradientToColor: TColor;
-       FHotTrackGradientType: TBackgroundKind;
-       FHotTrackInnerLightColor: TColor;
-       FHotTrackInnerDarkColor: TColor;
-       FHotTrackCaptionColor: TColor;
-       FHotTrackBrightnessChange: Integer;
-       FActiveFrameColor: TColor;
-       FActiveGradientFromColor: TColor;
-       FActiveGradientToColor: TColor;
-       FActiveGradientType: TBackgroundKind;
-       FActiveInnerLightColor: TColor;
-       FActiveInnerDarkColor: TColor;
-       FActiveCaptionColor: TColor;
-       FStyle: TSpkElementStyle;
-       procedure SetActiveCaptionColor(const Value: TColor);
-       procedure SetActiveFrameColor(const Value: TColor);
-       procedure SetActiveGradientFromColor(const Value: TColor);
-       procedure SetActiveGradientToColor(const Value: TColor);
-       procedure SetActiveGradientType(const Value: TBackgroundKind);
-       procedure SetActiveInnerDarkColor(const Value: TColor);
-       procedure SetActiveInnerLightColor(const Value: TColor);
-       procedure SetCaptionFont(const Value: TFont);
-       procedure SetHotTrackCaptionColor(const Value: TColor);
-       procedure SetHotTrackFrameColor(const Value: TColor);
-       procedure SetHotTrackGradientFromColor(const Value: TColor);
-       procedure SetHotTrackGradientToColor(const Value: TColor);
-       procedure SetHotTrackGradientType(const Value: TBackgroundKind);
-       procedure SetHotTrackInnerDarkColor(const Value: TColor);
-       procedure SetHotTrackInnerLightColor(const Value: TColor);
-       procedure SetHotTrackBrightnessChange(const Value: Integer);
-       procedure SetIdleCaptionColor(const Value: TColor);
-       procedure SetIdleFrameColor(const Value: TColor);
-       procedure SetIdleGradientFromColor(const Value: TColor);
-       procedure SetIdleGradientToColor(const Value: TColor);
-       procedure SetIdleGradientType(const Value: TBackgroundKind);
-       procedure SetIdleInnerDarkColor(const Value: TColor);
-       procedure SetIdleInnerLightColor(const Value: TColor);
-       procedure SetStyle(const Value: TSpkElementStyle);
-     public
-       constructor Create(ADispatch: TSpkBaseAppearanceDispatch);
-       destructor Destroy; override;
-       procedure Assign(Source: TPersistent); override;
-       procedure SaveToPascal(AList: TStrings);
-       procedure SaveToXML(Node: TSpkXMLNode);
-       procedure LoadFromXML(Node: TSpkXMLNode);
-       procedure Reset(AStyle: TSpkStyle = spkOffice2007Blue);
-     published
-       property CaptionFont: TFont read FCaptionFont write SetCaptionFont;
-       property IdleFrameColor: TColor read FIdleFrameColor write SetIdleFrameColor;
-       property IdleGradientFromColor: TColor read FIdleGradientFromColor write SetIdleGradientFromColor;
-       property IdleGradientToColor: TColor read FIdleGradientToColor write SetIdleGradientToColor;
-       property IdleGradientType: TBackgroundKind read FIdleGradientType write SetIdleGradientType;
-       property IdleInnerLightColor: TColor read FIdleInnerLightColor write SetIdleInnerLightColor;
-       property IdleInnerDarkColor: TColor read FIdleInnerDarkColor write SetIdleInnerDarkColor;
-       property IdleCaptionColor: TColor read FIdleCaptionColor write SetIdleCaptionColor;
-       property HotTrackFrameColor: TColor read FHotTrackFrameColor write SetHotTrackFrameColor;
-       property HotTrackGradientFromColor: TColor read FHotTrackGradientFromColor write SetHotTrackGradientFromColor;
-       property HotTrackGradientToColor: TColor read FHotTrackGradientToColor write SetHotTrackGradientToColor;
-       property HotTrackGradientType: TBackgroundKind read FHotTrackGradientType write SetHotTrackGradientType;
-       property HotTrackInnerLightColor: TColor read FHotTrackInnerLightColor write SetHotTrackInnerLightColor;
-       property HotTrackInnerDarkColor: TColor read FHotTrackInnerDarkColor write SetHotTrackInnerDarkColor;
-       property HotTrackCaptionColor: TColor read FHotTrackCaptionColor write SetHotTrackCaptionColor;
-       property HotTrackBrightnessChange: Integer read FHotTrackBrightnessChange write SetHotTrackBrightnessChange default 20;
-       property ActiveFrameColor: TColor read FActiveFrameColor write SetActiveFrameColor;
-       property ActiveGradientFromColor: TColor read FActiveGradientFromColor write SetActiveGradientFromColor;
-       property ActiveGradientToColor: TColor read FActiveGradientToColor write SetActiveGradientToColor;
-       property ActiveGradientType: TBackgroundKind read FActiveGradientType write SetActiveGradientType;
-       property ActiveInnerLightColor: TColor read FActiveInnerLightColor write SetActiveInnerLightColor;
-       property ActiveInnerDarkColor: TColor read FActiveInnerDarkColor write SetActiveInnerDarkColor;
-       property ActiveCaptionColor: TColor read FActiveCaptionColor write SetActiveCaptionColor;
-       property Style: TSpkElementStyle read FStyle write SetStyle;
-     end;
 
-type TSpkToolbarAppearance = class;
+  { TSpkPaneAppearance }
 
-     TSpkToolbarAppearanceDispatch = class(TSpkBaseAppearanceDispatch)
-     private
-       FToolbarAppearance: TSpkToolbarAppearance;
-     protected
-     public
-       constructor Create(AToolbarAppearance: TSpkToolbarAppearance);
-       procedure NotifyAppearanceChanged; override;
-     end;
+  TSpkPaneAppearance = class(TPersistent)
+  private
+    FDispatch: TSpkBaseAppearanceDispatch;
+    FCaptionFont: TFont;
+    FBorderDarkColor: TColor;
+    FBorderLightColor: TColor;
+    FCaptionBgColor: TColor;
+    FGradientFromColor: TColor;
+    FGradientToColor: TColor;
+    FGradientType: TBackgroundKind;
+    FHotTrackBrightnessChange: Integer;
+    FStyle: TSpkPaneStyle;
+    procedure SetCaptionBgColor(const Value: TColor);
+    procedure SetCaptionFont(const Value: TFont);
+    procedure SetBorderDarkColor(const Value: TColor);
+    procedure SetBorderLightColor(const Value: TColor);
+    procedure SetGradientFromColor(const Value: TColor);
+    procedure SetGradientToColor(const Value: TColor);
+    procedure SetGradientType(const Value: TBackgroundKind);
+    procedure SetHotTrackBrightnessChange(const Value: Integer);
+    procedure SetStyle(const Value: TSpkPaneStyle);
 
-     TSpkToolbarAppearance = class(TPersistent)
-     private
-       FAppearanceDispatch: TSpkToolbarAppearanceDispatch;
-       FTab: TSpkTabAppearance;
-       FPane: TSpkPaneAppearance;
-       FElement: TSpkElementAppearance;
-       FDispatch: TSpkBaseAppearanceDispatch;
-       procedure SetElementAppearance(const Value: TSpkElementAppearance);
-       procedure SetPaneAppearance(const Value: TSpkPaneAppearance);
-       procedure SetTabAppearance(const Value: TSpkTabAppearance);
-     protected
-       //
-     public
-       constructor Create(ADispatch: TSpkBaseAppearanceDispatch); reintroduce;
-       destructor Destroy; override;
-       procedure Assign(Source: TPersistent); override;
-       procedure NotifyAppearanceChanged;
-       procedure Reset(AStyle: TSpkStyle = spkOffice2007Blue);
-       procedure SaveToPascal(AList: TStrings);
-       procedure SaveToXML(Node: TSpkXMLNode);
-       procedure LoadFromXML(Node: TSpkXMLNode);
-     published
-       property Tab: TSpkTabAppearance read FTab write SetTabAppearance;
-       property Pane: TSpkPaneAppearance read FPane write SetPaneAppearance;
-       property Element: TSpkElementAppearance read FElement write SetElementAppearance;
-     end;
+  public
+    constructor Create(ADispatch: TSpkBaseAppearanceDispatch);
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+
+    procedure LoadFromXML(Node: TSpkXMLNode);
+    procedure SaveToPascal(AList: TStrings);
+    procedure SaveToXML(Node: TSpkXMLNode);
+    procedure Reset(AStyle: TSpkStyle = spkOffice2007Blue);
+
+  published
+    property BorderDarkColor: TColor read FBorderDarkColor write SetBorderDarkColor;
+    property BorderLightColor: TColor read FBorderLightColor write SetBorderLightColor;
+    property CaptionBgColor: TColor read FCaptionBgColor write SetCaptionBgColor;
+    property CaptionFont: TFont read FCaptionFont write SetCaptionFont;
+    property GradientFromColor: TColor read FGradientFromColor write SetGradientFromColor;
+    property GradientToColor: TColor read FGradientToColor write SetGradientToColor;
+    property GradientType: TBackgroundKind read FGradientType write SetGradientType;
+    property HotTrackBrightnessChange: Integer read FHotTrackBrightnessChange write SetHotTrackBrightnessChange default 20;
+    property Style: TSpkPaneStyle read FStyle write SetStyle default psRectangleEtched;
+  end;
+
+
+  { TSpkElementAppearance }
+  TSpkElementAppearance = class(TPersistent)
+  private
+    FDispatch: TSpkBaseAppearanceDispatch;
+    FCaptionFont: TFont;
+    FIdleFrameColor: TColor;
+    FIdleGradientFromColor: TColor;
+    FIdleGradientToColor: TColor;
+    FIdleGradientType: TBackgroundKind;
+    FIdleInnerLightColor: TColor;
+    FIdleInnerDarkColor: TColor;
+    FIdleCaptionColor: TColor;
+    FHotTrackFrameColor: TColor;
+    FHotTrackGradientFromColor: TColor;
+    FHotTrackGradientToColor: TColor;
+    FHotTrackGradientType: TBackgroundKind;
+    FHotTrackInnerLightColor: TColor;
+    FHotTrackInnerDarkColor: TColor;
+    FHotTrackCaptionColor: TColor;
+    FHotTrackBrightnessChange: Integer;
+    FActiveFrameColor: TColor;
+    FActiveGradientFromColor: TColor;
+    FActiveGradientToColor: TColor;
+    FActiveGradientType: TBackgroundKind;
+    FActiveInnerLightColor: TColor;
+    FActiveInnerDarkColor: TColor;
+    FActiveCaptionColor: TColor;
+    FStyle: TSpkElementStyle;
+    procedure SetActiveCaptionColor(const Value: TColor);
+    procedure SetActiveFrameColor(const Value: TColor);
+    procedure SetActiveGradientFromColor(const Value: TColor);
+    procedure SetActiveGradientToColor(const Value: TColor);
+    procedure SetActiveGradientType(const Value: TBackgroundKind);
+    procedure SetActiveInnerDarkColor(const Value: TColor);
+    procedure SetActiveInnerLightColor(const Value: TColor);
+    procedure SetCaptionFont(const Value: TFont);
+    procedure SetHotTrackCaptionColor(const Value: TColor);
+    procedure SetHotTrackFrameColor(const Value: TColor);
+    procedure SetHotTrackGradientFromColor(const Value: TColor);
+    procedure SetHotTrackGradientToColor(const Value: TColor);
+    procedure SetHotTrackGradientType(const Value: TBackgroundKind);
+    procedure SetHotTrackInnerDarkColor(const Value: TColor);
+    procedure SetHotTrackInnerLightColor(const Value: TColor);
+    procedure SetHotTrackBrightnessChange(const Value: Integer);
+    procedure SetIdleCaptionColor(const Value: TColor);
+    procedure SetIdleFrameColor(const Value: TColor);
+    procedure SetIdleGradientFromColor(const Value: TColor);
+    procedure SetIdleGradientToColor(const Value: TColor);
+    procedure SetIdleGradientType(const Value: TBackgroundKind);
+    procedure SetIdleInnerDarkColor(const Value: TColor);
+    procedure SetIdleInnerLightColor(const Value: TColor);
+    procedure SetStyle(const Value: TSpkElementStyle);
+
+  public
+    constructor Create(ADispatch: TSpkBaseAppearanceDispatch);
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+
+    procedure LoadFromXML(Node: TSpkXMLNode);
+    procedure SaveToPascal(AList: TStrings);
+    procedure SaveToXML(Node: TSpkXMLNode);
+    procedure Reset(AStyle: TSpkStyle = spkOffice2007Blue);
+
+  published
+    property CaptionFont: TFont read FCaptionFont write SetCaptionFont;
+    property IdleFrameColor: TColor read FIdleFrameColor write SetIdleFrameColor;
+    property IdleGradientFromColor: TColor read FIdleGradientFromColor write SetIdleGradientFromColor;
+    property IdleGradientToColor: TColor read FIdleGradientToColor write SetIdleGradientToColor;
+    property IdleGradientType: TBackgroundKind read FIdleGradientType write SetIdleGradientType;
+    property IdleInnerLightColor: TColor read FIdleInnerLightColor write SetIdleInnerLightColor;
+    property IdleInnerDarkColor: TColor read FIdleInnerDarkColor write SetIdleInnerDarkColor;
+    property IdleCaptionColor: TColor read FIdleCaptionColor write SetIdleCaptionColor;
+    property HotTrackFrameColor: TColor read FHotTrackFrameColor write SetHotTrackFrameColor;
+    property HotTrackGradientFromColor: TColor read FHotTrackGradientFromColor write SetHotTrackGradientFromColor;
+    property HotTrackGradientToColor: TColor read FHotTrackGradientToColor write SetHotTrackGradientToColor;
+    property HotTrackGradientType: TBackgroundKind read FHotTrackGradientType write SetHotTrackGradientType;
+    property HotTrackInnerLightColor: TColor read FHotTrackInnerLightColor write SetHotTrackInnerLightColor;
+    property HotTrackInnerDarkColor: TColor read FHotTrackInnerDarkColor write SetHotTrackInnerDarkColor;
+    property HotTrackCaptionColor: TColor read FHotTrackCaptionColor write SetHotTrackCaptionColor;
+    property HotTrackBrightnessChange: Integer read FHotTrackBrightnessChange write SetHotTrackBrightnessChange default 20;
+    property ActiveFrameColor: TColor read FActiveFrameColor write SetActiveFrameColor;
+    property ActiveGradientFromColor: TColor read FActiveGradientFromColor write SetActiveGradientFromColor;
+    property ActiveGradientToColor: TColor read FActiveGradientToColor write SetActiveGradientToColor;
+    property ActiveGradientType: TBackgroundKind read FActiveGradientType write SetActiveGradientType;
+    property ActiveInnerLightColor: TColor read FActiveInnerLightColor write SetActiveInnerLightColor;
+    property ActiveInnerDarkColor: TColor read FActiveInnerDarkColor write SetActiveInnerDarkColor;
+    property ActiveCaptionColor: TColor read FActiveCaptionColor write SetActiveCaptionColor;
+    property Style: TSpkElementStyle read FStyle write SetStyle;
+  end;
+
+
+  { TSpkToolbarAppearance }
+
+  TSpkToolbarAppearance = class;
+
+  TSpkToolbarAppearanceDispatch = class(TSpkBaseAppearanceDispatch)
+  private
+    FToolbarAppearance: TSpkToolbarAppearance;
+  public
+    constructor Create(AToolbarAppearance: TSpkToolbarAppearance);
+    procedure NotifyAppearanceChanged; override;
+  end;
+
+  TSpkToolbarAppearance = class(TPersistent)
+  private
+    FAppearanceDispatch: TSpkToolbarAppearanceDispatch;
+    FTab: TSpkTabAppearance;
+    FPane: TSpkPaneAppearance;
+    FElement: TSpkElementAppearance;
+    FDispatch: TSpkBaseAppearanceDispatch;
+    procedure SetElementAppearance(const Value: TSpkElementAppearance);
+    procedure SetPaneAppearance(const Value: TSpkPaneAppearance);
+    procedure SetTabAppearance(const Value: TSpkTabAppearance);
+  public
+    constructor Create(ADispatch: TSpkBaseAppearanceDispatch); reintroduce;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+    procedure NotifyAppearanceChanged;
+    procedure Reset(AStyle: TSpkStyle = spkOffice2007Blue);
+    procedure SaveToPascal(AList: TStrings);
+    procedure SaveToXML(Node: TSpkXMLNode);
+    procedure LoadFromXML(Node: TSpkXMLNode);
+  published
+    property Tab: TSpkTabAppearance read FTab write SetTabAppearance;
+    property Pane: TSpkPaneAppearance read FPane write SetPaneAppearance;
+    property Element: TSpkElementAppearance read FElement write SetElementAppearance;
+  end;
 
 procedure SetDefaultFont(AFont: TFont);
 
@@ -263,34 +279,11 @@ end;
 
 { TSpkBaseToolbarAppearance }
 
-procedure TSpkTabAppearance.Assign(Source: TPersistent);
-var
-  SrcAppearance: TSpkTabAppearance;
-begin
-  if Source is TSpkTabAppearance then
-  begin
-     SrcAppearance:=TSpkTabAppearance(Source);
-     FTabHeaderFont.Assign(SrcAppearance.TabHeaderFont);
-     FBorderColor:=SrcAppearance.BorderColor;
-     FGradientFromColor:=SrcAppearance.GradientFromColor;
-     FGradientToColor:=SrcAppearance.GradientToColor;
-     FGradientType:=SrcAppearance.GradientType;
-     FInactiveHeaderFontColor := SrcAppearance.InactiveTabHeaderFontColor;
-
-     if FDispatch<>nil then
-        FDispatch.NotifyAppearanceChanged;
-  end else
-    raise AssignException.create('TSpkToolbarAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkToolbarAppearance!');
-end;
-
-constructor TSpkTabAppearance.Create(
-  ADispatch: TSpkBaseAppearanceDispatch);
+constructor TSpkTabAppearance.Create(ADispatch: TSpkBaseAppearanceDispatch);
 begin
   inherited Create;
-  FDispatch:=ADispatch;
-
-  FTabHeaderFont:=TFont.Create;
-
+  FDispatch := ADispatch;
+  FTabHeaderFont := TFont.Create;
   Reset;
 end;
 
@@ -300,32 +293,52 @@ begin
   inherited;
 end;
 
+procedure TSpkTabAppearance.Assign(Source: TPersistent);
+var
+  SrcAppearance: TSpkTabAppearance;
+begin
+  if Source is TSpkTabAppearance then
+  begin
+     SrcAppearance := TSpkTabAppearance(Source);
+     FTabHeaderFont.Assign(SrcAppearance.TabHeaderFont);
+     FBorderColor := SrcAppearance.BorderColor;
+     FGradientFromColor := SrcAppearance.GradientFromColor;
+     FGradientToColor := SrcAppearance.GradientToColor;
+     FGradientType := SrcAppearance.GradientType;
+     FInactiveHeaderFontColor := SrcAppearance.InactiveTabHeaderFontColor;
+
+     if FDispatch <> nil then
+        FDispatch.NotifyAppearanceChanged;
+  end else
+    raise AssignException.Create('TSpkToolbarAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkToolbarAppearance!');
+end;
+
 procedure TSpkTabAppearance.LoadFromXML(Node: TSpkXMLNode);
 var
-  Subnode : TSpkXMLNode;
+  Subnode: TSpkXMLNode;
 begin
-  if not(assigned(Node)) then
+  if not Assigned(Node) then
     exit;
 
-  Subnode:=Node['TabHeaderFont',false];
+  Subnode := Node['TabHeaderFont',false];
   if Assigned(Subnode) then
     TSpkXMLTools.Load(Subnode, FTabHeaderFont);
 
-  Subnode:=Node['BorderColor',false];
-  if assigned(Subnode) then
-    FBorderColor:=Subnode.TextAsColor;
+  Subnode := Node['BorderColor',false];
+  if Assigned(Subnode) then
+    FBorderColor := Subnode.TextAsColor;
 
-  Subnode:=Node['GradientFromColor',false];
-  if assigned(Subnode) then
-    FGradientFromColor:=Subnode.TextAsColor;
+  Subnode := Node['GradientFromColor',false];
+  if Assigned(Subnode) then
+    FGradientFromColor := Subnode.TextAsColor;
 
-  Subnode:=Node['GradientToColor',false];
-  if assigned(Subnode) then
-    FGradientToColor:=Subnode.TextAsColor;
+  Subnode := Node['GradientToColor',false];
+  if Assigned(Subnode) then
+    FGradientToColor := Subnode.TextAsColor;
 
-  Subnode:=Node['GradientType',false];
-  if assigned(Subnode) then
-    FGradientType:=TBackgroundKind(Subnode.TextAsInteger);
+  Subnode := Node['GradientType',false];
+  if Assigned(Subnode) then
+    FGradientType := TBackgroundKind(Subnode.TextAsInteger);
 
   Subnode := Node['InactiveTabHeaderFontColor', false];
   if Assigned(Subnode) then
@@ -404,20 +417,20 @@ begin
   if not(assigned(Node)) then
     exit;
 
-  Subnode:=Node['TabHeaderFont',true];
+  Subnode := Node['TabHeaderFont',true];
   TSpkXMLTools.Save(Subnode, FTabHeaderFont);
 
-  Subnode:=Node['BorderColor',true];
-  Subnode.TextAsColor:=FBorderColor;
+  Subnode := Node['BorderColor',true];
+  Subnode.TextAsColor := FBorderColor;
 
-  Subnode:=Node['GradientFromColor',true];
-  Subnode.TextAsColor:=FGradientFromColor;
+  Subnode := Node['GradientFromColor',true];
+  Subnode.TextAsColor := FGradientFromColor;
 
-  Subnode:=Node['GradientToColor',true];
-  Subnode.TextAsColor:=FGradientToColor;
+  Subnode := Node['GradientToColor',true];
+  Subnode.TextAsColor := FGradientToColor;
 
-  Subnode:=Node['GradientType',true];
-  Subnode.TextAsInteger:=integer(FGradientType);
+  Subnode := Node['GradientType',true];
+  Subnode.TextAsInteger := integer(FGradientType);
 
   Subnode := Node['InactiveTabHeaderFontColor', true];
   Subnode.TextAsColor := FInactiveHeaderFontColor;
@@ -426,36 +439,36 @@ end;
 procedure TSpkTabAppearance.SetBorderColor(const Value: TColor);
 begin
   FBorderColor := Value;
-  if FDispatch<>nil then
-     FDispatch.NotifyAppearanceChanged;
+  if FDispatch <> nil then
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkTabAppearance.SetGradientFromColor(const Value: TColor);
 begin
   FGradientFromColor := Value;
-  if FDispatch<>nil then
-     FDispatch.NotifyAppearanceChanged;
+  if FDispatch <> nil then
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkTabAppearance.SetGradientToColor(const Value: TColor);
 begin
   FGradientToColor := Value;
-  if FDispatch<>nil then
-     FDispatch.NotifyAppearanceChanged;
+  if FDispatch <> nil then
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkTabAppearance.SetGradientType(const Value: TBackgroundKind);
 begin
   FGradientType := Value;
-  if FDispatch<>nil then
-     FDispatch.NotifyAppearanceChanged;
+  if FDispatch <> nil then
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkTabAppearance.SetHeaderFont(const Value: TFont);
 begin
-  FTabHeaderFont.assign(Value);
-  if FDispatch<>nil then
-     FDispatch.NotifyAppearanceChanged;
+  FTabHeaderFont.Assign(Value);
+  if FDispatch <> nil then
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkTabAppearance.SetInactiveHeaderFontColor(const Value: TColor);
@@ -466,8 +479,23 @@ begin
 end;
 
 
-
 { TSpkPaneAppearance }
+
+constructor TSpkPaneAppearance.Create(ADispatch: TSpkBaseAppearanceDispatch);
+begin
+  inherited Create;
+  FDispatch := ADispatch;
+  FCaptionFont := TFont.Create;
+  FHotTrackBrightnessChange := 20;
+  FStyle := psRectangleEtched;
+  Reset;
+end;
+
+destructor TSpkPaneAppearance.Destroy;
+begin
+  FCaptionFont.Free;
+  inherited Destroy;
+end;
 
 procedure TSpkPaneAppearance.Assign(Source: TPersistent);
 var
@@ -491,22 +519,6 @@ begin
       FDispatch.NotifyAppearanceChanged;
   end else
     raise AssignException.create('TSpkPaneAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkPaneAppearance!');
-end;
-
-constructor TSpkPaneAppearance.Create(ADispatch: TSpkBaseAppearanceDispatch);
-begin
-  inherited Create;
-  FDispatch := ADispatch;
-  FCaptionFont := TFont.Create;
-  FHotTrackBrightnessChange := 20;
-  FStyle := psRectangleEtched;
-  Reset;
-end;
-
-destructor TSpkPaneAppearance.Destroy;
-begin
-  FCaptionFont.Free;
-  inherited Destroy;
 end;
 
 procedure TSpkPaneAppearance.LoadFromXML(Node: TSpkXMLNode);
@@ -680,49 +692,49 @@ procedure TSpkPaneAppearance.SetBorderLightColor(const Value: TColor);
 begin
   FBorderLightColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkPaneAppearance.SetCaptionBgColor(const Value: TColor);
 begin
   FCaptionBgColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkPaneAppearance.SetCaptionFont(const Value: TFont);
 begin
   FCaptionFont.Assign(Value);
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkPaneAppearance.SetGradientFromColor(const Value: TColor);
 begin
   FGradientFromColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkPaneAppearance.SetGradientToColor(const Value: TColor);
 begin
   FGradientToColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkPaneAppearance.SetGradientType(const Value: TBackgroundKind);
 begin
   FGradientType := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkPaneAppearance.SetHotTrackBrightnessChange(const Value: Integer);
 begin
   FHotTrackBrightnessChange := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkPaneAppearance.SetStyle(const Value: TSpkPaneStyle);
@@ -734,6 +746,21 @@ end;
 
 
 { TSpkElementAppearance }
+
+constructor TSpkElementAppearance.Create(ADispatch: TSpkBaseAppearanceDispatch);
+begin
+  inherited Create;
+  FDispatch := ADispatch;
+  FCaptionFont := TFont.Create;
+  FHotTrackBrightnessChange := 40;
+  Reset;
+end;
+
+destructor TSpkElementAppearance.Destroy;
+begin
+  FCaptionFont.Free;
+  inherited Destroy;
+end;
 
 procedure TSpkElementAppearance.Assign(Source: TPersistent);
 var
@@ -772,21 +799,6 @@ begin
       FDispatch.NotifyAppearanceChanged;
   end else
     raise AssignException.create('TSpkElementAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkElementAppearance!');
-end;
-
-constructor TSpkElementAppearance.Create(ADispatch: TSpkBaseAppearanceDispatch);
-begin
-  inherited Create;
-  FDispatch := ADispatch;
-  FCaptionFont := TFont.Create;
-  FHotTrackBrightnessChange := 40;
-  Reset;
-end;
-
-destructor TSpkElementAppearance.Destroy;
-begin
-  FCaptionFont.Free;
-  inherited Destroy;
 end;
 
 procedure TSpkElementAppearance.LoadFromXML(Node: TSpkXMLNode);
@@ -1159,126 +1171,126 @@ procedure TSpkElementAppearance.SetActiveCaptionColor(const Value: TColor);
 begin
   FActiveCaptionColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetActiveFrameColor(const Value: TColor);
 begin
   FActiveFrameColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetActiveGradientFromColor(const Value: TColor);
 begin
   FActiveGradientFromColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetActiveGradientToColor(const Value: TColor);
 begin
   FActiveGradientToColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetActiveGradientType(const Value: TBackgroundKind);
 begin
   FActiveGradientType := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetActiveInnerDarkColor(const Value: TColor);
 begin
   FActiveInnerDarkColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetActiveInnerLightColor(const Value: TColor);
 begin
   FActiveInnerLightColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetCaptionFont(const Value: TFont);
 begin
   FCaptionFont.Assign(Value);
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackBrightnessChange(const Value: Integer);
 begin
   FHotTrackBrightnessChange := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackCaptionColor(const Value: TColor);
 begin
   FHotTrackCaptionColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackFrameColor(const Value: TColor);
 begin
   FHotTrackFrameColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackGradientFromColor(const Value: TColor);
 begin
   FHotTrackGradientFromColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackGradientToColor(const Value: TColor);
 begin
   FHotTrackGradientToColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackGradientType(const Value: TBackgroundKind);
 begin
   FHotTrackGradientType := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackInnerDarkColor(const Value: TColor);
 begin
   FHotTrackInnerDarkColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetHotTrackInnerLightColor(const Value: TColor);
 begin
   FHotTrackInnerLightColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetIdleCaptionColor(const Value: TColor);
 begin
   FIdleCaptionColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetIdleFrameColor(const Value: TColor);
 begin
   FIdleFrameColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetIdleGradientFromColor(const Value: TColor);
@@ -1292,28 +1304,28 @@ procedure TSpkElementAppearance.SetIdleGradientToColor(const Value: TColor);
 begin
   FIdleGradientToColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetIdleGradientType(const Value: TBackgroundKind);
 begin
   FIdleGradientType := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetIdleInnerDarkColor(const Value: TColor);
 begin
   FIdleInnerDarkColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetIdleInnerLightColor(const Value: TColor);
 begin
   FIdleInnerLightColor := Value;
   if FDispatch <> nil then
-     FDispatch.NotifyAppearanceChanged;
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.SetStyle(const Value: TSpkElementStyle);
@@ -1322,6 +1334,7 @@ begin
   if FDispatch <> nil then
     FDispatch.NotifyAppearanceChanged;
 end;
+
 
 { TSpkToolbarAppearanceDispatch }
 
@@ -1334,11 +1347,31 @@ end;
 
 procedure TSpkToolbarAppearanceDispatch.NotifyAppearanceChanged;
 begin
-if FToolbarAppearance<>nil then
+if FToolbarAppearance <> nil then
    FToolbarAppearance.NotifyAppearanceChanged;
 end;
 
+
 { TSpkToolbarAppearance }
+
+constructor TSpkToolbarAppearance.Create(ADispatch : TSpkBaseAppearanceDispatch);
+begin
+  inherited Create;
+  FDispatch := ADispatch;
+  FAppearanceDispatch := TSpkToolbarAppearanceDispatch.Create(self);
+  FTab := TSpkTabAppearance.Create(FAppearanceDispatch);
+  FPane := TSpkPaneAppearance.create(FAppearanceDispatch);
+  FElement := TSpkElementAppearance.create(FAppearanceDispatch);
+end;
+
+destructor TSpkToolbarAppearance.Destroy;
+begin
+  FElement.Free;
+  FPane.Free;
+  FTab.Free;
+  FAppearanceDispatch.Free;
+  inherited;
+end;
 
 procedure TSpkToolbarAppearance.Assign(Source: TPersistent);
 var
@@ -1354,57 +1387,37 @@ begin
 
     if FDispatch <> nil then
       FDispatch.NotifyAppearanceChanged;
-    end else
-      raise AssignException.create('TSpkToolbarAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkToolbarAppearance!');
-end;
-
-constructor TSpkToolbarAppearance.Create(ADispatch : TSpkBaseAppearanceDispatch);
-begin
-  inherited Create;
-  FDispatch:=ADispatch;
-  FAppearanceDispatch:=TSpkToolbarAppearanceDispatch.Create(self);
-  FTab:=TSpkTabAppearance.Create(FAppearanceDispatch);
-  FPane:=TSpkPaneAppearance.create(FAppearanceDispatch);
-  FElement:=TSpkElementAppearance.create(FAppearanceDispatch);
-end;
-
-destructor TSpkToolbarAppearance.Destroy;
-begin
-  FElement.Free;
-  FPane.Free;
-  FTab.Free;
-  FAppearanceDispatch.Free;
-  inherited;
+  end else
+    raise AssignException.create('TSpkToolbarAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkToolbarAppearance!');
 end;
 
 procedure TSpkToolbarAppearance.LoadFromXML(Node: TSpkXMLNode);
-
-var Subnode : TSpkXMLNode;
-
+var
+  Subnode: TSpkXMLNode;
 begin
-Tab.Reset;
-Pane.Reset;
-Element.Reset;
+  Tab.Reset;
+  Pane.Reset;
+  Element.Reset;
 
-if not(assigned(Node)) then
-   exit;
+  if not Assigned(Node) then
+    exit;
 
-Subnode:=Node['Tab',false];
-if assigned(Subnode) then
-   Tab.LoadFromXML(Subnode);
+  Subnode := Node['Tab', false];
+  if Assigned(Subnode) then
+    Tab.LoadFromXML(Subnode);
 
-Subnode:=Node['Pane',false];
-if assigned(Subnode) then
-   Pane.LoadFromXML(Subnode);
+  Subnode := Node['Pane', false];
+  if Assigned(Subnode) then
+    Pane.LoadFromXML(Subnode);
 
-Subnode:=Node['Element',false];
-if assigned(Subnode) then
-   Element.LoadFromXML(Subnode);
+  Subnode := Node['Element', false];
+  if Assigned(Subnode) then
+    Element.LoadFromXML(Subnode);
 end;
 
 procedure TSpkToolbarAppearance.NotifyAppearanceChanged;
 begin
-  if assigned(FDispatch) then
+  if Assigned(FDispatch) then
      FDispatch.NotifyAppearanceChanged;
 end;
 
@@ -1423,20 +1436,20 @@ begin
   FTab.SaveToPascal(AList);
   FPane.SaveToPascal(AList);
   FElement.SaveToPascal(AList);
-  AList.ADd('end;');
+  AList.Add('end;');
 end;
 
 procedure TSpkToolbarAppearance.SaveToXML(Node: TSpkXMLNode);
 var
   Subnode: TSpkXMLNode;
 begin
-  Subnode:=Node['Tab',true];
+  Subnode := Node['Tab',true];
   FTab.SaveToXML(Subnode);
 
-  Subnode:=Node['Pane',true];
+  Subnode := Node['Pane',true];
   FPane.SaveToXML(Subnode);
 
-  Subnode:=Node['Element',true];
+  Subnode := Node['Element',true];
   FElement.SaveToXML(Subnode);
 end;
 

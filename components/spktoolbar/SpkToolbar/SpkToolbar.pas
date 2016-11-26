@@ -418,10 +418,12 @@ type
     property OnTabChanged: TNotifyEvent read FOnTabChanged write FOnTabChanged;
   end;
 
+
 implementation
 
 uses
   LCLIntf, Themes;
+
 
 { TSpkToolbarDispatch }
 
@@ -478,21 +480,20 @@ begin
     FToolbar.NotifyVisualsChanged;
 end;
 
+
 { TSpkToolbar }
 
 function TSpkToolbar.AtLeastOneTabVisible: boolean;
-
 var
   i: integer;
   TabVisible: boolean;
-
 begin
   Result := FTabs.Count > 0;
   if Result then
   begin
     TabVisible := False;
     i := FTabs.Count - 1;
-    while (i >= 0) and not (TabVisible) do
+    while (i >= 0) and not TabVisible do
     begin
       TabVisible := FTabs[i].Visible;
       Dec(i);
@@ -588,7 +589,6 @@ end;
 procedure TSpkToolbar.DefineProperties(Filer: TFiler);
 begin
   inherited DefineProperties(Filer);
-
   Filer.DefineProperty('Tabs', FTabs.ReadNames, FTabs.WriteNames, True);
 end;
 
@@ -596,13 +596,11 @@ destructor TSpkToolbar.Destroy;
 begin
   // Release the fields
   FTabs.Free;
-
   FAppearance.Free;
 
   // Release the internal fields
   FTemporary.Free;
   FBuffer.Free;
-
   FToolbarDispatch.Free;
 
  {$IFDEF DELAYRUNTIMER}
@@ -615,7 +613,6 @@ end;
 procedure TSpkToolbar.EndUpdate;
 begin
   FUpdating := False;
-
   ValidateMetrics;
   ValidateBuffer;
   Repaint;
@@ -638,10 +635,8 @@ var
   i: integer;
 begin
   inherited;
-
-  if FTabs.Count > 0 then
-    for i := 0 to FTabs.Count - 1 do
-      Proc(FTabs.Items[i]);
+  for i := 0 to FTabs.Count - 1 do
+    Proc(FTabs.Items[i]);
 end;
 
 function TSpkToolbar.GetColor: TColor;
@@ -681,9 +676,7 @@ begin
   InternalBeginUpdate;
 
   if FTabs.ListState = lsNeedsProcessing then
-  begin
     FTabs.ProcessNames(self.Owner);
-  end;
 
   InternalEndUpdate;
 
@@ -975,7 +968,6 @@ end;
 procedure TSpkToolbar.NotifyAppearanceChanged;
 begin
   SetMetricsInvalid;
-
   if not (FInternalUpdating or FUpdating) then
     Repaint;
 end;
@@ -983,7 +975,6 @@ end;
 procedure TSpkToolbar.NotifyMetricsChanged;
 begin
   SetMetricsInvalid;
-
   if not (FInternalUpdating or FUpdating) then
     Repaint;
 end;
@@ -1025,7 +1016,6 @@ end;
 procedure TSpkToolbar.NotifyVisualsChanged;
 begin
   SetBufferInvalid;
-
   if not (FInternalUpdating or FUpdating) then
     Repaint;
 end;
@@ -1081,7 +1071,6 @@ procedure TSpkToolbar.SetColor(const Value: TColor);
 begin
   inherited Color := Value;
   SetBufferInvalid;
-
   if not (FInternalUpdating or FUpdating) then
     Repaint;
 end;
@@ -1091,7 +1080,6 @@ begin
   FDisabledImages := Value;
   FTabs.DisabledImages := Value;
   SetMetricsInvalid;
-
   if not (FInternalUpdating or FUpdating) then
     Repaint;
 end;
@@ -1101,7 +1089,6 @@ begin
   FDisabledLargeImages := Value;
   FTabs.DisabledLargeImages := Value;
   SetMetricsInvalid;
-
   if not (FInternalUpdating or FUpdating) then
     Repaint;
 end;
@@ -1111,7 +1098,6 @@ begin
   FImages := Value;
   FTabs.Images := Value;
   SetMetricsInvalid;
-
   if not (FInternalUpdating or FUpdating) then
     Repaint;
 end;
@@ -1121,7 +1107,6 @@ begin
   FLargeImages := Value;
   FTabs.LargeImages := Value;
   SetMetricsInvalid;
-
   if not (FInternalUpdating or FUpdating) then
     Repaint;
 end;
@@ -1272,14 +1257,12 @@ begin
   if (FTabIndex > -1) then
     FTabs[FTabIndex].ExecOnClick;
 
-
   //Tabs don't need MouseUp
 end;
 
 procedure TSpkToolbar.SetAppearance(const Value: TSpkToolbarAppearance);
 begin
   FAppearance.Assign(Value);
-
   SetBufferInvalid;
   if not (FInternalUpdating or FUpdating) then
     Repaint;
@@ -1316,6 +1299,7 @@ procedure TSpkToolbar.ValidateBuffer;
       FocusedAppearance.Tab.GradientFromColor,
       FocusedAppearance.Tab.GradientToColor,
       FocusedAppearance.Tab.GradientType);
+
     TGuiTools.DrawAARoundCorner(FBuffer,
                               {$IFDEF EnhancedRecordSupport}
       T2DIntPoint.Create(0, ToolbarTabCaptionsHeight),
@@ -1325,6 +1309,7 @@ procedure TSpkToolbar.ValidateBuffer;
       ToolbarCornerRadius,
       cpLeftTop,
       FocusedAppearance.Tab.BorderColor);
+
     TGuiTools.DrawAARoundCorner(FBuffer,
                               {$IFDEF EnhancedRecordSupport}
       T2DIntPoint.Create(self.Width - ToolbarCornerRadius, ToolbarTabCaptionsHeight),
@@ -1334,6 +1319,7 @@ procedure TSpkToolbar.ValidateBuffer;
       ToolbarCornerRadius,
       cpRightTop,
       FocusedAppearance.Tab.BorderColor);
+
     TGuiTools.DrawAARoundCorner(FBuffer,
                               {$IFDEF EnhancedRecordSupport}
       T2DIntPoint.Create(0, self.Height - ToolbarCornerRadius),
@@ -1343,6 +1329,7 @@ procedure TSpkToolbar.ValidateBuffer;
       ToolbarCornerRadius,
       cpLeftBottom,
       FocusedAppearance.Tab.BorderColor);
+
     TGuiTools.DrawAARoundCorner(FBuffer,
                               {$IFDEF EnhancedRecordSupport}
       T2DIntPoint.Create(self.Width - ToolbarCornerRadius, self.Height - ToolbarCornerRadius),
@@ -1352,11 +1339,14 @@ procedure TSpkToolbar.ValidateBuffer;
       ToolbarCornerRadius,
       cpRightBottom,
       FocusedAppearance.Tab.BorderColor);
+
     TGuiTools.DrawVLine(FBuffer, 0, ToolbarTabCaptionsHeight +
       ToolbarCornerRadius, self.Height - ToolbarCornerRadius,
       FocusedAppearance.Tab.BorderColor);
+
     TGuiTools.DrawHLine(FBuffer, ToolbarCornerRadius, self.Width - ToolbarCornerRadius,
       self.Height - 1, FocusedAppearance.Tab.BorderColor);
+
     TGuiTools.DrawVLine(FBuffer, self.Width - 1, ToolbarTabCaptionsHeight +
       ToolbarCornerRadius, self.Height - ToolbarCornerRadius,
       FocusedAppearance.Tab.BorderColor);

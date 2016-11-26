@@ -18,25 +18,24 @@ interface
 uses
   Graphics, SysUtils, SpkMath, SpkGUITools;
 
-type TButtonTools = class sealed(TObject)
-     private
-     protected
-     public
-       class procedure DrawButton(Bitmap: TBitmap;
-                                  Rect: T2DIntRect;
-                                  FrameColor,
-                                  InnerLightColor,
-                                  InnerDarkColor,
-                                  GradientFrom,
-                                  GradientTo: TColor;
-                                  GradientKind: TBackgroundKind;
-                                  LeftEdgeOpen,
-                                  RightEdgeOpen,
-                                  TopEdgeOpen,
-                                  BottomEdgeOpen: boolean;
-                                  Radius: integer;
-                                  ClipRect: T2DIntRect);
-     end;
+type
+  TButtonTools = class sealed(TObject)
+  public
+    class procedure DrawButton(Bitmap: TBitmap;
+                               Rect: T2DIntRect;
+                               FrameColor,
+                               InnerLightColor,
+                               InnerDarkColor,
+                               GradientFrom,
+                               GradientTo: TColor;
+                               GradientKind: TBackgroundKind;
+                               LeftEdgeOpen,
+                               RightEdgeOpen,
+                               TopEdgeOpen,
+                               BottomEdgeOpen: boolean;
+                               Radius: integer;
+                               ClipRect: T2DIntRect);
+  end;
 
 implementation
 
@@ -46,13 +45,12 @@ class procedure TButtonTools.DrawButton(Bitmap: TBitmap;
   Rect: T2DIntRect; FrameColor, InnerLightColor, InnerDarkColor, GradientFrom,
   GradientTo: TColor; GradientKind: TBackgroundKind; LeftEdgeOpen,
   RightEdgeOpen, TopEdgeOpen, BottomEdgeOpen: boolean; Radius: integer;
-  ClipRect : T2DIntRect);
-
+  ClipRect: T2DIntRect);
 var
   x1, x2, y1, y2: integer;
   LeftClosed, TopClosed, RightClosed, BottomClosed: byte;
 begin
-  if (Rect.Width <6 ) or (Rect.Height < 6) or
+  if (Rect.Width < 6) or (Rect.Height < 6) or
     (Rect.Width < 2*Radius) or (Rect.Height < 2*Radius) then exit;
 
   if LeftEdgeOpen then LeftClosed := 0 else LeftClosed := 1;

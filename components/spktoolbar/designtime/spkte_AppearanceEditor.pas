@@ -5,11 +5,10 @@ unit spkte_AppearanceEditor;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, StdCtrls, ComCtrls, Buttons, Spin,
-  SpkGUITools, SpkXMLParser,
-  spkt_Buttons, spkt_BaseItem, spkt_Pane, spkt_Types, spkt_Tab, SpkToolbar,
-  spkt_Appearance;
+  SpkGUITools, SpkXMLParser, SpkToolbar,
+  spkt_Buttons, spkt_Pane, spkt_Tab, spkt_Appearance;
 
 type
 

@@ -12,7 +12,6 @@ type
   TSpkCustomCheckbox = class;
 
   TSpkCheckboxActionLink = class(TSpkButtonActionLink)
-  private
   protected
     procedure SetChecked(Value: Boolean); override;
   public
@@ -98,7 +97,8 @@ procedure TSpkCheckboxActionLink.SetChecked(Value: Boolean);
 var
   cb: TSpkCustomCheckbox;
 begin
-  if IsCheckedLinked then begin
+  if IsCheckedLinked then
+  begin
     cb := TSpkCustomCheckbox(FClient);
     cb.Checked := Value;
   end;
@@ -120,7 +120,8 @@ end;
 procedure TSpkCustomCheckbox.ActionChange(Sender: TObject);
 begin
   if Sender is TCustomAction then
-    with TCustomAction(Sender) do begin
+    with TCustomAction(Sender) do
+    begin
       if (Self.Caption = '') or (Self.Caption = GetDefaultCaption) then
         Self.Caption := Caption;
       if (Self.Enabled = True) then
@@ -148,7 +149,7 @@ end;
 
 procedure TSpkCustomCheckbox.CalcRects;
 var
-  RectVector : T2DIntVector;
+  RectVector: T2DIntVector;
 begin
   ConstructRect(FButtonRect);
  {$IFDEF EnhancedRecordSupport}
@@ -179,12 +180,12 @@ end;
 
 procedure TSpkCustomCheckbox.ConstructRect(var BtnRect: T2DIntRect);
 var
-  BtnWidth : integer;
-  Bitmap : TBitmap;
+  BtnWidth: integer;
+  Bitmap: TBitmap;
   TextWidth: Integer;
 begin
  {$IFDEF EnhancedRecordSupport}
-  BtnRect:=T2DIntRect.Create(0, 0, 0, 0);
+  BtnRect := T2DIntRect.Create(0, 0, 0, 0);
  {$ELSE}
   BtnRect.Create(0, 0, 0, 0);
  {$ENDIF}
@@ -195,7 +196,7 @@ begin
     exit;
 
   Bitmap := FToolbarDispatch.GetTempBitmap;
-  if not(assigned(Bitmap)) then
+  if not Assigned(Bitmap) then
     exit;
 
   Bitmap.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
@@ -246,7 +247,8 @@ begin
   end;
 
   // Border
-  if (FButtonState = bsIdle) and (not(FHideFrameWhenIdle)) then begin
+  if (FButtonState = bsIdle) and (not(FHideFrameWhenIdle)) then
+  begin
     with FAppearance.Element do
       TButtonTools.DrawButton(
         ABuffer,
@@ -265,7 +267,8 @@ begin
         ClipRect
       );
   end else
-  if (FButtonState=bsBtnHottrack) then begin
+  if (FButtonState=bsBtnHottrack) then
+  begin
     with FAppearance.Element do
       TButtonTools.DrawButton(
         ABuffer,
@@ -284,7 +287,8 @@ begin
         ClipRect
       );
   end else
-  if (FButtonState = bsBtnPressed) then begin
+  if (FButtonState = bsBtnPressed) then
+  begin
     with FAppearance.Element do
       TButtonTools.DrawButton(
         ABuffer,
@@ -305,11 +309,13 @@ begin
   end;
 
   // Checkbox
-  if ThemeServices.ThemesEnabled then begin
+  if ThemeServices.ThemesEnabled then
+  begin
     te := ThemeServices.GetElementDetails(tbCheckboxCheckedNormal);
     h := ThemeServices.GetDetailSize(te).cy;
   end else
     h := GetSystemMetrics(SM_CYMENUCHECK);
+
   if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
     x := FButtonRect.Left + SmallButtonHalfBorderWidth + SmallButtonPadding
   else
@@ -350,40 +356,40 @@ end;
 
 function TSpkCustomCheckbox.GetChecked: Boolean;
 begin
-  result := (FState = cbChecked);
+  Result := (FState = cbChecked);
 end;
 
 function TSpkCustomCheckbox.GetDefaultCaption: String;
 begin
-  result := 'Checkbox';
+  Result := 'Checkbox';
 end;
 
 function TSpkCustomCheckbox.GetGroupBehaviour: TSpkItemGroupBehaviour;
 begin
-  result := FGroupBehaviour;
+  Result := FGroupBehaviour;
 end;
 
 function TSpkCustomCheckbox.GetSize: TSpkItemSize;
 begin
-  result := isNormal;
+  Result := isNormal;
 end;
 
 function TSpkCustomCheckbox.GetTableBehaviour: TSpkItemTableBehaviour;
 begin
-  result := FTableBehaviour;
+  Result := FTableBehaviour;
 end;
 
 function TSpkCustomCheckbox.GetWidth: integer;
 var
-  BtnRect, DropRect : T2DIntRect;
+  BtnRect, DropRect: T2DIntRect;
 begin
-  result := -1;
+  Result := -1;
   if FToolbarDispatch = nil then
     exit;
   if FAppearance = nil then
     exit;
   ConstructRect(BtnRect);
-  result := BtnRect.Right + 1;
+  Result := BtnRect.Right + 1;
 end;
 
 procedure TSpkCustomCheckbox.MouseDown(Button: TMouseButton; Shift: TShiftState;
@@ -452,7 +458,8 @@ end;
 
 procedure TSpkCustomCheckbox.SetState(AValue:TCheckboxState);
 begin
-  if AValue <> FState then begin
+  if AValue <> FState then
+  begin
     FState := AValue;
     if Assigned(FToolbarDispatch) then
       FToolbarDispatch.NotifyVisualsChanged;
@@ -477,6 +484,7 @@ end;
 
 
 { TSpkRadioButton }
+
 constructor TSpkRadioButton.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -485,7 +493,7 @@ end;
 
 function TSpkRadioButton.GetDefaultCaption: string;
 begin
-  result := 'RadioButton';
+  Result := 'RadioButton';
 end;
 
 procedure TSpkRadioButton.SetState(AValue: TCheckboxState);
@@ -500,7 +508,8 @@ var
   i: Integer;
   pane: TSpkPane;
 begin
-  if (Parent is TSpkPane) then begin
+  if (Parent is TSpkPane) then
+  begin
     pane := TSpkPane(Parent);
     for i:=0 to pane.Items.Count-1 do
       if (pane.items[i] is TSpkRadioButton) and (pane.items[i] <> self) then
