@@ -135,6 +135,7 @@ begin
   {$ELSE}
   fDefaultPlayCommand := GetNonWindowsPlayCommand; // Linux, Mac etc.
   {$ENDIF}
+  if (fDefaultPlayCommand <> '') then FPlayCommand:=fDefaultPlayCommand;
   // About Dialog properties
   AboutBoxComponentName := 'PlaySound';
   AboutBoxWidth := 400;
@@ -142,7 +143,7 @@ begin
   AboutBoxBackgroundColor := clCream;
   //AboutBoxFontName (string)
   //AboutBoxFontSize (integer)
-  AboutBoxVersion := '0.0.6';
+  AboutBoxVersion := '0.0.7';
   AboutBoxAuthorname := 'Gordon Bamber';
   AboutBoxOrganisation := 'Public Domain';
   AboutBoxAuthorEmail := 'minesadorada@charcodelvalle.com';
