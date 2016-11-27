@@ -395,7 +395,8 @@ end;
 procedure TfrmAppearanceEditWindow.bTabBorderColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pTabFrame) then begin
+  if PickColor(pTabFrame) then
+  begin
     tbPreview.Appearance.Tab.BorderColor := pTabFrame.Color;
     if cbLinkTab.checked then
       SetLinkedFrameColor(pTabFrame.Color)
@@ -406,7 +407,8 @@ end;
 procedure TfrmAppearanceEditWindow.bTabGradientFromColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pTabGradientFrom) then begin
+  if PickColor(pTabGradientFrom) then
+  begin
     tbPreview.Appearance.Tab.GradientFromColor := pTabGradientFrom.Color;
     if cbLinkTab.checked then
       SetLinkedFrameColor(pTabGradientFrom.Color)
@@ -417,7 +419,8 @@ end;
 procedure TfrmAppearanceEditWindow.bTabGradientToColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pTabGradientTo) then begin
+  if PickColor(pTabGradientTo) then
+  begin
     tbPreview.Appearance.Tab.GradientToColor := pTabGradientTo.Color;
     if cbLinkTab.checked then
       SetLinkedFrameColor(pTabGradientTo.Color)
@@ -431,11 +434,11 @@ begin
     Clipboard.AsText := mXML.Text;
 end;
 
-procedure TfrmAppearanceEditWindow.bActiveTabHeaderFontColorClick(
-  Sender: TObject);
+procedure TfrmAppearanceEditWindow.bActiveTabHeaderFontColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pActiveTabHeaderFont) then begin
+  if PickColor(pActiveTabHeaderFont) then
+  begin
     tbPreview.Appearance.Tab.TabHeaderFont.Color := pActiveTabHeaderFont.Color;
     tbPreview.ForceRepaint;
   end;
@@ -472,11 +475,11 @@ begin
   end;
 end;
 
-procedure TfrmAppearanceEditWindow.bInactiveTabHeaderFontColorClick(
-  Sender: TObject);
+procedure TfrmAppearanceEditWindow.bInactiveTabHeaderFontColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pInactiveTabHeaderFont) then begin
+  if PickColor(pInactiveTabHeaderFont) then
+  begin
     tbPreview.Appearance.Tab.InactiveTabHeaderFontColor := pInactiveTabHeaderFont.Color;
     tbPreview.ForceRepaint;
   end;
@@ -487,23 +490,20 @@ procedure TfrmAppearanceEditWindow.bItemActiveCaptionColorClick(Sender: TObject
   );
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pItemActiveCaptionColor) then begin
+  if PickColor(pItemActiveCaptionColor) then
     tbPreview.Appearance.Element.ActiveCaptionColor := pItemActiveCaptionColor.Color;
-  end;
   (Sender as TSpeedButton).Down := false;
 end;
 
 procedure TfrmAppearanceEditWindow.bItemActiveFrameColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pItemActiveFrame) then begin
+  if PickColor(pItemActiveFrame) then
     tbPreview.Appearance.Element.ActiveFrameColor := pItemactiveFrame.Color;
-  end;
   (Sender as TSpeedButton).Down := false;
 end;
 
-procedure TfrmAppearanceEditWindow.bItemActiveGradientFromColorClick(
-  Sender: TObject);
+procedure TfrmAppearanceEditWindow.bItemActiveGradientFromColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
   if PickColor(pItemActiveGradientFrom) then
@@ -511,8 +511,7 @@ begin
   (Sender as TSpeedButton).Down := false;
 end;
 
-procedure TfrmAppearanceEditWindow.bItemActiveGradientToColorClick(
-  Sender: TObject);
+procedure TfrmAppearanceEditWindow.bItemActiveGradientToColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
   if PickColor(pItemActiveGradientTo) then
@@ -520,8 +519,7 @@ begin
   (Sender as TSpeedButton).Down := false;
 end;
 
-procedure TfrmAppearanceEditWindow.bItemActiveInnerDarkColorClick(
-  Sender: TObject);
+procedure TfrmAppearanceEditWindow.bItemActiveInnerDarkColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
   if PickColor(pItemActiveInnerDark) then
@@ -529,8 +527,7 @@ begin
   (Sender as TSpeedButton).Down := false;
 end;
 
-procedure TfrmAppearanceEditWindow.bItemActiveInnerLightColorClick(
-  Sender: TObject);
+procedure TfrmAppearanceEditWindow.bItemActiveInnerLightColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
   if PickColor(pItemActiveInnerLight) then
@@ -538,28 +535,23 @@ begin
   (Sender as TSpeedButton).Down := false;
 end;
 
-procedure TfrmAppearanceEditWindow.bItemHotTrackCaptionColorClick(
-  Sender: TObject);
+procedure TfrmAppearanceEditWindow.bItemHotTrackCaptionColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pItemHotTrackCaptionColor) then begin
+  if PickColor(pItemHotTrackCaptionColor) then
     tbPreview.Appearance.Element.HotTrackCaptionColor := pItemHotTrackCaptionColor.Color;
-  end;
   (Sender as TSpeedButton).Down := false;
 end;
 
-procedure TfrmAppearanceEditWindow.bItemHotTrackFrameColorClick(Sender: TObject
-  );
+procedure TfrmAppearanceEditWindow.bItemHotTrackFrameColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pItemHotTrackFrame) then begin
+  if PickColor(pItemHotTrackFrame) then
     tbPreview.Appearance.Element.HotTrackFrameColor := pItemHotTrackFrame.Color;
-  end;
   (Sender as TSpeedButton).Down := false;
 end;
 
-procedure TfrmAppearanceEditWindow.bItemHotTrackGradientFromColorClick(
-  Sender: TObject);
+procedure TfrmAppearanceEditWindow.bItemHotTrackGradientFromColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
   if PickColor(pItemHotTrackGradientFrom) then
@@ -567,8 +559,7 @@ begin
   (Sender as TSpeedButton).Down := false;
 end;
 
-procedure TfrmAppearanceEditWindow.bItemHotTrackGradientToColorClick(
-  Sender: TObject);
+procedure TfrmAppearanceEditWindow.bItemHotTrackGradientToColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
   if PickColor(pItemHotTrackGradientTo) then
@@ -576,8 +567,7 @@ begin
   (Sender as TSpeedButton).Down := false;
 end;
 
-procedure TfrmAppearanceEditWindow.bItemHotTrackInnerDarkColorClick(
-  Sender: TObject);
+procedure TfrmAppearanceEditWindow.bItemHotTrackInnerDarkColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
   if PickColor(pItemHotTrackInnerDark) then
@@ -585,8 +575,7 @@ begin
   (Sender as TSpeedButton).Down := false;
 end;
 
-procedure TfrmAppearanceEditWindow.bItemHotTrackInnerLightColorClick(
-  Sender: TObject);
+procedure TfrmAppearanceEditWindow.bItemHotTrackInnerLightColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
   if PickColor(pItemHotTrackInnerLight) then
@@ -597,7 +586,8 @@ end;
 procedure TfrmAppearanceEditWindow.bItemIdleCaptionColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pItemIdleCaptionColor) then begin
+  if PickColor(pItemIdleCaptionColor) then
+  begin
     tbPreview.Appearance.Element.IdleCaptionColor := pItemIdleCaptionColor.Color;
     if cbLinkTab.checked then
       SetLinkedFrameColor(pItemIdleCaptionColor.Color)
@@ -608,7 +598,8 @@ end;
 procedure TfrmAppearanceEditWindow.bItemIdleFrameColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pItemIdleFrame) then begin
+  if PickColor(pItemIdleFrame) then
+  begin
     tbPreview.Appearance.Element.IdleFrameColor := pItemIdleFrame.Color;
     if cbLinkTab.checked then
       SetLinkedFrameColor(pItemIdleFrame.Color)
@@ -619,7 +610,8 @@ end;
 procedure TfrmAppearanceEditWindow.bItemIdleGradientFromColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pItemIdleGradientFrom) then begin
+  if PickColor(pItemIdleGradientFrom) then
+  begin
     tbPreview.Appearance.Element.IdleGradientFromColor := pItemIdleGradientFrom.Color;
     if cbLinkTab.checked then
       SetLinkedFrameColor(pItemIdleGradientFrom.Color)
@@ -627,11 +619,11 @@ begin
   (Sender as TSpeedButton).Down := false;
 end;
 
-procedure TfrmAppearanceEditWindow.bItemIdleGradientToColorClick(Sender: TObject
-  );
+procedure TfrmAppearanceEditWindow.bItemIdleGradientToColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pItemIdleGradientTo) then begin
+  if PickColor(pItemIdleGradientTo) then
+  begin
     tbPreview.Appearance.Element.IdleGradientToColor := pItemIdleGradientTo.Color;
     if cbLinkTab.checked then
       SetLinkedFrameColor(pItemIdleGradientTo.Color)
@@ -639,11 +631,11 @@ begin
   (Sender as TSpeedButton).Down := false;
 end;
 
-procedure TfrmAppearanceEditWindow.bItemIdleInnerDarkColorClick(Sender: TObject
-  );
+procedure TfrmAppearanceEditWindow.bItemIdleInnerDarkColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pItemIdleInnerDark) then begin
+  if PickColor(pItemIdleInnerDark) then
+  begin
     tbPreview.Appearance.Element.IdleInnerDarkColor := pItemIdleInnerDark.Color;
     if cbLinkTab.checked then
       SetLinkedFrameColor(pItemIdleInnerDark.Color)
@@ -651,11 +643,11 @@ begin
   (Sender as TSpeedButton).Down := false;
 end;
 
-procedure TfrmAppearanceEditWindow.bItemIdleInnerLightColorClick(Sender: TObject
-  );
+procedure TfrmAppearanceEditWindow.bItemIdleInnerLightColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pItemIdleInnerLight) then begin
+  if PickColor(pItemIdleInnerLight) then
+  begin
     tbPreview.Appearance.Element.IdleInnerLightColor := pItemIdleInnerLight.Color;
     if cbLinkPane.Checked then
       SetLinkedFrameColor(pItemIdleInnerLight.Color)
@@ -666,7 +658,8 @@ end;
 procedure TfrmAppearanceEditWindow.bPaneBorderDarkColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pPaneBorderDark) then begin
+  if PickColor(pPaneBorderDark) then
+  begin
     tbPreview.Appearance.Pane.BorderDarkColor := pPaneBorderDark.Color;
     if cbLinkPane.Checked then
       SetLinkedFrameColor(pPaneBorderDark.Color)
@@ -677,7 +670,8 @@ end;
 procedure TfrmAppearanceEditWindow.bPaneBorderLightColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pPaneBorderLight) then begin
+  if PickColor(pPaneBorderLight) then
+  begin
     tbPreview.Appearance.Pane.BorderLightColor := pPaneBorderLight.Color;
     if cbLinkPane.Checked then
       SetLinkedFrameColor(pPaneBorderLight.Color)
@@ -685,8 +679,7 @@ begin
   (Sender as TSpeedButton).Down := false;
 end;
 
-procedure TfrmAppearanceEditWindow.bPaneCaptionBackgroundColorClick(
-  Sender: TObject);
+procedure TfrmAppearanceEditWindow.bPaneCaptionBackgroundColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
   if PickColor(pPaneCaptionBackground) then
@@ -697,7 +690,8 @@ end;
 procedure TfrmAppearanceEditWindow.bPaneCaptionFontColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pPaneCaptionFontColor) then begin
+  if PickColor(pPaneCaptionFontColor) then
+  begin
     tbPreview.Appearance.Pane.CaptionFont.Color := pPaneCaptionFontColor.Color;
     tbPreview.ForceRepaint;
   end;
@@ -707,7 +701,8 @@ end;
 procedure TfrmAppearanceEditWindow.bPaneGradientFromColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pPaneGradientFrom) then begin
+  if PickColor(pPaneGradientFrom) then
+  begin
     tbPreview.Appearance.Pane.GradientFromColor := pPaneGradientFrom.Color;
     if cbLinkPane.Checked then
       SetLinkedFrameColor(pPaneGradientFrom.Color)
@@ -718,7 +713,8 @@ end;
 procedure TfrmAppearanceEditWindow.bPaneGradientToColorClick(Sender: TObject);
 begin
   (Sender as TSpeedButton).Down := true;
-  if PickColor(pPaneGradientTo) then begin
+  if PickColor(pPaneGradientTo) then
+  begin
     tbPreview.Appearance.Pane.GradientToColor := pPaneGradientTo.Color;
     if cbLinkPane.Checked then
       SetLinkedFrameColor(pPaneGradientTo.Color)
@@ -782,7 +778,7 @@ end;
 
 function TfrmAppearanceEditWindow.ChangeColor(Panel: TPanel): boolean;
 begin
-  cdColorDialog.Color:=Panel.Color;
+  cdColorDialog.Color := Panel.Color;
   if cdColorDialog.Execute then
   begin
     SetPanelColor(Panel, cdColorDialog.Color);
@@ -1064,7 +1060,8 @@ end;
 
 procedure TfrmAppearanceEditWindow.pItemHottrackCaptionColorClick(Sender: TObject);
 begin
-  if ChangeColor(Sender as TPanel) then begin
+  if ChangeColor(Sender as TPanel) then
+  begin
     tbPreview.Appearance.Element.HotTrackCaptionColor := (Sender as TPanel).Color;
     tbPreview.ForceRepaint;
   end;
@@ -1102,7 +1099,8 @@ end;
 
 procedure TfrmAppearanceEditWindow.pItemIdleCaptionColorClick(Sender: TObject);
 begin
-  if ChangeColor(Sender as TPanel) then begin
+  if ChangeColor(Sender as TPanel) then
+  begin
     tbPreview.Appearance.Element.IdleCaptionColor := (Sender as TPanel).Color;
     tbPreview.ForceRepaint;
   end;
@@ -1278,8 +1276,7 @@ begin
   end;
 end;
 
-procedure TfrmAppearanceEditWindow.pInactiveTabHeaderFontClick(
-  Sender: TObject);
+procedure TfrmAppearanceEditWindow.pInactiveTabHeaderFontClick(Sender: TObject);
 begin
   if ChangeColor(Sender as TPanel) then
   begin

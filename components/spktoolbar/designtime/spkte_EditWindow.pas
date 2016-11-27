@@ -76,11 +76,10 @@ type
     procedure aAddCheckboxExecute(Sender: TObject);
     procedure aAddRadioButtonExecute(Sender: TObject);
     procedure tvStructureDeletion(Sender:TObject; Node:TTreeNode);
+    procedure tvStructureEdited(Sender: TObject; Node: TTreeNode; var S: string);
     procedure tvStructureKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormActivate(Sender: TObject);
-    procedure tvStructureEdited(Sender: TObject; Node: TTreeNode;
-      var S: string);
     procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
@@ -88,30 +87,28 @@ type
     FToolbar: TSpkToolbar;
     FDesigner: TComponentEditorDesigner;
 
+    procedure CheckActionsAvailability;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
 
-    procedure CheckActionsAvailability;
-
     procedure AddItem(ItemClass: TSpkBaseItemClass);
-    function GetItemCaption(Item : TSpkBaseItem) : string;
-    procedure SetItemCaption(Item : TSpkBaseItem; const Value : String);
+    function GetItemCaption(Item: TSpkBaseItem): string;
+    procedure SetItemCaption(Item: TSpkBaseItem; const Value: String);
 
     procedure DoRemoveTab;
     procedure DoRemovePane;
     procedure DoRemoveItem;
 
-    function CheckValidTabNode(Node : TTreeNode) : boolean;
-    function CheckValidPaneNode(Node : TTreeNode) : boolean;
-    function CheckValidItemNode(Node : TTreeNode) : boolean;
+    function CheckValidTabNode(Node: TTreeNode): boolean;
+    function CheckValidPaneNode(Node: TTreeNode): boolean;
+    function CheckValidItemNode(Node: TTreeNode): boolean;
   public
     { Public declarations }
-    function ValidateTreeData : boolean;
+    function ValidateTreeData: boolean;
     procedure BuildTreeData;
     procedure RefreshNames;
+    procedure SetData(AToolbar: TSpkToolbar; ADesigner: TComponentEditorDesigner);
 
-    procedure SetData(AToolbar : TSpkToolbar; ADesigner: TComponentEditorDesigner);
-
-    property Toolbar : TSpkToolbar read FToolbar;
+    property Toolbar: TSpkToolbar read FToolbar;
   end;
 
 var
@@ -124,77 +121,75 @@ implementation
 { TfrmEditWindow }
 
 procedure TfrmEditWindow.aAddPaneExecute(Sender: TObject);
-
-var Obj : TObject;
-    Node : TTreeNode;
-    NewNode : TTreeNode;
-    Tab : TSpkTab;
-    Pane : TSpkPane;
+var
+  Obj: TObject;
+  Node: TTreeNode;
+  NewNode: TTreeNode;
+  Tab: TSpkTab;
+  Pane: TSpkPane;
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
-if FDesigner.PropertyEditorHook = nil then
-   Exit;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
+  if FDesigner.PropertyEditorHook = nil then
+    exit;
 
-Node:=tvStructure.Selected;
-if Node = nil then
-   raise Exception.create('TfrmEditWindow.aAddPaneExecute: Brak zaznaczonego obiektu!');
-if Node.Data = nil then
-   raise Exception.create('TfrmEditWindow.aAddPaneExecute: Uszkodzona struktura drzewa!');
+  Node := tvStructure.Selected;
+  if Node = nil then
+    raise Exception.Create('TfrmEditWindow.aAddPaneExecute: Brak zaznaczonego obiektu!');
+  if Node.Data = nil then
+    raise Exception.Create('TfrmEditWindow.aAddPaneExecute: Uszkodzona struktura drzewa!');
 
-Obj:=TObject(Node.Data);
-if Obj is TSpkTab then
-   begin
-   Tab:=TSpkTab(Obj);
-   Pane:=TSpkPane.Create(FToolbar.Owner);
-   Pane.Parent:=FToolbar;
-   Pane.Name := FDesigner.CreateUniqueComponentName(Pane.ClassName);
-   Tab.Panes.AddItem(Pane);
-   NewNode:=tvStructure.Items.AddChild(Node, Pane.Caption);
-   NewNode.Data:=Pane;
-   NewNode.ImageIndex:=1;
-   NewNode.SelectedIndex:=1;
-   NewNode.Selected:=true;
-   CheckActionsAvailability;
-   end else
-if Obj is TSpkPane then
-   begin
-   if not(CheckValidPaneNode(Node)) then
-      raise exception.create('TfrmEditWindow.aAddPaneExecute: Uszkodzona struktura drzewa!');
+  Obj := TObject(Node.Data);
+  if Obj is TSpkTab then
+  begin
+    Tab := TSpkTab(Obj);
+    Pane := TSpkPane.Create(FToolbar.Owner);
+    Pane.Parent := FToolbar;
+    Pane.Name := FDesigner.CreateUniqueComponentName(Pane.ClassName);
+    Tab.Panes.AddItem(Pane);
+    NewNode := tvStructure.Items.AddChild(Node, Pane.Caption);
+    NewNode.Data := Pane;
+    NewNode.ImageIndex := 1;
+    NewNode.SelectedIndex := 1;
+    NewNode.Selected := true;
+    CheckActionsAvailability;
+  end else
+  if Obj is TSpkPane then
+  begin
+    if not(CheckValidPaneNode(Node)) then
+      raise Exception.Create('TfrmEditWindow.aAddPaneExecute: Uszkodzona struktura drzewa!');
+    Tab := TSpkTab(Node.Parent.Data);
+    Pane := TSpkPane.Create(FToolbar.Owner);
+    Pane.Parent := FToolbar;
+    Pane.Name := FDesigner.CreateUniqueComponentName(Pane.ClassName);
+    Tab.Panes.AddItem(Pane);
+    NewNode := tvStructure.Items.AddChild(Node.Parent, Pane.Caption);
+    NewNode.Data := Pane;
+    NewNode.ImageIndex := 1;
+    NewNode.SelectedIndex := 1;
+    NewNode.Selected := true;
+    CheckActionsAvailability;
+  end else
+  if Obj is TSpkBaseItem then
+  begin
+    if not(CheckValidItemNode(Node)) then
+      raise Exception.Create('TfrmEditWindow.aAddPaneExecute: Uszkodzona struktura drzewa!');
+    Tab := TSpkTab(Node.Parent.Parent.Data);
+    Pane := TSpkPane.Create(FToolbar.Owner);
+    Pane.Parent := FToolbar;
+    Pane.Name := FDesigner.CreateUniqueComponentName(Pane.ClassName);
+    Tab.Panes.AddItem(Pane);
+    NewNode := tvStructure.Items.AddChild(Node.Parent.Parent, Pane.Caption);
+    NewNode.Data := Pane;
+    NewNode.ImageIndex := 1;
+    NewNode.SelectedIndex := 1;
+    NewNode.Selected := true;
+    CheckActionsAvailability;
+  end else
+    raise Exception.Create('TfrmEditWindow.aAddPaneExecute: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
 
-   Tab:=TSpkTab(Node.Parent.Data);
-   Pane:=TSpkPane.Create(FToolbar.Owner);
-   Pane.Parent:=FToolbar;
-   Pane.Name:=FDesigner.CreateUniqueComponentName(Pane.ClassName);
-   Tab.Panes.AddItem(Pane);
-   NewNode:=tvStructure.Items.AddChild(Node.Parent, Pane.Caption);
-   NewNode.Data:=Pane;
-   NewNode.ImageIndex:=1;
-   NewNode.SelectedIndex:=1;
-   NewNode.Selected:=true;
-   CheckActionsAvailability;
-
-   end else
-if Obj is TSpkBaseItem then
-   begin
-   if not(CheckValidItemNode(Node)) then
-      raise exception.create('TfrmEditWindow.aAddPaneExecute: Uszkodzona struktura drzewa!');
-
-   Tab:=TSpkTab(Node.Parent.Parent.Data);
-   Pane:=TSpkPane.Create(FToolbar.Owner);
-   Pane.Parent:=FToolbar;
-   Pane.Name:=FDesigner.CreateUniqueComponentName(Pane.ClassName);
-   Tab.Panes.AddItem(Pane);
-   NewNode:=tvStructure.Items.AddChild(Node.Parent.Parent, Pane.Caption);
-   NewNode.Data:=Pane;
-   NewNode.ImageIndex:=1;
-   NewNode.SelectedIndex:=1;
-   NewNode.Selected:=true;
-   CheckActionsAvailability;
-   end else
-       raise exception.create('TfrmEditWindow.aAddPaneExecute: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
-   FDesigner.PropertyEditorHook.PersistentAdded(Pane,True);
-   FDesigner.Modified;
+  FDesigner.PropertyEditorHook.PersistentAdded(Pane,True);
+  FDesigner.Modified;
 end;
 
 procedure TfrmEditWindow.aAddSmallButtonExecute(Sender: TObject);
@@ -218,489 +213,466 @@ begin
 end;
 
 procedure TfrmEditWindow.aAddTabExecute(Sender: TObject);
-
-var Node : TTreeNode;
-    Tab : TSpkTab;
-
+var
+  Node: TTreeNode;
+  Tab: TSpkTab;
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
-if FDesigner.PropertyEditorHook = nil then
-   Exit;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
+  if FDesigner.PropertyEditorHook = nil then
+    exit;
 
-Tab:=TSpkTab.Create(FToolbar.Owner);
-Tab.Parent:=FToolbar;
-FToolbar.Tabs.AddItem(Tab);
-Tab.Name:=FDesigner.CreateUniqueComponentName(Tab.ClassName);
-Node:=tvStructure.Items.AddChild(nil, Tab.Caption);
-Node.Data:=Tab;
-Node.ImageIndex:=0;
-Node.SelectedIndex:=0;
-Node.Selected:=true;
-CheckActionsAvailability;
+  Tab := TSpkTab.Create(FToolbar.Owner);
+  Tab.Parent := FToolbar;
+  FToolbar.Tabs.AddItem(Tab);
+  Tab.Name := FDesigner.CreateUniqueComponentName(Tab.ClassName);
+  Node := tvStructure.Items.AddChild(nil, Tab.Caption);
+  Node.Data := Tab;
+  Node.ImageIndex := 0;
+  Node.SelectedIndex := 0;
+  Node.Selected := true;
+  CheckActionsAvailability;
 
-FDesigner.PropertyEditorHook.PersistentAdded(Tab,True);
-FDesigner.Modified;
+  FDesigner.PropertyEditorHook.PersistentAdded(Tab,True);
+  FDesigner.Modified;
 end;
 
 procedure TfrmEditWindow.AddItem(ItemClass: TSpkBaseItemClass);
-
-var Node : TTreeNode;
-    Obj : TObject;
-    Pane: TSpkPane;
-    Item: TSpkBaseItem;
-    NewNode: TTreeNode;
-    s: string;
+var
+  Node: TTreeNode;
+  Obj: TObject;
+  Pane: TSpkPane;
+  Item: TSpkBaseItem;
+  NewNode: TTreeNode;
+  s: string;
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-  Exit;
-if FDesigner.PropertyEditorHook = nil then
-  Exit;
+  if (FToolbar = nil) or (FDesigner = nil) then
+   exit;
+  if FDesigner.PropertyEditorHook = nil then
+   exit;
 
-Node:=tvStructure.Selected;
-if Node = nil then
-   raise Exception.Create('TfrmEditWindow.AddItem: Brak zaznaczonego obiektu!');
-if Node.Data = nil then
-   raise Exception.Create('TfrmEditWindow.AddItem: Uszkodzona struktura drzewa!');
+  Node := tvStructure.Selected;
+  if Node = nil then
+    raise Exception.Create('TfrmEditWindow.AddItem: Brak zaznaczonego obiektu!');
+  if Node.Data = nil then
+    raise Exception.Create('TfrmEditWindow.AddItem: Uszkodzona struktura drzewa!');
 
-Obj:=TObject(Node.Data);
-if Obj is TSpkPane then
-   begin
-   Pane:=TSpkPane(Obj);
-   Item:=ItemClass.Create(FToolbar.Owner);
-   Item.Parent:=FToolbar;
-   Pane.Items.AddItem(Item);
-   Item.Name:=FDesigner.CreateUniqueComponentName(Item.ClassName);
-   s:=GetItemCaption(Item);
-   NewNode:=tvStructure.Items.AddChild(Node, s);
-   NewNode.Data:=Item;
-   NewNode.ImageIndex:=2;
-   NewNode.SelectedIndex:=2;
-   NewNode.Selected:=true;
-   CheckActionsAvailability;
-   end else
-if Obj is TSpkBaseItem then
-   begin
-   if not(CheckValidItemNode(Node)) then
-      raise exception.create('TfrmEditWindow.AddItem: Uszkodzona struktura drzewa!');
-
-   Pane:=TSpkPane(Node.Parent.Data);
-   Item:=ItemClass.Create(FToolbar.Owner);
-   Item.Parent:=FToolbar;
-   Pane.Items.AddItem(Item);
-   Item.Name:=FDesigner.CreateUniqueComponentName(Item.ClassName);
-   s:=GetItemCaption(Item);
-   NewNode:=tvStructure.Items.AddChild(Node.Parent, s);
-   NewNode.Data:=Item;
-   NewNode.ImageIndex:=2;
-   NewNode.SelectedIndex:=2;
-   NewNode.Selected:=true;
-   CheckActionsAvailability;
-   end else
-       raise exception.create('TfrmEditWindow.AddItem: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
-   FDesigner.PropertyEditorHook.PersistentAdded(Item,True);
-   FDesigner.Modified;
+  Obj := TObject(Node.Data);
+  if Obj is TSpkPane then
+  begin
+    Pane := TSpkPane(Obj);
+    Item := ItemClass.Create(FToolbar.Owner);
+    Item.Parent := FToolbar;
+    Pane.Items.AddItem(Item);
+    Item.Name := FDesigner.CreateUniqueComponentName(Item.ClassName);
+    s := GetItemCaption(Item);
+    NewNode := tvStructure.Items.AddChild(Node, s);
+    NewNode.Data := Item;
+    NewNode.ImageIndex := 2;
+    NewNode.SelectedIndex := 2;
+    NewNode.Selected := true;
+    CheckActionsAvailability;
+  end else
+  if Obj is TSpkBaseItem then
+  begin
+    if not CheckValidItemNode(Node) then
+      raise Exception.Create('TfrmEditWindow.AddItem: Uszkodzona struktura drzewa!');
+    Pane := TSpkPane(Node.Parent.Data);
+    Item := ItemClass.Create(FToolbar.Owner);
+    Item.Parent := FToolbar;
+    Pane.Items.AddItem(Item);
+    Item.Name := FDesigner.CreateUniqueComponentName(Item.ClassName);
+    s := GetItemCaption(Item);
+    NewNode := tvStructure.Items.AddChild(Node.Parent, s);
+    NewNode.Data := Item;
+    NewNode.ImageIndex := 2;
+    NewNode.SelectedIndex := 2;
+    NewNode.Selected := true;
+    CheckActionsAvailability;
+  end else
+    raise Exception.Create('TfrmEditWindow.AddItem: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
+  FDesigner.PropertyEditorHook.PersistentAdded(Item,True);
+  FDesigner.Modified;
 end;
 
 procedure TfrmEditWindow.aMoveDownExecute(Sender: TObject);
-
-var Node : TTreeNode;
-    Tab : TSpkTab;
-    Pane : TSpkPane;
-    Obj : TObject;
-    index: Integer;
+var
+  Node: TTreeNode;
+  Tab: TSpkTab;
+  Pane: TSpkPane;
+  Obj: TObject;
+  index: Integer;
   Item: TSpkBaseItem;
-
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
 
-Node:=tvStructure.Selected;
-if Node = nil then
-   raise exception.create('TfrmEditWindow.aMoveDownExecute: Nie zaznaczono obiektu do przesuniêcia!');
-if Node.Data = nil then
-   raise exception.create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
+  Node := tvStructure.Selected;
+  if Node = nil then
+    raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Nie zaznaczono obiektu do przesuniêcia!');
+  if Node.Data = nil then
+    raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
 
-Obj:=TObject(Node.Data);
+  Obj := TObject(Node.Data);
+  if Obj is TSpkTab then
+  begin
+    if not CheckValidTabNode(Node) then
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
 
-if Obj is TSpkTab then
-   begin
-   if not(CheckValidTabNode(Node)) then
-      raise exception.create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
+    Tab := TSpkTab(Node.Data);
+    index := FToolbar.Tabs.IndexOf(Tab);
+    if (index = -1) then
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
+    if (index = FToolbar.Tabs.Count - 1) then
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Nie mo¿na przesun¹æ w dó³ ostatniego elementu!');
 
-   Tab:=TSpkTab(Node.Data);
-   index:=FToolbar.Tabs.IndexOf(Tab);
-   if (index=-1) then
-      raise exception.create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
-   if (index=FToolbar.Tabs.Count-1) then
-      raise exception.create('TfrmEditWindow.aMoveDownExecute: Nie mo¿na przesun¹æ w dó³ ostatniego elementu!');
+    FToolbar.Tabs.Exchange(index, index+1);
+    FToolbar.TabIndex := index+1;
 
-   FToolbar.Tabs.Exchange(index,index+1);
-   FToolbar.TabIndex:=index+1;
+    Node.GetNextSibling.MoveTo(Node, naInsert);
+    Node.Selected := true;
+    CheckActionsAvailability;
+  end
+  else
+  if Obj is TSpkPane then
+  begin
+    if not CheckValidPaneNode(Node) then
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
 
-   Node.GetNextSibling.MoveTo(Node, naInsert);
-   Node.Selected:=true;
-   CheckActionsAvailability;
-   end else
-if Obj is TSpkPane then
-   begin
-   if not(CheckValidPaneNode(Node)) then
-      raise exception.create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
+    Pane := TSpkPane(Node.Data);
+    Tab := TSpkTab(Node.Parent.Data);
 
-   Pane:=TSpkPane(Node.Data);
-   Tab:=TSpkTab(Node.Parent.Data);
+    index := Tab.Panes.IndexOf(Pane);
+    if (index = -1) then
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
+    if (index = Tab.Panes.Count - 1) then
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Nie mo¿na przesun¹æ w dó³ ostatniego elementu!');
 
-   index:=Tab.Panes.IndexOf(Pane);
-   if (index=-1) then
-      raise exception.create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
-   if (index=Tab.Panes.Count-1) then
-      raise exception.create('TfrmEditWindow.aMoveDownExecute: Nie mo¿na przesun¹æ w dó³ ostatniego elementu!');
+    Tab.Panes.Exchange(index, index+1);
 
-   Tab.Panes.Exchange(index, index+1);
+    Node.GetNextSibling.MoveTo(Node, naInsert);
+    Node.Selected := true;
+    CheckActionsAvailability;
+  end
+  else
+  if Obj is TSpkBaseItem then
+  begin
+    if not CheckValidItemNode(Node) then
+      raise Exception.Create('TfrmEditWindow.aMoveDown.Execute: Uszkodzona struktura drzewa!');
 
-   Node.GetNextSibling.MoveTo(Node, naInsert);
-   Node.Selected:=true;
-   CheckActionsAvailability;
-   end else
-if Obj is TSpkBaseItem then
-   begin
-   if not(CheckValidItemNode(Node)) then
-      raise exception.create('TfrmEditWindow.aMoveDown.Execute: Uszkodzona struktura drzewa!');
+    Item := TSpkBaseItem(Node.Data);
+    Pane := TSpkPane(Node.Parent.Data);
 
-   Item:=TSpkBaseItem(Node.Data);
-   Pane:=TSpkPane(Node.Parent.Data);
+    index := Pane.Items.IndexOf(Item);
+    if (index = -1) then
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
+    if (index = Pane.Items.Count - 1) then
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Nie mo¿na przesun¹æ w dó³ ostatniego elementu!');
 
-   index:=Pane.Items.IndexOf(Item);
-   if (index=-1) then
-      raise exception.create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
-   if (index=Pane.Items.Count-1) then
-      raise exception.create('TfrmEditWindow.aMoveDownExecute: Nie mo¿na przesun¹æ w dó³ ostatniego elementu!');
+    Pane.Items.Exchange(index, index+1);
 
-   Pane.Items.Exchange(index, index+1);
-
-   Node.GetNextSibling.MoveTo(Node, naInsert);
-   Node.Selected:=true;
-   CheckActionsAvailability;
-   end else
-       raise exception.create('TfrmEditWindow.aMoveDownExecute: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
+    Node.GetNextSibling.MoveTo(Node, naInsert);
+    Node.Selected := true;
+    CheckActionsAvailability;
+  end
+  else
+    raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
 end;
 
 procedure TfrmEditWindow.aMoveUpExecute(Sender: TObject);
-
-var Node : TTreeNode;
-    Tab : TSpkTab;
-    Pane : TSpkPane;
-    Obj : TObject;
-    index: Integer;
+var
+  Node: TTreeNode;
+  Tab: TSpkTab;
+  Pane: TSpkPane;
+  Obj: TObject;
+  index: Integer;
   Item: TSpkBaseItem;
-
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
 
-Node:=tvStructure.Selected;
-if Node = nil then
-   raise exception.create('TfrmEditWindow.aMoveUpExecute: Nie zaznaczono obiektu do przesuniêcia!');
-if Node.Data = nil then
-   raise exception.create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
+  Node := tvStructure.Selected;
+  if Node = nil then
+    raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Nie zaznaczono obiektu do przesuniêcia!');
+  if Node.Data = nil then
+    raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
 
-Obj:=TObject(Node.Data);
+  Obj := TObject(Node.Data);
+  if Obj is TSpkTab then
+  begin
+    if not CheckValidTabNode(Node) then
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
 
-if Obj is TSpkTab then
-   begin
-   if not(CheckValidTabNode(Node)) then
-      raise exception.create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
+    Tab := TSpkTab(Node.Data);
+    index := FToolbar.Tabs.IndexOf(Tab);
+    if (index = -1) then
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
+    if (index = 0) then
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Nie mo¿na przesun¹æ do góry pierwszego elementu!');
 
-   Tab:=TSpkTab(Node.Data);
-   index:=FToolbar.Tabs.IndexOf(Tab);
-   if (index=-1) then
-      raise exception.create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
-   if (index=0) then
-      raise exception.create('TfrmEditWindow.aMoveUpExecute: Nie mo¿na przesun¹æ do góry pierwszego elementu!');
+    FToolbar.Tabs.Exchange(index, index-1);
+    FToolbar.TabIndex := index-1;
 
-   FToolbar.Tabs.Exchange(index,index-1);
-   FToolbar.TabIndex:=index-1;
+    Node.MoveTo(Node.getPrevSibling, naInsert);
+    Node.Selected := true;
+    CheckActionsAvailability;
+  end
+  else
+  if Obj is TSpkPane then
+  begin
+    if not CheckValidPaneNode(Node) then
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
 
-   Node.MoveTo(Node.getPrevSibling, naInsert);
-   Node.Selected:=true;
-   CheckActionsAvailability;
-   end else
-if Obj is TSpkPane then
-   begin
-   if not(CheckValidPaneNode(Node)) then
-      raise exception.create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
+    Pane := TSpkPane(Node.Data);
+    Tab := TSpkTab(Node.Parent.Data);
+    index := Tab.Panes.IndexOf(Pane);
+    if (index = -1) then
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
+    if (index = 0) then
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Nie mo¿na przesun¹æ do góry pierwszego elementu!');
 
-   Pane:=TSpkPane(Node.Data);
-   Tab:=TSpkTab(Node.Parent.Data);
+    Tab.Panes.Exchange(index, index-1);
 
-   index:=Tab.Panes.IndexOf(Pane);
-   if (index=-1) then
-      raise exception.create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
-   if (index=0) then
-      raise exception.create('TfrmEditWindow.aMoveUpExecute: Nie mo¿na przesun¹æ do góry pierwszego elementu!');
+    Node.MoveTo(Node.GetPrevSibling, naInsert);
+    Node.Selected := true;
+    CheckActionsAvailability;
+  end
+  else
+  if Obj is TSpkBaseItem then
+  begin
+    if not CheckValidItemNode(Node) then
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
 
-   Tab.Panes.Exchange(index, index-1);
+    Item := TSpkBaseItem(Node.Data);
+    Pane := TSpkPane(Node.Parent.Data);
+    index := Pane.Items.IndexOf(Item);
+    if (index = -1) then
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
+    if (index = 0) then
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Nie mo¿na przesun¹æ do góry pierwszego elementu!');
 
-   Node.MoveTo(Node.GetPrevSibling, naInsert);
-   Node.Selected:=true;
-   CheckActionsAvailability;
-   end else
-if Obj is TSpkBaseItem then
-   begin
-   if not(CheckValidItemNode(Node)) then
-      raise exception.create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
+    Pane.Items.Exchange(index, index-1);
 
-   Item:=TSpkBaseItem(Node.Data);
-   Pane:=TSpkPane(Node.Parent.Data);
-
-   index:=Pane.Items.IndexOf(Item);
-   if (index=-1) then
-      raise exception.create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
-   if (index=0) then
-      raise exception.create('TfrmEditWindow.aMoveUpExecute: Nie mo¿na przesun¹æ do góry pierwszego elementu!');
-
-   Pane.Items.Exchange(index, index-1);
-
-   Node.MoveTo(Node.GetPrevSibling, naInsert);
-   Node.Selected:=true;
-   CheckActionsAvailability;
-   end else
-       raise exception.create('TfrmEditWindow.aMoveUpExecute: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
+    Node.MoveTo(Node.GetPrevSibling, naInsert);
+    Node.Selected := true;
+    CheckActionsAvailability;
+  end else
+    raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
 end;
 
 procedure TfrmEditWindow.aRemoveItemExecute(Sender: TObject);
-
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
-
-DoRemoveItem;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
+  DoRemoveItem;
 end;
 
 procedure TfrmEditWindow.aRemovePaneExecute(Sender: TObject);
 
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
-
-DoRemovePane;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
+  DoRemovePane;
 end;
 
 procedure TfrmEditWindow.aRemoveTabExecute(Sender: TObject);
-
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
-
-DoRemoveTab;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
+  DoRemoveTab;
 end;
 
 procedure TfrmEditWindow.CheckActionsAvailability;
-
-var Node : TTreeNode;
-    Obj : TObject;
-    Tab : TSpkTab;
-    Pane : TSpkPane;
-    index : integer;
-    Item: TSpkBaseItem;
-
+var
+  Node: TTreeNode;
+  Obj: TObject;
+  Tab: TSpkTab;
+  Pane: TSpkPane;
+  index: integer;
+  Item: TSpkBaseItem;
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   begin
-   // Brak toolbara lub designera
-
-   aAddTab.Enabled:=false;
-   aRemoveTab.Enabled:=false;
-   aAddPane.Enabled:=false;
-   aRemovePane.Enabled:=false;
-   aAddLargeButton.Enabled:=false;
-   aAddSmallButton.Enabled:=false;
-   aAddCheckbox.Enabled := false;
-   aAddRadioButton.Enabled := false;
-   aRemoveItem.Enabled:=false;
-   aMoveUp.Enabled:=false;
-   aMoveDown.Enabled:=false;
-   end
-else
-   begin
-   Node:=tvStructure.Selected;
-
-   if Node = nil then
-      begin
+  if (FToolbar = nil) or (FDesigner = nil) then
+  begin
+    // Brak toolbara lub designera
+    aAddTab.Enabled := false;
+    aRemoveTab.Enabled := false;
+    aAddPane.Enabled := false;
+    aRemovePane.Enabled := false;
+    aAddLargeButton.Enabled := false;
+    aAddSmallButton.Enabled := false;
+    aAddCheckbox.Enabled := false;
+    aAddRadioButton.Enabled := false;
+    aRemoveItem.Enabled := false;
+    aMoveUp.Enabled := false;
+    aMoveDown.Enabled := false;
+  end
+  else
+  begin
+    Node := tvStructure.Selected;
+    if Node = nil then
+    begin
       // Pusty toolbar
-      aAddTab.Enabled:=true;
-      aRemoveTab.Enabled:=false;
-      aAddPane.Enabled:=false;
-      aRemovePane.Enabled:=false;
-      aAddLargeButton.Enabled:=false;
-      aAddSmallButton.Enabled:=false;
+      aAddTab.Enabled := true;
+      aRemoveTab.Enabled := false;
+      aAddPane.Enabled := false;
+      aRemovePane.Enabled := false;
+      aAddLargeButton.Enabled := false;
+      aAddSmallButton.Enabled := false;
       aAddCheckbox.Enabled := false;
       aAddRadioButton.Enabled := false;
-      aRemoveItem.Enabled:=false;
-      aMoveUp.Enabled:=false;
-      aMoveDown.Enabled:=false;
-      end
-   else
-      begin
-      Obj:=TObject(Node.Data);
-      if Obj=nil then
-         raise exception.create('TfrmEditWindow.CheckActionsAvailability: Nieprawid³owe dane w ga³êzi!');
+      aRemoveItem.Enabled := false;
+      aMoveUp.Enabled := false;
+      aMoveDown.Enabled := false;
+    end
+    else
+    begin
+      Obj := TObject(Node.Data);
+      if Obj = nil then
+        raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Nieprawid³owe dane w ga³êzi!');
 
       if Obj is TSpkTab then
-         begin
-         Tab:=Obj as TSpkTab;
+      begin
+        Tab := Obj as TSpkTab;
 
-         if not(CheckValidTabNode(Node)) then
-            raise exception.create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
+        if not CheckValidTabNode(Node) then
+          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
 
-         aAddTab.Enabled:=true;
-         aRemoveTab.Enabled:=true;
-         aAddPane.Enabled:=true;
-         aRemovePane.Enabled:=false;
-         aAddLargeButton.Enabled:=false;
-         aAddSmallButton.Enabled:=false;
-         aAddCheckbox.Enabled := false;
-         aAddRadioButton.Enabled := false;
-         aRemoveItem.Enabled:=false;
+        aAddTab.Enabled := true;
+        aRemoveTab.Enabled := true;
+        aAddPane.Enabled := true;
+        aRemovePane.Enabled := false;
+        aAddLargeButton.Enabled := false;
+        aAddSmallButton.Enabled := false;
+        aAddCheckbox.Enabled := false;
+        aAddRadioButton.Enabled := false;
+        aRemoveItem.Enabled := false;
 
-         index:=FToolbar.Tabs.IndexOf(Tab);
-         if index=-1 then
-            raise exception.create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
+        index := FToolbar.Tabs.IndexOf(Tab);
+        if index = -1 then
+          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
 
-         aMoveUp.enabled:=(index>0);
-         aMoveDown.enabled:=(index<FToolbar.Tabs.Count-1);
-         end else
+        aMoveUp.Enabled := (index > 0);
+        aMoveDown.enabled := (index < FToolbar.Tabs.Count-1);
+      end else
       if Obj is TSpkPane then
-         begin
-         Pane:=TSpkPane(Obj);
+      begin
+        Pane := TSpkPane(Obj);
+        if not(CheckValidPaneNode(Node)) then
+          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
 
-         if not(CheckValidPaneNode(Node)) then
-            raise exception.create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
+        Tab := TSpkTab(Node.Parent.Data);
 
-         Tab:=TSpkTab(Node.Parent.Data);
+        aAddTab.Enabled := true;
+        aRemoveTab.Enabled := false;
+        aAddPane.Enabled := true;
+        aRemovePane.Enabled := true;
+        aAddLargeButton.Enabled := true;
+        aAddSmallButton.Enabled := true;
+        aAddCheckbox.Enabled := true;
+        aAddRadiobutton.Enabled := true;
+        aRemoveItem.Enabled := false;
 
-         aAddTab.Enabled:=true;
-         aRemoveTab.enabled:=false;
-         aAddPane.Enabled:=true;
-         aRemovePane.Enabled:=true;
-         aAddLargeButton.Enabled:=true;
-         aAddSmallButton.Enabled:=true;
-         aAddCheckbox.Enabled := true;
-         aAddRadiobutton.Enabled := true;
-         aRemoveItem.Enabled:=false;
+        index := Tab.Panes.IndexOf(Pane);
+        if index = -1 then
+          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
 
-         index:=Tab.Panes.IndexOf(Pane);
-
-         if index=-1 then
-            raise exception.create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
-
-         aMoveUp.Enabled:=(index>0);
-         aMoveDown.Enabled:=(index<Tab.Panes.Count-1);
-         end else
+        aMoveUp.Enabled := (index > 0);
+        aMoveDown.Enabled := (index < Tab.Panes.Count-1);
+      end else
       if Obj is TSpkBaseItem then
-         begin
-         Item:=TSpkBaseItem(Obj);
+      begin
+        Item := TSpkBaseItem(Obj);
+        if not CheckValidItemNode(Node) then
+          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
 
-         if not(CheckValidItemNode(Node)) then
-            raise exception.create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
+        Pane := TSpkPane(Node.Parent.Data);
 
-         Pane:=TSpkPane(Node.Parent.Data);
+        aAddTab.Enabled := true;
+        aRemoveTab.Enabled := false;
+        aAddPane.Enabled := true;
+        aRemovePane.Enabled := false;
+        aAddLargeButton.Enabled := true;
+        aAddSmallButton.Enabled := true;
+        aAddCheckbox.Enabled := true;
+        aAddRadioButton.Enabled := true;
+        aRemoveItem.Enabled := true;
 
-         aAddTab.Enabled:=true;
-         aRemoveTab.Enabled:=false;
-         aAddPane.Enabled:=true;
-         aRemovePane.Enabled:=false;
-         aAddLargeButton.Enabled:=true;
-         aAddSmallButton.Enabled:=true;
-         aAddCheckbox.Enabled := true;
-         aAddRadioButton.Enabled := true;
-         aRemoveItem.Enabled:=true;
+        index := Pane.Items.IndexOf(Item);
+        if index = -1 then
+          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
 
-         index:=Pane.Items.IndexOf(Item);
-
-         if index=-1 then
-            raise exception.create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
-
-         aMoveUp.Enabled:=(index>0);
-         aMoveDown.Enabled:=(index<Pane.Items.Count-1);
-         end else
-             raise exception.create('TfrmEditWindow.CheckActionsAvailability: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
-      end;
-   end;
-
+        aMoveUp.Enabled := (index > 0);
+        aMoveDown.Enabled := (index < Pane.Items.Count - 1);
+      end else
+        raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
+    end;
+  end;
 end;
 
 function TfrmEditWindow.CheckValidItemNode(Node: TTreeNode): boolean;
 begin
-result:=false;
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
-
-{$B-}
-result:=(Node<>nil) and
-        (Node.Data<>nil) and
-        (TObject(Node.Data) is TSpkBaseItem) and
-        CheckValidPaneNode(Node.Parent);
+  Result := false;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
+  {$B-}
+  Result:=(Node <> nil) and
+          (Node.Data <> nil) and
+          (TObject(Node.Data) is TSpkBaseItem) and
+          CheckValidPaneNode(Node.Parent);
 end;
 
 function TfrmEditWindow.CheckValidPaneNode(Node: TTreeNode): boolean;
 begin
-result:=false;
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
-
-{$B-}
-result:=(Node<>nil) and
-        (Node.Data<>nil) and
-        (TObject(Node.Data) is TSpkPane) and
-        CheckValidTabNode(Node.Parent);
+  Result := false;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
+  {$B-}
+  Result := (Node <> nil) and
+            (Node.Data <> nil) and
+            (TObject(Node.Data) is TSpkPane) and
+            CheckValidTabNode(Node.Parent);
 end;
 
 function TfrmEditWindow.CheckValidTabNode(Node: TTreeNode): boolean;
 begin
-result:=false;
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
-
-{$B-}
-result:=(Node<>nil) and
-        (Node.Data<>nil) and
-        (TObject(Node.Data) is TSpkTab);
+  Result := false;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
+  {$B-}
+  result := (Node <> nil) and
+            (Node.Data <> nil) and
+            (TObject(Node.Data) is TSpkTab);
 end;
 
 procedure TfrmEditWindow.FormActivate(Sender: TObject);
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
-
-if not(ValidateTreeData) then
-   BuildTreeData;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
+  if not ValidateTreeData then
+    BuildTreeData;
 end;
 
 procedure TfrmEditWindow.FormDestroy(Sender: TObject);
 begin
-if FToolbar<>nil then
-   FToolbar.RemoveFreeNotification(self);
+  if FToolbar <> nil then
+    FToolbar.RemoveFreeNotification(self);
 end;
 
 procedure TfrmEditWindow.FormShow(Sender: TObject);
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
-
-BuildTreeData;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
+  BuildTreeData;
 end;
 
 function TfrmEditWindow.GetItemCaption(Item: TSpkBaseItem): string;
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
-
-if Item is TSpkBaseButton then
-   begin
-   result:=TSpkBaseButton(Item).Caption;
-   end else
-       result:='<Unknown caption>';
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
+  if Item is TSpkBaseButton then
+    Result := TSpkBaseButton(Item).Caption
+  else
+    Result := '<Unknown caption>';
 end;
 
 procedure TfrmEditWindow.Notification(AComponent: TComponent;
@@ -709,38 +681,36 @@ begin
   inherited;
 
   if (AComponent = FToolbar) and (Operation = opRemove) then
-     begin
-     // W³aœnie zwalniany jest toolbar, którego zawartoœæ wyœwietla okno
-     // edytora. Trzeba posprz¹taæ zawartoœæ - w przeciwnym wypadku okno
-     // bêdzie mia³o referencje do ju¿ usuniêtych elementów toolbara, co
-     // skoñczy siê AVami...
-
-     SetData(nil, nil);
-     end;
+  begin
+    // W³aœnie zwalniany jest toolbar, którego zawartoœæ wyœwietla okno
+    // edytora. Trzeba posprz¹taæ zawartoœæ - w przeciwnym wypadku okno
+    // bêdzie mia³o referencje do ju¿ usuniêtych elementów toolbara, co
+    // skoñczy siê AVami...
+    SetData(nil, nil);
+  end;
 end;
 
 procedure TfrmEditWindow.SetItemCaption(Item: TSpkBaseItem; const Value : string);
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
 
-if Item is TSpkBaseButton then
-   TSpkBaseButton(Item).Caption:=Value;
+  if Item is TSpkBaseButton then
+    TSpkBaseButton(Item).Caption := Value;
 end;
 
 procedure TfrmEditWindow.SetData(AToolbar: TSpkToolbar; ADesigner: TComponentEditorDesigner);
-
 begin
-if FToolbar<>nil then
-   FToolbar.RemoveFreeNotification(self);
+  if FToolbar <> nil then
+    FToolbar.RemoveFreeNotification(self);
 
-FToolbar:=AToolbar;
-FDesigner:=ADesigner;
+  FToolbar := AToolbar;
+  FDesigner := ADesigner;
 
-if FToolbar<>nil then
-   FToolbar.FreeNotification(self);
+  if FToolbar <> nil then
+    FToolbar.FreeNotification(self);
 
-BuildTreeData;
+  BuildTreeData;
 end;
 
 procedure TfrmEditWindow.DoRemoveItem;
@@ -751,8 +721,8 @@ var
   Pane: TSpkPane;
   NextNode: TTreeNode;
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
 
   Node := tvStructure.Selected;
   if not (CheckValidItemNode(Node)) then
@@ -761,7 +731,7 @@ if (FToolbar=nil) or (FDesigner=nil) then
   Pane := TSpkPane(Node.Parent.Data);
   index := Pane.Items.IndexOf(Item);
   if index = -1 then
-    raise exception.create('TfrmEditWindow.aRemoveItemExecute: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.aRemoveItemExecute: Uszkodzona struktura drzewa!');
   if Node.getPrevSibling <> nil then
     NextNode := Node.getPrevSibling
   else if Node.GetNextSibling <> nil then
@@ -782,17 +752,17 @@ var
   Node: TTreeNode;
   Tab: TSpkTab;
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
 
   Node := tvStructure.Selected;
   if not (CheckValidPaneNode(Node)) then
-    raise exception.create('TfrmEditWindow.aRemovePaneExecute: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.aRemovePaneExecute: Uszkodzona struktura drzewa!');
   Pane := TSpkPane(Node.Data);
   Tab := TSpkTab(Node.Parent.Data);
   index := Tab.Panes.IndexOf(Pane);
   if index = -1 then
-    raise Exception.create('TfrmEditWindow.aRemovePaneExecute: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.aRemovePaneExecute: Uszkodzona struktura drzewa!');
   if Node.GetPrevSibling <> nil then
     NextNode := Node.GetPrevSibling
   else if Node.GetNextSibling <> nil then
@@ -811,18 +781,17 @@ var
   Tab: TSpkTab;
   index: Integer;
   NextNode: TTreeNode;
-  //DesignObj: IDesignObject;
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
 
   Node := tvStructure.Selected;
   if not (CheckValidTabNode(Node)) then
-    raise exception.create('TfrmEditWindow.aRemoveTabExecute: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.aRemoveTabExecute: Uszkodzona struktura drzewa!');
   Tab := TSpkTab(Node.Data);
   index := FToolbar.Tabs.IndexOf(Tab);
   if index = -1 then
-    raise exception.create('TfrmEditWindow.aRemoveTabExecute: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.aRemoveTabExecute: Uszkodzona struktura drzewa!');
   if Node.GetPrevSibling <> nil then
     NextNode := Node.GetPrevSibling
   else if Node.GetNextSibling <> nil then
@@ -831,7 +800,7 @@ if (FToolbar=nil) or (FDesigner=nil) then
     NextNode := nil;
   FToolbar.Tabs.Delete(index);
   tvStructure.Items.Delete(Node);
-  if assigned(NextNode) then
+  if Assigned(NextNode) then
   begin
     // Zdarzenie OnChange wyzwoli aktualizacjê zaznaczonego obiektu w
     // Object Inspectorze
@@ -869,36 +838,32 @@ begin
   tvStructure.Items.Clear;
   tvStructure.OnDeletion := tvStructureDeletion;
 
-  if (FToolbar<>nil) and (FDesigner<>nil) then
-     begin
-     if FToolbar.Tabs.Count > 0 then
-       for i := 0 to FToolbar.Tabs.Count - 1 do
-       begin
-         tabnode := tvStructure.Items.AddChild(nil, FToolbar.Tabs[i].Caption);
-         tabnode.ImageIndex := 0;
-         tabnode.SelectedIndex := 0;
-         tabnode.Data := FToolbar.Tabs[i];
-         if FToolbar.Tabs[i].Panes.Count > 0 then
-           for j := 0 to FToolbar.Tabs.Items[i].Panes.Count - 1 do
-           begin
-             panenode := tvStructure.Items.AddChild(tabnode, FToolbar.Tabs[i].Panes[j].Caption);
-             panenode.ImageIndex := 1;
-             panenode.SelectedIndex := 1;
-             panenode.Data := FToolbar.Tabs[i].Panes[j];
-             if FToolbar.Tabs[i].Panes[j].Items.Count > 0 then
-                for k := 0 to FToolbar.Tabs[i].Panes[j].Items.Count - 1 do
-                begin
-                Obj:=FToolbar.Tabs[i].Panes[j].Items[k];
-                s:=GetItemCaption(Obj);
-
-                itemnode:=tvStructure.Items.AddChild(panenode,s);
-                itemnode.Imageindex:=2;
-                itemnode.Selectedindex:=2;
-                itemnode.Data:=Obj;
-                end;
-           end;
-       end;
-     end;
+  if (FToolbar <> nil) and (FDesigner <> nil) then
+  begin
+    for i := 0 to FToolbar.Tabs.Count - 1 do
+    begin
+      tabnode := tvStructure.Items.AddChild(nil, FToolbar.Tabs[i].Caption);
+      tabnode.ImageIndex := 0;
+      tabnode.SelectedIndex := 0;
+      tabnode.Data := FToolbar.Tabs[i];
+      for j := 0 to FToolbar.Tabs.Items[i].Panes.Count - 1 do
+      begin
+        panenode := tvStructure.Items.AddChild(tabnode, FToolbar.Tabs[i].Panes[j].Caption);
+        panenode.ImageIndex := 1;
+        panenode.SelectedIndex := 1;
+        panenode.Data := FToolbar.Tabs[i].Panes[j];
+        for k := 0 to FToolbar.Tabs[i].Panes[j].Items.Count - 1 do
+        begin
+          Obj := FToolbar.Tabs[i].Panes[j].Items[k];
+          s := GetItemCaption(Obj);
+          itemnode := tvStructure.Items.AddChild(panenode,s);
+          itemnode.Imageindex := 2;
+          itemnode.Selectedindex := 2;
+          itemnode.Data := Obj;
+        end;
+      end;
+    end;
+  end;
 
   if (tvStructure.Items.Count > 0) and (FToolbar.TabIndex > -1) then begin
     node := tvStructure.Items[0];
@@ -916,118 +881,104 @@ begin
 end;
 
 procedure TfrmEditWindow.RefreshNames;
-
-var tabnode, panenode, itemnode : TTreeNode;
-    Obj: TSpkBaseItem;
-    s: string;
+var
+  tabnode, panenode, itemnode: TTreeNode;
+  Obj: TSpkBaseItem;
+  s: string;
 
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
 
-tabnode:=tvStructure.Items.GetFirstNode;
-while tabnode<>nil do
+  tabnode := tvStructure.Items.GetFirstNode;
+  while tabnode<>nil do
+  begin
+    if not CheckValidTabNode(tabnode) then
+      raise Exception.Create('TfrmEditWindow.RefreshNames: Uszkodzona struktura drzewa!');
+
+    tabnode.Text := TSpkTab(tabnode.Data).Caption;
+
+    panenode := tabnode.getFirstChild;
+    while panenode <> nil do
+    begin
+      if not CheckValidPaneNode(panenode) then
+        raise Exception.Create('TfrmEditWindow.RefreshNames: Uszkodzona struktura drzewa!');
+
+      panenode.Text := TSpkPane(panenode.Data).Caption;
+
+      itemnode := panenode.getFirstChild;
+      while itemnode <> nil do
       begin
-      if not(CheckValidTabNode(tabnode)) then
-         raise exception.create('TfrmEditWindow.RefreshNames: Uszkodzona struktura drzewa!');
+        if not CheckValidItemNode(itemnode) then
+          raise Exception.Create('TfrmEditWindow.RefreshNames: Uszkodzona struktura drzewa!');
 
-      tabnode.Text:=TSpkTab(tabnode.Data).Caption;
-
-      panenode:=tabnode.getFirstChild;
-      while panenode<>nil do
-            begin
-            if not(CheckValidPaneNode(panenode)) then
-               raise exception.create('TfrmEditWindow.RefreshNames: Uszkodzona struktura drzewa!');
-
-            panenode.Text:=TSpkPane(panenode.Data).Caption;
-
-            itemnode:=panenode.getFirstChild;
-            while itemnode<>nil do
-                  begin
-                  if not(CheckValidItemNode(itemnode)) then
-                     raise exception.create('TfrmEditWindow.RefreshNames: Uszkodzona struktura drzewa!');
-
-                  Obj:=TSpkBaseItem(itemnode.Data);
-                  s:=GetItemCaption(Obj);
-
-                  itemnode.Text:=s;
-
-                  itemnode:=itemnode.getNextSibling;
-                  end;
-
-            panenode:=panenode.getNextSibling;
-            end;
-
-      tabnode:=tabnode.getNextSibling;
+        Obj := TSpkBaseItem(itemnode.Data);
+        s := GetItemCaption(Obj);
+        itemnode.Text := s;
+        itemnode := itemnode.getNextSibling;
       end;
+
+      panenode := panenode.getNextSibling;
+    end;
+
+    tabnode := tabnode.getNextSibling;
+  end;
 end;
 
 procedure TfrmEditWindow.tvStructureChange(Sender: TObject; Node: TTreeNode);
-
-var Obj : TObject;
-    Tab : TSpkTab;
-    Pane : TSpkPane;
-    Item : TSpkBaseItem;
-    //DesignObj : IDesignObject;
-    index : integer;
-
+var
+  Obj: TObject;
+  Tab: TSpkTab;
+  Pane: TSpkPane;
+  Item: TSpkBaseItem;
+  index: integer;
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
 
-if assigned(Node) then
-   begin
-   Obj:=TObject(Node.Data);
-
-   if Obj=nil then
-      raise exception.create('TfrmEditWindow.tvStructureChange: Nieprawid³owe dane w ga³êzi!');
-
-   if Obj is TSpkTab then
-      begin
-      Tab:=TSpkTab(Obj);
+  if Assigned(Node) then
+  begin
+    Obj := TObject(Node.Data);
+    if Obj = nil then
+      raise Exception.Create('TfrmEditWindow.tvStructureChange: Nieprawid³owe dane w ga³êzi!');
+    if Obj is TSpkTab then
+    begin
+      Tab := TSpkTab(Obj);
       FDesigner.SelectOnlyThisComponent(Tab);
-      index:=FToolbar.Tabs.IndexOf(Tab);
+      index := FToolbar.Tabs.IndexOf(Tab);
       if index=-1 then
-         raise exception.create('TfrmEditWindow.tvStructureChange: Uszkodzona struktura drzewa!');
-      FToolbar.TabIndex:=index;
-      end else
-   if Obj is TSpkPane then
-      begin
-      Pane:=TSpkPane(Obj);
+        raise Exception.Create('TfrmEditWindow.tvStructureChange: Uszkodzona struktura drzewa!');
+      FToolbar.TabIndex := index;
+    end else
+    if Obj is TSpkPane then
+    begin
+      Pane := TSpkPane(Obj);
       FDesigner.SelectOnlyThisComponent(Pane);
-
       if not(CheckValidPaneNode(Node)) then
-         raise exception.create('TfrmEditWindow.tvStructureChange: Uszkodzona struktura drzewa!');
-
-      Tab:=TSpkTab(Node.Parent.Data);
-
-      index:=FToolbar.Tabs.IndexOf(Tab);
-      if index=-1 then
-         raise exception.create('TfrmEditWindow.tvStructureChange: Uszkodzona struktura drzewa!');
-      FToolbar.TabIndex:=index;
-      end else
-   if Obj is TSpkBaseItem then
-      begin
-      Item:=TSpkBaseItem(Obj);
+        raise Exception.Create('TfrmEditWindow.tvStructureChange: Uszkodzona struktura drzewa!');
+      Tab := TSpkTab(Node.Parent.Data);
+      index := FToolbar.Tabs.IndexOf(Tab);
+      if index = -1 then
+        raise Exception.Create('TfrmEditWindow.tvStructureChange: Uszkodzona struktura drzewa!');
+      FToolbar.TabIndex := index;
+    end else
+    if Obj is TSpkBaseItem then
+    begin
+      Item := TSpkBaseItem(Obj);
       FDesigner.SelectOnlyThisComponent(Item);
-
-      if not(CheckValidItemNode(Node)) then
-         raise exception.create('TfrmEditWindow.tvStructureChange: Uszkodzona struktura drzewa!');
-
-      Tab:=TSpkTab(Node.Parent.Parent.Data);
-
-      index:=FToolbar.Tabs.IndexOf(Tab);
-      if index=-1 then
-         raise exception.create('TfrmEditWindow.tvStructureChange: Uszkodzona struktura drzewa!');
-      FToolbar.TabIndex:=index;
-      end else
-          raise exception.create('TfrmEditWindow.tvStructureChange: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
+      if not CheckValidItemNode(Node) then
+        raise Exception.Create('TfrmEditWindow.tvStructureChange: Uszkodzona struktura drzewa!');
+      Tab := TSpkTab(Node.Parent.Parent.Data);
+      index := FToolbar.Tabs.IndexOf(Tab);
+      if index = -1 then
+        raise Exception.Create('TfrmEditWindow.tvStructureChange: Uszkodzona struktura drzewa!');
+      FToolbar.TabIndex := index;
+    end else
+      raise Exception.Create('TfrmEditWindow.tvStructureChange: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
    end else
-       begin
-       FDesigner.SelectOnlyThisComponent(FToolbar);
-       end;
+     FDesigner.SelectOnlyThisComponent(FToolbar);
 
-CheckActionsAvailability;
+  CheckActionsAvailability;
 end;
 
 procedure TfrmEditWindow.tvStructureDeletion(Sender:TObject; Node:TTreeNode);
@@ -1054,69 +1005,59 @@ var
   Tab: TSpkTab;
   Pane: TSpkPane;
   Item: TSpkBaseItem;
-
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
 
-if Node.Data = nil then
-   raise exception.create('TfrmEditWindow.tvStructureEdited: Uszkodzona struktura drzewa!');
+  if Node.Data = nil then
+    raise Exception.Create('TfrmEditWindow.tvStructureEdited: Uszkodzona struktura drzewa!');
 
-if TObject(Node.Data) is TSpkTab then
-   begin
-   Tab:=TSpkTab(Node.Data);
-   Tab.Caption:=S;
-
-   FDesigner.Modified;
-   end else
-if TObject(Node.Data) is TSpkPane then
-   begin
-   Pane:=TSpkPane(Node.Data);
-   Pane.Caption:=S;
-
-   FDesigner.Modified;
-   end else
-if TObject(Node.Data) is TSpkBaseItem then
-   begin
-   Item:=TSpkBaseItem(Node.Data);
-   SetItemCaption(Item, S);
-
-   FDesigner.Modified;
-   end else
-       raise exception.create('TfrmEditWindow.tvStructureEdited: Uszkodzona struktura drzewa!');
+  if TObject(Node.Data) is TSpkTab then
+  begin
+    Tab := TSpkTab(Node.Data);
+    Tab.Caption := S;
+    FDesigner.Modified;
+  end else
+  if TObject(Node.Data) is TSpkPane then
+  begin
+    Pane := TSpkPane(Node.Data);
+    Pane.Caption := S;
+    FDesigner.Modified;
+  end else
+  if TObject(Node.Data) is TSpkBaseItem then
+  begin
+    Item := TSpkBaseItem(Node.Data);
+    SetItemCaption(Item, S);
+    FDesigner.Modified;
+  end else
+    raise Exception.Create('TfrmEditWindow.tvStructureEdited: Uszkodzona struktura drzewa!');
 end;
 
 procedure TfrmEditWindow.tvStructureKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
 
-if Key = VK_DELETE then
-   begin
-   if tvStructure.Selected<>nil then
-      begin
+  if Key = VK_DELETE then
+  begin
+    if tvStructure.Selected <> nil then
+    begin
       // Sprawdzamy, jakiego rodzaju obiekt jest zaznaczony - wystarczy
       // przetestowaæ typ podwieszonego obiektu.
       if TObject(tvStructure.Selected.Data) is TSpkTab then
-         begin
-         DoRemoveTab;
-         end else
-      if TObject(tvStructure.Selected.Data) is TSpkPane then
-         begin
-         DoRemovePane;
-         end else
-      if TObject(tvStructure.Selected.Data) is TSpkBaseItem then
-         begin
-         DoRemoveItem;
-         end else
-             raise exception.create('TfrmEditWindow.tvStructureKeyDown: Uszkodzona struktura drzewa!');
-      end;
+        DoRemoveTab
+      else if TObject(tvStructure.Selected.Data) is TSpkPane then
+        DoRemovePane
+      else if TObject(tvStructure.Selected.Data) is TSpkBaseItem then
+        DoRemoveItem
+      else
+        raise Exception.Create('TfrmEditWindow.tvStructureKeyDown: Uszkodzona struktura drzewa!');
+    end;
    end;
 end;
 
 function TfrmEditWindow.ValidateTreeData: boolean;
-
 var
   i: Integer;
   TabsValid: Boolean;
@@ -1127,89 +1068,77 @@ var
   k: Integer;
   ItemsValid: Boolean;
   ItemNode: TTreeNode;
-
 begin
-result:=false;
-if (FToolbar=nil) or (FDesigner=nil) then
-   exit;
+  Result := false;
+  if (FToolbar = nil) or (FDesigner = nil) then
+    exit;
 
-i:=0;
-TabsValid:=true;
-TabNode:=tvStructure.Items.GetFirstNode;
+  i := 0;
+  TabsValid := true;
+  TabNode := tvStructure.Items.GetFirstNode;
 
-while (i<FToolbar.Tabs.Count) and TabsValid do
+  while (i < FToolbar.Tabs.Count) and TabsValid do
+  begin
+    TabsValid := TabsValid and (TabNode <> nil);
+    if TabsValid then
+      TabsValid := TabsValid and (TabNode.Data = FToolbar.Tabs[i]);
+    if TabsValid then
+    begin
+      j := 0;
+      PanesValid := true;
+      PaneNode := TabNode.GetFirstChild;
+      while (j < FToolbar.Tabs[i].Panes.Count) and PanesValid do
       begin
-      TabsValid:=TabsValid and (TabNode<>nil);
+        PanesValid := PanesValid and (PaneNode <> nil);
+        if PanesValid then
+          PanesValid := PanesValid and (PaneNode.Data = FToolbar.Tabs[i].Panes[j]);
+        if PanesValid then
+        begin
+          k := 0;
+          ItemsValid := true;
+          ItemNode := PaneNode.GetFirstChild;
+          while (k < FToolbar.Tabs[i].Panes[j].Items.Count) and ItemsValid do
+          begin
+            ItemsValid := ItemsValid and (ItemNode <> nil);
+            if ItemsValid then
+              ItemsValid := ItemsValid and (ItemNode.Data = FToolbar.Tabs[i].Panes[j].Items[k]);
+            if ItemsValid then
+            begin
+              inc(k);
+              ItemNode := ItemNode.GetNextSibling;
+            end;
+          end;
 
-      if TabsValid then
-         TabsValid:=TabsValid and (TabNode.Data = FToolbar.Tabs[i]);
+          // Wa¿ne! Trzeba sprawdziæ, czy w drzewie nie ma dodatkowych
+          // elementów!
+          ItemsValid := ItemsValid and (ItemNode = nil);
+          PanesValid := PanesValid and ItemsValid;
+        end;
 
-      if TabsValid then
-         begin
-         j:=0;
-         PanesValid:=true;
-         PaneNode:=TabNode.GetFirstChild;
-
-         while (j<FToolbar.Tabs[i].Panes.Count) and PanesValid do
-               begin
-               PanesValid:=PanesValid and (PaneNode<>nil);
-
-               if PanesValid then
-                  PanesValid:=PanesValid and (PaneNode.Data = FToolbar.Tabs[i].Panes[j]);
-
-               if PanesValid then
-                  begin
-                  k:=0;
-                  ItemsValid:=true;
-                  ItemNode:=PaneNode.GetFirstChild;
-
-                  while (k<FToolbar.Tabs[i].Panes[j].Items.Count) and ItemsValid do
-                        begin
-                        ItemsValid:=ItemsValid and (ItemNode<>nil);
-
-                        if ItemsValid then
-                           ItemsValid:=ItemsValid and (ItemNode.Data = FToolbar.Tabs[i].Panes[j].Items[k]);
-
-                        if ItemsValid then
-                           begin
-                           inc(k);
-                           ItemNode:=ItemNode.GetNextSibling;
-                           end;
-                        end;
-
-                  // Wa¿ne! Trzeba sprawdziæ, czy w drzewie nie ma dodatkowych
-                  // elementów!
-                  ItemsValid:=ItemsValid and (ItemNode = nil);
-
-                  PanesValid:=PanesValid and ItemsValid;
-                  end;
-
-               if PanesValid then
-                  begin
-                  inc(j);
-                  PaneNode:=PaneNode.GetNextSibling;
-                  end;
-               end;
-
-         // Wa¿ne! Trzeba sprawdziæ, czy w drzewie nie ma dodatkowych
-         // elementów!
-         PanesValid:=PanesValid and (PaneNode = nil);
-
-         TabsValid:=TabsValid and PanesValid;
-         end;
-
-      if TabsValid then
-         begin
-         inc(i);
-         TabNode:=TabNode.GetNextSibling;
-         end;
+        if PanesValid then
+        begin
+          inc(j);
+          PaneNode := PaneNode.GetNextSibling;
+        end;
       end;
 
-// Wa¿ne! Trzeba sprawdziæ, czy w drzewie nie ma dodatkowych
-// elementów!
-TabsValid:=TabsValid and (TabNode = nil);
+      // Wa¿ne! Trzeba sprawdziæ, czy w drzewie nie ma dodatkowych
+      // elementów!
+      PanesValid := PanesValid and (PaneNode = nil);
+      TabsValid := TabsValid and PanesValid;
+    end;
 
-result:=TabsValid;
+    if TabsValid then
+    begin
+      inc(i);
+      TabNode := TabNode.GetNextSibling;
+    end;
+  end;
+
+  // Wa¿ne! Trzeba sprawdziæ, czy w drzewie nie ma dodatkowych
+  // elementów!
+  TabsValid := TabsValid and (TabNode = nil);
+  Result := TabsValid;
 end;
 
 end.
