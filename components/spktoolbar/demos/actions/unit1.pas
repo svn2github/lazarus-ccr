@@ -21,6 +21,13 @@ type
     AcQuit: TAction;
     AcAutoSave: TAction;
     AcSaveNow: TAction;
+    AcBold: TAction;
+    AcItalic: TAction;
+    AcLeftJustify: TAction;
+    AcCenter: TAction;
+    AcRightJustify: TAction;
+    AcAbout: TAction;
+    AcUnderline: TAction;
     ActionList: TActionList;
     AcEditCopy: TEditCopy;
     AcEditCut: TEditCut;
@@ -43,7 +50,17 @@ type
     MenuItem2: TMenuItem;
     MenuItem20: TMenuItem;
     MenuItem21: TMenuItem;
+    MenuItem22: TMenuItem;
+    MenuItem23: TMenuItem;
+    MenuItem24: TMenuItem;
+    MenuItem25: TMenuItem;
+    MenuItem26: TMenuItem;
+    MenuItem27: TMenuItem;
+    MenuItem28: TMenuItem;
+    MenuItem29: TMenuItem;
     MenuItem3: TMenuItem;
+    MenuItem30: TMenuItem;
+    MenuItem31: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
@@ -51,13 +68,23 @@ type
     MenuItem8: TMenuItem;
     MenuItem9: TMenuItem;
     Panel1: TPanel;
+    SpkLargeButton4: TSpkLargeButton;
+    SpkPane2: TSpkPane;
+    SpkPane4: TSpkPane;
+    SpkSmallButton10: TSpkSmallButton;
+    SpkSmallButton11: TSpkSmallButton;
+    SpkSmallButton4: TSpkSmallButton;
+    SpkSmallButton6: TSpkSmallButton;
+    SpkSmallButton8: TSpkSmallButton;
+    SpkSmallButton9: TSpkSmallButton;
+    SpkTab4: TSpkTab;
+    SpkTab5: TSpkTab;
     StyleMenu: TPopupMenu;
     SpkCheckbox1: TSpkCheckbox;
     SpkLargeButton1: TSpkLargeButton;
     SpkLargeButton2: TSpkLargeButton;
     SpkLargeButton3: TSpkLargeButton;
     SpkPane1: TSpkPane;
-    SpkPane2: TSpkPane;
     SpkPane3: TSpkPane;
     SpkPane5: TSpkPane;
     SpkPane6: TSpkPane;
@@ -74,6 +101,12 @@ type
     SpkToolbar1: TSpkToolbar;
     ToolBar1: TToolBar;
     ToolButton1: TToolButton;
+    ToolButton10: TToolButton;
+    ToolButton11: TToolButton;
+    ToolButton12: TToolButton;
+    ToolButton13: TToolButton;
+    ToolButton14: TToolButton;
+    ToolButton15: TToolButton;
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
@@ -81,16 +114,24 @@ type
     ToolButton6: TToolButton;
     ToolButton7: TToolButton;
     ToolButton8: TToolButton;
+    ToolButton9: TToolButton;
+    procedure AcAboutExecute(Sender: TObject);
     procedure AcAutoSaveExecute(Sender: TObject);
+    procedure AcBoldExecute(Sender: TObject);
+    procedure AcCenterExecute(Sender: TObject);
     procedure AcClassicalGUIExecute(Sender: TObject);
     procedure AcEditCopyExecute(Sender: TObject);
     procedure AcEditCutExecute(Sender: TObject);
     procedure AcEditPasteExecute(Sender: TObject);
+    procedure AcItalicExecute(Sender: TObject);
+    procedure AcLeftJustifyExecute(Sender: TObject);
     procedure AcOpenExecute(Sender: TObject);
     procedure AcQuitExecute(Sender: TObject);
     procedure AcRibbonGUIExecute(Sender: TObject);
+    procedure AcRightJustifyExecute(Sender: TObject);
     procedure AcSaveExecute(Sender: TObject);
     procedure AcSaveNowExecute(Sender: TObject);
+    procedure AcUnderlineExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure StyleMenuClick(Sender: TObject);
@@ -98,6 +139,7 @@ type
     { private declarations }
     procedure LoadFromIni;
     procedure SaveToIni;
+    procedure SetStyle(AStyle: TSpkStyle);
     procedure SetUserInterface(Ribbon:boolean);
   public
     { public declarations }
@@ -111,7 +153,7 @@ implementation
 {$R *.lfm}
 
 uses
-  inifiles;
+  inifiles, unit2;
 
 
 { TForm1 }
@@ -121,9 +163,31 @@ begin
   SetUserInterface(false);
 end;
 
+procedure TForm1.AcAboutExecute(Sender: TObject);
+var
+  F: TAboutForm;
+begin
+  F := TAboutForm.Create(nil);
+  try
+    F.ShowModal;
+  finally
+    F.Free;
+  end;
+end;
+
 procedure TForm1.AcAutoSaveExecute(Sender: TObject);
 begin
   //  Checked is handled by "AutoCheck". Need this method to have the action enabled.
+end;
+
+procedure TForm1.AcBoldExecute(Sender: TObject);
+begin
+  Label1.Caption := '"Bold" clicked';
+end;
+
+procedure TForm1.AcCenterExecute(Sender: TObject);
+begin
+  Label1.Caption := '"Center" clicked';
 end;
 
 procedure TForm1.AcEditCopyExecute(Sender: TObject);
@@ -141,6 +205,16 @@ begin
   Label1.Caption := '"Paste" clicked';
 end;
 
+procedure TForm1.AcItalicExecute(Sender: TObject);
+begin
+  Label1.Caption := '"Italic" clicked';
+end;
+
+procedure TForm1.AcLeftJustifyExecute(Sender: TObject);
+begin
+  Label1.Caption := '"Left-justify" clicked';
+end;
+
 procedure TForm1.AcOpenExecute(Sender: TObject);
 begin
   Label1.Caption := '"Open" clicked';
@@ -156,6 +230,11 @@ begin
   SetUserInterface(true);
 end;
 
+procedure TForm1.AcRightJustifyExecute(Sender: TObject);
+begin
+  Label1.Caption := '"Right-justify" clicked';
+end;
+
 procedure TForm1.AcSaveExecute(Sender: TObject);
 begin
   Label1.Caption := '"Save" clicked';
@@ -164,6 +243,11 @@ end;
 procedure TForm1.AcSaveNowExecute(Sender: TObject);
 begin
   SaveToIni;
+end;
+
+procedure TForm1.AcUnderlineExecute(Sender: TObject);
+begin
+  Label1.Caption := '"Underline" clicked';
 end;
 
 procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -193,14 +277,32 @@ begin
   try
     SetUserInterface(ini.ReadBool('MainForm', 'RibbonInterface', AcRibbonGUI.Checked));
     SpkToolbar1.Style := TSpkStyle(ini.ReadInteger('MainForm', 'RibbonStyle', 0));
+    SetStyle(SpkToolbar1.Style);
   finally
     ini.Free;
   end;
 end;
 
 procedure TForm1.StyleMenuClick(Sender: TObject);
+var
+  i: Integer;
 begin
-  SpkToolbar1.Style := TSpkStyle((Sender as TMenuItem).Tag);
+//  SpkToolbar1.Style := TSpkStyle((Sender as TMenuItem).Tag);
+  for i:=0 to StyleMenu.Items.Count-1 do
+    StyleMenu.Items[i].Checked := StyleMenu.Items[i] = TMenuItem(Sender);
+  SetStyle(TSpkStyle((Sender as TMenuItem).Tag));
+end;
+
+procedure TForm1.SetStyle(AStyle: TSpkStyle);
+begin
+  SpkToolbar1.Style := AStyle;
+  case SpkToolbar1.Style of
+    spkOffice2007Blue            : SpkToolbar1.Color := clSkyBlue;
+    spkOffice2007Silver          : SpkToolbar1.Color := clWhite;
+    spkOffice2007SilverTurquoise : SpkToolbar1.Color := clWhite;
+    spkMetroLight                : SpkToolbar1.Color := clSilver;
+    spkMetroDark                 : SpkToolbar1.Color := $080808;
+  end;
 end;
 
 procedure TForm1.SaveToIni;
