@@ -170,7 +170,7 @@ object Form1: TForm1
     Appearance.Element.ActiveInnerDarkColor = 961020
     Appearance.Element.ActiveCaptionColor = 8405614
     Appearance.Element.Style = esRounded
-    TabIndex = 3
+    TabIndex = 0
     Images = ImageList
     LargeImages = LargeImageList
     Tabs = (

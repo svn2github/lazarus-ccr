@@ -765,6 +765,9 @@ begin
   FChecked := Value;
   if Assigned(FToolbarDispatch) then
     FToolbarDispatch.NotifyVisualsChanged;
+
+  if not (csDesigning in ComponentState) and (Action <> nil) then
+    (Action as TCustomAction).Checked := Value;
 end;
 
 procedure TSpkBaseButton.SetDropdownMenu(const Value: TPopupMenu);

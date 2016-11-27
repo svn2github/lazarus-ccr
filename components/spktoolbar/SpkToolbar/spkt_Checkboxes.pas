@@ -461,8 +461,11 @@ begin
   if AValue <> FState then
   begin
     FState := AValue;
+    {
     if Assigned(FToolbarDispatch) then
       FToolbarDispatch.NotifyVisualsChanged;
+      }
+    inherited SetChecked(Checked);
   end;
 end;
 
