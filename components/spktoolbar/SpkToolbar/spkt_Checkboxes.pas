@@ -26,8 +26,6 @@ type
     FTableBehaviour : TSpkItemTableBehaviour;
     FGroupBehaviour : TSPkItemGroupBehaviour;
     FCheckboxStyle: TSpkCheckboxStyle;
-    function  GetChecked: Boolean;
-    procedure SetChecked(AValue: Boolean);
     procedure SetGroupBehaviour(const Value: TSpkItemGroupBehaviour);
     procedure SetTableBehaviour(const Value: TSpkItemTableBehaviour);
   protected
@@ -36,8 +34,10 @@ type
     procedure CalcRects; override;
     procedure Click; override;
     procedure ConstructRect(var BtnRect: T2DIntRect);
+    function  GetChecked: Boolean; override;
     function GetDefaultCaption: String; override;
     procedure SetAction(const AValue: TBasicAction); override;
+    procedure SetChecked(const AValue: Boolean); override;
     procedure SetEnabled(const AValue: Boolean); override;
     procedure SetState(AValue: TCheckboxState); virtual;
   public
@@ -54,7 +54,7 @@ type
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X, Y: Integer); override;
   published
-    property Checked: Boolean read GetChecked write SetChecked;
+    property Checked;
     property State: TCheckboxState read FState write SetState;
     property TableBehaviour : TSpkItemTableBehaviour read FTableBehaviour write SetTableBehaviour;
     property GroupBehaviour : TSpkItemGroupBehaviour read FGroupBehaviour write SetGroupBehaviour;
@@ -69,7 +69,7 @@ type
   protected
     function GetDefaultCaption: String; override;
     procedure SetState(AValue: TCheckboxState); override;
-    procedure UncheckSiblings;
+    procedure UncheckSiblings; override;
   public
     constructor Create(AOwner: TComponent); override;
   end;
@@ -435,7 +435,7 @@ begin
   end;
 end;
 
-procedure TSpkCustomCheckbox.SetChecked(AValue: Boolean);
+procedure TSpkCustomCheckbox.SetChecked(const AValue: Boolean);
 begin
   if AValue then
     SetState(cbChecked)
@@ -470,7 +470,7 @@ procedure TSpkCustomCheckbox.SetTableBehaviour(const Value: TSpkItemTableBehavio
 begin
   FTableBehaviour := Value;
   if Assigned(FToolbarDispatch) then
-     FToolbarDispatch.NotifyMetricsChanged;
+    FToolbarDispatch.NotifyMetricsChanged;
 end;
 
 
@@ -507,13 +507,17 @@ procedure TSpkRadioButton.UncheckSiblings;
 var
   i: Integer;
   pane: TSpkPane;
+  rb: TSpkRadioButton;
 begin
-  if (Parent is TSpkPane) then
-  begin
+  if (Parent is TSpkPane) then begin
     pane := TSpkPane(Parent);
-    for i:=0 to pane.Items.Count-1 do
-      if (pane.items[i] is TSpkRadioButton) and (pane.items[i] <> self) then
-        TSpkRadioButton(pane.items[i]).State := cbUnchecked;
+    for i := 0 to pane.Items.Count-1 do
+      if (pane.Items[i] is TSpkRadioButton) then
+      begin
+        rb := TSpkRadioButton(pane.Items[i]);
+        if (rb <> self) and (rb.GroupIndex = GroupIndex) then
+          rb.State := cbUnchecked;
+      end;
   end;
 end;
 

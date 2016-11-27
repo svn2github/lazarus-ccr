@@ -186,6 +186,19 @@ type
     procedure SaveToXML(Node: TSpkXMLNode);
     procedure Reset(AStyle: TSpkStyle = spkOffice2007Blue);
 
+    procedure GetActiveColors(IsChecked: Boolean; out AFrameColor,
+      AInnerLightColor, AInnerDarkColor, AGradientFromColor,
+      AGradientToColor: TColor; out AGradientKind: TBackgroundKind;
+      ABrightenBy: Integer = 0);
+    procedure GetHotTrackColors(IsChecked: Boolean; out AFrameColor,
+      AInnerLightColor, AInnerDarkColor, AGradientFromColor,
+      AGradientToColor: TColor; out AGradientKind: TBackgroundKind;
+      ABrightenBy: Integer = 0);
+    procedure GetIdleColors(IsChecked: Boolean; out AFrameColor,
+      AInnerLightColor, AInnerDarkColor, AGradientFromColor,
+      AGradientToColor: TColor; out AGradientKind: TBackgroundKind;
+      ABrightenBy: Integer = 0);
+
   published
     property CaptionFont: TFont read FCaptionFont write SetCaptionFont;
     property IdleFrameColor: TColor read FIdleFrameColor write SetIdleFrameColor;
@@ -257,7 +270,7 @@ procedure SetDefaultFont(AFont: TFont);
 implementation
 
 uses
-  LCLIntf, LCLType, typinfo;
+  LCLIntf, LCLType, typinfo, spkGraphTools;
 
 procedure SaveFontToPascal(AList: TStrings; AFont: TFont; AName: String);
 var
@@ -799,6 +812,101 @@ begin
       FDispatch.NotifyAppearanceChanged;
   end else
     raise AssignException.create('TSpkElementAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkElementAppearance!');
+end;
+
+procedure TSpkElementAppearance.GetActiveColors(IsChecked: Boolean;
+  out AFrameColor, AInnerLightColor, AInnerDarkColor, AGradientFromColor,
+  AGradientToColor: TColor; out AGradientKind: TBackgroundKind;
+  ABrightenBy: Integer = 0);
+const
+  DELTA = -20;
+begin
+  AFrameColor := FActiveFrameColor;
+  AInnerLightColor := FActiveInnerLightColor;
+  AInnerDarkColor := FActiveInnerDarkColor;
+  AGradientFromColor := FActiveGradientFromColor;
+  AGradientToColor := FActiveGradientToColor;
+  AGradientKind := FActiveGradientType;
+
+  if IsChecked then
+    ABrightenBy := DELTA + ABrightenBy;
+
+  if ABrightenBy <> 0 then
+  begin
+    AFrameColor := TColorTools.Brighten(AFrameColor, ABrightenBy);
+    AInnerLightColor := TColorTools.Brighten(AInnerLightColor, ABrightenBy);
+    AInnerDarkColor := TColortools.Brighten(AInnerDarkColor, ABrightenBy);
+    AGradientFromColor := TColorTools.Brighten(AGradientFromColor, ABrightenBy);
+    AGradientToColor := TColorTools.Brighten(AGradientToColor, ABrightenBy);
+  end;
+end;
+
+procedure TSpkElementAppearance.GetIdleColors(IsChecked: Boolean;
+  out AFrameColor, AInnerLightColor, AInnerDarkColor, AGradientFromColor,
+  AGradientToColor: TColor; out AGradientKind: TBackgroundKind;
+  ABrightenBy: Integer = 0);
+const
+  DELTA = 10;
+begin
+  if IsChecked then
+  begin
+    ABrightenBy := DELTA + ABrightenBy;
+    AFrameColor := FActiveFrameColor;
+    AInnerLightColor := FActiveInnerLightColor;
+    AInnerDarkColor := FActiveInnerDarkColor;
+    AGradientFromColor := FActiveGradientFromColor;
+    AGradientToColor := FActiveGradientToColor;
+    AGradientKind := FActiveGradientType;
+  end else
+  begin
+    AFrameColor := FIdleFrameColor;
+    AInnerLightColor := FIdleInnerLightColor;
+    AInnerDarkColor := FIdleInnerDarkColor;
+    AGradientFromColor := FIdleGradientFromColor;
+    AGradientToColor := FIdleGradientToColor;
+    AGradientKind := FIdleGradientType;
+  end;
+
+  if ABrightenBy <> 0 then
+  begin
+    AFrameColor := TColorTools.Brighten(AFrameColor, ABrightenBy);
+    AInnerLightColor := TColorTools.Brighten(AInnerLightColor, ABrightenBy);
+    AInnerDarkColor := TColorTools.Brighten(AInnerLightColor, ABrightenBy);
+    AGradientFromColor := TColorTools.Brighten(AGradientFromColor, ABrightenBy);
+    AGradientToColor := TColorTools.Brighten(AGradientToColor, ABrightenBy);
+  end;
+end;
+
+procedure TSpkElementAppearance.GetHotTrackColors(IsChecked: Boolean;
+  out AFrameColor, AInnerLightColor, AInnerDarkColor, AGradientFromColor,
+  AGradientToColor: TColor; out AGradientKind: TBackgroundKind;
+  ABrightenBy: Integer = 0);
+const
+  DELTA = 20;
+begin
+  if IsChecked then begin
+    ABrightenBy := ABrightenBy + DELTA;
+    AFrameColor := FActiveFrameColor;
+    AInnerLightColor := FActiveInnerLightColor;
+    AInnerDarkColor := FActiveInnerDarkColor;
+    AGradientFromColor := FActiveGradientFromColor;
+    AGradientToColor := FActiveGradientToColor;
+    AGradientKind := FActiveGradientType;
+  end else begin
+    AFrameColor := FHotTrackFrameColor;
+    AInnerLightColor := FHotTrackInnerLightColor;
+    AInnerDarkColor := FHotTrackInnerDarkColor;
+    AGradientFromColor := FHotTrackGradientFromColor;
+    AGradientToColor := FHotTrackGradientToColor;
+    AGradientKind := FHotTrackGradientType;
+  end;
+  if ABrightenBy <> 0 then begin
+    AFrameColor := TColorTools.Brighten(AFrameColor, ABrightenBy);
+    AInnerLightColor := TColorTools.Brighten(AInnerLightColor, ABrightenBy);
+    AInnerDarkColor := TColortools.Brighten(AInnerDarkColor, ABrightenBy);
+    AGradientFromColor := TColorTools.Brighten(AGradientFromColor, ABrightenBy);
+    AGradientToColor := TColorTools.Brighten(AGradientToColor, ABrightenBy);
+  end;
 end;
 
 procedure TSpkElementAppearance.LoadFromXML(Node: TSpkXMLNode);

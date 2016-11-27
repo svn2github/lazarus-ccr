@@ -30,7 +30,7 @@ type
 
   TSpkMouseButtonElement = (beNone, beButton, beDropdown);
 
-  TSpkButtonKind = (bkButton, bkButtonDropdown, bkDropdown);
+  TSpkButtonKind = (bkButton, bkButtonDropdown, bkDropdown, bkToggle);
 
   TSpkBaseButton = class;
 
@@ -40,13 +40,17 @@ type
     procedure AssignClient(AClient: TObject); override;
     function IsOnExecuteLinked: Boolean; override;
     procedure SetCaption(const Value: string); override;
+    procedure SetChecked(Value: Boolean); override;
     procedure SetEnabled(Value: Boolean); override;
+    procedure SetGroupIndex(Value: Integer); override;
     procedure SetImageIndex(Value: integer); override;
     procedure SetVisible(Value: Boolean); override;
     procedure SetOnExecute(Value: TNotifyEvent); override;
   public
     function IsCaptionLinked: Boolean; override;
+    function IsCheckedLinked: Boolean; override;
     function IsEnabledLinked: Boolean; override;
+    function IsGroupIndexLinked: Boolean; override;
     function IsImageIndexLinked: Boolean; override;
     function IsVisibleLinked: Boolean; override;
   end;
@@ -61,9 +65,11 @@ type
 
     // Getters and Setters
     function GetAction: TBasicAction;
-    procedure SetCaption(const Value: string);
+    procedure SetAllowAllUp(const Value: Boolean);
     procedure SetButtonKind(const Value: TSpkButtonKind);
+    procedure SetCaption(const Value: string);
     procedure SetDropdownMenu(const Value: TPopupMenu);
+    procedure SetGroupIndex(const Value: Integer);
 
   protected
     FCaption: string;
@@ -73,6 +79,9 @@ type
     FButtonRect: T2DIntRect;
     FDropdownRect: T2DIntRect;
     FButtonKind: TSpkButtonKind;
+    FChecked: Boolean;
+    FGroupIndex: Integer;
+    FAllowAllUp: Boolean;
     FDropdownMenu: TPopupMenu;
 
     // *** Obs³uga rysowania ***
@@ -87,13 +96,21 @@ type
     procedure DoActionChange(Sender: TObject);
     function GetDefaultCaption: String; virtual;
 
+    function SiblingsChecked: Boolean; virtual;
+    procedure UncheckSiblings; virtual;
+
     // Getters and Setters
+    function GetChecked: Boolean; virtual;
+    procedure SetAction(const Value: TBasicAction); virtual;
+    procedure SetChecked(const Value: Boolean); virtual;
     procedure SetEnabled(const Value: boolean); override;
     procedure SetRect(const Value: T2DIntRect); override;
-    procedure SetAction(const Value: TBasicAction); virtual;
 
+    property AllowAllUp: Boolean read FAllowAllUp write SetAllowAllUp default false;
     property ButtonKind: TSpkButtonKind read FButtonKind write SetButtonKind;
+    property Checked: Boolean read GetChecked write SetChecked default false;
     property DropdownMenu: TPopupMenu read FDropdownMenu write SetDropdownMenu;
+    property GroupIndex: Integer read FGroupIndex write SetGroupIndex default 0;
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -134,8 +151,11 @@ type
     function GetWidth: integer; override;
   published
     property LargeImageIndex: TImageIndex read FLargeImageIndex write SetLargeImageIndex default -1;
+    property AllowAllUp;
     property ButtonKind;
+    property Checked;
     property DropdownMenu;
+    property GroupIndex;
   end;
 
 
@@ -170,8 +190,11 @@ type
     property ImageIndex: TImageIndex read FImageIndex write SetImageIndex default -1;
     property ShowCaption: boolean read FShowCaption write SetShowCaption;
     property TableBehaviour: TSpkItemTableBehaviour read FTableBehaviour write SetTableBehaviour;
+    property AllowAllUp;
     property ButtonKind;
+    property Checked;
     property DropdownMenu;
+    property GroupIndex;
   end;
 
 
@@ -194,10 +217,22 @@ begin
             (FClient.Caption = (Action as TCustomAction).Caption);
 end;
 
+function TSpkButtonActionLink.IsCheckedLinked: Boolean;
+begin
+  Result := inherited IsCheckedLinked and Assigned(FClient) and
+            (FClient.Checked = (Action as TCustomAction).Checked);
+end;
+
 function TSpkButtonActionLink.IsEnabledLinked: Boolean;
 begin
   Result := inherited IsEnabledLinked and Assigned(FClient) and
             (FClient.Enabled = (Action as TCustomAction).Enabled);
+end;
+
+function TSpkButtonActionLink.IsGroupIndexLinked: Boolean;
+begin
+  Result := inherited IsGroupIndexLinked and Assigned(FClient) and
+            (FClient.GroupIndex = (Action as TCustomAction).GroupIndex);
 end;
 
 function TSpkButtonActionLink.IsOnExecuteLinked: Boolean;
@@ -230,10 +265,22 @@ begin
     FClient.Caption := Value;
 end;
 
+procedure TSpkButtonActionLink.SetChecked(Value: Boolean);
+begin
+  if IsCheckedLinked then
+    FClient.Checked := Value;
+end;
+
 procedure TSpkButtonActionLink.SetEnabled(Value: Boolean);
 begin
   if IsEnabledLinked then
     FClient.Enabled := Value;
+end;
+
+procedure TSpkButtonActionLink.SetGroupIndex(Value: Integer);
+begin
+  if IsGroupIndexLinked then
+    FClient.GroupIndex := Value;
 end;
 
 procedure TSpkButtonActionLink.SetImageIndex(Value: integer);
@@ -296,6 +343,12 @@ begin
          Self.Enabled := Enabled;
       if not CheckDefaults or (Self.Visible = True) then
          Self.Visible := Visible;
+      if not CheckDefaults or Self.Checked then
+        Self.Checked := Checked;
+      if not CheckDefaults or (Self.GroupIndex > 0) then
+        Self.GroupIndex := GroupIndex;
+      if not CheckDefaults or not Self.AllowAllUp then
+        Self.AllowAllUp := AllowAllUp;
       if not CheckDefaults or not Assigned(Self.OnClick) then
          Self.OnClick := OnExecute;
       if self is TSpkSmallButton then begin
@@ -329,6 +382,11 @@ begin
     Result := nil;
 end;
 
+function TSpkBaseButton.GetChecked: Boolean;
+begin
+  Result := FChecked;
+end;
+
 function TSpkBaseButton.GetDefaultCaption: String;
 begin
   Result := 'Button';
@@ -360,6 +418,9 @@ begin
     // Przyciski reaguj¹ tylko na lewy przycisk myszy
     if Button <> mbLeft then
       exit;
+
+    if FButtonKind = bkToggle then
+      Checked := not Checked;
 
     if FMouseActiveElement = beButton then
     begin
@@ -565,7 +626,7 @@ begin
       // przyciskiem
       if FMouseHoverElement = beButton then
       begin
-        if FButtonKind in [bkButton, bkButtonDropdown] then
+        if FButtonKind in [bkButton, bkButtonDropdown, bkToggle] then
         begin
           Click;
           FButtonState := bsBtnHottrack;
@@ -637,7 +698,7 @@ begin
 
     if ClearActive then
     begin
-      FMouseActiveElement:=beNone;
+      FMouseActiveElement := beNone;
     end;
   end   // if FEnabled
   else
@@ -659,8 +720,7 @@ begin
   begin
     FActionLink.Free;
     FActionLink := nil;
-  end
-  else
+  end else
   begin
     if FActionLink = nil then
       FActionLink := TSpkButtonActionLink.Create(self);
@@ -670,18 +730,41 @@ begin
   end;
 end;
 
+procedure TSpkBaseButton.SetAllowAllUp(const Value: Boolean);
+begin
+  FAllowAllUp := Value;
+end;
+
 procedure TSpkBaseButton.SetButtonKind(const Value: TSpkButtonKind);
 begin
   FButtonKind := Value;
   if Assigned(FToolbarDispatch) then
-     FToolbarDispatch.NotifyMetricsChanged;
+    FToolbarDispatch.NotifyMetricsChanged;
 end;
 
 procedure TSpkBaseButton.SetCaption(const Value: string);
 begin
   FCaption := Value;
   if Assigned(FToolbarDispatch) then
-     FToolbarDispatch.NotifyMetricsChanged;
+    FToolbarDispatch.NotifyMetricsChanged;
+end;
+
+procedure TSpkBaseButton.SetChecked(const Value: Boolean);
+begin
+  if FChecked = Value then
+    exit;
+
+  if FGroupIndex > 0 then
+  begin
+    if FAllowAllUp or ((not FAllowAllUp) and Value) then
+      UncheckSiblings;
+    if not FAllowAllUp and (not Value) and not SiblingsChecked then
+      exit;
+  end;
+
+  FChecked := Value;
+  if Assigned(FToolbarDispatch) then
+    FToolbarDispatch.NotifyVisualsChanged;
 end;
 
 procedure TSpkBaseButton.SetDropdownMenu(const Value: TPopupMenu);
@@ -712,10 +795,62 @@ begin
   end;
 end;
 
+procedure TSpkBaseButton.SetGroupIndex(const Value: Integer);
+begin
+  if FGroupIndex = Value then
+    exit;
+
+  FGroupIndex := Value;
+  if Assigned(FToolbarDispatch) then
+    FToolbarDispatch.NotifyVisualsChanged;
+end;
+
 procedure TSpkBaseButton.SetRect(const Value: T2DIntRect);
 begin
   inherited;
   CalcRects;
+end;
+
+function TSpkBaseButton.SiblingsChecked: Boolean;
+var
+  i: Integer;
+  pane: TSpkPane;
+  btn: TSpkBaseButton;
+begin
+  if (Parent is TSpkPane) then
+  begin
+    pane := TSpkPane(Parent);
+    for i:=0 to pane.Items.Count-1 do
+      if pane.Items[i] is TSpkBaseButton then
+      begin
+        btn := TSpkBaseButton(pane.Items[i]);
+        if (btn <> self) and (btn.ButtonKind = bkToggle) and
+           (btn.GroupIndex = FGroupIndex) and btn.Checked then
+        begin
+          Result := true;
+          exit;
+        end;
+      end;
+  end;
+  Result := false;
+end;
+
+procedure TSpkBaseButton.UncheckSiblings;
+var
+  i: Integer;
+  pane: TSpkPane;
+  btn: TSpkBaseButton;
+begin
+  if (Parent is TSpkPane) then begin
+    pane := TSpkPane(Parent);
+    for i:=0 to pane.Items.Count-1 do
+      if pane.Items[i] is TSpkBasebutton then
+      begin
+        btn := TSpkBaseButton(pane.Items[i]);
+        if (btn <> self) and (btn.ButtonKind = bkToggle) and (btn.GroupIndex = FGroupIndex) then
+          btn.FChecked := false;
+      end;
+  end;
 end;
 
 
@@ -807,32 +942,24 @@ begin
   if FButtonKind = bkButtonDropdown then
   begin
     drawBtn := true;
-    if (FButtonState in [bsBtnHottrack, bsBtnPressed]) then
+    if (FButtonState in [bsBtnHotTrack, bsBtnPressed]) then
     begin
-      frameColor := TColorTools.Brighten(FAppearance.Element.HotTrackFrameColor, delta);
-      innerLightColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerLightColor, delta);
-      innerDarkColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerDarkColor, delta);
-      gradientFromColor := TColorTools.Brighten(FAppearance.Element.HotTrackGradientFromColor, delta);
-      gradientToColor := TColorTools.Brighten(FAppearance.Element.HotTrackGradientToColor, delta);
-      gradientKind := FAppearance.Element.HotTrackGradientType;
+      FAppearance.Element.GetHotTrackColors(Checked,
+        frameColor, innerLightColor, innerDarkColor,
+        gradientFromColor, gradientToColor, gradientKind,
+        delta);
     end else
     if (FButtonState = bsDropdownHottrack) then
     begin
-      frameColor := FAppearance.Element.HotTrackFrameColor;
-      innerLightColor := FAppearance.Element.HotTrackInnerLightColor;
-      innerDarkColor := FAppearance.Element.HotTrackInnerDarkColor;
-      gradientFromColor := FAppearance.Element.HotTrackGradientFromColor;
-      gradientToColor := FAppearance.Element.HotTrackGradientToColor;
-      gradientKind := FAppearance.Element.HotTrackGradientType;
+      FAppearance.Element.GetHotTrackColors(Checked,
+        frameColor, innerLightColor, innerDarkColor,
+        gradientFromColor, gradientToColor, gradientKind);
     end else
     if (FButtonState = bsDropdownPressed) then
     begin
-      frameColor := FAppearance.Element.ActiveFrameColor;
-      innerlightColor := FAppearance.Element.ActiveInnerLightColor;
-      innerDarkColor := FAppearance.Element.ActiveInnerDarkColor;
-      gradientFromColor := FAppearance.Element.ActiveGradientFromColor;
-      gradientToColor := FAppearance.Element.ActiveGradientToColor;
-      gradientKind := FAppearance.Element.ActiveGradientType;
+      FAppearance.Element.GetActiveColors(Checked,
+        frameColor, innerLightColor, innerDarkColor,
+        gradientFromColor, gradientToColor, gradientKind);
     end else
       drawBtn := false;
 
@@ -860,30 +987,29 @@ begin
   drawBtn := true;
   if FButtonState = bsBtnHottrack then
   begin
-    frameColor := FAppearance.Element.HotTrackFrameColor;
-    innerLightColor := FAppearance.Element.HotTrackInnerLightColor;
-    innerDarkColor := FAppearance.Element.HotTrackInnerDarkColor;
-    gradientFromColor := FAppearance.Element.HotTrackGradientFromColor;
-    gradientToColor := FAppearance.Element.HotTrackGradientToColor;
-    gradientKind := FAppearance.Element.HotTrackGradientType;
+    FAppearance.Element.GetHotTrackColors(Checked,
+      frameColor, innerLightColor, innerDarkColor,
+      gradientFromColor, gradientToColor, gradientKind);
   end else
   if FButtonState = bsBtnPressed then
   begin
-    frameColor := FAppearance.Element.ActiveFrameColor;
-    innerDarkColor := FAppearance.Element.ActiveInnerDarkColor;
-    innerLightColor := FAppearance.Element.ActiveInnerLightColor;
-    gradientFromColor := FAppearance.Element.ActiveGradientFromColor;
-    gradientToColor := FAppearance.Element.ActiveGradientToColor;
-    gradientKind := FAppearance.Element.ActiveGradientType;
+    FAppearance.Element.GetActiveColors(Checked,
+      frameColor, innerLightColor, innerDarkColor,
+      gradientFromColor, gradientToColor, gradientkind);
   end else
   if (FButtonState in [bsDropdownHotTrack, bsDropdownPressed]) then
   begin
-    frameColor := TColorTools.Brighten(FAppearance.Element.HotTrackFrameColor, delta);
-    innerDarkColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerDarkColor, delta);
-    innerLightColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerLightColor, delta);
-    gradientFromColor := TColorTools.Brighten(FAppearance.Element.HotTrackGradientFromColor, delta);
-    gradientToColor := TColorTools.Brighten(FAppearance.Element.HotTrackGradientToColor, delta);
-    gradientKind := FAppearance.Element.HotTrackGradientType;
+    FAppearance.Element.GetHotTrackColors(Checked,
+      frameColor, innerLightColor, innerDarkColor,
+      gradientFromColor, gradientToColor, gradientKind,
+      delta);
+  end else
+  if (FButtonState = bsIdle) and Checked then
+  begin
+    FAppearance.Element.GetActiveColors(Checked,
+      frameColor, innerLightColor, innerDarkColor,
+      gradientFromColor, gradientToColor, gradientKind
+    );
   end else
     drawBtn := false;
 
@@ -954,7 +1080,7 @@ begin
   ABuffer.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
   ABuffer.Canvas.Font.Color := fontColor;
 
-  if FButtonKind = bkButton then
+  if FButtonKind in [bkButton, bkToggle] then
     FindBreakPlace(FCaption, breakPos, breakWidth)
   else
     breakPos := 0;
@@ -1101,7 +1227,7 @@ begin
     GlyphWidth := 0;
 
   // Text
-  if FButtonKind = bkButton then
+  if FButtonKind in [bkButton, bkToggle] then
   begin
     // £amiemy etykietê
     FindBreakPlace(FCaption,BreakPos,RowWidth);
@@ -1205,7 +1331,7 @@ begin
 
   // *** Dropdown ***
   case FButtonKind of
-    bkButton:
+    bkButton, bkToggle:
       begin
         // Lewa krawêdŸ przycisku
         if FGroupBehaviour in [gbContinuesGroup, gbEndsGroup] then
@@ -1317,39 +1443,32 @@ begin
   drawBtn := true;
   if (FButtonState = bsIdle) and (not FHideFrameWhenIdle) then
   begin
-    frameColor := FAppearance.Element.IdleFrameColor;
-    innerLightColor := FAppearance.Element.IdleInnerLightColor;
-    innerDarkColor := FAppearance.Element.IdleInnerDarkColor;
-    gradientFromColor := FAppearance.Element.IdleGradientFromColor;
-    gradientToColor := FAppearance.Element.IdleGradientToColor;
-    gradientKind := FAppearance.Element.IdleGradientType;
+    FAppearance.Element.GetIdleColors(Checked,
+      frameColor, innerLightColor, innerDarkColor,
+      gradientFromColor, gradientToColor, gradientKind
+    );
   end else
   if FButtonState = bsBtnHottrack then
   begin
-    frameColor := FAppearance.Element.HotTrackFrameColor;
-    innerLightColor := FAppearance.Element.HotTrackInnerLightColor;
-    innerDarkColor := FAppearance.Element.HotTrackInnerDarkColor;
-    gradientFromColor := FAppearance.Element.HotTrackGradientFromColor;
-    gradientToColor := FAppearance.Element.HotTrackGradientToColor;
-    gradientKind := FAppearance.Element.HotTrackGradientType;
+    FAppearance.Element.GetHotTrackColors(Checked,
+      frameColor, innerLightColor, innerDarkColor,
+      gradientFromColor, gradientToColor, gradientKind
+    );
   end else
   if FButtonState = bsBtnPressed then
   begin
-    frameColor := FAppearance.Element.ActiveFrameColor;
-    innerDarkColor := FAppearance.Element.ActiveInnerDarkColor;
-    innerLightColor := FAppearance.Element.ActiveInnerLightColor;
-    gradientFromColor := FAppearance.Element.ActiveGradientFromColor;
-    gradientToColor := FAppearance.Element.ActiveGradientToColor;
-    gradientKind := FAppearance.Element.ActiveGradientType;
+    FAppearance.Element.GetActiveColors(Checked,
+      frameColor, innerLightColor, innerDarkColor,
+      gradientFromColor, gradientToColor, gradientKind
+    );
   end else
   if (FButtonState in [bsDropdownHotTrack, bsDropdownPressed]) then
   begin
-    frameColor := TColorTools.Brighten(FAppearance.Element.HotTrackFrameColor, delta);
-    innerDarkColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerDarkColor, delta);
-    innerLightColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerLightColor, delta);
-    gradientFromColor := TColorTools.Brighten(FAppearance.Element.HotTrackGradientFromColor, delta);
-    gradientToColor := TColorTools.Brighten(FAppearance.Element.HotTrackGradientToColor, delta);
-    gradientKind := FAppearance.Element.HotTrackGradientType;
+    FAppearance.Element.GetHotTrackColors(Checked,
+      frameColor, innerLightColor, innerDarkColor,
+      gradientFromColor, gradientToColor, gradientKind,
+      delta
+    );
   end else
     drawBtn := false;
 
@@ -1437,39 +1556,32 @@ begin
     drawBtn := true;
     if (FButtonState = bsIdle) and (not FHideFrameWhenIdle) then
     begin
-      frameColor := FAppearance.Element.IdleFrameColor;
-      innerLightColor := FAppearance.Element.IdleInnerLightColor;
-      innerDarkColor := FAppearance.Element.IdleInnerDarkColor;
-      gradientFromColor := FAppearance.Element.IdleGradientFromColor;
-      gradientToColor := FAppearance.Element.IdleGradientToColor;
-      gradientKind := FAppearance.Element.IdleGradientType;
+      FAppearance.Element.GetIdleColors(Checked,
+        frameColor, innerLightColor, innerDarkColor,
+        gradientFromColor, gradientToColor, gradientkind
+      );
     end else
     if (FButtonState in [bsBtnHottrack, bsBtnPressed]) then
     begin
-      frameColor := TColorTools.Brighten(FAppearance.Element.HotTrackFrameColor, delta);
-      innerLightColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerLightColor, delta);
-      innerDarkColor := TColorTools.Brighten(FAppearance.Element.HotTrackInnerDarkColor, delta);
-      gradientFromColor := TColorTools.Brighten(FAppearance.Element.HotTrackGradientFromColor, delta);
-      gradientToColor := TColorTools.Brighten(FAppearance.Element.HotTrackGradientToColor, delta);
-      gradientKind := FAppearance.Element.HotTrackGradientType;
+      FAppearance.Element.GetHotTrackColors(Checked,
+        frameColor, innerLightColor, innerDarkColor,
+        gradientFromColor, gradientToColor, gradientKind,
+        delta
+      );
     end else
     if (FButtonState = bsDropdownHottrack) then
     begin
-      frameColor := FAppearance.Element.HotTrackFrameColor;
-      innerLightColor := FAppearance.Element.HotTrackInnerLightColor;
-      innerDarkColor := FAppearance.Element.HotTrackInnerDarkColor;
-      gradientFromColor := FAppearance.Element.HotTrackGradientFromColor;
-      gradientToColor := FAppearance.Element.HotTrackGradientToColor;
-      gradientKind := FAppearance.Element.HotTrackGradientType;
+      FAppearance.Element.GetHotTrackColors(Checked,
+        frameColor, innerLightColor, innerDarkColor,
+        gradientFromColor, gradientToColor, gradientkind
+      );
     end else
     if (FButtonState = bsDropdownPressed) then
     begin
-      frameColor := FAppearance.Element.ActiveFrameColor;
-      innerlightColor := FAppearance.Element.ActiveInnerLightColor;
-      innerDarkColor := FAppearance.Element.ActiveInnerDarkColor;
-      gradientFromColor := FAppearance.Element.ActiveGradientFromColor;
-      gradientToColor := FAppearance.Element.ActiveGradientToColor;
-      gradientKind := FAppearance.Element.ActiveGradientType;
+      FAppearance.Element.GetActiveColors(Checked,
+        frameColor, innerLightColor, innerDarkColor,
+        gradientFromColor, gradientToColor, gradientKind
+      );
     end else
       drawBtn := false;
 
