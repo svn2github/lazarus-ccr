@@ -10,7 +10,7 @@
       <SearchPaths>
         <IncludeFiles Value="source\include;source\addons\zeos"/>
         <OtherUnitFiles Value="source\addons\zeos"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\zeos_run"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Visual PlanIt datastore for ZEOS database components (Runtime package)"/>

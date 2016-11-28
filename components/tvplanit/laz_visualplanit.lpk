@@ -10,7 +10,7 @@
       <SearchPaths>
         <IncludeFiles Value="source\include"/>
         <OtherUnitFiles Value="source"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\run"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Lazarus Port of Turbo Power's VisualPlanIt components based on version 1.0.3. 
