@@ -10,6 +10,10 @@ Table of contents
 4.1   Release 1.03
 4.2   Release 1.04
 4.3   Release 1.06
+4.4   Current development version (1.07)
+5.  Additional help
+5.1   Original TurboPower documentation
+5.2   Wiki page
 
 ==============================================
 
@@ -21,27 +25,22 @@ adding time, task, & contact management capabilities to applications
 written in Borland Delphi & C++Builder. Get that Outlook look & feel
 without the hassle.
 
-This is a source-only release of TurboPower Visual PlanIt. It includes
-designtime packages for Delphi 4 through 7 and C++Builder 4 through 6.
 
 ==============================================
 
 2. Package names
 
 
-TurboPower Visual PlanIt package names have the following form:
+These are the TurboPower Visual PlanIt packages available for the Lazarus 
+version:
 
-  VNNNKKVV.*
-   |  | |
-   |  | +------ VV  VCL version (30=Delphi 3, 40=Delphi 4, 70=Delphi 7)
-   |  +-------- K   Kind of package (_D=designtime, AD = Advantage DataStore,
-   |                                 IS = DBISAM DataStore, F2 = FlashFiler 2 DataStore)
-   |
-   +----------- NNN Product version number (e.g., 403=version 4.03)
+  laz_visualplanit.lpk             --- runtime package for the common components
+  laz_visualplanit_design.lpk      --- designtime package
+  laz_visualplanit_zeos.lpk        --- runtime package for the zeos datastore
+  laz_visualplanit_zeos_design.lpk --- designtime package for the zeos datastore
+  
+The old naming scheme of the original Delphi components is discontinued.
 
-
-For example, the Visual PlanIt designtime package files for Delphi 7 have
-the filename V103_D70.*.
 
 ==============================================
 
@@ -53,19 +52,26 @@ steps:
 
   1. Unzip the release files into a directory (e.g., d:\vplanit).
 
-  2. Start Delphi or C++Builder.
-
-  3. Add the source subdirectory (e.g., d:\vplanit\source) to the
-     IDE's library path.
-
-  4. Open & install the designtime package specific to the IDE being
-     used. The IDE should notify you the components have been
-     installed.
-
-  5. Make sure the PATH environmental variable contains the directory
-     in which the compiled packages (i.e., BPL or DPL files) were
-     placed.
-
+  2. Start Lazarus
+  
+  3. Go to "Package" / "Load package file .lpk" and select the run-time package
+     laz_visualplanit.lpk. Compile.
+     
+  4. Open the designtime package laz_visualplanit_visual.lpk. 
+     Click "Use" > "Install". If you want to install the addon package for 
+     zeos components decline to rebuild the IDE and contine with 5, 
+     otherwise go to 7.
+     
+  5. Open the zeos runtime package laz_visualplanit_zeos.lpi. Compile.
+  
+  6. Open the zeos designtime package laz_visualplanit_design.lpi. 
+     Click "Use" > "Install".
+     
+  7. Confirm to rebuild the IDE.
+  
+  8. After some time the IDE will restart with the new components installed.
+  
+  
 ==============================================
 
 4. Version history
@@ -123,4 +129,29 @@ steps:
   - Activate task fields Priority and Category in task editor.
   - Holiday support
   - Separate design-time and run-time packages
- 
+  
+  
+4.4 Current development version (1.07)
+  - ...
+  
+  
+==============================================
+
+5.  Additional help
+
+
+5.1   Original TurboPower documentation
+
+Get TurboPower's original 300-page pdf file from the official 
+SourceForge site of the Delphi version 
+https://sourceforge.net/projects/tpvplanit/files/tpvplanit_docs/
+
+
+5.2   Wiki page
+
+The wiki site http://wiki.freepascal.org/Turbopower_Visual_PlanIt contains a
+short documentation of the Lazarus specific version together with a "Getting
+started".
+
+
+
