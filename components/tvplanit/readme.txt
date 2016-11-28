@@ -9,7 +9,7 @@ Table of contents
 4.  Version history
 4.1   Release 1.03
 4.2   Release 1.04
-4.3   Release 1.05
+4.3   Release 1.06
 
 ==============================================
 
