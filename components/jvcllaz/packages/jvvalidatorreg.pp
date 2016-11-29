@@ -1,0 +1,36 @@
+unit JvValidatorReg;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, LResources, SysUtils, ComponentEditors, PropEdits, ImageListEditor,
+  GraphPropEdits;
+
+procedure Register;
+
+implementation
+
+{$R ..\resource\JvValidatorsReg.res}
+
+uses JvValidators, JvErrorIndicator, JvValidatorsEditorForm;
+
+procedure Register;
+begin
+  RegisterComponents('JvValidators', [TJvValidators, TJvValidationSummary, TJvErrorIndicator]);
+  RegisterNoIcon([TJvRequiredFieldValidator, TJvCompareValidator,
+    TJvRangeValidator, TJvRegularExpressionValidator, TJvCustomValidator, TJvControlsCompareValidator]);
+
+  RegisterComponentEditor(TJvValidators, TJvValidatorEditor);
+  RegisterPropertyEditor(TypeInfo(Integer), TJvErrorIndicator, 'ImageIndex', TImageIndexPropertyEditor);
+//  RegisterPropertyEditor(TypeInfo(string), TJvCustomFormatEdit, 'Characters', TJvCharStringProperty);
+  RegisterPropertyEditor(TypeInfo(string), TJvBaseValidator, 'PropertyToValidate', TJvPropertyValidateProperty);
+  RegisterPropertyEditor(TypeInfo(string), TJvBaseValidator, 'CompareToProperty', TJvPropertyToCompareProperty); end;
+
+(*
+initialization
+  {$I JvXPBarLaz.lrs}
+*)
+
+end.

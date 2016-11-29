@@ -52,6 +52,13 @@ type
     dcNative); // if dcNative is in the set the native allowed keys are used and GetDlgCode is ignored
   TDlgCodes = set of TDlgCode;
 
+ {$IFDEF WINDOWS}
+  TSmallPoint = Types.TSmallPoint;
+ {$ENDIF}
+ {$IFDEF LINUX}
+  TSmallPoint = Classes.TSmallPoint;
+ {$ENDIF}
+
 (******************** NOT CONVERTED
 const
   dcWantMessage = dcWantAllKeys;
@@ -134,7 +141,8 @@ procedure HandleDotNetHighlighting(Control: TWinControl; const Msg: TLMessage;
   MouseOver: Boolean; Color: TColor);
 function CreateWMMessage(Msg: Integer; WParam: PtrInt; LParam: PtrInt): TLMessage; overload; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
 function CreateWMMessage(Msg: Integer; WParam: PtrInt; LParam: TControl): TLMessage; overload; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
-function SmallPointToLong(const Pt: TSmallPoint): Longint; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
+//function SmallPointToLong(const Pt: Classes.TSmallPoint): Longint; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
+function SmallPointToLong(const Pt: TSmallPoint): LongInt; {$IFDEF SUPPORTS_INLINE} inline {$ENDIF}
 function ShiftStateToKeyData(Shift: TShiftState): Longint;
 
 //******************** NOT CONVERTED
@@ -370,7 +378,8 @@ begin
   Self.Msg.Result := 0;
 end;
 
-function SmallPointToLong(const Pt: TSmallPoint): Longint;
+function SmallPointToLong(const Pt: TSmallPoint): LongInt;
+//function SmallPointToLong(const Pt: Classes.TSmallPoint): Longint;
 begin
   Result := Longint(Pt);
 end;

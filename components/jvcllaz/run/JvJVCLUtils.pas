@@ -32,7 +32,7 @@ unit JvJVCLUtils;
 
 interface
 uses
-  Classes, Graphics, JvTypes;
+  Classes, Graphics, JvTypes, ImgList, LCLType, Types;
 
 (******************** NOT CONVERTED
 // Transform an icon to a bitmap
@@ -670,9 +670,11 @@ procedure UpdateTrackFont(TrackFont, Font: TFont; TrackOptions: TJvTrackFontOpti
 // used for checkboxes and radiobuttons.
 // Originally from Mike Lischke
 function GetDefaultCheckBoxSize: TSize;
+********************)
 
 function CanvasMaxTextHeight(Canvas: TCanvas): Integer;
 
+(*******************
 {$IFDEF MSWINDOWS}
 // AllocateHWndEx works like Classes.AllocateHWnd but does not use any virtual memory pages
 function AllocateHWndEx(Method: TWndMethod; const AClassName: string = ''): THandle;
@@ -703,20 +705,34 @@ function StripAllFromResult(const Value: TModalResult): TModalResult;
 function SelectColorByLuminance(AColor, DarkColor, BrightColor: TColor): TColor;
 
 // (peter3) implementation moved from JvHTControls.
+************)
+
 type
-  TJvHTMLCalcType = (htmlShow, htmlCalcWidth, htmlCalcHeight);
+  TJvHTMLCalcType = (htmlShow, htmlCalcWidth, htmlCalcHeight, htmlHyperLink);
 
 procedure HTMLDrawTextEx(Canvas: TCanvas; Rect: TRect;
-  const State: TOwnerDrawState; const Text: string; var Width: Integer;
-  CalcType: TJvHTMLCalcType;  MouseX, MouseY: Integer; var MouseOnLink: Boolean;
-  var LinkName: string; Scale: Integer = 100);
-function HTMLDrawText(Canvas: TCanvas; Rect: TRect;
-  const State: TOwnerDrawState; const Text: string; Scale: Integer = 100): string;
-function HTMLTextWidth(Canvas: TCanvas; Rect: TRect;
-  const State: TOwnerDrawState; const Text: string; Scale: Integer = 100): Integer;
+  const State: TOwnerDrawState; const Text: string; out Width: Integer;
+  CalcType: TJvHTMLCalcType;  MouseX, MouseY: Integer; out MouseOnLink: Boolean;
+  var LinkName: string; SuperSubScriptRatio: Double; Scale: Integer = 100); overload;
+procedure HTMLDrawTextEx2(Canvas: TCanvas; Rect: TRect;
+  const State: TOwnerDrawState; const Text: string; out Width, Height: Integer;
+  CalcType: TJvHTMLCalcType;  MouseX, MouseY: Integer; out MouseOnLink: Boolean;
+  var LinkName: string; SuperSubScriptRatio: Double; Scale: Integer = 100); overload;
+procedure HTMLDrawText(Canvas: TCanvas; Rect: TRect;
+  const State: TOwnerDrawState; const Text: string; SuperSubScriptRatio: Double;
+  Scale: Integer = 100);
+procedure HTMLDrawTextHL(Canvas: TCanvas; Rect: TRect;
+  const State: TOwnerDrawState; const Text: string; MouseX, MouseY: Integer;
+  SuperSubScriptRatio: Double; Scale: Integer = 100);
 function HTMLPlainText(const Text: string): string;
-function HTMLTextHeight(Canvas: TCanvas; const Text: string; Scale: Integer = 100): Integer;
+function HTMLTextExtent(Canvas: TCanvas; Rect: TRect;
+  const State: TOwnerDrawState; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): TSize;
+function HTMLTextWidth(Canvas: TCanvas; Rect: TRect;
+  const State: TOwnerDrawState; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): Integer;
+function HTMLTextHeight(Canvas: TCanvas; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): Integer;
 function HTMLPrepareText(const Text: string): string;
+
+(*************
 
 // This type is used to allow an easy migration from a TBitmap property to a
 // TPicture property. It is, for instance, used in TJvXPButton so that users
@@ -809,10 +825,15 @@ function GetGraphicObject(AStream: TStream): TGraphic; overload;
 function GetGraphicObject(AStream: TStream; ASender: TObject; AOnProc: TJvGetGraphicClassEvent): TGraphic; overload;
 ********************)
 
+function ReplaceComponentReference(This, NewReference: TComponent; var VarReference: TComponent): Boolean;
+function ReplaceImageListReference(This: TComponent; NewReference: TCustomImageList;
+  var VarReference: TCustomImageList; ChangeLink: TChangeLink): Boolean;
+
 implementation
 
-(********************
 uses
+  sysutils, LCLIntf, math;
+  (********************
   SysConst,
   Consts,
   {$IFDEF MSWINDOWS}
@@ -6398,15 +6419,18 @@ begin
   end;
 end;
 
+*****************)
+
 function CanvasMaxTextHeight(Canvas: TCanvas): Integer;
 var
   tt: TTextMetric;
 begin
   // (ahuser) Qt returns different values for TextHeight('Ay') and TextHeigth(#1..#255)
-  GetTextMetrics(Canvas.Handle, tt);
+  GetTextMetrics(Canvas.Handle, tt{%H-});
   Result := tt.tmHeight;
 end;
 
+(****************
 {$IFDEF MSWINDOWS}
 
 //=== AllocateHWndEx =========================================================
@@ -6977,6 +7001,7 @@ begin
   else
     Result := BrightColor;
 end;
+***********)
 
 const
   cBR = '<BR>';
@@ -6996,28 +7021,26 @@ const
 // moved from JvHTControls and renamed
 function HTMLPrepareText(const Text: string): string;
 type
-  THtmlCode = packed record
-    Html: string[10];
-    Text: Char;
+  THtmlCode = record
+    Html: string;
+    Text: UTF8String;
   end;
 const
-  Conversions: array [0..6] of THtmlCode =
-   (
-    (Html: '&amp;';   Text: '&'),
-    (Html: '&quot;';  Text: '"'),
-    (Html: '&reg;';   Text: '®'),
-    (Html: '&copy;';  Text: '©'),
-    (Html: '&trade;'; Text: '™'),
-    (Html: '&euro;';  Text: '€'),
-    (Html: '&nbsp;';  Text: ' ')
-   );
+  Conversions: array [0..6] of THtmlCode = (
+    (Html: '&amp;'; Text: '&'),
+    (Html: '&quot;'; Text: '"'),
+    (Html: '&reg;'; Text: #$C2#$AE),
+    (Html: '&copy;'; Text: #$C2#$A9),
+    (Html: '&trade;'; Text: #$E2#$84#$A2),
+    (Html: '&euro;'; Text: #$E2#$82#$AC),
+    (Html: '&nbsp;'; Text: ' ')
+  );
 var
   I: Integer;
 begin
   Result := Text;
   for I := Low(Conversions) to High(Conversions) do
-    with Conversions[I] do
-      Result := StringReplace(Result, Html, Text, [rfReplaceAll, rfIgnoreCase]);
+    Result := StringReplace(Result, Conversions[I].Html, Utf8ToAnsi(Conversions[I].Text), [rfReplaceAll, rfIgnoreCase]);
   Result := StringReplace(Result, sLineBreak, '', [rfReplaceAll, rfIgnoreCase]); // only <BR> can be new line
   Result := StringReplace(Result, cBR, sLineBreak, [rfReplaceAll, rfIgnoreCase]);
   Result := StringReplace(Result, cHR, cHR + sLineBreak, [rfReplaceAll, rfIgnoreCase]); // fixed <HR><BR>
@@ -7027,9 +7050,9 @@ function HTMLBeforeTag(var Str: string; DeleteToTag: Boolean = False): string;
 begin
   if Pos(cTagBegin, Str) > 0 then
   begin
-    Result := Copy(Str, 1, Pos(cTagBegin, Str)-1);
+    Result := Copy(Str, 1, Pos(cTagBegin, Str) - 1);
     if DeleteToTag then
-      Delete(Str, 1, Pos(cTagBegin, Str)-1);
+      Delete(Str, 1, Pos(cTagBegin, Str) - 1);
   end
   else
   begin
@@ -7056,10 +7079,30 @@ begin
     Delete(Result, 1, Pos(cTagEnd, Result));
 end;
 
+// wp: Made Width and MouseOnLink out parameters (were "var" in the original)
+// to silence the compiler
 procedure HTMLDrawTextEx(Canvas: TCanvas; Rect: TRect;
-  const State: TOwnerDrawState; const Text: string; var Width: Integer;
-  CalcType: TJvHTMLCalcType;  MouseX, MouseY: Integer; var MouseOnLink: Boolean;
-  var LinkName: string; Scale: Integer = 100);
+  const State: TOwnerDrawState; const Text: string; out Width: Integer;
+  CalcType: TJvHTMLCalcType;  MouseX, MouseY: Integer; out MouseOnLink: Boolean;
+  var LinkName: string; SuperSubScriptRatio: Double; Scale: Integer);
+var
+  H: Integer;
+begin
+  HTMLDrawTextEx2(Canvas, Rect, State, Text, Width, H, CalcType, MouseX, MouseY, MouseOnLink,
+    LinkName, SuperSubScriptRatio, Scale);
+  if CalcType = htmlCalcHeight then
+    Width := H;
+end;
+
+type
+  TScriptPosition = (spNormal, spSuperscript, spSubscript);
+
+// wp: Make Width, Height and MouseOnLink "out" parameters
+// (they were "var" in the original) to silence the compiler
+procedure HTMLDrawTextEx2(Canvas: TCanvas; Rect: TRect;
+  const State: TOwnerDrawState; const Text: string; out Width, Height: Integer;
+  CalcType: TJvHTMLCalcType;  MouseX, MouseY: Integer; out MouseOnLink: Boolean;
+  var LinkName: string; SuperSubScriptRatio: Double; Scale: Integer);
 const
   DefaultLeft = 0; // (ahuser) was 2
 var
@@ -7082,6 +7125,7 @@ var
   RemFontColor,
   RemBrushColor: TColor;
   RemFontSize: Integer;
+  ScriptPosition: TScriptPosition;
 
   function ExtractPropertyValue(const Tag: string; PropName: string): string;
   var
@@ -7129,9 +7173,9 @@ var
   begin
     case Alignment of
       taRightJustify:
-        Result := (Rect.Right {- Rect.Left}) - HTMLTextWidth(Canvas, Rect, State, Str, Scale);
+        Result := (Rect.Right - Rect.Left) - HTMLTextWidth(Canvas, Rect, State, Str, Scale);
       taCenter:
-        Result := (Rect.Right {- Rect.Left} - HTMLTextWidth(Canvas, Rect, State, Str)) div 2;
+        Result := DefaultLeft + ((Rect.Right - Rect.Left) - HTMLTextWidth(Canvas, Rect, State, Str, SuperSubScriptRatio)) div 2;
     else
       Result := DefaultLeft;
     end;
@@ -7143,29 +7187,42 @@ var
   var
     Width, Height: Integer;
     R: TRect;
+    OriginalFontSize: Integer;
   begin
     R := Rect;
     Inc(R.Left, CurLeft);
     if Assigned(Canvas) then
     begin
-      Width  := Canvas.TextWidth(M);
-      Height := CanvasMaxTextHeight(Canvas);
-      if IsLink and not MouseOnLink then
-        if (MouseY >= R.Top) and (MouseY <= R.Top + Height) and
-           (MouseX >= R.Left) and (MouseX <= R.Left + Width) and
-           ((MouseY > 0) or (MouseX > 0)) then
+      OriginalFontSize := Canvas.Font.Size;
+      try
+        if ScriptPosition <> spNormal then
+          Canvas.Font.Size := Round(Canvas.Font.Size * SuperSubScriptRatio);
+
+        Width  := Canvas.TextWidth(M);
+        Height := CanvasMaxTextHeight(Canvas);
+
+        if ScriptPosition = spSubscript then
+          R.Top := R.Bottom - Height - 1;
+
+        if IsLink and not MouseOnLink then
+          if (MouseY >= R.Top) and (MouseY <= R.Top + Height) and
+             (MouseX >= R.Left) and (MouseX <= R.Left + Width) and
+             ((MouseY > 0) or (MouseX > 0)) then
+          begin
+            MouseOnLink := True;
+            Canvas.Font.Color := clRed; // hover link
+            LinkName := TempLink;
+          end;
+        if CalcType = htmlShow then
         begin
-          MouseOnLink := True;
-          Canvas.Font.Color := clRed; // hover link
-          LinkName := TempLink;
+          if Trans then
+            Canvas.Brush.Style := bsClear; // for transparent
+          Canvas.TextOut(R.Left, R.Top, M);
         end;
-      if CalcType = htmlShow then
-      begin
-        if Trans then
-          Canvas.Brush.Style := bsClear; // for transparent
-        Canvas.TextOut(R.Left, R.Top, M);
+        CurLeft := CurLeft + Width;
+      finally
+        Canvas.Font.Size := OriginalFontSize;
       end;
-      CurLeft := CurLeft + Width;
     end;
   end;
 
@@ -7197,20 +7254,21 @@ begin
     OldFontColor  := Canvas.Font.Color;
     OldBrushColor := Canvas.Brush.Color;
     OldBrushStyle := Canvas.Brush.Style;
-    OldAlignment  := Alignment;
+  //  OldAlignment  := Alignment;
     RemFontColor  := Canvas.Font.Color;
     RemBrushColor := Canvas.Brush.Color;
     RemFontSize   := Canvas.Font.size;
   end;
+  vStr  := TStringList.Create;
   try
     Alignment := taLeftJustify;
     IsLink := False;
     MouseOnLink := False;
     vText := Text;
-    vStr  := TStringList.Create;
-    vStr.Text := HTMLPrepareText(vText);
+    vStr.Text := vText;
     LinkName := '';
     TempLink := '';
+    ScriptPosition := spNormal;
 
     Selected := (odSelected in State) or (odDisabled in State);
     Trans := (Canvas.Brush.Style = bsClear) and not selected;
@@ -7221,16 +7279,17 @@ begin
     vM := '';
     for vCount := 0 to vStr.Count - 1 do
     begin
-      vText := vStr[vCount];
+      vText := HTMLPrepareText(vStr[vCount]);
       CurLeft := CalcPos(vText);
-      while Length(vText) > 0 do
+      while vText <> '' do
       begin
         vM := HTMLBeforeTag(vText, True);
         vM := StringReplace(vM, '&lt;', cLT, [rfReplaceAll, rfIgnoreCase]); // <--+ this must be here
         vM := StringReplace(vM, '&gt;', cGT, [rfReplaceAll, rfIgnoreCase]); // <--/
         if GetChar(vText, 1) = cTagBegin then
         begin
-          Draw(vM);
+          if vM <> '' then
+            Draw(vM);
           if Pos(cTagEnd, vText) = 0 then
             Insert(cTagEnd, vText, 2);
           if GetChar(vText, 2) = '/' then
@@ -7248,14 +7307,17 @@ begin
               'U':
                 Style(fsUnderline, False);
               'S':
-                Style(fsStrikeOut, False);
+                begin
+                  ScriptPosition := spNormal;
+                  Style(fsStrikeOut, False);
+                end;
               'F':
                 begin
                   if not Selected then // restore old colors
                   begin
-                    Canvas.Font.Color  := RemFontColor;
+                    Canvas.Font.Color := RemFontColor;
                     Canvas.Brush.Color := RemBrushColor;
-                    Canvas.Font.Size   := RemFontSize;
+                    Canvas.Font.Size := RemFontSize;
                     Trans := True;
                   end;
                 end;
@@ -7268,7 +7330,7 @@ begin
                 begin
                   if GetChar(vText, 3, True) = 'L' then // ALIGN
                   begin
-                    TagPrp := UpperCase(Copy(vText, 2, Pos(cTagEnd, vText)-2));
+                    TagPrp := UpperCase(Copy(vText, 2, Pos(cTagEnd, vText) - 2));
                     if Pos(cCENTER, TagPrp) > 0 then
                       Alignment := taCenter
                     else
@@ -7277,12 +7339,12 @@ begin
                     else
                       Alignment := taLeftJustify;
                     CurLeft := DefaultLeft;
-                    if CalcType = htmlShow then
+                    if CalcType in [htmlShow, htmlHyperLink] then
                       CurLeft := CalcPos(vText);
                   end
                   else
                   begin   // A HREF
-                    TagPrp := Copy(vText, 2, Pos(cTagEnd, vText)-2);
+                    TagPrp := Copy(vText, 2, Pos(cTagEnd, vText) - 2);
                     if Pos(cHREF, UpperCase(TagPrp)) > 0 then
                     begin
                       IsLink := True;
@@ -7298,7 +7360,7 @@ begin
               'I':
                 if GetChar(vText, 3, True) = 'N' then //IND="%d"
                 begin
-                  TagPrp := Copy(vText, 2, Pos(cTagEnd, vText)-2);
+                  TagPrp := Copy(vText, 2, Pos(cTagEnd, vText) - 2);
                   CurLeft := StrToInt(ExtractPropertyValue(TagPrp, cIND)); // ex IND="10"
                   if odReserved1 in State then
                     CurLeft := Round((CurLeft * Scale) div 100);
@@ -7308,7 +7370,21 @@ begin
               'U':
                 Style(fsUnderline, True);
               'S':
-                Style(fsStrikeOut, True);
+                begin
+                  if GetChar(vText, 4, True) = 'P' then
+                  begin
+                    ScriptPosition := spSuperscript;
+                  end
+                  else if GetChar(vText, 4, True) = 'B' then
+                  begin
+                    ScriptPosition := spSubscript;
+                  end
+                  else
+                  begin
+                    ScriptPosition := spNormal;
+                    Style(fsStrikeOut, True);
+                  end;
+                end;
               'H':
                 if (GetChar(vText, 3, True) = 'R') and Assigned(Canvas) then // HR
                 begin
@@ -7316,23 +7392,23 @@ begin
                     Canvas.Pen.Color := Canvas.Font.Color;
                   OldWidth := Canvas.Pen.Width;
                   TagPrp := UpperCase(Copy(vText, 2, Pos(cTagEnd, vText)-2));
-                  Canvas.Pen.Width := StrToIntDef(ExtractPropertyValue(TagPrp, 'SIZE'),1); // ex HR="10"
+                  Canvas.Pen.Width := StrToIntDef(ExtractPropertyValue(TagPrp, 'SIZE'), 1); // ex HR="10"
                   if odReserved1 in State then
                     Canvas.Pen.Width := Round((Canvas.Pen.Width * Scale) div 100);
                   if CalcType = htmlShow then
                   begin
-                    Canvas.MoveTo(Rect.Left ,Rect.Top + CanvasMaxTextHeight(Canvas));
-                    Canvas.LineTo(Rect.Right,Rect.Top + CanvasMaxTextHeight(Canvas));
+                    Canvas.MoveTo(Rect.Left, Rect.Top + CanvasMaxTextHeight(Canvas));
+                    Canvas.LineTo(Rect.Right, Rect.Top + CanvasMaxTextHeight(Canvas));
                   end;
                   Rect.Top := Rect.Top + 1 + Canvas.Pen.Width;
                   Canvas.Pen.Width := OldWidth;
                   NewLine(HTMLDeleteTag(vText) <> '');
                 end;
               'F':
-                if (Pos(cTagEnd, vText) > 0) and (not Selected) and Assigned(Canvas) {and (CalcType = htmlShow)} then // F from FONT
+                if (Pos(cTagEnd, vText) > 0) and (not Selected) and Assigned(Canvas) {and (CalcType in [htmlShow, htmlHyperLink])} then // F from FONT
                 begin
-                  TagPrp := UpperCase(Copy(vText, 2, Pos(cTagEnd, vText)-2));
-                  RemFontColor  := Canvas.Font.Color;
+                  TagPrp := UpperCase(Copy(vText, 2, Pos(cTagEnd, vText) - 2));
+                  RemFontColor := Canvas.Font.Color;
                   RemBrushColor := Canvas.Brush.Color;
 
                   if Pos(cCOLOR, TagPrp) > 0 then
@@ -7358,7 +7434,7 @@ begin
                   if Pos('SIZE', TagPrp) > 0 then
                   begin
                     Prp := ExtractPropertyValue(TagPrp, 'SIZE');
-                    Canvas.Font.Size := StrToIntDef(Prp,2) * Canvas.Font.Size div 2;
+                    Canvas.Font.Size := StrToIntDef(Prp,2){ * Canvas.Font.Size div 2};
                   end;
                 end;
             end;
@@ -7367,7 +7443,8 @@ begin
           vM := '';
         end;
       end;
-      Draw(vM);
+      if vM <> '' then
+        Draw(vM);
       NewLine;
       vM := '';
     end;
@@ -7385,20 +7462,33 @@ begin
     FreeAndNil(vStr);
     FreeAndNil(OldFont);
   end;
-  if CalcType = htmlCalcHeight then
-    Width := Rect.Top + CanvasMaxTextHeight(Canvas)
-  else
-    Width := Max(Width, CurLeft - DefaultLeft);
+  Width := Max(Width, CurLeft - DefaultLeft);
+  Height := Rect.Top + CanvasMaxTextHeight(Canvas);
 end;
 
-function HTMLDrawText(Canvas: TCanvas; Rect: TRect;
-  const State: TOwnerDrawState; const Text: string; Scale: Integer = 100): string;
+// wp: I made this a procedure - it was a function in the original with the
+// result being unassigned.
+procedure HTMLDrawText(Canvas: TCanvas; Rect: TRect;
+  const State: TOwnerDrawState; const Text: string; SuperSubScriptRatio: Double; Scale: Integer);
 var
   W: Integer;
   S: Boolean;
   St: string;
 begin
-  HTMLDrawTextEx(Canvas, Rect, State, Text, W, htmlShow, 0, 0, S, St, Scale);
+  HTMLDrawTextEx(Canvas, Rect, State, Text, W, htmlShow, 0, 0, S, St, SuperSubScriptRatio, Scale);
+end;
+
+// wp: I made this a procedure - it was a function in the original with the
+// result being unassigned.
+procedure HTMLDrawTextHL(Canvas: TCanvas; Rect: TRect;
+  const State: TOwnerDrawState; const Text: string; MouseX, MouseY: Integer;
+  SuperSubScriptRatio: Double; Scale: Integer);
+var
+  W: Integer;
+  S: Boolean;
+  St: string;
+begin
+  HTMLDrawTextEx(Canvas, Rect, State, Text, W, htmlShow, MouseX, MouseY, S, St, SuperSubScriptRatio, Scale);
 end;
 
 function HTMLPlainText(const Text: string): string;
@@ -7418,28 +7508,41 @@ begin
   Result := Result + S;
 end;
 
-function HTMLTextWidth(Canvas: TCanvas; Rect: TRect;
-  const State: TOwnerDrawState; const Text: string; Scale: Integer = 100): Integer;
+function HTMLTextExtent(Canvas: TCanvas; Rect: TRect;
+  const State: TOwnerDrawState; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): TSize;
 var
   S: Boolean;
   St: string;
 begin
-  HTMLDrawTextEx(Canvas, Rect, State, Text, Result, htmlCalcWidth, 0, 0, S, St);
+  HTMLDrawTextEx2(Canvas, Rect, State, Text, Result.cx, Result.cy, htmlCalcWidth, 0, 0, S, St, SuperSubScriptRatio, Scale);
+  if Result.cy = 0 then
+    Result.cy := CanvasMaxTextHeight(Canvas);
+  Inc(Result.cy);
 end;
 
-function HTMLTextHeight(Canvas: TCanvas; const Text: string; Scale: Integer = 100): Integer;
+function HTMLTextWidth(Canvas: TCanvas; Rect: TRect;
+  const State: TOwnerDrawState; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): Integer;
+var
+  S: Boolean;
+  St: string;
+begin
+  HTMLDrawTextEx(Canvas, Rect, State, Text, Result, htmlCalcWidth, 0, 0, S, St, SuperSubScriptRatio, Scale);
+end;
+
+function HTMLTextHeight(Canvas: TCanvas; const Text: string; SuperSubScriptRatio: Double; Scale: Integer = 100): Integer;
 var
   S: Boolean;
   St: string;
   R: TRect;
 begin
   R := Rect(0, 0, 0, 0);
-  HTMLDrawTextEx(Canvas, R, [], Text, Result, htmlCalcHeight, 0, 0, S, St, Scale);
+  HTMLDrawTextEx(Canvas, R, [], Text, Result, htmlCalcHeight, 0, 0, S, St, SuperSubScriptRatio, Scale);
   if Result = 0 then
     Result := CanvasMaxTextHeight(Canvas);
   Inc(Result);
 end;
 
+(*************
 { TJvPicture }
 procedure TJvPicture.ReadBitmapData(Stream: TStream);
 var
@@ -7681,6 +7784,43 @@ begin
   else // nope.
     Result := nil;
 end;
+
+******************)
+
+function ReplaceComponentReference(This, NewReference: TComponent; var VarReference: TComponent): Boolean;
+begin
+  Result := (VarReference <> NewReference) and Assigned(This);
+  if Result then
+  begin
+    if Assigned(VarReference) then
+      VarReference.RemoveFreeNotification(This);
+    VarReference := NewReference;
+    if Assigned(VarReference) then
+      VarReference.FreeNotification(This);
+  end;
+end;
+
+function ReplaceImageListReference(This: TComponent; NewReference: TCustomImageList;
+  var VarReference: TCustomImageList; ChangeLink: TChangeLink): Boolean;
+begin
+  Result := (VarReference <> NewReference) and Assigned(This);
+  if Result then
+  begin
+    if Assigned(VarReference) then
+    begin
+      VarReference.RemoveFreeNotification(This);
+      VarReference.UnRegisterChanges(ChangeLink);
+    end;
+    VarReference := NewReference;
+    if Assigned(VarReference) then
+    begin
+      VarReference.RegisterChanges(ChangeLink);
+      VarReference.FreeNotification(This);
+    end;
+  end;
+end;
+
+(************
 
 initialization
   InitScreenCursors;

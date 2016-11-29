@@ -61,10 +61,10 @@ type
     Result: Longint;
   end;
 
-(********************
   THintString = string;
   THintStringList = TStringList;
 
+  (********************
   { JvExVCL classes }
   TInputKey = (ikAll, ikArrows, ikChars, ikButton, ikTabs, ikEdit, ikNative{, ikNav, ikEsc});
   TInputKeys = set of TInputKey;
