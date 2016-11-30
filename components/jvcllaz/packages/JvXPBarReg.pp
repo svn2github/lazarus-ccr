@@ -10,11 +10,13 @@ uses
 procedure Register;
 
 implementation
-uses JvXPBar;
+
+uses
+  JvXPBar, JvXPContainer;
 
 procedure Register;
 begin
-  RegisterComponents('JvXP',[TJvXPBar]);
+  RegisterComponents('JvXP',[TJvXPBar, TJvXPContainer]);
 end;
 
 initialization

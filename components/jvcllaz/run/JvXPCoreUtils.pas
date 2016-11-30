@@ -40,14 +40,15 @@ uses
 function JvXPMethodsEqual(const Method1, Method2: TMethod): Boolean;
 procedure JvXPDrawLine(const ACanvas: TCanvas; const X1, Y1, X2, Y2: Integer);
 
-(******************** NOT CONVERTED - NOT USED
-procedure JvXPCreateGradientRect(const AWidth, AHeight: Integer; const StartColor,
-  EndColor: TColor; const AColors: TJvXPGradientColors; const Style: TJvXPGradientStyle;
-  const Dithered: Boolean; var Bitmap: TBitmap);
 procedure JvXPAdjustBoundRect(const BorderWidth: Byte;
   const ShowBoundLines: Boolean; const BoundLines: TJvXPBoundLines; var Rect: TRect);
 procedure JvXPDrawBoundLines(const ACanvas: TCanvas; const BoundLines: TJvXPBoundLines;
   const AColor: TColor; const Rect: TRect);
+
+(******************** NOT CONVERTED - NOT USED
+procedure JvXPCreateGradientRect(const AWidth, AHeight: Integer; const StartColor,
+  EndColor: TColor; const AColors: TJvXPGradientColors; const Style: TJvXPGradientStyle;
+  const Dithered: Boolean; var Bitmap: TBitmap);
 
 //
 // attic!
@@ -233,7 +234,6 @@ begin
   end;
 end;
 
-(******************** NOT CONVERTED - NOT USED
 procedure JvXPAdjustBoundRect(const BorderWidth: Byte;
   const ShowBoundLines: Boolean; const BoundLines: TJvXPBoundLines;
   var Rect: TRect);
@@ -269,6 +269,7 @@ begin
   end;
 end;
 
+(******************** NOT CONVERTED - NOT USED
 //
 // attic
 //

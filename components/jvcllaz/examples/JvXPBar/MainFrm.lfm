@@ -21,52 +21,48 @@ object frmMain: TfrmMain
     Top = 0
     Width = 4
   end
-  object cntWinXPBar: TGroupBox
+  object cntWinXPBar: TJvXPContainer
     Left = 0
     Height = 441
     Top = 0
     Width = 206
-    Align = alLeft
+    BoundLines = [blLeft, blTop, blRight, blBottom]
     Caption = 'cntWinXPBar'
-    ClientHeight = 421
-    ClientWidth = 202
     Color = 14985086
     ParentColor = False
-    TabOrder = 1
+    Align = alLeft
     object sbxWinXPBar: TScrollBox
-      Left = 0
-      Height = 421
-      Top = 0
-      Width = 202
+      Left = 1
+      Height = 439
+      Top = 1
+      Width = 204
       HorzScrollBar.Increment = 13
-      HorzScrollBar.Page = 133
+      HorzScrollBar.Page = 137
       HorzScrollBar.Smooth = True
       HorzScrollBar.Tracking = True
-      VertScrollBar.Increment = 26
-      VertScrollBar.Page = 263
+      VertScrollBar.Increment = 25
+      VertScrollBar.Page = 251
       VertScrollBar.Smooth = True
       VertScrollBar.Tracking = True
       Align = alClient
       BorderStyle = bsNone
-      ClientHeight = 421
-      ClientWidth = 202
+      ClientHeight = 439
+      ClientWidth = 204
       TabOrder = 0
-      object JvXPContainer1: TGroupBox
+      object JvXPContainer1: TJvXPContainer
         Left = 0
-        Height = 263
+        Height = 251
         Top = 0
-        Width = 202
-        Align = alTop
+        Width = 204
         AutoSize = True
+        BorderWidth = 4
         Caption = 'JvXPContainer1'
-        ClientHeight = 243
-        ClientWidth = 198
-        TabOrder = 0
+        Align = alTop
         object dxWinXPBar4: TJvXPBar
-          Left = 0
+          Left = 4
           Height = 35
-          Top = 208
-          Width = 198
+          Top = 212
+          Width = 196
           Caption = 'Structure'
           Collapsed = True
           Colors.BorderColor = 9845
@@ -113,7 +109,7 @@ object frmMain: TfrmMain
             Left = 4
             Height = 0
             Top = 33
-            Width = 190
+            Width = 188
             Align = alClient
             BorderStyle = bsNone
             ExpandSignSize = 16
@@ -123,11 +119,11 @@ object frmMain: TfrmMain
           end
         end
         object JvXPBar1: TJvXPBar
-          Left = 0
+          Left = 4
           Height = 35
           Hint = 'This bar doesn''t use actions'
-          Top = 138
-          Width = 198
+          Top = 142
+          Width = 196
           Caption = 'Synchronize'
           Collapsed = True
           Colors.BorderColor = clMaroon
@@ -159,11 +155,11 @@ object frmMain: TfrmMain
           ParentFont = False
         end
         object dxWinXPBar3: TJvXPBar
-          Left = 0
+          Left = 4
           Height = 35
           Hint = 'This is a hint'
-          Top = 173
-          Width = 198
+          Top = 177
+          Width = 196
           Caption = 'Information'
           Collapsed = True
           Colors.BorderColor = clGray
@@ -197,10 +193,10 @@ object frmMain: TfrmMain
           ParentFont = False
         end
         object dxWinXPBar2: TJvXPBar
-          Left = 0
+          Left = 4
           Height = 35
-          Top = 103
-          Width = 198
+          Top = 107
+          Width = 196
           Caption = 'Settings'
           Collapsed = True
           Colors.BorderColor = clBtnShadow
@@ -229,11 +225,11 @@ object frmMain: TfrmMain
           ParentFont = False
         end
         object dxWinXPBar1: TJvXPBar
-          Left = 0
+          Left = 4
           Height = 103
           Hint = 'Click to see connection options'
-          Top = 0
-          Width = 198
+          Top = 4
+          Width = 196
           Caption = 'Connect'
           Colors.GradientTo = 16244694
           Items = <          
@@ -267,18 +263,16 @@ object frmMain: TfrmMain
       end
     end
   end
-  object cntDetails: TGroupBox
+  object cntDetails: TJvXPContainer
     Left = 210
     Height = 441
     Top = 0
     Width = 290
-    Align = alClient
+    BoundLines = [blLeft, blTop, blRight, blBottom]
     Caption = 'cntDetails'
-    ClientHeight = 421
-    ClientWidth = 286
     Color = clInfoBk
     ParentColor = False
-    TabOrder = 2
+    Align = alClient
     object lbWelcome: TLabel
       Left = 8
       Height = 15

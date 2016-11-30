@@ -5,9 +5,8 @@ unit MainFrm;
 interface
 
 uses
-  //Windows, Messages,
   SysUtils, Classes, Graphics, Controls, Forms,
-  Dialogs, JvXPCore, JvXPBar, {JvXPContainer, }ImgList, ActnList, ExtCtrls,
+  Dialogs, JvXPCore, JvXPBar, JvXPContainer, ImgList, ActnList, ExtCtrls,
   StdCtrls, ComCtrls, JvExControls, JvComponent {, JvXPCheckCtrls, JvXPButtons}
   ;
 
@@ -30,8 +29,8 @@ type
     acSynchronizeWeb: TAction;
     btnCollapseAll: TButton;  // was: TJvXPButton;
     btnExpandAll: TButton;  // was: TJvXPButton;
-    cntDetails: TGroupbox;  // was: JvXPContainer;
-    cntWinXPBar: TGroupbox;  // was: TJvXPContainer;
+    cntDetails: TJvXPContainer;
+    cntWinXPBar: TJvXPContainer;
     imlWinXPBar: TImageList;
     lbWelcome: TLabel;
     sbxWinXPBar: TScrollBox;
@@ -47,7 +46,7 @@ type
     acHelp: TAction;
     acHowDoI: TAction;
     acCommonQuestions: TAction;
-    JvXPContainer1: TGroupbox;  // was. TJvXPContainer;
+    JvXPContainer1: TJvXPContainer;
     dxWinXPBar4: TJvXPBar;
     JvXPBar1: TJvXPBar;
     dxWinXPBar3: TJvXPBar;

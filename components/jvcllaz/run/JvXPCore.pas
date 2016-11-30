@@ -74,7 +74,9 @@ const
 
 type
   TJvXPCustomStyleControl = class;
+  ******************** NOT CONVERTED *)
 
+type
   TJvXPBoundLines = set of
    (
     blLeft,                             // left line
@@ -82,9 +84,7 @@ type
     blRight,                            // right line
     blBottom                            // bottom line
    );
-******************** NOT CONVERTED *)
 
-type
   TJvXPControlStyle = set of
    (
     csRedrawCaptionChanged,             // (default)
@@ -111,7 +111,6 @@ type
     dsFocused                           // focused
    );
 
-(******************** NOT CONVERTED
   TJvXPGlyphLayout =
    (
     glBottom,                           // bottom glyph
@@ -119,6 +118,7 @@ type
     glTop                               // top glyph
    );
 
+  (******************** NOT CONVERTED
   TJvXPTheme =
    (
     WindowsXP,                          // WindowsXP theme
