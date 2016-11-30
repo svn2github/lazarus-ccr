@@ -1852,6 +1852,10 @@ end;
 
 procedure TJvCustomNavigationPane.WMEraseBkgnd(var Msg: TLMEraseBkgnd);
 begin
+  exit;
+  // wp: the following code causes massive painting issues.
+
+
   // DEV: Doesn't clear, remove if...
   //if ActivePage = nil then
   begin
@@ -2397,6 +2401,7 @@ begin
       ACanvas.Font := Font;
     SetBkMode(ACanvas.Handle, TRANSPARENT);
     DrawText(ACanvas, Caption, Length(Caption), R, DT_SINGLELINE or DT_VCENTER);
+    SetBkMode(ACanvas.Handle, OPAQUE);
   end;
   if Colors.ButtonSeparatorColor <> clNone then
   begin
@@ -3527,6 +3532,7 @@ begin
       OffsetRect(R, 0, -Images.Height div 2);
     DrawText(Canvas, Caption, Length(Caption), R,
       cAlignment[Alignment] or cWordWrap[WordWrap] or DT_VCENTER or DT_NOPREFIX or DT_END_ELLIPSIS);
+    SetBkMode(Canvas.Handle, OPAQUE);
   end;
   if IsValidImage then
   begin
@@ -3768,6 +3774,7 @@ begin
     SetBkMode(Canvas.Handle, TRANSPARENT);
     DrawText(Canvas, Caption, Length(Caption), R,
       DT_SINGLELINE or DT_VCENTER or DT_NOPREFIX or DT_EDITCONTROL or cAlignment[Alignment]);
+    SetBkMode(Canvas.Handle, OPAQUE);
   end;
   Canvas.Pen.Color := FrameColor;
   Canvas.MoveTo(0, ClientHeight - 1);
@@ -4911,6 +4918,7 @@ DrawButton:
           DrawText(Canvas, Caption, Length(Caption), R, DT_LEFT or DT_VCENTER or DT_NOPREFIX or DT_END_ELLIPSIS);
           Inc(R.Right, 3 + 7);
           InflateRect(R, 2, 0);
+          SetBkMode(Canvas.Handle, OPAQUE);
         end;
         R.Left := R.Right - 11;
         Dec(R.Right, 4);
