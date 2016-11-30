@@ -1438,14 +1438,14 @@ begin
 
   FFont := TFont.Create;
   FFont.Color := $00840000;
-  FFont.Size := 8;
+  FFont.Size := 0; //8;
   FFont.OnChange := @FontChange;
   FHeaderHeight := 28;
   FHeaderRounded := True;
   FGradientWidth := 0;
   FHeaderFont := TFont.Create;
   FHeaderFont.Color := $00840000;
-  FHeaderFont.Size := 8;
+  FHeaderFont.Size := 0; //8;
   FHeaderFont.Style := [fsBold];
   FHeaderFont.OnChange := @FontChange;
 

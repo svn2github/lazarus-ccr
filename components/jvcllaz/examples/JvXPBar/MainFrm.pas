@@ -12,8 +12,8 @@ uses
   ;
 
 resourcestring
-  SClickEvent =
-    '  You clicked on the action "%s"...';
+  SClickEventAc  = '  You clicked on the action "%s"...';
+  SClickEventXP = '  You clicked on the JvXPBarItem "%s"...';
 
 type
   TProcControl = procedure (Control:TControl) of object;
@@ -96,16 +96,15 @@ begin
   if Sender is TJvXPBarItem then
     with TJvXPBarItem(Sender) do
       if Assigned(Action) then
-        StatusBar1.Panels[0].Text :=  Format(SClickEvent, [Name])
+        StatusBar1.Panels[0].Text := Format(SClickEventAc, [Action.Name])
       else
-        Statusbar1.Panels[0].Text := Caption;
+        Statusbar1.Panels[0].Text := Format(SClickEventXP, [Caption]);
 end;
 
 procedure TfrmMain.btnCollapseAllClick(Sender: TObject);
 begin
   IterateControls(DoCollapseAll);
 end;
-
 
 procedure TfrmMain.btnExpandAllClick(Sender: TObject);
 begin

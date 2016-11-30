@@ -4,6 +4,7 @@
     <PathDelim Value="\"/>
     <Name Value="JvValidatorLaz"/>
     <Type Value="RunAndDesignTime"/>
+    <Author Value="Lazarus port by: Michał Gawrycki"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -13,6 +14,9 @@
         <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
+    <Description Value="Validator components of the JVCL library (https://sourceforge.net/projects/jvcl/)"/>
+    <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
+    <Version Major="1" Release="1"/>
     <Files Count="4">
       <Item1>
         <Filename Value="..\run\JvErrorIndicator.pas"/>
