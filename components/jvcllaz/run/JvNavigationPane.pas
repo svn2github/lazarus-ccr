@@ -4393,6 +4393,7 @@ begin
         if CloseButton then
           R := Rect(R.Left, R.Top, FCloseButton.Left, R.Bottom);
         DrawText(Canvas, Caption, Length(Caption), R, DT_SINGLELINE or DT_VCENTER or DT_LEFT or DT_END_ELLIPSIS);
+        SetBkMode(Canvas.Handle, OPAQUE);
       end;
 
       // draw the client areas top rounding, set pixels directly to avoid messing up any background image
@@ -4435,9 +4436,11 @@ begin
       Inc(R.Top, HeaderHeight);
       Inc(R.Right);
       Canvas.Brush.Color := Colors.FrameColor;
-      Canvas.Pen.Style := psClear;
+      //Canvas.Pen.Style := psClear;
+
       if Buttons.Count > 0 then
       begin
+        Canvas.Pen.Style := psClear;
         R2 := Rect(R.Left, R.Top, R.Left + ButtonWidth * Buttons.Count - 1, R.Top + ButtonHeight);
         Canvas.RoundRect(R2.Left, R2.Top, R2.Right, R2.Bottom, EdgeRounding, EdgeRounding);
         // square two corners
