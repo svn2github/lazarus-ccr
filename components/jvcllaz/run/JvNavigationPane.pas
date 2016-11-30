@@ -954,6 +954,7 @@ type
     procedure Loaded; override;
     procedure DoDropDownMenu(Sender: TObject; MousePos: TPoint; var Handled: Boolean);
     function InternalGetPageClass: TJvCustomPageClass; override;
+    procedure Paint; override;
     property NavPages[Index: Integer]: TJvNavPanelPage read GetNavPage;
   public
     constructor Create(AOwner: TComponent); override;
@@ -1616,6 +1617,16 @@ begin
       ActivePage := APage;
   end;
   UpdatePositions;
+end;
+
+procedure TJvCustomNavigationPane.Paint;
+begin
+  if (csDesigning in ComponentState) or (PageCount = 0) then
+  begin
+    Canvas.Brush.Color := Color;
+    Canvas.FillRect(0, 0, Width, Height);
+  end;
+  inherited;
 end;
 
 procedure TJvCustomNavigationPane.SetActivePage(Page: TJvCustomPage);
