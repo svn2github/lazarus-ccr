@@ -844,6 +844,7 @@ begin
     //{$ELSE}
     DrawText(ACanvas.Handle, PAnsiChar(ItemCaption), Length(ItemCaption), Rect,
       DT_SINGLELINE or DT_VCENTER or DT_END_ELLIPSIS);
+    SetBkMode(ACanvas.Handle, OPAQUE);
   end;
 end;
 

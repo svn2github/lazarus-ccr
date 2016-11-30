@@ -13,9 +13,6 @@
         <TextDesc Value="Your application description."/>
       </XPManifest>
     </General>
-    <VersionInfo>
-      <StringTable ProductVersion=""/>
-    </VersionInfo>
     <BuildModes Count="1">
       <Item1 Name="default" Default="True"/>
     </BuildModes>
@@ -54,7 +51,7 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
         <TopLine Value="107"/>
-        <CursorPos X="56" Y="345"/>
+        <CursorPos X="24" Y="122"/>
         <UsageCount Value="22"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -95,7 +92,7 @@
     <SearchPaths>
       <IncludeFiles Value="..\..\resources"/>
       <OtherUnitFiles Value="..\..\run"/>
-      <UnitOutputDirectory Value="..\..\out"/>
+      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
       <SyntaxOptions>
