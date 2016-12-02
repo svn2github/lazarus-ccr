@@ -775,6 +775,7 @@ begin
     if F.ShowModal = mrOK then
     begin
       WorksheetGrid.Workbook.FormatSettings := F.FormatSettings;
+      UTF8FormatSettings := F.FormatSettings;
       WorksheetGrid.Invalidate;
     end;
   finally
