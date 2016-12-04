@@ -38,33 +38,30 @@ uses
   TypInfo, JvXPCore;
 
 function JvXPMethodsEqual(const Method1, Method2: TMethod): Boolean;
+
 procedure JvXPDrawLine(const ACanvas: TCanvas; const X1, Y1, X2, Y2: Integer);
 
-procedure JvXPAdjustBoundRect(const BorderWidth: Byte;
-  const ShowBoundLines: Boolean; const BoundLines: TJvXPBoundLines; var Rect: TRect);
-procedure JvXPDrawBoundLines(const ACanvas: TCanvas; const BoundLines: TJvXPBoundLines;
-  const AColor: TColor; const Rect: TRect);
-
-(******************** NOT CONVERTED - NOT USED
 procedure JvXPCreateGradientRect(const AWidth, AHeight: Integer; const StartColor,
   EndColor: TColor; const AColors: TJvXPGradientColors; const Style: TJvXPGradientStyle;
   const Dithered: Boolean; var Bitmap: TBitmap);
 
-//
-// attic!
-//
+procedure JvXPAdjustBoundRect(const BorderWidth: Byte;
+  const ShowBoundLines: Boolean; const BoundLines: TJvXPBoundLines; var Rect: TRect);
 
-procedure JvXPConvertToGray2(Bitmap: TBitmap);
+procedure JvXPDrawBoundLines(const ACanvas: TCanvas; const BoundLines: TJvXPBoundLines;
+  const AColor: TColor; const Rect: TRect);
+
+procedure JvXPConvertToGray2(ABitmap: TBitmap);
+
 procedure JvXPRenderText(const AParent: TControl; const ACanvas: TCanvas;
   ACaption: TCaption; const AFont: TFont; const AEnabled, AShowAccelChar: Boolean;
   var ARect: TRect; AFlags: Integer);
-******************** NOT CONVERTED *)
 
 procedure JvXPFrame3D(const ACanvas: TCanvas; const ARect: TRect;
   const TopColor, BottomColor: TColor; const Swapped: Boolean = False);
 
+procedure JvXPColorizeBitmap(ABitmap: TBitmap; const AColor: TColor);
 (******************** NOT CONVERTED - NOT USED
-procedure JvXPColorizeBitmap(Bitmap: TBitmap; const AColor: TColor);
 procedure JvXPSetDrawFlags(const AAlignment: TAlignment; const AWordWrap: Boolean;
   var Flags: Integer);
 procedure JvXPPlaceText(const AParent: TControl; const ACanvas: TCanvas;
@@ -74,12 +71,39 @@ procedure JvXPPlaceText(const AParent: TControl; const ACanvas: TCanvas;
 
 implementation
 
+uses
+  IntfGraphics, fpCanvas, fpImage, fpImgCanv;
+
 function JvXPMethodsEqual(const Method1, Method2: TMethod): Boolean;
 begin
   Result := (Method1.Code = Method2.Code) and (Method1.Data = Method2.Data);
 end;
 
-(******************** NOT USED
+// Ignoring "AColors" and "Dithered"
+procedure JvXPCreateGradientRect(const AWidth, AHeight: Integer;
+  const StartColor, EndColor: TColor; const AColors: TJvXPGradientColors;
+  const Style: TJvXPGradientStyle; const Dithered: Boolean; var Bitmap: TBitmap);
+begin
+  if (AHeight <= 0) or (AWidth <= 0) then
+    Exit;
+  Bitmap.Height := AHeight;
+  Bitmap.Width := AWidth;
+  Bitmap.PixelFormat := pf24bit;
+  case Style of
+    gsLeft:
+      Bitmap.Canvas.GradientFill(Rect(0, 0, AWidth, AHeight), StartColor, EndColor, gdHorizontal);
+    gsRight:
+      Bitmap.Canvas.GradientFill(Rect(0, 0, AWidth, AHeight), EndColor, StartColor, gdHorizontal);
+    gsTop:
+      Bitmap.Canvas.GradientFill(Rect(0, 0, AWidth, AHeight), StartColor, EndColor, gdVertical);
+    gsBottom:
+      Bitmap.Canvas.GradientFill(Rect(0, 0, AWidth, AHeight), EndColor, StartColor, gdVertical);
+  end;
+end;
+
+
+(*
+// Dithered is ignored at the moment...
 procedure JvXPCreateGradientRect(const AWidth, AHeight: Integer; const StartColor,
   EndColor: TColor; const AColors: TJvXPGradientColors; const Style: TJvXPGradientStyle;
   const Dithered: Boolean; var Bitmap: TBitmap);
@@ -111,13 +135,15 @@ type
       False:
         (R, G, B, D: Byte);
   end;
-  PRGBTripleArray = ^TRGBTripleArray;
-  TRGBTripleArray = array [0..PixelCountMax-1] of TRGBTriple;
 var
   iLoop, xLoop, yLoop, XX, YY: Integer;
   iBndS, iBndE: Integer;
   GBand: TGradientBand;
-  Row: PRGBTripleArray;
+  intfImg: TLazIntfImage;
+  cnv: TFPImageCanvas;
+  clr: TFPColor;
+  imgHandle, imgMaskHandle: HBitmap;
+  tempBitmap: TBitmap;
 
   procedure CalculateGradientBand;
   var
@@ -157,73 +183,82 @@ begin
 
   CalculateGradientBand;
 
-  with Bitmap.Canvas do
+  intfImg := TLazIntfImage.Create(0, 0);
+  intfImg.LoadFromBitmap(Bitmap.Handle, Bitmap.MaskHandle);
+  cnv := TFPImageCanvas.Create(intfImg);
+  cnv.Brush.FPColor := TColorToFPColor(StartColor);
+  //cnv.FillRect(Bounds(0, 0, AWidth, AHeight));
+
+  if Style in [gsLeft, gsRight] then
   begin
-    Brush.Color := StartColor;
-    FillRect(Bounds(0, 0, AWidth, AHeight));
-    if Style in [gsLeft, gsRight] then
-    begin
-      for iLoop := 0 to AColors - 1 do
+    for iLoop := 0 to AColors - 1 do begin
+      iBndS := MulDiv(iLoop, AWidth, AColors);
+      iBndE := MulDiv(iLoop + 1, AWidth, AColors);
+      cnv.Brush.FPColor := TColorToFPColor(GBand[iLoop]);
+      cnv.FillRect(iBnds, 0, iBndE, AHeight);
+      {
+      if Dithered and (iLoop > 0) then
       begin
-        iBndS := MulDiv(iLoop, AWidth, AColors);
-        iBndE := MulDiv(iLoop + 1, AWidth, AColors);
-        Brush.Color := GBand[iLoop];
-        PatBlt(Handle, iBndS, 0, iBndE, AHeigth, PATCOPY);
-        if (iLoop > 0) and Dithered then
-          for yLoop := 0 to DitherDepth - 1 do
-            if yLoop < AHeight  then
+        clr := TColorToFPColor(GBand[iLoop - 1]);
+        for yLoop := 0 to DitherDepth - 1 do
+          if yLoop < AHeight then
+            for xLoop := 0 to AWidth div (AColors - 1) do
             begin
-              Row := Bitmap.ScanLine[yLoop];
-              for xLoop := 0 to AWidth div (AColors - 1) do
-                begin
-                  XX := iBndS + Random(xLoop);
-                  if (XX < AWidth) and (XX > -1) then
-                    with Row[XX] do
-                    begin
-                      rgbtRed := GetRValue(GBand[iLoop - 1]);
-                      rgbtGreen := GetGValue(GBand[iLoop - 1]);
-                      rgbtBlue := GetBValue(GBand[iLoop - 1]);
-                    end;
-                end;
-            end;
-      end;
-      for yLoop := 1 to AHeight div DitherDepth do
-        CopyRect(Bounds(0, yLoop * DitherDepth, AWidth, DitherDepth),
-          Bitmap.Canvas, Bounds(0, 0, AWidth, DitherDepth));
-    end
-    else
-    begin
-      for iLoop := 0 to AColors - 1 do
-      begin
-        iBndS := MulDiv(iLoop, AHeight, AColors);
-        iBndE := MulDiv(iLoop + 1, AHeight, AColors);
-        Brush.Color := GBand[iLoop];
-        PatBlt(Handle, 0, iBndS, AWidth, iBndE, PATCOPY);
-        if (iLoop > 0) and Dithered then
-          for yLoop := 0 to AHeight div (AColors - 1) do
-          begin
-            YY := iBndS + Random(yLoop);
-            if (YY < AHeight) and (YY > -1) then
-            begin
-              Row := Bitmap.ScanLine[YY];
-              for xLoop := 0 to DitherDepth - 1 do
-              if xLoop < AWidth  then
-                with Row[xLoop] do
-                begin
-                  rgbtRed := GetRValue(GBand[iLoop - 1]);
-                  rgbtGreen := GetGValue(GBand[iLoop - 1]);
-                  rgbtBlue := GetBValue(GBand[iLoop - 1]);
-                end;
-              end;
+              XX := iBndS + Random(xLoop);
+              if (XX < AWidth) and (XX > -1) then
+                cnv.Colors[XX, yLoop] := clr;
           end;
       end;
-      for xLoop := 0 to AWidth div DitherDepth do
-        CopyRect(Bounds(xLoop * DitherDepth, 0, DitherDepth, AHeight),
-          Bitmap.Canvas, Bounds(0, 0, DitherDepth, AHeight));
+      }
     end;
+    {
+    if Dithered then
+      for yLoop := 1 to AHeight div DitherDepth do
+        for xLoop := 0 to AWidth - 1 do
+          cnv.Colors[xLoop, yLoop * DitherDepth] := cnv.Colors[xLoop, 0];
+        }
+  end
+  else
+  begin
+    for iLoop := 0 to AColors - 1 do
+    begin
+      iBndS := MulDiv(iLoop, AHeight, AColors);
+      iBndE := MulDiv(iLoop + 1, AHeight, AColors);
+      cnv.Brush.FPColor := TColorToFPColor(GBand[iLoop]);
+      cnv.FillRect(0, iBndS, AWidth, iBndS + iBndE);
+      {
+      if Dithered and (iLoop > 0) then
+      begin
+        clr := TColorToFPColor(GBand[iLoop - 1]);
+        for yLoop := 0 to AHeight div (AColors - 1) do
+        begin
+          YY := iBndS + Random(yLoop);
+          if (YY < AHeight) and (YY > -1) then
+            for xLoop := 0 to DitherDepth - 1 do
+              if xLoop < AWidth then
+                cnv.Colors[xLoop, YY] := clr;
+        end;
+      end;
+      }
+    end;
+    {
+    for xLoop := 0 to AWidth div DitherDepth do
+      for yLoop := 0 to AHeight - 1 do
+        cnv.Colors[xLoop * DitherDepth, yLoop] := cnv.Colors[0, yLoop];
+        }
   end;
+
+  intfImg.CreateBitmaps(imgHandle, imgMaskHandle, false);
+  tempBitmap := TBitmap.Create;
+  tempBitmap.Handle := imgHandle;
+  tempBitmap.MaskHandle := imgMaskHandle;
+  Bitmap.Canvas.Draw(0, 0, tempBitmap);
+
+  tempBitmap.Free;
+  cnv.Free;
+  intfImg.Free;
 end;
-******************** NOT USED *)
+  *)
 
 procedure JvXPDrawLine(const ACanvas: TCanvas; const X1, Y1, X2, Y2: Integer);
 begin
@@ -269,24 +304,19 @@ begin
   end;
 end;
 
-(******************** NOT CONVERTED - NOT USED
-//
-// attic
-//
-
-procedure JvXPConvertToGray2(Bitmap: TBitmap);
+procedure JvXPConvertToGray2(ABitmap: TBitmap);
 var
   x, y, c: Integer;
   PxlColor: TColor;
 begin
-  for x := 0 to Bitmap.Width - 1 do
-    for y := 0 to Bitmap.Height - 1 do
+  for x := 0 to ABitmap.Width - 1 do
+    for y := 0 to ABitmap.Height - 1 do
     begin
-      PxlColor := ColorToRGB(Bitmap.Canvas.Pixels[x, y]);
+      PxlColor := ColorToRGB(ABitmap.Canvas.Pixels[x, y]);
       c := (PxlColor shr 16 + ((PxlColor shr 8) and $00FF) + PxlColor and $0000FF) div 3 + 100;
       if c > 255 then
         c := 255;
-      Bitmap.Canvas.Pixels[x, y] := RGB(c, c, c);
+      ABitmap.Canvas.Pixels[x, y] := RGB(c, c, c);
     end;
 end;
 
@@ -306,7 +336,8 @@ begin
     ACaption := ACaption + ' ';
   if not AShowAccelChar then
     AFlags := AFlags or DT_NOPREFIX;
-  AFlags := AParent.DrawTextBiDiModeFlags(AFlags);
+  // wp: To do - bidi
+  // AFlags := AParent.DrawTextBiDiModeFlags(AFlags);
   with ACanvas do
   begin
     Font.Assign(AFont);
@@ -325,7 +356,6 @@ begin
       DoDrawText;
   end;
 end;
-******************** NOT CONVERTED *)
 
 procedure JvXPFrame3D(const ACanvas: TCanvas; const ARect: TRect;
   const TopColor, BottomColor: TColor; const Swapped: Boolean = False);
@@ -355,28 +385,28 @@ begin
   end;
 end;
 
-(******************** NOT CONVERTED
-procedure JvXPColorizeBitmap(Bitmap: TBitmap; const AColor: TColor);
+procedure JvXPColorizeBitmap(ABitmap: TBitmap; const AColor: TColor);
 var
   ColorMap: TBitmap;
   Rect: TRect;
 begin
-  Rect := Bounds(0, 0, Bitmap.Width, Bitmap.Height);
+  Rect := Bounds(0, 0, ABitmap.Width, ABitmap.Height);
   ColorMap := TBitmap.Create;
   try
-    ColorMap.Assign(Bitmap);
-    Bitmap.FreeImage;
+    ColorMap.Assign(ABitmap);
+    ABitmap.FreeImage;
     with ColorMap.Canvas do
     begin
       Brush.Color := AColor;
-      BrushCopy( Rect, Bitmap, Rect, clBlack);
+      BrushCopy(Rect, ABitmap, Rect, clBlack);
     end;
-    Bitmap.Assign(ColorMap);
+    ABitmap.Assign(ColorMap);
   finally
     ColorMap.Free;
   end;
 end;
 
+(******************** NOT CONVERTED
 procedure JvXPSetDrawFlags(const AAlignment: TAlignment; const AWordWrap: Boolean;
   var Flags: Integer);
 begin

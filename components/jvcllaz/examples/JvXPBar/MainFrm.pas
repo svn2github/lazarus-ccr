@@ -7,8 +7,7 @@ interface
 uses
   SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, JvXPCore, JvXPBar, JvXPContainer, ImgList, ActnList, ExtCtrls,
-  StdCtrls, ComCtrls, JvExControls, JvComponent {, JvXPCheckCtrls, JvXPButtons}
-  ;
+  StdCtrls, ComCtrls, JvExControls, JvComponent {, JvXPCheckCtrls}, JvXPButtons;
 
 resourcestring
   SClickEventAc  = '  You clicked on the action "%s"...';
@@ -27,16 +26,16 @@ type
     acSettingsUsers: TAction;
     acSynchronizeUnknown: TAction;
     acSynchronizeWeb: TAction;
-    btnCollapseAll: TButton;  // was: TJvXPButton;
-    btnExpandAll: TButton;  // was: TJvXPButton;
+    btnCollapseAll: TJvXPButton;
+    btnExpandAll: TJvXPButton;
     cntDetails: TJvXPContainer;
     cntWinXPBar: TJvXPContainer;
     imlWinXPBar: TImageList;
     lbWelcome: TLabel;
     sbxWinXPBar: TScrollBox;
     spltMain: TSplitter;
-    btnToogleEnableMode: TButton;  // was: TJvXPButton;
-    btnToggleVisibleMode: TButton;  // was: TJvXPButton;
+    btnToogleEnableMode: TJvXPButton;
+    btnToggleVisibleMode: TJvXPButton;
     ilOldButtons: TImageList;
     chkGrouped: TCheckbox;   // was: TJvXPCheckbox;
     ilWhiteButtons: TImageList;

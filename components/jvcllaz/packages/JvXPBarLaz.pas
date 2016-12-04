@@ -8,7 +8,7 @@ unit JvXPBarLaz;
 interface
 
 uses
-  JvXPCoreUtils, JvXPBar, JvXPCore, JvXPBarReg, JvXPContainer, 
+  JvXPCoreUtils, JvXPBar, JvXPCore, JvXPBarReg, JvXPContainer, JvXPButtons, 
   LazarusPackageIntf;
 
 implementation

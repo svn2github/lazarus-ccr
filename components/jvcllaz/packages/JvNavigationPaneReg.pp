@@ -10,7 +10,9 @@ uses
 procedure Register;
 
 implementation
-  uses JvNavigationPane;
+
+uses
+  JvNavigationPane;
 
 procedure Register;
 begin

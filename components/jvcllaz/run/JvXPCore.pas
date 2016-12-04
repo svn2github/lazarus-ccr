@@ -36,7 +36,6 @@ interface
 uses
   Classes, Controls, Forms, Graphics, JvComponent, LCLIntf, LCLType, LMessages;
 
-(******************** NOT CONVERTED
 const
   { color constants.
 
@@ -73,20 +72,16 @@ const
   dxColor_BgCkOXP              = TColor($00CC9999);
 
 type
-  TJvXPCustomStyleControl = class;
-  ******************** NOT CONVERTED *)
+//  TJvXPCustomStyleControl = class;
 
-type
-  TJvXPBoundLines = set of
-   (
+  TJvXPBoundLines = set of (
     blLeft,                             // left line
     blTop,                              // top line
     blRight,                            // right line
     blBottom                            // bottom line
    );
 
-  TJvXPControlStyle = set of
-   (
+  TJvXPControlStyle = set of (
     csRedrawCaptionChanged,             // (default)
     csRedrawBorderChanged,              //
     csRedrawEnabledChanged,             // (default)
@@ -102,31 +97,24 @@ type
     csRedrawResized                     //
    );
 
-type
-  TJvXPDrawState = set of
-   (
+  TJvXPDrawState = set of (
     dsDefault,                          // default
     dsHighlight,                        // highlighted
     dsClicked,                          // clicked
-    dsFocused                           // focused
-   );
+    dsFocused);                           // focused
 
-  TJvXPGlyphLayout =
-   (
+  TJvXPGlyphLayout = (
     glBottom,                           // bottom glyph
     glCenter,                           // centered glyph
-    glTop                               // top glyph
-   );
+    glTop);                             // top glyph
 
-  (******************** NOT CONVERTED
-  TJvXPTheme =
-   (
+  TJvXPTheme = (
     WindowsXP,                          // WindowsXP theme
-    OfficeXP                            // OfficeXP theme
-   );
+    OfficeXP);                          // OfficeXP theme
 
   { baseclass for non-focusable component descendants. }
   TJvXPCustomComponent = class(TComponent)
+  (******************** NOT CONVERTED
   private
     FVersion: string;
     procedure SetVersion(const Value: string);
@@ -134,8 +122,8 @@ type
     constructor Create(AOwner: TComponent); override;
   published
     property Version: string read FVersion write SetVersion stored False;
+  ******************** NOT CONVERTED *)
   end;
-******************** NOT CONVERTED *)
 
 type
   TJvXPWinControl = class(TWinControl)
@@ -145,6 +133,7 @@ type
   
   { baseclass for focusable control descendants. }
 
+//  TJvXPCustomControl = class(TCustomControl)  //(TJvCustomControl)
   TJvXPCustomControl = class(TJvCustomControl)
   private
     FClicking: Boolean;
@@ -166,10 +155,11 @@ type
     //LCL doesnt fire it
     //procedure CMParentFontChanged(var Msg: TLMessage); message CM_PARENTFONTCHANGED;
 
-    procedure CMTextChanged(var Msg: TLMessage); message CM_TEXTCHANGED;
+    //procedure CMTextChanged(var Msg: TLMessage); message CM_TEXTCHANGED;
     procedure WMMouseMove(var Msg: TLMMouse); message LM_MOUSEMOVE;
     procedure WMSize(var Msg: TLMSize); message LM_SIZE;
     procedure WMWindowPosChanged(var Msg: TLMWindowPosChanged); message LM_WINDOWPOSCHANGED;
+
   protected
     ExControlStyle: TJvXPControlStyle;
     procedure InternalRedraw; dynamic;
@@ -192,6 +182,8 @@ type
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure Click; override;
+    procedure Resize; override;
+    procedure TextChanged; override;
     property ModalResult: TModalResult read FModalResult write FModalResult default 0;
     property OnMouseEnter: TNotifyEvent read FOnMouseEnter write FOnMouseEnter;
     property OnMouseLeave: TNotifyEvent read FOnMouseLeave write FOnMouseLeave;
@@ -295,16 +287,16 @@ type
   private
     FStyle: TJvXPStyle;
     FStyleManager: TJvXPStyleManager;
-  public
-    constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
   protected
     procedure SetStyleManager(Value: TJvXPStyleManager); virtual;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     property Style: TJvXPStyle read FStyle write FStyle;
     property StyleManager: TJvXPStyleManager read FStyleManager write SetStyleManager;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   end;
-******************** NOT CONVERTED *)
+  ******************** NOT CONVERTED *)
 
   TJvXPGradientColors = 2..255;
 
@@ -343,29 +335,6 @@ type
 ******************** NOT CONVERTED *)
 
 implementation
-
-(******************** NOT CONVERTED
-{$IFNDEF USEJVCL}
-resourcestring
-  RsCopyright = 'Design eXperience. (c) 2002 M. Hoffmann Version ';
-  RsCopyright2 = 'Design eXperience II - (c) 2002 M. Hoffmann Version ';
-  RsVersion = '2.0.1'; // always increase version number on new releases!
-{$ENDIF !USEJVCL}
-//=== { TJvXPCustomComponent } ===============================================
-
-constructor TJvXPCustomComponent.Create(AOwner: TComponent);
-begin
-  inherited Create(AOwner);
-  {$IFNDEF USEJVCL}
-  FVersion := RsCopyright + RsVersion;
-  {$ENDIF !USEJVCL}
-end;
-
-procedure TJvXPCustomComponent.SetVersion(const Value: string);
-begin
-  // do not enable overwriting this constant.
-end;
-******************** NOT CONVERTED *)
 
 //=== { TJvXPCustomControl } =================================================
 
@@ -412,8 +381,6 @@ begin
     Invalidate;
 end;
 
-
-
 procedure TJvXPCustomControl.CMDialogChar(var Msg: TCMDialogChar);
 begin
   with Msg do
@@ -441,14 +408,12 @@ begin
   HookEnabledChanged;
 end;
 
-
 procedure TJvXPCustomControl.CMFocusChanged(var Msg: TLMessage);
 begin
   // delegate message "FocusChanged" to hook.
   inherited;
   HookFocusedChanged;
 end;
-
 
 procedure TJvXPCustomControl.CMMouseEnter(var Msg: TLMessage);
 begin
@@ -479,12 +444,25 @@ begin
   inherited;
   HookParentFontChanged;
 end;
-*)
 procedure TJvXPCustomControl.CMTextChanged(var Msg: TLMessage);
 begin
   // delegate message "TextChanged" to hook.
   inherited;
   HookTextChanged;
+end;
+*)
+
+procedure TJvXPCustomControl.Resize;
+begin
+  inherited;
+  //HookResized;
+end;
+
+procedure TJvXPCustomControl.TextChanged;
+begin
+  // delegate message "TextChanged" to hook.
+  inherited;
+  InternalRedraw;
 end;
 
 procedure TJvXPCustomControl.WMMouseMove(var Msg: TLMMouse);
@@ -679,11 +657,15 @@ end;
 procedure TJvXPCustomControl.HookTextChanged;
 begin
   // this hook is called, if the caption was changed.
-  if csRedrawCaptionChanged in ExControlStyle then
+  if (csRedrawCaptionChanged in ExControlStyle) and
+     not (csCreating in ControlState)
+  then
     InternalRedraw;
 end;
 
+
 (******************** NOT CONVERTED
+
 //=== { TJvXPStyle } =========================================================
 
 constructor TJvXPStyle.Create(AOwner: TComponent);
@@ -773,6 +755,7 @@ begin
     FControls.Delete(FControls.IndexOf(AControls[I]));
 end;
 
+
 //=== { TJvXPCustomStyleControl } ============================================
 
 constructor TJvXPCustomStyleControl.Create(AOwner: TComponent);
@@ -810,6 +793,7 @@ begin
     InternalRedraw;
   end;
 end;
+
 
 //=== { TJvXPGradient } ======================================================
 

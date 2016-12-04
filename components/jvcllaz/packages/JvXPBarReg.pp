@@ -12,11 +12,15 @@ procedure Register;
 implementation
 
 uses
-  JvXPBar, JvXPContainer;
+  JvXPBar, JvXPContainer, JvXPButtons;
 
 procedure Register;
 begin
-  RegisterComponents('JvXP',[TJvXPBar, TJvXPContainer]);
+  RegisterComponents('JvXP', [
+    TJvXPBar,
+    TJvXPContainer,
+    TJvXPButton
+  ]);
 end;
 
 initialization

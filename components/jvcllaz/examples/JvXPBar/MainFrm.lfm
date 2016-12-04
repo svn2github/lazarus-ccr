@@ -284,41 +284,41 @@ object frmMain: TfrmMain
       ParentColor = False
       ParentFont = False
     end
-    object btnCollapseAll: TButton
+    object btnCollapseAll: TJvXPButton
       Left = 8
       Height = 25
       Top = 48
       Width = 75
       Caption = 'Collapse All'
-      OnClick = btnCollapseAllClick
       TabOrder = 0
+      OnClick = btnCollapseAllClick
     end
-    object btnExpandAll: TButton
+    object btnExpandAll: TJvXPButton
       Left = 88
       Height = 25
       Top = 48
       Width = 75
       Caption = 'Expand All'
-      OnClick = btnExpandAllClick
       TabOrder = 1
+      OnClick = btnExpandAllClick
     end
-    object btnToogleEnableMode: TButton
+    object btnToogleEnableMode: TJvXPButton
       Left = 8
       Height = 25
       Top = 80
       Width = 153
       Caption = 'Toggle Enable Mode'
-      OnClick = btnToogleEnableModeClick
       TabOrder = 2
+      OnClick = btnToogleEnableModeClick
     end
-    object btnToggleVisibleMode: TButton
+    object btnToggleVisibleMode: TJvXPButton
       Left = 8
       Height = 25
       Top = 112
       Width = 153
       Caption = 'Toggle Visible Mode'
-      OnClick = btnToggleVisibleModeClick
       TabOrder = 3
+      OnClick = btnToggleVisibleModeClick
     end
     object chkGrouped: TCheckBox
       Left = 24
