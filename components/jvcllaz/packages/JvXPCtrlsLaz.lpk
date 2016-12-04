@@ -11,7 +11,7 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <IncludeFiles Value="..\resource"/>
-        <OtherUnitFiles Value="..\run"/>
+        <OtherUnitFiles Value="..\run;..\design"/>
         <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
       <Parsing>
@@ -24,7 +24,7 @@
 "/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="1"/>
-    <Files Count="7">
+    <Files Count="8">
       <Item1>
         <Filename Value="..\run\JvXPCoreUtils.pas"/>
         <UnitName Value="JvXPCoreUtils"/>
@@ -54,18 +54,25 @@
         <HasRegisterProc Value="True"/>
         <UnitName Value="JvXPCtrlsReg"/>
       </Item7>
+      <Item8>
+        <Filename Value="..\design\JvXPPropertyEditors.pas"/>
+        <UnitName Value="JvXPPropertyEditors"/>
+      </Item8>
     </Files>
-    <RequiredPkgs Count="3">
+    <RequiredPkgs Count="4">
       <Item1>
-        <PackageName Value="JvCoreLaz"/>
+        <PackageName Value="IDEIntf"/>
       </Item1>
       <Item2>
-        <PackageName Value="LCL"/>
+        <PackageName Value="JvCoreLaz"/>
       </Item2>
       <Item3>
+        <PackageName Value="LCL"/>
+      </Item3>
+      <Item4>
         <PackageName Value="FCL"/>
         <MinVersion Major="1" Valid="True"/>
-      </Item3>
+      </Item4>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

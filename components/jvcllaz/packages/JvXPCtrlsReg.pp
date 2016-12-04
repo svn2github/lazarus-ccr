@@ -12,7 +12,9 @@ procedure Register;
 implementation
 
 uses
-  JvXPCore, JvXPBar, JvXPContainer, JvXPButtons, JvXPCheckCtrls;
+  ComponentEditors, PropEdits, GraphPropEdits, ImgList,
+  JvXPCore, JvXPPropertyEditors,
+  JvXPBar, JvXPContainer, JvXPButtons, JvXPCheckCtrls;
 
 procedure Register;
 begin
@@ -24,6 +26,16 @@ begin
     TJvXPCheckbox,
     TJvXPStyleManager
   ]);
+
+  {
+  RegisterPropertyEditor(TypeInfo(TImageIndex), TJvXPBarItem, 'ImageIndex',
+    TJvXPItemImageIndexProperty);
+  }
+
+  RegisterPropertyEditor(TypeInfo(TImageIndex), TJvXPBarItem, 'ImageIndex',
+    TImageIndexPropertyEditor);
+
+  RegisterComponentEditor(TJvXPBar, TJvXPBarItemEditor);
 end;
 
 initialization

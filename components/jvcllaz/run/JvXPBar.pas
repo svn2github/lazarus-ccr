@@ -60,8 +60,7 @@ type
 
   TJvXPBarRollMode = (rmFixed, rmShrink); // rmFixed is default
 
-  TJvXPBarHitTest =
-   (
+  TJvXPBarHitTest = (
     htNone,      // mouse is inside non-supported rect
     htHeader,    // mouse is inside header
     htRollButton // mouse is inside rollbutton
@@ -88,6 +87,9 @@ const
 
   dxColor_FocusedFrameColorXP = clHotLight;
   dxColor_CheckedFrameColorXP = clHighlight;
+
+  dxColor_FontColorXP = TColor($00840000);
+  dxColor_HeaderFontColorXP = TColor($00840000);
 
 type
   TJvXPBarItem = class;
@@ -1310,6 +1312,7 @@ begin
       Self.CheckedFrameColor := CheckedFrameColor;
       Self.FocusedFrameColor := FocusedFrameColor;
       Self.BodyColor := BodyColor;
+      Self.BodyBorderColor := BodyBorderColor;
       Self.GradientTo := GradientTo;
       Self.GradientFrom := GradientFrom;
       Self.SeparatorColor := SeparatorColor;
@@ -1439,14 +1442,14 @@ begin
   FTopSpace := 5;
 
   FFont := TFont.Create;
-  FFont.Color := $00840000;
+  FFont.Color := dxColor_FontColorXP; //$00840000;
   FFont.Size := 0; //8;
   FFont.OnChange := @FontChange;
   FHeaderHeight := 28;
   FHeaderRounded := True;
   FGradientWidth := 0;
   FHeaderFont := TFont.Create;
-  FHeaderFont.Color := $00840000;
+  FHeaderFont.Color := dxColor_HeaderFontColorXP; //$00840000;
   FHeaderFont.Size := 0; //8;
   FHeaderFont.Style := [fsBold];
   FHeaderFont.OnChange := @FontChange;
@@ -1696,13 +1699,13 @@ begin
   begin
     FFontChanging := True;
     try
-      FFont.Color := $00E75100;
-      FFont.Name := inherited Font.Name;
-      FFont.Size := 8;
+      FFont.Color := dxColor_FontColorXP;
+      FFont.Name := 'default';
+      FFont.Size := 0;
       FFont.Style := inherited Font.Style;
-      FHeaderFont.Color := $00E75100;
-      FHeaderFont.Name := Font.Name;
-      FHeaderFont.Size := 8;
+      FHeaderFont.Color := dxColor_HeaderFontColorXP;
+      FHeaderFont.Name := 'default';
+      FHeaderFont.Size := 0;
       FHeaderFont.Style := [fsBold];
     finally
       FFontChanging := False;

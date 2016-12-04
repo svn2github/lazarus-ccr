@@ -151,6 +151,7 @@ type
     procedure CMMouseEnter(var Msg: TLMessage); message CM_MOUSEENTER;
     procedure CMMouseLeave(var Msg: TLMessage); message CM_MOUSELEAVE;
     procedure CMParentColorChanged(var Msg: TLMessage); message CM_PARENTCOLORCHANGED;
+    procedure CMParentFontChanged(var Msg: TLMessage); message CM_PARENTFONTCHANGED;
 
     //LCL doesnt fire it
     //procedure CMParentFontChanged(var Msg: TLMessage); message CM_PARENTFONTCHANGED;
@@ -437,6 +438,13 @@ begin
   // delegate message "ParentColorChanged" to hook.
   inherited;
   HookParentColorChanged;
+end;
+
+procedure TJvXPCustomControl.CMParentFontChanged(var Msg: TLMessage);
+begin
+  // delegate message "ParentFontChanged" to hook.
+  inherited;
+  HookParentFontChanged;
 end;
 
 //LCL doesnt fire it...
