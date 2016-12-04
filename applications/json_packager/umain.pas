@@ -82,7 +82,6 @@ type
     property Package: TPackageData read FPackage write FPackage;
     property PackageFiles: TPackageFilesList read FPackageFiles write FPackageFiles;
   end;
-
   { TfrmMain }
 
   TfrmMain = class(TForm)
@@ -137,6 +136,8 @@ type
     procedure SaveAsItemClick(Sender: TObject);
     procedure sb_editNameClick(Sender: TObject);
     procedure spd_CheckURLClick(Sender: TObject);
+    procedure stringPackageFilesCellProcess(Sender: TObject; aCol,
+      aRow: Integer; processType: TCellProcessType; var aValue: string);
   private
     { private declarations }
     JSONPackage: TPackage;
@@ -150,6 +151,7 @@ type
     procedure CtrlHidePopup(Sender: TObject);
     procedure CtrlSetUpPopupHandlers;
     procedure CtrlMakeDirty(Sender: TObject);
+    function IsADuplicateLPK:Boolean;
   public
     { public declarations }
   end;
@@ -299,6 +301,26 @@ begin
   end;
 end;
 
+
+function TfrmMain.IsADuplicateLPK:Boolean;
+Var
+  TempStringList:TStrings;
+  iCount:Integer;
+begin
+  Result:=FALSE;
+  TempStringList:=TstringList.Create;
+  TRY
+     For iCount:=0 to Pred(stringPackageFiles.RowCount) do
+     begin
+       If TempStringlist.IndexOf(stringPackageFiles.Cells[0,iCount]) = -1 then
+          TempStringList.Add(stringPackageFiles.Cells[0,iCount])
+       else
+         Result:=TRUE;
+     end;
+  finally
+    TempStringList.Free;
+  end;
+end;
 
 procedure TfrmMain.btnAddClick(Sender: TObject);
 begin
@@ -645,6 +667,13 @@ begin
         Result := True;
       end;
     end;
+  If IsADuplicateLPK then
+  begin
+    stringPackageFiles.Color := clYellow;
+    slErrorList.Add('- There are one or more .lpk entries with the same name.'
+    + LineEnding + '- Every .lpk entry must have a unique name.');
+    Result := True;
+  end;
 end;
 
 procedure TfrmMain.SaveAsItemClick(Sender: TObject);
@@ -742,6 +771,11 @@ begin
   end;
 end;
 
+procedure TfrmMain.stringPackageFilesCellProcess(Sender: TObject; aCol,
+  aRow: Integer; processType: TCellProcessType; var aValue: string);
+begin
+end;
+
 { TPackage }
 
 constructor TPackage.Create;
@@ -767,11 +801,19 @@ var
   s: TStringList;
 begin
   s := TStringList.Create;
-  s.LoadFromFile(AFileName);
-  DeStreamer := TJSONDeStreamer.Create(nil);
-  DeStreamer.JSONToObject(s.Text, Self);
-  DeStreamer.Free;
-  s.Free;
+  TRY
+   s.LoadFromFile(AFileName);
+   DeStreamer := TJSONDeStreamer.Create(nil);
+   TRY
+     DeStreamer.JSONToObject(s.Text, Self);
+   EXCEPT
+     On E:Exception do
+     ShowMessage('The json file appears to be corrupted or in the wrong format');
+   end;
+  Finally
+    DeStreamer.Free;
+    s.Free;
+  end;
 end;
 
 function TPackage.SaveToFile(AFileName: string): boolean;

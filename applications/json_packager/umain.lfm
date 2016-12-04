@@ -96,6 +96,7 @@ object frmMain: TfrmMain
     RowCount = 1
     TabOrder = 3
     TitleStyle = tsNative
+    OnCellProcess = stringPackageFilesCellProcess
     ColWidths = (
       150
       150
