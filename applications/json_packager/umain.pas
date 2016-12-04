@@ -22,9 +22,11 @@ unit umain;
   Version History
   ===============
   0.0.0.0 Original code by lainz
-  ..to 0.1.6.0 Refactored and updated by minesadorada
-  0.1.7.0: Bugfix by lainz
-  0.1.8.0: Config file change by minesadorada
+  ..to 0.1.6.0 Refactored and updated (minesadorada)
+  0.1.7.0: Bugfix (lainz)
+  0.1.8.0: Config file change (minesadorada)
+  0.1.10.0: Exception handling for Load + Save (minesadorada)
+            Error check for duplicate lpk entries (minesadorada)
  }
 {$mode objfpc}{$H+}
 
@@ -76,7 +78,7 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    procedure LoadFromFile(AFileName: string);
+    function LoadFromFile(AFileName: string):Boolean;
     function SaveToFile(AFileName: string): boolean;
   published
     property Package: TPackageData read FPackage write FPackage;
@@ -461,20 +463,26 @@ begin
     sJSONFilePath := FileOpen1.Dialog.Filename;
     CFG.WriteString('Options', 'LastLoadedJSONPath', ExtractFileDir(sJSONFilePath));
     JSONPackage := TPackage.Create;
-    JSONPackage.LoadFromFile(FileOpen1.Dialog.FileName);
+    TRY
+     if JSONPackage.LoadFromFile(FileOpen1.Dialog.FileName) then
+     begin
+      editName.Text := JSONPackage.Package.Name;
+      editDownloadURL.Text := JSONPackage.Package.DownloadURL;
+      cbForceUpdate.Checked := JSONPackage.Package.ForceUpdate;
 
-    editName.Text := JSONPackage.Package.Name;
-    editDownloadURL.Text := JSONPackage.Package.DownloadURL;
-    cbForceUpdate.Checked := JSONPackage.Package.ForceUpdate;
-
-    stringPackageFiles.RowCount := JSONPackage.PackageFiles.Count + 1;
-    for i := 0 to JSONPackage.PackageFiles.Count - 1 do
-    begin
-      stringPackageFiles.Cells[0, i + 1] := JSONPackage.PackageFiles.Items[i].Name;
-      stringPackageFiles.Cells[1, i + 1] := JSONPackage.PackageFiles.Items[i].Version;
+      stringPackageFiles.RowCount := JSONPackage.PackageFiles.Count + 1;
+      for i := 0 to JSONPackage.PackageFiles.Count - 1 do
+      begin
+        stringPackageFiles.Cells[0, i + 1] := JSONPackage.PackageFiles.Items[i].Name;
+        stringPackageFiles.Cells[1, i + 1] := JSONPackage.PackageFiles.Items[i].Version;
+      end;
+     end
+     else
+     ShowMessageFmt('There was a problem loading "%s" - is it corrupted or in the wrong format?',
+     [ExtractFilename(FileOpen1.Dialog.FileName)]);
+    finally
+     JSONPackage.Free;
     end;
-
-    JSONPackage.Free;
   end;
 end;
 
@@ -724,7 +732,9 @@ begin
     end
     else
     if JSONPackage.SaveToFile(sJSONFilePath) then
-      ShowMessage(sJSONFilePath + rsSavedOK);
+      ShowMessage(sJSONFilePath + rsSavedOK)
+    else
+      ShowMessage(rsSaveUnsucces);
     bDirty := False;
   finally
     JSONPackage.Free;
@@ -795,11 +805,12 @@ begin
   inherited Destroy;
 end;
 
-procedure TPackage.LoadFromFile(AFileName: string);
+Function TPackage.LoadFromFile(AFileName: string):Boolean;
 var
   DeStreamer: TJSONDeStreamer;
   s: TStringList;
 begin
+  Result:=TRUE;
   s := TStringList.Create;
   TRY
    s.LoadFromFile(AFileName);
@@ -807,8 +818,7 @@ begin
    TRY
      DeStreamer.JSONToObject(s.Text, Self);
    EXCEPT
-     On E:Exception do
-     ShowMessage('The json file appears to be corrupted or in the wrong format');
+     On E:Exception do Result:=FALSE;
    end;
   Finally
     DeStreamer.Free;
@@ -831,7 +841,7 @@ begin
       s.SaveToFile(AFileName);
       Result := True;
     except
-      ShowMessage(rsSaveUnsucces);
+
     end;
   finally
     Streamer.Free;
