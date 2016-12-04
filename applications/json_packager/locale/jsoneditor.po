@@ -1,0 +1,302 @@
+﻿msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: tfrmmain.btnadd.caption
+msgid "Add"
+msgstr ""
+
+#: tfrmmain.btnadd.hint
+msgid ""
+"Add Package File:\n"
+"The update zip can contain more than one lpk file\n"
+"deployed to the same place.\n"
+msgstr ""
+
+#: tfrmmain.btnremove.caption
+msgid "Remove"
+msgstr ""
+
+#: tfrmmain.btnremove.hint
+msgid ""
+"Remove Package File:\n"
+"Deletes the last entry from the list\n"
+msgstr ""
+
+#: tfrmmain.cbforceupdate.caption
+msgid "Force Update"
+msgstr ""
+
+#: tfrmmain.cbforceupdate.hint
+msgid ""
+"Force Update check box:\n"
+"If this is checked the OPM user will be notified\n"
+"of your update.  Only check this if the update is important.\n"
+msgstr ""
+
+#: tfrmmain.cmd_close.caption
+msgid "&Close"
+msgstr ""
+
+#: tfrmmain.cmd_save.caption
+msgid "&Save"
+msgstr ""
+
+#: tfrmmain.cmd_save.hint
+msgid ""
+"Save the current configuration to disk\n"
+"as a JSON update file\n"
+msgstr ""
+
+#: tfrmmain.editdownloadurl.hint
+msgid ""
+"Download URL:\n"
+"Include the FULL url needed to download the package Zip file\n"
+msgstr ""
+
+#: tfrmmain.editname.hint
+msgid ""
+"Update Zip Name:\n"
+"This is just the filename (not including the path)\n"
+"of your update zip. Type, or click the [...]\n"
+msgstr ""
+
+#: tfrmmain.filemenu.caption
+msgid "File"
+msgstr ""
+
+#: tfrmmain.fileopen1.caption
+msgid "&Open ..."
+msgstr ""
+
+#: tfrmmain.fileopen1.hint
+msgid "Open"
+msgstr ""
+
+#: tfrmmain.filesaveas1.caption
+msgid "&Save As ..."
+msgstr ""
+
+#: tfrmmain.filesaveas1.hint
+msgid "Save As"
+msgstr ""
+
+#: tfrmmain.lbldownloadurl.caption
+msgid "Download URL:"
+msgstr ""
+
+#: tfrmmain.lblname.caption
+msgid "Update Zip Name:"
+msgstr ""
+
+#: tfrmmain.lblpackagefiles.caption
+msgid "Package Files:"
+msgstr ""
+
+#: tfrmmain.loaditem.caption
+msgid "Load..."
+msgstr ""
+
+#: tfrmmain.mnu_filenew.caption
+msgid "New"
+msgstr ""
+
+#: tfrmmain.mnu_filesave.caption
+msgid "Save"
+msgstr ""
+
+#: tfrmmain.mnu_help.caption
+msgid "&Help"
+msgstr ""
+
+#: tfrmmain.mnu_helpabout.caption
+msgid "About.."
+msgstr ""
+
+#: tfrmmain.mnu_helpdisablewarnings.caption
+msgid "Disable warnings"
+msgstr "Desactivar Advertencias"
+
+#: tfrmmain.mnu_helpshowhints.caption
+msgid "Show Popup Hints"
+msgstr ""
+
+#: tfrmmain.mnu_lang.caption
+msgid "Languages.."
+msgstr ""
+
+#: tfrmmain.mnu_lang_en.caption
+msgid "English"
+msgstr ""
+
+#: tfrmmain.mnu_lang_es.caption
+msgid "Español"
+msgstr ""
+
+#: tfrmmain.saveasitem.caption
+msgid "Save As..."
+msgstr ""
+
+#: tfrmmain.sb_editname.caption
+msgid "..."
+msgstr ""
+
+#: tfrmmain.sb_editname.hint
+msgid ""
+"Update Zip Name:\n"
+"Click this to browse your system to find\n"
+" an existing Update Zip\n"
+msgstr ""
+
+#: tfrmmain.spd_checkurl.caption
+msgid "Check URL"
+msgstr ""
+
+#: tfrmmain.spd_checkurl.hint
+msgid "Attempting to Open URL"
+msgstr ""
+
+#: tfrmmain.stringpackagefiles.hint
+msgid ""
+"Package Files:\n"
+"[Add]:  to make a new entry\n"
+"[Remove]: Remove last entry\n"
+"lpk filename: i.e. mycontrol.lpk\n"
+"Version: The FULL version (i.e. not 1.0 but 1.0.0.0)\n"
+msgstr ""
+
+#: umain.rsabout
+msgid "About"
+msgstr ""
+
+#: umain.rscompiledwith2
+msgid "Compiled with FPC V:%s and Lazarus V:%d.%d%s for the %s - %s platform%s%s"
+msgstr ""
+
+#: umain.rsdownloadurld
+msgid "- Download URL does not contain the zipfile name"
+msgstr ""
+
+#: umain.rsdownloadurli
+msgid "- Download URL is too short or missing"
+msgstr ""
+
+#: umain.rsdownloadurli2
+msgid "- Download URL is incomplete"
+msgstr ""
+
+#: umain.rsdownloadurls
+msgid "- Download URL should start with \"http\""
+msgstr ""
+
+#: umain.rsfilemaybeuns
+msgid "JSON may be unsaved. Are you sure you want to quit?"
+msgstr ""
+
+#: umain.rsfixthentryag
+msgid "Fix, then try again."
+msgstr ""
+
+#: umain.rshelpandinfor
+msgid "Help and Information"
+msgstr ""
+
+#: umain.rshttpwwwupdat
+msgid "http://www.updatesite.com/myupdate/mypackagename.zip"
+msgstr ""
+
+#: umain.rslanguagechan
+msgid "Language changed to \"%s\"."
+msgstr ""
+
+#: umain.rslpkfilename
+msgid "lpk FileName"
+msgstr ""
+
+#: umain.rsmypackagenam
+msgid "mypackagename.zip"
+msgstr ""
+
+#: umain.rsoneofthereq1
+msgid "One of the required fields is missing or wrong."
+msgstr ""
+
+#: umain.rsoneofthereqn
+msgid "One or more of the required fields are missing or wrong."
+msgstr ""
+
+#: umain.rsoverwrite
+msgid "Overwrite"
+msgstr ""
+
+#: umain.rssavedok
+msgid "Saved OK"
+msgstr ""
+
+#: umain.rssaveunsucces
+msgid "Save unsuccessful"
+msgstr ""
+
+#: umain.rssorrycopyope
+msgid "Sorry - copy operation was unsuccessful"
+msgstr ""
+
+#: umain.rssorrythislan
+msgid "Sorry, this language is unavailable at this time."
+msgstr ""
+
+#: umain.rsswassuccessf
+msgid "%s was successfully copied to the %s folder"
+msgstr ""
+
+#: umain.rsthelpkentryd
+msgid "The .lpk entry #%d is missing the .lpk extension"
+msgstr ""
+
+#: umain.rsthelpkentryd2
+msgid "The .lpk entry #%d is is absent"
+msgstr ""
+
+#: umain.rstherearenolp
+msgid "- There are no .lpk files in the list yet"
+msgstr ""
+
+#: umain.rsthisoptionsh
+msgid "This option should only be used for crucial updates or bug-fixed packages. Are you OK with that?"
+msgstr ""
+
+#: umain.rsturnhintsoff
+msgid "(You can toggle these hints on/off in the Help menu)"
+msgstr ""
+
+#: umain.rsupdate
+msgid "Update"
+msgstr ""
+
+#: umain.rsupdatezipnam
+msgid "- Update zip name is too short or missing"
+msgstr ""
+
+#: umain.rsupdatezipnam2
+msgid "- Update zip name missing extension \".zip\""
+msgstr ""
+
+#: umain.rsversion0000
+msgid "Version (n.n.n.n)"
+msgstr ""
+
+#: umain.rsversionentry
+msgid "Version Entry #%d is absent"
+msgstr ""
+
+#: umain.rsversionentry2
+msgid "Version entry #%d needs to be of the form n.n.n.n"
+msgstr ""
+
+#: umain.rswouldyoulike
+msgid "Would you like to copy %s to the %s folder?"
+msgstr ""
+
+#: umain.rsyoumayneedto
+msgid "(You may need to restart the app to see the change)"
+msgstr ""
+

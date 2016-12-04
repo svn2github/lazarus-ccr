@@ -1,0 +1,284 @@
+object frmMain: TfrmMain
+  Left = 526
+  Height = 420
+  Top = 226
+  Width = 320
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  ClientHeight = 400
+  ClientWidth = 320
+  DefaultMonitor = dmPrimary
+  Menu = MainMenu1
+  OnClick = mnu_fileSaveClick
+  OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '1.7'
+  object lblName: TLabel
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 96
+    Caption = 'Update Zip Name:'
+    ParentColor = False
+  end
+  object editName: TEdit
+    Left = 8
+    Height = 23
+    Hint = 'Update Zip Name:'#13#10'This is just the filename (not including the path)'#13#10'of your update zip. Type, or click the [...]'
+    Top = 31
+    Width = 264
+    Anchors = [akTop, akLeft, akRight]
+    Color = clWindow
+    TabOrder = 0
+  end
+  object cbForceUpdate: TCheckBox
+    Left = 8
+    Height = 19
+    Hint = 'Force Update check box:'#13#10'If this is checked the OPM user will be notified'#13#10'of your update.  Only check this if the update is important.'
+    Top = 72
+    Width = 90
+    Caption = 'Force Update'
+    Color = clWindow
+    OnChange = cbForceUpdateChange
+    OnMouseUp = cbForceUpdateMouseUp
+    ParentColor = False
+    TabOrder = 1
+  end
+  object lblDownloadURL: TLabel
+    Left = 8
+    Height = 15
+    Top = 104
+    Width = 81
+    Caption = 'Download URL:'
+    ParentColor = False
+  end
+  object editDownloadURL: TEdit
+    Left = 8
+    Height = 28
+    Hint = 'Download URL:'#13#10'Include the FULL url needed to download the package Zip file'
+    Top = 128
+    Width = 304
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = False
+    Color = clWindow
+    TabOrder = 2
+  end
+  object lblPackageFiles: TLabel
+    Left = 8
+    Height = 15
+    Top = 163
+    Width = 73
+    Caption = 'Package Files:'
+    ParentColor = False
+  end
+  object stringPackageFiles: TStringGrid
+    Left = 8
+    Height = 144
+    Hint = 'Package Files:'#13#10'[Add]:  to make a new entry'#13#10'[Remove]: Remove last entry'#13#10'lpk filename: i.e. mycontrol.lpk'#13#10'Version: The FULL version (i.e. not 1.0 but 1.0.0.0)'
+    Top = 192
+    Width = 304
+    AutoFillColumns = True
+    ColCount = 2
+    Columns = <    
+      item
+        Title.Caption = ''
+        Width = 150
+      end    
+      item
+        Title.Caption = ''
+        Width = 150
+      end>
+    FixedCols = 0
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goThumbTracking, goSmoothScroll]
+    RowCount = 1
+    TabOrder = 3
+    TitleStyle = tsNative
+    ColWidths = (
+      150
+      150
+    )
+  end
+  object btnAdd: TButton
+    Left = 160
+    Height = 25
+    Hint = 'Add Package File:'#13#10'The update zip can contain more than one lpk file'#13#10'deployed to the same place.'
+    Top = 163
+    Width = 75
+    Caption = 'Add'
+    OnClick = btnAddClick
+    TabOrder = 4
+  end
+  object btnRemove: TButton
+    Left = 237
+    Height = 25
+    Hint = 'Remove Package File:'#13#10'Deletes the last entry from the list'
+    Top = 163
+    Width = 75
+    Caption = 'Remove'
+    OnClick = btnRemoveClick
+    TabOrder = 5
+  end
+  object cmd_Close: TBitBtn
+    Left = 237
+    Height = 30
+    Top = 352
+    Width = 75
+    Cancel = True
+    Caption = '&Close'
+    Kind = bkClose
+    ModalResult = 11
+    OnClick = cmd_CloseClick
+    TabOrder = 6
+  end
+  object cmd_save: TBitBtn
+    Left = 123
+    Height = 30
+    Hint = 'Save the current configuration to disk'#13#10'as a JSON update file'
+    Top = 352
+    Width = 75
+    Caption = '&Save'
+    Default = True
+    Glyph.Data = {
+      36040000424D3604000000000000360000002800000010000000100000000100
+      2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00000000000000
+      00000000000000000000FFFFFF0046986FFF379064FF0B774240FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00000000000000
+      000000000000FFFFFF0054A07AFF78BCA1FF7DB99EFF368F63FF0B774240FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0000000000FFFF
+      FF00FFFFFF0054A07AFF7BBEA4FF39A681FF55B191FF7AB698FF399166FF0B77
+      4240FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0054A0
+      7A0054A07AFF7CC0A6FF3CA985FF76BDA1FF7FBBA0FF4FB592FF7BBEA2FF54A0
+      7AFF0B77424054A07A0054A07A00FFFFFF00FFFFFF00FFFFFF0054A07A0054A0
+      7AFF7DC1A7FF4DB391FF7FBB9FFF4D9C75FF3E946AFF7BC5A9FF40B18BFF7BBE
+      A2FF54A07AFF0B77424054A07A0054A07A00FFFFFF00FFFFFF0054A07AFF7FC3
+      A8FF5FBB9BFF7FBBA0FF3A9166FF0B7742600B7742404D9C75FF7BC5A9FF4EBC
+      97FF7BBEA2FF54A07AFF0B7742400B77421054A07A00FFFFFF000B7742303A91
+      66FC7FBBA0FF3A9166FC0B77423000000000000000000B77426054A07AFF7BC5
+      A9FF4EBE99FF5CC2A0FF54A07AFF0B77423F0B77421054A07A00000000000B77
+      42203A9166F60B774220000000000000000000000000FFFFFF000B77424054A0
+      7AFF7CCAAEFF52C39DFF81BDA2FF54A07AFF0B77423F54A07A00000000000000
+      0000000000000000000000000000000000000000000000000000000000000B77
+      424054A07AFF6DC9A8FF57C7A2FF7BCCAFFF54A07AFF0B774239000000000000
+      000000000000000000000000000000000000000000000000000000000000FFFF
+      FF000B77424C54A07AFF7BCCAFFF81CBAFFF54A07AFF0B77423F000000000000
+      000000000000000000000000000000000000000000000000000000000000FFFF
+      FF00FFFFFF000B77423D54A07AFF54A07AFF0B774247FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF000B77423F0B77423FFFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
+    }
+    OnClick = mnu_fileSaveClick
+    TabOrder = 7
+  end
+  object sb_editName: TSpeedButton
+    Left = 280
+    Height = 22
+    Hint = 'Update Zip Name:'#13#10'Click this to browse your system to find'#13#10' an existing Update Zip'
+    Top = 31
+    Width = 24
+    Caption = '...'
+    OnClick = sb_editNameClick
+  end
+  object spd_CheckURL: TSpeedButton
+    Left = 104
+    Height = 19
+    Hint = 'Attempting to Open URL'
+    Top = 102
+    Width = 61
+    AutoSize = True
+    Caption = 'Check URL'
+    OnClick = spd_CheckURLClick
+  end
+  object MainMenu1: TMainMenu
+    Left = 200
+    object FileMenu: TMenuItem
+      Caption = 'File'
+      object mnu_fileNew: TMenuItem
+        Caption = 'New'
+        OnClick = mnu_fileNewClick
+      end
+      object LoadItem: TMenuItem
+        Caption = 'Load...'
+        OnClick = LoadItemClick
+      end
+      object mnu_fileSave: TMenuItem
+        Caption = 'Save'
+        OnClick = mnu_fileSaveClick
+      end
+      object SaveAsItem: TMenuItem
+        Caption = 'Save As...'
+        OnClick = SaveAsItemClick
+      end
+    end
+    object mnu_help: TMenuItem
+      Caption = '&Help'
+      object mnu_helpShowHints: TMenuItem
+        AutoCheck = True
+        Caption = 'Show Popup Hints'
+        Checked = True
+        GroupIndex = 1
+        OnClick = mnu_helpShowHintsClick
+      end
+      object mnu_helpDisableWarnings: TMenuItem
+        AutoCheck = True
+        Caption = 'Disable warnings'
+        OnClick = mnu_helpDisableWarningsClick
+      end
+      object mnu_lang: TMenuItem
+        Caption = 'Languages..'
+        object mnu_lang_en: TMenuItem
+          Caption = 'English'
+          GroupIndex = 2
+          RadioItem = True
+          OnClick = mnu_lang_enClick
+        end
+        object mnu_lang_es: TMenuItem
+          Caption = 'Español'
+          GroupIndex = 2
+          RadioItem = True
+          OnClick = mnu_lang_esClick
+        end
+      end
+      object mnu_helpAbout: TMenuItem
+        Caption = 'About..'
+        OnClick = mnu_helpAboutClick
+      end
+    end
+  end
+  object ActionList1: TActionList
+    Left = 136
+    object FileSaveAs1: TFileSaveAs
+      Category = 'File'
+      Caption = '&Save As ...'
+      Dialog.Filter = 'JSON|*.json'
+      Hint = 'Save As'
+    end
+    object FileOpen1: TFileOpen
+      Category = 'File'
+      Caption = '&Open ...'
+      Dialog.Filter = 'JSON|*.json'
+      Hint = 'Open'
+      ShortCut = 16463
+    end
+  end
+  object mypopup: TPopupNotifier
+    Color = 14483455
+    Icon.Data = {
+      07544269746D617000000000
+    }
+    Text = 'Text'
+    Title = 'Caption'
+    Visible = False
+    Left = 168
+  end
+end

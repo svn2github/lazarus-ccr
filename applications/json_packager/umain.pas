@@ -1,0 +1,800 @@
+unit umain;
+
+ { OnlinePackageManager Update JSON Editor
+
+  Copyright (C)2016 usernames lainz, minesadorada @ http://forum.lazarus.freepascal.org/index.php
+
+  This source is free software; you can redistribute it and/or modify it under
+  the terms of the GNU General Public License as published by the Free
+  Software Foundation; either version 2 of the License, or (at your option)
+  any later version.
+
+  This code is distributed in the hope that it will be useful, but WITHOUT ANY
+  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+  details.
+
+  A copy of the GNU General Public License is available on the World Wide Web
+  at <http://www.gnu.org/copyleft/gpl.html>. You can also obtain it by writing
+  to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+  MA 02111-1307, USA.
+
+  Version History
+  ===============
+  0.0.0.0 Original code by lainz
+  ..to 0.1.6.0 Refactored and updated by minesadorada
+  0.1.7.0: Bugfix by lainz
+  0.1.8.0: Config file change by minesadorada
+ }
+{$mode objfpc}{$H+}
+
+interface
+
+{DefaultTranslator}
+uses
+  Classes, Forms, Controls, StdCtrls, Menus, ActnList, StdActns, Grids,
+  Graphics, Buttons, fileutil, LazFileUtils, fileinfo, ugenericcollection, fpjsonrtti,
+  Dialogs, StrUtils, LCLTranslator, PopupNotifier, SysUtils, inifiles,
+  lclintf, lclVersion;
+
+type
+
+  { TPackage }
+
+  { TPackageFiles }
+
+  TPackageFiles = class(TCollectionItem)
+  private
+    FName: string;
+    FVersion: string;
+  published
+    property Name: string read FName write FName;
+    property Version: string read FVersion write FVersion;
+  end;
+
+  TPackageFilesList = specialize TGenericCollection<TPackageFiles>;
+
+  { TPackageData }
+
+  TPackageData = class(TPersistent)
+  private
+    FDownloadURL: string;
+    FForceUpdate: boolean;
+    FName: string;
+  public
+    constructor Create;
+  published
+    property Name: string read FName write FName;
+    property ForceUpdate: boolean read FForceUpdate write FForceUpdate;
+    property DownloadURL: string read FDownloadURL write FDownloadURL;
+  end;
+
+  TPackage = class(TPersistent)
+  private
+    FPackage: TPackageData;
+    FPackageFiles: TPackageFilesList;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure LoadFromFile(AFileName: string);
+    function SaveToFile(AFileName: string): boolean;
+  published
+    property Package: TPackageData read FPackage write FPackage;
+    property PackageFiles: TPackageFilesList read FPackageFiles write FPackageFiles;
+  end;
+
+  { TfrmMain }
+
+  TfrmMain = class(TForm)
+    ActionList1: TActionList;
+    cmd_Close: TBitBtn;
+    cmd_save: TBitBtn;
+    btnAdd: TButton;
+    btnRemove: TButton;
+    cbForceUpdate: TCheckBox;
+    editName: TEdit;
+    editDownloadURL: TEdit;
+    FileOpen1: TFileOpen;
+    FileSaveAs1: TFileSaveAs;
+    lblPackageFiles: TLabel;
+    lblName: TLabel;
+    lblDownloadURL: TLabel;
+    MainMenu1: TMainMenu;
+    FileMenu: TMenuItem;
+    LoadItem: TMenuItem;
+    mnu_fileNew: TMenuItem;
+    mnu_helpDisableWarnings: TMenuItem;
+    mnu_lang_es: TMenuItem;
+    mnu_lang_en: TMenuItem;
+    mnu_lang: TMenuItem;
+    mnu_helpAbout: TMenuItem;
+    mnu_helpShowHints: TMenuItem;
+    mnu_help: TMenuItem;
+    mnu_fileSave: TMenuItem;
+    mypopup: TPopupNotifier;
+    SaveAsItem: TMenuItem;
+    sb_editName: TSpeedButton;
+    spd_CheckURL: TSpeedButton;
+    stringPackageFiles: TStringGrid;
+    procedure btnAddClick(Sender: TObject);
+    procedure btnRemoveClick(Sender: TObject);
+    procedure cbForceUpdateChange(Sender: TObject);
+    procedure cbForceUpdateMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: integer);
+    procedure cmd_CloseClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure LoadItemClick(Sender: TObject);
+    procedure mnu_fileNewClick(Sender: TObject);
+    procedure mnu_fileSaveClick(Sender: TObject);
+    procedure mnu_helpAboutClick(Sender: TObject);
+    procedure mnu_helpDisableWarningsClick(Sender: TObject);
+    procedure mnu_helpShowHintsClick(Sender: TObject);
+    procedure mnu_lang_enClick(Sender: TObject);
+    procedure mnu_lang_esClick(Sender: TObject);
+    procedure SaveAsItemClick(Sender: TObject);
+    procedure sb_editNameClick(Sender: TObject);
+    procedure spd_CheckURLClick(Sender: TObject);
+  private
+    { private declarations }
+    JSONPackage: TPackage;
+    bForceSaveAs, bShowPopupHints, bDisableWarnings, bDirty,bIsVirgin: boolean;
+    sJSONFilePath: string;
+    sUpdateDirectory, sZipDirectory: string;
+    CFG: TIniFile;
+    slErrorList: TStrings;
+    function ValidationFailed: boolean;
+    procedure CtrlShowPopup(Sender: TObject);
+    procedure CtrlHidePopup(Sender: TObject);
+    procedure CtrlSetUpPopupHandlers;
+    procedure CtrlMakeDirty(Sender: TObject);
+  public
+    { public declarations }
+  end;
+
+var
+  frmMain: TfrmMain;
+
+implementation
+
+{$R *.lfm}
+resourcestring
+  rsOneOfTheReq1 =
+    'One of the required fields is missing or wrong.';
+  rsOneOfTheReqn =
+    'One or more of the required fields are missing or wrong.';
+  rsSavedOK = 'Saved OK';
+  rsSaveUnsucces = 'Save unsuccessful';
+  rsOverwrite = 'Overwrite';
+  rsTurnHintsOff = '(You can toggle these hints on/off in the Help menu)';
+  rsHelpAndInfor = 'Help and Information';
+  rsAbout = 'About';
+  rsUpdate = 'Update';
+  rsFileMayBeUns = 'JSON may be unsaved. Are you sure you want to quit?';
+  rsMypackagenam = 'mypackagename.zip';
+  rsHttpWwwUpdat = 'http://www.updatesite.com/myupdate/mypackagename.zip';
+  rsLpkFileName = 'lpk FileName';
+  rsVersion0000 = 'Version (n.n.n.n)';
+  rsFixThenTryAg = 'Fix, then try again.';
+  rsUpdateZipNam = '- Update zip name is too short or missing';
+  rsDownloadURLI = '- Download URL is too short or missing';
+  rsThereAreNoLp = '- There are no .lpk files in the list yet';
+  rsUpdateZipNam2 = '- Update zip name missing extension ".zip"';
+  rsDownloadURLI2 = '- Download URL is incomplete';
+  rsDownloadURLS = '- Download URL should start with "http"';
+  rsDownloadURLD = '- Download URL does not contain the zipfile name';
+  rsWouldYouLike = 'Would you like to copy %s to the %s folder?';
+  rsSWasSuccessf = '%s was successfully copied to the %s folder';
+  rsSorryCopyOpe = 'Sorry - copy operation was unsuccessful';
+  rsCompiledWith2 = 'Compiled with FPC V:%s and Lazarus V:%d.%d%s for the %s -' +
+    ' %s platform%s%s';
+  rsVersionEntry = 'Version Entry #%d is absent';
+  rsVersionEntry2 = 'Version entry #%d needs to be of the form n.n.n.n';
+  rsTheLpkEntryD = 'The .lpk entry #%d is missing the .lpk extension';
+  rsTheLpkEntryD2 = 'The .lpk entry #%d is is absent';
+  rsThisOptionSh =
+    'This option should only be used for crucial updates or bug-fixed packages. Are you OK with that?';
+  rsLanguageChan = 'Language changed to "%s".';
+  rsSorryThisLan = 'Sorry, this language is unavailable at this time.';
+  rsYouMayNeedTo = '(You may need to restart the app to see the change)';
+
+{ TPackageData }
+
+constructor TPackageData.Create;
+begin
+  FName := '';
+  FForceUpdate := False;
+  FDownloadURL := '';
+end;
+
+{ TfrmMain }
+procedure TfrmMain.CtrlMakeDirty(Sender: TObject);
+begin
+  bDirty := True;
+end;
+
+procedure TfrmMain.CtrlHidePopup(Sender: TObject);
+// Get rid of highlighting
+begin
+  mypopup.Hide;
+  slErrorList.Clear;
+  if Sender.ClassName <> 'TLabel' then
+    TControl(Sender).Color := clWindow;
+end;
+
+procedure TfrmMain.CtrlShowPopup(Sender: TObject);
+// Use the control's Hint property to populate the popup text
+begin
+  if not bShowPopupHints then
+    exit;
+  MyPopup.Text := '';
+  MyPopup.Title := '';
+  If (Sender.InheritsFrom(TControl) = FALSE) then exit;
+
+  myPopup.Text := TControl(Sender).Hint;
+  if (MyPopup.Text <> '') then
+  begin
+    mypopup.Title := rsHelpAndInfor;
+    mypopup.Text := mypopup.Text;
+    if bIsVirgin then mypopup.Text:=mypopup.Text + LineEnding + rsTurnHintsOff;
+    mypopup.showatpos(Mouse.CursorPos.X, Mouse.CursorPos.Y);
+  end;
+end;
+
+procedure TfrmMain.CtrlSetUpPopupHandlers;
+// Use different handlers for some controls
+var
+  iCount: integer;
+begin
+  with frmMain do
+  begin
+    for iCount := 0 to Pred(ControlCount) do
+    begin
+      If (Controls[iCount].InheritsFrom(TControl) = FALSE) then continue;
+      if (Controls[iCount] is TEdit) then
+      begin
+        TEdit(Controls[iCount]).OnMouseEnter := @CtrlShowPopup;
+        TEdit(Controls[iCount]).OnMouseLeave := @CtrlHidePopup;
+        TEdit(Controls[iCount]).OnClick := @CtrlHidePopup;
+        TEdit(Controls[iCount]).OnEditingDone := @CtrlMakeDirty;
+      end;
+      if (Controls[iCount] is TCheckBox) then
+      begin
+        TCheckBox(Controls[iCount]).OnMouseEnter := @CtrlShowPopup;
+        TCheckBox(Controls[iCount]).OnMouseLeave := @CtrlHidePopup;
+        TCheckBox(Controls[iCount]).OnClick := @CtrlHidePopup;
+        TCheckBox(Controls[iCount]).OnEditingDone := @CtrlMakeDirty;
+      end;
+      if (Controls[iCount] is TStringGrid) then
+      begin
+        TStringGrid(Controls[iCount]).OnMouseEnter := @CtrlShowPopup;
+        TStringGrid(Controls[iCount]).OnMouseLeave := @CtrlHidePopup;
+        TStringGrid(Controls[iCount]).OnClick := @CtrlHidePopup;
+        TStringGrid(Controls[iCount]).OnEditingDone := @CtrlMakeDirty;
+      end;
+      if (Controls[iCount] is TLabel) then
+      begin
+        TLabel(Controls[iCount]).OnMouseEnter := @CtrlShowPopup;
+        TLabel(Controls[iCount]).OnMouseLeave := @CtrlHidePopup;
+        TLabel(Controls[iCount]).OnClick := @CtrlHidePopup;
+      end;
+      if (Controls[iCount] is TButton) then
+      begin
+        TButton(Controls[iCount]).OnMouseEnter := @CtrlShowPopup;
+        TButton(Controls[iCount]).OnMouseLeave := @CtrlHidePopup;
+      end;
+      if (Controls[iCount] is TSpeedButton) then
+      begin
+        TSpeedButton(Controls[iCount]).OnMouseEnter := @CtrlShowPopup;
+        TSpeedButton(Controls[iCount]).OnMouseLeave := @CtrlHidePopup;
+      end;
+      if (Controls[iCount] is TBitBtn) then
+      begin
+        TBitBtn(Controls[iCount]).OnMouseEnter := @CtrlShowPopup;
+        TBitBtn(Controls[iCount]).OnMouseLeave := @CtrlHidePopup;
+      end;
+    end;
+  end;
+end;
+
+
+procedure TfrmMain.btnAddClick(Sender: TObject);
+begin
+  stringPackageFiles.RowCount := stringPackageFiles.RowCount + 1;
+end;
+
+procedure TfrmMain.btnRemoveClick(Sender: TObject);
+begin
+  if stringPackageFiles.RowCount > 1 then
+    stringPackageFiles.RowCount := stringPackageFiles.RowCount - 1;
+end;
+
+procedure TfrmMain.cbForceUpdateChange(Sender: TObject);
+begin
+
+end;
+
+procedure TfrmMain.cbForceUpdateMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: integer);
+var
+  s: string;
+begin
+  if bDisableWarnings then
+    exit;
+  if cbForceUpdate.Checked then
+  begin
+    s := rsThisOptionSh;
+    if MessageDlg(s, mtConfirmation, [mbOK, mbAbort], 0, mbAbort) = mrAbort then
+      cbForceUpdate.Checked := False;
+  end;
+end;
+
+procedure TfrmMain.cmd_CloseClick(Sender: TObject);
+begin
+
+end;
+
+procedure TfrmMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  CFG.WriteBool('Options', 'Virgin', False);
+  CFG.WriteBool('Options', 'DiableWarnings', bDisableWarnings);
+end;
+
+procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
+begin
+  CanClose := True;
+  if bDisableWarnings = TRUE then
+    exit;
+  if bDirty = True then
+  begin
+    if MessageDlg(rsFileMayBeUns, mtConfirmation, [mbYes, mbNo], 0, mbNo) = mrNo then
+      CanClose := False;
+  end;
+end;
+
+procedure TfrmMain.FormCreate(Sender: TObject);
+var
+  sLang,INIFilePath: string;
+
+procedure CreateUniqueINI(aCount:Integer);
+// Recursively loop until correct INI found, or new one created
+begin
+  INIFilePath:=GetAppConfigFile(False) + IntToStr(aCount);
+  CFG := TIniFile.Create(INIFilePath);
+  If CFG.ReadString('Options','AppPath',ProgramDirectory) <> ProgramDirectory then
+  Begin
+     CFG.Free; // Ditch the old one
+     inc(aCount);
+     CreateUniqueINI(aCount); // Make a new one
+  end;
+end;
+
+begin
+  Self.AutoAdjustLayout(lapAutoAdjustForDPI, Self.DesignTimeDPI,
+    Screen.PixelsPerInch, Self.Width, ScaleX(Self.Width, Self.DesignTimeDPI));
+  // Enable AutoSize again to get correct Height
+  editName.AutoSize := True;
+  editDownloadURL.AutoSize := True;
+  // Furniture
+  Caption := Application.Title;
+  Icon := Application.Icon;
+  MyPopup.Icon := TPicture(Application.Icon);
+  editname.Text := rsMypackagenam;
+  editDownloadURL.Text := rsHttpWwwUpdat;
+  stringPackageFiles.Columns[0].Title.Caption := rsLpkFileName;
+  stringPackageFiles.Columns[1].Title.Caption := rsVersion0000;
+  // Defaults
+  bForceSaveAs := True;
+  bShowPopupHints := True;
+  slErrorList := TStringList.Create;
+  // Encourage the user to maintain an updates folder
+  sUpdateDirectory := ProgramDirectory + 'updates';
+  if not FileExistsUTF8(sUpdateDirectory) then
+    if not ForceDirectoriesUTF8(ProgramDirectory + 'updates') then
+      sUpdateDirectory := ProgramDirectory;
+  // Enable options persistence
+  // If program location is different, create a new CFG file
+  // Because each component's location might be different
+  CreateUniqueINI(0);
+  CFG.WriteString('Options','AppPath',ProgramDirectory);
+
+  // Pop-up hints (show on first run, then not again unless the user chooses)
+  bIsVirgin:=CFG.ReadBool('Options', 'Virgin', True);
+  bShowPopupHints := bIsVirgin;
+  mnu_helpShowHints.Checked := bShowPopupHints;
+  // Override here if the user has re-enabled them
+  bShowPopupHints := CFG.ReadBool('Options', 'ShowPopupHints', bShowPopupHints);
+  mnu_helpShowHints.Checked := bShowPopupHints;
+  bDisableWarnings := CFG.ReadBool('Options', 'DiableWarnings', False);
+  mnu_helpDisableWarnings.Checked := bDisableWarnings;
+  CtrlSetUpPopupHandlers; // Set the Hint property of various controls to show a Popup
+  // Language translation
+  sLang := CFG.ReadString('Options', 'Language', 'en'); // First default is English
+  SetDefaultLang(sLang, 'locale', True);
+  // Add more translations here
+  if sLang = 'en' then
+    mnu_lang_en.Checked := True;
+  if sLang = 'es' then
+    mnu_lang_es.Checked := True;
+
+  bDirty := False; // No effect :(
+end;
+
+procedure TfrmMain.FormShow(Sender: TObject);
+begin
+  bDirty := False;
+end;
+
+procedure TfrmMain.LoadItemClick(Sender: TObject);
+var
+  i: integer;
+begin
+  FileOpen1.Dialog.InitialDir :=
+    CFG.ReadString('Options', 'LastLoadedJSONPath', sUpdateDirectory);
+  FileOpen1.Dialog.Filter := 'JSON|*.json';
+  if FileOpen1.Dialog.Execute then
+  begin
+    sJSONFilePath := FileOpen1.Dialog.Filename;
+    CFG.WriteString('Options', 'LastLoadedJSONPath', ExtractFileDir(sJSONFilePath));
+    JSONPackage := TPackage.Create;
+    JSONPackage.LoadFromFile(FileOpen1.Dialog.FileName);
+
+    editName.Text := JSONPackage.Package.Name;
+    editDownloadURL.Text := JSONPackage.Package.DownloadURL;
+    cbForceUpdate.Checked := JSONPackage.Package.ForceUpdate;
+
+    stringPackageFiles.RowCount := JSONPackage.PackageFiles.Count + 1;
+    for i := 0 to JSONPackage.PackageFiles.Count - 1 do
+    begin
+      stringPackageFiles.Cells[0, i + 1] := JSONPackage.PackageFiles.Items[i].Name;
+      stringPackageFiles.Cells[1, i + 1] := JSONPackage.PackageFiles.Items[i].Version;
+    end;
+
+    JSONPackage.Free;
+  end;
+end;
+
+procedure TfrmMain.mnu_fileNewClick(Sender: TObject);
+begin
+  editname.Text := rsMypackagenam;
+  editDownloadURL.Text := rsHttpWwwUpdat;
+  cbForceUpdate.Checked:=False;
+  stringPackageFiles.RowCount:=1;
+  sJSONFilePath:='';
+  sZipDirectory:='';
+end;
+
+procedure TfrmMain.mnu_fileSaveClick(Sender: TObject);
+begin
+  bForceSaveAs := False;
+  SaveAsItem.Click;
+  bForceSaveAs := True;
+end;
+
+procedure TfrmMain.mnu_helpAboutClick(Sender: TObject);
+var
+  s: string;
+  Quad: TVersionQuad;
+  VInfo: TFileVersionInfo;
+  EqualsPos: integer;
+begin
+  s := Application.Title + LineEnding;
+  if GetProgramVersion(Quad) then
+    s += 'Version: ' + VersionQuadToStr(Quad) + LineEnding;
+  Vinfo := TFileVersionInfo.Create(Application);
+  try
+    Vinfo.Filter.Add('LegalCopyright'); // Set In Project/Options/Version Info
+    Vinfo.Filter.Add('FileDescription'); // Set In Project/Options/Version Info
+    Vinfo.ReadFileInfo;
+    if VInfo.VersionStrings.Count > 0 then
+    begin
+      EqualsPos := Pos('=', VInfo.VersionStrings[1]); // Copyright
+      if (EqualsPos > 0) then
+        s += RightStr(VInfo.VersionStrings[1], Length(VInfo.VersionStrings[1]) -
+          EqualsPos) + LineEnding;
+    end;
+    s+=Format(rsCompiledWith2,
+    [{$I %FPCVERSION%},lcl_major,lcl_minor,LineEnding,{$I %FPCTARGETCPU%},{$I %FPCTARGETOS%},LineEnding,LineEnding]);
+    if VInfo.VersionStrings.Count > 1 then
+    begin
+      EqualsPos := Pos('=', VInfo.VersionStrings[0]); // File Deswcription
+      if (EqualsPos > 0) then
+        s += RightStr(VInfo.VersionStrings[0], Length(VInfo.VersionStrings[0]) -
+          EqualsPos) + LineEnding;
+
+    end;
+  finally
+    Vinfo.Free;
+  end;
+  MessageDlg(rsAbout + ' ' + Application.Title, s, mtInformation, [mbOK], 0);
+end;
+
+procedure TfrmMain.mnu_helpDisableWarningsClick(Sender: TObject);
+begin
+  bDisableWarnings := not bDisableWarnings;
+  mnu_helpDisableWarnings.Checked := bDisableWarnings;
+  CFG.WriteBool('Options', 'DiableWarnings', bDisableWarnings);
+end;
+
+procedure TfrmMain.mnu_helpShowHintsClick(Sender: TObject);
+begin
+  bShowPopupHints := mnu_helpShowHints.Checked;
+  CFG.WriteBool('Options', 'ShowPopupHints', bShowPopupHints);
+end;
+
+procedure TfrmMain.mnu_lang_enClick(Sender: TObject);
+begin
+  SetDefaultLang('en', 'locale', True);
+  if Length(GetDefaultLang) > 0 then
+  begin
+    ShowMessageFmt(rsLanguageChan, [GetDefaultLang]);
+    CFG.WriteString('Options', 'Language', GetDefaultLang);
+    mnu_lang_en.Checked := True;
+  end
+  else
+  begin
+    mnu_lang_en.Checked := False;
+    ShowMessage(rsSorryThisLan + LineEnding + rsYouMayNeedTo);
+  end;
+end;
+
+procedure TfrmMain.mnu_lang_esClick(Sender: TObject);
+begin
+  SetDefaultLang('es', 'locale', True);
+  if Length(GetDefaultLang) > 0 then
+  begin
+    ShowMessageFmt(rsLanguageChan, [GetDefaultLang]);
+    CFG.WriteString('Options', 'Language', GetDefaultLang);
+    mnu_lang_es.Checked := True;
+  end
+  else
+  begin
+    mnu_lang_es.Checked := False;
+    ShowMessage(rsSorryThisLan);
+  end;
+end;
+
+function TfrmMain.ValidationFailed: boolean;
+  // Add checks as needed here
+var
+  iCount: integer;
+  Quad: TVersionQuad; // fileinfo unit
+begin
+  Result := False;
+  // Check Zipname and URL http:// length
+  if (Length(editName.Text) < 5) then
+  begin
+    editName.Color := clYellow;
+    slErrorList.Add(rsUpdateZipNam);
+    Result := True;
+  end;
+  // URL implausable?
+  if (Length(editDownloadURL.Text) < 10) then
+  begin
+    slErrorList.Add(rsDownloadURLI);
+    editDownloadURL.Color := clYellow;
+    Result := True;
+  end;
+  // No lpk file?
+  if (stringPackageFiles.RowCount = 1) then
+  begin
+    slErrorList.Add(rsThereAreNoLp);
+    stringPackageFiles.Color := clYellow;
+    Result := True;
+  end;
+  // Remembered to type 'zip'?
+  if (Length(editName.Text) > 4) then
+    if (RightStr(LowerCase(editName.Text), 4) <> '.zip') then
+    begin
+      slErrorList.Add(rsUpdateZipNam2);
+      editName.Color := clYellow;
+      Result := True;
+    end;
+  // A full URL?
+  if ((Length(editDownloadURL.Text) > 0) and (RightStr(editDownloadURL.Text, 1) = '/'))
+  then
+  begin
+    slErrorList.Add(rsDownloadURLI2);
+    editDownloadURL.Color := clYellow;
+    Result := True;
+  end;
+
+  if ((Length(editDownloadURL.Text) > 4) and
+    (LeftStr(LowerCase(editDownloadURL.Text), 4) <> 'http')) then
+  begin
+    slErrorList.Add(rsDownloadURLS);
+    editDownloadURL.Color := clYellow;
+    Result := True;
+  end;
+
+  if (Pos(Lowercase(editName.Text), Lowercase(editDownloadURL.Text)) = 0) then
+  begin
+    slErrorList.Add(rsDownloadURLD);
+    editDownloadURL.Color := clYellow;
+    Result := True;
+  end;
+
+  // Check package files entries
+  if (stringPackageFiles.RowCount > 1) then
+    for iCount := 1 to stringPackageFiles.RowCount - 1 do
+    begin
+      if (Length(stringPackageFiles.Cells[0, iCount]) = 0) then
+      begin
+        slErrorList.Add(Format(rsTheLpkEntryD2, [iCount]));
+        stringPackageFiles.Color := clYellow;
+        Result := True;
+      end;
+      if (Length(stringPackageFiles.Cells[1, iCount]) = 0) then
+      begin
+        slErrorList.Add(Format(rsVersionEntry, [iCount]));
+        stringPackageFiles.Color := clYellow;
+        Result := True;
+      end;
+      if (TryStrToVersionQuad(stringPackageFiles.Cells[1, iCount], Quad) = False) then
+      begin
+        slErrorList.Add(Format(rsVersionEntry2, [iCount]));
+        stringPackageFiles.Color := clYellow;
+        Result := True;
+      end;
+      if (RightStr(LowerCase(stringPackageFiles.Cells[0, iCount]), 4) <> '.lpk') then
+      begin
+        slErrorList.Add(Format(rsTheLpkEntryD, [iCount]));
+        stringPackageFiles.Color := clYellow;
+        Result := True;
+      end;
+    end;
+end;
+
+procedure TfrmMain.SaveAsItemClick(Sender: TObject);
+var
+  i: integer;
+  s: string;
+begin
+  if ValidationFailed then
+  begin
+    if (slErrorList.Count > 1) then
+      ShowMessage(rsOneOfTheReqn + LineEnding + slErrorList.Text +
+        LineEnding + rsFixThenTryAg)
+    else
+      ShowMessage(rsOneOfTheReq1 + LineEnding + slErrorList.Text +
+        LineEnding + rsFixThenTryAg);
+    Exit;
+  end;
+  if bForceSaveAs or (sJSONFilePath = '') then
+  begin
+    FileSaveAs1.Dialog.InitialDir := sUpdateDirectory;
+    FileSaveAs1.Dialog.FileName:='update_' + ExtractFilenameOnly(editName.text);
+    if FileSaveAs1.Dialog.Execute then
+      sJSONFilePath := FileSaveAs1.Dialog.FileName
+    else
+      Exit;
+  end;
+
+  JSONPackage := TPackage.Create;
+  try
+    JSONPackage.Package.Name := editName.Text;
+    JSONPackage.Package.DownloadURL := editDownloadURL.Text;
+    JSONPackage.Package.ForceUpdate := cbForceUpdate.Checked;
+
+    for i := 1 to stringPackageFiles.RowCount - 1 do
+    begin
+      with JSONPackage.PackageFiles.Add do
+      begin
+        Name := stringPackageFiles.Cells[0, i];
+        Version := stringPackageFiles.Cells[1, i];
+      end;
+    end;
+    if FileExistsUTF8(sJSONFilePath) AND (bDisableWarnings=FALSE) then
+    begin
+      if MessageDlg(rsOverwrite + ' ' + sJSONFilePath + '?', mtConfirmation,
+        [mbYes, mbNo], 0, mbYes) = mrYes then
+        if JSONPackage.SaveToFile(sJSONFilePath) then
+          ShowMessage(sJSONFilePath + ' ' + rsSavedOK);
+    end
+    else
+    if JSONPackage.SaveToFile(sJSONFilePath) then
+      ShowMessage(sJSONFilePath + rsSavedOK);
+    bDirty := False;
+  finally
+    JSONPackage.Free;
+  end;
+end;
+
+procedure TfrmMain.sb_editNameClick(Sender: TObject);
+var
+  s: string;
+begin
+  FileOpen1.Dialog.InitialDir :=
+    CFG.ReadString('Options', 'LastLoadedZipPath', sZipDirectory);
+  FileOpen1.Dialog.Filter := rsUpdate + ' ZIP|*.zip';
+  if FileOpen1.Dialog.Execute then
+  begin
+    // Offer to copy to /updates?
+    sZipDirectory := ExtractFileDir(FileOpen1.Dialog.Filename);
+    CFG.WriteString('Options', 'LastLoadedZipPath', sZipDirectory);
+    s := ExtractFileName(FileOpen1.Dialog.Filename);
+    editName.Text := s;
+    if MessageDlg(Format(rsWouldYouLike, [s, sUpdateDirectory]),
+      mtConfirmation, [mbYes, mbNo], 0, mbYes) = mrYes then
+    begin
+      if CopyFile(FileOpen1.Dialog.Filename, sUpdateDirectory +
+        DirectorySeparator + s) then
+        ShowMessageFmt(rsSWasSuccessf, [s, sUpdateDirectory])
+      else
+        ShowMessage(rsSorryCopyOpe);
+    end;
+  end;
+end;
+
+procedure TfrmMain.spd_CheckURLClick(Sender: TObject);
+// Show a popup notification because it takes time to open a browser window
+var
+  bTemp: boolean;
+begin
+  if OpenURL(editDownloadURL.Text) then
+  begin
+    bTemp := bShowPopupHints;
+    bShowPopupHints := True;
+    CtrlShowPopup(spd_CheckURL);
+    bShowPopupHints := bTemp;
+  end;
+end;
+
+{ TPackage }
+
+constructor TPackage.Create;
+begin
+  FPackage := TPackageData.Create;
+  FPackageFiles := TPackageFilesList.Create;
+end;
+
+destructor TPackage.Destroy;
+var
+  c: TCollectionItem;
+begin
+  FPackage.Free;
+  for c in FPackageFiles do
+    c.Free;
+  FPackageFiles.Free;
+  inherited Destroy;
+end;
+
+procedure TPackage.LoadFromFile(AFileName: string);
+var
+  DeStreamer: TJSONDeStreamer;
+  s: TStringList;
+begin
+  s := TStringList.Create;
+  s.LoadFromFile(AFileName);
+  DeStreamer := TJSONDeStreamer.Create(nil);
+  DeStreamer.JSONToObject(s.Text, Self);
+  DeStreamer.Free;
+  s.Free;
+end;
+
+function TPackage.SaveToFile(AFileName: string): boolean;
+var
+  Streamer: TJSONStreamer;
+  s: TStringList;
+begin
+  Result := False;
+  s := TStringList.Create;
+  try
+    Streamer := TJSONStreamer.Create(nil);
+    Streamer.Options := Streamer.Options + [jsoUseFormatString];
+    s.AddText(Streamer.ObjectToJSONString(Self));
+    try
+      s.SaveToFile(AFileName);
+      Result := True;
+    except
+      ShowMessage(rsSaveUnsucces);
+    end;
+  finally
+    Streamer.Free;
+    s.Free;
+  end;
+end;
+
+end.
