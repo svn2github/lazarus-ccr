@@ -282,19 +282,10 @@ type
     property OnStartDrag;
   end;
 
-{$IFDEF USEJVCL}
-{$IFDEF UNITVERSIONING}
-const
-  UnitVersioning: TUnitVersionInfo = (
-    RCSfile: '$URL: https://jvcl.svn.sourceforge.net/svnroot/jvcl/tags/JVCL3_32/run/JvXPButtons.pas $';
-    Revision: '$Revision: 11167 $';
-    Date: '$Date: 2007-01-27 19:57:52 +0100 (sam., 27 janv. 2007) $';
-    LogPath: 'JVCL\run'
-  );
-{$ENDIF UNITVERSIONING}
-{$ENDIF USEJVCL}
 
 implementation
+
+//{$R ../resource/JvXPCore.res}
 
 //=== { TJvXPCustomButtonActionLink } ========================================
 
@@ -795,7 +786,7 @@ begin
   FToolType := ttClose;
   FChangeLink := TChangeLink.Create;
   FChangeLink.OnChange := DoImagesChange;
-//  HookResized;
+  HookResized;
 end;
 
 destructor TJvXPCustomToolButton.Destroy;
@@ -885,15 +876,15 @@ begin
     begin
       lBitmap := TBitmap.Create;
       try
+        {
         lBitmap.LoadFromLazarusResource(
           PChar('JvXPCustomToolButton' + Copy(GetEnumName(TypeInfo(TJvXPToolType),
           Ord(FToolType)), 3, MaxInt)));
-        {
+          }
         lBitmap.Assign(nil); // fixes GDI resource leak
-        Bitmap.LoadFromResourceName(HInstance,
+        lBitmap.LoadFromResourceName(HInstance,
           PChar('JvXPCustomToolButton' + Copy(GetEnumName(TypeInfo(TJvXPToolType),
           Ord(FToolType)), 3, MaxInt)));
-          }
         if (dsClicked in DrawState) and (dsHighlight in DrawState) then
           JvXPColorizeBitmap(lBitmap, clWhite)
         else
@@ -984,15 +975,6 @@ begin
   LockedInvalidate;
 end;
 
-{$IFDEF USEJVCL}
-{$IFDEF UNITVERSIONING}
-initialization
-  RegisterUnitVersion(HInstance, UnitVersioning);
-
-finalization
-  UnregisterUnitVersion(HInstance);
-{$ENDIF UNITVERSIONING}
-{$ENDIF USEJVCL}
 
 end.
 
