@@ -25,8 +25,9 @@ unit umain;
   ..to 0.1.6.0 Refactored and updated (minesadorada)
   0.1.7.0: Bugfix (lainz)
   0.1.8.0: Config file change (minesadorada)
+  0.1.9.0: Error check for duplicate lpk entries (minesadorada)
   0.1.10.0: Exception handling for Load + Save (minesadorada)
-            Error check for duplicate lpk entries (minesadorada)
+  0.1.11.0: Cleaned up code formatting etc.
  }
 {$mode objfpc}{$H+}
 
@@ -78,12 +79,13 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    function LoadFromFile(AFileName: string):Boolean;
+    function LoadFromFile(AFileName: string): boolean;
     function SaveToFile(AFileName: string): boolean;
   published
     property Package: TPackageData read FPackage write FPackage;
     property PackageFiles: TPackageFilesList read FPackageFiles write FPackageFiles;
   end;
+
   { TfrmMain }
 
   TfrmMain = class(TForm)
@@ -119,10 +121,8 @@ type
     stringPackageFiles: TStringGrid;
     procedure btnAddClick(Sender: TObject);
     procedure btnRemoveClick(Sender: TObject);
-    procedure cbForceUpdateChange(Sender: TObject);
     procedure cbForceUpdateMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
-    procedure cmd_CloseClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
@@ -138,12 +138,10 @@ type
     procedure SaveAsItemClick(Sender: TObject);
     procedure sb_editNameClick(Sender: TObject);
     procedure spd_CheckURLClick(Sender: TObject);
-    procedure stringPackageFilesCellProcess(Sender: TObject; aCol,
-      aRow: Integer; processType: TCellProcessType; var aValue: string);
   private
     { private declarations }
     JSONPackage: TPackage;
-    bForceSaveAs, bShowPopupHints, bDisableWarnings, bDirty,bIsVirgin: boolean;
+    bForceSaveAs, bShowPopupHints, bDisableWarnings, bDirty, bIsVirgin: boolean;
     sJSONFilePath: string;
     sUpdateDirectory, sZipDirectory: string;
     CFG: TIniFile;
@@ -153,7 +151,7 @@ type
     procedure CtrlHidePopup(Sender: TObject);
     procedure CtrlSetUpPopupHandlers;
     procedure CtrlMakeDirty(Sender: TObject);
-    function IsADuplicateLPK:Boolean;
+    function FoundADuplicateLPK: boolean;
   public
     { public declarations }
   end;
@@ -203,6 +201,8 @@ resourcestring
   rsLanguageChan = 'Language changed to "%s".';
   rsSorryThisLan = 'Sorry, this language is unavailable at this time.';
   rsYouMayNeedTo = '(You may need to restart the app to see the change)';
+  rsThereAreOneO = '- There are one or more .lpk entries with the same name.%s'
+    + '- Every .lpk entry must have a unique name.';
 
 { TPackageData }
 
@@ -235,14 +235,16 @@ begin
     exit;
   MyPopup.Text := '';
   MyPopup.Title := '';
-  If (Sender.InheritsFrom(TControl) = FALSE) then exit;
+  if (Sender.InheritsFrom(TControl) = False) then
+    exit;
 
   myPopup.Text := TControl(Sender).Hint;
   if (MyPopup.Text <> '') then
   begin
     mypopup.Title := rsHelpAndInfor;
     mypopup.Text := mypopup.Text;
-    if bIsVirgin then mypopup.Text:=mypopup.Text + LineEnding + rsTurnHintsOff;
+    if bIsVirgin then
+      mypopup.Text := mypopup.Text + LineEnding + rsTurnHintsOff;
     mypopup.showatpos(Mouse.CursorPos.X, Mouse.CursorPos.Y);
   end;
 end;
@@ -256,7 +258,8 @@ begin
   begin
     for iCount := 0 to Pred(ControlCount) do
     begin
-      If (Controls[iCount].InheritsFrom(TControl) = FALSE) then continue;
+      if (Controls[iCount].InheritsFrom(TControl) = False) then
+        continue;
       if (Controls[iCount] is TEdit) then
       begin
         TEdit(Controls[iCount]).OnMouseEnter := @CtrlShowPopup;
@@ -304,21 +307,21 @@ begin
 end;
 
 
-function TfrmMain.IsADuplicateLPK:Boolean;
-Var
-  TempStringList:TStrings;
-  iCount:Integer;
+function TfrmMain.FoundADuplicateLPK: boolean;
+var
+  TempStringList: TStrings;
+  iCount: integer;
 begin
-  Result:=FALSE;
-  TempStringList:=TstringList.Create;
-  TRY
-     For iCount:=0 to Pred(stringPackageFiles.RowCount) do
-     begin
-       If TempStringlist.IndexOf(stringPackageFiles.Cells[0,iCount]) = -1 then
-          TempStringList.Add(stringPackageFiles.Cells[0,iCount])
-       else
-         Result:=TRUE;
-     end;
+  Result := False;
+  TempStringList := TStringList.Create;
+  try
+    for iCount := 0 to Pred(stringPackageFiles.RowCount) do
+    begin
+      if TempStringlist.IndexOf(stringPackageFiles.Cells[0, iCount]) = -1 then
+        TempStringList.Add(stringPackageFiles.Cells[0, iCount])
+      else
+        Result := True;
+    end;
   finally
     TempStringList.Free;
   end;
@@ -333,11 +336,6 @@ procedure TfrmMain.btnRemoveClick(Sender: TObject);
 begin
   if stringPackageFiles.RowCount > 1 then
     stringPackageFiles.RowCount := stringPackageFiles.RowCount - 1;
-end;
-
-procedure TfrmMain.cbForceUpdateChange(Sender: TObject);
-begin
-
 end;
 
 procedure TfrmMain.cbForceUpdateMouseUp(Sender: TObject; Button: TMouseButton;
@@ -355,11 +353,6 @@ begin
   end;
 end;
 
-procedure TfrmMain.cmd_CloseClick(Sender: TObject);
-begin
-
-end;
-
 procedure TfrmMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   CFG.WriteBool('Options', 'Virgin', False);
@@ -369,7 +362,7 @@ end;
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   CanClose := True;
-  if bDisableWarnings = TRUE then
+  if bDisableWarnings = True then
     exit;
   if bDirty = True then
   begin
@@ -380,20 +373,20 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
-  sLang,INIFilePath: string;
+  sLang, INIFilePath: string;
 
-procedure CreateUniqueINI(aCount:Integer);
-// Recursively loop until correct INI found, or new one created
-begin
-  INIFilePath:=GetAppConfigFile(False) + IntToStr(aCount);
-  CFG := TIniFile.Create(INIFilePath);
-  If CFG.ReadString('Options','AppPath',ProgramDirectory) <> ProgramDirectory then
-  Begin
-     CFG.Free; // Ditch the old one
-     inc(aCount);
-     CreateUniqueINI(aCount); // Make a new one
+  procedure CreateUniqueINI(aCount: integer);
+  // Recursively loop until correct INI found, or new one created
+  begin
+    INIFilePath := GetAppConfigFile(False) + IntToStr(aCount);
+    CFG := TIniFile.Create(INIFilePath);
+    if CFG.ReadString('Options', 'AppPath', ProgramDirectory) <> ProgramDirectory then
+    begin
+      CFG.Free; // Ditch the old one
+      Inc(aCount);
+      CreateUniqueINI(aCount); // Make a new one
+    end;
   end;
-end;
 
 begin
   Self.AutoAdjustLayout(lapAutoAdjustForDPI, Self.DesignTimeDPI,
@@ -422,10 +415,10 @@ begin
   // If program location is different, create a new CFG file
   // Because each component's location might be different
   CreateUniqueINI(0);
-  CFG.WriteString('Options','AppPath',ProgramDirectory);
+  CFG.WriteString('Options', 'AppPath', ProgramDirectory);
 
   // Pop-up hints (show on first run, then not again unless the user chooses)
-  bIsVirgin:=CFG.ReadBool('Options', 'Virgin', True);
+  bIsVirgin := CFG.ReadBool('Options', 'Virgin', True);
   bShowPopupHints := bIsVirgin;
   mnu_helpShowHints.Checked := bShowPopupHints;
   // Override here if the user has re-enabled them
@@ -463,25 +456,25 @@ begin
     sJSONFilePath := FileOpen1.Dialog.Filename;
     CFG.WriteString('Options', 'LastLoadedJSONPath', ExtractFileDir(sJSONFilePath));
     JSONPackage := TPackage.Create;
-    TRY
-     if JSONPackage.LoadFromFile(FileOpen1.Dialog.FileName) then
-     begin
-      editName.Text := JSONPackage.Package.Name;
-      editDownloadURL.Text := JSONPackage.Package.DownloadURL;
-      cbForceUpdate.Checked := JSONPackage.Package.ForceUpdate;
-
-      stringPackageFiles.RowCount := JSONPackage.PackageFiles.Count + 1;
-      for i := 0 to JSONPackage.PackageFiles.Count - 1 do
+    try
+      if JSONPackage.LoadFromFile(FileOpen1.Dialog.FileName) then
       begin
-        stringPackageFiles.Cells[0, i + 1] := JSONPackage.PackageFiles.Items[i].Name;
-        stringPackageFiles.Cells[1, i + 1] := JSONPackage.PackageFiles.Items[i].Version;
-      end;
-     end
-     else
-     ShowMessageFmt('There was a problem loading "%s" - is it corrupted or in the wrong format?',
-     [ExtractFilename(FileOpen1.Dialog.FileName)]);
+        editName.Text := JSONPackage.Package.Name;
+        editDownloadURL.Text := JSONPackage.Package.DownloadURL;
+        cbForceUpdate.Checked := JSONPackage.Package.ForceUpdate;
+
+        stringPackageFiles.RowCount := JSONPackage.PackageFiles.Count + 1;
+        for i := 0 to JSONPackage.PackageFiles.Count - 1 do
+        begin
+          stringPackageFiles.Cells[0, i + 1] := JSONPackage.PackageFiles.Items[i].Name;
+          stringPackageFiles.Cells[1, i + 1] := JSONPackage.PackageFiles.Items[i].Version;
+        end;
+      end
+      else
+        ShowMessageFmt('There was a problem loading "%s" - is it corrupted or in the wrong format?',
+          [ExtractFilename(FileOpen1.Dialog.FileName)]);
     finally
-     JSONPackage.Free;
+      JSONPackage.Free;
     end;
   end;
 end;
@@ -490,10 +483,10 @@ procedure TfrmMain.mnu_fileNewClick(Sender: TObject);
 begin
   editname.Text := rsMypackagenam;
   editDownloadURL.Text := rsHttpWwwUpdat;
-  cbForceUpdate.Checked:=False;
-  stringPackageFiles.RowCount:=1;
-  sJSONFilePath:='';
-  sZipDirectory:='';
+  cbForceUpdate.Checked := False;
+  stringPackageFiles.RowCount := 1;
+  sJSONFilePath := '';
+  sZipDirectory := '';
 end;
 
 procedure TfrmMain.mnu_fileSaveClick(Sender: TObject);
@@ -675,11 +668,12 @@ begin
         Result := True;
       end;
     end;
-  If IsADuplicateLPK then
+
+  // Check for duplicate .lpk entries
+  if FoundADuplicateLPK then
   begin
     stringPackageFiles.Color := clYellow;
-    slErrorList.Add('- There are one or more .lpk entries with the same name.'
-    + LineEnding + '- Every .lpk entry must have a unique name.');
+    slErrorList.Add(Format(rsThereAreOneO, [LineEnding]));
     Result := True;
   end;
 end;
@@ -702,7 +696,7 @@ begin
   if bForceSaveAs or (sJSONFilePath = '') then
   begin
     FileSaveAs1.Dialog.InitialDir := sUpdateDirectory;
-    FileSaveAs1.Dialog.FileName:='update_' + ExtractFilenameOnly(editName.text);
+    FileSaveAs1.Dialog.FileName := 'update_' + ExtractFilenameOnly(editName.Text);
     if FileSaveAs1.Dialog.Execute then
       sJSONFilePath := FileSaveAs1.Dialog.FileName
     else
@@ -723,7 +717,7 @@ begin
         Version := stringPackageFiles.Cells[1, i];
       end;
     end;
-    if FileExistsUTF8(sJSONFilePath) AND (bDisableWarnings=FALSE) then
+    if FileExistsUTF8(sJSONFilePath) and (bDisableWarnings = False) then
     begin
       if MessageDlg(rsOverwrite + ' ' + sJSONFilePath + '?', mtConfirmation,
         [mbYes, mbNo], 0, mbYes) = mrYes then
@@ -781,11 +775,6 @@ begin
   end;
 end;
 
-procedure TfrmMain.stringPackageFilesCellProcess(Sender: TObject; aCol,
-  aRow: Integer; processType: TCellProcessType; var aValue: string);
-begin
-end;
-
 { TPackage }
 
 constructor TPackage.Create;
@@ -805,22 +794,24 @@ begin
   inherited Destroy;
 end;
 
-Function TPackage.LoadFromFile(AFileName: string):Boolean;
+function TPackage.LoadFromFile(AFileName: string): boolean;
 var
   DeStreamer: TJSONDeStreamer;
   s: TStringList;
 begin
-  Result:=TRUE;
+  Result := True;
   s := TStringList.Create;
-  TRY
-   s.LoadFromFile(AFileName);
-   DeStreamer := TJSONDeStreamer.Create(nil);
-   TRY
-     DeStreamer.JSONToObject(s.Text, Self);
-   EXCEPT
-     On E:Exception do Result:=FALSE;
-   end;
-  Finally
+  try
+    s.LoadFromFile(AFileName);
+    DeStreamer := TJSONDeStreamer.Create(nil);
+    try
+      DeStreamer.JSONToObject(s.Text, Self);
+    except
+      // Eat the exception
+      On E: Exception do
+        Result := False;
+    end;
+  finally
     DeStreamer.Free;
     s.Free;
   end;
@@ -831,7 +822,7 @@ var
   Streamer: TJSONStreamer;
   s: TStringList;
 begin
-  Result := False;
+  Result := True;
   s := TStringList.Create;
   try
     Streamer := TJSONStreamer.Create(nil);
@@ -839,9 +830,10 @@ begin
     s.AddText(Streamer.ObjectToJSONString(Self));
     try
       s.SaveToFile(AFileName);
-      Result := True;
     except
-
+      // Eat the exception
+      On E: Exception do
+        Result := False;
     end;
   finally
     Streamer.Free;

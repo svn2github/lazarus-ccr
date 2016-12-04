@@ -260,6 +260,10 @@ msgstr ""
 msgid "- There are no .lpk files in the list yet"
 msgstr ""
 
+#: umain.rsthereareoneo
+msgid "- There are one or more .lpk entries with the same name.%s- Every .lpk entry must have a unique name."
+msgstr ""
+
 #: umain.rsthisoptionsh
 msgid "This option should only be used for crucial updates or bug-fixed packages. Are you OK with that?"
 msgstr ""

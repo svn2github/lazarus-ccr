@@ -42,7 +42,6 @@ object frmMain: TfrmMain
     Width = 90
     Caption = 'Force Update'
     Color = clWindow
-    OnChange = cbForceUpdateChange
     OnMouseUp = cbForceUpdateMouseUp
     ParentColor = False
     TabOrder = 1
@@ -96,7 +95,6 @@ object frmMain: TfrmMain
     RowCount = 1
     TabOrder = 3
     TitleStyle = tsNative
-    OnCellProcess = stringPackageFilesCellProcess
     ColWidths = (
       150
       150
@@ -131,7 +129,6 @@ object frmMain: TfrmMain
     Caption = '&Close'
     Kind = bkClose
     ModalResult = 11
-    OnClick = cmd_CloseClick
     TabOrder = 6
   end
   object cmd_save: TBitBtn
