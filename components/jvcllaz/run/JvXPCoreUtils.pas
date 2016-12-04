@@ -61,13 +61,14 @@ procedure JvXPFrame3D(const ACanvas: TCanvas; const ARect: TRect;
   const TopColor, BottomColor: TColor; const Swapped: Boolean = False);
 
 procedure JvXPColorizeBitmap(ABitmap: TBitmap; const AColor: TColor);
-(******************** NOT CONVERTED - NOT USED
+
 procedure JvXPSetDrawFlags(const AAlignment: TAlignment; const AWordWrap: Boolean;
   var Flags: Integer);
+
 procedure JvXPPlaceText(const AParent: TControl; const ACanvas: TCanvas;
   const AText: TCaption; const AFont: TFont; const AEnabled, AShowAccelChar: Boolean;
   const AAlignment: TAlignment; const AWordWrap: Boolean; var Rect: TRect);
-******************** NOT CONVERTED *)
+
 
 implementation
 
@@ -406,7 +407,6 @@ begin
   end;
 end;
 
-(******************** NOT CONVERTED
 procedure JvXPSetDrawFlags(const AAlignment: TAlignment; const AWordWrap: Boolean;
   var Flags: Integer);
 begin
@@ -446,7 +446,6 @@ begin
   OffsetRect(Rect, DX, (OH - Rect.Bottom) div 2);
   JvXPRenderText(AParent, ACanvas, AText, AFont, AEnabled, AShowAccelChar, Rect, Flags);
 end;
-******************** NOT CONVERTED *)
 
 end.
 

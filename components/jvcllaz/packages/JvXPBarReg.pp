@@ -11,20 +11,23 @@ procedure Register;
 
 implementation
 
+//{$R ../resource/JvXPCore.res}
+
 uses
-  JvXPBar, JvXPContainer, JvXPButtons;
+  JvXPBar, JvXPContainer, JvXPButtons, JvXPCheckCtrls;
 
 procedure Register;
 begin
-  RegisterComponents('JvXP', [
+  RegisterComponents('JvXPCtrls', [
     TJvXPBar,
     TJvXPContainer,
-    TJvXPButton
+    TJvXPButton,
+    TJvXPCheckbox
   ]);
 end;
 
 initialization
-  {$I JvXPBarLaz.lrs}
+  {$I ../resource/JvXPBarLaz.lrs}
   
 end.
 

@@ -47,8 +47,7 @@ type
 
   TJvXPLayout = (blGlyphLeft, blGlyphRight, blGlyphTop, blGlyphBottom);
 
-//  TJvXPCustomButton = class(TJvXPCustomStyleControl)
-  TJvXPCustomButton = class(TJvXPCustomControl)
+  TJvXPCustomButton = class(TJvXPCustomStyleControl)
   private
     FAutoGray: Boolean;
     FBgGradient: TBitmap;
@@ -159,7 +158,7 @@ type
     property ParentShowHint;
     property PopupMenu;
     property ShowHint;
-//    property Style;
+    property Style;
 //    property StyleManager;
     property Visible;
     //property OnDockDrop;
@@ -190,7 +189,7 @@ type
   TJvXPToolType =
     (ttArrowLeft, ttArrowRight, ttClose, ttMaximize, ttMinimize, ttPopup, ttRestore, ttImage);
 
-  TJvXPCustomToolButton = class(TJvXPCustomControl)
+  TJvXPCustomToolButton = class(TJvXPCustomStyleControl)
   private
     FToolType: TJvXPToolType;
     FDropDownMenu: TPopupMenu;
@@ -255,7 +254,7 @@ type
     property ParentShowHint;
     property PopupMenu;
     property ShowHint;
-//    property Style;
+    property Style;
 //    property StyleManager;
     property Visible;
     //property OnDockDrop;

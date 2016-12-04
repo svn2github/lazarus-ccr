@@ -7,7 +7,7 @@ interface
 uses
   SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, JvXPCore, JvXPBar, JvXPContainer, ImgList, ActnList, ExtCtrls,
-  StdCtrls, ComCtrls, JvExControls, JvComponent {, JvXPCheckCtrls}, JvXPButtons;
+  StdCtrls, ComCtrls, JvExControls, JvComponent, JvXPCheckCtrls, JvXPButtons;
 
 resourcestring
   SClickEventAc  = '  You clicked on the action "%s"...';
@@ -37,7 +37,7 @@ type
     btnToogleEnableMode: TJvXPButton;
     btnToggleVisibleMode: TJvXPButton;
     ilOldButtons: TImageList;
-    chkGrouped: TCheckbox;   // was: TJvXPCheckbox;
+    chkGrouped: TJvXPCheckbox;
     ilWhiteButtons: TImageList;
     ilRedButtons: TImageList;
     ilBlackButtons: TImageList;

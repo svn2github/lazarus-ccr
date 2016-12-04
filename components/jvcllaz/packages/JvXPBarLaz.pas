@@ -9,7 +9,7 @@ interface
 
 uses
   JvXPCoreUtils, JvXPBar, JvXPCore, JvXPBarReg, JvXPContainer, JvXPButtons, 
-  LazarusPackageIntf;
+  JvXPCheckCtrls, LazarusPackageIntf;
 
 implementation
 

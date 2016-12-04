@@ -548,6 +548,8 @@ procedure RoundedFrame(Canvas: TCanvas; ARect: TRect; AColor: TColor; R: Integer
 
 implementation
 
+{$R ../resource/JvXPBar.res}
+
 uses
   Menus;
 
@@ -2028,11 +2030,11 @@ var
             end;
             Bitmap.Assign(nil); // fixes GDI resource leak
             if FCollapsed then
-              //Bitmap.LoadFromResourceName(HInstance, 'JvXPCustomWinXPBarEXPAND' + IntToStr(Index))
-              Bitmap.LoadFromLazarusResource('JvXPCustomWinXPBarEXPAND' + IntToStr(Index))
+              Bitmap.LoadFromResourceName(HInstance, 'JvXPCustomWinXPBarEXPAND' + IntToStr(Index))
+              //Bitmap.LoadFromLazarusResource('JvXPCustomWinXPBarEXPAND' + IntToStr(Index))
             else
-              //Bitmap.LoadFromResourceName(HInstance, 'JvXPCustomWinXPBarCOLLAPSE' + IntToStr(Index));
-              Bitmap.LoadFromLazarusResource('JvXPCustomWinXPBarCOLLAPSE' + IntToStr(Index));
+              Bitmap.LoadFromResourceName(HInstance, 'JvXPCustomWinXPBarCOLLAPSE' + IntToStr(Index));
+              //Bitmap.LoadFromLazarusResource('JvXPCustomWinXPBarCOLLAPSE' + IntToStr(Index));
           end;
           // Transparency fix not needed Here! -WPostma
           Bitmap.Transparent := True;
@@ -2332,8 +2334,8 @@ begin
   end;
 end;
 
-initialization
-  {$I JvXPBar.lrs}
+//initialization
+//  {$I JvXPBar.lrs}
 
 end.
 
