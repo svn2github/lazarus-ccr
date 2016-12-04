@@ -28,7 +28,7 @@
     </RunParams>
     <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="JvXPBarLaz"/>
+        <PackageName Value="JvXPCtrlsLaz"/>
       </Item1>
       <Item2>
         <PackageName Value="LCL"/>

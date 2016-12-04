@@ -2,7 +2,7 @@ program WinXPBarDemo;
 
 uses
   Forms, Interfaces,
-  MainFrm in 'MainFrm.pas', JvXPBarLaz {frmMain};
+  MainFrm in 'MainFrm.pas', JvXPCtrlsLaz;
 
 {$R *.res}
 

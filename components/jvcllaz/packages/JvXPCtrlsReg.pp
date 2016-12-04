@@ -1,4 +1,4 @@
-unit JvXPBarReg;
+unit JvXPCtrlsReg;
 
 {$mode objfpc}{$H+}
 
@@ -27,7 +27,7 @@ begin
 end;
 
 initialization
-  {$I ../resource/JvXPBarLaz.lrs}
+  {$I ../resource/JvXPCtrlsLaz.lrs}
   
 end.
 

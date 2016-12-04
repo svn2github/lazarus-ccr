@@ -2,22 +2,22 @@
   This source is only used to compile and install the package.
  }
 
-unit JvXPBarLaz;
+unit JvXPCtrlsLaz;
 
 {$warn 5023 off : no warning about unused units}
 interface
 
 uses
-  JvXPCoreUtils, JvXPBar, JvXPCore, JvXPBarReg, JvXPContainer, JvXPButtons, 
-  JvXPCheckCtrls, LazarusPackageIntf;
+  JvXPCoreUtils, JvXPBar, JvXPCore, JvXPContainer, JvXPButtons, 
+  JvXPCheckCtrls, JvXPCtrlsReg, LazarusPackageIntf;
 
 implementation
 
 procedure Register;
 begin
-  RegisterUnit('JvXPBarReg', @JvXPBarReg.Register);
+  RegisterUnit('JvXPCtrlsReg', @JvXPCtrlsReg.Register);
 end;
 
 initialization
-  RegisterPackage('JvXPBarLaz', @Register);
+  RegisterPackage('JvXPCtrlsLaz', @Register);
 end.

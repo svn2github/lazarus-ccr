@@ -2,7 +2,7 @@
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
-    <Name Value="JvXPBarLaz"/>
+    <Name Value="JvXPCtrlsLaz"/>
     <Type Value="RunAndDesignTime"/>
     <AddToProjectUsesSection Value="True"/>
     <Author Value="Sergio Samayoa"/>
@@ -38,21 +38,21 @@
         <UnitName Value="JvXPCore"/>
       </Item3>
       <Item4>
-        <Filename Value="JvXPBarReg.pp"/>
-        <HasRegisterProc Value="True"/>
-        <UnitName Value="JvXPBarReg"/>
-      </Item4>
-      <Item5>
         <Filename Value="..\run\JvXPContainer.pas"/>
         <UnitName Value="JvXPContainer"/>
-      </Item5>
-      <Item6>
+      </Item4>
+      <Item5>
         <Filename Value="..\run\JvXPButtons.pas"/>
         <UnitName Value="JvXPButtons"/>
-      </Item6>
-      <Item7>
+      </Item5>
+      <Item6>
         <Filename Value="..\run\JvXPCheckCtrls.pas"/>
         <UnitName Value="JvXPCheckCtrls"/>
+      </Item6>
+      <Item7>
+        <Filename Value="JvXPCtrlsReg.pp"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="JvXPCtrlsReg"/>
       </Item7>
     </Files>
     <RequiredPkgs Count="3">
