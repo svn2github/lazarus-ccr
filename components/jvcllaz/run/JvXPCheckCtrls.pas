@@ -113,8 +113,8 @@ type
     property ParentShowHint;
     property PopupMenu;
     property ShowHint;
-//    property Style;
-//    property StyleManager;
+    property Style;
+    property StyleManager;
     property Visible;
     //property OnDockDrop;
     //property OnDockOver;

@@ -159,7 +159,7 @@ type
     property PopupMenu;
     property ShowHint;
     property Style;
-//    property StyleManager;
+    property StyleManager;
     property Visible;
     //property OnDockDrop;
     //property OnDockOver;
@@ -255,7 +255,7 @@ type
     property PopupMenu;
     property ShowHint;
     property Style;
-//    property StyleManager;
+    property StyleManager;
     property Visible;
     //property OnDockDrop;
     //property OnDockOver;

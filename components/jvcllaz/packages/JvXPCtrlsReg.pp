@@ -12,7 +12,7 @@ procedure Register;
 implementation
 
 uses
-  JvXPBar, JvXPContainer, JvXPButtons, JvXPCheckCtrls;
+  JvXPCore, JvXPBar, JvXPContainer, JvXPButtons, JvXPCheckCtrls;
 
 procedure Register;
 begin
@@ -21,7 +21,8 @@ begin
     TJvXPContainer,
     TJvXPButton,
     TJvXPToolButton,
-    TJvXPCheckbox
+    TJvXPCheckbox,
+    TJvXPStyleManager
   ]);
 end;
 

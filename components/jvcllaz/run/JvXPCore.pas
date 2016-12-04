@@ -133,8 +133,8 @@ type
   
   { baseclass for focusable control descendants. }
 
-//  TJvXPCustomControl = class(TCustomControl)  //(TJvCustomControl)
-  TJvXPCustomControl = class(TJvCustomControl)
+  TJvXPCustomControl = class(TCustomControl)  //(TJvCustomControl)
+//  TJvXPCustomControl = class(TJvCustomControl)
   private
     FClicking: Boolean;
     FDrawState: TJvXPDrawState;
@@ -253,20 +253,19 @@ type
   TJvXPStyle = class(TPersistent)
   private
     FTheme: TJvXPTheme;
-    //FUseStyleManager: Boolean;
+    FUseStyleManager: Boolean;
   protected
     Parent: TJvXPCustomStyleControl;
     procedure SetTheme(Value: TJvXPTheme); virtual;
-    //procedure SetUseStyleManager(Value: Boolean); virtual;
+    procedure SetUseStyleManager(Value: Boolean); virtual;
   public
     constructor Create(AOwner: TComponent);
     function GetTheme: TJvXPTheme;
   published
     property Theme: TJvXPTheme read FTheme write SetTheme default WindowsXP;
-    //property UseStyleManager: Boolean read FUseStyleManager write SetUseStyleManager default True;
+    property UseStyleManager: Boolean read FUseStyleManager write SetUseStyleManager default True;
   end;
 
-  (******************** NOT CONVERTED
   TJvXPStyleManager = class(TJvXPCustomComponent)
   private
     FControls: TList;
@@ -274,6 +273,7 @@ type
     FOnThemeChanged: TNotifyEvent;
     procedure InvalidateControls;
   protected
+    procedure FreeNotifyControls;
     procedure SetTheme(Value: TJvXPTheme); virtual;
   public
     constructor Create(AOwner: TComponent); override;
@@ -284,17 +284,16 @@ type
     property Theme: TJvXPTheme read FTheme write SetTheme default WindowsXP;
     property OnThemeChanged: TNotifyEvent read FOnThemeChanged write FOnThemeChanged;
   end;
-  ******************** NOT CONVERTED *)
 
   TJvXPCustomStyleControl = class(TJvXPCustomControl)
   private
     FStyle: TJvXPStyle;
-    //FStyleManager: TJvXPStyleManager;
+    FStyleManager: TJvXPStyleManager;
   protected
-    //procedure SetStyleManager(Value: TJvXPStyleManager); virtual;
-    //procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure SetStyleManager(Value: TJvXPStyleManager); virtual;
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     property Style: TJvXPStyle read FStyle write FStyle;
-    //property StyleManager: TJvXPStyleManager read FStyleManager write SetStyleManager;
+    property StyleManager: TJvXPStyleManager read FStyleManager write SetStyleManager;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -675,7 +674,7 @@ begin
   inherited Create;
   Parent := TJvXPCustomStyleControl(AOwner);
   FTheme := WindowsXP;
-  //FUseStyleManager := True;
+  FUseStyleManager := True;
 end;
 
 procedure TJvXPStyle.SetTheme(Value: TJvXPTheme);
@@ -690,13 +689,10 @@ end;
 function TJvXPStyle.GetTheme: TJvXPTheme;
 begin
   Result := FTheme;
-  {
   if FUseStyleManager and Assigned(Parent.StyleManager) then
     Result := Parent.StyleManager.Theme;
-    }
 end;
 
-{
 procedure TJvXPStyle.SetUseStyleManager(Value: Boolean);
 begin
   if Value <> FUseStyleManager then
@@ -705,9 +701,7 @@ begin
     Parent.InternalRedraw;
   end;
 end;
- }
 
-(******************** NOT CONVERTED
 
 //=== { TJvXPStyleManager } ==================================================
 
@@ -721,8 +715,17 @@ end;
 destructor TJvXPStyleManager.Destroy;
 begin
   InvalidateControls;
+  FreeNotifyControls;
   FControls.Free;
   inherited Destroy;
+end;
+
+procedure TJvXPStyleManager.FreeNotifyControls;
+var
+  J: Integer;
+begin
+  for J := 0 to FControls.Count - 1 do
+    TJvXPCustomControl(FControls[J]).Notification(self, opRemove);
 end;
 
 procedure TJvXPStyleManager.InvalidateControls;
@@ -730,8 +733,8 @@ var
   I: Integer;
 begin
   for I := 0 to FControls.Count - 1 do
-  with TJvXPCustomControl(FControls[I]) do
-    InternalRedraw;
+    with TJvXPCustomControl(FControls[I]) do
+      InternalRedraw;
 end;
 
 procedure TJvXPStyleManager.SetTheme(Value: TJvXPTheme);
@@ -756,13 +759,15 @@ end;
 
 procedure TJvXPStyleManager.UnregisterControls(const AControls: array of TJvXPCustomControl);
 var
-  I: Integer;
+  I, J: Integer;
 begin
   for I := Low(AControls) to High(AControls) do
-  if FControls.IndexOf(AControls[I]) <> -1 then
-    FControls.Delete(FControls.IndexOf(AControls[I]));
+  begin
+    J := FControls.IndexOf(AControls[I]);
+    if J <> -1 then
+      FControls.Delete(J);
+  end;
 end;
-******************** NOT CONVERTED *)
 
 
 //=== { TJvXPCustomStyleControl } ============================================
@@ -771,19 +776,17 @@ constructor TJvXPCustomStyleControl.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FStyle := TJvXPStyle.Create(Self);
-  //FStyleManager := nil;
+  FStyleManager := nil;
 end;
 
 destructor TJvXPCustomStyleControl.Destroy;
 begin
-  {
   if FStyleManager <> nil then
     FStyleManager.UnregisterControls([Self]);
-    }
   FStyle.Free;
   inherited Destroy;
 end;
-                          {
+
 procedure TJvXPCustomStyleControl.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
@@ -803,7 +806,7 @@ begin
     FStyleManager := Value;
     InternalRedraw;
   end;
-end;           }
+end;
 
 
 (******************** NOT CONVERTED
