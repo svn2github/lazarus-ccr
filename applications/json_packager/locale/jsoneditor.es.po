@@ -1,4 +1,4 @@
-msgid ""
+﻿msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: \n"
@@ -128,7 +128,7 @@ msgstr "Cargar..."
 
 #: tfrmmain.mnu_filenew.caption
 msgid "New"
-msgstr ""
+msgstr "Nuevo"
 
 #: tfrmmain.mnu_filesave.caption
 msgid "Save"
@@ -309,7 +309,7 @@ msgstr "- No hay ningún archivo .lpk en la lista todavía"
 
 #: umain.rsthereareoneo
 msgid "- There are one or more .lpk entries with the same name.%s- Every .lpk entry must have a unique name."
-msgstr ""
+msgstr "Hay una o más entradas .lpk con el mismo nombre.%s- Cada entrada .lpk debe tener un nombre único. "
 
 #: umain.rsthisoptionsh
 msgid "This option should only be used for crucial updates or bug-fixed packages. Are you OK with that?"

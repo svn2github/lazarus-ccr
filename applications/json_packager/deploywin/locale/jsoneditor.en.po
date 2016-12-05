@@ -67,7 +67,9 @@ msgstr ""
 "Save the current configuration to disk\n"
 "as a JSON update file\n"
 
-#: tfrmmain.editdownloadurl.hint
+#: tfrmmain.editdownloadzipurl.hint
+#, fuzzy
+msgctxt "tfrmmain.editdownloadzipurl.hint"
 msgid ""
 "Download URL:\n"
 "Include the FULL url needed to download the package Zip file\n"
@@ -105,7 +107,9 @@ msgstr "&Save As ..."
 msgid "Save As"
 msgstr "Save As"
 
-#: tfrmmain.lbldownloadurl.caption
+#: tfrmmain.lbldownloadzipurl.caption
+#, fuzzy
+msgctxt "tfrmmain.lbldownloadzipurl.caption"
 msgid "Download URL:"
 msgstr "Download URL:"
 
@@ -123,7 +127,7 @@ msgstr "Load..."
 
 #: tfrmmain.mnu_filenew.caption
 msgid "New"
-msgstr ""
+msgstr "New"
 
 #: tfrmmain.mnu_filesave.caption
 msgid "Save"
@@ -191,7 +195,7 @@ msgstr "Attempting to Open URL"
 #| msgid ""
 #| "Package Files:\n"
 #| "[Add]:  to make a new entry\n"
-#| "[Remove]: Remove selected entry\n"
+#| "[Remove]: Remove last entry\n"
 #| "lpk filename: i.e. mycontrol.lpk\n"
 #| "Version: The FULL version (i.e. not 1.0 but 1.0.0.0)\n"
 msgid ""
@@ -215,19 +219,27 @@ msgstr "About"
 msgid "Compiled with FPC V:%s and Lazarus V:%d.%d%s for the %s - %s platform%s%s"
 msgstr "Compiled with FPC V:%s and Lazarus V:%d.%d%s for the %s - %s platform%s%s"
 
-#: umain.rsdownloadurld
+#: umain.rsdownloadzipurld
+#, fuzzy
+msgctxt "umain.rsdownloadzipurld"
 msgid "- Download URL does not contain the zipfile name"
 msgstr "- Download URL does not contain the zipfile name"
 
-#: umain.rsdownloadurli
+#: umain.rsdownloadzipurli
+#, fuzzy
+msgctxt "umain.rsdownloadzipurli"
 msgid "- Download URL is too short or missing"
 msgstr "- Download URL is too short or missing"
 
-#: umain.rsdownloadurli2
+#: umain.rsdownloadzipurli2
+#, fuzzy
+msgctxt "umain.rsdownloadzipurli2"
 msgid "- Download URL is incomplete"
 msgstr "- Download URL is incomplete"
 
-#: umain.rsdownloadurls
+#: umain.rsdownloadzipurls
+#, fuzzy
+msgctxt "umain.rsdownloadzipurls"
 msgid "- Download URL should start with \"http\""
 msgstr "- Download URL should start with \"http\""
 
@@ -305,11 +317,11 @@ msgstr "- There are no .lpk files in the list yet"
 
 #: umain.rsthereareoneo
 msgid "- There are one or more .lpk entries with the same name.%s- Every .lpk entry must have a unique name."
-msgstr ""
+msgstr "- There are one or more .lpk entries with the same name.%s- Every .lpk entry must have a unique name."
 
 #: umain.rsthisoptionsh
 msgid "This option should only be used for crucial updates or bug-fixed packages. Are you OK with that?"
-msgstr ""
+msgstr "This option should only be used for crucial updates or bug-fixed packages. Are you OK with that?"
 
 #: umain.rsturnhintsoff
 msgid "(You can toggle these hints on/off in the Help menu)"

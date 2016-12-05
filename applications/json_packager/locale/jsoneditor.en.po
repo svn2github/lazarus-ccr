@@ -127,7 +127,7 @@ msgstr "Load..."
 
 #: tfrmmain.mnu_filenew.caption
 msgid "New"
-msgstr ""
+msgstr "New"
 
 #: tfrmmain.mnu_filesave.caption
 msgid "Save"
@@ -195,7 +195,7 @@ msgstr "Attempting to Open URL"
 #| msgid ""
 #| "Package Files:\n"
 #| "[Add]:  to make a new entry\n"
-#| "[Remove]: Remove selected entry\n"
+#| "[Remove]: Remove last entry\n"
 #| "lpk filename: i.e. mycontrol.lpk\n"
 #| "Version: The FULL version (i.e. not 1.0 but 1.0.0.0)\n"
 msgid ""
@@ -317,11 +317,11 @@ msgstr "- There are no .lpk files in the list yet"
 
 #: umain.rsthereareoneo
 msgid "- There are one or more .lpk entries with the same name.%s- Every .lpk entry must have a unique name."
-msgstr ""
+msgstr "- There are one or more .lpk entries with the same name.%s- Every .lpk entry must have a unique name."
 
 #: umain.rsthisoptionsh
 msgid "This option should only be used for crucial updates or bug-fixed packages. Are you OK with that?"
-msgstr ""
+msgstr "This option should only be used for crucial updates or bug-fixed packages. Are you OK with that?"
 
 #: umain.rsturnhintsoff
 msgid "(You can toggle these hints on/off in the Help menu)"
