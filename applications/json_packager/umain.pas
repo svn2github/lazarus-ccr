@@ -28,7 +28,12 @@ unit umain;
   0.1.9.0: Error check for duplicate lpk entries (minesadorada)
   0.1.10.0: Exception handling for Load + Save (minesadorada)
   0.1.11.0: Cleaned up code formatting etc. (minesadorada)
-  0.1.12.0: Renamed DownloadURL to DownloadZipURL (minesadorada)
+  0.1.12.0: Rename Global DownloadURL to DownloadZipURL (minesadorada)
+  0.1.13.0: Renamed TPackageData ->  TUpdatePackageData (GetMem)
+            Renamed TPackageFiles -> TUpdatePackageFiles (GetMem)
+            Comment out Self.AutoAdjustLayout line in Form.Create (GetMem)
+            Removed StrUtils from uses (minesadorada)
+            Fixed memory leaks with CFG and slErrorList (minesadorada)
  }
 {$mode objfpc}{$H+}
 
@@ -38,16 +43,16 @@ interface
 uses
   Classes, Forms, Controls, StdCtrls, Menus, ActnList, StdActns, Grids,
   Graphics, Buttons, fileutil, LazFileUtils, fileinfo, ugenericcollection, fpjsonrtti,
-  Dialogs, StrUtils, LCLTranslator, PopupNotifier, SysUtils, inifiles,
+  Dialogs, LCLTranslator, PopupNotifier, SysUtils, inifiles,
   lclintf, lclVersion;
 
 type
 
   { TPackage }
 
-  { TPackageFiles }
+  { TUpdatePackageFiles }
 
-  TPackageFiles = class(TCollectionItem)
+  TUpdatePackageFiles = class(TCollectionItem)
   private
     FName: string;
     FVersion: string;
@@ -56,11 +61,11 @@ type
     property Version: string read FVersion write FVersion;
   end;
 
-  TPackageFilesList = specialize TGenericCollection<TPackageFiles>;
+  TPackageFilesList = specialize TGenericCollection<TUpdatePackageFiles>;
 
-  { TPackageData }
+  { TUpdatePackageData }
 
-  TPackageData = class(TPersistent)
+  TUpdatePackageData = class(TPersistent)
   private
     FDownloadZipURL: string;
     FForceUpdate: boolean;
@@ -75,7 +80,7 @@ type
 
   TPackage = class(TPersistent)
   private
-    FPackage: TPackageData;
+    FPackage: TUpdatePackageData;
     FPackageFiles: TPackageFilesList;
   public
     constructor Create;
@@ -83,7 +88,7 @@ type
     function LoadFromFile(AFileName: string): boolean;
     function SaveToFile(AFileName: string): boolean;
   published
-    property Package: TPackageData read FPackage write FPackage;
+    property Package: TUpdatePackageData read FPackage write FPackage;
     property PackageFiles: TPackageFilesList read FPackageFiles write FPackageFiles;
   end;
 
@@ -145,14 +150,16 @@ type
     bForceSaveAs, bShowPopupHints, bDisableWarnings, bDirty, bIsVirgin: boolean;
     sJSONFilePath: string;
     sUpdateDirectory, sZipDirectory: string;
-    CFG: TIniFile;
     slErrorList: TStrings;
+    CFG: TIniFile;
+    INIFilePath:String;
     function ValidationFailed: boolean;
     procedure CtrlShowPopup(Sender: TObject);
     procedure CtrlHidePopup(Sender: TObject);
     procedure CtrlSetUpPopupHandlers;
     procedure CtrlMakeDirty(Sender: TObject);
     function FoundADuplicateLPK: boolean;
+    Function CreateUniqueINI(var aCount: integer):Boolean;
   public
     { public declarations }
   end;
@@ -205,9 +212,9 @@ resourcestring
   rsThereAreOneO = '- There are one or more .lpk entries with the same name.%s'
     + '- Every .lpk entry must have a unique name.';
 
-{ TPackageData }
+{ TUpdatePackageData }
 
-constructor TPackageData.Create;
+constructor TUpdatePackageData.Create;
 begin
   FName := '';
   FForceUpdate := False;
@@ -356,42 +363,48 @@ end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  CFG.WriteBool('Options', 'Virgin', False);
-  CFG.WriteBool('Options', 'DiableWarnings', bDisableWarnings);
 end;
 
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   CanClose := True;
-  if bDisableWarnings = True then
-    exit;
-  if bDirty = True then
+  if ((bDirty = True) AND (bDisableWarnings=FALSE)) then
   begin
     if MessageDlg(rsFileMayBeUns, mtConfirmation, [mbYes, mbNo], 0, mbNo) = mrNo then
       CanClose := False;
+  end;
+  CFG.WriteBool('Options', 'Virgin', False);
+  CFG.WriteBool('Options', 'DiableWarnings', bDisableWarnings);
+  CFG.UpdateFile;
+  Application.ProcessMessages;
+  CFG.Free;
+  slErrorList.Free;
+end;
+function TfrmMain.CreateUniqueINI(var aCount: integer):Boolean;
+// Recursively loop until correct INI found, or new one created
+begin
+  Result:=FALSE;
+  INIFilePath := GetAppConfigFile(False) + IntToStr(aCount);
+  CFG := TIniFile.Create(INIFilePath);
+  CFG.CacheUpdates:=TRUE;
+  if CFG.ReadString('Options', 'AppPath', ProgramDirectory) <> ProgramDirectory then
+  begin
+    FreeAndNil(CFG); // Ditch the old one
+    Inc(aCount);
+    Result:=TRUE;
+    CreateUniqueINI(aCount); // Make a new one
   end;
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
-  sLang, INIFilePath: string;
-
-  procedure CreateUniqueINI(aCount: integer);
-  // Recursively loop until correct INI found, or new one created
-  begin
-    INIFilePath := GetAppConfigFile(False) + IntToStr(aCount);
-    CFG := TIniFile.Create(INIFilePath);
-    if CFG.ReadString('Options', 'AppPath', ProgramDirectory) <> ProgramDirectory then
-    begin
-      CFG.Free; // Ditch the old one
-      Inc(aCount);
-      CreateUniqueINI(aCount); // Make a new one
-    end;
-  end;
-
+  sLang: string;
+  iIniCount:Integer;
 begin
+  {
   Self.AutoAdjustLayout(lapAutoAdjustForDPI, Self.DesignTimeDPI,
     Screen.PixelsPerInch, Self.Width, ScaleX(Self.Width, Self.DesignTimeDPI));
+  }
   // Enable AutoSize again to get correct Height
   editName.AutoSize := True;
   editDownloadZipURL.AutoSize := True;
@@ -404,9 +417,9 @@ begin
   stringPackageFiles.Columns[0].Title.Caption := rsLpkFileName;
   stringPackageFiles.Columns[1].Title.Caption := rsVersion0000;
   // Defaults
+  slErrorList := TStringList.Create;
   bForceSaveAs := True;
   bShowPopupHints := True;
-  slErrorList := TStringList.Create;
   // Encourage the user to maintain an updates folder
   sUpdateDirectory := ProgramDirectory + 'updates';
   if not FileExistsUTF8(sUpdateDirectory) then
@@ -415,9 +428,11 @@ begin
   // Enable options persistence
   // If program location is different, create a new CFG file
   // Because each component's location might be different
-  CreateUniqueINI(0);
-  CFG.WriteString('Options', 'AppPath', ProgramDirectory);
-
+  iIniCount:=0;
+  If CreateUniqueINI(iIniCount) then
+    CFG.WriteString('Options', 'AppPath', ProgramDirectory);
+  CFG.UpdateFile;
+  ShowMessageFmt('Inifile=%s, Count=%d',[INIFilePath,iIniCount]);
   // Pop-up hints (show on first run, then not again unless the user chooses)
   bIsVirgin := CFG.ReadBool('Options', 'Virgin', True);
   bShowPopupHints := bIsVirgin;
@@ -682,7 +697,6 @@ end;
 procedure TfrmMain.SaveAsItemClick(Sender: TObject);
 var
   i: integer;
-  s: string;
 begin
   if ValidationFailed then
   begin
@@ -780,7 +794,7 @@ end;
 
 constructor TPackage.Create;
 begin
-  FPackage := TPackageData.Create;
+  FPackage := TUpdatePackageData.Create;
   FPackageFiles := TPackageFilesList.Create;
 end;
 
