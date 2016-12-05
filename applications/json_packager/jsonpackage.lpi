@@ -130,6 +130,11 @@
               </Win32>
             </Options>
           </Linking>
+          <Other>
+            <OtherDefines Count="1">
+              <Define0 Value="IGNOREPICTURE"/>
+            </OtherDefines>
+          </Other>
         </CompilerOptions>
       </Item4>
       <Item5 Name="Darwin32">

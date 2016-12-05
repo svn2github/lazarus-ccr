@@ -33,8 +33,8 @@ unit umain;
             Comment out Self.AutoAdjustLayout line in Form.Create (GetMem)
             Removed StrUtils from uses (minesadorada)
             Fixed memory leaks with CFG and slErrorList (minesadorada)
-            Moved inline procedure CreateUniqueINI to separate function
-            Added Const C_DEBUGMESSAGES=TRUE/FALSE
+            Moved inline procedure CreateUniqueINI to separate function (minesadorada)
+            Added Const C_DEBUGMESSAGES=TRUE/FALSE (minesadorada)
  }
 {$mode objfpc}{$H+}
 
@@ -375,13 +375,16 @@ begin
   begin
     if MessageDlg(rsFileMayBeUns, mtConfirmation, [mbYes, mbNo], 0, mbNo) = mrNo then
       CanClose := False;
+  end
+  else
+  begin
+    CFG.WriteBool('Options', 'Virgin', False);
+    CFG.WriteBool('Options', 'DiableWarnings', bDisableWarnings);
+    CFG.UpdateFile;
+    Application.ProcessMessages;
+    CFG.Free;
+    slErrorList.Free;
   end;
-  CFG.WriteBool('Options', 'Virgin', False);
-  CFG.WriteBool('Options', 'DiableWarnings', bDisableWarnings);
-  CFG.UpdateFile;
-  Application.ProcessMessages;
-  CFG.Free;
-  slErrorList.Free;
 end;
 function TfrmMain.CreateUniqueINI(var aCount: integer):Boolean;
 // Recursively loop until correct INI found, or new one created
