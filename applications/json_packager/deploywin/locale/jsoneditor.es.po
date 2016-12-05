@@ -122,6 +122,10 @@ msgstr "Archivos del Paquete"
 msgid "Load..."
 msgstr "Cargar..."
 
+#: tfrmmain.mnu_filenew.caption
+msgid "New"
+msgstr ""
+
 #: tfrmmain.mnu_filesave.caption
 msgid "Save"
 msgstr "Guardar"
@@ -291,6 +295,10 @@ msgstr "La entrada .lpk #%d está ausente"
 msgid "- There are no .lpk files in the list yet"
 msgstr "- No hay ningún archivo .lpk en la lista todavía"
 
+#: umain.rsthereareoneo
+msgid "- There are one or more .lpk entries with the same name.%s- Every .lpk entry must have a unique name."
+msgstr ""
+
 #: umain.rsthisoptionsh
 msgid "This option should only be used for crucial updates or bug-fixed packages. Are you OK with that?"
 msgstr "Esta opción debe ser usada solamente para actualizaciones cruciales o paquetes con arreglos de bugs. ¿Estás de acuerdo con esto?"
@@ -330,3 +338,4 @@ msgstr "¿Quieres copiar %s a la carpeta %s?"
 #: umain.rsyoumayneedto
 msgid "(You may need to restart the app to see the change)"
 msgstr "(Quizás necesites reiniciar la aplicación para ver los cambios)"
+

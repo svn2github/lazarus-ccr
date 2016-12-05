@@ -46,7 +46,7 @@ object frmMain: TfrmMain
     ParentColor = False
     TabOrder = 1
   end
-  object lblDownloadURL: TLabel
+  object lblDownloadZipURL: TLabel
     Left = 8
     Height = 15
     Top = 104
@@ -54,7 +54,7 @@ object frmMain: TfrmMain
     Caption = 'Download URL:'
     ParentColor = False
   end
-  object editDownloadURL: TEdit
+  object editDownloadZipURL: TEdit
     Left = 8
     Height = 28
     Hint = 'Download URL:'#13#10'Include the FULL url needed to download the package Zip file'

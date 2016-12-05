@@ -68,7 +68,9 @@ msgstr ""
 "Guardar la configuración actual al disco\n"
 "como un archivo JSON de actualización\n"
 
-#: tfrmmain.editdownloadurl.hint
+#: tfrmmain.editdownloadzipurl.hint
+#, fuzzy
+msgctxt "tfrmmain.editdownloadzipurl.hint"
 msgid ""
 "Download URL:\n"
 "Include the FULL url needed to download the package Zip file\n"
@@ -106,7 +108,9 @@ msgstr "&Guardar Como ..."
 msgid "Save As"
 msgstr "Guardar Como"
 
-#: tfrmmain.lbldownloadurl.caption
+#: tfrmmain.lbldownloadzipurl.caption
+#, fuzzy
+msgctxt "tfrmmain.lbldownloadzipurl.caption"
 msgid "Download URL:"
 msgstr "URL de Descarga"
 
@@ -206,19 +210,27 @@ msgstr "Acerca de"
 msgid "Compiled with FPC V:%s and Lazarus V:%d.%d%s for the %s - %s platform%s%s"
 msgstr "Compilado con FPC V:%s y Lazarus V:%d.%d%s para la plataforma %s - %s %s%s"
 
-#: umain.rsdownloadurld
+#: umain.rsdownloadzipurld
+#, fuzzy
+msgctxt "umain.rsdownloadzipurld"
 msgid "- Download URL does not contain the zipfile name"
 msgstr "- URL de descarga no contiene el nombre del zip"
 
-#: umain.rsdownloadurli
+#: umain.rsdownloadzipurli
+#, fuzzy
+msgctxt "umain.rsdownloadzipurli"
 msgid "- Download URL is too short or missing"
 msgstr "- URL de descarga es muy corta o está vacía"
 
-#: umain.rsdownloadurli2
+#: umain.rsdownloadzipurli2
+#, fuzzy
+msgctxt "umain.rsdownloadzipurli2"
 msgid "- Download URL is incomplete"
 msgstr "- URL de descarga incompleta"
 
-#: umain.rsdownloadurls
+#: umain.rsdownloadzipurls
+#, fuzzy
+msgctxt "umain.rsdownloadzipurls"
 msgid "- Download URL should start with \"http\""
 msgstr "- URL de descarga debe empezar con \"http\""
 

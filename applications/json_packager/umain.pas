@@ -27,7 +27,8 @@ unit umain;
   0.1.8.0: Config file change (minesadorada)
   0.1.9.0: Error check for duplicate lpk entries (minesadorada)
   0.1.10.0: Exception handling for Load + Save (minesadorada)
-  0.1.11.0: Cleaned up code formatting etc.
+  0.1.11.0: Cleaned up code formatting etc. (minesadorada)
+  0.1.12.0: Renamed DownloadURL to DownloadZipURL (minesadorada)
  }
 {$mode objfpc}{$H+}
 
@@ -61,7 +62,7 @@ type
 
   TPackageData = class(TPersistent)
   private
-    FDownloadURL: string;
+    FDownloadZipURL: string;
     FForceUpdate: boolean;
     FName: string;
   public
@@ -69,7 +70,7 @@ type
   published
     property Name: string read FName write FName;
     property ForceUpdate: boolean read FForceUpdate write FForceUpdate;
-    property DownloadURL: string read FDownloadURL write FDownloadURL;
+    property DownloadZipURL: string read FDownloadZipURL write FDownloadZipURL;
   end;
 
   TPackage = class(TPersistent)
@@ -96,12 +97,12 @@ type
     btnRemove: TButton;
     cbForceUpdate: TCheckBox;
     editName: TEdit;
-    editDownloadURL: TEdit;
+    editDownloadZipURL: TEdit;
     FileOpen1: TFileOpen;
     FileSaveAs1: TFileSaveAs;
     lblPackageFiles: TLabel;
     lblName: TLabel;
-    lblDownloadURL: TLabel;
+    lblDownloadZipURL: TLabel;
     MainMenu1: TMainMenu;
     FileMenu: TMenuItem;
     LoadItem: TMenuItem;
@@ -181,12 +182,12 @@ resourcestring
   rsVersion0000 = 'Version (n.n.n.n)';
   rsFixThenTryAg = 'Fix, then try again.';
   rsUpdateZipNam = '- Update zip name is too short or missing';
-  rsDownloadURLI = '- Download URL is too short or missing';
+  rsDownloadZipURLI = '- Download URL is too short or missing';
   rsThereAreNoLp = '- There are no .lpk files in the list yet';
   rsUpdateZipNam2 = '- Update zip name missing extension ".zip"';
-  rsDownloadURLI2 = '- Download URL is incomplete';
-  rsDownloadURLS = '- Download URL should start with "http"';
-  rsDownloadURLD = '- Download URL does not contain the zipfile name';
+  rsDownloadZipURLI2 = '- Download URL is incomplete';
+  rsDownloadZipURLS = '- Download URL should start with "http"';
+  rsDownloadZipURLD = '- Download URL does not contain the zipfile name';
   rsWouldYouLike = 'Would you like to copy %s to the %s folder?';
   rsSWasSuccessf = '%s was successfully copied to the %s folder';
   rsSorryCopyOpe = 'Sorry - copy operation was unsuccessful';
@@ -210,7 +211,7 @@ constructor TPackageData.Create;
 begin
   FName := '';
   FForceUpdate := False;
-  FDownloadURL := '';
+  FDownloadZipURL := '';
 end;
 
 { TfrmMain }
@@ -393,13 +394,13 @@ begin
     Screen.PixelsPerInch, Self.Width, ScaleX(Self.Width, Self.DesignTimeDPI));
   // Enable AutoSize again to get correct Height
   editName.AutoSize := True;
-  editDownloadURL.AutoSize := True;
+  editDownloadZipURL.AutoSize := True;
   // Furniture
   Caption := Application.Title;
   Icon := Application.Icon;
   MyPopup.Icon := TPicture(Application.Icon);
   editname.Text := rsMypackagenam;
-  editDownloadURL.Text := rsHttpWwwUpdat;
+  editDownloadZipURL.Text := rsHttpWwwUpdat;
   stringPackageFiles.Columns[0].Title.Caption := rsLpkFileName;
   stringPackageFiles.Columns[1].Title.Caption := rsVersion0000;
   // Defaults
@@ -460,7 +461,7 @@ begin
       if JSONPackage.LoadFromFile(FileOpen1.Dialog.FileName) then
       begin
         editName.Text := JSONPackage.Package.Name;
-        editDownloadURL.Text := JSONPackage.Package.DownloadURL;
+        editDownloadZipURL.Text := JSONPackage.Package.DownloadZipURL;
         cbForceUpdate.Checked := JSONPackage.Package.ForceUpdate;
 
         stringPackageFiles.RowCount := JSONPackage.PackageFiles.Count + 1;
@@ -482,7 +483,7 @@ end;
 procedure TfrmMain.mnu_fileNewClick(Sender: TObject);
 begin
   editname.Text := rsMypackagenam;
-  editDownloadURL.Text := rsHttpWwwUpdat;
+  editDownloadZipURL.Text := rsHttpWwwUpdat;
   cbForceUpdate.Checked := False;
   stringPackageFiles.RowCount := 1;
   sJSONFilePath := '';
@@ -594,10 +595,10 @@ begin
     Result := True;
   end;
   // URL implausable?
-  if (Length(editDownloadURL.Text) < 10) then
+  if (Length(editDownloadZipURL.Text) < 10) then
   begin
-    slErrorList.Add(rsDownloadURLI);
-    editDownloadURL.Color := clYellow;
+    slErrorList.Add(rsDownloadZipURLI);
+    editDownloadZipURL.Color := clYellow;
     Result := True;
   end;
   // No lpk file?
@@ -616,26 +617,26 @@ begin
       Result := True;
     end;
   // A full URL?
-  if ((Length(editDownloadURL.Text) > 0) and (RightStr(editDownloadURL.Text, 1) = '/'))
+  if ((Length(editDownloadZipURL.Text) > 0) and (RightStr(editDownloadZipURL.Text, 1) = '/'))
   then
   begin
-    slErrorList.Add(rsDownloadURLI2);
-    editDownloadURL.Color := clYellow;
+    slErrorList.Add(rsDownloadZipURLI2);
+    editDownloadZipURL.Color := clYellow;
     Result := True;
   end;
 
-  if ((Length(editDownloadURL.Text) > 4) and
-    (LeftStr(LowerCase(editDownloadURL.Text), 4) <> 'http')) then
+  if ((Length(editDownloadZipURL.Text) > 4) and
+    (LeftStr(LowerCase(editDownloadZipURL.Text), 4) <> 'http')) then
   begin
-    slErrorList.Add(rsDownloadURLS);
-    editDownloadURL.Color := clYellow;
+    slErrorList.Add(rsDownloadZipURLS);
+    editDownloadZipURL.Color := clYellow;
     Result := True;
   end;
 
-  if (Pos(Lowercase(editName.Text), Lowercase(editDownloadURL.Text)) = 0) then
+  if (Pos(Lowercase(editName.Text), Lowercase(editDownloadZipURL.Text)) = 0) then
   begin
-    slErrorList.Add(rsDownloadURLD);
-    editDownloadURL.Color := clYellow;
+    slErrorList.Add(rsDownloadZipURLD);
+    editDownloadZipURL.Color := clYellow;
     Result := True;
   end;
 
@@ -706,7 +707,7 @@ begin
   JSONPackage := TPackage.Create;
   try
     JSONPackage.Package.Name := editName.Text;
-    JSONPackage.Package.DownloadURL := editDownloadURL.Text;
+    JSONPackage.Package.DownloadZipURL := editDownloadZipURL.Text;
     JSONPackage.Package.ForceUpdate := cbForceUpdate.Checked;
 
     for i := 1 to stringPackageFiles.RowCount - 1 do
@@ -766,7 +767,7 @@ procedure TfrmMain.spd_CheckURLClick(Sender: TObject);
 var
   bTemp: boolean;
 begin
-  if OpenURL(editDownloadURL.Text) then
+  if OpenURL(editDownloadZipURL.Text) then
   begin
     bTemp := bShowPopupHints;
     bShowPopupHints := True;
