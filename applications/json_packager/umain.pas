@@ -36,6 +36,7 @@ unit umain;
             Moved inline procedure CreateUniqueINI to separate function
             Added Const C_DEBUGMESSAGES=TRUE/FALSE
   0.1.14.0: Various changes (GetMem)
+            BugFix: FormCloseQuery
  }
 {$mode objfpc}{$H+}
 
@@ -377,13 +378,16 @@ begin
   begin
     if MessageDlg(rsFileMayBeUns, mtConfirmation, [mbYes, mbNo], 0, mbNo) = mrNo then
       CanClose := False;
+  end
+  else
+  begin
+    CFG.WriteBool('Options', 'Virgin', False);
+    CFG.WriteBool('Options', 'DiableWarnings', bDisableWarnings);
+    CFG.UpdateFile;
+    Application.ProcessMessages;
+    CFG.Free;
+    slErrorList.Free;
   end;
-  CFG.WriteBool('Options', 'Virgin', False);
-  CFG.WriteBool('Options', 'DiableWarnings', bDisableWarnings);
-  CFG.UpdateFile;
-  Application.ProcessMessages;
-  CFG.Free;
-  slErrorList.Free;
 end;
 function TfrmMain.CreateUniqueINI(var aCount: integer):Boolean;
 // Recursively loop until correct INI found, or new one created
