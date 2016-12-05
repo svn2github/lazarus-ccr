@@ -1,5 +1,4 @@
 unit umain;
-
  { OnlinePackageManager Update JSON Editor
 
   Copyright (C)2016 usernames lainz, minesadorada @ http://forum.lazarus.freepascal.org/index.php
@@ -34,6 +33,8 @@ unit umain;
             Comment out Self.AutoAdjustLayout line in Form.Create (GetMem)
             Removed StrUtils from uses (minesadorada)
             Fixed memory leaks with CFG and slErrorList (minesadorada)
+            Moved inline procedure CreateUniqueINI to separate function
+            Added Const C_DEBUGMESSAGES=TRUE/FALSE
  }
 {$mode objfpc}{$H+}
 
@@ -45,6 +46,8 @@ uses
   Graphics, Buttons, fileutil, LazFileUtils, fileinfo, ugenericcollection, fpjsonrtti,
   Dialogs, LCLTranslator, PopupNotifier, SysUtils, inifiles,
   lclintf, lclVersion;
+
+CONST C_DEBUGMESSAGES=FALSE;
 
 type
 
@@ -432,7 +435,8 @@ begin
   If CreateUniqueINI(iIniCount) then
     CFG.WriteString('Options', 'AppPath', ProgramDirectory);
   CFG.UpdateFile;
-  ShowMessageFmt('Inifile=%s, Count=%d',[INIFilePath,iIniCount]);
+  If C_DEBUGMESSAGES=TRUE then
+    ShowMessageFmt('Inifile=%s, Count=%d',[INIFilePath,iIniCount]);
   // Pop-up hints (show on first run, then not again unless the user chooses)
   bIsVirgin := CFG.ReadBool('Options', 'Virgin', True);
   bShowPopupHints := bIsVirgin;
