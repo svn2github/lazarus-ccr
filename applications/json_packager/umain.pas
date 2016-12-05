@@ -138,6 +138,7 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure LoadItemClick(Sender: TObject);
     procedure mnu_fileNewClick(Sender: TObject);
@@ -384,9 +385,6 @@ begin
     CFG.WriteBool('Options', 'Virgin', False);
     CFG.WriteBool('Options', 'DiableWarnings', bDisableWarnings);
     CFG.UpdateFile;
-    Application.ProcessMessages;
-    CFG.Free;
-    slErrorList.Free;
   end;
 end;
 function TfrmMain.CreateUniqueINI(var aCount: integer):Boolean;
@@ -463,6 +461,12 @@ begin
     mnu_lang_es.Checked := True;
 
   bDirty := False; // No effect :(
+end;
+
+procedure TfrmMain.FormDestroy(Sender: TObject);
+begin
+    CFG.Free;
+    slErrorList.Free;
 end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
