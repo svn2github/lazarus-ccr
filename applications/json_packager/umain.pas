@@ -414,7 +414,9 @@ begin
   // Furniture
   Caption := Application.Title;
   Icon := Application.Icon;
+  {$IFNDEF IGNOREPICTURE}
   MyPopup.Icon := TPicture(Application.Icon);
+  {$ENDIF}
   editname.Text := rsMypackagenam;
   editDownloadZipURL.Text := rsHttpWwwUpdat;
   stringPackageFiles.Columns[0].Title.Caption := rsLpkFileName;
