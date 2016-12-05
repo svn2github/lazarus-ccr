@@ -23,6 +23,8 @@ object frmMain: TfrmMain
     OnPaint = cntHeaderPaint
     Align = alTop
     OnMouseDown = cntHeaderMouseDown
+    OnMouseMove = cntHeaderMouseMove
+    OnMouseUp = cntHeaderMouseUp
     object btnClose: TJvXPToolButton
       Left = 0
       Top = 0
@@ -178,7 +180,6 @@ object frmMain: TfrmMain
     Height = 41
     Top = 24
     Action = acBtn1
-    Caption = '&Generate'
     TabOrder = 4
     StyleManager = styleOffice
   end
@@ -187,7 +188,6 @@ object frmMain: TfrmMain
     Height = 41
     Top = 24
     Action = acBtn2
-    Caption = '&Optimize'
     TabOrder = 5
     Layout = blGlyphRight
     StyleManager = styleOffice
@@ -197,7 +197,6 @@ object frmMain: TfrmMain
     Height = 41
     Top = 24
     Action = acBtn4
-    Caption = 'C++ Code'
     TabOrder = 6
     Layout = blGlyphBottom
     StyleManager = styleOffice
@@ -207,7 +206,6 @@ object frmMain: TfrmMain
     Height = 41
     Top = 24
     Action = acBtn3
-    Caption = '&Copy Path'
     TabOrder = 7
     Layout = blGlyphTop
     StyleManager = styleOffice

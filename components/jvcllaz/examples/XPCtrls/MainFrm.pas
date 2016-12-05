@@ -29,9 +29,9 @@ unit MainFrm;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  Dialogs, ActnList, ImgList, JvXPCore, JvXPCheckCtrls, JvXPButtons, ExtCtrls,
-  StdCtrls, JvXPContainer, JvComponent, JvExControls;
+  LCLIntf, LCLProc, LCLType,
+  SysUtils, Classes, Graphics, Controls, Forms, Dialogs, ActnList, StdCtrls, ExtCtrls,
+  JvXPCore, JvXPCheckCtrls, JvXPButtons, JvXPContainer;
 
 type
 { TfrmMain }
@@ -71,7 +71,6 @@ type
     lbInternalPage: TLabel;
     lbWebEditor: TLabel;
     shpSeperator: TShape;
-//    styleOffice: TJvXPStyleManager;
     procedure FormCreate(Sender: TObject);
     procedure acBtn1Execute(Sender: TObject);
     procedure acBtn3Execute(Sender: TObject);
@@ -79,9 +78,13 @@ type
     procedure chkOfficeStyleClick(Sender: TObject);
     procedure chkToogleEnableClick(Sender: TObject);
     procedure cntHeaderMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure cntHeaderMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+    procedure cntHeaderMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure cntHeaderPaint(Sender: TObject; Rect: TRect; ACanvas: TCanvas; AFont: TFont);
     procedure cntNetPanelPaint(Sender: TObject; Rect: TRect; ACanvas: TCanvas; AFont: TFont);
   private
+    FDragStartPt: TPoint;
+    FDragging: Boolean;
     { Private declarations }
   public
     { Public declarations }
@@ -103,7 +106,7 @@ implementation
   Arguments: hWindow: THANDLE; Hide: boolean = True
   Result:    DWORD
 -----------------------------------------------------------------------------}
-
+                           (*
 function RemoveTitleBar(hWindow: THANDLE; Hide: boolean = True): DWORD;
 var
   R: TRect;
@@ -119,7 +122,7 @@ begin
   SetWindowPos(hWindow, 0, 0, 0, (R.Right - R.Left), (R.Bottom - R.Top),
     SWP_NOMOVE or SWP_NOZORDER or SWP_FRAMECHANGED or SWP_NOSENDCHANGING);
 end;
-
+                             *)
 {-----------------------------------------------------------------------------
   Procedure: TfrmMain.FormCreate
   Author:    mh
@@ -130,7 +133,8 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
-  RemoveTitleBar(Handle);
+//  RemoveTitleBar(Handle);
+  BorderStyle := bsNone;
 end;
 
 {-----------------------------------------------------------------------------
@@ -171,8 +175,24 @@ end;
 procedure TfrmMain.cntHeaderMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  ReleaseCapture;
-  Perform(WM_SYSCOMMAND, $F012, 0);
+  FDragStartPt := Point(X, Y);
+  FDragging := true;
+end;
+
+procedure TfrmMain.cntHeaderMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  if FDragging then
+  begin
+    Left := Left + X - FDragStartPt.X;
+    Top := Top + Y - FDragStartPt.Y;
+  end;
+end;
+
+procedure TfrmMain.cntHeaderMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  FDragging := false;
 end;
 
 {-----------------------------------------------------------------------------
