@@ -1,6 +1,6 @@
 [Setup]
 AppName=External OPM JSON package Editor
-AppVersion=0.1.11.0
+AppVersion=0.1.12.0
 DefaultDirName={pf}\OPMUtilities
 DefaultGroupName=OPM
 UninstallDisplayIcon={app}\jsoneditor.exe
