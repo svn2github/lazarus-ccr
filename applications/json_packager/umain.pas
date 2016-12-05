@@ -1,7 +1,7 @@
 unit umain;
  { OnlinePackageManager Update JSON Editor
 
-  Copyright (C)2016 usernames lainz, minesadorada @ http://forum.lazarus.freepascal.org/index.php
+  Copyright (C)2016 usernames lainz, minesadorada, GetMem @ http://forum.lazarus.freepascal.org/index.php
 
   This source is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free
@@ -33,8 +33,9 @@ unit umain;
             Comment out Self.AutoAdjustLayout line in Form.Create (GetMem)
             Removed StrUtils from uses (minesadorada)
             Fixed memory leaks with CFG and slErrorList (minesadorada)
-            Moved inline procedure CreateUniqueINI to separate function (minesadorada)
-            Added Const C_DEBUGMESSAGES=TRUE/FALSE (minesadorada)
+            Moved inline procedure CreateUniqueINI to separate function
+            Added Const C_DEBUGMESSAGES=TRUE/FALSE
+  0.1.14.0: Various changes (GetMem)
  }
 {$mode objfpc}{$H+}
 
@@ -51,8 +52,7 @@ CONST C_DEBUGMESSAGES=FALSE;
 
 type
 
-  { TPackage }
-
+  
   { TUpdatePackageFiles }
 
   TUpdatePackageFiles = class(TCollectionItem)
@@ -81,18 +81,20 @@ type
     property DownloadZipURL: string read FDownloadZipURL write FDownloadZipURL;
   end;
 
-  TPackage = class(TPersistent)
+  { TUpdatePackage }
+
+  TUpdatePackage = class(TPersistent)
   private
-    FPackage: TUpdatePackageData;
-    FPackageFiles: TPackageFilesList;
+    FUpdatePackageData: TUpdatePackageData;
+    FUpdatePackageFiles: TPackageFilesList;
   public
     constructor Create;
     destructor Destroy; override;
     function LoadFromFile(AFileName: string): boolean;
     function SaveToFile(AFileName: string): boolean;
   published
-    property Package: TUpdatePackageData read FPackage write FPackage;
-    property PackageFiles: TPackageFilesList read FPackageFiles write FPackageFiles;
+    property UpdatePackageData: TUpdatePackageData read FUpdatePackageData write FUpdatePackageData;
+    property UpdatePackageFiles: TPackageFilesList read FUpdatePackageFiles write FUpdatePackageFiles;
   end;
 
   { TfrmMain }
@@ -149,7 +151,7 @@ type
     procedure spd_CheckURLClick(Sender: TObject);
   private
     { private declarations }
-    JSONPackage: TPackage;
+    JSONPackage: TUpdatePackage;
     bForceSaveAs, bShowPopupHints, bDisableWarnings, bDirty, bIsVirgin: boolean;
     sJSONFilePath: string;
     sUpdateDirectory, sZipDirectory: string;
@@ -375,16 +377,13 @@ begin
   begin
     if MessageDlg(rsFileMayBeUns, mtConfirmation, [mbYes, mbNo], 0, mbNo) = mrNo then
       CanClose := False;
-  end
-  else
-  begin
-    CFG.WriteBool('Options', 'Virgin', False);
-    CFG.WriteBool('Options', 'DiableWarnings', bDisableWarnings);
-    CFG.UpdateFile;
-    Application.ProcessMessages;
-    CFG.Free;
-    slErrorList.Free;
   end;
+  CFG.WriteBool('Options', 'Virgin', False);
+  CFG.WriteBool('Options', 'DiableWarnings', bDisableWarnings);
+  CFG.UpdateFile;
+  Application.ProcessMessages;
+  CFG.Free;
+  slErrorList.Free;
 end;
 function TfrmMain.CreateUniqueINI(var aCount: integer):Boolean;
 // Recursively loop until correct INI found, or new one created
@@ -407,10 +406,8 @@ var
   sLang: string;
   iIniCount:Integer;
 begin
-  {
   Self.AutoAdjustLayout(lapAutoAdjustForDPI, Self.DesignTimeDPI,
     Screen.PixelsPerInch, Self.Width, ScaleX(Self.Width, Self.DesignTimeDPI));
-  }
   // Enable AutoSize again to get correct Height
   editName.AutoSize := True;
   editDownloadZipURL.AutoSize := True;
@@ -480,19 +477,19 @@ begin
   begin
     sJSONFilePath := FileOpen1.Dialog.Filename;
     CFG.WriteString('Options', 'LastLoadedJSONPath', ExtractFileDir(sJSONFilePath));
-    JSONPackage := TPackage.Create;
+    JSONPackage := TUpdatePackage.Create;
     try
       if JSONPackage.LoadFromFile(FileOpen1.Dialog.FileName) then
       begin
-        editName.Text := JSONPackage.Package.Name;
-        editDownloadZipURL.Text := JSONPackage.Package.DownloadZipURL;
-        cbForceUpdate.Checked := JSONPackage.Package.ForceUpdate;
+        editName.Text := JSONPackage.UpdatePackageData.Name;
+        editDownloadZipURL.Text := JSONPackage.UpdatePackageData.DownloadZipURL;
+        cbForceUpdate.Checked := JSONPackage.UpdatePackageData.ForceUpdate;
 
-        stringPackageFiles.RowCount := JSONPackage.PackageFiles.Count + 1;
-        for i := 0 to JSONPackage.PackageFiles.Count - 1 do
+        stringPackageFiles.RowCount := JSONPackage.UpdatePackageFiles.Count + 1;
+        for i := 0 to JSONPackage.UpdatePackageFiles.Count - 1 do
         begin
-          stringPackageFiles.Cells[0, i + 1] := JSONPackage.PackageFiles.Items[i].Name;
-          stringPackageFiles.Cells[1, i + 1] := JSONPackage.PackageFiles.Items[i].Version;
+          stringPackageFiles.Cells[0, i + 1] := JSONPackage.UpdatePackageFiles.Items[i].Name;
+          stringPackageFiles.Cells[1, i + 1] := JSONPackage.UpdatePackageFiles.Items[i].Version;
         end;
       end
       else
@@ -727,15 +724,15 @@ begin
       Exit;
   end;
 
-  JSONPackage := TPackage.Create;
+  JSONPackage := TUpdatePackage.Create;
   try
-    JSONPackage.Package.Name := editName.Text;
-    JSONPackage.Package.DownloadZipURL := editDownloadZipURL.Text;
-    JSONPackage.Package.ForceUpdate := cbForceUpdate.Checked;
+    JSONPackage.UpdatePackageData.Name := editName.Text;
+    JSONPackage.UpdatePackageData.DownloadZipURL := editDownloadZipURL.Text;
+    JSONPackage.UpdatePackageData.ForceUpdate := cbForceUpdate.Checked;
 
     for i := 1 to stringPackageFiles.RowCount - 1 do
     begin
-      with JSONPackage.PackageFiles.Add do
+      with JSONPackage.UpdatePackageFiles.Add do
       begin
         Name := stringPackageFiles.Cells[0, i];
         Version := stringPackageFiles.Cells[1, i];
@@ -801,24 +798,24 @@ end;
 
 { TPackage }
 
-constructor TPackage.Create;
+constructor TUpdatePackage.Create;
 begin
-  FPackage := TUpdatePackageData.Create;
-  FPackageFiles := TPackageFilesList.Create;
+  FUpdatePackageData := TUpdatePackageData.Create;
+  FUpdatePackageFiles := TPackageFilesList.Create;
 end;
 
-destructor TPackage.Destroy;
+destructor TUpdatePackage.Destroy;
 var
   c: TCollectionItem;
 begin
-  FPackage.Free;
-  for c in FPackageFiles do
+  FUpdatePackageData.Free;
+  for c in FUpdatePackageFiles do
     c.Free;
-  FPackageFiles.Free;
+  FUpdatePackageFiles.Free;
   inherited Destroy;
 end;
 
-function TPackage.LoadFromFile(AFileName: string): boolean;
+function TUpdatePackage.LoadFromFile(AFileName: string): boolean;
 var
   DeStreamer: TJSONDeStreamer;
   s: TStringList;
@@ -841,7 +838,7 @@ begin
   end;
 end;
 
-function TPackage.SaveToFile(AFileName: string): boolean;
+function TUpdatePackage.SaveToFile(AFileName: string): boolean;
 var
   Streamer: TJSONStreamer;
   s: TStringList;
