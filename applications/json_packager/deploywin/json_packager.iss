@@ -40,6 +40,9 @@ Source: "jsoneditor.exe"; DestDir: "{app}"; Check: not Is64BitInstallMode; Flags
 ; Source: "readme.txt"; DestDir: "{app}"; Flags: isreadme
 Source: ".\locale\jsoneditor.en.po"; DestDir: "{app}\locale";  Flags: solidbreak
 Source: ".\locale\jsoneditor.es.po"; DestDir: "{app}\locale";
+Source: ".\locale\jsoneditor.en.mo"; DestDir: "{app}\locale";
+Source: ".\locale\jsoneditor.es.mo"; DestDir: "{app}\locale";
+Source: ".\locale\jsoneditor.po"; DestDir: "{app}\locale";
 
 [Icons]
 Name: "{group}\External OPM JSON package Editor"; Filename: "{app}\jsoneditor.exe"

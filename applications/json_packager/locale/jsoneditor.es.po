@@ -20,7 +20,7 @@ msgid ""
 "Add Package File:\n"
 "The update zip can contain more than one lpk file\n"
 "deployed to the same place.\n"
-msgstr "Agregar archivo del paquete: La actualización postal puede contener más de un archivo LPK desplegado en el mismo lugar.\n"
+msgstr "Agregar archivo del paquete: La actualización postal puede contener más de un archivo LPK desplegado en el mismo lugar."
 
 #: tfrmmain.btnremove.caption
 msgid "Remove"
@@ -30,7 +30,7 @@ msgstr "Eliminar"
 msgid ""
 "Remove Package File:\n"
 "Deletes the last entry from the list\n"
-msgstr "Eliminar archivo del paquete: Borra la última entrada de la lista\n"
+msgstr "Eliminar archivo del paquete: Borra la última entrada de la lista"
 
 #: tfrmmain.cbforcenotify.caption
 msgid "Force Notify"
@@ -41,7 +41,7 @@ msgid ""
 "Force Notify check box:\n"
 "If this is checked the OPM user will be notified\n"
 "of your update.  Only check this if the update is important.\n"
-msgstr "Casilla de verificación notificar de fuerza: Si esto se comprueba se notificará al usuario de la OPM de su actualización.  Sólo esto Compruebe si la actualización es importante.\n"
+msgstr "Casilla de verificación notificar de fuerza: Si esto se comprueba se notificará al usuario de la OPM de su actualización.  Sólo esto Compruebe si la actualización es importante."
 
 #: tfrmmain.cmd_close.caption
 msgid "&Close"
@@ -55,13 +55,13 @@ msgstr "Guardar"
 msgid ""
 "Save the current configuration to disk\n"
 "as a JSON update file\n"
-msgstr "Guardar la configuración actual en el disco como un archivo de actualización JSON\n"
+msgstr "Guardar la configuración actual en el disco como un archivo de actualización JSON"
 
 #: tfrmmain.editdownloadzipurl.hint
 msgid ""
 "Download URL:\n"
 "Include the FULL url needed to download the package Zip file\n"
-msgstr "URL de descarga: Incluir el url COMPLETO necesario para descargar el archivo Zip del paquete\n"
+msgstr "URL de descarga: Incluir el url COMPLETO necesario para descargar el archivo Zip del paquete"
 
 #: tfrmmain.editname.hint
 msgid ""
@@ -157,7 +157,7 @@ msgid ""
 "Update Zip Name:\n"
 "Click this to browse your system to find\n"
 " an existing Update Zip\n"
-msgstr "Actualización Zip nombre: Haga clic aquí para ver su sistema para encontrar un Zip de actualización existentes\n"
+msgstr "Actualización Zip nombre: Haga clic aquí para ver su sistema para encontrar un Zip de actualización existentes"
 
 #: tfrmmain.spd_checkurl.caption
 msgid "Check URL"
@@ -323,3 +323,4 @@ msgstr "¿Quieres copiar la carpeta de %s %s?"
 #: umain.rsyoumayneedto
 msgid "(You may need to restart the app to see the change)"
 msgstr "(Puede que necesite reiniciar la aplicación para ver el cambio)"
+
