@@ -61,7 +61,6 @@
             </Options>
           </Linking>
           <Other>
-            <CustomOptions Value="-FcUTF8"/>
             <OtherDefines Count="1">
               <Define0 Value="IGNOREPICTURE"/>
             </OtherDefines>
@@ -98,6 +97,9 @@
               </Win32>
             </Options>
           </Linking>
+          <Other>
+            <CustomOptions Value="-FcUTF8"/>
+          </Other>
         </CompilerOptions>
       </Item3>
       <Item4 Name="Linux64">
@@ -131,6 +133,7 @@
             </Options>
           </Linking>
           <Other>
+            <CustomOptions Value="-FcUTF8"/>
             <OtherDefines Count="1">
               <Define0 Value="IGNOREPICTURE"/>
             </OtherDefines>
@@ -167,6 +170,9 @@
               </Win32>
             </Options>
           </Linking>
+          <Other>
+            <CustomOptions Value="-FcUTF8"/>
+          </Other>
         </CompilerOptions>
       </Item5>
       <Item6 Name="DEBUG Win64">

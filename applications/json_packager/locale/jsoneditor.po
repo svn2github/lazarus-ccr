@@ -1,4 +1,4 @@
-﻿msgid ""
+msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
 #: tfrmmain.btnadd.caption
@@ -27,7 +27,6 @@ msgid "Force Notify"
 msgstr ""
 
 #: tfrmmain.cbforcenotify.hint
-msgctxt "tfrmmain.cbforcenotify.hint"
 msgid ""
 "Force Notify check box:\n"
 "If this is checked the OPM user will be notified\n"
@@ -49,7 +48,6 @@ msgid ""
 msgstr ""
 
 #: tfrmmain.editdownloadzipurl.hint
-msgctxt "tfrmmain.editdownloadzipurl.hint"
 msgid ""
 "Download URL:\n"
 "Include the FULL url needed to download the package Zip file\n"
@@ -83,7 +81,6 @@ msgid "Save As"
 msgstr ""
 
 #: tfrmmain.lbldownloadzipurl.caption
-msgctxt "tfrmmain.lbldownloadzipurl.caption"
 msgid "Download URL:"
 msgstr ""
 
@@ -176,22 +173,18 @@ msgid "Compiled with FPC V:%s and Lazarus V:%d.%d%s for the %s - %s platform%s%s
 msgstr ""
 
 #: umain.rsdownloadzipurld
-msgctxt "umain.rsdownloadzipurld"
 msgid "- Download URL does not contain the zipfile name"
 msgstr ""
 
 #: umain.rsdownloadzipurli
-msgctxt "umain.rsdownloadzipurli"
 msgid "- Download URL is too short or missing"
 msgstr ""
 
 #: umain.rsdownloadzipurli2
-msgctxt "umain.rsdownloadzipurli2"
 msgid "- Download URL is incomplete"
 msgstr ""
 
 #: umain.rsdownloadzipurls
-msgctxt "umain.rsdownloadzipurls"
 msgid "- Download URL should start with \"http\""
 msgstr ""
 
