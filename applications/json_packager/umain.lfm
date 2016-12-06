@@ -35,15 +35,15 @@ object frmMain: TfrmMain
     Color = clWindow
     TabOrder = 0
   end
-  object cbForceUpdate: TCheckBox
+  object cbForceNotify: TCheckBox
     Left = 8
     Height = 19
-    Hint = 'Force Update check box:'#13#10'If this is checked the OPM user will be notified'#13#10'of your update.  Only check this if the update is important.'
+    Hint = 'Force Notify check box:'#13#10'If this is checked the OPM user will be notified'#13#10'of your update.  Only check this if the update is important.'
     Top = 72
-    Width = 90
-    Caption = 'Force Update'
+    Width = 85
+    Caption = 'Force Notify'
     Color = clWindow
-    OnMouseUp = cbForceUpdateMouseUp
+    OnMouseUp = cbForceNotifyMouseUp
     ParentColor = False
     TabOrder = 1
   end

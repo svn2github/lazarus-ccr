@@ -37,17 +37,17 @@ msgstr ""
 "Remove Package File:\n"
 "Deletes the last entry from the list\n"
 
-#: tfrmmain.cbforceupdate.caption
-msgid "Force Update"
-msgstr "Force Update"
+#: tfrmmain.cbforcenotify.caption
+msgid "Force Notify"
+msgstr "Force Notify"
 
-#: tfrmmain.cbforceupdate.hint
+#: tfrmmain.cbforcenotify.hint
 msgid ""
-"Force Update check box:\n"
+"Force Notify check box:\n"
 "If this is checked the OPM user will be notified\n"
 "of your update.  Only check this if the update is important.\n"
 msgstr ""
-"Force Update check box:\n"
+"Force Notify check box:\n"
 "If this is checked the OPM user will be notified\n"
 "of your update.  Only check this if the update is important.\n"
 

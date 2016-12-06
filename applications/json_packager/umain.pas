@@ -33,13 +33,14 @@ unit umain;
             Comment out Self.AutoAdjustLayout line in Form.Create (GetMem)
             Removed StrUtils from uses (minesadorada)
             Fixed memory leaks with CFG and slErrorList (minesadorada)
-            Moved inline procedure CreateUniqueINI to separate function
-            Added Const C_DEBUGMESSAGES=TRUE/FALSE
+            Moved inline procedure CreateUniqueINI to separate function (minesadorada)
+            Added Const C_DEBUGMESSAGES=TRUE/FALSE (minesadorada)
   0.1.14.0: Various changes (GetMem)
-            BugFix: FormCloseQuery
-  0.1.15.0: BugFix: File/Save didn't add the '.json' suffix in Linux
-            Addition: After Loading, run validation tests
-  0.1.16.0: ??
+            BugFix: FormCloseQuery(minesadorada)
+  0.1.15.0: BugFix: File/Save didn't add the '.json' suffix in Linux (minesadorada)
+            Addition: After Loading, run validation tests(minesadorada)
+  0.1.16.0: Renamed ForceUpdate to ForceNotify (GetMem/minesadorada)
+  0.1.17.0: ??
  }
 {$mode objfpc}{$H+}
 
@@ -75,13 +76,13 @@ type
   TUpdatePackageData = class(TPersistent)
   private
     FDownloadZipURL: string;
-    FForceUpdate: boolean;
+    FForceNotify: boolean;
     FName: string;
   public
     constructor Create;
   published
     property Name: string read FName write FName;
-    property ForceUpdate: boolean read FForceUpdate write FForceUpdate;
+    property ForceNotify: boolean read FForceNotify write FForceNotify;
     property DownloadZipURL: string read FDownloadZipURL write FDownloadZipURL;
   end;
 
@@ -109,7 +110,7 @@ type
     cmd_save: TBitBtn;
     btnAdd: TButton;
     btnRemove: TButton;
-    cbForceUpdate: TCheckBox;
+    cbForceNotify: TCheckBox;
     editName: TEdit;
     editDownloadZipURL: TEdit;
     FileOpen1: TFileOpen;
@@ -136,7 +137,7 @@ type
     stringPackageFiles: TStringGrid;
     procedure btnAddClick(Sender: TObject);
     procedure btnRemoveClick(Sender: TObject);
-    procedure cbForceUpdateMouseUp(Sender: TObject; Button: TMouseButton;
+    procedure cbForceNotifyMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -228,7 +229,7 @@ resourcestring
 constructor TUpdatePackageData.Create;
 begin
   FName := '';
-  FForceUpdate := False;
+  FForceNotify := False;
   FDownloadZipURL := '';
 end;
 
@@ -357,18 +358,18 @@ begin
     stringPackageFiles.RowCount := stringPackageFiles.RowCount - 1;
 end;
 
-procedure TfrmMain.cbForceUpdateMouseUp(Sender: TObject; Button: TMouseButton;
+procedure TfrmMain.cbForceNotifyMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: integer);
 var
   s: string;
 begin
   if bDisableWarnings then
     exit;
-  if cbForceUpdate.Checked then
+  if cbForceNotify.Checked then
   begin
     s := rsThisOptionSh;
     if MessageDlg(s, mtConfirmation, [mbOK, mbAbort], 0, mbAbort) = mrAbort then
-      cbForceUpdate.Checked := False;
+      cbForceNotify.Checked := False;
   end;
 end;
 
@@ -495,7 +496,7 @@ begin
       begin
         editName.Text := JSONPackage.UpdatePackageData.Name;
         editDownloadZipURL.Text := JSONPackage.UpdatePackageData.DownloadZipURL;
-        cbForceUpdate.Checked := JSONPackage.UpdatePackageData.ForceUpdate;
+        cbForceNotify.Checked := JSONPackage.UpdatePackageData.ForceNotify;
         stringPackageFiles.RowCount := JSONPackage.UpdatePackageFiles.Count + 1;
         for i := 0 to JSONPackage.UpdatePackageFiles.Count - 1 do
         begin
@@ -528,7 +529,7 @@ procedure TfrmMain.mnu_fileNewClick(Sender: TObject);
 begin
   editname.Text := rsMypackagenam;
   editDownloadZipURL.Text := rsHttpWwwUpdat;
-  cbForceUpdate.Checked := False;
+  cbForceNotify.Checked := False;
   stringPackageFiles.RowCount := 1;
   sJSONFilePath := '';
   sZipDirectory := '';
@@ -751,7 +752,7 @@ begin
   try
     JSONPackage.UpdatePackageData.Name := editName.Text;
     JSONPackage.UpdatePackageData.DownloadZipURL := editDownloadZipURL.Text;
-    JSONPackage.UpdatePackageData.ForceUpdate := cbForceUpdate.Checked;
+    JSONPackage.UpdatePackageData.ForceNotify := cbForceNotify.Checked;
 
     for i := 1 to stringPackageFiles.RowCount - 1 do
     begin

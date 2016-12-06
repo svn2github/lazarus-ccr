@@ -37,13 +37,13 @@ msgstr ""
 "Quitar Archivo de Paquete:\n"
 "Elimina la última entrada de la lista\n"
 
-#: tfrmmain.cbforceupdate.caption
-msgid "Force Update"
-msgstr "Forzar Actualización"
+#: tfrmmain.cbforcenotify.caption
+msgid "Force Notify"
+msgstr "Forzar Actualizaciones"
 
-#: tfrmmain.cbforceupdate.hint
+#: tfrmmain.cbforcenotify.hint
 msgid ""
-"Force Update check box:\n"
+"Force Notify check box:\n"
 "If this is checked the OPM user will be notified\n"
 "of your update.  Only check this if the update is important.\n"
 msgstr ""
@@ -69,8 +69,6 @@ msgstr ""
 "como un archivo JSON de actualización\n"
 
 #: tfrmmain.editdownloadzipurl.hint
-#, fuzzy
-msgctxt "tfrmmain.editdownloadzipurl.hint"
 msgid ""
 "Download URL:\n"
 "Include the FULL url needed to download the package Zip file\n"
@@ -211,26 +209,18 @@ msgid "Compiled with FPC V:%s and Lazarus V:%d.%d%s for the %s - %s platform%s%s
 msgstr "Compilado con FPC V:%s y Lazarus V:%d.%d%s para la plataforma %s - %s %s%s"
 
 #: umain.rsdownloadzipurld
-#, fuzzy
-msgctxt "umain.rsdownloadzipurld"
 msgid "- Download URL does not contain the zipfile name"
 msgstr "- URL de descarga no contiene el nombre del zip"
 
 #: umain.rsdownloadzipurli
-#, fuzzy
-msgctxt "umain.rsdownloadzipurli"
 msgid "- Download URL is too short or missing"
 msgstr "- URL de descarga es muy corta o está vacía"
 
 #: umain.rsdownloadzipurli2
-#, fuzzy
-msgctxt "umain.rsdownloadzipurli2"
 msgid "- Download URL is incomplete"
 msgstr "- URL de descarga incompleta"
 
 #: umain.rsdownloadzipurls
-#, fuzzy
-msgctxt "umain.rsdownloadzipurls"
 msgid "- Download URL should start with \"http\""
 msgstr "- URL de descarga debe empezar con \"http\""
 
@@ -267,7 +257,6 @@ msgid "One of the required fields is missing or wrong."
 msgstr "Uno de los campos requeridos esta vacío o mal."
 
 #: umain.rsoneofthereqn
-msgctxt "umain.rsoneofthereqn"
 msgid "One or more of the required fields are missing or wrong."
 msgstr "Uno de los campos requeridos esta vacío o mal. Arréglalo, luego intenta de nuevo."
 
