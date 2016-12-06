@@ -1,15 +1,5 @@
-﻿msgid ""
-msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"MIME-Version: 1.0\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Language: en\n"
-"X-Generator: Poedit 1.8.8\n"
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
 
 #: tfrmmain.btnadd.caption
 msgid "Add"
@@ -154,11 +144,8 @@ msgid "English"
 msgstr "English"
 
 #: tfrmmain.mnu_lang_es.caption
-#, fuzzy
 msgid "Español"
-msgstr ""
-"Español\n"
-"Spanish\n"
+msgstr "Español"
 
 #: tfrmmain.saveasitem.caption
 msgid "Save As..."
@@ -209,22 +196,18 @@ msgid "Compiled with FPC V:%s and Lazarus V:%d.%d%s for the %s - %s platform%s%s
 msgstr "Compiled with FPC V:%s and Lazarus V:%d.%d%s for the %s - %s platform%s%s"
 
 #: umain.rsdownloadzipurld
-msgctxt "umain.rsdownloadzipurld"
 msgid "- Download URL does not contain the zipfile name"
 msgstr "- Download URL does not contain the zipfile name"
 
 #: umain.rsdownloadzipurli
-msgctxt "umain.rsdownloadzipurli"
 msgid "- Download URL is too short or missing"
 msgstr "- Download URL is too short or missing"
 
 #: umain.rsdownloadzipurli2
-msgctxt "umain.rsdownloadzipurli2"
 msgid "- Download URL is incomplete"
 msgstr "- Download URL is incomplete"
 
 #: umain.rsdownloadzipurls
-msgctxt "umain.rsdownloadzipurls"
 msgid "- Download URL should start with \"http\""
 msgstr "- Download URL should start with \"http\""
 
@@ -318,7 +301,7 @@ msgstr "Update"
 
 #: umain.rsupdatejsonsf
 msgid "Update file \"%s\" failed to load correctly."
-msgstr "Update file \"%s\" failed to load correctly."
+msgstr "Update"
 
 #: umain.rsupdatezipnam
 msgid "- Update zip name is too short or missing"
@@ -342,9 +325,7 @@ msgstr "Version entry #%d needs to be of the form n.n.n.n"
 
 #: umain.rswouldyoulike
 msgid "Would you like to copy %s to the %s folder?"
-msgstr ""
-"Would you like to copy %s to the %s\n"
-"folder?\n"
+msgstr "Would you like to copy %s to the %s folder?"
 
 #: umain.rsyoumayneedto
 msgid "(You may need to restart the app to see the change)"
