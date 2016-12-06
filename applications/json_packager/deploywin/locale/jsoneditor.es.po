@@ -323,6 +323,10 @@ msgstr "(Puedes cambiar estos consejos en el menú Ayuda)"
 msgid "Update"
 msgstr "Actualización"
 
+#: umain.rsupdatejsonsf
+msgid "Update file \"%s\" failed to load correctly."
+msgstr "Error al cargar \"%s\" correctamente el archivo de actualización"
+
 #: umain.rsupdatezipnam
 msgid "- Update zip name is too short or missing"
 msgstr "- El nombre del zip es muy corto o está vacío"

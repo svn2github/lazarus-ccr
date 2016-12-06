@@ -37,6 +37,9 @@ unit umain;
             Added Const C_DEBUGMESSAGES=TRUE/FALSE
   0.1.14.0: Various changes (GetMem)
             BugFix: FormCloseQuery
+  0.1.15.0: BugFix: File/Save didn't add the '.json' suffix in Linux
+            Addition: After Loading, run validation tests
+  0.1.16.0: ??
  }
 {$mode objfpc}{$H+}
 
@@ -218,6 +221,7 @@ resourcestring
   rsYouMayNeedTo = '(You may need to restart the app to see the change)';
   rsThereAreOneO = '- There are one or more .lpk entries with the same name.%s'
     + '- Every .lpk entry must have a unique name.';
+  rsUpdateJsonSF = 'Update file "%s" failed to load correctly.';
 
 { TUpdatePackageData }
 
@@ -492,13 +496,24 @@ begin
         editName.Text := JSONPackage.UpdatePackageData.Name;
         editDownloadZipURL.Text := JSONPackage.UpdatePackageData.DownloadZipURL;
         cbForceUpdate.Checked := JSONPackage.UpdatePackageData.ForceUpdate;
-
         stringPackageFiles.RowCount := JSONPackage.UpdatePackageFiles.Count + 1;
         for i := 0 to JSONPackage.UpdatePackageFiles.Count - 1 do
         begin
           stringPackageFiles.Cells[0, i + 1] := JSONPackage.UpdatePackageFiles.Items[i].Name;
           stringPackageFiles.Cells[1, i + 1] := JSONPackage.UpdatePackageFiles.Items[i].Version;
         end;
+          if ValidationFailed then
+          begin
+            if (slErrorList.Count > 1) then
+              ShowMessage(Format(rsUpdateJsonSF, [ExtractFileName(sJSONFilePath)]) + LineEnding
+              + LineEnding + rsOneOfTheReqn + LineEnding + slErrorList.Text +
+                LineEnding + rsFixThenTryAg)
+            else
+              ShowMessage(Format(rsUpdateJsonSF,[ExtractFileName(sJSONFilePath)]) + LineEnding
+              + LineEnding + rsOneOfTheReq1 + LineEnding + slErrorList.Text +
+                LineEnding + rsFixThenTryAg);
+            Exit;
+          end;
       end
       else
         ShowMessageFmt('There was a problem loading "%s" - is it corrupted or in the wrong format?',
@@ -725,7 +740,7 @@ begin
   if bForceSaveAs or (sJSONFilePath = '') then
   begin
     FileSaveAs1.Dialog.InitialDir := sUpdateDirectory;
-    FileSaveAs1.Dialog.FileName := 'update_' + ExtractFilenameOnly(editName.Text);
+    FileSaveAs1.Dialog.FileName := 'update_' + ExtractFilenameOnly(editName.Text) + '.json';
     if FileSaveAs1.Dialog.Execute then
       sJSONFilePath := FileSaveAs1.Dialog.FileName
     else

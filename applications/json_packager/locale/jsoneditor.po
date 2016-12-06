@@ -116,7 +116,7 @@ msgstr ""
 
 #: tfrmmain.mnu_helpdisablewarnings.caption
 msgid "Disable warnings"
-msgstr "Desactivar Advertencias"
+msgstr ""
 
 #: tfrmmain.mnu_helpshowhints.caption
 msgid "Show Popup Hints"
@@ -280,6 +280,10 @@ msgstr ""
 
 #: umain.rsupdate
 msgid "Update"
+msgstr ""
+
+#: umain.rsupdatejsonsf
+msgid "Update file \"%s\" failed to load correctly."
 msgstr ""
 
 #: umain.rsupdatezipnam
