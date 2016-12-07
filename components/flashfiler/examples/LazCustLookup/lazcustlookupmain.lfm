@@ -1,0 +1,509 @@
+object Form1: TForm1
+  Left = 315
+  Height = 478
+  Top = 121
+  Width = 604
+  Caption = 'FlashFiler for Lazarus Demo2'
+  ClientHeight = 478
+  ClientWidth = 604
+  OnCreate = FormCreate
+  LCLVersion = '1.6.1.0'
+  object ToolBar1: TToolBar
+    Left = 0
+    Height = 22
+    Top = 0
+    Width = 604
+    AutoSize = True
+    Caption = 'ToolBar1'
+    EdgeBorders = []
+    TabOrder = 0
+    object DBNavigator1: TDBNavigator
+      Left = 1
+      Height = 22
+      Top = 0
+      Width = 241
+      BevelOuter = bvNone
+      ChildSizing.EnlargeHorizontal = crsScaleChilds
+      ChildSizing.EnlargeVertical = crsScaleChilds
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 100
+      ClientHeight = 22
+      ClientWidth = 241
+      DataSource = DataSource1
+      Options = []
+      TabOrder = 0
+    end
+    object DBLookupComboBox1: TDBLookupComboBox
+      Left = 242
+      Height = 21
+      Top = 0
+      Width = 100
+      DataField = 'Company'
+      DataSource = DataSource1
+      ListFieldIndex = 0
+      LookupCache = False
+      TabOrder = 1
+    end
+  end
+  object DBGrid1: TDBGrid
+    Left = 0
+    Height = 366
+    Top = 22
+    Width = 604
+    Align = alClient
+    Color = clWindow
+    Columns = <>
+    DataSource = DataSource1
+    TabOrder = 1
+  end
+  object Memo1: TMemo
+    Left = 0
+    Height = 90
+    Top = 388
+    Width = 604
+    Align = alBottom
+    Lines.Strings = (
+      'TDBLookupComboBox shows no Fieldvalues'
+      ''
+      '[Solved for Loookup-Field in TDBGrid'
+      'Lookup-Fields raises EVariantError-Exception on FreePascal:'
+      'Try to Change Value of Customer-Field.'
+      '--'
+      'ffdb'
+      '7929..'
+      'EVariantError : Invalid variant type cast'
+      '--'
+      ']'
+    )
+    ScrollBars = ssVertical
+    TabOrder = 2
+  end
+  object ffLegacyTransport1: TffLegacyTransport
+    Enabled = True
+    ServerName = 'Local server'
+    left = 366
+    top = 198
+  end
+  object FFRemoteServerEngine1: TFFRemoteServerEngine
+    Transport = ffLegacyTransport1
+    left = 282
+    top = 198
+  end
+  object ffClient1: TffClient
+    Active = True
+    ClientName = 'ffClient1Laz'
+    ServerEngine = FFRemoteServerEngine1
+    left = 448
+    top = 198
+  end
+  object ffSession1: TffSession
+    Active = True
+    ClientName = 'ffClient1Laz'
+    SessionName = 'ffSession1laz'
+    TimeOut = 2000
+    left = 510
+    top = 198
+  end
+  object ffDatabase1: TffDatabase
+    AliasName = 'mythicdb'
+    Connected = True
+    DatabaseName = 'DbLookuplaz'
+    SessionName = 'ffSession1laz'
+    left = 282
+    top = 266
+  end
+  object ffTable1: TffTable
+    DatabaseName = 'DbLookuplaz'
+    FieldDefs = <    
+      item
+        Name = 'OrderNo'
+        DataType = ftAutoInc
+        Precision = -1
+      end    
+      item
+        Name = 'Status'
+        DataType = ftString
+        Precision = -1
+        Size = 1
+      end    
+      item
+        Name = 'CustNo'
+        DataType = ftInteger
+        Precision = -1
+      end    
+      item
+        Name = 'SaleDate'
+        DataType = ftDateTime
+        Precision = -1
+      end    
+      item
+        Name = 'ShipDate'
+        DataType = ftDateTime
+        Precision = -1
+      end    
+      item
+        Name = 'EmpNo'
+        DataType = ftInteger
+        Precision = -1
+      end    
+      item
+        Name = 'ShipToContact'
+        DataType = ftString
+        Precision = -1
+        Size = 20
+      end    
+      item
+        Name = 'ShipToAddr1'
+        DataType = ftString
+        Precision = -1
+        Size = 30
+      end    
+      item
+        Name = 'ShipToAddr2'
+        DataType = ftString
+        Precision = -1
+        Size = 30
+      end    
+      item
+        Name = 'ShipToCity'
+        DataType = ftString
+        Precision = -1
+        Size = 15
+      end    
+      item
+        Name = 'ShipToState'
+        DataType = ftString
+        Precision = -1
+        Size = 20
+      end    
+      item
+        Name = 'ShipToZip'
+        DataType = ftString
+        Precision = -1
+        Size = 10
+      end    
+      item
+        Name = 'ShipToCountry'
+        DataType = ftString
+        Precision = -1
+        Size = 20
+      end    
+      item
+        Name = 'ShipToPhone'
+        DataType = ftString
+        Precision = -1
+        Size = 15
+      end    
+      item
+        Name = 'ShipVIA'
+        DataType = ftString
+        Precision = -1
+        Size = 7
+      end    
+      item
+        Name = 'PO'
+        DataType = ftString
+        Precision = -1
+        Size = 15
+      end    
+      item
+        Name = 'Terms'
+        DataType = ftString
+        Precision = -1
+        Size = 6
+      end    
+      item
+        Name = 'PaymentMethod'
+        DataType = ftString
+        Precision = -1
+        Size = 7
+      end    
+      item
+        Name = 'CCNumber'
+        DataType = ftString
+        Precision = -1
+        Size = 16
+      end    
+      item
+        Name = 'CCExpMonth'
+        DataType = ftSmallint
+        Precision = -1
+      end    
+      item
+        Name = 'CCExpYear'
+        DataType = ftSmallint
+        Precision = -1
+      end    
+      item
+        Name = 'ItemsTotal'
+        DataType = ftCurrency
+        Precision = -1
+      end    
+      item
+        Name = 'TaxRate'
+        DataType = ftFloat
+        Precision = -1
+      end    
+      item
+        Name = 'Freight'
+        DataType = ftCurrency
+        Precision = -1
+      end    
+      item
+        Name = 'AmountPaid'
+        DataType = ftCurrency
+        Precision = -1
+      end    
+      item
+        Name = 'DistribCenterID'
+        DataType = ftInteger
+        Precision = -1
+      end>
+    FilterOptions = []
+    IndexDefs = <    
+      item
+        Name = 'Sequential Access Index'
+        Options = [ixUnique, ixCaseInsensitive, ixExpression]
+      end    
+      item
+        Name = 'FF$PRIMARY'
+        Fields = 'OrderNo'
+        Options = [ixUnique]
+      end    
+      item
+        Name = 'CustNo'
+        Fields = 'CustNo'
+        Options = []
+      end    
+      item
+        Name = 'CustNo_SaleDate'
+        Fields = 'CustNo;SaleDate'
+        Options = [ixCaseInsensitive]
+      end    
+      item
+        Name = 'Status'
+        Fields = 'Status'
+        Options = [ixCaseInsensitive]
+      end    
+      item
+        Name = 'ByDistribCenter'
+        Fields = 'DistribCenterID'
+        Options = [ixCaseInsensitive]
+      end>
+    IndexName = 'CustNo'
+    SessionName = 'ffSession1laz'
+    TableName = 'orders'
+    left = 366
+    top = 268
+    object ffTable1OrderNo: TAutoIncField
+      FieldKind = fkData
+      FieldName = 'OrderNo'
+      Index = 0
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object ffTable1Status: TStringField
+      FieldKind = fkData
+      FieldName = 'Status'
+      Index = 1
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 1
+    end
+    object ffTable1CustNo: TLongintField
+      FieldKind = fkData
+      FieldName = 'CustNo'
+      Index = 2
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object StringField1: TStringField
+      FieldKind = fkLookup
+      FieldName = 'Company'
+      Index = 3
+      KeyFields = 'CustNo'
+      LookupCache = False
+      LookupDataSet = ffTaCustomer
+      LookupKeyFields = 'ID'
+      LookupResultField = 'Company'
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 30
+    end
+    object ffTable1SaleDate: TDateTimeField
+      FieldKind = fkData
+      FieldName = 'SaleDate'
+      Index = 4
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object ffTable1ShipDate: TDateTimeField
+      FieldKind = fkData
+      FieldName = 'ShipDate'
+      Index = 5
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object ffTable1EmpNo: TLongintField
+      FieldKind = fkData
+      FieldName = 'EmpNo'
+      Index = 6
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object ffTable1ShipToContact: TStringField
+      FieldKind = fkData
+      FieldName = 'ShipToContact'
+      Index = 7
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+  end
+  object DataSource1: TDataSource
+    DataSet = ffTable1
+    left = 428
+    top = 270
+  end
+  object ffTaCustomer: TffTable
+    DatabaseName = 'DbLookuplaz'
+    FieldDefs = <    
+      item
+        Name = 'ID'
+        DataType = ftAutoInc
+        Precision = -1
+      end    
+      item
+        Name = 'Company'
+        DataType = ftString
+        Precision = -1
+        Size = 30
+      end    
+      item
+        Name = 'Address1'
+        DataType = ftString
+        Precision = -1
+        Size = 30
+      end    
+      item
+        Name = 'Address2'
+        DataType = ftString
+        Precision = -1
+        Size = 30
+      end    
+      item
+        Name = 'City'
+        DataType = ftString
+        Precision = -1
+        Size = 15
+      end    
+      item
+        Name = 'State'
+        DataType = ftString
+        Precision = -1
+        Size = 20
+      end    
+      item
+        Name = 'Zip'
+        DataType = ftString
+        Precision = -1
+        Size = 10
+      end    
+      item
+        Name = 'Country'
+        DataType = ftString
+        Precision = -1
+        Size = 20
+      end    
+      item
+        Name = 'Phone'
+        DataType = ftString
+        Precision = -1
+        Size = 15
+      end    
+      item
+        Name = 'FAX'
+        DataType = ftString
+        Precision = -1
+        Size = 15
+      end    
+      item
+        Name = 'TaxRate'
+        DataType = ftFloat
+        Precision = -1
+      end    
+      item
+        Name = 'Contact'
+        DataType = ftString
+        Precision = -1
+        Size = 20
+      end    
+      item
+        Name = 'LastInvoiceDate'
+        DataType = ftDateTime
+        Precision = -1
+      end    
+      item
+        Name = 'DeliveryMethod'
+        DataType = ftString
+        Precision = -1
+        Size = 8
+      end>
+    FilterOptions = []
+    IndexDefs = <    
+      item
+        Name = 'Sequential Access Index'
+        Options = [ixUnique, ixCaseInsensitive, ixExpression]
+      end    
+      item
+        Name = 'Primary'
+        Fields = 'ID'
+        Options = [ixUnique]
+      end    
+      item
+        Name = 'Company'
+        Fields = 'Company'
+        Options = [ixCaseInsensitive]
+      end>
+    IndexName = 'Primary'
+    SessionName = 'ffSession1laz'
+    TableName = 'customer'
+    left = 366
+    top = 330
+    object ffTaCustomerID: TAutoIncField
+      FieldKind = fkData
+      FieldName = 'ID'
+      Index = 0
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object ffTaCustomerCompany: TStringField
+      FieldKind = fkData
+      FieldName = 'Company'
+      Index = 1
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 30
+    end
+  end
+end

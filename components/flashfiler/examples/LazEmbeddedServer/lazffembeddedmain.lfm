@@ -1,0 +1,89 @@
+object Form1: TForm1
+  Left = 325
+  Height = 398
+  Top = 128
+  Width = 539
+  Caption = 'Form1'
+  ClientHeight = 398
+  ClientWidth = 539
+  OnCreate = FormCreate
+  LCLVersion = '1.6.1.0'
+  object ToolBar1: TToolBar
+    Left = 0
+    Height = 20
+    Top = 0
+    Width = 539
+    AutoSize = True
+    Caption = 'ToolBar1'
+    EdgeBorders = []
+    TabOrder = 0
+    object DBNavigator1: TDBNavigator
+      Left = 1
+      Height = 20
+      Top = 0
+      Width = 200
+      AutoSize = True
+      BevelOuter = bvNone
+      ChildSizing.EnlargeHorizontal = crsScaleChilds
+      ChildSizing.EnlargeVertical = crsScaleChilds
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 100
+      ClientHeight = 20
+      ClientWidth = 200
+      Options = []
+      TabOrder = 0
+    end
+  end
+  object DBGrid1: TDBGrid
+    Left = 0
+    Height = 378
+    Top = 20
+    Width = 539
+    Align = alClient
+    Color = clWindow
+    Columns = <>
+    DataSource = DataSource1
+    TabOrder = 1
+  end
+  object ffServerEngine1: TffServerEngine
+    NoAutoSaveCfg = True
+    ConfigDir = 'D:\AppDev\TDLite\Comps\flashfiler\bin'
+    left = 88
+    top = 248
+  end
+  object ffClient1: TffClient
+    ClientName = 'FFClient_69729904'
+    ServerEngine = ffServerEngine1
+    left = 154
+    top = 248
+  end
+  object ffSession1: TffSession
+    ClientName = 'FFClient_69729904'
+    SessionName = 'FFSession_69795446'
+    left = 210
+    top = 248
+  end
+  object ffDatabase1: TffDatabase
+    AliasName = 'D:\AppDev\TDLite\Comps\flashfiler\examples\mythicdb\'
+    DatabaseName = 'FFDB_282722134'
+    SessionName = 'FFSession_69795446'
+    left = 266
+    top = 248
+  end
+  object ffTable1: TffTable
+    DatabaseName = 'FFDB_282722134'
+    FieldDefs = <>
+    FilterOptions = []
+    SessionName = 'FFSession_69795446'
+    TableName = 'customer'
+    left = 322
+    top = 248
+  end
+  object DataSource1: TDataSource
+    DataSet = ffTable1
+    left = 372
+    top = 248
+  end
+end

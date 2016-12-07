@@ -1,0 +1,164 @@
+object Form1: TForm1
+  Left = 295
+  Height = 310
+  Top = 147
+  Width = 320
+  Caption = 'Form1'
+  ClientHeight = 310
+  ClientWidth = 320
+  OnCreate = FormCreate
+  LCLVersion = '1.6.1.0'
+  object ToolBar1: TToolBar
+    Left = 0
+    Height = 20
+    Top = 0
+    Width = 320
+    AutoSize = True
+    Caption = 'ToolBar1'
+    EdgeBorders = []
+    TabOrder = 0
+    object DBNavigator1: TDBNavigator
+      Left = 1
+      Height = 20
+      Top = 0
+      Width = 200
+      AutoSize = True
+      BevelOuter = bvNone
+      ChildSizing.EnlargeHorizontal = crsScaleChilds
+      ChildSizing.EnlargeVertical = crsScaleChilds
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 100
+      ClientHeight = 20
+      ClientWidth = 200
+      DataSource = DataSource1
+      Options = []
+      TabOrder = 0
+    end
+  end
+  object DBGrid1: TDBGrid
+    Left = 0
+    Height = 290
+    Top = 20
+    Width = 320
+    Align = alClient
+    Color = clWindow
+    Columns = <>
+    DataSource = DataSource1
+    TabOrder = 1
+  end
+  object ffLegacyTransport1: TffLegacyTransport
+    Enabled = True
+    ServerName = 'Local server'
+    left = 28
+    top = 12
+  end
+  object FFRemoteServerEngine1: TFFRemoteServerEngine
+    Transport = ffLegacyTransport1
+    left = 28
+    top = 70
+  end
+  object ffClient1: TffClient
+    Active = True
+    ClientName = 'ffClient1'
+    ServerEngine = FFRemoteServerEngine1
+    TimeOut = 100
+    left = 28
+    top = 122
+  end
+  object ffSession1: TffSession
+    Active = True
+    ClientName = 'ffClient1'
+    SessionName = 'ffSession1sa'
+    TimeOut = 100
+    left = 26
+    top = 174
+  end
+  object ffDatabase1: TffDatabase
+    AliasName = 'Tutorial'
+    Connected = True
+    DatabaseName = 'ffDbDebug'
+    SessionName = 'ffSession1sa'
+    Timeout = 1000
+    left = 76
+    top = 176
+  end
+  object ffTable1: TffTable
+    DatabaseName = 'ffDbDebug'
+    FieldDefs = <    
+      item
+        Name = 'CustomerID'
+        DataType = ftInteger
+        Precision = -1
+      end    
+      item
+        Name = 'FirstName'
+        DataType = ftString
+        Precision = -1
+        Size = 25
+      end    
+      item
+        Name = 'LastName'
+        DataType = ftString
+        Precision = -1
+        Size = 25
+      end    
+      item
+        Name = 'Address'
+        DataType = ftString
+        Precision = -1
+        Size = 25
+      end    
+      item
+        Name = 'City'
+        DataType = ftString
+        Precision = -1
+        Size = 25
+      end    
+      item
+        Name = 'State'
+        DataType = ftString
+        Precision = -1
+        Size = 25
+      end    
+      item
+        Name = 'Zip'
+        DataType = ftString
+        Precision = -1
+        Size = 10
+      end>
+    FilterOptions = []
+    IndexDefs = <    
+      item
+        Name = 'Sequential Access Index'
+        Options = [ixUnique, ixCaseInsensitive, ixExpression]
+      end    
+      item
+        Name = 'ByID'
+        Fields = 'CustomerID'
+        Options = [ixUnique]
+      end    
+      item
+        Name = 'ByName'
+        Fields = 'LastName'
+        Options = [ixCaseInsensitive]
+      end    
+      item
+        Name = 'ByState'
+        Fields = 'State'
+        Options = [ixCaseInsensitive]
+      end>
+    IndexName = 'ByID'
+    SessionName = 'ffSession1sa'
+    TableName = 'excust'
+    Timeout = 100
+    left = 32
+    top = 234
+  end
+  object DataSource1: TDataSource
+    DataSet = ffTable1
+    left = 239
+    top = 32
+  end
+end

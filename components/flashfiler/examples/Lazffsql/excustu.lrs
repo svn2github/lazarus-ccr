@@ -1,0 +1,60 @@
+{ This is an automatically generated lazarus resource file }
+
+LazarusResources.Add('TForm1','FORMDATA',[
+  'TPF0'#6'TForm1'#5'Form1'#4'Left'#3#224#0#6'Height'#3#31#1#3'Top'#2'`'#5'Widt'
+  +'h'#3#28#2#7'Caption'#6'"FlashFiler Example - Customer Data'#12'ClientHeight'
+  +#3#12#1#11'ClientWidth'#3#28#2#5'Color'#7#9'clBtnFace'#10'Font.Color'#7#12'c'
+  +'lWindowText'#11'Font.Height'#2#245#9'Font.Name'#6#13'MS Sans Serif'#4'Menu'
+  +#7#9'MainMenu1'#6'OnShow'#7#8'FormShow'#10'LCLVersion'#6#7'1.6.1.0'#0#8'TToo'
+  +'lBar'#8'ToolBar1'#4'Left'#2#0#6'Height'#2#23#3'Top'#2#0#5'Width'#3#28#2#8'A'
+  +'utoSize'#9#12'ButtonHeight'#2#21#11'ButtonWidth'#2'7'#7'Caption'#6#8'ToolBa'
+  +'r1'#12'ShowCaptions'#9#8'TabOrder'#2#0#0#11'TToolButton'#13'TlBtnRunQuery'#4
+  +'Left'#2#1#3'Top'#2#2#7'Caption'#6#8'RunQuery'#10'ImageIndex'#2#0#7'OnClick'
+  +#7#18'TlBtnRunQueryClick'#0#0#11'TToolButton'#11'ToolButton2'#4'Left'#2'9'#6
+  +'Height'#2#21#3'Top'#2#2#5'Width'#2#8#7'Caption'#6#11'ToolButton2'#10'ImageI'
+  +'ndex'#2#1#5'Style'#7#12'tbsSeparator'#0#0#12'TDBNavigator'#12'DBNavigator1'
+  +#4'Left'#2'A'#6'Height'#2#21#3'Top'#2#2#5'Width'#3#250#0#10'BevelOuter'#7#6
+  +'bvNone'#29'ChildSizing.EnlargeHorizontal'#7#14'crsScaleChilds'#27'ChildSizi'
+  +'ng.EnlargeVertical'#7#14'crsScaleChilds'#28'ChildSizing.ShrinkHorizontal'#7
+  +#14'crsScaleChilds'#26'ChildSizing.ShrinkVertical'#7#14'crsScaleChilds'#18'C'
+  +'hildSizing.Layout'#7#29'cclLeftToRightThenTopToBottom'#27'ChildSizing.Contr'
+  +'olsPerLine'#2'd'#12'ClientHeight'#2#21#11'ClientWidth'#3#250#0#10'DataSourc'
+  +'e'#7#12'CustomerData'#4'Flat'#9#7'Options'#11#0#8'TabOrder'#2#0#0#0#0#7'TDB'
+  +'Grid'#12'CustomerGrid'#4'Left'#2#0#6'Height'#3#156#0#3'Top'#2'p'#5'Width'#3
+  +#28#2#5'Align'#7#8'alClient'#5'Color'#7#8'clWindow'#7'Columns'#14#0#10'DataS'
+  +'ource'#7#12'CustomerData'#8'TabOrder'#2#1#15'TitleFont.Color'#7#12'clWindow'
+  +'Text'#16'TitleFont.Height'#2#245#14'TitleFont.Name'#6#13'MS Sans Serif'#0#0
+  +#5'TMemo'#5'Memo1'#4'Left'#2#0#6'Height'#2'Y'#3'Top'#2#23#5'Width'#3#28#2#5
+  +'Align'#7#5'alTop'#13'Lines.Strings'#1#6'8select * from ExCust where State='
+  +'''NC''  AND CustomerID<50'#0#9'OnKeyDown'#7#12'Memo1KeyDown'#8'TabOrder'#2#2
+  +#0#0#18'TffLegacyTransport'#6'ltMain'#7'Enabled'#9#10'ServerName'#6#12'Local'
+  +' server'#4'left'#3'`'#1#3'top'#2'X'#0#0#21'TFFRemoteServerEngine'#5'ffRSE'#9
+  +'Transport'#7#6'ltMain'#4'left'#3'@'#1#3'top'#2'X'#0#0#9'TffClient'#8'ffClie'
+  +'nt'#10'ClientName'#6#8'ffClient'#12'ServerEngine'#7#5'ffRSE'#4'left'#3'@'#1
+  +#3'top'#2'8'#0#0#10'TffSession'#6'ffSess'#10'ClientName'#6#8'ffClient'#11'Se'
+  +'ssionName'#6#6'ExCust'#4'left'#3'`'#1#3'top'#2'8'#0#0#8'TffTable'#13'Custom'
+  +'erTable'#12'DatabaseName'#6#8'Tutorial'#9'FieldDefs'#14#0#13'FilterOptions'
+  +#11#0#9'IndexName'#6#4'ByID'#11'SessionName'#6#6'ExCust'#9'TableName'#6#6'Ex'
+  +'Cust'#7'Timeout'#3#16''''#4'left'#3#164#1#3'top'#2'|'#0#0#11'TDataSource'#12
+  +'CustomerData'#7'DataSet'#7#8'ffQuery1'#4'left'#3#160#1#3'top'#2'8'#0#0#9'TM'
+  +'ainMenu'#9'MainMenu1'#4'left'#3#192#1#3'top'#2'8'#0#9'TMenuItem'#5'File1'#7
+  +'Caption'#6#5'&File'#0#9'TMenuItem'#5'Open1'#7'Caption'#6#5'&Open'#7'OnClick'
+  +#7#10'Open1Click'#0#0#9'TMenuItem'#6'Close1'#7'Caption'#6#6'&Close'#7'Enable'
+  +'d'#8#7'OnClick'#7#11'Close1Click'#0#0#9'TMenuItem'#2'N1'#7'Caption'#6#1'-'#0
+  +#0#9'TMenuItem'#5'Exit1'#7'Caption'#6#5'&Exit'#7'OnClick'#7#10'Exit1Click'#0
+  +#0#0#9'TMenuItem'#9'Navigate1'#7'Caption'#6#9'&Navigate'#7'Enabled'#8#0#9'TM'
+  +'enuItem'#6'First1'#7'Caption'#6#6'&First'#7'OnClick'#7#11'First1Click'#0#0#9
+  +'TMenuItem'#5'Last1'#7'Caption'#6#5'&Last'#7'OnClick'#7#10'Last1Click'#0#0#9
+  +'TMenuItem'#5'Next1'#7'Caption'#6#5'&Next'#7'OnClick'#7#10'Next1Click'#0#0#9
+  +'TMenuItem'#6'Prior1'#7'Caption'#6#6'&Prior'#7'OnClick'#7#11'Prior1Click'#0#0
+  +#0#9'TMenuItem'#5'Edit1'#7'Caption'#6#5'&Edit'#7'Enabled'#8#0#9'TMenuItem'#7
+  +'Append1'#7'Caption'#6#7'&Append'#7'OnClick'#7#12'Append1Click'#0#0#9'TMenuI'
+  +'tem'#7'Insert1'#7'Caption'#6#7'&Insert'#7'OnClick'#7#12'Insert1Click'#0#0#9
+  +'TMenuItem'#5'Post1'#7'Caption'#6#5'&Post'#7'OnClick'#7#10'Post1Click'#0#0#9
+  +'TMenuItem'#8'Refresh1'#7'Caption'#6#8'&Refresh'#7'OnClick'#7#13'Refresh1Cli'
+  +'ck'#0#0#9'TMenuItem'#2'N2'#7'Caption'#6#1'-'#0#0#9'TMenuItem'#7'Cancel1'#7
+  +'Caption'#6#7'&Cancel'#7'OnClick'#7#12'Cancel1Click'#0#0#0#0#8'TffQuery'#8'f'
+  +'fQuery1'#12'DatabaseName'#6#8'Tutorial'#13'FilterOptions'#11#0#11'SessionNa'
+  +'me'#6#6'ExCust'#11'SQL.Strings'#1#6'8select * from ExCust where State=''NC'
+  +'''  AND CustomerID<50'#0#4'left'#3'~'#1#3'top'#2'&'#0#0#0
+]);
