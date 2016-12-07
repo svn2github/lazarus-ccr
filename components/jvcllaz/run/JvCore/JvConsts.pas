@@ -207,6 +207,9 @@ const
 
   DT_PATH_ELLIPSIS = $4000;
 
+  COLORONCOLOR = 3;
+  STRETCH_DELETESCANS = COLORONCOLOR;
+
 
 const
   KeyboardShiftStates = [ssShift, ssAlt, ssCtrl];

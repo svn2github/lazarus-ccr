@@ -65,8 +65,6 @@ var
   JvNavPaneDemoMainFrm: TJvNavPaneDemoMainFrm;
 
 implementation
-uses
-  CommCtrl;
 
 procedure TJvNavPaneDemoMainFrm.FormCreate(Sender: TObject);
 var

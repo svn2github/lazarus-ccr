@@ -855,11 +855,11 @@ function ReplaceImageListReference(This: TComponent; NewReference: TCustomImageL
 implementation
 
 uses
-  sysutils, LCLIntf,
+  sysutils, LCLIntf, GraphType, Math, Forms,
  {$IFDEF MSWINDOWS}
   CommCtrl,
  {$ENDIF}
-  math, JvConsts, JvJCLUtils;
+  JvConsts, JvJCLUtils;
   (********************
   SysConst,
   Consts,
@@ -2057,7 +2057,7 @@ begin
      {$IFDEF MSWINDOWS}
       ImageList_Draw(Images.Handle, Index, Handle, 0, 0, ILD_MASK);
      {$ELSE}
-      ImageList_Draw ????
+      Images.GetBitmap(Index, Bmp, gdeDisabled);    // to do: test this
      {$ENDIF}
     end;
     Bmp.Monochrome := True;
