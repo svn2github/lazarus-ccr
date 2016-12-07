@@ -1,4 +1,5 @@
 unit umain;
+{$DEFINE PO_RESOURCES}
  { OnlinePackageManager Update JSON Editor
 
   Copyright (C)2016 usernames lainz, minesadorada, GetMem @ http://forum.lazarus.freepascal.org/index.php
@@ -40,7 +41,8 @@ unit umain;
   0.1.15.0: BugFix: File/Save didn't add the '.json' suffix in Linux (minesadorada)
             Addition: After Loading, run validation tests(minesadorada)
   0.1.16.0: Renamed ForceUpdate to ForceNotify (GetMem/minesadorada)
-  0.1.17.0: ??
+  0.1.17.0: po files stored in resource file as fallback (minesadorada)
+  0.1.18.0: ??
  }
 {$mode objfpc}{$H+}
 
@@ -51,9 +53,10 @@ uses
   Classes, Forms, Controls, StdCtrls, Menus, ActnList, StdActns, Grids,
   Graphics, Buttons, fileutil, LazFileUtils, fileinfo, ugenericcollection, fpjsonrtti,
   Dialogs, LCLTranslator, PopupNotifier, SysUtils, inifiles,
-  lclintf, lclVersion;
+  lclintf, lclVersion{$IFDEF PO_RESOURCES},LResources, LazUTF8Classes{$ENDIF};
 
 CONST C_DEBUGMESSAGES=FALSE;
+
 
 type
 
@@ -177,6 +180,10 @@ type
 
 var
   frmMain: TfrmMain;
+  {$IFDEF PO_RESOURCES}
+  aLRes: TLResource;
+  aSS: TStringListUTF8;
+  {$ENDIF}
 
 implementation
 
@@ -413,8 +420,10 @@ var
   sLang: string;
   iIniCount:Integer;
 begin
+  {
   Self.AutoAdjustLayout(lapAutoAdjustForDPI, Self.DesignTimeDPI,
     Screen.PixelsPerInch, Self.Width, ScaleX(Self.Width, Self.DesignTimeDPI));
+  }
   // Enable AutoSize again to get correct Height
   editName.AutoSize := True;
   editDownloadZipURL.AutoSize := True;
@@ -605,6 +614,7 @@ begin
   else
   begin
     mnu_lang_en.Checked := False;
+//  SetDefaultLang(''); // Back to default?
     ShowMessage(rsSorryThisLan + LineEnding + rsYouMayNeedTo);
   end;
 end;
@@ -621,6 +631,7 @@ begin
   else
   begin
     mnu_lang_es.Checked := False;
+    SetDefaultLang(''); // Back to DefaultTranslator
     ShowMessage(rsSorryThisLan);
   end;
 end;
@@ -886,4 +897,39 @@ begin
   end;
 end;
 
+{$IFDEF PO_RESOURCES}
+// Use embedded .po resources if not distributed with executable
+Initialization
+{$I translate.lrs}
+If NOT FileExistsUTF8(ProgramDirectory + 'locale\' + ExtractFilenameOnly(Application.EXEName) + '.es.po') then
+BEGIN
+aLRes:=LazarusResources.Find('jsoneditor.es');
+if assigned(aLRes) then
+  begin
+    ForceDirectory(ProgramDirectory + 'locale');
+    aSS:=TStringListUTF8.Create;
+    TRY
+    Ass.Add(aLRes.Value);
+    aSS.SaveToFile(ProgramDirectory + 'locale\' + ExtractFilenameOnly(Application.EXEName) + '.es.po');
+    Finally
+    aSS.Free;
+    end;
+  end;
+END;
+If NOT FileExistsUTF8(ProgramDirectory + 'locale\' + ExtractFilenameOnly(Application.EXEName) + '.en.po') then
+BEGIN
+aLRes:=LazarusResources.Find('jsoneditor.en');
+if assigned(aLRes) then
+  begin
+    ForceDirectory(ProgramDirectory + 'locale');
+    aSS:=TStringListUTF8.Create;
+    TRY
+    Ass.Add(aLRes.Value);
+    aSS.SaveToFile(ProgramDirectory + 'locale\' + ExtractFilenameOnly(Application.EXEName) + '.en.po');
+    FINALLY
+    aSS.Free;
+    END;
+  end;
+END;
+{$ENDIF}
 end.

@@ -3,8 +3,10 @@ object frmMain: TfrmMain
   Height = 420
   Top = 226
   Width = 320
+  AutoSize = True
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
+  BorderWidth = 8
   ClientHeight = 400
   ClientWidth = 320
   DefaultMonitor = dmPrimary
