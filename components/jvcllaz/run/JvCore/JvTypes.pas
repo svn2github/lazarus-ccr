@@ -31,7 +31,8 @@ Known Issues:
 // Conversion is done in incremental way: as types / classes / routines
 // are needed they are converted.
 
-{$mode objfpc}{$H+}
+//{$mode objfpc}{$H+}
+{$MODE DELPHI}
 
 unit JvTypes;
 
@@ -98,6 +99,7 @@ type
   {$IFDEF CLR}
   IUnknown = IInterface;
   {$ENDIF CLR}
+  ********************)
 
   // Base class for persistent properties that can show events.
   // By default, Delphi and BCB don't show the events of a class
@@ -107,14 +109,10 @@ type
   // from having events for a sub property.
   // The design time editor associated with TJvPersistent will display
   // the events, thus mimicking a Sub Component.
-  {$IFDEF COMPILER6_UP}
   TJvPersistent = class(TComponent)
   public
     constructor Create(AOwner: TComponent); override;
   end;
-  {$ELSE}
-  TJvPersistent = class(TPersistent);
-  {$ENDIF COMPILER6_UP}
 
   // Added by dejoy (2005-04-20)
   // A lot of TJVxxx control persistent properties used TPersistent,
@@ -122,7 +120,7 @@ type
   // and property change notify.
   TJvPropertyChangeEvent = procedure(Sender: TObject; const PropName: string) of object;
 
-  TJvPersistentProperty = class(TPersistent)//?? TJvPersistent
+  TJvPersistentProperty = class(TPersistent)   // ?? TJvPersistent)
   private
     FUpdateCount: Integer;
     FOnChanging: TNotifyEvent;
@@ -145,6 +143,7 @@ type
     property OnChangingProperty: TJvPropertyChangeEvent read FOnChangingProperty write FOnChangingProperty;
   end;
 
+  (********************
   TJvRegKey = (hkClassesRoot, hkCurrentUser, hkLocalMachine, hkUsers,
     hkPerformanceData, hkCurrentConfig, hkDynData);
   TJvRegKeys = set of TJvRegKey;
@@ -675,8 +674,6 @@ type
 
 implementation
 
-(***************
-{$IFDEF COMPILER6_UP}
 constructor TJvPersistent.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -684,7 +681,6 @@ begin
   SetSubComponent(True);
   Name := 'SubComponent';
 end;
-{$ENDIF COMPILER6_UP}
 
 { TJvPersistentProperty }
 
@@ -733,7 +729,6 @@ begin
   else
     Changed;
 end;
-***************)
 
 end.
 

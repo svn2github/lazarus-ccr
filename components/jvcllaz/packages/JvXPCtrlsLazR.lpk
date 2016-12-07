@@ -9,7 +9,7 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <OtherUnitFiles Value="..\run\JvXPCtrls"/>
-        <UnitOutputDirectory Value="..lib\$(TargetCPU)-$(TargetOS)\run\JvXPCtrls"/>
+        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\run\JvXPCtrls"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="XP style controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (runtime code)"/>
@@ -43,7 +43,7 @@
     </Files>
     <RequiredPkgs Count="3">
       <Item1>
-        <PackageName Value="JvCtrlsLazR"/>
+        <PackageName Value="JvStdCtrlsLazR"/>
       </Item1>
       <Item2>
         <PackageName Value="JvCoreLazR"/>

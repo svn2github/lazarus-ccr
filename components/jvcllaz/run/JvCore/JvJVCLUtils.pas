@@ -26,13 +26,20 @@ Known Issues:
 // Conversion is done in incremental way: as types / classes / routines
 // are needed they are converted.
 
-{$mode objfpc}{$H+}
+{$MODE DELPHI}
+//{$mode objfpc}{$H+}
 
 unit JvJVCLUtils;
 
 interface
+
 uses
-  Classes, Graphics, JvTypes, ImgList, LCLType, Types;
+ {$IFDEF WIN32}
+  Windows,
+ {$ENDIF}
+  Classes, Graphics, Controls, ImgList,
+  LCLType, LCLProc, LMessages, Types,
+  JvTypes;
 
 (******************** NOT CONVERTED
 // Transform an icon to a bitmap
@@ -86,6 +93,7 @@ function CaptureScreen(WndHandle: Longword): TBitmap; overload;
 {$ENDIF MSWINDOWS}
 
 procedure RGBToHSV(R, G, B: Integer; var H, S, V: Integer);
+******************** NOT CONVERTED *)
 
 { from JvVCLUtils }
 
@@ -93,6 +101,7 @@ procedure CopyParentImage(Control: TControl; Dest: TCanvas);
 { Windows resources (bitmaps and icons) VCL-oriented routines }
 procedure DrawBitmapTransparent(Dest: TCanvas; DstX, DstY: Integer;
   Bitmap: TBitmap; TransparentColor: TColor);
+(******************** NOT CONVERTED
 procedure DrawBitmapRectTransparent(Dest: TCanvas; DstX, DstY: Integer;
   SrcRect: TRect; Bitmap: TBitmap; TransparentColor: TColor);
 procedure StretchBitmapRectTransparent(Dest: TCanvas; DstX, DstY, DstW,
@@ -102,6 +111,8 @@ function MakeBitmap(ResID: PChar): TBitmap;
 function MakeBitmapID(ResID: Word): TBitmap;
 function MakeModuleBitmap(Module: THandle; ResID: PChar): TBitmap;
 {$ENDIF !CLR}
+******************** NOT CONVERTED *)
+function AllocPatternBitmap(BkColor, FgColor: TColor): TBitmap;
 function CreateTwoColorsBrushPattern(Color1, Color2: TColor): TBitmap;
 function CreateDisabledBitmap_NewStyle(FOriginal: TBitmap; BackColor: TColor):
   TBitmap;
@@ -109,12 +120,15 @@ function CreateDisabledBitmapEx(FOriginal: TBitmap; OutlineColor, BackColor,
   HighLightColor, ShadowColor: TColor; DrawHighlight: Boolean): TBitmap;
 function CreateDisabledBitmap(FOriginal: TBitmap; OutlineColor: TColor):
   TBitmap;
+(******************** NOT CONVERTED
 procedure AssignBitmapCell(Source: TGraphic; Dest: TBitmap; Cols, Rows,
   Index: Integer);
 function ChangeBitmapColor(Bitmap: TBitmap; Color, NewColor: TColor): TBitmap;
+******************** NOT CONVERTED *)
 procedure ImageListDrawDisabled(Images: TCustomImageList; Canvas: TCanvas;
   X, Y, Index: Integer; HighLightColor, GrayColor: TColor;
   DrawHighlight: Boolean);
+(******************** NOT CONVERTED
 
 {$IFNDEF CLR}
 function MakeIcon(ResID: PChar): TIcon;
@@ -166,7 +180,11 @@ function GetControlPanelApplet(const AFileName: string; Strings: TStrings;
 {$ENDIF !CLR}
 
 function PointInPolyRgn(const P: TPoint; const Points: array of TPoint): Boolean;
+******************** NOT CONVERTED *)
+
 function PaletteColor(Color: TColor): Longint;
+
+(******************** NOT CONVERTED
 procedure PaintInverseRect(const RectOrg, RectEnd: TPoint);
 procedure DrawInvertFrame(ScreenRect: TRect; Width: Integer);
 
@@ -212,9 +230,12 @@ function LoadAniCursor(Instance: THandle; ResID: PChar): HCURSOR;
 
 { Windows API level routines }
 
+******************** NOT CONVERTED *)
+
 procedure StretchBltTransparent(DstDC: HDC; DstX, DstY, DstW, DstH: Integer;
   SrcDC: HDC; SrcX, SrcY, SrcW, Srch: Integer;
   Palette: HPALETTE; TransparentColor: TColorRef);
+(******************** NOT CONVERTED
 procedure DrawTransparentBitmap(DC: HDC; Bitmap: HBITMAP;
   DstX, DstY: Integer; TransparentColor: TColorRef);
 function PaletteEntries(Palette: HPALETTE): Integer;
@@ -279,8 +300,10 @@ function FindFormByClass(FormClass: TFormClass): TForm;
 function FindFormByClassName(const FormClassName: string): TForm;
 { AppMinimized returns True, if Application is minimized }
 function AppMinimized: Boolean;
+******************** NOT CONVERTED *)
 function IsForegroundTask: Boolean;
 
+(******************** NOT CONVERTED
 { MessageBox is Application.MessageBox with string (not PChar) parameters.
   if Caption parameter = '', it replaced with Application.Title }
 function MessageBox(const Msg, Caption: string; const Flags: Integer): Integer;
@@ -832,7 +855,11 @@ function ReplaceImageListReference(This: TComponent; NewReference: TCustomImageL
 implementation
 
 uses
-  sysutils, LCLIntf, math;
+  sysutils, LCLIntf,
+ {$IFDEF MSWINDOWS}
+  CommCtrl,
+ {$ENDIF}
+  math, JvConsts, JvJCLUtils;
   (********************
   SysConst,
   Consts,
@@ -1500,13 +1527,11 @@ begin
   else
     Result := pcItem.SubItems[piIndex - 1];
 end;
+******************** NOT CONVERTED *)
 
 {from JvVCLUtils }
 
 { Bitmaps }
-
-
-
 
 // see above for VisualCLX version of CopyParentImage
 type
@@ -1531,7 +1556,7 @@ begin
     // calls it as well. Best example is a TJvSpeeButton in a TJvPanel,
     // both with Transparent set to True (discovered while working on
     // Mantis 3624)
-    GetViewPortOrgEx(DC, ViewPortOrg);
+    GetViewPortOrgEx(DC, @ViewPortOrg);
 
     with Control do
     begin
@@ -1555,7 +1580,7 @@ begin
       {$ELSE}
       with TJvParentControl(Control.Parent) do
       begin
-        Perform(WM_ERASEBKGND, DC, 0);
+        Perform(LM_ERASEBKGND, DC, 0);
         PaintWindow(DC);
       end;
       {$ENDIF CLR}
@@ -1583,7 +1608,7 @@ begin
             try
               SetViewPortOrgEx(DC, Left + ViewPortOrg.X, Top + ViewPortOrg.Y, nil);
               IntersectClipRect(DC, 0, 0, Width, Height);
-              Perform(WM_PAINT, DC, 0);
+              Perform(LM_PAINT, DC, 0);
             finally
               RestoreDC(DC, SaveIndex);
               ControlState := ControlState - [csPaintCopy];
@@ -1597,6 +1622,7 @@ begin
       ControlState := ControlState - [csPaintCopy];
   end;
 end;
+(******************** NOT CONVERTED
 
 
 
@@ -1672,10 +1698,10 @@ begin
     Dest.Transparent := Source.Transparent;
   end;
 end;
+******************** NOT CONVERTED *)
+
 
 { Transparent bitmap }
-
-
 
 procedure StretchBltTransparent(DstDC: HDC; DstX, DstY, DstW, DstH: Integer;
   SrcDC: HDC; SrcX, SrcY, SrcW, Srch: Integer; Palette: HPALETTE;
@@ -1763,7 +1789,7 @@ begin
   DeleteDC(SaveDC);
 end;
 
-
+(******************** NOT CONVERTED
 
 procedure DrawTransparentBitmapRect(DC: HDC; Bitmap: HBITMAP; DstX, DstY,
   DstW, DstH: Integer; SrcRect: TRect; TransparentColor: TColorRef);
@@ -1794,6 +1820,7 @@ begin
   DrawTransparentBitmapRect(DC, Bitmap, DstX, DstY, BM.bmWidth, BM.bmHeight,
     Rect(0, 0, BM.bmWidth, BM.bmHeight), TransparentColor);
 end;
+******************** NOT CONVERTED*)
 
 procedure StretchBitmapTransparent(Dest: TCanvas; Bitmap: TBitmap;
   TransparentColor: TColor; DstX, DstY, DstW, DstH, SrcX, SrcY,
@@ -1865,6 +1892,7 @@ begin
   StretchBitmapTransparent(Dest, Bitmap, TransparentColor, DstX, DstY,
     Bitmap.Width, Bitmap.Height, 0, 0, Bitmap.Width, Bitmap.Height);
 end;
+
 
 { CreateDisabledBitmap. Creating TBitmap object with disable button glyph
   image. You must destroy it outside by calling TBitmap.Free method. }
@@ -1979,6 +2007,8 @@ begin
     clBtnFace, clBtnHighlight, clBtnShadow, True);
 end;
 
+(******************** NOT CONVERTED
+
 { ChangeBitmapColor. This function create new TBitmap object.
   You must destroy it outside by calling TBitmap.Free method. }
 
@@ -2006,6 +2036,8 @@ begin
   end;
 end;
 
+******************** NOT CONVERTED *)
+
 procedure ImageListDrawDisabled(Images: TCustomImageList; Canvas: TCanvas;
   X, Y, Index: Integer; HighLightColor, GrayColor: TColor;
   DrawHighlight: Boolean);
@@ -2022,7 +2054,11 @@ begin
     begin
       Brush.Color := clWhite;
       FillRect(Rect(0, 0, Images.Width, Images.Height));
+     {$IFDEF MSWINDOWS}
       ImageList_Draw(Images.Handle, Index, Handle, 0, 0, ILD_MASK);
+     {$ELSE}
+      ImageList_Draw ????
+     {$ENDIF}
     end;
     Bmp.Monochrome := True;
     if DrawHighlight then
@@ -2044,6 +2080,7 @@ begin
   end;
 end;
 
+
 { Brush Pattern }
 
 function CreateTwoColorsBrushPattern(Color1, Color2: TColor): TBitmap;
@@ -2064,6 +2101,19 @@ begin
           Pixels[X, Y] := Color2; { on even/odd rows }
   end;
 end;
+
+{ A function existing in Delphi's graphics, but missing in LCL.
+  According to Delphi help:
+  "AllocPatternBitmap returns a reference to an 8 by 8 pixel TBitmap that
+  is filled with a pattern. Pixels alternate between BkColor and FgColor colors
+  horizontally and vertically in a quilt pattern." - this is exactly what
+  CreateTwoColorsBrushPattern does... }
+function AllocPatternBitmap(BkColor, FgColor: TColor): TBitmap;
+begin
+  Result := CreateTwoColorsBrushPattern(BkColor, FgColor);
+end;
+
+(******************** NOT CONVERTED
 
 { Icons }
 
@@ -2198,14 +2248,14 @@ begin
     DeleteObject(Rgn);
   end;
 end;
-
+******************** NOT CONVERTED *)
 function PaletteColor(Color: TColor): Longint;
 begin
   Result := ColorToRGB(Color) or PaletteMask;
 end;
 
 
-
+(******************** NOT CONVERTED
 function CreateRotatedFont(Font: TFont; Angle: Integer): HFONT;
 var
   LogFont: TLogFont;
@@ -3000,75 +3050,50 @@ function AppMinimized: Boolean;
 begin
   Result := IsIconic(GetAppHandle);
 end;
+******************** NOT CONVERTED *)
 
 {$IFDEF MSWINDOWS}
-
 { Check if this is the active Windows task }
-{ Copied from implementation of FORMS.PAS  }
 type
-  {$IFNDEF CLR}
   PCheckTaskInfo = ^TCheckTaskInfo;
-  {$ENDIF !CLR}
   TCheckTaskInfo = record
-    FocusWnd: Windows.HWND;
+    FocusWnd: HWND;
     Found: Boolean;
   end;
-{$IFDEF CLR}
-  PCheckTaskInfo = TCheckTaskInfo;
 
-var
-  CheckTaskHashLock: TObject = nil;
-  CheckTaskInfo: PCheckTaskInfo;
-{$ENDIF CLR}
-
-function CheckTaskWindow(Window: HWND; Data: Longint): LongBool; {$IFNDEF CLR}stdcall;{$ENDIF}
+function CheckTaskWindow(Window: HWND; Data: PtrInt): LongBool; stdcall;
 begin
   Result := True;
-  {$IFDEF CLR}
-  if CheckTaskInfo.FocusWnd = Window then
+  if PCheckTaskInfo(Data)^.FocusWnd = Window then
   begin
-    CheckTaskInfo.Found := True;
-  {$ELSE}
-  if PCheckTaskInfo(Data).FocusWnd = Window then
-  begin
-    PCheckTaskInfo(Data).Found := True;
-  {$ENDIF CLR}
+    PCheckTaskInfo(Data)^.Found := True;
     Result := False;
   end;
 end;
+{$ENDIF}
 
 function IsForegroundTask: Boolean;
+{$IFDEF MSWINDOWS}
 var
   Info: TCheckTaskInfo;
+{$ENDIF}
 begin
-  Info.FocusWnd := Windows.GetActiveWindow;
+{$IFDEF MSWINDOWS}
+  Info.FocusWnd := GetActiveWindow;
   Info.Found := False;
-
-  {$IFDEF CLR}
-  if CheckTaskHashLock = nil then
-    CheckTaskHashLock := TObject.Create;
-  Monitor.Enter(CheckTaskHashLock);
-  try
-    CheckTaskInfo := Info;
-    EnumThreadWindows(GetCurrentThreadId, CheckTaskWindow, 0);
-    Info := CheckTaskInfo;
-  finally
-    Monitor.Exit(CheckTaskHashLock);
-  end;
-  {$ELSE}
-  EnumThreadWindows(GetCurrentThreadId, @CheckTaskWindow, Longint(@Info));
-  {$ENDIF CLR}
+  EnumThreadWindows(GetCurrentThreadID, @CheckTaskWindow, PtrInt(@Info));
   Result := Info.Found;
-end;
-
-{$ENDIF MSWINDOWS}
-
-{$IFDEF UNIX}
-function IsForegroundTask: Boolean;
-begin
+{$ELSE}
+ {$IFDEF UNIX}
   Result := Application.Active;
+ {$ELSE}
+  Result := true;
+ {$ENDIF}
+{$ENDIF}
 end;
-{$ENDIF UNIX}
+
+
+(******************** NOT CONVERTED
 
 function MessageBox(const Msg, Caption: string; const Flags: Integer): Integer;
 {$IFDEF CLR}

@@ -2,35 +2,33 @@
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
-    <Name Value="JvPageCompsR"/>
-    <Author Value="Lazarus port by: Michał Gawrycki"/>
+    <Name Value="JvStdCtrlsLazD"/>
+    <Type Value="RunAndDesignTime"/>
+    <Author Value="Lazarus port by: Werner Pamler"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <OtherUnitFiles Value="..\run\JvPageComps;..\run\JvStdCtrls"/>
-        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\run\JvPageComps"/>
+        <OtherUnitFiles Value="..\design\JvStdCtrls"/>
+        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvStdCtrls"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="Page style components of the JVCL library (https://sourceforge.net/projects/jvcl/) (runtime code)"/>
+    <Description Value="Standard controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (designtime code)"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="1"/>
-    <Files Count="2">
+    <Files Count="1">
       <Item1>
-        <Filename Value="..\run\JvPageComps\JvNavigationPane.pas"/>
-        <UnitName Value="JvNavigationPane"/>
+        <Filename Value="..\design\JvStdCtrls\JvStdCtrlsReg.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="JvStdCtrlsReg"/>
       </Item1>
-      <Item2>
-        <Filename Value="..\run\JvPageComps\JvPageList.pas"/>
-        <UnitName Value="JvPageList"/>
-      </Item2>
     </Files>
     <RequiredPkgs Count="3">
       <Item1>
-        <PackageName Value="JvStdCtrlsLazR"/>
+        <PackageName Value="JvCoreLazD"/>
       </Item1>
       <Item2>
-        <PackageName Value="JvCoreLazR"/>
+        <PackageName Value="JvStdCtrlsLazR"/>
       </Item2>
       <Item3>
         <PackageName Value="FCL"/>

@@ -14,12 +14,12 @@ implementation
 {$R ../../resource/JvHTControlsReg.res}
 
 uses
-  Classes, JvDsgnConsts, JvHtControls, {JvDBHTLabel,} JvHint, JvHTHintForm,
+  Classes, JvDsgnConsts,
+  JvHtControls, {JvDBHTLabel,} JvHint, JvHTHintForm,
   PropEdits, Controls;
 
 procedure Register;
 begin
-//  RegisterComponents(RsPaletteButton, [TJvHTButton]);
   RegisterComponents(RsPaletteLabel, [TJvHTLabel]);
   RegisterComponents(RsPaletteListComboTree, [TJvHTListBox, TJvHTComboBox]);
   RegisterComponents(RsPaletteNonVisual, [TJvHint]);

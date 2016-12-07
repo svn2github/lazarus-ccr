@@ -46,10 +46,10 @@ interface
 //          the JCL has the same problem with CLX it should not make any difference.
 
 uses
-  Classes, Graphics, LCLIntf, LCLType;
+  Classes, Graphics, LCLIntf, LCLType, LMessages;
   
-(******************** NOT CONVERTED
 const
+(******************** NOT CONVERTED
   {$IFDEF MSWINDOWS}
   PathDelim = '\';
   DriveDelim = ':';
@@ -61,8 +61,10 @@ const
   AllFilesMask = '*';
   {$ENDIF UNIX}
     // Note: the else is on purpose, VCL is not defined for a console application
+******************** NOT CONVERTED *)
   NullHandle = 0;
 
+(******************** NOT CONVERTED
 {$IFDEF UNIX}
 type
   TFileTime = Integer;
@@ -854,6 +856,7 @@ const
 function DateIsNull(const pdtValue: TDateTime; const pdtKind: TdtKind): Boolean;
 // Replacement for Win32Check to avoid platform specific warnings in D6
 function OSCheck(RetVal: Boolean): Boolean;
+******************** NOT CONVERTED *)
 
 { Shortens a fully qualified Path name so that it can be drawn with a specified length limit.
   Same as FileCtrl.MinimizeName in functionality (but not implementation). Included here to
@@ -863,6 +866,7 @@ function MinimizeText(const Text: string; Canvas: TCanvas; MaxWidth: Integer): s
 { MinimizeString trunactes long string, S, and appends
   '...' symbols, if Length of S is more than MaxLen }
 function MinimizeString(const S: string; const MaxLen: Integer): string;
+(******************** NOT CONVERTED
 
 {$IFNDEF CLR}
 {$IFDEF MSWINDOWS}
@@ -962,8 +966,10 @@ function WindowClassName(Wnd: THandle): string;
 procedure SwitchToWindow(Wnd: THandle; Restore: Boolean);
 procedure ActivateWindow(Wnd: THandle);
 procedure ShowWinNoAnimate(Handle: THandle; CmdShow: Integer);
+******************** NOT CONVERTED *)
 procedure KillMessage(Wnd: THandle; Msg: Cardinal);
 
+(******************** NOT CONVERTED
 { SetWindowTop put window to top without recreating window }
 procedure SetWindowTop(const Handle: THandle; const Top: Boolean);
 procedure CenterWindow(Wnd: THandle);
@@ -1191,6 +1197,10 @@ function SecondsBetween(const Now: TDateTime; const FTime: TDateTime): Integer;
 ******************** NOT CONVERTED *)
 
 implementation
+
+uses
+  Math,
+  JvConsts;
 
 (******************** NOT CONVERTED
 uses
@@ -2081,17 +2091,6 @@ begin
   if Result <> '' then
     Result := Separator + Result;
   Result := S2 + Result;
-end;
-
-function MinimizeString(const S: string; const MaxLen: Integer): string;
-begin
-  if Length(S) > MaxLen then
-    if MaxLen < 3 then
-      Result := Copy(S, 1, MaxLen)
-    else
-      Result := Copy(S, 1, MaxLen - 3) + '...'
-  else
-    Result := S;
 end;
 
 function TrueInflateRect(const R: TRect; const I: Integer): TRect;
@@ -8180,27 +8179,19 @@ begin
   Result := RetVal;
 end;
 
+******************** NOT CONVERTED *)
+
 function MinimizeFileName(const FileName: string; Canvas: TCanvas; MaxLen: Integer): string;
 var
-  {$IFDEF CLR}
-  sb: StringBuilder;
-  {$ENDIF CLR}
   R: TRect;
+  flags: Word;
 begin
   Result := FileName;
   R := Rect(0, 0, MaxLen, Canvas.TextHeight('Wq'));
-  {$IFDEF CLR}
-  sb := StringBuilder.Create(Result);
-  // DrawText() doesn't exist with StringBuilder parameter (2005)
-  if DrawTextEx(Canvas.Handle, sb, sb.Length, R,
-       DT_SINGLELINE or DT_MODIFYSTRING or DT_PATH_ELLIPSIS or DT_CALCRECT or
-       DT_NOPREFIX, nil) <= 0 then
-  {$ELSE}
   UniqueString(Result);
-  if DrawText(Canvas.Handle, PChar(Result), Length(Result), R,
-       DT_SINGLELINE or DT_MODIFYSTRING or DT_PATH_ELLIPSIS or DT_CALCRECT or
-       DT_NOPREFIX) <= 0 then
-  {$ENDIF CLR}
+  flags := DT_SINGLELINE or DT_MODIFYSTRING or DT_PATH_ELLIPSIS or
+    DT_CALCRECT or DT_NOPREFIX;
+  if DrawText(Canvas.Handle, PChar(Result), Length(Result), R, flags) <= 0 then
     Result := FileName;
 end;
 
@@ -8218,6 +8209,18 @@ begin
   end;
 end;
 
+function MinimizeString(const S: string; const MaxLen: Integer): string;
+begin
+  if Length(S) > MaxLen then
+    if MaxLen < 3 then
+      Result := Copy(S, 1, MaxLen)
+    else
+      Result := Copy(S, 1, MaxLen - 3) + '...'
+  else
+    Result := S;
+end;
+
+(******************** NOT CONVERTED
 {$IFNDEF CLR}
 {$IFDEF MSWINDOWS}
 
@@ -8950,7 +8953,7 @@ begin
   SetWindowPos(Wnd, 0, R.Left, R.Top, 0, 0, SWP_NOACTIVATE or
     SWP_NOSIZE or SWP_NOZORDER);
 end;
-
+******************** NOT CONVERTED *)
 
 { Delete the requested message from the queue, but throw back }
 { any WM_QUIT msgs that PeekMessage may also return.          }
@@ -8960,11 +8963,14 @@ var
   M: TMsg;
 begin
   M.Message := 0;
-  if PeekMessage(M, Wnd, Msg, Msg, PM_REMOVE) and (M.Message = WM_QUIT) then
+  {  wp ---- PostQuitMessage does not exist in Lazarus
+
+  if PeekMessage(M, Wnd, Msg, Msg, PM_REMOVE) and (M.Message = LM_QUIT) then
     PostQuitMessage(M.WParam);
+  }
 end;
 
-
+(******************** NOT CONVERTED
 procedure SetWindowTop(const Handle: THandle; const Top: Boolean);
 const
   TopFlag: array [Boolean] of Longword = (HWND_NOTOPMOST, HWND_TOPMOST);

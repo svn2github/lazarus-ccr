@@ -2,32 +2,28 @@
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
-    <Name Value="JvCtrlsLazR"/>
-    <Author Value="Lazarus port by: Michał Gawrycki, Werner Pamler"/>
+    <Name Value="JvStdCtrlsLazR"/>
+    <Author Value="Lazarus port by: Werner Pamler"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <OtherUnitFiles Value="..\run\JvCtrls"/>
-        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\run\JvCtrls"/>
+        <OtherUnitFiles Value="..\run\JvStdCtrls"/>
+        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\run\JvStdCtrls"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="Controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (runtime code):
+    <Description Value="Standard controls of the JVCL library (https://sourceforge.net/projects/jvcl/) (runtime code):
 - Buttons
 - Hypertext components 
 - Labels
 - Listboxes, Comboboxes, TreeViews"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="1"/>
-    <Files Count="2">
+    <Files Count="1">
       <Item1>
-        <Filename Value="..\run\JvCtrls\JvHint.pas"/>
-        <UnitName Value="JvHint"/>
+        <Filename Value="..\run\JvStdCtrls\JvButton.pas"/>
+        <UnitName Value="JvButton"/>
       </Item1>
-      <Item2>
-        <Filename Value="..\run\JvCtrls\JvHtControls.pas"/>
-        <UnitName Value="JvHtControls"/>
-      </Item2>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

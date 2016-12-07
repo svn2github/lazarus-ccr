@@ -44,7 +44,8 @@ unit JvExControls;
 interface
 
 uses
-  Classes, types, Controls, Graphics, LCLIntf, LCLType, LMessages, Forms;
+  Classes, types, Controls, Graphics, LCLIntf, LCLType, LMessages, Forms,
+  JvTypes;
 
 type
   TDlgCode =
@@ -67,6 +68,7 @@ const
   CM_DENYSUBCLASSING = JvThemes.CM_DENYSUBCLASSING;
   CM_PERFORM = CM_BASE + $500 + 0; // LParam: "Msg: ^TMessage"
   CM_SETAUTOSIZE = CM_BASE + $500 + 1; // WParam: "Value: Boolean"
+  ******************** NOT CONVERTED *)
 
 type
   TJvHotTrackOptions = class;
@@ -123,7 +125,6 @@ type
     property FrameVisible: Boolean read FFrameVisible write SetFrameVisible default False;
     property FrameColor: TColor read FFrameColor write SetFrameColor default $006A240A;
   end;
-******************** NOT CONVERTED *)
 
 type
   TStructPtrMessage = class(TObject)
@@ -491,7 +492,7 @@ begin
   end;
 end;
 
-(******************** NOT CONVERTED
+
 //=== { TJvHotTrackOptions } ======================================
 
 constructor TJvHotTrackOptions.Create;
@@ -568,7 +569,6 @@ begin
     Changed;
   end;
 end;
-******************** NOT CONVERTED *)
 
 //============================================================================
 

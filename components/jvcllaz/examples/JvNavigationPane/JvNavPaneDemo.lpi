@@ -36,7 +36,7 @@
         <PackageName Value="LCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="6">
+    <Units Count="7">
       <Unit0>
         <Filename Value="JvNavPaneDemo.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -51,7 +51,6 @@
         <ComponentName Value="JvNavPaneDemoMainFrm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <CursorPos X="3" Y="11"/>
         <UsageCount Value="22"/>
@@ -83,6 +82,15 @@
         <CursorPos X="31" Y="47"/>
         <UsageCount Value="10"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="..\..\run\JvPageComps\JvNavigationPane.pas"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="31"/>
+        <CursorPos X="61" Y="50"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit6>
     </Units>
     <JumpHistory Count="2" HistoryIndex="1">
       <Position1>

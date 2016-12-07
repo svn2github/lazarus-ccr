@@ -205,6 +205,9 @@ const
   AF_ICON     = $00000001;
   AF_SEQUENCE = $00000002;
 
+  DT_PATH_ELLIPSIS = $4000;
+
+
 const
   KeyboardShiftStates = [ssShift, ssAlt, ssCtrl];
   MouseShiftStates = [ssLeft, ssRight, ssMiddle, ssDouble];
