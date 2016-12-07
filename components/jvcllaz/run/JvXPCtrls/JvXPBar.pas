@@ -550,7 +550,7 @@ procedure RoundedFrame(Canvas: TCanvas; ARect: TRect; AColor: TColor; R: Integer
 
 implementation
 
-{$R ../resource/JvXPBar.res}
+{$R ../../resource/JvXPBar.res}
 
 uses
   Menus;

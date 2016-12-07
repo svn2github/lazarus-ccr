@@ -36,7 +36,7 @@
     </RunParams>
     <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="JvValidatorLaz"/>
+        <PackageName Value="JvValidatorsLazR"/>
       </Item1>
       <Item2>
         <PackageName Value="LCL"/>

@@ -10,6 +10,7 @@ object JvNavPaneDemoMainFrm: TJvNavPaneDemoMainFrm
   Font.Height = -11
   Font.Name = 'Tahoma'
   OnCreate = FormCreate
+  LCLVersion = '1.7'
   object PopupMenu1: TPopupMenu
     OnPopup = PopupMenu1Popup
     left = 92
@@ -769,7 +770,6 @@ object JvNavPaneDemoMainFrm: TJvNavPaneDemoMainFrm
     }
   end
   object OpenPictureDialog1: TOpenPictureDialog
-    Title = 'Open existing file'
     left = 136
     top = 64
   end

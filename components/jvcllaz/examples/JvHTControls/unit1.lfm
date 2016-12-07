@@ -181,9 +181,9 @@ object Form1: TForm1
       ClientWidth = 574
       object JvDBHTLabel1: TJvDBHTLabel
         Left = 8
-        Height = 76
+        Height = 16
         Top = 8
-        Width = 82
+        Width = 297
         DataSource = DataSource1
         Mask = 'Numeric field: <b><field="Num"></b><br>Field 1: <b><font color="clRed"><field="fld1"></font></b><br><i>Field 2:</i> <b><font color="clGreen"><field="fld2"></font></b><br>And some link: <a href="url"><field="Fld1"></a><br><a href="qwe">#<field="num"></a> - <b><field="fld1"> <field="fld2"></b>'
         ParentColor = False

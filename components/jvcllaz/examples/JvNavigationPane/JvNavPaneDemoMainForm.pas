@@ -12,6 +12,9 @@ uses
   {JvExExtCtrls,} ExtDlgs, LResources;
 
 type
+
+  { TJvNavPaneDemoMainFrm }
+
   TJvNavPaneDemoMainFrm = class(TForm)
     PopupMenu1: TPopupMenu;
     LargeImages: TImageList;

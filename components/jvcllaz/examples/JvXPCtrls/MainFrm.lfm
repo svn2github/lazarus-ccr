@@ -30,6 +30,7 @@ object frmMain: TfrmMain
       Top = 0
       Align = alLeft
       ImageIndex = 0
+      StyleManager = styleOffice
       OnClick = btnCloseClick
     end
   end
@@ -181,7 +182,6 @@ object frmMain: TfrmMain
     Top = 24
     Action = acBtn1
     TabOrder = 4
-    StyleManager = styleOffice
   end
   object btn2: TJvXPButton
     Left = 216
@@ -190,7 +190,6 @@ object frmMain: TfrmMain
     Action = acBtn2
     TabOrder = 5
     Layout = blGlyphRight
-    StyleManager = styleOffice
   end
   object btn4: TJvXPButton
     Left = 376
@@ -199,7 +198,6 @@ object frmMain: TfrmMain
     Action = acBtn4
     TabOrder = 6
     Layout = blGlyphBottom
-    StyleManager = styleOffice
   end
   object btn3: TJvXPButton
     Left = 296
@@ -208,7 +206,6 @@ object frmMain: TfrmMain
     Action = acBtn3
     TabOrder = 7
     Layout = blGlyphTop
-    StyleManager = styleOffice
   end
   object chkToogleEnable: TJvXPCheckbox
     Left = 136

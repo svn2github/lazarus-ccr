@@ -12,13 +12,15 @@ procedure Register;
 
 implementation
 
-{$R ..\resource\JvValidatorsReg.res}
+{$R ..\..\resource\JvValidatorsReg.res}
 
-uses JvValidators, JvErrorIndicator, JvValidatorsEditorForm;
+uses
+  JvDsgnConsts, JvValidators, JvErrorIndicator, JvValidatorsEditorForm;
 
 procedure Register;
 begin
-  RegisterComponents('JvValidators', [TJvValidators, TJvValidationSummary, TJvErrorIndicator]);
+  RegisterComponents(RsPaletteValidators, [TJvValidators, TJvValidationSummary, TJvErrorIndicator]);
+
   RegisterNoIcon([TJvRequiredFieldValidator, TJvCompareValidator,
     TJvRangeValidator, TJvRegularExpressionValidator, TJvCustomValidator, TJvControlsCompareValidator]);
 
@@ -28,9 +30,5 @@ begin
   RegisterPropertyEditor(TypeInfo(string), TJvBaseValidator, 'PropertyToValidate', TJvPropertyValidateProperty);
   RegisterPropertyEditor(TypeInfo(string), TJvBaseValidator, 'CompareToProperty', TJvPropertyToCompareProperty); end;
 
-(*
-initialization
-  {$I JvXPBarLaz.lrs}
-*)
 
 end.

@@ -221,7 +221,7 @@ uses
   SysUtils,
   JvResources, JvJVCLUtils;
 
-{$R ..\resource\JvErrorIndicator.res}
+{$R ..\..\resource\JvErrorIndicator.res}
 
 const
   cDefBlinkCount = 5;

@@ -13,12 +13,12 @@ implementation
 
 uses
   ComponentEditors, PropEdits, GraphPropEdits, ImgList,
-  JvXPCore, JvXPPropertyEditors,
+  JvDsgnConsts, JvXPCore, JvXPPropertyEditors,
   JvXPBar, JvXPContainer, JvXPButtons, JvXPCheckCtrls;
 
 procedure Register;
 begin
-  RegisterComponents('JvXPCtrls', [
+  RegisterComponents(RsPaletteXPControls, [
     TJvXPBar,
     TJvXPContainer,
     TJvXPButton,

@@ -6,14 +6,13 @@
     <General>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
-      <Title Value="WinXPBarDemo"/>
+      <Title Value="SimpleDemo"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
       <XPManifest>
         <TextName Value="CompanyName.ProductName.AppName"/>
         <TextDesc Value="Your application description."/>
       </XPManifest>
-      <Icon Value="0"/>
     </General>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
@@ -28,7 +27,7 @@
     </RunParams>
     <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="JvXPCtrlsLaz"/>
+        <PackageName Value="JvXPCtrlsLazR"/>
       </Item1>
       <Item2>
         <PackageName Value="LCL"/>
@@ -36,7 +35,7 @@
     </RequiredPackages>
     <Units Count="2">
       <Unit0>
-        <Filename Value="WinXPBarDemo.lpr"/>
+        <Filename Value="SimpleDemo.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
@@ -52,7 +51,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\..\bin\WinXPBarDemo"/>
+      <Filename Value="..\..\bin\XPCtrls_SimpleDemo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

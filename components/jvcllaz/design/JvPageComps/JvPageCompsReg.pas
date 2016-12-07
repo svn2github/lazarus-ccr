@@ -1,4 +1,4 @@
-unit JvNavigationPaneReg; 
+unit JvPageCompsReg; 
 
 {$mode objfpc}{$H+}
 
@@ -12,17 +12,17 @@ procedure Register;
 implementation
 
 uses
-  JvNavigationPane;
+  JvDsgnConsts, JvNavigationPane;
 
 procedure Register;
 begin
-  RegisterComponents('JvNavPane',[TJvNavigationPane, TJvNavIconButton,
+  RegisterComponents(RsPaletteNavPane, [TJvNavigationPane, TJvNavIconButton,
     TJvNavPanelButton, TJvNavPanelHeader, TJvNavPanelDivider, TJvOutlookSplitter,
     TJvNavPaneStyleManager, TJvNavPaneToolPanel]);
 end;
 
 initialization
-  {$I JvNavigationPaneLaz.lrs}
+  {$I ..\..\resource\JvNavigationPaneLaz.lrs}
 
 end.
 

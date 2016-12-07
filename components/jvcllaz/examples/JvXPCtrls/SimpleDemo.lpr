@@ -2,7 +2,7 @@ program SimpleDemo;
 
 uses
   Forms, Interfaces,
-  MainFrm in 'MainFrm.pas', JvXPCtrlsLaz {frmMain};
+  MainFrm in 'MainFrm.pas';
 
 {$R *.res}
 
