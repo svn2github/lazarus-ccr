@@ -15,6 +15,10 @@
         <TextDesc Value="Your application description."/>
       </XPManifest>
       <Icon Value="0"/>
+      <Resources Count="2">
+        <Resource_0 FileName="locale\jsoneditor.en.po" Type="RCDATA" ResourceName="JSONEDITOR.EN"/>
+        <Resource_1 FileName="locale\jsoneditor.es.po" Type="RCDATA" ResourceName="JSONEDITOR.ES"/>
+      </Resources>
     </General>
     <i18n>
       <EnableI18N Value="True"/>

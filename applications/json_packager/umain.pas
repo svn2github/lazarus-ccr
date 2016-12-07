@@ -1,6 +1,8 @@
 unit umain;
-{$DEFINE PO_RESOURCES}
- { OnlinePackageManager Update JSON Editor
+
+{$DEFINE PO_BUILTINRES}// Use built-in resources for .po files
+
+{ OnlinePackageManager Update JSON Editor
 
   Copyright (C)2016 usernames lainz, minesadorada, GetMem @ http://forum.lazarus.freepascal.org/index.php
 
@@ -41,7 +43,9 @@ unit umain;
   0.1.15.0: BugFix: File/Save didn't add the '.json' suffix in Linux (minesadorada)
             Addition: After Loading, run validation tests(minesadorada)
   0.1.16.0: Renamed ForceUpdate to ForceNotify (GetMem/minesadorada)
-  0.1.17.0: po files stored in resource file as fallback (minesadorada)
+  0.1.17.0: po files stored in resources
+            Use Project/Options/Resources in Laz 1.7+
+            Use LazRes to make a file 'translate.lrs' in older Laz (minesadorada)
   0.1.18.0: ??
  }
 {$mode objfpc}{$H+}
@@ -53,14 +57,14 @@ uses
   Classes, Forms, Controls, StdCtrls, Menus, ActnList, StdActns, Grids,
   Graphics, Buttons, fileutil, LazFileUtils, fileinfo, ugenericcollection, fpjsonrtti,
   Dialogs, LCLTranslator, PopupNotifier, SysUtils, inifiles,
-  lclintf, lclVersion{$IFDEF PO_RESOURCES},LResources, LazUTF8Classes{$ENDIF};
+  lclintf, lclVersion,{$IFDEF PO_BUILTINRES}LResources,LazUTF8Classes{$ENDIF};
 
-CONST C_DEBUGMESSAGES=FALSE;
-
+const
+  C_DEBUGMESSAGES = False;
 
 type
 
-  
+
   { TUpdatePackageFiles }
 
   TUpdatePackageFiles = class(TCollectionItem)
@@ -101,8 +105,10 @@ type
     function LoadFromFile(AFileName: string): boolean;
     function SaveToFile(AFileName: string): boolean;
   published
-    property UpdatePackageData: TUpdatePackageData read FUpdatePackageData write FUpdatePackageData;
-    property UpdatePackageFiles: TPackageFilesList read FUpdatePackageFiles write FUpdatePackageFiles;
+    property UpdatePackageData: TUpdatePackageData
+      read FUpdatePackageData write FUpdatePackageData;
+    property UpdatePackageFiles: TPackageFilesList
+      read FUpdatePackageFiles write FUpdatePackageFiles;
   end;
 
   { TfrmMain }
@@ -166,24 +172,27 @@ type
     sUpdateDirectory, sZipDirectory: string;
     slErrorList: TStrings;
     CFG: TIniFile;
-    INIFilePath:String;
+    INIFilePath: string;
     function ValidationFailed: boolean;
     procedure CtrlShowPopup(Sender: TObject);
     procedure CtrlHidePopup(Sender: TObject);
     procedure CtrlSetUpPopupHandlers;
     procedure CtrlMakeDirty(Sender: TObject);
     function FoundADuplicateLPK: boolean;
-    Function CreateUniqueINI(var aCount: integer):Boolean;
+    function CreateUniqueINI(var aCount: integer): boolean;
   public
     { public declarations }
   end;
 
 var
   frmMain: TfrmMain;
-  {$IFDEF PO_RESOURCES}
+  sPoPath_en, sPoPath_es: string;
+{$IFDEF PO_BUILTINRES}
   aLRes: TLResource;
   aSS: TStringListUTF8;
-  {$ENDIF}
+  S: TResourceStream;
+  F: TFileStream;
+{$ENDIF}
 
 implementation
 
@@ -227,8 +236,8 @@ resourcestring
   rsLanguageChan = 'Language changed to "%s".';
   rsSorryThisLan = 'Sorry, this language is unavailable at this time.';
   rsYouMayNeedTo = '(You may need to restart the app to see the change)';
-  rsThereAreOneO = '- There are one or more .lpk entries with the same name.%s'
-    + '- Every .lpk entry must have a unique name.';
+  rsThereAreOneO = '- There are one or more .lpk entries with the same name.%s' +
+    '- Every .lpk entry must have a unique name.';
   rsUpdateJsonSF = 'Update file "%s" failed to load correctly.';
 
 { TUpdatePackageData }
@@ -387,7 +396,7 @@ end;
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   CanClose := True;
-  if ((bDirty = True) AND (bDisableWarnings=FALSE)) then
+  if ((bDirty = True) and (bDisableWarnings = False)) then
   begin
     if MessageDlg(rsFileMayBeUns, mtConfirmation, [mbYes, mbNo], 0, mbNo) = mrNo then
       CanClose := False;
@@ -399,18 +408,19 @@ begin
     CFG.UpdateFile;
   end;
 end;
-function TfrmMain.CreateUniqueINI(var aCount: integer):Boolean;
-// Recursively loop until correct INI found, or new one created
+
+function TfrmMain.CreateUniqueINI(var aCount: integer): boolean;
+  // Recursively loop until correct INI found, or new one created
 begin
-  Result:=FALSE;
+  Result := False;
   INIFilePath := GetAppConfigFile(False) + IntToStr(aCount);
   CFG := TIniFile.Create(INIFilePath);
-  CFG.CacheUpdates:=TRUE;
+  CFG.CacheUpdates := True;
   if CFG.ReadString('Options', 'AppPath', ProgramDirectory) <> ProgramDirectory then
   begin
     FreeAndNil(CFG); // Ditch the old one
     Inc(aCount);
-    Result:=TRUE;
+    Result := True;
     CreateUniqueINI(aCount); // Make a new one
   end;
 end;
@@ -418,7 +428,7 @@ end;
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
   sLang: string;
-  iIniCount:Integer;
+  iIniCount: integer;
 begin
   {
   Self.AutoAdjustLayout(lapAutoAdjustForDPI, Self.DesignTimeDPI,
@@ -449,12 +459,12 @@ begin
   // Enable options persistence
   // If program location is different, create a new CFG file
   // Because each component's location might be different
-  iIniCount:=0;
-  If CreateUniqueINI(iIniCount) then
+  iIniCount := 0;
+  if CreateUniqueINI(iIniCount) then
     CFG.WriteString('Options', 'AppPath', ProgramDirectory);
   CFG.UpdateFile;
-  If C_DEBUGMESSAGES=TRUE then
-    ShowMessageFmt('Inifile=%s, Count=%d',[INIFilePath,iIniCount]);
+  if C_DEBUGMESSAGES = True then
+    ShowMessageFmt('Inifile=%s, Count=%d', [INIFilePath, iIniCount]);
   // Pop-up hints (show on first run, then not again unless the user chooses)
   bIsVirgin := CFG.ReadBool('Options', 'Virgin', True);
   bShowPopupHints := bIsVirgin;
@@ -479,8 +489,8 @@ end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
-    CFG.Free;
-    slErrorList.Free;
+  CFG.Free;
+  slErrorList.Free;
 end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
@@ -509,21 +519,23 @@ begin
         stringPackageFiles.RowCount := JSONPackage.UpdatePackageFiles.Count + 1;
         for i := 0 to JSONPackage.UpdatePackageFiles.Count - 1 do
         begin
-          stringPackageFiles.Cells[0, i + 1] := JSONPackage.UpdatePackageFiles.Items[i].Name;
-          stringPackageFiles.Cells[1, i + 1] := JSONPackage.UpdatePackageFiles.Items[i].Version;
+          stringPackageFiles.Cells[0, i + 1] :=
+            JSONPackage.UpdatePackageFiles.Items[i].Name;
+          stringPackageFiles.Cells[1, i + 1] :=
+            JSONPackage.UpdatePackageFiles.Items[i].Version;
         end;
-          if ValidationFailed then
-          begin
-            if (slErrorList.Count > 1) then
-              ShowMessage(Format(rsUpdateJsonSF, [ExtractFileName(sJSONFilePath)]) + LineEnding
-              + LineEnding + rsOneOfTheReqn + LineEnding + slErrorList.Text +
-                LineEnding + rsFixThenTryAg)
-            else
-              ShowMessage(Format(rsUpdateJsonSF,[ExtractFileName(sJSONFilePath)]) + LineEnding
-              + LineEnding + rsOneOfTheReq1 + LineEnding + slErrorList.Text +
-                LineEnding + rsFixThenTryAg);
-            Exit;
-          end;
+        if ValidationFailed then
+        begin
+          if (slErrorList.Count > 1) then
+            ShowMessage(Format(rsUpdateJsonSF, [ExtractFileName(sJSONFilePath)]) +
+              LineEnding + LineEnding + rsOneOfTheReqn + LineEnding +
+              slErrorList.Text + LineEnding + rsFixThenTryAg)
+          else
+            ShowMessage(Format(rsUpdateJsonSF, [ExtractFileName(sJSONFilePath)]) +
+              LineEnding + LineEnding + rsOneOfTheReq1 + LineEnding +
+              slErrorList.Text + LineEnding + rsFixThenTryAg);
+          Exit;
+        end;
       end
       else
         ShowMessageFmt('There was a problem loading "%s" - is it corrupted or in the wrong format?',
@@ -573,8 +585,10 @@ begin
         s += RightStr(VInfo.VersionStrings[1], Length(VInfo.VersionStrings[1]) -
           EqualsPos) + LineEnding;
     end;
+    {
     s+=Format(rsCompiledWith2,
     [{$I %FPCVERSION%},lcl_major,lcl_minor,LineEnding,{$I %FPCTARGETCPU%},{$I %FPCTARGETOS%},LineEnding,LineEnding]);
+    }
     if VInfo.VersionStrings.Count > 1 then
     begin
       EqualsPos := Pos('=', VInfo.VersionStrings[0]); // File Deswcription
@@ -614,7 +628,7 @@ begin
   else
   begin
     mnu_lang_en.Checked := False;
-//  SetDefaultLang(''); // Back to default?
+    //  SetDefaultLang(''); // Back to default?
     ShowMessage(rsSorryThisLan + LineEnding + rsYouMayNeedTo);
   end;
 end;
@@ -673,8 +687,8 @@ begin
       Result := True;
     end;
   // A full URL?
-  if ((Length(editDownloadZipURL.Text) > 0) and (RightStr(editDownloadZipURL.Text, 1) = '/'))
-  then
+  if ((Length(editDownloadZipURL.Text) > 0) and
+    (RightStr(editDownloadZipURL.Text, 1) = '/')) then
   begin
     slErrorList.Add(rsDownloadZipURLI2);
     editDownloadZipURL.Color := clYellow;
@@ -752,7 +766,8 @@ begin
   if bForceSaveAs or (sJSONFilePath = '') then
   begin
     FileSaveAs1.Dialog.InitialDir := sUpdateDirectory;
-    FileSaveAs1.Dialog.FileName := 'update_' + ExtractFilenameOnly(editName.Text) + '.json';
+    FileSaveAs1.Dialog.FileName :=
+      'update_' + ExtractFilenameOnly(editName.Text) + '.json';
     if FileSaveAs1.Dialog.Execute then
       sJSONFilePath := FileSaveAs1.Dialog.FileName
     else
@@ -897,39 +912,82 @@ begin
   end;
 end;
 
-{$IFDEF PO_RESOURCES}
 // Use embedded .po resources if not distributed with executable
-Initialization
-{$I translate.lrs}
-If NOT FileExistsUTF8(ProgramDirectory + 'locale\' + ExtractFilenameOnly(Application.EXEName) + '.es.po') then
-BEGIN
-aLRes:=LazarusResources.Find('jsoneditor.es');
-if assigned(aLRes) then
+initialization
+  sPoPath_en := ProgramDirectory + 'locale\' + ExtractFilenameOnly(
+    Application.EXEName) + '.en.po';
+  sPoPath_es := ProgramDirectory + 'locale\' + ExtractFilenameOnly(
+    Application.EXEName) + '.es.po';
+  if (lcl_major > 0) and (lcl_minor > 6) then
   begin
-    ForceDirectory(ProgramDirectory + 'locale');
-    aSS:=TStringListUTF8.Create;
-    TRY
-    Ass.Add(aLRes.Value);
-    aSS.SaveToFile(ProgramDirectory + 'locale\' + ExtractFilenameOnly(Application.EXEName) + '.es.po');
-    Finally
-    aSS.Free;
+{$IFDEF PO_BUILTINRES}
+    // This uses a resource file added via Project/Options
+    if not FileExistsUTF8(sPoPath_en) then
+    begin
+      // create a resource stream which points to the po file
+      S := TResourceStream.Create(HInstance, 'JSONEDITOR.EN', MakeIntResource(10));
+      try
+        ForceDirectory(ProgramDirectory + 'locale');
+        F := TFileStream.Create(sPoPath_en, fmCreate);
+        try
+          F.CopyFrom(S, S.Size); // copy data from the resource stream to file stream
+        finally
+          F.Free; // destroy the file stream
+        end;
+      finally
+        S.Free; // destroy the resource stream
+      end;
+    end;
+    if not FileExistsUTF8(sPoPath_es) then
+    begin
+      S := TResourceStream.Create(HInstance, 'JSONEDITOR.ES', MakeIntResource(10));
+      try
+        ForceDirectory(ProgramDirectory + 'locale');
+        F := TFileStream.Create(sPoPath_es, fmCreate);
+        try
+          F.CopyFrom(S, S.Size);
+        finally
+          F.Free
+        end;
+      finally
+        S.Free;
+      end;
+    end;
+  end
+  else
+  begin // Older version of laz
+    // This uses an lrs file generated from lazres
+{$I translate.lrs}
+    if not FileExistsUTF8(sPoPath_es) then
+    begin
+      aLRes := LazarusResources.Find('jsoneditor.es');
+      if assigned(aLRes) then
+      begin
+        ForceDirectory(ProgramDirectory + 'locale');
+        aSS := TStringListUTF8.Create;
+        try
+          Ass.Add(aLRes.Value);
+          aSS.SaveToFile(sPoPath_es);
+        finally
+          aSS.Free;
+        end;
+      end;
+    end;
+    if not FileExistsUTF8(sPoPath_en) then
+    begin
+      aLRes := LazarusResources.Find('jsoneditor.en');
+      if assigned(aLRes) then
+      begin
+        ForceDirectory(ProgramDirectory + 'locale');
+        aSS := TStringListUTF8.Create;
+        try
+          Ass.Add(aLRes.Value);
+          aSS.SaveToFile(sPoPath_en);
+        finally
+          aSS.Free;
+        end;
+      end;
     end;
   end;
-END;
-If NOT FileExistsUTF8(ProgramDirectory + 'locale\' + ExtractFilenameOnly(Application.EXEName) + '.en.po') then
-BEGIN
-aLRes:=LazarusResources.Find('jsoneditor.en');
-if assigned(aLRes) then
-  begin
-    ForceDirectory(ProgramDirectory + 'locale');
-    aSS:=TStringListUTF8.Create;
-    TRY
-    Ass.Add(aLRes.Value);
-    aSS.SaveToFile(ProgramDirectory + 'locale\' + ExtractFilenameOnly(Application.EXEName) + '.en.po');
-    FINALLY
-    aSS.Free;
-    END;
-  end;
-END;
 {$ENDIF}
 end.
