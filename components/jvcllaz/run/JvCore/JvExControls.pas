@@ -44,7 +44,7 @@ unit JvExControls;
 interface
 
 uses
-  Classes, types, Controls, Graphics, LCLIntf, LCLType, LMessages, Forms,
+  Classes, Controls, Graphics, LCLIntf, LCLType, LMessages, types, Forms,
   JvTypes;
 
 type
@@ -52,14 +52,14 @@ type
    (dcWantAllKeys, dcWantArrows, dcWantChars, dcButton, dcHasSetSel, dcWantTab,
     dcNative); // if dcNative is in the set the native allowed keys are used and GetDlgCode is ignored
   TDlgCodes = set of TDlgCode;
-
+                 (*
  {$IFDEF WINDOWS}
   TSmallPoint = Types.TSmallPoint;
  {$ENDIF}
  {$IFDEF LINUX}
   TSmallPoint = Classes.TSmallPoint;
  {$ENDIF}
-
+                   *)
 (******************** NOT CONVERTED
 const
   dcWantMessage = dcWantAllKeys;
@@ -664,8 +664,12 @@ begin
 end;
 
 function TJvExGraphicControl.HitTest(X, Y: Integer): Boolean;
+var
+  pt: Types.TSmallPoint;
 begin
-  Result := BaseWndProc(CM_HITTEST, 0, SmallPointToLong(PointToSmallPoint(Point(X, Y)))) <> 0;
+  pt.X := X;
+  pt.Y := Y;
+  Result := BaseWndProc(CM_HITTEST, 0, SmallPointToLong(pt)) <> 0;
 end;
 
 function TJvExGraphicControl.HintShow(var HintInfo: THintInfo): Boolean;
@@ -849,8 +853,12 @@ begin
 end;
 
 function TJvExCustomControl.HitTest(X, Y: Integer): Boolean;
+var
+  pt: Types.TSmallPoint;
 begin
-  Result := BaseWndProc(CM_HITTEST, 0, SmallPointToLong(PointToSmallPoint(Point(X, Y)))) <> 0;
+  pt.X := X;
+  pt.Y := Y;
+  Result := BaseWndProc(CM_HITTEST, 0, SmallPointToLong(pt)) <> 0;
 end;
 
 function TJvExCustomControl.HintShow(var HintInfo: THintInfo): Boolean;

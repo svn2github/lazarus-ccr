@@ -153,6 +153,9 @@ type
 
 implementation
 
+uses
+  Types;
+
 //******************** NOT CONVERTED
 //CONTROL_IMPL_DEFAULT(Shape)
 
@@ -293,8 +296,12 @@ begin
 end;
 
 function TJvExSplitter.HitTest(X, Y: Integer): Boolean;
+var
+  pt: Types.TSmallPoint;
 begin
-  Result := BaseWndProc(CM_HITTEST, 0, SmallPointToLong(PointToSmallPoint(Point(X, Y)))) <> 0;
+  pt.X := X;
+  pt.Y := Y;
+  Result := BaseWndProc(CM_HITTEST, 0, SmallPointToLong(pt)) <> 0;
 end;
 
 function TJvExSplitter.HintShow(var HintInfo: THintInfo): Boolean;

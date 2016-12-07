@@ -34,11 +34,11 @@ unit JvJVCLUtils;
 interface
 
 uses
- {$IFDEF WIN32}
-  Windows,
- {$ENDIF}
-  Classes, Graphics, Controls, ImgList,
+  {$IFDEF WIN32}
+   Windows,                 // before Types!
+  {$ENDIF}
   LCLType, LCLProc, LMessages, Types,
+  Classes, Graphics, Controls, ImgList,
   JvTypes;
 
 (******************** NOT CONVERTED
