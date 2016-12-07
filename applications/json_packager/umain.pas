@@ -1,6 +1,9 @@
 unit umain;
 
 {$DEFINE PO_BUILTINRES}// Use built-in resources for .po files
+// If compiling with Laz Version < 1.7 then use lazres to make a translate.lrs from the .po files
+// If compiling Laz V >=1.7 then add the .po files in Project/Options/resources
+// Without this DEFINE, include the /locale folder in the distribution
 
 { OnlinePackageManager Update JSON Editor
 
@@ -585,10 +588,8 @@ begin
         s += RightStr(VInfo.VersionStrings[1], Length(VInfo.VersionStrings[1]) -
           EqualsPos) + LineEnding;
     end;
-    {
     s+=Format(rsCompiledWith2,
     [{$I %FPCVERSION%},lcl_major,lcl_minor,LineEnding,{$I %FPCTARGETCPU%},{$I %FPCTARGETOS%},LineEnding,LineEnding]);
-    }
     if VInfo.VersionStrings.Count > 1 then
     begin
       EqualsPos := Pos('=', VInfo.VersionStrings[0]); // File Deswcription

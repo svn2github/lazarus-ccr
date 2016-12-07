@@ -19,6 +19,7 @@ object frmMain: TfrmMain
   OnShow = FormShow
   Position = poScreenCenter
   LCLVersion = '1.7'
+  Scaled = True
   object lblName: TLabel
     Left = 8
     Height = 15

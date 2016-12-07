@@ -1,6 +1,6 @@
 [Setup]
 AppName=External OPM JSON package Editor
-AppVersion=0.1.16.0
+AppVersion=0.1.17.0
 DefaultDirName={pf}\OPMUtilities
 DefaultGroupName=OPM
 UninstallDisplayIcon={app}\jsoneditor.exe
@@ -35,14 +35,15 @@ InfoAfterFile="readme.txt"
 Source: "jsoneditor64.exe"; DestDir: "{app}"; DestName: "jsoneditor.exe"; Check: Is64BitInstallMode
 ; Place all x86 files here, first one should be marked 'solidbreak'
 Source: "jsoneditor.exe"; DestDir: "{app}"; Check: not Is64BitInstallMode; Flags: solidbreak
+; Enable line below if using Lazarus < V1.7
+;Source: "translate.lrs"; DestDir: "{app}";
+
 ; Place all common files here, first one should be marked 'solidbreak'
 ; Source: "readmepreinstall.txt"; DestDir: "{app}"; Flags: isreadme
 ; Source: "readme.txt"; DestDir: "{app}"; Flags: isreadme
-Source: ".\locale\jsoneditor.en.po"; DestDir: "{app}\locale";  Flags: solidbreak
-Source: ".\locale\jsoneditor.es.po"; DestDir: "{app}\locale";
-Source: ".\locale\jsoneditor.en.mo"; DestDir: "{app}\locale";
-Source: ".\locale\jsoneditor.es.mo"; DestDir: "{app}\locale";
-Source: ".\locale\jsoneditor.po"; DestDir: "{app}\locale";
+; Source: ".\locale\jsoneditor.en.po"; DestDir: "{app}\locale";  Flags: solidbreak
+; Source: ".\locale\jsoneditor.es.po"; DestDir: "{app}\locale";
+; Source: ".\locale\jsoneditor.po"; DestDir: "{app}\locale";
 
 [Icons]
 Name: "{group}\External OPM JSON package Editor"; Filename: "{app}\jsoneditor.exe"
