@@ -340,3 +340,4 @@ msgstr "Would you like to copy %s to the %s folder?"
 #: umain.rsyoumayneedto
 msgid "(You may need to restart the app to see the change)"
 msgstr "(You may need to restart the app to see the change)"
+
