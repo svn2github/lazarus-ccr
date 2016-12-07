@@ -3,6 +3,7 @@ program JvValidatorsDemo;
 {$MODE Delphi}
 
 uses
+  {$IFDEF UNIX} cthreads, {$ENDIF}
   Forms, Interfaces,
   MainFrm in 'MainFrm.pas' {frmMain};
 
