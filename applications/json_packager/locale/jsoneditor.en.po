@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
+"Last-Translator: minesadorada <minesadorada@charcodelvalle.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -311,7 +311,7 @@ msgstr "Update"
 
 #: umain.rsupdatejsonsf
 msgid "Update file \"%s\" failed to load correctly."
-msgstr "Update"
+msgstr "Update file \"%s\" failed to load correctly."
 
 #: umain.rsupdatezipnam
 msgid "- Update zip name is too short or missing"
@@ -340,4 +340,3 @@ msgstr "Would you like to copy %s to the %s folder?"
 #: umain.rsyoumayneedto
 msgid "(You may need to restart the app to see the change)"
 msgstr "(You may need to restart the app to see the change)"
-

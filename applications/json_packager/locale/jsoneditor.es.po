@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
+"Last-Translator: minesadorada <minesadorada@charcodelvalle.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,7 +20,10 @@ msgid ""
 "Add Package File:\n"
 "The update zip can contain more than one lpk file\n"
 "deployed to the same place.\n"
-msgstr "Agregar archivo del paquete: La actualización postal puede contener más de un archivo LPK desplegado en el mismo lugar."
+msgstr ""
+"Agregar archivo del paquete:\n"
+"La actualización postal puede contener más de un archivo LPK\n"
+" desplegado en el mismo lugar.\n"
 
 #: tfrmmain.btnremove.caption
 msgid "Remove"
@@ -30,7 +33,9 @@ msgstr "Eliminar"
 msgid ""
 "Remove Package File:\n"
 "Deletes the last entry from the list\n"
-msgstr "Eliminar archivo del paquete: Borra la última entrada de la lista"
+msgstr ""
+"Eliminar archivo del paquete:\n"
+"Borra la última entrada de la lista\n"
 
 #: tfrmmain.cbforcenotify.caption
 msgid "Force Notify"
@@ -41,7 +46,10 @@ msgid ""
 "Force Notify check box:\n"
 "If this is checked the OPM user will be notified\n"
 "of your update.  Only check this if the update is important.\n"
-msgstr "Casilla de verificación notificar de fuerza: Si esto se comprueba se notificará al usuario de la OPM de su actualización.  Sólo esto Compruebe si la actualización es importante."
+msgstr ""
+"Casilla de verificación notificar de fuerza:\n"
+" Si esto se comprueba se notificará al usuario de la OPM de su actualización.\n"
+" Sólo esto Compruebe si la actualización es importante.\n"
 
 #: tfrmmain.cmd_close.caption
 msgid "&Close"
@@ -55,13 +63,15 @@ msgstr "Guardar"
 msgid ""
 "Save the current configuration to disk\n"
 "as a JSON update file\n"
-msgstr "Guardar la configuración actual en el disco como un archivo de actualización JSON"
+msgstr ""
+"Guardar la configuración actual en el disco\n"
+" como un archivo de actualización JSON\n"
 
 #: tfrmmain.editdownloadzipurl.hint
 msgid ""
 "Download URL:\n"
 "Include the FULL url needed to download the package Zip file\n"
-msgstr "URL de descarga: Incluir el url COMPLETO necesario para descargar el archivo Zip del paquete"
+msgstr "URL de descarga: Incluir el url COMPLETO necesario para descargar el archivo Zip del paquete\n"
 
 #: tfrmmain.editname.hint
 msgid ""
@@ -157,7 +167,7 @@ msgid ""
 "Update Zip Name:\n"
 "Click this to browse your system to find\n"
 " an existing Update Zip\n"
-msgstr "Actualización Zip nombre: Haga clic aquí para ver su sistema para encontrar un Zip de actualización existentes"
+msgstr "Actualización Zip nombre: Haga clic aquí para ver su sistema para encontrar un Zip de actualización existentes\n"
 
 #: tfrmmain.spd_checkurl.caption
 msgid "Check URL"
@@ -186,7 +196,7 @@ msgstr "Acerca de"
 
 #: umain.rscompiledwith2
 msgid "Compiled with FPC V:%s and Lazarus V:%d.%d%s for the %s - %s platform%s%s"
-msgstr "Compilado con FPC V: %s y Lazarus V:%d.%d%s para el % de s - plataforma de %s %s %s"
+msgstr "Compilado con FPC V: %s y Lazarus V:%d.%d%s para el %s - %s  plataforma de %s %s"
 
 #: umain.rsdownloadzipurld
 msgid "- Download URL does not contain the zipfile name"
@@ -323,4 +333,3 @@ msgstr "¿Quieres copiar la carpeta de %s %s?"
 #: umain.rsyoumayneedto
 msgid "(You may need to restart the app to see the change)"
 msgstr "(Puede que necesite reiniciar la aplicación para ver el cambio)"
-
