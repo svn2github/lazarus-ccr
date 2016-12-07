@@ -49,7 +49,8 @@ unit umain;
   0.1.17.0: po files stored in resources
             Use Project/Options/Resources in Laz 1.7+
             Use LazRes to make a file 'translate.lrs' in older Laz (minesadorada)
-  0.1.18.0: ??
+  0.1.18.0: Bugfix: Linux path error when creating locale folder
+  0.1.19.0: ??
  }
 {$mode objfpc}{$H+}
 
@@ -915,13 +916,13 @@ end;
 
 // Use embedded .po resources if not distributed with executable
 initialization
-  sPoPath_en := ProgramDirectory + 'locale\' + ExtractFilenameOnly(
+{$IFDEF PO_BUILTINRES}
+  sPoPath_en := ProgramDirectory + 'locale' + PathDelim + ExtractFilenameOnly(
     Application.EXEName) + '.en.po';
-  sPoPath_es := ProgramDirectory + 'locale\' + ExtractFilenameOnly(
+  sPoPath_es := ProgramDirectory + 'locale' + PathDelim + ExtractFilenameOnly(
     Application.EXEName) + '.es.po';
   if (lcl_major > 0) and (lcl_minor > 6) then
   begin
-{$IFDEF PO_BUILTINRES}
     // This uses a resource file added via Project/Options
     if not FileExistsUTF8(sPoPath_en) then
     begin
