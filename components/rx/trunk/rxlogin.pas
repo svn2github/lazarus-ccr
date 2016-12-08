@@ -411,12 +411,12 @@ begin
       with AppIcon do
       begin
         OnDblClick := @DoIconDblClick;
-        Cursor := crHand;
+        Cursor := crHandPoint;
       end;
       with KeyImage do
       begin
         OnDblClick := @DoIconDblClick;
-        Cursor := crHand;
+        Cursor := crHandPoint;
       end;
     end;
     PasswordEdit.MaxLength := FMaxPasswordLen;

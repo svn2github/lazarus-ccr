@@ -258,6 +258,10 @@ msgstr "Налаштування панелі інструментів"
 msgid "Transparent"
 msgstr "Прозоро"
 
+#: rxconst.svariableisnotstring
+msgid "Variable %s is not string"
+msgstr ""
+
 #: rxconst.svisiblebuttons
 msgid "Visible buttons"
 msgstr "Видимі кнопки"

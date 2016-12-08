@@ -126,6 +126,7 @@ type
   end;
 
 implementation
+uses rxconst;
 
 { TConfigValuesEnumerator }
 
@@ -370,7 +371,7 @@ begin
   if FDataType = cvtString then
     Result:=FValue
   else
-    raise Exception.CreateFmt('Variable %s is not string', [FName]);
+    raise Exception.CreateFmt(sVariableIsNotString, [FName]);
 end;
 
 procedure TConfigValue.SetAsBoolean(const AValue: boolean);
@@ -440,7 +441,7 @@ begin
     end
   end
   else
-    raise Exception.CreateFmt('Variable %s is not string', [FName]);
+    raise Exception.CreateFmt(sVariableIsNotString, [FName]);
 end;
 
 constructor TConfigValue.Create;

@@ -15,7 +15,7 @@
 "/>
     <License Value="LGPL"/>
     <Version Minor="1" Build="2"/>
-    <Files Count="4">
+    <Files Count="5">
       <Item1>
         <Filename Value="rxconfigvalues.pas"/>
         <UnitName Value="rxConfigValues"/>
@@ -32,6 +32,10 @@
         <Filename Value="rxfileutils.pas"/>
         <UnitName Value="rxFileUtils"/>
       </Item4>
+      <Item5>
+        <Filename Value="rxconst.pas"/>
+        <UnitName Value="rxconst"/>
+      </Item5>
     </Files>
     <LazDoc Paths="docs;/usr/local/share/lazarus/components/rxnew/docs"/>
     <RequiredPkgs Count="1">

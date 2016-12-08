@@ -241,6 +241,10 @@ msgstr ""
 msgid "Transparent"
 msgstr ""
 
+#: rxconst.svariableisnotstring
+msgid "Variable %s is not string"
+msgstr ""
+
 #: rxconst.svisiblebuttons
 msgid "Visible buttons"
 msgstr ""

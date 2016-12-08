@@ -245,6 +245,10 @@ msgstr "Menu panel herramienta"
 msgid "Transparent"
 msgstr "Transparente"
 
+#: rxconst.svariableisnotstring
+msgid "Variable %s is not string"
+msgstr ""
+
 #: rxconst.svisiblebuttons
 msgid "Visible buttons"
 msgstr "Botones visibles"
