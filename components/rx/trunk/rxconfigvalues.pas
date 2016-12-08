@@ -46,6 +46,7 @@ const
   cvtFloat    = 5; // вещественное
 
 type
+  TConfigValuesEnumerator = class;
 
   { TConfigValue }
 
@@ -105,13 +106,45 @@ type
     procedure SetByNameAsFloat(AName:string; ADefValue:Double);
     procedure SetByNameAsBoolean(AName:string; ADefValue:Boolean);
     procedure SetByNameAsDateTime(AName:string; ADefValue:TDateTime);
+    function GetEnumerator: TConfigValuesEnumerator;
   public
     property Items[Index:Integer]:TConfigValue read GetItem;default;
     property Count:integer read GetCount;
   end;
   
+  { TConfigValuesEnumerator }
+
+  TConfigValuesEnumerator = class
+  private
+    FList: TConfigValues;
+    FPosition: Integer;
+  public
+    constructor Create(AList: TConfigValues);
+    function GetCurrent: TConfigValue;
+    function MoveNext: Boolean;
+    property Current: TConfigValue read GetCurrent;
+  end;
 
 implementation
+
+{ TConfigValuesEnumerator }
+
+constructor TConfigValuesEnumerator.Create(AList: TConfigValues);
+begin
+  FList := AList;
+  FPosition := -1;
+end;
+
+function TConfigValuesEnumerator.GetCurrent: TConfigValue;
+begin
+  Result := FList[FPosition];
+end;
+
+function TConfigValuesEnumerator.MoveNext: Boolean;
+begin
+  Inc(FPosition);
+  Result := FPosition < FList.Count;
+end;
 
 { TConfigValues }
 
@@ -291,6 +324,11 @@ begin
   if not Assigned(P) then
     P:=CreateValue(AName, cvtDateTime);
   P.AsDateTime:=ADefValue;
+end;
+
+function TConfigValues.GetEnumerator: TConfigValuesEnumerator;
+begin
+  Result:=TConfigValuesEnumerator.Create(Self);
 end;
 
 { TConfigValue }
