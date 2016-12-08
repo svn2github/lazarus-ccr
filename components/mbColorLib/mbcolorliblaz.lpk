@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <PathDelim Value="\"/>
+    <Name Value="mbColorLibLaz"/>
+    <Type Value="RunAndDesignTime"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+    </CompilerOptions>
+    <Files Count="43">
+      <Item1>
+        <Filename Value="PalUtils.pas"/>
+        <UnitName Value="PalUtils"/>
+      </Item1>
+      <Item2>
+        <Filename Value="HTMLColors.pas"/>
+        <UnitName Value="HTMLColors"/>
+      </Item2>
+      <Item3>
+        <Filename Value="RGBCIEUtils.pas"/>
+        <UnitName Value="RGBCIEUtils"/>
+      </Item3>
+      <Item4>
+        <Filename Value="RGBCMYKUtils.pas"/>
+        <UnitName Value="RGBCMYKUtils"/>
+      </Item4>
+      <Item5>
+        <Filename Value="RGBHSLUtils.pas"/>
+        <UnitName Value="RGBHSLUtils"/>
+      </Item5>
+      <Item6>
+        <Filename Value="RGBHSVUtils.pas"/>
+        <UnitName Value="RGBHSVUtils"/>
+      </Item6>
+      <Item7>
+        <Filename Value="mbColorList.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="mbColorList"/>
+      </Item7>
+      <Item8>
+        <Filename Value="mbTrackBarPicker.pas"/>
+        <UnitName Value="mbTrackBarPicker"/>
+      </Item8>
+      <Item9>
+        <Filename Value="BColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="BColorPicker"/>
+      </Item9>
+      <Item10>
+        <Filename Value="GColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="GColorPicker"/>
+      </Item10>
+      <Item11>
+        <Filename Value="RColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="RColorPicker"/>
+      </Item11>
+      <Item12>
+        <Filename Value="HColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="HColorPicker"/>
+      </Item12>
+      <Item13>
+        <Filename Value="KColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="KColorPicker"/>
+      </Item13>
+      <Item14>
+        <Filename Value="LColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="LColorPicker"/>
+      </Item14>
+      <Item15>
+        <Filename Value="MColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="MColorPicker"/>
+      </Item15>
+      <Item16>
+        <Filename Value="VColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="VColorPicker"/>
+      </Item16>
+      <Item17>
+        <Filename Value="YColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="YColorPicker"/>
+      </Item17>
+      <Item18>
+        <Filename Value="mbColorPreview.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="mbColorPreview"/>
+      </Item18>
+      <Item19>
+        <Filename Value="Scanlines.pas"/>
+        <UnitName Value="Scanlines"/>
+      </Item19>
+      <Item20>
+        <Filename Value="mbColorPickerControl.pas"/>
+        <UnitName Value="mbColorPickerControl"/>
+      </Item20>
+      <Item21>
+        <Filename Value="BAxisColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="BAxisColorPicker"/>
+      </Item21>
+      <Item22>
+        <Filename Value="GAxisColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="GAxisColorPicker"/>
+      </Item22>
+      <Item23>
+        <Filename Value="RAxisColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="RAxisColorPicker"/>
+      </Item23>
+      <Item24>
+        <Filename Value="CIEAColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="CIEAColorPicker"/>
+      </Item24>
+      <Item25>
+        <Filename Value="CIEBColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="CIEBColorPicker"/>
+      </Item25>
+      <Item26>
+        <Filename Value="CIELColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="CIELColorPicker"/>
+      </Item26>
+      <Item27>
+        <Filename Value="HRingPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="HRingPicker"/>
+      </Item27>
+      <Item28>
+        <Filename Value="HexaColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="HexaColorPicker"/>
+      </Item28>
+      <Item29>
+        <Filename Value="HSColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="HSColorPicker"/>
+      </Item29>
+      <Item30>
+        <Filename Value="SLColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="SLColorPicker"/>
+      </Item30>
+      <Item31>
+        <Filename Value="SLHColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="SLHColorPicker"/>
+      </Item31>
+      <Item32>
+        <Filename Value="HSVColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="HSVColorPicker"/>
+      </Item32>
+      <Item33>
+        <Filename Value="SelPropUtils.pas"/>
+        <UnitName Value="SelPropUtils"/>
+      </Item33>
+      <Item34>
+        <Filename Value="mbOfficeColorDialog.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="mbOfficeColorDialog"/>
+      </Item34>
+      <Item35>
+        <Filename Value="OfficeMoreColorsDialog.pas"/>
+        <UnitName Value="OfficeMoreColorsDialog"/>
+      </Item35>
+      <Item36>
+        <Filename Value="HSLColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="HSLColorPicker"/>
+      </Item36>
+      <Item37>
+        <Filename Value="mbColorPalette.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="mbColorPalette"/>
+      </Item37>
+      <Item38>
+        <Filename Value="CColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="CColorPicker"/>
+      </Item38>
+      <Item39>
+        <Filename Value="SColorPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="SColorPicker"/>
+      </Item39>
+      <Item40>
+        <Filename Value="mbDeskPickerButton.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="mbDeskPickerButton"/>
+      </Item40>
+      <Item41>
+        <Filename Value="ScreenWin.pas"/>
+        <UnitName Value="ScreenWin"/>
+      </Item41>
+      <Item42>
+        <Filename Value="mbColorTree.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="mbColorTree"/>
+      </Item42>
+      <Item43>
+        <Filename Value="HSLRingPicker.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="HSLRingPicker"/>
+      </Item43>
+    </Files>
+    <RequiredPkgs Count="2">
+      <Item1>
+        <PackageName Value="LCLBase"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="FCL"/>
+      </Item2>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>
