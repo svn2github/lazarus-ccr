@@ -103,6 +103,17 @@ msgstr ""
 msgid "Package Files:"
 msgstr ""
 
+#: tfrmmain.lbl_internalversion.caption
+msgid "Internal Version"
+msgstr ""
+
+#: tfrmmain.lbl_internalversion.hint
+msgctxt "tfrmmain.lbl_internalversion.hint"
+msgid ""
+"Internal Version:\n"
+"Increase internal version when you have made changes in the source. It  works only combined with ForceNotify.\n"
+msgstr ""
+
 #: tfrmmain.loaditem.caption
 msgid "Load..."
 msgstr ""
@@ -164,6 +175,13 @@ msgstr ""
 
 #: tfrmmain.spd_checkurl.hint
 msgid "Attempting to Open URL"
+msgstr ""
+
+#: tfrmmain.spin_internalversion.hint
+msgctxt "tfrmmain.spin_internalversion.hint"
+msgid ""
+"Internal Version:\n"
+"Increase internal version when you have made changes in the source. It  works only combined with ForceNotify.\n"
 msgstr ""
 
 #: tfrmmain.stringpackagefiles.hint

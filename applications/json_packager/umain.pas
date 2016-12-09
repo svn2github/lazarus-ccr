@@ -49,8 +49,10 @@ unit umain;
   0.1.17.0: po files stored in resources
             Use Project/Options/Resources in Laz 1.7+
             Use LazRes to make a file 'translate.lrs' in older Laz (minesadorada)
-  0.1.18.0: Bugfix: Linux path error when creating locale folder
-  0.1.19.0: ??
+  0.1.18.0: Bugfix: Linux path error when creating locale folder (minesadorada)
+  0.1.19.0: Added IntrnalVersion integer field to json (minesadorada)
+            Added SpinEdit to control the above  (minesadorada)
+  0.1.20.0: ??
  }
 {$mode objfpc}{$H+}
 
@@ -59,9 +61,9 @@ interface
 {DefaultTranslator}
 uses
   Classes, Forms, Controls, StdCtrls, Menus, ActnList, StdActns, Grids,
-  Graphics, Buttons, fileutil, LazFileUtils, fileinfo, ugenericcollection, fpjsonrtti,
-  Dialogs, LCLTranslator, PopupNotifier, SysUtils, inifiles,
-  lclintf, lclVersion,{$IFDEF PO_BUILTINRES}LResources,LazUTF8Classes{$ENDIF};
+  Graphics, Buttons, fileutil, LazFileUtils, fileinfo, ugenericcollection,
+  fpjsonrtti, Dialogs, LCLTranslator, PopupNotifier, SysUtils, inifiles,
+  lclintf, lclVersion, LResources, Spin, {$IFDEF PO_BUILTINRES}LazUTF8Classes{$ENDIF};
 
 const
   C_DEBUGMESSAGES = False;
@@ -89,12 +91,14 @@ type
     FDownloadZipURL: string;
     FForceNotify: boolean;
     FName: string;
+    FInternalVersion:Integer;
   public
     constructor Create;
   published
     property Name: string read FName write FName;
     property ForceNotify: boolean read FForceNotify write FForceNotify;
     property DownloadZipURL: string read FDownloadZipURL write FDownloadZipURL;
+    property InternalVersion: integer read FInternalVersion write FInternalVersion;
   end;
 
   { TUpdatePackage }
@@ -119,15 +123,17 @@ type
 
   TfrmMain = class(TForm)
     ActionList1: TActionList;
+    cbForceNotify: TCheckBox;
     cmd_Close: TBitBtn;
     cmd_save: TBitBtn;
     btnAdd: TButton;
     btnRemove: TButton;
-    cbForceNotify: TCheckBox;
     editName: TEdit;
     editDownloadZipURL: TEdit;
     FileOpen1: TFileOpen;
     FileSaveAs1: TFileSaveAs;
+    grp_ForceNotify: TGroupBox;
+    lbl_InternalVersion: TLabel;
     lblPackageFiles: TLabel;
     lblName: TLabel;
     lblDownloadZipURL: TLabel;
@@ -147,6 +153,7 @@ type
     SaveAsItem: TMenuItem;
     sb_editName: TSpeedButton;
     spd_CheckURL: TSpeedButton;
+    Spin_InternalVersion: TSpinEdit;
     stringPackageFiles: TStringGrid;
     procedure btnAddClick(Sender: TObject);
     procedure btnRemoveClick(Sender: TObject);
@@ -157,6 +164,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure lbl_InternalVersionClick(Sender: TObject);
     procedure LoadItemClick(Sender: TObject);
     procedure mnu_fileNewClick(Sender: TObject);
     procedure mnu_fileSaveClick(Sender: TObject);
@@ -292,7 +300,7 @@ end;
 procedure TfrmMain.CtrlSetUpPopupHandlers;
 // Use different handlers for some controls
 var
-  iCount: integer;
+  iCount,jCount: integer;
 begin
   with frmMain do
   begin
@@ -300,19 +308,37 @@ begin
     begin
       if (Controls[iCount].InheritsFrom(TControl) = False) then
         continue;
+      if (Controls[iCount] is TGroupBox) then
+         // Iterate through the children of GroupBox
+         for jCount := 0 to Pred(TGroupBox(Controls[iCount]).ControlCount) do
+         Begin
+            if TGroupBox(Controls[iCount]).Controls[jCount] is TSpinEdit then
+            begin
+              TSpinEdit(TGroupBox(Controls[iCount]).Controls[jCount]).OnMouseEnter := @CtrlShowPopup;
+              TSpinEdit(TGroupBox(Controls[iCount]).Controls[jCount]).OnMouseLeave := @CtrlHidePopup;
+              TSpinEdit(TGroupBox(Controls[iCount]).Controls[jCount]).OnClick := @CtrlHidePopup;
+              TSpinEdit(TGroupBox(Controls[iCount]).Controls[jCount]).OnChange := @CtrlMakeDirty;
+            end;
+            if TGroupBox(Controls[iCount]).Controls[jCount] is TCheckBox then
+            begin
+              TCheckBox(TGroupBox(Controls[iCount]).Controls[jCount]).OnMouseEnter := @CtrlShowPopup;
+              TCheckBox(TGroupBox(Controls[iCount]).Controls[jCount]).OnMouseLeave := @CtrlHidePopup;
+              TCheckBox(TGroupBox(Controls[iCount]).Controls[jCount]).OnClick := @CtrlHidePopup;
+              TCheckBox(TGroupBox(Controls[iCount]).Controls[jCount]).OnEditingDone := @CtrlMakeDirty;
+            end;
+            if TGroupBox(Controls[iCount]).Controls[jCount] is TLabel then
+            begin
+              TLabel(TGroupBox(Controls[iCount]).Controls[jCount]).OnMouseEnter := @CtrlShowPopup;
+              TLabel(TGroupBox(Controls[iCount]).Controls[jCount]).OnMouseLeave := @CtrlHidePopup;
+              TLabel(TGroupBox(Controls[iCount]).Controls[jCount]).OnClick := @CtrlHidePopup;
+            end;
+        end;
       if (Controls[iCount] is TEdit) then
       begin
         TEdit(Controls[iCount]).OnMouseEnter := @CtrlShowPopup;
         TEdit(Controls[iCount]).OnMouseLeave := @CtrlHidePopup;
         TEdit(Controls[iCount]).OnClick := @CtrlHidePopup;
         TEdit(Controls[iCount]).OnEditingDone := @CtrlMakeDirty;
-      end;
-      if (Controls[iCount] is TCheckBox) then
-      begin
-        TCheckBox(Controls[iCount]).OnMouseEnter := @CtrlShowPopup;
-        TCheckBox(Controls[iCount]).OnMouseLeave := @CtrlHidePopup;
-        TCheckBox(Controls[iCount]).OnClick := @CtrlHidePopup;
-        TCheckBox(Controls[iCount]).OnEditingDone := @CtrlMakeDirty;
       end;
       if (Controls[iCount] is TStringGrid) then
       begin
@@ -389,8 +415,11 @@ begin
   begin
     s := rsThisOptionSh;
     if MessageDlg(s, mtConfirmation, [mbOK, mbAbort], 0, mbAbort) = mrAbort then
-      cbForceNotify.Checked := False;
-  end;
+      cbForceNotify.Checked := False
+    else
+      If Spin_InternalVersion.Value = 0 then Spin_InternalVersion.Value :=1;
+  end
+  else Spin_InternalVersion.Value :=0;
 end;
 
 procedure TfrmMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -502,6 +531,11 @@ begin
   bDirty := False;
 end;
 
+procedure TfrmMain.lbl_InternalVersionClick(Sender: TObject);
+begin
+
+end;
+
 procedure TfrmMain.LoadItemClick(Sender: TObject);
 var
   i: integer;
@@ -520,6 +554,7 @@ begin
         editName.Text := JSONPackage.UpdatePackageData.Name;
         editDownloadZipURL.Text := JSONPackage.UpdatePackageData.DownloadZipURL;
         cbForceNotify.Checked := JSONPackage.UpdatePackageData.ForceNotify;
+        Spin_InternalVersion.Value:=JSONPackage.UpdatePackageData.InternalVersion;
         stringPackageFiles.RowCount := JSONPackage.UpdatePackageFiles.Count + 1;
         for i := 0 to JSONPackage.UpdatePackageFiles.Count - 1 do
         begin
@@ -781,6 +816,7 @@ begin
     JSONPackage.UpdatePackageData.Name := editName.Text;
     JSONPackage.UpdatePackageData.DownloadZipURL := editDownloadZipURL.Text;
     JSONPackage.UpdatePackageData.ForceNotify := cbForceNotify.Checked;
+    JSONPackage.UpdatePackageData.InternalVersion:=Spin_InternalVersion.Value;
 
     for i := 1 to stringPackageFiles.RowCount - 1 do
     begin

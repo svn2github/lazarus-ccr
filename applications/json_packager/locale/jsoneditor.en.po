@@ -117,6 +117,19 @@ msgstr "Update Zip Name:"
 msgid "Package Files:"
 msgstr "Package Files:"
 
+#: tfrmmain.lbl_internalversion.caption
+msgid "Internal Version"
+msgstr "Internal Version"
+
+#: tfrmmain.lbl_internalversion.hint
+msgctxt "tfrmmain.lbl_internalversion.hint"
+msgid ""
+"Internal Version:\n"
+"Increase internal version when you have made changes in the source. It  works only combined with ForceNotify.\n"
+msgstr ""
+"Internal Version:\n"
+"Increase internal version when you have made changes in the source. It  works only combined with ForceNotify.\n"
+
 #: tfrmmain.loaditem.caption
 msgid "Load..."
 msgstr "Load..."
@@ -182,6 +195,13 @@ msgstr "Check URL"
 #: tfrmmain.spd_checkurl.hint
 msgid "Attempting to Open URL"
 msgstr "Attempting to Open URL"
+
+#: tfrmmain.spin_internalversion.hint
+msgctxt "tfrmmain.spin_internalversion.hint"
+msgid ""
+"Internal Version:\n"
+"Increase internal version when you have made changes in the source. It  works only combined with ForceNotify.\n"
+msgstr ""
 
 #: tfrmmain.stringpackagefiles.hint
 msgid ""
@@ -340,4 +360,3 @@ msgstr "Would you like to copy %s to the %s folder?"
 #: umain.rsyoumayneedto
 msgid "(You may need to restart the app to see the change)"
 msgstr "(You may need to restart the app to see the change)"
-

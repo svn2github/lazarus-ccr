@@ -4,12 +4,12 @@ msgstr ""
 "Project-Id-Version: jsoneditor\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
+"Last-Translator: minesadorada <minesadorada@charcodelvalle.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: tfrmmain.btnadd.caption
@@ -118,6 +118,19 @@ msgstr "Nombre del Zip de actualización:"
 msgid "Package Files:"
 msgstr "Archivos de Paquete:"
 
+#: tfrmmain.lbl_internalversion.caption
+msgid "Internal Version"
+msgstr "Versión interna"
+
+#: tfrmmain.lbl_internalversion.hint
+msgctxt "tfrmmain.lbl_internalversion.hint"
+msgid ""
+"Internal Version:\n"
+"Increase internal version when you have made changes in the source. It  works only combined with ForceNotify.\n"
+msgstr ""
+"Versión interno:\n"
+"Aumenta versión interna cuando se han hecho cambios en la fuente. Sólo funciona combina con ForceNotify.\n"
+
 #: tfrmmain.loaditem.caption
 msgid "Load..."
 msgstr "Cargar..."
@@ -183,6 +196,13 @@ msgstr "Verificar URL"
 #: tfrmmain.spd_checkurl.hint
 msgid "Attempting to Open URL"
 msgstr "Intentando Abrir URL"
+
+#: tfrmmain.spin_internalversion.hint
+msgctxt "tfrmmain.spin_internalversion.hint"
+msgid ""
+"Internal Version:\n"
+"Increase internal version when you have made changes in the source. It  works only combined with ForceNotify.\n"
+msgstr ""
 
 #: tfrmmain.stringpackagefiles.hint
 msgid ""
@@ -341,4 +361,3 @@ msgstr "¿Quieres copiar %s a la carpeta %s?"
 #: umain.rsyoumayneedto
 msgid "(You may need to restart the app to see the change)"
 msgstr "(Quizás necesites reiniciar la aplicación para ver los cambios)"
-

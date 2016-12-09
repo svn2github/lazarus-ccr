@@ -28,7 +28,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="1"/>
-      <RevisionNr Value="18"/>
+      <RevisionNr Value="19"/>
       <StringTable Comments="Buld configured for Win Linux and Darwin" FileDescription="An editor for OnlinePackageManager update JSON files" InternalName="jsoneditor" LegalCopyright="(c)2016 usernames lainz and minesadorada @ forum.lazarus.freepascal.org" LegalTrademarks="GPL code" OriginalFilename="jsoneditor" ProductName="Lazarus and Freepascal" ProductVersion="1.x and 3.x"/>
     </VersionInfo>
     <BuildModes Count="6">
