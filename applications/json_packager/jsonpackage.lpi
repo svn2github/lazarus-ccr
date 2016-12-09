@@ -10,7 +10,7 @@
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
       <XPManifest>
-        <DpiAware Value="True"/>
+        <DpiAware Value="True/PM"/>
         <TextName Value="CompanyName.ProductName.AppName"/>
         <TextDesc Value="Your application description."/>
       </XPManifest>

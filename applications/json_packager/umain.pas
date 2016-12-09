@@ -46,19 +46,25 @@ unit umain;
   0.1.15.0: BugFix: File/Save didn't add the '.json' suffix in Linux (minesadorada)
             Addition: After Loading, run validation tests(minesadorada)
   0.1.16.0: Renamed ForceUpdate to ForceNotify (GetMem/minesadorada)
-  0.1.17.0: po files stored in resources
-            Use Project/Options/Resources in Laz 1.7+
-            Use LazRes to make a file 'translate.lrs' in older Laz (minesadorada)
+  0.1.17.0: po files stored in executable's resources (minesadorada)
+            Use Project/Options/Resources in Laz 1.7+ to add the .po files
+            or.. Use (Gl)LazRes to make a file 'translate.lrs' in older Laz (minesadorada)
+            This can be disabled by commenting out $DEFINE PO_BUILTINRES
+            This system means you do not have to deploy the /locale folder - just the executable.
+            Portability: On startup, it will make a unique cfg file in the GetAppConfig folder based
+            on the executable's location on disk, so you can have copies of jsoneditor
+            in each component's dev folder that uses its own config file, language and updates folder.
   0.1.18.0: Bugfix: Linux path error when creating locale folder (minesadorada)
-  0.1.19.0: Added IntrnalVersion integer field to json (minesadorada)
+  0.1.19.0: Added IntrnalVersion integer field to json (getmem/minesadorada)
             Added SpinEdit to control the above  (minesadorada)
+            In Laz 1.7 DPIAwareness configured
   0.1.20.0: ??
  }
 {$mode objfpc}{$H+}
 
 interface
 
-{DefaultTranslator}
+{DefaultTranslator not used}
 uses
   Classes, Forms, Controls, StdCtrls, Menus, ActnList, StdActns, Grids,
   Graphics, Buttons, fileutil, LazFileUtils, fileinfo, ugenericcollection,
@@ -374,6 +380,7 @@ end;
 
 
 function TfrmMain.FoundADuplicateLPK: boolean;
+// Add lpk entries one-by-one to a temp stringlist looking for a duplicate
 var
   TempStringList: TStrings;
   iCount: integer;

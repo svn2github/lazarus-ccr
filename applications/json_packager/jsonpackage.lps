@@ -10,7 +10,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="5"/>
         <CursorPos Y="30"/>
-        <UsageCount Value="83"/>
+        <UsageCount Value="84"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -20,12 +20,12 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="30"/>
-        <CursorPos X="86" Y="65"/>
-        <UsageCount Value="83"/>
+        <TopLine Value="403"/>
+        <CursorPos X="43" Y="421"/>
+        <UsageCount Value="84"/>
         <Bookmarks Count="2">
-          <Item0 Y="545" ID="1"/>
-          <Item1 Y="829"/>
+          <Item0 Y="552" ID="1"/>
+          <Item1 Y="836"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -33,7 +33,7 @@
       <Unit2>
         <Filename Value="ugenericcollection.pas"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="83"/>
+        <UsageCount Value="84"/>
       </Unit2>
       <Unit3>
         <Filename Value="D:\Lazarusprojects\golfml\egacalculator\source\umainform.pas"/>
