@@ -10,10 +10,10 @@ uses
  {$IFDEF FPC}
  LCLIntf, LCLType, LMessages,
  {$ELSE}
- Windows, Messages,
+ Windows, Messages, Scanlines,
  {$ENDIF}
  SysUtils, Classes, Controls, Graphics, Math, Forms,
- RGBHSLUtils, HTMLColors, SelPropUtils, mbColorPickerControl, Scanlines;
+ RGBHSLUtils, HTMLColors, SelPropUtils, mbColorPickerControl;
 
 type
  THSColorPicker = class(TmbColorPickerControl)
@@ -66,6 +66,9 @@ implementation
 
 {$IFDEF FPC}
   {$R HSColorPicker.dcr}
+
+uses
+  IntfGraphics, fpimage;
 {$ENDIF}
 
 procedure Register;
@@ -109,6 +112,7 @@ begin
  CreateHSLGradient;
 end;
 
+{$IFDEF DELPHI}
 procedure THSColorPicker.CreateHSLGradient;
 var
   Hue, Sat : integer;
@@ -133,6 +137,41 @@ begin
 //     FHSLBmp.Canvas.Pixels[Hue, 240 - Sat] := GetWebSafe(HSLRangeToRGB(Hue, Sat, 120));
    end;
 end;
+{$ELSE}
+procedure THSColorPicker.CreateHSLGradient;
+var
+  Hue, Sat: Integer;
+  intfimg: TLazIntfImage;
+  imgHandle, imgMaskHandle: HBitmap;
+  c: TColor;
+begin
+  if FHSLBmp = nil then
+  begin
+    FHSLBmp := TBitmap.Create;
+    FHSLBmp.PixelFormat := pf32Bit;
+    FHSLBmp.Width := 240;
+    FHSLBmp.Height := 241;
+  end;
+  intfimg := TLazIntfImage.Create(FHSLBmp.Width, FHSLBmp.Height);
+  try
+    intfImg.LoadFromBitmap(FHSLBmp.Handle, FHSLBmp.MaskHandle);
+    for Hue := 0 to 239 do
+      for Sat := 0 to 240 do
+      begin
+        if not WebSafe then
+          c := HSLRangeToRGB(Hue, Sat, 120)
+        else
+          c := GetWebSafe(HSLRangeToRGB(Hue, Sat, 120));
+        intfimg.Colors[Hue, 240-Sat] := TColorToFPColor(c);
+      end;
+    intfimg.CreateBitmaps(imgHandle, imgMaskHandle, false);
+    FHSLBmp.Handle := imgHandle;
+    FHSLBmp.MaskHandle := imgMaskHandle;
+  finally
+    intfimg.Free;
+  end;
+end;
+{$ENDIF}
 
 procedure THSColorPicker.CorrectCoords(var x, y: integer);
 begin

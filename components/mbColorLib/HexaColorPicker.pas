@@ -16,7 +16,7 @@ uses
  {$ENDIF}
  SysUtils, Classes, Controls, Graphics, StdCtrls, Forms,
  {$IFDEF DELPHI_7_UP} Themes, {$ENDIF} HTMLColors, RGBHSLUtils, Math,
- RGBHSVUtils, RGBCMYKUtils, RGBCIEUtils;
+ RGBHSVUtils, RGBCMYKUtils, RGBCIEUtils, mbBasicPicker;
 
 const
  CustomCell = -2;
@@ -43,7 +43,7 @@ type
 
  TSelectionMode = (smNone, smColor, smBW, smRamp);
 
- THexaColorPicker = class(TCustomControl)
+ THexaColorPicker = class(TmbBasicPicker)
  private
   FIncrement: integer;
   FSelectedCombIndex: integer;
@@ -60,7 +60,7 @@ type
   FCenterColor: TRGBrec;
   FCenterIntensity: Single;
   FSliderWidth: integer;
-  FCustomIndex,             // If FSelectedIndex contains CustomCell then this index shows
+  FCustomIndex: Integer;    // If FSelectedIndex contains CustomCell then this index shows
                             // which index in the custom area has been selected.
                             // Positive values indicate the color comb and negative values
                             // indicate the B&W combs (complement). This value is offset with
@@ -84,7 +84,6 @@ type
   procedure DrawAll;
   procedure SetSelectedColor(const Value: TColor);
   procedure DrawCombControls;
-  procedure PaintParentBack;
   procedure DrawComb(Canvas: TCanvas; X, Y, Size: Integer);
   procedure HandleCustomColors(var Message: {$IFDEF FPC}TLMMouse{$ELSE}TWMMouse{$ENDIF});
   procedure CalculateCombLayout;
@@ -101,23 +100,25 @@ type
   function GetNextCombIndex(i: integer): integer;
   function GetPreviousCombIndex(i: integer): integer;
  protected
+  procedure CreateWnd; override;
+  procedure Paint; override;
+  procedure Resize; override;
   procedure WheelUp(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
   procedure WheelDown(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
-  procedure WMEraseBkgnd(var Message: {$IFDEF FPC}TLMEraseBkgnd{$ELSE}TWMEraseBkgnd{$ENDIF});
-    message {$IFDEF FPC}LM_ERASEBKGND{$ELSE}WM_ERASEBKGND{$ENDIF};
-  procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
-    message CN_KEYDOWN;
-  procedure CMHintShow(var Message: {$IFDEF FPC}TLMessage{$ELSE}TMessage{$ENDIF});
-    message CM_HINTSHOW;
-  procedure WMLButtonDown(var Message: {$IFDEF FPC}TLMLButtonDown{$ELSE}TWMLButtonDown{$ENDIF});
-    message {$IFDEF FPC}LM_LBUTTONDOWN{$ELSE}WM_LBUTTONDOWN{$ENDIF};
-  procedure WMLButtonUp(var Message: {$IFDEF FPC}TLMLButtonUp{$ELSE}TWMLButtonUp{$ENDIF});
-    message {$IFDEF FPC}LM_LBUTTONUP{$ELSE}WM_LBUTTONUP{$ENDIF};
-  procedure WMMouseMove(var Message: {$IFDEF FPC}TLMMouseMove{$ELSE}TWMMouseMove{$ENDIF});
-    message {$IFDEF FPC}LM_MOUSEMOVE{$ELSE}WM_MOUSEMOVE{$ENDIF};
-  procedure Paint; override;
-  procedure CreateWnd; override;
-  procedure Resize; override;
+  {$IFDEF DELPHI}
+  procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
+  procedure CMHintShow(var Message: TMessage); message CM_HINTSHOW;
+  procedure WMLButtonDown(var Message: TWMLButtonDown); message WM_LBUTTONDOWN;
+  procedure WMLButtonUp(var Message: TWMLButtonUp); message WM_LBUTTONUP;
+  procedure WMMouseMove(var Message: TWMMouseMove); message WM_MOUSEMOVE;
+  {$ELSE}
+  procedure CNKeyDown(var Message: TLMKeyDown); message CN_KEYDOWN;
+  procedure CMHintShow(var Message: TLMessage); message CM_HINTSHOW;
+  procedure WMLButtonDown(var Message: TLMLButtonDown); message LM_LBUTTONDOWN;
+  procedure WMLButtonUp(var Message: TLMLButtonUp); message LM_LBUTTONUP;
+  procedure WMMouseMove(var Message: TLMMouseMove); message LM_MOUSEMOVE;
+  {$ENDIF}
+
  public
   constructor Create(AOwner: TComponent); override;
   destructor Destroy; override;
@@ -145,12 +146,12 @@ type
   property Visible;
   property Enabled;
   property PopupMenu;
-  property ParentColor default true;
   {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
   property ParentBackground default true;
   {$ENDIF}{$ENDIF}
   property TabOrder;
   property Color;
+  property ParentColor;
   property SliderWidth: integer read FSliderWidth write SetSliderWidth default 12;
   property DragCursor;
   property DragMode;
@@ -214,7 +215,6 @@ begin
  FRadius := 90;
  FSliderWidth := 12;
  DoubleBuffered := true;
- ParentColor := true;
  {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
  ParentBackground := true;
  {$ENDIF}{$ENDIF}
@@ -451,47 +451,6 @@ begin
    Offscreen.Free;
   end;
  EnumerateCombs;
-end;
-
-procedure THexaColorPicker.WMEraseBkgnd(
-  var Message: {$IFDEF FPC}TLMEraseBkgnd{$ELSE}TWMEraseBkgnd{$ENDIF});
-begin
- Message.Result := 1;
-end;
-
-procedure THexaColorPicker.PaintParentBack;
-var
- OffScreen: TBitmap;
- {$IFDEF DELPHI_7_UP}
- MemDC: HDC;
- OldBMP: HBITMAP;
- {$ENDIF}
-begin
- Offscreen := TBitmap.Create;
- Offscreen.PixelFormat := pf32bit;
- Offscreen.Width := Width;
- Offscreen.Height := Height;
- {$IFDEF FPC}
- if Color = clDefault then
-   Offscreen.Canvas.Brush.Color := clForm
- else
- {$ENDIF}
-   Offscreen.Canvas.Brush.Color := Color;
- Offscreen.Canvas.FillRect(Offscreen.Canvas.ClipRect);
- {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
- if ParentBackground then
-  with ThemeServices do
-   if ThemesEnabled then
-    begin
-     MemDC := CreateCompatibleDC(0);
-     OldBMP := SelectObject(MemDC, OffScreen.Handle);
-     DrawParentBackground(Handle, MemDC, nil, False);
-     if OldBMP <> 0 then SelectObject(MemDC, OldBMP);
-     if MemDC <> 0 then DeleteDC(MemDC);
-    end;
- {$ENDIF}{$ENDIF}
- Canvas.Draw(0, 0, Offscreen);
- Offscreen.Free;
 end;
 
 procedure THexaColorPicker.Paint;

@@ -165,34 +165,34 @@ end;
 
 function HSLToRGBTriple(H, S, L: integer): TRGBTriple;
 const
- Divisor = 255*60;
+  Divisor = 255*60;
 var
- hTemp, f, LS, p, q, r: integer;
+  hTemp, f, LS, p, q, r: integer;
 begin
- Clamp(H, 0, MaxHue);
- Clamp(S, 0, MaxSat);
- Clamp(L, 0, MaxLum);
- if (S = 0) then
-   Result := RGBToRGBTriple(L, L, L)
- else
+  Clamp(H, 0, MaxHue);
+  Clamp(S, 0, MaxSat);
+  Clamp(L, 0, MaxLum);
+  if (S = 0) then
+    Result := RGBToRGBTriple(L, L, L)
+  else
   begin
-   hTemp := H mod MaxHue;
-   f := hTemp mod 60;
-   hTemp := hTemp div 60;
-   LS := L*S;
-   p := L - LS div MaxLum;
-   q := L - (LS*f) div Divisor;
-   r := L - (LS*(60 - f)) div Divisor;
-   case hTemp of
-    0: Result := RGBToRGBTriple(L, r, p);
-    1: Result := RGBToRGBTriple(q, L, p);
-    2: Result := RGBToRGBTriple(p, L, r);
-    3: Result := RGBToRGBTriple(p, q, L);
-    4: Result := RGBToRGBTriple(r, p, L);
-    5: Result := RGBToRGBTriple(L, p, q);
-   else
-    Result  := RGBToRGBTriple(0, 0, 0);
-   end;
+    hTemp := H mod MaxHue;
+    f := hTemp mod 60;
+    hTemp := hTemp div 60;
+    LS := L*S;
+    p := L - LS div MaxLum;
+    q := L - (LS*f) div Divisor;
+    r := L - (LS*(60 - f)) div Divisor;
+    case hTemp of
+      0: Result := RGBToRGBTriple(L, r, p);
+      1: Result := RGBToRGBTriple(q, L, p);
+      2: Result := RGBToRGBTriple(p, L, r);
+      3: Result := RGBToRGBTriple(p, q, L);
+      4: Result := RGBToRGBTriple(r, p, L);
+      5: Result := RGBToRGBTriple(L, p, q);
+    else
+      Result  := RGBToRGBTriple(0, 0, 0);
+    end;
   end;
 end;
 

@@ -85,6 +85,9 @@ implementation
 
 {$IFDEF FPC}
   {$R HSVColorPicker.dcr}
+
+uses
+  IntfGraphics, fpimage;
 {$ENDIF}
 
 procedure Register;
@@ -153,51 +156,83 @@ end;
 
 procedure THSVColorPicker.CreateHSVCircle;
 var
- dSquared, H, S, V, i, j, Radius, RadiusSquared, x, y, size: integer;
- row: pRGBQuadArray;
- tc: TColor;
+  dSquared, H, S, V, i, j, radius, radiusSquared, x, y, size: integer;
+  row: pRGBQuadArray;
+  c: TColor;
+  {$IFDEF FPC}
+  intfimg: TLazIntfImage;
+  imgHandle, imgMaskHandle: HBitmap;
+  {$ENDIF}
 begin
- if FHSVBmp = nil then
+  if FHSVBmp = nil then
   begin
-   FHSVBmp := TBitmap.Create;
-   FHSVBmp.PixelFormat := pf32bit;
+    FHSVBmp := TBitmap.Create;
+    FHSVBmp.PixelFormat := pf32bit;
   end;
- size := Min(Width, Height);
- FHSVBmp.Width := size;
- FHSVBmp.Height := size;
 
- Radius := size div 2;
- RadiusSquared := Radius*Radius;
- PaintParentBack(FHSVBmp.Canvas);
+  size := Min(Width, Height);
+  FHSVBmp.Width := size;
+  FHSVBmp.Height := size;
+  PaintParentBack(FHSVBmp.Canvas);
 
- V := FValue;
- for j := 0 to size-1 do
-  begin
-   Y := Size - 1 - j - Radius;
-   row := FHSVBmp.Scanline[Size - 1 - j];
-   for i := 0 to size-1 do
+  radius := size div 2;
+  radiusSquared := radius * radius;
+  V := FValue;
+
+  {$IFDEF FPC}
+  intfimg := TLazIntfImage.Create(FHSVBmp.Width, FHSVBmp.Height);
+  try
+    intfImg.LoadFromBitmap(FHSVBmp.Handle, FHSVBmp.MaskHandle);
+  {$ENDIF}
+
+    for j := 0 to size - 1 do
     begin
-     X := i - Radius;
-     dSquared := X*X + Y*Y;
-     if dSquared <= RadiusSquared then
+      Y := size - 1 - j - Radius;
+      {$IFDEF FPC}
+      row := intfImg.GetDataLineStart(size - 1 - j);
+      {$ELSE}
+      row := FHSVBmp.Scanline(size - 1 - j);
+      {$ENDIF}
+      for i := 0 to size - 1 do
       begin
-       if Radius <> 0 then
-        S := ROUND((255*SQRT(dSquared))/Radius)
-       else
-        S := 0;
-       H := ROUND(180*(1 + ArcTan2(X, Y)/PI));
-       H := H + 90;
-       if H > 360 then H := H - 360;
-       if not WebSafe then
-        row[i] := HSVtoRGBQuad(H,S,V)
-       else
+        X := i - Radius;
+        dSquared := X*X + Y*Y;
+        if dSquared <= RadiusSquared then
         begin
-         tc := GetWebSafe(HSVtoColor(H, S, V));
-         row[i] := RGBtoRGBQuad(GetRValue(tc), GetGValue(tc), GetBValue(tc));
+          if Radius <> 0 then
+            S := round(255.0 * sqrt(dSquared) / radius)
+          else
+            S := 0;
+          H := round(180 * (1 + arctan2(X, Y) / pi));   // wp: order (x,y) is correct!
+          H := H + 90;
+          if H > 360 then H := H - 360;
+          {$IFDEF FPC}
+          c := HSVtoColor(H, S, V);
+          if WebSafe then
+            c := GetWebSafe(c);
+          row^[i].rgbRed := GetRValue(c);
+          row^[i].rgbGreen := GetGValue(c);
+          row^[i].rgbBlue := GetBValue(c);
+          {$ELSE}
+          if not WebSafe then
+           row[i] := HSVtoRGBQuad(H,S,V)
+          else
+          begin
+            c := GetWebSafe(HSVtoColor(H, S, V));
+            row[i] := RGBtoRGBQuad(GetRValue(c), GetGValue(c), GetBValue(c));
+          end;
+          {$ENDIF}
         end;
-      end
+      end;
     end;
+   {$IFDEF FPC}
+    intfimg.CreateBitmaps(imgHandle, imgMaskHandle, false);
+    FHSVBmp.Handle := imgHandle;
+    FHSVBmp.MaskHandle := imgMaskHandle;
+  finally
+    intfimg.Free;
   end;
+  {$ENDIF}
 end;
 
 procedure THSVColorPicker.Resize;

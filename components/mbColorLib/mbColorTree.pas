@@ -44,10 +44,10 @@ type
    FGetHint: TGetHintEvent;
    FOnStartDrag: TStartDragEvent;
    FOnEndDrag: TEndDragEvent;
-
    procedure SetInfo1(Value: string);
    procedure SetInfo2(Value: string);
    procedure SetInfoLabel(Value: string);
+
   protected
    function CanChange(Node: TTreeNode): Boolean; override;
    procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
@@ -59,6 +59,9 @@ type
    procedure DrawColorItem(R: TRect; Selected: boolean; Index: integer; itemText: string; Expanded: boolean); dynamic;
    procedure DrawInfoItem(R: TRect; Index: integer); dynamic;
    procedure DoArrow(c: TCanvas; dir: TScrollDirection; p: TPoint; sel: boolean);
+   {$IFDEF FPC}
+   procedure WMHScroll(var Msg: TLMScroll); message LM_HSCROLL;
+   {$ENDIF}
   public
    Colors: array of TmbColor;
 
@@ -309,12 +312,12 @@ end;
 function TmbColorTree.CustomDrawItem(Node: TTreeNode; State: TCustomDrawState;
   Stage: TCustomDrawStage; var PaintImages: Boolean): Boolean;
 begin
- Result := true;
- if Length(Colors) = 0 then Exit;
- if Node.HasChildren then
-  DrawColorItem(Node.DisplayRect(false), cdsSelected in State, node.Index, node.Text, node.Expanded)
- else
-  DrawInfoItem(Node.DisplayRect(false), node.Parent.Index);
+  Result := true;
+  if Length(Colors) = 0 then Exit;
+  if Node.HasChildren then
+    DrawColorItem(Node.DisplayRect(false), cdsSelected in State, node.Index, node.Text, node.Expanded)
+  else
+    DrawInfoItem(Node.DisplayRect(false), node.Parent.Index);
 end;
 
 procedure TmbColorTree.DoArrow(c: TCanvas; dir: TScrollDirection; p: TPoint; sel: boolean);
@@ -351,24 +354,25 @@ var
  SR, TR: TRect;
 begin
   with Canvas do
-   begin
+  begin
     //background
     Pen.Color := clWindow;
     if Selected then
-     Brush.Color := clHighlight
+      Brush.Color := clHighlight
     else
-     Brush.Color := clBtnFace;
+      Brush.Color := Color; //clBtnFace;
     FillRect(R);
     MoveTo(R.Left, R.Bottom - 1);
     LineTo(R.Right, R.Bottom - 1);
+
     //swatches
     SR := Rect(R.Left + 6, R.Top + 6, R.Left + 42, R.Top + 42);
     Brush.Color := Self.Colors[Index].value;
     if Selected then
-     begin
+    begin
       {$IFDEF DELPHI_7_UP}
       if ThemeServices.ThemesEnabled then
-       begin
+      begin
         ThemeServices.DrawElement(Canvas.Handle, ThemeServices.GetElementDetails(teEditTextNormal), SR);
         InflateRect(SR, -2, -2);
         Brush.Color := Blend(Self.Colors[Index].value, clBlack, 80);
@@ -379,10 +383,10 @@ begin
         InflateRect(SR, -1, -1);
         Brush.Color := Self.Colors[Index].value;
         FillRect(SR);
-       end
+      end
       else
       //windows 9x
-       begin
+      begin
       {$ENDIF}
         Pen.Color := clBackground;
         Brush.Color := clWindow;
@@ -399,26 +403,26 @@ begin
         InflateRect(SR, -1, -1);
         Brush.Color := Self.Colors[Index].value;
         FillRect(SR);
-       {$IFDEF DELPHI_7_UP}
-       end;
-       {$ENDIF}
-     end
+      {$IFDEF DELPHI_7_UP}
+      end;
+     {$ENDIF}
+    end
     else
-     //not selected
-     begin
+    //not selected
+    begin
       //windows XP
       {$IFDEF DELPHI_7_UP}
       if ThemeServices.ThemesEnabled then
-       begin
+      begin
         ThemeServices.DrawElement(Canvas.Handle, ThemeServices.GetElementDetails(teEditTextNormal), SR);
         InflateRect(SR, -2, -2);
         Brush.Color := Self.Colors[Index].value;
         FillRect(SR);
-       end
+      end
       else
       //windows 9x
-       begin
-      {$ENDIF}
+      begin
+     {$ENDIF}
         DrawEdge(Canvas.Handle, SR, BDR_SUNKENOUTER, BF_RECT);
         InflateRect(SR, -2, -2);
         Brush.Color := Self.Colors[Index].value;
@@ -428,32 +432,34 @@ begin
         FillRect(SR);
         InflateRect(SR, 1, 1);
        {$IFDEF DELPHI_7_UP}
-       end;
+      end;
        {$ENDIF}
-     end;
+    end;
     //names
     Font.Style := [fsBold];
     if Selected then
-     begin
+    begin
       Brush.Color := clHighlightText;
       Pen.Color := clHighlightText;
-     end
+    end
     else
-     begin
+    begin
       Brush.Color := clWindowText;
       Pen.Color := clWindowText;
-     end;
+    end;
     TR := Rect(R.Left + 48, R.Top + (48 - TextHeight(itemText)) div 2, R.Right - 15, R.Bottom);
-   if Assigned(FDraw) then FDraw(Self, Index, Canvas.Font, itemText, Selected);
-   DrawText(Canvas.Handle, PChar(itemText), Length(itemText), TR, DT_LEFT or DT_NOCLIP or DT_END_ELLIPSIS);
+    if Assigned(FDraw) then FDraw(Self, Index, Canvas.Font, itemText, Selected);
+    SetBkMode(Canvas.Handle, TRANSPARENT);
+    DrawText(Canvas.Handle, PChar(itemText), Length(itemText), TR, DT_LEFT or DT_NOCLIP or DT_END_ELLIPSIS);
+    SetBkMode(Canvas.Handle, OPAQUE);
     if R.Right > 60 then
-     begin
+    begin
       if Expanded then
-       DoArrow(Canvas, sdDown, Point(R.Right - 13, R.Top + 20), selected)
+        DoArrow(Canvas, sdDown, Point(R.Right - 13, R.Top + 20), selected)
       else
-       DoArrow(Canvas, sdRight, Point(R.Right - 10, R.Top + 18), selected);
-     end;
-   end;
+        DoArrow(Canvas, sdRight, Point(R.Right - 10, R.Top + 18), selected);
+    end;
+  end;
 end;
 
 procedure TmbColorTree.DrawInfoItem(R: TRect; Index: integer);
@@ -682,5 +688,13 @@ if PtInRect(ClientRect, Point(mx, my)) and ShowHint and not Dragging then
  end;
  inherited;
 end;
+
+{$IFDEF FPC}
+procedure TmbColorTree.WMHScroll(var Msg: TLMScroll);
+begin
+  inherited;
+  //Invalidate;
+end;
+{$ENDIF}
 
 end.

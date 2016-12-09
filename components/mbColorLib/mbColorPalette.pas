@@ -15,7 +15,7 @@ uses
   Windows, Messages,
   {$ENDIF}
   SysUtils, Classes, Controls, Graphics, {$IFDEF DELPHI_7_UP} Themes, {$ENDIF}
-  Forms, HTMLColors, PalUtils, Dialogs;
+  Forms, HTMLColors, PalUtils, Dialogs, mbBasicPicker;
 
 type
   TMouseLoc = (mlNone, mlOver, mlDown);
@@ -28,7 +28,7 @@ type
   TGetHintTextEvent = procedure (AColor: TColor; Index: integer; var HintStr: string; var Handled: boolean) of object;
   TArrowKeyEvent = procedure (Key: Word; Shift: TShiftState) of object;
 
-  TmbColorPalette = class(TCustomControl)
+  TmbColorPalette = class(TmbBasicPicker)
   private
    FMouseLoc: TMouseLoc;
    FMouseOver, FMouseDown, FAutoHeight: boolean;
@@ -77,13 +77,11 @@ type
    procedure Click; override;
    procedure Resize; override;
    procedure SelectCell(i: integer);
-   procedure PaintParentBack;
    procedure CreateWnd; override;
    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
    {$IFDEF DELPHI}
-   procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
    procedure CMMouseEnter(var Message: TMessage); message CM_MOUSEENTER;
    procedure CMMouseLeave(var Message: TMessage); message CM_MOUSELEAVE;
    procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
@@ -92,7 +90,6 @@ type
    procedure CMEnabledChanged(var Message: TMessage); message CM_ENABLEDCHANGED;
    procedure CMHintShow(var Message: TMessage); message CM_HINTSHOW;
    {$ELSE}
-   procedure WMEraseBkgnd(var Message: TLMEraseBkgnd); message LM_ERASEBKGND;
    procedure CMMouseEnter(var Message: TLMessage); message CM_MOUSEENTER;
    procedure CMMouseLeave(var Message: TLMessage); message CM_MOUSELEAVE;
    procedure CNKeyDown(var Message: TLMKeyDown); message CN_KEYDOWN;
@@ -101,6 +98,7 @@ type
    procedure CMEnabledChanged(var Message: TLMessage); message CM_ENABLEDCHANGED;
    procedure CMHintShow(var Message: TLMessage); message CM_HINTSHOW;
    {$ENDIF}
+
   public
    constructor Create(AOwner: TComponent); override;
    destructor Destroy; override;
@@ -116,6 +114,7 @@ type
    procedure SaveColorsAsPalette(FileName: TFileName);
    procedure GeneratePalette(BaseColor: TColor);
    procedure GenerateGradientPalette(Colors: array of TColor);
+
   published
    property Align;
    property Anchors;
@@ -141,8 +140,6 @@ type
    property TabOrder;
    property ShowHint default false;
    property Constraints;
-   property Color;
-   property ParentColor;
    property ParentShowHint default true;
    property PopupMenu;
    property Visible;
@@ -193,6 +190,8 @@ begin
  DoubleBuffered := true;
  PBack := TBitmap.Create;
  PBack.PixelFormat := pf32bit;
+ FTempBmp := TBitmap.Create;
+ FTempBmp.PixelFormat := pf32bit;
  {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
  ParentBackground := true;
  {$ENDIF} {$ENDIF}
@@ -229,35 +228,36 @@ end;
 
 destructor TmbColorPalette.Destroy;
 begin
- PBack.Free;
- FNames.Free;
- FColors.Free;
- inherited Destroy;
+  PBack.Free;
+  FTempBmp.Free;
+  FNames.Free;
+  FColors.Free;
+  inherited Destroy;
 end;
 
 procedure TmbColorPalette.CalcAutoHeight;
 begin
- if Parent = nil then
-  exit;
- FColCount := Width div FCellSize;
- if FAutoHeight and (FColCount <> 0) then
+  if Parent = nil then
+    exit;
+  FColCount := Width div FCellSize;
+  if FAutoHeight and (FColCount <> 0) then
   begin
-   if FColors.Count mod FColCount > 0 then
-    Height := (FColors.Count div FColCount + 1) * FCellSize
-   else
-    Height := (FColors.Count div FColCount) * FCellSize;
+    if FColors.Count mod FColCount > 0 then
+      Height := (FColors.Count div FColCount + 1) * FCellSize
+    else
+      Height := (FColors.Count div FColCount) * FCellSize;
   end;
- if Height = 0 then Height := FCellSize;
- FRowCount := Height div FCellSize;
- Width := FColCount * FCellSize;
+  if Height = 0 then Height := FCellSize;
+  FRowCount := Height div FCellSize;
+  Width := FColCount * FCellSize;
 end;
 
 function TmbColorPalette.GetTotalRowCount: integer;
 begin
-if FColCount <> 0 then
- Result := FTotalCells div FColCount
-else
- Result := 0;
+  if FColCount <> 0 then
+    Result := FTotalCells div FColCount
+  else
+    Result := 0;
 end;
 
 procedure TmbColorPalette.CreateWnd;
@@ -266,7 +266,7 @@ begin
  CalcAutoHeight;
  Invalidate;
 end;
-
+                   (*
 procedure TmbColorPalette.PaintParentBack;
 {$IFDEF DELPHI_7_UP}
 var
@@ -283,7 +283,7 @@ begin
  PBack.Height := Height;
  {$IFDEF FPC}
  if Color = clDefault then
-  PBack.Canvas.Brush.Color := clForm
+  PBack.Canvas.Brush.Color := GetDefaultColor(dctBrush)
  else
  {$ENDIF}
  PBack.Canvas.Brush.Color := Color;
@@ -300,170 +300,154 @@ begin
      if MemDC <> 0 then DeleteDC(MemDC);
     end;
  {$ENDIF} {$ENDIF}
-end;
+end;                 *)
 
 procedure TmbColorPalette.Paint;
 var
- i: integer;
+  i: integer;
 begin
- PaintParentBack;
- //make bmp
- FTempBmp := TBitmap.Create;
- try
-  FTempBmp.PixelFormat := pf32bit;
+  PBack.Width := Width;
+  PBack.Height := Height;
+  PaintParentBack(PBack);
+
+  //make bmp
   FTempBmp.Width := Width;
   FTempBmp.Height := Height;
+  PaintParentBack(FTempBmp);
 
-  {$IFDEF FPC}
-  if Color = clDefault then
-   FTempBmp.Canvas.Brush.Color := clForm
-  else
-  {$ENDIF}
-  FTempBmp.Canvas.Brush.Color := Color;
-
-  {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
-  if not ParentBackground then
-  {$ENDIF} {$ENDIF}
-   FTempBmp.Canvas.FillRect(FTempBmp.Canvas.ClipRect)
-  {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
-  else
-   FTempBmp.Canvas.Draw(0, 0, PBack){$ENDIF} {$ENDIF};
-
-  FTotalCells := FColors.Count - 1;
   //reset counters
+  FTotalCells := FColors.Count - 1;
   FTop := 0;
   FLeft := 0;
+
   //draw the cells
   for i := 0 to FColors.Count - 1 do
-   begin
+  begin
     if FColors.Strings[i] <> '' then
-    DrawCell(FColors.Strings[i]);
+      DrawCell(FColors.Strings[i]);
     Inc(FLeft);
-   end;
-  //draw the result
+  end;
+
+  //draw the bmp
   Canvas.Draw(0, 0, FTempBmp);
-  //csDesiginng border
+
+  //csDesiging border
   if csDesigning in ComponentState then
-   begin
+  begin
     Canvas.Brush.Style := bsClear;
     Canvas.Pen.Style := psDot;
     Canvas.Pen.Color := clBtnShadow;
     Canvas.Rectangle(ClientRect);
     Canvas.Brush.Style := bsSolid;
     Canvas.Pen.Style := psSolid;
-   end;
- finally
-  FTempBmp.Free;
- end;
+  end;
 end;
 
 procedure TmbColorPalette.DrawCell(clr: string);
 var
- R: Trect;
- FCurrentIndex: integer;
- c: TColor;
- Handled: boolean;
+  R: Trect;
+  FCurrentIndex: integer;
+  c: TColor;
+  Handled: boolean;
 begin
- // set props
- if (FLeft + 1) * FCellSize > FTempBmp.width then
+  // set props
+  if (FLeft + 1) * FCellSize > FTempBmp.Width then
   begin
-   Inc(FTop);
-   FLeft := 0;
+    Inc(FTop);
+    FLeft := 0;
   end;
- FCurrentIndex := FTop * FColCount + FLeft;
- R := Rect(FLeft * FCellSize, FTop * FCellSize, (FLeft + 1) * FCellSize, (FTop + 1) * FCellSize);
- //start drawing
- with FTempBmp.Canvas do
+
+  FCurrentIndex := FTop * FColCount + FLeft;
+  R := Rect(FLeft * FCellSize, FTop * FCellSize, (FLeft + 1) * FCellSize, (FTop + 1) * FCellSize);
+
+  //start drawing
+
+  //get current state
+  if FCurrentIndex = FCheckedIndex then
   begin
-   {$IFDEF FPC}
-   if Color = clDefault then
-    Brush.Color := clForm else
-   {$ENDIF}
-   Brush.Color := Color;
-   //get current state
-   if FCurrentIndex = FCheckedIndex then
+    if FCheckedIndex = FIndex then
     begin
-     if FCheckedIndex = FIndex then
-      begin
-       if FMouseDown then
+      if FMouseDown then
         FState := ccsDown
-       else
+      else
         FState := ccsCheckedHover;
-      end
-     else
-      FState := ccsChecked;
     end
-   else
-    if FIndex = FCurrentIndex then
-     case FMouseLoc of
+    else
+      FState := ccsChecked;
+  end
+  else
+  if FIndex = FCurrentIndex then
+    case FMouseLoc of
       mlNone: FState := ccsNone;
       mlOver: FState := ccsOver;
-     end
-    else
-     FState := ccsNone;
+    end
+  else
+    FState := ccsNone;
 
-   //paint
-   DrawCellBack(FTempBmp.Canvas, R, FCurrentIndex);
+  //paint
+  DrawCellBack(FTempBmp.Canvas, R, FCurrentIndex);
 
-   // fire the event
-   Handled := false;
-   if Assigned(FOnPaintCell) then
+  // fire the event
+  Handled := false;
+  if Assigned(FOnPaintCell) then
     case FCellStyle of
-     csDefault: FOnPaintCell(FTempBmp.Canvas, R, mbStringToColor(clr), FCurrentIndex, FState, FTStyle, Handled);
-     csCorel:
-      if FColCount = 1 then
-       FOnPaintCell(FTempBmp.Canvas, R, mbStringToColor(clr), FCurrentIndex, FState, FTStyle, Handled)
-      else
-       FOnPaintCell(FTempBmp.Canvas, Rect(R.Left, R.Top, R.Right + 1, R.Bottom), mbStringToColor(clr), FCurrentIndex, FState, FTStyle, Handled);
+      csDefault:
+        FOnPaintCell(FTempBmp.Canvas, R, mbStringToColor(clr), FCurrentIndex, FState, FTStyle, Handled);
+      csCorel:
+        if FColCount = 1 then
+          FOnPaintCell(FTempBmp.Canvas, R, mbStringToColor(clr), FCurrentIndex, FState, FTStyle, Handled)
+        else
+          FOnPaintCell(FTempBmp.Canvas, Rect(R.Left, R.Top, R.Right + 1, R.Bottom), mbStringToColor(clr), FCurrentIndex, FState, FTStyle, Handled);
     end;
-   if not Handled then
-    begin
-     // if standard colors draw the rect
-     if not SameText(clr, 'clCustom') and not SameText(clr, 'clTransparent') then
+
+  if not Handled then
+  begin
+    // if standard colors draw the rect
+    c := mbStringToColor(clr);
+    if not SameText(clr, 'clCustom') and not SameText(clr, 'clTransparent') then
       case FCellStyle of
-       csDefault:
-        begin
-         InflateRect(R, -3, -3);
-         c := mbStringToColor(clr);
-         if Enabled then
+        csDefault:
           begin
-           Brush.Color := c;
-           Pen.Color := clBtnShadow;
-          end
-         else
-          begin
-           Brush.Color := clGray;
-           Pen.Color := clGray;
+            InflateRect(R, -3, -3);
+            if Enabled then
+            begin
+              FTempBmp.Canvas.Brush.Color := c;
+              FTempBmp.Canvas.Pen.Color := clBtnShadow;
+            end
+            else
+            begin
+              FTempBmp.Canvas.Brush.Color := clGray;
+              FTempBmp.Canvas.Pen.Color := clGray;
+            end;
+            FTempBmp.Canvas.Rectangle(R);
+            Exit;
           end;
-         Rectangle(R);
-         Exit;
-        end;
-       csCorel:
-        begin
-         if (FState <> ccsNone) then
-          InflateRect(R, -2, -2)
-         else
+
+        csCorel:
           begin
-           Inc(R.Left);
-           Dec(R.Bottom);
-           if R.Top <= 1 then
-            Inc(R.Top);
-           if R.Right = Width then
-            Dec(R.Right);
+            if (FState <> ccsNone) then
+              InflateRect(R, -2, -2)
+            else
+            begin
+              Inc(R.Left);
+              Dec(R.Bottom);
+              if R.Top <= 1 then
+                Inc(R.Top);
+              if R.Right = Width then
+                Dec(R.Right);
+            end;
+            if Enabled then
+              FTempBmp.Canvas.Brush.Color := c
+            else
+              FTempBmp.Canvas.Brush.Color := clGray;
+            FTempBmp.Canvas.FillRect(R);
+            Exit;
           end;
-         c := mbStringToColor(clr);
-         if Enabled then
-          Brush.Color := c
-         else
-          Brush.Color := clGray;
-         FillRect(R);
-         Exit;
-        end;
       end;
 
-     //if transparent draw the glyph
-     if SameText(clr, 'clTransparent') then PaintTransparentGlyph(FTempBmp.Canvas, R);
-    end;
+    //if transparent draw the glyph
+    if SameText(clr, 'clTransparent') then
+      PaintTransparentGlyph(FTempBmp.Canvas, R);
   end;
 end;
 
@@ -588,6 +572,10 @@ begin
      else
      {$ENDIF}
       begin
+       {$IFDEF FPC}
+       if Color = clDefault then
+        ACanvas.Brush.Color := GetDefaultColor(dctBrush) else
+       {$ENDIF}
        ACanvas.Brush.Color := Color;
        ACanvas.FillRect(R);
       end;
@@ -680,7 +668,7 @@ end;
 procedure TmbColorPalette.Resize;
 begin
  inherited;
- CalcAutoHeight;
+ //CalcAutoHeight;    // wp: will cause a ChangedBounds endless loop
  Invalidate;
 end;
 
@@ -704,14 +692,17 @@ begin
 end;
 
 procedure TmbColorPalette.MouseMove(Shift: TShiftState; X, Y: Integer);
+var
+  newIndex: Integer;
 begin
- if FIndex <> (y div FCellSize)* FColCount + (x div FCellSize) then
+  newIndex := (y div FCellSize) * FColCount + (x div FCellSize);
+  if FIndex <> newIndex then
   begin
-   FIndex := (y div FCellSize)* FColCount + (x div FCellSize);
-   if FIndex > FTotalCells then FIndex := -1;
-   Invalidate;
+    FIndex := newIndex;
+    if FIndex > FTotalCells then FIndex := -1;
+    Invalidate;
   end;
- inherited;
+  inherited;
 end;
 
 procedure TmbColorPalette.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -739,99 +730,93 @@ end;
 
 procedure TmbColorPalette.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
- DontCheck: boolean;
- AColor: TColor;
+  DontCheck: boolean;
+  AColor: TColor;
 begin
- FMouseDown := false;
- if FMouseOver then
-  FMouseLoc := mlOver
- else
-  FMouseLoc := mlNone;
- DontCheck := false;
- if (FCheckedIndex > -1) and (FCheckedIndex < FColors.Count) then
-  AColor := mbStringToColor(FColors.Strings[FCheckedIndex])
- else
-  AColor := clNone;
- if (Button = mbLeft) and PtInRect(ClientRect, Point(x, y)) then
-  if Assigned(FOnCellClick) then
-   FOnCellClick(Button, Shift, FCheckedIndex, AColor, DontCheck);
- if DontCheck then FCheckedIndex := FOldIndex;
- Invalidate;
- inherited;
- if Assigned(FOnChange) then FOnChange(Self);
+  FMouseDown := false;
+  if FMouseOver then
+    FMouseLoc := mlOver
+  else
+    FMouseLoc := mlNone;
+  DontCheck := false;
+  if (FCheckedIndex > -1) and (FCheckedIndex < FColors.Count) then
+    AColor := mbStringToColor(FColors.Strings[FCheckedIndex])
+  else
+    AColor := clNone;
+  if (Button = mbLeft) and PtInRect(ClientRect, Point(x, y)) then
+    if Assigned(FOnCellClick) then
+      FOnCellClick(Button, Shift, FCheckedIndex, AColor, DontCheck);
+  if DontCheck then FCheckedIndex := FOldIndex;
+  Invalidate;
+  inherited;
+  if Assigned(FOnChange) then FOnChange(Self);
 end;
 
 procedure TmbColorPalette.CMGotFocus(
   var Message: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF} );
 begin
- inherited;
- Invalidate;
+  inherited;
+  Invalidate;
 end;
 
 procedure TmbColorPalette.CMLostFocus(
   var Message: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF} );
 begin
- inherited;
- if FMouseOver then
-  FMouseLoc := mlOver
- else
-  FMouseLoc := mlNone;
- Invalidate;
+  inherited;
+  if FMouseOver then
+    FMouseLoc := mlOver
+  else
+    FMouseLoc := mlNone;
+  Invalidate;
 end;
 
 procedure TmbColorPalette.CMEnabledChanged(
   var Message: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF} );
 begin
- inherited;
- Invalidate;
-end;
-
-procedure TmbColorPalette.WMEraseBkgnd(
-  var Message: {$IFDEF DELPHI}TWMEraseBkgnd{$ELSE}TLMEraseBkgnd{$ENDIF});
-begin
- Message.Result := 1;
+  inherited;
+  Invalidate;
 end;
 
 procedure TmbColorPalette.SelectCell(i: integer);
 begin
- if i < FColors.Count - 1 then
-  FCheckedIndex := i
- else
-  FCheckedIndex := -1;
- Invalidate;
- if Assigned(FOnChange) then FOnChange(Self);
+  if i < FColors.Count - 1 then
+    FCheckedIndex := i
+  else
+    FCheckedIndex := -1;
+  Invalidate;
+  if Assigned(FOnChange) then FOnChange(Self);
 end;
 
 function TmbColorPalette.GetSelColor: TColor;
 begin
-if (FCheckedIndex > -1) and (FCheckedIndex <= FTotalCells) then
- Result := mbStringToColor(FColors.Strings[FCheckedIndex])
-else
- Result := FOld;
+  if (FCheckedIndex > -1) and (FCheckedIndex <= FTotalCells) then
+    Result := mbStringToColor(FColors.Strings[FCheckedIndex])
+  else
+    Result := FOld;
 end;
 
 function TmbColorPalette.GetColorUnderCursor: TColor;
 begin
- Result := clNone;
- if FIndex > -1 then
-  if FIndex < FColors.Count then
-   Result := mbStringToColor(FColors.Strings[FIndex]);
+  Result := clNone;
+  if FIndex > -1 then
+    if FIndex < FColors.Count then
+      Result := mbStringToColor(FColors.Strings[FIndex]);
 end;
 
 function TmbColorPalette.GetIndexUnderCursor: integer;
 begin
- Result := -1;
- if FIndex > -1 then
-  if FIndex < FColors.Count then
-   Result := FIndex;
+  Result := -1;
+  if FIndex > -1 then
+    if FIndex < FColors.Count then
+      Result := FIndex;
 end;
 
 procedure TmbColorPalette.SetTStyle(s: TTransparentStyle);
 begin
- if FTStyle <> s then
+  if FTStyle <> s then
   begin
-   FTStyle := s;
-   Invalidate;
+    FTStyle := s;
+    Invalidate;
   end;
 end;
 

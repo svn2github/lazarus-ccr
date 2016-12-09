@@ -13,7 +13,7 @@ uses
  {$ELSE} Windows, Messages,
  {$ENDIF}
  SysUtils, Classes, Controls, Graphics, Forms,
- {$IFDEF DELPHI_7_UP} Themes, {$ENDIF} ExtCtrls, PalUtils;
+ {$IFDEF DELPHI_7_UP} Themes, {$ENDIF} ExtCtrls, PalUtils, mbBasicPicker;
 
 const
  TBA_Resize = 0;
@@ -38,7 +38,7 @@ type
  TSliderPlacement = (spBefore, spAfter, spBoth);
  TSelIndicator = (siArrows, siRect);
 
- TmbTrackBarPicker = class(TCustomControl)
+ TmbTrackBarPicker = class(TmbBasicPicker)
  private
   mx, my: integer;
   FOnChange: TNotifyEvent;
@@ -68,7 +68,6 @@ type
   procedure SetPlacement(Value: TSliderPlacement);
   procedure DrawMarker(p: integer);
   procedure SetSelIndicator(Value: TSelIndicator);
-  procedure PaintParentBack;
   procedure CalcPickRect;
  protected
   FArrowPos: integer;
@@ -76,18 +75,12 @@ type
   FChange: boolean;
   FPickRect: TRect;
   FLimit: integer;
+  FGradientBmp: TBitmap;
+  FGradientWidth: Integer;
+  FGradientHeight: Integer;
 
-  procedure WheelUp(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
-  procedure WheelDown(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
-  procedure WMEraseBkgnd(var Message: {$IFDEF FPC}TLMEraseBkgnd{$ELSE}TWMEraseBkgnd{$ENDIF});
-    message {$IFDEF FPC} LM_ERASEBKGND{$ELSE}WM_ERASEBKGND{$ENDIF};
-  procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
-  procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF}); message CN_KEYDOWN;
-  procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-  procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-  procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-  procedure CMGotFocus(var Message: {$IFDEF FPC}TLMessage{$ELSE}TCMGotFocus{$ENDIF}); message CM_ENTER;
-  procedure CMLostFocus(var Message: {$IFDEF FPC}TLMessage{$ELSE}TCMLostFocus{$ENDIF}); message CM_EXIT;
+  procedure CreateGradient;
+  function GetGradientColor(AValue: Integer): TColor; virtual;
   procedure Paint; override;
   procedure DrawFrames; dynamic;
   procedure Resize; override;
@@ -96,9 +89,28 @@ type
   function GetArrowPos: integer; dynamic;
   function GetHintStr: string;
   function GetSelectedValue: integer; virtual; abstract;
+  procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+  procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+  procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+
+  procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
+  procedure WheelUp(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+  procedure WheelDown(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+  {$IFDEF DELPHI}
+  procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
+  procedure CMGotFocus(var Message: TCMGotFocus); message CM_ENTER;
+  procedure CMLostFocus(var Message: TCMLostFocus); message CM_EXIT;
+  {$ELSE}
+  procedure CNKeyDown(var Message: TLMKeyDown); message CN_KEYDOWN;
+  procedure CMGotFocus(var Message: TLMessage); message CM_ENTER;
+  procedure CMLostFocus(var Message: TLMessage); message CM_EXIT;
+  {$ENDIF}
+
  public
   constructor Create(AOwner: TComponent); override;
+  destructor Destroy; override;
   property Manual: boolean read FManual;
+
  published
   property BevelInner: TPanelBevel read FBevelInner write SetBevelInner default bvNone;
   property BevelOuter: TPanelBevel read FBevelOuter write SetBevelOuter default bvNone;
@@ -115,7 +127,7 @@ type
   property TabStop default true;
   property ShowHint;
   property Color;
-  property ParentColor default true;
+  property ParentColor;
   {$IFDEF DELPHI_7_UP}
   {$IFDEF DELPHI}
   property ParentBackground default true;
@@ -155,6 +167,12 @@ type
 
 implementation
 
+uses
+{$IFDEF FPC}
+  IntfGraphics, fpimage,
+{$ENDIF}
+  ScanLines, HTMLColors;
+
 const
   { 3D border styles }
   BDR_RAISEDOUTER = 1;
@@ -186,117 +204,217 @@ const
 
 constructor TmbTrackBarPicker.Create(AOwner: TComponent);
 begin
- inherited;
- ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
- DoubleBuffered := true;
- ParentColor := true;
- {$IFDEF DELPHI_7_UP}
- {$IFDEF DELPHI}
- ParentBackground := true;
- {$ENDIF}
- {$ENDIF}
- Width := 267;
- Height := 22;
- TabStop := true;
- ParentShowHint := true;
- mx := 0;
- my := 0;
- FIncrement := 1;
- FArrowPos := GetArrowPos;
- FHintFormat := '';
- OnMouseWheelUp := WheelUp;
- OnMouseWheelDown := WheelDown;
- FManual := false;
- FChange := true;
- FLayout := lyHorizontal;
- FNewArrowStyle := false;
- Aw := 6;
- Ah := 10;
- FPlacement := spAfter;
- FPickRect := Rect(Aw, 0, Width - Aw, Height - Ah);
- FDoChange := false;
- FSelIndicator := siArrows;
- FLimit := 7;
- FWebSafe := false;
- FBevelInner:= bvNone;
- FBevelOuter:= bvNone;
- FBevelWidth:= 1;
- FBorderStyle:= bsNone;
+  inherited;
+  ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
+  DoubleBuffered := true;
+  {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
+  ParentBackground := true;
+  {$ENDIF} {$ENDIF}
+  Width := 267;
+  Height := 22;
+  TabStop := true;
+  ParentShowHint := true;
+  FGradientWidth := 256;
+  FGradientHeight := 12;
+  FGradientBmp := TBitmap.Create;
+  FGradientBmp.PixelFormat := pf32bit;
+  mx := 0;
+  my := 0;
+  FIncrement := 1;
+  FArrowPos := GetArrowPos;
+  FHintFormat := '';
+  OnMouseWheelUp := WheelUp;
+  OnMouseWheelDown := WheelDown;
+  FManual := false;
+  FChange := true;
+  FLayout := lyHorizontal;
+  FNewArrowStyle := false;
+  Aw := 6;
+  Ah := 10;
+  FPlacement := spAfter;
+  FPickRect := Rect(Aw, 0, Width - Aw, Height - Ah);
+  FDoChange := false;
+  FSelIndicator := siArrows;
+  FLimit := 7;
+  FWebSafe := false;
+  FBevelInner:= bvNone;
+  FBevelOuter:= bvNone;
+  FBevelWidth:= 1;
+  FBorderStyle:= bsNone;
+end;
+
+destructor TmbTrackbarPicker.Destroy;
+begin
+  FGradientBmp.Free;
+  inherited;
+end;
+
+function TmbTrackbarPicker.GetGradientColor(AValue: Integer): TColor;
+begin
+  Result := clDefault;
+end;
+
+{ AWidth and AHeight are seen for horizontal arrangement of the bar }
+procedure TmbTrackbarPicker.CreateGradient;
+var
+  i,j: integer;
+  row: pRGBQuadArray;
+  c: TColor;
+  {$IFDEF FPC}
+  intfimg: TLazIntfImage;
+  imgHandle, imgMaskHandle: HBitmap;
+  {$ENDIF}
+begin
+  if FGradientBmp = nil then
+     exit;
+
+  {$IFDEF FPC}
+  intfimg := TLazIntfImage.Create(0, 0);
+  try
+  {$ENDIF}
+
+    if Layout = lyHorizontal then
+    begin
+      FGradientBmp.Width := FGradientWidth;
+      FGradientBmp.Height := FGradientHeight;
+      {$IFDEF FPC}
+      intfImg.LoadFromBitmap(FGradientBmp.Handle, FGradientBmp.MaskHandle);
+      {$ENDIF}
+      for i := 0 to FGradientBmp.Width-1 do
+      begin
+        c := GetGradientColor(i);
+        for j := 0 to FGradientBmp.Height-1 do
+        begin
+          {$IFDEF FPC}
+          row := intfImg.GetDataLineStart(j);
+          {$ELSE}
+          row := FGradientBmp.ScanLine[j];
+          {$ENDIF}
+          if not WebSafe then
+            row[i] := RGBtoRGBQuad(c)
+          else
+            row[i] := RGBtoRGBQuad(GetWebSafe(c));
+        end;
+      end;
+    end
+    else
+    begin
+      FGradientBmp.Width := FGradientHeight;
+      FGradientBmp.Height := FGradientWidth;
+      {$IFDEF FPC}
+      intfImg.LoadFromBitmap(FGradientBmp.Handle, FGradientBmp.MaskHandle);
+      {$ENDIF}
+      for i := 0 to FGradientBmp.Height-1 do
+      begin
+        {$IFDEF FPC}
+        row := intfImg.GetDataLineStart(i);
+        {$ELSE}
+        row := FGradientBmp.ScanLine[i];
+        {$ENDIF}
+        c := GetGradientColor(FGradientBmp.Height - 1 - i);
+        for j := 0 to FGradientBmp.Width-1 do
+          if not WebSafe then
+            row[j] := RGBtoRGBQuad(c)
+          else
+            row[j] := RGBtoRGBQuad(GetWebSafe(c));
+      end;
+    end;
+
+  {$IFDEF FPC}
+    intfimg.CreateBitmaps(imgHandle, imgMaskHandle, false);
+    FGradientBmp.Handle := imgHandle;
+    FGradientBmp.MaskHandle := imgMaskHandle;
+  finally
+    intfImg.Free;
+  end;
+  {$ENDIF}
 end;
 
 procedure TmbTrackBarPicker.CreateWnd;
 begin
- inherited;
- CalcPickRect;
+  inherited;
+  CalcPickRect;
+  CreateGradient;
 end;
 
 procedure TmbTrackBarPicker.CalcPickRect;
 var
- f: integer;
+  f: integer;
 begin
- case FSelIndicator of
-  siArrows:
-   if not FNewArrowStyle then
-    begin
-     f := 0;
-     Aw := 6;
-     Ah := 10;
-     FLimit := 7;
-    end
-   else
-    begin
-     Aw := 8;
-     Ah := 9;
-     f := 2;
-     FLimit := 7;
-    end;
-  siRect:
-   begin
-    f := 0;
-    Aw := 4;
-    Ah := 5;
-    FLimit := 3;
-   end
-  else
-   f := 0;
- end;
- case FLayout of
-  lyHorizontal:
-   case FSelIndicator of
+  case FSelIndicator of
     siArrows:
-     case FPlacement of
-      spAfter: FPickRect := Rect(Aw, 0, Width - Aw, Height - Ah - f);
-      spBefore: FPickRect := Rect(Aw, Ah + f, Width - Aw, Height);
-      spBoth: FPickRect := Rect(Aw, Ah + f, Width - Aw, Height - Ah - f);
-     end;
-    siRect: FPickRect := Rect(Aw, Ah, width - 2*Aw + 1, height - Ah);
-   end;
-  lyVertical:
-   case FSelIndicator of
-    siArrows:
-     case FPlacement of
-      spAfter: FPickRect := Rect(0, Aw, Width - Ah - f, Height - Aw);
-      spBefore: FPickRect := Rect(Ah + f, Aw, Width, Height - Aw);
-      spBoth: FPickRect := Rect(Ah + f, Aw, Width - Ah - f, Height - Aw);
-     end;
-    siRect: FPickRect := Rect(Ah, Aw, width - 5, height - 2*Aw + 1);
-   end;
- end;
+      if not FNewArrowStyle then
+      begin
+        f := 0;
+        Aw := 6;
+        Ah := 10;
+        FLimit := 7;
+      end
+      else
+      begin
+        Aw := 8;
+        Ah := 9;
+        f := 2;
+        FLimit := 7;
+      end;
+
+    siRect:
+      begin
+        f := 0;
+        Aw := 4;
+        Ah := 5;
+        FLimit := 3;
+      end
+
+    else
+      f := 0;
+  end;
+
+  case FLayout of
+    lyHorizontal:
+      case FSelIndicator of
+        siArrows:
+          case FPlacement of
+            spAfter:
+              FPickRect := Rect(Aw, 0, Width - Aw, Height - Ah - f);
+            spBefore:
+              FPickRect := Rect(Aw, Ah + f, Width - Aw, Height);
+            spBoth:
+              FPickRect := Rect(Aw, Ah + f, Width - Aw, Height - Ah - f);
+          end;
+        siRect:
+         FPickRect := Rect(Aw, Ah, width - 2*Aw + 1, height - Ah);
+      end;
+    lyVertical:
+      case FSelIndicator of
+        siArrows:
+          case FPlacement of
+            spAfter:
+              FPickRect := Rect(0, Aw, Width - Ah - f, Height - Aw);
+            spBefore:
+              FPickRect := Rect(Ah + f, Aw, Width, Height - Aw);
+            spBoth:
+              FPickRect := Rect(Ah + f, Aw, Width - Ah - f, Height - Aw);
+          end;
+        siRect:
+         FPickRect := Rect(Ah, Aw, width - 5, height - 2*Aw + 1);
+      end;
+  end;
 end;
 
 procedure TmbTrackBarPicker.Paint;
 begin
- CalcPickRect;
- PaintParentBack;
- FArrowPos := GetArrowPos;
- Execute(TBA_Paint);
- if FBorderStyle <> bsNone then
-  DrawFrames;
- DrawMarker(FArrowPos);
- if FDoChange then
+  CalcPickRect;
+  PaintParentBack;
+  FArrowPos := GetArrowPos;
+  Execute(TBA_Paint);
+  if FBorderStyle <> bsNone then
+    DrawFrames;
+  DrawMarker(FArrowPos);
+  if FDoChange then
   begin
-   if Assigned(FOnChange) then FOnChange(Self);
-   FDoChange := false;
+    if Assigned(FOnChange) then FOnChange(Self);
+    FDoChange := false;
   end;
 end;
 
@@ -330,250 +448,219 @@ end;
 
 procedure TmbTrackBarPicker.DrawMarker(p: integer);
 var
- x, y: integer;
- R: TRect;
+  x, y: integer;
+  R: TRect;
 begin
- case FSelIndicator of
-  siRect:
-   begin
-    case FLayout of
-     lyHorizontal:
+  case FSelIndicator of
+    siRect:
       begin
-       p := p + Aw;
-       R := Rect(p - 2, 2, p + 3, Height - 2);
+        case FLayout of
+          lyHorizontal:
+            begin
+              p := p + Aw;
+              R := Rect(p - 2, 2, p + 3, Height - 2);
+            end;
+          lyVertical:
+            begin
+              p := p + Aw;
+              R := Rect(2, p - 2, Width - 2, p + 3);
+            end;
+        end;
+        Canvas.Pen.Mode := pmNot;
+        Canvas.Brush.Style := bsClear;
+        Canvas.Rectangle(R);
+        Canvas.Brush.Style := bsSolid;
+        Canvas.Pen.Mode := pmCopy;
       end;
-     lyVertical:
+
+    siArrows:
       begin
-       p := p + Aw;
-       R := Rect(2, p - 2, Width - 2, p + 3);
-      end;
-    end;
-    Canvas.Pen.Mode := pmNot;
-    Canvas.Brush.Style := bsClear;
-    Canvas.Rectangle(R);
-    Canvas.Brush.Style := bsSolid;
-    Canvas.Pen.Mode := pmCopy;
-   end;
-  siArrows:
-   begin
-    if not FNewArrowStyle then
-     begin
-      if Focused or (csDesigning in ComponentState)then
-       begin
-        Canvas.Brush.Color := clBlack;
-        Canvas.Pen.Color := clBlack;
-       end
-      else
-       begin
-        Canvas.Brush.Color := clGray;
-        Canvas.Pen.Color := clGray;
-       end;
-     end
-    else
-     begin
-      Canvas.Brush.Color := clWindow;
-      Canvas.Pen.Color := clBtnShadow;
-     end;
-    if FLayout = lyHorizontal then
-     begin
-      x := p + Aw;
-      if x < Aw then x := Aw;
-      if x > Width - Aw then x := Width - Aw;
-      case FPlacement of
-       spAfter:
+        if not FNewArrowStyle then
         begin
-         y := Height - Aw - 1;
-         if not FNewArrowStyle then
-          Canvas.Polygon([Point(x, y), Point(x - 4, y + 6), Point(x + 4, y + 6)])
-         else
-          Canvas.Polygon([Point(x, y), Point(x - 4, y + 4), Point(x - 4, y + 6),
-                          Point(x - 3, y + 7), Point(x + 3, y + 7),
-                          Point(x + 4, y + 6), Point(x + 4, y + 4)]);
-        end;
-       spBefore:
+          if Focused or (csDesigning in ComponentState) then
+          begin
+            Canvas.Brush.Color := clBlack;
+            Canvas.Pen.Color := clBlack;
+          end
+          else
+          begin
+            Canvas.Brush.Color := clGray;
+            Canvas.Pen.Color := clGray;
+          end;
+        end
+        else
         begin
-         y := Aw;
-         if not FNewArrowStyle then
-          Canvas.Polygon([Point(x, y), Point(x - 4, y - 6), Point(x +4, y - 6)])
-         else
-          Canvas.Polygon([Point(x, y), Point(x + 4, y - 4), Point(x + 4, y - 6),
-                          Point(x + 3, y - 7), Point(x - 3, y - 7),
-                          Point(x - 4, y - 6), Point(x - 4, y - 4)]);
+          Canvas.Brush.Color := clWindow;
+          Canvas.Pen.Color := clBtnShadow;
         end;
-       spBoth:
+
+        if FLayout = lyHorizontal then
         begin
-         y := Height - Aw - 1;
-         if not FNewArrowStyle then
-          Canvas.Polygon([Point(x, y), Point(x -4, y +6), Point(x +4, y + 6)])
-         else
-          Canvas.Polygon([Point(x, y), Point(x - 4, y + 4), Point(x - 4, y + 6),
-                          Point(x - 3, y + 7), Point(x + 3, y + 7),
-                          Point(x + 4, y + 6), Point(x + 4, y + 4)]);
-         y := Aw;
-         if not FNewArrowStyle then
-          Canvas.Polygon([Point(x, y), Point(x - 4, y - 6), Point(x +4, y - 6)])
-         else
-          Canvas.Polygon([Point(x, y), Point(x + 4, y - 4), Point(x + 4, y - 6),
-                          Point(x + 3, y - 7), Point(x - 3, y - 7),
-                          Point(x - 4, y - 6), Point(x - 4, y - 4)]);
-        end;
-      end;
-     end
-    else
-     begin
-      if not FNewArrowStyle then
-       y := p + Aw
-      else
-       y := p + Aw - 1;
-      if y < Aw then y := Aw;
-      if y > Height - Aw - 1 then y := Height - Aw - 1;
-      case FPlacement of
-       spAfter:
+          x := p + Aw;
+          if x < Aw then x := Aw;
+          if x > Width - Aw then x := Width - Aw;
+          case FPlacement of
+            spAfter:
+              begin
+                y := Height - Aw - 1;
+                if not FNewArrowStyle then
+                  Canvas.Polygon([Point(x, y), Point(x - 4, y + 6), Point(x + 4, y + 6)])
+                else
+                  Canvas.Polygon([Point(x, y), Point(x - 4, y + 4), Point(x - 4, y + 6),
+                    Point(x - 3, y + 7), Point(x + 3, y + 7), Point(x + 4, y + 6),
+                    Point(x + 4, y + 4)]);
+              end;
+            spBefore:
+              begin
+                y := Aw;
+                if not FNewArrowStyle then
+                  Canvas.Polygon([Point(x, y), Point(x - 4, y - 6), Point(x +4, y - 6)
+                  ])
+                else
+                  Canvas.Polygon([Point(x, y), Point(x + 4, y - 4), Point(x + 4, y - 6),
+                    Point(x + 3, y - 7), Point(x - 3, y - 7), Point(x - 4, y - 6),
+                    Point(x - 4, y - 4) ]);
+              end;
+            spBoth:
+              begin
+                y := Height - Aw - 1;
+                if not FNewArrowStyle then
+                  Canvas.Polygon([Point(x, y), Point(x - 4, y + 6), Point(x + 4, y + 6) ])
+                else
+                  Canvas.Polygon([Point(x, y), Point(x - 4, y + 4), Point(x - 4, y + 6),
+                    Point(x - 3, y + 7), Point(x + 3, y + 7), Point(x + 4, y + 6),
+                    Point(x + 4, y + 4) ]);
+                y := Aw;
+                if not FNewArrowStyle then
+                  Canvas.Polygon([Point(x, y), Point(x - 4, y - 6), Point(x +4, y - 6) ])
+                else
+                  Canvas.Polygon([Point(x, y), Point(x + 4, y - 4), Point(x + 4, y - 6),
+                    Point(x + 3, y - 7), Point(x - 3, y - 7), Point(x - 4, y - 6),
+                    Point(x - 4, y - 4) ]);
+              end;
+          end;  // case FPlacement
+        end  // if FLayout
+        else
         begin
-         x := width - Aw - 1;
-         if not FNewArrowStyle then
-          Canvas.Polygon([Point(x, y), Point(x + 6, y - 4), Point(x + 6, y + 4)])
-         else
-          Canvas.Polygon([Point(x, y), Point(x + 4, y - 4), Point(x + 6, y - 4),
-                          Point(x + 7, y - 3), Point(x + 7, y + 3),
-                          Point(x + 6, y + 4), Point(x + 4, y + 4)]);
-        end;
-       spBefore:
-        begin
-         x := Aw;
-         if not FNewArrowStyle then
-          Canvas.Polygon([Point(x, y), Point(x - 6, y - 4), Point(x - 6, y + 4)])
-         else
-          Canvas.Polygon([Point(x, y), Point(x - 4, y - 4), Point(x - 6, y - 4),
-                          Point(x - 7, y + 1 - 4), Point(x - 7, y + 3),
-                          Point(x - 6, y + 4), Point(x - 4, y + 4)]);
-        end;
-       spBoth:
-        begin
-         x := width - Aw - 1;
-         if not FNewArrowStyle then
-          Canvas.Polygon([Point(x, y), Point(x + 6, y - 4), Point(x + 6, y + 4)])
-         else
-          Canvas.Polygon([Point(x, y), Point(x + 4, y - 4), Point(x + 6, y - 4),
-                          Point(x + 7, y - 3), Point(x + 7, y + 3),
-                          Point(x + 6, y + 4), Point(x + 4, y + 4)]);
-         x := Aw;
-         if not FNewArrowStyle then
-          Canvas.Polygon([Point(x, y), Point(x - 6, y - 4), Point(x - 6, y + 4)])
-         else
-          Canvas.Polygon([Point(x, y), Point(x - 4, y - 4), Point(x - 6, y - 4),
-                          Point(x - 7, y + 1 - 4), Point(x - 7, y + 3),
-                          Point(x - 6, y + 4), Point(x - 4, y + 4)]);
-        end;
-      end;
-     end;
-    end;
- end;
+          if not FNewArrowStyle then
+            y := p + Aw
+          else
+           y := p + Aw - 1;
+          if y < Aw then y := Aw;
+          if y > Height - Aw - 1 then y := Height - Aw - 1;
+          case FPlacement of
+            spAfter:
+              begin
+                x := width - Aw - 1;
+                if not FNewArrowStyle then
+                  Canvas.Polygon([Point(x, y), Point(x + 6, y - 4), Point(x + 6, y + 4)])
+                else
+                  Canvas.Polygon([Point(x, y), Point(x + 4, y - 4), Point(x + 6, y - 4),
+                    Point(x + 7, y - 3), Point(x + 7, y + 3), Point(x + 6, y + 4),
+                    Point(x + 4, y + 4)]);
+              end;
+            spBefore:
+              begin
+                x := Aw;
+                if not FNewArrowStyle then
+                  Canvas.Polygon([Point(x, y), Point(x - 6, y - 4), Point(x - 6, y + 4)])
+                else
+                  Canvas.Polygon([Point(x, y), Point(x - 4, y - 4), Point(x - 6, y - 4),
+                    Point(x - 7, y + 1 - 4), Point(x - 7, y + 3), Point(x - 6, y + 4),
+                    Point(x - 4, y + 4)]);
+              end;
+            spBoth:
+              begin
+                x := width - Aw - 1;
+                if not FNewArrowStyle then
+                  Canvas.Polygon([Point(x, y), Point(x + 6, y - 4), Point(x + 6, y + 4)])
+               else
+                 Canvas.Polygon([Point(x, y), Point(x + 4, y - 4), Point(x + 6, y - 4),
+                   Point(x + 7, y - 3), Point(x + 7, y + 3), Point(x + 6, y + 4),
+                   Point(x + 4, y + 4)]);
+               x := Aw;
+               if not FNewArrowStyle then
+                 Canvas.Polygon([Point(x, y), Point(x - 6, y - 4), Point(x - 6, y + 4)])
+               else
+                 Canvas.Polygon([Point(x, y), Point(x - 4, y - 4), Point(x - 6, y - 4),
+                   Point(x - 7, y + 1 - 4), Point(x - 7, y + 3), Point(x - 6, y + 4),
+                   Point(x - 4, y + 4)]);
+              end;
+          end;  // case FPlacement
+        end;  // else (if FLayout)
+      end;  // siArrow
+  end;  // case FSelIndicator
 end;
 
 procedure TmbTrackBarPicker.Resize;
 begin
- inherited;
- FChange := false;
- Execute(TBA_Resize);
- FChange := true;
-end;
-
-procedure TmbTrackBarPicker.PaintParentBack;
-var
- c: TColor;
- OffScreen: TBitmap;
-{$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
- MemDC: HDC;
- OldBMP: HBITMAP;
- {$ENDIF}{$ENDIF}
-begin
- Offscreen := TBitmap.Create;
- Offscreen.Width := Width;
- Offscreen.Height := Height;
- {$IFDEF FPC}
- if Color = clDefault then
-   Offscreen.Canvas.Brush.Color := clForm else
- {$ENDIF}
-   Offscreen.Canvas.Brush.Color := Color;
- Offscreen.Canvas.FillRect(Offscreen.Canvas.ClipRect);
- {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
- if ParentBackground then
-  with ThemeServices do
-   if ThemesEnabled then
-    begin
-     MemDC := CreateCompatibleDC(0);
-     OldBMP := SelectObject(MemDC, OffScreen.Handle);
-     DrawParentBackground(Handle, MemDC, nil, False);
-     if OldBMP <> 0 then SelectObject(MemDC, OldBMP);
-     if MemDC <> 0 then DeleteDC(MemDC);
-    end;
- {$ENDIF}{$ENDIF}
- Canvas.Draw(0, 0, Offscreen);
- Offscreen.Free;
+  inherited;
+  FChange := false;
+  Execute(TBA_Resize);
+  FChange := true;
 end;
 
 function TmbTrackBarPicker.XToArrowPos(p: integer): integer;
 var
- pos: integer;
+  pos: integer;
 begin
- pos := p - Aw;
- if pos < 0 then pos := 0;
- if pos > Width - Aw - 1 then pos := Width - Aw - 1;
- Result := pos;
+  pos := p - Aw;
+  if pos < 0 then pos := 0;
+  if pos > Width - Aw - 1 then pos := Width - Aw - 1;
+  Result := pos;
 end;
 
 function TmbTrackBarPicker.YToArrowPos(p: integer): integer;
 var
- pos: integer;
+  pos: integer;
 begin
- pos := p - Aw;
- if pos < 0 then pos := 0;
- if pos > Height - Aw - 1 then pos := Height - Aw - 1;
- Result := pos;
+  pos := p - Aw;
+  if pos < 0 then pos := 0;
+  if pos > Height - Aw - 1 then pos := Height - Aw - 1;
+  Result := pos;
 end;
 
 procedure TmbTrackBarPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
  R: TRect;
 begin
- if ssLeft in shift then
+  if ssLeft in shift then
   begin
-   R := ClientRect;
-   R.TopLeft := ClientToScreen(R.TopLeft);
-   R.BottomRight := ClientToScreen(R.BottomRight);
-   {$IFDEF DELPHI}
-   ClipCursor(@R);
-   {$ENDIF}
-   mx := x;
-   my := y;
-   if FLayout = lyHorizontal then
-    FArrowPos := XToArrowPos(x)
-   else
-    FArrowPos := YToArrowPos(y);
-   Execute(TBA_MouseMove);
-   FManual := true;
-   FDoChange := true;
-   Invalidate;
+    R := ClientRect;
+    R.TopLeft := ClientToScreen(R.TopLeft);
+    R.BottomRight := ClientToScreen(R.BottomRight);
+    {$IFDEF DELPHI}
+    ClipCursor(@R);
+    {$ENDIF}
+    mx := x;
+    my := y;
+    if FLayout = lyHorizontal then
+      FArrowPos := XToArrowPos(x)
+    else
+      FArrowPos := YToArrowPos(y);
+    Execute(TBA_MouseMove);
+    FManual := true;
+    FDoChange := true;
+    Invalidate;
   end;
- inherited;
+  inherited;
 end;
 
 procedure TmbTrackBarPicker.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
- if Button <> mbLeft then Exit;
- mx := x;
- my := y;
- SetFocus;
- if FLayout = lyHorizontal then
-  FArrowPos := XToArrowPos(x)
- else
-  FArrowPos := YToArrowPos(y);
- Execute(TBA_MouseDown);
- FManual := true;
- FDoChange := true;
- Invalidate;
- inherited;
+  if Button <> mbLeft then Exit;
+  mx := x;
+  my := y;
+  SetFocus;
+  if FLayout = lyHorizontal then
+    FArrowPos := XToArrowPos(x)
+  else
+    FArrowPos := YToArrowPos(y);
+  Execute(TBA_MouseDown);
+  FManual := true;
+  FDoChange := true;
+  Invalidate;
+  inherited;
 end;
 
 procedure TmbTrackBarPicker.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -681,121 +768,119 @@ end;
 
 procedure TmbTrackBarPicker.CMHintShow(var Message: TCMHintShow);
 begin
- with TCMHintShow(Message) do
-  if not ShowHint then
-   Message.Result := 1
-  else
-   with HintInfo^ do
-    begin
-     Result := 0;
-     ReshowTimeout := 1;
-     HideTimeout := 5000;
-     if FLayout = lyHorizontal then
-      HintPos := ClientToScreen(Point(CursorPos.X - 8, Height + 2))
-     else
-      HintPos := ClientToScreen(Point(Width + 2, CursorPos.Y - 8));
-     HintStr := GetHintStr;
-    end;
- inherited;
+  with TCMHintShow(Message) do
+    if not ShowHint then
+      Message.Result := 1
+    else
+      with HintInfo^ do
+      begin
+        Result := 0;
+        ReshowTimeout := 1;
+        HideTimeout := 5000;
+        if FLayout = lyHorizontal then
+          HintPos := ClientToScreen(Point(CursorPos.X - 8, Height + 2))
+        else
+          HintPos := ClientToScreen(Point(Width + 2, CursorPos.Y - 8));
+        HintStr := GetHintStr;
+      end;
+  inherited;
 end;
 
 procedure TmbTrackBarPicker.CMGotFocus(
   var Message: {$IFDEF FPC}TLMessage{$ELSE}TCMGotFocus{$ENDIF});
 begin
- inherited;
- Invalidate;
+  inherited;
+  Invalidate;
 end;
 
 procedure TmbTrackBarPicker.CMLostFocus(
   var Message: {$IFDEF FPC}TLMessage{$ELSE}TCMLostFocus{$ENDIF});
 begin
- inherited;
- Invalidate;
-end;
-
-procedure TmbTrackBarPicker.WMEraseBkgnd(
-  var Message: {$IFDEF FPC}TLMEraseBkgnd{$ELSE}TWMEraseBkgnd{$ENDIF});
-begin
- Message.Result := 1;
+  inherited;
+  Invalidate;
 end;
 
 procedure TmbTrackBarPicker.WheelUp(Sender: TObject; Shift: TShiftState;
   MousePos: TPoint; var Handled: Boolean);
 begin
- Handled := true;
- FChange := false;
- Execute(TBA_WheelUp);
- FManual := true;
- FChange := true;
- if Assigned(FOnChange) then FOnChange(Self);
+  Handled := true;
+  FChange := false;
+  Execute(TBA_WheelUp);
+  FManual := true;
+  FChange := true;
+  if Assigned(FOnChange) then FOnChange(Self);
 end;
 
 procedure TmbTrackBarPicker.WheelDown(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
 begin
- Handled := true;
- FChange := false;
- Execute(TBA_WheelDown);
- FManual := true;
- FChange := true;
- if Assigned(FOnChange) then FOnChange(Self);
+  Handled := true;
+  FChange := false;
+  Execute(TBA_WheelDown);
+  FManual := true;
+  FChange := true;
+  if Assigned(FOnChange) then FOnChange(Self);
 end;
 
 procedure TmbTrackBarPicker.SetLayout(Value: TTrackBarLayout);
 begin
- if FLayout <> Value then
+  if FLayout <> Value then
   begin
-   FLayout := Value;
-   Execute(TBA_RedoBMP);
-   Invalidate;
+    FLayout := Value;
+    Execute(TBA_RedoBMP);
+    Invalidate;
   end;
 end;
 
 procedure TmbTrackBarPicker.SetPlacement(Value: TSliderPlacement);
 begin
- if FPlacement <> Value then
+  if FPlacement <> Value then
   begin
-   FPlacement := Value;
-   Invalidate;
+    FPlacement := Value;
+    Invalidate;
   end;
 end;
 
 procedure TmbTrackBarPicker.SetNewArrowStyle(s: boolean);
 begin
- if FNewArrowStyle <> s then
+  if FNewArrowStyle <> s then
   begin
-   FNewArrowStyle := s;
-   Invalidate;
+    FNewArrowStyle := s;
+    Invalidate;
   end;
 end;
 
 procedure TmbTrackBarPicker.SetSelIndicator(Value: TSelIndicator);
 begin
- if FSelIndicator <> Value then
+  if FSelIndicator <> Value then
   begin
-   FSelIndicator := Value;
-   Invalidate;
+    FSelIndicator := Value;
+    Invalidate;
   end;
 end;
 
 procedure TmbTrackBarPicker.SetWebSafe(s: boolean);
 begin
- if FWebSafe <> s then
+  if FWebSafe <> s then
   begin
-   FWebSafe := s;
-   Execute(TBA_RedoBMP);
-   Invalidate;
+    FWebSafe := s;
+    Execute(TBA_RedoBMP);
+    Invalidate;
   end;
 end;
 
 procedure TmbTrackBarPicker.Execute(tbaAction: integer);
 begin
- //handled in descendants
+ case tbaAction of
+   TBA_Paint   : Canvas.StretchDraw(FPickRect, FGradientBmp);
+   TBA_RedoBMP : CreateGradient;
+   // Rest handled in descendants
+ end;
 end;
 
 function TmbTrackBarPicker.GetArrowPos: integer;
 begin
- Result := 0;
- //handled in descendants
+  Result := 0;
+  //handled in descendants
 end;
 
 function TmbTrackBarPicker.GetHintStr: string;
@@ -806,37 +891,37 @@ end;
 
 procedure TmbTrackBarPicker.SetBevelInner(Value: TBevelCut);
 begin
- if FBevelInner <> Value then
+  if FBevelInner <> Value then
   begin
-   FBevelInner := Value;
-   Invalidate;
+    FBevelInner := Value;
+    Invalidate;
   end;
 end;
 
 procedure TmbTrackBarPicker.SetBevelOuter(Value: TBevelCut);
 begin
- if FBevelOuter <> Value then
+  if FBevelOuter <> Value then
   begin
-   FBevelOuter := Value;
-   Invalidate;
+    FBevelOuter := Value;
+    Invalidate;
   end;
 end;
 
 procedure TmbTrackBarPicker.SetBevelWidth(Value: TBevelWidth);
 begin
- if FBevelWidth <> Value then
+  if FBevelWidth <> Value then
   begin
-   FBevelWidth := Value;
-   Invalidate;
+    FBevelWidth := Value;
+    Invalidate;
   end;
 end;
 
 procedure TmbTrackBarPicker.SetBorderStyle(Value: TBorderStyle);
 begin
- if FBorderStyle <> Value then
+  if FBorderStyle <> Value then
   begin
-   FBorderStyle := Value;
-   Invalidate;
+    FBorderStyle := Value;
+    Invalidate;
   end;
 end;
 

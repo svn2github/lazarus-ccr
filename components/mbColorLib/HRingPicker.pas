@@ -75,6 +75,9 @@ implementation
 
 {$IFDEF FPC}
   {$R HRingPicker.dcr}
+
+uses
+  IntfGraphics, fpimage;
 {$ENDIF}
 
 procedure Register;
@@ -116,49 +119,76 @@ end;
 
 procedure THRingPicker.CreateHSVCircle;
 var
- dSquared, H, S, V, i, j, Radius, RadiusSquared, x, y, size: integer;
- row: pRGBQuadArray;
- tc: TColor;
+  dSquared, H, S, V, i, j, Radius, RadiusSquared, x, y, size: integer;
+  row: pRGBQuadArray;
+  c: TColor;
+  {$IFDEF FPC}
+  intfimg: TLazIntfImage;
+  imgHandle, imgMaskHandle: HBitmap;
+  {$ENDIF}
 begin
- if FBMP = nil then
- begin
-  FBMP := TBitmap.Create;
-  FBMP.PixelFormat := pf32bit;
- end;
- size := Min(Width, Height);
- FBMP.Width := size;
- FBMP.Height := size;
- Radius := size div 2;
- RadiusSquared := Radius*Radius;
- PaintParentBack(FBMP.Canvas);
- V := FValue;
- for j := 0 to size - 1 do
+  if FBmp = nil then
   begin
-   Y := Size - 1 - j - Radius;
-   row := FBMP.Scanline[Size - 1 - j];
-   for i := 0 to size - 1 do
-    begin
-     X := i - Radius;
-     dSquared := X*X + Y*Y;
-     if dSquared <= RadiusSquared then
-      begin
-       if Radius <> 0 then
-        S := ROUND((255*SQRT(dSquared))/Radius)
-       else
-        S := 0;
-       H := ROUND( 180 * (1 + ArcTan2(X, Y) / PI));
-       H := H + 90;
-       if H > 360 then H := H - 360;
-       if not WebSafe then
-        row[i] := HSVtoRGBQuad(H,S,V)
-       else
-        begin
-         tc := GetWebSafe(HSVtoColor(H, S, V));
-         row[i] := RGBtoRGBQuad(GetRValue(tc), GetGValue(tc), GetBValue(tc));
-        end;
-      end
-    end;
+    FBmp := TBitmap.Create;
+    FBmp.PixelFormat := pf32bit;
   end;
+
+  size := Min(Width, Height);
+  FBmp.Width := size;
+  FBmp.Height := size;
+  PaintParentBack(FBmp);
+
+  radius := size div 2;
+  radiusSquared := radius * radius;
+  V := FValue;
+
+{$IFDEF FPC}
+  intfimg := TLazIntfImage.Create(FBmp.Width, FBmp.Height);
+  try
+    intfImg.LoadFromBitmap(FBmp.Handle, FBmp.MaskHandle);
+{$ENDIF}
+
+    for j := 0 to size - 1 do
+    begin
+      Y := Size - 1 - j - radius;
+
+      {$IFDEF FPC}
+      row := intfImg.GetDataLineStart(size - 1 - j);
+      {$ELSE}
+      row := FBmp.Scanline(size - 1 - j);
+      {$ENDIF}
+
+      for i := 0 to size - 1 do
+      begin
+        X := i - radius;
+        dSquared := X*X + Y*Y;
+        if dSquared <= radiusSquared then
+        begin
+          if Radius <> 0 then
+            S := round((255 * sqrt(dSquared)) / radius)
+          else
+            S := 0;
+          H := round( 180 * (1 + arctan2(X, Y) / PI));   // wp: order (x,y) is correct!
+          H := H + 90;
+          if H > 360 then H := H - 360;
+          if not WebSafe then
+            row[i] := HSVtoRGBQuad(H,S,V)
+          else
+          begin
+            c := GetWebSafe(HSVtoColor(H, S, V));
+            row[i] := RGBtoRGBQuad(GetRValue(c), GetGValue(c), GetBValue(c));
+          end;
+        end
+      end;
+    end;
+{$IFDEF FPC}
+    intfimg.CreateBitmaps(imgHandle, imgMaskHandle, false);
+    FBmp.Handle := imgHandle;
+    FBmp.MaskHandle := imgMaskHandle;
+  finally
+   intfimg.Free;
+  end;
+{$ENDIF}
 end;
 
 procedure THRingPicker.Resize;
@@ -267,26 +297,33 @@ end;
 
 procedure THRingPicker.Paint;
 var
- rgn, r1, r2: HRGN;
- r: TRect;
+  rgn, r1, r2: HRGN;
+  r: TRect;
+  size: Integer;
+  ringwidth: Integer;
 begin
- PaintParentBack(Canvas);
- r := ClientRect;
- r.Right := R.Left + Min(Width, Height);
- R.Bottom := R.Top + Min(Width, Height);
- r1 := CreateEllipticRgnIndirect(R);
- rgn := r1;
- InflateRect(R, - Min(Width, Height) + FRadius, - Min(Width, Height) + FRadius);
- r2 := CreateEllipticRgnIndirect(R);
- CombineRgn(rgn, r1, r2, RGN_DIFF);
- SelectClipRgn(Canvas.Handle, rgn);
- Canvas.Draw(0, 0, FBMP);
- DeleteObject(rgn);
- DrawHueLine;
- if FDoChange then
+  PaintParentBack(Canvas);
+  size := Min(Width, Height);         // diameter of circle
+  ringwidth := size div 2 - FRadius;  // FRadius is inner radius
+  r := ClientRect;
+  r.Right := R.Left + size;
+  R.Bottom := R.Top + size;
+  r1 := CreateEllipticRgnIndirect(R);
+  if ringwidth > 0 then
   begin
-   if Assigned(FOnChange) then FOnChange(Self);
-   FDoChange := false;
+    rgn := r1;
+    InflateRect(R, -ringwidth, - ringwidth);
+    r2 := CreateEllipticRgnIndirect(R);
+    CombineRgn(rgn, r1, r2, RGN_DIFF);
+  end;
+  SelectClipRgn(Canvas.Handle, rgn);
+  Canvas.Draw(0, 0, FBmp);
+  DeleteObject(rgn);
+  DrawHueLine;
+  if FDoChange then
+  begin
+    if Assigned(FOnChange) then FOnChange(Self);
+    FDoChange := false;
   end;
 end;
 

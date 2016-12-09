@@ -16,10 +16,10 @@ uses
  {$ENDIF}
  SysUtils, Classes, Controls, Graphics, Forms, Menus, Math,
  {$IFDEF DELPHI_7_UP}Themes,{$ENDIF}
- RGBHSLUtils, HRingPicker, SLColorPicker, HTMLColors;
+ RGBHSLUtils, HRingPicker, SLColorPicker, HTMLColors, mbBasicPicker;
 
 type
- THSLRingPicker = class(TCustomControl)
+ THSLRingPicker = class(TmbBasicPicker)
  private
   FOnChange: TNotifyEvent;
   FRingPicker: THRingPicker;
@@ -46,7 +46,6 @@ type
   procedure SetRingMenu(m: TPopupMenu);
   procedure SetRingCursor(c: TCursor);
   procedure SetSLCursor(c: TCursor);
-  procedure PaintParentBack;
  protected
   procedure CreateWnd; override;
   procedure Paint; override;
@@ -56,10 +55,8 @@ type
   procedure DoChange;
   procedure Resize; override;
   {$IFDEF DELPHI}
-  procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
   procedure WMSetFocus(var Message: TWMSetFocus); message WM_SETFOCUS;
   {$ELSE}
-  procedure WMEraseBkgnd(var Message: TLMEraseBkgnd); message LM_ERASEBKGND;
   procedure WMSetFocus(var Message: TLMSetFocus); message LM_SETFOCUS;
   {$ENDIF}
  public
@@ -123,7 +120,6 @@ begin
  inherited;
  ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque{$IFDEF DELPHI_7_UP}, csParentBackground{$ENDIF}];
  DoubleBuffered := true;
- ParentColor := true;
  PBack := TBitmap.Create;
  PBack.PixelFormat := pf32bit;
  {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
@@ -143,6 +139,7 @@ begin
    Width := 246;
    Top := 0;
    Left := 0;
+   Radius := 100;
    Align := alClient;
    Visible := true;
    Saturation := 255;
@@ -182,16 +179,33 @@ begin
 end;
 
 procedure THSLRingPicker.Resize;
+var
+ circ: TPoint;
+ ctr: double;
 begin
  inherited;
  if (FRingPicker = nil) or (FSLPicker = nil) then
   exit;
+
+ ctr := Min(Width, Height)/100;
+
+ circ.x := Min(Width, Height) div 2;
+ circ.y := circ.x;
+
+ FRingPicker.Radius := circ.x - round(12*ctr);
+
+ FSLPicker.Left := circ.x - FSLPicker.Width  div 2;
+ FSLPicker.Top  := circ.y - FSLPicker.Height div 2;
+ FSLPicker.Width := round(50*ctr);
+ FSLPicker.Height := FSLPicker.Width;
+                                     (*
  FRingPicker.Radius := (Min(Width, Height)*30) div 245;
  FSLPicker.Left := (21*FRingPicker.Radius) div 10;
  FSLPicker.Top := (21*FRingPicker.Radius) div 10;
  FSLPicker.Width := 4*FRingPicker.Radius;
  FSLPicker.Height := 4*FRingPicker.Radius;
- PaintParentBack;
+ *)
+ PaintParentBack(PBack);
 end;
 
 procedure THSLRingPicker.RingPickerChange(Sender: TObject);
@@ -351,55 +365,16 @@ begin
  Result := FRingPicker.Manual or FSLPicker.Manual;
 end;
 
-procedure THSLRingPicker.PaintParentBack;
-var
- MemDC: HDC;
- OldBMP: HBITMAP;
-begin
- if PBack = nil then
-  begin
-   PBack := TBitmap.Create;
-   PBack.PixelFormat := pf32bit;
-  end;
- PBack.Width := Width;
- PBack.Height := Height;
- {$IFDEF FPC}
- if Color = clDefault then
-   PBack.Canvas.Brush.Color := clForm
- else
- {$ENDIF}
-   PBack.Canvas.Brush.Color := Color;
- PBack.Canvas.FillRect(PBack.Canvas.ClipRect);
- {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
- if ParentBackground then
-  with ThemeServices do
-   if ThemesEnabled then
-    begin
-     MemDC := CreateCompatibleDC(0);
-     OldBMP := SelectObject(MemDC, PBack.Handle);
-     DrawParentBackground(Handle, MemDC, nil, False);
-     if OldBMP <> 0 then SelectObject(MemDC, OldBMP);
-     if MemDC <> 0 then DeleteDC(MemDC);
-    end;
- {$ENDIF} {$ENDIF}
-end;
-
 procedure THSLRingPicker.Paint;
 begin
- PaintParentBack;
+ PaintParentBack(PBack);
  Canvas.Draw(0, 0, PBack);
 end;
 
 procedure THSLRingPicker.CreateWnd;
 begin
  inherited;
- PaintParentBack;
-end;
-
-procedure THSLRingPicker.WMEraseBkgnd(
-  var Message: {$IFDEF DELPHI}TWMEraseBkgnd{$ELSE}TLMEraseBkgnd{$ENDIF} );
-begin
- Message.Result := 1;
+ PaintParentBack(PBack);
 end;
 
 end.

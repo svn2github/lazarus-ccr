@@ -19,24 +19,20 @@ type
  TSColorPicker = class(TmbTrackBarPicker)
  private
   FVal, FHue, FSat: integer;
-  FSBmp: TBitmap;
-
   function ArrowPosFromSat(s: integer): integer;
   function SatFromArrowPos(p: integer): integer;
   function GetSelectedColor: TColor;
   procedure SetSelectedColor(c: TColor);
-  procedure CreateSGradient;
   procedure SetHue(h: integer);
   procedure SetSat(s: integer);
   procedure SetValue(v: integer);
  protected
-  procedure CreateWnd; override;
   procedure Execute(tbaAction: integer); override;
   function GetArrowPos: integer; override;
+  function GetGradientColor(AValue: Integer): TColor; override;
   function GetSelectedValue: integer; override;
  public
   constructor Create(AOwner: TComponent); override;
-  destructor Destroy; override;
  published
   property Hue: integer read FHue write SetHue default 0;
   property Saturation: integer read FSat write SetSat default 255;
@@ -61,33 +57,22 @@ end;
 
 constructor TSColorPicker.Create(AOwner: TComponent);
 begin
- inherited;
- FSBmp := TBitmap.Create;
- FSBmp.PixelFormat := pf32bit;
- Width := 267;
- Height := 22;
- FHue := 0;
- FVal := 255;
- FArrowPos := ArrowPosFromSat(0);
- FChange := false;
- SetSat(255);
- HintFormat := 'Saturation: %value';
- FManual := false;
- FChange := true;
+  inherited;
+  FGradientWidth := 256;
+  FGradientHeight := 12;
+  Width := 267;
+  Height := 22;
+  FHue := 0;
+  FVal := 255;
+  FArrowPos := ArrowPosFromSat(0);
+  FChange := false;
+  SetSat(255);
+  HintFormat := 'Saturation: %value';
+  FManual := false;
+  FChange := true;
 end;
 
-destructor TSColorPicker.Destroy;
-begin
- FSBmp.Free;
- inherited Destroy;
-end;
-
-procedure TSColorPicker.CreateWnd;
-begin
- inherited;
- CreateSGradient;
-end;
-
+(*
 procedure TSColorPicker.CreateSGradient;
 var
  i,j: integer;
@@ -131,90 +116,93 @@ begin
     end;
   end;
 end;
+ *)
+
+function TSColorPicker.GetGradientColor(AValue: Integer): TColor;
+begin
+  Result := HSVtoColor(FHue, AValue, FVal);
+end;
 
 procedure TSColorPicker.SetValue(v: integer);
 begin
- if v < 0 then v := 0;
- if v > 255 then v := 255;
- if FVal <> v then
+  if v < 0 then v := 0;
+  if v > 255 then v := 255;
+  if FVal <> v then
   begin
-   FVal := v;
-   FManual := false;
-   CreateSGradient;
-   Invalidate;
-   if FChange then
-    if Assigned(OnChange) then OnChange(Self);
+    FVal := v;
+    FManual := false;
+    CreateGradient;
+    Invalidate;
+    if FChange and Assigned(OnChange) then OnChange(Self);
   end;
 end;
 
 procedure TSColorPicker.SetHue(h: integer);
 begin
- if h > 360 then h := 360;
- if h < 0 then h := 0;
- if FHue <> h then
+  if h > 360 then h := 360;
+  if h < 0 then h := 0;
+  if FHue <> h then
   begin
-   FHue := h;
-   CreateSGradient;
-   FManual := false;
-   Invalidate;
-   if FChange then
-    if Assigned(OnChange) then OnChange(Self);
+    FHue := h;
+    CreateGradient;
+    FManual := false;
+    Invalidate;
+    if FChange and Assigned(OnChange) then OnChange(Self);
   end;
 end;
 
 procedure TSColorPicker.SetSat(s: integer);
 begin
- if s > 255 then s := 255;
- if s < 0 then s := 0;
- if FSat <> s then
+  if s > 255 then s := 255;
+  if s < 0 then s := 0;
+  if FSat <> s then
   begin
-   FSat := s;
-   FManual := false;
-   FArrowPos := ArrowPosFromSat(s);
-   Invalidate;
-   if FChange then
-    if Assigned(OnChange) then OnChange(Self);
+    FSat := s;
+    FManual := false;
+    FArrowPos := ArrowPosFromSat(s);
+    Invalidate;
+    if FChange and Assigned(OnChange) then OnChange(Self);
   end;
 end;
 
 function TSColorPicker.ArrowPosFromSat(s: integer): integer;
 var
- a: integer;
+  a: integer;
 begin
- if Layout = lyHorizontal then
+  if Layout = lyHorizontal then
   begin
-   a := Round(((Width - 12)/255)*s);
-   if a > Width - FLimit then a := Width - FLimit;
+    a := Round(((Width - 12)/255)*s);
+    if a > Width - FLimit then a := Width - FLimit;
   end
- else
+  else
   begin
-   s := 255 - s;
-   a := Round(((Height - 12)/255)*s);
-   if a > Height - FLimit then a := Height - FLimit;
+    s := 255 - s;
+    a := Round(((Height - 12)/255)*s);
+    if a > Height - FLimit then a := Height - FLimit;
   end;
- if a < 0 then a := 0;
- Result := a;
+  if a < 0 then a := 0;
+  Result := a;
 end;
 
 function TSColorPicker.SatFromArrowPos(p: integer): integer;
 var
- r: integer;
+  r: integer;
 begin
- if Layout = lyHorizontal then
-  r := Round(p/((Width - 12)/255))
- else
-  r := Round(255 - p/((Height - 12)/255));
- if r < 0 then r := 0;
- if r > 255 then r := 255;
- Result := r;
+  if Layout = lyHorizontal then
+    r := Round(p/((Width - 12)/255))
+  else
+    r := Round(255 - p/((Height - 12)/255));
+  if r < 0 then r := 0;
+  if r > 255 then r := 255;
+  Result := r;
 end;
 
 function TSColorPicker.GetSelectedColor: TColor;
 begin
- if not WebSafe then
-  Result := HSVtoColor(FHue, FSat, FVal)
- else
-  Result := GetWebSafe(HSVtoColor(FHue, FSat, FVal));
+  if not WebSafe then
+    Result := HSVtoColor(FHue, FSat, FVal)
+  else
+    Result := GetWebSafe(HSVtoColor(FHue, FSat, FVal));
 end;
 
 function TSColorPicker.GetSelectedValue: integer;
@@ -224,44 +212,58 @@ end;
 
 procedure TSColorPicker.SetSelectedColor(c: TColor);
 var
- h, s, v: integer;
+  h, s, v: integer;
 begin
- if WebSafe then c := GetWebSafe(c);
- RGBToHSV(GetRValue(c), GetGValue(c), GetBValue(c), h, s, v);
- FChange := false;
- SetHue(h);
- SetSat(s);
- SetValue(v);
- FManual := false;
- FChange := true;
- if Assigned(OnChange) then OnChange(Self);
+  if WebSafe then c := GetWebSafe(c);
+  RGBToHSV(GetRValue(c), GetGValue(c), GetBValue(c), h, s, v);
+  FChange := false;
+  SetHue(h);
+  SetSat(s);
+  SetValue(v);
+  FManual := false;
+  FChange := true;
+  if Assigned(OnChange) then OnChange(Self);
 end;
 
 function TSColorPicker.GetArrowPos: integer;
 begin
- Result := ArrowPosFromSat(FSat);
+  Result := ArrowPosFromSat(FSat);
 end;
 
 procedure TSColorPicker.Execute(tbaAction: integer);
 begin
- case tbaAction of
-  TBA_Resize: SetSat(FSat);
-  TBA_Paint: Canvas.StretchDraw(FPickRect, FSBmp);
-  TBA_MouseMove: FSat := SatFromArrowPos(FArrowPos);
-  TBA_MouseDown: FSat := SatFromArrowPos(FArrowPos);
-  TBA_MouseUp: FSat := SatFromArrowPos(FArrowPos);
-  TBA_WheelUp: SetSat(FSat + Increment);
-  TBA_WheelDown: SetSat(FSat - Increment);
-  TBA_VKLeft: SetSat(FSat - Increment);
-  TBA_VKCtrlLeft: SetSat(0);
-  TBA_VKRight: SetSat(FSat + Increment);
-  TBA_VKCtrlRight: SetSat(255);
-  TBA_VKUp: SetSat(FSat + Increment);
-  TBA_VKCtrlUp: SetSat(255);
-  TBA_VKDown: SetSat(FSat - Increment);
-  TBA_VKCtrlDown: SetSat(0);
-  TBA_RedoBMP: CreateSGradient;
- end;
+  case tbaAction of
+    TBA_Resize:
+      SetSat(FSat);
+    TBA_MouseMove:
+      FSat := SatFromArrowPos(FArrowPos);
+    TBA_MouseDown:
+      FSat := SatFromArrowPos(FArrowPos);
+    TBA_MouseUp:
+      FSat := SatFromArrowPos(FArrowPos);
+    TBA_WheelUp:
+      SetSat(FSat + Increment);
+    TBA_WheelDown:
+      SetSat(FSat - Increment);
+    TBA_VKLeft:
+      SetSat(FSat - Increment);
+    TBA_VKCtrlLeft:
+      SetSat(0);
+    TBA_VKRight:
+      SetSat(FSat + Increment);
+    TBA_VKCtrlRight:
+      SetSat(255);
+    TBA_VKUp:
+      SetSat(FSat + Increment);
+    TBA_VKCtrlUp:
+      SetSat(255);
+    TBA_VKDown:
+      SetSat(FSat - Increment);
+    TBA_VKCtrlDown:
+      SetSat(0);
+    else
+      inherited;
+  end;
 end;
 
 end.

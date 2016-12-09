@@ -65,6 +65,9 @@ implementation
 
 {$IFDEF FPC}
   {$R SLColorPicker.dcr}
+
+uses
+  IntfGraphics, fpimage;
 {$ENDIF}
 
 procedure Register;
@@ -96,35 +99,98 @@ begin
  inherited;
 end;
 
+//{$IFDEF DELPHI}
 procedure TSLColorPicker.CreateSLGradient;
 var
- x, y, skip: integer;
- row: pRGBQuadArray;
- tc: TColor;
+  x, y, skip: integer;
+  row: pRGBQuadArray;
+  c: TColor;
+  {$IFDEF FPC}
+  intfimg: TLazIntfImage;
+  imgHandle, imgMaskHandle: HBitmap;
+  {$ENDIF}
 begin
- if FBMP = nil then
+  if FBmp = nil then
   begin
-   FBMP := TBitmap.Create;
-   FBMP.PixelFormat := pf32bit;
-   FBMP.Width := 256;
-   FBMP.Height := 256;
+    FBmp := TBitmap.Create;
+    FBmp.PixelFormat := pf32bit;
+    FBmp.Width := 256;
+    FBmp.Height := 256;
   end;
- row := FBMP.ScanLine[0];
- skip := integer(FBMP.ScanLine[1]) - Integer(row);
- for y := 0 to 255 do
-  begin
-   for x := 0 to 255 do
-    if not WebSafe then
-     row[x] := HSLtoRGBQuad(FHue, x, 255 - y)
-    else
-     begin
-      tc := GetWebSafe(RGBTripleToTColor(HSLToRGBTriple(FHue, x, 255 - y)));
-      row[x] := RGBtoRGBQuad(GetRValue(tc), GetGValue(tc), GetBValue(tc));
-     end;
-   row := pRGBQuadArray(Integer(row) + skip);
-  end;
+
+  {$IFDEF FPC}
+  intfimg := TLazIntfImage.Create(FBmp.Width, FBmp.Height);
+  try
+    intfImg.LoadFromBitmap(FBmp.Handle, FBmp.MaskHandle);
+  {$ENDIF}
+    {
+    row := FBMP.ScanLine[0];
+    skip := integer(FBMP.ScanLine[1]) - Integer(row);
+    }
+    for y := 0 to 255 do
+    begin
+     {$IFDEF FPC}
+     row := intfImg.GetDataLineStart(y);
+     {$ELSE}
+     row := FHSVBmp.Scanline(y);
+     {$ENDIF}
+
+     for x := 0 to 255 do
+      if not WebSafe then
+        row[x] := HSLtoRGBQuad(FHue, x, 255 - y)
+      else
+      begin
+        c := GetWebSafe(RGBTripleToTColor(HSLToRGBTriple(FHue, x, 255 - y)));
+        row[x] := RGBtoRGBQuad(GetRValue(c), GetGValue(c), GetBValue(c));
+      end;
+//      row := pRGBQuadArray(Integer(row) + skip);
+    end;
+   {$IFDEF FPC}
+   intfimg.CreateBitmaps(imgHandle, imgMaskHandle, false);
+   FBmp.Handle := imgHandle;
+   FBmp.MaskHandle := imgMaskHandle;
+ finally
+   intfimg.Free;
+ end;
+ {$ENDIF}
 end;
 
+   (*
+{$ELSE}
+procedure TSLColorPicker.CreateSLGradient;
+var
+  x, y: Integer;
+  c: TColor;
+  intfimg: TLazIntfImage;
+  imgHandle, imgMaskHandle: HBitmap;
+begin
+  if FBmp = nil then
+  begin
+    FBmp := TBitmap.Create;
+    FBmp.PixelFormat := pf32Bit;
+    FBmp.Width := 256;
+    FBmp.Height := 256;
+  end;
+  intfimg := TLazIntfImage.Create(FBmp.Width, FBmp.Height);
+  try
+    intfImg.LoadFromBitmap(FBmp.Handle, FBmp.MaskHandle);
+    for y := 0 to 255 do      // y = L
+      for x := 0 to 255 do    // x = S
+      begin
+        c := HSLRangeToRGB(FHue, x, 255-y);
+        if WebSafe then
+          c := GetWebSafe(c);
+        intfImg.Colors[x, y] := TColorToFPColor(c);
+      end;
+    intfimg.CreateBitmaps(imgHandle, imgMaskHandle, false);
+    FBmp.Handle := imgHandle;
+    FBmp.MaskHandle := imgMaskHandle;
+  finally
+    intfimg.Free;
+  end;
+end;
+{$ENDIF}
+     *)
 procedure TSLColorPicker.Resize;
 begin
  inherited;

@@ -16,39 +16,37 @@ uses
  {$ENDIF}
  SysUtils, Classes, Controls, Graphics, Forms,
  {$IFDEF DELPHI_7_UP} Themes,{$ENDIF}
- RGBHSLUtils, RGBHSVUtils, RGBCMYKUtils, RGBCIEUtils, HTMLColors;
+ RGBHSLUtils, RGBHSVUtils, RGBCMYKUtils, RGBCIEUtils, HTMLColors, mbBasicPicker;
 
 type
  TMarkerStyle = (msCircle, msSquare, msCross, msCrossCirc);
 
- TmbCustomPicker = class(TCustomControl)
+ TmbCustomPicker = class(TmbBasicPicker)
  private
   FHintFormat: string;
   FMarkerStyle: TMarkerStyle;
   FWebSafe: boolean;
-
   procedure SetMarkerStyle(s: TMarkerStyle);
   procedure SetWebSafe(s: boolean);
  protected
   mx, my, mdx, mdy: integer;
-
   function GetSelectedColor: TColor; virtual;
   procedure SetSelectedColor(C: TColor); virtual;
   procedure WebSafeChanged; dynamic;
-  procedure WMEraseBkgnd(var Message: {$IFDEF FPC}TLMEraseBkgnd{$ELSE}TWMEraseBkgnd{$ENDIF});
-    message {$IFDEF FPC} LM_ERASEBKGND{$ELSE}WM_ERASEBKGND{$ENDIF};
-  procedure CMGotFocus(var Message: {$IFDEF FPC}TLMessage{$ELSE}TCMGotFocus{$ENDIF});
-    message CM_ENTER;
-  procedure CMLostFocus(var Message: {$IFDEF FPC}TLMessage{$ELSE}TCMLostFocus{$ENDIF});
-    message CM_EXIT;
-  procedure CMMouseLeave(var Message: {$IFDEF FPC}TLMessage{$ELSE}TMessage{$ENDIF});
-    message CM_MOUSELEAVE;
-  procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
   procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
   procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
   procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-  procedure PaintParentBack(ACanvas: TCanvas);
   procedure CreateWnd; override;
+  procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
+  {$IFDEF DELPHI}
+  procedure CMGotFocus(var Message: TCMGotFocus); message CM_ENTER;
+  procedure CMLostFocus(var Message: TCMLostFocus); message CM_EXIT;
+  procedure CMMouseLeave(var Message: TMessage); message CM_MOUSELEAVE;
+  {$ELSE}
+  procedure CMGotFocus(var Message: TLMessage); message CM_ENTER;
+  procedure CMLostFocus(var Message: TLMessage); message CM_EXIT;
+  procedure CMMouseLeave(var Message: TLMessage); message CM_MOUSELEAVE;
+  {$ENDIF}
   property MarkerStyle: TMarkerStyle read FMarkerStyle write SetMarkerStyle;
  public
   constructor Create(AOwner: TComponent); override;
@@ -112,7 +110,6 @@ begin
  ControlStyle := ControlStyle + [csOpaque] - [csAcceptsControls];
  DoubleBuffered := true;
  TabStop := true;
- ParentColor := true;
  {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
  ParentBackground := true;
  {$ENDIF}{$ENDIF}
@@ -129,39 +126,6 @@ begin
  inherited;
 end;
 
-procedure TmbCustomPicker.PaintParentBack(ACanvas: TCanvas);
-var
- OffScreen: TBitmap;
- {$IFDEF DELPHI_7_UP}
- MemDC: HDC;
- OldBMP: HBITMAP;
- {$ENDIF}
-begin
- Offscreen := TBitmap.Create;
- Offscreen.Width := Width;
- Offscreen.Height := Height;
- {$IFDEF FPC}
- if Color = clDefault then
-   Offscreen.Canvas.Brush.Color := clForm else
- {$ENDIF}
-   Offscreen.Canvas.Brush.Color := Color;
- Offscreen.Canvas.FillRect(Offscreen.Canvas.ClipRect);
- {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
- if ParentBackground then
-  with ThemeServices do
-   if ThemesEnabled then
-    begin
-     MemDC := CreateCompatibleDC(0);
-     OldBMP := SelectObject(MemDC, OffScreen.Handle);
-     DrawParentBackground(Handle, MemDC, nil, False);
-     if OldBMP <> 0 then SelectObject(MemDC, OldBMP);
-     if MemDC <> 0 then DeleteDC(MemDC);
-    end;
- {$ENDIF}{$ENDIF}
- ACanvas.Draw(0, 0, Offscreen);
- Offscreen.Free;
-end;
-
 procedure TmbCustomPicker.CMGotFocus(
   var Message: {$IFDEF FPC}TLMessage{$ELSE}TCMGotFocus{$ENDIF} );
 begin
@@ -174,12 +138,6 @@ procedure TmbCustomPicker.CMLostFocus(
 begin
  inherited;
  Invalidate;
-end;
-
-procedure TmbCustomPicker.WMEraseBkgnd(
-  var Message: {$IFDEF FPC}TLMEraseBkgnd{$ELSE}TWMEraseBkgnd{$ENDIF});
-begin
- Message.Result := 1;
 end;
 
 procedure TmbCustomPicker.CMMouseLeave(

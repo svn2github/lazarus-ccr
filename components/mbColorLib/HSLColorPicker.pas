@@ -16,10 +16,10 @@ uses
  {$ENDIF}
  SysUtils, Classes, Controls, Graphics, Forms, Menus,
  {$IFDEF DELPHI_7_UP} Themes, {$ENDIF}
- RGBHSLUtils, HSColorPicker, LColorPicker, HTMLColors;
+ RGBHSLUtils, HSColorPicker, LColorPicker, HTMLColors, mbBasicPicker;
 
 type
- THSLColorPicker = class(TCustomControl)
+ THSLColorPicker = class(TmbBasicPicker)
  private
   FOnChange: TNotifyEvent;
   FHSPicker: THSColorPicker;
@@ -48,14 +48,12 @@ type
   procedure SetHSMenu(m: TPopupMenu);
   procedure SetHSCursor(c: TCursor);
   procedure SetLCursor(c: TCursor);
-  procedure PaintParentBack;
   procedure SetSelectedColor(Value: TColor);
  protected
   procedure CreateWnd; override;
   procedure Resize; override;
   procedure Paint; override;
-  procedure WMEraseBkgnd(var Message: {$IFDEF FPC}TLMEraseBkgnd{$ELSE}TWMEraseBkgnd{$ENDIF});
-    message {$IFDEF FPC}LM_ERASEBKGND{$ELSE}WM_ERASEBKGND{$ENDIF};
+  procedure PaintParentBack; override;
   procedure WMSetFocus(var Message: {$IFDEF FPC}TLMSetFocus{$ELSE}TWMSetFocus{$ENDIF});
     message {$IFDEF FPC}LM_SETFOCUS{$ELSE}WM_SETFOCUS{$ENDIF};
   procedure DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
@@ -121,55 +119,61 @@ end;
 
 constructor THSLColorPicker.Create(AOwner: TComponent);
 begin
- inherited;
- ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
- DoubleBuffered := true;
- ParentColor := true;
- PBack := TBitmap.Create;
- PBack.PixelFormat := pf32bit;
- {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
- ParentBackground := true;
- {$ENDIF} {$ENDIF}
- Width := 206;
- Height := 146;
- TabStop := true;
- FSelectedColor := clRed;
- FHSPicker := THSColorPicker.Create(Self);
- InsertControl(FHSPicker);
- FLumIncrement := 1;
- FHSCursor := crDefault;
- FLCursor := crDefault;
- with FHSPicker do
+  inherited;
+  ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
+  DoubleBuffered := true;
+  PBack := TBitmap.Create;
+  PBack.PixelFormat := pf32bit;
+  {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
+  ParentBackground := true;
+  {$ENDIF} {$ENDIF}
+  SetInitialBounds(0, 0, 206, 146);
+  //Width := 206;
+  //Height := 146;
+  TabStop := true;
+  FSelectedColor := clRed;
+  FHSPicker := THSColorPicker.Create(Self);
+  InsertControl(FHSPicker);
+  FLumIncrement := 1;
+  FHSCursor := crDefault;
+  FLCursor := crDefault;
+  with FHSPicker do
   begin
-   Height := 134;
-   Width := 174;
-   Top := 6;
-   Left := 0;
-   Anchors := [akLeft, akTop, akRight, akBottom];
-   Visible := true;
-   OnChange := HSPickerChange;
-   OnMouseMove := DoMouseMove;
+    SetInitialBounds(0, 6, 174, 134);
+    {
+    Height := 134;
+    Width := 174;
+    Top := 6;
+    Left := 0;
+    }
+    Anchors := [akLeft, akTop, akRight, akBottom];
+    Visible := true;
+    OnChange := HSPickerChange;
+    OnMouseMove := DoMouseMove;
   end;
- FLPicker := TLColorPicker.Create(Self);
- InsertControl(FLPicker);
- with FLPicker do
+  FLPicker := TLColorPicker.Create(Self);
+  InsertControl(FLPicker);
+  with FLPicker do
   begin
-   Height := 146;
-   Top := 0;
-   Left := 184;
-   Anchors := [akRight, akTop, akBottom];
-   Visible := true;
-   OnChange := LPickerChange;
-   OnMouseMove := DoMouseMove;
+    SetInitialBounds(184, 0, 25, 146);
+    {
+    Height := 146;
+    Top := 0;
+    Left := 184;
+    }
+    Anchors := [akRight, akTop, akBottom];
+    Visible := true;
+    OnChange := LPickerChange;
+    OnMouseMove := DoMouseMove;
   end;
- FHValue := 0;
- FSValue := 240;
- FLValue := 120;
- FRValue := 255;
- FGValue := 0;
- FBValue := 0;
- FHSHint := 'H: %h S: %hslS'#13'Hex: %hex';
- FLHint := 'Luminance: %l';
+  FHValue := 0;
+  FSValue := 240;
+  FLValue := 120;
+  FRValue := 255;
+  FGValue := 0;
+  FBValue := 0;
+  FHSHint := 'H: %h S: %hslS'#13'Hex: %hex';
+  FLHint := 'Luminance: %l';
 end;
 
 destructor THSLColorPicker.Destroy;
@@ -328,11 +332,6 @@ begin
 end;
 
 procedure THSLColorPicker.PaintParentBack;
-{$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
-var
- MemDC: HDC;
- OldBMP: HBITMAP;
- {$ENDIF} {$ENDIF}
 begin
  if PBack = nil then
   begin
@@ -341,31 +340,22 @@ begin
   end;
  PBack.Width := Width;
  PBack.Height := Height;
- {$IFDEF FPC}
- if Color = clDefault then
-   PBack.Canvas.Brush.Color := clForm
- else
- {$ENDIF}
- PBack.Canvas.Brush.Color := Color;
- PBack.Canvas.FillRect(PBack.Canvas.ClipRect);
- {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
- if ParentBackground then
-  with ThemeServices do
-   if ThemesEnabled then
-    begin
-     MemDC := CreateCompatibleDC(0);
-     OldBMP := SelectObject(MemDC, PBack.Handle);
-     DrawParentBackground(Handle, MemDC, nil, False);
-     if OldBMP <> 0 then SelectObject(MemDC, OldBMP);
-     if MemDC <> 0 then DeleteDC(MemDC);
-    end;
- {$ENDIF} {$ENDIF}
+ PaintParentBack(PBack);
 end;
 
 procedure THSLColorPicker.Resize;
 begin
- inherited;
- PaintParentBack;
+  inherited;
+  PaintParentBack;
+
+  if (FHSPicker = nil) or (FLPicker = nil) then
+    exit;
+
+  FHSPicker.Width := Width - FLPicker.Width - 15;
+  FHSPicker.Height := Height - 12;
+
+  FLPicker.Left := Width - FLPicker.Width - 2;
+  FLPicker.Height := Height; // - 12;
 end;
 
 procedure THSLColorPicker.CreateWnd;
@@ -378,12 +368,6 @@ procedure THSLColorPicker.Paint;
 begin
  PaintParentBack;
  Canvas.Draw(0, 0, PBack);
-end;
-
-procedure THSLColorPicker.WMEraseBkgnd(
-  var Message: {$IFDEF FPC}TLMEraseBkgnd{$ELSE}TWMEraseBkgnd{$ENDIF} );
-begin
- Message.Result := 1;
 end;
 
 procedure THSLColorPicker.SetSelectedColor(Value: TColor);
