@@ -32,7 +32,6 @@ type
     property ParentColor default true;
   end;
 
-
 implementation
 
 constructor TmbBasicPicker.Create(AOwner: TComponent);

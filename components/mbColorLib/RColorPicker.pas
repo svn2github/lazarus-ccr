@@ -52,6 +52,9 @@ implementation
   {$R RColorPicker.dcr}
 {$ENDIF}
 
+uses
+  mbUtils;
+
 procedure Register;
 begin
  RegisterComponents('mbColor Lib', [TRColorPicker]);
@@ -64,8 +67,9 @@ begin
   inherited;
   FGradientWidth := 256;
   FGradientHeight := 12;
-  Width := 22;
-  Height := 268;
+  SetInitialBounds(0, 0, 22, 268);
+//  Width := 22;
+//  Height := 268;
   Layout := lyVertical;
   FRed := 255;
   FGreen := 122;
@@ -78,51 +82,6 @@ begin
   FChange := true;
 end;
 
-                         (*
-procedure TRColorPicker.CreateRGradient;
-var
- i,j: integer;
- row: pRGBQuadArray;
-begin
- if FBmp = nil then
-  begin
-   FBmp := TBitmap.Create;
-   FBmp.PixelFormat := pf32bit;
-  end;
- if Layout = lyHorizontal then
-  begin
-   FBmp.width := 256;
-   FBmp.height := 12;
-   for i := 0 to 255 do
-    for j := 0 to 11 do
-     begin
-      row := FBmp.Scanline[j];
-      if not WebSafe then
-       row[i] := RGBToRGBQuad(i, FGreen, FBlue)
-//       FBmp.Canvas.Pixels[i, j] := RGB(i, FGreen, FBlue)
-      else
-       row[i] := RGBToRGBQuad(GetWebSafe(RGB(i, FGreen, FBlue)));
-//       FBmp.Canvas.Pixels[i, j] := GetWebSafe(RGB(i, FGreen, FBlue));
-     end;
-  end
- else
-  begin
-   FBmp.width := 12;
-   FBmp.height := 256;
-   for i := 0 to 255 do
-    begin
-     row := FBmp.ScanLine[i];
-     for j := 0 to 11 do
-      if not WebSafe then
-       row[j] := RGBtoRGBQuad(255-i, FGreen, FBlue)
-//       FBmp.Canvas.Pixels[j, i] := RGB(255-i, FGreen, FBlue)
-      else
-       row[j] := RGBtoRGBQuad(GetWebSafe(RGB(255-i, FGreen, FBlue)));
-//       FBmp.Canvas.Pixels[j, i] := GetWebSafe(RGB(255-i, FGreen, FBlue));
-    end;
-  end;
-end;             *)
-
 function TRColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
   Result := RGB(AValue, FGreen, FBlue);
@@ -130,8 +89,7 @@ end;
 
 procedure TRColorPicker.SetRed(r: integer);
 begin
-  if r < 0 then r := 0;
-  if r > 255 then r := 255;
+  Clamp(r, 0, 255);
   if FRed <> r then
   begin
     FRed := r;
@@ -144,8 +102,7 @@ end;
 
 procedure TRColorPicker.SetGreen(g: integer);
 begin
-  if g > 255 then g := 255;
-  if g < 0 then g := 0;
+  Clamp(g, 0, 255);
   if FGreen <> g then
   begin
     FGreen := g;
@@ -158,8 +115,7 @@ end;
 
 procedure TRColorPicker.SetBlue(b: integer);
 begin
-  if b > 255 then b := 255;
-  if b < 0 then b := 0;
+  Clamp(b, 0, 255);
   if FBlue <> b then
   begin
     FBlue := b;
@@ -197,8 +153,7 @@ begin
     r := Round(p/((Width - 12)/255))
   else
     r := Round(255 - p/((Height - 12)/255));
-  if r < 0 then r := 0;
-  if r > 255 then r := 255;
+  Clamp(r, 0, 255);
   Result := r;
 end;
 

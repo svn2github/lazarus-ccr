@@ -8,7 +8,7 @@ interface
 
 uses
   {$IFDEF FPC}
-  LCLIntf, LCLType, LMessages,
+  LCLIntf, LCLType, //LMessages,
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
@@ -52,6 +52,9 @@ implementation
   {$R BColorPicker.dcr}
 {$ENDIF}
 
+uses
+  mbUtils;
+
 procedure Register;
 begin
   RegisterComponents('mbColor Lib', [TBColorPicker]);
@@ -81,47 +84,6 @@ begin
   FChange := true;
 end;
 
-(*
-procedure TBColorPicker.CreateBGradient;
-var
- i,j: integer;
- row: pRGBQuadArray;
-begin
- if FBmp = nil then
-  begin
-   FBmp := TBitmap.Create;
-   FBmp.PixelFormat := pf32bit;
-  end;
- if Layout = lyHorizontal then
-  begin
-   FBmp.width := 256;
-   FBmp.height := 12;
-   for i := 0 to 255 do
-    for j := 0 to 11 do
-     begin
-      row := FBmp.Scanline[j];
-      if not WebSafe then
-       row[i] := RGBtoRGBQuad(FRed, FGreen, i)
-      else
-       row[i] := RGBtoRGBQuad(GetWebSafe(RGB(FRed, FGreen, i)));
-     end;
-  end
- else
-  begin
-   FBmp.width := 12;
-   FBmp.height := 256;
-   for i := 0 to 255 do
-    begin
-     row := FBmp.Scanline[i];
-     for j := 0 to 11 do
-      if not WebSafe then
-       row[j] := RGBtoRGBQuad(FRed, FGreen, 255-i)
-      else
-       row[j] := RGBtoRGBQuad(GetWebSafe(RGB(FRed, FGreen, 255-i)));
-    end;
-  end;
-end;   *)
-
 function TBColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
   Result := RGB(FRed, FGreen, AValue);
@@ -129,8 +91,7 @@ end;
 
 procedure TBColorPicker.SetRed(r: integer);
 begin
-  if r < 0 then r := 0;
-  if r > 255 then r := 255;
+  Clamp(r, 0, 255);
   if FRed <> r then
   begin
     FRed := r;
@@ -143,8 +104,7 @@ end;
 
 procedure TBColorPicker.SetGreen(g: integer);
 begin
-  if g > 255 then g := 255;
-  if g < 0 then g := 0;
+  Clamp(g, 0, 255);
   if FGreen <> g then
   begin
     FGreen := g;
@@ -157,8 +117,7 @@ end;
 
 procedure TBColorPicker.SetBlue(b: integer);
 begin
-  if b > 255 then b := 255;
-  if b < 0 then b := 0;
+  Clamp(b, 0, 255);
   if FBlue <> b then
   begin
     FBlue := b;
@@ -195,9 +154,8 @@ begin
   if Layout = lyHorizontal then
     b := Round(p/((Width - 12)/255))
   else
-   b := Round(255 - p/((Height - 12)/255));
-  if b < 0 then b := 0;
-  if b > 255 then b := 255;
+    b := Round(255 - p/((Height - 12)/255));
+  Clamp(b, 0, 255);
   Result := b;
 end;
 

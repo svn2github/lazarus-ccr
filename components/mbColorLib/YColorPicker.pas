@@ -52,6 +52,9 @@ implementation
   {$R YColorPicker.dcr}
 {$ENDIF}
 
+uses
+  mbUtils;
+
 procedure Register;
 begin
  RegisterComponents('mbColor Lib', [TYColorPicker]);
@@ -79,53 +82,6 @@ begin
   FChange := true;
 end;
 
-
-(*
-procedure TYColorPicker.CreateYGradient;
-var
- i,j: integer;
- row: pRGBQuadArray;
-begin
- if FYBmp = nil then
-  begin
-   FYBmp := TBitmap.Create;
-   FYBmp.PixelFormat := pf32bit;
-  end;
- if Layout = lyHorizontal then
-  begin
-   FYBmp.width := 255;
-   FYBmp.height := 12;
-   for i := 0 to 254 do
-    for j := 0 to 11 do
-     begin
-      row := FYBmp.Scanline[j];
-      if not WebSafe then
-       row[i] := RGBToRGBQuad(CMYKtoTColor(FCyan, FMagenta, i, FBlack))
-//       FYBmp.Canvas.Pixels[i, j] := CMYKtoTColor(FCyan, FMagenta, i, FBlack)
-      else
-       row[i] := RGBToRGBQuad(GetWebSafe(CMYKtoTColor(FCyan, FMagenta, i, FBlack)));
-//       FYBmp.Canvas.Pixels[i, j] := GetWebSafe(CMYKtoTColor(FCyan, FMagenta, i, FBlack));
-     end;
-  end
- else
-  begin
-   FYBmp.width := 12;
-   FYBmp.height := 255;
-   for i := 0 to 254 do
-    begin
-     row := FYBmp.Scanline[i];
-     for j := 0 to 11 do
-      if not WebSafe then
-       row[j] := RGBToRGBQuad(CMYKtoTColor(FCyan, FMagenta, 255-i, FBlack))
-//       FYBmp.Canvas.Pixels[j, i] := CMYKtoTColor(FCyan, FMagenta, 255-i, FBlack)
-      else
-       row[j] := RGBToRGBQuad(GetWebSafe(CMYKtoTColor(FCyan, FMagenta, 255-i, FBlack)));
-//       FYBmp.Canvas.Pixels[j, i] := GetWebSafe(CMYKtoTColor(FCyan, FMagenta, 255-i, FBlack));
-    end;
-  end;
-end;
-*)
-
 function TYColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
   Result := CMYKtoTColor(FCyan, FMagenta, AValue, FBlack);
@@ -133,8 +89,7 @@ end;
 
 procedure TYColorPicker.SetYellow(y: integer);
 begin
-  if y < 0 then y := 0;
-  if y > 255 then y := 255;
+  Clamp(y, 0, 255);
   if FYellow <> y then
   begin
     FYellow := y;
@@ -147,8 +102,7 @@ end;
 
 procedure TYColorPicker.SetMagenta(m: integer);
 begin
-  if m > 255 then m := 255;
-  if m < 0 then m := 0;
+  Clamp(m, 0, 255);
   if FMagenta <> m then
   begin
     FMagenta := m;
@@ -161,8 +115,7 @@ end;
 
 procedure TYColorPicker.SetCyan(c: integer);
 begin
-  if c > 255 then c := 255;
-  if c < 0 then c := 0;
+  Clamp(c, 0, 255);
   if FCyan <> c then
   begin
     FCyan := c;
@@ -175,8 +128,7 @@ end;
 
 procedure TYColorPicker.SetBlack(k: integer);
 begin
-  if k > 255 then k := 255;
-  if k < 0 then k := 0;
+  Clamp(k, 0, 255);
   if FBlack <> k then
   begin
     FBlack := k;
@@ -214,8 +166,7 @@ begin
     r := Round(p/((Width - 12)/255))
   else
     r := Round(255 - p/((Height - 12)/255));
-  if r < 0 then r := 0;
-  if r > 255 then r := 255;
+  Clamp(r, 0, 255);
   Result := r;
 end;
 

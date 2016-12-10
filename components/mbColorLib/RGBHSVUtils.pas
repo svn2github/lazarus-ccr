@@ -14,7 +14,6 @@ uses
  {$ENDIF}
  SysUtils, Classes, Graphics, Math, Scanlines;
 
-procedure Clamp(var Input: integer; Min, Max: integer);
 function RGBtoRGBTriple(R, G, B: byte): TRGBTriple;
 function RGBtoRGBQuad(R, G, B: byte): TRGBQuad;
 function RGBTripleToColor(Triple: TRGBTriple): TColor;
@@ -27,12 +26,6 @@ function GetVValue(Color: TColor): integer;
 function GetSValue(Color: TColor): integer;
 
 implementation
-
-procedure Clamp(var Input: integer; Min, Max: integer);
-begin
- if Input < Min then Input := Min;
- if Input > Max then Input := Max;
-end;
 
 function RGBtoRGBTriple(R, G, B: byte): TRGBTriple;
 begin

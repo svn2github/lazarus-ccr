@@ -48,6 +48,9 @@ implementation
   {$R HColorPicker.dcr}
 {$ENDIF}
 
+uses
+  mbUtils;
+
 procedure Register;
 begin
   RegisterComponents('mbColor Lib', [THColorPicker]);
@@ -73,50 +76,6 @@ begin
   FChange := true;
 end;
 
-(*
-procedure THColorPicker.CreateHGradient;
-var
- i,j: integer;
- row: pRGBQuadArray;
-begin
- if FHBmp = nil then
-  begin
-   FHBmp := TBitmap.Create;
-   FHBmp.PixelFormat := pf32bit;
-  end;
- if Layout = lyHorizontal then
-  begin
-   FHBmp.width := 360;
-   FHBmp.height := 12;
-   for i := 0 to 359 do
-    for j := 0 to 11 do
-     begin
-      row := FHBmp.ScanLine[j];
-      if not WebSafe then
-       row[i] := RGBtoRGBQuad(HSVtoColor(i, FSat, FVal))
-//       FHBmp.Canvas.Pixels[i, j] := HSVtoColor(i, FSat, FVal)
-      else
-       row[i] := RGBtoRGBQuad(GetWebSafe(HSVtoColor(i, FSat, FVal)));
-//       FHBmp.Canvas.Pixels[i, j] := GetWebSafe(HSVtoColor(i, FSat, FVal));
-     end;
-  end
- else
-  begin
-   FHBmp.width := 12;
-   FHBmp.height := 360;
-   for i := 0 to 359 do
-    begin
-     row := FHBmp.ScanLine[i];
-     for j := 0 to 11 do
-      if not WebSafe then
-       row[j] := RGBtoRGBQuad(HSVtoColor(i, FSat, FVal))
-      else
-       row[j] := RGBtoRGBQuad(GetWebSafe(HSVtoColor(i, FSat, FVal)));
-    end;
-  end;
-end;
-*)
-
 function THColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
   Result := HSVtoColor(AValue, FSat, FVal);
@@ -124,8 +83,7 @@ end;
 
 procedure THColorPicker.SetValue(v: integer);
 begin
-  if v < 0 then v := 0;
-  if v > 255 then v := 255;
+  Clamp(v, 0, 255);
   if FVal <> v then
   begin
     FVal := v;
@@ -138,8 +96,7 @@ end;
 
 procedure THColorPicker.SetHue(h: integer);
 begin
-  if h > 360 then h := 360;
-  if h < 0 then h := 0;
+  Clamp(h, 0, 360);
   if FHue <> h then
   begin
     FHue := h;
@@ -152,8 +109,7 @@ end;
 
 procedure THColorPicker.SetSat(s: integer);
 begin
-  if s > 255 then s := 255;
-  if s < 0 then s := 0;
+  Clamp(s, 0, 255);
   if FSat <> s then
   begin
     FSat := s;
@@ -190,8 +146,7 @@ begin
     r := Round(p/((Width - 12)/360))
   else
     r := Round(p/((Height - 12)/360));
-  if r < 0 then r := 0;
-  if r > 360 then r := 360;
+  Clamp(r, 0, 360);
   Result := r;
 end;
 

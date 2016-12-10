@@ -47,6 +47,9 @@ implementation
   {$R GColorPicker.dcr}
 {$ENDIF}
 
+uses
+  mbUtils;
+
 procedure Register;
 begin
   RegisterComponents('mbColor Lib', [TGColorPicker]);
@@ -74,50 +77,6 @@ begin
   FChange := true;
 end;
 
-(*
-procedure TGColorPicker.CreateGGradient;
-var
- i,j: integer;
- row: pRGBQuadArray;
-begin
- if FBmp = nil then
-  begin
-   FBmp := TBitmap.Create;
-   FBmp.PixelFormat := pf32bit;
-  end;
- if Layout = lyHorizontal then
-  begin
-   FBmp.width := 256;
-   FBmp.height := 12;
-   for i := 0 to 255 do
-    for j := 0 to 11 do
-     begin
-      row := FBmp.ScanLine[j];
-      if not WebSafe then
-       row[i] := RGBtoRGBQuad(FRed, i, FBlue)
-//       FBmp.Canvas.Pixels[i, j] := RGB(FRed, i, FBlue)
-      else
-       row[i] := RGBtoRGBQuad(GetWebSafe(RGB(FRed, i, FBlue)));
-//       FBmp.Canvas.Pixels[i, j] := GetWebSafe(RGB(FRed, i, FBlue));
-     end;
-  end
- else
-  begin
-   FBmp.width := 12;
-   FBmp.height := 256;
-   for i := 0 to 255 do
-    begin
-     row := FBmp.Scanline[i];
-     for j := 0 to 11 do
-      if not WebSafe then
-       row[j] := RGBtoRGBQuad(FRed, 255-i, FBlue)
-      else
-       row[j] := RGBtoRGBQuad(GetWebSafe(RGB(FRed, 255-i, FBlue)));
-    end;
-  end;
-end;
-*)
-
 function TGColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
   Result := RGB(FRed, AValue, FBlue);
@@ -125,8 +84,7 @@ end;
 
 procedure TGColorPicker.SetRed(r: integer);
 begin
-  if r < 0 then r := 0;
-  if r > 255 then r := 255;
+  Clamp(r, 0, 255);
   if FRed <> r then
   begin
     FRed := r;
@@ -139,8 +97,7 @@ end;
 
 procedure TGColorPicker.SetGreen(g: integer);
 begin
-  if g > 255 then g := 255;
-  if g < 0 then g := 0;
+  Clamp(g, 0, 255);
   if FGreen <> g then
   begin
     FGreen := g;
@@ -153,8 +110,7 @@ end;
 
 procedure TGColorPicker.SetBlue(b: integer);
 begin
-  if b > 255 then b := 255;
-  if b < 0 then b := 0;
+  Clamp(b, 0, 255);
   if FBlue <> b then
   begin
     FBlue := b;
@@ -192,8 +148,7 @@ begin
     g := Round(p/((Width - 12)/255))
   else
     g := Round(255 - p/((Height - 12)/255));
-  if g < 0 then g := 0;
-  if g > 255 then g := 255;
+  Clamp(g, 0, 255);
   Result := g;
 end;
 

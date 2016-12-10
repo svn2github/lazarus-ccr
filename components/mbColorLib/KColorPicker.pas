@@ -51,6 +51,9 @@ implementation
   {$R KColorPicker.dcr}
 {$ENDIF}
 
+uses
+  mbUtils;
+
 procedure Register;
 begin
   RegisterComponents('mbColor Lib', [TKColorPicker]);
@@ -79,52 +82,6 @@ begin
   FChange := true;
 end;
 
-(*
-procedure TKColorPicker.CreateKGradient;
-var
-  i,j: integer;
- row: pRGBQuadArray;
-begin
- if FKBmp = nil then
-  begin
-   FKBmp := TBitmap.Create;
-   FKBmp.PixelFormat := pf32bit;
-  end;
- if Layout = lyHorizontal then
-  begin
-   FKBmp.width := 255;
-   FKBmp.height := 12;
-   for i := 0 to 254 do
-    for j := 0 to 11 do
-     begin
-      row := FKBmp.ScanLine[j];
-      if not WebSafe then
-       row[i] := RGBToRGBQuad(CMYKtoTColor(FCyan, FMagenta, FYellow, i))
-//       FKBmp.Canvas.Pixels[i, j] := CMYKtoTColor(FCyan, FMagenta, FYellow, i)
-      else
-       row[i] := RGBToRGBQuad(GetWebSafe(CMYKtoTColor(FCyan, FMagenta, FYellow, i)));
-//       FKBmp.Canvas.Pixels[i, j] := GetWebSafe(CMYKtoTColor(FCyan, FMagenta, FYellow, i));
-     end;
-  end
- else
-  begin
-   FKBmp.width := 12;
-   FKBmp.height := 255;
-   for i := 0 to 254 do
-    begin
-     row := FKBmp.Scanline[i];
-     for j := 0 to 11 do
-      if not WebSafe then
-       row[j] := RGBToRGBQuad(CMYKtoTColor(FCyan, FMagenta, FYellow, 255-i))
-//       FKBmp.Canvas.Pixels[j, i] := CMYKtoTColor(FCyan, FMagenta, FYellow, 255-i)
-      else
-       row[j] := RGBToRGBQuad(GetWebSafe(CMYKtoTColor(FCyan, FMagenta, FYellow, 255-i)));
-//       FKBmp.Canvas.Pixels[j, i] := GetWebSafe(CMYKtoTColor(FCyan, FMagenta, FYellow, 255-i));
-    end;
-  end;
-end;
-  *)
-
 function TKColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
   Result := CMYKtoTColor(FCyan, FMagenta, FYellow, AValue);
@@ -132,8 +89,7 @@ end;
 
 procedure TKColorPicker.SetBlack(k: integer);
 begin
-  if k < 0 then k := 0;
-  if k > 255 then k := 255;
+  Clamp(k, 0, 255);
   if FBlack <> k then
   begin
     FBlack := k;
@@ -146,8 +102,7 @@ end;
 
 procedure TKColorPicker.SetMagenta(m: integer);
 begin
-  if m > 255 then m := 255;
-  if m < 0 then m := 0;
+  Clamp(m, 0, 255);
   if FMagenta <> m then
   begin
     FMagenta := m;
@@ -160,8 +115,7 @@ end;
 
 procedure TKColorPicker.SetYellow(y: integer);
 begin
-  if y > 255 then y := 255;
-  if y < 0 then y := 0;
+  Clamp(y, 0, 255);
   if FYellow <> y then
   begin
     FYellow := y;
@@ -174,8 +128,7 @@ end;
 
 procedure TKColorPicker.SetCyan(c: integer);
 begin
-  if c > 255 then c := 255;
-  if c < 0 then c := 0;
+  Clamp(c, 0, 255);
   if FCyan <> c then
   begin
     FCyan := c;
@@ -207,15 +160,14 @@ end;
 
 function TKColorPicker.BlackFromArrowPos(p: integer): integer;
 var
-  r: integer;
+  k: integer;
 begin
   if Layout = lyHorizontal then
-    r := Round(p/((Width - 12)/255))
+    k := Round(p/((Width - 12)/255))
   else
-   r := Round(255 - p/((Height - 12)/255));
-  if r < 0 then r := 0;
-  if r > 255 then r := 255;
-  Result := r;
+    k := Round(255 - p/((Height - 12)/255));
+  Clamp(k, 0, 255);
+  Result := k;
 end;
 
 function TKColorPicker.GetSelectedColor: TColor;

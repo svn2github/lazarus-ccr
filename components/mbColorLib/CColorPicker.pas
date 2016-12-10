@@ -22,7 +22,7 @@ type
     function ArrowPosFromCyan(c: integer): integer;
     function CyanFromArrowPos(p: integer): integer;
     function GetSelectedColor: TColor;
-    procedure SetSelectedColor(c: TColor);
+    procedure SetSelectedColor(clr: TColor);
     procedure SetCyan(c: integer);
     procedure SetMagenta(m: integer);
     procedure SetYellow(y: integer);
@@ -50,6 +50,9 @@ implementation
 {$IFDEF FPC}
   {$R CColorPicker.dcr}
 {$ENDIF}
+
+uses
+  mbUtils;
 
 procedure Register;
 begin
@@ -79,48 +82,6 @@ begin
   FChange := true;
 end;
 
-(*
-procedure TCColorPicker.CreateCGradient;
-var
- i,j: integer;
- row: pRGBQuadArray;
-begin
- if FCBmp = nil then
-  begin
-   FCBmp := TBitmap.Create;
-   FCBmp.PixelFormat := pf32bit;
-  end;
- if Layout = lyHorizontal then
-  begin
-   FCBmp.width := 255;
-   FCBmp.height := 12;
-   for i := 0 to 254 do
-    for j := 0 to 11 do
-     begin
-      row := FCBmp.Scanline[j];
-      if not WebSafe then
-       row[i] := RGBToRGBQuad(CMYKtoTColor(i, FMagenta, FYellow, FBlack))
-      else
-       row[i] := RGBToRGBQuad(GetWebSafe(CMYKtoTColor(i, FMagenta, FYellow, FBlack)));
-     end;
-  end
- else
-  begin
-   FCBmp.width := 12;
-   FCBmp.height := 255;
-   for i := 0 to 254 do
-    begin
-     row := FCBmp.Scanline[i];
-     for j := 0 to 11 do
-      if not WebSafe then
-       row[j] := RGBtoRGBQuad(CMYKtoTColor(255-i, FMagenta, FYellow, FBlack))
-      else
-       row[j] := RGBtoRGBQuad(GetWebSafe(CMYKtoTColor(255-i, FMagenta, FYellow, FBlack)));
-    end;
-  end;
-end;
-*)
-
 function TCColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
   Result := CMYKtoTColor(AValue, FMagenta, FYellow, FBlack);
@@ -128,8 +89,7 @@ end;
 
 procedure TCColorPicker.SetCyan(C: integer);
 begin
-  if C < 0 then C := 0;
-  if C > 255 then C := 255;
+  Clamp(c, 0, 255);
   if FCyan <> c then
   begin
     FCyan := c;
@@ -142,8 +102,7 @@ end;
 
 procedure TCColorPicker.SetMagenta(m: integer);
 begin
-  if m > 255 then m := 255;
-  if m < 0 then m := 0;
+  Clamp(m, 0, 255);
   if FMagenta <> m then
   begin
     FMagenta := m;
@@ -156,8 +115,7 @@ end;
 
 procedure TCColorPicker.SetYellow(y: integer);
 begin
-  if y > 255 then y := 255;
-  if y < 0 then y := 0;
+  Clamp(y, 0, 255);
   if FYellow <> y then
   begin
     FYellow := y;
@@ -170,8 +128,7 @@ end;
 
 procedure TCColorPicker.SetBlack(k: integer);
 begin
-  if k > 255 then k := 255;
-  if k < 0 then k := 0;
+  Clamp(k, 0, 255);
   if FBlack <> k then
   begin
     FBlack := k;
@@ -203,15 +160,14 @@ end;
 
 function TCColorPicker.CyanFromArrowPos(p: integer): integer;
 var
-  r: integer;
+  c: integer;
 begin
   if Layout = lyHorizontal then
-    r := Round(p/((Width - 12)/255))
+    c := Round(p/((Width - 12)/255))
   else
-    r := Round(255 - p/((Height - 12)/255));
-  if r < 0 then r := 0;
-  if r > 255 then r := 255;
-  Result := r;
+    c := Round(255 - p/((Height - 12)/255));
+  Clamp(c, 0, 255);
+  Result := c;
 end;
 
 function TCColorPicker.GetSelectedColor: TColor;
@@ -227,17 +183,17 @@ begin
   Result := FCyan;
 end;
 
-procedure TCColorPicker.SetSelectedColor(c: TColor);
+procedure TCColorPicker.SetSelectedColor(clr: TColor);
 var
-  cy, m, y, k: integer;
+  c, m, y, k: integer;
 begin
-  if WebSafe then c := GetWebSafe(c);
-  ColorToCMYK(c, cy, m, y, k);
+  if WebSafe then clr := GetWebSafe(clr);
+  ColorToCMYK(clr, c, m, y, k);
   FChange := false;
   SetMagenta(m);
   SetYellow(y);
   SetBlack(k);
-  SetCyan(cy);
+  SetCyan(c);
   FManual := false;
   FChange := true;
   if Assigned(OnChange) then OnChange(Self);

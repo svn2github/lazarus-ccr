@@ -49,6 +49,9 @@ implementation
   {$R LColorPicker.dcr}
 {$ENDIF}
 
+uses
+  mbUtils;
+
 procedure Register;
 begin
   RegisterComponents('mbColor Lib', [TLColorPicker]);
@@ -61,6 +64,7 @@ begin
   inherited;
   FGradientWidth := 256;
   FGradientHeight := 12;
+  SetInitialBounds(0, 0, 22, 267);
   Layout := lyVertical;
   FHue := 0;
   FSat := MaxSat;
@@ -72,52 +76,6 @@ begin
   FChange := true;
 end;
 
-(*
-procedure TLColorPicker.CreateLGradient;
-var
- i,j: integer;
- row: pRGBQuadArray;
-begin
- if FLBmp = nil then
-  begin
-   FLBmp := TBitmap.Create;
-   FLBmp.PixelFormat := pf32bit;
-  end;
- if Layout = lyHorizontal then
-  begin
-   FLBmp.width := MaxLum;
-   FLBmp.height := 12;
-   for i := 0 to MaxLum - 1 do
-    for j := 0 to 11 do
-     begin
-      row := FLBmp.Scanline[j];
-      if not WebSafe then
-       row[i] := RGBToRGBQuad(HSLRangeToRGB(FHue, FSat, i))
-//       FLBmp.Canvas.Pixels[i, j] := HSLRangeToRGB(FHue, FSat, i)
-      else
-       row[i] := RGBToRGBQuad(GetWebSafe(HSLRangeToRGB(FHue, FSat, i)));
-//       FLBmp.Canvas.Pixels[i, j] := GetWebSafe(HSLRangeToRGB(FHue, FSat, i));
-     end;
-  end
- else
-  begin
-   FLBmp.width := 12;
-   FLBmp.height := MaxLum;
-   for i := 0 to MaxLum - 1 do
-    begin
-     row := FLBmp.Scanline[i];
-     for j := 0 to 11 do
-      if not WebSafe then
-       row[j] := RGBToRGBQuad(HSLRangeToRGB(FHue, FSat, MaxLum - i))
-//       FLBmp.Canvas.Pixels[j, i] := HSLRangeToRGB(FHue, FSat, MaxLum - i)
-      else
-       row[j] := RGBToRGBQuad(GetWebSafe(HSLRangeToRGB(FHue, FSat, MaxLum - i)));
-//       FLBmp.Canvas.Pixels[j, i] := GetWebSafe(HSLRangeToRGB(FHue, FSat, MaxLum - i));
-    end;
-  end;
-end;
-*)
-
 function TLColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
   Result := HSLRangeToRGB(FHue, FSat, AValue);
@@ -125,8 +83,7 @@ end;
 
 procedure TLColorPicker.SetHue(h: integer);
 begin
-  if h > MaxHue then h := MaxHue;
-  if h < 0 then h := 0;
+  Clamp(h, 0, MaxHue);
   if FHue <> h then
   begin
     FHue := h;
@@ -139,8 +96,7 @@ end;
 
 procedure TLColorPicker.SetSat(s: integer);
 begin
-  if s > MaxSat then s := MaxSat;
-  if s < 0 then s := 0;
+  Clamp(s, 0, MaxSat);
   if FSat <> s then
   begin
     FSat := s;
@@ -172,25 +128,23 @@ end;
 
 function TLColorPicker.LumFromArrowPos(p: integer): integer;
 var
-  r: integer;
+  L: integer;
 begin
   if Layout = lyHorizontal then
-    r := Round(p/((Width - 12)/MaxLum))
+    L := Round(p/((Width - 12)/MaxLum))
   else
-   r := Round(MaxLum - p/((Height - 12)/MaxLum));
-  if r < 0 then r := 0;
-  if r > MaxLum then r := MaxLum;
-  Result := r;
+    L := Round(MaxLum - p/((Height - 12)/MaxLum));
+  Clamp(L, 0, MaxLum);
+  Result := L;
 end;
 
-procedure TLColorPicker.SetLuminance(l: integer);
+procedure TLColorPicker.SetLuminance(L: integer);
 begin
-  if l < 0 then l := 0;
-  if l > MaxLum then l := MaxLum;
-  if FLuminance <> l then
+  Clamp(L, 0, MaxLum);
+  if FLuminance <> L then
   begin
-    FLuminance := l;
-    FArrowPos := ArrowPosFromLum(l);
+    FLuminance := L;
+    FArrowPos := ArrowPosFromLum(L);
     FManual := false;
     Invalidate;
     if FChange and Assigned(OnChange) then OnChange(Self);

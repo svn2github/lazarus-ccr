@@ -48,6 +48,9 @@ implementation
   {$R SColorPicker.dcr}
 {$ENDIF}
 
+uses
+  mbUtils;
+
 procedure Register;
 begin
  RegisterComponents('mbColor Lib', [TSColorPicker]);
@@ -125,8 +128,7 @@ end;
 
 procedure TSColorPicker.SetValue(v: integer);
 begin
-  if v < 0 then v := 0;
-  if v > 255 then v := 255;
+  Clamp(v, 0, 255);
   if FVal <> v then
   begin
     FVal := v;
@@ -139,8 +141,7 @@ end;
 
 procedure TSColorPicker.SetHue(h: integer);
 begin
-  if h > 360 then h := 360;
-  if h < 0 then h := 0;
+  Clamp(h, 0, 360);
   if FHue <> h then
   begin
     FHue := h;
@@ -153,8 +154,7 @@ end;
 
 procedure TSColorPicker.SetSat(s: integer);
 begin
-  if s > 255 then s := 255;
-  if s < 0 then s := 0;
+  Clamp(s, 0, 255);
   if FSat <> s then
   begin
     FSat := s;
@@ -192,8 +192,7 @@ begin
     r := Round(p/((Width - 12)/255))
   else
     r := Round(255 - p/((Height - 12)/255));
-  if r < 0 then r := 0;
-  if r > 255 then r := 255;
+  Clamp(r, 0, 255);
   Result := r;
 end;
 

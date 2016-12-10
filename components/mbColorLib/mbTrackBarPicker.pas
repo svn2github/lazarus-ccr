@@ -266,7 +266,7 @@ var
   {$ENDIF}
 begin
   if FGradientBmp = nil then
-     exit;
+    exit;
 
   {$IFDEF FPC}
   intfimg := TLazIntfImage.Create(0, 0);
