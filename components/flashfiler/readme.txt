@@ -45,11 +45,13 @@ Usage
 Changes
 --------------------------------------------------------------------------------
 State of the Lazarus port:
-10.12.2016: Client components are Working. Server components has error so you need server binaries compiled with delphi.
+10.12.2016: Client components are Working. Server components has error so you 
+            need server binaries compiled with delphi.
 
 
 ToDo:
-Solve server components error. The error is located in fflldict.pas-file in procedure TffDataDictionary.ReadFromStream(S : TStream); 
+Solve server components error. The error is located in fflldict.pas-file in 
+procedure TffDataDictionary.ReadFromStream(S : TStream); 
 It is stream reading error with caused by functions ReadString and ReadInteger.
 I could not solve it, maybe someone with better skills can do it.
 
