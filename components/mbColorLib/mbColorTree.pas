@@ -59,9 +59,7 @@ type
    procedure DrawColorItem(R: TRect; Selected: boolean; Index: integer; itemText: string; Expanded: boolean); dynamic;
    procedure DrawInfoItem(R: TRect; Index: integer); dynamic;
    procedure DoArrow(c: TCanvas; dir: TScrollDirection; p: TPoint; sel: boolean);
-   {$IFDEF FPC}
-   procedure WMHScroll(var Msg: TLMScroll); message LM_HSCROLL;
-   {$ENDIF}
+
   public
    Colors: array of TmbColor;
 
@@ -229,10 +227,15 @@ begin
  RowSelect := true;
  HotTrack := false;
  SetLength(Colors, 0);
+ Images := TImageList.Create(Self);
+ Images.Width := 48;
+ Images.Height := 48;
+ {
  dummy := TCustomImageList.Create(Self);
  dummy.Width := 48;
  dummy.Height := 48;
  Images := dummy;
+ }
  FInfoLabel := 'Color Values:';
  FInfo1 := 'RGB: %r.%g.%b';
  FInfo2 := 'HEX: #%hex';
@@ -259,7 +262,7 @@ end;
 
 function TmbColorTree.CanChange(Node: TTreeNode): Boolean;
 begin
- Result := Node.HasChildren;
+  Result := Assigned(Node) and Node.HasChildren;
 end;
 
 procedure TmbColorTree.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -351,7 +354,7 @@ end;
 
 procedure TmbColorTree.DrawColorItem(R: TRect; Selected: boolean; Index: integer; itemText: string; Expanded: boolean);
 var
- SR, TR: TRect;
+  SR, TR: TRect;
 begin
   with Canvas do
   begin
@@ -555,12 +558,12 @@ end;
 
 procedure TmbColorTree.AddColor(Name: string; Value: TColor; refresh: boolean = true);
 var
- l: integer;
+ L: integer;
 begin
- l := Length(Colors);
- SetLength(Colors, l + 1);
- Colors[l].name := Name;
- Colors[l].value := Value;
+ L := Length(Colors);
+ SetLength(Colors, L + 1);
+ Colors[L].name := Name;
+ Colors[L].value := Value;
  if refresh then
   UpdateColors;
 end;
@@ -688,13 +691,5 @@ if PtInRect(ClientRect, Point(mx, my)) and ShowHint and not Dragging then
  end;
  inherited;
 end;
-
-{$IFDEF FPC}
-procedure TmbColorTree.WMHScroll(var Msg: TLMScroll);
-begin
-  inherited;
-  //Invalidate;
-end;
-{$ENDIF}
 
 end.
