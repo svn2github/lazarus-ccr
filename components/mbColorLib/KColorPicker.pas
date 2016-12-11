@@ -43,21 +43,10 @@ type
     property Layout default lyVertical;
   end;
 
-procedure Register;
-
 implementation
-
-{$IFDEF FPC}
-  {$R KColorPicker.dcr}
-{$ENDIF}
 
 uses
   mbUtils;
-
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [TKColorPicker]);
-end;
 
 {TKColorPicker}
 
@@ -66,16 +55,13 @@ begin
   inherited;
   FGradientWidth := 256;
   FGradientHeight := 12;
-  SetInitialBounds(0, 0, 22, 267);
-  //Width := 22;
-  //Height := 267;
-  Layout := lyVertical;
   FCyan := 0;
   FMagenta := 0;
   FYellow := 0;
   FBlack := 255;
   FArrowPos := ArrowPosFromBlack(255);
   FChange := false;
+  Layout := lyVertical;
   SetBlack(255);
   HintFormat := 'Black: %value';
   FManual := false;

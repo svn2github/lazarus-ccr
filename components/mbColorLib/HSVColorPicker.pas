@@ -71,22 +71,10 @@ type
     property OnChange;
   end;
 
-procedure Register;
-
 implementation
-
-{$IFDEF FPC}
-  {$R HSVColorPicker.dcr}
-{$ENDIF}
 
 uses
   mbUtils;
-
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [THSVColorPicker]);
-end;
-
 
 { THSVColorPicker }
 

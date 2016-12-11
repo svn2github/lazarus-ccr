@@ -103,6 +103,8 @@ type
     Memo1: TMemo;
     Label9: TLabel;
     CheckBox4: TCheckBox;
+    procedure PageControl1MouseMove(Sender: TObject; Shift: TShiftState;
+      X, Y: Integer);
     procedure tb1Change(Sender: TObject);
     procedure tb2Change(Sender: TObject);
     procedure HSLColorPicker1Change(Sender: TObject);
@@ -192,7 +194,7 @@ end;
 procedure TForm1.HexaColorPicker1MouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
-uc.color := hexacolorpicker1.ColorUnderCursor;
+  uc.color := hexacolorpicker1.ColorUnderCursor;
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
@@ -224,7 +226,7 @@ end;
 procedure TForm1.HSLRingPicker1MouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
-uc.color := HSLRingPicker1.ColorUnderCursor;
+  uc.color := HSLRingPicker1.ColorUnderCursor;
 end;
 
 procedure TForm1.HSVColorPicker1Change(Sender: TObject);
@@ -248,7 +250,7 @@ end;
 procedure TForm1.SLHColorPicker1MouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
-uc.color := SLHColorPicker1.ColorUnderCursor;
+  uc.color := SLHColorPicker1.ColorUnderCursor;
 end;
 
 procedure TForm1.mbDeskPickerButton1SelColorChange(Sender: TObject);
@@ -257,32 +259,38 @@ sc.color := mbDeskPickerButton1.SelectedColor;
 uc.color := mbDeskPickerButton1.SelectedColor;
 end;
 
+procedure TForm1.PageControl1MouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  uc.color := HSLColorpicker1.ColorUnderCursor;
+end;
+
 procedure TForm1.Button3Click(Sender: TObject);
 begin
- if mbOfficeColorDialog1.Execute then
-  sc.color := mbOfficeColorDialog1.SelectedColor;
+  if mbOfficeColorDialog1.Execute then
+    sc.color := mbOfficeColorDialog1.SelectedColor;
 end;
 
 procedure TForm1.HSColorPicker1Change(Sender: TObject);
 begin
-sc.color := HSColorPicker1.SelectedColor;
+  sc.color := HSColorPicker1.SelectedColor;
 end;
 
 procedure TForm1.HSColorPicker1MouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
-uc.color := HSColorpicker1.ColorUnderCursor;
+  uc.color := HSColorpicker1.ColorUnderCursor;
 end;
 
 procedure TForm1.SLColorPicker1Change(Sender: TObject);
 begin
-sc.color := SLColorPicker1.SelectedColor;
+  sc.color := SLColorPicker1.SelectedColor;
 end;
 
 procedure TForm1.SLColorPicker1MouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
-uc.color := slcolorpicker1.ColorUnderCursor;
+  uc.color := slcolorpicker1.ColorUnderCursor;
 end;
 
 procedure TForm1.HRingPicker1Change(Sender: TObject);

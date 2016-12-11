@@ -9,157 +9,153 @@ interface
 {$I mxs.inc}
 
 uses
- {$IFDEF FPC}LCLIntf, LCLType, LMessages,
- {$ELSE} Windows, Messages,
- {$ENDIF}
- SysUtils, Classes, Controls, Graphics, Forms,
- {$IFDEF DELPHI_7_UP} Themes, {$ENDIF} ExtCtrls, PalUtils, mbBasicPicker;
+  {$IFDEF FPC}
+  LCLIntf, LCLType, LMessages,
+  {$ELSE}
+  Windows, Messages,
+  {$ENDIF}
+  SysUtils, Classes, Controls, Graphics, Forms,
+  {$IFDEF DELPHI_7_UP} Themes, {$ENDIF} ExtCtrls, PalUtils, mbBasicPicker;
 
 const
- TBA_Resize = 0;
- TBA_Paint = 1;
- TBA_MouseMove = 2;
- TBA_MouseDown = 3;
- TBA_MouseUp = 4;
- TBA_WheelUp = 5;
- TBA_WheelDown = 6;
- TBA_VKUp = 7;
- TBA_VKCtrlUp = 8;
- TBA_VKDown = 9;
- TBA_VKCtrlDown = 10;
- TBA_VKLeft = 11;
- TBA_VKCtrlLeft = 12;
- TBA_VKRight = 13;
- TBA_VKCtrlRight = 14;
- TBA_RedoBMP = 15;
+  TBA_Resize = 0;
+  TBA_Paint = 1;
+  TBA_MouseMove = 2;
+  TBA_MouseDown = 3;
+  TBA_MouseUp = 4;
+  TBA_WheelUp = 5;
+  TBA_WheelDown = 6;
+  TBA_VKUp = 7;
+  TBA_VKCtrlUp = 8;
+  TBA_VKDown = 9;
+  TBA_VKCtrlDown = 10;
+  TBA_VKLeft = 11;
+  TBA_VKCtrlLeft = 12;
+  TBA_VKRight = 13;
+  TBA_VKCtrlRight = 14;
+  TBA_RedoBMP = 15;
 
 type
- TTrackBarLayout = (lyHorizontal, lyVertical);
- TSliderPlacement = (spBefore, spAfter, spBoth);
- TSelIndicator = (siArrows, siRect);
+  TTrackBarLayout = (lyHorizontal, lyVertical);
+  TSliderPlacement = (spBefore, spAfter, spBoth);
+  TSelIndicator = (siArrows, siRect);
 
- TmbTrackBarPicker = class(TmbBasicPicker)
- private
-  mx, my: integer;
-  FOnChange: TNotifyEvent;
-  FIncrement: integer;
-  FHintFormat: string;
-  FLayout: TTrackBarLayout;
-  FPlacement: TSliderPlacement;
-  FNewArrowStyle: boolean;
-  Aw, Ah: integer;
-  FDoChange: boolean;
-  FSelIndicator: TSelIndicator;
-  FWebSafe: boolean;
-  FBevelInner: TBevelCut;
-  FBevelOuter: TBevelCut;
-  FBevelWidth: TBevelWidth;
-  FBorderStyle: TBorderStyle;
+  TmbTrackBarPicker = class(TmbBasicPicker)
+  private
+    mx, my: integer;
+    FOnChange: TNotifyEvent;
+    FIncrement: integer;
+    FHintFormat: string;
+    FPlacement: TSliderPlacement;
+    FNewArrowStyle: boolean;
+    Aw, Ah: integer;
+    FDoChange: boolean;
+    FSelIndicator: TSelIndicator;
+    FWebSafe: boolean;
+    FBevelInner: TBevelCut;
+    FBevelOuter: TBevelCut;
+    FBevelWidth: TBevelWidth;
+    FBorderStyle: TBorderStyle;
 
-  procedure SetBevelInner(Value: TBevelCut);
-  procedure SetBevelOuter(Value: TBevelCut);
-  procedure SetBevelWidth(Value: TBevelWidth);
-  procedure SetBorderStyle(Value: TBorderStyle);
-  procedure SetWebSafe(s: boolean);
-  function XToArrowPos(p: integer): integer;
-  function YToArrowPos(p: integer): integer;
-  procedure SetLayout(Value: TTrackBarLayout);
-  procedure SetNewArrowStyle(s: boolean);
-  procedure SetPlacement(Value: TSliderPlacement);
-  procedure DrawMarker(p: integer);
-  procedure SetSelIndicator(Value: TSelIndicator);
-  procedure CalcPickRect;
- protected
-  FArrowPos: integer;
-  FManual: boolean;
-  FChange: boolean;
-  FPickRect: TRect;
-  FLimit: integer;
+    procedure SetBevelInner(Value: TBevelCut);
+    procedure SetBevelOuter(Value: TBevelCut);
+    procedure SetBevelWidth(Value: TBevelWidth);
+    procedure SetBorderStyle(Value: TBorderStyle);
+    procedure SetWebSafe(s: boolean);
+    function XToArrowPos(p: integer): integer;
+    function YToArrowPos(p: integer): integer;
+    procedure SetLayout(Value: TTrackBarLayout);
+    procedure SetNewArrowStyle(s: boolean);
+    procedure SetPlacement(Value: TSliderPlacement);
+    procedure DrawMarker(p: integer);
+    procedure SetSelIndicator(Value: TSelIndicator);
+    procedure CalcPickRect;
+  protected
+    FArrowPos: integer;
+    FManual: boolean;
+    FChange: boolean;
+    FPickRect: TRect;
+    FLayout: TTrackBarLayout;
+    FLimit: integer;
+    procedure CreateGradient; override;
+    procedure Paint; override;
+    procedure DrawFrames; dynamic;
+    procedure Resize; override;
+    procedure CreateWnd; override;
+    procedure Execute(tbaAction: integer); dynamic;
+    function GetArrowPos: integer; dynamic;
+    function GetHintStr: string;
+    function GetSelectedValue: integer; virtual; abstract;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
+    procedure WheelUp(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+    procedure WheelDown(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+    {$IFDEF DELPHI}
+    procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
+    procedure CMGotFocus(var Message: TCMGotFocus); message CM_ENTER;
+    procedure CMLostFocus(var Message: TCMLostFocus); message CM_EXIT;
+    {$ELSE}
+    procedure CNKeyDown(var Message: TLMKeyDown); message CN_KEYDOWN;
+    procedure CMGotFocus(var Message: TLMessage); message CM_ENTER;
+    procedure CMLostFocus(var Message: TLMessage); message CM_EXIT;
+    {$ENDIF}
 
-  procedure CreateGradient; override;
-  procedure Paint; override;
-  procedure DrawFrames; dynamic;
-  procedure Resize; override;
-  procedure CreateWnd; override;
-  procedure Execute(tbaAction: integer); dynamic;
-  function GetArrowPos: integer; dynamic;
-  function GetHintStr: string;
-  function GetSelectedValue: integer; virtual; abstract;
-  procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-  procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-  procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    property Manual: boolean read FManual;
 
-  procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
-  procedure WheelUp(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
-  procedure WheelDown(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
-  {$IFDEF DELPHI}
-  procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
-  procedure CMGotFocus(var Message: TCMGotFocus); message CM_ENTER;
-  procedure CMLostFocus(var Message: TCMLostFocus); message CM_EXIT;
-  {$ELSE}
-  procedure CNKeyDown(var Message: TLMKeyDown); message CN_KEYDOWN;
-  procedure CMGotFocus(var Message: TLMessage); message CM_ENTER;
-  procedure CMLostFocus(var Message: TLMessage); message CM_EXIT;
-  {$ENDIF}
-
- public
-  constructor Create(AOwner: TComponent); override;
-  destructor Destroy; override;
-  property Manual: boolean read FManual;
-
- published
-  property BevelInner: TPanelBevel read FBevelInner write SetBevelInner default bvNone;
-  property BevelOuter: TPanelBevel read FBevelOuter write SetBevelOuter default bvNone;
-  property BevelWidth: TBevelWidth read FBevelWidth write SetBevelWidth default 1;
-  property BorderStyle: TBorderStyle read FBorderStyle write SetBorderStyle default bsNone;
-
-  property HintFormat: string read FHintFormat write FHintFormat;
-  property Increment: integer read FIncrement write FIncrement default 1;
-  property Layout: TTrackBarLayout read FLayout write SetLayout default lyHorizontal;
-  property ArrowPlacement: TSliderPlacement read FPlacement write SetPlacement default spAfter;
-  property NewArrowStyle: boolean read FNewArrowStyle write SetNewArrowStyle default false;
-  property SelectionIndicator: TSelIndicator read FSelIndicator write SetSelIndicator default siArrows;
-  property WebSafe: boolean read FWebSafe write SetWebSafe default false;
-  property TabStop default true;
-  property ShowHint;
-  property Color;
-  property ParentColor;
-  {$IFDEF DELPHI_7_UP}
-  {$IFDEF DELPHI}
-  property ParentBackground default true;
-  {$ENDIF}
-  {$ENDIF}
-  property ParentShowHint default true;
-  property Anchors;
-  property Align;
-  property Visible;
-  property Enabled;
-  property PopupMenu;
-  property TabOrder;
-  property DragCursor;
-  property DragMode;
-  property DragKind;
-  property Constraints;
-
-  property OnChange: TNotifyEvent read FOnChange write FOnChange;
-  property OnContextPopup;
-  property OnMouseDown;
-  property OnMouseMove;
-  property OnMouseUp;
-  property OnMouseWheel;
-  property OnMouseWheelUp;
-  property OnMouseWheelDown;
-  property OnKeyDown;
-  property OnKeyPress;
-  property OnKeyUp;
-  property OnDragDrop;
-  property OnDragOver;
-  property OnEndDrag;
-  property OnEnter;
-  property OnExit;
-  property OnResize;
-  property OnStartDrag;
- end;
+  published
+    property BevelInner: TPanelBevel read FBevelInner write SetBevelInner default bvNone;
+    property BevelOuter: TPanelBevel read FBevelOuter write SetBevelOuter default bvNone;
+    property BevelWidth: TBevelWidth read FBevelWidth write SetBevelWidth default 1;
+    property BorderStyle: TBorderStyle read FBorderStyle write SetBorderStyle default bsNone;
+    property HintFormat: string read FHintFormat write FHintFormat;
+    property Increment: integer read FIncrement write FIncrement default 1;
+    property Layout: TTrackBarLayout read FLayout write SetLayout default lyHorizontal;
+    property ArrowPlacement: TSliderPlacement read FPlacement write SetPlacement default spAfter;
+    property NewArrowStyle: boolean read FNewArrowStyle write SetNewArrowStyle default false;
+    property SelectionIndicator: TSelIndicator read FSelIndicator write SetSelIndicator default siArrows;
+    property WebSafe: boolean read FWebSafe write SetWebSafe default false;
+    property TabStop default true;
+    property ShowHint;
+    property Color;
+    property ParentColor;
+    {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
+    property ParentBackground default true;
+    {$ENDIF}{$ENDIF}
+    property ParentShowHint default true;
+    property Anchors;
+    property Align;
+    property Visible;
+    property Enabled;
+    property PopupMenu;
+    property TabOrder;
+    property DragCursor;
+    property DragMode;
+    property DragKind;
+    property Constraints;
+    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property OnContextPopup;
+    property OnMouseDown;
+    property OnMouseMove;
+    property OnMouseUp;
+    property OnMouseWheel;
+    property OnMouseWheelUp;
+    property OnMouseWheelDown;
+    property OnKeyDown;
+    property OnKeyPress;
+    property OnKeyUp;
+    property OnDragDrop;
+    property OnDragOver;
+    property OnEndDrag;
+    property OnEnter;
+    property OnExit;
+    property OnResize;
+    property OnStartDrag;
+  end;
 
 implementation
 
@@ -178,22 +174,13 @@ const
 
   BDR_OUTER = 3;
   BDR_INNER = 12;
-  BDR_RAISED = 5;
-  BDR_SUNKEN = 10;
 
   { Border flags }
   BF_LEFT = 1;
   BF_TOP = 2;
   BF_RIGHT = 4;
   BF_BOTTOM = 8;
-
-  BF_TOPLEFT = (BF_TOP or BF_LEFT);
-  BF_TOPRIGHT = (BF_TOP or BF_RIGHT);
-  BF_BOTTOMLEFT = (BF_BOTTOM or BF_LEFT);
-  BF_BOTTOMRIGHT = (BF_BOTTOM or BF_RIGHT);
   BF_RECT = (BF_LEFT or BF_TOP or BF_RIGHT or BF_BOTTOM);
-
-  BF_DIAGONAL = $10;
 
 
 {TmbTrackBarPicker}
@@ -410,29 +397,29 @@ end;
 
 procedure TmbTrackBarPicker.DrawFrames;
 var
- flags: cardinal;
- R: TRect;
- i: integer;
+  flags: cardinal;
+  R: TRect;
+  i: integer;
 begin
- flags := 0;
- if (FBorderStyle = bsNone) or (FBevelWidth = 0) then Exit;
- case FBevelInner of
-  bvNone: flags := 0;
-  bvRaised: flags := BDR_RAISEDINNER;
-  bvLowered: flags := BDR_SUNKENINNER;
-  bvSpace: flags := BDR_INNER;
- end;
- case FBevelOuter of
-  bvRaised: flags := flags or BDR_RAISEDOUTER;
-  bvLowered: flags := flags or BDR_SUNKENOUTER;
-  bvSpace: flags := flags or BDR_OUTER;
- end;
- R := FPickRect;
- InflateRect(R, -FBevelWidth + 1, -FBevelWidth + 1);
- for i := 0 to FBevelWidth do
+  flags := 0;
+  if (FBorderStyle = bsNone) or (FBevelWidth = 0) then Exit;
+  case FBevelInner of
+    bvNone: flags := 0;
+    bvRaised: flags := BDR_RAISEDINNER;
+    bvLowered: flags := BDR_SUNKENINNER;
+    bvSpace: flags := BDR_INNER;
+  end;
+  case FBevelOuter of
+    bvRaised: flags := flags or BDR_RAISEDOUTER;
+    bvLowered: flags := flags or BDR_SUNKENOUTER;
+    bvSpace: flags := flags or BDR_OUTER;
+  end;
+  R := FPickRect;
+  InflateRect(R, -FBevelWidth + 1, -FBevelWidth + 1);
+  for i := 0 to FBevelWidth do
   begin
-   DrawEdge(Canvas.Handle, R, flags, BF_RECT);
-   InflateRect(R, 1, 1);
+    DrawEdge(Canvas.Handle, R, flags, BF_RECT);
+    InflateRect(R, 1, 1);
   end;
 end;
 
@@ -520,7 +507,7 @@ begin
                   Canvas.Polygon([Point(x, y), Point(x - 4, y + 4), Point(x - 4, y + 6),
                     Point(x - 3, y + 7), Point(x + 3, y + 7), Point(x + 4, y + 6),
                     Point(x + 4, y + 4) ]);
-                y := Aw;
+                 y := Aw;
                 if not FNewArrowStyle then
                   Canvas.Polygon([Point(x, y), Point(x - 4, y - 6), Point(x +4, y - 6) ])
                 else
@@ -655,105 +642,105 @@ end;
 
 procedure TmbTrackBarPicker.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
- {$IFDEF DELPHI}
- ClipCursor(nil);
- {$ENDIF}
- if Button <> mbLeft then Exit;
- mx := x;
- my := y;
- if FLayout = lyHorizontal then
-  FArrowPos := XToArrowPos(x)
- else
-  FArrowPos := YToArrowPos(y);
- Execute(TBA_MouseUp);
- FManual := true;
- FDoChange := true;
- Invalidate;
- inherited;
+  {$IFDEF DELPHI}
+  ClipCursor(nil);
+  {$ENDIF}
+  if Button <> mbLeft then
+    exit;
+  mx := x;
+  my := y;
+  if FLayout = lyHorizontal then
+    FArrowPos := XToArrowPos(x)
+  else
+    FArrowPos := YToArrowPos(y);
+  Execute(TBA_MouseUp);
+  FManual := true;
+  FDoChange := true;
+  Invalidate;
+  inherited;
 end;
 
 procedure TmbTrackBarPicker.CNKeyDown(
   var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
 var
- Shift: TShiftState;
- FInherited: boolean;
+  Shift: TShiftState;
+  FInherited: boolean;
 begin
- FInherited := false;
- Shift := KeyDataToShiftState(Message.KeyData);
- case Message.CharCode of
-  VK_UP:
-   begin
-    if FLayout = lyHorizontal then
-     begin
-      inherited;
-      Exit;
-     end;
-    FChange := false;
-    if not (ssCtrl in Shift) then
-     Execute(TBA_VKUp)
+  FInherited := false;
+  Shift := KeyDataToShiftState(Message.KeyData);
+  case Message.CharCode of
+    VK_UP:
+      begin
+        if FLayout = lyHorizontal then
+        begin
+          inherited;
+          Exit;
+        end;
+        FChange := false;
+        if not (ssCtrl in Shift) then
+          Execute(TBA_VKUp)
+        else
+          Execute(TBA_VKCtrlUp);
+        FManual := true;
+        FChange := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    VK_LEFT:
+      begin
+        if FLayout = lyVertical then
+        begin
+          inherited;
+          Exit;
+        end;
+        FChange := false;
+        if not (ssCtrl in Shift) then
+          Execute(TBA_VKLeft)
+        else
+          Execute(TBA_VKCtrlLeft);
+        FManual := true;
+        FChange := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    VK_RIGHT:
+      begin
+        if FLayout = lyVertical then
+        begin
+          inherited;
+          Exit;
+        end;
+        FChange := false;
+        if not (ssCtrl in Shift) then
+          Execute(TBA_VKRight)
+        else
+          Execute(TBA_VKCtrlRight);
+        FManual := true;
+        FChange := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    VK_DOWN:
+      begin
+        if FLayout = lyHorizontal then
+        begin
+          inherited;
+          Exit;
+        end;
+        FChange := false;
+        if not (ssCtrl in Shift) then
+          Execute(TBA_VKDown)
+        else
+          Execute(TBA_VKCtrlDown);
+        FManual := true;
+        FChange := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end
     else
-     Execute(TBA_VKCtrlUp);
-    FManual := true;
-    FChange := true;
-    if Assigned(FOnChange) then FOnChange(Self);
-   end;
-  VK_LEFT:
-   begin
-    if FLayout = lyVertical then
-     begin
-      inherited;
-      Exit;
-     end;
-    FChange := false;
-    if not (ssCtrl in Shift) then
-     Execute(TBA_VKLeft)
-    else
-     Execute(TBA_VKCtrlLeft);
-    FManual := true;
-    FChange := true;
-    if Assigned(FOnChange) then FOnChange(Self);
-   end;
-  VK_RIGHT:
-   begin
-    if FLayout = lyVertical then
-     begin
-      inherited;
-      Exit;
-     end;
-    FChange := false;
-    if not (ssCtrl in Shift) then
-     Execute(TBA_VKRight)
-    else
-     Execute(TBA_VKCtrlRight);
-    FManual := true;
-    FChange := true;
-    if Assigned(FOnChange) then FOnChange(Self);
-   end;
-  VK_DOWN:
-   begin
-    if FLayout = lyHorizontal then
-     begin
-      inherited;
-      Exit;
-     end;
-    FChange := false;
-    if not (ssCtrl in Shift) then
-     Execute(TBA_VKDown)
-    else
-     Execute(TBA_VKCtrlDown);
-    FManual := true;
-    FChange := true;
-    if Assigned(FOnChange) then FOnChange(Self);
-   end
- else
-  begin
-   FInherited := true;
-   inherited;
-  end;
- end;
- if not FInherited then
-  if Assigned(OnKeyDown) then
-   OnKeyDown(Self, Message.CharCode, Shift);
+      begin
+        FInherited := true;
+        inherited;
+      end;
+  end;  // case
+  if not FInherited and Assigned(OnKeyDown) then
+    OnKeyDown(Self, Message.CharCode, Shift);
 end;
 
 procedure TmbTrackBarPicker.CMHintShow(var Message: TCMHintShow);
@@ -811,11 +798,16 @@ begin
   if Assigned(FOnChange) then FOnChange(Self);
 end;
 
+{ IMPORTANT: If pickers are created at designtime the layout must be set before
+  defining the picker width and height because using a non-default layout will
+  flip the bounding rectangle !!! }
 procedure TmbTrackBarPicker.SetLayout(Value: TTrackBarLayout);
 begin
   if FLayout <> Value then
   begin
     FLayout := Value;
+    if not (csLoading in ComponentState) then
+      SetBounds(Left, Top, Height, Width);  // flip rectangle
     Execute(TBA_RedoBMP);
     Invalidate;
   end;

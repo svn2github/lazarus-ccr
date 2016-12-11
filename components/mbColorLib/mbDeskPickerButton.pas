@@ -44,19 +44,8 @@ type
    property ShowScreenHint: boolean read FShowScreenHint write FShowScreenHint default false;
   end;
 
-procedure Register;
-
 
 implementation
-
-{$IFDEF FPC}
-  {$R mbDeskPickerButton.dcr}
-{$ENDIF}
-
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [TmbDeskPickerButton]);
-end;
 
 constructor TmbDeskPickerButton.Create(AOwner: TComponent);
 begin

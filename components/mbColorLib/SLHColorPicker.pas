@@ -95,13 +95,7 @@ type
     property OnMouseMove;
   end;
 
-procedure Register;
-
 implementation
-
-{$IFDEF FPC}
-  {$R SLHColorPicker.dcr}
-{$ENDIF}
 
 const
   WSL = 255;
@@ -109,11 +103,6 @@ const
   WH = 40;
   DIST = 2;
   VDELTA = 8;
-
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [TSLHColorPicker]);
-end;
 
 {TSLHColorPicker}
 
@@ -144,6 +133,7 @@ begin
   // Hue picker
   with FHPicker do
   begin
+    Layout := lyVertical;  // put before setting width and height
     {$IFDEF DELPHI}
     Left := 257;
     Top := 0;

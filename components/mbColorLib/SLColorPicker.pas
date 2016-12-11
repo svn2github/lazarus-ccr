@@ -50,21 +50,12 @@ type
     property OnChange;
   end;
 
-procedure Register;
-
 implementation
-
-{$IFDEF FPC}
-  {$R SLColorPicker.dcr}
-{$ENDIF}
 
 uses
   ScanLines, RGBHSLUtils, HTMLColors, mbUtils;
 
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [TSLColorPicker]);
-end;
+{ TSLColorPicker }
 
 constructor TSLColorPicker.Create(AOwner: TComponent);
 begin

@@ -61,22 +61,11 @@ type
     property OnChange;
   end;
 
-procedure Register;
 
 implementation
 
-{$IFDEF FPC}
-  {$R HRingPicker.dcr}
-{$ENDIF}
-
 uses
   mbUtils;
-
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [THRingPicker]);
-end;
-
 
 { THRingPicker }
 

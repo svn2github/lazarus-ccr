@@ -38,24 +38,12 @@ type
     property Saturation: integer read FSat write SetSat default 240;
     property Luminance: integer read FLuminance write SetLuminance default 120;
     property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
-    property Layout default lyVertical;
   end;
-
-procedure Register;
 
 implementation
 
-{$IFDEF FPC}
-  {$R LColorPicker.dcr}
-{$ENDIF}
-
 uses
   mbUtils;
-
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [TLColorPicker]);
-end;
 
 {TLColorPicker}
 
@@ -64,8 +52,6 @@ begin
   inherited;
   FGradientWidth := 256;
   FGradientHeight := 12;
-  SetInitialBounds(0, 0, 22, 267);
-  Layout := lyVertical;
   FHue := 0;
   FSat := MaxSat;
   FArrowPos := ArrowPosFromLum(MaxLum div 2);

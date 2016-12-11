@@ -127,18 +127,7 @@ type
    property OnStartDrag;
   end;
 
-procedure Register;
-
 implementation
-
-{$IFDEF FPC}
-  {$R mbColorList.dcr}
-{$ENDIF}
-
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [TmbColorList]);
-end;
 
 //taken from GraphUtil, only for Delphi 5
 {$IFNDEF DELPHI_6_UP}

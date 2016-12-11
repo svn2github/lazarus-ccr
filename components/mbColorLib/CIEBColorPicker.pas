@@ -50,21 +50,12 @@ type
     property OnChange;
   end;
 
-procedure Register;
 
 implementation
-
-{$IFDEF FPC}
-  {$R CIEBColorPicker.dcr}
-{$ENDIF}
 
 uses
   mbUtils;
 
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [TCIEBColorPicker]);
-end;
 
 {TCIEBColorPicker}
 

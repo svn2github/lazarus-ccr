@@ -44,21 +44,10 @@ type
   property Layout default lyVertical;
  end;
 
-procedure Register;
-
 implementation
-
-{$IFDEF FPC}
-  {$R YColorPicker.dcr}
-{$ENDIF}
 
 uses
   mbUtils;
-
-procedure Register;
-begin
- RegisterComponents('mbColor Lib', [TYColorPicker]);
-end;
 
 {TYColorPicker}
 
@@ -67,15 +56,13 @@ begin
   inherited;
   FGradientWidth := 255;
   FGradientHeight := 12;
-  Width := 22;
-  Height := 267;
-  Layout := lyVertical;
   FYellow := 255;
   FMagenta := 0;
   FCyan := 0;
   FBlack := 0;
   FArrowPos := ArrowPosFromYellow(255);
   FChange := false;
+  Layout := lyVertical;
   SetYellow(255);
   HintFormat := 'Yellow: %value';
   FManual := false;

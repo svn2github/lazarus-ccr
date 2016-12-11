@@ -170,18 +170,9 @@ type
    property OnClick;
   end;
 
-procedure Register;
-
 implementation
 
-{$IFDEF FPC}
-  {$R mbColorPalette.dcr}
-{$ENDIF}
-
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [TmbColorPalette]);
-end;
+{ TmbColorPalette }
 
 constructor TmbColorPalette.Create(AOwner: TComponent);
 begin

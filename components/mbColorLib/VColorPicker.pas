@@ -19,13 +19,10 @@ type
   TVColorPicker = class(TmbTrackBarPicker)
   private
     FHue, FSat, FVal: integer;
- // FVBmp: TBitmap;
-
     function ArrowPosFromVal(l: integer): integer;
     function ValFromArrowPos(p: integer): integer;
     function GetSelectedColor: TColor;
     procedure SetSelectedColor(c: TColor);
-//    procedure CreateVGradient;
     procedure SetHue(h: integer);
     procedure SetSat(s: integer);
     procedure SetValue(v: integer);
@@ -36,30 +33,14 @@ type
     function GetSelectedValue: integer; override;
   public
     constructor Create(AOwner: TComponent); override;
-//  destructor Destroy; override;
   published
     property Hue: integer read FHue write SetHue default 0;
     property Saturation: integer read FSat write SetSat default 0;
     property Value: integer read FVal write SetValue default 255;
     property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
-    property Layout default lyVertical;
   end;
 
-procedure Register;
-
 implementation
-
-{$IFDEF FPC}
-  {$R VColorPicker.dcr}
-
-{uses
-  IntfGraphics, fpimage;}
-{$ENDIF}
-
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [TVColorPicker]);
-end;
 
 {TVColorPicker}
 
@@ -68,15 +49,6 @@ begin
   inherited;
   FGradientWidth := 256;
   FGradientHeight := 12;
-  {
-  FVBmp := TBitmap.Create;
-  FVBmp.PixelFormat := pf32bit;
-  FVBmp.SetSize(12, 255);
-  }
-//  Width := 22;
-//  Height := 267;
-  SetInitialBounds(0, 0, 22, 267);
-  Layout := lyVertical;
   FHue := 0;
   FSat := 0;
   FArrowPos := ArrowPosFromVal(255);

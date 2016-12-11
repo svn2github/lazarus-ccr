@@ -9,113 +9,102 @@ interface
 {$I mxs.inc}
 
 uses
- {$IFDEF FPC}
- LCLIntf, LCLType, LMessages,
- {$ELSE}
- Windows, Messages,
- {$ENDIF}
- SysUtils, Classes, Controls, Graphics, Forms, Menus,
- {$IFDEF DELPHI_7_UP} Themes, {$ENDIF}
- RGBHSLUtils, HSColorPicker, LColorPicker, HTMLColors, mbBasicPicker;
+  {$IFDEF FPC}
+  LCLIntf, LCLType, LMessages,
+  {$ELSE}
+  Windows, Messages,
+  {$ENDIF}
+  SysUtils, Classes, Controls, Graphics, Forms, Menus,
+  {$IFDEF DELPHI_7_UP} Themes, {$ENDIF}
+  RGBHSLUtils, HSColorPicker, LColorPicker, HTMLColors, mbBasicPicker;
 
 type
- THSLColorPicker = class(TmbBasicPicker)
- private
-  FOnChange: TNotifyEvent;
-  FHSPicker: THSColorPicker;
-  FLPicker: TLColorPicker;
-  FSelectedColor: TColor;
-  FHValue, FSValue, FLValue: integer;
-  FRValue, FGValue, FBValue: integer;
-  FHSHint, FLHint: string;
-  FLMenu, FHSMenu: TPopupMenu;
-  FLumIncrement: integer;
-  FHSCursor, FLCursor: TCursor;
-  PBack: TBitmap;
-
-  function GetManual: boolean;
-  procedure SetLumIncrement(i: integer);
-  procedure SelectColor(c: TColor);
-  procedure SetH(v: integer);
-  procedure SetS(v: integer);
-  procedure SetL(v: integer);
-  procedure SetR(v: integer);
-  procedure SetG(v: integer);
-  procedure SetB(v: integer);
-  procedure SetHSHint(h: string);
-  procedure SetLHint(h: string);
-  procedure SetLMenu(m: TPopupMenu);
-  procedure SetHSMenu(m: TPopupMenu);
-  procedure SetHSCursor(c: TCursor);
-  procedure SetLCursor(c: TCursor);
-  procedure SetSelectedColor(Value: TColor);
- protected
-  procedure CreateWnd; override;
-  procedure Resize; override;
-  procedure Paint; override;
-  procedure PaintParentBack; override;
-  procedure WMSetFocus(var Message: {$IFDEF FPC}TLMSetFocus{$ELSE}TWMSetFocus{$ENDIF});
-    message {$IFDEF FPC}LM_SETFOCUS{$ELSE}WM_SETFOCUS{$ENDIF};
-  procedure DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
-  procedure HSPickerChange(Sender: TObject);
-  procedure LPickerChange(Sender: TObject);
-  procedure DoChange;
- public
-  constructor Create(AOwner: TComponent); override;
-  destructor Destroy; override;
-
-  function GetColorUnderCursor: TColor;
-  function GetHexColorUnderCursor: string;
-  function GetSelectedHexColor: string;
-  property ColorUnderCursor: TColor read GetColorUnderCursor;
-  property HValue: integer read FHValue write SetH default 0;
-  property SValue: integer read FSValue write SetS default 240;
-  property LValue: integer read FLValue write SetL default 120;
-  property RValue: integer read FRValue write SetR default 255;
-  property GValue: integer read FGValue write SetG default 0;
-  property BValue: integer read FBValue write SetB default 0;
-  property Manual: boolean read GetManual;
- published
-  property LuminanceIncrement: integer read FLumIncrement write SetLumIncrement default 1;
-  property SelectedColor: TColor read FSelectedColor write SetSelectedColor default clRed;
-  property HSPickerPopupMenu: TPopupMenu read FHSMenu write SetHSMenu;
-  property LPickerPopupMenu: TPopupMenu read FLMenu write SetLMenu;
-  property HSPickerHintFormat: string read FHSHint write SetHSHint;
-  property LPickerHintFormat: string read FLHint write SetLHint;
-  property HSPickerCursor: TCursor read FHSCursor write SetHSCursor default crDefault;
-  property LPickerCursor: TCursor read FLCursor write SetLCursor default crDefault;
-  property TabStop default true;
-  property ShowHint;
-  property ParentShowHint;
-  property Anchors;
-  property Align;
-  property Visible;
-  property Enabled;
-  property TabOrder;
-  property Color;
-  property ParentColor default true;
-  {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
-  property ParentBackground default true;
-  {$ENDIF}{$ENDIF}
-
-  property OnChange: TNotifyEvent read FOnChange write FOnChange;
-  property OnMouseMove;
- end;
-
-procedure Register;
+  THSLColorPicker = class(TmbBasicPicker)
+  private
+    FOnChange: TNotifyEvent;
+    FHSPicker: THSColorPicker;
+    FLPicker: TLColorPicker;
+    FSelectedColor: TColor;
+    FHValue, FSValue, FLValue: integer;
+    FRValue, FGValue, FBValue: integer;
+    FHSHint, FLHint: string;
+    FLMenu, FHSMenu: TPopupMenu;
+    FLumIncrement: integer;
+    FHSCursor, FLCursor: TCursor;
+    PBack: TBitmap;
+    function GetManual: boolean;
+    procedure SetLumIncrement(i: integer);
+    procedure SelectColor(c: TColor);
+    procedure SetH(v: integer);
+    procedure SetS(v: integer);
+    procedure SetL(v: integer);
+    procedure SetR(v: integer);
+    procedure SetG(v: integer);
+    procedure SetB(v: integer);
+    procedure SetHSHint(h: string);
+    procedure SetLHint(h: string);
+    procedure SetLMenu(m: TPopupMenu);
+    procedure SetHSMenu(m: TPopupMenu);
+    procedure SetHSCursor(c: TCursor);
+    procedure SetLCursor(c: TCursor);
+    procedure SetSelectedColor(Value: TColor);
+  protected
+    procedure CreateWnd; override;
+    procedure Resize; override;
+    procedure Paint; override;
+    procedure PaintParentBack; override;
+    procedure WMSetFocus(var Message: {$IFDEF FPC}TLMSetFocus{$ELSE}TWMSetFocus{$ENDIF});
+      message {$IFDEF FPC}LM_SETFOCUS{$ELSE}WM_SETFOCUS{$ENDIF};
+    procedure DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+    procedure HSPickerChange(Sender: TObject);
+    procedure LPickerChange(Sender: TObject);
+    procedure DoChange;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    function GetColorUnderCursor: TColor;
+    function GetHexColorUnderCursor: string;
+    function GetSelectedHexColor: string;
+    property ColorUnderCursor: TColor read GetColorUnderCursor;
+    property HValue: integer read FHValue write SetH default 0;
+    property SValue: integer read FSValue write SetS default 240;
+    property LValue: integer read FLValue write SetL default 120;
+    property RValue: integer read FRValue write SetR default 255;
+    property GValue: integer read FGValue write SetG default 0;
+    property BValue: integer read FBValue write SetB default 0;
+    property Manual: boolean read GetManual;
+  published
+    property LuminanceIncrement: integer read FLumIncrement write SetLumIncrement default 1;
+    property SelectedColor: TColor read FSelectedColor write SetSelectedColor default clRed;
+    property HSPickerPopupMenu: TPopupMenu read FHSMenu write SetHSMenu;
+    property LPickerPopupMenu: TPopupMenu read FLMenu write SetLMenu;
+    property HSPickerHintFormat: string read FHSHint write SetHSHint;
+    property LPickerHintFormat: string read FLHint write SetLHint;
+    property HSPickerCursor: TCursor read FHSCursor write SetHSCursor default crDefault;
+    property LPickerCursor: TCursor read FLCursor write SetLCursor default crDefault;
+    property TabStop default true;
+    property ShowHint;
+    property ParentShowHint;
+    property Anchors;
+    property Align;
+    property Visible;
+    property Enabled;
+    property TabOrder;
+    property Color;
+    property ParentColor default true;
+    {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
+    property ParentBackground default true;
+    {$ENDIF}{$ENDIF}
+    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property OnMouseMove;
+  end;
 
 implementation
 
-{$IFDEF FPC}
-  {$R HSLColorPicker.dcr}
-{$ENDIF}
-
-procedure Register;
-begin
- RegisterComponents('mbColor Lib', [THSLColorPicker]);
-end;
-
 {THSLColorPicker}
+
+uses
+  mbTrackbarPicker;
 
 constructor THSLColorPicker.Create(AOwner: TComponent);
 begin
@@ -155,6 +144,7 @@ begin
   InsertControl(FLPicker);
   with FLPicker do
   begin
+    Layout := lyVertical;
     SetInitialBounds(184, 0, 25, 146);
     {
     Height := 146;
@@ -178,169 +168,169 @@ end;
 
 destructor THSLColorPicker.Destroy;
 begin
- PBack.Free;
- FHSPicker.Free;
- FLPicker.Free;
- inherited Destroy;
+  PBack.Free;
+  FHSPicker.Free;
+  FLPicker.Free;
+  inherited Destroy;
 end;
 
 procedure THSLColorPicker.HSPickerChange(Sender: TObject);
 begin
- FLPicker.Hue := FHSPicker.HueValue;
- FLPicker.Saturation := FHSPicker.SaturationValue;
- DoChange;
+  FLPicker.Hue := FHSPicker.HueValue;
+  FLPicker.Saturation := FHSPicker.SaturationValue;
+  DoChange;
 end;
 
 procedure THSLColorPicker.LPickerChange(Sender: TObject);
 begin
- FHSPicker.Lum := FLPicker.Luminance;
- FSelectedColor := FLPicker.SelectedColor;
- DoChange;
+  FHSPicker.Lum := FLPicker.Luminance;
+  FSelectedColor := FLPicker.SelectedColor;
+  DoChange;
 end;
 
 procedure THSLColorPicker.DoChange;
 begin
- FHValue := FLPicker.Hue;
- FSValue := FLPicker.Saturation;
- FLValue := FLPicker.Luminance;
- FRValue := GetRValue(FLPicker.SelectedColor);
- FGValue := GetGValue(FLPicker.SelectedColor);
- FBValue := GetBValue(FLPicker.SelectedColor);
- if Assigned(FOnChange) then
-  FOnChange(Self);
+  FHValue := FLPicker.Hue;
+  FSValue := FLPicker.Saturation;
+  FLValue := FLPicker.Luminance;
+  FRValue := GetRValue(FLPicker.SelectedColor);
+  FGValue := GetGValue(FLPicker.SelectedColor);
+  FBValue := GetBValue(FLPicker.SelectedColor);
+  if Assigned(FOnChange) then
+    FOnChange(Self);
 end;
 
 procedure THSLColorPicker.SelectColor(c: TColor);
 begin
- FSelectedColor := c;
- FHSPicker.SelectedColor := c;
- FLPicker.SelectedColor := c;
+  FSelectedColor := c;
+  FHSPicker.SelectedColor := c;
+  FLPicker.SelectedColor := c;
 end;
 
 procedure THSLColorPicker.SetH(v: integer);
 begin
- FHValue := v;
- FHSPicker.HueValue := v;
- FLPicker.Hue := v;
+  FHValue := v;
+  FHSPicker.HueValue := v;
+  FLPicker.Hue := v;
 end;
 
 procedure THSLColorPicker.SetS(v: integer);
 begin
- FSValue := v;
- FHSPicker.SaturationValue := v;
- FLPicker.Saturation := v;
+  FSValue := v;
+  FHSPicker.SaturationValue := v;
+  FLPicker.Saturation := v;
 end;
 
 procedure THSLColorPicker.SetL(v: integer);
 begin
- FLValue := v;
- FLPicker.Luminance := v;
+  FLValue := v;
+  FLPicker.Luminance := v;
 end;
 
 procedure THSLColorPicker.SetR(v: integer);
 begin
- FRValue := v;
- SetSelectedColor(RGB(FRValue, FGValue, FBValue));
+  FRValue := v;
+  SetSelectedColor(RGB(FRValue, FGValue, FBValue));
 end;
 
 procedure THSLColorPicker.SetG(v: integer);
 begin
- FGValue := v;
- SetSelectedColor(RGB(FRValue, FGValue, FBValue));
+  FGValue := v;
+  SetSelectedColor(RGB(FRValue, FGValue, FBValue));
 end;
 
 procedure THSLColorPicker.SetB(v: integer);
 begin
- FBValue := v;
- SetSelectedColor(RGB(FRValue, FGValue, FBValue));
+  FBValue := v;
+  SetSelectedColor(RGB(FRValue, FGValue, FBValue));
 end;
 
 function THSLColorPicker.GetSelectedHexColor: string;
 begin
- Result := ColorToHex(FSelectedColor);
+  Result := ColorToHex(FSelectedColor);
 end;
 
 procedure THSLColorPicker.SetHSHint(h: string);
 begin
- FHSHint := h;
- FHSPicker.HintFormat := h;
+  FHSHint := h;
+  FHSPicker.HintFormat := h;
 end;
 
 procedure THSLColorPicker.SetLHint(h: string);
 begin
- FLHint := h;
- FLPicker.HintFormat := h;
+  FLHint := h;
+  FLPicker.HintFormat := h;
 end;
 
 procedure THSLColorPicker.SetLMenu(m: TPopupMenu);
 begin
- FLMenu := m;
- FLPicker.PopupMenu := m;
+  FLMenu := m;
+  FLPicker.PopupMenu := m;
 end;
 
 procedure THSLColorPicker.SetHSMenu(m: TPopupMenu);
 begin
- FHSMenu := m;
- FHSPicker.PopupMenu := m;
+  FHSMenu := m;
+  FHSPicker.PopupMenu := m;
 end;
 
 procedure THSLColorPicker.SetLumIncrement(i: integer);
 begin
- FLumIncrement := i;
- FLPicker.Increment := i;
+  FLumIncrement := i;
+  FLPicker.Increment := i;
 end;
 
 procedure THSLColorPicker.DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
 begin
- if Assigned(OnMouseMove) then
-  OnMouseMove(Self, Shift, x, y);
- inherited;
+  if Assigned(OnMouseMove) then
+    OnMouseMove(Self, Shift, x, y);
+  inherited;
 end;
 
 function THSLColorPicker.GetColorUnderCursor: TColor;
 begin
- Result := FHSPicker.GetColorUnderCursor;
+  Result := FHSPicker.GetColorUnderCursor;
 end;
 
 function THSLColorPicker.GetHexColorUnderCursor: string;
 begin
- Result := FHSPicker.GetHexColorUnderCursor;
+  Result := FHSPicker.GetHexColorUnderCursor;
 end;
 
 procedure THSLColorPicker.SetHSCursor(c: TCursor);
 begin
- FHSCursor := c;
- FHSPicker.Cursor := c;
+  FHSCursor := c;
+  FHSPicker.Cursor := c;
 end;
 
 procedure THSLColorPicker.SetLCursor(c: TCursor);
 begin
- FLCursor := c;
- FLPicker.Cursor := c;
+  FLCursor := c;
+  FLPicker.Cursor := c;
 end;
 
 procedure THSLColorPicker.WMSetFocus(
   var Message: {$IFDEF FPC}TLMSetFocus{$ELSE}TWMSetFocus{$ENDIF} );
 begin
- FHSPicker.SetFocus;
- Message.Result := 1;
+  FHSPicker.SetFocus;
+  Message.Result := 1;
 end;
 
 function THSLColorPicker.GetManual:boolean;
 begin
- Result := FHSPicker.Manual or FLPicker.Manual;
+  Result := FHSPicker.Manual or FLPicker.Manual;
 end;
 
 procedure THSLColorPicker.PaintParentBack;
 begin
- if PBack = nil then
+  if PBack = nil then
   begin
-   PBack := TBitmap.Create;
-   PBack.PixelFormat := pf32bit;
+    PBack := TBitmap.Create;
+    PBack.PixelFormat := pf32bit;
   end;
- PBack.Width := Width;
- PBack.Height := Height;
- PaintParentBack(PBack);
+  PBack.Width := Width;
+  PBack.Height := Height;
+  PaintParentBack(PBack);
 end;
 
 procedure THSLColorPicker.Resize;
@@ -360,23 +350,23 @@ end;
 
 procedure THSLColorPicker.CreateWnd;
 begin
- inherited;
- PaintParentBack;
+  inherited;
+  PaintParentBack;
 end;
 
 procedure THSLColorPicker.Paint;
 begin
- PaintParentBack;
- Canvas.Draw(0, 0, PBack);
+  PaintParentBack;
+  Canvas.Draw(0, 0, PBack);
 end;
 
 procedure THSLColorPicker.SetSelectedColor(Value: TColor);
 begin
- if FSelectedColor <> Value then
+  if FSelectedColor <> Value then
   begin
-   SelectColor(Value);
-   //FLPicker.Hue := FHSPicker.HueValue;
-   //FLPicker.Saturation := FHSPicker.SaturationValue;
+    SelectColor(Value);
+    //FLPicker.Hue := FHSPicker.HueValue;
+    //FLPicker.Saturation := FHSPicker.SaturationValue;
   end;
 end;
 

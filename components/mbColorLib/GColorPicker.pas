@@ -39,21 +39,10 @@ type
     property Layout default lyVertical;
   end;
 
-procedure Register;
-
 implementation
-
-{$IFDEF FPC}
-  {$R GColorPicker.dcr}
-{$ENDIF}
 
 uses
   mbUtils;
-
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [TGColorPicker]);
-end;
 
 {TGColorPicker}
 
@@ -62,15 +51,12 @@ begin
   inherited;
   FGradientWidth := 256;
   FGradientHeight := 12;
-  SetInitialBounds(0, 0, 22, 268);
-  //Width := 22;
-  //Height := 268;
-  Layout := lyVertical;
   FRed := 122;
   FGreen := 255;
   FBlue := 122;
   FArrowPos := ArrowPosFromGreen(255);
   FChange := false;
+  Layout := lyVertical;
   SetGreen(255);
   HintFormat := 'Green: %value';
   FManual := false;

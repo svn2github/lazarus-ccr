@@ -40,21 +40,11 @@ type
     property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
   end;
 
-procedure Register;
 
 implementation
 
-{$IFDEF FPC}
-  {$R HColorPicker.dcr}
-{$ENDIF}
-
 uses
   mbUtils;
-
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [THColorPicker]);
-end;
 
 {THColorPicker}
 
@@ -63,12 +53,6 @@ begin
   inherited;
   FGradientWidth := 360;
   FGradientHeight := 12;
-  {$IFDEF DELPHI}
-  Width := 267;
-  Height := 22;
-  {$ELSE}
-  SetInitialBounds(0, 0, 267, 22);
-  {$ENDIF}
   FSat := 255;
   FVal := 255;
   FArrowPos := ArrowPosFromHue(0);

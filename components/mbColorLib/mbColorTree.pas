@@ -160,21 +160,10 @@ type
    property Items;
   end;
 
-procedure Register;
-
 implementation
-
-{$IFDEF FPC}
-  {$R mbColorTree.dcr}
-{$ENDIF}
 
 uses
   PalUtils;
-
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [TmbColorTree]);
-end;
 
 //taken from GraphUtil, only for Delphi 5
 {$IFNDEF DELPHI_6_UP}

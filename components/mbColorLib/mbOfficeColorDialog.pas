@@ -29,18 +29,9 @@ type
    property UseHints: boolean read FUseHint write FUseHint default false;
   end;
 
-procedure Register;
-
 implementation
 
-{$IFDEF FPC}
-  {$R mbOfficeColorDialog.dcr}
-{$ENDIF}
-
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [TmbOfficeColorDialog]);
-end;
+{ TmbOfficeColorDialog }
 
 constructor TmbOfficeColorDialog.Create(AOwner: TComponent);
 begin

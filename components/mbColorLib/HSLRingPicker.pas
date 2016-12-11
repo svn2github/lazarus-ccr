@@ -9,109 +9,95 @@ interface
 {$I mxs.inc}
 
 uses
- {$IFDEF FPC}
- LCLIntf, LCLType, LMessages,
- {$ELSE}
- Windows, Messages,
- {$ENDIF}
- SysUtils, Classes, Controls, Graphics, Forms, Menus, Math,
- {$IFDEF DELPHI_7_UP}Themes,{$ENDIF}
- RGBHSLUtils, HRingPicker, SLColorPicker, HTMLColors, mbBasicPicker;
+  {$IFDEF FPC}
+  LCLIntf, LCLType, LMessages,
+  {$ELSE}
+  Windows, Messages,
+  {$ENDIF}
+  SysUtils, Classes, Controls, Graphics, Forms, Menus, Math,
+  {$IFDEF DELPHI_7_UP}Themes,{$ENDIF}
+  RGBHSLUtils, HRingPicker, SLColorPicker, HTMLColors, mbBasicPicker;
 
 type
- THSLRingPicker = class(TmbBasicPicker)
- private
-  FOnChange: TNotifyEvent;
-  FRingPicker: THRingPicker;
-  FSLPicker: TSLColorPicker;
-  FSelectedColor: TColor;
-  FHValue, FSValue, FLValue: integer;
-  FRValue, FGValue, FBValue: integer;
-  FRingHint, FSLHint: string;
-  FSLMenu, FRingMenu: TPopupMenu;
-  FSLCursor, FRingCursor: TCursor;
-  PBack: TBitmap;
-
-  function GetManual: boolean;
-  procedure SelectColor(c: TColor);
-  procedure SetH(v: integer);
-  procedure SetS(v: integer);
-  procedure SetL(v: integer);
-  procedure SetR(v: integer);
-  procedure SetG(v: integer);
-  procedure SetB(v: integer);
-  procedure SetRingHint(h: string);
-  procedure SetSLHint(h: string);
-  procedure SetSLMenu(m: TPopupMenu);
-  procedure SetRingMenu(m: TPopupMenu);
-  procedure SetRingCursor(c: TCursor);
-  procedure SetSLCursor(c: TCursor);
- protected
-  procedure CreateWnd; override;
-  procedure Paint; override;
-  procedure DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
-  procedure RingPickerChange(Sender: TObject);
-  procedure SLPickerChange(Sender: TObject);
-  procedure DoChange;
-  procedure Resize; override;
-  {$IFDEF DELPHI}
-  procedure WMSetFocus(var Message: TWMSetFocus); message WM_SETFOCUS;
-  {$ELSE}
-  procedure WMSetFocus(var Message: TLMSetFocus); message LM_SETFOCUS;
-  {$ENDIF}
- public
-  constructor Create(AOwner: TComponent); override;
-  destructor Destroy; override;
-
-  function GetColorUnderCursor: TColor;
-  function GetHexColorUnderCursor: string;
-  function GetSelectedHexColor: string;
-  property ColorUnderCursor: TColor read GetColorUnderCursor;
-  property HValue: integer read FHValue write SetH default 0;
-  property SValue: integer read FSValue write SetS default 240;
-  property LValue: integer read FLValue write SetL default 120;
-  property RValue: integer read FRValue write SetR default 255;
-  property GValue: integer read FGValue write SetG default 0;
-  property BValue: integer read FBValue write SetB default 0;
-  property Manual: boolean read GetManual;
- published
-  property SelectedColor: TColor read FSelectedColor write SelectColor default clRed;
-  property RingPickerPopupMenu: TPopupMenu read FRingMenu write SetRingMenu;
-  property SLPickerPopupMenu: TPopupMenu read FSLMenu write SetSLMenu;
-  property RingPickerHintFormat: string read FRingHint write SetRingHint;
-  property SLPickerHintFormat: string read FSLHint write SetSLHint;
-  property RingPickerCursor: TCursor read FRingCursor write SetRingCursor default crDefault;
-  property SLPickerCursor: TCursor read FSLCursor write SetSLCursor default crDefault;
-  property TabStop default true;
-  property ShowHint;
-  property ParentShowHint;
-  property Anchors;
-  property Align;
-  property Visible;
-  property Enabled;
-  property TabOrder;
-  property Color;
-  property ParentColor default true;
-  {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
-  property ParentBackground default true;
-  {$ENDIF} {$ENDIF}
-
-  property OnChange: TNotifyEvent read FOnChange write FOnChange;
-  property OnMouseMove;
- end;
-
-procedure Register;
+  THSLRingPicker = class(TmbBasicPicker)
+  private
+    FOnChange: TNotifyEvent;
+    FRingPicker: THRingPicker;
+    FSLPicker: TSLColorPicker;
+    FSelectedColor: TColor;
+    FHValue, FSValue, FLValue: integer;
+    FRValue, FGValue, FBValue: integer;
+    FRingHint, FSLHint: string;
+    FSLMenu, FRingMenu: TPopupMenu;
+    FSLCursor, FRingCursor: TCursor;
+    PBack: TBitmap;
+    function GetManual: boolean;
+    procedure SelectColor(c: TColor);
+    procedure SetH(v: integer);
+    procedure SetS(v: integer);
+    procedure SetL(v: integer);
+    procedure SetR(v: integer);
+    procedure SetG(v: integer);
+    procedure SetB(v: integer);
+    procedure SetRingHint(h: string);
+    procedure SetSLHint(h: string);
+    procedure SetSLMenu(m: TPopupMenu);
+    procedure SetRingMenu(m: TPopupMenu);
+    procedure SetRingCursor(c: TCursor);
+    procedure SetSLCursor(c: TCursor);
+  protected
+    procedure CreateWnd; override;
+    procedure Paint; override;
+    procedure DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+    procedure RingPickerChange(Sender: TObject);
+    procedure SLPickerChange(Sender: TObject);
+    procedure DoChange;
+    procedure Resize; override;
+    {$IFDEF DELPHI}
+    procedure WMSetFocus(var Message: TWMSetFocus); message WM_SETFOCUS;
+    {$ELSE}
+    procedure WMSetFocus(var Message: TLMSetFocus); message LM_SETFOCUS;
+    {$ENDIF}
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    function GetColorUnderCursor: TColor;
+    function GetHexColorUnderCursor: string;
+    function GetSelectedHexColor: string;
+    property ColorUnderCursor: TColor read GetColorUnderCursor;
+    property HValue: integer read FHValue write SetH default 0;
+    property SValue: integer read FSValue write SetS default 240;
+    property LValue: integer read FLValue write SetL default 120;
+    property RValue: integer read FRValue write SetR default 255;
+    property GValue: integer read FGValue write SetG default 0;
+    property BValue: integer read FBValue write SetB default 0;
+    property Manual: boolean read GetManual;
+  published
+    property SelectedColor: TColor read FSelectedColor write SelectColor default clRed;
+    property RingPickerPopupMenu: TPopupMenu read FRingMenu write SetRingMenu;
+    property SLPickerPopupMenu: TPopupMenu read FSLMenu write SetSLMenu;
+    property RingPickerHintFormat: string read FRingHint write SetRingHint;
+    property SLPickerHintFormat: string read FSLHint write SetSLHint;
+    property RingPickerCursor: TCursor read FRingCursor write SetRingCursor default crDefault;
+    property SLPickerCursor: TCursor read FSLCursor write SetSLCursor default crDefault;
+    property TabStop default true;
+    property ShowHint;
+    property ParentShowHint;
+    property Anchors;
+    property Align;
+    property Visible;
+    property Enabled;
+    property TabOrder;
+    property Color;
+    property ParentColor default true;
+    {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
+    property ParentBackground default true;
+    {$ENDIF} {$ENDIF}
+    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property OnMouseMove;
+  end;
 
 implementation
-
-{$IFDEF FPC}
-  {$R HSLRingPicker.dcr}
-{$ENDIF}
-
-procedure Register;
-begin
- RegisterComponents('mbColor Lib', [THSLRingPicker]);
-end;
 
 {THSLRingPicker}
 
@@ -192,8 +178,8 @@ end;
 
 procedure THSLRingPicker.Resize;
 var
- circ: TPoint;
- ctr: double;
+  circ: TPoint;
+  ctr: double;
 begin
   inherited;
   if (FRingPicker = nil) or (FSLPicker = nil) then

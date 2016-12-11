@@ -44,21 +44,12 @@ type
   property Layout default lyVertical;
  end;
 
-procedure Register;
 
 implementation
-
-{$IFDEF FPC}
-  {$R RColorPicker.dcr}
-{$ENDIF}
 
 uses
   mbUtils;
 
-procedure Register;
-begin
- RegisterComponents('mbColor Lib', [TRColorPicker]);
-end;
 
 {TRColorPicker}
 
@@ -67,15 +58,12 @@ begin
   inherited;
   FGradientWidth := 256;
   FGradientHeight := 12;
-  SetInitialBounds(0, 0, 22, 268);
-//  Width := 22;
-//  Height := 268;
-  Layout := lyVertical;
   FRed := 255;
   FGreen := 122;
   FBlue := 122;
   FArrowPos := ArrowPosFromRed(255);
   FChange := false;
+  Layout := lyVertical;
   SetRed(255);
   HintFormat := 'Red: %value';
   FManual := false;

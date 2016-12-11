@@ -47,21 +47,10 @@ type
     property OnChange;
   end;
 
-procedure Register;
-
 implementation
-
-{$IFDEF FPC}
-  {$R RAxisColorPicker.dcr}
-{$ENDIF}
 
 uses
   mbUtils;
-
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [TRAxisColorPicker]);
-end;
 
 {TRAxisColorPicker}
 

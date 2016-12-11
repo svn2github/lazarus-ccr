@@ -46,6 +46,7 @@ object Form1: TForm1
     Anchors = [akTop, akLeft, akRight, akBottom]
     TabIndex = 0
     TabOrder = 0
+    OnMouseMove = PageControl1MouseMove
     object TabSheet1: TTabSheet
       Caption = 'HSLColorPicker'
       ClientHeight = 303
@@ -55,7 +56,7 @@ object Form1: TForm1
         Height = 287
         Top = 8
         Width = 377
-        SelectedColor = 494343
+        SelectedColor = 424966
         HSPickerHintFormat = 'H: %h S: %s'#13'Hex: %hex'
         LPickerHintFormat = 'Luminance: %l'
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -217,7 +218,7 @@ object Form1: TForm1
           Left = 0
           Height = 234
           Top = 0
-          Width = 360
+          Width = 364
           Align = alTop
           Colors.Strings = (
             'clBlack'
@@ -585,14 +586,14 @@ object Form1: TForm1
     end
     object TabSheet5: TTabSheet
       Caption = 'HSVColorPicker'
-      ClientHeight = 299
-      ClientWidth = 389
+      ClientHeight = 303
+      ClientWidth = 391
       ImageIndex = 4
       object HSVColorPicker1: THSVColorPicker
         Left = 24
-        Height = 285
+        Height = 289
         Top = 6
-        Width = 297
+        Width = 328
         HintFormat = 'H: %h S: %s V: %v'#13'Hex: %hex'
         Anchors = [akTop, akLeft, akRight, akBottom]
         TabOrder = 0
@@ -600,11 +601,12 @@ object Form1: TForm1
         OnChange = HSVColorPicker1Change
       end
       object VColorPicker2: TVColorPicker
-        Left = 332
-        Height = 293
+        Left = 360
+        Height = 302
         Top = 2
         Width = 22
         HintFormat = 'Value: %v'
+        Layout = lyVertical
         NewArrowStyle = True
         Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
@@ -614,14 +616,14 @@ object Form1: TForm1
     end
     object TabSheet6: TTabSheet
       Caption = 'SLHColorPicker'
-      ClientHeight = 299
-      ClientWidth = 389
+      ClientHeight = 303
+      ClientWidth = 391
       ImageIndex = 5
       object SLHColorPicker1: TSLHColorPicker
         Left = 5
-        Height = 287
+        Height = 291
         Top = 6
-        Width = 379
+        Width = 381
         HPickerHintFormat = 'Hue: %h'
         SLPickerHintFormat = 'S: %s L: %l'#13'Hex: %hex'
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -701,7 +703,6 @@ object Form1: TForm1
         Top = 192
         Width = 343
         HintFormat = 'Luminance: %l'
-        Layout = lyHorizontal
         SelectionIndicator = siRect
         Anchors = [akLeft, akRight, akBottom]
         TabOrder = 2
@@ -715,7 +716,6 @@ object Form1: TForm1
         Top = 160
         Width = 343
         HintFormat = 'Value: %v'
-        Layout = lyHorizontal
         ArrowPlacement = spBefore
         NewArrowStyle = True
         SelectionIndicator = siRect

@@ -71,21 +71,12 @@ type
    property OnDblClick;
   end;
 
-procedure Register;
-
 implementation
-
-{$IFDEF FPC}
-  {$R mbColorPreview.dcr}
-{$ENDIF}
 
 uses
   PalUtils;
 
-procedure Register;
-begin
-  RegisterComponents('mbColor Lib', [TmbColorPreview]);
-end;
+{ TmbColorPreview }
 
 constructor TmbColorPreview.Create(AOwner: TComponent);
 begin
