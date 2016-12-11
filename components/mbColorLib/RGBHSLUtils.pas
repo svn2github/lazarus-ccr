@@ -25,12 +25,15 @@ procedure RGBtoHSLRange (RGB: TColor; var H1, S1, L1 : integer);
 function GetHValue(AColor: TColor): integer;
 function GetSValue(AColor: TColor): integer;
 function GetLValue(AColor: TColor): integer;
-procedure Clamp(var Input: integer; Min, Max: integer);
+//procedure Clamp(var Input: integer; Min, Max: integer);
 function HSLToRGBTriple(H, S, L : integer) : TRGBTriple;
 function HSLToRGBQuad(H, S, L: integer): TRGBQuad;
 procedure RGBTripleToHSL(RGBTriple : TRGBTriple; var h, s, l: integer);
 
 implementation
+
+uses
+   mbUtils;
 
 function HSLtoRGB(H, S, L: double): TColor;
 var
@@ -156,12 +159,12 @@ begin
  RGBToHSLRange(AColor, d, d, l);
  Result := l;
 end;
-
+                   {
 procedure Clamp(var Input: integer; Min, Max: integer);
 begin
  if (Input < Min) then Input := Min;
  if (Input > Max) then Input := Max;
-end;
+end;                }
 
 function HSLToRGBTriple(H, S, L: integer): TRGBTriple;
 const
@@ -198,34 +201,34 @@ end;
 
 function HSLToRGBQuad(H, S, L: integer): TRGBQuad;
 const
- Divisor = 255*60;
+  Divisor = 255*60;
 var
- hTemp, f, LS, p, q, r: integer;
+  hTemp, f, LS, p, q, r: integer;
 begin
- Clamp(H, 0, MaxHue);
- Clamp(S, 0, MaxSat);
- Clamp(L, 0, MaxLum);
- if (S = 0) then
-   Result := RGBToRGBQuad(L, L, L)
- else
+  Clamp(H, 0, MaxHue);
+  Clamp(S, 0, MaxSat);
+  Clamp(L, 0, MaxLum);
+  if (S = 0) then
+    Result := RGBToRGBQuad(L, L, L)
+  else
   begin
-   hTemp := H mod MaxHue;
-   f := hTemp mod 60;
-   hTemp := hTemp div 60;
-   LS := L*S;
-   p := L - LS div MaxLum;
-   q := L - (LS*f) div Divisor;
-   r := L - (LS*(60 - f)) div Divisor;
-   case hTemp of
-    0: Result := RGBToRGBQuad(L, r, p);
-    1: Result := RGBToRGBQuad(q, L, p);
-    2: Result := RGBToRGBQuad(p, L, r);
-    3: Result := RGBToRGBQuad(p, q, L);
-    4: Result := RGBToRGBQuad(r, p, L);
-    5: Result := RGBToRGBQuad(L, p, q);
-   else
-    Result  := RGBToRGBQuad(0, 0, 0);
-   end;
+    hTemp := H mod MaxHue;
+    f := hTemp mod 60;
+    hTemp := hTemp div 60;
+    LS := L*S;
+    p := L - LS div MaxLum;
+    q := L - (LS*f) div Divisor;
+    r := L - (LS*(60 - f)) div Divisor;
+    case hTemp of
+      0: Result := RGBToRGBQuad(L, r, p);
+      1: Result := RGBToRGBQuad(q, L, p);
+      2: Result := RGBToRGBQuad(p, L, r);
+      3: Result := RGBToRGBQuad(p, q, L);
+      4: Result := RGBToRGBQuad(r, p, L);
+      5: Result := RGBToRGBQuad(L, p, q);
+    else
+      Result  := RGBToRGBQuad(0, 0, 0);
+    end;
   end;
 end;
 

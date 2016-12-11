@@ -61,11 +61,14 @@ end;
 constructor THColorPicker.Create(AOwner: TComponent);
 begin
   inherited;
-  FGradientWidth := 256;
+  FGradientWidth := 360;
   FGradientHeight := 12;
+  {$IFDEF DELPHI}
+  Width := 267;
+  Height := 22;
+  {$ELSE}
   SetInitialBounds(0, 0, 267, 22);
-  //Width := 267;
-  //Height := 22;
+  {$ENDIF}
   FSat := 255;
   FVal := 255;
   FArrowPos := ArrowPosFromHue(0);
@@ -78,6 +81,7 @@ end;
 
 function THColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
+  if Layout = lyVertical then AValue := 360 - AValue;
   Result := HSVtoColor(AValue, FSat, FVal);
 end;
 

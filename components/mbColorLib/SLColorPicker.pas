@@ -12,51 +12,42 @@ uses
  {$ELSE}
   Windows, Messages,
  {$ENDIF}
-  SysUtils, Classes, Controls, Graphics, Math, RGBHSLUtils,
-  Forms, HTMLColors, SelPropUtils, mbColorPickerControl, Scanlines;
+  SysUtils, Classes, Controls, Graphics, Math, Forms,
+  mbColorPickerControl;
 
 type
   TSLColorPicker = class(TmbColorPickerControl)
   private
-   FManual: boolean;
-   FHue, FSat, FLum: integer;
-   FOnChange: TNotifyEvent;
-   FChange: boolean;
-   FBMP: TBitmap;
-
-   procedure CreateSLGradient;
-   procedure DrawMarker(x, y: integer);
-   procedure SelectionChanged(x, y: integer);
-   procedure UpdateCoords;
-   procedure SetHue(h: integer);
-   procedure SetSat(s: integer);
-   procedure SetLum(l: integer);
+    FHue, FSat, FLum: integer;
+    FChange: boolean;
+    procedure DrawMarker(x, y: integer);
+    procedure SelectionChanged(x, y: integer);
+    procedure UpdateCoords;
+    procedure SetHue(h: integer);
+    procedure SetSat(s: integer);
+    procedure SetLum(l: integer);
   protected
-   procedure WebSafeChanged; override;
-   function GetSelectedColor: TColor; override;
-   procedure SetSelectedColor(c: TColor); override;
-   procedure Paint; override;
-   procedure Resize; override;
-   procedure CreateWnd; override;
-   procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-   procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-   procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-   procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
-     message CN_KEYDOWN;
+    function GetGradientColor2D(X, Y: Integer): TColor; override;
+    function GetSelectedColor: TColor; override;
+    procedure SetSelectedColor(c: TColor); override;
+    procedure Paint; override;
+    procedure Resize; override;
+    procedure CreateWnd; override;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
+      message CN_KEYDOWN;
   public
-   constructor Create(AOwner: TComponent); override;
-   destructor Destroy; override;
-
-   function GetColorAtPoint(x, y: integer): TColor; override;
-   property Manual: boolean read FManual;
+    constructor Create(AOwner: TComponent); override;
+    function GetColorAtPoint(x, y: integer): TColor; override;
   published
-   property Hue: integer read FHue write SetHue default 0;
-   property Saturation: integer read FSat write SetSat default 0;
-   property Luminance: integer read FLum write SetLum default 255;
-   property SelectedColor default clWhite;
-   property MarkerStyle default msCircle;
-
-   property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property Hue: integer read FHue write SetHue default 0;
+    property Saturation: integer read FSat write SetSat default 0;
+    property Luminance: integer read FLum write SetLum default 255;
+    property SelectedColor default clWhite;
+    property MarkerStyle default msCircle;
+    property OnChange;
   end;
 
 procedure Register;
@@ -65,10 +56,10 @@ implementation
 
 {$IFDEF FPC}
   {$R SLColorPicker.dcr}
+{$ENDIF}
 
 uses
-  IntfGraphics, fpimage;
-{$ENDIF}
+  ScanLines, RGBHSLUtils, HTMLColors, mbUtils;
 
 procedure Register;
 begin
@@ -77,306 +68,211 @@ end;
 
 constructor TSLColorPicker.Create(AOwner: TComponent);
 begin
- inherited;
- FBMP := TBitmap.Create;
- FBMP.PixelFormat := pf32bit;
- FBMP.SetSize(256, 256);
- Width := 255;
- Height := 255;
- MaxHue := 360;
- MaxSat := 255;
- MaxLum := 255;
- FHue := 0;
- FSat := 0;
- FLum := 255;
- FChange := true;
- MarkerStyle := msCircle;
-end;
-
-destructor TSLColorPicker.Destroy;
-begin
- FBMP.Free;
- inherited;
-end;
-
-//{$IFDEF DELPHI}
-procedure TSLColorPicker.CreateSLGradient;
-var
-  x, y, skip: integer;
-  row: pRGBQuadArray;
-  c: TColor;
-  {$IFDEF FPC}
-  intfimg: TLazIntfImage;
-  imgHandle, imgMaskHandle: HBitmap;
+  inherited;
+  FGradientWidth := 256;
+  FGradientHeight := 256;
+  {$IFDEF DELPHI}
+  Width := 255;
+  Height := 255;
+  {$ELSE}
+  SetInitialBounds(0, 0, 256, 256);
   {$ENDIF}
-begin
-  if FBmp = nil then
-  begin
-    FBmp := TBitmap.Create;
-    FBmp.PixelFormat := pf32bit;
-    FBmp.Width := 256;
-    FBmp.Height := 256;
-  end;
-
-  {$IFDEF FPC}
-  intfimg := TLazIntfImage.Create(FBmp.Width, FBmp.Height);
-  try
-    intfImg.LoadFromBitmap(FBmp.Handle, FBmp.MaskHandle);
-  {$ENDIF}
-    {
-    row := FBMP.ScanLine[0];
-    skip := integer(FBMP.ScanLine[1]) - Integer(row);
-    }
-    for y := 0 to 255 do
-    begin
-     {$IFDEF FPC}
-     row := intfImg.GetDataLineStart(y);
-     {$ELSE}
-     row := FHSVBmp.Scanline(y);
-     {$ENDIF}
-
-     for x := 0 to 255 do
-      if not WebSafe then
-        row[x] := HSLtoRGBQuad(FHue, x, 255 - y)
-      else
-      begin
-        c := GetWebSafe(RGBTripleToTColor(HSLToRGBTriple(FHue, x, 255 - y)));
-        row[x] := RGBtoRGBQuad(GetRValue(c), GetGValue(c), GetBValue(c));
-      end;
-//      row := pRGBQuadArray(Integer(row) + skip);
-    end;
-   {$IFDEF FPC}
-   intfimg.CreateBitmaps(imgHandle, imgMaskHandle, false);
-   FBmp.Handle := imgHandle;
-   FBmp.MaskHandle := imgMaskHandle;
- finally
-   intfimg.Free;
- end;
- {$ENDIF}
+  MaxHue := 360;
+  MaxSat := 255;
+  MaxLum := 255;
+  FHue := 0;
+  FSat := 0;
+  FLum := 255;
+  FChange := true;
+  MarkerStyle := msCircle;
 end;
 
-   (*
-{$ELSE}
-procedure TSLColorPicker.CreateSLGradient;
+{ This picker has Saturation along the X and Luminance along the Y axis. }
+function TSLColorPicker.GetGradientColor2D(X, Y: Integer): TColor;
 var
-  x, y: Integer;
-  c: TColor;
-  intfimg: TLazIntfImage;
-  imgHandle, imgMaskHandle: HBitmap;
+  q: TRGBQuad;
 begin
-  if FBmp = nil then
-  begin
-    FBmp := TBitmap.Create;
-    FBmp.PixelFormat := pf32Bit;
-    FBmp.Width := 256;
-    FBmp.Height := 256;
-  end;
-  intfimg := TLazIntfImage.Create(FBmp.Width, FBmp.Height);
-  try
-    intfImg.LoadFromBitmap(FBmp.Handle, FBmp.MaskHandle);
-    for y := 0 to 255 do      // y = L
-      for x := 0 to 255 do    // x = S
-      begin
-        c := HSLRangeToRGB(FHue, x, 255-y);
-        if WebSafe then
-          c := GetWebSafe(c);
-        intfImg.Colors[x, y] := TColorToFPColor(c);
-      end;
-    intfimg.CreateBitmaps(imgHandle, imgMaskHandle, false);
-    FBmp.Handle := imgHandle;
-    FBmp.MaskHandle := imgMaskHandle;
-  finally
-    intfimg.Free;
-  end;
+  q := HSLtoRGBQuad(FHue, x, 255-y);
+  Result := RGB(q.rgbRed, q.rgbGreen, q.rgbBlue);
 end;
-{$ENDIF}
-     *)
+
 procedure TSLColorPicker.Resize;
 begin
- inherited;
- UpdateCoords;
+  inherited;
+  UpdateCoords;
 end;
 
 procedure TSLColorPicker.CreateWnd;
 begin
- inherited;
- CreateSLGradient;
- UpdateCoords;
+  inherited;
+  CreateGradient;
+  UpdateCoords;
 end;
 
 procedure TSLColorPicker.UpdateCoords;
 begin
- mdx := MulDiv(FSat, Width, 255);
- mdy := MulDiv(255-FLum, Height, 255);
+  mdx := MulDiv(FSat, Width, 255);
+  mdy := MulDiv(255-FLum, Height, 255);
 end;
 
 procedure TSLColorPicker.DrawMarker(x, y: integer);
 var
- c: TColor;
+  c: TColor;
 begin
- c := not GetColorAtPoint(x, y);
- case MarkerStyle of
-  msCircle: DrawSelCirc(x, y, Canvas);
-  msSquare: DrawSelSquare(x, y, Canvas);
-  msCross: DrawSelCross(x, y, Canvas, c);
-  msCrossCirc: DrawSelCrossCirc(x, y, Canvas, c);
- end;
+  c := not GetColorAtPoint(x, y);
+  InternalDrawMarker(x, y, c);
 end;
 
 procedure TSLColorPicker.Paint;
 begin
- Canvas.StretchDraw(ClientRect, FBMP);
- DrawMarker(mdx, mdy);
+  Canvas.StretchDraw(ClientRect, FGradientBMP);
+  UpdateCoords;
+  DrawMarker(mdx, mdy);
 end;
 
 procedure TSLColorPicker.SetHue(h: integer);
 begin
- if h > 360 then h := 360;
- if h < 0 then h := 0;
- if FHue <> h then
+  Clamp(h, 0, 360);
+  if FHue <> h then
   begin
-   FHue := h;
-   FManual := false;
-   CreateSLGradient;
-   UpdateCoords;
-   Invalidate;
-   if Fchange then
-    if Assigned(FOnChange) then FOnChange(Self);
+    FHue := h;
+    FManual := false;
+    CreateGradient;
+    UpdateCoords;
+    Invalidate;
+    if FChange and Assigned(FOnChange) then FOnChange(Self);
   end;
 end;
 
 procedure TSLColorPicker.SetSat(s: integer);
 begin
- if s > 255 then s := 255;
- if s < 0 then s := 0;
- if FSat <> s then
+  Clamp(s, 0, 255);
+  if FSat <> s then
   begin
-   FSat := s;
-   FManual := false;
-   UpdateCoords;
-   Invalidate;
-   if Fchange then
-    if Assigned(FOnChange) then FOnChange(Self);
+    FSat := s;
+    FManual := false;
+    UpdateCoords;
+    Invalidate;
+    if FChange and Assigned(FOnChange) then FOnChange(Self);
   end;
 end;
 
-procedure TSLColorPicker.SetLum(l: integer);
+procedure TSLColorPicker.SetLum(L: integer);
 begin
- if l > 255 then l := 255;
- if l < 0 then l := 0;
- if FLum <> l then
+  Clamp(L, 0, 255);
+  if FLum <> L then
   begin
-   FLum := l;
-   FManual := false;
-   UpdateCoords;
-   Invalidate;
-   if Fchange then
-    if Assigned(FOnChange) then FOnChange(Self);
+    FLum := L;
+    FManual := false;
+    UpdateCoords;
+    Invalidate;
+    if FChange and Assigned(FOnChange) then FOnChange(Self);
   end;
 end;
 
 procedure TSLColorPicker.SelectionChanged(x, y: integer);
 begin
- FChange := false;
-// SetSat(MulDiv(255, x, Width));
-// SetLum(MulDiv(255, Height - y, Height));
- SetSat(MulDiv(255, x, Width - 1));
- SetLum(MulDiv(255, Height - y -1, Height - 1));
- FChange := true;
+  FChange := false;
+//  SetSat(MulDiv(255, x, Width));
+//  SetLum(MulDiv(255, Height - y, Height));
+  SetSat(MulDiv(255, x, Width - 1));
+  SetLum(MulDiv(255, Height - y -1, Height - 1));
+  FChange := true;
 end;
 
 procedure TSLColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState;
-      X, Y: Integer);
+  X, Y: Integer);
 begin
- inherited;
- {$IFDEF DELPHI}
- ClipCursor(nil);
- {$ENDIF}
- if csDesigning in ComponentState then Exit;
- if (Button = mbLeft) and PtInRect(ClientRect, Point(x, y)) then
+  inherited;
+  {$IFDEF DELPHI}
+  ClipCursor(nil);
+  {$ENDIF}
+  if csDesigning in ComponentState then Exit;
+  if (Button = mbLeft) and PtInRect(ClientRect, Point(x, y)) then
   begin
-   mdx := x;
-   mdy := y;
-   SelectionChanged(X, Y);
-   FManual := true;
-   if Assigned(FOnChange) then FOnChange(Self);
+    mdx := x;
+    mdy := y;
+    SelectionChanged(X, Y);
+    FManual := true;
+    if Assigned(FOnChange) then FOnChange(Self);
   end;
 end;
 
 procedure TSLColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState;
-      X, Y: Integer);
+  X, Y: Integer);
 var
- R: TRect;
+  R: TRect;
 begin
- inherited;
- if csDesigning in ComponentState then Exit;
- if (Button = mbLeft) and PtInRect(ClientRect, Point(x, y)) then
+  inherited;
+  if csDesigning in ComponentState then
+    Exit;
+  if (Button = mbLeft) and PtInRect(ClientRect, Point(x, y)) then
   begin
-   mdx := x;
-   mdy := y;
-   R := ClientRect;
-   R.TopLeft := ClientToScreen(R.TopLeft);
-   R.BottomRight := ClientToScreen(R.BottomRight);
-   {$IFDEF DELPHI}
-   ClipCursor(@R);
-   {$ENDIF}
-   SelectionChanged(X, Y);
-   FManual := true;
-   if Assigned(FOnChange) then FOnChange(Self);
+    mdx := x;
+    mdy := y;
+    R := ClientRect;
+    R.TopLeft := ClientToScreen(R.TopLeft);
+    R.BottomRight := ClientToScreen(R.BottomRight);
+    {$IFDEF DELPHI}
+    ClipCursor(@R);
+    {$ENDIF}
+    SelectionChanged(X, Y);
+    FManual := true;
+    if Assigned(FOnChange) then FOnChange(Self);
   end;
- SetFocus;
+  SetFocus;
 end;
 
 procedure TSLColorPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
- inherited;
- if csDesigning in ComponentState then Exit;
- if (ssLeft in Shift) and PtInRect(ClientRect, Point(x, y)) then
+  inherited;
+  if csDesigning in ComponentState then
+    Exit;
+  if (ssLeft in Shift) and PtInRect(ClientRect, Point(x, y)) then
   begin
-   mdx := x;
-   mdy := y;
-   SelectionChanged(X, Y);
-   FManual := true;
-   if Assigned(FOnChange) then FOnChange(Self);
+    mdx := x;
+    mdy := y;
+    SelectionChanged(X, Y);
+    FManual := true;
+    if Assigned(FOnChange) then FOnChange(Self);
   end;
 end;
 
 procedure TSLColorPicker.SetSelectedColor(c: TColor);
 var
- h, s, l: integer;
+  h, s, l: integer;
 begin
- if WebSafe then c := GetWebSafe(c);
- FManual := false;
- Fchange := false;
- RGBTripleToHSL(RGBtoRGBTriple(GetRValue(c), GetGValue(c), GetBValue(c)), h, s, l);
- SetHue(h);
- SetSat(s);
- SetLum(l);
- if Fchange then
-  if Assigned(FOnChange) then FOnChange(Self);
- FChange := true;
+  if WebSafe then c := GetWebSafe(c);
+  FManual := false;
+  FChange := false;
+  RGBTripleToHSL(RGBtoRGBTriple(GetRValue(c), GetGValue(c), GetBValue(c)), h, s, l);
+  SetHue(h);
+  SetSat(s);
+  SetLum(l);
+  if FChange and Assigned(FOnChange) then FOnChange(Self);
+  FChange := true;
 end;
 
 function TSLColorPicker.GetSelectedColor: TColor;
 var
- triple: TRGBTriple;
+  triple: TRGBTriple;
 begin
- triple := HSLToRGBTriple(FHue, FSat, FLum);
- if not WebSafe then
-  Result := RGBTripleToTColor(triple)
- else
-  Result := GetWebSafe(RGBTripleToTColor(triple));
+  triple := HSLToRGBTriple(FHue, FSat, FLum);
+  if not WebSafe then
+    Result := RGBTripleToTColor(triple)
+  else
+    Result := GetWebSafe(RGBTripleToTColor(triple));
 end;
 
 function TSLColorPicker.GetColorAtPoint(x, y: integer): TColor;
 var
- triple: TRGBTriple;
+  triple: TRGBTriple;
 begin
- triple := HSLToRGBTriple(FHue, MulDiv(255, x, Width), MulDiv(255, Height - y, Height));
- if not WebSafe then
-  Result := RGBTripleToTColor(triple)
- else
-  Result := GetWebSafe(RGBTripleToTColor(triple));
+  triple := HSLToRGBTriple(FHue, MulDiv(255, x, Width), MulDiv(255, Height - y, Height));
+  if not WebSafe then
+    Result := RGBTripleToTColor(triple)
+  else
+    Result := GetWebSafe(RGBTripleToTColor(triple));
 end;
 
 procedure TSLColorPicker.CNKeyDown(
@@ -470,13 +366,6 @@ begin
  if not FInherited then
   if Assigned(OnKeyDown) then
    OnKeyDown(Self, Message.CharCode, Shift);
-end;
-
-procedure TSLColorPicker.WebSafeChanged;
-begin
- inherited;
- CreateSLGradient;
- Invalidate;
 end;
 
 end.

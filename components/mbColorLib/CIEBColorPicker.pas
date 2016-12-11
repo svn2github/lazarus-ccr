@@ -7,57 +7,48 @@ unit CIEBColorPicker;
 interface
 
 uses
- {$IFDEF FPC}
- LCLIntf, LCLType, LMessages,
- {$ELSE}
- Windows, Messages,
- {$ENDIF}
- SysUtils, Classes, Controls, Graphics, Math, Forms,
- HTMLColors, SelPropUtils, mbColorPickerControl, RGBCIEUtils, Scanlines;
+  {$IFDEF FPC}
+  LCLIntf, LCLType, LMessages,
+  {$ELSE}
+  Windows, Messages,
+  {$ENDIF}
+  SysUtils, Classes, Controls, Graphics, Math, Forms,
+  HTMLColors, RGBCIEUtils, mbColorPickerControl;
 
 type
- TCIEBColorPicker = class(TmbColorPickerControl)
- private
-  FSelected: TColor;
-  FBmp: TBitmap;
-  FOnChange: TNotifyEvent;
-  FL, FA, FB: integer;
-  FManual: boolean;
-  dx, dy, mxx, myy: integer;
 
-  procedure SetLValue(l: integer);
-  procedure SetAValue(a: integer);
-  procedure SetBValue(b: integer);
- protected
-  function GetSelectedColor: TColor; override;
-  procedure WebSafeChanged; override;
-  procedure SetSelectedColor(c: TColor); override;
-  procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
-    message CN_KEYDOWN;
-  procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-  procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-  procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-  procedure DrawMarker(x, y: integer);
-  procedure Paint; override;
-  procedure CreateLABGradient;
-  procedure Resize; override;
-  procedure CreateWnd; override;
-  procedure CorrectCoords(var x, y: integer);
- public
-  constructor Create(AOwner: TComponent); override;
-  destructor Destroy; override;
+  { TCIEBColorPicker }
 
-  function GetColorAtPoint(x, y: integer): TColor; override;
-  property Manual: boolean read FManual;
- published
-  property SelectedColor default clLime;
-  property LValue: integer read FL write SetLValue default 100;
-  property AValue: integer read FA write SetAValue default -128;
-  property BValue: integer read FB write SetBValue default 127;
-  property MarkerStyle default msCircle;
-
-  property OnChange: TNotifyEvent read FOnChange write FOnChange;
- end;
+  TCIEBColorPicker = class(TmbColorPickerControl)
+  private
+    FL, FA, FB: integer;
+    dx, dy, mxx, myy: integer;
+    procedure SetLValue(l: integer);
+    procedure SetAValue(a: integer);
+    procedure SetBValue(b: integer);
+  protected
+    function GetGradientColor2D(x, y: Integer): TColor; override;
+    procedure SetSelectedColor(c: TColor); override;
+    procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
+      message CN_KEYDOWN;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure DrawMarker(x, y: integer);
+    procedure Paint; override;
+    procedure Resize; override;
+    procedure CreateWnd; override;
+    procedure CorrectCoords(var x, y: integer);
+  public
+    constructor Create(AOwner: TComponent); override;
+  published
+    property SelectedColor default clLime;
+    property LValue: integer read FL write SetLValue default 100;
+    property AValue: integer read FA write SetAValue default -128;
+    property BValue: integer read FB write SetBValue default 127;
+    property MarkerStyle default msCircle;
+    property OnChange;
+  end;
 
 procedure Register;
 
@@ -67,181 +58,152 @@ implementation
   {$R CIEBColorPicker.dcr}
 {$ENDIF}
 
+uses
+  mbUtils;
+
 procedure Register;
 begin
- RegisterComponents('mbColor Lib', [TCIEBColorPicker]);
+  RegisterComponents('mbColor Lib', [TCIEBColorPicker]);
 end;
 
 {TCIEBColorPicker}
 
 constructor TCIEBColorPicker.Create(AOwner: TComponent);
 begin
- inherited;
- FBmp := TBitmap.Create;
- FBmp.PixelFormat := pf32bit;
- FBmp.SetSize(256, 256);
- Width := 256;
- Height := 256;
- HintFormat := 'L: %cieL A: %cieA'#13'Hex: %hex';
- FSelected := clLime;
- FL := 100;
- FA := -128;
- FB := 127;
- FManual := false;
- dx := 0;
- dy := 0;
- mxx := 0;
- myy := 0;
- MarkerStyle := msCircle;
-end;
-
-destructor TCIEBColorPicker.Destroy;
-begin
- FBmp.Free;
- inherited Destroy;
+  inherited;
+  FGradientWidth := 256;
+  FGradientHeight := 256;
+  {$IFDEF DELPHI}
+  Width := 256;
+  Height := 256;
+  {$ELSE}
+  SetInitialBounds(0, 0, 256, 256);
+  {$ENDIF}
+  HintFormat := 'L: %cieL A: %cieA'#13'Hex: %hex';
+  FSelected := clLime;
+  FL := 100;
+  FA := -128;
+  FB := 127;
+  FManual := false;
+  dx := 0;
+  dy := 0;
+  mxx := 0;
+  myy := 0;
+  MarkerStyle := msCircle;
 end;
 
 procedure TCIEBColorPicker.CreateWnd;
 begin
- inherited;
- CreateLABGradient;
+  inherited;
+  CreateGradient;
 end;
 
-procedure TCIEBColorPicker.CreateLABGradient;
-var
-  l, a: integer;
-  row: pRGBQuadArray;
+{ In the original code: for L ... for A ... LabToRGB(Round(100-L*100/244), A-128, FB)
+  --> x is A, y is L}
+function TCIEBColorPicker.GetGradientColor2D(x, y: Integer): TColor;
 begin
- if FBmp = nil then
-  begin
-   FBmp := TBitmap.Create;
-   FBmp.PixelFormat := pf32bit;
-   FBmp.Width := 256;
-   FBmp.Height := 256;
-  end;
-
- for l := 255 downto 0 do
-  begin
-   row := FBmp.Scanline[l];
-   for a := 0 to 255 do
-    if not WebSafe then
-     row[a] := RGBtoRGBQuad(LabToRGB(Round(100 - l*100/255), a-128, FB))
-    else
-     row[a] := RGBtoRGBQuad(GetWebSafe(LabToRGB(Round(100 - l*100/255), a-128, FB)));
-  end;
+  Result := LabToRGB(Round(100 - y*100/255), x - 128, FB);
 end;
 
 procedure TCIEBColorPicker.CorrectCoords(var x, y: integer);
 begin
- if x < 0 then x := 0;
- if y < 0 then y := 0;
- if x > Width - 1 then x := Width - 1;
- if y > Height - 1 then y := Height - 1;
+  Clamp(x, 0, Width - 1);
+  Clamp(y, 0, Height - 1);
 end;
 
 procedure TCIEBColorPicker.DrawMarker(x, y: integer);
 var
- c: TColor;
+  c: TColor;
 begin
- CorrectCoords(x, y);
- FL := Round(GetCIELValue(FSelected));
- FA := Round(GetCIEAValue(FSelected));
- FB := Round(GetCIEBValue(FSelected));
- if Assigned(FOnChange) then
-  FOnChange(Self);
- dx := x;
- dy := y;
- if Focused or (csDesigning in ComponentState) then
-  c := clBlack
- else
-  c := clWhite;
- case MarkerStyle of
-  msCircle: DrawSelCirc(x, y, Canvas);
-  msSquare: DrawSelSquare(x, y, Canvas);
-  msCross: DrawSelCross(x, y, Canvas, c);
-  msCrossCirc: DrawSelCrossCirc(x, y, Canvas, c);
- end;
-end;
-
-function TCIEBColorPicker.GetSelectedColor: TColor;
-begin
- Result := FSelected;
+  CorrectCoords(x, y);
+  FL := Round(GetCIELValue(FSelected));
+  FA := Round(GetCIEAValue(FSelected));
+  FB := Round(GetCIEBValue(FSelected));
+  if Assigned(FOnChange) then
+    FOnChange(Self);
+  dx := x;
+  dy := y;
+  if Focused or (csDesigning in ComponentState) then
+    c := clBlack
+  else
+    c := clWhite;
+  InternalDrawMarker(x, y, c);
 end;
 
 procedure TCIEBColorPicker.SetSelectedColor(c: TColor);
 begin
- if WebSafe then c := GetWebSafe(c);
- FL := Round(GetCIELValue(c));
- FA := Round(GetCIEAValue(c));
- FB := Round(GetCIEBValue(c));
- FSelected := c;
- FManual := false;
- mxx := Round((FA+128)*(Width/255));
- myy := Round(((100-FL)*255/100)*(Height/255));
- CreateLABGradient;
- Invalidate;
+  if WebSafe then c := GetWebSafe(c);
+  FL := Round(GetCIELValue(c));
+  FA := Round(GetCIEAValue(c));
+  FB := Round(GetCIEBValue(c));
+  FSelected := c;
+  FManual := false;
+  mxx := Round((FA+128)*(Width/255));
+  myy := Round(((100-FL)*255/100)*(Height/255));
+  CreateGradient;
+  Invalidate;
 end;
 
 procedure TCIEBColorPicker.Paint;
 begin
- Canvas.StretchDraw(ClientRect, FBmp);
- CorrectCoords(mxx, myy);
- DrawMarker(mxx, myy);
+  Canvas.StretchDraw(ClientRect, FGradientBmp);
+  CorrectCoords(mxx, myy);
+  DrawMarker(mxx, myy);
 end;
 
 procedure TCIEBColorPicker.Resize;
 begin
- FManual := false;
- mxx := Round((FA+128)*(Width/255));
- myy := Round(((100-FL)*255/100)*(Height/255));
- inherited;
+  FManual := false;
+  mxx := Round((FA + 128) * (Width / 255));
+  myy := Round(((100 - FL) * 255 / 100) * (Height / 255));
+  inherited;
 end;
 
 procedure TCIEBColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
- R: TRect;
+  R: TRect;
 begin
- inherited;
- mxx := x;
- myy := y;
- if Button = mbLeft then
+  inherited;
+  mxx := x;
+  myy := y;
+  if Button = mbLeft then
   begin
-   R := ClientRect;
-   R.TopLeft := ClientToScreen(R.TopLeft);
-   R.BottomRight := ClientToScreen(R.BottomRight);
-   {$IFDEF DELPHI}
-   ClipCursor(@R);
-   {$ENDIF}
-   FSelected := GetColorAtPoint(x, y);
-   FManual := true;
-   Invalidate;
+    R := ClientRect;
+    R.TopLeft := ClientToScreen(R.TopLeft);
+    R.BottomRight := ClientToScreen(R.BottomRight);
+    {$IFDEF DELPHI}
+    ClipCursor(@R);
+    {$ENDIF}
+    FSelected := GetColorAtPoint(x, y);
+    FManual := true;
+    Invalidate;
   end;
- SetFocus;
+  SetFocus;
 end;
 
 procedure TCIEBColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
- inherited;
- {$IFDEF DELPHI}
- ClipCursor(nil);
- {$ENDIF}
- mxx := x;
- myy := y;
- FSelected := GetColorAtPoint(x, y);
- FManual := true;
- Invalidate;
+  inherited;
+  {$IFDEF DELPHI}
+  ClipCursor(nil);
+  {$ENDIF}
+  mxx := x;
+  myy := y;
+  FSelected := GetColorAtPoint(x, y);
+  FManual := true;
+  Invalidate;
 end;
 
 procedure TCIEBColorPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
- inherited;
- if ssLeft in Shift then
+  inherited;
+  if ssLeft in Shift then
   begin
-   mxx := x;
-   myy := y;
-   FSelected := GetColorAtPoint(x, y);
-   FManual := true;
-   Invalidate;
+    mxx := x;
+    myy := y;
+    FSelected := GetColorAtPoint(x, y);
+    FManual := true;
+    Invalidate;
   end;
 end;
 
@@ -342,40 +304,25 @@ begin
    OnKeyDown(Self, Message.CharCode, Shift);
 end;
 
-procedure TCIEBColorPicker.SetLValue(l: integer);
+procedure TCIEBColorPicker.SetLValue(L: integer);
 begin
- if l > 100 then l := 100;
- if l < 0 then l := 0;
- FL := l;
- SetSelectedColor(LabToRGB(FL, FA, FB));
+  Clamp(L, 0, 100);
+  FL := L;
+  SetSelectedColor(LabToRGB(FL, FA, FB));
 end;
 
 procedure TCIEBColorPicker.SetAValue(a: integer);
 begin
- if a > 127 then a := 127;
- if a < -128 then a := -128;
- FA := a;
- SetSelectedColor(LabToRGB(FL, FA, FB));
+  Clamp(a, -128, 127);
+  FA := a;
+  SetSelectedColor(LabToRGB(FL, FA, FB));
 end;
 
 procedure TCIEBColorPicker.SetBValue(b: integer);
 begin
- if b > 127 then b := 127;
- if b < -128 then b := -128;
- FB := b;
- SetSelectedColor(LabToRGB(FL, FA, FB));
-end;
-
-function TCIEBColorPicker.GetColorAtPoint(x, y: integer): TColor;
-begin
- Result := Canvas.Pixels[x, y];
-end;
-
-procedure TCIEBColorPicker.WebSafeChanged;
-begin
- inherited;
- CreateLABGradient;
- Invalidate;
+  Clamp(b, -128, 127);
+  FB := b;
+  SetSelectedColor(LabToRGB(FL, FA, FB));
 end;
 
 end.

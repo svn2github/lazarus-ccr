@@ -117,65 +117,77 @@ end;
 
 constructor THSLRingPicker.Create(AOwner: TComponent);
 begin
- inherited;
- ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque{$IFDEF DELPHI_7_UP}, csParentBackground{$ENDIF}];
- DoubleBuffered := true;
- PBack := TBitmap.Create;
- PBack.PixelFormat := pf32bit;
- {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
- ParentBackground := true;
- {$ENDIF} {$ENDIF}
- Width := 245;
- Height := 245;
- TabStop := true;
- FSelectedColor := clRed;
- FRingPicker := THRingPicker.Create(Self);
- InsertControl(FRingPicker);
- FRingCursor := crDefault;
- FSLCursor := crDefault;
- with FRingPicker do
+  inherited;
+  ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque{$IFDEF DELPHI_7_UP}, csParentBackground{$ENDIF}];
+  DoubleBuffered := true;
+  PBack := TBitmap.Create;
+  PBack.PixelFormat := pf32bit;
+  {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
+  ParentBackground := true;
+  {$ENDIF} {$ENDIF}
+  {$IFDEF DELPHI}
+  Width := 245;
+  Height := 245;
+  {$ELSE}
+  SetInitialBounds(0, 0, 245, 245);
+  {$ENDIF}
+  TabStop := true;
+  FSelectedColor := clRed;
+  FRingPicker := THRingPicker.Create(Self);
+  InsertControl(FRingPicker);
+  FRingCursor := crDefault;
+  FSLCursor := crDefault;
+  with FRingPicker do
   begin
-   Height := 246;
-   Width := 246;
-   Top := 0;
-   Left := 0;
-   Radius := 100;
-   Align := alClient;
-   Visible := true;
-   Saturation := 255;
-   Value := 255;
-   Hue := 0;
-   OnChange := RingPickerChange;
-   OnMouseMove := DoMouseMove;
+    {$IFDEF DELPHI}
+    Left := 0;
+    Top := 0;
+    Width := 246;
+    Height := 246;
+    {$ELSE}
+    SetInitialBounds(0, 0, 246, 246);
+    {$ENDIF}
+    Radius := 100;
+    Align := alClient;
+    Visible := true;
+    Saturation := 255;
+    Value := 255;
+    Hue := 0;
+    OnChange := RingPickerChange;
+    OnMouseMove := DoMouseMove;
   end;
- FSLPicker := TSLColorPicker.Create(Self);
- InsertControl(FSLPicker);
- with FSLPicker do
+  FSLPicker := TSLColorPicker.Create(Self);
+  InsertControl(FSLPicker);
+  with FSLPicker do
   begin
-   Height := 120;
-   Width := 120;
-   Left := 63;
-   Top := 63;
-   Visible := true;
-   OnChange := SLPickerChange;
-   OnMouseMove := DoMouseMove;
+    {$IFDEF DELPHI}
+    Left := 63;
+    Top := 63;
+    Width := 120;
+    Height := 120;
+    {$ELSE}
+    SetInitialBounds(63, 63, 120, 120);
+    {$ENDIF}
+    Visible := true;
+    OnChange := SLPickerChange;
+    OnMouseMove := DoMouseMove;
   end;
- FHValue := 0;
- FSValue := 255;
- FLValue := 255;
- FRValue := 255;
- FGValue := 0;
- FBValue := 0;
- FRingHint := 'Hue: %h';
- FSLHint := 'S: %hslS L: %l'#13'Hex: %hex';
+  FHValue := 0;
+  FSValue := 255;
+  FLValue := 255;
+  FRValue := 255;
+  FGValue := 0;
+  FBValue := 0;
+  FRingHint := 'Hue: %h';
+  FSLHint := 'S: %hslS L: %l'#13'Hex: %hex';
 end;
 
 destructor THSLRingPicker.Destroy;
 begin
- PBack.Free;
- FRingPicker.Free;
- FSLPicker.Free;
- inherited Destroy;
+  PBack.Free;
+  FRingPicker.Free;
+  FSLPicker.Free;
+  inherited Destroy;
 end;
 
 procedure THSLRingPicker.Resize;
@@ -183,198 +195,191 @@ var
  circ: TPoint;
  ctr: double;
 begin
- inherited;
- if (FRingPicker = nil) or (FSLPicker = nil) then
-  exit;
+  inherited;
+  if (FRingPicker = nil) or (FSLPicker = nil) then
+    exit;
 
- ctr := Min(Width, Height)/100;
+  ctr := Min(Width, Height)/100;
+  circ.x := Min(Width, Height) div 2;
+  circ.y := circ.x;
 
- circ.x := Min(Width, Height) div 2;
- circ.y := circ.x;
+  FRingPicker.Radius := circ.x - round(12*ctr);
 
- FRingPicker.Radius := circ.x - round(12*ctr);
+  FSLPicker.Left := circ.x - FSLPicker.Width  div 2;
+  FSLPicker.Top  := circ.y - FSLPicker.Height div 2;
+  FSLPicker.Width := round(50 * ctr);
+  FSLPicker.Height := FSLPicker.Width;
 
- FSLPicker.Left := circ.x - FSLPicker.Width  div 2;
- FSLPicker.Top  := circ.y - FSLPicker.Height div 2;
- FSLPicker.Width := round(50*ctr);
- FSLPicker.Height := FSLPicker.Width;
-                                     (*
- FRingPicker.Radius := (Min(Width, Height)*30) div 245;
- FSLPicker.Left := (21*FRingPicker.Radius) div 10;
- FSLPicker.Top := (21*FRingPicker.Radius) div 10;
- FSLPicker.Width := 4*FRingPicker.Radius;
- FSLPicker.Height := 4*FRingPicker.Radius;
- *)
- PaintParentBack(PBack);
+  PaintParentBack(PBack);
 end;
 
 procedure THSLRingPicker.RingPickerChange(Sender: TObject);
 begin
- if (FRingPicker = nil) or (FSLPicker = nil) then
-  exit;
- FSLPicker.Hue := FRingPicker.Hue;
- DoChange;
+  if (FRingPicker = nil) or (FSLPicker = nil) then
+    exit;
+  FSLPicker.Hue := FRingPicker.Hue;
+  DoChange;
 end;
 
 procedure THSLRingPicker.SLPickerChange(Sender: TObject);
 begin
- if FSLPicker = nil then
-   exit;
- FSelectedColor := FSLPicker.SelectedColor;
- DoChange;
+  if FSLPicker = nil then
+    exit;
+  FSelectedColor := FSLPicker.SelectedColor;
+  DoChange;
 end;
 
 procedure THSLRingPicker.DoChange;
 begin
- if (FRingPicker = nil) or (FSLPicker = nil) then
-   exit;
+  if (FRingPicker = nil) or (FSLPicker = nil) then
+    exit;
 
- FHValue := FRingPicker.Hue;
- FSValue := FSLPicker.Saturation;
- FLValue := FSLPicker.Luminance;
- FRValue := GetRValue(FSLPicker.SelectedColor);
- FGValue := GetGValue(FSLPicker.SelectedColor);
- FBValue := GetBValue(FSLPicker.SelectedColor);
- if Assigned(FOnChange) then
-  FOnChange(Self);
+  FHValue := FRingPicker.Hue;
+  FSValue := FSLPicker.Saturation;
+  FLValue := FSLPicker.Luminance;
+  FRValue := GetRValue(FSLPicker.SelectedColor);
+  FGValue := GetGValue(FSLPicker.SelectedColor);
+  FBValue := GetBValue(FSLPicker.SelectedColor);
+  if Assigned(FOnChange) then
+    FOnChange(Self);
 end;
 
 procedure THSLRingPicker.SelectColor(c: TColor);
 begin
- if (FRingPicker = nil) or (FSLPicker = nil) then
-   exit;
+  if (FRingPicker = nil) or (FSLPicker = nil) then
+    exit;
 
- FRingPicker.Hue := GetHValue(c);
- FRingPicker.Saturation := 255;
- FRingPicker.Value := 255;
- FSLPicker.SelectedColor := c;
- FSelectedColor := c;
+  FRingPicker.Hue := GetHValue(c);
+  FRingPicker.Saturation := 255;
+  FRingPicker.Value := 255;
+  FSLPicker.SelectedColor := c;
+  FSelectedColor := c;
 end;
 
 procedure THSLRingPicker.SetH(v: integer);
 begin
- if (FRingPicker = nil) or (FSLPicker = nil) then
-   exit;
+  if (FRingPicker = nil) or (FSLPicker = nil) then
+    exit;
 
- FHValue := v;
- FRingPicker.Hue := v;
- FSLPicker.Hue := v;
+  FHValue := v;
+  FRingPicker.Hue := v;
+  FSLPicker.Hue := v;
 end;
 
 procedure THSLRingPicker.SetS(v: integer);
 begin
- if (FSLPicker = nil) then
-   exit;
- FSValue := v;
- FSLPicker.Saturation := v;
+  if (FSLPicker = nil) then
+    exit;
+  FSValue := v;
+  FSLPicker.Saturation := v;
 end;
 
 procedure THSLRingPicker.SetL(v: integer);
 begin
- if (FSLPicker = nil) then
-  exit;
- FLValue := v;
- FSLPicker.Luminance := v;
+  if (FSLPicker = nil) then
+    exit;
+  FLValue := v;
+  FSLPicker.Luminance := v;
 end;
 
 procedure THSLRingPicker.SetR(v: integer);
 begin
- FRValue := v;
- SelectColor(RGB(FRValue, FGValue, FBValue));
+  FRValue := v;
+  SelectColor(RGB(FRValue, FGValue, FBValue));
 end;
 
 procedure THSLRingPicker.SetG(v: integer);
 begin
- FGValue := v;
- SelectColor(RGB(FRValue, FGValue, FBValue));
+  FGValue := v;
+  SelectColor(RGB(FRValue, FGValue, FBValue));
 end;
 
 procedure THSLRingPicker.SetB(v: integer);
 begin
- FBValue := v;
- SelectColor(RGB(FRValue, FGValue, FBValue));
+  FBValue := v;
+  SelectColor(RGB(FRValue, FGValue, FBValue));
 end;
 
 function THSLRingPicker.GetSelectedHexColor: string;
 begin
- Result := ColorToHex(FSelectedColor);
+  Result := ColorToHex(FSelectedColor);
 end;
 
 procedure THSLRingPicker.SetRingHint(h: string);
 begin
- FRingHint := h;
- FRingPicker.HintFormat := h;
+  FRingHint := h;
+  FRingPicker.HintFormat := h;
 end;
 
 procedure THSLRingPicker.SetSLHint(h: string);
 begin
- FSLHint := h;
- FSLPicker.HintFormat := h;
+  FSLHint := h;
+  FSLPicker.HintFormat := h;
 end;
 
 procedure THSLRingPicker.SetRingMenu(m: TPopupMenu);
 begin
- FRingMenu := m;
- FRingPicker.PopupMenu := m;
+  FRingMenu := m;
+  FRingPicker.PopupMenu := m;
 end;
 
 procedure THSLRingPicker.SetSLMenu(m: TPopupMenu);
 begin
- FSLMenu := m;
- FSLPicker.PopupMenu := m;
+  FSLMenu := m;
+  FSLPicker.PopupMenu := m;
 end;
 
 procedure THSLRingPicker.DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
 begin
- if Assigned(OnMouseMove) then
-  OnMouseMove(Self, Shift, x, y);
- inherited;
+  if Assigned(OnMouseMove) then
+    OnMouseMove(Self, Shift, x, y);
+  inherited;
 end;
 
 function THSLRingPicker.GetColorUnderCursor: TColor;
 begin
- Result := FSLPicker.GetColorUnderCursor;
+  Result := FSLPicker.GetColorUnderCursor;
 end;
 
 function THSLRingPicker.GetHexColorUnderCursor: string;
 begin
- Result := FSLPicker.GetHexColorUnderCursor;
+  Result := FSLPicker.GetHexColorUnderCursor;
 end;
 
 procedure THSLRingPicker.SetRingCursor(c: TCursor);
 begin
- FRingCursor := c;
- FRingPicker.Cursor := c;
+  FRingCursor := c;
+  FRingPicker.Cursor := c;
 end;
 
 procedure THSLRingPicker.SetSLCursor(c: TCursor);
 begin
- FSLCursor := c;
- FSLPicker.Cursor := c;
+  FSLCursor := c;
+  FSLPicker.Cursor := c;
 end;
 
 procedure THSLRingPicker.WMSetFocus(
   var Message: {$IFDEF DELPHI}TWMSetFocus{$ELSE}TLMSetFocus{$ENDIF} );
 begin
- FRingPicker.SetFocus;
- Message.Result := 1;
+  FRingPicker.SetFocus;
+  Message.Result := 1;
 end;
 
 function THSLRingPicker.GetManual:boolean;
 begin
- Result := FRingPicker.Manual or FSLPicker.Manual;
+  Result := FRingPicker.Manual or FSLPicker.Manual;
 end;
 
 procedure THSLRingPicker.Paint;
 begin
- PaintParentBack(PBack);
- Canvas.Draw(0, 0, PBack);
+  PaintParentBack(PBack);
+  Canvas.Draw(0, 0, PBack);
 end;
 
 procedure THSLRingPicker.CreateWnd;
 begin
- inherited;
- PaintParentBack(PBack);
+  inherited;
+  PaintParentBack(PBack);
 end;
 
 end.

@@ -42,9 +42,9 @@ object Form1: TForm1
     Height = 331
     Top = 6
     Width = 399
-    ActivePage = TabSheet11
+    ActivePage = TabSheet1
     Anchors = [akTop, akLeft, akRight, akBottom]
-    TabIndex = 6
+    TabIndex = 0
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'HSLColorPicker'
@@ -55,7 +55,7 @@ object Form1: TForm1
         Height = 287
         Top = 8
         Width = 377
-        SelectedColor = 562183
+        SelectedColor = 494343
         HSPickerHintFormat = 'H: %h S: %s'#13'Hex: %hex'
         LPickerHintFormat = 'Luminance: %l'
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -991,13 +991,13 @@ object Form1: TForm1
     end
     object TabSheet10: TTabSheet
       Caption = 'Yet even more'
-      ClientHeight = 299
-      ClientWidth = 389
+      ClientHeight = 303
+      ClientWidth = 391
       ImageIndex = 9
       object RAxisColorPicker1: TRAxisColorPicker
         Left = 10
         Height = 100
-        Top = 8
+        Top = 28
         Width = 100
         HintFormat = 'G: %g B: %b'#13'Hex: %hex'
         TabOrder = 0
@@ -1005,25 +1005,25 @@ object Form1: TForm1
       object GAxisColorPicker1: TGAxisColorPicker
         Left = 130
         Height = 100
-        Top = 10
+        Top = 28
         Width = 100
         HintFormat = 'R: %r B: %b'#13'Hex: %hex'
         TabOrder = 1
         MarkerStyle = msCross
       end
       object BAxisColorPicker1: TBAxisColorPicker
-        Left = 252
+        Left = 250
         Height = 100
-        Top = 10
+        Top = 28
         Width = 100
         HintFormat = 'R: %r G: %g'#13'Hex: %hex'
         TabOrder = 2
         MarkerStyle = msCrossCirc
       end
       object CIELColorPicker1: TCIELColorPicker
-        Left = 8
+        Left = 10
         Height = 100
-        Top = 130
+        Top = 164
         Width = 100
         SelectedColor = 16119089
         HintFormat = 'A: %cieA B: %cieB'#13'Hex: %hex'
@@ -1033,9 +1033,9 @@ object Form1: TForm1
         BValue = -32
       end
       object CIEAColorPicker1: TCIEAColorPicker
-        Left = 128
+        Left = 130
         Height = 100
-        Top = 130
+        Top = 164
         Width = 100
         SelectedColor = 16515327
         HintFormat = 'L: %cieL B: %cieB'#13'Hex: %hex'
@@ -1048,7 +1048,7 @@ object Form1: TForm1
       object CIEBColorPicker1: TCIEBColorPicker
         Left = 250
         Height = 100
-        Top = 130
+        Top = 164
         Width = 100
         SelectedColor = 130823
         HintFormat = 'L: %cieL A: %cieA'#13'Hex: %hex'
@@ -1056,6 +1056,54 @@ object Form1: TForm1
         LValue = 88
         AValue = -88
         BValue = 74
+      end
+      object Label10: TLabel
+        Left = 130
+        Height = 15
+        Top = 8
+        Width = 90
+        Caption = 'GAxisColorPicker'
+        ParentColor = False
+      end
+      object Label11: TLabel
+        Left = 10
+        Height = 15
+        Top = 8
+        Width = 89
+        Caption = 'RAxisColorPicker'
+        ParentColor = False
+      end
+      object Label12: TLabel
+        Left = 250
+        Height = 15
+        Top = 8
+        Width = 89
+        Caption = 'BAxisColorPicker'
+        ParentColor = False
+      end
+      object Label13: TLabel
+        Left = 10
+        Height = 15
+        Top = 144
+        Width = 84
+        Caption = 'CIELColorPicker'
+        ParentColor = False
+      end
+      object Label14: TLabel
+        Left = 130
+        Height = 15
+        Top = 144
+        Width = 86
+        Caption = 'CIEAColorPicker'
+        ParentColor = False
+      end
+      object Label15: TLabel
+        Left = 250
+        Height = 15
+        Top = 144
+        Width = 85
+        Caption = 'CIEBColorPicker'
+        ParentColor = False
       end
     end
   end

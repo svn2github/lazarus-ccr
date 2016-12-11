@@ -16,7 +16,16 @@ uses
   mbColorTree, mbColorList {for internet shortcuts};
 
 type
+
+  { TForm1 }
+
   TForm1 = class(TForm)
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
@@ -295,13 +304,13 @@ end;
 // only for internet shortcuts
 procedure TForm1.FormCreate(Sender: TObject);
 begin
- with TIniFile.Create(ExtractFilePath(Application.ExeName) + '\MXS Website.url') do
+  with TIniFile.Create(ExtractFilePath(Application.ExeName) + '\MXS Website.url') do
   try
-   WriteString('InternetShortcut','URL', 'http://mxs.bergsoft.net');
-   WriteInteger('InternetShortcut','IconIndex', 1);
-   WriteString('InternetShortcut','IconFile', '"' + Application.ExeName + '"');
+    WriteString('InternetShortcut','URL', 'http://mxs.bergsoft.net');
+    WriteInteger('InternetShortcut','IconIndex', 1);
+    WriteString('InternetShortcut','IconFile', '"' + Application.ExeName + '"');
   finally
-   Free;
+    Free;
   end; 
 end;
 

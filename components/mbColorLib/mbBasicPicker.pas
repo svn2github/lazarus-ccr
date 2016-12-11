@@ -13,8 +13,17 @@ uses
   Classes, SysUtils, Graphics, Controls;
 
 type
+
+  { TmbBasicPicker }
+
   TmbBasicPicker = class(TCustomControl)
   protected
+    FGradientBmp: TBitmap;
+    FGradientWidth: Integer;
+    FGradientHeight: Integer;
+    procedure CreateGradient; virtual;
+    function GetGradientColor(AValue: Integer): TColor; virtual;
+    function GetGradientColor2D(X, Y: Integer): TColor; virtual;
     procedure PaintParentBack; virtual; overload;
     procedure PaintParentBack(ACanvas: TCanvas); overload;
     procedure PaintParentBack(ABitmap: TBitmap); overload;
@@ -50,9 +59,24 @@ begin
   inherited;
 end;
 
+procedure TmbBasicPicker.CreateGradient;
+begin
+  // to be implemented by descendants
+end;
+
 function TmbBasicPicker.GetDefaultColor(const DefaultColorType: TDefaultColorType): TColor;
 begin
   result := inherited GetDefaultColor(DefaultColorType);
+end;
+
+function TmbBasicPicker.GetGradientColor(AValue: Integer): TColor;
+begin
+  Result := clNone;
+end;
+
+function TmbBasicPicker.GetGradientColor2D(X, Y: Integer): TColor;
+begin
+  Result := clNone;
 end;
 
 procedure TmbBasicPicker.PaintParentBack;

@@ -75,12 +75,8 @@ type
   FChange: boolean;
   FPickRect: TRect;
   FLimit: integer;
-  FGradientBmp: TBitmap;
-  FGradientWidth: Integer;
-  FGradientHeight: Integer;
 
-  procedure CreateGradient;
-  function GetGradientColor(AValue: Integer): TColor; virtual;
+  procedure CreateGradient; override;
   procedure Paint; override;
   procedure DrawFrames; dynamic;
   procedure Resize; override;
@@ -249,17 +245,13 @@ begin
   inherited;
 end;
 
-function TmbTrackbarPicker.GetGradientColor(AValue: Integer): TColor;
-begin
-  Result := clDefault;
-end;
-
 { AWidth and AHeight are seen for horizontal arrangement of the bar }
 procedure TmbTrackbarPicker.CreateGradient;
 var
   i,j: integer;
   row: pRGBQuadArray;
   c: TColor;
+  q: TRGBQuad;
   {$IFDEF FPC}
   intfimg: TLazIntfImage;
   imgHandle, imgMaskHandle: HBitmap;
@@ -283,6 +275,8 @@ begin
       for i := 0 to FGradientBmp.Width-1 do
       begin
         c := GetGradientColor(i);
+        if WebSafe then c := GetWebSafe(c);
+        q := RGBToRGBQuad(c);
         for j := 0 to FGradientBmp.Height-1 do
         begin
           {$IFDEF FPC}
@@ -290,10 +284,7 @@ begin
           {$ELSE}
           row := FGradientBmp.ScanLine[j];
           {$ENDIF}
-          if not WebSafe then
-            row[i] := RGBtoRGBQuad(c)
-          else
-            row[i] := RGBtoRGBQuad(GetWebSafe(c));
+          row[i] := q;
         end;
       end;
     end
@@ -312,11 +303,10 @@ begin
         row := FGradientBmp.ScanLine[i];
         {$ENDIF}
         c := GetGradientColor(FGradientBmp.Height - 1 - i);
+        if WebSafe then c := GetWebSafe(c);
+        q := RGBtoRGBQuad(c);
         for j := 0 to FGradientBmp.Width-1 do
-          if not WebSafe then
-            row[j] := RGBtoRGBQuad(c)
-          else
-            row[j] := RGBtoRGBQuad(GetWebSafe(c));
+          row[j] := q;
       end;
     end;
 
