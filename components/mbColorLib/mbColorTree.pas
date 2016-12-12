@@ -49,7 +49,6 @@ type
    procedure SetInfoLabel(Value: string);
 
   protected
-   function CanChange(Node: TTreeNode): Boolean; override;
    procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
@@ -163,7 +162,7 @@ type
 implementation
 
 uses
-  PalUtils;
+  PalUtils, mbUtils;
 
 //taken from GraphUtil, only for Delphi 5
 {$IFNDEF DELPHI_6_UP}
@@ -249,11 +248,6 @@ begin
   end;
 end;
 
-function TmbColorTree.CanChange(Node: TTreeNode): Boolean;
-begin
-  Result := Assigned(Node) and Node.HasChildren;
-end;
-
 procedure TmbColorTree.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
  r: TRect;
@@ -327,8 +321,10 @@ begin
    end
   else
    begin
-    b.Canvas.Brush.Color := clBtnFace;
+    b.Canvas.Brush.Color := clFuchsia;
     b.Canvas.Pen.Color := clWindowText;
+    b.Transparent := true;
+    b.TransparentColor := clFuchsia;
    end;
   b.Canvas.FillRect(B.Canvas.ClipRect);
   case dir of
@@ -455,20 +451,24 @@ begin
 end;
 
 procedure TmbColorTree.DrawInfoItem(R: TRect; Index: integer);
+const
+  FLAGS = DT_LEFT or DT_END_ELLIPSIS or DT_NOCLIP;
+  DELTA = 2;
 var
  b: TBitmap;
  BR, TR: TRect;
  i, fx: integer;
  s: string;
+ h: Integer;
 begin
  b := TBitmap.Create;
  try
   b.Width := R.Right - R.Left;
   b.Height := R.Bottom - R.Top;
   BR := b.Canvas.ClipRect;
-  b.Canvas.Font.Assign(Font);
   with b.Canvas do
    begin
+    Canvas.Font.Assign(Self.Font);
     Brush.Color := Blend(clBtnFace, clWindow, 30);
     FillRect(BR);
     BR := Rect(BR.Left + 42, BR.Top, BR.Right, BR.Bottom);
@@ -479,34 +479,28 @@ begin
     Font.Size := 7;
 
     s := FInfoLabel;
-    TR := Rect(BR.Left, BR.Top + 2, BR.Right, BR.Top + 12);
+    h := TextHeight(s);
+    TR := Rect(BR.Left, BR.Top{ + 2}, BR.Right, BR.Top + {2 + }h + DELTA);
     if Assigned(FDraw1) then FDraw1(Self, Index, Canvas.Font, s);
-    DrawText(b.Canvas.Handle, PChar(s), Length(s), TR, DT_LEFT or DT_END_ELLIPSIS or DT_NOCLIP);
+    DrawText(b.Canvas.Handle, PChar(s), Length(s), TR, FLAGS);
 
-    fX := BR.Left;
-    for i := 0 to (BR.Right - 2 - BR.Left) div 2 do
-     begin
-      Pixels[fX, BR.Top + 4 + TextHeight(s)] := clGray;
-      fX := fX + 2;
-     end;
+    DrawHorDottedLine(b.Canvas, BR.Left, BR.Right, TR.Bottom + DELTA, clGray);
 
     s := FormatHint(FInfo1, Self.Colors[Index].value);
-    TR := Rect(BR.Left, BR.Top + (BR.Bottom - BR.Top) div 3 + 2, BR.Right, BR.Top + 12);
+    TR.Top := TR.Bottom + 2 * DELTA;
+    TR.Bottom := TR.Top + h + DELTA;
     if Assigned(FDraw2) then FDraw2(Self, Index, Canvas.Font, s);
-    DrawText(b.Canvas.Handle, PChar(s), Length(s), TR, DT_LEFT or DT_END_ELLIPSIS or DT_NOCLIP);
+    DrawText(b.Canvas.Handle, PChar(s), Length(s), TR, FLAGS);
 
-    fX := BR.Left;
-    for i := 0 to (BR.Right - 2 - BR.Left) div 2 do
-     begin
-      Pixels[fX, BR.Top + (BR.Bottom - BR.Top) div 3 + 4 + TextHeight(s)] := clGray;
-      fX := fX + 2;
-     end;
+    DrawHorDottedLine(b.Canvas, BR.LEft, BR.Right, TR.Bottom + DELTA, clGray);
 
     s := FormatHint(FInfo2, Self.Colors[Index].value);
-    TR := Rect(BR.Left, BR.Top + 2*((BR.Bottom - BR.Top) div 3) + 2, BR.Right, BR.Top + 12);
+    TR.Top := TR.Bottom + 2 * DELTA;
+    TR.Bottom := TR.Top + h + DELTA;
     if Assigned(FDraw3) then FDraw3(Self, Index, Canvas.Font, s);
-    DrawText(b.Canvas.Handle, PChar(s), Length(s), TR, DT_LEFT or DT_END_ELLIPSIS or DT_NOCLIP);
+    DrawText(b.Canvas.Handle, PChar(s), Length(s), TR, FLAGS);
    end;
+
   Canvas.Draw(R.Left, R.Top, b);
  finally
   b.Free;
