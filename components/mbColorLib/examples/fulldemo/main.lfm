@@ -42,9 +42,9 @@ object Form1: TForm1
     Height = 331
     Top = 6
     Width = 399
-    ActivePage = TabSheet1
+    ActivePage = TabSheet8
     Anchors = [akTop, akLeft, akRight, akBottom]
-    TabIndex = 0
+    TabIndex = 8
     TabOrder = 0
     OnMouseMove = PageControl1MouseMove
     object TabSheet1: TTabSheet
@@ -56,7 +56,7 @@ object Form1: TForm1
         Height = 287
         Top = 8
         Width = 377
-        SelectedColor = 424966
+        SelectedColor = 422918
         HSPickerHintFormat = 'H: %h S: %s'#13'Hex: %hex'
         LPickerHintFormat = 'Luminance: %l'
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -218,7 +218,7 @@ object Form1: TForm1
           Left = 0
           Height = 234
           Top = 0
-          Width = 364
+          Width = 360
           Align = alTop
           Colors.Strings = (
             'clBlack'
@@ -605,7 +605,7 @@ object Form1: TForm1
         Height = 302
         Top = 2
         Width = 22
-        HintFormat = 'Value: %v'
+        HintFormat = 'Value: %v (selected)'
         Layout = lyVertical
         NewArrowStyle = True
         Anchors = [akTop, akRight, akBottom]
@@ -624,7 +624,7 @@ object Form1: TForm1
         Height = 291
         Top = 6
         Width = 381
-        HPickerHintFormat = 'Hue: %h'
+        HPickerHintFormat = 'Hue: %h (selected)'
         SLPickerHintFormat = 'S: %s L: %l'#13'Hex: %hex'
         Anchors = [akTop, akLeft, akRight, akBottom]
         TabOrder = 0
@@ -702,7 +702,7 @@ object Form1: TForm1
         Height = 25
         Top = 192
         Width = 343
-        HintFormat = 'Luminance: %l'
+        HintFormat = 'Luminance: %l (selected)'
         SelectionIndicator = siRect
         Anchors = [akLeft, akRight, akBottom]
         TabOrder = 2
@@ -715,7 +715,7 @@ object Form1: TForm1
         Height = 21
         Top = 160
         Width = 343
-        HintFormat = 'Value: %v'
+        HintFormat = 'Value: %v (selected)'
         ArrowPlacement = spBefore
         NewArrowStyle = True
         SelectionIndicator = siRect
@@ -731,7 +731,7 @@ object Form1: TForm1
         Height = 61
         Top = 231
         Width = 343
-        HintFormat = 'Hue: %h'
+        HintFormat = 'Hue: %h (selected)'
         Increment = 5
         ArrowPlacement = spBoth
         SelectionIndicator = siRect
@@ -745,7 +745,7 @@ object Form1: TForm1
         Height = 222
         Top = 70
         Width = 19
-        HintFormat = 'Saturation: %s'
+        HintFormat = 'Saturation: %s (selected)'
         Layout = lyVertical
         ArrowPlacement = spBefore
         NewArrowStyle = True
@@ -805,8 +805,8 @@ object Form1: TForm1
     end
     object TabSheet8: TTabSheet
       Caption = 'Other'
-      ClientHeight = 292
-      ClientWidth = 372
+      ClientHeight = 303
+      ClientWidth = 391
       ImageIndex = 7
       object HSColorPicker1: THSColorPicker
         Left = 6
@@ -837,7 +837,7 @@ object Form1: TForm1
         Height = 130
         Top = 164
         Width = 133
-        HintFormat = 'Hue: %h'
+        HintFormat = 'Hue: %h (selected)'
         TabOrder = 2
         OnMouseMove = HRingPicker1MouseMove
         OnChange = HRingPicker1Change
@@ -861,7 +861,7 @@ object Form1: TForm1
         Height = 267
         Top = 18
         Width = 22
-        HintFormat = 'Cyan: %c'
+        HintFormat = 'Cyan: %c (selected)'
         TabOrder = 0
         SelectedColor = clAqua
       end
@@ -870,7 +870,7 @@ object Form1: TForm1
         Height = 267
         Top = 18
         Width = 22
-        HintFormat = 'Magenta: %m'
+        HintFormat = 'Magenta: %m (selected)'
         ArrowPlacement = spBefore
         TabOrder = 1
         SelectedColor = clFuchsia
@@ -880,7 +880,7 @@ object Form1: TForm1
         Height = 267
         Top = 19
         Width = 31
-        HintFormat = 'Yellow: %y'
+        HintFormat = 'Yellow: %y (selected)'
         ArrowPlacement = spBoth
         TabOrder = 2
         SelectedColor = clYellow
@@ -890,7 +890,7 @@ object Form1: TForm1
         Height = 267
         Top = 18
         Width = 22
-        HintFormat = 'Black: %k'
+        HintFormat = 'Black: %k (selected)'
         NewArrowStyle = True
         TabOrder = 3
         Cyan = 0
@@ -902,7 +902,7 @@ object Form1: TForm1
         Height = 268
         Top = 18
         Width = 22
-        HintFormat = 'Red: %r'
+        HintFormat = 'Red: %r (selected)'
         ArrowPlacement = spBefore
         NewArrowStyle = True
         TabOrder = 4
@@ -913,7 +913,7 @@ object Form1: TForm1
         Height = 268
         Top = 18
         Width = 34
-        HintFormat = 'Green: %g'
+        HintFormat = 'Green: %g (selected)'
         ArrowPlacement = spBoth
         NewArrowStyle = True
         TabOrder = 5
@@ -924,7 +924,7 @@ object Form1: TForm1
         Height = 268
         Top = 18
         Width = 22
-        HintFormat = 'Blue: %b'
+        HintFormat = 'Blue: %b (selected)'
         SelectionIndicator = siRect
         TabOrder = 6
         SelectedColor = 16743034
@@ -937,7 +937,7 @@ object Form1: TForm1
         BevelInner = bvRaised
         BevelOuter = bvRaised
         BorderStyle = bsSingle
-        HintFormat = 'Black: %k'
+        HintFormat = 'Black: %k (selected)'
         ArrowPlacement = spBoth
         NewArrowStyle = True
         TabOrder = 7
@@ -953,7 +953,7 @@ object Form1: TForm1
         BevelInner = bvLowered
         BevelOuter = bvRaised
         BorderStyle = bsSingle
-        HintFormat = 'Magenta: %m'
+        HintFormat = 'Magenta: %m (selected)'
         Layout = lyHorizontal
         ArrowPlacement = spBoth
         NewArrowStyle = True
@@ -968,7 +968,7 @@ object Form1: TForm1
         BevelInner = bvRaised
         BevelOuter = bvLowered
         BorderStyle = bsSingle
-        HintFormat = 'Cyan: %c'
+        HintFormat = 'Cyan: %c (selected)'
         ArrowPlacement = spBoth
         NewArrowStyle = True
         TabOrder = 9
@@ -982,7 +982,7 @@ object Form1: TForm1
         BevelInner = bvLowered
         BevelOuter = bvLowered
         BorderStyle = bsSingle
-        HintFormat = 'Yellow: %y'
+        HintFormat = 'Yellow: %y (selected)'
         ArrowPlacement = spBoth
         NewArrowStyle = True
         TabOrder = 10

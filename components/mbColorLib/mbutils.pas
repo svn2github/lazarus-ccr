@@ -9,6 +9,7 @@ uses
 
 procedure Clamp(var AValue:Integer; AMin, AMax: Integer);
 function PointInCircle(p: TPoint; Size: integer): boolean;
+function PtInCircle(p, ctr: TPoint; Radius: Integer): Boolean;
 
 implementation
 
@@ -24,6 +25,11 @@ var
 begin
   r := size div 2;
   Result := (sqr(p.x - r) + sqr(p.y - r) <= sqr(r));
+end;
+
+function PtInCircle(p, ctr: TPoint; Radius: Integer): Boolean;
+begin
+  Result := sqr(p.x - ctr.x) + sqr(p.y - ctr.y) <= sqr(Radius);
 end;
 
 

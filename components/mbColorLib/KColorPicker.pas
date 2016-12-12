@@ -63,7 +63,7 @@ begin
   FChange := false;
   Layout := lyVertical;
   SetBlack(255);
-  HintFormat := 'Black: %value';
+  HintFormat := 'Black: %value (selected)';
   FManual := false;
   FChange := true;
 end;

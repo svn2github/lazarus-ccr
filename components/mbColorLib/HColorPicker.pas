@@ -58,7 +58,7 @@ begin
   FArrowPos := ArrowPosFromHue(0);
   FChange := false;
   SetHue(0);
-  HintFormat := 'Hue: %value';
+  HintFormat := 'Hue: %value (selected)';
   FManual := false;
   FChange := true;
 end;

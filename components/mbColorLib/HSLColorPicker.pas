@@ -128,13 +128,14 @@ begin
   FLCursor := crDefault;
   with FHSPicker do
   begin
-    SetInitialBounds(0, 6, 174, 134);
-    {
-    Height := 134;
-    Width := 174;
-    Top := 6;
+    {$IFDEF DELPHI}
     Left := 0;
-    }
+    Top := 6;
+    Width := 174;
+    Height := 134;
+    {$ELSE}
+    SetInitialBounds(0, 6, 174, 134);
+    {$ENDIF}
     Anchors := [akLeft, akTop, akRight, akBottom];
     Visible := true;
     OnChange := HSPickerChange;
@@ -145,12 +146,14 @@ begin
   with FLPicker do
   begin
     Layout := lyVertical;
-    SetInitialBounds(184, 0, 25, 146);
-    {
-    Height := 146;
-    Top := 0;
+    {$IFDEF DELPHI}
     Left := 184;
-    }
+    Top := 0;
+    Width := 25;
+    Height := 146;
+    {$ELSE}
+    SetInitialBounds(184, 0, 25, 146);
+    {$ENDIF}
     Anchors := [akRight, akTop, akBottom];
     Visible := true;
     OnChange := LPickerChange;

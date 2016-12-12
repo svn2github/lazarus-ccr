@@ -58,7 +58,7 @@ begin
   FArrowPos := ArrowPosFromSat(0);
   FChange := false;
   SetSat(255);
-  HintFormat := 'Saturation: %value';
+  HintFormat := 'Saturation: %value (selected)';
   FManual := false;
   FChange := true;
 end;

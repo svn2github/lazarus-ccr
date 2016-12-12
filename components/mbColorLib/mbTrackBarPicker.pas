@@ -84,12 +84,15 @@ type
     procedure CreateWnd; override;
     procedure Execute(tbaAction: integer); dynamic;
     function GetArrowPos: integer; dynamic;
-    function GetHintStr: string;
+    function GetHintText: string; override;
     function GetSelectedValue: integer; virtual; abstract;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseLeave; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    function MouseOnPicker(X, Y: Integer): Boolean; override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
+    function ShowHintWindow(APoint: TPoint; AText: String): Boolean; override;
+//    procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
     procedure WheelUp(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
     procedure WheelDown(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
     {$IFDEF DELPHI}
@@ -597,6 +600,12 @@ begin
   Result := pos;
 end;
 
+procedure TmbTrackBarPicker.MouseLeave;
+begin
+  inherited;
+  FHintShown := false;
+end;
+
 procedure TmbTrackBarPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
  R: TRect;
@@ -621,6 +630,11 @@ begin
     Invalidate;
   end;
   inherited;
+end;
+
+function TmbTrackBarPicker.MouseOnPicker(X, Y: Integer): Boolean;
+begin
+  Result := PtInRect(FPickRect, Point(X, Y));
 end;
 
 procedure TmbTrackBarPicker.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -742,7 +756,7 @@ begin
   if not FInherited and Assigned(OnKeyDown) then
     OnKeyDown(Self, Message.CharCode, Shift);
 end;
-
+                                  (*
 procedure TmbTrackBarPicker.CMHintShow(var Message: TCMHintShow);
 begin
   with TCMHintShow(Message) do
@@ -761,7 +775,7 @@ begin
         HintStr := GetHintStr;
       end;
   inherited;
-end;
+end;           *)
 
 procedure TmbTrackBarPicker.CMGotFocus(
   var Message: {$IFDEF FPC}TLMessage{$ELSE}TCMGotFocus{$ENDIF});
@@ -865,7 +879,7 @@ begin
   //handled in descendants
 end;
 
-function TmbTrackBarPicker.GetHintStr: string;
+function TmbTrackBarPicker.GetHintText: string;
 begin
   Result := ReplaceFlags(FHintFormat, ['%value', '%h', '%s', '%l', '%v', '%c',
   '%m', '%y', '%k', '%r', '%g', '%b'], GetSelectedValue);
@@ -905,6 +919,13 @@ begin
     FBorderStyle := Value;
     Invalidate;
   end;
+end;
+
+function TmbTrackbarPicker.ShowHintWindow(APoint: TPoint; AText: String): Boolean;
+begin
+  Result := inherited;
+  if Result then
+    FHintShown := true;
 end;
 
 end.

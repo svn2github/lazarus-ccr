@@ -63,7 +63,7 @@ begin
   FChange := false;
   Layout := lyVertical;
   SetCyan(255);
-  HintFormat := 'Cyan: %value';
+  HintFormat := 'Selected cyan value: %value';
   FManual := false;
   FChange := true;
 end;

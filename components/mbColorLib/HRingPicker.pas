@@ -45,6 +45,7 @@ type
     procedure CreateWnd; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    function MouseOnPicker(X, Y: Integer): Boolean; override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
       message CN_KEYDOWN;
@@ -87,6 +88,7 @@ begin
   FChange := true;
   FRadius := 40;
   FDoChange := false;
+  HintFormat := 'Hue: %h (selected)';
 end;
 
 procedure THRingPicker.CreateGradient;
@@ -334,6 +336,18 @@ begin
     FManual := true;
   end;
   SetFocus;
+end;
+
+function THRingPicker.MouseOnPicker(X, Y: Integer): Boolean;
+var
+  diameter, r: Integer;
+  P, ctr: TPoint;
+begin
+  diameter := Min(Width, Height);
+  r := diameter div 2;      // outer radius
+  P := Point(x, y);
+  ctr := Point(r, r);
+  Result := PtInCircle(P, ctr, r) and not PtInCircle(P, ctr, Radius);
 end;
 
 procedure THRingPicker.MouseMove(Shift: TShiftState; X, Y: Integer);

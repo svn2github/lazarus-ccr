@@ -21,6 +21,8 @@ uses
 type
   TMarkerStyle = (msCircle, msSquare, msCross, msCrossCirc);
 
+  { TmbCustomPicker }
+
   TmbCustomPicker = class(TmbBasicPicker)
   private
     FHintFormat: string;
@@ -34,6 +36,7 @@ type
     mx, my, mdx, mdy: integer;
     FOnChange: TNotifyEvent;
     procedure CreateGradient; override;
+    function GetHintText: String; override;
     function GetSelectedColor: TColor; virtual;
     procedure SetSelectedColor(C: TColor); virtual;
     procedure InternalDrawMarker(X, Y: Integer; C: TColor);
@@ -42,7 +45,7 @@ type
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure CreateWnd; override;
     procedure WebSafeChanged; dynamic;
-    procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
+//    procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
     {$IFDEF DELPHI}
     procedure CMGotFocus(var Message: TCMGotFocus); message CM_ENTER;
     procedure CMLostFocus(var Message: TCMLostFocus); message CM_EXIT;
@@ -208,6 +211,11 @@ begin
 {$ENDIF}
 end;
 
+function TmbCustomPicker.GetHintText: String;
+begin
+  Result := FormatHint(FHintFormat, GetColorUnderCursor)
+end;
+
 function TmbCustomPicker.GetSelectedColor: TColor;
 begin
   Result := FSelected;  // valid for most descendents
@@ -248,7 +256,7 @@ begin
     msCrossCirc: DrawSelCrossCirc(x, y, Canvas, c);
   end;
 end;
-
+             (*
 procedure TmbCustomPicker.CMHintShow(var Message: TCMHintShow);
 begin
   if GetColorUnderCursor <> clNone then
@@ -264,7 +272,7 @@ begin
           HintStr := FormatHint(FHintFormat, GetColorUnderCursor);;
         end;
   inherited;
-end;
+end;       *)
 
 procedure TmbCustomPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin

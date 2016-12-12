@@ -54,7 +54,7 @@ begin
   FArrowPos := ArrowPosFromVal(255);
   FChange := false;
   SetValue(255);
-  HintFormat := 'Value: %value';
+  HintFormat := 'Value: %value (selected)';
   FManual := false;
   FChange := true;
 end;

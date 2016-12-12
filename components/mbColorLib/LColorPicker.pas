@@ -57,7 +57,7 @@ begin
   FArrowPos := ArrowPosFromLum(MaxLum div 2);
   FChange := false;
   SetLuminance(MaxLum div 2);
-  HintFormat := 'Luminance: %value';
+  HintFormat := 'Luminance: %value (selected)';
   FManual := false;
   FChange := true;
 end;
