@@ -799,8 +799,8 @@ begin
 end;
 
 { IMPORTANT: If pickers are created at designtime the layout must be set before
-  defining the picker width and height because using a non-default layout will
-  flip the bounding rectangle !!! }
+  defining the picker width and height because changing the layout will flip the
+  bounding rectangle !!! }
 procedure TmbTrackBarPicker.SetLayout(Value: TTrackBarLayout);
 begin
   if FLayout <> Value then
