@@ -1,76 +1,70 @@
 object OfficeMoreColorsWin: TOfficeMoreColorsWin
   Left = 194
+  Height = 300
   Top = 112
   Width = 331
-  Height = 358
   ActiveControl = OKbtn
   BorderIcons = [biSystemMenu]
   Caption = 'More colors...'
-  Color = clBtnFace
-  Constraints.MinHeight = 358
+  ClientHeight = 300
+  ClientWidth = 331
+  Constraints.MinHeight = 300
   Constraints.MinWidth = 331
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Shell Dlg 2'
-  Font.Style = []
-  OldCreateOrder = False
-  Position = poMainFormCenter
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnResize = FormResize
-  DesignSize = (
-    315
-    319)
-  PixelsPerInch = 96
-  TextHeight = 13
+  Position = poMainFormCenter
+  LCLVersion = '1.7'
   object Label4: TLabel
-    Left = 268
-    Top = 218
-    Width = 21
+    Left = 264
     Height = 13
-    Anchors = [akRight, akBottom]
+    Top = 72
+    Width = 21
+    Anchors = [akTop, akRight]
     Caption = 'New'
-    Transparent = True
+    ParentColor = False
   end
   object Label5: TLabel
-    Left = 260
-    Top = 306
-    Width = 37
+    Left = 256
     Height = 13
-    Anchors = [akRight, akBottom]
+    Top = 160
+    Width = 37
+    Anchors = [akTop, akRight]
     Caption = 'Current'
-    Transparent = True
+    ParentColor = False
   end
   object Pages: TPageControl
     Left = 6
+    Height = 280
     Top = 6
     Width = 227
-    Height = 316
-    ActivePage = Standard
-    Anchors = [akLeft, akTop, akRight, akBottom]
+    ActivePage = Custom
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    TabIndex = 1
     TabOrder = 0
     OnChange = PagesChange
     object Standard: TTabSheet
       Caption = 'Standard'
-      DesignSize = (
-        219
-        288)
+      ClientHeight = 254
+      ClientWidth = 219
       object Label2: TLabel
         Left = 6
+        Height = 13
         Top = 7
         Width = 34
-        Height = 13
         Caption = '&Colors:'
         FocusControl = Hexa
-        Transparent = True
+        ParentColor = False
       end
       object Hexa: THexaColorPicker
-        Left = 6
+        Left = 0
+        Height = 227
         Top = 26
-        Width = 209
-        Height = 207
-        Anchors = [akLeft, akTop, akRight, akBottom]
+        Width = 216
+        Anchors = [akTop, akLeft, akRight, akBottom]
         HintFormat = 'RGB(%r, %g, %b)'#13'Hex: %h'
         IntensityText = 'Intensity'
         TabOrder = 0
@@ -81,88 +75,90 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
     end
     object Custom: TTabSheet
       Caption = 'Custom'
+      ClientHeight = 254
+      ClientWidth = 219
       ImageIndex = 1
-      DesignSize = (
-        219
-        288)
       object Label1: TLabel
         Left = 6
+        Height = 13
         Top = 7
         Width = 34
-        Height = 13
         Caption = '&Colors:'
         FocusControl = HSL
+        ParentColor = False
       end
       object Label3: TLabel
         Left = 6
-        Top = 178
-        Width = 60
         Height = 13
+        Top = 154
+        Width = 60
         Anchors = [akLeft, akBottom]
         Caption = 'Color mo&del:'
         FocusControl = ColorModel
+        ParentColor = False
       end
-      object LRed: TLabel
+      object LRedOrHue: TLabel
         Left = 6
-        Top = 204
-        Width = 23
         Height = 13
+        Top = 180
+        Width = 23
         Anchors = [akLeft, akBottom]
         Caption = '&Red:'
+        ParentColor = False
       end
-      object LGreen: TLabel
+      object LGreenOrSat: TLabel
         Left = 6
-        Top = 230
-        Width = 33
         Height = 13
+        Top = 206
+        Width = 33
         Anchors = [akLeft, akBottom]
         Caption = '&Green:'
+        ParentColor = False
       end
-      object LBlue: TLabel
+      object LBlueOrLum: TLabel
         Left = 6
-        Top = 256
-        Width = 24
         Height = 13
+        Top = 232
+        Width = 24
         Anchors = [akLeft, akBottom]
         Caption = '&Blue:'
+        ParentColor = False
       end
       object HSL: THSLColorPicker
         Left = 6
+        Height = 128
         Top = 20
-        Width = 211
-        Height = 152
+        Width = 203
         HSPickerHintFormat = 'H: %h S: %s'#13'Hex: %hex'
         LPickerHintFormat = 'Luminance: %l'
-        Anchors = [akLeft, akTop, akRight, akBottom]
+        Anchors = [akTop, akLeft, akRight, akBottom]
         TabOrder = 0
         OnChange = HSLChange
-        DesignSize = (
-          211
-          152)
       end
       object ColorModel: TComboBox
         Left = 74
-        Top = 172
-        Width = 92
         Height = 21
-        Style = csDropDownList
+        Top = 148
+        Width = 92
         Anchors = [akLeft, akBottom]
         ItemHeight = 13
         ItemIndex = 0
-        TabOrder = 1
-        Text = 'RGB'
-        OnChange = ColorModelChange
         Items.Strings = (
           'RGB'
-          'HSL')
+          'HSL'
+        )
+        OnChange = ColorModelChange
+        Style = csDropDownList
+        TabOrder = 1
+        Text = 'RGB'
       end
     end
   end
   object OKbtn: TButton
     Left = 242
+    Height = 23
     Top = 6
     Width = 73
-    Height = 23
     Anchors = [akTop, akRight]
     Caption = 'OK'
     ModalResult = 1
@@ -170,9 +166,9 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
   end
   object Cancelbtn: TButton
     Left = 242
+    Height = 23
     Top = 36
     Width = 73
-    Height = 23
     Anchors = [akTop, akRight]
     Cancel = True
     Caption = 'Cancel'
@@ -180,23 +176,23 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
     TabOrder = 2
   end
   object NewSwatch: TmbColorPreview
-    Left = 246
-    Top = 238
-    Width = 68
+    Left = 242
     Height = 32
     Hint = 'RGB(255, 255, 255)'
-    Anchors = [akRight, akBottom]
+    Top = 92
+    Width = 68
+    Anchors = [akTop, akRight]
     ShowHint = True
     ParentShowHint = False
     OnColorChange = NewSwatchColorChange
   end
   object OldSwatch: TmbColorPreview
-    Left = 246
-    Top = 269
-    Width = 68
+    Left = 242
     Height = 32
     Hint = 'RGB(255, 255, 255)'#13#10'Hex: FFFFFF'
-    Anchors = [akRight, akBottom]
+    Top = 123
+    Width = 68
+    Anchors = [akTop, akRight]
     ShowHint = True
     ParentShowHint = False
     OnColorChange = OldSwatchColorChange

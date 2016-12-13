@@ -15,9 +15,9 @@ uses
  Graphics, Math, Scanlines;
 
 var //set these variables to your needs, e.g. 360, 255, 255
- MaxHue: integer = 239;
- MaxSat: integer = 240;
- MaxLum: integer = 240;
+ MaxHue: integer = 359; //239;
+ MaxSat: integer = 100; //240;
+ MaxLum: integer = 100; //240;
 
 function HSLtoRGB (H, S, L: double): TColor;
 function HSLRangeToRGB (H, S, L: integer): TColor;

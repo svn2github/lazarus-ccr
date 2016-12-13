@@ -56,7 +56,7 @@ object Form1: TForm1
         Height = 287
         Top = 8
         Width = 377
-        SelectedColor = 422918
+        SelectedColor = 488198
         HSPickerHintFormat = 'H: %h S: %s'#13'Hex: %hex'
         LPickerHintFormat = 'Luminance: %l'
         Anchors = [akTop, akLeft, akRight, akBottom]

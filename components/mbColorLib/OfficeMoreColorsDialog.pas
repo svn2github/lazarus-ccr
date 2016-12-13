@@ -27,9 +27,9 @@ type
     Label2: TLabel;
     Label3: TLabel;
     ColorModel: TComboBox;
-    LRed: TLabel;
-    LGreen: TLabel;
-    LBlue: TLabel;
+    LRedOrHue: TLabel;
+    LGreenOrSat: TLabel;
+    LBlueOrLum: TLabel;
     Label4: TLabel;
     Label5: TLabel;
     OKbtn: TButton;
@@ -38,19 +38,26 @@ type
     OldSwatch: TmbColorPreview;
     procedure ColorModelChange(Sender: TObject);
     procedure HSLChange(Sender: TObject);
-    procedure ERedChange(Sender: TObject);
-    procedure EGreenChange(Sender: TObject);
-    procedure EBlueChange(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure ERedOrHueChange(Sender: TObject);
+    procedure EGreenOrSatChange(Sender: TObject);
+    procedure EBlueOrLumChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormResize(Sender: TObject);
+    function GetHint(c: TColor): string;
     procedure HexaChange(Sender: TObject);
     procedure NewSwatchColorChange(Sender: TObject);
     procedure OldSwatchColorChange(Sender: TObject);
-    function GetHint(c: TColor): string;
-    procedure SetAllToSel(c: TColor);
     procedure PagesChange(Sender: TObject);
-    procedure FormResize(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
+    procedure SetAllToSel(c: TColor);
+  private
+    {$IFDEF mbXP_Lib}
+    ERedOrHue, EGreenOrSat, EBlueOrLum: TmbXPSpinEdit;
+    grip: TmbXPSizeGrip;
+    {$ELSE}
+    ERedOrHue, EGreenOrSat, EBlueOrLum: TSpinEdit;
+    {$ENDIF}
+    FLockChange: Integer;
   protected
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
@@ -58,13 +65,6 @@ type
 
 var
   OfficeMoreColorsWin: TOfficeMoreColorsWin;
-  h, s, l: integer;
-  {$IFDEF mbXP_Lib}
-  ERed, EGreen, EBlue: TmbXPSpinEdit;
-  grip: TmbXPSizeGrip;
-  {$ELSE}
-  ERed, EGreen, EBlue: TSpinEdit;
-  {$ENDIF}
 
 implementation
 
@@ -89,32 +89,34 @@ begin
 end; 
 
 procedure TOfficeMoreColorsWin.ColorModelChange(Sender: TObject);
+var
+  h, s, l: Integer;
 begin
  case ColorModel.ItemIndex of
   0:
    begin
-    LRed.Caption := '&Red:';
-    LGreen.Caption := '&Green:';
-    LBlue.Caption := '&Blue:';
-    ERed.MaxValue := 255;
-    EGreen.MaxValue := 255;
-    EBlue.MaxValue := 255;
-    ERed.Value := GetRValue(NewSwatch.Color);
-    EGreen.Value := GetGValue(NewSwatch.Color);
-    EBlue.Value := GetBValue(NewSwatch.Color);
+    LRedOrHue.Caption := '&Red:';
+    LGreenOrSat.Caption := '&Green:';
+    LBlueOrLum.Caption := '&Blue:';
+    ERedOrHue.MaxValue := 255;
+    EGreenOrSat.MaxValue := 255;
+    EBlueOrLum.MaxValue := 255;
+    ERedOrHue.Value := GetRValue(NewSwatch.Color);
+    EGreenOrSat.Value := GetGValue(NewSwatch.Color);
+    EBlueOrLum.Value := GetBValue(NewSwatch.Color);
    end;
   1:
    begin
-    LRed.Caption := 'H&ue:';
-    LGreen.Caption := '&Sat:';
-    LBlue.Caption := '&Lum:';
-    ERed.MaxValue := 238;
-    EGreen.MaxValue := 240;
-    EBlue.MaxValue := 240;
+    LRedOrHue.Caption := 'H&ue:';
+    LGreenOrSat.Caption := '&Sat:';
+    LBlueOrLum.Caption := '&Lum:';
+    ERedOrHue.MaxValue := MaxHue; //238;
+    EGreenOrSat.MaxValue := MaxSat; //240;
+    EBlueOrLum.MaxValue := MaxLum; //240;
     RGBtoHSLRange(NewSwatch.Color, h, s, l);
-    ERed.Value := h;
-    EGreen.Value := s;
-    EBlue.Value := l;
+    ERedOrHue.Value := h;
+    EGreenOrSat.Value := s;
+    EBlueOrLum.Value := l;
    end;
  end;
 end;
@@ -125,70 +127,77 @@ begin
   case ColorModel.ItemIndex of
    0:
     begin
-      ERed.Value := HSL.RValue;
-      EGreen.Value := HSL.GValue;
-      EBlue.Value := HSL.BValue;
+      ERedOrHue.Value := HSL.RValue;
+      EGreenOrSat.Value := HSL.GValue;
+      EBlueOrLum.Value := HSL.BValue;
       NewSwatch.Color := HSL.SelectedColor;
     end;
    1:
     begin
-      ERed.Value := HSL.HValue;
-      EGreen.Value := HSL.SValue;
-      EBlue.Value := HSL.LValue;
+      ERedOrHue.Value := HSL.HValue;
+      EGreenOrSat.Value := HSL.SValue;
+      EBlueOrLum.Value := HSL.LValue;
       NewSwatch.Color := HSL.SelectedColor;
     end;
   end;
 end;
 
-procedure TOfficeMoreColorsWin.ERedChange(Sender: TObject);
+procedure TOfficeMoreColorsWin.ERedOrHueChange(Sender: TObject);
 begin
-  if (ERed.Text <> '') and
-     (ERed.Focused {$IFDEF DELPHI} or ERed.Button.Focused{$ENDIF})
+  inc(FLockChange);
+  if (ERedOrHue.Text <> '') and
+     (ERedOrHue.Focused {$IFDEF DELPHI} or ERedOrHue.Button.Focused{$ENDIF})
   then
     case ColorModel.ItemIndex of
       0: begin
-           HSL.RValue := ERed.Value;
-           NewSwatch.Color := RGB(ERed.Value, EGreen.Value, EBlue.Value);
+           HSL.RValue := ERedOrHue.Value;
+           NewSwatch.Color := RGB(ERedOrHue.Value, EGreenOrSat.Value, EBlueOrLum.Value);
          end;
       1: begin
-           HSL.HValue := ERed.Value;
-           NewSwatch.Color := HSLRangeToRGB(ERed.Value, EGreen.Value, EBlue.Value);
+           HSL.HValue := ERedOrHue.Value;
+           NewSwatch.Color := HSLRangeToRGB(ERedOrHue.Value, EGreenOrSat.Value, EBlueOrLum.Value);
          end;
     end;
+  dec(FLockChange);
 end;
 
-procedure TOfficeMoreColorsWin.EGreenChange(Sender: TObject);
+procedure TOfficeMoreColorsWin.EGreenOrSatChange(Sender: TObject);
 begin
-  if (EGreen.Text <> '') and
-     (EGreen.Focused {$IFDEF DELPHI}or EGreen.Button.Focused{$ENDIF})
+  inc(FLockChange);
+  NewSwatch.OnColorChange := nil;
+  if (EGreenOrSat.Text <> '') and
+     (EGreenOrSat.Focused {$IFDEF DELPHI}or EGreen.ButtonOrSat.Focused{$ENDIF})
   then
     case ColorModel.ItemIndex of
       0: begin
-           HSL.GValue := EGreen.Value;
-           NewSwatch.Color := RGB(ERed.Value, EGreen.Value, EBlue.Value);
+           HSL.GValue := EGreenOrSat.Value;
+           NewSwatch.Color := RGB(ERedOrHue.Value, EGreenOrSat.Value, EBlueOrLum.Value);
          end;
       1: begin
-           HSL.SValue := EGreen.Value;
-           NewSwatch.Color := HSLRangeToRGB(ERed.Value, EGreen.Value, EBlue.Value);
-          end;
+           HSL.SValue := EGreenOrSat.Value;
+           NewSwatch.Color := HSLRangeToRGB(ERedOrHue.Value, EGreenOrSat.Value, EBlueOrLum.Value);
+         end;
     end;
+  dec(FLockChange);
 end;
 
-procedure TOfficeMoreColorsWin.EBlueChange(Sender: TObject);
+procedure TOfficeMoreColorsWin.EBlueOrLumChange(Sender: TObject);
 begin
-  if (EBlue.Text <> '') and
-     (EBlue.Focused {$IFDEF DELPHI} or EBlue.Button.Focused{$ENDIF})
+  inc(FLockChange);
+  if (EBlueOrLum.Text <> '') and
+     (EBlueOrLum.Focused {$IFDEF DELPHI} or EBlueOrLum.Button.Focused{$ENDIF})
   then
     case ColorModel.ItemIndex of
       0: begin
-           HSL.BValue := EBlue.Value;
-           NewSwatch.Color := RGB(ERed.Value, EGreen.Value, EBlue.Value);
+           HSL.BValue := EBlueOrLum.Value;
+           NewSwatch.Color := RGB(ERedOrHue.Value, EGreenOrSat.Value, EBlueOrLum.Value);
          end;
       1: begin
-           HSL.LValue := EBlue.Value;
-           NewSwatch.Color := HSLRangeToRGB(ERed.Value, EGreen.Value, EBlue.Value);
+           HSL.LValue := EBlueOrLum.Value;
+           NewSwatch.Color := HSLRangeToRGB(ERedOrHue.Value, EGreenOrSat.Value, EBlueOrLum.Value);
          end;
     end;
+  dec(FLockChange);
 end;
 
 procedure TOfficeMoreColorsWin.FormKeyDown(Sender: TObject; var Key: Word;
@@ -202,17 +211,38 @@ end;
 
 procedure TOfficeMoreColorsWin.HexaChange(Sender: TObject);
 begin
- NewSwatch.Color := Hexa.SelectedColor;
+  NewSwatch.Color := Hexa.SelectedColor;
 end;
 
 function TOfficeMoreColorsWin.GetHint(c: TColor): string;
 begin
- Result := Format('RGB(%u, %u, %u)'#13'Hex: %s', [GetRValue(c), GetGValue(c), GetBValue(c), ColorToHex(c)]);
+  Result := Format('RGB(%u, %u, %u)'#13'Hex: %s', [
+    GetRValue(c), GetGValue(c), GetBValue(c), ColorToHex(c)
+  ]);
 end;
 
 procedure TOfficeMoreColorsWin.NewSwatchColorChange(Sender: TObject);
+var
+  r,g,b: Integer;
+  h,s,l: Integer;
 begin
- NewSwatch.Hint := GetHint(NewSwatch.Color);
+  NewSwatch.Hint := GetHint(NewSwatch.Color);
+  if (ERedOrHue = nil) or (EBlueOrLum = nil) or (EGreenOrSat = nil) or
+     (FLockChange <> 0)
+  then
+    exit;
+
+  if ColorModel.ItemIndex = 0 then  // RGB
+  begin
+    ERedOrHue.Value := GetRValue(NewSwatch.Color);
+    EGreenOrSat.Value := GetGValue(NewSwatch.Color);
+    EBlueOrLum.Value := GetBValue(NewSwatch.Color);
+  end else
+  begin
+    ERedOrHue.Value := GetHValue(NewSwatch.Color);
+    EGreenOrSat.Value := GetSValue(NewSwatch.Color);
+    EBlueOrLum.Value := GetLValue(NewSwatch.Color);
+  end;
 end;
 
 procedure TOfficeMoreColorsWin.OldSwatchColorChange(Sender: TObject);
@@ -222,6 +252,8 @@ begin
 end;
 
 procedure TOfficeMoreColorsWin.SetAllToSel(c: TColor);
+var
+  h, s, l: Integer;
 begin
  case Pages.ActivePageIndex of
   // Standard Page
@@ -233,16 +265,16 @@ begin
     case ColorModel.ItemIndex of
      0:
       begin
-       ERed.Value := GetRValue(c);
-       EGreen.Value := GetGValue(c);
-       EBlue.Value := GetBValue(c);
+       ERedOrHue.Value := GetRValue(c);
+       EGreenOrSat.Value := GetGValue(c);
+       EBlueOrLum.Value := GetBValue(c);
       end;
      1:
       begin
        RGBtoHSLRange(c, h, s, l);
-       ERed.Value := h;
-       EGreen.Value := s;
-       EBlue.Value := l;
+       ERedOrHue.Value := h;
+       EGreenOrSat.Value := s;
+       EBlueOrLum.Value := l;
       end;
     end;
    end;
@@ -252,79 +284,73 @@ end;
 
 procedure TOfficeMoreColorsWin.PagesChange(Sender: TObject);
 begin
- SetAllToSel(NewSwatch.Color);
+  SetAllToSel(NewSwatch.Color);
 end;
 
 procedure TOfficeMoreColorsWin.FormResize(Sender: TObject);
 begin
 {$IFDEF mbXP_Lib}
-grip.Left := ClientWidth - 15;
-grip.Top := ClientHeight - 15;
+  grip.Left := ClientWidth - 15;
+  grip.Top := ClientHeight - 15;
 {$ENDIF}
 end;
 
 procedure TOfficeMoreColorsWin.FormCreate(Sender: TObject);
 begin
  {$IFDEF mbXP_Lib}
- ERed := TmbXPSpinEdit.CreateParented(Custom.Handle);
- EGreen := TmbXPSpinEdit.CreateParented(Custom.Handle);
- EBlue := TmbXPSpinEdit.CreateParented(Custom.Handle);
- grip := TmbXPSizeGrip.CreateParented(Self.Handle);
+  ERedOrHue := TmbXPSpinEdit.CreateParented(Custom.Handle);
+  EGreenOrSat := TmbXPSpinEdit.CreateParented(Custom.Handle);
+  EBlueOrLum := TmbXPSpinEdit.CreateParented(Custom.Handle);
+  grip := TmbXPSizeGrip.CreateParented(Self.Handle);
  {$ELSE}
- ERed := TSpinEdit.CreateParented(Custom.Handle);
- EGreen := TSpinEdit.CreateParented(Custom.Handle);
- EBlue := TSpinEdit.CreateParented(Custom.Handle);
+  ERedOrHue := TSpinEdit.CreateParented(Custom.Handle);
+  EGreenOrSat := TSpinEdit.CreateParented(Custom.Handle);
+  EBlueOrLum := TSpinEdit.CreateParented(Custom.Handle);
  {$ENDIF}
- with ERed do
+  with ERedOrHue do
   begin
    Name := 'ERed';
    Width := 47;
    Height := 22;
    Left := 74;
-   Top := 198;
+   Top := LRedOrHue.Top - 4; //198;
    Anchors := [akLeft, akBottom];
    MaxValue := 255;
    MinValue := 0;
    Value := 0;
-   { to do
-   OnChange := ERedChange;
-   }
+   OnChange := @ERedOrHueChange;
   end;
- with EGreen do
+  with EGreenOrSat do
   begin
    Name := 'EGreen';
    Width := 47;
    Height := 22;
    Left := 74;
-   Top := 224;
+   Top := LGreenOrSat.Top - 3; //224;
    Anchors := [akLeft, akBottom];
    MaxValue := 255;
    MinValue := 0;
    Value := 0;
-   { to do
-   OnChange := EGreenChange;
-   }
+   OnChange := @EGreenOrSatChange;
   end;
- with EBlue do
+  with EBlueOrLum do
   begin
    Name := 'EBlue';
    Width := 47;
    Height := 22;
    Left := 74;
-   Top := 251;
+   Top := LBlueOrLum.Top - 4; //251;
    Anchors := [akLeft, akBottom];
    MaxValue := 255;
    MinValue := 0;
    Value := 0;
-   { to do
-   OnChange := EBlueChange;
-   }
+   OnChange := @EBlueOrLumChange;
   end;
- Custom.InsertControl(ERed);
- Custom.InsertControl(EGreen);
- Custom.InsertControl(EBlue);
+  Custom.InsertControl(ERedOrHue);
+  Custom.InsertControl(EGreenOrSat);
+  Custom.InsertControl(EBlueOrLum);
  {$IFDEF mbXP_Lib}
- with grip do
+  with grip do
   begin
    Name := 'grip';
    Width := 15;
