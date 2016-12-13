@@ -45,12 +45,12 @@ type
     procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
     {$ELSE}
     procedure CMParentColorChanged(var Message: TLMessage); message CM_PARENTCOLORCHANGED;
-    procedure WMEraseBkgnd(var Message: TLMEraseBkgnd); message LM_ERASEBKGND;
+//    procedure WMEraseBkgnd(var Message: TLMEraseBkgnd); message LM_ERASEBKGND;
     {$ENDIF}
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    function GetDefaultColor(const DefaultColorType: TDefaultColorType): TColor; override;
+//    function GetDefaultColor(const DefaultColorType: TDefaultColorType): TColor; override;
   published
     property ParentColor default true;
   end;
@@ -95,11 +95,11 @@ procedure TmbBasicPicker.CreateGradient;
 begin
   // to be implemented by descendants
 end;
-
+                                     {
 function TmbBasicPicker.GetDefaultColor(const DefaultColorType: TDefaultColorType): TColor;
 begin
   result := inherited GetDefaultColor(DefaultColorType);
-end;
+end;                                  }
 
 function TmbBasicPicker.GetGradientColor(AValue: Integer): TColor;
 begin
@@ -170,13 +170,19 @@ end;
 
 procedure TmbBasicPicker.PaintParentBack(ABitmap: TBitmap);
 begin
+  ABitmap.Width := Width;
+  ABitmap.Height := Height;
   {$IFNDEF DELPHI}
-  if Color = clDefault then
-    ABitmap.Canvas.Brush.Color := GetDefaultColor(dctBrush)
-  else
+  if Color = clDefault then begin
+    ABitmap.Transparent := true;
+    ABitmap.TransparentColor := clForm;
+    ABitmap.Canvas.Brush.Color := clForm; //GetDefaultColor(dctBrush)
+  end else
   {$ENDIF}
     ABitmap.Canvas.Brush.Color := Color;
   ABitmap.Canvas.FillRect(ABitmap.Canvas.ClipRect);
+  Canvas.Draw(0, 0, ABitmap);
+
   {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
   if ParentBackground then
    with ThemeServices do
@@ -197,7 +203,11 @@ var
 begin
   Offscreen := TBitmap.Create;
   try
-    Offscreen.PixelFormat := pf32bit;
+  //  Offscreen.PixelFormat := pf32bit;
+    if Color = clDefault then begin
+      Offscreen.Transparent := true;
+      Offscreen.TransparentColor := GetDefaultColor(dctBrush);
+    end;
     Offscreen.Width := Width;
     Offscreen.Height := Height;
     PaintParentBack(Offscreen);
@@ -244,13 +254,13 @@ begin
 
   Result := true;
 end;
-
+                                 (*  !!!!!!!!!!!!!!!!!
 procedure TmbBasicPicker.WMEraseBkgnd(
   var Message: {$IFDEF DELPHI}TWMEraseBkgnd{$ELSE}TLMEraseBkgnd{$ENDIF} );
 begin
   inherited;
 //  Message.Result := 1;
-end;
+end;                               *)
 
 end.
 

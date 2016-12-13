@@ -295,24 +295,28 @@ var
   XOffs, YOffs, Count: Integer;
   dColor: Single;
   OffScreen: TBitmap;
-  {$IFDEF DELPHI_7_UP}
+  {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
   MemDC: HDC;
   OldBMP: HBITMAP;
-  {$ENDIF}
+  {$ENDIF} {$ENDIF}
 begin
   OffScreen := TBitmap.Create;
   try
-    OffScreen.PixelFormat := pf32bit;
+ //   OffScreen.PixelFormat := pf32bit;
     OffScreen.Width := Width;
     OffScreen.Height := FColorCombRect.Bottom - FColorCombRect.Top + FBWCombRect.Bottom - FBWCombRect.Top;
     //Parent background
     {$IFDEF FPC}
     if Color = clDefault then
+    begin
+      Offscreen.Transparent := true;
+      Offscreen.TransparentColor := clForm;
       Offscreen.Canvas.Brush.Color := clForm
-    else
+    end else
     {$ENDIF}
       OffScreen.Canvas.Brush.Color := Color;
     OffScreen.Canvas.FillRect(OffScreen.Canvas.ClipRect);
+
     {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
     if ParentBackground then
       with ThemeServices do
@@ -325,6 +329,7 @@ begin
           if MemDC <> 0 then DeleteDC(MemDC);
        end;
     {$ENDIF}{$ENDIF}
+
     with OffScreen.Canvas do
     begin
       Pen.Style := psClear;
@@ -454,7 +459,7 @@ end;
 
 procedure THexaColorPicker.Paint;
 begin
-  PaintParentBack;
+  PaintParentBack; //(Canvas);
   if FColorCombs = nil then
     CalculateCombLayout;
   DrawCombControls;

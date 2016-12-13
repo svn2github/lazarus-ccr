@@ -348,7 +348,7 @@ begin
     if Selected then
       Brush.Color := clHighlight
     else
-      Brush.Color := Color; //clBtnFace;
+      Brush.Color := Color;
     FillRect(R);
     MoveTo(R.Left, R.Bottom - 1);
     LineTo(R.Right, R.Bottom - 1);
@@ -427,13 +427,15 @@ begin
     Font.Style := [fsBold];
     if Selected then
     begin
-      Brush.Color := clHighlightText;
+      //Brush.Color := clHighlightText;
       Pen.Color := clHighlightText;
+      Font.Color := clHighlightText;
     end
     else
     begin
-      Brush.Color := clWindowText;
+      //Brush.Color := clWindowText;
       Pen.Color := clWindowText;
+      Font.Color := clWindowText;
     end;
     TR := Rect(R.Left + 48, R.Top + (48 - TextHeight(itemText)) div 2, R.Right - 15, R.Bottom);
     if Assigned(FDraw) then FDraw(Self, Index, Canvas.Font, itemText, Selected);

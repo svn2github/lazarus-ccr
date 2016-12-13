@@ -56,7 +56,6 @@ type
     FBevelOuter: TBevelCut;
     FBevelWidth: TBevelWidth;
     FBorderStyle: TBorderStyle;
-
     procedure SetBevelInner(Value: TBevelCut);
     procedure SetBevelOuter(Value: TBevelCut);
     procedure SetBevelWidth(Value: TBevelWidth);
@@ -77,8 +76,10 @@ type
     FPickRect: TRect;
     FLayout: TTrackBarLayout;
     FLimit: integer;
+    FBack: TBitmap;
     procedure CreateGradient; override;
     procedure Paint; override;
+//    procedure PaintParentBack;
     procedure DrawFrames; dynamic;
     procedure Resize; override;
     procedure CreateWnd; override;
@@ -191,7 +192,7 @@ const
 constructor TmbTrackBarPicker.Create(AOwner: TComponent);
 begin
   inherited;
-  ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
+  //ControlStyle := ControlStyle - [csAcceptsControls]; // + [csOpaque];  // !!!!!!!!
   DoubleBuffered := true;
   {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
   ParentBackground := true;
@@ -200,10 +201,14 @@ begin
   Height := 22;
   TabStop := true;
   ParentShowHint := true;
+
+  FBack := TBitmap.Create;
+
   FGradientWidth := 256;
   FGradientHeight := 12;
   FGradientBmp := TBitmap.Create;
   FGradientBmp.PixelFormat := pf32bit;
+
   mx := 0;
   my := 0;
   FIncrement := 1;
@@ -232,6 +237,7 @@ end;
 destructor TmbTrackbarPicker.Destroy;
 begin
   FGradientBmp.Free;
+  FBack.Free;
   inherited;
 end;
 
@@ -385,7 +391,7 @@ end;
 procedure TmbTrackBarPicker.Paint;
 begin
   CalcPickRect;
-  PaintParentBack;
+  PaintParentBack(Canvas);
   FArrowPos := GetArrowPos;
   Execute(TBA_Paint);
   if FBorderStyle <> bsNone then

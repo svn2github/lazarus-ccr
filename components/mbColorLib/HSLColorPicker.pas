@@ -52,7 +52,7 @@ type
     procedure CreateWnd; override;
     procedure Resize; override;
     procedure Paint; override;
-    procedure PaintParentBack; override;
+//    procedure PaintParentBack; override;
     procedure WMSetFocus(var Message: {$IFDEF FPC}TLMSetFocus{$ELSE}TWMSetFocus{$ENDIF});
       message {$IFDEF FPC}LM_SETFOCUS{$ELSE}WM_SETFOCUS{$ENDIF};
     procedure DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
@@ -109,8 +109,8 @@ uses
 constructor THSLColorPicker.Create(AOwner: TComponent);
 begin
   inherited;
-  ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
-  DoubleBuffered := true;
+//  ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
+  //DoubleBuffered := true;
   PBack := TBitmap.Create;
   PBack.PixelFormat := pf32bit;
   {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
@@ -323,7 +323,7 @@ function THSLColorPicker.GetManual:boolean;
 begin
   Result := FHSPicker.Manual or FLPicker.Manual;
 end;
-
+                                         (*
 procedure THSLColorPicker.PaintParentBack;
 begin
   if PBack = nil then
@@ -333,13 +333,20 @@ begin
   end;
   PBack.Width := Width;
   PBack.Height := Height;
-  PaintParentBack(PBack);
+  if Color = clDefault then begin
+    PBack.Transparent := true;
+    PBack.TransparentColor := clForm;
+    PBack.Canvas.Brush.Color := clForm;
+  end else
+    PBack.Canvas.Brush.Color := Color;
+  PBack.Canvas.FillRect(0, 0, Width, Height);
+//  PaintParentBack(PBack);
 end;
-
+                                           *)
 procedure THSLColorPicker.Resize;
 begin
   inherited;
-  PaintParentBack;
+ // PaintParentBack(Canvas);
 
   if (FHSPicker = nil) or (FLPicker = nil) then
     exit;
@@ -354,12 +361,12 @@ end;
 procedure THSLColorPicker.CreateWnd;
 begin
   inherited;
-  PaintParentBack;
+ // PaintParentBack;
 end;
 
 procedure THSLColorPicker.Paint;
 begin
-  PaintParentBack;
+  PaintParentBack(Canvas);
   Canvas.Draw(0, 0, PBack);
 end;
 

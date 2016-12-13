@@ -52,7 +52,7 @@ type
     procedure DoChange;
     procedure DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure Paint; override;
-    procedure PaintParentBack; override;
+//    procedure PaintParentBack; override;
     procedure Resize; override;
     procedure WMSetFocus(var Message: {$IFDEF FPC}TLMSetFocus{$ELSE}TWMSetFocus{$ENDIF});
       message {$IFDEF FPC}LM_SETFOCUS{$ELSE}WM_SETFOCUS{$ENDIF};
@@ -329,7 +329,7 @@ end;
 procedure TSLHColorPicker.Resize;
 begin
   inherited;
-  PaintParentBack;
+//  PaintParentBack;
 
   if (FSLPicker = nil) or (FHPicker = nil) then
     exit;
@@ -340,7 +340,7 @@ begin
   FHPicker.Left := Width - FHPicker.Width;
   FHPicker.Height := Height;
 end;
-
+                          {
 procedure TSLHColorPicker.PaintParentBack;
 begin
   if PBack = nil then
@@ -351,12 +351,12 @@ begin
   PBack.Width := Width;
   PBack.Height := Height;
   PaintParentBack(PBack);
-end;
+end;                       }
 
 procedure TSLHColorPicker.Paint;
 begin
-  PaintParentBack;
-  Canvas.Draw(0, 0, PBack);
+  PaintParentBack(Canvas);
+//  Canvas.Draw(0, 0, PBack);
 end;
 
 procedure TSLHColorPicker.CreateWnd;
