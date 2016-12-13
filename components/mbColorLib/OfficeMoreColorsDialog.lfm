@@ -1,7 +1,7 @@
 object OfficeMoreColorsWin: TOfficeMoreColorsWin
-  Left = 194
+  Left = 265
   Height = 300
-  Top = 112
+  Top = 115
   Width = 331
   ActiveControl = OKbtn
   BorderIcons = [biSystemMenu]
@@ -90,35 +90,35 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
       object Label3: TLabel
         Left = 6
         Height = 13
-        Top = 154
-        Width = 60
+        Top = 150
+        Width = 32
         Anchors = [akLeft, akBottom]
-        Caption = 'Color mo&del:'
+        Caption = 'Mo&del:'
         FocusControl = ColorModel
         ParentColor = False
       end
-      object LRedOrHue: TLabel
+      object LRed: TLabel
         Left = 6
         Height = 13
-        Top = 180
+        Top = 176
         Width = 23
         Anchors = [akLeft, akBottom]
         Caption = '&Red:'
         ParentColor = False
       end
-      object LGreenOrSat: TLabel
+      object LGreen: TLabel
         Left = 6
         Height = 13
-        Top = 206
+        Top = 202
         Width = 33
         Anchors = [akLeft, akBottom]
         Caption = '&Green:'
         ParentColor = False
       end
-      object LBlueOrLum: TLabel
+      object LBlue: TLabel
         Left = 6
         Height = 13
-        Top = 232
+        Top = 228
         Width = 24
         Anchors = [akLeft, akBottom]
         Caption = '&Blue:'
@@ -126,9 +126,9 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
       end
       object HSL: THSLColorPicker
         Left = 6
-        Height = 128
+        Height = 124
         Top = 20
-        Width = 203
+        Width = 210
         HSPickerHintFormat = 'H: %h S: %s'#13'Hex: %hex'
         LPickerHintFormat = 'Luminance: %l'
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -136,10 +136,10 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
         OnChange = HSLChange
       end
       object ColorModel: TComboBox
-        Left = 74
+        Left = 48
         Height = 21
-        Top = 148
-        Width = 92
+        Top = 146
+        Width = 147
         Anchors = [akLeft, akBottom]
         ItemHeight = 13
         ItemIndex = 0
@@ -151,6 +151,44 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
         Style = csDropDownList
         TabOrder = 1
         Text = 'RGB'
+      end
+      object SLH: TSLHColorPicker
+        Left = 6
+        Height = 80
+        Top = 20
+        Width = 115
+        HPickerHintFormat = 'Hue: %h'
+        SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
+        ParentShowHint = False
+        TabOrder = 2
+        OnChange = SLHChange
+      end
+      object LHue: TLabel
+        Left = 120
+        Height = 13
+        Top = 176
+        Width = 23
+        Anchors = [akLeft, akBottom]
+        Caption = '&Hue:'
+        ParentColor = False
+      end
+      object LSat: TLabel
+        Left = 120
+        Height = 13
+        Top = 202
+        Width = 20
+        Anchors = [akLeft, akBottom]
+        Caption = '&Sat:'
+        ParentColor = False
+      end
+      object LLum: TLabel
+        Left = 120
+        Height = 13
+        Top = 228
+        Width = 23
+        Anchors = [akLeft, akBottom]
+        Caption = 'L&um:'
+        ParentColor = False
       end
     end
   end

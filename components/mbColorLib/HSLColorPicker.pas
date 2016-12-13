@@ -33,6 +33,8 @@ type
     FHSCursor, FLCursor: TCursor;
     PBack: TBitmap;
     function GetManual: boolean;
+    function GetShowHint: Boolean;
+    procedure SetShowHint(AValue: Boolean);
     procedure SetLumIncrement(i: integer);
     procedure SelectColor(c: TColor);
     procedure SetH(v: integer);
@@ -83,7 +85,7 @@ type
     property HSPickerCursor: TCursor read FHSCursor write SetHSCursor default crDefault;
     property LPickerCursor: TCursor read FLCursor write SetLCursor default crDefault;
     property TabStop default true;
-    property ShowHint;
+    property ShowHint read GetShowHint write SetShowHint;
     property ParentShowHint;
     property Anchors;
     property Align;
@@ -323,6 +325,19 @@ function THSLColorPicker.GetManual:boolean;
 begin
   Result := FHSPicker.Manual or FLPicker.Manual;
 end;
+
+function THSLColorPicker.GetShowHint: Boolean;
+begin
+  Result := inherited ShowHint;
+end;
+
+procedure THSLColorPicker.SetShowHint(AValue: Boolean);
+begin
+  inherited ShowHint := AValue;
+  FHSPicker.ShowHint := AValue;
+  FLPicker.ShowHint := AValue;
+end;
+
                                          (*
 procedure THSLColorPicker.PaintParentBack;
 begin

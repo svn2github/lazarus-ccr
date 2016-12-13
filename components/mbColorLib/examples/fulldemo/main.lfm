@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 255
+  Left = 447
   Height = 344
-  Top = 107
+  Top = 197
   Width = 543
   Caption = 'mbColor Lib v2.0.1 Demo'
   ClientHeight = 344
@@ -42,9 +42,9 @@ object Form1: TForm1
     Height = 331
     Top = 6
     Width = 399
-    ActivePage = TabSheet8
+    ActivePage = TabSheet6
     Anchors = [akTop, akLeft, akRight, akBottom]
-    TabIndex = 8
+    TabIndex = 5
     TabOrder = 0
     OnMouseMove = PageControl1MouseMove
     object TabSheet1: TTabSheet
