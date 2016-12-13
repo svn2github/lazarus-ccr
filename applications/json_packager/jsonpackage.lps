@@ -10,7 +10,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="3"/>
         <CursorPos X="15" Y="19"/>
-        <UsageCount Value="129"/>
+        <UsageCount Value="130"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -20,13 +20,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="883"/>
-        <CursorPos Y="888"/>
-        <UsageCount Value="129"/>
+        <TopLine Value="233"/>
+        <CursorPos X="38" Y="255"/>
+        <UsageCount Value="130"/>
         <Bookmarks Count="3">
-          <Item0 Y="819" ID="1"/>
-          <Item1 X="44" Y="765"/>
-          <Item2 Y="631" ID="2"/>
+          <Item0 Y="820" ID="1"/>
+          <Item1 X="44" Y="766"/>
+          <Item2 Y="632" ID="2"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -34,7 +34,7 @@
       <Unit2>
         <Filename Value="ugenericcollection.pas"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="129"/>
+        <UsageCount Value="130"/>
       </Unit2>
       <Unit3>
         <Filename Value="C:\NewPascal\projects\MDSUM\CryptINI\lockini.pas"/>
@@ -42,7 +42,7 @@
         <UnitName Value="LockIni"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="40" Y="9"/>
-        <UsageCount Value="47"/>
+        <UsageCount Value="48"/>
       </Unit3>
       <Unit4>
         <Filename Value="D:\Lazarusprojects\golfml\egacalculator\source\umainform.pas"/>

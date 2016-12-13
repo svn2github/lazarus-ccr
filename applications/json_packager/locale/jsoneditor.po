@@ -211,7 +211,13 @@ msgstr ""
 msgid "lpk FileName"
 msgstr ""
 
+#: umain.rsmypackagelpk
+msgctxt "umain.rsmypackagelpk"
+msgid "mypackagename.lpk"
+msgstr ""
+
 #: umain.rsmypackagenam
+msgctxt "umain.rsmypackagenam"
 msgid "mypackagename.zip"
 msgstr ""
 

@@ -252,6 +252,7 @@ resourcestring
   rsUpdate = 'Update';
   rsFileMayBeUns = 'JSON may be unsaved. Are you sure you want to quit?';
   rsMypackagenam = 'mypackagename.zip';
+  rsMypackagelpk = 'mypackagename.lpk';
   rsHttpWwwUpdat = 'http://www.updatesite.com/myupdate/mypackagename.zip';
   rsLpkFileName = 'lpk FileName';
   rsVersion0000 = 'Version (n.n.n.n)';
@@ -496,7 +497,7 @@ begin
      ArrayEdtPackageFileName[iNumLpkFilesVisible]:=TEdit.Create(Nil);
      With ArrayEdtPackageFileName[iNumLpkFilesVisible] do
      begin
-       Text:=rsMypackagenam;
+       Text:=rsMypackagelpk;
        SetBounds(64,8,256,23);
        Visible:=True;
        Tag:=Pred(iNumLpkFilesVisible);

@@ -225,7 +225,15 @@ msgstr "Language changed to \"%s\"."
 msgid "lpk FileName"
 msgstr "lpk FileName"
 
+#: umain.rsmypackagelpk
+#, fuzzy
+#| msgid "mypackagename.zip"
+msgctxt "umain.rsmypackagelpk"
+msgid "mypackagename.lpk"
+msgstr "mypackagename.zip"
+
 #: umain.rsmypackagenam
+msgctxt "umain.rsmypackagenam"
 msgid "mypackagename.zip"
 msgstr "mypackagename.zip"
 
