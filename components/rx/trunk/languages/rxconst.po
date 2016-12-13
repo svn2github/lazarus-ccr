@@ -241,6 +241,22 @@ msgstr ""
 msgid "Transparent"
 msgstr ""
 
+#: rxconst.svariableisnotboolean
+msgid "Variable %s is not boolean"
+msgstr ""
+
+#: rxconst.svariableisnotdt
+msgid "Variable %s is not date/time"
+msgstr ""
+
+#: rxconst.svariableisnotfloat
+msgid "Variable %s is not float"
+msgstr ""
+
+#: rxconst.svariableisnotinteger
+msgid "Variable %s is not integer"
+msgstr ""
+
 #: rxconst.svariableisnotstring
 msgid "Variable %s is not string"
 msgstr ""

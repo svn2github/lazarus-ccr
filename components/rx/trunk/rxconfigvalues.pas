@@ -339,7 +339,7 @@ begin
   if FDataType = cvtBoolean then
     Result:=FValue
   else
-    raise Exception.CreateFmt('Variable %s is not boolean', [FName]);
+    raise Exception.CreateFmt(sVariableIsNotBoolean, [FName]);
 end;
 
 function TConfigValue.GetAsDateTime: TDateTime;
@@ -347,7 +347,7 @@ begin
   if FDataType = cvtDateTime then
     Result:=FValue
   else
-    raise Exception.CreateFmt('Variable %s is not date/time', [FName]);
+    raise Exception.CreateFmt(sVariableIsNotDT, [FName]);
 end;
 
 function TConfigValue.GetAsFloat: Double;
@@ -355,7 +355,7 @@ begin
   if FDataType = cvtFloat then
     Result:=FValue
   else
-    raise Exception.CreateFmt('Variable %s is not float', [FName]);
+    raise Exception.CreateFmt(sVariableIsNotFloat, [FName]);
 end;
 
 function TConfigValue.GetAsInteger: integer;
@@ -363,7 +363,7 @@ begin
   if FDataType = cvtInteger then
     Result:=FValue
   else
-    raise Exception.CreateFmt('Variable %s is not integer', [FName]);
+    raise Exception.CreateFmt(sVariableIsNotInteger, [FName]);
 end;
 
 function TConfigValue.GetAsString: string;
@@ -385,7 +385,7 @@ begin
     end
   end
   else
-    raise Exception.CreateFmt('Variable %s is not boolean', [FName]);
+    raise Exception.CreateFmt(sVariableIsNotBoolean, [FName]);
 end;
 
 procedure TConfigValue.SetAsDateTime(const AValue: TDateTime);
@@ -399,7 +399,7 @@ begin
     end
   end
   else
-    raise Exception.CreateFmt('Variable %s is not date/time', [FName]);
+    raise Exception.CreateFmt(sVariableIsNotDT, [FName]);
 end;
 
 procedure TConfigValue.SetAsFloat(const AValue: Double);
@@ -413,7 +413,7 @@ begin
     end
   end
   else
-    raise Exception.CreateFmt('Variable %s is not float', [FName]);
+    raise Exception.CreateFmt(sVariableIsNotFloat, [FName]);
 end;
 
 procedure TConfigValue.SetAsInteger(const AValue: integer);
@@ -427,7 +427,7 @@ begin
     end
   end
   else
-    raise Exception.CreateFmt('Variable %s is not integer', [FName]);
+    raise Exception.CreateFmt(sVariableIsNotInteger, [FName]);
 end;
 
 procedure TConfigValue.SetAsString(const AValue: string);

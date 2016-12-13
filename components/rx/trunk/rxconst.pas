@@ -122,6 +122,10 @@ resourcestring
 
   { TConfigValues }
   sVariableIsNotString  = 'Variable %s is not string';
+  sVariableIsNotInteger = 'Variable %s is not integer';
+  sVariableIsNotFloat   = 'Variable %s is not float';
+  sVariableIsNotDT      = 'Variable %s is not date/time';
+  sVariableIsNotBoolean = 'Variable %s is not boolean';
 
 implementation
 

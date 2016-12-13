@@ -1017,7 +1017,7 @@ begin
   CreateFontDirList;
   if gTTFontCache.Count = 0 then
   begin
-    gTTFontCache.BuildFontFacheIgnoresErrors:=true;
+    gTTFontCache.BuildFontCacheIgnoresErrors:=true;
     CreateFontDirList;
     gTTFontCache.SearchPath.Assign(FontDirList);
     FreeAndNil(FontDirList);
