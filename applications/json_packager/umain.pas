@@ -588,6 +588,7 @@ begin
        Tag:=Pred(iNumLpkFilesVisible);
        Parent:=ArrayGrpBox[iNumLpkFilesVisible];
      end;
+     AutoAdjustLayout(lapAutoAdjustForDPI, 96, frmMain.PixelsPerInch, 0, 0, False);
      // This sets the subcontrols up correctly
      Parent:=frmMain;
    end;
@@ -889,7 +890,7 @@ begin
   sJSONFilePath := '';
   sZipDirectory := '';
   ResetPackageFileControlsToOne;
-  ArrayEdtPackageFileName[0].Text:=rsMypackagenam;
+  ArrayEdtPackageFileName[0].Text:=rsMypackagelpk;
   ArraySpinEditV1[0].Value:=0;
   ArraySpinEditV2[0].Value:=0;
   ArraySpinEditV3[0].Value:=0;
