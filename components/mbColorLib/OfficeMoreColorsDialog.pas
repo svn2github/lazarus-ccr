@@ -14,17 +14,31 @@ uses
   Forms, StdCtrls, ExtCtrls, ComCtrls,
   HexaColorPicker, HSLColorPicker, RGBHSLUtils,
   mbColorPreview, {$IFDEF mbXP_Lib}mbXPSpinEdit, mbXPSizeGrip,{$ELSE} Spin,{$ENDIF}
-  HTMLColors, SLHColorPicker;
+  HTMLColors, SLHColorPicker, HSLRingPicker, RColorPicker, GColorPicker,
+  BColorPicker;
 
 type
 
   { TOfficeMoreColorsWin }
 
   TOfficeMoreColorsWin = class(TForm)
+    BTrackbar: TBColorPicker;
+    Bevel1: TBevel;
+    GTrackbar: TGColorPicker;
+    HSLRing: THSLRingPicker;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
     LLum: TLabel;
     LSat: TLabel;
     LHue: TLabel;
+    nbRGB: TPage;
+    PickerNotebook: TNotebook;
+    nbHSL: TPage;
+    nbHSLRing: TPage;
+    nbSLH: TPage;
     Pages: TPageControl;
+    RTrackbar: TRColorPicker;
     SLH: TSLHColorPicker;
     Standard: TTabSheet;
     Custom: TTabSheet;
@@ -33,7 +47,7 @@ type
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
-    ColorModel: TComboBox;
+    cbColorDisplay: TComboBox;
     LRed: TLabel;
     LGreen: TLabel;
     LBlue: TLabel;
@@ -43,7 +57,7 @@ type
     Cancelbtn: TButton;
     NewSwatch: TmbColorPreview;
     OldSwatch: TmbColorPreview;
-    procedure ColorModelChange(Sender: TObject);
+    procedure cbColorDisplayChange(Sender: TObject);
     procedure HSLChange(Sender: TObject);
     procedure ERedChange(Sender: TObject);
     procedure EGreenChange(Sender: TObject);
@@ -56,10 +70,11 @@ type
     procedure FormResize(Sender: TObject);
     function GetHint(c: TColor): string;
     procedure HexaChange(Sender: TObject);
+    procedure HSLRingChange(Sender: TObject);
     procedure NewSwatchColorChange(Sender: TObject);
     procedure OldSwatchColorChange(Sender: TObject);
     procedure PagesChange(Sender: TObject);
-    procedure SetAllToSel(c: TColor);
+    procedure ColorPickerChange(Sender: TObject);
     procedure SLHChange(Sender: TObject);
   private
     {$IFDEF mbXP_Lib}
@@ -71,9 +86,15 @@ type
     EHue, ESat, ELum: TSpinEdit;
     {$ENDIF}
     FLockChange: Integer;
+    function GetShowHint: Boolean;
+    procedure SetAllCustom(c: TColor);
+    procedure SetAllToSel(c: TColor);
+    procedure SetShowHint(AValue: boolean);
   protected
     procedure CreateParams(var Params: TCreateParams); override;
-    procedure CreateWnd; override;
+//    procedure CreateWnd; override;
+  published
+    property ShowHint: Boolean read GetShowHint write SetShowHint;
   end;
 
 var
@@ -87,31 +108,77 @@ implementation
   {$R *.lfm}
 {$ENDIF}
 
+procedure TOfficeMoreColorsWin.ColorPickerChange(Sender: TObject);
+begin
+  if FLockChange <> 0 then
+    exit;
+  if Sender = HSL then
+    SetAllCustom(HSL.SelectedColor);
+  if Sender = HSLRing then
+    SetAllCustom(HSLRing.SelectedColor);
+  if Sender = SLH then
+    SetAllCustom(SLH.SelectedColor);
+  if Sender = RTrackbar then
+    SetAllCustom(RTrackbar.SelectedColor);
+  if Sender = GTrackbar then
+    SetAllCustom(GTrackbar.SelectedColor);
+  if Sender = BTrackbar then
+    SetAllCustom(BTrackbar.SelectedColor);
+end;
+
 procedure TOfficeMoreColorsWin.CreateParams(var Params: TCreateParams);
 begin 
   inherited CreateParams(Params); 
   Params.Style := WS_CAPTION or WS_SIZEBOX or WS_SYSMENU; 
   Params.ExStyle := WS_EX_DLGMODALFRAME or WS_EX_WINDOWEDGE; 
 end; 
-
+  (*
 procedure TOfficeMoreColorsWin.CreateWnd;
 begin 
   inherited CreateWnd;
   { wp : LM_SETICON not used in LCL }
   // SendMessage(Self.Handle, {$IFDEF FPC}LM_SETICON{$ELSE}WM_SETICON{$ENDIF}, 1, 0);
 end; 
-
-procedure TOfficeMoreColorsWin.ColorModelChange(Sender: TObject);
+    *)
+procedure TOfficeMoreColorsWin.cbColorDisplayChange(Sender: TObject);
 begin
-  HSL.Visible := ColorModel.ItemIndex = 0;
-  SLH.Visible := ColorModel.ItemIndex = 1;
-  HSL.SelectedColor := NewSwatch.Color;
-  SLH.SelectedColor := NewSwatch.Color;
+  PickerNotebook.PageIndex := cbColorDisplay.ItemIndex;
+  SetAllCustom(NewSwatch.Color);
+  exit;
+
+
+
+
+  {
+  HSL.Visible := cbColorDisplay.ItemIndex = 0;
+  HSLRing.Visible := cbColorDisplay.ItemIndex = 1;
+  SLH.Visible := cbColorDisplay.ItemIndex = 2;
+  }
+  if HSL.Visible then
+    HSL.SelectedColor := NewSwatch.Color;
+  if HSLRing.Visible then
+    HSLRing.SelectedColor := NewSwatch.Color;
+  if SLH.Visible then
+    SLH.SelectedColor := NewSwatch.Color;
+end;
+
+function TOfficeMoreColorsWin.GetShowHint: Boolean;
+begin
+  Result := inherited ShowHint;
 end;
 
 procedure TOfficeMoreColorsWin.HSLChange(Sender: TObject);
 begin
-  NewSwatch.Color := HSL.SelectedColor;
+  if FLockChange <> 0 then
+    exit;
+  SetAllCustom(HSL.SelectedColor);
+end;
+
+procedure TOfficeMoreColorsWin.HSLRingChange(Sender: TObject);
+begin
+  if FLockChange <> 0 then
+    exit;
+  SetAllCustom(HSLRing.SelectedColor);
 end;
 
 procedure TOfficeMoreColorsWin.ERedChange(Sender: TObject);
@@ -223,12 +290,23 @@ begin
   then
     exit;
 
+  SetAllCustom(NewSwatch.Color);
+  {
+
   ERed.Value := GetRValue(NewSwatch.Color);
   EGreen.Value := GetGValue(NewSwatch.Color);
   EBlue.Value := GetBValue(NewSwatch.Color);
   EHue.Value := GetHValue(NewSwatch.Color);
   ESat.Value := GetSValue(NewSwatch.Color);
   ELum.Value := GetLValue(NewSwatch.Color);
+
+  if HSL.Visible then
+    HSL.SelectedColor := NewSwatch.Color;
+  if HSLRing.Visible then
+    HSLRing.SelectedColor := NewSwatch.Color;
+  if SLH.Visible then
+    SLH.SelectedColor := NewSwatch.Color;
+    }
 end;
 
 procedure TOfficeMoreColorsWin.OldSwatchColorChange(Sender: TObject);
@@ -245,24 +323,73 @@ begin
     // Standard Page
     0: Hexa.SelectedColor := c;
     // Custom Page
-    1: begin
-         HSL.SelectedColor := c;
-         SLH.SelectedColor := c;
-         ERed.Value := GetRValue(c);
-         EGreen.Value := GetGValue(c);
-         EBlue.Value := GetBValue(c);
-         RGBtoHSLRange(c, h, s, l);
-         EHue.Value := h;
-         ESat.Value := s;
-         ELum.Value := l;
-       end;
+    1: SetAllCustom(c);
   end;
   NewSwatch.Color := c;
 end;
 
+procedure TOfficeMoreColorsWin.SetAllCustom(c: TColor);
+var
+  r, g, b: Integer;
+  h, s, l: Integer;
+begin
+  if (ERed = nil) or (EGreen = nil) or (EBlue = nil) or
+     (EHue = nil) or (ESat = nil) or (ELum = nil) or
+     (PickerNotebook = nil) or (HSL = nil) or (HSLRing = nil) or (SLH = nil)
+  then
+    exit;
+
+  inc(FLockChange);
+  try
+    NewSwatch.Color := c;
+    r := GetRValue(c);
+    g := GetGValue(c);
+    b := GetBValue(c);
+    RGBtoHSLRange(c, h, s, l);
+
+    if PickerNotebook.ActivePage = nbHSL.Name then
+      HSL.SelectedColor := c
+    else
+    if PickerNotebook.ActivePage = nbHSLRing.Name then
+      HSLRing.SelectedColor := c
+    else
+    if PickerNotebook.ActivePage = nbSLH.Name then
+      SLH.SelectedColor := c
+    else
+    if PickerNotebook.ActivePage = nbRGB.Name then
+    begin
+      RTrackbar.SelectedColor := c;
+      GTrackbar.SelectedColor := c;
+      BTrackbar.SelectedColor := c;
+    end
+    else
+      exit; //raise Exception.Create('Notbook page not prepared for color pickers');
+
+    ERed.Value := r;
+    EGreen.Value := g;
+    EBlue.Value := b;
+    EHue.Value := h;
+    ESat.Value := s;
+    ELum.Value := l;
+  finally
+    dec(FLockChange);
+  end;
+end;
+
+procedure TOfficeMoreColorsWin.SetShowHint(AValue: Boolean);
+begin
+  inherited ShowHint := AValue;
+  // Unfortunately Notebook does not have a Hint and ParentHint...
+  HSL.ShowHint := AValue;
+  HSLRing.ShowHint := AValue;
+  SLH.ShowHint := AValue;
+end;
+
 procedure TOfficeMoreColorsWin.SLHChange(Sender: TObject);
 begin
-  NewSwatch.Color := SLH.SelectedColor;
+  if FLockChange <> 0 then
+    exit;
+  SetAllCustom(SLH.SelectedColor);
 end;
 
 procedure TOfficeMoreColorsWin.PagesChange(Sender: TObject);
@@ -272,8 +399,13 @@ end;
 
 procedure TOfficeMoreColorsWin.FormResize(Sender: TObject);
 begin
+  {
   SLH.Width := SLH.Parent.ClientWidth - SLH.Left;
-  SLH.Height := ColorModel.Top - SLH.Top;
+  SLH.Height := cbColorDisplay.Top - SLH.Top;
+
+  HSLRing.Width := SLH.Width;
+  HSLRing.Height := SLH.Height - 4;
+   }
 {$IFDEF mbXP_Lib}
   grip.Left := ClientWidth - 15;
   grip.Top := ClientHeight - 15;
@@ -282,13 +414,6 @@ end;
 
 procedure TOfficeMoreColorsWin.FormCreate(Sender: TObject);
 begin
-  SLH.Width := HSL.Width;
-  SLH.Height := HSL.Height;
-  SLH.Top := HSL.Top;
-  SLH.Left := HSL.Left;
-  SLH.Hide;
-//  SLH.Anchors := [akLeft, akTop, akRight, akBottom];
-
  {$IFDEF mbXP_Lib}
   ERed := TmbXPSpinEdit.CreateParented(Custom.Handle);
   EGreen := TmbXPSpinEdit.CreateParented(Custom.Handle);
@@ -299,7 +424,7 @@ begin
   EGreen := TSpinEdit.CreateParented(Custom.Handle);
   EBlue := TSpinEdit.CreateParented(Custom.Handle);
   EHue := TSpinEdit.CreateParented(Custom.Handle);
-  ESat := TSpinEdit.createParented(Custom.Handle);
+  ESat := TSpinEdit.CreateParented(Custom.Handle);
   ELum := TSpinEdit.CreateParented(Custom.Handle);
  {$ENDIF}
   with ERed do
@@ -307,8 +432,8 @@ begin
    Name := 'ERed';
    Width := 47;
    Height := 22;
-   Left := ColorModel.Left;
-   Top := LRed.Top - 4; //198;
+   Left := cbColorDisplay.Left;
+   Top := LRed.Top - 4;
    Alignment := taRightJustify;
    Anchors := [akLeft, akBottom];
    MaxValue := 255;
@@ -321,8 +446,8 @@ begin
    Name := 'EGreen';
    Width := 47;
    Height := 22;
-   Left := ColorModel.Left;
-   Top := LGreen.Top - 3; //224;
+   Left := cbColorDisplay.Left;
+   Top := LGreen.Top - 3;
    Alignment := taRightJustify;
    Anchors := [akLeft, akBottom];
    MaxValue := 255;
@@ -335,8 +460,8 @@ begin
    Name := 'EBlue';
    Width := 47;
    Height := 22;
-   Left := ColorModel.Left;
-   Top := LBlue.Top - 4; //251;
+   Left := cbColorDisplay.Left;
+   Top := LBlue.Top - 4;
    Alignment := taRightJustify;
    Anchors := [akLeft, akBottom];
    MaxValue := 255;
@@ -349,7 +474,7 @@ begin
    Name := 'EHue';
    Width := 47;
    Height := 22;
-   Left := ColorModel.Left + ColorModel.Width - Width;
+   Left := cbColorDisplay.Left + cbColorDisplay.Width - Width;
    Top := ERed.Top;
    Alignment := taRightJustify;
    Anchors := [akLeft, akBottom];
@@ -363,7 +488,7 @@ begin
    Name := 'ESat';
    Width := 47;
    Height := 22;
-   Left := ColorModel.Left + ColorModel.Width - Width;
+   Left := cbColorDisplay.Left + cbColorDisplay.Width - Width;
    Top := EGreen.Top;
    Alignment := taRightJustify;
    Anchors := [akLeft, akBottom];
@@ -377,7 +502,7 @@ begin
    Name := 'ELum';
    Width := 47;
    Height := 22;
-   Left := ColorModel.Left + ColorModel.Width - Width;
+   Left := cbColorDisplay.Left + cbColorDisplay.Width - Width;
    Top := EBlue.Top;
    Alignment := taRightJustify;
    Anchors := [akLeft, akBottom];

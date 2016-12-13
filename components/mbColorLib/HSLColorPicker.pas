@@ -33,8 +33,6 @@ type
     FHSCursor, FLCursor: TCursor;
     PBack: TBitmap;
     function GetManual: boolean;
-    function GetShowHint: Boolean;
-    procedure SetShowHint(AValue: Boolean);
     procedure SetLumIncrement(i: integer);
     procedure SelectColor(c: TColor);
     procedure SetH(v: integer);
@@ -52,15 +50,15 @@ type
     procedure SetSelectedColor(Value: TColor);
   protected
     procedure CreateWnd; override;
+    procedure DoChange;
+    procedure DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure Resize; override;
     procedure Paint; override;
 //    procedure PaintParentBack; override;
     procedure WMSetFocus(var Message: {$IFDEF FPC}TLMSetFocus{$ELSE}TWMSetFocus{$ENDIF});
       message {$IFDEF FPC}LM_SETFOCUS{$ELSE}WM_SETFOCUS{$ENDIF};
-    procedure DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure HSPickerChange(Sender: TObject);
     procedure LPickerChange(Sender: TObject);
-    procedure DoChange;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -85,7 +83,7 @@ type
     property HSPickerCursor: TCursor read FHSCursor write SetHSCursor default crDefault;
     property LPickerCursor: TCursor read FLCursor write SetLCursor default crDefault;
     property TabStop default true;
-    property ShowHint read GetShowHint write SetShowHint;
+    property ShowHint;
     property ParentShowHint;
     property Anchors;
     property Align;
@@ -326,18 +324,6 @@ begin
   Result := FHSPicker.Manual or FLPicker.Manual;
 end;
 
-function THSLColorPicker.GetShowHint: Boolean;
-begin
-  Result := inherited ShowHint;
-end;
-
-procedure THSLColorPicker.SetShowHint(AValue: Boolean);
-begin
-  inherited ShowHint := AValue;
-  FHSPicker.ShowHint := AValue;
-  FLPicker.ShowHint := AValue;
-end;
-
                                          (*
 procedure THSLColorPicker.PaintParentBack;
 begin
@@ -361,7 +347,6 @@ end;
 procedure THSLColorPicker.Resize;
 begin
   inherited;
- // PaintParentBack(Canvas);
 
   if (FHSPicker = nil) or (FLPicker = nil) then
     exit;

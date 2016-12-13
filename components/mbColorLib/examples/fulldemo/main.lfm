@@ -1,17 +1,17 @@
 object Form1: TForm1
   Left = 447
-  Height = 344
+  Height = 376
   Top = 197
-  Width = 543
+  Width = 539
   Caption = 'mbColor Lib v2.0.1 Demo'
-  ClientHeight = 344
-  ClientWidth = 543
+  ClientHeight = 376
+  ClientWidth = 539
   Font.Color = clWindowText
   OnCreate = FormCreate
   ShowHint = True
   LCLVersion = '1.7'
   object Label1: TLabel
-    Left = 412
+    Left = 416
     Height = 15
     Top = 8
     Width = 73
@@ -20,7 +20,7 @@ object Form1: TForm1
     ParentColor = False
   end
   object Label2: TLabel
-    Left = 412
+    Left = 416
     Height = 15
     Top = 112
     Width = 96
@@ -29,9 +29,9 @@ object Form1: TForm1
     ParentColor = False
   end
   object Label5: TLabel
-    Left = 412
+    Left = 416
     Height = 75
-    Top = 238
+    Top = 248
     Width = 99
     Anchors = [akTop, akRight]
     Caption = 'Aditional controls:'#13#13'- Arrow keys'#13'- Ctrl + Arrow keys'#13'- Mouse wheel'
@@ -39,12 +39,12 @@ object Form1: TForm1
   end
   object PageControl1: TPageControl
     Left = 6
-    Height = 331
+    Height = 363
     Top = 6
-    Width = 399
-    ActivePage = TabSheet6
+    Width = 403
+    ActivePage = TabSheet7
     Anchors = [akTop, akLeft, akRight, akBottom]
-    TabIndex = 5
+    TabIndex = 7
     TabOrder = 0
     OnMouseMove = PageControl1MouseMove
     object TabSheet1: TTabSheet
@@ -616,16 +616,17 @@ object Form1: TForm1
     end
     object TabSheet6: TTabSheet
       Caption = 'SLHColorPicker'
-      ClientHeight = 303
-      ClientWidth = 391
+      ClientHeight = 329
+      ClientWidth = 387
       ImageIndex = 5
       object SLHColorPicker1: TSLHColorPicker
-        Left = 5
-        Height = 291
+        Left = 8
+        Height = 317
         Top = 6
-        Width = 381
+        Width = 377
         HPickerHintFormat = 'Hue: %h (selected)'
         SLPickerHintFormat = 'S: %s L: %l'#13'Hex: %hex'
+        ParentShowHint = False
         Anchors = [akTop, akLeft, akRight, akBottom]
         TabOrder = 0
         OnChange = SLHColorPicker1Change
@@ -634,32 +635,35 @@ object Form1: TForm1
     end
     object TabSheet11: TTabSheet
       Caption = 'Lists && Trees'
-      ClientHeight = 303
-      ClientWidth = 391
+      ClientHeight = 335
+      ClientWidth = 395
       ImageIndex = 10
       object mbColorList1: TmbColorList
-        Left = 192
-        Height = 244
-        Top = 12
+        Left = 200
+        Height = 278
+        Top = 10
         Width = 183
+        Anchors = [akTop, akLeft, akBottom]
         TabOrder = 0
       end
       object mbColorTree1: TmbColorTree
         Left = 8
-        Height = 247
+        Height = 279
         Top = 10
-        Width = 171
+        Width = 184
         InfoLabelText = 'Color Values:'
         InfoDisplay1 = 'RGB: %r.%g.%b'
         InfoDisplay2 = 'HEX: #%hex'
+        Anchors = [akTop, akLeft, akBottom]
         Indent = 51
         TabOrder = 1
       end
       object Button5: TButton
-        Left = 120
+        Left = 128
         Height = 25
-        Top = 264
+        Top = 296
         Width = 137
+        Anchors = [akLeft, akBottom]
         Caption = 'Add colors from palette'
         OnClick = Button5Click
         TabOrder = 2
@@ -667,8 +671,8 @@ object Form1: TForm1
     end
     object TabSheet7: TTabSheet
       Caption = 'More'
-      ClientHeight = 303
-      ClientWidth = 391
+      ClientHeight = 335
+      ClientWidth = 395
       ImageIndex = 6
       object Label9: TLabel
         Left = 128
@@ -700,8 +704,8 @@ object Form1: TForm1
       object LColorPicker1: TLColorPicker
         Left = 34
         Height = 25
-        Top = 192
-        Width = 343
+        Top = 224
+        Width = 347
         HintFormat = 'Luminance: %l (selected)'
         SelectionIndicator = siRect
         Anchors = [akLeft, akRight, akBottom]
@@ -713,8 +717,8 @@ object Form1: TForm1
       object VColorPicker1: TVColorPicker
         Left = 34
         Height = 21
-        Top = 160
-        Width = 343
+        Top = 192
+        Width = 347
         HintFormat = 'Value: %v (selected)'
         ArrowPlacement = spBefore
         NewArrowStyle = True
@@ -729,8 +733,8 @@ object Form1: TForm1
       object HColorPicker1: THColorPicker
         Left = 34
         Height = 61
-        Top = 231
-        Width = 343
+        Top = 263
+        Width = 347
         HintFormat = 'Hue: %h (selected)'
         Increment = 5
         ArrowPlacement = spBoth
@@ -742,7 +746,7 @@ object Form1: TForm1
       end
       object SColorPicker1: TSColorPicker
         Left = 8
-        Height = 222
+        Height = 254
         Top = 70
         Width = 19
         HintFormat = 'Saturation: %s (selected)'
@@ -758,9 +762,9 @@ object Form1: TForm1
       end
       object Memo1: TMemo
         Left = 128
-        Height = 118
+        Height = 150
         Top = 26
-        Width = 249
+        Width = 253
         Anchors = [akTop, akLeft, akRight, akBottom]
         Lines.Strings = (
           'The following variables will be replaced in the hint at runtime:'
@@ -805,8 +809,8 @@ object Form1: TForm1
     end
     object TabSheet8: TTabSheet
       Caption = 'Other'
-      ClientHeight = 303
-      ClientWidth = 391
+      ClientHeight = 335
+      ClientWidth = 395
       ImageIndex = 7
       object HSColorPicker1: THSColorPicker
         Left = 6
@@ -1108,7 +1112,7 @@ object Form1: TForm1
     end
   end
   object sc: TmbColorPreview
-    Left = 412
+    Left = 416
     Height = 62
     Top = 25
     Width = 108
@@ -1116,7 +1120,7 @@ object Form1: TForm1
     Anchors = [akTop, akRight]
   end
   object uc: TmbColorPreview
-    Left = 412
+    Left = 416
     Height = 62
     Top = 130
     Width = 108
@@ -1124,7 +1128,7 @@ object Form1: TForm1
     Anchors = [akTop, akRight]
   end
   object tb1: TTrackBar
-    Left = 412
+    Left = 416
     Height = 20
     Hint = 'Opacity'
     Top = 90
@@ -1137,7 +1141,7 @@ object Form1: TForm1
     TabOrder = 3
   end
   object tb2: TTrackBar
-    Left = 412
+    Left = 416
     Height = 20
     Top = 196
     Width = 108
@@ -1148,34 +1152,46 @@ object Form1: TForm1
     Anchors = [akTop, akRight]
     TabOrder = 4
   end
-  object CheckBox3: TCheckBox
-    Left = 412
+  object CbWebSsafe: TCheckBox
+    Left = 416
     Height = 19
-    Top = 320
+    Top = 328
     Width = 66
     Anchors = [akTop, akRight]
     Caption = 'WebSafe'
-    OnClick = CheckBox3Click
+    OnClick = CbWebSsafeClick
     TabOrder = 5
   end
-  object CheckBox4: TCheckBox
-    Left = 412
+  object CbSwatchStyle: TCheckBox
+    Left = 416
     Height = 19
     Top = 218
     Width = 83
     Anchors = [akTop, akRight]
     Caption = 'SwatchStyle'
-    OnClick = CheckBox4Click
+    OnClick = CbSwatchStyleClick
     TabOrder = 6
+  end
+  object CbShowHints: TCheckBox
+    Left = 416
+    Height = 19
+    Top = 349
+    Width = 78
+    Anchors = [akTop, akRight]
+    Caption = 'Show hints'
+    Checked = True
+    OnChange = CbShowHintsChange
+    State = cbChecked
+    TabOrder = 7
   end
   object mbOfficeColorDialog1: TmbOfficeColorDialog
     UseHints = True
-    left = 448
+    left = 456
     top = 136
   end
   object OpenDialog1: TOpenDialog
     Filter = 'JASC PAL (*.pal)|*.pal|Photoshop (*.act; *.aco)|*.act;*.aco'
-    left = 440
+    left = 456
     top = 40
   end
 end

@@ -146,7 +146,7 @@ begin
   inherited;
   if ShowHint and not FHintShown then
   begin
-    if MouseOnPicker(X, Y) then //and not FHintShown then
+    if MouseOnPicker(X, Y) then
     begin
       FHintTimer.Enabled := false;
       FHintState := hsWaitingToShow;
@@ -206,7 +206,7 @@ begin
   //  Offscreen.PixelFormat := pf32bit;
     if Color = clDefault then begin
       Offscreen.Transparent := true;
-      Offscreen.TransparentColor := GetDefaultColor(dctBrush);
+      Offscreen.TransparentColor := clForm; //GetDefaultColor(dctBrush);
     end;
     Offscreen.Width := Width;
     Offscreen.Height := Height;

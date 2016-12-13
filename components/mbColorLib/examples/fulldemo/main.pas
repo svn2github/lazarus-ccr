@@ -20,6 +20,7 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    CbShowHints: TCheckBox;
     Label10: TLabel;
     Label11: TLabel;
     Label12: TLabel;
@@ -95,14 +96,15 @@ type
     CIELColorPicker1: TCIELColorPicker;
     CIEAColorPicker1: TCIEAColorPicker;
     CIEBColorPicker1: TCIEBColorPicker;
-    CheckBox3: TCheckBox;
+    CbWebSsafe: TCheckBox;
     TabSheet11: TTabSheet;
     mbColorList1: TmbColorList;
     mbColorTree1: TmbColorTree;
     Button5: TButton;
     Memo1: TMemo;
     Label9: TLabel;
-    CheckBox4: TCheckBox;
+    CbSwatchStyle: TCheckBox;
+    procedure CbShowHintsChange(Sender: TObject);
     procedure PageControl1MouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
     procedure tb1Change(Sender: TObject);
@@ -148,9 +150,9 @@ type
     procedure ComboBox3Change(Sender: TObject);
     procedure ComboBox4Change(Sender: TObject);
     procedure UpDown1Changing(Sender: TObject; var AllowChange: Boolean);
-    procedure CheckBox3Click(Sender: TObject);
+    procedure CbWebSsafeClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
-    procedure CheckBox4Click(Sender: TObject);
+    procedure CbSwatchStyleClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -365,13 +367,13 @@ allowchange := true;
 mbcolorpalette1.CellSize := abs(updown1.Position);
 end;
 
-procedure TForm1.CheckBox3Click(Sender: TObject);
+procedure TForm1.CbWebSsafeClick(Sender: TObject);
 var
  i: integer;
 begin
  for i := 0 to ComponentCount - 1 do
   if IsPublishedProp(components[i], 'WebSafe') = true then
-   SetOrdProp(components[i], 'WebSafe', integer(checkbox3.checked));
+   SetOrdProp(components[i], 'WebSafe', integer(CbWebSsafe.checked));
 end;
 
 procedure TForm1.Button5Click(Sender: TObject);
@@ -389,10 +391,16 @@ begin
  mbcolorlist1.UpdateColors;
 end;
 
-procedure TForm1.CheckBox4Click(Sender: TObject);
+procedure TForm1.CbSwatchStyleClick(Sender: TObject);
 begin
-  sc.swatchstyle := checkbox4.Checked;
-  uc.swatchstyle := checkbox4.checked;
+  sc.swatchstyle := CbSwatchStyle.Checked;
+  uc.swatchstyle := CbSwatchStyle.checked;
+end;
+
+procedure TForm1.CbShowHintsChange(Sender: TObject);
+begin
+  PageControl1.ShowHint := CbShowHints.Checked;
+  mbOfficeColorDialog1.UseHints := CbShowHints.Checked;
 end;
 
 end.

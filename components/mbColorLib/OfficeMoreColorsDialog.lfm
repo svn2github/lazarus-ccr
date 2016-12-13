@@ -1,15 +1,15 @@
 object OfficeMoreColorsWin: TOfficeMoreColorsWin
   Left = 265
-  Height = 300
+  Height = 310
   Top = 115
-  Width = 331
+  Width = 343
   ActiveControl = OKbtn
   BorderIcons = [biSystemMenu]
   Caption = 'More colors...'
-  ClientHeight = 300
-  ClientWidth = 331
-  Constraints.MinHeight = 300
-  Constraints.MinWidth = 331
+  ClientHeight = 310
+  ClientWidth = 343
+  Constraints.MinHeight = 310
+  Constraints.MinWidth = 340
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Shell Dlg 2'
@@ -19,7 +19,7 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
   Position = poMainFormCenter
   LCLVersion = '1.7'
   object Label4: TLabel
-    Left = 264
+    Left = 276
     Height = 13
     Top = 72
     Width = 21
@@ -28,7 +28,7 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
     ParentColor = False
   end
   object Label5: TLabel
-    Left = 256
+    Left = 268
     Height = 13
     Top = 160
     Width = 37
@@ -38,9 +38,9 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
   end
   object Pages: TPageControl
     Left = 6
-    Height = 280
+    Height = 290
     Top = 6
-    Width = 227
+    Width = 239
     ActivePage = Custom
     Anchors = [akTop, akLeft, akRight, akBottom]
     TabIndex = 1
@@ -48,8 +48,8 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
     OnChange = PagesChange
     object Standard: TTabSheet
       Caption = 'Standard'
-      ClientHeight = 254
-      ClientWidth = 219
+      ClientHeight = 264
+      ClientWidth = 231
       object Label2: TLabel
         Left = 6
         Height = 13
@@ -61,9 +61,9 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
       end
       object Hexa: THexaColorPicker
         Left = 0
-        Height = 227
+        Height = 237
         Top = 26
-        Width = 216
+        Width = 228
         Anchors = [akTop, akLeft, akRight, akBottom]
         HintFormat = 'RGB(%r, %g, %b)'#13'Hex: %h'
         IntensityText = 'Intensity'
@@ -75,8 +75,8 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
     end
     object Custom: TTabSheet
       Caption = 'Custom'
-      ClientHeight = 254
-      ClientWidth = 219
+      ClientHeight = 264
+      ClientWidth = 231
       ImageIndex = 1
       object Label1: TLabel
         Left = 6
@@ -90,17 +90,17 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
       object Label3: TLabel
         Left = 6
         Height = 13
-        Top = 150
+        Top = 160
         Width = 32
         Anchors = [akLeft, akBottom]
-        Caption = 'Mo&del:'
-        FocusControl = ColorModel
+        Caption = '&Picker:'
+        FocusControl = cbColorDisplay
         ParentColor = False
       end
       object LRed: TLabel
         Left = 6
         Height = 13
-        Top = 176
+        Top = 186
         Width = 23
         Anchors = [akLeft, akBottom]
         Caption = '&Red:'
@@ -109,7 +109,7 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
       object LGreen: TLabel
         Left = 6
         Height = 13
-        Top = 202
+        Top = 212
         Width = 33
         Anchors = [akLeft, akBottom]
         Caption = '&Green:'
@@ -118,55 +118,35 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
       object LBlue: TLabel
         Left = 6
         Height = 13
-        Top = 228
+        Top = 238
         Width = 24
         Anchors = [akLeft, akBottom]
         Caption = '&Blue:'
         ParentColor = False
       end
-      object HSL: THSLColorPicker
-        Left = 6
-        Height = 124
-        Top = 20
-        Width = 210
-        HSPickerHintFormat = 'H: %h S: %s'#13'Hex: %hex'
-        LPickerHintFormat = 'Luminance: %l'
-        Anchors = [akTop, akLeft, akRight, akBottom]
-        TabOrder = 0
-        OnChange = HSLChange
-      end
-      object ColorModel: TComboBox
+      object cbColorDisplay: TComboBox
         Left = 48
         Height = 21
-        Top = 146
+        Top = 156
         Width = 147
         Anchors = [akLeft, akBottom]
         ItemHeight = 13
         ItemIndex = 0
         Items.Strings = (
-          'RGB'
-          'HSL'
+          'HS box, L bar'
+          'H ring, SL box'
+          'SL box, H bar'
+          'RGB trackbars'
         )
-        OnChange = ColorModelChange
+        OnChange = cbColorDisplayChange
         Style = csDropDownList
-        TabOrder = 1
-        Text = 'RGB'
-      end
-      object SLH: TSLHColorPicker
-        Left = 6
-        Height = 80
-        Top = 20
-        Width = 115
-        HPickerHintFormat = 'Hue: %h'
-        SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
-        ParentShowHint = False
-        TabOrder = 2
-        OnChange = SLHChange
+        TabOrder = 0
+        Text = 'HS box, L bar'
       end
       object LHue: TLabel
         Left = 120
         Height = 13
-        Top = 176
+        Top = 186
         Width = 23
         Anchors = [akLeft, akBottom]
         Caption = '&Hue:'
@@ -175,7 +155,7 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
       object LSat: TLabel
         Left = 120
         Height = 13
-        Top = 202
+        Top = 212
         Width = 20
         Anchors = [akLeft, akBottom]
         Caption = '&Sat:'
@@ -184,16 +164,166 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
       object LLum: TLabel
         Left = 120
         Height = 13
-        Top = 228
+        Top = 238
         Width = 23
         Anchors = [akLeft, akBottom]
         Caption = 'L&um:'
         ParentColor = False
       end
+      object PickerNotebook: TNotebook
+        Left = 6
+        Height = 132
+        Top = 22
+        Width = 220
+        PageIndex = 3
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        TabOrder = 1
+        object nbHSL: TPage
+          object HSL: THSLColorPicker
+            Left = 0
+            Height = 132
+            Top = 0
+            Width = 220
+            HSPickerHintFormat = 'H: %h S: %s'#13'Hex: %hex'
+            LPickerHintFormat = 'Luminance: %l'
+            Align = alClient
+            TabOrder = 0
+            OnChange = ColorPickerChange
+          end
+        end
+        object nbHSLRing: TPage
+          object HSLRing: THSLRingPicker
+            AnchorSideLeft.Control = nbHSLRing
+            AnchorSideLeft.Side = asrCenter
+            Left = 42
+            Height = 124
+            Top = 0
+            Width = 136
+            RingPickerHintFormat = 'Hue: %h'
+            SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
+            ParentShowHint = False
+            Anchors = [akTop, akLeft, akBottom]
+            TabOrder = 0
+            OnChange = ColorPickerChange
+          end
+          object Bevel1: TBevel
+            Left = 0
+            Height = 5
+            Top = 127
+            Width = 220
+            Align = alBottom
+            Shape = bsSpacer
+          end
+        end
+        object nbSLH: TPage
+          object SLH: TSLHColorPicker
+            Left = 0
+            Height = 122
+            Top = 0
+            Width = 238
+            HPickerHintFormat = 'Hue: %h'
+            SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
+            ParentShowHint = False
+            Align = alClient
+            TabOrder = 0
+            OnChange = ColorPickerChange
+          end
+        end
+        object nbRGB: TPage
+          object RTrackbar: TRColorPicker
+            AnchorSideRight.Control = nbRGB
+            AnchorSideRight.Side = asrBottom
+            Left = 14
+            Height = 32
+            Top = 0
+            Width = 206
+            HintFormat = 'Red: %value (selected)'
+            Layout = lyHorizontal
+            SelectionIndicator = siRect
+            Anchors = [akTop, akLeft, akRight]
+            TabOrder = 0
+            OnChange = ColorPickerChange
+            SelectedColor = 8026879
+          end
+          object GTrackbar: TGColorPicker
+            AnchorSideRight.Control = nbRGB
+            AnchorSideRight.Side = asrBottom
+            Left = 16
+            Height = 32
+            Top = 40
+            Width = 204
+            BevelInner = bvLowered
+            BevelOuter = bvRaised
+            HintFormat = 'Green: %value (selected)'
+            Layout = lyHorizontal
+            SelectionIndicator = siRect
+            Anchors = [akTop, akLeft, akRight]
+            TabOrder = 1
+            OnChange = ColorPickerChange
+            SelectedColor = 8060794
+          end
+          object BTrackbar: TBColorPicker
+            AnchorSideRight.Control = nbRGB
+            AnchorSideRight.Side = asrBottom
+            Left = 16
+            Height = 32
+            Top = 80
+            Width = 204
+            HintFormat = 'Blue: %value (selected)'
+            Layout = lyHorizontal
+            SelectionIndicator = siRect
+            Anchors = [akTop, akLeft, akRight]
+            TabOrder = 2
+            OnChange = ColorPickerChange
+            SelectedColor = 16743034
+          end
+          object Label6: TLabel
+            AnchorSideTop.Control = RTrackbar
+            AnchorSideTop.Side = asrCenter
+            AnchorSideRight.Control = RTrackbar
+            Left = 4
+            Height = 13
+            Top = 10
+            Width = 7
+            Anchors = [akTop, akRight]
+            BorderSpacing.Right = 3
+            Caption = 'R'
+            ParentColor = False
+          end
+          object Label7: TLabel
+            AnchorSideTop.Control = GTrackbar
+            AnchorSideTop.Side = asrCenter
+            AnchorSideRight.Control = GTrackbar
+            Left = 4
+            Height = 13
+            Top = 50
+            Width = 7
+            Anchors = [akTop, akRight]
+            BorderSpacing.Left = 4
+            BorderSpacing.Right = 5
+            Caption = 'G'
+            ParentColor = False
+          end
+          object Label8: TLabel
+            AnchorSideTop.Control = BTrackbar
+            AnchorSideTop.Side = asrCenter
+            AnchorSideRight.Control = BTrackbar
+            Left = 5
+            Height = 13
+            Top = 90
+            Width = 6
+            Anchors = [akTop, akRight]
+            BorderSpacing.Left = 4
+            BorderSpacing.Right = 5
+            Caption = 'B'
+            ParentColor = False
+          end
+        end
+      end
     end
   end
   object OKbtn: TButton
-    Left = 242
+    Left = 254
     Height = 23
     Top = 6
     Width = 73
@@ -203,7 +333,7 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
     TabOrder = 1
   end
   object Cancelbtn: TButton
-    Left = 242
+    Left = 254
     Height = 23
     Top = 36
     Width = 73
@@ -214,7 +344,7 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
     TabOrder = 2
   end
   object NewSwatch: TmbColorPreview
-    Left = 242
+    Left = 254
     Height = 32
     Hint = 'RGB(255, 255, 255)'
     Top = 92
@@ -225,7 +355,7 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
     OnColorChange = NewSwatchColorChange
   end
   object OldSwatch: TmbColorPreview
-    Left = 242
+    Left = 254
     Height = 32
     Hint = 'RGB(255, 255, 255)'#13#10'Hex: FFFFFF'
     Top = 123
