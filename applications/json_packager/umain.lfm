@@ -1,18 +1,17 @@
 object frmMain: TfrmMain
-  Left = 503
-  Height = 425
-  Top = 226
-  Width = 339
-  AutoSize = True
+  Left = 588
+  Height = 330
+  Top = 157
+  Width = 613
+  Anchors = []
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   BorderWidth = 8
-  ClientHeight = 405
-  ClientWidth = 339
+  ClientHeight = 310
+  ClientWidth = 613
   DefaultMonitor = dmPrimary
   Menu = MainMenu1
   OnClick = mnu_fileSaveClick
-  OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -29,13 +28,15 @@ object frmMain: TfrmMain
     ParentColor = False
   end
   object editName: TEdit
+    AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = sb_editName
-    Left = 8
+    Left = 12
     Height = 23
     Hint = 'Update Zip Name:'#13#10'This is just the filename (not including the path)'#13#10'of your update zip. Type, or click the [...]'
     Top = 32
-    Width = 291
+    Width = 561
     Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 4
     BorderSpacing.Right = 6
     Color = clWindow
     TabOrder = 0
@@ -43,99 +44,87 @@ object frmMain: TfrmMain
   object lblDownloadZipURL: TLabel
     Left = 8
     Height = 15
-    Top = 112
+    Top = 64
     Width = 81
     Caption = 'Download URL:'
     ParentColor = False
   end
   object editDownloadZipURL: TEdit
-    Left = 8
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = spd_CheckURL
+    Left = 12
     Height = 28
     Hint = 'Download URL:'#13#10'Include the FULL url needed to download the package Zip file'
-    Top = 136
-    Width = 322
+    Top = 88
+    Width = 411
+    Anchors = [akTop, akLeft, akRight]
     AutoSize = False
+    BorderSpacing.Left = 4
     Color = clWindow
     TabOrder = 1
   end
   object lblPackageFiles: TLabel
+    AnchorSideRight.Control = btnAdd
     Left = 8
     Height = 15
-    Top = 173
-    Width = 73
+    Top = 130
+    Width = 399
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = False
+    BorderSpacing.Right = 8
     Caption = 'Package Files:'
     ParentColor = False
   end
-  object stringPackageFiles: TStringGrid
-    Left = 8
-    Height = 144
-    Hint = 'Package Files:'#13#10'[Add]:  to make a new entry'#13#10'[Remove]: Remove last entry'#13#10'lpk filename: i.e. mycontrol.lpk'#13#10'Version: The FULL version (i.e. not 1.0 but 1.0.0.0)'
-    Top = 208
-    Width = 323
-    Anchors = [akTop, akLeft, akRight]
-    AutoFillColumns = True
-    ColCount = 2
-    Columns = <    
-      item
-        Title.Caption = ''
-        Width = 159
-      end    
-      item
-        Title.Caption = ''
-        Width = 160
-      end>
-    FixedCols = 0
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goThumbTracking, goSmoothScroll]
-    RowCount = 1
-    TabOrder = 2
-    TitleStyle = tsNative
-    ColWidths = (
-      159
-      160
-    )
-  end
   object btnAdd: TButton
     AnchorSideRight.Control = btnRemove
-    Left = 176
+    Left = 415
     Height = 25
     Hint = 'Add Package File:'#13#10'The update zip can contain more than one lpk file'#13#10'deployed to the same place.'
-    Top = 173
-    Width = 65
-    Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Right = 5
+    Top = 128
+    Width = 97
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
     Caption = 'Add'
     OnClick = btnAddClick
-    TabOrder = 3
+    TabOrder = 2
   end
   object btnRemove: TButton
-    Left = 246
+    Left = 520
     Height = 25
     Hint = 'Remove Package File:'#13#10'Deletes the last entry from the list'
-    Top = 173
+    Top = 128
     Width = 75
-    Anchors = [akTop, akRight]
+    Anchors = [akTop]
+    BorderSpacing.Right = 8
     Caption = 'Remove'
     OnClick = btnRemoveClick
-    TabOrder = 4
+    TabOrder = 3
   end
   object cmd_Close: TBitBtn
-    Left = 253
+    Left = 520
     Height = 30
-    Top = 368
-    Width = 76
-    Anchors = [akTop, akLeft, akRight]
+    Top = 270
+    Width = 83
+    Anchors = []
+    BorderSpacing.Top = 30
+    BorderSpacing.Right = 10
     Cancel = True
     Caption = '&Close'
     Kind = bkClose
     ModalResult = 11
-    TabOrder = 5
+    OnClick = cmd_CloseClick
+    TabOrder = 4
   end
   object cmd_save: TBitBtn
-    Left = 134
+    AnchorSideTop.Control = btnAdd
+    Left = 269
     Height = 30
     Hint = 'Save the current configuration to disk'#13#10'as a JSON update file'
-    Top = 368
+    Top = 270
     Width = 75
+    Anchors = []
+    BorderSpacing.Top = 30
     Caption = '&Save'
     Default = True
     Glyph.Data = {
@@ -175,10 +164,10 @@ object frmMain: TfrmMain
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
     }
     OnClick = mnu_fileSaveClick
-    TabOrder = 6
+    TabOrder = 5
   end
   object sb_editName: TSpeedButton
-    Left = 305
+    Left = 579
     Height = 22
     Hint = 'Update Zip Name:'#13#10'Click this to browse your system to find'#13#10' an existing Update Zip'
     Top = 32
@@ -188,65 +177,28 @@ object frmMain: TfrmMain
     OnClick = sb_editNameClick
   end
   object spd_CheckURL: TSpeedButton
-    Left = 257
+    AnchorSideRight.Control = chk_DisableInOPM
+    Left = 433
     Height = 19
     Hint = 'Attempting to Open URL'
-    Top = 112
+    Top = 88
     Width = 61
     Anchors = [akTop, akRight]
-    AutoSize = True
+    BorderSpacing.Left = 10
+    BorderSpacing.Right = 8
     Caption = 'Check URL'
     OnClick = spd_CheckURLClick
   end
-  object grp_ForceNotify: TGroupBox
-    Left = 8
-    Height = 48
-    Top = 56
-    Width = 321
-    Anchors = [akTop, akLeft, akRight]
-    ClientHeight = 28
-    ClientWidth = 317
-    TabOrder = 7
-    object cbForceNotify: TCheckBox
-      Left = 8
-      Height = 19
-      Hint = 'Force Notify check box:'#13#10'If this is checked the OPM user will be notified'#13#10'of your update.  Only check this if the update is important.'
-      Top = 0
-      Width = 85
-      Anchors = [akLeft]
-      Caption = 'Force Notify'
-      Color = clWindow
-      OnMouseUp = cbForceNotifyMouseUp
-      ParentColor = False
-      TabOrder = 0
-    end
-    object Spin_InternalVersion: TSpinEdit
-      AnchorSideTop.Control = grp_ForceNotify
-      AnchorSideRight.Control = grp_ForceNotify
-      Left = 256
-      Height = 23
-      Hint = 'Internal Version:'#13#10'Increase internal version when you have made changes in the source. It  works only combined with ForceNotify.'
-      Top = 0
-      Width = 51
-      Anchors = []
-      BorderSpacing.Right = 7
-      MaxValue = 364
-      TabOrder = 1
-    end
-    object lbl_InternalVersion: TLabel
-      AnchorSideRight.Control = Spin_InternalVersion
-      Left = 104
-      Height = 15
-      Hint = 'Internal Version:'#13#10'Increase internal version when you have made changes in the source. It  works only combined with ForceNotify.'
-      Top = 2
-      Width = 147
-      Alignment = taRightJustify
-      Anchors = [akLeft, akRight]
-      BorderSpacing.Right = 5
-      Caption = 'Internal Version'
-      ParentColor = False
-      OnClick = lbl_InternalVersionClick
-    end
+  object chk_DisableInOPM: TCheckBox
+    Left = 502
+    Height = 19
+    Top = 88
+    Width = 101
+    Anchors = [akTop, akRight]
+    AutoSize = False
+    BorderSpacing.Right = 10
+    Caption = 'Disable in OPM'
+    TabOrder = 6
   end
   object MainMenu1: TMainMenu
     Left = 200
@@ -267,6 +219,10 @@ object frmMain: TfrmMain
       object SaveAsItem: TMenuItem
         Caption = 'Save As...'
         OnClick = SaveAsItemClick
+      end
+      object mnu_fileExit: TMenuItem
+        Caption = 'E&xit'
+        OnClick = mnu_fileExitClick
       end
     end
     object mnu_help: TMenuItem

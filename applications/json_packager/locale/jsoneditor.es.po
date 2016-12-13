@@ -38,19 +38,9 @@ msgstr ""
 "Quitar archivo de paquete:\n"
 "Elimina la última entrada de la lista\n"
 
-#: tfrmmain.cbforcenotify.caption
-msgid "Force Notify"
-msgstr "Forzar Notificación"
-
-#: tfrmmain.cbforcenotify.hint
-msgid ""
-"Force Notify check box:\n"
-"If this is checked the OPM user will be notified\n"
-"of your update.  Only check this if the update is important.\n"
+#: tfrmmain.chk_disableinopm.caption
+msgid "Disable in OPM"
 msgstr ""
-"Forzar Notificación casilla de verificación:\n"
-"Si esto es marcado el usuario del OPM será notificado\n"
-"de tu actualización. Solo marca esto si la actualización es importante.\n"
 
 #: tfrmmain.cmd_close.caption
 msgid "&Close"
@@ -118,22 +108,13 @@ msgstr "Nombre del Zip de actualización:"
 msgid "Package Files:"
 msgstr "Archivos de Paquete:"
 
-#: tfrmmain.lbl_internalversion.caption
-msgid "Internal Version"
-msgstr "Versión interna"
-
-#: tfrmmain.lbl_internalversion.hint
-msgctxt "tfrmmain.lbl_internalversion.hint"
-msgid ""
-"Internal Version:\n"
-"Increase internal version when you have made changes in the source. It  works only combined with ForceNotify.\n"
-msgstr ""
-"Versión interno:\n"
-"Aumenta versión interna cuando se han hecho cambios en la fuente. Sólo funciona combina con ForceNotify.\n"
-
 #: tfrmmain.loaditem.caption
 msgid "Load..."
 msgstr "Cargar..."
+
+#: tfrmmain.mnu_fileexit.caption
+msgid "E&xit"
+msgstr ""
 
 #: tfrmmain.mnu_filenew.caption
 msgid "New"
@@ -196,27 +177,6 @@ msgstr "Verificar URL"
 #: tfrmmain.spd_checkurl.hint
 msgid "Attempting to Open URL"
 msgstr "Intentando Abrir URL"
-
-#: tfrmmain.spin_internalversion.hint
-msgctxt "tfrmmain.spin_internalversion.hint"
-msgid ""
-"Internal Version:\n"
-"Increase internal version when you have made changes in the source. It  works only combined with ForceNotify.\n"
-msgstr ""
-
-#: tfrmmain.stringpackagefiles.hint
-msgid ""
-"Package Files:\n"
-"[Add]:  to make a new entry\n"
-"[Remove]: Remove last entry\n"
-"lpk filename: i.e. mycontrol.lpk\n"
-"Version: The FULL version (i.e. not 1.0 but 1.0.0.0)\n"
-msgstr ""
-"Archivos de paquete:\n"
-"[Agregar]: para crear una nueva entrada\n"
-"[Quitar]: eliminar última entrada\n"
-"Archivo .lpk: ejemplo micontrol.lpk\n"
-"Versión: La versión COMPLETA (ejemplo no 1.0 pero si 1.0.0.0)\n"
 
 #: umain.rsabout
 msgid "About"
@@ -343,6 +303,7 @@ msgid "- Update zip name missing extension \".zip\""
 msgstr "- El nombre del zip no tiene la extensión \".zip\""
 
 #: umain.rsversion0000
+msgctxt "umain.rsversion0000"
 msgid "Version (n.n.n.n)"
 msgstr "Versión (n.n.n.n)"
 
@@ -361,3 +322,4 @@ msgstr "¿Quieres copiar %s a la carpeta %s?"
 #: umain.rsyoumayneedto
 msgid "(You may need to restart the app to see the change)"
 msgstr "(Quizás necesites reiniciar la aplicación para ver los cambios)"
+

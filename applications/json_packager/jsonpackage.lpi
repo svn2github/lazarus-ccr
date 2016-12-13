@@ -27,8 +27,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
-      <MinorVersionNr Value="1"/>
-      <RevisionNr Value="19"/>
+      <MinorVersionNr Value="2"/>
       <StringTable Comments="Buld configured for Win Linux and Darwin" FileDescription="An editor for OnlinePackageManager update JSON files" InternalName="jsoneditor" LegalCopyright="(c)2016 usernames lainz and minesadorada @ forum.lazarus.freepascal.org" LegalTrademarks="GPL code" OriginalFilename="jsoneditor" ProductName="Lazarus and Freepascal" ProductVersion="1.x and 3.x"/>
     </VersionInfo>
     <BuildModes Count="6">
@@ -252,7 +251,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="3">
+    <Units Count="4">
       <Unit0>
         <Filename Value="jsonpackage.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -268,6 +267,11 @@
         <Filename Value="ugenericcollection.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit2>
+      <Unit3>
+        <Filename Value="C:\NewPascal\projects\MDSUM\CryptINI\lockini.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="LockIni"/>
+      </Unit3>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

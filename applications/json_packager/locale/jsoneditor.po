@@ -33,15 +33,8 @@ msgid ""
 "Deletes the last entry from the list\n"
 msgstr ""
 
-#: tfrmmain.cbforcenotify.caption
-msgid "Force Notify"
-msgstr ""
-
-#: tfrmmain.cbforcenotify.hint
-msgid ""
-"Force Notify check box:\n"
-"If this is checked the OPM user will be notified\n"
-"of your update.  Only check this if the update is important.\n"
+#: tfrmmain.chk_disableinopm.caption
+msgid "Disable in OPM"
 msgstr ""
 
 #: tfrmmain.cmd_close.caption
@@ -103,19 +96,12 @@ msgstr ""
 msgid "Package Files:"
 msgstr ""
 
-#: tfrmmain.lbl_internalversion.caption
-msgid "Internal Version"
-msgstr ""
-
-#: tfrmmain.lbl_internalversion.hint
-msgctxt "tfrmmain.lbl_internalversion.hint"
-msgid ""
-"Internal Version:\n"
-"Increase internal version when you have made changes in the source. It  works only combined with ForceNotify.\n"
-msgstr ""
-
 #: tfrmmain.loaditem.caption
 msgid "Load..."
+msgstr ""
+
+#: tfrmmain.mnu_fileexit.caption
+msgid "E&xit"
 msgstr ""
 
 #: tfrmmain.mnu_filenew.caption
@@ -175,22 +161,6 @@ msgstr ""
 
 #: tfrmmain.spd_checkurl.hint
 msgid "Attempting to Open URL"
-msgstr ""
-
-#: tfrmmain.spin_internalversion.hint
-msgctxt "tfrmmain.spin_internalversion.hint"
-msgid ""
-"Internal Version:\n"
-"Increase internal version when you have made changes in the source. It  works only combined with ForceNotify.\n"
-msgstr ""
-
-#: tfrmmain.stringpackagefiles.hint
-msgid ""
-"Package Files:\n"
-"[Add]:  to make a new entry\n"
-"[Remove]: Remove last entry\n"
-"lpk filename: i.e. mycontrol.lpk\n"
-"Version: The FULL version (i.e. not 1.0 but 1.0.0.0)\n"
 msgstr ""
 
 #: umain.rsabout
@@ -318,6 +288,7 @@ msgid "- Update zip name missing extension \".zip\""
 msgstr ""
 
 #: umain.rsversion0000
+msgctxt "umain.rsversion0000"
 msgid "Version (n.n.n.n)"
 msgstr ""
 
