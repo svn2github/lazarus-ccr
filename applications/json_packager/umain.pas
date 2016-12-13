@@ -821,7 +821,6 @@ end;
 procedure TfrmMain.LoadItemClick(Sender: TObject);
 var
   i: integer;
-  sVersionString:String;
   Quad: TVersionQuad;
 begin
   FileOpen1.Dialog.InitialDir :=
@@ -842,8 +841,7 @@ begin
         begin
           If (i > 0) then AddPackageFileToList;
           ArrayEdtPackageFileName[i].Text:=JSONPackage.UpdatePackageFiles.Items[i].Name;
-          sVersionString:=JSONPackage.UpdatePackageFiles.Items[i].Version;
-          If fileinfo.TryStrToVersionQuad(sVersionString,Quad) then
+          If fileinfo.TryStrToVersionQuad(JSONPackage.UpdatePackageFiles.Items[i].Version,Quad) then
           begin
              ArraySpinEditV1[i].Value:=Quad[1];
              ArraySpinEditV2[i].Value:=Quad[2];
@@ -887,6 +885,14 @@ begin
   // stringPackageFiles.RowCount := 1;
   sJSONFilePath := '';
   sZipDirectory := '';
+  ResetPackageFileControlsToOne;
+  ArrayEdtPackageFileName[0].Text:=rsMypackagenam;
+  ArraySpinEditV1[0].Value:=0;
+  ArraySpinEditV2[0].Value:=0;
+  ArraySpinEditV3[0].Value:=0;
+  ArraySpinEditV4[0].Value:=0;
+  ArrayChkBoxForceNotify[0].Checked:=False;
+  ArraySpinEditInternalVersion[0].Value:=0;
 end;
 
 procedure TfrmMain.mnu_fileSaveClick(Sender: TObject);
