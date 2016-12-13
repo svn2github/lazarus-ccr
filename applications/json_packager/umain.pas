@@ -837,6 +837,8 @@ begin
       begin
         editName.Text := JSONPackage.UpdatePackageData.Name;
         editDownloadZipURL.Text := JSONPackage.UpdatePackageData.DownloadZipURL;
+        chk_DisableInOPM.Checked:=JSONPackage.UpdatePackageData.DisableInOpm;
+
         for i := 0 to JSONPackage.UpdatePackageFiles.Count - 1 do
         begin
           If (i > 0) then AddPackageFileToList;
@@ -882,7 +884,7 @@ procedure TfrmMain.mnu_fileNewClick(Sender: TObject);
 begin
   editname.Text := rsMypackagenam;
   editDownloadZipURL.Text := rsHttpWwwUpdat;
-  // stringPackageFiles.RowCount := 1;
+  chk_DisableInOPM.Checked:=False;
   sJSONFilePath := '';
   sZipDirectory := '';
   ResetPackageFileControlsToOne;
@@ -1121,6 +1123,7 @@ begin
   try
     JSONPackage.UpdatePackageData.Name := editName.Text;
     JSONPackage.UpdatePackageData.DownloadZipURL := editDownloadZipURL.Text;
+    JSONPackage.UpdatePackageData.DisableInOpm := chk_DisableInOPM.Checked;
     For i:=0 to High(ArrayGrpBox) do
     begin
        with JSONPackage.UpdatePackageFiles.Add do

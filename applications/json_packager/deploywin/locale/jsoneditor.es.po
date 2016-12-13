@@ -1,47 +1,46 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: \n"
+"Project-Id-Version: jsoneditor\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
+"Last-Translator: minesadorada <minesadorada@charcodelvalle.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es\n"
 "X-Generator: Poedit 1.8.11\n"
+"X-Poedit-SourceCharset: UTF-8\n"
 
 #: tfrmmain.btnadd.caption
 msgid "Add"
-msgstr "Añadir"
+msgstr "Agregar"
 
 #: tfrmmain.btnadd.hint
 msgid ""
 "Add Package File:\n"
 "The update zip can contain more than one lpk file\n"
 "deployed to the same place.\n"
-msgstr "Agregar archivo del paquete: La actualización postal puede contener más de un archivo LPK desplegado en el mismo lugar.\n"
+msgstr ""
+"Agregar archivo de paquete:\n"
+"El zip de actualización puede contener mas que un archivo lpk\n"
+"distribuido en el mismo lugar.\n"
 
 #: tfrmmain.btnremove.caption
 msgid "Remove"
-msgstr "Eliminar"
+msgstr "Quitar"
 
 #: tfrmmain.btnremove.hint
 msgid ""
 "Remove Package File:\n"
 "Deletes the last entry from the list\n"
-msgstr "Eliminar archivo del paquete: Borra la última entrada de la lista\n"
+msgstr ""
+"Quitar archivo de paquete:\n"
+"Elimina la última entrada de la lista\n"
 
-#: tfrmmain.cbforcenotify.caption
-msgid "Force Notify"
-msgstr "Notificar la fuerza"
-
-#: tfrmmain.cbforcenotify.hint
-msgid ""
-"Force Notify check box:\n"
-"If this is checked the OPM user will be notified\n"
-"of your update.  Only check this if the update is important.\n"
-msgstr "Casilla de verificación notificar de fuerza: Si esto se comprueba se notificará al usuario de la OPM de su actualización.  Sólo esto Compruebe si la actualización es importante.\n"
+#: tfrmmain.chk_disableinopm.caption
+msgid "Disable in OPM"
+msgstr ""
 
 #: tfrmmain.cmd_close.caption
 msgid "&Close"
@@ -49,19 +48,23 @@ msgstr "&Cerrar"
 
 #: tfrmmain.cmd_save.caption
 msgid "&Save"
-msgstr "Guardar"
+msgstr "&Guardar"
 
 #: tfrmmain.cmd_save.hint
 msgid ""
 "Save the current configuration to disk\n"
 "as a JSON update file\n"
-msgstr "Guardar la configuración actual en el disco como un archivo de actualización JSON\n"
+msgstr ""
+"Guardar la configuración actual en el disco\n"
+"como archivo de actualización JSON\n"
 
 #: tfrmmain.editdownloadzipurl.hint
 msgid ""
 "Download URL:\n"
 "Include the FULL url needed to download the package Zip file\n"
-msgstr "URL de descarga: Incluir el url COMPLETO necesario para descargar el archivo Zip del paquete\n"
+msgstr ""
+"URL de Descarga:\n"
+"Incluye la url COMPLETA necesaria para descargar el archivo zip del paquete\n"
 
 #: tfrmmain.editname.hint
 msgid ""
@@ -69,8 +72,9 @@ msgid ""
 "This is just the filename (not including the path)\n"
 "of your update zip. Type, or click the [...]\n"
 msgstr ""
-"Actualizar postal Nombre:\n"
-"Esto es sólo el nombre de archivo (sin incluir la ruta de acceso) de su actualización postal. Escriba o haga clic en el [...]\n"
+"Nombre del Zip de actualización:\n"
+"Este es solo el nombre (no incluye la ruta)\n"
+"de tu zip de actualización. Escribe o haz clic en [...]\n"
 
 #: tfrmmain.filemenu.caption
 msgid "File"
@@ -78,7 +82,7 @@ msgstr "Archivo"
 
 #: tfrmmain.fileopen1.caption
 msgid "&Open ..."
-msgstr "& Abrir..."
+msgstr "&Abrir ..."
 
 #: tfrmmain.fileopen1.hint
 msgid "Open"
@@ -86,27 +90,31 @@ msgstr "Abrir"
 
 #: tfrmmain.filesaveas1.caption
 msgid "&Save As ..."
-msgstr "Guardar &como..."
+msgstr "&Guardar Como ..."
 
 #: tfrmmain.filesaveas1.hint
 msgid "Save As"
-msgstr "Guardar como"
+msgstr "Guardar Como"
 
 #: tfrmmain.lbldownloadzipurl.caption
 msgid "Download URL:"
-msgstr "URL  de Descarga"
+msgstr "URL de Descarga:"
 
 #: tfrmmain.lblname.caption
 msgid "Update Zip Name:"
-msgstr "Actualizar postal Nombre:"
+msgstr "Nombre del Zip de actualización:"
 
 #: tfrmmain.lblpackagefiles.caption
 msgid "Package Files:"
-msgstr "El paquete de archivos:"
+msgstr "Archivos de Paquete:"
 
 #: tfrmmain.loaditem.caption
 msgid "Load..."
-msgstr "Cargar Archivo"
+msgstr "Cargar..."
+
+#: tfrmmain.mnu_fileexit.caption
+msgid "E&xit"
+msgstr ""
 
 #: tfrmmain.mnu_filenew.caption
 msgid "New"
@@ -122,23 +130,23 @@ msgstr "&Ayuda"
 
 #: tfrmmain.mnu_helpabout.caption
 msgid "About.."
-msgstr "Acerca de"
+msgstr "Acerca de.."
 
 #: tfrmmain.mnu_helpdisablewarnings.caption
 msgid "Disable warnings"
-msgstr "Desactivar advertencias"
+msgstr "Deshabilitar advertencias"
 
 #: tfrmmain.mnu_helpshowhints.caption
 msgid "Show Popup Hints"
-msgstr "Mostrar popup"
+msgstr "Mostrar consejos"
 
 #: tfrmmain.mnu_lang.caption
 msgid "Languages.."
-msgstr "Idiomas"
+msgstr "Idiomas.."
 
 #: tfrmmain.mnu_lang_en.caption
 msgid "English"
-msgstr "Ingles"
+msgstr "English"
 
 #: tfrmmain.mnu_lang_es.caption
 msgid "Español"
@@ -146,7 +154,7 @@ msgstr "Español"
 
 #: tfrmmain.saveasitem.caption
 msgid "Save As..."
-msgstr "Guardar como..."
+msgstr "Guardar Como..."
 
 #: tfrmmain.sb_editname.caption
 msgid "..."
@@ -157,28 +165,18 @@ msgid ""
 "Update Zip Name:\n"
 "Click this to browse your system to find\n"
 " an existing Update Zip\n"
-msgstr "Actualización Zip nombre: Haga clic aquí para ver su sistema para encontrar un Zip de actualización existentes\n"
+msgstr ""
+"Nombre del zip de actualización:\n"
+"Haz clic aquí para explorar tu sistema para encontrar\n"
+" un zip de actualización existente\n"
 
 #: tfrmmain.spd_checkurl.caption
 msgid "Check URL"
-msgstr "Comprueba la URL."
+msgstr "Verificar URL"
 
 #: tfrmmain.spd_checkurl.hint
 msgid "Attempting to Open URL"
-msgstr "Intentar abrir URL"
-
-#: tfrmmain.stringpackagefiles.hint
-msgid ""
-"Package Files:\n"
-"[Add]:  to make a new entry\n"
-"[Remove]: Remove last entry\n"
-"lpk filename: i.e. mycontrol.lpk\n"
-"Version: The FULL version (i.e. not 1.0 but 1.0.0.0)\n"
-msgstr ""
-"Los archivos del paquete:\n"
-"[Añadir]: para hacer una nueva entrada\n"
-"[Quitar]: Eliminar la última entrada de nombre de archivo\n"
-"LPK: es decir mycontrol.lpk Versión: La versión completa (es decir, no 1.0, pero 1.0.0.0)\n"
+msgstr "Intentando Abrir URL"
 
 #: umain.rsabout
 msgid "About"
@@ -186,39 +184,39 @@ msgstr "Acerca de"
 
 #: umain.rscompiledwith2
 msgid "Compiled with FPC V:%s and Lazarus V:%d.%d%s for the %s - %s platform%s%s"
-msgstr "Compilado con FPC V: %s y Lazarus V:%d.%d%s para el % de s - plataforma de %s %s %s"
+msgstr "Compilado con FPC V:%s y Lazarus V:%d.%d%s para la plataforma %s - %s%s%s"
 
 #: umain.rsdownloadzipurld
 msgid "- Download URL does not contain the zipfile name"
-msgstr "-URL de descarga no contiene el nombre del archivo zip"
+msgstr "- La URL de descarga no contiene el nombre del zip"
 
 #: umain.rsdownloadzipurli
 msgid "- Download URL is too short or missing"
-msgstr "-URL de descarga es demasiado breve o falta"
+msgstr "- URL de descarga es muy corta o está vacía"
 
 #: umain.rsdownloadzipurli2
 msgid "- Download URL is incomplete"
-msgstr "-URL de descarga es incompleta"
+msgstr "- URL de descarga incompleta"
 
 #: umain.rsdownloadzipurls
 msgid "- Download URL should start with \"http\""
-msgstr "-Descargar la URL debe comenzar con \"http\""
+msgstr "- URL de descarga debe empezar con \"http\""
 
 #: umain.rsfilemaybeuns
 msgid "JSON may be unsaved. Are you sure you want to quit?"
-msgstr "JSON puede ser salvo. ¿Está seguro que desea salir?"
+msgstr "JSON puede estar sin guardar. ¿Está seguro que desea salir?"
 
 #: umain.rsfixthentryag
 msgid "Fix, then try again."
-msgstr "Fijar, inténtelo de nuevo."
+msgstr "Arréglalo, luego intenta de nuevo."
 
 #: umain.rshelpandinfor
 msgid "Help and Information"
-msgstr "Ayuda e Info"
+msgstr "Ayuda e Información"
 
 #: umain.rshttpwwwupdat
 msgid "http://www.updatesite.com/myupdate/mypackagename.zip"
-msgstr "http://www.updatesite.com/myupdate/mypackagename.zip"
+msgstr "http://www.sitioactualizacion.com/miactualizacion/nombredemipaquete.zip"
 
 #: umain.rslanguagechan
 msgid "Language changed to \"%s\"."
@@ -226,23 +224,23 @@ msgstr "Idioma cambiado a \"%s\"."
 
 #: umain.rslpkfilename
 msgid "lpk FileName"
-msgstr "lpk nombre de archivo"
+msgstr "Archivo lpk"
 
 #: umain.rsmypackagenam
 msgid "mypackagename.zip"
-msgstr "mypackagename.zip"
+msgstr "nombredemipaquete.zip"
 
 #: umain.rsoneofthereq1
 msgid "One of the required fields is missing or wrong."
-msgstr "Uno de los campos requeridos es falta o no."
+msgstr "Uno de los campos requeridos esta vacío o mal."
 
 #: umain.rsoneofthereqn
 msgid "One or more of the required fields are missing or wrong."
-msgstr "Uno o más de los campos necesarios falta o mal."
+msgstr "Uno o mas de los capos requeridos esta vacío o mal."
 
 #: umain.rsoverwrite
 msgid "Overwrite"
-msgstr "Sobrescribir"
+msgstr "Sobreescribir"
 
 #: umain.rssavedok
 msgid "Saved OK"
@@ -250,76 +248,78 @@ msgstr "Guardado OK"
 
 #: umain.rssaveunsucces
 msgid "Save unsuccessful"
-msgstr "Salvar sin éxito"
+msgstr "Guardado no satisfactorio"
 
 #: umain.rssorrycopyope
 msgid "Sorry - copy operation was unsuccessful"
-msgstr "Lo sentimos - operación de copia no prosperó"
+msgstr "Lo siento, operación de copia insatisfactoria"
 
 #: umain.rssorrythislan
 msgid "Sorry, this language is unavailable at this time."
-msgstr "Lo sentimos, este idioma no está disponible en este momento."
+msgstr "Lo siento, este idioma no está disponible en este momento."
 
 #: umain.rsswassuccessf
 msgid "%s was successfully copied to the %s folder"
-msgstr "%s se ha copiado con éxito a la carpeta de %s"
+msgstr "%s fue satisfactoriamente copiado a la carpeta %s"
 
 #: umain.rsthelpkentryd
 msgid "The .lpk entry #%d is missing the .lpk extension"
-msgstr "La entrada de LPK # %d falta la extensión de LPK"
+msgstr "La entrada .lpk #%d no tiene la extensión .lpk"
 
 #: umain.rsthelpkentryd2
 msgid "The .lpk entry #%d is is absent"
-msgstr "La entrada de LPK # %d es ausente"
+msgstr "La entrada .lpk #%d está vacía"
 
 #: umain.rstherearenolp
 msgid "- There are no .lpk files in the list yet"
-msgstr "-Hay no hay archivos lpk en la lista aún"
+msgstr "- No hay ningún archivo .lpk en la lista todavía"
 
 #: umain.rsthereareoneo
 msgid "- There are one or more .lpk entries with the same name.%s- Every .lpk entry must have a unique name."
-msgstr "-Hay una o más entradas de LPK con la name.%s-mismo cada entrada lpk debe tener un nombre único."
+msgstr "- Hay una o más entradas .lpk con el mismo nombre.%s- Cada entrada .lpk debe tener un nombre único."
 
 #: umain.rsthisoptionsh
 msgid "This option should only be used for crucial updates or bug-fixed packages. Are you OK with that?"
-msgstr "Esta opción debe usarse cruciales actualizaciones o paquetes de bug-fixed. ¿Está bien con eso?"
+msgstr "Esta opción debe ser usada solamente para actualizaciones cruciales o paquetes con arreglos de bugs. ¿Estás de acuerdo con esto?"
 
 #: umain.rsturnhintsoff
 msgid "(You can toggle these hints on/off in the Help menu)"
-msgstr "(Se pueden alternar estos consejos de encendido/apagado en el menú Ayuda)"
+msgstr "(Puedes cambiar estos consejos en el menú Ayuda)"
 
 #: umain.rsupdate
 msgid "Update"
-msgstr "Actualizar"
+msgstr "Actualización"
 
 #: umain.rsupdatejsonsf
 msgid "Update file \"%s\" failed to load correctly."
-msgstr "Actualizar el archivo \"%s\" no se pudo cargar correctamente."
+msgstr "Archivo de actualización \"%s\" falló al cargarse."
 
 #: umain.rsupdatezipnam
 msgid "- Update zip name is too short or missing"
-msgstr "¡El nombre es demasiado corto!"
+msgstr "- El nombre del zip es muy corto o está vacío"
 
 #: umain.rsupdatezipnam2
 msgid "- Update zip name missing extension \".zip\""
-msgstr "-Actualización falta extensión \".zip\" el nombre zip"
+msgstr "- El nombre del zip no tiene la extensión \".zip\""
 
 #: umain.rsversion0000
+msgctxt "umain.rsversion0000"
 msgid "Version (n.n.n.n)"
 msgstr "Versión (n.n.n.n)"
 
 #: umain.rsversionentry
 msgid "Version Entry #%d is absent"
-msgstr "Existe versión entrada # %d"
+msgstr "Entrada de versión #%d está ausente"
 
 #: umain.rsversionentry2
 msgid "Version entry #%d needs to be of the form n.n.n.n"
-msgstr "Entrada # %d de la versión debe ser de la forma n.n.n.n"
+msgstr "Entrada de versión #%d necesita ser de la forma n.n.n.n"
 
 #: umain.rswouldyoulike
 msgid "Would you like to copy %s to the %s folder?"
-msgstr "¿Quieres copiar la carpeta de %s %s?"
+msgstr "¿Quieres copiar %s a la carpeta %s?"
 
 #: umain.rsyoumayneedto
 msgid "(You may need to restart the app to see the change)"
-msgstr "(Puede que necesite reiniciar la aplicación para ver el cambio)"
+msgstr "(Quizás necesites reiniciar la aplicación para ver los cambios)"
+
