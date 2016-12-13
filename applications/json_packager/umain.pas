@@ -58,8 +58,9 @@ unit umain;
   0.1.19.0: Added IntrnalVersion integer field to json (getmem/minesadorada)
             Added SpinEdit to control the above  (minesadorada)
             In Laz 1.7 DPIAwareness configured
-  0.2.0.0:  Refactored GUI
-  0.2.1.0: ToDo
+  0.2.0.0:  Refactored GUI(minesadorada)
+  0.2.1.0:  Added scrollbox to contain package info (GetMem)
+  0.2.2.0:  ToDo
            - sort out resourcestrings
            - Update Validation
            - Update hints
@@ -163,6 +164,7 @@ type
     mypopup: TPopupNotifier;
     SaveAsItem: TMenuItem;
     sb_editName: TSpeedButton;
+    sbPackageFiles: TScrollBox;
     spd_CheckURL: TSpeedButton;
     procedure btnAddClick(Sender: TObject);
     procedure btnRemoveClick(Sender: TObject);
@@ -330,7 +332,7 @@ end;
 procedure TfrmMain.CtrlSetUpPopupHandlers;
 // Use different handlers for some controls
 var
-  iCount, jCount: integer;
+  iCount, jCount,kCount: integer;
 begin
   with frmMain do
   begin
@@ -476,7 +478,7 @@ begin
 
    With ArrayGrpBox[iNumLpkFilesVisible] do
    begin
-     Caption:='Package Information';
+     Caption:=Format('Package #%d Information',[Succ(iNumLpkFilesVisible)]);
      if (iNumLpkFilesVisible > 0) then
         SetBounds(8,ArrayGrpBox[Pred(iNumLpkFilesVisible)].Top + ArrayGrpBox[Pred(iNumLpkFilesVisible)].Height + 10,frmMain.Width - 16,100)
      else
@@ -588,9 +590,8 @@ begin
        Tag:=Pred(iNumLpkFilesVisible);
        Parent:=ArrayGrpBox[iNumLpkFilesVisible];
      end;
-     AutoAdjustLayout(lapAutoAdjustForDPI, 96, frmMain.PixelsPerInch, 0, 0, False);
      // This sets the subcontrols up correctly
-     Parent:=frmMain;
+     Parent := sbPackageFiles;
    end;
 end;
 
@@ -634,12 +635,8 @@ begin
 
   // Makes it visible
   ArrayGrpBox[High(ArrayGrpBox)].Visible:=TRUE;
+  ArrayGrpBox[High(ArrayGrpBox)].Align := alTop;
   Inc(iNumLpkFilesVisible);
-
-  // Adjust form
-  Height:=Height + 108;//ArrayGrpBox[High(ArrayGrpBox)].Height;
-  cmd_Save.Top:=Height - cmd_Save.Height - cmd_Save.Height;
-  cmd_Close.Top:=Height - cmd_Close.Height - cmd_Close.Height;
   CtrlSetUpPopupHandlers;
   Refresh;
 end;
@@ -662,10 +659,6 @@ begin
     RemoveLastControlArray;
     Dec(iNumLpkFilesVisible);
     CtrlSetUpPopupHandlers;
-    // Adjust form
-    Height:=Height - 108; //ArrayGrpBox[High(ArrayGrpBox)].Height;
-    cmd_Save.Top:=Height - cmd_Save.Height - cmd_Save.Height;
-    cmd_Close.Top:=Height - cmd_Close.Height - cmd_Close.Height;
   end;
 end;
 
@@ -753,9 +746,9 @@ begin
   // Furniture
   Caption := Application.Title;
   Icon := Application.Icon;
-  Height:=btnAdd.Top + btnAdd.Height + (cmd_Save.Height * 3);
+{  Height:=btnAdd.Top + btnAdd.Height + (cmd_Save.Height * 3);
   cmd_Save.Top:=Height - cmd_Save.Height - cmd_Save.Height;
-  cmd_Close.Top:=Height - cmd_Close.Height - cmd_Close.Height;
+  cmd_Close.Top:=Height - cmd_Close.Height - cmd_Close.Height;}
   {$IFNDEF IGNOREPICTURE}
   MyPopup.Icon := TPicture(Application.Icon);
   {$ENDIF}
@@ -839,8 +832,6 @@ begin
       begin
         editName.Text := JSONPackage.UpdatePackageData.Name;
         editDownloadZipURL.Text := JSONPackage.UpdatePackageData.DownloadZipURL;
-        chk_DisableInOPM.Checked:=JSONPackage.UpdatePackageData.DisableInOpm;
-
         for i := 0 to JSONPackage.UpdatePackageFiles.Count - 1 do
         begin
           If (i > 0) then AddPackageFileToList;
@@ -886,7 +877,6 @@ procedure TfrmMain.mnu_fileNewClick(Sender: TObject);
 begin
   editname.Text := rsMypackagenam;
   editDownloadZipURL.Text := rsHttpWwwUpdat;
-  chk_DisableInOPM.Checked:=False;
   sJSONFilePath := '';
   sZipDirectory := '';
   ResetPackageFileControlsToOne;
@@ -1125,7 +1115,6 @@ begin
   try
     JSONPackage.UpdatePackageData.Name := editName.Text;
     JSONPackage.UpdatePackageData.DownloadZipURL := editDownloadZipURL.Text;
-    JSONPackage.UpdatePackageData.DisableInOpm := chk_DisableInOPM.Checked;
     For i:=0 to High(ArrayGrpBox) do
     begin
        with JSONPackage.UpdatePackageFiles.Add do

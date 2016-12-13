@@ -1,14 +1,14 @@
 object frmMain: TfrmMain
   Left = 588
-  Height = 330
+  Height = 398
   Top = 157
-  Width = 613
+  Width = 618
   Anchors = []
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   BorderWidth = 8
-  ClientHeight = 310
-  ClientWidth = 613
+  ClientHeight = 378
+  ClientWidth = 618
   DefaultMonitor = dmPrimary
   Menu = MainMenu1
   OnClick = mnu_fileSaveClick
@@ -34,7 +34,7 @@ object frmMain: TfrmMain
     Height = 23
     Hint = 'Update Zip Name:'#13#10'This is just the filename (not including the path)'#13#10'of your update zip. Type, or click the [...]'
     Top = 32
-    Width = 561
+    Width = 566
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Left = 4
     BorderSpacing.Right = 6
@@ -56,7 +56,7 @@ object frmMain: TfrmMain
     Height = 28
     Hint = 'Download URL:'#13#10'Include the FULL url needed to download the package Zip file'
     Top = 88
-    Width = 411
+    Width = 416
     Anchors = [akTop, akLeft, akRight]
     AutoSize = False
     BorderSpacing.Left = 4
@@ -68,7 +68,7 @@ object frmMain: TfrmMain
     Left = 8
     Height = 15
     Top = 130
-    Width = 399
+    Width = 404
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
     AutoSize = False
@@ -78,7 +78,7 @@ object frmMain: TfrmMain
   end
   object btnAdd: TButton
     AnchorSideRight.Control = btnRemove
-    Left = 415
+    Left = 420
     Height = 25
     Hint = 'Add Package File:'#13#10'The update zip can contain more than one lpk file'#13#10'deployed to the same place.'
     Top = 128
@@ -90,7 +90,7 @@ object frmMain: TfrmMain
     TabOrder = 2
   end
   object btnRemove: TButton
-    Left = 520
+    Left = 525
     Height = 25
     Hint = 'Remove Package File:'#13#10'Deletes the last entry from the list'
     Top = 128
@@ -102,11 +102,11 @@ object frmMain: TfrmMain
     TabOrder = 3
   end
   object cmd_Close: TBitBtn
-    Left = 520
+    Left = 517
     Height = 30
-    Top = 270
+    Top = 337
     Width = 83
-    Anchors = []
+    Anchors = [akBottom]
     BorderSpacing.Top = 30
     BorderSpacing.Right = 10
     Cancel = True
@@ -118,12 +118,12 @@ object frmMain: TfrmMain
   end
   object cmd_save: TBitBtn
     AnchorSideTop.Control = btnAdd
-    Left = 269
+    Left = 280
     Height = 30
     Hint = 'Save the current configuration to disk'#13#10'as a JSON update file'
-    Top = 270
+    Top = 337
     Width = 75
-    Anchors = []
+    Anchors = [akBottom]
     BorderSpacing.Top = 30
     Caption = '&Save'
     Default = True
@@ -167,7 +167,7 @@ object frmMain: TfrmMain
     TabOrder = 5
   end
   object sb_editName: TSpeedButton
-    Left = 579
+    Left = 584
     Height = 22
     Hint = 'Update Zip Name:'#13#10'Click this to browse your system to find'#13#10' an existing Update Zip'
     Top = 32
@@ -178,7 +178,7 @@ object frmMain: TfrmMain
   end
   object spd_CheckURL: TSpeedButton
     AnchorSideRight.Control = chk_DisableInOPM
-    Left = 433
+    Left = 438
     Height = 19
     Hint = 'Attempting to Open URL'
     Top = 88
@@ -190,7 +190,7 @@ object frmMain: TfrmMain
     OnClick = spd_CheckURLClick
   end
   object chk_DisableInOPM: TCheckBox
-    Left = 502
+    Left = 507
     Height = 19
     Top = 88
     Width = 101
@@ -199,6 +199,16 @@ object frmMain: TfrmMain
     BorderSpacing.Right = 10
     Caption = 'Disable in OPM'
     TabOrder = 6
+  end
+  object sbPackageFiles: TScrollBox
+    Left = 8
+    Height = 166
+    Top = 160
+    Width = 595
+    HorzScrollBar.Page = 1
+    VertScrollBar.Page = 1
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    TabOrder = 7
   end
   object MainMenu1: TMainMenu
     Left = 200
