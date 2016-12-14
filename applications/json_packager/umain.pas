@@ -165,6 +165,8 @@ type
     sb_editName: TSpeedButton;
     sbPackageFiles: TScrollBox;
     spd_CheckURL: TSpeedButton;
+    procedure chk_DisableInOPMMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure cmd_AddPackageFileClick(Sender: TObject);
     procedure cmd_RemoveLastPackageFileClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -719,6 +721,16 @@ end;
 procedure TfrmMain.cmd_AddPackageFileClick(Sender: TObject);
 begin
   AddPackageFileToList;
+end;
+
+procedure TfrmMain.chk_DisableInOPMMouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  If chk_DisableInOPM.Checked=TRUE then
+     If MessageDlg('This will disable your package in OnlinePackageManager!' + LineEnding +
+     'Are you SURE you want to do this?',
+     mtWarning,[MBYES,MBNO],0,MBNO) = mrNo then
+       chk_DisableInOPM.Checked:=FALSE;
 end;
 
 procedure TfrmMain.cmd_RemoveLastPackageFileClick(Sender: TObject);

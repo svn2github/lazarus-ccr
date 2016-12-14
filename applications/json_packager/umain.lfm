@@ -197,6 +197,7 @@ object frmMain: TfrmMain
     AutoSize = False
     BorderSpacing.Right = 10
     Caption = 'Disable in OPM'
+    OnMouseUp = chk_DisableInOPMMouseUp
     TabOrder = 6
   end
   object sbPackageFiles: TScrollBox
