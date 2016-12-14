@@ -343,7 +343,7 @@ msgid "- Update zip name missing extension \".zip\""
 msgstr ""
 
 #: umain.rsuseincombina
-msgid "Use in combination with %s"
+msgid "Use in combination with"
 msgstr ""
 
 #: umain.rsversion

@@ -279,7 +279,7 @@ resourcestring
     '- Every .lpk entry must have a unique name.';
   rsUpdateJsonSF = 'Update file "%s" failed to load correctly.';
   rsNotifyUpdate = 'Notify Update';
-  rsUseInCombina = 'Use in combination with %s';
+  rsUseInCombina = 'Use in combination with';
   rsPackageDInfo = 'Package #%d Information';
   rsThePackageFi = 'The package filename (No path e.g. package.lpk)';
   rsVersion = 'Version: ';
@@ -599,7 +599,7 @@ begin
       OnMouseEnter := @CtrlShowPopup;
       OnMouseLeave := @CtrlHidePopup;
       OnClick := @CtrlHidePopup;
-      Hint := Format('%s%s%s%s', [rsInternalVers,LineEnding,rsUseInCombina,rsNotifyUpdate]);
+      Hint := Format('%s%s%s %s', [rsInternalVers,LineEnding,rsUseInCombina,rsNotifyUpdate]);
       Parent := ArrayGrpBox[iNumLpkFilesVisible];
     end;
     // SpinEdit Internal Version
@@ -614,7 +614,7 @@ begin
       OnMouseLeave := @CtrlHidePopup;
       OnClick := @CtrlHidePopup;
       OnChange := @CtrlMakeDirty;
-      Hint := Format('%s%s%s%s', [rsInternalVers,LineEnding,rsUseInCombina,rsNotifyUpdate]);
+      Hint := Format('%s%s%s %s', [rsInternalVers,LineEnding,rsUseInCombina,rsNotifyUpdate]);
       Parent := ArrayGrpBox[iNumLpkFilesVisible];
     end;
     // This sets the subcontrols up correctly
