@@ -284,11 +284,11 @@ resourcestring
   rsThePackageFi = 'The package filename (No path e.g. package.lpk)';
   rsVersion = 'Version: ';
   rsFormatIsNNNN = 'Package version:%sFormat is: n.n.n.n';
-  rsCheckThisIfY = 'Check this if you don''t want to incrememt the package '
+  rsCheckThisIfY = 'Check this if you don''t want to increment the package '
     +'version';
   rsInternalVers = 'Internal Version: ';
   rsFilename = 'Filename: ';
-  rsThisWillDisa = 'This will disable your package in OnlinePackageManager!%'
+  rsThisWillDisa = 'This will disable your package in Online Package Manager!%'
     +'sAre you SURE you want to do this?';
   rsThereWasAPro = 'There was a problem loading "%s" - is it corrupted or in '
     +'the wrong format?';
@@ -301,7 +301,7 @@ resourcestring
 constructor TUpdatePackageData.Create;
 begin
   FName := '';
-  //  FForceNotify := False;
+  FDisableInOPM:= False;
   FDownloadZipURL := '';
 end;
 

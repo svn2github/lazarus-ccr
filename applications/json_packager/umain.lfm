@@ -1,7 +1,7 @@
 object frmMain: TfrmMain
-  Left = 852
+  Left = 488
   Height = 398
-  Top = 171
+  Top = 246
   Width = 618
   Anchors = []
   BorderIcons = [biSystemMenu]
@@ -183,6 +183,7 @@ object frmMain: TfrmMain
     Top = 88
     Width = 61
     Anchors = [akTop, akRight]
+    AutoSize = True
     BorderSpacing.Left = 10
     BorderSpacing.Right = 8
     Caption = 'Check URL'
@@ -195,7 +196,6 @@ object frmMain: TfrmMain
     Top = 88
     Width = 101
     Anchors = [akTop, akRight]
-    AutoSize = False
     BorderSpacing.Right = 10
     Caption = 'Disable in OPM'
     OnMouseUp = chk_DisableInOPMMouseUp

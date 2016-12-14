@@ -209,7 +209,7 @@ msgid "About"
 msgstr "Acerca de"
 
 #: umain.rscheckthisify
-msgid "Check this if you don't want to incrememt the package version"
+msgid "Check this if you don't want to increment the package version"
 msgstr ""
 
 #: umain.rscompiledwith2
@@ -351,7 +351,7 @@ msgid "This option should only be used for crucial updates or bug-fixed packages
 msgstr "Esta opción debe ser usada solamente para actualizaciones cruciales o paquetes con arreglos de bugs. ¿Estás de acuerdo con esto?"
 
 #: umain.rsthiswilldisa
-msgid "This will disable your package in OnlinePackageManager!%sAre you SURE you want to do this?"
+msgid "This will disable your package in Online Package Manager!%sAre you SURE you want to do this?"
 msgstr ""
 
 #: umain.rsturnhintsoff
@@ -375,7 +375,7 @@ msgid "- Update zip name missing extension \".zip\""
 msgstr "- El nombre del zip no tiene la extensión \".zip\""
 
 #: umain.rsuseincombina
-msgid "Use in combination with %s"
+msgid "Use in combination with"
 msgstr ""
 
 #: umain.rsversion

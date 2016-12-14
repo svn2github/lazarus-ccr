@@ -181,7 +181,7 @@ msgid "About"
 msgstr ""
 
 #: umain.rscheckthisify
-msgid "Check this if you don't want to incrememt the package version"
+msgid "Check this if you don't want to increment the package version"
 msgstr ""
 
 #: umain.rscompiledwith2
@@ -319,7 +319,7 @@ msgid "This option should only be used for crucial updates or bug-fixed packages
 msgstr ""
 
 #: umain.rsthiswilldisa
-msgid "This will disable your package in OnlinePackageManager!%sAre you SURE you want to do this?"
+msgid "This will disable your package in Online Package Manager!%sAre you SURE you want to do this?"
 msgstr ""
 
 #: umain.rsturnhintsoff

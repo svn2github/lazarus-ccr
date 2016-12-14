@@ -20,13 +20,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="586"/>
-        <CursorPos X="30" Y="617"/>
+        <TopLine Value="287"/>
+        <CursorPos X="19" Y="304"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
           <IsVisibleTab Value="True"/>
           <WindowIndex Value="1"/>
-          <TopLine Value="312"/>
+          <TopLine Value="311"/>
           <CursorPos Y="498"/>
         </ExtraEditor1>
         <UsageCount Value="161"/>
