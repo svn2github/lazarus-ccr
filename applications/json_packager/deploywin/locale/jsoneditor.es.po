@@ -12,11 +12,19 @@ msgstr ""
 "X-Generator: Poedit 1.8.11\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: tfrmmain.btnadd.caption
+#: tfrmmain.chk_disableinopm.caption
+msgid "Disable in OPM"
+msgstr ""
+
+#: tfrmmain.cmd_addpackagefile.caption
+#, fuzzy
+msgctxt "tfrmmain.cmd_addpackagefile.caption"
 msgid "Add"
 msgstr "Agregar"
 
-#: tfrmmain.btnadd.hint
+#: tfrmmain.cmd_addpackagefile.hint
+#, fuzzy
+msgctxt "tfrmmain.cmd_addpackagefile.hint"
 msgid ""
 "Add Package File:\n"
 "The update zip can contain more than one lpk file\n"
@@ -26,25 +34,25 @@ msgstr ""
 "El zip de actualización puede contener mas que un archivo lpk\n"
 "distribuido en el mismo lugar.\n"
 
-#: tfrmmain.btnremove.caption
+#: tfrmmain.cmd_close.caption
+msgid "&Close"
+msgstr "&Cerrar"
+
+#: tfrmmain.cmd_removelastpackagefile.caption
+#, fuzzy
+msgctxt "tfrmmain.cmd_removelastpackagefile.caption"
 msgid "Remove"
 msgstr "Quitar"
 
-#: tfrmmain.btnremove.hint
+#: tfrmmain.cmd_removelastpackagefile.hint
+#, fuzzy
+msgctxt "tfrmmain.cmd_removelastpackagefile.hint"
 msgid ""
 "Remove Package File:\n"
 "Deletes the last entry from the list\n"
 msgstr ""
 "Quitar archivo de paquete:\n"
 "Elimina la última entrada de la lista\n"
-
-#: tfrmmain.chk_disableinopm.caption
-msgid "Disable in OPM"
-msgstr ""
-
-#: tfrmmain.cmd_close.caption
-msgid "&Close"
-msgstr "&Cerrar"
 
 #: tfrmmain.cmd_save.caption
 msgid "&Save"
@@ -58,7 +66,9 @@ msgstr ""
 "Guardar la configuración actual en el disco\n"
 "como archivo de actualización JSON\n"
 
-#: tfrmmain.editdownloadzipurl.hint
+#: tfrmmain.edt_downloadzipurl.hint
+#, fuzzy
+msgctxt "tfrmmain.edt_downloadzipurl.hint"
 msgid ""
 "Download URL:\n"
 "Include the FULL url needed to download the package Zip file\n"
@@ -66,7 +76,9 @@ msgstr ""
 "URL de Descarga:\n"
 "Incluye la url COMPLETA necesaria para descargar el archivo zip del paquete\n"
 
-#: tfrmmain.editname.hint
+#: tfrmmain.edt_updatezipname.hint
+#, fuzzy
+msgctxt "tfrmmain.edt_updatezipname.hint"
 msgid ""
 "Update Zip Name:\n"
 "This is just the filename (not including the path)\n"
@@ -96,17 +108,23 @@ msgstr "&Guardar Como ..."
 msgid "Save As"
 msgstr "Guardar Como"
 
-#: tfrmmain.lbldownloadzipurl.caption
+#: tfrmmain.lbl_downloadzipurl.caption
+#, fuzzy
+msgctxt "tfrmmain.lbl_downloadzipurl.caption"
 msgid "Download URL:"
 msgstr "URL de Descarga:"
 
-#: tfrmmain.lblname.caption
-msgid "Update Zip Name:"
-msgstr "Nombre del Zip de actualización:"
-
-#: tfrmmain.lblpackagefiles.caption
+#: tfrmmain.lbl_packagefiles.caption
+#, fuzzy
+msgctxt "tfrmmain.lbl_packagefiles.caption"
 msgid "Package Files:"
 msgstr "Archivos de Paquete:"
+
+#: tfrmmain.lbl_updatezipname.caption
+#, fuzzy
+msgctxt "tfrmmain.lbl_updatezipname.caption"
+msgid "Update Zip Name:"
+msgstr "Nombre del Zip de actualización:"
 
 #: tfrmmain.loaditem.caption
 msgid "Load..."
@@ -222,10 +240,6 @@ msgstr "http://www.sitioactualizacion.com/miactualizacion/nombredemipaquete.zip"
 msgid "Language changed to \"%s\"."
 msgstr "Idioma cambiado a \"%s\"."
 
-#: umain.rslpkfilename
-msgid "lpk FileName"
-msgstr "Archivo lpk"
-
 #: umain.rsmypackagelpk
 #, fuzzy
 #| msgid "mypackagename.zip"
@@ -278,16 +292,14 @@ msgstr "La entrada .lpk #%d no tiene la extensión .lpk"
 msgid "The .lpk entry #%d is is absent"
 msgstr "La entrada .lpk #%d está vacía"
 
-#: umain.rstherearenolp
-msgid "- There are no .lpk files in the list yet"
-msgstr "- No hay ningún archivo .lpk en la lista todavía"
-
 #: umain.rsthereareoneo
 msgid "- There are one or more .lpk entries with the same name.%s- Every .lpk entry must have a unique name."
 msgstr "- Hay una o más entradas .lpk con el mismo nombre.%s- Cada entrada .lpk debe tener un nombre único."
 
 #: umain.rsthisoptionsh
-msgid "This option should only be used for crucial updates or bug-fixed packages. Are you OK with that?"
+#, fuzzy
+#| msgid "This option should only be used for crucial updates or bug-fixed packages. Are you OK with that?"
+msgid "This option should only be used for crucial updates or bug-fixed packages."
 msgstr "Esta opción debe ser usada solamente para actualizaciones cruciales o paquetes con arreglos de bugs. ¿Estás de acuerdo con esto?"
 
 #: umain.rsturnhintsoff
@@ -309,19 +321,6 @@ msgstr "- El nombre del zip es muy corto o está vacío"
 #: umain.rsupdatezipnam2
 msgid "- Update zip name missing extension \".zip\""
 msgstr "- El nombre del zip no tiene la extensión \".zip\""
-
-#: umain.rsversion0000
-msgctxt "umain.rsversion0000"
-msgid "Version (n.n.n.n)"
-msgstr "Versión (n.n.n.n)"
-
-#: umain.rsversionentry
-msgid "Version Entry #%d is absent"
-msgstr "Entrada de versión #%d está ausente"
-
-#: umain.rsversionentry2
-msgid "Version entry #%d needs to be of the form n.n.n.n"
-msgstr "Entrada de versión #%d necesita ser de la forma n.n.n.n"
 
 #: umain.rswouldyoulike
 msgid "Would you like to copy %s to the %s folder?"

@@ -60,11 +60,9 @@ unit umain;
             In Laz 1.7 DPIAwareness configured
   0.2.0.0:  Refactored GUI(minesadorada)
   0.2.1.0:  Added scrollbox to contain package info (GetMem)
-  0.2.2.0:  Hints and Validation updated
+  0.2.2.0:  Hints and Validation updated (minesadorada)
   0.2.3.0:  ToDo
            - sort out resourcestrings
-           - Update Validation
-           - Update hints
  }
 {$mode objfpc}{$H+}
 
@@ -105,14 +103,14 @@ type
   TUpdatePackageData = class(TPersistent)
   private
     FDownloadZipURL: string;
-    FDisableInOPM: Boolean;
+    FDisableInOPM: boolean;
     FName: string;
   public
     constructor Create;
   published
     property Name: string read FName write FName;
     property DownloadZipURL: string read FDownloadZipURL write FDownloadZipURL;
-    property DisableInOPM:Boolean read FDisableInOPM write FDisableInOPM;
+    property DisableInOPM: boolean read FDisableInOPM write FDisableInOPM;
   end;
 
   { TUpdatePackage }
@@ -140,15 +138,15 @@ type
     chk_DisableInOPM: TCheckBox;
     cmd_Close: TBitBtn;
     cmd_save: TBitBtn;
-    btnAdd: TButton;
-    btnRemove: TButton;
-    editName: TEdit;
-    editDownloadZipURL: TEdit;
+    cmd_AddPackageFile: TButton;
+    cmd_RemoveLastPackageFile: TButton;
+    edt_UpdateZipName: TEdit;
+    edt_DownloadZipURL: TEdit;
     FileOpen1: TFileOpen;
     FileSaveAs1: TFileSaveAs;
-    lblPackageFiles: TLabel;
-    lblName: TLabel;
-    lblDownloadZipURL: TLabel;
+    lbl_PackageFiles: TLabel;
+    lbl_UpdateZipName: TLabel;
+    lbl_DownloadZipURL: TLabel;
     MainMenu1: TMainMenu;
     FileMenu: TMenuItem;
     LoadItem: TMenuItem;
@@ -162,16 +160,13 @@ type
     mnu_helpShowHints: TMenuItem;
     mnu_help: TMenuItem;
     mnu_fileSave: TMenuItem;
-    mypopup: TPopupNotifier;
+    popup_hint: TPopupNotifier;
     SaveAsItem: TMenuItem;
     sb_editName: TSpeedButton;
     sbPackageFiles: TScrollBox;
     spd_CheckURL: TSpeedButton;
-    procedure btnAddClick(Sender: TObject);
-    procedure btnRemoveClick(Sender: TObject);
-    procedure cbForceNotifyMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: integer);
-    procedure cmd_CloseClick(Sender: TObject);
+    procedure cmd_AddPackageFileClick(Sender: TObject);
+    procedure cmd_RemoveLastPackageFileClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -198,19 +193,19 @@ type
     CFG: TIniFile;
     INIFilePath: string;
     // Start of Package Information controls
-    ArrayGrpBox:Array of TGroupBox;
-    ArrayLblPackageFileName:Array of TLabel;
-    ArrayEdtPackageFileName:Array of TEdit;
-    ArrayLblPackageVersion:Array of TLabel;
-    ArraySpinEditV1:Array of TSpinEdit;
-    ArraySpinEditV2:Array of TSpinEdit;
-    ArraySpinEditV3:Array of TSpinEdit;
-    ArraySpinEditV4:Array of TSpinEdit;
-    ArrayChkBoxForceNotify:Array of TCheckBox;
-    ArraySpinEditInternalVersion:Array of TSpinEdit;
-    ArrayLblPackageInternalVersion:Array of TLabel;
+    ArrayGrpBox: array of TGroupBox;
+    ArrayLblPackageFileName: array of TLabel;
+    ArrayEdtPackageFileName: array of TEdit;
+    ArrayLblPackageVersion: array of TLabel;
+    ArraySpinEditV1: array of TSpinEdit;
+    ArraySpinEditV2: array of TSpinEdit;
+    ArraySpinEditV3: array of TSpinEdit;
+    ArraySpinEditV4: array of TSpinEdit;
+    ArrayChkBoxForceNotify: array of TCheckBox;
+    ArraySpinEditInternalVersion: array of TSpinEdit;
+    ArrayLblPackageInternalVersion: array of TLabel;
     // End of Package Information controls
-    iNumLpkFilesVisible:Integer;
+    iNumLpkFilesVisible: integer;
     procedure AddPackageFileToList;
     procedure RemovePackageFileFromList;
     procedure ResetPackageFileControlsToOne;
@@ -218,6 +213,8 @@ type
     procedure DestroyControlArrays;
     procedure RemoveLastControlArray;
     function ValidationFailed: boolean;
+    procedure ProcessNotify(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: integer);
     procedure CtrlShowPopup(Sender: TObject);
     procedure CtrlHidePopup(Sender: TObject);
     procedure CtrlSetUpPopupHandlers;
@@ -257,12 +254,9 @@ resourcestring
   rsMypackagenam = 'mypackagename.zip';
   rsMypackagelpk = 'mypackagename.lpk';
   rsHttpWwwUpdat = 'http://www.updatesite.com/myupdate/mypackagename.zip';
-  rsLpkFileName = 'lpk FileName';
-  rsVersion0000 = 'Version (n.n.n.n)';
   rsFixThenTryAg = 'Fix, then try again.';
   rsUpdateZipNam = '- Update zip name is too short or missing';
   rsDownloadZipURLI = '- Download URL is too short or missing';
-  rsThereAreNoLp = '- There are no .lpk files in the list yet';
   rsUpdateZipNam2 = '- Update zip name missing extension ".zip"';
   rsDownloadZipURLI2 = '- Download URL is incomplete';
   rsDownloadZipURLS = '- Download URL should start with "http"';
@@ -272,12 +266,10 @@ resourcestring
   rsSorryCopyOpe = 'Sorry - copy operation was unsuccessful';
   rsCompiledWith2 = 'Compiled with FPC V:%s and Lazarus V:%d.%d%s for the %s -' +
     ' %s platform%s%s';
-  rsVersionEntry = 'Version Entry #%d is absent';
-  rsVersionEntry2 = 'Version entry #%d needs to be of the form n.n.n.n';
   rsTheLpkEntryD = 'The .lpk entry #%d is missing the .lpk extension';
   rsTheLpkEntryD2 = 'The .lpk entry #%d is is absent';
   rsThisOptionSh =
-    'This option should only be used for crucial updates or bug-fixed packages. Are you OK with that?';
+    'This option should only be used for crucial updates or bug-fixed packages.';
   rsLanguageChan = 'Language changed to "%s".';
   rsSorryThisLan = 'Sorry, this language is unavailable at this time.';
   rsYouMayNeedTo = '(You may need to restart the app to see the change)';
@@ -290,7 +282,7 @@ resourcestring
 constructor TUpdatePackageData.Create;
 begin
   FName := '';
-//  FForceNotify := False;
+  //  FForceNotify := False;
   FDownloadZipURL := '';
 end;
 
@@ -303,7 +295,7 @@ end;
 procedure TfrmMain.CtrlHidePopup(Sender: TObject);
 // Get rid of highlighting
 begin
-  mypopup.Hide;
+  popup_hint.Hide;
   slErrorList.Clear;
   if Sender.ClassName <> 'TLabel' then
     TControl(Sender).Color := clWindow;
@@ -314,19 +306,19 @@ procedure TfrmMain.CtrlShowPopup(Sender: TObject);
 begin
   if not bShowPopupHints then
     exit;
-  MyPopup.Text := '';
-  MyPopup.Title := '';
+  popup_hint.Text := '';
+  popup_hint.Title := '';
   if (Sender.InheritsFrom(TControl) = False) then
     exit;
 
-  myPopup.Text := TControl(Sender).Hint;
-  if (MyPopup.Text <> '') then
+  popup_hint.Text := TControl(Sender).Hint;
+  if (popup_hint.Text <> '') then
   begin
-    mypopup.Title := rsHelpAndInfor;
-    mypopup.Text := mypopup.Text;
+    popup_hint.Title := rsHelpAndInfor;
+    popup_hint.Text := popup_hint.Text;
     if bIsVirgin then
-      mypopup.Text := mypopup.Text + LineEnding + rsTurnHintsOff;
-    mypopup.showatpos(Mouse.CursorPos.X, Mouse.CursorPos.Y);
+      popup_hint.Text := popup_hint.Text + LineEnding + rsTurnHintsOff;
+    popup_hint.showatpos(Mouse.CursorPos.X, Mouse.CursorPos.Y);
   end;
 end;
 
@@ -392,31 +384,33 @@ begin
     end;
   end;
 end;
+
 procedure TfrmMain.DestroyControlArrays;
-Var i:Integer;
+var
+  i: integer;
 begin
   // This could be done with one loop
-  For i:=0 to High(ArraySpinEditInternalVersion) do
+  for i := 0 to High(ArraySpinEditInternalVersion) do
     FreeAndNil(ArraySpinEditInternalVersion[i]);
-  For i:=0 to High(ArrayLblPackageInternalVersion) do
+  for i := 0 to High(ArrayLblPackageInternalVersion) do
     FreeAndNil(ArrayLblPackageInternalVersion[i]);
-  For i:=0 to High(ArrayChkBoxForceNotify) do
-     FreeAndNil(ArrayChkBoxForceNotify[i]);
-  For i:=0 to High(ArraySpinEditV4) do
+  for i := 0 to High(ArrayChkBoxForceNotify) do
+    FreeAndNil(ArrayChkBoxForceNotify[i]);
+  for i := 0 to High(ArraySpinEditV4) do
     FreeAndNil(ArraySpinEditV4[i]);
-  For i:=0 to High(ArraySpinEditV3) do
+  for i := 0 to High(ArraySpinEditV3) do
     FreeAndNil(ArraySpinEditV3[i]);
-  For i:=0 to High(ArraySpinEditV2) do
+  for i := 0 to High(ArraySpinEditV2) do
     FreeAndNil(ArraySpinEditV2[i]);
-  For i:=0 to High(ArraySpinEditV1) do
+  for i := 0 to High(ArraySpinEditV1) do
     FreeAndNil(ArraySpinEditV1[i]);
-  For i:=0 to High(ArrayLblPackageVersion) do
+  for i := 0 to High(ArrayLblPackageVersion) do
     FreeAndNil(ArrayLblPackageVersion[i]);
-  For i:=0 to High(ArrayEdtPackageFileName) do
+  for i := 0 to High(ArrayEdtPackageFileName) do
     FreeAndNil(ArrayEdtPackageFileName[i]);
-  For i:=0 to High(ArrayLblPackageFileName) do
+  for i := 0 to High(ArrayLblPackageFileName) do
     FreeAndNil(ArrayLblPackageFileName[i]);
-  For i:=0 to High(ArrayGrpBox) do
+  for i := 0 to High(ArrayGrpBox) do
     FreeAndNil(ArrayGrpBox[i]);
 end;
 
@@ -438,217 +432,221 @@ ArraySpinEditInternalVersion:Array of TSpinEdit;
 SetBounds(Left,Top,Width,Height);
 }
 begin
-   SetLength(ArrayGrpBox,Succ(iNumLpkFilesVisible));
-   ArrayGrpBox[iNumLpkFilesVisible]:=TGroupBox.Create(Self);
+  SetLength(ArrayGrpBox, Succ(iNumLpkFilesVisible));
+  ArrayGrpBox[iNumLpkFilesVisible] := TGroupBox.Create(Self);
 
-   SetLength(ArrayLblPackageFileName,Succ(iNumLpkFilesVisible));
-   SetLength(ArrayEdtPackageFileName,Succ(iNumLpkFilesVisible));
-   SetLength(ArrayLblPackageVersion,Succ(iNumLpkFilesVisible));
-   SetLength(ArraySpinEditV1,Succ(iNumLpkFilesVisible));
-   SetLength(ArraySpinEditV2,Succ(iNumLpkFilesVisible));
-   SetLength(ArraySpinEditV3,Succ(iNumLpkFilesVisible));
-   SetLength(ArraySpinEditV4,Succ(iNumLpkFilesVisible));
-   SetLength(ArrayChkBoxForceNotify,Succ(iNumLpkFilesVisible));
-   SetLength(ArrayLblPackageInternalVersion,Succ(iNumLpkFilesVisible));
-   SetLength(ArraySpinEditInternalVersion,Succ(iNumLpkFilesVisible));
+  SetLength(ArrayLblPackageFileName, Succ(iNumLpkFilesVisible));
+  SetLength(ArrayEdtPackageFileName, Succ(iNumLpkFilesVisible));
+  SetLength(ArrayLblPackageVersion, Succ(iNumLpkFilesVisible));
+  SetLength(ArraySpinEditV1, Succ(iNumLpkFilesVisible));
+  SetLength(ArraySpinEditV2, Succ(iNumLpkFilesVisible));
+  SetLength(ArraySpinEditV3, Succ(iNumLpkFilesVisible));
+  SetLength(ArraySpinEditV4, Succ(iNumLpkFilesVisible));
+  SetLength(ArrayChkBoxForceNotify, Succ(iNumLpkFilesVisible));
+  SetLength(ArrayLblPackageInternalVersion, Succ(iNumLpkFilesVisible));
+  SetLength(ArraySpinEditInternalVersion, Succ(iNumLpkFilesVisible));
 
-   With ArrayGrpBox[iNumLpkFilesVisible] do
-   begin
-     Caption:=Format('Package #%d Information',[Succ(iNumLpkFilesVisible)]);
-     if (iNumLpkFilesVisible > 0) then
-        SetBounds(8,ArrayGrpBox[Pred(iNumLpkFilesVisible)].Top + ArrayGrpBox[Pred(iNumLpkFilesVisible)].Height + 10,frmMain.Width - 16,100)
-     else
-       SetBounds(8,btnAdd.Top + btnAdd.Height + 10,frmMain.Width - 16,100);
-     Visible:=False;
-     Tag:=Pred(iNumLpkFilesVisible);
-     // Label - Package name
-     ArrayLblPackageFileName[iNumLpkFilesVisible]:=TLabel.Create(Nil);
-     With ArrayLblPackageFileName[iNumLpkFilesVisible] do
-     begin
-       Caption:='Filename: ';
-       SetBounds(8,10,50,23);
-       Visible:=True;
-       Tag:=Pred(iNumLpkFilesVisible);
-       OnMouseEnter:=@CtrlShowPopup;
-       OnMouseLeave := @CtrlHidePopup;
-       OnClick := @CtrlHidePopup;
-       Hint:='Just the package filename e.g. package.lpk';
-       Parent:=ArrayGrpBox[iNumLpkFilesVisible];
-     end;
-     // EditBox - Package name
-     ArrayEdtPackageFileName[iNumLpkFilesVisible]:=TEdit.Create(Nil);
-     With ArrayEdtPackageFileName[iNumLpkFilesVisible] do
-     begin
-       Text:=rsMypackagelpk;
-       SetBounds(64,8,256,23);
-       Visible:=True;
-       Tag:=Pred(iNumLpkFilesVisible);
-       OnMouseEnter:=@CtrlShowPopup;
-       OnMouseLeave := @CtrlHidePopup;
-       OnClick := @CtrlHidePopup;
-       OnEditingDone := @CtrlMakeDirty;
-       Hint:='Just the package filename e.g. package.lpk';
-       Parent:=ArrayGrpBox[iNumLpkFilesVisible];
-     end;
-     // Label - Package Version
-     ArrayLblPackageVersion[iNumLpkFilesVisible]:=TLabel.Create(Nil);
-     With ArrayLblPackageVersion[iNumLpkFilesVisible] do
-     begin
-       Caption:='Version: ';
-       SetBounds(330,10,50,23);
-       Visible:=True;
-       Tag:=Pred(iNumLpkFilesVisible);
-       OnMouseEnter:=@CtrlShowPopup;
-       OnMouseLeave := @CtrlHidePopup;
-       OnClick := @CtrlHidePopup;
-       Hint:='Format is: n.n.n.n';
-       Parent:=ArrayGrpBox[iNumLpkFilesVisible];
-     end;
-     // SpinEdit V1
-     ArraySpinEditV1[iNumLpkFilesVisible]:=TSpinEdit.Create(Nil);
-     With ArraySpinEditV1[iNumLpkFilesVisible] do
-     begin
-       Value:=0;
-       SetBounds(380,8,40,20);
-       Visible:=True;
-       Tag:=Pred(iNumLpkFilesVisible);
-       OnMouseEnter := @CtrlShowPopup;
-       OnMouseLeave := @CtrlHidePopup;
-       OnClick := @CtrlHidePopup;
-       OnChange :=@CtrlMakeDirty;
-       Hint:='Format is: n.n.n.n';
-       Parent:=ArrayGrpBox[iNumLpkFilesVisible];
-     end;
-     // SpinEdit V2
-     ArraySpinEditV2[iNumLpkFilesVisible]:=TSpinEdit.Create(Nil);
-     With ArraySpinEditV2[iNumLpkFilesVisible] do
-     begin
-       Value:=0;
-       SetBounds(430,8,40,20);
-       Visible:=True;
-       Tag:=Pred(iNumLpkFilesVisible);
-       Hint:='Format is: n.n.n.n';
-       OnMouseEnter := @CtrlShowPopup;
-       OnMouseLeave := @CtrlHidePopup;
-       OnClick := @CtrlHidePopup;
-       OnChange :=@CtrlMakeDirty;
-       Hint:='Format is: n.n.n.n';
-       Parent:=ArrayGrpBox[iNumLpkFilesVisible];
-     end;
-     // SpinEdit V3
-     ArraySpinEditV3[iNumLpkFilesVisible]:=TSpinEdit.Create(Nil);
-     With ArraySpinEditV3[iNumLpkFilesVisible] do
-     begin
-       Value:=0;
-       SetBounds(480,8,40,20);
-       Visible:=True;
-       Tag:=Pred(iNumLpkFilesVisible);
-       Hint:='Format is: n.n.n.n';
-       OnMouseEnter := @CtrlShowPopup;
-       OnMouseLeave := @CtrlHidePopup;
-       OnClick := @CtrlHidePopup;
-       OnChange :=@CtrlMakeDirty;
-       Hint:='Format is: n.n.n.n';
-       Parent:=ArrayGrpBox[iNumLpkFilesVisible];
-     end;
-     // SpinEdit V4
-     ArraySpinEditV4[iNumLpkFilesVisible]:=TSpinEdit.Create(Nil);
-     With ArraySpinEditV4[iNumLpkFilesVisible] do
-     begin
-       Value:=0;
-       SetBounds(530,8,40,20);
-       Visible:=True;
-       Tag:=Pred(iNumLpkFilesVisible);
-       Hint:='Format is: n.n.n.n';
-       OnMouseEnter := @CtrlShowPopup;
-       OnMouseLeave := @CtrlHidePopup;
-       OnClick := @CtrlHidePopup;
-       OnChange :=@CtrlMakeDirty;
-       Hint:='Format is: n.n.n.n';
-       Parent:=ArrayGrpBox[iNumLpkFilesVisible];
-     end;
-     // ChkBox Notify
-     ArrayChkBoxForceNotify[iNumLpkFilesVisible]:=TCheckBox.Create(Nil);
-     With ArrayChkBoxForceNotify[iNumLpkFilesVisible] do
-     begin
-       Checked:=False;
-       Caption:='Notify Update';
-       SetBounds(8,50,40,20);
-       Visible:=True;
-       Tag:=Pred(iNumLpkFilesVisible);
-       OnMouseEnter:=@CtrlShowPopup;
-       OnMouseLeave := @CtrlHidePopup;
-       OnClick := @CtrlHidePopup;
-       OnEditingDone := @CtrlMakeDirty;
-       Hint:='Check this if you don''t want to incrememt the version';
-       Parent:=ArrayGrpBox[iNumLpkFilesVisible];
-     end;
-     // Label Internal version
-     ArrayLblPackageInternalVersion[iNumLpkFilesVisible]:=TLabel.Create(Nil);
-     With ArrayLblPackageInternalVersion[iNumLpkFilesVisible] do
-     begin
-       Caption:='Internal Version: ';
-       SetBounds(160,50,40,23);
-       Visible:=True;
-       Tag:=Pred(iNumLpkFilesVisible);
-       OnMouseEnter:=@CtrlShowPopup;
-       OnMouseLeave := @CtrlHidePopup;
-       OnClick := @CtrlHidePopup;
-       Hint:='Use in combination with Notify Update';
-       Parent:=ArrayGrpBox[iNumLpkFilesVisible];
-     end;
-     // SpinEdit Internal Version
-     ArraySpinEditInternalVersion[iNumLpkFilesVisible]:=TSpinEdit.Create(Nil);
-     With ArraySpinEditInternalVersion[iNumLpkFilesVisible] do
-     begin
-       Value:=0;
-       SetBounds(260,48,40,20);
-       Visible:=True;
-       Tag:=Pred(iNumLpkFilesVisible);
-       OnMouseEnter := @CtrlShowPopup;
-       OnMouseLeave := @CtrlHidePopup;
-       OnClick := @CtrlHidePopup;
-       OnChange :=@CtrlMakeDirty;
-       Hint:='Use in combination with Notify Update';
-       Parent:=ArrayGrpBox[iNumLpkFilesVisible];
-     end;
-     // This sets the subcontrols up correctly
-     Parent := sbPackageFiles;
-   end;
+  with ArrayGrpBox[iNumLpkFilesVisible] do
+  begin
+    Caption := Format('Package #%d Information', [Succ(iNumLpkFilesVisible)]);
+    if (iNumLpkFilesVisible > 0) then
+      SetBounds(8, ArrayGrpBox[Pred(iNumLpkFilesVisible)].Top +
+        ArrayGrpBox[Pred(iNumLpkFilesVisible)].Height + 10, frmMain.Width - 16, 100)
+    else
+      SetBounds(8, cmd_AddPackageFile.Top + cmd_AddPackageFile.Height + 10,
+        frmMain.Width - 16, 100);
+    Visible := False;
+    Tag := Pred(iNumLpkFilesVisible);
+    // Label - Package name
+    ArrayLblPackageFileName[iNumLpkFilesVisible] := TLabel.Create(nil);
+    with ArrayLblPackageFileName[iNumLpkFilesVisible] do
+    begin
+      Caption := 'Filename: ';
+      SetBounds(8, 10, 50, 23);
+      Visible := True;
+      Tag := Pred(iNumLpkFilesVisible);
+      OnMouseEnter := @CtrlShowPopup;
+      OnMouseLeave := @CtrlHidePopup;
+      OnClick := @CtrlHidePopup;
+      Hint := 'Just the package filename e.g. package.lpk';
+      Parent := ArrayGrpBox[iNumLpkFilesVisible];
+    end;
+    // EditBox - Package name
+    ArrayEdtPackageFileName[iNumLpkFilesVisible] := TEdit.Create(nil);
+    with ArrayEdtPackageFileName[iNumLpkFilesVisible] do
+    begin
+      Text := rsMypackagelpk;
+      SetBounds(64, 8, 256, 23);
+      Visible := True;
+      Tag := Pred(iNumLpkFilesVisible);
+      OnMouseEnter := @CtrlShowPopup;
+      OnMouseLeave := @CtrlHidePopup;
+      OnClick := @CtrlHidePopup;
+      OnEditingDone := @CtrlMakeDirty;
+      Hint := 'Just the package filename e.g. package.lpk';
+      Parent := ArrayGrpBox[iNumLpkFilesVisible];
+    end;
+    // Label - Package Version
+    ArrayLblPackageVersion[iNumLpkFilesVisible] := TLabel.Create(nil);
+    with ArrayLblPackageVersion[iNumLpkFilesVisible] do
+    begin
+      Caption := 'Version: ';
+      SetBounds(330, 10, 50, 23);
+      Visible := True;
+      Tag := Pred(iNumLpkFilesVisible);
+      OnMouseEnter := @CtrlShowPopup;
+      OnMouseLeave := @CtrlHidePopup;
+      OnClick := @CtrlHidePopup;
+      Hint := 'Format is: n.n.n.n';
+      Parent := ArrayGrpBox[iNumLpkFilesVisible];
+    end;
+    // SpinEdit V1
+    ArraySpinEditV1[iNumLpkFilesVisible] := TSpinEdit.Create(nil);
+    with ArraySpinEditV1[iNumLpkFilesVisible] do
+    begin
+      Value := 0;
+      SetBounds(380, 8, 40, 20);
+      Visible := True;
+      Tag := Pred(iNumLpkFilesVisible);
+      OnMouseEnter := @CtrlShowPopup;
+      OnMouseLeave := @CtrlHidePopup;
+      OnClick := @CtrlHidePopup;
+      OnChange := @CtrlMakeDirty;
+      Hint := 'Format is: n.n.n.n';
+      Parent := ArrayGrpBox[iNumLpkFilesVisible];
+    end;
+    // SpinEdit V2
+    ArraySpinEditV2[iNumLpkFilesVisible] := TSpinEdit.Create(nil);
+    with ArraySpinEditV2[iNumLpkFilesVisible] do
+    begin
+      Value := 0;
+      SetBounds(430, 8, 40, 20);
+      Visible := True;
+      Tag := Pred(iNumLpkFilesVisible);
+      Hint := 'Format is: n.n.n.n';
+      OnMouseEnter := @CtrlShowPopup;
+      OnMouseLeave := @CtrlHidePopup;
+      OnClick := @CtrlHidePopup;
+      OnChange := @CtrlMakeDirty;
+      Hint := 'Format is: n.n.n.n';
+      Parent := ArrayGrpBox[iNumLpkFilesVisible];
+    end;
+    // SpinEdit V3
+    ArraySpinEditV3[iNumLpkFilesVisible] := TSpinEdit.Create(nil);
+    with ArraySpinEditV3[iNumLpkFilesVisible] do
+    begin
+      Value := 0;
+      SetBounds(480, 8, 40, 20);
+      Visible := True;
+      Tag := Pred(iNumLpkFilesVisible);
+      Hint := 'Format is: n.n.n.n';
+      OnMouseEnter := @CtrlShowPopup;
+      OnMouseLeave := @CtrlHidePopup;
+      OnClick := @CtrlHidePopup;
+      OnChange := @CtrlMakeDirty;
+      Hint := 'Format is: n.n.n.n';
+      Parent := ArrayGrpBox[iNumLpkFilesVisible];
+    end;
+    // SpinEdit V4
+    ArraySpinEditV4[iNumLpkFilesVisible] := TSpinEdit.Create(nil);
+    with ArraySpinEditV4[iNumLpkFilesVisible] do
+    begin
+      Value := 0;
+      SetBounds(530, 8, 40, 20);
+      Visible := True;
+      Tag := Pred(iNumLpkFilesVisible);
+      Hint := 'Format is: n.n.n.n';
+      OnMouseEnter := @CtrlShowPopup;
+      OnMouseLeave := @CtrlHidePopup;
+      OnClick := @CtrlHidePopup;
+      OnChange := @CtrlMakeDirty;
+      Hint := 'Format is: n.n.n.n';
+      Parent := ArrayGrpBox[iNumLpkFilesVisible];
+    end;
+    // ChkBox Notify
+    ArrayChkBoxForceNotify[iNumLpkFilesVisible] := TCheckBox.Create(nil);
+    with ArrayChkBoxForceNotify[iNumLpkFilesVisible] do
+    begin
+      Checked := False;
+      Caption := 'Notify Update';
+      SetBounds(8, 50, 40, 20);
+      Visible := True;
+      Tag := Pred(iNumLpkFilesVisible);
+      OnMouseEnter := @CtrlShowPopup;
+      OnMouseLeave := @CtrlHidePopup;
+      OnClick := @CtrlHidePopup;
+      OnMouseUp := @ProcessNotify;
+      OnEditingDone := @CtrlMakeDirty;
+      Hint := 'Check this if you don''t want to incrememt the package version';
+      Parent := ArrayGrpBox[iNumLpkFilesVisible];
+    end;
+    // Label Internal version
+    ArrayLblPackageInternalVersion[iNumLpkFilesVisible] := TLabel.Create(nil);
+    with ArrayLblPackageInternalVersion[iNumLpkFilesVisible] do
+    begin
+      Caption := 'Internal Version: ';
+      SetBounds(160, 50, 40, 23);
+      Visible := True;
+      Tag := Pred(iNumLpkFilesVisible);
+      OnMouseEnter := @CtrlShowPopup;
+      OnMouseLeave := @CtrlHidePopup;
+      OnClick := @CtrlHidePopup;
+      Hint := 'Use in combination with Notify Update';
+      Parent := ArrayGrpBox[iNumLpkFilesVisible];
+    end;
+    // SpinEdit Internal Version
+    ArraySpinEditInternalVersion[iNumLpkFilesVisible] := TSpinEdit.Create(nil);
+    with ArraySpinEditInternalVersion[iNumLpkFilesVisible] do
+    begin
+      Value := 1;
+      SetBounds(260, 48, 40, 20);
+      Visible := True;
+      Tag := Pred(iNumLpkFilesVisible);
+      OnMouseEnter := @CtrlShowPopup;
+      OnMouseLeave := @CtrlHidePopup;
+      OnClick := @CtrlHidePopup;
+      OnChange := @CtrlMakeDirty;
+      Hint := 'Use in combination with Notify Update';
+      Parent := ArrayGrpBox[iNumLpkFilesVisible];
+    end;
+    // This sets the subcontrols up correctly
+    Parent := sbPackageFiles;
+  end;
 end;
 
 procedure TfrmMain.RemoveLastControlArray;
 // Uses iLpkFilesCount
-Var iLast:Integer;
+var
+  iLast: integer;
 begin
-   iLast:=High(ArrayGrpBox);
-   // Makes the group control invisible
-   ArrayGrpBox[iLast].Parent:=nil;
+  iLast := High(ArrayGrpBox);
+  // Makes the group control invisible
+  ArrayGrpBox[iLast].Parent := nil;
 
-   // Tidy up memory
-   FreeAndNil(ArrayChkBoxForceNotify[iLast]);
-   FreeAndNil(ArrayLblPackageInternalVersion[iLast]);
-   FreeAndNil(ArraySpinEditInternalVersion[iLast]);
-   FreeAndNil(ArraySpinEditV4[iLast]);
-   FreeAndNil(ArraySpinEditV3[iLast]);
-   FreeAndNil(ArraySpinEditV2[iLast]);
-   FreeAndNil(ArraySpinEditV1[iLast]);
-   FreeAndNil(ArrayLblPackageVersion[iLast]);
-   FreeAndNil(ArrayEdtPackageFileName[iLast]);
-   FreeAndNil(ArrayLblPackageFileName[iLast]);
-   FreeAndNil(ArrayGrpBox[iLast]);
-   // Tidy up control arrays
-   SetLength(ArrayChkBoxForceNotify,iLast);
-   SetLength(ArrayLblPackageInternalVersion,iLast);
-   SetLength(ArraySpinEditInternalVersion,iLast);
-   SetLength(ArraySpinEditV4,iLast);
-   SetLength(ArraySpinEditV3,iLast);
-   SetLength(ArraySpinEditV2,iLast);
-   SetLength(ArraySpinEditV1,iLast);
-   SetLength(ArrayLblPackageVersion,iLast);
-   SetLength(ArrayEdtPackageFileName,iLast);
-   SetLength(ArrayLblPackageFileName,iLast);
-   SetLength(ArrayGrpBox,iLast);
+  // Tidy up memory
+  FreeAndNil(ArrayChkBoxForceNotify[iLast]);
+  FreeAndNil(ArrayLblPackageInternalVersion[iLast]);
+  FreeAndNil(ArraySpinEditInternalVersion[iLast]);
+  FreeAndNil(ArraySpinEditV4[iLast]);
+  FreeAndNil(ArraySpinEditV3[iLast]);
+  FreeAndNil(ArraySpinEditV2[iLast]);
+  FreeAndNil(ArraySpinEditV1[iLast]);
+  FreeAndNil(ArrayLblPackageVersion[iLast]);
+  FreeAndNil(ArrayEdtPackageFileName[iLast]);
+  FreeAndNil(ArrayLblPackageFileName[iLast]);
+  FreeAndNil(ArrayGrpBox[iLast]);
+  // Tidy up control arrays
+  SetLength(ArrayChkBoxForceNotify, iLast);
+  SetLength(ArrayLblPackageInternalVersion, iLast);
+  SetLength(ArraySpinEditInternalVersion, iLast);
+  SetLength(ArraySpinEditV4, iLast);
+  SetLength(ArraySpinEditV3, iLast);
+  SetLength(ArraySpinEditV2, iLast);
+  SetLength(ArraySpinEditV1, iLast);
+  SetLength(ArrayLblPackageVersion, iLast);
+  SetLength(ArrayEdtPackageFileName, iLast);
+  SetLength(ArrayLblPackageFileName, iLast);
+  SetLength(ArrayGrpBox, iLast);
 end;
 
 procedure TfrmMain.AddPackageFileToList;
@@ -656,7 +654,7 @@ begin
   AddNewControlArray; // make another one
 
   // Makes it visible
-  ArrayGrpBox[High(ArrayGrpBox)].Visible:=TRUE;
+  ArrayGrpBox[High(ArrayGrpBox)].Visible := True;
   ArrayGrpBox[High(ArrayGrpBox)].Align := alTop;
   Inc(iNumLpkFilesVisible);
   CtrlSetUpPopupHandlers;
@@ -664,12 +662,14 @@ begin
 end;
 
 procedure TfrmMain.ResetPackageFileControlsToOne;
-Var iCount:Integer;
+var
+  iCount: integer;
 begin
-  if (iNumLpkFilesVisible = 1) then exit;
-  For iCount:=iNumLpkFilesVisible downto 1 do
+  if (iNumLpkFilesVisible = 1) then
+    exit;
+  for iCount := iNumLpkFilesVisible downto 1 do
   begin
-     RemovePackageFileFromList;
+    RemovePackageFileFromList;
   end;
 end;
 
@@ -693,36 +693,37 @@ begin
   Result := False;
   TempStringList := TStringList.Create;
   try
-    For iCount := 0 to High(ArrayEdtPackageFileName) do
+    for iCount := 0 to High(ArrayEdtPackageFileName) do
     begin
       if TempStringlist.IndexOf(ArrayEdtPackageFileName[iCount].Text) = -1 then
         TempStringList.Add(ArrayEdtPackageFileName[iCount].Text)
       else
         Result := True;
-     end;
+    end;
   finally
     TempStringList.Free;
   end;
 end;
 
-procedure TfrmMain.btnAddClick(Sender: TObject);
+procedure TfrmMain.ProcessNotify(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: integer);
+begin
+  if not bShowPopupHints then
+    exit;
+  popup_hint.Text := rsThisOptionSh;
+  popup_hint.Title := rsHelpAndInfor;
+  popup_hint.Text := popup_hint.Text;
+  popup_hint.showatpos(Mouse.CursorPos.X, Mouse.CursorPos.Y);
+end;
+
+procedure TfrmMain.cmd_AddPackageFileClick(Sender: TObject);
 begin
   AddPackageFileToList;
 end;
 
-procedure TfrmMain.btnRemoveClick(Sender: TObject);
+procedure TfrmMain.cmd_RemoveLastPackageFileClick(Sender: TObject);
 begin
   RemovePackageFileFromList;
-end;
-
-procedure TfrmMain.cbForceNotifyMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: integer);
-begin
-end;
-
-procedure TfrmMain.cmd_CloseClick(Sender: TObject);
-begin
-
 end;
 
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -763,24 +764,21 @@ var
   iIniCount: integer;
 begin
   // Enable AutoSize again to get correct Height
-  editName.AutoSize := True;
-  editDownloadZipURL.AutoSize := True;
+  edt_UpdateZipName.AutoSize := True;
+  edt_DownloadZipURL.AutoSize := True;
   // Furniture
   Caption := Application.Title;
   Icon := Application.Icon;
-{  Height:=btnAdd.Top + btnAdd.Height + (cmd_Save.Height * 3);
-  cmd_Save.Top:=Height - cmd_Save.Height - cmd_Save.Height;
-  cmd_Close.Top:=Height - cmd_Close.Height - cmd_Close.Height;}
   {$IFNDEF IGNOREPICTURE}
-  MyPopup.Icon := TPicture(Application.Icon);
+  popup_hint.Icon := TPicture(Application.Icon);
   {$ENDIF}
-  editname.Text := rsMypackagenam;
-  editDownloadZipURL.Text := rsHttpWwwUpdat;
+  edt_UpdateZipName.Text := rsMypackagenam;
+  edt_DownloadZipURL.Text := rsHttpWwwUpdat;
   // Defaults
   slErrorList := TStringList.Create;
   bForceSaveAs := True;
   bShowPopupHints := True;
-  iNumLpkFilesVisible:=0;
+  iNumLpkFilesVisible := 0;
   // Encourage the user to maintain an updates folder
   sUpdateDirectory := ProgramDirectory + 'updates';
   if not FileExistsUTF8(sUpdateDirectory) then
@@ -852,21 +850,26 @@ begin
     try
       if JSONPackage.LoadFromFile(FileOpen1.Dialog.FileName) then
       begin
-        editName.Text := JSONPackage.UpdatePackageData.Name;
-        editDownloadZipURL.Text := JSONPackage.UpdatePackageData.DownloadZipURL;
+        edt_UpdateZipName.Text := JSONPackage.UpdatePackageData.Name;
+        edt_DownloadZipURL.Text := JSONPackage.UpdatePackageData.DownloadZipURL;
         for i := 0 to JSONPackage.UpdatePackageFiles.Count - 1 do
         begin
-          If (i > 0) then AddPackageFileToList;
-          ArrayEdtPackageFileName[i].Text:=JSONPackage.UpdatePackageFiles.Items[i].Name;
-          If fileinfo.TryStrToVersionQuad(JSONPackage.UpdatePackageFiles.Items[i].Version,Quad) then
+          if (i > 0) then
+            AddPackageFileToList;
+          ArrayEdtPackageFileName[i].Text :=
+            JSONPackage.UpdatePackageFiles.Items[i].Name;
+          if fileinfo.TryStrToVersionQuad(
+            JSONPackage.UpdatePackageFiles.Items[i].Version, Quad) then
           begin
-             ArraySpinEditV1[i].Value:=Quad[1];
-             ArraySpinEditV2[i].Value:=Quad[2];
-             ArraySpinEditV3[i].Value:=Quad[3];
-             ArraySpinEditV4[i].Value:=Quad[4];
+            ArraySpinEditV1[i].Value := Quad[1];
+            ArraySpinEditV2[i].Value := Quad[2];
+            ArraySpinEditV3[i].Value := Quad[3];
+            ArraySpinEditV4[i].Value := Quad[4];
           end;
-          ArrayChkBoxForceNotify[i].Checked:=JSONPackage.UpdatePackageFiles.Items[i].ForceNotify;
-          ArraySpinEditInternalVersion[i].Value:=JSONPackage.UpdatePackageFiles.Items[i].InternalVersion;
+          ArrayChkBoxForceNotify[i].Checked :=
+            JSONPackage.UpdatePackageFiles.Items[i].ForceNotify;
+          ArraySpinEditInternalVersion[i].Value :=
+            JSONPackage.UpdatePackageFiles.Items[i].InternalVersion;
         end;
         if ValidationFailed then
         begin
@@ -897,18 +900,18 @@ end;
 
 procedure TfrmMain.mnu_fileNewClick(Sender: TObject);
 begin
-  editname.Text := rsMypackagenam;
-  editDownloadZipURL.Text := rsHttpWwwUpdat;
+  edt_UpdateZipName.Text := rsMypackagenam;
+  edt_DownloadZipURL.Text := rsHttpWwwUpdat;
   sJSONFilePath := '';
   sZipDirectory := '';
   ResetPackageFileControlsToOne;
-  ArrayEdtPackageFileName[0].Text:=rsMypackagelpk;
-  ArraySpinEditV1[0].Value:=0;
-  ArraySpinEditV2[0].Value:=0;
-  ArraySpinEditV3[0].Value:=0;
-  ArraySpinEditV4[0].Value:=0;
-  ArrayChkBoxForceNotify[0].Checked:=False;
-  ArraySpinEditInternalVersion[0].Value:=0;
+  ArrayEdtPackageFileName[0].Text := rsMypackagelpk;
+  ArraySpinEditV1[0].Value := 0;
+  ArraySpinEditV2[0].Value := 0;
+  ArraySpinEditV3[0].Value := 0;
+  ArraySpinEditV4[0].Value := 0;
+  ArrayChkBoxForceNotify[0].Checked := False;
+  ArraySpinEditInternalVersion[0].Value := 0;
 end;
 
 procedure TfrmMain.mnu_fileSaveClick(Sender: TObject);
@@ -1011,56 +1014,57 @@ var
 begin
   Result := False;
   // Check Zipname and URL http:// length
-  if (Length(editName.Text) < 5) then
+  if (Length(edt_UpdateZipName.Text) < 5) then
   begin
-    editName.Color := clYellow;
+    edt_UpdateZipName.Color := clYellow;
     slErrorList.Add(rsUpdateZipNam);
     Result := True;
   end;
   // URL implausable?
-  if (Length(editDownloadZipURL.Text) < 10) then
+  if (Length(edt_DownloadZipURL.Text) < 10) then
   begin
     slErrorList.Add(rsDownloadZipURLI);
-    editDownloadZipURL.Color := clYellow;
+    edt_DownloadZipURL.Color := clYellow;
     Result := True;
   end;
   // Remembered to type 'zip'?
-  if (Length(editName.Text) > 4) then
-    if (RightStr(LowerCase(editName.Text), 4) <> '.zip') then
+  if (Length(edt_UpdateZipName.Text) > 4) then
+    if (RightStr(LowerCase(edt_UpdateZipName.Text), 4) <> '.zip') then
     begin
       slErrorList.Add(rsUpdateZipNam2);
-      editName.Color := clYellow;
+      edt_UpdateZipName.Color := clYellow;
       Result := True;
     end;
   // A full URL?
-  if ((Length(editDownloadZipURL.Text) > 0) and
-    (RightStr(editDownloadZipURL.Text, 1) = '/')) then
+  if ((Length(edt_DownloadZipURL.Text) > 0) and
+    (RightStr(edt_DownloadZipURL.Text, 1) = '/')) then
   begin
     slErrorList.Add(rsDownloadZipURLI2);
-    editDownloadZipURL.Color := clYellow;
+    edt_DownloadZipURL.Color := clYellow;
     Result := True;
   end;
   // URL starts with 'http' ?
-  if ((Length(editDownloadZipURL.Text) > 4) and
-    (LeftStr(LowerCase(editDownloadZipURL.Text), 4) <> 'http')) then
+  if ((Length(edt_DownloadZipURL.Text) > 4) and
+    (LeftStr(LowerCase(edt_DownloadZipURL.Text), 4) <> 'http')) then
   begin
     slErrorList.Add(rsDownloadZipURLS);
-    editDownloadZipURL.Color := clYellow;
+    edt_DownloadZipURL.Color := clYellow;
     Result := True;
   end;
   // URL contains zipfile name?
-  if (Pos(Lowercase(editName.Text), Lowercase(editDownloadZipURL.Text)) = 0) then
+  if (Pos(Lowercase(edt_UpdateZipName.Text),
+    Lowercase(edt_DownloadZipURL.Text)) = 0) then
   begin
     slErrorList.Add(rsDownloadZipURLD);
-    editDownloadZipURL.Color := clYellow;
+    edt_DownloadZipURL.Color := clYellow;
     Result := True;
   end;
 
   // Check package files entries
-  For iCount:=0 to High(ArrayGrpBox) do
+  for iCount := 0 to High(ArrayGrpBox) do
   begin
     // Is package name empty?
-    If Length(ArrayEdtPackageFileName[iCount].Text)=0 then
+    if Length(ArrayEdtPackageFileName[iCount].Text) = 0 then
     begin
       slErrorList.Add(Format(rsTheLpkEntryD2, [Succ(iCount)]));
       ArrayEdtPackageFileName[iCount].Color := clYellow;
@@ -1074,19 +1078,26 @@ begin
       Result := True;
     end;
     // Is the version number zero
-    If (ArraySpinEditV1[iCount].Value = 0)
-       AND (ArraySpinEditV2[iCount].Value = 0)
-       AND (ArraySpinEditV3[iCount].Value = 0)
-       AND (ArraySpinEditV4[iCount].Value = 0)
-     then
-     begin
-       slErrorList.Add(Format('Version for package %d is zero', [Succ(iCount)]));
-       ArraySpinEditV1[iCount].Color := clYellow;
-       ArraySpinEditV2[iCount].Color := clYellow;
-       ArraySpinEditV3[iCount].Color := clYellow;
-       ArraySpinEditV4[iCount].Color := clYellow;
-       Result := True;
-     end;
+    if (ArraySpinEditV1[iCount].Value = 0) and
+      (ArraySpinEditV2[iCount].Value = 0) and
+      (ArraySpinEditV3[iCount].Value = 0) and
+      (ArraySpinEditV4[iCount].Value = 0) then
+    begin
+      slErrorList.Add(Format('Version for package %d is zero', [Succ(iCount)]));
+      ArraySpinEditV1[iCount].Color := clYellow;
+      ArraySpinEditV2[iCount].Color := clYellow;
+      ArraySpinEditV3[iCount].Color := clYellow;
+      ArraySpinEditV4[iCount].Color := clYellow;
+      Result := True;
+    end;
+    // Check Forcenotify version isn't zero
+    If ArrayChkBoxForceNotify[iCount].Checked = TRUE then
+       If ArraySpinEditInternalVersion[iCount].Value = 0 then
+       begin
+         ArraySpinEditInternalVersion[iCount].Color := clYellow;
+         slErrorList.Add(Format('Internal version number should not be Zero%s', [LineEnding]));
+         Result := True;
+       end;
     // Check for duplicate .lpk entries
     if FoundADuplicateLPK then
     begin
@@ -1100,7 +1111,7 @@ end;
 procedure TfrmMain.SaveAsItemClick(Sender: TObject);
 var
   i: integer;
-  Quad:TVersionQuad;
+  Quad: TVersionQuad;
 begin
   if ValidationFailed then
   begin
@@ -1116,7 +1127,7 @@ begin
   begin
     FileSaveAs1.Dialog.InitialDir := sUpdateDirectory;
     FileSaveAs1.Dialog.FileName :=
-      'update_' + ExtractFilenameOnly(editName.Text) + '.json';
+      'update_' + ExtractFilenameOnly(edt_UpdateZipName.Text) + '.json';
     if FileSaveAs1.Dialog.Execute then
       sJSONFilePath := FileSaveAs1.Dialog.FileName
     else
@@ -1125,21 +1136,21 @@ begin
 
   JSONPackage := TUpdatePackage.Create;
   try
-    JSONPackage.UpdatePackageData.Name := editName.Text;
-    JSONPackage.UpdatePackageData.DownloadZipURL := editDownloadZipURL.Text;
-    For i:=0 to High(ArrayGrpBox) do
+    JSONPackage.UpdatePackageData.Name := edt_UpdateZipName.Text;
+    JSONPackage.UpdatePackageData.DownloadZipURL := edt_DownloadZipURL.Text;
+    for i := 0 to High(ArrayGrpBox) do
     begin
-       with JSONPackage.UpdatePackageFiles.Add do
-       begin
-         Name:=ArrayEdtPackageFileName[i].Text;
-         Quad[1]:=ArraySpinEditV1[i].Value;
-         Quad[2]:=ArraySpinEditV2[i].Value;
-         Quad[3]:=ArraySpinEditV3[i].Value;
-         Quad[4]:=ArraySpinEditV4[i].Value;
-         Version:=VersionQuadToStr(Quad);
-         ForceNotify:=ArrayChkBoxForceNotify[i].Checked;
-         InternalVersion:=ArraySpinEditInternalVersion[i].Value;
-       end;
+      with JSONPackage.UpdatePackageFiles.Add do
+      begin
+        Name := ArrayEdtPackageFileName[i].Text;
+        Quad[1] := ArraySpinEditV1[i].Value;
+        Quad[2] := ArraySpinEditV2[i].Value;
+        Quad[3] := ArraySpinEditV3[i].Value;
+        Quad[4] := ArraySpinEditV4[i].Value;
+        Version := VersionQuadToStr(Quad);
+        ForceNotify := ArrayChkBoxForceNotify[i].Checked;
+        InternalVersion := ArraySpinEditInternalVersion[i].Value;
+      end;
     end;
     if FileExistsUTF8(sJSONFilePath) and (bDisableWarnings = False) then
     begin
@@ -1172,7 +1183,7 @@ begin
     sZipDirectory := ExtractFileDir(FileOpen1.Dialog.Filename);
     CFG.WriteString('Options', 'LastLoadedZipPath', sZipDirectory);
     s := ExtractFileName(FileOpen1.Dialog.Filename);
-    editName.Text := s;
+    edt_UpdateZipName.Text := s;
     if MessageDlg(Format(rsWouldYouLike, [s, sUpdateDirectory]),
       mtConfirmation, [mbYes, mbNo], 0, mbYes) = mrYes then
     begin
@@ -1190,7 +1201,7 @@ procedure TfrmMain.spd_CheckURLClick(Sender: TObject);
 var
   bTemp: boolean;
 begin
-  if OpenURL(editDownloadZipURL.Text) then
+  if OpenURL(edt_DownloadZipURL.Text) then
   begin
     bTemp := bShowPopupHints;
     bShowPopupHints := True;

@@ -12,33 +12,37 @@ msgstr ""
 "X-Generator: Poedit 1.8.11\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: tfrmmain.btnadd.caption
+#: tfrmmain.chk_disableinopm.caption
+msgid "Disable in OPM"
+msgstr ""
+
+#: tfrmmain.cmd_addpackagefile.caption
+msgctxt "tfrmmain.cmd_addpackagefile.caption"
 msgid "Add"
 msgstr ""
 
-#: tfrmmain.btnadd.hint
+#: tfrmmain.cmd_addpackagefile.hint
+msgctxt "tfrmmain.cmd_addpackagefile.hint"
 msgid ""
 "Add Package File:\n"
 "The update zip can contain more than one lpk file\n"
 "deployed to the same place.\n"
 msgstr ""
 
-#: tfrmmain.btnremove.caption
+#: tfrmmain.cmd_close.caption
+msgid "&Close"
+msgstr ""
+
+#: tfrmmain.cmd_removelastpackagefile.caption
+msgctxt "tfrmmain.cmd_removelastpackagefile.caption"
 msgid "Remove"
 msgstr ""
 
-#: tfrmmain.btnremove.hint
+#: tfrmmain.cmd_removelastpackagefile.hint
+msgctxt "tfrmmain.cmd_removelastpackagefile.hint"
 msgid ""
 "Remove Package File:\n"
 "Deletes the last entry from the list\n"
-msgstr ""
-
-#: tfrmmain.chk_disableinopm.caption
-msgid "Disable in OPM"
-msgstr ""
-
-#: tfrmmain.cmd_close.caption
-msgid "&Close"
 msgstr ""
 
 #: tfrmmain.cmd_save.caption
@@ -51,13 +55,15 @@ msgid ""
 "as a JSON update file\n"
 msgstr ""
 
-#: tfrmmain.editdownloadzipurl.hint
+#: tfrmmain.edt_downloadzipurl.hint
+msgctxt "tfrmmain.edt_downloadzipurl.hint"
 msgid ""
 "Download URL:\n"
 "Include the FULL url needed to download the package Zip file\n"
 msgstr ""
 
-#: tfrmmain.editname.hint
+#: tfrmmain.edt_updatezipname.hint
+msgctxt "tfrmmain.edt_updatezipname.hint"
 msgid ""
 "Update Zip Name:\n"
 "This is just the filename (not including the path)\n"
@@ -84,16 +90,19 @@ msgstr ""
 msgid "Save As"
 msgstr ""
 
-#: tfrmmain.lbldownloadzipurl.caption
+#: tfrmmain.lbl_downloadzipurl.caption
+msgctxt "tfrmmain.lbl_downloadzipurl.caption"
 msgid "Download URL:"
 msgstr ""
 
-#: tfrmmain.lblname.caption
-msgid "Update Zip Name:"
+#: tfrmmain.lbl_packagefiles.caption
+msgctxt "tfrmmain.lbl_packagefiles.caption"
+msgid "Package Files:"
 msgstr ""
 
-#: tfrmmain.lblpackagefiles.caption
-msgid "Package Files:"
+#: tfrmmain.lbl_updatezipname.caption
+msgctxt "tfrmmain.lbl_updatezipname.caption"
+msgid "Update Zip Name:"
 msgstr ""
 
 #: tfrmmain.loaditem.caption
@@ -207,10 +216,6 @@ msgstr ""
 msgid "Language changed to \"%s\"."
 msgstr ""
 
-#: umain.rslpkfilename
-msgid "lpk FileName"
-msgstr ""
-
 #: umain.rsmypackagelpk
 msgctxt "umain.rsmypackagelpk"
 msgid "mypackagename.lpk"
@@ -261,16 +266,12 @@ msgstr ""
 msgid "The .lpk entry #%d is is absent"
 msgstr ""
 
-#: umain.rstherearenolp
-msgid "- There are no .lpk files in the list yet"
-msgstr ""
-
 #: umain.rsthereareoneo
 msgid "- There are one or more .lpk entries with the same name.%s- Every .lpk entry must have a unique name."
 msgstr ""
 
 #: umain.rsthisoptionsh
-msgid "This option should only be used for crucial updates or bug-fixed packages. Are you OK with that?"
+msgid "This option should only be used for crucial updates or bug-fixed packages."
 msgstr ""
 
 #: umain.rsturnhintsoff
@@ -291,19 +292,6 @@ msgstr ""
 
 #: umain.rsupdatezipnam2
 msgid "- Update zip name missing extension \".zip\""
-msgstr ""
-
-#: umain.rsversion0000
-msgctxt "umain.rsversion0000"
-msgid "Version (n.n.n.n)"
-msgstr ""
-
-#: umain.rsversionentry
-msgid "Version Entry #%d is absent"
-msgstr ""
-
-#: umain.rsversionentry2
-msgid "Version entry #%d needs to be of the form n.n.n.n"
 msgstr ""
 
 #: umain.rswouldyoulike
