@@ -1,0 +1,15 @@
+{
+  "UpdatePackageData" : {
+    "DisableInOPM" : false,
+    "DownloadZipURL" : "https://sourceforge.net/projects/lazautoupdate/files/updates/lazautoupdate.zip",
+    "Name" : "lazautoupdate.zip"
+  },
+  "UpdatePackageFiles" : [
+    {
+      "ForceNotify" : false,
+      "InternalVersion" : 0,
+      "Name" : "lazupdate.lpk",
+      "Version" : "0.1.27.0"
+    }
+  ]
+}
