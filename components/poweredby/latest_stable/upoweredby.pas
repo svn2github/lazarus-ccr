@@ -248,7 +248,10 @@ begin
       img_background := TImage.Create(fPoweredByForm);
       // Bitmap mask - Load from resource
       MyBitmap := TBitMap.Create;
+      MyBitmap.Monochrome := True;
       MyBitmap.LoadFromLazarusResource('powered_by_mask');
+      MyBitMap.Transparent := True;
+      MyBitMap.TransparentColor := clBlack;
       // Delay Timer
       Delaytimer := TTimer.Create(fPoweredByForm);
       delaytimer.Interval := fDelayMilliseconds;
