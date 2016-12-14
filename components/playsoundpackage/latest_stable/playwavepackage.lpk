@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <Name Value="playwavepackage"/>
+    <Type Value="RunAndDesignTime"/>
+    <Author Value="minesadorada"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <SearchPaths>
+        <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+      <Linking>
+        <Debugging>
+          <GenerateDebugInfo Value="False"/>
+        </Debugging>
+      </Linking>
+    </CompilerOptions>
+    <Description Value="Simple component to play wave files under Windows or Linux"/>
+    <License Value="  Copyright (C)2014 minesadorada@charcodelvalle.com
+  Modified GPL"/>
+    <Version Release="7"/>
+    <Files Count="2">
+      <Item1>
+        <Filename Value="uplaysound.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="uplaysound"/>
+      </Item1>
+      <Item2>
+        <Filename Value="aboutplaysound.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="aboutplaysound"/>
+      </Item2>
+    </Files>
+    <i18n>
+      <EnableI18N Value="True"/>
+      <OutDir Value="locale"/>
+      <EnableI18NForLFM Value="True"/>
+    </i18n>
+    <RequiredPkgs Count="1">
+      <Item1>
+        <PackageName Value="IDEIntf"/>
+      </Item1>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+      <DestinationDirectory Value="/home/gordon/Lazarusprojects/playsoundpackage/published"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>
