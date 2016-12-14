@@ -63,7 +63,8 @@ unit umain;
   0.2.2.0:  Hints and Validation updated (minesadorada)
   0.2.3.0:  ResourceStrings Updated (minesadorada)
   0.2.4.0:  Bugfix: regression error: DisableInOPM (minesadorada)
-  0.2.5.0: ??
+  0.2.5.0:  BugFix: regression error: CreateUniqueINIFile (minesadorada)
+  0.2.6.0: ??
  }
 {$mode objfpc}{$H+}
 
@@ -71,7 +72,7 @@ interface
 
 {DefaultTranslator not used}
 uses
-  Classes, Forms, Controls, StdCtrls, Menus, ActnList, StdActns, Grids,
+  Classes, Forms, Controls, StdCtrls, Menus, ActnList, StdActns,
   Graphics, Buttons, fileutil, LazFileUtils, fileinfo, ugenericcollection,
   fpjsonrtti, Dialogs, LCLTranslator, PopupNotifier, SysUtils, inifiles,
   lclintf, lclVersion, LResources, Spin, {$IFDEF PO_BUILTINRES}LazUTF8Classes{$ENDIF};
@@ -167,7 +168,7 @@ type
     sb_PackageFiles: TScrollBox;
     spd_CheckURL: TSpeedButton;
     procedure chk_DisableInOPMMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+      Shift: TShiftState; X, Y: integer);
     procedure cmd_AddPackageFileClick(Sender: TObject);
     procedure cmd_RemoveLastPackageFileClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -215,15 +216,15 @@ type
     procedure AddNewControlArray;
     procedure DestroyControlArrays;
     procedure RemoveLastControlArray;
-    function ValidationFailed: boolean;
     procedure ProcessNotify(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure CtrlShowPopup(Sender: TObject);
     procedure CtrlHidePopup(Sender: TObject);
     procedure CtrlSetUpPopupHandlers;
     procedure CtrlMakeDirty(Sender: TObject);
+    procedure CreateUniqueINI(var aCount: integer);
+    function ValidationFailed: boolean;
     function FoundADuplicateLPK: boolean;
-    function CreateUniqueINI(var aCount: integer): boolean;
   public
     { public declarations }
   end;
@@ -286,13 +287,13 @@ resourcestring
   rsVersion = 'Version: ';
   rsFormatIsNNNN = 'Package version:%sFormat is: n.n.n.n';
   rsCheckThisIfY = 'Check this if you don''t want to increment the package '
-    +'version';
+    + 'version';
   rsInternalVers = 'Internal Version: ';
   rsFilename = 'Filename: ';
   rsThisWillDisa = 'This will disable your package in Online Package Manager!%'
-    +'sAre you SURE you want to do this?';
+    + 'sAre you SURE you want to do this?';
   rsThereWasAPro = 'There was a problem loading "%s" - is it corrupted or in '
-    +'the wrong format?';
+    + 'the wrong format?';
   rsVersionForPa = 'Version for package %d is zero';
   rsInternalVers2 = 'Internal version number should not be Zero%s';
   rsOpeningYourB = 'Opening your browser...';
@@ -302,7 +303,7 @@ resourcestring
 constructor TUpdatePackageData.Create;
 begin
   FName := '';
-  FDisableInOPM:= False;
+  FDisableInOPM := False;
   FDownloadZipURL := '';
 end;
 
@@ -411,7 +412,7 @@ var
 begin
   // Callked on Form_Destroy
   for i := 0 to High(ArrayGrpBox) do
-  Begin
+  begin
     FreeAndNil(ArraySpinEditInternalVersion[i]);
     FreeAndNil(ArrayLblPackageInternalVersion[i]);
     FreeAndNil(ArrayChkBoxForceNotify[i]);
@@ -480,7 +481,7 @@ begin
       OnMouseEnter := @CtrlShowPopup;
       OnMouseLeave := @CtrlHidePopup;
       OnClick := @CtrlHidePopup;
-      Hint := Format('%s%s%s',[rsFilename,LineEnding,rsThePackageFi]);
+      Hint := Format('%s%s%s', [rsFilename, LineEnding, rsThePackageFi]);
       Parent := ArrayGrpBox[iNumLpkFilesVisible];
     end;
     // EditBox - Package name
@@ -495,7 +496,7 @@ begin
       OnMouseLeave := @CtrlHidePopup;
       OnClick := @CtrlHidePopup;
       OnEditingDone := @CtrlMakeDirty;
-      Hint := Format('%s%s%s',[rsFilename,LineEnding,rsThePackageFi]);
+      Hint := Format('%s%s%s', [rsFilename, LineEnding, rsThePackageFi]);
       Parent := ArrayGrpBox[iNumLpkFilesVisible];
     end;
     // Label - Package Version
@@ -509,7 +510,7 @@ begin
       OnMouseEnter := @CtrlShowPopup;
       OnMouseLeave := @CtrlHidePopup;
       OnClick := @CtrlHidePopup;
-      Hint := Format(rsFormatIsNNNN,[LineEnding]);
+      Hint := Format(rsFormatIsNNNN, [LineEnding]);
       Parent := ArrayGrpBox[iNumLpkFilesVisible];
     end;
     // SpinEdit V1
@@ -524,7 +525,7 @@ begin
       OnMouseLeave := @CtrlHidePopup;
       OnClick := @CtrlHidePopup;
       OnChange := @CtrlMakeDirty;
-      Hint := Format(rsFormatIsNNNN,[LineEnding]);
+      Hint := Format(rsFormatIsNNNN, [LineEnding]);
       Parent := ArrayGrpBox[iNumLpkFilesVisible];
     end;
     // SpinEdit V2
@@ -539,7 +540,7 @@ begin
       OnMouseLeave := @CtrlHidePopup;
       OnClick := @CtrlHidePopup;
       OnChange := @CtrlMakeDirty;
-      Hint := Format(rsFormatIsNNNN,[LineEnding]);
+      Hint := Format(rsFormatIsNNNN, [LineEnding]);
       Parent := ArrayGrpBox[iNumLpkFilesVisible];
     end;
     // SpinEdit V3
@@ -554,7 +555,7 @@ begin
       OnMouseLeave := @CtrlHidePopup;
       OnClick := @CtrlHidePopup;
       OnChange := @CtrlMakeDirty;
-      Hint := Format(rsFormatIsNNNN,[LineEnding]);
+      Hint := Format(rsFormatIsNNNN, [LineEnding]);
       Parent := ArrayGrpBox[iNumLpkFilesVisible];
     end;
     // SpinEdit V4
@@ -569,7 +570,7 @@ begin
       OnMouseLeave := @CtrlHidePopup;
       OnClick := @CtrlHidePopup;
       OnChange := @CtrlMakeDirty;
-      Hint := Format(rsFormatIsNNNN,[LineEnding]);
+      Hint := Format(rsFormatIsNNNN, [LineEnding]);
       Parent := ArrayGrpBox[iNumLpkFilesVisible];
     end;
     // ChkBox Notify
@@ -586,7 +587,7 @@ begin
       OnClick := @CtrlHidePopup;
       OnMouseUp := @ProcessNotify;
       OnEditingDone := @CtrlMakeDirty;
-      Hint := Format('%s:%s%s',[rsNotifyUpdate,LineEnding,rsCheckThisIfY]);
+      Hint := Format('%s:%s%s', [rsNotifyUpdate, LineEnding, rsCheckThisIfY]);
       Parent := ArrayGrpBox[iNumLpkFilesVisible];
     end;
     // Label Internal version
@@ -600,7 +601,8 @@ begin
       OnMouseEnter := @CtrlShowPopup;
       OnMouseLeave := @CtrlHidePopup;
       OnClick := @CtrlHidePopup;
-      Hint := Format('%s%s%s %s', [rsInternalVers,LineEnding,rsUseInCombina,rsNotifyUpdate]);
+      Hint := Format('%s%s%s %s',
+        [rsInternalVers, LineEnding, rsUseInCombina, rsNotifyUpdate]);
       Parent := ArrayGrpBox[iNumLpkFilesVisible];
     end;
     // SpinEdit Internal Version
@@ -615,7 +617,8 @@ begin
       OnMouseLeave := @CtrlHidePopup;
       OnClick := @CtrlHidePopup;
       OnChange := @CtrlMakeDirty;
-      Hint := Format('%s%s%s %s', [rsInternalVers,LineEnding,rsUseInCombina,rsNotifyUpdate]);
+      Hint := Format('%s%s%s %s',
+        [rsInternalVers, LineEnding, rsUseInCombina, rsNotifyUpdate]);
       Parent := ArrayGrpBox[iNumLpkFilesVisible];
     end;
     // This sets the subcontrols up correctly
@@ -734,13 +737,13 @@ begin
 end;
 
 procedure TfrmMain.chk_DisableInOPMMouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+  Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 begin
-// Warn user about DisableInOPM
-  If chk_DisableInOPM.Checked=TRUE then
-     if MessageDlg(Format(rsThisWillDisa, [LineEnding]),
-     mtWarning,[MBYES,MBNO],0,MBNO) = mrNo then
-       chk_DisableInOPM.Checked:=FALSE;
+  // Warn user about DisableInOPM
+  if chk_DisableInOPM.Checked = True then
+    if MessageDlg(Format(rsThisWillDisa, [LineEnding]),
+      mtWarning, [mbYes, mbNo], 0, mbNo) = mrNo then
+      chk_DisableInOPM.Checked := False;
 end;
 
 procedure TfrmMain.cmd_RemoveLastPackageFileClick(Sender: TObject);
@@ -755,8 +758,8 @@ begin
   begin
     if MessageDlg(rsFileMayBeUns, mtConfirmation, [mbYes, mbNo], 0, mbNo) = mrNo then
       CanClose := False;
-  end
-  else
+  end;
+  if CanClose = True then
   begin
     CFG.WriteBool('Options', 'Virgin', False); // Suppresses PopUp hints on next run
     CFG.WriteBool('Options', 'DiableWarnings', bDisableWarnings);
@@ -764,20 +767,33 @@ begin
   end;
 end;
 
-function TfrmMain.CreateUniqueINI(var aCount: integer): boolean;
-  // Recursively loop until correct INI found, or new one created
-  // Based on Executable's path location
+procedure TfrmMain.CreateUniqueINI(var aCount: integer);
+// Recursively loop until correct INI found, or new one created
+// Based on Executable's path location
 begin
-  Result := False;
   INIFilePath := GetAppConfigFile(False) + IntToStr(aCount);
-  CFG := TIniFile.Create(INIFilePath);
-  CFG.CacheUpdates := True;
-  if CFG.ReadString('Options', 'AppPath', ProgramDirectory) <> ProgramDirectory then
+  If C_DEBUGMESSAGES then ShowMessage(INIFilePath);
+  if FileExistsUTF8(INIFilePath) then
   begin
-    FreeAndNil(CFG); // Ditch the old one
-    Inc(aCount);
-    Result := True;
-    CreateUniqueINI(aCount); // Make a new one
+    CFG := TIniFile.Create(INIFilePath);
+    CFG.CacheUpdates := True;
+    if CFG.ReadString('Options', 'AppPath', 'unknown') = ProgramDirectory then
+    begin
+      Exit;
+    end
+    else
+    begin
+      FreeAndNil(CFG); // Ditch the old one
+      Inc(aCount);
+      CreateUniqueINI(aCount); // Make a new one
+    end;
+  end
+  else
+  begin
+    CFG := TIniFile.Create(INIFilePath);
+    CFG.CacheUpdates := True;
+    CFG.WriteString('Options', 'AppPath', ProgramDirectory);
+    Exit;
   end;
 end;
 
@@ -811,8 +827,16 @@ begin
   // If program location is different, create a new CFG file
   // Because each component's location might be different
   iIniCount := 0;
-  if CreateUniqueINI(iIniCount) then
+  // First time run anywhere on the system
+  INIFilePath := GetAppConfigFile(False) + '0';
+  if not FileExistsUTF8(INIFilePath) then
+  begin
+    CFG := TIniFile.Create(INIFilePath);
     CFG.WriteString('Options', 'AppPath', ProgramDirectory);
+  end
+  else // Make a new INI if this is a new location
+    CreateUniqueINI(iIniCount);
+
   CFG.UpdateFile;
 
   if C_DEBUGMESSAGES = True then // Dev only
@@ -875,7 +899,7 @@ begin
       begin
         edt_UpdateZipName.Text := JSONPackage.UpdatePackageData.Name;
         edt_DownloadZipURL.Text := JSONPackage.UpdatePackageData.DownloadZipURL;
-        chk_DisableInOPM.Checked:=JSONPackage.UpdatePackageData.DisableInOPM;
+        chk_DisableInOPM.Checked := JSONPackage.UpdatePackageData.DisableInOPM;
         for i := 0 to JSONPackage.UpdatePackageFiles.Count - 1 do
         begin
           if (i > 0) then
@@ -928,7 +952,7 @@ begin
   edt_DownloadZipURL.Text := rsHttpWwwUpdat;
   sJSONFilePath := '';
   sZipDirectory := '';
-  chk_DisableInOPM.Checked:=False;
+  chk_DisableInOPM.Checked := False;
   ResetPackageFileControlsToOne;
   ArrayEdtPackageFileName[0].Text := rsMypackagelpk;
   ArraySpinEditV1[0].Value := 0;
@@ -1116,13 +1140,13 @@ begin
       Result := True;
     end;
     // Check Forcenotify version isn't zero
-    If ArrayChkBoxForceNotify[iCount].Checked = TRUE then
-       If ArraySpinEditInternalVersion[iCount].Value = 0 then
-       begin
-         ArraySpinEditInternalVersion[iCount].Color := clYellow;
-         slErrorList.Add(Format(rsInternalVers2, [LineEnding]));
-         Result := True;
-       end;
+    if ArrayChkBoxForceNotify[iCount].Checked = True then
+      if ArraySpinEditInternalVersion[iCount].Value = 0 then
+      begin
+        ArraySpinEditInternalVersion[iCount].Color := clYellow;
+        slErrorList.Add(Format(rsInternalVers2, [LineEnding]));
+        Result := True;
+      end;
     // Check for duplicate .lpk entries
     if FoundADuplicateLPK then
     begin
@@ -1163,7 +1187,7 @@ begin
   try
     JSONPackage.UpdatePackageData.Name := edt_UpdateZipName.Text;
     JSONPackage.UpdatePackageData.DownloadZipURL := edt_DownloadZipURL.Text;
-    JSONPackage.UpdatePackageData.DisableInOPM:=chk_DisableInOPM.Checked;
+    JSONPackage.UpdatePackageData.DisableInOPM := chk_DisableInOPM.Checked;
     for i := 0 to High(ArrayGrpBox) do
     begin
       with JSONPackage.UpdatePackageFiles.Add do
@@ -1226,16 +1250,16 @@ procedure TfrmMain.spd_CheckURLClick(Sender: TObject);
 // Show a popup notification because it takes time to open a browser window
 var
   bTemp: boolean;
-  sOldHint:String;
+  sOldHint: string;
 begin
   if OpenURL(edt_DownloadZipURL.Text) then
   begin
     bTemp := bShowPopupHints;
-    sOldHint:=spd_CheckURL.Hint;
-    spd_CheckURL.Hint:=rsOpeningYourB;
+    sOldHint := spd_CheckURL.Hint;
+    spd_CheckURL.Hint := rsOpeningYourB;
     bShowPopupHints := True;
     CtrlShowPopup(spd_CheckURL);
-    spd_CheckURL.Hint:=sOldHint;
+    spd_CheckURL.Hint := sOldHint;
     bShowPopupHints := bTemp;
   end;
 end;

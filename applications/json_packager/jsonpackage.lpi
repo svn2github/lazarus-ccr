@@ -28,7 +28,8 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="2"/>
-      <RevisionNr Value="4"/>
+      <RevisionNr Value="5"/>
+      <BuildNr Value="1"/>
       <StringTable Comments="Buld configured for Win Linux and Darwin" FileDescription="An editor for OnlinePackageManager update JSON files" InternalName="jsoneditor" LegalCopyright="(c)2016 usernames lainz and minesadorada @ forum.lazarus.freepascal.org" LegalTrademarks="GPL code" OriginalFilename="jsoneditor" ProductName="Lazarus and Freepascal" ProductVersion="1.x and 3.x"/>
     </VersionInfo>
     <BuildModes Count="6">
@@ -55,7 +56,6 @@
           <Linking>
             <Debugging>
               <GenerateDebugInfo Value="False"/>
-              <UseLineInfoUnit Value="False"/>
             </Debugging>
             <LinkSmart Value="True"/>
             <Options>
@@ -65,6 +65,7 @@
             </Options>
           </Linking>
           <Other>
+            <CustomOptions Value="-dIGNOREPICTURE"/>
             <OtherDefines Count="1">
               <Define0 Value="IGNOREPICTURE"/>
             </OtherDefines>
@@ -102,7 +103,8 @@
             </Options>
           </Linking>
           <Other>
-            <CustomOptions Value="-FcUTF8"/>
+            <CustomOptions Value="-FcUTF8
+-dIGNOREPICTURE"/>
             <OtherDefines Count="1">
               <Define0 Value="IGNOREPICTURE"/>
             </OtherDefines>
@@ -140,7 +142,8 @@
             </Options>
           </Linking>
           <Other>
-            <CustomOptions Value="-FcUTF8"/>
+            <CustomOptions Value="-FcUTF8
+-dIGNOREPICTURE"/>
             <OtherDefines Count="1">
               <Define0 Value="IGNOREPICTURE"/>
             </OtherDefines>
@@ -178,7 +181,8 @@
             </Options>
           </Linking>
           <Other>
-            <CustomOptions Value="-FcUTF8"/>
+            <CustomOptions Value="-FcUTF8
+-dIGNOREPICTURE"/>
           </Other>
         </CompilerOptions>
       </Item5>
@@ -302,6 +306,7 @@
       </Options>
     </Linking>
     <Other>
+      <CustomOptions Value="-dIGNOREPICTURE"/>
       <OtherDefines Count="1">
         <Define0 Value="IGNOREPICTURE"/>
       </OtherDefines>
