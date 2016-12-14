@@ -21,12 +21,12 @@
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="314"/>
+        <TopLine Value="313"/>
         <CursorPos Y="498"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
           <IsVisibleTab Value="True"/>
-          <TopLine Value="244"/>
+          <TopLine Value="37"/>
           <CursorPos X="80" Y="258"/>
         </ExtraEditor1>
         <UsageCount Value="160"/>

@@ -12,40 +12,41 @@ msgstr ""
 "X-Generator: Poedit 1.8.11\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: tfrmmain.btnadd.caption
+#: tfrmmain.chk_disableinopm.caption
+msgid "Disable in OPM"
+msgstr ""
+
+#: tfrmmain.chk_disableinopm.hint
+msgid "Warning! This will disable installing or updating your package in OPM"
+msgstr ""
+
+#: tfrmmain.cmd_addpackagefile.caption
+msgctxt "tfrmmain.cmd_addpackagefile.caption"
 msgid "Add"
 msgstr ""
 
-#: tfrmmain.btnadd.hint
+#: tfrmmain.cmd_addpackagefile.hint
+msgctxt "tfrmmain.cmd_addpackagefile.hint"
 msgid ""
 "Add Package File:\n"
 "The update zip can contain more than one lpk file\n"
 "deployed to the same place.\n"
 msgstr ""
 
-#: tfrmmain.btnremove.caption
+#: tfrmmain.cmd_close.caption
+msgid "&Close"
+msgstr ""
+
+#: tfrmmain.cmd_removelastpackagefile.caption
+msgctxt "tfrmmain.cmd_removelastpackagefile.caption"
 msgid "Remove"
 msgstr ""
 
-#: tfrmmain.btnremove.hint
+#: tfrmmain.cmd_removelastpackagefile.hint
+msgctxt "tfrmmain.cmd_removelastpackagefile.hint"
 msgid ""
 "Remove Package File:\n"
 "Deletes the last entry from the list\n"
-msgstr ""
-
-#: tfrmmain.cbforcenotify.caption
-msgid "Force Notify"
-msgstr ""
-
-#: tfrmmain.cbforcenotify.hint
-msgid ""
-"Force Notify check box:\n"
-"If this is checked the OPM user will be notified\n"
-"of your update.  Only check this if the update is important.\n"
-msgstr ""
-
-#: tfrmmain.cmd_close.caption
-msgid "&Close"
 msgstr ""
 
 #: tfrmmain.cmd_save.caption
@@ -58,13 +59,15 @@ msgid ""
 "as a JSON update file\n"
 msgstr ""
 
-#: tfrmmain.editdownloadzipurl.hint
+#: tfrmmain.edt_downloadzipurl.hint
+msgctxt "tfrmmain.edt_downloadzipurl.hint"
 msgid ""
 "Download URL:\n"
 "Include the FULL url needed to download the package Zip file\n"
 msgstr ""
 
-#: tfrmmain.editname.hint
+#: tfrmmain.edt_updatezipname.hint
+msgctxt "tfrmmain.edt_updatezipname.hint"
 msgid ""
 "Update Zip Name:\n"
 "This is just the filename (not including the path)\n"
@@ -91,20 +94,27 @@ msgstr ""
 msgid "Save As"
 msgstr ""
 
-#: tfrmmain.lbldownloadzipurl.caption
+#: tfrmmain.lbl_downloadzipurl.caption
+msgctxt "tfrmmain.lbl_downloadzipurl.caption"
 msgid "Download URL:"
 msgstr ""
 
-#: tfrmmain.lblname.caption
-msgid "Update Zip Name:"
+#: tfrmmain.lbl_packagefiles.caption
+msgctxt "tfrmmain.lbl_packagefiles.caption"
+msgid "Package Files:"
 msgstr ""
 
-#: tfrmmain.lblpackagefiles.caption
-msgid "Package Files:"
+#: tfrmmain.lbl_updatezipname.caption
+msgctxt "tfrmmain.lbl_updatezipname.caption"
+msgid "Update Zip Name:"
 msgstr ""
 
 #: tfrmmain.loaditem.caption
 msgid "Load..."
+msgstr ""
+
+#: tfrmmain.mnu_fileexit.caption
+msgid "E&xit"
 msgstr ""
 
 #: tfrmmain.mnu_filenew.caption
@@ -163,20 +173,15 @@ msgid "Check URL"
 msgstr ""
 
 #: tfrmmain.spd_checkurl.hint
-msgid "Attempting to Open URL"
-msgstr ""
-
-#: tfrmmain.stringpackagefiles.hint
-msgid ""
-"Package Files:\n"
-"[Add]:  to make a new entry\n"
-"[Remove]: Remove last entry\n"
-"lpk filename: i.e. mycontrol.lpk\n"
-"Version: The FULL version (i.e. not 1.0 but 1.0.0.0)\n"
+msgid "Attempts to open the URL in your browser"
 msgstr ""
 
 #: umain.rsabout
 msgid "About"
+msgstr ""
+
+#: umain.rscheckthisify
+msgid "Check this if you don't want to incrememt the package version"
 msgstr ""
 
 #: umain.rscompiledwith2
@@ -203,8 +208,16 @@ msgstr ""
 msgid "JSON may be unsaved. Are you sure you want to quit?"
 msgstr ""
 
+#: umain.rsfilename
+msgid "Filename: "
+msgstr ""
+
 #: umain.rsfixthentryag
 msgid "Fix, then try again."
+msgstr ""
+
+#: umain.rsformatisnnnn
+msgid "Package version:%sFormat is: n.n.n.n"
 msgstr ""
 
 #: umain.rshelpandinfor
@@ -215,16 +228,30 @@ msgstr ""
 msgid "http://www.updatesite.com/myupdate/mypackagename.zip"
 msgstr ""
 
+#: umain.rsinternalvers
+msgid "Internal Version: "
+msgstr ""
+
+#: umain.rsinternalvers2
+msgid "Internal version number should not be Zero%s"
+msgstr ""
+
 #: umain.rslanguagechan
 msgid "Language changed to \"%s\"."
 msgstr ""
 
-#: umain.rslpkfilename
-msgid "lpk FileName"
+#: umain.rsmypackagelpk
+msgctxt "umain.rsmypackagelpk"
+msgid "mypackagename.lpk"
 msgstr ""
 
 #: umain.rsmypackagenam
+msgctxt "umain.rsmypackagenam"
 msgid "mypackagename.zip"
+msgstr ""
+
+#: umain.rsnotifyupdate
+msgid "Notify Update"
 msgstr ""
 
 #: umain.rsoneofthereq1
@@ -235,8 +262,16 @@ msgstr ""
 msgid "One or more of the required fields are missing or wrong."
 msgstr ""
 
+#: umain.rsopeningyourb
+msgid "Opening your browser..."
+msgstr ""
+
 #: umain.rsoverwrite
 msgid "Overwrite"
+msgstr ""
+
+#: umain.rspackagedinfo
+msgid "Package #%d Information"
 msgstr ""
 
 #: umain.rssavedok
@@ -267,16 +302,24 @@ msgstr ""
 msgid "The .lpk entry #%d is is absent"
 msgstr ""
 
-#: umain.rstherearenolp
-msgid "- There are no .lpk files in the list yet"
+#: umain.rsthepackagefi
+msgid "The package filename (No path e.g. package.lpk)"
 msgstr ""
 
 #: umain.rsthereareoneo
 msgid "- There are one or more .lpk entries with the same name.%s- Every .lpk entry must have a unique name."
 msgstr ""
 
+#: umain.rstherewasapro
+msgid "There was a problem loading \"%s\" - is it corrupted or in the wrong format?"
+msgstr ""
+
 #: umain.rsthisoptionsh
-msgid "This option should only be used for crucial updates or bug-fixed packages. Are you OK with that?"
+msgid "This option should only be used for crucial updates or bug-fixed packages."
+msgstr ""
+
+#: umain.rsthiswilldisa
+msgid "This will disable your package in OnlinePackageManager!%sAre you SURE you want to do this?"
 msgstr ""
 
 #: umain.rsturnhintsoff
@@ -299,16 +342,16 @@ msgstr ""
 msgid "- Update zip name missing extension \".zip\""
 msgstr ""
 
-#: umain.rsversion0000
-msgid "Version (n.n.n.n)"
+#: umain.rsuseincombina
+msgid "Use in combination with %s"
 msgstr ""
 
-#: umain.rsversionentry
-msgid "Version Entry #%d is absent"
+#: umain.rsversion
+msgid "Version: "
 msgstr ""
 
-#: umain.rsversionentry2
-msgid "Version entry #%d needs to be of the form n.n.n.n"
+#: umain.rsversionforpa
+msgid "Version for package %d is zero"
 msgstr ""
 
 #: umain.rswouldyoulike
