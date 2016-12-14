@@ -62,7 +62,8 @@ unit umain;
   0.2.1.0:  Added scrollbox to contain package info (GetMem)
   0.2.2.0:  Hints and Validation updated (minesadorada)
   0.2.3.0:  ResourceStrings Updated (minesadorada)
-  0.2.4.0:  ??
+  0.2.4.0:  Bugfix: regression error: DisableInOPM (minesadorada)
+  0.2.5.0: ??
  }
 {$mode objfpc}{$H+}
 
@@ -874,6 +875,7 @@ begin
       begin
         edt_UpdateZipName.Text := JSONPackage.UpdatePackageData.Name;
         edt_DownloadZipURL.Text := JSONPackage.UpdatePackageData.DownloadZipURL;
+        chk_DisableInOPM.Checked:=JSONPackage.UpdatePackageData.DisableInOPM;
         for i := 0 to JSONPackage.UpdatePackageFiles.Count - 1 do
         begin
           if (i > 0) then
@@ -926,6 +928,7 @@ begin
   edt_DownloadZipURL.Text := rsHttpWwwUpdat;
   sJSONFilePath := '';
   sZipDirectory := '';
+  chk_DisableInOPM.Checked:=False;
   ResetPackageFileControlsToOne;
   ArrayEdtPackageFileName[0].Text := rsMypackagelpk;
   ArraySpinEditV1[0].Value := 0;
@@ -1160,6 +1163,7 @@ begin
   try
     JSONPackage.UpdatePackageData.Name := edt_UpdateZipName.Text;
     JSONPackage.UpdatePackageData.DownloadZipURL := edt_DownloadZipURL.Text;
+    JSONPackage.UpdatePackageData.DisableInOPM:=chk_DisableInOPM.Checked;
     for i := 0 to High(ArrayGrpBox) do
     begin
       with JSONPackage.UpdatePackageFiles.Add do
