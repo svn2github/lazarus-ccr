@@ -16,6 +16,10 @@ msgstr ""
 msgid "Disable in OPM"
 msgstr ""
 
+#: tfrmmain.chk_disableinopm.hint
+msgid "Warning! This will disable installing or updating your package in OPM"
+msgstr ""
+
 #: tfrmmain.cmd_addpackagefile.caption
 msgctxt "tfrmmain.cmd_addpackagefile.caption"
 msgid "Add"
@@ -169,11 +173,15 @@ msgid "Check URL"
 msgstr ""
 
 #: tfrmmain.spd_checkurl.hint
-msgid "Attempting to Open URL"
+msgid "Attempts to open the URL in your browser"
 msgstr ""
 
 #: umain.rsabout
 msgid "About"
+msgstr ""
+
+#: umain.rscheckthisify
+msgid "Check this if you don't want to incrememt the package version"
 msgstr ""
 
 #: umain.rscompiledwith2
@@ -200,8 +208,16 @@ msgstr ""
 msgid "JSON may be unsaved. Are you sure you want to quit?"
 msgstr ""
 
+#: umain.rsfilename
+msgid "Filename: "
+msgstr ""
+
 #: umain.rsfixthentryag
 msgid "Fix, then try again."
+msgstr ""
+
+#: umain.rsformatisnnnn
+msgid "Package version:%sFormat is: n.n.n.n"
 msgstr ""
 
 #: umain.rshelpandinfor
@@ -210,6 +226,14 @@ msgstr ""
 
 #: umain.rshttpwwwupdat
 msgid "http://www.updatesite.com/myupdate/mypackagename.zip"
+msgstr ""
+
+#: umain.rsinternalvers
+msgid "Internal Version: "
+msgstr ""
+
+#: umain.rsinternalvers2
+msgid "Internal version number should not be Zero%s"
 msgstr ""
 
 #: umain.rslanguagechan
@@ -226,6 +250,10 @@ msgctxt "umain.rsmypackagenam"
 msgid "mypackagename.zip"
 msgstr ""
 
+#: umain.rsnotifyupdate
+msgid "Notify Update"
+msgstr ""
+
 #: umain.rsoneofthereq1
 msgid "One of the required fields is missing or wrong."
 msgstr ""
@@ -234,8 +262,16 @@ msgstr ""
 msgid "One or more of the required fields are missing or wrong."
 msgstr ""
 
+#: umain.rsopeningyourb
+msgid "Opening your browser..."
+msgstr ""
+
 #: umain.rsoverwrite
 msgid "Overwrite"
+msgstr ""
+
+#: umain.rspackagedinfo
+msgid "Package #%d Information"
 msgstr ""
 
 #: umain.rssavedok
@@ -266,12 +302,24 @@ msgstr ""
 msgid "The .lpk entry #%d is is absent"
 msgstr ""
 
+#: umain.rsthepackagefi
+msgid "The package filename (No path e.g. package.lpk)"
+msgstr ""
+
 #: umain.rsthereareoneo
 msgid "- There are one or more .lpk entries with the same name.%s- Every .lpk entry must have a unique name."
 msgstr ""
 
+#: umain.rstherewasapro
+msgid "There was a problem loading \"%s\" - is it corrupted or in the wrong format?"
+msgstr ""
+
 #: umain.rsthisoptionsh
 msgid "This option should only be used for crucial updates or bug-fixed packages."
+msgstr ""
+
+#: umain.rsthiswilldisa
+msgid "This will disable your package in OnlinePackageManager!%sAre you SURE you want to do this?"
 msgstr ""
 
 #: umain.rsturnhintsoff
@@ -292,6 +340,18 @@ msgstr ""
 
 #: umain.rsupdatezipnam2
 msgid "- Update zip name missing extension \".zip\""
+msgstr ""
+
+#: umain.rsuseincombina
+msgid "Use in combination with %s"
+msgstr ""
+
+#: umain.rsversion
+msgid "Version: "
+msgstr ""
+
+#: umain.rsversionforpa
+msgid "Version for package %d is zero"
 msgstr ""
 
 #: umain.rswouldyoulike

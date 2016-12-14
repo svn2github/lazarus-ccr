@@ -1,7 +1,7 @@
 object frmMain: TfrmMain
-  Left = 588
+  Left = 852
   Height = 398
-  Top = 157
+  Top = 171
   Width = 618
   Anchors = []
   BorderIcons = [biSystemMenu]
@@ -179,7 +179,7 @@ object frmMain: TfrmMain
     AnchorSideRight.Control = chk_DisableInOPM
     Left = 438
     Height = 19
-    Hint = 'Attempting to Open URL'
+    Hint = 'Attempts to open the URL in your browser'
     Top = 88
     Width = 61
     Anchors = [akTop, akRight]
@@ -191,6 +191,7 @@ object frmMain: TfrmMain
   object chk_DisableInOPM: TCheckBox
     Left = 507
     Height = 19
+    Hint = 'Warning! This will disable installing or updating your package in OPM'
     Top = 88
     Width = 101
     Anchors = [akTop, akRight]
@@ -200,7 +201,7 @@ object frmMain: TfrmMain
     OnMouseUp = chk_DisableInOPMMouseUp
     TabOrder = 6
   end
-  object sbPackageFiles: TScrollBox
+  object sb_PackageFiles: TScrollBox
     Left = 8
     Height = 166
     Top = 160
