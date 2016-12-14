@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Name Value="lazupdate"/>
     <Type Value="RunAndDesignTime"/>
-    <Author Value="minesadorada@charcodelvalle.com"/>
+    <Author Value="user minesadorada at freepascal forum"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -25,8 +25,8 @@
     </CompilerOptions>
     <Description Value="Laz AutoUpdater
 A component for SourceForge Project Developers and end-users to update their apps easily"/>
-    <License Value="  Copyright (C)2014 minesadorada@charcodelvalle.com
-  Modified GPL
+    <License Value="  Modified GPL
+  Copyright (C)2014 minesadorada@charcodelvalle.com
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
   the Free Software Foundation; either version 2 of the License, or (at your

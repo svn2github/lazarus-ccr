@@ -5,7 +5,7 @@
     <Name Value="poweredby"/>
     <Type Value="RunAndDesignTime"/>
     <AddToProjectUsesSection Value="True"/>
-    <Author Value="minesadorada@charcodelvalle.com"/>
+    <Author Value="user minesadorada at freepascal forum"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -18,11 +18,11 @@
         </Debugging>
       </Linking>
     </CompilerOptions>
-    <Description Value="Method: ShowPoweredBy
+    <Description Value="A splash window component
+Method: ShowPoweredBy
 Graphic shown will depend on widgetset"/>
     <License Value="TPoweredby Component
 Copyright (C)2014 minesadorada@charcodelvalle.com
-  Copyright (C)2014 minesadorada@charcodelvalle.com
   Modified GPL
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by

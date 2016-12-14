@@ -3,7 +3,7 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="10"/>
-    <BuildModes Active="Darwin32"/>
+    <BuildModes Active="Win32"/>
     <Units Count="51">
       <Unit0>
         <Filename Value="cryptinitest.lpr"/>
@@ -45,6 +45,7 @@
         <ComponentName Value="keydialog"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <CursorPos X="12" Y="29"/>
         <UsageCount Value="100"/>
@@ -394,9 +395,8 @@
       </Unit49>
       <Unit50>
         <Filename Value="..\ucryptini.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="390"/>
+        <TopLine Value="79"/>
         <CursorPos X="19" Y="222"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>

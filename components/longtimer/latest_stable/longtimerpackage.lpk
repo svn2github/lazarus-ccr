@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Name Value="longtimerpackage"/>
     <Type Value="RunAndDesignTime"/>
-    <Author Value="minesadorada@charcodelvalle.com"/>
+    <Author Value="user minesadorada at freepascal forum"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -15,7 +15,6 @@
     <Description Value="TLongTimer is a descendant of TIdleTimer that samples every 30minutes when idle.
 It is intended for TTrayIcon applications.  DailyHour is a 24-hour clock (16 = 4pm) and MonthlyDate  is best &lt; 29 "/>
     <License Value="Copyright (C)2014 minesadorada@charcodelvalle.com
-  Copyright (C)2014 minesadorada@charcodelvalle.com
   Modified GPL
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by

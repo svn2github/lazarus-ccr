@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Name Value="scrolltext"/>
     <Type Value="RunAndDesignTime"/>
-    <Author Value="FPC / minesadorada (adaptation)"/>
+    <Author Value="FPC / user minesadorada at freepascal forum (adaptation)"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
