@@ -51,7 +51,7 @@ constructor TmbDeskPickerButton.Create(AOwner: TComponent);
 begin
  inherited;
  DoubleBuffered := true;
- ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque{$IFDEF DELPHI_7_UP}, csParentBackground{$ENDIF}];
+// ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque{$IFDEF DELPHI_7_UP}, csParentBackground{$ENDIF}];
  FHintFmt := 'RGB(%r, %g, %b)'#13'Hex: %h';
  FShowScreenHint := false;
 end;
@@ -80,8 +80,8 @@ end;
 
 procedure TmbDeskPickerButton.ColorPicked(Sender: TObject);
 begin
- FSelColor := ScreenFrm.SelectedColor;
- if Assigned(FOnColorPicked) then FOnColorPicked(Self);
+  FSelColor := ScreenFrm.SelectedColor;
+  if Assigned(FOnColorPicked) then FOnColorPicked(Self);
 end;
 
 procedure TmbDeskPickerButton.ScreenKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

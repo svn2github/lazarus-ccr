@@ -4,6 +4,8 @@ object ScreenForm: TScreenForm
   Top = 117
   Width = 149
   Align = alClient
+  AlphaBlend = True
+  AlphaBlendValue = 1
   BorderIcons = []
   BorderStyle = bsNone
   Caption = 'Pick a color...'

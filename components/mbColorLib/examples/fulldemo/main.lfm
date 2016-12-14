@@ -56,7 +56,7 @@ object Form1: TForm1
         Height = 287
         Top = 8
         Width = 377
-        SelectedColor = 488198
+        SelectedColor = 488454
         HSPickerHintFormat = 'H: %h S: %s'#13'Hex: %hex'
         LPickerHintFormat = 'Luminance: %l'
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -691,6 +691,7 @@ object Form1: TForm1
         TabOrder = 0
         OnSelColorChange = mbDeskPickerButton1SelColorChange
         ScreenHintFormat = 'RGB(%r, %g, %b)'#13'Hex: %h'
+        ShowScreenHint = True
       end
       object Button3: TButton
         Left = 8

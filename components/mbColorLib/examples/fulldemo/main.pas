@@ -211,7 +211,7 @@ end;
 
 procedure TForm1.mbColorPalette1SelColorChange(Sender: TObject);
 begin
-sc.color := mbcolorpalette1.selectedcolor;
+  uc.Color := mbColorPalette1.SelectedColor;
 end;
 
 procedure TForm1.mbColorPalette1MouseMove(Sender: TObject;
@@ -401,6 +401,7 @@ procedure TForm1.CbShowHintsChange(Sender: TObject);
 begin
   PageControl1.ShowHint := CbShowHints.Checked;
   mbOfficeColorDialog1.UseHints := CbShowHints.Checked;
+  mbDeskPickerButton1.ShowScreenHint := CbShowHints.Checked;
 end;
 
 end.

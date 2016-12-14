@@ -33,7 +33,6 @@ type
    FOnKeyDown: TKeyEvent;
 
   protected
-   procedure CreateParams(var Params:TCreateParams); override;
    procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
 
   public
@@ -62,18 +61,20 @@ begin
 end;
 
 function GetDesktopColor(const X, Y: Integer): TColor;
-{$IFDEF DELPHI}
 var
   c: TCanvas;
+  screenDC: HDC;
 begin
   c := TCanvas.Create;
   try
-   c.Handle := GetWindowDC(GetDesktopWindow);
-   Result := GetPixel(c.Handle, X, Y);
+    screenDC := GetDC(0);
+    c.Handle := screenDC;
+    Result := c.Pixels[X, Y];
   finally
-   c.Free;
+    c.Free;
   end;
 end;
+(*
 {$ELSE}
 var
   bmp: TBitmap;
@@ -87,12 +88,7 @@ begin
   bmp.Free;
 end;
 {$ENDIF}
-
-procedure TScreenForm.CreateParams(var Params:TCreateParams);
-Begin
- inherited CreateParams(Params);
- Params.ExStyle := WS_EX_TRANSPARENT or WS_EX_TOPMOST;
-end;
+*)
 
 procedure TScreenForm.FormShow(Sender: TObject);
 begin
@@ -114,19 +110,23 @@ end;
 procedure TScreenForm.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
- if (key = VK_ESCAPE) or (ssAlt in Shift) or (ssCtrl in Shift) then
-  EndSelection(0, 0, false);
- if Assigned(FOnKeyDown) then FOnKeyDown(Self, Key, Shift);
+  if (key = VK_ESCAPE) or (ssAlt in Shift) or (ssCtrl in Shift) then
+    EndSelection(0, 0, false);
+  if (key = VK_RETURN) then
+    EndSelection(Mouse.CursorPos.X, Mouse.CursorPos.Y, true);
+  if Assigned(FOnKeyDown) then
+    FOnKeyDown(Self, Key, Shift);
 end;
 
 procedure TScreenForm.EndSelection(x, y: integer; ok: boolean);
 begin
- if ok then
-  SelectedColor := GetDesktopColor(x, y)
- else
-  SelectedColor := clNone;
- close;
- if Assigned(FOnSelColorChange) then FOnSelColorChange(Self);
+  if ok then
+    SelectedColor := GetDesktopColor(x, y)
+  else
+    SelectedColor := clNone;
+  Close;
+  if Assigned(FOnSelColorChange) then
+    FOnSelColorChange(Self);
 end;
 
 procedure TScreenForm.FormMouseUp(Sender: TObject; Button: TMouseButton;
@@ -138,25 +138,26 @@ end;
 procedure TScreenForm.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 begin
- SelectedColor := GetDesktopColor(x, y);
- if Assigned(FOnSelColorChange) then FOnSelColorChange(Self);
+  SelectedColor := GetDesktopColor(x, y);
+  if Assigned(FOnSelColorChange) then FOnSelColorChange(Self);
+  Application.ProcessMessages;
 end;
 
 procedure TScreenForm.CMHintShow(var Message: TCMHintShow);
 begin
- with TCMHintShow(Message) do
-  if not ShowHint then
-   Message.Result := 1
-  else
-   with HintInfo^ do
-    begin
-     Result := 0;
-     ReshowTimeout := 1;
-     HideTimeout := 5000;
-     HintPos := Point(HintPos.X + 16, HintPos.y - 16);
-     HintStr := FormatHint(FHintFormat, SelectedColor);
-    end;
- inherited;
+  with TCMHintShow(Message) do
+    if not ShowHint then
+      Message.Result := 1
+   else
+     with HintInfo^ do
+     begin
+       Result := 0;
+       ReshowTimeout := 1;
+       HideTimeout := 5000;
+       HintPos := Point(HintPos.X + 16, HintPos.y - 16);
+       HintStr := FormatHint(FHintFormat, SelectedColor);
+     end;
+  inherited;
 end;
 
 end.
