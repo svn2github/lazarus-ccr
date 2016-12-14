@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="9"/>
+    <BuildModes Active="Release"/>
+    <Units Count="13">
+      <Unit0>
+        <Filename Value="longtimerdemo.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="83" Y="6"/>
+        <UsageCount Value="76"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="umainform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="mainform"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="umainform"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="88"/>
+        <CursorPos X="39" Y="92"/>
+        <UsageCount Value="76"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="..\ulongtimer.pas"/>
+        <UnitName Value="uLongTimer"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="138"/>
+        <CursorPos X="33" Y="151"/>
+        <UsageCount Value="37"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="D:\Lazarus32_production\lcl\extctrls.pp"/>
+        <TopLine Value="184"/>
+        <CursorPos X="65" Y="203"/>
+        <UsageCount Value="25"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="D:\Lazarus32_production\lcl\customtimer.pas"/>
+        <CursorPos X="25" Y="42"/>
+        <UsageCount Value="25"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="D:\Lazarus32_production\fpc\2.6.4\source\rtl\objpas\dateutils.pp"/>
+        <CursorPos X="18"/>
+        <UsageCount Value="6"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="D:\Lazarus32_production\fpc\2.6.4\source\rtl\objpas\dateutil.pp"/>
+        <CursorPos X="13"/>
+        <UsageCount Value="6"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="D:\Lazarus32_production\fpc\2.6.4\source\rtl\objpas\dateutil.inc"/>
+        <TopLine Value="263"/>
+        <CursorPos X="22" Y="89"/>
+        <UsageCount Value="25"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="..\aboutlongtimerunit.pas"/>
+        <UnitName Value="AboutLongTimerunit"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="28"/>
+        <CursorPos X="43" Y="42"/>
+        <UsageCount Value="22"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
+        <UnitName Value="ExtCtrls"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="156"/>
+        <CursorPos X="31" Y="181"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="C:\codetyphon\typhon\lcl\customtimer.pas"/>
+        <UnitName Value="CustomTimer"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="23"/>
+        <CursorPos X="41" Y="39"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="C:\codetyphon\fpcsrc\packages\rtl-objpas\src\inc\dateutils.pp"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="17"/>
+        <UsageCount Value="10"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="C:\codetyphon\fpcsrc\packages\rtl-objpas\src\inc\dateutil.inc"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="1453"/>
+        <CursorPos X="3" Y="1473"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit12>
+    </Units>
+    <CustomDefines Count="1">
+      <Define0 Value="DEBUG"/>
+    </CustomDefines>
+    <JumpHistory Count="29" HistoryIndex="28">
+      <Position1>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="93" Column="35" TopLine="83"/>
+      </Position1>
+      <Position2>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="110" Column="14" TopLine="69"/>
+      </Position2>
+      <Position3>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="175" Column="3" TopLine="138"/>
+      </Position3>
+      <Position4>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="92" Column="13" TopLine="62"/>
+      </Position4>
+      <Position5>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="33" Column="13" TopLine="31"/>
+      </Position5>
+      <Position6>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="192" Column="31" TopLine="154"/>
+      </Position6>
+      <Position7>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="93" Column="38" TopLine="50"/>
+      </Position7>
+      <Position8>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="88" Column="50" TopLine="65"/>
+      </Position8>
+      <Position9>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="91" TopLine="61"/>
+      </Position9>
+      <Position10>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="93" TopLine="63"/>
+      </Position10>
+      <Position11>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="169" Column="41" TopLine="147"/>
+      </Position11>
+      <Position12>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="140" Column="11" TopLine="83"/>
+      </Position12>
+      <Position13>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="130" TopLine="118"/>
+      </Position13>
+      <Position14>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="82" Column="8" TopLine="49"/>
+      </Position14>
+      <Position15>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="123" Column="22" TopLine="92"/>
+      </Position15>
+      <Position16>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="57" TopLine="51"/>
+      </Position16>
+      <Position17>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="123" Column="24" TopLine="88"/>
+      </Position17>
+      <Position18>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="82" Column="91" TopLine="55"/>
+      </Position18>
+      <Position19>
+        <Filename Value="..\aboutlongtimerunit.pas"/>
+        <Caret Line="42" Column="43" TopLine="28"/>
+      </Position19>
+      <Position20>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="57" Column="3" TopLine="52"/>
+      </Position20>
+      <Position21>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="82" Column="37" TopLine="61"/>
+      </Position21>
+      <Position22>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="66" Column="5" TopLine="50"/>
+      </Position22>
+      <Position23>
+        <Filename Value="C:\codetyphon\typhon\lcl\extctrls.pp"/>
+        <Caret Line="181" Column="31" TopLine="156"/>
+      </Position23>
+      <Position24>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="82" Column="67" TopLine="58"/>
+      </Position24>
+      <Position25>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="66" Column="51" TopLine="44"/>
+      </Position25>
+      <Position26>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="124" Column="13" TopLine="84"/>
+      </Position26>
+      <Position27>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="154" Column="35" TopLine="147"/>
+      </Position27>
+      <Position28>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="50" Column="78" TopLine="28"/>
+      </Position28>
+      <Position29>
+        <Filename Value="..\ulongtimer.pas"/>
+        <Caret Line="165" Column="18" TopLine="142"/>
+      </Position29>
+    </JumpHistory>
+  </ProjectSession>
+</CONFIG>
