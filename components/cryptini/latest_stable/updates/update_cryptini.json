@@ -1,0 +1,15 @@
+{
+  "UpdatePackageData" : {
+    "DownloadZipURL" : "https://sourceforge.net/projects/lazautoupdate/files/otherpackages/cryptini.zip",
+    "DisableInOPM" : false,
+    "Name" : "cryptini.zip"
+  },
+  "UpdatePackageFiles" : [
+    {
+      "ForceNotify" : false,
+      "InternalVersion" : 1,
+      "Name" : "cryptini.lpk",
+      "Version" : "0.1.2.0"
+    }
+  ]
+}
