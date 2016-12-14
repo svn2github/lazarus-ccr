@@ -1,6 +1,6 @@
 {
   "UpdatePackageData" : {
-    "DisableInOPM" : false,
+    "DisableInOPM" : true,
     "DownloadZipURL" : "https://sourceforge.net/projects/lazautoupdate/files/updates/lazautoupdate.zip",
     "Name" : "lazautoupdate.zip"
   },
