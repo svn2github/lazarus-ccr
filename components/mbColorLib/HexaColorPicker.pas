@@ -196,7 +196,7 @@ type
 implementation
 
 uses
-  PalUtils;
+  PalUtils, mbUtils;
 
 { THexaColorPicker }
 
@@ -304,7 +304,7 @@ begin
   try
  //   OffScreen.PixelFormat := pf32bit;
     OffScreen.Width := Width;
-    OffScreen.Height := FColorCombRect.Bottom - FColorCombRect.Top + FBWCombRect.Bottom - FBWCombRect.Top;
+    OffScreen.Height := HeightOf(FColorCombRect) + HeightOf(FBWCombRect);
     //Parent background
     {$IFDEF FPC}
     if Color = clDefault then
@@ -351,8 +351,11 @@ begin
         Index := FCustomIndex - 1;
         FSelectedCombIndex := index;
         Pen.Style := psSolid;
+        {
         Pen.Mode := pmXOR;
         Pen.Color := clWhite;
+        }
+        Pen.Color := HighContrastColor(FColorCombs[Index].Color);
         Pen.Width := 2;
         Brush.Style := bsClear;
         DrawComb(OffScreen.Canvas, FColorCombs[Index].Position.X + XOffs, FColorCombs[Index].Position.Y + YOffs, FCombSize);
@@ -371,9 +374,12 @@ begin
         Pen.Color := FBWCombs[I].Color;
         Brush.Color := FBWCombs[I].Color;
         if I in [0, High(FBWCombs)] then
-         DrawComb(OffScreen.Canvas, FBWCombs[I].Position.X + XOffs, FBWCombs[I].Position.Y + YOffs, 2 * FCombSize)
-        else
-         DrawComb(OffScreen.Canvas, FBWCombs[I].Position.X + XOffs, FBWCombs[I].Position.Y + YOffs, FCombSize);
+        begin
+          if Pen.Color = clWhite then
+            Pen.Color := clGray;
+          DrawComb(OffScreen.Canvas, FBWCombs[I].Position.X + XOffs, FBWCombs[I].Position.Y + YOffs, 2 * FCombSize)
+        end else
+          DrawComb(OffScreen.Canvas, FBWCombs[I].Position.X + XOffs, FBWCombs[I].Position.Y + YOffs, FCombSize);
       end;
       // mark selected comb
       if FCustomIndex < 0 then
@@ -384,12 +390,20 @@ begin
         else
           FSelectedCombIndex := -index;
         Pen.Style := psSolid;
+        {
         Pen.Mode := pmXOR;
         Pen.Color := clWhite;
+        }
+        Pen.Mode := pmCopy;
+        Pen.Color := HighContrastColor(FBWCombs[Index].Color);
         Pen.Width := 2;
         Brush.Style := bsClear;
         if Index in [0, High(FBWCombs)] then
         begin
+          if Index = High(FBWCombs) then begin
+            Pen.Color := clWhite;
+            Pen.Mode := pmXOR;
+          end;
           if ((FColorCombs[0].Color = Cardinal(clWhite)) and (Index = 0)) or
              ((FColorCombs[0].Color = Cardinal(clBlack)) and (Index = High(FBWCombs)))
           then

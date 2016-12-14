@@ -5,12 +5,17 @@ unit mbUtils;
 interface
 
 uses
-  Classes, SysUtils, Graphics;
+  Classes, SysUtils, Graphics, LCLIntf;
 
 procedure Clamp(var AValue:Integer; AMin, AMax: Integer);
 procedure DrawHorDottedLine(ACanvas: TCanvas; X1, X2, Y: Integer; AColor: TColor);
 function PointInCircle(p: TPoint; Size: integer): boolean;
 function PtInCircle(p, ctr: TPoint; Radius: Integer): Boolean;
+
+function HighContrastColor(AColor: TColor): TColor;
+
+function HeightOf(R: TRect): Integer;
+function WidthOf(R: TRect): Integer;
 
 implementation
 
@@ -41,6 +46,23 @@ begin
   Result := sqr(p.x - ctr.x) + sqr(p.y - ctr.y) <= sqr(Radius);
 end;
 
+function HeightOf(R: TRect): Integer;
+begin
+  Result := R.Bottom - R.Top;
+end;
+
+function WidthOf(R: TRect): Integer;
+begin
+  Result := R.Right - R.Left;
+end;
+
+function HighContrastColor(AColor: TColor): TColor;
+begin
+  if GetRValue(AColor) + GetGValue(AColor) + GetBValue(AColor) > 3*128 then
+    Result := clBlack
+  else
+    Result := clWhite;
+end;
 
 end.
 
