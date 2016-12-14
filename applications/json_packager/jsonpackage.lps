@@ -3,7 +3,7 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="10"/>
-    <BuildModes Active="Win32"/>
+    <BuildModes Active="DEBUG Win64"/>
     <Units Count="47">
       <Unit0>
         <Filename Value="jsonpackage.lpr"/>
@@ -20,8 +20,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="37"/>
-        <CursorPos X="59" Y="57"/>
+        <TopLine Value="67"/>
+        <CursorPos X="58" Y="66"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
           <EditorIndex Value="-1"/>
