@@ -3,14 +3,14 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="10"/>
-    <BuildModes Active="Win64"/>
+    <BuildModes Active="Win32"/>
     <Units Count="47">
       <Unit0>
         <Filename Value="jsonpackage.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="3"/>
         <CursorPos X="15" Y="19"/>
-        <UsageCount Value="130"/>
+        <UsageCount Value="156"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -20,13 +20,20 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="58"/>
-        <CursorPos X="13" Y="63"/>
-        <UsageCount Value="130"/>
+        <TopLine Value="34"/>
+        <CursorPos X="48" Y="60"/>
+        <ExtraEditorCount Value="1"/>
+        <ExtraEditor1>
+          <IsVisibleTab Value="True"/>
+          <WindowIndex Value="1"/>
+          <TopLine Value="491"/>
+          <CursorPos X="21" Y="508"/>
+        </ExtraEditor1>
+        <UsageCount Value="156"/>
         <Bookmarks Count="3">
-          <Item0 Y="822" ID="1"/>
-          <Item1 X="44" Y="768"/>
-          <Item2 Y="634" ID="2"/>
+          <Item0 Y="844" ID="1"/>
+          <Item1 X="44" Y="790"/>
+          <Item2 Y="656" ID="2"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -34,7 +41,7 @@
       <Unit2>
         <Filename Value="ugenericcollection.pas"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="130"/>
+        <UsageCount Value="156"/>
       </Unit2>
       <Unit3>
         <Filename Value="C:\NewPascal\projects\MDSUM\CryptINI\lockini.pas"/>
@@ -42,7 +49,7 @@
         <UnitName Value="LockIni"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="40" Y="9"/>
-        <UsageCount Value="48"/>
+        <UsageCount Value="74"/>
       </Unit3>
       <Unit4>
         <Filename Value="D:\Lazarusprojects\golfml\egacalculator\source\umainform.pas"/>
@@ -52,33 +59,33 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="541"/>
         <CursorPos X="3" Y="544"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit4>
       <Unit5>
         <Filename Value="D:\Lazarusprojects\MDSUM\CryptINI\trunk\cryptinilpk\cryptini.pas"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="4"/>
       </Unit5>
       <Unit6>
         <Filename Value="D:\Lazarusprojects\MDSUM\CryptINI\trunk\latest_stable\cryptinilpk\ucryptini.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1376"/>
         <CursorPos X="55" Y="1411"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="9"/>
       </Unit6>
       <Unit7>
         <Filename Value="..\..\lazarus\lcl\defaulttranslator.pas"/>
         <UnitName Value="DefaultTranslator"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="53" Y="29"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="8"/>
       </Unit7>
       <Unit8>
         <Filename Value="..\..\lazarus\lcl\lcltranslator.pas"/>
         <UnitName Value="LCLTranslator"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="517"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="8"/>
       </Unit8>
       <Unit9>
         <Filename Value="..\..\NewPascal\lazarus\packager\registration\registerfcl.pas"/>
@@ -86,7 +93,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="24"/>
         <CursorPos X="42" Y="37"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="4"/>
       </Unit9>
       <Unit10>
         <Filename Value="D:\lazarustrunk\common_components\onlinepackagemanager\onlinepackagemanager\opkman_mainfrm.pas"/>
@@ -94,7 +101,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="22"/>
         <CursorPos X="12" Y="23"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="4"/>
       </Unit10>
       <Unit11>
         <Filename Value="D:\lazarustrunk\common_components\onlinepackagemanager\onlinepackagemanager\opkman_mainfrm.lfm"/>
@@ -103,7 +110,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="6"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="4"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit11>
       <Unit12>
@@ -112,21 +119,21 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="10428"/>
         <CursorPos X="33" Y="10448"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="11"/>
       </Unit12>
       <Unit13>
         <Filename Value="C:\NewPascalDarwin\fpc\rtl\objpas\classes\classesh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1563"/>
         <CursorPos X="14" Y="1794"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="11"/>
       </Unit13>
       <Unit14>
         <Filename Value="X:\MainForm\MainForm\umain.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="200"/>
         <CursorPos X="21" Y="383"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="8"/>
       </Unit14>
       <Unit15>
         <Filename Value="D:\lazarustrunk\common_components\kcontrols_1.7\source\kgrids.pas"/>
@@ -134,7 +141,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="5883"/>
         <CursorPos X="19" Y="5885"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="9"/>
       </Unit15>
       <Unit16>
         <Filename Value="C:\NewPascalDarwin\lazarus\lcl\lcltype.pp"/>
@@ -142,7 +149,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1619"/>
         <CursorPos X="21" Y="1643"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="9"/>
       </Unit16>
       <Unit17>
         <Filename Value="C:\NewPascalDarwin\lazarus\ide\lazarus.pp"/>
@@ -150,7 +157,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="63"/>
         <CursorPos X="21" Y="94"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="9"/>
       </Unit17>
       <Unit18>
         <Filename Value="D:\lazarustrunk\common_components\kcontrols_1.7\source\kmemo.pas"/>
@@ -158,20 +165,20 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1501"/>
         <CursorPos X="78" Y="1525"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="4"/>
       </Unit18>
       <Unit19>
         <Filename Value="D:\lazarustrunk\common_components\cryptini\ucryptini.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1402"/>
         <CursorPos X="74" Y="346"/>
-        <UsageCount Value="16"/>
+        <UsageCount Value="13"/>
       </Unit19>
       <Unit20>
         <Filename Value="C:\NewPascalDarwin\lazarus\ide\revision.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="28" Y="2"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="9"/>
       </Unit20>
       <Unit21>
         <Filename Value="D:\lazarustrunk\common_components\bgrabitmap-master\bgrabitmap\bgrasse.pas"/>
@@ -179,7 +186,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="405"/>
         <CursorPos X="9" Y="429"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit21>
       <Unit22>
         <Filename Value="C:\NewPascalDarwin\lazarus\lcl\translations.pas"/>
@@ -187,37 +194,37 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="76"/>
         <CursorPos X="36" Y="82"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit22>
       <Unit23>
         <Filename Value="translate.lrs"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="5"/>
       </Unit23>
       <Unit24>
         <Filename Value="C:\NewPascalDarwin\fpc\rtl\win\wininc\defines.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="64" Y="1204"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="5"/>
       </Unit24>
       <Unit25>
         <Filename Value="C:\trunklatest\fpc\rtl\objpas\fgl.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1527"/>
         <CursorPos Y="1547"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="5"/>
       </Unit25>
       <Unit26>
         <Filename Value="C:\trunklatest\lazarus\components\onlinepackagemanager\opkman_updates.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="45" Y="8"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="5"/>
       </Unit26>
       <Unit27>
         <Filename Value="C:\trunklatest\lazarus\components\onlinepackagemanager\opkman_options.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="70"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="5"/>
       </Unit27>
       <Unit28>
         <Filename Value="C:\trunklatest\lazarus\components\onlinepackagemanager\opkman_createrepositorypackage.pas"/>
@@ -227,12 +234,12 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="9"/>
         <CursorPos X="26" Y="23"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="5"/>
       </Unit28>
       <Unit29>
         <Filename Value="C:\trunklatest\lazarus\components\onlinepackagemanager\opkman_createrepositorypackage.lfm"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="5"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit29>
       <Unit30>
@@ -240,7 +247,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="212"/>
         <CursorPos X="65" Y="218"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="5"/>
       </Unit30>
       <Unit31>
         <Filename Value="C:\trunklatest\lazarus\ide\lazarus.pp"/>
@@ -248,7 +255,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="101"/>
         <CursorPos X="38" Y="51"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit31>
       <Unit32>
         <Filename Value="C:\trunklatest\lazarus\components\pochecker\pocheckermain.pp"/>
@@ -257,7 +264,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="46" Y="18"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="5"/>
       </Unit32>
       <Unit33>
         <Filename Value="C:\NewPascalDarwin\lazarus\lcl\controls.pp"/>
@@ -265,7 +272,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="2131"/>
         <CursorPos X="3" Y="1900"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="6"/>
       </Unit33>
       <Unit34>
         <Filename Value="C:\NewPascalDarwin\lazarus\lcl\stdctrls.pp"/>
@@ -273,14 +280,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="129"/>
         <CursorPos X="38" Y="159"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="6"/>
       </Unit34>
       <Unit35>
         <Filename Value="D:\lazarustrunk\common_components\onlinepackagemanager\onlinepackagemanager\opkman_serializablepackages.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="219"/>
         <CursorPos X="74" Y="222"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="11"/>
       </Unit35>
       <Unit36>
         <Filename Value="C:\trunklatest\fpc\packages\fcl-base\src\inifiles.pp"/>
@@ -288,7 +295,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1357"/>
         <CursorPos X="31" Y="21"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="5"/>
       </Unit36>
       <Unit37>
         <Filename Value="C:\trunklatest\lazarus\lcl\grids.pas"/>
@@ -296,7 +303,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="202"/>
         <CursorPos X="20" Y="11529"/>
-        <UsageCount Value="15"/>
+        <UsageCount Value="12"/>
       </Unit37>
       <Unit38>
         <Filename Value="D:\lazarustrunk\common_components\onlinepackagemanager\onlinepackagemanager\opkman_packagelistfrm.pas"/>
@@ -305,50 +312,50 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="28" Y="12"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="5"/>
       </Unit38>
       <Unit39>
         <Filename Value="D:\lazarustrunk\common_components\onlinepackagemanager\onlinepackagemanager\opkman_updates.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="299"/>
         <CursorPos X="24" Y="319"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="6"/>
       </Unit39>
       <Unit40>
         <Filename Value="D:\lazarustrunk\common_components\onlinepackagemanager\onlinepackagemanager\opkman_packagedetailsfrm.pas"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="6"/>
       </Unit40>
       <Unit41>
         <Filename Value="D:\lazarustrunk\common_components\onlinepackagemanager\onlinepackagemanager\opkman_common.pas"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="6"/>
       </Unit41>
       <Unit42>
         <Filename Value="D:\lazarustrunk\common_components\onlinepackagemanager\onlinepackagemanager\opkman_downloader.pas"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="6"/>
       </Unit42>
       <Unit43>
         <Filename Value="D:\lazarustrunk\common_components\onlinepackagemanager\onlinepackagemanager\opkman_visualtree.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="997"/>
         <CursorPos X="57" Y="1024"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="6"/>
       </Unit43>
       <Unit44>
         <Filename Value="C:\NewPascal\projects\MDSUM\CryptINI\latest_stable\ucryptini.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="363"/>
         <CursorPos Y="378"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="17"/>
       </Unit44>
       <Unit45>
         <Filename Value="C:\trunklatest\lazarus\lcl\include\customform.inc"/>
         <EditorIndex Value="2"/>
         <TopLine Value="992"/>
         <CursorPos Y="1012"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit45>
       <Unit46>
@@ -356,7 +363,7 @@
         <EditorIndex Value="1"/>
         <TopLine Value="88"/>
         <CursorPos X="26" Y="110"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="25"/>
         <Loaded Value="True"/>
       </Unit46>
     </Units>
@@ -366,123 +373,123 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="umain.pas"/>
-        <Caret Line="496" Column="23" TopLine="465"/>
+        <Caret Line="826" Column="9" TopLine="806"/>
       </Position1>
       <Position2>
         <Filename Value="umain.pas"/>
-        <Caret Line="558" Column="22" TopLine="532"/>
+        <Caret Line="209" Column="44" TopLine="199"/>
       </Position2>
       <Position3>
         <Filename Value="umain.pas"/>
-        <Caret Line="552" Column="56" TopLine="533"/>
+        <Caret Line="206" Column="24" TopLine="193"/>
       </Position3>
       <Position4>
         <Filename Value="umain.pas"/>
-        <Caret Line="551" TopLine="516"/>
+        <Caret Line="878" Column="3" TopLine="876"/>
       </Position4>
       <Position5>
         <Filename Value="umain.pas"/>
-        <Caret Line="826" Column="9" TopLine="806"/>
+        <Caret Line="841" Column="25" TopLine="817"/>
       </Position5>
       <Position6>
         <Filename Value="umain.pas"/>
-        <Caret Line="209" Column="44" TopLine="199"/>
+        <Caret Line="814" TopLine="811"/>
       </Position6>
       <Position7>
         <Filename Value="umain.pas"/>
-        <Caret Line="206" Column="24" TopLine="193"/>
+        <Caret Line="454" TopLine="436"/>
       </Position7>
       <Position8>
         <Filename Value="umain.pas"/>
-        <Caret Line="878" Column="3" TopLine="876"/>
+        <Caret Line="70" Column="54" TopLine="43"/>
       </Position8>
       <Position9>
         <Filename Value="umain.pas"/>
-        <Caret Line="841" Column="25" TopLine="817"/>
+        <Caret Line="909" TopLine="906"/>
       </Position9>
       <Position10>
         <Filename Value="umain.pas"/>
-        <Caret Line="814" TopLine="811"/>
+        <Caret Line="846" Column="11" TopLine="827"/>
       </Position10>
       <Position11>
         <Filename Value="umain.pas"/>
-        <Caret Line="454" TopLine="436"/>
+        <Caret Line="919" Column="40" TopLine="910"/>
       </Position11>
       <Position12>
         <Filename Value="umain.pas"/>
-        <Caret Line="70" Column="54" TopLine="43"/>
+        <Caret Line="850" Column="25" TopLine="824"/>
       </Position12>
       <Position13>
         <Filename Value="umain.pas"/>
-        <Caret Line="909" TopLine="906"/>
+        <Caret Line="844" Column="42" TopLine="825"/>
       </Position13>
       <Position14>
         <Filename Value="umain.pas"/>
-        <Caret Line="846" Column="11" TopLine="827"/>
+        <Caret Line="852" TopLine="833"/>
       </Position14>
       <Position15>
         <Filename Value="umain.pas"/>
-        <Caret Line="919" Column="40" TopLine="910"/>
+        <Caret Line="1165" Column="49" TopLine="1153"/>
       </Position15>
       <Position16>
         <Filename Value="umain.pas"/>
-        <Caret Line="850" Column="25" TopLine="824"/>
+        <Caret Line="1113" Column="8" TopLine="1112"/>
       </Position16>
       <Position17>
         <Filename Value="umain.pas"/>
-        <Caret Line="844" Column="42" TopLine="825"/>
+        <Caret Line="850" TopLine="817"/>
       </Position17>
       <Position18>
         <Filename Value="umain.pas"/>
-        <Caret Line="852" TopLine="833"/>
+        <Caret Line="458" Column="25" TopLine="451"/>
       </Position18>
       <Position19>
         <Filename Value="umain.pas"/>
-        <Caret Line="1165" Column="49" TopLine="1153"/>
+        <Caret Line="53" Column="42" TopLine="40"/>
       </Position19>
       <Position20>
         <Filename Value="umain.pas"/>
-        <Caret Line="1113" Column="8" TopLine="1112"/>
+        <Caret Line="255" Column="12" TopLine="234"/>
       </Position20>
       <Position21>
         <Filename Value="umain.pas"/>
-        <Caret Line="850" TopLine="817"/>
+        <Caret Line="900" Column="3" TopLine="898"/>
       </Position21>
       <Position22>
         <Filename Value="umain.pas"/>
-        <Caret Line="458" Column="25" TopLine="451"/>
+        <Caret Line="1124" TopLine="1104"/>
       </Position22>
       <Position23>
         <Filename Value="umain.pas"/>
-        <Caret Line="53" Column="42" TopLine="40"/>
+        <Caret Line="839" Column="9" TopLine="831"/>
       </Position23>
       <Position24>
         <Filename Value="umain.pas"/>
-        <Caret Line="255" Column="12" TopLine="234"/>
+        <Caret Line="580" Column="39" TopLine="566"/>
       </Position24>
       <Position25>
         <Filename Value="umain.pas"/>
-        <Caret Line="900" Column="3" TopLine="898"/>
+        <Caret Line="255" Column="17" TopLine="254"/>
       </Position25>
       <Position26>
         <Filename Value="umain.pas"/>
-        <Caret Line="1124" TopLine="1104"/>
+        <Caret Line="480" Column="67" TopLine="471"/>
       </Position26>
       <Position27>
         <Filename Value="umain.pas"/>
-        <Caret Line="839" Column="9" TopLine="831"/>
+        <Caret Line="647" Column="23" TopLine="629"/>
       </Position27>
       <Position28>
         <Filename Value="umain.pas"/>
-        <Caret Line="580" Column="39" TopLine="566"/>
+        <Caret Line="1090" Column="18" TopLine="1065"/>
       </Position28>
       <Position29>
         <Filename Value="umain.pas"/>
-        <Caret Line="255" Column="17" TopLine="254"/>
+        <Caret Line="697" Column="69" TopLine="683"/>
       </Position29>
       <Position30>
         <Filename Value="umain.pas"/>
-        <Caret Line="480" Column="67" TopLine="471"/>
+        <Caret Line="695" Column="9" TopLine="675"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>

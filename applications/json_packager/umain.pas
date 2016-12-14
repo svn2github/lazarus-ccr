@@ -60,7 +60,8 @@ unit umain;
             In Laz 1.7 DPIAwareness configured
   0.2.0.0:  Refactored GUI(minesadorada)
   0.2.1.0:  Added scrollbox to contain package info (GetMem)
-  0.2.2.0:  ToDo
+  0.2.2.0:  Hints and Validation updated
+  0.2.3.0:  ToDo
            - sort out resourcestrings
            - Update Validation
            - Update hints
@@ -332,7 +333,7 @@ end;
 procedure TfrmMain.CtrlSetUpPopupHandlers;
 // Use different handlers for some controls
 var
-  iCount, jCount,kCount: integer;
+  iCount: integer;
 begin
   with frmMain do
   begin
@@ -340,43 +341,19 @@ begin
     begin
       if (Controls[iCount].InheritsFrom(TControl) = False) then
         continue;
+{
+      // Iterate through the children of TScrollBox
       if (Controls[iCount] is TGroupBox) then
         // Iterate through the children of GroupBox
         for jCount := 0 to Pred(TGroupBox(Controls[iCount]).ControlCount) do
-          // With TGroupBox(Controls[iCount]).Controls[jCount] do?
         begin
           if TGroupBox(Controls[iCount]).Controls[jCount] is TSpinEdit then
           begin
             TSpinEdit(TGroupBox(Controls[iCount]).Controls[jCount]).OnMouseEnter :=
               @CtrlShowPopup;
-            TSpinEdit(TGroupBox(Controls[iCount]).Controls[jCount]).OnMouseLeave :=
-              @CtrlHidePopup;
-            TSpinEdit(TGroupBox(Controls[iCount]).Controls[jCount]).OnClick :=
-              @CtrlHidePopup;
-            TSpinEdit(TGroupBox(Controls[iCount]).Controls[jCount]).OnChange :=
-              @CtrlMakeDirty;
-          end;
-          if TGroupBox(Controls[iCount]).Controls[jCount] is TCheckBox then
-          begin
-            TCheckBox(TGroupBox(Controls[iCount]).Controls[jCount]).OnMouseEnter :=
-              @CtrlShowPopup;
-            TCheckBox(TGroupBox(Controls[iCount]).Controls[jCount]).OnMouseLeave :=
-              @CtrlHidePopup;
-            TCheckBox(TGroupBox(Controls[iCount]).Controls[jCount]).OnClick :=
-              @CtrlHidePopup;
-            TCheckBox(TGroupBox(Controls[iCount]).Controls[jCount]).OnEditingDone :=
-              @CtrlMakeDirty;
-          end;
-          if TGroupBox(Controls[iCount]).Controls[jCount] is TLabel then
-          begin
-            TLabel(TGroupBox(Controls[iCount]).Controls[jCount]).OnMouseEnter :=
-              @CtrlShowPopup;
-            TLabel(TGroupBox(Controls[iCount]).Controls[jCount]).OnMouseLeave :=
-              @CtrlHidePopup;
-            TLabel(TGroupBox(Controls[iCount]).Controls[jCount]).OnClick :=
-              @CtrlHidePopup;
           end;
         end;
+}
       if (Controls[iCount] is TEdit) then
       begin
         TEdit(Controls[iCount]).OnMouseEnter := @CtrlShowPopup;
@@ -418,13 +395,13 @@ end;
 procedure TfrmMain.DestroyControlArrays;
 Var i:Integer;
 begin
+  // This could be done with one loop
   For i:=0 to High(ArraySpinEditInternalVersion) do
     FreeAndNil(ArraySpinEditInternalVersion[i]);
   For i:=0 to High(ArrayLblPackageInternalVersion) do
     FreeAndNil(ArrayLblPackageInternalVersion[i]);
   For i:=0 to High(ArrayChkBoxForceNotify) do
      FreeAndNil(ArrayChkBoxForceNotify[i]);
-
   For i:=0 to High(ArraySpinEditV4) do
     FreeAndNil(ArraySpinEditV4[i]);
   For i:=0 to High(ArraySpinEditV3) do
@@ -441,7 +418,6 @@ begin
     FreeAndNil(ArrayLblPackageFileName[i]);
   For i:=0 to High(ArrayGrpBox) do
     FreeAndNil(ArrayGrpBox[i]);
-
 end;
 
 procedure TfrmMain.AddNewControlArray;
@@ -493,6 +469,10 @@ begin
        SetBounds(8,10,50,23);
        Visible:=True;
        Tag:=Pred(iNumLpkFilesVisible);
+       OnMouseEnter:=@CtrlShowPopup;
+       OnMouseLeave := @CtrlHidePopup;
+       OnClick := @CtrlHidePopup;
+       Hint:='Just the package filename e.g. package.lpk';
        Parent:=ArrayGrpBox[iNumLpkFilesVisible];
      end;
      // EditBox - Package name
@@ -503,6 +483,11 @@ begin
        SetBounds(64,8,256,23);
        Visible:=True;
        Tag:=Pred(iNumLpkFilesVisible);
+       OnMouseEnter:=@CtrlShowPopup;
+       OnMouseLeave := @CtrlHidePopup;
+       OnClick := @CtrlHidePopup;
+       OnEditingDone := @CtrlMakeDirty;
+       Hint:='Just the package filename e.g. package.lpk';
        Parent:=ArrayGrpBox[iNumLpkFilesVisible];
      end;
      // Label - Package Version
@@ -513,6 +498,10 @@ begin
        SetBounds(330,10,50,23);
        Visible:=True;
        Tag:=Pred(iNumLpkFilesVisible);
+       OnMouseEnter:=@CtrlShowPopup;
+       OnMouseLeave := @CtrlHidePopup;
+       OnClick := @CtrlHidePopup;
+       Hint:='Format is: n.n.n.n';
        Parent:=ArrayGrpBox[iNumLpkFilesVisible];
      end;
      // SpinEdit V1
@@ -523,6 +512,10 @@ begin
        SetBounds(380,8,40,20);
        Visible:=True;
        Tag:=Pred(iNumLpkFilesVisible);
+       OnMouseEnter := @CtrlShowPopup;
+       OnMouseLeave := @CtrlHidePopup;
+       OnClick := @CtrlHidePopup;
+       OnChange :=@CtrlMakeDirty;
        Hint:='Format is: n.n.n.n';
        Parent:=ArrayGrpBox[iNumLpkFilesVisible];
      end;
@@ -535,6 +528,11 @@ begin
        Visible:=True;
        Tag:=Pred(iNumLpkFilesVisible);
        Hint:='Format is: n.n.n.n';
+       OnMouseEnter := @CtrlShowPopup;
+       OnMouseLeave := @CtrlHidePopup;
+       OnClick := @CtrlHidePopup;
+       OnChange :=@CtrlMakeDirty;
+       Hint:='Format is: n.n.n.n';
        Parent:=ArrayGrpBox[iNumLpkFilesVisible];
      end;
      // SpinEdit V3
@@ -545,6 +543,11 @@ begin
        SetBounds(480,8,40,20);
        Visible:=True;
        Tag:=Pred(iNumLpkFilesVisible);
+       Hint:='Format is: n.n.n.n';
+       OnMouseEnter := @CtrlShowPopup;
+       OnMouseLeave := @CtrlHidePopup;
+       OnClick := @CtrlHidePopup;
+       OnChange :=@CtrlMakeDirty;
        Hint:='Format is: n.n.n.n';
        Parent:=ArrayGrpBox[iNumLpkFilesVisible];
      end;
@@ -557,6 +560,11 @@ begin
        Visible:=True;
        Tag:=Pred(iNumLpkFilesVisible);
        Hint:='Format is: n.n.n.n';
+       OnMouseEnter := @CtrlShowPopup;
+       OnMouseLeave := @CtrlHidePopup;
+       OnClick := @CtrlHidePopup;
+       OnChange :=@CtrlMakeDirty;
+       Hint:='Format is: n.n.n.n';
        Parent:=ArrayGrpBox[iNumLpkFilesVisible];
      end;
      // ChkBox Notify
@@ -568,6 +576,11 @@ begin
        SetBounds(8,50,40,20);
        Visible:=True;
        Tag:=Pred(iNumLpkFilesVisible);
+       OnMouseEnter:=@CtrlShowPopup;
+       OnMouseLeave := @CtrlHidePopup;
+       OnClick := @CtrlHidePopup;
+       OnEditingDone := @CtrlMakeDirty;
+       Hint:='Check this if you don''t want to incrememt the version';
        Parent:=ArrayGrpBox[iNumLpkFilesVisible];
      end;
      // Label Internal version
@@ -578,6 +591,10 @@ begin
        SetBounds(160,50,40,23);
        Visible:=True;
        Tag:=Pred(iNumLpkFilesVisible);
+       OnMouseEnter:=@CtrlShowPopup;
+       OnMouseLeave := @CtrlHidePopup;
+       OnClick := @CtrlHidePopup;
+       Hint:='Use in combination with Notify Update';
        Parent:=ArrayGrpBox[iNumLpkFilesVisible];
      end;
      // SpinEdit Internal Version
@@ -588,6 +605,11 @@ begin
        SetBounds(260,48,40,20);
        Visible:=True;
        Tag:=Pred(iNumLpkFilesVisible);
+       OnMouseEnter := @CtrlShowPopup;
+       OnMouseLeave := @CtrlHidePopup;
+       OnClick := @CtrlHidePopup;
+       OnChange :=@CtrlMakeDirty;
+       Hint:='Use in combination with Notify Update';
        Parent:=ArrayGrpBox[iNumLpkFilesVisible];
      end;
      // This sets the subcontrols up correctly
@@ -671,13 +693,13 @@ begin
   Result := False;
   TempStringList := TStringList.Create;
   try
-    //for iCount := 0 to Pred(stringPackageFiles.RowCount) do
-    //begin
-    //  if TempStringlist.IndexOf(stringPackageFiles.Cells[0, iCount]) = -1 then
-    //    TempStringList.Add(stringPackageFiles.Cells[0, iCount])
-    //  else
-    //    Result := True;
-    // end;
+    For iCount := 0 to High(ArrayEdtPackageFileName) do
+    begin
+      if TempStringlist.IndexOf(ArrayEdtPackageFileName[iCount].Text) = -1 then
+        TempStringList.Add(ArrayEdtPackageFileName[iCount].Text)
+      else
+        Result := True;
+     end;
   finally
     TempStringList.Free;
   end;
@@ -986,7 +1008,6 @@ function TfrmMain.ValidationFailed: boolean;
   // Add checks as needed here
 var
   iCount: integer;
-  Quad: TVersionQuad; // fileinfo unit
 begin
   Result := False;
   // Check Zipname and URL http:// length
@@ -1003,15 +1024,6 @@ begin
     editDownloadZipURL.Color := clYellow;
     Result := True;
   end;
-  // No lpk file?
-{
-  if (stringPackageFiles.RowCount = 1) then
-  begin
-    slErrorList.Add(rsThereAreNoLp);
-    stringPackageFiles.Color := clYellow;
-    Result := True;
-  end;
-}
   // Remembered to type 'zip'?
   if (Length(editName.Text) > 4) then
     if (RightStr(LowerCase(editName.Text), 4) <> '.zip') then
@@ -1028,7 +1040,7 @@ begin
     editDownloadZipURL.Color := clYellow;
     Result := True;
   end;
-
+  // URL starts with 'http' ?
   if ((Length(editDownloadZipURL.Text) > 4) and
     (LeftStr(LowerCase(editDownloadZipURL.Text), 4) <> 'http')) then
   begin
@@ -1036,7 +1048,7 @@ begin
     editDownloadZipURL.Color := clYellow;
     Result := True;
   end;
-
+  // URL contains zipfile name?
   if (Pos(Lowercase(editName.Text), Lowercase(editDownloadZipURL.Text)) = 0) then
   begin
     slErrorList.Add(rsDownloadZipURLD);
@@ -1045,44 +1057,44 @@ begin
   end;
 
   // Check package files entries
-{
-  if (stringPackageFiles.RowCount > 1) then
-    for iCount := 1 to stringPackageFiles.RowCount - 1 do
-    begin
-      if (Length(stringPackageFiles.Cells[0, iCount]) = 0) then
-      begin
-        slErrorList.Add(Format(rsTheLpkEntryD2, [iCount]));
-        stringPackageFiles.Color := clYellow;
-        Result := True;
-      end;
-      if (Length(stringPackageFiles.Cells[1, iCount]) = 0) then
-      begin
-        slErrorList.Add(Format(rsVersionEntry, [iCount]));
-        stringPackageFiles.Color := clYellow;
-        Result := True;
-      end;
-      if (TryStrToVersionQuad(stringPackageFiles.Cells[1, iCount], Quad) = False) then
-      begin
-        slErrorList.Add(Format(rsVersionEntry2, [iCount]));
-        stringPackageFiles.Color := clYellow;
-        Result := True;
-      end;
-      if (RightStr(LowerCase(stringPackageFiles.Cells[0, iCount]), 4) <> '.lpk') then
-      begin
-        slErrorList.Add(Format(rsTheLpkEntryD, [iCount]));
-        stringPackageFiles.Color := clYellow;
-        Result := True;
-      end;
-    end;
-
-  // Check for duplicate .lpk entries
-  if FoundADuplicateLPK then
+  For iCount:=0 to High(ArrayGrpBox) do
   begin
-    stringPackageFiles.Color := clYellow;
-    slErrorList.Add(Format(rsThereAreOneO, [LineEnding]));
-    Result := True;
+    // Is package name empty?
+    If Length(ArrayEdtPackageFileName[iCount].Text)=0 then
+    begin
+      slErrorList.Add(Format(rsTheLpkEntryD2, [Succ(iCount)]));
+      ArrayEdtPackageFileName[iCount].Color := clYellow;
+      Result := True;
+    end;
+    // Does it end with 'lpk'
+    if (RightStr(LowerCase(ArrayEdtPackageFileName[iCount].Text), 4) <> '.lpk') then
+    begin
+      slErrorList.Add(Format(rsTheLpkEntryD, [Succ(iCount)]));
+      ArrayEdtPackageFileName[iCount].Color := clYellow;
+      Result := True;
+    end;
+    // Is the version number zero
+    If (ArraySpinEditV1[iCount].Value = 0)
+       AND (ArraySpinEditV2[iCount].Value = 0)
+       AND (ArraySpinEditV3[iCount].Value = 0)
+       AND (ArraySpinEditV4[iCount].Value = 0)
+     then
+     begin
+       slErrorList.Add(Format('Version for package %d is zero', [Succ(iCount)]));
+       ArraySpinEditV1[iCount].Color := clYellow;
+       ArraySpinEditV2[iCount].Color := clYellow;
+       ArraySpinEditV3[iCount].Color := clYellow;
+       ArraySpinEditV4[iCount].Color := clYellow;
+       Result := True;
+     end;
+    // Check for duplicate .lpk entries
+    if FoundADuplicateLPK then
+    begin
+      ArrayEdtPackageFileName[iCount].Color := clYellow;
+      slErrorList.Add(Format(rsThereAreOneO, [LineEnding]));
+      Result := True;
+    end;
   end;
-}
 end;
 
 procedure TfrmMain.SaveAsItemClick(Sender: TObject);
