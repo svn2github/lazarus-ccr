@@ -101,10 +101,10 @@ type
     function GetPreviousCombIndex(i: integer): integer;
   protected
 //    procedure CreateWnd; override;
+
+    function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean; override;
     procedure Paint; override;
     procedure Resize; override;
-    procedure WheelUp(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
-    procedure WheelDown(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
    {$IFDEF DELPHI}
     procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
     procedure CMHintShow(var Message: TMessage); message CM_HINTSHOW;
@@ -226,8 +226,6 @@ begin
   FNewArrowStyle := false;
   Initialize;
   DrawAll;
-  OnMouseWheelUp := WheelUp;
-  OnMouseWheelDown := WheelDown;
   FIntensityText := 'Intensity';
   {
   MaxHue := 360;
@@ -243,7 +241,19 @@ begin
   FBufferBmp.Free;
   inherited;
 end;
-           (*
+
+function THexaColorPicker.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
+  MousePos: TPoint): Boolean;
+begin
+  Result := inherited DoMouseWheel(Shift, WheelDelta, MousePos);
+  if not Result then
+  begin
+    Result := True;
+    ChangeIntensity(WheelDelta > 0);
+  end;
+end;
+
+(*
 procedure THexaColorPicker.CreateWnd;
 var
   rw, rh: integer;
@@ -1427,24 +1437,6 @@ begin
     end;
   if not FInherited and Assigned(OnKeyDown) then
     OnKeyDown(Self, Message.CharCode, Shift);
-end;
-
-procedure THexaColorPicker.WheelUp(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
-begin
-  if FSliderVisible then
-  begin
-    Handled := true;
-    ChangeIntensity(true);
-  end;
-end;
-
-procedure THexaColorPicker.WheelDown(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
-begin
-  if FSliderVisible then
-  begin
-    Handled := true;
-    ChangeIntensity(false);
-  end;
 end;
 
 function THexaColorPicker.SelectAvailableColor(Color: TColor): boolean;
