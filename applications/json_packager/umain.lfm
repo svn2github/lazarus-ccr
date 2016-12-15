@@ -1,7 +1,7 @@
 object frmMain: TfrmMain
-  Left = 450
+  Left = 930
   Height = 398
-  Top = 207
+  Top = 221
   Width = 618
   Anchors = []
   BorderIcons = [biSystemMenu]
@@ -249,6 +249,11 @@ object frmMain: TfrmMain
         AutoCheck = True
         Caption = 'Disable warnings'
         OnClick = mnu_helpDisableWarningsClick
+      end
+      object mnu_helpAutoloadLastFile: TMenuItem
+        AutoCheck = True
+        Caption = 'Auto-load last saved file'
+        OnClick = mnu_helpAutoloadLastFileClick
       end
       object mnu_lang: TMenuItem
         Caption = 'Languages..'

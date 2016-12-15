@@ -145,6 +145,10 @@ msgstr "&Ayuda"
 msgid "About.."
 msgstr "Acerca de.."
 
+#: tfrmmain.mnu_helpautoloadlastfile.caption
+msgid "Auto-load last saved file"
+msgstr "Carga automática último archivo guardado"
+
 #: tfrmmain.mnu_helpdisablewarnings.caption
 msgid "Disable warnings"
 msgstr "Deshabilitar advertencias"
@@ -376,4 +380,3 @@ msgstr "¿Quieres copiar %s a la carpeta %s?"
 #: umain.rsyoumayneedto
 msgid "(You may need to restart the app to see the change)"
 msgstr "(Quizás necesites reiniciar la aplicación para ver los cambios)"
-

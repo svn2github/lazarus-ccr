@@ -64,7 +64,8 @@ unit umain;
   0.2.3.0:  ResourceStrings Updated (minesadorada)
   0.2.4.0:  Bugfix: regression error: DisableInOPM (minesadorada)
   0.2.5.0:  BugFix: regression error: CreateUniqueINIFile (minesadorada)
-  0.2.6.0: ??
+  0.2.6.0:  Added feature - Help menu/AutoLoad Last File
+  0.2.7.0:  ??
  }
 {$mode objfpc}{$H+}
 
@@ -78,7 +79,7 @@ uses
   lclintf, lclVersion, LResources, Spin, {$IFDEF PO_BUILTINRES}LazUTF8Classes{$ENDIF};
 
 const
-  C_DEBUGMESSAGES = False;
+  C_DEBUGMESSAGES = False; // TRUE ONLY IN DEV MODE!
 
 type
 
@@ -152,6 +153,7 @@ type
     MainMenu1: TMainMenu;
     FileMenu: TMenuItem;
     LoadItem: TMenuItem;
+    mnu_helpAutoloadLastFile: TMenuItem;
     mnu_fileExit: TMenuItem;
     mnu_fileNew: TMenuItem;
     mnu_helpDisableWarnings: TMenuItem;
@@ -180,6 +182,7 @@ type
     procedure mnu_fileNewClick(Sender: TObject);
     procedure mnu_fileSaveClick(Sender: TObject);
     procedure mnu_helpAboutClick(Sender: TObject);
+    procedure mnu_helpAutoloadLastFileClick(Sender: TObject);
     procedure mnu_helpDisableWarningsClick(Sender: TObject);
     procedure mnu_helpShowHintsClick(Sender: TObject);
     procedure mnu_lang_enClick(Sender: TObject);
@@ -190,7 +193,8 @@ type
   private
     { private declarations }
     JSONPackage: TUpdatePackage;
-    bForceSaveAs, bShowPopupHints, bDisableWarnings, bDirty, bIsVirgin: boolean;
+    bForceSaveAs, bShowPopupHints, bDisableWarnings,bAutoLoadLast,
+      bDirty, bIsVirgin: boolean;
     sJSONFilePath: string;
     sUpdateDirectory, sZipDirectory: string;
     slErrorList: TStrings;
@@ -210,6 +214,7 @@ type
     ArrayLblPackageInternalVersion: array of TLabel;
     // End of Package Information controls
     iNumLpkFilesVisible: integer;
+    procedure LoadJSONFromFile(sFileName:String);
     procedure AddPackageFileToList;
     procedure RemovePackageFileFromList;
     procedure ResetPackageFileControlsToOne;
@@ -846,6 +851,13 @@ begin
   bIsVirgin := CFG.ReadBool('Options', 'Virgin', True);
   bShowPopupHints := bIsVirgin;
   mnu_helpShowHints.Checked := bShowPopupHints;
+
+  // On startup, default to FALSE
+  bAutoLoadLast:=CFG.ReadBool('Options', 'AutoLoadLastFile',FALSE);
+  mnu_helpAutoloadLastFile.Checked:=bAutoLoadLast;
+  sJSONFilePath:=CFG.ReadString('Options','LastSavedJSON','unknown');
+  if C_DEBUGMESSAGES = True then // Dev only
+    ShowMessage(sJSONFilePath);
   // Override here if the user has re-enabled them
   bShowPopupHints := CFG.ReadBool('Options', 'ShowPopupHints', bShowPopupHints);
   mnu_helpShowHints.Checked := bShowPopupHints;
@@ -878,24 +890,20 @@ procedure TfrmMain.FormShow(Sender: TObject);
 begin
   bDirty := False;
   AddPackageFileToList;
-end;
+  If sJSONFilePath <> 'unknown' then
+    If (FileExistsUTF8(sJSONFilePath)) AND  (bAutoLoadLast=TRUE) then
+     LoadJSONFromFile(sJSONFilePath);
 
-procedure TfrmMain.LoadItemClick(Sender: TObject);
+end;
+procedure TfrmMain.LoadJSONFromFile(sFileName:String);
 var
   i: integer;
   Quad: TVersionQuad;
 begin
-  FileOpen1.Dialog.InitialDir :=
-    CFG.ReadString('Options', 'LastLoadedJSONPath', sUpdateDirectory);
-  FileOpen1.Dialog.Filter := 'JSON|*.json';
-  if FileOpen1.Dialog.Execute then
-  begin
-    ResetPackageFileControlsToOne; // So iNumLpkFilesVisible=1
-    sJSONFilePath := FileOpen1.Dialog.Filename;
-    CFG.WriteString('Options', 'LastLoadedJSONPath', ExtractFileDir(sJSONFilePath));
-    JSONPackage := TUpdatePackage.Create;
+  ResetPackageFileControlsToOne; // So iNumLpkFilesVisible=1
+      JSONPackage := TUpdatePackage.Create;
     try
-      if JSONPackage.LoadFromFile(FileOpen1.Dialog.FileName) then
+      if JSONPackage.LoadFromFile(sFileName) then
       begin
         edt_UpdateZipName.Text := JSONPackage.UpdatePackageData.Name;
         edt_DownloadZipURL.Text := JSONPackage.UpdatePackageData.DownloadZipURL;
@@ -934,10 +942,23 @@ begin
       end
       else
         ShowMessageFmt(rsThereWasAPro,
-          [ExtractFilename(FileOpen1.Dialog.FileName)]);
+          [ExtractFilename(sFileName)]);
     finally
       JSONPackage.Free;
     end;
+end;
+
+procedure TfrmMain.LoadItemClick(Sender: TObject);
+begin
+  FileOpen1.Dialog.InitialDir :=
+    CFG.ReadString('Options', 'LastLoadedJSONPath', sUpdateDirectory);
+  FileOpen1.Dialog.Filter := 'JSON|*.json';
+  if FileOpen1.Dialog.Execute then
+  begin
+    sJSONFilePath := FileOpen1.Dialog.Filename;
+    CFG.WriteString('Options', 'LastLoadedJSONPath', ExtractFileDir(sJSONFilePath));
+    ResetPackageFileControlsToOne; // So iNumLpkFilesVisible=1
+    LoadJSONFromFile(sJSONFilePath);
   end;
 end;
 
@@ -1007,6 +1028,13 @@ begin
     Vinfo.Free;
   end;
   MessageDlg(rsAbout + ' ' + Application.Title, s, mtInformation, [mbOK], 0);
+end;
+
+procedure TfrmMain.mnu_helpAutoloadLastFileClick(Sender: TObject);
+begin
+  bAutoLoadLast:= NOT bAutoLoadLast;
+  mnu_helpAutoloadLastFile.Checked:=bAutoLoadLast;
+  CFG.WriteBool('Options', 'AutoLoadLastFile',bAutoLoadLast);
 end;
 
 procedure TfrmMain.mnu_helpDisableWarningsClick(Sender: TObject);
@@ -1177,8 +1205,11 @@ begin
     FileSaveAs1.Dialog.InitialDir := sUpdateDirectory;
     FileSaveAs1.Dialog.FileName :=
       'update_' + ExtractFilenameOnly(edt_UpdateZipName.Text) + '.json';
+
     if FileSaveAs1.Dialog.Execute then
-      sJSONFilePath := FileSaveAs1.Dialog.FileName
+       begin
+          sJSONFilePath := FileSaveAs1.Dialog.FileName;
+       end
     else
       Exit;
   end;
@@ -1207,11 +1238,17 @@ begin
       if MessageDlg(rsOverwrite + ' ' + sJSONFilePath + '?', mtConfirmation,
         [mbYes, mbNo], 0, mbYes) = mrYes then
         if JSONPackage.SaveToFile(sJSONFilePath) then
-          ShowMessage(sJSONFilePath + ' ' + rsSavedOK);
+          begin
+           ShowMessage(sJSONFilePath + ' ' + rsSavedOK);
+           CFG.WriteString('Options','LastSavedJSON',sJSONFilePath);
+          end;
     end
     else
     if JSONPackage.SaveToFile(sJSONFilePath) then
-      ShowMessage(sJSONFilePath + rsSavedOK)
+    begin
+      ShowMessage(sJSONFilePath + rsSavedOK);
+      CFG.WriteString('Options','LastSavedJSON',sJSONFilePath);
+    end
     else
       ShowMessage(rsSaveUnsucces);
     bDirty := False;

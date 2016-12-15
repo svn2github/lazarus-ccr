@@ -144,6 +144,10 @@ msgstr "&Help"
 msgid "About.."
 msgstr "About.."
 
+#: tfrmmain.mnu_helpautoloadlastfile.caption
+msgid "Auto-load last saved file"
+msgstr ""
+
 #: tfrmmain.mnu_helpdisablewarnings.caption
 msgid "Disable warnings"
 msgstr "Disable warnings"
