@@ -3,8 +3,6 @@ README FOR External OPM JSON package Editor
 
 * This application is for component writers who wish to publish updates for the Online Package Manager.
 
-* The update is packaged in a ZIP file, and uploaded along with a configuration file in json format.
-
 * The json file can be manually edited, but this GUI application can make and edit the JSON file so that it is always correct for OPM.
 
 * On startup it will create an \updates folder which can be used as your deployment folder for the updated app.
