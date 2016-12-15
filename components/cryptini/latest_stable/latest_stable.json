@@ -1,0 +1,30 @@
+{
+  "PackageData0" : {
+    "Name" : "latest_stable",
+    "DisplayName" : "CryptINI",
+    "Category" : "Cryptography",
+    "RepositoryFileName" : "latest_stable.zip",
+    "RepositoryFileSize" : 7248599,
+    "RepositoryFileHash" : "1a51050d3ca69cade72140b16bb08419",
+    "RepositoryDate" : 4.2719000000000000E+004,
+    "PackageBaseDir" : "latest_stable\\/",
+    "HomePageURL" : "http//:wiki.lazarus.freepascal.org/CryptINI",
+    "DownloadURL" : "https://svn.code.sf.net/p/lazarus-ccr/svn/components/cryptini/latest_stable/",
+    "SVNURL" : "https://svn.code.sf.net/p/lazarus-ccr/svn/components/cryptini/latest_stable/"
+  },
+  "PackageFiles0" : [
+    {
+      "Name" : "cryptini.lpk",
+      "Description" : "This is a TiniFile implementation that is resistant to tampering.\r\nIn normal (PlainTextMode = FALSE) mode, any calls to Write values are\r\naccompanied by an embedded MD5 hash value, and also Base64/IDEA Encrypted.\r\nThis is invisible in normal use (i.e. read methods return normal results)\r\nbut there are added methods to internally verify any entries.\r\nIt also is able to write a standard ident section containing various\r\ndetails including authorship and copyright.  A single function allows\r\nyou to check on app startup whether this section has been altered.\r\nIt also includes a useful 'First Run' functionality.\r\nIt's intended purpose is to store information that cannot be easily altered\r\nin a text editor (such as HiScores etc) by a weekend scripter.\r\nThe WriteInteger method is the most secure as it double-encrypts as well as\r\nembedding an MD5Hash value as a checksum.  Very handy to save scores etc.\r\nIt is paired with ReadInteger and VerifyInteger.\r\nFor thread-safe operation use the TLockCryptIniFile and call Lock/Unlock method.\r\nA demo app is available bundled with this component.",
+      "Author" : "user minesadorada at freepascal forum",
+      "License" : "Modified LGPL\r\nAs a request, please only add to the existing attribution header.\r\nPlease update this versioninfo alongside the constant C_VERSION\r\n\r\n(c)2016 minesadorada minesadorada@charcodelvalle.com\r\n  This library is free software; you can redistribute it and/or modify it\r\n  under the terms of the GNU Library General Public License as published by\r\n  the Free Software Foundation; either version 2 of the License, or (at your\r\n  option) any later version with the following modification:\r\n\r\n  As a special exception, the copyright holders of this library give you\r\n  permission to link this library with independent modules to produce an\r\n  executable, regardless of the license terms of these independent modules,and\r\n  to copy and distribute the resulting executable under terms of your choice,\r\n  provided that you also meet, for each linked independent module, the terms\r\n  and conditions of the license of that module. An independent module is a\r\n  module which is not derived from or based on this library. If you modify\r\n  this library, you may extend this exception to your version of the library,\r\n  but you are not obligated to do so. If you do not wish to do so, delete this\r\n  exception statement from your version.\r\n\r\n  This program is distributed in the hope that it will be useful, but WITHOUT\r\n  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\r\n  FITNESS FOR A PARTICULAR PURPOSE. See the GNU Library General Public License\r\n  for more details.\r\n\r\n  You should have received a copy of the GNU Library General Public License\r\n  along with this library; if not, write to the Free Software Foundation,\r\n  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\r\n\r\n",
+      "RelativeFilePath" : "",
+      "VersionAsString" : "0.1.2.0",
+      "LazCompatibility" : "1.6, Trunk",
+      "FPCCompatibility" : "2.6.4, 3.0.0",
+      "SupportedWidgetSet" : "win32/64, gtk2, carbon",
+      "PackageType" : 3,
+      "DependenciesAsString" : "dcpcrypt(2.0.0.0), LCLBase"
+    }
+  ]
+}
