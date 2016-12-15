@@ -33,7 +33,8 @@ type
    FMouseLoc: TMouseLoc;
    FMouseOver, FMouseDown, FAutoHeight: boolean;
    FColCount, FRowCount, FTop, FLeft, FIndex, FCheckedIndex, FCellSize, FTotalCells: integer;
-   FTempBmp, PBack: TBitmap;
+   FTempBmp: TBitmap;
+   //PBack: TBitmap;
    FState: TColorCellState;
    FColors, FNames: TStrings;
    FPalette: TFileName;
@@ -177,12 +178,12 @@ implementation
 constructor TmbColorPalette.Create(AOwner: TComponent);
 begin
  inherited Create(AOwner);
- ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
- DoubleBuffered := true;
- PBack := TBitmap.Create;
- PBack.PixelFormat := pf32bit;
+// ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
+// DoubleBuffered := true;
+// PBack := TBitmap.Create;
+// PBack.PixelFormat := pf32bit;
  FTempBmp := TBitmap.Create;
- FTempBmp.PixelFormat := pf32bit;
+ //FTempBmp.PixelFormat := pf32bit;
  {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
  ParentBackground := true;
  {$ENDIF} {$ENDIF}
@@ -219,7 +220,7 @@ end;
 
 destructor TmbColorPalette.Destroy;
 begin
-  PBack.Free;
+  //PBack.Free;
   FTempBmp.Free;
   FNames.Free;
   FColors.Free;
@@ -297,10 +298,10 @@ procedure TmbColorPalette.Paint;
 var
   i: integer;
 begin
-  PBack.Width := Width;
+{  PBack.Width := Width;
   PBack.Height := Height;
   PaintParentBack(PBack);
-
+ }
   //make bmp
   FTempBmp.Width := Width;
   FTempBmp.Height := Height;
@@ -453,7 +454,8 @@ begin
        with ThemeServices do
         if Enabled then
          case FState of
-          ccsNone: ACanvas.CopyRect(R, PBack.Canvas, R);
+          ccsNone: ;
+          //ccsNone: ACanvas.CopyRect(R, PBack.Canvas, R);
           ccsOver: DrawElement(ACanvas.Handle, GetElementDetails(ttbButtonHot), R);
           ccsDown: DrawElement(ACanvas.Handle, GetElementDetails(ttbButtonPressed), R);
           ccsChecked: DrawElement(ACanvas.Handle, GetElementDetails(ttbButtonChecked), R);

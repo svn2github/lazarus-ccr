@@ -91,7 +91,7 @@ end;
 
 function THSColorPicker.GetGradientColor2D(X, Y: Integer): TColor;
 begin
-  Result := HSLRangeToRGB(x, FGradientBmp.Height - 1 - y, 120);
+  Result := HSLRangeToRGB(x, FBufferBmp.Height - 1 - y, 120);
 end;
 
 procedure THSColorPicker.CorrectCoords(var x, y: integer);
@@ -130,7 +130,7 @@ end;
 
 procedure THSColorPicker.Paint;
 begin
-  Canvas.StretchDraw(ClientRect, FGradientBmp);
+  Canvas.StretchDraw(ClientRect, FBufferBmp);
   CorrectCoords(mxx, myy);
   DrawMarker(mxx, myy);
 end;

@@ -24,7 +24,7 @@ type
     FHintState: THintState;
     procedure HintTimer(Sender: TObject);
   protected
-    FGradientBmp: TBitmap;
+    FBufferBmp: TBitmap;
     FGradientWidth: Integer;
     FGradientHeight: Integer;
     FHintShown: Boolean;
@@ -181,7 +181,7 @@ begin
   {$ENDIF}
     ABitmap.Canvas.Brush.Color := Color;
   ABitmap.Canvas.FillRect(ABitmap.Canvas.ClipRect);
-  Canvas.Draw(0, 0, ABitmap);
+//  Canvas.Draw(0, 0, ABitmap);
 
   {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
   if ParentBackground then

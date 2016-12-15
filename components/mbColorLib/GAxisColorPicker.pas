@@ -86,7 +86,7 @@ end;
 
 function TGAxisColorPicker.GetGradientColor2D(x, y: Integer): TColor;
 begin
-  Result := RGB(FGradientBmp.Height - 1 - y, FG, x);
+  Result := RGB(FBufferBmp.Height - 1 - y, FG, x);
 end;
 
 procedure TGAxisColorPicker.CorrectCoords(var x, y: integer);
@@ -130,7 +130,7 @@ end;
 
 procedure TGAxisColorPicker.Paint;
 begin
-  Canvas.StretchDraw(ClientRect, FGradientBmp);
+  Canvas.StretchDraw(ClientRect, FBufferBmp);
   CorrectCoords(mxx, myy);
   DrawMarker(mxx, myy);
 end;

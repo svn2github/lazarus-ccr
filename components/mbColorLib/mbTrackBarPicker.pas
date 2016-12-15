@@ -206,8 +206,8 @@ begin
 
   FGradientWidth := 256;
   FGradientHeight := 12;
-  FGradientBmp := TBitmap.Create;
-  FGradientBmp.PixelFormat := pf32bit;
+  FBufferBmp := TBitmap.Create;
+  FBufferBmp.PixelFormat := pf32bit;
 
   mx := 0;
   my := 0;
@@ -236,7 +236,7 @@ end;
 
 destructor TmbTrackbarPicker.Destroy;
 begin
-  FGradientBmp.Free;
+  FBufferBmp.Free;
   FBack.Free;
   inherited;
 end;
@@ -253,7 +253,7 @@ var
   imgHandle, imgMaskHandle: HBitmap;
   {$ENDIF}
 begin
-  if FGradientBmp = nil then
+  if FBufferBmp = nil then
     exit;
 
   {$IFDEF FPC}
@@ -263,17 +263,17 @@ begin
 
     if Layout = lyHorizontal then
     begin
-      FGradientBmp.Width := FGradientWidth;
-      FGradientBmp.Height := FGradientHeight;
+      FBufferBmp.Width := FGradientWidth;
+      FBufferBmp.Height := FGradientHeight;
       {$IFDEF FPC}
-      intfImg.LoadFromBitmap(FGradientBmp.Handle, FGradientBmp.MaskHandle);
+      intfImg.LoadFromBitmap(FBufferBmp.Handle, FBufferBmp.MaskHandle);
       {$ENDIF}
-      for i := 0 to FGradientBmp.Width-1 do
+      for i := 0 to FBufferBmp.Width-1 do
       begin
         c := GetGradientColor(i);
         if WebSafe then c := GetWebSafe(c);
         q := RGBToRGBQuad(c);
-        for j := 0 to FGradientBmp.Height-1 do
+        for j := 0 to FBufferBmp.Height-1 do
         begin
           {$IFDEF FPC}
           row := intfImg.GetDataLineStart(j);
@@ -286,30 +286,30 @@ begin
     end
     else
     begin
-      FGradientBmp.Width := FGradientHeight;
-      FGradientBmp.Height := FGradientWidth;
+      FBufferBmp.Width := FGradientHeight;
+      FBufferBmp.Height := FGradientWidth;
       {$IFDEF FPC}
-      intfImg.LoadFromBitmap(FGradientBmp.Handle, FGradientBmp.MaskHandle);
+      intfImg.LoadFromBitmap(FBufferBmp.Handle, FBufferBmp.MaskHandle);
       {$ENDIF}
-      for i := 0 to FGradientBmp.Height-1 do
+      for i := 0 to FBufferBmp.Height-1 do
       begin
         {$IFDEF FPC}
         row := intfImg.GetDataLineStart(i);
         {$ELSE}
         row := FGradientBmp.ScanLine[i];
         {$ENDIF}
-        c := GetGradientColor(FGradientBmp.Height - 1 - i);
+        c := GetGradientColor(FBufferBmp.Height - 1 - i);
         if WebSafe then c := GetWebSafe(c);
         q := RGBtoRGBQuad(c);
-        for j := 0 to FGradientBmp.Width-1 do
+        for j := 0 to FBufferBmp.Width-1 do
           row[j] := q;
       end;
     end;
 
   {$IFDEF FPC}
     intfimg.CreateBitmaps(imgHandle, imgMaskHandle, false);
-    FGradientBmp.Handle := imgHandle;
-    FGradientBmp.MaskHandle := imgMaskHandle;
+    FBufferBmp.Handle := imgHandle;
+    FBufferBmp.MaskHandle := imgMaskHandle;
   finally
     intfImg.Free;
   end;
@@ -873,7 +873,7 @@ end;
 procedure TmbTrackBarPicker.Execute(tbaAction: integer);
 begin
  case tbaAction of
-   TBA_Paint   : Canvas.StretchDraw(FPickRect, FGradientBmp);
+   TBA_Paint   : Canvas.StretchDraw(FPickRect, FBufferBmp);
    TBA_RedoBMP : CreateGradient;
    // Rest handled in descendants
  end;

@@ -333,7 +333,7 @@ begin
     with OffScreen.Canvas do
     begin
       Pen.Style := psClear;
-      // draw color comb from FColorCombs array
+      // draw color combs from FColorCombs array
       XOffs := FRadius + FColorCombRect.Left;
       YOffs := FRadius + FColorCombRect.Top;
       // draw the combs
@@ -375,7 +375,7 @@ begin
         Brush.Color := FBWCombs[I].Color;
         if I in [0, High(FBWCombs)] then
         begin
-          if Pen.Color = clWhite then
+          if Pen.Color = clWhite then   // "white" needs a border if background is white as well
             Pen.Color := clGray;
           DrawComb(OffScreen.Canvas, FBWCombs[I].Position.X + XOffs, FBWCombs[I].Position.Y + YOffs, 2 * FCombSize)
         end else

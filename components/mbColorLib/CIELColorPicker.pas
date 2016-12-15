@@ -132,7 +132,7 @@ end;
 
 procedure TCIELColorPicker.Paint;
 begin
-  Canvas.StretchDraw(ClientRect, FGradientBmp);
+  Canvas.StretchDraw(ClientRect, FBufferBmp);
   CorrectCoords(mxx, myy);
   DrawMarker(mxx, myy);
 end;

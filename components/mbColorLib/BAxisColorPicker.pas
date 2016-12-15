@@ -87,7 +87,7 @@ end;
 { x is RED, y is GREEN }
 function TBAxisColorPicker.GetGradientColor2D(x, y: Integer): TColor;
 begin
-  Result := RGB(x, FGradientBmp.Height - 1 - y, FB);
+  Result := RGB(x, FBufferBmp.Height - 1 - y, FB);
 end;
 
 procedure TBAxisColorPicker.CorrectCoords(var x, y: integer);
@@ -131,7 +131,7 @@ end;
 
 procedure TBAxisColorPicker.Paint;
 begin
-  Canvas.StretchDraw(ClientRect, FGradientBmp);
+  Canvas.StretchDraw(ClientRect, FBufferBmp);
   CorrectCoords(mxx, myy);
   DrawMarker(mxx, myy);
 end;

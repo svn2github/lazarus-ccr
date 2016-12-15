@@ -170,29 +170,29 @@ var
   imgHandle, imgMaskHandle: HBitmap;
   {$ENDIF}
 begin
-  if FGradientBmp = nil then
+  if FBufferBmp = nil then
   begin
-    FGradientBmp := TBitmap.Create;
-    FGradientBmp.PixelFormat := pf32bit;
+    FBufferBmp := TBitmap.Create;
+    FBufferBmp.PixelFormat := pf32bit;
   end;
-  FGradientBmp.Width := FGradientWidth;
-  FGradientBmp.Height := FGradientHeight;
+  FBufferBmp.Width := FGradientWidth;
+  FBufferBmp.Height := FGradientHeight;
 
   {$IFDEF FPC}
-  intfimg := TLazIntfImage.Create(FGradientBmp.Width, FGradientBmp.Height);
+  intfimg := TLazIntfImage.Create(FBufferBmp.Width, FBufferBmp.Height);
   try
-    intfImg.LoadFromBitmap(FGradientBmp.Handle, FGradientBmp.MaskHandle);
+    intfImg.LoadFromBitmap(FBufferBmp.Handle, FBufferBmp.MaskHandle);
   {$ENDIF}
 
-    for y := 0 to FGradientBmp.Height - 1 do
+    for y := 0 to FBufferBmp.Height - 1 do
     begin
       {$IFDEF FPC}
-      row := intfImg.GetDataLineStart(y); //FGradientBmp.Height - 1 - y);
+      row := intfImg.GetDataLineStart(y); //FBufferBmp.Height - 1 - y);
       {$ELSE}
       row := FHSVBmp.Scanline(y); //FGradientBmp.Height - 1 - y);
       {$ENDIF}
 
-      for x := 0 to FGradientBmp.Width - 1 do
+      for x := 0 to FBufferBmp.Width - 1 do
       begin
         c := GetGradientColor2D(x, y);
         if WebSafe then
@@ -203,8 +203,8 @@ begin
 
 {$IFDEF FPC}
     intfimg.CreateBitmaps(imgHandle, imgMaskHandle, false);
-    FGradientBmp.Handle := imgHandle;
-    FGradientBmp.MaskHandle := imgMaskHandle;
+    FBufferBmp.Handle := imgHandle;
+    FBufferBmp.MaskHandle := imgMaskHandle;
   finally
    intfimg.Free;
   end;

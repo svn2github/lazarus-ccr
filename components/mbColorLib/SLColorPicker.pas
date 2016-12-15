@@ -116,7 +116,7 @@ end;
 
 procedure TSLColorPicker.Paint;
 begin
-  Canvas.StretchDraw(ClientRect, FGradientBMP);
+  Canvas.StretchDraw(ClientRect, FBufferBMP);
   UpdateCoords;
   DrawMarker(mdx, mdy);
 end;

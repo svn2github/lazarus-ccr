@@ -42,9 +42,9 @@ object Form1: TForm1
     Height = 363
     Top = 6
     Width = 403
-    ActivePage = TabSheet7
+    ActivePage = TabSheet3
     Anchors = [akTop, akLeft, akRight, akBottom]
-    TabIndex = 7
+    TabIndex = 2
     TabOrder = 0
     OnMouseMove = PageControl1MouseMove
     object TabSheet1: TTabSheet
@@ -139,15 +139,15 @@ object Form1: TForm1
     end
     object TabSheet3: TTabSheet
       Caption = 'mbColorPalette'
-      ClientHeight = 303
-      ClientWidth = 391
+      ClientHeight = 335
+      ClientWidth = 395
       ImageIndex = 2
       object Label3: TLabel
         AnchorSideTop.Control = ComboBox2
         AnchorSideTop.Side = asrCenter
         Left = 6
         Height = 15
-        Top = 272
+        Top = 304
         Width = 24
         Caption = 'Sort:'
         ParentColor = False
@@ -157,7 +157,7 @@ object Form1: TForm1
         AnchorSideTop.Side = asrCenter
         Left = 224
         Height = 15
-        Top = 272
+        Top = 304
         Width = 28
         Caption = 'Style:'
         ParentColor = False
@@ -167,7 +167,7 @@ object Form1: TForm1
         AnchorSideTop.Side = asrCenter
         Left = 336
         Height = 15
-        Top = 272
+        Top = 304
         Width = 23
         Caption = 'Size:'
         ParentColor = False
@@ -175,7 +175,7 @@ object Form1: TForm1
       object Button1: TButton
         Left = 6
         Height = 25
-        Top = 236
+        Top = 268
         Width = 107
         Anchors = [akLeft, akBottom]
         Caption = 'Generate blue pal'
@@ -185,7 +185,7 @@ object Form1: TForm1
       object Button2: TButton
         Left = 120
         Height = 25
-        Top = 236
+        Top = 268
         Width = 135
         Anchors = [akLeft, akBottom]
         Caption = 'Generate gradient pal'
@@ -195,7 +195,7 @@ object Form1: TForm1
       object Button4: TButton
         Left = 262
         Height = 25
-        Top = 236
+        Top = 268
         Width = 121
         Anchors = [akLeft, akBottom]
         Caption = 'Load palette from file'
@@ -204,21 +204,21 @@ object Form1: TForm1
       end
       object ScrollBox1: TScrollBox
         Left = 6
-        Height = 221
+        Height = 253
         Top = 8
-        Width = 381
+        Width = 385
         HorzScrollBar.Page = 75
-        VertScrollBar.Page = 221
+        VertScrollBar.Page = 234
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderStyle = bsNone
-        ClientHeight = 221
-        ClientWidth = 364
+        ClientHeight = 253
+        ClientWidth = 385
         TabOrder = 3
         object mbColorPalette1: TmbColorPalette
           Left = 0
           Height = 234
           Top = 0
-          Width = 360
+          Width = 385
           Align = alTop
           Colors.Strings = (
             'clBlack'
@@ -480,6 +480,7 @@ object Form1: TForm1
           )
           HintFormat = 'RGB(%r, %g, %b)'#13'Hex: %h'
           AutoHeight = True
+          CellStyle = csCorel
           TabOrder = 0
           OnSelColorChange = mbColorPalette1SelColorChange
           OnMouseMove = mbColorPalette1MouseMove
@@ -488,7 +489,7 @@ object Form1: TForm1
       object ComboBox2: TComboBox
         Left = 34
         Height = 23
-        Top = 268
+        Top = 300
         Width = 87
         Anchors = [akLeft, akBottom]
         ItemHeight = 15
@@ -505,7 +506,7 @@ object Form1: TForm1
       object ComboBox3: TComboBox
         Left = 124
         Height = 23
-        Top = 268
+        Top = 300
         Width = 87
         Anchors = [akLeft, akBottom]
         ItemHeight = 15
@@ -538,7 +539,7 @@ object Form1: TForm1
       object ComboBox4: TComboBox
         Left = 256
         Height = 23
-        Top = 268
+        Top = 300
         Width = 71
         Anchors = [akLeft, akBottom]
         ItemHeight = 15
@@ -555,7 +556,7 @@ object Form1: TForm1
       object UpDown1: TUpDown
         Left = 364
         Height = 23
-        Top = 268
+        Top = 300
         Width = 15
         Anchors = [akLeft, akBottom]
         Min = 0

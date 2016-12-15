@@ -87,7 +87,7 @@ end;
 { x is BLUE, y is GREEN }
 function TRAxisColorPicker.GetGradientColor2D(x, y: Integer): TColor;
 begin
-  Result := RGB(FR, FGradientBmp.Height - 1 - y, x);
+  Result := RGB(FR, FBufferBmp.Height - 1 - y, x);
 end;
 
 procedure TRAxisColorPicker.CorrectCoords(var x, y: integer);
@@ -131,7 +131,7 @@ end;
 
 procedure TRAxisColorPicker.Paint;
 begin
-  Canvas.StretchDraw(ClientRect, FGradientBmp);
+  Canvas.StretchDraw(ClientRect, FBufferBmp);
   CorrectCoords(mxx, myy);
   DrawMarker(mxx, myy);
 end;

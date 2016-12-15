@@ -115,7 +115,7 @@ begin
   InflateRect(R, -1, -1);  // Avoid spurious black pixels at the border
   rgn := CreateEllipticRgnIndirect(R);
   SelectClipRgn(Canvas.Handle, rgn);
-  Canvas.Draw(0, 0, FGradientBmp);
+  Canvas.Draw(0, 0, FBufferBmp);
   DeleteObject(rgn);
   DrawSatCirc;
   DrawHueLine;

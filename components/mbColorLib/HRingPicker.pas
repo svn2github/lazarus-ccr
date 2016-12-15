@@ -254,7 +254,7 @@ begin
     CombineRgn(rgn, r1, r2, RGN_DIFF);
   end;
   SelectClipRgn(Canvas.Handle, rgn);
-  Canvas.Draw(0, 0, FGradientBmp);
+  Canvas.Draw(0, 0, FBufferBmp);
   DeleteObject(rgn);
   DrawHueLine;
   if FDoChange then
