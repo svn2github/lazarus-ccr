@@ -1,0 +1,15 @@
+{
+  "UpdatePackageData" : {
+    "DisableInOPM" : false,
+    "DownloadZipURL" : "https://svn.code.sf.net/p/lazarus-ccr/svn/components/longtimer/latest_stable/updates/longtimer.zip",
+    "Name" : "longtimer.zip"
+  },
+  "UpdatePackageFiles" : [
+    {
+      "ForceNotify" : false,
+      "InternalVersion" : 1,
+      "Name" : "longtimerpackage.lpk",
+      "Version" : "0.0.3.0"
+    }
+  ]
+}
