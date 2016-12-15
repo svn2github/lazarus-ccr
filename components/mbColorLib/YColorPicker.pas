@@ -7,42 +7,41 @@ interface
 {$ENDIF}
 
 uses
- {$IFDEF FPC}
- LCLIntf, LCLType, LMessages,
- {$ELSE}
- Windows, Messages,
- {$ENDIF}
- SysUtils, Classes, Controls, Graphics, Forms,
- RGBCMYKUtils, mbTrackBarPicker, HTMLColors, Scanlines;
+  {$IFDEF FPC}
+  LCLIntf, LCLType, LMessages,
+  {$ELSE}
+  Windows, Messages,
+  {$ENDIF}
+  SysUtils, Classes, Controls, Graphics, Forms,
+  RGBCMYKUtils, mbTrackBarPicker, HTMLColors, Scanlines;
 
 type
- TYColorPicker = class(TmbTrackBarPicker)
- private
-  FYellow, FMagenta, FCyan, FBlack: integer;
-
-  function ArrowPosFromYellow(y: integer): integer;
-  function YellowFromArrowPos(p: integer): integer;
-  function GetSelectedColor: TColor;
-  procedure SetSelectedColor(c: TColor);
-  procedure SetYellow(y: integer);
-  procedure SetMagenta(m: integer);
-  procedure SetCyan(c: integer);
-  procedure SetBlack(k: integer);
- protected
-  procedure Execute(tbaAction: integer); override;
-  function GetArrowPos: integer; override;
-  function GetGradientColor(AValue: Integer): TColor; override;
-  function GetSelectedValue: integer; override;
- public
-  constructor Create(AOwner: TComponent); override;
- published
-  property Yellow: integer read FYellow write SetYellow default 255;
-  property Magenta: integer read FMagenta write SetMagenta default 0;
-  property Cyan: integer read FCyan write SetCyan default 0;
-  property Black: integer read FBlack write SetBlack default 0;
-  property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
-  property Layout default lyVertical;
- end;
+  TYColorPicker = class(TmbTrackBarPicker)
+  private
+    FYellow, FMagenta, FCyan, FBlack: integer;
+    function ArrowPosFromYellow(y: integer): integer;
+    function YellowFromArrowPos(p: integer): integer;
+    function GetSelectedColor: TColor;
+    procedure SetSelectedColor(c: TColor);
+    procedure SetYellow(y: integer);
+    procedure SetMagenta(m: integer);
+    procedure SetCyan(c: integer);
+    procedure SetBlack(k: integer);
+  protected
+    procedure Execute(tbaAction: integer); override;
+    function GetArrowPos: integer; override;
+    function GetGradientColor(AValue: Integer): TColor; override;
+    function GetSelectedValue: integer; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+  published
+    property Yellow: integer read FYellow write SetYellow default 255;
+    property Magenta: integer read FMagenta write SetMagenta default 0;
+    property Cyan: integer read FCyan write SetCyan default 0;
+    property Black: integer read FBlack write SetBlack default 0;
+    property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
+    property Layout default lyVertical;
+  end;
 
 implementation
 

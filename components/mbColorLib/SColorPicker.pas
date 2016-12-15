@@ -7,38 +7,38 @@ unit SColorPicker;
 interface
 
 uses
- {$IFDEF FPC}
- LCLIntf, LCLType, LMessages,
- {$ELSE}
- Windows, Messages,
- {$ENDIF}
- SysUtils, Classes, Controls, Graphics, Forms,
- RGBHSVUtils, mbTrackBarPicker, HTMLColors, Scanlines;
+  {$IFDEF FPC}
+  LCLIntf, LCLType, LMessages,
+  {$ELSE}
+  Windows, Messages,
+  {$ENDIF}
+  SysUtils, Classes, Controls, Graphics, Forms,
+  RGBHSVUtils, mbTrackBarPicker, HTMLColors, Scanlines;
 
 type
- TSColorPicker = class(TmbTrackBarPicker)
- private
-  FVal, FHue, FSat: integer;
-  function ArrowPosFromSat(s: integer): integer;
-  function SatFromArrowPos(p: integer): integer;
-  function GetSelectedColor: TColor;
-  procedure SetSelectedColor(c: TColor);
-  procedure SetHue(h: integer);
-  procedure SetSat(s: integer);
-  procedure SetValue(v: integer);
- protected
-  procedure Execute(tbaAction: integer); override;
-  function GetArrowPos: integer; override;
-  function GetGradientColor(AValue: Integer): TColor; override;
-  function GetSelectedValue: integer; override;
- public
-  constructor Create(AOwner: TComponent); override;
- published
-  property Hue: integer read FHue write SetHue default 0;
-  property Saturation: integer read FSat write SetSat default 255;
-  property Value: integer read FVal write SetValue default 255;
-  property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
- end;
+  TSColorPicker = class(TmbTrackBarPicker)
+  private
+    FVal, FHue, FSat: integer;
+    function ArrowPosFromSat(s: integer): integer;
+    function SatFromArrowPos(p: integer): integer;
+    function GetSelectedColor: TColor;
+    procedure SetSelectedColor(c: TColor);
+    procedure SetHue(h: integer);
+    procedure SetSat(s: integer);
+    procedure SetValue(v: integer);
+  protected
+    procedure Execute(tbaAction: integer); override;
+    function GetArrowPos: integer; override;
+    function GetGradientColor(AValue: Integer): TColor; override;
+    function GetSelectedValue: integer; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+  published
+    property Hue: integer read FHue write SetHue default 0;
+    property Saturation: integer read FSat write SetSat default 255;
+    property Value: integer read FVal write SetValue default 255;
+    property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
+  end;
 
 
 implementation

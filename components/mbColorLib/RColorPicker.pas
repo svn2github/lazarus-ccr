@@ -7,42 +7,42 @@ unit RColorPicker;
 interface
 
 uses
- {$IFDEF FPC}
- LCLIntf, LCLType, LMessages,
- {$ELSE}
- Windows, Messages,
- {$ENDIF}
- SysUtils, Classes, Controls, Graphics, Forms,
- mbTrackBarPicker, HTMLColors, Scanlines;
+  {$IFDEF FPC}
+  LCLIntf, LCLType, LMessages,
+  {$ELSE}
+  Windows, Messages,
+  {$ENDIF}
+  SysUtils, Classes, Controls, Graphics, Forms,
+  mbTrackBarPicker, HTMLColors, Scanlines;
 
 type
 
- { TRColorPicker }
+  { TRColorPicker }
 
- TRColorPicker = class(TmbTrackBarPicker)
- private
-  FRed, FGreen, FBlue: integer;
-  function ArrowPosFromRed(r: integer): integer;
-  function RedFromArrowPos(p: integer): integer;
-  function GetSelectedColor: TColor;
-  procedure SetSelectedColor(c: TColor);
-  procedure SetRed(r: integer);
-  procedure SetGreen(g: integer);
-  procedure SetBlue(b: integer);
- protected
-  procedure Execute(tbaAction: integer); override;
-  function GetArrowPos: integer; override;
-  function GetGradientColor(AValue: Integer): TColor; override;
-  function GetSelectedValue: integer; override;
- public
-  constructor Create(AOwner: TComponent); override;
- published
-  property Red: integer read FRed write SetRed default 255;
-  property Green: integer read FGreen write SetGreen default 122;
-  property Blue: integer read FBlue write SetBlue default 122;
-  property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
-  property Layout default lyVertical;
- end;
+  TRColorPicker = class(TmbTrackBarPicker)
+  private
+    FRed, FGreen, FBlue: integer;
+    function ArrowPosFromRed(r: integer): integer;
+    function RedFromArrowPos(p: integer): integer;
+    function GetSelectedColor: TColor;
+    procedure SetSelectedColor(c: TColor);
+    procedure SetRed(r: integer);
+    procedure SetGreen(g: integer);
+    procedure SetBlue(b: integer);
+  protected
+    procedure Execute(tbaAction: integer); override;
+    function GetArrowPos: integer; override;
+    function GetGradientColor(AValue: Integer): TColor; override;
+    function GetSelectedValue: integer; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+  published
+    property Red: integer read FRed write SetRed default 255;
+    property Green: integer read FGreen write SetGreen default 122;
+    property Blue: integer read FBlue write SetBlue default 122;
+    property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
+    property Layout default lyVertical;
+  end;
 
 
 implementation

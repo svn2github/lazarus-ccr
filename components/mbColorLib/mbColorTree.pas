@@ -25,8 +25,8 @@ type
   {$ENDIF}
 
   TmbColor = record
-   name: string;
-   value: TColor;
+    Name: string;
+    Value: TColor;
   end;
 
   TDrawCaptionEvent = procedure (Sender: TObject; AIndex: integer; AFont: TFont; var AText: string; Selected: boolean) of object;
@@ -35,128 +35,124 @@ type
 
   TmbColorTree = class(TCustomTreeView)
   private
-   dummy: TCustomImageList;
-   FInfo1, FInfo2: string;
-   FInfoLabel: string;
-   FDraw: TDrawCaptionEvent;
-   FDraw1, FDraw2, FDraw3: TDrawLabelEvent;
-   mx, my: integer;
-   FGetHint: TGetHintEvent;
-   FOnStartDrag: TStartDragEvent;
-   FOnEndDrag: TEndDragEvent;
-   procedure SetInfo1(Value: string);
-   procedure SetInfo2(Value: string);
-   procedure SetInfoLabel(Value: string);
+    FInfo1, FInfo2: string;
+    FInfoLabel: string;
+    FDraw: TDrawCaptionEvent;
+    FDraw1, FDraw2, FDraw3: TDrawLabelEvent;
+    mx, my: integer;
+    FGetHint: TGetHintEvent;
+    FOnStartDrag: TStartDragEvent;
+    FOnEndDrag: TEndDragEvent;
+    procedure SetInfo1(Value: string);
+    procedure SetInfo2(Value: string);
+    procedure SetInfoLabel(Value: string);
 
   protected
-   procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
-   procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-   procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-   function CustomDrawItem(Node: TTreeNode; State: TCustomDrawState;
+    procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    function CustomDrawItem(Node: TTreeNode; State: TCustomDrawState;
       Stage: TCustomDrawStage; var PaintImages: Boolean): Boolean; override;
-   function IsCustomDrawn(Target: TCustomDrawTarget; Stage: TCustomDrawStage): Boolean; {$IFDEF DELPHI_7_UP}override;{$ENDIF}
-   procedure DrawColorItem(R: TRect; Selected: boolean; Index: integer; itemText: string; Expanded: boolean); dynamic;
-   procedure DrawInfoItem(R: TRect; Index: integer); dynamic;
-   procedure DoArrow(c: TCanvas; dir: TScrollDirection; p: TPoint; sel: boolean);
+    function IsCustomDrawn(Target: TCustomDrawTarget; Stage: TCustomDrawStage): Boolean; {$IFDEF DELPHI_7_UP}override;{$ENDIF}
+    procedure DrawColorItem(R: TRect; Selected: boolean; Index: integer; itemText: string; Expanded: boolean); dynamic;
+    procedure DrawInfoItem(R: TRect; Index: integer); dynamic;
+    procedure DoArrow(c: TCanvas; dir: TScrollDirection; p: TPoint; sel: boolean);
 
   public
-   Colors: array of TmbColor;
+    Colors: array of TmbColor;
 
-   constructor Create(AOwner: TComponent); override;
-   destructor Destroy; override;
-
-   procedure UpdateColors;
-   procedure AddColor(Name: string; Value: TColor; refresh: boolean = true);
-   procedure ClearColors;
-   procedure DeleteColor(Index: integer; refresh: boolean = true);
-   procedure DeleteColorByName(Name: string; All: boolean);
-   procedure DeleteColorByValue(Value: TColor; All: boolean);
-   procedure InsertColor(Index: integer; Name: string; Value: TColor);
-   function ColorCount: integer;
+    constructor Create(AOwner: TComponent); override;
+    procedure UpdateColors;
+    procedure AddColor(AName: string; AValue: TColor; ARefresh: boolean = true);
+    procedure ClearColors;
+    procedure DeleteColor(AIndex: integer; ARefresh: boolean = true);
+    procedure DeleteColorByName(AName: string; All: boolean);
+    procedure DeleteColorByValue(AValue: TColor; All: boolean);
+    procedure InsertColor(AIndex: integer; AName: string; AValue: TColor);
+    function ColorCount: integer;
   published
-   property InfoLabelText: string read FInfoLabel write SetInfoLabel;
-   property InfoDisplay1: string read FInfo1 write SetInfo1;
-   property InfoDisplay2: string read FInfo2 write SetInfo2;
-   property Align;
-   property Anchors;
-   property AutoExpand;
+    property InfoLabelText: string read FInfoLabel write SetInfoLabel;
+    property InfoDisplay1: string read FInfo1 write SetInfo1;
+    property InfoDisplay2: string read FInfo2 write SetInfo2;
+    property Align;
+    property Anchors;
+    property AutoExpand;
    {$IFDEF DELPHI}
-   property BevelEdges;
-   property BevelInner;
-   property BevelOuter;
-   property BevelKind default bkNone;
-   property BevelWidth;
+    property BevelEdges;
+    property BevelInner;
+    property BevelOuter;
+    property BevelKind default bkNone;
+    property BevelWidth;
    {$ENDIF}
-   property BorderStyle;
-   property BorderWidth;
+    property BorderStyle;
+    property BorderWidth;
    {$IFDEF DELPHI}
-   property ChangeDelay;
-   property Ctl3D;
-   property ParentCtl3D;
+    property ChangeDelay;
+    property Ctl3D;
+    property ParentCtl3D;
    {$ENDIF}
-   property Constraints;
-   property Color;
-   property DragKind;
-   property DragCursor;
-   property DragMode;
-   property Enabled;
-   property Font;
-   property Indent;
+    property Constraints;
+    property Color;
+    property DragKind;
+    property DragCursor;
+    property DragMode;
+    property Enabled;
+    property Font;
+    property Indent;
    {$IFDEF DELPHI_7_UP}
-   property MultiSelect;
-   property MultiSelectStyle;
+    property MultiSelect;
+    property MultiSelectStyle;
    {$ENDIF}
-   property ParentColor default False;
-   property ParentFont;
-   property ParentShowHint;
-   property PopupMenu;
-   property RightClickSelect;
-   property ShowHint;
-   property SortType;
-   property TabOrder;
-   property TabStop default True;
-   property ToolTips;
-   property Visible;
-
-   property OnGetHint: TGetHintEvent read FGetHint write FGetHint;
-   property OnDrawCaption: TDrawCaptionEvent read FDraw write FDraw;
-   property OnDrawInfoLabel: TDrawLabelEvent read FDraw1 write FDraw1;
-   property OnDrawInfoDisplay1: TDrawLabelEvent read FDraw2 write FDraw2;
-   property OnDrawInfoDisplay2: TDrawLabelEvent read FDraw3 write FDraw3;
+    property ParentColor default False;
+    property ParentFont;
+    property ParentShowHint;
+    property PopupMenu;
+    property RightClickSelect;
+    property ShowHint;
+    property SortType;
+    property TabOrder;
+    property TabStop default True;
+    property ToolTips;
+    property Visible;
+    property OnGetHint: TGetHintEvent read FGetHint write FGetHint;
+    property OnDrawCaption: TDrawCaptionEvent read FDraw write FDraw;
+    property OnDrawInfoLabel: TDrawLabelEvent read FDraw1 write FDraw1;
+    property OnDrawInfoDisplay1: TDrawLabelEvent read FDraw2 write FDraw2;
+    property OnDrawInfoDisplay2: TDrawLabelEvent read FDraw3 write FDraw3;
    {$IFDEF DELPHI_7_UP}
-   property OnAddition;
-   property OnCreateNodeClass;
+    property OnAddition;
+    property OnCreateNodeClass;
    {$ENDIF}
-   property OnAdvancedCustomDraw;
-   property OnAdvancedCustomDrawItem;
-   property OnChange;
-   property OnChanging;
-   property OnClick;
-   property OnCollapsed;
-   property OnCollapsing;
-   property OnCompare;
-   property OnContextPopup;
-   property OnCustomDraw;
-   property OnCustomDrawItem;
-   property OnDblClick;
-   property OnDeletion;
-   property OnDragDrop;
-   property OnDragOver;
-   property OnEndDock;
-   property OnEndDrag: TEndDragEvent read FOnEndDrag write FOnEndDrag;
-   property OnEnter;
-   property OnExit;
-   property OnExpanding;
-   property OnExpanded;
-   property OnKeyDown;
-   property OnKeyPress;
-   property OnKeyUp;
-   property OnMouseDown;
-   property OnMouseMove;
-   property OnMouseUp;
-   property OnStartDock;
-   property OnStartDrag: TStartDragEvent read FOnStartDrag write FOnStartDrag;
-   property Items;
+    property OnAdvancedCustomDraw;
+    property OnAdvancedCustomDrawItem;
+    property OnChange;
+    property OnChanging;
+    property OnClick;
+    property OnCollapsed;
+    property OnCollapsing;
+    property OnCompare;
+    property OnContextPopup;
+    property OnCustomDraw;
+    property OnCustomDrawItem;
+    property OnDblClick;
+    property OnDeletion;
+    property OnDragDrop;
+    property OnDragOver;
+    property OnEndDock;
+    property OnEndDrag: TEndDragEvent read FOnEndDrag write FOnEndDrag;
+    property OnEnter;
+    property OnExit;
+    property OnExpanding;
+    property OnExpanded;
+    property OnKeyDown;
+    property OnKeyPress;
+    property OnKeyUp;
+    property OnMouseDown;
+    property OnMouseMove;
+    property OnMouseUp;
+    property OnStartDock;
+    property OnStartDrag: TStartDragEvent read FOnStartDrag write FOnStartDrag;
+    property Items;
   end;
 
 implementation
@@ -203,96 +199,86 @@ end;
 
 constructor TmbColorTree.Create(AOwner: TComponent);
 begin
- inherited;
- ControlStyle := ControlStyle + [csDisplayDragImage];
- MaxHue := 360;
- MaxSat := 255;
- MaxLum := 255;
- ReadOnly := true;
- ShowButtons := false;
- ShowLines := false;
- ShowRoot := true;
- RowSelect := true;
- HotTrack := false;
- SetLength(Colors, 0);
- Images := TImageList.Create(Self);
- Images.Width := 48;
- Images.Height := 48;
- {
- dummy := TCustomImageList.Create(Self);
- dummy.Width := 48;
- dummy.Height := 48;
- Images := dummy;
- }
- FInfoLabel := 'Color Values:';
- FInfo1 := 'RGB: %r.%g.%b';
- FInfo2 := 'HEX: #%hex';
-end;
-
-destructor TmbColorTree.Destroy;
-begin
- dummy.Free;
- inherited;
+  inherited;
+  ControlStyle := ControlStyle + [csDisplayDragImage];
+  {
+  MaxHue := 360;
+  MaxSat := 255;
+  MaxLum := 255;
+  }
+  ReadOnly := true;
+  ShowButtons := false;
+  ShowLines := false;
+  ShowRoot := true;
+  RowSelect := true;
+  HotTrack := false;
+  SetLength(Colors, 0);
+  Images := TImageList.Create(Self);
+  Images.Width := 48;
+  Images.Height := 48;
+  FInfoLabel := 'Color Values:';
+  FInfo1 := 'RGB: %r.%g.%b';
+  FInfo2 := 'HEX: #%hex';
 end;
 
 procedure TmbColorTree.UpdateColors;
 var
- i: integer;
- n: TTreeNode;
+  i: integer;
+  n: TTreeNode;
 begin
- Items.Clear;
- for i := 0 to Length(Colors) - 1 do
+  Items.Clear;
+  for i := 0 to Length(Colors) - 1 do
   begin
-   n := Items.Add(TopItem, Colors[i].name);
-   Items.AddChild(n, '');
+    n := Items.Add(TopItem, Colors[i].name);
+    Items.AddChild(n, '');
   end;
 end;
 
 procedure TmbColorTree.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
- r: TRect;
+  r: TRect;
 begin
- inherited;
- if (ssShift in Shift) or (ssCtrl in Shift) then Exit;
- if Selected <> nil then
-  r := Selected.DisplayRect(false)
- else
-  Exit;
- if (x > r.Right - 15) and (x < r.Right - 3) and (y > r.Top + 13) and (y < r.Top + 30) then
-  if (Selected.HasChildren) and PtInRect(r, Point(x, y)) then
-   begin
-    if selected.Expanded then
-     Selected.Collapse(false)
-    else
-     Selected.Expand(false);
-    Invalidate;
-   end;
+  inherited;
+  if (ssShift in Shift) or (ssCtrl in Shift) then Exit;
+  if Selected <> nil then
+    r := Selected.DisplayRect(false)
+  else
+    exit;
+  if (x > r.Right - 15) and (x < r.Right - 3) and (y > r.Top + 13) and (y < r.Top + 30) then
+    if (Selected.HasChildren) and PtInRect(r, Point(x, y)) then
+    begin
+      if selected.Expanded then
+        Selected.Collapse(false)
+      else
+        Selected.Expand(false);
+      Invalidate;
+    end;
 end;
 
 procedure TmbColorTree.MouseMove(Shift: TShiftState; X, Y: Integer);
 var
- r: TRect;
+  r: TRect;
 begin
- inherited;
- mx := x;
- my := y;
- if GetNodeAt(x, y) <> nil then
-  r := GetNodeAt(x, y).DisplayRect(false)
- else
+  inherited;
+  mx := x;
+  my := y;
+  if GetNodeAt(x, y) <> nil then
+    r := GetNodeAt(x, y).DisplayRect(false)
+  else
   begin
-   Cursor := crDefault;
-   Exit;
+    Cursor := crDefault;
+    exit;
   end;
 
- if (x > r.Right - 15) and (x < r.Right - 3) and (y > r.Top + 13) and (y < r.Top + 30) then
+  if (x > r.Right - 15) and (x < r.Right - 3) and (y > r.Top + 13) and (y < r.Top + 30) then
   begin
-   if (GetNodeAt(x, y).HasChildren) and PtInRect(r, Point(x, y)) then
-    Cursor := crHandPoint
-   else
-    Cursor := crDefault;
+    if (GetNodeAt(x, y).HasChildren) and PtInRect(r, Point(x, y)) then
+      Cursor := crHandPoint
+    else
+      Cursor := crDefault;
   end
- else
-  Cursor := crDefault;
+  else
+    Cursor := crDefault;
 end;
 
 function TmbColorTree.CustomDrawItem(Node: TTreeNode; State: TCustomDrawState;
@@ -306,38 +292,40 @@ begin
     DrawInfoItem(Node.DisplayRect(false), node.Parent.Index);
 end;
 
-procedure TmbColorTree.DoArrow(c: TCanvas; dir: TScrollDirection; p: TPoint; sel: boolean);
+procedure TmbColorTree.DoArrow(c: TCanvas; dir: TScrollDirection; p: TPoint;
+  sel: boolean);
 var
- b: TBitmap;
+  b: TBitmap;
 begin
- b := TBitmap.Create;
- try
-  b.Height := 12;
-  b.Width := 12;
-  if Sel then
-   begin
-    b.Canvas.Brush.Color := clHighlight;
-    b.Canvas.Pen.Color := clHighlightText;
-   end
-  else
-   begin
-    b.Canvas.Brush.Color := clFuchsia;
-    b.Canvas.Pen.Color := clWindowText;
-    b.Transparent := true;
-    b.TransparentColor := clFuchsia;
-   end;
-  b.Canvas.FillRect(B.Canvas.ClipRect);
-  case dir of
-   sdDown: DrawArrow(b.Canvas, dir, Point(2, 3), 3);
-   sdRight: DrawArrow(b.Canvas, dir, Point(1, 2), 3);
+  b := TBitmap.Create;
+  try
+    b.Height := 12;
+    b.Width := 12;
+    if Sel then
+    begin
+      b.Canvas.Brush.Color := clHighlight;
+      b.Canvas.Pen.Color := clHighlightText;
+    end
+    else
+    begin
+      b.Canvas.Brush.Color := clFuchsia;
+      b.Canvas.Pen.Color := clWindowText;
+      b.Transparent := true;
+      b.TransparentColor := clFuchsia;
+    end;
+    b.Canvas.FillRect(B.Canvas.ClipRect);
+    case dir of
+      sdDown  : DrawArrow(b.Canvas, dir, Point(2, 3), 3);
+      sdRight : DrawArrow(b.Canvas, dir, Point(1, 2), 3);
+    end;
+    c.Draw(p.x, p.y, b);
+  finally
+    b.Free;
   end;
-  c.Draw(p.x, p.y, b);
- finally
-  b.Free;
- end;
 end;
 
-procedure TmbColorTree.DrawColorItem(R: TRect; Selected: boolean; Index: integer; itemText: string; Expanded: boolean);
+procedure TmbColorTree.DrawColorItem(R: TRect; Selected: boolean; Index: integer;
+  itemText: string; Expanded: boolean);
 var
   SR, TR: TRect;
 begin
@@ -457,224 +445,217 @@ const
   FLAGS = DT_LEFT or DT_END_ELLIPSIS or DT_NOCLIP;
   DELTA = 2;
 var
- b: TBitmap;
- BR, TR: TRect;
- i, fx: integer;
- s: string;
- h: Integer;
+  b: TBitmap;
+  BR, TR: TRect;
+  i, fx: integer;
+  s: string;
+  h: Integer;
 begin
- b := TBitmap.Create;
- try
-  b.Width := R.Right - R.Left;
-  b.Height := R.Bottom - R.Top;
-  BR := b.Canvas.ClipRect;
-  with b.Canvas do
-   begin
-    Canvas.Font.Assign(Self.Font);
-    Brush.Color := Blend(clBtnFace, clWindow, 30);
-    FillRect(BR);
-    BR := Rect(BR.Left + 42, BR.Top, BR.Right, BR.Bottom);
-    Brush.Color := clWindow;
-    FillRect(BR);
-    Inc(BR.Left, 6);
-    Font.Style := [];
-    Font.Size := 7;
+  b := TBitmap.Create;
+  try
+    b.Width := R.Right - R.Left;
+    b.Height := R.Bottom - R.Top;
+    BR := b.Canvas.ClipRect;
+    with b.Canvas do
+    begin
+      Canvas.Font.Assign(Self.Font);
+      Brush.Color := Blend(clBtnFace, clWindow, 30);
+      FillRect(BR);
+      BR := Rect(BR.Left + 42, BR.Top, BR.Right, BR.Bottom);
+      Brush.Color := clWindow;
+      FillRect(BR);
+      Inc(BR.Left, 6);
+      Font.Style := [];
+      Font.Size := 7;
 
-    s := FInfoLabel;
-    h := TextHeight(s);
-    TR := Rect(BR.Left, BR.Top{ + 2}, BR.Right, BR.Top + {2 + }h + DELTA);
-    if Assigned(FDraw1) then FDraw1(Self, Index, Canvas.Font, s);
-    DrawText(b.Canvas.Handle, PChar(s), Length(s), TR, FLAGS);
+      s := FInfoLabel;
+      h := TextHeight(s);
+      TR := Rect(BR.Left, BR.Top{ + 2}, BR.Right, BR.Top + {2 + }h + DELTA);
+      if Assigned(FDraw1) then FDraw1(Self, Index, Canvas.Font, s);
+      DrawText(b.Canvas.Handle, PChar(s), Length(s), TR, FLAGS);
 
-    DrawHorDottedLine(b.Canvas, BR.Left, BR.Right, TR.Bottom + DELTA, clGray);
+      DrawHorDottedLine(b.Canvas, BR.Left, BR.Right, TR.Bottom + DELTA, clGray);
 
-    s := FormatHint(FInfo1, Self.Colors[Index].value);
-    TR.Top := TR.Bottom + 2 * DELTA;
-    TR.Bottom := TR.Top + h + DELTA;
-    if Assigned(FDraw2) then FDraw2(Self, Index, Canvas.Font, s);
-    DrawText(b.Canvas.Handle, PChar(s), Length(s), TR, FLAGS);
+      s := FormatHint(FInfo1, Self.Colors[Index].value);
+      TR.Top := TR.Bottom + 2 * DELTA;
+      TR.Bottom := TR.Top + h + DELTA;
+      if Assigned(FDraw2) then FDraw2(Self, Index, Canvas.Font, s);
+      DrawText(b.Canvas.Handle, PChar(s), Length(s), TR, FLAGS);
 
-    DrawHorDottedLine(b.Canvas, BR.LEft, BR.Right, TR.Bottom + DELTA, clGray);
+      DrawHorDottedLine(b.Canvas, BR.LEft, BR.Right, TR.Bottom + DELTA, clGray);
 
-    s := FormatHint(FInfo2, Self.Colors[Index].value);
-    TR.Top := TR.Bottom + 2 * DELTA;
-    TR.Bottom := TR.Top + h + DELTA;
-    if Assigned(FDraw3) then FDraw3(Self, Index, Canvas.Font, s);
-    DrawText(b.Canvas.Handle, PChar(s), Length(s), TR, FLAGS);
-   end;
+      s := FormatHint(FInfo2, Self.Colors[Index].value);
+      TR.Top := TR.Bottom + 2 * DELTA;
+      TR.Bottom := TR.Top + h + DELTA;
+      if Assigned(FDraw3) then FDraw3(Self, Index, Canvas.Font, s);
+        DrawText(b.Canvas.Handle, PChar(s), Length(s), TR, FLAGS);
+    end;
 
-  Canvas.Draw(R.Left, R.Top, b);
- finally
-  b.Free;
- end;
+    Canvas.Draw(R.Left, R.Top, b);
+  finally
+    b.Free;
+  end;
 end;
 
 function TmbColorTree.IsCustomDrawn(Target: TCustomDrawTarget; Stage: TCustomDrawStage): Boolean;
 begin
- Result := true;
+  Result := true;
 end;
 
 procedure TmbColorTree.SetInfoLabel(Value: string);
 begin
- if FInfoLabel <> Value then
+  if FInfoLabel <> Value then
   begin
-   FInfoLabel := Value;
-   Invalidate;
+    FInfoLabel := Value;
+    Invalidate;
   end;
 end;
 
 procedure TmbColorTree.SetInfo1(Value: string);
 begin
- if FInfo1 <> Value then
+  if FInfo1 <> Value then
   begin
-   FInfo1 := Value;
-   Invalidate;
+    FInfo1 := Value;
+    Invalidate;
   end;
 end;
 
 procedure TmbColorTree.SetInfo2(Value: string);
 begin
- if FInfo2 <> Value then
+  if FInfo2 <> Value then
   begin
-   FInfo2 := Value;
-   Invalidate;
+    FInfo2 := Value;
+    Invalidate;
   end;
 end;
 
-procedure TmbColorTree.AddColor(Name: string; Value: TColor; refresh: boolean = true);
+procedure TmbColorTree.AddColor(AName: string; AValue: TColor;
+  ARefresh: boolean = true);
 var
- L: integer;
+  L: integer;
 begin
- L := Length(Colors);
- SetLength(Colors, L + 1);
- Colors[L].name := Name;
- Colors[L].value := Value;
- if refresh then
-  UpdateColors;
+  L := Length(Colors);
+  SetLength(Colors, L + 1);
+  Colors[L].Name := AName;
+  Colors[L].Value := AValue;
+  if ARefresh then
+    UpdateColors;
 end;
 
 procedure TmbColorTree.ClearColors;
 begin
- SetLength(Colors, 0);
- UpdateColors;
+  SetLength(Colors, 0);
+  UpdateColors;
 end;
 
 function TmbColorTree.ColorCount: integer;
 begin
- Result := Length(Colors);
+  Result := Length(Colors);
 end;
 
-procedure TmbColorTree.DeleteColor(Index: integer; refresh: boolean = true);
+procedure TmbColorTree.DeleteColor(AIndex: integer; ARefresh: boolean = true);
 var
- i: integer;
+  i: integer;
 begin
- if Length(Colors) = 0 then
-  begin
+  if Length(Colors) = 0 then
    raise Exception.Create('There''s nothing to delete! The length of the array is 0.');
-   Exit;
-  end;
 
- if Index > Length(Colors) - 1 then
+  if AIndex > Length(Colors) - 1 then
+   raise Exception.Create(Format('List index out of bounds (%d)', [AIndex]));
+
+  for i := AIndex to Length(Colors) - 2 do
+    Colors[i] := Colors[i+1];
+  SetLength(Colors, Length(Colors) - 1);
+  if ARefresh then
+    UpdateColors;
+end;
+
+procedure TmbColorTree.DeleteColorByName(AName: string; All: boolean);
+var
+  i: integer;
+begin
+  for i := Length(Colors) - 1 downto 0 do
+  if SameText(Colors[i].Name, AName) then
   begin
-   raise Exception.Create(Format('List index out of bounds (%d)', [Index]));
-   Exit;
+    DeleteColor(i, false);
+    if not All then
+    begin
+      UpdateColors;
+      Exit;
+     end;
   end;
-
- for i := Index to Length(Colors) - 2 do
-  Colors[i] := Colors[i+1];
- SetLength(Colors, Length(Colors) - 1);
- if refresh then
   UpdateColors;
 end;
 
-procedure TmbColorTree.DeleteColorByName(Name: string; All: boolean);
+procedure TmbColorTree.DeleteColorByValue(AValue: TColor; All: boolean);
 var
- i: integer;
+  i: integer;
 begin
- for i := Length(Colors) - 1 downto 0 do
-  if SameText(Colors[i].name, Name) then
-   begin
-    DeleteColor(i, false);
-    if not All then
-     begin
-      UpdateColors;
-      Exit;
-     end;
-   end;
- UpdateColors;
+  for i := Length(Colors) - 1 downto 0 do
+    if Colors[i].Value = AValue then
+    begin
+      DeleteColor(i, false);
+      if not All then
+      begin
+        UpdateColors;
+        Exit;
+      end;
+    end;
+  UpdateColors;
 end;
 
-procedure TmbColorTree.DeleteColorByValue(Value: TColor; All: boolean);
+procedure TmbColorTree.InsertColor(AIndex: integer; AName: string; AValue: TColor);
 var
- i: integer;
+  i: integer;
 begin
- for i := Length(Colors) - 1 downto 0 do
-  if Colors[i].Value = Value then
-   begin
-    DeleteColor(i, false);
-    if not All then
-     begin
-      UpdateColors;
-      Exit;
-     end;
-   end;
- UpdateColors;
-end;
+  if AIndex > Length(Colors) - 1 then
+    raise Exception.Create(Format('List index out of bounds (%d)', [AIndex]));
 
-procedure TmbColorTree.InsertColor(Index: integer; Name: string; Value: TColor);
-var
- i: integer;
-begin
- if Index > Length(Colors) - 1 then
-  begin
-   raise Exception.Create(Format('List index out of bounds (%d)', [Index]));
-   Exit;
-  end;
+  SetLength(Colors, Length(Colors) + 1);
+  for i := Length(Colors) - 1 downto AIndex do
+    Colors[i] := Colors[i-1];
 
- SetLength(Colors, Length(Colors) + 1);
- for i := Length(Colors) - 1 downto Index do
-  Colors[i] := Colors[i-1];
+  Colors[AIndex].Name := AName;
+  Colors[AIndex].Value := AValue;
 
- Colors[Index].Name := Name;
- Colors[Index].Value := Value;
-
- UpdateColors;
+  UpdateColors;
 end;
 
 procedure TmbColorTree.CMHintShow(var Message: TCMHintShow);
 var
- Handled: boolean;
- i: integer;
- n: TTreeNode;
+  Handled: boolean;
+  i: integer;
+  n: TTreeNode;
 begin
-if PtInRect(ClientRect, Point(mx, my)) and ShowHint and not Dragging then
- begin
-  n := GetNodeAt(mx, my);
-  if n <> nil then
-   begin
-    if not n.HasChildren then
-     i := n.Parent.Index
-    else
-     i := n.Index;
-    with TCMHintShow(Message) do
-     if not ShowHint then
-      Message.Result := 1
-     else
-      with HintInfo^ do
-       begin
-        Result := 0;
-        ReshowTimeout := 2000;
-        HideTimeout := 1000;
-        Handled := false;
-        if Assigned(FGetHint) then FGetHint(i, HintStr, Handled);
-        if Handled then
-         HintStr := FormatHint(HintStr, Colors[i].Value)
+  if PtInRect(ClientRect, Point(mx, my)) and ShowHint and not Dragging then
+  begin
+    n := GetNodeAt(mx, my);
+    if n <> nil then
+    begin
+      if not n.HasChildren then
+        i := n.Parent.Index
+      else
+        i := n.Index;
+      with TCMHintShow(Message) do
+        if not ShowHint then
+          Message.Result := 1
         else
-         HintStr := Colors[i].Name;
-       end;
-   end;
- end;
- inherited;
+          with HintInfo^ do
+          begin
+            Result := 0;
+            ReshowTimeout := 2000;
+            HideTimeout := 1000;
+            Handled := false;
+            if Assigned(FGetHint) then
+              FGetHint(i, HintStr, Handled);
+            if Handled then
+              HintStr := FormatHint(HintStr, Colors[i].Value)
+            else
+              HintStr := Colors[i].Name;
+          end;
+    end;
+  end;
+  inherited;
 end;
 
 end.

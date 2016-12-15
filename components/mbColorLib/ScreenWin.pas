@@ -92,19 +92,19 @@ end;
 
 procedure TScreenForm.FormShow(Sender: TObject);
 begin
- Width := Screen.Width;
- Height := Screen.Height;
- Left := 0;
- Top := 0;
+  Width := Screen.Width;
+  Height := Screen.Height;
+  Left := 0;
+  Top := 0;
 end;
 
 procedure TScreenForm.FormCreate(Sender: TObject);
 begin
- Brush.Style := bsClear;
- Screen.Cursors[crPickerCursor] := LoadCursor(HInstance, 'PickerCursor');
- Cursor := crPickerCursor;
- SelectedColor := clNone;
- FHintFormat := 'RGB(%r, %g, %b)'#13'Hex: %h';
+  Brush.Style := bsClear;
+  Screen.Cursors[crPickerCursor] := LoadCursor(HInstance, 'PickerCursor');
+  Cursor := crPickerCursor;
+  SelectedColor := clNone;
+  FHintFormat := 'RGB(%r, %g, %b)'#13'Hex: %h';
 end;
 
 procedure TScreenForm.FormKeyDown(Sender: TObject; var Key: Word;
@@ -132,7 +132,7 @@ end;
 procedure TScreenForm.FormMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
- EndSelection(x, y, true);
+  EndSelection(x, y, true);
 end;
 
 procedure TScreenForm.FormMouseMove(Sender: TObject; Shift: TShiftState; X,

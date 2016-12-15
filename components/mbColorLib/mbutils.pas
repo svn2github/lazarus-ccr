@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils, Graphics, LCLIntf;
 
-procedure Clamp(var AValue:Integer; AMin, AMax: Integer);
+procedure Clamp(var AValue: Integer; AMin, AMax: Integer); overload;
+procedure Clamp(var AValue: Double; AMin, AMax: Double); overload;
 procedure DrawHorDottedLine(ACanvas: TCanvas; X1, X2, Y: Integer; AColor: TColor);
 function PointInCircle(p: TPoint; Size: integer): boolean;
 function PtInCircle(p, ctr: TPoint; Radius: Integer): Boolean;
@@ -20,6 +21,12 @@ function WidthOf(R: TRect): Integer;
 implementation
 
 procedure Clamp(var AValue: integer; AMin, AMax: integer);
+begin
+  if AValue < AMin then AValue := AMin;
+  if AValue > AMax then AValue := AMax;
+end;
+
+procedure Clamp(var AValue: Double; AMin, AMax: Double);
 begin
   if AValue < AMin then AValue := AMin;
   if AValue > AMax then AValue := AMax;

@@ -49,33 +49,33 @@ implementation
 
 constructor TmbDeskPickerButton.Create(AOwner: TComponent);
 begin
- inherited;
- DoubleBuffered := true;
+  inherited;
+//  DoubleBuffered := true;
 // ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque{$IFDEF DELPHI_7_UP}, csParentBackground{$ENDIF}];
- FHintFmt := 'RGB(%r, %g, %b)'#13'Hex: %h';
- FShowScreenHint := false;
+  FHintFmt := 'RGB(%r, %g, %b)'#13'Hex: %h';
+  FShowScreenHint := false;
 end;
 
 procedure TmbDeskPickerButton.Click;
 begin
- inherited;
- StartPicking;
+  inherited;
+  StartPicking;
 end;
 
 procedure TmbDeskPickerButton.StartPicking;
 begin
- ScreenFrm := TScreenForm.Create(Application);
- try
-  ScreenFrm.OnSelColorChange := ColorPicked;
-  ScreenFrm.OnScreenKeyDown := ScreenKeyDown;
-  ScreenFrm.OnMouseWheelDown := WheelDown;
-  ScreenFrm.OnMouseWheelUp := WheelUp;
-  ScreenFrm.ShowHint := FShowScreenHint;
-  ScreenFrm.FHintFormat := FHintFmt;
-  ScreenFrm.ShowModal;
- finally
-  ScreenFrm.Free;
- end;
+  ScreenFrm := TScreenForm.Create(Application);
+  try
+    ScreenFrm.OnSelColorChange := ColorPicked;
+    ScreenFrm.OnScreenKeyDown := ScreenKeyDown;
+    ScreenFrm.OnMouseWheelDown := WheelDown;
+    ScreenFrm.OnMouseWheelUp := WheelUp;
+    ScreenFrm.ShowHint := FShowScreenHint;
+    ScreenFrm.FHintFormat := FHintFmt;
+    ScreenFrm.ShowModal;
+  finally
+    ScreenFrm.Free;
+  end;
 end;
 
 procedure TmbDeskPickerButton.ColorPicked(Sender: TObject);
@@ -86,17 +86,17 @@ end;
 
 procedure TmbDeskPickerButton.ScreenKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
- if Assigned(FOnKeyDown) then FOnKeyDown(Self, Key, Shift);
+  if Assigned(FOnKeyDown) then FOnKeyDown(Self, Key, Shift);
 end;
 
 procedure TmbDeskPickerButton.WheelUp(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
 begin
- if Assigned(OnWUp) then OnWUp(Self, Shift, MousePos, Handled);
+  if Assigned(OnWUp) then OnWUp(Self, Shift, MousePos, Handled);
 end;
 
 procedure TmbDeskPickerButton.WheelDown(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
 begin
- if Assigned(OnWDown) then OnWDown(Self, Shift, MousePos, Handled);
+  if Assigned(OnWDown) then OnWDown(Self, Shift, MousePos, Handled);
 end;
 
 end.

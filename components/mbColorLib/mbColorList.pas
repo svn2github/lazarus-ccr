@@ -166,271 +166,264 @@ end;
 
 constructor TmbColorList.Create(AOwner: TComponent);
 begin
- inherited;
- MaxHue := 360;
- MaxSat := 255;
- MaxLum := 255;
- style := lbOwnerDrawFixed;
- SetLength(Colors, 0);
- ItemHeight := 48;
- IntegralHeight := true;
- mx := -1;
- my := -1;
+  inherited;
+  {
+  MaxHue := 360;
+  MaxSat := 255;
+  MaxLum := 255;
+  }
+  style := lbOwnerDrawFixed;
+  SetLength(Colors, 0);
+  ItemHeight := 48;
+  IntegralHeight := true;
+  mx := -1;
+  my := -1;
 end;
 
 procedure TmbColorList.UpdateColors;
 var
- i: integer;
+  i: integer;
 begin
- Items.Clear;
- for i := 0 to Length(Colors) - 1 do
-  Items.Add(Colors[i].name);
+  Items.Clear;
+  for i := 0 to Length(Colors) - 1 do
+    Items.Add(Colors[i].name);
 end;
 
 procedure TmbColorList.DrawItem(Index: Integer; Rect: TRect; State: TOwnerDrawState);
 var
- SR, TR, R: TRect;
- itemText: string;
+  SR, TR, R: TRect;
+  itemText: string;
 begin
- if Length(Colors) = 0 then Exit;
- R := Rect;
- with Canvas do
+  if Length(Colors) = 0 then Exit;
+  R := Rect;
+  with Canvas do
   begin
-   //background
-   Pen.Color := clWindow;
-   if odSelected in State then
-    Brush.Color := clHighlight
-   else
-    Brush.Color := self.Color; //clBtnFace;
-   FillRect(R);
-   MoveTo(R.Left, R.Bottom - 1);
-   LineTo(R.Right, R.Bottom - 1);
-   //swatches
-   SR := Classes.Rect(R.Left + 6, R.Top + 6, R.Left + ItemHeight - 6, R.Top + ItemHeight - 6);
-   Brush.Color := Self.Colors[Index].value;
-   if odSelected in State then
+    //background
+    Pen.Color := clWindow;
+    if odSelected in State then
+      Brush.Color := clHighlight
+    else
+      Brush.Color := self.Color; //clBtnFace;
+    FillRect(R);
+    MoveTo(R.Left, R.Bottom - 1);
+    LineTo(R.Right, R.Bottom - 1);
+    //swatches
+    SR := Classes.Rect(R.Left + 6, R.Top + 6, R.Left + ItemHeight - 6, R.Top + ItemHeight - 6);
+    Brush.Color := Self.Colors[Index].value;
+    if odSelected in State then
     begin
-     {$IFDEF DELPHI_7_UP}
-     if ThemeServices.ThemesEnabled then
+      {$IFDEF DELPHI_7_UP}
+      if ThemeServices.ThemesEnabled then
       begin
-       ThemeServices.DrawElement(Canvas.Handle, ThemeServices.GetElementDetails(teEditTextNormal), SR);
-       InflateRect(SR, -2, -2);
-       Brush.Color := Blend(Self.Colors[Index].value, clBlack, 80);
-       FillRect(SR);
-       InflateRect(SR, -1, -1);
-       Brush.Color := Blend(self.Colors[Index].value, clBlack, 90);
-       FillRect(SR);
-       InflateRect(SR, -1, -1);
-       Brush.Color := Self.Colors[Index].value;
-       FillRect(SR);
+        ThemeServices.DrawElement(Canvas.Handle, ThemeServices.GetElementDetails(teEditTextNormal), SR);
+        InflateRect(SR, -2, -2);
+        Brush.Color := Blend(Self.Colors[Index].value, clBlack, 80);
+        FillRect(SR);
+        InflateRect(SR, -1, -1);
+        Brush.Color := Blend(self.Colors[Index].value, clBlack, 90);
+        FillRect(SR);
+        InflateRect(SR, -1, -1);
+        Brush.Color := Self.Colors[Index].value;
+        FillRect(SR);
       end
-     else
-     //windows 9x
+      else
+      //windows 9x
       begin
      {$ENDIF}
-       Pen.Color := clBackground;
-       Brush.Color := clWindow;
-       Rectangle(SR);
-       InflateRect(SR, -1, -1);
-       FillRect(SR);
-       InflateRect(SR, 1, 1);
-       InflateRect(SR, -2, -2);
-       Brush.Color := Blend(Self.Colors[Index].value, clBlack, 75);
-       FillRect(SR);
-       InflateRect(SR, -1, -1);
-       Brush.Color := Blend(Self.Colors[Index].value, clBlack, 87);
-       FillRect(SR);
-       InflateRect(SR, -1, -1);
-       Brush.Color := Self.Colors[Index].value;
-       FillRect(SR);
-      {$IFDEF DELPHI_7_UP}
+        Pen.Color := clBackground;
+        Brush.Color := clWindow;
+        Rectangle(SR);
+        InflateRect(SR, -1, -1);
+        FillRect(SR);
+        InflateRect(SR, 1, 1);
+        InflateRect(SR, -2, -2);
+        Brush.Color := Blend(Self.Colors[Index].value, clBlack, 75);
+        FillRect(SR);
+        InflateRect(SR, -1, -1);
+        Brush.Color := Blend(Self.Colors[Index].value, clBlack, 87);
+        FillRect(SR);
+        InflateRect(SR, -1, -1);
+        Brush.Color := Self.Colors[Index].value;
+        FillRect(SR);
+       {$IFDEF DELPHI_7_UP}
       end;
       {$ENDIF}
     end
-   else
+    else
     //not selected
     begin
-     //windows XP
+      //windows XP
      {$IFDEF DELPHI_7_UP}
-     if ThemeServices.ThemesEnabled then
+      if ThemeServices.ThemesEnabled then
       begin
-       ThemeServices.DrawElement(Canvas.Handle, ThemeServices.GetElementDetails(teEditTextNormal), SR);
-       InflateRect(SR, -2, -2);
-       Brush.Color := Self.Colors[Index].value;
-       FillRect(SR);
+        ThemeServices.DrawElement(Canvas.Handle, ThemeServices.GetElementDetails(teEditTextNormal), SR);
+        InflateRect(SR, -2, -2);
+        Brush.Color := Self.Colors[Index].value;
+        FillRect(SR);
       end
-     else
-     //windows 9x
+      else
+      //windows 9x
       begin
      {$ENDIF}
-       DrawEdge(Canvas.Handle, SR, BDR_SUNKENOUTER, BF_RECT);
-       InflateRect(SR, -2, -2);
-       Brush.Color := Self.Colors[Index].value;
-       Pen.Color := clBlack;
-       Rectangle(SR);
-       InflateRect(SR, -1, -1);
-       FillRect(SR);
-       InflateRect(SR, 1, 1);
+        DrawEdge(Canvas.Handle, SR, BDR_SUNKENOUTER, BF_RECT);
+        InflateRect(SR, -2, -2);
+        Brush.Color := Self.Colors[Index].value;
+        Pen.Color := clBlack;
+        Rectangle(SR);
+        InflateRect(SR, -1, -1);
+        FillRect(SR);
+        InflateRect(SR, 1, 1);
       {$IFDEF DELPHI_7_UP}
       end;
       {$ENDIF}
     end;
-   //names
-   Font.Style := [fsBold];
-   if odSelected in State then
+    //names
+    Font.Style := [fsBold];
+    if odSelected in State then
     begin
-     Brush.Color := clHighlight;
-     Pen.Color := clHighlightText;
-     Font.Color := clHighlightText;
+      Brush.Color := clHighlight;
+      Pen.Color := clHighlightText;
+      Font.Color := clHighlightText;
     end
-   else
+    else
     begin
-     Brush.Color := clBtnFace;
-     Pen.Color := clWindowText;
-     Font.Color := clWindowText;
+      Brush.Color := clBtnFace;
+      Pen.Color := clWindowText;
+      Font.Color := clWindowText;
     end;
-  itemText := Items.Strings[Index];
-  Canvas.Brush.Style := bsClear;
-  TR := Classes.Rect(R.Left + ItemHeight, R.Top + (ItemHeight - TextHeight(itemText)) div 2, R.Right, R.Bottom - (ItemHeight - TextHeight(itemText)) div 2);
-  if Assigned(FDraw) then FDraw(Self, Index, Canvas.Font, itemText, odSelected in State);
-  DrawText(Canvas.Handle, PChar(itemText), Length(itemText), TR, DT_LEFT or DT_NOCLIP or DT_END_ELLIPSIS);
- end;
+    itemText := Items.Strings[Index];
+    Canvas.Brush.Style := bsClear;
+    TR := Classes.Rect(R.Left + ItemHeight, R.Top + (ItemHeight - TextHeight(itemText)) div 2, R.Right, R.Bottom - (ItemHeight - TextHeight(itemText)) div 2);
+    if Assigned(FDraw) then FDraw(Self, Index, Canvas.Font, itemText, odSelected in State);
+    DrawText(Canvas.Handle, PChar(itemText), Length(itemText), TR, DT_LEFT or DT_NOCLIP or DT_END_ELLIPSIS);
+  end;
 end;
 
 procedure TmbColorList.AddColor(Name: string; Value: TColor; refresh: boolean = true);
 var
- l: integer;
+  l: integer;
 begin
- l := Length(Colors);
- SetLength(Colors, l + 1);
- Colors[l].name := Name;
- Colors[l].value := Value;
- if refresh then
-  UpdateColors;
+  l := Length(Colors);
+  SetLength(Colors, l + 1);
+  Colors[l].name := Name;
+  Colors[l].value := Value;
+  if refresh then
+    UpdateColors;
 end;
 
 procedure TmbColorList.ClearColors;
 begin
- SetLength(Colors, 0);
- UpdateColors;
+  SetLength(Colors, 0);
+  UpdateColors;
 end;
 
 function TmbColorList.ColorCount: integer;
 begin
- Result := Length(Colors);
+  Result := Length(Colors);
 end;
 
 procedure TmbColorList.DeleteColor(Index: integer; refresh: boolean = true);
 var
- i: integer;
+  i: integer;
 begin
- if Length(Colors) = 0 then
-  begin
-   raise Exception.Create('There''s nothing to delete! The length of the array is 0.');
-   Exit;
-  end;
+  if Length(Colors) = 0 then
+    raise Exception.Create('There''s nothing to delete! The length of the array is 0.');
 
- if Index > Length(Colors) - 1 then
-  begin
-   raise Exception.Create(Format('List index out of bounds (%d)', [Index]));
-   Exit;
-  end;
+  if Index > Length(Colors) - 1 then
+    raise Exception.Create(Format('List index out of bounds (%d)', [Index]));
 
- for i := Index to Length(Colors) - 2 do
-  Colors[i] := Colors[i+1];
- SetLength(Colors, Length(Colors) - 1);
- if refresh then
-  UpdateColors;
+  for i := Index to Length(Colors) - 2 do
+    Colors[i] := Colors[i+1];
+  SetLength(Colors, Length(Colors) - 1);
+  if refresh then
+    UpdateColors;
 end;
 
 procedure TmbColorList.DeleteColorByName(Name: string; All: boolean);
 var
- i: integer;
+  i: integer;
 begin
- for i := Length(Colors) - 1 downto 0 do
-  if SameText(Colors[i].name, Name) then
-   begin
-    DeleteColor(i, false);
-    if not All then
-     begin
-      UpdateColors;
-      Exit;
-     end;
-   end;
- UpdateColors;
+  for i := Length(Colors) - 1 downto 0 do
+    if SameText(Colors[i].name, Name) then
+    begin
+      DeleteColor(i, false);
+      if not All then
+      begin
+        UpdateColors;
+        Exit;
+      end;
+    end;
+  UpdateColors;
 end;
 
 procedure TmbColorList.DeleteColorByValue(Value: TColor; All: boolean);
 var
- i: integer;
+  i: integer;
 begin
- for i := Length(Colors) - 1 downto 0 do
+  for i := Length(Colors) - 1 downto 0 do
   if Colors[i].Value = Value then
-   begin
+  begin
     DeleteColor(i, false);
     if not All then
-     begin
+    begin
       UpdateColors;
       Exit;
-     end;
-   end;
- UpdateColors;
+    end;
+  end;
+  UpdateColors;
 end;
 
 procedure TmbColorList.InsertColor(Index: integer; Name: string; Value: TColor);
 var
- i: integer;
+  i: integer;
 begin
- if Index > Length(Colors) - 1 then
-  begin
-   raise Exception.Create(Format('List index out of bounds (%d)', [Index]));
-   Exit;
-  end;
+  if Index > Length(Colors) - 1 then
+    raise Exception.Create(Format('List index out of bounds (%d)', [Index]));
 
- SetLength(Colors, Length(Colors) + 1);
- for i := Length(Colors) - 1 downto Index do
-  Colors[i] := Colors[i-1];
+  SetLength(Colors, Length(Colors) + 1);
+  for i := Length(Colors) - 1 downto Index do
+    Colors[i] := Colors[i-1];
 
- Colors[Index].Name := Name;
- Colors[Index].Value := Value;
+  Colors[Index].Name := Name;
+  Colors[Index].Value := Value;
 
- UpdateColors;
+  UpdateColors;
 end;
 
 procedure TmbColorList.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
- inherited;
- mx := x;
- my := y;
+  inherited;
+  mx := x;
+  my := y;
 end;
 
 procedure TmbColorList.CMHintShow(var Message: TCMHintShow);
 var
- Handled: boolean;
- i: integer;
+  Handled: boolean;
+  i: integer;
 begin
-if PtInRect(ClientRect, Point(mx, my)) and ShowHint then
- begin
-  i := ItemAtPos(Point(mx, my), true);
-  if i > -1 then
-   with TCMHintShow(Message) do
-    if not ShowHint then
-     Message.Result := 1
-    else
-     with HintInfo^ do
-      begin
-       Result := 0;
-       ReshowTimeout := 2000;
-       HideTimeout := 1000;
-       Handled := false;
-       if Assigned(FGetHint) then FGetHint(i, HintStr, Handled);
-       if Handled then
-        HintStr := FormatHint(HintStr, Colors[i].Value)
-       else
-        HintStr := Colors[i].Name;
-      end;
- end;
- inherited;
+  if PtInRect(ClientRect, Point(mx, my)) and ShowHint then
+  begin
+    i := ItemAtPos(Point(mx, my), true);
+    if i > -1 then
+      with TCMHintShow(Message) do
+        if not ShowHint then
+          Message.Result := 1
+        else
+          with HintInfo^ do
+          begin
+            Result := 0;
+            ReshowTimeout := 2000;
+            HideTimeout := 1000;
+            Handled := false;
+            if Assigned(FGetHint) then FGetHint(i, HintStr, Handled);
+            if Handled then
+              HintStr := FormatHint(HintStr, Colors[i].Value)
+            else
+              HintStr := Colors[i].Name;
+          end;
+  end;
+  inherited;
 end;
 
 end.

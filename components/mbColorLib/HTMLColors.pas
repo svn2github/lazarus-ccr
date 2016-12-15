@@ -137,19 +137,19 @@ function GetWebSafe(C: TColor): TColor;
 implementation
 
 var
- WS: array [0..255] of byte;
+  WS: array [0..255] of byte;
 
 //------------------------------------------------------------------------------
 
 //checks membership of a string array
 function IsMember(a: array of string; n: integer; s: string): boolean;
 var
- i: integer;
+  i: integer;
 begin
- Result := false;
- for i := 0 to n - 1 do
-  if SameText(s, a[i]) then
-   Result := true;
+  Result := false;
+  for i := 0 to n - 1 do
+    if SameText(s, a[i]) then
+      Result := true;
 end;
 
 //------------------------------------------------------------------------------
@@ -157,7 +157,7 @@ end;
 //checks if the color's nam was used instead of hex
 function IsSpecialColor(s: string): boolean;
 begin
- Result := IsMember(BASIC_NAMES, BASIC_COUNT, s) or IsMember(SPECIAL_NAMES, SPECIAL_COUNT, s) or IsMember(SYSTEM_NAMES, SYSTEM_COUNT, s);
+  Result := IsMember(BASIC_NAMES, BASIC_COUNT, s) or IsMember(SPECIAL_NAMES, SPECIAL_COUNT, s) or IsMember(SYSTEM_NAMES, SYSTEM_COUNT, s);
 end;
 
 //------------------------------------------------------------------------------
@@ -165,12 +165,12 @@ end;
 //is hex was used then remove the wrong characters
 procedure MakeIntoHex(var s: string);
 var
- i: integer;
+  i: integer;
 begin
-if s <> '' then
- for i := 1 to Length(s) do
-  if not (s[i] in ['0'..'9', 'A'..'F', 'a'..'f']) then
-   s[i] := '0';
+  if s <> '' then
+    for i := 1 to Length(s) do
+      if not (s[i] in ['0'..'9', 'A'..'F', 'a'..'f']) then
+        s[i] := '0';
 end;
 
 //------------------------------------------------------------------------------
@@ -178,35 +178,35 @@ end;
 //formats entered text into a true hex value
 function FormatHexColor(S: string): string;
 var
- c: string;
- i: integer;
+  c: string;
+  i: integer;
 begin
- c := '';
- if not IsSpecialColor(s) then
+  c := '';
+  if not IsSpecialColor(s) then
   begin
-   if (s <> '') and (s[1] = '#') then
-    Delete(s, 1, 1);
+    if (s <> '') and (s[1] = '#') then
+      Delete(s, 1, 1);
 
-   if s <> '' then
+    if s <> '' then
     begin
-     MakeIntoHex(c);
-     if Length(c) = 6 then
-      Result := c
-     else
+      MakeIntoHex(c);
+      if Length(c) = 6 then
+        Result := c
+      else
       begin
-       if Length(c) > 6 then
-        c := Copy(c, 1, 6);
-       if Length(c) < 6 then
-        for i := 0 to 6 - Length(c) - 1 do
-          c := '0' + c;
-       Result := c;
+        if Length(c) > 6 then
+          c := Copy(c, 1, 6);
+        if Length(c) < 6 then
+          for i := 0 to 6 - Length(c) - 1 do
+            c := '0' + c;
+        Result := c;
       end;
     end
-   else
-    Result := '000000';
+    else
+      Result := '000000';
   end
- else
-  Result := s;
+  else
+    Result := s;
 end;
 
 //------------------------------------------------------------------------------
@@ -214,16 +214,16 @@ end;
 //gets a hex value from a color name from special colors
 function GetHexFromName(s: string): string;
 var
- i, k: integer;
+  i, k: integer;
 begin
- k := 0;
- for i := 0 to SPECIAL_COUNT - 1 do
-  if SameText(s, SPECIAL_NAMES[i]) then
-   begin
-    k := i;
-    Break;
-   end;
- Result := SPECIAL_HEX[k];
+  k := 0;
+  for i := 0 to SPECIAL_COUNT - 1 do
+    if SameText(s, SPECIAL_NAMES[i]) then
+    begin
+      k := i;
+      Break;
+    end;
+  Result := SPECIAL_HEX[k];
 end;
 
 //------------------------------------------------------------------------------
@@ -231,33 +231,32 @@ end;
 // gets a TColor value from a color name from basic or system colors
 function GetValueFromName(s: string): TColor;
 var
- i, k: integer;
+  i, k: integer;
 begin
- k := 0;
- s := LowerCase(s);
- if IsMember(BASIC_NAMES, BASIC_COUNT, s) then
+  k := 0;
+  s := LowerCase(s);
+  if IsMember(BASIC_NAMES, BASIC_COUNT, s) then
   begin
-   for i := 0 to BASIC_COUNT - 1 do
-    if SameText(s, BASIC_NAMES[i]) then
-     begin
-      k := i;
-      Break;
-     end;
-   Result := BASIC_VALUES[k];
-  end
- else
-  if IsMember(SYSTEM_NAMES, SYSTEM_COUNT, s) then
-   begin
-    for i := 0 to SYSTEM_COUNT - 1 do
-     if SameText(s, SYSTEM_NAMES[i]) then
+    for i := 0 to BASIC_COUNT - 1 do
+      if SameText(s, BASIC_NAMES[i]) then
       begin
-       k := i;
-       Break;
+        k := i;
+        Break;
+      end;
+    Result := BASIC_VALUES[k];
+  end
+  else if IsMember(SYSTEM_NAMES, SYSTEM_COUNT, s) then
+  begin
+    for i := 0 to SYSTEM_COUNT - 1 do
+      if SameText(s, SYSTEM_NAMES[i]) then
+      begin
+        k := i;
+        Break;
       end;
     Result := SYSTEM_VALUES[k];
-   end
+  end
   else
-   Result := clNone;
+    Result := clNone;
 end;
 
 //------------------------------------------------------------------------------
@@ -276,27 +275,26 @@ end;
 //converts a hex value to a TColor
 function HexToTColor(s: OleVariant): TColor;
 begin
- if s <> null then
+  if s <> null then
   begin
-   if not IsSpecialColor(s) then
+    if not IsSpecialColor(s) then
     begin
-     s := FormatHexColor(s);
-     if s <> '' then
-      Result := RGB(StrToInt('$'+Copy(S, 1, 2)), StrToInt('$'+Copy(S, 3, 2)), StrToInt('$'+Copy(S, 5, 2)))
-     else
-      Result := clNone;
+      s := FormatHexColor(s);
+      if s <> '' then
+        Result := RGB(StrToInt('$'+Copy(S, 1, 2)), StrToInt('$'+Copy(S, 3, 2)), StrToInt('$'+Copy(S, 5, 2)))
+      else
+        Result := clNone;
     end
-   else
-    if IsMember(SPECIAL_NAMES, SPECIAL_COUNT, s) then
-     begin
+    else if IsMember(SPECIAL_NAMES, SPECIAL_COUNT, s) then
+    begin
       s := GetHexFromName(s);
       Result := RGB(StrToInt('$'+Copy(S, 1, 2)), StrToInt('$'+Copy(S, 3, 2)), StrToInt('$'+Copy(S, 5, 2)));
-     end
+    end
     else
-     Result := GetValueFromName(s);
+      Result := GetValueFromName(s);
   end
- else
-  Result := clNone;
+  else
+    Result := clNone;
 end;
 
 //------------------------------------------------------------------------------
@@ -304,8 +302,8 @@ end;
 //checks if a hex value belongs to the websafe palette
 function IsWebSafe(s: string): boolean;
 begin
- s := FormatHexColor(s);
- Result := IsMember(WEBSAFE_HEX, WEBSAFE_COUNT, s);
+  s := FormatHexColor(s);
+  Result := IsMember(WEBSAFE_HEX, WEBSAFE_COUNT, s);
 end;
 
 //------------------------------------------------------------------------------
@@ -313,34 +311,34 @@ end;
 //checks if a color belongs to the websafe palette
 function IsWebSafe(c: TColor): boolean;
 var
- s: string;
+  s: string;
 begin
- s  := ColorToHex(c);
- Result := IsMember(WEBSAFE_HEX, WEBSAFE_COUNT, s);
+  s  := ColorToHex(c);
+  Result := IsMember(WEBSAFE_HEX, WEBSAFE_COUNT, s);
 end;
 
 //------------------------------------------------------------------------------
 
 //initializes the websafe comparison array
 procedure InitializeWS;
- var
-   i: integer;
- begin
+var
+  i: integer;
+begin
   for i := 0 to 255 do
-   WS[I] := ((i + $19) div $33) * $33;
- end;
+    WS[I] := ((i + $19) div $33) * $33;
+end;
 
 //------------------------------------------------------------------------------
 
 //returns the closest web safe color to the one given
 function GetWebSafe(C: TColor): TColor;
 begin
- Result := RGB(WS[GetRValue(C)], WS[GetGValue(C)], WS[GetBValue(C)]);
+  Result := RGB(WS[GetRValue(C)], WS[GetGValue(C)], WS[GetBValue(C)]);
 end;
 
 //------------------------------------------------------------------------------
 
 initialization
- InitializeWS;
+  InitializeWS;
 
 end.

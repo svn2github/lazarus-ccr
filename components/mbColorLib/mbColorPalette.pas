@@ -177,45 +177,45 @@ implementation
 
 constructor TmbColorPalette.Create(AOwner: TComponent);
 begin
- inherited Create(AOwner);
+  inherited Create(AOwner);
 // ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
 // DoubleBuffered := true;
 // PBack := TBitmap.Create;
 // PBack.PixelFormat := pf32bit;
- FTempBmp := TBitmap.Create;
+  FTempBmp := TBitmap.Create;
  //FTempBmp.PixelFormat := pf32bit;
- {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
- ParentBackground := true;
- {$ENDIF} {$ENDIF}
- TabStop := true;
- ParentShowHint := true;
- ShowHint := false;
- Width := 180;
- Height := 126;
- FMouseLoc := mlNone;
- FMouseOver := false;
- FMouseDown := false;
- FColCount := 0;
- FRowCount := 0;
- FIndex := -1;
- FCheckedIndex := -1;
- FTop := 0;
- FLeft := 0;
- FCellSize := 18;
- FState := ccsNone;
- FNames := TStringList.Create;
- FColors := TStringList.Create;
- (FColors as TStringList).OnChange := ColorsChange;
- FTotalCells := 0;
- FHintFormat := 'RGB(%r, %g, %b)'#13'Hex: %hex';
- FAutoHeight := false;
- FMinColors := 0;
- FMaxColors := 0;
- FSort := smNone;
- FOrder := soAscending;
- FOld := clNone;
- FTStyle := tsNone;
- FCellStyle := csDefault;
+  {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
+  ParentBackground := true;
+  {$ENDIF} {$ENDIF}
+  TabStop := true;
+  ParentShowHint := true;
+  ShowHint := false;
+  Width := 180;
+  Height := 126;
+  FMouseLoc := mlNone;
+  FMouseOver := false;
+  FMouseDown := false;
+  FColCount := 0;
+  FRowCount := 0;
+  FIndex := -1;
+  FCheckedIndex := -1;
+  FTop := 0;
+  FLeft := 0;
+  FCellSize := 18;
+  FState := ccsNone;
+  FNames := TStringList.Create;
+  FColors := TStringList.Create;
+  (FColors as TStringList).OnChange := ColorsChange;
+  FTotalCells := 0;
+  FHintFormat := 'RGB(%r, %g, %b)'#13'Hex: %hex';
+  FAutoHeight := false;
+  FMinColors := 0;
+  FMaxColors := 0;
+  FSort := smNone;
+  FOrder := soAscending;
+  FOld := clNone;
+  FTStyle := tsNone;
+  FCellStyle := csDefault;
 end;
 
 destructor TmbColorPalette.Destroy;
@@ -254,9 +254,9 @@ end;
 
 procedure TmbColorPalette.CreateWnd;
 begin
- inherited;
- CalcAutoHeight;
- Invalidate;
+  inherited;
+  CalcAutoHeight;
+  Invalidate;
 end;
                    (*
 procedure TmbColorPalette.PaintParentBack;
@@ -578,110 +578,109 @@ end;
 
 procedure TmbColorPalette.PaintTransparentGlyph(ACanvas: TCanvas; R: TRect);
 begin
- InflateRect(R, -3, -3);
- if FCellStyle = csCorel then
+  InflateRect(R, -3, -3);
+  if FCellStyle = csCorel then
   begin
-   if FState <> ccsNone then
-    InflateRect(R, -2, -2)
-   else
-    if FColCount > 1 then
-     Inc(R.Right);
+    if FState <> ccsNone then
+      InflateRect(R, -2, -2)
+    else if FColCount > 1 then
+      Inc(R.Right);
   end;
- with ACanvas do
-  case FTStyle of
-   tsPhotoshop:
-    begin
-     if Enabled then
-      Pen.Color := clBtnShadow
-     else
-      Pen.Color := clGray;
-     Brush.Color := clWhite;
-     Rectangle(R);
-     Brush.Color := clSilver;
-     FillRect(Rect(R.Left + (R.Right - R.Left) div 2, R.Top + 1, R.Right - 1, R.Top + (R.Bottom - R.Top) div 2));
-     FillRect(Rect(R.Left + 1, R.Top + (R.Bottom - R.Top) div 2, R.Left + (R.Right - R.Left) div 2, R.Bottom - 1));
+  with ACanvas do
+    case FTStyle of
+      tsPhotoshop:
+        begin
+          if Enabled then
+            Pen.Color := clBtnShadow
+          else
+            Pen.Color := clGray;
+          Brush.Color := clWhite;
+          Rectangle(R);
+          Brush.Color := clSilver;
+          FillRect(Rect(R.Left + (R.Right - R.Left) div 2, R.Top + 1, R.Right - 1, R.Top + (R.Bottom - R.Top) div 2));
+          FillRect(Rect(R.Left + 1, R.Top + (R.Bottom - R.Top) div 2, R.Left + (R.Right - R.Left) div 2, R.Bottom - 1));
+        end;
+      tsPhotoshop2:
+        begin
+          InflateRect(R, -1, -1);
+          Brush.Color := clWhite;
+          Rectangle(R);
+          Pen.Color := clRed;
+          Pen.Width := 2;
+          InflateRect(R, 1, 1);
+          MoveTo(R.Left, R.Top);
+          LineTo(R.Right - 1, R.Bottom - 1);
+          Pen.Width := 1;
+          Pen.Color := clBlack;
+        end;
+      tsCorel:
+        begin
+          if FCellStyle = csCorel then
+          begin
+            Pen.Color := clBlack;
+            InflateRect(R, 3, 3);
+            Brush.Color := clWhite;
+            Rectangle(R);
+            //the \ line
+            MoveTo(R.Left, R.Top);
+            LineTo(R.Right, R.Bottom);
+            //the / line
+            MoveTo(R.Right-1, R.Top);
+            LineTo(R.Left-1, R.Bottom);
+          end
+          else
+          begin
+            if Enabled then
+              Pen.Color := clBtnShadow
+            else
+              Pen.Color := clGray;
+            Brush.Color := clWhite;
+            Rectangle(R);
+            MoveTo(R.Left, R.Top);
+            LineTo(R.Right, R.Bottom);
+            MoveTo(R.Right - 1, R.Top);
+            LineTo(R.Left - 1, R.Bottom);
+          end;
+        end;
+      tsMicroangelo:
+        begin
+          InflateRect(R, -1, -1);
+          Dec(R.Bottom);
+          Pen.Color := clBlack;
+          Brush.Color := clTeal;
+          Rectangle(R);
+          Pixels[R.Left + 2, R.Top + 2] := clWhite;
+          Pixels[R.Left + (R.Right - R.Left) div 2, R.Bottom] := clBlack;
+          MoveTo(R.Left + (R.Right - R.Left) div 2 - 2, R.Bottom + 1);
+          LineTo(R.Left + (R.Right - R.Left) div 2 + 3, R.Bottom + 1);
+        end;
     end;
-   tsPhotoshop2:
-    begin
-     InflateRect(R, -1, -1);
-     Brush.Color := clWhite;
-     Rectangle(R);
-     Pen.Color := clRed;
-     Pen.Width := 2;
-     InflateRect(R, 1, 1);
-     MoveTo(R.Left, R.Top);
-     LineTo(R.Right - 1, R.Bottom - 1);
-     Pen.Width := 1;
-     Pen.Color := clBlack;
-    end;
-   tsCorel:
-    begin
-     if FCellStyle = csCorel then
-      begin
-       Pen.Color := clBlack;
-       InflateRect(R, 3, 3);
-       Brush.Color := clWhite;
-       Rectangle(R);
-       //the \ line
-       MoveTo(R.Left, R.Top);
-       LineTo(R.Right, R.Bottom);
-       //the / line
-       MoveTo(R.Right-1, R.Top);
-       LineTo(R.Left-1, R.Bottom);
-      end
-     else
-      begin
-       if Enabled then
-        Pen.Color := clBtnShadow
-       else
-        Pen.Color := clGray;
-       Brush.Color := clWhite;
-       Rectangle(R);
-       MoveTo(R.Left, R.Top);
-       LineTo(R.Right, R.Bottom);
-       MoveTo(R.Right - 1, R.Top);
-       LineTo(R.Left - 1, R.Bottom);
-      end;
-    end;
-   tsMicroangelo:
-    begin
-     InflateRect(R, -1, -1);
-     Dec(R.Bottom);
-     Pen.Color := clBlack;
-     Brush.Color := clTeal;
-     Rectangle(R);
-     Pixels[R.Left + 2, R.Top + 2] := clWhite;
-     Pixels[R.Left + (R.Right - R.Left) div 2, R.Bottom] := clBlack;
-     MoveTo(R.Left + (R.Right - R.Left) div 2 - 2, R.Bottom + 1);
-     LineTo(R.Left + (R.Right - R.Left) div 2 + 3, R.Bottom + 1);
-    end;
-  end;
 end;
 
 procedure TmbColorPalette.Resize;
 begin
- inherited;
- //CalcAutoHeight;    // wp: will cause a ChangedBounds endless loop
- Invalidate;
+  inherited;
+  //CalcAutoHeight;    // wp: will cause a ChangedBounds endless loop
+  Invalidate;
 end;
 
 procedure TmbColorPalette.CMMouseEnter(
   var Message: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF} );
 begin
- FMouseOver := true;
- FMouseLoc := mlOver;
- Invalidate;
- inherited;
+  FMouseOver := true;
+  FMouseLoc := mlOver;
+  Invalidate;
+  inherited;
 end;
 
 procedure TmbColorPalette.CMMouseLeave(
   var Message: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF} );
 begin
- FMouseOver := false;
- FMouseLoc := mlNone;
- FIndex := -1;
- Invalidate;
- inherited;
+  FMouseOver := false;
+  FMouseLoc := mlNone;
+  FIndex := -1;
+  Invalidate;
+  inherited;
 end;
 
 procedure TmbColorPalette.MouseMove(Shift: TShiftState; X, Y: Integer);
@@ -700,25 +699,25 @@ end;
 
 procedure TmbColorPalette.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-if Button = mbLeft then
- begin
-  SetFocus;
-  FMouseDown := true;
-  FMouseLoc := mlDown;
-  if (y div FCellSize)* FColCount + (x div FCellSize) <= FTotalCells then
-   if FCheckedIndex <> (y div FCellSize)* FColCount + (x div FCellSize) then
-    begin
-     FOldIndex := FCheckedIndex;
-     FCheckedIndex := (y div FCellSize)* FColCount + (x div FCellSize);
-    end;
-  Invalidate;
- end;
- inherited;
+  if Button = mbLeft then
+  begin
+    SetFocus;
+    FMouseDown := true;
+    FMouseLoc := mlDown;
+    if (y div FCellSize)* FColCount + (x div FCellSize) <= FTotalCells then
+      if FCheckedIndex <> (y div FCellSize)* FColCount + (x div FCellSize) then
+      begin
+        FOldIndex := FCheckedIndex;
+        FCheckedIndex := (y div FCellSize)* FColCount + (x div FCellSize);
+      end;
+    Invalidate;
+  end;
+  inherited;
 end;
 
 procedure TmbColorPalette.Click;
 begin
- inherited;
+  inherited;
 end;
 
 procedure TmbColorPalette.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -815,171 +814,173 @@ end;
 
 procedure TmbColorPalette.SetCellStyle(s: TCellStyle);
 begin
- if FCellStyle <> s then
+  if FCellStyle <> s then
   begin
-   FCellStyle := s;
-   Invalidate;
+    FCellStyle := s;
+    Invalidate;
   end;
 end;
 
 procedure TmbColorPalette.SetSelColor(k: TColor);
 var
- s: string;
- i: integer;
+  s: string;
+  i: integer;
 begin
- s := mbColorToString(k);
- for i:= 0 to FColors.Count - 1 do
-  if SameText(s, FColors.Strings[i]) then
-   begin
-    FCheckedIndex := i;
-    Break;
-   end
-  else
-   FCheckedIndex := -1;
- Invalidate;
- FOld := k;
- if Assigned(FOnChange) then FOnChange(Self);
+  s := mbColorToString(k);
+  for i:= 0 to FColors.Count - 1 do
+    if SameText(s, FColors.Strings[i]) then
+    begin
+      FCheckedIndex := i;
+      Break;
+    end
+    else
+      FCheckedIndex := -1;
+  Invalidate;
+  FOld := k;
+  if Assigned(FOnChange) then FOnChange(Self);
 end;
 
 procedure TmbColorPalette.SetStrings(s: TStrings);
 var
- i: integer;
+  i: integer;
 begin
- FColors.Clear;
- FColors.AddStrings(s);
- if FColors.Count < FMinColors then
-  for i := 0 to FMinColors - FColors.Count - 1 do
-   FColors.Add('clNone');
- if (FColors.Count > FMaxColors) and (FMaxColors > 0) then
-  for i := FColors.Count - 1 downto FMaxColors do
-   FColors.Delete(i);
- CalcAutoHeight;
- SortColors;
- Invalidate;
+  FColors.Clear;
+  FColors.AddStrings(s);
+  if FColors.Count < FMinColors then
+    for i := 0 to FMinColors - FColors.Count - 1 do
+      FColors.Add('clNone');
+  if (FColors.Count > FMaxColors) and (FMaxColors > 0) then
+    for i := FColors.Count - 1 downto FMaxColors do
+      FColors.Delete(i);
+  CalcAutoHeight;
+  SortColors;
+  Invalidate;
 end;
 
 procedure TmbColorPalette.SetNames(n: TStrings);
 var
- i: integer;
+  i: integer;
 begin
- FNames.Clear;
- FNames.AddStrings(n);
- if (FNames.Count > FMaxColors) and (FMaxColors > 0) then
-  for i := FNames.Count - 1 downto FMaxColors do
-   FNames.Delete(i);
+  FNames.Clear;
+  FNames.AddStrings(n);
+  if (FNames.Count > FMaxColors) and (FMaxColors > 0) then
+    for i := FNames.Count - 1 downto FMaxColors do
+      FNames.Delete(i);
 end;
 
 function TmbColorPalette.GetMoveCellIndex(move: TMoveDirection): integer;
 var
- FBefore: integer;
+  FBefore: integer;
 begin
- Result := -1;
- case move of
-  mdLeft:
-   if FCheckedIndex -1 < 0 then
-    Result := FTotalCells
-   else
-    Result := FCheckedIndex - 1;
-  mdRight:
-   if FCheckedIndex + 1 > FTotalCells then
-    Result := 0
-   else
-    Result := FCheckedIndex + 1;
-  mdUp:
-   if FCheckedIndex - FColCount < 0 then
-    begin
-     FBefore := (FTotalcells div FColCount) * FColCount;
-     if FBefore + FCheckedIndex - 1 > FTotalCells then Dec(FBefore, FColCount);
-     Result := FBefore + FCheckedIndex - 1;
-    end
-   else
-    Result := FCheckedIndex - FColCount;
-  mdDown:
-   if FCheckedIndex + FColCount > FTotalCells then
-    Result := FCheckedIndex mod FColCount + 1
-   else
-    Result := FCheckedIndex + FColCount;
- end;
- if Result > FColors.Count - 1 then
-  Result := 0;
+  Result := -1;
+  case move of
+    mdLeft:
+      if FCheckedIndex -1 < 0 then
+        Result := FTotalCells
+      else
+        Result := FCheckedIndex - 1;
+    mdRight:
+      if FCheckedIndex + 1 > FTotalCells then
+        Result := 0
+      else
+        Result := FCheckedIndex + 1;
+    mdUp:
+      if FCheckedIndex - FColCount < 0 then
+      begin
+        FBefore := (FTotalcells div FColCount) * FColCount;
+        if FBefore + FCheckedIndex - 1 > FTotalCells then Dec(FBefore, FColCount);
+        Result := FBefore + FCheckedIndex - 1;
+      end
+      else
+        Result := FCheckedIndex - FColCount;
+    mdDown:
+      if FCheckedIndex + FColCount > FTotalCells then
+        Result := FCheckedIndex mod FColCount + 1
+      else
+        Result := FCheckedIndex + FColCount;
+  end;
+  if Result > FColors.Count - 1 then
+    Result := 0;
 end;
 
 procedure TmbColorPalette.CNKeyDown(
   var Message: {$IFDEF DELPHI}TWMKeyDown{$ELSE}TLMKeyDown{$ENDIF} );
 var
- FInherited: boolean;
- Shift: TShiftState;
+  FInherited: boolean;
+  Shift: TShiftState;
 begin
- Shift := KeyDataToShiftState(Message.KeyData);
- Finherited := false;
- case Message.CharCode of
-  VK_LEFT:
-   begin
-    FCheckedIndex := GetMoveCellIndex(mdLeft);
-    if Assigned(FOnArrowKey) then FOnArrowKey(Message.CharCode, Shift);
-   end;
-  VK_RIGHT:
-   begin
-    FCheckedIndex := GetMoveCellIndex(mdRight);
-    if Assigned(FOnArrowKey) then FOnArrowKey(Message.CharCode, Shift);
-   end;
-  VK_UP:
-   begin
-    FCheckedIndex := GetMoveCellIndex(mdUp);
-    if Assigned(FOnArrowKey) then FOnArrowKey(Message.CharCode, Shift);
-   end;
-  VK_DOWN:
-   begin
-    FCheckedIndex := GetMoveCellIndex(mdDown);
-    if Assigned(FOnArrowKey) then FOnArrowKey(Message.CharCode, Shift);
-   end;
-  VK_SPACE, VK_RETURN: if Assigned(FOnChange) then FOnChange(Self);
- else
-  begin
-   FInherited := true;
-   inherited;
+  Shift := KeyDataToShiftState(Message.KeyData);
+  Finherited := false;
+  case Message.CharCode of
+    VK_LEFT:
+      begin
+        FCheckedIndex := GetMoveCellIndex(mdLeft);
+        if Assigned(FOnArrowKey) then FOnArrowKey(Message.CharCode, Shift);
+      end;
+    VK_RIGHT:
+      begin
+        FCheckedIndex := GetMoveCellIndex(mdRight);
+        if Assigned(FOnArrowKey) then FOnArrowKey(Message.CharCode, Shift);
+      end;
+    VK_UP:
+      begin
+       FCheckedIndex := GetMoveCellIndex(mdUp);
+       if Assigned(FOnArrowKey) then FOnArrowKey(Message.CharCode, Shift);
+      end;
+    VK_DOWN:
+      begin
+        FCheckedIndex := GetMoveCellIndex(mdDown);
+        if Assigned(FOnArrowKey) then FOnArrowKey(Message.CharCode, Shift);
+      end;
+    VK_SPACE, VK_RETURN:
+      if Assigned(FOnChange) then FOnChange(Self);
+  else
+    begin
+      FInherited := true;
+      inherited;
+    end;
   end;
- end;
- if not FInherited then
+  if not FInherited then
   begin
-   Invalidate;
-   if Assigned(OnKeyDown) then OnKeyDown(Self, Message.CharCode, Shift);
-   if Assigned(FOnChange) then FOnChange(Self);
+    Invalidate;
+    if Assigned(OnKeyDown) then OnKeyDown(Self, Message.CharCode, Shift);
+    if Assigned(FOnChange) then FOnChange(Self);
   end;
 end;
 
 procedure TmbColorPalette.CMHintShow(
   var Message: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF} );
 var
- clr: TColor;
- Handled: boolean;
+  clr: TColor;
+  Handled: boolean;
 begin
-if (Colors.Count > 0) and (FIndex > -1) then
- with TCMHintShow(Message) do
+  if (Colors.Count > 0) and (FIndex > -1) then
+  with TCMHintShow(Message) do
   begin
-   if not ShowHint then
-    Message.Result := 1
-   else
+    if not ShowHint then
+      Message.Result := 1
+    else
     begin
-     with HintInfo^ do
+      with HintInfo^ do
       begin
-       // show that we want a hint
-       Result := 0;
-       ReshowTimeout := 1;
-       HideTimeout := 5000;
-       clr := GetColorUnderCursor;
-       //fire event
-       Handled := false;
-       if Assigned(FOnGetHintText) then FOnGetHintText(clr, GetIndexUnderCursor, HintStr, Handled);
-       if Handled then Exit;
-       //do default
-       if FIndex < FNames.Count then
-        HintStr := FNames.Strings[FIndex]
-       else
-        if SameText(FColors.Strings[GetIndexUnderCursor], 'clCustom') or SameText(FColors.Strings[GetIndexUnderCursor], 'clTransparent') then
-         HintStr := StringReplace(FColors.Strings[GetIndexUnderCursor], 'cl', '', [rfReplaceAll])
+        // show that we want a hint
+        Result := 0;
+        ReshowTimeout := 1;
+        HideTimeout := 5000;
+        clr := GetColorUnderCursor;
+        //fire event
+        Handled := false;
+        if Assigned(FOnGetHintText) then
+          FOnGetHintText(clr, GetIndexUnderCursor, HintStr, Handled);
+        if Handled then Exit;
+        //do default
+        if FIndex < FNames.Count then
+          HintStr := FNames.Strings[FIndex]
         else
-         HintStr := FormatHint(FHintFormat, GetColorUnderCursor);
+        if SameText(FColors.Strings[GetIndexUnderCursor], 'clCustom') or SameText(FColors.Strings[GetIndexUnderCursor], 'clTransparent') then
+          HintStr := StringReplace(FColors.Strings[GetIndexUnderCursor], 'cl', '', [rfReplaceAll])
+        else
+          HintStr := FormatHint(FHintFormat, GetColorUnderCursor);
       end;
     end;
   end;
@@ -987,181 +988,179 @@ end;
 
 procedure TmbColorPalette.SetAutoHeight(auto: boolean);
 begin
- FAutoHeight := auto;
- CalcAutoHeight;
- Invalidate;
+  FAutoHeight := auto;
+  CalcAutoHeight;
+  Invalidate;
 end;
 
 procedure TmbColorPalette.SetMinColors(m: integer);
 var
- i: integer;
+  i: integer;
 begin
- if (FMaxColors > 0) and (m > FMaxColors) then
-  m := FMaxColors;
- FMinColors := m;
- if FColors.Count < m then
-  for i := 0 to m - FColors.Count - 1 do
-   FColors.Add('clNone');
- CalcAutoHeight;
- SortColors;
- Invalidate;
+  if (FMaxColors > 0) and (m > FMaxColors) then
+    m := FMaxColors;
+  FMinColors := m;
+  if FColors.Count < m then
+    for i := 0 to m - FColors.Count - 1 do
+      FColors.Add('clNone');
+  CalcAutoHeight;
+  SortColors;
+  Invalidate;
 end;
 
 procedure TmbColorPalette.SetMaxColors(m: integer);
 var
- i: integer;
+  i: integer;
 begin
- if m < 0 then m := 0;
- FMaxColors := m;
- if (m < FMinColors) and (m > 0) then
-  SetMinColors(m);
- if (FColors.Count > FMaxColors) and (FMaxColors > 0) then
-  for i := FColors.Count - 1 downto FMaxColors do
-   FColors.Delete(i);
- CalcAutoHeight;
- SortColors;
- Invalidate;
+  if m < 0 then m := 0;
+  FMaxColors := m;
+  if (m < FMinColors) and (m > 0) then
+    SetMinColors(m);
+  if (FColors.Count > FMaxColors) and (FMaxColors > 0) then
+    for i := FColors.Count - 1 downto FMaxColors do
+      FColors.Delete(i);
+  CalcAutoHeight;
+  SortColors;
+  Invalidate;
 end;
 
 procedure TmbColorPalette.SetSortMode(s: TSortMode);
 begin
- if FSort <> s then
+  if FSort <> s then
   begin
-   FSort := s;
-   SortColors;
-   Invalidate;
+    FSort := s;
+    SortColors;
+    Invalidate;
   end;
 end;
 
 procedure TmbColorPalette.SetSortOrder(s: TSortOrder);
 begin
- if FOrder <> s then
+  if FOrder <> s then
   begin
-   FOrder := s;
-   SortColors;
-   Invalidate;
+    FOrder := s;
+    SortColors;
+    Invalidate;
   end;
 end;
 
 procedure TmbColorPalette.ColorsChange(Sender: TObject);
 begin
- if Assigned(FOnColorsChange) then FOnColorsChange(Self);
- FTotalCells := FColors.Count - 1;
- CalcAutoHeight;
- Invalidate;
+  if Assigned(FOnColorsChange) then FOnColorsChange(Self);
+  FTotalCells := FColors.Count - 1;
+  CalcAutoHeight;
+  Invalidate;
 end;
 
 procedure TmbColorPalette.SetCellSize(s: integer);
 begin
- FCellSize := s;
- CalcAutoHeight;
- Invalidate;
+  FCellSize := s;
+  CalcAutoHeight;
+  Invalidate;
 end;
 
 function TmbColorPalette.GetSelectedCellRect: TRect;
 var
- row, fbottom, fleft: integer;
+  row, fbottom, fleft: integer;
 begin
- if FCheckedIndex > -1 then
+  if FCheckedIndex > -1 then
   begin
-   if FCheckedIndex mod FColCount = 0 then
+    if FCheckedIndex mod FColCount = 0 then
     begin
-     row := FCheckedIndex div FColCount;
-     fleft := Width - FCellSize;
+      row := FCheckedIndex div FColCount;
+      fleft := Width - FCellSize;
     end
-   else
+    else
     begin
-     row := FCheckedIndex div FColCount + 1;
-     fleft := (FCheckedIndex mod FColCount - 1) * FCellSize;
+      row := FCheckedIndex div FColCount + 1;
+      fleft := (FCheckedIndex mod FColCount - 1) * FCellSize;
     end;
-   fbottom := row * FCellSize;
-   Result := Rect(fleft, fbottom - FCellSize, fleft + FCellSize, fbottom);
+    fbottom := row * FCellSize;
+    Result := Rect(fleft, fbottom - FCellSize, fleft + FCellSize, fbottom);
   end
- else
-  Result := Rect(0, 0, 0, 0);
+  else
+    Result := Rect(0, 0, 0, 0);
 end;
 
 procedure TmbColorPalette.GeneratePalette(BaseColor: TColor);
 begin
- FColors.Text := MakePalette(BaseColor, FOrder);
- CalcAutoHeight;
- SortColors;
- Invalidate;
- if Assigned(FOnChange) then FOnChange(Self);
+  FColors.Text := MakePalette(BaseColor, FOrder);
+  CalcAutoHeight;
+  SortColors;
+  Invalidate;
+  if Assigned(FOnChange) then FOnChange(Self);
 end;
 
 procedure TmbColorPalette.GenerateGradientPalette(Colors: array of TColor);
 begin
- FColors.Text := MakeGradientPalette(Colors);
- CalcAutoHeight;
- SortColors;
- Invalidate;
- if Assigned(FOnChange) then FOnChange(Self);
+  FColors.Text := MakeGradientPalette(Colors);
+  CalcAutoHeight;
+  SortColors;
+  Invalidate;
+  if Assigned(FOnChange) then FOnChange(Self);
 end;
 
 procedure TmbColorPalette.LoadPalette(FileName: TFileName);
 var
- supported: boolean;
- a: AcoColors;
- i: integer;
+  supported: boolean;
+  a: AcoColors;
+  i: integer;
 begin
- supported := false;
- if SameText(ExtractFileExt(FileName), '.pal') then
+  supported := false;
+  if SameText(ExtractFileExt(FileName), '.pal') then
   begin
-   supported := true;
-   FNames.Clear;
-   FColors.Text := ReadJASCPal(FileName);
+    supported := true;
+    FNames.Clear;
+    FColors.Text := ReadJASCPal(FileName);
   end
- else
-  if SameText(ExtractFileExt(FileName), '.aco') then
-   begin
+  else if SameText(ExtractFileExt(FileName), '.aco') then
+  begin
     supported := true;
     a := ReadPhotoshopAco(FileName);
     FColors.Clear;
     for i := 0 to Length(a.Colors) - 1 do
-     FColors.Add(ColorToString(a.Colors[i]));
+      FColors.Add(ColorToString(a.Colors[i]));
     FNames.Clear;
     if a.HasNames then
-     for i := 0 to Length(a.Names) - 1 do
-      FNames.Add(a.Names[i]);
-   end
-  else
-   if SameText(ExtractFileExt(FileName), '.act') then
-    begin
-     supported := true;
-     FNames.Clear;
-     FColors.Text := ReadPhotoshopAct(FileName);
-    end
-   else
-    Exception.Create('The file format you are trying to load is not supported in this version of the palette'#13'Please send a request to MXS along with the files of this format so'#13'loading support for this file can be added too');
- if supported then
+      for i := 0 to Length(a.Names) - 1 do
+        FNames.Add(a.Names[i]);
+  end
+  else if SameText(ExtractFileExt(FileName), '.act') then
   begin
-   CalcAutoHeight;
-   SortColors;
-   Invalidate;
-   if Assigned(FOnChange) then FOnChange(Self);
+   supported := true;
+   FNames.Clear;
+   FColors.Text := ReadPhotoshopAct(FileName);
+  end
+  else
+    raise Exception.Create('The file format you are trying to load is not supported in this version of the palette'#13'Please send a request to MXS along with the files of this format so'#13'loading support for this file can be added too');
+  if supported then
+  begin
+    CalcAutoHeight;
+    SortColors;
+    Invalidate;
+    if Assigned(FOnChange) then FOnChange(Self);
   end;
 end;
 
 procedure TmbColorPalette.SaveColorsAsPalette(FileName: TFileName);
 begin
- if SameText(ExtractFileExt(FileName), '.pal') then
-  SaveJASCPal(FColors, FileName)
- else
-  raise Exception.Create('The file extension specified does not identify a supported file format!'#13'Supported files formats are: .pal .aco .act');
+  if SameText(ExtractFileExt(FileName), '.pal') then
+    SaveJASCPal(FColors, FileName)
+  else
+    raise Exception.Create('The file extension specified does not identify a supported file format!'#13'Supported files formats are: .pal .aco .act');
 end;
 
 procedure TmbColorPalette.SortColors;
 var
- old: TColor;
+  old: TColor;
 begin
- if FSort <> smNone then
+  if FSort <> smNone then
   begin
-   if FColors.Count = 0 then Exit;
-   old := GetSelColor;
-   SortPalColors(FColors, FSort, FOrder);
-   SetSelColor(old);
-   Invalidate;
+    if FColors.Count = 0 then Exit;
+    old := GetSelColor;
+    SortPalColors(FColors, FSort, FOrder);
+    SetSelColor(old);
+    Invalidate;
   end;
 end;
 
