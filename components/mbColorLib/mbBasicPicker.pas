@@ -67,7 +67,7 @@ const
 constructor TmbBasicPicker.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  ControlStyle := ControlStyle - [csOpaque];
+//  ControlStyle := ControlStyle - [csOpaque];
   ParentColor := true;
   FHintTimer := TTimer.Create(self);
   FHintTimer.Interval := HINT_SHOW_DELAY;
@@ -84,10 +84,12 @@ end;
 
 procedure TmbBasicPicker.CMParentColorChanged(var Message: TLMessage);
 begin
+  {
   if ParentColor then
     ControlStyle := ControlStyle - [csOpaque]
   else
     ControlStyle := ControlStyle + [csOpaque];
+    }
   inherited;
 end;
 

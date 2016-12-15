@@ -83,8 +83,8 @@ type
     procedure Initialize;
     procedure DrawAll;
     procedure SetSelectedColor(const Value: TColor);
-    procedure DrawCombControls;
-    procedure DrawComb(Canvas: TCanvas; X, Y, Size: Integer);
+    procedure DrawCombControls(ACanvas: TCanvas);
+    procedure DrawComb(ACanvas: TCanvas; X, Y, Size: Integer);
     procedure HandleCustomColors(var Message: {$IFDEF FPC}TLMMouse{$ELSE}TWMMouse{$ENDIF});
     procedure CalculateCombLayout;
     procedure EndSelection;
@@ -100,7 +100,7 @@ type
     function GetNextCombIndex(i: integer): integer;
     function GetPreviousCombIndex(i: integer): integer;
   protected
-    procedure CreateWnd; override;
+//    procedure CreateWnd; override;
     procedure Paint; override;
     procedure Resize; override;
     procedure WheelUp(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
@@ -201,7 +201,8 @@ uses
 constructor THexaColorPicker.Create(AOwner: TComponent);
 begin
   inherited;
-  ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
+  //ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
+//  FBufferBmp := TBitmap.Create;
   FRadius := 90;
   FSliderWidth := 12;
   DoubleBuffered := true;
@@ -228,23 +229,27 @@ begin
   OnMouseWheelUp := WheelUp;
   OnMouseWheelDown := WheelDown;
   FIntensityText := 'Intensity';
+  {
   MaxHue := 360;
   MaxLum := 255;
   MaxSat := 255;
+  }
 end;
 
 destructor THexaColorPicker.Destroy;
 begin
   FBWCombs := nil;
   FColorCombs := nil;
+  FBufferBmp.Free;
   inherited;
 end;
-
+           (*
 procedure THexaColorPicker.CreateWnd;
 var
   rw, rh: integer;
 begin
   inherited;
+  {
   SetSelectedColor(clBlack);
   if (Width >= 93) and (Height >= 85) then
   begin
@@ -255,7 +260,8 @@ begin
     rh := Round((24/53)*(Height - 6));
     SetRadius(Min(rw, rh));
   end;
-end;
+  }
+end;     *)
 
 procedure THexaColorPicker.Initialize;
 var
@@ -274,7 +280,7 @@ begin
   FCenterIntensity := 1;
 end;
 
-procedure THexaColorPicker.DrawComb(Canvas: TCanvas; X, Y: Integer; Size: Integer);
+procedure THexaColorPicker.DrawComb(ACanvas: TCanvas; X, Y: Integer; Size: Integer);
 var
   I: Integer;
   P: array[0..5] of TPoint;
@@ -284,15 +290,15 @@ begin
     P[I].X := Round(FCombCorners[I].X * Size + X);
     P[I].Y := Round(FCombCorners[I].Y * Size + Y);
   end;
-  Canvas.Polygon(P);
+  ACanvas.Polygon(P);
 end;
 
-procedure THexaColorPicker.DrawCombControls;
+procedure THexaColorPicker.DrawCombControls(ACanvas: TCanvas);
 var
   I, Index: Integer;
   XOffs, YOffs, Count: Integer;
-  dColor: Single;
   OffScreen: TBitmap;
+  R: TRect;
   {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
   MemDC: HDC;
   OldBMP: HBITMAP;
@@ -331,6 +337,7 @@ begin
     with OffScreen.Canvas do
     begin
       Pen.Style := psClear;
+
       // draw color combs from FColorCombs array
       XOffs := FRadius + FColorCombRect.Left;
       YOffs := FRadius + FColorCombRect.Top;
@@ -343,6 +350,7 @@ begin
         Pen.color := FColorCombs[I].Color;
         DrawComb(OffScreen.Canvas, FColorCombs[I].Position.X + XOffs, FColorCombs[I].Position.Y + YOffs, FCombSize);
       end;
+
       // mark selected comb
       if FCustomIndex > 0 then
       begin
@@ -361,6 +369,7 @@ begin
         Pen.Mode := pmCopy;
         Pen.Width := 1;
       end;
+
       // draw white-to-black combs
       XOffs := FColorCombRect.Left;
       YOffs := FColorCombRect.Bottom - 4;
@@ -379,6 +388,7 @@ begin
         end else
           DrawComb(OffScreen.Canvas, FBWCombs[I].Position.X + XOffs, FBWCombs[I].Position.Y + YOffs, FCombSize);
       end;
+
       // mark selected comb
       if FCustomIndex < 0 then
       begin
@@ -399,7 +409,7 @@ begin
         if Index in [0, High(FBWCombs)] then
         begin
           if Index = High(FBWCombs) then begin
-            Pen.Color := clWhite;
+            Pen.Color := rgb(254, 254, 254); //clWhite;
             Pen.Mode := pmXOR;
           end;
           if ((FColorCombs[0].Color = Cardinal(clWhite)) and (Index = 0)) or
@@ -414,40 +424,45 @@ begin
         Pen.Mode := pmCopy;
         Pen.Width := 1;
       end;
+
+      // Slider
       if FSliderVisible then
       begin
         // center-color trackbar
-        XOffs := FSliderRect.Left;
-        YOffs := FSliderRect.Top;
-        Count := FSliderRect.Bottom - FSliderRect.Top - 1;
-        dColor := 255 / Count;
+        R := FSliderRect;
+        R.Right := R.Left + FSliderWidth;
         Pen.Style := psSolid;
-        // b&w ramp
-        for I := 0 to Count do
-        begin
-          Pen.Color := RGB(Round((Count - I) * dColor), Round((Count - I) * dColor), Round((Count - I) * dColor));
-          MoveTo(XOffs, YOffs + I);
-          LineTo(XOffs + FSliderWidth, YOffs + I);
-        end;
+        GradientFill(R, clWhite, clBlack, gdVertical);
+
         // draw marker
-        Inc(XOffs, FSliderWidth + 1);
-        Inc(YOffs, Round(Count * (1 - FCenterIntensity)));
+        Count := FSliderRect.Bottom - FSliderRect.Top - 1;
+        XOffs := FSliderRect.Left + FSliderWidth + 1;
+        YOffs := FSliderRect.Top + Round(Count * (1 - FCenterIntensity));;
+        Pen.Color := clBlack;
         case FMarker of
           smArrow:
             begin
               if not FNewArrowStyle then
               begin
                 Brush.Color := clBlack;
-                Polygon([Point(XOffs, YOffs), Point(XOffs + 6, YOffs - 4), Point(XOffs + 6, YOffs + 4)])
+                Polygon([
+                  Point(XOffs, YOffs),
+                  Point(XOffs + 6, YOffs - 4),
+                  Point(XOffs + 6, YOffs + 4)
+                ])
               end
               else
               begin
                 Brush.Color := clWhite;
                 Pen.Color := clBtnShadow;
                 Polygon([
-                  Point(XOffs, YOffs), Point(XOffs + 4, YOffs - 4), Point(XOffs + 6, YOffs - 4),
-                  Point(XOffs + 7, YOffs - 3), Point(XOffs + 7, YOffs + 3),
-                  Point(XOffs + 6, YOffs + 4), Point(XOffs + 4, YOffs + 4)]);
+                  Point(XOffs, YOffs),
+                  Point(XOffs + 4, YOffs - 4),
+                  Point(XOffs + 6, YOffs - 4),
+                  Point(XOffs + 7, YOffs - 3),
+                  Point(XOffs + 7, YOffs + 3),
+                  Point(XOffs + 6, YOffs + 4),
+                  Point(XOffs + 4, YOffs + 4)]);
               end;
             end;
           smRect:
@@ -462,7 +477,7 @@ begin
         Pen.Style := psClear;
       end;
     end;
-    Canvas.Draw(0, 0, OffScreen);
+    ACanvas.Draw(0, 0, OffScreen);
   finally
     Offscreen.Free;
   end;
@@ -471,10 +486,19 @@ end;
 
 procedure THexaColorPicker.Paint;
 begin
-  PaintParentBack; //(Canvas);
+  PaintParentBack(Canvas);
   if FColorCombs = nil then
     CalculateCombLayout;
-  DrawCombControls;
+  DrawCombControls(Canvas);
+  {
+  if FBufferBmp = nil then
+    FBufferBmp := TBitmap.Create;
+  PaintParentBack(FBufferBmp); //(Canvas);
+  if FColorCombs = nil then
+    CalculateCombLayout;
+  DrawCombControls(FBufferBmp.Canvas);
+  Canvas.Draw(0, 0, FBufferBmp);
+  }
 end;
 
 // determines whether the mouse position is within the slider area and acts accordingly
@@ -490,10 +514,14 @@ begin
     Result := false;
     Exit;
   end;
-  Result := PtInRect(FSliderRect, Point(Message.XPos, Message.YPos)) and
-    (FSelectionMode = smNone) or
+
+  Result :=
+    (PtInRect(FSliderRect, Point(Message.XPos, Message.YPos))
+      and (FSelectionMode = smNone))
+    or
     ((Message.XPos >= FSliderRect.Left) and (Message.XPos <= FSliderRect.Right)
       and (FSelectionMode = smRamp));
+
   if Result then
   begin
     Shift := KeysToShiftState(Message.Keys);
@@ -723,6 +751,7 @@ begin
   );
   if FSliderVisible then
     FSliderRect := Rect(FColorCombRect.Right, FCombSize, FColorCombRect.Right + 10 + FSliderWidth, FColorCombRect.Bottom - FCombSize)
+//    FSliderRect := Rect(FColorCombRect.Right, FColorCombRect.Top, FColorCombRect.Right + 10 + FSliderWidth, FColorCombRect.Bottom)
   else
     FSliderRect := Rect(-1, -1, -1, -1);
 end;
@@ -759,7 +788,7 @@ var
   Color1, Color2, dColor1, dColor2, dColor: TRGBrec;
 begin
   // this ensures the radius and comb size is set correctly
-  HandleNeeded;
+//  HandleNeeded;
   if FLevels < 1 then FLevels := 1;
   // To draw perfectly aligned combs we split the final comb into six triangles (sextants)
   // and calculate each separately. The center comb is stored as first entry in the array
@@ -1187,7 +1216,7 @@ begin
       105: k := 6;
       106: k := 52;
       107: k := 41;
-      108 : k := 53;
+      108: k := 53;
       109: k := 31;
       110: k := 42;
       111: k := 54;
@@ -1283,12 +1312,8 @@ end;
 procedure THexaColorPicker.SetIntensity(v: integer);
 var
   R: TRect;
-  s: single;
 begin
-  s := v/100;
-  FCenterIntensity := s;
-  if FCenterIntensity < 0 then FCenterIntensity := 0;
-  if FCenterIntensity > 1 then FCenterIntensity := 1;
+  FCenterIntensity := EnsureRange(v/100, 0, 1);
   FCenterColor.Red := DefCenterColor.Red * FCenterIntensity;
   FCenterColor.Green := DefCenterColor.Green * FCenterIntensity;
   FCenterColor.Blue := DefCenterColor.Blue * FCenterIntensity;
@@ -1334,7 +1359,7 @@ begin
   FRadius := r;
   DrawAll;
   CalculateCombLayout;
-  DrawCombControls;
+//  DrawCombControls;
   Invalidate;
 end;
 
@@ -1347,7 +1372,7 @@ begin
     Width := FSliderRect.Right + 2;
 //    Height := FBWCombRect.Bottom + 2;
     CalculateCombLayout;
-    DrawCombControls;
+//    DrawCombControls;
     Invalidate;
   end;
 end;
@@ -1467,7 +1492,8 @@ end;
 procedure THexaColorPicker.SelectColor(Color: TColor);
 begin
   SelectAvailableColor(Color);
-  DrawCombControls;
+  Invalidate;
+//  DrawCombControls;
   if Assigned(FOnChange) then
     FOnChange(Self);
 end;
@@ -1479,7 +1505,7 @@ begin
     FSliderVisible := Value;
     DrawAll;
     CalculateCombLayout;
-    DrawCombControls;
+  //  DrawCombControls;
     Invalidate;
   end;
 end;
@@ -1491,7 +1517,7 @@ begin
     FMarker := Value;
     DrawAll;
     CalculateCombLayout;
-    DrawCombControls;
+    //DrawCombControls;
     Invalidate;
   end;
 end;
@@ -1503,7 +1529,7 @@ begin
     FNewArrowStyle := Value;
     DrawAll;
     CalculateCombLayout;
-    DrawCombControls;
+   // DrawCombControls;
     Invalidate;
   end;
 end;
