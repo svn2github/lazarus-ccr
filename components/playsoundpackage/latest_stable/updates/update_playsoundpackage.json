@@ -1,0 +1,15 @@
+{
+  "UpdatePackageData" : {
+    "DisableInOPM" : false,
+    "DownloadZipURL" : "https://svn.code.sf.net/p/lazarus-ccr/svn/components/playsoundpackage/latest_stable/updates/playsoundpackage.zip",
+    "Name" : "playsoundpackage.zip"
+  },
+  "UpdatePackageFiles" : [
+    {
+      "ForceNotify" : false,
+      "InternalVersion" : 1,
+      "Name" : "playwavepackage.lpk",
+      "Version" : "0.0.7.0"
+    }
+  ]
+}

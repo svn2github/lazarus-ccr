@@ -1,7 +1,7 @@
 {
   "UpdatePackageData" : {
-    "DownloadZipURL" : "https://sourceforge.net/projects/lazautoupdate/files/otherpackages/cryptini.zip",
     "DisableInOPM" : false,
+    "DownloadZipURL" : "https://svn.code.sf.net/p/lazarus-ccr/svn/components/cryptini/latest_stable/updates/cryptini.zip",
     "Name" : "cryptini.zip"
   },
   "UpdatePackageFiles" : [
