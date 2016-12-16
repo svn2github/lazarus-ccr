@@ -23,17 +23,11 @@ the executable.
 You can set Active=True when designing to see the scrolling text
 but remember than any http:// links are only clickable in runtime mode
 
-Download
-=======
-This component is available at http://www.charcodelvalle.com/scrollingtext/scrollingtext_component.zip
-
-Version
-======
-This version is 1.0.0.0
+More Informaton: http://wiki.freepascal.org/ScrollText
 
 License
 ======
-GPL License (see source code)
+Modified GPL License (see source code)
 
 Works With
 =========
@@ -44,4 +38,4 @@ you can see a scrolling screen, then this component is compatible with your IDE
 Support
 ======
 minesadorada@charcodelvalle.com
-Note the GPL license conditions
+
