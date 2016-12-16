@@ -384,3 +384,4 @@ msgstr "¿Quieres copiar %s a la carpeta %s?"
 #: umain.rsyoumayneedto
 msgid "(You may need to restart the app to see the change)"
 msgstr "(Quizás necesites reiniciar la aplicación para ver los cambios)"
+

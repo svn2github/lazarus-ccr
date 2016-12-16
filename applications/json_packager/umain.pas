@@ -66,7 +66,8 @@ unit umain;
   0.2.5.0:  BugFix: regression error: CreateUniqueINIFile (minesadorada)
   0.2.6.0:  Added feature: Help menu/AutoLoad Last File (minesadorada)
   0.2.7.0:  Updated: Save procedure (minesadorada)
-  0.2.8.0:  ??
+  0.2.8.0:  BugFix: ValidationFailed repeated messages about FoundDuplicates
+  0.2.9.0:  ??
  }
 {$mode objfpc}{$H+}
 
@@ -1066,7 +1067,11 @@ begin
   SetDefaultLang('en', 'locale', True);
   if Length(GetDefaultLang) > 0 then
   begin
-    ShowMessageFmt(rsLanguageChan, [GetDefaultLang]);
+    if bIsVirgin then
+       ShowMessageFmt(rsLanguageChan + '%s' + rsYouMayNeedTo, [GetDefaultLang,LineEnding])
+    else
+       ShowMessageFmt(rsLanguageChan, [GetDefaultLang]);
+
     CFG.WriteString('Options', 'Language', GetDefaultLang);
     mnu_lang_en.Checked := True;
   end
@@ -1083,7 +1088,10 @@ begin
   SetDefaultLang('es', 'locale', True);
   if Length(GetDefaultLang) > 0 then
   begin
-    ShowMessageFmt(rsLanguageChan, [GetDefaultLang]);
+    if bIsVirgin then
+       ShowMessageFmt(rsLanguageChan + '%s' + rsYouMayNeedTo, [GetDefaultLang,LineEnding])
+    else
+       ShowMessageFmt(rsLanguageChan, [GetDefaultLang]);
     CFG.WriteString('Options', 'Language', GetDefaultLang);
     mnu_lang_es.Checked := True;
   end
@@ -1188,11 +1196,12 @@ begin
       end;
     // Check for duplicate .lpk entries
     if FoundADuplicateLPK then
-    begin
-      ArrayEdtPackageFileName[iCount].Color := clYellow;
-      slErrorList.Add(Format(rsThereAreOneO, [LineEnding]));
-      Result := True;
-    end;
+       if slErrorList.IndexOf(Format(rsThereAreOneO, [LineEnding])) = -1 then
+       begin
+            ArrayEdtPackageFileName[iCount].Color := clYellow;
+            slErrorList.Add(Format(rsThereAreOneO, [LineEnding]));
+            Result := True;
+       end;
   end;
 end;
 
