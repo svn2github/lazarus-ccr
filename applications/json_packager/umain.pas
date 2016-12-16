@@ -67,6 +67,7 @@ unit umain;
   0.2.6.0:  Added feature: Help menu/AutoLoad Last File (minesadorada)
   0.2.7.0:  Updated: Save procedure (minesadorada)
   0.2.8.0:  BugFix: ValidationFailed repeated messages about FoundDuplicates
+            BugFix: SetDefaultLang added to AddPackageFileToList
   0.2.9.0:  ??
  }
 {$mode objfpc}{$H+}
@@ -603,7 +604,7 @@ begin
     with ArrayLblPackageInternalVersion[iNumLpkFilesVisible] do
     begin
       Caption := rsInternalVers;
-      SetBounds(160, 50, 40, 23);
+      SetBounds(180, 50, 40, 23);
       Visible := True;
       Tag := Pred(iNumLpkFilesVisible);
       OnMouseEnter := @CtrlShowPopup;
@@ -618,7 +619,7 @@ begin
     with ArraySpinEditInternalVersion[iNumLpkFilesVisible] do
     begin
       Value := 1;
-      SetBounds(260, 48, 40, 20);
+      SetBounds(280, 48, 40, 20);
       Visible := True;
       Tag := Pred(iNumLpkFilesVisible);
       OnMouseEnter := @CtrlShowPopup;
@@ -632,6 +633,7 @@ begin
     // This sets the subcontrols up correctly
     Parent := sb_PackageFiles;
   end;
+  SetDefaultLang(CFG.ReadString('Options', 'Language', 'en'), 'locale', True);
 end;
 
 procedure TfrmMain.RemoveLastControlArray;
@@ -818,9 +820,16 @@ begin
   Icon := Application.Icon;
   // Popup hint window
   popup_hint.vNotifierForm.Color:=clForm;
+  popup_hint.vNotifierForm.Font.Size:=8;
+  popup_hint.vNotifierForm.Font.Style:=[fsBold];
+  {$IFDEF LINUX}
+  popup_hint.vNotifierForm.Height:=popup_hint.vNotifierForm.Height + 50;
+  {$ENDIF}
   popup_hint.vNotifierForm.AlphaBlend:=TRUE;
   popup_hint.vNotifierForm.AlphaBlendValue:=200;
-
+  if (lcl_major > 0) and (lcl_minor > 6) then
+     popup_hint.vNotifierForm.Scaled:=TRUE;
+  // ToDo: TApplication.HintPause:=2000;
   // Defaults
   slErrorList := TStringList.Create;
   bForceSaveAs := True;
