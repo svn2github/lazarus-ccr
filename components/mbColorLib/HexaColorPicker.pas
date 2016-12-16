@@ -103,16 +103,17 @@ type
 //    procedure CreateWnd; override;
 
     function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean; override;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+//    procedure KeyDownInterface(var Key: Word; Shift: TShiftState); override;
     procedure Paint; override;
     procedure Resize; override;
+
    {$IFDEF DELPHI}
-    procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
     procedure CMHintShow(var Message: TMessage); message CM_HINTSHOW;
     procedure WMLButtonDown(var Message: TWMLButtonDown); message WM_LBUTTONDOWN;
     procedure WMLButtonUp(var Message: TWMLButtonUp); message WM_LBUTTONUP;
     procedure WMMouseMove(var Message: TWMMouseMove); message WM_MOUSEMOVE;
    {$ELSE}
-    procedure CNKeyDown(var Message: TLMKeyDown); message CN_KEYDOWN;
     procedure CMHintShow(var Message: TLMessage); message CM_HINTSHOW;
     procedure WMLButtonDown(var Message: TLMLButtonDown); message LM_LBUTTONDOWN;
     procedure WMLButtonUp(var Message: TLMLButtonUp); message LM_LBUTTONUP;
@@ -179,7 +180,7 @@ type
   end;
 
   const
-    DefCenterColor: TRGBrec =(Red: 1; Green: 1; Blue: 1);  // White
+    DefCenterColor: TRGBrec = (Red: 1; Green: 1; Blue: 1);  // White
     DefColors: array[0..5] of TRGBrec = (
       (Red: 1; Green: 0; Blue: 1),     // Magenta
       (Red: 1; Green: 0; Blue: 0),     // Red
@@ -251,6 +252,34 @@ begin
     Result := True;
     ChangeIntensity(WheelDelta > 0);
   end;
+end;
+
+procedure THexaColorPicker.KeyDown(var Key: Word; Shift: TShiftState);
+var
+  eraseKey: Boolean;
+begin
+  eraseKey := true;
+  if ssCtrl in Shift then
+    case Key of
+      VK_LEFT: SetSelectedColor(clWhite);
+      VK_RIGHT: SetSelectedColor(clBlack);
+      VK_UP: if FSliderVisible then SetIntensity(100);
+      VK_DOWN: if FSliderVisible then SetIntensity(0);
+    else
+      eraseKey := false;
+    end
+  else
+    case Key of
+      VK_LEFT: SelectCombIndex(GetPreviousCombIndex(GetSelectedCombIndex));
+      VK_RIGHT: SelectCombIndex(GetNextCombIndex(GetSelectedCombIndex));
+      VK_UP: if FSliderVisible then ChangeIntensity(true);
+      VK_DOWN: if FSliderVisible then ChangeIntensity(false);
+     else
+       eraseKey := false;
+    end;
+  if eraseKey then
+    Key := 0;
+  inherited;
 end;
 
 (*
@@ -355,9 +384,9 @@ begin
       for I := 0 to High(FColorCombs) do
       begin
         Brush.Color := FColorCombs[I].Color;
-        Pen.mode := pmCopy; // the pen is set here so there are no gaps between the combs
-        Pen.style := psSolid;
-        Pen.color := FColorCombs[I].Color;
+        Pen.Mode := pmCopy; // the pen is set here so there are no gaps between the combs
+        Pen.Style := psSolid;
+        Pen.Color := FColorCombs[I].Color;
         DrawComb(OffScreen.Canvas, FColorCombs[I].Position.X + XOffs, FColorCombs[I].Position.Y + YOffs, FCombSize);
       end;
 
@@ -1345,7 +1374,7 @@ procedure THexaColorPicker.ChangeIntensity(increase: boolean);
 var
   i: integer;
 begin
-  i := ROUND(FCenterIntensity * 100);
+  i := round(FCenterIntensity * 100);
   if increase then
   begin
     Inc(i, FIncrement);
@@ -1399,17 +1428,15 @@ begin
       rw := Round(Width/2 - 5);
     rh := Round((24/53)*(Height - 6));
     SetRadius(Min(rw, rh));
-    inherited;
   end;
+  inherited;
 end;
-
+       (*
 procedure THexaColorPicker.CNKeyDown(
   var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
 var
   Shift: TShiftState;
-  FInherited: boolean;
 begin
-  FInherited := false;
   Shift := KeyDataToShiftState(Message.KeyData);
   if ssCtrl in Shift then
     case Message.CharCode of
@@ -1418,10 +1445,8 @@ begin
       VK_UP: if FSliderVisible then SetIntensity(100);
       VK_DOWN: if FSliderVisible then SetIntensity(0);
     else
-      begin
-        FInherited := true;
-        inherited;
-      end;
+      if Assigned(OnKeyDown) then
+        OnKeyDown(Self, Message.CharCode, Shift);
     end
   else
     case Message.CharCode of
@@ -1430,15 +1455,12 @@ begin
       VK_UP: if FSliderVisible then ChangeIntensity(true);
       VK_DOWN: if FSliderVisible then ChangeIntensity(false);
      else
-      begin
-        FInherited := true;
-        inherited;
-      end;
+       if Assigned(OnKeyDown) then
+         OnKeyDown(Self, Message.CharCode, Shift);
     end;
-  if not FInherited and Assigned(OnKeyDown) then
-    OnKeyDown(Self, Message.CharCode, Shift);
+  Message.CharCode := 0;
 end;
-
+*)
 function THexaColorPicker.SelectAvailableColor(Color: TColor): boolean;
 var
   I: integer;
