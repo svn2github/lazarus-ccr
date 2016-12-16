@@ -1,0 +1,44 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: minesadorada <minesadorada@charcodelvalle.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"X-Generator: Poedit 1.8.11\n"
+
+#: aboutlongtimerunit.rs_about
+msgid "About"
+msgstr "Acerca de"
+
+#: aboutlongtimerunit.rs_aboutboxerror
+msgid "Subcomponent TAboutBox Error"
+msgstr "Subcomponente TAboutBox Error"
+
+#: aboutlongtimerunit.rs_by
+msgid "By"
+msgstr "Por"
+
+#: aboutlongtimerunit.rs_componentname
+msgid "Component name"
+msgstr "Nombre del componente"
+
+#: aboutlongtimerunit.rs_datafilemissing
+msgid "Resource datafile license.lrs is missing"
+msgstr "no existe"
+
+#: aboutlongtimerunit.rs_for
+msgid "For"
+msgstr "Por"
+
+#: aboutlongtimerunit.rs_license
+msgid "License"
+msgstr "Licencia"
+
+#: aboutlongtimerunit.rs_licensetexterror
+msgid "There is something wrong with the Licence text"
+msgstr "Hay algo mal con el texto de la licencia"

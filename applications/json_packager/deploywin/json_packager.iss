@@ -1,6 +1,6 @@
 [Setup]
 AppName=External OPM JSON package Editor
-AppVersion=0.2.6.0
+AppVersion=0.2.7.0
 DefaultDirName={pf}\OPMUtilities
 DefaultGroupName=OPM
 UninstallDisplayIcon={app}\jsoneditor.exe
@@ -36,7 +36,7 @@ Source: "jsoneditor64.exe"; DestDir: "{app}"; DestName: "jsoneditor.exe"; Check:
 ; Place all x86 files here, first one should be marked 'solidbreak'
 Source: "jsoneditor.exe"; DestDir: "{app}"; Check: not Is64BitInstallMode; Flags: solidbreak
 ; Enable line below if using Lazarus < V1.7
-;Source: "translate.lrs"; DestDir: "{app}";
+Source: "translate.lrs"; DestDir: "{app}";
 
 ; Place all common files here, first one should be marked 'solidbreak'
 ; Source: "readmepreinstall.txt"; DestDir: "{app}"; Flags: isreadme

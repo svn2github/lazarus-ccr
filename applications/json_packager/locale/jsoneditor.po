@@ -216,6 +216,10 @@ msgstr ""
 msgid "Filename: "
 msgstr ""
 
+#: umain.rsfilescanbeau
+msgid "File \"%s\" can be auto-loaded next time you start %s%sWould you like to enable this?%s(It can be changed in menu item Help/%s later)"
+msgstr ""
+
 #: umain.rsfixthentryag
 msgid "Fix, then try again."
 msgstr ""

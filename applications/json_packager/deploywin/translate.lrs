@@ -1,0 +1,367 @@
+LazarusResources.Add('jsoneditor.en','PO',[
+  'msgid ""'#13#10'msgstr ""'#13#10'"Content-Type: text/plain; charset=UTF-8\n"'
+  +#13#10'"Project-Id-Version: \n"'#13#10'"POT-Creation-Date: \n"'#13#10'"PO-Re'
+  +'vision-Date: \n"'#13#10'"Last-Translator: minesadorada <minesadorada@charco'
+  +'delvalle.com>\n"'#13#10'"Language-Team: \n"'#13#10'"MIME-Version: 1.0\n"'#13
+  +#10'"Content-Transfer-Encoding: 8bit\n"'#13#10'"Language: en\n"'#13#10'"X-Ge'
+  +'nerator: Poedit 1.8.11\n"'#13#10#13#10'#: tfrmmain.chk_disableinopm.caption'
+  +#13#10'msgid "Disable in OPM"'#13#10'msgstr "Disable in OPM"'#13#10#13#10'#:'
+  +' tfrmmain.chk_disableinopm.hint'#13#10'msgid "Warning! This will disable in'
+  +'stalling or updating your package in OPM"'#13#10'msgstr "Warning! This will'
+  +' disable installing or updating your package in OPM"'#13#10#13#10'#: tfrmma'
+  +'in.cmd_addpackagefile.caption'#13#10'msgctxt "tfrmmain.cmd_addpackagefile.c'
+  +'aption"'#13#10'msgid "Add"'#13#10'msgstr "Add"'#13#10#13#10'#: tfrmmain.cmd'
+  +'_addpackagefile.hint'#13#10'msgctxt "tfrmmain.cmd_addpackagefile.hint"'#13
+  +#10'msgid ""'#13#10'"Add Package File:\n"'#13#10'"The update zip can contain'
+  +' more than one lpk file\n"'#13#10'"deployed to the same place.\n"'#13#10'ms'
+  +'gstr ""'#13#10'"Add Package File:\n"'#13#10'"The update zip can contain mor'
+  +'e than one lpk file\n"'#13#10'"deployed to the same place.\n"'#13#10#13#10
+  +'#: tfrmmain.cmd_close.caption'#13#10'msgid "&Close"'#13#10'msgstr "&Close"'
+  +#13#10#13#10'#: tfrmmain.cmd_removelastpackagefile.caption'#13#10'msgctxt "t'
+  +'frmmain.cmd_removelastpackagefile.caption"'#13#10'msgid "Remove"'#13#10'msg'
+  +'str "Remove"'#13#10#13#10'#: tfrmmain.cmd_removelastpackagefile.hint'#13#10
+  +'msgctxt "tfrmmain.cmd_removelastpackagefile.hint"'#13#10'msgid ""'#13#10'"R'
+  +'emove Package File:\n"'#13#10'"Deletes the last entry from the list\n"'#13
+  +#10'msgstr ""'#13#10'"Remove Package File:\n"'#13#10'"Deletes the last entry'
+  +' from the list\n"'#13#10#13#10'#: tfrmmain.cmd_save.caption'#13#10'msgid "&'
+  +'Save"'#13#10'msgstr "&Save"'#13#10#13#10'#: tfrmmain.cmd_save.hint'#13#10'm'
+  +'sgid ""'#13#10'"Save the current configuration to disk\n"'#13#10'"as a JSON'
+  +' update file\n"'#13#10'msgstr ""'#13#10'"Save the current configuration to '
+  +'disk\n"'#13#10'"as a JSON update file\n"'#13#10#13#10'#: tfrmmain.edt_downl'
+  +'oadzipurl.hint'#13#10'msgctxt "tfrmmain.edt_downloadzipurl.hint"'#13#10'msg'
+  +'id ""'#13#10'"Download URL:\n"'#13#10'"Include the FULL url needed to downl'
+  +'oad the package Zip file\n"'#13#10'msgstr ""'#13#10'"Download URL:\n"'#13#10
+  +'"Include the FULL url needed to download the package Zip file\n"'#13#10#13
+  +#10'#: tfrmmain.edt_updatezipname.hint'#13#10'msgctxt "tfrmmain.edt_updatezi'
+  +'pname.hint"'#13#10'msgid ""'#13#10'"Update Zip Name:\n"'#13#10'"This is jus'
+  +'t the filename (not including the path)\n"'#13#10'"of your update zip. Type'
+  +', or click the [...]\n"'#13#10'msgstr ""'#13#10'"Update Zip Name:\n"'#13#10
+  +'"This is just the filename (not including the path)\n"'#13#10'"of your upda'
+  +'te zip. Type, or click the [...]\n"'#13#10#13#10'#: tfrmmain.filemenu.capti'
+  +'on'#13#10'msgid "File"'#13#10'msgstr "File"'#13#10#13#10'#: tfrmmain.fileop'
+  +'en1.caption'#13#10'msgid "&Open ..."'#13#10'msgstr "&Open ..."'#13#10#13#10
+  +'#: tfrmmain.fileopen1.hint'#13#10'msgid "Open"'#13#10'msgstr "Open"'#13#10
+  +#13#10'#: tfrmmain.filesaveas1.caption'#13#10'msgid "&Save As ..."'#13#10'ms'
+  +'gstr "&Save As ..."'#13#10#13#10'#: tfrmmain.filesaveas1.hint'#13#10'msgid '
+  +'"Save As"'#13#10'msgstr "Save As"'#13#10#13#10'#: tfrmmain.lbl_downloadzipu'
+  +'rl.caption'#13#10'msgctxt "tfrmmain.lbl_downloadzipurl.caption"'#13#10'msgi'
+  +'d "Download URL:"'#13#10'msgstr "Download URL:"'#13#10#13#10'#: tfrmmain.lb'
+  +'l_packagefiles.caption'#13#10'msgctxt "tfrmmain.lbl_packagefiles.caption"'
+  +#13#10'msgid "Package Files:"'#13#10'msgstr "Package Files:"'#13#10#13#10'#:'
+  +' tfrmmain.lbl_updatezipname.caption'#13#10'msgctxt "tfrmmain.lbl_updatezipn'
+  +'ame.caption"'#13#10'msgid "Update Zip Name:"'#13#10'msgstr "Update Zip Name'
+  +':"'#13#10#13#10'#: tfrmmain.loaditem.caption'#13#10'msgid "Load..."'#13#10
+  +'msgstr "Load..."'#13#10#13#10'#: tfrmmain.mnu_fileexit.caption'#13#10'msgid'
+  +' "E&xit"'#13#10'msgstr "E&xit"'#13#10#13#10'#: tfrmmain.mnu_filenew.caption'
+  +#13#10'msgid "New"'#13#10'msgstr "New"'#13#10#13#10'#: tfrmmain.mnu_filesave'
+  +'.caption'#13#10'msgid "Save"'#13#10'msgstr "Save"'#13#10#13#10'#: tfrmmain.'
+  +'mnu_help.caption'#13#10'msgid "&Help"'#13#10'msgstr "&Help"'#13#10#13#10'#:'
+  +' tfrmmain.mnu_helpabout.caption'#13#10'msgid "About.."'#13#10'msgstr "About'
+  +'.."'#13#10#13#10'#: tfrmmain.mnu_helpautoloadlastfile.caption'#13#10'msgid '
+  +'"Auto-load last saved file"'#13#10'msgstr "Auto-load last saved file"'#13#10
+  +#13#10'#: tfrmmain.mnu_helpdisablewarnings.caption'#13#10'msgid "Disable war'
+  +'nings"'#13#10'msgstr "Disable warnings"'#13#10#13#10'#: tfrmmain.mnu_helpsh'
+  +'owhints.caption'#13#10'msgid "Show Popup Hints"'#13#10'msgstr "Show Popup H'
+  +'ints"'#13#10#13#10'#: tfrmmain.mnu_lang.caption'#13#10'msgid "Languages.."'
+  ,#13#10'msgstr "Languages.."'#13#10#13#10'#: tfrmmain.mnu_lang_en.caption'#13
+  +#10'msgid "English"'#13#10'msgstr "English"'#13#10#13#10'#: tfrmmain.mnu_lan'
+  +'g_es.caption'#13#10'msgid "Espa'#195#177'ol"'#13#10'msgstr "Espa'#195#177'o'
+  +'l"'#13#10#13#10'#: tfrmmain.saveasitem.caption'#13#10'msgid "Save As..."'#13
+  +#10'msgstr "Save As..."'#13#10#13#10'#: tfrmmain.sb_editname.caption'#13#10
+  +'msgid "..."'#13#10'msgstr "..."'#13#10#13#10'#: tfrmmain.sb_editname.hint'
+  +#13#10'msgid ""'#13#10'"Update Zip Name:\n"'#13#10'"Click this to browse you'
+  +'r system to find\n"'#13#10'" an existing Update Zip\n"'#13#10'msgstr ""'#13
+  +#10'"Update Zip Name:\n"'#13#10'"Click this to browse your system to find\n"'
+  +#13#10'" an existing Update Zip\n"'#13#10#13#10'#: tfrmmain.spd_checkurl.cap'
+  +'tion'#13#10'msgid "Check URL"'#13#10'msgstr "Check URL"'#13#10#13#10'#: tfr'
+  +'mmain.spd_checkurl.hint'#13#10'#| msgid ""'#13#10'#| "Check URL:\n"'#13#10
+  +'#| "Attempts to open the URL in your browser\n"'#13#10'msgid "Attempts to o'
+  +'pen the URL in your browser"'#13#10'msgstr "Attempts to open the URL in you'
+  +'r browser"'#13#10#13#10'#: umain.rsabout'#13#10'msgid "About"'#13#10'msgstr'
+  +' "About"'#13#10#13#10'#: umain.rscheckthisify'#13#10'#| msgid "Check this i'
+  +'f you don''t want to incrememt the package version"'#13#10'msgid "Check thi'
+  +'s if you don''t want to increment the package version"'#13#10'msgstr "Check'
+  +' this if you don''t want to increment the package version"'#13#10#13#10'#: '
+  +'umain.rscompiledwith2'#13#10'msgid "Compiled with FPC V:%s and Lazarus V:%d'
+  +'.%d%s for the %s - %s platform%s%s"'#13#10'msgstr "Compiled with FPC V:%s a'
+  +'nd Lazarus V:%d.%d%s for the %s - %s platform%s%s"'#13#10#13#10'#: umain.rs'
+  +'downloadzipurld'#13#10'msgid "- Download URL does not contain the zipfile n'
+  +'ame"'#13#10'msgstr "- Download URL does not contain the zipfile name"'#13#10
+  +#13#10'#: umain.rsdownloadzipurli'#13#10'msgid "- Download URL is too short '
+  +'or missing"'#13#10'msgstr "- Download URL is too short or missing"'#13#10#13
+  +#10'#: umain.rsdownloadzipurli2'#13#10'msgid "- Download URL is incomplete"'
+  +#13#10'msgstr "- Download URL is incomplete"'#13#10#13#10'#: umain.rsdownloa'
+  +'dzipurls'#13#10'msgid "- Download URL should start with \"http\""'#13#10'ms'
+  +'gstr "- Download URL should start with \"http\""'#13#10#13#10'#: umain.rsfi'
+  +'lemaybeuns'#13#10'msgid "JSON may be unsaved. Are you sure you want to quit'
+  +'?"'#13#10'msgstr "JSON may be unsaved. Are you sure you want to quit?"'#13
+  +#10#13#10'#: umain.rsfilename'#13#10'msgid "Filename: "'#13#10'msgstr "Filen'
+  +'ame: "'#13#10#13#10'#: umain.rsfilescanbeau'#13#10'msgid "File \"%s\" can b'
+  +'e auto-loaded next time you start %s%sWould you like to enable this?%s(It c'
+  +'an be changed in menu item Help/%s later)"'#13#10'msgstr "File \"%s\" can b'
+  +'e auto-loaded next time you start %s%sWould you like to enable this?%s(It c'
+  +'an be changed in menu item Help/%s later)"'#13#10#13#10'#: umain.rsfixthent'
+  +'ryag'#13#10'msgid "Fix, then try again."'#13#10'msgstr "Fix, then try again'
+  +'."'#13#10#13#10'#: umain.rsformatisnnnn'#13#10'msgid "Package version:%sFor'
+  +'mat is: n.n.n.n"'#13#10'msgstr "Package version:%sFormat is: n.n.n.n"'#13#10
+  +#13#10'#: umain.rshelpandinfor'#13#10'msgid "Help and Information"'#13#10'ms'
+  +'gstr "Help and Information"'#13#10#13#10'#: umain.rshttpwwwupdat'#13#10'msg'
+  +'id "http://www.updatesite.com/myupdate/mypackagename.zip"'#13#10'msgstr "ht'
+  +'tp://www.updatesite.com/myupdate/mypackagename.zip"'#13#10#13#10'#: umain.r'
+  +'sinternalvers'#13#10'msgid "Internal Version: "'#13#10'msgstr "Internal Ver'
+  +'sion: "'#13#10#13#10'#: umain.rsinternalvers2'#13#10'msgid "Internal versio'
+  +'n number should not be Zero%s"'#13#10'msgstr "Internal version number shoul'
+  +'d not be Zero%s"'#13#10#13#10'#: umain.rslanguagechan'#13#10'msgid "Languag'
+  +'e changed to \"%s\"."'#13#10'msgstr "Language changed to \"%s\"."'#13#10#13
+  +#10'#: umain.rsmypackagelpk'#13#10'#| msgid "mypackagename.zip"'#13#10'msgct'
+  +'xt "umain.rsmypackagelpk"'#13#10'msgid "mypackagename.lpk"'#13#10'msgstr "m'
+  +'ypackagename.lpk"'#13#10#13#10'#: umain.rsmypackagenam'#13#10'msgctxt "umai'
+  +'n.rsmypackagenam"'#13#10'msgid "mypackagename.zip"'#13#10'msgstr "mypackage'
+  +'name.zip"'#13#10#13#10'#: umain.rsnotifyupdate'#13#10'msgid "Notify Update"'
+  +#13#10'msgstr "Notify Update"'#13#10#13#10'#: umain.rsoneofthereq1'#13#10'ms'
+  +'gid "One of the required fields is missing or wrong."'#13#10'msgstr "One of'
+  +' the required fields is missing or wrong."'#13#10#13#10'#: umain.rsoneofthe'
+  +'reqn'#13#10'msgid "One or more of the required fields are missing or wrong.'
+  +'"'#13#10'msgstr "One or more of the required fields are missing or wrong."'
+  +#13#10#13#10'#: umain.rsopeningyourb'#13#10'msgid "Opening your browser..."'
+  +#13#10'msgstr "Opening your browser..."'#13#10#13#10'#: umain.rsoverwrite'#13
+  +#10'msgid "Overwrite"'#13#10'msgstr "Overwrite"'#13#10#13#10'#: umain.rspack'
+  +'agedinfo'#13#10'msgid "Package #%d Information"'#13#10'msgstr "Package #%d '
+  ,'Information"'#13#10#13#10'#: umain.rssavedok'#13#10'msgid "Saved OK"'#13#10
+  +'msgstr "Saved OK"'#13#10#13#10'#: umain.rssaveunsucces'#13#10'msgid "Save u'
+  +'nsuccessful"'#13#10'msgstr "Save unsuccessful"'#13#10#13#10'#: umain.rssorr'
+  +'ycopyope'#13#10'msgid "Sorry - copy operation was unsuccessful"'#13#10'msgs'
+  +'tr "Sorry - copy operation was unsuccessful"'#13#10#13#10'#: umain.rssorryt'
+  +'hislan'#13#10'msgid "Sorry, this language is unavailable at this time."'#13
+  +#10'msgstr "Sorry, this language is unavailable at this time."'#13#10#13#10
+  +'#: umain.rsswassuccessf'#13#10'msgid "%s was successfully copied to the %s '
+  +'folder"'#13#10'msgstr "%s was successfully copied to the %s folder"'#13#10
+  +#13#10'#: umain.rsthelpkentryd'#13#10'msgid "The .lpk entry #%d is missing t'
+  +'he .lpk extension"'#13#10'msgstr "The .lpk entry #%d is missing the .lpk ex'
+  +'tension"'#13#10#13#10'#: umain.rsthelpkentryd2'#13#10'msgid "The .lpk entry'
+  +' #%d is is absent"'#13#10'msgstr "The .lpk entry #%d is is absent"'#13#10#13
+  +#10'#: umain.rsthepackagefi'#13#10'msgid "The package filename (No path e.g.'
+  +' package.lpk)"'#13#10'msgstr "The package filename (No path e.g. package.lp'
+  +'k)"'#13#10#13#10'#: umain.rsthereareoneo'#13#10'msgid "- There are one or m'
+  +'ore .lpk entries with the same name.%s- Every .lpk entry must have a unique'
+  +' name."'#13#10'msgstr "- There are one or more .lpk entries with the same n'
+  +'ame.%s- Every .lpk entry must have a unique name."'#13#10#13#10'#: umain.rs'
+  +'therewasapro'#13#10'msgid "There was a problem loading \"%s\" - is it corru'
+  +'pted or in the wrong format?"'#13#10'msgstr "There was a problem loading \"'
+  +'%s\" - is it corrupted or in the wrong format?"'#13#10#13#10'#: umain.rsthi'
+  +'soptionsh'#13#10'#| msgid "This option should only be used for crucial upda'
+  +'tes or bug-fixed packages. Are you OK with that?"'#13#10'msgid "This option'
+  +' should only be used for crucial updates or bug-fixed packages."'#13#10'msg'
+  +'str "This option should only be used for crucial updates or bug-fixed packa'
+  +'ges."'#13#10#13#10'#: umain.rsthiswilldisa'#13#10'#| msgid "This will disab'
+  +'le your package in OnlinePackageManager!%sAre you SURE you want to do this?'
+  +'"'#13#10'msgid "This will disable your package in Online Package Manager!%s'
+  +'Are you SURE you want to do this?"'#13#10'msgstr "This will disable your pa'
+  +'ckage in Online Package Manager!%sAre you SURE you want to do this?"'#13#10
+  +#13#10'#: umain.rsturnhintsoff'#13#10'msgid "(You can toggle these hints on/'
+  +'off in the Help menu)"'#13#10'msgstr "(You can toggle these hints on/off in'
+  +' the Help menu)"'#13#10#13#10'#: umain.rsupdate'#13#10'msgid "Update"'#13#10
+  +'msgstr "Update"'#13#10#13#10'#: umain.rsupdatejsonsf'#13#10'msgid "Update f'
+  +'ile \"%s\" failed to load correctly."'#13#10'msgstr "Update file \"%s\" fai'
+  +'led to load correctly."'#13#10#13#10'#: umain.rsupdatezipnam'#13#10'msgid "'
+  +'- Update zip name is too short or missing"'#13#10'msgstr "- Update zip name'
+  +' is too short or missing"'#13#10#13#10'#: umain.rsupdatezipnam2'#13#10'msgi'
+  +'d "- Update zip name missing extension \".zip\""'#13#10'msgstr "- Update zi'
+  +'p name missing extension \".zip\""'#13#10#13#10'#: umain.rsuseincombina'#13
+  +#10'#| msgid "Use in combination with %s"'#13#10'msgid "Use in combination w'
+  +'ith"'#13#10'msgstr "Use in combination with"'#13#10#13#10'#: umain.rsversio'
+  +'n'#13#10'msgid "Version: "'#13#10'msgstr "Version: "'#13#10#13#10'#: umain.'
+  +'rsversionforpa'#13#10'msgid "Version for package %d is zero"'#13#10'msgstr '
+  +'"Version for package %d is zero"'#13#10#13#10'#: umain.rswouldyoulike'#13#10
+  +'msgid "Would you like to copy %s to the %s folder?"'#13#10'msgstr "Would yo'
+  +'u like to copy %s to the %s folder?"'#13#10#13#10'#: umain.rsyoumayneedto'
+  +#13#10'msgid "(You may need to restart the app to see the change)"'#13#10'ms'
+  +'gstr "(You may need to restart the app to see the change)"'#13#10
+]);
+LazarusResources.Add('jsoneditor.es','PO',[
+  'msgid ""'#13#10'msgstr ""'#13#10'"Content-Type: text/plain; charset=UTF-8\n"'
+  +#13#10'"Project-Id-Version: jsoneditor\n"'#13#10'"POT-Creation-Date: \n"'#13
+  +#10'"PO-Revision-Date: \n"'#13#10'"Last-Translator: minesadorada <minesadora'
+  +'da@charcodelvalle.com>\n"'#13#10'"Language-Team: \n"'#13#10'"MIME-Version: '
+  +'1.0\n"'#13#10'"Content-Transfer-Encoding: 8bit\n"'#13#10'"Language: es\n"'
+  +#13#10'"X-Generator: Poedit 1.8.11\n"'#13#10'"X-Poedit-SourceCharset: UTF-8\'
+  +'n"'#13#10#13#10'#: tfrmmain.chk_disableinopm.caption'#13#10'msgid "Disable '
+  +'in OPM"'#13#10'msgstr "Desactivar en OPM"'#13#10#13#10'#: tfrmmain.chk_disa'
+  +'bleinopm.hint'#13#10'msgid "Warning! This will disable installing or updati'
+  +'ng your package in OPM"'#13#10'msgstr "'#194#161'Advertencia! Esto deshabil'
+  +'itar'#195#161' la instalaci'#195#179'n o actualizaci'#195#179'n de tu paque'
+  +'te en OPM"'#13#10#13#10'#: tfrmmain.cmd_addpackagefile.caption'#13#10'msgct'
+  +'xt "tfrmmain.cmd_addpackagefile.caption"'#13#10'msgid "Add"'#13#10'msgstr "'
+  +'Agregar"'#13#10#13#10'#: tfrmmain.cmd_addpackagefile.hint'#13#10'msgctxt "t'
+  +'frmmain.cmd_addpackagefile.hint"'#13#10'msgid ""'#13#10'"Add Package File:\'
+  +'n"'#13#10'"The update zip can contain more than one lpk file\n"'#13#10'"dep'
+  +'loyed to the same place.\n"'#13#10'msgstr ""'#13#10'"Agregar archivo de paq'
+  +'uete:\n"'#13#10'"El zip de actualizaci'#195#179'n puede contener mas que un'
+  +' archivo lpk\n"'#13#10'"distribuido en el mismo lugar.\n"'#13#10#13#10'#: t'
+  +'frmmain.cmd_close.caption'#13#10'msgid "&Close"'#13#10'msgstr "&Cerrar"'#13
+  +#10#13#10'#: tfrmmain.cmd_removelastpackagefile.caption'#13#10'msgctxt "tfrm'
+  +'main.cmd_removelastpackagefile.caption"'#13#10'msgid "Remove"'#13#10'msgstr'
+  +' "Quitar"'#13#10#13#10'#: tfrmmain.cmd_removelastpackagefile.hint'#13#10'ms'
+  +'gctxt "tfrmmain.cmd_removelastpackagefile.hint"'#13#10'msgid ""'#13#10'"Rem'
+  +'ove Package File:\n"'#13#10'"Deletes the last entry from the list\n"'#13#10
+  +'msgstr ""'#13#10'"Quitar archivo de paquete:\n"'#13#10'"Elimina la '#195#186
+  +'ltima entrada de la lista\n"'#13#10#13#10'#: tfrmmain.cmd_save.caption'#13
+  +#10'msgid "&Save"'#13#10'msgstr "&Guardar"'#13#10#13#10'#: tfrmmain.cmd_save'
+  +'.hint'#13#10'msgid ""'#13#10'"Save the current configuration to disk\n"'#13
+  +#10'"as a JSON update file\n"'#13#10'msgstr ""'#13#10'"Guardar la configurac'
+  +'i'#195#179'n actual en el disco\n"'#13#10'"como archivo de actualizaci'#195
+  +#179'n JSON\n"'#13#10#13#10'#: tfrmmain.edt_downloadzipurl.hint'#13#10'msgct'
+  +'xt "tfrmmain.edt_downloadzipurl.hint"'#13#10'msgid ""'#13#10'"Download URL:'
+  +'\n"'#13#10'"Include the FULL url needed to download the package Zip file\n"'
+  +#13#10'msgstr ""'#13#10'"URL de Descarga:\n"'#13#10'"Incluye la url COMPLETA'
+  +' necesaria para descargar el archivo zip del paquete\n"'#13#10#13#10'#: tfr'
+  +'mmain.edt_updatezipname.hint'#13#10'msgctxt "tfrmmain.edt_updatezipname.hin'
+  +'t"'#13#10'msgid ""'#13#10'"Update Zip Name:\n"'#13#10'"This is just the fil'
+  +'ename (not including the path)\n"'#13#10'"of your update zip. Type, or clic'
+  +'k the [...]\n"'#13#10'msgstr ""'#13#10'"Nombre del Zip de actualizaci'#195
+  +#179'n:\n"'#13#10'"Este es solo el nombre (no incluye la ruta)\n"'#13#10'"de'
+  +' tu zip de actualizaci'#195#179'n. Escribe o haz clic en [...]\n"'#13#10#13
+  +#10'#: tfrmmain.filemenu.caption'#13#10'msgid "File"'#13#10'msgstr "Archivo"'
+  +#13#10#13#10'#: tfrmmain.fileopen1.caption'#13#10'msgid "&Open ..."'#13#10'm'
+  +'sgstr "&Abrir ..."'#13#10#13#10'#: tfrmmain.fileopen1.hint'#13#10'msgid "Op'
+  +'en"'#13#10'msgstr "Abrir"'#13#10#13#10'#: tfrmmain.filesaveas1.caption'#13
+  +#10'msgid "&Save As ..."'#13#10'msgstr "&Guardar Como ..."'#13#10#13#10'#: t'
+  +'frmmain.filesaveas1.hint'#13#10'msgid "Save As"'#13#10'msgstr "Guardar Como'
+  +'"'#13#10#13#10'#: tfrmmain.lbl_downloadzipurl.caption'#13#10'msgctxt "tfrmm'
+  +'ain.lbl_downloadzipurl.caption"'#13#10'msgid "Download URL:"'#13#10'msgstr '
+  +'"URL de Descarga:"'#13#10#13#10'#: tfrmmain.lbl_packagefiles.caption'#13#10
+  +'msgctxt "tfrmmain.lbl_packagefiles.caption"'#13#10'msgid "Package Files:"'
+  +#13#10'msgstr "Archivos de Paquete:"'#13#10#13#10'#: tfrmmain.lbl_updatezipn'
+  +'ame.caption'#13#10'msgctxt "tfrmmain.lbl_updatezipname.caption"'#13#10'msgi'
+  +'d "Update Zip Name:"'#13#10'msgstr "Nombre del Zip de actualizaci'#195#179
+  +'n:"'#13#10#13#10'#: tfrmmain.loaditem.caption'#13#10'msgid "Load..."'#13#10
+  +'msgstr "Cargar..."'#13#10#13#10'#: tfrmmain.mnu_fileexit.caption'#13#10'msg'
+  +'id "E&xit"'#13#10'msgstr "&Salir"'#13#10#13#10'#: tfrmmain.mnu_filenew.capt'
+  +'ion'#13#10'msgid "New"'#13#10'msgstr "Nuevo"'#13#10#13#10'#: tfrmmain.mnu_f'
+  +'ilesave.caption'#13#10'msgid "Save"'#13#10'msgstr "Guardar"'#13#10#13#10'#:'
+  +' tfrmmain.mnu_help.caption'#13#10'msgid "&Help"'#13#10'msgstr "&Ayuda"'#13
+  +#10#13#10'#: tfrmmain.mnu_helpabout.caption'#13#10'msgid "About.."'#13#10'ms'
+  +'gstr "Acerca de.."'#13#10#13#10'#: tfrmmain.mnu_helpautoloadlastfile.captio'
+  +'n'#13#10'msgid "Auto-load last saved file"'#13#10'msgstr "Carga autom'#195
+  ,#161'tica '#195#186'ltimo archivo guardado"'#13#10#13#10'#: tfrmmain.mnu_hel'
+  +'pdisablewarnings.caption'#13#10'msgid "Disable warnings"'#13#10'msgstr "Des'
+  +'habilitar advertencias"'#13#10#13#10'#: tfrmmain.mnu_helpshowhints.caption'
+  +#13#10'msgid "Show Popup Hints"'#13#10'msgstr "Mostrar consejos"'#13#10#13#10
+  +'#: tfrmmain.mnu_lang.caption'#13#10'msgid "Languages.."'#13#10'msgstr "Idio'
+  +'mas.."'#13#10#13#10'#: tfrmmain.mnu_lang_en.caption'#13#10'msgid "English"'
+  +#13#10'msgstr "English"'#13#10#13#10'#: tfrmmain.mnu_lang_es.caption'#13#10
+  +'msgid "Espa'#195#177'ol"'#13#10'msgstr "Espa'#195#177'ol"'#13#10#13#10'#: t'
+  +'frmmain.saveasitem.caption'#13#10'msgid "Save As..."'#13#10'msgstr "Guardar'
+  +' Como..."'#13#10#13#10'#: tfrmmain.sb_editname.caption'#13#10'msgid "..."'
+  +#13#10'msgstr "..."'#13#10#13#10'#: tfrmmain.sb_editname.hint'#13#10'msgid "'
+  +'"'#13#10'"Update Zip Name:\n"'#13#10'"Click this to browse your system to f'
+  +'ind\n"'#13#10'" an existing Update Zip\n"'#13#10'msgstr ""'#13#10'"Nombre d'
+  +'el zip de actualizaci'#195#179'n:\n"'#13#10'"Haz clic aqu'#195#173' para ex'
+  +'plorar tu sistema para encontrar\n"'#13#10'" un zip de actualizaci'#195#179
+  +'n existente\n"'#13#10#13#10'#: tfrmmain.spd_checkurl.caption'#13#10'msgid "'
+  +'Check URL"'#13#10'msgstr "Verificar URL"'#13#10#13#10'#: tfrmmain.spd_check'
+  +'url.hint'#13#10'msgid "Attempts to open the URL in your browser"'#13#10'msg'
+  +'str "Intentando Abrir URL en el navegador"'#13#10#13#10'#: umain.rsabout'#13
+  +#10'msgid "About"'#13#10'msgstr "Acerca de"'#13#10#13#10'#: umain.rscheckthi'
+  +'sify'#13#10'msgid "Check this if you don''t want to increment the package v'
+  +'ersion"'#13#10'msgstr "Marca esto si no quieres incrementar la versi'#195
+  +#179'n del paquete"'#13#10#13#10'#: umain.rscompiledwith2'#13#10'msgid "Comp'
+  +'iled with FPC V:%s and Lazarus V:%d.%d%s for the %s - %s platform%s%s"'#13
+  +#10'msgstr "Compilado con FPC V:%s y Lazarus V:%d.%d%s para la plataforma %s'
+  +' - %s%s%s"'#13#10#13#10'#: umain.rsdownloadzipurld'#13#10'msgid "- Download'
+  +' URL does not contain the zipfile name"'#13#10'msgstr "- La URL de descarga'
+  +' no contiene el nombre del zip"'#13#10#13#10'#: umain.rsdownloadzipurli'#13
+  +#10'msgid "- Download URL is too short or missing"'#13#10'msgstr "- URL de d'
+  +'escarga es muy corta o est'#195#161' vac'#195#173'a"'#13#10#13#10'#: umain.'
+  +'rsdownloadzipurli2'#13#10'msgid "- Download URL is incomplete"'#13#10'msgst'
+  +'r "- URL de descarga incompleta"'#13#10#13#10'#: umain.rsdownloadzipurls'#13
+  +#10'msgid "- Download URL should start with \"http\""'#13#10'msgstr "- URL d'
+  +'e descarga debe empezar con \"http\""'#13#10#13#10'#: umain.rsfilemaybeuns'
+  +#13#10'msgid "JSON may be unsaved. Are you sure you want to quit?"'#13#10'ms'
+  +'gstr "JSON puede estar sin guardar. '#194#191'Est'#195#161' seguro que dese'
+  +'a salir?"'#13#10#13#10'#: umain.rsfilename'#13#10'msgid "Filename: "'#13#10
+  +'msgstr "Archivo: "'#13#10#13#10'#: umain.rsfilescanbeau'#13#10'msgid "File '
+  +'\"%s\" can be auto-loaded next time you start %s%sWould you like to enable '
+  +'this?%s(It can be changed in menu item Help/%s later)"'#13#10'msgstr "El ar'
+  +'chivo \"%s\" puede ser auto-cargado pr'#195#179'xima vez que inicie%s%sWoul'
+  +'d de si desea activar esto?%s (Puede cambiarse en elemento de men'#195#186
+  +' Ayuda /%s despu'#195#169's)"'#13#10#13#10'#: umain.rsfixthentryag'#13#10'm'
+  +'sgid "Fix, then try again."'#13#10'msgstr "Arr'#195#169'glalo, luego intent'
+  +'a de nuevo."'#13#10#13#10'#: umain.rsformatisnnnn'#13#10'msgid "Package ver'
+  +'sion:%sFormat is: n.n.n.n"'#13#10'msgstr "Versi'#195#179'n del paquete:%sFo'
+  +'rmato es: n.n.n.n"'#13#10#13#10'#: umain.rshelpandinfor'#13#10'msgid "Help '
+  +'and Information"'#13#10'msgstr "Ayuda e Informaci'#195#179'n"'#13#10#13#10
+  +'#: umain.rshttpwwwupdat'#13#10'msgid "http://www.updatesite.com/myupdate/my'
+  +'packagename.zip"'#13#10'msgstr "http://www.sitioactualizacion.com/miactuali'
+  +'zacion/nombredemipaquete.zip"'#13#10#13#10'#: umain.rsinternalvers'#13#10'm'
+  +'sgid "Internal Version: "'#13#10'msgstr "Versi'#195#179'n Interna: "'#13#10
+  +#13#10'#: umain.rsinternalvers2'#13#10'msgid "Internal version number should'
+  +' not be Zero%s"'#13#10'msgstr "La versi'#195#179'n interna no debe ser cero'
+  +'%s"'#13#10#13#10'#: umain.rslanguagechan'#13#10'msgid "Language changed to '
+  +'\"%s\"."'#13#10'msgstr "Idioma cambiado a \"%s\"."'#13#10#13#10'#: umain.rs'
+  +'mypackagelpk'#13#10'msgctxt "umain.rsmypackagelpk"'#13#10'msgid "mypackagen'
+  +'ame.lpk"'#13#10'msgstr "nombredemipaquete.lpk"'#13#10#13#10'#: umain.rsmypa'
+  +'ckagenam'#13#10'msgctxt "umain.rsmypackagenam"'#13#10'msgid "mypackagename.'
+  +'zip"'#13#10'msgstr "nombredemipaquete.zip"'#13#10#13#10'#: umain.rsnotifyup'
+  +'date'#13#10'msgid "Notify Update"'#13#10'msgstr "Notificar Actualizaci'#195
+  +#179'n"'#13#10#13#10'#: umain.rsoneofthereq1'#13#10'msgid "One of the requir'
+  +'ed fields is missing or wrong."'#13#10'msgstr "Uno de los campos requeridos'
+  +' esta vac'#195#173'o o mal."'#13#10#13#10'#: umain.rsoneofthereqn'#13#10'ms'
+  ,'gid "One or more of the required fields are missing or wrong."'#13#10'msgst'
+  +'r "Uno o mas de los capos requeridos esta vac'#195#173'o o mal."'#13#10#13
+  +#10'#: umain.rsopeningyourb'#13#10'msgid "Opening your browser..."'#13#10'ms'
+  +'gstr "Abriendo tu navegador..."'#13#10#13#10'#: umain.rsoverwrite'#13#10'ms'
+  +'gid "Overwrite"'#13#10'msgstr "Sobreescribir"'#13#10#13#10'#: umain.rspacka'
+  +'gedinfo'#13#10'msgid "Package #%d Information"'#13#10'msgstr "Paquete #%d I'
+  +'nformaci'#195#179'n"'#13#10#13#10'#: umain.rssavedok'#13#10'msgid "Saved OK'
+  +'"'#13#10'msgstr "Guardado OK"'#13#10#13#10'#: umain.rssaveunsucces'#13#10'm'
+  +'sgid "Save unsuccessful"'#13#10'msgstr "Guardado no satisfactorio"'#13#10#13
+  +#10'#: umain.rssorrycopyope'#13#10'msgid "Sorry - copy operation was unsucce'
+  +'ssful"'#13#10'msgstr "Lo siento, operaci'#195#179'n de copia insatisfactori'
+  +'a"'#13#10#13#10'#: umain.rssorrythislan'#13#10'msgid "Sorry, this language '
+  +'is unavailable at this time."'#13#10'msgstr "Lo siento, este idioma no est'
+  +#195#161' disponible en este momento."'#13#10#13#10'#: umain.rsswassuccessf'
+  +#13#10'msgid "%s was successfully copied to the %s folder"'#13#10'msgstr "%s'
+  +' fue satisfactoriamente copiado a la carpeta %s"'#13#10#13#10'#: umain.rsth'
+  +'elpkentryd'#13#10'msgid "The .lpk entry #%d is missing the .lpk extension"'
+  +#13#10'msgstr "La entrada .lpk #%d no tiene la extensi'#195#179'n .lpk"'#13
+  +#10#13#10'#: umain.rsthelpkentryd2'#13#10'msgid "The .lpk entry #%d is is ab'
+  +'sent"'#13#10'msgstr "La entrada .lpk #%d est'#195#161' vac'#195#173'a"'#13
+  +#10#13#10'#: umain.rsthepackagefi'#13#10'msgid "The package filename (No pat'
+  +'h e.g. package.lpk)"'#13#10'msgstr "El nombre del paquete (Sin ruta ej. paq'
+  +'uete.lpk)"'#13#10#13#10'#: umain.rsthereareoneo'#13#10'msgid "- There are o'
+  +'ne or more .lpk entries with the same name.%s- Every .lpk entry must have a'
+  +' unique name."'#13#10'msgstr "- Hay una o m'#195#161's entradas .lpk con el'
+  +' mismo nombre.%s- Cada entrada .lpk debe tener un nombre '#195#186'nico."'
+  +#13#10#13#10'#: umain.rstherewasapro'#13#10'msgid "There was a problem loadi'
+  +'ng \"%s\" - is it corrupted or in the wrong format?"'#13#10'msgstr "Hubo un'
+  +' problema cargando \"%s\" - est'#195#161' corrupto o el formato incorrecto?'
+  +'"'#13#10#13#10'#: umain.rsthisoptionsh'#13#10'msgid "This option should onl'
+  +'y be used for crucial updates or bug-fixed packages."'#13#10'msgstr "Esta o'
+  +'pci'#195#179'n deber'#195#173'a solo ser usada para actualizaciones crucial'
+  +'es o paquetes con menos bugs."'#13#10#13#10'#: umain.rsthiswilldisa'#13#10
+  +'msgid "This will disable your package in Online Package Manager!%sAre you S'
+  +'URE you want to do this?"'#13#10'msgstr "'#194#161'Esto deshabilitar'#195
+  +#161' tu paquete en el Administrador de Paquetes en L'#195#173'nea!%s'#194
+  +#191'Seguro de que quieres hacer esto?"'#13#10#13#10'#: umain.rsturnhintsoff'
+  +#13#10'msgid "(You can toggle these hints on/off in the Help menu)"'#13#10'm'
+  +'sgstr "(Puedes cambiar estos consejos en el men'#195#186' Ayuda)"'#13#10#13
+  +#10'#: umain.rsupdate'#13#10'msgid "Update"'#13#10'msgstr "Actualizaci'#195
+  +#179'n"'#13#10#13#10'#: umain.rsupdatejsonsf'#13#10'msgid "Update file \"%s\'
+  +'" failed to load correctly."'#13#10'msgstr "Archivo de actualizaci'#195#179
+  +'n \"%s\" fall'#195#179' al cargarse."'#13#10#13#10'#: umain.rsupdatezipnam'
+  +#13#10'msgid "- Update zip name is too short or missing"'#13#10'msgstr "- El'
+  +' nombre del zip es muy corto o est'#195#161' vac'#195#173'o"'#13#10#13#10'#'
+  +': umain.rsupdatezipnam2'#13#10'msgid "- Update zip name missing extension \'
+  +'".zip\""'#13#10'msgstr "- El nombre del zip no tiene la extensi'#195#179'n '
+  +'\".zip\""'#13#10#13#10'#: umain.rsuseincombina'#13#10'msgid "Use in combina'
+  +'tion with"'#13#10'msgstr "Usar en combinaci'#195#179'n con"'#13#10#13#10'#:'
+  +' umain.rsversion'#13#10'msgid "Version: "'#13#10'msgstr "Versi'#195#179'n: '
+  +'"'#13#10#13#10'#: umain.rsversionforpa'#13#10'msgid "Version for package %d'
+  +' is zero"'#13#10'msgstr "La versi'#195#179'n para el paquete %d es cero"'#13
+  +#10#13#10'#: umain.rswouldyoulike'#13#10'msgid "Would you like to copy %s to'
+  +' the %s folder?"'#13#10'msgstr "'#194#191'Quieres copiar %s a la carpeta %s'
+  +'?"'#13#10#13#10'#: umain.rsyoumayneedto'#13#10'msgid "(You may need to rest'
+  +'art the app to see the change)"'#13#10'msgstr "(Quiz'#195#161's necesites r'
+  +'einiciar la aplicaci'#195#179'n para ver los cambios)"'#13#10
+]);

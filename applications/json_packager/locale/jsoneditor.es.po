@@ -231,6 +231,10 @@ msgstr "JSON puede estar sin guardar. ¿Está seguro que desea salir?"
 msgid "Filename: "
 msgstr "Archivo: "
 
+#: umain.rsfilescanbeau
+msgid "File \"%s\" can be auto-loaded next time you start %s%sWould you like to enable this?%s(It can be changed in menu item Help/%s later)"
+msgstr "El archivo \"%s\" puede ser auto-cargado próxima vez que inicie%s%sWould de si desea activar esto?%s (Puede cambiarse en elemento de menú Ayuda /%s después)"
+
 #: umain.rsfixthentryag
 msgid "Fix, then try again."
 msgstr "Arréglalo, luego intenta de nuevo."

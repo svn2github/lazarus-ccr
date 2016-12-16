@@ -191,24 +191,20 @@ msgid "Check URL"
 msgstr "Check URL"
 
 #: tfrmmain.spd_checkurl.hint
-#, fuzzy
 #| msgid ""
 #| "Check URL:\n"
 #| "Attempts to open the URL in your browser\n"
 msgid "Attempts to open the URL in your browser"
-msgstr ""
-"Check URL:\n"
-"Attempts to open the URL in your browser\n"
+msgstr "Attempts to open the URL in your browser"
 
 #: umain.rsabout
 msgid "About"
 msgstr "About"
 
 #: umain.rscheckthisify
-#, fuzzy
 #| msgid "Check this if you don't want to incrememt the package version"
 msgid "Check this if you don't want to increment the package version"
-msgstr "Check this if you don't want to incrememt the package version"
+msgstr "Check this if you don't want to increment the package version"
 
 #: umain.rscompiledwith2
 msgid "Compiled with FPC V:%s and Lazarus V:%d.%d%s for the %s - %s platform%s%s"
@@ -237,6 +233,10 @@ msgstr "JSON may be unsaved. Are you sure you want to quit?"
 #: umain.rsfilename
 msgid "Filename: "
 msgstr "Filename: "
+
+#: umain.rsfilescanbeau
+msgid "File \"%s\" can be auto-loaded next time you start %s%sWould you like to enable this?%s(It can be changed in menu item Help/%s later)"
+msgstr "File \"%s\" can be auto-loaded next time you start %s%sWould you like to enable this?%s(It can be changed in menu item Help/%s later)"
 
 #: umain.rsfixthentryag
 msgid "Fix, then try again."
@@ -347,10 +347,9 @@ msgid "This option should only be used for crucial updates or bug-fixed packages
 msgstr "This option should only be used for crucial updates or bug-fixed packages."
 
 #: umain.rsthiswilldisa
-#, fuzzy
 #| msgid "This will disable your package in OnlinePackageManager!%sAre you SURE you want to do this?"
 msgid "This will disable your package in Online Package Manager!%sAre you SURE you want to do this?"
-msgstr "This will disable your package in OnlinePackageManager!%sAre you SURE you want to do this?"
+msgstr "This will disable your package in Online Package Manager!%sAre you SURE you want to do this?"
 
 #: umain.rsturnhintsoff
 msgid "(You can toggle these hints on/off in the Help menu)"
@@ -373,10 +372,9 @@ msgid "- Update zip name missing extension \".zip\""
 msgstr "- Update zip name missing extension \".zip\""
 
 #: umain.rsuseincombina
-#, fuzzy
 #| msgid "Use in combination with %s"
 msgid "Use in combination with"
-msgstr "Use in combination with %s"
+msgstr "Use in combination with"
 
 #: umain.rsversion
 msgid "Version: "

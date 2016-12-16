@@ -64,8 +64,9 @@ unit umain;
   0.2.3.0:  ResourceStrings Updated (minesadorada)
   0.2.4.0:  Bugfix: regression error: DisableInOPM (minesadorada)
   0.2.5.0:  BugFix: regression error: CreateUniqueINIFile (minesadorada)
-  0.2.6.0:  Added feature - Help menu/AutoLoad Last File
-  0.2.7.0:  ??
+  0.2.6.0:  Added feature: Help menu/AutoLoad Last File (minesadorada)
+  0.2.7.0:  Updated: Save procedure (minesadorada)
+  0.2.8.0:  ??
  }
 {$mode objfpc}{$H+}
 
@@ -302,6 +303,8 @@ resourcestring
   rsVersionForPa = 'Version for package %d is zero';
   rsInternalVers2 = 'Internal version number should not be Zero%s';
   rsOpeningYourB = 'Opening your browser...';
+  rsFileSCanBeAu = 'File "%s" can be auto-loaded next time you start %s%sWould'
+    +' you like to enable this?%s(It can be changed in menu item Help/%s later)';
 
 { TUpdatePackageData }
 
@@ -360,7 +363,6 @@ begin
       if (Controls[iCount].InheritsFrom(TControl) = False) then
         continue;
 {     // (Kept for reference)
-      // Iterate through the children of TScrollBox
       if (Controls[iCount] is TGroupBox) then
         // Iterate through the children of GroupBox
         for jCount := 0 to Pred(TGroupBox(Controls[iCount]).ControlCount) do
@@ -813,16 +815,19 @@ begin
   // Furniture
   Caption := Application.Title;
   Icon := Application.Icon;
-  {$IFNDEF IGNOREPICTURE}
-  popup_hint.Icon := TPicture(Application.Icon);
-  {$ENDIF}
-  edt_UpdateZipName.Text := rsMypackagenam;
-  edt_DownloadZipURL.Text := rsHttpWwwUpdat;
+  // Popup hint window
+  popup_hint.vNotifierForm.Color:=clForm;
+  popup_hint.vNotifierForm.AlphaBlend:=TRUE;
+  popup_hint.vNotifierForm.AlphaBlendValue:=200;
+
   // Defaults
   slErrorList := TStringList.Create;
   bForceSaveAs := True;
   bShowPopupHints := True;
   iNumLpkFilesVisible := 0;
+  edt_UpdateZipName.Text := rsMypackagenam;
+  edt_DownloadZipURL.Text := rsHttpWwwUpdat;
+
   // Encourage the user to maintain an updates folder
   sUpdateDirectory := ProgramDirectory + 'updates';
   if not FileExistsUTF8(sUpdateDirectory) then
@@ -840,10 +845,16 @@ begin
     CFG.WriteString('Options', 'AppPath', ProgramDirectory);
   end
   else // Make a new INI if this is a new location
+  Try
     CreateUniqueINI(iIniCount);
-
+  Except
+    On E:Exception do
+    begin
+     ShowMessageFmt('Unable to create a configuration file. Reason: %s',[E.Message]);
+     Application.Terminate;
+    end;
+  end;
   CFG.UpdateFile;
-
   if C_DEBUGMESSAGES = True then // Dev only
     ShowMessageFmt('Inifile=%s, Count=%d', [INIFilePath, iIniCount]);
 
@@ -1200,7 +1211,7 @@ begin
         LineEnding + rsFixThenTryAg);
     Exit;
   end;
-  if bForceSaveAs or (sJSONFilePath = '') then
+  if bForceSaveAs or (sJSONFilePath = 'unknown') then
   begin
     FileSaveAs1.Dialog.InitialDir := sUpdateDirectory;
     FileSaveAs1.Dialog.FileName :=
@@ -1233,21 +1244,47 @@ begin
         InternalVersion := ArraySpinEditInternalVersion[i].Value;
       end;
     end;
+
+    // Process Options before saving
+    if bIsVirgin then
+      if MessageDlg(Format(rsFileSCanBeAu,
+      [ExtractFileName(sJSONFilePath),Application.Title,LineEnding,LineEnding,mnu_helpAutoloadLastFile.Caption]),
+      mtInformation,[MBYES,MBNO],0,MBYES) = mrYes then
+      begin
+           mnu_helpAutoloadLastFile.Checked:=TRUE;
+           bAutoLoadLast:=TRUE;
+           CFG.WriteBool('Options', 'AutoLoadLastFile',bAutoLoadLast);
+      end;
+
+
     if FileExistsUTF8(sJSONFilePath) and (bDisableWarnings = False) then
+    // Overwrite?
     begin
       if MessageDlg(rsOverwrite + ' ' + sJSONFilePath + '?', mtConfirmation,
         [mbYes, mbNo], 0, mbYes) = mrYes then
         if JSONPackage.SaveToFile(sJSONFilePath) then
           begin
            ShowMessage(sJSONFilePath + ' ' + rsSavedOK);
-           CFG.WriteString('Options','LastSavedJSON',sJSONFilePath);
+           If (bAutoLoadLast = TRUE) then
+              CFG.WriteString('Options','LastSavedJSON',sJSONFilePath);
           end;
     end
     else
+    // New file
     if JSONPackage.SaveToFile(sJSONFilePath) then
     begin
-      ShowMessage(sJSONFilePath + rsSavedOK);
-      CFG.WriteString('Options','LastSavedJSON',sJSONFilePath);
+      If (bDisableWarnings = True) then
+      begin
+       ShowMessage(sJSONFilePath + ' ' + rsSavedOK);
+       If (bAutoLoadLast = TRUE) then
+          CFG.WriteString('Options','LastSavedJSON',sJSONFilePath);
+      end
+      else
+       If (bAutoLoadLast = TRUE) then
+        if MessageDlg(sJSONFilePath + ' ' + rsSavedOK + LineEnding +
+        'Save this location for next Auto-Load?',
+        mtConfirmation,[MBYES,MBNO],0,MBYES) = mrYes then
+          CFG.WriteString('Options','LastSavedJSON',sJSONFilePath);
     end
     else
       ShowMessage(rsSaveUnsucces);
@@ -1383,7 +1420,7 @@ initialization
       // create a resource stream which points to the po file
       S := TResourceStream.Create(HInstance, 'JSONEDITOR.EN', MakeIntResource(10));
       try
-        ForceDirectory(ProgramDirectory + 'locale');
+        ForceDirectoriesUTF8(ProgramDirectory + 'locale');
         F := TFileStream.Create(sPoPath_en, fmCreate);
         try
           F.CopyFrom(S, S.Size); // copy data from the resource stream to file stream
@@ -1398,7 +1435,7 @@ initialization
     begin
       S := TResourceStream.Create(HInstance, 'JSONEDITOR.ES', MakeIntResource(10));
       try
-        ForceDirectory(ProgramDirectory + 'locale');
+        ForceDirectoriesUTF8(ProgramDirectory + 'locale');
         F := TFileStream.Create(sPoPath_es, fmCreate);
         try
           F.CopyFrom(S, S.Size);
