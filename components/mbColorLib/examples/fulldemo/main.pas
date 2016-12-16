@@ -140,6 +140,8 @@ type
     procedure HRingPicker1Change(Sender: TObject);
     procedure HRingPicker1MouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
+    procedure UpDown1ChangingEx(Sender: TObject; var AllowChange: Boolean;
+      NewValue: SmallInt; Direction: TUpDownDirection);
     procedure VColorPicker2Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
@@ -149,7 +151,6 @@ type
     procedure ComboBox2Change(Sender: TObject);
     procedure ComboBox3Change(Sender: TObject);
     procedure ComboBox4Change(Sender: TObject);
-    procedure UpDown1Changing(Sender: TObject; var AllowChange: Boolean);
     procedure CbWebSsafeClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure CbSwatchStyleClick(Sender: TObject);
@@ -166,6 +167,9 @@ implementation
 
 {$R *.lfm}
 {$R mxico.res} //MXS icon resource file, for internet shortcut only
+
+uses
+  RGBHSLUtils;
 
 procedure TForm1.tb1Change(Sender: TObject);
 begin
@@ -314,6 +318,9 @@ end;
 // only for internet shortcuts
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  MaxHue := 360;
+  MaxSat := 240;
+  MaxLum := 240;
   with TIniFile.Create(ExtractFilePath(Application.ExeName) + '\MXS Website.url') do
   try
     WriteString('InternetShortcut','URL', 'http://mxs.bergsoft.net');
@@ -360,11 +367,11 @@ begin
 mbcolorpalette1.CellStyle := tcellstyle(combobox4.ItemIndex);
 end;
 
-procedure TForm1.UpDown1Changing(Sender: TObject;
-  var AllowChange: Boolean);
+procedure TForm1.UpDown1ChangingEx(Sender: TObject; var AllowChange: Boolean;
+  NewValue: SmallInt; Direction: TUpDownDirection);
 begin
-allowchange := true;
-mbcolorpalette1.CellSize := abs(updown1.Position);
+ allowchange := true;
+ mbcolorpalette1.CellSize := abs(NewValue);
 end;
 
 procedure TForm1.CbWebSsafeClick(Sender: TObject);

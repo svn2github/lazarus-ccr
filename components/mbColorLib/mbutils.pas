@@ -15,8 +15,12 @@ function PtInCircle(p, ctr: TPoint; Radius: Integer): Boolean;
 
 function HighContrastColor(AColor: TColor): TColor;
 
-function HeightOf(R: TRect): Integer;
-function WidthOf(R: TRect): Integer;
+function HeightOfRect(R: TRect): Integer;
+function WidthOfRect(R: TRect): Integer;
+function IsEmptyRect(R: TRect): Boolean;
+
+const
+  EMPTY_RECT: TRect = (Left: -1; Top: -1; Right: -1; Bottom: -1);
 
 implementation
 
@@ -53,14 +57,19 @@ begin
   Result := sqr(p.x - ctr.x) + sqr(p.y - ctr.y) <= sqr(Radius);
 end;
 
-function HeightOf(R: TRect): Integer;
+function HeightOfRect(R: TRect): Integer;
 begin
   Result := R.Bottom - R.Top;
 end;
 
-function WidthOf(R: TRect): Integer;
+function WidthOfRect(R: TRect): Integer;
 begin
   Result := R.Right - R.Left;
+end;
+
+function IsEmptyRect(R: TRect): Boolean;
+begin
+  Result := (R.Left = -1) and (R.Top = -1) and (R.Right = -1) and (R.Bottom = -1);
 end;
 
 function HighContrastColor(AColor: TColor): TColor;

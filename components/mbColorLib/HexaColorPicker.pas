@@ -104,7 +104,6 @@ type
 
     function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean; override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-//    procedure KeyDownInterface(var Key: Word; Shift: TShiftState); override;
     procedure Paint; override;
     procedure Resize; override;
 
@@ -347,7 +346,7 @@ begin
   try
  //   OffScreen.PixelFormat := pf32bit;
     OffScreen.Width := Width;
-    OffScreen.Height := HeightOf(FColorCombRect) + HeightOf(FBWCombRect);
+    OffScreen.Height := HeightOfRect(FColorCombRect) + HeightOfRect(FBWCombRect);
     //Parent background
     {$IFDEF FPC}
     if Color = clDefault then

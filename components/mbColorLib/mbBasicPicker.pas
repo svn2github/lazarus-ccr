@@ -38,6 +38,7 @@ type
     function MouseOnPicker(X, Y: Integer): Boolean; virtual;
     procedure PaintParentBack; virtual; overload;
     procedure PaintParentBack(ACanvas: TCanvas); overload;
+    procedure PaintParentBack(ACanvas: TCanvas; ARect: TRect); overload;
     procedure PaintParentBack(ABitmap: TBitmap); overload;
     function ShowHintWindow(APoint: TPoint; AText: String): Boolean; virtual;
     {$IFDEF DELPHI}
@@ -58,7 +59,7 @@ type
 implementation
 
 uses
-  LCLIntf;
+  LCLIntf, mbUtils;
 
 const
   HINT_SHOW_DELAY = 50;
@@ -183,7 +184,6 @@ begin
   {$ENDIF}
     ABitmap.Canvas.Brush.Color := Color;
   ABitmap.Canvas.FillRect(ABitmap.Canvas.ClipRect);
-//  Canvas.Draw(0, 0, ABitmap);
 
   {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
   if ParentBackground then
@@ -201,6 +201,12 @@ end;
 
 procedure TmbBasicPicker.PaintParentBack(ACanvas: TCanvas);
 var
+  R: TRect;
+begin
+  R := Rect(0, 0, Width, Height);
+  PaintParentBack(ACanvas, R);
+  (*
+var
   OffScreen: TBitmap;
 begin
   Offscreen := TBitmap.Create;
@@ -214,6 +220,27 @@ begin
     Offscreen.Height := Height;
     PaintParentBack(Offscreen);
     ACanvas.Draw(0, 0, Offscreen);
+  finally
+    Offscreen.Free;
+  end;
+  *)
+end;
+
+procedure TmbBasicPicker.PaintParentBack(ACanvas: TCanvas; ARect: TRect);
+var
+  OffScreen: TBitmap;
+begin
+  Offscreen := TBitmap.Create;
+  try
+  //  Offscreen.PixelFormat := pf32bit;
+    if Color = clDefault then begin
+      Offscreen.Transparent := true;
+      Offscreen.TransparentColor := clForm; //GetDefaultColor(dctBrush);
+    end;
+    Offscreen.Width := WidthOfRect(ARect);
+    Offscreen.Height := HeightOfRect(ARect);
+    PaintParentBack(Offscreen);
+    ACanvas.Draw(ARect.Left, ARect.Top, Offscreen);
   finally
     Offscreen.Free;
   end;

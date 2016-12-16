@@ -33,7 +33,6 @@ type
    FMouseLoc: TMouseLoc;
    FMouseOver, FMouseDown, FAutoHeight: boolean;
    FColCount, FRowCount, FTop, FLeft, FIndex, FCheckedIndex, FCellSize, FTotalCells: integer;
-   FTempBmp: TBitmap;
    //PBack: TBitmap;
    FState: TColorCellState;
    FColors, FNames: TStrings;
@@ -72,13 +71,13 @@ type
   protected
    procedure Paint; override;
    procedure PaintTransparentGlyph(ACanvas: TCanvas; R: TRect);
-   procedure DrawCell(clr: string);
+   procedure DrawCell(ACanvas: TCanvas; AColor: string);
    procedure DrawCellBack(ACanvas: TCanvas; R: TRect; AIndex: integer);
    procedure ColorsChange(Sender: TObject);
    procedure Click; override;
    procedure Resize; override;
    procedure SelectCell(i: integer);
-   procedure CreateWnd; override;
+//   procedure CreateWnd; override;
    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -173,25 +172,25 @@ type
 
 implementation
 
+uses
+  mbUtils;
+
 { TmbColorPalette }
 
 constructor TmbColorPalette.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-// ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
+//  ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
 // DoubleBuffered := true;
 // PBack := TBitmap.Create;
 // PBack.PixelFormat := pf32bit;
-  FTempBmp := TBitmap.Create;
- //FTempBmp.PixelFormat := pf32bit;
   {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
   ParentBackground := true;
   {$ENDIF} {$ENDIF}
   TabStop := true;
   ParentShowHint := true;
   ShowHint := false;
-  Width := 180;
-  Height := 126;
+  SetInitialBounds(0, 0, 180, 126);
   FMouseLoc := mlNone;
   FMouseOver := false;
   FMouseDown := false;
@@ -221,7 +220,7 @@ end;
 destructor TmbColorPalette.Destroy;
 begin
   //PBack.Free;
-  FTempBmp.Free;
+  FBufferBmp.Free;
   FNames.Free;
   FColors.Free;
   inherited Destroy;
@@ -232,6 +231,7 @@ begin
   if Parent = nil then
     exit;
   FColCount := Width div FCellSize;
+  {7
   if FAutoHeight and (FColCount <> 0) then
   begin
     if FColors.Count mod FColCount > 0 then
@@ -240,8 +240,11 @@ begin
       Height := (FColors.Count div FColCount) * FCellSize;
   end;
   if Height = 0 then Height := FCellSize;
+  }
   FRowCount := Height div FCellSize;
+  {
   Width := FColCount * FCellSize;
+  }
 end;
 
 function TmbColorPalette.GetTotalRowCount: integer;
@@ -251,13 +254,16 @@ begin
   else
     Result := 0;
 end;
-
+                                 (*
 procedure TmbColorPalette.CreateWnd;
 begin
   inherited;
+  {
   CalcAutoHeight;
   Invalidate;
+  }
 end;
+*)
                    (*
 procedure TmbColorPalette.PaintParentBack;
 {$IFDEF DELPHI_7_UP}
@@ -297,15 +303,19 @@ end;                 *)
 procedure TmbColorPalette.Paint;
 var
   i: integer;
+  bmp: TBitmap;
 begin
 {  PBack.Width := Width;
   PBack.Height := Height;
   PaintParentBack(PBack);
  }
   //make bmp
-  FTempBmp.Width := Width;
-  FTempBmp.Height := Height;
-  PaintParentBack(FTempBmp);
+  if FBufferBmp = nil then
+    FBufferBmp := TBitmap.Create;
+  FBufferBmp.Width := Width;
+  FBufferBmp.Height := Height;
+  PaintParentBack(FBufferBmp);
+  FBufferBmp.Transparent := false;  // a transparent bitmap does not show the selection ?!
 
   //reset counters
   FTotalCells := FColors.Count - 1;
@@ -316,12 +326,29 @@ begin
   for i := 0 to FColors.Count - 1 do
   begin
     if FColors.Strings[i] <> '' then
-      DrawCell(FColors.Strings[i]);
+      DrawCell(FBufferBmp.Canvas, FColors.Strings[i]);
     Inc(FLeft);
   end;
 
   //draw the bmp
-  Canvas.Draw(0, 0, FTempBmp);
+  if Color = clDefault then
+  begin
+    // Use temporary bitmap to draw the buffer bitmap transparently
+    bmp := TBitmap.Create;
+    try
+      bmp.SetSize(Width, Height);
+      if Color = clDefault then begin
+        bmp.Transparent := true;
+        bmp.TransparentColor := clForm;
+      end;
+      bmp.Canvas.Draw(0, 0, FBufferBmp);
+      Canvas.Draw(0, 0, bmp);
+    finally
+      bmp.Free;
+    end;
+  end
+  else
+    Canvas.Draw(0, 0, FBufferBmp);
 
   //csDesiging border
   if csDesigning in ComponentState then
@@ -335,7 +362,7 @@ begin
   end;
 end;
 
-procedure TmbColorPalette.DrawCell(clr: string);
+procedure TmbColorPalette.DrawCell(ACanvas: TCanvas; AColor: string);
 var
   R: Trect;
   FCurrentIndex: integer;
@@ -343,7 +370,7 @@ var
   Handled: boolean;
 begin
   // set props
-  if (FLeft + 1) * FCellSize > FTempBmp.Width then
+  if (FLeft + 1) * FCellSize > Width then
   begin
     Inc(FTop);
     FLeft := 0;
@@ -377,41 +404,42 @@ begin
     FState := ccsNone;
 
   //paint
-  DrawCellBack(FTempBmp.Canvas, R, FCurrentIndex);
+  DrawCellBack(ACanvas, R, FCurrentIndex);
 
   // fire the event
   Handled := false;
+  c := mbStringToColor(AColor);
   if Assigned(FOnPaintCell) then
     case FCellStyle of
       csDefault:
-        FOnPaintCell(FTempBmp.Canvas, R, mbStringToColor(clr), FCurrentIndex, FState, FTStyle, Handled);
+        FOnPaintCell(ACanvas, R, c, FCurrentIndex, FState, FTStyle, Handled);
       csCorel:
         if FColCount = 1 then
-          FOnPaintCell(FTempBmp.Canvas, R, mbStringToColor(clr), FCurrentIndex, FState, FTStyle, Handled)
+          FOnPaintCell(ACanvas, R, c, FCurrentIndex, FState, FTStyle, Handled)
         else
-          FOnPaintCell(FTempBmp.Canvas, Rect(R.Left, R.Top, R.Right + 1, R.Bottom), mbStringToColor(clr), FCurrentIndex, FState, FTStyle, Handled);
+          FOnPaintCell(ACanvas, Rect(R.Left, R.Top, R.Right + 1, R.Bottom), c,
+            FCurrentIndex, FState, FTStyle, Handled);
     end;
 
   if not Handled then
   begin
     // if standard colors draw the rect
-    c := mbStringToColor(clr);
-    if not SameText(clr, 'clCustom') and not SameText(clr, 'clTransparent') then
+    if not SameText(AColor, 'clCustom') and not SameText(AColor, 'clTransparent') then
       case FCellStyle of
         csDefault:
           begin
             InflateRect(R, -3, -3);
             if Enabled then
             begin
-              FTempBmp.Canvas.Brush.Color := c;
-              FTempBmp.Canvas.Pen.Color := clBtnShadow;
+              ACanvas.Brush.Color := c;
+              ACanvas.Pen.Color := clBtnShadow;
             end
             else
             begin
-              FTempBmp.Canvas.Brush.Color := clGray;
-              FTempBmp.Canvas.Pen.Color := clGray;
+              ACanvas.Brush.Color := clGray;
+              ACanvas.Pen.Color := clGray;
             end;
-            FTempBmp.Canvas.Rectangle(R);
+            ACanvas.Rectangle(R);
             Exit;
           end;
 
@@ -429,17 +457,17 @@ begin
                 Dec(R.Right);
             end;
             if Enabled then
-              FTempBmp.Canvas.Brush.Color := c
+              ACanvas.Brush.Color := c
             else
-              FTempBmp.Canvas.Brush.Color := clGray;
-            FTempBmp.Canvas.FillRect(R);
+              ACanvas.Brush.Color := clGray;
+            ACanvas.FillRect(R);
             Exit;
           end;
       end;
 
     //if transparent draw the glyph
-    if SameText(clr, 'clTransparent') then
-      PaintTransparentGlyph(FTempBmp.Canvas, R);
+    if SameText(AColor, 'clTransparent') then
+      PaintTransparentGlyph(ACanvas, R);
   end;
 end;
 
@@ -454,8 +482,8 @@ begin
        with ThemeServices do
         if Enabled then
          case FState of
-          ccsNone: ;
-          //ccsNone: ACanvas.CopyRect(R, PBack.Canvas, R);
+          ccsNone: ; //PaintParentBack(ACanvas, R);
+//          ccsNone: ACanvas.CopyRect(R, PBack.Canvas, R);
           ccsOver: DrawElement(ACanvas.Handle, GetElementDetails(ttbButtonHot), R);
           ccsDown: DrawElement(ACanvas.Handle, GetElementDetails(ttbButtonPressed), R);
           ccsChecked: DrawElement(ACanvas.Handle, GetElementDetails(ttbButtonChecked), R);
@@ -586,6 +614,7 @@ begin
     else if FColCount > 1 then
       Inc(R.Right);
   end;
+
   with ACanvas do
     case FTStyle of
       tsPhotoshop:
@@ -660,7 +689,7 @@ end;
 procedure TmbColorPalette.Resize;
 begin
   inherited;
-  //CalcAutoHeight;    // wp: will cause a ChangedBounds endless loop
+  CalcAutoHeight;    // wp: will cause a ChangedBounds endless loop
   Invalidate;
 end;
 

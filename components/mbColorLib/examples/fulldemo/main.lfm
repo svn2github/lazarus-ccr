@@ -42,9 +42,9 @@ object Form1: TForm1
     Height = 363
     Top = 6
     Width = 403
-    ActivePage = TabSheet2
+    ActivePage = TabSheet3
     Anchors = [akTop, akLeft, akRight, akBottom]
-    TabIndex = 1
+    TabIndex = 2
     TabOrder = 0
     OnMouseMove = PageControl1MouseMove
     object TabSheet1: TTabSheet
@@ -56,7 +56,7 @@ object Form1: TForm1
         Height = 287
         Top = 8
         Width = 377
-        SelectedColor = 553990
+        SelectedColor = 685062
         HSPickerHintFormat = 'H: %h S: %s'#13'Hex: %hex'
         LPickerHintFormat = 'Luminance: %l'
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -208,8 +208,8 @@ object Form1: TForm1
         Height = 253
         Top = 8
         Width = 385
-        HorzScrollBar.Page = 75
-        VertScrollBar.Page = 234
+        HorzScrollBar.Page = 385
+        VertScrollBar.Page = 250
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderStyle = bsNone
         ClientHeight = 253
@@ -217,10 +217,10 @@ object Form1: TForm1
         TabOrder = 3
         object mbColorPalette1: TmbColorPalette
           Left = 0
-          Height = 234
+          Height = 250
           Top = 0
           Width = 385
-          Align = alTop
+          Anchors = [akTop, akLeft, akRight, akBottom]
           Colors.Strings = (
             'clBlack'
             '$00330000'
@@ -481,7 +481,6 @@ object Form1: TForm1
           )
           HintFormat = 'RGB(%r, %g, %b)'#13'Hex: %h'
           AutoHeight = True
-          CellStyle = csCorel
           TabOrder = 0
           OnSelColorChange = mbColorPalette1SelColorChange
           OnMouseMove = mbColorPalette1MouseMove
@@ -505,7 +504,7 @@ object Form1: TForm1
         Text = 'soAscending'
       end
       object ComboBox3: TComboBox
-        Left = 124
+        Left = 127
         Height = 23
         Top = 300
         Width = 87
@@ -561,7 +560,7 @@ object Form1: TForm1
         Width = 15
         Anchors = [akLeft, akBottom]
         Min = 0
-        OnChanging = UpDown1Changing
+        OnChangingEx = UpDown1ChangingEx
         Position = 18
         TabOrder = 7
         Thousands = False
