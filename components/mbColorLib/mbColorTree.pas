@@ -462,7 +462,6 @@ begin
       Brush.Color := Blend(clBtnFace, clWindow, 30);
       FillRect(BR);
       BR := Rect(BR.Left + 42, BR.Top, BR.Right, BR.Bottom);
-      Brush.Color := clWindow;
       FillRect(BR);
       Inc(BR.Left, 6);
       Font.Style := [];
