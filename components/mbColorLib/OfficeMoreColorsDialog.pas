@@ -440,6 +440,7 @@ begin
    MinValue := 0;
    Value := 0;
    OnChange := @ERedChange;
+//   TabOrder := cbColorDisplay.TabOrder + 1;
   end;
   with EGreen do
   begin
@@ -454,6 +455,7 @@ begin
    MinValue := 0;
    Value := 0;
    OnChange := @EGreenChange;
+//   TabOrder := ERed.TabOrder + 1;
   end;
   with EBlue do
   begin
@@ -468,6 +470,7 @@ begin
    MinValue := 0;
    Value := 0;
    OnChange := @EBlueChange;
+//   TabOrder := EGreen.TabOrder + 1;
   end;
   with EHue do
   begin
@@ -482,6 +485,7 @@ begin
    MinValue := 0;
    Value := 0;
    OnChange := @EHueChange;
+//   TabOrder := EBlue.TabOrder + 1;
   end;
   with ESat do
   begin
@@ -496,6 +500,7 @@ begin
    MinValue := 0;
    Value := 0;
    OnChange := @ESatChange;
+//   TabOrder := EHue.TabOrder + 1;
   end;
   with ELum do
   begin
@@ -510,6 +515,7 @@ begin
    MinValue := 0;
    Value := 0;
    OnChange := @ELumChange;
+//   TabOrder := ESat.TabOrder + 1;
   end;
   Custom.InsertControl(ERed);
   Custom.InsertControl(EGreen);
@@ -517,6 +523,7 @@ begin
   Custom.InsertControl(EHue);
   Custom.InsertControl(ESat);
   Custom.InsertControl(ELum);
+
  {$IFDEF mbXP_Lib}
   with grip do
   begin
@@ -529,6 +536,9 @@ begin
   end;
  InsertControl(grip);
  {$ENDIF}
+
+ OKBtn.TabOrder := ELum.TabOrder + 1;
+ CancelBtn.TabOrder := OKBtn.TabOrder + 1;
 end;
 
 end.
