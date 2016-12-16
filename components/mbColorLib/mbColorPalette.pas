@@ -1012,6 +1012,7 @@ procedure TmbColorPalette.CMHintShow(
 var
   clr: TColor;
   Handled: boolean;
+  cp: TPoint;
 begin
   if (Colors.Count > 0) and (FIndex > -1) then
   with TCMHintShow(Message) do
@@ -1024,7 +1025,9 @@ begin
       begin
         // show that we want a hint
         Result := 0;
-        ReshowTimeout := 1;
+        ReshowTimeout := 0; //1;
+        cp := CursorPos;
+        HintInfo^.CursorRect := Rect(cp.X, cp.Y, cp.X+1, cp.Y+1);
         HideTimeout := Application.HintHidePause; // was: 5000
         clr := GetColorUnderCursor;
         //fire event

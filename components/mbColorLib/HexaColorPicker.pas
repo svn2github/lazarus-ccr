@@ -1002,6 +1002,7 @@ procedure THexaColorPicker.CMHintShow(
 var
   Index: Integer;
   Colors: TCombArray;
+  cp: TPoint;
 begin
   Colors := nil;
   if (GetColorUnderCursor <> clNone) or PtInRect(FSliderRect, Point(mX, mY)) then
@@ -1015,9 +1016,11 @@ begin
       begin
         // show that we want a hint
         Result := 0;
-        ReshowTimeout := 1;
+        cp := CursorPos;
+        ReshowTimeout := 0; //1;
         HideTimeout := 5000;
-        if PtInRect(FSliderRect, Point(CursorPos.X, CursorPos.Y)) and FSliderVisible then
+        HintInfo^.CursorRect := Rect(cp.X, cp.Y, cp.X+1, cp.Y+1);
+        if PtInRect(FSliderRect, cp) and FSliderVisible then
         begin
           // in case of the intensity slider we show the current intensity
           HintStr := FIntensityText + Format(': %d%%', [Round(100 * FCenterIntensity)]);
