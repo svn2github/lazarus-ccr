@@ -48,7 +48,7 @@ type
     procedure HPickerChange(Sender: TObject);
     procedure SLPickerChange(Sender: TObject);
   protected
-    procedure CreateWnd; override;
+//    procedure CreateWnd; override;
     procedure DoChange;
     procedure DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     function GetColorUnderCursor: TColor; override;
@@ -109,7 +109,7 @@ const
 constructor TSLHColorPicker.Create(AOwner: TComponent);
 begin
   inherited;
-  ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
+  //ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
   DoubleBuffered := true;
   PBack := TBitmap.Create;
   PBack.PixelFormat := pf32bit;
@@ -358,11 +358,11 @@ begin
   PaintParentBack(Canvas);
 //  Canvas.Draw(0, 0, PBack);
 end;
-
+    (*
 procedure TSLHColorPicker.CreateWnd;
 begin
   inherited;
   PaintParentBack;
 end;
-
+  *)
 end.

@@ -104,7 +104,7 @@ implementation
 constructor THSLRingPicker.Create(AOwner: TComponent);
 begin
   inherited;
-  ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque{$IFDEF DELPHI_7_UP}, csParentBackground{$ENDIF}];
+//  ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque{$IFDEF DELPHI_7_UP}, csParentBackground{$ENDIF}];
   DoubleBuffered := true;
   PBack := TBitmap.Create;
   PBack.PixelFormat := pf32bit;

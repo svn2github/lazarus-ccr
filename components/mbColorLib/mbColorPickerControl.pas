@@ -117,7 +117,7 @@ uses
 constructor TmbCustomPicker.Create(AOwner: TComponent);
 begin
   inherited;
-  ControlStyle := ControlStyle + [csOpaque] - [csAcceptsControls];
+  //ControlStyle := ControlStyle + [csOpaque] - [csAcceptsControls];
   DoubleBuffered := true;
   TabStop := true;
  {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}

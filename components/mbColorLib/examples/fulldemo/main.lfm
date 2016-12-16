@@ -42,9 +42,9 @@ object Form1: TForm1
     Height = 384
     Top = 6
     Width = 403
-    ActivePage = TabSheet10
+    ActivePage = TabSheet3
     Anchors = [akTop, akLeft, akRight, akBottom]
-    TabIndex = 10
+    TabIndex = 2
     TabOrder = 0
     OnChange = PageControl1Change
     OnMouseMove = PageControl1MouseMove
@@ -57,7 +57,7 @@ object Form1: TForm1
         Height = 340
         Top = 8
         Width = 381
-        SelectedColor = 2048
+        SelectedColor = 1024
         HSPickerHintFormat = 'H: %h S: %s'#13'Hex: #%hex'
         LPickerHintFormat = 'Luminance: %l'
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -218,7 +218,7 @@ object Form1: TForm1
         TabOrder = 3
         object mbColorPalette1: TmbColorPalette
           Left = 0
-          Height = 234
+          Height = 272
           Top = 0
           Width = 378
           Anchors = [akTop, akLeft, akRight, akBottom]
@@ -865,16 +865,17 @@ object Form1: TForm1
       end
       object CColorPicker1: TCColorPicker
         Left = 4
-        Height = 267
+        Height = 334
         Top = 18
         Width = 22
         HintFormat = 'Cyan: %c (selected)'
+        Anchors = [akTop, akLeft, akBottom]
         TabOrder = 0
         SelectedColor = clAqua
       end
       object MColorPicker1: TMColorPicker
         Left = 34
-        Height = 267
+        Height = 334
         Top = 18
         Width = 22
         HintFormat = 'Magenta: %m (selected)'
@@ -884,7 +885,7 @@ object Form1: TForm1
       end
       object YColorPicker1: TYColorPicker
         Left = 68
-        Height = 267
+        Height = 333
         Top = 19
         Width = 31
         HintFormat = 'Yellow: %y (selected)'
@@ -894,7 +895,7 @@ object Form1: TForm1
       end
       object KColorPicker1: TKColorPicker
         Left = 120
-        Height = 267
+        Height = 334
         Top = 18
         Width = 22
         HintFormat = 'Black: %k (selected)'
@@ -906,7 +907,7 @@ object Form1: TForm1
       end
       object RColorPicker1: TRColorPicker
         Left = 150
-        Height = 268
+        Height = 334
         Top = 18
         Width = 22
         HintFormat = 'Red: %r (selected)'
@@ -917,7 +918,7 @@ object Form1: TForm1
       end
       object GColorPicker1: TGColorPicker
         Left = 182
-        Height = 268
+        Height = 334
         Top = 18
         Width = 34
         HintFormat = 'Green: %g (selected)'
@@ -928,7 +929,7 @@ object Form1: TForm1
       end
       object BColorPicker1: TBColorPicker
         Left = 224
-        Height = 268
+        Height = 334
         Top = 18
         Width = 22
         HintFormat = 'Blue: %b (selected)'
@@ -1192,7 +1193,7 @@ object Form1: TForm1
     Height = 19
     Top = 371
     Width = 62
-    Anchors = [akLeft, akBottom]
+    Anchors = [akRight, akBottom]
     Caption = 'Enabled'
     Checked = True
     OnChange = CbEnabledChange
