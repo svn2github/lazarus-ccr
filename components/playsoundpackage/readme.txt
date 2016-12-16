@@ -1,15 +1,16 @@
-PlayWavePackage
-===============
+PlaySoundPackage
+================
 
-A simple visual component to play WAVe files in Windows or Linux
+* A simple visual component to play WAVe files in Windows or Linux
+* For more information, see: http://wiki.freepascal.org/TPlaySound
 
 Licence
 =======
-LGPLv2
+Modified GPL
 
 Author
 ======
-minesadorada
+minesadorada@charcodelvalle.com
 
 Compatibility
 =============
@@ -22,4 +23,3 @@ All versions of Windows
 Most versions of Linux
 Maybe Macintosh OSX
 
-:Gordon Bamber September 2014
