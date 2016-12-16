@@ -74,28 +74,29 @@ type
    procedure DrawCell(ACanvas: TCanvas; AColor: string);
    procedure DrawCellBack(ACanvas: TCanvas; R: TRect; AIndex: integer);
    procedure ColorsChange(Sender: TObject);
-   procedure Click; override;
    procedure Resize; override;
    procedure SelectCell(i: integer);
 //   procedure CreateWnd; override;
    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-   procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+   procedure MouseEnter; override;
+   procedure MouseLeave; override;
    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+   procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
    {$IFDEF DELPHI}
-   procedure CMMouseEnter(var Message: TMessage); message CM_MOUSEENTER;
-   procedure CMMouseLeave(var Message: TMessage); message CM_MOUSELEAVE;
+//   procedure CMMouseEnter(var Message: TMessage); message CM_MOUSEENTER;
+//   procedure CMMouseLeave(var Message: TMessage); message CM_MOUSELEAVE;
    procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
    procedure CMGotFocus(var Message: TCMGotFocus); message CM_ENTER;
    procedure CMLostFocus(var Message: TCMLostFocus); message CM_EXIT;
-   procedure CMEnabledChanged(var Message: TMessage); message CM_ENABLEDCHANGED;
+//   procedure CMEnabledChanged(var Message: TMessage); message CM_ENABLEDCHANGED;
    procedure CMHintShow(var Message: TMessage); message CM_HINTSHOW;
    {$ELSE}
-   procedure CMMouseEnter(var Message: TLMessage); message CM_MOUSEENTER;
-   procedure CMMouseLeave(var Message: TLMessage); message CM_MOUSELEAVE;
+//   procedure CMMouseEnter(var Message: TLMessage); message CM_MOUSEENTER;
+ //  procedure CMMouseLeave(var Message: TLMessage); message CM_MOUSELEAVE;
    procedure CNKeyDown(var Message: TLMKeyDown); message CN_KEYDOWN;
    procedure CMGotFocus(var Message: TLMessage); message CM_ENTER;
    procedure CMLostFocus(var Message: TLMessage); message CM_EXIT;
-   procedure CMEnabledChanged(var Message: TLMessage); message CM_ENABLEDCHANGED;
+//   procedure CMEnabledChanged(var Message: TLMessage); message CM_ENABLEDCHANGED;
    procedure CMHintShow(var Message: TLMessage); message CM_HINTSHOW;
    {$ENDIF}
 
@@ -689,10 +690,10 @@ end;
 procedure TmbColorPalette.Resize;
 begin
   inherited;
-  CalcAutoHeight;    // wp: will cause a ChangedBounds endless loop
+  CalcAutoHeight;
   Invalidate;
 end;
-
+  (*
 procedure TmbColorPalette.CMMouseEnter(
   var Message: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF} );
 begin
@@ -704,6 +705,24 @@ end;
 
 procedure TmbColorPalette.CMMouseLeave(
   var Message: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF} );
+begin
+  FMouseOver := false;
+  FMouseLoc := mlNone;
+  FIndex := -1;
+  Invalidate;
+  inherited;
+end;
+*)
+
+procedure TmbColorPalette.MouseEnter;
+begin
+  FMouseOver := true;
+  FMouseLoc := mlOver;
+  Invalidate;
+  inherited;
+end;
+
+procedure TmbColorPalette.MouseLeave;
 begin
   FMouseOver := false;
   FMouseLoc := mlNone;
@@ -741,11 +760,6 @@ begin
       end;
     Invalidate;
   end;
-  inherited;
-end;
-
-procedure TmbColorPalette.Click;
-begin
   inherited;
 end;
 
@@ -790,14 +804,14 @@ begin
     FMouseLoc := mlNone;
   Invalidate;
 end;
-
+  (*
 procedure TmbColorPalette.CMEnabledChanged(
   var Message: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF} );
 begin
   inherited;
   Invalidate;
 end;
-
+    *)
 procedure TmbColorPalette.SelectCell(i: integer);
 begin
   if i < FColors.Count - 1 then

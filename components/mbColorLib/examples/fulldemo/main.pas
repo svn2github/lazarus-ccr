@@ -21,6 +21,7 @@ type
 
   TForm1 = class(TForm)
     CbShowHints: TCheckBox;
+    CbEnabled: TCheckBox;
     Label10: TLabel;
     Label11: TLabel;
     Label12: TLabel;
@@ -52,7 +53,7 @@ type
     TabSheet8: TTabSheet;
     mbDeskPickerButton1: TmbDeskPickerButton;
     mbOfficeColorDialog1: TmbOfficeColorDialog;
-    Button3: TButton;
+    OfficeColorDialogButton: TButton;
     LColorPicker1: TLColorPicker;
     VColorPicker1: TVColorPicker;
     HColorPicker1: THColorPicker;
@@ -104,7 +105,9 @@ type
     Memo1: TMemo;
     Label9: TLabel;
     CbSwatchStyle: TCheckBox;
+    procedure CbEnabledChange(Sender: TObject);
     procedure CbShowHintsChange(Sender: TObject);
+    procedure PageControl1Change(Sender: TObject);
     procedure PageControl1MouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
     procedure tb1Change(Sender: TObject);
@@ -130,7 +133,7 @@ type
     procedure SLHColorPicker1MouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
     procedure mbDeskPickerButton1SelColorChange(Sender: TObject);
-    procedure Button3Click(Sender: TObject);
+    procedure OfficeColorDialogButtonClick(Sender: TObject);
     procedure HSColorPicker1Change(Sender: TObject);
     procedure HSColorPicker1MouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
@@ -265,13 +268,18 @@ sc.color := mbDeskPickerButton1.SelectedColor;
 uc.color := mbDeskPickerButton1.SelectedColor;
 end;
 
+procedure TForm1.PageControl1Change(Sender: TObject);
+begin
+  CbEnabledChange(nil);
+end;
+
 procedure TForm1.PageControl1MouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
 begin
   uc.color := HSLColorpicker1.ColorUnderCursor;
 end;
 
-procedure TForm1.Button3Click(Sender: TObject);
+procedure TForm1.OfficeColorDialogButtonClick(Sender: TObject);
 begin
   if mbOfficeColorDialog1.Execute then
     sc.color := mbOfficeColorDialog1.SelectedColor;
@@ -396,6 +404,65 @@ begin
   end;
  mbcolortree1.UpdateColors;
  mbcolorlist1.UpdateColors;
+end;
+
+procedure TForm1.CbEnabledChange(Sender: TObject);
+begin
+  if PageControl1.ActivePage = Tabsheet1 then
+    HSLColorPicker1.Enabled := CbEnabled.Checked
+  else if PageControl1.ActivePage = Tabsheet2 then
+    HexaColorPicker1.Enabled := CbEnabled.Checked
+  else if PageControl1.ActivePage = Tabsheet3 then
+    mbColorPalette1.Enabled := CbEnabled.Checked
+  else if PageControl1.ActivePage = Tabsheet4 then
+    HSLRingPicker1.Enabled := CbEnabled.Checked
+  else if PageControl1.ActivePage = Tabsheet5 then
+    HSVColorPicker1.Enabled := CbEnabled.Checked
+  else if PageControl1.ActivePage = Tabsheet6 then
+    SLHColorPicker1.Enabled := CbEnabled.Checked
+  else if PageControl1.ActivePage = Tabsheet11 then
+  begin
+    mbColorList1.Enabled := CbEnabled.Checked;
+    mbColorTree1.Enabled := CbEnabled.Checked;
+  end
+  else if PageControl1.ActivePage = Tabsheet7 then
+  begin
+    mbDeskPickerButton1.Enabled := CbEnabled.Checked;
+    OfficeColorDialogButton.Enabled := CbEnabled.Checked;
+    LColorPicker1.Enabled := CbEnabled.Checked;
+    VColorPicker1.Enabled := CbEnabled.Checked;
+    HColorPicker1.Enabled := CbEnabled.Checked;
+    SColorPicker1.Enabled := CbEnabled.Checked;
+  end
+  else if PageControl1.ActivePage = Tabsheet8 then
+  begin
+    HSColorPicker1.Enabled := CbEnabled.Checked;
+    SLColorPicker1.Enabled := CbEnabled.Checked;
+    HRingPicker1.Enabled := CbEnabled.Checked;
+  end
+  else if PageControl1.ActivePage = Tabsheet9 then
+  begin
+    CColorPicker1.Enabled := CbEnabled.Checked;
+    MColorPicker1.Enabled := CbEnabled.Checked;
+    YColorPicker1.Enabled := CbEnabled.Checked;
+    KColorPicker1.Enabled := CbEnabled.Checked;
+    RColorPicker1.Enabled := CbEnabled.Checked;
+    BColorPicker1.Enabled := CbEnabled.Checked;
+    GColorPicker1.Enabled := CbEnabled.Checked;
+    KColorPicker2.Enabled := CbEnabled.Checked;
+    MColorPicker2.Enabled := CbEnabled.Checked;
+    CColorPicker2.Enabled := CbEnabled.Checked;
+    YColorPicker2.Enabled := CbEnabled.Checked;
+  end
+  else if PageControl1.ActivePage = Tabsheet10 then
+  begin
+    RAxisColorPicker1.Enabled := CbEnabled.Checked;
+    GAxisColorPicker1.Enabled := CbEnabled.Checked;
+    BAxisColorPicker1.Enabled := CbEnabled.Checked;
+    CIELColorPicker1.Enabled := CbEnabled.Checked;
+    CIEAColorPicker1.Enabled := CbEnabled.Checked;
+    CIEBColorPicker1.Enabled := CbEnabled.Checked;
+  end;
 end;
 
 procedure TForm1.CbSwatchStyleClick(Sender: TObject);
