@@ -36,7 +36,9 @@ type
     mx, my, mdx, mdy: integer;
     FOnChange: TNotifyEvent;
     procedure CreateGradient; override;
-    function GetHintText: String; override;
+//    function GetColorAtPoint(x, y: integer): TColor; override;
+//    function GetHintText: String; override;
+    function GetHintStr(X, Y: Integer): String; override;
     function GetSelectedColor: TColor; virtual;
     procedure SetSelectedColor(C: TColor); virtual;
     procedure InternalDrawMarker(X, Y: Integer; C: TColor);
@@ -59,11 +61,7 @@ type
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
   public
     constructor Create(AOwner: TComponent); override;
-    function GetColorAtPoint(x, y: integer): TColor; dynamic;
-    function GetHexColorAtPoint(X, Y: integer): string;
-    function GetColorUnderCursor: TColor;
-    function GetHexColorUnderCursor: string;
-    property ColorUnderCursor: TColor read GetColorUnderCursor;
+    property ColorUnderCursor;
     property Manual: boolean read FManual;
   published
     property SelectedColor: TColor read GetSelectedColor write SetSelectedColor;
@@ -92,6 +90,7 @@ type
     property DragKind;
     property Constraints;
     property OnContextPopup;
+    property OnGetHintStr;
     property OnMouseDown;
     property OnMouseMove;
     property OnMouseUp;
@@ -210,11 +209,11 @@ begin
   end;
 {$ENDIF}
 end;
-
+                         (*
 function TmbCustomPicker.GetHintText: String;
 begin
   Result := FormatHint(FHintFormat, GetColorUnderCursor)
-end;
+end;                       *)
 
 function TmbCustomPicker.GetSelectedColor: TColor;
 begin
@@ -227,26 +226,6 @@ begin
   //handled in descendents
 end;
 
-function TmbCustomPicker.GetColorAtPoint(x, y: integer): TColor;
-begin
-  Result := Canvas.Pixels[x, y];  // valid for most descendents
-end;
-
-function TmbCustomPicker.GetHexColorAtPoint(X, Y: integer): string;
-begin
-  Result := ColorToHex(GetColorAtPoint(x, y));
-end;
-
-function TmbCustomPicker.GetColorUnderCursor: TColor;
-begin
-  Result := GetColorAtPoint(mx, my);
-end;
-
-function TmbCustomPicker.GetHexColorUnderCursor: string;
-begin
-  Result := ColorToHex(GetColorAtPoint(mx, my));
-end;
-
 procedure TmbCustomPicker.InternalDrawMarker(X, Y: Integer; C: TColor);
 begin
   case MarkerStyle of
@@ -256,24 +235,41 @@ begin
     msCrossCirc : DrawSelCrossCirc(x, y, Canvas, c);
   end;
 end;
-             (*
+
+function TmbCustomPicker.GetHintStr(X, Y: Integer): String;
+begin
+  Result := FormatHint(FHintFormat, GetColorUnderCursor);
+end;
+
+                 (*
 procedure TmbCustomPicker.CMHintShow(var Message: TCMHintShow);
+var
+  cp: TPoint;
 begin
   if GetColorUnderCursor <> clNone then
     with TCMHintShow(Message) do
       if not ShowHint then
         Message.Result := 1
       else
+      begin
+        cp := HintInfo^.CursorPos;
+        HintInfo^.ReshowTimeout := 0;  // was: 1
+        HintInfo^.HideTimeout := Application.HintHidePause;  // was: 5000
+        HintInfo^.HintStr := FormatHint(FHintFormat, GetColorUnderCursor);
+        HintInfo^.CursorRect := Rect(cp.X, cp.Y, cp.X+1, cp.Y+1);
+        Result := 0;    // 0 means: show hint
+      end;
+{
         with HintInfo^ do
         begin
           Result := 0;
           ReshowTimeout := 1;
           HideTimeout := 5000;
           HintStr := FormatHint(FHintFormat, GetColorUnderCursor);;
-        end;
+        end; }
   inherited;
-end;       *)
-
+end;
+              *)
 procedure TmbCustomPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
   inherited;

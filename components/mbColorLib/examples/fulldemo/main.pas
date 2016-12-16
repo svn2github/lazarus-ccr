@@ -13,7 +13,7 @@ uses
   BColorPicker, GColorPicker, RColorPicker, KColorPicker, YColorPicker,
   MColorPicker, CColorPicker, CIEBColorPicker, CIEAColorPicker, Typinfo,
   CIELColorPicker, BAxisColorPicker, GAxisColorPicker, RAxisColorPicker,
-  mbColorTree, mbColorList {for internet shortcuts};
+  mbColorTree, mbColorList {for internet shortcuts}, mbBasicPicker;
 
 type
 
@@ -107,6 +107,8 @@ type
     CbSwatchStyle: TCheckBox;
     procedure CbEnabledChange(Sender: TObject);
     procedure CbShowHintsChange(Sender: TObject);
+    procedure HColorPicker1GetHintStr(Sender: TObject; X, Y: Integer;
+      var AText: String);
     procedure PageControl1Change(Sender: TObject);
     procedure PageControl1MouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
@@ -337,6 +339,12 @@ begin
   finally
     Free;
   end; 
+end;
+
+procedure TForm1.HColorPicker1GetHintStr(Sender: TObject; X, Y: Integer;
+  var AText: String);
+begin
+  AText := FormatHint(HColorPicker1.HintFormat, HColorPicker1.GetColorAtPoint(X, Y));
 end;
 
 procedure TForm1.CheckBox1Click(Sender: TObject);

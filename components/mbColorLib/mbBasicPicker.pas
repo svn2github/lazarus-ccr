@@ -15,24 +15,30 @@ uses
 type
   THintState = (hsOff, hsWaitingToShow, hsWaitingToHide);
 
+  TGetHintStrEvent = procedure (Sender: TObject; X, Y: Integer; var AText: String) of object;
+
   { TmbBasicPicker }
 
   TmbBasicPicker = class(TCustomControl)
   private
+    FOnGetHintStr: TGetHintStrEvent;
+    {
     FHintWindow: THintWindow;
     FHintTimer: TTimer;
     FHintState: THintState;
     procedure HintTimer(Sender: TObject);
+    }
   protected
     FBufferBmp: TBitmap;
     FGradientWidth: Integer;
     FGradientHeight: Integer;
     FHintShown: Boolean;
     procedure CreateGradient; virtual;
+    function GetColorUnderCursor: TColor; virtual;
     function GetGradientColor(AValue: Integer): TColor; virtual;
     function GetGradientColor2D(X, Y: Integer): TColor; virtual;
-    function GetHintText: String; virtual;
-    procedure HideHintWindow; virtual;
+    function GetHintPos(X, Y: Integer): TPoint; virtual;
+    function GetHintStr(X, Y: Integer): String; virtual;
     procedure MouseLeave; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     function MouseOnPicker(X, Y: Integer): Boolean; virtual;
@@ -40,7 +46,7 @@ type
     procedure PaintParentBack(ACanvas: TCanvas); overload;
     procedure PaintParentBack(ACanvas: TCanvas; ARect: TRect); overload;
     procedure PaintParentBack(ABitmap: TBitmap); overload;
-    function ShowHintWindow(APoint: TPoint; AText: String): Boolean; virtual;
+    procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
     {$IFDEF DELPHI}
     procedure CMParentColorChanged(var Message: TMessage); message CM_PARENTCOLORCHANGED;
     procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
@@ -48,9 +54,14 @@ type
     procedure CMParentColorChanged(var Message: TLMessage); message CM_PARENTCOLORCHANGED;
 //    procedure WMEraseBkgnd(var Message: TLMEraseBkgnd); message LM_ERASEBKGND;
     {$ENDIF}
+    property ColorUnderCursor: TColor read GetColorUnderCursor;
+    property OnGetHintStr: TGetHintStrEvent read FOnGetHintStr write FOnGetHintStr;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    function GetColorAtPoint(X, Y: Integer): TColor; virtual;
+    function GetHexColorAtPoint(X, Y: integer): string;
+    function GetHexColorUnderCursor: string; virtual;
 //    function GetDefaultColor(const DefaultColorType: TDefaultColorType): TColor; override;
   published
     property ParentColor default true;
@@ -59,7 +70,8 @@ type
 implementation
 
 uses
-  LCLIntf, mbUtils;
+  LCLIntf,
+  HTMLColors, mbUtils;
 
 const
   HINT_SHOW_DELAY = 50;
@@ -70,16 +82,43 @@ begin
   inherited Create(AOwner);
 //  ControlStyle := ControlStyle - [csOpaque];
   ParentColor := true;
+  {
   FHintTimer := TTimer.Create(self);
   FHintTimer.Interval := HINT_SHOW_DELAY;
   FHintTimer.Enabled := false;
   FHintTimer.OnTimer := @HintTimer;
   FHintState := hsOff;
+  }
 end;
 
 destructor TmbBasicPicker.Destroy;
 begin
-  HideHintWindow;
+  //HideHintWindow;
+  inherited;
+end;
+
+procedure TmbBasicPicker.CMHintShow(var Message: TCMHintShow);
+var
+  cp: TPoint;
+begin
+  if GetColorUnderCursor <> clNone then
+    with TCMHintShow(Message) do
+      if not ShowHint then
+        Message.Result := 1
+      else
+      if Hint <> '' then
+        Message.Result := 0
+      else
+      begin
+        cp := HintInfo^.CursorPos;
+        HintInfo^.ReshowTimeout := 0;  // must be zero!
+        HintInfo^.HideTimeout := Application.HintHidePause;
+        HintInfo^.HintStr := GetHintStr(cp.X, cp.Y);
+        HintInfo^.HintPos := ClientToScreen(GetHintPos(cp.X, cp.Y));
+        HintInfo^.CursorRect := Rect(cp.X, cp.Y, cp.X+1, cp.Y+1);
+        Result := 0;    // 0 means: show hint
+      end;
+
   inherited;
 end;
 
@@ -98,6 +137,30 @@ procedure TmbBasicPicker.CreateGradient;
 begin
   // to be implemented by descendants
 end;
+
+function TmbBasicPicker.GetColorAtPoint(x, y: integer): TColor;
+begin
+  Result := Canvas.Pixels[x, y];  // valid for most descendents
+end;
+
+function TmbBasicPicker.GetColorUnderCursor: TColor;
+var
+  P: TPoint;
+begin
+  P := ScreenToClient(Mouse.CursorPos);
+  Result := GetColorAtPoint(P.X, P.Y);
+end;
+
+function TmbBasicPicker.GetHexColorAtPoint(X, Y: integer): string;
+begin
+  Result := ColorToHex(GetColorAtPoint(x, y));
+end;
+
+function TmbBasicPicker.GetHexColorUnderCursor: string;
+begin
+  Result := ColorToHex(GetColorUnderCursor);
+end;
+
                                      {
 function TmbBasicPicker.GetDefaultColor(const DefaultColorType: TDefaultColorType): TColor;
 begin
@@ -114,6 +177,19 @@ begin
   Result := clNone;
 end;
 
+function TmbBasicPicker.GetHintPos(X, Y: Integer): TPoint;
+begin
+  Result := Point(X, Y);
+end;
+
+function TmbBasicPicker.GetHintStr(X, Y: Integer): String;
+begin
+  Result := '';
+  if Assigned(FOnGetHintStr) then
+    FOnGetHintStr(Self, X, Y, Result);
+end;
+
+(*
 function TmbBasicPicker.GetHintText: String;
 begin
   Result := Hint;
@@ -135,18 +211,21 @@ begin
       HideHintWindow;
   end;
 end;
-
+   *)
 procedure TmbBasicPicker.MouseLeave;
 begin
   inherited;
+    {
   HideHintWindow;
   FHintTimer.Enabled := false;
   FHintState := hsOff;
+  }
 end;
 
 procedure TmbBasicPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
+  {
   if ShowHint and not FHintShown then
   begin
     if MouseOnPicker(X, Y) then
@@ -159,6 +238,7 @@ begin
     else
       HideHintWindow;
   end;
+  }
 end;
 
 function TmbBasicPicker.MouseOnPicker(X, Y: Integer): Boolean;
@@ -245,7 +325,7 @@ begin
     Offscreen.Free;
   end;
 end;
-
+   (*
 // Build and show the hint window
 function TmbBasicPicker.ShowHintWindow(APoint: TPoint; AText: String): Boolean;
 const
@@ -283,6 +363,7 @@ begin
 
   Result := true;
 end;
+*)
                                  (*  !!!!!!!!!!!!!!!!!
 procedure TmbBasicPicker.WMEraseBkgnd(
   var Message: {$IFDEF DELPHI}TWMEraseBkgnd{$ELSE}TLMEraseBkgnd{$ENDIF} );

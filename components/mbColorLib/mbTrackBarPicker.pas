@@ -40,6 +40,8 @@ type
   TSliderPlacement = (spBefore, spAfter, spBoth);
   TSelIndicator = (siArrows, siRect);
 
+  { TmbTrackBarPicker }
+
   TmbTrackBarPicker = class(TmbBasicPicker)
   private
     mx, my: integer;
@@ -85,15 +87,15 @@ type
     procedure CreateWnd; override;
     procedure Execute(tbaAction: integer); dynamic;
     function GetArrowPos: integer; dynamic;
-    function GetHintText: string; override;
+//    function GetColorUnderCursor: TColor; override;
+    function GetHintPos(X, Y: Integer): TPoint; override;
+    function GetHintStr(X, Y: Integer): String; override;
     function GetSelectedValue: integer; virtual; abstract;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseLeave; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     function MouseOnPicker(X, Y: Integer): Boolean; override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    function ShowHintWindow(APoint: TPoint; AText: String): Boolean; override;
-//    procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
     procedure WheelUp(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
     procedure WheelDown(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
     {$IFDEF DELPHI}
@@ -143,6 +145,7 @@ type
     property Constraints;
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
     property OnContextPopup;
+    property OnGetHintStr;
     property OnMouseDown;
     property OnMouseMove;
     property OnMouseUp;
@@ -762,18 +765,63 @@ begin
   if not FInherited and Assigned(OnKeyDown) then
     OnKeyDown(Self, Message.CharCode, Shift);
 end;
-                                  (*
+
+function TmbTrackBarPicker.GetHintPos(X, Y: Integer): TPoint;
+begin
+  case FLayout of
+    lyHorizontal:
+      Result := Point(X - 8, Height + 2);
+    lyVertical:
+      Result := Point(Width + 2, Y - 8);
+  end;
+end;
+
+function TmbTrackBarPicker.GetHintStr(X, Y: Integer): string;
+begin
+  Result := inherited GetHintStr(X, Y);
+  if Result = '' then
+    Result := ReplaceFlags(FHintFormat, ['%value', '%h', '%s', '%l', '%v', '%c',
+      '%m', '%y', '%k', '%r', '%g', '%b'], GetSelectedValue);
+end;
+            (*
 procedure TmbTrackBarPicker.CMHintShow(var Message: TCMHintShow);
+var
+  cp: TPoint;
 begin
   with TCMHintShow(Message) do
     if not ShowHint then
-      Message.Result := 1
+      Message.Result := 1      // 1 means: hide hint
     else
+    begin
+      cp := HintInfo^.CursorPos;
+      HintInfo^.ReshowTimeout := 0;  // was: 1
+      HintInfo^.HideTimeout := Application.HintHidePause;  // was: 5000
+      HintInfo
+      case FLayout of
+        lyHorizontal:
+          HintInfo^.HintPos := ClientToScreen(Point(cp.X - 8, Height + 2));
+        lyVertical:
+          HintInfo^.HintPos := ClientToScreen(Point(Width +2, cp.Y - 8));
+      end;
+      HintInfo^.HintStr := GetHintStr;
+      HintInfo^.CursorRect := Rect(cp.X, cp.Y, cp.X+1, cp.Y+1);
+      Result := 0;    // 0 means: show hint
+    end;
+  inherited;
+end;          *)
+
+{
+
       with HintInfo^ do
       begin
+        if HintControl <> self then
+        begin
+          Message.Result := -1;
+          exit;
+        end;
         Result := 0;
         ReshowTimeout := 1;
-        HideTimeout := 5000;
+        HideTimeout := 0; //5000;
         if FLayout = lyHorizontal then
           HintPos := ClientToScreen(Point(CursorPos.X - 8, Height + 2))
         else
@@ -781,8 +829,8 @@ begin
         HintStr := GetHintStr;
       end;
   inherited;
-end;           *)
-
+end;
+ }
 procedure TmbTrackBarPicker.CMGotFocus(
   var Message: {$IFDEF FPC}TLMessage{$ELSE}TCMGotFocus{$ENDIF});
 begin
@@ -885,11 +933,12 @@ begin
   //handled in descendants
 end;
 
+                           (*
 function TmbTrackBarPicker.GetHintText: string;
 begin
   Result := ReplaceFlags(FHintFormat, ['%value', '%h', '%s', '%l', '%v', '%c',
   '%m', '%y', '%k', '%r', '%g', '%b'], GetSelectedValue);
-end;
+end;                         *)
 
 procedure TmbTrackBarPicker.SetBevelInner(Value: TBevelCut);
 begin
@@ -927,11 +976,12 @@ begin
   end;
 end;
 
+(*
 function TmbTrackbarPicker.ShowHintWindow(APoint: TPoint; AText: String): Boolean;
 begin
   Result := inherited;
   if Result then
     FHintShown := true;
 end;
-
+  *)
 end.

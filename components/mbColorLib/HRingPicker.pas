@@ -42,7 +42,7 @@ type
     procedure SetSelectedColor(c: TColor); override;
     procedure Paint; override;
     procedure Resize; override;
-    procedure CreateWnd; override;
+//    procedure CreateWnd; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     function MouseOnPicker(X, Y: Integer): Boolean; override;
@@ -52,6 +52,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     function GetColorAtPoint(x, y: integer): TColor; override;
+    property ColorUnderCursor;
   published
     property Hue: integer read FHue write SetHue default 0;
     property Saturation: integer read FSat write SetSat default 0;
@@ -135,14 +136,14 @@ begin
   CreateGradient;
   UpdateCoords;
 end;
-
+  {
 procedure THRingPicker.CreateWnd;
 begin
   inherited;
   CreateGradient;
   UpdateCoords;
 end;
-
+   }
 procedure THRingPicker.UpdateCoords;
 var
   r, angle: real;
@@ -396,7 +397,7 @@ begin
     s := 255
   else
     s := MulDiv(distance, 255, radius);
-  if PointInCircle(Point(mx, my), Min(Width, Height)) then
+  if PointInCircle(Point(x, y), Min(Width, Height)) then
   begin
     if not WebSafe then
       Result := HSVtoColor(h, s, FValue)

@@ -49,6 +49,7 @@ type
     procedure CreateWnd; override;
     procedure Paint; override;
     procedure DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+    function GetColorUnderCursor: TColor; override;
     procedure RingPickerChange(Sender: TObject);
     procedure SLPickerChange(Sender: TObject);
     procedure DoChange;
@@ -61,10 +62,9 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    function GetColorUnderCursor: TColor;
-    function GetHexColorUnderCursor: string;
+    function GetHexColorUnderCursor: string; override;
     function GetSelectedHexColor: string;
-    property ColorUnderCursor: TColor read GetColorUnderCursor;
+    property ColorUnderCursor;
     property HValue: integer read FHValue write SetH default 0;
     property SValue: integer read FSValue write SetS default 240;
     property LValue: integer read FLValue write SetL default 120;
@@ -324,7 +324,7 @@ end;
 
 function THSLRingPicker.GetColorUnderCursor: TColor;
 begin
-  Result := FSLPicker.GetColorUnderCursor;
+  Result := FSLPicker.ColorUnderCursor;
 end;
 
 function THSLRingPicker.GetHexColorUnderCursor: string;

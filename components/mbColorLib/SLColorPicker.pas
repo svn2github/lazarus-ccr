@@ -41,6 +41,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     function GetColorAtPoint(x, y: integer): TColor; override;
+    property ColorUnderCursor;
   published
     property Hue: integer read FHue write SetHue default 0;
     property Saturation: integer read FSat write SetSat default 0;

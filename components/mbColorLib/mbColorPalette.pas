@@ -74,6 +74,9 @@ type
    procedure DrawCell(ACanvas: TCanvas; AColor: string);
    procedure DrawCellBack(ACanvas: TCanvas; R: TRect; AIndex: integer);
    procedure ColorsChange(Sender: TObject);
+   function GetColorUnderCursor: TColor; override;
+   function GetHintStr(X, Y: Integer): String; override;
+   function GetIndexUnderCursor: integer;
    procedure Resize; override;
    procedure SelectCell(i: integer);
 //   procedure CreateWnd; override;
@@ -103,11 +106,8 @@ type
   public
    constructor Create(AOwner: TComponent); override;
    destructor Destroy; override;
-   function GetColorUnderCursor: TColor;
    function GetSelectedCellRect: TRect;
-   function GetIndexUnderCursor: integer;
-
-   property ColorUnderCursor: TColor read GetColorUnderCursor;
+   property ColorUnderCursor;
    property VisibleRowCount: integer read FRowCount;
    property RowCount: integer read GetTotalRowCount;
    property ColCount: integer read FColCount;
@@ -207,7 +207,7 @@ begin
   FColors := TStringList.Create;
   (FColors as TStringList).OnChange := ColorsChange;
   FTotalCells := 0;
-  FHintFormat := 'RGB(%r, %g, %b)'#13'Hex: %hex';
+  FHintFormat := 'RGB(%r, %g, %b)'#13'Hex: #%hex';
   FAutoHeight := false;
   FMinColors := 0;
   FMaxColors := 0;
@@ -838,6 +838,22 @@ begin
       Result := mbStringToColor(FColors.Strings[FIndex]);
 end;
 
+function TmbColorPalette.GetHintStr(X, Y: Integer): String;
+var
+  idx: Integer;
+begin
+  idx := GetIndexUnderCursor;
+  if FIndex < FNames.Count then
+    Result := FNames.Strings[FIndex]
+  else
+  if SameText(FColors.Strings[idx], 'clCustom') or
+     SameText(FColors.Strings[idx], 'clTransparent')
+  then
+    Result := StringReplace(FColors.Strings[idx], 'cl', '', [rfReplaceAll])
+  else
+    Result := FormatHint(FHintFormat, ColorUnderCursor);
+end;
+
 function TmbColorPalette.GetIndexUnderCursor: integer;
 begin
   Result := -1;
@@ -1009,21 +1025,15 @@ begin
         // show that we want a hint
         Result := 0;
         ReshowTimeout := 1;
-        HideTimeout := 5000;
+        HideTimeout := Application.HintHidePause; // was: 5000
         clr := GetColorUnderCursor;
         //fire event
         Handled := false;
         if Assigned(FOnGetHintText) then
           FOnGetHintText(clr, GetIndexUnderCursor, HintStr, Handled);
-        if Handled then Exit;
         //do default
-        if FIndex < FNames.Count then
-          HintStr := FNames.Strings[FIndex]
-        else
-        if SameText(FColors.Strings[GetIndexUnderCursor], 'clCustom') or SameText(FColors.Strings[GetIndexUnderCursor], 'clTransparent') then
-          HintStr := StringReplace(FColors.Strings[GetIndexUnderCursor], 'cl', '', [rfReplaceAll])
-        else
-          HintStr := FormatHint(FHintFormat, GetColorUnderCursor);
+        if not Handled then
+          HintStr := GetHintStr(CursorPos.X, CursorPos.Y);
       end;
     end;
   end;

@@ -10,7 +10,7 @@ interface
 
 uses
   {$IFDEF FPC}
-  LCLIntf, LCLType, LMessages,
+  LCLIntf, LCLType,
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
