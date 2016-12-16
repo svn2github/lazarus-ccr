@@ -6,7 +6,7 @@
   },
   "UpdatePackageFiles" : [
     {
-      "ForceNotify" : false,
+      "ForceNotify" : true,
       "InternalVersion" : 1,
       "Name" : "playwavepackage.lpk",
       "Version" : "0.0.7.0"
