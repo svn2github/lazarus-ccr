@@ -417,7 +417,10 @@ begin
   else if PageControl1.ActivePage = Tabsheet4 then
     HSLRingPicker1.Enabled := CbEnabled.Checked
   else if PageControl1.ActivePage = Tabsheet5 then
-    HSVColorPicker1.Enabled := CbEnabled.Checked
+  begin
+    HSVColorPicker1.Enabled := CbEnabled.Checked;
+    VColorPicker1.Enabled := CbEnabled.Checked;
+  end
   else if PageControl1.ActivePage = Tabsheet6 then
     SLHColorPicker1.Enabled := CbEnabled.Checked
   else if PageControl1.ActivePage = Tabsheet11 then

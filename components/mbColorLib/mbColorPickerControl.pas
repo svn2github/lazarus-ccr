@@ -250,10 +250,10 @@ end;
 procedure TmbCustomPicker.InternalDrawMarker(X, Y: Integer; C: TColor);
 begin
   case MarkerStyle of
-    msCircle: DrawSelCirc(x, y, Canvas);
-    msSquare: DrawSelSquare(x, y, Canvas);
-    msCross: DrawSelCross(x, y, Canvas, c);
-    msCrossCirc: DrawSelCrossCirc(x, y, Canvas, c);
+    msCircle    : DrawSelCirc(x, y, Canvas);
+    msSquare    : DrawSelSquare(x, y, Canvas);
+    msCross     : DrawSelCross(x, y, Canvas, c);
+    msCrossCirc : DrawSelCrossCirc(x, y, Canvas, c);
   end;
 end;
              (*
@@ -317,8 +317,8 @@ end;
 
 procedure TmbCustomPicker.WebSafeChanged;
 begin
-   CreateGradient;
-   Invalidate;
+  CreateGradient;
+  Invalidate;
 end;
 
 end.
