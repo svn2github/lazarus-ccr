@@ -25,7 +25,7 @@ function RGBtoRGBTriple(R, G, B: byte): TRGBTriple;
 function RGBtoRGBQuad(R, G, B: byte): TRGBQuad; overload;
 function RGBToRGBQuad(c: TColor): TRGBQuad; overload;
 function RGBQuadToRGB(q: TRGBQuad): TColor;
-function RGBTripleToTColor(RGBTriple : TRGBTriple) : TColor;
+function RGBTripleToColor(RGBTriple : TRGBTriple) : TColor;
 
 implementation
 
@@ -66,7 +66,7 @@ begin
   Result := RGB(q.rgbRed, q.rgbGreen, q.rgbBlue);
 end;
 
-function RGBTripleToTColor(RGBTriple: TRGBTriple): TColor;
+function RGBTripleToColor(RGBTriple: TRGBTriple): TColor;
 begin
   Result := RGBTriple.rgbtBlue shl 16 + RGBTriple.rgbtGreen shl 8 + RGBTriple.rgbtRed;
 end;

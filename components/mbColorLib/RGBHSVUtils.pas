@@ -14,46 +14,26 @@ uses
   {$ENDIF}
   SysUtils, Classes, Graphics, Math, Scanlines;
 
-function RGBtoRGBTriple(R, G, B: byte): TRGBTriple;
-function RGBtoRGBQuad(R, G, B: byte): TRGBQuad;
-function RGBTripleToColor(Triple: TRGBTriple): TColor;
-procedure RGBToHSV(R,G,B: integer; var H,S,V: integer);
+procedure RGBtoHSV(R, G, B: Integer; out H, S, V: Double);
+procedure RGBtoHSVRange(R, G, B: integer; out H, S, V: integer);
+
+procedure HSVtoRGB(H, S, V: Double; out R, G, B: Integer);
+procedure HSVtoRGBRange(H, S, V: Integer; out R, G, B: Integer);
+
 function HSVtoRGBTriple(H, S, V: integer): TRGBTriple;
 function HSVtoRGBQuad(H, S, V: integer): TRGBQuad;
-function HSVtoColor(H, S, V: integer): TColor;
+
+function HSVtoColor(H, S, V: Double): TColor;
+function HSVRangeToColor(H, S, V: Integer): TColor;
+
 function GetHValue(Color: TColor): integer;
 function GetVValue(Color: TColor): integer;
 function GetSValue(Color: TColor): integer;
 
+
 implementation
 
-function RGBtoRGBTriple(R, G, B: byte): TRGBTriple;
-begin
-  with Result do
-  begin
-    rgbtRed := R;
-    rgbtGreen := G;
-    rgbtBlue := B;
-  end
-end;
-
-function RGBtoRGBQuad(R, G, B: byte): TRGBQuad;
-begin
-  with Result do
-  begin
-    rgbRed := R;
-    rgbGreen := G;
-    rgbBlue := B;
-    rgbReserved := 0;
-  end
-end;
-
-function RGBTripleToColor(Triple: TRGBTriple): TColor;
-begin
-  Result := RGB(Triple.rgbtRed, Triple.rgbtGreen, Triple.rgbtBlue);
-end;
-
-procedure RGBToHSV(R, G, B: integer; var H, S, V: integer);
+procedure RGBToHSVRange(R, G, B: integer; out H, S, V: integer);
 var
   Delta, Min, H1, S1: double;
 begin
@@ -77,6 +57,31 @@ begin
   end;
   h := round(h1);
   s := round(s1*255);
+end;
+
+procedure RGBToHSV(R, G, B: Integer; out H, S, V: Double);
+var
+  hh, ss, vv: Integer;
+begin
+  RGBtoHSVRange(R, G, B, hh, ss, vv);
+  H := H / 360;
+  S := S / 255;
+  V := V / 255;
+end;
+
+procedure HSVtoRGB(H, S, V: Double; out R, G, B: Integer);
+begin
+  HSVtoRGBRange(round(H*360), round(S*255), round(V*255), R, G, B);
+end;
+
+procedure HSVtoRGBRange(H, S, V: Integer; out R, G, B: Integer);
+var
+  t: TRGBTriple;
+begin
+  t := HSVtoRGBTriple(H, S, V);
+  R := t.rgbtRed;
+  G := t.rgbtGreen;
+  B := t.rgbtBlue;
 end;
 
 function HSVtoRGBTriple(H, S, V: integer): TRGBTriple;
@@ -141,30 +146,35 @@ begin
   end;
 end;
 
-function HSVtoColor(H, S, V: integer): TColor;
+function HSVRangetoColor(H, S, V: integer): TColor;
 begin
   Result := RGBTripleToColor(HSVtoRGBTriple(H, S, V));
+end;
+
+function HSVtoColor(H, S, V: Double): TColor;
+begin
+  Result := HSVRangeToColor(round(H*360), round(S*255), round(V*255));
 end;
 
 function GetHValue(Color: TColor): integer;
 var
   s, v: integer;
 begin
-  RGBToHSV(GetRValue(Color), GetGValue(Color), GetBValue(Color), Result, s, v);
+  RGBToHSVRange(GetRValue(Color), GetGValue(Color), GetBValue(Color), Result, s, v);
 end;
 
 function GetSValue(Color: TColor): integer;
 var
   h, v: integer;
 begin
-  RGBToHSV(GetRValue(Color), GetGValue(Color), GetBValue(Color), h, Result, v);
+  RGBToHSVRange(GetRValue(Color), GetGValue(Color), GetBValue(Color), h, Result, v);
 end;
 
 function GetVValue(Color: TColor): integer;
 var
   h, s: integer;
 begin
-  RGBToHSV(GetRValue(Color), GetGValue(Color), GetBValue(Color), h, s, Result);
+  RGBToHSVRange(GetRValue(Color), GetGValue(Color), GetBValue(Color), h, s, Result);
 end;
 
 end.

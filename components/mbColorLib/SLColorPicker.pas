@@ -251,9 +251,9 @@ var
 begin
   triple := HSLToRGBTriple(FHue, FSat, FLum);
   if not WebSafe then
-    Result := RGBTripleToTColor(triple)
+    Result := RGBTripleToColor(triple)
   else
-    Result := GetWebSafe(RGBTripleToTColor(triple));
+    Result := GetWebSafe(RGBTripleToColor(triple));
 end;
 
 function TSLColorPicker.GetColorAtPoint(x, y: integer): TColor;
@@ -262,9 +262,9 @@ var
 begin
   triple := HSLToRGBTriple(FHue, MulDiv(255, x, Width), MulDiv(255, Height - y, Height));
   if not WebSafe then
-    Result := RGBTripleToTColor(triple)
+    Result := RGBTripleToColor(triple)
   else
-    Result := GetWebSafe(RGBTripleToTColor(triple));
+    Result := GetWebSafe(RGBTripleToColor(triple));
 end;
 
 procedure TSLColorPicker.CNKeyDown(
