@@ -6,10 +6,10 @@
   },
   "UpdatePackageFiles" : [
     {
-      "ForceNotify" : false,
-      "InternalVersion" : 1,
+      "ForceNotify" : true,
+      "InternalVersion" : 3,
       "Name" : "cryptini.lpk",
-      "Version" : "0.1.2.1"
+      "Version" : "0.1.2.0"
     }
   ]
 }
