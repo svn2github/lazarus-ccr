@@ -22,7 +22,7 @@ uses
 {$R *.res}
 
 begin
-  Application.Title:='External OPM JSON package Editor';
+  Application.Title:='OPM External Update json Editor';
   RequireDerivedFormResource:=True;
   Application.Initialize;
   Application.CreateForm(TfrmMain, frmMain);

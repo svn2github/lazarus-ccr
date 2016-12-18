@@ -674,7 +674,7 @@ end;
 
 procedure TfrmMain.AddPackageFileToList;
 begin
-  AddNewControlArray; // Contruct another one
+  AddNewControlArray; // Construct another one
 
   // Makes it visible and aligns it
   ArrayGrpBox[High(ArrayGrpBox)].Visible := True;
