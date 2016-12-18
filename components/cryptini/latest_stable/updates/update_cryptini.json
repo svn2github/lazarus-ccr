@@ -7,7 +7,7 @@
   "UpdatePackageFiles" : [
     {
       "ForceNotify" : true,
-      "InternalVersion" : 3,
+      "InternalVersion" : 4,
       "Name" : "cryptini.lpk",
       "Version" : "0.1.2.0"
     }
