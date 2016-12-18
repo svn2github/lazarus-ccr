@@ -751,7 +751,8 @@ begin
     FNavPanel.ChildWindowsShowLast;
   FNavPanel.ShowHiddenBtnOnResize;
   CloseAction:=caFree;
-  Owner.RemoveComponent(Self);
+  if Assigned(Owner) then
+    Owner.RemoveComponent(Self);
   FNavPanel.FMainPanel.RemoveControl(Sender as TCustomForm);
   Application.ReleaseComponent(Self);
 end;

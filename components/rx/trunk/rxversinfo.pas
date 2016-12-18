@@ -111,7 +111,8 @@ type
 
 
 implementation
-uses FileUtil, resource, resreader, InterfaceBase, rxconst, LazFileUtils, LazUTF8
+uses FileUtil, resource, resreader, InterfaceBase, rxconst, LazFileUtils,
+  LazUTF8, LCLPlatformDef
 {$IFDEF WINDOWS}
   , winpeimagereader
 {$ENDIF}
