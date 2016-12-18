@@ -201,6 +201,7 @@
     <RequiredPackages Count="2">
       <Item1>
         <PackageName Value="cryptini"/>
+        <DefaultFilename Value="..\cryptini.lpk"/>
       </Item1>
       <Item2>
         <PackageName Value="LCL"/>
