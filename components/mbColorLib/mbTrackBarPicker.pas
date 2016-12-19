@@ -239,7 +239,6 @@ end;
 
 destructor TmbTrackbarPicker.Destroy;
 begin
-  FBufferBmp.Free;
   FBack.Free;
   inherited;
 end;

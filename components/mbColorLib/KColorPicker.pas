@@ -54,7 +54,7 @@ constructor TKColorPicker.Create(AOwner: TComponent);
 begin
   inherited;
   FGradientWidth := 256;
-  FGradientHeight := 12;
+  FGradientHeight := 1;
   FCyan := 0;
   FMagenta := 0;
   FYellow := 0;
@@ -70,7 +70,7 @@ end;
 
 function TKColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
-  Result := CMYKtoTColor(FCyan, FMagenta, FYellow, AValue);
+  Result := CMYKtoColor(FCyan, FMagenta, FYellow, AValue);
 end;
 
 procedure TKColorPicker.SetBlack(k: integer);
@@ -158,10 +158,9 @@ end;
 
 function TKColorPicker.GetSelectedColor: TColor;
 begin
-  if not WebSafe then
-    Result := CMYKtoTColor(FCyan, FMagenta, FYellow, FBlack)
-  else
-    Result := GetWebSafe(CMYKtoTColor(FCyan, FMagenta, FYellow, FBlack));
+  Result := CMYKtoColor(FCyan, FMagenta, FYellow, FBlack);
+  if WebSafe then
+    Result := GetWebSafe(Result);
 end;
 
 function TKColorPicker.GetSelectedValue: integer;

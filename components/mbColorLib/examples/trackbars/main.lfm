@@ -184,6 +184,9 @@ object Form1: TForm1
           Visible = False
           TabOrder = 5
           OnChange = SLVPickerV_Change
+          Hue = 0
+          Saturation = 0
+          Value = 255
           SelectedColor = clWhite
         end
         object LColorPickerV: TLColorPicker
@@ -196,9 +199,10 @@ object Form1: TForm1
           Anchors = [akTop, akLeft, akBottom]
           TabOrder = 6
           OnChange = SLVPickerV_Change
-          Saturation = 255
-          Luminance = 127
-          SelectedColor = 254
+          Hue = 0
+          Saturation = 240
+          Luminance = 239
+          SelectedColor = 16645631
         end
         object HColorPickerV: THColorPicker
           Left = 288
@@ -210,6 +214,9 @@ object Form1: TForm1
           Anchors = [akTop, akLeft, akBottom]
           TabOrder = 7
           OnChange = HPickerV_Change
+          Hue = 0
+          Saturation = 255
+          Value = 255
         end
         object KColorPickerV: TKColorPicker
           Left = 232
@@ -305,6 +312,9 @@ object Form1: TForm1
           Anchors = [akTop, akLeft, akBottom]
           TabOrder = 15
           OnChange = SLVPickerV_Change
+          Hue = 0
+          Saturation = 255
+          Value = 255
         end
       end
     end
@@ -471,6 +481,9 @@ object Form1: TForm1
           Visible = False
           TabOrder = 5
           OnChange = SLVPickerH_Change
+          Hue = 0
+          Saturation = 0
+          Value = 255
           SelectedColor = clWhite
         end
         object LColorPickerH: TLColorPicker
@@ -483,9 +496,10 @@ object Form1: TForm1
           Anchors = [akTop, akLeft, akRight]
           TabOrder = 6
           OnChange = SLVPickerH_Change
-          Saturation = 255
-          Luminance = 127
-          SelectedColor = 254
+          Hue = 0
+          Saturation = 240
+          Luminance = 239
+          SelectedColor = 16645631
         end
         object SColorPickerH: TSColorPicker
           Left = 24
@@ -497,6 +511,9 @@ object Form1: TForm1
           Anchors = [akTop, akLeft, akRight]
           TabOrder = 7
           OnChange = SLVPickerH_Change
+          Hue = 0
+          Saturation = 255
+          Value = 255
         end
         object HColorPickerH: THColorPicker
           Left = 24
@@ -508,6 +525,9 @@ object Form1: TForm1
           Anchors = [akTop, akLeft, akRight]
           TabOrder = 8
           OnChange = HPickerH_Change
+          Hue = 0
+          Saturation = 255
+          Value = 255
         end
         object KColorPickerH: TKColorPicker
           Left = 24

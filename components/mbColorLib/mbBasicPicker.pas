@@ -93,13 +93,14 @@ end;
 
 destructor TmbBasicPicker.Destroy;
 begin
-  //HideHintWindow;
+  FBufferBmp.Free;
   inherited;
 end;
 
 procedure TmbBasicPicker.CMHintShow(var Message: TCMHintShow);
 var
   cp: TPoint;
+  hp: TPoint;
 begin
   if GetColorUnderCursor <> clNone then
     with TCMHintShow(Message) do
@@ -111,10 +112,11 @@ begin
       else
       begin
         cp := HintInfo^.CursorPos;
+        hp := GetHintPos(cp.X, cp.Y);
         HintInfo^.ReshowTimeout := 0;  // must be zero!
         HintInfo^.HideTimeout := Application.HintHidePause;
         HintInfo^.HintStr := GetHintStr(cp.X, cp.Y);
-        HintInfo^.HintPos := ClientToScreen(GetHintPos(cp.X, cp.Y));
+        HintInfo^.HintPos := ClientToScreen(Point(hp.X + 16, hp.Y));
         HintInfo^.CursorRect := Rect(cp.X, cp.Y, cp.X+1, cp.Y+1);
         Result := 0;    // 0 means: show hint
       end;

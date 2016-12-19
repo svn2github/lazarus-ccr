@@ -65,7 +65,7 @@ begin
   FMaxSat := 255;
   FMaxVal := 255;
   FGradientWidth := FMaxHue + 1;
-  FGradientHeight := 12;
+  FGradientHeight := 1;
   FSat := 1.0;
   FVal := 1.0;
   FChange := false;
@@ -80,7 +80,7 @@ var
   h: Double;
 begin
   if Layout = lyVertical then AValue := (FMaxHue + 1) - AValue;
-  h := AValue / (FMaxHue + 1);
+  h := AValue / FMaxHue;
   Result := HSVtoColor(h, FSat, FVal);
 end;
 

@@ -187,8 +187,8 @@ begin
      (ERed.Focused {$IFDEF DELPHI} or ERed.Button.Focused{$ENDIF}) then
   begin
     inc(FLockChange);
-    HSL.RValue := ERed.Value;
-    SLH.RValue := ERed.Value;
+    HSL.Red := ERed.Value;
+    SLH.Red := ERed.Value;
     NewSwatch.Color := RGB(ERed.Value, EGreen.Value, EBlue.Value);
     dec(FLockChange);
   end;
@@ -200,8 +200,8 @@ begin
      (EGreen.Focused {$IFDEF DELPHI}or EGreen.Button.Focused{$ENDIF}) then
   begin
     inc(FLockChange);
-    HSL.GValue := EGreen.Value;
-    SLH.GValue := EGreen.Value;
+    HSL.Green := EGreen.Value;
+    SLH.Green := EGreen.Value;
     NewSwatch.Color := RGB(ERed.Value, EGreen.Value, EBlue.Value);
     dec(FLockChange);
   end;
@@ -213,8 +213,8 @@ begin
      (EBlue.Focused {$IFDEF DELPHI} or EBlue.Button.Focused{$ENDIF}) then
   begin
     inc(FLockChange);
-    HSL.BValue := EBlue.Value;
-    SLH.BValue := EBlue.Value;
+    HSL.Blue := EBlue.Value;
+    SLH.Blue := EBlue.Value;
     NewSwatch.Color := RGB(ERed.Value, EGreen.Value, EBlue.Value);
     dec(FLockChange);
   end;
@@ -226,8 +226,8 @@ begin
      (EHue.Focused {$IFDEF DELPHI} or EHue.Button.Focused{$ENDIF}) then
   begin
     inc(FLockChange);
-    HSL.HValue := EHue.Value;
-    SLH.HValue := EHue.Value;
+    HSL.Hue := EHue.Value;
+    SLH.Hue := EHue.Value;
     NewSwatch.Color := HSLRangeToRGB(EHue.Value, ESat.Value, ELum.Value);
     dec(FLockChange);
   end;
@@ -239,8 +239,8 @@ begin
      (ESat.Focused {$IFDEF DELPHI}or ESat.Button.Focused{$ENDIF}) then
   begin
     inc(FLockChange);
-    HSL.SValue := ESat.Value;
-    SLH.SValue := ESat.Value;
+    HSL.Saturation := ESat.Value;
+    SLH.Saturation := ESat.Value;
     NewSwatch.Color := HSLRangeToRGB(EHue.Value, ESat.Value, ELum.Value);
     dec(FLockChange);
   end;
@@ -252,7 +252,7 @@ begin
      (ELum.Focused {$IFDEF DELPHI} or ELum.Button.Focused{$ENDIF}) then
   begin
     inc(FLockChange);
-    HSL.LValue := ELum.Value;
+    HSL.Luminance := ELum.Value;
     NewSwatch.Color := HSLRangeToRGB(EHue.Value, ESat.Value, ELum.Value);
     dec(FLockChange);
   end;

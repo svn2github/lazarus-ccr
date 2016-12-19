@@ -588,13 +588,13 @@ begin
     1: //HSB - HSV
       Result := HSVToColor(Round(w/182.04), Round(x/655.35), Round(y/655.35));
     2: //CMYK
-      Result := CMYKToTColor(Round(100-w/55.35), Round(100-x/655.35), Round(100-y/655.35), Round(100-z/655.35));
+      Result := CMYKToColor(Round(100-w/55.35), Round(100-x/655.35), Round(100-y/655.35), Round(100-z/655.35));
     7: //Lab
       Result := LabToRGB(w/100, x/100, y/100);
     8: //Grayscale
       Result := RGB(Round(w/39.0625), Round(w/39.0625), Round(w/39.0625));
     9: //Wide CMYK
-      Result := CMYKToTColor(w div 100, x div 100, y div 100, z div 100)
+      Result := CMYKToColor(w div 100, x div 100, y div 100, z div 100)
     else //unknown
      Result := RGB(w div 256, x div 256, y div 256);
   end;

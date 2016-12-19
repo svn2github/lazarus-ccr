@@ -112,7 +112,7 @@ begin
   if (CColorPickerH = nil) or (YColorPickerH = nil) or (MColorPickerH = nil) or
      (KColorPickerH = nil) or (CMYKh = nil) then
     exit;
-  CMYKh.Color := CMYKToTColor(
+  CMYKh.Color := CMYKToColor(
     CColorPickerH.Cyan,
     MColorPickerH.Magenta,
     YColorPickerH.Yellow,
@@ -136,7 +136,7 @@ begin
   if (CColorPickerV = nil) or (YColorPickerV = nil) or (MColorPickerV = nil) or
      (KColorPickerV = nil) or (CMYKv = nil) then
     exit;
-  CMYKv.Color := CMYKToTColor(
+  CMYKv.Color := CMYKToColor(
     CColorPickerV.Cyan,
     MColorPickerV.Magenta,
     YColorPickerV.Yellow,
@@ -156,6 +156,10 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  MaxHue := 359;
+  MaxSat := 240;
+  MaxLum := 240;
+
   VColorPickerH.Left := LColorPickerH.Left;
   VColorPickerH.Top := LColorPickerH.Top;
   VColorPickerH.Width := LColorPickerH.Width;
@@ -279,14 +283,12 @@ begin
   if rbHSLh.Checked then begin
     if (LColorPickerH = nil) then
       exit;
-    triple := HSLToRGBTriple(HColorPickerH.Hue, SColorPickerH.Saturation, LColorPickerH.Luminance);
-    HSLVh.Color := RGBTripleToTColor(triple);
-//    HSLVh.Color := HSLRangetoRGB(HColorPickerH.Hue, SColorPickerH.Saturation, LColorPickerH.Luminance);
+    HSLVh.Color := HSLRangeToRGB(HColorPickerH.Hue, SColorPickerH.Saturation, LColorPickerH.Luminance);
   end;
   if rbHSVh.Checked then begin
     if (VColorPickerH = nil) then
       exit;
-    HSLVh.Color := HSVtoColor(HColorPickerH.Hue, SColorPickerH.Saturation, VColorPickerH.Value);
+    HSLVh.Color := HSVRangetoColor(HColorPickerH.Hue, SColorPickerH.Saturation, VColorPickerH.Value);
   end;
 
   c := HSLVh.Color;
@@ -310,7 +312,7 @@ begin
     if (LColorPickerV = nil) then
       exit;
     triple := HSLToRGBTriple(HColorPickerV.Hue, SColorPickerV.Saturation, LColorPickerV.Luminance);
-    HSLVv.Color := RGBTripleToTColor(triple);
+    HSLVv.Color := RGBTripleToColor(triple);
   end;
   if rbHSVv.Checked then begin
     if (VColorPickerV = nil) then

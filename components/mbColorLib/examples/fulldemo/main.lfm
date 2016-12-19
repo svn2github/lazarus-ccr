@@ -10,6 +10,7 @@ object Form1: TForm1
   OnCreate = FormCreate
   ShowHint = True
   LCLVersion = '1.7'
+  Scaled = True
   object Label1: TLabel
     Left = 416
     Height = 15
@@ -42,9 +43,9 @@ object Form1: TForm1
     Height = 384
     Top = 6
     Width = 403
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     Anchors = [akTop, akLeft, akRight, akBottom]
-    TabIndex = 2
+    TabIndex = 0
     TabOrder = 0
     OnChange = PageControl1Change
     OnMouseMove = PageControl1MouseMove
@@ -57,7 +58,7 @@ object Form1: TForm1
         Height = 340
         Top = 8
         Width = 381
-        SelectedColor = 1024
+        SelectedColor = 3289805
         HSPickerHintFormat = 'H: %h S: %s'#13'Hex: #%hex'
         LPickerHintFormat = 'Luminance: %l'
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -600,6 +601,9 @@ object Form1: TForm1
         Anchors = [akTop, akLeft, akRight, akBottom]
         TabOrder = 0
         OnMouseMove = HSVColorPicker1MouseMove
+        Hue = 0
+        Saturation = 0
+        Value = 255
         OnChange = HSVColorPicker1Change
       end
       object VColorPicker2: TVColorPicker
@@ -613,6 +617,9 @@ object Form1: TForm1
         Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
         OnChange = VColorPicker2Change
+        Hue = 0
+        Saturation = 0
+        Value = 255
         SelectedColor = clWhite
       end
     end
@@ -712,9 +719,10 @@ object Form1: TForm1
         SelectionIndicator = siRect
         Anchors = [akLeft, akRight, akBottom]
         TabOrder = 2
-        Saturation = 238
-        Luminance = 60
-        SelectedColor = 263284
+        Hue = 0
+        Saturation = 51
+        Luminance = 240
+        SelectedColor = clWhite
       end
       object VColorPicker1: TVColorPicker
         Left = 34
@@ -727,7 +735,7 @@ object Form1: TForm1
         SelectionIndicator = siRect
         Anchors = [akLeft, akRight, akBottom]
         TabOrder = 3
-        Hue = 240
+        Hue = 239
         Saturation = 255
         Value = 40
         SelectedColor = 2621440
@@ -744,7 +752,9 @@ object Form1: TForm1
         Anchors = [akLeft, akRight, akBottom]
         TabOrder = 4
         OnGetHintStr = HColorPicker1GetHintStr
+        Hue = 0
         Saturation = 120
+        Value = 255
         SelectedColor = 8882175
       end
       object SColorPicker1: TSColorPicker
@@ -761,6 +771,7 @@ object Form1: TForm1
         TabOrder = 5
         Hue = 60
         Saturation = 80
+        Value = 255
         SelectedColor = 11534335
       end
       object Memo1: TMemo
@@ -820,11 +831,11 @@ object Form1: TForm1
         Height = 155
         Top = 6
         Width = 211
-        SelectedColor = 518633
+        SelectedColor = 15797774
         HintFormat = 'H: %h S: %s'#13'Hex: %hex'
         TabOrder = 0
         OnMouseMove = HSColorPicker1MouseMove
-        HueValue = 60
+        Luminance = 120
         MarkerStyle = msSquare
         OnChange = HSColorPicker1Change
       end
@@ -833,9 +844,13 @@ object Form1: TForm1
         Height = 147
         Top = 144
         Width = 161
+        SelectedColor = 2763306
         HintFormat = 'H: %h S: %s L: %l'#13'Hex: %hex'
         TabOrder = 1
         OnMouseMove = SLColorPicker1MouseMove
+        Hue = 0
+        Saturation = 0
+        Luminance = 100
         MarkerStyle = msCross
         OnChange = SLColorPicker1Change
       end
@@ -847,6 +862,9 @@ object Form1: TForm1
         HintFormat = 'Hue: %h (selected)'
         TabOrder = 2
         OnMouseMove = HRingPicker1MouseMove
+        Hue = 0
+        Saturation = 255
+        Value = 255
         OnChange = HRingPicker1Change
       end
     end

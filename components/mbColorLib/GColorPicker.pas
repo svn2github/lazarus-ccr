@@ -32,9 +32,9 @@ type
   public
     constructor Create(AOwner: TComponent); override;
   published
-    property Red: integer read FRed write SetRed default 122;
+    property Red: integer read FRed write SetRed default 128;
     property Green: integer read FGreen write SetGreen default 255;
-    property Blue: integer read FBlue write SetBlue default 122;
+    property Blue: integer read FBlue write SetBlue default 128;
     property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
     property Layout default lyVertical;
   end;
@@ -50,10 +50,10 @@ constructor TGColorPicker.Create(AOwner: TComponent);
 begin
   inherited;
   FGradientWidth := 256;
-  FGradientHeight := 12;
-  FRed := 122;
+  FGradientHeight := 1;
+  FRed := 128;
   FGreen := 255;
-  FBlue := 122;
+  FBlue := 128;
   FArrowPos := ArrowPosFromGreen(255);
   FChange := false;
   Layout := lyVertical;

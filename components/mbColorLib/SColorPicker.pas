@@ -65,7 +65,7 @@ begin
   FMaxSat := 255;
   FMaxVal := 255;
   FGradientWidth := FMaxSat + 1;
-  FGradientHeight := 12;
+  FGradientHeight := 1;
   FChange := false;
   FHue := 0;
   FVal := 1.0;

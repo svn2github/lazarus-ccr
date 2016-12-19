@@ -54,7 +54,7 @@ constructor TCColorPicker.Create(AOwner: TComponent);
 begin
   inherited;
   FGradientWidth := 256;
-  FGradientHeight := 12;
+  FGradientHeight := 1;
   FCyan := 255;
   FMagenta := 0;
   FYellow := 0;
@@ -70,7 +70,7 @@ end;
 
 function TCColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
-  Result := CMYKtoTColor(AValue, FMagenta, FYellow, FBlack);
+  Result := CMYKtoColor(AValue, FMagenta, FYellow, FBlack);
 end;
 
 procedure TCColorPicker.SetCyan(C: integer);
@@ -158,10 +158,9 @@ end;
 
 function TCColorPicker.GetSelectedColor: TColor;
 begin
-  if not WebSafe then
-    Result := CMYKtoTColor(FCyan, FMagenta, FYellow, FBlack)
-  else
-    Result := GetWebSafe(CMYKtoTColor(FCyan, FMagenta, FYellow, FBlack));
+  Result := CMYKtoColor(FCyan, FMagenta, FYellow, FBlack);
+  if WebSafe then
+    Result := GetWebSafe(Result);
 end;
 
 function TCColorPicker.GetSelectedValue: integer;
@@ -176,13 +175,16 @@ begin
   if WebSafe then clr := GetWebSafe(clr);
   ColorToCMYK(clr, c, m, y, k);
   FChange := false;
-  SetMagenta(m);
-  SetYellow(y);
-  SetBlack(k);
-  SetCyan(c);
+  FMagenta := m;
+  FYellow := y;
+  FBlack := k;
+  FCyan := c;
+  FManual := false;
+  CreateGradient;
+  Invalidate;
+  if FChange and Assigned(OnChange) then OnChange(Self);
   FManual := false;
   FChange := true;
-  if Assigned(OnChange) then OnChange(Self);
 end;
 
 function TCColorPicker.GetArrowPos: integer;

@@ -25,7 +25,8 @@ type
     FSLPicker: TSLColorPicker;
     FHPicker: THColorPicker;
     FSelectedColor: TColor;
-    FHValue, FSValue, FLValue: integer;
+    FHValue, FSValue, FLValue: Double;
+    FMaxH, FMaxS, FMaxL: Integer;
     FRValue, FGValue, FBValue: integer;
     FSLHint, FHHint: string;
     FSLMenu, FHMenu: TPopupMenu;
@@ -33,12 +34,18 @@ type
     PBack: TBitmap;
     function GetManual: boolean;
     procedure SelectColor(c: TColor);
-    procedure SetH(v: integer);
-    procedure SetS(v: integer);
-    procedure SetL(v: integer);
-    procedure SetR(v: integer);
-    procedure SetG(v: integer);
-    procedure SetB(v: integer);
+    function GetH: Integer;
+    function GetS: Integer;
+    function GetL: Integer;
+    procedure SetH(H: integer);
+    procedure SetS(S: integer);
+    procedure SetL(L: integer);
+    procedure SetR(R: integer);
+    procedure SetG(G: integer);
+    procedure SetB(B: integer);
+    procedure SetMaxH(H: Integer);
+    procedure SetMaxS(S: Integer);
+    procedure SetMaxL(L: Integer);
     procedure SetHHint(h: string);
     procedure SetSLHint(h: string);
     procedure SetSLMenu(m: TPopupMenu);
@@ -63,12 +70,12 @@ type
     function GetHexColorUnderCursor: string; override;
     function GetSelectedHexColor: string;
     property ColorUnderCursor;
-    property HValue: integer read FHValue write SetH default 0;
-    property SValue: integer read FSValue write SetS default 240;
-    property LValue: integer read FLValue write SetL default 120;
-    property RValue: integer read FRValue write SetR default 255;
-    property GValue: integer read FGValue write SetG default 0;
-    property BValue: integer read FBValue write SetB default 0;
+    property Hue: integer read GetH write SetH;
+    property Saturation: integer read GetS write SetS;
+    property Luminance: integer read GetL write SetL;
+    property Red: integer read FRValue write SetR default 255;
+    property Green: integer read FGValue write SetG default 0;
+    property Blue: integer read FBValue write SetB default 0;
     property Manual: boolean read GetManual;
   published
     property SelectedColor: TColor read FSelectedColor write SelectColor default clRed;
@@ -111,6 +118,9 @@ begin
   inherited;
   //ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
   DoubleBuffered := true;
+  FMaxH := 359;
+  FMaxS := 240;
+  FMaxL := 100;
   PBack := TBitmap.Create;
   PBack.PixelFormat := pf32bit;
   ParentColor := true;
@@ -142,9 +152,14 @@ begin
     {$ELSE}
     SetInitialBounds(WSL + DIST, 0, WH, HSL + 2*VDELTA);
     {$ENDIF}
+    MaxHue := self.FMaxH;
+    MaxSaturation := 255;
+    MaxValue := 255;
+    Saturation := MaxSaturation;
+    Value := MaxValue;
   //  Anchors := [akTop, akRight, akBottom];
     Visible := true;
-    Layout := lyVertical;
+//    Layout := lyVertical;
     ArrowPlacement := spBoth;
     NewArrowStyle := true;
     OnChange := HPickerChange;
@@ -167,12 +182,17 @@ begin
     //Anchors := [akLeft, akRight, akTop, akBottom];
     Visible := true;
     SelectedColor := clRed;
+    MaxHue := FMaxH;
+    MaxSaturation := FMaxS;
+    MaxLuminance := FMaxL;
+    Saturation := FMaxS;
+    Luminance := FMaxL;
     OnChange := SLPickerChange;
     OnMouseMove := DoMouseMove;
   end;
   FHValue := 0;
-  FSValue := 255;
-  FLValue := 255;
+  FSValue := 1.0;
+  FLValue := 1.0;
   FRValue := 255;
   FGValue := 0;
   FBValue := 0;
@@ -202,9 +222,9 @@ end;
 
 procedure TSLHColorPicker.DoChange;
 begin
-  FHValue := FHPicker.Hue;
-  FSValue := FSLPicker.Saturation;
-  FLValue := FSLPicker.Luminance;
+  FHValue := FHPicker.Hue / FHPicker.MaxHue;
+  FSValue := FSLPicker.Saturation / FSLPicker.MaxSaturation;
+  FLValue := FSLPicker.Luminance / FSLPicker.MaxLuminance;
   FRValue := GetRValue(FSLPicker.SelectedColor);
   FGValue := GetGValue(FSLPicker.SelectedColor);
   FBValue := GetBValue(FSLPicker.SelectedColor);
@@ -219,41 +239,75 @@ begin
   FSLPicker.SelectedColor := c;
 end;
 
-procedure TSLHColorPicker.SetH(v: integer);
+function TSLHColorPicker.GetH: Integer;
 begin
-  FHValue := v;
-  FSLPicker.Hue := v;
-  FHPicker.Hue := v;
+  Result := Round(FHValue * FMaxH);
 end;
 
-procedure TSLHColorPicker.SetS(v: integer);
+function TSLHColorPicker.GetS: Integer;
 begin
-  FSValue := v;
-  FSLPicker.Saturation := v;
+  Result := Round(FSValue * FMaxS);
 end;
 
-procedure TSLHColorPicker.SetL(v: integer);
+function TSLHColorPicker.GetL: Integer;
 begin
-  FLValue := v;
-  FSLPicker.Luminance := v;
+  Result := ROund(FLValue * FMaxL);
 end;
 
-procedure TSLHColorPicker.SetR(v: integer);
+procedure TSLHColorPicker.SetH(H: integer);
 begin
-  FRValue := v;
+  FHValue := H / FMaxH;
+  FSLPicker.Hue := H;
+  FHPicker.Hue := H;
+end;
+
+procedure TSLHColorPicker.SetS(S: integer);
+begin
+  FSValue := S / FMaxS;
+  FSLPicker.Saturation := S;
+end;
+
+procedure TSLHColorPicker.SetL(L: integer);
+begin
+  FLValue := L / FMaxL;
+  FSLPicker.Luminance := L;
+end;
+
+procedure TSLHColorPicker.SetR(R: integer);
+begin
+  FRValue := R;
   SelectColor(RGB(FRValue, FGValue, FBValue));
 end;
 
-procedure TSLHColorPicker.SetG(v: integer);
+procedure TSLHColorPicker.SetG(G: integer);
 begin
-  FGValue := v;
+  FGValue := G;
   SelectColor(RGB(FRValue, FGValue, FBValue));
 end;
 
-procedure TSLHColorPicker.SetB(v: integer);
+procedure TSLHColorPicker.SetB(B: integer);
 begin
-  FBValue := v;
+  FBValue := B;
   SelectColor(RGB(FRValue, FGValue, FBValue));
+end;
+
+procedure TSLHColorPicker.SetMaxH(H: Integer);
+begin
+  FMaxH := H;
+  FSLPicker.MaxHue := H;
+  FHPicker.MaxHue := H;
+end;
+
+procedure TSLHColorPicker.SetMaxS(S: Integer);
+begin
+  FMaxS := S;
+  FSLPicker.MaxSaturation := S;
+end;
+
+procedure TSLHColorPicker.SetMaxL(L: Integer);
+begin
+  FMaxL := L;
+  FSLPicker.MaxLuminance := L;
 end;
 
 function TSLHColorPicker.GetSelectedHexColor: string;

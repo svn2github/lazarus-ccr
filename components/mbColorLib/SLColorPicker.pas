@@ -18,14 +18,21 @@ uses
 type
   TSLColorPicker = class(TmbColorPickerControl)
   private
-    FHue, FSat, FLum: integer;
+    FHue, FSat, FLum: Double;
+    FMaxHue, FMaxSat, FMaxLum: integer;
     FChange: boolean;
     procedure DrawMarker(x, y: integer);
     procedure SelectionChanged(x, y: integer);
     procedure UpdateCoords;
-    procedure SetHue(h: integer);
-    procedure SetSat(s: integer);
-    procedure SetLum(l: integer);
+    function GetHue: Integer;
+    function GetLum: Integer;
+    function GetSat: Integer;
+    procedure SetHue(H: integer);
+    procedure SetSat(S: integer);
+    procedure SetLum(L: integer);
+    procedure SetMaxHue(H: Integer);
+    procedure SetMaxLum(L: Integer);
+    procedure SetMaxSat(S: Integer);
   protected
     function GetGradientColor2D(X, Y: Integer): TColor; override;
     function GetSelectedColor: TColor; override;
@@ -43,9 +50,12 @@ type
     function GetColorAtPoint(x, y: integer): TColor; override;
     property ColorUnderCursor;
   published
-    property Hue: integer read FHue write SetHue default 0;
-    property Saturation: integer read FSat write SetSat default 0;
-    property Luminance: integer read FLum write SetLum default 255;
+    property Hue: integer read GetHue write SetHue;
+    property Saturation: integer read GetSat write SetSat;
+    property Luminance: integer read GetLum write SetLum;
+    property MaxHue: Integer read FMaxHue write SetMaxHue default 359;
+    property MaxSaturation: Integer read FMaxSat write SetMaxSat default 240;
+    property MaxLuminance: Integer read FMaxLum write SetMaxLum default 240;
     property SelectedColor default clWhite;
     property MarkerStyle default msCircle;
     property OnChange;
@@ -61,31 +71,29 @@ uses
 constructor TSLColorPicker.Create(AOwner: TComponent);
 begin
   inherited;
-  FGradientWidth := 256;
-  FGradientHeight := 256;
+  FMaxHue := 359;
+  FMaxSat := 240;
+  FMaxLum := 240;
+  FGradientWidth := FMaxSat + 1;       // x --> Saturation
+  FGradientHeight := FMaxLum + 1;      // y --> Luminance
   {$IFDEF DELPHI}
   Width := 255;
   Height := 255;
   {$ELSE}
-  SetInitialBounds(0, 0, 256, 256);
+  SetInitialBounds(0, 0, FGradientWidth, FGradientHeight);
   {$ENDIF}
-  MaxHue := 360;
-  MaxSat := 255;
-  MaxLum := 255;
-  FHue := 0;
-  FSat := 0;
-  FLum := 255;
+  FHue := 0.0;
+  FSat := 0.0;
+  FLum := 1.0;
   FChange := true;
   MarkerStyle := msCircle;
 end;
 
 { This picker has Saturation along the X and Luminance along the Y axis. }
 function TSLColorPicker.GetGradientColor2D(X, Y: Integer): TColor;
-var
-  q: TRGBQuad;
 begin
-  q := HSLtoRGBQuad(FHue, x, 255-y);
-  Result := RGB(q.rgbRed, q.rgbGreen, q.rgbBlue);
+  Result := HSLtoColor(FHue, x / FMaxSat, (FMaxLum - y) / FMaxLum);
+//  Result := HSLtoRGB(FHue, x / FMaxSat, (FMaxLum - y) / FMaxLum);
 end;
 
 procedure TSLColorPicker.Resize;
@@ -103,15 +111,15 @@ end;
 
 procedure TSLColorPicker.UpdateCoords;
 begin
-  mdx := MulDiv(FSat, Width, 255);
-  mdy := MulDiv(255-FLum, Height, 255);
+  mdx := round(FSat * (Width - 1));
+  mdy := round((1.0 - FLum) * (Height - 1));
 end;
 
 procedure TSLColorPicker.DrawMarker(x, y: integer);
 var
   c: TColor;
 begin
-  c := not GetColorAtPoint(x, y);
+  c := not GetColorAtPoint(x, y);     // "not" --> invert color bits
   InternalDrawMarker(x, y, c);
 end;
 
@@ -122,12 +130,27 @@ begin
   DrawMarker(mdx, mdy);
 end;
 
-procedure TSLColorPicker.SetHue(h: integer);
+function TSLColorPicker.GetHue: Integer;
 begin
-  Clamp(h, 0, 360);
-  if FHue <> h then
+  Result := round(FHue * FMaxHue);
+end;
+
+function TSLColorPicker.GetLum: Integer;
+begin
+  Result := round(FLum * FMaxLum);
+end;
+
+function TSLColorPicker.GetSat: Integer;
+begin
+  Result := round(FSat * FMaxSat);
+end;
+
+procedure TSLColorPicker.SetHue(H: integer);
+begin
+  Clamp(H, 0, FMaxHue);
+  if GetHue() <> H then
   begin
-    FHue := h;
+    FHue := h / FMaxHue;
     FManual := false;
     CreateGradient;
     UpdateCoords;
@@ -136,12 +159,12 @@ begin
   end;
 end;
 
-procedure TSLColorPicker.SetSat(s: integer);
+procedure TSLColorPicker.SetSat(S: integer);
 begin
-  Clamp(s, 0, 255);
-  if FSat <> s then
+  Clamp(S, 0, FMaxSat);
+  if GetSat() <> S then
   begin
-    FSat := s;
+    FSat := S / FMaxSat;
     FManual := false;
     UpdateCoords;
     Invalidate;
@@ -151,10 +174,10 @@ end;
 
 procedure TSLColorPicker.SetLum(L: integer);
 begin
-  Clamp(L, 0, 255);
-  if FLum <> L then
+  Clamp(L, 0, FMaxLum);
+  if GetLum() <> L then
   begin
-    FLum := L;
+    FLum := L / FMaxLum;
     FManual := false;
     UpdateCoords;
     Invalidate;
@@ -162,13 +185,53 @@ begin
   end;
 end;
 
+procedure TSLColorPicker.SetMaxHue(H: Integer);
+begin
+  if H = FMaxHue then
+    exit;
+  FMaxHue := H;
+  CreateGradient;
+  if FChange and Assigned(OnChange) then OnChange(Self);
+  Invalidate;
+end;
+
+procedure TSLColorPicker.SetMaxLum(L: Integer);
+begin
+  if L = FMaxLum then
+    exit;
+  FMaxLum := L;
+  FGradientHeight := FMaxLum + 1;
+  CreateGradient;
+  if FChange and Assigned(OnChange) then OnChange(Self);
+  Invalidate;
+end;
+
+procedure TSLColorPicker.SetMaxSat(S: Integer);
+begin
+  if S = FMaxSat then
+    exit;
+  FMaxSat := S;
+  FGradientWidth := FMaxSat + 1;
+  CreateGradient;
+  if FChange and Assigned(OnChange) then OnChange(Self);
+  Invalidate;
+end;
+
 procedure TSLColorPicker.SelectionChanged(x, y: integer);
 begin
   FChange := false;
 //  SetSat(MulDiv(255, x, Width));
 //  SetLum(MulDiv(255, Height - y, Height));
+  FSat := x / (Width - 1);
+  FLum := (Height - y - 1) / (Height - 1);
+  FManual := false;
+  UpdateCoords;
+  Invalidate;
+  if FChange and Assigned(FOnChange) then FOnChange(Self);
+  {
   SetSat(MulDiv(255, x, Width - 1));
   SetLum(MulDiv(255, Height - y -1, Height - 1));
+  }
   FChange := true;
 end;
 
@@ -192,8 +255,10 @@ end;
 
 procedure TSLColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
+{$IFDEF DELPHI}
 var
   R: TRect;
+{$ENDIF}
 begin
   inherited;
   if csDesigning in ComponentState then
@@ -202,15 +267,15 @@ begin
   begin
     mdx := x;
     mdy := y;
+    {$IFDEF DELPHI}
     R := ClientRect;
     R.TopLeft := ClientToScreen(R.TopLeft);
     R.BottomRight := ClientToScreen(R.BottomRight);
-    {$IFDEF DELPHI}
     ClipCursor(@R);
     {$ENDIF}
     SelectionChanged(X, Y);
-    FManual := true;
-    if Assigned(FOnChange) then FOnChange(Self);
+//    FManual := true;
+//    if Assigned(FOnChange) then FOnChange(Self);
   end;
   SetFocus;
 end;
@@ -225,139 +290,97 @@ begin
     mdx := x;
     mdy := y;
     SelectionChanged(X, Y);
-    FManual := true;
-    if Assigned(FOnChange) then FOnChange(Self);
+//    FManual := true;
+//    if Assigned(FOnChange) then FOnChange(Self);
   end;
 end;
 
 procedure TSLColorPicker.SetSelectedColor(c: TColor);
 var
-  h, s, l: integer;
+  h, s, l: Double;
 begin
   if WebSafe then c := GetWebSafe(c);
   FManual := false;
   FChange := false;
-  RGBTripleToHSL(RGBtoRGBTriple(GetRValue(c), GetGValue(c), GetBValue(c)), h, s, l);
-  SetHue(h);
-  SetSat(s);
-  SetLum(l);
+  ColorToHSL(c, FHue, FSat, FLum);
+  FManual := false;
+  UpdateCoords;
+  Invalidate;
   if FChange and Assigned(FOnChange) then FOnChange(Self);
   FChange := true;
 end;
 
 function TSLColorPicker.GetSelectedColor: TColor;
-var
-  triple: TRGBTriple;
 begin
-  triple := HSLToRGBTriple(FHue, FSat, FLum);
-  if not WebSafe then
-    Result := RGBTripleToColor(triple)
-  else
-    Result := GetWebSafe(RGBTripleToColor(triple));
+  Result := HSLtoRGB(FHue, FSat, FLum);
+  if WebSafe then
+    Result := GetWebSafe(Result);
 end;
 
 function TSLColorPicker.GetColorAtPoint(x, y: integer): TColor;
-var
-  triple: TRGBTriple;
 begin
-  triple := HSLToRGBTriple(FHue, MulDiv(255, x, Width), MulDiv(255, Height - y, Height));
-  if not WebSafe then
-    Result := RGBTripleToColor(triple)
-  else
-    Result := GetWebSafe(RGBTripleToColor(triple));
+  Result := HSLToRGB(FHue, x/(Width - 1), (Height - 1 - y) / (Height - 1));
+  if WebSafe then
+    Result := GetWebSafe(Result);
 end;
 
 procedure TSLColorPicker.CNKeyDown(
   var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF} );
 var
- Shift: TShiftState;
- FInherited: boolean;
+  Shift: TShiftState;
+  FInherited: boolean;
+  delta: Integer;
 begin
- FInherited := false;
- Shift := KeyDataToShiftState(Message.KeyData);
- if not (ssCtrl in Shift) then
-  case Message.CharCode of
-   VK_LEFT:
-    if not (mdx - 1 < 0) then
-     begin
-      Dec(mdx, 1);
-      SelectionChanged(mdx, mdy);
-      FManual := true;
-      if Assigned(FOnChange) then FOnChange(Self);
-     end;
-   VK_RIGHT:
-    if not (mdx + 1 > Width) then
-     begin
-      Inc(mdx, 1);
-      SelectionChanged(mdx, mdy);
-      FManual := true;
-      if Assigned(FOnChange) then FOnChange(Self);
-     end;
-   VK_UP:
-    if not (mdy - 1 < 0) then
-     begin
-      Dec(mdy, 1);
-      SelectionChanged(mdx, mdy);
-      FManual := true;
-      if Assigned(FOnChange) then FOnChange(Self);
-     end;
-   VK_DOWN:
-    if not (mdy + 1 > Height) then
-     begin
-      Inc(mdy, 1);
-      SelectionChanged(mdx, mdy);
-      FManual := true;
-      if Assigned(FOnChange) then FOnChange(Self);
-     end;
+  FInherited := false;
+  Shift := KeyDataToShiftState(Message.KeyData);
+  if ssCtrl in Shift then
+    delta := 10
   else
-   begin
-    FInherited := true;
-    inherited;
-   end;
-  end
- else
+    delta := 1;
+
   case Message.CharCode of
-   VK_LEFT:
-    if not (mdx - 10 < 0) then
-     begin
-      Dec(mdx, 10);
-      SelectionChanged(mdx, mdy);
-      FManual := true;
-      if Assigned(FOnChange) then FOnChange(Self);
-     end;
-   VK_RIGHT:
-    if not (mdx + 10 > Width) then
-     begin
-      Inc(mdx, 10);
-      SelectionChanged(mdx, mdy);
-      FManual := true;
-      if Assigned(FOnChange) then FOnChange(Self);
-     end;
-   VK_UP:
-    if not (mdy - 10 < 0) then
-     begin
-      Dec(mdy, 10);
-      SelectionChanged(mdx, mdy);
-      FManual := true;
-      if Assigned(FOnChange) then FOnChange(Self);
-     end;
-   VK_DOWN:
-    if not (mdy + 10 > Height) then
-     begin
-      Inc(mdy, 10);
-      SelectionChanged(mdx, mdy);
-      FManual := true;
-      if Assigned(FOnChange) then FOnChange(Self);
-     end;
-  else
-   begin
-    FInherited := true;
-    inherited;
-   end;
+    VK_LEFT:
+      if not (mdx - delta < 0) then
+      begin
+        Dec(mdx, delta);
+        SelectionChanged(mdx, mdy);
+        FManual := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    VK_RIGHT:
+      if not (mdx + delta > Width) then
+      begin
+        Inc(mdx, delta);
+        SelectionChanged(mdx, mdy);
+        FManual := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    VK_UP:
+      if not (mdy - delta < 0) then
+      begin
+        Dec(mdy, delta);
+        SelectionChanged(mdx, mdy);
+        FManual := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    VK_DOWN:
+      if not (mdy + delta > Height) then
+      begin
+        Inc(mdy, delta);
+        SelectionChanged(mdx, mdy);
+        FManual := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+   else
+      begin
+        FInherited := true;
+        inherited;
+      end;
   end;
- if not FInherited then
-  if Assigned(OnKeyDown) then
-   OnKeyDown(Self, Message.CharCode, Shift);
+
+  if not FInherited then
+    if Assigned(OnKeyDown) then
+      OnKeyDown(Self, Message.CharCode, Shift);
 end;
 
 end.

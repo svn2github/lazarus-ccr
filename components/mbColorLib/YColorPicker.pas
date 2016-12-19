@@ -54,7 +54,7 @@ constructor TYColorPicker.Create(AOwner: TComponent);
 begin
   inherited;
   FGradientWidth := 255;
-  FGradientHeight := 12;
+  FGradientHeight := 1;
   FYellow := 255;
   FMagenta := 0;
   FCyan := 0;
@@ -70,7 +70,7 @@ end;
 
 function TYColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
-  Result := CMYKtoTColor(FCyan, FMagenta, AValue, FBlack);
+  Result := CMYKtoColor(FCyan, FMagenta, AValue, FBlack);
 end;
 
 procedure TYColorPicker.SetYellow(y: integer);
@@ -158,10 +158,9 @@ end;
 
 function TYColorPicker.GetSelectedColor: TColor;
 begin
-  if not WebSafe then
-    Result := CMYKtoTColor(FCyan, FMagenta, FYellow, FBlack)
-  else
-    Result := GetWebSafe(CMYKtoTColor(FCyan, FMagenta, FYellow, FBlack));
+  Result := CMYKtoColor(FCyan, FMagenta, FYellow, FBlack);
+  if WebSafe then
+    Result := GetWebSafe(Result);
 end;
 
 function TYColorPicker.GetSelectedValue: integer;

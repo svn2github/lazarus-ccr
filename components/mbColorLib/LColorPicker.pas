@@ -18,12 +18,19 @@ uses
 type
   TLColorPicker = class(TmbTrackBarPicker)
   private
-    FHue, FSat, FLuminance: integer;
-    function ArrowPosFromLum(l: integer): integer;
+    FHue, FSat, FLuminance: Double;
+    FMaxHue, FMaxSat, FMaxLum: Integer;
+    function ArrowPosFromLum(L: integer): integer;
     function LumFromArrowPos(p: integer): integer;
-    procedure SetHue(h: integer);
-    procedure SetSat(s: integer);
-    procedure SetLuminance(l: integer);
+    function GetHue: Integer;
+    function GetSat: Integer;
+    function GetLuminance: Integer;
+    procedure SetHue(H: integer);
+    procedure SetSat(S: integer);
+    procedure SetLuminance(L: integer);
+    procedure SetMaxHue(H: Integer);
+    procedure SetMaxSat(S: Integer);
+    procedure SetMaxLum(L: Integer);
     function GetSelectedColor: TColor;
     procedure SetSelectedColor(c: TColor);
   protected
@@ -34,9 +41,12 @@ type
   public
     constructor Create(AOwner: TComponent); override;
   published
-    property Hue: integer read FHue write SetHue default 0;
-    property Saturation: integer read FSat write SetSat default 240;
-    property Luminance: integer read FLuminance write SetLuminance default 120;
+    property Hue: integer read GetHue write SetHue;
+    property Saturation: integer read GetSat write SetSat;
+    property Luminance: integer read GetLuminance write SetLuminance;
+    property MaxHue: Integer read FMaxHue write SetmaxHue default 359;
+    property MaxSaturation: Integer read FMaxSat write SetMaxSat default 240;
+    property MaxLuminance: Integer read FMaxLum write SetMaxLum default 240;
     property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
   end;
 
@@ -50,13 +60,15 @@ uses
 constructor TLColorPicker.Create(AOwner: TComponent);
 begin
   inherited;
-  FGradientWidth := 256;
-  FGradientHeight := 12;
+  FMaxHue := 359;
+  FMaxSat := 240;
+  FMaxLum := 240;
+  FGradientWidth := FMaxLum + 1;
+  FGradientHeight := 1;
   FHue := 0;
-  FSat := MaxSat;
-  FArrowPos := ArrowPosFromLum(MaxLum div 2);
+  FSat := FMaxSat;
   FChange := false;
-  SetLuminance(MaxLum div 2);
+  SetLuminance(FMaxLum div 2);
   HintFormat := 'Luminance: %value (selected)';
   FManual := false;
   FChange := true;
@@ -64,15 +76,30 @@ end;
 
 function TLColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
-  Result := HSLRangeToRGB(FHue, FSat, AValue);
+  Result := HSLToRGB(FHue, FSat, AValue/FMaxLum);
 end;
 
-procedure TLColorPicker.SetHue(h: integer);
+function TLColorPicker.GetHue: Integer;
 begin
-  Clamp(h, 0, MaxHue);
-  if FHue <> h then
+  Result := Round(FHue * FMaxHue);
+end;
+
+function TLColorPicker.GetLuminance: Integer;
+begin
+  Result := Round(FLuminance * FMaxLum);
+end;
+
+function TLColorPicker.GetSat: Integer;
+begin
+  Result := Round(FSat * FMaxSat);
+end;
+
+procedure TLColorPicker.SetHue(H: integer);
+begin
+  Clamp(H, 0, FMaxHue);
+  if GetHue() <> H then
   begin
-    FHue := h;
+    FHue := H / FMaxHue;
     FManual := false;
     CreateGradient;
     Invalidate;
@@ -80,12 +107,56 @@ begin
   end;
 end;
 
-procedure TLColorPicker.SetSat(s: integer);
+procedure TLColorPicker.SetLuminance(L: integer);
 begin
-  Clamp(s, 0, MaxSat);
-  if FSat <> s then
+  Clamp(L, 0, FMaxLum);
+  if GetLuminance() <> L then
   begin
-    FSat := s;
+    FLuminance := L / FMaxLum;
+    FArrowPos := ArrowPosFromLum(L);
+    FManual := false;
+    Invalidate;
+    if FChange and Assigned(OnChange) then OnChange(Self);
+  end;
+end;
+
+procedure TLColorPicker.SetMaxHue(H: Integer);
+begin
+  if H = FMaxHue then
+    exit;
+  FMaxHue := H;
+  CreateGradient;
+  Invalidate;
+  if FChange and Assigned(OnChange) then OnChange(Self);
+end;
+
+procedure TLColorPicker.SetMaxLum(L: Integer);
+begin
+  if L = FMaxLum then
+    exit;
+  FMaxLum := L;
+  FGradientWidth := FMaxLum + 1;   // 0 .. FMaxHue  --> FMaxHue + 1 pixels
+  CreateGradient;
+  Invalidate;
+  if FChange and Assigned(OnChange) then OnChange(Self);
+end;
+
+procedure TLColorPicker.SetMaxSat(S: Integer);
+begin
+  if S = FMaxSat then
+    exit;
+  FMaxSat := S;
+  CreateGradient;
+  Invalidate;
+  if FChange and Assigned(OnChange) then OnChange(Self);
+end;
+
+procedure TLColorPicker.SetSat(S: integer);
+begin
+  Clamp(S, 0, FMaxSat);
+  if GetSat() <> S then
+  begin
+    FSat := S / FMaxSat;
     FManual := false;
     CreateGradient;
     Invalidate;
@@ -93,19 +164,18 @@ begin
   end;
 end;
 
-function TLColorPicker.ArrowPosFromLum(l: integer): integer;
+function TLColorPicker.ArrowPosFromLum(L: integer): integer;
 var
   a: integer;
 begin
   if Layout = lyHorizontal then
   begin
-    a := Round(((Width - 12)/MaxLum)*l);
+    a := Round((Width - 12) * L / FMaxLum);
     if a > Width - FLimit then a := Width - FLimit;
   end
   else
   begin
-    l := MaxLum - l;
-    a := Round(((Height - 12)/MaxLum)*l);
+    a := Round((Height - 12) * (FMaxLum - L) / FMaxLum);
     if a > Height - FLimit then a := Height - FLimit;
   end;
   if a < 0 then a := 0;
@@ -117,88 +187,73 @@ var
   L: integer;
 begin
   if Layout = lyHorizontal then
-    L := Round(p/((Width - 12)/MaxLum))
+    L := Round(p / (Width - 12) * FMaxLum)
   else
-    L := Round(MaxLum - p/((Height - 12)/MaxLum));
-  Clamp(L, 0, MaxLum);
+    L := Round(MaxLum - p /(Height - 12) * FMaxLum);
+  Clamp(L, 0, FMaxLum);
   Result := L;
-end;
-
-procedure TLColorPicker.SetLuminance(L: integer);
-begin
-  Clamp(L, 0, MaxLum);
-  if FLuminance <> L then
-  begin
-    FLuminance := L;
-    FArrowPos := ArrowPosFromLum(L);
-    FManual := false;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
 end;
 
 function TLColorPicker.GetSelectedColor: TColor;
 begin
-  if not WebSafe then
-    Result := HSLRangeToRGB(FHue, FSat, FLuminance)
-  else
-    Result := GetWebSafe(HSLRangeToRGB(FHue, FSat, FLuminance));
+  Result := HSLToRGB(FHue, FSat, FLuminance);
+  if WebSafe then
+    Result := GetWebSafe(Result);
 end;
 
 function TLColorPicker.GetSelectedValue: integer;
 begin
-  Result := FLuminance;
+  Result := GetLuminance();
 end;
 
 procedure TLColorPicker.SetSelectedColor(c: TColor);
-var
-  h1, s1, l1: integer;
 begin
   if WebSafe then c := GetWebSafe(c);
-  RGBtoHSLRange(c, h1, s1, l1);
-  Fchange := false;
-  SetHue(h1);
-  SetSat(s1);
-  SetLuminance(l1);
-  FChange := true;
+  ColortoHSL(c, FHue, FSat, FLuminance);
+  FChange := false;
   FManual := false;
+  CreateGradient;
+  Invalidate;
   if FChange and Assigned(OnChange) then OnChange(Self);
 end;
 
 function TLColorPicker.GetArrowPos: integer;
 begin
-  Result := ArrowPosFromLum(FLuminance);
+  if FMaxLum = 0 then
+    Result := inherited GetArrowPos
+  else
+    Result := ArrowPosFromLum(GetLuminance());
 end;
 
 procedure TLColorPicker.Execute(tbaAction: integer);
 begin
   case tbaAction of
     TBA_Resize:
-      SetLuminance(FLuminance);
+      SetLuminance(GetLuminance());
     TBA_MouseMove:
-      FLuminance := LumFromArrowPos(FArrowPos);
+      SetLuminance(LumFromArrowPos(FArrowPos));
     TBA_MouseDown:
-      Fluminance := LumFromArrowPos(FArrowPos);
+      SetLuminance(LumFromArrowPos(FArrowPos));
     TBA_MouseUp:
-      Fluminance := LumFromArrowPos(FArrowPos);
+      SetLuminance(LumFromArrowPos(FArrowPos));
     TBA_WheelUp:
-      SetLuminance(FLuminance + Increment);
+      SetLuminance(GetLuminance() + Increment);
     TBA_WheelDown:
-      SetLuminance(FLuminance - Increment);
+      SetLuminance(GetLuminance() - Increment);
     TBA_VKRight:
-      SetLuminance(FLuminance + Increment);
+      SetLuminance(GetLuminance() + Increment);
     TBA_VKCtrlRight:
-      SetLuminance(MaxLum);
+      SetLuminance(FMaxLum);
     TBA_VKLeft:
-      SetLuminance(FLuminance - Increment);
+      SetLuminance(GetLuminance() - Increment);
     TBA_VKCtrlLeft:
       SetLuminance(0);
     TBA_VKUp:
-      SetLuminance(FLuminance + Increment);
+      SetLuminance(GetLuminance() + Increment);
     TBA_VKCtrlUp:
-      SetLuminance(MaxLum);
+      SetLuminance(FMaxLum);
     TBA_VKDown:
-      SetLuminance(FLuminance - Increment);
+      SetLuminance(GetLuminance() - Increment);
     TBA_VKCtrlDown:
       SetLuminance(0);
     else

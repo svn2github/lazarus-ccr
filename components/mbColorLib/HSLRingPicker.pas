@@ -25,17 +25,25 @@ type
     FRingPicker: THRingPicker;
     FSLPicker: TSLColorPicker;
     FSelectedColor: TColor;
-    FHValue, FSValue, FLValue: integer;
     FRValue, FGValue, FBValue: integer;
     FRingHint, FSLHint: string;
     FSLMenu, FRingMenu: TPopupMenu;
     FSLCursor, FRingCursor: TCursor;
     PBack: TBitmap;
     function GetManual: boolean;
+    function GetHue: Integer;
+    function GetLum: Integer;
+    function GetSat: Integer;
+    function GetMaxHue: Integer;
+    function GetMaxLum: Integer;
+    function GetMaxSat: Integer;
     procedure SelectColor(c: TColor);
-    procedure SetH(v: integer);
-    procedure SetS(v: integer);
-    procedure SetL(v: integer);
+    procedure SetHue(H: integer);
+    procedure SetSat(S: integer);
+    procedure SetLum(L: integer);
+    procedure SetMaxHue(H: Integer);
+    procedure SetMaxLum(L: Integer);
+    procedure SetMaxSat(S: Integer);
     procedure SetR(v: integer);
     procedure SetG(v: integer);
     procedure SetB(v: integer);
@@ -65,9 +73,9 @@ type
     function GetHexColorUnderCursor: string; override;
     function GetSelectedHexColor: string;
     property ColorUnderCursor;
-    property HValue: integer read FHValue write SetH default 0;
-    property SValue: integer read FSValue write SetS default 240;
-    property LValue: integer read FLValue write SetL default 120;
+    property Hue: integer read GetHue write SetHue;
+    property Saturation: integer read GetSat write SetSat;
+    property Luminance: integer read GetLum write SetLum;
     property RValue: integer read FRValue write SetR default 255;
     property GValue: integer read FGValue write SetG default 0;
     property BValue: integer read FBValue write SetB default 0;
@@ -80,6 +88,9 @@ type
     property SLPickerHintFormat: string read FSLHint write SetSLHint;
     property RingPickerCursor: TCursor read FRingCursor write SetRingCursor default crDefault;
     property SLPickerCursor: TCursor read FSLCursor write SetSLCursor default crDefault;
+    property MaxHue: Integer read GetMaxHue write SetMaxHue default 359;
+    property MaxLuminance: Integer read GetMaxLum write SetMaxLum default 240;
+    property MaxSaturation: Integer read GetMaxSat write SetMaxSat default 240;
     property TabStop default true;
     property ShowHint;
     property ParentShowHint;
@@ -105,7 +116,10 @@ constructor THSLRingPicker.Create(AOwner: TComponent);
 begin
   inherited;
 //  ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque{$IFDEF DELPHI_7_UP}, csParentBackground{$ENDIF}];
-  DoubleBuffered := true;
+  //DoubleBuffered := true;
+  FRValue := 255;
+  FGValue := 0;
+  FBValue := 0;
   PBack := TBitmap.Create;
   PBack.PixelFormat := pf32bit;
   {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
@@ -133,11 +147,11 @@ begin
     {$ELSE}
     SetInitialBounds(0, 0, 246, 246);
     {$ENDIF}
-    Radius := 100;
+    //Radius := 40;
     Align := alClient;
     Visible := true;
-    Saturation := 255;
-    Value := 255;
+    Saturation := FRingPicker.MaxSaturation;
+    Value := FRingPicker.MaxValue;
     Hue := 0;
     OnChange := RingPickerChange;
     OnMouseMove := DoMouseMove;
@@ -154,16 +168,14 @@ begin
     {$ELSE}
     SetInitialBounds(63, 63, 120, 120);
     {$ENDIF}
+    MaxSaturation := 240;
+    MaxLuminance := 240;
+    Saturation := 240;
+    Luminance := 240;
     Visible := true;
     OnChange := SLPickerChange;
     OnMouseMove := DoMouseMove;
   end;
-  FHValue := 0;
-  FSValue := 255;
-  FLValue := 255;
-  FRValue := 255;
-  FGValue := 0;
-  FBValue := 0;
   FRingHint := 'Hue: %h';
   FSLHint := 'S: %hslS L: %l'#13'Hex: %hex';
 end;
@@ -220,9 +232,6 @@ begin
   if (FRingPicker = nil) or (FSLPicker = nil) then
     exit;
 
-  FHValue := FRingPicker.Hue;
-  FSValue := FSLPicker.Saturation;
-  FLValue := FSLPicker.Luminance;
   FRValue := GetRValue(FSLPicker.SelectedColor);
   FGValue := GetGValue(FSLPicker.SelectedColor);
   FBValue := GetBValue(FSLPicker.SelectedColor);
@@ -236,36 +245,34 @@ begin
     exit;
 
   FRingPicker.Hue := GetHValue(c);
-  FRingPicker.Saturation := 255;
-  FRingPicker.Value := 255;
+  //FRingPicker.Saturation := FRingPicker.MaxSaturation;
+  //FRingPicker.Value := FRingPicker.MaxValue;
+
   FSLPicker.SelectedColor := c;
   FSelectedColor := c;
 end;
 
-procedure THSLRingPicker.SetH(v: integer);
+procedure THSLRingPicker.SetHue(H: integer);
 begin
   if (FRingPicker = nil) or (FSLPicker = nil) then
     exit;
 
-  FHValue := v;
-  FRingPicker.Hue := v;
-  FSLPicker.Hue := v;
+  FRingPicker.Hue := H;
+  FSLPicker.Hue := H;
 end;
 
-procedure THSLRingPicker.SetS(v: integer);
+procedure THSLRingPicker.SetSat(S: integer);
 begin
   if (FSLPicker = nil) then
     exit;
-  FSValue := v;
-  FSLPicker.Saturation := v;
+  FSLPicker.Saturation := S;
 end;
 
-procedure THSLRingPicker.SetL(v: integer);
+procedure THSLRingPicker.SetLum(L: integer);
 begin
   if (FSLPicker = nil) then
     exit;
-  FLValue := v;
-  FSLPicker.Luminance := v;
+  FSLPicker.Luminance := L;
 end;
 
 procedure THSLRingPicker.SetR(v: integer);
@@ -366,6 +373,51 @@ procedure THSLRingPicker.CreateWnd;
 begin
   inherited;
   PaintParentBack(PBack);
+end;
+
+function THSLRingPicker.GetHue: Integer;
+begin
+  Result := FRingPicker.Hue;
+end;
+
+function THSLRingPicker.GetSat: Integer;
+begin
+  Result := FSLPicker.Saturation;
+end;
+
+function THSLRingPicker.GetLum: Integer;
+begin
+  Result := FSLPicker.Luminance;
+end;
+
+function THSLRingPicker.GetMaxHue: Integer;
+begin
+  Result := FRingPicker.MaxHue;
+end;
+
+function THSLRingPicker.GetMaxSat: Integer;
+begin
+  Result := FSLPicker.MaxSaturation;
+end;
+
+function THSLRingPicker.GetMaxLum: Integer;
+begin
+  Result := FSLPicker.MaxLuminance;
+end;
+
+procedure THSLRingPicker.SetMaxHue(H: Integer);
+begin
+  FRingPicker.MaxHue := H;
+end;
+
+procedure THSLRingPicker.SetMaxLum(L: Integer);
+begin
+  FSLPicker.MaxLuminance := L;
+end;
+
+procedure THSLRingPicker.SetMaxSat(S: Integer);
+begin
+  FSLPicker.MaxSaturation := S;
 end;
 
 end.

@@ -33,7 +33,6 @@ type
   public
    constructor Create(AOwner: TComponent); override;
    procedure Click; override;
-
    property SelectedColor: TColor read FSelColor;
   published
    property OnSelColorChange: TNotifyEvent read FOnColorPicked write FOnColorPicked;
