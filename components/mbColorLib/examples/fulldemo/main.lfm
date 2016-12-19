@@ -43,9 +43,9 @@ object Form1: TForm1
     Height = 384
     Top = 6
     Width = 403
-    ActivePage = TabSheet5
+    ActivePage = TabSheet1
     Anchors = [akTop, akLeft, akRight, akBottom]
-    TabIndex = 4
+    TabIndex = 0
     TabOrder = 0
     OnChange = PageControl1Change
     OnMouseMove = PageControl1MouseMove
@@ -721,8 +721,8 @@ object Form1: TForm1
         TabOrder = 2
         Hue = 0
         Saturation = 0
-        Luminance = 240
-        SelectedColor = 6579300
+        Luminance = 94
+        SelectedColor = 6184542
       end
       object VColorPicker1: TVColorPicker
         Left = 34
@@ -844,7 +844,7 @@ object Form1: TForm1
         Height = 147
         Top = 144
         Width = 161
-        SelectedColor = 2763306
+        SelectedColor = 6579300
         HintFormat = 'H: %h S: %s L: %l'#13'Hex: %hex'
         TabOrder = 1
         OnMouseMove = SLColorPicker1MouseMove
@@ -920,8 +920,8 @@ object Form1: TForm1
         NewArrowStyle = True
         TabOrder = 3
         Cyan = 0
-        Black = 255
-        SelectedColor = clBlack
+        Black = 1
+        SelectedColor = 16711422
       end
       object RColorPicker1: TRColorPicker
         Left = 150
@@ -932,6 +932,8 @@ object Form1: TForm1
         ArrowPlacement = spBefore
         NewArrowStyle = True
         TabOrder = 4
+        Green = 122
+        Blue = 122
         SelectedColor = 8026879
       end
       object GColorPicker1: TGColorPicker
@@ -943,6 +945,8 @@ object Form1: TForm1
         ArrowPlacement = spBoth
         NewArrowStyle = True
         TabOrder = 5
+        Red = 122
+        Blue = 122
         SelectedColor = 8060794
       end
       object BColorPicker1: TBColorPicker
@@ -953,6 +957,8 @@ object Form1: TForm1
         HintFormat = 'Blue: %b (selected)'
         SelectionIndicator = siRect
         TabOrder = 6
+        Red = 122
+        Green = 122
         SelectedColor = 16743034
       end
       object KColorPicker2: TKColorPicker
@@ -968,8 +974,8 @@ object Form1: TForm1
         NewArrowStyle = True
         TabOrder = 7
         Cyan = 0
-        Black = 255
-        SelectedColor = clBlack
+        Black = 1
+        SelectedColor = 16711422
       end
       object MColorPicker2: TMColorPicker
         Left = 272
@@ -1253,7 +1259,7 @@ object Form1: TForm1
     Height = 19
     Top = 371
     Width = 62
-    Anchors = [akRight, akBottom]
+    Anchors = [akTop, akRight]
     Caption = 'Enabled'
     Checked = True
     OnChange = CbEnabledChange

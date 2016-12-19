@@ -80,6 +80,8 @@ type
     FLimit: integer;
     FBack: TBitmap;
     procedure CreateGradient; override;
+    function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
+      MousePos: TPoint): Boolean; override;
     procedure Paint; override;
 //    procedure PaintParentBack;
     procedure DrawFrames; dynamic;
@@ -97,8 +99,10 @@ type
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
 //    function MouseOnPicker(X, Y: Integer): Boolean;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    {
     procedure WheelUp(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
     procedure WheelDown(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+    }
     {$IFDEF DELPHI}
 //    procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
     procedure CMGotFocus(var Message: TCMGotFocus); message CM_ENTER;
@@ -218,8 +222,8 @@ begin
   FIncrement := 1;
   FArrowPos := GetArrowPos;
   FHintFormat := '';
-  OnMouseWheelUp := WheelUp;
-  OnMouseWheelDown := WheelDown;
+//  OnMouseWheelUp := WheelUp;
+//  OnMouseWheelDown := WheelDown;
   FManual := false;
   FChange := true;
   FLayout := lyHorizontal;
@@ -917,6 +921,25 @@ begin
   Invalidate;
 end;
 
+function TmbTrackbarPicker.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
+  MousePos: TPoint): Boolean;
+begin
+  Result := inherited DoMouseWheel(Shift, WheelDelta, MousePos);
+  if not Result then
+  begin
+    Result := True;
+    FChange := false;
+    if WheelDelta > 0 then
+      Execute(TBA_WheelUp)
+    else
+      Execute(TBA_WheelDown);
+    FManual := true;
+    FChange := true;
+    if Assigned(FOnChange) then FOnChange(Self);
+  end;
+end;
+
+                      (*
 procedure TmbTrackBarPicker.WheelUp(Sender: TObject; Shift: TShiftState;
   MousePos: TPoint; var Handled: Boolean);
 begin
@@ -936,7 +959,8 @@ begin
   FManual := true;
   FChange := true;
   if Assigned(FOnChange) then FOnChange(Self);
-end;
+end;                    *)
+
 
 { IMPORTANT: If pickers are created at designtime the layout must be set before
   defining the picker width and height because changing the layout will flip the

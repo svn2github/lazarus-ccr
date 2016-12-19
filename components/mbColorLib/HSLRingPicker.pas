@@ -55,14 +55,14 @@ type
     procedure SetSLCursor(c: TCursor);
   protected
     procedure CreateWnd; override;
-    procedure Paint; override;
+    procedure DoChange;
     procedure DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     function GetColorUnderCursor: TColor; override;
-    procedure RingPickerChange(Sender: TObject);
-    procedure SLPickerChange(Sender: TObject);
-    procedure DoChange;
+    procedure Paint; override;
     procedure Resize; override;
+    procedure RingPickerChange(Sender: TObject);
     procedure SetFocus; override;
+    procedure SLPickerChange(Sender: TObject);
     (*
     {$IFDEF DELPHI}
     procedure WMSetFocus(var Message: TWMSetFocus); message WM_SETFOCUS;
