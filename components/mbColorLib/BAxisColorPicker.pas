@@ -24,18 +24,21 @@ type
     procedure SetGValue(g: integer);
     procedure SetBValue(b: integer);
   protected
+    procedure CorrectCoords(var x, y: integer);
+    procedure CreateWnd; override;
+    procedure DrawMarker(x, y: integer);
     function GetGradientColor2D(x, y: Integer): TColor; override;
-    procedure SetSelectedColor(c: TColor); override;
+    (*
     procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
       message CN_KEYDOWN;
+      *)
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    procedure DrawMarker(x, y: integer);
     procedure Paint; override;
     procedure Resize; override;
-    procedure CreateWnd; override;
-    procedure CorrectCoords(var x, y: integer);
+    procedure SetSelectedColor(c: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
   published
@@ -78,22 +81,16 @@ begin
   MarkerStyle := msCircle;
 end;
 
-procedure TBAxisColorPicker.CreateWnd;
-begin
-  inherited;
-  CreateGradient;
-end;
-
-{ x is RED, y is GREEN }
-function TBAxisColorPicker.GetGradientColor2D(x, y: Integer): TColor;
-begin
-  Result := RGB(x, FBufferBmp.Height - 1 - y, FB);
-end;
-
 procedure TBAxisColorPicker.CorrectCoords(var x, y: integer);
 begin
   Clamp(x, 0, Width - 1);
   Clamp(y, 0, Height - 1);
+end;
+
+procedure TBAxisColorPicker.CreateWnd;
+begin
+  inherited;
+  CreateGradient;
 end;
 
 procedure TBAxisColorPicker.DrawMarker(x, y: integer);
@@ -104,8 +101,6 @@ begin
   FR := GetRValue(FSelected);
   FG := GetGValue(FSelected);
   FB := GetBValue(FSelected);
-  if Assigned(FOnChange) then
-    FOnChange(Self);
   dx := x;
   dy := y;
   if Focused or (csDesigning in ComponentState) then
@@ -115,18 +110,10 @@ begin
   InternalDrawMarker(x, y, c);
 end;
 
-procedure TBAxisColorPicker.SetSelectedColor(c: TColor);
+{ x is RED, y is GREEN }
+function TBAxisColorPicker.GetGradientColor2D(x, y: Integer): TColor;
 begin
-  if WebSafe then c := GetWebSafe(c);
-  FR := GetRValue(c);
-  FG := GetGValue(c);
-  FB := GetBValue(c);
-  FSelected := c;
-  FManual := false;
-  mxx := Round(FR*(Width/255));
-  myy := Round((255-FG)*(Height/255));
-  CreateGradient;
-  Invalidate;
+  Result := RGB(x, FBufferBmp.Height - 1 - y, FB);
 end;
 
 procedure TBAxisColorPicker.Paint;
@@ -144,6 +131,77 @@ begin
   inherited;
 end;
 
+procedure TBAxisColorPicker.SetSelectedColor(c: TColor);
+begin
+  if WebSafe then c := GetWebSafe(c);
+  FR := GetRValue(c);
+  FG := GetGValue(c);
+  FB := GetBValue(c);
+  FSelected := c;
+  FManual := false;
+  mxx := Round(FR*(Width/255));
+  myy := Round((255-FG)*(Height/255));
+  Invalidate;
+  if Assigned(FOnChange) then FOnChange(self);
+end;
+
+procedure TBAxisColorPicker.KeyDown(var Key: Word; Shift: TShiftState);
+var
+  eraseKey: Boolean;
+  delta: Integer;
+begin
+  eraseKey := true;
+  if (ssCtrl in Shift) then delta := 10 else delta := 1;
+
+  case Key of
+    VK_LEFT:
+      begin
+        mxx := dx - delta;
+        myy := dy;
+        if mxx < 0 then mxx := 0;
+        FSelected := GetColorAtPoint(mxx, myy);
+        FManual := true;
+        Invalidate;
+        if Assigned(FOnChange) then FOnChange(self);
+      end;
+    VK_RIGHT:
+      begin
+        mxx := dx + delta;
+        myy := dy;
+        if mxx >= Width then mxx := Width - 1;
+        FSelected := GetColorAtPoint(mxx, myy);
+        FManual := true;
+        Invalidate;
+        if Assigned(FOnChange) then FOnChange(self);
+      end;
+    VK_UP:
+      begin
+        mxx := dx;
+        myy := dy - delta;
+        if myy < 0 then myy := 0;
+        FSelected := GetColorAtPoint(mxx, myy);
+        FManual := true;
+        Invalidate;
+        if Assigned(FOnChange) then FOnChange(self);
+      end;
+    VK_DOWN:
+      begin
+        mxx := dx;
+        myy := dy + delta;
+        if myy >= Height then myy := Height - 1;
+        FSelected := GetColorAtPoint(mxx, myy);
+        FManual := true;
+        Invalidate;
+        if Assigned(FOnChange) then FOnChange(self);
+      end;
+  else
+    eraseKey := false;
+  end;
+
+  if eraseKey then Key := 0;
+  inherited;
+end;
+
 procedure TBAxisColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 var
@@ -154,10 +212,10 @@ begin
   myy := y;
   if Button = mbLeft then
   begin
+    {$IFDEF DELPHI}
     R := ClientRect;
     R.TopLeft := ClientToScreen(R.TopLeft);
     R.BottomRight := ClientToScreen(R.BottomRight);
-   {$IFDEF DELPHI}
     ClipCursor(@R);
    {$ENDIF}
     FSelected := GetColorAtPoint(x, y);
@@ -173,11 +231,15 @@ begin
  {$IFDEF DELPHI}
   ClipCursor(nil);
  {$ENDIF}
-  mxx := x;
-  myy := y;
-  FSelected := GetColorAtPoint(x, y);
-  FManual := true;
-  Invalidate;
+  if ssLeft in Shift then
+  begin
+    mxx := x;
+    myy := y;
+    FSelected := GetColorAtPoint(x, y);
+    FManual := true;
+    Invalidate;
+    if Assigned(FOnChange) then FOnChange(self);
+  end;
 end;
 
 procedure TBAxisColorPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
@@ -190,9 +252,10 @@ begin
     FSelected := GetColorAtPoint(x, y);
     FManual := true;
     Invalidate;
+    if Assigned(FOnChange) then FOnChange(self);
   end;
 end;
-
+(*
 procedure TBAxisColorPicker.CNKeyDown(
   var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF} );
 var
@@ -289,7 +352,7 @@ begin
   if Assigned(OnKeyDown) then
    OnKeyDown(Self, Message.CharCode, Shift);
 end;
-
+    *)
 procedure TBAxisColorPicker.SetRValue(r: integer);
 begin
   Clamp(r, 0, 255);

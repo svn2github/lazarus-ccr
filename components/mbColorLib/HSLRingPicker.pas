@@ -62,11 +62,14 @@ type
     procedure SLPickerChange(Sender: TObject);
     procedure DoChange;
     procedure Resize; override;
+    procedure SetFocus; override;
+    (*
     {$IFDEF DELPHI}
     procedure WMSetFocus(var Message: TWMSetFocus); message WM_SETFOCUS;
     {$ELSE}
     procedure WMSetFocus(var Message: TLMSetFocus); message LM_SETFOCUS;
     {$ENDIF}
+    *)
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -131,12 +134,16 @@ begin
   {$ELSE}
   SetInitialBounds(0, 0, 245, 245);
   {$ENDIF}
+
   TabStop := true;
   FSelectedColor := clRed;
-  FRingPicker := THRingPicker.Create(Self);
-  InsertControl(FRingPicker);
   FRingCursor := crDefault;
   FSLCursor := crDefault;
+  FRingHint := 'Hue: %h';
+  FSLHint := 'S: %hslS L: %l'#13'Hex: %hex';
+
+  FRingPicker := THRingPicker.Create(Self);
+  InsertControl(FRingPicker);
   with FRingPicker do
   begin
     {$IFDEF DELPHI}
@@ -156,6 +163,7 @@ begin
     OnChange := RingPickerChange;
     OnMouseMove := DoMouseMove;
   end;
+
   FSLPicker := TSLColorPicker.Create(Self);
   InsertControl(FSLPicker);
   with FSLPicker do
@@ -176,15 +184,13 @@ begin
     OnChange := SLPickerChange;
     OnMouseMove := DoMouseMove;
   end;
-  FRingHint := 'Hue: %h';
-  FSLHint := 'S: %hslS L: %l'#13'Hex: %hex';
 end;
 
 destructor THSLRingPicker.Destroy;
 begin
   PBack.Free;
-  FRingPicker.Free;
-  FSLPicker.Free;
+  //FRingPicker.Free;
+  //FSLPicker.Free;
   inherited Destroy;
 end;
 
@@ -197,7 +203,7 @@ begin
   if (FRingPicker = nil) or (FSLPicker = nil) then
     exit;
 
-  ctr := Min(Width, Height)/100;
+  ctr := Min(Width, Height) / 100;
   circ.x := Min(Width, Height) div 2;
   circ.y := circ.x;
 
@@ -350,12 +356,19 @@ begin
   FSLCursor := c;
   FSLPicker.Cursor := c;
 end;
-
+  (*
 procedure THSLRingPicker.WMSetFocus(
   var Message: {$IFDEF DELPHI}TWMSetFocus{$ELSE}TLMSetFocus{$ENDIF} );
 begin
   FRingPicker.SetFocus;
   Message.Result := 1;
+end;
+*)
+
+procedure THSLRingPicker.SetFocus;
+begin
+  inherited;
+  FRingPicker.SetFocus;
 end;
 
 function THSLRingPicker.GetManual:boolean;

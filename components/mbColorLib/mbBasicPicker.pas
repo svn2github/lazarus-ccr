@@ -41,7 +41,6 @@ type
     function GetHintStr(X, Y: Integer): String; virtual;
     procedure MouseLeave; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    function MouseOnPicker(X, Y: Integer): Boolean; virtual;
     procedure PaintParentBack; virtual; overload;
     procedure PaintParentBack(ACanvas: TCanvas); overload;
     procedure PaintParentBack(ACanvas: TCanvas; ARect: TRect); overload;
@@ -241,11 +240,6 @@ begin
       HideHintWindow;
   end;
   }
-end;
-
-function TmbBasicPicker.MouseOnPicker(X, Y: Integer): Boolean;
-begin
-  Result := true;
 end;
 
 procedure TmbBasicPicker.PaintParentBack;

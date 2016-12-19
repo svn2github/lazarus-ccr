@@ -238,7 +238,7 @@ destructor THexaColorPicker.Destroy;
 begin
   FBWCombs := nil;
   FColorCombs := nil;
-  FBufferBmp.Free;
+  // FBufferBmp.Free;  is already destroyed by ancestor TmbBasicPicker
   inherited;
 end;
 

@@ -5,7 +5,7 @@ interface
 
 uses
   LCLIntf, LCLType, LMessages, SysUtils, Variants,Classes, Graphics, Controls,
-  Forms, Dialogs, HSLColorPicker, ComCtrls, StdCtrls, mbColorPreview,
+  Forms, Dialogs, HSLColorPicker, ComCtrls, StdCtrls, ExtCtrls, mbColorPreview,
   HexaColorPicker, mbColorPalette, HSLRingPicker, HSVColorPicker, PalUtils,
   SLHColorPicker, mbDeskPickerButton, mbOfficeColorDialog, SColorPicker,
   HColorPicker, VColorPicker, mbTrackBarPicker, LColorPicker, HRingPicker,
@@ -20,8 +20,10 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    CIEBIndicator: TShape;
     CbShowHints: TCheckBox;
     CbEnabled: TCheckBox;
+    CIEAIndicator: TShape;
     Label10: TLabel;
     Label11: TLabel;
     Label12: TLabel;
@@ -29,6 +31,10 @@ type
     Label14: TLabel;
     Label15: TLabel;
     PageControl1: TPageControl;
+    RAxisIndicator: TShape;
+    GAxisIndicator: TShape;
+    BAxisIndicator: TShape;
+    CIELIndicator: TShape;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
@@ -105,13 +111,19 @@ type
     Memo1: TMemo;
     Label9: TLabel;
     CbSwatchStyle: TCheckBox;
+    procedure BAxisColorPicker1Change(Sender: TObject);
     procedure CbEnabledChange(Sender: TObject);
     procedure CbShowHintsChange(Sender: TObject);
+    procedure CIEAColorPicker1Change(Sender: TObject);
+    procedure CIEBColorPicker1Change(Sender: TObject);
+    procedure CIELColorPicker1Change(Sender: TObject);
+    procedure GAxisColorPicker1Change(Sender: TObject);
     procedure HColorPicker1GetHintStr(Sender: TObject; X, Y: Integer;
       var AText: String);
     procedure PageControl1Change(Sender: TObject);
     procedure PageControl1MouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
+    procedure RAxisColorPicker1Change(Sender: TObject);
     procedure tb1Change(Sender: TObject);
     procedure tb2Change(Sender: TObject);
     procedure HSLColorPicker1Change(Sender: TObject);
@@ -208,6 +220,11 @@ begin
   uc.color := hexacolorpicker1.ColorUnderCursor;
 end;
 
+procedure TForm1.BAxisColorPicker1Change(Sender: TObject);
+begin
+  BAxisIndicator.Brush.Color := BAxisColorPicker1.SelectedColor;
+end;
+
 procedure TForm1.Button1Click(Sender: TObject);
 begin
 mbColorPalette1.GeneratePalette(clblue);
@@ -281,6 +298,11 @@ begin
   uc.color := HSLColorpicker1.ColorUnderCursor;
 end;
 
+procedure TForm1.RAxisColorPicker1Change(Sender: TObject);
+begin
+  RAxisIndicator.Brush.Color := RAxisColorPicker1.SelectedColor;
+end;
+
 procedure TForm1.OfficeColorDialogButtonClick(Sender: TObject);
 begin
   if mbOfficeColorDialog1.Execute then
@@ -341,6 +363,11 @@ begin
   end; 
 end;
 
+procedure TForm1.GAxisColorPicker1Change(Sender: TObject);
+begin
+  GAxisIndicator.Brush.Color := GAxisColorPicker1.SelectedColor;
+end;
+
 procedure TForm1.HColorPicker1GetHintStr(Sender: TObject; X, Y: Integer;
   var AText: String);
 begin
@@ -360,6 +387,21 @@ end;
 procedure TForm1.CheckBox2Click(Sender: TObject);
 begin
 hexacolorpicker1.NewArrowStyle := checkbox2.checked;
+end;
+
+procedure TForm1.CIEAColorPicker1Change(Sender: TObject);
+begin
+ CIEAIndicator.Brush.Color := CIEAColorPicker1.SelectedColor;
+end;
+
+procedure TForm1.CIEBColorPicker1Change(Sender: TObject);
+begin
+ CIEBIndicator.Brush.Color := CIEBColorPicker1.SelectedColor;
+end;
+
+procedure TForm1.CIELColorPicker1Change(Sender: TObject);
+begin
+  CIELIndicator.Brush.Color := CIELColorPicker1.SelectedColor;
 end;
 
 procedure TForm1.Button4Click(Sender: TObject);

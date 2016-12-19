@@ -56,12 +56,15 @@ type
     procedure Paint; override;
     procedure Resize; override;
     procedure CreateWnd; override;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    function MouseOnPicker(X, Y: Integer): Boolean; override;
+//    function MouseOnPicker(X, Y: Integer): Boolean; override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    (*
     procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
       message CN_KEYDOWN;
+      *)
   public
     constructor Create(AOwner: TComponent); override;
     function GetColorAtPoint(x, y: integer): TColor; override;
@@ -223,7 +226,9 @@ end;
 
 procedure THSVColorPicker.SetHue(h: integer);
 begin
-  Clamp(h, 0, FMaxHue);
+  if h > FMaxHue then h := h - (FMaxHue + 1);
+  if h < 0 then h := h + (FMaxHue + 1);
+//  Clamp(h, 0, FMaxHue);
   if GetHue() <> h then
   begin
     FHue := h / FMaxHue;
@@ -419,6 +424,58 @@ begin
   Invalidate;
 end;
 
+procedure THSVColorPicker.KeyDown(var Key: Word; Shift: TShiftState);
+var
+  eraseKey: Boolean;
+  delta: Integer;
+begin
+  eraseKey := true;
+  if ssCtrl in shift then
+    delta := 10
+  else
+    delta := 1;
+
+  case Key  of
+    VK_LEFT:
+      begin
+        FChange := false;
+        SetHue(RadHue(GetHue() + delta));
+        FChange := true;
+        FManual := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    VK_RIGHT:
+      begin
+        FChange := false;
+        SetHue(RadHue(GetHue() - delta));
+        FChange := true;
+        FManual := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    VK_UP:
+      begin
+        FChange := false;
+        SetSat(GetSat() + delta);
+        FChange := true;
+        FManual := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    VK_DOWN:
+      begin
+        FChange := false;
+        SetSat(GetSat() - delta);
+        FChange := true;
+        FManual := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+  else
+    eraseKey := false;
+  end;
+
+  if eraseKey then Key := 0;
+  inherited;
+end;
+
 procedure THSVColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 begin
@@ -480,7 +537,7 @@ begin
     FManual := true;
   end;
 end;
-
+                                    (*
 function THSVColorPicker.MouseOnPicker(X, Y: Integer): Boolean;
 var
   diameter, r: Integer;
@@ -492,7 +549,7 @@ begin
   ctr := Point(r, r);
   Result := PtInCircle(P, ctr, r);
 end;
-
+                                      *)
 function THSVColorPicker.GetSelectedColor: TColor;
 begin
   if FSelectedColor <> clNone then
@@ -556,7 +613,7 @@ begin
   if New > (FMaxHue + 1) then New := New - (FMaxHue + 1);
   Result := New;
 end;
-
+(*
 procedure THSVColorPicker.CNKeyDown(
   var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF} );
 var
@@ -614,5 +671,5 @@ begin
     if Assigned(OnKeyDown) then
      OnKeyDown(Self, Message.CharCode, Shift);
 end;
-
+    *)
 end.

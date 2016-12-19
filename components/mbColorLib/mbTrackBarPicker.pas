@@ -91,19 +91,20 @@ type
     function GetHintPos(X, Y: Integer): TPoint; override;
     function GetHintStr(X, Y: Integer): String; override;
     function GetSelectedValue: integer; virtual; abstract;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseLeave; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    function MouseOnPicker(X, Y: Integer): Boolean; override;
+//    function MouseOnPicker(X, Y: Integer): Boolean;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure WheelUp(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
     procedure WheelDown(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
     {$IFDEF DELPHI}
-    procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
+//    procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
     procedure CMGotFocus(var Message: TCMGotFocus); message CM_ENTER;
     procedure CMLostFocus(var Message: TCMLostFocus); message CM_EXIT;
     {$ELSE}
-    procedure CNKeyDown(var Message: TLMKeyDown); message CN_KEYDOWN;
+//    procedure CNKeyDown(var Message: TLMKeyDown); message CN_KEYDOWN;
     procedure CMGotFocus(var Message: TLMessage); message CM_ENTER;
     procedure CMLostFocus(var Message: TLMessage); message CM_EXIT;
     {$ENDIF}
@@ -608,6 +609,78 @@ begin
   Result := pos;
 end;
 
+procedure TmbTrackBarPicker.KeyDown(var Key: Word; Shift: TShiftState);
+var
+  eraseKey: Boolean;
+begin
+  eraseKey := true;
+  case Key of
+    VK_UP:
+      if FLayout = lyHorizontal then
+        eraseKey := false
+      else
+      begin
+        FChange := false;
+        if not (ssCtrl in Shift) then
+          Execute(TBA_VKUp)
+        else
+          Execute(TBA_VKCtrlUp);
+        FManual := true;
+        FChange := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    VK_LEFT:
+      if FLayout = lyVertical then
+        eraseKey := false
+      else
+      begin
+        FChange := false;
+        if not (ssCtrl in Shift) then
+          Execute(TBA_VKLeft)
+        else
+          Execute(TBA_VKCtrlLeft);
+        FManual := true;
+        FChange := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    VK_RIGHT:
+      if FLayout = lyVertical then
+        eraseKey := false
+      else
+      begin
+        FChange := false;
+        if not (ssCtrl in Shift) then
+          Execute(TBA_VKRight)
+        else
+          Execute(TBA_VKCtrlRight);
+        FManual := true;
+        FChange := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    VK_DOWN:
+      if FLayout = lyHorizontal then
+        eraseKey := false
+      else
+      begin
+        FChange := false;
+        if not (ssCtrl in Shift) then
+          Execute(TBA_VKDown)
+        else
+          Execute(TBA_VKCtrlDown);
+        FManual := true;
+        FChange := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end
+    else
+      eraseKey := false;
+  end;  // case
+
+  if eraseKey then
+    Key := 0;
+
+  inherited;
+end;
+
 procedure TmbTrackBarPicker.MouseLeave;
 begin
   inherited;
@@ -639,11 +712,11 @@ begin
   end;
   inherited;
 end;
-
+                                      (*
 function TmbTrackBarPicker.MouseOnPicker(X, Y: Integer): Boolean;
 begin
   Result := PtInRect(FPickRect, Point(X, Y));
-end;
+end;                                    *)
 
 procedure TmbTrackBarPicker.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
@@ -681,7 +754,7 @@ begin
   Invalidate;
   inherited;
 end;
-
+             (*
 procedure TmbTrackBarPicker.CNKeyDown(
   var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
 var
@@ -764,7 +837,7 @@ begin
   if not FInherited and Assigned(OnKeyDown) then
     OnKeyDown(Self, Message.CharCode, Shift);
 end;
-
+*)
 function TmbTrackBarPicker.GetHintPos(X, Y: Integer): TPoint;
 begin
   case FLayout of

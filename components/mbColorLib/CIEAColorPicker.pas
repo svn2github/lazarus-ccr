@@ -24,18 +24,21 @@ type
     procedure SetAValue(a: integer);
     procedure SetBValue(b: integer);
   protected
+    procedure CorrectCoords(var x, y: integer);
+    procedure CreateWnd; override;
+    procedure DrawMarker(x, y: integer);
     function GetGradientColor2D(x, y: Integer): TColor; override;
-    procedure SetSelectedColor(c: TColor); override;
+    (*
     procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
       message CN_KEYDOWN;
+    *)
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    procedure DrawMarker(x, y: integer);
     procedure Paint; override;
     procedure Resize; override;
-    procedure CreateWnd; override;
-    procedure CorrectCoords(var x, y: integer);
+    procedure SetSelectedColor(c: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
   published
@@ -112,8 +115,6 @@ begin
   FL := Round(GetCIELValue(FSelected));
   FA := Round(GetCIEAValue(FSelected));
   FB := Round(GetCIEBValue(FSelected));
-  if Assigned(FOnChange) then
-    FOnChange(Self);
   dx := x;
   dy := y;
   if Focused or (csDesigning in ComponentState) then
@@ -131,10 +132,11 @@ begin
   FB := Round(GetCIEBValue(c));
   FSelected := c;
   FManual := false;
-  mxx := Round((FB+128)*(Width/255));
-  myy := Round(((100-FL)*255/100)*(Height/255));
-  CreateGradient;
+  mxx := Round((FB + 128) * Width / 255);
+  myy := Round((100 - FL) * 255 / 100 * Height / 255);
   Invalidate;
+  if Assigned(FOnChange) then
+    FOnChange(Self);
 end;
 
 procedure TCIEAColorPicker.Paint;
@@ -147,8 +149,8 @@ end;
 procedure TCIEAColorPicker.Resize;
 begin
   FManual := false;
-  mxx := Round((FB+128)*(Width/255));
-  myy := Round(((100-FL)*255/100)*(Height/255));
+  mxx := Round((FB + 128) * Width / 255);
+  myy := Round(((100 - FL) * 255 / 100) * Height / 255);
   inherited;
 end;
 
@@ -161,15 +163,17 @@ begin
   myy := y;
   if Button = mbLeft then
   begin
+    {$IFDEF DELPHI}
     R := ClientRect;
     R.TopLeft := ClientToScreen(R.TopLeft);
     R.BottomRight := ClientToScreen(R.BottomRight);
-    {$IFDEF DELPHI}
     ClipCursor(@R);
     {$ENDIF}
     FSelected := GetColorAtPoint(x, y);
     FManual := true;
     Invalidate;
+    if Assigned(FOnChange) then
+      FOnChange(Self);
   end;
   SetFocus;
 end;
@@ -180,11 +184,16 @@ begin
   {$IFDEF DELPHI}
   ClipCursor(nil);
   {$ENDIF}
-  mxx := x;
-  myy := y;
-  FSelected := GetColorAtPoint(x, y);
-  FManual := true;
-  Invalidate;
+  if ssLeft in Shift then
+  begin
+    mxx := x;
+    myy := y;
+    FSelected := GetColorAtPoint(x, y);
+    FManual := true;
+    Invalidate;
+    if Assigned(FOnChange) then
+      FOnChange(Self);
+  end;
 end;
 
 procedure TCIEAColorPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
@@ -197,104 +206,70 @@ begin
     FSelected := GetColorAtPoint(x, y);
     FManual := true;
     Invalidate;
+    if Assigned(FOnChange) then
+      FOnChange(Self);
   end;
 end;
 
-procedure TCIEAColorPicker.CNKeyDown(
-  var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF} );
+procedure TCIEAColorPicker.KeyDown(var Key: Word; Shift: TShiftState);
 var
-  Shift: TShiftState;
-  FInherited: boolean;
+  eraseKey: Boolean;
+  delta: Integer;
 begin
- FInherited := false;
- Shift := KeyDataToShiftState(Message.KeyData);
- if not (ssCtrl in Shift) then
-  case Message.CharCode of
-   VK_LEFT:
-    begin
-     mxx := dx - 1;
-     myy := dy;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
-   VK_RIGHT:
-    begin
-     mxx := dx + 1;
-     myy := dy;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
-   VK_UP:
-    begin
-     mxx := dx;
-     myy := dy - 1;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
-   VK_DOWN:
-    begin
-     mxx := dx;
-     myy := dy + 1;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
+  eraseKey := true;
+  if (ssCtrl in Shift) then delta := 10 else delta := 1;
+
+  case Key of
+    VK_LEFT:
+      begin
+        mxx := dx - delta;
+        myy := dy;
+        if mxx < 0 then mxx := 0;
+        FSelected := GetColorAtPoint(mxx, myy);
+        FManual := true;
+        Invalidate;
+        if Assigned(FOnChange) then
+          FOnChange(Self);
+      end;
+    VK_RIGHT:
+      begin
+        mxx := dx + delta;
+        myy := dy;
+        if mxx >= Width then mxx := Width - 1;
+        FSelected := GetColorAtPoint(mxx, myy);
+        FManual := true;
+        Invalidate;
+        if Assigned(FOnChange) then
+          FOnChange(Self);
+      end;
+    VK_UP:
+      begin
+        mxx := dx;
+        myy := dy - delta;
+        if myy < 0 then myy := 0;
+        FSelected := GetColorAtPoint(mxx, myy);
+        FManual := true;
+        Invalidate;
+        if Assigned(FOnChange) then
+          FOnChange(Self);
+      end;
+    VK_DOWN:
+      begin
+        mxx := dx;
+        myy := dy + delta;
+        if myy >= Height then myy := Height - 1;
+        FSelected := GetColorAtPoint(mxx, myy);
+        FManual := true;
+        Invalidate;
+        if Assigned(FOnChange) then
+          FOnChange(Self);
+      end;
   else
-   begin
-    FInherited := true;
-    inherited;
-   end;
-  end
- else
-  case Message.CharCode of
-   VK_LEFT:
-    begin
-     mxx := dx - 10;
-     myy := dy;
-     Refresh;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
-   VK_RIGHT:
-    begin
-     mxx := dx + 10;
-     myy := dy;
-     Refresh;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
-   VK_UP:
-    begin
-     mxx := dx;
-     myy := dy - 10;
-     Refresh;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
-   VK_DOWN:
-    begin
-     mxx := dx;
-     myy := dy + 10;
-     Refresh;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
-  else
-   begin
-    FInherited := true;
-    inherited;
-   end;
+    eraseKey := false;
   end;
- if not FInherited then
-  if Assigned(OnKeyDown) then
-   OnKeyDown(Self, Message.CharCode, Shift);
+
+  if eraseKey then Key := 0;
+  inherited;
 end;
 
 procedure TCIEAColorPicker.SetLValue(l: integer);

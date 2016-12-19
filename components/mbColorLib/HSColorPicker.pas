@@ -39,8 +39,11 @@ type
     procedure CorrectCoords(var x, y: integer);
     function GetGradientColor2D(X, Y: Integer): TColor; override;
     procedure SetSelectedColor(c: TColor); override;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    (*
     procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
       message CN_KEYDOWN;
+      *)
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
@@ -187,6 +190,63 @@ begin
   inherited;
 end;
 
+procedure THSColorPicker.KeyDown(var Key: Word; Shift: TShiftState);
+var
+  eraseKey: Boolean;
+  delta: Integer;
+begin
+  eraseKey := true;
+  if (ssCtrl in Shift) then
+    delta := 10
+  else
+    delta := 1;
+  case Key of
+    VK_LEFT:
+      begin
+        mxx := dx - delta;
+        myy := dy;
+        FSelected := GetColorAtPoint(mxx, myy);
+        if Assigned(OnChange) then OnChange(Self);
+        FManual := true;
+        Invalidate;
+      end;
+    VK_RIGHT:
+      begin
+        mxx := dx + delta;
+        myy := dy;
+        FSelected := GetColorAtPoint(mxx, myy);
+        if Assigned(OnChange) then OnChange(Self);
+        FManual := true;
+        Invalidate;
+      end;
+    VK_UP:
+      begin
+        mxx := dx;
+        myy := dy - delta;
+        FSelected := GetColorAtPoint(mxx, myy);
+        if Assigned(OnChange) then OnChange(Self);
+        FManual := true;
+        Invalidate;
+      end;
+    VK_DOWN:
+      begin
+        mxx := dx;
+        myy := dy + delta;
+        FSelected := GetColorAtPoint(mxx, myy);
+        if Assigned(OnChange) then OnChange(Self);
+        FManual := true;
+        Invalidate;
+      end;
+    else
+      eraseKey := false;
+  end;
+
+  if eraseKey then
+    Key := 0;
+
+  inherited;
+end;
+
 procedure THSColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 {$IFDEF DELPHI}
 var
@@ -249,6 +309,7 @@ begin
   Result := HSLToRGB(H, S, L);
 end;
 
+(*
 procedure THSColorPicker.CNKeyDown(
   var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF} );
 var
@@ -306,6 +367,7 @@ begin
     if Assigned(OnKeyDown) then
       OnKeyDown(Self, Message.CharCode, Shift);
 end;
+*)
 
 procedure THSColorPicker.SetHue(H: integer);
 begin

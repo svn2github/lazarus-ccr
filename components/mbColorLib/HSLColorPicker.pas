@@ -137,6 +137,7 @@ begin
   FLumIncrement := 1;
   FHSCursor := crDefault;
   FLCursor := crDefault;
+
   with FHSPicker do
   begin
     {$IFDEF DELPHI}
@@ -155,6 +156,7 @@ begin
     OnChange := HSPickerChange;
     OnMouseMove := DoMouseMove;
   end;
+
   FLPicker := TLColorPicker.Create(Self);
   InsertControl(FLPicker);
   with FLPicker do
@@ -177,6 +179,7 @@ begin
     OnChange := LPickerChange;
     OnMouseMove := DoMouseMove;
   end;
+
   Hue := 0;
   Saturation := 240;
   Luminance := 120;
@@ -190,8 +193,8 @@ end;
 destructor THSLColorPicker.Destroy;
 begin
   PBack.Free;
-  FHSPicker.Free;
-  FLPicker.Free;
+  //FHSPicker.Free;
+  //FLPicker.Free;
   inherited Destroy;
 end;
 

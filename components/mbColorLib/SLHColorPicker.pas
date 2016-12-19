@@ -62,8 +62,11 @@ type
     procedure Paint; override;
 //    procedure PaintParentBack; override;
     procedure Resize; override;
+    procedure SetFocus; override;
+    (*
     procedure WMSetFocus(var Message: {$IFDEF FPC}TLMSetFocus{$ELSE}TWMSetFocus{$ENDIF});
       message {$IFDEF FPC}LM_SETFOCUS{$ELSE}WM_SETFOCUS{$ENDIF};
+      *)
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -140,6 +143,31 @@ begin
   FHCursor := crDefault;
   FSLCursor := crDefault;
 
+  // Saturation-Lightness picker
+  FSLPicker := TSLColorPicker.Create(Self);
+  InsertControl(FSLPicker);
+  with FSLPicker do
+  begin
+    {$IFDEF DELPHI}
+    Left := 0;
+    Top := DELTA;
+    Width := 255;
+    Height := self.Height - 2 * VDELTA;
+    {$ELSE}
+    SetInitialBounds(0, VDELTA, WSL, HSL);
+    {$ENDIF}
+    //Anchors := [akLeft, akRight, akTop, akBottom];
+    Visible := true;
+    SelectedColor := clRed;
+    MaxHue := FMaxH;
+    MaxSaturation := FMaxS;
+    MaxLuminance := FMaxL;
+    Saturation := FMaxS;
+    Luminance := FMaxL;
+    OnChange := SLPickerChange;
+    OnMouseMove := DoMouseMove;
+  end;
+
   // Hue picker
   with FHPicker do
   begin
@@ -166,30 +194,6 @@ begin
     OnMouseMove := DoMouseMove;
   end;
 
-  // Saturation-Lightness picker
-  FSLPicker := TSLColorPicker.Create(Self);
-  InsertControl(FSLPicker);
-  with FSLPicker do
-  begin
-    {$IFDEF DELPHI}
-    Left := 0;
-    Top := DELTA;
-    Width := 255;
-    Height := self.Height - 2 * VDELTA;
-    {$ELSE}
-    SetInitialBounds(0, VDELTA, WSL, HSL);
-    {$ENDIF}
-    //Anchors := [akLeft, akRight, akTop, akBottom];
-    Visible := true;
-    SelectedColor := clRed;
-    MaxHue := FMaxH;
-    MaxSaturation := FMaxS;
-    MaxLuminance := FMaxL;
-    Saturation := FMaxS;
-    Luminance := FMaxL;
-    OnChange := SLPickerChange;
-    OnMouseMove := DoMouseMove;
-  end;
   FHValue := 0;
   FSValue := 1.0;
   FLValue := 1.0;
@@ -203,8 +207,8 @@ end;
 destructor TSLHColorPicker.Destroy;
 begin
   PBack.Free;
-  FHPicker.Free;
-  FSLPicker.Free;
+//  FHPicker.Free;
+//  FSLPicker.Free;
   inherited Destroy;
 end;
 
@@ -368,12 +372,18 @@ begin
   FSLPicker.Cursor := c;
 end;
 
+procedure TSLHColorPicker.SetFocus;
+begin
+  FSLPicker.SetFocus;
+end;
+(*
 procedure TSLHColorPicker.WMSetFocus(
   var Message: {$IFDEF FPC}TLMSetFocus{$ELSE}TWMSetFocus{$ENDIF} );
 begin
-  FHPicker.SetFocus;
+  FSLPicker.SetFocus;
   Message.Result := 1;
 end;
+*)
 
 function TSLHColorPicker.GetManual:boolean;
 begin

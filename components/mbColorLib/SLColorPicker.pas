@@ -40,11 +40,12 @@ type
     procedure Paint; override;
     procedure Resize; override;
     procedure CreateWnd; override;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
-      message CN_KEYDOWN;
+//    procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
+//      message CN_KEYDOWN;
   public
     constructor Create(AOwner: TComponent); override;
     function GetColorAtPoint(x, y: integer): TColor; override;
@@ -235,6 +236,61 @@ begin
   FChange := true;
 end;
 
+
+procedure TSLColorPicker.KeyDown(var Key: Word; Shift: TShiftState);
+var
+  eraseKey: Boolean;
+  delta: Integer;
+begin
+  eraseKey := true;
+  if ssCtrl in Shift then
+    delta := 10
+  else
+    delta := 1;
+
+  case Key of
+    VK_LEFT:
+      if (mdx - delta >= 0) then
+      begin
+        Dec(mdx, delta);
+        SelectionChanged(mdx, mdy);
+        FManual := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    VK_RIGHT:
+      if (mdx + delta < Width) then
+      begin
+        Inc(mdx, delta);
+        SelectionChanged(mdx, mdy);
+        FManual := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    VK_UP:
+      if (mdy - delta >= 0) then
+      begin
+        Dec(mdy, delta);
+        SelectionChanged(mdx, mdy);
+        FManual := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    VK_DOWN:
+      if (mdy + delta < Height) then
+      begin
+        Inc(mdy, delta);
+        SelectionChanged(mdx, mdy);
+        FManual := true;
+        if Assigned(FOnChange) then FOnChange(Self);
+      end;
+    else
+      eraseKey := false;
+  end;
+
+  if eraseKey then
+    Key := 0;
+
+  inherited;
+end;
+
 procedure TSLColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 begin
@@ -324,6 +380,7 @@ begin
     Result := GetWebSafe(Result);
 end;
 
+(*
 procedure TSLColorPicker.CNKeyDown(
   var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF} );
 var
@@ -382,5 +439,6 @@ begin
     if Assigned(OnKeyDown) then
       OnKeyDown(Self, Message.CharCode, Shift);
 end;
+*)
 
 end.
