@@ -64,7 +64,7 @@ type
     function YToArrowPos(p: integer): integer;
   protected
     FArrowPos: integer;
-    FBack: TBitmap;
+//    FBack: TBitmap;
     FChange: boolean;
     FManual: boolean;
     FLayout: TTrackBarLayout;
@@ -184,10 +184,10 @@ begin
   FGradientWidth := 256;
   FGradientHeight := 1;
 
-  FBack := TBitmap.Create;
+//  FBack := TBitmap.Create;
 
   FBufferBmp := TBitmap.Create;
-  FBufferBmp.PixelFormat := pf32bit;
+  //FBufferBmp.PixelFormat := pf32bit;
 
   mx := 0;
   my := 0;
@@ -214,7 +214,7 @@ end;
 
 destructor TmbTrackbarPicker.Destroy;
 begin
-  FBack.Free;
+//  FBack.Free;
   inherited;
 end;
 
@@ -301,9 +301,8 @@ end;
 procedure TmbTrackbarPicker.CreateGradient;
 var
   i,j: integer;
-  row: pRGBQuadArray;
-  c: TColor;
-  q: TRGBQuad;
+  col: TColor;
+  fpcol: TFPColor;
   intfimg: TLazIntfImage;
   imgHandle, imgMaskHandle: HBitmap;
 begin
@@ -320,14 +319,11 @@ begin
 
       for i := 0 to FBufferBmp.Width-1 do
       begin
-        c := GetGradientColor(i);
-        if WebSafe then c := GetWebSafe(c);
-        q := RGBToRGBQuad(c);
+        col := GetGradientColor(i);
+        if WebSafe then col := GetWebSafe(col);
+        fpcol := TColorToFPColor(col);
         for j := 0 to FBufferBmp.Height-1 do
-        begin
-          row := intfImg.GetDataLineStart(j);
-          row[i] := q;
-        end;
+          intfImg.Colors[i, j] := fpcol;
       end;
     end
     else
@@ -335,14 +331,13 @@ begin
       FBufferBmp.Width := FGradientHeight;
       FBufferBmp.Height := FGradientWidth;
       intfImg.LoadFromBitmap(FBufferBmp.Handle, FBufferBmp.MaskHandle);
-      for i := 0 to FBufferBmp.Height-1 do
+      for j := 0 to FBufferBmp.Height-1 do
       begin
-        row := intfImg.GetDataLineStart(i);
-        c := GetGradientColor(FBufferBmp.Height - 1 - i);
-        if WebSafe then c := GetWebSafe(c);
-        q := RGBtoRGBQuad(c);
-        for j := 0 to FBufferBmp.Width-1 do
-          row[j] := q;
+        col := GetGradientColor(FBufferBmp.Height - 1 - j);
+        if WebSafe then col := GetWebSafe(col);
+        fpcol := TColorToFPColor(col);
+        for i := 0 to FBufferBmp.Width-1 do
+          intfImg.Colors[i, j] := fpcol;
       end;
     end;
 
