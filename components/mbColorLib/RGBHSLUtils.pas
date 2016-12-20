@@ -7,12 +7,7 @@ unit RGBHSLUtils;
 interface
 
 uses
-  {$IFDEF FPC}
-  LCLIntf, LCLType,
-  {$ELSE}
-  Windows,
-  {$ENDIF}
-  Graphics, Math, Scanlines;
+  LCLIntf, LCLType, Graphics, Math, Scanlines;
 
 var //set these variables to your needs, e.g. 360, 255, 255
   MaxHue: integer = 359;
@@ -35,6 +30,7 @@ function GetLValue(AColor: TColor): integer;
 function HSLToRGBTriple(H, S, L : integer) : TRGBTriple;
 function HSLToRGBQuad(H, S, L: integer): TRGBQuad;
 procedure RGBTripleToHSL(RGBTriple : TRGBTriple; var h, s, l: integer);
+
 
 implementation
 

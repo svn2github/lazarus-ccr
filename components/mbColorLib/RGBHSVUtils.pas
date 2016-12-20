@@ -7,12 +7,8 @@ unit RGBHSVUtils;
 interface
 
 uses
-  {$IFDEF FPC}
-  LCLIntf, LCLType,
-  {$ELSE}
-  Windows,
-  {$ENDIF}
-  SysUtils, Classes, Graphics, Math, Scanlines;
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Math,
+  Scanlines;
 
 procedure RGBtoHSV(R, G, B: Integer; out H, S, V: Double);
 procedure RGBtoHSVRange(R, G, B: integer; out H, S, V: integer);

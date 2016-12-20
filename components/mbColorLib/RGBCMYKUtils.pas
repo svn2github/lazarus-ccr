@@ -8,8 +8,7 @@ interface
 {$DEFINE CMYK_FORMULA_2}        // Result agrees with OpenOffice
 
 uses
-  {$IFDEF FPC}LCLIntf,{$ELSE} Windows,{$ENDIF}
-  Graphics, Math;
+  LCLIntf, Graphics, Math;
 
 function CMYtoColor(C, M, Y: integer): TColor;
 procedure RGBtoCMY(clr: TColor; var C, M, Y: integer);

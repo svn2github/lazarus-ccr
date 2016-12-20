@@ -7,12 +7,7 @@ unit Scanlines;
 interface
 
 uses
-  {$IFDEF FPC}
-  LCLIntf, LCLType,
-  {$ELSE}
-  Windows,
-  {$ENDIF}
-  Graphics;
+  LCLIntf, LCLType, Graphics;
 
 type
   TRGBTripleArray = array [0..65535] of TRGBTriple;
@@ -26,6 +21,7 @@ function RGBtoRGBQuad(R, G, B: byte): TRGBQuad; overload;
 function RGBToRGBQuad(c: TColor): TRGBQuad; overload;
 function RGBQuadToRGB(q: TRGBQuad): TColor;
 function RGBTripleToColor(RGBTriple : TRGBTriple) : TColor;
+
 
 implementation
 

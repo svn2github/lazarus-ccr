@@ -7,12 +7,7 @@ unit SelPropUtils;
 interface
 
 uses
- {$IFDEF FPC}
-  LCLIntf, LCLType,
- {$ELSE}
-  Windows,
- {$ENDIF}
-  Classes, Graphics;
+  LCLIntf, LCLType, Classes, Graphics;
 
 procedure DrawSelCross(x, y: integer; Canvas: TCanvas; Color: TColor);
 procedure DrawSelCrossCirc(x, y: integer; Canvas: TCanvas; Color: TColor);

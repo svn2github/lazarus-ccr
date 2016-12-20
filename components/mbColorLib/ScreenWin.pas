@@ -7,12 +7,8 @@ unit ScreenWin;
 interface
 
 uses
-  {$IFDEF FPC}
-  LCLIntf, LCLType, LMessages,
-  {$ELSE}
-  Windows, Messages,
-  {$ENDIF}
-  SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls, StdCtrls,
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms,
+  ExtCtrls, StdCtrls,
   PalUtils;
 
 const
@@ -47,12 +43,7 @@ var
 
 implementation
 
-{$IFDEF DELPHI}
-  {$R *.dfm}
-{$ELSE}
-  {$R *.lfm}
-{$ENDIF}
-
+{$R *.lfm}
 {$R PickCursor.res}
 
 function ColorToHex(Color: TColor): string;
@@ -74,28 +65,36 @@ begin
     c.Free;
   end;
 end;
-(*
-{$ELSE}
-var
-  bmp: TBitmap;
-  screenDC: HDC;
-begin
-  bmp := TBitmap.Create;
-  screenDC := GetDC(0);
-  bmp.LoadFromDevice(screenDC);
-  Result := bmp.Canvas.Pixels[X, Y];
-  ReleaseDC(0, screenDC);
-  bmp.Free;
-end;
-{$ENDIF}
-*)
 
-procedure TScreenForm.FormShow(Sender: TObject);
+
+{ TScreenForm }
+
+procedure TScreenForm.CMHintShow(var Message: TCMHintShow);
 begin
-  Width := Screen.Width;
-  Height := Screen.Height;
-  Left := 0;
-  Top := 0;
+  with TCMHintShow(Message) do
+    if not ShowHint then
+      Message.Result := 1
+   else
+     with HintInfo^ do
+     begin
+       Result := 0;
+       ReshowTimeout := 1;
+       HideTimeout := 5000;
+       HintPos := Point(HintPos.X + 16, HintPos.y - 16);
+       HintStr := FormatHint(FHintFormat, SelectedColor);
+     end;
+  inherited;
+end;
+
+procedure TScreenForm.EndSelection(x, y: integer; ok: boolean);
+begin
+  if ok then
+    SelectedColor := GetDesktopColor(x, y)
+  else
+    SelectedColor := clNone;
+  Close;
+  if Assigned(FOnSelColorChange) then
+    FOnSelColorChange(Self);
 end;
 
 procedure TScreenForm.FormCreate(Sender: TObject);
@@ -118,23 +117,6 @@ begin
     FOnKeyDown(Self, Key, Shift);
 end;
 
-procedure TScreenForm.EndSelection(x, y: integer; ok: boolean);
-begin
-  if ok then
-    SelectedColor := GetDesktopColor(x, y)
-  else
-    SelectedColor := clNone;
-  Close;
-  if Assigned(FOnSelColorChange) then
-    FOnSelColorChange(Self);
-end;
-
-procedure TScreenForm.FormMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  EndSelection(x, y, true);
-end;
-
 procedure TScreenForm.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 begin
@@ -143,21 +125,18 @@ begin
   Application.ProcessMessages;
 end;
 
-procedure TScreenForm.CMHintShow(var Message: TCMHintShow);
+procedure TScreenForm.FormMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
 begin
-  with TCMHintShow(Message) do
-    if not ShowHint then
-      Message.Result := 1
-   else
-     with HintInfo^ do
-     begin
-       Result := 0;
-       ReshowTimeout := 1;
-       HideTimeout := 5000;
-       HintPos := Point(HintPos.X + 16, HintPos.y - 16);
-       HintStr := FormatHint(FHintFormat, SelectedColor);
-     end;
-  inherited;
+  EndSelection(x, y, true);
+end;
+
+procedure TScreenForm.FormShow(Sender: TObject);
+begin
+  Width := Screen.Width;
+  Height := Screen.Height;
+  Left := 0;
+  Top := 0;
 end;
 
 end.

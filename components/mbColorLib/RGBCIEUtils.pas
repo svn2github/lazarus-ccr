@@ -3,9 +3,7 @@ unit RGBCIEUtils;
 interface
 
 uses
-  SysUtils,
-  {$IFDEF FPC}LCLIntf,{$ELSE}Windows,{$ENDIF}
-  Graphics, Math;
+  SysUtils, LCLIntf, Graphics, Math;
 
 const
   {// Observer= 2°, Illuminant= D65    - Daylignt
@@ -290,23 +288,23 @@ end;
 
 function GetCIEAValue(c: TColor): double;
 var
- d: double;
+  d: double;
 begin
- XYZToLab(RGBToXYZ(c), d, Result, d);
+  XYZToLab(RGBToXYZ(c), d, Result, d);
 end;
 
 function GetCIEBValue(c: TColor): double;
 var
- d: double;
+  d: double;
 begin
- XYZToLab(RGBToXYZ(c), d, d, Result);
+  XYZToLab(RGBToXYZ(c), d, d, Result);
 end;
 
 function GetCIECValue(c: TColor): double;
 var
- d: double;
+  d: double;
 begin
- RGBToLCH(c, d, Result, d);
+  RGBToLCH(c, d, Result, d);
 end;
 
 function GetCIEHValue(c: TColor): double;

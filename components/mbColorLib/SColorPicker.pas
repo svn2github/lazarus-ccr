@@ -7,11 +7,7 @@ unit SColorPicker;
 interface
 
 uses
-  {$IFDEF FPC}
   LCLIntf, LCLType, LMessages,
-  {$ELSE}
-  Windows, Messages,
-  {$ENDIF}
   SysUtils, Classes, Controls, Graphics, Forms,
   RGBHSVUtils, mbTrackBarPicker, HTMLColors, Scanlines;
 
@@ -21,18 +17,18 @@ type
     FVal, FHue, FSat: Double;
     FMaxVal, FMaxHue, FMaxSat: Integer;
     function ArrowPosFromSat(s: integer): integer;
-    function SatFromArrowPos(p: integer): integer;
     function GetHue: Integer;
     function GetSat: Integer;
-    function GetVal: Integer;
     function GetSelectedColor: TColor;
-    procedure SetSelectedColor(c: TColor);
+    function GetVal: Integer;
+    function SatFromArrowPos(p: integer): integer;
     procedure SetHue(h: integer);
-    procedure SetSat(s: integer);
-    procedure SetValue(v: integer);
     procedure SetMaxHue(h: Integer);
     procedure SetMaxSat(s: Integer);
     procedure SetMaxVal(v: Integer);
+    procedure SetSat(s: integer);
+    procedure SetValue(v: integer);
+    procedure SetSelectedColor(c: TColor);
   protected
     procedure Execute(tbaAction: integer); override;
     function GetArrowPos: integer; override;
@@ -73,6 +69,25 @@ begin
   HintFormat := 'Saturation: %value (selected)';
   FManual := false;
   FChange := true;
+end;
+
+function TSColorPicker.ArrowPosFromSat(s: integer): integer;
+var
+  a: integer;
+begin
+  if Layout = lyHorizontal then
+  begin
+    a := Round(s / FMaxSat * (Width - 12));
+    if a > Width - FLimit then a := Width - FLimit;
+  end
+  else
+  begin
+    s := FMaxSat - s;
+    a := Round(s / FMaxSat * (Height - 12));
+    if a > Height - FLimit then a := Height - FLimit;
+  end;
+  if a < 0 then a := 0;
+  Result := a;
 end;
 
 (*
@@ -121,162 +136,6 @@ begin
 end;
  *)
 
-function TSColorPicker.GetGradientColor(AValue: Integer): TColor;
-begin
-  Result := HSVtoColor(FHue, AValue/FMaxSat, FVal);
-end;
-
-procedure TSColorPicker.SetValue(v: integer);
-begin
-  Clamp(v, 0, FMaxVal);
-  if GetVal() <> v then
-  begin
-    FVal := v / FMaxVal;
-    FManual := false;
-    CreateGradient;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
-end;
-
-procedure TSColorPicker.SetHue(h: integer);
-begin
-  Clamp(h, 0, FMaxHue);
-  if GetHue() <> h then
-  begin
-    FHue := h / FMaxHue;
-    CreateGradient;
-    FManual := false;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
-end;
-
-procedure TSColorPicker.SetSat(s: integer);
-begin
-  Clamp(s, 0, FMaxSat);
-  if GetSat() <> s then
-  begin
-    FSat := s / FMaxSat;
-    FManual := false;
-    FArrowPos := ArrowPosFromSat(s);
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
-end;
-
-function TSColorPicker.ArrowPosFromSat(s: integer): integer;
-var
-  a: integer;
-begin
-  if Layout = lyHorizontal then
-  begin
-    a := Round(s / FMaxSat * (Width - 12));
-    if a > Width - FLimit then a := Width - FLimit;
-  end
-  else
-  begin
-    s := FMaxSat - s;
-    a := Round(s / FMaxSat * (Height - 12));
-    if a > Height - FLimit then a := Height - FLimit;
-  end;
-  if a < 0 then a := 0;
-  Result := a;
-end;
-
-function TSColorPicker.SatFromArrowPos(p: integer): integer;
-var
-  r: integer;
-begin
-  if Layout = lyHorizontal then
-    r := Round(p / (Width - 12) * FMaxSat)
-  else
-    r := Round(FMaxSat - p / (Height - 12) * FMaxSat);
-  Clamp(r, 0, FMaxSat);
-  Result := r;
-end;
-
-function TSColorPicker.GetHue: Integer;
-begin
-  Result := round(FHue * FMaxHue);
-end;
-
-function TSColorPicker.GetSat: Integer;
-begin
-  Result := round(FSat * FMaxSat);
-end;
-
-function TSColorPicker.GetVal: Integer;
-begin
-  Result := round(FVal * FMaxVal);
-end;
-
-procedure TSColorPicker.SetMaxHue(h: Integer);
-begin
-  if h = FMaxHue then
-    exit;
-  FMaxHue := h;
-  CreateGradient;
-  if FChange and Assigned(OnChange) then OnChange(Self);
-  Invalidate;
-end;
-
-procedure TSColorPicker.SetMaxSat(s: Integer);
-begin
-  if s = FMaxSat then
-    exit;
-  FMaxSat := s;
-  FGradientWidth := FMaxSat + 1;
-  CreateGradient;
-  if FChange and Assigned(OnChange) then OnChange(Self);
-  Invalidate;
-end;
-
-procedure TSColorPicker.SetMaxVal(v: Integer);
-begin
-  if v = FMaxVal then
-    exit;
-  FMaxVal := v;
-  CreateGradient;
-  if FChange and Assigned(OnChange) then OnChange(Self);
-  Invalidate;
-end;
-
-function TSColorPicker.GetSelectedColor: TColor;
-begin
-  Result := HSVToColor(FHue, FSat, FVal);
-  if WebSafe then
-    Result := GetWebSafe(Result);
-end;
-
-function TSColorPicker.GetSelectedValue: integer;
-begin
-  Result := GetSat();
-end;
-
-procedure TSColorPicker.SetSelectedColor(c: TColor);
-var
-  h, s, v: integer;
-begin
-  if WebSafe then c := GetWebSafe(c);
-  RGBToHSVRange(GetRValue(c), GetGValue(c), GetBValue(c), h, s, v);
-  FChange := false;
-  SetHue(h);
-  SetSat(s);
-  SetValue(v);
-  FManual := false;
-  FChange := true;
-  if Assigned(OnChange) then OnChange(Self);
-end;
-
-function TSColorPicker.GetArrowPos: integer;
-begin
-  if FMaxSat = 0 then
-    Result := inherited GetArrowPos
-  else
-    Result := ArrowPosFromSat(GetSat());
-end;
-
 procedure TSColorPicker.Execute(tbaAction: integer);
 begin
   case tbaAction of
@@ -312,5 +171,143 @@ begin
       inherited;
   end;
 end;
+
+function TSColorPicker.GetArrowPos: integer;
+begin
+  if FMaxSat = 0 then
+    Result := inherited GetArrowPos
+  else
+    Result := ArrowPosFromSat(GetSat());
+end;
+
+function TSColorPicker.GetGradientColor(AValue: Integer): TColor;
+begin
+  Result := HSVtoColor(FHue, AValue/FMaxSat, FVal);
+end;
+
+function TSColorPicker.GetHue: Integer;
+begin
+  Result := round(FHue * FMaxHue);
+end;
+
+function TSColorPicker.GetSat: Integer;
+begin
+  Result := round(FSat * FMaxSat);
+end;
+
+function TSColorPicker.GetSelectedColor: TColor;
+begin
+  Result := HSVToColor(FHue, FSat, FVal);
+  if WebSafe then
+    Result := GetWebSafe(Result);
+end;
+
+function TSColorPicker.GetSelectedValue: integer;
+begin
+  Result := GetSat();
+end;
+
+function TSColorPicker.GetVal: Integer;
+begin
+  Result := round(FVal * FMaxVal);
+end;
+
+function TSColorPicker.SatFromArrowPos(p: integer): integer;
+var
+  r: integer;
+begin
+  if Layout = lyHorizontal then
+    r := Round(p / (Width - 12) * FMaxSat)
+  else
+    r := Round(FMaxSat - p / (Height - 12) * FMaxSat);
+  Clamp(r, 0, FMaxSat);
+  Result := r;
+end;
+
+procedure TSColorPicker.SetMaxHue(h: Integer);
+begin
+  if h = FMaxHue then
+    exit;
+  FMaxHue := h;
+  CreateGradient;
+  if FChange and Assigned(OnChange) then OnChange(Self);
+  Invalidate;
+end;
+
+procedure TSColorPicker.SetMaxSat(s: Integer);
+begin
+  if s = FMaxSat then
+    exit;
+  FMaxSat := s;
+  FGradientWidth := FMaxSat + 1;
+  CreateGradient;
+  if FChange and Assigned(OnChange) then OnChange(Self);
+  Invalidate;
+end;
+
+procedure TSColorPicker.SetMaxVal(v: Integer);
+begin
+  if v = FMaxVal then
+    exit;
+  FMaxVal := v;
+  CreateGradient;
+  if FChange and Assigned(OnChange) then OnChange(Self);
+  Invalidate;
+end;
+
+procedure TSColorPicker.SetHue(h: integer);
+begin
+  Clamp(h, 0, FMaxHue);
+  if GetHue() <> h then
+  begin
+    FHue := h / FMaxHue;
+    CreateGradient;
+    FManual := false;
+    Invalidate;
+    if FChange and Assigned(OnChange) then OnChange(Self);
+  end;
+end;
+
+procedure TSColorPicker.SetSat(s: integer);
+begin
+  Clamp(s, 0, FMaxSat);
+  if GetSat() <> s then
+  begin
+    FSat := s / FMaxSat;
+    FManual := false;
+    FArrowPos := ArrowPosFromSat(s);
+    Invalidate;
+    if FChange and Assigned(OnChange) then OnChange(Self);
+  end;
+end;
+
+procedure TSColorPicker.SetSelectedColor(c: TColor);
+var
+  h, s, v: integer;
+begin
+  if WebSafe then c := GetWebSafe(c);
+  RGBToHSVRange(GetRValue(c), GetGValue(c), GetBValue(c), h, s, v);
+  FChange := false;
+  SetHue(h);
+  SetSat(s);
+  SetValue(v);
+  FManual := false;
+  FChange := true;
+  if Assigned(OnChange) then OnChange(Self);
+end;
+
+procedure TSColorPicker.SetValue(v: integer);
+begin
+  Clamp(v, 0, FMaxVal);
+  if GetVal() <> v then
+  begin
+    FVal := v / FMaxVal;
+    FManual := false;
+    CreateGradient;
+    Invalidate;
+    if FChange and Assigned(OnChange) then OnChange(Self);
+  end;
+end;
+
 
 end.

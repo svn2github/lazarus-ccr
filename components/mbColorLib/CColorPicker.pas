@@ -7,11 +7,7 @@ unit CColorPicker;
 interface
 
 uses
-  {$IFDEF FPC}
   LCLIntf, LCLType,
-  {$ELSE}
-  Windows, Messages,
-  {$ENDIF}
   SysUtils, Classes, Controls, Graphics, Forms,
   RGBCMYKUtils, mbTrackBarPicker, HTMLColors;
 
@@ -22,11 +18,11 @@ type
     function ArrowPosFromCyan(c: integer): integer;
     function CyanFromArrowPos(p: integer): integer;
     function GetSelectedColor: TColor;
-    procedure SetSelectedColor(clr: TColor);
+    procedure SetBlack(k: integer);
     procedure SetCyan(c: integer);
     procedure SetMagenta(m: integer);
+    procedure SetSelectedColor(clr: TColor);
     procedure SetYellow(y: integer);
-    procedure SetBlack(k: integer);
   protected
     procedure Execute(tbaAction: integer); override;
     function GetArrowPos: integer; override;
@@ -35,13 +31,14 @@ type
   public
     constructor Create(AOwner: TComponent); override;
   published
+    property Black: integer read FBlack write SetBlack default 0;
     property Cyan: integer read FCyan write SetCyan default 255;
     property Magenta: integer read FMagenta write SetMagenta default 0;
     property Yellow: integer read FYellow write SetYellow default 0;
-    property Black: integer read FBlack write SetBlack default 0;
     property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
     property Layout default lyVertical;
   end;
+
 
 implementation
 
@@ -68,9 +65,94 @@ begin
   FChange := true;
 end;
 
+function TCColorPicker.ArrowPosFromCyan(c: integer): integer;
+var
+  a: integer;
+begin
+  if Layout = lyHorizontal then
+  begin
+    a := Round(((Width - 12)/255)*c);
+    if a > Width - FLimit then a := Width - FLimit;
+  end
+  else
+  begin
+    c := 255 - c;
+    a := Round(((Height - 12)/255)*c);
+    if a > Height - FLimit then a := Height - FLimit;
+  end;
+  if a < 0 then a := 0;
+  Result := a;
+end;
+
+function TCColorPicker.CyanFromArrowPos(p: integer): integer;
+var
+  c: integer;
+begin
+  if Layout = lyHorizontal then
+    c := Round(p/((Width - 12)/255))
+  else
+    c := Round(255 - p/((Height - 12)/255));
+  Clamp(c, 0, 255);
+  Result := c;
+end;
+
+procedure TCColorPicker.Execute(tbaAction: integer);
+begin
+  case tbaAction of
+    TBA_Resize:
+      SetCyan(FCyan);
+    TBA_MouseMove:
+      FCyan := CyanFromArrowPos(FArrowPos);
+    TBA_MouseDown:
+      FCyan := CyanFromArrowPos(FArrowPos);
+    TBA_MouseUp:
+      FCyan := CyanFromArrowPos(FArrowPos);
+    TBA_WheelUp:
+      SetCyan(FCyan + Increment);
+    TBA_WheelDown:
+      SetCyan(FCyan - Increment);
+    TBA_VKRight:
+      SetCyan(FCyan + Increment);
+    TBA_VKCtrlRight:
+      SetCyan(255);
+    TBA_VKLeft:
+      SetCyan(FCyan - Increment);
+    TBA_VKCtrlLeft:
+      SetCyan(0);
+    TBA_VKUp:
+      SetCyan(FCyan + Increment);
+    TBA_VKCtrlUp:
+      SetCyan(255);
+    TBA_VKDown:
+      SetCyan(FCyan - Increment);
+    TBA_VKCtrlDown:
+      SetCyan(0);
+    else
+      inherited;
+  end;
+end;
+
+function TCColorPicker.GetArrowPos: integer;
+begin
+  Result := ArrowPosFromCyan(FCyan);
+end;
+
 function TCColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
   Result := CMYKtoColor(AValue, FMagenta, FYellow, FBlack);
+end;
+
+procedure TCColorPicker.SetBlack(k: integer);
+begin
+  Clamp(k, 0, 255);
+  if FBlack <> k then
+  begin
+    FBlack := k;
+    FManual := false;
+    CreateGradient;
+    Invalidate;
+    if FChange and Assigned(OnChange) then OnChange(Self);
+  end;
 end;
 
 procedure TCColorPicker.SetCyan(C: integer);
@@ -112,50 +194,6 @@ begin
   end;
 end;
 
-procedure TCColorPicker.SetBlack(k: integer);
-begin
-  Clamp(k, 0, 255);
-  if FBlack <> k then
-  begin
-    FBlack := k;
-    FManual := false;
-    CreateGradient;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
-end;
-
-function TCColorPicker.ArrowPosFromCyan(c: integer): integer;
-var
-  a: integer;
-begin
-  if Layout = lyHorizontal then
-  begin
-    a := Round(((Width - 12)/255)*c);
-    if a > Width - FLimit then a := Width - FLimit;
-  end
-  else
-  begin
-    c := 255 - c;
-    a := Round(((Height - 12)/255)*c);
-    if a > Height - FLimit then a := Height - FLimit;
-  end;
-  if a < 0 then a := 0;
-  Result := a;
-end;
-
-function TCColorPicker.CyanFromArrowPos(p: integer): integer;
-var
-  c: integer;
-begin
-  if Layout = lyHorizontal then
-    c := Round(p/((Width - 12)/255))
-  else
-    c := Round(255 - p/((Height - 12)/255));
-  Clamp(c, 0, 255);
-  Result := c;
-end;
-
 function TCColorPicker.GetSelectedColor: TColor;
 begin
   Result := CMYKtoColor(FCyan, FMagenta, FYellow, FBlack);
@@ -185,47 +223,6 @@ begin
   if FChange and Assigned(OnChange) then OnChange(Self);
   FManual := false;
   FChange := true;
-end;
-
-function TCColorPicker.GetArrowPos: integer;
-begin
-  Result := ArrowPosFromCyan(FCyan);
-end;
-
-procedure TCColorPicker.Execute(tbaAction: integer);
-begin
-  case tbaAction of
-    TBA_Resize:
-      SetCyan(FCyan);
-    TBA_MouseMove:
-      FCyan := CyanFromArrowPos(FArrowPos);
-    TBA_MouseDown:
-      FCyan := CyanFromArrowPos(FArrowPos);
-    TBA_MouseUp:
-      FCyan := CyanFromArrowPos(FArrowPos);
-    TBA_WheelUp:
-      SetCyan(FCyan + Increment);
-    TBA_WheelDown:
-      SetCyan(FCyan - Increment);
-    TBA_VKRight:
-      SetCyan(FCyan + Increment);
-    TBA_VKCtrlRight:
-      SetCyan(255);
-    TBA_VKLeft:
-      SetCyan(FCyan - Increment);
-    TBA_VKCtrlLeft:
-      SetCyan(0);
-    TBA_VKUp:
-      SetCyan(FCyan + Increment);
-    TBA_VKCtrlUp:
-      SetCyan(255);
-    TBA_VKDown:
-      SetCyan(FCyan - Increment);
-    TBA_VKCtrlDown:
-      SetCyan(0);
-    else
-      inherited;
-  end;
 end;
 
 end.
