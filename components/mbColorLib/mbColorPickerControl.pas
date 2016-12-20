@@ -1,21 +1,11 @@
 unit mbColorPickerControl;
 
-{$IFDEF FPC}
-  {$MODE DELPHI}
-{$ENDIF}
+{$MODE DELPHI}
 
 interface
 
-{$I mxs.inc}
-
 uses
-  {$IFDEF FPC}
-  LCLIntf, LCLType, LMessages,
-  {$ELSE}
-  Windows, Messages,
-  {$ENDIF}
-  SysUtils, Classes, Controls, Graphics, Forms,
-  {$IFDEF DELPHI_7_UP} Themes,{$ENDIF}
+  LCLIntf, LCLType, LMessages, SysUtils, Classes, Controls, Graphics, Forms, Themes,
   RGBHSLUtils, RGBHSVUtils, RGBCMYKUtils, RGBCIEUtils, HTMLColors, mbBasicPicker;
 
 type
@@ -36,18 +26,14 @@ type
     mx, my, mdx, mdy: integer;
     FOnChange: TNotifyEvent;
     procedure CreateGradient; override;
-//    function GetColorAtPoint(x, y: integer): TColor; override;
-//    function GetHintText: String; override;
     function GetHintStr(X, Y: Integer): String; override;
     function GetSelectedColor: TColor; virtual;
-    procedure SetSelectedColor(C: TColor); virtual;
     procedure InternalDrawMarker(X, Y: Integer; C: TColor);
-    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    procedure CreateWnd; override;
+    procedure SetSelectedColor(C: TColor); virtual;
     procedure WebSafeChanged; dynamic;
-//    procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
     {$IFDEF DELPHI}
     procedure CMGotFocus(var Message: TCMGotFocus); message CM_ENTER;
     procedure CMLostFocus(var Message: TCMLostFocus); message CM_EXIT;
@@ -118,22 +104,14 @@ constructor TmbCustomPicker.Create(AOwner: TComponent);
 begin
   inherited;
   //ControlStyle := ControlStyle + [csOpaque] - [csAcceptsControls];
-  DoubleBuffered := true;
+
   TabStop := true;
- {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
-  ParentBackground := true;
- {$ENDIF}{$ENDIF}
   mx := 0;
   my := 0;
   mdx := 0;
   mdy := 0;
   FHintFormat := 'Hex #%hex'#10#13'RGB[%r, %g, %b]'#10#13'HSL[%hslH, %hslS, %hslL]'#10#13'HSV[%hsvH, %hsvS, %hsvV]'#10#13'CMYK[%c, %m, %y, %k]'#10#13'L*a*b*[%cieL, %cieA, %cieB]'#10#13'XYZ[%cieX, %cieY, %cieZ]';
   FWebSafe := false;
-end;
-
-procedure TmbCustomPicker.CreateWnd;
-begin
-  inherited;
 end;
 
 procedure TmbCustomPicker.CMGotFocus(
@@ -160,14 +138,11 @@ end;
 
 procedure TmbCustomPicker.CreateGradient;
 var
-//  x, y, skip: integer;
   x, y: Integer;
   row: pRGBQuadArray;
   c: TColor;
-  {$IFDEF FPC}
   intfimg: TLazIntfImage;
   imgHandle, imgMaskHandle: HBitmap;
-  {$ENDIF}
 begin
   if FBufferBmp = nil then
   begin
@@ -177,20 +152,13 @@ begin
   FBufferBmp.Width := FGradientWidth;
   FBufferBmp.Height := FGradientHeight;
 
-  {$IFDEF FPC}
   intfimg := TLazIntfImage.Create(FBufferBmp.Width, FBufferBmp.Height);
   try
     intfImg.LoadFromBitmap(FBufferBmp.Handle, FBufferBmp.MaskHandle);
-  {$ENDIF}
 
     for y := 0 to FBufferBmp.Height - 1 do
     begin
-      {$IFDEF FPC}
       row := intfImg.GetDataLineStart(y); //FBufferBmp.Height - 1 - y);
-      {$ELSE}
-      row := FHSVBmp.Scanline(y); //FGradientBmp.Height - 1 - y);
-      {$ENDIF}
-
       for x := 0 to FBufferBmp.Width - 1 do
       begin
         c := GetGradientColor2D(x, y);
@@ -200,30 +168,22 @@ begin
       end;
     end;
 
-{$IFDEF FPC}
     intfimg.CreateBitmaps(imgHandle, imgMaskHandle, false);
     FBufferBmp.Handle := imgHandle;
     FBufferBmp.MaskHandle := imgMaskHandle;
   finally
    intfimg.Free;
   end;
-{$ENDIF}
 end;
-                         (*
-function TmbCustomPicker.GetHintText: String;
+
+function TmbCustomPicker.GetHintStr(X, Y: Integer): String;
 begin
-  Result := FormatHint(FHintFormat, GetColorUnderCursor)
-end;                       *)
+  Result := FormatHint(FHintFormat, GetColorUnderCursor);
+end;
 
 function TmbCustomPicker.GetSelectedColor: TColor;
 begin
   Result := FSelected;  // valid for most descendents
-end;
-
-procedure TmbCustomPicker.SetSelectedColor(C: TColor);
-begin
-  FSelected := C;
-  //handled in descendents
 end;
 
 procedure TmbCustomPicker.InternalDrawMarker(X, Y: Integer; C: TColor);
@@ -236,49 +196,15 @@ begin
   end;
 end;
 
-function TmbCustomPicker.GetHintStr(X, Y: Integer): String;
-begin
-  Result := FormatHint(FHintFormat, GetColorUnderCursor);
-end;
-
-                 (*
-procedure TmbCustomPicker.CMHintShow(var Message: TCMHintShow);
-var
-  cp: TPoint;
-begin
-  if GetColorUnderCursor <> clNone then
-    with TCMHintShow(Message) do
-      if not ShowHint then
-        Message.Result := 1
-      else
-      begin
-        cp := HintInfo^.CursorPos;
-        HintInfo^.ReshowTimeout := 0;  // was: 1
-        HintInfo^.HideTimeout := Application.HintHidePause;  // was: 5000
-        HintInfo^.HintStr := FormatHint(FHintFormat, GetColorUnderCursor);
-        HintInfo^.CursorRect := Rect(cp.X, cp.Y, cp.X+1, cp.Y+1);
-        Result := 0;    // 0 means: show hint
-      end;
-{
-        with HintInfo^ do
-        begin
-          Result := 0;
-          ReshowTimeout := 1;
-          HideTimeout := 5000;
-          HintStr := FormatHint(FHintFormat, GetColorUnderCursor);;
-        end; }
-  inherited;
-end;
-              *)
-procedure TmbCustomPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
+procedure TmbCustomPicker.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
 begin
   inherited;
   mx := x;
   my := y;
 end;
 
-procedure TmbCustomPicker.MouseDown(Button: TMouseButton; Shift: TShiftState;
-  X, Y: Integer);
+procedure TmbCustomPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
   mx := x;
@@ -300,6 +226,12 @@ begin
     FMarkerStyle := s;
     Invalidate;
   end;
+end;
+
+procedure TmbCustomPicker.SetSelectedColor(C: TColor);
+begin
+  FSelected := C;
+  //handled in descendents
 end;
 
 procedure TmbCustomPicker.SetWebSafe(s: boolean);

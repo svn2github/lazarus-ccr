@@ -190,28 +190,28 @@ uses
 
 procedure TForm1.tb1Change(Sender: TObject);
 begin
-sc.opacity := tb1.position;
+  sc.opacity := tb1.position;
 end;
 
 procedure TForm1.tb2Change(Sender: TObject);
 begin
-uc.opacity := tb2.position;
+  uc.opacity := tb2.position;
 end;
 
 procedure TForm1.HSLColorPicker1Change(Sender: TObject);
 begin
-sc.color := HSLColorPicker1.SelectedColor;
+  sc.color := HSLColorPicker1.SelectedColor;
 end;
 
 procedure TForm1.HSLColorPicker1MouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
-uc.color := HSLColorPicker1.ColorUnderCursor;
+  uc.color := HSLColorPicker1.ColorUnderCursor;
 end;
 
 procedure TForm1.HexaColorPicker1Change(Sender: TObject);
 begin
-sc.color := hexacolorpicker1.selectedcolor;
+  sc.color := hexacolorpicker1.selectedcolor;
 end;
 
 procedure TForm1.HexaColorPicker1MouseMove(Sender: TObject;
@@ -227,28 +227,28 @@ end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-mbColorPalette1.GeneratePalette(clblue);
+  mbColorPalette1.GeneratePalette(clblue);
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
 begin
-mbColorpalette1.GenerateGradientPalette([clblue, clred]);
+  mbColorpalette1.GenerateGradientPalette([clblue, clred]);
 end;
 
 procedure TForm1.mbColorPalette1SelColorChange(Sender: TObject);
 begin
-  uc.Color := mbColorPalette1.SelectedColor;
+  sc.Color := mbColorPalette1.SelectedColor;
 end;
 
 procedure TForm1.mbColorPalette1MouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
-uc.color := mbcolorpalette1.ColorUnderCursor;
+  uc.color := mbcolorpalette1.ColorUnderCursor;
 end;
 
 procedure TForm1.HSLRingPicker1Change(Sender: TObject);
 begin
-sc.color := HSLRingPicker1.SelectedColor;
+  sc.color := HSLRingPicker1.SelectedColor;
 end;
 
 procedure TForm1.HSLRingPicker1MouseMove(Sender: TObject;
@@ -259,9 +259,9 @@ end;
 
 procedure TForm1.HSVColorPicker1Change(Sender: TObject);
 begin
-sc.color := HSVColorPicker1.SelectedColor;
-VColorPicker2.Saturation := HSVColorPicker1.Saturation;
-VColorPicker2.Hue := HSVColorPicker1.Hue;
+  sc.color := HSVColorPicker1.SelectedColor;
+  VColorPicker2.Saturation := HSVColorPicker1.Saturation;
+  VColorPicker2.Hue := HSVColorPicker1.Hue;
 end;
 
 procedure TForm1.HSVColorPicker1MouseMove(Sender: TObject;
@@ -272,7 +272,7 @@ end;
 
 procedure TForm1.SLHColorPicker1Change(Sender: TObject);
 begin
-sc.color := SLHColorPicker1.SelectedColor;
+  sc.color := SLHColorPicker1.SelectedColor;
 end;
 
 procedure TForm1.SLHColorPicker1MouseMove(Sender: TObject;
@@ -283,8 +283,8 @@ end;
 
 procedure TForm1.mbDeskPickerButton1SelColorChange(Sender: TObject);
 begin
-sc.color := mbDeskPickerButton1.SelectedColor;
-uc.color := mbDeskPickerButton1.SelectedColor;
+  sc.color := mbDeskPickerButton1.SelectedColor;
+  uc.color := mbDeskPickerButton1.SelectedColor;
 end;
 
 procedure TForm1.PageControl1Change(Sender: TObject);
@@ -333,18 +333,18 @@ end;
 
 procedure TForm1.HRingPicker1Change(Sender: TObject);
 begin
-sc.color := hringpicker1.SelectedColor;
+  sc.color := hringpicker1.SelectedColor;
 end;
 
 procedure TForm1.HRingPicker1MouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
 begin
-uc.color := hringpicker1.ColorUnderCursor;
+  uc.color := hringpicker1.ColorUnderCursor;
 end;
 
 procedure TForm1.VColorPicker2Change(Sender: TObject);
 begin
-HSVColorPicker1.Value := VColorPicker2.Value;
+  HSVColorPicker1.Value := VColorPicker2.Value;
 end;
 
 // only for internet shortcuts
@@ -376,27 +376,27 @@ end;
 
 procedure TForm1.CheckBox1Click(Sender: TObject);
 begin
-HexaColorPicker1.SliderVisible := checkbox1.Checked;
+  HexaColorPicker1.SliderVisible := checkbox1.Checked;
 end;
 
 procedure TForm1.ComboBox1Change(Sender: TObject);
 begin
-hexacolorpicker1.SliderMarker := TMArker(ComboBox1.ItemIndex);
+  hexacolorpicker1.SliderMarker := TMArker(ComboBox1.ItemIndex);
 end;
 
 procedure TForm1.CheckBox2Click(Sender: TObject);
 begin
-hexacolorpicker1.NewArrowStyle := checkbox2.checked;
+  hexacolorpicker1.NewArrowStyle := checkbox2.checked;
 end;
 
 procedure TForm1.CIEAColorPicker1Change(Sender: TObject);
 begin
- CIEAIndicator.Brush.Color := CIEAColorPicker1.SelectedColor;
+  CIEAIndicator.Brush.Color := CIEAColorPicker1.SelectedColor;
 end;
 
 procedure TForm1.CIEBColorPicker1Change(Sender: TObject);
 begin
- CIEBIndicator.Brush.Color := CIEBColorPicker1.SelectedColor;
+  CIEBIndicator.Brush.Color := CIEBColorPicker1.SelectedColor;
 end;
 
 procedure TForm1.CIELColorPicker1Change(Sender: TObject);
@@ -406,54 +406,54 @@ end;
 
 procedure TForm1.Button4Click(Sender: TObject);
 begin
- if opendialog1.Execute then
-  mbcolorpalette1.Palette := opendialog1.FileName;
+  if opendialog1.Execute then
+    mbcolorpalette1.Palette := opendialog1.FileName;
 end;
 
 procedure TForm1.ComboBox2Change(Sender: TObject);
 begin
-mbcolorpalette1.SortOrder := tsortorder(combobox2.itemindex);
+  mbcolorpalette1.SortOrder := tsortorder(combobox2.itemindex);
 end;
 
 procedure TForm1.ComboBox3Change(Sender: TObject);
 begin
-mbcolorpalette1.Sortmode := tsortmode(combobox3.ItemIndex);
+  mbcolorpalette1.Sortmode := tsortmode(combobox3.ItemIndex);
 end;
 
 procedure TForm1.ComboBox4Change(Sender: TObject);
 begin
-mbcolorpalette1.CellStyle := tcellstyle(combobox4.ItemIndex);
+  mbcolorpalette1.CellStyle := tcellstyle(combobox4.ItemIndex);
 end;
 
 procedure TForm1.UpDown1ChangingEx(Sender: TObject; var AllowChange: Boolean;
   NewValue: SmallInt; Direction: TUpDownDirection);
 begin
- allowchange := true;
- mbcolorpalette1.CellSize := abs(NewValue);
+  allowchange := true;
+  mbcolorpalette1.CellSize := abs(NewValue);
 end;
 
 procedure TForm1.CbWebSsafeClick(Sender: TObject);
 var
  i: integer;
 begin
- for i := 0 to ComponentCount - 1 do
-  if IsPublishedProp(components[i], 'WebSafe') = true then
-   SetOrdProp(components[i], 'WebSafe', integer(CbWebSsafe.checked));
+  for i := 0 to ComponentCount - 1 do
+    if IsPublishedProp(components[i], 'WebSafe') = true then
+      SetOrdProp(components[i], 'WebSafe', integer(CbWebSsafe.checked));
 end;
 
 procedure TForm1.Button5Click(Sender: TObject);
 var
- i: integer;
+  i: integer;
 begin
- mbcolortree1.ClearColors;
- mbcolorlist1.ClearColors;
- for i := 0 to mbcolorpalette1.Colors.Count - 1 do
+  mbcolortree1.ClearColors;
+  mbcolorlist1.ClearColors;
+  for i := 0 to mbcolorpalette1.Colors.Count - 1 do
   begin
-   mbcolortree1.AddColor('Color '+inttostr(i), StringtoColor(mbcolorpalette1.colors.Strings[i]), false);
-   mbcolorlist1.AddColor('Color '+inttostr(i), StringtoColor(mbcolorpalette1.colors.Strings[i]), false);
+     mbcolortree1.AddColor('Color '+inttostr(i), StringtoColor(mbcolorpalette1.colors.Strings[i]), false);
+     mbcolorlist1.AddColor('Color '+inttostr(i), StringtoColor(mbcolorpalette1.colors.Strings[i]), false);
   end;
- mbcolortree1.UpdateColors;
- mbcolorlist1.UpdateColors;
+  mbcolortree1.UpdateColors;
+  mbcolorlist1.UpdateColors;
 end;
 
 procedure TForm1.CbEnabledChange(Sender: TObject);

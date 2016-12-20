@@ -1,18 +1,11 @@
 unit mbColorPreview;
 
-{$IFDEF FPC}
-  {$MODE DELPHI}
-{$ENDIF}
+{$MODE DELPHI}
 
 interface
 
 uses
- {$IFDEF FPC}
-  LCLIntf, LCLType, LMessages,
- {$ELSE}
-  Windows, Messages,
- {$ENDIF}
-  SysUtils, Classes, Controls, Graphics;
+  LCLIntf, LCLType, SysUtils, Classes, Controls, Graphics;
 
 type
   TmbColorPreview = class(TCustomControl)
@@ -23,22 +16,19 @@ type
     FOnOpacityChange: TNotifyEvent;
     FBlockSize: integer;
     FSwatchStyle: boolean;
-
+    function MakeBmp: TBitmap;
     procedure SetSwatchStyle(Value: boolean);
     procedure SetSelColor(c: TColor);
     procedure SetOpacity(o: integer);
     procedure SetBlockSize(s: integer);
-    function MakeBmp: TBitmap;
   protected
     procedure Paint; override;
-    procedure WMEraseBkgnd(var Message: {$IFDEF FPC}TLMEraseBkgnd{$ELSE}TWMEraseBkgnd{$ENDIF});
-      message {$IFDEF FPC}LM_ERASEBKGND{$ELSE}WM_ERASEBKGND{$ENDIF};
   public
     constructor Create(AOwner: TComponent); override;
   published
+    property BlockSize: integer read FBlockSize write SetBlockSize default 6;
     property Color: TColor read FSelColor write SetSelColor default clWhite;
     property Opacity: integer read FOpacity write SetOpacity default 100;
-    property BlockSize: integer read FBlockSize write SetBlockSize default 6;
     property SwatchStyle: boolean read FSwatchStyle write SetSwatchStyle default false;
     property Anchors;
     property Align;
@@ -81,8 +71,8 @@ uses
 constructor TmbColorPreview.Create(AOwner: TComponent);
 begin
   inherited;
-  DoubleBuffered := true;
-  ControlStyle := COntrolStyle - [csAcceptsControls] + [csOpaque];
+  //ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
+
   FSelColor := clWhite;
   SetInitialBounds(0, 0, 68, 32);
   TabStop := false;
@@ -194,19 +184,12 @@ begin
   end;
 end;
 
-procedure TmbColorPreview.WMEraseBkgnd(
-  var Message: {$IFDEF FPC}TLMEraseBkgnd{$ELSE}TWMEraseBkgnd{$ENDIF});
+procedure TmbColorPreview.SetBlockSize(s: integer);
 begin
-  Message.Result := 1;
-end;
-
-procedure TmbColorPreview.SetSelColor(c: TColor);
-begin
-  if c <> FSelColor then
+  if (FBlockSize <> s) and (s > 0) then
   begin
-    FSelColor := c;
+    FBlockSize := s;
     Invalidate;
-    if Assigned(FOnColorChange) then FOnColorChange(Self);
   end;
 end;
 
@@ -220,12 +203,13 @@ begin
   end;
 end;
 
-procedure TmbColorPreview.SetBlockSize(s: integer);
+procedure TmbColorPreview.SetSelColor(c: TColor);
 begin
-  if (FBlockSize <> s) and (s > 0) then
+  if c <> FSelColor then
   begin
-    FBlockSize := s;
+    FSelColor := c;
     Invalidate;
+    if Assigned(FOnColorChange) then FOnColorChange(Self);
   end;
 end;
 

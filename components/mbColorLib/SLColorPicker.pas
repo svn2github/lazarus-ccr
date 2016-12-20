@@ -1,17 +1,11 @@
 unit SLColorPicker;
 
-{$IFDEF FPC}
-  {$MODE DELPHI}
-{$ENDIF}
+{$MODE DELPHI}
 
 interface
 
 uses
- {$IFDEF FPC}
   LCLIntf, LCLType, LMessages,
- {$ELSE}
-  Windows, Messages,
- {$ENDIF}
   SysUtils, Classes, Controls, Graphics, Math, Forms,
   mbColorPickerControl;
 
@@ -44,8 +38,6 @@ type
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-//    procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
-//      message CN_KEYDOWN;
   public
     constructor Create(AOwner: TComponent); override;
     function GetColorAtPoint(x, y: integer): TColor; override;
@@ -77,12 +69,7 @@ begin
   FMaxLum := 240;
   FGradientWidth := FMaxSat + 1;       // x --> Saturation
   FGradientHeight := FMaxLum + 1;      // y --> Luminance
-  {$IFDEF DELPHI}
-  Width := 255;
-  Height := 255;
-  {$ELSE}
   SetInitialBounds(0, 0, FGradientWidth, FGradientHeight);
-  {$ENDIF}
   FHue := 0.0;
   FSat := 0.0;
   FLum := 1.0;
@@ -90,30 +77,11 @@ begin
   MarkerStyle := msCircle;
 end;
 
-{ This picker has Saturation along the X and Luminance along the Y axis. }
-function TSLColorPicker.GetGradientColor2D(X, Y: Integer): TColor;
-begin
-  Result := HSLtoColor(FHue, x / FMaxSat, (FMaxLum - y) / FMaxLum);
-//  Result := HSLtoRGB(FHue, x / FMaxSat, (FMaxLum - y) / FMaxLum);
-end;
-
-procedure TSLColorPicker.Resize;
-begin
-  inherited;
-  UpdateCoords;
-end;
-
 procedure TSLColorPicker.CreateWnd;
 begin
   inherited;
   CreateGradient;
   UpdateCoords;
-end;
-
-procedure TSLColorPicker.UpdateCoords;
-begin
-  mdx := round(FSat * (Width - 1));
-  mdy := round((1.0 - FLum) * (Height - 1));
 end;
 
 procedure TSLColorPicker.DrawMarker(x, y: integer);
@@ -124,11 +92,18 @@ begin
   InternalDrawMarker(x, y, c);
 end;
 
-procedure TSLColorPicker.Paint;
+function TSLColorPicker.GetColorAtPoint(x, y: integer): TColor;
 begin
-  Canvas.StretchDraw(ClientRect, FBufferBMP);
-  UpdateCoords;
-  DrawMarker(mdx, mdy);
+  Result := HSLToRGB(FHue, x/(Width - 1), (Height - 1 - y) / (Height - 1));
+  if WebSafe then
+    Result := GetWebSafe(Result);
+end;
+
+{ This picker has Saturation along the X and Luminance along the Y axis. }
+function TSLColorPicker.GetGradientColor2D(X, Y: Integer): TColor;
+begin
+  Result := HSLtoColor(FHue, x / FMaxSat, (FMaxLum - y) / FMaxLum);
+//  Result := HSLtoRGB(FHue, x / FMaxSat, (FMaxLum - y) / FMaxLum);
 end;
 
 function TSLColorPicker.GetHue: Integer;
@@ -146,96 +121,12 @@ begin
   Result := round(FSat * FMaxSat);
 end;
 
-procedure TSLColorPicker.SetHue(H: integer);
+function TSLColorPicker.GetSelectedColor: TColor;
 begin
-  Clamp(H, 0, FMaxHue);
-  if GetHue() <> H then
-  begin
-    FHue := h / FMaxHue;
-    FManual := false;
-    CreateGradient;
-    UpdateCoords;
-    Invalidate;
-    if FChange and Assigned(FOnChange) then FOnChange(Self);
-  end;
+  Result := HSLtoRGB(FHue, FSat, FLum);
+  if WebSafe then
+    Result := GetWebSafe(Result);
 end;
-
-procedure TSLColorPicker.SetSat(S: integer);
-begin
-  Clamp(S, 0, FMaxSat);
-  if GetSat() <> S then
-  begin
-    FSat := S / FMaxSat;
-    FManual := false;
-    UpdateCoords;
-    Invalidate;
-    if FChange and Assigned(FOnChange) then FOnChange(Self);
-  end;
-end;
-
-procedure TSLColorPicker.SetLum(L: integer);
-begin
-  Clamp(L, 0, FMaxLum);
-  if GetLum() <> L then
-  begin
-    FLum := L / FMaxLum;
-    FManual := false;
-    UpdateCoords;
-    Invalidate;
-    if FChange and Assigned(FOnChange) then FOnChange(Self);
-  end;
-end;
-
-procedure TSLColorPicker.SetMaxHue(H: Integer);
-begin
-  if H = FMaxHue then
-    exit;
-  FMaxHue := H;
-  CreateGradient;
-  if FChange and Assigned(OnChange) then OnChange(Self);
-  Invalidate;
-end;
-
-procedure TSLColorPicker.SetMaxLum(L: Integer);
-begin
-  if L = FMaxLum then
-    exit;
-  FMaxLum := L;
-  FGradientHeight := FMaxLum + 1;
-  CreateGradient;
-  if FChange and Assigned(OnChange) then OnChange(Self);
-  Invalidate;
-end;
-
-procedure TSLColorPicker.SetMaxSat(S: Integer);
-begin
-  if S = FMaxSat then
-    exit;
-  FMaxSat := S;
-  FGradientWidth := FMaxSat + 1;
-  CreateGradient;
-  if FChange and Assigned(OnChange) then OnChange(Self);
-  Invalidate;
-end;
-
-procedure TSLColorPicker.SelectionChanged(x, y: integer);
-begin
-  FChange := false;
-//  SetSat(MulDiv(255, x, Width));
-//  SetLum(MulDiv(255, Height - y, Height));
-  FSat := x / (Width - 1);
-  FLum := (Height - y - 1) / (Height - 1);
-  FManual := false;
-  UpdateCoords;
-  Invalidate;
-  if FChange and Assigned(FOnChange) then FOnChange(Self);
-  {
-  SetSat(MulDiv(255, x, Width - 1));
-  SetLum(MulDiv(255, Height - y -1, Height - 1));
-  }
-  FChange := true;
-end;
-
 
 procedure TSLColorPicker.KeyDown(var Key: Word; Shift: TShiftState);
 var
@@ -291,30 +182,8 @@ begin
   inherited;
 end;
 
-procedure TSLColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState;
-  X, Y: Integer);
-begin
-  inherited;
-  {$IFDEF DELPHI}
-  ClipCursor(nil);
-  {$ENDIF}
-  if csDesigning in ComponentState then Exit;
-  if (Button = mbLeft) and PtInRect(ClientRect, Point(x, y)) then
-  begin
-    mdx := x;
-    mdy := y;
-    SelectionChanged(X, Y);
-    FManual := true;
-    if Assigned(FOnChange) then FOnChange(Self);
-  end;
-end;
-
 procedure TSLColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
-{$IFDEF DELPHI}
-var
-  R: TRect;
-{$ENDIF}
 begin
   inherited;
   if csDesigning in ComponentState then
@@ -323,15 +192,7 @@ begin
   begin
     mdx := x;
     mdy := y;
-    {$IFDEF DELPHI}
-    R := ClientRect;
-    R.TopLeft := ClientToScreen(R.TopLeft);
-    R.BottomRight := ClientToScreen(R.BottomRight);
-    ClipCursor(@R);
-    {$ENDIF}
     SelectionChanged(X, Y);
-//    FManual := true;
-//    if Assigned(FOnChange) then FOnChange(Self);
   end;
   SetFocus;
 end;
@@ -346,8 +207,118 @@ begin
     mdx := x;
     mdy := y;
     SelectionChanged(X, Y);
-//    FManual := true;
-//    if Assigned(FOnChange) then FOnChange(Self);
+  end;
+end;
+
+procedure TSLColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  inherited;
+  if csDesigning in ComponentState then Exit;
+  if (Button = mbLeft) and PtInRect(ClientRect, Point(x, y)) then
+  begin
+    mdx := x;
+    mdy := y;
+    SelectionChanged(X, Y);
+    FManual := true;
+    if Assigned(FOnChange) then FOnChange(Self);
+  end;
+end;
+
+procedure TSLColorPicker.Paint;
+begin
+  Canvas.StretchDraw(ClientRect, FBufferBMP);
+  UpdateCoords;
+  DrawMarker(mdx, mdy);
+end;
+
+procedure TSLColorPicker.Resize;
+begin
+  inherited;
+  UpdateCoords;
+end;
+
+procedure TSLColorPicker.SelectionChanged(x, y: integer);
+begin
+  FChange := false;
+  FSat := x / (Width - 1);
+  FLum := (Height - y - 1) / (Height - 1);
+  FManual := false;
+  UpdateCoords;
+  Invalidate;
+  if FChange and Assigned(FOnChange) then FOnChange(Self);
+  FChange := true;
+end;
+
+procedure TSLColorPicker.SetHue(H: integer);
+begin
+  Clamp(H, 0, FMaxHue);
+  if GetHue() <> H then
+  begin
+    FHue := h / FMaxHue;
+    FManual := false;
+    CreateGradient;
+    UpdateCoords;
+    Invalidate;
+    if FChange and Assigned(FOnChange) then FOnChange(Self);
+  end;
+end;
+
+procedure TSLColorPicker.SetLum(L: integer);
+begin
+  Clamp(L, 0, FMaxLum);
+  if GetLum() <> L then
+  begin
+    FLum := L / FMaxLum;
+    FManual := false;
+    UpdateCoords;
+    Invalidate;
+    if FChange and Assigned(FOnChange) then FOnChange(Self);
+  end;
+end;
+
+procedure TSLColorPicker.SetMaxHue(H: Integer);
+begin
+  if H = FMaxHue then
+    exit;
+  FMaxHue := H;
+  CreateGradient;
+  if FChange and Assigned(OnChange) then OnChange(Self);
+  Invalidate;
+end;
+
+procedure TSLColorPicker.SetMaxLum(L: Integer);
+begin
+  if L = FMaxLum then
+    exit;
+  FMaxLum := L;
+  FGradientHeight := FMaxLum + 1;
+  CreateGradient;
+  if FChange and Assigned(OnChange) then OnChange(Self);
+  Invalidate;
+end;
+
+procedure TSLColorPicker.SetMaxSat(S: Integer);
+begin
+  if S = FMaxSat then
+    exit;
+  FMaxSat := S;
+  FGradientWidth := FMaxSat + 1;
+  CreateGradient;
+  if FChange and Assigned(OnChange) then OnChange(Self);
+  Invalidate;
+end;
+
+procedure TSLColorPicker.SetSat(S: integer);
+begin
+  Clamp(S, 0, FMaxSat);
+  if GetSat() <> S then
+  begin
+    FSat := S / FMaxSat;
+    FManual := false;
+    UpdateCoords;
+    Invalidate;
+    if FChange and Assigned(FOnChange) then FOnChange(Self);
   end;
 end;
 
@@ -366,79 +337,11 @@ begin
   FChange := true;
 end;
 
-function TSLColorPicker.GetSelectedColor: TColor;
+procedure TSLColorPicker.UpdateCoords;
 begin
-  Result := HSLtoRGB(FHue, FSat, FLum);
-  if WebSafe then
-    Result := GetWebSafe(Result);
+  mdx := round(FSat * (Width - 1));
+  mdy := round((1.0 - FLum) * (Height - 1));
 end;
 
-function TSLColorPicker.GetColorAtPoint(x, y: integer): TColor;
-begin
-  Result := HSLToRGB(FHue, x/(Width - 1), (Height - 1 - y) / (Height - 1));
-  if WebSafe then
-    Result := GetWebSafe(Result);
-end;
-
-(*
-procedure TSLColorPicker.CNKeyDown(
-  var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF} );
-var
-  Shift: TShiftState;
-  FInherited: boolean;
-  delta: Integer;
-begin
-  FInherited := false;
-  Shift := KeyDataToShiftState(Message.KeyData);
-  if ssCtrl in Shift then
-    delta := 10
-  else
-    delta := 1;
-
-  case Message.CharCode of
-    VK_LEFT:
-      if not (mdx - delta < 0) then
-      begin
-        Dec(mdx, delta);
-        SelectionChanged(mdx, mdy);
-        FManual := true;
-        if Assigned(FOnChange) then FOnChange(Self);
-      end;
-    VK_RIGHT:
-      if not (mdx + delta > Width) then
-      begin
-        Inc(mdx, delta);
-        SelectionChanged(mdx, mdy);
-        FManual := true;
-        if Assigned(FOnChange) then FOnChange(Self);
-      end;
-    VK_UP:
-      if not (mdy - delta < 0) then
-      begin
-        Dec(mdy, delta);
-        SelectionChanged(mdx, mdy);
-        FManual := true;
-        if Assigned(FOnChange) then FOnChange(Self);
-      end;
-    VK_DOWN:
-      if not (mdy + delta > Height) then
-      begin
-        Inc(mdy, delta);
-        SelectionChanged(mdx, mdy);
-        FManual := true;
-        if Assigned(FOnChange) then FOnChange(Self);
-      end;
-   else
-      begin
-        FInherited := true;
-        inherited;
-      end;
-  end;
-
-  if not FInherited then
-    if Assigned(OnKeyDown) then
-      OnKeyDown(Self, Message.CharCode, Shift);
-end;
-*)
 
 end.

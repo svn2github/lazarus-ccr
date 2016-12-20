@@ -3,7 +3,7 @@ object Form1: TForm1
   Height = 397
   Top = 197
   Width = 539
-  Caption = 'mbColor Lib v2.0.1 Demo'
+  Caption = 'mbColor Lib v2.1 Demo'
   ClientHeight = 397
   ClientWidth = 539
   Font.Color = clWindowText
@@ -43,9 +43,9 @@ object Form1: TForm1
     Height = 384
     Top = 6
     Width = 403
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Anchors = [akTop, akLeft, akRight, akBottom]
-    TabIndex = 0
+    TabIndex = 2
     TabOrder = 0
     OnChange = PageControl1Change
     OnMouseMove = PageControl1MouseMove
@@ -89,8 +89,8 @@ object Form1: TForm1
         Width = 289
         Anchors = [akTop, akLeft, akRight, akBottom]
         HintFormat = 'RGB(%r, %g, %b)'#13'Hex: #%hex'
-        SliderMarker = smRect
         IntensityText = 'Intensity'
+        SliderMarker = smRect
         TabOrder = 0
         Constraints.MinHeight = 85
         Constraints.MinWidth = 93
@@ -697,9 +697,9 @@ object Form1: TForm1
         Width = 104
         Caption = 'Pick from screen'
         TabOrder = 0
-        OnSelColorChange = mbDeskPickerButton1SelColorChange
         ScreenHintFormat = 'RGB(%r, %g, %b)'#13'Hex: %h'
         ShowScreenHint = True
+        OnSelColorChange = mbDeskPickerButton1SelColorChange
       end
       object OfficeColorDialogButton: TButton
         Left = 8
@@ -721,8 +721,8 @@ object Form1: TForm1
         TabOrder = 2
         Hue = 0
         Saturation = 0
-        Luminance = 94
-        SelectedColor = 6184542
+        Luminance = 78
+        SelectedColor = 5131854
       end
       object VColorPicker1: TVColorPicker
         Left = 34
@@ -835,7 +835,6 @@ object Form1: TForm1
         HintFormat = 'H: %h S: %s'#13'Hex: %hex'
         TabOrder = 0
         OnMouseMove = HSColorPicker1MouseMove
-        Luminance = 120
         MarkerStyle = msSquare
         OnChange = HSColorPicker1Change
       end
@@ -957,8 +956,8 @@ object Form1: TForm1
         HintFormat = 'Blue: %b (selected)'
         SelectionIndicator = siRect
         TabOrder = 6
-        Red = 122
         Green = 122
+        Red = 122
         SelectedColor = 16743034
       end
       object KColorPicker2: TKColorPicker
@@ -1063,9 +1062,9 @@ object Form1: TForm1
         SelectedColor = 16119089
         HintFormat = 'A: %cieA B: %cieB'#13'Hex: #%hex'
         TabOrder = 3
-        LValue = 88
         AValue = -47
         BValue = -32
+        LValue = 88
         OnChange = CIELColorPicker1Change
       end
       object CIEAColorPicker1: TCIEAColorPicker
@@ -1090,9 +1089,9 @@ object Form1: TForm1
         SelectedColor = 130823
         HintFormat = 'L: %cieL A: %cieA'#13'Hex: #%hex'
         TabOrder = 5
-        LValue = 88
         AValue = -88
         BValue = 74
+        LValue = 88
         OnChange = CIEBColorPicker1Change
       end
       object Label10: TLabel

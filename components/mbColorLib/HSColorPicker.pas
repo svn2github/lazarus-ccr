@@ -9,12 +9,7 @@ unit HSColorPicker;
 interface
 
 uses
-  {$IFDEF FPC}
-  LCLIntf, LCLType, LMessages,
-  {$ELSE}
-  Windows, Messages, Scanlines,
-  {$ENDIF}
-  SysUtils, Classes, Controls, Graphics, Math, Forms,
+  LCLIntf, LCLType, SysUtils, Classes, Controls, Graphics, Math, Forms,
   RGBHSLUtils, HTMLColors, mbColorPickerControl;
 
 type
@@ -40,10 +35,6 @@ type
     function GetGradientColor2D(X, Y: Integer): TColor; override;
     procedure SetSelectedColor(c: TColor); override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-    (*
-    procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
-      message CN_KEYDOWN;
-      *)
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
@@ -56,10 +47,9 @@ type
     constructor Create(AOwner: TComponent); override;
     property Hue: integer read GetHue write SetHue;
     property Saturation: integer read GetSat write SetSat;
-//    property Lum: integer read GetLum write SetLum;
   published
     property SelectedColor default clRed;
-    property Luminance: Integer read GetLum write SetLum;
+    property Luminance: Integer read GetLum write SetLum default 120;
     property MaxHue: Integer read FMaxHue write SetMaxHue default 359;
     property MaxSaturation: Integer read FMaxSat write SetMaxSat default 240;
     property MaxLuminance: Integer read FMaxLum write SetMaxLum default 240;
@@ -82,12 +72,7 @@ begin
   FMaxLum := 240;
   FGradientWidth := FMaxHue + 1;
   FGradientHeight := FMaxSat + 1;
- {$IFDEF DELPHI}
-  Width := 239;
-  Height := 240;
- {$ELSE}
   SetInitialBounds(0, 0, FGradientWidth, FGradientHeight);
- {$ENDIF}
   HintFormat := 'H: %h S: %hslS'#13'Hex: %hex';
   FHue := 0;
   FSat := 1.0;
@@ -101,25 +86,16 @@ begin
   MarkerStyle := msCross;
 end;
 
-procedure THSColorPicker.CreateWnd;
-begin
-  inherited;
-  CreateGradient;
-end;
-
-function THSColorPicker.GetGradientColor2D(X, Y: Integer): TColor;
-begin
-  {$IFDEF USE_COLOR_TO_RGB}
-  Result := HSLToColor(x / FMaxHue, (FBufferBmp.Height - 1 - y) / FMaxSat, FLum);
-  {$ELSE}
-  Result := HSLtoRGB(x / FMaxHue, (FMaxSat - y) / FMaxSat, FLum);
-  {$ENDIF}
-end;
-
 procedure THSColorPicker.CorrectCoords(var x, y: integer);
 begin
   Clamp(x, 0, Width - 1);
   Clamp(y, 0, Height - 1);
+end;
+
+procedure THSColorPicker.CreateWnd;
+begin
+  inherited;
+  CreateGradient;
 end;
 
 procedure THSColorPicker.DrawMarker(x, y: integer);
@@ -144,6 +120,15 @@ begin
   InternalDrawMarker(x, y, c);
 end;
 
+function THSColorPicker.GetGradientColor2D(X, Y: Integer): TColor;
+begin
+  {$IFDEF USE_COLOR_TO_RGB}
+  Result := HSLToColor(x / FMaxHue, (FBufferBmp.Height - 1 - y) / FMaxSat, FLum);
+  {$ELSE}
+  Result := HSLtoRGB(x / FMaxHue, (FMaxSat - y) / FMaxSat, FLum);
+  {$ENDIF}
+end;
+
 function THSColorPicker.GetHue: Integer;
 begin
   Result := Round(FHue * FMaxHue);
@@ -157,37 +142,6 @@ end;
 function THSColorPicker.GetSat: Integer;
 begin
   Result := Round(FSat * FMaxSat);
-end;
-
-procedure THSColorPicker.SetSelectedColor(c: TColor);
-var
-  L: Double;
-begin
-  if WebSafe then c := GetWebSafe(c);
-  {$IFDEF USE_COLOR_TO_RGB}
-  ColorToHSL(c, FHue, FSat, L);
-  {$ELSE}
-  RGBtoHSL(c, FHue, FSat, L);
-  {$ENDIF}
-  FSelected := c;
-  FManual := false;
-  mxx := Round(FHue * Width);
-  myy := Round((1.0 - FSat) * Height);
-  Invalidate;
-  if Assigned(OnChange) then OnChange(Self);
-end;
-
-procedure THSColorPicker.Paint;
-begin
-  Canvas.StretchDraw(ClientRect, FBufferBmp);
-  CorrectCoords(mxx, myy);
-  DrawMarker(mxx, myy);
-end;
-
-procedure THSColorPicker.Resize;
-begin
-  SetSelectedColor(FSelected);
-  inherited;
 end;
 
 procedure THSColorPicker.KeyDown(var Key: Word; Shift: TShiftState);
@@ -248,40 +202,17 @@ begin
 end;
 
 procedure THSColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-{$IFDEF DELPHI}
-var
-  R: TRect;
-{$ENDIF}
 begin
   inherited;
   mxx := x;
   myy := y;
   if Button = mbLeft then
   begin
-    {$IFDEF DELPHI}
-    R := ClientRect;
-    R.TopLeft := ClientToScreen(R.TopLeft);
-    R.BottomRight := ClientToScreen(R.BottomRight);
-    ClipCursor(@R);
-    {$ENDIF}
     SetSelectedColor(GetColorAtPoint(x, y));
     FManual := true;
     Invalidate;
   end;
   SetFocus;
-end;
-
-procedure THSColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-begin
-  inherited;
-  {$IFDEF DELPHI}
-  ClipCursor(nil);
-  {$ENDIF}
-  mxx := x;
-  myy := y;
-  SetSelectedColor(GetColorAtPoint(x, y));
-  FManual := true;
-  Invalidate;
 end;
 
 procedure THSColorPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
@@ -297,6 +228,26 @@ begin
   end;
 end;
 
+procedure THSColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  inherited;
+  if ssLeft in Shift then
+  begin
+    mxx := x;
+    myy := y;
+    SetSelectedColor(GetColorAtPoint(x, y));
+    FManual := true;
+    Invalidate;
+  end;
+end;
+
+procedure THSColorPicker.Paint;
+begin
+  Canvas.StretchDraw(ClientRect, FBufferBmp);
+  CorrectCoords(mxx, myy);
+  DrawMarker(mxx, myy);
+end;
+
 function THSColorPicker.PredictColor: TColor;
 var
   H, S, L: Double;
@@ -309,65 +260,11 @@ begin
   Result := HSLToRGB(H, S, L);
 end;
 
-(*
-procedure THSColorPicker.CNKeyDown(
-  var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF} );
-var
-  Shift: TShiftState;
-  FInherited: boolean;
-  delta: Integer;
+procedure THSColorPicker.Resize;
 begin
-  FInherited := false;
-  Shift := KeyDataToShiftState(Message.KeyData);
-  if (ssCtrl in Shift) then
-    delta := 10
-  else
-    delta := 1;
-  case Message.CharCode of
-    VK_LEFT:
-      begin
-        mxx := dx - delta;
-        myy := dy;
-        FSelected := GetColorAtPoint(mxx, myy);
-        FManual := true;
-        Invalidate;
-      end;
-    VK_RIGHT:
-      begin
-        mxx := dx + delta;
-        myy := dy;
-        FSelected := GetColorAtPoint(mxx, myy);
-        FManual := true;
-        Invalidate;
-      end;
-    VK_UP:
-      begin
-        mxx := dx;
-        myy := dy - delta;
-        FSelected := GetColorAtPoint(mxx, myy);
-        FManual := true;
-        Invalidate;
-      end;
-    VK_DOWN:
-      begin
-        mxx := dx;
-        myy := dy + delta;
-        FSelected := GetColorAtPoint(mxx, myy);
-        FManual := true;
-        Invalidate;
-      end;
-    else
-    begin
-      FInherited := true;
-      inherited;
-    end;
-  end;
-
-  if not FInherited then
-    if Assigned(OnKeyDown) then
-      OnKeyDown(Self, Message.CharCode, Shift);
+  SetSelectedColor(FSelected);
+  inherited;
 end;
-*)
 
 procedure THSColorPicker.SetHue(H: integer);
 begin
@@ -415,6 +312,16 @@ begin
   Invalidate;
 end;
 
+procedure THSColorPicker.SetMaxLum(L: Integer);
+begin
+  if L = FMaxLum then
+    exit;
+  FMaxLum := L;
+  CreateGradient;
+  Invalidate;
+  if Assigned(OnChange) then OnChange(Self);
+end;
+
 procedure THSColorPicker.SetMaxSat(S: Integer);
 begin
   if S = FMaxSat then
@@ -425,12 +332,20 @@ begin
   Invalidate;
 end;
 
-procedure THSColorPicker.SetMaxLum(L: Integer);
+procedure THSColorPicker.SetSelectedColor(c: TColor);
+var
+  L: Double;
 begin
-  if L = FMaxLum then
-    exit;
-  FMaxLum := L;
-  CreateGradient;
+  if WebSafe then c := GetWebSafe(c);
+  {$IFDEF USE_COLOR_TO_RGB}
+  ColorToHSL(c, FHue, FSat, L);
+  {$ELSE}
+  RGBtoHSL(c, FHue, FSat, L);
+  {$ENDIF}
+  FSelected := c;
+  FManual := false;
+  mxx := Round(FHue * Width);
+  myy := Round((1.0 - FSat) * Height);
   Invalidate;
   if Assigned(OnChange) then OnChange(Self);
 end;

@@ -6,16 +6,9 @@ unit HSLRingPicker;
 
 interface
 
-{$I mxs.inc}
-
 uses
-  {$IFDEF FPC}
-  LCLIntf, LCLType, LMessages,
-  {$ELSE}
-  Windows, Messages,
-  {$ENDIF}
-  SysUtils, Classes, Controls, Graphics, Forms, Menus, Math,
-  {$IFDEF DELPHI_7_UP}Themes,{$ENDIF}
+  LCLIntf, LCLType, SysUtils, Classes, Controls, Graphics,
+  Forms, Menus, Math, Themes,
   RGBHSLUtils, HRingPicker, SLColorPicker, HTMLColors, mbBasicPicker;
 
 type
@@ -61,20 +54,13 @@ type
     procedure Paint; override;
     procedure Resize; override;
     procedure RingPickerChange(Sender: TObject);
-    procedure SetFocus; override;
     procedure SLPickerChange(Sender: TObject);
-    (*
-    {$IFDEF DELPHI}
-    procedure WMSetFocus(var Message: TWMSetFocus); message WM_SETFOCUS;
-    {$ELSE}
-    procedure WMSetFocus(var Message: TLMSetFocus); message LM_SETFOCUS;
-    {$ENDIF}
-    *)
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     function GetHexColorUnderCursor: string; override;
     function GetSelectedHexColor: string;
+    procedure SetFocus; override;
     property ColorUnderCursor;
     property Hue: integer read GetHue write SetHue;
     property Saturation: integer read GetSat write SetSat;
@@ -119,22 +105,13 @@ constructor THSLRingPicker.Create(AOwner: TComponent);
 begin
   inherited;
 //  ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque{$IFDEF DELPHI_7_UP}, csParentBackground{$ENDIF}];
-  //DoubleBuffered := true;
+
   FRValue := 255;
   FGValue := 0;
   FBValue := 0;
   PBack := TBitmap.Create;
   PBack.PixelFormat := pf32bit;
-  {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
-  ParentBackground := true;
-  {$ENDIF} {$ENDIF}
-  {$IFDEF DELPHI}
-  Width := 245;
-  Height := 245;
-  {$ELSE}
   SetInitialBounds(0, 0, 245, 245);
-  {$ENDIF}
-
   TabStop := true;
   FSelectedColor := clRed;
   FRingCursor := crDefault;
@@ -146,14 +123,7 @@ begin
   InsertControl(FRingPicker);
   with FRingPicker do
   begin
-    {$IFDEF DELPHI}
-    Left := 0;
-    Top := 0;
-    Width := 246;
-    Height := 246;
-    {$ELSE}
     SetInitialBounds(0, 0, 246, 246);
-    {$ENDIF}
     //Radius := 40;
     Align := alClient;
     Visible := true;
@@ -168,14 +138,7 @@ begin
   InsertControl(FSLPicker);
   with FSLPicker do
   begin
-    {$IFDEF DELPHI}
-    Left := 63;
-    Top := 63;
-    Width := 120;
-    Height := 120;
-    {$ELSE}
     SetInitialBounds(63, 63, 120, 120);
-    {$ENDIF}
     MaxSaturation := 240;
     MaxLuminance := 240;
     Saturation := 240;
@@ -189,9 +152,88 @@ end;
 destructor THSLRingPicker.Destroy;
 begin
   PBack.Free;
-  //FRingPicker.Free;
-  //FSLPicker.Free;
   inherited Destroy;
+end;
+
+procedure THSLRingPicker.CreateWnd;
+begin
+  inherited;
+  PaintParentBack(PBack);
+end;
+
+procedure THSLRingPicker.DoChange;
+begin
+  if (FRingPicker = nil) or (FSLPicker = nil) then
+    exit;
+
+  FRValue := GetRValue(FSLPicker.SelectedColor);
+  FGValue := GetGValue(FSLPicker.SelectedColor);
+  FBValue := GetBValue(FSLPicker.SelectedColor);
+  if Assigned(FOnChange) then
+    FOnChange(Self);
+end;
+
+procedure THSLRingPicker.DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+begin
+  if Assigned(OnMouseMove) then
+    OnMouseMove(Self, Shift, x, y);
+  inherited;
+end;
+
+function THSLRingPicker.GetColorUnderCursor: TColor;
+begin
+  Result := FSLPicker.ColorUnderCursor;
+end;
+
+function THSLRingPicker.GetHexColorUnderCursor: string;
+begin
+  Result := FSLPicker.GetHexColorUnderCursor;
+end;
+
+function THSLRingPicker.GetHue: Integer;
+begin
+  Result := FRingPicker.Hue;
+end;
+
+function THSLRingPicker.GetLum: Integer;
+begin
+  Result := FSLPicker.Luminance;
+end;
+
+function THSLRingPicker.GetMaxHue: Integer;
+begin
+  Result := FRingPicker.MaxHue;
+end;
+
+function THSLRingPicker.GetManual:boolean;
+begin
+  Result := FRingPicker.Manual or FSLPicker.Manual;
+end;
+
+function THSLRingPicker.GetMaxSat: Integer;
+begin
+  Result := FSLPicker.MaxSaturation;
+end;
+
+function THSLRingPicker.GetMaxLum: Integer;
+begin
+  Result := FSLPicker.MaxLuminance;
+end;
+
+function THSLRingPicker.GetSat: Integer;
+begin
+  Result := FSLPicker.Saturation;
+end;
+
+function THSLRingPicker.GetSelectedHexColor: string;
+begin
+  Result := ColorToHex(FSelectedColor);
+end;
+
+procedure THSLRingPicker.Paint;
+begin
+  PaintParentBack(PBack);
+  Canvas.Draw(0, 0, PBack);
 end;
 
 procedure THSLRingPicker.Resize;
@@ -225,26 +267,6 @@ begin
   DoChange;
 end;
 
-procedure THSLRingPicker.SLPickerChange(Sender: TObject);
-begin
-  if FSLPicker = nil then
-    exit;
-  FSelectedColor := FSLPicker.SelectedColor;
-  DoChange;
-end;
-
-procedure THSLRingPicker.DoChange;
-begin
-  if (FRingPicker = nil) or (FSLPicker = nil) then
-    exit;
-
-  FRValue := GetRValue(FSLPicker.SelectedColor);
-  FGValue := GetGValue(FSLPicker.SelectedColor);
-  FBValue := GetBValue(FSLPicker.SelectedColor);
-  if Assigned(FOnChange) then
-    FOnChange(Self);
-end;
-
 procedure THSLRingPicker.SelectColor(c: TColor);
 begin
   if (FRingPicker = nil) or (FSLPicker = nil) then
@@ -258,6 +280,24 @@ begin
   FSelectedColor := c;
 end;
 
+procedure THSLRingPicker.SetB(v: integer);
+begin
+  FBValue := v;
+  SelectColor(RGB(FRValue, FGValue, FBValue));
+end;
+
+procedure THSLRingPicker.SetFocus;
+begin
+  inherited;
+  FRingPicker.SetFocus;
+end;
+
+procedure THSLRingPicker.SetG(v: integer);
+begin
+  FGValue := v;
+  SelectColor(RGB(FRValue, FGValue, FBValue));
+end;
+
 procedure THSLRingPicker.SetHue(H: integer);
 begin
   if (FRingPicker = nil) or (FSLPicker = nil) then
@@ -267,155 +307,11 @@ begin
   FSLPicker.Hue := H;
 end;
 
-procedure THSLRingPicker.SetSat(S: integer);
-begin
-  if (FSLPicker = nil) then
-    exit;
-  FSLPicker.Saturation := S;
-end;
-
 procedure THSLRingPicker.SetLum(L: integer);
 begin
   if (FSLPicker = nil) then
     exit;
   FSLPicker.Luminance := L;
-end;
-
-procedure THSLRingPicker.SetR(v: integer);
-begin
-  FRValue := v;
-  SelectColor(RGB(FRValue, FGValue, FBValue));
-end;
-
-procedure THSLRingPicker.SetG(v: integer);
-begin
-  FGValue := v;
-  SelectColor(RGB(FRValue, FGValue, FBValue));
-end;
-
-procedure THSLRingPicker.SetB(v: integer);
-begin
-  FBValue := v;
-  SelectColor(RGB(FRValue, FGValue, FBValue));
-end;
-
-function THSLRingPicker.GetSelectedHexColor: string;
-begin
-  Result := ColorToHex(FSelectedColor);
-end;
-
-procedure THSLRingPicker.SetRingHint(h: string);
-begin
-  FRingHint := h;
-  FRingPicker.HintFormat := h;
-end;
-
-procedure THSLRingPicker.SetSLHint(h: string);
-begin
-  FSLHint := h;
-  FSLPicker.HintFormat := h;
-end;
-
-procedure THSLRingPicker.SetRingMenu(m: TPopupMenu);
-begin
-  FRingMenu := m;
-  FRingPicker.PopupMenu := m;
-end;
-
-procedure THSLRingPicker.SetSLMenu(m: TPopupMenu);
-begin
-  FSLMenu := m;
-  FSLPicker.PopupMenu := m;
-end;
-
-procedure THSLRingPicker.DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
-begin
-  if Assigned(OnMouseMove) then
-    OnMouseMove(Self, Shift, x, y);
-  inherited;
-end;
-
-function THSLRingPicker.GetColorUnderCursor: TColor;
-begin
-  Result := FSLPicker.ColorUnderCursor;
-end;
-
-function THSLRingPicker.GetHexColorUnderCursor: string;
-begin
-  Result := FSLPicker.GetHexColorUnderCursor;
-end;
-
-procedure THSLRingPicker.SetRingCursor(c: TCursor);
-begin
-  FRingCursor := c;
-  FRingPicker.Cursor := c;
-end;
-
-procedure THSLRingPicker.SetSLCursor(c: TCursor);
-begin
-  FSLCursor := c;
-  FSLPicker.Cursor := c;
-end;
-  (*
-procedure THSLRingPicker.WMSetFocus(
-  var Message: {$IFDEF DELPHI}TWMSetFocus{$ELSE}TLMSetFocus{$ENDIF} );
-begin
-  FRingPicker.SetFocus;
-  Message.Result := 1;
-end;
-*)
-
-procedure THSLRingPicker.SetFocus;
-begin
-  inherited;
-  FRingPicker.SetFocus;
-end;
-
-function THSLRingPicker.GetManual:boolean;
-begin
-  Result := FRingPicker.Manual or FSLPicker.Manual;
-end;
-
-procedure THSLRingPicker.Paint;
-begin
-  PaintParentBack(PBack);
-  Canvas.Draw(0, 0, PBack);
-end;
-
-procedure THSLRingPicker.CreateWnd;
-begin
-  inherited;
-  PaintParentBack(PBack);
-end;
-
-function THSLRingPicker.GetHue: Integer;
-begin
-  Result := FRingPicker.Hue;
-end;
-
-function THSLRingPicker.GetSat: Integer;
-begin
-  Result := FSLPicker.Saturation;
-end;
-
-function THSLRingPicker.GetLum: Integer;
-begin
-  Result := FSLPicker.Luminance;
-end;
-
-function THSLRingPicker.GetMaxHue: Integer;
-begin
-  Result := FRingPicker.MaxHue;
-end;
-
-function THSLRingPicker.GetMaxSat: Integer;
-begin
-  Result := FSLPicker.MaxSaturation;
-end;
-
-function THSLRingPicker.GetMaxLum: Integer;
-begin
-  Result := FSLPicker.MaxLuminance;
 end;
 
 procedure THSLRingPicker.SetMaxHue(H: Integer);
@@ -431,6 +327,63 @@ end;
 procedure THSLRingPicker.SetMaxSat(S: Integer);
 begin
   FSLPicker.MaxSaturation := S;
+end;
+
+procedure THSLRingPicker.SetR(v: integer);
+begin
+  FRValue := v;
+  SelectColor(RGB(FRValue, FGValue, FBValue));
+end;
+
+procedure THSLRingPicker.SetRingCursor(c: TCursor);
+begin
+  FRingCursor := c;
+  FRingPicker.Cursor := c;
+end;
+
+procedure THSLRingPicker.SetRingHint(h: string);
+begin
+  FRingHint := h;
+  FRingPicker.HintFormat := h;
+end;
+
+procedure THSLRingPicker.SetRingMenu(m: TPopupMenu);
+begin
+  FRingMenu := m;
+  FRingPicker.PopupMenu := m;
+end;
+
+procedure THSLRingPicker.SetSat(S: integer);
+begin
+  if (FSLPicker = nil) then
+    exit;
+  FSLPicker.Saturation := S;
+end;
+
+procedure THSLRingPicker.SetSLCursor(c: TCursor);
+begin
+  FSLCursor := c;
+  FSLPicker.Cursor := c;
+end;
+
+procedure THSLRingPicker.SetSLHint(h: string);
+begin
+  FSLHint := h;
+  FSLPicker.HintFormat := h;
+end;
+
+procedure THSLRingPicker.SetSLMenu(m: TPopupMenu);
+begin
+  FSLMenu := m;
+  FSLPicker.PopupMenu := m;
+end;
+
+procedure THSLRingPicker.SLPickerChange(Sender: TObject);
+begin
+  if FSLPicker = nil then
+    exit;
+  FSelectedColor := FSLPicker.SelectedColor;
+  DoChange;
 end;
 
 end.

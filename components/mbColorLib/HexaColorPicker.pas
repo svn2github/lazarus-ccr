@@ -6,17 +6,13 @@ unit HexaColorPicker;
 
 interface
 
-{$I mxs.inc}
+//{$I mxs.inc}
 
 uses
-  {$IFDEF FPC}
-  LCLIntf, LCLType, LMessages,
-  {$ELSE}
-  Windows, Messages,
-  {$ENDIF}
-  SysUtils, Classes, Controls, Graphics, StdCtrls, Forms,
-  {$IFDEF DELPHI_7_UP} Themes, {$ENDIF} HTMLColors, RGBHSLUtils, Math,
-  RGBHSVUtils, RGBCMYKUtils, RGBCIEUtils, mbBasicPicker;
+  LCLIntf, LCLType, LMessages, SysUtils, Classes, Controls, Graphics, StdCtrls,
+  Forms, Themes, Math,
+  HTMLColors, RGBHSLUtils, RGBHSVUtils, RGBCMYKUtils, RGBCIEUtils,
+  mbBasicPicker;
 
 const
   CustomCell = -2;
@@ -71,87 +67,72 @@ type
     FMarker: TMarker;
     FNewArrowStyle: boolean;
     FIntensityText: string;
-
-    procedure SetNewArrowStyle(Value: boolean);
-    procedure SetMarker(Value: TMarker);
-    procedure SetSliderVisible(Value: boolean);
-    procedure SetRadius(r: integer);
-    procedure SetSliderWidth(w: integer);
-    procedure SetIntensity(v: integer);
-    procedure ChangeIntensity(increase: boolean);
-    procedure SelectColor(Color: TColor);
-    procedure Initialize;
-    procedure DrawAll;
-    procedure SetSelectedColor(const Value: TColor);
-    procedure DrawCombControls(ACanvas: TCanvas);
-    procedure DrawComb(ACanvas: TCanvas; X, Y, Size: Integer);
-    procedure HandleCustomColors(var Message: {$IFDEF FPC}TLMMouse{$ELSE}TWMMouse{$ENDIF});
     procedure CalculateCombLayout;
+    procedure ChangeIntensity(increase: boolean);
+    procedure DrawAll;
+    procedure DrawComb(ACanvas: TCanvas; X, Y, Size: Integer);
+    procedure DrawCombControls(ACanvas: TCanvas);
     procedure EndSelection;
     procedure EnumerateCombs;
-    function SelectAvailableColor(Color: TColor): boolean;
-    function GetIntensity: integer;
-    function HandleBWArea(const Message: {$IFDEF FPC}TLMMouse{$ELSE}TWMMouse{$ENDIF}): Boolean;
-    function HandleColorComb(const Message: {$IFDEF FPC}TLMMouse{$ELSE}TWMMouse{$ENDIF}): Boolean;
-    function HandleSlider(const Message: {$IFDEF FPC}TLMMouse{$ELSE}TWMMouse{$ENDIF}): Boolean;
-    function PtInComb(Comb: TCombEntry; P: TPoint; Scale: Integer): Boolean;
     function FindBWArea(X, Y: Integer): Integer;
     function FindColorArea(X, Y: Integer): Integer;
+    function GetIntensity: integer;
     function GetNextCombIndex(i: integer): integer;
     function GetPreviousCombIndex(i: integer): integer;
+    procedure HandleCustomColors(var Message: TLMMouse);
+    function HandleBWArea(const Message: TLMMouse): Boolean;
+    function HandleColorComb(const Message: TLMMouse): Boolean;
+    function HandleSlider(const Message: TLMMouse): Boolean;
+    procedure Initialize;
+    function PtInComb(Comb: TCombEntry; P: TPoint; Scale: Integer): Boolean;
+    procedure SetIntensity(v: integer);
+    procedure SetNewArrowStyle(Value: boolean);
+    procedure SetMarker(Value: TMarker);
+    procedure SetRadius(r: integer);
+    procedure SetSelectedColor(const Value: TColor);
+    procedure SetSliderVisible(Value: boolean);
+    procedure SetSliderWidth(w: integer);
+    function SelectAvailableColor(Color: TColor): boolean;
+    procedure SelectColor(Color: TColor);
   protected
-//    procedure CreateWnd; override;
-
     function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint): Boolean; override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure Paint; override;
     procedure Resize; override;
-
-   {$IFDEF DELPHI}
-    procedure CMHintShow(var Message: TMessage); message CM_HINTSHOW;
-    procedure WMLButtonDown(var Message: TWMLButtonDown); message WM_LBUTTONDOWN;
-    procedure WMLButtonUp(var Message: TWMLButtonUp); message WM_LBUTTONUP;
-    procedure WMMouseMove(var Message: TWMMouseMove); message WM_MOUSEMOVE;
-   {$ELSE}
     procedure CMHintShow(var Message: TLMessage); message CM_HINTSHOW;
     procedure WMLButtonDown(var Message: TLMLButtonDown); message LM_LBUTTONDOWN;
     procedure WMLButtonUp(var Message: TLMLButtonUp); message LM_LBUTTONUP;
     procedure WMMouseMove(var Message: TLMMouseMove); message LM_MOUSEMOVE;
-   {$ENDIF}
-
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure SelectCombIndex(i: integer);
-    function GetSelectedCombIndex: integer;
-    function GetColorUnderCursor: TColor;
-    function GetHexColorUnderCursor: string;
-    function GetColorAtPoint(X, Y: integer): TColor;
+    function GetColorAtPoint(X, Y: integer): TColor; override;
+    function GetColorUnderCursor: TColor; override;
+    function GetHexColorUnderCursor: string; override;
     function GetHexColorAtPoint(X, Y: integer): string;
+    function GetSelectedCombIndex: integer;
+    procedure SelectCombIndex(i: integer);
     property ColorUnderCursor: TColor read GetColorUnderCursor;
   published
     property Align;
     property Anchors;
     property HintFormat: string read FHintFormat write FHintFormat;
-    property SelectedColor: TColor read FCurrentColor write SetSelectedColor default clBlack;
     property Intensity: integer read GetIntensity write SetIntensity default 100;
     property IntensityIncrement: integer read FIncrement write FIncrement default 1;
-    property SliderVisible: boolean read FSliderVisible write SetSliderVisible default true;
-    property SliderMarker: TMarker read FMarker write SetMarker default smArrow;
-    property NewArrowStyle: boolean read FNewArrowStyle write SetNewArrowStyle default false;
     property IntensityText: string read FIntensityText write FIntensityText;
+    property NewArrowStyle: boolean read FNewArrowStyle write SetNewArrowStyle default false;
+    property SelectedColor: TColor read FCurrentColor write SetSelectedColor default clBlack;
+    property SliderVisible: boolean read FSliderVisible write SetSliderVisible default true;
+    property SliderWidth: integer read FSliderWidth write SetSliderWidth default 12;
+    property SliderMarker: TMarker read FMarker write SetMarker default smArrow;
     property ShowHint default true;
     property TabStop default true;
     property Visible;
     property Enabled;
     property PopupMenu;
-   {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
-    property ParentBackground default true;
-   {$ENDIF}{$ENDIF}
     property TabOrder;
     property Color;
     property ParentColor;
-    property SliderWidth: integer read FSliderWidth write SetSliderWidth default 12;
     property DragCursor;
     property DragMode;
     property DragKind;
@@ -186,7 +167,7 @@ type
       (Red: 1; Green: 1; Blue: 0),     // Yellow
       (Red: 0; Green: 1; Blue: 0),     // Green
       (Red: 0; Green: 1; Blue: 1),     // Cyan
-      (Red: 0; Green: 0; Blue: 1)       // Blue
+      (Red: 0; Green: 0; Blue: 1)      // Blue
     );
     DefCenter: TFloatPoint = (X: 0; Y: 0);
 
@@ -202,19 +183,10 @@ constructor THexaColorPicker.Create(AOwner: TComponent);
 begin
   inherited;
   //ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
-//  FBufferBmp := TBitmap.Create;
   FRadius := 90;
   FSliderWidth := 12;
   DoubleBuffered := true;
-  {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
-  ParentBackground := true;
-  {$ENDIF}{$ENDIF}
-  {$IFDEF DELPHI}
-  Width := 204;
-  Height := 206;
-  {$ELSE}
   SetInitialBounds(0, 0, 204, 204);
-  {$ENDIF}
   Constraints.MinHeight := 85;
   Constraints.MinWidth := 93;
   TabStop := true;
@@ -242,6 +214,25 @@ begin
   inherited;
 end;
 
+procedure THexaColorPicker.ChangeIntensity(increase: boolean);
+var
+  i: integer;
+begin
+  i := round(FCenterIntensity * 100);
+  if increase then
+  begin
+    Inc(i, FIncrement);
+    if i > 100 then i := 100;
+    SetIntensity(i);
+  end
+  else
+  begin
+    Dec(i, FIncrement);
+    if i < 0 then i := 0;
+    SetIntensity(i);
+  end;
+end;
+
 function THexaColorPicker.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
   MousePos: TPoint): Boolean;
 begin
@@ -251,71 +242,6 @@ begin
     Result := True;
     ChangeIntensity(WheelDelta > 0);
   end;
-end;
-
-procedure THexaColorPicker.KeyDown(var Key: Word; Shift: TShiftState);
-var
-  eraseKey: Boolean;
-begin
-  eraseKey := true;
-  if ssCtrl in Shift then
-    case Key of
-      VK_LEFT: SetSelectedColor(clWhite);
-      VK_RIGHT: SetSelectedColor(clBlack);
-      VK_UP: if FSliderVisible then SetIntensity(100);
-      VK_DOWN: if FSliderVisible then SetIntensity(0);
-    else
-      eraseKey := false;
-    end
-  else
-    case Key of
-      VK_LEFT: SelectCombIndex(GetPreviousCombIndex(GetSelectedCombIndex));
-      VK_RIGHT: SelectCombIndex(GetNextCombIndex(GetSelectedCombIndex));
-      VK_UP: if FSliderVisible then ChangeIntensity(true);
-      VK_DOWN: if FSliderVisible then ChangeIntensity(false);
-     else
-       eraseKey := false;
-    end;
-  if eraseKey then
-    Key := 0;
-  inherited;
-end;
-
-(*
-procedure THexaColorPicker.CreateWnd;
-var
-  rw, rh: integer;
-begin
-  inherited;
-  {
-  SetSelectedColor(clBlack);
-  if (Width >= 93) and (Height >= 85) then
-  begin
-    if FSliderVisible then
-      rw := Round((Width - 10 - FSliderWidth)/2)
-    else
-      rw := Round(Width/2 - 5);
-    rh := Round((24/53)*(Height - 6));
-    SetRadius(Min(rw, rh));
-  end;
-  }
-end;     *)
-
-procedure THexaColorPicker.Initialize;
-var
-  I: Integer;
-begin
-  FSelectedIndex := NoCell;
-  for I := 0 to 5 do
-  begin
-    FCombCorners[I].X := 0.5 * cos(Pi * (90 - I * 60) / 180);
-    FCombCorners[I].Y := 0.5 * sin(Pi * (90 - I * 60) / 180);
-  end;
-  FLevels := 7;
-  FCombSize := Round(FRadius / (FLevels - 1));
-  FCenterColor := DefCenterColor;
-  FIncrement := 1;
-  FCenterIntensity := 1;
 end;
 
 procedure THexaColorPicker.DrawComb(ACanvas: TCanvas; X, Y: Integer; Size: Integer);
@@ -337,40 +263,21 @@ var
   XOffs, YOffs, Count: Integer;
   OffScreen: TBitmap;
   R: TRect;
-  {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
-  MemDC: HDC;
-  OldBMP: HBITMAP;
-  {$ENDIF} {$ENDIF}
 begin
   OffScreen := TBitmap.Create;
   try
- //   OffScreen.PixelFormat := pf32bit;
     OffScreen.Width := Width;
     OffScreen.Height := HeightOfRect(FColorCombRect) + HeightOfRect(FBWCombRect);
+
     //Parent background
-    {$IFDEF FPC}
     if Color = clDefault then
     begin
       Offscreen.Transparent := true;
       Offscreen.TransparentColor := clForm;
       Offscreen.Canvas.Brush.Color := clForm
     end else
-    {$ENDIF}
       OffScreen.Canvas.Brush.Color := Color;
     OffScreen.Canvas.FillRect(OffScreen.Canvas.ClipRect);
-
-    {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
-    if ParentBackground then
-      with ThemeServices do
-        if ThemesEnabled then
-        begin
-          MemDC := CreateCompatibleDC(0);
-          OldBMP := SelectObject(MemDC, OffScreen.Handle);
-          DrawParentBackground(Handle, MemDC, nil, False);
-          if OldBMP <> 0 then SelectObject(MemDC, OldBMP);
-          if MemDC <> 0 then DeleteDC(MemDC);
-       end;
-    {$ENDIF}{$ENDIF}
 
     with OffScreen.Canvas do
     begin
@@ -379,6 +286,7 @@ begin
       // draw color combs from FColorCombs array
       XOffs := FRadius + FColorCombRect.Left;
       YOffs := FRadius + FColorCombRect.Top;
+
       // draw the combs
       for I := 0 to High(FColorCombs) do
       begin
@@ -522,26 +430,165 @@ begin
   EnumerateCombs;
 end;
 
-procedure THexaColorPicker.Paint;
+// Looks for a comb at position (X, Y) in the black&white area.
+// Result is -1 if nothing could be found else the index of the particular comb
+// into FBWCombs.
+function THexaColorPicker.FindBWArea(X, Y: Integer): Integer;
+var
+  I, Scale: Integer;
+  Pt: TPoint;
 begin
-  PaintParentBack(Canvas);
-  if FColorCombs = nil then
-    CalculateCombLayout;
-  DrawCombControls(Canvas);
-  {
-  if FBufferBmp = nil then
-    FBufferBmp := TBitmap.Create;
-  PaintParentBack(FBufferBmp); //(Canvas);
-  if FColorCombs = nil then
-    CalculateCombLayout;
-  DrawCombControls(FBufferBmp.Canvas);
-  Canvas.Draw(0, 0, FBufferBmp);
-  }
+  Result := -1;
+  Pt := Point(X - FBWCombRect.Left, Y - FBWCombRect.Top);
+  for I := 0 to High(FBWCombs) do
+  begin
+    if I in [0, High(FBWCombs)] then
+      Scale := FCombSize
+    else
+      Scale := FCombSize div 2;
+    if PtInComb(FBWCombs[I], Pt, Scale) then
+    begin
+      Result := I;
+      Break;
+    end;
+  end;
+end;
+
+// Looks for a comb at position (X, Y) in the custom color area.
+// Result is -1 if nothing could be found else the index of the particular comb
+// into FColorCombs.
+function THexaColorPicker.FindColorArea(X, Y: Integer): Integer;
+var
+  I: Integer;
+  Pt: TPoint;
+begin
+  Result := -1;
+  Pt := Point(X - (FRadius + FColorCombRect.Left), Y - (FRadius + FColorCombRect.Top));
+  for I := 0 to High(FColorCombs) do
+  begin
+    if PtInComb(FColorCombs[I], Pt, FCombSize div 2) then
+    begin
+      Result := I;
+      Break;
+    end;
+  end;
+end;
+
+function THexaColorPicker.GetIntensity: integer;
+begin
+  Result := round(FCenterIntensity * 100);
+end;
+
+function THexaColorPicker.GetNextCombIndex(i: integer): integer;
+begin
+  if i = 127 then
+    Result := -1
+  else
+  if i = -15 then
+    Result := 1
+  else
+  if i > 0 then
+    Result := i + 1
+  else
+    Result := i - 1;
+end;
+
+function THexaColorPicker.GetPreviousCombIndex(i: integer): integer;
+begin
+  if i = 1 then
+    Result := -15
+  else
+  if i = -1 then
+    Result := 127
+  else
+  if i > 0 then
+    Result := i - 1
+  else
+    Result := i + 1;
+end;
+
+function THexaColorPicker.GetSelectedCombIndex: integer;
+begin
+  if FSelectedCombIndex < 0 then
+    Result := FBWCombs[-FSelectedCombIndex].TabIndex
+  else
+    Result := FColorCombs[FSelectedCombIndex].TabIndex;
+end;
+
+// determines whether the mouse position is within the B&W comb area and acts accordingly
+function THexaColorPicker.HandleBWArea(const Message: TLMMouse): Boolean;
+var
+  Index: Integer;
+  Shift: TShiftState;
+begin
+  Result := PtInRect(FBWCombRect, Point(Message.XPos, Message.YPos)) and (FSelectionMode in [smNone, smBW]);
+  if Result then
+  begin
+    Shift := KeysToShiftState(Message.Keys);
+    if ssLeft in Shift then
+    begin
+      FSelectionMode := smBW;
+      Index := FindBWArea(Message.XPos, Message.YPos);
+      if Index > -1 then
+      begin
+        // remove selection comb if it was previously in color comb
+        if FCustomIndex > 0 then InvalidateRect(Handle, @FColorCombRect, False);
+        if FCustomIndex <> -(Index + 1) then
+        begin
+          FCustomIndex := -(Index + 1);
+          InvalidateRect(Handle, @FBWCombRect, False);
+          InvalidateRect(Handle, @FCustomColorRect, False);
+          EndSelection;
+        end;
+      end
+      else
+        Result := False;
+    end;
+  end;
+end;
+
+// determines whether the mouse position is within the color comb area and acts accordingly
+function THexaColorPicker.HandleColorComb(const Message: TLMMouse): Boolean;
+var
+  Index: Integer;
+  Shift: TShiftState;
+begin
+  Result := PtInRect(FColorCombRect, Point(Message.XPos, Message.YPos)) and (FSelectionMode in [smNone, smColor]);
+  if Result then
+  begin
+    Shift := KeysToShiftState(Message.Keys);
+    if ssLeft in Shift then
+    begin
+      FSelectionMode := smColor;
+      Index := FindColorArea(Message.XPos, Message.YPos);
+      if Index > -1 then
+      begin
+        // remove selection comb if it was previously in b&w comb
+        if FCustomIndex < 0 then InvalidateRect(Handle, @FBWCombRect, False);
+        if FCustomIndex <> (Index + 1) then
+        begin
+          FCustomIndex := Index + 1;
+          InvalidateRect(Handle, @FColorCombRect, False);
+          InvalidateRect(Handle, @FCustomColorRect, False);
+          EndSelection;
+        end;
+      end
+      else
+        Result := False;
+    end;
+  end;
+end;
+
+procedure THexaColorPicker.HandleCustomColors(
+  var Message: {$IFDEF FPC}TLMMouse{$ELSE}TWMMouse{$ENDIF});
+begin
+  if not HandleSlider(Message) then
+    if not HandleBWArea(Message) then
+      HandleColorComb(Message);
 end;
 
 // determines whether the mouse position is within the slider area and acts accordingly
-function THexaColorPicker.HandleSlider(
-  const Message: {$IFDEF FPC}TLMMouse{$ELSE}TWMMouse{$ENDIF}): Boolean;
+function THexaColorPicker.HandleSlider(const Message: TLMMouse): Boolean;
 var
   Shift: TShiftState;
   dY: Integer;
@@ -589,189 +636,62 @@ begin
   end;
 end;
 
+procedure THexaColorPicker.Initialize;
+var
+  I: Integer;
+begin
+  FSelectedIndex := NoCell;
+  for I := 0 to 5 do
+  begin
+    FCombCorners[I].X := 0.5 * cos(Pi * (90 - I * 60) / 180);
+    FCombCorners[I].Y := 0.5 * sin(Pi * (90 - I * 60) / 180);
+  end;
+  FLevels := 7;
+  FCombSize := Round(FRadius / (FLevels - 1));
+  FCenterColor := DefCenterColor;
+  FIncrement := 1;
+  FCenterIntensity := 1;
+end;
+
+procedure THexaColorPicker.KeyDown(var Key: Word; Shift: TShiftState);
+var
+  eraseKey: Boolean;
+begin
+  eraseKey := true;
+  if ssCtrl in Shift then
+    case Key of
+      VK_LEFT: SetSelectedColor(clWhite);
+      VK_RIGHT: SetSelectedColor(clBlack);
+      VK_UP: if FSliderVisible then SetIntensity(100);
+      VK_DOWN: if FSliderVisible then SetIntensity(0);
+    else
+      eraseKey := false;
+    end
+  else
+    case Key of
+      VK_LEFT: SelectCombIndex(GetPreviousCombIndex(GetSelectedCombIndex));
+      VK_RIGHT: SelectCombIndex(GetNextCombIndex(GetSelectedCombIndex));
+      VK_UP: if FSliderVisible then ChangeIntensity(true);
+      VK_DOWN: if FSliderVisible then ChangeIntensity(false);
+     else
+       eraseKey := false;
+    end;
+  if eraseKey then
+    Key := 0;
+  inherited;
+end;
+
+procedure THexaColorPicker.Paint;
+begin
+  PaintParentBack(Canvas);
+  if FColorCombs = nil then
+    CalculateCombLayout;
+  DrawCombControls(Canvas);
+end;
+
 function THexaColorPicker.PtInComb(Comb: TCombEntry; P: TPoint; Scale: Integer): Boolean;
 begin
   Result := (Sqr(Comb.Position.X - P.X) + Sqr(Comb.Position.Y - P.Y)) <= Scale * Scale;
-end;
-
-// Looks for a comb at position (X, Y) in the black&white area.
-// Result is -1 if nothing could be found else the index of the particular comb
-// into FBWCombs.
-function THexaColorPicker.FindBWArea(X, Y: Integer): Integer;
-var
-  I, Scale: Integer;
-  Pt: TPoint;
-begin
-  Result := -1;
-  Pt := Point(X - FBWCombRect.Left, Y - FBWCombRect.Top);
-  for I := 0 to High(FBWCombs) do
-  begin
-    if I in [0, High(FBWCombs)] then
-      Scale := FCombSize
-    else
-      Scale := FCombSize div 2;
-    if PtInComb(FBWCombs[I], Pt, Scale) then
-    begin
-      Result := I;
-      Break;
-    end;
-  end;
-end;
-
-// determines whether the mouse position is within the B&W comb area and acts accordingly
-function THexaColorPicker.HandleBWArea(
-  const Message: {$IFDEF FPC}TLMMouse{$ELSE}TWMMouse{$ENDIF}): Boolean;
-var
-  Index: Integer;
-  Shift: TShiftState;
-begin
-  Result := PtInRect(FBWCombRect, Point(Message.XPos, Message.YPos)) and (FSelectionMode in [smNone, smBW]);
-  if Result then
-  begin
-    Shift := KeysToShiftState(Message.Keys);
-    if ssLeft in Shift then
-    begin
-      FSelectionMode := smBW;
-      Index := FindBWArea(Message.XPos, Message.YPos);
-      if Index > -1 then
-      begin
-        // remove selection comb if it was previously in color comb
-        if FCustomIndex > 0 then InvalidateRect(Handle, @FColorCombRect, False);
-        if FCustomIndex <> -(Index + 1) then
-        begin
-          FCustomIndex := -(Index + 1);
-          InvalidateRect(Handle, @FBWCombRect, False);
-          InvalidateRect(Handle, @FCustomColorRect, False);
-          EndSelection;
-        end;
-      end
-      else
-        Result := False;
-    end;
-  end;
-end;
-
-// Looks for a comb at position (X, Y) in the custom color area.
-// Result is -1 if nothing could be found else the index of the particular comb
-// into FColorCombs.
-function THexaColorPicker.FindColorArea(X, Y: Integer): Integer;
-var
-  I: Integer;
-  Pt: TPoint;
-begin
-  Result := -1;
-  Pt := Point(X - (FRadius + FColorCombRect.Left), Y - (FRadius + FColorCombRect.Top));
-  for I := 0 to High(FColorCombs) do
-  begin
-    if PtInComb(FColorCombs[I], Pt, FCombSize div 2) then
-    begin
-      Result := I;
-      Break;
-    end;
-  end;
-end;
-
-// determines whether the mouse position is within the color comb area and acts accordingly
-function THexaColorPicker.HandleColorComb(
-  const Message: {$IFDEF FPC}TLMMouse{$ELSE}TWMMouse{$ENDIF}): Boolean;
-var
-  Index: Integer;
-  Shift: TShiftState;
-begin
-  Result := PtInRect(FColorCombRect, Point(Message.XPos, Message.YPos)) and (FSelectionMode in [smNone, smColor]);
-  if Result then
-  begin
-    Shift := KeysToShiftState(Message.Keys);
-    if ssLeft in Shift then
-    begin
-      FSelectionMode := smColor;
-      Index := FindColorArea(Message.XPos, Message.YPos);
-      if Index > -1 then
-      begin
-        // remove selection comb if it was previously in b&w comb
-        if FCustomIndex < 0 then InvalidateRect(Handle, @FBWCombRect, False);
-        if FCustomIndex <> (Index + 1) then
-        begin
-          FCustomIndex := Index + 1;
-          InvalidateRect(Handle, @FColorCombRect, False);
-          InvalidateRect(Handle, @FCustomColorRect, False);
-          EndSelection;
-        end;
-      end
-      else
-        Result := False;
-    end;
-  end;
-end;
-
-procedure THexaColorPicker.HandleCustomColors(
-  var Message: {$IFDEF FPC}TLMMouse{$ELSE}TWMMouse{$ENDIF});
-begin
-  if not HandleSlider(Message) then
-    if not HandleBWArea(Message) then
-      HandleColorComb(Message);
-end;
-
-procedure THexaColorPicker.WMMouseMove(
-  var Message: {$IFDEF FPC}TLMMouseMove{$ELSE}TWMMouseMove{$ENDIF} );
-var
-  Shift: TShiftState;
-  Index: Integer;
-  Colors: TCombArray;
-begin
-  inherited;
-  mX := Message.XPos;
-  mY := Message.YPos;
-  //get color under cursor
-  Colors := nil;
-  FUnderCursor := clNone;
-  if PtInRect(FBWCombRect, Point(Message.XPos, Message.YPos)) then
-  begin
-    Index := FindBWArea(Message.XPos, Message.YPos);
-    Colors := FBWCombs;
-    if (Index > -1) and (Colors <> nil) then
-      FUnderCursor := Colors[Index].Color;
-  end
-  else
-  if PtInRect(FColorCombRect, Point(Message.XPos, Message.YPos)) then
-  begin
-    Index := FindColorArea(Message.XPos, Message.YPos);
-    Colors := FColorCombs;
-    if (Index > -1) and (Colors <> nil) then
-      FUnderCursor := Colors[Index].Color;
-   end
-   else
-     FUnderCursor := clNone;
-  // further process message
-  Shift := KeysToShiftState(Message.Keys);
-  if ssLeft in Shift then
-    HandleCustomColors(Message);
-end;
-
-procedure THexaColorPicker.WMLButtonDown(
-  var Message: {$IFDEF FPC}TLMLButtonDown{$ELSE}TWMLButtonDown{$ENDIF} );
-begin
-  inherited;
-  SetFocus; // needed so the key events work
-  if PtInRect(ClientRect, Point(Message.XPos, Message.YPos)) then
-    HandleCustomColors(Message);
-end;
-
-procedure THexaColorPicker.WMLButtonUp(
-  var Message: {$IFDEF FPC}TLMLButtonUp{$ELSE}TWMLButtonUp{$ENDIF} );
-var
-  LastMode: TSelectionMode;
-begin
-  inherited;
-  LastMode := FSelectionMode;
-  FSelectionMode := smNone;
-  if (FSelectedIndex = CustomCell) and (FCustomIndex <> 0) then
-  begin
-    if ((FSelectedIndex = CustomCell) and (LastMode in [smColor, smBW])) or
-       (FSelectedIndex <> NoCell) and (FSelectedIndex <> CustomCell)
-    then
-      EndSelection
-  end;
 end;
 
 procedure THexaColorPicker.DrawAll;
@@ -1309,115 +1229,6 @@ begin
     end;
 end;
 
-function THexaColorPicker.GetSelectedCombIndex: integer;
-begin
-  if FSelectedCombIndex < 0 then
-    Result := FBWCombs[-FSelectedCombIndex].TabIndex
-  else
-    Result := FColorCombs[FSelectedCombIndex].TabIndex;
-end;
-
-function THexaColorPicker.GetNextCombIndex(i: integer): integer;
-begin
-  if i = 127 then
-    Result := -1
-  else
-  if i = -15 then
-    Result := 1
-  else
-  if i > 0 then
-    Result := i + 1
-  else
-    Result := i - 1;
-end;
-
-function THexaColorPicker.GetPreviousCombIndex(i: integer): integer;
-begin
-  if i = 1 then
-    Result := -15
-  else
-  if i = -1 then
-    Result := 127
-  else
-  if i > 0 then
-    Result := i - 1
-  else
-    Result := i + 1;
-end;
-
-function THexaColorPicker.GetIntensity: integer;
-begin
-  Result := round(FCenterIntensity * 100);
-end;
-
-procedure THexaColorPicker.SetIntensity(v: integer);
-var
-  R: TRect;
-begin
-  FCenterIntensity := EnsureRange(v/100, 0, 1);
-  FCenterColor.Red := DefCenterColor.Red * FCenterIntensity;
-  FCenterColor.Green := DefCenterColor.Green * FCenterIntensity;
-  FCenterColor.Blue := DefCenterColor.Blue * FCenterIntensity;
-  R := FSliderRect;
-  Dec(R.Top, 3);
-  Inc(R.Bottom, 3);
-  Inc(R.Left, 10);
-  InvalidateRect(Handle, @R, False);
-  FColorCombs := nil;
-  InvalidateRect(Handle, @FColorCombRect, False);
-  InvalidateRect(Handle, @FCustomColorRect, False);
-  CalculateCombLayout;
-  EndSelection;
-  if Assigned(FOnIntensityChange) then
-    FOnIntensityChange(Self);
-end;
-
-procedure THexaColorPicker.ChangeIntensity(increase: boolean);
-var
-  i: integer;
-begin
-  i := round(FCenterIntensity * 100);
-  if increase then
-  begin
-    Inc(i, FIncrement);
-    if i > 100 then i := 100;
-    SetIntensity(i);
-  end
-  else
-  begin
-    Dec(i, FIncrement);
-    if i < 0 then i := 0;
-    SetIntensity(i);
-  end;
-end;
-
-procedure THexaColorPicker.SetRadius(r: integer);
-begin
-  {$IFDEF FPC}
-  if Parent = nil then
-    exit;
-  {$ENDIF}
-  FRadius := r;
-  DrawAll;
-  CalculateCombLayout;
-//  DrawCombControls;
-  Invalidate;
-end;
-
-procedure THexaColorPicker.SetSliderWidth(w: integer);
-begin
-  if (FSliderWidth <> w) and FSliderVisible then
-  begin
-    FSliderWidth := w;
-    DrawAll;
-    Width := FSliderRect.Right + 2;
-//    Height := FBWCombRect.Bottom + 2;
-    CalculateCombLayout;
-//    DrawCombControls;
-    Invalidate;
-  end;
-end;
-
 procedure THexaColorPicker.Resize;
 var
   rw, rh: integer;
@@ -1433,41 +1244,10 @@ begin
   end;
   inherited;
 end;
-       (*
-procedure THexaColorPicker.CNKeyDown(
-  var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
-var
-  Shift: TShiftState;
-begin
-  Shift := KeyDataToShiftState(Message.KeyData);
-  if ssCtrl in Shift then
-    case Message.CharCode of
-      VK_LEFT: SetSelectedColor(clWhite);
-      VK_RIGHT: SetSelectedColor(clBlack);
-      VK_UP: if FSliderVisible then SetIntensity(100);
-      VK_DOWN: if FSliderVisible then SetIntensity(0);
-    else
-      if Assigned(OnKeyDown) then
-        OnKeyDown(Self, Message.CharCode, Shift);
-    end
-  else
-    case Message.CharCode of
-      VK_LEFT: SelectCombIndex(GetPreviousCombIndex(GetSelectedCombIndex));
-      VK_RIGHT: SelectCombIndex(GetNextCombIndex(GetSelectedCombIndex));
-      VK_UP: if FSliderVisible then ChangeIntensity(true);
-      VK_DOWN: if FSliderVisible then ChangeIntensity(false);
-     else
-       if Assigned(OnKeyDown) then
-         OnKeyDown(Self, Message.CharCode, Shift);
-    end;
-  Message.CharCode := 0;
-end;
-*)
+
 function THexaColorPicker.SelectAvailableColor(Color: TColor): boolean;
 var
   I: integer;
-  //intens: single;
-  //SC: TRGBrec;
   C: COLORREF;
   found: Boolean;
 begin
@@ -1492,38 +1272,39 @@ begin
       begin
         FSelectedIndex := CustomCell;
         FCustomIndex := I + 1;
-        //found := true;
         Result := true;
         Break;
       end;
-    {if not found then // calculate & set intensity if not found
-    begin
-      SC := TRGBrecFromTColor(Color);
-      intens := SC.Red/DefCenterColor.Red;
-      //SetIntensity(Round(intens * 100)); // EStackOverflow
-      //SelectAvailableColor(Color);
-    end;}
 end;
 
 procedure THexaColorPicker.SelectColor(Color: TColor);
 begin
   SelectAvailableColor(Color);
   Invalidate;
-//  DrawCombControls;
   if Assigned(FOnChange) then
     FOnChange(Self);
 end;
 
-procedure THexaColorPicker.SetSliderVisible(Value: boolean);
+procedure THexaColorPicker.SetIntensity(v: integer);
+var
+  R: TRect;
 begin
-  if FSliderVisible <> Value then
-  begin
-    FSliderVisible := Value;
-    DrawAll;
-    CalculateCombLayout;
-  //  DrawCombControls;
-    Invalidate;
-  end;
+  FCenterIntensity := EnsureRange(v/100, 0, 1);
+  FCenterColor.Red := DefCenterColor.Red * FCenterIntensity;
+  FCenterColor.Green := DefCenterColor.Green * FCenterIntensity;
+  FCenterColor.Blue := DefCenterColor.Blue * FCenterIntensity;
+  R := FSliderRect;
+  Dec(R.Top, 3);
+  Inc(R.Bottom, 3);
+  Inc(R.Left, 10);
+  InvalidateRect(Handle, @R, False);
+  FColorCombs := nil;
+  InvalidateRect(Handle, @FColorCombRect, False);
+  InvalidateRect(Handle, @FCustomColorRect, False);
+  CalculateCombLayout;
+  EndSelection;
+  if Assigned(FOnIntensityChange) then
+    FOnIntensityChange(Self);
 end;
 
 procedure THexaColorPicker.SetMarker(Value: TMarker);
@@ -1533,7 +1314,6 @@ begin
     FMarker := Value;
     DrawAll;
     CalculateCombLayout;
-    //DrawCombControls;
     Invalidate;
   end;
 end;
@@ -1545,9 +1325,103 @@ begin
     FNewArrowStyle := Value;
     DrawAll;
     CalculateCombLayout;
-   // DrawCombControls;
     Invalidate;
   end;
+end;
+
+procedure THexaColorPicker.SetRadius(r: integer);
+begin
+  if Parent = nil then
+    exit;
+  FRadius := r;
+  DrawAll;
+  CalculateCombLayout;
+  Invalidate;
+end;
+
+procedure THexaColorPicker.SetSliderVisible(Value: boolean);
+begin
+  if FSliderVisible <> Value then
+  begin
+    FSliderVisible := Value;
+    DrawAll;
+    CalculateCombLayout;
+    Invalidate;
+  end;
+end;
+
+procedure THexaColorPicker.SetSliderWidth(w: integer);
+begin
+  if (FSliderWidth <> w) and FSliderVisible then
+  begin
+    FSliderWidth := w;
+    DrawAll;
+    Width := FSliderRect.Right + 2;
+    CalculateCombLayout;
+    Invalidate;
+  end;
+end;
+
+procedure THexaColorPicker.WMLButtonDown(
+  var Message: {$IFDEF FPC}TLMLButtonDown{$ELSE}TWMLButtonDown{$ENDIF} );
+begin
+  inherited;
+  SetFocus; // needed so the key events work
+  if PtInRect(ClientRect, Point(Message.XPos, Message.YPos)) then
+    HandleCustomColors(Message);
+end;
+
+procedure THexaColorPicker.WMLButtonUp(
+  var Message: {$IFDEF FPC}TLMLButtonUp{$ELSE}TWMLButtonUp{$ENDIF} );
+var
+  LastMode: TSelectionMode;
+begin
+  inherited;
+  LastMode := FSelectionMode;
+  FSelectionMode := smNone;
+  if (FSelectedIndex = CustomCell) and (FCustomIndex <> 0) then
+  begin
+    if ((FSelectedIndex = CustomCell) and (LastMode in [smColor, smBW])) or
+       (FSelectedIndex <> NoCell) and (FSelectedIndex <> CustomCell)
+    then
+      EndSelection
+  end;
+end;
+
+procedure THexaColorPicker.WMMouseMove(
+  var Message: {$IFDEF FPC}TLMMouseMove{$ELSE}TWMMouseMove{$ENDIF} );
+var
+  Shift: TShiftState;
+  Index: Integer;
+  Colors: TCombArray;
+begin
+  inherited;
+  mX := Message.XPos;
+  mY := Message.YPos;
+  //get color under cursor
+  Colors := nil;
+  FUnderCursor := clNone;
+  if PtInRect(FBWCombRect, Point(Message.XPos, Message.YPos)) then
+  begin
+    Index := FindBWArea(Message.XPos, Message.YPos);
+    Colors := FBWCombs;
+    if (Index > -1) and (Colors <> nil) then
+      FUnderCursor := Colors[Index].Color;
+  end
+  else
+  if PtInRect(FColorCombRect, Point(Message.XPos, Message.YPos)) then
+  begin
+    Index := FindColorArea(Message.XPos, Message.YPos);
+    Colors := FColorCombs;
+    if (Index > -1) and (Colors <> nil) then
+      FUnderCursor := Colors[Index].Color;
+   end
+   else
+     FUnderCursor := clNone;
+  // further process message
+  Shift := KeysToShiftState(Message.Keys);
+  if ssLeft in Shift then
+    HandleCustomColors(Message);
 end;
 
 end.

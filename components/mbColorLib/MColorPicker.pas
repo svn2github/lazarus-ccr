@@ -2,31 +2,25 @@ unit MColorPicker;
 
 interface
 
-{$IFDEF FPC}
-  {$MODE DELPHI}
-{$ENDIF}
+{$MODE DELPHI}
 
 uses
-  {$IFDEF FPC}
-  LCLIntf, LCLType, LMessages,
-  {$ELSE}
-  Windows, Messages,
-  {$ENDIF}
+  LCLIntf, LCLType,
   SysUtils, Classes, Controls, Graphics, Forms,
-  RGBCMYKUtils, mbTrackBarPicker, HTMLColors; //, Scanlines;
+  RGBCMYKUtils, mbTrackBarPicker, HTMLColors;
 
 type
   TMColorPicker = class(TmbTrackBarPicker)
   private
     FCyan, FMagenta, FYellow, FBlack: integer;
     function ArrowPosFromMagenta(m: integer): integer;
-    function MagentaFromArrowPos(p: integer): integer;
     function GetSelectedColor: TColor;
-    procedure SetSelectedColor(c: TColor);
+    function MagentaFromArrowPos(p: integer): integer;
+    procedure SetBlack(k: integer);
     procedure SetCyan(c: integer);
     procedure SetMagenta(m: integer);
+    procedure SetSelectedColor(c: TColor);
     procedure SetYellow(y: integer);
-    procedure SetBlack(k: integer);
   protected
     procedure Execute(tbaAction: integer); override;
     function GetArrowPos: integer; override;
@@ -42,6 +36,7 @@ type
     property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
     property Layout default lyVertical;
   end;
+
 
 implementation
 
@@ -68,126 +63,23 @@ begin
   FChange := true;
 end;
 
-
-function TMColorPicker.GetGradientColor(AValue: Integer): TColor;
-begin
-  Result := CMYKtoColor(FCyan, AValue, FYellow, FBlack);
-end;
-
-procedure TMColorPicker.SetMagenta(m: integer);
-begin
-  Clamp(m, 0, 255);
-  if FMagenta <> m then
-  begin
-    FMagenta := m;
-    FArrowPos := ArrowPosFromMagenta(m);
-    FManual := false;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
-end;
-
-procedure TMColorPicker.SetCyan(c: integer);
-begin
-  Clamp(c, 0, 255);
-  if FCyan <> c then
-  begin
-    FCyan := c;
-    FManual := false;
-    CreateGradient;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
-end;
-
-procedure TMColorPicker.SetYellow(y: integer);
-begin
-  Clamp(y, 0, 255);
-  if FYellow <> y then
-  begin
-    FYellow := y;
-    FManual := false;
-    CreateGradient;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
-end;
-
-procedure TMColorPicker.SetBlack(k: integer);
-begin
-  Clamp(k, 0, 255);
-  if FBlack <> k then
-  begin
-    FBlack := k;
-    FManual := false;
-    CreateGradient;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
-end;
-
 function TMColorPicker.ArrowPosFromMagenta(m: integer): integer;
 var
   a: integer;
 begin
   if Layout = lyHorizontal then
   begin
-    a := Round(((Width - 12)/255)*m);
+    a := Round((Width - 12) / 255 * m);
     if a > Width - FLimit then a := Width - FLimit;
   end
   else
   begin
     m := 255 - m;
-    a := Round(((Height - 12)/255)*m);
+    a := Round((Height - 12) / 255 * m);
     if a > Height - FLimit then a := Height - FLimit;
   end;
   if a < 0 then a := 0;
   Result := a;
-end;
-
-function TMColorPicker.MagentaFromArrowPos(p: integer): integer;
-var
-  m: integer;
-begin
-  if Layout = lyHorizontal then
-    m := Round(p/((Width - 12)/255))
-  else
-    m := Round(255 - p/((Height - 12)/255));
-  Clamp(m, 0, 255);
-  Result := m;
-end;
-
-function TMColorPicker.GetSelectedColor: TColor;
-begin
-  Result := CMYKtoColor(FCyan, FMagenta, FYellow, FBlack);
-  if WebSafe then
-    Result := GetWebSafe(Result);
-end;
-
-function TMColorPicker.GetSelectedValue: integer;
-begin
-  Result := FMagenta;
-end;
-
-procedure TMColorPicker.SetSelectedColor(c: TColor);
-var
-  cy, m, y, k: integer;
-begin
-  if WebSafe then c := GetWebSafe(c);
-  ColorToCMYK(c, cy, m, y, k);
-  FChange := false;
-  SetCyan(cy);
-  SetYellow(y);
-  SetBlack(k);
-  SetMagenta(m);
-  FManual := false;
-  FChange := true;
-  if Assigned(OnChange) then OnChange(Self);
-end;
-
-function TMColorPicker.GetArrowPos: integer;
-begin
-  Result := ArrowPosFromMagenta(FMagenta);
 end;
 
 procedure TMColorPicker.Execute(tbaAction: integer);
@@ -223,6 +115,108 @@ begin
       SetMagenta(0);
     else
       inherited;
+  end;
+end;
+
+function TMColorPicker.GetArrowPos: integer;
+begin
+  Result := ArrowPosFromMagenta(FMagenta);
+end;
+
+function TMColorPicker.GetGradientColor(AValue: Integer): TColor;
+begin
+  Result := CMYKtoColor(FCyan, AValue, FYellow, FBlack);
+end;
+
+function TMColorPicker.GetSelectedColor: TColor;
+begin
+  Result := CMYKtoColor(FCyan, FMagenta, FYellow, FBlack);
+  if WebSafe then
+    Result := GetWebSafe(Result);
+end;
+
+function TMColorPicker.GetSelectedValue: integer;
+begin
+  Result := FMagenta;
+end;
+
+function TMColorPicker.MagentaFromArrowPos(p: integer): integer;
+var
+  m: integer;
+begin
+  if Layout = lyHorizontal then
+    m := Round(p * 255 / (Width - 12))
+  else
+    m := Round(255 - p * 255 / (Height - 12));
+  Clamp(m, 0, 255);
+  Result := m;
+end;
+
+procedure TMColorPicker.SetBlack(k: integer);
+begin
+  Clamp(k, 0, 255);
+  if FBlack <> k then
+  begin
+    FBlack := k;
+    FManual := false;
+    CreateGradient;
+    Invalidate;
+    if FChange and Assigned(OnChange) then OnChange(Self);
+  end;
+end;
+
+procedure TMColorPicker.SetCyan(c: integer);
+begin
+  Clamp(c, 0, 255);
+  if FCyan <> c then
+  begin
+    FCyan := c;
+    FManual := false;
+    CreateGradient;
+    Invalidate;
+    if FChange and Assigned(OnChange) then OnChange(Self);
+  end;
+end;
+
+procedure TMColorPicker.SetMagenta(m: integer);
+begin
+  Clamp(m, 0, 255);
+  if FMagenta <> m then
+  begin
+    FMagenta := m;
+    FArrowPos := ArrowPosFromMagenta(m);
+    FManual := false;
+    Invalidate;
+    if FChange and Assigned(OnChange) then OnChange(Self);
+  end;
+end;
+
+procedure TMColorPicker.SetSelectedColor(c: TColor);
+var
+  cy, m, y, k: integer;
+begin
+  if WebSafe then c := GetWebSafe(c);
+  ColorToCMYK(c, cy, m, y, k);
+  FChange := false;
+  SetCyan(cy);
+  SetYellow(y);
+  SetBlack(k);
+  SetMagenta(m);
+  FManual := false;
+  FChange := true;
+  if Assigned(OnChange) then OnChange(Self);
+end;
+
+procedure TMColorPicker.SetYellow(y: integer);
+begin
+  Clamp(y, 0, 255);
+  if FYellow <> y then
+  begin
+    FYellow := y;
+    FManual := false;
+    CreateGradient;
+    Invalidate;
+    if FChange and Assigned(OnChange) then OnChange(Self);
   end;
 end;
 

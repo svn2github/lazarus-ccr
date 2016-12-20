@@ -7,13 +7,8 @@ interface
 {$ENDIF}
 
 uses
-  {$IFDEF FPC}
-  LCLIntf, LCLType, LMessages,
-  {$ELSE}
-  Windows, Messages,
-  {$ENDIF}
-  SysUtils, Classes, Controls, Graphics, Forms,
-  RGBHSLUtils, mbTrackBarPicker, HTMLColors;
+  LCLIntf, LCLType, SysUtils, Classes, Controls, Graphics, Forms,
+  HTMLColors, RGBHSLUtils, mbTrackBarPicker;
 
 type
   TLColorPicker = class(TmbTrackBarPicker)
@@ -21,17 +16,17 @@ type
     FHue, FSat, FLuminance: Double;
     FMaxHue, FMaxSat, FMaxLum: Integer;
     function ArrowPosFromLum(L: integer): integer;
-    function LumFromArrowPos(p: integer): integer;
     function GetHue: Integer;
-    function GetSat: Integer;
     function GetLuminance: Integer;
+    function GetSat: Integer;
+    function GetSelectedColor: TColor;
+    function LumFromArrowPos(p: integer): integer;
     procedure SetHue(H: integer);
-    procedure SetSat(S: integer);
     procedure SetLuminance(L: integer);
     procedure SetMaxHue(H: Integer);
-    procedure SetMaxSat(S: Integer);
     procedure SetMaxLum(L: Integer);
-    function GetSelectedColor: TColor;
+    procedure SetMaxSat(S: Integer);
+    procedure SetSat(S: integer);
     procedure SetSelectedColor(c: TColor);
   protected
     procedure Execute(tbaAction: integer); override;
@@ -74,6 +69,68 @@ begin
   FChange := true;
 end;
 
+function TLColorPicker.ArrowPosFromLum(L: integer): integer;
+var
+  a: integer;
+begin
+  if Layout = lyHorizontal then
+  begin
+    a := Round((Width - 12) * L / FMaxLum);
+    if a > Width - FLimit then a := Width - FLimit;
+  end
+  else
+  begin
+    a := Round((Height - 12) * (FMaxLum - L) / FMaxLum);
+    if a > Height - FLimit then a := Height - FLimit;
+  end;
+  if a < 0 then a := 0;
+  Result := a;
+end;
+
+procedure TLColorPicker.Execute(tbaAction: integer);
+begin
+  case tbaAction of
+    TBA_Resize:
+      SetLuminance(GetLuminance());
+    TBA_MouseMove:
+      SetLuminance(LumFromArrowPos(FArrowPos));
+    TBA_MouseDown:
+      SetLuminance(LumFromArrowPos(FArrowPos));
+    TBA_MouseUp:
+      SetLuminance(LumFromArrowPos(FArrowPos));
+    TBA_WheelUp:
+      SetLuminance(GetLuminance() + Increment);
+    TBA_WheelDown:
+      SetLuminance(GetLuminance() - Increment);
+    TBA_VKRight:
+      SetLuminance(GetLuminance() + Increment);
+    TBA_VKCtrlRight:
+      SetLuminance(FMaxLum);
+    TBA_VKLeft:
+      SetLuminance(GetLuminance() - Increment);
+    TBA_VKCtrlLeft:
+      SetLuminance(0);
+    TBA_VKUp:
+      SetLuminance(GetLuminance() + Increment);
+    TBA_VKCtrlUp:
+      SetLuminance(FMaxLum);
+    TBA_VKDown:
+      SetLuminance(GetLuminance() - Increment);
+    TBA_VKCtrlDown:
+      SetLuminance(0);
+    else
+      inherited;
+  end;
+end;
+
+function TLColorPicker.GetArrowPos: integer;
+begin
+  if FMaxLum = 0 then
+    Result := inherited GetArrowPos
+  else
+    Result := ArrowPosFromLum(GetLuminance());
+end;
+
 function TLColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
   Result := HSLToRGB(FHue, FSat, AValue/FMaxLum);
@@ -92,6 +149,30 @@ end;
 function TLColorPicker.GetSat: Integer;
 begin
   Result := Round(FSat * FMaxSat);
+end;
+
+function TLColorPicker.GetSelectedColor: TColor;
+begin
+  Result := HSLToRGB(FHue, FSat, FLuminance);
+  if WebSafe then
+    Result := GetWebSafe(Result);
+end;
+
+function TLColorPicker.GetSelectedValue: integer;
+begin
+  Result := GetLuminance();
+end;
+
+function TLColorPicker.LumFromArrowPos(p: integer): integer;
+var
+  L: integer;
+begin
+  if Layout = lyHorizontal then
+    L := Round(p / (Width - 12) * FMaxLum)
+  else
+    L := Round(MaxLum - p /(Height - 12) * FMaxLum);
+  Clamp(L, 0, FMaxLum);
+  Result := L;
 end;
 
 procedure TLColorPicker.SetHue(H: integer);
@@ -164,48 +245,6 @@ begin
   end;
 end;
 
-function TLColorPicker.ArrowPosFromLum(L: integer): integer;
-var
-  a: integer;
-begin
-  if Layout = lyHorizontal then
-  begin
-    a := Round((Width - 12) * L / FMaxLum);
-    if a > Width - FLimit then a := Width - FLimit;
-  end
-  else
-  begin
-    a := Round((Height - 12) * (FMaxLum - L) / FMaxLum);
-    if a > Height - FLimit then a := Height - FLimit;
-  end;
-  if a < 0 then a := 0;
-  Result := a;
-end;
-
-function TLColorPicker.LumFromArrowPos(p: integer): integer;
-var
-  L: integer;
-begin
-  if Layout = lyHorizontal then
-    L := Round(p / (Width - 12) * FMaxLum)
-  else
-    L := Round(MaxLum - p /(Height - 12) * FMaxLum);
-  Clamp(L, 0, FMaxLum);
-  Result := L;
-end;
-
-function TLColorPicker.GetSelectedColor: TColor;
-begin
-  Result := HSLToRGB(FHue, FSat, FLuminance);
-  if WebSafe then
-    Result := GetWebSafe(Result);
-end;
-
-function TLColorPicker.GetSelectedValue: integer;
-begin
-  Result := GetLuminance();
-end;
-
 procedure TLColorPicker.SetSelectedColor(c: TColor);
 begin
   if WebSafe then c := GetWebSafe(c);
@@ -215,50 +254,6 @@ begin
   CreateGradient;
   Invalidate;
   if FChange and Assigned(OnChange) then OnChange(Self);
-end;
-
-function TLColorPicker.GetArrowPos: integer;
-begin
-  if FMaxLum = 0 then
-    Result := inherited GetArrowPos
-  else
-    Result := ArrowPosFromLum(GetLuminance());
-end;
-
-procedure TLColorPicker.Execute(tbaAction: integer);
-begin
-  case tbaAction of
-    TBA_Resize:
-      SetLuminance(GetLuminance());
-    TBA_MouseMove:
-      SetLuminance(LumFromArrowPos(FArrowPos));
-    TBA_MouseDown:
-      SetLuminance(LumFromArrowPos(FArrowPos));
-    TBA_MouseUp:
-      SetLuminance(LumFromArrowPos(FArrowPos));
-    TBA_WheelUp:
-      SetLuminance(GetLuminance() + Increment);
-    TBA_WheelDown:
-      SetLuminance(GetLuminance() - Increment);
-    TBA_VKRight:
-      SetLuminance(GetLuminance() + Increment);
-    TBA_VKCtrlRight:
-      SetLuminance(FMaxLum);
-    TBA_VKLeft:
-      SetLuminance(GetLuminance() - Increment);
-    TBA_VKCtrlLeft:
-      SetLuminance(0);
-    TBA_VKUp:
-      SetLuminance(GetLuminance() + Increment);
-    TBA_VKCtrlUp:
-      SetLuminance(FMaxLum);
-    TBA_VKDown:
-      SetLuminance(GetLuminance() - Increment);
-    TBA_VKCtrlDown:
-      SetLuminance(0);
-    else
-      inherited;
-  end;
 end;
 
 end.

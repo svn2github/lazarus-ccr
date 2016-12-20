@@ -1,17 +1,11 @@
 unit mbOfficeColorDialog;
 
-{$IFDEF FPC}
-  {$MODE DELPHI}
-{$ENDIF}
+{$MODE DELPHI}
 
 interface
 
 uses
-  {$IFDEF FPC}
   LCLIntf, LCLType,
-  {$ELSE}
-  Windows,
-  {$ENDIF}
   SysUtils, Classes, Graphics, Forms, OfficeMoreColorsDialog;
 
 type

@@ -7,13 +7,8 @@ unit HColorPicker;
 interface
 
 uses
-  {$IFDEF FPC}
-  LCLIntf, LCLType, LMessages,
-  {$ELSE}
-  Windows, Messages,
-  {$ENDIF}
-  SysUtils, Classes, Controls, Graphics, Forms,
-  RGBHSVUtils, mbTrackBarPicker, HTMLColors;
+  LCLIntf, LCLType, LMessages, SysUtils, Classes, Controls, Graphics, Forms,
+  RGBHSVUtils, HTMLColors, mbTrackBarPicker;
 
 type
   THColorPicker = class(TmbTrackBarPicker)
@@ -24,14 +19,14 @@ type
     function HueFromArrowPos(p: integer): integer;
     function GetHue: Integer;
     function GetSat: Integer;
-    function GetVal: Integer;
     function GetSelectedColor: TColor;
-    procedure SetSelectedColor(c: TColor);
+    function GetVal: Integer;
     procedure SetHue(h: integer);
     procedure SetMaxHue(h: Integer);
     procedure SetMaxSat(s: Integer);
     procedure SetMaxVal(v: Integer);
     procedure SetSat(s: integer);
+    procedure SetSelectedColor(c: TColor);
     procedure SetVal(v: integer);
   protected
     procedure Execute(tbaAction: integer); override;
@@ -75,6 +70,68 @@ begin
   FChange := true;
 end;
 
+function THColorPicker.ArrowPosFromHue(h: integer): integer;
+var
+  a: integer;
+begin
+  if Layout = lyHorizontal then
+  begin
+    a := Round((Width - 12) * h / FMaxHue);
+    if a > Width - FLimit then a := Width - FLimit;
+  end
+  else
+  begin
+    a := Round((Height - 12) * h / FMaxHue);
+    if a > Height - FLimit then a := Height - FLimit;
+  end;
+  if a < 0 then a := 0;
+  Result := a;
+end;
+
+procedure THColorPicker.Execute(tbaAction: integer);
+begin
+  case tbaAction of
+    TBA_Resize:
+      SetHue(GetHue);
+    TBA_MouseMove:
+      Hue := HueFromArrowPos(FArrowPos);
+    TBA_MouseDown:
+      Hue := HueFromArrowPos(FArrowPos);
+    TBA_MouseUp:
+      Hue := HueFromArrowPos(FArrowPos);
+    TBA_WheelUp:
+      SetHue(GetHue() + Increment);
+    TBA_WheelDown:
+      SetHue(GetHue() - Increment);
+    TBA_VKLeft:
+      SetHue(GetHue() - Increment);
+    TBA_VKCtrlLeft:
+      SetHue(0);
+    TBA_VKRight:
+      SetHue(GetHue() + Increment);
+    TBA_VKCtrlRight:
+      SetHue(FMaxHue);
+    TBA_VKUp:
+      SetHue(GetHue() - Increment);
+    TBA_VKCtrlUp:
+      SetHue(0);
+    TBA_VKDown:
+      SetHue(GetHue() + Increment);
+    TBA_VKCtrlDown:
+      SetHue(FMaxHue);
+    else
+      inherited;
+  end;
+end;
+
+function THColorPicker.GetArrowPos: integer;
+begin
+  if FMaxHue = 0 then
+    Result := inherited GetArrowPos
+  else
+    Result := ArrowPosFromHue(GetHue());
+end;
+
 function THColorPicker.GetGradientColor(AValue: Integer): TColor;
 var
   h: Double;
@@ -94,9 +151,33 @@ begin
   Result := round(FSat * FMaxSat);
 end;
 
+function THColorPicker.GetSelectedColor: TColor;
+begin
+  Result := HSVtoColor(FHue, FSat, FVal);
+  if WebSafe then
+    Result := GetWebSafe(Result);
+end;
+
+function THColorPicker.GetSelectedValue: integer;
+begin
+  Result := GetHue();
+end;
+
 function THColorPicker.GetVal: Integer;
 begin
   Result := round(FVal * FMaxVal);
+end;
+
+function THColorPicker.HueFromArrowPos(p: integer): integer;
+var
+  r: integer;
+begin
+  if Layout = lyHorizontal then
+    r := Round(p / (Width - 12) * FMaxHue)
+  else
+    r := Round(p / (Height - 12) * MaxHue);
+  Clamp(r, 0, FMaxHue);
+  Result := r;
 end;
 
 procedure THColorPicker.SetHue(h: integer);
@@ -156,61 +237,6 @@ begin
   end;
 end;
 
-procedure THColorPicker.SetVal(v: integer);
-begin
-  Clamp(v, 0, FMaxVal);
-  if GetVal() <> v then
-  begin
-    FVal := v / FMaxVal;
-    FManual := false;
-    CreateGradient;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
-end;
-
-function THColorPicker.ArrowPosFromHue(h: integer): integer;
-var
-  a: integer;
-begin
-  if Layout = lyHorizontal then
-  begin
-    a := Round((Width - 12) * h / FMaxHue);
-    if a > Width - FLimit then a := Width - FLimit;
-  end
-  else
-  begin
-    a := Round((Height - 12) * h / FMaxHue);
-    if a > Height - FLimit then a := Height - FLimit;
-  end;
-  if a < 0 then a := 0;
-  Result := a;
-end;
-
-function THColorPicker.HueFromArrowPos(p: integer): integer;
-var
-  r: integer;
-begin
-  if Layout = lyHorizontal then
-    r := Round(p / (Width - 12) * FMaxHue)
-  else
-    r := Round(p / (Height - 12) * MaxHue);
-  Clamp(r, 0, FMaxHue);
-  Result := r;
-end;
-
-function THColorPicker.GetSelectedColor: TColor;
-begin
-  Result := HSVtoColor(FHue, FSat, FVal);
-  if WebSafe then
-    Result := GetWebSafe(Result);
-end;
-
-function THColorPicker.GetSelectedValue: integer;
-begin
-  Result := GetHue();
-end;
-
 procedure THColorPicker.SetSelectedColor(c: TColor);
 var
   h, s, v: integer;
@@ -226,48 +252,17 @@ begin
   if Assigned(OnChange) then OnChange(Self);
 end;
 
-function THColorPicker.GetArrowPos: integer;
+procedure THColorPicker.SetVal(v: integer);
 begin
-  if FMaxHue = 0 then
-    Result := inherited GetArrowPos
-  else
-    Result := ArrowPosFromHue(GetHue());
-end;
-
-procedure THColorPicker.Execute(tbaAction: integer);
-begin
-  case tbaAction of
-    TBA_Resize:
-      SetHue(GetHue);
-    TBA_MouseMove:
-      Hue := HueFromArrowPos(FArrowPos);
-    TBA_MouseDown:
-      Hue := HueFromArrowPos(FArrowPos);
-    TBA_MouseUp:
-      Hue := HueFromArrowPos(FArrowPos);
-    TBA_WheelUp:
-      SetHue(GetHue() + Increment);
-    TBA_WheelDown:
-      SetHue(GetHue() - Increment);
-    TBA_VKLeft:
-      SetHue(GetHue() - Increment);
-    TBA_VKCtrlLeft:
-      SetHue(0);
-    TBA_VKRight:
-      SetHue(GetHue() + Increment);
-    TBA_VKCtrlRight:
-      SetHue(FMaxHue);
-    TBA_VKUp:
-      SetHue(GetHue() - Increment);
-    TBA_VKCtrlUp:
-      SetHue(0);
-    TBA_VKDown:
-      SetHue(GetHue() + Increment);
-    TBA_VKCtrlDown:
-      SetHue(FMaxHue);
-    else
-      inherited;
- end;
+  Clamp(v, 0, FMaxVal);
+  if GetVal() <> v then
+  begin
+    FVal := v / FMaxVal;
+    FManual := false;
+    CreateGradient;
+    Invalidate;
+    if FChange and Assigned(OnChange) then OnChange(Self);
+  end;
 end;
 
 end.

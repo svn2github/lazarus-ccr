@@ -1,21 +1,13 @@
 unit mbTrackBarPicker;
 
-{$IFDEF FPC}
-  {$MODE DELPHI}
-{$ENDIF}
+{$MODE DELPHI}
 
 interface
 
-{$I mxs.inc}
-
 uses
-  {$IFDEF FPC}
-  LCLIntf, LCLType, LMessages,
-  {$ELSE}
-  Windows, Messages,
-  {$ENDIF}
-  SysUtils, Classes, Controls, Graphics, Forms,
-  {$IFDEF DELPHI_7_UP} Themes, {$ENDIF} ExtCtrls, PalUtils, mbBasicPicker;
+  LCLIntf, LCLType, LMessages, SysUtils, Classes, Controls, Graphics, Forms,
+  Themes, ExtCtrls,
+  PalUtils, mbBasicPicker;
 
 const
   TBA_Resize = 0;
@@ -44,52 +36,47 @@ type
 
   TmbTrackBarPicker = class(TmbBasicPicker)
   private
-    mx, my: integer;
-    FOnChange: TNotifyEvent;
-    FIncrement: integer;
-    FHintFormat: string;
-    FPlacement: TSliderPlacement;
-    FNewArrowStyle: boolean;
     Aw, Ah: integer;
-    FDoChange: boolean;
-    FSelIndicator: TSelIndicator;
-    FWebSafe: boolean;
+    mx, my: integer;
     FBevelInner: TBevelCut;
     FBevelOuter: TBevelCut;
     FBevelWidth: TBevelWidth;
     FBorderStyle: TBorderStyle;
+    FDoChange: boolean;
+    FHintFormat: string;
+    FIncrement: integer;
+    FNewArrowStyle: boolean;
+    FPlacement: TSliderPlacement;
+    FSelIndicator: TSelIndicator;
+    FWebSafe: boolean;
+    FOnChange: TNotifyEvent;
+    procedure CalcPickRect;
+    procedure DrawMarker(p: integer);
     procedure SetBevelInner(Value: TBevelCut);
     procedure SetBevelOuter(Value: TBevelCut);
     procedure SetBevelWidth(Value: TBevelWidth);
-    procedure SetBorderStyle(Value: TBorderStyle);
-    procedure SetWebSafe(s: boolean);
-    function XToArrowPos(p: integer): integer;
-    function YToArrowPos(p: integer): integer;
     procedure SetLayout(Value: TTrackBarLayout);
     procedure SetNewArrowStyle(s: boolean);
     procedure SetPlacement(Value: TSliderPlacement);
-    procedure DrawMarker(p: integer);
     procedure SetSelIndicator(Value: TSelIndicator);
-    procedure CalcPickRect;
+    procedure SetWebSafe(s: boolean);
+    function XToArrowPos(p: integer): integer;
+    function YToArrowPos(p: integer): integer;
   protected
     FArrowPos: integer;
-    FManual: boolean;
+    FBack: TBitmap;
     FChange: boolean;
-    FPickRect: TRect;
+    FManual: boolean;
     FLayout: TTrackBarLayout;
     FLimit: integer;
-    FBack: TBitmap;
+    FPickRect: TRect;
     procedure CreateGradient; override;
+    procedure CreateWnd; override;
     function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
       MousePos: TPoint): Boolean; override;
-    procedure Paint; override;
-//    procedure PaintParentBack;
     procedure DrawFrames; dynamic;
-    procedure Resize; override;
-    procedure CreateWnd; override;
     procedure Execute(tbaAction: integer); dynamic;
     function GetArrowPos: integer; dynamic;
-//    function GetColorUnderCursor: TColor; override;
     function GetHintPos(X, Y: Integer): TPoint; override;
     function GetHintStr(X, Y: Integer): String; override;
     function GetSelectedValue: integer; virtual; abstract;
@@ -97,21 +84,12 @@ type
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseLeave; override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-//    function MouseOnPicker(X, Y: Integer): Boolean;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    {
-    procedure WheelUp(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
-    procedure WheelDown(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
-    }
-    {$IFDEF DELPHI}
-//    procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
-    procedure CMGotFocus(var Message: TCMGotFocus); message CM_ENTER;
-    procedure CMLostFocus(var Message: TCMLostFocus); message CM_EXIT;
-    {$ELSE}
-//    procedure CNKeyDown(var Message: TLMKeyDown); message CN_KEYDOWN;
+    procedure Paint; override;
+    procedure Resize; override;
+    procedure SetBorderStyle(Value: TBorderStyle); override;
     procedure CMGotFocus(var Message: TLMessage); message CM_ENTER;
     procedure CMLostFocus(var Message: TLMessage); message CM_EXIT;
-    {$ENDIF}
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -134,9 +112,6 @@ type
     property ShowHint;
     property Color;
     property ParentColor;
-    {$IFDEF DELPHI_7_UP}{$IFDEF DELPHI}
-    property ParentBackground default true;
-    {$ENDIF}{$ENDIF}
     property ParentShowHint default true;
     property Anchors;
     property Align;
@@ -172,9 +147,7 @@ type
 implementation
 
 uses
-{$IFDEF FPC}
   IntfGraphics, fpimage,
-{$ENDIF}
   ScanLines, HTMLColors;
 
 const
@@ -201,19 +174,18 @@ constructor TmbTrackBarPicker.Create(AOwner: TComponent);
 begin
   inherited;
   //ControlStyle := ControlStyle - [csAcceptsControls]; // + [csOpaque];  // !!!!!!!!
-  DoubleBuffered := true;
-  {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
-  ParentBackground := true;
-  {$ENDIF} {$ENDIF}
+  //DoubleBuffered := true;
+
   Width := 267;
   Height := 22;
   TabStop := true;
   ParentShowHint := true;
 
+  FGradientWidth := 256;
+  FGradientHeight := 1;
+
   FBack := TBitmap.Create;
 
-  FGradientWidth := 256;
-  FGradientHeight := 12;
   FBufferBmp := TBitmap.Create;
   FBufferBmp.PixelFormat := pf32bit;
 
@@ -222,8 +194,6 @@ begin
   FIncrement := 1;
   FArrowPos := GetArrowPos;
   FHintFormat := '';
-//  OnMouseWheelUp := WheelUp;
-//  OnMouseWheelDown := WheelDown;
   FManual := false;
   FChange := true;
   FLayout := lyHorizontal;
@@ -236,98 +206,16 @@ begin
   FSelIndicator := siArrows;
   FLimit := 7;
   FWebSafe := false;
-  FBevelInner:= bvNone;
-  FBevelOuter:= bvNone;
-  FBevelWidth:= 1;
-  FBorderStyle:= bsNone;
+  FBevelInner := bvNone;
+  FBevelOuter := bvNone;
+  FBevelWidth := 1;
+  FBorderStyle := bsNone;
 end;
 
 destructor TmbTrackbarPicker.Destroy;
 begin
   FBack.Free;
   inherited;
-end;
-
-{ AWidth and AHeight are seen for horizontal arrangement of the bar }
-procedure TmbTrackbarPicker.CreateGradient;
-var
-  i,j: integer;
-  row: pRGBQuadArray;
-  c: TColor;
-  q: TRGBQuad;
-  {$IFDEF FPC}
-  intfimg: TLazIntfImage;
-  imgHandle, imgMaskHandle: HBitmap;
-  {$ENDIF}
-begin
-  if FBufferBmp = nil then
-    exit;
-
-  {$IFDEF FPC}
-  intfimg := TLazIntfImage.Create(0, 0);
-  try
-  {$ENDIF}
-
-    if Layout = lyHorizontal then
-    begin
-      FBufferBmp.Width := FGradientWidth;
-      FBufferBmp.Height := FGradientHeight;
-      {$IFDEF FPC}
-      intfImg.LoadFromBitmap(FBufferBmp.Handle, FBufferBmp.MaskHandle);
-      {$ENDIF}
-      for i := 0 to FBufferBmp.Width-1 do
-      begin
-        c := GetGradientColor(i);
-        if WebSafe then c := GetWebSafe(c);
-        q := RGBToRGBQuad(c);
-        for j := 0 to FBufferBmp.Height-1 do
-        begin
-          {$IFDEF FPC}
-          row := intfImg.GetDataLineStart(j);
-          {$ELSE}
-          row := FGradientBmp.ScanLine[j];
-          {$ENDIF}
-          row[i] := q;
-        end;
-      end;
-    end
-    else
-    begin
-      FBufferBmp.Width := FGradientHeight;
-      FBufferBmp.Height := FGradientWidth;
-      {$IFDEF FPC}
-      intfImg.LoadFromBitmap(FBufferBmp.Handle, FBufferBmp.MaskHandle);
-      {$ENDIF}
-      for i := 0 to FBufferBmp.Height-1 do
-      begin
-        {$IFDEF FPC}
-        row := intfImg.GetDataLineStart(i);
-        {$ELSE}
-        row := FGradientBmp.ScanLine[i];
-        {$ENDIF}
-        c := GetGradientColor(FBufferBmp.Height - 1 - i);
-        if WebSafe then c := GetWebSafe(c);
-        q := RGBtoRGBQuad(c);
-        for j := 0 to FBufferBmp.Width-1 do
-          row[j] := q;
-      end;
-    end;
-
-  {$IFDEF FPC}
-    intfimg.CreateBitmaps(imgHandle, imgMaskHandle, false);
-    FBufferBmp.Handle := imgHandle;
-    FBufferBmp.MaskHandle := imgMaskHandle;
-  finally
-    intfImg.Free;
-  end;
-  {$ENDIF}
-end;
-
-procedure TmbTrackBarPicker.CreateWnd;
-begin
-  inherited;
-  CalcPickRect;
-  CreateGradient;
 end;
 
 procedure TmbTrackBarPicker.CalcPickRect;
@@ -395,19 +283,98 @@ begin
   end;
 end;
 
-procedure TmbTrackBarPicker.Paint;
+procedure TmbTrackBarPicker.CMGotFocus(
+  var Message: {$IFDEF FPC}TLMessage{$ELSE}TCMGotFocus{$ENDIF});
 begin
-  CalcPickRect;
-  PaintParentBack(Canvas);
-  FArrowPos := GetArrowPos;
-  Execute(TBA_Paint);
-  if FBorderStyle <> bsNone then
-    DrawFrames;
-  DrawMarker(FArrowPos);
-  if FDoChange then
+  inherited;
+  Invalidate;
+end;
+
+procedure TmbTrackBarPicker.CMLostFocus(
+  var Message: {$IFDEF FPC}TLMessage{$ELSE}TCMLostFocus{$ENDIF});
+begin
+  inherited;
+  Invalidate;
+end;
+
+{ AWidth and AHeight are seen for horizontal arrangement of the bar }
+procedure TmbTrackbarPicker.CreateGradient;
+var
+  i,j: integer;
+  row: pRGBQuadArray;
+  c: TColor;
+  q: TRGBQuad;
+  intfimg: TLazIntfImage;
+  imgHandle, imgMaskHandle: HBitmap;
+begin
+  if FBufferBmp = nil then
+    exit;
+
+  intfimg := TLazIntfImage.Create(0, 0);
+  try
+    if Layout = lyHorizontal then
+    begin
+      FBufferBmp.Width := FGradientWidth;
+      FBufferBmp.Height := FGradientHeight;
+      intfImg.LoadFromBitmap(FBufferBmp.Handle, FBufferBmp.MaskHandle);
+
+      for i := 0 to FBufferBmp.Width-1 do
+      begin
+        c := GetGradientColor(i);
+        if WebSafe then c := GetWebSafe(c);
+        q := RGBToRGBQuad(c);
+        for j := 0 to FBufferBmp.Height-1 do
+        begin
+          row := intfImg.GetDataLineStart(j);
+          row[i] := q;
+        end;
+      end;
+    end
+    else
+    begin
+      FBufferBmp.Width := FGradientHeight;
+      FBufferBmp.Height := FGradientWidth;
+      intfImg.LoadFromBitmap(FBufferBmp.Handle, FBufferBmp.MaskHandle);
+      for i := 0 to FBufferBmp.Height-1 do
+      begin
+        row := intfImg.GetDataLineStart(i);
+        c := GetGradientColor(FBufferBmp.Height - 1 - i);
+        if WebSafe then c := GetWebSafe(c);
+        q := RGBtoRGBQuad(c);
+        for j := 0 to FBufferBmp.Width-1 do
+          row[j] := q;
+      end;
+    end;
+
+    intfimg.CreateBitmaps(imgHandle, imgMaskHandle, false);
+    FBufferBmp.Handle := imgHandle;
+    FBufferBmp.MaskHandle := imgMaskHandle;
+  finally
+    intfImg.Free;
+  end;
+end;
+
+procedure TmbTrackbarPicker.CreateWnd;
+begin
+  inherited;
+  CreateGradient;
+end;
+
+function TmbTrackbarPicker.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
+  MousePos: TPoint): Boolean;
+begin
+  Result := inherited DoMouseWheel(Shift, WheelDelta, MousePos);
+  if not Result then
   begin
+    Result := True;
+    FChange := false;
+    if WheelDelta > 0 then
+      Execute(TBA_WheelUp)
+    else
+      Execute(TBA_WheelDown);
+    FManual := true;
+    FChange := true;
     if Assigned(FOnChange) then FOnChange(Self);
-    FDoChange := false;
   end;
 end;
 
@@ -585,32 +552,37 @@ begin
   end;  // case FSelIndicator
 end;
 
-procedure TmbTrackBarPicker.Resize;
+procedure TmbTrackBarPicker.Execute(tbaAction: integer);
 begin
-  inherited;
-  FChange := false;
-  Execute(TBA_Resize);
-  FChange := true;
+ case tbaAction of
+   TBA_Paint   : Canvas.StretchDraw(FPickRect, FBufferBmp);
+   TBA_RedoBMP : CreateGradient;
+   // Rest handled in descendants
+ end;
 end;
 
-function TmbTrackBarPicker.XToArrowPos(p: integer): integer;
-var
-  pos: integer;
+function TmbTrackBarPicker.GetArrowPos: integer;
 begin
-  pos := p - Aw;
-  if pos < 0 then pos := 0;
-  if pos > Width - Aw - 1 then pos := Width - Aw - 1;
-  Result := pos;
+  Result := 0;
+  //handled in descendants
 end;
 
-function TmbTrackBarPicker.YToArrowPos(p: integer): integer;
-var
-  pos: integer;
+function TmbTrackBarPicker.GetHintPos(X, Y: Integer): TPoint;
 begin
-  pos := p - Aw;
-  if pos < 0 then pos := 0;
-  if pos > Height - Aw - 1 then pos := Height - Aw - 1;
-  Result := pos;
+  case FLayout of
+    lyHorizontal:
+      Result := Point(X - 8, Height + 2);
+    lyVertical:
+      Result := Point(Width + 2, Y - 8);
+  end;
+end;
+
+function TmbTrackBarPicker.GetHintStr(X, Y: Integer): string;
+begin
+  Result := inherited GetHintStr(X, Y);
+  if Result = '' then
+    Result := ReplaceFlags(FHintFormat, ['%value', '%h', '%s', '%l', '%v', '%c',
+      '%m', '%y', '%k', '%r', '%g', '%b'], GetSelectedValue);
 end;
 
 procedure TmbTrackBarPicker.KeyDown(var Key: Word; Shift: TShiftState);
@@ -685,6 +657,23 @@ begin
   inherited;
 end;
 
+procedure TmbTrackBarPicker.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  if Button <> mbLeft then Exit;
+  mx := x;
+  my := y;
+  SetFocus;
+  if FLayout = lyHorizontal then
+    FArrowPos := XToArrowPos(x)
+  else
+    FArrowPos := YToArrowPos(y);
+  Execute(TBA_MouseDown);
+  FManual := true;
+  FDoChange := true;
+  Invalidate;
+  inherited;
+end;
+
 procedure TmbTrackBarPicker.MouseLeave;
 begin
   inherited;
@@ -716,28 +705,6 @@ begin
   end;
   inherited;
 end;
-                                      (*
-function TmbTrackBarPicker.MouseOnPicker(X, Y: Integer): Boolean;
-begin
-  Result := PtInRect(FPickRect, Point(X, Y));
-end;                                    *)
-
-procedure TmbTrackBarPicker.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-begin
-  if Button <> mbLeft then Exit;
-  mx := x;
-  my := y;
-  SetFocus;
-  if FLayout = lyHorizontal then
-    FArrowPos := XToArrowPos(x)
-  else
-    FArrowPos := YToArrowPos(y);
-  Execute(TBA_MouseDown);
-  FManual := true;
-  FDoChange := true;
-  Invalidate;
-  inherited;
-end;
 
 procedure TmbTrackBarPicker.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
@@ -758,209 +725,66 @@ begin
   Invalidate;
   inherited;
 end;
-             (*
-procedure TmbTrackBarPicker.CNKeyDown(
-  var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
-var
-  Shift: TShiftState;
-  FInherited: boolean;
-begin
-  FInherited := false;
-  Shift := KeyDataToShiftState(Message.KeyData);
-  case Message.CharCode of
-    VK_UP:
-      begin
-        if FLayout = lyHorizontal then
-        begin
-          inherited;
-          Exit;
-        end;
-        FChange := false;
-        if not (ssCtrl in Shift) then
-          Execute(TBA_VKUp)
-        else
-          Execute(TBA_VKCtrlUp);
-        FManual := true;
-        FChange := true;
-        if Assigned(FOnChange) then FOnChange(Self);
-      end;
-    VK_LEFT:
-      begin
-        if FLayout = lyVertical then
-        begin
-          inherited;
-          Exit;
-        end;
-        FChange := false;
-        if not (ssCtrl in Shift) then
-          Execute(TBA_VKLeft)
-        else
-          Execute(TBA_VKCtrlLeft);
-        FManual := true;
-        FChange := true;
-        if Assigned(FOnChange) then FOnChange(Self);
-      end;
-    VK_RIGHT:
-      begin
-        if FLayout = lyVertical then
-        begin
-          inherited;
-          Exit;
-        end;
-        FChange := false;
-        if not (ssCtrl in Shift) then
-          Execute(TBA_VKRight)
-        else
-          Execute(TBA_VKCtrlRight);
-        FManual := true;
-        FChange := true;
-        if Assigned(FOnChange) then FOnChange(Self);
-      end;
-    VK_DOWN:
-      begin
-        if FLayout = lyHorizontal then
-        begin
-          inherited;
-          Exit;
-        end;
-        FChange := false;
-        if not (ssCtrl in Shift) then
-          Execute(TBA_VKDown)
-        else
-          Execute(TBA_VKCtrlDown);
-        FManual := true;
-        FChange := true;
-        if Assigned(FOnChange) then FOnChange(Self);
-      end
-    else
-      begin
-        FInherited := true;
-        inherited;
-      end;
-  end;  // case
-  if not FInherited and Assigned(OnKeyDown) then
-    OnKeyDown(Self, Message.CharCode, Shift);
-end;
-*)
-function TmbTrackBarPicker.GetHintPos(X, Y: Integer): TPoint;
-begin
-  case FLayout of
-    lyHorizontal:
-      Result := Point(X - 8, Height + 2);
-    lyVertical:
-      Result := Point(Width + 2, Y - 8);
-  end;
-end;
 
-function TmbTrackBarPicker.GetHintStr(X, Y: Integer): string;
+procedure TmbTrackBarPicker.Paint;
 begin
-  Result := inherited GetHintStr(X, Y);
-  if Result = '' then
-    Result := ReplaceFlags(FHintFormat, ['%value', '%h', '%s', '%l', '%v', '%c',
-      '%m', '%y', '%k', '%r', '%g', '%b'], GetSelectedValue);
-end;
-            (*
-procedure TmbTrackBarPicker.CMHintShow(var Message: TCMHintShow);
-var
-  cp: TPoint;
-begin
-  with TCMHintShow(Message) do
-    if not ShowHint then
-      Message.Result := 1      // 1 means: hide hint
-    else
-    begin
-      cp := HintInfo^.CursorPos;
-      HintInfo^.ReshowTimeout := 0;  // was: 1
-      HintInfo^.HideTimeout := Application.HintHidePause;  // was: 5000
-      HintInfo
-      case FLayout of
-        lyHorizontal:
-          HintInfo^.HintPos := ClientToScreen(Point(cp.X - 8, Height + 2));
-        lyVertical:
-          HintInfo^.HintPos := ClientToScreen(Point(Width +2, cp.Y - 8));
-      end;
-      HintInfo^.HintStr := GetHintStr;
-      HintInfo^.CursorRect := Rect(cp.X, cp.Y, cp.X+1, cp.Y+1);
-      Result := 0;    // 0 means: show hint
-    end;
-  inherited;
-end;          *)
-
-{
-
-      with HintInfo^ do
-      begin
-        if HintControl <> self then
-        begin
-          Message.Result := -1;
-          exit;
-        end;
-        Result := 0;
-        ReshowTimeout := 1;
-        HideTimeout := 0; //5000;
-        if FLayout = lyHorizontal then
-          HintPos := ClientToScreen(Point(CursorPos.X - 8, Height + 2))
-        else
-          HintPos := ClientToScreen(Point(Width + 2, CursorPos.Y - 8));
-        HintStr := GetHintStr;
-      end;
-  inherited;
-end;
- }
-procedure TmbTrackBarPicker.CMGotFocus(
-  var Message: {$IFDEF FPC}TLMessage{$ELSE}TCMGotFocus{$ENDIF});
-begin
-  inherited;
-  Invalidate;
-end;
-
-procedure TmbTrackBarPicker.CMLostFocus(
-  var Message: {$IFDEF FPC}TLMessage{$ELSE}TCMLostFocus{$ENDIF});
-begin
-  inherited;
-  Invalidate;
-end;
-
-function TmbTrackbarPicker.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
-  MousePos: TPoint): Boolean;
-begin
-  Result := inherited DoMouseWheel(Shift, WheelDelta, MousePos);
-  if not Result then
+  CalcPickRect;
+  PaintParentBack(Canvas);
+  FArrowPos := GetArrowPos;
+  Execute(TBA_Paint);
+  if FBorderStyle <> bsNone then
+    DrawFrames;
+  DrawMarker(FArrowPos);
+  if FDoChange then
   begin
-    Result := True;
-    FChange := false;
-    if WheelDelta > 0 then
-      Execute(TBA_WheelUp)
-    else
-      Execute(TBA_WheelDown);
-    FManual := true;
-    FChange := true;
     if Assigned(FOnChange) then FOnChange(Self);
+    FDoChange := false;
   end;
 end;
 
-                      (*
-procedure TmbTrackBarPicker.WheelUp(Sender: TObject; Shift: TShiftState;
-  MousePos: TPoint; var Handled: Boolean);
+procedure TmbTrackBarPicker.Resize;
 begin
-  Handled := true;
+  inherited;
   FChange := false;
-  Execute(TBA_WheelUp);
-  FManual := true;
+  Execute(TBA_Resize);
   FChange := true;
-  if Assigned(FOnChange) then FOnChange(Self);
 end;
 
-procedure TmbTrackBarPicker.WheelDown(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+procedure TmbTrackBarPicker.SetBevelInner(Value: TBevelCut);
 begin
-  Handled := true;
-  FChange := false;
-  Execute(TBA_WheelDown);
-  FManual := true;
-  FChange := true;
-  if Assigned(FOnChange) then FOnChange(Self);
-end;                    *)
+  if FBevelInner <> Value then
+  begin
+    FBevelInner := Value;
+    Invalidate;
+  end;
+end;
 
+procedure TmbTrackBarPicker.SetBevelOuter(Value: TBevelCut);
+begin
+  if FBevelOuter <> Value then
+  begin
+    FBevelOuter := Value;
+    Invalidate;
+  end;
+end;
+
+procedure TmbTrackBarPicker.SetBorderStyle(Value: TBorderStyle);
+begin
+  if FBorderStyle <> Value then
+  begin
+    FBorderStyle := Value;
+    Invalidate;
+  end;
+end;
+
+procedure TmbTrackBarPicker.SetBevelWidth(Value: TBevelWidth);
+begin
+  if FBevelWidth <> Value then
+  begin
+    FBevelWidth := Value;
+    Invalidate;
+  end;
+end;
 
 { IMPORTANT: If pickers are created at designtime the layout must be set before
   defining the picker width and height because changing the layout will flip the
@@ -977,20 +801,20 @@ begin
   end;
 end;
 
-procedure TmbTrackBarPicker.SetPlacement(Value: TSliderPlacement);
-begin
-  if FPlacement <> Value then
-  begin
-    FPlacement := Value;
-    Invalidate;
-  end;
-end;
-
 procedure TmbTrackBarPicker.SetNewArrowStyle(s: boolean);
 begin
   if FNewArrowStyle <> s then
   begin
     FNewArrowStyle := s;
+    Invalidate;
+  end;
+end;
+
+procedure TmbTrackBarPicker.SetPlacement(Value: TSliderPlacement);
+begin
+  if FPlacement <> Value then
+  begin
+    FPlacement := Value;
     Invalidate;
   end;
 end;
@@ -1014,70 +838,24 @@ begin
   end;
 end;
 
-procedure TmbTrackBarPicker.Execute(tbaAction: integer);
+function TmbTrackBarPicker.XToArrowPos(p: integer): integer;
+var
+  pos: integer;
 begin
- case tbaAction of
-   TBA_Paint   : Canvas.StretchDraw(FPickRect, FBufferBmp);
-   TBA_RedoBMP : CreateGradient;
-   // Rest handled in descendants
- end;
+  pos := p - Aw;
+  if pos < 0 then pos := 0;
+  if pos > Width - Aw - 1 then pos := Width - Aw - 1;
+  Result := pos;
 end;
 
-function TmbTrackBarPicker.GetArrowPos: integer;
+function TmbTrackBarPicker.YToArrowPos(p: integer): integer;
+var
+  pos: integer;
 begin
-  Result := 0;
-  //handled in descendants
+  pos := p - Aw;
+  if pos < 0 then pos := 0;
+  if pos > Height - Aw - 1 then pos := Height - Aw - 1;
+  Result := pos;
 end;
 
-                           (*
-function TmbTrackBarPicker.GetHintText: string;
-begin
-  Result := ReplaceFlags(FHintFormat, ['%value', '%h', '%s', '%l', '%v', '%c',
-  '%m', '%y', '%k', '%r', '%g', '%b'], GetSelectedValue);
-end;                         *)
-
-procedure TmbTrackBarPicker.SetBevelInner(Value: TBevelCut);
-begin
-  if FBevelInner <> Value then
-  begin
-    FBevelInner := Value;
-    Invalidate;
-  end;
-end;
-
-procedure TmbTrackBarPicker.SetBevelOuter(Value: TBevelCut);
-begin
-  if FBevelOuter <> Value then
-  begin
-    FBevelOuter := Value;
-    Invalidate;
-  end;
-end;
-
-procedure TmbTrackBarPicker.SetBevelWidth(Value: TBevelWidth);
-begin
-  if FBevelWidth <> Value then
-  begin
-    FBevelWidth := Value;
-    Invalidate;
-  end;
-end;
-
-procedure TmbTrackBarPicker.SetBorderStyle(Value: TBorderStyle);
-begin
-  if FBorderStyle <> Value then
-  begin
-    FBorderStyle := Value;
-    Invalidate;
-  end;
-end;
-
-(*
-function TmbTrackbarPicker.ShowHintWindow(APoint: TPoint; AText: String): Boolean;
-begin
-  Result := inherited;
-  if Result then
-    FHintShown := true;
-end;
-  *)
 end.

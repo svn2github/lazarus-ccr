@@ -1,18 +1,11 @@
 unit RAxisColorPicker;
 
-{$IFDEF FPC}
-  {$MODE DELPHI}
-{$ENDIF}
+{$MODE DELPHI}
 
 interface
 
 uses
-  {$IFDEF FPC}
-  LCLIntf, LCLType, LMessages,
-  {$ELSE}
-  Windows, Messages,
-  {$ENDIF}
-  SysUtils, Classes, Controls, Graphics, Math, Forms,
+  LCLIntf, LCLType, SysUtils, Classes, Controls, Graphics, Math, Forms,
   HTMLColors, mbColorPickerControl;
 
 type
@@ -28,10 +21,6 @@ type
     procedure CreateWnd; override;
     procedure DrawMarker(x, y: integer);
     function GetGradientColor2D(x, y: Integer): TColor; override;
-    (*
-    procedure CNKeyDown(var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF});
-      message CN_KEYDOWN;
-      *)
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
@@ -50,6 +39,7 @@ type
     property OnChange;
   end;
 
+
 implementation
 
 uses
@@ -62,12 +52,7 @@ begin
   inherited;
   FGradientWidth := 256;
   FGradientHeight := 256;
-  {$IFDEF DELPHI}
-  Width := 256;
-  Height := 256;
-  {$ELSE}
   SetInitialBounds(0, 0, 256, 256);
-  {$ENDIF}
   HintFormat := 'G: %g B: %b'#13'Hex: %hex';
   FG := 0;
   FB := 0;
@@ -81,22 +66,16 @@ begin
   MarkerStyle := msCircle;
 end;
 
-procedure TRAxisColorPicker.CreateWnd;
-begin
-  inherited;
-  CreateGradient;
-end;
-
-{ x is BLUE, y is GREEN }
-function TRAxisColorPicker.GetGradientColor2D(x, y: Integer): TColor;
-begin
-  Result := RGB(FR, FBufferBmp.Height - 1 - y, x);
-end;
-
 procedure TRAxisColorPicker.CorrectCoords(var x, y: integer);
 begin
   Clamp(x, 0, Width - 1);
   Clamp(y, 0, Height - 1);
+end;
+
+procedure TRAxisColorPicker.CreateWnd;
+begin
+  inherited;
+  CreateGradient;
 end;
 
 procedure TRAxisColorPicker.DrawMarker(x, y: integer);
@@ -116,18 +95,10 @@ begin
   InternalDrawMarker(x, y, c);
 end;
 
-procedure TRAxisColorPicker.SetSelectedColor(c: TColor);
+{ x is BLUE, y is GREEN }
+function TRAxisColorPicker.GetGradientColor2D(x, y: Integer): TColor;
 begin
-  if WebSafe then c := GetWebSafe(c);
-  FR := GetRValue(c);
-  FG := GetGValue(c);
-  FB := GetBValue(c);
-  FSelected := c;
-  FManual := false;
-  myy := Round((255-FG)*(Height/255));
-  mxx := Round(FB*(Width/255));
-  Invalidate;
-  if Assigned(FOnChange) then FOnChange(self);
+  Result := RGB(FR, FBufferBmp.Height - 1 - y, x);
 end;
 
 procedure TRAxisColorPicker.Paint;
@@ -229,23 +200,6 @@ begin
   SetFocus;
 end;
 
-procedure TRAxisColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-begin
-  inherited;
-  if ssLeft in Shift then
-  begin
-    {$IFDEF DELPHI}
-    ClipCursor(nil);
-    {$ENDIF}
-    mxx := x;
-    myy := y;
-    FSelected := GetColorAtPoint(x, y);
-    FManual := true;
-    Invalidate;
-    if Assigned(FOnChange) then FOnChange(self);
-  end;
-end;
-
 procedure TRAxisColorPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
@@ -260,108 +214,25 @@ begin
   end;
 end;
 
-(*
-procedure TRAxisColorPicker.CNKeyDown(
-  var Message: {$IFDEF FPC}TLMKeyDown{$ELSE}TWMKeyDown{$ENDIF} );
-var
-  Shift: TShiftState;
-  FInherited: boolean;
+procedure TRAxisColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
 begin
-  FInherited := false;
-  Shift := KeyDataToShiftState(Message.KeyData);
-  if not (ssCtrl in Shift) then
-    case Message.CharCode of
-    VK_LEFT:
-    begin
-     mxx := dx - 1;
-     myy := dy;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
-   VK_RIGHT:
-    begin
-     mxx := dx + 1;
-     myy := dy;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
-   VK_UP:
-    begin
-     mxx := dx;
-     myy := dy - 1;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
-   VK_DOWN:
-    begin
-     mxx := dx;
-     myy := dy + 1;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
-  else
-   begin
-    FInherited := true;
-    inherited;
-   end;
-  end
- else
-  case Message.CharCode of
-   VK_LEFT:
-    begin
-     mxx := dx - 10;
-     myy := dy;
-     Refresh;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
-   VK_RIGHT:
-    begin
-     mxx := dx + 10;
-     myy := dy;
-     Refresh;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
-   VK_UP:
-    begin
-     mxx := dx;
-     myy := dy - 10;
-     Refresh;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
-   VK_DOWN:
-    begin
-     mxx := dx;
-     myy := dy + 10;
-     Refresh;
-     FSelected := GetColorAtPoint(mxx, myy);
-     FManual := true;
-     Invalidate;
-    end;
-  else
-   begin
-    FInherited := true;
-    inherited;
-   end;
+  inherited;
+  if ssLeft in Shift then
+  begin
+    mxx := x;
+    myy := y;
+    FSelected := GetColorAtPoint(x, y);
+    FManual := true;
+    Invalidate;
+    if Assigned(FOnChange) then FOnChange(self);
   end;
- if not FInherited then
-  if Assigned(OnKeyDown) then
-   OnKeyDown(Self, Message.CharCode, Shift);
 end;
-*)
-procedure TRAxisColorPicker.SetRValue(r: integer);
+
+procedure TRAxisColorPicker.SetBValue(b: integer);
 begin
-  Clamp(r, 0, 255);
-  FR := r;
+  Clamp(b, 0, 255);
+  FB := b;
   SetSelectedColor(RGB(FR, FG, FB));
 end;
 
@@ -372,11 +243,25 @@ begin
   SetSelectedColor(RGB(FR, FG, FB));
 end;
 
-procedure TRAxisColorPicker.SetBValue(b: integer);
+procedure TRAxisColorPicker.SetRValue(r: integer);
 begin
-  Clamp(b, 0, 255);
-  FB := b;
+  Clamp(r, 0, 255);
+  FR := r;
   SetSelectedColor(RGB(FR, FG, FB));
+end;
+
+procedure TRAxisColorPicker.SetSelectedColor(c: TColor);
+begin
+  if WebSafe then c := GetWebSafe(c);
+  FR := GetRValue(c);
+  FG := GetGValue(c);
+  FB := GetBValue(c);
+  FSelected := c;
+  FManual := false;
+  myy := Round((255-FG)*(Height/255));
+  mxx := Round(FB*(Width/255));
+  Invalidate;
+  if Assigned(FOnChange) then FOnChange(self);
 end;
 
 end.
