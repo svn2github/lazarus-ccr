@@ -20,6 +20,7 @@ type
     procedure CorrectCoords(var x, y: integer);
     procedure CreateWnd; override;
     procedure DrawMarker(x, y: integer);
+    function GetColorAtPoint(x, y: Integer): TColor; override;
     function GetGradientColor2D(x, y: Integer): TColor; override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -95,25 +96,19 @@ begin
   InternalDrawMarker(x, y, c);
 end;
 
+function TRAxisColorPicker.GetColorAtPoint(x, y: Integer): TColor;
+var
+  g, b: Integer;
+begin
+  b := round(x / (Width - 1) * 255);
+  g := 255 - round(y / (Height - 1) * 255);
+  Result := RGBtoColor(FR, g, b);
+end;
+
 { x is BLUE, y is GREEN }
 function TRAxisColorPicker.GetGradientColor2D(x, y: Integer): TColor;
 begin
   Result := RGB(FR, FBufferBmp.Height - 1 - y, x);
-end;
-
-procedure TRAxisColorPicker.Paint;
-begin
-  Canvas.StretchDraw(ClientRect, FBufferBmp);
-  CorrectCoords(mxx, myy);
-  DrawMarker(mxx, myy);
-end;
-
-procedure TRAxisColorPicker.Resize;
-begin
-  FManual := false;
-  myy := Round((255 - FG) * Height / 255);
-  mxx := Round(FB * Width / 255);
-  inherited;
 end;
 
 procedure TRAxisColorPicker.KeyDown(var Key: Word; Shift: TShiftState);
@@ -229,25 +224,40 @@ begin
   end;
 end;
 
+procedure TRAxisColorPicker.Paint;
+begin
+  Canvas.StretchDraw(ClientRect, FBufferBmp);
+  CorrectCoords(mxx, myy);
+  DrawMarker(mxx, myy);
+end;
+
+procedure TRAxisColorPicker.Resize;
+begin
+  FManual := false;
+  myy := Round((255 - FG) * Height / 255);
+  mxx := Round(FB * Width / 255);
+  inherited;
+end;
+
 procedure TRAxisColorPicker.SetBValue(b: integer);
 begin
   Clamp(b, 0, 255);
   FB := b;
-  SetSelectedColor(RGB(FR, FG, FB));
+  SetSelectedColor(RGBtoColor(FR, FG, FB));
 end;
 
 procedure TRAxisColorPicker.SetGValue(g: integer);
 begin
   Clamp(g, 0, 255);
   FG := g;
-  SetSelectedColor(RGB(FR, FG, FB));
+  SetSelectedColor(RGBtoColor(FR, FG, FB));
 end;
 
 procedure TRAxisColorPicker.SetRValue(r: integer);
 begin
   Clamp(r, 0, 255);
   FR := r;
-  SetSelectedColor(RGB(FR, FG, FB));
+  SetSelectedColor(RGBtoColor(FR, FG, FB));
 end;
 
 procedure TRAxisColorPicker.SetSelectedColor(c: TColor);
@@ -258,8 +268,8 @@ begin
   FB := GetBValue(c);
   FSelected := c;
   FManual := false;
-  myy := Round((255-FG)*(Height/255));
-  mxx := Round(FB*(Width/255));
+  myy := Round((255 - FG) * Height / 255);  // GREEN on y
+  mxx := Round(FB * Width / 255);            // BLUE on x
   Invalidate;
   if Assigned(FOnChange) then FOnChange(self);
 end;

@@ -23,6 +23,7 @@ type
     procedure CorrectCoords(var x, y: integer);
     procedure CreateWnd; override;
     procedure DrawMarker(x, y: integer);
+    function GetColorAtPoint(x, y: Integer): TColor; override;
     function GetGradientColor2D(x, y: Integer): TColor; override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -97,6 +98,15 @@ begin
   else
     c := clWhite;
   InternalDrawMarker(x, y, c);
+end;
+
+function TBAxisColorPicker.GetColorAtPoint(x, y: Integer): TColor;
+var
+  r, g: Integer;
+begin
+  r := round(x / (Width - 1) * 255);
+  g := 255 - round(y / (Height - 1) * 255);
+  Result := RGBtoColor(r, g, FB);
 end;
 
 { x is RED, y is GREEN }
@@ -249,8 +259,8 @@ begin
   FB := GetBValue(c);
   FSelected := c;
   FManual := false;
-  mxx := Round(FR*(Width/255));
-  myy := Round((255-FG)*(Height/255));
+  mxx := Round(FR * Width / 255);                  // RED is on x
+  myy := Round((255 - FG) * Height / 255);         // GREEN is on y
   Invalidate;
   if Assigned(FOnChange) then FOnChange(self);
 end;
