@@ -108,7 +108,7 @@ begin
   FMaxS := 240;
   FMaxL := 100;
   PBack := TBitmap.Create;
-  PBack.PixelFormat := pf32bit;
+//  PBack.PixelFormat := pf32bit;
   ParentColor := true;
   SetInitialBounds(0, 0, WSL + DIST + WH, HSL + 2*VDELTA);
   TabStop := true;

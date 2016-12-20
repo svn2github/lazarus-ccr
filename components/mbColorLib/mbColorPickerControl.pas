@@ -139,15 +139,15 @@ end;
 procedure TmbCustomPicker.CreateGradient;
 var
   x, y: Integer;
-  row: pRGBQuadArray;
-  c: TColor;
+  col: TColor;
+  fpcol: TFPColor;
   intfimg: TLazIntfImage;
   imgHandle, imgMaskHandle: HBitmap;
 begin
   if FBufferBmp = nil then
   begin
     FBufferBmp := TBitmap.Create;
-    FBufferBmp.PixelFormat := pf32bit;
+//    FBufferBmp.PixelFormat := pf32bit;
   end;
   FBufferBmp.Width := FGradientWidth;
   FBufferBmp.Height := FGradientHeight;
@@ -158,13 +158,13 @@ begin
 
     for y := 0 to FBufferBmp.Height - 1 do
     begin
-      row := intfImg.GetDataLineStart(y); //FBufferBmp.Height - 1 - y);
       for x := 0 to FBufferBmp.Width - 1 do
       begin
-        c := GetGradientColor2D(x, y);
+        col := GetGradientColor2D(x, y);
         if WebSafe then
-          c := GetWebSafe(c);
-        row[x] := RGBToRGBQuad(GetRValue(c), GetGValue(c), GetBValue(c));
+          col := GetWebSafe(col);
+        fpcol := TColorToFPColor(col);
+        intfImg.Colors[x, y] := fpcol;
       end;
     end;
 
@@ -172,7 +172,7 @@ begin
     FBufferBmp.Handle := imgHandle;
     FBufferBmp.MaskHandle := imgMaskHandle;
   finally
-   intfimg.Free;
+    intfimg.Free;
   end;
 end;
 

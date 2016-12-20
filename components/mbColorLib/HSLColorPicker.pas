@@ -111,7 +111,7 @@ begin
 //  ControlStyle := ControlStyle - [csAcceptsControls] + [csOpaque];
 
   PBack := TBitmap.Create;
-  PBack.PixelFormat := pf32bit;
+//  PBack.PixelFormat := pf32bit;
   SetInitialBounds(0, 0, 206, 146);
   TabStop := true;
   FSelectedColor := clRed;

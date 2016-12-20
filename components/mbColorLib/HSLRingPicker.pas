@@ -110,7 +110,7 @@ begin
   FGValue := 0;
   FBValue := 0;
   PBack := TBitmap.Create;
-  PBack.PixelFormat := pf32bit;
+//  PBack.PixelFormat := pf32bit;
   SetInitialBounds(0, 0, 245, 245);
   TabStop := true;
   FSelectedColor := clRed;
