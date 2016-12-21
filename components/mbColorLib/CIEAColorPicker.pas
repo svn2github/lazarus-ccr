@@ -33,6 +33,7 @@ type
     procedure SetSelectedColor(c: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
+    function GetColorAtPoint(x, y: Integer): TColor; override;
   published
     property SelectedColor default clFuchsia;
     property LValue: integer read FL write SetLValue default 100;
@@ -96,6 +97,26 @@ begin
   else
     c := clWhite;
   InternalDrawMarker(x, y, c);
+end;
+
+{
+function TCIEAColorPicker.GetColorAtPoint(x, y: Integer): TColor;
+var
+  l, a, b: Integer;
+begin
+  l := round(100 * (1 - y / (Height-1)));
+  a := FA;
+  b := round(255 * (x / (Width - 1))) - 128;
+  Result := LabToRGB(l, a, b);
+end;
+}
+function TCIEAColorPicker.GetColorAtPoint(x, y: Integer): TColor;
+var
+  l, b: Integer; //Double;
+begin
+  l := round((1 - y / (Height - 1)) * 100);
+  b := round((x / (Width - 1) - 0.5) * 255);
+  Result := LabToRGB(l, FA, b);
 end;
 
 // In the original code: for L ... for B ... LabToRGB(Round(100-L*100/255), FA, B-128);
@@ -169,10 +190,12 @@ end;
 procedure TCIEAColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
-  mxx := x;
-  myy := y;
   if Button = mbLeft then
   begin
+    mxx := x;
+    myy := y;
+    CorrectCoords(mxx, myy);
+    FSelected := GetColorAtPoint(mxx, myy);
     FSelected := GetColorAtPoint(x, y);
     FManual := true;
     Invalidate;
@@ -189,7 +212,8 @@ begin
   begin
     mxx := x;
     myy := y;
-    FSelected := GetColorAtPoint(x, y);
+    CorrectCoords(mxx, myy);
+    FSelected := GetColorAtPoint(mxx, myy);
     FManual := true;
     Invalidate;
     if Assigned(FOnChange) then
@@ -204,7 +228,8 @@ begin
   begin
     mxx := x;
     myy := y;
-    FSelected := GetColorAtPoint(x, y);
+    CorrectCoords(mxx, myy);
+    FSelected := GetColorAtPoint(mxx, myy);
     FManual := true;
     Invalidate;
     if Assigned(FOnChange) then
@@ -215,7 +240,6 @@ end;
 procedure TCIEAColorPicker.Paint;
 begin
   Canvas.StretchDraw(ClientRect, FBufferBmp);
-  CorrectCoords(mxx, myy);
   DrawMarker(mxx, myy);
 end;
 

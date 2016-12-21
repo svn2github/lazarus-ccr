@@ -33,6 +33,7 @@ type
     procedure SetSelectedColor(c: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
+    function GetColorAtPoint(X, Y: Integer): TColor; override;
   published
     property AValue: integer read FA write SetAValue default -128;
     property BValue: integer read FB write SetBValue default 127;
@@ -98,6 +99,24 @@ begin
     c := clWhite;
   InternalDrawMarker(x, y, c);
 end;
+
+function TCIELColorPicker.GetColorAtPoint(x, y: Integer): TColor;
+var
+  a, b: Double;
+begin
+  a := (y / (Height - 1) - 0.5) * 255;
+  b := (x / (Width  - 1) - 0.5) * 255;
+  Result := LabToRGB(FL, a, b);
+end;
+{
+var
+  a, b: Integer;
+begin
+  a := round(255 * (y / (Height - 1))) - 128;
+  b := round(255 * (x / (Width - 1))) - 128;
+  Result := LabToRGB(FL, a, b);
+end;
+}
 
 { Original code: for A ... for B ---> LabToRGB(FL, A - 128, B - 128) }
 function TCIELColorPicker.GetGradientColor2D(x, y: Integer): TColor;
@@ -168,11 +187,12 @@ end;
 procedure TCIELColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
-  mxx := x;
-  myy := y;
   if Button = mbLeft then
   begin
-    FSelected := GetColorAtPoint(x, y);
+    mxx := x;
+    myy := y;
+    CorrectCoords(mxx, myy);
+    FSelected := GetColorAtPoint(mxx, myy);
     FManual := true;
     Invalidate;
   end;
@@ -186,7 +206,8 @@ begin
   begin
     mxx := x;
     myy := y;
-    FSelected := GetColorAtPoint(x, y);
+    CorrectCoords(mxx, myy);
+    FSelected := GetColorAtPoint(mxx, myy);
     FManual := true;
     Invalidate;
     if Assigned(FOnChange) then
@@ -201,7 +222,8 @@ begin
   begin
     mxx := x;
     myy := y;
-    FSelected := GetColorAtPoint(x, y);
+    CorrectCoords(mxx, myy);
+    FSelected := GetColorAtPoint(mxx, myy);
     FManual := true;
     Invalidate;
     if Assigned(FOnChange) then

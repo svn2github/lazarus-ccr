@@ -125,6 +125,8 @@ begin
 end;
 
 function XYZToRGB(space: xyz): TColor;
+// see:
+// https://de.mathworks.com/matlabcentral/fileexchange/28790-colorspace-transformations/content/colorspace/colorspace.html?requestedDomain=www.mathworks.com
 var
   r, g, b, x, y, z: double;
 begin

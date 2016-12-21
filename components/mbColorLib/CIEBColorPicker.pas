@@ -36,6 +36,7 @@ type
     procedure SetSelectedColor(c: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
+    function GetColorAtPoint(x, y: Integer): TColor; override;
   published
     property AValue: integer read FA write SetAValue default -128;
     property BValue: integer read FB write SetBValue default 127;
@@ -99,6 +100,26 @@ begin
   else
     c := clWhite;
   InternalDrawMarker(x, y, c);
+end;
+
+{
+function TCIEBColorPicker.GetColorAtPoint(x, y: Integer): TColor;
+var
+  l, a, b: Integer;
+begin
+  l := round(100 * (1 - y / (Height-1)));
+  a := round(255 * (x / (Width - 1))) - 128;
+  b := FB;
+  Result := LabToRGB(l, a, b);
+end;
+}
+function TCIEBColorPicker.GetColorAtPoint(x, y: Integer): TColor;
+var
+  l, a: Double;
+begin
+  l := (1 - y / (Height - 1)) * 100;
+  a := (x / (Width - 1) - 0.5) * 255;
+  Result := LabToRGB(l, a, FB);
 end;
 
 { In the original code: for L ... for A ... LabToRGB(Round(100-L*100/244), A-128, FB)
@@ -170,20 +191,14 @@ begin
 end;
 
 procedure TCIEBColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var
-  R: TRect;
 begin
   inherited;
-  mxx := x;
-  myy := y;
   if Button = mbLeft then
   begin
-    R := ClientRect;
-    R.TopLeft := ClientToScreen(R.TopLeft);
-    R.BottomRight := ClientToScreen(R.BottomRight);
-    {$IFDEF DELPHI}
-    ClipCursor(@R);
-    {$ENDIF}
+    mxx := x;
+    myy := y;
+    CorrectCoords(mxx, myy);
+    FSelected := GetColorAtPoint(mxx, myy);
     FSelected := GetColorAtPoint(x, y);
     FManual := true;
     Invalidate;
@@ -196,12 +211,10 @@ begin
   inherited;
   if ssLeft in Shift then
   begin
-    {$IFDEF DELPHI}
-    ClipCursor(nil);
-    {$ENDIF}
     mxx := x;
     myy := y;
-    FSelected := GetColorAtPoint(x, y);
+    CorrectCoords(mxx, myy);
+    FSelected := GetColorAtPoint(mxx, myy);
     FManual := true;
     Invalidate;
     if Assigned(FOnChange) then
@@ -216,7 +229,8 @@ begin
   begin
     mxx := x;
     myy := y;
-    FSelected := GetColorAtPoint(x, y);
+    CorrectCoords(mxx, myy);
+    FSelected := GetColorAtPoint(mxx, myy);
     FManual := true;
     Invalidate;
     if Assigned(FOnChange) then
@@ -227,7 +241,6 @@ end;
 procedure TCIEBColorPicker.Paint;
 begin
   Canvas.StretchDraw(ClientRect, FBufferBmp);
-  CorrectCoords(mxx, myy);
   DrawMarker(mxx, myy);
 end;
 

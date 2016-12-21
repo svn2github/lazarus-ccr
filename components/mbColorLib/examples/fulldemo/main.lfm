@@ -43,9 +43,9 @@ object Form1: TForm1
     Height = 384
     Top = 6
     Width = 403
-    ActivePage = TabSheet9
+    ActivePage = TabSheet7
     Anchors = [akTop, akLeft, akRight, akBottom]
-    TabIndex = 9
+    TabIndex = 7
     TabOrder = 0
     OnChange = PageControl1Change
     OnMouseMove = PageControl1MouseMove
@@ -721,8 +721,8 @@ object Form1: TForm1
         TabOrder = 2
         Hue = 0
         Saturation = 0
-        Luminance = 73
-        SelectedColor = 4802889
+        Luminance = 65
+        SelectedColor = 4276545
       end
       object VColorPicker1: TVColorPicker
         Left = 34
@@ -1038,7 +1038,6 @@ object Form1: TForm1
         Width = 100
         HintFormat = 'G: %g B: %b'#13'Hex: #%hex'
         TabOrder = 0
-        OnChange = RAxisColorPicker1Change
       end
       object GAxisColorPicker1: TGAxisColorPicker
         Left = 130
@@ -1048,7 +1047,6 @@ object Form1: TForm1
         HintFormat = 'R: %r B: %b'#13'Hex: #%hex'
         TabOrder = 1
         MarkerStyle = msCross
-        OnChange = GAxisColorPicker1Change
       end
       object BAxisColorPicker1: TBAxisColorPicker
         Left = 250
@@ -1058,7 +1056,6 @@ object Form1: TForm1
         HintFormat = 'R: %r G: %g'#13'Hex: #%hex'
         TabOrder = 2
         MarkerStyle = msCrossCirc
-        OnChange = BAxisColorPicker1Change
       end
       object CIELColorPicker1: TCIELColorPicker
         Left = 10
@@ -1071,7 +1068,6 @@ object Form1: TForm1
         AValue = -47
         BValue = -32
         LValue = 88
-        OnChange = CIELColorPicker1Change
       end
       object CIEAColorPicker1: TCIEAColorPicker
         Left = 130
@@ -1085,7 +1081,6 @@ object Form1: TForm1
         AValue = 96
         BValue = -78
         MarkerStyle = msSquare
-        OnChange = CIEAColorPicker1Change
       end
       object CIEBColorPicker1: TCIEBColorPicker
         Left = 250
@@ -1098,7 +1093,6 @@ object Form1: TForm1
         AValue = -88
         BValue = 74
         LValue = 88
-        OnChange = CIEBColorPicker1Change
       end
       object Label10: TLabel
         Left = 130
@@ -1147,42 +1141,6 @@ object Form1: TForm1
         Width = 85
         Caption = 'CIEBColorPicker'
         ParentColor = False
-      end
-      object RAxisIndicator: TShape
-        Left = 88
-        Height = 21
-        Top = 132
-        Width = 22
-      end
-      object GAxisIndicator: TShape
-        Left = 208
-        Height = 21
-        Top = 132
-        Width = 22
-      end
-      object BAxisIndicator: TShape
-        Left = 328
-        Height = 21
-        Top = 132
-        Width = 22
-      end
-      object CIEBIndicator: TShape
-        Left = 328
-        Height = 21
-        Top = 296
-        Width = 22
-      end
-      object CIEAIndicator: TShape
-        Left = 208
-        Height = 21
-        Top = 296
-        Width = 22
-      end
-      object CIELIndicator: TShape
-        Left = 88
-        Height = 21
-        Top = 296
-        Width = 22
       end
     end
   end
