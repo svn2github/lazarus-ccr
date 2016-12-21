@@ -32,19 +32,21 @@ type
     procedure SetMaxSat(S: Integer);
   protected
     procedure CorrectCoords(var x, y: integer);
-    function GetGradientColor2D(X, Y: Integer): TColor; override;
-    procedure SetSelectedColor(c: TColor); override;
+    procedure CreateWnd; override;
+    function GetGradientColor2D(x, y: Integer): TColor; override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure DrawMarker(x, y: integer);
     procedure Paint; override;
-    procedure Resize; override;
-    procedure CreateWnd; override;
     function PredictColor: TColor;
+    procedure Resize; override;
+    procedure SelectColor(x, y: Integer);
+    procedure SetSelectedColor(c: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
+    function GetColorAtPoint(x, y: Integer): TColor; override;
     property Hue: integer read GetHue write SetHue;
     property Saturation: integer read GetSat write SetSat;
   published
@@ -120,7 +122,24 @@ begin
   InternalDrawMarker(x, y, c);
 end;
 
-function THSColorPicker.GetGradientColor2D(X, Y: Integer): TColor;
+function THSColorPicker.GetColorAtPoint(x, y: Integer): TColor;
+var
+  h, s, l: Double;
+begin
+  if InRange(x, 0, Width - 1) and InRange(y, 0, Height - 1) then
+  begin
+    h := x / (Width - 1);
+    s := 1 - y / (Height - 1);
+    {$IFDEF USE_COLOR_TO_RGB}
+    Result := HSLToColor(h, s, FLum);
+    {$ELSE}
+    Result := HSLToRGB(h, s, FLum);
+    {$ENDIF}
+  end else
+    Result := clNone;
+end;
+
+function THSColorPicker.GetGradientColor2D(x, y: Integer): TColor;
 begin
   {$IFDEF USE_COLOR_TO_RGB}
   Result := HSLToColor(x / FMaxHue, (FBufferBmp.Height - 1 - y) / FMaxSat, FLum);
@@ -208,9 +227,8 @@ begin
   myy := y;
   if Button = mbLeft then
   begin
-    SetSelectedColor(GetColorAtPoint(x, y));
+    SelectColor(x, y);
     FManual := true;
-    Invalidate;
   end;
   SetFocus;
 end;
@@ -220,11 +238,8 @@ begin
   inherited;
   if ssLeft in Shift then
   begin
-    mxx := x;
-    myy := y;
-    SetSelectedColor(GetColorAtPoint(x, y));
+    SelectColor(x, y);
     FManual := true;
-    Invalidate;
   end;
 end;
 
@@ -233,18 +248,14 @@ begin
   inherited;
   if ssLeft in Shift then
   begin
-    mxx := x;
-    myy := y;
-    SetSelectedColor(GetColorAtPoint(x, y));
+    SelectColor(x, y);
     FManual := true;
-    Invalidate;
   end;
 end;
 
 procedure THSColorPicker.Paint;
 begin
   Canvas.StretchDraw(ClientRect, FBufferBmp);
-  CorrectCoords(mxx, myy);
   DrawMarker(mxx, myy);
 end;
 
@@ -264,6 +275,27 @@ procedure THSColorPicker.Resize;
 begin
   SetSelectedColor(FSelected);
   inherited;
+end;
+
+procedure THSColorPicker.SelectColor(x, y: Integer);
+var
+  c: TColor;
+  L: Double;
+begin
+  mxx := x;
+  myy := y;
+  CorrectCoords(mxx, myy);
+  c := GetColorAtPoint(mxx, myy);
+  if WebSafe then c := GetWebSafe(c);
+  {$IFDEF USE_COLOR_TO_RGB}
+  ColorToHSL(c, FHue, FSat, L);
+  {$ELSE}
+  RGBtoHSL(c, FHue, FSat, L);
+  {$ENDIF}
+  FSelected := c;
+  FManual := false;
+  Invalidate;
+  if Assigned(OnChange) then OnChange(Self);
 end;
 
 procedure THSColorPicker.SetHue(H: integer);
@@ -346,6 +378,7 @@ begin
   FManual := false;
   mxx := Round(FHue * Width);
   myy := Round((1.0 - FSat) * Height);
+  CorrectCoords(mxx, myy);
   Invalidate;
   if Assigned(OnChange) then OnChange(Self);
 end;
