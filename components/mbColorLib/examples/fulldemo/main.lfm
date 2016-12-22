@@ -43,9 +43,9 @@ object Form1: TForm1
     Height = 384
     Top = 6
     Width = 403
-    ActivePage = TabSheet7
+    ActivePage = TabSheet2
     Anchors = [akTop, akLeft, akRight, akBottom]
-    TabIndex = 7
+    TabIndex = 1
     TabOrder = 0
     OnChange = PageControl1Change
     OnMouseMove = PageControl1MouseMove
@@ -90,7 +90,6 @@ object Form1: TForm1
         Anchors = [akTop, akLeft, akRight, akBottom]
         HintFormat = 'RGB(%r, %g, %b)'#13'Hex: #%hex'
         IntensityText = 'Intensity'
-        SliderMarker = smRect
         TabOrder = 0
         Constraints.MinHeight = 85
         Constraints.MinWidth = 93
@@ -721,8 +720,8 @@ object Form1: TForm1
         TabOrder = 2
         Hue = 0
         Saturation = 0
-        Luminance = 65
-        SelectedColor = 4276545
+        Luminance = 61
+        SelectedColor = 4013373
       end
       object VColorPicker1: TVColorPicker
         Left = 34

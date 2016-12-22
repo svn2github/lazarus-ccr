@@ -12,30 +12,32 @@ uses
   PalUtils;
 
 const
- crPickerCursor = 13;
+  crPickerCursor = 13;
 
 type
-  TScreenForm = class(TForm)
-    procedure FormShow(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure EndSelection(x, y: integer; ok: boolean);
-    procedure FormMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+   TScreenForm = class(TForm)
+   procedure EndSelection(x, y: integer; ok: boolean);
+     procedure FormCreate(Sender: TObject);
+     procedure FormKeyDown(Sender: TObject; var Key: Word;
+       Shift: TShiftState);
+     procedure FormMouseMove(Sender: TObject;
+       Shift: TShiftState; X, Y: Integer);
+     procedure FormMouseUp(Sender: TObject; Button: TMouseButton;
+       Shift: TShiftState; X, Y: Integer);
+     procedure FormShow(Sender: TObject);
 
   private
-   FOnSelColorChange: TNotifyEvent;
-   FOnKeyDown: TKeyEvent;
+    FOnSelColorChange: TNotifyEvent;
+    FOnKeyDown: TKeyEvent;
 
   protected
-   procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
+    procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
 
   public
-    FHintFormat: string;
-    SelectedColor: TColor;
-    property OnSelColorChange: TNotifyEvent read FOnSelColorChange write FOnSelColorChange;
-    property OnScreenKeyDown: TKeyEvent read FOnKeyDown write FOnKeyDown;
+     FHintFormat: string;
+     SelectedColor: TColor;
+     property OnSelColorChange: TNotifyEvent read FOnSelColorChange write FOnSelColorChange;
+     property OnScreenKeyDown: TKeyEvent read FOnKeyDown write FOnKeyDown;
   end;
 
 var
@@ -46,10 +48,8 @@ implementation
 {$R *.lfm}
 {$R PickCursor.res}
 
-function ColorToHex(Color: TColor): string;
-begin
- Result := IntToHex(GetRValue(Color), 2) + IntToHex(GetGValue(Color), 2) + IntToHex(GetBValue(Color), 2);
-end;
+uses
+  HTMLColors;
 
 function GetDesktopColor(const X, Y: Integer): TColor;
 var

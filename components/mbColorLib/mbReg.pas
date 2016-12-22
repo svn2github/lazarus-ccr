@@ -14,6 +14,7 @@ implementation
 //{$R mbReg.res}
 
 uses
+  ActnList,
   RColorPicker, GColorPicker, BColorPicker,
   RAxisColorPicker, GAxisColorPicker, BAxisColorPicker,
   CColorPicker, YColorPicker, MColorPicker, KColorPicker,
@@ -37,8 +38,11 @@ begin
     THSColorPicker, THSVColorPicker, THSLColorPicker, THSLRingPicker,
     TSLColorPicker, TSLHColorPicker,
     TCIEAColorPicker, TCIEBColorPicker, TCIELColorPicker,
-    THexaColorPicker, TmbColorPreview, TmbColorList, TmbColorTree, TmbColorPalette,
-    TmbOfficeColorDialog, TmbDeskPickerButton]);
+    THexaColorPicker, TmbColorPreview, TmbColorList, TmbColorTree,
+    TmbColorPalette, TmbOfficeColorDialog, TmbDeskPickerButton
+  ]);
+
+  RegisterActions('mbColorLib', [TmbDeskPickerAction], nil);
 end;
 
 
