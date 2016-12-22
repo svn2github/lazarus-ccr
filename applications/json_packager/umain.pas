@@ -685,7 +685,7 @@ begin
 end;
 
 procedure TfrmMain.ResetPackageFileControlsToOne;
-// Used in File/New
+// Used in File/New and File/Load
 var
   iCount: integer;
 begin
@@ -827,8 +827,8 @@ begin
   {$ENDIF}
   popup_hint.vNotifierForm.AlphaBlend:=TRUE;
   popup_hint.vNotifierForm.AlphaBlendValue:=200;
-  if (lcl_major > 0) and (lcl_minor > 6) then
-     popup_hint.vNotifierForm.Scaled:=TRUE;
+  if (lcl_major > 0) and (lcl_minor > 7) then
+     {$IFNDEF DARWIN}popup_hint.vNotifierForm.Scaled:=TRUE;{$ENDIF}
   // ToDo: TApplication.HintPause:=2000;
   // Defaults
   slErrorList := TStringList.Create;
