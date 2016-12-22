@@ -80,7 +80,7 @@ Please update this versioninfo alongside the constant C_VERSION
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 "/>
-    <Version Minor="1" Release="2"/>
+    <Version Minor="1" Release="3"/>
     <Files Count="1">
       <Item1>
         <Filename Value="ucryptini.pas"/>

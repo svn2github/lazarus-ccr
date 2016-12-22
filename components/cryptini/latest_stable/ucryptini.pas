@@ -15,7 +15,7 @@ unit ucryptini;
 
 { 'Paranoid' version of TIniFile
 
-  Copyright (C) 2016 Gordon Bamber minesadorada@gmail.com
+  Copyright (C) 2016 Gordon Bamber minesadorada@charcodelvcalle.com
   Base 64 code by David Barton
 
   This library is free software; you can redistribute it and/or modify it
@@ -219,7 +219,7 @@ const
     54, 55, 56, 57, 43, 47);
   {$ENDIF}
 
-C_VERSION = '0.1.2';
+C_VERSION = '0.1.3';
 {
   VERSION HISTORY
   ===============
@@ -236,7 +236,8 @@ C_VERSION = '0.1.2';
   V 0.1.2: Added thread-safe TLockCryptINIFile class
            for thread-safe operation (GB)
            Credit: "Fungus" at http://forum.lazarus.freepascal.org/
-  V 0.1.3: ??
+  V 0.1.3: BugFix: WriteIdent method without Version Info now covered by meaningful error message.
+  V 0.1.4: ??
 }
 type
   TCryptIniFile = class(TIniFile)
@@ -793,11 +794,15 @@ begin
     s:='0.0.0.0'; // Default
     VInfo:=TFileVersionInfo.Create(Application);
     TRY
-      VInfo.ReadFileInfo;
-      If fileinfo.GetProgramVersion(Version) then
-         s:=ProgramversionToStr(Version);
-    finally
-      VInfo.free;
+       TRY
+          VInfo.ReadFileInfo;
+          If fileinfo.GetProgramVersion(Version) then
+          s:=ProgramversionToStr(Version);
+       finally
+          VInfo.free;
+       end;
+    Except
+      Raise EResNotFound.Create('TCryptINIFile.WriteIdent' + LineEnding + 'Please include Version Info in Project/options to use this function');
     end;
     WriteString(IDENT_SECTION,IDENT_APPVERSION,s);
     WriteString(IDENT_SECTION, IDENT_EXE, ParamStrUTF8(0));
