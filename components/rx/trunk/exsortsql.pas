@@ -48,7 +48,7 @@ type
   end;
 
 implementation
-uses SQLDB, synRegExpr, strUtils;
+uses SQLDB, RegExpr, strUtils;
 
 
 procedure TSQLQuerySortEngine.Sort(FieldName: string; ADataSet: TDataSet;
