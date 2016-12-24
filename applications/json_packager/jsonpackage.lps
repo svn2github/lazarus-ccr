@@ -8,9 +8,10 @@
       <Unit0>
         <Filename Value="jsonpackage.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="25" Y="28"/>
-        <UsageCount Value="185"/>
+        <EditorIndex Value="1"/>
+        <CursorPos Y="23"/>
+        <UsageCount Value="186"/>
+        <Loaded Value="True"/>
       </Unit0>
       <Unit1>
         <Filename Value="umain.pas"/>
@@ -19,19 +20,19 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="810"/>
-        <CursorPos X="3" Y="815"/>
+        <TopLine Value="60"/>
+        <CursorPos X="15" Y="73"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
           <EditorIndex Value="-1"/>
           <TopLine Value="185"/>
           <CursorPos X="40" Y="211"/>
         </ExtraEditor1>
-        <UsageCount Value="185"/>
+        <UsageCount Value="186"/>
         <Bookmarks Count="3">
-          <Item0 Y="913" ID="1"/>
-          <Item1 Y="671" ID="2"/>
-          <Item2 Y="140"/>
+          <Item0 Y="916" ID="1"/>
+          <Item1 Y="675" ID="2"/>
+          <Item2 Y="144"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -39,7 +40,7 @@
       <Unit2>
         <Filename Value="ugenericcollection.pas"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="185"/>
+        <UsageCount Value="186"/>
       </Unit2>
       <Unit3>
         <Filename Value="C:\NewPascal\projects\MDSUM\CryptINI\lockini.pas"/>
@@ -457,7 +458,7 @@
     <OtherDefines Count="1">
       <Define0 Value="IGNOREPICTURE"/>
     </OtherDefines>
-    <JumpHistory Count="2" HistoryIndex="1">
+    <JumpHistory Count="18" HistoryIndex="17">
       <Position1>
         <Filename Value="umain.pas"/>
         <Caret Line="120" Column="40" TopLine="100"/>
@@ -466,6 +467,70 @@
         <Filename Value="umain.pas"/>
         <Caret Line="1400" Column="24" TopLine="1383"/>
       </Position2>
+      <Position3>
+        <Filename Value="umain.pas"/>
+        <Caret Line="1435" Column="3" TopLine="1416"/>
+      </Position3>
+      <Position4>
+        <Filename Value="umain.pas"/>
+        <Caret Line="1432" Column="4" TopLine="1411"/>
+      </Position4>
+      <Position5>
+        <Filename Value="umain.pas"/>
+        <Caret Line="257" Column="3" TopLine="230"/>
+      </Position5>
+      <Position6>
+        <Filename Value="jsonpackage.lpr"/>
+        <Caret Line="19"/>
+      </Position6>
+      <Position7>
+        <Filename Value="umain.pas"/>
+        <Caret Line="10"/>
+      </Position7>
+      <Position8>
+        <Filename Value="umain.pas"/>
+        <Caret Line="7" Column="2"/>
+      </Position8>
+      <Position9>
+        <Filename Value="umain.pas"/>
+        <Caret Line="9"/>
+      </Position9>
+      <Position10>
+        <Filename Value="umain.pas"/>
+        <Caret Line="78" TopLine="52"/>
+      </Position10>
+      <Position11>
+        <Filename Value="umain.pas"/>
+        <Caret Line="82" TopLine="53"/>
+      </Position11>
+      <Position12>
+        <Filename Value="umain.pas"/>
+        <Caret Line="80" Column="113" TopLine="72"/>
+      </Position12>
+      <Position13>
+        <Filename Value="umain.pas"/>
+        <Caret Line="82" TopLine="58"/>
+      </Position13>
+      <Position14>
+        <Filename Value="umain.pas"/>
+        <Caret Line="5"/>
+      </Position14>
+      <Position15>
+        <Filename Value="umain.pas"/>
+        <Caret Line="7" Column="20"/>
+      </Position15>
+      <Position16>
+        <Filename Value="umain.pas"/>
+        <Caret Line="2" Column="33"/>
+      </Position16>
+      <Position17>
+        <Filename Value="umain.pas"/>
+        <Caret Line="79" TopLine="43"/>
+      </Position17>
+      <Position18>
+        <Filename Value="umain.pas"/>
+        <Caret Line="256" Column="24" TopLine="234"/>
+      </Position18>
     </JumpHistory>
   </ProjectSession>
 </CONFIG>

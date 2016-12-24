@@ -293,6 +293,9 @@ object frmMain: TfrmMain
   end
   object popup_hint: TPopupNotifier
     Color = 14483455
+    Icon.Data = {
+      07544269746D617000000000
+    }
     Text = 'Text'
     Title = 'Caption'
     Visible = False

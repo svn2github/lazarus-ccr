@@ -68,7 +68,8 @@ unit umain;
   0.2.7.0:  Updated: Save procedure (minesadorada)
   0.2.8.0:  BugFix: ValidationFailed repeated messages about FoundDuplicates
             BugFix: SetDefaultLang added to AddPackageFileToList
-  0.2.9.0:  ??
+  0.2.9.0:  Added $DEFINE LAZ17
+  0.2.10.0: ??
  }
 {$mode objfpc}{$H+}
 
@@ -76,10 +77,13 @@ interface
 
 {DefaultTranslator not used}
 uses
-  Classes, Forms, Controls, StdCtrls, Menus, ActnList, StdActns,
+  lclVersion,  Classes, Forms, Controls, StdCtrls, Menus, ActnList, StdActns,
   Graphics, Buttons, fileutil, LazFileUtils, fileinfo, ugenericcollection,
   fpjsonrtti, Dialogs, LCLTranslator, PopupNotifier, SysUtils, inifiles,
-  lclintf, lclVersion, LResources, Spin, {$IFDEF PO_BUILTINRES}LazUTF8Classes{$ENDIF};
+  lclintf, LResources, Spin, {$IFDEF PO_BUILTINRES}LazUTF8Classes{$ENDIF};
+{$IF LCL_FULLVERSION >= 1070000}
+  {$DEFINE LAZ17}
+{$ENDIF}
 
 const
   C_DEBUGMESSAGES = False; // TRUE ONLY IN DEV MODE!
@@ -248,8 +252,8 @@ var
 {$ENDIF}
 
 implementation
-
 {$R *.lfm}
+
 resourcestring
   rsOneOfTheReq1 =
     'One of the required fields is missing or wrong.';
@@ -895,7 +899,6 @@ begin
     mnu_lang_en.Checked := True;
   if sLang = 'es' then
     mnu_lang_es.Checked := True;
-
   bDirty := False; // No effect :(
 end;
 
@@ -1430,8 +1433,9 @@ initialization
     Application.EXEName) + '.en.po';
   sPoPath_es := ProgramDirectory + 'locale' + PathDelim + ExtractFilenameOnly(
     Application.EXEName) + '.es.po';
-  if (lcl_major > 0) and (lcl_minor > 6) then // Can't use a LazVersion $DEFINE :(
-  begin
+//if (lcl_major > 0) and (lcl_minor > 6) then // Can't use a LazVersion $DEFINE :(
+{$IFDEF LAZ17}
+begin
     // This uses a resource file added via Project/Options (Laz 1.7+)
     if not FileExistsUTF8(sPoPath_en) then
     begin
@@ -1465,7 +1469,8 @@ initialization
       end;
     end;
   end
-  else
+{$ELSE}
+  //else
   begin // Older version of laz
     // This uses an lrs file generated from lazres
     // Can't disable this with a LazVersion $DEFINE :(
@@ -1501,5 +1506,6 @@ initialization
       end;
     end;
   end;
+{$ENDIF}
 {$ENDIF}
 end.
