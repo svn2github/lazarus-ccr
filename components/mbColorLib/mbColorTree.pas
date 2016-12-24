@@ -7,7 +7,7 @@ interface
 uses
   LCLIntf, LCLType, SysUtils, Classes, Controls, ComCtrls, Graphics, Themes,
   GraphUtil, ImgList, Forms,
-  HTMLColors, RGBHSLUtils, RGBHSVUtils, RGBCMYKUtils, RGBCIEUtils;
+  HTMLColors;
 
 type
   TmbColor = record
@@ -384,7 +384,6 @@ const
 var
   b: TBitmap;
   BR, TR: TRect;
-  i, fx: integer;
   s: string;
   h: Integer;
 begin

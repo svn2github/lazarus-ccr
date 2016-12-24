@@ -7,8 +7,7 @@ unit BAxisColorPicker;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages,
-  SysUtils, Classes, Controls, Graphics, Math, Forms,
+  LCLIntf, LCLType, SysUtils, Classes, Controls, Graphics,
   HTMLColors, mbColorPickerControl;
 
 type
@@ -23,22 +22,22 @@ type
     procedure CorrectCoords(var x, y: integer);
     procedure CreateWnd; override;
     procedure DrawMarker(x, y: integer);
-    function GetColorAtPoint(x, y: Integer): TColor; override;
     function GetGradientColor2D(x, y: Integer): TColor; override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure Paint; override;
     procedure Resize; override;
     procedure SetSelectedColor(c: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
+    function GetColorAtPoint(x, y: Integer): TColor; override;
   published
     property SelectedColor default clBlue;
-    property RValue: integer read FR write SetRValue default 0;
-    property GValue: integer read FG write SetGValue default 0;
-    property BValue: integer read FB write SetBValue default 255;
+    property Red: integer read FR write SetRValue default 0;
+    property Green: integer read FG write SetGValue default 0;
+    property Blue: integer read FB write SetBValue default 255;
     property MarkerStyle default msCircle;
     property OnChange;
   end;
@@ -176,13 +175,14 @@ procedure TBAxisColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 begin
   inherited;
-  mxx := x;
-  myy := y;
   if Button = mbLeft then
   begin
+    mxx := x;
+    myy := y;
     FSelected := GetColorAtPoint(x, y);
     FManual := true;
     Invalidate;
+    if Assigned(FOnChange) then FOnChange(self);
   end;
   SetFocus;
 end;
@@ -194,7 +194,9 @@ begin
   begin
     mxx := x;
     myy := y;
-    FSelected := GetColorAtPoint(x, y);
+    Clamp(mxx, 0, Width - 1);
+    Clamp(myy, 0, Height - 1);
+    FSelected := GetColorAtPoint(mxx, myy);
     FManual := true;
     Invalidate;
     if Assigned(FOnChange) then FOnChange(self);
@@ -208,7 +210,9 @@ begin
   begin
     mxx := x;
     myy := y;
-    FSelected := GetColorAtPoint(x, y);
+    Clamp(mxx, 0, Width - 1);
+    Clamp(myy, 0, Height - 1);
+    FSelected := GetColorAtPoint(mxx, myy);
     FManual := true;
     Invalidate;
     if Assigned(FOnChange) then FOnChange(self);
@@ -218,23 +222,26 @@ end;
 procedure TBAxisColorPicker.Paint;
 begin
   Canvas.StretchDraw(ClientRect, FBufferBmp);
-  CorrectCoords(mxx, myy);
   DrawMarker(mxx, myy);
 end;
 
 procedure TBAxisColorPicker.Resize;
 begin
   FManual := false;
-  mxx := round(FR * (Width / 255));
-  myy := round((255 - FG) * (Height / 255));
+  mxx := round(FR * Width / 255);
+  myy := round((255 - FG) * Height / 255);
   inherited;
 end;
 
 procedure TBAxisColorPicker.SetBValue(b: integer);
 begin
   Clamp(b, 0, 255);
-  FB := b;
-  SetSelectedColor(RGB(FR, FG, FB));
+  if b <> FB then
+  begin
+    FB := b;
+    CreateGradient;
+    SetSelectedColor(RGB(FR, FG, FB));
+  end;
 end;
 
 procedure TBAxisColorPicker.SetGValue(g: integer);
@@ -252,13 +259,20 @@ begin
 end;
 
 procedure TBAxisColorPicker.SetSelectedColor(c: TColor);
+var
+  r, g, b: Integer;
 begin
   if WebSafe then c := GetWebSafe(c);
-  FR := GetRValue(c);
-  FG := GetGValue(c);
-  FB := GetBValue(c);
+  r := GetRValue(c);
+  g := GetGValue(c);
+  b := GetBValue(c);
+  if b <> FB then
+    CreateGradient;
+  FR := r;
+  FG := g;
+  FB := b;
   FSelected := c;
-  FManual := false;
+  FManual := true;
   mxx := Round(FR * Width / 255);                  // RED is on x
   myy := Round((255 - FG) * Height / 255);         // GREEN is on y
   Invalidate;

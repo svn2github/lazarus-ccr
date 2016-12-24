@@ -46,7 +46,8 @@ type
     mX, mY: integer;
     FHintFormat: string;
     FUnderCursor: TColor;
-    FOnChange, FOnIntensityChange: TNotifyEvent;
+    //FOnChange,
+    FOnIntensityChange: TNotifyEvent;
     FCurrentColor: TColor;
     FSelectedIndex: Integer;
     FColorCombRect, FBWCombRect, FSliderRect, FCustomColorRect: TRect;
@@ -137,7 +138,7 @@ type
     property DragMode;
     property DragKind;
     property Constraints;
-    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property OnChange; //: TNotifyEvent read FOnChange write FOnChange;
     property OnIntensityChange: TNotifyEvent read FOnIntensityChange write FOnIntensityChange;
     property OnDblClick;
     property OnContextPopup;
@@ -1281,8 +1282,7 @@ procedure THexaColorPicker.SelectColor(Color: TColor);
 begin
   SelectAvailableColor(Color);
   Invalidate;
-  if Assigned(FOnChange) then
-    FOnChange(Self);
+  if Assigned(OnChange) then OnChange(Self);
 end;
 
 procedure THexaColorPicker.SetIntensity(v: integer);

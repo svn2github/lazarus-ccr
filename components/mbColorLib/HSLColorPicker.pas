@@ -14,7 +14,7 @@ uses
 type
   THSLColorPicker = class(TmbBasicPicker)
   private
-    FOnChange: TNotifyEvent;
+    //FOnChange: TNotifyEvent;
     FHSPicker: THSColorPicker;
     FLPicker: TLColorPicker;
     FSelectedColor: TColor;
@@ -93,7 +93,7 @@ type
     property TabOrder;
     property Color;
     property ParentColor default true;
-    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property OnChange; //: TNotifyEvent read FOnChange write FOnChange;
     property OnMouseMove;
   end;
 
@@ -170,8 +170,7 @@ begin
   FRValue := GetRValue(FLPicker.SelectedColor);
   FGValue := GetGValue(FLPicker.SelectedColor);
   FBValue := GetBValue(FLPicker.SelectedColor);
-  if Assigned(FOnChange) then
-    FOnChange(Self);
+  if Assigned(OnChange) then OnChange(Self);
 end;
 
 procedure THSLColorPicker.DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);

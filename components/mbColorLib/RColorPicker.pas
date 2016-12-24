@@ -73,8 +73,7 @@ begin
   end
   else
   begin
-    r := 255 - r;
-    a := Round((Height - 12) / 255 * r);
+    a := Round((Height - 12) * (255 - r) / 255);
     if a > Height - FLimit then a := Height - FLimit;
   end;
   if a < 0 then a := 0;
@@ -122,6 +121,7 @@ begin
   Result := ArrowPosFromRed(FRed);
 end;
 
+// Note: AValue is restricted to the range 0..255 by the size of the trackbar.
 function TRColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
   Result := RGB(AValue, FGreen, FBlue);
@@ -194,13 +194,15 @@ end;
 procedure TRColorPicker.SetSelectedColor(c: TColor);
 begin
   if WebSafe then c := GetWebSafe(c);
+  if c = GetSelectedColor then
+    exit;
   FChange := false;
   SetGreen(GetGValue(c));
   SetBlue(GetBValue(c));
   SetRed(GetRValue(c));
   FManual := false;
   FChange := true;
-  if Assigned(OnChange) then OnChange(Self);
+  if Assigned(OnChange) then OnChange(self);
 end;
 
 end.

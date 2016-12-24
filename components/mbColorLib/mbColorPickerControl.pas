@@ -59,6 +59,7 @@ type
   published
     property Anchors;
     property Align;
+    property BorderSpacing;
     property ShowHint;
     property ParentShowHint;
     property Visible;

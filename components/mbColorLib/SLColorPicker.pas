@@ -14,7 +14,7 @@ type
   private
     FHue, FSat, FLum: Double;
     FMaxHue, FMaxSat, FMaxLum: integer;
-    FChange: boolean;
+    //FChange: boolean;
     procedure DrawMarker(x, y: integer);
     procedure SelectionChanged(x, y: integer);
     procedure UpdateCoords;

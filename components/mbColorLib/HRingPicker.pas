@@ -19,7 +19,7 @@ type
     FSelectedColor: TColor;
     FManual: boolean;
     mx, my, mdx, mdy: integer;
-    FChange: boolean;
+    //FChange: boolean;
     FRadius: integer;
     FDoChange: boolean;
     FDragging: Boolean;

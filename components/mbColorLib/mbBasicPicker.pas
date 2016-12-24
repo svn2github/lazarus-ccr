@@ -15,9 +15,11 @@ type
 
   TmbBasicPicker = class(TCustomControl)
   private
+    FOnChange: TNotifyEvent;
     FOnGetHintStr: TGetHintStrEvent;
   protected
     FBufferBmp: TBitmap;
+    FChange: Boolean;
     FGradientWidth: Integer;
     FGradientHeight: Integer;
     FHintShown: Boolean;
@@ -34,6 +36,7 @@ type
     procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
     procedure CMParentColorChanged(var Message: TLMessage); message CM_PARENTCOLORCHANGED;
     property ColorUnderCursor: TColor read GetColorUnderCursor;
+    property OnChange: TNotifyEvent read FOnChange write FOnChange;
     property OnGetHintStr: TGetHintStrEvent read FOnGetHintStr write FOnGetHintStr;
   public
     constructor Create(AOwner: TComponent); override;

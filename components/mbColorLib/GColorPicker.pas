@@ -67,13 +67,12 @@ var
 begin
   if Layout = lyHorizontal then
   begin
-    a := Round(((Width - 12)/255)*g);
+    a := Round((Width - 12) / 255 * g);
     if a > Width - FLimit then a := Width - FLimit;
   end
   else
   begin
-    g := 255 - g;
-    a := Round(((Height - 12)/255)*g);
+    a := Round((Height - 12) * (255 - g) / 255);
     if a > Height - FLimit then a := Height - FLimit;
   end;
   if a < 0 then a := 0;
@@ -121,6 +120,7 @@ begin
   Result := ArrowPosFromGreen(FGreen);
 end;
 
+// Note: AValue is restricted to the range 0..255 by the size of the trackbar.
 function TGColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
   Result := RGB(FRed, AValue, FBlue);
@@ -144,9 +144,9 @@ var
   g: integer;
 begin
   if Layout = lyHorizontal then
-    g := Round(p/((Width - 12)/255))
+    g := Round(p * 255 / (Width - 12))
   else
-    g := Round(255 - p/((Height - 12)/255));
+    g := Round(255 - p * 255 / (Height - 12));
   Clamp(g, 0, 255);
   Result := g;
 end;
@@ -193,6 +193,8 @@ end;
 procedure TGColorPicker.SetSelectedColor(c: TColor);
 begin
   if WebSafe then c := GetWebSafe(c);
+  if c = GetSelectedColor then
+    exit;
   FChange := false;
   SetRed(GetRValue(c));
   SetBlue(GetBValue(c));

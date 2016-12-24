@@ -14,7 +14,7 @@ uses
 type
   THSLRingPicker = class(TmbBasicPicker)
   private
-    FOnChange: TNotifyEvent;
+    //FOnChange: TNotifyEvent;
     FRingPicker: THRingPicker;
     FSLPicker: TSLColorPicker;
     FSelectedColor: TColor;
@@ -90,10 +90,7 @@ type
     property TabOrder;
     property Color;
     property ParentColor default true;
-    {$IFDEF DELPHI_7_UP} {$IFDEF DELPHI}
-    property ParentBackground default true;
-    {$ENDIF} {$ENDIF}
-    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property OnChange; //: TNotifyEvent read FOnChange write FOnChange;
     property OnMouseMove;
   end;
 
@@ -169,8 +166,7 @@ begin
   FRValue := GetRValue(FSLPicker.SelectedColor);
   FGValue := GetGValue(FSLPicker.SelectedColor);
   FBValue := GetBValue(FSLPicker.SelectedColor);
-  if Assigned(FOnChange) then
-    FOnChange(Self);
+  if Assigned(OnChange) then OnChange(Self);
 end;
 
 procedure THSLRingPicker.DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);

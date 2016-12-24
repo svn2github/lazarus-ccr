@@ -20,7 +20,7 @@ type
     FShowSatCirc: boolean;
     FShowHueLine: boolean;
     FShowSelCirc: boolean;
-    FChange: boolean;
+    //FChange: boolean;
     FDoChange: boolean;
     function RadHue(New: integer): integer;
     function GetHue: Integer;

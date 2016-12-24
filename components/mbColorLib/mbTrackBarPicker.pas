@@ -49,7 +49,6 @@ type
     FPlacement: TSliderPlacement;
     FSelIndicator: TSelIndicator;
     FWebSafe: boolean;
-    FOnChange: TNotifyEvent;
     procedure CalcPickRect;
     procedure DrawMarker(p: integer);
     procedure SetBevelInner(Value: TBevelCut);
@@ -115,6 +114,7 @@ type
     property ParentShowHint default true;
     property Anchors;
     property Align;
+    property BorderSpacing;
     property Visible;
     property Enabled;
     property PopupMenu;
@@ -123,7 +123,7 @@ type
     property DragMode;
     property DragKind;
     property Constraints;
-    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property OnChange;
     property OnContextPopup;
     property OnGetHintStr;
     property OnMouseDown;
@@ -369,7 +369,7 @@ begin
       Execute(TBA_WheelDown);
     FManual := true;
     FChange := true;
-    if Assigned(FOnChange) then FOnChange(Self);
+    if Assigned(OnChange) then OnChange(Self);
   end;
 end;
 
@@ -598,7 +598,7 @@ begin
           Execute(TBA_VKCtrlUp);
         FManual := true;
         FChange := true;
-        if Assigned(FOnChange) then FOnChange(Self);
+        if Assigned(OnChange) then OnChange(Self);
       end;
     VK_LEFT:
       if FLayout = lyVertical then
@@ -612,7 +612,7 @@ begin
           Execute(TBA_VKCtrlLeft);
         FManual := true;
         FChange := true;
-        if Assigned(FOnChange) then FOnChange(Self);
+        if Assigned(OnChange) then OnChange(Self);
       end;
     VK_RIGHT:
       if FLayout = lyVertical then
@@ -626,7 +626,7 @@ begin
           Execute(TBA_VKCtrlRight);
         FManual := true;
         FChange := true;
-        if Assigned(FOnChange) then FOnChange(Self);
+        if Assigned(OnChange) then OnChange(Self);
       end;
     VK_DOWN:
       if FLayout = lyHorizontal then
@@ -640,7 +640,7 @@ begin
           Execute(TBA_VKCtrlDown);
         FManual := true;
         FChange := true;
-        if Assigned(FOnChange) then FOnChange(Self);
+        if Assigned(OnChange) then OnChange(Self);
       end
     else
       eraseKey := false;
@@ -732,7 +732,7 @@ begin
   DrawMarker(FArrowPos);
   if FDoChange then
   begin
-    if Assigned(FOnChange) then FOnChange(Self);
+    if Assigned(OnChange) then OnChange(Self);
     FDoChange := false;
   end;
 end;
