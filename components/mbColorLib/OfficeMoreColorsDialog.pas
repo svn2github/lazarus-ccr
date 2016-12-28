@@ -51,6 +51,7 @@ type
     NewSwatch: TmbColorPreview;
     OldSwatch: TmbColorPreview;
     procedure cbColorDisplayChange(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure HSLChange(Sender: TObject);
     procedure ERedChange(Sender: TObject);
     procedure EGreenChange(Sender: TObject);
@@ -358,6 +359,18 @@ begin
   grip.Left := ClientWidth - 15;
   grip.Top := ClientHeight - 15;
 {$ENDIF}
+end;
+
+procedure TOfficeMoreColorsWin.FormShow(Sender: TObject);
+var
+  h: Integer;
+begin
+  OKbtn.AutoSize := true;
+  h := OKbtn.Height;
+  OKbtn.AutoSize := false;
+  OKbtn.Height := h;
+  OKbtn.Width := Cancelbtn.Width;
+  CancelBtn.Height := h;
 end;
 
 function TOfficeMoreColorsWin.GetHint(c: TColor): string;

@@ -20,6 +20,7 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    Bevel1: TBevel;
     CbShowHints: TCheckBox;
     CbEnabled: TCheckBox;
     Label10: TLabel;
@@ -42,8 +43,8 @@ type
     Label2: TLabel;
     HexaColorPicker1: THexaColorPicker;
     mbColorPalette1: TmbColorPalette;
-    Button1: TButton;
-    Button2: TButton;
+    BtnBluePalette: TButton;
+    BtnGradientPal: TButton;
     HSLRingPicker1: THSLRingPicker;
     TabSheet5: TTabSheet;
     TabSheet6: TTabSheet;
@@ -67,16 +68,16 @@ type
     Label4: TLabel;
     CheckBox2: TCheckBox;
     Label5: TLabel;
-    Button4: TButton;
+    BtnLoadPal: TButton;
     OpenDialog1: TOpenDialog;
     ScrollBox1: TScrollBox;
-    Label3: TLabel;
-    ComboBox2: TComboBox;
-    ComboBox3: TComboBox;
-    Label6: TLabel;
-    ComboBox4: TComboBox;
-    Label7: TLabel;
-    UpDown1: TUpDown;
+    LblSort: TLabel;
+    CbSortDir: TComboBox;
+    CbSortMode: TComboBox;
+    LblStyle: TLabel;
+    CbStyle: TComboBox;
+    LblSize: TLabel;
+    udSize: TUpDown;
     TabSheet9: TTabSheet;
     CColorPicker1: TCColorPicker;
     MColorPicker1: TMColorPicker;
@@ -120,8 +121,8 @@ type
     procedure HexaColorPicker1Change(Sender: TObject);
     procedure HexaColorPicker1MouseMove(Sender: TObject;
       Shift: TShiftState; X, Y: Integer);
-    procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
+    procedure BtnBluePaletteClick(Sender: TObject);
+    procedure BtnGradientPalClick(Sender: TObject);
     procedure mbColorPalette1SelColorChange(Sender: TObject);
     procedure mbColorPalette1MouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
@@ -145,17 +146,17 @@ type
     procedure HRingPicker1Change(Sender: TObject);
     procedure HRingPicker1MouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
-    procedure UpDown1ChangingEx(Sender: TObject; var AllowChange: Boolean;
+    procedure udSizeChangingEx(Sender: TObject; var AllowChange: Boolean;
       NewValue: SmallInt; Direction: TUpDownDirection);
     procedure VColorPicker2Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
     procedure CheckBox2Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
-    procedure ComboBox2Change(Sender: TObject);
-    procedure ComboBox3Change(Sender: TObject);
-    procedure ComboBox4Change(Sender: TObject);
+    procedure BtnLoadPalClick(Sender: TObject);
+    procedure CbSortDirChange(Sender: TObject);
+    procedure CbSortModeChange(Sender: TObject);
+    procedure CbStyleChange(Sender: TObject);
     procedure CbWebSsafeClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure CbSwatchStyleClick(Sender: TObject);
@@ -208,12 +209,12 @@ begin
   uc.color := hexacolorpicker1.ColorUnderCursor;
 end;
 
-procedure TForm1.Button1Click(Sender: TObject);
+procedure TForm1.BtnBluePaletteClick(Sender: TObject);
 begin
   mbColorPalette1.GeneratePalette(clblue);
 end;
 
-procedure TForm1.Button2Click(Sender: TObject);
+procedure TForm1.BtnGradientPalClick(Sender: TObject);
 begin
   mbColorpalette1.GenerateGradientPalette([clblue, clred]);
 end;
@@ -362,28 +363,28 @@ begin
   hexacolorpicker1.NewArrowStyle := checkbox2.checked;
 end;
 
-procedure TForm1.Button4Click(Sender: TObject);
+procedure TForm1.BtnLoadPalClick(Sender: TObject);
 begin
   if opendialog1.Execute then
     mbcolorpalette1.Palette := opendialog1.FileName;
 end;
 
-procedure TForm1.ComboBox2Change(Sender: TObject);
+procedure TForm1.CbSortDirChange(Sender: TObject);
 begin
-  mbcolorpalette1.SortOrder := tsortorder(combobox2.itemindex);
+  mbcolorpalette1.SortOrder := tsortorder(CbSortDir.itemindex);
 end;
 
-procedure TForm1.ComboBox3Change(Sender: TObject);
+procedure TForm1.CbSortModeChange(Sender: TObject);
 begin
-  mbcolorpalette1.Sortmode := tsortmode(combobox3.ItemIndex);
+  mbcolorpalette1.Sortmode := tsortmode(CbSortMode.ItemIndex);
 end;
 
-procedure TForm1.ComboBox4Change(Sender: TObject);
+procedure TForm1.CbStyleChange(Sender: TObject);
 begin
-  mbcolorpalette1.CellStyle := tcellstyle(combobox4.ItemIndex);
+  mbcolorpalette1.CellStyle := tcellstyle(CbStyle.ItemIndex);
 end;
 
-procedure TForm1.UpDown1ChangingEx(Sender: TObject; var AllowChange: Boolean;
+procedure TForm1.udSizeChangingEx(Sender: TObject; var AllowChange: Boolean;
   NewValue: SmallInt; Direction: TUpDownDirection);
 begin
   allowchange := true;

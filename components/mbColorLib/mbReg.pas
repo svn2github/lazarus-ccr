@@ -17,7 +17,7 @@ uses
   ActnList,
   RColorPicker, GColorPicker, BColorPicker,
   RAxisColorPicker, GAxisColorPicker, BAxisColorPicker,
-  CColorPicker, YColorPicker, MColorPicker, KColorPicker,
+  CColorPicker, MColorPicker, YColorPicker, KColorPicker,
   HRingPicker,
   HColorPicker, SColorPicker, LColorPicker, VColorPicker,
   HSColorPicker, HSVColorPicker, HSLColorPicker, HSLRingPicker,
@@ -32,7 +32,7 @@ begin
   RegisterComponents('mbColor Lib', [
     TRColorPicker, TGColorPicker, TBColorPicker,
     TRAxisColorPicker, TGAxisColorPicker, TBAxisColorPicker,
-    TCColorPicker, TYColorPicker, TMColorPicker, TKColorPicker,
+    TCColorPicker, TMColorPicker, TYColorPicker, TKColorPicker,
     THRingPicker,
     THColorPicker, TSColorPicker, TLColorPicker, TVColorPicker,
     THSColorPicker, THSVColorPicker, THSLColorPicker, THSLRingPicker,
