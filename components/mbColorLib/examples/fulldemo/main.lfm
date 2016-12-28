@@ -1,62 +1,36 @@
 object Form1: TForm1
   Left = 447
-  Height = 406
+  Height = 416
   Top = 197
-  Width = 564
+  Width = 594
   Caption = 'mbColor Lib v2.1 Demo'
-  ClientHeight = 406
-  ClientWidth = 564
+  ClientHeight = 416
+  ClientWidth = 594
   Font.Color = clWindowText
   OnCreate = FormCreate
   ShowHint = True
   LCLVersion = '1.7'
-  object Label1: TLabel
-    Left = 441
-    Height = 15
-    Top = 8
-    Width = 73
-    Anchors = [akTop, akRight]
-    Caption = 'SelectedColor'
-    ParentColor = False
-  end
-  object Label2: TLabel
-    Left = 441
-    Height = 15
-    Top = 112
-    Width = 96
-    Anchors = [akTop, akRight]
-    Caption = 'ColorUnderCursor'
-    ParentColor = False
-  end
-  object Label5: TLabel
-    Left = 441
-    Height = 75
-    Top = 248
-    Width = 99
-    Anchors = [akTop, akRight]
-    Caption = 'Aditional controls:'#13#13'- Arrow keys'#13'- Ctrl + Arrow keys'#13'- Mouse wheel'
-    ParentColor = False
-  end
   object PageControl1: TPageControl
-    Left = 8
-    Height = 393
+    Left = 6
+    Height = 404
     Top = 6
-    Width = 428
+    Width = 476
     ActivePage = TabSheet1
-    Anchors = [akTop, akLeft, akRight, akBottom]
+    Align = alClient
+    BorderSpacing.Around = 6
     TabIndex = 0
     TabOrder = 0
     OnChange = PageControl1Change
     OnMouseMove = PageControl1MouseMove
     object TabSheet1: TTabSheet
       Caption = 'HSLColorPicker'
-      ClientHeight = 365
-      ClientWidth = 420
+      ClientHeight = 376
+      ClientWidth = 468
       object HSLColorPicker1: THSLColorPicker
         Left = 8
-        Height = 349
+        Height = 360
         Top = 8
-        Width = 406
+        Width = 454
         SelectedColor = 3289805
         HSPickerHintFormat = 'H: %h S: %s'#13'Hex: #%hex'
         LPickerHintFormat = 'Luminance: %l'
@@ -68,27 +42,29 @@ object Form1: TForm1
     end
     object TabSheet2: TTabSheet
       Caption = 'HexaColorPicker'
-      ClientHeight = 365
-      ClientWidth = 420
+      ClientHeight = 376
+      ClientWidth = 468
       ImageIndex = 1
       object Label4: TLabel
         AnchorSideLeft.Control = CheckBox1
         AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = ComboBox1
+        AnchorSideTop.Control = CbMarker
         AnchorSideTop.Side = asrCenter
         Left = 111
         Height = 15
-        Top = 344
+        Top = 355
         Width = 40
         BorderSpacing.Left = 24
         Caption = 'Marker:'
         ParentColor = False
       end
       object HexaColorPicker1: THexaColorPicker
-        Left = 48
-        Height = 333
-        Top = 4
-        Width = 314
+        AnchorSideTop.Control = TabSheet2
+        AnchorSideBottom.Control = CbMarker
+        Left = 64
+        Height = 351
+        Top = 0
+        Width = 336
         Anchors = [akTop, akLeft, akRight, akBottom]
         HintFormat = 'RGB(%r, %g, %b)'#13'Hex: #%hex'
         IntensityText = 'Intensity'
@@ -99,24 +75,26 @@ object Form1: TForm1
         OnMouseMove = HexaColorPicker1MouseMove
       end
       object CheckBox1: TCheckBox
-        AnchorSideTop.Control = ComboBox1
+        AnchorSideLeft.Control = TabSheet2
+        AnchorSideTop.Control = CbMarker
         AnchorSideTop.Side = asrCenter
         Left = 4
         Height = 19
-        Top = 342
+        Top = 353
         Width = 83
+        BorderSpacing.Left = 4
         Caption = 'SliderVisible'
         Checked = True
         OnClick = CheckBox1Click
         State = cbChecked
         TabOrder = 1
       end
-      object ComboBox1: TComboBox
+      object CbMarker: TComboBox
         AnchorSideLeft.Control = Label4
         AnchorSideLeft.Side = asrBottom
         Left = 159
         Height = 23
-        Top = 340
+        Top = 351
         Width = 103
         Anchors = [akLeft, akBottom]
         BorderSpacing.Left = 8
@@ -126,19 +104,19 @@ object Form1: TForm1
           'smArrow'
           'smRect'
         )
-        OnChange = ComboBox1Change
+        OnChange = CbMarkerChange
         Style = csDropDownList
         TabOrder = 2
         Text = 'smArrow'
       end
       object CheckBox2: TCheckBox
-        AnchorSideLeft.Control = ComboBox1
+        AnchorSideLeft.Control = CbMarker
         AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = ComboBox1
+        AnchorSideTop.Control = CbMarker
         AnchorSideTop.Side = asrCenter
         Left = 286
         Height = 20
-        Top = 341
+        Top = 352
         Width = 101
         Anchors = [akTop, akLeft, akBottom]
         BorderSpacing.Left = 24
@@ -149,8 +127,8 @@ object Form1: TForm1
     end
     object TabSheet3: TTabSheet
       Caption = 'mbColorPalette'
-      ClientHeight = 365
-      ClientWidth = 420
+      ClientHeight = 376
+      ClientWidth = 468
       ImageIndex = 2
       object LblSort: TLabel
         AnchorSideLeft.Control = TabSheet3
@@ -160,7 +138,7 @@ object Form1: TForm1
         AnchorSideBottom.Side = asrBottom
         Left = 6
         Height = 15
-        Top = 338
+        Top = 349
         Width = 24
         Anchors = [akLeft, akBottom]
         BorderSpacing.Left = 6
@@ -173,9 +151,9 @@ object Form1: TForm1
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = CbStyle
         AnchorSideTop.Side = asrCenter
-        Left = 222
+        Left = 264
         Height = 15
-        Top = 338
+        Top = 349
         Width = 28
         BorderSpacing.Left = 8
         Caption = 'Style:'
@@ -186,9 +164,9 @@ object Form1: TForm1
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = udSize
         AnchorSideTop.Side = asrCenter
-        Left = 331
+        Left = 398
         Height = 15
-        Top = 338
+        Top = 349
         Width = 23
         BorderSpacing.Left = 6
         Caption = 'Size:'
@@ -199,7 +177,7 @@ object Form1: TForm1
         AnchorSideBottom.Control = CbSortDir
         Left = 6
         Height = 25
-        Top = 301
+        Top = 312
         Width = 118
         Anchors = [akLeft, akBottom]
         AutoSize = True
@@ -215,7 +193,7 @@ object Form1: TForm1
         AnchorSideTop.Side = asrCenter
         Left = 128
         Height = 25
-        Top = 301
+        Top = 312
         Width = 139
         AutoSize = True
         BorderSpacing.Left = 4
@@ -230,7 +208,7 @@ object Form1: TForm1
         AnchorSideTop.Side = asrCenter
         Left = 271
         Height = 25
-        Top = 301
+        Top = 312
         Width = 139
         AutoSize = True
         BorderSpacing.Left = 4
@@ -241,22 +219,22 @@ object Form1: TForm1
       object ScrollBox1: TScrollBox
         AnchorSideBottom.Control = BtnBluePalette
         Left = 6
-        Height = 289
+        Height = 300
         Top = 8
-        Width = 410
+        Width = 458
         HorzScrollBar.Page = 75
         VertScrollBar.Page = 50
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Bottom = 4
         BorderStyle = bsNone
-        ClientHeight = 289
-        ClientWidth = 410
+        ClientHeight = 300
+        ClientWidth = 458
         TabOrder = 3
         object mbColorPalette1: TmbColorPalette
           Left = 0
-          Height = 287
+          Height = 298
           Top = 0
-          Width = 403
+          Width = 451
           Anchors = [akTop, akLeft, akRight, akBottom]
           Colors.Strings = (
             'clBlack'
@@ -530,8 +508,8 @@ object Form1: TForm1
         AnchorSideTop.Side = asrCenter
         Left = 34
         Height = 23
-        Top = 334
-        Width = 87
+        Top = 345
+        Width = 110
         BorderSpacing.Left = 4
         ItemHeight = 15
         ItemIndex = 0
@@ -549,10 +527,10 @@ object Form1: TForm1
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = LblSort
         AnchorSideTop.Side = asrCenter
-        Left = 127
+        Left = 150
         Height = 23
-        Top = 334
-        Width = 87
+        Top = 345
+        Width = 106
         BorderSpacing.Left = 6
         ItemHeight = 15
         ItemIndex = 7
@@ -586,10 +564,10 @@ object Form1: TForm1
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = LblSort
         AnchorSideTop.Side = asrCenter
-        Left = 254
+        Left = 296
         Height = 23
-        Top = 334
-        Width = 71
+        Top = 345
+        Width = 96
         BorderSpacing.Left = 4
         ItemHeight = 15
         ItemIndex = 0
@@ -607,9 +585,9 @@ object Form1: TForm1
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = LblSort
         AnchorSideTop.Side = asrCenter
-        Left = 358
+        Left = 425
         Height = 23
-        Top = 334
+        Top = 345
         Width = 15
         BorderSpacing.Left = 4
         Min = 0
@@ -640,14 +618,14 @@ object Form1: TForm1
     end
     object TabSheet5: TTabSheet
       Caption = 'HSVColorPicker'
-      ClientHeight = 365
-      ClientWidth = 420
+      ClientHeight = 376
+      ClientWidth = 468
       ImageIndex = 4
       object HSVColorPicker1: THSVColorPicker
         Left = 24
-        Height = 351
+        Height = 362
         Top = 6
-        Width = 357
+        Width = 405
         HintFormat = 'H: %h S: %s V: %v'#13'Hex: %hex'
         Anchors = [akTop, akLeft, akRight, akBottom]
         TabOrder = 0
@@ -658,8 +636,8 @@ object Form1: TForm1
         OnChange = HSVColorPicker1Change
       end
       object VColorPicker2: TVColorPicker
-        Left = 389
-        Height = 364
+        Left = 437
+        Height = 375
         Top = 2
         Width = 22
         HintFormat = 'Value: %v (selected)'
@@ -676,14 +654,14 @@ object Form1: TForm1
     end
     object TabSheet6: TTabSheet
       Caption = 'SLHColorPicker'
-      ClientHeight = 365
-      ClientWidth = 420
+      ClientHeight = 376
+      ClientWidth = 468
       ImageIndex = 5
       object SLHColorPicker1: TSLHColorPicker
         Left = 8
-        Height = 353
+        Height = 364
         Top = 6
-        Width = 410
+        Width = 458
         HPickerHintFormat = 'Hue: %h (selected)'
         SLPickerHintFormat = 'S: %s L: %l'#13'Hex: %hex'
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -694,8 +672,8 @@ object Form1: TForm1
     end
     object TabSheet11: TTabSheet
       Caption = 'Lists && Trees'
-      ClientHeight = 365
-      ClientWidth = 420
+      ClientHeight = 376
+      ClientWidth = 468
       ImageIndex = 10
       object mbColorList1: TmbColorList
         AnchorSideLeft.Control = Bevel1
@@ -704,10 +682,10 @@ object Form1: TForm1
         AnchorSideRight.Control = TabSheet11
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = Button5
-        Left = 214
-        Height = 328
-        Top = 4
-        Width = 202
+        Left = 238
+        Height = 339
+        Top = 0
+        Width = 230
         Anchors = [akTop, akLeft, akRight, akBottom]
         TabOrder = 0
       end
@@ -716,10 +694,10 @@ object Form1: TForm1
         AnchorSideTop.Control = TabSheet11
         AnchorSideRight.Control = Bevel1
         AnchorSideBottom.Control = Button5
-        Left = 4
-        Height = 328
-        Top = 4
-        Width = 202
+        Left = 0
+        Height = 339
+        Top = 0
+        Width = 230
         InfoLabelText = 'Color Values:'
         InfoDisplay1 = 'RGB: %r.%g.%b'
         InfoDisplay2 = 'HEX: #%hex'
@@ -732,9 +710,9 @@ object Form1: TForm1
         AnchorSideLeft.Side = asrCenter
         AnchorSideBottom.Control = TabSheet11
         AnchorSideBottom.Side = asrBottom
-        Left = 135
+        Left = 159
         Height = 25
-        Top = 336
+        Top = 347
         Width = 151
         Anchors = [akLeft, akBottom]
         AutoSize = True
@@ -746,7 +724,7 @@ object Form1: TForm1
       object Bevel1: TBevel
         AnchorSideLeft.Control = TabSheet11
         AnchorSideLeft.Side = asrCenter
-        Left = 206
+        Left = 230
         Height = 50
         Top = 72
         Width = 8
@@ -755,14 +733,17 @@ object Form1: TForm1
     end
     object TabSheet7: TTabSheet
       Caption = 'More'
-      ClientHeight = 365
-      ClientWidth = 420
+      ClientHeight = 376
+      ClientWidth = 468
       ImageIndex = 6
       object Label9: TLabel
-        Left = 136
+        AnchorSideLeft.Control = mbDeskPickerButton1
+        AnchorSideLeft.Side = asrBottom
+        Left = 134
         Height = 15
         Top = 8
         Width = 113
+        BorderSpacing.Left = 12
         Caption = 'HintFormat variables:'
         ParentColor = False
       end
@@ -779,11 +760,17 @@ object Form1: TForm1
         OnSelColorChange = mbDeskPickerButton1SelColorChange
       end
       object OfficeColorDialogButton: TButton
+        AnchorSideTop.Control = mbDeskPickerButton1
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = mbDeskPickerButton1
+        AnchorSideRight.Side = asrBottom
         Left = 8
         Height = 25
-        Top = 40
-        Width = 105
+        Top = 41
+        Width = 114
+        Anchors = [akTop, akLeft, akRight]
         AutoSize = True
+        BorderSpacing.Top = 8
         Caption = 'OfficeColorDlg'
         OnClick = OfficeColorDialogButtonClick
         TabOrder = 1
@@ -791,22 +778,22 @@ object Form1: TForm1
       object LColorPicker1: TLColorPicker
         Left = 34
         Height = 25
-        Top = 254
-        Width = 372
+        Top = 265
+        Width = 420
         HintFormat = 'Luminance: %l (selected)'
         SelectionIndicator = siRect
         Anchors = [akLeft, akRight, akBottom]
         TabOrder = 2
         Hue = 0
         Saturation = 0
-        Luminance = 54
-        SelectedColor = 3552822
+        Luminance = 48
+        SelectedColor = 3158064
       end
       object VColorPicker1: TVColorPicker
         Left = 34
         Height = 21
-        Top = 222
-        Width = 372
+        Top = 233
+        Width = 420
         HintFormat = 'Value: %v (selected)'
         ArrowPlacement = spBefore
         NewArrowStyle = True
@@ -821,8 +808,8 @@ object Form1: TForm1
       object HColorPicker1: THColorPicker
         Left = 34
         Height = 61
-        Top = 293
-        Width = 372
+        Top = 304
+        Width = 420
         HintFormat = 'Hue: %h (under mouse)'
         Increment = 5
         ArrowPlacement = spBoth
@@ -836,9 +823,11 @@ object Form1: TForm1
         SelectedColor = 8882175
       end
       object SColorPicker1: TSColorPicker
+        AnchorSideTop.Control = OfficeColorDialogButton
+        AnchorSideTop.Side = asrBottom
         Left = 8
-        Height = 284
-        Top = 70
+        Height = 291
+        Top = 74
         Width = 19
         HintFormat = 'Saturation: %s (selected)'
         Layout = lyVertical
@@ -846,6 +835,7 @@ object Form1: TForm1
         NewArrowStyle = True
         SelectionIndicator = siRect
         Anchors = [akTop, akLeft, akBottom]
+        BorderSpacing.Top = 8
         TabOrder = 5
         Hue = 60
         Saturation = 80
@@ -853,11 +843,15 @@ object Form1: TForm1
         SelectedColor = 11534335
       end
       object Memo1: TMemo
-        Left = 136
-        Height = 180
-        Top = 26
-        Width = 270
+        AnchorSideLeft.Control = Label9
+        AnchorSideTop.Control = Label9
+        AnchorSideTop.Side = asrBottom
+        Left = 134
+        Height = 190
+        Top = 27
+        Width = 320
         Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Top = 4
         Lines.Strings = (
           'The following variables will be replaced in the hint at runtime:'
           ''
@@ -901,8 +895,8 @@ object Form1: TForm1
     end
     object TabSheet8: TTabSheet
       Caption = 'Other'
-      ClientHeight = 365
-      ClientWidth = 420
+      ClientHeight = 376
+      ClientWidth = 468
       ImageIndex = 7
       object HSColorPicker1: THSColorPicker
         Left = 6
@@ -947,21 +941,27 @@ object Form1: TForm1
     end
     object TabSheet9: TTabSheet
       Caption = 'Even more'
-      ClientHeight = 365
-      ClientWidth = 420
+      ClientHeight = 376
+      ClientWidth = 468
       ImageIndex = 8
       object Label8: TLabel
-        Left = 6
+        AnchorSideLeft.Control = TabSheet9
+        AnchorSideTop.Control = TabSheet9
+        Left = 4
         Height = 15
         Top = 4
         Width = 136
+        BorderSpacing.Left = 4
+        BorderSpacing.Top = 4
         Caption = 'New: border styles added.'
         ParentColor = False
       end
       object CColorPicker1: TCColorPicker
+        AnchorSideTop.Control = Label8
+        AnchorSideTop.Side = asrBottom
         Left = 4
-        Height = 343
-        Top = 18
+        Height = 353
+        Top = 19
         Width = 22
         HintFormat = 'Cyan: %c (selected)'
         Anchors = [akTop, akLeft, akBottom]
@@ -969,9 +969,12 @@ object Form1: TForm1
         SelectedColor = clAqua
       end
       object MColorPicker1: TMColorPicker
+        AnchorSideTop.Control = CColorPicker1
+        AnchorSideBottom.Control = CColorPicker1
+        AnchorSideBottom.Side = asrBottom
         Left = 34
-        Height = 343
-        Top = 18
+        Height = 353
+        Top = 19
         Width = 22
         HintFormat = 'Magenta: %m (selected)'
         ArrowPlacement = spBefore
@@ -980,8 +983,11 @@ object Form1: TForm1
         SelectedColor = clFuchsia
       end
       object YColorPicker1: TYColorPicker
+        AnchorSideTop.Control = CColorPicker1
+        AnchorSideBottom.Control = CColorPicker1
+        AnchorSideBottom.Side = asrBottom
         Left = 68
-        Height = 342
+        Height = 353
         Top = 19
         Width = 31
         HintFormat = 'Yellow: %y (selected)'
@@ -991,9 +997,12 @@ object Form1: TForm1
         SelectedColor = clYellow
       end
       object KColorPicker1: TKColorPicker
+        AnchorSideTop.Control = CColorPicker1
+        AnchorSideBottom.Control = CColorPicker1
+        AnchorSideBottom.Side = asrBottom
         Left = 120
-        Height = 343
-        Top = 18
+        Height = 353
+        Top = 19
         Width = 22
         HintFormat = 'Black: %k (selected)'
         NewArrowStyle = True
@@ -1004,9 +1013,12 @@ object Form1: TForm1
         SelectedColor = 16711422
       end
       object RColorPicker1: TRColorPicker
-        Left = 150
-        Height = 343
-        Top = 18
+        AnchorSideTop.Control = CColorPicker1
+        AnchorSideBottom.Control = CColorPicker1
+        AnchorSideBottom.Side = asrBottom
+        Left = 184
+        Height = 353
+        Top = 19
         Width = 22
         HintFormat = 'Red: %r (selected)'
         ArrowPlacement = spBefore
@@ -1018,9 +1030,12 @@ object Form1: TForm1
         SelectedColor = 8026879
       end
       object GColorPicker1: TGColorPicker
-        Left = 182
-        Height = 343
-        Top = 18
+        AnchorSideTop.Control = CColorPicker1
+        AnchorSideBottom.Control = CColorPicker1
+        AnchorSideBottom.Side = asrBottom
+        Left = 216
+        Height = 353
+        Top = 19
         Width = 34
         HintFormat = 'Green: %g (selected)'
         ArrowPlacement = spBoth
@@ -1032,9 +1047,12 @@ object Form1: TForm1
         SelectedColor = 8060794
       end
       object BColorPicker1: TBColorPicker
-        Left = 224
-        Height = 343
-        Top = 18
+        AnchorSideTop.Control = CColorPicker1
+        AnchorSideBottom.Control = CColorPicker1
+        AnchorSideBottom.Side = asrBottom
+        Left = 258
+        Height = 353
+        Top = 19
         Width = 22
         HintFormat = 'Blue: %b (selected)'
         SelectionIndicator = siRect
@@ -1045,9 +1063,9 @@ object Form1: TForm1
         SelectedColor = 16743034
       end
       object KColorPicker2: TKColorPicker
-        Left = 274
-        Height = 71
-        Top = 22
+        Left = 322
+        Height = 79
+        Top = 27
         Width = 69
         BevelInner = bvRaised
         BevelOuter = bvRaised
@@ -1061,9 +1079,9 @@ object Form1: TForm1
         SelectedColor = 16711422
       end
       object MColorPicker2: TMColorPicker
-        Left = 272
-        Height = 55
-        Top = 96
+        Left = 320
+        Height = 61
+        Top = 110
         Width = 91
         BevelInner = bvLowered
         BevelOuter = bvRaised
@@ -1076,9 +1094,9 @@ object Form1: TForm1
         SelectedColor = clFuchsia
       end
       object CColorPicker2: TCColorPicker
-        Left = 274
-        Height = 67
-        Top = 152
+        Left = 322
+        Height = 74
+        Top = 172
         Width = 61
         BevelInner = bvRaised
         BevelOuter = bvLowered
@@ -1090,9 +1108,9 @@ object Form1: TForm1
         SelectedColor = clAqua
       end
       object YColorPicker2: TYColorPicker
-        Left = 272
-        Height = 57
-        Top = 228
+        Left = 320
+        Height = 63
+        Top = 256
         Width = 81
         BevelInner = bvLowered
         BevelOuter = bvLowered
@@ -1106,54 +1124,81 @@ object Form1: TForm1
     end
     object TabSheet10: TTabSheet
       Caption = 'Yet even more'
-      ClientHeight = 356
-      ClientWidth = 395
+      ClientHeight = 376
+      ClientWidth = 468
       ImageIndex = 9
       object RAxisColorPicker1: TRAxisColorPicker
+        AnchorSideLeft.Control = TabSheet10
+        AnchorSideTop.Control = LblRAxisPicker
+        AnchorSideTop.Side = asrBottom
         Left = 10
         Height = 100
-        Top = 28
+        Top = 27
         Width = 100
         HintFormat = 'G: %g B: %b'#13'Hex: #%hex'
+        BorderSpacing.Left = 10
+        BorderSpacing.Top = 4
         TabOrder = 0
       end
       object GAxisColorPicker1: TGAxisColorPicker
-        Left = 130
+        AnchorSideLeft.Control = TabSheet10
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = LblGAxisPicker
+        AnchorSideTop.Side = asrBottom
+        Left = 184
         Height = 100
-        Top = 28
+        Top = 27
         Width = 100
         HintFormat = 'R: %r B: %b'#13'Hex: #%hex'
+        BorderSpacing.Top = 4
         TabOrder = 1
         MarkerStyle = msCross
       end
       object BAxisColorPicker1: TBAxisColorPicker
-        Left = 250
+        AnchorSideTop.Control = LblBAxisPicker
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TabSheet10
+        AnchorSideRight.Side = asrBottom
+        Left = 358
         Height = 100
-        Top = 28
+        Top = 27
         Width = 100
         HintFormat = 'R: %r G: %g'#13'Hex: #%hex'
+        Anchors = [akTop, akRight]
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 10
         TabOrder = 2
         MarkerStyle = msCrossCirc
       end
       object CIELColorPicker1: TCIELColorPicker
+        AnchorSideLeft.Control = TabSheet10
+        AnchorSideTop.Control = LblCIELColorPicker
+        AnchorSideTop.Side = asrBottom
         Left = 10
         Height = 100
-        Top = 188
+        Top = 186
         Width = 100
         SelectedColor = 16119089
         HintFormat = 'A: %cieA B: %cieB'#13'Hex: #%hex'
+        BorderSpacing.Left = 10
+        BorderSpacing.Top = 4
         TabOrder = 3
         AValue = -47
         BValue = -32
         LValue = 88
       end
       object CIEAColorPicker1: TCIEAColorPicker
-        Left = 130
+        AnchorSideLeft.Control = TabSheet10
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = LblCIEAColorPicker
+        AnchorSideTop.Side = asrBottom
+        Left = 184
         Height = 100
-        Top = 188
+        Top = 186
         Width = 100
         SelectedColor = 16515327
         HintFormat = 'L: %cieL B: %cieB'#13'Hex: #%hex'
+        BorderSpacing.Top = 4
         TabOrder = 4
         LValue = 60
         AValue = 96
@@ -1161,160 +1206,280 @@ object Form1: TForm1
         MarkerStyle = msSquare
       end
       object CIEBColorPicker1: TCIEBColorPicker
-        Left = 250
+        AnchorSideTop.Control = LblCIEBColorPicker
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TabSheet10
+        AnchorSideRight.Side = asrBottom
+        Left = 358
         Height = 100
-        Top = 188
+        Top = 186
         Width = 100
         SelectedColor = 130823
         HintFormat = 'L: %cieL A: %cieA'#13'Hex: #%hex'
+        Anchors = [akTop, akRight]
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 10
         TabOrder = 5
         AValue = -88
         BValue = 74
         LValue = 88
       end
-      object Label10: TLabel
-        Left = 130
+      object LblGAxisPicker: TLabel
+        AnchorSideLeft.Control = GAxisColorPicker1
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = TabSheet10
+        Left = 189
         Height = 15
         Top = 8
         Width = 90
+        BorderSpacing.Top = 8
         Caption = 'GAxisColorPicker'
         ParentColor = False
       end
-      object Label11: TLabel
+      object LblRAxisPicker: TLabel
+        AnchorSideLeft.Control = TabSheet10
+        AnchorSideTop.Control = TabSheet10
         Left = 10
         Height = 15
         Top = 8
         Width = 89
+        BorderSpacing.Left = 10
+        BorderSpacing.Top = 8
         Caption = 'RAxisColorPicker'
         ParentColor = False
       end
-      object Label12: TLabel
-        Left = 250
+      object LblBAxisPicker: TLabel
+        AnchorSideTop.Control = TabSheet10
+        AnchorSideRight.Control = BAxisColorPicker1
+        AnchorSideRight.Side = asrBottom
+        Left = 369
         Height = 15
         Top = 8
         Width = 89
+        Anchors = [akTop, akRight]
+        BorderSpacing.Top = 8
         Caption = 'BAxisColorPicker'
         ParentColor = False
       end
-      object Label13: TLabel
+      object LblCIELColorPicker: TLabel
+        AnchorSideLeft.Control = TabSheet10
+        AnchorSideTop.Control = RAxisColorPicker1
+        AnchorSideTop.Side = asrBottom
         Left = 10
         Height = 15
-        Top = 168
+        Top = 167
         Width = 84
+        BorderSpacing.Left = 10
+        BorderSpacing.Top = 40
         Caption = 'CIELColorPicker'
         ParentColor = False
       end
-      object Label14: TLabel
-        Left = 130
+      object LblCIEAColorPicker: TLabel
+        AnchorSideLeft.Control = CIEAColorPicker1
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = GAxisColorPicker1
+        AnchorSideTop.Side = asrBottom
+        Left = 191
         Height = 15
-        Top = 168
+        Top = 167
         Width = 86
+        BorderSpacing.Top = 40
         Caption = 'CIEAColorPicker'
         ParentColor = False
       end
-      object Label15: TLabel
-        Left = 250
+      object LblCIEBColorPicker: TLabel
+        AnchorSideTop.Control = BAxisColorPicker1
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = CIEBColorPicker1
+        AnchorSideRight.Side = asrBottom
+        Left = 373
         Height = 15
-        Top = 168
+        Top = 167
         Width = 85
+        Anchors = [akTop, akRight]
+        BorderSpacing.Top = 40
         Caption = 'CIEBColorPicker'
         ParentColor = False
       end
     end
   end
-  object sc: TmbColorPreview
-    Left = 441
-    Height = 62
-    Top = 25
-    Width = 108
-    Color = clNone
-    Anchors = [akTop, akRight]
-  end
-  object uc: TmbColorPreview
-    Left = 441
-    Height = 62
-    Top = 130
-    Width = 108
-    Color = clNone
-    Anchors = [akTop, akRight]
-  end
-  object tb1: TTrackBar
-    Left = 441
-    Height = 20
-    Hint = 'Opacity'
-    Top = 90
-    Width = 108
-    Max = 100
-    OnChange = tb1Change
-    Position = 100
-    TickStyle = tsNone
-    Anchors = [akTop, akRight]
-    TabOrder = 3
-  end
-  object tb2: TTrackBar
-    Left = 441
-    Height = 20
-    Top = 196
-    Width = 108
-    Max = 100
-    OnChange = tb2Change
-    Position = 100
-    TickStyle = tsNone
-    Anchors = [akTop, akRight]
-    TabOrder = 4
-  end
-  object CbWebSsafe: TCheckBox
-    Left = 441
-    Height = 19
-    Top = 328
-    Width = 66
-    Anchors = [akTop, akRight]
-    Caption = 'WebSafe'
-    OnClick = CbWebSsafeClick
-    TabOrder = 6
-  end
-  object CbSwatchStyle: TCheckBox
-    Left = 441
-    Height = 19
-    Top = 218
-    Width = 83
-    Anchors = [akTop, akRight]
-    Caption = 'SwatchStyle'
-    OnClick = CbSwatchStyleClick
-    TabOrder = 5
-  end
-  object CbShowHints: TCheckBox
-    Left = 441
-    Height = 19
-    Top = 349
-    Width = 78
-    Anchors = [akTop, akRight]
-    Caption = 'Show hints'
-    Checked = True
-    OnChange = CbShowHintsChange
-    State = cbChecked
-    TabOrder = 7
-  end
-  object CbEnabled: TCheckBox
-    Left = 441
-    Height = 19
-    Top = 371
-    Width = 62
-    Anchors = [akTop, akRight]
-    Caption = 'Enabled'
-    Checked = True
-    OnChange = CbEnabledChange
-    State = cbChecked
-    TabOrder = 8
+  object RightPanel: TPanel
+    Left = 488
+    Height = 404
+    Top = 6
+    Width = 100
+    Align = alRight
+    AutoSize = True
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 6
+    BevelOuter = bvNone
+    ClientHeight = 404
+    ClientWidth = 100
+    TabOrder = 1
+    object LblSelectedColor: TLabel
+      AnchorSideLeft.Control = RightPanel
+      AnchorSideTop.Control = RightPanel
+      Left = 0
+      Height = 15
+      Top = 0
+      Width = 73
+      Caption = 'SelectedColor'
+      ParentColor = False
+    end
+    object sc: TmbColorPreview
+      AnchorSideLeft.Control = RightPanel
+      AnchorSideTop.Control = LblSelectedColor
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = RightPanel
+      AnchorSideRight.Side = asrBottom
+      Left = 0
+      Height = 62
+      Top = 15
+      Width = 100
+      Color = clNone
+      Anchors = [akTop, akLeft, akRight]
+    end
+    object tb1: TTrackBar
+      AnchorSideLeft.Control = RightPanel
+      AnchorSideTop.Control = sc
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = RightPanel
+      AnchorSideRight.Side = asrBottom
+      Left = 0
+      Height = 20
+      Hint = 'Opacity'
+      Top = 81
+      Width = 100
+      Max = 100
+      OnChange = tb1Change
+      Position = 100
+      TickStyle = tsNone
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      TabOrder = 1
+    end
+    object LblColorUnderCursor: TLabel
+      AnchorSideLeft.Control = RightPanel
+      AnchorSideTop.Control = tb1
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 15
+      Top = 105
+      Width = 96
+      BorderSpacing.Top = 4
+      Caption = 'ColorUnderCursor'
+      ParentColor = False
+    end
+    object uc: TmbColorPreview
+      AnchorSideLeft.Control = RightPanel
+      AnchorSideTop.Control = LblColorUnderCursor
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = RightPanel
+      AnchorSideRight.Side = asrBottom
+      Left = 0
+      Height = 62
+      Top = 120
+      Width = 100
+      Color = clNone
+      Anchors = [akTop, akLeft, akRight]
+    end
+    object tb2: TTrackBar
+      AnchorSideLeft.Control = RightPanel
+      AnchorSideTop.Control = uc
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = RightPanel
+      AnchorSideRight.Side = asrBottom
+      Left = 0
+      Height = 20
+      Top = 186
+      Width = 100
+      Max = 100
+      OnChange = tb2Change
+      Position = 100
+      TickStyle = tsNone
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      TabOrder = 3
+    end
+    object CbSwatchStyle: TCheckBox
+      AnchorSideLeft.Control = RightPanel
+      AnchorSideTop.Control = tb2
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 19
+      Top = 210
+      Width = 83
+      BorderSpacing.Top = 4
+      Caption = 'SwatchStyle'
+      OnClick = CbSwatchStyleClick
+      TabOrder = 4
+    end
+    object LblInfo: TLabel
+      AnchorSideLeft.Control = RightPanel
+      AnchorSideTop.Control = CbSwatchStyle
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 75
+      Top = 241
+      Width = 99
+      BorderSpacing.Top = 12
+      Caption = 'Aditional controls:'#13#13'- Arrow keys'#13'- Ctrl + Arrow keys'#13'- Mouse wheel'
+      ParentColor = False
+    end
+    object CbWebSsafe: TCheckBox
+      AnchorSideLeft.Control = RightPanel
+      AnchorSideTop.Control = LblInfo
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 19
+      Top = 328
+      Width = 66
+      BorderSpacing.Top = 12
+      Caption = 'WebSafe'
+      OnClick = CbWebSsafeClick
+      TabOrder = 5
+    end
+    object CbShowHints: TCheckBox
+      AnchorSideLeft.Control = RightPanel
+      AnchorSideTop.Control = CbWebSsafe
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 19
+      Top = 351
+      Width = 78
+      BorderSpacing.Top = 4
+      Caption = 'Show hints'
+      Checked = True
+      OnChange = CbShowHintsChange
+      State = cbChecked
+      TabOrder = 6
+    end
+    object CbEnabled: TCheckBox
+      AnchorSideLeft.Control = RightPanel
+      AnchorSideTop.Control = CbShowHints
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 19
+      Top = 374
+      Width = 62
+      BorderSpacing.Top = 4
+      Caption = 'Enabled'
+      Checked = True
+      OnChange = CbEnabledChange
+      State = cbChecked
+      TabOrder = 7
+    end
   end
   object mbOfficeColorDialog1: TmbOfficeColorDialog
     UseHints = True
-    left = 456
-    top = 136
+    left = 504
+    top = 144
   end
   object OpenDialog1: TOpenDialog
     Filter = 'JASC PAL (*.pal)|*.pal|Photoshop (*.act; *.aco)|*.act;*.aco'
-    left = 456
+    left = 504
     top = 40
   end
 end

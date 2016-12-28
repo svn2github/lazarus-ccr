@@ -14,10 +14,10 @@ object Form1: TForm1
     Height = 429
     Top = 0
     Width = 400
-    ActivePage = tabHorizontal
+    ActivePage = tabVertical
     Align = alClient
     Anchors = [akTop, akRight]
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 0
     object tabVertical: TTabSheet
       Caption = 'vertical'
@@ -73,11 +73,14 @@ object Form1: TForm1
           Anchors = [akLeft, akBottom]
         end
         object rbHSVv: TRadioButton
-          Left = 328
+          AnchorSideLeft.Control = rbHSLv
+          AnchorSideLeft.Side = asrBottom
+          Left = 323
           Height = 19
           Top = 305
           Width = 42
           Anchors = [akLeft, akBottom]
+          BorderSpacing.Left = 2
           Caption = 'HSV'
           OnChange = rbHSLv_Change
           TabOrder = 3
@@ -110,7 +113,7 @@ object Form1: TForm1
           Caption = 'S'
           ParentColor = False
         end
-        object Label8: TLabel
+        object LblH: TLabel
           Left = 288
           Height = 15
           Top = 8
@@ -142,7 +145,7 @@ object Form1: TForm1
           Caption = 'M'
           ParentColor = False
         end
-        object Label4: TLabel
+        object LblC: TLabel
           Left = 136
           Height = 15
           Top = 8
@@ -166,7 +169,7 @@ object Form1: TForm1
           Caption = 'G'
           ParentColor = False
         end
-        object Label1: TLabel
+        object LblR: TLabel
           Left = 13
           Height = 15
           Top = 8
@@ -175,9 +178,10 @@ object Form1: TForm1
           ParentColor = False
         end
         object VColorPickerV: TVColorPicker
+          AnchorSideTop.Control = HColorPickerV
           Left = 368
-          Height = 278
-          Top = 24
+          Height = 279
+          Top = 23
           Width = 22
           HintFormat = 'Value: %value'
           Layout = lyVertical
@@ -190,9 +194,10 @@ object Form1: TForm1
           SelectedColor = clWhite
         end
         object LColorPickerV: TLColorPicker
+          AnchorSideTop.Control = HColorPickerV
           Left = 350
-          Height = 278
-          Top = 24
+          Height = 279
+          Top = 23
           Width = 22
           HintFormat = 'Luminance: %value'
           Layout = lyVertical
@@ -200,14 +205,16 @@ object Form1: TForm1
           TabOrder = 6
           OnChange = SLVPickerV_Change
           Hue = 0
-          Saturation = 240
-          Luminance = 239
-          SelectedColor = 16645631
+          Saturation = 0
+          Luminance = 240
+          SelectedColor = 15790320
         end
         object HColorPickerV: THColorPicker
+          AnchorSideTop.Control = LblH
+          AnchorSideTop.Side = asrBottom
           Left = 288
-          Height = 278
-          Top = 24
+          Height = 279
+          Top = 23
           Width = 22
           HintFormat = 'Hue: %value'
           Layout = lyVertical
@@ -219,22 +226,24 @@ object Form1: TForm1
           Value = 255
         end
         object KColorPickerV: TKColorPicker
+          AnchorSideTop.Control = CColorPickerV
           Left = 232
-          Height = 296
-          Top = 24
+          Height = 297
+          Top = 23
           Width = 22
           HintFormat = 'Black: %value'
           Anchors = [akTop, akLeft, akBottom]
           TabOrder = 8
           OnChange = CMYKPickerV_Change
           Cyan = 0
-          Black = 255
-          SelectedColor = clBlack
+          Black = 1
+          SelectedColor = 16711422
         end
         object YColorPickerV: TYColorPicker
+          AnchorSideTop.Control = CColorPickerV
           Left = 200
-          Height = 296
-          Top = 24
+          Height = 297
+          Top = 23
           Width = 22
           HintFormat = 'Yellow: %value'
           Anchors = [akTop, akLeft, akBottom]
@@ -243,9 +252,10 @@ object Form1: TForm1
           SelectedColor = clYellow
         end
         object MColorPickerV: TMColorPicker
+          AnchorSideTop.Control = CColorPickerV
           Left = 168
-          Height = 296
-          Top = 24
+          Height = 297
+          Top = 23
           Width = 22
           HintFormat = 'Magenta: %value'
           Anchors = [akTop, akLeft, akBottom]
@@ -254,9 +264,11 @@ object Form1: TForm1
           SelectedColor = clFuchsia
         end
         object CColorPickerV: TCColorPicker
+          AnchorSideTop.Control = LblC
+          AnchorSideTop.Side = asrBottom
           Left = 136
-          Height = 296
-          Top = 24
+          Height = 297
+          Top = 23
           Width = 22
           HintFormat = 'Cyan: %value'
           Anchors = [akTop, akLeft, akBottom]
@@ -265,9 +277,11 @@ object Form1: TForm1
           SelectedColor = clAqua
         end
         object RColorPickerV: TRColorPicker
+          AnchorSideTop.Control = LblR
+          AnchorSideTop.Side = asrBottom
           Left = 12
-          Height = 296
-          Top = 24
+          Height = 297
+          Top = 23
           Width = 22
           HintFormat = 'Red: %value'
           Anchors = [akTop, akLeft, akBottom]
@@ -277,9 +291,10 @@ object Form1: TForm1
           Blue = 0
         end
         object GColorPickerV: TGColorPicker
+          AnchorSideTop.Control = RColorPickerV
           Left = 45
-          Height = 296
-          Top = 24
+          Height = 297
+          Top = 23
           Width = 22
           HintFormat = 'Green: %value'
           Anchors = [akTop, akLeft, akBottom]
@@ -290,22 +305,24 @@ object Form1: TForm1
           SelectedColor = clLime
         end
         object BColorPickerV: TBColorPicker
+          AnchorSideTop.Control = RColorPickerV
           Left = 76
-          Height = 296
-          Top = 24
+          Height = 297
+          Top = 23
           Width = 22
           HintFormat = 'Blue: %value'
           Anchors = [akTop, akLeft, akBottom]
           TabOrder = 14
           OnChange = RGBPickerV_Change
-          Red = 0
           Green = 0
+          Red = 0
           SelectedColor = clBlue
         end
         object SColorPickerV: TSColorPicker
+          AnchorSideTop.Control = HColorPickerV
           Left = 318
-          Height = 278
-          Top = 24
+          Height = 279
+          Top = 23
           Width = 22
           HintFormat = 'Saturation: %value'
           Layout = lyVertical
@@ -351,10 +368,13 @@ object Form1: TForm1
           Shape = bsTopLine
         end
         object rbHSVh: TRadioButton
-          Left = 72
+          AnchorSideLeft.Control = rbHSLh
+          AnchorSideLeft.Side = asrBottom
+          Left = 71
           Height = 19
           Top = 376
           Width = 42
+          BorderSpacing.Left = 6
           Caption = 'HSV'
           OnChange = rbHSLh_Change
           TabOrder = 0
@@ -497,9 +517,9 @@ object Form1: TForm1
           TabOrder = 6
           OnChange = SLVPickerH_Change
           Hue = 0
-          Saturation = 240
-          Luminance = 239
-          SelectedColor = 16645631
+          Saturation = 0
+          Luminance = 240
+          SelectedColor = 15790320
         end
         object SColorPickerH: TSColorPicker
           Left = 24
@@ -540,8 +560,8 @@ object Form1: TForm1
           TabOrder = 9
           OnChange = CMYKPickerH_Change
           Cyan = 0
-          Black = 255
-          SelectedColor = clBlack
+          Black = 1
+          SelectedColor = 16711422
         end
         object MColorPickerH: TMColorPicker
           Left = 24
@@ -589,8 +609,8 @@ object Form1: TForm1
           Anchors = [akTop, akLeft, akRight]
           TabOrder = 13
           OnChange = RGBPickerH_Change
-          Red = 0
           Green = 0
+          Red = 0
           SelectedColor = clBlue
         end
         object GColorPickerH: TGColorPicker

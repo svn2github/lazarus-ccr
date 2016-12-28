@@ -29,7 +29,7 @@ type
     HColorPickerV: THColorPicker;
     KColorPickerH: TKColorPicker;
     KColorPickerV: TKColorPicker;
-    Label1: TLabel;
+    LblR: TLabel;
     lblLVv: TLabel;
     Label12: TLabel;
     Label13: TLabel;
@@ -43,11 +43,11 @@ type
     Label20: TLabel;
     lblLVh: TLabel;
     Label3: TLabel;
-    Label4: TLabel;
+    LblC: TLabel;
     Label5: TLabel;
     Label6: TLabel;
     Label7: TLabel;
-    Label8: TLabel;
+    LblH: TLabel;
     Label9: TLabel;
     LColorPickerH: TLColorPicker;
     LColorPickerV: TLColorPicker;
@@ -317,7 +317,11 @@ begin
   if rbHSVv.Checked then begin
     if (VColorPickerV = nil) then
       exit;
-    HSLVv.Color := HSVtoColor(HColorPickerV.Hue, SColorPickerV.Saturation, VColorPickerV.Value);
+    HSLVv.Color := HSVtoColor(
+      HColorPickerV.Hue/HColorPickerV.MaxHue,
+      SColorPickerV.Saturation/SColorPickerV.MaxSaturation,
+      VColorPickerV.Value/VColorPickerV.MaxValue
+    );
   end;
 
   c := HSLVv.Color;

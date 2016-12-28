@@ -23,13 +23,14 @@ type
     Bevel1: TBevel;
     CbShowHints: TCheckBox;
     CbEnabled: TCheckBox;
-    Label10: TLabel;
-    Label11: TLabel;
-    Label12: TLabel;
-    Label13: TLabel;
-    Label14: TLabel;
-    Label15: TLabel;
+    LblGAxisPicker: TLabel;
+    LblRAxisPicker: TLabel;
+    LblBAxisPicker: TLabel;
+    LblCIELColorPicker: TLabel;
+    LblCIEAColorPicker: TLabel;
+    LblCIEBColorPicker: TLabel;
     PageControl1: TPageControl;
+    RightPanel: TPanel;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
@@ -37,10 +38,10 @@ type
     HSLColorPicker1: THSLColorPicker;
     sc: TmbColorPreview;
     uc: TmbColorPreview;
-    Label1: TLabel;
+    LblSelectedColor: TLabel;
     tb1: TTrackBar;
     tb2: TTrackBar;
-    Label2: TLabel;
+    LblColorUnderCursor: TLabel;
     HexaColorPicker1: THexaColorPicker;
     mbColorPalette1: TmbColorPalette;
     BtnBluePalette: TButton;
@@ -64,10 +65,10 @@ type
     HRingPicker1: THRingPicker;
     VColorPicker2: TVColorPicker;
     CheckBox1: TCheckBox;
-    ComboBox1: TComboBox;
+    CbMarker: TComboBox;
     Label4: TLabel;
     CheckBox2: TCheckBox;
-    Label5: TLabel;
+    LblInfo: TLabel;
     BtnLoadPal: TButton;
     OpenDialog1: TOpenDialog;
     ScrollBox1: TScrollBox;
@@ -151,7 +152,7 @@ type
     procedure VColorPicker2Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
-    procedure ComboBox1Change(Sender: TObject);
+    procedure CbMarkerChange(Sender: TObject);
     procedure CheckBox2Click(Sender: TObject);
     procedure BtnLoadPalClick(Sender: TObject);
     procedure CbSortDirChange(Sender: TObject);
@@ -353,9 +354,9 @@ begin
   HexaColorPicker1.SliderVisible := checkbox1.Checked;
 end;
 
-procedure TForm1.ComboBox1Change(Sender: TObject);
+procedure TForm1.CbMarkerChange(Sender: TObject);
 begin
-  hexacolorpicker1.SliderMarker := TMArker(ComboBox1.ItemIndex);
+  hexacolorpicker1.SliderMarker := TMArker(CbMarker.ItemIndex);
 end;
 
 procedure TForm1.CheckBox2Click(Sender: TObject);
