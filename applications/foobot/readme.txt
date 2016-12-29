@@ -4,6 +4,7 @@ Foobot project
 The main application Foobot Interregator shows how to pull all the data available from the Foobot API
 The monitor application shows how to write a practical graphical Foobot Monitor for one foobot
 Both applications have dependency for CryptIni - available via OnlinePackageManager
+Also Industrial component - available via OnlinePackageManager in Laz1.8
 
 If you want to build your own GUI, then you need three files:
 1. foobot_objects.pas - Object definitions
