@@ -1,0 +1,84 @@
+object loginform: Tloginform
+  Left = 256
+  Height = 141
+  Top = 472
+  Width = 442
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  Caption = 'Foobot Login'
+  ClientHeight = 141
+  ClientWidth = 442
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '1.7'
+  Scaled = True
+  object GroupBox1: TGroupBox
+    Left = 0
+    Height = 88
+    Top = 0
+    Width = 442
+    Align = alTop
+    Caption = 'Your FooBot information'
+    ClientHeight = 68
+    ClientWidth = 438
+    TabOrder = 0
+    object edt_emailaddress: TLabeledEdit
+      Left = 16
+      Height = 23
+      Hint = 'This is your Foobot LogIn name'
+      Top = 24
+      Width = 192
+      EditLabel.AnchorSideLeft.Control = edt_emailaddress
+      EditLabel.AnchorSideRight.Control = edt_emailaddress
+      EditLabel.AnchorSideRight.Side = asrBottom
+      EditLabel.AnchorSideBottom.Control = edt_emailaddress
+      EditLabel.Left = 16
+      EditLabel.Height = 15
+      EditLabel.Top = 6
+      EditLabel.Width = 192
+      EditLabel.Caption = 'User Name (Email address)'
+      EditLabel.ParentColor = False
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+      Text = 'myname@myserver.com'
+    end
+    object edt_password: TLabeledEdit
+      Left = 230
+      Height = 23
+      Hint = 'This is your Foobot LogIn password'
+      Top = 24
+      Width = 192
+      EchoMode = emPassword
+      EditLabel.AnchorSideLeft.Control = edt_password
+      EditLabel.AnchorSideRight.Control = edt_password
+      EditLabel.AnchorSideRight.Side = asrBottom
+      EditLabel.AnchorSideBottom.Control = edt_password
+      EditLabel.Left = 230
+      EditLabel.Height = 15
+      EditLabel.Top = 6
+      EditLabel.Width = 192
+      EditLabel.Caption = 'Foobot password'
+      EditLabel.ParentColor = False
+      ParentShowHint = False
+      PasswordChar = '*'
+      ShowHint = True
+      TabOrder = 1
+      Text = 'mypassword'
+    end
+  end
+  object cmd_OK: TBitBtn
+    Left = 184
+    Height = 30
+    Top = 96
+    Width = 75
+    Anchors = [akLeft, akRight, akBottom]
+    Default = True
+    DefaultCaption = True
+    Kind = bkOK
+    ModalResult = 1
+    OnClick = cmd_OKClick
+    TabOrder = 1
+  end
+end

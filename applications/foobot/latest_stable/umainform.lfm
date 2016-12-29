@@ -1,0 +1,262 @@
+object mainform: Tmainform
+  Left = 547
+  Height = 377
+  Top = 198
+  Width = 510
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
+  Caption = 'mainform'
+  ClientHeight = 357
+  ClientWidth = 510
+  DefaultMonitor = dmDesktop
+  Menu = MainMenu1
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '1.7'
+  Scaled = True
+  object GroupBox3: TGroupBox
+    Left = 0
+    Height = 209
+    Top = 0
+    Width = 510
+    Align = alTop
+    Caption = 'Your Foobots'
+    ClientHeight = 189
+    ClientWidth = 506
+    TabOrder = 0
+    object tv_Identity: TTreeView
+      Left = 0
+      Height = 136
+      Top = 53
+      Width = 506
+      Align = alBottom
+      AutoExpand = True
+      DefaultItemHeight = 18
+      ExpandSignType = tvestPlusMinus
+      MultiSelectStyle = [msVisibleOnly]
+      ReadOnly = True
+      RowSelect = True
+      ShowLines = False
+      ShowRoot = False
+      TabOrder = 0
+      OnClick = tv_IdentityClick
+      Options = [tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoRowSelect, tvoShowButtons, tvoToolTips, tvoThemedDraw]
+    end
+    object cmd_GetIdentity: TButton
+      Left = 8
+      Height = 30
+      Hint = 'Click to fetch your Foobot details'
+      Top = 8
+      Width = 128
+      Caption = 'Fetch all Foobots'
+      OnClick = cmd_GetIdentityClick
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+    end
+    object cmd_FetchData: TButton
+      Left = 144
+      Height = 30
+      Top = 8
+      Width = 248
+      Caption = 'Fetch data from selected Foobot'
+      Enabled = False
+      OnClick = cmd_FetchDataClick
+      ParentFont = False
+      TabOrder = 2
+    end
+    object cmd_Close: TBitBtn
+      Left = 422
+      Height = 30
+      Top = 8
+      Width = 75
+      Anchors = []
+      DefaultCaption = True
+      Kind = bkClose
+      ModalResult = 11
+      OnClick = mnu_fileExitClick
+      TabOrder = 3
+    end
+  end
+  object sb: TStatusBar
+    Left = 0
+    Height = 23
+    Top = 334
+    Width = 510
+    Panels = <>
+  end
+  object rg_interval: TRadioGroup
+    Left = 264
+    Height = 105
+    Top = 216
+    Width = 96
+    AutoFill = True
+    Caption = 'Previous...'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 85
+    ClientWidth = 92
+    Enabled = False
+    ItemIndex = 0
+    Items.Strings = (
+      'Now'
+      'Hour'
+      '2 Hours'
+      '4 Hours'
+      '8 Hours'
+    )
+    OnSelectionChanged = rg_intervalSelectionChanged
+    TabOrder = 2
+  end
+  object rg_intervalAverageBy: TRadioGroup
+    Left = 360
+    Height = 105
+    Top = 216
+    Width = 145
+    AutoFill = True
+    Caption = 'Average by..'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 85
+    ClientWidth = 141
+    Enabled = False
+    ItemIndex = 0
+    Items.Strings = (
+      'No average'
+      'Hourly average'
+      '8-Hourly average'
+      '24-Hourly average'
+      'Total average'
+    )
+    OnSelectionChanged = rg_intervalAverageBySelectionChanged
+    TabOrder = 3
+  end
+  object rg_mode: TRadioGroup
+    Left = 8
+    Height = 105
+    Top = 216
+    Width = 112
+    AutoFill = True
+    Caption = 'Mode'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 85
+    ClientWidth = 108
+    Enabled = False
+    ItemIndex = 0
+    Items.Strings = (
+      'Previous'
+      'Date Range'
+    )
+    OnSelectionChanged = rg_modeSelectionChanged
+    TabOrder = 4
+  end
+  object grp_daterange: TGroupBox
+    Left = 128
+    Height = 105
+    Top = 216
+    Width = 129
+    Caption = 'Date Range'
+    ClientHeight = 85
+    ClientWidth = 125
+    Enabled = False
+    TabOrder = 5
+    object lbl_fromdate: TLabel
+      Left = 8
+      Height = 15
+      Top = 12
+      Width = 55
+      Caption = 'From Date'
+      ParentColor = False
+    end
+    object lbl_to: TLabel
+      Left = 8
+      Height = 15
+      Top = 36
+      Width = 11
+      Caption = 'to'
+      ParentColor = False
+    end
+    object lbl_toDate: TLabel
+      Left = 8
+      Height = 15
+      Top = 60
+      Width = 39
+      Caption = 'To date'
+      ParentColor = False
+    end
+    object spd_fromdate: TSpeedButton
+      Left = 88
+      Height = 22
+      Top = 8
+      Width = 23
+      Caption = '...'
+      OnClick = spd_fromdateClick
+    end
+    object spd_todate: TSpeedButton
+      Left = 88
+      Height = 22
+      Top = 56
+      Width = 23
+      Caption = '...'
+      OnClick = spd_todateClick
+    end
+  end
+  object Button1: TButton
+    Left = 0
+    Height = 25
+    Top = 312
+    Width = 75
+    Caption = 'Button1'
+    OnClick = Button1Click
+    TabOrder = 6
+  end
+  object MainMenu1: TMainMenu
+    Left = 304
+    Top = 24
+    object mnu_file: TMenuItem
+      Caption = '&File'
+      object mnu_fileExit: TMenuItem
+        Caption = 'E&xit'
+        OnClick = mnu_fileExitClick
+      end
+    end
+    object mnu_help: TMenuItem
+      Caption = '&Help'
+      object mnu_helpAbout: TMenuItem
+        Caption = '&About...'
+        OnClick = mnu_helpAboutClick
+      end
+    end
+  end
+  object ApplicationProperties1: TApplicationProperties
+    ExceptionDialog = aedOkMessageBox
+    OnHint = ApplicationProperties1Hint
+    Left = 264
+    Top = 16
+  end
+  object CalendarDialog1: TCalendarDialog
+    Date = 42730
+    OKCaption = '&OK'
+    CancelCaption = 'Cancel'
+    Left = 373
+    Top = 25
+  end
+end

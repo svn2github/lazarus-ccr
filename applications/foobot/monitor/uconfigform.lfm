@@ -1,0 +1,89 @@
+object configform: Tconfigform
+  Left = 654
+  Height = 197
+  Top = 285
+  Width = 592
+  BorderIcons = []
+  BorderStyle = bsToolWindow
+  Caption = 'configform'
+  ClientHeight = 197
+  ClientWidth = 592
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '1.7'
+  object grp_main: TGroupBox
+    Left = 0
+    Height = 145
+    Top = 0
+    Width = 592
+    Align = alTop
+    Caption = 'Your Foobot'
+    ClientHeight = 125
+    ClientWidth = 588
+    TabOrder = 0
+    object edt_username: TLabeledEdit
+      Left = 104
+      Height = 23
+      Top = 8
+      Width = 472
+      EditLabel.AnchorSideTop.Control = edt_username
+      EditLabel.AnchorSideTop.Side = asrCenter
+      EditLabel.AnchorSideRight.Control = edt_username
+      EditLabel.AnchorSideBottom.Control = edt_username
+      EditLabel.AnchorSideBottom.Side = asrBottom
+      EditLabel.Left = 7
+      EditLabel.Height = 15
+      EditLabel.Top = 12
+      EditLabel.Width = 94
+      EditLabel.Caption = 'Foobot Username'
+      EditLabel.ParentColor = False
+      LabelPosition = lpLeft
+      TabOrder = 0
+      Text = '(email address)'
+      OnEditingDone = edt_usernameEditingDone
+    end
+    object Memo1: TMemo
+      Left = 0
+      Height = 69
+      Top = 56
+      Width = 588
+      Align = alBottom
+      Lines.Strings = (
+        'Copy + Paste here'
+      )
+      OnEditingDone = Memo1EditingDone
+      TabOrder = 1
+    end
+    object Label1: TLabel
+      Left = 8
+      Height = 15
+      Top = 32
+      Width = 75
+      Caption = 'API Secret Key'
+      ParentColor = False
+    end
+  end
+  object BitBtn1: TBitBtn
+    Left = 259
+    Height = 30
+    Top = 160
+    Width = 75
+    Default = True
+    DefaultCaption = True
+    Kind = bkOK
+    ModalResult = 1
+    TabOrder = 1
+  end
+  object BitBtn2: TBitBtn
+    Left = 512
+    Height = 30
+    Top = 160
+    Width = 75
+    Cancel = True
+    DefaultCaption = True
+    Kind = bkCancel
+    ModalResult = 11
+    TabOrder = 2
+  end
+end

@@ -1,0 +1,63 @@
+object dataform: Tdataform
+  Left = 840
+  Height = 425
+  Top = 140
+  Width = 668
+  BorderStyle = bsSingle
+  Caption = 'dataform'
+  ClientHeight = 425
+  ClientWidth = 668
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '1.7'
+  object grp_data: TGroupBox
+    Left = 0
+    Height = 368
+    Top = 0
+    Width = 668
+    Align = alTop
+    Caption = 'grp_data'
+    ClientHeight = 348
+    ClientWidth = 664
+    TabOrder = 0
+    object datagrid: TStringGrid
+      Left = 0
+      Height = 348
+      Top = 0
+      Width = 664
+      Align = alClient
+      AutoEdit = False
+      AutoFillColumns = True
+      ColCount = 7
+      ExtendedSelect = False
+      FixedCols = 0
+      Flat = True
+      HeaderHotZones = []
+      HeaderPushZones = []
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goSmoothScroll]
+      RowCount = 1
+      TabOrder = 0
+      ColWidths = (
+        94
+        94
+        94
+        94
+        94
+        94
+        99
+      )
+    end
+  end
+  object BitBtn1: TBitBtn
+    Left = 297
+    Height = 30
+    Top = 382
+    Width = 75
+    Anchors = [akBottom]
+    DefaultCaption = True
+    Kind = bkClose
+    ModalResult = 11
+    TabOrder = 1
+  end
+end

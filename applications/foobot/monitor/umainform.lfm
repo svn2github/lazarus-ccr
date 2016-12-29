@@ -1,0 +1,383 @@
+object mainform: Tmainform
+  Left = 615
+  Height = 262
+  Top = 154
+  Width = 782
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsToolWindow
+  Caption = 'mainform'
+  ClientHeight = 242
+  ClientWidth = 782
+  DefaultMonitor = dmDesktop
+  Menu = MainMenu1
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  Position = poWorkAreaCenter
+  LCLVersion = '1.7'
+  Scaled = True
+  object grp_sensorDisplay: TGroupBox
+    Left = 0
+    Height = 120
+    Top = 0
+    Width = 782
+    Align = alTop
+    Caption = 'Current Values'
+    ChildSizing.ControlsPerLine = 6
+    ClientHeight = 100
+    ClientWidth = 778
+    TabOrder = 0
+    object as_pm: TAnalogSensor
+      Left = 0
+      Height = 100
+      Top = 0
+      Width = 130
+      Align = alLeft
+      ClientHeight = 100
+      ClientWidth = 130
+      TabOrder = 0
+      ShowText = True
+      ShowLevel = True
+      Value = 0
+      ValueMin = 0
+      ValueMax = 300
+      ValueRed = 0
+      ValueYellow = 0
+      AnalogKind = akAnalog
+    end
+    object as_tmp: TAnalogSensor
+      Left = 130
+      Height = 100
+      Top = 0
+      Width = 130
+      Align = alLeft
+      ClientHeight = 100
+      ClientWidth = 130
+      TabOrder = 1
+      ShowText = True
+      ShowLevel = True
+      Value = 0
+      ValueMin = 0
+      ValueMax = 40
+      ValueRed = 0
+      ValueYellow = 0
+      AnalogKind = akAnalog
+    end
+    object as_hum: TAnalogSensor
+      Left = 260
+      Height = 100
+      Top = 0
+      Width = 130
+      Align = alLeft
+      ClientHeight = 100
+      ClientWidth = 130
+      TabOrder = 2
+      ShowText = True
+      ShowLevel = True
+      Value = 0
+      ValueMin = 0
+      ValueMax = 100
+      ValueRed = 0
+      ValueYellow = 0
+      AnalogKind = akAnalog
+    end
+    object as_co2: TAnalogSensor
+      Left = 390
+      Height = 100
+      Top = 0
+      Width = 130
+      Align = alLeft
+      ClientHeight = 100
+      ClientWidth = 130
+      TabOrder = 3
+      ShowText = True
+      ShowLevel = True
+      Value = 0
+      ValueMin = 0
+      ValueMax = 3000
+      ValueRed = 0
+      ValueYellow = 0
+      AnalogKind = akAnalog
+    end
+    object as_voc: TAnalogSensor
+      Left = 520
+      Height = 100
+      Top = 0
+      Width = 130
+      Align = alLeft
+      ClientHeight = 100
+      ClientWidth = 130
+      TabOrder = 4
+      ShowText = True
+      ShowLevel = True
+      Value = 0
+      ValueMin = 0
+      ValueMax = 1000
+      ValueRed = 0
+      ValueYellow = 0
+      AnalogKind = akAnalog
+    end
+    object as_allpollu: TAnalogSensor
+      Left = 650
+      Height = 100
+      Top = 0
+      Width = 130
+      Align = alLeft
+      ClientHeight = 100
+      ClientWidth = 130
+      TabOrder = 5
+      ShowText = True
+      ShowLevel = True
+      Value = 0
+      ValueMin = 0
+      ValueMax = 300
+      ValueRed = 0
+      ValueYellow = 0
+      AnalogKind = akAnalog
+    end
+  end
+  object grp_highlow: TGroupBox
+    Left = 0
+    Height = 119
+    Top = 120
+    Width = 782
+    Align = alTop
+    Caption = 'Highs and Lows'
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsScaleChilds
+    ChildSizing.ControlsPerLine = 6
+    ClientHeight = 99
+    ClientWidth = 778
+    TabOrder = 1
+    object grp_pm: TGroupBox
+      Left = 0
+      Height = 99
+      Top = 0
+      Width = 130
+      Align = alLeft
+      Caption = 'Particulates'
+      ClientHeight = 79
+      ClientWidth = 126
+      TabOrder = 0
+      object lbl_pmhigh: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 60
+        Caption = 'lbl_pmhigh'
+        ParentColor = False
+      end
+      object lbl_pmlow: TLabel
+        Left = 8
+        Height = 15
+        Top = 40
+        Width = 55
+        Caption = 'lbl_pmlow'
+        ParentColor = False
+      end
+    end
+    object grp_tmp: TGroupBox
+      Left = 130
+      Height = 99
+      Top = 0
+      Width = 130
+      Align = alLeft
+      Caption = 'Temperature'
+      ClientHeight = 79
+      ClientWidth = 126
+      TabOrder = 1
+      object lbl_tmphigh: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 64
+        Caption = 'lbl_tmphigh'
+        ParentColor = False
+      end
+      object lbl_tmplow: TLabel
+        Left = 8
+        Height = 15
+        Top = 40
+        Width = 59
+        Caption = 'lbl_tmplow'
+        ParentColor = False
+      end
+    end
+    object grp_hum: TGroupBox
+      Left = 260
+      Height = 99
+      Top = 0
+      Width = 130
+      Align = alLeft
+      Caption = 'Humidity'
+      ClientHeight = 79
+      ClientWidth = 126
+      TabOrder = 2
+      object lbl_humhigh: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 67
+        Caption = 'lbl_humhigh'
+        ParentColor = False
+      end
+      object lbl_humlow: TLabel
+        Left = 8
+        Height = 15
+        Top = 40
+        Width = 62
+        Caption = 'lbl_humlow'
+        ParentColor = False
+      end
+    end
+    object grp_co2: TGroupBox
+      Left = 390
+      Height = 99
+      Top = 0
+      Width = 130
+      Align = alLeft
+      Caption = 'CO2'
+      ClientHeight = 79
+      ClientWidth = 126
+      TabOrder = 3
+      object lbl_co2high: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 61
+        Caption = 'lbl_co2high'
+        ParentColor = False
+      end
+      object lbl_co2low: TLabel
+        Left = 8
+        Height = 15
+        Top = 40
+        Width = 56
+        Caption = 'lbl_co2low'
+        ParentColor = False
+      end
+    end
+    object grp_voc: TGroupBox
+      Left = 520
+      Height = 99
+      Top = 0
+      Width = 130
+      Align = alLeft
+      Caption = 'Volatile VOC'
+      ClientHeight = 79
+      ClientWidth = 126
+      TabOrder = 4
+      object lbl_vochigh: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 61
+        Caption = 'lbl_vochigh'
+        ParentColor = False
+      end
+      object lbl_voclow: TLabel
+        Left = 8
+        Height = 15
+        Top = 40
+        Width = 56
+        Caption = 'lbl_voclow'
+        ParentColor = False
+      end
+    end
+    object grp_allpollu: TGroupBox
+      Left = 650
+      Height = 99
+      Top = 0
+      Width = 130
+      Align = alLeft
+      Caption = 'All Pollution'
+      ClientHeight = 79
+      ClientWidth = 126
+      TabOrder = 5
+      object lbl_allpolluhigh: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 81
+        Caption = 'lbl_allpolluhigh'
+        ParentColor = False
+      end
+      object lbl_allpollulow: TLabel
+        Left = 8
+        Height = 15
+        Top = 40
+        Width = 76
+        Caption = 'lbl_allpollulow'
+        ParentColor = False
+      end
+    end
+  end
+  object tmr_foobot: TTimer
+    Enabled = False
+    Interval = 3600
+    OnTimer = tmr_foobotTimer
+    Left = 16
+  end
+  object MainMenu1: TMainMenu
+    Left = 56
+    Top = 8
+    object mnu_file: TMenuItem
+      Caption = '&File'
+      object mnu_fileExit: TMenuItem
+        Caption = 'E&xit'
+        OnClick = mnu_fileExitClick
+      end
+    end
+    object mnu_options: TMenuItem
+      Caption = '&Options'
+      object mnu_optionsShowHighsAndLows: TMenuItem
+        AutoCheck = True
+        Caption = 'Show Highs and Lows'
+        Checked = True
+        OnClick = mnu_optionsShowHighsAndLowsClick
+      end
+      object mnu_optionsTakeReadingNow: TMenuItem
+        Caption = 'Take reading now'
+        OnClick = mnu_optionsTakeReadingNowClick
+      end
+      object mnu_optionsSampleEvery: TMenuItem
+        Caption = 'Sample every...'
+        object mnu_SampleEvery1Hour: TMenuItem
+          AutoCheck = True
+          Caption = 'Hour (default)'
+          Checked = True
+          GroupIndex = 1
+          OnClick = mnu_SampleEvery1HourClick
+        end
+        object mnu_SampleEvery2Hours: TMenuItem
+          AutoCheck = True
+          Caption = '2 Hours'
+          OnClick = mnu_SampleEvery2HoursClick
+        end
+        object mnu_SampleEvery4Hours: TMenuItem
+          AutoCheck = True
+          Caption = '4 Hours'
+          OnClick = mnu_SampleEvery4HoursClick
+        end
+        object mnu_SampleEvery8Hours: TMenuItem
+          AutoCheck = True
+          Caption = '8 Hours'
+          OnClick = mnu_SampleEvery8HoursClick
+        end
+        object mnu_SampleEvery24Hours: TMenuItem
+          AutoCheck = True
+          Caption = '24 Hours'
+          GroupIndex = 1
+          OnClick = mnu_SampleEvery24HoursClick
+        end
+      end
+      object mnu_optionsSaveHighLows: TMenuItem
+        AutoCheck = True
+        Caption = 'Save/Load High-Lows to disk'
+        Checked = True
+        OnClick = mnu_optionsSaveHighLowsClick
+      end
+    end
+  end
+end
