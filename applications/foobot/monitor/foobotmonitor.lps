@@ -10,7 +10,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="6"/>
         <CursorPos X="33" Y="25"/>
-        <UsageCount Value="39"/>
+        <UsageCount Value="40"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -19,8 +19,10 @@
         <ComponentName Value="mainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <CursorPos Y="20"/>
-        <UsageCount Value="39"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="18"/>
+        <CursorPos X="13" Y="26"/>
+        <UsageCount Value="40"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -32,7 +34,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="1"/>
         <CursorPos X="2" Y="20"/>
-        <UsageCount Value="29"/>
+        <UsageCount Value="30"/>
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
@@ -42,7 +44,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="21"/>
+        <UsageCount Value="22"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\foobot_objects.pas"/>
@@ -51,14 +53,14 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="21"/>
+        <UsageCount Value="22"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\foobot_utility.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="4"/>
         <CursorPos Y="27"/>
-        <UsageCount Value="39"/>
+        <UsageCount Value="40"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
@@ -68,21 +70,21 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="21"/>
+        <UsageCount Value="22"/>
       </Unit6>
       <Unit7>
         <Filename Value="..\latest_stable\foobot_httpclient.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
+        <TopLine Value="43"/>
         <CursorPos X="47" Y="13"/>
-        <UsageCount Value="38"/>
+        <UsageCount Value="39"/>
         <Loaded Value="True"/>
       </Unit7>
       <Unit8>
         <Filename Value="..\latest_stable\foobot_objects.pas"/>
         <EditorIndex Value="5"/>
         <CursorPos X="32" Y="61"/>
-        <UsageCount Value="38"/>
+        <UsageCount Value="39"/>
         <Loaded Value="True"/>
       </Unit8>
       <Unit9>
@@ -118,7 +120,7 @@
         <EditorIndex Value="3"/>
         <TopLine Value="134"/>
         <CursorPos X="25" Y="154"/>
-        <UsageCount Value="18"/>
+        <UsageCount Value="19"/>
         <Loaded Value="True"/>
       </Unit13>
       <Unit14>
@@ -152,123 +154,123 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="umainform.pas"/>
-        <Caret Line="189" Column="3" TopLine="187"/>
+        <Caret Line="165" Column="48" TopLine="145"/>
       </Position1>
       <Position2>
         <Filename Value="umainform.pas"/>
-        <Caret Line="190" Column="3" TopLine="188"/>
+        <Caret Line="153" Column="47" TopLine="132"/>
       </Position2>
       <Position3>
         <Filename Value="umainform.pas"/>
-        <Caret Line="191" Column="3" TopLine="189"/>
+        <Caret Line="105" Column="54" TopLine="80"/>
       </Position3>
       <Position4>
         <Filename Value="umainform.pas"/>
-        <Caret Line="192" Column="3" TopLine="190"/>
+        <Caret Line="106" Column="54" TopLine="81"/>
       </Position4>
       <Position5>
         <Filename Value="umainform.pas"/>
-        <Caret Line="193" Column="3" TopLine="191"/>
+        <Caret Line="107" Column="54" TopLine="82"/>
       </Position5>
       <Position6>
         <Filename Value="umainform.pas"/>
-        <Caret Line="15" Column="3" TopLine="4"/>
+        <Caret Line="127" Column="37" TopLine="93"/>
       </Position6>
       <Position7>
         <Filename Value="umainform.pas"/>
-        <Caret Line="13" Column="15"/>
+        <Caret Line="202" Column="22" TopLine="197"/>
       </Position7>
       <Position8>
         <Filename Value="umainform.pas"/>
-        <Caret Line="14" Column="6"/>
+        <Caret Line="127" Column="17" TopLine="105"/>
       </Position8>
       <Position9>
         <Filename Value="umainform.pas"/>
-        <Caret Line="208" TopLine="204"/>
+        <Caret Line="207" Column="44" TopLine="184"/>
       </Position9>
       <Position10>
         <Filename Value="umainform.pas"/>
-        <Caret Line="216" TopLine="212"/>
+        <Caret Line="289" Column="22" TopLine="286"/>
       </Position10>
       <Position11>
         <Filename Value="umainform.pas"/>
-        <Caret Line="223" Column="28" TopLine="220"/>
+        <Caret Line="216" Column="38" TopLine="194"/>
       </Position11>
       <Position12>
         <Filename Value="umainform.pas"/>
-        <Caret Line="236" Column="29" TopLine="233"/>
+        <Caret Line="130" Column="22" TopLine="107"/>
       </Position12>
       <Position13>
         <Filename Value="umainform.pas"/>
-        <Caret Line="163" Column="48" TopLine="143"/>
+        <Caret Line="131" Column="22" TopLine="108"/>
       </Position13>
       <Position14>
         <Filename Value="umainform.pas"/>
-        <Caret Line="165" Column="48" TopLine="145"/>
+        <Caret Line="132" Column="22" TopLine="109"/>
       </Position14>
       <Position15>
         <Filename Value="umainform.pas"/>
-        <Caret Line="153" Column="47" TopLine="132"/>
+        <Caret Line="134" Column="22" TopLine="111"/>
       </Position15>
       <Position16>
         <Filename Value="umainform.pas"/>
-        <Caret Line="105" Column="54" TopLine="80"/>
+        <Caret Line="216" Column="17" TopLine="205"/>
       </Position16>
       <Position17>
         <Filename Value="umainform.pas"/>
-        <Caret Line="106" Column="54" TopLine="81"/>
+        <Caret Line="134" TopLine="113"/>
       </Position17>
       <Position18>
         <Filename Value="umainform.pas"/>
-        <Caret Line="107" Column="54" TopLine="82"/>
+        <Caret Line="208" Column="10" TopLine="201"/>
       </Position18>
       <Position19>
         <Filename Value="umainform.pas"/>
-        <Caret Line="127" Column="37" TopLine="93"/>
+        <Caret Line="209" Column="10" TopLine="202"/>
       </Position19>
       <Position20>
         <Filename Value="umainform.pas"/>
-        <Caret Line="202" Column="22" TopLine="197"/>
+        <Caret Line="226" TopLine="203"/>
       </Position20>
       <Position21>
         <Filename Value="umainform.pas"/>
-        <Caret Line="127" Column="17" TopLine="105"/>
+        <Caret Line="271" Column="5" TopLine="251"/>
       </Position21>
       <Position22>
         <Filename Value="umainform.pas"/>
-        <Caret Line="207" Column="44" TopLine="184"/>
+        <Caret Line="289" Column="57" TopLine="284"/>
       </Position22>
       <Position23>
         <Filename Value="umainform.pas"/>
-        <Caret Line="289" Column="22" TopLine="286"/>
+        <Caret Line="280" Column="3" TopLine="278"/>
       </Position23>
       <Position24>
         <Filename Value="umainform.pas"/>
-        <Caret Line="216" Column="38" TopLine="194"/>
+        <Caret Line="286" Column="3" TopLine="284"/>
       </Position24>
       <Position25>
         <Filename Value="umainform.pas"/>
-        <Caret Line="130" Column="22" TopLine="107"/>
+        <Caret Line="287" Column="3" TopLine="285"/>
       </Position25>
       <Position26>
         <Filename Value="umainform.pas"/>
-        <Caret Line="131" Column="22" TopLine="108"/>
+        <Caret Line="286" Column="3" TopLine="284"/>
       </Position26>
       <Position27>
         <Filename Value="umainform.pas"/>
-        <Caret Line="132" Column="22" TopLine="109"/>
+        <Caret Line="287" Column="3" TopLine="285"/>
       </Position27>
       <Position28>
         <Filename Value="umainform.pas"/>
-        <Caret Line="134" Column="22" TopLine="111"/>
+        <Caret Line="294" Column="3" TopLine="292"/>
       </Position28>
       <Position29>
         <Filename Value="umainform.pas"/>
-        <Caret Line="216" Column="17" TopLine="205"/>
+        <Caret Line="283" Column="15" TopLine="281"/>
       </Position29>
       <Position30>
         <Filename Value="umainform.pas"/>
-        <Caret Line="134" TopLine="113"/>
+        <Caret Line="11" Column="19" TopLine="7"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>

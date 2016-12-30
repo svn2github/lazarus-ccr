@@ -52,7 +52,7 @@ function FetchAuthenticationKey(aUsername, aUserPassword: string): boolean;
 // Populates FoobotIdentityObject.TFoobotIdentityList collection
 function FetchFoobotIdentity(aUsername, aSecretKey: string): boolean;
 
-// Populates FoobotIdentityObject
+// Populates FoobotDataObject
 function FetchFoobotData(DataFetchType: TDataFetchType = dfLast;
   iCurrentFoobot: integer = 0; iLastIntervalSeconds: integer = 3600;
   iLastAverageBySeconds: integer = 0; iStartTimeSeconds: int64 = 0;

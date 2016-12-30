@@ -9,7 +9,7 @@
 
 [Setup]
 AppName=Foobot Monitor
-AppVersion=0.0.2.0
+AppVersion=0.0.3.0
 DefaultDirName={pf}\foobotmonitor
 DefaultGroupName=Foobot
 UninstallDisplayIcon={app}\foobotmonitor.exe
@@ -41,3 +41,6 @@ Source: "..\compiled\win32\foobotmonitor.exe"; DestDir: "{app}"; Flags: solidbre
 
 [Icons]
 Name: "{group}\Foobot"; Filename: "{app}\foobotmonitor.exe"
+
+[Run]
+Filename: "{app}\foobotmonitor.exe"; WorkingDir: "{app}"; Flags: postinstall runascurrentuser; Description: "Start Foobot Monitor now"; StatusMsg: "Start Foobot Monitor now"

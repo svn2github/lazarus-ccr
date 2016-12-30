@@ -22,7 +22,8 @@ VERSION HISTORY
 ===============
 V0.0.1.0: Initial commit
 V0.0.2.0: Trayicon added
-V0.0.3.0: ??
+V0.0.3.0: Added Help menu.  Updated Options menu
+V0.0.4.0: ??
 }
 
 {$mode objfpc}{$H+}
@@ -31,7 +32,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Sensors, Forms, Controls, Graphics, Dialogs,
-  ExtCtrls, StdCtrls, Menus, foobot_utility, uCryptIni, Variants, dateutils,
+  ExtCtrls, StdCtrls, Menus, lclIntf,foobot_utility, uCryptIni, Variants, dateutils,
   uconfigform;
 
 CONST
@@ -75,6 +76,10 @@ type
     lbl_voclow: TLabel;
     lbl_allpollulow: TLabel;
     MainMenu1: TMainMenu;
+    mnu_optionsOnlineHelp: TMenuItem;
+    mnu_optionsSeperator1: TMenuItem;
+    mnu_helpAbout: TMenuItem;
+    mnu_help: TMenuItem;
     mnupopup_fileRestore: TMenuItem;
     mnu_pupupClose: TMenuItem;
     mnu_optionsMinimiseToTray: TMenuItem;
@@ -100,7 +105,9 @@ type
     procedure FormWindowStateChange(Sender: TObject);
     procedure mnupopup_fileRestoreClick(Sender: TObject);
     procedure mnu_fileExitClick(Sender: TObject);
+    procedure mnu_helpAboutClick(Sender: TObject);
     procedure mnu_optionsMinimiseToTrayClick(Sender: TObject);
+    procedure mnu_optionsOnlineHelpClick(Sender: TObject);
     procedure mnu_optionsSaveHighLowsClick(Sender: TObject);
     procedure mnu_optionsShowHighsAndLowsClick(Sender: TObject);
     procedure mnu_optionsTakeReadingNowClick(Sender: TObject);
@@ -245,10 +252,36 @@ begin
   Close;
 end;
 
+procedure Tmainform.mnu_helpAboutClick(Sender: TObject);
+var
+  s: string;
+begin
+  s := Application.Title + LineEnding;
+  s += 'Version: ' + INI.ReadUnencryptedString('ProgramInfo', IDENT_APPVERSION, '') +
+    LineEnding + LineEnding;
+  s += INI.ReadUnencryptedString('ProgramInfo', IDENT_COPYRIGHT, '');
+  s += ' by ' + INI.ReadUnencryptedString('ProgramInfo', IDENT_AUTHOR, '') + LineEnding;
+  s += 'Licence: ' + INI.ReadUnencryptedString('ProgramInfo', IDENT_LICENSE, '') +
+    LineEnding;
+  s += 'Made with LCL v ' + INI.ReadUnencryptedString('ProgramInfo',
+    IDENT_LCLVERSION, '');
+  s += ' FPC v ' + INI.ReadUnencryptedString('ProgramInfo', IDENT_FPCVERSION, '') +
+    LineEnding;
+  s += 'Compiled ' + INI.ReadUnencryptedString('ProgramInfo', IDENT_LASTCOMPILED, '') +
+    LineEnding;
+  s += ' for ' + INI.ReadUnencryptedString('ProgramInfo', IDENT_TARGET, '');
+  MessageDlg('About ' + Application.Title, s,
+    mtInformation, [mbOK], 0);
+end;
 procedure Tmainform.mnu_optionsMinimiseToTrayClick(Sender: TObject);
 begin
   mainform.WindowState:=wsMinimized;
   mainform.FormWindowStateChange(Self);
+end;
+
+procedure Tmainform.mnu_optionsOnlineHelpClick(Sender: TObject);
+begin
+  OpenURL('http://wiki.freepascal.org/Foobot');
 end;
 
 procedure Tmainform.mnu_optionsSaveHighLowsClick(Sender: TObject);
@@ -262,7 +295,7 @@ begin
   if mnu_optionsShowHighsAndLows.Checked then
     mainform.ClientHeight := grp_sensorDisplay.Height + grp_highlow.Height + iFudgeFactor
   else
-    mainform.ClientHeight := grp_sensorDisplay.Height + iFudgeFactor;
+    mainform.ClientHeight := grp_sensorDisplay.Height;// + iFudgeFactor;
   bShowHighsAndLows := mnu_optionsShowHighsAndLows.Checked;
 end;
 

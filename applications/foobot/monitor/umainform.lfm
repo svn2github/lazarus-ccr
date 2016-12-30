@@ -1,7 +1,7 @@
 object mainform: Tmainform
-  Left = 615
+  Left = 614
   Height = 262
-  Top = 154
+  Top = 109
   Width = 782
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -145,7 +145,7 @@ object mainform: Tmainform
     Top = 120
     Width = 782
     Align = alTop
-    Caption = 'Highs and Lows'
+    Caption = 'All-time Highs and Lows'
     ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
     ChildSizing.EnlargeVertical = crsScaleChilds
     ChildSizing.ControlsPerLine = 6
@@ -333,11 +333,9 @@ object mainform: Tmainform
     end
     object mnu_options: TMenuItem
       Caption = '&Options'
-      object mnu_optionsShowHighsAndLows: TMenuItem
-        AutoCheck = True
-        Caption = 'Show Highs and Lows'
-        Checked = True
-        OnClick = mnu_optionsShowHighsAndLowsClick
+      object mnu_optionsMinimiseToTray: TMenuItem
+        Caption = 'Minimise to tray'
+        OnClick = mnu_optionsMinimiseToTrayClick
       end
       object mnu_optionsTakeReadingNow: TMenuItem
         Caption = 'Take reading now'
@@ -374,15 +372,31 @@ object mainform: Tmainform
           OnClick = mnu_SampleEvery24HoursClick
         end
       end
+      object mnu_optionsSeperator1: TMenuItem
+        Caption = '-'
+      end
+      object mnu_optionsShowHighsAndLows: TMenuItem
+        AutoCheck = True
+        Caption = 'Show All-time Highs and Lows'
+        Checked = True
+        OnClick = mnu_optionsShowHighsAndLowsClick
+      end
       object mnu_optionsSaveHighLows: TMenuItem
         AutoCheck = True
-        Caption = 'Save/Load High-Lows to disk'
+        Caption = 'Record All-time High/Lows'
         Checked = True
         OnClick = mnu_optionsSaveHighLowsClick
       end
-      object mnu_optionsMinimiseToTray: TMenuItem
-        Caption = 'Minimise to tray'
-        OnClick = mnu_optionsMinimiseToTrayClick
+    end
+    object mnu_help: TMenuItem
+      Caption = '&Help'
+      object mnu_optionsOnlineHelp: TMenuItem
+        Caption = 'Online Help'
+        OnClick = mnu_optionsOnlineHelpClick
+      end
+      object mnu_helpAbout: TMenuItem
+        Caption = 'A&bout..'
+        OnClick = mnu_helpAboutClick
       end
     end
   end

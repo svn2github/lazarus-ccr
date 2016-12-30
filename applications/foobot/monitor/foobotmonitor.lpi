@@ -19,7 +19,7 @@
     </General>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
-      <RevisionNr Value="2"/>
+      <RevisionNr Value="3"/>
       <StringTable ProductVersion="0.0.1.0"/>
     </VersionInfo>
     <BuildModes Count="6">
