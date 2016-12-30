@@ -3,8 +3,8 @@ object mainform: Tmainform
   Height = 262
   Top = 154
   Width = 782
-  BorderIcons = [biSystemMenu]
-  BorderStyle = bsToolWindow
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
   Caption = 'mainform'
   ClientHeight = 242
   ClientWidth = 782
@@ -14,7 +14,9 @@ object mainform: Tmainform
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
+  OnWindowStateChange = FormWindowStateChange
   Position = poWorkAreaCenter
+  ShowInTaskBar = stNever
   LCLVersion = '1.7'
   Scaled = True
   object grp_sensorDisplay: TGroupBox
@@ -378,6 +380,29 @@ object mainform: Tmainform
         Checked = True
         OnClick = mnu_optionsSaveHighLowsClick
       end
+      object mnu_optionsMinimiseToTray: TMenuItem
+        Caption = 'Minimise to tray'
+        OnClick = mnu_optionsMinimiseToTrayClick
+      end
+    end
+  end
+  object TrayIcon1: TTrayIcon
+    PopUpMenu = traypopup
+    Visible = True
+    OnClick = TrayIcon1Click
+    Left = 96
+    Top = 8
+  end
+  object traypopup: TPopupMenu
+    Left = 136
+    Top = 8
+    object mnupopup_fileRestore: TMenuItem
+      Caption = '&Restore'
+      OnClick = mnupopup_fileRestoreClick
+    end
+    object mnu_pupupClose: TMenuItem
+      Caption = '&Close'
+      OnClick = mnu_fileExitClick
     end
   end
 end

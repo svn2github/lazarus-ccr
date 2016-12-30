@@ -19,7 +19,8 @@
     </General>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
-      <RevisionNr Value="1"/>
+      <RevisionNr Value="2"/>
+      <StringTable ProductVersion="0.0.1.0"/>
     </VersionInfo>
     <BuildModes Count="6">
       <Item1 Name="Debug" Default="True"/>

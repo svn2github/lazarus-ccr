@@ -1,4 +1,29 @@
 unit umainform;
+{ Foobot Monitor
+
+  Copyright (C)2016 Gordon Bamber minsadorada@charcodelvalle.com
+
+  This source is free software; you can redistribute it and/or modify it under
+  the terms of the GNU General Public License as published by the Free
+  Software Foundation; either version 2 of the License, or (at your option)
+  any later version.
+
+  This code is distributed in the hope that it will be useful, but WITHOUT ANY
+  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+  details.
+
+  A copy of the GNU General Public License is available on the World Wide Web
+  at <http://www.gnu.org/copyleft/gpl.html>. You can also obtain it by writing
+  to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+  MA 02111-1307, USA.
+
+VERSION HISTORY
+===============
+V0.0.1.0: Initial commit
+V0.0.2.0: Trayicon added
+V0.0.3.0: ??
+}
 
 {$mode objfpc}{$H+}
 
@@ -50,6 +75,9 @@ type
     lbl_voclow: TLabel;
     lbl_allpollulow: TLabel;
     MainMenu1: TMainMenu;
+    mnupopup_fileRestore: TMenuItem;
+    mnu_pupupClose: TMenuItem;
+    mnu_optionsMinimiseToTray: TMenuItem;
     mnu_optionsSaveHighLows: TMenuItem;
     mnu_SampleEvery24Hours: TMenuItem;
     mnu_SampleEvery8Hours: TMenuItem;
@@ -62,12 +90,17 @@ type
     mnu_options: TMenuItem;
     mnu_fileExit: TMenuItem;
     mnu_file: TMenuItem;
+    traypopup: TPopupMenu;
     tmr_foobot: TTimer;
+    TrayIcon1: TTrayIcon;
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure FormWindowStateChange(Sender: TObject);
+    procedure mnupopup_fileRestoreClick(Sender: TObject);
     procedure mnu_fileExitClick(Sender: TObject);
+    procedure mnu_optionsMinimiseToTrayClick(Sender: TObject);
     procedure mnu_optionsSaveHighLowsClick(Sender: TObject);
     procedure mnu_optionsShowHighsAndLowsClick(Sender: TObject);
     procedure mnu_optionsTakeReadingNowClick(Sender: TObject);
@@ -77,6 +110,7 @@ type
     procedure mnu_SampleEvery4HoursClick(Sender: TObject);
     procedure mnu_SampleEvery8HoursClick(Sender: TObject);
     procedure tmr_foobotTimer(Sender: TObject);
+    procedure TrayIcon1Click(Sender: TObject);
   private
     sSecretKey, sFoobotUserName, sUUID: string;
     bShowHighsAndLows: boolean;
@@ -120,6 +154,8 @@ begin
   iFudgeFactor := 20;
   ClientHeight := grp_sensorDisplay.Height + grp_highlow.Height + iFudgeFactor;
   bShowHighsAndLows := True;
+  TrayIcon1.Icon:=Application.Icon;
+  TrayIcon1.Hint:=Application.Title;
 end;
 
 procedure Tmainform.FormActivate(Sender: TObject);
@@ -189,9 +225,30 @@ procedure Tmainform.FormShow(Sender: TObject);
 begin
 end;
 
+procedure Tmainform.FormWindowStateChange(Sender: TObject);
+begin
+  if mainform.WindowState = wsMinimized then
+  begin
+      mainform.WindowState := wsNormal;
+      mainform.Hide;
+      mainform.ShowInTaskBar := stNever;
+  end;
+end;
+
+procedure Tmainform.mnupopup_fileRestoreClick(Sender: TObject);
+begin
+  mainform.show;
+end;
+
 procedure Tmainform.mnu_fileExitClick(Sender: TObject);
 begin
   Close;
+end;
+
+procedure Tmainform.mnu_optionsMinimiseToTrayClick(Sender: TObject);
+begin
+  mainform.WindowState:=wsMinimized;
+  mainform.FormWindowStateChange(Self);
 end;
 
 procedure Tmainform.mnu_optionsSaveHighLowsClick(Sender: TObject);
@@ -259,6 +316,11 @@ procedure Tmainform.tmr_foobotTimer(Sender: TObject);
 begin
   if FetchFoobotData(dfLast, 0, 0, 0, 0, 0, sSecretKey) then
     DisplayReadings;
+end;
+
+procedure Tmainform.TrayIcon1Click(Sender: TObject);
+begin
+  mainform.show;
 end;
 
 procedure Tmainform.UpdateHighLow(SensorNumber: integer);

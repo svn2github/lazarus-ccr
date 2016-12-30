@@ -1,6 +1,6 @@
 unit foobot_utility;
 
-{ Foobot Interrogator Utilities
+{ Foobot Utilities
 
   Copyright (C)2016 Gordon Bamber minsadorada@charcodelvalle.com
 
