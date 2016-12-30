@@ -113,7 +113,7 @@ begin
       'minesadorada@charcodelvalle.com', True);
     // PUT YOUR SECRET API KEY HERE IF YOU LIKE
     // INI.WriteString('Foobot', 'Secret Key',
-      '');
+    //  '');
   end;
   if not INI.VerifyIdent('41d10218d247980fc5e871b6b7844483') then
   begin

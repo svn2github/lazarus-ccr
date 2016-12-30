@@ -37,6 +37,8 @@ type
     edt_emailaddress: TLabeledEdit;
     edt_password: TLabeledEdit;
     GroupBox1: TGroupBox;
+    Label1: TLabel;
+    Memo1: TMemo;
     procedure cmd_OKClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
@@ -57,12 +59,17 @@ uses umainform;
 { Tloginform }
 
 procedure Tloginform.FormCreate(Sender: TObject);
+Var s:String;
 begin
   Icon := Application.Icon;
   Caption := Application.Title + ' Login';
   edt_emailaddress.Text := mainform.INI.ReadString('Foobot', 'Foobot User',
     'myname@myserver.com');
   edt_password.Text := mainform.INI.ReadString('Foobot', 'Foobot Password', 'password');
+  s:='Copy + Paste your API key here & click OK' + LineEnding;
+  s+='Get one by visiting the Foobot website:' + LineEnding;
+  s+='https://api.foobot.io/apidoc/index.html';
+  memo1.text:=mainform.INI.ReadString('Foobot', 'Secret Key',s);
 end;
 
 procedure Tloginform.cmd_OKClick(Sender: TObject);
@@ -82,6 +89,7 @@ begin
     CanClose := True;
   mainform.INI.WriteString('Foobot', 'Foobot User', edt_emailaddress.Text);
   mainform.INI.WriteString('Foobot', 'Foobot Password', edt_password.Text);
+  mainform.INI.WriteString('Foobot', 'Secret Key',memo1.text);
 end;
 
 function Tloginform.ValidEmail(sEmail: string): boolean;

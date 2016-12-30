@@ -1,12 +1,12 @@
 object loginform: Tloginform
-  Left = 256
-  Height = 141
-  Top = 472
+  Left = 648
+  Height = 243
+  Top = 288
   Width = 442
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Foobot Login'
-  ClientHeight = 141
+  ClientHeight = 243
   ClientWidth = 442
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
@@ -15,12 +15,12 @@ object loginform: Tloginform
   Scaled = True
   object GroupBox1: TGroupBox
     Left = 0
-    Height = 88
+    Height = 96
     Top = 0
     Width = 442
     Align = alTop
     Caption = 'Your FooBot information'
-    ClientHeight = 68
+    ClientHeight = 76
     ClientWidth = 438
     TabOrder = 0
     object edt_emailaddress: TLabeledEdit
@@ -67,11 +67,21 @@ object loginform: Tloginform
       TabOrder = 1
       Text = 'mypassword'
     end
+    object Label1: TLabel
+      Left = 16
+      Height = 15
+      Top = 56
+      Width = 408
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'API Secret Key'
+      ParentColor = False
+    end
   end
   object cmd_OK: TBitBtn
     Left = 184
     Height = 30
-    Top = 96
+    Top = 198
     Width = 75
     Anchors = [akLeft, akRight, akBottom]
     Default = True
@@ -80,5 +90,13 @@ object loginform: Tloginform
     ModalResult = 1
     OnClick = cmd_OKClick
     TabOrder = 1
+  end
+  object Memo1: TMemo
+    Left = 0
+    Height = 90
+    Top = 96
+    Width = 442
+    Align = alTop
+    TabOrder = 2
   end
 end

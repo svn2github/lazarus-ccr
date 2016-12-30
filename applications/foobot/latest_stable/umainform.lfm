@@ -1,7 +1,7 @@
 object mainform: Tmainform
-  Left = 547
+  Left = 918
   Height = 377
-  Top = 198
+  Top = 191
   Width = 510
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -227,6 +227,7 @@ object mainform: Tmainform
     Caption = 'Button1'
     OnClick = Button1Click
     TabOrder = 6
+    Visible = False
   end
   object MainMenu1: TMainMenu
     Left = 304

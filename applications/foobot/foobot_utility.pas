@@ -32,7 +32,7 @@ interface
 uses
   Classes, SysUtils, Dialogs,
   foobot_httpclient, foobot_objects, fpjson, fpjsonrtti, base64, variants,
-  DateUtils,INIFiles;
+  DateUtils, INIFiles;
 
 const
   FOOBOT_USER_URL = 'https://api.foobot.io/v2/user/%s/login/';
@@ -44,7 +44,7 @@ const
 
 type
   TDataFetchType = (dfLast, dfStartEnd);
-  TSensorType = (st_time,st_pm,st_tmp,st_hum,st_co2,st_voc,st_allpollu);
+  TSensorType = (st_time, st_pm, st_tmp, st_hum, st_co2, st_voc, st_allpollu);
 
 function EncodeStringBase64(const s: string): string;
 function FetchAuthenticationKey(aUsername, aUserPassword: string): boolean;
@@ -65,19 +65,19 @@ function FoobotDataObjectToArrays: boolean;
 // Utility functions
 function ResetArrays: boolean;
 function ResetObjects: boolean;
-Function ResetHighLows:Boolean;
-function SaveHighLows:Boolean;
-Function LoadHighLows:Boolean;
+function ResetHighLows: boolean;
+function SaveHighLows: boolean;
+function LoadHighLows: boolean;
 
 var
   HttpClient: TFPHTTPClient;
   FoobotIdentityObject: TFoobotIdentityObject;
   FoobotDataObject: TFoobotDataObject;
   sAuthenticationKey: string;
-  SensorType:TSensorType;
-  SaveLoadHighLows:Boolean;
-  TheCurrentFoobot:Integer;
-  HLINI:TIniFile;
+  SensorType: TSensorType;
+  SaveLoadHighLows: boolean;
+  TheCurrentFoobot: integer;
+  HLINI: TIniFile;
   // Easier access to datapoints
   // Call FoobotDataObjectToArrays to populate them
   FoobotData_time: array of TDateTime;
@@ -88,96 +88,101 @@ var
   FoobotData_voc: array of integer;
   FoobotData_allpollu: array of double;
   // Set in FoobotDataObjectToArrays
-  FoobotDataHighs:Array[0..HIGHLOWMAX]of Variant;
-  FoobotDataLows:Array[0..HIGHLOWMAX]of Variant;
-  FoobotDataHighTimes:Array[0..HIGHLOWMAX]of Variant;
-  FoobotDataLowTimes:Array[0..HIGHLOWMAX]of Variant;
+  FoobotDataHighs: array[0..HIGHLOWMAX] of variant;
+  FoobotDataLows: array[0..HIGHLOWMAX] of variant;
+  FoobotDataHighTimes: array[0..HIGHLOWMAX] of variant;
+  FoobotDataLowTimes: array[0..HIGHLOWMAX] of variant;
 
 implementation
-function SaveHighLows:Boolean;
-Var sFoobotName:String;
+
+function SaveHighLows: boolean;
+var
+  sFoobotName: string;
 begin
-  If SaveLoadHighLows=FALSE then Exit(FALSE);
-  sFoobotName:=FoobotIdentityObject.FoobotIdentityList[TheCurrentFoobot].name;
-  If Not Assigned(HLINI) then
-     HLINI:=TIniFile.Create(ChangeFileExt(GetAppConfigFile(False),'.ini'));
+  if SaveLoadHighLows = False then
+    Exit(False);
+  sFoobotName := FoobotIdentityObject.FoobotIdentityList[TheCurrentFoobot].Name;
+  if not Assigned(HLINI) then
+    HLINI := TIniFile.Create(ChangeFileExt(GetAppConfigFile(False), '.ini'));
   // Store current Foobot info
-  HLINI.WriteInteger('Foobot','CurrentFoobot',TheCurrentFoobot);
-  HLINI.WriteString('Foobot','CurrentFoobotName',sFoobotName);
+  HLINI.WriteInteger('Foobot', 'CurrentFoobot', TheCurrentFoobot);
+  HLINI.WriteString('Foobot', 'CurrentFoobotName', sFoobotName);
 
   // Particulates
-  HLINI.WriteFloat(sFoobotName,'pmHigh',Double(FoobotDataHighs[1]));
-  HLINI.WriteDateTime(sFoobotName,'pmHighTime',TDateTime(FoobotDataHighTimes[1]));
-  HLINI.WriteFloat(sFoobotName,'pmLow',Double(FoobotDataLows[1]));
-  HLINI.WriteDateTime(sFoobotName,'pmLowTime',TDateTime(FoobotDataLowTimes[1]));
+  HLINI.WriteFloat(sFoobotName, 'pmHigh', double(FoobotDataHighs[1]));
+  HLINI.WriteDateTime(sFoobotName, 'pmHighTime', TDateTime(FoobotDataHighTimes[1]));
+  HLINI.WriteFloat(sFoobotName, 'pmLow', double(FoobotDataLows[1]));
+  HLINI.WriteDateTime(sFoobotName, 'pmLowTime', TDateTime(FoobotDataLowTimes[1]));
   // Temp
-  HLINI.WriteFloat(sFoobotName,'tmpHigh',Double(FoobotDataHighs[2]));
-  HLINI.WriteDateTime(sFoobotName,'tmpHighTime',TDateTime(FoobotDataHighTimes[2]));
-  HLINI.WriteFloat(sFoobotName,'tmpLow',Double(FoobotDataLows[2]));
-  HLINI.WriteDateTime(sFoobotName,'tmpLowTime',TDateTime(FoobotDataLowTimes[2]));
+  HLINI.WriteFloat(sFoobotName, 'tmpHigh', double(FoobotDataHighs[2]));
+  HLINI.WriteDateTime(sFoobotName, 'tmpHighTime', TDateTime(FoobotDataHighTimes[2]));
+  HLINI.WriteFloat(sFoobotName, 'tmpLow', double(FoobotDataLows[2]));
+  HLINI.WriteDateTime(sFoobotName, 'tmpLowTime', TDateTime(FoobotDataLowTimes[2]));
   // Humidity
-  HLINI.WriteFloat(sFoobotName,'humHigh',Double(FoobotDataHighs[3]));
-  HLINI.WriteDateTime(sFoobotName,'humHighTime',TDateTime(FoobotDataHighTimes[3]));
-  HLINI.WriteFloat(sFoobotName,'humLow',Double(FoobotDataLows[3]));
-  HLINI.WriteDateTime(sFoobotName,'humLowTime',TDateTime(FoobotDataLowTimes[3]));
+  HLINI.WriteFloat(sFoobotName, 'humHigh', double(FoobotDataHighs[3]));
+  HLINI.WriteDateTime(sFoobotName, 'humHighTime', TDateTime(FoobotDataHighTimes[3]));
+  HLINI.WriteFloat(sFoobotName, 'humLow', double(FoobotDataLows[3]));
+  HLINI.WriteDateTime(sFoobotName, 'humLowTime', TDateTime(FoobotDataLowTimes[3]));
   // CO2
-  HLINI.WriteInteger(sFoobotName,'co2High',Integer(FoobotDataHighs[4]));
-  HLINI.WriteDateTime(sFoobotName,'co2HighTime',TDateTime(FoobotDataHighTimes[4]));
-  HLINI.WriteInteger(sFoobotName,'co2Low',Integer(FoobotDataLows[4]));
-  HLINI.WriteDateTime(sFoobotName,'co2LowTime',TDateTime(FoobotDataLowTimes[4]));
+  HLINI.WriteInteger(sFoobotName, 'co2High', integer(FoobotDataHighs[4]));
+  HLINI.WriteDateTime(sFoobotName, 'co2HighTime', TDateTime(FoobotDataHighTimes[4]));
+  HLINI.WriteInteger(sFoobotName, 'co2Low', integer(FoobotDataLows[4]));
+  HLINI.WriteDateTime(sFoobotName, 'co2LowTime', TDateTime(FoobotDataLowTimes[4]));
   //  Volatile Compounds
-  HLINI.WriteInteger(sFoobotName,'vocHigh',Integer(FoobotDataHighs[5]));
-  HLINI.WriteDateTime(sFoobotName,'vocHighTime',TDateTime(FoobotDataHighTimes[5]));
-  HLINI.WriteInteger(sFoobotName,'vocLow',Integer(FoobotDataLows[5]));
-  HLINI.WriteDateTime(sFoobotName,'vocLowTime',TDateTime(FoobotDataLowTimes[5]));
+  HLINI.WriteInteger(sFoobotName, 'vocHigh', integer(FoobotDataHighs[5]));
+  HLINI.WriteDateTime(sFoobotName, 'vocHighTime', TDateTime(FoobotDataHighTimes[5]));
+  HLINI.WriteInteger(sFoobotName, 'vocLow', integer(FoobotDataLows[5]));
+  HLINI.WriteDateTime(sFoobotName, 'vocLowTime', TDateTime(FoobotDataLowTimes[5]));
   // All Pollution
-  HLINI.WriteFloat(sFoobotName,'allpolluHigh',Double(FoobotDataHighs[6]));
-  HLINI.WriteDateTime(sFoobotName,'allpolluHighTime',TDateTime(FoobotDataHighTimes[6]));
-  HLINI.WriteFloat(sFoobotName,'allpolluLow',Double(FoobotDataLows[6]));
-  HLINI.WriteDateTime(sFoobotName,'allpolluLowTime',TDateTime(FoobotDataLowTimes[6]));
+  HLINI.WriteFloat(sFoobotName, 'allpolluHigh', double(FoobotDataHighs[6]));
+  HLINI.WriteDateTime(sFoobotName, 'allpolluHighTime', TDateTime(FoobotDataHighTimes[6]));
+  HLINI.WriteFloat(sFoobotName, 'allpolluLow', double(FoobotDataLows[6]));
+  HLINI.WriteDateTime(sFoobotName, 'allpolluLowTime', TDateTime(FoobotDataLowTimes[6]));
 end;
 
-Function LoadHighLows:Boolean;
-Var sFoobotName:String;
+function LoadHighLows: boolean;
+var
+  sFoobotName: string;
 begin
-  If SaveLoadHighLows=FALSE then Exit(FALSE);
-  sFoobotName:=FoobotIdentityObject.FoobotIdentityList[TheCurrentFoobot].name;
-  If Not Assigned(HLINI) then
-     HLINI:=TIniFile.Create(ChangeFileExt(GetAppConfigFile(False),'.ini'));
+  if SaveLoadHighLows = False then
+    Exit(False);
+  sFoobotName := FoobotIdentityObject.FoobotIdentityList[TheCurrentFoobot].Name;
+  if not Assigned(HLINI) then
+    HLINI := TIniFile.Create(ChangeFileExt(GetAppConfigFile(False), '.ini'));
   // Make sure the High-Lows are for the current Foobot
-  if (HLINI.ReadString('Foobot','CurrentFoobotName','unknown') <> sFoobotName)
-  then Exit(FALSE);
+  if (HLINI.ReadString('Foobot', 'CurrentFoobotName', 'unknown') <> sFoobotName) then
+    Exit(False);
 
   // Particulates
-  FoobotDataHighs[1]:=HLINI.ReadFloat(sFoobotName,'pmHigh',0);
-  FoobotDataHighTimes[1]:=HLINI.ReadDateTime(sFoobotName,'pmHighTime',Now);
-  FoobotDataLows[1]:=HLINI.ReadFloat(sFoobotName,'pmLow',0);
-  FoobotDataLowTimes[1]:=HLINI.ReadDateTime(sFoobotName,'pmLowTime',Now);
+  FoobotDataHighs[1] := HLINI.ReadFloat(sFoobotName, 'pmHigh', 0);
+  FoobotDataHighTimes[1] := HLINI.ReadDateTime(sFoobotName, 'pmHighTime', Now);
+  FoobotDataLows[1] := HLINI.ReadFloat(sFoobotName, 'pmLow', 0);
+  FoobotDataLowTimes[1] := HLINI.ReadDateTime(sFoobotName, 'pmLowTime', Now);
   // Temp
-  FoobotDataHighs[2]:=HLINI.ReadFloat(sFoobotName,'tmpHigh',0);
-  FoobotDataHighTimes[2]:=HLINI.ReadDateTime(sFoobotName,'tmpHighTime',Now);
-  FoobotDataLows[2]:=HLINI.ReadFloat(sFoobotName,'tmpLow',0);
-  FoobotDataLowTimes[2]:=HLINI.ReadDateTime(sFoobotName,'tmpLowTime',Now);
+  FoobotDataHighs[2] := HLINI.ReadFloat(sFoobotName, 'tmpHigh', 0);
+  FoobotDataHighTimes[2] := HLINI.ReadDateTime(sFoobotName, 'tmpHighTime', Now);
+  FoobotDataLows[2] := HLINI.ReadFloat(sFoobotName, 'tmpLow', 0);
+  FoobotDataLowTimes[2] := HLINI.ReadDateTime(sFoobotName, 'tmpLowTime', Now);
   // Humidity
-  FoobotDataHighs[3]:=HLINI.ReadFloat(sFoobotName,'humHigh',0);
-  FoobotDataHighTimes[3]:=HLINI.ReadDateTime(sFoobotName,'humHighTime',Now);
-  FoobotDataLows[3]:=HLINI.ReadFloat(sFoobotName,'humLow',0);
-  FoobotDataLowTimes[3]:=HLINI.ReadDateTime(sFoobotName,'humLowTime',Now);
+  FoobotDataHighs[3] := HLINI.ReadFloat(sFoobotName, 'humHigh', 0);
+  FoobotDataHighTimes[3] := HLINI.ReadDateTime(sFoobotName, 'humHighTime', Now);
+  FoobotDataLows[3] := HLINI.ReadFloat(sFoobotName, 'humLow', 0);
+  FoobotDataLowTimes[3] := HLINI.ReadDateTime(sFoobotName, 'humLowTime', Now);
   // CO2
-  FoobotDataHighs[4]:=HLINI.ReadInteger(sFoobotName,'co2High',0);
-  FoobotDataHighTimes[4]:=HLINI.ReadDateTime(sFoobotName,'co2HighTime',Now);
-  FoobotDataLows[4]:=HLINI.ReadInteger(sFoobotName,'co2Low',0);
-  FoobotDataLowTimes[4]:=HLINI.ReadDateTime(sFoobotName,'co2LowTime',Now);
+  FoobotDataHighs[4] := HLINI.ReadInteger(sFoobotName, 'co2High', 0);
+  FoobotDataHighTimes[4] := HLINI.ReadDateTime(sFoobotName, 'co2HighTime', Now);
+  FoobotDataLows[4] := HLINI.ReadInteger(sFoobotName, 'co2Low', 0);
+  FoobotDataLowTimes[4] := HLINI.ReadDateTime(sFoobotName, 'co2LowTime', Now);
   // Volatile Compounds
-  FoobotDataHighs[5]:=HLINI.ReadInteger(sFoobotName,'vocHigh',0);
-  FoobotDataHighTimes[5]:=HLINI.ReadDateTime(sFoobotName,'vocHighTime',Now);
-  FoobotDataLows[5]:=HLINI.ReadInteger(sFoobotName,'vocLow',0);
-  FoobotDataLowTimes[5]:=HLINI.ReadDateTime(sFoobotName,'vocLowTime',Now);
+  FoobotDataHighs[5] := HLINI.ReadInteger(sFoobotName, 'vocHigh', 0);
+  FoobotDataHighTimes[5] := HLINI.ReadDateTime(sFoobotName, 'vocHighTime', Now);
+  FoobotDataLows[5] := HLINI.ReadInteger(sFoobotName, 'vocLow', 0);
+  FoobotDataLowTimes[5] := HLINI.ReadDateTime(sFoobotName, 'vocLowTime', Now);
   // All Pollution
-  FoobotDataHighs[6]:=HLINI.ReadFloat(sFoobotName,'allpolluHigh',0);
-  FoobotDataHighTimes[6]:=HLINI.ReadDateTime(sFoobotName,'allpolluHighTime',Now);
-  FoobotDataLows[6]:=HLINI.ReadFloat(sFoobotName,'allpolluLow',0);
-  FoobotDataLowTimes[6]:=HLINI.ReadDateTime(sFoobotName,'allpolluLowTime',Now);
+  FoobotDataHighs[6] := HLINI.ReadFloat(sFoobotName, 'allpolluHigh', 0);
+  FoobotDataHighTimes[6] := HLINI.ReadDateTime(sFoobotName, 'allpolluHighTime', Now);
+  FoobotDataLows[6] := HLINI.ReadFloat(sFoobotName, 'allpolluLow', 0);
+  FoobotDataLowTimes[6] := HLINI.ReadDateTime(sFoobotName, 'allpolluLowTime', Now);
 end;
 
 // ToDo: Multiple Foobots?
@@ -190,24 +195,25 @@ var
   sStart, sEnd: string;
   }
   iUnixSecs: int64;
-// ========= Internal routines start ===========
-procedure SetHigh(iMember:Integer;aValue:Variant;aDateTime:TDateTime);
-begin
-  If aValue > FoobotDataHighs[iMember] then
-   begin
-      FoobotDataHighs[iMember]:=aValue;
-      FoobotDataHighTimes[iMember]:=aDateTime;
-   end;
-end;
-procedure SetLow(iMember:Integer;aValue:Variant;aDateTime:TDateTime);
-begin
-   If (aValue < FoobotDataLows[iMember]) OR  (FoobotDataLows[iMember] = 0) then
-   begin
-      FoobotDataLows[iMember]:=aValue;
-      FoobotDataLowTimes[iMember]:=aDateTime;
-   end;
-end;
-// ========== Internal routines end =============
+  // ========= Internal routines start ===========
+  procedure SetHigh(iMember: integer; aValue: variant; aDateTime: TDateTime);
+  begin
+    if aValue > FoobotDataHighs[iMember] then
+    begin
+      FoobotDataHighs[iMember] := aValue;
+      FoobotDataHighTimes[iMember] := aDateTime;
+    end;
+  end;
+
+  procedure SetLow(iMember: integer; aValue: variant; aDateTime: TDateTime);
+  begin
+    if (aValue < FoobotDataLows[iMember]) or (FoobotDataLows[iMember] = 0) then
+    begin
+      FoobotDataLows[iMember] := aValue;
+      FoobotDataLowTimes[iMember] := aDateTime;
+    end;
+  end;
+  // ========== Internal routines end =============
 begin
   ResetArrays;
   Result := True;
@@ -237,57 +243,60 @@ begin
         begin
           SetLength(FoobotData_pm, K + 1);
           FoobotData_pm[K] := double(MyDataPoint);
-          SetHigh(J,FoobotData_pm[K],FoobotData_time[K]);
-          SetLow(J,FoobotData_pm[K],FoobotData_time[K]);
+          SetHigh(J, FoobotData_pm[K], FoobotData_time[K]);
+          SetLow(J, FoobotData_pm[K], FoobotData_time[K]);
         end;
         2: // Temperature
         begin
           SetLength(FoobotData_tmp, K + 1);
           FoobotData_tmp[K] := double(MyDataPoint);
-          SetHigh(J,FoobotData_tmp[K],FoobotData_time[K]);
-          SetLow(J,FoobotData_tmp[K],FoobotData_time[K]);
+          SetHigh(J, FoobotData_tmp[K], FoobotData_time[K]);
+          SetLow(J, FoobotData_tmp[K], FoobotData_time[K]);
         end;
         3: // Humidity
         begin
           SetLength(FoobotData_hum, K + 1);
           FoobotData_hum[K] := double(MyDataPoint);
-          SetHigh(J,FoobotData_hum[K],FoobotData_time[K]);
-          SetLow(J,FoobotData_hum[K],FoobotData_time[K]);
+          SetHigh(J, FoobotData_hum[K], FoobotData_time[K]);
+          SetLow(J, FoobotData_hum[K], FoobotData_time[K]);
         end;
         4: // CO2
         begin
           SetLength(FoobotData_co2, K + 1);
           FoobotData_co2[K] := integer(MyDataPoint);
-          SetHigh(J,FoobotData_co2[K],FoobotData_time[K]);
-          SetLow(J,FoobotData_co2[K],FoobotData_time[K]);
+          SetHigh(J, FoobotData_co2[K], FoobotData_time[K]);
+          SetLow(J, FoobotData_co2[K], FoobotData_time[K]);
         end;
         5: // Volatile compounds
         begin
           SetLength(FoobotData_voc, K + 1);
           FoobotData_voc[K] := integer(MyDataPoint);
-          SetHigh(J,FoobotData_voc[K],FoobotData_time[K]);
-          SetLow(J,FoobotData_voc[K],FoobotData_time[K]);
+          SetHigh(J, FoobotData_voc[K], FoobotData_time[K]);
+          SetLow(J, FoobotData_voc[K], FoobotData_time[K]);
         end;
         6: // All Pollution
         begin
           SetLength(FoobotData_allpollu, K + 1);
           FoobotData_allpollu[K] := double(MyDataPoint);
-          SetHigh(J,FoobotData_allpollu[K],FoobotData_time[K]);
-          SetLow(J,FoobotData_allpollu[K],FoobotData_time[K]);
+          SetHigh(J, FoobotData_allpollu[K], FoobotData_time[K]);
+          SetLow(J, FoobotData_allpollu[K], FoobotData_time[K]);
         end;
       end; // of Case
     end;
   end;
   SaveHighLows;
 end;
-Function ResetHighLows:Boolean;
-Var iCount:Integer;
+
+function ResetHighLows: boolean;
+var
+  iCount: integer;
 begin
-  For iCount:=0 to HIGHLOWMAX do begin
-     FoobotDataHighs[iCount]:=0;
-     FoobotDataLows[iCount]:=0;
+  for iCount := 0 to HIGHLOWMAX do
+  begin
+    FoobotDataHighs[iCount] := 0;
+    FoobotDataLows[iCount] := 0;
   end;
-  Result:=TRUE;
+  Result := True;
 end;
 
 function ResetArrays: boolean;
@@ -352,6 +361,7 @@ function FetchAuthenticationKey(aUsername, aUserPassword: string): boolean;
 var
   sRequestURL: string;
   iCount: integer;
+  JSON: TJSONStringType;
 begin
   //  FOOBOT_USER_URL = 'http://api.foobot.io/v2/user/%s/login/';
   //  sAuthenticationKey
@@ -361,17 +371,22 @@ begin
     with httpclient do
     begin
       ResponseHeaders.NameValueSeparator := ':';
-      AddHeader('Authorization', EncodeStringBase64(aUsername + ':' + aUserPassword));
-      sRequestURL := Format(FOOBOT_USER_URL, [aUsername]);
-      Get(sRequestURL);
-      if ResponseStatusCode <> 200 then
-      begin
-        ShowMessageFmt('Failed - Foobot server refused with code %d',
-          [ResponseStatusCode]);
-        Exit(False);
+      AddHeader('password', aUserPassword);
+      // ShowMessage(EncodeURLElement(aUsername));
+      sRequestURL := Format(FOOBOT_USER_URL, [EncodeURLElement(aUsername)]);
+      try
+        JSON := Get(sRequestURL);
+        if ResponseStatusCode <> 200 then
+        begin
+          ShowMessageFmt('Failed - Foobot server refused with code %d',
+            [ResponseStatusCode]);
+          Exit(False);
+        end;
+      finally
+        ShowMessage(JSON);
+        for iCount := 0 to Pred(ResponseHeaders.Count) do
+          ShowMessage(ResponseHeaders[iCount]);
       end;
-      for iCount := 0 to ResponseHeaders.Count do
-        ShowMessage(ResponseHeaders[iCount]);
       Result := True;
     end;
   finally
@@ -386,7 +401,7 @@ var
   DeStreamer: TJSONDeStreamer;
 begin
   Result := True; // Assume success: Look for failure
-  sAuthenticationKey:=aSecretKey;
+  sAuthenticationKey := aSecretKey;
   try
     with httpclient do
     begin
@@ -417,7 +432,8 @@ begin
         DeStreamer.JSONToObject(JSON, FoobotIdentityObject.FoobotIdentityList);
       except
         On E: Exception do
-          showmessagefmt('Cannot retieve data - Foobot server refused with code %s', [E.Message]);
+          showmessagefmt('Cannot retieve data - Foobot server refused with code %s',
+            [E.Message]);
         On E: Exception do
           Result := False;
       end;
@@ -439,7 +455,7 @@ var
   //FOOBOT_DATA_START_FINISH_URL = 'http://api.foobot.io/v2/device/%s/datapoint/%s/%s/%s/';
 begin
   Result := True; // Assume success: Look for failure
-  TheCurrentFoobot:=iCurrentFoobot;
+  TheCurrentFoobot := iCurrentFoobot;
   // Checks for integrity
   if (FoobotIdentityObject.FoobotIdentityList.Count = 0) then
     Exit(False);
@@ -511,13 +527,14 @@ initialization
     HttpClient := TFPHTTPClient.Create(nil);
     FoobotIdentityObject := TFoobotIdentityObject.Create;
     FoobotDataObject := TFoobotDataObject.Create;
-    SaveLoadHighLows:=TRUE;
-    TheCurrentFoobot:=0;
+    SaveLoadHighLows := True;
+    TheCurrentFoobot := 0;
   end;
 
 finalization
   begin
-    If Assigned(HLINI) then FreeAndNil(HLINI);
+    if Assigned(HLINI) then
+      FreeAndNil(HLINI);
     FreeAndNil(HttpClient);
     FreeAndNil(FoobotIdentityObject);
     FreeAndNil(FoobotDataObject);
