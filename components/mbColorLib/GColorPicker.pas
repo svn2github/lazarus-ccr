@@ -50,15 +50,10 @@ begin
   FGradientWidth := 256;
   FGradientHeight := 1;
   FRed := 128;
-  FGreen := 255;
   FBlue := 128;
-  FArrowPos := ArrowPosFromGreen(255);
-  FChange := false;
-  Layout := lyVertical;
   SetGreen(255);
+  Layout := lyVertical;
   HintFormat := 'Green: %value (selected)';
-  FManual := false;
-  FChange := true;
 end;
 
 function TGColorPicker.ArrowPosFromGreen(g: integer): integer;
@@ -85,11 +80,11 @@ begin
     TBA_Resize:
       SetGreen(FGreen);
     TBA_MouseMove:
-      FGreen := GreenFromArrowPos(FArrowPos);
+      SetGreen(GreenFromArrowPos(FArrowPos));
     TBA_MouseDown:
-      FGreen := GreenFromArrowPos(FArrowPos);
+      SetGreen(GreenFromArrowPos(FArrowPos));
     TBA_MouseUp:
-      FGreen := GreenFromArrowPos(FArrowPos);
+      SetGreen(GreenFromArrowPos(FArrowPos));
     TBA_WheelUp:
       SetGreen(FGreen + Increment);
     TBA_WheelDown:
@@ -128,10 +123,9 @@ end;
 
 function TGColorPicker.GetSelectedColor: TColor;
 begin
-  if not WebSafe then
-    Result := RGB(FRed, FGreen, FBlue)
-  else
-    Result := GetWebSafe(RGB(FRed, FGreen, FBlue));
+  Result := RGB(FRed, FGreen, FBlue);
+  if WebSafe then
+    Result := GetWebSafe(Result);
 end;
 
 function TGColorPicker.GetSelectedValue: integer;
@@ -143,10 +137,12 @@ function TGColorPicker.GreenFromArrowPos(p: integer): integer;
 var
   g: integer;
 begin
-  if Layout = lyHorizontal then
-    g := Round(p * 255 / (Width - 12))
-  else
-    g := Round(255 - p * 255 / (Height - 12));
+  case Layout of
+    lyHorizontal:
+      g := Round(p * 255 / (Width - 12));
+    lyVertical:
+      g := Round(255 - p * 255 / (Height - 12));
+  end;
   Clamp(g, 0, 255);
   Result := g;
 end;
@@ -157,10 +153,9 @@ begin
   if FBlue <> b then
   begin
     FBlue := b;
-    FManual := false;
     CreateGradient;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
@@ -171,9 +166,8 @@ begin
   begin
     FGreen := g;
     FArrowPos := ArrowPosFromGreen(g);
-    FManual := false;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
@@ -183,25 +177,33 @@ begin
   if FRed <> r then
   begin
     FRed := r;
-    FManual := false;
     CreateGradient;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
 procedure TGColorPicker.SetSelectedColor(c: TColor);
+var
+  r, g, b: Integer;
+  newGradient: Boolean;
 begin
-  if WebSafe then c := GetWebSafe(c);
+  if WebSafe then
+    c := GetWebSafe(c);
   if c = GetSelectedColor then
     exit;
-  FChange := false;
-  SetRed(GetRValue(c));
-  SetBlue(GetBValue(c));
-  SetGreen(GetGValue(c));
-  FManual := false;
-  FChange := true;
-  if Assigned(OnChange) then OnChange(Self);
+
+  r := GetRValue(c);
+  g := GetGValue(c);
+  b := GetBValue(c);
+  newGradient := (r <> FRed) or (b <> FBlue);
+  FGreen := g;
+  FBlue := b;
+  FRed := r;
+  if newGradient then
+    CreateGradient;
+  Invalidate;
+  DoChange;
 end;
 
 end.

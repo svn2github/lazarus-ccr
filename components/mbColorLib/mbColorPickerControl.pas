@@ -24,7 +24,6 @@ type
     FManual: Boolean;
     FSelected: TColor;
     mx, my, mdx, mdy: integer;
-    FOnChange: TNotifyEvent;
     procedure CreateGradient; override;
     function GetHintStr(X, Y: Integer): String; override;
     function GetSelectedColor: TColor; virtual;
@@ -44,7 +43,6 @@ type
     procedure CMMouseLeave(var Message: TLMessage); message CM_MOUSELEAVE;
     {$ENDIF}
     property MarkerStyle: TMarkerStyle read FMarkerStyle write SetMarkerStyle;
-    property OnChange: TNotifyEvent read FOnChange write FOnChange;
   public
     constructor Create(AOwner: TComponent); override;
     property ColorUnderCursor;

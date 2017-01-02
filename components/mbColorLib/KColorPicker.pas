@@ -18,11 +18,11 @@ type
     function ArrowPosFromBlack(k: integer): integer;
     function BlackFromArrowPos(p: integer): integer;
     function GetSelectedColor: TColor;
+    procedure SetBlack(k: integer);
     procedure SetCyan(c: integer);
     procedure SetMagenta(m: integer);
-    procedure SetSelectedColor(c: TColor);
+    procedure SetSelectedColor(clr: TColor);
     procedure SetYellow(y: integer);
-    procedure SetBlack(k: integer);
   protected
     procedure Execute(tbaAction: integer); override;
     function GetArrowPos: integer; override;
@@ -54,14 +54,9 @@ begin
   FCyan := 0;
   FMagenta := 0;
   FYellow := 0;
-  FBlack := 255;
-  FArrowPos := ArrowPosFromBlack(255);
-  FChange := false;
-  Layout := lyVertical;
   SetBlack(255);
+  Layout := lyVertical;
   HintFormat := 'Black: %value (selected)';
-  FManual := false;
-  FChange := true;
 end;
 
 function TKColorPicker.ArrowPosFromBlack(k: integer): integer;
@@ -87,10 +82,12 @@ function TKColorPicker.BlackFromArrowPos(p: integer): integer;
 var
   k: integer;
 begin
-  if Layout = lyHorizontal then
-    k := Round(p/((Width - 12)/255))
-  else
-    k := Round(255 - p/((Height - 12)/255));
+  case Layout of
+    lyHorizontal:
+      k := Round(p * 255 / (Width - 12));
+    lyVertical:
+      k := Round(255 - p * 255 / (Height - 12));
+  end;
   Clamp(k, 0, 255);
   Result := k;
 end;
@@ -101,11 +98,11 @@ begin
     TBA_Resize:
       SetBlack(FBlack);
     TBA_MouseMove:
-      FBlack := BlackFromArrowPos(FArrowPos);
+      SetBlack(BlackFromArrowPos(FArrowPos));
     TBA_MouseDown:
-      FBlack := BlackFromArrowPos(FArrowPos);
+      SetBlack(BlackFromArrowPos(FArrowPos));
     TBA_MouseUp:
-      FBlack := BlackFromArrowPos(FArrowPos);
+      SetBlack(BlackFromArrowPos(FArrowPos));
     TBA_WheelUp:
       SetBlack(FBlack + Increment);
     TBA_WheelDown:
@@ -160,9 +157,8 @@ begin
   begin
     FBlack := k;
     FArrowPos := ArrowPosFromBlack(k);
-    FManual := false;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
@@ -172,10 +168,9 @@ begin
   if FCyan <> c then
   begin
     FCyan := c;
-    FManual := false;
     CreateGradient;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
@@ -185,27 +180,32 @@ begin
   if FMagenta <> m then
   begin
     FMagenta := m;
-    FManual := false;
     CreateGradient;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
-procedure TKColorPicker.SetSelectedColor(c: TColor);
+procedure TKColorPicker.SetSelectedColor(clr: TColor);
 var
-  cy, m, y, k: integer;
+  c, m, y, k: integer;
+  newGradient: Boolean;
 begin
-  if WebSafe then c := GetWebSafe(c);
-  ColorToCMYK(c, cy, m, y, k);
-  FChange := false;
-  SetMagenta(m);
-  SetYellow(y);
-  SetCyan(cy);
-  SetBlack(k);
-  FManual := false;
-  FChange := true;
-  if Assigned(OnChange) then OnChange(Self);
+  if WebSafe then
+    clr := GetWebSafe(clr);
+  if clr = GetSelectedColor then
+    exit;
+
+  ColorToCMYK(clr, c, m, y, k);
+  newGradient := (c <> FCyan) or (m <> FMagenta) or (y <> FYellow);
+  FCyan := c;
+  FMagenta := m;
+  FYellow := y;
+  FBlack := k;
+  if newGradient then
+    CreateGradient;
+  Invalidate;
+  DoChange;
 end;
 
 procedure TKColorPicker.SetYellow(y: integer);
@@ -214,10 +214,9 @@ begin
   if FYellow <> y then
   begin
     FYellow := y;
-    FManual := false;
     CreateGradient;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 

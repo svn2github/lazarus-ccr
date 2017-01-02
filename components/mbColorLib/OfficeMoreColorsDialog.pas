@@ -100,8 +100,6 @@ implementation
 
 procedure TOfficeMoreColorsWin.ColorPickerChange(Sender: TObject);
 begin
-  if FLockChange <> 0 then
-    exit;
   if Sender = HSL then
     SetAllCustom(HSL.SelectedColor);
   if Sender = HSLRing then
@@ -127,10 +125,6 @@ procedure TOfficeMoreColorsWin.cbColorDisplayChange(Sender: TObject);
 begin
   PickerNotebook.PageIndex := cbColorDisplay.ItemIndex;
   SetAllCustom(NewSwatch.Color);
-
-
-  exit;
-
   {
   HSL.Visible := cbColorDisplay.ItemIndex = 0;
   HSLRing.Visible := cbColorDisplay.ItemIndex = 1;
@@ -146,72 +140,90 @@ end;
 
 procedure TOfficeMoreColorsWin.EBlueChange(Sender: TObject);
 begin
-  if (EBlue.Text <> '') and EBlue.Focused then
+  if (EBlue.Text <> '') and EBlue.Focused and (FLockChange = 0) then
   begin
     inc(FLockChange);
-    HSL.Blue := EBlue.Value;
-    SLH.Blue := EBlue.Value;
-    NewSwatch.Color := RGB(ERed.Value, EGreen.Value, EBlue.Value);
-    dec(FLockChange);
+    try
+      HSL.Blue := EBlue.Value;
+      SLH.Blue := EBlue.Value;
+      NewSwatch.Color := RGB(ERed.Value, EGreen.Value, EBlue.Value);
+    finally
+      dec(FLockChange);
+    end;
   end;
 end;
 
 procedure TOfficeMoreColorsWin.EGreenChange(Sender: TObject);
 begin
-  if (EGreen.Text <> '') and EGreen.Focused then
+  if (EGreen.Text <> '') and EGreen.Focused and (FLockChange = 0) then
   begin
     inc(FLockChange);
-    HSL.Green := EGreen.Value;
-    SLH.Green := EGreen.Value;
-    NewSwatch.Color := RGB(ERed.Value, EGreen.Value, EBlue.Value);
-    dec(FLockChange);
+    try
+      HSL.Green := EGreen.Value;
+      SLH.Green := EGreen.Value;
+      NewSwatch.Color := RGB(ERed.Value, EGreen.Value, EBlue.Value);
+    finally
+      dec(FLockChange);
+    end;
   end;
 end;
 
 procedure TOfficeMoreColorsWin.EHueChange(Sender: TObject);
 begin
-  if (EHue.Text <> '') and EHue.Focused  then
+  if (EHue.Text <> '') and EHue.Focused and (FLockChange = 0) then
   begin
     inc(FLockChange);
-    HSL.Hue := EHue.Value;
-    SLH.Hue := EHue.Value;
-    NewSwatch.Color := HSLRangeToRGB(EHue.Value, ESat.Value, ELum.Value);
-    dec(FLockChange);
+    try
+      HSL.Hue := EHue.Value;
+      SLH.Hue := EHue.Value;
+      NewSwatch.Color := HSLRangeToRGB(EHue.Value, ESat.Value, ELum.Value);
+    finally
+      dec(FLockChange);
+    end;
   end;
 end;
 
 procedure TOfficeMoreColorsWin.ELumChange(Sender: TObject);
 begin
-  if (ELum.Text <> '') and ELum.Focused then
+  if (ELum.Text <> '') and ELum.Focused and (FLockChange = 0) then
   begin
     inc(FLockChange);
-    HSL.Luminance := ELum.Value;
-    NewSwatch.Color := HSLRangeToRGB(EHue.Value, ESat.Value, ELum.Value);
-    dec(FLockChange);
+    try
+      HSL.Luminance := ELum.Value;
+      NewSwatch.Color := HSLRangeToRGB(EHue.Value, ESat.Value, ELum.Value);
+    finally
+      dec(FLockChange);
+    end;
   end;
 end;
 
 procedure TOfficeMoreColorsWin.ERedChange(Sender: TObject);
 begin
-  if (ERed.Text <> '') and ERed.Focused then
+  if (ERed.Text <> '') and ERed.Focused and (FLockChange = 0) then
   begin
     inc(FLockChange);
-    HSL.Red := ERed.Value;
-    SLH.Red := ERed.Value;
-    NewSwatch.Color := RGB(ERed.Value, EGreen.Value, EBlue.Value);
-    dec(FLockChange);
+    try
+      HSL.Red := ERed.Value;
+      SLH.Red := ERed.Value;
+      NewSwatch.Color := RGB(ERed.Value, EGreen.Value, EBlue.Value);
+    finally
+      dec(FLockChange);
+    end;
   end;
 end;
 
 procedure TOfficeMoreColorsWin.ESatChange(Sender: TObject);
 begin
-  if (ESat.Text <> '') and ESat.Focused then
+  if (ESat.Text <> '') and ESat.Focused and (FLockChange = 0) then
   begin
     inc(FLockChange);
-    HSL.Saturation := ESat.Value;
-    SLH.Saturation := ESat.Value;
-    NewSwatch.Color := HSLRangeToRGB(EHue.Value, ESat.Value, ELum.Value);
-    dec(FLockChange);
+    try
+      HSL.Saturation := ESat.Value;
+      SLH.Saturation := ESat.Value;
+      NewSwatch.Color := HSLRangeToRGB(EHue.Value, ESat.Value, ELum.Value);
+    finally
+      dec(FLockChange);
+    end;
   end;
 end;
 
@@ -348,8 +360,8 @@ procedure TOfficeMoreColorsWin.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   case Key of
-   VK_RETURN: ModalResult := mrOK;
-   VK_ESCAPE: ModalResult := mrCancel;
+    VK_RETURN: ModalResult := mrOK;
+    VK_ESCAPE: ModalResult := mrCancel;
   end;
 end;
 
@@ -392,15 +404,11 @@ end;
 
 procedure TOfficeMoreColorsWin.HSLChange(Sender: TObject);
 begin
-  if FLockChange <> 0 then
-    exit;
   SetAllCustom(HSL.SelectedColor);
 end;
 
 procedure TOfficeMoreColorsWin.HSLRingChange(Sender: TObject);
 begin
-  if FLockChange <> 0 then
-    exit;
   SetAllCustom(HSLRing.SelectedColor);
 end;
 
@@ -411,7 +419,7 @@ var
 begin
   NewSwatch.Hint := GetHint(NewSwatch.Color);
   if (ERed = nil) or (EBlue = nil) or (EGreen = nil) or
-     (EHue = nil) or (ESat = nil) or (ELum = nil) or (FLockChange <> 0)
+     (EHue = nil) or (ESat = nil) or (ELum = nil)
   then
     exit;
 
@@ -432,49 +440,51 @@ end;
 procedure TOfficeMoreColorsWin.SetAllCustom(c: TColor);
 var
   r, g, b: Integer;
-  h, s, l: Integer;
+  H, S, L: Double;
+//  h, s, l: Integer;
 begin
   if (ERed = nil) or (EGreen = nil) or (EBlue = nil) or
      (EHue = nil) or (ESat = nil) or (ELum = nil) or
-     (PickerNotebook = nil) or (HSL = nil) or (HSLRing = nil) or (SLH = nil)
+     (PickerNotebook = nil) or (HSL = nil) or (HSLRing = nil) or (SLH = nil) or
+     (FLockChange > 0)
   then
     exit;
 
-  inc(FLockChange);
-  try
-    NewSwatch.Color := c;
-    r := GetRValue(c);
-    g := GetGValue(c);
-    b := GetBValue(c);
-    RGBtoHSLRange(c, h, s, l);
+  NewSwatch.Color := c;
 
-    if PickerNotebook.ActivePage = nbHSL.Name then
-      HSL.SelectedColor := c
-    else
-    if PickerNotebook.ActivePage = nbHSLRing.Name then
-      HSLRing.SelectedColor := c
-    else
-    if PickerNotebook.ActivePage = nbSLH.Name then
-      SLH.SelectedColor := c
-    else
-    if PickerNotebook.ActivePage = nbRGB.Name then
-    begin
-      RTrackbar.SelectedColor := c;
-      GTrackbar.SelectedColor := c;
-      BTrackbar.SelectedColor := c;
-    end
-    else
-      exit; //raise Exception.Create('Notbook page not prepared for color pickers');
+//  inc(FLockChange);
+  r := GetRValue(c);
+  g := GetGValue(c);
+  b := GetBValue(c);
+  RGBToHSL(c, H, S, L);
+//  RGBtoHSLRange(c, h, s, l);
 
-    ERed.Value := r;
-    EGreen.Value := g;
-    EBlue.Value := b;
-    EHue.Value := h;
-    ESat.Value := s;
-    ELum.Value := l;
-  finally
-    dec(FLockChange);
-  end;
+  if PickerNotebook.ActivePage = nbHSL.Name then
+    HSL.SelectedColor := c
+  else
+  if PickerNotebook.ActivePage = nbHSLRing.Name then
+    HSLRing.SelectedColor := c
+  else
+  if PickerNotebook.ActivePage = nbSLH.Name then
+    SLH.SelectedColor := c
+  else
+  if PickerNotebook.ActivePage = nbRGB.Name then
+  begin
+    RTrackbar.SelectedColor := c;
+    GTrackbar.SelectedColor := c;
+    BTrackbar.SelectedColor := c;
+  end
+  else
+    exit; //raise Exception.Create('Notbook page not prepared for color pickers');
+
+  ERed.Value := r;
+  EGreen.Value := g;
+  EBlue.Value := b;
+  EHue.Value := H * HSL.MaxHue;
+  ESat.Value := S * HSL.MaxSaturation;
+  ELum.Value := L * HSL.MaxLuminance;
+
+//  dec(FLockChange);
 end;
 
 procedure TOfficeMoreColorsWin.SetAllToSel(c: TColor);
@@ -501,8 +511,6 @@ end;
 
 procedure TOfficeMoreColorsWin.SLHChange(Sender: TObject);
 begin
-  if FLockChange <> 0 then
-    exit;
   SetAllCustom(SLH.SelectedColor);
 end;
 

@@ -23,7 +23,7 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
     AnchorSideBottom.Control = NewSwatch
     Left = 290
     Height = 15
-    Top = 209
+    Top = 213
     Width = 24
     Anchors = [akLeft, akBottom]
     BorderSpacing.Bottom = 4
@@ -200,6 +200,8 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
             Height = 141
             Top = 0
             Width = 232
+            Hue = 180
+            Saturation = 227
             SelectedColor = 16315911
             HSPickerHintFormat = 'H: %h S: %s'#13'Hex: %hex'
             LPickerHintFormat = 'Luminance: %l'
@@ -216,6 +218,7 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
             Height = 124
             Top = 0
             Width = 136
+            Luminance = 240
             RingPickerHintFormat = 'Hue: %h'
             SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
             ParentShowHint = False
@@ -235,14 +238,17 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
         object nbSLH: TPage
           object SLH: TSLHColorPicker
             Left = 0
-            Height = 122
+            Height = 141
             Top = 0
-            Width = 238
+            Width = 232
+            ParentColor = False
+            Luminance = 240
             HPickerHintFormat = 'Hue: %h'
             SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
             ParentShowHint = False
             Align = alClient
             TabOrder = 0
+            Color = clMenuHighlight
             OnChange = ColorPickerChange
           end
         end
@@ -253,7 +259,7 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
             Left = 14
             Height = 32
             Top = 0
-            Width = 206
+            Width = 218
             HintFormat = 'Red: %value (selected)'
             Layout = lyHorizontal
             SelectionIndicator = siRect
@@ -270,7 +276,7 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
             Left = 16
             Height = 32
             Top = 40
-            Width = 204
+            Width = 216
             BevelInner = bvLowered
             BevelOuter = bvRaised
             HintFormat = 'Green: %value (selected)'
@@ -289,7 +295,7 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
             Left = 16
             Height = 32
             Top = 80
-            Width = 204
+            Width = 216
             HintFormat = 'Blue: %value (selected)'
             Layout = lyHorizontal
             SelectionIndicator = siRect
@@ -305,8 +311,8 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
             AnchorSideTop.Side = asrCenter
             AnchorSideRight.Control = RTrackbar
             Left = 4
-            Height = 13
-            Top = 10
+            Height = 15
+            Top = 9
             Width = 7
             Anchors = [akTop, akRight]
             BorderSpacing.Right = 3
@@ -317,10 +323,10 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
             AnchorSideTop.Control = GTrackbar
             AnchorSideTop.Side = asrCenter
             AnchorSideRight.Control = GTrackbar
-            Left = 4
-            Height = 13
-            Top = 50
-            Width = 7
+            Left = 3
+            Height = 15
+            Top = 49
+            Width = 8
             Anchors = [akTop, akRight]
             BorderSpacing.Left = 4
             BorderSpacing.Right = 5
@@ -331,10 +337,10 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
             AnchorSideTop.Control = BTrackbar
             AnchorSideTop.Side = asrCenter
             AnchorSideRight.Control = BTrackbar
-            Left = 5
-            Height = 13
-            Top = 90
-            Width = 6
+            Left = 4
+            Height = 15
+            Top = 89
+            Width = 7
             Anchors = [akTop, akRight]
             BorderSpacing.Left = 4
             BorderSpacing.Right = 5
@@ -379,7 +385,7 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
     Left = 266
     Height = 32
     Hint = 'RGB(255, 255, 255)'
-    Top = 228
+    Top = 232
     Width = 73
     Anchors = [akLeft, akBottom]
     ShowHint = True
@@ -395,7 +401,7 @@ object OfficeMoreColorsWin: TOfficeMoreColorsWin
     Left = 266
     Height = 32
     Hint = 'RGB(255, 255, 255)'#13#10'Hex: FFFFFF'
-    Top = 260
+    Top = 264
     Width = 73
     Anchors = [akLeft, akRight, akBottom]
     ShowHint = True

@@ -7,14 +7,17 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   ExtCtrls, ComCtrls, RAxisColorPicker, RColorPicker, GColorPicker,
-  GAxisColorPicker, BColorPicker, BAxisColorPicker;
+  GAxisColorPicker, BColorPicker, BAxisColorPicker, mbColorPreview;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
+    Label1: TLabel;
+    mbColorPreview1: TmbColorPreview;
     PageControl1: TPageControl;
+    Panel1: TPanel;
     RAxisColorPicker1: TRAxisColorPicker;
     BAxisColorPicker1: TBAxisColorPicker;
     GAxisColorPicker1: TGAxisColorPicker;
@@ -32,11 +35,14 @@ type
     procedure FormCreate(Sender: TObject);
     procedure GAxisColorPicker1Change(Sender: TObject);
     procedure GColorPicker1Change(Sender: TObject);
+    procedure PageControl1Change(Sender: TObject);
     procedure PanelBLUEPaint(Sender: TObject);
     procedure PanelGREENPaint(Sender: TObject);
     procedure PanelREDPaint(Sender: TObject);
     procedure RAxisColorPicker1Change(Sender: TObject);
     procedure RColorPicker1Change(Sender: TObject);
+  private
+    procedure UpdatePreview;
   public
 
   end;
@@ -49,18 +55,20 @@ implementation
 {$R *.lfm}
 
 uses
-  Types, GraphUtil;
+  LclIntf, Types, GraphUtil, HTMLColors;
 
 { TForm1 }
 
 procedure TForm1.BAxisColorPicker1Change(Sender: TObject);
 begin
   BColorPicker1.SelectedColor := BAxisColorPicker1.SelectedColor;
+  UpdatePreview;
 end;
 
 procedure TForm1.BColorPicker1Change(Sender: TObject);
 begin
   BAxisColorPicker1.SelectedColor := BColorPicker1.SelectedColor;
+  UpdatePreview;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -68,16 +76,24 @@ begin
   RAxisColorPicker1.SelectedColor := clRed;
   GAxisColorPicker1.SelectedColor := clGreen;
   BAxisColorPicker1.SelectedColor := clBlue;
+  UpdatePreview;
 end;
 
 procedure TForm1.GAxisColorPicker1Change(Sender: TObject);
 begin
   GColorPicker1.SelectedColor := GAxisColorPicker1.SelectedColor;
+  UpdatePreview;
 end;
 
 procedure TForm1.GColorPicker1Change(Sender: TObject);
 begin
   GAxisColorPicker1.SelectedColor := GColorPicker1.SelectedColor;
+  UpdatePreview;
+end;
+
+procedure TForm1.PageControl1Change(Sender: TObject);
+begin
+  UpdatePreview;
 end;
 
 // On BlueAxisPicker, x is RED, y is GREEN
@@ -190,12 +206,28 @@ end;
 procedure TForm1.RAxisColorPicker1Change(Sender: TObject);
 begin
   RColorPicker1.SelectedColor := RAxisColorPicker1.SelectedColor;
+  UpdatePreview;
 end;
 
 procedure TForm1.RColorPicker1Change(Sender: TObject);
 begin
   RAXisColorPicker1.SelectedColor := RColorPicker1.SelectedColor;
+  UpdatePreview;
 end;
 
+procedure TForm1.UpdatePreview;
+begin
+  case PageControl1.ActivePageindex of
+    0: mbColorPreview1.Color := RColorPicker1.SelectedColor;
+    1: mbColorPreview1.Color := GColorPicker1.SelectedColor;
+    2: mbColorPreview1.Color := BColorPicker1.SelectedColor;
+  end;
+  Label1.Caption := Format('R=%d G=%d B=%d HTML=#%s', [
+    GetRValue(mbColorPreview1.Color),
+    GetGValue(mbColorPreview1.Color),
+    GetBValue(mbColorPreview1.Color),
+    ColorToHex(mbColorPreview1.Color)
+  ]);
+end;
 end.
 

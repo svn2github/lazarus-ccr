@@ -52,6 +52,9 @@ type
 
 implementation
 
+uses
+  mbUtils;
+
 {TVColorPicker}
 
 constructor TVColorPicker.Create(AOwner: TComponent);
@@ -64,90 +67,8 @@ begin
   FGradientHeight := 1;
   FHue := 0;
   FSat := 0;
-  FChange := false;
   SetValue(FMaxVal);
   HintFormat := 'Value: %value (selected)';
-  FManual := false;
-  FChange := true;
-end;
-
-function TVColorPicker.GetGradientColor(AValue: Integer): TColor;
-begin
-  Result := HSVtoColor(FHue, FSat, AValue / FMaxVal);
-end;
-
-function TVColorPicker.GetHue: Integer;
-begin
-  Result := round(FHue * FMaxHue);
-end;
-
-function TVColorPicker.GetSat: Integer;
-begin
-  Result := round(FSat * FMaxSat);
-end;
-
-function TVColorPicker.GetValue: Integer;
-begin
-  Result := round(FVal * FMaxVal);
-end;
-
-procedure TVColorPicker.SetHue(h: integer);
-begin
-  if h > FMaxHue+1 then h := FMaxHue + 1;
-  if h < 0 then h := 0;
-  if GetHue() <> h then
-  begin
-    FHue := h / (FMaxHue + 1);
-    FManual := false;
-    CreateGradient;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
-end;
-
-procedure TVColorPicker.SetMaxHue(h: Integer);
-begin
-  if h = FMaxHue then
-    exit;
-  FMaxHue := h;
-  CreateGradient;
-  Invalidate;
-  if FChange and Assigned(OnChange) then OnChange(Self);
-end;
-
-procedure TVColorPicker.SetMaxSat(s: Integer);
-begin
-  if s = FMaxSat then
-    exit;
-  FMaxSat := s;
-  CreateGradient;
-  Invalidate;
-  if FChange and Assigned(OnChange) then OnChange(Self);
-end;
-
-procedure TVColorPicker.SetMaxVal(v: Integer);
-begin
-  if v = FMaxVal then
-    exit;
-  FMaxVal := v;
-  FGradientWidth := FMaxVal + 1;
-  CreateGradient;
-  Invalidate;
-  if FChange and Assigned(OnChange) then OnChange(Self);
-end;
-
-procedure TVColorPicker.SetSat(s: integer);
-begin
-  if s > FMaxSat then s := FMaxSat;
-  if s < 0 then s := 0;
-  if GetSat() <> s then
-  begin
-    FSat := s / FMaxSat;
-    FManual := false;
-    CreateGradient;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
 end;
 
 function TVColorPicker.ArrowPosFromVal(v: integer): integer;
@@ -161,74 +82,11 @@ begin
   end
   else
   begin
-    v := FMaxVal - v;
-    a := Round((Height - 12) * v / FMaxVal);
+    a := Round((Height - 12) * (FMaxVal - v) / FMaxVal);
     if a > Height - FLimit then a := Height - FLimit;
   end;
   if a < 0 then a := 0;
   Result := a;
-end;
-
-function TVColorPicker.ValFromArrowPos(p: integer): integer;
-var
-  r: integer;
-begin
-  if Layout = lyHorizontal then
-    r := Round(p / (Width - 12) * FMaxVal)
-  else
-    r := Round(FMaxVal - p / (Height - 12) * FMaxVal);
-  if r < 0 then r := 0;
-  if r > FMaxVal then r := FMaxVal;
-  Result := r;
-end;
-
-procedure TVColorPicker.SetValue(V: integer);
-begin
-  if v < 0 then v := 0;
-  if v > FMaxVal then v := FMaxVal;
-  if GetValue() <> v then
-  begin
-    FVal := v / FMaxVal;
-    FArrowPos := ArrowPosFromVal(v);
-    FManual := false;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
-end;
-
-function TVColorPicker.GetSelectedColor: TColor;
-begin
-  Result := HSVtoColor(FHue, FSat, FVal);
-  if WebSafe then
-    Result := GetWebSafe(Result);
-end;
-
-function TVColorPicker.GetSelectedValue: integer;
-begin
-  Result := GetValue();
-end;
-
-procedure TVColorPicker.SetSelectedColor(c: TColor);
-var
-  h, s, v: integer;
-begin
-  if WebSafe then c := GetWebSafe(c);
-  RGBToHSVRange(GetRValue(c), GetGValue(c), GetBValue(c), h, s, v);
-  FChange := false;
-  SetHue(h);
-  SetSat(s);
-  SetValue(v);
-  FManual := false;
-  FChange := true;
-  if Assigned(OnChange) then OnChange(Self);
-end;
-
-function TVColorPicker.GetArrowPos: integer;
-begin
-  if FMaxVal = 0 then
-    Result := inherited GetArrowPos
-  else
-    Result := ArrowPosFromVal(GetValue());
 end;
 
 procedure TVColorPicker.Execute(tbaAction: integer);
@@ -265,6 +123,149 @@ begin
     else
       inherited;
   end;
+end;
+
+function TVColorPicker.GetArrowPos: integer;
+begin
+  if FMaxVal = 0 then
+    Result := inherited GetArrowPos
+  else
+    Result := ArrowPosFromVal(GetValue());
+end;
+
+function TVColorPicker.GetGradientColor(AValue: Integer): TColor;
+begin
+  Result := HSVtoColor(FHue, FSat, AValue / FMaxVal);
+end;
+
+function TVColorPicker.GetHue: Integer;
+begin
+  Result := round(FHue * FMaxHue);
+end;
+
+function TVColorPicker.GetSat: Integer;
+begin
+  Result := round(FSat * FMaxSat);
+end;
+
+function TVColorPicker.GetSelectedColor: TColor;
+begin
+  Result := HSVtoColor(FHue, FSat, FVal);
+  if WebSafe then
+    Result := GetWebSafe(Result);
+end;
+
+function TVColorPicker.GetSelectedValue: integer;
+begin
+  Result := GetValue();
+end;
+
+function TVColorPicker.GetValue: Integer;
+begin
+  Result := round(FVal * FMaxVal);
+end;
+
+procedure TVColorPicker.SetHue(h: integer);
+begin
+  if h > FMaxHue+1 then h := FMaxHue + 1;
+  if h < 0 then h := 0;
+  if GetHue() <> h then
+  begin
+    FHue := h / (FMaxHue + 1);
+    CreateGradient;
+    Invalidate;
+    DoChange;
+  end;
+end;
+
+procedure TVColorPicker.SetMaxHue(h: Integer);
+begin
+  if h = FMaxHue then
+    exit;
+  FMaxHue := h;
+  CreateGradient;
+  Invalidate;
+//  if FChange and Assigned(OnChange) then OnChange(Self);
+end;
+
+procedure TVColorPicker.SetMaxSat(s: Integer);
+begin
+  if s = FMaxSat then
+    exit;
+  FMaxSat := s;
+  CreateGradient;
+  Invalidate;
+//  if FChange and Assigned(OnChange) then OnChange(Self);
+end;
+
+procedure TVColorPicker.SetMaxVal(v: Integer);
+begin
+  if v = FMaxVal then
+    exit;
+  FMaxVal := v;
+  FGradientWidth := FMaxVal + 1;
+  CreateGradient;
+  Invalidate;
+//  if FChange and Assigned(OnChange) then OnChange(Self);
+end;
+
+procedure TVColorPicker.SetSat(s: integer);
+begin
+  if s > FMaxSat then s := FMaxSat;
+  if s < 0 then s := 0;
+  if GetSat() <> s then
+  begin
+    FSat := s / FMaxSat;
+    CreateGradient;
+    Invalidate;
+    DoChange;
+  end;
+end;
+
+procedure TVColorPicker.SetSelectedColor(c: TColor);
+var
+  h, s, v: integer;
+  needNewGradient: Boolean;
+begin
+  if WebSafe then
+    c := GetWebSafe(c);
+  if c = GetSelectedColor then
+    exit;
+
+  RGBToHSVRange(GetRValue(c), GetGValue(c), GetBValue(c), h, s, v);
+  needNewGradient := (h <> FHue) or (s <> FSat);
+  FHue := h;
+  FSat := s;
+  FVal := v;
+  if needNewGradient then
+    CreateGradient;
+  Invalidate;
+  DoChange;
+end;
+
+procedure TVColorPicker.SetValue(V: integer);
+begin
+  if v < 0 then v := 0;
+  if v > FMaxVal then v := FMaxVal;
+  if GetValue() <> v then
+  begin
+    FVal := v / FMaxVal;
+    FArrowPos := ArrowPosFromVal(v);
+    Invalidate;
+    DoChange;
+  end;
+end;
+
+function TVColorPicker.ValFromArrowPos(p: integer): integer;
+var
+  v: integer;
+begin
+  case Layout of
+    lyHorizontal : v := Round(p / (Width - 12) * FMaxVal);
+    lyVertical   : v := Round(FMaxVal - p / (Height - 12) * FMaxVal);
+  end;
+  Clamp(v, 0, FMaxVal);
+  Result := v;
 end;
 
 end.

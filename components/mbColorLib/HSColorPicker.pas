@@ -9,7 +9,7 @@ unit HSColorPicker;
 interface
 
 uses
-  LCLIntf, LCLType, SysUtils, Classes, Controls, Graphics, Math, Forms,
+  LCLIntf, LCLType, SysUtils, Classes, Controls, Graphics, Forms,
   RGBHSLUtils, HTMLColors, mbColorPickerControl;
 
 type
@@ -18,7 +18,7 @@ type
 
   THSColorPicker = class(TmbColorPickerControl)
   private
-    FHue, FSat, FLum: Double;
+    FHue, FSat, FLum, FLumSel: Double;
     FMaxHue, FMaxSat, FMaxLum: Integer;
     dx, dy, mxx, myy: integer;
     function GetHue: Integer;
@@ -33,24 +33,26 @@ type
   protected
     procedure CorrectCoords(var x, y: integer);
     procedure CreateWnd; override;
+    procedure DrawMarker(x, y: integer);
     function GetGradientColor2D(x, y: Integer): TColor; override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    procedure DrawMarker(x, y: integer);
     procedure Paint; override;
     function PredictColor: TColor;
     procedure Resize; override;
     procedure SelectColor(x, y: Integer);
     procedure SetSelectedColor(c: TColor); override;
+    procedure UpdateCoords;
   public
     constructor Create(AOwner: TComponent); override;
     function GetColorAtPoint(x, y: Integer): TColor; override;
-    property Hue: integer read GetHue write SetHue;
-    property Saturation: integer read GetSat write SetSat;
+    function GetSelectedColor: TColor; override;
   published
     property SelectedColor default clRed;
+    property Hue: integer read GetHue write SetHue default 0;
+    property Saturation: integer read GetSat write SetSat default 240;
     property Luminance: Integer read GetLum write SetLum default 120;
     property MaxHue: Integer read FMaxHue write SetMaxHue default 359;
     property MaxSaturation: Integer read FMaxSat write SetMaxSat default 240;
@@ -62,7 +64,7 @@ type
 implementation
 
 uses
-  mbUtils;
+  math, mbUtils;
 
 {THSColorPicker}
 
@@ -75,16 +77,13 @@ begin
   FGradientWidth := FMaxHue + 1;
   FGradientHeight := FMaxSat + 1;
   SetInitialBounds(0, 0, FGradientWidth, FGradientHeight);
-  HintFormat := 'H: %h S: %hslS'#13'Hex: %hex';
   FHue := 0;
   FSat := 1.0;
   FLum := 0.5;
+  FLumSel := 0.5;
   FSelected := clRed;
-  FManual := false;
-  dx := 0;
-  dy := 0;
-  mxx := 0;
-  myy := 0;
+  CreateGradient;
+  HintFormat := 'H: %h S: %hslS'#13'Hex: %hex';
   MarkerStyle := msCross;
 end;
 
@@ -124,33 +123,37 @@ end;
 
 function THSColorPicker.GetColorAtPoint(x, y: Integer): TColor;
 var
-  h, s, l: Double;
+  H, S: Double;
 begin
   if InRange(x, 0, Width - 1) and InRange(y, 0, Height - 1) then
   begin
-    h := x / (Width - 1);
-    s := 1 - y / (Height - 1);
+    H := x / (Width - 1);
+    S := 1 - y / (Height - 1);
     {$IFDEF USE_COLOR_TO_RGB}
-    Result := HSLToColor(h, s, FLum);
+    Result := HSLToColor(H, S, FLumSel);
     {$ELSE}
-    Result := HSLToRGB(h, s, FLum);
+    Result := HSLToRGB(H, S, FLumSel);
     {$ENDIF}
   end else
     Result := clNone;
 end;
 
 function THSColorPicker.GetGradientColor2D(x, y: Integer): TColor;
+var
+  H, S: Double;
 begin
+  H := x / FMaxHue;
+  S := 1 - y / FMaxSat;
   {$IFDEF USE_COLOR_TO_RGB}
-  Result := HSLToColor(x / FMaxHue, (FBufferBmp.Height - 1 - y) / FMaxSat, FLum);
+  Result := HSLToColor(H, S, FLum);
   {$ELSE}
-  Result := HSLtoRGB(x / FMaxHue, (FMaxSat - y) / FMaxSat, FLum);
+  Result := HSLtoRGB(H, S, FLum);
   {$ENDIF}
 end;
 
 function THSColorPicker.GetHue: Integer;
 begin
-  Result := Round(FHue * FMaxHue);
+  Result := Round(FHue * (FMaxHue + 1));
 end;
 
 function THSColorPicker.GetLum: Integer;
@@ -163,16 +166,31 @@ begin
   Result := Round(FSat * FMaxSat);
 end;
 
+function THSColorPicker.GetSelectedColor: TColor;
+begin
+  {$IFDEF USE_COLOR_TO_RGB}
+  Result := HSLToColor(FHue, FSat, FLumSel);
+  {$ELSE}
+  Result := HSLtoRGB(FHue, FSat, FLumSel);
+  {$ENDIF}
+end;
+
 procedure THSColorPicker.KeyDown(var Key: Word; Shift: TShiftState);
 var
   eraseKey: Boolean;
   delta: Integer;
 begin
   eraseKey := true;
-  if (ssCtrl in Shift) then
-    delta := 10
-  else
-    delta := 1;
+  delta := IfThen(ssCtrl in Shift, 10, 1);
+
+  case Key of
+    VK_LEFT  : SelectColor(mxx - delta, myy);
+    VK_RIGHT : SelectColor(mxx + delta, myy);
+    VK_UP    : SelectColor(mxx, myy - delta);
+    VK_DOWN  : SelectColor(mxx, myy + delta);
+    else       eraseKey := false;
+  end;
+  {
   case Key of
     VK_LEFT:
       begin
@@ -213,6 +231,7 @@ begin
     else
       eraseKey := false;
   end;
+  }
 
   if eraseKey then
     Key := 0;
@@ -223,13 +242,8 @@ end;
 procedure THSColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
-  mxx := x;
-  myy := y;
   if Button = mbLeft then
-  begin
     SelectColor(x, y);
-    FManual := true;
-  end;
   SetFocus;
 end;
 
@@ -237,20 +251,14 @@ procedure THSColorPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
   if ssLeft in Shift then
-  begin
     SelectColor(x, y);
-    FManual := true;
-  end;
 end;
 
 procedure THSColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
-  if ssLeft in Shift then
-  begin
+  if Button = mbLeft then
     SelectColor(x, y);
-    FManual := true;
-  end;
 end;
 
 procedure THSColorPicker.Paint;
@@ -279,59 +287,107 @@ end;
 
 procedure THSColorPicker.SelectColor(x, y: Integer);
 var
+  H, S, L: Double;
   c: TColor;
-  L: Double;
 begin
+  CorrectCoords(x, y);
   mxx := x;
   myy := y;
-  CorrectCoords(mxx, myy);
-  c := GetColorAtPoint(mxx, myy);
+  c := GetColorAtPoint(x, y);
   if WebSafe then c := GetWebSafe(c);
   {$IFDEF USE_COLOR_TO_RGB}
-  ColorToHSL(c, FHue, FSat, L);
+  ColorToHSL(c, H, S, L);
   {$ELSE}
-  RGBtoHSL(c, FHue, FSat, L);
+  RGBtoHSL(c, H, S, L);
   {$ENDIF}
-  FSelected := c;
-  FManual := false;
+
+  if (H = FHue) and (S = FSat) then
+    exit;
+
+  FHue := H;
+  FSat := S;
+  {$IFDEF USE_COLOR_TO_RGB}
+  FSelected := ColorToHSL(FHue, FSat, FLumSel);
+  {$ELSE}
+  FSelected := HSLToRGB(FHue, FSat, FLumSel);
+  {$ENDIF}
+
   Invalidate;
-  if Assigned(OnChange) then OnChange(Self);
+  DoChange;
 end;
+
+(*
+  BeginUpdate;
+  try
+    mxx := x;
+    myy := y;
+    CorrectCoords(mxx, myy);
+    c := GetColorAtPoint(mxx, myy);
+    if WebSafe then c := GetWebSafe(c);
+    {$IFDEF USE_COLOR_TO_RGB}
+    ColorToHSL(c, FHue, FSat, L);
+    {$ELSE}
+    RGBtoHSL(c, FHue, FSat, L);
+    {$ENDIF}
+    FSelected := c;
+    FManual := false;
+    Invalidate;
+  finally
+    EndUpdate;
+  end;
+end;
+*)
 
 procedure THSColorPicker.SetHue(H: integer);
 begin
   Clamp(H, 0, FMaxHue);
-  FHue := H / FMaxHue;
+  if H = GetHue then
+    exit;
+
+  FHue := H / (FMaxHue + 1);
   {$IFDEF USE_COLOR_TO_RGB}
-  SetSelectedColor(HSLtoColor(FHue, FSat, FLum));
+  FSelected := HSLtoColor(FHue, FSat, FLumSel);
   {$ELSE}
-  SetSelectedColor(HSLToRGB(FHue, FSat, FLum));
+  FSelected := HSLToRGB(FHue, FSat, FLumSel);
   {$ENDIF}
+  UpdateCoords;
+  Invalidate;
+  DoChange;
+(*
+  {$IFDEF USE_COLOR_TO_RGB}
+  SetSelectedColor(HSLtoColor(FHue, FSat, FLumSel));
+  {$ELSE}
+  SetSelectedColor(HSLToRGB(FHue, FSat, FLumSel));
+  {$ENDIF}
+  *)
 end;
 
 // Sets the luminance value used for the display. It is not necessarily that
 // of the selected color.
+// The true luminance of the selected color is given by LumSel
 procedure THSColorPicker.SetLum(L: Integer);
 begin
   Clamp(L, 0, FMaxLum);
+  if L = GetLum then
+    exit;
+
   FLum := L / FMaxLum;
   CreateGradient;
-  {$IFDEF USE_COLOR_TO_RGB}
-  SetSelectedColor(HSLtoColor(FHue, FSat, FLum));
-  {$ELSE}
-  SetSelectedColor(HSLToRGB(FHue, FSat, FLum));
-  {$ENDIF}
+  Invalidate;
+  DoChange;
 end;
 
 procedure THSColorPicker.SetSat(S: integer);
 begin
   Clamp(S, 0, FMaxSat);
-  FSat := S;
-  {$IFDEF USE_COLOR_TO_RGB}
-  SetSelectedColor(HSLtoColor(FHue, FSat, FLum));
-  {$ELSE}
-  SetSelectedColor(HSLToRGB(FHue, FSat, FLum));
-  {$ENDIF}
+  if S = GetSat then
+    exit;
+
+  FSat := S / FMaxSat;
+  FSelected := HSLToRGB(FHue, FSat, FLumSel);
+  UpdateCoords;
+  Invalidate;
+  DoChange;
 end;
 
 procedure THSColorPicker.SetMaxHue(H: Integer);
@@ -364,23 +420,41 @@ begin
   Invalidate;
 end;
 
+// NOTE: In the picker display only the hue and the saturation of the input
+// color are used, the luminance is replaced by the preset value of the picker.
+// --> The selected color in the üicker display in general is different from the
+//     input color.
 procedure THSColorPicker.SetSelectedColor(c: TColor);
 var
-  L: Double;
+  H, S, L: Double;
 begin
-  if WebSafe then c := GetWebSafe(c);
+  if WebSafe then
+    c := GetWebSafe(c);
+
   {$IFDEF USE_COLOR_TO_RGB}
-  ColorToHSL(c, FHue, FSat, L);
+  ColorToHSL(c, H, S, L);
   {$ELSE}
-  RGBtoHSL(c, FHue, FSat, L);
+  RGBtoHSL(c, H, S, L);
   {$ENDIF}
+
   FSelected := c;
-  FManual := false;
+  if (H = FHue) and (S = FSat) then
+    exit;
+
+  FHue := H;
+  FSat := S;
+  FLumSel := L;
+
+  UpdateCoords;
+  Invalidate;
+  DoChange;
+end;
+
+procedure THSCOlorPicker.UpdateCoords;
+begin
   mxx := Round(FHue * Width);
   myy := Round((1.0 - FSat) * Height);
   CorrectCoords(mxx, myy);
-  Invalidate;
-  if Assigned(OnChange) then OnChange(Self);
 end;
 
 end.

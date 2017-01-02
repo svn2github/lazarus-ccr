@@ -13,8 +13,8 @@ uses
 type
   THColorPicker = class(TmbTrackBarPicker)
   private
-    FVal, FSat, FHue: double;
-    FMaxVal, FMaxSat, FMaxHue: Integer;
+    FHue, FSat, FVal: Double;
+    FMaxHue, FMaxSat, FMaxVal: Integer;
     function ArrowPosFromHue(h: integer): integer;
     function HueFromArrowPos(p: integer): integer;
     function GetHue: Integer;
@@ -29,6 +29,8 @@ type
     procedure SetSelectedColor(c: TColor);
     procedure SetVal(v: integer);
   protected
+    function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
+      MousePos: TPoint): Boolean; override;
     procedure Execute(tbaAction: integer); override;
     function GetArrowPos: integer; override;
     function GetGradientColor(AValue: Integer): TColor; override;
@@ -39,6 +41,7 @@ type
     property Hue: integer read GetHue write SetHue;
     property Saturation: integer read GetSat write SetSat;
     property Value: integer read GetVal write SetVal;
+    property Layout default lyHorizontal;
     property MaxHue: Integer read FMaxHue write SetMaxHue default 359;
     property MaxSaturation: Integer read FMaxSat write SetMaxSat default 255;
     property MaxValue: Integer read FMaxVal write SetMaxVal default 255;
@@ -59,15 +62,12 @@ begin
   FMaxHue := 359;
   FMaxSat := 255;
   FMaxVal := 255;
-  FGradientWidth := FMaxHue + 1;
+  FGradientWidth := FMaxHue;
   FGradientHeight := 1;
   FSat := 1.0;
   FVal := 1.0;
-  FChange := false;
   SetHue(0);
   HintFormat := 'Hue: %value (selected)';
-  FManual := false;
-  FChange := true;
 end;
 
 function THColorPicker.ArrowPosFromHue(h: integer): integer;
@@ -88,17 +88,24 @@ begin
   Result := a;
 end;
 
+function THColorPicker.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
+  MousePos: TPoint): Boolean;
+begin
+  if Layout = lyVertical then WheelDelta := -WheelDelta;
+  inherited;
+end;
+
 procedure THColorPicker.Execute(tbaAction: integer);
 begin
   case tbaAction of
     TBA_Resize:
       SetHue(GetHue);
     TBA_MouseMove:
-      Hue := HueFromArrowPos(FArrowPos);
+      SetHue(HueFromArrowPos(FArrowPos));
     TBA_MouseDown:
-      Hue := HueFromArrowPos(FArrowPos);
+      SetHue(HueFromArrowPos(FArrowPos));
     TBA_MouseUp:
-      Hue := HueFromArrowPos(FArrowPos);
+      SetHue(HueFromArrowPos(FArrowPos));
     TBA_WheelUp:
       SetHue(GetHue() + Increment);
     TBA_WheelDown:
@@ -170,14 +177,16 @@ end;
 
 function THColorPicker.HueFromArrowPos(p: integer): integer;
 var
-  r: integer;
+  h: integer;
 begin
-  if Layout = lyHorizontal then
-    r := Round(p / (Width - 12) * FMaxHue)
-  else
-    r := Round(p / (Height - 12) * MaxHue);
-  Clamp(r, 0, FMaxHue);
-  Result := r;
+  case Layout of
+    lyHorizontal:
+      h := Round(p / (Width - 12) * FMaxHue);
+    lyVertical:
+      h := Round(p / (Height - 12) * MaxHue);
+  end;
+  Clamp(h, 0, FMaxHue);
+  Result := h;
 end;
 
 procedure THColorPicker.SetHue(h: integer);
@@ -187,9 +196,8 @@ begin
   begin
     FHue := h / FMaxHue;
     FArrowPos := ArrowPosFromHue(h);
-    FManual := false;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
@@ -201,7 +209,7 @@ begin
   FGradientWidth := FMaxHue + 1;   // 0 .. FMaxHue  --> FMaxHue + 1 pixels
   CreateGradient;
   Invalidate;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+  //if FChange and Assigned(OnChange) then OnChange(Self);
 end;
 
 procedure THColorPicker.SetMaxSat(s: Integer);
@@ -211,7 +219,7 @@ begin
   FMaxSat := s;
   CreateGradient;
   Invalidate;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+  //if FChange and Assigned(OnChange) then OnChange(Self);
 end;
 
 procedure THColorPicker.SetMaxVal(v: Integer);
@@ -221,7 +229,7 @@ begin
   FMaxVal := v;
   CreateGradient;
   Invalidate;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+//  if FChange and Assigned(OnChange) then OnChange(Self);
 end;
 
 procedure THColorPicker.SetSat(s: integer);
@@ -230,26 +238,31 @@ begin
   if GetSat() <> s then
   begin
     FSat := s / FMaxSat;
-    FManual := false;
     CreateGradient;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
 procedure THColorPicker.SetSelectedColor(c: TColor);
 var
   h, s, v: integer;
+  needNewGradient: Boolean;
 begin
-  if WebSafe then c := GetWebSafe(c);
+  if WebSafe then
+    c := GetWebSafe(c);
+  if c = GetSelectedColor then
+    exit;
+
   RGBToHSVRange(GetRValue(c), GetGValue(c), GetBValue(c), h, s, v);
-  FChange := false;
-  SetHue(h);
-  SetSat(s);
-  SetVal(v);
-  FManual := false;
-  FChange := true;
-  if Assigned(OnChange) then OnChange(Self);
+  needNewGradient := (s <> FSat) or (v <> FVal);
+  FHue := h;
+  FSat := s;
+  FVal := v;
+  if needNewGradient then
+    CreateGradient;
+  Invalidate;
+  DoChange;
 end;
 
 procedure THColorPicker.SetVal(v: integer);
@@ -258,10 +271,9 @@ begin
   if GetVal() <> v then
   begin
     FVal := v / FMaxVal;
-    FManual := false;
     CreateGradient;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 

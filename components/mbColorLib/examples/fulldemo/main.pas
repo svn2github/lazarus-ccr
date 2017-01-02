@@ -4,7 +4,7 @@ interface
 
 
 uses
-  LCLIntf, LCLType, LMessages, SysUtils, Variants,Classes, Graphics, Controls,
+  LCLIntf, LCLType, SysUtils, Variants,Classes, Graphics, Controls,
   Forms, Dialogs, HSLColorPicker, ComCtrls, StdCtrls, ExtCtrls, mbColorPreview,
   HexaColorPicker, mbColorPalette, HSLRingPicker, HSVColorPicker, PalUtils,
   SLHColorPicker, mbDeskPickerButton, mbOfficeColorDialog, SColorPicker,

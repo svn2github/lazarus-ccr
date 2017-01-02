@@ -27,6 +27,7 @@ type
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure Paint; override;
     procedure Resize; override;
+    procedure SelectColor(x, y: Integer);
     procedure SetSelectedColor(c: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -44,7 +45,7 @@ type
 implementation
 
 uses
-  mbUtils;
+  Math, mbUtils;
 
 {TRAxisColorPicker}
 
@@ -117,58 +118,18 @@ var
   eraseKey: Boolean;
 begin
   eraseKey := true;
-  if ssCtrl in Shift then
-    delta := 10
-  else
-    delta := 1;
+  delta := IfThen(ssCtrl in Shift, 10, 1);
 
   case Key of
-    VK_LEFT:
-      begin
-        mxx := dx - delta;
-        if mxx < 0 then mxx := 0;
-        myy := dy;
-        FSelected := GetColorAtPoint(mxx, myy);
-        FManual := true;
-        Invalidate;
-        if Assigned(FOnChange) then FOnChange(self);
-      end;
-    VK_RIGHT:
-      begin
-        mxx := dx + delta;
-        if mxx >= Width then mxx := Width - 1;
-        myy := dy;
-        FSelected := GetColorAtPoint(mxx, myy);
-        FManual := true;
-        Invalidate;
-        if Assigned(FOnChange) then FOnChange(self);
-      end;
-    VK_UP:
-      begin
-        mxx := dx;
-        myy := dy - delta;
-        if myy < 0 then myy := 0;
-        FSelected := GetColorAtPoint(mxx, myy);
-        FManual := true;
-        Invalidate;
-        if Assigned(FOnChange) then FOnChange(self);
-      end;
-    VK_DOWN:
-      begin
-        mxx := dx;
-        myy := dy + delta;
-        if myy >= Height then
-          myy := Height - 1;
-        FSelected := GetColorAtPoint(mxx, myy);
-        FManual := true;
-        Invalidate;
-        if Assigned(FOnChange) then FOnChange(self);
-      end;
-    else
-      eraseKey := false;
+    VK_LEFT  : SelectColor(mxx - delta, myy);
+    VK_RIGHT : SelectColor(mxx + delta, myy);
+    VK_UP    : SelectColor(mxx, myy - delta);
+    VK_DOWN  : SelectColor(mxx, myy + delta);
+    else       eraseKey := false;
   end;
 
-  if eraseKey then Key := 0;
+  if eraseKey then
+    Key := 0;
 
   inherited;
 end;
@@ -176,17 +137,8 @@ end;
 procedure TRAxisColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
-  mxx := x;
-  myy := y;
   if Button = mbLeft then
-  begin
-    mxx := x;
-    myy := y;
-    FSelected := GetColorAtPoint(x, y);
-    FManual := true;
-    Invalidate;
-    if Assigned(FOnChange) then FOnChange(self);
-  end;
+    SelectColor(x, y);
   SetFocus;
 end;
 
@@ -194,33 +146,15 @@ procedure TRAxisColorPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
   if ssLeft in Shift then
-  begin
-    mxx := x;
-    myy := y;
-    Clamp(mxx, 0, Width - 1);
-    Clamp(myy, 0, Height - 1);
-    FSelected := GetColorAtPoint(mxx, myy);
-    FManual := true;
-    Invalidate;
-    if Assigned(FOnChange) then FOnChange(self);
-  end;
+    SelectColor(x, y);
 end;
 
 procedure TRAxisColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 begin
   inherited;
-  if ssLeft in Shift then
-  begin
-    mxx := x;
-    myy := y;
-    Clamp(mxx, 0, Width - 1);
-    Clamp(myy, 0, Height - 1);
-    FSelected := GetColorAtPoint(mxx, myy);
-    FManual := true;
-    Invalidate;
-    if Assigned(FOnChange) then FOnChange(self);
-  end;
+  if Button = mbLeft then
+    SelectColor(x, y);
 end;
 
 procedure TRAxisColorPicker.Paint;
@@ -235,6 +169,32 @@ begin
   mxx := Round(FB * Width / 255);
   myy := Round((255 - FG) * Height / 255);
   inherited;
+end;
+
+procedure TRAxisColorPicker.SelectColor(x, y: Integer);
+var
+  c: TColor;
+  r, g, b: Integer;
+  needNewGradient: Boolean;
+begin
+  CorrectCoords(x, y);
+  mxx := x;
+  myy := y;
+  c := GetColorAtPoint(x, y);
+  if c = FSelected then
+    exit;
+  FSelected := c;
+  r := GetRValue(c);
+  g := GetGValue(c);
+  b := GetBValue(c);
+  needNewGradient := r <> FR;
+  FR := r;
+  FG := g;
+  FB := b;
+  if needNewGradient then
+    CreateGradient;
+  Invalidate;
+  DoChange;
 end;
 
 procedure TRAxisColorPicker.SetBValue(b: integer);
@@ -257,7 +217,6 @@ begin
   if FR <> r then
   begin
     FR := r;
-    CreateGradient;
     SetSelectedColor(RGBtoColor(FR, FG, FB));
   end;
 end;
@@ -265,13 +224,17 @@ end;
 procedure TRAxisColorPicker.SetSelectedColor(c: TColor);
 var
   r, g, b: Integer;
+  needNewGradient: Boolean;
 begin
-  if WebSafe then c := GetWebSafe(c);
+  if WebSafe then
+    c := GetWebSafe(c);
+  if c = FSelected then
+    exit;
+
   r := GetRValue(c);
   g := GetGValue(c);
   b := GetBValue(c);
-  if r <> FR then
-    CreateGradient;
+  needNewGradient := r <> FR;
   FR := r;
   FG := g;
   FB := b;
@@ -279,8 +242,10 @@ begin
   FManual := false;
   mxx := Round(FB * Width / 255);            // BLUE on x
   myy := Round((255 - FG) * Height / 255);   // GREEN on y
+  if needNewGradient then
+    CreateGradient;
   Invalidate;
-  if Assigned(FOnChange) then FOnChange(self);
+  DoChange;
 end;
 
 end.

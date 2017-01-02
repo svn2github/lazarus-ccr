@@ -19,7 +19,7 @@ type
     procedure SetBlack(k: integer);
     procedure SetCyan(c: integer);
     procedure SetMagenta(m: integer);
-    procedure SetSelectedColor(c: TColor);
+    procedure SetSelectedColor(clr: TColor);
     procedure SetYellow(y: integer);
   protected
     procedure Execute(tbaAction: integer); override;
@@ -51,16 +51,11 @@ begin
   FGradientWidth := 256;
   FGradientHeight := 1;
   FCyan := 0;
-  FMagenta := 255;
   FYellow := 0;
   FBlack := 0;
-  FArrowPos := ArrowPosFromMagenta(255);
-  FChange := false;
-  Layout := lyVertical;
   SetMagenta(255);
+  Layout := lyVertical;
   HintFormat := 'Magenta: %value (selected)';
-  FManual := false;
-  FChange := true;
 end;
 
 function TMColorPicker.ArrowPosFromMagenta(m: integer): integer;
@@ -69,13 +64,12 @@ var
 begin
   if Layout = lyHorizontal then
   begin
-    a := Round((Width - 12) / 255 * m);
+    a := Round((Width - 12) * m / 255);
     if a > Width - FLimit then a := Width - FLimit;
   end
   else
   begin
-    m := 255 - m;
-    a := Round((Height - 12) / 255 * m);
+    a := Round((Height - 12) * (255 - m) / 255);
     if a > Height - FLimit then a := Height - FLimit;
   end;
   if a < 0 then a := 0;
@@ -88,11 +82,11 @@ begin
     TBA_Resize:
       SetMagenta(FMagenta);
     TBA_MouseMove:
-      FMagenta := MagentaFromArrowPos(FArrowPos);
+      SetMagenta(MagentaFromArrowPos(FArrowPos));
     TBA_MouseDown:
-      FMagenta := MagentaFromArrowPos(FArrowPos);
+      SetMagenta(MagentaFromArrowPos(FArrowPos));
     TBA_MouseUp:
-      FMagenta := MagentaFromArrowPos(FArrowPos);
+      SetMagenta(MagentaFromArrowPos(FArrowPos));
     TBA_WheelUp:
       SetMagenta(FMagenta + Increment);
     TBA_WheelDown:
@@ -144,10 +138,12 @@ function TMColorPicker.MagentaFromArrowPos(p: integer): integer;
 var
   m: integer;
 begin
-  if Layout = lyHorizontal then
-    m := Round(p * 255 / (Width - 12))
-  else
-    m := Round(255 - p * 255 / (Height - 12));
+  case Layout of
+    lyHorizontal:
+      m := Round(p * 255 / (Width - 12));
+    lyVertical:
+      m := Round(255 - p * 255 / (Height - 12));
+  end;
   Clamp(m, 0, 255);
   Result := m;
 end;
@@ -158,10 +154,9 @@ begin
   if FBlack <> k then
   begin
     FBlack := k;
-    FManual := false;
     CreateGradient;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
@@ -171,10 +166,9 @@ begin
   if FCyan <> c then
   begin
     FCyan := c;
-    FManual := false;
     CreateGradient;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
@@ -185,26 +179,31 @@ begin
   begin
     FMagenta := m;
     FArrowPos := ArrowPosFromMagenta(m);
-    FManual := false;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
-procedure TMColorPicker.SetSelectedColor(c: TColor);
+procedure TMColorPicker.SetSelectedColor(clr: TColor);
 var
-  cy, m, y, k: integer;
+  c, m, y, k: integer;
+  newGradient: Boolean;
 begin
-  if WebSafe then c := GetWebSafe(c);
-  ColorToCMYK(c, cy, m, y, k);
-  FChange := false;
-  SetCyan(cy);
-  SetYellow(y);
-  SetBlack(k);
-  SetMagenta(m);
-  FManual := false;
-  FChange := true;
-  if Assigned(OnChange) then OnChange(Self);
+  if WebSafe then
+    clr := GetWebSafe(clr);
+  if clr = GetSelectedColor then
+    exit;
+
+  ColorToCMYK(clr, c, m, y, k);
+  newGradient := (c <> FCyan) or (y <> FYellow) or (k <> FBlack);
+  FCyan := c;
+  FMagenta := m;
+  FYellow := y;
+  FBlack := k;
+  if newGradient then
+    CreateGradient;
+  Invalidate;
+  DoChange;
 end;
 
 procedure TMColorPicker.SetYellow(y: integer);
@@ -213,10 +212,9 @@ begin
   if FYellow <> y then
   begin
     FYellow := y;
-    FManual := false;
     CreateGradient;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 

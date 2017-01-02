@@ -36,6 +36,8 @@ end;
 
 function TmbOfficeColorDialog.Execute: boolean;
 begin
+  Result := Execute(FSelColor);
+  {
   FWin := TOfficeMoreColorsWin.Create(Application);
   try
     FWin.OldSwatch.Color := FSelColor;
@@ -48,6 +50,7 @@ begin
   finally
     FWin.Free;
   end;
+  }
 end;
 
 function TmbOfficeColorDialog.Execute(AColor: TColor): boolean;

@@ -8,7 +8,7 @@ interface
 
 uses
   LCLIntf, LCLType, LMessages,
-  SysUtils, Classes, Controls, Graphics, Math, Forms,
+  SysUtils, Classes, Controls, Graphics, Forms,
   HTMLColors, RGBCIEUtils, mbColorPickerControl;
 
 type
@@ -30,6 +30,7 @@ type
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure Paint; override;
     procedure Resize; override;
+    procedure SelectColor(x, y: Integer);
     procedure SetSelectedColor(c: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -47,7 +48,7 @@ type
 implementation
 
 uses
-  mbUtils;
+  Math, mbUtils;
 
 {TCIEAColorPicker}
 
@@ -62,7 +63,6 @@ begin
   FL := 100;
   FA := 127;
   FB := -128;
-  FManual := false;
   dx := 0;
   dy := 0;
   mxx := 0;
@@ -112,7 +112,7 @@ end;
 }
 function TCIEAColorPicker.GetColorAtPoint(x, y: Integer): TColor;
 var
-  l, b: Integer; //Double;
+  l, b: Integer;
 begin
   l := round((1 - y / (Height - 1)) * 100);
   b := round((x / (Width - 1) - 0.5) * 255);
@@ -132,76 +132,28 @@ var
   delta: Integer;
 begin
   eraseKey := true;
-  if (ssCtrl in Shift) then delta := 10 else delta := 1;
+  delta := IfThen(ssCtrl in Shift, 10, 1);
 
   case Key of
-    VK_LEFT:
-      begin
-        mxx := dx - delta;
-        myy := dy;
-        if mxx < 0 then mxx := 0;
-        FSelected := GetColorAtPoint(mxx, myy);
-        FManual := true;
-        Invalidate;
-        if Assigned(FOnChange) then
-          FOnChange(Self);
-      end;
-    VK_RIGHT:
-      begin
-        mxx := dx + delta;
-        myy := dy;
-        if mxx >= Width then mxx := Width - 1;
-        FSelected := GetColorAtPoint(mxx, myy);
-        FManual := true;
-        Invalidate;
-        if Assigned(FOnChange) then
-          FOnChange(Self);
-      end;
-    VK_UP:
-      begin
-        mxx := dx;
-        myy := dy - delta;
-        if myy < 0 then myy := 0;
-        FSelected := GetColorAtPoint(mxx, myy);
-        FManual := true;
-        Invalidate;
-        if Assigned(FOnChange) then
-          FOnChange(Self);
-      end;
-    VK_DOWN:
-      begin
-        mxx := dx;
-        myy := dy + delta;
-        if myy >= Height then myy := Height - 1;
-        FSelected := GetColorAtPoint(mxx, myy);
-        FManual := true;
-        Invalidate;
-        if Assigned(FOnChange) then
-          FOnChange(Self);
-      end;
-  else
-    eraseKey := false;
+    VK_LEFT  : SelectColor(mxx - delta, myy);
+    VK_RIGHT : SelectColor(mxx + delta, myy);
+    VK_UP    : SelectColor(mxx, myy - delta);
+    VK_DOWN  : SelectColor(mxx, myy + delta);
+    else       eraseKey := false;
   end;
 
-  if eraseKey then Key := 0;
+  if eraseKey then
+    Key := 0;
+
   inherited;
 end;
 
-procedure TCIEAColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TCIEAColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
 begin
   inherited;
   if Button = mbLeft then
-  begin
-    mxx := x;
-    myy := y;
-    CorrectCoords(mxx, myy);
-    FSelected := GetColorAtPoint(mxx, myy);
-    FSelected := GetColorAtPoint(x, y);
-    FManual := true;
-    Invalidate;
-    if Assigned(FOnChange) then
-      FOnChange(Self);
-  end;
+    SelectColor(x, y);
   SetFocus;
 end;
 
@@ -209,32 +161,15 @@ procedure TCIEAColorPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
   if ssLeft in Shift then
-  begin
-    mxx := x;
-    myy := y;
-    CorrectCoords(mxx, myy);
-    FSelected := GetColorAtPoint(mxx, myy);
-    FManual := true;
-    Invalidate;
-    if Assigned(FOnChange) then
-      FOnChange(Self);
-  end;
+    SelectColor(X, Y);
 end;
 
-procedure TCIEAColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TCIEAColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
 begin
   inherited;
-  if ssLeft in Shift then
-  begin
-    mxx := x;
-    myy := y;
-    CorrectCoords(mxx, myy);
-    FSelected := GetColorAtPoint(mxx, myy);
-    FManual := true;
-    Invalidate;
-    if Assigned(FOnChange) then
-      FOnChange(Self);
-  end;
+  if Button = mbLeft then
+    SelectColor(X, Y);
 end;
 
 procedure TCIEAColorPicker.Paint;
@@ -245,10 +180,39 @@ end;
 
 procedure TCIEAColorPicker.Resize;
 begin
-  FManual := false;
-  mxx := Round((FB + 128) * Width / 255);
-  myy := Round(((100 - FL) * 255 / 100) * Height / 255);
+  mxx := Round((FB + 128) / 255 * Width);
+//  myy := Round(((100 - FL) * 255 / 100) * Height / 255);
+  myy := Round((100 - FL) / 100 * Height);
   inherited;
+end;
+
+procedure TCIEAColorPicker.SelectColor(x, y: Integer);
+var
+  c: TColor;
+  l, a, b: Integer;
+  needNewGradient: Boolean;
+begin
+  CorrectCoords(x, y);
+  c := GetColorAtPoint(x, y);
+  if WebSafe then
+    c := GetWebSafe(c);
+  if c = FSelected then
+    exit;
+
+  mxx := x;
+  myy := y;
+  l := Round(GetCIELValue(c));
+  a := Round(GetCIEAValue(c));
+  b := Round(GetCIEBValue(c));
+  needNewGradient := a <> FA;
+  FSelected := c;
+  FL := l;
+  FA := a;
+  FB := b;
+  if needNewGradient then
+    CreateGradient;
+  Invalidate;
+  DoChange;
 end;
 
 procedure TCIEAColorPicker.SetAValue(a: integer);
@@ -273,18 +237,30 @@ begin
 end;
 
 procedure TCIEAColorPicker.SetSelectedColor(c: TColor);
+var
+  l, a, b: Integer;
+  needNewGradient: Boolean;
 begin
-  if WebSafe then c := GetWebSafe(c);
-  FL := Round(GetCIELValue(c));
-  FA := Round(GetCIEAValue(c));
-  FB := Round(GetCIEBValue(c));
+  if WebSafe then
+    c := GetWebSafe(c);
+  if c = FSelected then
+    exit;
+
+  l := Round(GetCIELValue(c));
+  a := Round(GetCIEAValue(c));
+  b := Round(GetCIEBValue(c));
+  needNewGradient := a <> FA;
+  FL := l;
+  FA := a;
+  FB := b;
   FSelected := c;
-  FManual := false;
   mxx := Round((FB + 128) * Width / 255);
-  myy := Round((100 - FL) * 255 / 100 * Height / 255);
+//  myy := Round((100 - FL) * 255 / 100 * Height / 255);
+  myy := Round((100 - FL) / 100 * Height);
+  if needNewGradient then
+    CreateGradient;
   Invalidate;
-  if Assigned(FOnChange) then
-    FOnChange(Self);
+  DoChange;
 end;
 
 end.

@@ -19,11 +19,11 @@ type
     FOnGetHintStr: TGetHintStrEvent;
   protected
     FBufferBmp: TBitmap;
-    FChange: Boolean;
     FGradientWidth: Integer;
     FGradientHeight: Integer;
     FHintShown: Boolean;
     procedure CreateGradient; virtual;
+    procedure DoChange; virtual;
     function GetColorUnderCursor: TColor; virtual;
     function GetGradientColor(AValue: Integer): TColor; virtual;
     function GetGradientColor2D(X, Y: Integer): TColor; virtual;
@@ -108,6 +108,12 @@ end;
 procedure TmbBasicPicker.CreateGradient;
 begin
   // to be implemented by descendants
+end;
+
+procedure TmbBasicPicker.DoChange;
+begin
+  if Assigned(FOnChange) then
+    FOnChange(self);
 end;
 
 function TmbBasicPicker.GetColorAtPoint(x, y: integer): TColor;

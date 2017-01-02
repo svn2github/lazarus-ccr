@@ -52,17 +52,12 @@ begin
   inherited;
   FGradientWidth := 256;
   FGradientHeight := 1;
-  FCyan := 255;
   FMagenta := 0;
   FYellow := 0;
   FBlack := 0;
-  FArrowPos := ArrowPosFromCyan(255);
-  FChange := false;
-  Layout := lyVertical;
   SetCyan(255);
+  Layout := lyVertical;
   HintFormat := 'Selected cyan value: %value';
-  FManual := false;
-  FChange := true;
 end;
 
 function TCColorPicker.ArrowPosFromCyan(c: integer): integer;
@@ -71,13 +66,12 @@ var
 begin
   if Layout = lyHorizontal then
   begin
-    a := Round(((Width - 12)/255)*c);
+    a := Round((Width - 12) / 255 * c);
     if a > Width - FLimit then a := Width - FLimit;
   end
   else
   begin
-    c := 255 - c;
-    a := Round(((Height - 12)/255)*c);
+    a := Round((Height - 12) * (255 - c) / 255);
     if a > Height - FLimit then a := Height - FLimit;
   end;
   if a < 0 then a := 0;
@@ -88,10 +82,12 @@ function TCColorPicker.CyanFromArrowPos(p: integer): integer;
 var
   c: integer;
 begin
-  if Layout = lyHorizontal then
-    c := Round(p/((Width - 12)/255))
-  else
-    c := Round(255 - p/((Height - 12)/255));
+  case Layout of
+    lyHorizontal:
+      c := Round(p * 255 / (Width - 12));
+    lyVertical:
+      c := Round(255 - p * 255 / (Height - 12));
+  end;
   Clamp(c, 0, 255);
   Result := c;
 end;
@@ -102,11 +98,11 @@ begin
     TBA_Resize:
       SetCyan(FCyan);
     TBA_MouseMove:
-      FCyan := CyanFromArrowPos(FArrowPos);
+      SetCyan(CyanFromArrowPos(FArrowPos));
     TBA_MouseDown:
-      FCyan := CyanFromArrowPos(FArrowPos);
+      SetCyan(CyanFromArrowPos(FArrowPos));
     TBA_MouseUp:
-      FCyan := CyanFromArrowPos(FArrowPos);
+      SetCyan(CyanFromArrowPos(FArrowPos));
     TBA_WheelUp:
       SetCyan(FCyan + Increment);
     TBA_WheelDown:
@@ -137,61 +133,10 @@ begin
   Result := ArrowPosFromCyan(FCyan);
 end;
 
+// Note: AValue is restricted to the range 0..255 by the size of the trackbar.
 function TCColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
   Result := CMYKtoColor(AValue, FMagenta, FYellow, FBlack);
-end;
-
-procedure TCColorPicker.SetBlack(k: integer);
-begin
-  Clamp(k, 0, 255);
-  if FBlack <> k then
-  begin
-    FBlack := k;
-    FManual := false;
-    CreateGradient;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
-end;
-
-procedure TCColorPicker.SetCyan(C: integer);
-begin
-  Clamp(c, 0, 255);
-  if FCyan <> c then
-  begin
-    FCyan := c;
-    FArrowPos := ArrowPosFromCyan(c);
-    FManual := false;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
-end;
-
-procedure TCColorPicker.SetMagenta(m: integer);
-begin
-  Clamp(m, 0, 255);
-  if FMagenta <> m then
-  begin
-    FMagenta := m;
-    FManual := false;
-    CreateGradient;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
-end;
-
-procedure TCColorPicker.SetYellow(y: integer);
-begin
-  Clamp(y, 0, 255);
-  if FYellow <> y then
-  begin
-    FYellow := y;
-    FManual := false;
-    CreateGradient;
-    Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
-  end;
 end;
 
 function TCColorPicker.GetSelectedColor: TColor;
@@ -206,23 +151,73 @@ begin
   Result := FCyan;
 end;
 
+procedure TCColorPicker.SetBlack(k: integer);
+begin
+  Clamp(k, 0, 255);
+  if FBlack <> k then
+  begin
+    FBlack := k;
+    CreateGradient;
+    Invalidate;
+    DoChange;
+  end;
+end;
+
+procedure TCColorPicker.SetCyan(C: integer);
+begin
+  Clamp(c, 0, 255);
+  if FCyan <> c then
+  begin
+    FCyan := c;
+    FArrowPos := ArrowPosFromCyan(c);
+    Invalidate;
+    DoChange;
+  end;
+end;
+
+procedure TCColorPicker.SetMagenta(m: integer);
+begin
+  Clamp(m, 0, 255);
+  if FMagenta <> m then
+  begin
+    FMagenta := m;
+    CreateGradient;
+    Invalidate;
+    DoChange;
+  end;
+end;
+
+procedure TCColorPicker.SetYellow(y: integer);
+begin
+  Clamp(y, 0, 255);
+  if FYellow <> y then
+  begin
+    FYellow := y;
+    CreateGradient;
+    Invalidate;
+    DoChange;
+  end;
+end;
+
 procedure TCColorPicker.SetSelectedColor(clr: TColor);
 var
   c, m, y, k: integer;
+  newGradient: Boolean;
 begin
-  if WebSafe then clr := GetWebSafe(clr);
+  if WebSafe then
+    clr := GetWebSafe(clr);
+  if clr = GetSelectedColor then
+    exit;
   ColorToCMYK(clr, c, m, y, k);
-  FChange := false;
+  newGradient := (m <> FMagenta) or (y <> FYellow) or (k <> FBlack);
   FMagenta := m;
   FYellow := y;
   FBlack := k;
   FCyan := c;
-  FManual := false;
-  CreateGradient;
+  if newGradient then
+    CreateGradient;
   Invalidate;
-  if FChange and Assigned(OnChange) then OnChange(Self);
-  FManual := false;
-  FChange := true;
+  DoChange;
 end;
 
 end.

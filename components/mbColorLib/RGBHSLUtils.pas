@@ -131,6 +131,11 @@ var
   var
     V : double;
   begin
+    if Hue > 10 then
+      Hue := Hue + 1;
+
+
+
     if Hue < 0 then
       Hue := Hue + 1
     else if Hue > 1 then
@@ -143,7 +148,7 @@ var
       V := M1 + (M2 - M1) * (2/3 - Hue) * 6
     else
       V := M1;
-    Result := round (255 * V)
+    Result := round(255 * V)
   end;
 
 var
@@ -151,7 +156,7 @@ var
 begin
   if S = 0 then
   begin
-    R := round(MaxLum * L);
+    R := round(255 * L);
     G := R;
     B := R
   end

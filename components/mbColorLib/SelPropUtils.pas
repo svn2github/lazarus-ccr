@@ -18,13 +18,13 @@ implementation
 
 procedure DrawSelCross(x, y: integer; Canvas: TCanvas; Color: TColor);
 const
-  w = 5;
-  h = 3;
+  w = 5;  // Line length
+  h = 3;  // Line width
   o = 8;
 var
   R: TRect;
 begin
-  R := Rect(x-10, y-10, x+9, y+9);
+  R := Rect(x - o - 1, y - o - 1, x + o + 1, y + o + 1);
   Canvas.Brush.Color := Color;
   Canvas.FillRect(Rect(R.Left, R.Top + o, R.Left + w, R.Top + o + h));
   Canvas.FillRect(Rect(R.Left + o, R.Top, R.Left + o + h, R.Top + w));

@@ -13,15 +13,13 @@ uses
 type
   THRingPicker = class(TmbColorPickerControl)
   private
-    FHue, FSat, FValue: Double;
-    FMaxHue, FMaxSat, FMaxValue: Integer;
+    FHue, FSat, FVal: Double;
+    FMaxHue, FMaxSat, FMaxVal: Integer;
     FHueLineColor: TColor;
     FSelectedColor: TColor;
-    FManual: boolean;
     mx, my, mdx, mdy: integer;
     //FChange: boolean;
     FRadius: integer;
-    FDoChange: boolean;
     FDragging: Boolean;
     function GetHue: Integer;
     function GetSat: Integer;
@@ -31,15 +29,15 @@ type
     procedure SetMaxSat(s: Integer);
     procedure SetMaxValue(v: Integer);
     procedure SetRadius(r: integer);
-    procedure SetValue(v: integer);
     procedure SetHue(h: integer);
     procedure SetSat(s: integer);
+    procedure SetValue(v: integer);
     procedure SetHueLineColor(c: TColor);
-    procedure DrawHueLine;
     procedure SelectionChanged(x, y: integer);
     procedure UpdateCoords;
   protected
     procedure CreateGradient; override;
+    procedure DrawHueLine;
     function GetGradientColor2D(X, Y: Integer): TColor; override;
     function GetSelectedColor: TColor; override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
@@ -60,7 +58,7 @@ type
     property Value: integer read GetValue write SetValue;
     property MaxHue: Integer read FMaxHue write SetMaxHue default 359;
     property MaxSaturation: Integer read FMaxSat write SetMaxSat default 255;
-    property MaxValue: Integer read FMaxValue write SetMaxValue default 255;
+    property MaxValue: Integer read FMaxVal write SetMaxValue default 255;
     property HueLineColor: TColor read FHueLineColor write SetHueLineColor default clGray;
     property Radius: integer read FRadius write SetRadius default 40;
     property SelectedColor default clNone;
@@ -81,16 +79,15 @@ begin
   SetInitialBounds(0, 0, 204, 204);
   FMaxHue := 359;
   FMaxSat := 255;
-  FMaxValue := 255;
-  FValue := 1.0;
-  FHue := 0.0;
+  FMaxVal := 255;
+  FVal := 1.0;
+//  FHue := 0.0;
   FSat := 1.0;
   FHueLineColor := clGray;
-  FSelectedColor := clNone;
+  SetSelectedColor(clRed);
+//  FSelectedColor := clRed; clNone;
   FManual := false;
-  FChange := true;
   FRadius := 40;
-  FDoChange := false;
   HintFormat := 'Hue: %h (selected)';
   TabStop := true;
 end;
@@ -137,7 +134,7 @@ begin
     else if angle > 360 then
       angle := angle - 360;
     h := angle / 360;
-    Result := HSVtoColor(h, FSat, FValue);
+    Result := HSVtoColor(h, FSat, FVal);
     if WebSafe then
       Result := GetWebSafe(Result);
   end
@@ -165,7 +162,7 @@ begin
     H := 180 * (1 + arctan2(dx, dy) / pi);  // wp: order (x,y) is correct!
     H := H + 90;
     if H > 360 then H := H - 360;
-    Result := HSVtoColor(H/360, FSat, FValue);
+    Result := HSVtoColor(H/360, FSat, FVal);
     if WebSafe then
       Result := GetWebSafe(Result);
   end else
@@ -186,7 +183,7 @@ function THRingPicker.GetSelectedColor: TColor;
 begin
   if FSelectedColor <> clNone then
   begin
-    Result := HSVtoColor(FHue, FSat, FValue);
+    Result := HSVtoColor(FHue, FSat, FVal);
     if WebSafe then
       Result := GetWebSafe(Result);
   end
@@ -196,7 +193,7 @@ end;
 
 function THRingPicker.GetValue: Integer;
 begin
-  Result := round(FValue * FMaxValue);
+  Result := round(FVal * FMaxVal);
 end;
 
 procedure THRingPicker.KeyDown(var Key: Word; Shift: TShiftState);
@@ -211,27 +208,14 @@ begin
     delta := 1;
 
   case Key of
-    VK_LEFT:
-      begin
-        FChange := false;
-        SetHue(RadHue(GetHue() + delta));
-        FChange := true;
-        FManual := true;
-        if Assigned(FOnChange) then FOnChange(Self);
-      end;
-    VK_RIGHT:
-      begin
-        FChange := false;
-        SetHue(RadHue(GetHue() - delta));
-        FChange := true;
-        FManual := true;
-        if Assigned(FOnChange) then FOnChange(Self);
-      end
-    else
-      erasekey := false;
+    VK_LEFT  : SetHue(RadHue(GetHue() + delta));
+    VK_RIGHT : SetHue(RadHue(GetHue() - delta));
+    else       erasekey := false;
   end;
 
-  if eraseKey then Key := 0;
+  if eraseKey then
+    Key := 0;
+
   inherited;
 end;
 
@@ -245,9 +229,7 @@ begin
   then begin
     mdx := x;
     mdy := y;
-    FDoChange := true;
     SelectionChanged(X, Y);
-    FManual := true;
     FDragging := true;
   end;
   SetFocus;
@@ -273,9 +255,7 @@ begin
   begin
     mdx := x;
     mdy := y;
-    FDoChange := true;
     SelectionChanged(X, Y);
-    FManual := true;
   end;
 end;
 
@@ -288,9 +268,7 @@ begin
   begin
     mdx := x;
     mdy := y;
-    FDoChange := true;
     SelectionChanged(X, Y);
-    FManual := true;
     FDragging := false;
   end;
 end;
@@ -321,11 +299,7 @@ begin
   Canvas.Draw(0, 0, FBufferBmp);
   DeleteObject(rgn);
   DrawHueLine;
-  if FDoChange then
-  begin
-    if Assigned(FOnChange) then FOnChange(Self);
-    FDoChange := false;
-  end;
+  DoChange;
 end;
 
 function THRingPicker.RadHue(New: integer): integer;
@@ -355,23 +329,17 @@ begin
     inc(angle, 360)
   else if angle > 360 then
     dec(angle, 360);
-  FChange := false;
   SetHue(MulDiv(angle, FMaxHue + 1, 360));
-  FChange := true;
-  Invalidate;
 end;
 
 procedure THRingPicker.SetHue(h: integer);
 begin
-  if h > FMaxHue then h := h - (FMaxHue + 1);
-  if h < 0 then h := h + (FMaxHue + 1);
+  h := RadHue(h);
   if GetHue() <> h then
   begin
     FHue := h / FMaxHue;
-    FManual := false;
-    UpdateCoords;
     Invalidate;
-    if FChange and Assigned(FOnChange) then FOnChange(Self);
+    DoChange;
   end;
 end;
 
@@ -391,7 +359,7 @@ begin
   FMaxHue := h;
   CreateGradient;
   Invalidate;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+//  if FChange and Assigned(OnChange) then OnChange(Self);
 end;
 
 procedure THRingPicker.SetMaxSat(s: Integer);
@@ -401,17 +369,17 @@ begin
   FMaxSat := s;
   CreateGradient;
   Invalidate;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+//  if FChange and Assigned(OnChange) then OnChange(Self);
 end;
 
 procedure THRingPicker.SetMaxValue(v: Integer);
 begin
-  if v = FMaxValue then
+  if v = FMaxVal then
     exit;
-  FMaxValue := v;
+  FMaxVal := v;
   CreateGradient;
   Invalidate;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+//  if FChange and Assigned(OnChange) then OnChange(Self);
 end;
 
 procedure THRingPicker.SetRadius(r: integer);
@@ -429,41 +397,42 @@ begin
   if GetSat() <> s then
   begin
     FSat := s / FMaxSat;
-    FManual := false;
-    UpdateCoords;
     Invalidate;
-    if FChange and Assigned(FOnChange) then FOnChange(Self);
+    DoChange;
   end;
 end;
 
 procedure THRingPicker.SetSelectedColor(c: TColor);
 var
-  changeSave: boolean;
   h, s, v: Double;
+  needNewGradient: Boolean;
 begin
-  if WebSafe then c := GetWebSafe(c);
-  changeSave := FChange;
-  FManual := false;
-  FChange := false;
-  RGBToHSV(GetRValue(c), GetGValue(c), GetBValue(c), FHue, FSat, FValue);
-  FSelectedColor := c;
+  if WebSafe then
+    c := GetWebSafe(c);
+  if c = GetSelectedColor then
+    Exit;
+
+  RGBToHSV(GetRValue(c), GetGValue(c), GetBValue(c), h, s, v);
+  needNewGradient := (s <> FSat) or (v <> FVal);
+  FHue := h;
+  FSat := s;
+  FVal := v;
   UpdateCoords;
+  if needNewGradient then
+    CreateGradient;
   Invalidate;
-  FChange := changeSave;
-  if FChange and Assigned(FOnChange) then FOnChange(Self);
-  FChange := true;
+  DoChange;
 end;
 
 procedure THRingPicker.SetValue(v: integer);
 begin
-  Clamp(v, 0, FMaxValue);
+  Clamp(v, 0, FMaxVal);
   if GetValue() <> V then
   begin
-    FValue := V / FMaxValue;
-    FManual := false;
+    FVal := V / FMaxVal;
     CreateGradient;
     Invalidate;
-    if FChange and Assigned(FOnChange) then FOnChange(Self);
+    DoChange;
   end;
 end;
 

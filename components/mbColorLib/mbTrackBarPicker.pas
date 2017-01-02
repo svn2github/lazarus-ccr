@@ -42,7 +42,6 @@ type
     FBevelOuter: TBevelCut;
     FBevelWidth: TBevelWidth;
     FBorderStyle: TBorderStyle;
-    FDoChange: boolean;
     FHintFormat: string;
     FIncrement: integer;
     FNewArrowStyle: boolean;
@@ -64,8 +63,6 @@ type
   protected
     FArrowPos: integer;
 //    FBack: TBitmap;
-    FChange: boolean;
-    FManual: boolean;
     FLayout: TTrackBarLayout;
     FLimit: integer;
     FPickRect: TRect;
@@ -93,7 +90,6 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    property Manual: boolean read FManual;
 
   published
     property BevelInner: TPanelBevel read FBevelInner write SetBevelInner default bvNone;
@@ -147,7 +143,7 @@ type
 implementation
 
 uses
-  IntfGraphics, fpimage,
+  IntfGraphics, fpimage, Math,
   ScanLines, HTMLColors;
 
 const
@@ -194,15 +190,13 @@ begin
   FIncrement := 1;
   FArrowPos := GetArrowPos;
   FHintFormat := '';
-  FManual := false;
-  FChange := true;
   FLayout := lyHorizontal;
   FNewArrowStyle := false;
   Aw := 6;
   Ah := 10;
   FPlacement := spAfter;
   FPickRect := Rect(Aw, 0, Width - Aw, Height - Ah);
-  FDoChange := false;
+//  FDoChange := false;
   FSelIndicator := siArrows;
   FLimit := 7;
   FWebSafe := false;
@@ -256,12 +250,9 @@ begin
       case FSelIndicator of
         siArrows:
           case FPlacement of
-            spAfter:
-              FPickRect := Rect(Aw, 0, Width - Aw, Height - Ah - f);
-            spBefore:
-              FPickRect := Rect(Aw, Ah + f, Width - Aw, Height);
-            spBoth:
-              FPickRect := Rect(Aw, Ah + f, Width - Aw, Height - Ah - f);
+            spAfter  : FPickRect := Rect(Aw, 0, Width - Aw, Height - Ah - f);
+            spBefore : FPickRect := Rect(Aw, Ah + f, Width - Aw, Height);
+            spBoth   : FPickRect := Rect(Aw, Ah + f, Width - Aw, Height - Ah - f);
           end;
         siRect:
          FPickRect := Rect(Aw, Ah, width - 2*Aw + 1, height - Ah);
@@ -270,12 +261,9 @@ begin
       case FSelIndicator of
         siArrows:
           case FPlacement of
-            spAfter:
-              FPickRect := Rect(0, Aw, Width - Ah - f, Height - Aw);
-            spBefore:
-              FPickRect := Rect(Ah + f, Aw, Width, Height - Aw);
-            spBoth:
-              FPickRect := Rect(Ah + f, Aw, Width - Ah - f, Height - Aw);
+            spAfter  : FPickRect := Rect(0, Aw, Width - Ah - f, Height - Aw);
+            spBefore : FPickRect := Rect(Ah + f, Aw, Width, Height - Aw);
+            spBoth   : FPickRect := Rect(Ah + f, Aw, Width - Ah - f, Height - Aw);
           end;
         siRect:
          FPickRect := Rect(Ah, Aw, width - 5, height - 2*Aw + 1);
@@ -362,14 +350,11 @@ begin
   if not Result then
   begin
     Result := True;
-    FChange := false;
     if WheelDelta > 0 then
       Execute(TBA_WheelUp)
     else
       Execute(TBA_WheelDown);
-    FManual := true;
-    FChange := true;
-    if Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
@@ -591,56 +576,44 @@ begin
         eraseKey := false
       else
       begin
-        FChange := false;
         if not (ssCtrl in Shift) then
           Execute(TBA_VKUp)
         else
           Execute(TBA_VKCtrlUp);
-        FManual := true;
-        FChange := true;
-        if Assigned(OnChange) then OnChange(Self);
+        DoChange;
       end;
     VK_LEFT:
       if FLayout = lyVertical then
         eraseKey := false
       else
       begin
-        FChange := false;
         if not (ssCtrl in Shift) then
           Execute(TBA_VKLeft)
         else
           Execute(TBA_VKCtrlLeft);
-        FManual := true;
-        FChange := true;
-        if Assigned(OnChange) then OnChange(Self);
+        DoChange;
       end;
     VK_RIGHT:
       if FLayout = lyVertical then
         eraseKey := false
       else
       begin
-        FChange := false;
         if not (ssCtrl in Shift) then
           Execute(TBA_VKRight)
         else
           Execute(TBA_VKCtrlRight);
-        FManual := true;
-        FChange := true;
-        if Assigned(OnChange) then OnChange(Self);
+        DoChange;
       end;
     VK_DOWN:
       if FLayout = lyHorizontal then
         eraseKey := false
       else
       begin
-        FChange := false;
         if not (ssCtrl in Shift) then
           Execute(TBA_VKDown)
         else
           Execute(TBA_VKCtrlDown);
-        FManual := true;
-        FChange := true;
-        if Assigned(OnChange) then OnChange(Self);
+        DoChange;
       end
     else
       eraseKey := false;
@@ -654,18 +627,15 @@ end;
 
 procedure TmbTrackBarPicker.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  if Button <> mbLeft then Exit;
-  mx := x;
-  my := y;
-  SetFocus;
-  if FLayout = lyHorizontal then
-    FArrowPos := XToArrowPos(x)
-  else
-    FArrowPos := YToArrowPos(y);
-  Execute(TBA_MouseDown);
-  FManual := true;
-  FDoChange := true;
-  Invalidate;
+  if Button = mbLeft then
+  begin
+    SetFocus;
+    mx := X;
+    my := Y;
+    FArrowPos := IfThen(FLayout = lyHorizontal, XToArrowPos(X), YToArrowPos(Y));
+    Execute(TBA_MouseDown);
+    //Invalidate;
+  end;
   inherited;
 end;
 
@@ -676,48 +646,29 @@ begin
 end;
 
 procedure TmbTrackBarPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
-var
- R: TRect;
 begin
   if ssLeft in shift then
   begin
-    R := ClientRect;
-    R.TopLeft := ClientToScreen(R.TopLeft);
-    R.BottomRight := ClientToScreen(R.BottomRight);
-    {$IFDEF DELPHI}
-    ClipCursor(@R);
-    {$ENDIF}
-    mx := x;
-    my := y;
-    if FLayout = lyHorizontal then
-      FArrowPos := XToArrowPos(x)
-    else
-      FArrowPos := YToArrowPos(y);
+    mx := X;
+    my := Y;
+    FArrowPos := IfThen(FLayout = lyHorizontal, XToArrowPos(X), YToArrowPos(Y));
     Execute(TBA_MouseMove);
-    FManual := true;
-    FDoChange := true;
-    Invalidate;
+//    Invalidate;
   end;
   inherited;
 end;
 
 procedure TmbTrackBarPicker.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  {$IFDEF DELPHI}
-  ClipCursor(nil);
-  {$ENDIF}
-  if Button <> mbLeft then
-    exit;
-  mx := x;
-  my := y;
-  if FLayout = lyHorizontal then
-    FArrowPos := XToArrowPos(x)
-  else
-    FArrowPos := YToArrowPos(y);
-  Execute(TBA_MouseUp);
-  FManual := true;
-  FDoChange := true;
-  Invalidate;
+  if Button = mbLeft then
+  begin
+    mx := X;
+    my := Y;
+    FArrowPos := IfThen(FLayout = lyHorizontal, XToArrowPos(X), YToArrowPos(Y));
+    Execute(TBA_MouseUp);
+//    Invalidate;
+  end;
+
   inherited;
 end;
 
@@ -730,19 +681,19 @@ begin
   if FBorderStyle <> bsNone then
     DrawFrames;
   DrawMarker(FArrowPos);
+  {
   if FDoChange then
   begin
     if Assigned(OnChange) then OnChange(Self);
     FDoChange := false;
   end;
+  }
 end;
 
 procedure TmbTrackBarPicker.Resize;
 begin
   inherited;
-  FChange := false;
   Execute(TBA_Resize);
-  FChange := true;
 end;
 
 procedure TmbTrackBarPicker.SetBevelInner(Value: TBevelCut);

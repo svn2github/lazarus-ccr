@@ -62,11 +62,8 @@ begin
   FGradientHeight := 1;
   FHue := 0;
   FSat := FMaxSat;
-  FChange := false;
   SetLuminance(FMaxLum div 2);
   HintFormat := 'Luminance: %value (selected)';
-  FManual := false;
-  FChange := true;
 end;
 
 function TLColorPicker.ArrowPosFromLum(L: integer): integer;
@@ -167,10 +164,10 @@ function TLColorPicker.LumFromArrowPos(p: integer): integer;
 var
   L: integer;
 begin
-  if Layout = lyHorizontal then
-    L := Round(p / (Width - 12) * FMaxLum)
-  else
-    L := Round(MaxLum - p /(Height - 12) * FMaxLum);
+  case Layout of
+    lyHorizontal : L := Round(p / (Width - 12) * FMaxLum);
+    lyVertical   : L := Round(MaxLum - p /(Height - 12) * FMaxLum);
+  end;
   Clamp(L, 0, FMaxLum);
   Result := L;
 end;
@@ -181,10 +178,9 @@ begin
   if GetHue() <> H then
   begin
     FHue := H / FMaxHue;
-    FManual := false;
     CreateGradient;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
@@ -195,9 +191,9 @@ begin
   begin
     FLuminance := L / FMaxLum;
     FArrowPos := ArrowPosFromLum(L);
-    FManual := false;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
+//    if FChange and Assigned(OnChange) then OnChange(Self);
   end;
 end;
 
@@ -208,7 +204,7 @@ begin
   FMaxHue := H;
   CreateGradient;
   Invalidate;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+//  if FChange and Assigned(OnChange) then OnChange(Self);
 end;
 
 procedure TLColorPicker.SetMaxLum(L: Integer);
@@ -219,7 +215,7 @@ begin
   FGradientWidth := FMaxLum + 1;   // 0 .. FMaxHue  --> FMaxHue + 1 pixels
   CreateGradient;
   Invalidate;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+//  if FChange and Assigned(OnChange) then OnChange(Self);
 end;
 
 procedure TLColorPicker.SetMaxSat(S: Integer);
@@ -229,7 +225,7 @@ begin
   FMaxSat := S;
   CreateGradient;
   Invalidate;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+  DoChange;
 end;
 
 procedure TLColorPicker.SetSat(S: integer);
@@ -238,22 +234,32 @@ begin
   if GetSat() <> S then
   begin
     FSat := S / FMaxSat;
-    FManual := false;
     CreateGradient;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
 procedure TLColorPicker.SetSelectedColor(c: TColor);
+var
+  H, S, L: Double;
+  needNewGradient: Boolean;
 begin
-  if WebSafe then c := GetWebSafe(c);
-  ColortoHSL(c, FHue, FSat, FLuminance);
-  FChange := false;
-  FManual := false;
-  CreateGradient;
+  if WebSafe then
+    c := GetWebSafe(c);
+  if c = GetSelectedColor then
+    exit;
+
+//  ColortoHSL(c, FHue, FSat, FLuminance);   // not working in HSLPicker
+  RGBtoHSL(c, H, S, L);
+  needNewGradient := (H <> FHue) or (S <> FSat);
+  FHue := H;
+  FSat := S;
+  FLuminance := L;
+  if needNewGradient then
+    CreateGradient;
   Invalidate;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+  DoChange;
 end;
 
 end.

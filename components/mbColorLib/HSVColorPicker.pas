@@ -20,24 +20,27 @@ type
     FShowSatCirc: boolean;
     FShowHueLine: boolean;
     FShowSelCirc: boolean;
-    //FChange: boolean;
-    FDoChange: boolean;
     function RadHue(New: integer): integer;
     function GetHue: Integer;
     function GetSat: Integer;
     function GetValue: Integer;
+    function GetRed: Integer;
+    function GetGreen: Integer;
+    function GetBlue: Integer;
     procedure SetMaxHue(h: Integer);
     procedure SetMaxSat(s: Integer);
     procedure SetMaxValue(v: Integer);
     procedure SetHue(h: integer);
     procedure SetSat(s: integer);
     procedure SetValue(V: integer);
+    procedure SetRed(r: Integer);
+    procedure SetGreen(g: Integer);
+    procedure SetBlue(b: Integer);
     procedure SetSatCircColor(c: TColor);
     procedure SetHueLineColor(c: TColor);
     procedure DrawSatCirc;
     procedure DrawHueLine;
     procedure DrawMarker(x, y: integer);
-    procedure SelectionChanged(x, y: integer);
     procedure SetShowSatCirc(s: boolean);
     procedure SetShowSelCirc(s: boolean);
     procedure SetShowHueLine(s: boolean);
@@ -53,20 +56,24 @@ type
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure SelectColor(x, y: integer);
     procedure SetSelectedColor(c: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
     function GetColorAtPoint(x, y: integer): TColor; override;
+    property Red: Integer read GetRed write SetRed;
+    property Green: Integer read GetGreen write SetGreen;
+    property Blue: Integer read GetBlue write SetBlue;
   published
-    property Hue: integer read GetHue write SetHue;
-    property Saturation: integer read GetSat write SetSat;
-    property Value: integer read GetValue write SetValue;
+    property SelectedColor default clRed;
+    property Hue: integer read GetHue write SetHue default 0;
+    property Saturation: integer read GetSat write SetSat default 255;
+    property Value: integer read GetValue write SetValue default 255;
     property MaxHue: Integer read FMaxHue write SetMaxHue default 359;
     property MaxSaturation: Integer read FMaxSat write SetMaxSat default 255;
     property MaxValue: Integer read FMaxValue write SetMaxValue default 255;
     property SaturationCircleColor: TColor read FSatCircColor write SetSatCircColor default clSilver;
     property HueLineColor: TColor read FHueLineColor write SetHueLineColor default clGray;
-    property SelectedColor default clNone;
     property ShowSaturationCircle: boolean read FShowSatCirc write SetShowSatCirc default true;
     property ShowHueLine: boolean read FShowHueLine write SetShowHueLine default true;
     property ShowSelectionCircle: boolean read FShowSelCirc write SetShowSelCirc default true;
@@ -89,17 +96,15 @@ begin
   FMaxSat := 255;
   FMaxValue := 255;
   FHue := 0;
-  FSat := 0;
+  FSat := 1.0;
   FValue := 1.0;
   FSatCircColor := clSilver;
   FHueLineColor := clGray;
-  FSelectedColor := clNone;
+  FSelectedColor := clRed;
   FManual := false;
   FShowSatCirc := true;
   FShowHueLine := true;
   FShowSelCirc := true;
-  FChange := true;
-  FDoChange := false;
   MarkerStyle := msCrossCirc;
 end;
 
@@ -166,6 +171,11 @@ begin
   InternalDrawMarker(x, y, c);
 end;
 
+function THSVColorPicker.GetBlue: Integer;
+begin
+  Result := GetBValue(FSelectedColor);
+end;
+
 function THSVColorPicker.GetColorAtPoint(x, y: integer): TColor;
 var
   angle: Double;
@@ -224,9 +234,19 @@ begin
     Result := GetDefaultColor(dctBrush);
 end;
 
+function THSVColorPicker.GetGreen: Integer;
+begin
+  Result := GetGValue(FSelectedColor);
+end;
+
 function THSVColorPicker.GetHue: Integer;
 begin
   Result := round(FHue * FMaxHue);
+end;
+
+function THSVColorPicker.GetRed: Integer;
+begin
+  Result := GetRValue(FSelectedColor);
 end;
 
 function THSVColorPicker.GetSat: Integer;
@@ -257,49 +277,19 @@ var
   delta: Integer;
 begin
   eraseKey := true;
-  if ssCtrl in shift then
-    delta := 10
-  else
-    delta := 1;
+  delta := IfThen(ssCtrl in shift, 10, 1);
 
   case Key  of
-    VK_LEFT:
-      begin
-        FChange := false;
-        SetHue(RadHue(GetHue() + delta));
-        FChange := true;
-        FManual := true;
-        if Assigned(FOnChange) then FOnChange(Self);
-      end;
-    VK_RIGHT:
-      begin
-        FChange := false;
-        SetHue(RadHue(GetHue() - delta));
-        FChange := true;
-        FManual := true;
-        if Assigned(FOnChange) then FOnChange(Self);
-      end;
-    VK_UP:
-      begin
-        FChange := false;
-        SetSat(GetSat() + delta);
-        FChange := true;
-        FManual := true;
-        if Assigned(FOnChange) then FOnChange(Self);
-      end;
-    VK_DOWN:
-      begin
-        FChange := false;
-        SetSat(GetSat() - delta);
-        FChange := true;
-        FManual := true;
-        if Assigned(FOnChange) then FOnChange(Self);
-      end;
-  else
-    eraseKey := false;
+    VK_LEFT  : SetHue(RadHue(GetHue() + delta));
+    VK_RIGHT : SetHue(RadHue(GetHue() - delta));
+    VK_UP    : SetSat(GetSat() + delta);
+    VK_DOWN  : SetSat(GetSat() - delta);
+    else       eraseKey := false;
   end;
 
-  if eraseKey then Key := 0;
+  if eraseKey then
+    Key := 0;
+
   inherited;
 end;
 
@@ -310,13 +300,7 @@ begin
   if csDesigning in ComponentState then
     exit;
   if (Button = mbLeft) and PointInCircle(Point(x, y), Min(Width, Height)) then
-  begin
-    mdx := x;
-    mdy := y;
-    FDoChange := true;
-    SelectionChanged(X, Y);
-    FManual := true;
-  end;
+    SelectColor(X, Y);
   SetFocus;
 end;
 
@@ -326,13 +310,7 @@ begin
   if csDesigning in ComponentState then
     exit;
   if (ssLeft in Shift) and PointInCircle(Point(x, y), Min(Width, Height)) then
-  begin
-    mdx := x;
-    mdy := y;
-    FDoChange := true;
-    SelectionChanged(X, Y);
-    FManual := true;
-  end;
+    SelectColor(X, Y);
 end;
 
 procedure THSVColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState;
@@ -342,13 +320,7 @@ begin
   if csDesigning in ComponentState then
     exit;
   if (Button = mbLeft) and PointInCircle(Point(x, y), Min(Width, Height)) then
-  begin
-    mdx := x;
-    mdy := y;
-    FDoChange := true;
-    SelectionChanged(X, Y);
-    FManual := true;
-  end;
+    SelectColor(X, Y);
 end;
 
 procedure THSVColorPicker.Paint;
@@ -368,11 +340,6 @@ begin
   DrawSatCirc;
   DrawHueLine;
   DrawMarker(mdx, mdy);
-  if FDoChange then
-  begin
-    if Assigned(FOnChange) then FOnChange(Self);
-    FDoChange := false;
-  end;
 end;
 
 function THSVColorPicker.RadHue(New: integer): integer;
@@ -389,11 +356,15 @@ begin
   UpdateCoords;
 end;
 
-procedure THSVColorPicker.SelectionChanged(x, y: integer);
+procedure THSVColorPicker.SelectColor(x, y: integer);
 var
   angle: Double;
   dx, dy, r, radius: integer;
+  H, S: Double;
 begin
+  mdx := x;
+  mdy := y;
+
   radius := Min(Width, Height) div 2;
   dx := x - radius;
   dy := y - radius;
@@ -401,27 +372,53 @@ begin
 
   if r > radius then  // point outside circle
   begin
-    FChange := false;
     SetSelectedColor(clNone);
-    FChange := true;
     exit;
   end;
 
-  FSelectedColor := clWhite;
+  //FSelectedColor := clWhite;         // ????
   angle := 360 + 180*arctan2(-dy, dx) / pi;   // wp: "-y, x" correct? The others have "x, y"
   if angle < 0 then
     angle := angle + 360
   else if angle > 360 then
     angle := angle - 360;
-  FChange := false;
-  FHue := angle / 360;
+  H := angle / 360;
   if r > radius then
-    FSat := 1.0
+    S := 1.0
   else
-    FSat := r / radius;
-  FChange := true;
+    S := r / radius;
 
+  if (H = FHue) and (S = FSat) then
+    exit;
+
+  FHue := H;
+  FSat := S;
+  FSelectedColor := HSVToColor(FHue, FSat, FValue);
+  UpdateCoords;
   Invalidate;
+  DoChange;
+end;
+
+procedure THSVColorPicker.SetBlue(b: Integer);
+var
+  c: TColor;
+begin
+  Clamp(b, 0, 255);
+  if b = GetBValue(FSelectedColor) then
+    exit;
+  c := RgbToColor(GetRValue(FSelectedColor), GetGValue(FSelectedColor), b);
+  SetSelectedColor(c);
+end;
+
+procedure THSVColorPicker.SetGreen(g: Integer);
+var
+  c: TColor;
+begin
+  Clamp(g, 0, 255);
+  if g = GetGValue(FSelectedColor) then
+    exit;
+  c := RgbToColor(GetRValue(FSelectedColor), g, GetBValue(FSelectedColor));
+  SetSelectedColor(c);
 end;
 
 procedure THSVColorPicker.SetHue(h: integer);
@@ -431,10 +428,10 @@ begin
   if GetHue() <> h then
   begin
     FHue := h / FMaxHue;
-    FManual := false;
+    FSelectedColor := HSVToColor(FHue, FSat, FValue);
     UpdateCoords;
     Invalidate;
-    if FChange and Assigned(FOnChange) then FOnChange(Self);
+    DoChange;
   end;
 end;
 
@@ -453,7 +450,7 @@ begin
     exit;
   FMaxHue := h;
   CreateGradient;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+  //if FChange and Assigned(OnChange) then OnChange(Self);
   Invalidate;
 end;
 
@@ -463,7 +460,7 @@ begin
     exit;
   FMaxSat := s;
   CreateGradient;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+  //if FChange and Assigned(OnChange) then OnChange(Self);
   Invalidate;
 end;
 
@@ -473,8 +470,19 @@ begin
     exit;
   FMaxValue := v;
   CreateGradient;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+  //if FChange and Assigned(OnChange) then OnChange(Self);
   Invalidate;
+end;
+
+procedure THSVColorPicker.SetRed(r: Integer);
+var
+  c: TColor;
+begin
+  Clamp(r, 0, 255);
+  if r = GetRValue(FSelectedColor) then
+    exit;
+  c := RgbToColor(r, GetGValue(FSelectedColor), GetBValue(FSelectedColor));
+  SetSelectedColor(c);
 end;
 
 procedure THSVColorPicker.SetSat(s: integer);
@@ -483,10 +491,10 @@ begin
   if GetSat() <> s then
   begin
     FSat := s / FMaxSat;
-    FManual := false;
+    FSelectedColor := HSVToColor(FHue, FSat, FValue);
     UpdateCoords;
     Invalidate;
-    if FChange and Assigned(FOnChange) then FOnChange(Self);
+    DoChange;
   end;
 end;
 
@@ -501,20 +509,17 @@ end;
 
 procedure THSVColorPicker.SetSelectedColor(c: TColor);
 var
-  changeSave: boolean;
   h, s, v: Double;
 begin
-  if WebSafe then c := GetWebSafe(c);
-  changeSave := FChange;
-  FManual := false;
-  FChange := false;
+  if WebSafe then
+    c := GetWebSafe(c);
+  if c = FSelectedColor then
+    exit;
   RGBtoHSV(GetRValue(c), GetGValue(c), GetBValue(c), FHue, FSat, FValue);
   FSelectedColor := c;
   UpdateCoords;
   Invalidate;
-  FChange := changeSave;
-  if FChange and Assigned(FOnChange) then FOnChange(Self);
-  FChange := true;
+  DoChange;
 end;
 
 procedure THSVColorPicker.SetShowHueLine(s: boolean);
@@ -550,10 +555,10 @@ begin
   if GetValue() <> V then
   begin
     FValue := V / FMaxValue;
-    FManual := false;
+    FSelectedColor := HSVToColor(FHue, FSat, FValue);
     CreateGradient;
     Invalidate;
-    if FChange and Assigned(FOnChange) then FOnChange(Self);
+    DoChange;
   end;
 end;
 

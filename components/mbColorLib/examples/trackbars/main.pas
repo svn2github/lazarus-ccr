@@ -153,7 +153,6 @@ begin
   ]);
 end;
 
-
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   MaxHue := 359;
@@ -181,6 +180,8 @@ end;
 
 procedure TForm1.HPickerH_Change(Sender: TObject);
 begin
+  exit;
+
   SLVPickerH_Change(nil);
   SColorPickerH.Hue := HColorPickerH.Hue;
   LColorPickerH.Hue := HColorPickerH.Hue;

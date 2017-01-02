@@ -62,13 +62,10 @@ begin
   FMaxVal := 255;
   FGradientWidth := FMaxSat + 1;
   FGradientHeight := 1;
-  FChange := false;
   FHue := 0;
   FVal := 1.0;
   SetSat(FMaxSat);
   HintFormat := 'Saturation: %value (selected)';
-  FManual := false;
-  FChange := true;
 end;
 
 function TSColorPicker.ArrowPosFromSat(s: integer): integer;
@@ -82,59 +79,12 @@ begin
   end
   else
   begin
-    s := FMaxSat - s;
-    a := Round(s / FMaxSat * (Height - 12));
+    a := Round((FMaxSat - s) / FMaxSat * (Height - 12));
     if a > Height - FLimit then a := Height - FLimit;
   end;
   if a < 0 then a := 0;
   Result := a;
 end;
-
-(*
-procedure TSColorPicker.CreateSGradient;
-var
- i,j: integer;
- row: pRGBQuadArray;
-begin
- if FSBmp = nil then
-  begin
-   FSBmp := TBitmap.Create;
-   FSBmp.PixelFormat := pf32bit;
-  end;
- if Layout = lyHorizontal then
-  begin
-   FSBmp.width := 255;
-   FSBmp.height := 12;
-   for i := 0 to 254 do
-    for j := 0 to 11 do
-     begin
-      row := FSBmp.Scanline[j];
-      if not WebSafe then
-       row[i] := RGBToRGBQuad(HSVtoColor(FHue, i, FVal))
-//       FSBmp.Canvas.Pixels[i, j] := HSVtoColor(FHue, i, FVal)
-      else
-       row[i] := RGBToRGBQuad(GetWebSafe(HSVtoColor(FHue, i, FVal)));
-//       FSBmp.Canvas.Pixels[i, j] := GetWebSafe(HSVtoColor(FHue, i, FVal));
-     end;
-  end
- else
-  begin
-   FSBmp.width := 12;
-   FSBmp.height := 255;
-   for i := 0 to 254 do
-    begin
-     row := FSBmp.Scanline[i];
-     for j := 0 to 11 do
-      if not WebSafe then
-       row[j] := RGBToRGBQuad(HSVtoColor(FHue, 255-i, FVal))
-//       FSBmp.Canvas.Pixels[j, i] := HSVtoColor(FHue, 255-i, FVal)
-      else
-       row[j] := RGBToRGBQuad(GetWebSafe(HSVtoColor(FHue, 255-i, FVal)));
-//       FSBmp.Canvas.Pixels[j, i] := GetWebSafe(HSVtoColor(FHue, 255-i, FVal));
-    end;
-  end;
-end;
- *)
 
 procedure TSColorPicker.Execute(tbaAction: integer);
 begin
@@ -214,14 +164,14 @@ end;
 
 function TSColorPicker.SatFromArrowPos(p: integer): integer;
 var
-  r: integer;
+  s: integer;
 begin
-  if Layout = lyHorizontal then
-    r := Round(p / (Width - 12) * FMaxSat)
-  else
-    r := Round(FMaxSat - p / (Height - 12) * FMaxSat);
-  Clamp(r, 0, FMaxSat);
-  Result := r;
+  case Layout of
+    lyHorizontal: s := Round(p / (Width - 12) * FMaxSat);
+    lyVertical  : s := Round(FMaxSat - p / (Height - 12) * FMaxSat);
+  end;
+  Clamp(s, 0, FMaxSat);
+  Result := s;
 end;
 
 procedure TSColorPicker.SetMaxHue(h: Integer);
@@ -230,7 +180,7 @@ begin
     exit;
   FMaxHue := h;
   CreateGradient;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+  //if FChange and Assigned(OnChange) then OnChange(Self);
   Invalidate;
 end;
 
@@ -241,7 +191,7 @@ begin
   FMaxSat := s;
   FGradientWidth := FMaxSat + 1;
   CreateGradient;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+  //if FChange and Assigned(OnChange) then OnChange(Self);
   Invalidate;
 end;
 
@@ -251,7 +201,7 @@ begin
     exit;
   FMaxVal := v;
   CreateGradient;
-  if FChange and Assigned(OnChange) then OnChange(Self);
+  //if FChange and Assigned(OnChange) then OnChange(Self);
   Invalidate;
 end;
 
@@ -262,9 +212,8 @@ begin
   begin
     FHue := h / FMaxHue;
     CreateGradient;
-    FManual := false;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
@@ -274,26 +223,31 @@ begin
   if GetSat() <> s then
   begin
     FSat := s / FMaxSat;
-    FManual := false;
     FArrowPos := ArrowPosFromSat(s);
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
 
 procedure TSColorPicker.SetSelectedColor(c: TColor);
 var
   h, s, v: integer;
+  needNewGradient: Boolean;
 begin
-  if WebSafe then c := GetWebSafe(c);
+  if WebSafe then
+    c := GetWebSafe(c);
+  if c = GetSelectedColor then
+    exit;
+
   RGBToHSVRange(GetRValue(c), GetGValue(c), GetBValue(c), h, s, v);
-  FChange := false;
-  SetHue(h);
-  SetSat(s);
-  SetValue(v);
-  FManual := false;
-  FChange := true;
-  if Assigned(OnChange) then OnChange(Self);
+  needNewGradient := (h <> FHue) or (v <> FVal);
+  FHue := h;
+  FSat := s;
+  FVal := v;
+  if needNewGradient then
+    CreateGradient;
+  Invalidate;
+  DoChange;
 end;
 
 procedure TSColorPicker.SetValue(v: integer);
@@ -302,12 +256,10 @@ begin
   if GetVal() <> v then
   begin
     FVal := v / FMaxVal;
-    FManual := false;
     CreateGradient;
     Invalidate;
-    if FChange and Assigned(OnChange) then OnChange(Self);
+    DoChange;
   end;
 end;
-
 
 end.

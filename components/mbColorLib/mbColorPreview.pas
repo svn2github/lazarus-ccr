@@ -22,6 +22,7 @@ type
     procedure SetOpacity(o: integer);
     procedure SetBlockSize(s: integer);
   protected
+    procedure DoChange;
     procedure Paint; override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -32,6 +33,7 @@ type
     property SwatchStyle: boolean read FSwatchStyle write SetSwatchStyle default false;
     property Anchors;
     property Align;
+    property BorderSpacing;
     property ShowHint;
     property ParentShowHint;
     property Visible;
@@ -79,6 +81,12 @@ begin
   FOpacity := 100;
   FBlockSize := 6;
   FSwatchStyle := false;
+end;
+
+procedure TmbColorPreview.DoChange;
+begin
+  if Assigned(FOnColorChange) then
+    FOnColorChange(self);
 end;
 
 function TmbColorPreview.MakeBmp: TBitmap;
@@ -209,7 +217,6 @@ begin
   begin
     FSelColor := c;
     Invalidate;
-    if Assigned(FOnColorChange) then FOnColorChange(Self);
   end;
 end;
 

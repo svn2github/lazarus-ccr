@@ -14,7 +14,6 @@ uses
 type
   THSLRingPicker = class(TmbBasicPicker)
   private
-    //FOnChange: TNotifyEvent;
     FRingPicker: THRingPicker;
     FSLPicker: TSLColorPicker;
     FSelectedColor: TColor;
@@ -23,14 +22,12 @@ type
     FSLMenu, FRingMenu: TPopupMenu;
     FSLCursor, FRingCursor: TCursor;
     PBack: TBitmap;
-    function GetManual: boolean;
     function GetHue: Integer;
     function GetLum: Integer;
     function GetSat: Integer;
     function GetMaxHue: Integer;
     function GetMaxLum: Integer;
     function GetMaxSat: Integer;
-    procedure SelectColor(c: TColor);
     procedure SetHue(H: integer);
     procedure SetSat(S: integer);
     procedure SetLum(L: integer);
@@ -48,12 +45,13 @@ type
     procedure SetSLCursor(c: TCursor);
   protected
     procedure CreateWnd; override;
-    procedure DoChange;
+    procedure DoChange; override;
     procedure DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     function GetColorUnderCursor: TColor; override;
     procedure Paint; override;
     procedure Resize; override;
     procedure RingPickerChange(Sender: TObject);
+    procedure SelectColor(c: TColor);
     procedure SLPickerChange(Sender: TObject);
   public
     constructor Create(AOwner: TComponent); override;
@@ -62,14 +60,13 @@ type
     function GetSelectedHexColor: string;
     procedure SetFocus; override;
     property ColorUnderCursor;
-    property Hue: integer read GetHue write SetHue;
-    property Saturation: integer read GetSat write SetSat;
-    property Luminance: integer read GetLum write SetLum;
-    property RValue: integer read FRValue write SetR default 255;
-    property GValue: integer read FGValue write SetG default 0;
-    property BValue: integer read FBValue write SetB default 0;
-    property Manual: boolean read GetManual;
+    property Red: integer read FRValue write SetR;
+    property Green: integer read FGValue write SetG;
+    property Blue: integer read FBValue write SetB;
   published
+    property Hue: integer read GetHue write SetHue default 0;
+    property Saturation: integer read GetSat write SetSat default 240;
+    property Luminance: integer read GetLum write SetLum default 120;
     property SelectedColor: TColor read FSelectedColor write SelectColor default clRed;
     property RingPickerPopupMenu: TPopupMenu read FRingMenu write SetRingMenu;
     property SLPickerPopupMenu: TPopupMenu read FSLMenu write SetSLMenu;
@@ -166,7 +163,8 @@ begin
   FRValue := GetRValue(FSLPicker.SelectedColor);
   FGValue := GetGValue(FSLPicker.SelectedColor);
   FBValue := GetBValue(FSLPicker.SelectedColor);
-  if Assigned(OnChange) then OnChange(Self);
+
+  inherited;
 end;
 
 procedure THSLRingPicker.DoMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
@@ -199,11 +197,6 @@ end;
 function THSLRingPicker.GetMaxHue: Integer;
 begin
   Result := FRingPicker.MaxHue;
-end;
-
-function THSLRingPicker.GetManual:boolean;
-begin
-  Result := FRingPicker.Manual or FSLPicker.Manual;
 end;
 
 function THSLRingPicker.GetMaxSat: Integer;
@@ -259,8 +252,11 @@ procedure THSLRingPicker.RingPickerChange(Sender: TObject);
 begin
   if (FRingPicker = nil) or (FSLPicker = nil) then
     exit;
-  FSLPicker.Hue := FRingPicker.Hue;
-  DoChange;
+  if FSLPicker.Hue <> FRingPicker.Hue then
+  begin
+    FSLPicker.Hue := FRingPicker.Hue;
+    DoChange;
+  end;
 end;
 
 procedure THSLRingPicker.SelectColor(c: TColor);
@@ -376,10 +372,11 @@ end;
 
 procedure THSLRingPicker.SLPickerChange(Sender: TObject);
 begin
-  if FSLPicker = nil then
-    exit;
-  FSelectedColor := FSLPicker.SelectedColor;
-  DoChange;
+  if (FSLPicker <> nil) and (FSelectedColor <> FSLPicker.SelectedColor) then
+  begin
+    FSelectedColor := FSLPicker.SelectedColor;
+    DoChange;
+  end;
 end;
 
 end.

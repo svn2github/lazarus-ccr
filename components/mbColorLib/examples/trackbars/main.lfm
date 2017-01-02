@@ -206,8 +206,8 @@ object Form1: TForm1
           OnChange = SLVPickerV_Change
           Hue = 0
           Saturation = 0
-          Luminance = 240
-          SelectedColor = 15790320
+          Luminance = 226
+          SelectedColor = 14869218
         end
         object HColorPickerV: THColorPicker
           AnchorSideTop.Control = LblH
@@ -518,8 +518,8 @@ object Form1: TForm1
           OnChange = SLVPickerH_Change
           Hue = 0
           Saturation = 0
-          Luminance = 240
-          SelectedColor = 15790320
+          Luminance = 226
+          SelectedColor = 14869218
         end
         object SColorPickerH: TSColorPicker
           Left = 24
