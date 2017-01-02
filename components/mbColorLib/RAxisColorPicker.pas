@@ -12,7 +12,6 @@ type
   TRAxisColorPicker = class(TmbColorPickerControl)
   private
     FR, FG, FB: integer;
-    dx, dy, mxx, myy: integer;
     procedure SetRValue(r: integer);
     procedure SetGValue(g: integer);
     procedure SetBValue(b: integer);
@@ -60,11 +59,6 @@ begin
   FB := 0;
   FR := 255;
   FSelected := clRed;
-  FManual := false;
-  dx := 0;
-  dy := 0;
-  mxx := 0;
-  myy := 0;
   MarkerStyle := msCircle;
 end;
 
@@ -88,8 +82,6 @@ begin
   FR := GetRValue(FSelected);
   FG := GetGValue(FSelected);
   FB := GetBValue(FSelected);
-  dx := x;
-  dy := y;
   if Focused or (csDesigning in ComponentState) then
     c := clBlack
   else
@@ -121,10 +113,10 @@ begin
   delta := IfThen(ssCtrl in Shift, 10, 1);
 
   case Key of
-    VK_LEFT  : SelectColor(mxx - delta, myy);
-    VK_RIGHT : SelectColor(mxx + delta, myy);
-    VK_UP    : SelectColor(mxx, myy - delta);
-    VK_DOWN  : SelectColor(mxx, myy + delta);
+    VK_LEFT  : SelectColor(mx - delta, my);
+    VK_RIGHT : SelectColor(mx + delta, my);
+    VK_UP    : SelectColor(mx, my - delta);
+    VK_DOWN  : SelectColor(mx, my + delta);
     else       eraseKey := false;
   end;
 
@@ -160,14 +152,14 @@ end;
 procedure TRAxisColorPicker.Paint;
 begin
   Canvas.StretchDraw(ClientRect, FBufferBmp);
-  DrawMarker(mxx, myy);
+  DrawMarker(mx, my);
 end;
 
 procedure TRAxisColorPicker.Resize;
 begin
   FManual := false;
-  mxx := Round(FB * Width / 255);
-  myy := Round((255 - FG) * Height / 255);
+  mx := Round(FB * Width / 255);
+  my := Round((255 - FG) * Height / 255);
   inherited;
 end;
 
@@ -178,8 +170,8 @@ var
   needNewGradient: Boolean;
 begin
   CorrectCoords(x, y);
-  mxx := x;
-  myy := y;
+  mx := x;
+  my := y;
   c := GetColorAtPoint(x, y);
   if c = FSelected then
     exit;
@@ -240,8 +232,8 @@ begin
   FB := b;
   FSelected := c;
   FManual := false;
-  mxx := Round(FB * Width / 255);            // BLUE on x
-  myy := Round((255 - FG) * Height / 255);   // GREEN on y
+  mx := Round(FB * Width / 255);            // BLUE on x
+  my := Round((255 - FG) * Height / 255);   // GREEN on y
   if needNewGradient then
     CreateGradient;
   Invalidate;

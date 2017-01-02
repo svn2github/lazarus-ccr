@@ -15,7 +15,6 @@ type
   TCIEAColorPicker = class(TmbColorPickerControl)
   private
     FL, FA, FB: integer;
-    dx, dy, mxx, myy: integer;
     procedure SetLValue(l: integer);
     procedure SetAValue(a: integer);
     procedure SetBValue(b: integer);
@@ -63,10 +62,6 @@ begin
   FL := 100;
   FA := 127;
   FB := -128;
-  dx := 0;
-  dy := 0;
-  mxx := 0;
-  myy := 0;
   MarkerStyle := msCircle;
 end;
 
@@ -90,8 +85,6 @@ begin
   FL := Round(GetCIELValue(FSelected));
   FA := Round(GetCIEAValue(FSelected));
   FB := Round(GetCIEBValue(FSelected));
-  dx := x;
-  dy := y;
   if Focused or (csDesigning in ComponentState) then
     c := clBlack
   else
@@ -135,10 +128,10 @@ begin
   delta := IfThen(ssCtrl in Shift, 10, 1);
 
   case Key of
-    VK_LEFT  : SelectColor(mxx - delta, myy);
-    VK_RIGHT : SelectColor(mxx + delta, myy);
-    VK_UP    : SelectColor(mxx, myy - delta);
-    VK_DOWN  : SelectColor(mxx, myy + delta);
+    VK_LEFT  : SelectColor(mx - delta, my);
+    VK_RIGHT : SelectColor(mx + delta, my);
+    VK_UP    : SelectColor(mx, my - delta);
+    VK_DOWN  : SelectColor(mx, my + delta);
     else       eraseKey := false;
   end;
 
@@ -175,21 +168,21 @@ end;
 procedure TCIEAColorPicker.Paint;
 begin
   Canvas.StretchDraw(ClientRect, FBufferBmp);
-  DrawMarker(mxx, myy);
+  DrawMarker(mx, my);
 end;
 
 procedure TCIEAColorPicker.Resize;
 begin
-  mxx := Round((FB + 128) / 255 * Width);
+  mx := Round((FB + 128) / 255 * Width);
 //  myy := Round(((100 - FL) * 255 / 100) * Height / 255);
-  myy := Round((100 - FL) / 100 * Height);
+  my := Round((100 - FL) / 100 * Height);
   inherited;
 end;
 
 procedure TCIEAColorPicker.SelectColor(x, y: Integer);
 var
   c: TColor;
-  l, a, b: Integer;
+  L, a, b: Integer;
   needNewGradient: Boolean;
 begin
   CorrectCoords(x, y);
@@ -199,14 +192,14 @@ begin
   if c = FSelected then
     exit;
 
-  mxx := x;
-  myy := y;
-  l := Round(GetCIELValue(c));
+  mx := x;
+  my := y;
+  L := Round(GetCIELValue(c));
   a := Round(GetCIEAValue(c));
   b := Round(GetCIEBValue(c));
   needNewGradient := a <> FA;
   FSelected := c;
-  FL := l;
+  FL := L;
   FA := a;
   FB := b;
   if needNewGradient then
@@ -254,9 +247,9 @@ begin
   FA := a;
   FB := b;
   FSelected := c;
-  mxx := Round((FB + 128) * Width / 255);
-//  myy := Round((100 - FL) * 255 / 100 * Height / 255);
-  myy := Round((100 - FL) / 100 * Height);
+  mx := Round((FB + 128) * Width / 255);
+//  my := Round((100 - FL) * 255 / 100 * Height / 255);
+  my := Round((100 - FL) / 100 * Height);
   if needNewGradient then
     CreateGradient;
   Invalidate;

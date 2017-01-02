@@ -20,7 +20,6 @@ type
   private
     FHue, FSat, FLum, FLumSel: Double;
     FMaxHue, FMaxSat, FMaxLum: Integer;
-    dx, dy, mxx, myy: integer;
     function GetHue: Integer;
     function GetLum: Integer;
     function GetSat: Integer;
@@ -112,8 +111,6 @@ begin
   RGBToHSL(FSelected, FHue, FSat, L);
   {$ENDIF}
 
-  dx := x;
-  dy := y;
   if Focused or (csDesigning in ComponentState) then
     c := clBlack
   else
@@ -184,10 +181,10 @@ begin
   delta := IfThen(ssCtrl in Shift, 10, 1);
 
   case Key of
-    VK_LEFT  : SelectColor(mxx - delta, myy);
-    VK_RIGHT : SelectColor(mxx + delta, myy);
-    VK_UP    : SelectColor(mxx, myy - delta);
-    VK_DOWN  : SelectColor(mxx, myy + delta);
+    VK_LEFT  : SelectColor(mx - delta, my);
+    VK_RIGHT : SelectColor(mx + delta, my);
+    VK_UP    : SelectColor(mx, my - delta);
+    VK_DOWN  : SelectColor(mx, my + delta);
     else       eraseKey := false;
   end;
   {
@@ -264,7 +261,7 @@ end;
 procedure THSColorPicker.Paint;
 begin
   Canvas.StretchDraw(ClientRect, FBufferBmp);
-  DrawMarker(mxx, myy);
+  DrawMarker(mx, my);
 end;
 
 function THSColorPicker.PredictColor: TColor;
@@ -291,8 +288,8 @@ var
   c: TColor;
 begin
   CorrectCoords(x, y);
-  mxx := x;
-  myy := y;
+  mx := x;
+  my := y;
   c := GetColorAtPoint(x, y);
   if WebSafe then c := GetWebSafe(c);
   {$IFDEF USE_COLOR_TO_RGB}
@@ -452,9 +449,9 @@ end;
 
 procedure THSCOlorPicker.UpdateCoords;
 begin
-  mxx := Round(FHue * Width);
-  myy := Round((1.0 - FSat) * Height);
-  CorrectCoords(mxx, myy);
+  mx := Round(FHue * Width);
+  my := Round((1.0 - FSat) * Height);
+  CorrectCoords(mx, my);
 end;
 
 end.

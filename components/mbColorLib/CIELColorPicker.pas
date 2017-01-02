@@ -15,7 +15,6 @@ type
   TCIELColorPicker = class(TmbColorPickerControl)
   private
     FL, FA, FB: integer;
-    dx, dy, mxx, myy: integer;
     procedure SetLValue(l: integer);
     procedure SetAValue(a: integer);
     procedure SetBValue(b: integer);
@@ -63,11 +62,6 @@ begin
   FL := 100;
   FA := -128;
   FB := 127;
-  FManual := false;
-  dx := 0;
-  dy := 0;
-  mxx := 0;
-  myy := 0;
   MarkerStyle := msCircle;
 end;
 
@@ -91,8 +85,6 @@ begin
   FL := Round(GetCIELValue(FSelected));
   FA := Round(GetCIEAValue(FSelected));
   FB := Round(GetCIEBValue(FSelected));
-  dx := x;
-  dy := y;
   if Focused or (csDesigning in ComponentState) then
     c := clBlack
   else
@@ -133,10 +125,10 @@ begin
   delta := IfThen(ssCtrl in Shift, 10, 1);
 
   case Key of
-    VK_LEFT  : SelectColor(mxx - delta, myy);
-    VK_Right : SelectColor(mxx + delta, myy);
-    VK_UP    : SelectColor(mxx, myy - delta);
-    VK_DOWN  : SelectColor(mxx, myy + delta);
+    VK_LEFT  : SelectColor(mx - delta, my);
+    VK_Right : SelectColor(mx + delta, my);
+    VK_UP    : SelectColor(mx, my - delta);
+    VK_DOWN  : SelectColor(mx, my + delta);
     else       eraseKey := false;
   end;
 
@@ -173,15 +165,15 @@ end;
 procedure TCIELColorPicker.Paint;
 begin
   Canvas.StretchDraw(ClientRect, FBufferBmp);
-  CorrectCoords(mxx, myy);
-  DrawMarker(mxx, myy);
+  CorrectCoords(mx, my);
+  DrawMarker(mx, my);
 end;
 
 procedure TCIELColorPicker.Resize;
 begin
   FManual := false;
-  mxx := Round((FA + 128) * Width / 255);
-  myy := Round((255 - (FB + 128)) * Height / 255);
+  mx := Round((FA + 128) * Width / 255);
+  my := Round((255 - (FB + 128)) * Height / 255);
   inherited;
 end;
 
@@ -198,8 +190,8 @@ begin
   if c = FSelected then
     exit;
 
-  mxx := x;
-  myy := y;
+  mx := x;
+  my := y;
   l := Round(GetCIELValue(c));
   a := Round(GetCIEAValue(c));
   b := Round(GetCIEBValue(c));
@@ -237,7 +229,7 @@ end;
 
 procedure TCIELColorPicker.SetSelectedColor(c: TColor);
 var
-  l, a, b: Integer;
+  L, a, b: Integer;
   needNewGradient: Boolean;
 begin
   if WebSafe then
@@ -245,16 +237,16 @@ begin
   if c = FSelected then
     exit;
 
-  l := Round(GetCIELValue(c));
+  L := Round(GetCIELValue(c));
   a := Round(GetCIEAValue(c));
   b := Round(GetCIEBValue(c));
-  needNewGradient := l <> FL;
-  FL := l;
+  needNewGradient := L <> FL;
+  FL := L;
   FA := a;
   FB := b;
   FSelected := c;
-  mxx := Round((FA + 128) * Width / 255);
-  myy := Round((255 - (FB + 128)) * Height / 255);
+  mx := Round((FA + 128) * Width / 255);
+  my := Round((255 - (FB + 128)) * Height / 255);
   if needNewGradient then
     CreateGradient;
   Invalidate;

@@ -143,10 +143,10 @@ begin
   delta := IfThen(ssCtrl in Shift, 10, 1);
 
   case Key of
-    VK_LEFT  : SelectColor(mdx - delta, mdy);
-    VK_RIGHT : SelectColor(mdx + delta, mdy);
-    VK_UP    : SelectColor(mdx, mdy - delta);
-    VK_DOWN  : SelectColor(mdx, mdy + delta);
+    VK_LEFT  : SelectColor(mx - delta, my);
+    VK_RIGHT : SelectColor(mx + delta, my);
+    VK_UP    : SelectColor(mx, my - delta);
+    VK_DOWN  : SelectColor(mx, my + delta);
     else       eraseKey := false;
   end;
   {
@@ -228,7 +228,7 @@ procedure TSLColorPicker.Paint;
 begin
   Canvas.StretchDraw(ClientRect, FBufferBMP);
   UpdateCoords;
-  DrawMarker(mdx, mdy);
+  DrawMarker(mx, my);
 end;
 
 procedure TSLColorPicker.Resize;
@@ -353,8 +353,8 @@ end;
 
 procedure TSLColorPicker.UpdateCoords;
 begin
-  mdx := round(FSat * (Width - 1));
-  mdy := round((1.0 - FLum) * (Height - 1));
+  mx := round(FSat * (Width - 1));
+  my := round((1.0 - FLum) * (Height - 1));
 end;
 
 

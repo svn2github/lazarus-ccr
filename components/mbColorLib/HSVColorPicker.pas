@@ -339,7 +339,7 @@ begin
   DeleteObject(rgn);
   DrawSatCirc;
   DrawHueLine;
-  DrawMarker(mdx, mdy);
+  DrawMarker(mx, my);
 end;
 
 function THSVColorPicker.RadHue(New: integer): integer;
@@ -362,8 +362,8 @@ var
   dx, dy, r, radius: integer;
   H, S: Double;
 begin
-  mdx := x;
-  mdy := y;
+  mx := x;
+  my := y;
 
   radius := Min(Width, Height) div 2;
   dx := x - radius;
@@ -572,8 +572,8 @@ begin
   r := -FSat * radius;
   angle := -(FHue * 2 + 1) * pi;
   SinCos(angle, sinAngle, cosAngle);
-  mdx := round(cosAngle * r) + radius;
-  mdy := round(sinAngle * r) + radius;
+  mx := round(cosAngle * r) + radius;
+  my := round(sinAngle * r) + radius;
 end;
 
 end.
