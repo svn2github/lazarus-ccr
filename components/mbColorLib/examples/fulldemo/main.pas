@@ -330,9 +330,9 @@ end;
 // only for internet shortcuts
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  MaxHue := 360;
-  MaxSat := 240;
-  MaxLum := 240;
+//  MaxHue := 360;
+//  MaxSat := 240;
+//  MaxLum := 240;
   with TIniFile.Create(ExtractFilePath(Application.ExeName) + '\MXS Website.url') do
   try
     WriteString('InternetShortcut','URL', 'http://mxs.bergsoft.net');

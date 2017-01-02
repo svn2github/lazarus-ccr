@@ -79,6 +79,9 @@ type
     ERed, EGreen, EBlue: TSpinEdit;
     EHue, ESat, ELum: TSpinEdit;
     {$ENDIF}
+    FMaxHue: Integer;
+    FMaxSat: Integer;
+    FMaxLum: Integer;
     FLockChange: Integer;
     function GetShowHint: Boolean;
     procedure SetAllCustom(c: TColor);
@@ -87,6 +90,10 @@ type
   protected
     procedure CreateParams(var Params: TCreateParams); override;
 //    procedure CreateWnd; override;
+  public
+    property MaxHue: Integer read FMaxHue write FMaxHue;
+    property MaxSaturation: Integer read FMaxSat write FMaxSat;
+    property MaxLuminance: Integer read FMaxLum write FMaxLum;
   published
     property ShowHint: Boolean read GetShowHint write SetShowHint;
   end;
@@ -176,7 +183,7 @@ begin
     try
       HSL.Hue := EHue.Value;
       SLH.Hue := EHue.Value;
-      NewSwatch.Color := HSLRangeToRGB(EHue.Value, ESat.Value, ELum.Value);
+      NewSwatch.Color := HSLToRGB(EHue.Value/FMaxHue, ESat.Value/FMaxSat, ELum.Value/FMaxLum);
     finally
       dec(FLockChange);
     end;
@@ -190,7 +197,7 @@ begin
     inc(FLockChange);
     try
       HSL.Luminance := ELum.Value;
-      NewSwatch.Color := HSLRangeToRGB(EHue.Value, ESat.Value, ELum.Value);
+      NewSwatch.Color := HSLToRGB(EHue.Value/FMaxHue, ESat.Value/FMaxSat, ELum.Value/FMaxLum);
     finally
       dec(FLockChange);
     end;
@@ -220,7 +227,7 @@ begin
     try
       HSL.Saturation := ESat.Value;
       SLH.Saturation := ESat.Value;
-      NewSwatch.Color := HSLRangeToRGB(EHue.Value, ESat.Value, ELum.Value);
+      NewSwatch.Color := HSLToRGB(EHue.Value/FMaxHue, ESat.Value/FMaxSat, ELum.Value/FMaxLum);
     finally
       dec(FLockChange);
     end;
@@ -229,6 +236,22 @@ end;
 
 procedure TOfficeMoreColorsWin.FormCreate(Sender: TObject);
 begin
+  FMaxHue := 359;
+  FMaxSat := 240;
+  FMaxLum := 240;
+
+  HSL.MaxHue := FMaxHue;
+  HSL.MaxSaturation := FMaxSat;
+  HSL.MaxLuminance := FMaxLum;
+
+  HSLRing.MaxHue := FMaxHue;
+  HSLRing.MaxSaturation := FMaxSat;
+  HSLRing.MaxLuminance := FMaxLum;
+
+  SLH.MaxHue := FMaxHue;
+  SLH.MaxSaturation := FMaxSat;
+  SLH.MaxLuminance := FMaxLum;
+
  {$IFDEF mbXP_Lib}
   ERed := TmbXPSpinEdit.CreateParented(Custom.Handle);
   EGreen := TmbXPSpinEdit.CreateParented(Custom.Handle);
@@ -296,7 +319,7 @@ begin
     Top := ERed.Top;
     Alignment := taRightJustify;
     Anchors := [akLeft, akBottom];
-    MaxValue := MaxHue;
+    MaxValue := FMaxHue;
     MinValue := 0;
     Value := 0;
     OnChange := @EHueChange;
@@ -311,7 +334,7 @@ begin
     Top := EGreen.Top;
     Alignment := taRightJustify;
     Anchors := [akLeft, akBottom];
-    MaxValue := MaxSat;
+    MaxValue := FMaxSat;
     MinValue := 0;
     Value := 0;
     OnChange := @ESatChange;
@@ -326,7 +349,7 @@ begin
     Top := EBlue.Top;
     Alignment := taRightJustify;
     Anchors := [akLeft, akBottom];
-    MaxValue := MaxLum;
+    MaxValue := FMaxLum;
     MinValue := 0;
     Value := 0;
     OnChange := @ELumChange;
@@ -445,14 +468,12 @@ var
 begin
   if (ERed = nil) or (EGreen = nil) or (EBlue = nil) or
      (EHue = nil) or (ESat = nil) or (ELum = nil) or
-     (PickerNotebook = nil) or (HSL = nil) or (HSLRing = nil) or (SLH = nil) or
-     (FLockChange > 0)
+     (PickerNotebook = nil) or (HSL = nil) or (HSLRing = nil) or (SLH = nil)
   then
     exit;
 
   NewSwatch.Color := c;
 
-//  inc(FLockChange);
   r := GetRValue(c);
   g := GetGValue(c);
   b := GetBValue(c);
@@ -483,8 +504,6 @@ begin
   EHue.Value := H * HSL.MaxHue;
   ESat.Value := S * HSL.MaxSaturation;
   ELum.Value := L * HSL.MaxLuminance;
-
-//  dec(FLockChange);
 end;
 
 procedure TOfficeMoreColorsWin.SetAllToSel(c: TColor);
