@@ -1,4 +1,5 @@
 unit umainform;
+
 { Foobot Monitor
 
   Copyright (C)2016 Gordon Bamber minsadorada@charcodelvalle.com
@@ -23,19 +24,24 @@ VERSION HISTORY
 V0.0.1.0: Initial commit
 V0.0.2.0: Trayicon added
 V0.0.3.0: Added Help menu.  Updated Options menu
-V0.0.4.0: ??
+V0.0.4.0: Graph added
+V0.0.5.0: ??
 }
+{$ifopt D+}
+// Debug mode
+{$ENDIF}
 
 {$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Sensors, Forms, Controls, Graphics, Dialogs,
-  ExtCtrls, StdCtrls, Menus, lclIntf,foobot_utility, uCryptIni, Variants, dateutils,
-  uconfigform;
+  Classes, SysUtils, FileUtil, TAGraph, TAIntervalSources, TASeries, //TASources,
+  Sensors, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Menus,
+  lclIntf, foobot_utility, uCryptIni, Variants, dateutils, uconfigform;
 
-CONST
+const
+  // Timer milliseconds
   ONEMINUTE = 60000;
   ONEHOUR = ONEMINUTE * 60;
   TWOHOURS = ONEHOUR * 2;
@@ -43,6 +49,13 @@ CONST
   EIGHTHOURS = ONEHOUR * 8;
   TWENTYFOURHOURS = ONEHOUR * 24;
 
+  // Colours for guages and graph lines
+  COL_PM = clMaroon;
+  COL_TMP = clRed;
+  COL_HUM = clGreen;
+  COL_CO2 = clLime;
+  COL_VOC = clNavy;
+  COL_ALLPOLLU = clBlue;
 
 type
 
@@ -55,6 +68,15 @@ type
     as_pm: TAnalogSensor;
     as_tmp: TAnalogSensor;
     as_voc: TAnalogSensor;
+    Chart1: TChart;
+    DateTimeIntervalChartSource1: TDateTimeIntervalChartSource;
+    lineseries_allpollu: TLineSeries;
+    lineseries_voc: TLineSeries;
+    lineseries_co2: TLineSeries;
+    lineseries_hum: TLineSeries;
+    lineseries_tmp: TLineSeries;
+    lineseries_pm: TLineSeries;
+    grp_chart: TGroupBox;
     grp_pm: TGroupBox;
     grp_tmp: TGroupBox;
     grp_hum: TGroupBox;
@@ -91,7 +113,7 @@ type
     mnu_SampleEvery1Hour: TMenuItem;
     mnu_optionsSampleEvery: TMenuItem;
     mnu_optionsTakeReadingNow: TMenuItem;
-    mnu_optionsShowHighsAndLows: TMenuItem;
+    mnu_optionsShowMinimalDisplay: TMenuItem;
     mnu_options: TMenuItem;
     mnu_fileExit: TMenuItem;
     mnu_file: TMenuItem;
@@ -101,7 +123,6 @@ type
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
     procedure mnupopup_fileRestoreClick(Sender: TObject);
     procedure mnu_fileExitClick(Sender: TObject);
@@ -109,7 +130,7 @@ type
     procedure mnu_optionsMinimiseToTrayClick(Sender: TObject);
     procedure mnu_optionsOnlineHelpClick(Sender: TObject);
     procedure mnu_optionsSaveHighLowsClick(Sender: TObject);
-    procedure mnu_optionsShowHighsAndLowsClick(Sender: TObject);
+    procedure mnu_optionsShowMinimalDisplayClick(Sender: TObject);
     procedure mnu_optionsTakeReadingNowClick(Sender: TObject);
     procedure mnu_SampleEvery1HourClick(Sender: TObject);
     procedure mnu_SampleEvery24HoursClick(Sender: TObject);
@@ -120,12 +141,14 @@ type
     procedure TrayIcon1Click(Sender: TObject);
   private
     sSecretKey, sFoobotUserName, sUUID: string;
-    bShowHighsAndLows: boolean;
+    bShowMinimalDisplay: boolean;
     iFudgeFactor: integer;
-    iSampleInterval:Integer;
+    procedure SetUpColours;
     procedure DisplayReadings;
     procedure UpdateGuage(Sender: TAnalogSensor; SensorNumber: integer);
     procedure UpdateHighLow(SensorNumber: integer);
+    procedure DrawGraphHistory;
+    procedure DrawGraph;
   public
     INI: TCryptINIfile;
   end;
@@ -156,28 +179,33 @@ begin
     FreeAndNil(INI);
     Application.Terminate;
   end;
-  INI.SectionHashing:=FALSE;
+  INI.SectionHashing := False;
   ResetHighLows;
-  iFudgeFactor := 20;
-  ClientHeight := grp_sensorDisplay.Height + grp_highlow.Height + iFudgeFactor;
-  bShowHighsAndLows := True;
-  TrayIcon1.Icon:=Application.Icon;
-  TrayIcon1.Hint:=Application.Title;
+  iFudgeFactor := 20; // only needed if height set here
+  bShowMinimalDisplay := False;
+  TrayIcon1.Icon := Application.Icon;
+  TrayIcon1.Hint := Application.Title;
+  DateTimeIntervalChartSource1.DateTimeFormat := 'hh:nn';
+  SetUpColours;
 end;
 
 procedure Tmainform.FormActivate(Sender: TObject);
-Var sTempFoobotUserName,sTempSecretKey:String;
+var
+  sTempFoobotUserName, sTempSecretKey: string;
 
 begin
+    ClientHeight := grp_sensorDisplay.Height + grp_highlow.Height +
+    grp_chart.Height;
+
   // Allow user to enter values in INIFile
-  sTempFoobotUserName:=INI.ReadUnencryptedString('Config','Foobot User','unknown');
-  sTempSecretKey:=INI.ReadUnencryptedString('Config', 'Secret Key', 'unknown');
+  sTempFoobotUserName := INI.ReadUnencryptedString('Config', 'Foobot User', 'unknown');
+  sTempSecretKey := INI.ReadUnencryptedString('Config', 'Secret Key', 'unknown');
   if ((sTempFoobotUserName <> 'unknown') and (sTempSecretKey <> 'unknown')) then
   begin
     INI.WriteString('Foobot', 'Foobot User', sTempFoobotUserName);
-    INI.DeleteKey('Config','Foobot User');
+    INI.DeleteKey('Config', 'Foobot User');
     INI.WriteString('Foobot', 'Secret Key', sTempSecretKey);
-    INI.DeleteKey('Config','Secret Key');
+    INI.DeleteKey('Config', 'Secret Key');
   end;
   // Fetch Username and API_KEY
   sFoobotUserName := INI.ReadString('Foobot', 'Foobot User', 'unknown');
@@ -190,17 +218,24 @@ begin
       if FoobotIdentityObject.FoobotIdentityList.Count > 0 then
       begin
         sUUID := FoobotIdentityObject.FoobotIdentityList.Items[0].uuid;
-        SaveLoadHighLows:=INI.ReadBool('Foobot','SaveLoadHighLows',TRUE);
-        mnu_optionsSaveHighLows.Checked:=SaveLoadHighLows;
-        If SaveLoadHighLows then LoadHighLows;
+        SaveLoadHighLows := INI.ReadBool('Foobot', 'SaveLoadHighLows', True);
+        mnu_optionsSaveHighLows.Checked := SaveLoadHighLows;
+        if SaveLoadHighLows then
+          LoadHighLows;
+        DrawGraphHistory;
+        {$IFNDEF DEBUGMODE}
         mnu_optionsTakeReadingNow.Click;
+{$ENDIF}
         // Switch off for testing
-        tmr_foobot.Interval:=ONEHOUR;
-        tmr_foobot.Enabled:=TRUE;
+        tmr_foobot.Interval := ONEHOUR;
+        {$IFNDEF DEBUGMODE}
+        tmr_foobot.Enabled := True;
+{$ENDIF}
         Show;
       end;
     end
-    else Close;
+    else
+      Close;
   end
   else
   begin
@@ -209,7 +244,7 @@ begin
     Application.ProcessMessages;
     configform.ShowModal;
     // If user quit without data, then bail out
-    If NOT configform.bValid then
+    if not configform.bValid then
     begin
       Close;
     end;
@@ -218,7 +253,8 @@ begin
     INI.WriteString('Foobot', 'Secret Key', configform.FoobotSecretKey);
     //sFoobotUserName := INI.ReadString('Foobot', 'Foobot User', 'unknown');
     //sSecretKey := INI.ReadString('Foobot', 'Secret Key', 'unknown');
-    ShowMessage('Click OK to store settings and close the app.' + LineEnding + 'New settings are applied on resart.');
+    ShowMessage('Click OK to store settings and close the app.' +
+      LineEnding + 'New settings are applied on resart.');
     Close;
   end;
 end;
@@ -228,23 +264,35 @@ begin
   FreeAndNil(INI);
 end;
 
-procedure Tmainform.FormShow(Sender: TObject);
+procedure Tmainform.SetUpColours;
 begin
+  as_pm.ColorFore := COL_PM;
+  lineSeries_pm.SeriesColor := COL_PM;
+  as_tmp.ColorFore := COL_TMP;
+  lineSeries_tmp.SeriesColor := COL_TMP;
+  as_hum.ColorFore := COL_HUM;
+  lineSeries_hum.SeriesColor := COL_HUM;
+  as_co2.ColorFore := COL_CO2;
+  lineSeries_co2.SeriesColor := COL_CO2;
+  as_voc.ColorFore := COL_VOC;
+  lineSeries_voc.SeriesColor := COL_VOC;
+  as_allpollu.ColorFore := COL_ALLPOLLU;
+  lineSeries_allpollu.SeriesColor := COL_ALLPOLLU;
 end;
 
 procedure Tmainform.FormWindowStateChange(Sender: TObject);
 begin
   if mainform.WindowState = wsMinimized then
   begin
-      mainform.WindowState := wsNormal;
-      mainform.Hide;
-      mainform.ShowInTaskBar := stNever;
+    mainform.WindowState := wsNormal;
+    mainform.Hide;
+    mainform.ShowInTaskBar := stNever;
   end;
 end;
 
 procedure Tmainform.mnupopup_fileRestoreClick(Sender: TObject);
 begin
-  mainform.show;
+  mainform.Show;
 end;
 
 procedure Tmainform.mnu_fileExitClick(Sender: TObject);
@@ -273,9 +321,10 @@ begin
   MessageDlg('About ' + Application.Title, s,
     mtInformation, [mbOK], 0);
 end;
+
 procedure Tmainform.mnu_optionsMinimiseToTrayClick(Sender: TObject);
 begin
-  mainform.WindowState:=wsMinimized;
+  mainform.WindowState := wsMinimized;
   mainform.FormWindowStateChange(Self);
 end;
 
@@ -286,17 +335,18 @@ end;
 
 procedure Tmainform.mnu_optionsSaveHighLowsClick(Sender: TObject);
 begin
-  SaveLoadHighLows:=mnu_optionsSaveHighLows.Checked;
-  INI.WriteBool('Foobot','SaveLoadHighLows',SaveLoadHighLows);
+  SaveLoadHighLows := mnu_optionsSaveHighLows.Checked;
+  INI.WriteBool('Foobot', 'SaveLoadHighLows', SaveLoadHighLows);
 end;
 
-procedure Tmainform.mnu_optionsShowHighsAndLowsClick(Sender: TObject);
+procedure Tmainform.mnu_optionsShowMinimalDisplayClick(Sender: TObject);
 begin
-  if mnu_optionsShowHighsAndLows.Checked then
-    mainform.ClientHeight := grp_sensorDisplay.Height + grp_highlow.Height + iFudgeFactor
+  if mnu_optionsShowMinimalDisplay.Checked then
+    mainform.ClientHeight := grp_sensorDisplay.Height// + iFudgeFactor
   else
-    mainform.ClientHeight := grp_sensorDisplay.Height;// + iFudgeFactor;
-  bShowHighsAndLows := mnu_optionsShowHighsAndLows.Checked;
+    mainform.ClientHeight := grp_sensorDisplay.Height + grp_chart.Height +
+      grp_highlow.Height;// + iFudgeFactor;
+  bShowMinimalDisplay := mnu_optionsShowMinimalDisplay.Checked;
 end;
 
 procedure Tmainform.mnu_optionsTakeReadingNowClick(Sender: TObject);
@@ -312,37 +362,37 @@ end;
 
 procedure Tmainform.mnu_SampleEvery1HourClick(Sender: TObject);
 begin
-  tmr_foobot.Enabled:=FALSE;
-  tmr_foobot.Interval:=ONEHOUR;
-  tmr_foobot.Enabled:=TRUE;
+  tmr_foobot.Enabled := False;
+  tmr_foobot.Interval := ONEHOUR;
+  tmr_foobot.Enabled := True;
 end;
 
 procedure Tmainform.mnu_SampleEvery24HoursClick(Sender: TObject);
 begin
-  tmr_foobot.Enabled:=FALSE;
-  tmr_foobot.Interval:=TWENTYFOURHOURS;
-  tmr_foobot.Enabled:=TRUE;
+  tmr_foobot.Enabled := False;
+  tmr_foobot.Interval := TWENTYFOURHOURS;
+  tmr_foobot.Enabled := True;
 end;
 
 procedure Tmainform.mnu_SampleEvery2HoursClick(Sender: TObject);
 begin
-  tmr_foobot.Enabled:=FALSE;
-  tmr_foobot.Interval:=TWOHOURS;
-  tmr_foobot.Enabled:=TRUE;
+  tmr_foobot.Enabled := False;
+  tmr_foobot.Interval := TWOHOURS;
+  tmr_foobot.Enabled := True;
 end;
 
 procedure Tmainform.mnu_SampleEvery4HoursClick(Sender: TObject);
 begin
-  tmr_foobot.Enabled:=FALSE;
-  tmr_foobot.Interval:=FOURHOURS;
-  tmr_foobot.Enabled:=TRUE;
+  tmr_foobot.Enabled := False;
+  tmr_foobot.Interval := FOURHOURS;
+  tmr_foobot.Enabled := True;
 end;
 
 procedure Tmainform.mnu_SampleEvery8HoursClick(Sender: TObject);
 begin
-  tmr_foobot.Enabled:=FALSE;
-  tmr_foobot.Interval:=EIGHTHOURS;
-  tmr_foobot.Enabled:=TRUE;
+  tmr_foobot.Enabled := False;
+  tmr_foobot.Interval := EIGHTHOURS;
+  tmr_foobot.Enabled := True;
 end;
 
 procedure Tmainform.tmr_foobotTimer(Sender: TObject);
@@ -353,7 +403,7 @@ end;
 
 procedure Tmainform.TrayIcon1Click(Sender: TObject);
 begin
-  mainform.show;
+  mainform.Show;
 end;
 
 procedure Tmainform.UpdateHighLow(SensorNumber: integer);
@@ -361,61 +411,56 @@ begin
   case SensorNumber of
     1:
     begin
-      lbl_pmhigh.Caption := Format(
-        'High: %f %s', [double(FoobotDataHighs[SensorNumber]),
-        FoobotDataObject.Units[SensorNumber]]) + LineEnding + 'on ' +
-        FormatDateTime('dd/mm tt', TDateTime(FoobotDataHighTimes[SensorNumber]));
-      lbl_pmLow.Caption := Format(
-        'Low: %f %s', [double(FoobotDataLows[SensorNumber]),
-        FoobotDataObject.Units[SensorNumber]]) +
+      lbl_pmhigh.Caption := Format('High: %f %s',
+        [double(FoobotDataHighs[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
+        LineEnding + 'on ' + FormatDateTime('dd/mm tt',
+        TDateTime(FoobotDataHighTimes[SensorNumber]));
+      lbl_pmLow.Caption := Format('Low: %f %s',
+        [double(FoobotDataLows[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
         LineEnding + 'on ' + FormatDateTime('dd/mm tt', TDateTime(
         FoobotDataLowTimes[SensorNumber]));
     end;
     2:
     begin
-      lbl_tmphigh.Caption := Format(
-        'High: %f %s', [double(FoobotDataHighs[SensorNumber]),
-        FoobotDataObject.Units[SensorNumber]]) + LineEnding + 'on ' +
-        FormatDateTime('dd/mm tt', TDateTime(FoobotDataHighTimes[SensorNumber]));
-      lbl_tmpLow.Caption := Format(
-        'Low: %f %s', [double(FoobotDataLows[SensorNumber]),
-        FoobotDataObject.Units[SensorNumber]]) +
+      lbl_tmphigh.Caption := Format('High: %f %s',
+        [double(FoobotDataHighs[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
+        LineEnding + 'on ' + FormatDateTime('dd/mm tt',
+        TDateTime(FoobotDataHighTimes[SensorNumber]));
+      lbl_tmpLow.Caption := Format('Low: %f %s',
+        [double(FoobotDataLows[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
         LineEnding + 'on ' + FormatDateTime('dd/mm tt', TDateTime(
         FoobotDataLowTimes[SensorNumber]));
     end;
     3:
     begin
-      lbl_humhigh.Caption := Format(
-        'High: %f %s', [double(FoobotDataHighs[SensorNumber]),
-        FoobotDataObject.Units[SensorNumber]]) + LineEnding + 'on ' +
-        FormatDateTime('dd/mm tt', TDateTime(FoobotDataHighTimes[SensorNumber]));
-      lbl_humLow.Caption := Format(
-        'Low: %f %s', [double(FoobotDataLows[SensorNumber]),
-        FoobotDataObject.Units[SensorNumber]]) +
+      lbl_humhigh.Caption := Format('High: %f %s',
+        [double(FoobotDataHighs[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
+        LineEnding + 'on ' + FormatDateTime('dd/mm tt',
+        TDateTime(FoobotDataHighTimes[SensorNumber]));
+      lbl_humLow.Caption := Format('Low: %f %s',
+        [double(FoobotDataLows[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
         LineEnding + 'on ' + FormatDateTime('dd/mm tt', TDateTime(
         FoobotDataLowTimes[SensorNumber]));
     end;
     4:
     begin
-      lbl_co2high.Caption := Format(
-        'High: %f %s', [double(FoobotDataHighs[SensorNumber]),
-        FoobotDataObject.Units[SensorNumber]]) + LineEnding + 'on ' +
-        FormatDateTime('dd/mm tt', TDateTime(FoobotDataHighTimes[SensorNumber]));
-      lbl_co2Low.Caption := Format(
-        'Low: %f %s', [double(FoobotDataLows[SensorNumber]),
-        FoobotDataObject.Units[SensorNumber]]) +
+      lbl_co2high.Caption := Format('High: %f %s',
+        [double(FoobotDataHighs[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
+        LineEnding + 'on ' + FormatDateTime('dd/mm tt',
+        TDateTime(FoobotDataHighTimes[SensorNumber]));
+      lbl_co2Low.Caption := Format('Low: %f %s',
+        [double(FoobotDataLows[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
         LineEnding + 'on ' + FormatDateTime('dd/mm tt', TDateTime(
         FoobotDataLowTimes[SensorNumber]));
     end;
     5:
     begin
-      lbl_vochigh.Caption := Format(
-        'High: %f %s', [double(FoobotDataHighs[SensorNumber]),
-        FoobotDataObject.Units[SensorNumber]]) + LineEnding + 'on ' +
-        FormatDateTime('dd/mm tt', TDateTime(FoobotDataHighTimes[SensorNumber]));
-      lbl_vocLow.Caption := Format(
-        'Low: %f %s', [double(FoobotDataLows[SensorNumber]),
-        FoobotDataObject.Units[SensorNumber]]) +
+      lbl_vochigh.Caption := Format('High: %f %s',
+        [double(FoobotDataHighs[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
+        LineEnding + 'on ' + FormatDateTime('dd/mm tt',
+        TDateTime(FoobotDataHighTimes[SensorNumber]));
+      lbl_vocLow.Caption := Format('Low: %f %s',
+        [double(FoobotDataLows[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
         LineEnding + 'on ' + FormatDateTime('dd/mm tt', TDateTime(
         FoobotDataLowTimes[SensorNumber]));
     end;
@@ -483,7 +528,7 @@ var
 begin
   if FoobotDataObjectToArrays = True then
   begin
-    mainform.Caption := Format('Foobot "%s" - ',
+    mainform.Caption := Format('Foobot "%s" - Last reading: ',
       [FoobotIdentityObject.FoobotIdentityList[0].Name]) +
       FormatDateTime('dd/mm/yyyy - tt', FoobotData_time[0]);
     UpdateGuage(as_pm, 1);
@@ -492,10 +537,63 @@ begin
     UpdateGuage(as_co2, 4);
     UpdateGuage(as_voc, 5);
     UpdateGuage(as_allpollu, 6);
-    if bShowHighsAndLows then
+    if not bShowMinimalDisplay then
+    begin
       for iCount := 1 to 6 do
         UpdateHighLow(iCount);
+    end;
+    DrawGraph;
   end;
+end;
+
+function AsPercent(aValue, aMax: double): double;
+begin
+  if aMax > 0 then
+    Result := aValue / aMax * 100
+  else
+    Result := 0;
+end;
+
+procedure Tmainform.DrawGraph;
+begin
+  lineseries_pm.AddXY(FoobotData_time[0], AsPercent(FoobotData_pm[0], as_pm.ValueMax));
+  lineseries_tmp.AddXY(FoobotData_time[0], AsPercent(FoobotData_tmp[0], as_tmp.ValueMax));
+  lineseries_hum.AddXY(FoobotData_time[0], AsPercent(FoobotData_hum[0], as_hum.ValueMax));
+  lineseries_co2.AddXY(FoobotData_time[0], AsPercent(FoobotData_co2[0], as_co2.ValueMax));
+  lineseries_voc.AddXY(FoobotData_time[0], AsPercent(FoobotData_voc[0], as_voc.ValueMax));
+  lineseries_allpollu.AddXY(FoobotData_time[0],
+    AsPercent(FoobotData_allpollu[0], as_allpollu.ValueMax));
+end;
+
+procedure Tmainform.DrawGraphHistory;
+// Fetch Hourly readings for the previous 2 days (AverageBy=3600)
+// Populate FoobotDataObjectToArrays
+var
+  iCount: integer;
+  iStartSeconds, iEndSeconds: int64;
+begin
+  iEndSeconds := DateTimeToUnix(Now) - 3600;
+  iStartSeconds := iEndSeconds - (2 * (24 * 3600));
+  if FetchFoobotData(dfStartEnd, 0, 0, 3600, iStartSeconds, iEndSeconds, sSecretKey) =
+    False then
+    exit;
+  if FoobotDataObjectToArrays then
+    for iCount := 0 to Pred(High(FoobotData_time)) do
+    begin
+      lineseries_pm.AddXY(FoobotData_time[iCount],
+        AsPercent(FoobotData_pm[iCount], as_pm.ValueMax));
+      lineseries_tmp.AddXY(FoobotData_time[iCount],
+        AsPercent(FoobotData_tmp[iCount], as_tmp.ValueMax));
+      lineseries_hum.AddXY(FoobotData_time[iCount],
+        AsPercent(FoobotData_hum[iCount], as_hum.ValueMax));
+      lineseries_co2.AddXY(FoobotData_time[iCount],
+        AsPercent(FoobotData_co2[iCount], as_co2.ValueMax));
+      lineseries_voc.AddXY(FoobotData_time[iCount],
+        AsPercent(FoobotData_voc[iCount], as_voc.ValueMax));
+      lineseries_allpollu.AddXY(FoobotData_time[iCount],
+        AsPercent(FoobotData_allpollu[iCount], as_allpollu.ValueMax));
+    end;
+  ResetArrays; // at end
 end;
 
 end.

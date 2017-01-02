@@ -145,7 +145,10 @@ var
   sFoobotName: string;
 begin
   if SaveLoadHighLows = False then
-    Exit(False);
+    begin
+      ShowMessage('Unable to load All-Time stats');
+     Exit(False);
+    end;
   sFoobotName := FoobotIdentityObject.FoobotIdentityList[TheCurrentFoobot].Name;
   if not Assigned(HLINI) then
     HLINI := TIniFile.Create(ChangeFileExt(GetAppConfigFile(False), '.ini'));

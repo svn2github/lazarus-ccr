@@ -1,19 +1,18 @@
 object mainform: Tmainform
-  Left = 614
-  Height = 262
-  Top = 109
-  Width = 782
+  Left = 583
+  Height = 451
+  Top = 174
+  Width = 784
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'mainform'
-  ClientHeight = 242
-  ClientWidth = 782
+  ClientHeight = 431
+  ClientWidth = 784
   DefaultMonitor = dmDesktop
   Menu = MainMenu1
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
   Position = poWorkAreaCenter
   ShowInTaskBar = stNever
@@ -23,12 +22,12 @@ object mainform: Tmainform
     Left = 0
     Height = 120
     Top = 0
-    Width = 782
+    Width = 784
     Align = alTop
     Caption = 'Current Values'
     ChildSizing.ControlsPerLine = 6
     ClientHeight = 100
-    ClientWidth = 778
+    ClientWidth = 780
     TabOrder = 0
     object as_pm: TAnalogSensor
       Left = 0
@@ -43,7 +42,7 @@ object mainform: Tmainform
       ShowLevel = True
       Value = 0
       ValueMin = 0
-      ValueMax = 300
+      ValueMax = 1000
       ValueRed = 0
       ValueYellow = 0
       AnalogKind = akAnalog
@@ -59,11 +58,11 @@ object mainform: Tmainform
       TabOrder = 1
       ShowText = True
       ShowLevel = True
-      Value = 0
-      ValueMin = 0
+      Value = 10
+      ValueMin = 10
       ValueMax = 40
-      ValueRed = 0
-      ValueYellow = 0
+      ValueRed = 10
+      ValueYellow = 10
       AnalogKind = akAnalog
     end
     object as_hum: TAnalogSensor
@@ -77,11 +76,11 @@ object mainform: Tmainform
       TabOrder = 2
       ShowText = True
       ShowLevel = True
-      Value = 0
-      ValueMin = 0
+      Value = 10
+      ValueMin = 10
       ValueMax = 100
-      ValueRed = 0
-      ValueYellow = 0
+      ValueRed = 10
+      ValueYellow = 10
       AnalogKind = akAnalog
     end
     object as_co2: TAnalogSensor
@@ -95,11 +94,11 @@ object mainform: Tmainform
       TabOrder = 3
       ShowText = True
       ShowLevel = True
-      Value = 0
-      ValueMin = 0
+      Value = 450
+      ValueMin = 450
       ValueMax = 3000
-      ValueRed = 0
-      ValueYellow = 0
+      ValueRed = 450
+      ValueYellow = 450
       AnalogKind = akAnalog
     end
     object as_voc: TAnalogSensor
@@ -113,11 +112,11 @@ object mainform: Tmainform
       TabOrder = 4
       ShowText = True
       ShowLevel = True
-      Value = 0
-      ValueMin = 0
+      Value = 125
+      ValueMin = 125
       ValueMax = 1000
-      ValueRed = 0
-      ValueYellow = 0
+      ValueRed = 125
+      ValueYellow = 125
       AnalogKind = akAnalog
     end
     object as_allpollu: TAnalogSensor
@@ -133,7 +132,7 @@ object mainform: Tmainform
       ShowLevel = True
       Value = 0
       ValueMin = 0
-      ValueMax = 300
+      ValueMax = 1000
       ValueRed = 0
       ValueYellow = 0
       AnalogKind = akAnalog
@@ -143,14 +142,14 @@ object mainform: Tmainform
     Left = 0
     Height = 119
     Top = 120
-    Width = 782
+    Width = 784
     Align = alTop
     Caption = 'All-time Highs and Lows'
     ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
     ChildSizing.EnlargeVertical = crsScaleChilds
     ChildSizing.ControlsPerLine = 6
     ClientHeight = 99
-    ClientWidth = 778
+    ClientWidth = 780
     TabOrder = 1
     object grp_pm: TGroupBox
       Left = 0
@@ -166,16 +165,16 @@ object mainform: Tmainform
         Left = 8
         Height = 15
         Top = 8
-        Width = 60
-        Caption = 'lbl_pmhigh'
+        Width = 43
+        Caption = 'No stats'
         ParentColor = False
       end
       object lbl_pmlow: TLabel
         Left = 8
         Height = 15
         Top = 40
-        Width = 55
-        Caption = 'lbl_pmlow'
+        Width = 44
+        Caption = 'No Stats'
         ParentColor = False
       end
     end
@@ -193,16 +192,16 @@ object mainform: Tmainform
         Left = 8
         Height = 15
         Top = 8
-        Width = 64
-        Caption = 'lbl_tmphigh'
+        Width = 44
+        Caption = 'No Stats'
         ParentColor = False
       end
       object lbl_tmplow: TLabel
         Left = 8
         Height = 15
         Top = 40
-        Width = 59
-        Caption = 'lbl_tmplow'
+        Width = 44
+        Caption = 'No Stats'
         ParentColor = False
       end
     end
@@ -220,16 +219,16 @@ object mainform: Tmainform
         Left = 8
         Height = 15
         Top = 8
-        Width = 67
-        Caption = 'lbl_humhigh'
+        Width = 44
+        Caption = 'No Stats'
         ParentColor = False
       end
       object lbl_humlow: TLabel
         Left = 8
         Height = 15
         Top = 40
-        Width = 62
-        Caption = 'lbl_humlow'
+        Width = 44
+        Caption = 'No Stats'
         ParentColor = False
       end
     end
@@ -247,16 +246,16 @@ object mainform: Tmainform
         Left = 8
         Height = 15
         Top = 8
-        Width = 61
-        Caption = 'lbl_co2high'
+        Width = 44
+        Caption = 'No Stats'
         ParentColor = False
       end
       object lbl_co2low: TLabel
         Left = 8
         Height = 15
         Top = 40
-        Width = 56
-        Caption = 'lbl_co2low'
+        Width = 44
+        Caption = 'No Stats'
         ParentColor = False
       end
     end
@@ -274,16 +273,16 @@ object mainform: Tmainform
         Left = 8
         Height = 15
         Top = 8
-        Width = 61
-        Caption = 'lbl_vochigh'
+        Width = 44
+        Caption = 'No Stats'
         ParentColor = False
       end
       object lbl_voclow: TLabel
         Left = 8
         Height = 15
         Top = 40
-        Width = 56
-        Caption = 'lbl_voclow'
+        Width = 44
+        Caption = 'No Stats'
         ParentColor = False
       end
     end
@@ -301,17 +300,88 @@ object mainform: Tmainform
         Left = 8
         Height = 15
         Top = 8
-        Width = 81
-        Caption = 'lbl_allpolluhigh'
+        Width = 44
+        Caption = 'No Stats'
         ParentColor = False
       end
       object lbl_allpollulow: TLabel
         Left = 8
         Height = 15
         Top = 40
-        Width = 76
-        Caption = 'lbl_allpollulow'
+        Width = 44
+        Caption = 'No Stats'
         ParentColor = False
+      end
+    end
+  end
+  object grp_chart: TGroupBox
+    Left = 0
+    Height = 179
+    Top = 239
+    Width = 784
+    Align = alTop
+    Caption = 'History'
+    ClientHeight = 159
+    ClientWidth = 780
+    TabOrder = 2
+    object Chart1: TChart
+      Left = 0
+      Height = 159
+      Top = 0
+      Width = 780
+      AxisList = <      
+        item
+          Marks.Format = '%2:s'
+          Marks.Style = smsLabel
+          Minors = <>
+          Title.LabelFont.Orientation = 900
+        end      
+        item
+          Grid.Visible = False
+          Intervals.Count = 24
+          Intervals.Options = [aipGraphCoords, aipUseNiceSteps]
+          Alignment = calBottom
+          Arrow.Length = 24
+          Marks.Distance = 0
+          Marks.Format = '%2:s'
+          Marks.OverlapPolicy = opHideNeighbour
+          Marks.Range.Max = 24
+          Marks.Source = DateTimeIntervalChartSource1
+          Marks.Style = smsLabel
+          Minors = <>
+          Range.Max = 24
+          Range.UseMax = True
+        end>
+      ExtentSizeLimit.UseXMax = True
+      ExtentSizeLimit.XMax = 24
+      Foot.Brush.Color = clBtnFace
+      Foot.Font.Color = clBlue
+      Foot.Text.Strings = (
+        'Today'
+      )
+      Title.Brush.Color = clBtnFace
+      Title.Font.Color = clBlue
+      Title.Text.Strings = (
+        'Foobot History'
+      )
+      Align = alClient
+      object lineseries_pm: TLineSeries
+        LinePen.Color = clMaroon
+      end
+      object lineseries_tmp: TLineSeries
+        LinePen.Color = clRed
+      end
+      object lineseries_hum: TLineSeries
+        LinePen.Color = clGreen
+      end
+      object lineseries_co2: TLineSeries
+        LinePen.Color = clLime
+      end
+      object lineseries_voc: TLineSeries
+        LinePen.Color = clNavy
+      end
+      object lineseries_allpollu: TLineSeries
+        LinePen.Color = clBlue
       end
     end
   end
@@ -375,11 +445,10 @@ object mainform: Tmainform
       object mnu_optionsSeperator1: TMenuItem
         Caption = '-'
       end
-      object mnu_optionsShowHighsAndLows: TMenuItem
+      object mnu_optionsShowMinimalDisplay: TMenuItem
         AutoCheck = True
-        Caption = 'Show All-time Highs and Lows'
-        Checked = True
-        OnClick = mnu_optionsShowHighsAndLowsClick
+        Caption = 'Only show guages'
+        OnClick = mnu_optionsShowMinimalDisplayClick
       end
       object mnu_optionsSaveHighLows: TMenuItem
         AutoCheck = True
@@ -418,5 +487,9 @@ object mainform: Tmainform
       Caption = '&Close'
       OnClick = mnu_fileExitClick
     end
+  end
+  object DateTimeIntervalChartSource1: TDateTimeIntervalChartSource
+    Left = 174
+    Top = 325
   end
 end
