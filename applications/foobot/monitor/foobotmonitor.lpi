@@ -19,7 +19,7 @@
     </General>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
-      <RevisionNr Value="4"/>
+      <MinorVersionNr Value="1"/>
       <StringTable Comments="Uses Foobot public API to query Foobot #1" FileDescription="Monitor for Foobot" InternalName="foobotmonitor" LegalCopyright="(c)2016 minesadorada@charcodelvalle.com" LegalTrademarks="Foobot" ProductName="Foobot" ProductVersion="0.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="6">
@@ -50,6 +50,11 @@
               </Win32>
             </Options>
           </Linking>
+          <Other>
+            <OtherDefines Count="1">
+              <Define0 Value="DEBUGMODE"/>
+            </OtherDefines>
+          </Other>
         </CompilerOptions>
       </Item2>
       <Item3 Name="win64">

@@ -457,6 +457,10 @@ object mainform: Tmainform
         Checked = True
         OnClick = mnu_optionsSaveHighLowsClick
       end
+      object mnu_optionsResetHighsLows: TMenuItem
+        Caption = 'Reset All-time Highs/Lows'
+        OnClick = mnu_optionsResetHighsLowsClick
+      end
     end
     object mnu_help: TMenuItem
       Caption = '&Help'

@@ -113,6 +113,7 @@ type
     lbl_voclow: TLabel;
     lbl_allpollulow: TLabel;
     MainMenu1: TMainMenu;
+    mnu_optionsResetHighsLows: TMenuItem;
     mnu_optionsOnlineHelp: TMenuItem;
     mnu_optionsSeperator1: TMenuItem;
     mnu_helpAbout: TMenuItem;
@@ -144,6 +145,7 @@ type
     procedure mnu_helpAboutClick(Sender: TObject);
     procedure mnu_optionsMinimiseToTrayClick(Sender: TObject);
     procedure mnu_optionsOnlineHelpClick(Sender: TObject);
+    procedure mnu_optionsResetHighsLowsClick(Sender: TObject);
     procedure mnu_optionsSaveHighLowsClick(Sender: TObject);
     procedure mnu_optionsShowMinimalDisplayClick(Sender: TObject);
     procedure mnu_optionsTakeReadingNowClick(Sender: TObject);
@@ -363,6 +365,17 @@ end;
 procedure Tmainform.mnu_optionsOnlineHelpClick(Sender: TObject);
 begin
   OpenURL('http://wiki.freepascal.org/Foobot');
+end;
+
+procedure Tmainform.mnu_optionsResetHighsLowsClick(Sender: TObject);
+Var iCount:Integer;
+begin
+  If MessageDlg('This will erase the all-time high/low data permanently.  Are you sure?',
+     mtConfirmation,[MBYES,MBCANCEL],0,MBCANCEL) = mrCancel then exit;
+  ResetHighLows;
+  SaveHighLows;
+  For iCount:=1 to 6 do
+      UpdateHighLow(iCount);
 end;
 
 procedure Tmainform.mnu_optionsSaveHighLowsClick(Sender: TObject);
