@@ -36,7 +36,7 @@ V0.0.5.0: ??
 interface
 
 uses
-  Classes, SysUtils, FileUtil, TAGraph, TAIntervalSources, TASeries, //TASources,
+  Classes, SysUtils, FileUtil, TAGraph, TAIntervalSources, TASeries,
   Sensors, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Menus,
   lclIntf, foobot_utility, uCryptIni, Variants, dateutils, uconfigform;
 
@@ -50,12 +50,27 @@ const
   TWENTYFOURHOURS = ONEHOUR * 24;
 
   // Colours for guages and graph lines
-  COL_PM = clMaroon;
+  COL_PM = clGreen;
   COL_TMP = clRed;
-  COL_HUM = clGreen;
+  COL_HUM = clMaroon;
   COL_CO2 = clLime;
-  COL_VOC = clNavy;
-  COL_ALLPOLLU = clBlue;
+  COL_VOC = clBlue;
+  COL_ALLPOLLU = clFuchsia;
+
+  // Sensor Gauge MINMAX Values
+  MIN_PM = 0;
+  MAX_PM = 1000;
+  MIN_TMP = 0;
+  MAX_TMP = 40;
+  MIN_HUM = 10;
+  MAX_HUM = 100;
+  MIN_CO2 = 450;
+  MAX_CO2 = 3000;
+  MIN_VOC = 125;
+  MAX_VOC = 1000;
+  MIN_ALLPOLLU = 0;
+  MAX_ALLPOLLU = 700;
+
 
 type
 
@@ -143,12 +158,13 @@ type
     sSecretKey, sFoobotUserName, sUUID: string;
     bShowMinimalDisplay: boolean;
     iFudgeFactor: integer;
-    procedure SetUpColours;
+    procedure SetUpSensorColours;
+    procedure SetUpSensorMinMax;
     procedure DisplayReadings;
     procedure UpdateGuage(Sender: TAnalogSensor; SensorNumber: integer);
     procedure UpdateHighLow(SensorNumber: integer);
-    procedure DrawGraphHistory;
-    procedure DrawGraph;
+    procedure GraphHistory;
+    procedure GraphCurrentReading;
   public
     INI: TCryptINIfile;
   end;
@@ -186,7 +202,8 @@ begin
   TrayIcon1.Icon := Application.Icon;
   TrayIcon1.Hint := Application.Title;
   DateTimeIntervalChartSource1.DateTimeFormat := 'hh:nn';
-  SetUpColours;
+  SetUpSensorMinMax;
+  SetUpSensorColours;
 end;
 
 procedure Tmainform.FormActivate(Sender: TObject);
@@ -194,8 +211,7 @@ var
   sTempFoobotUserName, sTempSecretKey: string;
 
 begin
-    ClientHeight := grp_sensorDisplay.Height + grp_highlow.Height +
-    grp_chart.Height;
+  ClientHeight := grp_sensorDisplay.Height + grp_highlow.Height + grp_chart.Height;
 
   // Allow user to enter values in INIFile
   sTempFoobotUserName := INI.ReadUnencryptedString('Config', 'Foobot User', 'unknown');
@@ -222,7 +238,7 @@ begin
         mnu_optionsSaveHighLows.Checked := SaveLoadHighLows;
         if SaveLoadHighLows then
           LoadHighLows;
-        DrawGraphHistory;
+        GraphHistory;
         {$IFNDEF DEBUGMODE}
         mnu_optionsTakeReadingNow.Click;
 {$ENDIF}
@@ -264,7 +280,7 @@ begin
   FreeAndNil(INI);
 end;
 
-procedure Tmainform.SetUpColours;
+procedure Tmainform.SetUpSensorColours;
 begin
   as_pm.ColorFore := COL_PM;
   lineSeries_pm.SeriesColor := COL_PM;
@@ -278,6 +294,22 @@ begin
   lineSeries_voc.SeriesColor := COL_VOC;
   as_allpollu.ColorFore := COL_ALLPOLLU;
   lineSeries_allpollu.SeriesColor := COL_ALLPOLLU;
+end;
+
+procedure Tmainform.SetUpSensorMinMax;
+begin
+  as_pm.ValueMin := MIN_PM;
+  as_pm.ValueMax := MAX_PM;
+  as_tmp.ValueMin := MIN_TMP;
+  as_tmp.ValueMax := MAX_TMP;
+  as_hum.ValueMin := MIN_HUM;
+  as_hum.ValueMax := MAX_HUM;
+  as_co2.ValueMin := MIN_CO2;
+  as_co2.ValueMax := MAX_CO2;
+  as_voc.ValueMin := MIN_VOC;
+  as_voc.ValueMax := MAX_VOC;
+  as_allpollu.ValueMin := MIN_ALLPOLLU;
+  as_allpollu.ValueMax := MAX_ALLPOLLU;
 end;
 
 procedure Tmainform.FormWindowStateChange(Sender: TObject);
@@ -542,30 +574,35 @@ begin
       for iCount := 1 to 6 do
         UpdateHighLow(iCount);
     end;
-    DrawGraph;
+    GraphCurrentReading;
   end;
 end;
 
-function AsPercent(aValue, aMax: double): double;
+function AsPercent(aValue, aMin, aMax: double): double;
 begin
   if aMax > 0 then
-    Result := aValue / aMax * 100
+    Result := aValue / (aMax - aMin) * 100
   else
     Result := 0;
 end;
 
-procedure Tmainform.DrawGraph;
+procedure Tmainform.GraphCurrentReading;
 begin
-  lineseries_pm.AddXY(FoobotData_time[0], AsPercent(FoobotData_pm[0], as_pm.ValueMax));
-  lineseries_tmp.AddXY(FoobotData_time[0], AsPercent(FoobotData_tmp[0], as_tmp.ValueMax));
-  lineseries_hum.AddXY(FoobotData_time[0], AsPercent(FoobotData_hum[0], as_hum.ValueMax));
-  lineseries_co2.AddXY(FoobotData_time[0], AsPercent(FoobotData_co2[0], as_co2.ValueMax));
-  lineseries_voc.AddXY(FoobotData_time[0], AsPercent(FoobotData_voc[0], as_voc.ValueMax));
+  lineseries_pm.AddXY(FoobotData_time[0],
+    AsPercent(FoobotData_pm[0], as_pm.ValueMin, as_pm.ValueMax));
+  lineseries_tmp.AddXY(FoobotData_time[0], AsPercent(FoobotData_tmp[0],
+    as_tmp.ValueMin, as_tmp.ValueMax));
+  lineseries_hum.AddXY(FoobotData_time[0],
+    AsPercent(FoobotData_hum[0], as_hum.ValueMin, as_hum.ValueMax));
+  lineseries_co2.AddXY(FoobotData_time[0],
+    AsPercent(FoobotData_co2[0], as_co2.ValueMin, as_co2.ValueMax));
+  lineseries_voc.AddXY(FoobotData_time[0],
+    AsPercent(FoobotData_voc[0], as_voc.ValueMin, as_voc.ValueMax));
   lineseries_allpollu.AddXY(FoobotData_time[0],
-    AsPercent(FoobotData_allpollu[0], as_allpollu.ValueMax));
+    AsPercent(FoobotData_allpollu[0], as_allpollu.ValueMin, as_allpollu.ValueMax));
 end;
 
-procedure Tmainform.DrawGraphHistory;
+procedure Tmainform.GraphHistory;
 // Fetch Hourly readings for the previous 2 days (AverageBy=3600)
 // Populate FoobotDataObjectToArrays
 var
@@ -573,7 +610,8 @@ var
   iStartSeconds, iEndSeconds: int64;
 begin
   iEndSeconds := DateTimeToUnix(Now) - 3600;
-  iStartSeconds := iEndSeconds - (2 * (24 * 3600));
+  iStartSeconds := iEndSeconds - (2 * (24 * 3600)); // 49 hours before Now
+  grp_chart.Caption:=Format('History from %s',[FormatDateTime('dd/mm/yyyy hh:nn',UnixToDateTime(iStartSeconds))]);
   if FetchFoobotData(dfStartEnd, 0, 0, 3600, iStartSeconds, iEndSeconds, sSecretKey) =
     False then
     exit;
@@ -581,17 +619,18 @@ begin
     for iCount := 0 to Pred(High(FoobotData_time)) do
     begin
       lineseries_pm.AddXY(FoobotData_time[iCount],
-        AsPercent(FoobotData_pm[iCount], as_pm.ValueMax));
+        AsPercent(FoobotData_pm[iCount], as_pm.ValueMin, as_pm.ValueMax));
       lineseries_tmp.AddXY(FoobotData_time[iCount],
-        AsPercent(FoobotData_tmp[iCount], as_tmp.ValueMax));
+        AsPercent(FoobotData_tmp[iCount], as_tmp.ValueMin, as_tmp.ValueMax));
       lineseries_hum.AddXY(FoobotData_time[iCount],
-        AsPercent(FoobotData_hum[iCount], as_hum.ValueMax));
+        AsPercent(FoobotData_hum[iCount], as_hum.ValueMin, as_hum.ValueMax));
       lineseries_co2.AddXY(FoobotData_time[iCount],
-        AsPercent(FoobotData_co2[iCount], as_co2.ValueMax));
+        AsPercent(FoobotData_co2[iCount], as_co2.ValueMin, as_co2.ValueMax));
       lineseries_voc.AddXY(FoobotData_time[iCount],
-        AsPercent(FoobotData_voc[iCount], as_voc.ValueMax));
+        AsPercent(FoobotData_voc[iCount], as_voc.ValueMin, as_voc.ValueMax));
       lineseries_allpollu.AddXY(FoobotData_time[iCount],
-        AsPercent(FoobotData_allpollu[iCount], as_allpollu.ValueMax));
+        AsPercent(FoobotData_allpollu[iCount], as_allpollu.ValueMin,
+        as_allpollu.ValueMax));
     end;
   ResetArrays; // at end
 end;

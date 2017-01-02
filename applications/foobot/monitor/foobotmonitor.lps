@@ -3,14 +3,14 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="10"/>
-    <BuildModes Active="linux64"/>
+    <BuildModes Active="win32GTK2"/>
     <Units Count="25">
       <Unit0>
         <Filename Value="foobotmonitor.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="8"/>
         <CursorPos X="33" Y="25"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="74"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -20,9 +20,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="23"/>
-        <CursorPos X="72" Y="39"/>
-        <UsageCount Value="72"/>
+        <TopLine Value="591"/>
+        <CursorPos X="58" Y="613"/>
+        <UsageCount Value="74"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -34,7 +34,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="2"/>
         <CursorPos X="2" Y="20"/>
-        <UsageCount Value="62"/>
+        <UsageCount Value="64"/>
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
@@ -44,7 +44,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="54"/>
+        <UsageCount Value="56"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\foobot_objects.pas"/>
@@ -53,7 +53,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="54"/>
+        <UsageCount Value="56"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\foobot_utility.pas"/>
@@ -61,7 +61,7 @@
         <EditorIndex Value="5"/>
         <TopLine Value="65"/>
         <CursorPos X="18" Y="83"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="74"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
@@ -71,21 +71,21 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="54"/>
+        <UsageCount Value="56"/>
       </Unit6>
       <Unit7>
         <Filename Value="..\latest_stable\foobot_httpclient.pas"/>
         <EditorIndex Value="3"/>
         <TopLine Value="43"/>
         <CursorPos X="47" Y="13"/>
-        <UsageCount Value="53"/>
+        <UsageCount Value="54"/>
         <Loaded Value="True"/>
       </Unit7>
       <Unit8>
         <Filename Value="..\latest_stable\foobot_objects.pas"/>
         <EditorIndex Value="7"/>
         <CursorPos X="32" Y="61"/>
-        <UsageCount Value="53"/>
+        <UsageCount Value="54"/>
         <Loaded Value="True"/>
       </Unit8>
       <Unit9>
@@ -121,7 +121,7 @@
         <EditorIndex Value="4"/>
         <TopLine Value="284"/>
         <CursorPos X="38" Y="313"/>
-        <UsageCount Value="33"/>
+        <UsageCount Value="34"/>
         <Loaded Value="True"/>
       </Unit13>
       <Unit14>
@@ -191,16 +191,16 @@
       <Unit23>
         <Filename Value="C:\trunklatest\fpc\packages\rtl-objpas\src\inc\dateutil.inc"/>
         <EditorIndex Value="6"/>
-        <TopLine Value="93"/>
-        <CursorPos X="19" Y="110"/>
-        <UsageCount Value="22"/>
+        <TopLine Value="381"/>
+        <CursorPos X="24" Y="409"/>
+        <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit23>
       <Unit24>
         <Filename Value="..\latest_stable\udataform.pas"/>
         <EditorIndex Value="1"/>
         <TopLine Value="70"/>
-        <UsageCount Value="22"/>
+        <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit24>
     </Units>

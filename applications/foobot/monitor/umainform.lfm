@@ -59,10 +59,10 @@ object mainform: Tmainform
       ShowText = True
       ShowLevel = True
       Value = 10
-      ValueMin = 10
+      ValueMin = 0
       ValueMax = 40
-      ValueRed = 10
-      ValueYellow = 10
+      ValueRed = 0
+      ValueYellow = 30
       AnalogKind = akAnalog
     end
     object as_hum: TAnalogSensor
@@ -132,7 +132,7 @@ object mainform: Tmainform
       ShowLevel = True
       Value = 0
       ValueMin = 0
-      ValueMax = 1000
+      ValueMax = 700
       ValueRed = 0
       ValueYellow = 0
       AnalogKind = akAnalog
@@ -382,6 +382,7 @@ object mainform: Tmainform
       end
       object lineseries_allpollu: TLineSeries
         LinePen.Color = clBlue
+        LinePen.Width = 2
       end
     end
   end
