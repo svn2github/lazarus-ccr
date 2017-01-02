@@ -50,12 +50,12 @@ const
   TWENTYFOURHOURS = ONEHOUR * 24;
 
   // Colours for guages and graph lines
-  COL_PM = clGreen;
-  COL_TMP = clRed;
-  COL_HUM = clMaroon;
-  COL_CO2 = clLime;
-  COL_VOC = clBlue;
-  COL_ALLPOLLU = clFuchsia;
+  COL_PM = 'clGreen';
+  COL_TMP = 'clRed';
+  COL_HUM = 'clMaroon';
+  COL_CO2 = 'clLime';
+  COL_VOC = 'clBlue';
+  COL_ALLPOLLU = 'clFuchsia';
 
   // Sensor Gauge MINMAX Values
   MIN_PM = 0;
@@ -137,6 +137,7 @@ type
     tmr_foobot: TTimer;
     TrayIcon1: TTrayIcon;
     procedure FormActivate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
@@ -160,13 +161,13 @@ type
     sSecretKey, sFoobotUserName, sUUID: string;
     bShowMinimalDisplay: boolean;
     iFudgeFactor: integer;
-    procedure SetUpSensorColours;
-    procedure SetUpSensorMinMax;
     procedure DisplayReadings;
     procedure UpdateGuage(Sender: TAnalogSensor; SensorNumber: integer);
     procedure UpdateHighLow(SensorNumber: integer);
     procedure GraphHistory;
     procedure GraphCurrentReading;
+    procedure SaveConfig;
+    procedure LoadConfig;
   public
     INI: TCryptINIfile;
   end;
@@ -204,8 +205,7 @@ begin
   TrayIcon1.Icon := Application.Icon;
   TrayIcon1.Hint := Application.Title;
   DateTimeIntervalChartSource1.DateTimeFormat := 'hh:nn';
-  SetUpSensorMinMax;
-  SetUpSensorColours;
+  LoadConfig;
 end;
 
 procedure Tmainform.FormActivate(Sender: TObject);
@@ -277,41 +277,73 @@ begin
   end;
 end;
 
+procedure Tmainform.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  SaveConfig;
+  CloseAction:=caFree;
+end;
+
 procedure Tmainform.FormDestroy(Sender: TObject);
 begin
   FreeAndNil(INI);
 end;
-
-procedure Tmainform.SetUpSensorColours;
+procedure Tmainform.SaveConfig;
 begin
-  as_pm.ColorFore := COL_PM;
-  lineSeries_pm.SeriesColor := COL_PM;
-  as_tmp.ColorFore := COL_TMP;
-  lineSeries_tmp.SeriesColor := COL_TMP;
-  as_hum.ColorFore := COL_HUM;
-  lineSeries_hum.SeriesColor := COL_HUM;
-  as_co2.ColorFore := COL_CO2;
-  lineSeries_co2.SeriesColor := COL_CO2;
-  as_voc.ColorFore := COL_VOC;
-  lineSeries_voc.SeriesColor := COL_VOC;
-  as_allpollu.ColorFore := COL_ALLPOLLU;
-  lineSeries_allpollu.SeriesColor := COL_ALLPOLLU;
+  INI.PlainTextMode:=TRUE;
+ // Colours
+ INI.WriteString('Config','pmColour',ColorToString(as_pm.ColorFore));
+ INI.WriteString('Config','tmpColour',ColorToString(as_tmp.ColorFore));
+ INI.WriteString('Config','humColour',ColorToString(as_hum.ColorFore));
+ INI.WriteString('Config','co2Colour',ColorToString(as_co2.ColorFore));
+ INI.WriteString('Config','vocColour',ColorToString(as_voc.ColorFore));
+ INI.WriteString('Config','allpolluColour',ColorToString(as_allpollu.ColorFore));
+
+ // Max and Min
+  INI.WriteFloat('Config','pmMinValue',as_pm.ValueMin);
+  INI.WriteFloat('Config','pmMaxValue',as_pm.ValueMax);
+  INI.WriteFloat('Config','tmpMinValue',as_tmp.ValueMin);
+  INI.WriteFloat('Config','tmpMaxValue',as_tmp.ValueMax);
+  INI.WriteFloat('Config','humMinValue',as_hum.ValueMin);
+  INI.WriteFloat('Config','humMaxValue',as_hum.ValueMax);
+  INI.WriteFloat('Config','co2MinValue',as_co2.ValueMin);
+  INI.WriteFloat('Config','co2MaxValue',as_co2.ValueMax);
+  INI.WriteFloat('Config','vocMinValue',as_voc.ValueMin);
+  INI.WriteFloat('Config','vocMaxValue',as_voc.ValueMax);
+  INI.WriteFloat('Config','allpolluMinValue',as_allpollu.ValueMin);
+  INI.WriteFloat('Config','allpolluMaxValue',as_allpollu.ValueMax);
+  INI.PlainTextMode:=FALSE;
 end;
 
-procedure Tmainform.SetUpSensorMinMax;
+procedure Tmainform.LoadConfig;
 begin
-  as_pm.ValueMin := MIN_PM;
-  as_pm.ValueMax := MAX_PM;
-  as_tmp.ValueMin := MIN_TMP;
-  as_tmp.ValueMax := MAX_TMP;
-  as_hum.ValueMin := MIN_HUM;
-  as_hum.ValueMax := MAX_HUM;
-  as_co2.ValueMin := MIN_CO2;
-  as_co2.ValueMax := MAX_CO2;
-  as_voc.ValueMin := MIN_VOC;
-  as_voc.ValueMax := MAX_VOC;
-  as_allpollu.ValueMin := MIN_ALLPOLLU;
-  as_allpollu.ValueMax := MAX_ALLPOLLU;
+  INI.PlainTextMode:=TRUE;
+  // Colours
+  as_pm.ColorFore:=StringToColor(INI.ReadString('Config','pmColour',COL_PM));
+  as_tmp.ColorFore:=StringToColor(INI.ReadString('Config','tmpColour',COL_TMP));
+  as_hum.ColorFore:=StringToColor(INI.ReadString('Config','humColour',COL_HUM));
+  as_co2.ColorFore:=StringToColor(INI.ReadString('Config','co2Colour',COL_CO2));
+  as_voc.ColorFore:=StringToColor(INI.ReadString('Config','vocColour',COL_VOC));
+  as_allpollu.ColorFore:=StringToColor(INI.ReadString('Config','allpolluColour',COL_ALLPOLLU));
+  lineSeries_pm.SeriesColor := as_pm.ColorFore;
+  lineSeries_tmp.SeriesColor := as_tmp.ColorFore;
+  lineSeries_hum.SeriesColor := as_hum.ColorFore;
+  lineSeries_co2.SeriesColor := as_co2.ColorFore;
+  lineSeries_voc.SeriesColor := as_voc.ColorFore;
+  lineSeries_allpollu.SeriesColor := as_allpollu.ColorFore;
+  // Max and Min
+  as_pm.ValueMin := INI.ReadFloat('Config','pmMinValue',MIN_PM);
+  as_pm.ValueMax := INI.ReadFloat('Config','pmMaxValue',MAX_PM);
+  as_tmp.ValueMin := INI.ReadFloat('Config','tmpMinValue',MIN_TMP);
+  as_tmp.ValueMax := INI.ReadFloat('Config','tmpMaxValue',MAX_TMP);
+  as_hum.ValueMin := INI.ReadFloat('Config','humMinValue',MIN_HUM);
+  as_hum.ValueMax := INI.ReadFloat('Config','humMaxValue',MAX_HUM);
+  as_co2.ValueMin := INI.ReadFloat('Config','co2MinValue',MIN_CO2);
+  as_co2.ValueMax := INI.ReadFloat('Config','co2MaxValue',MAX_CO2);
+  as_voc.ValueMin := INI.ReadFloat('Config','vocMinValue',MIN_VOC);
+  as_voc.ValueMax := INI.ReadFloat('Config','vocMaxValue',MAX_VOC);
+  as_allpollu.ValueMin := INI.ReadFloat('Config','allpolluMinValue',MIN_ALLPOLLU);
+  as_allpollu.ValueMax := INI.ReadFloat('Config','allpolluMaxValue',MAX_ALLPOLLU);
+  INI.PlainTextMode:=FALSE;
 end;
 
 procedure Tmainform.FormWindowStateChange(Sender: TObject);

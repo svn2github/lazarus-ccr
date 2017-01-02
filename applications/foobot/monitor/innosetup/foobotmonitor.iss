@@ -9,7 +9,7 @@
 
 [Setup]
 AppName=Foobot Monitor
-AppVersion=0.1.0.0
+AppVersion=0.1.1.0
 DefaultDirName={pf}\foobotmonitor
 DefaultGroupName=Foobot
 UninstallDisplayIcon={app}\foobotmonitor.exe

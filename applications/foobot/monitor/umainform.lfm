@@ -11,6 +11,7 @@ object mainform: Tmainform
   DefaultMonitor = dmDesktop
   Menu = MainMenu1
   OnActivate = FormActivate
+  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnWindowStateChange = FormWindowStateChange
