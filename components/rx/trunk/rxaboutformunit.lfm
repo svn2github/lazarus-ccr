@@ -8,20 +8,20 @@ object rxAboutFormForm: TrxAboutFormForm
   ClientWidth = 498
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '0.9.29'
+  LCLVersion = '1.7'
   object PageControl1: TPageControl
     Left = 0
-    Height = 340
+    Height = 328
     Top = 0
     Width = 498
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alClient
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'General'
-      ClientHeight = 314
-      ClientWidth = 490
+      ClientHeight = 294
+      ClientWidth = 488
       object lblAppTitle: TLabel
         AnchorSideLeft.Control = Image1
         AnchorSideLeft.Side = asrBottom
@@ -29,9 +29,9 @@ object rxAboutFormForm: TrxAboutFormForm
         AnchorSideRight.Control = TabSheet1
         AnchorSideRight.Side = asrBottom
         Left = 140
-        Height = 14
+        Height = 20
         Top = 6
-        Width = 344
+        Width = 342
         Alignment = taCenter
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Around = 6
@@ -56,9 +56,9 @@ object rxAboutFormForm: TrxAboutFormForm
         AnchorSideRight.Control = lblAppTitle
         AnchorSideRight.Side = asrBottom
         Left = 140
-        Height = 14
-        Top = 27
-        Width = 344
+        Height = 20
+        Top = 33
+        Width = 342
         Alignment = taCenter
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 7
@@ -75,9 +75,9 @@ object rxAboutFormForm: TrxAboutFormForm
         AnchorSideBottom.Control = TabSheet1
         AnchorSideBottom.Side = asrBottom
         Left = 140
-        Height = 273
-        Top = 41
-        Width = 350
+        Height = 241
+        Top = 53
+        Width = 348
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderStyle = bsNone
         ParentColor = True
@@ -88,16 +88,16 @@ object rxAboutFormForm: TrxAboutFormForm
     end
     object TabSheet2: TTabSheet
       Caption = 'Detail'
-      ClientHeight = 314
-      ClientWidth = 490
+      ClientHeight = 294
+      ClientWidth = 488
       object lblBuildDate: TLabel
         AnchorSideLeft.Control = TabSheet2
         AnchorSideRight.Control = TabSheet2
         AnchorSideRight.Side = asrBottom
         Left = 0
-        Height = 14
+        Height = 20
         Top = 6
-        Width = 490
+        Width = 488
         Alignment = taCenter
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
@@ -111,9 +111,9 @@ object rxAboutFormForm: TrxAboutFormForm
         AnchorSideRight.Control = TabSheet2
         AnchorSideRight.Side = asrBottom
         Left = 0
-        Height = 14
-        Top = 26
-        Width = 490
+        Height = 20
+        Top = 32
+        Width = 488
         Alignment = taCenter
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
@@ -127,9 +127,9 @@ object rxAboutFormForm: TrxAboutFormForm
         AnchorSideRight.Control = TabSheet2
         AnchorSideRight.Side = asrBottom
         Left = 0
-        Height = 14
-        Top = 46
-        Width = 490
+        Height = 20
+        Top = 58
+        Width = 488
         Alignment = taCenter
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
@@ -143,9 +143,9 @@ object rxAboutFormForm: TrxAboutFormForm
         AnchorSideRight.Control = TabSheet2
         AnchorSideRight.Side = asrBottom
         Left = 0
-        Height = 14
-        Top = 66
-        Width = 490
+        Height = 20
+        Top = 84
+        Width = 488
         Alignment = taCenter
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
@@ -159,9 +159,9 @@ object rxAboutFormForm: TrxAboutFormForm
         AnchorSideRight.Control = TabSheet2
         AnchorSideRight.Side = asrBottom
         Left = 0
-        Height = 14
-        Top = 86
-        Width = 490
+        Height = 20
+        Top = 110
+        Width = 488
         Alignment = taCenter
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
@@ -175,9 +175,9 @@ object rxAboutFormForm: TrxAboutFormForm
         AnchorSideRight.Control = TabSheet2
         AnchorSideRight.Side = asrBottom
         Left = 0
-        Height = 14
-        Top = 106
-        Width = 490
+        Height = 20
+        Top = 136
+        Width = 488
         Alignment = taCenter
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
@@ -187,13 +187,13 @@ object rxAboutFormForm: TrxAboutFormForm
     end
     object TabSheet3: TTabSheet
       Caption = 'License'
-      ClientHeight = 301
-      ClientWidth = 494
+      ClientHeight = 294
+      ClientWidth = 488
       object Memo1: TMemo
         Left = 0
-        Height = 301
+        Height = 294
         Top = 0
-        Width = 494
+        Width = 488
         Align = alClient
         Lines.Strings = (
           'Memo1'
@@ -204,14 +204,22 @@ object rxAboutFormForm: TrxAboutFormForm
   end
   object ButtonPanel1: TButtonPanel
     Left = 6
-    Height = 34
-    Top = 346
+    Height = 46
+    Top = 334
     Width = 486
+    OKButton.Name = 'OKButton'
+    OKButton.DefaultCaption = True
+    HelpButton.Name = 'HelpButton'
+    HelpButton.DefaultCaption = True
+    CloseButton.Name = 'CloseButton'
+    CloseButton.DefaultCaption = True
+    CancelButton.Name = 'CancelButton'
+    CancelButton.DefaultCaption = True
     TabOrder = 1
     ShowButtons = [pbClose, pbHelp]
   end
   object RxVersionInfo1: TRxVersionInfo
-    left = 432
-    top = 88
+    Left = 432
+    Top = 88
   end
 end

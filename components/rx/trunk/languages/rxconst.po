@@ -37,10 +37,6 @@ msgstr ""
 msgid "Right"
 msgstr ""
 
-#: rxconst.scarbonwidgetset
-msgid "Carbon widget set"
-msgstr ""
-
 #: rxconst.scloseallexceptthis
 msgid "Close all except this"
 msgstr ""
@@ -113,20 +109,8 @@ msgstr ""
 msgid "FPC version : "
 msgstr ""
 
-#: rxconst.sfpguiwidgetset
-msgid "FpGUI widget set"
-msgstr ""
-
 #: rxconst.sgeneral
 msgid "General"
-msgstr ""
-
-#: rxconst.sgtk2widgetset
-msgid "GTK 2 widget set"
-msgstr ""
-
-#: rxconst.sgtkwidgetset
-msgid "GTK widget set"
 msgstr ""
 
 #: rxconst.shistorydesc
@@ -161,10 +145,6 @@ msgstr ""
 msgid "Options"
 msgstr ""
 
-#: rxconst.sotherguiwidgetset
-msgid "Other gui"
-msgstr ""
-
 #: rxconst.soutofrange
 msgid "Out of range %d %d %d %d"
 msgstr ""
@@ -175,10 +155,6 @@ msgstr ""
 
 #: rxconst.sprevyear
 msgid "Previous Year|"
-msgstr ""
-
-#: rxconst.sqtwidgetset
-msgid "QT widget set"
 msgstr ""
 
 #: rxconst.sreqvalue
@@ -265,12 +241,8 @@ msgstr ""
 msgid "Visible buttons"
 msgstr ""
 
-#: rxconst.swin32_64widgetset
-msgid "Win32/Win64 widget set"
-msgstr ""
-
-#: rxconst.swincewidgetset
-msgid "WinCE widget set"
+#: rxconst.swidget
+msgid "Widget : "
 msgstr ""
 
 #: rxconst.swindowsicofiles

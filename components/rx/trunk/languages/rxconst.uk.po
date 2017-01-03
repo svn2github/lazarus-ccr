@@ -48,10 +48,6 @@ msgstr "Ліворуч"
 msgid "Right"
 msgstr "Праворуч"
 
-#: rxconst.scarbonwidgetset
-msgid "Carbon widget set"
-msgstr "Графічний інтерфейс Carbon"
-
 #: rxconst.scloseallexceptthis
 msgid "Close all except this"
 msgstr "Закрити всі вікна, за виключенням цього"
@@ -126,21 +122,9 @@ msgstr ""
 msgid "FPC version : "
 msgstr "Версія FPC : "
 
-#: rxconst.sfpguiwidgetset
-msgid "FpGUI widget set"
-msgstr "Набір віджетів FpGUI"
-
 #: rxconst.sgeneral
 msgid "General"
 msgstr "Загальне"
-
-#: rxconst.sgtk2widgetset
-msgid "GTK 2 widget set"
-msgstr "Набір віджетів GTK 2"
-
-#: rxconst.sgtkwidgetset
-msgid "GTK widget set"
-msgstr "Набір віджетів GTK"
 
 #: rxconst.shistorydesc
 msgid "History - \"%s\""
@@ -174,10 +158,6 @@ msgstr "Функція не реалізована"
 msgid "Options"
 msgstr "Параметри"
 
-#: rxconst.sotherguiwidgetset
-msgid "Other gui"
-msgstr "Інші GUI"
-
 #: rxconst.soutofrange
 msgid "Out of range %d %d %d %d"
 msgstr ""
@@ -189,10 +169,6 @@ msgstr "Попередній місяць|"
 #: rxconst.sprevyear
 msgid "Previous Year|"
 msgstr "Попередній місяць|"
-
-#: rxconst.sqtwidgetset
-msgid "QT widget set"
-msgstr "Набір віджетів QT"
 
 #: rxconst.sreqvalue
 #, fuzzy
@@ -282,13 +258,9 @@ msgstr ""
 msgid "Visible buttons"
 msgstr "Видимі кнопки"
 
-#: rxconst.swin32_64widgetset
-msgid "Win32/Win64 widget set"
-msgstr "Набір віджетів Win32/Win64"
-
-#: rxconst.swincewidgetset
-msgid "WinCE widget set"
-msgstr "Набір віджетів WinCE"
+#: rxconst.swidget
+msgid "Widget : "
+msgstr ""
 
 #: rxconst.swindowsicofiles
 msgid "Windows Ico files (*.ico)|*.ico|All files (*.*)|*.*"

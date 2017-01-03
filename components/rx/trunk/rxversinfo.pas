@@ -306,7 +306,8 @@ end;
 
 function TRxVersionInfo.GetWidgetName: string;
 begin
-  case WidgetSet.LCLPlatform of
+  Result:=sWidget + LCLPlatformDisplayNames[WidgetSet.LCLPlatform];
+{  case WidgetSet.LCLPlatform of
     lpGtk:Result:=sGTKWidgetSet;
     lpGtk2:Result:=sGTK2WidgetSet;
     lpWin32:Result:=sWin32_64WidgetSet;
@@ -316,7 +317,7 @@ begin
     lpfpGUI:Result:=sFpGUIWidgetSet;
   else
     Result:=sOtherGUIWidgetSet;
-  end;
+  end;}
 end;
 
 end.
