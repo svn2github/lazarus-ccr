@@ -25,10 +25,12 @@ V0.0.1.0: Initial commit
 V0.0.2.0: Trayicon added
 V0.0.3.0: Added Help menu.  Updated Options menu
 V0.0.4.0: Graph added
-V0.0.5.0: ??
+V0.1.0.0: Save/Load Alltime High/Lows.  Reset values from menu
+V0.1.1.0: Save/Load Colours, Min and Max values to cfg file
+V0.1.2.0: ??
 }
 {$ifopt D+}
-// Debug mode
+// Debug mode does not load data from web
 {$ENDIF}
 
 {$mode objfpc}{$H+}
@@ -36,13 +38,14 @@ V0.0.5.0: ??
 interface
 
 uses
-  Classes, SysUtils, FileUtil, TAGraph, TAIntervalSources, TASeries,
+  SysUtils, TAGraph, TAIntervalSources, TASeries,
   Sensors, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Menus,
-  lclIntf, foobot_utility, uCryptIni, Variants, dateutils, uconfigform;
+  lclIntf, foobot_utility, uCryptIni, dateutils, uconfigform, Classes;
 
 const
   // Timer milliseconds
   ONEMINUTE = 60000;
+  HALFHOUR = ONEMINUTE * 30;
   ONEHOUR = ONEMINUTE * 60;
   TWOHOURS = ONEHOUR * 2;
   FOURHOURS = ONEHOUR * 4;
@@ -71,6 +74,13 @@ const
   MIN_ALLPOLLU = 0;
   MAX_ALLPOLLU = 700;
 
+  // Sensor recommended levels
+  REC_PM = 25;
+  REC_TMP = 23;
+  REC_HUM = 60;
+  REC_CO2 = 1300;
+  REC_VOC = 300;
+  REC_ALLPOLLU = 50;
 
 type
 
@@ -113,6 +123,7 @@ type
     lbl_voclow: TLabel;
     lbl_allpollulow: TLabel;
     MainMenu1: TMainMenu;
+    mnu_SampleEveryHalfHour: TMenuItem;
     mnu_optionsResetHighsLows: TMenuItem;
     mnu_optionsOnlineHelp: TMenuItem;
     mnu_optionsSeperator1: TMenuItem;
@@ -155,6 +166,7 @@ type
     procedure mnu_SampleEvery2HoursClick(Sender: TObject);
     procedure mnu_SampleEvery4HoursClick(Sender: TObject);
     procedure mnu_SampleEvery8HoursClick(Sender: TObject);
+    procedure mnu_SampleEveryHalfHourClick(Sender: TObject);
     procedure tmr_foobotTimer(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
   private
@@ -166,6 +178,7 @@ type
     procedure UpdateHighLow(SensorNumber: integer);
     procedure GraphHistory;
     procedure GraphCurrentReading;
+    Procedure SetRecommendedLevels;
     procedure SaveConfig;
     procedure LoadConfig;
   public
@@ -243,12 +256,12 @@ begin
         GraphHistory;
         {$IFNDEF DEBUGMODE}
         mnu_optionsTakeReadingNow.Click;
-{$ENDIF}
+        {$ENDIF}
         // Switch off for testing
         tmr_foobot.Interval := ONEHOUR;
         {$IFNDEF DEBUGMODE}
         tmr_foobot.Enabled := True;
-{$ENDIF}
+        {$ENDIF}
         Show;
       end;
     end
@@ -436,6 +449,12 @@ begin
     ShowMessage('Sorry - no readings available');
   mainform.Cursor := crDefault;
 end;
+procedure Tmainform.mnu_SampleEveryHalfHourClick(Sender: TObject);
+begin
+  tmr_foobot.Enabled := False;
+  tmr_foobot.Interval := HALFHOUR;
+  tmr_foobot.Enabled := True;
+end;
 
 procedure Tmainform.mnu_SampleEvery1HourClick(Sender: TObject);
 begin
@@ -472,6 +491,7 @@ begin
   tmr_foobot.Enabled := True;
 end;
 
+
 procedure Tmainform.tmr_foobotTimer(Sender: TObject);
 begin
   if FetchFoobotData(dfLast, 0, 0, 0, 0, 0, sSecretKey) then
@@ -481,6 +501,16 @@ end;
 procedure Tmainform.TrayIcon1Click(Sender: TObject);
 begin
   mainform.Show;
+end;
+
+Procedure Tmainform.SetRecommendedLevels;
+begin
+  as_pm.ValueYellow:=REC_PM;
+  as_tmp.ValueYellow:=REC_TMP;
+  as_hum.ValueYellow:=REC_HUM;
+  as_co2.ValueYellow:=REC_CO2;
+  as_voc.ValueYellow:=REC_VOC;
+  as_allpollu.ValueYellow:=REC_ALLPOLLU;
 end;
 
 procedure Tmainform.UpdateHighLow(SensorNumber: integer);
@@ -596,6 +626,7 @@ begin
     ValueYellow := ValueMax;
     if Value > ValueRed then
       ValueRed := Value;
+    SetRecommendedLevels;
   end;
 end;
 

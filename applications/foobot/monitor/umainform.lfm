@@ -415,6 +415,11 @@ object mainform: Tmainform
       end
       object mnu_optionsSampleEvery: TMenuItem
         Caption = 'Sample every...'
+        object mnu_SampleEveryHalfHour: TMenuItem
+          AutoCheck = True
+          Caption = 'Half-Hour'
+          OnClick = mnu_SampleEveryHalfHourClick
+        end
         object mnu_SampleEvery1Hour: TMenuItem
           AutoCheck = True
           Caption = 'Hour (default)'
