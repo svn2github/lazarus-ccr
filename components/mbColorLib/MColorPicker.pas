@@ -14,18 +14,18 @@ type
   private
     FCyan, FMagenta, FYellow, FBlack: integer;
     function ArrowPosFromMagenta(m: integer): integer;
-    function GetSelectedColor: TColor;
     function MagentaFromArrowPos(p: integer): integer;
     procedure SetBlack(k: integer);
     procedure SetCyan(c: integer);
     procedure SetMagenta(m: integer);
-    procedure SetSelectedColor(clr: TColor);
     procedure SetYellow(y: integer);
   protected
     procedure Execute(tbaAction: integer); override;
     function GetArrowPos: integer; override;
     function GetGradientColor(AValue: Integer): TColor; override;
+    function GetSelectedColor: TColor; override;
     function GetSelectedValue: integer; override;
+    procedure SetSelectedColor(clr: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
   published
@@ -33,8 +33,9 @@ type
     property Magenta: integer read FMagenta write SetMagenta default 255;
     property Yellow: integer read FYellow write SetYellow default 0;
     property Black: integer read FBlack write SetBlack default 0;
-    property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
+    property SelectedColor default clRed;
     property Layout default lyVertical;
+    property HintFormat;
   end;
 
 

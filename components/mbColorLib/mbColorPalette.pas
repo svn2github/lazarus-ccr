@@ -64,7 +64,7 @@ type
     procedure DrawCell(ACanvas: TCanvas; AColor: string);
     procedure DrawCellBack(ACanvas: TCanvas; R: TRect; AIndex: integer);
     function GetColorUnderCursor: TColor; override;
-    function GetHintStr(X, Y: Integer): String; override;
+    function GetHintStr({%H-}X, {%H-}Y: Integer): String; override;
     function GetIndexUnderCursor: integer;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
@@ -146,8 +146,6 @@ type
 
 implementation
 
-uses
-  mbUtils;
 
 { TmbColorPalette }
 
@@ -684,6 +682,7 @@ begin
     FNames.Clear;
     FColors.Text := ReadJASCPal(FileName);
   end
+  (*
   else if SameText(ExtractFileExt(FileName), '.aco') then
   begin
     supported := true;
@@ -702,6 +701,7 @@ begin
    FNames.Clear;
    FColors.Text := ReadPhotoshopAct(FileName);
   end
+  *)
   else
     raise Exception.Create('The file format you are trying to load is not supported in this version of the palette'#13'Please send a request to MXS along with the files of this format so'#13'loading support for this file can be added too');
   if supported then

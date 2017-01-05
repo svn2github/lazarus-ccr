@@ -61,7 +61,6 @@ begin
   FB := 0;
   FR := 0;
   FSelected := clLime;
-  FManual := false;
   MarkerStyle := msCircle;
 end;
 
@@ -159,7 +158,6 @@ end;
 
 procedure TGAxisColorPicker.Resize;
 begin
-  FManual := false;
   mx := Round(FB * Width / 255);
   my := Round((255 - FR) * Height / 255);
   inherited;

@@ -243,7 +243,8 @@ end;
 
 procedure RGBToLCH(clr: TColor; var l, c, h: double);
 var
-  a, b: double;
+  a: Double = 0;
+  b: Double = 0;
 begin
   RGBToLab(clr, l, a, b);
   LabToLCH(l, a, b, l, c, h);
@@ -251,7 +252,9 @@ end;
 
 function LCHToRGB(l, c, h: double): TColor;
 var
-  lum, a, b: double;
+  lum: Double = 0;
+  a: Double = 0;
+  b: double = 0;
 begin
   LCHToLab(l, c, h, lum, a, b);
   Result := LabToRGB(lum, a, b);
@@ -283,36 +286,38 @@ end;
 
 function GetCIELValue(c: TColor): double;
 var
-  d: real;
+  d: Double = 0;
 begin
-  XYZToLab(RGBToXYZ(c), Result, d, d);
+  XYZToLab(RGBToXYZ(c), Result{%H-}, d, d);
 end;
 
 function GetCIEAValue(c: TColor): double;
 var
-  d: double;
+  d: double = 0;
 begin
-  XYZToLab(RGBToXYZ(c), d, Result, d);
+  XYZToLab(RGBToXYZ(c), d, Result{%H-}, d);
 end;
 
 function GetCIEBValue(c: TColor): double;
 var
-  d: double;
+  d: double = 0;
 begin
-  XYZToLab(RGBToXYZ(c), d, d, Result);
+  XYZToLab(RGBToXYZ(c), d, d, Result{%H-});
 end;
 
 function GetCIECValue(c: TColor): double;
 var
-  d: double;
+  d: double = 0;
 begin
+  Result := 0.0;
   RGBToLCH(c, d, Result, d);
 end;
 
 function GetCIEHValue(c: TColor): double;
 var
-  d: double;
+  d: double = 0;
 begin
+  Result := 0.0;
   RGBToLCH(c, d, d, Result);
 end;
 

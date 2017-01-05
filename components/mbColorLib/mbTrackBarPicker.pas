@@ -7,7 +7,7 @@ interface
 uses
   LCLIntf, LCLType, LMessages, SysUtils, Classes, Controls, Graphics, Forms,
   Themes, ExtCtrls,
-  PalUtils, mbBasicPicker;
+  PalUtils, mbColorConv, mbBasicPicker;
 
 const
   TBA_Resize = 0;
@@ -86,6 +86,7 @@ type
     procedure SetBorderStyle(Value: TBorderStyle); override;
     procedure CMGotFocus(var Message: TLMessage); message CM_ENTER;
     procedure CMLostFocus(var Message: TLMessage); message CM_EXIT;
+    property HintFormat: string read FHintFormat write FHintFormat;
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -96,7 +97,6 @@ type
     property BevelOuter: TPanelBevel read FBevelOuter write SetBevelOuter default bvNone;
     property BevelWidth: TBevelWidth read FBevelWidth write SetBevelWidth default 1;
     property BorderStyle: TBorderStyle read FBorderStyle write SetBorderStyle default bsNone;
-    property HintFormat: string read FHintFormat write FHintFormat;
     property Increment: integer read FIncrement write FIncrement default 1;
     property Layout: TTrackBarLayout read FLayout write SetLayout default lyHorizontal;
     property ArrowPlacement: TSliderPlacement read FPlacement write SetPlacement default spAfter;
@@ -140,11 +140,58 @@ type
     property OnStartDrag;
   end;
 
+  { TmbHSLVTrackbarPicker }
+
+  TmbHSLVTrackbarPicker = class(TmbTrackbarPicker)
+  private
+    FBrightnessMode: TBrightnessMode;
+    function GetHue: Integer;
+    function GetLum: Integer;
+    function GetSat: Integer;
+    function GetVal: Integer;
+    procedure SetHue(h: integer);
+    procedure SetLum(L: Integer);
+    procedure SetSat(s: integer);
+    procedure SetVal(v: integer);
+  protected
+    FHue, FSat, FLum, FVal: Double;
+    FMaxHue, FMaxSat, FMaxLum, FMaxVal: Integer;
+    procedure ColorToHSLV(c: TColor; var H, S, L, V: Double);
+    function GetSelectedColor: TColor; override;
+    function HSLVtoColor(H, S, L, V: Double): TColor;
+    procedure SetBrightnessMode(AMode: TBrightnessMode); virtual;
+    procedure SetMaxHue(h: Integer); virtual;
+    procedure SetMaxLum(L: Integer); virtual;
+    procedure SetMaxSat(s: Integer); virtual;
+    procedure SetMaxVal(v: Integer); virtual;
+    procedure SetRelHue(H: Double); virtual;
+    procedure SetRelLum(L: Double); virtual;
+    procedure SetRelSat(S: Double); virtual;
+    procedure SetRelVal(V: Double); virtual;
+  public
+    constructor Create(AOwner: TComponent); override;
+    property RelHue: Double read FHue write SetRelHue;
+    property RelSaturation: Double read FSat write SetRelSat;
+    property RelLuminance: Double read FLum write SetRelLum;
+    property RelValue: Double read FVal write SetRelVal;
+  published
+    property BrightnessMode: TBrightnessMode
+      read FBrightnessMode write SetBrightnessMode default bmLuminance;
+    property Hue: integer read GetHue write SetHue;
+    property Luminance: Integer read GetLum write SetLum;
+    property Saturation: integer read GetSat write SetSat;
+    property Value: integer read GetVal write SetVal;
+    property MaxHue: Integer read FMaxHue write SetMaxHue default 360;
+    property MaxSaturation: Integer read FMaxSat write SetMaxSat default 255;
+    property MaxLuminance: Integer read FMaxLum write SetMaxLum default 255;
+    property MaxValue: Integer read FMaxVal write SetMaxVal default 255;
+  end;
+
 implementation
 
 uses
   IntfGraphics, fpimage, Math,
-  ScanLines, HTMLColors;
+  mbUtils, HTMLColors;
 
 const
   { 3D border styles }
@@ -634,7 +681,6 @@ begin
     my := Y;
     FArrowPos := IfThen(FLayout = lyHorizontal, XToArrowPos(X), YToArrowPos(Y));
     Execute(TBA_MouseDown);
-    //Invalidate;
   end;
   inherited;
 end;
@@ -653,7 +699,6 @@ begin
     my := Y;
     FArrowPos := IfThen(FLayout = lyHorizontal, XToArrowPos(X), YToArrowPos(Y));
     Execute(TBA_MouseMove);
-//    Invalidate;
   end;
   inherited;
 end;
@@ -666,7 +711,6 @@ begin
     my := Y;
     FArrowPos := IfThen(FLayout = lyHorizontal, XToArrowPos(X), YToArrowPos(Y));
     Execute(TBA_MouseUp);
-//    Invalidate;
   end;
 
   inherited;
@@ -802,6 +846,188 @@ begin
   if pos < 0 then pos := 0;
   if pos > Height - Aw - 1 then pos := Height - Aw - 1;
   Result := pos;
+end;
+
+
+{ TmbHSLVTrackbarPicker }
+
+constructor TmbHSLVTrackbarPicker.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  FBrightnessMode := bmLuminance;
+  FMaxHue := 360;
+  FMaxSat := 255;
+  FMaxVal := 255;
+  FMaxLum := 255;
+end;
+
+procedure TmbHSLVTrackbarPicker.ColorToHSLV(c: TColor; var H, S, L, V: Double);
+begin
+  case FBrightnessMode of
+    bmLuminance : ColorToHSL(c, H, S, L);
+    bmValue     : ColorToHSV(c, H, S, V);
+  end;
+end;
+
+function TmbHSLVTrackbarPicker.GetHue: Integer;
+begin
+  Result := round(FHue * FMaxHue);
+end;
+
+function TmbHSLVTrackbarPicker.GetLum: Integer;
+begin
+  Result := round(FLum * FMaxLum);
+end;
+
+function TmbHSLVTrackbarPicker.GetSat: Integer;
+begin
+  Result := round(FSat * FMaxSat);
+end;
+
+function TmbHSLVTrackbarPicker.GetSelectedColor: TColor;
+begin
+  Result := HSLVtoColor(FHue, FSat, FLum, FVal);
+end;
+
+function TmbHSLVTrackbarPicker.GetVal: Integer;
+begin
+  Result := round(FVal * FMaxVal);
+end;
+
+function TmbHSLVTrackbarPicker.HSLVtoColor(H, S, L, V: Double): TColor;
+begin
+  case FBrightnessMode of
+    bmLuminance : Result := HSLToColor(H, S, L);
+    bmValue     : Result := HSVtoColor(H, S, V);
+  end;
+  if WebSafe then
+    Result := GetWebSafe(Result);
+end;
+
+procedure TmbHSLVTrackbarPicker.SetBrightnessMode(AMode: TBrightnessMode);
+var
+  c: TColor;
+begin
+  c := HSLVtoColor(FHue, FSat, FLum, FVal);
+  FBrightnessMode := AMode;
+  ColorToHSLV(c, FHue, FSat, FLum, FVal);
+  CreateGradient;
+  Invalidate;
+  DoChange;
+end;
+
+procedure TmbHSLVTrackbarPicker.SetHue(H: Integer);
+begin
+  SetRelHue(H / FMaxHue);
+end;
+
+procedure TmbHSLVTrackbarPicker.SetLum(L: Integer);
+begin
+  SetRelLum(L / FMaxLum);
+end;
+
+procedure TmbHSLVTrackbarPicker.SetMaxHue(h: Integer);
+begin
+  if h = FMaxHue then
+    exit;
+  FMaxHue := h;
+  FGradientWidth := FMaxHue;   // we don't want to access H=360, i.e. don't use FMaxHue+1
+  //CreateGradient;
+  Invalidate;
+end;
+
+procedure TmbHSLVTrackbarPicker.SetMaxLum(L: Integer);
+begin
+  if L = FMaxLum then
+    exit;
+  FMaxLum := L;
+  if FBrightnessMode = bmLuminance then begin
+    //CreateGradient;
+    Invalidate;
+  end;
+end;
+
+procedure TmbHSLVTrackbarPicker.SetMaxSat(S: Integer);
+begin
+  if S = FMaxSat then
+    exit;
+  FMaxSat := S;
+  //CreateGradient;
+  Invalidate;
+end;
+
+procedure TmbHSLVTrackbarPicker.SetMaxVal(V: Integer);
+begin
+  if V = FMaxVal then
+    exit;
+  FMaxVal := V;
+  if FBrightnessMode = bmValue then begin
+    //CreateGradient;
+    Invalidate;
+  end;
+end;
+
+procedure TmbHSLVTrackbarPicker.SetRelHue(H: Double);
+begin
+  Clamp(H, 0, 1 - 1/FMaxHue);  // don't go up to 360 because this will flip back to the start
+  if (FHue <> H) then
+  begin
+    FHue := H;
+    CreateGradient;
+    Invalidate;
+    DoChange;
+  end;
+end;
+
+procedure TmbHSLVTrackbarPicker.SetRelLum(L: Double);
+begin
+  Clamp(L, 0, 1.0);
+  if (FLum <> L) then
+  begin
+    FLum := L;
+    if BrightnessMode = bmLuminance then begin
+      CreateGradient;
+      Invalidate;
+    end;
+    DoChange;
+  end;
+end;
+
+procedure TmbHSLVTrackbarPicker.SetRelSat(S: Double);
+begin
+  Clamp(S, 0, 1.0);
+  if FSat <> S then
+  begin
+    FSat := S;
+    CreateGradient;
+    Invalidate;
+    DoChange;
+  end;
+end;
+
+procedure TmbHSLVTrackbarPicker.SetRelVal(V: Double);
+begin
+  Clamp(V, 0, 1.0);
+  if FVal <> V then
+  begin
+    FVal := V;
+    if BrightnessMode = bmValue then
+    begin
+      CreateGradient;
+      Invalidate;
+    end;
+    DoChange;
+  end;
+end;
+
+procedure TmbHSLVTrackbarPicker.SetSat(S: Integer);
+begin
+  SetRelSat(S / FMaxSat);
+end;
+
+procedure TmbHSLVTrackbarPicker.SetVal(V: Integer);
+begin
+  SetRelVal(V / FMaxVal);
 end;
 
 end.

@@ -15,15 +15,16 @@ type
     FSelColor: TColor;
     FUseHint: boolean;
     FMaxHue, FMaxSat, FMaxLum: Integer;
+    FPickerIndex: Integer;
   public
     constructor Create(AOwner: TComponent); override;
     function Execute: boolean; overload;
     function Execute(AColor: TColor): boolean; overload;
   published
     property SelectedColor: TColor read FSelColor write FSelColor default clWhite;
-    property MaxHue: Integer read FMaxHue write FMaxHue default 359;
-    property MaxSaturation: Integer read FMaxSat write FMaxSat default 240;
-    property MaxLuminance: Integer read FMaxLum write FMaxLum default 240;
+    property MaxHue: Integer read FMaxHue write FMaxHue default 360;
+    property MaxSaturation: Integer read FMaxSat write FMaxSat default 255;
+    property MaxLuminance: Integer read FMaxLum write FMaxLum default 255;
     property UseHints: boolean read FUseHint write FUseHint default false;
   end;
 
@@ -36,9 +37,9 @@ begin
   inherited;
   FSelColor := clWhite;
   FUseHint := false;
-  FMaxHue := 359;
-  FMaxSat := 240;
-  FMaxLum := 240;
+  FMaxHue := 360;
+  FMaxSat := 255;
+  FMaxLum := 255;
 end;
 
 function TmbOfficeColorDialog.Execute: boolean;
@@ -50,16 +51,19 @@ function TmbOfficeColorDialog.Execute(AColor: TColor): boolean;
 begin
   FWin := TOfficeMoreColorsWin.Create(Application);
   try
-    FWin.OldSwatch.Color := AColor;
     FWin.ShowHint := FUseHint;
     FWin.MaxHue := FMaxHue;
     FWin.MaxSaturation := FMaxSat;
     FWin.MaxLuminance := FMaxLum;
+    FWin.PickerIndex := FPickerIndex;
+//    FWin.OldSwatch.Color := AColor;
+    FWin.SelectedColor := AColor;
     Result := (FWin.ShowModal = IdOK);
     if Result then
-      FSelColor := FWin.NewSwatch.Color
+      FSelColor := FWin.SelectedColor //FWin.NewSwatch.Color
     else
       FSelColor := clNone;
+    FPickerIndex := FWin.PickerIndex;
   finally
     FWin.Free;
   end;

@@ -50,13 +50,13 @@ function ReadJASCPal(PalFile: TFileName): string;
 
 //saves a string list to a JASC .pal file
 procedure SaveJASCPal(pal: TStrings; FileName: TFileName);
-
+(*
 //reads Photoshop .aco file into an Aco record
 function ReadPhotoshopAco(PalFile: TFileName): AcoColors;
 
 //reads Photoshop .act file
 function ReadPhotoshopAct(PalFile: TFileName): string;
-
+  *)
 
 implementation
 
@@ -87,7 +87,7 @@ function FormatHint(fmt: string; c: TColor): string;
 var
   h: string;
 begin
-  h := AnsiReplaceText(fmt, '%hex', ColorToHex(c));
+  h := AnsiReplaceText(fmt, '%hex', '#' + ColorToHex(c));
   h := AnsiReplaceText(h, '%cieL', IntToStr(Round(GetCIElValue(c))));
   h := AnsiReplaceText(h, '%cieA', IntToStr(Round(GetCIEaValue(c))));
   h := AnsiReplaceText(h, '%cieB', IntToStr(Round(GetCIEbValue(c))));
@@ -579,7 +579,7 @@ begin
     s[i] := WideChar(w);
   end;
 end;
-
+                (*
 function GetAcoColor(space,w,x,y,z: word): TColor;
 begin
   case space of
@@ -711,5 +711,5 @@ begin
   end;
   CloseFile(f);
 end;
-
+                        *)
 end.

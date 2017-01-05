@@ -21,9 +21,9 @@ type
      procedure FormKeyDown(Sender: TObject; var Key: Word;
        Shift: TShiftState);
      procedure FormMouseMove(Sender: TObject;
-       Shift: TShiftState; X, Y: Integer);
-     procedure FormMouseUp(Sender: TObject; Button: TMouseButton;
-       Shift: TShiftState; X, Y: Integer);
+       {%H-}Shift: TShiftState; X, Y: Integer);
+     procedure FormMouseUp(Sender: TObject; {%H-}Button: TMouseButton;
+       {%H-}Shift: TShiftState; X, Y: Integer);
      procedure FormShow(Sender: TObject);
 
   private

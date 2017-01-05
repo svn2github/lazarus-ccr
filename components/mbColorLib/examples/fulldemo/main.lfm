@@ -15,10 +15,10 @@ object Form1: TForm1
     Height = 404
     Top = 6
     Width = 476
-    ActivePage = TabSheet7
+    ActivePage = TabSheet1
     Align = alClient
     BorderSpacing.Around = 6
-    TabIndex = 7
+    TabIndex = 0
     TabOrder = 0
     OnChange = PageControl1Change
     OnMouseMove = PageControl1MouseMove
@@ -31,10 +31,12 @@ object Form1: TForm1
         Height = 360
         Top = 8
         Width = 454
-        Saturation = 146
-        SelectedColor = 3289805
+        SelectedColor = 3552968
+        Saturation = 147
         HSPickerHintFormat = 'H: %h S: %s'#13'Hex: #%hex'
         LPickerHintFormat = 'Luminance: %l'
+        VPickerHintFormat = 'Value: %value (selected)'
+        MaxLuminance = 255
         Anchors = [akTop, akLeft, akRight, akBottom]
         TabOrder = 0
         OnChange = HSLColorPicker1Change
@@ -611,7 +613,10 @@ object Form1: TForm1
         Width = 322
         Luminance = 240
         RingPickerHintFormat = 'Hue: %h'
-        SLPickerHintFormat = 'S: %s L: %l'#13'Hex: %hex'
+        SLPickerHintFormat = 'S: %hslS V: %v'#13'Hex: %hex'
+        SVPickerHintFormat = 'S: %hslS V: %v'#13'Hex: %hex'
+        MaxLuminance = 255
+        MaxSaturation = 255
         Anchors = [akTop, akLeft, akRight, akBottom]
         TabOrder = 0
         OnChange = HSLRingPicker1Change
@@ -632,25 +637,22 @@ object Form1: TForm1
         HintFormat = 'H: %h S: %s V: %v'#13'Hex: %hex'
         Anchors = [akTop, akLeft, akRight, akBottom]
         TabOrder = 0
-        OnMouseMove = HSVColorPicker1MouseMove
         Saturation = 0
         OnChange = HSVColorPicker1Change
       end
-      object VColorPicker2: TVColorPicker
+      object LVColorPicker1: TLVColorPicker
         Left = 437
         Height = 375
         Top = 2
         Width = 22
-        HintFormat = 'Value: %v (selected)'
         Layout = lyVertical
         NewArrowStyle = True
         Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
-        OnChange = VColorPicker2Change
-        Hue = 0
-        Saturation = 0
-        Value = 255
-        SelectedColor = clWhite
+        OnChange = LVColorPicker1Change
+        BrightnessMode = bmValue
+        LHintFormat = 'Luminance: %lum (selected)'
+        VHintFormat = 'Value: %value (selected)'
       end
     end
     object TabSheet6: TTabSheet
@@ -663,9 +665,13 @@ object Form1: TForm1
         Height = 364
         Top = 6
         Width = 458
+        SelectedColor = 213
+        Value = 213
         Luminance = 100
         HPickerHintFormat = 'Hue: %h (selected)'
         SLPickerHintFormat = 'S: %s L: %l'#13'Hex: %hex'
+        MaxSaturation = 255
+        MaxLuminance = 255
         Anchors = [akTop, akLeft, akRight, akBottom]
         TabOrder = 0
         OnChange = SLHColorPicker1Change
@@ -782,20 +788,20 @@ object Form1: TForm1
         Height = 25
         Top = 265
         Width = 420
-        HintFormat = 'Luminance: %l (selected)'
+        SelectedColor = 460777
         SelectionIndicator = siRect
         Anchors = [akLeft, akRight, akBottom]
         TabOrder = 2
         Hue = 0
         Saturation = 240
         Luminance = 120
+        HintFormat = 'Luminance: %l (selected)'
       end
       object VColorPicker1: TVColorPicker
         Left = 34
         Height = 21
         Top = 233
         Width = 420
-        HintFormat = 'Value: %v (selected)'
         ArrowPlacement = spBefore
         NewArrowStyle = True
         SelectionIndicator = siRect
@@ -804,23 +810,22 @@ object Form1: TForm1
         Hue = 0
         Saturation = 255
         Value = 255
+        HintFormat = 'Value: %v (selected)'
       end
       object HColorPicker1: THColorPicker
         Left = 34
         Height = 61
         Top = 304
         Width = 420
-        HintFormat = 'Hue: %h (under mouse)'
+        SelectedColor = 8882175
         Increment = 5
         ArrowPlacement = spBoth
         SelectionIndicator = siRect
         Anchors = [akLeft, akRight, akBottom]
         TabOrder = 4
         OnGetHintStr = HColorPicker1GetHintStr
-        Hue = 0
-        Saturation = 120
-        Value = 255
-        SelectedColor = 8882175
+        Luminance = 195
+        HintFormat = 'Hue: %h (under mouse)'
       end
       object SColorPicker1: TSColorPicker
         AnchorSideTop.Control = OfficeColorDialogButton
@@ -829,7 +834,7 @@ object Form1: TForm1
         Height = 291
         Top = 74
         Width = 19
-        HintFormat = 'Saturation: %s (selected)'
+        SelectedColor = 11534335
         Layout = lyVertical
         ArrowPlacement = spBefore
         NewArrowStyle = True
@@ -838,9 +843,8 @@ object Form1: TForm1
         BorderSpacing.Top = 8
         TabOrder = 5
         Hue = 60
-        Saturation = 80
-        Value = 255
-        SelectedColor = 11534335
+        Luminance = 215
+        HintFormat = 'Saturation: %s (selected)'
       end
       object Memo1: TMemo
         AnchorSideLeft.Control = Label9
@@ -903,12 +907,13 @@ object Form1: TForm1
         Height = 155
         Top = 6
         Width = 211
-        SelectedColor = 15797774
+        SelectedColor = 15406357
         HintFormat = 'H: %h S: %s'#13'Hex: %hex'
         TabOrder = 0
         OnMouseMove = HSColorPicker1MouseMove
         Hue = 240
-        Saturation = 214
+        Luminance = 128
+        Saturation = 215
         MarkerStyle = msSquare
         OnChange = HSColorPicker1Change
       end
@@ -917,12 +922,14 @@ object Form1: TForm1
         Height = 130
         Top = 168
         Width = 161
-        SelectedColor = 6974058
+        SelectedColor = 6579300
         HintFormat = 'H: %h S: %s L: %l'#13'Hex: %hex'
         TabOrder = 1
         OnMouseMove = SLColorPicker1MouseMove
         Luminance = 100
         MarkerStyle = msCross
+        SLHintFormat = 'S: %hslS L: %l'#13#10'Hex: %hex'
+        SVHintFormat = 'S: %hslS V: %v'#13#10'Hex: %hex'
         OnChange = SLColorPicker1Change
       end
       object HRingPicker1: THRingPicker
@@ -930,13 +937,11 @@ object Form1: TForm1
         Height = 130
         Top = 168
         Width = 133
-        SelectedColor = clRed
+        SelectedColor = 66047
         HintFormat = 'Hue: %h (selected)'
         TabOrder = 2
         OnMouseMove = HRingPicker1MouseMove
-        Hue = 0
-        Saturation = 255
-        Value = 255
+        Luminance = 128
         OnChange = HRingPicker1Change
       end
     end
@@ -964,10 +969,10 @@ object Form1: TForm1
         Height = 353
         Top = 19
         Width = 22
-        HintFormat = 'Cyan: %c (selected)'
+        SelectedColor = clAqua
         Anchors = [akTop, akLeft, akBottom]
         TabOrder = 0
-        SelectedColor = clAqua
+        HintFormat = 'Cyan: %c (selected)'
       end
       object MColorPicker1: TMColorPicker
         AnchorSideTop.Control = CColorPicker1
@@ -977,11 +982,11 @@ object Form1: TForm1
         Height = 353
         Top = 19
         Width = 22
-        HintFormat = 'Magenta: %m (selected)'
+        SelectedColor = clFuchsia
         ArrowPlacement = spBefore
         Anchors = [akTop, akLeft, akBottom]
         TabOrder = 1
-        SelectedColor = clFuchsia
+        HintFormat = 'Magenta: %m (selected)'
       end
       object YColorPicker1: TYColorPicker
         AnchorSideTop.Control = CColorPicker1
@@ -991,11 +996,11 @@ object Form1: TForm1
         Height = 353
         Top = 19
         Width = 31
-        HintFormat = 'Yellow: %y (selected)'
+        SelectedColor = clYellow
         ArrowPlacement = spBoth
         Anchors = [akTop, akLeft, akBottom]
         TabOrder = 2
-        SelectedColor = clYellow
+        HintFormat = 'Yellow: %y (selected)'
       end
       object KColorPicker1: TKColorPicker
         AnchorSideTop.Control = CColorPicker1
@@ -1005,13 +1010,13 @@ object Form1: TForm1
         Height = 353
         Top = 19
         Width = 22
-        HintFormat = 'Black: %k (selected)'
+        SelectedColor = 16711422
         NewArrowStyle = True
         Anchors = [akTop, akLeft, akBottom]
         TabOrder = 3
         Cyan = 0
         Black = 1
-        SelectedColor = 16711422
+        HintFormat = 'Black: %k (selected)'
       end
       object RColorPicker1: TRColorPicker
         AnchorSideTop.Control = CColorPicker1
@@ -1021,14 +1026,14 @@ object Form1: TForm1
         Height = 353
         Top = 19
         Width = 22
-        HintFormat = 'Red: %r (selected)'
+        SelectedColor = 8026879
         ArrowPlacement = spBefore
         NewArrowStyle = True
         Anchors = [akTop, akLeft, akBottom]
         TabOrder = 4
         Green = 122
         Blue = 122
-        SelectedColor = 8026879
+        HintFormat = 'Red: %r (selected)'
       end
       object GColorPicker1: TGColorPicker
         AnchorSideTop.Control = CColorPicker1
@@ -1038,14 +1043,14 @@ object Form1: TForm1
         Height = 353
         Top = 19
         Width = 34
-        HintFormat = 'Green: %g (selected)'
+        SelectedColor = 8060794
         ArrowPlacement = spBoth
         NewArrowStyle = True
         Anchors = [akTop, akLeft, akBottom]
         TabOrder = 5
         Red = 122
         Blue = 122
-        SelectedColor = 8060794
+        HintFormat = 'Green: %g (selected)'
       end
       object BColorPicker1: TBColorPicker
         AnchorSideTop.Control = CColorPicker1
@@ -1055,72 +1060,72 @@ object Form1: TForm1
         Height = 353
         Top = 19
         Width = 22
-        HintFormat = 'Blue: %b (selected)'
+        SelectedColor = 16743034
         SelectionIndicator = siRect
         Anchors = [akTop, akLeft, akBottom]
         TabOrder = 6
         Green = 122
         Red = 122
-        SelectedColor = 16743034
+        HintFormat = 'Blue: %b (selected)'
       end
       object KColorPicker2: TKColorPicker
         Left = 322
         Height = 79
         Top = 27
         Width = 69
+        SelectedColor = 16711422
         BevelInner = bvRaised
         BevelOuter = bvRaised
         BorderStyle = bsSingle
-        HintFormat = 'Black: %k (selected)'
         ArrowPlacement = spBoth
         NewArrowStyle = True
         TabOrder = 7
         Cyan = 0
         Black = 1
-        SelectedColor = 16711422
+        HintFormat = 'Black: %k (selected)'
       end
       object MColorPicker2: TMColorPicker
         Left = 320
         Height = 61
         Top = 110
         Width = 91
+        SelectedColor = clFuchsia
         BevelInner = bvLowered
         BevelOuter = bvRaised
         BorderStyle = bsSingle
-        HintFormat = 'Magenta: %m (selected)'
         Layout = lyHorizontal
         ArrowPlacement = spBoth
         NewArrowStyle = True
         TabOrder = 8
-        SelectedColor = clFuchsia
+        HintFormat = 'Magenta: %m (selected)'
       end
       object CColorPicker2: TCColorPicker
         Left = 322
         Height = 74
         Top = 172
         Width = 61
+        SelectedColor = clAqua
         BevelInner = bvRaised
         BevelOuter = bvLowered
         BorderStyle = bsSingle
-        HintFormat = 'Cyan: %c (selected)'
         ArrowPlacement = spBoth
         NewArrowStyle = True
         TabOrder = 9
-        SelectedColor = clAqua
+        HintFormat = 'Cyan: %c (selected)'
       end
       object YColorPicker2: TYColorPicker
         Left = 320
         Height = 63
         Top = 256
         Width = 81
+        SelectedColor = clYellow
         BevelInner = bvLowered
         BevelOuter = bvLowered
         BorderStyle = bsSingle
-        HintFormat = 'Yellow: %y (selected)'
         ArrowPlacement = spBoth
         NewArrowStyle = True
         TabOrder = 10
-        SelectedColor = clYellow
+        HintFormat = 'Yellow: %y (selected)'
       end
     end
     object TabSheet10: TTabSheet

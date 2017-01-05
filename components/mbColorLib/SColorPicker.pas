@@ -7,43 +7,31 @@ unit SColorPicker;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages,
-  SysUtils, Classes, Controls, Graphics, Forms,
-  RGBHSVUtils, mbTrackBarPicker, HTMLColors, Scanlines;
+  LCLIntf, LCLType, SysUtils, Classes, Controls, Graphics, Forms,
+  mbColorConv, mbTrackBarPicker, HTMLColors;
 
 type
-  TSColorPicker = class(TmbTrackBarPicker)
+  TSColorPicker = class(TmbHSLVTrackBarPicker)
   private
-    FVal, FHue, FSat: Double;
-    FMaxVal, FMaxHue, FMaxSat: Integer;
-    function ArrowPosFromSat(s: integer): integer;
-    function GetHue: Integer;
-    function GetSat: Integer;
-    function GetSelectedColor: TColor;
-    function GetVal: Integer;
-    function SatFromArrowPos(p: integer): integer;
-    procedure SetHue(h: integer);
-    procedure SetMaxHue(h: Integer);
-    procedure SetMaxSat(s: Integer);
-    procedure SetMaxVal(v: Integer);
-    procedure SetSat(s: integer);
-    procedure SetValue(v: integer);
-    procedure SetSelectedColor(c: TColor);
+    function ArrowPosFromSat(s: Double): integer;
+    function SatFromArrowPos(p: integer): Double;
   protected
     procedure Execute(tbaAction: integer); override;
     function GetArrowPos: integer; override;
     function GetGradientColor(AValue: Integer): TColor; override;
     function GetSelectedValue: integer; override;
+    procedure SetMaxSat(S: Integer); override;
+    procedure SetRelSat(S: Double); override;
+    procedure SetSelectedColor(c: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
   published
-    property Hue: integer read GetHue write SetHue;
-    property Saturation: integer read GetSat write SetSat;
-    property Value: integer read GetVal write SetValue;
-    property MaxHue: Integer read FMaxHue write SetMaxHue default 359;
-    property MaxSaturation: Integer read FMaxSat write SetMaxSat default 255;
-    property MaxValue: Integer read FMaxVal write SetMaxVal default 255;
-    property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
+    property Hue default 0;
+    property Saturation default 255;
+    property Luminance default 127;
+    property Value default 255;
+    property SelectedColor default clRed;
+    property HintFormat;
   end;
 
 
@@ -57,29 +45,27 @@ uses
 constructor TSColorPicker.Create(AOwner: TComponent);
 begin
   inherited;
-  FMaxHue := 359;
-  FMaxSat := 255;
-  FMaxVal := 255;
   FGradientWidth := FMaxSat + 1;
   FGradientHeight := 1;
   FHue := 0;
+  FLum := 0.5;
   FVal := 1.0;
-  SetSat(FMaxSat);
+  Saturation := 255;
   HintFormat := 'Saturation: %value (selected)';
 end;
 
-function TSColorPicker.ArrowPosFromSat(s: integer): integer;
+function TSColorPicker.ArrowPosFromSat(s: Double): integer;
 var
   a: integer;
 begin
   if Layout = lyHorizontal then
   begin
-    a := Round(s / FMaxSat * (Width - 12));
+    a := Round(s * (Width - 12));
     if a > Width - FLimit then a := Width - FLimit;
   end
   else
   begin
-    a := Round((FMaxSat - s) / FMaxSat * (Height - 12));
+    a := Round((1.0 - s) * (Height - 12));
     if a > Height - FLimit then a := Height - FLimit;
   end;
   if a < 0 then a := 0;
@@ -87,36 +73,39 @@ begin
 end;
 
 procedure TSColorPicker.Execute(tbaAction: integer);
+var
+  dSat: Double;
 begin
+  if FMaxSat = 0 then dSat := 0 else dSat := Increment / FMaxSat;
   case tbaAction of
     TBA_Resize:
-      SetSat(GetSat());
+      SetRelSat(FSat);
     TBA_MouseMove:
-      SetSat(SatFromArrowPos(FArrowPos));
+      SetRelSat(SatFromArrowPos(FArrowPos));
     TBA_MouseDown:
-      SetSat(SatFromArrowPos(FArrowPos));
+      SetRelSat(SatFromArrowPos(FArrowPos));
     TBA_MouseUp:
-      SetSat(SatFromArrowPos(FArrowPos));
+      SetRelSat(SatFromArrowPos(FArrowPos));
     TBA_WheelUp:
-      SetSat(GetSat() + Increment);
+      SetRelSat(FSat + dSat);
     TBA_WheelDown:
-      SetSat(GetSat() - Increment);
+      SetRelSat(FSat - dSat);
     TBA_VKLeft:
-      SetSat(GetSat() - Increment);
+      SetRelSat(FSat - dSat);
     TBA_VKCtrlLeft:
-      SetSat(0);
+      SetRelSat(0.0);
     TBA_VKRight:
-      SetSat(GetSat() + Increment);
+      SetRelSat(FSat + dSat);
     TBA_VKCtrlRight:
-      SetSat(FMaxSat);
+      SetRelSat(1.0);
     TBA_VKUp:
-      SetSat(GetSat() + Increment);
+      SetRelSat(FSat + dSat);
     TBA_VKCtrlUp:
-      SetSat(FMaxSat);
+      SetRelSat(1.0);
     TBA_VKDown:
-      SetSat(GetSat() - Increment);
+      SetRelSat(FSat - dSat);
     TBA_VKCtrlDown:
-      SetSat(0);
+      SetRelSat(0.0);
     else
       inherited;
   end;
@@ -127,103 +116,49 @@ begin
   if FMaxSat = 0 then
     Result := inherited GetArrowPos
   else
-    Result := ArrowPosFromSat(GetSat());
+    Result := ArrowPosFromSat(FSat);
 end;
 
 function TSColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
-  Result := HSVtoColor(FHue, AValue/FMaxSat, FVal);
-end;
-
-function TSColorPicker.GetHue: Integer;
-begin
-  Result := round(FHue * FMaxHue);
-end;
-
-function TSColorPicker.GetSat: Integer;
-begin
-  Result := round(FSat * FMaxSat);
-end;
-
-function TSColorPicker.GetSelectedColor: TColor;
-begin
-  Result := HSVToColor(FHue, FSat, FVal);
-  if WebSafe then
-    Result := GetWebSafe(Result);
+  Result := HSLVtoColor(FHue, AValue/FMaxSat, FLum, FVal);
 end;
 
 function TSColorPicker.GetSelectedValue: integer;
 begin
-  Result := GetSat();
+  Result := Saturation;
 end;
 
-function TSColorPicker.GetVal: Integer;
-begin
-  Result := round(FVal * FMaxVal);
-end;
-
-function TSColorPicker.SatFromArrowPos(p: integer): integer;
+function TSColorPicker.SatFromArrowPos(p: integer): Double;
 var
-  s: integer;
+  s: Double;
 begin
   case Layout of
-    lyHorizontal: s := Round(p / (Width - 12) * FMaxSat);
-    lyVertical  : s := Round(FMaxSat - p / (Height - 12) * FMaxSat);
+    lyHorizontal: s :=       p / (Width  - 12);
+    lyVertical  : s := 1.0 - p / (Height - 12);
   end;
-  Clamp(s, 0, FMaxSat);
+  Clamp(s, 0, 1.0);
   Result := s;
 end;
 
-procedure TSColorPicker.SetMaxHue(h: Integer);
+procedure TSColorPicker.SetMaxSat(S: Integer);
 begin
-  if h = FMaxHue then
+  if S = FMaxSat then
     exit;
-  FMaxHue := h;
-  CreateGradient;
-  //if FChange and Assigned(OnChange) then OnChange(Self);
-  Invalidate;
-end;
-
-procedure TSColorPicker.SetMaxSat(s: Integer);
-begin
-  if s = FMaxSat then
-    exit;
-  FMaxSat := s;
+  FMaxSat := S;
   FGradientWidth := FMaxSat + 1;
   CreateGradient;
-  //if FChange and Assigned(OnChange) then OnChange(Self);
   Invalidate;
+  DoChange;
 end;
 
-procedure TSColorPicker.SetMaxVal(v: Integer);
+procedure TSColorPicker.SetRelSat(S: Double);
 begin
-  if v = FMaxVal then
-    exit;
-  FMaxVal := v;
-  CreateGradient;
-  //if FChange and Assigned(OnChange) then OnChange(Self);
-  Invalidate;
-end;
-
-procedure TSColorPicker.SetHue(h: integer);
-begin
-  Clamp(h, 0, FMaxHue);
-  if GetHue() <> h then
+  Clamp(S, 0, 1.0);
+  if FSat <> S then
   begin
-    FHue := h / FMaxHue;
-    CreateGradient;
-    Invalidate;
-    DoChange;
-  end;
-end;
-
-procedure TSColorPicker.SetSat(s: integer);
-begin
-  Clamp(s, 0, FMaxSat);
-  if GetSat() <> s then
-  begin
-    FSat := s / FMaxSat;
-    FArrowPos := ArrowPosFromSat(s);
+    FSat := S;
+    FArrowPos := ArrowPosFromSat(S);
     Invalidate;
     DoChange;
   end;
@@ -231,7 +166,10 @@ end;
 
 procedure TSColorPicker.SetSelectedColor(c: TColor);
 var
-  h, s, v: integer;
+  H: Double = 0;
+  S: Double = 0;
+  L: Double = 0;
+  V: Double = 0;
   needNewGradient: Boolean;
 begin
   if WebSafe then
@@ -239,27 +177,25 @@ begin
   if c = GetSelectedColor then
     exit;
 
-  RGBToHSVRange(GetRValue(c), GetGValue(c), GetBValue(c), h, s, v);
-  needNewGradient := (h <> FHue) or (v <> FVal);
-  FHue := h;
-  FSat := s;
-  FVal := v;
+  ColorToHSLV(c, H,S,L,V);
+  case BrightnessMode of
+    bmLuminance:
+      begin
+        needNewGradient := (H <> FHue) or (L <> FLum);
+        FLum := L;
+      end;
+    bmValue:
+      begin
+        needNewGradient := (H <> FHue) or (V <> FVal);
+        FVal := V;
+      end;
+  end;
+  FHue := H;
+  FSat := S;
   if needNewGradient then
     CreateGradient;
   Invalidate;
   DoChange;
-end;
-
-procedure TSColorPicker.SetValue(v: integer);
-begin
-  Clamp(v, 0, FMaxVal);
-  if GetVal() <> v then
-  begin
-    FVal := v / FMaxVal;
-    CreateGradient;
-    Invalidate;
-    DoChange;
-  end;
 end;
 
 end.

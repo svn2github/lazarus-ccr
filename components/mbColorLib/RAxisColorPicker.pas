@@ -157,7 +157,6 @@ end;
 
 procedure TRAxisColorPicker.Resize;
 begin
-  FManual := false;
   mx := Round(FB * Width / 255);
   my := Round((255 - FG) * Height / 255);
   inherited;
@@ -231,7 +230,6 @@ begin
   FG := g;
   FB := b;
   FSelected := c;
-  FManual := false;
   mx := Round(FB * Width / 255);            // BLUE on x
   my := Round((255 - FG) * Height / 255);   // GREEN on y
   if needNewGradient then

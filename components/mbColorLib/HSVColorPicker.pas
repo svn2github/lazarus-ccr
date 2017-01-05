@@ -8,34 +8,17 @@ interface
 
 uses
   LCLIntf, LCLType, SysUtils, Classes, Controls, Graphics, Math, Forms, Themes,
-  RGBHSVUtils, Scanlines, HTMLColors, mbColorPickerControl;
+  HTMLColors, mbColorConv, mbColorPickerControl;
 
 type
-  THSVColorPicker = class(TmbColorPickerControl)
+  THSVColorPicker = class(TmbHSLVColorPickerControl)
   private
-    FHue, FSat, FValue: Double;
-    FMaxHue, FMaxSat, FMaxValue: Integer;
     FSatCircColor, FHueLineColor: TColor;
-    FSelectedColor: TColor;
     FShowSatCirc: boolean;
     FShowHueLine: boolean;
     FShowSelCirc: boolean;
-    function RadHue(New: integer): integer;
-    function GetHue: Integer;
-    function GetSat: Integer;
-    function GetValue: Integer;
-    function GetRed: Integer;
-    function GetGreen: Integer;
-    function GetBlue: Integer;
-    procedure SetMaxHue(h: Integer);
-    procedure SetMaxSat(s: Integer);
-    procedure SetMaxValue(v: Integer);
-    procedure SetHue(h: integer);
-    procedure SetSat(s: integer);
-    procedure SetValue(V: integer);
-    procedure SetRed(r: Integer);
-    procedure SetGreen(g: Integer);
-    procedure SetBlue(b: Integer);
+    procedure SetRelHue(H: Double);
+    procedure SetRelSat(S: Double);
     procedure SetSatCircColor(c: TColor);
     procedure SetHueLineColor(c: TColor);
     procedure DrawSatCirc;
@@ -47,31 +30,26 @@ type
     procedure UpdateCoords;
   protected
     procedure CreateGradient; override;
-    procedure CreateWnd; override;
+//    procedure CreateWnd; override;
     function GetGradientColor2D(X, Y: Integer): TColor; override;
-    function GetSelectedColor: TColor; override;
     procedure Paint; override;
     procedure Resize; override;
-    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    procedure SelectColor(x, y: integer);
+    procedure SelectColor(x, y: integer); override;
     procedure SetSelectedColor(c: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
     function GetColorAtPoint(x, y: integer): TColor; override;
-    property Red: Integer read GetRed write SetRed;
-    property Green: Integer read GetGreen write SetGreen;
-    property Blue: Integer read GetBlue write SetBlue;
   published
+    property BrightnessMode default bmValue;
     property SelectedColor default clRed;
-    property Hue: integer read GetHue write SetHue default 0;
-    property Saturation: integer read GetSat write SetSat default 255;
-    property Value: integer read GetValue write SetValue default 255;
-    property MaxHue: Integer read FMaxHue write SetMaxHue default 359;
-    property MaxSaturation: Integer read FMaxSat write SetMaxSat default 255;
-    property MaxValue: Integer read FMaxValue write SetMaxValue default 255;
+    property Hue default 0;
+    property Luminance default 127;
+    property Saturation default 255;
+    property Value default 255;
+    property MaxHue default 360;
+    property MaxLuminance default 255;
+    property MaxSaturation default 255;
+    property MaxValue default 255;
     property SaturationCircleColor: TColor read FSatCircColor write SetSatCircColor default clSilver;
     property HueLineColor: TColor read FHueLineColor write SetHueLineColor default clGray;
     property ShowSaturationCircle: boolean read FShowSatCirc write SetShowSatCirc default true;
@@ -92,16 +70,14 @@ constructor THSVColorPicker.Create(AOwner: TComponent);
 begin
   inherited;
   SetInitialBounds(0, 0, 204, 204);
-  FMaxHue := 359;
-  FMaxSat := 255;
-  FMaxValue := 255;
   FHue := 0;
   FSat := 1.0;
-  FValue := 1.0;
+  FLum := 0.5;
+  FVal := 1.0;
+  SetSelectedColor(clRed);
+  BrightnessMode := bmValue;
   FSatCircColor := clSilver;
   FHueLineColor := clGray;
-  FSelectedColor := clRed;
-  FManual := false;
   FShowSatCirc := true;
   FShowHueLine := true;
   FShowSelCirc := true;
@@ -114,13 +90,13 @@ begin
   FGradientHeight := FGradientWidth;
   inherited;
 end;
-
+                  (*
 procedure THSVColorPicker.CreateWnd;
 begin
   inherited;
   CreateGradient;
   UpdateCoords;
-end;
+end;                *)
 
 procedure THSVColorPicker.DrawSatCirc;
 var
@@ -171,11 +147,6 @@ begin
   InternalDrawMarker(x, y, c);
 end;
 
-function THSVColorPicker.GetBlue: Integer;
-begin
-  Result := GetBValue(FSelectedColor);
-end;
-
 function THSVColorPicker.GetColorAtPoint(x, y: integer): TColor;
 var
   angle: Double;
@@ -196,7 +167,7 @@ begin
       angle := angle - 360;
     h := angle / 360;
     s := r / radius;
-    Result := HSVtoColor(h, s, FValue);
+    Result := HSLVtoColor(h, s, FLum, FVal);
     if WebSafe then
       Result := GetWebSafe(Result);
   end else
@@ -209,8 +180,7 @@ var
   dx, dy: Integer;
   dSq, radiusSq: Integer;
   radius, size: Integer;
-  S, H, V: Double;
-  q: TRGBQuad;
+  S, H: Double;
 begin
   size := FGradientWidth;  // or Height, they are the same...
   radius := size div 2;
@@ -227,100 +197,11 @@ begin
     H := 180 * (1 + arctan2(dx, dy) / pi);  // wp: order (x,y) is correct!
     H := H + 90;
     if H > 360 then H := H - 360;
-    Result := HSVtoColor(H/360, S, FValue);
+    Result := HSLVtoColor(H/360, S, FLum, FVal);
     if WebSafe then
       Result := GetWebSafe(Result);
   end else
     Result := GetDefaultColor(dctBrush);
-end;
-
-function THSVColorPicker.GetGreen: Integer;
-begin
-  Result := GetGValue(FSelectedColor);
-end;
-
-function THSVColorPicker.GetHue: Integer;
-begin
-  Result := round(FHue * FMaxHue);
-end;
-
-function THSVColorPicker.GetRed: Integer;
-begin
-  Result := GetRValue(FSelectedColor);
-end;
-
-function THSVColorPicker.GetSat: Integer;
-begin
-  Result := round(FSat * FMaxSat);
-end;
-
-function THSVColorPicker.GetSelectedColor: TColor;
-begin
-  if FSelectedColor <> clNone then
-  begin
-    Result := HSVtoColor(FHue, FSat, FValue);
-    if WebSafe then
-      Result := GetWebSafe(Result);
-  end
-  else
-    Result := clNone;
-end;
-
-function THSVColorPicker.GetValue: Integer;
-begin
-  Result := round(FValue * FMaxValue);
-end;
-
-procedure THSVColorPicker.KeyDown(var Key: Word; Shift: TShiftState);
-var
-  eraseKey: Boolean;
-  delta: Integer;
-begin
-  eraseKey := true;
-  delta := IfThen(ssCtrl in shift, 10, 1);
-
-  case Key  of
-    VK_LEFT  : SetHue(RadHue(GetHue() + delta));
-    VK_RIGHT : SetHue(RadHue(GetHue() - delta));
-    VK_UP    : SetSat(GetSat() + delta);
-    VK_DOWN  : SetSat(GetSat() - delta);
-    else       eraseKey := false;
-  end;
-
-  if eraseKey then
-    Key := 0;
-
-  inherited;
-end;
-
-procedure THSVColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState;
-  X, Y: Integer);
-begin
-  inherited;
-  if csDesigning in ComponentState then
-    exit;
-  if (Button = mbLeft) and PointInCircle(Point(x, y), Min(Width, Height)) then
-    SelectColor(X, Y);
-  SetFocus;
-end;
-
-procedure THSVColorPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
-begin
-  inherited;
-  if csDesigning in ComponentState then
-    exit;
-  if (ssLeft in Shift) and PointInCircle(Point(x, y), Min(Width, Height)) then
-    SelectColor(X, Y);
-end;
-
-procedure THSVColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState;
-  X, Y: Integer);
-begin
-  inherited;
-  if csDesigning in ComponentState then
-    exit;
-  if (Button = mbLeft) and PointInCircle(Point(x, y), Min(Width, Height)) then
-    SelectColor(X, Y);
 end;
 
 procedure THSVColorPicker.Paint;
@@ -340,13 +221,6 @@ begin
   DrawSatCirc;
   DrawHueLine;
   DrawMarker(mx, my);
-end;
-
-function THSVColorPicker.RadHue(New: integer): integer;
-begin
-  if New < 0 then New := New + (FMaxHue + 1);
-  if New > (FMaxHue + 1) then New := New - (FMaxHue + 1);
-  Result := New;
 end;
 
 procedure THSVColorPicker.Resize;
@@ -393,46 +267,10 @@ begin
 
   FHue := H;
   FSat := S;
-  FSelectedColor := HSVToColor(FHue, FSat, FValue);
+  FSelected := HSLVToColor(FHue, FSat, FLum, FVal);
   UpdateCoords;
   Invalidate;
   DoChange;
-end;
-
-procedure THSVColorPicker.SetBlue(b: Integer);
-var
-  c: TColor;
-begin
-  Clamp(b, 0, 255);
-  if b = GetBValue(FSelectedColor) then
-    exit;
-  c := RgbToColor(GetRValue(FSelectedColor), GetGValue(FSelectedColor), b);
-  SetSelectedColor(c);
-end;
-
-procedure THSVColorPicker.SetGreen(g: Integer);
-var
-  c: TColor;
-begin
-  Clamp(g, 0, 255);
-  if g = GetGValue(FSelectedColor) then
-    exit;
-  c := RgbToColor(GetRValue(FSelectedColor), g, GetBValue(FSelectedColor));
-  SetSelectedColor(c);
-end;
-
-procedure THSVColorPicker.SetHue(h: integer);
-begin
-  if h > FMaxHue then h := h - (FMaxHue + 1);
-  if h < 0 then h := h + (FMaxHue + 1);
-  if GetHue() <> h then
-  begin
-    FHue := h / FMaxHue;
-    FSelectedColor := HSVToColor(FHue, FSat, FValue);
-    UpdateCoords;
-    Invalidate;
-    DoChange;
-  end;
 end;
 
 procedure THSVColorPicker.SetHueLineColor(c: TColor);
@@ -444,54 +282,27 @@ begin
   end;
 end;
 
-procedure THSVColorPicker.SetMaxHue(h: Integer);
+procedure THSVColorPicker.SetRelHue(H: Double);
 begin
-  if h = FMaxHue then
-    exit;
-  FMaxHue := h;
-  CreateGradient;
-  //if FChange and Assigned(OnChange) then OnChange(Self);
-  Invalidate;
-end;
-
-procedure THSVColorPicker.SetMaxSat(s: Integer);
-begin
-  if s = FMaxSat then
-    exit;
-  FMaxSat := s;
-  CreateGradient;
-  //if FChange and Assigned(OnChange) then OnChange(Self);
-  Invalidate;
-end;
-
-procedure THSVColorPicker.SetMaxValue(v: Integer);
-begin
-  if v = FMaxValue then
-    exit;
-  FMaxValue := v;
-  CreateGradient;
-  //if FChange and Assigned(OnChange) then OnChange(Self);
-  Invalidate;
-end;
-
-procedure THSVColorPicker.SetRed(r: Integer);
-var
-  c: TColor;
-begin
-  Clamp(r, 0, 255);
-  if r = GetRValue(FSelectedColor) then
-    exit;
-  c := RgbToColor(r, GetGValue(FSelectedColor), GetBValue(FSelectedColor));
-  SetSelectedColor(c);
-end;
-
-procedure THSVColorPicker.SetSat(s: integer);
-begin
-  Clamp(s, 0, FMaxSat);
-  if GetSat() <> s then
+  if H > 1 then H := H - 1;
+  if H < 0 then H := H + 1;
+  if FHue <> h then
   begin
-    FSat := s / FMaxSat;
-    FSelectedColor := HSVToColor(FHue, FSat, FValue);
+    FHue := h;
+    FSelected := HSLVtoColor(FHue, FSat, FLum, FVal);
+    UpdateCoords;
+    Invalidate;
+    DoChange;
+  end;
+end;
+
+procedure THSVColorPicker.SetRelSat(S: Double);
+begin
+  Clamp(S, 0.0, 1.0);
+  if FSat <> S then
+  begin
+    FSat := s;
+    FSelected := HSLVToColor(FHue, FSat, FLum, FVal);
     UpdateCoords;
     Invalidate;
     DoChange;
@@ -508,15 +319,13 @@ begin
 end;
 
 procedure THSVColorPicker.SetSelectedColor(c: TColor);
-var
-  h, s, v: Double;
 begin
   if WebSafe then
     c := GetWebSafe(c);
-  if c = FSelectedColor then
+  if c = FSelected then
     exit;
-  RGBtoHSV(GetRValue(c), GetGValue(c), GetBValue(c), FHue, FSat, FValue);
-  FSelectedColor := c;
+  ColorToHSLV(c, FHue, FSat, FLum, FVal);
+  FSelected := c;
   UpdateCoords;
   Invalidate;
   DoChange;
@@ -546,19 +355,6 @@ begin
   begin
     FShowSelCirc := s;
     Invalidate;
-  end;
-end;
-
-procedure THSVColorPicker.SetValue(V: integer);
-begin
-  Clamp(V, 0, FMaxValue);
-  if GetValue() <> V then
-  begin
-    FValue := V / FMaxValue;
-    FSelectedColor := HSVToColor(FHue, FSat, FValue);
-    CreateGradient;
-    Invalidate;
-    DoChange;
   end;
 end;
 

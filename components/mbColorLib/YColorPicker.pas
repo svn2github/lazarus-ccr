@@ -7,13 +7,8 @@ interface
 {$ENDIF}
 
 uses
-  {$IFDEF FPC}
-  LCLIntf, LCLType, LMessages,
-  {$ELSE}
-  Windows, Messages,
-  {$ENDIF}
-  SysUtils, Classes, Controls, Graphics, Forms,
-  RGBCMYKUtils, mbTrackBarPicker, HTMLColors, Scanlines;
+  LCLIntf, LCLType, SysUtils, Classes, Controls, Graphics, Forms,
+  RGBCMYKUtils, mbTrackBarPicker, HTMLColors;
 
 type
   TYColorPicker = class(TmbTrackBarPicker)
@@ -21,8 +16,6 @@ type
     FYellow, FMagenta, FCyan, FBlack: integer;
     function ArrowPosFromYellow(y: integer): integer;
     function YellowFromArrowPos(p: integer): integer;
-    function GetSelectedColor: TColor;
-    procedure SetSelectedColor(clr: TColor);
     procedure SetYellow(y: integer);
     procedure SetMagenta(m: integer);
     procedure SetCyan(c: integer);
@@ -31,7 +24,9 @@ type
     procedure Execute(tbaAction: integer); override;
     function GetArrowPos: integer; override;
     function GetGradientColor(AValue: Integer): TColor; override;
+    function GetSelectedColor: TColor; override;
     function GetSelectedValue: integer; override;
+    procedure SetSelectedColor(clr: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
   published
@@ -39,8 +34,9 @@ type
     property Magenta: integer read FMagenta write SetMagenta default 0;
     property Cyan: integer read FCyan write SetCyan default 0;
     property Black: integer read FBlack write SetBlack default 0;
-    property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
+    property SelectedColor default clRed;
     property Layout default lyVertical;
+    property HintFormat;
   end;
 
 implementation

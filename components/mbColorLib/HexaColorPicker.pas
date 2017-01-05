@@ -11,8 +11,7 @@ interface
 uses
   LCLIntf, LCLType, LMessages, SysUtils, Classes, Controls, Graphics, StdCtrls,
   Forms, Themes, Math,
-  HTMLColors, RGBHSLUtils, RGBHSVUtils, RGBCMYKUtils, RGBCIEUtils,
-  mbBasicPicker;
+  HTMLColors, mbBasicPicker;
 
 const
   CustomCell = -2;
@@ -90,7 +89,6 @@ type
     procedure SetNewArrowStyle(Value: boolean);
     procedure SetMarker(Value: TMarker);
     procedure SetRadius(r: integer);
-    procedure SetSelectedColor(const Value: TColor);
     procedure SetSliderVisible(Value: boolean);
     procedure SetSliderWidth(w: integer);
     function SelectAvailableColor(Color: TColor): boolean;
@@ -100,6 +98,7 @@ type
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure Paint; override;
     procedure Resize; override;
+    procedure SetSelectedColor(Value: TColor); override;
     procedure CMHintShow(var Message: TLMessage); message CM_HINTSHOW;
     procedure WMLButtonDown(var Message: TLMLButtonDown); message LM_LBUTTONDOWN;
     procedure WMLButtonUp(var Message: TLMLButtonUp); message LM_LBUTTONUP;
@@ -705,7 +704,7 @@ begin
   FBWCombRect := Rect(
     FColorCombRect.Left,
     FColorCombRect.Bottom - 4,
-    Round(17 * FCombSize * cos(Pi / 6) / 2) + 6 * FCombSize,
+    Round(17 * FCombSize * cos(Pi / 6) / 2) {%H-}+ 6 * FCombSize,
     FColorCombRect.Bottom + 2 * FCombSize
   );
   if FSliderVisible then
@@ -977,7 +976,7 @@ begin
   end;
 end;
 
-procedure THexaColorPicker.SetSelectedColor(const Value: TColor);
+procedure THexaColorPicker.SetSelectedColor(Value: TColor);
 begin
   FCurrentColor := Value;
   SelectColor(Value);

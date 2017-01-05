@@ -11,11 +11,11 @@ uses
   Scanlines;
 
 { The next four procedures assume H, S, V to be in the range 0..1 }
-procedure ColorToHSV(c: TColor; out H, S, V: Double);
-procedure RGBtoHSV(R, G, B: Integer; out H, S, V: Double);
+//procedure ColorToHSV(c: TColor; out H, S, V: Double);
+//procedure RGBtoHSV(R, G, B: Integer; out H, S, V: Double);
 
-function HSVtoColor(H, S, V: Double): TColor;
-procedure HSVtoRGB(H, S, V: Double; out R, G, B: Integer);
+//function HSVtoColor(H, S, V: Double): TColor;
+//procedure HSVtoRGB(H, S, V: Double; out R, G, B: Integer);
 
 { These next procedure assume H to be in the range 0..360
   and S, V in the range 0..255 }
@@ -117,8 +117,6 @@ procedure RGBToHSVRange(R, G, B: integer; out H, S, V: integer);
 var
   Delta, Min, H1, S1: double;
 begin
-  h1 := h;
-  s1 := s;
   Min := MinIntValue([R, G, B]);
   V := MaxIntValue([R, G, B]);
   Delta := V - Min;

@@ -21,6 +21,7 @@ function IsEmptyRect(R: TRect): Boolean;
 
 const
   EMPTY_RECT: TRect = (Left: -1; Top: -1; Right: -1; Bottom: -1);
+  TWO_PI = 2.0 * pi;
 
 implementation
 

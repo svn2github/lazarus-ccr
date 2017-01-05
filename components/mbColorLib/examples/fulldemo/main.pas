@@ -4,16 +4,18 @@ interface
 
 
 uses
-  LCLIntf, LCLType, SysUtils, Variants,Classes, Graphics, Controls,
-  Forms, Dialogs, HSLColorPicker, ComCtrls, StdCtrls, ExtCtrls, mbColorPreview,
+  LCLIntf, LCLType, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, HSLColorPicker, ComCtrls, StdCtrls, ExtCtrls, mbColorPreview,
   HexaColorPicker, mbColorPalette, HSLRingPicker, HSVColorPicker, PalUtils,
   SLHColorPicker, mbDeskPickerButton, mbOfficeColorDialog, SColorPicker,
-  HColorPicker, VColorPicker, mbTrackBarPicker, LColorPicker, HRingPicker,
-  SLColorPicker, HSColorPicker, IniFiles, mbColorPickerControl,
-  BColorPicker, GColorPicker, RColorPicker, KColorPicker, YColorPicker,
-  MColorPicker, CColorPicker, CIEBColorPicker, CIEAColorPicker, Typinfo,
-  CIELColorPicker, BAxisColorPicker, GAxisColorPicker, RAxisColorPicker,
-  mbColorTree, mbColorList {for internet shortcuts}, mbBasicPicker;
+  HColorPicker, LVColorPicker, mbTrackBarPicker, LColorPicker, HRingPicker,
+  SLColorPicker, HSColorPicker, IniFiles, mbColorPickerControl, BColorPicker,
+  GColorPicker, RColorPicker, KColorPicker, YColorPicker, MColorPicker,
+  CColorPicker, CIEBColorPicker, CIEAColorPicker, Typinfo, CIELColorPicker,
+  BAxisColorPicker, GAxisColorPicker, RAxisColorPicker, mbColorTree,
+  mbColorList, mbBasicPicker,
+
+  VColorPicker;
 
 type
 
@@ -63,7 +65,6 @@ type
     HSColorPicker1: THSColorPicker;
     SLColorPicker1: TSLColorPicker;
     HRingPicker1: THRingPicker;
-    VColorPicker2: TVColorPicker;
     CheckBox1: TCheckBox;
     CbMarker: TComboBox;
     Label4: TLabel;
@@ -82,6 +83,7 @@ type
     TabSheet9: TTabSheet;
     CColorPicker1: TCColorPicker;
     MColorPicker1: TMColorPicker;
+    LVColorPicker1: TLVColorPicker;
     YColorPicker1: TYColorPicker;
     KColorPicker1: TKColorPicker;
     Label8: TLabel;
@@ -131,8 +133,6 @@ type
     procedure HSLRingPicker1MouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
     procedure HSVColorPicker1Change(Sender: TObject);
-    procedure HSVColorPicker1MouseMove(Sender: TObject; Shift: TShiftState;
-      X, Y: Integer);
     procedure SLHColorPicker1Change(Sender: TObject);
     procedure SLHColorPicker1MouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
@@ -149,7 +149,7 @@ type
       Y: Integer);
     procedure udSizeChangingEx(Sender: TObject; var AllowChange: Boolean;
       NewValue: SmallInt; Direction: TUpDownDirection);
-    procedure VColorPicker2Change(Sender: TObject);
+    procedure LVColorPicker1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
     procedure CbMarkerChange(Sender: TObject);
@@ -176,7 +176,8 @@ implementation
 {$R mxico.res} //MXS icon resource file, for internet shortcut only
 
 uses
-  RGBHSLUtils;
+  mbColorConv;
+//  RGBHSLUtils;
 
 procedure TForm1.tb1Change(Sender: TObject);
 begin
@@ -244,15 +245,9 @@ end;
 
 procedure TForm1.HSVColorPicker1Change(Sender: TObject);
 begin
-  sc.color := HSVColorPicker1.SelectedColor;
-  VColorPicker2.Saturation := HSVColorPicker1.Saturation;
-  VColorPicker2.Hue := HSVColorPicker1.Hue;
-end;
-
-procedure TForm1.HSVColorPicker1MouseMove(Sender: TObject;
-  Shift: TShiftState; X, Y: Integer);
-begin
-uc.Color := HSVColorPicker1.ColorUnderCursor;
+  LVColorPicker1.Saturation := HSVColorPicker1.Saturation;
+  LVColorPicker1.Hue := HSVColorPicker1.Hue;
+  sc.color := LVColorPicker1.SelectedColor;
 end;
 
 procedure TForm1.SLHColorPicker1Change(Sender: TObject);
@@ -322,17 +317,19 @@ begin
   uc.color := hringpicker1.ColorUnderCursor;
 end;
 
-procedure TForm1.VColorPicker2Change(Sender: TObject);
+procedure TForm1.LVColorPicker1Change(Sender: TObject);
 begin
-  HSVColorPicker1.Value := VColorPicker2.Value;
+  if (sc = nil) or (uc = nil) or (LVColorPicker1 = nil) or (HSVColorPicker1 = nil) then
+    exit;
+  LVColorPicker1.Saturation := HSVColorPicker1.Saturation;
+  LVColorPicker1.Hue := HSVColorPicker1.Hue;
+  sc.Color := LVColorPicker1.SelectedColor;
+  uc.Color := HSVtoColor(HSVColorPicker1.RelHue, HSVColorPicker1.RelSaturation, HSVColorPicker1.RelValue);
 end;
 
 // only for internet shortcuts
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-//  MaxHue := 360;
-//  MaxSat := 240;
-//  MaxLum := 240;
   with TIniFile.Create(ExtractFilePath(Application.ExeName) + '\MXS Website.url') do
   try
     WriteString('InternetShortcut','URL', 'http://mxs.bergsoft.net');

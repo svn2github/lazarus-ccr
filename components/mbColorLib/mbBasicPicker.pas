@@ -25,14 +25,16 @@ type
     procedure CreateGradient; virtual;
     procedure DoChange; virtual;
     function GetColorUnderCursor: TColor; virtual;
-    function GetGradientColor(AValue: Integer): TColor; virtual;
-    function GetGradientColor2D(X, Y: Integer): TColor; virtual;
+    function GetGradientColor({%H-}AValue: Integer): TColor; virtual;
+    function GetGradientColor2D({%H-}X, {%H-}Y: Integer): TColor; virtual;
     function GetHintPos(X, Y: Integer): TPoint; virtual;
     function GetHintStr(X, Y: Integer): String; virtual;
+    function GetSelectedColor: TColor; virtual; abstract;
     procedure PaintParentBack; virtual; overload;
     procedure PaintParentBack(ACanvas: TCanvas); overload;
     procedure PaintParentBack(ACanvas: TCanvas; ARect: TRect); overload;
     procedure PaintParentBack(ABitmap: TBitmap); overload;
+    procedure SetSelectedColor(c: TColor); virtual; abstract;
     procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
     procedure CMParentColorChanged(var Message: TLMessage); message CM_PARENTCOLORCHANGED;
     property ColorUnderCursor: TColor read GetColorUnderCursor;
@@ -46,6 +48,7 @@ type
     function GetHexColorUnderCursor: string; virtual;
   published
     property ParentColor default true;
+    property SelectedColor: TColor read GetSelectedColor write SetSelectedColor;
   end;
 
 implementation

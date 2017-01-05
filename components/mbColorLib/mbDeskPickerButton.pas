@@ -60,8 +60,8 @@ type
       var Handled: Boolean);
   public
     constructor Create(AOwner: TComponent); override;
-    procedure ExecuteTarget(Target: TObject); override;
-    function HandlesTarget(Target: TObject): Boolean; override;
+    procedure ExecuteTarget({%H-}Target: TObject); override;
+    function HandlesTarget({%H-}Target: TObject): Boolean; override;
 //    procedure UpdateTarget(Target: TObject); override;
   published
     property Caption;

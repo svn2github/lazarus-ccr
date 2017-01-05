@@ -8,7 +8,7 @@ interface
 
 uses
   LCLIntf, LCLType, SysUtils, Classes, Controls, Graphics, Forms,
-  HTMLColors, RGBHSLUtils, mbTrackBarPicker;
+  HTMLColors, {RGBHSLUtils, }mbTrackBarPicker;
 
 type
   TLColorPicker = class(TmbTrackBarPicker)
@@ -19,7 +19,6 @@ type
     function GetHue: Integer;
     function GetLuminance: Integer;
     function GetSat: Integer;
-    function GetSelectedColor: TColor;
     function LumFromArrowPos(p: integer): integer;
     procedure SetHue(H: integer);
     procedure SetLuminance(L: integer);
@@ -27,37 +26,39 @@ type
     procedure SetMaxLum(L: Integer);
     procedure SetMaxSat(S: Integer);
     procedure SetSat(S: integer);
-    procedure SetSelectedColor(c: TColor);
   protected
     procedure Execute(tbaAction: integer); override;
     function GetArrowPos: integer; override;
     function GetGradientColor(AValue: Integer): TColor; override;
+    function GetSelectedColor: TColor; override;
     function GetSelectedValue: integer; override;
+    procedure SetSelectedColor(c: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
   published
     property Hue: integer read GetHue write SetHue;
     property Saturation: integer read GetSat write SetSat;
     property Luminance: integer read GetLuminance write SetLuminance;
-    property MaxHue: Integer read FMaxHue write SetmaxHue default 359;
-    property MaxSaturation: Integer read FMaxSat write SetMaxSat default 240;
-    property MaxLuminance: Integer read FMaxLum write SetMaxLum default 240;
-    property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
+    property MaxHue: Integer read FMaxHue write SetmaxHue default 360;
+    property MaxSaturation: Integer read FMaxSat write SetMaxSat default 255;
+    property MaxLuminance: Integer read FMaxLum write SetMaxLum default 255;
+    property SelectedColor default clRed;
+    property HintFormat;
   end;
 
 implementation
 
 uses
-  mbUtils;
+  mbUtils, mbColorConv;
 
 {TLColorPicker}
 
 constructor TLColorPicker.Create(AOwner: TComponent);
 begin
   inherited;
-  FMaxHue := 359;
-  FMaxSat := 240;
-  FMaxLum := 240;
+  FMaxHue := 360;
+  FMaxSat := 255;
+  FMaxLum := 255;
   FGradientWidth := FMaxLum + 1;
   FGradientHeight := 1;
   FHue := 0;
@@ -130,7 +131,7 @@ end;
 
 function TLColorPicker.GetGradientColor(AValue: Integer): TColor;
 begin
-  Result := HSLToRGB(FHue, FSat, AValue/FMaxLum);
+  Result := HSLToColor(FHue, FSat, AValue/FMaxLum);
 end;
 
 function TLColorPicker.GetHue: Integer;
@@ -150,7 +151,7 @@ end;
 
 function TLColorPicker.GetSelectedColor: TColor;
 begin
-  Result := HSLToRGB(FHue, FSat, FLuminance);
+  Result := HSLToColor(FHue, FSat, FLuminance);
   if WebSafe then
     Result := GetWebSafe(Result);
 end;
@@ -165,8 +166,8 @@ var
   L: integer;
 begin
   case Layout of
-    lyHorizontal : L := Round(p / (Width - 12) * FMaxLum);
-    lyVertical   : L := Round(MaxLum - p /(Height - 12) * FMaxLum);
+    lyHorizontal : L := Round(       p / (Width - 12) * FMaxLum);
+    lyVertical   : L := Round((1.0 - p /(Height - 12)) * FMaxLum);
   end;
   Clamp(L, 0, FMaxLum);
   Result := L;
@@ -193,7 +194,6 @@ begin
     FArrowPos := ArrowPosFromLum(L);
     Invalidate;
     DoChange;
-//    if FChange and Assigned(OnChange) then OnChange(Self);
   end;
 end;
 
@@ -250,8 +250,8 @@ begin
   if c = GetSelectedColor then
     exit;
 
-//  ColortoHSL(c, FHue, FSat, FLuminance);   // not working in HSLPicker
-  RGBtoHSL(c, H, S, L);
+//  ColortoHSL(c, H, S, L);   // not working in HSLPicker
+  ColorToHSL(c, H, S, L);
   needNewGradient := (H <> FHue) or (S <> FSat);
   FHue := H;
   FSat := S;

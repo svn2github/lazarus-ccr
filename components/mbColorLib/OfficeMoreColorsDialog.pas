@@ -5,7 +5,7 @@ interface
 uses
   LCLIntf, LCLType, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   StdCtrls, ExtCtrls, ComCtrls,
-  HexaColorPicker, HSLColorPicker, RGBHSLUtils, mbColorPreview,
+  HexaColorPicker, HSLColorPicker, mbColorConv, mbColorPreview,
   {$IFDEF mbXP_Lib}mbXPSpinEdit, mbXPSizeGrip,{$ELSE} Spin,{$ENDIF}
   HTMLColors, SLHColorPicker, HSLRingPicker, RColorPicker, GColorPicker,
   BColorPicker;
@@ -22,7 +22,7 @@ type
     Label6: TLabel;
     Label7: TLabel;
     Label8: TLabel;
-    LLum: TLabel;
+    LLumVal: TLabel;
     LSat: TLabel;
     LHue: TLabel;
     nbRGB: TPage;
@@ -51,49 +51,66 @@ type
     NewSwatch: TmbColorPreview;
     OldSwatch: TmbColorPreview;
     procedure cbColorDisplayChange(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure HSLChange(Sender: TObject);
-    procedure ERedChange(Sender: TObject);
-    procedure EGreenChange(Sender: TObject);
+    procedure ColorPickerChange(Sender: TObject);
     procedure EBlueChange(Sender: TObject);
+    procedure EGreenChange(Sender: TObject);
     procedure EHueChange(Sender: TObject);
+    procedure ELumValChange(Sender: TObject);
+    procedure ERedChange(Sender: TObject);
     procedure ESatChange(Sender: TObject);
-    procedure ELumChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; {%H-}Shift: TShiftState);
     procedure FormResize(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     function GetHint(c: TColor): string;
     procedure HexaChange(Sender: TObject);
+    procedure HSLChange(Sender: TObject);
     procedure HSLRingChange(Sender: TObject);
     procedure NewSwatchColorChange(Sender: TObject);
     procedure OldSwatchColorChange(Sender: TObject);
     procedure PagesChange(Sender: TObject);
-    procedure ColorPickerChange(Sender: TObject);
+    procedure PagesChanging(Sender: TObject; var {%H-}AllowChange: Boolean);
     procedure SLHChange(Sender: TObject);
   private
     {$IFDEF mbXP_Lib}
     ERed, EGreen, EBlue: TmbXPSpinEdit;
-    EHue, ESat, ELum: TmbXPSpinEdit;
+    EHue, ESat, ELumVal: TmbXPSpinEdit;
     grip: TmbXPSizeGrip;
     {$ELSE}
     ERed, EGreen, EBlue: TSpinEdit;
-    EHue, ESat, ELum: TSpinEdit;
+    EHue, ESat, ELumVal: TSpinEdit;
     {$ENDIF}
     FMaxHue: Integer;
     FMaxSat: Integer;
     FMaxLum: Integer;
+    FMaxVal: Integer;
+    FSelectedColor: TColor;
+    FBrightnessMode: TBrightnessMode;
     FLockChange: Integer;
+    function GetPickerIndex: Integer;
+    function GetSelectedColor: TColor;
     function GetShowHint: Boolean;
     procedure SetAllCustom(c: TColor);
     procedure SetAllToSel(c: TColor);
+    procedure SetBrightnessMode(AMode: TBrightnessMode);
+    procedure SetMaxHue(H: Integer);
+    procedure SetMaxLum(L: Integer);
+    procedure SetMaxSat(S: Integer);
+    procedure SetMaxVal(V: Integer);
+    procedure SetPickerIndex(AValue: Integer);
+    procedure SetSelectedColor(c: TColor);
     procedure SetShowHint(AValue: boolean);
   protected
+    procedure BeginUpdate;
     procedure CreateParams(var Params: TCreateParams); override;
-//    procedure CreateWnd; override;
+    procedure EndUpdate;
   public
-    property MaxHue: Integer read FMaxHue write FMaxHue;
-    property MaxSaturation: Integer read FMaxSat write FMaxSat;
-    property MaxLuminance: Integer read FMaxLum write FMaxLum;
+    property PickerIndex: Integer read GetPickerIndex write SetPickerIndex;
+    property SelectedColor: TColor read GetSelectedColor write SetSelectedColor;
+    property MaxHue: Integer read FMaxHue write SetMaxHue;
+    property MaxSaturation: Integer read FMaxSat write SetMaxSat;
+    property MaxLuminance: Integer read FMaxLum write SetMaxLum;
+    property MaxValue: Integer read FMaxVal write SetMaxVal;
   published
     property ShowHint: Boolean read GetShowHint write SetShowHint;
   end;
@@ -105,8 +122,16 @@ implementation
 
 {$R *.lfm}
 
+procedure TOfficeMoreColorsWin.BeginUpdate;
+begin
+  inc(FLockChange);
+end;
+
 procedure TOfficeMoreColorsWin.ColorPickerChange(Sender: TObject);
 begin
+  if FLockChange > 0 then
+    exit;
+
   if Sender = HSL then
     SetAllCustom(HSL.SelectedColor);
   if Sender = HSLRing then
@@ -183,25 +208,40 @@ begin
     try
       HSL.Hue := EHue.Value;
       SLH.Hue := EHue.Value;
-      NewSwatch.Color := HSLToRGB(EHue.Value/FMaxHue, ESat.Value/FMaxSat, ELum.Value/FMaxLum);
+      case FBrightnessMode of
+        bmLuminance:
+          NewSwatch.Color := HSLToColor(EHue.Value/FMaxHue, ESat.Value/FMaxSat, ELumVal.Value/FMaxLum);
+        bmValue:
+          NewSwatch.Color := HSVtoColor(EHue.Value/FMaxHue, ESat.Value/FMaxSat, ELumVal.Value/FMaxVal);
+      end;
     finally
       dec(FLockChange);
     end;
   end;
 end;
 
-procedure TOfficeMoreColorsWin.ELumChange(Sender: TObject);
+procedure TOfficeMoreColorsWin.ELumValChange(Sender: TObject);
 begin
-  if (ELum.Text <> '') and ELum.Focused and (FLockChange = 0) then
+  if (ELumVal.Text <> '') and ELumVal.Focused and (FLockChange = 0) then
   begin
     inc(FLockChange);
     try
-      HSL.Luminance := ELum.Value;
-      NewSwatch.Color := HSLToRGB(EHue.Value/FMaxHue, ESat.Value/FMaxSat, ELum.Value/FMaxLum);
+      HSL.Luminance := ELumVal.Value;
+      case FBrightnessMode of
+        bmLuminance:
+          NewSwatch.Color := HSLToColor(EHue.Value/FMaxHue, ESat.Value/FMaxSat, ELumVal.Value/FMaxLum);
+        bmValue:
+          NewSwatch.Color := HSVtoColor(EHue.Value/FMaxHue, ESat.Value/FMaxSat, ELumVal.Value/FMaxVal);
+      end;
     finally
       dec(FLockChange);
     end;
   end;
+end;
+
+procedure TOfficeMoreColorsWin.EndUpdate;
+begin
+  dec(FLockChange);
 end;
 
 procedure TOfficeMoreColorsWin.ERedChange(Sender: TObject);
@@ -227,7 +267,12 @@ begin
     try
       HSL.Saturation := ESat.Value;
       SLH.Saturation := ESat.Value;
-      NewSwatch.Color := HSLToRGB(EHue.Value/FMaxHue, ESat.Value/FMaxSat, ELum.Value/FMaxLum);
+      case FBrightnessMode of
+        bmLuminance:
+          NewSwatch.Color := HSLToColor(EHue.Value/FMaxHue, ESat.Value/FMaxSat, ELumval.Value/FMaxLum);
+        bmValue:
+          NewSwatch.Color := HSVtoColor(EHue.Value/FMaxHue, ESat.Value/FMaxSat, ELumval.Value/FMaxVal);
+      end;
     finally
       dec(FLockChange);
     end;
@@ -236,21 +281,27 @@ end;
 
 procedure TOfficeMoreColorsWin.FormCreate(Sender: TObject);
 begin
-  FMaxHue := 359;
-  FMaxSat := 240;
-  FMaxLum := 240;
+  FBrightnessMode := bmLuminance;
+
+  FMaxHue := 360;
+  FMaxSat := 255;
+  FMaxLum := 255;
+  FMaxVal := 255;
 
   HSL.MaxHue := FMaxHue;
   HSL.MaxSaturation := FMaxSat;
   HSL.MaxLuminance := FMaxLum;
+  HSL.BrightnessMode := FBrightnessMode;
 
   HSLRing.MaxHue := FMaxHue;
   HSLRing.MaxSaturation := FMaxSat;
   HSLRing.MaxLuminance := FMaxLum;
+  HSLRing.BrightnessMode := FBrightnessMode;
 
   SLH.MaxHue := FMaxHue;
   SLH.MaxSaturation := FMaxSat;
   SLH.MaxLuminance := FMaxLum;
+  SLH.BrightnessMode := FBrightnessMode;
 
  {$IFDEF mbXP_Lib}
   ERed := TmbXPSpinEdit.CreateParented(Custom.Handle);
@@ -263,7 +314,7 @@ begin
   EBlue := TSpinEdit.CreateParented(Custom.Handle);
   EHue := TSpinEdit.CreateParented(Custom.Handle);
   ESat := TSpinEdit.CreateParented(Custom.Handle);
-  ELum := TSpinEdit.CreateParented(Custom.Handle);
+  ELumVal := TSpinEdit.CreateParented(Custom.Handle);
  {$ENDIF}
   with ERed do
   begin
@@ -340,9 +391,9 @@ begin
     OnChange := @ESatChange;
 //   TabOrder := EHue.TabOrder + 1;
   end;
-  with ELum do
+  with ELumVal do
   begin
-    Name := 'ELum';
+    Name := 'ELumVal';
     Width := 47;
     Height := 22;
     Left := cbColorDisplay.Left + cbColorDisplay.Width - Width;
@@ -352,7 +403,7 @@ begin
     MaxValue := FMaxLum;
     MinValue := 0;
     Value := 0;
-    OnChange := @ELumChange;
+    OnChange := @ELumValChange;
 //   TabOrder := ESat.TabOrder + 1;
   end;
   Custom.InsertControl(ERed);
@@ -360,7 +411,7 @@ begin
   Custom.InsertControl(EBlue);
   Custom.InsertControl(EHue);
   Custom.InsertControl(ESat);
-  Custom.InsertControl(ELum);
+  Custom.InsertControl(ELumVal);
 
  {$IFDEF mbXP_Lib}
   with grip do
@@ -375,7 +426,7 @@ begin
   InsertControl(grip);
  {$ENDIF}
 
-  OKBtn.TabOrder := ELum.TabOrder + 1;
+  OKBtn.TabOrder := ELumVal.TabOrder + 1;
   CancelBtn.TabOrder := OKBtn.TabOrder + 1;
 end;
 
@@ -415,6 +466,32 @@ begin
   ]);
 end;
 
+function TOfficeMoreColorsWin.GetPickerIndex: Integer;
+begin
+  Result := PickerNotebook.PageIndex + 1;
+  if Pages.PageIndex = 0 then
+    Result := -Result;
+end;
+
+procedure TOfficeMoreColorsWin.SetPickerIndex(AValue: Integer);
+begin
+  if AValue = 0 then begin
+    Pages.PageIndex := 0;
+    PickerNotebook.PageIndex := 0;
+  end else
+  begin
+    PickerNotebook.PageIndex := abs(AValue) - 1;
+    if AValue > 0 then
+      Pages.PageIndex := 1 else
+      Pages.PageIndex := 0;
+  end;
+end;
+
+function TOfficeMoreColorsWin.GetSelectedColor: TColor;
+begin
+  Result := NewSwatch.Color;
+end;
+
 function TOfficeMoreColorsWin.GetShowHint: Boolean;
 begin
   Result := inherited ShowHint;
@@ -436,13 +513,14 @@ begin
 end;
 
 procedure TOfficeMoreColorsWin.NewSwatchColorChange(Sender: TObject);
-var
-  r,g,b: Integer;
-  h,s,l: Integer;
 begin
   NewSwatch.Hint := GetHint(NewSwatch.Color);
+
+  exit;
+
+
   if (ERed = nil) or (EBlue = nil) or (EGreen = nil) or
-     (EHue = nil) or (ESat = nil) or (ELum = nil)
+     (EHue = nil) or (ESat = nil) or (ELumVal = nil)
   then
     exit;
 
@@ -452,33 +530,57 @@ end;
 procedure TOfficeMoreColorsWin.OldSwatchColorChange(Sender: TObject);
 begin
   OldSwatch.Hint := GetHint(OldSwatch.Color);
-  SetAllToSel(OldSwatch.Color);
+
+
+
+  //SetAllToSel(OldSwatch.Color);
 end;
 
 procedure TOfficeMoreColorsWin.PagesChange(Sender: TObject);
 begin
-  SetAllToSel(NewSwatch.Color);
+  SetAllToSel(FSelectedColor); //NewSwatch.Color);
+end;
+
+procedure TOfficeMoreColorsWin.PagesChanging(Sender: TObject;
+  var AllowChange: Boolean);
+begin
+  FSelectedColor := NewSwatch.Color;
+  {
+  case Pages.PageIndex of
+    0: FSelectedColor := Hexa.SelectedColor;
+    1: case PickerNotebook.PageIndex of
+         0: FSelectedColor := HSL.SelectedColor;
+         1: FSelectedColor := HSLRing.SelectedColor;
+         2: FSelectedColor := SLH.SelectedColor;
+         3: FSelectedColor := RgbToColor(RTrackbar.Red, GTrackbar.Green, BTrackbar.Blue);
+       end;
+  end;
+  }
 end;
 
 procedure TOfficeMoreColorsWin.SetAllCustom(c: TColor);
 var
   r, g, b: Integer;
-  H, S, L: Double;
-//  h, s, l: Integer;
+  H, S, L, V: Double;
 begin
   if (ERed = nil) or (EGreen = nil) or (EBlue = nil) or
-     (EHue = nil) or (ESat = nil) or (ELum = nil) or
+     (EHue = nil) or (ESat = nil) or (ELumVal = nil) or
      (PickerNotebook = nil) or (HSL = nil) or (HSLRing = nil) or (SLH = nil)
+     or (FLockChange > 0)
   then
     exit;
+
+  BeginUpdate;
 
   NewSwatch.Color := c;
 
   r := GetRValue(c);
   g := GetGValue(c);
   b := GetBValue(c);
-  RGBToHSL(c, H, S, L);
-//  RGBtoHSLRange(c, h, s, l);
+  case FBrightnessMode of
+    bmLuminance : ColorToHSL(c, H, S, L);
+    bmValue     : ColortoHSV(c, H, S, V);
+  end;
 
   if PickerNotebook.ActivePage = nbHSL.Name then
     HSL.SelectedColor := c
@@ -503,13 +605,17 @@ begin
   EBlue.Value := b;
   EHue.Value := H * HSL.MaxHue;
   ESat.Value := S * HSL.MaxSaturation;
-  ELum.Value := L * HSL.MaxLuminance;
+  case FBrightnessMode of
+    bmLuminance: ELumVal.Value := L * HSL.MaxLuminance;
+    bmValue    : ELumVal.Value := V * HSL.MaxValue;
+  end;
+
+  EndUpdate;
 end;
 
 procedure TOfficeMoreColorsWin.SetAllToSel(c: TColor);
-var
-  h, s, l: Integer;
 begin
+  //inc(FLockChange);
   case Pages.ActivePageIndex of
     // Standard Page
     0: Hexa.SelectedColor := c;
@@ -517,6 +623,71 @@ begin
     1: SetAllCustom(c);
   end;
   NewSwatch.Color := c;
+  //dec(FLockChange);
+end;
+
+procedure TOfficeMoreColorsWin.SetBrightnessMode(AMode: TBrightnessMode);
+begin
+  FBrightnessMode := AMode;
+  case AMode of
+    bmLuminance: LLumVal.Caption := 'Lum:';
+    bmValue    : LLumval.Caption := 'Val:';
+  end;
+end;
+
+procedure TOfficeMoreColorsWin.SetMaxHue(H: Integer);
+var
+  hh: Double;
+begin
+  inc(FLockChange);
+  hh := EHue.Value / FMaxHue;
+  FMaxHue := H;
+  EHue.MaxValue := H;
+  EHue.Value := round(hh * FMaxHue);
+  dec(FLockChange);
+end;
+
+procedure TOfficeMoreColorsWin.SetMaxLum(L: Integer);
+var
+  ll: Double;
+begin
+  inc(FLockChange);
+  ll := ELumVal.Value / FMaxLum;
+  FMaxLum := L;
+  ELumVal.MaxValue := L;
+  ELumVal.Value := round(ll * FMaxLum);
+  dec(FLockChange);
+end;
+
+procedure TOfficeMoreColorsWin.SetMaxSat(S: Integer);
+var
+  ss: Double;
+begin
+  inc(FLockChange);
+  ss := ESat.Value / FMaxSat;
+  FMaxSat := S;
+  ESat.MaxValue := S;
+  ESat.Value := round(ss * FMaxSat);
+  dec(FLockChange);
+end;
+
+procedure TOfficeMoreColorsWin.SetMaxVal(V: Integer);
+var
+  vv: Double;
+begin
+  inc(FLockChange);
+  vv := ELumVal.Value / FMaxVal;
+  FMaxVal := V;
+  ELumVal.MaxValue := V;
+  ELumVal.Value := round(vv * FMaxVal);
+  dec(FLockChange);
+end;
+
+procedure TOfficeMoreColorsWin.SetSelectedColor(c: TColor);
+begin
+  FSelectedColor := c;
+  OldSwatch.Color := c;
+  SetAllToSel(FSelectedColor);
 end;
 
 procedure TOfficeMoreColorsWin.SetShowHint(AValue: Boolean);
@@ -526,6 +697,9 @@ begin
   HSL.ShowHint := AValue;
   HSLRing.ShowHint := AValue;
   SLH.ShowHint := AValue;
+  RTrackbar.ShowHint := AValue;
+  GTrackbar.ShowHint := AValue;
+  BTrackbar.ShowHint := AValue;
 end;
 
 procedure TOfficeMoreColorsWin.SLHChange(Sender: TObject);

@@ -5,74 +5,74 @@ unit SLColorPicker;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages,
-  SysUtils, Classes, Controls, Graphics, Forms,
-  mbColorPickerControl;
+  LCLIntf, LCLType, SysUtils, Classes, Controls, Graphics, Forms,
+  mbColorConv, mbColorPickerControl;
 
 type
-  TSLColorPicker = class(TmbColorPickerControl)
+  TSLColorPicker = class(TmbHSLVColorPickerControl)
   private
-    FHue, FSat, FLum: Double;
-    FMaxHue, FMaxSat, FMaxLum: integer;
-    procedure DrawMarker(x, y: integer);
-    function GetHue: Integer;
-    function GetLum: Integer;
-    function GetSat: Integer;
-    procedure SetHue(H: integer);
-    procedure SetLum(L: integer);
-    procedure SetSat(S: integer);
-    procedure SetMaxHue(H: Integer);
-    procedure SetMaxLum(L: Integer);
-    procedure SetMaxSat(S: Integer);
-    procedure UpdateCoords;
+    FHint: array[TBrightnessMode] of string;
+    function GetHint(AMode: TBrightnessMode): String;
+    procedure SetHint(AMode: TBrightnessMode; AText: String);
   protected
     procedure CorrectCoords(var x, y: integer);
     procedure CreateWnd; override;
+    procedure DrawMarker(x, y: integer);
     function GetGradientColor2D(X, Y: Integer): TColor; override;
-    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure Resize; override;
     procedure Paint; override;
-    procedure SelectColor(x, y: integer);
+    procedure SelectColor(x, y: integer); override;
+    procedure SetBrightnessMode(AMode: TBrightnessMode); override;
+    procedure SetMaxLum(L: Integer); override;
+    procedure SetMaxSat(S: Integer); override;
+    procedure SetMaxVal(V: Integer); override;
+    procedure SetRelLum(L: Double); override;
+    procedure SetRelSat(S: Double); override;
+    procedure SetRelVal(V: Double); override;
     procedure SetSelectedColor(c: TColor); override;
+    procedure UpdateCoords;
   public
     constructor Create(AOwner: TComponent); override;
     function GetColorAtPoint(x, y: integer): TColor; override;
     property ColorUnderCursor;
   published
-    property Hue: integer read GetHue write SetHue default 0;
-    property Saturation: integer read GetSat write SetSat default 0;
-    property Luminance: integer read GetLum write SetLum default 240;
-    property MaxHue: Integer read FMaxHue write SetMaxHue default 359;
-    property MaxSaturation: Integer read FMaxSat write SetMaxSat default 240;
-    property MaxLuminance: Integer read FMaxLum write SetMaxLum default 240;
+    property Hue default 0;
+    property Saturation default 0;
+    property Luminance default 255;
+    property Value default 255;
+    property MaxHue default 360;
+    property MaxSaturation default 255;
+    property MaxLuminance default 255;
+    property MaxValue default 255;
     property SelectedColor default clWhite;
     property MarkerStyle default msCircle;
+    property SLHintFormat: String index bmLuminance read GetHint write SetHint;
+    property SVHintFormat: String index bmValue read GetHint write SetHint;
     property OnChange;
   end;
 
 implementation
 
 uses
-  Math,
-  ScanLines, RGBHSLUtils, HTMLColors, mbUtils;
+  HTMLColors, mbUtils;
 
 { TSLColorPicker }
 
 constructor TSLColorPicker.Create(AOwner: TComponent);
 begin
   inherited;
-  FMaxHue := 359;
-  FMaxSat := 240;
-  FMaxLum := 240;
-  FGradientWidth := FMaxSat + 1;       // x --> Saturation
-  FGradientHeight := FMaxLum + 1;      // y --> Luminance
+  FGradientWidth := FMaxSat + 1;                       // x --> Saturation
+  case BrightnessMode of
+    bmLuminance : FGradientHeight := FMaxLum + 1;      // y --> Luminance
+    bmValue     : FGradientHeight := FMaxVal + 1;      // y --> value
+  end;
   SetInitialBounds(0, 0, FGradientWidth, FGradientHeight);
-  FSelected := clWhite;
-  RGBToHSL(FSelected, FHue, FSat, FLum);
-  HintFormat := 'S: %hslS L: %l'#13'Hex: %hex';
+  FHue := 0;
+  FSat := 1.0;
+  FLum := 1.0;
+  FVal := 1.0;
+  SLHintFormat := 'S: %hslS L: %l' + LineEnding + 'Hex: %hex';
+  SVHintFormat := 'S: %hslS V: %v' + LineEnding + 'Hex: %hex';
   MarkerStyle := msCircle;
 end;
 
@@ -99,135 +99,28 @@ end;
 
 function TSLColorPicker.GetColorAtPoint(x, y: integer): TColor;
 var
-  S, L: Double;
+  S, LV: Double;
 begin
   S := x / (Width - 1);
-  L := 1.0 - y / (Height - 1);
-  Result := HSLToRGB(FHue, S, L);
-//  Result := HSLToRGB(FHue, x/(Width - 1), (Height - 1 - y) / (Height - 1));
-  if WebSafe then
-    Result := GetWebSafe(Result);
+  LV := 1.0 - y / (Height - 1);
+  Result := HSLVtoColor(FHue, S, LV, LV);
 end;
 
-{ This picker has Saturation along the X and Luminance along the Y axis.
-
-  NOTE: The HSL conversion (HSLtoColor) seems to be wrong
-  but it produces the display seen elsewhere }
+{ This picker has Saturation along the X and Luminance or Value on the Y axis. }
 function TSLColorPicker.GetGradientColor2D(X, Y: Integer): TColor;
 begin
-//  Result := HSLtoColor(FHue, x / FMaxSat, (FMaxLum - y) / FMaxLum);   // wrong formula
-  Result := HSLtoRGB(FHue, x / FMaxSat, (FMaxLum - y) / FMaxLum);       // correct, but looks wrong...
+  Result := HSLVtoColor(FHue, x/FMaxSat, 1.0 - y/FMaxLum, 1.0 - y/FMaxVal);
 end;
 
-function TSLColorPicker.GetHue: Integer;
+function TSLColorPicker.GetHint(AMode: TBrightnessMode): String;
 begin
-  Result := round(FHue * FMaxHue);
-end;
-
-function TSLColorPicker.GetLum: Integer;
-begin
-  Result := round(FLum * FMaxLum);
-end;
-
-function TSLColorPicker.GetSat: Integer;
-begin
-  Result := round(FSat * FMaxSat);
-end;
-
-procedure TSLColorPicker.KeyDown(var Key: Word; Shift: TShiftState);
-var
-  eraseKey: Boolean;
-  delta: Integer;
-begin
-  eraseKey := true;
-  delta := IfThen(ssCtrl in Shift, 10, 1);
-
-  case Key of
-    VK_LEFT  : SelectColor(mx - delta, my);
-    VK_RIGHT : SelectColor(mx + delta, my);
-    VK_UP    : SelectColor(mx, my - delta);
-    VK_DOWN  : SelectColor(mx, my + delta);
-    else       eraseKey := false;
-  end;
-  {
-  case Key of
-    VK_LEFT:
-      if (mdx - delta >= 0) then
-      begin
-        Dec(mdx, delta);
-        SelectionChanged(mdx, mdy);
-        FManual := true;
-        DoChange;
-      end;
-    VK_RIGHT:
-      if (mdx + delta < Width) then
-      begin
-        Inc(mdx, delta);
-        SelectionChanged(mdx, mdy);
-        FManual := true;
-        DoChange;
-      end;
-    VK_UP:
-      if (mdy - delta >= 0) then
-      begin
-        Dec(mdy, delta);
-        SelectionChanged(mdx, mdy);
-        FManual := true;
-        DoChange;
-      end;
-    VK_DOWN:
-      if (mdy + delta < Height) then
-      begin
-        Inc(mdy, delta);
-        SelectionChanged(mdx, mdy);
-        FManual := true;
-        DoChange;
-      end;
-    else
-      eraseKey := false;
-  end;
-  }
-
-  if eraseKey then
-    Key := 0;
-
-  inherited;
-end;
-
-procedure TSLColorPicker.MouseDown(Button: TMouseButton; Shift: TShiftState;
-  X, Y: Integer);
-begin
-  inherited;
-  if csDesigning in ComponentState then
-    Exit;
-  if (Button = mbLeft) then
-    SelectColor(X, Y);
-  SetFocus;
-end;
-
-procedure TSLColorPicker.MouseMove(Shift: TShiftState; X, Y: Integer);
-begin
-  inherited;
-  if csDesigning in ComponentState then
-    Exit;
-  if (ssLeft in Shift) then
-    SelectColor(X, Y);
-end;
-
-procedure TSLColorPicker.MouseUp(Button: TMouseButton; Shift: TShiftState;
-  X, Y: Integer);
-begin
-  inherited;
-  if csDesigning in ComponentState then
-    Exit;
-  if (Button = mbLeft)then
-    SelectColor(X, Y);
+  Result := FHint[AMode];
 end;
 
 procedure TSLColorPicker.Paint;
 begin
   Canvas.StretchDraw(ClientRect, FBufferBMP);
-  UpdateCoords;
+//  UpdateCoords;
   DrawMarker(mx, my);
 end;
 
@@ -239,88 +132,94 @@ end;
 
 procedure TSLColorPicker.SelectColor(x, y: integer);
 var
-  S, L: Double;
+  S, LV: Double;
 begin
   CorrectCoords(x, y);
   S := x / (Width - 1);
-  L := 1 - y / (Height - 1);
-  if (S = FSat) and (L = FLum) then
-    exit;
+  LV := 1 - y / (Height - 1);
 
+  case BrightnessMode of
+    bmLuminance:
+      begin
+        if (S = FSat) and (LV = FLum) then
+          exit;
+        FLum := LV;
+      end;
+    bmValue:
+      begin
+        if (S = FSat) and (LV = FVal) then
+          exit;
+        FVal := LV;
+      end;
+  end;
   FSat := S;
-  FLum := L;
-  FSelected := HSLtoRGB(FHue, FSat, FLum);
+  FSelected := HSLVtoColor(FHue, FSat, FLum, FVal);
+
   Invalidate;
   UpdateCoords;
   DoChange;
 end;
 
-procedure TSLColorPicker.SetHue(H: integer);
+procedure TSLColorPicker.SetBrightnessMode(AMode: TBrightnessMode);
 begin
-  Clamp(H, 0, FMaxHue);
-  if GetHue() <> H then
-  begin
-    FHue := h / FMaxHue;
-    FSelected := HSLtoRGB(FHue, FSat, FLum);
-    CreateGradient;
-    UpdateCoords;
-    Invalidate;
-    DoChange;
-  end;
+  inherited;
+  HintFormat := FHint[AMode];
 end;
 
-procedure TSLColorPicker.SetLum(L: integer);
+procedure TSLColorPicker.SetHint(AMode: TBrightnessMode; AText: String);
 begin
-  Clamp(L, 0, FMaxLum);
-  if GetLum() <> L then
-  begin
-    FLum := L / FMaxLum;
-    FSelected := HSLtoRGB(FHue, FSat, FLum);
-    UpdateCoords;
-    Invalidate;
-    DoChange;
-  end;
-end;
-
-procedure TSLColorPicker.SetMaxHue(H: Integer);
-begin
-  if H = FMaxHue then
-    exit;
-  FMaxHue := H;
-  CreateGradient;
-  //if FChange and Assigned(OnChange) then OnChange(Self);
-  Invalidate;
+  FHint[AMode] := AText;
 end;
 
 procedure TSLColorPicker.SetMaxLum(L: Integer);
 begin
   if L = FMaxLum then
     exit;
-  FMaxLum := L;
-  FGradientHeight := FMaxLum + 1;
-  CreateGradient;
-  //if FChange and Assigned(OnChange) then OnChange(Self);
-  Invalidate;
+  if BrightnessMode = bmLuminance then
+    FGradientHeight := L + 1;
+  inherited;
 end;
 
 procedure TSLColorPicker.SetMaxSat(S: Integer);
 begin
   if S = FMaxSat then
     exit;
-  FMaxSat := S;
-  FGradientWidth := FMaxSat + 1;
-  CreateGradient;
-  //if FChange and Assigned(OnChange) then OnChange(Self);
-  Invalidate;
+  FGradientWidth := S + 1;  // inherited will re-create the gradient
+  inherited;
 end;
 
-procedure TSLColorPicker.SetSat(S: integer);
+procedure TSLColorPicker.SetMaxVal(V: Integer);
 begin
-  Clamp(S, 0, FMaxSat);
-  if GetSat() <> S then
+  if V = FMaxVal then
+    exit;
+  if BrightnessMode = bmValue then
+    FGradientHeight := V + 1;
+  inherited;
+end;
+
+procedure TSLColorPicker.SetRelLum(L: Double);
+begin
+  Clamp(L, 0.0, 1.0);
+  if FLum <> L then
   begin
-    FSat := S / FMaxSat;
-    FSelected := HSLtoRGB(FHue, FSat, FLum);
+    FLum := L;
+    if BrightnessMode = bmLuminance then
+    begin
+      FSelected := HSLtoColor(FHue, FSat, FLum);
+      UpdateCoords;
+      Invalidate;
+    end;
+    DoChange;
+  end;
+end;
+
+procedure TSLColorPicker.SetRelSat(S: Double);
+begin
+  Clamp(S, 0.0, 1.0);
+  if FSat <> S then
+  begin
+    FSat := S;
+    FSelected := HSLVtoColor(FHue, FSat, FLum, FVal);
     UpdateCoords;
     Invalidate;
     DoChange;
@@ -329,7 +228,10 @@ end;
 
 procedure TSLColorPicker.SetSelectedColor(c: TColor);
 var
-  H, S, L: Double;
+  H: Double = 0;
+  S: Double = 0;
+  L: Double = 0;
+  V: Double = 0;
   needNewGradient: Boolean;
 begin
   if WebSafe then
@@ -337,12 +239,14 @@ begin
   if c = GetSelectedColor then
     exit;
 
-  RGBToHSL(c, H, S, L);
-//  ColorToHSL(c, H, S, L);
+  ColorToHSLV(c, H, S, L, V);
   needNewGradient := (FHue <> H);
   FHue := H;
   FSat := S;
-  FLum := L;
+  case BrightnessMode of
+    bmLuminance : FLum := L;
+    bmValue     : FVal := V;
+  end;
   FSelected := c;
   UpdateCoords;
   if needNewGradient then
@@ -351,10 +255,29 @@ begin
   DoChange;
 end;
 
+procedure TSLColorPicker.SetRelVal(V: Double);
+begin
+  Clamp(V, 0.0, 1.0);
+  if FVal <> V then
+  begin
+    FVal := V;
+    if BrightnessMode = bmValue then
+    begin
+      FSelected := HSVtoColor(FHue, FSat, FVal);
+      UpdateCoords;
+      Invalidate;
+    end;
+    DoChange;
+  end;
+end;
+
 procedure TSLColorPicker.UpdateCoords;
 begin
   mx := round(FSat * (Width - 1));
-  my := round((1.0 - FLum) * (Height - 1));
+  case BrightnessMode of
+    bmLuminance : my := round((1.0 - FLum) * (Height - 1));
+    bmValue     : my := round((1.0 - FVal) * (Height - 1));
+  end;
 end;
 
 

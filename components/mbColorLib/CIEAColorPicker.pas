@@ -7,8 +7,7 @@ unit CIEAColorPicker;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages,
-  SysUtils, Classes, Controls, Graphics, Forms,
+  LCLIntf, LCLType, SysUtils, Classes, Controls, Graphics, Forms,
   HTMLColors, RGBCIEUtils, mbColorPickerControl;
 
 type

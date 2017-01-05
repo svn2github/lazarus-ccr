@@ -7,13 +7,8 @@ interface
 {$ENDIF}
 
 uses
-  {$IFDEF FPC}
-  LCLIntf, LCLType, LMessages,
-  {$ELSE}
-  Windows, Messages,
-  {$ENDIF}
-  SysUtils, Classes, Controls, Forms, Graphics,
-  RGBHSVUtils, mbTrackBarPicker, HTMLColors, Scanlines;
+  LCLIntf, LCLType, SysUtils, Classes, Controls, Forms, Graphics,
+  {RGBHSVUtils,} mbTrackBarPicker, HTMLColors;
 
 type
   TVColorPicker = class(TmbTrackBarPicker)
@@ -24,9 +19,7 @@ type
     function ValFromArrowPos(p: integer): integer;
     function GetHue: Integer;
     function GetSat: Integer;
-    function GetSelectedColor: TColor;
     function GetValue: Integer;
-    procedure SetSelectedColor(c: TColor);
     procedure SetHue(h: integer);
     procedure SetMaxHue(h: Integer);
     procedure SetMaxSat(s: Integer);
@@ -37,7 +30,9 @@ type
     procedure Execute(tbaAction: integer); override;
     function GetArrowPos: integer; override;
     function GetGradientColor(AValue: Integer): TColor; override;
+    function GetSelectedColor: TColor; override;
     function GetSelectedValue: integer; override;
+    procedure SetSelectedColor(c: TColor); override;
   public
     constructor Create(AOwner: TComponent); override;
   published
@@ -47,13 +42,14 @@ type
     property MaxHue: Integer read FMaxHue write SetMaxHue default 359;
     property MaxSaturation: Integer read FMaxSat write SetMaxSat default 255;
     property MaxValue: Integer read FMaxVal write SetMaxVal default 255;
-    property SelectedColor: TColor read GetSelectedColor write SetSelectedColor default clRed;
+    property SelectedColor default clRed;
+    property HintFormat;
   end;
 
 implementation
 
 uses
-  mbUtils;
+  mbUtils, mbColorConv;
 
 {TVColorPicker}
 
@@ -224,7 +220,7 @@ end;
 
 procedure TVColorPicker.SetSelectedColor(c: TColor);
 var
-  h, s, v: integer;
+  h, s, v: Double;
   needNewGradient: Boolean;
 begin
   if WebSafe then
@@ -232,7 +228,7 @@ begin
   if c = GetSelectedColor then
     exit;
 
-  RGBToHSVRange(GetRValue(c), GetGValue(c), GetBValue(c), h, s, v);
+  RGBToHSV(GetRValue(c), GetGValue(c), GetBValue(c), h, s, v);
   needNewGradient := (h <> FHue) or (s <> FSat);
   FHue := h;
   FSat := s;

@@ -14,13 +14,13 @@ var //set these variables to your needs, e.g. 360, 255, 255
   MaxSat: integer = 240;
   MaxLum: integer = 240;
 
-function HSLtoRGB(H, S, L: double): TColor;
+{function HSLtoRGB(H, S, L: double): TColor;}
 function HSLRangeToRGB(H, S, L: integer): TColor;
 
-procedure ColorToHSL(AColor: TColor; var H, S, L: Double);
+{procedure ColorToHSL(AColor: TColor; var H, S, L: Double);}
 function HSLtoColor(H, S, L: Double): TColor;
 
-procedure RGBtoHSL(RGB: TColor; out H, S, L: Double);
+{procedure RGBtoHSL(RGB: TColor; out H, S, L: Double);       }
 procedure RGBtoHSLRange(RGB: TColor; out H1, S1, L1: integer);
 
 function GetHValue(AColor: TColor): integer;
@@ -36,7 +36,7 @@ implementation
 
 uses
   mbUtils;
-
+                   (*
 procedure ColorToHSL(AColor: TColor; var H, S, L: Double);
 
   function RGBMaxValue(r, g, b: Double): Double;
@@ -81,7 +81,7 @@ begin
     if H < 0 then H := H + 360;
     H := H / 360;
   end;
-end;
+end;              *)
 
 function HSLtoColor(H, S, L: Double): TColor;
 const
@@ -133,9 +133,6 @@ var
   begin
     if Hue > 10 then
       Hue := Hue + 1;
-
-
-
     if Hue < 0 then
       Hue := Hue + 1
     else if Hue > 1 then
@@ -224,9 +221,6 @@ procedure RGBtoHSLRange(RGB: TColor; out H1, S1, L1: integer);
 var
   R, G, B, D, Cmax, Cmin, h, s, l: double;
 begin
-  H := h1;
-  S := s1;
-  L := l1;
   R := GetRValue(RGB) / 255;
   G := GetGValue(RGB) / 255;
   B := GetBValue(RGB) / 255;

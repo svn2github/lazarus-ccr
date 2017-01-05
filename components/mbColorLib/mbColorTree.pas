@@ -35,12 +35,12 @@ type
   protected
     procedure CMHintShow(var Message: TCMHintShow); message CM_HINTSHOW;
     function CustomDrawItem(Node: TTreeNode; State: TCustomDrawState;
-      Stage: TCustomDrawStage; var PaintImages: Boolean): Boolean; override;
+      {%H-}Stage: TCustomDrawStage; var {%H-}PaintImages: Boolean): Boolean; override;
     procedure DoArrow(c: TCanvas; dir: TScrollDirection; p: TPoint; sel: boolean);
     procedure DrawColorItem(R: TRect; Selected: boolean; AIndex: Integer;
       AItemText: String; Expanded: boolean); dynamic;
     procedure DrawInfoItem(R: TRect; Index: integer); dynamic;
-    function IsCustomDrawn(Target: TCustomDrawTarget; Stage: TCustomDrawStage): Boolean; override;
+    function IsCustomDrawn({%H-}Target: TCustomDrawTarget; {%H-}Stage: TCustomDrawStage): Boolean; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
   public

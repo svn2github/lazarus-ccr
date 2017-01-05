@@ -7,8 +7,7 @@ unit CIELColorPicker;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages,
-  SysUtils, Classes, Controls, Graphics, Math, Forms,
+  LCLIntf, LCLType, SysUtils, Classes, Controls, Graphics, Math, Forms,
   HTMLColors, RGBCIEUtils, mbColorPickerControl;
 
 type
@@ -171,7 +170,6 @@ end;
 
 procedure TCIELColorPicker.Resize;
 begin
-  FManual := false;
   mx := Round((FA + 128) * Width / 255);
   my := Round((255 - (FB + 128)) * Height / 255);
   inherited;
