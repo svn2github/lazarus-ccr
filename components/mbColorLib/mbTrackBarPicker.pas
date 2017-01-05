@@ -907,9 +907,18 @@ end;
 procedure TmbHSLVTrackbarPicker.SetBrightnessMode(AMode: TBrightnessMode);
 var
   c: TColor;
+  S, L, V: Double;
 begin
   c := HSLVtoColor(FHue, FSat, FLum, FVal);
   FBrightnessMode := AMode;
+  (*
+  ColorToHSLV(c, FHue, S, L, V);
+  SetRelSat(S);
+  case AMode of
+    bmLuminance: SetRelLum(L);
+    bmValue    : SetRelVal(V);
+  end;
+  *)
   ColorToHSLV(c, FHue, FSat, FLum, FVal);
   CreateGradient;
   Invalidate;

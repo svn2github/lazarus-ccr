@@ -26,6 +26,14 @@ procedure RGBtoHSV(R, G, B: Integer; out H, S, V: Double);
 function HSVtoColor(H, S, V: Double): TColor;
 procedure HSVtoRGB(H, S, V: Double; out R, G, B: Integer);
 
+{ H, S, L, V extraction }
+
+function GetRelHValue(c: TColor): Double;
+function GetRelSValueHSL(c: TColor): Double;
+function GetRelSValueHSV(c: TColor): Double;
+function GetRelLValue(c: TColor): Double;
+function GetRelVValue(c: TColor): Double;
+
 
 implementation
 
@@ -310,6 +318,51 @@ begin
     S := delta / cmax;
   end;
   V := cmax;
+end;
+
+
+//==============================================================================
+//                      H, S, L, V extraction
+//==============================================================================
+
+function GetRelHValue(c: TColor): Double;
+var
+  H, S, L: Double;
+begin
+  ColorToHSL(c, H, S, L);  // Could also use HSV - H is the same in both models
+  Result := H;
+end;
+
+function GetRelSValueHSL(c: TColor): Double;
+var
+  H, S, L: Double;
+begin
+  ColorToHSL(c, H, S, L);
+  Result := S;
+end;
+
+function GetRelSValueHSV(c: TColor): Double;
+var
+  H, S, V: Double;
+begin
+  ColorToHSV(c, H, S, V);
+  Result := S;
+end;
+
+function GetRelLValue(c: TColor): Double;
+var
+  H, S, L: Double;
+begin
+  ColorToHSL(c, H, S, L);
+  result := L;
+end;
+
+function GetRelVValue(c: TColor): Double;
+var
+  H, S, V: Double;
+begin
+  ColorToHSV(c, H, S, V);
+  Result := V;
 end;
 
 end.

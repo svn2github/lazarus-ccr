@@ -8,14 +8,13 @@ uses
   Dialogs, HSLColorPicker, ComCtrls, StdCtrls, ExtCtrls, mbColorPreview,
   HexaColorPicker, mbColorPalette, HSLRingPicker, HSVColorPicker, PalUtils,
   SLHColorPicker, mbDeskPickerButton, mbOfficeColorDialog, SColorPicker,
-  HColorPicker, LVColorPicker, mbTrackBarPicker, LColorPicker, HRingPicker,
-  SLColorPicker, HSColorPicker, IniFiles, mbColorPickerControl, BColorPicker,
-  GColorPicker, RColorPicker, KColorPicker, YColorPicker, MColorPicker,
-  CColorPicker, CIEBColorPicker, CIEAColorPicker, Typinfo, CIELColorPicker,
-  BAxisColorPicker, GAxisColorPicker, RAxisColorPicker, mbColorTree,
-  mbColorList, mbBasicPicker,
+  HColorPicker, LVColorPicker, mbTrackBarPicker, HRingPicker, SLColorPicker,
+  HSColorPicker, IniFiles, mbColorPickerControl, BColorPicker, GColorPicker,
+  RColorPicker, KColorPicker, YColorPicker, MColorPicker, CColorPicker,
+  CIEBColorPicker, CIEAColorPicker, Typinfo, CIELColorPicker, BAxisColorPicker,
+  GAxisColorPicker, RAxisColorPicker, mbColorTree, mbColorList;
 
-  VColorPicker;
+  { vmbColorList, mbBasicPicker, }
 
 type
 
@@ -58,8 +57,8 @@ type
     mbDeskPickerButton1: TmbDeskPickerButton;
     mbOfficeColorDialog1: TmbOfficeColorDialog;
     OfficeColorDialogButton: TButton;
-    LColorPicker1: TLColorPicker;
-    VColorPicker1: TVColorPicker;
+    LVColorPicker2: TLVColorPicker;
+    LVColorPicker3: TLVColorPicker;
     HColorPicker1: THColorPicker;
     SColorPicker1: TSColorPicker;
     HSColorPicker1: THSColorPicker;
@@ -426,7 +425,7 @@ begin
   else if PageControl1.ActivePage = Tabsheet5 then
   begin
     HSVColorPicker1.Enabled := CbEnabled.Checked;
-    VColorPicker1.Enabled := CbEnabled.Checked;
+    LVColorPicker1.Enabled := CbEnabled.Checked;
   end
   else if PageControl1.ActivePage = Tabsheet6 then
     SLHColorPicker1.Enabled := CbEnabled.Checked
@@ -439,8 +438,8 @@ begin
   begin
     mbDeskPickerButton1.Enabled := CbEnabled.Checked;
     OfficeColorDialogButton.Enabled := CbEnabled.Checked;
-    LColorPicker1.Enabled := CbEnabled.Checked;
-    VColorPicker1.Enabled := CbEnabled.Checked;
+    LVColorPicker2.Enabled := CbEnabled.Checked;
+    LVColorPicker3.Enabled := CbEnabled.Checked;
     HColorPicker1.Enabled := CbEnabled.Checked;
     SColorPicker1.Enabled := CbEnabled.Checked;
   end

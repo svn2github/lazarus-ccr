@@ -603,14 +603,14 @@ object Form1: TForm1
     end
     object TabSheet4: TTabSheet
       Caption = 'HSLRingPicker'
-      ClientHeight = 365
-      ClientWidth = 420
+      ClientHeight = 376
+      ClientWidth = 468
       ImageIndex = 3
       object HSLRingPicker1: THSLRingPicker
         Left = 50
-        Height = 351
+        Height = 362
         Top = 6
-        Width = 322
+        Width = 370
         Luminance = 240
         RingPickerHintFormat = 'Hue: %h'
         SLPickerHintFormat = 'S: %hslS V: %v'#13'Hex: %hex'
@@ -637,6 +637,7 @@ object Form1: TForm1
         HintFormat = 'H: %h S: %s V: %v'#13'Hex: %hex'
         Anchors = [akTop, akLeft, akRight, akBottom]
         TabOrder = 0
+        Luminance = 128
         Saturation = 0
         OnChange = HSVColorPicker1Change
       end
@@ -691,7 +692,7 @@ object Form1: TForm1
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = Button5
         Left = 238
-        Height = 339
+        Height = 347
         Top = 0
         Width = 230
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -703,7 +704,7 @@ object Form1: TForm1
         AnchorSideRight.Control = Bevel1
         AnchorSideBottom.Control = Button5
         Left = 0
-        Height = 339
+        Height = 347
         Top = 0
         Width = 230
         InfoLabelText = 'Color Values:'
@@ -783,7 +784,7 @@ object Form1: TForm1
         OnClick = OfficeColorDialogButtonClick
         TabOrder = 1
       end
-      object LColorPicker1: TLColorPicker
+      object LVColorPicker2: TLVColorPicker
         Left = 34
         Height = 25
         Top = 265
@@ -792,12 +793,12 @@ object Form1: TForm1
         SelectionIndicator = siRect
         Anchors = [akLeft, akRight, akBottom]
         TabOrder = 2
-        Hue = 0
-        Saturation = 240
         Luminance = 120
-        HintFormat = 'Luminance: %l (selected)'
+        Saturation = 240
+        LHintFormat = 'Luminance: %l (selected)'
+        VHintFormat = 'Value: %v (selected)'
       end
-      object VColorPicker1: TVColorPicker
+      object LVColorPicker3: TLVColorPicker
         Left = 34
         Height = 21
         Top = 233
@@ -807,10 +808,9 @@ object Form1: TForm1
         SelectionIndicator = siRect
         Anchors = [akLeft, akRight, akBottom]
         TabOrder = 3
-        Hue = 0
         Saturation = 255
-        Value = 255
-        HintFormat = 'Value: %v (selected)'
+        LHintFormat = 'Luminance: %l (selected)'
+        VHintFormat = 'Value: %v (selected)'
       end
       object HColorPicker1: THColorPicker
         Left = 34

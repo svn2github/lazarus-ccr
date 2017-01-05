@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
   StdCtrls, ExtCtrls, BColorPicker, GColorPicker, RColorPicker, CColorPicker,
   YColorPicker, MColorPicker, KColorPicker, HColorPicker, SColorPicker,
-  LColorPicker, VColorPicker, mbColorPreview;
+  LVColorPicker, mbColorPreview;
 
 type
 
@@ -49,8 +49,6 @@ type
     Label7: TLabel;
     LblH: TLabel;
     Label9: TLabel;
-    LColorPickerH: TLColorPicker;
-    LColorPickerV: TLColorPicker;
     CMYKh: TmbColorPreview;
     HSLVh: TmbColorPreview;
     Panel1: TPanel;
@@ -72,8 +70,8 @@ type
     SColorPickerV: TSColorPicker;
     tabVertical: TTabSheet;
     tabHorizontal: TTabSheet;
-    VColorPickerH: TVColorPicker;
-    VColorPickerV: TVColorPicker;
+    LVColorPickerH: TLVColorPicker;
+    LVColorPickerV: TLVColorPicker;
     YColorPickerH: TYColorPicker;
     YColorPickerV: TYColorPicker;
     procedure CMYKPickerV_Change(Sender: TObject);
@@ -96,12 +94,18 @@ type
 var
   Form1: TForm1;
 
+const
+  MaxHue = 360;
+  MaxSat = 255;
+  MaxLum = 255;
+  MaxVal = 255;
+
 implementation
 
 {$R *.lfm}
 
 uses
-  LCLType, LCLIntf, ScanLines, RGBCMYKUtils, RGBHSLUtils, RGBHSVUtils;
+  LCLType, LCLIntf, ScanLines, RGBCMYKUtils, mbColorConv;
 
 { TForm1 }
 
@@ -124,8 +128,9 @@ begin
     'Cyan: %d - Magenta: %d - Yellow: %d - Black: %d'#13 +
     'Hue: %d - Saturation: %d - Luminance: %d - Value: %d', [
     GetRValue(c), GetGValue(c), GetBValue(c),
-    GetCValue(c), GetMValue(c), GetYvalue(c), GetKValue(c),
-    GetHValue(c), GetSValue(c), GetLValue(c), GetVValue(c)
+    GetCValue(c), GetMValue(c), GetYValue(c), GetKValue(c),
+    round(GetRelHValue(c)*MaxHue), round(GetRelSValueHSL(c)*MaxSat),
+    round(GetRelLValue(c)*MaxLum), round(GetRelVValue(c)*MaxVal)
   ]);
 end;
 
@@ -149,26 +154,13 @@ begin
     'Hue: %d - Saturation: %d - Luminance: %d - Value: %d', [
     GetRValue(c), GetGValue(c), GetBValue(c),
     GetCValue(c), GetMValue(c), GetYvalue(c), GetKValue(c),
-    GetHValue(c), GetSValue(c), GetLValue(c), GetVValue(c)
+    round(GetRelHValue(c)*MaxHue), round(GetRelSValueHSL(c)*MaxSat),
+    round(GetRelLValue(c)*MaxLum), round(GetRelVValue(c)*MaxVal)
   ]);
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  MaxHue := 359;
-  MaxSat := 240;
-  MaxLum := 240;
-
-  VColorPickerH.Left := LColorPickerH.Left;
-  VColorPickerH.Top := LColorPickerH.Top;
-  VColorPickerH.Width := LColorPickerH.Width;
-  VColorPickerH.Anchors := [akLeft, akTop, akRight];
-
-  VColorPickerV.Left := LColorPickerV.Left;
-  VColorPickerV.Top := LColorPickerV.Top;
-  VColorPickerV.Height := LColorPickerV.Height;
-  VColorPickerV.Anchors := [akLeft, akTop, akBottom];
-
   RGBPickerH_Change(nil);
   CMYKPickerH_Change(nil);
   SLVPickerH_Change(nil);
@@ -180,20 +172,21 @@ end;
 
 procedure TForm1.HPickerH_Change(Sender: TObject);
 begin
-  exit;
+  if ComponentState <> [] then
+    exit;
 
   SLVPickerH_Change(nil);
   SColorPickerH.Hue := HColorPickerH.Hue;
-  LColorPickerH.Hue := HColorPickerH.Hue;
-  VColorPickerH.Hue := HColorPickerH.Hue;
+  LVColorPickerH.Hue := HColorPickerH.Hue;
 end;
 
 procedure TForm1.HPickerV_Change(Sender: TObject);
 begin
+  if ComponentState <> [] then
+    exit;
   SLVPickerV_Change(nil);
   SColorPickerV.Hue := HColorPickerV.Hue;
-  LColorPickerV.Hue := HColorPickerV.Hue;
-  VColorPickerV.Hue := HColorPickerV.Hue;
+  LVColorPickerV.Hue := HColorPickerV.Hue;
 end;
 
 procedure TForm1.rbHSLv_Change(Sender: TObject);
@@ -201,14 +194,16 @@ begin
   if rbHSLv.Checked then
   begin
     lblLVv.Caption := 'L';
-    VColorPickerV.Visible := false;
-    LColorPickerV.Visible := true;
+    HColorPickerV.BrightnessMode := bmLuminance;
+    SColorPickerV.BrightnessMode := bmLuminance;
+    LVColorPickerV.BrightnessMode := bmLuminance;
   end;
   if rbHSVv.Checked then
   begin
     lblLVv.Caption := 'V';
-    LColorPickerV.Visible := false;
-    VColorPickerV.Visible := true;
+    HColorPickerV.BrightnessMode := bmValue;
+    SColorPickerV.BrightnessMode := bmValue;
+    LVColorPickerV.BrightnessMode := bmValue;
   end;
   HPickerV_Change(nil);
 end;
@@ -218,14 +213,16 @@ begin
   if rbHSLh.Checked then
   begin
     lblLVh.Caption := 'L';
-    VColorPickerH.Visible := false;
-    LColorPickerH.Visible := true;
+    HColorPickerH.BrightnessMode := bmLuminance;
+    SColorPickerH.BrightnessMode := bmLuminance;
+    LVColorPickerH.BrightnessMode := bmLuminance;
   end;
   if rbHSVh.Checked then
   begin
     lblLVh.Caption := 'V';
-    lColorPickerH.Visible := false;
-    VColorPickerH.Visible := true;
+    HColorPickerH.BrightnessMode := bmValue;
+    SColorPickerH.BrightnessMode := bmValue;
+    LVColorPickerH.BrightnessMode := bmValue;
   end;
   HPickerH_Change(nil);
 end;
@@ -248,7 +245,8 @@ begin
     'Hue: %d - Saturation: %d - Luminance: %d - Value: %d', [
     GetRValue(c), GetGValue(c), GetBValue(c),
     GetCValue(c), GetMValue(c), GetYvalue(c), GetKValue(c),
-    GetHValue(c), GetSValue(c), GetLValue(c), GetVValue(c)
+    round(GetRelHValue(c)*MaxHue), round(GetRelSValueHSL(c)*MaxSat),
+    round(GetRelLValue(c)*MaxLum), round(GetRelVValue(c)*MaxVal)
   ]);
 end;
 
@@ -270,7 +268,8 @@ begin
     'Hue: %d - Saturation: %d - Luminance: %d - Value: %d', [
     GetRValue(c), GetGValue(c), GetBValue(c),
     GetCValue(c), GetMValue(c), GetYvalue(c), GetKValue(c),
-    GetHValue(c), GetSValue(c), GetLValue(c), GetVValue(c)
+    round(GetRelHValue(c)*MaxHue), round(GetRelSValueHSL(c)*MaxSat),
+    round(GetRelLValue(c)*MaxLum), round(GetRelVValue(c)*MaxVal)
   ]);
 end;
 
@@ -279,18 +278,16 @@ var
   triple: TRGBTriple;
   c: TColor;
 begin
-  if (HSLVh = nil) or (HColorPickerH = nil) or (SColorPickerH = nil) then
+  if (HSLVh = nil) or (HColorPickerH = nil) or (SColorPickerH = nil) or
+    (LVColorPickerH = nil)
+  then
     exit;
-  if rbHSLh.Checked then begin
-    if (LColorPickerH = nil) then
-      exit;
-    HSLVh.Color := HSLRangeToRGB(HColorPickerH.Hue, SColorPickerH.Saturation, LColorPickerH.Luminance);
-  end;
-  if rbHSVh.Checked then begin
-    if (VColorPickerH = nil) then
-      exit;
-    HSLVh.Color := HSVRangetoColor(HColorPickerH.Hue, SColorPickerH.Saturation, VColorPickerH.Value);
-  end;
+
+  if rbHSLh.Checked then
+    HSLVh.Color := HSLToColor(HColorPickerH.RelHue, SColorPickerH.RelSaturation, LVColorPickerH.RelLuminance);
+
+  if rbHSVh.Checked then
+    HSLVh.Color := HSVToColor(HColorPickerH.RelHue, SColorPickerH.RelSaturation, LVColorPickerH.RelValue);
 
   c := HSLVh.Color;
   HSLVh.Hint := Format('Red: %d - Green: %d - Blue: %d'#13 +
@@ -298,31 +295,31 @@ begin
     'Hue: %d - Saturation: %d - Luminance: %d - Value: %d', [
     GetRValue(c), GetGValue(c), GetBValue(c),
     GetCValue(c), GetMValue(c), GetYvalue(c), GetKValue(c),
-    GetHValue(c), GetSValue(c), GetLValue(c), GetVValue(c)
+    round(GetRelHValue(c)*MaxHue), round(GetRelSValueHSL(c)*MaxSat),
+    round(GetRelLValue(c)*MaxLum), round(GetRelVValue(c)*MaxVal)
   ]);
 end;
 
 procedure TForm1.SLVPickerV_Change(Sender: TObject);
 var
-  triple: TRGBTriple;
   c: TColor;
 begin
-  if (HSLVv = nil) or (HColorPickerV = nil) or (SColorPickerV = nil) then
+  if (HSLVv = nil) or (HColorPickerV = nil) or (SColorPickerV = nil) or
+     (LVColorPickerV = nil)
+  then
     exit;
+
   if rbHSLv.Checked then begin
-    if (LColorPickerV = nil) then
+    if (LVColorPickerV = nil) then
       exit;
-    triple := HSLToRGBTriple(HColorPickerV.Hue, SColorPickerV.Saturation, LColorPickerV.Luminance);
-    HSLVv.Color := RGBTripleToColor(triple);
+    c := HSLToColor(HColorPickerV.RelHue, SColorPickerV.RelSaturation, LVColorPickerV.RelLuminance);
+    HSLVv.Color := c;
   end;
   if rbHSVv.Checked then begin
-    if (VColorPickerV = nil) then
+    if (LVColorPickerV = nil) then
       exit;
-    HSLVv.Color := HSVtoColor(
-      HColorPickerV.Hue/HColorPickerV.MaxHue,
-      SColorPickerV.Saturation/SColorPickerV.MaxSaturation,
-      VColorPickerV.Value/VColorPickerV.MaxValue
-    );
+    c := HSVtoColor(HColorPickerV.RelHue, SColorPickerV.RelSaturation, LVColorPickerV.RelValue);
+    HSLVv.Color := c;
   end;
 
   c := HSLVv.Color;
@@ -331,7 +328,8 @@ begin
     'Hue: %d - Saturation: %d - Luminance: %d - Value: %d', [
     GetRValue(c), GetGValue(c), GetBValue(c),
     GetCValue(c), GetMValue(c), GetYvalue(c), GetKValue(c),
-    GetHValue(c), GetSValue(c), GetLValue(c), GetVValue(c)
+    round(GetRelHValue(c)*MaxHue), round(GetRelSValueHSL(c)*MaxSat),
+    round(GetRelLValue(c)*MaxLum), round(GetRelVValue(c)*MaxVal)
   ]);
 end;
 
