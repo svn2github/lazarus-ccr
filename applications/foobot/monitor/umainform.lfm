@@ -59,11 +59,11 @@ object mainform: Tmainform
       TabOrder = 1
       ShowText = True
       ShowLevel = True
-      Value = 10
+      Value = 0
       ValueMin = 0
       ValueMax = 40
       ValueRed = 0
-      ValueYellow = 1
+      ValueYellow = 0
       AnalogKind = akAnalog
     end
     object as_hum: TAnalogSensor
@@ -418,6 +418,7 @@ object mainform: Tmainform
         object mnu_SampleEveryHalfHour: TMenuItem
           AutoCheck = True
           Caption = 'Half-Hour'
+          GroupIndex = 1
           OnClick = mnu_SampleEveryHalfHourClick
         end
         object mnu_SampleEvery1Hour: TMenuItem
@@ -430,16 +431,19 @@ object mainform: Tmainform
         object mnu_SampleEvery2Hours: TMenuItem
           AutoCheck = True
           Caption = '2 Hours'
+          GroupIndex = 1
           OnClick = mnu_SampleEvery2HoursClick
         end
         object mnu_SampleEvery4Hours: TMenuItem
           AutoCheck = True
           Caption = '4 Hours'
+          GroupIndex = 1
           OnClick = mnu_SampleEvery4HoursClick
         end
         object mnu_SampleEvery8Hours: TMenuItem
           AutoCheck = True
           Caption = '8 Hours'
+          GroupIndex = 1
           OnClick = mnu_SampleEvery8HoursClick
         end
         object mnu_SampleEvery24Hours: TMenuItem
@@ -514,6 +518,7 @@ object mainform: Tmainform
     end
   end
   object DateTimeIntervalChartSource1: TDateTimeIntervalChartSource
+    Steps = [dtsYear, dtsWeek, dtsDay, dtsHour]
     Left = 174
     Top = 325
   end
