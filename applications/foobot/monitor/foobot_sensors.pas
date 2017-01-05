@@ -272,9 +272,11 @@ procedure TSensorPanel.SetValueRed(AValue: Double);
 begin
   if (AValue <> FValueRed) then
   begin
-    if (AValue < FValueMin) or (AValue > FValueMax) then
+    {
+    if (AValue < 0) or (AValue > FValueMax) then
       if not (csLoading in ComponentState) then
         raise EInvalidOperation.CreateFmt('SOutOfRange', [Round(FValueMin), Round(FValueMax)]);
+    }
     FValueRed := AValue;
     Invalidate;
   end;
@@ -284,9 +286,11 @@ procedure TSensorPanel.SetValueYellow(AValue: Double);
 begin
   if (AValue <> FValueYellow) then
   begin
-    if (AValue < 1) or (AValue > FValueMax) then
+  {
+    if (AValue < 0) or (AValue > FValueMax) then
       if not (csLoading in ComponentState) then
         raise EInvalidOperation.CreateFmt('SOutOfRange', [Round(FValueRed), Round(FValueMax)]);
+    }
     FValueYellow := AValue;
     Invalidate;
   end;

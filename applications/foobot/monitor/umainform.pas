@@ -39,7 +39,7 @@ interface
 
 uses
   SysUtils, TAGraph, TAIntervalSources, TASeries,
-  Sensors, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Menus,
+  foobot_sensors, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Menus,
   lclIntf, foobot_utility, uCryptIni, dateutils, uconfigform, Classes;
 
 const
@@ -123,6 +123,9 @@ type
     lbl_voclow: TLabel;
     lbl_allpollulow: TLabel;
     MainMenu1: TMainMenu;
+    mnu_optionsDisplayRedLines: TMenuItem;
+    mnu_optionsDisplayYellowLines: TMenuItem;
+    mnu_optionsDisplayGuagesOnly: TMenuItem;
     mnu_SampleEveryHalfHour: TMenuItem;
     mnu_optionsResetHighsLows: TMenuItem;
     mnu_optionsOnlineHelp: TMenuItem;
@@ -140,7 +143,7 @@ type
     mnu_SampleEvery1Hour: TMenuItem;
     mnu_optionsSampleEvery: TMenuItem;
     mnu_optionsTakeReadingNow: TMenuItem;
-    mnu_optionsShowMinimalDisplay: TMenuItem;
+    mnu_optionsDisplay: TMenuItem;
     mnu_options: TMenuItem;
     mnu_fileExit: TMenuItem;
     mnu_file: TMenuItem;
@@ -155,11 +158,14 @@ type
     procedure mnupopup_fileRestoreClick(Sender: TObject);
     procedure mnu_fileExitClick(Sender: TObject);
     procedure mnu_helpAboutClick(Sender: TObject);
+    procedure mnu_optionsDisplayGuagesOnlyClick(Sender: TObject);
+    procedure mnu_optionsDisplayRedLinesClick(Sender: TObject);
+    procedure mnu_optionsDisplayYellowLinesClick(Sender: TObject);
     procedure mnu_optionsMinimiseToTrayClick(Sender: TObject);
     procedure mnu_optionsOnlineHelpClick(Sender: TObject);
     procedure mnu_optionsResetHighsLowsClick(Sender: TObject);
     procedure mnu_optionsSaveHighLowsClick(Sender: TObject);
-    procedure mnu_optionsShowMinimalDisplayClick(Sender: TObject);
+    procedure mnu_optionsDisplayClick(Sender: TObject);
     procedure mnu_optionsTakeReadingNowClick(Sender: TObject);
     procedure mnu_SampleEvery1HourClick(Sender: TObject);
     procedure mnu_SampleEvery24HoursClick(Sender: TObject);
@@ -171,14 +177,15 @@ type
     procedure TrayIcon1Click(Sender: TObject);
   private
     sSecretKey, sFoobotUserName, sUUID: string;
-    bShowMinimalDisplay: boolean;
+    bDisplayGuagesOnly, bDisplayYellowLines, bDisplayRedLines: boolean;
     iFudgeFactor: integer;
     procedure DisplayReadings;
     procedure UpdateGuage(Sender: TAnalogSensor; SensorNumber: integer);
     procedure UpdateHighLow(SensorNumber: integer);
     procedure GraphHistory;
     procedure GraphCurrentReading;
-    Procedure SetRecommendedLevels;
+    procedure SetYellowRecommendedLevels;
+    procedure SetRedSessionMax;
     procedure SaveConfig;
     procedure LoadConfig;
   public
@@ -214,7 +221,11 @@ begin
   INI.SectionHashing := False;
   ResetHighLows;
   iFudgeFactor := 20; // only needed if height set here
-  bShowMinimalDisplay := False;
+  bDisplayGuagesOnly := False;
+  bDisplayYellowLines := False;
+  SetYellowRecommendedLevels;
+  bDisplayRedLines := False;
+  SetRedSessionMax;
   TrayIcon1.Icon := Application.Icon;
   TrayIcon1.Hint := Application.Title;
   DateTimeIntervalChartSource1.DateTimeFormat := 'hh:nn';
@@ -293,50 +304,52 @@ end;
 procedure Tmainform.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   SaveConfig;
-  CloseAction:=caFree;
+  CloseAction := caFree;
 end;
 
 procedure Tmainform.FormDestroy(Sender: TObject);
 begin
   FreeAndNil(INI);
 end;
+
 procedure Tmainform.SaveConfig;
 begin
-  INI.PlainTextMode:=TRUE;
- // Colours
- INI.WriteString('Config','pmColour',ColorToString(as_pm.ColorFore));
- INI.WriteString('Config','tmpColour',ColorToString(as_tmp.ColorFore));
- INI.WriteString('Config','humColour',ColorToString(as_hum.ColorFore));
- INI.WriteString('Config','co2Colour',ColorToString(as_co2.ColorFore));
- INI.WriteString('Config','vocColour',ColorToString(as_voc.ColorFore));
- INI.WriteString('Config','allpolluColour',ColorToString(as_allpollu.ColorFore));
+  INI.PlainTextMode := True;
+  // Colours
+  INI.WriteString('Config', 'pmColour', ColorToString(as_pm.ColorFore));
+  INI.WriteString('Config', 'tmpColour', ColorToString(as_tmp.ColorFore));
+  INI.WriteString('Config', 'humColour', ColorToString(as_hum.ColorFore));
+  INI.WriteString('Config', 'co2Colour', ColorToString(as_co2.ColorFore));
+  INI.WriteString('Config', 'vocColour', ColorToString(as_voc.ColorFore));
+  INI.WriteString('Config', 'allpolluColour', ColorToString(as_allpollu.ColorFore));
 
- // Max and Min
-  INI.WriteFloat('Config','pmMinValue',as_pm.ValueMin);
-  INI.WriteFloat('Config','pmMaxValue',as_pm.ValueMax);
-  INI.WriteFloat('Config','tmpMinValue',as_tmp.ValueMin);
-  INI.WriteFloat('Config','tmpMaxValue',as_tmp.ValueMax);
-  INI.WriteFloat('Config','humMinValue',as_hum.ValueMin);
-  INI.WriteFloat('Config','humMaxValue',as_hum.ValueMax);
-  INI.WriteFloat('Config','co2MinValue',as_co2.ValueMin);
-  INI.WriteFloat('Config','co2MaxValue',as_co2.ValueMax);
-  INI.WriteFloat('Config','vocMinValue',as_voc.ValueMin);
-  INI.WriteFloat('Config','vocMaxValue',as_voc.ValueMax);
-  INI.WriteFloat('Config','allpolluMinValue',as_allpollu.ValueMin);
-  INI.WriteFloat('Config','allpolluMaxValue',as_allpollu.ValueMax);
-  INI.PlainTextMode:=FALSE;
+  // Max and Min
+  INI.WriteFloat('Config', 'pmMinValue', as_pm.ValueMin);
+  INI.WriteFloat('Config', 'pmMaxValue', as_pm.ValueMax);
+  INI.WriteFloat('Config', 'tmpMinValue', as_tmp.ValueMin);
+  INI.WriteFloat('Config', 'tmpMaxValue', as_tmp.ValueMax);
+  INI.WriteFloat('Config', 'humMinValue', as_hum.ValueMin);
+  INI.WriteFloat('Config', 'humMaxValue', as_hum.ValueMax);
+  INI.WriteFloat('Config', 'co2MinValue', as_co2.ValueMin);
+  INI.WriteFloat('Config', 'co2MaxValue', as_co2.ValueMax);
+  INI.WriteFloat('Config', 'vocMinValue', as_voc.ValueMin);
+  INI.WriteFloat('Config', 'vocMaxValue', as_voc.ValueMax);
+  INI.WriteFloat('Config', 'allpolluMinValue', as_allpollu.ValueMin);
+  INI.WriteFloat('Config', 'allpolluMaxValue', as_allpollu.ValueMax);
+  INI.PlainTextMode := False;
 end;
 
 procedure Tmainform.LoadConfig;
 begin
-  INI.PlainTextMode:=TRUE;
+  INI.PlainTextMode := True;
   // Colours
-  as_pm.ColorFore:=StringToColor(INI.ReadString('Config','pmColour',COL_PM));
-  as_tmp.ColorFore:=StringToColor(INI.ReadString('Config','tmpColour',COL_TMP));
-  as_hum.ColorFore:=StringToColor(INI.ReadString('Config','humColour',COL_HUM));
-  as_co2.ColorFore:=StringToColor(INI.ReadString('Config','co2Colour',COL_CO2));
-  as_voc.ColorFore:=StringToColor(INI.ReadString('Config','vocColour',COL_VOC));
-  as_allpollu.ColorFore:=StringToColor(INI.ReadString('Config','allpolluColour',COL_ALLPOLLU));
+  as_pm.ColorFore := StringToColor(INI.ReadString('Config', 'pmColour', COL_PM));
+  as_tmp.ColorFore := StringToColor(INI.ReadString('Config', 'tmpColour', COL_TMP));
+  as_hum.ColorFore := StringToColor(INI.ReadString('Config', 'humColour', COL_HUM));
+  as_co2.ColorFore := StringToColor(INI.ReadString('Config', 'co2Colour', COL_CO2));
+  as_voc.ColorFore := StringToColor(INI.ReadString('Config', 'vocColour', COL_VOC));
+  as_allpollu.ColorFore := StringToColor(
+    INI.ReadString('Config', 'allpolluColour', COL_ALLPOLLU));
   lineSeries_pm.SeriesColor := as_pm.ColorFore;
   lineSeries_tmp.SeriesColor := as_tmp.ColorFore;
   lineSeries_hum.SeriesColor := as_hum.ColorFore;
@@ -344,19 +357,19 @@ begin
   lineSeries_voc.SeriesColor := as_voc.ColorFore;
   lineSeries_allpollu.SeriesColor := as_allpollu.ColorFore;
   // Max and Min
-  as_pm.ValueMin := INI.ReadFloat('Config','pmMinValue',MIN_PM);
-  as_pm.ValueMax := INI.ReadFloat('Config','pmMaxValue',MAX_PM);
-  as_tmp.ValueMin := INI.ReadFloat('Config','tmpMinValue',MIN_TMP);
-  as_tmp.ValueMax := INI.ReadFloat('Config','tmpMaxValue',MAX_TMP);
-  as_hum.ValueMin := INI.ReadFloat('Config','humMinValue',MIN_HUM);
-  as_hum.ValueMax := INI.ReadFloat('Config','humMaxValue',MAX_HUM);
-  as_co2.ValueMin := INI.ReadFloat('Config','co2MinValue',MIN_CO2);
-  as_co2.ValueMax := INI.ReadFloat('Config','co2MaxValue',MAX_CO2);
-  as_voc.ValueMin := INI.ReadFloat('Config','vocMinValue',MIN_VOC);
-  as_voc.ValueMax := INI.ReadFloat('Config','vocMaxValue',MAX_VOC);
-  as_allpollu.ValueMin := INI.ReadFloat('Config','allpolluMinValue',MIN_ALLPOLLU);
-  as_allpollu.ValueMax := INI.ReadFloat('Config','allpolluMaxValue',MAX_ALLPOLLU);
-  INI.PlainTextMode:=FALSE;
+  as_pm.ValueMin := INI.ReadFloat('Config', 'pmMinValue', MIN_PM);
+  as_pm.ValueMax := INI.ReadFloat('Config', 'pmMaxValue', MAX_PM);
+  as_tmp.ValueMin := INI.ReadFloat('Config', 'tmpMinValue', MIN_TMP);
+  as_tmp.ValueMax := INI.ReadFloat('Config', 'tmpMaxValue', MAX_TMP);
+  as_hum.ValueMin := INI.ReadFloat('Config', 'humMinValue', MIN_HUM);
+  as_hum.ValueMax := INI.ReadFloat('Config', 'humMaxValue', MAX_HUM);
+  as_co2.ValueMin := INI.ReadFloat('Config', 'co2MinValue', MIN_CO2);
+  as_co2.ValueMax := INI.ReadFloat('Config', 'co2MaxValue', MAX_CO2);
+  as_voc.ValueMin := INI.ReadFloat('Config', 'vocMinValue', MIN_VOC);
+  as_voc.ValueMax := INI.ReadFloat('Config', 'vocMaxValue', MAX_VOC);
+  as_allpollu.ValueMin := INI.ReadFloat('Config', 'allpolluMinValue', MIN_ALLPOLLU);
+  as_allpollu.ValueMax := INI.ReadFloat('Config', 'allpolluMaxValue', MAX_ALLPOLLU);
+  INI.PlainTextMode := False;
 end;
 
 procedure Tmainform.FormWindowStateChange(Sender: TObject);
@@ -401,6 +414,28 @@ begin
     mtInformation, [mbOK], 0);
 end;
 
+procedure Tmainform.mnu_optionsDisplayGuagesOnlyClick(Sender: TObject);
+begin
+  bDisplayGuagesOnly := mnu_optionsDisplayGuagesOnly.Checked;
+  if bDisplayGuagesOnly then
+    mainform.ClientHeight := grp_sensorDisplay.Height// + iFudgeFactor
+  else
+    mainform.ClientHeight := grp_sensorDisplay.Height + grp_chart.Height +
+      grp_highlow.Height;// + iFudgeFactor;
+end;
+
+procedure Tmainform.mnu_optionsDisplayRedLinesClick(Sender: TObject);
+begin
+  bDisplayRedLines := mnu_optionsDisplayRedLines.Checked;
+  SetRedSessionMax;
+end;
+
+procedure Tmainform.mnu_optionsDisplayYellowLinesClick(Sender: TObject);
+begin
+  bDisplayYellowLines := mnu_optionsDisplayYellowLines.Checked;
+  SetYellowRecommendedLevels;
+end;
+
 procedure Tmainform.mnu_optionsMinimiseToTrayClick(Sender: TObject);
 begin
   mainform.WindowState := wsMinimized;
@@ -413,14 +448,16 @@ begin
 end;
 
 procedure Tmainform.mnu_optionsResetHighsLowsClick(Sender: TObject);
-Var iCount:Integer;
+var
+  iCount: integer;
 begin
-  If MessageDlg('This will erase the all-time high/low data permanently.  Are you sure?',
-     mtConfirmation,[MBYES,MBCANCEL],0,MBCANCEL) = mrCancel then exit;
+  if MessageDlg('This will erase the all-time high/low data permanently.  Are you sure?',
+    mtConfirmation, [mbYes, mbCancel], 0, mbCancel) = mrCancel then
+    exit;
   ResetHighLows;
   SaveHighLows;
-  For iCount:=1 to 6 do
-      UpdateHighLow(iCount);
+  for iCount := 1 to 6 do
+    UpdateHighLow(iCount);
 end;
 
 procedure Tmainform.mnu_optionsSaveHighLowsClick(Sender: TObject);
@@ -429,14 +466,8 @@ begin
   INI.WriteBool('Foobot', 'SaveLoadHighLows', SaveLoadHighLows);
 end;
 
-procedure Tmainform.mnu_optionsShowMinimalDisplayClick(Sender: TObject);
+procedure Tmainform.mnu_optionsDisplayClick(Sender: TObject);
 begin
-  if mnu_optionsShowMinimalDisplay.Checked then
-    mainform.ClientHeight := grp_sensorDisplay.Height// + iFudgeFactor
-  else
-    mainform.ClientHeight := grp_sensorDisplay.Height + grp_chart.Height +
-      grp_highlow.Height;// + iFudgeFactor;
-  bShowMinimalDisplay := mnu_optionsShowMinimalDisplay.Checked;
 end;
 
 procedure Tmainform.mnu_optionsTakeReadingNowClick(Sender: TObject);
@@ -449,6 +480,7 @@ begin
     ShowMessage('Sorry - no readings available');
   mainform.Cursor := crDefault;
 end;
+
 procedure Tmainform.mnu_SampleEveryHalfHourClick(Sender: TObject);
 begin
   tmr_foobot.Enabled := False;
@@ -503,14 +535,60 @@ begin
   mainform.Show;
 end;
 
-Procedure Tmainform.SetRecommendedLevels;
+procedure Tmainform.SetRedSessionMax;
 begin
-  as_pm.ValueYellow:=REC_PM;
-  as_tmp.ValueYellow:=REC_TMP;
-  as_hum.ValueYellow:=REC_HUM;
-  as_co2.ValueYellow:=REC_CO2;
-  as_voc.ValueYellow:=REC_VOC;
-  as_allpollu.ValueYellow:=REC_ALLPOLLU;
+  if bDisplayRedLines = True then
+  begin
+    with as_pm do
+      if Value > ValueRed then
+        ValueRed := Value;
+    with as_tmp do
+      if Value > ValueRed then
+        ValueRed := Value;
+    with as_hum do
+      if Value > ValueRed then
+        ValueRed := Value;
+    with as_co2 do
+      if Value > ValueRed then
+        ValueRed := Value;
+    with as_voc do
+      if Value > ValueRed then
+        ValueRed := Value;
+    with as_allpollu do
+      if Value > ValueRed then
+        ValueRed := Value;
+  end
+  else
+  begin
+    as_pm.ValueRed := as_pm.ValueMin;
+    as_tmp.ValueRed := as_tmp.ValueMin;
+    as_hum.ValueRed := as_hum.ValueMin;
+    as_co2.ValueRed := as_co2.ValueMin;
+    as_voc.ValueRed := as_voc.ValueMin;
+    as_allpollu.ValueRed := as_allpollu.ValueMin;
+  end;
+end;
+
+procedure Tmainform.SetYellowRecommendedLevels;
+begin
+  if bDisplayYellowLines = True then
+  begin
+    as_pm.ValueYellow := REC_PM;
+    as_tmp.ValueYellow := REC_TMP;
+    as_hum.ValueYellow := REC_HUM;
+    as_co2.ValueYellow := REC_CO2;
+    as_voc.ValueYellow := REC_VOC;
+    as_allpollu.ValueYellow := REC_ALLPOLLU;
+  end
+  else
+  begin
+    as_pm.ValueYellow := as_pm.ValueMin;
+    as_tmp.ValueYellow := as_tmp.ValueMin;
+    as_hum.ValueYellow := as_hum.ValueMin;
+    as_co2.ValueYellow := as_co2.ValueMin;
+    as_voc.ValueYellow := as_voc.ValueMin;
+    as_allpollu.ValueYellow := as_allpollu.ValueMin;
+  end;
 end;
 
 procedure Tmainform.UpdateHighLow(SensorNumber: integer);
@@ -623,10 +701,11 @@ begin
     end;
     if Value > ValueMax then
       ValueMax := Value;
-    ValueYellow := ValueMax;
-    if Value > ValueRed then
-      ValueRed := Value;
-    SetRecommendedLevels;
+    if bDisplayRedLines then
+      if Value > ValueRed then
+        ValueRed := Value;
+    if bDisplayYellowLines then
+      SetYellowRecommendedLevels;
   end;
 end;
 
@@ -645,7 +724,7 @@ begin
     UpdateGuage(as_co2, 4);
     UpdateGuage(as_voc, 5);
     UpdateGuage(as_allpollu, 6);
-    if not bShowMinimalDisplay then
+    if not bDisplayGuagesOnly then
     begin
       for iCount := 1 to 6 do
         UpdateHighLow(iCount);
@@ -687,7 +766,8 @@ var
 begin
   iEndSeconds := DateTimeToUnix(Now) - 3600;
   iStartSeconds := iEndSeconds - (2 * (24 * 3600)); // 49 hours before Now
-  grp_chart.Caption:=Format('History from %s',[FormatDateTime('dd/mm/yyyy hh:nn',UnixToDateTime(iStartSeconds))]);
+  grp_chart.Caption := Format('History from %s',
+    [FormatDateTime('dd/mm/yyyy hh:nn', UnixToDateTime(iStartSeconds))]);
   if FetchFoobotData(dfStartEnd, 0, 0, 3600, iStartSeconds, iEndSeconds, sSecretKey) =
     False then
     exit;

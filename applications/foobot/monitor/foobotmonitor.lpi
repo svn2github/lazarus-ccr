@@ -20,7 +20,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="1"/>
-      <RevisionNr Value="1"/>
+      <RevisionNr Value="2"/>
       <StringTable Comments="Uses Foobot public API to query Foobot #1" FileDescription="Monitor for Foobot" InternalName="foobotmonitor" LegalCopyright="(c)2016 minesadorada@charcodelvalle.com" LegalTrademarks="Foobot" ProductName="Foobot" ProductVersion="0.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="6">
@@ -209,7 +209,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="7">
+    <Units Count="8">
       <Unit0>
         <Filename Value="foobotmonitor.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -244,6 +244,10 @@
         <Filename Value="..\ugenericcollection.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit6>
+      <Unit7>
+        <Filename Value="foobot_sensors.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit7>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

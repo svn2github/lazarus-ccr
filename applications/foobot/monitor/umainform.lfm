@@ -63,7 +63,7 @@ object mainform: Tmainform
       ValueMin = 0
       ValueMax = 40
       ValueRed = 0
-      ValueYellow = 30
+      ValueYellow = 1
       AnalogKind = akAnalog
     end
     object as_hum: TAnalogSensor
@@ -452,10 +452,24 @@ object mainform: Tmainform
       object mnu_optionsSeperator1: TMenuItem
         Caption = '-'
       end
-      object mnu_optionsShowMinimalDisplay: TMenuItem
-        AutoCheck = True
-        Caption = 'Only show guages'
-        OnClick = mnu_optionsShowMinimalDisplayClick
+      object mnu_optionsDisplay: TMenuItem
+        Caption = 'Display...'
+        OnClick = mnu_optionsDisplayClick
+        object mnu_optionsDisplayGuagesOnly: TMenuItem
+          AutoCheck = True
+          Caption = 'Guages only'
+          OnClick = mnu_optionsDisplayGuagesOnlyClick
+        end
+        object mnu_optionsDisplayYellowLines: TMenuItem
+          AutoCheck = True
+          Caption = 'Recommended values'
+          OnClick = mnu_optionsDisplayYellowLinesClick
+        end
+        object mnu_optionsDisplayRedLines: TMenuItem
+          AutoCheck = True
+          Caption = 'Session maximums'
+          OnClick = mnu_optionsDisplayRedLinesClick
+        end
       end
       object mnu_optionsSaveHighLows: TMenuItem
         AutoCheck = True
