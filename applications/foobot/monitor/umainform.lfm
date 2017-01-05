@@ -419,37 +419,44 @@ object mainform: Tmainform
           AutoCheck = True
           Caption = 'Half-Hour'
           GroupIndex = 1
+          RadioItem = True
           OnClick = mnu_SampleEveryHalfHourClick
         end
         object mnu_SampleEvery1Hour: TMenuItem
           AutoCheck = True
           Caption = 'Hour (default)'
           Checked = True
+          Default = True
           GroupIndex = 1
+          RadioItem = True
           OnClick = mnu_SampleEvery1HourClick
         end
         object mnu_SampleEvery2Hours: TMenuItem
           AutoCheck = True
           Caption = '2 Hours'
           GroupIndex = 1
+          RadioItem = True
           OnClick = mnu_SampleEvery2HoursClick
         end
         object mnu_SampleEvery4Hours: TMenuItem
           AutoCheck = True
           Caption = '4 Hours'
           GroupIndex = 1
+          RadioItem = True
           OnClick = mnu_SampleEvery4HoursClick
         end
         object mnu_SampleEvery8Hours: TMenuItem
           AutoCheck = True
           Caption = '8 Hours'
           GroupIndex = 1
+          RadioItem = True
           OnClick = mnu_SampleEvery8HoursClick
         end
         object mnu_SampleEvery24Hours: TMenuItem
           AutoCheck = True
           Caption = '24 Hours'
           GroupIndex = 1
+          RadioItem = True
           OnClick = mnu_SampleEvery24HoursClick
         end
       end

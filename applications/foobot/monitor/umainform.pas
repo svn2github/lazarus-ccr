@@ -220,11 +220,13 @@ begin
   end;
   INI.SectionHashing := False;
   ResetHighLows;
-  iFudgeFactor := 20; // only needed if height set here
+  iFudgeFactor := 20; // only needed if height set in form.create
   bDisplayGuagesOnly := False;
-  bDisplayYellowLines := False;
+  INI.PlainTextMode:=TRUE;
+  bDisplayYellowLines := INI.ReadBool('Config','DisplayYellowLines',False);
+  bDisplayRedLines := INI.ReadBool('Config','DisplayRedLines',False);
+  INI.PlainTextMode:=FALSE;
   SetYellowRecommendedLevels;
-  bDisplayRedLines := False;
   SetRedSessionMax;
   TrayIcon1.Icon := Application.Icon;
   TrayIcon1.Hint := Application.Title;
@@ -336,6 +338,8 @@ begin
   INI.WriteFloat('Config', 'vocMaxValue', as_voc.ValueMax);
   INI.WriteFloat('Config', 'allpolluMinValue', as_allpollu.ValueMin);
   INI.WriteFloat('Config', 'allpolluMaxValue', as_allpollu.ValueMax);
+  INI.WriteBool('Config','DisplayYellowLines',bDisplayYellowLines);
+  INI.WriteBool('Config','DisplayRedLines',bDisplayRedLines);
   INI.PlainTextMode := False;
 end;
 
