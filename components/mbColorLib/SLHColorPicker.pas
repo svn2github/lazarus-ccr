@@ -130,7 +130,7 @@ begin
   FHCursor := crDefault;
   FSLCursor := crDefault;
   FHHint := 'Hue: %h';
-  FSLHint := 'S: %hslS L: %l'#13'Hex: %hex';
+  FSLHint := 'S: %s L: %l'#13'Hex: %hex';
 
   // Saturation-Lightness picker
   FSLPicker := TSLColorPicker.Create(Self);

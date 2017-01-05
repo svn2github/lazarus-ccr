@@ -6,7 +6,7 @@ interface
 uses
   LCLIntf, LCLType, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, HSLColorPicker, ComCtrls, StdCtrls, ExtCtrls, mbColorPreview,
-  HexaColorPicker, mbColorPalette, HSLRingPicker, HSVColorPicker, PalUtils,
+  HexaColorPicker, mbColorPalette, HSLRingPicker, HSCirclePicker, PalUtils,
   SLHColorPicker, mbDeskPickerButton, mbOfficeColorDialog, SColorPicker,
   HColorPicker, LVColorPicker, mbTrackBarPicker, HRingPicker, SLColorPicker,
   HSColorPicker, IniFiles, mbColorPickerControl, BColorPicker, GColorPicker,
@@ -50,7 +50,7 @@ type
     HSLRingPicker1: THSLRingPicker;
     TabSheet5: TTabSheet;
     TabSheet6: TTabSheet;
-    HSVColorPicker1: THSVColorPicker;
+    HSCirclePicker1: THSCirclePicker;
     SLHColorPicker1: TSLHColorPicker;
     TabSheet7: TTabSheet;
     TabSheet8: TTabSheet;
@@ -244,8 +244,8 @@ end;
 
 procedure TForm1.HSVColorPicker1Change(Sender: TObject);
 begin
-  LVColorPicker1.Saturation := HSVColorPicker1.Saturation;
-  LVColorPicker1.Hue := HSVColorPicker1.Hue;
+  LVColorPicker1.Saturation := HSCirclePicker1.Saturation;
+  LVColorPicker1.Hue := HSCirclePicker1.Hue;
   sc.color := LVColorPicker1.SelectedColor;
 end;
 
@@ -318,12 +318,12 @@ end;
 
 procedure TForm1.LVColorPicker1Change(Sender: TObject);
 begin
-  if (sc = nil) or (uc = nil) or (LVColorPicker1 = nil) or (HSVColorPicker1 = nil) then
+  if (sc = nil) or (uc = nil) or (LVColorPicker1 = nil) or (HSCirclePicker1 = nil) then
     exit;
-  LVColorPicker1.Saturation := HSVColorPicker1.Saturation;
-  LVColorPicker1.Hue := HSVColorPicker1.Hue;
+  LVColorPicker1.Saturation := HSCirclePicker1.Saturation;
+  LVColorPicker1.Hue := HSCirclePicker1.Hue;
   sc.Color := LVColorPicker1.SelectedColor;
-  uc.Color := HSVtoColor(HSVColorPicker1.RelHue, HSVColorPicker1.RelSaturation, HSVColorPicker1.RelValue);
+  uc.Color := HSVtoColor(HSCirclePicker1.RelHue, HSCirclePicker1.RelSaturation, HSCirclePicker1.RelValue);
 end;
 
 // only for internet shortcuts
@@ -424,7 +424,7 @@ begin
     HSLRingPicker1.Enabled := CbEnabled.Checked
   else if PageControl1.ActivePage = Tabsheet5 then
   begin
-    HSVColorPicker1.Enabled := CbEnabled.Checked;
+    HSCirclePicker1.Enabled := CbEnabled.Checked;
     LVColorPicker1.Enabled := CbEnabled.Checked;
   end
   else if PageControl1.ActivePage = Tabsheet6 then

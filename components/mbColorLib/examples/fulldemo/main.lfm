@@ -624,11 +624,11 @@ object Form1: TForm1
       end
     end
     object TabSheet5: TTabSheet
-      Caption = 'HSVColorPicker'
+      Caption = 'HSCirclePicker'
       ClientHeight = 376
       ClientWidth = 468
       ImageIndex = 4
-      object HSVColorPicker1: THSVColorPicker
+      object HSCirclePicker1: THSCirclePicker
         Left = 24
         Height = 362
         Top = 6

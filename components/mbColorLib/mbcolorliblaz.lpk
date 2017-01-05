@@ -133,8 +133,8 @@
         <UnitName Value="SLHColorPicker"/>
       </Item29>
       <Item30>
-        <Filename Value="HSVColorPicker.pas"/>
-        <UnitName Value="HSVColorPicker"/>
+        <Filename Value="HSCirclePicker.pas"/>
+        <UnitName Value="HSCirclePicker"/>
       </Item30>
       <Item31>
         <Filename Value="SelPropUtils.pas"/>

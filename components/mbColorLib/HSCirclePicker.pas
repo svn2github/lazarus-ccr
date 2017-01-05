@@ -1,4 +1,4 @@
-unit HSVColorPicker;
+unit HSCirclePicker;
 
 {$IFDEF FPC}
   {$MODE DELPHI}
@@ -11,7 +11,7 @@ uses
   HTMLColors, mbColorConv, mbColorPickerControl;
 
 type
-  THSVColorPicker = class(TmbHSLVColorPickerControl)
+  THSCirclePicker = class(TmbHSLVColorPickerControl)
   private
     FSatCircColor, FHueLineColor: TColor;
     FShowSatCirc: boolean;
@@ -64,9 +64,9 @@ implementation
 uses
   mbUtils;
 
-{ THSVColorPicker }
+{ THSCirclePicker }
 
-constructor THSVColorPicker.Create(AOwner: TComponent);
+constructor THSCirclePicker.Create(AOwner: TComponent);
 begin
   inherited;
   SetInitialBounds(0, 0, 204, 204);
@@ -84,21 +84,21 @@ begin
   MarkerStyle := msCrossCirc;
 end;
 
-procedure THSVColorPicker.CreateGradient;
+procedure THSCirclePicker.CreateGradient;
 begin
   FGradientWidth := Min(Width, Height);
   FGradientHeight := FGradientWidth;
   inherited;
 end;
                   (*
-procedure THSVColorPicker.CreateWnd;
+procedure THSCirclePicker.CreateWnd;
 begin
   inherited;
   CreateGradient;
   UpdateCoords;
 end;                *)
 
-procedure THSVColorPicker.DrawSatCirc;
+procedure THSCirclePicker.DrawSatCirc;
 var
   delta: integer;
   radius: integer;
@@ -115,7 +115,7 @@ begin
   end;
 end;
 
-procedure THSVColorPicker.DrawHueLine;
+procedure THSCirclePicker.DrawHueLine;
 var
   angle: double;
   sinAngle, cosAngle: Double;
@@ -134,7 +134,7 @@ begin
   end;
 end;
 
-procedure THSVColorPicker.DrawMarker(x, y: integer);
+procedure THSCirclePicker.DrawMarker(x, y: integer);
 var
   c: TColor;
 begin
@@ -147,7 +147,7 @@ begin
   InternalDrawMarker(x, y, c);
 end;
 
-function THSVColorPicker.GetColorAtPoint(x, y: integer): TColor;
+function THSCirclePicker.GetColorAtPoint(x, y: integer): TColor;
 var
   angle: Double;
   dx, dy, r, radius: integer;
@@ -175,7 +175,7 @@ begin
 end;
 
 { Outer loop: Y, Inner loop: X }
-function THSVColorPicker.GetGradientColor2D(X, Y: Integer): TColor;
+function THSCirclePicker.GetGradientColor2D(X, Y: Integer): TColor;
 var
   dx, dy: Integer;
   dSq, radiusSq: Integer;
@@ -204,7 +204,7 @@ begin
     Result := GetDefaultColor(dctBrush);
 end;
 
-procedure THSVColorPicker.Paint;
+procedure THSCirclePicker.Paint;
 var
   rgn: HRGN;
   R: TRect;
@@ -223,14 +223,14 @@ begin
   DrawMarker(mx, my);
 end;
 
-procedure THSVColorPicker.Resize;
+procedure THSCirclePicker.Resize;
 begin
   inherited;
   CreateGradient;
   UpdateCoords;
 end;
 
-procedure THSVColorPicker.SelectColor(x, y: integer);
+procedure THSCirclePicker.SelectColor(x, y: integer);
 var
   angle: Double;
   dx, dy, r, radius: integer;
@@ -273,7 +273,7 @@ begin
   DoChange;
 end;
 
-procedure THSVColorPicker.SetHueLineColor(c: TColor);
+procedure THSCirclePicker.SetHueLineColor(c: TColor);
 begin
   if FHueLineColor <> c then
   begin
@@ -282,7 +282,7 @@ begin
   end;
 end;
 
-procedure THSVColorPicker.SetRelHue(H: Double);
+procedure THSCirclePicker.SetRelHue(H: Double);
 begin
   if H > 1 then H := H - 1;
   if H < 0 then H := H + 1;
@@ -296,7 +296,7 @@ begin
   end;
 end;
 
-procedure THSVColorPicker.SetRelSat(S: Double);
+procedure THSCirclePicker.SetRelSat(S: Double);
 begin
   Clamp(S, 0.0, 1.0);
   if FSat <> S then
@@ -309,7 +309,7 @@ begin
   end;
 end;
 
-procedure THSVColorPicker.SetSatCircColor(c: TColor);
+procedure THSCirclePicker.SetSatCircColor(c: TColor);
 begin
   if FSatCircColor <> c then
   begin
@@ -318,7 +318,7 @@ begin
   end;
 end;
 
-procedure THSVColorPicker.SetSelectedColor(c: TColor);
+procedure THSCirclePicker.SetSelectedColor(c: TColor);
 begin
   if WebSafe then
     c := GetWebSafe(c);
@@ -331,7 +331,7 @@ begin
   DoChange;
 end;
 
-procedure THSVColorPicker.SetShowHueLine(s: boolean);
+procedure THSCirclePicker.SetShowHueLine(s: boolean);
 begin
   if FShowHueLine <> s then
   begin
@@ -340,7 +340,7 @@ begin
   end;
 end;
 
-procedure THSVColorPicker.SetShowSatCirc(s: boolean);
+procedure THSCirclePicker.SetShowSatCirc(s: boolean);
 begin
   if FShowSatCirc <> s then
   begin
@@ -349,7 +349,7 @@ begin
   end;
 end;
 
-procedure THSVColorPicker.SetShowSelCirc(s: boolean);
+procedure THSCirclePicker.SetShowSelCirc(s: boolean);
 begin
   if FShowSelCirc <> s then
   begin
@@ -358,7 +358,7 @@ begin
   end;
 end;
 
-procedure THSVColorPicker.UpdateCoords;
+procedure THSCirclePicker.UpdateCoords;
 var
   r, angle: double;
   sinAngle, cosAngle: Double;
