@@ -16,11 +16,14 @@
         <TextDesc Value="Your application description."/>
       </XPManifest>
       <Icon Value="0"/>
+      <Resources Count="1">
+        <Resource_0 FileName="splashimage.jpg" Type="RCDATA" ResourceName="SPLASHIMAGE"/>
+      </Resources>
     </General>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="1"/>
-      <RevisionNr Value="2"/>
+      <RevisionNr Value="3"/>
       <StringTable Comments="Uses Foobot public API to query Foobot #1" FileDescription="Monitor for Foobot" InternalName="foobotmonitor" LegalCopyright="(c)2016 minesadorada@charcodelvalle.com" LegalTrademarks="Foobot" ProductName="Foobot" ProductVersion="0.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="6">
@@ -209,7 +212,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="8">
+    <Units Count="9">
       <Unit0>
         <Filename Value="foobotmonitor.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -248,6 +251,12 @@
         <Filename Value="foobot_sensors.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit7>
+      <Unit8>
+        <Filename Value="usplash.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="splashform"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit8>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

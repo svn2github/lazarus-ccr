@@ -1,7 +1,7 @@
 object mainform: Tmainform
-  Left = 583
+  Left = 1072
   Height = 451
-  Top = 174
+  Top = 245
   Width = 784
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -14,6 +14,7 @@ object mainform: Tmainform
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
   Position = poWorkAreaCenter
   ShowInTaskBar = stNever

@@ -38,9 +38,9 @@ V0.1.2.0: ??
 interface
 
 uses
-  SysUtils, TAGraph, TAIntervalSources, TASeries,
-  foobot_sensors, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Menus,
-  lclIntf, foobot_utility, uCryptIni, dateutils, uconfigform, Classes;
+  SysUtils, TAGraph, TAIntervalSources, TASeries, foobot_sensors,
+  Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Menus, lclIntf,
+  foobot_utility, uCryptIni, dateutils, uconfigform, Classes;
 
 const
   // Timer milliseconds
@@ -150,10 +150,12 @@ type
     traypopup: TPopupMenu;
     tmr_foobot: TTimer;
     TrayIcon1: TTrayIcon;
+    procedure ApplicationProperties1IdleEnd(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
     procedure mnupopup_fileRestoreClick(Sender: TObject);
     procedure mnu_fileExitClick(Sender: TObject);
@@ -196,7 +198,7 @@ var
   mainform: Tmainform;
 
 implementation
-
+Uses uSplash;
 {$R *.lfm}
 
 { Tmainform }
@@ -240,7 +242,7 @@ var
 
 begin
   ClientHeight := grp_sensorDisplay.Height + grp_highlow.Height + grp_chart.Height;
-
+  Application.ProcessMessages;
   // Allow user to enter values in INIFile
   sTempFoobotUserName := INI.ReadUnencryptedString('Config', 'Foobot User', 'unknown');
   sTempSecretKey := INI.ReadUnencryptedString('Config', 'Secret Key', 'unknown');
@@ -256,7 +258,7 @@ begin
   sSecretKey := INI.ReadString('Foobot', 'Secret Key', 'unknown');
   if ((sFoobotUserName <> 'unknown') and (sSecretKey <> 'unknown')) then
   begin
-    Hide;
+    //Show;
     if FetchFoobotIdentity(sFoobotUserName, sSecretKey) then
     begin
       if FoobotIdentityObject.FoobotIdentityList.Count > 0 then
@@ -275,16 +277,30 @@ begin
         {$IFNDEF DEBUGMODE}
         tmr_foobot.Enabled := True;
         {$ENDIF}
+        // Everything OK - lets go!
         Show;
+        grp_sensorDisplay.Refresh;
+        grp_highlow.Refresh;
+        Update;
+        Application.Processmessages;
+        splashform.hide;
+        Application.Processmessages;
+      end
+      else
+      begin
+        // Identity.Count = 0
       end;
     end
     else
+    begin // Unable to fetch foobot identity
       Close;
+    end;
   end
   else
   begin
     // No valid cfg.  Show config form
     Hide;
+    splashform.Hide;
     Application.ProcessMessages;
     configform.ShowModal;
     // If user quit without data, then bail out
@@ -301,6 +317,12 @@ begin
       LineEnding + 'New settings are applied on resart.');
     Close;
   end;
+
+end;
+
+procedure Tmainform.ApplicationProperties1IdleEnd(Sender: TObject);
+begin
+
 end;
 
 procedure Tmainform.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -311,7 +333,13 @@ end;
 
 procedure Tmainform.FormDestroy(Sender: TObject);
 begin
+  FreeAndNil(splashform);
   FreeAndNil(INI);
+end;
+
+procedure Tmainform.FormShow(Sender: TObject);
+begin
+
 end;
 
 procedure Tmainform.SaveConfig;
