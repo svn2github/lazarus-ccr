@@ -283,9 +283,14 @@ begin
 end;
 
 procedure TOfficeMoreColorsWin.FormCreate(Sender: TObject);
+const
+  DESIGN_DPI = 96;
 begin
-  Width := ScaleX(Width, 96);
-  Height := ScaleY(Height, 96);
+  Width := ScaleX(Width, DESIGN_DPI);
+  Height := ScaleY(Height, DESIGN_DPI);
+  RTrackbar.Height := ScaleY(RTrackbar.Height, DESIGN_DPI);
+  BTrackbar.Height := RTrackbar.Height;
+  GTrackbar.Height := RTrackbar.Height;
 
   FBrightnessMode := bmLuminance;
 
