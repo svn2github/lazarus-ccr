@@ -255,6 +255,7 @@
         <Filename Value="usplash.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="splashform"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit8>
     </Units>

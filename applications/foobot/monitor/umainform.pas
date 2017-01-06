@@ -226,7 +226,9 @@ begin
   bDisplayGuagesOnly := False;
   INI.PlainTextMode:=TRUE;
   bDisplayYellowLines := INI.ReadBool('Config','DisplayYellowLines',False);
+  mnu_optionsDisplayYellowLines.Checked:=bDisplayYellowLines;
   bDisplayRedLines := INI.ReadBool('Config','DisplayRedLines',False);
+  mnu_optionsDisplayRedLines.Checked:=bDisplayRedLines;
   INI.PlainTextMode:=FALSE;
   SetYellowRecommendedLevels;
   SetRedSessionMax;

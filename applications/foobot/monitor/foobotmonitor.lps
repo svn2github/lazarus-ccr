@@ -19,8 +19,9 @@
         <ComponentName Value="mainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="272"/>
-        <CursorPos X="36" Y="280"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="209"/>
+        <CursorPos X="61" Y="229"/>
         <UsageCount Value="94"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -83,84 +84,96 @@
         <Loaded Value="True"/>
       </Unit7>
       <Unit8>
+        <Filename Value="usplash.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="splashform"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="1"/>
+        <CursorPos X="21" Y="35"/>
+        <UsageCount Value="23"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit8>
+      <Unit9>
         <Filename Value="..\latest_stable\foobot_httpclient.pas"/>
         <EditorIndex Value="9"/>
         <TopLine Value="43"/>
         <CursorPos X="47" Y="13"/>
         <UsageCount Value="63"/>
         <Loaded Value="True"/>
-      </Unit8>
-      <Unit9>
+      </Unit9>
+      <Unit10>
         <Filename Value="..\latest_stable\foobot_objects.pas"/>
         <EditorIndex Value="13"/>
         <CursorPos X="32" Y="61"/>
         <UsageCount Value="63"/>
         <Loaded Value="True"/>
-      </Unit9>
-      <Unit10>
+      </Unit10>
+      <Unit11>
         <Filename Value="..\latest_stable\ugenericcollection.pas"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
         <UsageCount Value="36"/>
-      </Unit10>
-      <Unit11>
+      </Unit11>
+      <Unit12>
         <Filename Value="..\latest_stable\umainform.lfm"/>
         <EditorIndex Value="-1"/>
         <UsageCount Value="8"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
-      </Unit11>
-      <Unit12>
+      </Unit12>
+      <Unit13>
         <Filename Value="..\latest_stable\umainform.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="10"/>
         <CursorPos X="57" Y="36"/>
         <UsageCount Value="8"/>
-      </Unit12>
-      <Unit13>
+      </Unit13>
+      <Unit14>
         <Filename Value="..\udataform.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="74"/>
         <CursorPos Y="96"/>
         <UsageCount Value="16"/>
-      </Unit13>
-      <Unit14>
+      </Unit14>
+      <Unit15>
         <Filename Value="..\umainform.pas"/>
         <EditorIndex Value="10"/>
         <TopLine Value="284"/>
         <CursorPos X="38" Y="313"/>
         <UsageCount Value="43"/>
         <Loaded Value="True"/>
-      </Unit14>
-      <Unit15>
+      </Unit15>
+      <Unit16>
         <Filename Value="C:\trunklatest\lazarus\lcl\lclmessageglue.pas"/>
         <UnitName Value="LCLMessageGlue"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="93"/>
         <CursorPos Y="114"/>
         <UsageCount Value="8"/>
-      </Unit15>
-      <Unit16>
+      </Unit16>
+      <Unit17>
         <Filename Value="..\ulogin.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="108"/>
         <UsageCount Value="11"/>
-      </Unit16>
-      <Unit17>
+      </Unit17>
+      <Unit18>
         <Filename Value="..\..\..\components\cryptini\latest_stable\ucryptini.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="906"/>
         <CursorPos X="8" Y="939"/>
         <UsageCount Value="9"/>
-      </Unit17>
-      <Unit18>
+      </Unit18>
+      <Unit19>
         <Filename Value="..\backup\foobot_utility.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="7"/>
         <UsageCount Value="8"/>
-      </Unit18>
-      <Unit19>
+      </Unit19>
+      <Unit20>
         <Filename Value="C:\trunklatest\lazarus\ide\lazarus.pp"/>
         <UnitName Value="Lazarus"/>
         <EditorIndex Value="6"/>
@@ -168,65 +181,65 @@
         <CursorPos Y="154"/>
         <UsageCount Value="14"/>
         <Loaded Value="True"/>
-      </Unit19>
-      <Unit20>
+      </Unit20>
+      <Unit21>
         <Filename Value="C:\trunklatest\fpc\rtl\objpas\objpas.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="11"/>
         <CursorPos X="8" Y="33"/>
         <UsageCount Value="9"/>
-      </Unit20>
-      <Unit21>
+      </Unit21>
+      <Unit22>
         <Filename Value="D:\Lazarusprojects\healthmonitor\svn\healthanalysis\healthanalysis\umainform.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="540"/>
         <CursorPos X="55" Y="593"/>
         <UsageCount Value="9"/>
-      </Unit21>
-      <Unit22>
+      </Unit22>
+      <Unit23>
         <Filename Value="C:\trunklatest\fpc\rtl\objpas\sysutils\datih.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="109"/>
         <CursorPos X="10" Y="128"/>
         <UsageCount Value="8"/>
-      </Unit22>
-      <Unit23>
+      </Unit23>
+      <Unit24>
         <Filename Value="C:\trunklatest\fpc\packages\rtl-objpas\src\inc\dateutil.inc"/>
         <EditorIndex Value="12"/>
         <TopLine Value="381"/>
         <CursorPos X="24" Y="409"/>
         <UsageCount Value="32"/>
         <Loaded Value="True"/>
-      </Unit23>
-      <Unit24>
+      </Unit24>
+      <Unit25>
         <Filename Value="..\latest_stable\udataform.pas"/>
         <EditorIndex Value="7"/>
         <TopLine Value="70"/>
         <UsageCount Value="32"/>
         <Loaded Value="True"/>
-      </Unit24>
-      <Unit25>
+      </Unit25>
+      <Unit26>
         <Filename Value="D:\lazarustrunk\common_components\cryptini\ucryptini.pas"/>
         <EditorIndex Value="4"/>
         <TopLine Value="781"/>
         <CursorPos X="28" Y="795"/>
         <UsageCount Value="17"/>
         <Loaded Value="True"/>
-      </Unit25>
-      <Unit26>
+      </Unit26>
+      <Unit27>
         <Filename Value="C:\trunklatest\fpc\packages\fcl-base\src\fileinfo.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="43"/>
         <CursorPos X="19" Y="51"/>
         <UsageCount Value="12"/>
-      </Unit26>
-      <Unit27>
+      </Unit27>
+      <Unit28>
         <Filename Value="C:\trunklatest\lazarus\components\IndustrialStuff\industrial.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="18" Y="11"/>
         <UsageCount Value="10"/>
-      </Unit27>
-      <Unit28>
+      </Unit28>
+      <Unit29>
         <Filename Value="..\..\..\components\poweredby\latest_stable\upoweredby.pas"/>
         <UnitName Value="uPoweredby"/>
         <EditorIndex Value="3"/>
@@ -234,18 +247,6 @@
         <CursorPos X="33" Y="205"/>
         <UsageCount Value="14"/>
         <Loaded Value="True"/>
-      </Unit28>
-      <Unit29>
-        <Filename Value="usplash.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="splashform"/>
-        <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="1"/>
-        <CursorPos X="21" Y="35"/>
-        <UsageCount Value="23"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit29>
       <Unit30>
         <Filename Value="C:\trunklatest\lazarus\lcl\include\customform.inc"/>
