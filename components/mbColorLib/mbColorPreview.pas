@@ -217,6 +217,7 @@ begin
   begin
     FSelColor := c;
     Invalidate;
+    DoChange;
   end;
 end;
 

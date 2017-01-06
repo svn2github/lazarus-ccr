@@ -17,6 +17,7 @@ type
   private
     FOnChange: TNotifyEvent;
     FOnGetHintStr: TGetHintStrEvent;
+    FLockChange: Integer;
   protected
     FBufferBmp: TBitmap;
     FGradientWidth: Integer;
@@ -46,6 +47,9 @@ type
     function GetColorAtPoint(X, Y: Integer): TColor; virtual;
     function GetHexColorAtPoint(X, Y: integer): string;
     function GetHexColorUnderCursor: string; virtual;
+    procedure Lock;
+    function IsLocked: Boolean;
+    procedure Unlock;
   published
     property ParentColor default true;
     property SelectedColor: TColor read GetSelectedColor write SetSelectedColor;
@@ -115,7 +119,7 @@ end;
 
 procedure TmbBasicPicker.DoChange;
 begin
-  if Assigned(FOnChange) then
+  if (FLockChange = 0) and Assigned(FOnChange) and (ComponentState = []) then
     FOnChange(self);
 end;
 
@@ -164,6 +168,16 @@ begin
     FOnGetHintStr(Self, X, Y, Result);
 end;
 
+function TmbBasicPicker.IsLocked: Boolean;
+begin
+  Result := FLockChange > 0;
+end;
+
+procedure TmbBasicPicker.Lock;
+begin
+  inc(FLockChange);
+end;
+
 procedure TmbBasicPicker.PaintParentBack;
 begin
   PaintParentBack(Canvas);
@@ -207,6 +221,11 @@ begin
   finally
     Offscreen.Free;
   end;
+end;
+
+procedure TmbBasicPicker.Unlock;
+begin
+  dec(FLockChange);
 end;
 
 end.

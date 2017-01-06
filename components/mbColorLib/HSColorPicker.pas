@@ -53,7 +53,7 @@ type
 implementation
 
 uses
-  Math, mbUtils;
+  Math, mbUtils, PalUtils;
 
 { THSColorPicker }
 
@@ -91,7 +91,10 @@ begin
   if Focused or (csDesigning in ComponentState) then
     c := clBlack
   else
-    c := clWhite;
+    case BrightnessMode of
+      bmLuminance: c := clWhite;
+      bmValue    : c := clGray;
+    end;
   InternalDrawMarker(x, y, c);
 end;
 
@@ -154,9 +157,10 @@ begin
   if WebSafe then c := GetWebSafe(c);
 
   ColorToHSLV(c, H, S, L, V);
+  {
   if (H = FHue) and (S = FSat) then
     exit;
-
+   }
   FHue := H;
   FSat := S;
   FSelected := HSLVtoColor(FHue, FSat, FLum, FVal);

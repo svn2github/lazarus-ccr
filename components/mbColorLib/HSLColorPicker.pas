@@ -109,7 +109,7 @@ type
     property LVPickerCursor: TCursor read FLVCursor write SetLVCursor default crDefault;
     property MaxHue: Integer read GetMaxHue write SetMaxHue default 360;
     property MaxSaturation: Integer read GetMaxSat write SetMaxSat default 255;
-    property MaxLuminance: Integer read GetMaxLum write SetMaxLum default 127;
+    property MaxLuminance: Integer read GetMaxLum write SetMaxLum default 255;
     property MaxValue: Integer read GetMaxVal write SetMaxVal default 255;
     property TabStop default true;
     property ShowHint;
@@ -314,12 +314,17 @@ begin
 end;
 
 procedure THSLColorPicker.HSPickerChange(Sender: TObject);
+var
+  c: TColor;
 begin
-  if FHSPicker.Hue <> FLVPicker.Hue then
+  FLVPicker.Lock;  // Lock the LVPicker to generate OnChange events here.
+  try
     FLVPicker.Hue := FHSPicker.Hue;
-  if FHSPicker.Saturation <> FLVPicker.Saturation then
     FLVPicker.Saturation := FHSPicker.Saturation;
-  DoChange;
+  finally
+    FLVPicker.Unlock;
+    DoChange;
+  end;
 end;
 
 procedure THSLColorPicker.LVPickerChange(Sender: TObject);
@@ -331,9 +336,9 @@ procedure THSLColorPicker.Resize;
 begin
   inherited;
 
-  if (FHSPicker = nil) or (FLVPicker = nil) then
+ { if (FHSPicker = nil) or (FLVPicker = nil) then
     exit;
-
+  }
   FHSPicker.Width := Width - FLVPicker.Width - 15;
   FHSPicker.Height := Height - 12;
 
@@ -498,14 +503,12 @@ begin
   if c <> Value then
   begin
     case GetBrightnessMode of
-      bmLuminance: ColorToHSL(c, H, S, LV);
-      bmValue    : ColorToHSV(c, H, S, LV);
+      bmLuminance: ColorToHSL(Value, H, S, LV);
+      bmValue    : ColorToHSV(value, H, S, LV);
     end;
-//    FSelectedColor := c;
     FHSPicker.RelHue := H;
     FHSPicker.RelSaturation := S;
-//    FHSPicker.SelectedColor := c;
-    FLVPicker.SelectedColor := c;
+    FLVPicker.SelectedColor := Value;
   end;
 end;
 
@@ -513,6 +516,5 @@ procedure THSLColorPicker.SetVal(V: Integer);
 begin
   FLVPicker.Value := V;
 end;
-
 
 end.

@@ -36,6 +36,9 @@ function mbColorToString(c: TColor): string;
 //blends two colors together in proportion C1 : C2 = W1 : 100 - W1, where 0 <= W1 <= 100
 function Blend(C1, C2: TColor; W1: Integer): TColor;
 
+// Inverts a color
+function InvertedColor(C: TColor): TColor;
+
 //generates a white-color-black or a black-color-white gradient palette
 function MakePalette(BaseColor: TColor; SortOrder: TSortOrder): string;
 
@@ -59,6 +62,9 @@ function ReadPhotoshopAct(PalFile: TFileName): string;
   *)
 
 implementation
+
+uses
+  Math;
 
 function ReplaceFlags(s: string; flags: array of string; value: integer): string;
 var
@@ -168,6 +174,11 @@ begin
   A1 := (C1 and $FF) * W1;
   G := (A1 + A2 + F) div D and $FF;
   Result := Result or G;
+end;
+
+function InvertedColor(C: TColor): TColor;
+begin
+  Result := RgbToColor(255 - GetRValue(c), 255 - GetGValue(c), 255 - GetBValue(c));
 end;
 
 function IsMember(sl: TStrings; s: string): boolean;

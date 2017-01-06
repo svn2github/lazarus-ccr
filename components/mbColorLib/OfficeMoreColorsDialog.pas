@@ -582,9 +582,11 @@ begin
     bmValue     : ColortoHSV(c, H, S, V);
   end;
 
-  if PickerNotebook.ActivePage = nbHSL.Name then
-    HSL.SelectedColor := c
-  else
+  if PickerNotebook.ActivePage = nbHSL.Name then begin
+  //  HSL.Lock;
+    HSL.SelectedColor := c;
+  //  HSL.Unlock;
+  end else
   if PickerNotebook.ActivePage = nbHSLRing.Name then
     HSLRing.SelectedColor := c
   else
