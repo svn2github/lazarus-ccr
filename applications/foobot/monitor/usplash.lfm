@@ -1,0 +1,26 @@
+object splashform: Tsplashform
+  Left = 596
+  Height = 480
+  Top = 136
+  Width = 790
+  BorderStyle = bsNone
+  Caption = 'splashform'
+  ClientHeight = 480
+  ClientWidth = 790
+  DefaultMonitor = dmDesktop
+  FormStyle = fsStayOnTop
+  OnCreate = FormCreate
+  Position = poWorkAreaCenter
+  ShowInTaskBar = stNever
+  LCLVersion = '1.7'
+  Scaled = True
+  object img: TImage
+    Left = 0
+    Height = 480
+    Top = 0
+    Width = 790
+    Align = alClient
+    Stretch = True
+    Transparent = True
+  end
+end
