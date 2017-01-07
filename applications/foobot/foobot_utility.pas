@@ -138,6 +138,7 @@ begin
   HLINI.WriteDateTime(sFoobotName, 'allpolluHighTime', TDateTime(FoobotDataHighTimes[6]));
   HLINI.WriteFloat(sFoobotName, 'allpolluLow', double(FoobotDataLows[6]));
   HLINI.WriteDateTime(sFoobotName, 'allpolluLowTime', TDateTime(FoobotDataLowTimes[6]));
+  Result:=TRUE;
 end;
 
 function LoadHighLows: boolean;
@@ -186,6 +187,7 @@ begin
   FoobotDataHighTimes[6] := HLINI.ReadDateTime(sFoobotName, 'allpolluHighTime', Now);
   FoobotDataLows[6] := HLINI.ReadFloat(sFoobotName, 'allpolluLow', 0);
   FoobotDataLowTimes[6] := HLINI.ReadDateTime(sFoobotName, 'allpolluLowTime', Now);
+  Result:=TRUE;
 end;
 
 // ToDo: Multiple Foobots?

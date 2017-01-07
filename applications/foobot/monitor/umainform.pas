@@ -40,7 +40,7 @@ interface
 uses
   SysUtils, TAGraph, TAIntervalSources, TASeries, foobot_sensors,
   Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Menus, lclIntf,
-  foobot_utility, uCryptIni, dateutils, uconfigform, Classes;
+  foobot_utility, uCryptIni, dateutils, uconfigform;
 
 const
   // Timer milliseconds
@@ -123,6 +123,7 @@ type
     lbl_voclow: TLabel;
     lbl_allpollulow: TLabel;
     MainMenu1: TMainMenu;
+    mnu_foobot: TMenuItem;
     mnu_optionsDisplayRedLines: TMenuItem;
     mnu_optionsDisplayYellowLines: TMenuItem;
     mnu_optionsDisplayGuagesOnly: TMenuItem;
@@ -150,12 +151,10 @@ type
     traypopup: TPopupMenu;
     tmr_foobot: TTimer;
     TrayIcon1: TTrayIcon;
-    procedure ApplicationProperties1IdleEnd(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
     procedure mnupopup_fileRestoreClick(Sender: TObject);
     procedure mnu_fileExitClick(Sender: TObject);
@@ -167,7 +166,6 @@ type
     procedure mnu_optionsOnlineHelpClick(Sender: TObject);
     procedure mnu_optionsResetHighsLowsClick(Sender: TObject);
     procedure mnu_optionsSaveHighLowsClick(Sender: TObject);
-    procedure mnu_optionsDisplayClick(Sender: TObject);
     procedure mnu_optionsTakeReadingNowClick(Sender: TObject);
     procedure mnu_SampleEvery1HourClick(Sender: TObject);
     procedure mnu_SampleEvery24HoursClick(Sender: TObject);
@@ -181,6 +179,8 @@ type
     sSecretKey, sFoobotUserName, sUUID: string;
     bDisplayGuagesOnly, bDisplayYellowLines, bDisplayRedLines: boolean;
     iFudgeFactor: integer;
+    iCurrentFoobot: integer;
+    foobotmenuarray: array of TMenuItem;
     procedure DisplayReadings;
     procedure UpdateGuage(Sender: TAnalogSensor; SensorNumber: integer);
     procedure UpdateHighLow(SensorNumber: integer);
@@ -188,6 +188,8 @@ type
     procedure GraphCurrentReading;
     procedure SetYellowRecommendedLevels;
     procedure SetRedSessionMax;
+    procedure PopulateFoobotMenu;
+    procedure ChangeCurrentFoobot(Sender: TObject);
     procedure SaveConfig;
     procedure LoadConfig;
   public
@@ -198,7 +200,9 @@ var
   mainform: Tmainform;
 
 implementation
-Uses uSplash;
+
+uses uSplash;
+
 {$R *.lfm}
 
 { Tmainform }
@@ -224,12 +228,12 @@ begin
   ResetHighLows;
   iFudgeFactor := 20; // only needed if height set in form.create
   bDisplayGuagesOnly := False;
-  INI.PlainTextMode:=TRUE;
-  bDisplayYellowLines := INI.ReadBool('Config','DisplayYellowLines',False);
-  mnu_optionsDisplayYellowLines.Checked:=bDisplayYellowLines;
-  bDisplayRedLines := INI.ReadBool('Config','DisplayRedLines',False);
-  mnu_optionsDisplayRedLines.Checked:=bDisplayRedLines;
-  INI.PlainTextMode:=FALSE;
+  INI.PlainTextMode := True;
+  bDisplayYellowLines := INI.ReadBool('Config', 'DisplayYellowLines', False);
+  mnu_optionsDisplayYellowLines.Checked := bDisplayYellowLines;
+  bDisplayRedLines := INI.ReadBool('Config', 'DisplayRedLines', False);
+  mnu_optionsDisplayRedLines.Checked := bDisplayRedLines;
+  INI.PlainTextMode := False;
   SetYellowRecommendedLevels;
   SetRedSessionMax;
   TrayIcon1.Icon := Application.Icon;
@@ -280,13 +284,15 @@ begin
         tmr_foobot.Enabled := True;
         {$ENDIF}
         // Everything OK - lets go!
+        iCurrentFoobot := 0;
+        PopulateFoobotMenu;
         Show;
         grp_sensorDisplay.Refresh;
         grp_highlow.Refresh;
         Update;
-        Application.Processmessages;
+        Application.ProcessMessages;
         splashform.hide;
-        Application.Processmessages;
+        Application.ProcessMessages;
       end
       else
       begin
@@ -322,9 +328,35 @@ begin
 
 end;
 
-procedure Tmainform.ApplicationProperties1IdleEnd(Sender: TObject);
+procedure Tmainform.ChangeCurrentFoobot(Sender: TObject);
 begin
+  iCurrentFoobot := (Sender as TMenuItem).Tag;
+  mnu_optionsTakeReadingNow.Click;
+end;
 
+procedure Tmainform.PopulateFoobotMenu;
+// uses foobotmenuarray
+var
+  iCount: integer;
+begin
+  if FoobotIdentityObject.FoobotIdentityList.Count = 0 then
+    Exit;
+  SetLength(foobotmenuarray, FoobotIdentityObject.FoobotIdentityList.Count);
+  for iCount := 0 to Pred(FoobotIdentityObject.FoobotIdentityList.Count) do
+  begin
+    foobotmenuarray[iCount] := TMenuItem.Create(MainMenu1);
+    with foobotmenuarray[iCount] do
+    begin
+      Caption := FoobotIdentityObject.FoobotIdentityList[iCount].Name;
+      AutoCheck := True;
+      RadioItem := True;
+      OnClick := @ChangeCurrentFoobot;
+      Tag := iCount;
+      if iCount = 0 then
+        Checked := True;
+    end;
+  end;
+  mnu_foobot.Add(foobotmenuarray);
 end;
 
 procedure Tmainform.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -337,11 +369,6 @@ procedure Tmainform.FormDestroy(Sender: TObject);
 begin
   FreeAndNil(splashform);
   FreeAndNil(INI);
-end;
-
-procedure Tmainform.FormShow(Sender: TObject);
-begin
-
 end;
 
 procedure Tmainform.SaveConfig;
@@ -368,8 +395,8 @@ begin
   INI.WriteFloat('Config', 'vocMaxValue', as_voc.ValueMax);
   INI.WriteFloat('Config', 'allpolluMinValue', as_allpollu.ValueMin);
   INI.WriteFloat('Config', 'allpolluMaxValue', as_allpollu.ValueMax);
-  INI.WriteBool('Config','DisplayYellowLines',bDisplayYellowLines);
-  INI.WriteBool('Config','DisplayRedLines',bDisplayRedLines);
+  INI.WriteBool('Config', 'DisplayYellowLines', bDisplayYellowLines);
+  INI.WriteBool('Config', 'DisplayRedLines', bDisplayRedLines);
   INI.PlainTextMode := False;
 end;
 
@@ -500,15 +527,10 @@ begin
   INI.WriteBool('Foobot', 'SaveLoadHighLows', SaveLoadHighLows);
 end;
 
-procedure Tmainform.mnu_optionsDisplayClick(Sender: TObject);
-begin
-end;
-
 procedure Tmainform.mnu_optionsTakeReadingNowClick(Sender: TObject);
 begin
   mainform.Cursor := crHourGlass;
-  // Only Foobot #0
-  if FetchFoobotData(dfLast, 0, 0, 0, 0, 0, sSecretKey) then
+  if FetchFoobotData(dfLast, iCurrentFoobot, 0, 0, 0, 0, sSecretKey) then
     DisplayReadings
   else
     ShowMessage('Sorry - no readings available');
@@ -560,7 +582,7 @@ end;
 
 procedure Tmainform.tmr_foobotTimer(Sender: TObject);
 begin
-  if FetchFoobotData(dfLast, 0, 0, 0, 0, 0, sSecretKey) then
+  if FetchFoobotData(dfLast, iCurrentFoobot, 0, 0, 0, 0, sSecretKey) then
     DisplayReadings;
 end;
 
@@ -802,8 +824,8 @@ begin
   iStartSeconds := iEndSeconds - (2 * (24 * 3600)); // 49 hours before Now
   grp_chart.Caption := Format('History from %s',
     [FormatDateTime('dd/mm/yyyy hh:nn', UnixToDateTime(iStartSeconds))]);
-  if FetchFoobotData(dfStartEnd, 0, 0, 3600, iStartSeconds, iEndSeconds, sSecretKey) =
-    False then
+  if FetchFoobotData(dfStartEnd, iCurrentFoobot, 0, 3600, iStartSeconds,
+    iEndSeconds, sSecretKey) = False then
     exit;
   if FoobotDataObjectToArrays then
     for iCount := 0 to Pred(High(FoobotData_time)) do

@@ -8,6 +8,7 @@ object configform: Tconfigform
   Caption = 'configform'
   ClientHeight = 197
   ClientWidth = 592
+  Font.Height = -12
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   Position = poMainFormCenter

@@ -1,7 +1,7 @@
 object mainform: Tmainform
-  Left = 1072
+  Left = 516
   Height = 451
-  Top = 245
+  Top = 144
   Width = 784
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -9,12 +9,12 @@ object mainform: Tmainform
   ClientHeight = 431
   ClientWidth = 784
   DefaultMonitor = dmDesktop
+  Font.Height = -12
   Menu = MainMenu1
   OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
   Position = poWorkAreaCenter
   ShowInTaskBar = stNever
@@ -466,7 +466,6 @@ object mainform: Tmainform
       end
       object mnu_optionsDisplay: TMenuItem
         Caption = 'Display...'
-        OnClick = mnu_optionsDisplayClick
         object mnu_optionsDisplayGuagesOnly: TMenuItem
           AutoCheck = True
           Caption = 'Guages only'
@@ -493,6 +492,9 @@ object mainform: Tmainform
         Caption = 'Reset All-time Highs/Lows'
         OnClick = mnu_optionsResetHighsLowsClick
       end
+    end
+    object mnu_foobot: TMenuItem
+      Caption = '&Foobot'
     end
     object mnu_help: TMenuItem
       Caption = '&Help'
