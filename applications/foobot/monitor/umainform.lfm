@@ -494,7 +494,6 @@ object mainform: Tmainform
       end
       object mnu_optionsFoobotTriggers: TMenuItem
         Caption = 'Foobot Triggers...'
-        OnClick = mnu_optionsFoobotTriggersClick
         object mnu_options_triggersSetTriggers: TMenuItem
           Caption = 'Set Trigger Values...'
           OnClick = mnu_options_triggersSetTriggersClick
@@ -515,6 +514,10 @@ object mainform: Tmainform
       object mnu_optionsOnlineHelp: TMenuItem
         Caption = 'Online Help'
         OnClick = mnu_optionsOnlineHelpClick
+      end
+      object mnu_helpFoobotAPIPage: TMenuItem
+        Caption = 'Foobot API page'
+        OnClick = mnu_helpFoobotAPIPageClick
       end
       object mnu_helpAbout: TMenuItem
         Caption = 'A&bout..'

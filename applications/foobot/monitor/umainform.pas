@@ -27,7 +27,7 @@ V0.0.3.0: Added Help menu.  Updated Options menu
 V0.0.4.0: Graph added
 V0.1.0.0: Save/Load Alltime High/Lows.  Reset values from menu
 V0.1.1.0: Save/Load Colours, Min and Max values to cfg file
-V0.1.2.0: ??
+V0.2.1.0: Triggers,Multiple Foobots
 }
 {$ifopt D+}
 // Debug mode does not load data from web
@@ -37,10 +37,10 @@ V0.1.2.0: ??
 
 interface
 
-uses
+uses // If Lazarus auto-inserts 'sensors' in the clause then delete it
   SysUtils, TAGraph, TAIntervalSources, TASeries, foobot_sensors,
   Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Menus, lclIntf,
-  foobot_utility, uCryptIni, dateutils, uconfigform,utriggersform, Classes;
+  foobot_utility, uCryptIni, dateutils, uconfigform, utriggersform, Classes;
 
 const
   // Timer milliseconds
@@ -123,6 +123,7 @@ type
     lbl_voclow: TLabel;
     lbl_allpollulow: TLabel;
     MainMenu1: TMainMenu;
+    mnu_helpFoobotAPIPage: TMenuItem;
     mnu_options_triggersActivateTriggers: TMenuItem;
     mnu_options_triggersSetTriggers: TMenuItem;
     mnu_optionsFoobotTriggers: TMenuItem;
@@ -162,6 +163,7 @@ type
     procedure mnupopup_fileRestoreClick(Sender: TObject);
     procedure mnu_fileExitClick(Sender: TObject);
     procedure mnu_helpAboutClick(Sender: TObject);
+    procedure mnu_helpFoobotAPIPageClick(Sender: TObject);
     procedure mnu_optionsDisplayGuagesOnlyClick(Sender: TObject);
     procedure mnu_optionsDisplayRedLinesClick(Sender: TObject);
     procedure mnu_optionsDisplayYellowLinesClick(Sender: TObject);
@@ -169,7 +171,6 @@ type
     procedure mnu_optionsOnlineHelpClick(Sender: TObject);
     procedure mnu_optionsResetHighsLowsClick(Sender: TObject);
     procedure mnu_optionsSaveHighLowsClick(Sender: TObject);
-    procedure mnu_optionsFoobotTriggersClick(Sender: TObject);
     procedure mnu_optionsTakeReadingNowClick(Sender: TObject);
     procedure mnu_options_triggersActivateTriggersClick(Sender: TObject);
     procedure mnu_options_triggersSetTriggersClick(Sender: TObject);
@@ -246,7 +247,9 @@ begin
   TrayIcon1.Hint := Application.Title;
   DateTimeIntervalChartSource1.DateTimeFormat := 'hh:nn';
   LoadConfig;
-  {$IFDEF DEBUGMODE}UseTriggers:=FALSE;{$ENDIF}
+  {$IFDEF DEBUGMODE}
+  UseTriggers := False;
+  {$ENDIF}
 end;
 
 procedure Tmainform.FormActivate(Sender: TObject);
@@ -293,6 +296,8 @@ begin
         // Everything OK - lets go!
         iCurrentFoobot := 0;
         PopulateFoobotMenu;
+        LoadTriggers; // This can only be done if we have a Foobot Identity
+        // as each Foobot has its own trigger values
         Show;
         grp_sensorDisplay.Refresh;
         grp_highlow.Refresh;
@@ -336,17 +341,18 @@ begin
 end;
 
 procedure Tmainform.ChangeCurrentFoobot(Sender: TObject);
+// Called from 'Foobot' TSubmenuitem.click
 begin
   iCurrentFoobot := (Sender as TMenuItem).Tag;
   mnu_optionsTakeReadingNow.Click;
 end;
 
 procedure Tmainform.PopulateFoobotMenu;
-// uses foobotmenuarray
+// Uses dynamic foobotmenuarray
 var
   iCount: integer;
 begin
-  if FoobotIdentityObject.FoobotIdentityList.Count = 0 then
+  if (FoobotIdentityObject.FoobotIdentityList.Count = 0) then
     Exit;
   SetLength(foobotmenuarray, FoobotIdentityObject.FoobotIdentityList.Count);
   for iCount := 0 to Pred(FoobotIdentityObject.FoobotIdentityList.Count) do
@@ -368,7 +374,9 @@ end;
 
 procedure Tmainform.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  SaveConfig;
+  SaveConfig; // to .cfg file
+  if (FoobotIdentityObject.FoobotIdentityList.Count > 0) then
+    SaveTriggers;
   CloseAction := caFree;
 end;
 
@@ -379,6 +387,7 @@ begin
 end;
 
 procedure Tmainform.SaveConfig;
+// For all Foobots
 begin
   INI.PlainTextMode := True;
   // Colours
@@ -408,6 +417,7 @@ begin
 end;
 
 procedure Tmainform.LoadConfig;
+// For all Foobots
 begin
   INI.PlainTextMode := True;
   // Colours
@@ -482,6 +492,11 @@ begin
     mtInformation, [mbOK], 0);
 end;
 
+procedure Tmainform.mnu_helpFoobotAPIPageClick(Sender: TObject);
+begin
+  OpenURL('http://api.foobot.io/apidoc/index.html');
+end;
+
 procedure Tmainform.mnu_optionsDisplayGuagesOnlyClick(Sender: TObject);
 begin
   bDisplayGuagesOnly := mnu_optionsDisplayGuagesOnly.Checked;
@@ -534,10 +549,6 @@ begin
   INI.WriteBool('Foobot', 'SaveLoadHighLows', SaveLoadHighLows);
 end;
 
-procedure Tmainform.mnu_optionsFoobotTriggersClick(Sender: TObject);
-begin
-end;
-
 procedure Tmainform.mnu_optionsTakeReadingNowClick(Sender: TObject);
 begin
   mainform.Cursor := crHourGlass;
@@ -550,21 +561,22 @@ end;
 
 procedure Tmainform.mnu_options_triggersActivateTriggersClick(Sender: TObject);
 begin
-  mnu_options_triggersActivateTriggers.Checked:= NOT mnu_options_triggersActivateTriggers.Checked;
-  UseTriggers:=mnu_options_triggersActivateTriggers.Checked;
-  If UseTriggers then
-   mnu_options_triggersActivateTriggers.Caption:='Set Triggers Off'
+  mnu_options_triggersActivateTriggers.Checked :=
+    not mnu_options_triggersActivateTriggers.Checked;
+  UseTriggers := mnu_options_triggersActivateTriggers.Checked;
+  if UseTriggers then
+    mnu_options_triggersActivateTriggers.Caption := 'Set Triggers Off'
   else
-    mnu_options_triggersActivateTriggers.Caption:='Set Triggers On';
+    mnu_options_triggersActivateTriggers.Caption := 'Set Triggers On';
 end;
 
 procedure Tmainform.mnu_options_triggersSetTriggersClick(Sender: TObject);
 begin
-    triggersform.ShowModal;
-  If triggersform.ModalResult = mrCancel then
-  ShowMessage('Cancel')
+  triggersform.ShowModal;
+  if triggersform.ModalResult = mrCancel then
+    ShowMessage('Cancel')
   else
-  mnu_options_triggersActivateTriggers.Enabled:=TRUE;
+    mnu_options_triggersActivateTriggers.Enabled := True;
 end;
 
 procedure Tmainform.mnu_SampleEveryHalfHourClick(Sender: TObject);
@@ -613,7 +625,11 @@ end;
 procedure Tmainform.tmr_foobotTimer(Sender: TObject);
 begin
   if FetchFoobotData(dfLast, iCurrentFoobot, 0, 0, 0, 0, sSecretKey) then
-    DisplayReadings;
+    DisplayReadings
+  else
+    mainform.Caption := Format('Foobot "%s" - Read failure on %s',
+      [FoobotIdentityObject.FoobotIdentityList[iCurrentFoobot].Name,
+      FormatDateTime('dd/mm/yyyy - tt', Now)]);
 end;
 
 procedure Tmainform.TrayIcon1Click(Sender: TObject);
@@ -746,6 +762,8 @@ begin
         FoobotDataObject.Units[SensorNumber]]) + LineEnding + 'on ' +
         FormatDateTime('dd/mm tt', TDateTime(FoobotDataLowTimes[SensorNumber]));
     end;
+    else
+      Exception.Create('Error in UpdateHighLow Case statement');
   end;
 end;
 
@@ -802,7 +820,7 @@ begin
   if FoobotDataObjectToArrays = True then
   begin
     mainform.Caption := Format('Foobot "%s" - Last reading: ',
-      [FoobotIdentityObject.FoobotIdentityList[0].Name]) +
+      [FoobotIdentityObject.FoobotIdentityList[iCurrentFoobot].Name]) +
       FormatDateTime('dd/mm/yyyy - tt', FoobotData_time[0]);
     UpdateGuage(as_pm, C_PM);
     UpdateGuage(as_tmp, C_TMP);
@@ -817,46 +835,62 @@ begin
     end;
     GraphCurrentReading;
 
-    // Process Trigger Alerts
-    If UseTriggers then
-      For iCount:=C_PM to C_ALLPOLLU do
-      If AlertRec[iCount].AlertTriggered then
-        If AlertRec[iCount].AlertType = at_high then
-        begin
-           ShowMessageFmt('High alert member %d (value %f) exceeded',
-           [iCount,Double(AlertRec[iCount].AlertValue)]);
-        end
-        else
-        begin
-          ShowMessageFmt('Low alert member %d (value %f) exceeded',
-          [iCount,Double(AlertRec[iCount].AlertValue)]);
-        end;
-  end;
+    // Process Trigger Alerts on each call to FoobotDataObjectToArrays
+    if UseTriggers then
+      try
+        // Look for alerts in each sensor
+        for iCount := C_PM to C_ALLPOLLU do
+          if AlertRec[iCount].AlertTriggered then
+            // Alert found.  High or low?
+            if AlertRec[iCount].AlertType = at_high then
+            begin
+              // A high alert - do something
+              ShowMessageFmt('High alert member %d (value %f) exceeded',
+                [iCount, double(AlertRec[iCount].AlertValue)]);
+            end
+            else
+            begin
+              // A low alert - do something
+              ShowMessageFmt('Low alert member %d (value %f) exceeded',
+                [iCount, double(AlertRec[iCount].AlertValue)]);
+            end;
+      except
+        raise Exception.Create('Unable to process triggers in DisplayReadings');
+      end;
+  end
+  else
+    raise Exception.Create('FoobotDataObjectToArrays error in DisplayReadings');
 end;
 
 function AsPercent(aValue, aMin, aMax: double): double;
 begin
   if aMax > 0 then
-    Result := aValue / (aMax - aMin) * 100
+    Result := (aValue / (aMax - aMin) * 100)
   else
     Result := 0;
 end;
 
 procedure Tmainform.GraphCurrentReading;
 begin
-  {$IFDEF DEBUGMODE}Exit;{$ENDIF}
-  lineseries_pm.AddXY(FoobotData_time[0],
-    AsPercent(FoobotData_pm[0], as_pm.ValueMin, as_pm.ValueMax));
-  lineseries_tmp.AddXY(FoobotData_time[0], AsPercent(FoobotData_tmp[0],
-    as_tmp.ValueMin, as_tmp.ValueMax));
-  lineseries_hum.AddXY(FoobotData_time[0],
-    AsPercent(FoobotData_hum[0], as_hum.ValueMin, as_hum.ValueMax));
-  lineseries_co2.AddXY(FoobotData_time[0],
-    AsPercent(FoobotData_co2[0], as_co2.ValueMin, as_co2.ValueMax));
-  lineseries_voc.AddXY(FoobotData_time[0],
-    AsPercent(FoobotData_voc[0], as_voc.ValueMin, as_voc.ValueMax));
-  lineseries_allpollu.AddXY(FoobotData_time[0],
-    AsPercent(FoobotData_allpollu[0], as_allpollu.ValueMin, as_allpollu.ValueMax));
+  {$IFDEF DEBUGMODE}
+  Exit;
+  {$ENDIF}
+  try
+    lineseries_pm.AddXY(FoobotData_time[0],
+      AsPercent(FoobotData_pm[0], as_pm.ValueMin, as_pm.ValueMax));
+    lineseries_tmp.AddXY(FoobotData_time[0], AsPercent(FoobotData_tmp[0],
+      as_tmp.ValueMin, as_tmp.ValueMax));
+    lineseries_hum.AddXY(FoobotData_time[0],
+      AsPercent(FoobotData_hum[0], as_hum.ValueMin, as_hum.ValueMax));
+    lineseries_co2.AddXY(FoobotData_time[0],
+      AsPercent(FoobotData_co2[0], as_co2.ValueMin, as_co2.ValueMax));
+    lineseries_voc.AddXY(FoobotData_time[0],
+      AsPercent(FoobotData_voc[0], as_voc.ValueMin, as_voc.ValueMax));
+    lineseries_allpollu.AddXY(FoobotData_time[0],
+      AsPercent(FoobotData_allpollu[0], as_allpollu.ValueMin, as_allpollu.ValueMax));
+  except
+    raise Exception.Create('Unable to update graph in GraphCurrentReading');
+  end;
 end;
 
 procedure Tmainform.GraphHistory;
@@ -866,32 +900,37 @@ var
   iCount: integer;
   iStartSeconds, iEndSeconds: int64;
 begin
-  {$IFDEF DEBUGMODE}Exit;{$ENDIF}
+  {$IFDEF DEBUGMODE}
+  Exit;
+  {$ENDIF}
   iEndSeconds := DateTimeToUnix(Now) - 3600;
   iStartSeconds := iEndSeconds - (2 * (24 * 3600)); // 49 hours before Now
-  grp_chart.Caption := Format('History from %s',
+  grp_chart.Caption := Format('History since %s',
     [FormatDateTime('dd/mm/yyyy hh:nn', UnixToDateTime(iStartSeconds))]);
   if FetchFoobotData(dfStartEnd, iCurrentFoobot, 0, 3600, iStartSeconds,
     iEndSeconds, sSecretKey) = False then
     exit;
-  if FoobotDataObjectToArrays then
-    for iCount := 0 to Pred(High(FoobotData_time)) do
-    begin
-      lineseries_pm.AddXY(FoobotData_time[iCount],
-        AsPercent(FoobotData_pm[iCount], as_pm.ValueMin, as_pm.ValueMax));
-      lineseries_tmp.AddXY(FoobotData_time[iCount],
-        AsPercent(FoobotData_tmp[iCount], as_tmp.ValueMin, as_tmp.ValueMax));
-      lineseries_hum.AddXY(FoobotData_time[iCount],
-        AsPercent(FoobotData_hum[iCount], as_hum.ValueMin, as_hum.ValueMax));
-      lineseries_co2.AddXY(FoobotData_time[iCount],
-        AsPercent(FoobotData_co2[iCount], as_co2.ValueMin, as_co2.ValueMax));
-      lineseries_voc.AddXY(FoobotData_time[iCount],
-        AsPercent(FoobotData_voc[iCount], as_voc.ValueMin, as_voc.ValueMax));
-      lineseries_allpollu.AddXY(FoobotData_time[iCount],
-        AsPercent(FoobotData_allpollu[iCount], as_allpollu.ValueMin,
-        as_allpollu.ValueMax));
-    end;
-  ResetArrays; // at end
+  try
+    if FoobotDataObjectToArrays then
+      for iCount := 0 to Pred(High(FoobotData_time)) do
+      begin
+        lineseries_pm.AddXY(FoobotData_time[iCount],
+          AsPercent(FoobotData_pm[iCount], as_pm.ValueMin, as_pm.ValueMax));
+        lineseries_tmp.AddXY(FoobotData_time[iCount],
+          AsPercent(FoobotData_tmp[iCount], as_tmp.ValueMin, as_tmp.ValueMax));
+        lineseries_hum.AddXY(FoobotData_time[iCount],
+          AsPercent(FoobotData_hum[iCount], as_hum.ValueMin, as_hum.ValueMax));
+        lineseries_co2.AddXY(FoobotData_time[iCount],
+          AsPercent(FoobotData_co2[iCount], as_co2.ValueMin, as_co2.ValueMax));
+        lineseries_voc.AddXY(FoobotData_time[iCount],
+          AsPercent(FoobotData_voc[iCount], as_voc.ValueMin, as_voc.ValueMax));
+        lineseries_allpollu.AddXY(FoobotData_time[iCount],
+          AsPercent(FoobotData_allpollu[iCount], as_allpollu.ValueMin,
+          as_allpollu.ValueMax));
+      end;
+  finally
+    ResetArrays; // at end
+  end;
 end;
 
 end.

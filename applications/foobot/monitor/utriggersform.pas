@@ -15,6 +15,12 @@ type
   Ttriggersform = class(TForm)
     cmd_cancel: TBitBtn;
     cmd_OK: TBitBtn;
+    grp_pm: TGroupBox;
+    grp_tmp: TGroupBox;
+    grp_hum: TGroupBox;
+    grp_co2: TGroupBox;
+    grp_voc: TGroupBox;
+    grp_allpollu: TGroupBox;
     grp_main: TGroupBox;
     procedure FormCreate(Sender: TObject);
   private

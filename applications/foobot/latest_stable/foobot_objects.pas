@@ -1,4 +1,5 @@
 unit foobot_objects;
+
 { Objects for Foobot Lazarus
 
   Copyright (C)2016 Gordon Bamber minsadorada@charcodelvalle.com
@@ -40,7 +41,7 @@ type
     property uuid: string read Fuuid write Fuuid;
     property userId: integer read FuserId write FuserId;
     property mac: string read FMac write FMac;
-    property name: string read FName write FName;
+    property Name: string read FName write FName;
   end;
 
   {TFoobotIdentityList}
@@ -65,26 +66,24 @@ type
 
 type
   TFoobotDataObject = class(TPersistent)
-    private
-      FDataPoints:Variant;
-      FSensors:TStrings;
-      FUnits:TStrings;
-      Fuuid:String;
-      FStart:Int64;
-      FEnd:Int64;
-    public
-      constructor Create;
-      Destructor Destroy; override;
-      function SaveToFile(const AFilename: string): boolean;
-    published
-      property uuid:String read Fuuid write Fuuid;
-      property start:Int64 read FStart write FStart;
-      property &end:Int64 read FEnd write FEnd;
-      property sensors:TStrings
-        read FSensors write FSensors;
-      property units:TStrings
-        read FUnits write FUnits;
-      property datapoints : Variant read FDataPoints write FDataPoints;
+  private
+    FDataPoints: variant;
+    FSensors: TStrings;
+    FUnits: TStrings;
+    Fuuid: string;
+    FStart: int64;
+    FEnd: int64;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    function SaveToFile(const AFilename: string): boolean;
+  published
+    property uuid: string read Fuuid write Fuuid;
+    property start: int64 read FStart write FStart;
+    property &end:Int64 read FEnd write FEnd;
+    property sensors: TStrings read FSensors write FSensors;
+    property units: TStrings read FUnits write FUnits;
+    property datapoints: variant read FDataPoints write FDataPoints;
   end;
 
 
@@ -93,11 +92,12 @@ implementation
 constructor TFoobotDataObject.Create;
 begin
   inherited;
-  FSensors:=TStringList.Create;
-  FUnits:=TstringList.Create;
+  FSensors := TStringList.Create;
+  FUnits := TStringList.Create;
 end;
 
-Destructor TFoobotDataObject.Destroy;
+destructor TFoobotDataObject.Destroy;
+
 begin
   FSensors.Free;
   FUnits.Free;
