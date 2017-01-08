@@ -202,7 +202,7 @@ begin
   r := GetRValue(c);
   g := GetGValue(c);
   b := GetBValue(c);
-  newGradient := (r <> FRed) and (g <> FGreen);
+  newGradient := (r <> FRed) or (g <> FGreen);
   FGreen := g;
   FBlue := b;
   FRed := r;
