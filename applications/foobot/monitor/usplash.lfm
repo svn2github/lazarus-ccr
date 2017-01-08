@@ -1,12 +1,12 @@
 object splashform: Tsplashform
   Left = 596
-  Height = 480
+  Height = 484
   Top = 136
-  Width = 790
+  Width = 794
   BorderStyle = bsNone
   Caption = 'splashform'
-  ClientHeight = 480
-  ClientWidth = 790
+  ClientHeight = 484
+  ClientWidth = 794
   DefaultMonitor = dmDesktop
   FormStyle = fsStayOnTop
   OnCreate = FormCreate
@@ -16,9 +16,9 @@ object splashform: Tsplashform
   Scaled = True
   object img: TImage
     Left = 0
-    Height = 480
+    Height = 484
     Top = 0
-    Width = 790
+    Width = 794
     Align = alClient
     Stretch = True
     Transparent = True

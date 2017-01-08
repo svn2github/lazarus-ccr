@@ -1,0 +1,49 @@
+object triggersform: Ttriggersform
+  Left = 546
+  Height = 484
+  Top = 142
+  Width = 794
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  Caption = 'triggersform'
+  ClientHeight = 484
+  ClientWidth = 794
+  DefaultMonitor = dmDesktop
+  FormStyle = fsStayOnTop
+  OnCreate = FormCreate
+  Position = poWorkAreaCenter
+  ShowInTaskBar = stNever
+  LCLVersion = '1.7'
+  Scaled = True
+  object grp_main: TGroupBox
+    Left = 0
+    Height = 424
+    Top = 0
+    Width = 794
+    Align = alTop
+    Caption = 'Foobot Triggers'
+    TabOrder = 0
+  end
+  object cmd_OK: TBitBtn
+    Left = 360
+    Height = 30
+    Top = 440
+    Width = 75
+    Default = True
+    DefaultCaption = True
+    Kind = bkOK
+    ModalResult = 1
+    TabOrder = 1
+  end
+  object cmd_cancel: TBitBtn
+    Left = 704
+    Height = 30
+    Top = 440
+    Width = 75
+    Cancel = True
+    DefaultCaption = True
+    Kind = bkCancel
+    ModalResult = 2
+    TabOrder = 2
+  end
+end

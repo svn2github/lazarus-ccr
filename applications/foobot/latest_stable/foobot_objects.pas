@@ -1,5 +1,5 @@
 unit foobot_objects;
-{ Objects for Foobot Interrogator
+{ Objects for Foobot Lazarus
 
   Copyright (C)2016 Gordon Bamber minsadorada@charcodelvalle.com
 

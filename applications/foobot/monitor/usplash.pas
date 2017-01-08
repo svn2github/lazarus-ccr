@@ -35,7 +35,7 @@ begin
      jpg:=TJPEGImage.Create;
      try
         jpg.LoadFromResourceName(HInstance,'SPLASHIMAGE');
-        Img.Canvas.Draw(0,0,jpg);
+        img.Canvas.Draw(0,0,jpg);
      finally
         jpg.Free;
      end;

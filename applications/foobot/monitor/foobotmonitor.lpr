@@ -15,7 +15,8 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms,  usplash, tachartlazaruspkg, umainform, uconfigform, foobot_sensors
+  Forms, usplash, tachartlazaruspkg, umainform, uconfigform, foobot_sensors,
+  utriggersform
   { you can add units after this };
 
 {$R *.res}
@@ -29,6 +30,7 @@ begin
   Application.ProcessMessages; // process splash paint message
   Application.CreateForm(Tmainform, mainform);
   Application.CreateForm(Tconfigform, configform);
+  Application.CreateForm(Ttriggersform, triggersform);
   Application.Run;
 end.
 

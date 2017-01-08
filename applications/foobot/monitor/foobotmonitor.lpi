@@ -23,6 +23,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="2"/>
+      <RevisionNr Value="1"/>
       <StringTable Comments="Uses Foobot public API to query Foobot #1" FileDescription="Monitor for Foobot" InternalName="foobotmonitor" LegalCopyright="(c)2016 minesadorada@charcodelvalle.com" LegalTrademarks="Foobot" ProductName="Foobot" ProductVersion="0.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="6">
@@ -236,7 +237,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="9">
+    <Units Count="10">
       <Unit0>
         <Filename Value="foobotmonitor.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -282,6 +283,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit8>
+      <Unit9>
+        <Filename Value="utriggersform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="triggersform"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit9>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -322,9 +330,6 @@
     <Other>
       <CustomOptions Value="-FcUTF8
 -dDEBUGMODE"/>
-      <OtherDefines Count="1">
-        <Define0 Value="DEBUGMODE"/>
-      </OtherDefines>
     </Other>
   </CompilerOptions>
   <Debugging>

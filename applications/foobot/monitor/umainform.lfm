@@ -492,6 +492,20 @@ object mainform: Tmainform
         Caption = 'Reset All-time Highs/Lows'
         OnClick = mnu_optionsResetHighsLowsClick
       end
+      object mnu_optionsFoobotTriggers: TMenuItem
+        Caption = 'Foobot Triggers...'
+        OnClick = mnu_optionsFoobotTriggersClick
+        object mnu_options_triggersSetTriggers: TMenuItem
+          Caption = 'Set Trigger Values...'
+          OnClick = mnu_options_triggersSetTriggersClick
+        end
+        object mnu_options_triggersActivateTriggers: TMenuItem
+          Caption = 'Set Triggers On'
+          Enabled = False
+          RadioItem = True
+          OnClick = mnu_options_triggersActivateTriggersClick
+        end
+      end
     end
     object mnu_foobot: TMenuItem
       Caption = '&Foobot'
