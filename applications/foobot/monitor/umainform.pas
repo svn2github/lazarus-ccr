@@ -199,6 +199,10 @@ type
     procedure ChangeCurrentFoobot(Sender: TObject);
     procedure SaveConfig;
     procedure LoadConfig;
+    procedure SetMinMaxTriggers;
+    procedure DoHighTriggerAlert(Const iSensorNum:Integer;Const aValue:Variant);
+    procedure DoLowTriggerAlert(Const iSensorNum:Integer;Const aValue:Variant);
+    procedure RestoreNormalColour(Const iSensorNum:Integer);
   public
     INI: TCryptINIfile;
   end;
@@ -285,9 +289,6 @@ begin
         if SaveLoadHighLows then
           LoadHighLows;
         GraphHistory;
-        {$IFNDEF DEBUGMODE}
-        mnu_optionsTakeReadingNow.Click;
-        {$ENDIF}
         // Switch off for testing
         tmr_foobot.Interval := ONEHOUR;
         {$IFNDEF DEBUGMODE}
@@ -298,7 +299,11 @@ begin
         PopulateFoobotMenu;
         LoadTriggers; // This can only be done if we have a Foobot Identity
         // as each Foobot has its own trigger values
+        SetMinMaxTriggers; // Adjust if necesarry for Guage High/Low limits
         Show;
+        {$IFNDEF DEBUGMODE}
+        mnu_optionsTakeReadingNow.Click;
+        {$ENDIF}
         grp_sensorDisplay.Refresh;
         grp_highlow.Refresh;
         Update;
@@ -389,31 +394,71 @@ end;
 procedure Tmainform.SaveConfig;
 // For all Foobots
 begin
-  INI.PlainTextMode := True;
-  // Colours
-  INI.WriteString('Config', 'pmColour', ColorToString(as_pm.ColorFore));
-  INI.WriteString('Config', 'tmpColour', ColorToString(as_tmp.ColorFore));
-  INI.WriteString('Config', 'humColour', ColorToString(as_hum.ColorFore));
-  INI.WriteString('Config', 'co2Colour', ColorToString(as_co2.ColorFore));
-  INI.WriteString('Config', 'vocColour', ColorToString(as_voc.ColorFore));
-  INI.WriteString('Config', 'allpolluColour', ColorToString(as_allpollu.ColorFore));
+  With INI do
+  begin
+    PlainTextMode := True;
+    // Colours
+    WriteString('Config', 'pmColour', ColorToString(as_pm.ColorFore));
+    WriteString('Config', 'tmpColour', ColorToString(as_tmp.ColorFore));
+    WriteString('Config', 'humColour', ColorToString(as_hum.ColorFore));
+    WriteString('Config', 'co2Colour', ColorToString(as_co2.ColorFore));
+    WriteString('Config', 'vocColour', ColorToString(as_voc.ColorFore));
+    WriteString('Config', 'allpolluColour', ColorToString(as_allpollu.ColorFore));
+    // Max and Min
+    WriteFloat('Config', 'pmMinValue', as_pm.ValueMin);
+    WriteFloat('Config', 'pmMaxValue', as_pm.ValueMax);
+    WriteFloat('Config', 'tmpMinValue', as_tmp.ValueMin);
+    WriteFloat('Config', 'tmpMaxValue', as_tmp.ValueMax);
+    WriteFloat('Config', 'humMinValue', as_hum.ValueMin);
+    WriteFloat('Config', 'humMaxValue', as_hum.ValueMax);
+    WriteFloat('Config', 'co2MinValue', as_co2.ValueMin);
+    WriteFloat('Config', 'co2MaxValue', as_co2.ValueMax);
+    WriteFloat('Config', 'vocMinValue', as_voc.ValueMin);
+    WriteFloat('Config', 'vocMaxValue', as_voc.ValueMax);
+    WriteFloat('Config', 'allpolluMinValue', as_allpollu.ValueMin);
+    WriteFloat('Config', 'allpolluMaxValue', as_allpollu.ValueMax);
+    WriteBool('Config', 'DisplayYellowLines', bDisplayYellowLines);
+    WriteBool('Config', 'DisplayRedLines', bDisplayRedLines);
+      // Triggers
+    WriteBool('Config', 'UseTriggers', UseTriggers);
+    PlainTextMode := False;
+  end;
+end;
 
-  // Max and Min
-  INI.WriteFloat('Config', 'pmMinValue', as_pm.ValueMin);
-  INI.WriteFloat('Config', 'pmMaxValue', as_pm.ValueMax);
-  INI.WriteFloat('Config', 'tmpMinValue', as_tmp.ValueMin);
-  INI.WriteFloat('Config', 'tmpMaxValue', as_tmp.ValueMax);
-  INI.WriteFloat('Config', 'humMinValue', as_hum.ValueMin);
-  INI.WriteFloat('Config', 'humMaxValue', as_hum.ValueMax);
-  INI.WriteFloat('Config', 'co2MinValue', as_co2.ValueMin);
-  INI.WriteFloat('Config', 'co2MaxValue', as_co2.ValueMax);
-  INI.WriteFloat('Config', 'vocMinValue', as_voc.ValueMin);
-  INI.WriteFloat('Config', 'vocMaxValue', as_voc.ValueMax);
-  INI.WriteFloat('Config', 'allpolluMinValue', as_allpollu.ValueMin);
-  INI.WriteFloat('Config', 'allpolluMaxValue', as_allpollu.ValueMax);
-  INI.WriteBool('Config', 'DisplayYellowLines', bDisplayYellowLines);
-  INI.WriteBool('Config', 'DisplayRedLines', bDisplayRedLines);
-  INI.PlainTextMode := False;
+procedure Tmainform.SetMinMaxTriggers;
+// Ensure Triggers are in range of High & Low guage values
+begin
+  if (UseTriggers = False) then
+    exit;
+  if as_pm.ValueMin > GetLowTrigger(C_PM) then
+    SetLowTrigger(C_PM, as_pm.ValueMin);
+  if as_pm.ValueMax < GetHighTrigger(C_PM) then
+    SetHighTrigger(C_PM, as_pm.ValueMax);
+
+  if as_tmp.ValueMin > GetLowTrigger(C_TMP) then
+    SetLowTrigger(C_TMP, as_tmp.ValueMin);
+  if as_tmp.ValueMax < GetHighTrigger(C_TMP) then
+    SetHighTrigger(C_TMP, as_tmp.ValueMax);
+
+  if as_hum.ValueMin > GetLowTrigger(C_HUM) then
+    SetLowTrigger(C_HUM, as_hum.ValueMin);
+  if as_hum.ValueMax < GetHighTrigger(C_HUM) then
+    SetHighTrigger(C_HUM, as_hum.ValueMax);
+
+  if as_co2.ValueMin > GetLowTrigger(C_CO2) then
+    SetLowTrigger(C_CO2, as_co2.ValueMin);
+  if as_co2.ValueMax < GetHighTrigger(C_CO2) then
+    SetHighTrigger(C_CO2, as_co2.ValueMax);
+
+  if as_voc.ValueMin > GetLowTrigger(C_VOC) then
+    SetLowTrigger(C_VOC, as_voc.ValueMin);
+  if as_voc.ValueMax < GetHighTrigger(C_VOC) then
+    SetHighTrigger(C_VOC, as_voc.ValueMax);
+
+  if as_allpollu.ValueMin > GetLowTrigger(C_ALLPOLLU) then
+    SetLowTrigger(C_ALLPOLLU, as_allpollu.ValueMin);
+  if as_allpollu.ValueMax < GetHighTrigger(C_ALLPOLLU) then
+    SetHighTrigger(C_ALLPOLLU, as_allpollu.ValueMax);
 end;
 
 procedure Tmainform.LoadConfig;
@@ -447,6 +492,8 @@ begin
   as_voc.ValueMax := INI.ReadFloat('Config', 'vocMaxValue', MAX_VOC);
   as_allpollu.ValueMin := INI.ReadFloat('Config', 'allpolluMinValue', MIN_ALLPOLLU);
   as_allpollu.ValueMax := INI.ReadFloat('Config', 'allpolluMaxValue', MAX_ALLPOLLU);
+  // Triggers
+  UseTriggers:=INI.ReadBool('Config', 'UseTriggers', False);
   INI.PlainTextMode := False;
 end;
 
@@ -565,7 +612,11 @@ begin
     not mnu_options_triggersActivateTriggers.Checked;
   UseTriggers := mnu_options_triggersActivateTriggers.Checked;
   if UseTriggers then
-    mnu_options_triggersActivateTriggers.Caption := 'Set Triggers Off'
+  begin
+    mnu_options_triggersActivateTriggers.Caption := 'Set Triggers Off';
+    LoadTriggers;
+    SetMinMaxTriggers
+  end
   else
     mnu_options_triggersActivateTriggers.Caption := 'Set Triggers On';
 end;
@@ -812,7 +863,41 @@ begin
       SetYellowRecommendedLevels;
   end;
 end;
+procedure Tmainform.DoHighTriggerAlert(Const iSensorNum:Integer;Const aValue:Variant);
+begin
+   Case iSensorNum of
+     C_PM:as_pm.Color:=clYellow;
+     C_TMP:as_tmp.Color:=clYellow;
+     C_HUM:as_hum.Color:=clYellow;
+     C_CO2:as_co2.Color:=clYellow;
+     C_VOC:as_voc.Color:=clYellow;
+     C_ALLPOLLU:as_allpollu.Color:=clYellow;
+   end;
+end;
 
+procedure Tmainform.DoLowTriggerAlert(Const iSensorNum:Integer;Const aValue:Variant);
+begin
+  Case iSensorNum of
+    C_PM:as_pm.Color:=clAqua;
+    C_TMP:as_tmp.Color:=clAqua;
+    C_HUM:as_hum.Color:=clAqua;
+    C_CO2:as_co2.Color:=clAqua;
+    C_VOC:as_voc.Color:=clAqua;
+    C_ALLPOLLU:as_allpollu.Color:=clAqua;
+  end;
+end;
+
+procedure Tmainform.RestoreNormalColour(Const iSensorNum:Integer);
+begin
+  Case iSensorNum of
+    C_PM:as_pm.Color:=clDefault;
+    C_TMP:as_tmp.Color:=clDefault;
+    C_HUM:as_hum.Color:=clDefault;
+    C_CO2:as_co2.Color:=clDefault;
+    C_VOC:as_voc.Color:=clDefault;
+    C_ALLPOLLU:as_allpollu.Color:=clDefault;
+  end;
+end;
 procedure Tmainform.DisplayReadings;
 var
   iCount: integer;
@@ -841,19 +926,28 @@ begin
         // Look for alerts in each sensor
         for iCount := C_PM to C_ALLPOLLU do
           if AlertRec[iCount].AlertTriggered then
+          begin
             // Alert found.  High or low?
-            if AlertRec[iCount].AlertType = at_high then
+            if AlertRec[iCount].AlertType = 0 then
             begin
               // A high alert - do something
+              DoHighTriggerAlert(iCount,AlertRec[iCount].AlertValue);
+              {
               ShowMessageFmt('High alert member %d (value %f) exceeded',
                 [iCount, double(AlertRec[iCount].AlertValue)]);
+              }
             end
             else
             begin
               // A low alert - do something
+              DoLowTriggerAlert(iCount,AlertRec[iCount].AlertValue);
+              {
               ShowMessageFmt('Low alert member %d (value %f) exceeded',
                 [iCount, double(AlertRec[iCount].AlertValue)]);
+              }
             end;
+          end
+          else RestoreNormalColour(iCount);
       except
         raise Exception.Create('Unable to process triggers in DisplayReadings');
       end;
