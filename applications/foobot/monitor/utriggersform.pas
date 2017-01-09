@@ -9,7 +9,6 @@ uses
   Buttons;
 
 type
-
   { Ttriggersform }
 
   Ttriggersform = class(TForm)
@@ -94,10 +93,14 @@ type
     lbl_newrec_co2: TLabel;
     lbl_newrec_voc: TLabel;
     lbl_newrec_allpollu: TLabel;
+    procedure cmd_OKClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure OnlyNumericKeyPress(Sender: TObject; var Key: char);
   private
+    ErrorList:TStrings;
     procedure DisplayCurrentValues;
     procedure SetUpUnits;
   public
@@ -118,7 +121,12 @@ uses umainform, foobot_utility;
 procedure Ttriggersform.FormCreate(Sender: TObject);
 begin
   Icon := Application.Icon;
-  Caption := Application.Title + ' - Set Recommended values and Triggers';
+  ErrorList:=TStringList.Create;
+end;
+
+procedure Ttriggersform.FormDestroy(Sender: TObject);
+begin
+  FreeAndNil(ErrorList);
 end;
 
 procedure Ttriggersform.FormActivate(Sender: TObject);
@@ -126,9 +134,22 @@ begin
   SetUpUnits;
 end;
 
+procedure Ttriggersform.cmd_OKClick(Sender: TObject);
+begin
+  // VerifyEveryThing then Save to inifiles;
+end;
+
+procedure Ttriggersform.OnlyNumericKeyPress(Sender: TObject; var Key: char);
+begin
+   if not (Key in ['0'..'9', '.', #8, #9]) then Key := #0;
+end;
+
 procedure Ttriggersform.FormShow(Sender: TObject);
 begin
+  Caption := Application.Title + ' - Set Recommended values (for all Foobots) and Triggers (for ' +
+  FoobotIdentityObject.FoobotIdentityList[mainform.iCurrentFoobot].Name + ')';
   DisplayCurrentValues;
+  ErrorList.Clear;
   Update;
 end;
 

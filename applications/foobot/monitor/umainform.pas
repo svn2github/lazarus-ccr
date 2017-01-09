@@ -217,7 +217,6 @@ type
     sSecretKey, sFoobotUserName, sUUID: string;
     bDisplayGuagesOnly, bDisplayYellowLines, bDisplayRedLines: boolean;
     iFudgeFactor: integer;
-    iCurrentFoobot: integer;
     HighTriggerColor, LowTriggerColor: TColor;
     foobotmenuarray: array of TMenuItem;
     procedure DisplayReadings;
@@ -238,6 +237,7 @@ type
     procedure DoLowTriggerAlert(const iSensorNum: integer; const aValue: variant);
     procedure RestoreNormalColour(const iSensorNum: integer);
   public
+    iCurrentFoobot: integer;
     INI: TCryptINIfile;
   end;
 
@@ -351,6 +351,7 @@ begin
         {$ENDIF}
         grp_sensorDisplay.Refresh;
         grp_highlow.Refresh;
+        grp_health.Refresh;
         Update;
         Application.ProcessMessages;
         splashform.hide;
@@ -772,6 +773,7 @@ end;
 
 procedure Tmainform.mnu_options_triggersSetTriggersClick(Sender: TObject);
 begin
+  If FoobotIdentityObject.FoobotIdentityList.Count = 0 then Exit;;
   triggersform.ShowModal;
   if triggersform.ModalResult = mrCancel then
   begin

@@ -1,7 +1,7 @@
 object triggersform: Ttriggersform
-  Left = 543
+  Left = 478
   Height = 565
-  Top = 191
+  Top = 162
   Width = 794
   ActiveControl = edt_newrec_pm
   BorderIcons = [biSystemMenu]
@@ -13,6 +13,7 @@ object triggersform: Ttriggersform
   FormStyle = fsStayOnTop
   OnActivate = FormActivate
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnShow = FormShow
   Position = poWorkAreaCenter
   ShowInTaskBar = stNever
@@ -113,6 +114,7 @@ object triggersform: Ttriggersform
         Top = 0
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 0
         Text = '0.00'
@@ -123,6 +125,7 @@ object triggersform: Ttriggersform
         Top = 20
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 1
         Text = '0.00'
@@ -133,6 +136,7 @@ object triggersform: Ttriggersform
         Top = 40
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 2
         Text = '0.00'
@@ -247,6 +251,7 @@ object triggersform: Ttriggersform
         Top = 0
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 0
         Text = '0.00'
@@ -257,6 +262,7 @@ object triggersform: Ttriggersform
         Top = 20
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 1
         Text = '0.00'
@@ -267,6 +273,7 @@ object triggersform: Ttriggersform
         Top = 40
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 2
         Text = '0.00'
@@ -381,6 +388,7 @@ object triggersform: Ttriggersform
         Top = 0
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 0
         Text = '0.00'
@@ -391,6 +399,7 @@ object triggersform: Ttriggersform
         Top = 20
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 1
         Text = '0.00'
@@ -401,6 +410,7 @@ object triggersform: Ttriggersform
         Top = 40
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 2
         Text = '0.00'
@@ -515,6 +525,7 @@ object triggersform: Ttriggersform
         Top = 0
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 0
         Text = '0.00'
@@ -525,6 +536,7 @@ object triggersform: Ttriggersform
         Top = 20
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 1
         Text = '0.00'
@@ -535,6 +547,7 @@ object triggersform: Ttriggersform
         Top = 40
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 2
         Text = '0.00'
@@ -649,6 +662,7 @@ object triggersform: Ttriggersform
         Top = 0
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 0
         Text = '0.00'
@@ -659,6 +673,7 @@ object triggersform: Ttriggersform
         Top = 20
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 1
         Text = '0.00'
@@ -669,6 +684,7 @@ object triggersform: Ttriggersform
         Top = 40
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 2
         Text = '0.00'
@@ -783,6 +799,7 @@ object triggersform: Ttriggersform
         Top = 0
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 0
         Text = '0.00'
@@ -793,6 +810,7 @@ object triggersform: Ttriggersform
         Top = 20
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 1
         Text = '0.00'
@@ -803,6 +821,7 @@ object triggersform: Ttriggersform
         Top = 40
         Width = 72
         BorderStyle = bsNone
+        OnKeyPress = OnlyNumericKeyPress
         ParentFont = False
         TabOrder = 2
         Text = '0.00'
@@ -845,6 +864,7 @@ object triggersform: Ttriggersform
     DefaultCaption = True
     Kind = bkOK
     ModalResult = 1
+    OnClick = cmd_OKClick
     TabOrder = 1
   end
   object cmd_cancel: TBitBtn
