@@ -49,14 +49,17 @@ const
   C_CO2 = 4;
   C_VOC = 5;
   C_ALLPOLLU = 6;
+  // Used in Trigger functions
+  C_HIGH = 0;
+  C_LOW = 1;
 
 type
   TDataFetchType = (dfLast, dfStartEnd); // FetchFoobotData
 
   // Unused
-  TSensorType = (st_time, st_pm, st_tmp, st_hum, st_co2, st_voc, st_allpollu); // Unused
+  TSensorType = (st_time, st_pm, st_tmp, st_hum, st_co2, st_voc, st_allpollu);
   // Unused
-  TAlertType = (at_high, at_low); // TAlertRec
+  TAlertType = (at_high, at_low);
 
   TAlertRec = record
     AlertTriggered: boolean;
@@ -157,29 +160,29 @@ begin
       WriteInteger('Foobot', 'CurrentFoobot', TheCurrentFoobot);
       WriteString('Foobot', 'CurrentFoobotName', sFoobotName);
       WriteFloat(sFoobotName, 'pmTriggerHigh',
-        double(FooBotTriggerArray[0, C_PM]));
+        double(FooBotTriggerArray[C_HIGH, C_PM]));
       WriteFloat(sFoobotName, 'pmTriggerLow',
-        double(FooBotTriggerArray[1, C_PM]));
+        double(FooBotTriggerArray[C_LOW, C_PM]));
       WriteFloat(sFoobotName, 'tmpTriggerHigh',
-        double(FooBotTriggerArray[0, C_TMP]));
+        double(FooBotTriggerArray[C_HIGH, C_TMP]));
       WriteFloat(sFoobotName, 'tmpTriggerLow',
-        double(FooBotTriggerArray[1, C_TMP]));
+        double(FooBotTriggerArray[C_LOW, C_TMP]));
       WriteFloat(sFoobotName, 'humTriggerHigh',
-        double(FooBotTriggerArray[0, C_HUM]));
+        double(FooBotTriggerArray[C_HIGH, C_HUM]));
       WriteFloat(sFoobotName, 'humTriggerLow',
-        double(FooBotTriggerArray[1, C_HUM]));
+        double(FooBotTriggerArray[C_LOW, C_HUM]));
       WriteFloat(sFoobotName, 'co2TriggerHigh',
-        double(FooBotTriggerArray[0, C_CO2]));
+        Integer(FooBotTriggerArray[C_HIGH, C_CO2]));
       WriteFloat(sFoobotName, 'co2TriggerLow',
-        double(FooBotTriggerArray[1, C_CO2]));
+        Integer(FooBotTriggerArray[C_LOW, C_CO2]));
       WriteFloat(sFoobotName, 'vocTriggerHigh',
-        double(FooBotTriggerArray[0, C_VOC]));
+        Integer(FooBotTriggerArray[C_HIGH, C_VOC]));
       WriteFloat(sFoobotName, 'vocTriggerLow',
-        double(FooBotTriggerArray[1, C_VOC]));
+        Integer(FooBotTriggerArray[C_LOW, C_VOC]));
       WriteFloat(sFoobotName, 'allpolluTriggerHigh',
-        double(FooBotTriggerArray[0, C_ALLPOLLU]));
+        double(FooBotTriggerArray[C_HIGH, C_ALLPOLLU]));
       WriteFloat(sFoobotName, 'allpolluTriggerLow',
-        double(FooBotTriggerArray[1, C_ALLPOLLU]));
+        double(FooBotTriggerArray[C_LOW, C_ALLPOLLU]));
     end;
     Result := True;
   except
@@ -206,19 +209,19 @@ begin
     // Load current Foobot triggers
     with HLINI do
     begin
-      FooBotTriggerArray[0, C_PM] := ReadFloat(sFoobotName, 'pmTriggerHigh', 0);
-      FooBotTriggerArray[1, C_PM] := ReadFloat(sFoobotName, 'pmTriggerLow', 0);
-      FooBotTriggerArray[0, C_TMP] := ReadFloat(sFoobotName, 'tmpTriggerHigh', 0);
-      FooBotTriggerArray[1, C_TMP] := ReadFloat(sFoobotName, 'tmpTriggerLow', 0);
-      FooBotTriggerArray[0, C_HUM] := ReadFloat(sFoobotName, 'humTriggerHigh', 0);
-      FooBotTriggerArray[1, C_HUM] := ReadFloat(sFoobotName, 'humTriggerLow', 0);
-      FooBotTriggerArray[0, C_CO2] := ReadFloat(sFoobotName, 'co2TriggerHigh', 0);
-      FooBotTriggerArray[1, C_CO2] := ReadFloat(sFoobotName, 'co2TriggerLow', 0);
-      FooBotTriggerArray[0, C_VOC] := ReadFloat(sFoobotName, 'vocTriggerHigh', 0);
-      FooBotTriggerArray[1, C_VOC] := ReadFloat(sFoobotName, 'vocTriggerLow', 0);
-      FooBotTriggerArray[0, C_ALLPOLLU] :=
+      FooBotTriggerArray[C_HIGH, C_PM] := ReadFloat(sFoobotName, 'pmTriggerHigh', 0);
+      FooBotTriggerArray[C_LOW, C_PM] := ReadFloat(sFoobotName, 'pmTriggerLow', 0);
+      FooBotTriggerArray[C_HIGH, C_TMP] := ReadFloat(sFoobotName, 'tmpTriggerHigh', 0);
+      FooBotTriggerArray[C_LOW, C_TMP] := ReadFloat(sFoobotName, 'tmpTriggerLow', 0);
+      FooBotTriggerArray[C_HIGH, C_HUM] := ReadFloat(sFoobotName, 'humTriggerHigh', 0);
+      FooBotTriggerArray[C_LOW, C_HUM] := ReadFloat(sFoobotName, 'humTriggerLow', 0);
+      FooBotTriggerArray[C_HIGH, C_CO2] := ReadFloat(sFoobotName, 'co2TriggerHigh', 0);
+      FooBotTriggerArray[C_LOW, C_CO2] := ReadFloat(sFoobotName, 'co2TriggerLow', 0);
+      FooBotTriggerArray[C_HIGH, C_VOC] := ReadFloat(sFoobotName, 'vocTriggerHigh', 0);
+      FooBotTriggerArray[C_LOW, C_VOC] := ReadFloat(sFoobotName, 'vocTriggerLow', 0);
+      FooBotTriggerArray[C_HIGH, C_ALLPOLLU] :=
         ReadFloat(sFoobotName, 'allpolluTriggerHigh', 0);
-      FooBotTriggerArray[1, C_ALLPOLLU] :=
+      FooBotTriggerArray[C_LOW, C_ALLPOLLU] :=
         ReadFloat(sFoobotName, 'allpolluTriggerLow', 0);
     end;
     Result := True;
@@ -377,19 +380,17 @@ var
       FoobotDataHighTimes[iMember] := aDateTime;
       SaveHighLows;
     end;
-    if ((UseTriggers = True) and (FooBotTriggerArray[0, iMember] <> 0)) then
+    if ((UseTriggers = True) and (FooBotTriggerArray[C_HIGH, iMember] <> 0)) then
     begin
       // Do High Trigger
       // Sets AlertRec record
-      if (aValue > FooBotTriggerArray[0, iMember]) then
-      begin
-        AlertRec[iMember].AlertTriggered := True;
-        AlertRec[iMember].AlertTime := aDateTime;
-        AlertRec[iMember].AlertType := 0;
-        AlertRec[iMember].AlertValue := aValue;
-      end
-      else
-        AlertRec[iMember].AlertTriggered := False;
+        if (aValue > FooBotTriggerArray[C_HIGH, iMember]) then
+        begin
+          AlertRec[iMember].AlertTriggered := True;
+          AlertRec[iMember].AlertTime := aDateTime;
+          AlertRec[iMember].AlertType := C_HIGH;
+          AlertRec[iMember].AlertValue := aValue;
+        end;
     end;
   end;
 
@@ -402,20 +403,28 @@ var
       FoobotDataLowTimes[iMember] := aDateTime;
       SaveHighLows;
     end;
-    if ((UseTriggers = True) and (FooBotTriggerArray[1, iMember] <> 0)) then
+    if ((UseTriggers = True) and (FooBotTriggerArray[C_LOW, iMember] <> 0)) then
     begin
       // Do Low Trigger
       // Sets AlertRec record
-      if (aValue < FooBotTriggerArray[1, iMember]) then
+      if (aValue < FooBotTriggerArray[C_LOW, iMember]) then
       begin
         AlertRec[iMember].AlertTriggered := True;
         AlertRec[iMember].AlertTime := aDateTime;
-        AlertRec[iMember].AlertType := 1;
+        AlertRec[iMember].AlertType :=C_LOW;
         AlertRec[iMember].AlertValue := aValue;
-      end
-      else
-        AlertRec[iMember].AlertTriggered := False;
+      end;
     end;
+  end;
+
+  procedure ClearTriggers;
+  Var iCount:Integer;
+  begin
+   for iCount := C_PM to C_ALLPOLLU do
+   begin
+     AlertRec[iCount].AlertTriggered:=False;
+     AlertRec[iCount].AlertValue := 0;
+   end;
   end;
   // ========== Internal routines end =============
 begin
@@ -428,6 +437,8 @@ begin
     Exit(False);
   if FooBotDataObject.units.Count = 0 then
     Exit(False);
+  // Reset all triggers (if on)
+  If UseTriggers then ClearTriggers;
   // J=Column, K=Row
   for K := VarArrayLowBound(FoobotDataObject.datapoints, 1)
     to VarArrayHighBound(FoobotDataObject.datapoints, 1) do
@@ -494,45 +505,41 @@ begin
 end;
 
 function GetHighTrigger(Const aSensor:Integer):Variant;
-//TAlertType = (at_high, at_low)
 begin
   Result:=0;
   if UseTriggers = False then Exit;
   If ((aSensor < C_PM) or (aSensor > C_ALLPOLLU)) then exit;
-  Result:=FooBotTriggerArray[0, aSensor];
+  Result:=FooBotTriggerArray[C_HIGH, aSensor];
 end;
 
 function GetLowTrigger(Const aSensor:Integer):Variant;
-//TAlertType = (at_high, at_low)
 begin
  Result:=0;
  if UseTriggers = False then Exit;
  If ((aSensor < C_PM) or (aSensor > C_ALLPOLLU)) then exit;
- Result:=FooBotTriggerArray[1, aSensor];
+ Result:=FooBotTriggerArray[C_LOW, aSensor];
 end;
 
 function SetHighTrigger(const aSensor: integer; const aValue: variant): boolean;
-//TAlertType = (at_high, at_low)
 begin
   Result := False;
   if UseTriggers = False then
     Exit;
-  if aValue <> FooBotTriggerArray[0, aSensor] then
+  if aValue <> FooBotTriggerArray[C_HIGH, aSensor] then
   begin
-    FooBotTriggerArray[0, aSensor] := aValue;
+    FooBotTriggerArray[C_HIGH, aSensor] := aValue;
     Result := True;
   end;
 end;
 
 function SetLowTrigger(const aSensor: integer; const aValue: variant): boolean;
-//TAlertType = (at_high, at_low)
 begin
   Result := False;
   if UseTriggers = False then
     Exit;
-  if aValue <> FooBotTriggerArray[1, Ord(aSensor)] then
+  if aValue <> FooBotTriggerArray[C_LOW, Ord(aSensor)] then
   begin
-    FooBotTriggerArray[1, aSensor] := aValue;
+    FooBotTriggerArray[C_LOW, aSensor] := aValue;
     Result := True;
   end;
 end;

@@ -187,6 +187,7 @@ type
     bDisplayGuagesOnly, bDisplayYellowLines, bDisplayRedLines: boolean;
     iFudgeFactor: integer;
     iCurrentFoobot: integer;
+    HighTriggerColor,LowTriggerColor:TColor;
     foobotmenuarray: array of TMenuItem;
     procedure DisplayReadings;
     procedure UpdateGuage(Sender: TAnalogSensor; SensorNumber: integer);
@@ -240,6 +241,8 @@ begin
   iFudgeFactor := 20; // only needed if height set in form.create
   bDisplayGuagesOnly := False;
   INI.PlainTextMode := True;
+  HighTriggerColor:=clYellow;
+  LowTriggerColor:=clAqua;
   bDisplayYellowLines := INI.ReadBool('Config', 'DisplayYellowLines', False);
   mnu_optionsDisplayYellowLines.Checked := bDisplayYellowLines;
   bDisplayRedLines := INI.ReadBool('Config', 'DisplayRedLines', False);
@@ -254,6 +257,12 @@ begin
   {$IFDEF DEBUGMODE}
   UseTriggers := False;
   {$ENDIF}
+  If UseTriggers then
+  begin
+     mnu_options_triggersActivateTriggers.Enabled:=TRUE;
+     mnu_options_triggersActivateTriggers.Checked:=TRUE;
+     mnu_options_triggersActivateTriggers.Caption:='Set Triggers Off';
+  end;
 end;
 
 procedure Tmainform.FormActivate(Sender: TObject);
@@ -421,6 +430,8 @@ begin
     WriteBool('Config', 'DisplayRedLines', bDisplayRedLines);
       // Triggers
     WriteBool('Config', 'UseTriggers', UseTriggers);
+    WriteString('Config', 'HighTriggerColour', ColorToString(HighTriggerColor));
+    WriteString('Config', 'LowTriggerColour', ColorToString(LowTriggerColor));
     PlainTextMode := False;
   end;
 end;
@@ -494,7 +505,9 @@ begin
   as_allpollu.ValueMax := INI.ReadFloat('Config', 'allpolluMaxValue', MAX_ALLPOLLU);
   // Triggers
   UseTriggers:=INI.ReadBool('Config', 'UseTriggers', False);
-  INI.PlainTextMode := False;
+  HighTriggerColor:=StringToColor(INI.ReadString('Config', 'HighTriggerColour', 'clYellow'));
+  LowTriggerColor:=StringToColor(INI.ReadString('Config', 'LowTriggerColour', 'clAqua'));
+INI.PlainTextMode := False;
 end;
 
 procedure Tmainform.FormWindowStateChange(Sender: TObject);
@@ -782,23 +795,23 @@ begin
     end;
     C_CO2:
     begin
-      lbl_co2high.Caption := Format('High: %f %s',
-        [double(FoobotDataHighs[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
+      lbl_co2high.Caption := Format('High: %d %s',
+        [Integer(FoobotDataHighs[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
         LineEnding + 'on ' + FormatDateTime('dd/mm tt',
         TDateTime(FoobotDataHighTimes[SensorNumber]));
-      lbl_co2Low.Caption := Format('Low: %f %s',
-        [double(FoobotDataLows[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
+      lbl_co2Low.Caption := Format('Low: %d %s',
+        [Integer(FoobotDataLows[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
         LineEnding + 'on ' + FormatDateTime('dd/mm tt', TDateTime(
         FoobotDataLowTimes[SensorNumber]));
     end;
     C_VOC:
     begin
-      lbl_vochigh.Caption := Format('High: %f %s',
-        [double(FoobotDataHighs[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
+      lbl_vochigh.Caption := Format('High: %d %s',
+        [Integer(FoobotDataHighs[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
         LineEnding + 'on ' + FormatDateTime('dd/mm tt',
         TDateTime(FoobotDataHighTimes[SensorNumber]));
-      lbl_vocLow.Caption := Format('Low: %f %s',
-        [double(FoobotDataLows[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
+      lbl_vocLow.Caption := Format('Low: %d %s',
+        [Integer(FoobotDataLows[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
         LineEnding + 'on ' + FormatDateTime('dd/mm tt', TDateTime(
         FoobotDataLowTimes[SensorNumber]));
     end;
@@ -825,32 +838,32 @@ begin
     case SensorNumber of
       C_PM:
       begin
-        Value := FoobotData_pm[0];
+        Value := FoobotData_pm[iCurrentFoobot];
         Caption := Format('PM (%s): ', [FoobotDataObject.Units[SensorNumber]]);
       end;
       C_TMP:
       begin
-        Value := FoobotData_tmp[0];
+        Value := FoobotData_tmp[iCurrentFoobot];
         Caption := Format('Temp (%s): ', [FoobotDataObject.Units[SensorNumber]]);
       end;
       C_HUM:
       begin
-        Value := FoobotData_hum[0];
+        Value := FoobotData_hum[iCurrentFoobot];
         Caption := Format('Hum. (%s): ', [FoobotDataObject.Units[SensorNumber]]);
       end;
       C_CO2:
       begin
-        Value := FoobotData_co2[0];
+        Value := FoobotData_co2[iCurrentFoobot];
         Caption := Format('CO2 (%s): ', [FoobotDataObject.Units[SensorNumber]]);
       end;
       C_VOC:
       begin
-        Value := FoobotData_voc[0];
+        Value := FoobotData_voc[iCurrentFoobot];
         Caption := Format('VOC (%s): ', [FoobotDataObject.Units[SensorNumber]]);
       end;
       C_ALLPOLLU:
       begin
-        Value := FoobotData_allpollu[0];
+        Value := FoobotData_allpollu[iCurrentFoobot];
         Caption := Format('All (%s): ', [FoobotDataObject.Units[SensorNumber]]);
       end;
     end;
@@ -866,24 +879,24 @@ end;
 procedure Tmainform.DoHighTriggerAlert(Const iSensorNum:Integer;Const aValue:Variant);
 begin
    Case iSensorNum of
-     C_PM:as_pm.Color:=clYellow;
-     C_TMP:as_tmp.Color:=clYellow;
-     C_HUM:as_hum.Color:=clYellow;
-     C_CO2:as_co2.Color:=clYellow;
-     C_VOC:as_voc.Color:=clYellow;
-     C_ALLPOLLU:as_allpollu.Color:=clYellow;
+     C_PM:as_pm.Color:=HighTriggerColor;
+     C_TMP:as_tmp.Color:=HighTriggerColor;
+     C_HUM:as_hum.Color:=HighTriggerColor;
+     C_CO2:as_co2.Color:=HighTriggerColor;
+     C_VOC:as_voc.Color:=HighTriggerColor;
+     C_ALLPOLLU:as_allpollu.Color:=HighTriggerColor;
    end;
 end;
 
 procedure Tmainform.DoLowTriggerAlert(Const iSensorNum:Integer;Const aValue:Variant);
 begin
   Case iSensorNum of
-    C_PM:as_pm.Color:=clAqua;
-    C_TMP:as_tmp.Color:=clAqua;
-    C_HUM:as_hum.Color:=clAqua;
-    C_CO2:as_co2.Color:=clAqua;
-    C_VOC:as_voc.Color:=clAqua;
-    C_ALLPOLLU:as_allpollu.Color:=clAqua;
+    C_PM:as_pm.Color:=LowTriggerColor;
+    C_TMP:as_tmp.Color:=LowTriggerColor;
+    C_HUM:as_hum.Color:=LowTriggerColor;
+    C_CO2:as_co2.Color:=LowTriggerColor;
+    C_VOC:as_voc.Color:=LowTriggerColor;
+    C_ALLPOLLU:as_allpollu.Color:=LowTriggerColor;
   end;
 end;
 
@@ -913,29 +926,19 @@ begin
     UpdateGuage(as_co2, C_CO2);
     UpdateGuage(as_voc, C_VOC);
     UpdateGuage(as_allpollu, C_ALLPOLLU);
-    if not bDisplayGuagesOnly then
-    begin
-      for iCount := 1 to 6 do
-        UpdateHighLow(iCount);
-    end;
-    GraphCurrentReading;
-
     // Process Trigger Alerts on each call to FoobotDataObjectToArrays
     if UseTriggers then
       try
         // Look for alerts in each sensor
         for iCount := C_PM to C_ALLPOLLU do
-          if AlertRec[iCount].AlertTriggered then
+        begin
+          if (AlertRec[iCount].AlertTriggered=TRUE) then
           begin
             // Alert found.  High or low?
-            if AlertRec[iCount].AlertType = 0 then
+            if (AlertRec[iCount].AlertType = C_HIGH) then
             begin
               // A high alert - do something
               DoHighTriggerAlert(iCount,AlertRec[iCount].AlertValue);
-              {
-              ShowMessageFmt('High alert member %d (value %f) exceeded',
-                [iCount, double(AlertRec[iCount].AlertValue)]);
-              }
             end
             else
             begin
@@ -948,9 +951,18 @@ begin
             end;
           end
           else RestoreNormalColour(iCount);
+        end;
       except
         raise Exception.Create('Unable to process triggers in DisplayReadings');
       end;
+    if not bDisplayGuagesOnly then
+    begin
+      for iCount := 1 to 6 do
+        UpdateHighLow(iCount);
+    end;
+    GraphCurrentReading;
+
+
   end
   else
     raise Exception.Create('FoobotDataObjectToArrays error in DisplayReadings');
@@ -970,18 +982,18 @@ begin
   Exit;
   {$ENDIF}
   try
-    lineseries_pm.AddXY(FoobotData_time[0],
-      AsPercent(FoobotData_pm[0], as_pm.ValueMin, as_pm.ValueMax));
-    lineseries_tmp.AddXY(FoobotData_time[0], AsPercent(FoobotData_tmp[0],
+    lineseries_pm.AddXY(FoobotData_time[iCurrentFoobot],
+      AsPercent(FoobotData_pm[iCurrentFoobot], as_pm.ValueMin, as_pm.ValueMax));
+    lineseries_tmp.AddXY(FoobotData_time[iCurrentFoobot], AsPercent(FoobotData_tmp[iCurrentFoobot],
       as_tmp.ValueMin, as_tmp.ValueMax));
-    lineseries_hum.AddXY(FoobotData_time[0],
-      AsPercent(FoobotData_hum[0], as_hum.ValueMin, as_hum.ValueMax));
-    lineseries_co2.AddXY(FoobotData_time[0],
-      AsPercent(FoobotData_co2[0], as_co2.ValueMin, as_co2.ValueMax));
-    lineseries_voc.AddXY(FoobotData_time[0],
-      AsPercent(FoobotData_voc[0], as_voc.ValueMin, as_voc.ValueMax));
-    lineseries_allpollu.AddXY(FoobotData_time[0],
-      AsPercent(FoobotData_allpollu[0], as_allpollu.ValueMin, as_allpollu.ValueMax));
+    lineseries_hum.AddXY(FoobotData_time[iCurrentFoobot],
+      AsPercent(FoobotData_hum[iCurrentFoobot], as_hum.ValueMin, as_hum.ValueMax));
+    lineseries_co2.AddXY(FoobotData_time[iCurrentFoobot],
+      AsPercent(FoobotData_co2[iCurrentFoobot], as_co2.ValueMin, as_co2.ValueMax));
+    lineseries_voc.AddXY(FoobotData_time[iCurrentFoobot],
+      AsPercent(FoobotData_voc[iCurrentFoobot], as_voc.ValueMin, as_voc.ValueMax));
+    lineseries_allpollu.AddXY(FoobotData_time[iCurrentFoobot],
+      AsPercent(FoobotData_allpollu[iCurrentFoobot], as_allpollu.ValueMin, as_allpollu.ValueMax));
   except
     raise Exception.Create('Unable to update graph in GraphCurrentReading');
   end;
@@ -993,10 +1005,15 @@ procedure Tmainform.GraphHistory;
 var
   iCount: integer;
   iStartSeconds, iEndSeconds: int64;
+  bTempUseTriggers:Boolean;
 begin
   {$IFDEF DEBUGMODE}
   Exit;
   {$ENDIF}
+  // Turn off triggers (if on)
+  bTempUseTriggers:=UseTriggers;
+  UseTriggers:=FALSE;
+
   iEndSeconds := DateTimeToUnix(Now) - 3600;
   iStartSeconds := iEndSeconds - (2 * (24 * 3600)); // 49 hours before Now
   grp_chart.Caption := Format('History since %s',
@@ -1023,6 +1040,7 @@ begin
           as_allpollu.ValueMax));
       end;
   finally
+    UseTriggers:=bTempUseTriggers;
     ResetArrays; // at end
   end;
 end;
