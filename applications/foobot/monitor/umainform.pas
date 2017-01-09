@@ -233,7 +233,7 @@ type
     procedure SaveConfig;
     procedure LoadConfig;
     procedure SetMinMaxTriggers;
-    procedure SetTrafficLightStats(iSensorNum: integer; HIGHLOW: integer);
+    procedure SetTrafficLightStats(const iSensorNum: integer; const HIGHLOW: integer);
     procedure DoHighTriggerAlert(const iSensorNum: integer; const aValue: variant);
     procedure DoLowTriggerAlert(const iSensorNum: integer; const aValue: variant);
     procedure RestoreNormalColour(const iSensorNum: integer);
@@ -342,7 +342,7 @@ begin
         PopulateFoobotMenu;
         LoadTriggers; // This can only be done if we have a Foobot Identity
         // as each Foobot has its own trigger values
-        SetMinMaxTriggers; // Adjust if necesarry for Guage High/Low limits
+        SetMinMaxTriggers; // Adjust if necesarry for preset Guage High/Low limits
         for iCount := C_PM to C_ALLPOLLU do
           SetTrafficLightStats(iCount, C_HIGH);
         Show;
@@ -363,6 +363,7 @@ begin
     end
     else
     begin // Unable to fetch foobot identity
+      ShowMessage('Cannot locate your Foobot.  Click OK to close the application');
       Close;
     end;
   end
@@ -387,18 +388,21 @@ begin
       LineEnding + 'New settings are applied on resart.');
     Close;
   end;
-
 end;
 
 procedure Tmainform.ChangeCurrentFoobot(Sender: TObject);
 // Called from 'Foobot' TSubmenuitem.click
 begin
   iCurrentFoobot := (Sender as TMenuItem).Tag;
-  mnu_optionsTakeReadingNow.Click;
+  mnu_optionsTakeReadingNow.Click; // also triggers DoDisplay
 end;
 
-procedure Tmainform.SetTrafficLightStats(iSensorNum: integer; HIGHLOW: integer);
+procedure Tmainform.SetTrafficLightStats(const iSensorNum: integer; const HIGHLOW: integer);
+// Called via a loop in form.create with HIGHLOW=C_HIGH (all traffic light captions set)
+// Called in DoHighTriggerAlert with HIGHLOW=C_HIGH (specific traffic light caption set)
+// Called in DoLowTriggerAlert with HIGHLOW=C_LOW (specific traffic light caption set)
 begin
+  {$IFDEF DEBUGMODE}Exit;{$ENDIF}
   if iSensorNum = C_PM then
     if (HIGHLOW = C_HIGH) then
       lbl_redlightpm.Caption :=
@@ -770,9 +774,13 @@ procedure Tmainform.mnu_options_triggersSetTriggersClick(Sender: TObject);
 begin
   triggersform.ShowModal;
   if triggersform.ModalResult = mrCancel then
-    ShowMessage('Cancel')
+  begin
+    // Cancelled form
+  end
   else
+  begin
     mnu_options_triggersActivateTriggers.Enabled := True;
+  end;
 end;
 
 procedure Tmainform.mnu_SampleEveryHalfHourClick(Sender: TObject);

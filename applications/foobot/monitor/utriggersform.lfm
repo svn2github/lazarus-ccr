@@ -1,92 +1,845 @@
 object triggersform: Ttriggersform
-  Left = 686
-  Height = 484
-  Top = 279
+  Left = 543
+  Height = 565
+  Top = 191
   Width = 794
+  ActiveControl = edt_newrec_pm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'triggersform'
-  ClientHeight = 484
+  ClientHeight = 565
   ClientWidth = 794
   DefaultMonitor = dmDesktop
   FormStyle = fsStayOnTop
+  OnActivate = FormActivate
   OnCreate = FormCreate
+  OnShow = FormShow
   Position = poWorkAreaCenter
   ShowInTaskBar = stNever
   LCLVersion = '1.7'
   Scaled = True
   object grp_main: TGroupBox
     Left = 0
-    Height = 428
+    Height = 506
     Top = 0
     Width = 794
     Align = alTop
     AutoSize = True
-    Caption = 'All Foobot Triggers'
+    Caption = 'All Foobot Recommended values and Triggers'
     ChildSizing.EnlargeVertical = crsScaleChilds
     ChildSizing.ControlsPerLine = 1
-    ClientHeight = 408
+    ClientHeight = 486
     ClientWidth = 790
     TabOrder = 0
     object grp_pm: TGroupBox
       Left = 0
-      Height = 68
+      Height = 81
       Top = 0
       Width = 790
       Align = alTop
       Caption = 'Particulates'
+      ChildSizing.EnlargeVertical = crsHomogenousSpaceResize
+      ClientHeight = 61
+      ClientWidth = 786
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 0
+      object lbl_currentrec_pm: TLabel
+        Left = 8
+        Height = 15
+        Top = 0
+        Width = 304
+        AutoSize = False
+        Caption = 'Current recommended level: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currenthightrigger_pm: TLabel
+        Left = 8
+        Height = 15
+        Top = 20
+        Width = 304
+        AutoSize = False
+        Caption = 'Current high trigger: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currentlowtrigger_pm: TLabel
+        Left = 8
+        Height = 15
+        Top = 40
+        Width = 304
+        AutoSize = False
+        Caption = 'Current low trigger: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newrec_pm: TLabel
+        Left = 312
+        Height = 15
+        Top = 0
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New recommended level:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newhightrigger_pm: TLabel
+        Left = 312
+        Height = 15
+        Top = 20
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New high trigger:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newlowtrigger_pm: TLabel
+        Left = 312
+        Height = 15
+        Top = 40
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New low trigger:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object edt_newrec_pm: TEdit
+        Left = 504
+        Height = 15
+        Top = 0
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 0
+        Text = '0.00'
+      end
+      object edt_newhightrigger_pm: TEdit
+        Left = 504
+        Height = 15
+        Top = 20
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 1
+        Text = '0.00'
+      end
+      object edt_newlowtrigger_pm: TEdit
+        Left = 504
+        Height = 15
+        Top = 40
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 2
+        Text = '0.00'
+      end
+      object lbl_currentrecunits_pm: TLabel
+        Left = 584
+        Height = 15
+        Top = 0
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currenthightriggerunits_pm: TLabel
+        Left = 584
+        Height = 15
+        Top = 20
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currentlowtriggerunits_pm: TLabel
+        Left = 584
+        Height = 15
+        Top = 40
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
     end
     object grp_tmp: TGroupBox
       Left = 0
-      Height = 68
-      Top = 340
+      Height = 81
+      Top = 405
       Width = 790
       Align = alTop
       Caption = 'All Pollution'
+      ChildSizing.EnlargeVertical = crsHomogenousSpaceResize
+      ClientHeight = 61
+      ClientWidth = 786
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 1
+      object lbl_currentrec_allpollu: TLabel
+        Left = 8
+        Height = 15
+        Top = 0
+        Width = 304
+        AutoSize = False
+        Caption = 'Current recommended level: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currenthightrigger_allpollu: TLabel
+        Left = 8
+        Height = 15
+        Top = 20
+        Width = 304
+        AutoSize = False
+        Caption = 'Current high trigger: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currentlowtrigger_allpollu: TLabel
+        Left = 8
+        Height = 15
+        Top = 40
+        Width = 304
+        AutoSize = False
+        Caption = 'Current low trigger: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newrec_allpollu: TLabel
+        Left = 312
+        Height = 15
+        Top = 0
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New recommended level:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newhightrigger_allpollu: TLabel
+        Left = 312
+        Height = 15
+        Top = 20
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New high trigger:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newlowtrigger_allpollu: TLabel
+        Left = 312
+        Height = 15
+        Top = 40
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New low trigger:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object edt_newrec_allpollu: TEdit
+        Left = 504
+        Height = 15
+        Top = 0
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 0
+        Text = '0.00'
+      end
+      object edt_newhightrigger_allpollu: TEdit
+        Left = 504
+        Height = 15
+        Top = 20
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 1
+        Text = '0.00'
+      end
+      object edt_newlowtrigger_allpollu: TEdit
+        Left = 504
+        Height = 15
+        Top = 40
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 2
+        Text = '0.00'
+      end
+      object lbl_currentrecunits_allpollu: TLabel
+        Left = 584
+        Height = 15
+        Top = 0
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currenthightriggerunits_allpollu: TLabel
+        Left = 584
+        Height = 15
+        Top = 20
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currentlowtriggerunits_allpollu: TLabel
+        Left = 584
+        Height = 15
+        Top = 40
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
     end
     object grp_hum: TGroupBox
       Left = 0
-      Height = 68
-      Top = 272
+      Height = 81
+      Top = 324
       Width = 790
       Align = alTop
       Caption = 'Volatile Componds'
+      ChildSizing.EnlargeVertical = crsHomogenousSpaceResize
+      ClientHeight = 61
+      ClientWidth = 786
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 2
+      object lbl_currentrec_voc: TLabel
+        Left = 8
+        Height = 15
+        Top = 0
+        Width = 304
+        AutoSize = False
+        Caption = 'Current recommended level: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currenthightrigger_voc: TLabel
+        Left = 8
+        Height = 15
+        Top = 20
+        Width = 304
+        AutoSize = False
+        Caption = 'Current high trigger: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currentlowtrigger_voc: TLabel
+        Left = 8
+        Height = 15
+        Top = 40
+        Width = 304
+        AutoSize = False
+        Caption = 'Current low trigger: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newrec_voc: TLabel
+        Left = 312
+        Height = 15
+        Top = 0
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New recommended level:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newhightrigger_voc: TLabel
+        Left = 312
+        Height = 15
+        Top = 20
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New high trigger:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newlowtrigger_voc: TLabel
+        Left = 312
+        Height = 15
+        Top = 40
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New low trigger:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object edt_newrec_voc: TEdit
+        Left = 504
+        Height = 15
+        Top = 0
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 0
+        Text = '0.00'
+      end
+      object edt_newhightrigger_voc: TEdit
+        Left = 504
+        Height = 15
+        Top = 20
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 1
+        Text = '0.00'
+      end
+      object edt_newlowtrigger_voc: TEdit
+        Left = 504
+        Height = 15
+        Top = 40
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 2
+        Text = '0.00'
+      end
+      object lbl_currentrecunits_voc: TLabel
+        Left = 584
+        Height = 15
+        Top = 0
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currenthightriggerunits_voc: TLabel
+        Left = 584
+        Height = 15
+        Top = 20
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currentlowtriggerunits_voc: TLabel
+        Left = 584
+        Height = 15
+        Top = 40
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
     end
     object grp_co2: TGroupBox
       Left = 0
-      Height = 68
-      Top = 204
+      Height = 81
+      Top = 243
       Width = 790
       Align = alTop
-      Caption = 'Carbon Diaoxide'
+      Caption = 'Carbon Dioxide'
+      ChildSizing.EnlargeVertical = crsHomogenousSpaceResize
+      ClientHeight = 61
+      ClientWidth = 786
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 3
+      object lbl_currentrec_co2: TLabel
+        Left = 8
+        Height = 15
+        Top = 0
+        Width = 304
+        AutoSize = False
+        Caption = 'Current recommended level: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currenthightrigger_co2: TLabel
+        Left = 8
+        Height = 15
+        Top = 20
+        Width = 304
+        AutoSize = False
+        Caption = 'Current high trigger: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currentlowtrigger_co2: TLabel
+        Left = 8
+        Height = 15
+        Top = 40
+        Width = 304
+        AutoSize = False
+        Caption = 'Current low trigger: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newrec_co2: TLabel
+        Left = 312
+        Height = 15
+        Top = 0
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New recommended level:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newhightrigger_co2: TLabel
+        Left = 312
+        Height = 15
+        Top = 20
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New high trigger:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newlowtrigger_co2: TLabel
+        Left = 312
+        Height = 15
+        Top = 40
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New low trigger:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object edt_newrec_co2: TEdit
+        Left = 504
+        Height = 15
+        Top = 0
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 0
+        Text = '0.00'
+      end
+      object edt_newhightrigger_co2: TEdit
+        Left = 504
+        Height = 15
+        Top = 20
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 1
+        Text = '0.00'
+      end
+      object edt_newlowtrigger_co2: TEdit
+        Left = 504
+        Height = 15
+        Top = 40
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 2
+        Text = '0.00'
+      end
+      object lbl_currentrecunits_co2: TLabel
+        Left = 584
+        Height = 15
+        Top = 0
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currenthightriggerunits_co2: TLabel
+        Left = 584
+        Height = 15
+        Top = 20
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currentlowtriggerunits_co2: TLabel
+        Left = 584
+        Height = 15
+        Top = 40
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
     end
     object grp_voc: TGroupBox
       Left = 0
-      Height = 68
-      Top = 136
+      Height = 81
+      Top = 162
       Width = 790
       Align = alTop
       Caption = 'Humidity'
+      ChildSizing.EnlargeVertical = crsHomogenousSpaceResize
+      ClientHeight = 61
+      ClientWidth = 786
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 4
+      object lbl_currentrec_hum: TLabel
+        Left = 8
+        Height = 15
+        Top = 0
+        Width = 304
+        AutoSize = False
+        Caption = 'Current recommended level: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currenthightrigger_hum: TLabel
+        Left = 8
+        Height = 15
+        Top = 20
+        Width = 304
+        AutoSize = False
+        Caption = 'Current high trigger: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currentlowtrigger_hum: TLabel
+        Left = 8
+        Height = 15
+        Top = 40
+        Width = 304
+        AutoSize = False
+        Caption = 'Current low trigger: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newrec_hum: TLabel
+        Left = 312
+        Height = 15
+        Top = 0
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New recommended level:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newhightrigger_hum: TLabel
+        Left = 312
+        Height = 15
+        Top = 20
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New high trigger:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newlowtrigger_hum: TLabel
+        Left = 312
+        Height = 15
+        Top = 40
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New low trigger:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object edt_newrec_hum: TEdit
+        Left = 504
+        Height = 15
+        Top = 0
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 0
+        Text = '0.00'
+      end
+      object edt_newhightrigger_hum: TEdit
+        Left = 504
+        Height = 15
+        Top = 20
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 1
+        Text = '0.00'
+      end
+      object edt_newlowtrigger_hum: TEdit
+        Left = 504
+        Height = 15
+        Top = 40
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 2
+        Text = '0.00'
+      end
+      object lbl_currentrecunits_hum: TLabel
+        Left = 584
+        Height = 15
+        Top = 0
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currenthightriggerunits_hum: TLabel
+        Left = 584
+        Height = 15
+        Top = 20
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currentlowtriggerunits_hum: TLabel
+        Left = 584
+        Height = 15
+        Top = 40
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
     end
     object grp_allpollu: TGroupBox
       Left = 0
-      Height = 68
-      Top = 68
+      Height = 81
+      Top = 81
       Width = 790
       Align = alTop
       Caption = 'Temperature'
+      ChildSizing.EnlargeVertical = crsHomogenousSpaceResize
+      ClientHeight = 61
+      ClientWidth = 786
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 5
+      object lbl_currentrec_tmp: TLabel
+        Left = 8
+        Height = 15
+        Top = 0
+        Width = 304
+        AutoSize = False
+        Caption = 'Current recommended level: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currenthightrigger_tmp: TLabel
+        Left = 8
+        Height = 15
+        Top = 20
+        Width = 304
+        AutoSize = False
+        Caption = 'Current high trigger: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currentlowtrigger_tmp: TLabel
+        Left = 8
+        Height = 15
+        Top = 40
+        Width = 304
+        AutoSize = False
+        Caption = 'Current low trigger: No Stats'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newrec_tmp: TLabel
+        Left = 312
+        Height = 15
+        Top = 0
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New recommended level:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newhightrigger_tmp: TLabel
+        Left = 312
+        Height = 15
+        Top = 20
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New high trigger:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_newlowtrigger_tmp: TLabel
+        Left = 312
+        Height = 15
+        Top = 40
+        Width = 168
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'New low trigger:'
+        ParentColor = False
+        ParentFont = False
+      end
+      object edt_newrec_tmp: TEdit
+        Left = 504
+        Height = 15
+        Top = 0
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 0
+        Text = '0.00'
+      end
+      object edt_newhightrigger_tmp: TEdit
+        Left = 504
+        Height = 15
+        Top = 20
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 1
+        Text = '0.00'
+      end
+      object edt_newlowtrigger_tmp: TEdit
+        Left = 504
+        Height = 15
+        Top = 40
+        Width = 72
+        BorderStyle = bsNone
+        ParentFont = False
+        TabOrder = 2
+        Text = '0.00'
+      end
+      object lbl_currentrecunits_tmp: TLabel
+        Left = 584
+        Height = 15
+        Top = 0
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currenthightriggerunits_tmp: TLabel
+        Left = 584
+        Height = 15
+        Top = 20
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
+      object lbl_currentlowtriggerunits_tmp: TLabel
+        Left = 584
+        Height = 15
+        Top = 40
+        Width = 26
+        Caption = 'units'
+        ParentColor = False
+        ParentFont = False
+      end
     end
   end
   object cmd_OK: TBitBtn
     Left = 360
     Height = 30
-    Top = 440
+    Top = 520
     Width = 75
     Default = True
     DefaultCaption = True
@@ -97,7 +850,7 @@ object triggersform: Ttriggersform
   object cmd_cancel: TBitBtn
     Left = 704
     Height = 30
-    Top = 440
+    Top = 520
     Width = 75
     Cancel = True
     DefaultCaption = True

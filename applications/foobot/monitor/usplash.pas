@@ -13,6 +13,7 @@ type
 
   Tsplashform = class(TForm)
     img: TImage;
+    procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
 
@@ -30,12 +31,16 @@ implementation
 { Tsplashform }
 
 procedure Tsplashform.FormCreate(Sender: TObject);
+begin
+end;
+
+procedure Tsplashform.FormActivate(Sender: TObject);
 var jpg:TJPEGImage;
 begin
      jpg:=TJPEGImage.Create;
      try
         jpg.LoadFromResourceName(HInstance,'SPLASHIMAGE');
-        img.Canvas.Draw(0,0,jpg);
+        img.Picture.Jpeg:=jpg;
      finally
         jpg.Free;
      end;

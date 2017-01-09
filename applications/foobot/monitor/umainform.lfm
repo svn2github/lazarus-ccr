@@ -1,12 +1,12 @@
 object mainform: Tmainform
   Left = 589
-  Height = 506
+  Height = 500
   Top = 145
   Width = 784
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'mainform'
-  ClientHeight = 486
+  ClientHeight = 480
   ClientWidth = 784
   DefaultMonitor = dmDesktop
   Font.Height = -12
@@ -833,9 +833,9 @@ object mainform: Tmainform
         OnClick = mnu_optionsResetHighsLowsClick
       end
       object mnu_optionsFoobotTriggers: TMenuItem
-        Caption = 'Foobot Triggers...'
+        Caption = 'Foobot Triggers and Recommended values...'
         object mnu_options_triggersSetTriggers: TMenuItem
-          Caption = 'Set Trigger Values...'
+          Caption = 'Set Trigger and Recommended Values...'
           OnClick = mnu_options_triggersSetTriggersClick
         end
         object mnu_options_triggersActivateTriggers: TMenuItem
