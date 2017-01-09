@@ -38,9 +38,9 @@ V0.2.1.0: Triggers,Multiple Foobots
 interface
 
 uses // If Lazarus auto-inserts 'sensors' in the clause then delete it
-  SysUtils, TAGraph, TAIntervalSources, TASeries, foobot_sensors,
-  Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Menus, lclIntf,
-  foobot_utility, uCryptIni, dateutils, uconfigform, utriggersform, Classes;
+  SysUtils, TAGraph, TAIntervalSources, TASeries,
+  foobot_sensors, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Menus,
+  lclIntf, foobot_utility, uCryptIni, dateutils, uconfigform, utriggersform;
 
 const
   // Timer milliseconds
@@ -95,6 +95,25 @@ type
     as_voc: TAnalogSensor;
     Chart1: TChart;
     DateTimeIntervalChartSource1: TDateTimeIntervalChartSource;
+    grp_health: TGroupBox;
+    lbl_greenlighttmp: TLabel;
+    lbl_greenlighthum: TLabel;
+    lbl_greenlightco2: TLabel;
+    lbl_greenlightvoc: TLabel;
+    lbl_greenlightallpollu: TLabel;
+    lbl_redlightpm: TLabel;
+    lbl_redlighttmp: TLabel;
+    lbl_redlighthum: TLabel;
+    lbl_redlightco2: TLabel;
+    lbl_redlightvoc: TLabel;
+    lbl_redlightallpollu: TLabel;
+    lbl_yellowlightpm: TLabel;
+    lbl_greenlightpm: TLabel;
+    lbl_yellowlighttmp: TLabel;
+    lbl_yellowlighthum: TLabel;
+    lbl_yellowlightco2: TLabel;
+    lbl_yellowlightvoc: TLabel;
+    lbl_yellowlightallpollu: TLabel;
     lineseries_allpollu: TLineSeries;
     lineseries_voc: TLineSeries;
     lineseries_co2: TLineSeries;
@@ -152,6 +171,18 @@ type
     mnu_options: TMenuItem;
     mnu_fileExit: TMenuItem;
     mnu_file: TMenuItem;
+    pnl_healthpm: TPanel;
+    pnl_healthallpollu: TPanel;
+    pnl_healthvoc: TPanel;
+    pnl_healthco2: TPanel;
+    pnl_healthhum: TPanel;
+    pnl_healthtmp: TPanel;
+    sls_pm: TStopLightSensor;
+    sls_allpollu: TStopLightSensor;
+    sls_voc: TStopLightSensor;
+    sls_co2: TStopLightSensor;
+    sls_hum: TStopLightSensor;
+    sls_tmp: TStopLightSensor;
     traypopup: TPopupMenu;
     tmr_foobot: TTimer;
     TrayIcon1: TTrayIcon;
@@ -187,7 +218,7 @@ type
     bDisplayGuagesOnly, bDisplayYellowLines, bDisplayRedLines: boolean;
     iFudgeFactor: integer;
     iCurrentFoobot: integer;
-    HighTriggerColor,LowTriggerColor:TColor;
+    HighTriggerColor, LowTriggerColor: TColor;
     foobotmenuarray: array of TMenuItem;
     procedure DisplayReadings;
     procedure UpdateGuage(Sender: TAnalogSensor; SensorNumber: integer);
@@ -196,14 +227,16 @@ type
     procedure GraphCurrentReading;
     procedure SetYellowRecommendedLevels;
     procedure SetRedSessionMax;
+    procedure UpdateHealth;
     procedure PopulateFoobotMenu;
     procedure ChangeCurrentFoobot(Sender: TObject);
     procedure SaveConfig;
     procedure LoadConfig;
     procedure SetMinMaxTriggers;
-    procedure DoHighTriggerAlert(Const iSensorNum:Integer;Const aValue:Variant);
-    procedure DoLowTriggerAlert(Const iSensorNum:Integer;Const aValue:Variant);
-    procedure RestoreNormalColour(Const iSensorNum:Integer);
+    procedure SetTrafficLightStats;
+    procedure DoHighTriggerAlert(const iSensorNum: integer; const aValue: variant);
+    procedure DoLowTriggerAlert(const iSensorNum: integer; const aValue: variant);
+    procedure RestoreNormalColour(const iSensorNum: integer);
   public
     INI: TCryptINIfile;
   end;
@@ -241,8 +274,8 @@ begin
   iFudgeFactor := 20; // only needed if height set in form.create
   bDisplayGuagesOnly := False;
   INI.PlainTextMode := True;
-  HighTriggerColor:=clYellow;
-  LowTriggerColor:=clAqua;
+  HighTriggerColor := clYellow;
+  LowTriggerColor := clAqua;
   bDisplayYellowLines := INI.ReadBool('Config', 'DisplayYellowLines', False);
   mnu_optionsDisplayYellowLines.Checked := bDisplayYellowLines;
   bDisplayRedLines := INI.ReadBool('Config', 'DisplayRedLines', False);
@@ -257,11 +290,11 @@ begin
   {$IFDEF DEBUGMODE}
   UseTriggers := False;
   {$ENDIF}
-  If UseTriggers then
+  if UseTriggers then
   begin
-     mnu_options_triggersActivateTriggers.Enabled:=TRUE;
-     mnu_options_triggersActivateTriggers.Checked:=TRUE;
-     mnu_options_triggersActivateTriggers.Caption:='Set Triggers Off';
+    mnu_options_triggersActivateTriggers.Enabled := True;
+    mnu_options_triggersActivateTriggers.Checked := True;
+    mnu_options_triggersActivateTriggers.Caption := 'Set Triggers Off';
   end;
 end;
 
@@ -270,7 +303,8 @@ var
   sTempFoobotUserName, sTempSecretKey: string;
 
 begin
-  ClientHeight := grp_sensorDisplay.Height + grp_highlow.Height + grp_chart.Height;
+  ClientHeight := grp_sensorDisplay.Height + grp_highlow.Height +
+    grp_health.Height + grp_chart.Height;
   Application.ProcessMessages;
   // Allow user to enter values in INIFile
   sTempFoobotUserName := INI.ReadUnencryptedString('Config', 'Foobot User', 'unknown');
@@ -309,6 +343,7 @@ begin
         LoadTriggers; // This can only be done if we have a Foobot Identity
         // as each Foobot has its own trigger values
         SetMinMaxTriggers; // Adjust if necesarry for Guage High/Low limits
+        SetTrafficLightStats;
         Show;
         {$IFNDEF DEBUGMODE}
         mnu_optionsTakeReadingNow.Click;
@@ -361,6 +396,52 @@ begin
   mnu_optionsTakeReadingNow.Click;
 end;
 
+procedure Tmainform.SetTrafficLightStats;
+begin
+  lbl_redlightpm.Caption := Format('> %.1f %s', [double(FooBotTriggerArray[C_HIGH, C_PM]),
+    FoobotDataObject.Units[C_PM]]);
+  lbl_yellowlightpm.Caption := Format('> %.1f %s', [double(REC_PM),
+    FoobotDataObject.Units[C_PM]]);
+  lbl_greenlightpm.Caption := Format('< %.1f %s', [double(REC_PM),
+    FoobotDataObject.Units[C_PM]]);
+
+  lbl_redlighttmp.Caption := Format('> %.1f %s', [double(FooBotTriggerArray[C_HIGH, C_TMP]),
+    FoobotDataObject.Units[C_TMP]]);
+  lbl_yellowlighttmp.Caption :=
+    Format('> %.1f %s', [double(REC_TMP), FoobotDataObject.Units[C_TMP]]);
+  lbl_greenlighttmp.Caption := Format('< %.1f %s', [double(REC_TMP),
+    FoobotDataObject.Units[C_TMP]]);
+
+  lbl_redlighthum.Caption := Format('> %.1f %s', [double(FooBotTriggerArray[C_HIGH, C_HUM]),
+    FoobotDataObject.Units[C_HUM]]);
+  lbl_yellowlighthum.Caption :=
+    Format('> %.1f %s', [double(REC_HUM), FoobotDataObject.Units[C_HUM]]);
+  lbl_greenlighthum.Caption := Format('< %.1f %s', [double(REC_HUM),
+    FoobotDataObject.Units[C_HUM]]);
+
+  lbl_redlightco2.Caption := Format('> %.0f %s', [double(FooBotTriggerArray[C_HIGH, C_CO2]),
+    FoobotDataObject.Units[C_CO2]]);
+  lbl_yellowlightco2.Caption :=
+    Format('> %.0f %s', [double(REC_CO2), FoobotDataObject.Units[C_CO2]]);
+  lbl_greenlightco2.Caption := Format('< %.0f %s', [double(REC_CO2),
+    FoobotDataObject.Units[C_CO2]]);
+
+  lbl_redlightvoc.Caption := Format('> %.0f %s', [double(FooBotTriggerArray[C_HIGH, C_VOC]),
+    FoobotDataObject.Units[C_VOC]]);
+  lbl_yellowlightvoc.Caption :=
+    Format('> %.0f %s', [double(REC_VOC), FoobotDataObject.Units[C_VOC]]);
+  lbl_greenlightvoc.Caption := Format('< %.0f %s', [double(REC_VOC),
+    FoobotDataObject.Units[C_VOC]]);
+
+  lbl_redlightallpollu.Caption :=
+    Format('> %.1f %s', [double(FooBotTriggerArray[C_HIGH, C_ALLPOLLU]),
+    FoobotDataObject.Units[C_ALLPOLLU]]);
+  lbl_yellowlightallpollu.Caption :=
+    Format('> %.1f %s', [double(REC_ALLPOLLU), FoobotDataObject.Units[C_ALLPOLLU]]);
+  lbl_greenlightallpollu.Caption :=
+    Format('< %.1f %s', [double(REC_ALLPOLLU), FoobotDataObject.Units[C_ALLPOLLU]]);
+end;
+
 procedure Tmainform.PopulateFoobotMenu;
 // Uses dynamic foobotmenuarray
 var
@@ -403,7 +484,7 @@ end;
 procedure Tmainform.SaveConfig;
 // For all Foobots
 begin
-  With INI do
+  with INI do
   begin
     PlainTextMode := True;
     // Colours
@@ -428,7 +509,7 @@ begin
     WriteFloat('Config', 'allpolluMaxValue', as_allpollu.ValueMax);
     WriteBool('Config', 'DisplayYellowLines', bDisplayYellowLines);
     WriteBool('Config', 'DisplayRedLines', bDisplayRedLines);
-      // Triggers
+    // Triggers
     WriteBool('Config', 'UseTriggers', UseTriggers);
     WriteString('Config', 'HighTriggerColour', ColorToString(HighTriggerColor));
     WriteString('Config', 'LowTriggerColour', ColorToString(LowTriggerColor));
@@ -504,10 +585,11 @@ begin
   as_allpollu.ValueMin := INI.ReadFloat('Config', 'allpolluMinValue', MIN_ALLPOLLU);
   as_allpollu.ValueMax := INI.ReadFloat('Config', 'allpolluMaxValue', MAX_ALLPOLLU);
   // Triggers
-  UseTriggers:=INI.ReadBool('Config', 'UseTriggers', False);
-  HighTriggerColor:=StringToColor(INI.ReadString('Config', 'HighTriggerColour', 'clYellow'));
-  LowTriggerColor:=StringToColor(INI.ReadString('Config', 'LowTriggerColour', 'clAqua'));
-INI.PlainTextMode := False;
+  UseTriggers := INI.ReadBool('Config', 'UseTriggers', False);
+  HighTriggerColor := StringToColor(INI.ReadString('Config', 'HighTriggerColour',
+    'clYellow'));
+  LowTriggerColor := StringToColor(INI.ReadString('Config', 'LowTriggerColour', 'clAqua'));
+  INI.PlainTextMode := False;
 end;
 
 procedure Tmainform.FormWindowStateChange(Sender: TObject);
@@ -561,10 +643,10 @@ procedure Tmainform.mnu_optionsDisplayGuagesOnlyClick(Sender: TObject);
 begin
   bDisplayGuagesOnly := mnu_optionsDisplayGuagesOnly.Checked;
   if bDisplayGuagesOnly then
-    mainform.ClientHeight := grp_sensorDisplay.Height// + iFudgeFactor
+    mainform.ClientHeight := grp_sensorDisplay.Height + grp_health.Height
   else
-    mainform.ClientHeight := grp_sensorDisplay.Height + grp_chart.Height +
-      grp_highlow.Height;// + iFudgeFactor;
+    mainform.ClientHeight := grp_sensorDisplay.Height + grp_health.Height +
+      grp_chart.Height + grp_highlow.Height;
 end;
 
 procedure Tmainform.mnu_optionsDisplayRedLinesClick(Sender: TObject);
@@ -628,7 +710,7 @@ begin
   begin
     mnu_options_triggersActivateTriggers.Caption := 'Set Triggers Off';
     LoadTriggers;
-    SetMinMaxTriggers
+    SetMinMaxTriggers;
   end
   else
     mnu_options_triggersActivateTriggers.Caption := 'Set Triggers On';
@@ -796,22 +878,22 @@ begin
     C_CO2:
     begin
       lbl_co2high.Caption := Format('High: %d %s',
-        [Integer(FoobotDataHighs[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
+        [integer(FoobotDataHighs[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
         LineEnding + 'on ' + FormatDateTime('dd/mm tt',
         TDateTime(FoobotDataHighTimes[SensorNumber]));
       lbl_co2Low.Caption := Format('Low: %d %s',
-        [Integer(FoobotDataLows[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
+        [integer(FoobotDataLows[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
         LineEnding + 'on ' + FormatDateTime('dd/mm tt', TDateTime(
         FoobotDataLowTimes[SensorNumber]));
     end;
     C_VOC:
     begin
       lbl_vochigh.Caption := Format('High: %d %s',
-        [Integer(FoobotDataHighs[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
+        [integer(FoobotDataHighs[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
         LineEnding + 'on ' + FormatDateTime('dd/mm tt',
         TDateTime(FoobotDataHighTimes[SensorNumber]));
       lbl_vocLow.Caption := Format('Low: %d %s',
-        [Integer(FoobotDataLows[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
+        [integer(FoobotDataLows[SensorNumber]), FoobotDataObject.Units[SensorNumber]]) +
         LineEnding + 'on ' + FormatDateTime('dd/mm tt', TDateTime(
         FoobotDataLowTimes[SensorNumber]));
     end;
@@ -876,41 +958,77 @@ begin
       SetYellowRecommendedLevels;
   end;
 end;
-procedure Tmainform.DoHighTriggerAlert(Const iSensorNum:Integer;Const aValue:Variant);
-begin
-   Case iSensorNum of
-     C_PM:as_pm.Color:=HighTriggerColor;
-     C_TMP:as_tmp.Color:=HighTriggerColor;
-     C_HUM:as_hum.Color:=HighTriggerColor;
-     C_CO2:as_co2.Color:=HighTriggerColor;
-     C_VOC:as_voc.Color:=HighTriggerColor;
-     C_ALLPOLLU:as_allpollu.Color:=HighTriggerColor;
-   end;
-end;
 
-procedure Tmainform.DoLowTriggerAlert(Const iSensorNum:Integer;Const aValue:Variant);
+procedure Tmainform.DoHighTriggerAlert(const iSensorNum: integer; const aValue: variant);
 begin
-  Case iSensorNum of
-    C_PM:as_pm.Color:=LowTriggerColor;
-    C_TMP:as_tmp.Color:=LowTriggerColor;
-    C_HUM:as_hum.Color:=LowTriggerColor;
-    C_CO2:as_co2.Color:=LowTriggerColor;
-    C_VOC:as_voc.Color:=LowTriggerColor;
-    C_ALLPOLLU:as_allpollu.Color:=LowTriggerColor;
+  case iSensorNum of
+    C_PM: as_pm.Color := HighTriggerColor;
+    C_TMP: as_tmp.Color := HighTriggerColor;
+    C_HUM: as_hum.Color := HighTriggerColor;
+    C_CO2: as_co2.Color := HighTriggerColor;
+    C_VOC: as_voc.Color := HighTriggerColor;
+    C_ALLPOLLU: as_allpollu.Color := HighTriggerColor;
   end;
 end;
 
-procedure Tmainform.RestoreNormalColour(Const iSensorNum:Integer);
+procedure Tmainform.DoLowTriggerAlert(const iSensorNum: integer; const aValue: variant);
 begin
-  Case iSensorNum of
-    C_PM:as_pm.Color:=clDefault;
-    C_TMP:as_tmp.Color:=clDefault;
-    C_HUM:as_hum.Color:=clDefault;
-    C_CO2:as_co2.Color:=clDefault;
-    C_VOC:as_voc.Color:=clDefault;
-    C_ALLPOLLU:as_allpollu.Color:=clDefault;
+  case iSensorNum of
+    C_PM: as_pm.Color := LowTriggerColor;
+    C_TMP: as_tmp.Color := LowTriggerColor;
+    C_HUM: as_hum.Color := LowTriggerColor;
+    C_CO2: as_co2.Color := LowTriggerColor;
+    C_VOC: as_voc.Color := LowTriggerColor;
+    C_ALLPOLLU: as_allpollu.Color := LowTriggerColor;
   end;
 end;
+
+procedure Tmainform.RestoreNormalColour(const iSensorNum: integer);
+begin
+  case iSensorNum of
+    C_PM: as_pm.Color := clDefault;
+    C_TMP: as_tmp.Color := clDefault;
+    C_HUM: as_hum.Color := clDefault;
+    C_CO2: as_co2.Color := clDefault;
+    C_VOC: as_voc.Color := clDefault;
+    C_ALLPOLLU: as_allpollu.Color := clDefault;
+  end;
+end;
+
+procedure Tmainform.UpdateHealth;
+begin
+  if (as_pm.Value > REC_PM) then
+    sls_pm.State := slYELLOW
+  else
+    sls_pm.State := slGREEN;
+
+  if (as_tmp.Value > REC_TMP) then
+    sls_tmp.State := slYELLOW
+  else
+    sls_tmp.State := slGREEN;
+
+  if (as_hum.Value > REC_HUM) then
+    sls_hum.State := slYELLOW
+  else
+    sls_hum.State := slGREEN;
+
+  if (as_co2.Value > REC_CO2) then
+    sls_co2.State := slYELLOW
+  else
+    sls_co2.State := slGREEN;
+
+  if (as_voc.Value > REC_VOC) then
+    sls_voc.State := slYELLOW
+  else
+    sls_voc.State := slGREEN;
+
+  if (as_allpollu.Value > REC_ALLPOLLU) then
+    sls_allpollu.State := slYELLOW
+  else
+    sls_allpollu.State := slGREEN;
+
+end;
+
 procedure Tmainform.DisplayReadings;
 var
   iCount: integer;
@@ -926,31 +1044,37 @@ begin
     UpdateGuage(as_co2, C_CO2);
     UpdateGuage(as_voc, C_VOC);
     UpdateGuage(as_allpollu, C_ALLPOLLU);
+    UpdateHealth;
     // Process Trigger Alerts on each call to FoobotDataObjectToArrays
     if UseTriggers then
       try
         // Look for alerts in each sensor
         for iCount := C_PM to C_ALLPOLLU do
         begin
-          if (AlertRec[iCount].AlertTriggered=TRUE) then
+          if (AlertRec[iCount].AlertTriggered = True) then
           begin
+            case iCount of
+              C_PM: sls_pm.State := slRED;
+              C_TMP: sls_tmp.State := slRED;
+              C_HUM: sls_hum.State := slRED;
+              C_CO2: sls_co2.State := slRED;
+              C_VOC: sls_voc.State := slRED;
+              C_ALLPOLLU: sls_allpollu.State := slRED;
+            end;
             // Alert found.  High or low?
             if (AlertRec[iCount].AlertType = C_HIGH) then
             begin
               // A high alert - do something
-              DoHighTriggerAlert(iCount,AlertRec[iCount].AlertValue);
+              DoHighTriggerAlert(iCount, AlertRec[iCount].AlertValue);
             end
             else
             begin
               // A low alert - do something
-              DoLowTriggerAlert(iCount,AlertRec[iCount].AlertValue);
-              {
-              ShowMessageFmt('Low alert member %d (value %f) exceeded',
-                [iCount, double(AlertRec[iCount].AlertValue)]);
-              }
+              DoLowTriggerAlert(iCount, AlertRec[iCount].AlertValue);
             end;
           end
-          else RestoreNormalColour(iCount);
+          else
+            RestoreNormalColour(iCount);
         end;
       except
         raise Exception.Create('Unable to process triggers in DisplayReadings');
@@ -961,7 +1085,6 @@ begin
         UpdateHighLow(iCount);
     end;
     GraphCurrentReading;
-
 
   end
   else
@@ -984,8 +1107,8 @@ begin
   try
     lineseries_pm.AddXY(FoobotData_time[iCurrentFoobot],
       AsPercent(FoobotData_pm[iCurrentFoobot], as_pm.ValueMin, as_pm.ValueMax));
-    lineseries_tmp.AddXY(FoobotData_time[iCurrentFoobot], AsPercent(FoobotData_tmp[iCurrentFoobot],
-      as_tmp.ValueMin, as_tmp.ValueMax));
+    lineseries_tmp.AddXY(FoobotData_time[iCurrentFoobot],
+      AsPercent(FoobotData_tmp[iCurrentFoobot], as_tmp.ValueMin, as_tmp.ValueMax));
     lineseries_hum.AddXY(FoobotData_time[iCurrentFoobot],
       AsPercent(FoobotData_hum[iCurrentFoobot], as_hum.ValueMin, as_hum.ValueMax));
     lineseries_co2.AddXY(FoobotData_time[iCurrentFoobot],
@@ -993,7 +1116,8 @@ begin
     lineseries_voc.AddXY(FoobotData_time[iCurrentFoobot],
       AsPercent(FoobotData_voc[iCurrentFoobot], as_voc.ValueMin, as_voc.ValueMax));
     lineseries_allpollu.AddXY(FoobotData_time[iCurrentFoobot],
-      AsPercent(FoobotData_allpollu[iCurrentFoobot], as_allpollu.ValueMin, as_allpollu.ValueMax));
+      AsPercent(FoobotData_allpollu[iCurrentFoobot], as_allpollu.ValueMin,
+      as_allpollu.ValueMax));
   except
     raise Exception.Create('Unable to update graph in GraphCurrentReading');
   end;
@@ -1005,14 +1129,14 @@ procedure Tmainform.GraphHistory;
 var
   iCount: integer;
   iStartSeconds, iEndSeconds: int64;
-  bTempUseTriggers:Boolean;
+  bTempUseTriggers: boolean;
 begin
   {$IFDEF DEBUGMODE}
   Exit;
   {$ENDIF}
   // Turn off triggers (if on)
-  bTempUseTriggers:=UseTriggers;
-  UseTriggers:=FALSE;
+  bTempUseTriggers := UseTriggers;
+  UseTriggers := False;
 
   iEndSeconds := DateTimeToUnix(Now) - 3600;
   iStartSeconds := iEndSeconds - (2 * (24 * 3600)); // 49 hours before Now
@@ -1040,7 +1164,7 @@ begin
           as_allpollu.ValueMax));
       end;
   finally
-    UseTriggers:=bTempUseTriggers;
+    UseTriggers := bTempUseTriggers;
     ResetArrays; // at end
   end;
 end;

@@ -1,12 +1,12 @@
 object mainform: Tmainform
-  Left = 516
-  Height = 451
-  Top = 144
+  Left = 589
+  Height = 506
+  Top = 145
   Width = 784
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'mainform'
-  ClientHeight = 431
+  ClientHeight = 486
   ClientWidth = 784
   DefaultMonitor = dmDesktop
   Font.Height = -12
@@ -140,27 +140,368 @@ object mainform: Tmainform
       AnalogKind = akAnalog
     end
   end
+  object grp_health: TGroupBox
+    Left = 0
+    Height = 72
+    Top = 120
+    Width = 784
+    Align = alTop
+    Caption = 'Health'
+    ClientHeight = 52
+    ClientWidth = 780
+    TabOrder = 3
+    object pnl_healthpm: TPanel
+      Left = 0
+      Height = 52
+      Top = 0
+      Width = 130
+      Align = alLeft
+      ClientHeight = 52
+      ClientWidth = 130
+      TabOrder = 0
+      object sls_pm: TStopLightSensor
+        Left = 4
+        Height = 43
+        Top = 4
+        Width = 23
+        Picture.Data = {
+          1754506F727461626C654E6574776F726B47726170686963F400000089504E47
+          0D0A1A0A0000000D49484452000000150000002B08020000001805541C000000
+          BB49444154789CED95D10A80200C45FD743FAD3F33D3D2E972F34E7A281A04A2
+          9CB3619772DB5AB9F8786B85104EDEE115C187F932A785CF9B9EAC01BE81078A
+          215FE0782C28243EC3C7319902E0FBE10DFDB96296BF5500F7C715F0FBAB0A73
+          7ED47A47FE7D5D037C0BDF2BB4FCF97C345488F94BF0F179235380F96F3AE3FD
+          B902CCBF082B7CA7F8F38FF3D7ED91F53C4FE19142C99F4B111614224FF25F14
+          58FEF90F00EBCF1558FE6558E13BC5F7F3BF99EAE4C342D54BB2D50EA0FED6E2
+          5B12FB970000000049454E44AE426082
+        }
+        State = slUNKNOWN
+      end
+      object lbl_redlightpm: TLabel
+        Left = 32
+        Height = 15
+        Top = 4
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+      object lbl_yellowlightpm: TLabel
+        Left = 32
+        Height = 15
+        Top = 18
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+      object lbl_greenlightpm: TLabel
+        Left = 32
+        Height = 15
+        Top = 32
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+    end
+    object pnl_healthallpollu: TPanel
+      Left = 650
+      Height = 52
+      Top = 0
+      Width = 130
+      Align = alLeft
+      ClientHeight = 52
+      ClientWidth = 130
+      TabOrder = 1
+      object sls_allpollu: TStopLightSensor
+        Left = 4
+        Height = 43
+        Top = 4
+        Width = 23
+        Picture.Data = {
+          1754506F727461626C654E6574776F726B47726170686963F400000089504E47
+          0D0A1A0A0000000D49484452000000150000002B08020000001805541C000000
+          BB49444154789CED95D10A80200C45FD743FAD3F33D3D2E972F34E7A281A04A2
+          9CB3619772DB5AB9F8786B85104EDEE115C187F932A785CF9B9EAC01BE81078A
+          215FE0782C28243EC3C7319902E0FBE10DFDB96296BF5500F7C715F0FBAB0A73
+          7ED47A47FE7D5D037C0BDF2BB4FCF97C345488F94BF0F179235380F96F3AE3FD
+          B902CCBF082B7CA7F8F38FF3D7ED91F53C4FE19142C99F4B111614224FF25F14
+          58FEF90F00EBCF1558FE6558E13BC5F7F3BF99EAE4C342D54BB2D50EA0FED6E2
+          5B12FB970000000049454E44AE426082
+        }
+        State = slUNKNOWN
+      end
+      object lbl_redlightallpollu: TLabel
+        Left = 32
+        Height = 15
+        Top = 4
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+      object lbl_yellowlightallpollu: TLabel
+        Left = 32
+        Height = 15
+        Top = 18
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+      object lbl_greenlightallpollu: TLabel
+        Left = 32
+        Height = 15
+        Top = 32
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+    end
+    object pnl_healthvoc: TPanel
+      Left = 520
+      Height = 52
+      Top = 0
+      Width = 130
+      Align = alLeft
+      ClientHeight = 52
+      ClientWidth = 130
+      TabOrder = 2
+      object sls_voc: TStopLightSensor
+        Left = 4
+        Height = 43
+        Top = 4
+        Width = 23
+        Picture.Data = {
+          1754506F727461626C654E6574776F726B47726170686963F400000089504E47
+          0D0A1A0A0000000D49484452000000150000002B08020000001805541C000000
+          BB49444154789CED95D10A80200C45FD743FAD3F33D3D2E972F34E7A281A04A2
+          9CB3619772DB5AB9F8786B85104EDEE115C187F932A785CF9B9EAC01BE81078A
+          215FE0782C28243EC3C7319902E0FBE10DFDB96296BF5500F7C715F0FBAB0A73
+          7ED47A47FE7D5D037C0BDF2BB4FCF97C345488F94BF0F179235380F96F3AE3FD
+          B902CCBF082B7CA7F8F38FF3D7ED91F53C4FE19142C99F4B111614224FF25F14
+          58FEF90F00EBCF1558FE6558E13BC5F7F3BF99EAE4C342D54BB2D50EA0FED6E2
+          5B12FB970000000049454E44AE426082
+        }
+        State = slUNKNOWN
+      end
+      object lbl_redlightvoc: TLabel
+        Left = 32
+        Height = 15
+        Top = 4
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+      object lbl_yellowlightvoc: TLabel
+        Left = 32
+        Height = 15
+        Top = 18
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+      object lbl_greenlightvoc: TLabel
+        Left = 32
+        Height = 15
+        Top = 32
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+    end
+    object pnl_healthco2: TPanel
+      Left = 390
+      Height = 52
+      Top = 0
+      Width = 130
+      Align = alLeft
+      ClientHeight = 52
+      ClientWidth = 130
+      TabOrder = 3
+      object sls_co2: TStopLightSensor
+        Left = 4
+        Height = 43
+        Top = 4
+        Width = 23
+        Picture.Data = {
+          1754506F727461626C654E6574776F726B47726170686963F400000089504E47
+          0D0A1A0A0000000D49484452000000150000002B08020000001805541C000000
+          BB49444154789CED95D10A80200C45FD743FAD3F33D3D2E972F34E7A281A04A2
+          9CB3619772DB5AB9F8786B85104EDEE115C187F932A785CF9B9EAC01BE81078A
+          215FE0782C28243EC3C7319902E0FBE10DFDB96296BF5500F7C715F0FBAB0A73
+          7ED47A47FE7D5D037C0BDF2BB4FCF97C345488F94BF0F179235380F96F3AE3FD
+          B902CCBF082B7CA7F8F38FF3D7ED91F53C4FE19142C99F4B111614224FF25F14
+          58FEF90F00EBCF1558FE6558E13BC5F7F3BF99EAE4C342D54BB2D50EA0FED6E2
+          5B12FB970000000049454E44AE426082
+        }
+        State = slUNKNOWN
+      end
+      object lbl_redlightco2: TLabel
+        Left = 32
+        Height = 15
+        Top = 4
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+      object lbl_yellowlightco2: TLabel
+        Left = 32
+        Height = 15
+        Top = 18
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+      object lbl_greenlightco2: TLabel
+        Left = 32
+        Height = 15
+        Top = 32
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+    end
+    object pnl_healthhum: TPanel
+      Left = 260
+      Height = 52
+      Top = 0
+      Width = 130
+      Align = alLeft
+      ClientHeight = 52
+      ClientWidth = 130
+      TabOrder = 4
+      object sls_hum: TStopLightSensor
+        Left = 4
+        Height = 43
+        Top = 4
+        Width = 23
+        Picture.Data = {
+          1754506F727461626C654E6574776F726B47726170686963F400000089504E47
+          0D0A1A0A0000000D49484452000000150000002B08020000001805541C000000
+          BB49444154789CED95D10A80200C45FD743FAD3F33D3D2E972F34E7A281A04A2
+          9CB3619772DB5AB9F8786B85104EDEE115C187F932A785CF9B9EAC01BE81078A
+          215FE0782C28243EC3C7319902E0FBE10DFDB96296BF5500F7C715F0FBAB0A73
+          7ED47A47FE7D5D037C0BDF2BB4FCF97C345488F94BF0F179235380F96F3AE3FD
+          B902CCBF082B7CA7F8F38FF3D7ED91F53C4FE19142C99F4B111614224FF25F14
+          58FEF90F00EBCF1558FE6558E13BC5F7F3BF99EAE4C342D54BB2D50EA0FED6E2
+          5B12FB970000000049454E44AE426082
+        }
+        State = slUNKNOWN
+      end
+      object lbl_redlighthum: TLabel
+        Left = 32
+        Height = 15
+        Top = 4
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+      object lbl_yellowlighthum: TLabel
+        Left = 32
+        Height = 15
+        Top = 18
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+      object lbl_greenlighthum: TLabel
+        Left = 32
+        Height = 15
+        Top = 32
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+    end
+    object pnl_healthtmp: TPanel
+      Left = 130
+      Height = 52
+      Top = 0
+      Width = 130
+      Align = alLeft
+      ClientHeight = 52
+      ClientWidth = 130
+      TabOrder = 5
+      object sls_tmp: TStopLightSensor
+        Left = 4
+        Height = 43
+        Top = 4
+        Width = 23
+        Picture.Data = {
+          1754506F727461626C654E6574776F726B47726170686963F400000089504E47
+          0D0A1A0A0000000D49484452000000150000002B08020000001805541C000000
+          BB49444154789CED95D10A80200C45FD743FAD3F33D3D2E972F34E7A281A04A2
+          9CB3619772DB5AB9F8786B85104EDEE115C187F932A785CF9B9EAC01BE81078A
+          215FE0782C28243EC3C7319902E0FBE10DFDB96296BF5500F7C715F0FBAB0A73
+          7ED47A47FE7D5D037C0BDF2BB4FCF97C345488F94BF0F179235380F96F3AE3FD
+          B902CCBF082B7CA7F8F38FF3D7ED91F53C4FE19142C99F4B111614224FF25F14
+          58FEF90F00EBCF1558FE6558E13BC5F7F3BF99EAE4C342D54BB2D50EA0FED6E2
+          5B12FB970000000049454E44AE426082
+        }
+        State = slUNKNOWN
+      end
+      object lbl_redlighttmp: TLabel
+        Left = 32
+        Height = 15
+        Top = 4
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+      object lbl_yellowlighttmp: TLabel
+        Left = 32
+        Height = 15
+        Top = 18
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+      object lbl_greenlighttmp: TLabel
+        Left = 32
+        Height = 15
+        Top = 32
+        Width = 96
+        AutoSize = False
+        Caption = 'No Stats'
+        ParentColor = False
+      end
+    end
+  end
   object grp_highlow: TGroupBox
     Left = 0
-    Height = 119
-    Top = 120
+    Height = 112
+    Top = 192
     Width = 784
     Align = alTop
     Caption = 'All-time Highs and Lows'
     ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
     ChildSizing.EnlargeVertical = crsScaleChilds
     ChildSizing.ControlsPerLine = 6
-    ClientHeight = 99
+    ClientHeight = 92
     ClientWidth = 780
     TabOrder = 1
     object grp_pm: TGroupBox
       Left = 0
-      Height = 99
+      Height = 92
       Top = 0
       Width = 130
       Align = alLeft
       Caption = 'Particulates'
-      ClientHeight = 79
+      ClientHeight = 72
       ClientWidth = 126
       TabOrder = 0
       object lbl_pmhigh: TLabel
@@ -182,12 +523,12 @@ object mainform: Tmainform
     end
     object grp_tmp: TGroupBox
       Left = 130
-      Height = 99
+      Height = 92
       Top = 0
       Width = 130
       Align = alLeft
       Caption = 'Temperature'
-      ClientHeight = 79
+      ClientHeight = 72
       ClientWidth = 126
       TabOrder = 1
       object lbl_tmphigh: TLabel
@@ -209,12 +550,12 @@ object mainform: Tmainform
     end
     object grp_hum: TGroupBox
       Left = 260
-      Height = 99
+      Height = 92
       Top = 0
       Width = 130
       Align = alLeft
       Caption = 'Humidity'
-      ClientHeight = 79
+      ClientHeight = 72
       ClientWidth = 126
       TabOrder = 2
       object lbl_humhigh: TLabel
@@ -236,12 +577,12 @@ object mainform: Tmainform
     end
     object grp_co2: TGroupBox
       Left = 390
-      Height = 99
+      Height = 92
       Top = 0
       Width = 130
       Align = alLeft
       Caption = 'CO2'
-      ClientHeight = 79
+      ClientHeight = 72
       ClientWidth = 126
       TabOrder = 3
       object lbl_co2high: TLabel
@@ -263,12 +604,12 @@ object mainform: Tmainform
     end
     object grp_voc: TGroupBox
       Left = 520
-      Height = 99
+      Height = 92
       Top = 0
       Width = 130
       Align = alLeft
       Caption = 'Volatile VOC'
-      ClientHeight = 79
+      ClientHeight = 72
       ClientWidth = 126
       TabOrder = 4
       object lbl_vochigh: TLabel
@@ -290,12 +631,12 @@ object mainform: Tmainform
     end
     object grp_allpollu: TGroupBox
       Left = 650
-      Height = 99
+      Height = 92
       Top = 0
       Width = 130
       Align = alLeft
       Caption = 'All Pollution'
-      ClientHeight = 79
+      ClientHeight = 72
       ClientWidth = 126
       TabOrder = 5
       object lbl_allpolluhigh: TLabel
@@ -319,7 +660,7 @@ object mainform: Tmainform
   object grp_chart: TGroupBox
     Left = 0
     Height = 179
-    Top = 239
+    Top = 304
     Width = 784
     Align = alTop
     Caption = 'History'
@@ -395,8 +736,7 @@ object mainform: Tmainform
     Left = 16
   end
   object MainMenu1: TMainMenu
-    Left = 56
-    Top = 8
+    Left = 200
     object mnu_file: TMenuItem
       Caption = '&File'
       object mnu_fileExit: TMenuItem

@@ -3,14 +3,14 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="10"/>
-    <BuildModes Active="win32"/>
-    <Units Count="33">
+    <BuildModes Active="win64"/>
+    <Units Count="34">
       <Unit0>
         <Filename Value="foobotmonitor.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="12"/>
         <CursorPos Y="35"/>
-        <UsageCount Value="114"/>
+        <UsageCount Value="119"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -19,9 +19,10 @@
         <ComponentName Value="mainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="245"/>
-        <CursorPos X="37" Y="264"/>
-        <UsageCount Value="114"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="1113"/>
+        <CursorPos X="86" Y="1135"/>
+        <UsageCount Value="119"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -34,7 +35,7 @@
         <EditorIndex Value="7"/>
         <TopLine Value="33"/>
         <CursorPos X="41" Y="45"/>
-        <UsageCount Value="104"/>
+        <UsageCount Value="109"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit2>
@@ -44,7 +45,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="380"/>
         <CursorPos X="35" Y="387"/>
-        <UsageCount Value="96"/>
+        <UsageCount Value="101"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\foobot_objects.pas"/>
@@ -53,16 +54,15 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="96"/>
+        <UsageCount Value="101"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\foobot_utility.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="9"/>
-        <TopLine Value="395"/>
-        <CursorPos X="21" Y="426"/>
-        <UsageCount Value="114"/>
+        <TopLine Value="123"/>
+        <CursorPos X="49" Y="212"/>
+        <UsageCount Value="119"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
@@ -72,7 +72,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="96"/>
+        <UsageCount Value="101"/>
       </Unit6>
       <Unit7>
         <Filename Value="foobot_sensors.pas"/>
@@ -80,7 +80,7 @@
         <EditorIndex Value="4"/>
         <TopLine Value="299"/>
         <CursorPos X="14" Y="321"/>
-        <UsageCount Value="48"/>
+        <UsageCount Value="53"/>
         <Loaded Value="True"/>
       </Unit7>
       <Unit8>
@@ -91,7 +91,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="2"/>
         <CursorPos X="42" Y="25"/>
-        <UsageCount Value="43"/>
+        <UsageCount Value="48"/>
         <Loaded Value="True"/>
       </Unit8>
       <Unit9>
@@ -101,8 +101,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="57" Y="24"/>
-        <UsageCount Value="34"/>
+        <CursorPos X="41" Y="7"/>
+        <UsageCount Value="39"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit9>
@@ -111,7 +111,7 @@
         <EditorIndex Value="8"/>
         <TopLine Value="43"/>
         <CursorPos X="47" Y="13"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="74"/>
         <Loaded Value="True"/>
       </Unit10>
       <Unit11>
@@ -119,7 +119,7 @@
         <EditorIndex Value="11"/>
         <TopLine Value="143"/>
         <CursorPos X="35" Y="59"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="74"/>
         <Loaded Value="True"/>
       </Unit11>
       <Unit12>
@@ -190,7 +190,7 @@
         <EditorIndex Value="5"/>
         <TopLine Value="101"/>
         <CursorPos Y="154"/>
-        <UsageCount Value="23"/>
+        <UsageCount Value="25"/>
         <Loaded Value="True"/>
       </Unit21>
       <Unit22>
@@ -219,14 +219,14 @@
         <EditorIndex Value="10"/>
         <TopLine Value="381"/>
         <CursorPos X="13" Y="384"/>
-        <UsageCount Value="41"/>
+        <UsageCount Value="43"/>
         <Loaded Value="True"/>
       </Unit25>
       <Unit26>
         <Filename Value="..\latest_stable\udataform.pas"/>
         <EditorIndex Value="6"/>
         <TopLine Value="70"/>
-        <UsageCount Value="41"/>
+        <UsageCount Value="43"/>
         <Loaded Value="True"/>
       </Unit26>
       <Unit27>
@@ -270,130 +270,138 @@
         <EditorIndex Value="3"/>
         <TopLine Value="1811"/>
         <CursorPos X="13" Y="1834"/>
-        <UsageCount Value="19"/>
+        <UsageCount Value="21"/>
         <Loaded Value="True"/>
       </Unit32>
+      <Unit33>
+        <Filename Value="umainform.lfm"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="119"/>
+        <CursorPos Y="151"/>
+        <UsageCount Value="10"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit33>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="umainform.pas"/>
-        <Caret Line="634" Column="46" TopLine="606"/>
+        <Caret Line="953" TopLine="920"/>
       </Position1>
       <Position2>
         <Filename Value="umainform.pas"/>
-        <Caret Line="2" Column="59"/>
+        <Caret Line="929" Column="17" TopLine="921"/>
       </Position2>
       <Position3>
         <Filename Value="umainform.pas"/>
-        <Caret Line="364" Column="58" TopLine="317"/>
+        <Caret Line="930" Column="17" TopLine="922"/>
       </Position3>
       <Position4>
         <Filename Value="umainform.pas"/>
-        <Caret Line="633" Column="48" TopLine="586"/>
+        <Caret Line="932" Column="17" TopLine="924"/>
       </Position4>
       <Position5>
         <Filename Value="umainform.pas"/>
-        <Caret Line="824" Column="48" TopLine="777"/>
+        <Caret Line="931" Column="17" TopLine="923"/>
       </Position5>
       <Position6>
         <Filename Value="umainform.pas"/>
-        <Caret Line="404" TopLine="383"/>
+        <Caret Line="932" Column="17" TopLine="924"/>
       </Position6>
       <Position7>
         <Filename Value="umainform.pas"/>
-        <Caret Line="614" Column="23" TopLine="596"/>
+        <Caret Line="934" Column="17" TopLine="926"/>
       </Position7>
       <Position8>
         <Filename Value="umainform.pas"/>
-        <Caret Line="202" Column="32" TopLine="159"/>
+        <Caret Line="936" Column="17" TopLine="928"/>
       </Position8>
       <Position9>
         <Filename Value="umainform.pas"/>
-        <Caret Line="302" Column="26" TopLine="276"/>
+        <Caret Line="938" Column="17" TopLine="930"/>
       </Position9>
       <Position10>
-        <Filename Value="..\foobot_utility.pas"/>
-        <Caret Line="157" Column="35" TopLine="137"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="940" Column="17" TopLine="932"/>
       </Position10>
       <Position11>
-        <Filename Value="..\foobot_utility.pas"/>
-        <Caret Line="158" Column="43" TopLine="137"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="942" Column="17" TopLine="934"/>
       </Position11>
       <Position12>
-        <Filename Value="..\foobot_utility.pas"/>
-        <Caret Line="203" Column="40" TopLine="181"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="287" TopLine="250"/>
       </Position12>
       <Position13>
-        <Filename Value="..\foobot_utility.pas"/>
-        <Caret Line="157" Column="37" TopLine="140"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="580" Column="32" TopLine="574"/>
       </Position13>
       <Position14>
-        <Filename Value="..\foobot_utility.pas"/>
-        <Caret Line="159" Column="36" TopLine="140"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="581" Column="32" TopLine="575"/>
       </Position14>
       <Position15>
-        <Filename Value="..\foobot_utility.pas"/>
-        <Caret Line="157" Column="36" TopLine="140"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="580" Column="32" TopLine="574"/>
       </Position15>
       <Position16>
         <Filename Value="umainform.pas"/>
-        <Caret Line="929" Column="38" TopLine="909"/>
+        <Caret Line="973" Column="18" TopLine="934"/>
       </Position16>
       <Position17>
-        <Filename Value="..\foobot_utility.pas"/>
-        <Caret Line="58" TopLine="41"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="987" Column="17" TopLine="945"/>
       </Position17>
       <Position18>
-        <Filename Value="..\foobot_utility.pas"/>
-        <Caret Line="186" TopLine="144"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="580" Column="49" TopLine="575"/>
       </Position18>
       <Position19>
-        <Filename Value="..\foobot_utility.pas"/>
-        <Caret Line="226" TopLine="189"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="581" Column="49" TopLine="576"/>
       </Position19>
       <Position20>
         <Filename Value="umainform.pas"/>
-        <Caret Line="985" TopLine="959"/>
+        <Caret Line="582" Column="49" TopLine="577"/>
       </Position20>
       <Position21>
         <Filename Value="umainform.pas"/>
-        <Caret Line="857" TopLine="820"/>
+        <Caret Line="583" Column="49" TopLine="578"/>
       </Position21>
       <Position22>
-        <Filename Value="..\foobot_utility.pas"/>
-        <Caret Line="387" Column="13" TopLine="202"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="586" Column="49" TopLine="581"/>
       </Position22>
       <Position23>
         <Filename Value="umainform.pas"/>
-        <Caret Line="503" Column="88" TopLine="475"/>
+        <Caret Line="589" Column="49" TopLine="584"/>
       </Position23>
       <Position24>
-        <Filename Value="..\foobot_utility.pas"/>
-        <Caret Line="404" Column="30" TopLine="368"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="592" Column="49" TopLine="587"/>
       </Position24>
       <Position25>
         <Filename Value="umainform.pas"/>
-        <Caret Line="945" Column="15" TopLine="919"/>
+        <Caret Line="595" Column="49" TopLine="590"/>
       </Position25>
       <Position26>
         <Filename Value="umainform.pas"/>
-        <Caret Line="936" Column="45" TopLine="915"/>
+        <Caret Line="598" Column="49" TopLine="593"/>
       </Position26>
       <Position27>
         <Filename Value="umainform.pas"/>
-        <Caret Line="934" Column="12" TopLine="907"/>
+        <Caret Line="402" Column="29" TopLine="369"/>
       </Position27>
       <Position28>
         <Filename Value="umainform.pas"/>
-        <Caret Line="264" TopLine="235"/>
+        <Caret Line="438" Column="37" TopLine="401"/>
       </Position28>
       <Position29>
-        <Filename Value="..\foobot_utility.pas"/>
-        <Caret Line="427" Column="14" TopLine="358"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="415" Column="89" TopLine="393"/>
       </Position29>
       <Position30>
-        <Filename Value="..\foobot_utility.pas"/>
-        <Caret Line="420" Column="27" TopLine="395"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="417" Column="66" TopLine="395"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>

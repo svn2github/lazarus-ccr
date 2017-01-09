@@ -354,16 +354,32 @@ begin
   end;
 end;
 
-// Function to make the Foobot data accessible
-// Also sets the HighLow array values
-// Also sets triggers
+// Use FoobotDataObjectToArrays function to make the Foobot data accessible
+//  after a call to FetchFoobotData
+// * Sets the HighLow array values
+// * Sets triggers
 {
-TAlertRec = Record
-  Triggered:Boolean;
-  AlertTime:TDateTime;
-  AlertType:TAlertType;
-  AlertValue:Variant;
-end;
+Here's calling code to use the triggers:
+// Process Trigger Alerts on each call to FoobotDataObjectToArrays
+if UseTriggers then
+  // Look for alerts in each sensor
+  for iCount := C_PM to C_ALLPOLLU do
+  begin
+    if (AlertRec[iCount].AlertTriggered=TRUE) then
+    begin
+      // Alert found.  High or low?
+      if (AlertRec[iCount].AlertType = C_HIGH) then
+      begin
+        // A high alert - do something
+        DoHighTriggerAlert(iCount,AlertRec[iCount].AlertValue);
+      end
+      else
+      begin
+        // A low alert - do something
+        DoLowTriggerAlert(iCount,AlertRec[iCount].AlertValue);
+      end;
+    end;
+  end;
 }
 function FoobotDataObjectToArrays: boolean;
 var
