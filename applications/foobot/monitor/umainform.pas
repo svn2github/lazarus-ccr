@@ -233,7 +233,7 @@ type
     procedure SaveConfig;
     procedure LoadConfig;
     procedure SetMinMaxTriggers;
-    procedure SetTrafficLightStats;
+    procedure SetTrafficLightStats(iSensorNum: integer; HIGHLOW: integer);
     procedure DoHighTriggerAlert(const iSensorNum: integer; const aValue: variant);
     procedure DoLowTriggerAlert(const iSensorNum: integer; const aValue: variant);
     procedure RestoreNormalColour(const iSensorNum: integer);
@@ -301,7 +301,7 @@ end;
 procedure Tmainform.FormActivate(Sender: TObject);
 var
   sTempFoobotUserName, sTempSecretKey: string;
-
+  iCount: integer;
 begin
   ClientHeight := grp_sensorDisplay.Height + grp_highlow.Height +
     grp_health.Height + grp_chart.Height;
@@ -343,7 +343,8 @@ begin
         LoadTriggers; // This can only be done if we have a Foobot Identity
         // as each Foobot has its own trigger values
         SetMinMaxTriggers; // Adjust if necesarry for Guage High/Low limits
-        SetTrafficLightStats;
+        for iCount := C_PM to C_ALLPOLLU do
+          SetTrafficLightStats(iCount, C_HIGH);
         Show;
         {$IFNDEF DEBUGMODE}
         mnu_optionsTakeReadingNow.Click;
@@ -396,46 +397,87 @@ begin
   mnu_optionsTakeReadingNow.Click;
 end;
 
-procedure Tmainform.SetTrafficLightStats;
+procedure Tmainform.SetTrafficLightStats(iSensorNum: integer; HIGHLOW: integer);
 begin
-  lbl_redlightpm.Caption := Format('> %.1f %s', [double(FooBotTriggerArray[C_HIGH, C_PM]),
-    FoobotDataObject.Units[C_PM]]);
-  lbl_yellowlightpm.Caption := Format('> %.1f %s', [double(REC_PM),
-    FoobotDataObject.Units[C_PM]]);
-  lbl_greenlightpm.Caption := Format('< %.1f %s', [double(REC_PM),
-    FoobotDataObject.Units[C_PM]]);
+  if iSensorNum = C_PM then
+    if (HIGHLOW = C_HIGH) then
+      lbl_redlightpm.Caption :=
+        Format('> %.1f %s', [double(FooBotTriggerArray[C_HIGH, C_PM]),
+        FoobotDataObject.Units[C_PM]])
+    else
+      lbl_redlightpm.Caption :=
+        Format('< %.1f %s', [double(FooBotTriggerArray[C_LOW, C_PM]),
+        FoobotDataObject.Units[C_PM]]);
+  lbl_yellowlightpm.Caption :=
+    Format('> %.1f %s', [double(REC_PM), FoobotDataObject.Units[C_PM]]);
+  lbl_greenlightpm.Caption :=
+    Format('< %.1f %s', [double(REC_PM), FoobotDataObject.Units[C_PM]]);
 
-  lbl_redlighttmp.Caption := Format('> %.1f %s', [double(FooBotTriggerArray[C_HIGH, C_TMP]),
-    FoobotDataObject.Units[C_TMP]]);
+  if iSensorNum = C_TMP then
+    if (HIGHLOW = C_HIGH) then
+      lbl_redlighttmp.Caption :=
+        Format('> %.1f %s', [double(FooBotTriggerArray[C_HIGH, C_TMP]),
+        FoobotDataObject.Units[C_TMP]])
+    else
+      lbl_redlighttmp.Caption :=
+        Format('< %.1f %s', [double(FooBotTriggerArray[C_LOW, C_TMP]),
+        FoobotDataObject.Units[C_TMP]]);
   lbl_yellowlighttmp.Caption :=
     Format('> %.1f %s', [double(REC_TMP), FoobotDataObject.Units[C_TMP]]);
-  lbl_greenlighttmp.Caption := Format('< %.1f %s', [double(REC_TMP),
-    FoobotDataObject.Units[C_TMP]]);
+  lbl_greenlighttmp.Caption :=
+    Format('< %.1f %s', [double(REC_TMP), FoobotDataObject.Units[C_TMP]]);
 
-  lbl_redlighthum.Caption := Format('> %.1f %s', [double(FooBotTriggerArray[C_HIGH, C_HUM]),
-    FoobotDataObject.Units[C_HUM]]);
+  if iSensorNum = C_HUM then
+    if (HIGHLOW = C_HIGH) then
+      lbl_redlighthum.Caption :=
+        Format('> %.1f %s', [double(FooBotTriggerArray[C_HIGH, C_HUM]),
+        FoobotDataObject.Units[C_HUM]])
+    else
+      lbl_redlighthum.Caption :=
+        Format('< %.1f %s', [double(FooBotTriggerArray[C_LOW, C_HUM]),
+        FoobotDataObject.Units[C_HUM]]);
   lbl_yellowlighthum.Caption :=
     Format('> %.1f %s', [double(REC_HUM), FoobotDataObject.Units[C_HUM]]);
-  lbl_greenlighthum.Caption := Format('< %.1f %s', [double(REC_HUM),
-    FoobotDataObject.Units[C_HUM]]);
+  lbl_greenlighthum.Caption :=
+    Format('< %.1f %s', [double(REC_HUM), FoobotDataObject.Units[C_HUM]]);
 
-  lbl_redlightco2.Caption := Format('> %.0f %s', [double(FooBotTriggerArray[C_HIGH, C_CO2]),
-    FoobotDataObject.Units[C_CO2]]);
+  if iSensorNum = C_CO2 then
+    if (HIGHLOW = C_HIGH) then
+      lbl_redlightco2.Caption :=
+        Format('> %.0f %s', [double(FooBotTriggerArray[C_HIGH, C_CO2]),
+        FoobotDataObject.Units[C_CO2]])
+    else
+      lbl_redlightco2.Caption :=
+        Format('< %.0f %s', [double(FooBotTriggerArray[C_LOW, C_CO2]),
+        FoobotDataObject.Units[C_CO2]]);
   lbl_yellowlightco2.Caption :=
     Format('> %.0f %s', [double(REC_CO2), FoobotDataObject.Units[C_CO2]]);
-  lbl_greenlightco2.Caption := Format('< %.0f %s', [double(REC_CO2),
-    FoobotDataObject.Units[C_CO2]]);
+  lbl_greenlightco2.Caption :=
+    Format('< %.0f %s', [double(REC_CO2), FoobotDataObject.Units[C_CO2]]);
 
-  lbl_redlightvoc.Caption := Format('> %.0f %s', [double(FooBotTriggerArray[C_HIGH, C_VOC]),
-    FoobotDataObject.Units[C_VOC]]);
+  if iSensorNum = C_VOC then
+    if (HIGHLOW = C_HIGH) then
+      lbl_redlightvoc.Caption :=
+        Format('> %.0f %s', [double(FooBotTriggerArray[C_HIGH, C_VOC]),
+        FoobotDataObject.Units[C_VOC]])
+    else
+      lbl_redlightvoc.Caption :=
+        Format('< %.0f %s', [double(FooBotTriggerArray[C_LOW, C_VOC]),
+        FoobotDataObject.Units[C_VOC]]);
   lbl_yellowlightvoc.Caption :=
     Format('> %.0f %s', [double(REC_VOC), FoobotDataObject.Units[C_VOC]]);
-  lbl_greenlightvoc.Caption := Format('< %.0f %s', [double(REC_VOC),
-    FoobotDataObject.Units[C_VOC]]);
+  lbl_greenlightvoc.Caption :=
+    Format('< %.0f %s', [double(REC_VOC), FoobotDataObject.Units[C_VOC]]);
 
-  lbl_redlightallpollu.Caption :=
-    Format('> %.1f %s', [double(FooBotTriggerArray[C_HIGH, C_ALLPOLLU]),
-    FoobotDataObject.Units[C_ALLPOLLU]]);
+  if iSensorNum = C_ALLPOLLU then
+    if (HIGHLOW = C_HIGH) then
+      lbl_redlightallpollu.Caption :=
+        Format('> %.1f %s', [double(FooBotTriggerArray[C_HIGH, C_ALLPOLLU]),
+        FoobotDataObject.Units[C_ALLPOLLU]])
+    else
+      lbl_redlightallpollu.Caption :=
+        Format('< %.1f %s', [double(FooBotTriggerArray[C_LOW, C_ALLPOLLU]),
+        FoobotDataObject.Units[C_ALLPOLLU]]);
   lbl_yellowlightallpollu.Caption :=
     Format('> %.1f %s', [double(REC_ALLPOLLU), FoobotDataObject.Units[C_ALLPOLLU]]);
   lbl_greenlightallpollu.Caption :=
@@ -470,8 +512,8 @@ end;
 procedure Tmainform.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   SaveConfig; // to .cfg file
-  if (FoobotIdentityObject.FoobotIdentityList.Count > 0) then
-    SaveTriggers;
+  if UseTriggers then
+    SaveTriggers; // To .ini file
   CloseAction := caFree;
 end;
 
@@ -586,9 +628,10 @@ begin
   as_allpollu.ValueMax := INI.ReadFloat('Config', 'allpolluMaxValue', MAX_ALLPOLLU);
   // Triggers
   UseTriggers := INI.ReadBool('Config', 'UseTriggers', False);
-  HighTriggerColor := StringToColor(INI.ReadString('Config', 'HighTriggerColour',
-    'clYellow'));
-  LowTriggerColor := StringToColor(INI.ReadString('Config', 'LowTriggerColour', 'clAqua'));
+  HighTriggerColor := StringToColor(INI.ReadString('Config',
+    'HighTriggerColour', 'clYellow'));
+  LowTriggerColor := StringToColor(INI.ReadString('Config',
+    'LowTriggerColour', 'clAqua'));
   INI.PlainTextMode := False;
 end;
 
@@ -702,6 +745,8 @@ begin
 end;
 
 procedure Tmainform.mnu_options_triggersActivateTriggersClick(Sender: TObject);
+var
+  icount: integer;
 begin
   mnu_options_triggersActivateTriggers.Checked :=
     not mnu_options_triggersActivateTriggers.Checked;
@@ -711,9 +756,14 @@ begin
     mnu_options_triggersActivateTriggers.Caption := 'Set Triggers Off';
     LoadTriggers;
     SetMinMaxTriggers;
+    DisplayReadings;
   end
   else
+  begin
     mnu_options_triggersActivateTriggers.Caption := 'Set Triggers On';
+    for iCount := C_PM to C_ALLPOLLU do
+      RestoreNormalColour(iCount);
+  end;
 end;
 
 procedure Tmainform.mnu_options_triggersSetTriggersClick(Sender: TObject);
@@ -969,6 +1019,7 @@ begin
     C_VOC: as_voc.Color := HighTriggerColor;
     C_ALLPOLLU: as_allpollu.Color := HighTriggerColor;
   end;
+  SetTrafficLightStats(iSensorNum, C_HIGH);
 end;
 
 procedure Tmainform.DoLowTriggerAlert(const iSensorNum: integer; const aValue: variant);
@@ -981,6 +1032,7 @@ begin
     C_VOC: as_voc.Color := LowTriggerColor;
     C_ALLPOLLU: as_allpollu.Color := LowTriggerColor;
   end;
+  SetTrafficLightStats(iSensorNum, C_LOW);
 end;
 
 procedure Tmainform.RestoreNormalColour(const iSensorNum: integer);
@@ -997,32 +1049,32 @@ end;
 
 procedure Tmainform.UpdateHealth;
 begin
-  if (as_pm.Value > REC_PM) then
+  if (as_pm.Value >= REC_PM) then
     sls_pm.State := slYELLOW
   else
     sls_pm.State := slGREEN;
 
-  if (as_tmp.Value > REC_TMP) then
+  if (as_tmp.Value >= REC_TMP) then
     sls_tmp.State := slYELLOW
   else
     sls_tmp.State := slGREEN;
 
-  if (as_hum.Value > REC_HUM) then
+  if (as_hum.Value >= REC_HUM) then
     sls_hum.State := slYELLOW
   else
     sls_hum.State := slGREEN;
 
-  if (as_co2.Value > REC_CO2) then
+  if (as_co2.Value >= REC_CO2) then
     sls_co2.State := slYELLOW
   else
     sls_co2.State := slGREEN;
 
-  if (as_voc.Value > REC_VOC) then
+  if (as_voc.Value >= REC_VOC) then
     sls_voc.State := slYELLOW
   else
     sls_voc.State := slGREEN;
 
-  if (as_allpollu.Value > REC_ALLPOLLU) then
+  if (as_allpollu.Value >= REC_ALLPOLLU) then
     sls_allpollu.State := slYELLOW
   else
     sls_allpollu.State := slGREEN;
