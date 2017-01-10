@@ -98,11 +98,14 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure OnlyNumericKeyPress(Sender: TObject; var Key: char);
+    procedure OnlyNumericKeyPressFloat(Sender: TObject; var Key: char);
+    procedure OnlyNumericKeyPressInteger(Sender: TObject; var Key: char);
   private
     ErrorList:TStrings;
     procedure DisplayCurrentValues;
     procedure SetUpUnits;
+    function AssignAndSaveTriggers:boolean;
+    function AssignAndSaveRecommendedLevels:boolean;
   public
 
   end;
@@ -137,9 +140,15 @@ end;
 procedure Ttriggersform.cmd_OKClick(Sender: TObject);
 begin
   // VerifyEveryThing then Save to inifiles;
+  AssignAndSaveTriggers;
 end;
 
-procedure Ttriggersform.OnlyNumericKeyPress(Sender: TObject; var Key: char);
+procedure Ttriggersform.OnlyNumericKeyPressInteger(Sender: TObject; var Key: char);
+begin
+   if not (Key in ['0'..'9', #8, #9]) then Key := #0;
+end;
+
+procedure Ttriggersform.OnlyNumericKeyPressFloat(Sender: TObject; var Key: char);
 begin
    if not (Key in ['0'..'9', '.', #8, #9]) then Key := #0;
 end;
@@ -151,6 +160,47 @@ begin
   DisplayCurrentValues;
   ErrorList.Clear;
   Update;
+end;
+function Ttriggersform.AssignAndSaveTriggers:boolean;
+begin
+  Result:=FALSE;
+  TRY
+  FooBotTriggerArray[C_HIGH, C_PM]:=StrToFloat(edt_newhightrigger_pm.text);
+  FooBotTriggerArray[C_LOW, C_PM]:=StrToFloat(edt_newlowtrigger_pm.text);
+  FooBotTriggerArray[C_HIGH, C_TMP]:=StrToFloat(edt_newhightrigger_tmp.text);
+  FooBotTriggerArray[C_LOW, C_TMP]:=StrToFloat(edt_newlowtrigger_tmp.text);
+  FooBotTriggerArray[C_HIGH, C_HUM]:=StrToFloat(edt_newhightrigger_hum.text);
+  FooBotTriggerArray[C_LOW, C_HUM]:=StrToFloat(edt_newlowtrigger_hum.text);
+  FooBotTriggerArray[C_HIGH, C_CO2]:=StrToInt(edt_newhightrigger_co2.text);
+  FooBotTriggerArray[C_LOW, C_CO2]:=StrToInt(edt_newlowtrigger_co2.text);
+  FooBotTriggerArray[C_HIGH, C_VOC]:=StrToInt(edt_newhightrigger_voc.text);
+  FooBotTriggerArray[C_LOW, C_VOC]:=StrToInt(edt_newlowtrigger_voc.text);
+  FooBotTriggerArray[C_HIGH, C_ALLPOLLU]:=StrToFloat(edt_newhightrigger_allpollu.text);
+  FooBotTriggerArray[C_LOW, C_ALLPOLLU]:=StrToFloat(edt_newlowtrigger_allpollu.text);
+  except
+    raise exception.create('Error in AssignAndSaveTriggers');
+    Exit;
+  end;
+  If NOT SaveTriggers then ErrorList.Add('Unable to save new triggers to disk')
+  else Result:=TRUE;
+end;
+
+function Ttriggersform.AssignAndSaveRecommendedLevels:boolean;
+begin
+  Result:=FALSE;
+  TRY
+     RecommendedLevelsArray[C_PM]:=StrToFloat(edt_newrec_pm.Text);
+     RecommendedLevelsArray[C_TMP]:=StrToFloat(edt_newrec_tmp.Text);
+     RecommendedLevelsArray[C_HUM]:=StrToFloat(edt_newrec_hum.Text);
+     RecommendedLevelsArray[C_CO2]:=StrToFloat(edt_newrec_co2.Text);
+     RecommendedLevelsArray[C_VOC]:=StrToFloat(edt_newrec_voc.Text);
+     RecommendedLevelsArray[C_ALLPOLLU]:=StrToFloat(edt_newrec_allpollu.Text);
+  except
+    raise exception.create('Error in AssignAndSaveRecommendedLevels');
+    Exit;
+  end;
+  If NOT SaveRecommendedLevels then ErrorList.Add('Unable to save new recommended levels to disk')
+  else Result:=TRUE;
 end;
 
 procedure Ttriggersform.DisplayCurrentValues;
@@ -188,10 +238,10 @@ begin
     Format('Current high trigger: %.1f %s',
     [double(FooBotTriggerArray[C_HIGH, C_HUM]), FoobotDataObject.Units[C_HUM]]);
   lbl_currenthightrigger_co2.Caption :=
-    Format('Current high trigger: %.1f %s',
+    Format('Current high trigger: %.0f %s',
     [double(FooBotTriggerArray[C_HIGH, C_CO2]), FoobotDataObject.Units[C_CO2]]);
   lbl_currenthightrigger_voc.Caption :=
-    Format('Current high trigger: %.1f %s',
+    Format('Current high trigger: %.0f %s',
     [double(FooBotTriggerArray[C_HIGH, C_VOC]), FoobotDataObject.Units[C_VOC]]);
   lbl_currenthightrigger_allpollu.Caption :=
     Format('Current high trigger: %.1f %s',
@@ -208,10 +258,10 @@ begin
     Format('Current low trigger: %.1f %s',
     [double(FooBotTriggerArray[C_LOW, C_HUM]), FoobotDataObject.Units[C_HUM]]);
   lbl_currentlowtrigger_co2.Caption :=
-    Format('Current low trigger: %.1f %s',
+    Format('Current low trigger: %.0f %s',
     [double(FooBotTriggerArray[C_LOW, C_CO2]), FoobotDataObject.Units[C_CO2]]);
   lbl_currentlowtrigger_voc.Caption :=
-    Format('Current low trigger: %.1f %s',
+    Format('Current low trigger: %.0f %s',
     [double(FooBotTriggerArray[C_LOW, C_VOC]), FoobotDataObject.Units[C_VOC]]);
   lbl_currentlowtrigger_allpollu.Caption :=
     Format('Current low trigger: %.1f %s',

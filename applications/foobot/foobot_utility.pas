@@ -52,6 +52,13 @@ const
   // Used in Trigger functions
   C_HIGH = 0;
   C_LOW = 1;
+    // Sensor recommended levels
+  REC_PM = 25;
+  REC_TMP = 23;
+  REC_HUM = 60;
+  REC_CO2 = 1300;
+  REC_VOC = 300;
+  REC_ALLPOLLU = 50;
 
 type
   TDataFetchType = (dfLast, dfStartEnd); // FetchFoobotData
@@ -67,6 +74,8 @@ type
     AlertType: Integer;
     AlertValue: variant;
   end;
+  var
+    RecommendedLevelsArray:Array[C_PM..C_ALLPOLLU] of Double;
 
 function EncodeStringBase64(const s: string): string;
 function FetchAuthenticationKey(aUsername, aUserPassword: string): boolean;
@@ -99,7 +108,8 @@ function SaveHighLows: boolean;
 function LoadHighLows: boolean;
 function SaveTriggers: boolean;
 function LoadTriggers: boolean;
-
+function SaveRecommendedLevels:boolean;
+function LoadRecommendedLevels:boolean;
 var
   // Used to fetch server data
   HttpClient: TFPHTTPClient;
@@ -227,6 +237,68 @@ begin
     Result := True;
   except
     raise Exception.Create('Could not load Triggers');
+  end;
+end;
+
+function SaveRecommendedLevels:boolean;
+var
+  sFoobotName: string;
+begin
+  Result:=FALSE; // assume failure
+  if FoobotIdentityObject.FoobotIdentityList.Count = 0 then Exit(FALSE);
+  sFoobotName := FoobotIdentityObject.FoobotIdentityList[TheCurrentFoobot].Name;
+  if (sFoobotName = '') then
+    Exit(False);
+  if not Assigned(HLINI) then
+    HLINI := TIniFile.Create(ChangeFileExt(GetAppConfigFile(False), '.ini'));
+  // Make sure the High-Lows are for the current Foobot
+  if (HLINI.ReadString('Foobot', 'CurrentFoobotName', 'unknown') <> sFoobotName) then
+    Exit(False);
+  try
+    // Save current Foobot recommended levels
+    with HLINI do
+    begin
+        WriteFloat(sFoobotName,'RecPM',RecommendedLevelsArray[C_PM]);
+        WriteFloat(sFoobotName,'RecTMP',RecommendedLevelsArray[C_TMP]);
+        WriteFloat(sFoobotName,'RecHUM',RecommendedLevelsArray[C_HUM]);
+        WriteFloat(sFoobotName,'RecCO2',RecommendedLevelsArray[C_CO2]);
+        WriteFloat(sFoobotName,'RecVOC',RecommendedLevelsArray[C_VOC]);
+        WriteFloat(sFoobotName,'RecALLPOLLU',RecommendedLevelsArray[C_ALLPOLLU]);
+    end;
+    Result := True;
+  except
+    raise Exception.Create('Could not save recommended levels for ' + sFoobotName);
+  end;
+end;
+
+function LoadRecommendedLevels:boolean;
+var
+  sFoobotName: string;
+begin
+  Result:=FALSE; // assume failure
+  if FoobotIdentityObject.FoobotIdentityList.Count = 0 then Exit(FALSE);
+  sFoobotName := FoobotIdentityObject.FoobotIdentityList[TheCurrentFoobot].Name;
+  if (sFoobotName = '') then
+    Exit(False);
+  if not Assigned(HLINI) then
+    HLINI := TIniFile.Create(ChangeFileExt(GetAppConfigFile(False), '.ini'));
+  // Make sure the High-Lows are for the current Foobot
+  if (HLINI.ReadString('Foobot', 'CurrentFoobotName', 'unknown') <> sFoobotName) then
+    Exit(False);
+  try
+    // Load current Foobot recommended levels
+    with HLINI do
+    begin
+        RecommendedLevelsArray[C_PM]:=ReadFloat(sFoobotName,'RecPM',REC_PM);
+        RecommendedLevelsArray[C_TMP]:=ReadFloat(sFoobotName,'RecTMP',REC_TMP);
+        RecommendedLevelsArray[C_HUM]:=ReadFloat(sFoobotName,'RecHUM',REC_HUM);
+        RecommendedLevelsArray[C_CO2]:=ReadFloat(sFoobotName,'RecCO2',REC_CO2);
+        RecommendedLevelsArray[C_VOC]:=ReadFloat(sFoobotName,'RecVOC',REC_VOC);
+        RecommendedLevelsArray[C_ALLPOLLU]:=ReadFloat(sFoobotName,'RecALLPOLLU',REC_ALLPOLLU);
+    end;
+    Result := True;
+  except
+    raise Exception.Create('Could not load recommended levels for ' + sFoobotName);
   end;
 end;
 

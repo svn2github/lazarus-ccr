@@ -808,7 +808,7 @@ object mainform: Tmainform
         Caption = 'Display...'
         object mnu_optionsDisplayGuagesOnly: TMenuItem
           AutoCheck = True
-          Caption = 'Guages only'
+          Caption = 'Minimal view'
           OnClick = mnu_optionsDisplayGuagesOnlyClick
         end
         object mnu_optionsDisplayYellowLines: TMenuItem

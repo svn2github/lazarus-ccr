@@ -74,13 +74,6 @@ const
   MIN_ALLPOLLU = 0;
   MAX_ALLPOLLU = 700;
 
-  // Sensor recommended levels
-  REC_PM = 25;
-  REC_TMP = 23;
-  REC_HUM = 60;
-  REC_CO2 = 1300;
-  REC_VOC = 300;
-  REC_ALLPOLLU = 50;
 
 type
 
@@ -343,6 +336,7 @@ begin
         LoadTriggers; // This can only be done if we have a Foobot Identity
         // as each Foobot has its own trigger values
         SetMinMaxTriggers; // Adjust if necesarry for preset Guage High/Low limits
+        LoadRecommendedLevels; // into RecommendedLevelsArray
         for iCount := C_PM to C_ALLPOLLU do
           SetTrafficLightStats(iCount, C_HIGH);
         Show;
@@ -414,9 +408,9 @@ begin
         Format('< %.1f %s', [double(FooBotTriggerArray[C_LOW, C_PM]),
         FoobotDataObject.Units[C_PM]]);
   lbl_yellowlightpm.Caption :=
-    Format('> %.1f %s', [double(REC_PM), FoobotDataObject.Units[C_PM]]);
+    Format('> %.1f %s', [RecommendedLevelsArray[C_PM], FoobotDataObject.Units[C_PM]]);
   lbl_greenlightpm.Caption :=
-    Format('< %.1f %s', [double(REC_PM), FoobotDataObject.Units[C_PM]]);
+    Format('< %.1f %s', [RecommendedLevelsArray[C_PM], FoobotDataObject.Units[C_PM]]);
 
   if iSensorNum = C_TMP then
     if (HIGHLOW = C_HIGH) then
@@ -428,9 +422,9 @@ begin
         Format('< %.1f %s', [double(FooBotTriggerArray[C_LOW, C_TMP]),
         FoobotDataObject.Units[C_TMP]]);
   lbl_yellowlighttmp.Caption :=
-    Format('> %.1f %s', [double(REC_TMP), FoobotDataObject.Units[C_TMP]]);
+    Format('> %.1f %s', [RecommendedLevelsArray[C_TMP], FoobotDataObject.Units[C_TMP]]);
   lbl_greenlighttmp.Caption :=
-    Format('< %.1f %s', [double(REC_TMP), FoobotDataObject.Units[C_TMP]]);
+    Format('< %.1f %s', [RecommendedLevelsArray[C_TMP], FoobotDataObject.Units[C_TMP]]);
 
   if iSensorNum = C_HUM then
     if (HIGHLOW = C_HIGH) then
@@ -442,9 +436,9 @@ begin
         Format('< %.1f %s', [double(FooBotTriggerArray[C_LOW, C_HUM]),
         FoobotDataObject.Units[C_HUM]]);
   lbl_yellowlighthum.Caption :=
-    Format('> %.1f %s', [double(REC_HUM), FoobotDataObject.Units[C_HUM]]);
+    Format('> %.1f %s', [RecommendedLevelsArray[C_HUM], FoobotDataObject.Units[C_HUM]]);
   lbl_greenlighthum.Caption :=
-    Format('< %.1f %s', [double(REC_HUM), FoobotDataObject.Units[C_HUM]]);
+    Format('< %.1f %s', [RecommendedLevelsArray[C_HUM], FoobotDataObject.Units[C_HUM]]);
 
   if iSensorNum = C_CO2 then
     if (HIGHLOW = C_HIGH) then
@@ -456,9 +450,9 @@ begin
         Format('< %.0f %s', [double(FooBotTriggerArray[C_LOW, C_CO2]),
         FoobotDataObject.Units[C_CO2]]);
   lbl_yellowlightco2.Caption :=
-    Format('> %.0f %s', [double(REC_CO2), FoobotDataObject.Units[C_CO2]]);
+    Format('> %.0f %s', [RecommendedLevelsArray[C_CO2], FoobotDataObject.Units[C_CO2]]);
   lbl_greenlightco2.Caption :=
-    Format('< %.0f %s', [double(REC_CO2), FoobotDataObject.Units[C_CO2]]);
+    Format('< %.0f %s', [RecommendedLevelsArray[C_CO2], FoobotDataObject.Units[C_CO2]]);
 
   if iSensorNum = C_VOC then
     if (HIGHLOW = C_HIGH) then
@@ -470,9 +464,9 @@ begin
         Format('< %.0f %s', [double(FooBotTriggerArray[C_LOW, C_VOC]),
         FoobotDataObject.Units[C_VOC]]);
   lbl_yellowlightvoc.Caption :=
-    Format('> %.0f %s', [double(REC_VOC), FoobotDataObject.Units[C_VOC]]);
+    Format('> %.0f %s', [RecommendedLevelsArray[C_VOC], FoobotDataObject.Units[C_VOC]]);
   lbl_greenlightvoc.Caption :=
-    Format('< %.0f %s', [double(REC_VOC), FoobotDataObject.Units[C_VOC]]);
+    Format('< %.0f %s', [RecommendedLevelsArray[C_VOC], FoobotDataObject.Units[C_VOC]]);
 
   if iSensorNum = C_ALLPOLLU then
     if (HIGHLOW = C_HIGH) then
@@ -484,9 +478,9 @@ begin
         Format('< %.1f %s', [double(FooBotTriggerArray[C_LOW, C_ALLPOLLU]),
         FoobotDataObject.Units[C_ALLPOLLU]]);
   lbl_yellowlightallpollu.Caption :=
-    Format('> %.1f %s', [double(REC_ALLPOLLU), FoobotDataObject.Units[C_ALLPOLLU]]);
+    Format('> %.1f %s', [RecommendedLevelsArray[C_ALLPOLLU], FoobotDataObject.Units[C_ALLPOLLU]]);
   lbl_greenlightallpollu.Caption :=
-    Format('< %.1f %s', [double(REC_ALLPOLLU), FoobotDataObject.Units[C_ALLPOLLU]]);
+    Format('< %.1f %s', [RecommendedLevelsArray[C_ALLPOLLU], FoobotDataObject.Units[C_ALLPOLLU]]);
 end;
 
 procedure Tmainform.PopulateFoobotMenu;
@@ -519,6 +513,7 @@ begin
   SaveConfig; // to .cfg file
   if UseTriggers then
     SaveTriggers; // To .ini file
+  SaveRecommendedLevels;
   CloseAction := caFree;
 end;
 
@@ -881,12 +876,12 @@ procedure Tmainform.SetYellowRecommendedLevels;
 begin
   if bDisplayYellowLines = True then
   begin
-    as_pm.ValueYellow := REC_PM;
-    as_tmp.ValueYellow := REC_TMP;
-    as_hum.ValueYellow := REC_HUM;
-    as_co2.ValueYellow := REC_CO2;
-    as_voc.ValueYellow := REC_VOC;
-    as_allpollu.ValueYellow := REC_ALLPOLLU;
+    as_pm.ValueYellow := RecommendedLevelsArray[C_PM];
+    as_tmp.ValueYellow := RecommendedLevelsArray[C_TMP];
+    as_hum.ValueYellow := RecommendedLevelsArray[C_HUM];
+    as_co2.ValueYellow := RecommendedLevelsArray[C_CO2];
+    as_voc.ValueYellow := RecommendedLevelsArray[C_VOC];
+    as_allpollu.ValueYellow := RecommendedLevelsArray[C_ALLPOLLU];
   end
   else
   begin
@@ -1059,32 +1054,32 @@ end;
 
 procedure Tmainform.UpdateHealth;
 begin
-  if (as_pm.Value >= REC_PM) then
+  if (as_pm.Value >= RecommendedLevelsArray[C_PM]) then
     sls_pm.State := slYELLOW
   else
     sls_pm.State := slGREEN;
 
-  if (as_tmp.Value >= REC_TMP) then
+  if (as_tmp.Value >= RecommendedLevelsArray[C_TMP]) then
     sls_tmp.State := slYELLOW
   else
     sls_tmp.State := slGREEN;
 
-  if (as_hum.Value >= REC_HUM) then
+  if (as_hum.Value >= RecommendedLevelsArray[C_HUM]) then
     sls_hum.State := slYELLOW
   else
     sls_hum.State := slGREEN;
 
-  if (as_co2.Value >= REC_CO2) then
+  if (as_co2.Value >= RecommendedLevelsArray[C_CO2]) then
     sls_co2.State := slYELLOW
   else
     sls_co2.State := slGREEN;
 
-  if (as_voc.Value >= REC_VOC) then
+  if (as_voc.Value >= RecommendedLevelsArray[C_VOC]) then
     sls_voc.State := slYELLOW
   else
     sls_voc.State := slGREEN;
 
-  if (as_allpollu.Value >= REC_ALLPOLLU) then
+  if (as_allpollu.Value >= RecommendedLevelsArray[C_ALLPOLLU]) then
     sls_allpollu.State := slYELLOW
   else
     sls_allpollu.State := slGREEN;

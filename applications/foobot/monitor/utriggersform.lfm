@@ -1,7 +1,7 @@
 object triggersform: Ttriggersform
-  Left = 478
+  Left = 808
   Height = 565
-  Top = 162
+  Top = 146
   Width = 794
   ActiveControl = edt_newrec_pm
   BorderIcons = [biSystemMenu]
@@ -114,7 +114,7 @@ object triggersform: Ttriggersform
         Top = 0
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressFloat
         ParentFont = False
         TabOrder = 0
         Text = '0.00'
@@ -125,7 +125,7 @@ object triggersform: Ttriggersform
         Top = 20
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressFloat
         ParentFont = False
         TabOrder = 1
         Text = '0.00'
@@ -136,7 +136,7 @@ object triggersform: Ttriggersform
         Top = 40
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressFloat
         ParentFont = False
         TabOrder = 2
         Text = '0.00'
@@ -251,7 +251,7 @@ object triggersform: Ttriggersform
         Top = 0
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressFloat
         ParentFont = False
         TabOrder = 0
         Text = '0.00'
@@ -262,7 +262,7 @@ object triggersform: Ttriggersform
         Top = 20
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressFloat
         ParentFont = False
         TabOrder = 1
         Text = '0.00'
@@ -273,7 +273,7 @@ object triggersform: Ttriggersform
         Top = 40
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressFloat
         ParentFont = False
         TabOrder = 2
         Text = '0.00'
@@ -388,10 +388,10 @@ object triggersform: Ttriggersform
         Top = 0
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressInteger
         ParentFont = False
         TabOrder = 0
-        Text = '0.00'
+        Text = '0'
       end
       object edt_newhightrigger_voc: TEdit
         Left = 504
@@ -399,10 +399,10 @@ object triggersform: Ttriggersform
         Top = 20
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressInteger
         ParentFont = False
         TabOrder = 1
-        Text = '0.00'
+        Text = '0'
       end
       object edt_newlowtrigger_voc: TEdit
         Left = 504
@@ -410,10 +410,10 @@ object triggersform: Ttriggersform
         Top = 40
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressInteger
         ParentFont = False
         TabOrder = 2
-        Text = '0.00'
+        Text = '0'
       end
       object lbl_currentrecunits_voc: TLabel
         Left = 584
@@ -525,10 +525,10 @@ object triggersform: Ttriggersform
         Top = 0
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressInteger
         ParentFont = False
         TabOrder = 0
-        Text = '0.00'
+        Text = '0'
       end
       object edt_newhightrigger_co2: TEdit
         Left = 504
@@ -536,10 +536,10 @@ object triggersform: Ttriggersform
         Top = 20
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressInteger
         ParentFont = False
         TabOrder = 1
-        Text = '0.00'
+        Text = '0'
       end
       object edt_newlowtrigger_co2: TEdit
         Left = 504
@@ -547,10 +547,10 @@ object triggersform: Ttriggersform
         Top = 40
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressInteger
         ParentFont = False
         TabOrder = 2
-        Text = '0.00'
+        Text = '0'
       end
       object lbl_currentrecunits_co2: TLabel
         Left = 584
@@ -662,7 +662,7 @@ object triggersform: Ttriggersform
         Top = 0
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressFloat
         ParentFont = False
         TabOrder = 0
         Text = '0.00'
@@ -673,7 +673,7 @@ object triggersform: Ttriggersform
         Top = 20
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressFloat
         ParentFont = False
         TabOrder = 1
         Text = '0.00'
@@ -684,7 +684,7 @@ object triggersform: Ttriggersform
         Top = 40
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressFloat
         ParentFont = False
         TabOrder = 2
         Text = '0.00'
@@ -799,7 +799,7 @@ object triggersform: Ttriggersform
         Top = 0
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressFloat
         ParentFont = False
         TabOrder = 0
         Text = '0.00'
@@ -810,7 +810,7 @@ object triggersform: Ttriggersform
         Top = 20
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressFloat
         ParentFont = False
         TabOrder = 1
         Text = '0.00'
@@ -821,7 +821,7 @@ object triggersform: Ttriggersform
         Top = 40
         Width = 72
         BorderStyle = bsNone
-        OnKeyPress = OnlyNumericKeyPress
+        OnKeyPress = OnlyNumericKeyPressFloat
         ParentFont = False
         TabOrder = 2
         Text = '0.00'
