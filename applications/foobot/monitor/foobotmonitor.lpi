@@ -24,7 +24,7 @@
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="2"/>
       <RevisionNr Value="2"/>
-      <StringTable Comments="Uses Foobot public API to query Foobot #1" FileDescription="Monitor for Foobot" InternalName="foobotmonitor" LegalCopyright="(c)2016 minesadorada@charcodelvalle.com" LegalTrademarks="Foobot" ProductName="Foobot" ProductVersion="0.0.0.0"/>
+      <StringTable Comments="Uses Foobot public API to query Foobots" FileDescription="Monitor for Foobot" InternalName="foobotmonitor" LegalCopyright="(c)2016 minesadorada@charcodelvalle.com" LegalTrademarks="Foobot" ProductName="Foobot" ProductVersion="0.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="6">
       <Item1 Name="Debug" Default="True"/>

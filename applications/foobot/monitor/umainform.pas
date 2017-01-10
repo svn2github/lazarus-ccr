@@ -28,6 +28,8 @@ V0.0.4.0: Graph added
 V0.1.0.0: Save/Load Alltime High/Lows.  Reset values from menu
 V0.1.1.0: Save/Load Colours, Min and Max values to cfg file
 V0.2.1.0: Triggers,Multiple Foobots
+V0.2.2.0: Trigger config form, SaveLoad recommended values
+V0.2.3.0: ??
 }
 {$ifopt D+}
 // Debug mode does not load data from web
@@ -145,7 +147,7 @@ type
     mnu_optionsDisplayGuagesOnly: TMenuItem;
     mnu_SampleEveryHalfHour: TMenuItem;
     mnu_optionsResetHighsLows: TMenuItem;
-    mnu_optionsOnlineHelp: TMenuItem;
+    mnu_optionsHomePage: TMenuItem;
     mnu_optionsSeperator1: TMenuItem;
     mnu_helpAbout: TMenuItem;
     mnu_help: TMenuItem;
@@ -192,7 +194,7 @@ type
     procedure mnu_optionsDisplayRedLinesClick(Sender: TObject);
     procedure mnu_optionsDisplayYellowLinesClick(Sender: TObject);
     procedure mnu_optionsMinimiseToTrayClick(Sender: TObject);
-    procedure mnu_optionsOnlineHelpClick(Sender: TObject);
+    procedure mnu_optionsHomePageClick(Sender: TObject);
     procedure mnu_optionsResetHighsLowsClick(Sender: TObject);
     procedure mnu_optionsSaveHighLowsClick(Sender: TObject);
     procedure mnu_optionsTakeReadingNowClick(Sender: TObject);
@@ -711,7 +713,7 @@ begin
   mainform.FormWindowStateChange(Self);
 end;
 
-procedure Tmainform.mnu_optionsOnlineHelpClick(Sender: TObject);
+procedure Tmainform.mnu_optionsHomePageClick(Sender: TObject);
 begin
   OpenURL('http://wiki.freepascal.org/Foobot');
 end;

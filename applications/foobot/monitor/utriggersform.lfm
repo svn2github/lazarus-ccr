@@ -1,7 +1,7 @@
 object triggersform: Ttriggersform
-  Left = 2283
+  Left = 2007
   Height = 565
-  Top = 82
+  Top = 405
   Width = 794
   ActiveControl = edt_newrec_pm
   BorderIcons = [biSystemMenu]

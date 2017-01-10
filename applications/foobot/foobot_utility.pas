@@ -226,9 +226,9 @@ begin
       FooBotTriggerArray[C_HIGH, C_HUM] := ReadFloat(sFoobotName, 'humTriggerHigh', 0);
       FooBotTriggerArray[C_LOW, C_HUM] := ReadFloat(sFoobotName, 'humTriggerLow', 0);
       FooBotTriggerArray[C_HIGH, C_CO2] := ReadFloat(sFoobotName, 'co2TriggerHigh', 0);
-      FooBotTriggerArray[C_LOW, C_CO2] := ReadFloat(sFoobotName, 'co2TriggerLow', 0);
+      FooBotTriggerArray[C_LOW, C_CO2] := ReadFloat(sFoobotName, 'co2TriggerLow', 450);
       FooBotTriggerArray[C_HIGH, C_VOC] := ReadFloat(sFoobotName, 'vocTriggerHigh', 0);
-      FooBotTriggerArray[C_LOW, C_VOC] := ReadFloat(sFoobotName, 'vocTriggerLow', 0);
+      FooBotTriggerArray[C_LOW, C_VOC] := ReadFloat(sFoobotName, 'vocTriggerLow', 125);
       FooBotTriggerArray[C_HIGH, C_ALLPOLLU] :=
         ReadFloat(sFoobotName, 'allpolluTriggerHigh', 0);
       FooBotTriggerArray[C_LOW, C_ALLPOLLU] :=

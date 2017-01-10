@@ -851,9 +851,9 @@ object mainform: Tmainform
     end
     object mnu_help: TMenuItem
       Caption = '&Help'
-      object mnu_optionsOnlineHelp: TMenuItem
-        Caption = 'Online Help'
-        OnClick = mnu_optionsOnlineHelpClick
+      object mnu_optionsHomePage: TMenuItem
+        Caption = 'Home Page'
+        OnClick = mnu_optionsHomePageClick
       end
       object mnu_helpFoobotAPIPage: TMenuItem
         Caption = 'Foobot API page'
