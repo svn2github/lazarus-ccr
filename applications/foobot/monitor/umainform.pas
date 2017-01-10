@@ -40,9 +40,9 @@ V0.2.3.0: ??
 interface
 
 uses // If Lazarus auto-inserts 'sensors' in the clause then delete it
-  SysUtils, TAGraph, TAIntervalSources, TASeries,
-  foobot_sensors, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Menus,
-  lclIntf, foobot_utility, uCryptIni, dateutils, uconfigform, utriggersform;
+  SysUtils, TAGraph, TAIntervalSources, TASeries, foobot_sensors,
+  Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Menus, lclIntf,
+  ComCtrls, foobot_utility, uCryptIni, dateutils, uconfigform, utriggersform;
 
 const
   // Timer milliseconds
@@ -178,6 +178,7 @@ type
     sls_co2: TStopLightSensor;
     sls_hum: TStopLightSensor;
     sls_tmp: TStopLightSensor;
+    sts: TStatusBar;
     traypopup: TPopupMenu;
     tmr_foobot: TTimer;
     TrayIcon1: TTrayIcon;
@@ -208,12 +209,14 @@ type
     procedure mnu_SampleEveryHalfHourClick(Sender: TObject);
     procedure tmr_foobotTimer(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
+    procedure ShowHintInStatusBar(Sender:TObject);
   private
     sSecretKey, sFoobotUserName, sUUID: string;
     bDisplayGuagesOnly, bDisplayYellowLines, bDisplayRedLines: boolean;
     iFudgeFactor: integer;
     HighTriggerColor, LowTriggerColor: TColor;
     foobotmenuarray: array of TMenuItem;
+    sStandardHintText:String;
     procedure DisplayReadings;
     procedure UpdateGuage(Sender: TAnalogSensor; SensorNumber: integer);
     procedure UpdateHighLow(SensorNumber: integer);
@@ -231,6 +234,7 @@ type
     procedure DoHighTriggerAlert(const iSensorNum: integer; const aValue: variant);
     procedure DoLowTriggerAlert(const iSensorNum: integer; const aValue: variant);
     procedure RestoreNormalColour(const iSensorNum: integer);
+    procedure PopulateHints; // for i8n use later
   public
     iCurrentFoobot: integer;
     INI: TCryptINIfile;
@@ -246,6 +250,68 @@ uses uSplash;
 {$R *.lfm}
 
 { Tmainform }
+procedure Tmainform.PopulateHints;
+// ToDo: i8n
+begin
+  // Traffic light controls
+  sls_pm.Hint:='|Shows health of Particulates';
+  sls_tmp.Hint:='|Shows health of Temperature';
+  sls_hum.Hint:='|Shows health of Humidity';
+  sls_co2.Hint:='|Shows health of Carbon Dioxide';
+  sls_voc.Hint:='|Shows health of Volatile Organics';
+  sls_allpollu.Hint:='|Shows health of All Pollution';
+  // Traffic light labels
+  lbl_greenlightpm.Hint:='|Shows green when below recommended value';
+  lbl_greenlighttmp.Hint:='|Shows green when below recommended value';
+  lbl_greenlighthum.Hint:='|Shows green when below recommended value';
+  lbl_greenlightco2.Hint:='|Shows green when below recommended value';
+  lbl_greenlightvoc.Hint:='|Shows green when below recommended value';
+  lbl_greenlightallpollu.Hint:='|Shows green wne below recommended value';
+  lbl_redlightpm.Hint:='|Shows red if High or Low value is triggered';
+  lbl_redlighttmp.Hint:='|Shows red if High or Low value is triggered';
+  lbl_redlighthum.Hint:='|Shows red if High or Low value is triggered';
+  lbl_redlightco2.Hint:='|Shows red if High or Low value is triggered';
+  lbl_redlightvoc.Hint:='|Shows red if High or Low value is triggered';
+  lbl_redlightallpollu.Hint:='|Shows red if High or Low value is triggered';
+  lbl_yellowlightpm.Hint:='|Shows yellow when above recommended value';
+  lbl_yellowlighttmp.Hint:='|Shows yellow when above recommended value';
+  lbl_yellowlighthum.Hint:='|Shows yellow when above recommended value';
+  lbl_yellowlightco2.Hint:='|Shows yellow when above recommended value';
+  lbl_yellowlightvoc.Hint:='|Shows yellow when above recommended value';
+  lbl_yellowlightallpollu.Hint:='|Shows yellow when above recommended value';
+  // All-time highs and lows
+  lbl_pmhigh.Hint:='|All-time highest value recorded';
+  lbl_tmphigh.Hint:='|All-time highest value recorded';
+  lbl_humhigh.Hint:='|All-time highest value recorded';
+  lbl_co2high.Hint:='|All-time highest value recorded';
+  lbl_vochigh.Hint:='|All-time highest value recorded';
+  lbl_allpolluhigh.Hint:='|All-time highest value recorded';
+  lbl_pmlow.Hint:='|All-time lowest value recorded';
+  lbl_tmplow.Hint:='|All-time lowest value recorded';
+  lbl_humlow.Hint:='|All-time lowest value recorded';
+  lbl_co2low.Hint:='|All-time lowest value recorded';
+  lbl_voclow.Hint:='|All-time lowest value recorded';
+  lbl_allpollulow.Hint:='|All-time lowest value recorded';
+  // GroupBoxes
+  grp_chart.Hint:='|' + sStandardHintText;
+  grp_pm.Hint:='|' + sStandardHintText;
+  grp_tmp.Hint:='|' + sStandardHintText;
+  grp_hum.Hint:='|' + sStandardHintText;
+  grp_co2.Hint:='|' + sStandardHintText;
+  grp_voc.Hint:='|' + sStandardHintText;
+  grp_allpollu.Hint:='|' + sStandardHintText;
+  grp_highlow.Hint:='|' + sStandardHintText;
+  grp_sensorDisplay.Hint:='|' + sStandardHintText;
+  grp_health.Hint:='|' + sStandardHintText;
+  // Sensors
+  as_pm.Hint:='|Particulates level';
+  as_tmp.Hint:='|Temperature';
+  as_hum.Hint:='|Humidity';
+  as_co2.Hint:='|Co2 level';
+  as_voc.Hint:='|Volatile organics level';
+  as_allpollu.Hint:='|All pollution level';
+  Chart1.Hint:='|Rolling chart showing levels of all sensors';
+end;
 
 procedure Tmainform.FormCreate(Sender: TObject);
 begin
@@ -291,6 +357,10 @@ begin
     mnu_options_triggersActivateTriggers.Checked := True;
     mnu_options_triggersActivateTriggers.Caption := 'Set Triggers Off';
   end;
+  sStandardHintText:='Welcome to ' + Application.Title;
+  PopulateHints;
+  sts.SimpleText:=sStandardHintText;
+  Application.OnHint := @ShowHintInStatusBar;
 end;
 
 procedure Tmainform.FormActivate(Sender: TObject);
@@ -1237,6 +1307,11 @@ begin
     UseTriggers := bTempUseTriggers;
     ResetArrays; // at end
   end;
+end;
+
+procedure Tmainform.ShowHintInStatusBar(Sender:TObject);
+begin
+  sts.SimpleText := GetLongHint(Application.Hint);
 end;
 
 end.
