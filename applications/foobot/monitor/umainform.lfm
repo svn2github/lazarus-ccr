@@ -860,6 +860,10 @@ object mainform: Tmainform
     end
     object mnu_help: TMenuItem
       Caption = '&Help'
+      object mnu_helpHelpHTML: TMenuItem
+        Caption = 'Help...'
+        OnClick = mnu_helpHelpHTMLClick
+      end
       object mnu_optionsHomePage: TMenuItem
         Caption = 'Home Page'
         OnClick = mnu_optionsHomePageClick

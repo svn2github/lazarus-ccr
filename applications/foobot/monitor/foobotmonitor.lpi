@@ -16,14 +16,15 @@
         <TextDesc Value="Your application description."/>
       </XPManifest>
       <Icon Value="0"/>
-      <Resources Count="1">
+      <Resources Count="2">
         <Resource_0 FileName="splashimage.jpg" Type="RCDATA" ResourceName="SPLASHIMAGE"/>
+        <Resource_1 FileName="foobotmonitorhelp.htm" Type="RCDATA" ResourceName="FOOBOTMONITORHELP"/>
       </Resources>
     </General>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="2"/>
-      <RevisionNr Value="3"/>
+      <RevisionNr Value="4"/>
       <StringTable Comments="Uses Foobot public API to query Foobots" FileDescription="Monitor for Foobot" InternalName="foobotmonitor" LegalCopyright="(c)2016 minesadorada@charcodelvalle.com" LegalTrademarks="Foobot" ProductName="Foobot" ProductVersion="0.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="6">

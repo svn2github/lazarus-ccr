@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<head>
+<meta http-equiv="Content-Language" content="en-gb" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Help for Foobot Monitor</title>
+</head>
+
+<body>
+
+<h1>Foobot Monitor</h1>
+<p>Welcome to Foobot Monitor - a desktop application to display information from 
+your Foobot(s).</p>
+<p>Foobot Monitor is available for Windows 32-bit and 64-bit editions, and also 
+Linux 32-bit and 64-bit editions.&nbsp; It is compatible with Windows Vista, 
+Windows 8 and Windows 10.&nbsp;&nbsp; It was written as a hobby project using 
+the excellent FreePascal compiler with the equally excellent Lazarus IDE.&nbsp; 
+Licence is GPL
+<a href="https://en.wikipedia.org/wiki/GNU_General_Public_License">(information 
+here)</a> It is distributed as freeware.</p>
+<h2>QuickStart</h2>
+<p>On first startup, Foobot Monitor will present a dialog asking for your Foobot 
+Username and an API Key.</p>
+<p>Foobot supplies an API Key for any Foobot owner that requests it from their 
+site. Go to <a href="http://api.foobot.io/apidoc/index.html">the Foobot API page</a>, 
+and you will see easy-to-follow instructions for obtaining your own API Key.&nbsp; 
+Once you have it, save it to a text file, and when the FM dialog comes up you 
+can Copy/Paste it into the dialog.&nbsp; Once that is done, you need to restart 
+Foobot Monitor and it will automatically use the information you entered every 
+time it starts.</p>
+<p>Foobot Monitor stores the information in an encrypted configuration file.&nbsp; 
+In Windows, this file is located in %APPDATA%\username\local\foobotmonitor\foobotmonitor.cfg.&nbsp; 
+In Linux it is located in your home directory/-conf/foobotmonitor.cfg.</p>
+<p>&nbsp;If for some reason you wish to change/update your login and/or API Key, 
+there are two ways of doing it:</p>
+<ol>
+	<li>Delete the cfg file, and resart&nbsp; Foobot Monitor.&nbsp; You will be 
+	prompted with the login dialog as before.&nbsp; As a consequence you will 
+	lose any saved settings you had before.</li>
+	<li>
+	<p>Open the foobotmonitor.cfg file<br />
+	Make a new entry thus, then save the file. (using your values instead of the 
+	example &lt;..&gt; ones) </p>
+	<div dir="ltr" class="mw-geshi mw-code mw-content-ltr">
+		<div class="delphi source-delphi">
+			<pre class="de1"><span class="br0">[</span>Config<span class="br0">]</span>
+Foobot User<span class="sy3">=</span>&lt;username&gt;
+Secret Key<span class="sy3">=</span>&lt;Secret API Key&gt;</pre>
+		</div>
+	</div>
+	Next time Foobot Monitor is run, these values are read, then encrypted and 
+	the plaintext is deleted <br />
+	You can do this as many times as you like </li>
+</ol>
+<p>Once running,Foobot Monitor should locate your Foobot(s) and display current 
+readings, as well as a graph showing the last 48 hours of readings.&nbsp; By 
+default, Foobot Monitor will fetch a new reading every hour and add it to the 
+graph.</p>
+<p>* Notice the status bar at the bottom of the window. Running your mouse over 
+the various parts of Foobot Monitor panels will display useful information.</p>
+<hr />
+<h2>Foobot Menus</h2>
+<p><strong>The File menu</strong> contains one item: Exit.</p>
+<p><strong>The Foobot men</strong>u has a list of your Foobots.&nbsp; Click the 
+Foobot name to change the Foobot the application uses.&nbsp; It also takes an 
+instant reading.</p>
+<p><strong>The Help menu</strong> has links to the Foobot Monitor home page, 
+Foobot&#39;s API page and an &#39;About&#39; dialog.</p>
+<h4>The Options menu</h4>
+<p>The Options menu is where you can customise Foobot Monitor to your liking.</p>
+<p><strong>Minimise to Tray:</strong> Foobot Monitor can run as a System Tray 
+icon when you need more screen space.&nbsp; Just click the tray icon to restore 
+Foobot Monitor. You can also right-click the tray icon to show a small menu.</p>
+<p><strong>Take Reading Now:</strong> This will update Foobot Monitor instantly 
+when clicked.</p>
+<p><strong>Sample Every...:</strong> By default, Foobot Monitor fetches a fresh 
+reading every hour, but this can be changed via this submenu,</p>
+<p><strong>Display... Minimal View:</strong> This will collapse/expand Foobot 
+Monitor to a smaller screen footprint.</p>
+<p><strong>Display... Recommended Values:</strong>&nbsp; This will show yellow 
+lines on the gauges corresponding to the &#39;recommended values&#39;.&nbsp; The 
+recommended values can be tweaked via the &#39;Set Triggers and Recommended Values&#39; 
+dialog (see below)</p>
+<p><strong>Display... Session Maximums:</strong> This will show red lines on the 
+gauges corresponding to the maximum values read whilst Foobot Monitor has been 
+running.&nbsp; These are reset when Foobot Monitor is restarted.</p>
+<p>&nbsp;<strong>Record All-time High/Lows:</strong> (Default=ON)&nbsp; This 
+setting controls the &#39;All-time Highs and Lows&#39; panel - whether it updates or 
+not.</p>
+<p><strong>Reset All-time Highs and Lows:</strong> Clicking this zeros out the 
+&#39;All-time Highs and Lows&#39; panel.&nbsp; Depending on the &#39;Record..&#39; menu it will 
+then populate itself as Foobot Monitor runs.</p>
+<p><strong>Foobot Triggers and Recommended Values.. Set Trigger and Recommended 
+Values:</strong> This opens a dialog where you can change any or all the values 
+Foobot Monitor uses.&nbsp; This information takes effect immediately and is also 
+used next time Foobot Monitor starts.</p>
+<p><strong>Foobot Triggers and Recommended Values.. Set Triggers On/off:</strong> 
+Recommended Values apply to all Foobots you have in your system, whereas 
+Triggers are set on a per-Foobot basis.</p>
+<hr />
+<p>&nbsp;</p>
+
+</body>
+
+</html>

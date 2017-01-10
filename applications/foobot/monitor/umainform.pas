@@ -40,9 +40,10 @@ V0.2.3.0: ??
 interface
 
 uses // If Lazarus auto-inserts 'sensors' in the clause then delete it
-  SysUtils, TAGraph, TAIntervalSources, TASeries, foobot_sensors,
+  SysUtils, LazFileUtils, TAGraph, TAIntervalSources, TASeries, foobot_sensors,
   Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Menus, lclIntf,
-  ComCtrls, foobot_utility, uCryptIni, dateutils, uconfigform, utriggersform;
+  ComCtrls, foobot_utility, uCryptIni, dateutils, uconfigform, utriggersform,
+  Classes;
 
 const
   // Timer milliseconds
@@ -137,6 +138,7 @@ type
     lbl_voclow: TLabel;
     lbl_allpollulow: TLabel;
     MainMenu1: TMainMenu;
+    mnu_helpHelpHTML: TMenuItem;
     mnu_helpFoobotAPIPage: TMenuItem;
     mnu_options_triggersActivateTriggers: TMenuItem;
     mnu_options_triggersSetTriggers: TMenuItem;
@@ -191,6 +193,7 @@ type
     procedure mnu_fileExitClick(Sender: TObject);
     procedure mnu_helpAboutClick(Sender: TObject);
     procedure mnu_helpFoobotAPIPageClick(Sender: TObject);
+    procedure mnu_helpHelpHTMLClick(Sender: TObject);
     procedure mnu_optionsDisplayGuagesOnlyClick(Sender: TObject);
     procedure mnu_optionsDisplayRedLinesClick(Sender: TObject);
     procedure mnu_optionsDisplayYellowLinesClick(Sender: TObject);
@@ -242,6 +245,10 @@ type
 
 var
   mainform: Tmainform;
+  // Used in extracting the help html file
+  sHelpFilePath:String;
+  S: TResourceStream;
+  F: TFileStream;
 
 implementation
 
@@ -753,6 +760,14 @@ end;
 procedure Tmainform.mnu_helpFoobotAPIPageClick(Sender: TObject);
 begin
   OpenURL('http://api.foobot.io/apidoc/index.html');
+end;
+
+procedure Tmainform.mnu_helpHelpHTMLClick(Sender: TObject);
+Var s:String;
+begin
+  If FileExists(sHelpFilePath) then
+    OpenURL('file://' + sHelpFilePath)
+  else ShowMessageFmt('Sorry, the help file %s is missing',[sHelpFilePath]);
 end;
 
 procedure Tmainform.mnu_optionsDisplayGuagesOnlyClick(Sender: TObject);
@@ -1312,6 +1327,24 @@ end;
 procedure Tmainform.ShowHintInStatusBar(Sender:TObject);
 begin
   sts.SimpleText := GetLongHint(Application.Hint);
+end;
+initialization
+sHelpFilePath:=GetCurrentDir + DirectorySeparator + 'foobotmonitorhelp.htm';
+// This uses a resource file added via Project/Options (Laz 1.7+)
+if not FileExistsUTF8(sHelpFilePath) then
+begin
+  // create a resource stream which points to the po file
+  S := TResourceStream.Create(HInstance, 'FOOBOTMONITORHELP', MakeIntResource(10));
+  try
+    F := TFileStream.Create(sHelpFilePath, fmCreate);
+    try
+      F.CopyFrom(S, S.Size); // copy data from the resource stream to file stream
+    finally
+      F.Free; // destroy the file stream
+    end;
+  finally
+    S.Free; // destroy the resource stream
+  end;
 end;
 
 end.
