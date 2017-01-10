@@ -1,7 +1,7 @@
 object triggersform: Ttriggersform
-  Left = 808
+  Left = 2283
   Height = 565
-  Top = 146
+  Top = 82
   Width = 794
   ActiveControl = edt_newrec_pm
   BorderIcons = [biSystemMenu]
@@ -863,7 +863,6 @@ object triggersform: Ttriggersform
     Default = True
     DefaultCaption = True
     Kind = bkOK
-    ModalResult = 1
     OnClick = cmd_OKClick
     TabOrder = 1
   end

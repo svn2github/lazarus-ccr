@@ -106,6 +106,7 @@ type
     procedure SetUpUnits;
     function AssignAndSaveTriggers:boolean;
     function AssignAndSaveRecommendedLevels:boolean;
+    function AllInputsVerified:Boolean;
   public
 
   end;
@@ -136,11 +137,31 @@ procedure Ttriggersform.FormActivate(Sender: TObject);
 begin
   SetUpUnits;
 end;
+procedure Ttriggersform.FormShow(Sender: TObject);
+begin
+  Caption := Application.Title + ' - Set Recommended values (for all Foobots) and Triggers (for ' +
+  FoobotIdentityObject.FoobotIdentityList[mainform.iCurrentFoobot].Name + ')';
+  DisplayCurrentValues;
+  ErrorList.Clear;
+  Update;
+end;
+// *****************************************************************************
 
 procedure Ttriggersform.cmd_OKClick(Sender: TObject);
 begin
   // VerifyEveryThing then Save to inifiles;
-  AssignAndSaveTriggers;
+  IF AssignAndSaveTriggers
+  AND AssignAndSaveRecommendedLevels
+  AND AllInputsVerified then
+  begin
+    ModalResult:=mrClose;
+    Close;
+  end
+  else
+  begin
+    ModalResult:=mrNone;
+    ShowMessage('Wont close');
+  end;
 end;
 
 procedure Ttriggersform.OnlyNumericKeyPressInteger(Sender: TObject; var Key: char);
@@ -153,14 +174,11 @@ begin
    if not (Key in ['0'..'9', '.', #8, #9]) then Key := #0;
 end;
 
-procedure Ttriggersform.FormShow(Sender: TObject);
+function Ttriggersform.AllInputsVerified:Boolean;
 begin
-  Caption := Application.Title + ' - Set Recommended values (for all Foobots) and Triggers (for ' +
-  FoobotIdentityObject.FoobotIdentityList[mainform.iCurrentFoobot].Name + ')';
-  DisplayCurrentValues;
-  ErrorList.Clear;
-  Update;
+  Result:=TRUE;
 end;
+
 function Ttriggersform.AssignAndSaveTriggers:boolean;
 begin
   Result:=FALSE;
@@ -210,23 +228,23 @@ begin
 {$ENDIF}
   // Recommended levels
   lbl_currentrec_pm.Caption :=
-    Format('Current recommended level: %.1f %s', [double(REC_PM),
+    Format('Current recommended level: %.1f %s', [RecommendedLevelsArray[C_PM],
     FoobotDataObject.Units[C_PM]]);
   lbl_currentrec_tmp.Caption :=
-    Format('Current recommended level: %.1f %s', [double(REC_TMP),
+    Format('Current recommended level: %.1f %s', [RecommendedLevelsArray[C_TMP],
     FoobotDataObject.Units[C_TMP]]);
   lbl_currentrec_hum.Caption :=
-    Format('Current recommended level: %.1f %s', [double(REC_HUM),
+    Format('Current recommended level: %.1f %s', [RecommendedLevelsArray[C_HUM],
     FoobotDataObject.Units[C_HUM]]);
   lbl_currentrec_co2.Caption :=
-    Format('Current recommended level: %.0f %s', [double(REC_CO2),
+    Format('Current recommended level: %.0f %s', [RecommendedLevelsArray[C_CO2],
     FoobotDataObject.Units[C_CO2]]);
   lbl_currentrec_voc.Caption :=
-    Format('Current recommended level: %.0f %s', [double(REC_VOC),
+    Format('Current recommended level: %.0f %s', [RecommendedLevelsArray[C_VOC],
     FoobotDataObject.Units[C_VOC]]);
   lbl_currentrec_allpollu.Caption :=
     Format('Current recommended level: %.1f %s',
-    [double(REC_ALLPOLLU), FoobotDataObject.Units[C_ALLPOLLU]]);
+    [RecommendedLevelsArray[C_ALLPOLLU], FoobotDataObject.Units[C_ALLPOLLU]]);
   // Trigger highs
   lbl_currenthightrigger_pm.Caption :=
     Format('Current high trigger: %.1f %s',
@@ -266,6 +284,30 @@ begin
   lbl_currentlowtrigger_allpollu.Caption :=
     Format('Current low trigger: %.1f %s',
     [double(FooBotTriggerArray[C_LOW, C_ALLPOLLU]), FoobotDataObject.Units[C_ALLPOLLU]]);
+
+  // Assign Edit control values
+  // Recommended
+   edt_newrec_pm.Text:=Format('%.1f', [RecommendedLevelsArray[C_PM]]);
+   edt_newrec_tmp.Text:=Format('%.1f', [RecommendedLevelsArray[C_TMP]]);
+   edt_newrec_hum.Text:=Format('%.1f', [RecommendedLevelsArray[C_HUM]]);
+   edt_newrec_co2.Text:=Format('%.0f', [RecommendedLevelsArray[C_CO2]]);
+   edt_newrec_voc.Text:=Format('%.0f', [RecommendedLevelsArray[C_VOC]]);
+   edt_newrec_allpollu.Text:=Format('%.1f', [RecommendedLevelsArray[C_ALLPOLLU]]);
+   // HighTrigger
+   edt_newhightrigger_pm.Text:=Format('%.1f',[double(FooBotTriggerArray[C_HIGH, C_PM])]);
+   edt_newhightrigger_tmp.Text:=Format('%.1f',[double(FooBotTriggerArray[C_HIGH, C_TMP])]);
+   edt_newhightrigger_hum.Text:=Format('%.1f',[double(FooBotTriggerArray[C_HIGH, C_HUM])]);
+   edt_newhightrigger_co2.Text:=Format('%.0f',[double(FooBotTriggerArray[C_HIGH, C_CO2])]);
+   edt_newhightrigger_voc.Text:=Format('%.0f',[double(FooBotTriggerArray[C_HIGH, C_VOC])]);
+   edt_newhightrigger_allpollu.Text:=Format('%.1f',[double(FooBotTriggerArray[C_HIGH, C_ALLPOLLU])]);
+   // LowTrigger
+   edt_newlowtrigger_pm.Text:=Format('%.1f',[double(FooBotTriggerArray[C_LOW, C_PM])]);
+   edt_newlowtrigger_tmp.Text:=Format('%.1f',[double(FooBotTriggerArray[C_LOW, C_TMP])]);
+   edt_newlowtrigger_hum.Text:=Format('%.1f',[double(FooBotTriggerArray[C_LOW, C_HUM])]);
+   edt_newlowtrigger_co2.Text:=Format('%.0f',[double(FooBotTriggerArray[C_LOW, C_CO2])]);
+   edt_newlowtrigger_voc.Text:=Format('%.0f',[double(FooBotTriggerArray[C_LOW, C_VOC])]);
+   edt_newlowtrigger_allpollu.Text:=Format('%.1f',[double(FooBotTriggerArray[C_LOW, C_ALLPOLLU])]);
+
 end;
 
 procedure Ttriggersform.SetUpUnits;
