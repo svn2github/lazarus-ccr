@@ -481,6 +481,7 @@ begin
     Format('> %.1f %s', [RecommendedLevelsArray[C_ALLPOLLU], FoobotDataObject.Units[C_ALLPOLLU]]);
   lbl_greenlightallpollu.Caption :=
     Format('< %.1f %s', [RecommendedLevelsArray[C_ALLPOLLU], FoobotDataObject.Units[C_ALLPOLLU]]);
+  grp_health.Refresh;
 end;
 
 procedure Tmainform.PopulateFoobotMenu;
@@ -767,17 +768,25 @@ begin
 end;
 
 procedure Tmainform.mnu_options_triggersSetTriggersClick(Sender: TObject);
+Var iCount:Integer;
 begin
   If FoobotIdentityObject.FoobotIdentityList.Count = 0 then Exit;;
   triggersform.ShowModal;
-  if triggersform.ModalResult = mrCancel then
-  begin
-    // Cancelled form
-  end
-  else
-  begin
-    mnu_options_triggersActivateTriggers.Enabled := True;
-  end;
+  // If cancel was clicked nothing was changed
+  mnu_options_triggersActivateTriggers.Enabled := True;
+  LoadTriggers; // This can only be done if we have a Foobot Identity
+  // as each Foobot has its own trigger values
+  SetMinMaxTriggers; // Adjust if necesarry for preset Guage High/Low limits
+  // LoadRecommendedLevels; // into RecommendedLevelsArray
+  for iCount := C_PM to C_ALLPOLLU do
+      SetTrafficLightStats(iCount, C_HIGH);
+   UpdateHealth;
+   DisplayReadings;
+   Update;
+   {
+   ShowMessageFmt('Current high trigger: %.1f %s',
+    [double(FooBotTriggerArray[C_HIGH, C_TMP]), FoobotDataObject.Units[C_TMP]]);
+   }
 end;
 
 procedure Tmainform.mnu_SampleEveryHalfHourClick(Sender: TObject);
@@ -839,6 +848,7 @@ begin
 end;
 
 procedure Tmainform.SetRedSessionMax;
+// Sets red lines on guages
 begin
   if bDisplayRedLines = True then
   begin
@@ -873,6 +883,7 @@ begin
 end;
 
 procedure Tmainform.SetYellowRecommendedLevels;
+// Sets yellow lines on guages
 begin
   if bDisplayYellowLines = True then
   begin

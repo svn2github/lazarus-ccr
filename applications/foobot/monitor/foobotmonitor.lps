@@ -10,7 +10,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="12"/>
         <CursorPos Y="35"/>
-        <UsageCount Value="149"/>
+        <UsageCount Value="151"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -19,9 +19,10 @@
         <ComponentName Value="mainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="511"/>
-        <CursorPos X="25" Y="516"/>
-        <UsageCount Value="149"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="770"/>
+        <CursorPos X="6" Y="780"/>
+        <UsageCount Value="151"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -34,7 +35,7 @@
         <EditorIndex Value="7"/>
         <TopLine Value="33"/>
         <CursorPos X="41" Y="45"/>
-        <UsageCount Value="139"/>
+        <UsageCount Value="141"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit2>
@@ -44,7 +45,7 @@
         <EditorIndex Value="1"/>
         <TopLine Value="13"/>
         <CursorPos X="49" Y="20"/>
-        <UsageCount Value="131"/>
+        <UsageCount Value="133"/>
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
@@ -54,7 +55,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="131"/>
+        <UsageCount Value="133"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\foobot_utility.pas"/>
@@ -62,7 +63,7 @@
         <EditorIndex Value="9"/>
         <TopLine Value="241"/>
         <CursorPos X="68" Y="261"/>
-        <UsageCount Value="149"/>
+        <UsageCount Value="151"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
@@ -72,7 +73,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="131"/>
+        <UsageCount Value="133"/>
       </Unit6>
       <Unit7>
         <Filename Value="foobot_sensors.pas"/>
@@ -80,7 +81,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="299"/>
         <CursorPos X="14" Y="321"/>
-        <UsageCount Value="83"/>
+        <UsageCount Value="85"/>
       </Unit7>
       <Unit8>
         <Filename Value="usplash.pas"/>
@@ -90,7 +91,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="3"/>
         <CursorPos X="48" Y="37"/>
-        <UsageCount Value="78"/>
+        <UsageCount Value="80"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit8>
@@ -100,11 +101,10 @@
         <ComponentName Value="triggersform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="135"/>
-        <CursorPos X="18" Y="165"/>
-        <UsageCount Value="69"/>
+        <TopLine Value="232"/>
+        <CursorPos X="81" Y="254"/>
+        <UsageCount Value="71"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit9>
@@ -287,123 +287,123 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="utriggersform.pas"/>
-        <Caret Line="21" Column="18"/>
+        <Caret Line="123" Column="8" TopLine="105"/>
       </Position1>
       <Position2>
-        <Filename Value="utriggersform.pas"/>
-        <Caret Line="153" Column="20" TopLine="130"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="279" Column="11" TopLine="261"/>
       </Position2>
       <Position3>
         <Filename Value="utriggersform.pas"/>
-        <Caret Line="92" Column="20" TopLine="90"/>
+        <Caret Line="153" Column="43" TopLine="134"/>
       </Position3>
       <Position4>
         <Filename Value="umainform.pas"/>
-        <Caret Line="397" Column="17" TopLine="378"/>
+        <Caret Line="78" Column="9" TopLine="45"/>
       </Position4>
       <Position5>
         <Filename Value="umainform.pas"/>
-        <Caret Line="745" Column="44" TopLine="698"/>
+        <Caret Line="417" Column="39" TopLine="370"/>
       </Position5>
       <Position6>
         <Filename Value="umainform.pas"/>
-        <Caret Line="832" Column="44" TopLine="785"/>
+        <Caret Line="419" Column="39" TopLine="372"/>
       </Position6>
       <Position7>
-        <Filename Value="utriggersform.pas"/>
-        <Caret Line="138" TopLine="103"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="884" Column="32" TopLine="837"/>
       </Position7>
       <Position8>
-        <Filename Value="utriggersform.pas"/>
-        <Caret Line="137" Column="52" TopLine="110"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="1062" Column="28" TopLine="1015"/>
       </Position8>
       <Position9>
-        <Filename Value="utriggersform.pas"/>
-        <Caret Line="123" Column="8" TopLine="105"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="77" TopLine="51"/>
       </Position9>
       <Position10>
         <Filename Value="umainform.pas"/>
-        <Caret Line="279" Column="11" TopLine="261"/>
+        <Caret Line="3" Column="7"/>
       </Position10>
       <Position11>
-        <Filename Value="utriggersform.pas"/>
-        <Caret Line="153" Column="43" TopLine="134"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="30" Column="20" TopLine="28"/>
       </Position11>
       <Position12>
         <Filename Value="umainform.pas"/>
-        <Caret Line="78" Column="9" TopLine="45"/>
+        <Caret Line="883" Column="65" TopLine="852"/>
       </Position12>
       <Position13>
         <Filename Value="umainform.pas"/>
-        <Caret Line="417" Column="39" TopLine="370"/>
+        <Caret Line="1080" Column="61" TopLine="1036"/>
       </Position13>
       <Position14>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="419" Column="39" TopLine="372"/>
+        <Filename Value="..\foobot_utility.pas"/>
+        <Caret Line="277" TopLine="241"/>
       </Position14>
       <Position15>
         <Filename Value="umainform.pas"/>
-        <Caret Line="884" Column="32" TopLine="837"/>
+        <Caret Line="476" Column="65" TopLine="457"/>
       </Position15>
       <Position16>
         <Filename Value="umainform.pas"/>
-        <Caret Line="1062" Column="28" TopLine="1015"/>
+        <Caret Line="448" Column="8" TopLine="445"/>
       </Position16>
       <Position17>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="77" TopLine="51"/>
+        <Filename Value="utriggersform.pas"/>
+        <Caret Line="171" Column="16" TopLine="135"/>
       </Position17>
       <Position18>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="3" Column="7"/>
+        <Filename Value="utriggersform.pas"/>
+        <Caret Line="285" Column="79" TopLine="244"/>
       </Position18>
       <Position19>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="30" Column="20" TopLine="28"/>
+        <Filename Value="utriggersform.pas"/>
+        <Caret Line="287" Column="88" TopLine="245"/>
       </Position19>
       <Position20>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="883" Column="65" TopLine="852"/>
+        <Filename Value="utriggersform.pas"/>
+        <Caret Line="275" Column="17" TopLine="260"/>
       </Position20>
       <Position21>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="1080" Column="61" TopLine="1036"/>
+        <Filename Value="utriggersform.pas"/>
+        <Caret Line="161" Column="22" TopLine="150"/>
       </Position21>
       <Position22>
-        <Filename Value="..\foobot_utility.pas"/>
-        <Caret Line="277" TopLine="241"/>
+        <Filename Value="utriggersform.pas"/>
+        <Caret Line="162" Column="16" TopLine="130"/>
       </Position22>
       <Position23>
         <Filename Value="umainform.pas"/>
-        <Caret Line="476" Column="65" TopLine="457"/>
+        <Caret Line="318" Column="46" TopLine="313"/>
       </Position23>
       <Position24>
         <Filename Value="umainform.pas"/>
-        <Caret Line="448" Column="8" TopLine="445"/>
+        <Caret Line="779" Column="58" TopLine="769"/>
       </Position24>
       <Position25>
-        <Filename Value="utriggersform.pas"/>
-        <Caret Line="171" Column="16" TopLine="135"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="786" TopLine="769"/>
       </Position25>
       <Position26>
-        <Filename Value="utriggersform.pas"/>
-        <Caret Line="285" Column="79" TopLine="244"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="1194" Column="27" TopLine="1184"/>
       </Position26>
       <Position27>
-        <Filename Value="utriggersform.pas"/>
-        <Caret Line="287" Column="88" TopLine="245"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="400" Column="3" TopLine="392"/>
       </Position27>
       <Position28>
-        <Filename Value="utriggersform.pas"/>
-        <Caret Line="275" Column="17" TopLine="260"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="449" Column="27" TopLine="391"/>
       </Position28>
       <Position29>
-        <Filename Value="utriggersform.pas"/>
-        <Caret Line="161" Column="22" TopLine="150"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="742" Column="13" TopLine="738"/>
       </Position29>
       <Position30>
-        <Filename Value="utriggersform.pas"/>
-        <Caret Line="162" Column="16" TopLine="130"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="400" Column="3" TopLine="395"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>
