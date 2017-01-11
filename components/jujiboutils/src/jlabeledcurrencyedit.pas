@@ -32,17 +32,23 @@ type
   TJLabeledCurrencyEdit = class(TCustomLabeledEdit)
   private
     fEFormat: string;
+    fNColor: TColor;
+    fPColor: TColor;
     theValue: currency;
     fFormat: string;
+    fNFormat: string;
     fDecimals: integer;
     function getDecimals: integer;
     function getFormat: string;
+    function getNegativeFormat: string;
     function getValue: currency;
     procedure formatInput;
     procedure setDecimals(const AValue: integer);
     procedure setFormat(const AValue: string);
     function scaleTo(const AValue: currency; const NDecimals: integer): currency;
     function IsValidFloat(const Value: string): boolean;
+    procedure setNegativeColor(AValue: TColor);
+    procedure setNegativeFormat(AValue: string);
     procedure setValue(const AValue: currency);
   protected
     { Protected declarations }
@@ -59,6 +65,9 @@ type
     property EditFormat: string read fEFormat write fEFormat;
     property Decimals: integer read getDecimals write setDecimals;
     property Value: currency read getValue write setValue;
+    property NegativeDisplayFormat: string read getNegativeFormat
+      write setNegativeFormat;
+    property NegativeColor: TColor read fNColor write setNegativeColor;
 
     property Action;
     property Align;
@@ -134,6 +143,11 @@ begin
   Result := fFormat;
 end;
 
+function TJLabeledCurrencyEdit.getNegativeFormat: string;
+begin
+  Result := fNFormat;
+end;
+
 function TJLabeledCurrencyEdit.getValue: currency;
 begin
   Result := theValue;
@@ -141,7 +155,19 @@ end;
 
 procedure TJLabeledCurrencyEdit.formatInput;
 begin
-  Caption := FormatFloat(DisplayFormat, theValue);
+  if Font.Color <> fNColor then
+    fPColor := Font.Color;      // store original font color
+  if (theValue < 0) and (fNFormat <> '') then
+  begin
+    Caption := FormatFloat(fNFormat, -theValue);
+    font.Color := fNColor;
+  end
+  else
+  begin
+    Caption := FormatFloat(DisplayFormat, theValue);
+    font.Color := fPColor;
+  end;
+
 end;
 
 procedure TJLabeledCurrencyEdit.setDecimals(const AValue: integer);
@@ -168,6 +194,20 @@ begin
     Result := False
   else
     Result := True;
+end;
+
+procedure TJLabeledCurrencyEdit.setNegativeColor(AValue: TColor);
+begin
+  if fNColor = AValue then
+    Exit;
+  fNColor := AValue;
+  formatInput;
+end;
+
+procedure TJLabeledCurrencyEdit.setNegativeFormat(AValue: string);
+begin
+  fNFormat := AValue;
+  formatInput;
 end;
 
 procedure TJLabeledCurrencyEdit.setValue(const AValue: currency);
@@ -228,6 +268,8 @@ begin
   Text := '';
   fFormat := '#,0.00';
   fDecimals := 2;
+  fPColor := Font.Color;
+  fNColor := Font.Color;
   formatInput;
 end;
 
