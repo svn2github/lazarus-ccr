@@ -23,8 +23,8 @@ unit uconfigform;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, Buttons;
+  Classes, SysUtils, Forms, Controls, Dialogs, StdCtrls,
+  ExtCtrls, Buttons,lclIntf;
 
 type
 
@@ -33,10 +33,12 @@ type
   Tconfigform = class(TForm)
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
+    cmd_help: TBitBtn;
     grp_main: TGroupBox;
     edt_username: TLabeledEdit;
     Label1: TLabel;
     Memo1: TMemo;
+    procedure cmd_helpClick(Sender: TObject);
     procedure edt_usernameEditingDone(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
@@ -120,6 +122,14 @@ begin
      FoobotUsername:=edt_username.Text;
      bDoneUsername:=TRUE;
   end;
+end;
+
+procedure Tconfigform.cmd_helpClick(Sender: TObject);
+begin
+  If FileExists(sHelpFilePath) then
+    OpenURL('file://' + sHelpFilePath)
+  else ShowMessageFmt('Sorry, the help file %s is missing',[sHelpFilePath]);
+
 end;
 
 procedure Tconfigform.FormCloseQuery(Sender: TObject; var CanClose: boolean);

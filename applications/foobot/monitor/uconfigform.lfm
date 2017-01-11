@@ -87,4 +87,14 @@ object configform: Tconfigform
     ModalResult = 11
     TabOrder = 2
   end
+  object cmd_help: TBitBtn
+    Left = 432
+    Height = 30
+    Top = 160
+    Width = 75
+    DefaultCaption = True
+    Kind = bkHelp
+    OnClick = cmd_helpClick
+    TabOrder = 3
+  end
 end
