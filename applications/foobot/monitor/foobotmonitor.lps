@@ -3,7 +3,7 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="10"/>
-    <BuildModes Active="win64"/>
+    <BuildModes Active="linux64"/>
     <Units Count="32">
       <Unit0>
         <Filename Value="foobotmonitor.lpr"/>
