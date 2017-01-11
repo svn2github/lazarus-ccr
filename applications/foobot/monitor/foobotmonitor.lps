@@ -8,11 +8,10 @@
       <Unit0>
         <Filename Value="foobotmonitor.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="18"/>
         <TopLine Value="13"/>
-        <CursorPos X="139" Y="27"/>
-        <UsageCount Value="196"/>
+        <CursorPos X="11" Y="23"/>
+        <UsageCount Value="197"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -21,9 +20,10 @@
         <ComponentName Value="mainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="22"/>
-        <CursorPos X="73" Y="56"/>
-        <UsageCount Value="196"/>
+        <CursorPos X="4" Y="33"/>
+        <UsageCount Value="197"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -36,7 +36,7 @@
         <EditorIndex Value="12"/>
         <TopLine Value="14"/>
         <CursorPos X="65" Y="44"/>
-        <UsageCount Value="186"/>
+        <UsageCount Value="187"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit2>
@@ -46,7 +46,7 @@
         <EditorIndex Value="6"/>
         <TopLine Value="13"/>
         <CursorPos X="49" Y="20"/>
-        <UsageCount Value="178"/>
+        <UsageCount Value="179"/>
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
@@ -56,7 +56,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="178"/>
+        <UsageCount Value="179"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\foobot_utility.pas"/>
@@ -64,7 +64,7 @@
         <EditorIndex Value="14"/>
         <TopLine Value="199"/>
         <CursorPos X="22" Y="214"/>
-        <UsageCount Value="196"/>
+        <UsageCount Value="197"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
@@ -74,7 +74,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="178"/>
+        <UsageCount Value="179"/>
       </Unit6>
       <Unit7>
         <Filename Value="foobot_sensors.pas"/>
@@ -82,7 +82,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="299"/>
         <CursorPos X="14" Y="321"/>
-        <UsageCount Value="130"/>
+        <UsageCount Value="131"/>
       </Unit7>
       <Unit8>
         <Filename Value="usplash.pas"/>
@@ -92,7 +92,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="8"/>
         <CursorPos X="48" Y="37"/>
-        <UsageCount Value="125"/>
+        <UsageCount Value="126"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit8>
@@ -105,7 +105,7 @@
         <EditorIndex Value="7"/>
         <TopLine Value="382"/>
         <CursorPos X="26" Y="21"/>
-        <UsageCount Value="116"/>
+        <UsageCount Value="117"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit9>
@@ -159,7 +159,7 @@
         <EditorIndex Value="10"/>
         <TopLine Value="101"/>
         <CursorPos Y="154"/>
-        <UsageCount Value="63"/>
+        <UsageCount Value="64"/>
         <Loaded Value="True"/>
       </Unit16>
       <Unit17>
@@ -167,14 +167,14 @@
         <EditorIndex Value="16"/>
         <TopLine Value="381"/>
         <CursorPos X="13" Y="384"/>
-        <UsageCount Value="81"/>
+        <UsageCount Value="82"/>
         <Loaded Value="True"/>
       </Unit17>
       <Unit18>
         <Filename Value="..\latest_stable\udataform.pas"/>
         <EditorIndex Value="11"/>
         <TopLine Value="70"/>
-        <UsageCount Value="81"/>
+        <UsageCount Value="82"/>
         <Loaded Value="True"/>
       </Unit18>
       <Unit19>
@@ -205,7 +205,7 @@
         <EditorIndex Value="9"/>
         <TopLine Value="1811"/>
         <CursorPos X="13" Y="1834"/>
-        <UsageCount Value="59"/>
+        <UsageCount Value="60"/>
         <Loaded Value="True"/>
       </Unit22>
       <Unit23>
@@ -220,7 +220,7 @@
         <Filename Value="..\..\json_packager\umain.pas"/>
         <EditorIndex Value="5"/>
         <CursorPos X="29" Y="1445"/>
-        <UsageCount Value="29"/>
+        <UsageCount Value="30"/>
         <Loaded Value="True"/>
       </Unit24>
       <Unit25>
@@ -228,7 +228,7 @@
         <EditorIndex Value="3"/>
         <TopLine Value="664"/>
         <CursorPos X="25" Y="697"/>
-        <UsageCount Value="28"/>
+        <UsageCount Value="29"/>
         <Loaded Value="True"/>
       </Unit25>
       <Unit26>
@@ -236,7 +236,7 @@
         <EditorIndex Value="2"/>
         <TopLine Value="16"/>
         <CursorPos X="26" Y="44"/>
-        <UsageCount Value="28"/>
+        <UsageCount Value="29"/>
         <Loaded Value="True"/>
       </Unit26>
       <Unit27>
@@ -252,7 +252,7 @@
         <EditorIndex Value="15"/>
         <TopLine Value="1272"/>
         <CursorPos X="23" Y="1276"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="13"/>
         <Loaded Value="True"/>
       </Unit28>
       <Unit29>
@@ -260,7 +260,7 @@
         <EditorIndex Value="4"/>
         <TopLine Value="1116"/>
         <CursorPos X="3" Y="1121"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="13"/>
         <Loaded Value="True"/>
       </Unit29>
       <Unit30>
@@ -277,7 +277,7 @@
         <EditorIndex Value="1"/>
         <TopLine Value="54"/>
         <CursorPos X="10" Y="81"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit31>
     </Units>

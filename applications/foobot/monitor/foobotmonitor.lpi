@@ -12,7 +12,6 @@
       <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True"/>
-        <UIAccess Value="True"/>
         <TextName Value="Minesadorada.Lazarus.FoobotMonitor"/>
         <TextDesc Value="Monitor app for the Foobot IoT Gadget"/>
       </XPManifest>
@@ -27,6 +26,7 @@
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="2"/>
       <RevisionNr Value="4"/>
+      <BuildNr Value="1"/>
       <StringTable Comments="Uses Foobot public API to query Foobots" FileDescription="Monitor for Foobot" InternalName="foobotmonitor" LegalCopyright="(c)2016 minesadorada@charcodelvalle.com" LegalTrademarks="Foobot" ProductName="Foobot" ProductVersion="0.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="6">
