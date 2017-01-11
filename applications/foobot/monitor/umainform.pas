@@ -1329,22 +1329,30 @@ begin
   sts.SimpleText := GetLongHint(Application.Hint);
 end;
 initialization
-sHelpFilePath:=GetCurrentDir + DirectorySeparator + 'foobotmonitorhelp.htm';
+//sHelpFilePath:=AppendPathDelim(GetCurrentDir) + 'foobotmonitorhelp.htm';
+sHelpFilePath:=AppendPathDelim(GetAppConfigDir(false)) + 'foobotmonitorhelp.htm';
+//sHelpFilePath:=ExtractFileDir(GetAppConfigFile(False));
+//sHelpFilePath:=AppendPathDelim(sHelpFilePath) + 'foobotmonitorhelp.htm';
+
 // This uses a resource file added via Project/Options (Laz 1.7+)
 if not FileExistsUTF8(sHelpFilePath) then
 begin
   // create a resource stream which points to the po file
   S := TResourceStream.Create(HInstance, 'FOOBOTMONITORHELP', MakeIntResource(10));
-  try
-    F := TFileStream.Create(sHelpFilePath, fmCreate);
+  TRY
     try
-      F.CopyFrom(S, S.Size); // copy data from the resource stream to file stream
+      ForceDirectoriesUTF8(GetAppConfigDir(false));
+      F := TFileStream.Create(sHelpFilePath, fmCreate);
+      try
+        F.CopyFrom(S, S.Size); // copy data from the resource stream to file stream
+      finally
+        F.Free; // destroy the file stream
+      end;
     finally
-      F.Free; // destroy the file stream
+      S.Free; // destroy the resource stream
     end;
-  finally
-    S.Free; // destroy the resource stream
+  EXCEPT
+    raise Exception.Create('Could not create ' + sHelpFilePath);
   end;
 end;
-
 end.

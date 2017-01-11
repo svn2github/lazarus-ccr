@@ -20,20 +20,22 @@ Licence is GPL
 <a href="https://en.wikipedia.org/wiki/GNU_General_Public_License">(information 
 here)</a> It is distributed as freeware.</p>
 <h2>QuickStart</h2>
-<p>On first startup, Foobot Monitor will present a dialog asking for your Foobot 
-Username and an API Key.</p>
-<p>Foobot supplies an API Key for any Foobot owner that requests it from their 
+<ul>
+	<li>On first startup, Foobot Monitor will present a dialog asking for your Foobot 
+Username and an API Key.</li>
+	<li>Foobot supplies an API Key for any Foobot owner that requests it from their 
 site. Go to <a href="http://api.foobot.io/apidoc/index.html">the Foobot API page</a>, 
-and you will see easy-to-follow instructions for obtaining your own API Key.&nbsp; 
-Once you have it, save it to a text file, and when the FM dialog comes up you 
-can Copy/Paste it into the dialog.&nbsp; Once that is done, you need to restart 
-Foobot Monitor and it will automatically use the information you entered every 
-time it starts.</p>
-<p>Foobot Monitor stores the information in an encrypted configuration file.&nbsp; 
-In Windows, this file is located in %APPDATA%\username\local\foobotmonitor\foobotmonitor.cfg.&nbsp; 
-In Linux it is located in your home directory/-conf/foobotmonitor.cfg.</p>
-<p>&nbsp;If for some reason you wish to change/update your login and/or API Key, 
-there are two ways of doing it:</p>
+	and you will see easy-to-follow instructions for obtaining your own API Key.&nbsp; 
+	Once you have it, save it to a text file, and when the Foobot Monitor dialog comes up you 
+can Copy/Paste it into the dialog.&nbsp; Once that is done, you need to restart Foobot Monitor and it will automatically use the information you entered every 
+time it starts.</li>
+	<li>Foobot Monitor stores the information in an encrypted configuration file.&nbsp; 
+In Windows, this file is located in &lt;username&gt;AppData\local\Foobot monitor\foobotmonitor.cfg.&nbsp; 
+In Linux it is usually located in your home directory/-conf/foobotmonitor.cfg 
+	(depends on Linux distribution)</li>
+	<li>If for some reason you wish to change/update your login and/or API Key, 
+there are two ways of doing it:</li>
+</ul>
 <ol>
 	<li>Delete the cfg file, and resart&nbsp; Foobot Monitor.&nbsp; You will be 
 	prompted with the login dialog as before.&nbsp; As a consequence you will 
@@ -53,12 +55,14 @@ Secret Key<span class="sy3">=</span>&lt;Secret API Key&gt;</pre>
 	the plaintext is deleted <br />
 	You can do this as many times as you like </li>
 </ol>
-<p>Once running,Foobot Monitor should locate your Foobot(s) and display current 
+<ul>
+	<li>Once running,Foobot Monitor should locate your Foobot(s) and display current 
 readings, as well as a graph showing the last 48 hours of readings.&nbsp; By 
 default, Foobot Monitor will fetch a new reading every hour and add it to the 
-graph.</p>
-<p>* Notice the status bar at the bottom of the window. Running your mouse over 
-the various parts of Foobot Monitor panels will display useful information.</p>
+graph.</li>
+	<li>Notice the status bar at the bottom of the window. Running your mouse over 
+the various parts of Foobot Monitor panels will display useful information.</li>
+</ul>
 <hr />
 <h2>Foobot Menus</h2>
 <p><strong>The File menu</strong> contains one item: Exit.</p>
@@ -68,7 +72,9 @@ instant reading.</p>
 <p><strong>The Help menu</strong> has links to the Foobot Monitor home page, 
 Foobot&#39;s API page and an &#39;About&#39; dialog.</p>
 <h4>The Options menu</h4>
-<p>The Options menu is where you can customise Foobot Monitor to your liking.</p>
+<ul>
+	<li>The Options menu is where you can customise Foobot Monitor to your liking.</li>
+</ul>
 <p><strong>Minimise to Tray:</strong> Foobot Monitor can run as a System Tray 
 icon when you need more screen space.&nbsp; Just click the tray icon to restore 
 Foobot Monitor. You can also right-click the tray icon to show a small menu.</p>
@@ -96,10 +102,43 @@ Values:</strong> This opens a dialog where you can change any or all the values
 Foobot Monitor uses.&nbsp; This information takes effect immediately and is also 
 used next time Foobot Monitor starts.</p>
 <p><strong>Foobot Triggers and Recommended Values.. Set Triggers On/off:</strong> 
-Recommended Values apply to all Foobots you have in your system, whereas 
-Triggers are set on a per-Foobot basis.</p>
+Turns off triggering for all FooBots</p>
 <hr />
-<p>&nbsp;</p>
+<h2>FAQ</h2>
+<ol>
+	<li>Q. <strong>Can Foobot Monitor be run from a thumb drive?&nbsp; What 
+	files are required?</strong><br />
+	A. The only file required is foobotmonitor(.exe).&nbsp; It can be located 
+	anywhere in your file system (including thumbdrives or non-writable media)&nbsp; 
+	On startup, it will create config files and a help file on your main 
+	system&#39;s config directory.</li>
+	<li>Q. <strong>Can Foobot Monitor be run without an internet connection?</strong><br />
+	A. Foobot Monitor requires an internet connection to aquire data from the 
+	Foobot server.</li>
+	<li>Q. <strong>What is a &quot;trigger&quot; in Foobot Monitor?&nbsp; What does it do?</strong><br />
+	A. As an example; let&#39;s say you set a &quot;High Trigger&quot; for temperature at 26C, 
+	and a &quot;Low Trigger&quot; at 20C.&nbsp; If Foobot Monitor receives a temperature 
+	of more than 26C or less than 20C, the temperature sensor will change colour 
+	and the &#39;traffic light&#39; will show red.</li>
+	<li>Q. <strong>What is a &quot;Recommended Value&quot; in Foobot Monitor?</strong><br />
+	A. Each sensor has a &#39;recommended value&#39; and if Foobot Monitor detects above 
+	or below this value the traffic lights show yellow and green respectively.</li>
+	<li>Q. <strong>Can I change Foobot Monitor&#39;s default recommended values and 
+	triggers?</strong><br />
+	A. Certainly. From the Options menu, click Foobot Triggers and Recommended 
+	Values.. Set Trigger and Recommended Values and you can configure them to 
+	your liking.&nbsp; Note that Recommended Values apply to all Foobots, but 
+	Triggers are unique to each Foobot.</li>
+	<li>Q. I have a problem with my Foobot Monitor.&nbsp; Can I expect to get it 
+	fixed?<br />
+	A. Foobot Monitor is freeware distributed under a GPL license.&nbsp; Unpaid 
+	support is not included, however a polite email with full details of the 
+	error and the system running Foobot Monitor may get attention.&nbsp; My 
+	email address is in the cfg file.&nbsp; From time to time updates will be 
+	posted - check your version of Foobot Monitor - it is in the Help/About 
+	menu.</li>
+</ol>
+<p>minesadorada Jan 2017</p>
 
 </body>
 
