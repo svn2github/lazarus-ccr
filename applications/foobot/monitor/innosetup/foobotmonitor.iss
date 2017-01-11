@@ -38,7 +38,9 @@ Source: "..\compiled\win64\foobotmonitor64.exe"; DestDir: "{app}"; DestName: "fo
 ; Place all x86 files here, first one should be marked 'solidbreak'
 Source: "..\compiled\win32\foobotmonitor.exe"; DestDir: "{app}"; Flags: solidbreak; Check: not Is64BitInstallMode
 ; Place all common files here, first one should be marked 'solidbreak'
-
+Source: "..\libeay32.dll";DestDir: "{app}"; Flags: solidbreak;
+Source: "..\ssleay32.dll";DestDir: "{app}";
+ 
 [Icons]
 Name: "{group}\Foobot"; Filename: "{app}\foobotmonitor.exe"
 

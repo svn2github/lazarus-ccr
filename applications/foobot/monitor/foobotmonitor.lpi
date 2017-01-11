@@ -12,8 +12,9 @@
       <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True"/>
-        <TextName Value="CompanyName.ProductName.AppName"/>
-        <TextDesc Value="Your application description."/>
+        <UIAccess Value="True"/>
+        <TextName Value="Minesadorada.Lazarus.FoobotMonitor"/>
+        <TextDesc Value="Monitor app for the Foobot IoT Gadget"/>
       </XPManifest>
       <Icon Value="0"/>
       <Resources Count="2">
