@@ -4,6 +4,8 @@ unit umainform;
 
   Copyright (C)2016 Gordon Bamber minsadorada@charcodelvalle.com
 
+  This project requires FPCv3.1.1+ and Lazarus V1.7+
+
   This source is free software; you can redistribute it and/or modify it under
   the terms of the GNU General Public License as published by the Free
   Software Foundation; either version 2 of the License, or (at your option)
@@ -19,6 +21,14 @@ unit umainform;
   to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
   MA 02111-1307, USA.
 
+REQUIREMENTS
+============
+* Custom sensors unit from Industrial package (foobot_sendors)
+* Custom httpdclient unit (foobot_httpclient)
+* CryptINI, TChart and Industrial components
+* FPCv3.1.1+ and Lazarus V1.7+
+* A connected Foobot
+
 VERSION HISTORY
 ===============
 V0.0.1.0: Initial commit
@@ -29,9 +39,11 @@ V0.1.0.0: Save/Load Alltime High/Lows.  Reset values from menu
 V0.1.1.0: Save/Load Colours, Min and Max values to cfg file
 V0.2.1.0: Triggers,Multiple Foobots
 V0.2.2.0: Trigger config form, SaveLoad recommended values
-V0.2.3.0: ??
+V0.2.4.0: Embedded help file added
+V0.2.5.0: ??
 }
 {$ifopt D+}
+  {$DEFINE DEBUGMODE}
 // Debug mode does not load data from web
 {$ENDIF}
 

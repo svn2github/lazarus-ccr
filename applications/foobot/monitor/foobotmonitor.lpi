@@ -23,6 +23,7 @@
     </General>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
+      <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="2"/>
       <RevisionNr Value="4"/>
       <StringTable Comments="Uses Foobot public API to query Foobots" FileDescription="Monitor for Foobot" InternalName="foobotmonitor" LegalCopyright="(c)2016 minesadorada@charcodelvalle.com" LegalTrademarks="Foobot" ProductName="Foobot" ProductVersion="0.0.0.0"/>
