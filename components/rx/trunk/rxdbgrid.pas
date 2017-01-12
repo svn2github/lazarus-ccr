@@ -1249,7 +1249,7 @@ begin
           if FDisplayFormat = '' then
             Result := IntToStr(Round(FTestValue))
           else
-            Result := Format(FDisplayFormat, [Round(FTestValue)]);
+            Result := FormatFloat(FDisplayFormat, FTestValue);
         end
         else
         begin
