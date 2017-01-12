@@ -48,16 +48,13 @@ type
     procedure setNegativeColor(AValue: TColor);
     procedure setValue(const AValue: currency);
   protected
-    { Protected declarations }
     procedure DoEnter; override;
     procedure DoExit; override;
     procedure KeyPress(var Key: char); override;
   public
-    { Public declarations }
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
   published
-    { Published declarations }
     property DisplayFormat: string read getFormat write setFormat;
     property EditFormat: string read fEFormat write fEFormat;
     property Decimals: integer read getDecimals write setDecimals;

@@ -22,7 +22,7 @@ unit jdblabeledintegeredit;
 interface
 
 uses
-  Classes, LResources, Controls, ExtCtrls, DB, DBCtrls,
+  Classes, LResources, Controls, ExtCtrls, DB, DBCtrls, Graphics,
   LMessages, LCLType, Dialogs,
   SysUtils, jinputconsts;
 
@@ -34,9 +34,12 @@ type
   private
     fFormat: string;
     FDataLink: TFieldDataLink;
+    fNColor: TColor;
+    fPColor: TColor;
     fNull: boolean;
 
     procedure DataChange(Sender: TObject);
+    procedure setNegativeColor(AValue: TColor);
     procedure UpdateData(Sender: TObject);
     procedure FocusRequest(Sender: TObject);
 
@@ -78,6 +81,7 @@ type
     property DataSource: TDataSource read GetDataSource write SetDataSource;
     property ReadOnly: boolean read GetReadOnly write SetReadOnly default False;
     property AllowNull: boolean read fNull write fNull default False;
+    property NegativeColor: TColor read fNColor write setNegativeColor;
 
     property Action;
     property Align;
@@ -155,6 +159,14 @@ begin
     Text := '';
 end;
 
+procedure TJDBLabeledIntegerEdit.setNegativeColor(AValue: TColor);
+begin
+  if fNColor = AValue then
+    Exit;
+  fNColor := AValue;
+  formatInput;
+end;
+
 
 procedure TJDBLabeledIntegerEdit.UpdateData(Sender: TObject);
 begin
@@ -221,7 +233,10 @@ end;
 
 procedure TJDBLabeledIntegerEdit.formatInput;
 begin
+  if Font.Color <> fNColor then
+    fPColor := Font.Color;      // store original font color
   if FDataLink.Field <> nil then
+  begin
     //FDataLink.Field.DisplayText -> formatted  (tdbgridcolumns/persistent field DisplayFormat
     if FDataLink.Field.IsNull then
       Caption := ''
@@ -229,9 +244,17 @@ begin
     if fFormat <> '' then
       Caption := FormatFloat(fFormat, FDataLink.Field.AsInteger)
     else
-      Caption := FDataLink.Field.DisplayText
+      Caption := FDataLink.Field.DisplayText;
+    if FDataLink.Field.AsInteger < 0 then
+      font.Color := fNColor
+    else
+      font.Color := fPColor;
+  end
   else
+  begin
     Caption := 'nil';
+    font.Color := fPColor;
+  end;
 end;
 
 function TJDBLabeledIntegerEdit.GetReadOnly: boolean;
@@ -342,6 +365,8 @@ begin
   FDataLink.OnDataChange := @DataChange;
   FDataLink.OnUpdateData := @UpdateData;
   FDataLInk.OnActiveChange := @ActiveChange;
+  fPColor := Font.Color;
+  fNColor := Font.Color;
 end;
 
 destructor TJDBLabeledIntegerEdit.Destroy;
@@ -363,4 +388,3 @@ begin
 end;
 
 end.
-

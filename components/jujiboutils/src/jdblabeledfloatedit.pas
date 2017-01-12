@@ -22,7 +22,7 @@ unit JDBLabeledFloatEdit;
 interface
 
 uses
-  Classes, LResources, Controls, ExtCtrls, DB, DBCtrls,
+  Classes, LResources, Controls, ExtCtrls, DB, DBCtrls, Graphics,
   LMessages, LCLType, Dialogs,
   SysUtils, jinputconsts;
 
@@ -36,11 +36,14 @@ type
     fEFormat: string;
     FDataLink: TFieldDataLink;
     fDecimales: integer;
+    fNColor: TColor;
+    fPColor: TColor;
     fNull: boolean;
 
     procedure DataChange(Sender: TObject);
     function getDecimals: integer;
     procedure setDecimals(AValue: integer);
+    procedure setNegativeColor(AValue: TColor);
     procedure UpdateData(Sender: TObject);
     procedure FocusRequest(Sender: TObject);
 
@@ -85,6 +88,7 @@ type
     property Decimals: integer read getDecimals write setDecimals;
     property ReadOnly: boolean read GetReadOnly write SetReadOnly default False;
     property AllowNull: boolean read fNull write fNull default False;
+    property NegativeColor: TColor read fNColor write setNegativeColor;
 
     property Action;
     property Align;
@@ -174,6 +178,14 @@ begin
     fDecimales := AValue;
 end;
 
+procedure TJDBLabeledFloatEdit.setNegativeColor(AValue: TColor);
+begin
+  if fNColor = AValue then
+    Exit;
+  fNColor := AValue;
+  formatInput;
+end;
+
 
 procedure TJDBLabeledFloatEdit.UpdateData(Sender: TObject);
 var
@@ -255,7 +267,10 @@ end;
 
 procedure TJDBLabeledFloatEdit.formatInput;
 begin
+  if Font.Color <> fNColor then
+    fPColor := Font.Color;      // store original font color
   if FDataLink.Field <> nil then
+  begin
     //FDataLink.Field.DisplayText -> formatted  (tdbgridcolumns/persistent field DisplayFormat
     if FDataLink.Field.IsNull then
       Caption := ''
@@ -263,9 +278,17 @@ begin
     if fFormat <> '' then
       Caption := FormatFloat(fFormat, FDataLink.Field.AsFloat)
     else
-      Caption := FDataLink.Field.DisplayText
+      Caption := FDataLink.Field.DisplayText;
+    if FDataLink.Field.AsFloat < 0 then
+      font.Color := fNColor
+    else
+      font.Color := fPColor;
+  end
   else
+  begin
     Caption := 'nil';
+    font.Color := fPColor;
+  end;
 end;
 
 function TJDBLabeledFloatEdit.GetReadOnly: boolean;
@@ -393,6 +416,8 @@ begin
   FDataLink.OnUpdateData := @UpdateData;
   FDataLInk.OnActiveChange := @ActiveChange;
   fEFormat := '';
+  fPColor := Font.Color;
+  fNColor := Font.Color;
   // Set default values
   //fDecimales := 2;
   //fFormat := '0.00';

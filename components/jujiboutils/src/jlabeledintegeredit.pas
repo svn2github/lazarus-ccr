@@ -31,33 +31,33 @@ type
 
   TJLabeledIntegerEdit = class(TCustomLabeledEdit)
   private
+    fNColor: TColor;
+    fPColor: TColor;
     fNull: boolean;
-    { Private declarations }
     theValue: integer;
     fFormat: string;
     function getFormat: string;
     function getValue: integer;
     function getCurrentValue: integer;
     procedure setFormat(const AValue: string);
+    procedure setNegativeColor(AValue: TColor);
     procedure setValue(const AValue: integer);
     function IsValidInteger(const Value: string): boolean;
     procedure FormatInput;
   protected
-    { Protected declarations }
     procedure DoEnter; override;
     procedure DoExit; override;
     procedure KeyPress(var Key: char); override;
   public
-    { Public declarations }
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
     function isNull: boolean;
     property CurrentValue: integer read getCurrentValue;
   published
-    { Published declarations }
     property DisplayFormat: string read getFormat write setFormat;
     property Value: integer read getValue write setValue;
     property AllowNull: boolean read fNull write fNull default False;
+    property NegativeColor: TColor read fNColor write setNegativeColor;
 
     property Action;
     property Align;
@@ -141,6 +141,14 @@ begin
   formatInput;
 end;
 
+procedure TJLabeledIntegerEdit.setNegativeColor(AValue: TColor);
+begin
+  if fNColor = AValue then
+    Exit;
+  fNColor := AValue;
+  FormatInput;
+end;
+
 procedure TJLabeledIntegerEdit.setValue(const AValue: integer);
 begin
   theValue := AValue;
@@ -157,10 +165,21 @@ end;
 
 procedure TJLabeledIntegerEdit.FormatInput;
 begin
+  if Font.Color <> fNColor then
+    fPColor := Font.Color;      // store original font color
   if isNull then
-    Text := ''
+  begin
+    Text := '';
+    font.Color := fNColor;
+  end
   else
+  begin
     Text := FormatFloat(fFormat, theValue);
+    if theValue < 0 then
+      font.Color := fNColor
+    else
+      font.Color := fPColor;
+  end;
 end;
 
 procedure TJLabeledIntegerEdit.DoEnter;
@@ -205,6 +224,8 @@ begin
   Text := '';
   DisplayFormat := '0';
   Value := 0;
+  fPColor := Font.Color;
+  fNColor := Font.Color;
 end;
 
 destructor TJLabeledIntegerEdit.Destroy;
@@ -218,4 +239,3 @@ begin
 end;
 
 end.
-

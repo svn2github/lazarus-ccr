@@ -31,7 +31,8 @@ type
 
   TJLabeledFloatEdit = class(TCustomLabeledEdit)
   private
-    { Private declarations }
+    fNColor: TColor;
+    fPColor: TColor;
     theValue: double;
     fFormat: string;
     fEFormat: string;
@@ -45,23 +46,22 @@ type
     procedure setFormat(const AValue: string);
     function scaleTo(const AValue: double; const NDecimals: integer): double;
     function IsValidFloat(const Value: string): boolean;
+    procedure setNegativeColor(AValue: TColor);
     procedure setValue(const AValue: double);
   protected
-    { Protected declarations }
     procedure DoEnter; override;
     procedure DoExit; override;
     procedure KeyPress(var Key: char); override;
   public
-    { Public declarations }
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
     property CurrentValue: double read getCurrentValue;
   published
-    { Published declarations }
     property DisplayFormat: string read getFormat write setFormat;
     property EditFormat: string read fEFormat write fEFormat;
     property Decimals: integer read getDecimals write setDecimals;
     property Value: double read getValue write setValue;
+    property NegativeColor: TColor read fNColor write setNegativeColor;
 
     property Action;
     property Align;
@@ -146,7 +146,13 @@ end;
 
 procedure TJLabeledFloatEdit.formatInput;
 begin
+  if Font.Color <> fNColor then
+    fPColor := Font.Color;      // store original font color
   Caption := FormatFloat(DisplayFormat, theValue);
+  if theValue < 0 then
+    font.Color := fNColor
+  else
+    font.Color := fPColor;
 end;
 
 procedure TJLabeledFloatEdit.setDecimals(const AValue: integer);
@@ -173,6 +179,14 @@ begin
     Result := False
   else
     Result := True;
+end;
+
+procedure TJLabeledFloatEdit.setNegativeColor(AValue: TColor);
+begin
+  if fNColor = AValue then
+    Exit;
+  fNColor := AValue;
+  formatInput;
 end;
 
 procedure TJLabeledFloatEdit.setValue(const AValue: double);
@@ -232,6 +246,8 @@ begin
   fEFormat := '';
   fFormat := '#,0.00';
   fDecimals := 2;
+  fPColor := Font.Color;
+  fNColor := Font.Color;
   formatInput;
 end;
 
