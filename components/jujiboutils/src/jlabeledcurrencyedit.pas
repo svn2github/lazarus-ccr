@@ -36,11 +36,9 @@ type
     fPColor: TColor;
     theValue: currency;
     fFormat: string;
-    fNFormat: string;
     fDecimals: integer;
     function getDecimals: integer;
     function getFormat: string;
-    function getNegativeFormat: string;
     function getValue: currency;
     procedure formatInput;
     procedure setDecimals(const AValue: integer);
@@ -48,7 +46,6 @@ type
     function scaleTo(const AValue: currency; const NDecimals: integer): currency;
     function IsValidFloat(const Value: string): boolean;
     procedure setNegativeColor(AValue: TColor);
-    procedure setNegativeFormat(AValue: string);
     procedure setValue(const AValue: currency);
   protected
     { Protected declarations }
@@ -65,8 +62,6 @@ type
     property EditFormat: string read fEFormat write fEFormat;
     property Decimals: integer read getDecimals write setDecimals;
     property Value: currency read getValue write setValue;
-    property NegativeDisplayFormat: string read getNegativeFormat
-      write setNegativeFormat;
     property NegativeColor: TColor read fNColor write setNegativeColor;
 
     property Action;
@@ -143,11 +138,6 @@ begin
   Result := fFormat;
 end;
 
-function TJLabeledCurrencyEdit.getNegativeFormat: string;
-begin
-  Result := fNFormat;
-end;
-
 function TJLabeledCurrencyEdit.getValue: currency;
 begin
   Result := theValue;
@@ -157,17 +147,11 @@ procedure TJLabeledCurrencyEdit.formatInput;
 begin
   if Font.Color <> fNColor then
     fPColor := Font.Color;      // store original font color
-  if (theValue < 0) and (fNFormat <> '') then
-  begin
-    Caption := FormatFloat(fNFormat, -theValue);
-    font.Color := fNColor;
-  end
+  Caption := FormatFloat(DisplayFormat, theValue);
+  if theValue < 0 then
+    font.Color := fNColor
   else
-  begin
-    Caption := FormatFloat(DisplayFormat, theValue);
     font.Color := fPColor;
-  end;
-
 end;
 
 procedure TJLabeledCurrencyEdit.setDecimals(const AValue: integer);
@@ -201,12 +185,6 @@ begin
   if fNColor = AValue then
     Exit;
   fNColor := AValue;
-  formatInput;
-end;
-
-procedure TJLabeledCurrencyEdit.setNegativeFormat(AValue: string);
-begin
-  fNFormat := AValue;
   formatInput;
 end;
 
