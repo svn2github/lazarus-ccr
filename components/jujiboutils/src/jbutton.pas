@@ -36,9 +36,7 @@ type
     FImage: TImage;
     FJLabel: TJLabel;
     //OldBevel: TPanelBevel;
-    { Private declarations }
   protected
-    { Protected declarations }
     procedure SetName(const Value: TComponentName); override;
     procedure JLabel1MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
@@ -46,10 +44,8 @@ type
       Shift: TShiftState; X, Y: integer);
     procedure JLabel1MouseClick(Sender: TObject);
   public
-    { Public declarations }
     constructor Create(TheOwner: TComponent); override;
   published
-    { Published declarations }
     property LCaption: TJLabel read FJLabel;
     property Image: TImage read FImage;
     property Align;

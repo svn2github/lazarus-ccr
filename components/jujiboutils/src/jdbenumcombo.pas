@@ -42,14 +42,12 @@ type
     procedure SetReadOnly(const AValue: boolean);
     procedure CMGetDataLink(var Message: TLMessage); message CM_GETDATALINK;
   protected
-    { Protected declarations }
     procedure DataChange(Sender: TObject);
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure Change; override;
     procedure DropDown; override;
     procedure UpdateData(Sender: TObject);
   public
-    { Public declarations }
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
     procedure EditingDone; override;
@@ -57,7 +55,6 @@ type
     property Text;
     property ItemIndex;
   published
-    { Published declarations }
     property Anchors;
     property ArrowKeysTraverseList;
     property AutoDropDown;

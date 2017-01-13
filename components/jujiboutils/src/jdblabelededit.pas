@@ -31,7 +31,6 @@ type
 
   TJDBLabeledEdit = class(TCustomLabeledEdit)
   private
-    { Private declarations }
     FDataLink: TFieldDataLink;
 
     procedure DataChange(Sender: TObject);
@@ -49,7 +48,6 @@ type
     procedure CMGetDataLink(var Message: TLMessage); message CM_GETDATALINK;
 
   protected
-    { Protected declarations }
     procedure Loaded; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure ActiveChange(Sender: TObject); virtual;
@@ -59,13 +57,11 @@ type
     function GetReadOnly: boolean; override;
     procedure SetReadOnly(Value: boolean); override;
   public
-    { Public declarations }
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
     procedure EditingDone; override;
     property Field: TField read GetField;
   published
-    { Published declarations }
     property DataField: string read GetDataField write SetDataField;
     property DataSource: TDataSource read GetDataSource write SetDataSource;
     property ReadOnly: boolean read GetReadOnly write SetReadOnly default False;

@@ -33,16 +33,13 @@ type
 
   TJCustomLabel = class(TCustomLabel)
   private
-    { Private declarations }
     FLabelStyle: TLabelStyle;
     FShadowColor: TColor;
     FShadowColor2: TColor;
     procedure SetLabelStyle(AValue: TLabelStyle);
     procedure SetShadowColor2(AValue: TColor);
   protected
-    { Protected declarations }
     procedure SetShadowColor(Value: TColor);
-
     property ShadowColor: TColor read FShadowColor write SetShadowColor;
     property ShadowColor2: TColor read FShadowColor2 write SetShadowColor2;
     property LabelStyle: TLabelStyle read FLabelStyle write SetLabelStyle;
@@ -88,7 +85,6 @@ type
     property OnStartDrag;
     property OptimalFill;
   public
-    { Public declarations }
     constructor Create(TheOwner: TComponent); override;
     procedure Paint; override;
   end;

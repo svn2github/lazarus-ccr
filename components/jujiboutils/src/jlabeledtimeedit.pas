@@ -28,7 +28,6 @@ uses
 type
   TJLabeledTimeEdit = class(TCustomLabeledEdit)
   private
-    { Private declarations }
     theValue: TTime;
     hasValue: boolean;
     fFormat: string;
@@ -38,16 +37,13 @@ type
     procedure setValue(const AValue: TTime);
     procedure FormatInput;
   protected
-    { Protected declarations }
     procedure DoEnter; override;
     procedure DoExit; override;
     procedure KeyPress(var Key: char); override;
   public
-    { Public declarations }
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
   published
-    { Published declarations }
     function isNull: boolean;
     property DisplayFormat: string read getFormat write setFormat;
     property Value: TTime read getValue write setValue;

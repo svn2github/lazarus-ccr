@@ -11,7 +11,6 @@ uses
 type
   TJDBLabeledTimeEdit = class(TCustomLabeledEdit)
   private
-    { Private declarations }
     fFormat: string;
     FDataLink: TFieldDataLink;
 

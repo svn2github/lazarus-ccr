@@ -31,7 +31,6 @@ type
 
   TJDbLabel = class(TJCustomLabel)
   private
-    { Private declarations }
     FDataLink: TFieldDataLink;
 
     procedure DataChange(Sender: TObject);
@@ -43,16 +42,13 @@ type
     procedure SetDataSource(Value: TDataSource);
     procedure CMGetDataLink(var Message: TLMessage); message CM_GETDATALINK;
   protected
-    { Protected declarations }
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure Loaded; override;
   public
-    { Public declarations }
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     property Field: TField read GetField;
   published
-    { Published declarations }
     property DataField: string read GetDataField write SetDataField;
     property DataSource: TDataSource read GetDataSource write SetDataSource;
 

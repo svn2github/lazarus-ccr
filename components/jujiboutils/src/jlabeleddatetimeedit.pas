@@ -34,7 +34,6 @@ type
   TJLabeledDateTimeEdit = class(TCustomLabeledEdit)
   private
     fEFormat: string;
-    { Private declarations }
     theValue: TDateTime;
     fFormat: string;
     FButton: TSpeedButton;
@@ -49,7 +48,6 @@ type
     procedure WMSetFocus(var Message: TLMSetFocus); message LM_SETFOCUS;
     procedure WMKillFocus(var Message: TLMKillFocus); message LM_KILLFOCUS;
   protected
-    { Protected declarations }
     procedure DoEnter; override;
     procedure DoExit; override;
     procedure KeyDown(var Key: word; Shift: TShiftState); override;
@@ -66,11 +64,9 @@ type
     procedure CalendarPopupReturnDate(Sender: TObject; const ADate: TDateTime);
 
   public
-    { Public declarations }
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
   published
-    { Published declarations }
     function isNull: boolean;
     property DisplayFormat: string read getFormat write setFormat;
     property EditFormat: string read fEFormat write fEFormat;

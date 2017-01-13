@@ -32,7 +32,6 @@ type
   TJDBImageBlob = class(TCustomImage)
   private
     FAutoDisplay: boolean;
-    { Private declarations }
     FDataLink: TFieldDataLink;
 
     procedure DataChange(Sender: TObject);
@@ -46,17 +45,13 @@ type
     procedure SetDataSource(Value: TDataSource);
     procedure CMGetDataLink(var Message: TLMessage); message CM_GETDATALINK;
   protected
-    { Protected declarations }
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure LoadPicture; virtual;
   public
-    { Public declarations }
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
     property Field: TField read GetField;
   published
-    { Published declarations }
-
     property DataField: string read GetDataField write SetDataField;
     property DataSource: TDataSource read GetDataSource write SetDataSource;
     property AutoDisplay: boolean read FAutoDisplay write SetAutoDisplay default True;
@@ -194,7 +189,7 @@ constructor TJDBImageBlob.Create(TheOwner: TComponent);
 begin
   inherited Create(TheOwner);
   ControlStyle := ControlStyle + [csReplicatable];
-  FAutoDisplay:=True;
+  FAutoDisplay := True;
   FDataLink := TFieldDataLink.Create;
   FDataLink.Control := Self;
   FDataLink.OnDataChange := @DataChange;

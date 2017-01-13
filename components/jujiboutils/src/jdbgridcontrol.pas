@@ -61,7 +61,6 @@ type
 
   TJDBGridControl = class(TDBGrid)
   private
-    { Private declarations }
     stringDbGridControl: TJDbGridStringCtrl;
     dateDbGridControl: TJDbGridDateCtrl;
     timeDbGridControl: TJDbGridTimeCtrl;
@@ -71,7 +70,6 @@ type
     function GetColumns: TJDBGridColumns;
     procedure SetColumns(AValue: TJDBGridColumns);
   protected
-    { Protected declarations }
     function CreateColumns: TGridColumns; override;
     function GetDefaultEditor(Column: integer): TWinControl; override;
     procedure UpdateData; override;
@@ -83,11 +81,9 @@ type
     procedure WMVScroll(var Message: TLMVScroll); message LM_VScroll;
     procedure KeyDown(var Key: word; Shift: TShiftState); override;
   public
-    { Public declarations }
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
   published
-    { Published declarations }
 
   end;
 
