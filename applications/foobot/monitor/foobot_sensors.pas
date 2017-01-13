@@ -107,7 +107,7 @@ type
 
 implementation
 
-{$R sensors.res}
+{$R foobot_sensors.res}
 
 uses SysUtils;
 
