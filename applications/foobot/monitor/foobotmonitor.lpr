@@ -22,7 +22,7 @@ program foobotmonitor;
 
 REQUIREMENTS
 ============
-* Custom sensors unit from Industrial package (foobot_sendors)
+* Custom sensors unit from Industrial package (foobot_sendors and foobot_sensors.res)
 * Custom httpdclient unit (foobot_httpclient)
 * CryptINI, TChart and Industrial components
 * FPCv3.1.1+ and Lazarus V1.7+

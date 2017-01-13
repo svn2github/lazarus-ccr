@@ -25,7 +25,7 @@ REQUIREMENTS
 ============
 * Custom sensors unit from Industrial package (foobot_sendors and foobot_sensors.res)
 * Custom httpdclient unit (foobot_httpclient)
-* CryptINI, TChart and Industrial components
+* CryptINI, TChart components
 * FPCv3.1.1+ and Lazarus V1.7+
 * A connected Foobot
 
