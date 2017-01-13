@@ -1,0 +1,114 @@
+object mainform: Tmainform
+  Left = 716
+  Height = 209
+  Top = 296
+  Width = 335
+  BorderIcons = [biSystemMenu]
+  Caption = 'mainform'
+  ClientHeight = 209
+  ClientWidth = 335
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  Position = poDesktopCenter
+  LCLVersion = '1.7'
+  object StatusBar1: TStatusBar
+    Left = 0
+    Height = 23
+    Top = 186
+    Width = 335
+    Panels = <>
+  end
+  object cmd_close: TBitBtn
+    Left = 248
+    Height = 30
+    Top = 16
+    Width = 75
+    DefaultCaption = True
+    Kind = bkClose
+    ModalResult = 11
+    TabOrder = 1
+  end
+  object cmd_NewVersionAvailable: TButton
+    Left = 24
+    Height = 25
+    Top = 16
+    Width = 143
+    AutoSize = True
+    Caption = 'New Version Available'
+    OnClick = cmd_NewVersionAvailableClick
+    TabOrder = 2
+  end
+  object cmd_DownloadNewVersion: TButton
+    Left = 24
+    Height = 25
+    Top = 48
+    Width = 149
+    AutoSize = True
+    Caption = 'Download New Version'
+    OnClick = cmd_DownloadNewVersionClick
+    TabOrder = 3
+  end
+  object cmd_updateToNewVersion: TButton
+    Left = 24
+    Height = 25
+    Top = 80
+    Width = 147
+    AutoSize = True
+    Caption = 'Update to New Version'
+    OnClick = cmd_updateToNewVersionClick
+    TabOrder = 4
+  end
+  object cmd_AutoUpdate: TButton
+    Left = 24
+    Height = 25
+    Top = 112
+    Width = 93
+    AutoSize = True
+    Caption = 'Auto Update'
+    OnClick = cmd_AutoUpdateClick
+    TabOrder = 5
+  end
+  object lbl_Version: TLabel
+    Left = 24
+    Height = 15
+    Top = 152
+    Width = 298
+    Alignment = taCenter
+    AutoSize = False
+    Caption = 'Version: '
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object LazAutoUpdate1: TLazAutoUpdate
+    About.Description.Strings = (
+      'A component for updating your application'#13#10'Designed for projects hosted by SourceForge'#13#10#13#10'Main methods:'#13#10'Procedure AutoUpdate'#13#10'Function NewVersionAvailable: Boolean'#13#10'Function DownloadNewVersion: Boolean'#13#10'Function UpdateToNewVersion: Boolean'#13#10'Procedure ShowWhatsNewIfAvailable'#13#10'For troubleshooting, set DebugMode=TRUE'
+    )
+    About.Title = 'About LazAutoUpdate'
+    About.Height = 450
+    About.Width = 400
+    About.Font.Color = clNavy
+    About.Font.Height = -13
+    About.BackGroundColor = clWindow
+    About.Version = '0.2.0'
+    About.Authorname = 'Gordon Bamber'
+    About.Organisation = 'Public Domain'
+    About.AuthorEmail = 'minesadorada@gmail.com'
+    About.ComponentName = 'Laz Auto-update v0.2.0'
+    About.LicenseType = abModifiedGPL
+    OnNewVersionAvailable = LazAutoUpdate1NewVersionAvailable
+    OnDownloaded = LazAutoUpdate1Downloaded
+    OnDebugEvent = LazAutoUpdate1DebugEvent
+    SFProjectName = 'lazautoupdate'
+    CopyTree = False
+    UpdatesFolder = 'updates'
+    VersionsININame = 'testapp.ini'
+    ShowUpdateInCaption = True
+    ShowDialogs = True
+    VersionCountLimit = 1000000
+    DownloadCountLimit = 10000000
+    ZipfileName = 'testapp.zip'
+    Left = 200
+    Top = 24
+  end
+end
