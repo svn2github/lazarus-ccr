@@ -2,15 +2,15 @@
 <CONFIG>
   <ProjectSession>
     <PathDelim Value="\"/>
-    <Version Value="9"/>
-    <BuildModes Active="Win64 Release"/>
+    <Version Value="10"/>
+    <BuildModes Active="Linux64 Release"/>
     <Units Count="25">
       <Unit0>
         <Filename Value="updatehm.lpr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="114"/>
-        <CursorPos X="36" Y="292"/>
+        <TopLine Value="132"/>
+        <CursorPos X="41" Y="144"/>
         <UsageCount Value="76"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -134,26 +134,23 @@
         <UsageCount Value="10"/>
       </Unit21>
       <Unit22>
-        <Filename Value="..\..\..\..\..\lazarus\components\lazutils\lazutf8.pas"/>
+        <Filename Value="D:\lazarus\components\lazutils\lazutf8.pas"/>
         <UnitName Value="LazUTF8"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="-1"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit22>
       <Unit23>
-        <Filename Value="..\..\..\..\..\lazarus\components\lazutils\lazfileutils.pas"/>
+        <Filename Value="D:\lazarus\components\lazutils\lazfileutils.pas"/>
         <UnitName Value="LazFileUtils"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="61"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit23>
       <Unit24>
-        <Filename Value="..\..\..\..\..\fpc\packages\fcl-process\src\process.pp"/>
-        <EditorIndex Value="1"/>
+        <Filename Value="D:\fpc\packages\fcl-process\src\process.pp"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="76"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit24>
     </Units>
     <JumpHistory Count="28" HistoryIndex="27">

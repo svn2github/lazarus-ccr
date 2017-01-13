@@ -1,8 +1,6 @@
 unit ulazautoupdate;
 
 {
-  Original DownloadHTTP code: wiki.freepascal.org
-  Thread source: http://freepascalanswers.wordpress.com/2012/06/15/synapas-http-thread/
   VersionSupport:  Mike Thompson - mike.cornflake@gmail.com
   Added to and modified by minesadorada@charcodelvalle.com
 
@@ -37,21 +35,18 @@ interface
 
 
 uses
-  Forms, Classes, SysUtils, strutils, LazUTF8,FileUtil,LazFileUtils, Dialogs, StdCtrls,
-  Buttons, httpsend, DateUtils, asyncprocess, zipper, LResources,
+  Forms, Classes, SysUtils, lazautoupdate_httpclient, strutils,
+  LazUTF8, FileUtil, LazFileUtils, Dialogs, StdCtrls,
+  Buttons, DateUtils, asyncprocess, zipper, LResources,
   VersionSupport, inifiles, aboutlazautoupdateunit, uappisrunning, LCLProc,
-  fileinfo  , winpeimagereader {need this for reading exe info}
+  fileinfo, winpeimagereader {need this for reading exe info}
   , elfreader {needed for reading ELF executables}
   , machoreader {needed for reading MACH-O executables}
-  ;
+  {$IFDEF WINDOWS},Windows,ShellAPI{$ENDIF}; // Thanks to Windows 10 and 704 error
 
 const
-//  C_OnlineAppPath =
-//'https://sourceforge.net/project/%s/files/%s/%s/download';
-// https://sourceforge.net/projects/lazautoupdate/files/updates/updatepackwin32.zip/download
-// https://heanet.dl.sourceforge.net/project/lazautoupdate/updates/dboxmonitorwin64.zip
   C_OnlineAppPath =
-   'http://sourceforge.net/projects/%s/files/%s/%s/download';
+    'https://sourceforge.net/projects/%s/files/%s/%s/download';
   // [updatepath,projectname,filename]
   C_TLazAutoUpdateComponentVersion = '0.2.0';
   C_LAUTRayINI = 'lauimport.ini';
@@ -104,13 +99,13 @@ const
          More checks on PrettyName
  V0.1.25:Changed default: CopyTree = TRUE
  V0.1.26:Updated uses clause for FileUtils.
- V0.2.0: ??
+ V0.2.0: Rewritten for 2017
 }
-  C_TThreadedDownloadComponentVersion = '0.0.2';
+  C_TThreadedDownloadComponentVersion = '0.0.3';
 {
  V0.0.1: Initial alpha
  V0.0.2: Added fDebugmode to all classes and functions
- V0.0.3: ??
+ V0.0.3: Changed to http_client
 }
   C_OnlineVersionsININame = 'versions.ini'; // User can change
   C_UpdatesFolder = 'updates'; // User can change
@@ -119,10 +114,13 @@ const
   C_GUIEntry = 'GUI';
   C_ModuleEntry = 'Module';
   {$IFDEF WINDOWS}
-  C_Updater = 'updatehm.exe';
+   {$IFDEF CPU32}C_Updater = 'updatehmwin32.exe';{$ENDIF}
+   {$IFDEF CPU64}C_Updater = 'updatehmwin64.exe';{$ENDIF}
   C_LOCALUPDATER = 'lauupdate.exe';
-  {$ELSE}
-  C_Updater = 'updatehm';
+  {$ENDIF}
+  {$IFDEF LINUX}
+   {$IFDEF CPU32}C_Updater = 'updatehmlinux32';{$ENDIF}
+   {$IFDEF CPU64}C_Updater = 'updatehmlinux64';{$ENDIF}
   C_LOCALUPDATER = 'lauupdate';
   {$ENDIF}
 
@@ -188,14 +186,15 @@ type
     OnlineVersion: string) of object;
   TOnDownloaded = procedure(Sender: TObject; ResultCode, BytesDownloaded: integer) of
     object;
-  TOnDebugEvent = procedure(Sender: TObject; lauMethodName, lauMessage: string) of object;
+  TOnDebugEvent = procedure(Sender: TObject; lauMethodName, lauMessage: string) of
+    object;
 
   TLazAutoUpdate = class(TAboutLazAutoUpdate)
   private
     fSourceForgeProjectName: string;
     fApplicationVersionString: string;
     fApplicationVersionQuad: TVersionQuad;
-    fGuiQuad:TVersionQuad;
+    fGuiQuad: TVersionQuad;
     fProjectType: TProjectType;
     fThreadDownload: TThreadedDownload;
     fAppFileName: string;
@@ -228,7 +227,7 @@ type
     fSilentMode: boolean;
     fLCLVersion, fWidgetSet, fFPCVersion, fLastCompiled, fTargetOS: string;
     fQuad: TVersionQuad;
-    fProgVersion:TProgramVersion;
+    fProgVersion: TProgramVersion;
     objFileVerInfo: TFileVersionInfo;
     procedure SetProjectType(AValue: TProjectType);
     // projectype=auOther property Sets
@@ -248,7 +247,8 @@ type
 
   public
     constructor Create(AOwner: TComponent); override;
-    Procedure DebugTest;
+    destructor Destroy; override;
+    procedure DebugTest;
     {Main functions}
     // If  NewVersionAvailable then DownloadNewVersion then UpdateToNewVersion
     // Returns TRUE if GUIVersion > AppVersion
@@ -301,7 +301,7 @@ type
     property LastError: string read fLastError;
     // Debugging use only
     property DebugMode: boolean read fDebugMode write SetDebugMode;
-//    property AppVersionNumber: integer read fApplicationVersionQuad;
+    //    property AppVersionNumber: integer read fApplicationVersionQuad;
 
     // Info useful for About dialogs
     property LCLVersion: string read fLCLVersion;
@@ -317,7 +317,8 @@ type
     property OnDebugEvent: TOnDebugEvent read fOnDebugEvent write fOnDebugEvent;
 
     // Embedded class
-    property ThreadDownload: TThreadedDownload read fThreadDownload write fThreadDownload;
+    property ThreadDownload: TThreadedDownload
+      read fThreadDownload write fThreadDownload;
     // Set this property before using methods
     property SFProjectName: string read fSourceForgeProjectName
       write SetSourceForgeProjectName;
@@ -334,7 +335,7 @@ type
     // Version of this component
     property AutoUpdateVersion: string read fComponentVersion;
     // Zipfile contains a whole directory tree (relative to App Directory)
-    property CopyTree: boolean read fCopyTree write fCopyTree default TRUE;
+    property CopyTree: boolean read fCopyTree write fCopyTree default True;
     // Default is 'updates' *must be the same in SourceForge file section*
     property UpdatesFolder: string read fUpdatesFolder write fUpdatesFolder;
     // Default=versions.ini  File in SourceForge /updates folder
@@ -345,7 +346,8 @@ type
     // Set to FALSE if you want to handle them in form code
     property ShowDialogs: boolean read fShowDialogs write SetShowDialogs default False;
     // How many counts to wait until 'Too long' meesage quits out
-    property VersionCountLimit: cardinal read fVersionCountLimit write fVersionCountLimit;
+    property VersionCountLimit: cardinal read fVersionCountLimit
+      write fVersionCountLimit;
     // How many counts to wait until 'Too long' meesage quits out
     property DownloadCountLimit: cardinal read fDownloadCountLimit
       write fDownloadCountLimit;
@@ -416,8 +418,9 @@ type
 
 
 // Non-threaded version (redundant v0.0.1)
-function DownloadHTTP(URL, TargetFile: string;
-  var ReturnCode, DownloadSize: integer; bIsSourceForge, fDebugMode: boolean): boolean;
+
+function DownloadHTTP(URL, TargetFile: string; var ReturnCode, DownloadSize: integer;
+  bIsSourceForge, fDebugMode: boolean): boolean;
 
 procedure Register;
 
@@ -443,9 +446,9 @@ begin
   while MilliSecondOfTheDay(Now) < (ThisSecond + MillisecondDelay) do ;
 end;
 
-Procedure TLazAutoUpdate.DebugTest;
+procedure TLazAutoUpdate.DebugTest;
 begin
-   ShowMessage(fApplicationVersionString);
+  ShowMessage(fApplicationVersionString);
 end;
 
 constructor TLazAutoUpdate.Create(AOwner: TComponent);
@@ -470,29 +473,30 @@ begin
   // Grab the application and form objects from the application
   fParentApplication := Tapplication(AOwner.Owner);
   fParentForm := TForm(AOwner);
-  fApplicationVersionString:='No build information available';
-  objFileVerInfo:=TFileVersionInfo.Create(fParentApplication);
-  TRY
-   Try
-     objFileVerInfo.Filename:=ParamStrUTF8(0);
-     objFileVerInfo.ReadFileInfo;
-     fApplicationVersionString:=objFileVerInfo.VersionStrings.Values['FileVersion'];
-     fileinfo.GetProgramVersion(fApplicationVersionQuad);
-     fileinfo.GetProgramVersion(fProgVersion);
-   Except
-    // Eat other Exceptions?
-    On E:EResNotFound do
-       ShowMessage('There is no version information in your project!');
-    On E:Exception do Application.Terminate;
-   end;
+  fApplicationVersionString := 'No build information available';
+  objFileVerInfo := TFileVersionInfo.Create(fParentApplication);
+  try
+    try
+      objFileVerInfo.Filename := ParamStrUTF8(0);
+      objFileVerInfo.ReadFileInfo;
+      fApplicationVersionString := objFileVerInfo.VersionStrings.Values['FileVersion'];
+      fileinfo.GetProgramVersion(fApplicationVersionQuad);
+      fileinfo.GetProgramVersion(fProgVersion);
+    except
+      // Eat other Exceptions?
+      On E: EResNotFound do
+        ShowMessage('There is no version information in your project!');
+      On E: Exception do
+        Application.Terminate;
+    end;
   finally
-   objFileVerInfo.Free;
+    objFileVerInfo.Free;
   end;
   // fApplicationVersionString := GetFileVersion;
   if (fApplicationVersionString = 'No build information available') then
     fApplicationVersionString := '0.0.0.0';
 
-  fCopyTree := TRUE; // User can change
+  fCopyTree := True; // User can change
   // UpdateList: Redundant?
   AddToUpdateList('', LazUTF8.ParamStrUTF8(0), GetFileVersion, 0);
 
@@ -553,10 +557,14 @@ begin
   AboutBoxVersion := C_TLazAutoUpdateComponentVersion;
   AboutBoxAuthorname := 'Gordon Bamber';
   //AboutBoxOrganisation (string)
-  AboutBoxAuthorEmail := 'minesadorada@gmail.com';
+  AboutBoxAuthorEmail := 'minesadorada@charcodelvalle.com';
   AboutBoxLicenseType := 'MODIFIEDGPL';
 end;
-
+destructor TLazAutoUpdate.Destroy;
+begin
+  FreeAndNil(fThreadDownload);
+  inherited destroy;
+end;
 function TLazAutoUpdate.AppIsActive(const ExeName: string): boolean;
 begin
   Result := AppIsRunning(ExeName);
@@ -820,7 +828,8 @@ begin
   VersionINI := TIniFile.Create(sznewINIPath);
   try
     fGUIOnlineVersion := VersionINI.ReadString(C_INISection, C_GUIEntry, '0.0.0.0');
-    if NOT TryStrToVersionQuad(fGUIOnlineVersion,fGuiQuad) then fGUIQuad:=StrToVersionQuad('0.0.0.0');
+    if not TryStrToVersionQuad(fGUIOnlineVersion, fGuiQuad) then
+      fGUIQuad := StrToVersionQuad('0.0.0.0');
   finally
     VersionINI.Free;
   end;
@@ -840,9 +849,10 @@ begin
       [iGUIVersion, fApplicationVersionQuad]));
 }
   // Test: Is the online version newer?
-  if NewerVersion(fGUIQuad,fApplicationVersionQuad) then Result:=TRUE;
-//  if (iGUIVersion > fApplicationVersionQuad) then
-//    Result := True;
+  if NewerVersion(fGUIQuad, fApplicationVersionQuad) then
+    Result := True;
+  //  if (iGUIVersion > fApplicationVersionQuad) then
+  //    Result := True;
 end;
 
 
@@ -991,8 +1001,8 @@ begin
       end
       else
       if fFireDebugEvent then
-      fOndebugEvent(Self, 'NewVersionAvailable',
-        Format('DownloadSize was %d', [fDownloadSize]));
+        fOndebugEvent(Self, 'NewVersionAvailable',
+          Format('DownloadSize was %d', [fDownloadSize]));
 
     end;
   end;
@@ -1213,7 +1223,7 @@ function TLazAutoUpdate.CreateLocalLauImportFile: boolean;
 var
   LAUTRayINI: TIniFile;
   szSection: string;
-  szSuffix:String;
+  szSuffix: string;
 begin
   // read the VMT once
   if Assigned(fOndebugEvent) then
@@ -1227,14 +1237,14 @@ begin
   end;
   // Make up OS-Bitness suffix
   {$IFDEF WINDOWS}
-  szSuffix:='win';
+  szSuffix := 'win';
   {$ELSE}
-  szSuffix:='linux';
+  szSuffix := 'linux';
   {$ENDIF}
   {$IFDEF CPU64}
-  szSuffix+='64';
+  szSuffix += '64';
   {$ELSE}
-  szSuffix+='32';
+  szSuffix += '32';
   {$ENDIF}
   Result := False;
   LAUTRayINI := TIniFile.Create(ProgramDirectory + C_LAUTRayINI);
@@ -1248,9 +1258,10 @@ begin
         szSection := fParentForm.Caption
       else
         szSection := 'My Application';
-      If ((AnsiContainsText(szSection,{$I %FPCTARGETOS%}) = FALSE)
-      AND (AnsiContainsText(szSection,szSuffix) = FALSE)) then
-         szSection += szSuffix;
+      if ((AnsiContainsText(szSection,
+{$I %FPCTARGETOS%}
+        ) = False) and (AnsiContainsText(szSection, szSuffix) = False)) then
+        szSection += szSuffix;
       WriteString(szSection, 'AppPrettyName', szSection);
       WriteString(szSection, 'AppPath', ExtractFilename(fAppFilename));
       WriteString(szSection, 'INIPath', fVersionsININame);
@@ -1334,14 +1345,14 @@ begin
   if not FileExistsUTF8(szDestLAUTrayPath + C_LAUTRayINI) then
   begin
     // Move C_LAUTRayINI from app folder to local <AppData> folder
-    if CopyFile(szSourceLAUTrayPath, szDestLAUTrayPath + C_LAUTRayINI,
+    if FileUtil.CopyFile(szSourceLAUTrayPath, szDestLAUTrayPath + C_LAUTRayINI,
       [cffOverwriteFile]) then
     begin
       if fFireDebugEvent then
         fOndebugEvent(Self, 'RelocateLauImportFile',
-          Format('Relocated %s from %s to %s', [C_LAUTRayINI,
-          szSourceLAUTrayPath, szDestLAUTrayPath]));
-      DeleteFile(szSourceLAUTrayPath);
+          Format('Relocated %s from %s to %s',
+          [C_LAUTRayINI, szSourceLAUTrayPath, szDestLAUTrayPath]));
+      SysUtils.DeleteFile(szSourceLAUTrayPath);
     end
     else
     if fFireDebugEvent then
@@ -1609,7 +1620,8 @@ begin
       // remotely shut down the app?
       if fSilentMode then
       begin
-        If AppIsRunning(ExtractFileName(fAppFilename)) then KillApp(ExtractFileName(fAppFilename));
+        if AppIsRunning(ExtractFileName(fAppFilename)) then
+          KillApp(ExtractFileName(fAppFilename));
         if fFireDebugEvent then
           fOndebugEvent(Self, 'RemoteUpdateToNewVersion',
             Format('Killing %s ready for update', [fAppFilename]));
@@ -1628,9 +1640,28 @@ begin
 end;
 
 function TLazAutoUpdate.UpdateToNewVersion: boolean;
+
+{$IFDEF WINDOWS}
+// function RunAsAdmin(const Handle: Hwnd; const Path, Params: string): Boolean;
+function RunAsAdmin(const Handle: THandle; const Path, Params: string): Boolean;
+var
+  sei: TShellExecuteInfoA;
+begin
+  FillChar(sei, SizeOf(sei), 0);
+  sei.cbSize := SizeOf(sei);
+  sei.Wnd := Handle;
+  sei.fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
+  sei.lpVerb := 'runas';
+  sei.lpFile := PAnsiChar(Path);
+  sei.lpParameters := PAnsiChar(Params);
+  sei.nShow := SW_SHOWNORMAL;
+  Result := ShellExecuteExA(@sei);
+end;
+{$ENDIF}
 var
   cCount: cardinal;
   szAppDir: string;
+  szParams:String;
 begin
   Result := False;
   szAppDir := AppendPathDelim(ExtractFilePath(fAppFilename));
@@ -1641,7 +1672,6 @@ begin
   if fFireDebugEvent then
     fOndebugEvent(Self, 'UpdateToNewVersion',
       'Entering UpdateToNewVersion');
-
 
   // Running update using updatehm?
   if not AppIsRunning(ExtractFileName(fAppFilename)) then
@@ -1658,6 +1688,7 @@ begin
           Format(C_UpdaterMissing, [szAppDir + C_Updater]));
       Exit;
     end;
+
     if not DirectoryExistsUTF8(szAppDir + fUpdatesFolder) then
     begin
       if fShowDialogs then
@@ -1672,16 +1703,42 @@ begin
     // remotely shut down the app?
     if fSilentMode then
     begin
-      If AppIsRunning(ExtractFileName(fAppFilename)) then KillApp(ExtractFileName(fAppFilename));
+      if AppIsRunning(ExtractFileName(fAppFilename)) then
+        KillApp(ExtractFileName(fAppFilename));
       if fFireDebugEvent then
         fOndebugEvent(Self, 'UpdateToNewVersion',
           Format('Killing %s ready for update', [fAppFilename]));
     end;
+{$IFDEF WINDOWS}
+    szParams:=ExtractFileName(fAppFilename);
+    szParams:=szParams + ' ' + fUpdatesFolder;
+    szParams:=szParams + ' ' + C_WhatsNewFilename;
+    szParams:=szParams + ' ' + fParentApplication.Title;
+    if (fCopyTree = True) then
+    szParams:=szParams + ' copytree';
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'UpdateToNewVersion',
+        Format('Executing %s', [szAppDir + C_UPDATER]));
+    RunAsAdmin(fParentForm.Handle,szAppDir + C_UPDATER, szParams);
 
+    // Check for C_WhatsNewFilename in the app directory in a LOOP
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'UpdateToNewVersion',
+        Format('Waiting for %s', [szAppDir + C_WhatsNewFilename]));
+    while not FileExistsUTF8(szAppDir + C_WhatsNewFilename) do
+    begin
+      fParentApplication.ProcessMessages;
+      Inc(CCount);
+      if cCount > 10000000 then
+        Break; // Get out of jail in case updatehm.exe fails to copy file
+    end;
+{$ELSE}
     // Update and re-start the app
     FUpdateHMProcess := TAsyncProcess.Create(nil);
     try
+//      FUpdateHMProcess.Executable := AppendPathDelim(GetAppConfigDir(false)) + C_Updater;
       FUpdateHMProcess.Executable := szAppDir + C_UPDATER;
+//      FUpdateHMProcess.CurrentDirectory := AppendPathDelim(GetAppConfigDir(false));
       FUpdateHMProcess.CurrentDirectory := szAppDir;
       if not fSilentMode then
         FUpdateHMProcess.ConsoleTitle :=
@@ -1697,7 +1754,11 @@ begin
       if fFireDebugEvent then
         fOndebugEvent(Self, 'UpdateToNewVersion',
           Format('Executing %s', [szAppDir + C_UPDATER]));
-      FUpdateHMProcess.Execute;
+TRY
+     FUpdateHMProcess.Execute;
+EXCEPT
+    raise Exception.CreateFmt('Error %d: Run this application in Administrator mode or turn off UAC',[GetLastOSError]);
+END;
 
       // Check for C_WhatsNewFilename in the app directory in a LOOP
       if fFireDebugEvent then
@@ -1710,15 +1771,15 @@ begin
         if cCount > 10000000 then
           Break; // Get out of jail in case updatehm.exe fails to copy file
       end;
-
-    finally
-      FUpdateHMProcess.Free;
-      if not fSilentMode then
-        fParentForm.Close;
-    end;
+finally
+  FUpdateHMProcess.Free;
+end;
+{$ENDIF}
     if fFireDebugEvent then
       fOndebugEvent(Self, 'UpdateToNewVersion',
         'Success');
+    if not fSilentMode then
+       fParentForm.Close;
     Result := True;
   end;
 end;
@@ -1914,298 +1975,39 @@ begin
 end;
 
 { End of class members}
-
-function DownloadHTTPStream(URL: string; Buffer: TStream; fDebugMode: boolean): boolean;
-  // Download file; retry if necessary.
-const
-  MaxRetries = 3;
-var
-  RetryAttempt: integer;
-  HTTPGetResult: boolean;
-begin
-  Result := False;
-  RetryAttempt := 1;
-  HTTPGetResult := False;
-  while ((HTTPGetResult = False) and (RetryAttempt < MaxRetries)) do
-  begin
-    HTTPGetResult := HttpGetBinary(URL, Buffer);
-    //Application.ProcessMessages;
-    WaitFor(100 * RetryAttempt);
-    // Sleep(100 * RetryAttempt);
-    RetryAttempt := RetryAttempt + 1;
-  end;
-  if HTTPGetResult = False then
-    if fDebugmode then
-      raise Exception.Create(C_CannotLoadFromRemote);
-  Buffer.Position := 0;
-  if Buffer.Size = 0 then
-    if fDebugmode then
-      raise Exception.Create(C_DownloadIsEmpty)
-    else
-      Result := True;
-end;
-
-function SFDirectLinkURL(URL: string; Document: TMemoryStream): string;
-{
-Transform this part of the body:
-<noscript>
-<meta http-equiv="refresh" content="5; url=http://downloads.sourceforge.net/project/base64decoder/base64decoder/version%202.0/b64util.zip?r=&amp;ts=1329648745&amp;use_mirror=kent">
-</noscript>
-into a valid URL:
-http://downloads.sourceforge.net/project/base64decoder/base64decoder/version%202.0/b64util.zip?r=&amp;ts=1329648745&amp;use_mirror=kent
-}
-const
-  Refresh = '<meta http-equiv="refresh"';
-  URLMarker = 'url=';
-var
-  Counter  : integer;
-  HTMLBody  : TStringList;
-  RefreshStart  : integer;
-  URLStart  : integer;
-begin
-  HTMLBody := TStringList.Create;
-   try
-    HTMLBody.LoadFromStream(Document);
-    for Counter := 0 to HTMLBody.Count - 1 do
-     begin
-      // This line should be between noscript tags and give the direct download locations:
-      RefreshStart := Ansipos(Refresh, HTMLBody[Counter]);
-      if RefreshStart > 0 then
-       begin
-        URLStart := AnsiPos(URLMarker, HTMLBody[Counter]) + Length(URLMarker);
-        if URLStart > RefreshStart then
-         begin
-          // Look for closing "
-          URL := Copy(HTMLBody[Counter], URLStart,
-            PosEx('"', HTMLBody[Counter], URLStart + 1) - URLStart);
-          //infoln('debug: new url after sf noscript:');
-          //infoln(URL);
-          break;
-         end;
-       end;
-     end;
-   finally
-    HTMLBody.Free;
-   end;
-  Result := URL;
-end;
-
-function SourceForgeURL(URL: string; fDebugmode: boolean;
-  var AReturnCode: integer): string;
-  // Detects sourceforge download and tries to deal with
-  // redirection, and extracting direct download link.
-  // Thanks to
-  // Ocye: http://lazarus.freepascal.org/index.php/topic,13425.msg70575.html#msg70575
-// http://downloads.sourceforge.net/project/lazautoupdate/updates/updatepackwin32.ini?r=&ts=1481210267&use_mirror=heanet
-const
-    SFProjectPart = '//sourceforge.net/projects/';
-    SFFilesPart = '/files/';
-    SFDownloadPart ='/download';
-var
-  HTTPSender: THTTPSend;
-  i, j: integer;
-  FoundCorrectURL: boolean;
-  SFDirectory: string; //Sourceforge directory
-  SFDirectoryBegin: integer;
-  SFFileBegin: integer;
-  SFFilename: string; //Sourceforge name of file
-  SFProject: string;
-  SFProjectBegin: integer;
-begin
-  // Detect SourceForge download; e.g. from URL
-  //          1         2         3         4         5         6         7         8         9
-  // 1234557890123456789012345578901234567890123455789012345678901234557890123456789012345578901234567890
-  // http://sourceforge.net/projects/base64decoder/files/base64decoder/version%202.0/b64util.zip/download
-  //                                 ^^^project^^^       ^^^directory............^^^ ^^^file^^^
-  FoundCorrectURL := True; //Assume not a SF download
-  i := Pos(SFProjectPart, URL);
-  if i > 0 then
-  begin
-    // Possibly found project; now extract project, directory and filename parts.
-    SFProjectBegin := i + Length(SFProjectPart);
-    j := PosEx(SFFilesPart, URL, SFProjectBegin);
-    if (j > 0) then
-    begin
-      SFProject := Copy(URL, SFProjectBegin, j - SFProjectBegin);
-      SFDirectoryBegin := PosEx(SFFilesPart, URL, SFProjectBegin) + Length(SFFilesPart);
-      if SFDirectoryBegin > 0 then
-      begin
-        // Find file
-        // URL might have trailing arguments... so: search for first
-        // /download coming up from the right, but it should be after
-        // /files/
-        i := RPos(SFDownloadPart, URL);
-        // Now look for previous / so we can make out the file
-        // This might perhaps be the trailing / in /files/
-        SFFileBegin := RPosEx('/', URL, i - 1) + 1;
-
-        if SFFileBegin > 0 then
-        begin
-          SFFilename := Copy(URL, SFFileBegin, i - SFFileBegin);
-         //Include trailing /
-          SFDirectory := Copy(URL, SFDirectoryBegin, SFFileBegin - SFDirectoryBegin);
-          // if fdebugmode then SHowMessage('SFFilename=' + SFFilename);
-          // if fdebugmode then SHowMessage('SFDirectory=' + SFDirectory);
-          FoundCorrectURL := False;
-        end;
-      end;
-    end;
-  end;
-
-  if not FoundCorrectURL then
-  begin
-    try
-      // Rewrite URL if needed for Sourceforge download redirection
-      // Detect direct link in HTML body and get URL from that
-      HTTPSender := THTTPSend.Create;
-      //Who knows, this might help:
-      HTTPSender.UserAgent :=
-        'curl/7.21.0 (i686-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18';
-      while not FoundCorrectURL do
-      begin
-        HTTPSender.HTTPMethod('GET', URL);
-        // if fdebugmode then showmessagefmt('Return code is %d',[HTTPSender.Resultcode]);
-        // SEE: http_ReturnCodes.txt
-        case HTTPSender.Resultcode of
-          301, 302, 307:
-          begin
-            for i := 0 to HTTPSender.Headers.Count - 1 do
-            Begin
-              // if fdebugmode then SHowMessage('Header string=' +  HTTPSender.Headers.Strings[i]);
-              if (Pos('Location: ', HTTPSender.Headers.Strings[i]) > 0) or
-                (Pos('location: ', HTTPSender.Headers.Strings[i]) > 0) then
-              begin
-                // if fdebugmode then SHowMessage('Header string=' + LeftStr(HTTPSender.Headers.Strings[i],Length( HTTPSender.Headers.Strings[i]) div 2));
-                //if fdebugmode then SHowMessage('Header string=' + RightStr(HTTPSender.Headers.Strings[i],Length( HTTPSender.Headers.Strings[i]) div 2));
-                j := Pos('use_mirror=', HTTPSender.Headers.Strings[i]);
-                if j > 0 then
-                  URL :=
-                    'http://' + RightStr(HTTPSender.Headers.Strings[i],
-                    length(HTTPSender.Headers.Strings[i]) - j - 10) +
-                    'downloads.sourceforge.net/project/' + SFProject +
-                    '/' + SFDirectory + SFFilename
-                else
-                  URL := StringReplace(HTTPSender.Headers.Strings[i],
-                    'Location: ', '', []);
-                HTTPSender.Clear;//httpsend
-                FoundCorrectURL := True;
-                AReturnCode := HTTPSender.Resultcode;
-                break; //out of rewriting loop
-              end;
-            end;
-          end;
-          100..200:
-          begin
-            //Could be a sourceforge timer/direct link page, but...
-            if AnsiPos('Content-Type: text/html', HTTPSender.Headers.Text) > 0 then
-            begin
-              // find out... it's at least not a binary
-              URL := SFDirectLinkURL(URL, HTTPSender.Document);
-            end;
-            FoundCorrectURL := True; //We're done by now
-            AReturnCode := HTTPSender.Resultcode;
-          end;
-          500:
-          begin
-            // if fDebugMode then ShowMessageFmt(C_Error500, [HTTPSender.ResultCode]);
-            AReturnCode := HTTPSender.Resultcode;
-            Break;
-          end;
-          //Raise Exception.Create('No internet connection available');
-          //Internal Server Error ('+aURL+')');
-          404:
-          begin
-            // if fDebugMode then ShowMessageFmt(C_Error404, [HTTPSender.ResultCode]);
-            AReturnCode := HTTPSender.Resultcode;
-            Break;
-          end;
-          else
-            raise Exception.Create(C_DownloadFailedErrorCode +
-              IntToStr(HTTPSender.ResultCode) + ' (' + HTTPSender.ResultString + ')');
-        end;//case
-      end;//while
-    finally
-      AReturnCode := HTTPSender.Resultcode;
-      HTTPSender.Free;
-    end;
-  end;
-  Result := URL;
-end;
-
-function DownloadHTTP(URL, TargetFile: string; var ReturnCode, DownloadSize: integer;
-bIsSourceForge, fDebugmode: boolean): boolean;
+function DownloadHTTP(URL, TargetFile: string;
+  var ReturnCode, DownloadSize: integer; bIsSourceForge, fDebugmode: boolean): boolean;
   // Download file; retry if necessary.
   // Deals with SourceForge download links
-  // Could use Synapse HttpGetBinary, but that doesn't deal
-  // with result codes (i.e. it happily downloads a 404 error document)
 const
   MaxRetries = 3;
 var
-  HTTPGetResult  : boolean;
-  HTTPSender  : THTTPSend;
-  RetryAttempt,i  : integer;
+  HTTPClient: TFPHTTPClient;
+  HTTPGetResult: boolean;
+  RetryAttempt, i: integer;
 begin
   Result := False;
   RetryAttempt := 1;
-  //Optional: mangling of Sourceforge file download URLs; see below.
+  HTTPClient := TFPHTTPClient.Create(nil);
   if bIsSourceForge then
   begin
-    URL := SourceForgeURL(URL, fDebugMode, ReturnCode); //Deal with sourceforge URLs
-    // if fDebugMode then ShowMessage(LeftStr(URL,Length(URL) div 2));
-    // if fDebugMode then ShowMessage(RightStr(URL,Length(URL) div 2));
+    HTTPClient.AllowRedirect:=True;
   end;
 
   // ReturnCode may not be useful, but it's provided here
-  HTTPSender := THTTPSend.Create;
-   try
-     try
+  try
+    try
       // Try to get the file
-      HTTPGetResult := HTTPSender.HTTPMethod('GET', URL);
-
-      while (HTTPGetResult = False) and (RetryAttempt < MaxRetries) do
-       begin
-        WaitFor(500 * RetryAttempt);
-        // sleep(500 * RetryAttempt);
-        HTTPGetResult := HTTPSender.HTTPMethod('GET', URL);
-        RetryAttempt  := RetryAttempt + 1;
-       end;
-      // If we have an answer from the server, check if the file
-      // was sent to us
-      ReturnCode   := HTTPSender.Resultcode;
-      DownloadSize := HTTPSender.DownloadSize;
-      ShowMessageFmt('DownloadHTTP Return code=%d',[HTTPSender.Resultcode]);
-      ShowMessageFmt('DownloadHTTP Download Size=%d',[HTTPSender.DownloadSize]);
-      case HTTPSender.Resultcode of
-        100..299:
-         begin
-          with TFileStream.Create(TargetFile, fmCreate or fmOpenWrite) do
-             try
-              Seek(0, soFromBeginning);
-              CopyFrom(HTTPSender.Document, 0);
-             finally
-              Free;
-             end;
-          Result := True;
-         end; //informational, success
-        301: // moved permanently
-         begin
-            URL:=SourceForgeURL(URL,TRUE,ReturnCode);
-            ShowMessage(URL);
-         end;
-        302..399:
-        Result := False; //redirection. Not implemented, but could be.
-        400..499: Result := False; //client error; 404 not found etc
-        500..599: Result := False; //internal server error
-        else
-          Result := False; //unknown code
-       end;
-     except
+      HTTPClient.Get(URL, TargetFile);
+      ReturnCode := HTTPClient.ResponseStatusCode;
+      DownloadSize := Filesize(TargetFile);
+    except
       // We don't care for the reason for this error; the download failed.
       Result := False;
-     end;
-   finally
-    HTTPSender.Free;
-   end;
+    end;
+  finally
+    HTTPClient.Free;
+  end;
 
 end;
 

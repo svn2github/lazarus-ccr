@@ -67,7 +67,7 @@ uses
 const
   C_AppPrettyName = 'Lazarus Auto-Updater';
   C_WhatsNewFileName = 'whatsnew.txt';
-  C_Version = '0.0.14';
+  C_Version = '0.0.15';
   C_UpdatesDirectory = 'updates';
   C_LogFileName = 'updatehmlog.txt';
   C_LAUTRayINI = 'lauimport.ini';
@@ -120,9 +120,13 @@ var
 begin
   if ParamCount = 0 then
     begin
+    WriteLn('==========================================================');
     Writeln(LineEnding + '==== updatehm v' + C_Version +
       ' - an lazautoupdate application ====');
     Writeln('Usage: updatehm exename.exe [updatesfoldername] [whatnewfilename] [exePrettyName] [copytree]');
+    WriteLn('==========================================================');
+    WriteLn('Press any key to continue');
+    ReadLn;
     Halt;
     end;
 
@@ -135,6 +139,8 @@ begin
     WriteLn('optional parameters are');
     WriteLn('-h or /h - this screen');
     WriteLn('==========================================================');
+    WriteLn('Press any key to continue');
+    ReadLn;
     Halt;
     end;
 

@@ -52,8 +52,8 @@ A component for SourceForge Project Developers and end-users to update their app
   along with this library; if not, write to the Free Software Foundation,
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 "/>
-    <Version Minor="1" Release="28"/>
-    <Files Count="4">
+    <Version Minor="2"/>
+    <Files Count="5">
       <Item1>
         <Filename Value="ulazautoupdate.pas"/>
         <HasRegisterProc Value="True"/>
@@ -72,19 +72,20 @@ A component for SourceForge Project Developers and end-users to update their app
         <Filename Value="uappisrunning.pas"/>
         <UnitName Value="uappisrunning"/>
       </Item4>
+      <Item5>
+        <Filename Value="lazautoupdate_httpclient.pas"/>
+        <UnitName Value="lazautoupdate_httpclient"/>
+      </Item5>
     </Files>
     <i18n>
       <EnableI18N Value="True"/>
       <OutDir Value="locale"/>
       <EnableI18NForLFM Value="True"/>
     </i18n>
-    <RequiredPkgs Count="2">
+    <RequiredPkgs Count="1">
       <Item1>
-        <PackageName Value="laz_synapse40_1"/>
-      </Item1>
-      <Item2>
         <PackageName Value="IDEIntf"/>
-      </Item2>
+      </Item1>
     </RequiredPkgs>
     <UsageOptions>
       <CustomOptions Value="-dUseCThreads"/>
