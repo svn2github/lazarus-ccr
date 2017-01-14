@@ -31,7 +31,7 @@ Interface
 *)
 
 Uses
-  Classes, SysUtils,LCLVersion;
+  Classes, SysUtils, LCLVersion;
 
 Function GetFileVersion: String;
 Function GetProductVersion: String;
@@ -56,7 +56,8 @@ Const
 Implementation
 
 Uses
-  resource, versiontypes, versionresource, InterfaceBase;
+  resource, versiontypes, versionresource, InterfaceBase
+  {$IF (lcl_major > 0) and (lcl_minor > 6)}, LCLPlatformDef {$ENDIF};
 
 Type
   TVersionInfo = Class
