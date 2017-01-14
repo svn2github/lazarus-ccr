@@ -1,6 +1,6 @@
 {
   "UpdatePackageData" : {
-    "DisableInOPM" : true,
+    "DisableInOPM" : false,
     "DownloadZipURL" : "https://svn.code.sf.net/p/lazarus-ccr/svn/components/lazautoupdate/latest_stable/updates/lazautoupdate.zip",
     "Name" : "lazautoupdate.zip"
   },
@@ -9,7 +9,7 @@
       "ForceNotify" : false,
       "InternalVersion" : 0,
       "Name" : "lazupdate.lpk",
-      "Version" : "0.1.27.0"
+      "Version" : "0.2.0.0"
     }
   ]
 }
