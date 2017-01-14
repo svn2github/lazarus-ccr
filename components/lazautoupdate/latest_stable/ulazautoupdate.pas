@@ -42,7 +42,7 @@ uses
   fileinfo, winpeimagereader {need this for reading exe info}
   , elfreader {needed for reading ELF executables}
   , machoreader {needed for reading MACH-O executables}
-  {$IFDEF WINDOWS},Windows,ShellAPI{$ENDIF}; // Thanks to Windows 10 and 704 error
+  {$IFDEF WINDOWS}, Windows, ShellAPI{$ENDIF}; // Thanks to Windows 10 and 704 error
 
 const
   C_OnlineAppPath =
@@ -114,14 +114,16 @@ const
   C_GUIEntry = 'GUI';
   C_ModuleEntry = 'Module';
   {$IFDEF WINDOWS}
-   {$IFDEF CPU32}C_Updater = 'updatehmwin32.exe';{$ENDIF}
-   {$IFDEF CPU64}C_Updater = 'updatehmwin64.exe';{$ENDIF}
-  C_LOCALUPDATER = 'lauupdate.exe';
+   {$IFDEF CPU32}C_UPDATER = 'updatehmwin32.exe';
+  C_LOCALUPDATER = 'lauupdatewin32.exe';{$ENDIF}
+   {$IFDEF CPU64}C_UPDATER = 'updatehmwin64.exe';
+  C_LOCALUPDATER = 'lauupdatewin64.exe';{$ENDIF}
   {$ENDIF}
   {$IFDEF LINUX}
-   {$IFDEF CPU32}C_Updater = 'updatehmlinux32';{$ENDIF}
-   {$IFDEF CPU64}C_Updater = 'updatehmlinux64';{$ENDIF}
-  C_LOCALUPDATER = 'lauupdate';
+   {$IFDEF CPU32}C_UPDATER = 'updatehmlinux32';
+  C_LOCALUPDATER = 'lauupdatelinux32';{$ENDIF}
+   {$IFDEF CPU64}C_UPDATER = 'updatehmlinux64';
+  C_LOCALUPDATER = 'lauupdatelinux64';{$ENDIF}
   {$ENDIF}
 
 resourcestring
@@ -229,6 +231,7 @@ type
     fQuad: TVersionQuad;
     fProgVersion: TProgramVersion;
     objFileVerInfo: TFileVersionInfo;
+    fUpdateExe,fUpdateSilentExe:String;
     procedure SetProjectType(AValue: TProjectType);
     // projectype=auOther property Sets
     procedure SetauOtherSourceFilename(AValue: string);
@@ -353,7 +356,8 @@ type
       write fDownloadCountLimit;
     // Default is application filename.zip
     property ZipfileName: string read fZipfileName write fZipfileName;
-
+    property UpdateExe:String read fUpdateExe;
+    property UpdateExeSilent:String read fUpdateSilentExe;
   end;
 
   {TThreadedDownload }
@@ -526,6 +530,10 @@ begin
 
   fZipfileName := ''; // assign later
 
+  fUpdateExe:=C_UPDATER;
+  fUpdateSilentExe:=C_LOCALUPDATER;
+
+
   // Assorted versioninfo properties
   fLCLVersion := GetLCLVersion;
   fWidgetSet := GetWidgetSet;
@@ -560,11 +568,13 @@ begin
   AboutBoxAuthorEmail := 'minesadorada@charcodelvalle.com';
   AboutBoxLicenseType := 'MODIFIEDGPL';
 end;
+
 destructor TLazAutoUpdate.Destroy;
 begin
   FreeAndNil(fThreadDownload);
-  inherited destroy;
+  inherited Destroy;
 end;
+
 function TLazAutoUpdate.AppIsActive(const ExeName: string): boolean;
 begin
   Result := AppIsRunning(ExeName);
@@ -1345,13 +1355,13 @@ begin
   if not FileExistsUTF8(szDestLAUTrayPath + C_LAUTRayINI) then
   begin
     // Move C_LAUTRayINI from app folder to local <AppData> folder
-    if FileUtil.CopyFile(szSourceLAUTrayPath, szDestLAUTrayPath + C_LAUTRayINI,
-      [cffOverwriteFile]) then
+    if FileUtil.CopyFile(szSourceLAUTrayPath, szDestLAUTrayPath +
+      C_LAUTRayINI, [cffOverwriteFile]) then
     begin
       if fFireDebugEvent then
         fOndebugEvent(Self, 'RelocateLauImportFile',
-          Format('Relocated %s from %s to %s',
-          [C_LAUTRayINI, szSourceLAUTrayPath, szDestLAUTrayPath]));
+          Format('Relocated %s from %s to %s', [C_LAUTRayINI,
+          szSourceLAUTrayPath, szDestLAUTrayPath]));
       SysUtils.DeleteFile(szSourceLAUTrayPath);
     end
     else
@@ -1541,9 +1551,28 @@ end;
 
 function TLazAutoUpdate.RemoteUpdateToNewVersion: boolean;
   // Shells to 'lauupdate' console app in ProgramDirectory to remotely update an app
+
+{$IFDEF WINDOWS}
+  function RunAsAdmin(const Handle: THandle; const Path, Params: string): boolean;
+  var
+    sei: TShellExecuteInfoA;
+  begin
+    FillChar(sei, SizeOf(sei), 0);
+    sei.cbSize := SizeOf(sei);
+    sei.Wnd := Handle;
+    sei.fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
+    sei.lpVerb := 'runas';
+    sei.lpFile := PAnsiChar(Path);
+    sei.lpParameters := PAnsiChar(Params);
+    sei.nShow := SW_SHOWNORMAL;
+    Result := ShellExecuteExA(@sei);
+  end;
+
+{$ENDIF}
+
 var
   cCount: cardinal;
-  szAppDir: string;
+  szAppDir, szParams: string;
 begin
   Result := False;
   szAppDir := AppendPathDelim(ExtractFilePath(fAppFilename));
@@ -1583,26 +1612,51 @@ begin
     end;
 
 
+ {$IFDEF WINDOWS}
+    szParams := ExtractFileName(fAppFilename);
+    szParams := szParams + ' ' + fUpdatesFolder;
+    szParams := szParams + ' ' + C_WhatsNewFilename;
+    szParams := szParams + ' ' + fParentApplication.Title;
+    if (fCopyTree = True) then
+      szParams := szParams + ' copytree';
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'RemoteUpdateToNewVersion',
+        Format('Executing %s', [ProgramDirectory + C_LOCALUPDATER]));
+    RunAsAdmin(fParentForm.Handle, ProgramDirectory + C_LOCALUPDATER, szParams);
+
+    // Check for C_WhatsNewFilename in the app directory in a LOOP
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'RemoteUpdateToNewVersion',
+        Format('Waiting for %s', [szAppDir + C_WhatsNewFilename]));
+    while not FileExistsUTF8(szAppDir + C_WhatsNewFilename) do
+    begin
+      fParentApplication.ProcessMessages;
+      Inc(CCount);
+      if cCount > 10000000 then
+        Break; // Get out of jail in case updatehm.exe fails to copy file
+    end;
+{$ELSE}
 
     // Update and re-start the app
     FUpdateHMProcess := TAsyncProcess.Create(nil);
+    FUpdateHMProcess.Executable := ProgramDirectory + C_LOCALUPDATER;
+    FUpdateHMProcess.CurrentDirectory := ProgramDirectory;
+    if not fSilentMode then
+      FUpdateHMProcess.ConsoleTitle :=
+        Format(C_ConsoleTitle, [fParentApplication.Title]);
+    FUpdateHMProcess.Parameters.Clear;
+    FUpdateHMProcess.Parameters.Add(fAppFilename); //Param 1 = EXEname
+    FUpdateHMProcess.Parameters.Add(fUpdatesFolder); // Param 2 = updates
+    FUpdateHMProcess.Parameters.Add(C_WhatsNewFilename); // Param 3 = whatsnew.txt
+    FUpdateHMProcess.Parameters.Add(fParentApplication.Title); // Param 4 = Prettyname
+    if (fCopyTree = True) then
+      FUpdateHMProcess.Parameters.Add('copytree');
+    // Param 5 = Copy the whole of /updates to the App Folder
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'RemoteUpdateToNewVersion',
+        Format('Executing %s', [ProgramDirectory + C_LOCALUPDATER]));
+
     try
-      FUpdateHMProcess.Executable := ProgramDirectory + C_LOCALUPDATER;
-      FUpdateHMProcess.CurrentDirectory := ProgramDirectory;
-      if not fSilentMode then
-        FUpdateHMProcess.ConsoleTitle :=
-          Format(C_ConsoleTitle, [fParentApplication.Title]);
-      FUpdateHMProcess.Parameters.Clear;
-      FUpdateHMProcess.Parameters.Add(fAppFilename); //Param 1 = EXEname
-      FUpdateHMProcess.Parameters.Add(fUpdatesFolder); // Param 2 = updates
-      FUpdateHMProcess.Parameters.Add(C_WhatsNewFilename); // Param 3 = whatsnew.txt
-      FUpdateHMProcess.Parameters.Add(fParentApplication.Title); // Param 4 = Prettyname
-      if (fCopyTree = True) then
-        FUpdateHMProcess.Parameters.Add('copytree');
-      // Param 5 = Copy the whole of /updates to the App Folder
-      if fFireDebugEvent then
-        fOndebugEvent(Self, 'RemoteUpdateToNewVersion',
-          Format('Executing %s', [ProgramDirectory + C_LOCALUPDATER]));
       FUpdateHMProcess.Execute;
 
       // Check for C_WhatsNewFilename in the app directory in a LOOP
@@ -1616,22 +1670,22 @@ begin
         if cCount > 10000000 then
           Break; // Get out of jail in case updatehm.exe fails to copy file
       end;
-
-      // remotely shut down the app?
-      if fSilentMode then
-      begin
-        if AppIsRunning(ExtractFileName(fAppFilename)) then
-          KillApp(ExtractFileName(fAppFilename));
-        if fFireDebugEvent then
-          fOndebugEvent(Self, 'RemoteUpdateToNewVersion',
-            Format('Killing %s ready for update', [fAppFilename]));
-      end;
-
     finally
       FUpdateHMProcess.Free;
-      if not fSilentMode then
-        fParentForm.Close;
     end;
+{$ENDIF}
+    // remotely shut down the app?
+    if fSilentMode then
+    begin
+      if AppIsRunning(ExtractFileName(fAppFilename)) then
+        KillApp(ExtractFileName(fAppFilename));
+      if fFireDebugEvent then
+        fOndebugEvent(Self, 'RemoteUpdateToNewVersion',
+          Format('Killing %s ready for update', [fAppFilename]));
+    end;
+
+    if not fSilentMode then
+      fParentForm.Close;
     if fFireDebugEvent then
       fOndebugEvent(Self, 'RemoteUpdateToNewVersion',
         'Success');
@@ -1642,26 +1696,26 @@ end;
 function TLazAutoUpdate.UpdateToNewVersion: boolean;
 
 {$IFDEF WINDOWS}
-// function RunAsAdmin(const Handle: Hwnd; const Path, Params: string): Boolean;
-function RunAsAdmin(const Handle: THandle; const Path, Params: string): Boolean;
-var
-  sei: TShellExecuteInfoA;
-begin
-  FillChar(sei, SizeOf(sei), 0);
-  sei.cbSize := SizeOf(sei);
-  sei.Wnd := Handle;
-  sei.fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
-  sei.lpVerb := 'runas';
-  sei.lpFile := PAnsiChar(Path);
-  sei.lpParameters := PAnsiChar(Params);
-  sei.nShow := SW_SHOWNORMAL;
-  Result := ShellExecuteExA(@sei);
-end;
+  function RunAsAdmin(const Handle: THandle; const Path, Params: string): boolean;
+  var
+    sei: TShellExecuteInfoA;
+  begin
+    FillChar(sei, SizeOf(sei), 0);
+    sei.cbSize := SizeOf(sei);
+    sei.Wnd := Handle;
+    sei.fMask := SEE_MASK_FLAG_DDEWAIT or SEE_MASK_FLAG_NO_UI;
+    sei.lpVerb := 'runas';
+    sei.lpFile := PAnsiChar(Path);
+    sei.lpParameters := PAnsiChar(Params);
+    sei.nShow := SW_SHOWNORMAL;
+    Result := ShellExecuteExA(@sei);
+  end;
+
 {$ENDIF}
 var
   cCount: cardinal;
   szAppDir: string;
-  szParams:String;
+  szParams: string;
 begin
   Result := False;
   szAppDir := AppendPathDelim(ExtractFilePath(fAppFilename));
@@ -1679,13 +1733,13 @@ begin
   else
   begin
     cCount := 0;
-    if not FileExistsUTF8(szAppDir + C_Updater) then
+    if not FileExistsUTF8(szAppDir + C_UPDATER) then
     begin
       if fShowDialogs then
-        ShowMessageFmt(C_UpdaterMissing, [szAppDir + C_Updater]);
+        ShowMessageFmt(C_UpdaterMissing, [szAppDir + C_UPDATER]);
       if fFireDebugEvent then
         fOndebugEvent(Self, 'UpdateToNewVersion',
-          Format(C_UpdaterMissing, [szAppDir + C_Updater]));
+          Format(C_UpdaterMissing, [szAppDir + C_UPDATER]));
       Exit;
     end;
 
@@ -1710,16 +1764,16 @@ begin
           Format('Killing %s ready for update', [fAppFilename]));
     end;
 {$IFDEF WINDOWS}
-    szParams:=ExtractFileName(fAppFilename);
-    szParams:=szParams + ' ' + fUpdatesFolder;
-    szParams:=szParams + ' ' + C_WhatsNewFilename;
-    szParams:=szParams + ' ' + fParentApplication.Title;
+    szParams := ExtractFileName(fAppFilename);
+    szParams := szParams + ' ' + fUpdatesFolder;
+    szParams := szParams + ' ' + C_WhatsNewFilename;
+    szParams := szParams + ' ' + fParentApplication.Title;
     if (fCopyTree = True) then
-    szParams:=szParams + ' copytree';
+      szParams := szParams + ' copytree';
     if fFireDebugEvent then
       fOndebugEvent(Self, 'UpdateToNewVersion',
         Format('Executing %s', [szAppDir + C_UPDATER]));
-    RunAsAdmin(fParentForm.Handle,szAppDir + C_UPDATER, szParams);
+    RunAsAdmin(fParentForm.Handle, szAppDir + C_UPDATER, szParams);
 
     // Check for C_WhatsNewFilename in the app directory in a LOOP
     if fFireDebugEvent then
@@ -1736,9 +1790,9 @@ begin
     // Update and re-start the app
     FUpdateHMProcess := TAsyncProcess.Create(nil);
     try
-//      FUpdateHMProcess.Executable := AppendPathDelim(GetAppConfigDir(false)) + C_Updater;
+      //      FUpdateHMProcess.Executable := AppendPathDelim(GetAppConfigDir(false)) + C_Updater;
       FUpdateHMProcess.Executable := szAppDir + C_UPDATER;
-//      FUpdateHMProcess.CurrentDirectory := AppendPathDelim(GetAppConfigDir(false));
+      //      FUpdateHMProcess.CurrentDirectory := AppendPathDelim(GetAppConfigDir(false));
       FUpdateHMProcess.CurrentDirectory := szAppDir;
       if not fSilentMode then
         FUpdateHMProcess.ConsoleTitle :=
@@ -1754,11 +1808,12 @@ begin
       if fFireDebugEvent then
         fOndebugEvent(Self, 'UpdateToNewVersion',
           Format('Executing %s', [szAppDir + C_UPDATER]));
-TRY
-     FUpdateHMProcess.Execute;
-EXCEPT
-    raise Exception.CreateFmt('Error %d: Run this application in Administrator mode or turn off UAC',[GetLastOSError]);
-END;
+      try
+        FUpdateHMProcess.Execute;
+      except
+        raise Exception.CreateFmt(
+          'Error %d: Run this application in Administrator mode or turn off UAC', [GetLastOSError]);
+      end;
 
       // Check for C_WhatsNewFilename in the app directory in a LOOP
       if fFireDebugEvent then
@@ -1771,15 +1826,15 @@ END;
         if cCount > 10000000 then
           Break; // Get out of jail in case updatehm.exe fails to copy file
       end;
-finally
-  FUpdateHMProcess.Free;
-end;
+    finally
+      FUpdateHMProcess.Free;
+    end;
 {$ENDIF}
     if fFireDebugEvent then
       fOndebugEvent(Self, 'UpdateToNewVersion',
         'Success');
     if not fSilentMode then
-       fParentForm.Close;
+      fParentForm.Close;
     Result := True;
   end;
 end;
@@ -1975,8 +2030,8 @@ begin
 end;
 
 { End of class members}
-function DownloadHTTP(URL, TargetFile: string;
-  var ReturnCode, DownloadSize: integer; bIsSourceForge, fDebugmode: boolean): boolean;
+function DownloadHTTP(URL, TargetFile: string; var ReturnCode, DownloadSize: integer;
+  bIsSourceForge, fDebugmode: boolean): boolean;
   // Download file; retry if necessary.
   // Deals with SourceForge download links
 const
@@ -1991,9 +2046,8 @@ begin
   HTTPClient := TFPHTTPClient.Create(nil);
   if bIsSourceForge then
   begin
-    HTTPClient.AllowRedirect:=True;
+    HTTPClient.AllowRedirect := True;
   end;
-
   // ReturnCode may not be useful, but it's provided here
   try
     try

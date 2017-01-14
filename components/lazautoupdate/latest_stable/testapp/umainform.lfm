@@ -11,6 +11,7 @@ object mainform: Tmainform
   OnCreate = FormCreate
   Position = poDesktopCenter
   LCLVersion = '1.7'
+  Visible = True
   object StatusBar1: TStatusBar
     Left = 0
     Height = 23
@@ -79,6 +80,17 @@ object mainform: Tmainform
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
+  end
+  object cmd_SilentUpdate: TButton
+    Left = 184
+    Height = 25
+    Top = 80
+    Width = 96
+    AutoSize = True
+    Caption = 'Silent Update'
+    OnClick = cmd_SilentUpdateClick
+    TabOrder = 6
+    Visible = False
   end
   object LazAutoUpdate1: TLazAutoUpdate
     About.Description.Strings = (

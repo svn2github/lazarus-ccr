@@ -34,6 +34,7 @@ type
   { Tmainform }
 
   Tmainform = class(TForm)
+    cmd_SilentUpdate: TButton;
     cmd_AutoUpdate: TButton;
     cmd_updateToNewVersion: TButton;
     cmd_DownloadNewVersion: TButton;
@@ -45,6 +46,7 @@ type
     procedure cmd_AutoUpdateClick(Sender: TObject);
     procedure cmd_DownloadNewVersionClick(Sender: TObject);
     procedure cmd_NewVersionAvailableClick(Sender: TObject);
+    procedure cmd_SilentUpdateClick(Sender: TObject);
     procedure cmd_updateToNewVersionClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -81,6 +83,11 @@ end;
 procedure Tmainform.cmd_NewVersionAvailableClick(Sender: TObject);
 begin
   LazAutoUpdate1.NewVersionAvailable;
+end;
+
+procedure Tmainform.cmd_SilentUpdateClick(Sender: TObject);
+begin
+   LazAutoUpdate1.SilentUpdate;
 end;
 
 procedure Tmainform.cmd_updateToNewVersionClick(Sender: TObject);
