@@ -212,7 +212,9 @@ type
     fGUIOnlineVersion: string;
     fShowDialogs: boolean;
     fDownloadInprogress: boolean;
-    FUpdateHMProcess: TAsyncProcess;
+    {$IFDEF UNIX}
+      FUpdateHMProcess: TAsyncProcess;
+    {$ENDIF}
     fauOtherSourceURL: string;
     fauOtherSourceFilename: string;
     WhatsNewForm: TForm;
@@ -228,7 +230,7 @@ type
     fDebugMode, fFireDebugEvent: boolean;
     fSilentMode: boolean;
     fLCLVersion, fWidgetSet, fFPCVersion, fLastCompiled, fTargetOS: string;
-    fQuad: TVersionQuad;
+    // fQuad: TVersionQuad;
     fProgVersion: TProgramVersion;
     objFileVerInfo: TFileVersionInfo;
     fUpdateExe,fUpdateSilentExe:String;
@@ -861,8 +863,6 @@ begin
   // Test: Is the online version newer?
   if NewerVersion(fGUIQuad, fApplicationVersionQuad) then
     Result := True;
-  //  if (iGUIVersion > fApplicationVersionQuad) then
-  //    Result := True;
 end;
 
 

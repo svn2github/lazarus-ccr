@@ -31,7 +31,7 @@ Interface
 *)
 
 Uses
-  Classes, SysUtils;
+  Classes, SysUtils,LCLVersion;
 
 Function GetFileVersion: String;
 Function GetProductVersion: String;
@@ -56,7 +56,7 @@ Const
 Implementation
 
 Uses
-  resource, versiontypes, versionresource, LCLVersion, InterfaceBase;
+  resource, versiontypes, versionresource, InterfaceBase;
 
 Type
   TVersionInfo = Class
