@@ -50,9 +50,11 @@ const
   // [updatepath,projectname,filename]
   // C_GITHUBFILE_URL = 'https://raw.github.com/%s/%s/master/%s/%s';
   C_GITHUBFILE_URL = 'https://raw.github.com/%s/%s/%s/%s/%s';
-  C_GITHUBFILE_URL_UPDATES = 'https://raw.github.com/%s/%s/%s/%s/%s/%s';
   // https://raw.github.com/<username>/<repo>/<branch>/some_directory/file
   //  GitHubUserName,GitHubProjectName,updatepath,filename
+
+  C_GITHUBFILE_URL_UPDATES = 'https://raw.github.com/%s/%s/%s/%s/%s/%s';
+
   C_TLazAutoUpdateComponentVersion = '0.2.3';
   C_LAUTRayINI = 'lauimport.ini';
 

@@ -5,7 +5,7 @@ unit open_ssl;
 interface
 
 uses
-  // Built-in: fphttpclient
+  // Built-in 'fphttpclient' replaces 'lazautoupdate_httpclient' for general use
   Classes, SysUtils,lazautoupdate_httpclient,LazFileUtils,FileUtil,zipper;
 
 function CheckForOpenSSL:Boolean;
@@ -15,9 +15,11 @@ implementation
 const
 {$ifdef win64}
  cOpenSSLURL = 'http://packages.lazarus-ide.org/openssl-1.0.2j-x64_86-win64.zip';
+ cAltOpenSSLURL = 'http://indy.fulgan.com/SSL/openssl-1.0.2j-i386-win32.zip';
 {$endif}
 {$ifdef win32}
 cOpenSSLURL = 'http://packages.lazarus-ide.org/openssl-1.0.2j-i386-win32.zip';
+cAltOpenSSLURL = 'http://indy.fulgan.com/SSL/openssl-1.0.2j-x64_86-win64.zip';
 {$endif}
 Var FHTTPClient:TFPHttpClient;
 
@@ -44,7 +46,14 @@ begin
      ZipFile := ExtractFilePath(ParamStr(0)) + ExtractFileName(cOpenSSLURL);
      try
        FHTTPClient.Get(cOpenSSLURL, ZipFile);
+       If (FHTTPClient.ResponseStatusCode <> 200) then
+        begin
+          ZipFile := ExtractFilePath(ParamStr(0)) + ExtractFileName(cAltOpenSSLURL);
+          FHTTPClient.Get(cOpenSSLURL, ZipFile);
+        end;
      except
+       // Just leave
+       Exit;
      end;
 
      if FileExistsUTF8(ZipFile) then
