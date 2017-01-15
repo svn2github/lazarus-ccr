@@ -98,6 +98,7 @@ type
 procedure Register;
 
 implementation
+Uses {$IF (lcl_major > 0) and (lcl_minor > 6)}LCLPlatformDef {$ENDIF};
 
 procedure Register;
 begin
@@ -211,11 +212,14 @@ Choices are:
   lpCustomDrawn
   }
 begin
+Result:=FALSE;
+{
   case WidgetSet.LCLPlatform of
     lpWin32, lpQT: Result := True;
     else
       Result := False;
   end;
+}
 end;
 
 procedure TPoweredby.ShowPoweredByForm;
