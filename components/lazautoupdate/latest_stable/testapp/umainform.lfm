@@ -124,6 +124,7 @@ object mainform: Tmainform
     ZipfileName = 'testapp.zip'
     GitHubUsername = '<not applicable>'
     GitHubProjectName = '<not applicable>'
+    GitHubBranch = '<not applicable>'
     Left = 200
     Top = 24
   end

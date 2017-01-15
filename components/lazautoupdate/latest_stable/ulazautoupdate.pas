@@ -531,7 +531,7 @@ begin
 
   // Propagate down
   fThreadDownload.fDebugmode := fDebugMode;
-  if fProjectType = auSourceForge then
+  if ((fProjectType = auSourceForge) or (fProjectType = auGitHubReleaseZip)) then
     fThreadDownload.fIsSourceForge := True
   else
     fThreadDownload.fIsSourceForge := False;
