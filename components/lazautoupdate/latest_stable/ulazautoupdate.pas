@@ -45,10 +45,13 @@ uses
   {$IFDEF WINDOWS}, Windows, ShellAPI{$ENDIF}; // Thanks to Windows 10 and 704 error
 
 const
-  C_OnlineAppPath =
+  C_SOURCEFORGEURL =
     'https://sourceforge.net/projects/%s/files/%s/%s/download';
   // [updatepath,projectname,filename]
-  C_TLazAutoUpdateComponentVersion = '0.2.0';
+  C_GITHUBFILEURL = 'https://raw.github.com/%s/%s/master/%s/%s';
+  // https://raw.github.com/<username>/<repo>/<branch>/some_directory/file
+  //  GitHubUserName,GitHubProjectName,updatepath,filename
+  C_TLazAutoUpdateComponentVersion = '0.2.2';
   C_LAUTRayINI = 'lauimport.ini';
 
 {
@@ -174,7 +177,7 @@ type
 
 type
 
-  TProjectType = (auSourceForge, auOther);
+  TProjectType = (auSourceForge,auGitHubUpdateZip, auOther);
   // Array of these records used for multiple updates
   UpdateListRecord = record
     PrettyName: string;
@@ -194,6 +197,8 @@ type
   TLazAutoUpdate = class(TAboutLazAutoUpdate)
   private
     fSourceForgeProjectName: string;
+    fGitHubUsername:String;
+    fGitHubProjectName:String;
     fApplicationVersionString: string;
     fApplicationVersionQuad: TVersionQuad;
     fGuiQuad: TVersionQuad;
@@ -360,6 +365,9 @@ type
     property ZipfileName: string read fZipfileName write fZipfileName;
     property UpdateExe:String read fUpdateExe;
     property UpdateExeSilent:String read fUpdateSilentExe;
+    property GitHubUsername:String read fGitHubUsername write fGitHubUsername;
+    Property GitHubProjectName:String read fGitHubProjectName write fGitHubProjectName;
+
   end;
 
   {TThreadedDownload }
@@ -879,14 +887,6 @@ begin
   if Assigned(fOndebugEvent) then
     fFireDebugEvent := True;
 
-  if fSourceForgeProjectName = '' then
-  begin
-    if fShowDialogs then
-      ShowMessage(C_PropIsEmpty);
-    if fFireDebugEvent then
-      fOndebugEvent(Self, 'NewVersionAvailable', C_PropIsEmpty);
-    Exit;
-  end;
   if fZipFileName = '' then
   begin
     fZipfileName := ChangeFileExt(ExtractFilename(fAppFilename), '.zip');
@@ -897,25 +897,47 @@ begin
 
   if fProjectType = auSourceForge then
   begin
-    szURL := Format(C_OnlineAppPath, [fSourceForgeProjectName,
+    if fSourceForgeProjectName = '' then
+    begin
+      if fShowDialogs then
+        ShowMessage(C_PropIsEmpty);
+      if fFireDebugEvent then
+        fOndebugEvent(Self, 'NewVersionAvailable', C_PropIsEmpty);
+      Exit;
+    end;
+    szURL := Format(C_SOURCEFORGEURL, [fSourceForgeProjectName,
       fUpdatesFolder, fVersionsININame]);
+  end;
+  if fProjectType = auGitHubUpdateZip then
+  begin
+    if ((fGitHubUserName = '') or (fGitHubProjectName = '')) then
+    begin
+      if fShowDialogs then
+        ShowMessage(C_PropIsEmpty);
+      if fFireDebugEvent then
+        fOndebugEvent(Self, 'NewVersionAvailable', C_PropIsEmpty);
+      Exit;
+    end;
+     szURL := Format(C_GITHUBFILEURL,
+     [fGitHubUserName,fGitHubProjectName,fUpdatesFolder,fVersionsININame]);
+  end;
+  if fProjectType = auOther then
+    // fauOtherSourceURL ends with '/'
+  begin
+    szURL := fauOtherSourceURL + fVersionsININame;
+  end;
 
-    if fFireDebugEvent then
-      fOndebugEvent(Self, 'NewVersionAvailable',
-        Format('SourceForgeURL is %s', [szURL]));
 
     szTargetPath := AppendPathDelim(ExtractFilePath(fAppFilename)) +
       Format(C_TempVersionsININame, [fVersionsININame]);
+  if fFireDebugEvent then
+      fOndebugEvent(Self, 'NewVersionAvailable',
+        Format('URL is %s', [szURL]));
 
     if fFireDebugEvent then
       fOndebugEvent(Self, 'NewVersionAvailable',
         Format('Target Path %s', [szTargetPath]));
 
-    if fProjectType = auOther then
-      // fauOtherSourceURL ends with '/'
-    begin
-      szURL := fauOtherSourceURL + fVersionsININame;
-    end;
 
     // Delete any old versions
     try
@@ -1015,7 +1037,6 @@ begin
           Format('DownloadSize was %d', [fDownloadSize]));
 
     end;
-  end;
   if not fSilentMode then
     fParentForm.Caption := szOldCaption;
   if Assigned(fOnNewVersionAvailable) then
@@ -1046,8 +1067,17 @@ begin
         Format('ZipFilename was empty.  Assigned %s', [fZipfileName]));
   end;
   szTargetPath := fZipfileName;
-  szURL := Format(C_OnlineAppPath, [fSourceForgeProjectName, fUpdatesFolder,
-    ExtractFileName(szTargetPath)]);
+  if fProjectType = auSourceForge then
+     szURL := Format(C_SOURCEFORGEURL, [fSourceForgeProjectName, fUpdatesFolder,
+     ExtractFileName(szTargetPath)]);
+  if fProjectType = auGitHubUpdateZip then
+     szURL := Format(C_GITHUBFILEURL, [fGitHubUserName,fGitHubProjectName,fUpdatesFolder,fZipfileName]);
+  if fProjectType = auOther then
+    // fauOtherSourceURL ends with '/'
+  begin
+    szURL := fauOtherSourceURL + fVersionsININame;
+  end;
+
   szUpdatesFolder := AppendPathDelim(ExtractFilePath(fAppFilename)) + fUpdatesFolder;
   if fFireDebugEvent then
     fOndebugEvent(Self, 'DownloadNewVersion',
@@ -1895,17 +1925,36 @@ procedure TLazAutoUpdate.SetProjectType(AValue: TProjectType);
 begin
   if (AValue <> fProjectType) then
     fProjectType := AValue;
+
   if fProjectType = auOther then
   begin
     fSourceForgeProjectName := C_NotApplicable;
-  end
-  else
+    fGitHubProjectName := C_NotApplicable;
+    fGitHubUserName := C_NotApplicable;
+    fauOtherSourceFilename:='';
+    fauOtherSourceURL:='';
+  end;
+  if fProjectType = auSourceForge then
   begin
     fUpdatesFolder := C_UpdatesFolder;
     fSourceForgeProjectName := '';
     fauOtherSourceFilename := C_NotApplicable;
     fauOtherSourceURL := C_NotApplicable;
+    fGitHubProjectName := C_NotApplicable;
+    fGitHubUserName := C_NotApplicable;
   end;
+  if fProjectType = auGitHubUpdateZip then
+  begin
+    fZipFileName:=ChangeFileExt(fVersionsININame,'.zip');
+    fUpdatesFolder := C_UpdatesFolder;
+    fSourceForgeProjectName := C_NotApplicable;
+    fauOtherSourceFilename := C_NotApplicable;
+    fauOtherSourceURL := C_NotApplicable;
+    fGitHubProjectName := '';
+    fGitHubUserName := '';
+  end;
+
+
 end;
 
 procedure TLazAutoUpdate.SetSourceForgeProjectName(Avalue: string);

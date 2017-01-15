@@ -112,6 +112,8 @@ object mainform: Tmainform
     OnDownloaded = LazAutoUpdate1Downloaded
     OnDebugEvent = LazAutoUpdate1DebugEvent
     SFProjectName = 'lazautoupdate'
+    auOtherSourceURL = '<not applicable>'
+    auOtherSourceFilename = '<not applicable>'
     CopyTree = False
     UpdatesFolder = 'updates'
     VersionsININame = 'testapp.ini'
@@ -120,6 +122,8 @@ object mainform: Tmainform
     VersionCountLimit = 1000000
     DownloadCountLimit = 10000000
     ZipfileName = 'testapp.zip'
+    GitHubUsername = '<not applicable>'
+    GitHubProjectName = '<not applicable>'
     Left = 200
     Top = 24
   end
