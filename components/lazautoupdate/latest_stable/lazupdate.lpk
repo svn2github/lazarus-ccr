@@ -24,7 +24,10 @@
       </Linking>
     </CompilerOptions>
     <Description Value="Laz AutoUpdater
-A component for SourceForge Project Developers and end-users to update their apps easily"/>
+A component for SourceForge and GitHub Project Developers and end-users to update their apps easily.
+Drop onto a form, set a few properties and call the Method 'AutoUpdate' - as easy as pie!
+Fully configurable. 
+More information in the Wiki Home Page http://wiki.freepascal.org/LazAutoUpdater"/>
     <License Value="  Modified GPL
   Copyright (C)2014 minesadorada@charcodelvalle.com
   This library is free software; you can redistribute it and/or modify it
