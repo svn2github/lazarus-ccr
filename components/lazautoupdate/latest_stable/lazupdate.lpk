@@ -55,8 +55,8 @@ More information in the Wiki Home Page http://wiki.freepascal.org/LazAutoUpdater
   along with this library; if not, write to the Free Software Foundation,
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 "/>
-    <Version Minor="2" Release="2"/>
-    <Files Count="5">
+    <Version Minor="2" Release="3"/>
+    <Files Count="6">
       <Item1>
         <Filename Value="ulazautoupdate.pas"/>
         <HasRegisterProc Value="True"/>
@@ -79,6 +79,10 @@ More information in the Wiki Home Page http://wiki.freepascal.org/LazAutoUpdater
         <Filename Value="lazautoupdate_httpclient.pas"/>
         <UnitName Value="lazautoupdate_httpclient"/>
       </Item5>
+      <Item6>
+        <Filename Value="open_ssl.pas"/>
+        <UnitName Value="open_ssl"/>
+      </Item6>
     </Files>
     <i18n>
       <EnableI18N Value="True"/>

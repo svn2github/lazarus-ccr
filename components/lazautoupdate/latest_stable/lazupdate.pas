@@ -4,11 +4,12 @@
 
 unit lazupdate;
 
+{$warn 5023 off : no warning about unused units}
 interface
 
 uses
   ulazautoupdate, aboutlazautoupdateunit, VersionSupport, uappisrunning, 
-  lazautoupdate_httpclient, LazarusPackageIntf;
+  lazautoupdate_httpclient, open_ssl, LazarusPackageIntf;
 
 implementation
 

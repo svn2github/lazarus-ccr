@@ -1,7 +1,7 @@
 object mainform: Tmainform
-  Left = 716
+  Left = 682
   Height = 209
-  Top = 296
+  Top = 277
   Width = 335
   BorderIcons = [biSystemMenu]
   Caption = 'mainform'
@@ -112,7 +112,7 @@ object mainform: Tmainform
     OnDownloaded = LazAutoUpdate1Downloaded
     OnDebugEvent = LazAutoUpdate1DebugEvent
     SFProjectName = 'lazautoupdate'
-    auOtherSourceURL = '<not applicable>'
+    auOtherSourceURL = '<not applicable>/'
     auOtherSourceFilename = '<not applicable>'
     CopyTree = False
     UpdatesFolder = 'updates'

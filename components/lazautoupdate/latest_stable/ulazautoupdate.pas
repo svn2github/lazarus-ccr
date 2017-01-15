@@ -39,7 +39,7 @@ uses
   LazUTF8, FileUtil, LazFileUtils, Dialogs, StdCtrls,
   Buttons, DateUtils, asyncprocess, zipper, LResources,
   VersionSupport, inifiles, aboutlazautoupdateunit, uappisrunning, LCLProc,
-  fileinfo, winpeimagereader {need this for reading exe info}
+  fileinfo,open_ssl, winpeimagereader {need this for reading exe info}
   , elfreader {needed for reading ELF executables}
   , machoreader {needed for reading MACH-O executables}
   {$IFDEF WINDOWS}, Windows, ShellAPI{$ENDIF}; // Thanks to Windows 10 and 704 error
@@ -48,10 +48,12 @@ const
   C_SOURCEFORGEURL =
     'https://sourceforge.net/projects/%s/files/%s/%s/download';
   // [updatepath,projectname,filename]
-  C_GITHUBFILEURL = 'https://raw.github.com/%s/%s/master/%s/%s';
+  // C_GITHUBFILE_URL = 'https://raw.github.com/%s/%s/master/%s/%s';
+  C_GITHUBFILE_URL = 'https://raw.github.com/%s/%s/%s/%s/%s';
+  C_GITHUBFILE_URL_UPDATES = 'https://raw.github.com/%s/%s/%s/%s/%s/%s';
   // https://raw.github.com/<username>/<repo>/<branch>/some_directory/file
   //  GitHubUserName,GitHubProjectName,updatepath,filename
-  C_TLazAutoUpdateComponentVersion = '0.2.2';
+  C_TLazAutoUpdateComponentVersion = '0.2.3';
   C_LAUTRayINI = 'lauimport.ini';
 
 {
@@ -116,6 +118,7 @@ const
   C_INISection = 'versions';
   C_GUIEntry = 'GUI';
   C_ModuleEntry = 'Module';
+  C_MASTER = 'master';
   {$IFDEF WINDOWS}
    {$IFDEF CPU32}C_UPDATER = 'updatehmwin32.exe';
   C_LOCALUPDATER = 'lauupdatewin32.exe';{$ENDIF}
@@ -177,7 +180,7 @@ type
 
 type
 
-  TProjectType = (auSourceForge,auGitHubUpdateZip, auOther);
+  TProjectType = (auSourceForge,auGitHubReleaseZip,auOther);
   // Array of these records used for multiple updates
   UpdateListRecord = record
     PrettyName: string;
@@ -199,6 +202,7 @@ type
     fSourceForgeProjectName: string;
     fGitHubUsername:String;
     fGitHubProjectName:String;
+    fGitHubBranch:String;
     fApplicationVersionString: string;
     fApplicationVersionQuad: TVersionQuad;
     fGuiQuad: TVersionQuad;
@@ -367,7 +371,7 @@ type
     property UpdateExeSilent:String read fUpdateSilentExe;
     property GitHubUsername:String read fGitHubUsername write fGitHubUsername;
     Property GitHubProjectName:String read fGitHubProjectName write fGitHubProjectName;
-
+    Property GitHubBranch:String read fGitHubBranch write fGitHubBranch;
   end;
 
   {TThreadedDownload }
@@ -882,7 +886,6 @@ var
   szOldCaption: string;
 begin
   Result := False;
-
   // read the VMT once
   if Assigned(fOndebugEvent) then
     fFireDebugEvent := True;
@@ -908,7 +911,7 @@ begin
     szURL := Format(C_SOURCEFORGEURL, [fSourceForgeProjectName,
       fUpdatesFolder, fVersionsININame]);
   end;
-  if fProjectType = auGitHubUpdateZip then
+  if fProjectType = auGitHubReleaseZip then
   begin
     if ((fGitHubUserName = '') or (fGitHubProjectName = '')) then
     begin
@@ -918,8 +921,8 @@ begin
         fOndebugEvent(Self, 'NewVersionAvailable', C_PropIsEmpty);
       Exit;
     end;
-     szURL := Format(C_GITHUBFILEURL,
-     [fGitHubUserName,fGitHubProjectName,fUpdatesFolder,fVersionsININame]);
+     szURL := Format(C_GITHUBFILE_URL,
+     [fGitHubUserName,fGitHubProjectName,fGitHubBranch,fVersionsININame]);
   end;
   if fProjectType = auOther then
     // fauOtherSourceURL ends with '/'
@@ -967,6 +970,7 @@ begin
       fDownloadInprogress := True;
       if not fSilentMode then
         fParentForm.Caption := C_Checking;
+       CheckForOpenSSL;
       // Start the thread
       ThreadDownloadHTTP;
       if fFireDebugEvent then
@@ -1070,8 +1074,11 @@ begin
   if fProjectType = auSourceForge then
      szURL := Format(C_SOURCEFORGEURL, [fSourceForgeProjectName, fUpdatesFolder,
      ExtractFileName(szTargetPath)]);
-  if fProjectType = auGitHubUpdateZip then
-     szURL := Format(C_GITHUBFILEURL, [fGitHubUserName,fGitHubProjectName,fUpdatesFolder,fZipfileName]);
+  if fProjectType = auGitHubReleaseZip then
+    If ((fUpdatesFolder=C_NotApplicable) or (fUpdatesFolder='')) then
+      szURL := Format(C_GITHUBFILE_URL, [fGitHubUserName,fGitHubProjectName,fGitHubBranch,fZipfileName])
+    else
+      szURL := Format(C_GITHUBFILE_URL_UPDATES, [fGitHubUserName,fGitHubProjectName,fGitHubBranch,fUpdatesFolder,fZipfileName]);
   if fProjectType = auOther then
     // fauOtherSourceURL ends with '/'
   begin
@@ -1152,6 +1159,7 @@ begin
   end;
 
   fDownloadInprogress := True;
+  CheckForOpenSSL;
   // Do the download
   with fThreadDownload do
   begin
@@ -1931,6 +1939,7 @@ begin
     fSourceForgeProjectName := C_NotApplicable;
     fGitHubProjectName := C_NotApplicable;
     fGitHubUserName := C_NotApplicable;
+    fGitHubBranch:=C_NotApplicable;
     fauOtherSourceFilename:='';
     fauOtherSourceURL:='';
   end;
@@ -1942,16 +1951,19 @@ begin
     fauOtherSourceURL := C_NotApplicable;
     fGitHubProjectName := C_NotApplicable;
     fGitHubUserName := C_NotApplicable;
+    fGitHubBranch:=C_NotApplicable;
   end;
-  if fProjectType = auGitHubUpdateZip then
+  if fProjectType = auGitHubReleaseZip then
   begin
     fZipFileName:=ChangeFileExt(fVersionsININame,'.zip');
     fUpdatesFolder := C_UpdatesFolder;
     fSourceForgeProjectName := C_NotApplicable;
     fauOtherSourceFilename := C_NotApplicable;
     fauOtherSourceURL := C_NotApplicable;
+    fGitHubBranch:= C_MASTER;
     fGitHubProjectName := '';
     fGitHubUserName := '';
+    fUpdatesFolder:=C_NotApplicable;
   end;
 
 
