@@ -6,7 +6,7 @@
   },
   "UpdatePackageFiles" : [
     {
-      "ForceNotify" : true,
+      "ForceNotify" : false,
       "InternalVersion" : 2,
       "Name" : "poweredby.lpk",
       "Version" : "1.0.4.0"
