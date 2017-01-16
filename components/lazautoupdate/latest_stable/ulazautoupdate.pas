@@ -49,11 +49,11 @@ const
     'https://sourceforge.net/projects/%s/files/%s/%s/download';
   // [updatepath,projectname,filename]
   // C_GITHUBFILE_URL = 'https://raw.github.com/%s/%s/master/%s/%s';
-  C_GITHUBFILE_URL = 'https://raw.github.com/%s/%s/%s/%s/%s';
-  // https://raw.github.com/<username>/<repo>/<branch>/some_directory/file
+  C_GITHUBFILE_URL = 'https://raw.github.com/%s/%s/%s/%s';
+  // https://raw.github.com/<username>/<repo>/<branch>/file
   //  GitHubUserName,GitHubProjectName,updatepath,filename
-
-  C_GITHUBFILE_URL_UPDATES = 'https://raw.github.com/%s/%s/%s/%s/%s/%s';
+  C_GITHUBFILE_URL_UPDATES = 'https://raw.github.com/%s/%s/%s/%s/%s';
+  // https://raw.github.com/<username>/<repo>/<branch>/some_directory/file
 
   C_TLazAutoUpdateComponentVersion = '0.2.3';
   C_LAUTRayINI = 'lauimport.ini';
@@ -107,6 +107,7 @@ const
  V0.1.25:Changed default: CopyTree = TRUE
  V0.1.26:Updated uses clause for FileUtils.
  V0.2.0: Rewritten for 2017
+ V0.2.4: GitHub integration with branches
 }
   C_TThreadedDownloadComponentVersion = '0.0.3';
 {
@@ -923,9 +924,12 @@ begin
         fOndebugEvent(Self, 'NewVersionAvailable', C_PropIsEmpty);
       Exit;
     end;
-     szURL := Format(C_GITHUBFILE_URL,
-     [fGitHubUserName,fGitHubProjectName,fGitHubBranch,fVersionsININame]);
+    If ((fUpdatesFolder=C_NotApplicable) or (fUpdatesFolder='')) then
+      szURL := Format(C_GITHUBFILE_URL, [fGitHubUserName,fGitHubProjectName,fGitHubBranch,fVersionsININame])
+    else
+      szURL := Format(C_GITHUBFILE_URL_UPDATES, [fGitHubUserName,fGitHubProjectName,fGitHubBranch,fUpdatesFolder,fVersionsININame]);
   end;
+  // ShowMessage(szURL);
   if fProjectType = auOther then
     // fauOtherSourceURL ends with '/'
   begin

@@ -5,23 +5,26 @@ unit open_ssl;
 interface
 
 uses
-  // Built-in 'fphttpclient' replaces 'lazautoupdate_httpclient' for general use
+  // Built-in 'fphttpclient' unit replaces 'lazautoupdate_httpclient' unit for general use
   Classes, SysUtils,lazautoupdate_httpclient,LazFileUtils,FileUtil,zipper;
 
 function CheckForOpenSSL:Boolean;
 function OpenSSLInstalled:Boolean;
 
 implementation
-const
+Var FHTTPClient:TFPHttpClient;
+
 {$ifdef win64}
+const
  cOpenSSLURL = 'http://packages.lazarus-ide.org/openssl-1.0.2j-x64_86-win64.zip';
  cAltOpenSSLURL = 'http://indy.fulgan.com/SSL/openssl-1.0.2j-i386-win32.zip';
 {$endif}
 {$ifdef win32}
+const
 cOpenSSLURL = 'http://packages.lazarus-ide.org/openssl-1.0.2j-i386-win32.zip';
 cAltOpenSSLURL = 'http://indy.fulgan.com/SSL/openssl-1.0.2j-x64_86-win64.zip';
 {$endif}
-Var FHTTPClient:TFPHttpClient;
+
 
 function OpenSSLInstalled:Boolean;
 begin
