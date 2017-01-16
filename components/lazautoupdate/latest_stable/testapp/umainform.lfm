@@ -123,8 +123,8 @@ object mainform: Tmainform
     VersionCountLimit = 1000000
     DownloadCountLimit = 10000000
     ZipfileName = 'testapp.zip'
-    GitHubUsername = 'lazarusccr'
-    GitHubProjectName = 'TestApp'
+    GitHubProjectname = 'lazarusccr'
+    GitHubRepositoryName = 'TestApp'
     GitHubBranch = 'TestBranch'
     Left = 200
     Top = 24

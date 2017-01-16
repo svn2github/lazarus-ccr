@@ -203,8 +203,8 @@ type
   TLazAutoUpdate = class(TAboutLazAutoUpdate)
   private
     fSourceForgeProjectName: string;
-    fGitHubUsername:String;
     fGitHubProjectName:String;
+    fGitHubRepositoryName:String;
     fGitHubBranch:String;
     fApplicationVersionString: string;
     fApplicationVersionQuad: TVersionQuad;
@@ -372,8 +372,8 @@ type
     property ZipfileName: string read fZipfileName write fZipfileName;
     property UpdateExe:String read fUpdateExe;
     property UpdateExeSilent:String read fUpdateSilentExe;
-    property GitHubUsername:String read fGitHubUsername write fGitHubUsername;
-    Property GitHubProjectName:String read fGitHubProjectName write fGitHubProjectName;
+    property GitHubProjectname:String read fGitHubProjectName write fGitHubProjectName;
+    Property GitHubRepositoryName:String read fGitHubRepositoryName write fGitHubRepositoryName;
     Property GitHubBranch:String read fGitHubBranch write fGitHubBranch;
   end;
 
@@ -916,7 +916,7 @@ begin
   end;
   if fProjectType = auGitHubReleaseZip then
   begin
-    if ((fGitHubUserName = '') or (fGitHubProjectName = '')) then
+    if ((fGitHubProjectName = '') or (fGitHubRepositoryName = '')) then
     begin
       if fShowDialogs then
         ShowMessage(C_PropIsEmpty);
@@ -925,9 +925,9 @@ begin
       Exit;
     end;
     If ((fUpdatesFolder=C_NotApplicable) or (fUpdatesFolder='')) then
-      szURL := Format(C_GITHUBFILE_URL, [fGitHubUserName,fGitHubProjectName,fGitHubBranch,fVersionsININame])
+      szURL := Format(C_GITHUBFILE_URL, [fGitHubProjectName,fGitHubRepositoryName,fGitHubBranch,fVersionsININame])
     else
-      szURL := Format(C_GITHUBFILE_URL_UPDATES, [fGitHubUserName,fGitHubProjectName,fGitHubBranch,fUpdatesFolder,fVersionsININame]);
+      szURL := Format(C_GITHUBFILE_URL_UPDATES, [fGitHubProjectName,fGitHubRepositoryName,fGitHubBranch,fUpdatesFolder,fVersionsININame]);
   end;
   // ShowMessage(szURL);
   if fProjectType = auOther then
@@ -1082,9 +1082,9 @@ begin
      ExtractFileName(szTargetPath)]);
   if fProjectType = auGitHubReleaseZip then
     If ((fUpdatesFolder=C_NotApplicable) or (fUpdatesFolder='')) then
-      szURL := Format(C_GITHUBFILE_URL, [fGitHubUserName,fGitHubProjectName,fGitHubBranch,fZipfileName])
+      szURL := Format(C_GITHUBFILE_URL, [fGitHubProjectName,fGitHubRepositoryName,fGitHubBranch,fZipfileName])
     else
-      szURL := Format(C_GITHUBFILE_URL_UPDATES, [fGitHubUserName,fGitHubProjectName,fGitHubBranch,fUpdatesFolder,fZipfileName]);
+      szURL := Format(C_GITHUBFILE_URL_UPDATES, [fGitHubProjectName,fGitHubRepositoryName,fGitHubBranch,fUpdatesFolder,fZipfileName]);
   if fProjectType = auOther then
     // fauOtherSourceURL ends with '/'
   begin
@@ -1943,8 +1943,8 @@ begin
   if fProjectType = auOther then
   begin
     fSourceForgeProjectName := C_NotApplicable;
+    fGitHubRepositoryName := C_NotApplicable;
     fGitHubProjectName := C_NotApplicable;
-    fGitHubUserName := C_NotApplicable;
     fGitHubBranch:=C_NotApplicable;
     fauOtherSourceFilename:='';
     fauOtherSourceURL:='';
@@ -1955,8 +1955,8 @@ begin
     fSourceForgeProjectName := '';
     fauOtherSourceFilename := C_NotApplicable;
     fauOtherSourceURL := C_NotApplicable;
+    fGitHubRepositoryName := C_NotApplicable;
     fGitHubProjectName := C_NotApplicable;
-    fGitHubUserName := C_NotApplicable;
     fGitHubBranch:=C_NotApplicable;
   end;
   if fProjectType = auGitHubReleaseZip then
@@ -1967,8 +1967,8 @@ begin
     fauOtherSourceFilename := C_NotApplicable;
     fauOtherSourceURL := C_NotApplicable;
     fGitHubBranch:= C_MASTER;
+    fGitHubRepositoryName := '';
     fGitHubProjectName := '';
-    fGitHubUserName := '';
     fUpdatesFolder:=C_NotApplicable;
   end;
 
