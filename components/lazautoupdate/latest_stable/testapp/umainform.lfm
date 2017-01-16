@@ -1,7 +1,7 @@
 object mainform: Tmainform
-  Left = 682
+  Left = 558
   Height = 209
-  Top = 277
+  Top = 210
   Width = 335
   BorderIcons = [biSystemMenu]
   Caption = 'mainform'
@@ -9,6 +9,7 @@ object mainform: Tmainform
   ClientWidth = 335
   OnActivate = FormActivate
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   Position = poDesktopCenter
   LCLVersion = '1.7'
   Visible = True
