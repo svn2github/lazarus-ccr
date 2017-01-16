@@ -1,0 +1,32 @@
+Zipfile and INI file are located at:
+D:\lazarusccr\components\lazautoupdate\latest_stable\testapp\compiled\win32\updatepackoutput\
+
+-- Copy and Paste Pascal code --
+
+Form1.FormCreate(Sender: TObject);
+begin
+  LazAutoUpdate1.ProjectType:=auSourceForge;
+  LazAutoUpdate1.SFProjectName:='lazautoupdate';
+  LazAutoUpdate1.VersionsININame:='testappwin32.ini';
+  LazAutoUpdate1.ZipfileName:='testappwin32.zip';
+  LazAutoUpdate1.CopyTree:=False;
+  LazAutoUpdate1.ShowUpdatesInCaption:=True;
+  LazAutoUpdate1.ShowDialogs:=True;
+  LazAutoUpdate1.DebugMode:=True;
+  LazAutoUpdate1.UpdatesFolder:='updates';
+end;
+
+The zipfile testappwin32.zip has the structure:
+-testappwin32.exe
+-whatsnew.txt
+-lauimport.ini
+
+This structure will be unzipped into the application directory, and
+will overwtrite existing files and/or folders of the same name.
+If you want other files or folders to be deployed, then edit the zipfile
+(or drag files into the [Advanced] tab list) before uploading it
+to your SourceForge 'updates' folder.
+
+-------------------------
+Type your own notes below
+
