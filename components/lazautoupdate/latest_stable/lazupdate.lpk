@@ -12,7 +12,13 @@
         <IncludeFiles Value="synapse\source\lib"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
+      <Parsing>
+        <SyntaxOptions>
+          <IncludeAssertionCode Value="True"/>
+        </SyntaxOptions>
+      </Parsing>
       <CodeGeneration>
+        <SmartLinkUnit Value="True"/>
         <Optimizations>
           <OptimizationLevel Value="3"/>
         </Optimizations>
@@ -55,7 +61,7 @@ More information in the Wiki Home Page http://wiki.freepascal.org/LazAutoUpdater
   along with this library; if not, write to the Free Software Foundation,
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 "/>
-    <Version Minor="2" Release="5"/>
+    <Version Minor="2" Release="6"/>
     <Files Count="6">
       <Item1>
         <Filename Value="ulazautoupdate.pas"/>

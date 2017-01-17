@@ -57,8 +57,11 @@ const
   //  GitHubUserName,GitHubProjectName,updatepath,filename
   C_GITHUBFILE_URL_UPDATES = 'https://raw.github.com/%s/%s/%s/%s/%s';
   // https://raw.github.com/<username>/<repo>/<branch>/some_directory/file
+  C_GITHUBFILE_URL_TAGUPDATES = 'https://raw.github.com/%s/%s/%s/%s/%s';
+  // https://github.com/lazarusccr/TestApp/blob/updates/updates/testapplinux32.ini
+  // https://raw.github.com/<username>/<repo>/<branch>/some_directory/file
 
-  C_TLazAutoUpdateComponentVersion = '0.2.5';
+  C_TLazAutoUpdateComponentVersion = '0.2.6';
   C_LAUTRayINI = 'lauimport.ini';
 
 {
@@ -396,7 +399,7 @@ type
     // Name of your GitHub repository within the project/username
     Property GitHubRepositoryName:String read fGitHubRepositoryName write fGitHubRepositoryName;
     // Default=master but any branchname is OK
-    Property GitHubBranch:String read fGitHubBranch write fGitHubBranch;
+    Property GitHubBranchOrTag:String read fGitHubBranch write fGitHubBranch;
   end;
 
   {TThreadedDownload }

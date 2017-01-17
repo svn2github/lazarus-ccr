@@ -126,7 +126,7 @@ object mainform: Tmainform
     ZipfileName = 'testapp.zip'
     GitHubProjectname = 'lazarusccr'
     GitHubRepositoryName = 'TestApp'
-    GitHubBranch = 'TestBranch'
+    GitHubBranchOrTag = 'updates'
     Left = 200
     Top = 24
   end
