@@ -1,7 +1,7 @@
 object mainform: Tmainform
-  Left = 558
+  Left = 125
   Height = 209
-  Top = 210
+  Top = 292
   Width = 335
   BorderIcons = [biSystemMenu]
   Caption = 'mainform'

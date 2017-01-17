@@ -128,12 +128,7 @@ const
    {$IFDEF CPU64}C_UPDATER = 'updatehmwin64.exe';
   C_LOCALUPDATER = 'lauupdatewin64.exe';{$ENDIF}
   // Windows Constants
-  CONST
-  GENERIC_READ = $80000000;
-  GENERIC_WRITE = $40000000;
-  GENERIC_EXECUTE = $20000000;
-  GENERIC_ALL = $10000000;
-  {$ENDIF}
+   {$ENDIF}
   {$IFDEF LINUX}
    {$IFDEF CPU32}C_UPDATER = 'updatehmlinux32';
   C_LOCALUPDATER = 'lauupdatelinux32';{$ENDIF}
@@ -263,7 +258,7 @@ type
     procedure SetShowDialogs(AValue: boolean);
     procedure SetDebugMode(AValue: boolean);
     function GetThreadDownloadReturnCode: integer;
-    function IsSourceForgeVersionNewer(const sznewINIPath: string): boolean;
+    function IsOnlineVersionNewer(const sznewINIPath: string): boolean;
     function VersionStringToNumber(AVersionString: string): integer;
     function DoSilentUpdate: boolean;
   protected
@@ -482,7 +477,71 @@ begin
   ShowMessage(fApplicationVersionString);
 end;
 {$IFDEF WINDOWS}
-function IsWindowsAdmin: boolean;
+function IsWindowsAdmin: Boolean;
+const
+  SECURITY_NT_AUTHORITY: TSIDIdentifierAuthority =
+    (Value: (0, 0, 0, 0, 0, 5));
+  SECURITY_BUILTIN_DOMAIN_RID = $00000020;
+  DOMAIN_ALIAS_RID_ADMINS     = $00000220;
+var
+  hAccessToken: THandle;
+  ptgGroups: PTokenGroups;
+  dwInfoBufferSize: DWORD;
+  psidAdministrators: PSID;
+  x: Integer;
+  bSuccess: BOOL;
+  LastError: integer;
+begin
+
+  if Win32Platform <> VER_PLATFORM_WIN32_NT then
+  begin
+    Result := True;
+    exit;
+  end;
+
+  Result := False;
+  bSuccess := OpenThreadToken(GetCurrentThread, TOKEN_QUERY, True,
+    hAccessToken);
+  if not bSuccess then
+  begin
+    if GetLastError = ERROR_NO_TOKEN then
+    bSuccess := OpenProcessToken(GetCurrentProcess, TOKEN_QUERY,
+      hAccessToken);
+  end;
+  if bSuccess then
+  begin
+    GetMem(ptgGroups, 1024);
+    bSuccess := GetTokenInformation(hAccessToken, TokenGroups,
+      ptgGroups, 1024, @dwInfoBufferSize);
+    LastError := GetLastError;
+    if not bSuccess then
+      showmessage(format('GetLastError %d',[LastError]));
+    CloseHandle(hAccessToken);
+    if bSuccess then
+    begin
+      AllocateAndInitializeSid(SECURITY_NT_AUTHORITY, 2,
+        SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS,
+        0, 0, 0, 0, 0, 0, psidAdministrators);
+      {$R-}
+      for x := 0 to ptgGroups^.GroupCount - 1 do
+       if EqualSid(psidAdministrators, ptgGroups^.Groups[x].Sid) then
+      begin
+          Result := True;
+          break;
+        end;
+      {$R+}
+      FreeSid(psidAdministrators);
+    end;
+    FreeMem(ptgGroups);
+  end;
+end;
+
+function IsWindowsAdminWinXP: boolean;
+CONST
+GENERIC_READ = $80000000;
+GENERIC_WRITE = $40000000;
+GENERIC_EXECUTE = $20000000;
+GENERIC_ALL = $10000000;
 var
   hSC: THandle;
 begin
@@ -857,7 +916,7 @@ begin
       mtInformation, [mbOK], 0);
 end;
 
-function TLazAutoUpdate.IsSourceForgeVersionNewer(const sznewINIPath: string): boolean;
+function TLazAutoUpdate.IsOnlineVersionNewer(const sznewINIPath: string): boolean;
   // Compares version contained in szTempXMLPath INI file
   // to fApplicationVersionNumber
 var
@@ -1058,7 +1117,7 @@ begin
           fOndebugEvent(Self, 'NewVersionAvailable',
             Format('Downloaded %s OK', [szTargetPath]));
         fParentApplication.ProcessMessages;
-        Result := IsSourceForgeVersionNewer(szTargetPath);
+        Result := IsOnlineVersionNewer(szTargetPath);
         if fFireDebugEvent then
           fOndebugEvent(Self, 'NewVersionAvailable',
             Format(C_DownloadedBytes, [szTargetPath, fDownloadSize]));
@@ -1785,6 +1844,7 @@ var
 begin
   Result := False;
   {$IFDEF WINDOWS}
+
     If NOT IsWindowsAdmin then
     begin
       szParams:='Only Windows users whith Administrator status can update this application.' + lineending;
