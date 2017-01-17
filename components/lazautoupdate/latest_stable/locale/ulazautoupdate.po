@@ -127,6 +127,10 @@ msgstr ""
 msgid "A new version %s is available.  Would you like to download it?"
 msgstr ""
 
+#: ulazautoupdate.rsapplicationu
+msgid "Application update"
+msgstr ""
+
 #: ulazautoupdate.rscancelledyou
 msgid "Cancelled.  You can download and update to the new version later."
 msgstr ""
@@ -137,6 +141,10 @@ msgstr ""
 
 #: ulazautoupdate.rsdownloadfail
 msgid "Download failed. (HTTP Errorcode %d) Try again later"
+msgstr ""
+
+#: ulazautoupdate.rsonlywindowsu
+msgid "Only Windows users whith Administrator status can update this application.%sPlease log off, then log on as an administrator (or switch users to an administrator account),%sthen try again.  This restriction is for the safety and security of your Windows system.%sClick OK to continue"
 msgstr ""
 
 #: ulazautoupdate.rsthisapplicat

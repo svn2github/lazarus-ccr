@@ -175,6 +175,12 @@ resourcestring
   rsDownloadFail = 'Download failed. (HTTP Errorcode %d) Try again later';
   rsCancelledYou2 = 'Cancelled.  You can download the new version later.';
   rsThisApplicat = 'This application is up-to-date';
+  rsOnlyWindowsU = 'Only Windows users whith Administrator status can update '
+    +'this application.%sPlease log off, then log on as an administrator (or '
+    +'switch users to an administrator account),%sthen try again.  This '
+    +'restriction is for the safety and security of your Windows system.%'
+    +'sClick OK to continue';
+  rsApplicationU = 'Application update';
 
 type
   tc = class(tthread)
@@ -225,6 +231,7 @@ type
     fGUIOnlineVersion: string;
     fShowDialogs: boolean;
     fDownloadInprogress: boolean;
+    fWindowsAdminCheck:Boolean;
     {$IFDEF UNIX}
       FUpdateHMProcess: TAsyncProcess;
     {$ENDIF}
@@ -327,6 +334,7 @@ type
     property FPCVersion: string read fFPCVersion;
     property LastCompiled: string read fLastCompiled;
     property TargetOS: string read fTargetOS;
+    property WindowsAdminCheck:Boolean read fWindowsAdminCheck write fWindowsAdminCheck;
   published
     // Events
     property OnNewVersionAvailable: TOnNewVersionAvailable
@@ -477,6 +485,14 @@ begin
   ShowMessage(fApplicationVersionString);
 end;
 {$IFDEF WINDOWS}
+
+procedure ShowAdminCheckMessage;
+Var sMessage:String;
+begin
+      sMessage:=Format(rsOnlyWindowsU, [lineending, lineending, lineending]);
+      MessageDlg(rsApplicationU, sMessage, mtInformation, [MBOK], 0);
+end;
+
 function IsWindowsAdmin: Boolean;
 const
   SECURITY_NT_AUTHORITY: TSIDIdentifierAuthority =
@@ -638,6 +654,7 @@ begin
   fFPCVersion := GetCompilerInfo;
   fLastCompiled := GetCompiledDate;
   fTargetOS := GetOS;
+  fWindowsAdminCheck:=TRUE;
 
 
   // AboutBox properties
@@ -1700,6 +1717,14 @@ var
   szAppDir, szParams: string;
 begin
   Result := False;
+  {$IFDEF WINDOWS}
+  If fWindowsAdminCheck then
+    If NOT IsWindowsAdmin then
+    begin
+      ShowAdminCheckMessage;
+      Exit;
+    end;
+  {$ENDIF}
   szAppDir := AppendPathDelim(ExtractFilePath(fAppFilename));
 
   // read the VMT once
@@ -1818,6 +1843,7 @@ begin
   end;
 end;
 
+
 function TLazAutoUpdate.UpdateToNewVersion: boolean;
 
 {$IFDEF WINDOWS}
@@ -1844,14 +1870,10 @@ var
 begin
   Result := False;
   {$IFDEF WINDOWS}
-
+  If fWindowsAdminCheck then
     If NOT IsWindowsAdmin then
     begin
-      szParams:='Only Windows users whith Administrator status can update this application.' + lineending;
-      szParams+='Please log off, then log on as an administrator (or switch users to an administrator account),' + lineending;
-      szParams+='then try again.  This restriction is for the safety and security of your Windows system.' + lineending;
-      szParams+='Click OK to continue';
-      MessageDlg('Application update',szParams,mtInformation,[MBOK],0);
+      ShowAdminCheckMessage;
       Exit;
     end;
   {$ENDIF}
