@@ -8,7 +8,7 @@
       <Unit0>
         <Filename Value="testapp.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="2"/>
         <CursorPos X="33" Y="27"/>
         <UsageCount Value="47"/>
         <Loaded Value="True"/>
@@ -37,22 +37,21 @@
       </Unit2>
       <Unit3>
         <Filename Value="..\lazautoupdate_httpclient.pas"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="97" Y="12"/>
-        <UsageCount Value="22"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="23"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\ulazautoupdate.pas"/>
         <IsVisibleTab Value="True"/>
-        <EditorIndex Value="4"/>
-        <CursorPos X="70" Y="493"/>
+        <EditorIndex Value="1"/>
+        <CursorPos X="40" Y="10"/>
         <ExtraEditorCount Value="2"/>
         <ExtraEditor1>
           <IsVisibleTab Value="True"/>
           <WindowIndex Value="1"/>
-          <TopLine Value="555"/>
-          <CursorPos Y="564"/>
+          <TopLine Value="578"/>
+          <CursorPos Y="587"/>
         </ExtraEditor1>
         <ExtraEditor2>
           <EditorIndex Value="-1"/>
@@ -60,7 +59,7 @@
           <TopLine Value="-1"/>
           <CursorPos X="-1" Y="-1"/>
         </ExtraEditor2>
-        <UsageCount Value="22"/>
+        <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
@@ -101,11 +100,10 @@
       </Unit9>
       <Unit10>
         <Filename Value="..\..\..\..\applications\foobot\monitor\umainform.pas"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="25"/>
-        <CursorPos X="25" Y="55"/>
-        <UsageCount Value="20"/>
-        <Loaded Value="True"/>
+        <CursorPos X="22" Y="36"/>
+        <UsageCount Value="21"/>
       </Unit10>
       <Unit11>
         <Filename Value="C:\trunklatest\fpc\rtl\objpas\sysutils\osutilsh.inc"/>
@@ -116,11 +114,10 @@
       <Unit12>
         <Filename Value="..\versionsupport.pas"/>
         <UnitName Value="VersionSupport"/>
-        <EditorIndex Value="5"/>
-        <TopLine Value="25"/>
-        <CursorPos X="71" Y="44"/>
-        <UsageCount Value="17"/>
-        <Loaded Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="4"/>
+        <CursorPos X="8" Y="31"/>
+        <UsageCount Value="18"/>
       </Unit12>
       <Unit13>
         <Filename Value="C:\laztrunk\fpc\examples\httpd22\minimain.pas"/>
@@ -149,17 +146,16 @@
         <WindowIndex Value="1"/>
         <TopLine Value="35"/>
         <CursorPos X="40" Y="51"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="13"/>
         <Loaded Value="True"/>
       </Unit16>
       <Unit17>
         <Filename Value="C:\NewPascal\projects\snippets\usefulunits\uuser.pas"/>
         <UnitName Value="uUser"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="6"/>
-        <CursorPos X="33" Y="16"/>
-        <UsageCount Value="11"/>
-        <Loaded Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="24"/>
+        <CursorPos Y="33"/>
+        <UsageCount Value="12"/>
       </Unit17>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">

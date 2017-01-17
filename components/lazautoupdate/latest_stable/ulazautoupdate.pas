@@ -1,8 +1,11 @@
 unit ulazautoupdate;
 
 {
+  LazAutoUpdate (c)2015 Gordon Bamber (minesadorada@charcodelvalle.com)
+
   VersionSupport:  Mike Thompson - mike.cornflake@gmail.com
   Added to and modified by minesadorada@charcodelvalle.com
+  Windows admin function:  Vincent at freepascal forum
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -55,7 +58,7 @@ const
   C_GITHUBFILE_URL_UPDATES = 'https://raw.github.com/%s/%s/%s/%s/%s';
   // https://raw.github.com/<username>/<repo>/<branch>/some_directory/file
 
-  C_TLazAutoUpdateComponentVersion = '0.2.3';
+  C_TLazAutoUpdateComponentVersion = '0.2.5';
   C_LAUTRayINI = 'lauimport.ini';
 
 {
@@ -108,6 +111,8 @@ const
  V0.1.26:Updated uses clause for FileUtils.
  V0.2.0: Rewritten for 2017
  V0.2.4: GitHub integration with branches
+ V0.2.5: IsWindowsAdministrator check added and property to control it
+ V0.2.6:
 }
   C_TThreadedDownloadComponentVersion = '0.0.3';
 {
@@ -117,6 +122,8 @@ const
 }
   C_OnlineVersionsININame = 'versions.ini'; // User can change
   C_UpdatesFolder = 'updates'; // User can change
+
+  // Don't change these without some thought..
   C_WhatsNewFilename = 'whatsnew.txt';
   C_INISection = 'versions';
   C_GUIEntry = 'GUI';
@@ -128,6 +135,8 @@ const
    {$IFDEF CPU64}C_UPDATER = 'updatehmwin64.exe';
   C_LOCALUPDATER = 'lauupdatewin64.exe';{$ENDIF}
   // Windows Constants
+  C_RUNONCEKEY = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce';
+  C_RUNKEY = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run';
    {$ENDIF}
   {$IFDEF LINUX}
    {$IFDEF CPU32}C_UPDATER = 'updatehmlinux32';
@@ -491,6 +500,20 @@ Var sMessage:String;
 begin
       sMessage:=Format(rsOnlyWindowsU, [lineending, lineending, lineending]);
       MessageDlg(rsApplicationU, sMessage, mtInformation, [MBOK], 0);
+end;
+
+function IsXP: boolean;
+var
+  osVinfo: TOSVERSIONINFO;
+begin
+  ZeroMemory(@osVinfo, SizeOf(osVinfo));
+  OsVinfo.dwOSVersionInfoSize := SizeOf(TOSVERSIONINFO);
+  if ((GetVersionEx(osVInfo) = True) and (osVinfo.dwPlatformId =
+    VER_PLATFORM_WIN32_NT) and (osVinfo.dwMajorVersion = 5) and
+    (osVinfo.dwMinorVersion = 1)) then
+    Result := True
+  else
+    Result := False;
 end;
 
 function IsWindowsAdmin: Boolean;
