@@ -127,6 +127,12 @@ const
   C_LOCALUPDATER = 'lauupdatewin32.exe';{$ENDIF}
    {$IFDEF CPU64}C_UPDATER = 'updatehmwin64.exe';
   C_LOCALUPDATER = 'lauupdatewin64.exe';{$ENDIF}
+  // Windows Constants
+  CONST
+  GENERIC_READ = $80000000;
+  GENERIC_WRITE = $40000000;
+  GENERIC_EXECUTE = $20000000;
+  GENERIC_ALL = $10000000;
   {$ENDIF}
   {$IFDEF LINUX}
    {$IFDEF CPU32}C_UPDATER = 'updatehmlinux32';
@@ -339,7 +345,6 @@ type
     // Set this property before using methods
     property SFProjectName: string read fSourceForgeProjectName
       write SetSourceForgeProjectName;
-    // Only auSourceForge at V0.0.1
     // For when fProjectType = auOther
     // Fully qualified URL (not including the filename).
     property auOtherSourceURL: string read fauOtherSourceURL write SetauOtherSourceURL;
@@ -353,9 +358,9 @@ type
     property AutoUpdateVersion: string read fComponentVersion;
     // Zipfile contains a whole directory tree (relative to App Directory)
     property CopyTree: boolean read fCopyTree write fCopyTree default True;
-    // Default is 'updates' *must be the same in SourceForge file section*
+    // Default is 'updates' *must be the same in SourceForge file section or GitHub Branch subfolder*
     property UpdatesFolder: string read fUpdatesFolder write fUpdatesFolder;
-    // Default=versions.ini  File in SourceForge /updates folder
+    // Default=versions.ini  File in SourceForge/GitHub /updates folder
     property VersionsININame: string read fVersionsININame write fVersionsININame;
     // Default is to modify parent form's caption during downloads
     property ShowUpdateInCaption: boolean read fShowUpdateInCaption
@@ -370,10 +375,15 @@ type
       write fDownloadCountLimit;
     // Default is application filename.zip
     property ZipfileName: string read fZipfileName write fZipfileName;
+    // Name of Console app
     property UpdateExe:String read fUpdateExe;
+    // Name of Console app
     property UpdateExeSilent:String read fUpdateSilentExe;
+    // Main project name/UserName
     property GitHubProjectname:String read fGitHubProjectName write fGitHubProjectName;
+    // Name of your GitHub repository within the project/username
     Property GitHubRepositoryName:String read fGitHubRepositoryName write fGitHubRepositoryName;
+    // Default=master but any branchname is OK
     Property GitHubBranch:String read fGitHubBranch write fGitHubBranch;
   end;
 
@@ -471,7 +481,19 @@ procedure TLazAutoUpdate.DebugTest;
 begin
   ShowMessage(fApplicationVersionString);
 end;
+{$IFDEF WINDOWS}
+function IsWindowsAdmin: boolean;
+var
+  hSC: THandle;
+begin
+  Result := True;
+  hSC := OpenSCManager(nil, nil, GENERIC_READ or GENERIC_WRITE or GENERIC_EXECUTE);
 
+  if (hSC = 0) then
+    Result := False;
+  CloseServiceHandle(hSC);
+end;
+{$ENDIF}
 constructor TLazAutoUpdate.Create(AOwner: TComponent);
 var
   sz: string;
@@ -1762,6 +1784,17 @@ var
   szParams: string;
 begin
   Result := False;
+  {$IFDEF WINDOWS}
+    If NOT IsWindowsAdmin then
+    begin
+      szParams:='Only Windows users whith Administrator status can update this application.' + lineending;
+      szParams+='Please log off, then log on as an administrator (or switch users to an administrator account),' + lineending;
+      szParams+='then try again.  This restriction is for the safety and security of your Windows system.' + lineending;
+      szParams+='Click OK to continue';
+      MessageDlg('Application update',szParams,mtInformation,[MBOK],0);
+      Exit;
+    end;
+  {$ENDIF}
   szAppDir := AppendPathDelim(ExtractFilePath(fAppFilename));
 
   // read the VMT once
