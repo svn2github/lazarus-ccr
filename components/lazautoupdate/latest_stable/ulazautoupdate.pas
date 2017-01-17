@@ -42,7 +42,7 @@ uses
   LazUTF8, FileUtil, LazFileUtils, Dialogs, StdCtrls,
   Buttons, DateUtils, asyncprocess, zipper, LResources,
   VersionSupport, inifiles, aboutlazautoupdateunit, uappisrunning, LCLProc,
-  fileinfo,open_ssl, winpeimagereader {need this for reading exe info}
+  fileinfo, open_ssl, winpeimagereader {need this for reading exe info}
   , elfreader {needed for reading ELF executables}
   , machoreader {needed for reading MACH-O executables}
   {$IFDEF WINDOWS}, Windows, ShellAPI{$ENDIF}; // Thanks to Windows 10 and 704 error
@@ -115,7 +115,8 @@ const
  V0.2.0: Rewritten for 2017
  V0.2.4: GitHub integration with branches
  V0.2.5: IsWindowsAdministrator check added and property to control it
- V0.2.6:
+ V0.2.6: Enabled GitHub tags (GitHubBranchOrTag property)
+ V0.2.7:
 }
   C_TThreadedDownloadComponentVersion = '0.0.3';
 {
@@ -188,10 +189,10 @@ resourcestring
   rsCancelledYou2 = 'Cancelled.  You can download the new version later.';
   rsThisApplicat = 'This application is up-to-date';
   rsOnlyWindowsU = 'Only Windows users whith Administrator status can update '
-    +'this application.%sPlease log off, then log on as an administrator (or '
-    +'switch users to an administrator account),%sthen try again.  This '
-    +'restriction is for the safety and security of your Windows system.%'
-    +'sClick OK to continue';
+    + 'this application.%sPlease log off, then log on as an administrator (or '
+    + 'switch users to an administrator account),%sthen try again.  This '
+    + 'restriction is for the safety and security of your Windows system.%'
+    + 'sClick OK to continue';
   rsApplicationU = 'Application update';
 
 type
@@ -201,8 +202,8 @@ type
 
 
 type
-
-  TProjectType = (auSourceForge,auGitHubReleaseZip,auOther);
+  // This type is currently unused
+  TProjectType = (auSourceForge, auGitHubReleaseZip, auOther);
   // Array of these records used for multiple updates
   UpdateListRecord = record
     PrettyName: string;
@@ -210,7 +211,9 @@ type
     VersionString: string;
     VersionNumber: cardinal;
   end;
+
   TThreadedDownload = class; // Forward declaration
+
   {TLAZAUTOUPDATE}
   TOnNewVersionAvailable = procedure(Sender: TObject; Newer: boolean;
     OnlineVersion: string) of object;
@@ -222,9 +225,9 @@ type
   TLazAutoUpdate = class(TAboutLazAutoUpdate)
   private
     fSourceForgeProjectName: string;
-    fGitHubProjectName:String;
-    fGitHubRepositoryName:String;
-    fGitHubBranch:String;
+    fGitHubProjectName: string;
+    fGitHubRepositoryName: string;
+    fGitHubBranchOrTag: string;
     fApplicationVersionString: string;
     fApplicationVersionQuad: TVersionQuad;
     fGuiQuad: TVersionQuad;
@@ -243,9 +246,9 @@ type
     fGUIOnlineVersion: string;
     fShowDialogs: boolean;
     fDownloadInprogress: boolean;
-    fWindowsAdminCheck:Boolean;
+    fWindowsAdminCheck: boolean;
     {$IFDEF UNIX}
-      FUpdateHMProcess: TAsyncProcess;
+    FUpdateHMProcess: TAsyncProcess;
     {$ENDIF}
     fauOtherSourceURL: string;
     fauOtherSourceFilename: string;
@@ -265,7 +268,7 @@ type
     // fQuad: TVersionQuad;
     fProgVersion: TProgramVersion;
     objFileVerInfo: TFileVersionInfo;
-    fUpdateExe,fUpdateSilentExe:String;
+    fUpdateExe, fUpdateSilentExe: string;
     procedure SetProjectType(AValue: TProjectType);
     // projectype=auOther property Sets
     procedure SetauOtherSourceFilename(AValue: string);
@@ -278,7 +281,8 @@ type
     procedure SetDebugMode(AValue: boolean);
     function GetThreadDownloadReturnCode: integer;
     function IsOnlineVersionNewer(const sznewINIPath: string): boolean;
-    function VersionStringToNumber(AVersionString: string): integer;
+    // No longer needed
+    // function VersionStringToNumber(AVersionString: string): integer;
     function DoSilentUpdate: boolean;
   protected
 
@@ -346,7 +350,7 @@ type
     property FPCVersion: string read fFPCVersion;
     property LastCompiled: string read fLastCompiled;
     property TargetOS: string read fTargetOS;
-    property WindowsAdminCheck:Boolean read fWindowsAdminCheck write fWindowsAdminCheck;
+    property WindowsAdminCheck: boolean read fWindowsAdminCheck write fWindowsAdminCheck;
   published
     // Events
     property OnNewVersionAvailable: TOnNewVersionAvailable
@@ -391,15 +395,16 @@ type
     // Default is application filename.zip
     property ZipfileName: string read fZipfileName write fZipfileName;
     // Name of Console app
-    property UpdateExe:String read fUpdateExe;
+    property UpdateExe: string read fUpdateExe;
     // Name of Console app
-    property UpdateExeSilent:String read fUpdateSilentExe;
+    property UpdateExeSilent: string read fUpdateSilentExe;
     // Main project name/UserName
-    property GitHubProjectname:String read fGitHubProjectName write fGitHubProjectName;
+    property GitHubProjectname: string read fGitHubProjectName write fGitHubProjectName;
     // Name of your GitHub repository within the project/username
-    Property GitHubRepositoryName:String read fGitHubRepositoryName write fGitHubRepositoryName;
-    // Default=master but any branchname is OK
-    Property GitHubBranchOrTag:String read fGitHubBranch write fGitHubBranch;
+    property GitHubRepositoryName: string read fGitHubRepositoryName
+      write fGitHubRepositoryName;
+    // Default=master but any branchname or tagname is OK
+    property GitHubBranchOrTag: string read fGitHubBranchOrTag write fGitHubBranchOrTag;
   end;
 
   {TThreadedDownload }
@@ -463,8 +468,7 @@ type
 
 
 
-// Non-threaded version (redundant v0.0.1)
-
+// Non-threaded version
 function DownloadHTTP(URL, TargetFile: string; var ReturnCode, DownloadSize: integer;
   bIsSourceForge, fDebugMode: boolean): boolean;
 
@@ -478,6 +482,7 @@ begin
   RegisterComponents('System', [TLazAutoUpdate]);
 end;
 
+// Dummy thread to initialise the threading process
 procedure tc.Execute;
 begin
 
@@ -496,13 +501,16 @@ procedure TLazAutoUpdate.DebugTest;
 begin
   ShowMessage(fApplicationVersionString);
 end;
-{$IFDEF WINDOWS}
 
+{$IFDEF WINDOWS}
+// === START WINDOWS PROCS =====================================================
+// This is all about permissions in Windows 10
 procedure ShowAdminCheckMessage;
-Var sMessage:String;
+var
+  sMessage: string;
 begin
-      sMessage:=Format(rsOnlyWindowsU, [lineending, lineending, lineending]);
-      MessageDlg(rsApplicationU, sMessage, mtInformation, [MBOK], 0);
+  sMessage := Format(rsOnlyWindowsU, [lineending, lineending, lineending]);
+  MessageDlg(rsApplicationU, sMessage, mtInformation, [mbOK], 0);
 end;
 
 function IsXP: boolean;
@@ -519,18 +527,18 @@ begin
     Result := False;
 end;
 
-function IsWindowsAdmin: Boolean;
+function IsWindowsAdmin: boolean;
 const
   SECURITY_NT_AUTHORITY: TSIDIdentifierAuthority =
     (Value: (0, 0, 0, 0, 0, 5));
   SECURITY_BUILTIN_DOMAIN_RID = $00000020;
-  DOMAIN_ALIAS_RID_ADMINS     = $00000220;
+  DOMAIN_ALIAS_RID_ADMINS = $00000220;
 var
   hAccessToken: THandle;
   ptgGroups: PTokenGroups;
   dwInfoBufferSize: DWORD;
   psidAdministrators: PSID;
-  x: Integer;
+  x: integer;
   bSuccess: BOOL;
   LastError: integer;
 begin
@@ -542,13 +550,11 @@ begin
   end;
 
   Result := False;
-  bSuccess := OpenThreadToken(GetCurrentThread, TOKEN_QUERY, True,
-    hAccessToken);
+  bSuccess := OpenThreadToken(GetCurrentThread, TOKEN_QUERY, True, hAccessToken);
   if not bSuccess then
   begin
     if GetLastError = ERROR_NO_TOKEN then
-    bSuccess := OpenProcessToken(GetCurrentProcess, TOKEN_QUERY,
-      hAccessToken);
+      bSuccess := OpenProcessToken(GetCurrentProcess, TOKEN_QUERY, hAccessToken);
   end;
   if bSuccess then
   begin
@@ -557,7 +563,7 @@ begin
       ptgGroups, 1024, @dwInfoBufferSize);
     LastError := GetLastError;
     if not bSuccess then
-      showmessage(format('GetLastError %d',[LastError]));
+      ShowMessage(format('GetLastError %d', [LastError]));
     CloseHandle(hAccessToken);
     if bSuccess then
     begin
@@ -566,8 +572,8 @@ begin
         0, 0, 0, 0, 0, 0, psidAdministrators);
       {$R-}
       for x := 0 to ptgGroups^.GroupCount - 1 do
-       if EqualSid(psidAdministrators, ptgGroups^.Groups[x].Sid) then
-      begin
+        if EqualSid(psidAdministrators, ptgGroups^.Groups[x].Sid) then
+        begin
           Result := True;
           break;
         end;
@@ -579,11 +585,11 @@ begin
 end;
 
 function IsWindowsAdminWinXP: boolean;
-CONST
-GENERIC_READ = $80000000;
-GENERIC_WRITE = $40000000;
-GENERIC_EXECUTE = $20000000;
-GENERIC_ALL = $10000000;
+const
+  GENERIC_READ = $80000000;
+  GENERIC_WRITE = $40000000;
+  GENERIC_EXECUTE = $20000000;
+  GENERIC_ALL = $10000000;
 var
   hSC: THandle;
 begin
@@ -595,6 +601,8 @@ begin
   CloseServiceHandle(hSC);
 end;
 {$ENDIF}
+// === END WINDOWS PROCS =======================================================
+
 constructor TLazAutoUpdate.Create(AOwner: TComponent);
 var
   sz: string;
@@ -608,16 +616,21 @@ begin
     Free;
   end;
 
-
+  // Freed in Destroy
   fThreadDownload := TThreadedDownload.Create();
+
   // Leave URL and Filename to be set via properties
   fComponentVersion := C_TLazAutoUpdateComponentVersion;
+  // Unused
   ClearUpdateList;
   fUpdateListCount := 0;
+
   // Grab the application and form objects from the application
   fParentApplication := Tapplication(AOwner.Owner);
   fParentForm := TForm(AOwner);
+  // Set default
   fApplicationVersionString := 'No build information available';
+  // Get Versioninfo
   objFileVerInfo := TFileVersionInfo.Create(fParentApplication);
   try
     try
@@ -636,7 +649,6 @@ begin
   finally
     objFileVerInfo.Free;
   end;
-  // fApplicationVersionString := GetFileVersion;
   if (fApplicationVersionString = 'No build information available') then
     fApplicationVersionString := '0.0.0.0';
 
@@ -670,8 +682,9 @@ begin
 
   fZipfileName := ''; // assign later
 
-  fUpdateExe:=C_UPDATER;
-  fUpdateSilentExe:=C_LOCALUPDATER;
+  // BE SURE TO CHANGE THE CONSTANTS IF YOU CHANGE THE UPDATE EXE NAME
+  fUpdateExe := C_UPDATER;
+  fUpdateSilentExe := C_LOCALUPDATER;
 
 
   // Assorted versioninfo properties
@@ -680,7 +693,7 @@ begin
   fFPCVersion := GetCompilerInfo;
   fLastCompiled := GetCompiledDate;
   fTargetOS := GetOS;
-  fWindowsAdminCheck:=TRUE;
+  fWindowsAdminCheck := True;
 
 
   // AboutBox properties
@@ -720,7 +733,8 @@ function TLazAutoUpdate.AppIsActive(const ExeName: string): boolean;
 begin
   Result := AppIsRunning(ExeName);
 end;
-
+{
+// Obselete.  fileinfo functions used instead
 function TLazAutoUpdate.VersionStringToNumber(AVersionString: string): integer;
   // Converts 'n.n.n.n' into an integer
 var
@@ -742,7 +756,7 @@ begin
   if TryStrToInt(s, i) then
     Result := Result + i;
 end;
-
+}
 procedure TLazAutoUpdate.ResetAppVersion;
 begin
   fApplicationVersionString := GetFileVersion;
@@ -869,6 +883,7 @@ begin
 end;
 
 function TLazAutoUpdate.SilentUpdate: boolean;
+// Part of the tray update system
 begin
   // read the VMT once
   if Assigned(fOndebugEvent) then
@@ -964,7 +979,6 @@ function TLazAutoUpdate.IsOnlineVersionNewer(const sznewINIPath: string): boolea
   // to fApplicationVersionNumber
 var
   VersionINI: TIniFile;
-  iGUIVersion: integer;
 {
 C_INISection = 'versions';
 C_GUIEntry ='GUI';
@@ -985,20 +999,13 @@ begin
     VersionINI.Free;
   end;
   if fFireDebugEvent then
-    fOndebugEvent(Self, 'IsSourceForgeVersionNewer',
+    fOndebugEvent(Self, 'IsOnlineVersionNewer',
       Format('fGUIOnlineVersion=%s, fApplicationVersionString=%s, szTempXMLPath=%s',
       [fGUIOnlineVersion, fApplicationVersionString, sznewINIPath]));
 
   // Fetch the 4 (or less) version elements and make into an Integer
   // so 1.10 > 1.9.9.9
   // iGUIVersion := VersionStringToNumber(fGUIOnlineVersion);
-
-{
-  if fFireDebugEvent then
-    fOndebugEvent(Self, 'IsSourceForgeVersionNewer',
-      Format('iGUIVersion=%d, fApplicationVersionNumber=%d',
-      [iGUIVersion, fApplicationVersionQuad]));
-}
   // Test: Is the online version newer?
   if NewerVersion(fGUIQuad, fApplicationVersionQuad) then
     Result := True;
@@ -1032,12 +1039,13 @@ begin
       if fShowDialogs then
         ShowMessage(C_PropIsEmpty);
       if fFireDebugEvent then
-        fOndebugEvent(Self, 'NewVersionAvailable', C_PropIsEmpty);
+        fOndebugEvent(Self, 'NewVersionAvailable (auSourceForge)', C_PropIsEmpty);
       Exit;
     end;
     szURL := Format(C_SOURCEFORGEURL, [fSourceForgeProjectName,
       fUpdatesFolder, fVersionsININame]);
   end;
+
   if fProjectType = auGitHubReleaseZip then
   begin
     if ((fGitHubProjectName = '') or (fGitHubRepositoryName = '')) then
@@ -1045,15 +1053,18 @@ begin
       if fShowDialogs then
         ShowMessage(C_PropIsEmpty);
       if fFireDebugEvent then
-        fOndebugEvent(Self, 'NewVersionAvailable', C_PropIsEmpty);
+        fOndebugEvent(Self, 'NewVersionAvailable (auGitHubReleaseZip)', C_PropIsEmpty);
       Exit;
     end;
-    If ((fUpdatesFolder=C_NotApplicable) or (fUpdatesFolder='')) then
-      szURL := Format(C_GITHUBFILE_URL, [fGitHubProjectName,fGitHubRepositoryName,fGitHubBranch,fVersionsININame])
+    if ((fUpdatesFolder = C_NotApplicable) or (fUpdatesFolder = '')) then
+      szURL := Format(C_GITHUBFILE_URL,
+        [fGitHubProjectName, fGitHubRepositoryName, fGitHubBranchOrTag, fVersionsININame])
     else
-      szURL := Format(C_GITHUBFILE_URL_UPDATES, [fGitHubProjectName,fGitHubRepositoryName,fGitHubBranch,fUpdatesFolder,fVersionsININame]);
+      szURL := Format(C_GITHUBFILE_URL_UPDATES,
+        [fGitHubProjectName, fGitHubRepositoryName, fGitHubBranchOrTag,
+        fUpdatesFolder, fVersionsININame]);
   end;
-  // ShowMessage(szURL);
+
   if fProjectType = auOther then
     // fauOtherSourceURL ends with '/'
   begin
@@ -1061,116 +1072,116 @@ begin
   end;
 
 
-    szTargetPath := AppendPathDelim(ExtractFilePath(fAppFilename)) +
-      Format(C_TempVersionsININame, [fVersionsININame]);
+  szTargetPath := AppendPathDelim(ExtractFilePath(fAppFilename)) +
+    Format(C_TempVersionsININame, [fVersionsININame]);
   if fFireDebugEvent then
-      fOndebugEvent(Self, 'NewVersionAvailable',
-        Format('URL is %s', [szURL]));
+    fOndebugEvent(Self, 'NewVersionAvailable',
+      Format('URL is %s', [szURL]));
 
+  if fFireDebugEvent then
+    fOndebugEvent(Self, 'NewVersionAvailable',
+      Format('Target Path %s', [szTargetPath]));
+
+
+  // Delete any old versions
+  try
+    if FileExistsUTF8(szTargetPath) then
+    begin
+      SysUtils.DeleteFile(szTargetPath);
+      if fFireDebugEvent then
+        fOndebugEvent(Self, 'NewVersionAvailable',
+          Format('Deleted old file %s', [szTargetPath]));
+    end;
+  except
     if fFireDebugEvent then
       fOndebugEvent(Self, 'NewVersionAvailable',
-        Format('Target Path %s', [szTargetPath]));
+        Format('Failed to delete old file %s', [szTargetPath]));
+    // No error if the delete can't be done
+  end;
+  with fThreadDownload do
+  begin
+    URL := szURL;
+    Filename := szTargetPath;
+    if not fSilentMode then
+      szOldCaption := fParentForm.Caption;
+    // Initialise fields
+    ThreadFinished := False;
+    ReturnCode := 0;
+    DownloadSize := 0;
+    fDownloadInprogress := True;
+    if not fSilentMode then
+      fParentForm.Caption := C_Checking;
+    CheckForOpenSSL;
+    // Start the thread
+    ThreadDownloadHTTP;
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'NewVersionAvailable',
+        Format('ThreadDownloadHTTP return Code was %d', [fReturnCode]));
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'NewVersionAvailable',
+        Format('ThreadDownloadHTTP Last Error was %s', [fLastError]));
 
-
-    // Delete any old versions
+    cCount := 0;
+    // Update the GUI during the thread
     try
-      if FileExistsUTF8(szTargetPath) then
+      while (ThreadFinished = False) do
       begin
-        SysUtils.DeleteFile(szTargetPath);
-        if fFireDebugEvent then
-          fOndebugEvent(Self, 'NewVersionAvailable',
-            Format('Deleted old file %s', [szTargetPath]));
+        Inc(cCount);
+        Sleep(1);
+        fParentApplication.ProcessMessages;
+        ThreadSwitch();
+        {$IFDEF WINDOWS}
+        if fShowUpdateInCaption then
+          fParentForm.Caption := Format(C_Checking + ' %d', [cCount])
+        else
+          Sleep(10);
+        {$ENDIF}
+        fParentApplication.ProcessMessages;
+        if (cCount > fVersionCountLimit) then
+        begin
+          if fShowDialogs then
+            ShowMessage(C_TakingTooLong);
+          ThreadFinished := True;
+          fDownloadSize := 0;
+          fDownloadInprogress := False;
+          if not fSilentMode then
+            fParentForm.Caption := szOldCaption;
+          Exit;
+        end;
       end;
     except
-      if fFireDebugEvent then
-        fOndebugEvent(Self, 'NewVersionAvailable',
-          Format('Failed to delete old file %s', [szTargetPath]));
-      // No error if the delete can't be done
-    end;
-    with fThreadDownload do
-    begin
-      URL := szURL;
-      Filename := szTargetPath;
-      if not fSilentMode then
-        szOldCaption := fParentForm.Caption;
-      // Initialise fields
-      ThreadFinished := False;
-      ReturnCode := 0;
-      DownloadSize := 0;
-      fDownloadInprogress := True;
-      if not fSilentMode then
-        fParentForm.Caption := C_Checking;
-       CheckForOpenSSL;
-      // Start the thread
-      ThreadDownloadHTTP;
-      if fFireDebugEvent then
-        fOndebugEvent(Self, 'NewVersionAvailable',
-          Format('ThreadDownloadHTTP return Code was %d', [fReturnCode]));
-      if fFireDebugEvent then
-        fOndebugEvent(Self, 'NewVersionAvailable',
-          Format('ThreadDownloadHTTP Last Error was %s', [fLastError]));
-
-      cCount := 0;
-      // Update the GUI during the thread
-      try
-        while (ThreadFinished = False) do
-        begin
-          Inc(cCount);
-          Sleep(1);
-          fParentApplication.ProcessMessages;
-          ThreadSwitch();
-        {$IFDEF WINDOWS}
-          if fShowUpdateInCaption then
-            fParentForm.Caption := Format(C_Checking + ' %d', [cCount])
-          else
-            Sleep(10);
-        {$ENDIF}
-          fParentApplication.ProcessMessages;
-          if (cCount > fVersionCountLimit) then
-          begin
-            if fShowDialogs then
-              ShowMessage(C_TakingTooLong);
-            ThreadFinished := True;
-            fDownloadSize := 0;
-            fDownloadInprogress := False;
-            if not fSilentMode then
-              fParentForm.Caption := szOldCaption;
-            Exit;
-          end;
-        end;
-      except
-        ThreadFinished := True;
-        fDownloadSize := 0;
-        fDownloadInprogress := False;
-        if not fSilentMode then
-          fParentForm.Caption := szOldCaption;
-        if fFireDebugEvent then
-          fOndebugEvent(Self, 'NewVersionAvailable',
-            C_ThreadDownloadCrash);
-        Exit;
-      end;
-      if fFireDebugEvent then
-        fOndebugEvent(Self, 'NewVersionAvailable',
-          Format('After Threadfinished: Return Code was %d', [fReturnCode]));
-      Sleep(1);
+      ThreadFinished := True;
+      fDownloadSize := 0;
       fDownloadInprogress := False;
-      if fDownloadSize > 0 then
-      begin
-        if fFireDebugEvent then
-          fOndebugEvent(Self, 'NewVersionAvailable',
-            Format('Downloaded %s OK', [szTargetPath]));
-        fParentApplication.ProcessMessages;
-        Result := IsOnlineVersionNewer(szTargetPath);
-        if fFireDebugEvent then
-          fOndebugEvent(Self, 'NewVersionAvailable',
-            Format(C_DownloadedBytes, [szTargetPath, fDownloadSize]));
-      end
-      else
+      if not fSilentMode then
+        fParentForm.Caption := szOldCaption;
       if fFireDebugEvent then
         fOndebugEvent(Self, 'NewVersionAvailable',
-          Format('DownloadSize was %d', [fDownloadSize]));
-
+          C_ThreadDownloadCrash);
+      Exit;
     end;
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'NewVersionAvailable',
+        Format('After Threadfinished: Return Code was %d', [fReturnCode]));
+    Sleep(1);
+    fDownloadInprogress := False;
+    if fDownloadSize > 0 then
+    begin
+      if fFireDebugEvent then
+        fOndebugEvent(Self, 'NewVersionAvailable',
+          Format('Downloaded %s OK', [szTargetPath]));
+      fParentApplication.ProcessMessages;
+      Result := IsOnlineVersionNewer(szTargetPath);
+      if fFireDebugEvent then
+        fOndebugEvent(Self, 'NewVersionAvailable',
+          Format(C_DownloadedBytes, [szTargetPath, fDownloadSize]));
+    end
+    else
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'NewVersionAvailable',
+        Format('DownloadSize was %d', [fDownloadSize]));
+
+  end;
   if not fSilentMode then
     fParentForm.Caption := szOldCaption;
   if Assigned(fOnNewVersionAvailable) then
@@ -1202,13 +1213,16 @@ begin
   end;
   szTargetPath := fZipfileName;
   if fProjectType = auSourceForge then
-     szURL := Format(C_SOURCEFORGEURL, [fSourceForgeProjectName, fUpdatesFolder,
-     ExtractFileName(szTargetPath)]);
+    szURL := Format(C_SOURCEFORGEURL, [fSourceForgeProjectName,
+      fUpdatesFolder, ExtractFileName(szTargetPath)]);
   if fProjectType = auGitHubReleaseZip then
-    If ((fUpdatesFolder=C_NotApplicable) or (fUpdatesFolder='')) then
-      szURL := Format(C_GITHUBFILE_URL, [fGitHubProjectName,fGitHubRepositoryName,fGitHubBranch,fZipfileName])
+    if ((fUpdatesFolder = C_NotApplicable) or (fUpdatesFolder = '')) then
+      szURL := Format(C_GITHUBFILE_URL,
+        [fGitHubProjectName, fGitHubRepositoryName, fGitHubBranchOrTag, fZipfileName])
     else
-      szURL := Format(C_GITHUBFILE_URL_UPDATES, [fGitHubProjectName,fGitHubRepositoryName,fGitHubBranch,fUpdatesFolder,fZipfileName]);
+      szURL := Format(C_GITHUBFILE_URL_UPDATES,
+        [fGitHubProjectName, fGitHubRepositoryName, fGitHubBranchOrTag,
+        fUpdatesFolder, fZipfileName]);
   if fProjectType = auOther then
     // fauOtherSourceURL ends with '/'
   begin
@@ -1398,6 +1412,7 @@ begin
 end;
 
 function TLazAutoUpdate.CreateLocalLauImportFile: boolean;
+// Used in SysTray app
 var
   LAUTRayINI: TIniFile;
   szSection: string;
@@ -1528,8 +1543,8 @@ begin
     begin
       if fFireDebugEvent then
         fOndebugEvent(Self, 'RelocateLauImportFile',
-          Format('Relocated %s from %s to %s', [C_LAUTRayINI,
-          szSourceLAUTrayPath, szDestLAUTrayPath]));
+          Format('Relocated %s from %s to %s',
+          [C_LAUTRayINI, szSourceLAUTrayPath, szDestLAUTrayPath]));
       SysUtils.DeleteFile(szSourceLAUTrayPath);
     end
     else
@@ -1541,8 +1556,9 @@ begin
 end;
 
 function TLazAutoUpdate.DoSilentUpdate: boolean;
-  // Called from UpdateToNewVersion when the app is not running
-  // Updates the app, and also copies over and updates C_LAUTRayINI
+// Used in Systray app
+// Called from UpdateToNewVersion when the app is not running
+// Updates the app, and also copies over and updates C_LAUTRayINI
 var
   szAppFolder: string;
   szLAUTrayAppPath: string;
@@ -1718,8 +1734,8 @@ begin
 end;
 
 function TLazAutoUpdate.RemoteUpdateToNewVersion: boolean;
-  // Shells to 'lauupdate' console app in ProgramDirectory to remotely update an app
-
+// Used in Systray app
+// Shells to 'lauupdate' console app in ProgramDirectory to remotely update an app
 {$IFDEF WINDOWS}
   function RunAsAdmin(const Handle: THandle; const Path, Params: string): boolean;
   var
@@ -1744,8 +1760,8 @@ var
 begin
   Result := False;
   {$IFDEF WINDOWS}
-  If fWindowsAdminCheck then
-    If NOT IsWindowsAdmin then
+  if fWindowsAdminCheck then
+    if not IsWindowsAdmin then
     begin
       ShowAdminCheckMessage;
       Exit;
@@ -1871,7 +1887,8 @@ end;
 
 
 function TLazAutoUpdate.UpdateToNewVersion: boolean;
-
+// Shells to updater console
+// Requires admin user in Win 10
 {$IFDEF WINDOWS}
   function RunAsAdmin(const Handle: THandle; const Path, Params: string): boolean;
   var
@@ -1896,8 +1913,8 @@ var
 begin
   Result := False;
   {$IFDEF WINDOWS}
-  If fWindowsAdminCheck then
-    If NOT IsWindowsAdmin then
+  if fWindowsAdminCheck then
+    if not IsWindowsAdmin then
     begin
       ShowAdminCheckMessage;
       Exit;
@@ -1997,7 +2014,8 @@ begin
         FUpdateHMProcess.Execute;
       except
         raise Exception.CreateFmt(
-          'Error %d: Run this application in Administrator mode or turn off UAC', [GetLastOSError]);
+          'Error %d: Run this application in Administrator mode or turn off UAC',
+          [GetLastOSError]);
       end;
 
       // Check for C_WhatsNewFilename in the app directory in a LOOP
@@ -2026,12 +2044,14 @@ end;
 
 
 procedure TLazAutoUpdate.ClearUpdateList;
+// Unused
 begin
   Setlength(fUpdateList, 0);
 end;
 
 function TLazAutoUpdate.AddToUpdateList(APrettyName, APath, AVersionString: string;
   AVersionNumber: cardinal): integer;
+// Unused
 var
   iLast: integer;
   TheRec: UpdateListRecord;
@@ -2077,6 +2097,7 @@ begin
 end;
 
 procedure TLazAutoUpdate.SetProjectType(AValue: TProjectType);
+// Set properties in a context-sensitive way
 begin
   if (AValue <> fProjectType) then
     fProjectType := AValue;
@@ -2086,9 +2107,9 @@ begin
     fSourceForgeProjectName := C_NotApplicable;
     fGitHubRepositoryName := C_NotApplicable;
     fGitHubProjectName := C_NotApplicable;
-    fGitHubBranch:=C_NotApplicable;
-    fauOtherSourceFilename:='';
-    fauOtherSourceURL:='';
+    fGitHubBranchOrTag := C_NotApplicable;
+    fauOtherSourceFilename := '';
+    fauOtherSourceURL := '';
   end;
   if fProjectType = auSourceForge then
   begin
@@ -2098,30 +2119,31 @@ begin
     fauOtherSourceURL := C_NotApplicable;
     fGitHubRepositoryName := C_NotApplicable;
     fGitHubProjectName := C_NotApplicable;
-    fGitHubBranch:=C_NotApplicable;
+    fGitHubBranchOrTag := C_NotApplicable;
   end;
   if fProjectType = auGitHubReleaseZip then
   begin
-    fZipFileName:=ChangeFileExt(fVersionsININame,'.zip');
+    fZipFileName := ChangeFileExt(fVersionsININame, '.zip');
     fUpdatesFolder := C_UpdatesFolder;
     fSourceForgeProjectName := C_NotApplicable;
     fauOtherSourceFilename := C_NotApplicable;
     fauOtherSourceURL := C_NotApplicable;
-    fGitHubBranch:= C_MASTER;
+    fGitHubBranchOrTag := C_MASTER;
     fGitHubRepositoryName := '';
     fGitHubProjectName := '';
-    fUpdatesFolder:=C_NotApplicable;
+    fUpdatesFolder := C_NotApplicable;
   end;
-
 
 end;
 
 procedure TLazAutoUpdate.SetSourceForgeProjectName(Avalue: string);
+// Ensure lowercase
 begin
   fSourceForgeProjectName := LowerCase(AValue);
 end;
 
 procedure TLazAutoUpdate.SetAppFilename(Avalue: string);
+// Guess a default value
 begin
   fAppFilename := AValue;
   // Set a default value?
@@ -2212,7 +2234,7 @@ begin
 end;
 
 procedure TThreadedDownload.DownloadTerminiated(Sender: TObject);
-// Unzips all files ready for updatehm to copy them over
+// Unzips all files ready for updatehmxxx to copy them over
 var
   UnZipper: TUnZipper;
 begin
@@ -2241,16 +2263,11 @@ end;
 function DownloadHTTP(URL, TargetFile: string; var ReturnCode, DownloadSize: integer;
   bIsSourceForge, fDebugmode: boolean): boolean;
   // Download file; retry if necessary.
-  // Deals with SourceForge download links
-const
-  MaxRetries = 3;
+  // Deals with https download links
 var
   HTTPClient: TFPHTTPClient;
-  HTTPGetResult: boolean;
-  RetryAttempt, i: integer;
 begin
   Result := False;
-  RetryAttempt := 1;
   HTTPClient := TFPHTTPClient.Create(nil);
   if bIsSourceForge then
   begin
@@ -2263,6 +2280,7 @@ begin
       HTTPClient.Get(URL, TargetFile);
       ReturnCode := HTTPClient.ResponseStatusCode;
       DownloadSize := Filesize(TargetFile);
+      Result:=True;
     except
       // We don't care for the reason for this error; the download failed.
       Result := False;
