@@ -1,4 +1,4 @@
-msgid "of the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate componentof the LazAutoUpdate component"
+msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
 #: tmainform.caption
@@ -50,7 +50,7 @@ msgid "List of current profiles"
 msgstr ""
 
 #: tmainform.cmb_profile.text
-msgctxt "TMAINFORM.CMB_PROFILE.TEXT"
+msgctxt "tmainform.cmb_profile.text"
 msgid "Default"
 msgstr ""
 
@@ -118,12 +118,12 @@ msgid ""
 msgstr ""
 
 #: tmainform.cmd_useappnamezipfilename.caption
-msgctxt "TMAINFORM.CMD_USEAPPNAMEZIPFILENAME.CAPTION"
+msgctxt "tmainform.cmd_useappnamezipfilename.caption"
 msgid "Use Appname"
 msgstr ""
 
 #: tmainform.cmd_useappnamezipfilename.hint
-msgctxt "TMAINFORM.CMD_USEAPPNAMEZIPFILENAME.HINT"
+msgctxt "tmainform.cmd_useappnamezipfilename.hint"
 msgid ""
 "Use this to assign a unique value to the\n"
 "INI file or Zipfile names\n"
@@ -137,7 +137,7 @@ msgid ""
 msgstr ""
 
 #: tmainform.edt_outputdirectory.hint
-msgctxt "TMAINFORM.EDT_OUTPUTDIRECTORY.HINT"
+msgctxt "tmainform.edt_outputdirectory.hint"
 msgid ""
 "Use the directory mini-button.\n"
 "You cannot type into the box\n"
@@ -162,14 +162,14 @@ msgid ""
 msgstr ""
 
 #: tmainform.edt_whatsnewtextfile.hint
-msgctxt "TMAINFORM.EDT_WHATSNEWTEXTFILE.HINT"
+msgctxt "tmainform.edt_whatsnewtextfile.hint"
 msgid ""
 "Use the directory mini-button.\n"
 "You cannot type into the box\n"
 msgstr ""
 
 #: tmainform.edt_zipfilename.hint
-msgctxt "TMAINFORM.EDT_ZIPFILENAME.HINT"
+msgctxt "tmainform.edt_zipfilename.hint"
 msgid ""
 "Type the filename \n"
 "or use the directory mini-button\n"
@@ -181,7 +181,6 @@ msgid "Update a whole directory tree"
 msgstr ""
 
 #: tmainform.grp_dragfiles.caption
-msgctxt "tmainform.grp_dragfiles.caption"
 msgid "Drag extra files that update to the app directory into this area (double-click to clear)"
 msgstr ""
 
@@ -315,7 +314,7 @@ msgid ""
 msgstr ""
 
 #: tmainform.spn2.hint
-msgctxt "TMAINFORM.SPN2.HINT"
+msgctxt "tmainform.spn2.hint"
 msgid ""
 "This is the version number of your updated app.\n"
 "It should be greater than the version number\n"
@@ -324,7 +323,7 @@ msgid ""
 msgstr ""
 
 #: tmainform.spn3.hint
-msgctxt "TMAINFORM.SPN3.HINT"
+msgctxt "tmainform.spn3.hint"
 msgid ""
 "This is the version number of your updated app.\n"
 "It should be greater than the version number\n"
@@ -333,7 +332,7 @@ msgid ""
 msgstr ""
 
 #: tmainform.spn4.hint
-msgctxt "TMAINFORM.SPN4.HINT"
+msgctxt "tmainform.spn4.hint"
 msgid ""
 "This is the version number of your updated app.\n"
 "It should be greater than the version number\n"

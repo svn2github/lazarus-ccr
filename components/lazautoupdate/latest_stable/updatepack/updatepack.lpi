@@ -33,7 +33,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="compiled\updatepackcompiled\win32\updatepackwin32"/>
+            <Filename Value="compiled\win32\updatepack"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -68,7 +68,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="compiled\updatepackcompiled\win64\updatepackwin64"/>
+            <Filename Value="compiled\win64\updatepack"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -103,7 +103,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="compiled\updatepackcompiled\linux64\updatepacklinux64"/>
+            <Filename Value="compiled\linux64\updatepack"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -144,7 +144,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="compiled\updatepackcompiled\linux32\updatepacklinux32"/>
+            <Filename Value="compiled\linux32\updatepack"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -225,7 +225,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="compiled\updatepackcompiled\win32debug\updatepackwin32"/>
+      <Filename Value="compiled\win32debug\updatepack"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
