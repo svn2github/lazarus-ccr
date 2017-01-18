@@ -51,15 +51,12 @@ const
   C_SOURCEFORGEURL =
     'https://sourceforge.net/projects/%s/files/%s/%s/download';
   // [updatepath,projectname,filename]
-  // C_GITHUBFILE_URL = 'https://raw.github.com/%s/%s/master/%s/%s';
   C_GITHUBFILE_URL = 'https://raw.github.com/%s/%s/%s/%s';
   // https://raw.github.com/<username>/<repo>/<branch>/file
   //  GitHubUserName,GitHubProjectName,updatepath,filename
   C_GITHUBFILE_URL_UPDATES = 'https://raw.github.com/%s/%s/%s/%s/%s';
-  // https://raw.github.com/<username>/<repo>/<branch>/some_directory/file
-  C_GITHUBFILE_URL_TAGUPDATES = 'https://raw.github.com/%s/%s/%s/%s/%s';
-  // https://github.com/lazarusccr/TestApp/blob/updates/updates/testapplinux32.ini
-  // https://raw.github.com/<username>/<repo>/<branch>/some_directory/file
+  // https://raw.github.com/<username>/<repo>/<branchname>/some_directory/file
+  // https://raw.github.com/<username>/<repo>/<tagname>/some_directory/file
 
   C_TLazAutoUpdateComponentVersion = '0.2.6';
   C_LAUTRayINI = 'lauimport.ini';
@@ -196,6 +193,7 @@ resourcestring
   rsApplicationU = 'Application update';
 
 type
+  // Dummy thread to initialise the threading system
   tc = class(tthread)
     procedure Execute; override;
   end;
@@ -215,10 +213,12 @@ type
   TThreadedDownload = class; // Forward declaration
 
   {TLAZAUTOUPDATE}
+  // Event declarations
   TOnNewVersionAvailable = procedure(Sender: TObject; Newer: boolean;
     OnlineVersion: string) of object;
   TOnDownloaded = procedure(Sender: TObject; ResultCode, BytesDownloaded: integer) of
     object;
+  // ToDo: TOnUpdated??
   TOnDebugEvent = procedure(Sender: TObject; lauMethodName, lauMessage: string) of
     object;
 

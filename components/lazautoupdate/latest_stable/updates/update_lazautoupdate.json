@@ -6,8 +6,8 @@
   },
   "UpdatePackageFiles" : [
     {
-      "ForceNotify" : false,
-      "InternalVersion" : 2,
+      "ForceNotify" : true,
+      "InternalVersion" : 1,
       "Name" : "lazupdate.lpk",
       "Version" : "0.2.6.0"
     }

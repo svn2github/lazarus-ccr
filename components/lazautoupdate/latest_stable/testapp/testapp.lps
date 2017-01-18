@@ -45,14 +45,14 @@
         <Filename Value="..\ulazautoupdate.pas"/>
         <IsVisibleTab Value="True"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="547"/>
-        <CursorPos X="45" Y="572"/>
+        <TopLine Value="184"/>
+        <CursorPos X="13" Y="221"/>
         <ExtraEditorCount Value="2"/>
         <ExtraEditor1>
           <IsVisibleTab Value="True"/>
           <EditorIndex Value="1"/>
           <TopLine Value="45"/>
-          <CursorPos X="42" Y="72"/>
+          <CursorPos X="42" Y="69"/>
         </ExtraEditor1>
         <ExtraEditor2>
           <EditorIndex Value="-1"/>
