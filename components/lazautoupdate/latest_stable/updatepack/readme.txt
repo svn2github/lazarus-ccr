@@ -10,7 +10,7 @@ Getting Started
 
 * To change the 'App to Update', 'Output Directory' and 'WhatsNew TextFile' you need to use the 'directory' mini-buttons.  The text cannot be edited directly.
 
-* The 'versions.ini' and 'SF Project Name' can be edited directly.
+* The 'versions.ini' and 'Online Project Name' can be edited directly.
 
 * When the [Create Update Pack] is clicked, the Zip file is created, the versions ini file is created, and both are copied to the specified 'Output directory' - ready for you to upload.  Sample Lazarus code is shown for you to copy and paste into your app
 

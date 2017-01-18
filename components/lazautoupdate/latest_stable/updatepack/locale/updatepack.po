@@ -224,16 +224,16 @@ msgstr ""
 msgid "New Version:"
 msgstr ""
 
+#: tmainform.lbl_onlineprojectname.caption
+msgid "Online Project Name:"
+msgstr ""
+
 #: tmainform.lbl_outputdirectory.caption
 msgid "Output directory:"
 msgstr ""
 
 #: tmainform.lbl_profile.caption
 msgid "Profile name"
-msgstr ""
-
-#: tmainform.lbl_sfprojectname.caption
-msgid "SourceForge Project Name:"
 msgstr ""
 
 #: tmainform.lbl_sfupdatesdirectory2.caption

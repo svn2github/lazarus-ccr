@@ -117,7 +117,7 @@ type
     LazAutoUpdate1: TLazAutoUpdate;
     lbl_AppFilename: TLabel;
     lbl_NewVersion: TLabel;
-    lbl_SFProjectname: TLabel;
+    lbl_OnlineProjectname: TLabel;
     lbl_ZipFileName: TLabel;
     lst_dragfiles: TListBox;
     MainMenu1: TMainMenu;
@@ -608,6 +608,7 @@ end;
 procedure Tmainform.edt_OutputDirectoryChange(Sender: TObject);
 begin
   ProfileRec.OutDir := AppendPathDelim(edt_OutputDirectory.Directory);
+  ForceDirectoriesUTF8(ProfileRec.OutDir);
   bCurrentProfileSaved := False;
 end;
 
@@ -628,6 +629,7 @@ procedure Tmainform.edt_WhatsNewTextFileChange(Sender: TObject);
 begin
   edt_WhatsNewTextFile.InitialDir := ExtractFileDir(ProfileRec.WhatsNewPath);
   ProfileRec.WhatsNewPath := edt_WhatsNewTextFile.Filename;
+  ForceDirectoriesUTF8(ProfileRec.WhatsNewPath);
   bCurrentProfileSaved := False;
 end;
 
@@ -704,6 +706,7 @@ begin
   with LazAutoUpdate1 do
   begin
     // Set component to download source package
+    // Enable to debug LazAutoUpdate
     DebugMode := True; // Fire OnDebugEvent and log the results
     SFProjectName := 'lazautoupdate';
     CopyTree := True;
@@ -715,8 +718,6 @@ begin
 //    VersionINI := TIniFile.Create(VersionsININame);
     AppVersion := VersionINI.ReadString('versions', 'GUI', '0.0.0.0');
     VersionINI.Free;
-    // Enable to debug LazAutoUpdate
-    // DebugMode:=TRUE;
     if NewVersionAvailable then
     begin
       if DownloadNewVersion then

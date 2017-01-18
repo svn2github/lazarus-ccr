@@ -23,7 +23,7 @@
 {"hash":238718917,"name":"tmainform.spd_whatsnewcreate.hint","sourcebytes":[69,100,105,116,32,87,104,97,116,115,78,101,119,32,116,101,120,116,32,102,105,108,101],"value":"Edit WhatsNew text file"},
 {"hash":12558,"name":"tmainform.spd_whatsnewcreate.caption","sourcebytes":[46,46,46],"value":"..."},
 {"hash":100152250,"name":"tmainform.lbl_createwhatsnew.caption","sourcebytes":[67,114,101,97,116,101,47,69,100,105,116,32,87,104,97,116,115,78,101,119,46,116,120,116,32,58],"value":"Create/Edit WhatsNew.txt :"},
-{"hash":115750586,"name":"tmainform.lbl_sfprojectname.caption","sourcebytes":[83,111,117,114,99,101,70,111,114,103,101,32,80,114,111,106,101,99,116,32,78,97,109,101,58],"value":"SourceForge Project Name:"},
+{"hash":76696090,"name":"tmainform.lbl_onlineprojectname.caption","sourcebytes":[79,110,108,105,110,101,32,80,114,111,106,101,99,116,32,78,97,109,101,58],"value":"Online Project Name:"},
 {"hash":211704412,"name":"tmainform.edt_sfprojectname.hint","sourcebytes":[84,104,105,115,32,105,115,32,116,104,101,32,112,114,111,106,101,99,116,32,116,105,116,108,101,32,97,115,32,100,105,115,112,108,97,121,101,100,32,98,121,13,10,83,111,117,114,99,101,102,111,114,103,101,32,105,110,32,116,104,101,32,112,114,111,106,101,99,116,32,85,82,76],"value":"This is the project title as displayed by\r\nSourceforge in the project URL"},
 {"hash":16395530,"name":"tmainform.lbl_zipfilename.caption","sourcebytes":[85,112,100,97,116,101,32,90,105,112,102,105,108,101,32,78,97,109,101,58],"value":"Update Zipfile Name:"},
 {"hash":103972133,"name":"tmainform.cmd_deleteprofile.hint","sourcebytes":[68,101,108,101,116,101,115,32,116,104,101,32,99,117,114,114,101,110,116,32,112,114,111,102,105,108,101],"value":"Deletes the current profile"},

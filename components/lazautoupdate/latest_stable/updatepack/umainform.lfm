@@ -1,7 +1,7 @@
 object mainform: Tmainform
-  Left = 727
+  Left = 767
   Height = 481
-  Top = 298
+  Top = 215
   Width = 587
   AllowDropFiles = True
   BorderIcons = [biSystemMenu, biMinimize]
@@ -38,10 +38,10 @@ object mainform: Tmainform
     Height = 412
     Top = 0
     Width = 587
-    ActivePage = Tab_advanced
+    ActivePage = tab_configure
     Align = alTop
     ParentShowHint = False
-    TabIndex = 2
+    TabIndex = 1
     TabOrder = 0
     object tab_intro: TTabSheet
       Hint = 'Getting Started information'
@@ -252,12 +252,12 @@ object mainform: Tmainform
         Caption = 'Create/Edit WhatsNew.txt :'
         ParentColor = False
       end
-      object lbl_SFProjectname: TLabel
+      object lbl_OnlineProjectname: TLabel
         Left = 16
         Height = 15
         Top = 208
-        Width = 144
-        Caption = 'SourceForge Project Name:'
+        Width = 113
+        Caption = 'Online Project Name:'
         ParentColor = False
       end
       object edt_SFProjectName: TEdit
