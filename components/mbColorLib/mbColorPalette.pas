@@ -682,7 +682,6 @@ begin
     FNames.Clear;
     FColors.Text := ReadJASCPal(FileName);
   end
-  (*
   else if SameText(ExtractFileExt(FileName), '.aco') then
   begin
     supported := true;
@@ -701,7 +700,6 @@ begin
    FNames.Clear;
    FColors.Text := ReadPhotoshopAct(FileName);
   end
-  *)
   else
     raise Exception.Create('The file format you are trying to load is not supported in this version of the palette'#13'Please send a request to MXS along with the files of this format so'#13'loading support for this file can be added too');
   if supported then

@@ -4,7 +4,8 @@ interface
 
 uses
   LCLType, LCLIntf, SysUtils, Classes, Graphics,
-  RGBHSVUtils, RGBHSLUtils, RGBCIEUtils, RGBCMYKUtils,
+  //RGBHSVUtils, RGBHSLUtils,
+  RGBCIEUtils, RGBCMYKUtils,
   HTMLColors;
 
 const
@@ -53,18 +54,18 @@ function ReadJASCPal(PalFile: TFileName): string;
 
 //saves a string list to a JASC .pal file
 procedure SaveJASCPal(pal: TStrings; FileName: TFileName);
-(*
+
 //reads Photoshop .aco file into an Aco record
 function ReadPhotoshopAco(PalFile: TFileName): AcoColors;
 
 //reads Photoshop .act file
 function ReadPhotoshopAct(PalFile: TFileName): string;
-  *)
+
 
 implementation
 
 uses
-  Math;
+  Math, mbColorConv;
 
 function ReplaceFlags(s: string; flags: array of string; value: integer): string;
 var
@@ -92,7 +93,12 @@ end;
 function FormatHint(fmt: string; c: TColor): string;
 var
   h: string;
+  hslH, hslS, hslL: Double;
+  hsvH, hsvS, hsvV: Double;
 begin
+  ColorToHSL(c, hslH, hslS, hslL);
+  ColorToHSV(c, hsvH, hsvS, hsvV);
+
   h := AnsiReplaceText(fmt, '%hex', '#' + ColorToHex(c));
   h := AnsiReplaceText(h, '%cieL', IntToStr(Round(GetCIElValue(c))));
   h := AnsiReplaceText(h, '%cieA', IntToStr(Round(GetCIEaValue(c))));
@@ -102,12 +108,12 @@ begin
   h := AnsiReplaceText(h, '%cieZ', IntToStr(Round(GetCIEzValue(c))));
   h := AnsiReplaceText(h, '%cieC', IntToStr(Round(GetCIEcValue(c))));
   h := AnsiReplaceText(h, '%cieH', IntToStr(Round(GetCIEhValue(c))));
-  h := AnsiReplaceText(h, '%hslH', IntToStr(RGBHSLUtils.GetHValue(c)));
-  h := AnsiReplaceText(h, '%hslS', IntToStr(RGBHSLUtils.GetSValue(c)));
-  h := AnsiReplaceText(h, '%hslL', IntToStr(RGBHSLUtils.GetLValue(c)));
-  h := AnsiReplaceText(h, '%hsvH', IntToStr(RGBHSVUtils.GetHValue(c)));
-  h := AnsiReplaceText(h, '%hsvS', IntToStr(RGBHSVUtils.GetSValue(c)));
-  h := AnsiReplaceText(h, '%hsvV', IntToStr(RGBHSVUtils.GetVValue(c)));
+  h := AnsiReplaceText(h, '%hslH', IntToStr(Round(hslH * 360)));  //RGBHSLUtils.GetHValue(c)));
+  h := AnsiReplaceText(h, '%hslS', IntToStr(Round(hslS * 255)));  //RGBHSLUtils.GetSValue(c)));
+  h := AnsiReplaceText(h, '%hslL', IntToStr(Round(hslL * 255)));  //RGBHSLUtils.GetLValue(c)));
+  h := AnsiReplaceText(h, '%hsvH', IntToStr(round(hsvH * 360)));  //RGBHSVUtils.GetHValue(c)));
+  h := AnsiReplaceText(h, '%hsvS', IntToStr(round(hsvS * 255)));  //RGBHSVUtils.GetSValue(c)));
+  h := AnsiReplaceText(h, '%hsvV', IntToStr(round(hsvV * 255)));  //RGBHSVUtils.GetVValue(c)));
   h := AnsiReplaceText(h, '%r', IntToStr(GetRValue(c)));
   h := AnsiReplaceText(h, '%g', IntToStr(GetGValue(c)));
   h := AnsiReplaceText(h, '%b', IntToStr(GetBValue(c)));
@@ -115,10 +121,10 @@ begin
   h := AnsiReplaceText(h, '%m', IntToStr(GetMValue(c)));
   h := AnsiReplaceText(h, '%y', IntToStr(GetYValue(c)));
   h := AnsiReplaceText(h, '%k', IntToStr(GetKValue(c)));
-  h := AnsiReplaceText(h, '%h', IntToStr(RGBHSLUtils.GetHValue(c)));
-  h := AnsiReplaceText(h, '%s', IntToStr(RGBHSLUtils.GetSValue(c)));
-  h := AnsiReplaceText(h, '%l', IntToStr(RGBHSLUtils.GetLValue(c)));
-  h := AnsiReplaceText(h, '%v', IntToStr(RGBHSVUtils.GetVValue(c)));
+  h := AnsiReplaceText(h, '%h', IntToStr(round(hslH * 360)));     //RGBHSLUtils.GetHValue(c)));
+  h := AnsiReplaceText(h, '%s', IntToStr(round(hslS * 255)));     //RGBHSLUtils.GetSValue(c)));
+  h := AnsiReplaceText(h, '%l', IntToStr(round(hslL * 255)));     //RGBHSLUtils.GetLValue(c)));
+  h := AnsiReplaceText(h, '%v', IntToStr(round(hsvV * 255)));     //RGBHSVUtils.GetVValue(c)));
   Result := h;
 end;
 
@@ -195,20 +201,28 @@ begin
 end;
 
 function MakePalette(BaseColor: TColor; SortOrder: TSortOrder): string;
+const
+  maxL = 240;
 var
   i: integer;
   s: TStrings;
+  hslH, hslS, hslL: Double;
 begin
   Result := '';
   s := TStringList.Create;
   try
+    ColorToHSL(BaseColor, hslH, hslS, hslL);
     case SortOrder of
       soAscending:
-        for i := 239 downto 0 do
-          s.Add(ColorToString(HSLRangeToRGB(GetHValue(BaseColor), GetSValue(BaseColor), 240 - i)));
+        for i := maxL downto 0 do
+          s.Add(ColorToString(HSLToColor(hslH, hslS, 1 - i/maxL)));
+//        for i := 239 downto 0 do
+//          s.Add(ColorToString(HSLRangeToRGB(GetHValue(BaseColor), GetSValue(BaseColor), 240 - i)));
       soDescending:
-        for i := 0 to 239 do
-          s.Add(ColorToString(HSLRangeToRGB(GetHValue(BaseColor), GetSValue(BaseColor), 240 - i)));
+        for i := 0 to maxL do
+          s.Add(ColorToString(HSLToColor(hslH, hslS, i/maxL)));
+//        for i := 0 to 239 do
+//          s.Add(ColorToString(HSLRangeToRGB(GetHValue(BaseColor), GetSValue(BaseColor), 240 - i)));
     end;
     Result := s.Text;
   finally
@@ -261,228 +275,270 @@ procedure SortPalColors(Colors: TStrings; SortMode: TSortMode; SortOrder: TSortO
   var
     i: integer;
     first: TColor;
+    c: TColor;
+    hc, sc, lc, vc: Double;
+    hf, sf, lf, vf: Double;
   begin
     Result := 0;
     first := clBlack;
     for i := 0 to s.Count - 1 do
+    begin
+      c := mbStringToColor(s.Strings[i]);
       case sm of
         smRed:
-          if GetRValue(first) < GetRValue(mbStringToColor(s.Strings[i])) then
+          if GetRValue(first) < GetRValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smGreen:
-          if GetGValue(first) < GetGValue(mbStringToColor(s.Strings[i])) then
+          if GetGValue(first) < GetGValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smBlue:
-          if GetBValue(first) < GetBValue(mbStringToColor(s.Strings[i])) then
+          if GetBValue(first) < GetBValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smHue:
-          if GetHValue(first) < GetHValue(mbStringToColor(s.Strings[i])) then
           begin
-            first := mbStringToColor(s.Strings[i]);
-            Result := i;
+            ColorToHSL(c, hc, sc, lc);
+            ColorToHSL(first, hf, sf, lf);
+            if hf < hc then begin
+              first := c;
+              Result := i;
+            end;
           end;
         smSaturation:
-          if GetSValue(first) < GetSValue(mbStringToColor(s.Strings[i])) then
           begin
-            first := mbStringToColor(s.Strings[i]);
-            Result := i;
+            ColorToHSL(c, hc, sc, lc);
+            ColorToHSL(first, hf, sf, lf);
+            if sf < sc then begin
+              first := c;
+              Result := i;
+            end;
           end;
         smLuminance:
-          if GetLValue(first) < GetLValue(mbStringToColor(s.Strings[i])) then
           begin
-            first := mbStringToColor(s.Strings[i]);
-            Result := i;
+            ColorToHSL(c, hc, sc, lc);
+            ColorToHSL(first, hf, sc, lf);
+            if lf < lc then
+            begin
+              first := c;
+              Result := i;
+            end;
           end;
         smValue:
-          if GetVValue(first) < GetVValue(mbStringToColor(s.Strings[i])) then
           begin
-            first := mbStringToColor(s.Strings[i]);
-            Result := i;
+            ColorToHSV(c, hc, sc, vc);
+            ColorToHSV(first, hf, sc, vf);
+            if vf < vc then
+            begin
+              first := c;
+              Result := i;
+            end;
           end;
         smCyan:
-          if GetCValue(first) < GetCValue(mbStringToColor(s.Strings[i])) then
+          if GetCValue(first) < GetCValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smMagenta:
-          if GetMValue(first) < GetMValue(mbStringToColor(s.Strings[i])) then
+          if GetMValue(first) < GetMValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smYellow:
-          if GetYValue(first) < GetYValue(mbStringToColor(s.Strings[i])) then
+          if GetYValue(first) < GetYValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smBlacK:
-          if GetKValue(first) < GetKValue(mbStringToColor(s.Strings[i])) then
+          if GetKValue(first) < GetKValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smCIEx:
-          if GetCIEXValue(first) < GetCIEXValue(mbStringToColor(s.Strings[i])) then
+          if GetCIEXValue(first) < GetCIEXValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smCIEy:
-          if GetCIEYValue(first) < GetCIEYValue(mbStringToColor(s.Strings[i])) then
+          if GetCIEYValue(first) < GetCIEYValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smCIEz:
-          if GetCIEZValue(first) < GetCIEZValue(mbStringToColor(s.Strings[i])) then
+          if GetCIEZValue(first) < GetCIEZValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smCIEl:
-          if GetCIELValue(first) < GetCIELValue(mbStringToColor(s.Strings[i])) then
+          if GetCIELValue(first) < GetCIELValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smCIEa:
-          if GetCIEAValue(first) < GetCIEAValue(mbStringToColor(s.Strings[i])) then
+          if GetCIEAValue(first) < GetCIEAValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smCIEb:
-          if GetCIEBValue(first) < GetCIEBValue(mbStringToColor(s.Strings[i])) then
+          if GetCIEBValue(first) < GetCIEBValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
       end;
+    end;
   end;
 
   function MinPos(s: TStrings; sm: TSortMode): integer;
   var
     i: integer;
     first: TColor;
+    c: TColor;
+    hc, sc, lc, vc: Double;
+    hf, sf, lf, vf: Double;
   begin
     Result := 0;
     first := clWhite;
     for i := 0 to s.Count - 1 do
+    begin
+      c := mbStringToColor(s.Strings[i]);
       case sm of
         smRed:
-          if GetRValue(first) > GetRValue(mbStringToColor(s.Strings[i])) then
+          if GetRValue(first) > GetRValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smGreen:
-          if GetGValue(first) > GetGValue(mbStringToColor(s.Strings[i])) then
+          if GetGValue(first) > GetGValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smBlue:
-          if GetBValue(first) > GetBValue(mbStringToColor(s.Strings[i])) then
+          if GetBValue(first) > GetBValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smHue:
-          if GetHValue(first) > GetHValue(mbStringToColor(s.Strings[i])) then
           begin
-            first := mbStringToColor(s.Strings[i]);
-            Result := i;
+            ColorToHSL(c, hc, sc, lc);
+            ColorToHSL(first, hf, sf, lf);
+            if hf > hc then
+            begin
+              first := c;
+              Result := i;
+            end;
           end;
         smSaturation:
-          if GetSValue(first) > GetSValue(mbStringToColor(s.Strings[i])) then
           begin
-            first := mbStringToColor(s.Strings[i]);
-            Result := i;
+            ColorToHSL(c, hc, sc, lc);
+            ColorToHSV(first, hf, sf, vf);
+            if sf > sc then
+            begin
+              first := c;
+              Result := i;
+            end;
           end;
         smLuminance:
-          if GetLValue(first) > GetLValue(mbStringToColor(s.Strings[i])) then
           begin
-            first := mbStringToColor(s.Strings[i]);
-            Result := i;
+            ColorToHSL(c, hc, sc, lc);
+            ColorToHSV(first, hf, sf, vf);
+            if lf > lc then
+            begin
+              first := c;
+              Result := i;
+            end;
           end;
         smValue:
-          if GetVValue(first) > GetVValue(mbStringToColor(s.Strings[i])) then
           begin
-            first := mbStringToColor(s.Strings[i]);
-            Result := i;
+            ColorToHSV(c, hc, sc, vc);
+            ColorToHSV(first, hf, sf, vf);
+            if vf > vc then
+            begin
+              first := c;
+              Result := i;
+            end;
           end;
         smCyan:
-          if GetCValue(first) > GetCValue(mbStringToColor(s.Strings[i])) then
+          if GetCValue(first) > GetCValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smMagenta:
-          if GetMValue(first) > GetMValue(mbStringToColor(s.Strings[i])) then
+          if GetMValue(first) > GetMValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smYellow:
-          if GetYValue(first) > GetYValue(mbStringToColor(s.Strings[i])) then
+          if GetYValue(first) > GetYValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smBlacK:
-          if GetKValue(first) > GetKValue(mbStringToColor(s.Strings[i])) then
+          if GetKValue(first) > GetKValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smCIEx:
-          if GetCIEXValue(first) > GetCIEXValue(mbStringToColor(s.Strings[i])) then
+          if GetCIEXValue(first) > GetCIEXValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smCIEy:
-          if GetCIEYValue(first) > GetCIEYValue(mbStringToColor(s.Strings[i])) then
+          if GetCIEYValue(first) > GetCIEYValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smCIEz:
-          if GetCIEZValue(first) > GetCIEZValue(mbStringToColor(s.Strings[i])) then
+          if GetCIEZValue(first) > GetCIEZValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smCIEl:
-          if GetCIELValue(first) > GetCIELValue(mbStringToColor(s.Strings[i])) then
+          if GetCIELValue(first) > GetCIELValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smCIEa:
-          if GetCIEAValue(first) > GetCIEAValue(mbStringToColor(s.Strings[i])) then
+          if GetCIEAValue(first) > GetCIEAValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
         smCIEb:
-          if GetCIEBValue(first) > GetCIEBValue(mbStringToColor(s.Strings[i])) then
+          if GetCIEBValue(first) > GetCIEBValue(c) then
           begin
-            first := mbStringToColor(s.Strings[i]);
+            first := c;
             Result := i;
           end;
       end;
+    end;
   end;
 
 var
@@ -568,8 +624,21 @@ begin
 end;
 
 procedure ExchangeBytes(var w: Word);
+type
+  TWordRec = packed record
+    a, b: byte;
+  end;
+var
+  brec: TWordRec;
+  tmp: Byte;
 begin
-  Swap(w);
+  brec := TWordRec(w);
+  tmp := brec.a;
+  brec.a := brec.b;
+  brec.b := tmp;
+  w := word(brec);
+
+//  Swap(w);
 {
 asm
  MOV DX,[w] //assign the word to the data register
@@ -590,7 +659,7 @@ begin
     s[i] := WideChar(w);
   end;
 end;
-                (*
+
 function GetAcoColor(space,w,x,y,z: word): TColor;
 begin
   case space of
@@ -722,5 +791,5 @@ begin
   end;
   CloseFile(f);
 end;
-                        *)
+
 end.
