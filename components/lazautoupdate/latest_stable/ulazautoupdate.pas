@@ -1109,6 +1109,7 @@ begin
     ReturnCode := 0;
     DownloadSize := 0;
     fDownloadInprogress := True;
+    DebugMode:=fDebugMode;
     if not fSilentMode then
       fParentForm.Caption := C_Checking;
     CheckForOpenSSL;
@@ -1314,6 +1315,7 @@ begin
     ReturnCode := 0;
     DownloadSize := 0;
     fUnzipAfter := True;
+    DebugMode:=fDebugMode;
     if not fSilentMode then
       szOldCaption := fParentForm.Caption;
     if not fSilentMode then
@@ -1931,7 +1933,11 @@ begin
 
   // Running update using updatehm?
   if not AppIsRunning(ExtractFileName(fAppFilename)) then
-    Result := DoSilentUpdate
+  begin
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'UpdateToNewVersion','Doing SilentUpdate');
+    Result := DoSilentUpdate;
+  end
   else
   begin
     cCount := 0;
@@ -1972,10 +1978,18 @@ begin
     szParams := szParams + ' ' + fParentApplication.Title;
     if (fCopyTree = True) then
       szParams := szParams + ' copytree';
-    if fFireDebugEvent then
       fOndebugEvent(Self, 'UpdateToNewVersion',
         Format('Executing %s', [szAppDir + C_UPDATER]));
-    RunAsAdmin(fParentForm.Handle, szAppDir + C_UPDATER, szParams);
+    if RunAsAdmin(fParentForm.Handle, szAppDir + C_UPDATER, szParams) then
+    begin
+      if fFireDebugEvent then
+       fOndebugEvent(Self, 'UpdateToNewVersion','RunAsAdmin succeeded');
+    end
+    else
+    begin
+      if fFireDebugEvent then
+       fOndebugEvent(Self, 'UpdateToNewVersion','RunAsAdmin failed');
+    end;
 
     // Check for C_WhatsNewFilename in the app directory in a LOOP
     if fFireDebugEvent then

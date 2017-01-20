@@ -1,7 +1,7 @@
 object mainform: Tmainform
-  Left = 125
+  Left = 771
   Height = 209
-  Top = 292
+  Top = 224
   Width = 335
   BorderIcons = [biSystemMenu]
   Caption = 'mainform'
@@ -119,8 +119,6 @@ object mainform: Tmainform
     CopyTree = False
     UpdatesFolder = 'updates'
     VersionsININame = 'testapp.ini'
-    ShowUpdateInCaption = True
-    ShowDialogs = True
     VersionCountLimit = 1000000
     DownloadCountLimit = 10000000
     ZipfileName = 'testapp.zip'

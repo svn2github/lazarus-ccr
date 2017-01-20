@@ -7,13 +7,19 @@ interface
 uses
   Classes, SysUtils, Forms, ComCtrls,
   Buttons, StdCtrls,LazFileUtils,FileUtil,
-  ulazautoupdate,eventlog;
+  ulazautoupdate,eventlog,Dialogs;
 CONST
 {$IFDEF WINDOWS}
    {$IFDEF CPU32}
+     {$IFDEF DEBUGMODE}
+      C_VERSIONSINNAME = 'testappwin32debug.ini';
+      C_ZIPFILENAME = 'testappwin32debug.zip';
+      C_LogFileName = 'testappwin32debuglog.txt';
+     {$ELSE}
       C_VERSIONSINNAME = 'testappwin32.ini';
       C_ZIPFILENAME = 'testappwin32.zip';
       C_LogFileName = 'testappwin32log.txt';
+      {$ENDIF}
    {$ENDIF}
    {$IFDEF CPU64}
       C_VERSIONSINNAME = 'testappwin64.ini';
@@ -87,20 +93,34 @@ begin
   LazAutoUpdate1.DebugMode:=TRUE;
   LazAutoUpdate1.VersionsININame:=C_VERSIONSINNAME;
   LazAutoUpdate1.ZipfileName:=C_ZIPFILENAME;
-  lbl_Version.Caption:='Version: ' + LazAutoUpdate1.AppVersion;
+  LazAutoUpdate1.GitHubProjectname:='lazarusccr';
+  LazAutoUpdate1.GitHubRepositoryName:='TestApp';
+  LazAutoUpdate1.GitHubBranchOrTag:='updates';
+  LazAutoUpdate1.ShowUpdateInCaption:=TRUE;
   Caption:=Application.Title;
+  If Assigned(Logger) then FreeAndNil(Logger);
   if FileExistsUTF8(C_LogFileName) then
     DeleteFile(C_LogFileName);
+  Application.Processmessages;
   Logger := TEventLog.Create(nil);
+  TRY
   Logger.LogType := ltFile;
   Logger.FileName := C_LogFileName;
   Logger.Active := True;
   Logger.Info('Start of Log');
+  Except
+    Raise Exception.Create('Trouble with the logger. Click OK to quit');
+    If Assigned(Logger) then FreeAndNil(Logger);
+    Application.Terminate;
+  end;
+  // FORCE AN UPDATE EVERY TIME HERE?
+  // LazAutoUpdate1.AppVersion:='0.0.0.0';
+  lbl_Version.Caption:='Version: ' + LazAutoUpdate1.AppVersion;
 end;
 
 procedure Tmainform.FormDestroy(Sender: TObject);
 begin
-  Logger.Info('End of Log');
+  If Assigned(Logger) then Logger.Info('End of Log');
   FreeAndNil(Logger);
 end;
 
@@ -116,7 +136,11 @@ end;
 
 procedure Tmainform.cmd_updateToNewVersionClick(Sender: TObject);
 begin
-   LazAutoUpdate1.UpdateToNewVersion;
+{$IFDEF DEBUGMODE}
+  ShowMessage('Please do not try updating in DEBUG mode');
+{$ELSE}
+  LazAutoUpdate1.UpdateToNewVersion;
+{$ENDIF}
 end;
 
 procedure Tmainform.FormActivate(Sender: TObject);
@@ -131,7 +155,11 @@ end;
 
 procedure Tmainform.cmd_AutoUpdateClick(Sender: TObject);
 begin
+  {$IFDEF DEBUGMODE}
+    ShowMessage('Please do not try updating in DEBUG mode');
+  {$ELSE}
   LazAutoUpdate1.AutoUpdate;
+  {$ENDIF}
 end;
 
 procedure Tmainform.LazAutoUpdate1DebugEvent(Sender: TObject; lauMethodName,
