@@ -71,6 +71,7 @@ type
   private
      Logger: TEventLog;
      procedure WriteAndLog(szText: string);
+     procedure CloseLog;
   public
 
   end;
@@ -83,6 +84,15 @@ implementation
 {$R *.lfm}
 
 { Tmainform }
+procedure Tmainform.CloseLog;
+begin
+  If Assigned(Logger) then
+   begin
+    Logger.Info('End of Log');
+    Logger.Active:=False;
+   end;
+end;
+
 procedure Tmainform.WriteAndLog(szText: string);
 begin
   Logger.Info(szText);
@@ -98,7 +108,6 @@ begin
   LazAutoUpdate1.GitHubBranchOrTag:='updates';
   LazAutoUpdate1.ShowUpdateInCaption:=TRUE;
   Caption:=Application.Title;
-  If Assigned(Logger) then FreeAndNil(Logger);
   if FileExistsUTF8(C_LogFileName) then
     DeleteFile(C_LogFileName);
   Application.Processmessages;
@@ -120,8 +129,8 @@ end;
 
 procedure Tmainform.FormDestroy(Sender: TObject);
 begin
-  If Assigned(Logger) then Logger.Info('End of Log');
-  FreeAndNil(Logger);
+  CloseLog;
+  If Assigned(Logger) then FreeAndNil(Logger);
 end;
 
 procedure Tmainform.cmd_NewVersionAvailableClick(Sender: TObject);
@@ -139,6 +148,7 @@ begin
 {$IFDEF DEBUGMODE}
   ShowMessage('Please do not try updating in DEBUG mode');
 {$ELSE}
+  CloseLog;
   LazAutoUpdate1.UpdateToNewVersion;
 {$ENDIF}
 end;
@@ -158,6 +168,7 @@ begin
   {$IFDEF DEBUGMODE}
     ShowMessage('Please do not try updating in DEBUG mode');
   {$ELSE}
+  CloseLog;
   LazAutoUpdate1.AutoUpdate;
   {$ENDIF}
 end;

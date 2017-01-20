@@ -3,14 +3,14 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="10"/>
-    <BuildModes Active="Win32"/>
+    <BuildModes Active="Win32Debug"/>
     <Units Count="18">
       <Unit0>
         <Filename Value="testapp.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="2"/>
-        <CursorPos X="28" Y="19"/>
-        <UsageCount Value="53"/>
+        <CursorPos X="25" Y="28"/>
+        <UsageCount Value="54"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -20,9 +20,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="95"/>
-        <CursorPos X="23" Y="109"/>
-        <UsageCount Value="53"/>
+        <TopLine Value="97"/>
+        <CursorPos Y="111"/>
+        <UsageCount Value="54"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -33,7 +33,7 @@
         <WindowIndex Value="1"/>
         <TopLine Value="3"/>
         <CursorPos X="76" Y="8"/>
-        <UsageCount Value="36"/>
+        <UsageCount Value="37"/>
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
@@ -60,7 +60,7 @@
           <TopLine Value="-1"/>
           <CursorPos X="-1" Y="-1"/>
         </ExtraEditor2>
-        <UsageCount Value="26"/>
+        <UsageCount Value="27"/>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
@@ -147,7 +147,7 @@
         <WindowIndex Value="1"/>
         <TopLine Value="35"/>
         <CursorPos X="40" Y="51"/>
-        <UsageCount Value="16"/>
+        <UsageCount Value="17"/>
         <Loaded Value="True"/>
       </Unit16>
       <Unit17>
@@ -165,123 +165,123 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="1514" TopLine="1489"/>
+        <Caret Line="61" Column="80" TopLine="37"/>
       </Position1>
       <Position2>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="61" Column="80" TopLine="37"/>
+        <Caret Line="757" Column="2" TopLine="718"/>
       </Position2>
       <Position3>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="757" Column="2" TopLine="718"/>
+        <Caret Line="2282" Column="46" TopLine="2250"/>
       </Position3>
       <Position4>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="2282" Column="46" TopLine="2250"/>
+        <Caret Line="592" Column="3" TopLine="567"/>
       </Position4>
       <Position5>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="592" Column="3" TopLine="567"/>
+        <Caret Line="982" TopLine="966"/>
       </Position5>
       <Position6>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="982" TopLine="966"/>
+        <Caret Line="1745" Column="17" TopLine="1720"/>
       </Position6>
       <Position7>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="1745" Column="17" TopLine="1720"/>
+        <Caret Line="1898" Column="17" TopLine="1873"/>
       </Position7>
       <Position8>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="1898" Column="17" TopLine="1873"/>
+        <Caret Line="2267" TopLine="2247"/>
       </Position8>
       <Position9>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="2267" TopLine="2247"/>
+        <Caret Line="2286" Column="17" TopLine="2247"/>
       </Position9>
       <Position10>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="2286" Column="17" TopLine="2247"/>
+        <Caret Line="2270" TopLine="2246"/>
       </Position10>
       <Position11>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="2270" TopLine="2246"/>
+        <Caret Line="2273" Column="17" TopLine="2246"/>
       </Position11>
       <Position12>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="2273" Column="17" TopLine="2246"/>
+        <Caret Line="2269" TopLine="2244"/>
       </Position12>
       <Position13>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="2269" TopLine="2244"/>
+        <Caret Line="592" Column="3" TopLine="567"/>
       </Position13>
       <Position14>
-        <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="592" Column="3" TopLine="567"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="99" Column="38" TopLine="64"/>
       </Position14>
       <Position15>
         <Filename Value="umainform.pas"/>
-        <Caret Line="99" Column="38" TopLine="64"/>
+        <Caret Line="127" Column="28" TopLine="123"/>
       </Position15>
       <Position16>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="127" Column="28" TopLine="123"/>
+        <Filename Value="..\ulazautoupdate.pas"/>
+        <Caret Line="472" Column="22" TopLine="446"/>
       </Position16>
       <Position17>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="472" Column="22" TopLine="446"/>
+        <Caret Line="1094" Column="27" TopLine="1082"/>
       </Position17>
       <Position18>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="1094" Column="27" TopLine="1082"/>
+        <Caret Line="1117" Column="23" TopLine="1082"/>
       </Position18>
       <Position19>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="1117" Column="23" TopLine="1082"/>
+        <Caret Line="1120" Column="35" TopLine="1082"/>
       </Position19>
       <Position20>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="1120" Column="35" TopLine="1082"/>
+        <Caret Line="1123" Column="35" TopLine="1082"/>
       </Position20>
       <Position21>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="1123" Column="35" TopLine="1082"/>
+        <Caret Line="1316" Column="25" TopLine="1298"/>
       </Position21>
       <Position22>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="1316" Column="25" TopLine="1298"/>
+        <Caret Line="1324" Column="23" TopLine="1298"/>
       </Position22>
       <Position23>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="1324" Column="23" TopLine="1298"/>
+        <Caret Line="1358" Column="73" TopLine="1264"/>
       </Position23>
       <Position24>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="1358" Column="73" TopLine="1264"/>
+        <Caret Line="2187" Column="58" TopLine="2140"/>
       </Position24>
       <Position25>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="2187" Column="58" TopLine="2140"/>
+        <Caret Line="2216" Column="15" TopLine="2169"/>
       </Position25>
       <Position26>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="2216" Column="15" TopLine="2169"/>
+        <Caret Line="2231" Column="46" TopLine="2205"/>
       </Position26>
       <Position27>
-        <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="2231" Column="46" TopLine="2205"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="133" TopLine="113"/>
       </Position27>
       <Position28>
         <Filename Value="umainform.pas"/>
-        <Caret Line="133" TopLine="113"/>
+        <Caret Line="19" Column="43" TopLine="7"/>
       </Position28>
       <Position29>
         <Filename Value="umainform.pas"/>
-        <Caret Line="19" Column="43" TopLine="7"/>
+        <Caret Line="153" TopLine="123"/>
       </Position29>
       <Position30>
         <Filename Value="umainform.pas"/>
-        <Caret Line="153" TopLine="123"/>
+        <Caret Line="165" TopLine="124"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>
