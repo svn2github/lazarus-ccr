@@ -3,7 +3,7 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="10"/>
-    <BuildModes Active="Win32Debug"/>
+    <BuildModes Active="Linux64"/>
     <Units Count="18">
       <Unit0>
         <Filename Value="testapp.lpr"/>
@@ -162,6 +162,9 @@
     <OtherDefines Count="1">
       <Define0 Value="DEBUGMODE"/>
     </OtherDefines>
+    <General>
+      <ActiveWindowIndexAtStart Value="1"/>
+    </General>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="..\ulazautoupdate.pas"/>
