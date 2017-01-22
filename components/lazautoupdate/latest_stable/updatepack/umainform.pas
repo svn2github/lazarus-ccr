@@ -840,6 +840,12 @@ begin
     ShowMessageFmt('Zipfile ''%s'' is OK', [ProfileRec.ZipFileName])
   else
     ShowMessage('Unable to create Zipfile. Is the App path and/or WhatsNew path valid?');
+  // Save the current Profile
+  AppConfig.WriteString('Current', 'Profilename', szCurrentProfileName);
+  ReadFromGUI(szCurrentProfileName);
+  WriteProfileToINI(szCurrentProfileName);
+  bCurrentProfileSaved := True;
+  // Make up the text for the memo
   sz := 'Zipfile and INI file are located at:' + LineEnding;
   sz += ProfileRec.Outdir + LineEnding + LineEnding;
 

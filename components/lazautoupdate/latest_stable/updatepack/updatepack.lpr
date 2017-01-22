@@ -34,7 +34,8 @@ Const
   C_PFX = C_OS + C_BITNESS;
 begin
   Application.Title:='LazAutoUpdate Update Pack';
-  Application.Title:=Application.Title + ' (' + C_PFX + ' edition)';
+  // Line below gives unique folders in GetAppConfig call
+  // Application.Title:=Application.Title + ' (' + C_PFX + ' edition)';
   RequireDerivedFormResource := True;
   Application.Initialize;
   Application.CreateForm(Tmainform, mainform);

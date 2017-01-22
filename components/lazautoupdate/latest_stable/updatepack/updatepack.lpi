@@ -22,8 +22,8 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="1"/>
-      <MinorVersionNr Value="1"/>
-      <RevisionNr Value="1"/>
+      <MinorVersionNr Value="2"/>
+      <RevisionNr Value="2"/>
       <StringTable Comments="Updated Jan 2017" FileDescription="Companion to LazAutoUpdate component" InternalName="updatepack" LegalCopyright="(c)2015 minesadorada@charcodelvalle.com" OriginalFilename="updatepack" ProductName="Lazarus/FPC" ProductVersion="2.6.4"/>
     </VersionInfo>
     <BuildModes Count="5">
@@ -159,6 +159,9 @@
             </Optimizations>
           </CodeGeneration>
           <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+            </Debugging>
             <LinkSmart Value="True"/>
             <Options>
               <Win32>
