@@ -1,7 +1,7 @@
 object mainform: Tmainform
-  Left = 767
+  Left = 715
   Height = 481
-  Top = 215
+  Top = 197
   Width = 587
   AllowDropFiles = True
   BorderIcons = [biSystemMenu, biMinimize]
@@ -188,6 +188,7 @@ object mainform: Tmainform
         OnCloseUp = cmb_profileCloseUp
         ParentShowHint = False
         ShowHint = True
+        Sorted = True
         Style = csDropDownList
         TabOrder = 0
         Text = 'Default'

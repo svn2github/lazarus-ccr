@@ -77,10 +77,6 @@ msgstr ""
 msgid "Property SFProjectName is empty!"
 msgstr ""
 
-#: ulazautoupdate.c_sourceforgedownload
-msgid "SourceForge download"
-msgstr ""
-
 #: ulazautoupdate.c_takingtoolong
 msgid "Check is taking too long (bad/slow internet connection?). Try again later?"
 msgstr ""

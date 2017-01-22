@@ -1,12 +1,26 @@
 unit ulazautoupdate;
 
 {
+  Summary and Copyright
+  =====================
   LazAutoUpdate (c)2015 Gordon Bamber (minesadorada@charcodelvalle.com)
+  A Lazarus Visual component that enables an update service for Executables.
 
+  Web References
+  ==============
+  Wiki Page: http://wiki.freepascal.org/LazAutoUpdater
+  Forum thread: http://forum.lazarus.freepascal.org/index.php/topic,25444.0.html
+  SourceForge project: https://sourceforge.net/projects/lazautoupdate/
+
+  Other Credits
+  =============
   VersionSupport:  Mike Thompson - mike.cornflake@gmail.com
-  Added to and modified by minesadorada@charcodelvalle.com
-  Windows admin function:  Vincent at freepascal forum
+  (added to and modified by minesadorada@charcodelvalle.com)
+  Windows admin RunAs function:  Vincent at freepascal forum
+  THpttpClient code: GetMem at freepascal forum
 
+  License
+  =======
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
   the Free Software Foundation; either version 2 of the License, or (at your
@@ -31,6 +45,12 @@ unit ulazautoupdate;
   You should have received a copy of the GNU Library General Public License
   along with this library; if not, write to the Free Software Foundation,
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+  Version Control and History
+  ===========================
+  Via SVN: https://svn.code.sf.net/p/lazarus-ccr/svn/components/lazautoupdate/
+  Via SourceForge: https://sourceforge.net/projects/lazautoupdate/
+  Also see 'Version History' below
 }
 {$mode objfpc}{$H+}
 
@@ -62,6 +82,8 @@ const
   C_LAUTRayINI = 'lauimport.ini';
 
 {
+ Version History
+ ===============
  V0.0.1: Initial alpha
  V0.0.2: Added auOther properties
  V0.0.3: Limit to download time
@@ -130,21 +152,31 @@ const
   C_GUIEntry = 'GUI';
   C_ModuleEntry = 'Module';
   C_MASTER = 'master';
+  // Compiler mode directives
+  // (note: nothing for Mac/Darwin)
   {$IFDEF WINDOWS}
-   {$IFDEF CPU32}C_UPDATER = 'updatehmwin32.exe';
-  C_LOCALUPDATER = 'lauupdatewin32.exe';{$ENDIF}
-   {$IFDEF CPU64}C_UPDATER = 'updatehmwin64.exe';
-  C_LOCALUPDATER = 'lauupdatewin64.exe';{$ENDIF}
-  // Windows Constants
-  C_RUNONCEKEY = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce';
-  C_RUNKEY = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run';
+     {$IFDEF CPU32}
+       C_UPDATER = 'updatehmwin32.exe';
+       C_LOCALUPDATER = 'lauupdatewin32.exe';
+     {$ENDIF}
+     {$IFDEF CPU64}
+       C_UPDATER = 'updatehmwin64.exe';
+       C_LOCALUPDATER = 'lauupdatewin64.exe';
+     {$ENDIF}
    {$ENDIF}
   {$IFDEF LINUX}
-   {$IFDEF CPU32}C_UPDATER = 'updatehmlinux32';
-  C_LOCALUPDATER = 'lauupdatelinux32';{$ENDIF}
-   {$IFDEF CPU64}C_UPDATER = 'updatehmlinux64';
-  C_LOCALUPDATER = 'lauupdatelinux64';{$ENDIF}
+     {$IFDEF CPU32}
+       C_UPDATER = 'updatehmlinux32';
+       C_LOCALUPDATER = 'lauupdatelinux32';
+     {$ENDIF}
+     {$IFDEF CPU64}
+       C_UPDATER = 'updatehmlinux64';
+       C_LOCALUPDATER = 'lauupdatelinux64';
+     {$ENDIF}
   {$ENDIF}
+  // Windows Constants (unused)
+  C_RUNONCEKEY = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce';
+  C_RUNKEY = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run';
 
 resourcestring
   C_ComponentPrettyName = 'Lazarus Auto-Update Component';
@@ -174,7 +206,7 @@ resourcestring
   C_FolderMissing = 'Missing %s folder';
   C_NotApplicable = '<not applicable>';
   C_ThreadStarted = 'Thread Started';
-  C_SourceForgeDownload = 'SourceForge download';
+  // C_SourceForgeDownload = 'SourceForge download';
   C_CannotLoadFromRemote = 'Cannot load document from remote server';
   C_DownloadIsEmpty = 'Downloaded document is empty.';
   C_DownloadFailedErrorCode = 'Download failed with error code ';
@@ -464,6 +496,11 @@ type
     fLastError: string;  // Propagated to TThreadedDownload
     constructor Create(URL, FileName: string);
     procedure Execute; override; // Starts thread
+    // Todo:
+    {
+    procedure GetDownloadSize;
+    procedure ShowProgress;
+    }
   end;
 
 

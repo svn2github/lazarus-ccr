@@ -87,10 +87,6 @@ msgstr "Espera. Procesamiento de..."
 msgid "Property SFProjectName is empty!"
 msgstr "¡Propiedad SFProjectName está vacía!"
 
-#: ulazautoupdate.c_sourceforgedownload
-msgid "SourceForge download"
-msgstr "Descargar de SourceForge"
-
 #: ulazautoupdate.c_takingtoolong
 msgid "Check is taking too long (bad/slow internet connection?). Try again later?"
 msgstr "Cheque tarda demasiado (mala/lenta conexión a internet?). ¿Inténtalo más tarde?"
@@ -164,3 +160,4 @@ msgstr "Esta aplicación es actualizada"
 #: ulazautoupdate.rsvewversionsh
 msgid "Vew version %s has downloaded. Click OK to update now."
 msgstr "Ver versión %s se ha descargado. Haga clic en Aceptar para actualizar ahora."
+

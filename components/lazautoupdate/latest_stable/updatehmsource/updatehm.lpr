@@ -1,12 +1,13 @@
 program updatehm;
+
 {$ifdef Linux}
 
   {$ifdef FPC_CROSSCOMPILING}
 
     {$ifdef CPUARM}
-      //if GUI, then uncomment
+//if GUI, then uncomment
 
-      //{$linklib GLESv2}
+//{$linklib GLESv2}
 
     {$endif}
 
@@ -56,7 +57,9 @@ program updatehm;
 
 uses
   SysUtils,
-  LazUTF8,LazFileUtils,FileUtil,
+  LazUTF8,
+  LazFileUtils,
+  FileUtil,
   process,
   eventlog,
   DateUtils,
@@ -119,7 +122,7 @@ var
 
 begin
   if ParamCount = 0 then
-    begin
+  begin
     WriteLn('==========================================================');
     Writeln(LineEnding + '==== updatehm v' + C_Version +
       ' - an lazautoupdate application ====');
@@ -128,10 +131,10 @@ begin
     WriteLn('Press any key to continue');
     ReadLn;
     Halt;
-    end;
+  end;
 
   if (ParamStrUTF8(1) = '-h') or (ParamStrUTF8(1) = '/h') then
-    begin
+  begin
     WriteLn('==========================================================');
     Writeln('Normal usage: updatehm exename.exe [updatesfoldername] [whatnewfilename] [exePrettyName] [copytree]');
     WriteLn('- where exename.exe is a single application to be updated');
@@ -142,14 +145,20 @@ begin
     WriteLn('Press any key to continue');
     ReadLn;
     Halt;
-    end;
+  end;
 
   Logger := TEventLog.Create(nil);
-  Logger.LogType := ltFile;
-  Logger.FileName := C_LogFileName;
-  if FileExistsUTF8(C_LogFileName) then
-    DeleteFile(C_LogFileName);
-  Logger.Active := True;
+  try
+    Logger.LogType := ltFile;
+    Logger.FileName := C_LogFileName;
+    if FileExistsUTF8(C_LogFileName) then
+      DeleteFile(C_LogFileName);
+    Logger.Active := True;
+  except
+    Logger.Active := False;
+    FreeAndNil(Logger);
+    Halt(1);
+  end;
   Logger.Info('Start of Log');
 
   bCopyTreeSuccess := False;
@@ -195,31 +204,31 @@ begin
   Logger.Info('Updated whatsNew path = ' + szUpdatedWNPath);
 
   if not FileExistsUTF8(szUpdatedEXEPath) then
-    begin
+  begin
     WriteAndLog('Couldn''t find szUpdatedEXEPath');
     Logger.Active := False;
     FreeAndNil(Logger);
     Halt(1);
-    end;
+  end;
 
 
   if FileExistsUTF8(szUpdatedWNPath) then
-    begin
+  begin
     // Write a file to disk that the app keeps checking for.
-      try
+    try
       Fileutil.CopyFile(szUpdatedWNPath, szOldWNPath, [cffOverWriteFile]);
       WriteAndLog('Writing.. ' + szWhatsNewName);
-      except
+    except
       On E: Exception do
-        begin
+      begin
         WriteAndLog(Format('There was a problem writing %s.  Reason: %s',
           [szWhatsNewName, E.Message]));
         Logger.Active := False;
         FreeAndNil(Logger);
         Halt(1);
-        end;
       end;
     end;
+  end;
 
   // The calling app is in a loop - waiting to detect
   // a Whatsnew file in it's home directory
@@ -242,61 +251,62 @@ begin
   // Copied to the global application data folder
   // Add entry 'Location'
   if FileExistsUTF8(szUpdatesFullPath + C_LAUTRayINI) then
-    begin
-    szLAUTrayAppPath := GetAppConfigDirUTF8(False, True);;
-      try
+  begin
+    szLAUTrayAppPath := GetAppConfigDirUTF8(False, True);
+    ;
+    try
       ForceDirectory(szLAUTrayAppPath);
       Fileutil.CopyFile(szUpdatesFullPath + C_LAUTRayINI, szLAUTrayAppPath +
         C_LAUTRayINI, [cffOverWriteFile]);
       WriteAndLog(Format('Successfully copied %s to %s ',
         [C_LAUTRayINI, szLAUTrayAppPath]));
       if FileExistsUTF8(szLAUTrayAppPath + C_LAUTRayINI) then
-        begin
+      begin
         INI := TINIFile.Create(szLAUTrayAppPath + C_LAUTRayINI);
         SectionStringList := TStringList.Create;
-          try
+        try
           INI.ReadSections(SectionStringList);
           if SectionStringList.Count > 0 then
-            begin
+          begin
             INI.WriteString(SectionStringList[0], 'Location', ProgramDirectory);
             WriteAndLog(Format('Wrote new entry in section %s.  Location=%s',
               [SectionStringList[0], ProgramDirectory]));
-            end
+          end
           else
             WriteAndLog('Failed to find a valid section in ' + C_LAUTRayINI);
-          finally
+        finally
           FreeAndNil(SectionStringList);
           FreeAndNil(INI);
-          end;
-        end
+        end;
+      end
       else
         WriteAndLog('Failed to copy ' + C_LAUTRayINI + ' to ' + szLAUTrayAppPath);
-      except
+    except
       On E: Exception do
         WriteAndLog(Format('Could not copy %s.  Error: %s ', [C_LAUTrayApp, E.Message]));
-      end;
     end;
+  end;
 
 
   // If CopyTree, then just copy the whole of the /updates folder (inc directories) to the App Directory
-    try
+  try
     if ParamStrUTF8(5) = 'copytree' then
       // Copy a whole directory tree?
       bCopyTreeSuccess := CopyDirTree(szUpdatesFullPath, ProgramDirectory,
         [cffOverwriteFile, cffCreateDestDirectory]);
-    except
+  except
     On E: Exception do
       WriteAndLog('Copytree error: ' + E.Message);
-    end;
+  end;
 
   // CopyTree not specified, or operation failed
   // Just copy the updated app over the old one
   if FileExistsUTF8(szUpdatedEXEPath) then
-    begin
+  begin
     if (bCopyTreeSuccess = False) then
       // Copy over exe file
       if Fileutil.CopyFile(szUpdatedEXEPath, szOldEXEPath, [cffOverWriteFile]) then
-        begin
+      begin
         WriteAndLog('Copying over executeable, then sleeping...');
   {$IFDEF HAS_SLEEP}
         WriteAndLog('Sleeping...');
@@ -305,27 +315,27 @@ begin
         WriteAndLog('Waiting 1 second...');
         WaitFor(1000);
   {$ENDIF}
-        end
+      end
       else
         WriteAndLog('Copy to ' + szUpdatedEXEPath + ' failed');
 
     // Restart updated app
     if FileExistsUTF8(szOldEXEPath) then
-      begin
+    begin
       WriteAndLog('Restarting ' + szPrettyName + '...');
       AppProcess := TProcess.Create(nil);
-        try
+      try
         AppProcess.CurrentDirectory := ExtractFileDir(szOldEXEPath);
         AppProcess.Executable := szOldEXEPath;
         AppProcess.StartupOptions := [suoUseShowWindow];
         AppProcess.Execute;
-        finally
+      finally
         AppProcess.Free;
-        end;
-      end
+      end;
+    end
     else
       WriteAndLog('Failure. Couldn''t find ' + szOldEXEPath);
-    end
+  end
   else
     WriteAndLog('Failure. Couldn''t find ' + szUpdatedEXEPath);
 

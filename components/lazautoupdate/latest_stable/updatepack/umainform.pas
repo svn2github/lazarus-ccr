@@ -36,7 +36,7 @@ unit umainform;
 interface
 
 uses
-  Classes, SysUtils, LazUTF8,LazFileUtils,FileUtil, Forms, Controls, Dialogs,
+  Classes, SysUtils, LazUTF8, LazFileUtils, FileUtil, Forms, Controls, Dialogs,
   Buttons, Menus, StdCtrls, EditBtn, Spin, ComCtrls, ulazautoupdate, inifiles,
   eventlog, umemoform, Zipper, strutils, asyncprocess, lclintf, types;
 
@@ -196,7 +196,7 @@ type
     procedure spn3Change(Sender: TObject);
     procedure spn4Change(Sender: TObject);
     procedure tab_configureContextPopup(Sender: TObject; MousePos: TPoint;
-      var Handled: Boolean);
+      var Handled: boolean);
   private
     { private declarations }
     AppConfig: TINIFile; // Application config file.  Holds current Profile name
@@ -205,7 +205,8 @@ type
     ProfilenameList: TStringList; // Used to populate the combo box
     szCurrentProfileName: string; // Name used to Save/Load profiles to the INI file
     bCurrentProfileSaved, bComponentDownloaded, bIsVirgin: boolean;
-    bShowCodeWindow, bShowFileManager, bShowOnlineWebsite, bOverRideUserPrefs,DebugMode: boolean;
+    bShowCodeWindow, bShowFileManager, bShowOnlineWebsite,
+    bOverRideUserPrefs, DebugMode: boolean;
     //    DragFileStringList:TStringList;
     procedure ReadProfileFromINI(AProfileName: string); // Writes ProfileRec to disk
     procedure WriteProfileToINI(AProfileName: string); // Reads ProfileRec from disk
@@ -358,19 +359,21 @@ begin
 end;
 
 procedure Tmainform.tab_configureContextPopup(Sender: TObject;
-  MousePos: TPoint; var Handled: Boolean);
+  MousePos: TPoint; var Handled: boolean);
 begin
 
 end;
 
 procedure Tmainform.FormCreate(Sender: TObject);
 begin
-  If LowerCase(ParamStr(1))='debug' then DebugMode:=TRUE
-  else DebugMode:=FALSE;
+  if LowerCase(ParamStr(1)) = 'debug' then
+    DebugMode := True
+  else
+    DebugMode := False;
   Caption := Application.Title;
   Icon := Application.Icon;
-  AppConfig := TINIFile.Create(GetAppConfigDir(false) + C_APPCONFIGNAME);
-  ProfileConfig := TINIFile.Create(GetAppConfigDir(false) + C_PROFILECONFIGNAME);
+  AppConfig := TINIFile.Create(GetAppConfigDir(False) + C_APPCONFIGNAME);
+  ProfileConfig := TINIFile.Create(GetAppConfigDir(False) + C_PROFILECONFIGNAME);
   ProfilenameList := TStringList.Create;
   ProfileRec.DragFileStringList := TStringList.Create;
   if FileExistsUTF8('readme.txt') then
@@ -416,18 +419,22 @@ begin
   cmb_profile.Clear;
   cmb_profile.Items := ProfileNameList;
   cmb_profile.ItemIndex := cmb_profile.Items.IndexOf(szCurrentProfileName);
-  If LazAutoUpdate1.CreateLocalLauImportFile
-  then LazAutoUpdate1.RelocateLauImportFile;
+  if LazAutoUpdate1.CreateLocalLauImportFile then
+    LazAutoUpdate1.RelocateLauImportFile;
   if bIsVirgin then
     PageControl1.ActivePage := tab_intro
   else
     PageControl1.ActivePage := tab_configure;
-  If DebugMode then EventLog1.FileName := ChangeFileExt(ParamStr(0), '.log');
-  If DebugMode then if FileExistsUTF8(EventLog1.FileName) then
-    SysUtils.DeleteFile(EventLog1.FileName);
-  If DebugMode then EventLog1.AppendContent := True;
-  If DebugMode then EventLog1.Active := True;
-  LazAutoUpdate1.DebugMode:=DebugMode;
+  if DebugMode then
+    EventLog1.FileName := ChangeFileExt(ParamStr(0), '.log');
+  if DebugMode then
+    if FileExistsUTF8(EventLog1.FileName) then
+      SysUtils.DeleteFile(EventLog1.FileName);
+  if DebugMode then
+    EventLog1.AppendContent := True;
+  if DebugMode then
+    EventLog1.Active := True;
+  LazAutoUpdate1.DebugMode := DebugMode;
 end;
 
 procedure Tmainform.FormDestroy(Sender: TObject);
@@ -453,10 +460,10 @@ var
 begin
   for i := Low(FileNames) to High(FileNames) do
     if ((ProfileRec.DragFileStringList.IndexOf(FileNames[i]) = -1) and
-      (FileNames[i] <> ProfileRec.AppPath) and (FileNames[i] <>
-      ProfileRec.WhatsNewPath) and (FileNames[i] <>
-      LazAutoUpdate1.UpdateExe) and (FileNames[i] <>
-      LazAutoUpdate1.UpdateExeSilent)) then
+      (FileNames[i] <> ProfileRec.AppPath) and
+      (FileNames[i] <> ProfileRec.WhatsNewPath) and
+      (FileNames[i] <> LazAutoUpdate1.UpdateExe) and
+      (FileNames[i] <> LazAutoUpdate1.UpdateExeSilent)) then
       if (DirPathExists(FileNames[i]) = True) then
       begin // Not allowed to drag a directory into the list
         ShowMessage('You dragged a directory. For whole directories, use the CopyTree facility');
@@ -483,7 +490,8 @@ end;
 
 procedure Tmainform.LazAutoUpdate1DebugEvent(Sender: TObject; WhereAt, Message: string);
 begin
-  If DebugMode AND (EventLog1.Active=TRUE) then EventLog1.Log(Format('LazAutoUpdate: Source=%s, Message=%s', [WhereAt, Message]));
+  if DebugMode and (EventLog1.Active = True) then
+    EventLog1.Log(Format('LazAutoUpdate: Source=%s, Message=%s', [WhereAt, Message]));
 end;
 
 procedure Tmainform.lst_dragfilesDblClick(Sender: TObject);
@@ -681,7 +689,8 @@ begin
       CanClose := True;
     end;
   if CanClose then
-    If DebugMode then EventLog1.Active := False;
+    if DebugMode then
+      EventLog1.Active := False;
 end;
 
 procedure Tmainform.cmd_UseAppnameVersionsINIClick(Sender: TObject);
@@ -715,7 +724,7 @@ begin
     ZipFileName := 'packagesource.zip';
     ShowUpdateInCaption := True;
     VersionINI := TIniFile.Create('new' + VersionsININame);
-//    VersionINI := TIniFile.Create(VersionsININame);
+    //    VersionINI := TIniFile.Create(VersionsININame);
     AppVersion := VersionINI.ReadString('versions', 'GUI', '0.0.0.0');
     VersionINI.Free;
     if NewVersionAvailable then
@@ -750,22 +759,22 @@ end;
 
 procedure Tmainform.cmb_profileClick(Sender: TObject);
 begin
-    szCurrentProfileName := cmb_profile.Items[cmb_profile.ItemIndex];
-// Auto-save current profile
-    AppConfig.WriteString('Current', 'Profilename', szCurrentProfileName);
-    ReadFromGUI(szCurrentProfileName); // Read from GUI
-    WriteProfileToINI(szCurrentProfileName); // Write to disk
-    bCurrentProfileSaved := True;
+  szCurrentProfileName := cmb_profile.Items[cmb_profile.ItemIndex];
+  // Auto-save current profile
+  AppConfig.WriteString('Current', 'Profilename', szCurrentProfileName);
+  ReadFromGUI(szCurrentProfileName); // Read from GUI
+  WriteProfileToINI(szCurrentProfileName); // Write to disk
+  bCurrentProfileSaved := True;
 end;
 
 procedure Tmainform.cmb_profileCloseUp(Sender: TObject);
 begin
-    // Read selected profile into ProfileRec and GUI
-    szCurrentProfileName := cmb_profile.Items[cmb_profile.ItemIndex];
-    ReadProfileFromINI(szCurrentProfileName); // Read from disk
-    WriteToGUI(szCurrentProfileName);  // Display in GUI
-    AppConfig.WriteString('Current', 'Profilename', szCurrentProfileName);
-    bCurrentProfileSaved := False;
+  // Read selected profile into ProfileRec and GUI
+  szCurrentProfileName := cmb_profile.Items[cmb_profile.ItemIndex];
+  ReadProfileFromINI(szCurrentProfileName); // Read from disk
+  WriteToGUI(szCurrentProfileName);  // Display in GUI
+  AppConfig.WriteString('Current', 'Profilename', szCurrentProfileName);
+  bCurrentProfileSaved := False;
 
 end;
 
@@ -923,12 +932,13 @@ begin
         Execute;
     end;
     if bShowOnlineWebsite then
-     If LazAutoUpdate1.ProjectType=auSourceForge then
-      OpenURL('https://sourceforge.net/projects/' + ProfileRec.SFProjectName + '/');
-     If LazAutoUpdate1.ProjectType=auGitHubReleaseZip then
-     OpenURL('https://github.com/' + LazAutoUpdate1.GitHubProjectName + '/' + LazAutoUpdate1.GitHubBranchOrTag + '/');
-     If LazAutoUpdate1.ProjectType=auOther then
-     OpenURL(LazAutoUpdate1.auOtherSourceURL + '/');
+      if LazAutoUpdate1.ProjectType = auSourceForge then
+        OpenURL('https://sourceforge.net/projects/' + ProfileRec.SFProjectName + '/');
+    if LazAutoUpdate1.ProjectType = auGitHubReleaseZip then
+      OpenURL('https://github.com/' + LazAutoUpdate1.GitHubProjectName +
+        '/' + LazAutoUpdate1.GitHubBranchOrTag + '/');
+    if LazAutoUpdate1.ProjectType = auOther then
+      OpenURL(LazAutoUpdate1.auOtherSourceURL + '/');
 
   {$ELSE}
     // Use generic linux command
@@ -941,12 +951,14 @@ begin
         if bShowFileManager then
           Execute;
         Parameters.Clear;
-        If LazAutoUpdate1.ProjectType=auSourceForge then
-         Parameters.Add('https://sourceforge.net/projects/' + ProfileRec.SFProjectName + '/');
-        If LazAutoUpdate1.ProjectType=auGitHubReleaseZip then
-        Parameters.Add('https://github.com/' + LazAutoUpdate1.GitHubProjectName + '/' + LazAutoUpdate1.GitHubBranchOrTag + '/');
-        If LazAutoUpdate1.ProjectType=auOther then
-        Parameters.Add(LazAutoUpdate1.auOtherSourceURL + '/');
+        if LazAutoUpdate1.ProjectType = auSourceForge then
+          Parameters.Add('https://sourceforge.net/projects/' +
+            ProfileRec.SFProjectName + '/');
+        if LazAutoUpdate1.ProjectType = auGitHubReleaseZip then
+          Parameters.Add('https://github.com/' + LazAutoUpdate1.GitHubProjectName +
+            '/' + LazAutoUpdate1.GitHubBranchOrTag + '/');
+        if LazAutoUpdate1.ProjectType = auOther then
+          Parameters.Add(LazAutoUpdate1.auOtherSourceURL + '/');
         if bShowOnlineWebsite then
           Execute;
       end;
@@ -962,13 +974,15 @@ begin
 end;
 
 procedure Tmainform.cmd_NewProfileClick(Sender: TObject);
-Var
-  szProfileName:String;
+var
+  szProfileName: string;
 begin
   szProfileName := '';
-  if NOT InputQuery('New Profile Name',
-  'Type new profile name here',FALSE,szProfilename) then exit;
-  if szProfileName = '' then exit;
+  if not InputQuery('New Profile Name', 'Type new profile name here',
+    False, szProfilename) then
+    exit;
+  if szProfileName = '' then
+    exit;
 
   // We have a valid profile name...
   // Does it already exist?
@@ -985,8 +999,13 @@ begin
     // Set last item in list as current
     cmb_profile.ItemIndex := cmb_profile.Items.Count - 1;
     bCurrentProfileSaved := False;
+  end
+  else
+  begin
+    ShowMessage('This profile name already exists. Please choose a new name');
+    Exit;
   end;
-if (ProfilenameList.IndexOf(cmb_profile.Text) >= 0) then
+  if (ProfilenameList.IndexOf(cmb_profile.Text) >= 0) then
     MessageDlg(Application.Title,
       Format(rsNewProfileCreated, [szCurrentProfileName]),
       mtInformation, [mbOK], 0);
@@ -1023,7 +1042,8 @@ begin
     begin
       ProfileName := AProfileName;
       AppPath := ReadString(AProfileName, 'AppPath', ProgramDirectory + 'myapp.exe');
-      OutDir := CleanAndExpandDirectory(ReadString(AProfileName, 'OutDir', ProgramDirectory));
+      OutDir := CleanAndExpandDirectory(ReadString(AProfileName,
+        'OutDir', ProgramDirectory));
       NewVersion.VString := ReadString(AProfileName, 'NewVersion', '0.0.0.0');
       FillVersionInteger(NewVersion);
       VersionsINI := ReadString(AProfileName, 'VersionsINI', 'versions.ini');
@@ -1228,7 +1248,8 @@ begin
     DeleteFile(ProfileRec.Zipfilename);
     Application.ProcessMessages;
     if FileExistsUTF8(ProfileRec.Zipfilename) then
-      If DebugMode then EventLog1.Error('Unable to delete %s', [ProfileRec.Zipfilename]);
+      if DebugMode then
+        EventLog1.Error('Unable to delete %s', [ProfileRec.Zipfilename]);
   end;
 
   AZipper := TZipper.Create;
@@ -1326,7 +1347,8 @@ begin
     DeleteFile(ProfileRec.Outdir + C_LAUTRayINI);
   Application.ProcessMessages;
   if FileExistsUTF8(ProfileRec.Outdir + C_LAUTRayINI) then
-    If DebugMode then EventLog1.Error('Unable to delete %s', [ProfileRec.Outdir + C_LAUTRayINI]);
+    if DebugMode then
+      EventLog1.Error('Unable to delete %s', [ProfileRec.Outdir + C_LAUTRayINI]);
 
   LAUTRayINI := TINIFile.Create(ProfileRec.Outdir + C_LAUTRayINI);
   try
