@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="10"/>
+    <BuildModes Active="Linux64 Release"/>
+    <Units Count="27">
+      <Unit0>
+        <Filename Value="trayupdater.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="1"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="19"/>
+        <CursorPos X="30" Y="57"/>
+        <UsageCount Value="176"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="umainform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="mainform"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="660"/>
+        <CursorPos X="52" Y="672"/>
+        <ComponentState Value="1"/>
+        <UsageCount Value="176"/>
+        <Bookmarks Count="1">
+          <Item0 X="3" Y="478" ID="2"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="uconfigform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="configform"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="3"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="206"/>
+        <CursorPos X="67" Y="231"/>
+        <UsageCount Value="172"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="..\..\..\..\healthmonitor\svn\ministaller\umainform.pas"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="315"/>
+        <CursorPos X="57" Y="323"/>
+        <UsageCount Value="2"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="D:\Lazarus32_production\lcl\menus.pp"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="214"/>
+        <UsageCount Value="2"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="..\..\..\..\longtimer\longtimer.pas"/>
+        <WindowIndex Value="1"/>
+        <CursorPos X="29" Y="14"/>
+        <UsageCount Value="1"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="..\..\..\longtimer\ulongtimer.pas"/>
+        <UnitName Value="uLongTimer"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="4"/>
+        <CursorPos X="54" Y="10"/>
+        <UsageCount Value="49"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="C:\development\lazarus\lcl\lclclasses.pp"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="5"/>
+        <CursorPos X="24" Y="24"/>
+        <UsageCount Value="5"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="D:\Lazarus32_production\components\lazutils\fileutil.pas"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="202"/>
+        <CursorPos X="29" Y="225"/>
+        <UsageCount Value="70"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="D:\Lazarus32_production\fpc\2.6.4\source\packages\fcl-base\src\inifiles.pp"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="125"/>
+        <CursorPos X="34" Y="143"/>
+        <UsageCount Value="44"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="..\updatepack\umainform.pas"/>
+        <ComponentName Value="mainform"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="25"/>
+        <CursorPos X="56" Y="214"/>
+        <UsageCount Value="40"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="D:\Lazarus32_production\fpc\2.6.4\source\rtl\objpas\strutils.pp"/>
+        <WindowIndex Value="1"/>
+        <CursorPos Y="33"/>
+        <UsageCount Value="47"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="D:\Lazarus32_production\fpc\2.6.4\source\packages\fcl-registry\src\registry.pp"/>
+        <WindowIndex Value="1"/>
+        <CursorPos X="11" Y="20"/>
+        <UsageCount Value="37"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="D:\Lazarus32_production\fpc\2.6.4\source\packages\fcl-registry\src\regdef.inc"/>
+        <WindowIndex Value="1"/>
+        <CursorPos X="17" Y="18"/>
+        <UsageCount Value="37"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="..\packagesource\ulazautoupdate.pas"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="78"/>
+        <CursorPos X="12" Y="68"/>
+        <UsageCount Value="70"/>
+        <Bookmarks Count="1">
+          <Item0 X="7" Y="1165"/>
+        </Bookmarks>
+      </Unit14>
+      <Unit15>
+        <Filename Value="..\packagesource\versionsupport.pas"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <CursorPos X="31" Y="109"/>
+        <UsageCount Value="69"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="D:\fpc_trunk\packages\winunits-jedi\src\jwatlhelp32.pas"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="76"/>
+        <CursorPos X="54" Y="27"/>
+        <UsageCount Value="10"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="..\packagesource\uappisrunning.pas"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <CursorPos X="47" Y="104"/>
+        <UsageCount Value="51"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="D:\Lazarus32_production\packager\registration\fcllaz.pas"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="..\updatehm.lpr"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="54"/>
+        <CursorPos X="17" Y="68"/>
+        <UsageCount Value="24"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="..\packagesource\aboutlazautoupdateunit.pas"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="157"/>
+        <CursorPos X="29" Y="182"/>
+        <UsageCount Value="10"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="D:\development\fpc\packages\fcl-base\src\inifiles.pp"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="142"/>
+        <UsageCount Value="8"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="D:\Lazarus32_production\fpc\2.6.4\source\rtl\objpas\sysutils\sysstrh.inc"/>
+        <WindowIndex Value="1"/>
+        <CursorPos X="4" Y="27"/>
+        <UsageCount Value="20"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="umainform.lfm"/>
+        <EditorIndex Value="1"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="22"/>
+        <CursorPos X="29" Y="11"/>
+        <UsageCount Value="10"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="uconfigform.lfm"/>
+        <EditorIndex Value="3"/>
+        <WindowIndex Value="1"/>
+        <UsageCount Value="10"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="C:\codetyphon\fpcsrc\packages\rtl-objpas\src\inc\strutils.pp"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="221"/>
+        <CursorPos X="63" Y="225"/>
+        <UsageCount Value="10"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="C:\laztrunk\config_lazarus\onlinepackagemanager\packages\longtimer\ulongtimer.pas"/>
+        <UnitName Value="uLongTimer"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="299"/>
+        <CursorPos X="14" Y="323"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit26>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="151" Column="52" TopLine="117"/>
+      </Position1>
+      <Position2>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="152" Column="58" TopLine="118"/>
+      </Position2>
+      <Position3>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="498" Column="41" TopLine="489"/>
+      </Position3>
+      <Position4>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="50" Column="20" TopLine="16"/>
+      </Position4>
+      <Position5>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="151" Column="52" TopLine="117"/>
+      </Position5>
+      <Position6>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="152" Column="58" TopLine="118"/>
+      </Position6>
+      <Position7>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="179" Column="41" TopLine="145"/>
+      </Position7>
+      <Position8>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="309" Column="57" TopLine="276"/>
+      </Position8>
+      <Position9>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="310" Column="72" TopLine="277"/>
+      </Position9>
+      <Position10>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="349" Column="46" TopLine="315"/>
+      </Position10>
+      <Position11>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="405" Column="52" TopLine="369"/>
+      </Position11>
+      <Position12>
+        <Filename Value="trayupdater.lpr"/>
+        <Caret Column="38"/>
+      </Position12>
+      <Position13>
+        <Filename Value="uconfigform.pas"/>
+        <Caret Line="107" Column="73"/>
+      </Position13>
+      <Position14>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="30" Column="43" TopLine="28"/>
+      </Position14>
+      <Position15>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="83" Column="41" TopLine="77"/>
+      </Position15>
+      <Position16>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="691" TopLine="677"/>
+      </Position16>
+      <Position17>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="695" Column="8" TopLine="693"/>
+      </Position17>
+      <Position18>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="434" Column="3" TopLine="432"/>
+      </Position18>
+      <Position19>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="697" Column="19" TopLine="693"/>
+      </Position19>
+      <Position20>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="438" Column="23" TopLine="432"/>
+      </Position20>
+      <Position21>
+        <Filename Value="uconfigform.pas"/>
+        <Caret Line="8" Column="16"/>
+      </Position21>
+      <Position22>
+        <Filename Value="uconfigform.pas"/>
+        <Caret Line="82" Column="3" TopLine="80"/>
+      </Position22>
+      <Position23>
+        <Filename Value="uconfigform.pas"/>
+        <Caret Line="285" Column="3" TopLine="238"/>
+      </Position23>
+      <Position24>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="124" Column="15" TopLine="118"/>
+      </Position24>
+      <Position25>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="672" Column="52" TopLine="660"/>
+      </Position25>
+      <Position26>
+        <Filename Value="trayupdater.lpr"/>
+        <Caret Line="63" TopLine="14"/>
+      </Position26>
+      <Position27>
+        <Filename Value="trayupdater.lpr"/>
+        <Caret Line="53" Column="3" TopLine="14"/>
+      </Position27>
+      <Position28>
+        <Filename Value="uconfigform.pas"/>
+        <Caret Line="231" Column="67" TopLine="206"/>
+      </Position28>
+      <Position29>
+        <Filename Value="trayupdater.lpr"/>
+        <Caret Line="63" TopLine="14"/>
+      </Position29>
+      <Position30>
+        <Filename Value="trayupdater.lpr"/>
+        <Caret Line="57" Column="30" TopLine="19"/>
+      </Position30>
+    </JumpHistory>
+  </ProjectSession>
+</CONFIG>
