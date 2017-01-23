@@ -932,14 +932,15 @@ begin
   Result := s;
   if fPlainText = True then // Use unencrypted version
     Exit;
+  if (s = Default) then Exit;
   If (Length(s) < 32) then Exit;
-
   fMD5String := LeftStr(s, 32); // Grab the MD5 string and store (unencoded)
-  Result := RightStr(s, Length(s) - 32); // Use the rest
-  if Result <> EncodeString(Default) then
-  begin
-    Result := DecodeString(Result); // Un-Encrypt it
-  end;
+  s := RightStr(s, Length(s) - 32); // Use the rest
+  // Deal with Default value
+  //if (s = EncodeString(Default)) then
+  //   Result:=Default
+  //else
+  Result := DecodeString(s); // Un-Encrypt it
 end;
 
 (******************************************************************************)

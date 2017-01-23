@@ -3,7 +3,7 @@
 * Can be dropped into any app using TIniFiles
 * Licence is Modified GPL with linking exception (same as Lazarus components)
 * Tested: Windows 10 32/64-bit  Linux Mint 14 32/64-bit
-* Compiles with: Lazarus 1.6 -> FPC 3.x ->
+* Compiles with: Lazarus 1.6 -> FPC 2.6 ->
 
 Read more about it: http://wiki.freepascal.org/CryptINI
 
