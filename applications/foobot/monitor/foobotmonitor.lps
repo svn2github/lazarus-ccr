@@ -3,16 +3,15 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="10"/>
-    <BuildModes Active="win64"/>
-    <Units Count="32">
+    <BuildModes Active="win32"/>
+    <Units Count="36">
       <Unit0>
         <Filename Value="foobotmonitor.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="11"/>
-        <TopLine Value="13"/>
-        <CursorPos X="45" Y="21"/>
-        <UsageCount Value="197"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="39"/>
+        <CursorPos Y="56"/>
+        <UsageCount Value="198"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -21,9 +20,9 @@
         <ComponentName Value="mainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="22"/>
-        <CursorPos X="20" Y="28"/>
-        <UsageCount Value="197"/>
+        <TopLine Value="28"/>
+        <CursorPos X="14" Y="190"/>
+        <UsageCount Value="198"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -33,10 +32,10 @@
         <ComponentName Value="configform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="14"/>
         <CursorPos X="65" Y="44"/>
-        <UsageCount Value="187"/>
+        <UsageCount Value="188"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit2>
@@ -46,7 +45,7 @@
         <EditorIndex Value="1"/>
         <TopLine Value="13"/>
         <CursorPos X="49" Y="20"/>
-        <UsageCount Value="179"/>
+        <UsageCount Value="180"/>
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
@@ -56,15 +55,15 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="179"/>
+        <UsageCount Value="180"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\foobot_utility.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="6"/>
         <TopLine Value="199"/>
         <CursorPos X="22" Y="214"/>
-        <UsageCount Value="197"/>
+        <UsageCount Value="198"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
@@ -74,15 +73,17 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="179"/>
+        <UsageCount Value="180"/>
       </Unit6>
       <Unit7>
         <Filename Value="foobot_sensors.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="299"/>
-        <CursorPos X="14" Y="321"/>
-        <UsageCount Value="131"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="9"/>
+        <TopLine Value="10"/>
+        <CursorPos X="44" Y="17"/>
+        <UsageCount Value="132"/>
+        <Loaded Value="True"/>
       </Unit7>
       <Unit8>
         <Filename Value="usplash.pas"/>
@@ -92,7 +93,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="3"/>
         <CursorPos X="48" Y="37"/>
-        <UsageCount Value="126"/>
+        <UsageCount Value="127"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit8>
@@ -105,7 +106,7 @@
         <EditorIndex Value="2"/>
         <TopLine Value="382"/>
         <CursorPos X="26" Y="21"/>
-        <UsageCount Value="117"/>
+        <UsageCount Value="118"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit9>
@@ -118,7 +119,7 @@
       </Unit10>
       <Unit11>
         <Filename Value="..\latest_stable\foobot_objects.pas"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="7"/>
         <TopLine Value="141"/>
         <CursorPos X="31" Y="148"/>
         <UsageCount Value="110"/>
@@ -155,23 +156,21 @@
       <Unit16>
         <Filename Value="C:\trunklatest\lazarus\ide\lazarus.pp"/>
         <UnitName Value="Lazarus"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="101"/>
         <CursorPos Y="154"/>
         <UsageCount Value="64"/>
-        <Loaded Value="True"/>
       </Unit16>
       <Unit17>
         <Filename Value="C:\trunklatest\fpc\packages\rtl-objpas\src\inc\dateutil.inc"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="381"/>
         <CursorPos X="13" Y="384"/>
         <UsageCount Value="82"/>
-        <Loaded Value="True"/>
       </Unit17>
       <Unit18>
         <Filename Value="..\latest_stable\udataform.pas"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="4"/>
         <TopLine Value="66"/>
         <UsageCount Value="82"/>
         <Loaded Value="True"/>
@@ -201,18 +200,17 @@
       <Unit22>
         <Filename Value="C:\trunklatest\lazarus\lcl\graphics.pp"/>
         <UnitName Value="Graphics"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="1811"/>
         <CursorPos X="13" Y="1834"/>
         <UsageCount Value="60"/>
-        <Loaded Value="True"/>
       </Unit22>
       <Unit23>
         <Filename Value="umainform.lfm"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="119"/>
+        <EditorIndex Value="11"/>
         <CursorPos Y="151"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit23>
       <Unit24>
@@ -273,8 +271,35 @@
         <CursorPos X="10" Y="81"/>
         <UsageCount Value="11"/>
       </Unit31>
+      <Unit32>
+        <Filename Value="..\..\..\components\industrialstuff\source\sensors.pas"/>
+        <UnitName Value="Sensors"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="10"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="..\..\..\components\industrialstuff\industrial.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="46" Y="15"/>
+        <UsageCount Value="10"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="..\..\..\components\industrialstuff\source\AllIndustrialRegister.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2"/>
+        <CursorPos X="8" Y="23"/>
+        <UsageCount Value="10"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="foobot.pas"/>
+        <UnitName Value="FoobotSensors"/>
+        <EditorIndex Value="10"/>
+        <TopLine Value="3"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit35>
     </Units>
-    <JumpHistory Count="16" HistoryIndex="15">
+    <JumpHistory Count="15" HistoryIndex="14">
       <Position1>
         <Filename Value="umainform.pas"/>
         <Caret Line="1341" TopLine="1299"/>
@@ -328,17 +353,13 @@
         <Caret Line="40" Column="39" TopLine="22"/>
       </Position13>
       <Position14>
-        <Filename Value="C:\trunklatest\fpc\packages\rtl-objpas\src\inc\dateutil.inc"/>
-        <Caret Line="384" Column="13" TopLine="381"/>
-      </Position14>
-      <Position15>
-        <Filename Value="C:\trunklatest\lazarus\ide\lazarus.pp"/>
-        <Caret Line="154" TopLine="83"/>
-      </Position15>
-      <Position16>
         <Filename Value="foobotmonitor.lpr"/>
         <Caret Line="37" Column="17" TopLine="13"/>
-      </Position16>
+      </Position14>
+      <Position15>
+        <Filename Value="foobotmonitor.lpr"/>
+        <Caret Line="21" Column="45" TopLine="37"/>
+      </Position15>
     </JumpHistory>
   </ProjectSession>
 </CONFIG>

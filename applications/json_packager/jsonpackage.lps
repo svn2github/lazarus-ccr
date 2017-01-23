@@ -20,8 +20,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="60"/>
-        <CursorPos X="15" Y="73"/>
+        <TopLine Value="58"/>
+        <CursorPos X="23" Y="83"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
           <EditorIndex Value="-1"/>
@@ -458,7 +458,7 @@
     <OtherDefines Count="1">
       <Define0 Value="IGNOREPICTURE"/>
     </OtherDefines>
-    <JumpHistory Count="18" HistoryIndex="17">
+    <JumpHistory Count="19" HistoryIndex="18">
       <Position1>
         <Filename Value="umain.pas"/>
         <Caret Line="120" Column="40" TopLine="100"/>
@@ -531,6 +531,10 @@
         <Filename Value="umain.pas"/>
         <Caret Line="256" Column="24" TopLine="234"/>
       </Position18>
+      <Position19>
+        <Filename Value="umain.pas"/>
+        <Caret Line="73" Column="15" TopLine="867"/>
+      </Position19>
     </JumpHistory>
   </ProjectSession>
 </CONFIG>
