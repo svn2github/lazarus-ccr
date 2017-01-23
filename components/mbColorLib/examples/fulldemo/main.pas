@@ -336,7 +336,7 @@ begin
     WriteString('InternetShortcut','IconFile', '"' + Application.ExeName + '"');
   finally
     Free;
-  end; 
+  end;
 end;
 
 procedure TForm1.HColorPicker1GetHintStr(Sender: TObject; X, Y: Integer;

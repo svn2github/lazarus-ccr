@@ -3,7 +3,7 @@ object Form1: TForm1
   Height = 416
   Top = 197
   Width = 594
-  Caption = 'mbColor Lib v2.1 Demo'
+  Caption = 'mbColor Lib v2.2 Demo'
   ClientHeight = 416
   ClientWidth = 594
   Font.Color = clWindowText
@@ -31,12 +31,10 @@ object Form1: TForm1
         Height = 360
         Top = 8
         Width = 454
-        SelectedColor = 3552968
-        Saturation = 147
+        Luminance = 128
         HSPickerHintFormat = 'H: %h S: %s'#13'Hex: #%hex'
         LPickerHintFormat = 'Luminance: %l'
         VPickerHintFormat = 'Value: %value (selected)'
-        MaxLuminance = 255
         Anchors = [akTop, akLeft, akRight, akBottom]
         TabOrder = 0
         OnChange = HSLColorPicker1Change
@@ -498,7 +496,6 @@ object Form1: TForm1
             'clBlack'
           )
           HintFormat = 'RGB(%r, %g, %b)'#13'Hex: #%hex'
-          AutoHeight = True
           TabOrder = 0
           OnSelColorChange = mbColorPalette1SelColorChange
           OnMouseMove = mbColorPalette1MouseMove
@@ -907,13 +904,10 @@ object Form1: TForm1
         Height = 155
         Top = 6
         Width = 211
-        SelectedColor = 15406357
         HintFormat = 'H: %h S: %s'#13'Hex: %hex'
         TabOrder = 0
         OnMouseMove = HSColorPicker1MouseMove
-        Hue = 240
         Luminance = 128
-        Saturation = 215
         MarkerStyle = msSquare
         OnChange = HSColorPicker1Change
       end

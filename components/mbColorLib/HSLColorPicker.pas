@@ -509,6 +509,9 @@ begin
     FHSPicker.RelHue := H;
     FHSPicker.RelSaturation := S;
     FLVPicker.SelectedColor := Value;
+    FRed := GetRValue(Value);
+    FGreen := GetGValue(Value);
+    FBlue := GetBValue(Value);
   end;
 end;
 
