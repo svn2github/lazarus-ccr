@@ -665,11 +665,11 @@ begin
     DebugMode := False;
   // Initialise the App's main INI file
   Try
-  INI := TIniFile.Create(GetAppConfigDir(False) + C_INIFilename);
+  INI := TIniFile.Create(GetAppConfigDirUTF8(False) + C_INIFilename);
   Except
    sleep(4000);
    If (INI = Nil) then
-      INI := TIniFile.Create(GetAppConfigDir(False) + C_INIFilename);
+      INI := TIniFile.Create(GetAppConfigDirUTF8(False) + C_INIFilename);
   end;
   INI.CacheUpdates := False;
   INI.WriteString('ProgramInfo', 'AppName', Application.Title);

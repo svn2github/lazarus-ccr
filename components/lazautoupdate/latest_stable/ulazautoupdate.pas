@@ -78,8 +78,6 @@ const
   // https://raw.github.com/<username>/<repo>/<branchname>/some_directory/file
   // https://raw.github.com/<username>/<repo>/<tagname>/some_directory/file
 
-  C_TLazAutoUpdateComponentVersion = '0.2.6';
-  C_LAUTRayINI = 'lauimport.ini';
 
 {
  Version History
@@ -135,8 +133,11 @@ const
  V0.2.4: GitHub integration with branches
  V0.2.5: IsWindowsAdministrator check added and property to control it
  V0.2.6: Enabled GitHub tags (GitHubBranchOrTag property)
- V0.2.7:
+ V0.2.7: Updates Tray Updater routines
+ V0.2.8: Changed constants C_UPDATEHMNAME and C_LAUUPDATENAME
+ V0.2.9: ??
 }
+  C_TLazAutoUpdateComponentVersion = '0.2.8';
   C_TThreadedDownloadComponentVersion = '0.0.3';
 {
  V0.0.1: Initial alpha
@@ -147,6 +148,7 @@ const
   C_UpdatesFolder = 'updates'; // User can change
 
   // Don't change these without some thought..
+  C_LAUTRayINI = 'lauimport.ini';
   C_WhatsNewFilename = 'whatsnew.txt';
   C_INISection = 'versions';
   C_GUIEntry = 'GUI';
@@ -155,25 +157,18 @@ const
   // Compiler mode directives
   // (note: nothing for Mac/Darwin)
   {$IFDEF WINDOWS}
-     {$IFDEF CPU32}
-       C_UPDATER = 'updatehmwin32.exe';
-       C_LOCALUPDATER = 'lauupdatewin32.exe';
-     {$ENDIF}
-     {$IFDEF CPU64}
-       C_UPDATER = 'updatehmwin64.exe';
-       C_LOCALUPDATER = 'lauupdatewin64.exe';
-     {$ENDIF}
-   {$ENDIF}
-  {$IFDEF LINUX}
-     {$IFDEF CPU32}
-       C_UPDATER = 'updatehmlinux32';
-       C_LOCALUPDATER = 'lauupdatelinux32';
-     {$ENDIF}
-     {$IFDEF CPU64}
-       C_UPDATER = 'updatehmlinux64';
-       C_LOCALUPDATER = 'lauupdatelinux64';
-     {$ENDIF}
+  C_OS = 'win';
+  {$ELSE}
+  C_OS = 'linux';
   {$ENDIF}
+  {$IFDEF CPU32}
+  C_BITNESS = '32';
+  {$ELSE}
+  C_BITNESS = '64';
+  {$ENDIF}
+  C_PFX = C_OS + C_BITNESS; // Used in file naming
+  C_UPDATEHMNAME = 'updatehm' + C_PFX;
+  C_LAUUPDATENAME = 'lauupdate' + C_PFX;
   // Windows Constants (unused)
   C_RUNONCEKEY = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce';
   C_RUNKEY = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run';
@@ -217,11 +212,11 @@ resourcestring
   rsDownloadFail = 'Download failed. (HTTP Errorcode %d) Try again later';
   rsCancelledYou2 = 'Cancelled.  You can download the new version later.';
   rsThisApplicat = 'This application is up-to-date';
-  rsOnlyWindowsU = 'Only Windows users whith Administrator status can update '
-    + 'this application.%sPlease log off, then log on as an administrator (or '
-    + 'switch users to an administrator account),%sthen try again.  This '
-    + 'restriction is for the safety and security of your Windows system.%'
-    + 'sClick OK to continue';
+  rsOnlyWindowsU = 'Only Windows users whith Administrator status can update ' +
+    'this application.%sPlease log off, then log on as an administrator (or ' +
+    'switch users to an administrator account),%sthen try again.  This ' +
+    'restriction is for the safety and security of your Windows system.%' +
+    'sClick OK to continue';
   rsApplicationU = 'Application update';
 
 type
@@ -637,6 +632,7 @@ begin
     Result := False;
   CloseServiceHandle(hSC);
 end;
+
 {$ENDIF}
 // === END WINDOWS PROCS =======================================================
 
@@ -720,8 +716,8 @@ begin
   fZipfileName := ''; // assign later
 
   // BE SURE TO CHANGE THE CONSTANTS IF YOU CHANGE THE UPDATE EXE NAME
-  fUpdateExe := C_UPDATER;
-  fUpdateSilentExe := C_LOCALUPDATER;
+  fUpdateExe := C_UPDATEHMNAME;
+  fUpdateSilentExe := C_LAUUPDATENAME;
 
 
   // Assorted versioninfo properties
@@ -770,6 +766,7 @@ function TLazAutoUpdate.AppIsActive(const ExeName: string): boolean;
 begin
   Result := AppIsRunning(ExeName);
 end;
+
 {
 // Obselete.  fileinfo functions used instead
 function TLazAutoUpdate.VersionStringToNumber(AVersionString: string): integer;
@@ -920,7 +917,7 @@ begin
 end;
 
 function TLazAutoUpdate.SilentUpdate: boolean;
-// Part of the tray update system
+  // Part of the tray update system
 begin
   // read the VMT once
   if Assigned(fOndebugEvent) then
@@ -934,7 +931,7 @@ begin
     fOndebugEvent(Self, 'SilentUpdate', 'Calling UpdateToNewVersion');
 
   // Use the local lauupdate if available
-  if FileExistsUTF8(ProgramDirectory + C_LOCALUPDATER) then
+  if FileExistsUTF8(ProgramDirectory + C_LAUUPDATENAME) then
   begin
     if RemoteUpdateToNewVersion then
       // If IsAppRunning=FALSE, then calls DoSilentUpdate
@@ -1094,8 +1091,8 @@ begin
       Exit;
     end;
     if ((fUpdatesFolder = C_NotApplicable) or (fUpdatesFolder = '')) then
-      szURL := Format(C_GITHUBFILE_URL,
-        [fGitHubProjectName, fGitHubRepositoryName, fGitHubBranchOrTag, fVersionsININame])
+      szURL := Format(C_GITHUBFILE_URL, [fGitHubProjectName,
+        fGitHubRepositoryName, fGitHubBranchOrTag, fVersionsININame])
     else
       szURL := Format(C_GITHUBFILE_URL_UPDATES,
         [fGitHubProjectName, fGitHubRepositoryName, fGitHubBranchOrTag,
@@ -1146,7 +1143,7 @@ begin
     ReturnCode := 0;
     DownloadSize := 0;
     fDownloadInprogress := True;
-    DebugMode:=fDebugMode;
+    DebugMode := fDebugMode;
     if not fSilentMode then
       fParentForm.Caption := C_Checking;
     CheckForOpenSSL;
@@ -1255,8 +1252,8 @@ begin
       fUpdatesFolder, ExtractFileName(szTargetPath)]);
   if fProjectType = auGitHubReleaseZip then
     if ((fUpdatesFolder = C_NotApplicable) or (fUpdatesFolder = '')) then
-      szURL := Format(C_GITHUBFILE_URL,
-        [fGitHubProjectName, fGitHubRepositoryName, fGitHubBranchOrTag, fZipfileName])
+      szURL := Format(C_GITHUBFILE_URL, [fGitHubProjectName,
+        fGitHubRepositoryName, fGitHubBranchOrTag, fZipfileName])
     else
       szURL := Format(C_GITHUBFILE_URL_UPDATES,
         [fGitHubProjectName, fGitHubRepositoryName, fGitHubBranchOrTag,
@@ -1352,7 +1349,7 @@ begin
     ReturnCode := 0;
     DownloadSize := 0;
     fUnzipAfter := True;
-    DebugMode:=fDebugMode;
+    DebugMode := fDebugMode;
     if not fSilentMode then
       szOldCaption := fParentForm.Caption;
     if not fSilentMode then
@@ -1451,7 +1448,7 @@ begin
 end;
 
 function TLazAutoUpdate.CreateLocalLauImportFile: boolean;
-// Used in SysTray app
+  // Used in SysTray app
 var
   LAUTRayINI: TIniFile;
   szSection: string;
@@ -1479,7 +1476,7 @@ begin
   szSuffix += '32';
   {$ENDIF}
   Result := False;
-  LAUTRayINI := TIniFile.Create(ProgramDirectory + C_LAUTRayINI);
+  LAUTRayINI := TIniFile.Create(GetAppConfigDirUTF8(False, True) + C_LAUTRayINI);
   try
     with LAUTRayINI do
     begin
@@ -1539,10 +1536,10 @@ begin
     szDestLAUTrayPath := GetAppConfigDirUTF8(False, False); // Don't create it yet
     {$IFDEF WINDOWS}
     szDestLAUTrayPath := StringReplace(szDestLAUTrayPath, Application.Title,
-      'updatehm', [rfReplaceAll]);
+      'updatehm' + C_PFX, [rfReplaceAll]);
     {$ELSE}
     szDestLAUTrayPath := UTF8StringReplace(szDestLAUTrayPath,
-      Application.Title, 'updatehm', [rfReplaceAll]);
+      Application.Title, 'updatehm' + C_PFX, [rfReplaceAll]);
     {$ENDIF}
   end
   else
@@ -1582,8 +1579,8 @@ begin
     begin
       if fFireDebugEvent then
         fOndebugEvent(Self, 'RelocateLauImportFile',
-          Format('Relocated %s from %s to %s',
-          [C_LAUTRayINI, szSourceLAUTrayPath, szDestLAUTrayPath]));
+          Format('Relocated %s from %s to %s', [C_LAUTRayINI,
+          szSourceLAUTrayPath, szDestLAUTrayPath]));
       SysUtils.DeleteFile(szSourceLAUTrayPath);
     end
     else
@@ -1595,9 +1592,9 @@ begin
 end;
 
 function TLazAutoUpdate.DoSilentUpdate: boolean;
-// Used in Systray app
-// Called from UpdateToNewVersion when the app is not running
-// Updates the app, and also copies over and updates C_LAUTRayINI
+  // Used in Systray app
+  // Called from UpdateToNewVersion when the app is not running
+  // Updates the app, and also copies over and updates C_LAUTRayINI
 var
   szAppFolder: string;
   szLAUTrayAppPath: string;
@@ -1773,8 +1770,8 @@ begin
 end;
 
 function TLazAutoUpdate.RemoteUpdateToNewVersion: boolean;
-// Used in Systray app
-// Shells to 'lauupdate' console app in ProgramDirectory to remotely update an app
+  // Used in Systray app
+  // Shells to 'lauupdate' console app in ProgramDirectory to remotely update an app
 {$IFDEF WINDOWS}
   function RunAsAdmin(const Handle: THandle; const Path, Params: string): boolean;
   var
@@ -1822,13 +1819,13 @@ begin
   else
   begin
     cCount := 0;
-    if not FileExistsUTF8(ProgramDirectory + C_LOCALUPDATER) then
+    if not FileExistsUTF8(ProgramDirectory + C_LAUUPDATENAME) then
     begin
       if fShowDialogs then
-        ShowMessageFmt(C_UpdaterMissing, [ProgramDirectory + C_LOCALUPDATER]);
+        ShowMessageFmt(C_UpdaterMissing, [ProgramDirectory + C_LAUUPDATENAME]);
       if fFireDebugEvent then
         fOndebugEvent(Self, 'RemoteUpdateToNewVersion',
-          Format(C_UpdaterMissing, [ProgramDirectory + C_LOCALUPDATER]));
+          Format(C_UpdaterMissing, [ProgramDirectory + C_LAUUPDATENAME]));
       Exit;
     end;
 
@@ -1852,8 +1849,8 @@ begin
       szParams := szParams + ' copytree';
     if fFireDebugEvent then
       fOndebugEvent(Self, 'RemoteUpdateToNewVersion',
-        Format('Executing %s', [ProgramDirectory + C_LOCALUPDATER]));
-    RunAsAdmin(fParentForm.Handle, ProgramDirectory + C_LOCALUPDATER, szParams);
+        Format('Executing %s', [ProgramDirectory + C_LAUUPDATENAME]));
+    RunAsAdmin(fParentForm.Handle, ProgramDirectory + C_LAUUPDATENAME, szParams);
 
     // Check for C_WhatsNewFilename in the app directory in a LOOP
     if fFireDebugEvent then
@@ -1870,7 +1867,7 @@ begin
 
     // Update and re-start the app
     FUpdateHMProcess := TAsyncProcess.Create(nil);
-    FUpdateHMProcess.Executable := ProgramDirectory + C_LOCALUPDATER;
+    FUpdateHMProcess.Executable := ProgramDirectory + C_LAUUPDATENAME;
     FUpdateHMProcess.CurrentDirectory := ProgramDirectory;
     if not fSilentMode then
       FUpdateHMProcess.ConsoleTitle :=
@@ -1885,7 +1882,7 @@ begin
     // Param 5 = Copy the whole of /updates to the App Folder
     if fFireDebugEvent then
       fOndebugEvent(Self, 'RemoteUpdateToNewVersion',
-        Format('Executing %s', [ProgramDirectory + C_LOCALUPDATER]));
+        Format('Executing %s', [ProgramDirectory + C_LAUUPDATENAME]));
 
     try
       FUpdateHMProcess.Execute;
@@ -1926,8 +1923,8 @@ end;
 
 
 function TLazAutoUpdate.UpdateToNewVersion: boolean;
-// Shells to updater console
-// Requires admin user in Win 10
+  // Shells to updater console
+  // Requires admin user in Win 10
 {$IFDEF WINDOWS}
   function RunAsAdmin(const Handle: THandle; const Path, Params: string): boolean;
   var
@@ -1972,19 +1969,19 @@ begin
   if not AppIsRunning(ExtractFileName(fAppFilename)) then
   begin
     if fFireDebugEvent then
-      fOndebugEvent(Self, 'UpdateToNewVersion','Doing SilentUpdate');
+      fOndebugEvent(Self, 'UpdateToNewVersion', 'Doing SilentUpdate');
     Result := DoSilentUpdate;
   end
   else
   begin
     cCount := 0;
-    if not FileExistsUTF8(szAppDir + C_UPDATER) then
+    if not FileExistsUTF8(szAppDir + C_UPDATEHMNAME) then
     begin
       if fShowDialogs then
-        ShowMessageFmt(C_UpdaterMissing, [szAppDir + C_UPDATER]);
+        ShowMessageFmt(C_UpdaterMissing, [szAppDir + C_UPDATEHMNAME]);
       if fFireDebugEvent then
         fOndebugEvent(Self, 'UpdateToNewVersion',
-          Format(C_UpdaterMissing, [szAppDir + C_UPDATER]));
+          Format(C_UpdaterMissing, [szAppDir + C_UPDATEHMNAME]));
       Exit;
     end;
 
@@ -2015,17 +2012,17 @@ begin
     szParams := szParams + ' ' + fParentApplication.Title;
     if (fCopyTree = True) then
       szParams := szParams + ' copytree';
-      fOndebugEvent(Self, 'UpdateToNewVersion',
-        Format('Executing %s', [szAppDir + C_UPDATER]));
-    if RunAsAdmin(fParentForm.Handle, szAppDir + C_UPDATER, szParams) then
+    fOndebugEvent(Self, 'UpdateToNewVersion',
+      Format('Executing %s', [szAppDir + C_UPDATEHMNAME]));
+    if RunAsAdmin(fParentForm.Handle, szAppDir + C_UPDATEHMNAME, szParams) then
     begin
       if fFireDebugEvent then
-       fOndebugEvent(Self, 'UpdateToNewVersion','RunAsAdmin succeeded');
+        fOndebugEvent(Self, 'UpdateToNewVersion', 'RunAsAdmin succeeded');
     end
     else
     begin
       if fFireDebugEvent then
-       fOndebugEvent(Self, 'UpdateToNewVersion','RunAsAdmin failed');
+        fOndebugEvent(Self, 'UpdateToNewVersion', 'RunAsAdmin failed');
     end;
 
     // Check for C_WhatsNewFilename in the app directory in a LOOP
@@ -2043,8 +2040,8 @@ begin
     // Update and re-start the app
     FUpdateHMProcess := TAsyncProcess.Create(nil);
     try
-      //      FUpdateHMProcess.Executable := AppendPathDelim(GetAppConfigDir(false)) + C_Updater;
-      FUpdateHMProcess.Executable := szAppDir + C_UPDATER;
+      //      FUpdateHMProcess.Executable := AppendPathDelim(GetAppConfigDir(false)) + C_UPDATEHMNAME;
+      FUpdateHMProcess.Executable := szAppDir + C_UPDATEHMNAME;
       //      FUpdateHMProcess.CurrentDirectory := AppendPathDelim(GetAppConfigDir(false));
       FUpdateHMProcess.CurrentDirectory := szAppDir;
       if not fSilentMode then
@@ -2060,7 +2057,7 @@ begin
       // Param 5 = Copy the whole of /updates to the App Folder
       if fFireDebugEvent then
         fOndebugEvent(Self, 'UpdateToNewVersion',
-          Format('Executing %s', [szAppDir + C_UPDATER]));
+          Format('Executing %s', [szAppDir + C_UPDATEHMNAME]));
       try
         FUpdateHMProcess.Execute;
       except
@@ -2102,7 +2099,7 @@ end;
 
 function TLazAutoUpdate.AddToUpdateList(APrettyName, APath, AVersionString: string;
   AVersionNumber: cardinal): integer;
-// Unused
+  // Unused
 var
   iLast: integer;
   TheRec: UpdateListRecord;
@@ -2331,7 +2328,7 @@ begin
       HTTPClient.Get(URL, TargetFile);
       ReturnCode := HTTPClient.ResponseStatusCode;
       DownloadSize := Filesize(TargetFile);
-      Result:=True;
+      Result := True;
     except
       // We don't care for the reason for this error; the download failed.
       Result := False;

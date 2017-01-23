@@ -23,8 +23,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="1"/>
-      <RevisionNr Value="12"/>
-      <BuildNr Value="2"/>
+      <RevisionNr Value="13"/>
       <StringTable CompanyName="minesadorada" FileDescription="Tray app that works with LazAutoUpdate apps" InternalName="lazautoupdater" LegalCopyright="LGPLv2" LegalTrademarks="(c)2014 Gordon Bamber" OriginalFilename="trayupdater" ProductName="Lazarus 1.x FPC 2.6.x" ProductVersion="0.1.11.2"/>
     </VersionInfo>
     <BuildModes Count="4">
@@ -60,6 +59,9 @@
               </Win32>
             </Options>
           </Linking>
+          <Other>
+            <CustomOptions Value="-FcUTF8"/>
+          </Other>
         </CompilerOptions>
       </Item2>
       <Item3 Name="Linux32 Release">
@@ -93,6 +95,9 @@
               </Win32>
             </Options>
           </Linking>
+          <Other>
+            <CustomOptions Value="-FcUTF8"/>
+          </Other>
         </CompilerOptions>
       </Item3>
       <Item4 Name="Linux64 Release">
@@ -126,6 +131,9 @@
               </Win32>
             </Options>
           </Linking>
+          <Other>
+            <CustomOptions Value="-FcUTF8"/>
+          </Other>
         </CompilerOptions>
       </Item4>
     </BuildModes>
@@ -203,6 +211,9 @@
         </Win32>
       </Options>
     </Linking>
+    <Other>
+      <CustomOptions Value="-FcUTF8"/>
+    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">

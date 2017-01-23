@@ -3,7 +3,7 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="10"/>
-    <BuildModes Active="Win32"/>
+    <BuildModes Active="Linux64"/>
     <Units Count="19">
       <Unit0>
         <Filename Value="testapp.lpr"/>

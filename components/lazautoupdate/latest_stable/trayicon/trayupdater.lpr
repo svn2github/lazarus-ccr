@@ -54,7 +54,7 @@ Const
   C_PFX = C_OS + C_BITNESS;
 }
 begin
-  Application.Title:='LazTrayUpdater';
+  Application.Title:='LazAutoUpdater';
   // Application.Title:=Application.Title + ' (' + C_PFX + ' edition)';
   RequireDerivedFormResource := True;
   Application.Initialize;

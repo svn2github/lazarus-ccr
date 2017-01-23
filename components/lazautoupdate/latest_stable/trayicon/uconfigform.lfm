@@ -12,6 +12,7 @@ object configform: Tconfigform
   OnShow = FormShow
   Position = poScreenCenter
   LCLVersion = '1.7'
+  Scaled = True
   object grp_configapp: TGroupBox
     Left = 0
     Height = 252
