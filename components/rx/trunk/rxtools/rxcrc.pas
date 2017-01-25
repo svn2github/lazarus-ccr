@@ -38,20 +38,45 @@ interface
 uses
   Classes, SysUtils;
 
-function crc8(Buffer:String;Polynom,Initial:Cardinal):Cardinal;
+function rxCRC8(Buffer:String;Polynom,Initial:Cardinal):Cardinal; overload;
+function rxCRC8(Buffer:PByteArray; BufferLen:Cardinal; Polynom,Initial:Cardinal):Cardinal; overload;
 implementation
 
 {autor - hansotten
 http://forum.lazarus.freepascal.org/index.php?topic=31532.msg202338#msg202338
 }
-function crc8(Buffer:String;Polynom,Initial:Cardinal):Cardinal;
+function rxCRC8(Buffer:String;Polynom,Initial:Cardinal):Cardinal;
 var
-  i,j                   : Integer;
+  i,j : Integer;
 begin
-  Result:=Initial;
+{  Result:=Initial;
   for i:=1 to Length(Buffer) do
   begin
     Result:=Result xor Ord(buffer[i]);
+    for j:=0 to 7 do
+    begin
+      if (Result and $80)<>0 then
+        Result:=(Result shl 1) xor Polynom
+      else
+        Result:=Result shl 1;
+    end;
+  end;
+  Result:=Result and $ff;}
+  if Length(Buffer) > 0 then
+    Result:=rxCRC8(@Buffer[1], Length(Buffer), Polynom, Initial)
+  else
+    Result:=Initial;
+end;
+
+function rxCRC8(Buffer: PByteArray; BufferLen: Cardinal; Polynom, Initial: Cardinal
+  ): Cardinal;
+var
+  i,j : Integer;
+begin
+  Result:=Initial;
+  for i:=0 to BufferLen-1 do
+  begin
+    Result:=Result xor Buffer^[i];
     for j:=0 to 7 do
     begin
       if (Result and $80)<>0 then
