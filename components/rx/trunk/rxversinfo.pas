@@ -1,7 +1,7 @@
 { RxVersInfo is part of RxFPC library
 
-Copyright (C) 2005-2016 Lagunov Aleksey alexs75@yandex.ru and Lazarus team
-original conception from rx library for Delphi (c)
+  Copyright (C) 2005-2017 Lagunov Aleksey alexs75@yandex.ru and Lazarus team
+  original conception from rx library for Delphi (c)
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by

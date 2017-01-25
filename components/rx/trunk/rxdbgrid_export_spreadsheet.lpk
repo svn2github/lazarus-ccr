@@ -7,11 +7,11 @@
     <CompilerOptions>
       <Version Value="11"/>
       <SearchPaths>
-        <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+        <UnitOutputDirectory Value="lib/rxdbgrid_export_spreadsheet/$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
     <License Value="LGPL"/>
-    <Version Minor="9" Release="1" Build="5"/>
+    <Version Major="1" Release="1" Build="6"/>
     <Files Count="3">
       <Item1>
         <Filename Value="rxdbgridexportspreadsheet.pas"/>

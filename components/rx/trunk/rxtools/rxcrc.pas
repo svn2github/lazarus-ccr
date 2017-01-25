@@ -1,6 +1,6 @@
-{ RegisterRxTools unit
+{ rxCRC unit
 
-  Copyright (C) 2005-2017 Lagunov Aleksey alexs75@yandex.ru and Lazarus team
+  Copyright (C) 2005-2017 Lagunov Aleksey alexs@yandex.ru and Lazarus team
   original conception from rx library for Delphi (c)
 
   This library is free software; you can redistribute it and/or modify it
@@ -29,55 +29,39 @@
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
 
-unit RxIniPropStorage;
+unit rxCRC;
 
-{$I rx.inc}
+{$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, IniPropStorage;
+  Classes, SysUtils;
 
-type
-
-  { TRxIniPropStorage }
-
-  TRxIniPropStorage = class(TIniPropStorage)
-  private
-    FSeparateFiles: boolean;
-  protected
-    function GetIniFileName: string; override;
-  public
-    { Public declarations }
-  published
-    property SeparateFiles:boolean read FSeparateFiles write FSeparateFiles;
-  end;
-
+function crc8(Buffer:String;Polynom,Initial:Cardinal):Cardinal;
 implementation
-uses rxapputils, LazUTF8, FileUtil, LazFileUtils;
 
-{ TRxIniPropStorage }
-
-function TRxIniPropStorage.GetIniFileName: string;
+{autor - hansotten
+http://forum.lazarus.freepascal.org/index.php?topic=31532.msg202338#msg202338
+}
+function crc8(Buffer:String;Polynom,Initial:Cardinal):Cardinal;
 var
-  S:string;
+  i,j                   : Integer;
 begin
-  if ExtractFileDir(IniFileName) <> '' then
-    Result:=IniFileName
-  else
+  Result:=Initial;
+  for i:=1 to Length(Buffer) do
   begin
-    S:=GetDefaultIniName;
-    if IniFileName <> '' then
-      Result:=AppendPathDelim(ExtractFileDir(S)) + IniFileName
-    else
+    Result:=Result xor Ord(buffer[i]);
+    for j:=0 to 7 do
     begin
-      if FSeparateFiles then
-        Result:=AppendPathDelim(ExtractFileDir(S)) + RootSection + '.cfg'
+      if (Result and $80)<>0 then
+        Result:=(Result shl 1) xor Polynom
       else
-        Result:=S;
+        Result:=Result shl 1;
     end;
   end;
-  Result:=UTF8ToSys(Result);
+  Result:=Result and $ff;
 end;
 
 end.
+

@@ -12,6 +12,7 @@
         <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
+    <License Value="LGPL"/>
     <Version Major="1" Release="1"/>
     <Files Count="2">
       <Item1>

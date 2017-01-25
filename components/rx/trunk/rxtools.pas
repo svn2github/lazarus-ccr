@@ -8,8 +8,8 @@ unit rxtools;
 interface
 
 uses
-  rxConfigValues, rxstrutils, rxdateutil, rxFileUtils, rxconst, 
-  LazarusPackageIntf;
+  rxCRC, rxConfigValues, rxconst, rxdateutil, rxdconst, rxFileUtils, 
+  rxstrutils, LazarusPackageIntf;
 
 implementation
 
