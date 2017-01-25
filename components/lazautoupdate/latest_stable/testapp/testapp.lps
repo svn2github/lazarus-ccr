@@ -10,7 +10,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="2"/>
         <CursorPos X="25" Y="28"/>
-        <UsageCount Value="55"/>
+        <UsageCount Value="56"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -19,9 +19,10 @@
         <ComponentName Value="mainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="59"/>
-        <CursorPos X="4" Y="108"/>
-        <UsageCount Value="55"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="8"/>
+        <CursorPos X="55" Y="40"/>
+        <UsageCount Value="56"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -32,7 +33,7 @@
         <WindowIndex Value="1"/>
         <TopLine Value="31"/>
         <CursorPos X="48" Y="14"/>
-        <UsageCount Value="38"/>
+        <UsageCount Value="39"/>
       </Unit2>
       <Unit3>
         <Filename Value="..\lazautoupdate_httpclient.pas"/>
@@ -42,15 +43,15 @@
       </Unit3>
       <Unit4>
         <Filename Value="..\ulazautoupdate.pas"/>
+        <IsVisibleTab Value="True"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="216"/>
-        <CursorPos X="50" Y="236"/>
+        <TopLine Value="221"/>
+        <CursorPos X="50" Y="241"/>
         <ExtraEditorCount Value="2"/>
         <ExtraEditor1>
-          <IsVisibleTab Value="True"/>
           <EditorIndex Value="1"/>
-          <TopLine Value="478"/>
-          <CursorPos X="28" Y="502"/>
+          <TopLine Value="2024"/>
+          <CursorPos X="66" Y="2039"/>
         </ExtraEditor1>
         <ExtraEditor2>
           <EditorIndex Value="-1"/>
@@ -58,7 +59,7 @@
           <TopLine Value="-1"/>
           <CursorPos X="-1" Y="-1"/>
         </ExtraEditor2>
-        <UsageCount Value="27"/>
+        <UsageCount Value="28"/>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
@@ -141,12 +142,11 @@
       </Unit15>
       <Unit16>
         <Filename Value="..\updatehmsource\updatehm.lpr"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="1"/>
         <TopLine Value="132"/>
         <CursorPos X="6" Y="338"/>
-        <UsageCount Value="17"/>
+        <UsageCount Value="18"/>
         <Loaded Value="True"/>
       </Unit16>
       <Unit17>

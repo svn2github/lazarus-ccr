@@ -138,7 +138,7 @@ const
  V0.2.9: Added CreateLocalLauImportFile in UpdateToNewVersion
  V0.3.0: ??
 }
-  C_TLazAutoUpdateComponentVersion = '0.2.9';
+  C_TLazAutoUpdateComponentVersion = '0.3.0';
   C_TThreadedDownloadComponentVersion = '0.0.3';
 {
  V0.0.1: Initial alpha
@@ -168,8 +168,13 @@ const
   C_BITNESS = '64';
   {$ENDIF}
   C_PFX = C_OS + C_BITNESS; // Used in file naming
-  C_UPDATEHMNAME = 'updatehm' + C_PFX;
-  C_LAUUPDATENAME = 'lauupdate' + C_PFX;
+  {$IFDEF WINDOWS}
+     C_UPDATEHMNAME = 'updatehm' + C_PFX + '.exe';
+     C_LAUUPDATENAME = 'lauupdate' + C_PFX + '.exe';
+  {$ELSE}
+     C_UPDATEHMNAME = 'updatehm' + C_PFX;
+     C_LAUUPDATENAME = 'lauupdate' + C_PFX;
+  {$ENDIF}
   // Windows Constants (unused)
   C_RUNONCEKEY = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce';
   C_RUNKEY = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run';
@@ -2000,7 +2005,6 @@ begin
       if fFireDebugEvent then
         fOndebugEvent(Self, 'UpdateToNewVersion', 'RunAsAdmin failed');
     end;
-    CreateLocalLauImportFile; // Creates a new import file in GetAppConfigDirUTF8
     // Check for C_WhatsNewFilename in the app directory in a LOOP
     if fFireDebugEvent then
       fOndebugEvent(Self, 'UpdateToNewVersion',
@@ -2041,7 +2045,6 @@ begin
           'Error %d: Run this application in Administrator mode or turn off UAC',
           [GetLastOSError]);
       end;
-      CreateLocalLauImportFile; // Creates a new import file in GetAppConfigDirUTF8
       // Check for C_WhatsNewFilename in the app directory in a LOOP
       if fFireDebugEvent then
         fOndebugEvent(Self, 'UpdateToNewVersion',
@@ -2057,6 +2060,7 @@ begin
       FUpdateHMProcess.Free;
     end;
 {$ENDIF}
+    CreateLocalLauImportFile; // Creates a new import file in GetAppConfigDirUTF8
     if fFireDebugEvent then
       fOndebugEvent(Self, 'UpdateToNewVersion',
         'Success');

@@ -20,7 +20,6 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <RevisionNr Value="1"/>
-      <BuildNr Value="1"/>
       <StringTable ProductVersion="0.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="5">
@@ -88,6 +87,11 @@
               </Win32>
             </Options>
           </Linking>
+          <Other>
+            <OtherDefines Count="1">
+              <Define0 Value="DEBUGMODE"/>
+            </OtherDefines>
+          </Other>
         </CompilerOptions>
       </Item3>
       <Item4 Name="Linux32">
