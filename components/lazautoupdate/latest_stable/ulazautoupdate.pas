@@ -135,9 +135,10 @@ const
  V0.2.6: Enabled GitHub tags (GitHubBranchOrTag property)
  V0.2.7: Updates Tray Updater routines
  V0.2.8: Changed constants C_UPDATEHMNAME and C_LAUUPDATENAME
- V0.2.9: ??
+ V0.2.9: Added CreateLocalLauImportFile in UpdateToNewVersion
+ V0.3.0: ??
 }
-  C_TLazAutoUpdateComponentVersion = '0.2.8';
+  C_TLazAutoUpdateComponentVersion = '0.2.9';
   C_TThreadedDownloadComponentVersion = '0.0.3';
 {
  V0.0.1: Initial alpha
@@ -148,7 +149,7 @@ const
   C_UpdatesFolder = 'updates'; // User can change
 
   // Don't change these without some thought..
-  C_LAUTRayINI = 'lauimport.ini';
+  C_LAUTRayINI = 'lauimport.ini'; // Name syncronises with TrayUpdater App
   C_WhatsNewFilename = 'whatsnew.txt';
   C_INISection = 'versions';
   C_GUIEntry = 'GUI';
@@ -308,8 +309,6 @@ type
     procedure SetDebugMode(AValue: boolean);
     function GetThreadDownloadReturnCode: integer;
     function IsOnlineVersionNewer(const sznewINIPath: string): boolean;
-    // No longer needed
-    // function VersionStringToNumber(AVersionString: string): integer;
     function DoSilentUpdate: boolean;
   protected
 
@@ -323,7 +322,7 @@ type
     function NewVersionAvailable: boolean;
     // Returns TRUE if successful
     function DownloadNewVersion: boolean;
-    // Returns TRUE if successful
+    // Returns TRUE if successful. Also creates a C_LAUTRayINI file in the GetAppConfig folder for TrayUpdater
     function UpdateToNewVersion: boolean;
     // Put in form.activate. Shows <whatsnew.txt> only if in ProgramDirectory then deletes it. Exits otherwise
     procedure ShowWhatsNewIfAvailable;
@@ -338,7 +337,7 @@ type
 
     // Resets AppVersion property to the ownling application version
     procedure ResetAppVersion;
-    // Create a new lauimport.ini in the App folder
+    // Create a new lauimport.ini in GetAppConfigDirUTF8 folder
     function CreateLocalLauImportFile: boolean;
     // If lauimport.ini is found in the app folder, move it to the AppData folder
     procedure RelocateLauImportFile;
@@ -767,30 +766,6 @@ begin
   Result := AppIsRunning(ExeName);
 end;
 
-{
-// Obselete.  fileinfo functions used instead
-function TLazAutoUpdate.VersionStringToNumber(AVersionString: string): integer;
-  // Converts 'n.n.n.n' into an integer
-var
-  s: string;
-  i: integer;
-begin
-  Result := 0;
-  // Fetch the 4 (or less) version elements and make into an Integer
-  s := ExtractDelimited(1, AVersionString, ['.']);
-  if TryStrToInt(s, i) then
-    Result := Result + (i * 10000);
-  s := ExtractDelimited(2, AVersionString, ['.']);
-  if TryStrToInt(s, i) then
-    Result := Result + (i * 1000);
-  s := ExtractDelimited(3, AVersionString, ['.']);
-  if TryStrToInt(s, i) then
-    Result := Result + (i * 100);
-  s := ExtractDelimited(4, AVersionString, ['.']);
-  if TryStrToInt(s, i) then
-    Result := Result + i;
-end;
-}
 procedure TLazAutoUpdate.ResetAppVersion;
 begin
   fApplicationVersionString := GetFileVersion;
@@ -1461,6 +1436,7 @@ begin
     fOndebugEvent(Self, 'CreateLocalLauImportFile', 'CreateLocalLauImportFile called');
   if FileExistsUTF8(ProgramDirectory + C_LAUTRayINI) then
   begin
+    RelocateLauImportFile;
     Result := True;
     Exit;
   end;
@@ -2024,7 +2000,7 @@ begin
       if fFireDebugEvent then
         fOndebugEvent(Self, 'UpdateToNewVersion', 'RunAsAdmin failed');
     end;
-
+    CreateLocalLauImportFile; // Creates a new import file in GetAppConfigDirUTF8
     // Check for C_WhatsNewFilename in the app directory in a LOOP
     if fFireDebugEvent then
       fOndebugEvent(Self, 'UpdateToNewVersion',
@@ -2065,7 +2041,7 @@ begin
           'Error %d: Run this application in Administrator mode or turn off UAC',
           [GetLastOSError]);
       end;
-
+      CreateLocalLauImportFile; // Creates a new import file in GetAppConfigDirUTF8
       // Check for C_WhatsNewFilename in the app directory in a LOOP
       if fFireDebugEvent then
         fOndebugEvent(Self, 'UpdateToNewVersion',

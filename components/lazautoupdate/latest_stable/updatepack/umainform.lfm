@@ -1,7 +1,7 @@
 object mainform: Tmainform
-  Left = 715
+  Left = 1335
   Height = 481
-  Top = 197
+  Top = 384
   Width = 587
   AllowDropFiles = True
   BorderIcons = [biSystemMenu, biMinimize]

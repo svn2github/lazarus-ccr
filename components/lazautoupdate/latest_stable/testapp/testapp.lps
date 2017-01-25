@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Version Value="10"/>
     <BuildModes Active="Linux64"/>
-    <Units Count="19">
+    <Units Count="22">
       <Unit0>
         <Filename Value="testapp.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -28,12 +28,11 @@
       <Unit2>
         <Filename Value="..\open_ssl.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="3"/>
-        <CursorPos X="76" Y="8"/>
+        <TopLine Value="31"/>
+        <CursorPos X="48" Y="14"/>
         <UsageCount Value="38"/>
-        <Loaded Value="True"/>
       </Unit2>
       <Unit3>
         <Filename Value="..\lazautoupdate_httpclient.pas"/>
@@ -164,6 +163,27 @@
         <WindowIndex Value="1"/>
         <UsageCount Value="10"/>
       </Unit18>
+      <Unit19>
+        <Filename Value="..\..\..\mbColorLib\mbutils.pas"/>
+        <UnitName Value="mbUtils"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="4"/>
+        <UsageCount Value="10"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="..\..\..\mbColorLib\ScreenWin.pas"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="..\..\..\mbColorLib\LVColorPicker.pas"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="290"/>
+        <UsageCount Value="10"/>
+      </Unit21>
     </Units>
     <OtherDefines Count="1">
       <Define0 Value="DEBUGMODE"/>
