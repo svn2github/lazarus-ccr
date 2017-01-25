@@ -172,7 +172,6 @@ object configform: Tconfigform
     ClientHeight = 223
     ClientWidth = 600
     TabOrder = 1
-    OnClick = grp_updateintervalClick
     object cmd_Close: TBitBtn
       Left = 228
       Height = 30

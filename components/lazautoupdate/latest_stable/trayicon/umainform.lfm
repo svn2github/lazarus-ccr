@@ -7,7 +7,6 @@ object mainform: Tmainform
   Caption = 'mainform'
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
   ShowInTaskBar = stNever
@@ -80,7 +79,7 @@ object mainform: Tmainform
     Left = 128
     Top = 16
   end
-  object EventLog1: TEventLog
+  object Logger: TEventLog
     AppendContent = False
     LogType = ltFile
     Active = False

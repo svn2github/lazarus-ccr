@@ -39,93 +39,94 @@ VERSION HISTORY
 0.1.12: Commit to svn
 0.1.13: Updated January 2017
         Ini filename uses C_PFX
+0.1.14: Memory leaks fixed
+0.1.15: ??
 }
 {$mode objfpc}{$H+}
 
 interface
 
 uses
-Classes, SysUtils, FileUtil, LazFileUtils,Forms, Controls, Graphics, Dialogs, ExtCtrls,
-Menus, uLongTimer, ulazautoupdate, inifiles, eventlog, strUtils, uconfigform
+  Classes, SysUtils, FileUtil, LazFileUtils, Forms, Dialogs, ExtCtrls,
+  Menus, uLongTimer, ulazautoupdate, inifiles, eventlog, strUtils, uconfigform
   {$IFDEF WINDOWS}, registry{$ENDIF};
 
 type
-{ TAppRec - in-memory storage for all settings }
-TAppRec = record
-  AppPrettyName: string;
-  AppPath: string;
-  INIPath: string;
-  ZipPath: string;
-  AppVersion: string;
-  SFProjectName: string;
-  SFUpdatesDirectory: string;
-  Location: string;
-  IntervalType: word;
-  IntervalDay: word;
-  IntervalDate: word;
-  IntervalHour: word;
-  Update: boolean;
-  LastCheckDateTime: TDateTime;
-end;
+  { TAppRec - in-memory storage for all settings }
+  TAppRec = record
+    AppPrettyName: string;
+    AppPath: string;
+    INIPath: string;
+    ZipPath: string;
+    AppVersion: string;
+    SFProjectName: string;
+    SFUpdatesDirectory: string;
+    Location: string;
+    IntervalType: word;
+    IntervalDay: word;
+    IntervalDate: word;
+    IntervalHour: word;
+    Update: boolean;
+    LastCheckDateTime: TDateTime;
+  end;
 
-{ Tmainform }
-Tmainform = class(TForm)
-  Logger:      TEventLog;
-  idleReminder:   TIdleTimer;
-  LazAutoUpdate1: TLazAutoUpdate;
-  mnu_About:      TMenuItem;
-  mnu_SelfCheck:  TMenuItem;
-  mnu_startAtOSStartUp: TMenuItem;
-  mnu_configure:  TMenuItem;
-  mnu_fileExit:   TMenuItem;
-  PopupMenu1:     TPopupMenu;
-  TrayIcon1:      TTrayIcon;
-  procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
-  procedure FormCreate(Sender: TObject);
-  procedure FormShow(Sender: TObject);
-  procedure FormWindowStateChange(Sender: TObject);
-  procedure idleReminderTimer(Sender: TObject);
-  procedure LazAutoUpdate1DebugEvent(Sender: TObject; WhereAt, Message: string);
-  procedure mnu_AboutClick(Sender: TObject);
-  procedure mnu_configureClick(Sender: TObject);
-  procedure mnu_fileExitClick(Sender: TObject);
-  procedure mnu_startAtOSStartUpClick(Sender: TObject);
-  procedure mnu_SelfCheckClick(Sender: TObject);
-  procedure TrayIcon1Click(Sender: TObject);
-  function UT_DateTimeToStr(TheDate: TDateTime): string;
-  function UT_StrToDate(str: string): TDateTime;
+  { Tmainform }
+  Tmainform = class(TForm)
+    Logger: TEventLog;
+    idleReminder: TIdleTimer;
+    LazAutoUpdate1: TLazAutoUpdate;
+    mnu_About: TMenuItem;
+    mnu_SelfCheck: TMenuItem;
+    mnu_startAtOSStartUp: TMenuItem;
+    mnu_configure: TMenuItem;
+    mnu_fileExit: TMenuItem;
+    PopupMenu1: TPopupMenu;
+    TrayIcon1: TTrayIcon;
+    procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
+    procedure FormCreate(Sender: TObject);
+    procedure FormWindowStateChange(Sender: TObject);
+    procedure idleReminderTimer(Sender: TObject);
+    procedure LazAutoUpdate1DebugEvent(Sender: TObject; WhereAt, Message: string);
+    procedure mnu_AboutClick(Sender: TObject);
+    procedure mnu_configureClick(Sender: TObject);
+    procedure mnu_fileExitClick(Sender: TObject);
+    procedure mnu_startAtOSStartUpClick(Sender: TObject);
+    procedure mnu_SelfCheckClick(Sender: TObject);
+    procedure TrayIcon1Click(Sender: TObject);
+    function UT_DateTimeToStr(TheDate: TDateTime): string;
+    function UT_StrToDate(str: string): TDateTime;
 
-private
-  { private declarations }
-  szImportINIPath: string;
-  DebugMode: boolean;
-  procedure DoAlert(aAppname, aVersion: string);
-  // Transfers info from lauimport.ini to local ini
-  function ImportINIFile: boolean;
-  // When first run, Populates INI and AppRecArray with default entry
-  procedure PopulateOwnProfile;
-  // Transfers info from local INI to AppRecArray
-  procedure DoReadINIIntoAppRecArray;
-  // Re-initialises a LongTimer array from AppRecArray info
-  procedure DoSetupLongTimerArray;
-  // All LongTimers use this for their OnTimer event
-  procedure DoLongTimerEvent(Sender: TObject);
-  // Do a silent check/install for this AppRecArray member
-  procedure CheckAndUpdate(ARecIndex: integer);
-public
-  { public declarations }
-  INI: TIniFile;
-  AppRecArray: array of TAppRec; // Dynamic array
-  LongTimerArray: array of TLongTimer; // Dynamic array
-  iCurrentRecIndex: integer;
-  // Transfers info from AppRecArray to local INI
-  procedure DoWriteAppRecArrayIntoINI;
-end;
+  private
+    { private declarations }
+    szImportINIPath: string;
+    DebugMode: boolean;
+    procedure DoAlert(aAppname, aVersion: string);
+    // Transfers info from lauimport.ini to local ini
+    function ImportINIFile: boolean;
+    // When first run, Populates INI and AppRecArray with default entry
+    procedure PopulateOwnProfile;
+    // Transfers info from local INI to AppRecArray
+    procedure DoReadINIIntoAppRecArray;
+    // Re-initialises a LongTimer array from AppRecArray info
+    procedure DoSetupLongTimerArray;
+    // All LongTimers use this for their OnTimer event
+    procedure DoLongTimerEvent(Sender: TObject);
+    // Do a silent check/install for this AppRecArray member
+    procedure CheckAndUpdate(ARecIndex: integer);
+  public
+    { public declarations }
+    INI: TIniFile;
+    AppRecArray: array of TAppRec; // Dynamic array
+    LongTimerArray: array of TLongTimer; // Dynamic array
+    iCurrentRecIndex: integer;
+    // Transfers info from AppRecArray to local INI
+    procedure DoWriteAppRecArrayIntoINI;
+  end;
 
 var
-mainform  : Tmainform;
+  mainform: Tmainform;
 
-Const
+const
   {$IFDEF WINDOWS}
   C_OS = 'win';
   {$ELSE}
@@ -137,16 +138,16 @@ Const
   C_BITNESS = '64';
   {$ENDIF}
   C_PFX = C_OS + C_BITNESS;
-C_LAUTRayINI  = 'lauimport.ini';
-C_INIFilename = 'trayupdater' + C_PFX + '.ini';
+  C_LAUTRayINI = 'lauimport.ini';
+  C_INIFilename = 'trayupdater' + C_PFX + '.ini';
 
 implementation
 
 
 resourcestring
-rs_balloontitle = '%s service';
-rs_trayloaded = '%s Loaded';
-rs_newversionavailable = 'A new version of %s (v%s) is available';
+  rs_balloontitle = '%s service';
+  rs_trayloaded = '%s Loaded';
+  rs_newversionavailable = 'A new version of %s (v%s) is available';
 // TODO: Put all the other strings here
 {$R *.lfm}
 
@@ -154,15 +155,15 @@ rs_newversionavailable = 'A new version of %s (v%s) is available';
 procedure Tmainform.DoWriteAppRecArrayIntoINI;
 // AppRecArray is an in-memory copy of the INI file
 var
-  i  : integer;
-  szSection  : string;
+  i: integer;
+  szSection: string;
 begin
   if High(AppRecArray) = 0 then
     Exit;
   for i := Low(AppRecArray) to High(AppRecArray) do
-   begin
+  begin
     szSection := AppRecArray[i].AppPrettyName;
-     try
+    try
       INI.WriteString(szSection, 'AppPrettyName', AppRecArray[i].AppPrettyName);
       INI.WriteString(szSection, 'AppPath', AppRecArray[i].AppPath);
       INI.WriteString(szSection, 'INIPath', AppRecArray[i].INIPath);
@@ -181,25 +182,25 @@ begin
       INI.WriteString(szSection, 'LastCheckDateTime',
         UT_DateTimeToStr(AppRecArray[i].LastCheckDateTime));
       INI.UpdateFile;
-     except
+    except
       if DebugMode then
         Logger.Error('Failed to write AppRecArray to %s', [INI.Filename])
-     end;
-   end;
+    end;
+  end;
 end;
 
 procedure Tmainform.DoLongTimerEvent(Sender: TObject);
 // All LongTimerArray.OnTimer events go here
 // The Tag property is the same as the AppRecArray entry it relates to
 var
-  iTag  : integer;
+  iTag: integer;
 begin
   iTag := 0;
   // Assertion check
   if Sender is TLongTimer then
-   begin
+  begin
     iTag := TLongTimer(Sender).Tag;
-   end;
+  end;
   if DebugMode then
     Logger.Log('Timer for %s fired', [AppRecArray[iTag].AppPrettyName]);
   TrayIcon1.BalloonHint :=
@@ -217,29 +218,29 @@ procedure Tmainform.DoSetupLongTimerArray;
 // 2. Iterate through the AppRecArray, setting up a new LongTimer for each element
 // 3. Enable the LongTimers for which AppArray.Update=TRUE
 var
-  i, iArrayElement  : integer;
+  i, iArrayElement: integer;
 begin
   // Start with an empty array
   for i := Low(LongTimerArray) to High(LongTimerArray) do
     if LongTimerArray[i] <> nil then
-     begin
+    begin
       LongTimerArray[i].Enabled := False;
       FreeAndNil(LongTimerArray[i]);
-     end;
+    end;
   SetLength(LongTimerArray, 0); // Zeros the array
   iArrayElement := -1;
   for i := Low(AppRecArray) to High(AppRecArray) do
-   begin
+  begin
     Inc(iArrayElement); // initially to zero
     SetLength(LongTimerArray, iArrayElement + 1);
     LongTimerArray[iArrayElement] := TLongTimer.Create(nil);
     with AppRecArray[i] do
-     begin
+    begin
       case IntervalType of
         0: LongTimerArray[iArrayElement].IntervalType := lt1Daily;
         1: LongTimerArray[iArrayElement].IntervalType := lt2Weekly;
         2: LongTimerArray[iArrayElement].IntervalType := lt3Monthly;
-       end;
+      end;
       case IntervalDay of
         0: LongTimerArray[iArrayElement].WeeklyDay := lt1Monday;
         1: LongTimerArray[iArrayElement].WeeklyDay := lt2Tuesday;
@@ -248,21 +249,21 @@ begin
         4: LongTimerArray[iArrayElement].WeeklyDay := lt5Friday;
         5: LongTimerArray[iArrayElement].WeeklyDay := lt6Saturday;
         6: LongTimerArray[iArrayElement].WeeklyDay := lt7Sunday;
-       end;
+      end;
       LongTimerArray[iArrayElement].MonthlyDate := IntervalDate;
       LongTimerArray[iArrayElement].Daily24Hour := IntervalHour;
-      LongTimerArray[iArrayElement].Tag     := i;
+      LongTimerArray[iArrayElement].Tag := i;
       LongTimerArray[iArrayElement].OnTimer := @DoLongTimerEvent;
       // Make sure timer doesn't fire right after a self-update
       LongTimerArray[iArrayElement].SampleInterval := lt5Every45Minutes;
       LongTimerArray[iArrayElement].Enabled := Update;
-     end;
-   end;
+    end;
+  end;
 end;
 
 function Tmainform.UT_DateTimeToStr(TheDate: TDateTime): string;
 var
-  frmstg  : TFormatSettings;
+  frmstg: TFormatSettings;
   // Ensures consitent String dates across platforms
 begin
   //GetLocaleFormatSettings(0, frmstg);
@@ -275,14 +276,14 @@ end;
 
 function Tmainform.UT_StrToDate(str: string): TDateTime;
 var
-  frmstg  : TFormatSettings;
+  frmstg: TFormatSettings;
   // Ensures consitent String dates across platforms
 begin
   //GetLocaleFormatSettings(0, frmstg);
-  frmstg.DateSeparator   := '-';
+  frmstg.DateSeparator := '-';
   frmstg.ShortDateFormat := 'yyyy-mm-dd';
-  frmstg.TimeSeparator   := '-';
-  frmstg.LongTimeFormat  := 'hh-nn';
+  frmstg.TimeSeparator := '-';
+  frmstg.LongTimeFormat := 'hh-nn';
   if not TryStrToDateTime(str, Result, frmstg) then
     Result := Now();
 end;
@@ -290,24 +291,24 @@ end;
 procedure Tmainform.DoReadINIIntoAppRecArray;
 // AppRecArray is an in-memory copy of the INI file
 var
-  SectionStringList  : TStringList;
-  szSection  : string;
-  i, iArrayElement  : integer;
+  SectionStringList: TStringList;
+  szSection: string;
+  i, iArrayElement: integer;
 begin
   SetLength(AppRecArray, 0); // Zeros the array
   SectionStringList := TStringList.Create;
-   try
-     try
+  try
+    try
       // Fetch all the section names
       INI.ReadSections(SectionStringList);
       iArrayElement := -1;
       if SectionStringList.Count > 0 then
         for i := 0 to SectionStringList.Count - 1 do
-         begin // Loop through all the INI file sections
+        begin // Loop through all the INI file sections
           szSection := SectionStringList[i];
           // Skip over the ProgramInfo section
           if (szSection <> 'ProgramInfo') then
-           begin
+          begin
             Inc(iArrayElement); // initially to zero
             SetLength(AppRecArray, iArrayElement + 1);
             AppRecArray[iArrayElement].AppPrettyName :=
@@ -339,30 +340,30 @@ begin
             AppRecArray[iArrayElement].LastCheckDateTime :=
               UT_StrToDate(INI.ReadString(szSection, 'LastCheckDateTime',
               UT_DateTimeToStr(Now)));
-           end;
-         end;
-     except
+          end;
+        end;
+    except
       if DebugMode then
         Logger.Error('Failed to read AppRecArray from %s', [INI.Filename])
-     end;
-   finally
+    end;
+  finally
     FreeAndNil(SectionStringList);
-   end;
+  end;
   // Low(AppRecArray) to High(AppRecArray) iterates the whole array
 end;
 
 procedure Tmainform.PopulateOwnProfile;
 // Only called when app is first run
 var
-  szSection, szOSsuffix  : string;
+  szSection, szOSsuffix: string;
 begin
-  szSection  := Application.Title;
+  szSection := Application.Title;
   szOSsuffix := LowerCase(
 {$I %FPCTARGETOS%}
     );
-  szSection  += szOSsuffix;
+  szSection += szOSsuffix;
   with INI do
-   begin
+  begin
     WriteString(szSection, 'AppPrettyName', szSection);
     WriteString(szSection, 'AppPath', ParamStr(0));
     WriteString(szSection, 'Location', ProgramDirectory);
@@ -379,14 +380,14 @@ begin
     WriteString(szSection, 'LastCheckDateTime', UT_DateTimeToStr(Now));
     WriteBool('ProgramInfo', 'IsVirgin', False);
     UpdateFile;
-   end;
+  end;
   with LazAutoUpdate1 do
-   begin
+  begin
     VersionsININame := 'lautraynotify' + szOSsuffix + '.ini';
-    ZipFileName     := 'lautraynotify' + szOSsuffix + '.zip';
-    UpdatesFolder   := 'updates';
-    SFProjectName   := 'lazautoupdate';
-   end;
+    ZipFileName := 'lautraynotify' + szOSsuffix + '.zip';
+    UpdatesFolder := 'updates';
+    SFProjectName := 'lazautoupdate';
+  end;
   DoReadINIIntoAppRecArray;
   if not FileExistsUTF8(C_LAUTRayINI) then
     LazAutoUpdate1.CreateLocalLauImportFile;
@@ -399,10 +400,10 @@ function Tmainform.ImportINIFile: boolean;
   // Sets Update=TRUE
   // into C_INIFilename then deletes source ini
 var
-  ImportINI  : TIniFile;
-  SectionStringList, SectionContents  : TStringList;
-  i  : integer;
-  szSection, szKey, szLocation, szAppPath  : string;
+  ImportINI: TIniFile;
+  SectionStringList, SectionContents: TStringList;
+  i: integer;
+  szSection, szKey, szLocation, szAppPath: string;
 begin
   {TODO: Preserve user Logtimer settings?}
   Result := False;
@@ -411,14 +412,14 @@ begin
   ImportINI := TIniFile.Create(szImportINIPath);
   SectionStringList := TStringList.Create;
   SectionContents := TStringList.Create;
-   try
+  try
     ImportINI.ReadSections(SectionStringList);
     if SectionStringList.Count > 0 then
-     begin
+    begin
       szSection := SectionStringList[0];
       ImportINI.ReadSection(szSection, SectionContents);
       for i := 0 to SectionContents.Count - 1 do
-       begin
+      begin
         szKey := SectionContents[i];
         if szKey = 'Location' then
           szLocation := ImportINI.ReadString(szSection, szKey, '');
@@ -426,7 +427,7 @@ begin
           szAppPath := ImportINI.ReadString(szSection, szKey, '');
         INI.WriteString(szSection, szKey, ImportINI.ReadString(
           szSection, szKey, ''));
-       end;
+      end;
       // Append Location to AppPath
       if ((szAppPath <> '') and (szLocation <> '')) then
         INI.WriteString(szSection, 'AppPath', AppendPathDelim(szLocation) +
@@ -436,19 +437,19 @@ begin
         UT_DateTimeToStr(Now));
       INI.UpdateFile;
       Result := True;
-     end;
-   finally
+    end;
+  finally
     FreeAndNil(SectionContents);
     FreeAndNil(SectionStringList);
     FreeAndNil(ImportINI);
-   end;
+  end;
   if (Result = True) then
-   begin
+  begin
     if DebugMode then
       Logger.Log('%s: Imported %s into %s',
         [Application.Title, szImportINIPath, INI.Filename]);
     DoReadINIIntoAppRecArray;
-   end;
+  end;
 end;
 
 procedure Tmainform.DoAlert(aAppname, aVersion: string);
@@ -461,7 +462,7 @@ end;
 procedure Tmainform.FormWindowStateChange(Sender: TObject);
 begin
   if mainform.WindowState = wsMinimized then
-   begin
+  begin
     // 2 lines below are ineffective at hiding the main form
     // Replaced with  Application.ShowMainForm := false; in the lpr
     // mainform.WindowState := wsNormal;
@@ -473,7 +474,7 @@ begin
     if DebugMode then
       Logger.Log('%s version %s started OK',
         [Application.Title, LazAutoUpdate1.AppVersion]);
-   end;
+  end;
 end;
 
 procedure Tmainform.idleReminderTimer(Sender: TObject);
@@ -481,28 +482,28 @@ procedure Tmainform.idleReminderTimer(Sender: TObject);
 // If found, it is imported then deleted.
 begin
   if LazAutoUpdate1.DownloadInprogress then
-   begin
+  begin
     TrayIcon1.BalloonHint := 'Download in progress';
     TrayIcon1.ShowBalloonHint;
     Exit;
-   end;
+  end;
   if FileExists(szImportINIPath) then
-   begin
+  begin
     if DebugMode then
       Logger.Log('%s: Import file %s discovered',
         [Application.Title, szImportINIPath]);
     if ImportINIFile then
-     begin
+    begin
       if DebugMode then
         Logger.Log('%s: Import file %s successfully imported',
           [Application.Title, szImportINIPath]);
       DeleteFileUTF8(szImportINIPath);
-     end
+    end
     else
-      if DebugMode then
-        Logger.Error('%s: Failed to import file %s',
-          [Application.Title, szImportINIPath]);
-   end;
+    if DebugMode then
+      Logger.Error('%s: Failed to import file %s',
+        [Application.Title, szImportINIPath]);
+  end;
 end;
 
 procedure Tmainform.LazAutoUpdate1DebugEvent(Sender: TObject; WhereAt, Message: string);
@@ -513,7 +514,7 @@ end;
 
 procedure Tmainform.mnu_AboutClick(Sender: TObject);
 var
-  sz  : string;
+  sz: string;
 begin
   LazAutoUpdate1.ResetAppVersion;
   sz := Application.Title + ' system tray application' + LineEnding;
@@ -547,56 +548,56 @@ end;
 procedure Tmainform.mnu_startAtOSStartUpClick(Sender: TObject);
 {$IFDEF WINDOWS}
 var
-  Reg  : TRegistry;
+  Reg: TRegistry;
   {$ENDIF}
 begin
   {$IFDEF WINDOWS}
   Reg := TRegistry.Create(KEY_ALL_ACCESS);
-   try
+  try
     Reg.RootKey := HKEY_CURRENT_USER;
     Reg.OpenKey('\Software\Microsoft\Windows\CurrentVersion\Run', False);
     if mnu_startAtOSStartUp.Checked then
-     begin
+    begin
       Reg.WriteString(Application.Title, ParamStr(0));
       INI.WriteBool('ProgramInfo', 'RunAtStartUp', True);
       if DebugMode then
         Logger.Log('Run at OS startup Activated');
       MessageDlg(Application.Title,
         'Run at OS startup activated OK', mtInformation, [mbOK], 0);
-     end
+    end
     else
-     begin
+    begin
       Reg.DeleteValue(Application.Title);
       INI.WriteBool('ProgramInfo', 'RunAtStartUp', False);
       if DebugMode then
         Logger.Log('Run at OS startup Deactivated');
       MessageDlg(Application.Title,
         'Run at OS startup deactivated OK', mtInformation, [mbOK], 0);
-     end;
+    end;
     Reg.CloseKey;
-   finally
+  finally
     FreeAndNil(Reg);
-   end;
+  end;
    {$ELSE}
   if mnu_startAtOSStartUp.Checked then
-   begin
+  begin
     ShowMessage('Sorry - not implemented in Linux in this version');
     mnu_startAtOSStartUp.Checked := False;
-   end;
+  end;
   {$ENDIF}
 end;
 
 procedure TmainForm.CheckAndUpdate(ARecIndex: integer);
 begin
   if LazAutoUpdate1.DownloadInprogress then
-   begin
+  begin
     if DebugMode then
       Logger.Error(
         'Tried to update whilst download in progress.  Exiting CheckAndUpdate routine');
     Exit;
-   end;
+  end;
   with AppRecArray[ARecIndex] do
-   begin
+  begin
     LazAutoUpdate1.AppFileWithPath := AppPath;
     LazAutoUpdate1.AppVersion := AppVersion;
     LazAutoUpdate1.ZipfileName := ZipPath;
@@ -604,36 +605,36 @@ begin
     LazAutoUpdate1.UpdatesFolder := SFUpdatesDirectory;
     LazAutoUpdate1.VersionsININame := INIPath;
     LazAutoUpdate1.CopyTree := True;
-    TrayIcon1.BalloonHint   :=
+    TrayIcon1.BalloonHint :=
       Format('Checking %s for updates', [AppPrettyName]);
     TrayIcon1.ShowBalloonHint;
     // Debugging line
     LazAutoUpdate1.DebugMode := True; // Logs everyting
     if LazAutoUpdate1.NewVersionAvailable then
-     begin
+    begin
       TrayIcon1.BalloonHint :=
         Format('Found newer version %s. Downloading...',
         [LazAutoUpdate1.GUIOnlineVersion]);
       TrayIcon1.ShowBalloonHint;
       if LazAutoUpdate1.DownloadNewVersion then
         if LazAutoUpdate1.SilentUpdate then
-         begin
+        begin
           TrayIcon1.BalloonHint :=
             Format('Successfully updated %s to version %s',
             [AppPrettyName, LazAutoUpdate1.GUIOnlineVersion]);
-          LastCheckDateTime     := Now;
-         end
+          LastCheckDateTime := Now;
+        end
         else
           TrayIcon1.BalloonHint := Format('Failed to update %s', [AppPrettyName]);
-     end
+    end
     else
-     begin
+    begin
       TrayIcon1.BalloonHint := AppPrettyName + ' is up-to-date';
       TrayIcon1.ShowBalloonHint;
-     end;
+    end;
     LazAutoUpdate1.ResetAppVersion;
     TrayIcon1.ShowBalloonHint;
-   end;
+  end;
 end;
 
 procedure Tmainform.mnu_SelfCheckClick(Sender: TObject);
@@ -653,10 +654,10 @@ end;
 procedure Tmainform.TrayIcon1Click(Sender: TObject);
 begin
   if LazAutoUpdate1.DownloadInprogress then
-   begin
+  begin
     TrayIcon1.BalloonHint := 'Currently downloading...';
     TrayIcon1.ShowBalloonHint;
-   end;
+  end;
 end;
 
 procedure Tmainform.FormCreate(Sender: TObject);
@@ -665,13 +666,15 @@ begin
     DebugMode := True
   else
     DebugMode := False;
-  {$IFDEF DEBUGMODE}DebugMode := True;{$ENDIF}
+  {$IFDEF DEBUGMODE}
+  DebugMode := True;
+{$ENDIF}
   // Initialise the App's main INI file
-  Try
-  INI := TIniFile.Create(GetAppConfigDirUTF8(False) + C_INIFilename);
-  Except
-   sleep(4000);
-   If (INI = Nil) then
+  try
+    INI := TIniFile.Create(GetAppConfigDirUTF8(False) + C_INIFilename);
+  except
+    sleep(4000);
+    if (INI = nil) then
       INI := TIniFile.Create(GetAppConfigDirUTF8(False) + C_INIFilename);
   end;
   INI.CacheUpdates := False;
@@ -702,10 +705,11 @@ begin
   // Logger.Identification := Application.Title;
   // Fetch the location of any trayicon INI on the users system
   szImportINIPath := GetAppConfigDirUTF8(False, True);
-  szImportINIPath := AnsiReplaceText(szImportINIPath, Application.Title, 'updatehm' + C_PFX);
+  szImportINIPath := AnsiReplaceText(szImportINIPath, Application.Title,
+    'updatehm' + C_PFX);
   szImportINIPath := AppendPathDelim(szImportINIPath) + C_LAUTRayINI;
   if DebugMode then
-     Logger.Debug('szImportINIPath=' + szImportINIPath);
+    Logger.Debug('szImportINIPath=' + szImportINIPath);
   // Initialise the AppRecArray
   DoReadINIIntoAppRecArray;
   // Use last saved Profile at startup
@@ -713,48 +717,50 @@ begin
     'CurrentProfileIndex', 0);
   DoSetupLongTimerArray;
   // Sort out the TrayIcon stuff
-  TrayIcon1.Icon     := Application.Icon;
+  TrayIcon1.Icon := Application.Icon;
   TrayIcon1.BalloonTitle := Format(rs_balloontitle, [Application.Title]);
-  TrayIcon1.Hint     := Application.Title;
+  TrayIcon1.Hint := Application.Title;
   TrayIcon1.ShowIcon := True;
   TrayIcon1.Show;
   TrayIcon1.BalloonHint := Format(rs_trayloaded, [Application.Title]);
   TrayIcon1.ShowBalloonHint;
   LazAutoUpdate1.DebugMode := DebugMode;
-  mnu_SelfCheck.Visible    := DebugMode;
-end;
-
-procedure Tmainform.FormShow(Sender: TObject);
-begin
+  mnu_SelfCheck.Visible := DebugMode;
 end;
 
 procedure Tmainform.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 var
-  i  : integer;
+  i: integer;
 begin
   if LazAutoUpdate1.DownloadInprogress then
-   begin
+  begin
     ShowMessage('Please wait.  Update in progress');
     CanClose := False;
-   end
+  end
   else
-   begin
+  // Clean up memory  No leaks (V0.1.14)
+  begin
     if DebugMode then
+    begin
       Logger.Log('User closed application');
-    if DebugMode then
       Logger.Active := False;
+      FreeAndNil(Logger);
+    end;
     CanClose := True;
-   end;
+  end;
   if CanClose then
-   begin
+  begin
     // Clean up any LongTimers
     for i := Low(LongTimerArray) to High(LongTimerArray) do
       if LongTimerArray[i] <> nil then
-       begin
+      begin
         LongTimerArray[i].Enabled := False;
         FreeAndNil(LongTimerArray[i]);
-       end;
-   end;
+      end;
+    SetLength(AppRecArray, 0);
+    FreeAndNil(AppRecArray);
+    FreeAndNil(INI);
+  end;
 end;
 
 end.
