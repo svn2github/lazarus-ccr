@@ -8,9 +8,12 @@ uses
   Classes, SysUtils, DB, RxDBGrid;
 
 type
-  TMemDataSetSortEngine = class(TExDBGridSortEngine)
+
+  { TMemDataSetSortEngine }
+
+  TMemDataSetSortEngine = class(TRxDBGridSortEngine)
   public
-    procedure Sort(Field:TField; ADataSet:TDataSet; Asc:boolean);override;
+    procedure Sort(FieldName: string; ADataSet:TDataSet; Asc:boolean; SortOptions:TRxSortEngineOptions);override;
   end;
 
 implementation
@@ -20,7 +23,8 @@ type
   THackMDS = class(TMemDataSet)
   end;
   
-procedure TMemDataSetSortEngine.Sort(Field:TField; ADataSet:TDataSet; Asc:boolean);
+procedure TMemDataSetSortEngine.Sort(FieldName: string; ADataSet: TDataSet;
+  Asc: boolean; SortOptions: TRxSortEngineOptions);
 var
   MS:TMemoryStream;
   V, FRecSize, FRecCount, I, J:integer;
@@ -31,6 +35,7 @@ var
   I1:integer;
   B1:boolean;
   D1:TDateTime;
+  Field:TField;
 
 
 function DoExch:boolean;
@@ -103,6 +108,7 @@ end;
 begin
   if Assigned(ADataSet) then
   begin
+    Field:=ADataSet.FieldByName(FieldName);
     ADataSet.DisableControls;
     MS:=TMemoryStream.Create;
     BufOrign:=THackMDS(ADataSet).AllocRecordBuffer;
@@ -181,6 +187,6 @@ begin
 end;
 
 initialization
-  RegisterExDBGridSortEngine(TMemDataSetSortEngine, TMemDataset);
+  RegisterRxDBGridSortEngine(TMemDataSetSortEngine, 'TMemDataset');
 end.
 

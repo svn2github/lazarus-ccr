@@ -10,6 +10,7 @@
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
+        <IncludeFiles Value="rxdb;rxcontrols"/>
         <OtherUnitFiles Value="rxdb;rxcontrols"/>
         <UnitOutputDirectory Value="lib\rxcontrols\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
@@ -26,258 +27,286 @@ translate to Lazarus by alexs in 2005 - 2016
 "/>
     <License Value="LGPL"/>
     <Version Major="2" Minor="9" Release="5" Build="201"/>
-    <Files Count="62">
+    <Files Count="69">
       <Item1>
-        <Filename Value="rxautopanel.pas"/>
-        <UnitName Value="RxAutoPanel"/>
-      </Item1>
-      <Item2>
-        <Filename Value="rxboxprocs.pas"/>
-        <UnitName Value="rxboxprocs"/>
-      </Item2>
-      <Item3>
-        <Filename Value="rxcurredit.pas"/>
-        <UnitName Value="rxcurredit"/>
-      </Item3>
-      <Item4>
-        <Filename Value="rxdbcurredit.pas"/>
-        <UnitName Value="rxdbcurredit"/>
-      </Item4>
-      <Item5>
-        <Filename Value="rxdbdateedit.pas"/>
-        <UnitName Value="rxdbdateedit"/>
-      </Item5>
-      <Item6>
-        <Filename Value="rxdbutils.pas"/>
-        <UnitName Value="rxdbutils"/>
-      </Item6>
-      <Item7>
-        <Filename Value="rxduallist.pas"/>
-        <UnitName Value="rxduallist"/>
-      </Item7>
-      <Item8>
-        <Filename Value="rxfduallst.pas"/>
-        <UnitName Value="rxfduallst"/>
-      </Item8>
-      <Item9>
-        <Filename Value="rxfolderlister.pas"/>
-        <UnitName Value="rxfolderlister"/>
-      </Item9>
-      <Item10>
-        <Filename Value="rxpagemngr.pas"/>
-        <UnitName Value="rxpagemngr"/>
-      </Item10>
-      <Item11>
-        <Filename Value="rxpickdate.pas"/>
-        <UnitName Value="rxpickdate"/>
-      </Item11>
-      <Item12>
         <Filename Value="registerrx.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="registerrx"/>
-      </Item12>
-      <Item13>
+      </Item1>
+      <Item2>
         <Filename Value="registerrxdb.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="RegisterRxDB"/>
-      </Item13>
-      <Item14>
+      </Item2>
+      <Item3>
         <Filename Value="registerrxtools.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="RegisterRxTools"/>
-      </Item14>
-      <Item15>
+      </Item3>
+      <Item4>
         <Filename Value="rx.inc"/>
         <Type Value="Include"/>
-      </Item15>
-      <Item16>
-        <Filename Value="rxaboutdialog.pas"/>
-        <UnitName Value="RxAboutDialog"/>
-      </Item16>
-      <Item17>
-        <Filename Value="rxaboutformunit.pas"/>
-        <UnitName Value="rxAboutFormUnit"/>
-      </Item17>
-      <Item18>
-        <Filename Value="rxapputils.pas"/>
-        <UnitName Value="rxapputils"/>
-      </Item18>
-      <Item19>
-        <Filename Value="rxclock.pas"/>
-        <UnitName Value="rxclock"/>
-      </Item19>
-      <Item20>
-        <Filename Value="rxctrls.pas"/>
-        <UnitName Value="rxctrls"/>
-      </Item20>
-      <Item21>
-        <Filename Value="rxdbcolorbox.pas"/>
-        <UnitName Value="RxDBColorBox"/>
-      </Item21>
-      <Item22>
-        <Filename Value="rxdbcomb.pas"/>
-        <UnitName Value="rxdbcomb"/>
-      </Item22>
-      <Item23>
-        <Filename Value="rxdbctrls.pas"/>
-        <UnitName Value="RxDBCtrls"/>
-      </Item23>
-      <Item24>
-        <Filename Value="rxdbgrid.pas"/>
-        <UnitName Value="rxdbgrid"/>
-      </Item24>
-      <Item25>
-        <Filename Value="rxdbgrid_columsunit.pas"/>
-        <UnitName Value="rxdbgrid_columsunit"/>
-      </Item25>
-      <Item26>
-        <Filename Value="rxdbgrid_findunit.pas"/>
-        <UnitName Value="rxdbgrid_findunit"/>
-      </Item26>
-      <Item27>
-        <Filename Value="rxdbspinedit.pas"/>
-        <UnitName Value="RxDBSpinEdit"/>
-      </Item27>
-      <Item28>
-        <Filename Value="rxdbtimeedit.pas"/>
-        <UnitName Value="RxDBTimeEdit"/>
-      </Item28>
-      <Item29>
-        <Filename Value="rxdice.pas"/>
-        <UnitName Value="rxdice"/>
-      </Item29>
-      <Item30>
-        <Filename Value="rxfilterby.pas"/>
-        <UnitName Value="rxfilterby"/>
-      </Item30>
-      <Item31>
-        <Filename Value="rxlogin.pas"/>
-        <UnitName Value="rxlogin"/>
-      </Item31>
-      <Item32>
-        <Filename Value="rxlookup.pas"/>
-        <UnitName Value="rxlookup"/>
-      </Item32>
-      <Item33>
-        <Filename Value="rxmemds.pas"/>
-        <UnitName Value="rxmemds"/>
-      </Item33>
-      <Item34>
-        <Filename Value="rxpopupunit.pas"/>
-        <UnitName Value="rxpopupunit"/>
-      </Item34>
-      <Item35>
-        <Filename Value="rxsortmemds.pas"/>
-        <UnitName Value="rxsortmemds"/>
-      </Item35>
-      <Item36>
-        <Filename Value="rxspin.pas"/>
-        <UnitName Value="rxspin"/>
-      </Item36>
-      <Item37>
-        <Filename Value="rxswitch.pas"/>
-        <UnitName Value="rxswitch"/>
-      </Item37>
-      <Item38>
-        <Filename Value="rxsystemservices.pas"/>
-        <UnitName Value="RxSystemServices"/>
-      </Item38>
-      <Item39>
-        <Filename Value="rxtbrsetup.pas"/>
-        <UnitName Value="rxtbrsetup"/>
-      </Item39>
-      <Item40>
-        <Filename Value="rxtimeedit.pas"/>
-        <UnitName Value="RxTimeEdit"/>
-      </Item40>
-      <Item41>
-        <Filename Value="rxtoolbar.pas"/>
-        <UnitName Value="rxtoolbar"/>
-      </Item41>
-      <Item42>
-        <Filename Value="rxversinfo.pas"/>
-        <UnitName Value="RxVersInfo"/>
-      </Item42>
-      <Item43>
-        <Filename Value="rxviewspanel.pas"/>
-        <UnitName Value="RxViewsPanel"/>
-      </Item43>
-      <Item44>
-        <Filename Value="rxseldsfrm.pas"/>
-        <UnitName Value="rxseldsfrm"/>
-      </Item44>
-      <Item45>
-        <Filename Value="rxtooledit.pas"/>
-        <UnitName Value="rxtooledit"/>
-      </Item45>
-      <Item46>
-        <Filename Value="rxvclutils.pas"/>
-        <UnitName Value="rxvclutils"/>
-      </Item46>
-      <Item47>
-        <Filename Value="rxcloseformvalidator.pas"/>
-        <UnitName Value="RxCloseFormValidator"/>
-      </Item47>
-      <Item48>
-        <Filename Value="ex_rx_bin_datapacket.pas"/>
-        <UnitName Value="ex_rx_bin_datapacket"/>
-      </Item48>
-      <Item49>
-        <Filename Value="ex_rx_datapacket.pas"/>
-        <UnitName Value="ex_rx_datapacket"/>
-      </Item49>
-      <Item50>
-        <Filename Value="ex_rx_xml_datapacket.pas"/>
-        <UnitName Value="ex_rx_xml_datapacket"/>
-      </Item50>
-      <Item51>
-        <Filename Value="rxsortby.pas"/>
-        <UnitName Value="rxsortby"/>
-      </Item51>
-      <Item52>
-        <Filename Value="rxmdi.pas"/>
-        <UnitName Value="RxMDI"/>
-      </Item52>
-      <Item53>
-        <Filename Value="rxinipropstorage.pas"/>
-        <UnitName Value="RxIniPropStorage"/>
-      </Item53>
-      <Item54>
-        <Filename Value="rx_lcl.res"/>
-        <Type Value="Binary"/>
-      </Item54>
-      <Item55>
-        <Filename Value="rxdaterangeeditunit.pas"/>
-        <UnitName Value="rxDateRangeEditUnit"/>
-      </Item55>
-      <Item56>
-        <Filename Value="rxdbgridfootertools.pas"/>
-        <UnitName Value="RxDBGridFooterTools"/>
-      </Item56>
-      <Item57>
-        <Filename Value="rxdbgridfootertools_setup.pas"/>
-        <UnitName Value="rxdbgridfootertools_setup"/>
-      </Item57>
-      <Item58>
-        <Filename Value="rxshortcutunit.pas"/>
-        <UnitName Value="rxShortCutUnit"/>
-      </Item58>
-      <Item59>
-        <Filename Value="rxdbgridexportpdf.pas"/>
-        <UnitName Value="RxDBGridExportPdf"/>
-      </Item59>
-      <Item60>
-        <Filename Value="rxdbgridexportpdfsetupunit.pas"/>
-        <UnitName Value="RxDBGridExportPdfSetupUnit"/>
-      </Item60>
-      <Item61>
-        <Filename Value="rxlclconst.pas"/>
-        <UnitName Value="rxlclconst"/>
-      </Item61>
-      <Item62>
+      </Item4>
+      <Item5>
         <Filename Value="rxcontrols\rxhistorynavigator.pas"/>
         <UnitName Value="RxHistoryNavigator"/>
+      </Item5>
+      <Item6>
+        <Filename Value="rxcontrols\rxaboutdialog.pas"/>
+        <UnitName Value="RxAboutDialog"/>
+      </Item6>
+      <Item7>
+        <Filename Value="rxcontrols\rxaboutformunit.pas"/>
+        <UnitName Value="rxAboutFormUnit"/>
+      </Item7>
+      <Item8>
+        <Filename Value="rxcontrols\rxclock.pas"/>
+        <UnitName Value="rxclock"/>
+      </Item8>
+      <Item9>
+        <Filename Value="rxcontrols\rxcloseformvalidator.pas"/>
+        <UnitName Value="RxCloseFormValidator"/>
+      </Item9>
+      <Item10>
+        <Filename Value="rxcontrols\rxapputils.pas"/>
+        <UnitName Value="rxapputils"/>
+      </Item10>
+      <Item11>
+        <Filename Value="rxcontrols\rxautopanel.pas"/>
+        <UnitName Value="RxAutoPanel"/>
+      </Item11>
+      <Item12>
+        <Filename Value="rxcontrols\rxboxprocs.pas"/>
+        <UnitName Value="rxboxprocs"/>
+      </Item12>
+      <Item13>
+        <Filename Value="rxcontrols\rxctrls.pas"/>
+        <UnitName Value="rxctrls"/>
+      </Item13>
+      <Item14>
+        <Filename Value="rxcontrols\rxcurredit.pas"/>
+        <UnitName Value="rxcurredit"/>
+      </Item14>
+      <Item15>
+        <Filename Value="rxcontrols\rxdaterangeeditunit.pas"/>
+        <UnitName Value="rxDateRangeEditUnit"/>
+      </Item15>
+      <Item16>
+        <Filename Value="rxcontrols\rxvclutils.pas"/>
+        <UnitName Value="rxvclutils"/>
+      </Item16>
+      <Item17>
+        <Filename Value="rxcontrols\rxversinfo.pas"/>
+        <UnitName Value="RxVersInfo"/>
+      </Item17>
+      <Item18>
+        <Filename Value="rxcontrols\rxviewspanel.pas"/>
+        <UnitName Value="RxViewsPanel"/>
+      </Item18>
+      <Item19>
+        <Filename Value="rxdb\ex_rx_bin_datapacket.pas"/>
+        <UnitName Value="ex_rx_bin_datapacket"/>
+      </Item19>
+      <Item20>
+        <Filename Value="rxdb\ex_rx_datapacket.pas"/>
+        <UnitName Value="ex_rx_datapacket"/>
+      </Item20>
+      <Item21>
+        <Filename Value="rxdb\ex_rx_xml_datapacket.pas"/>
+        <UnitName Value="ex_rx_xml_datapacket"/>
+      </Item21>
+      <Item22>
+        <Filename Value="rxdb\rxdbcolorbox.pas"/>
+        <UnitName Value="RxDBColorBox"/>
+      </Item22>
+      <Item23>
+        <Filename Value="rxdb\rxdbcomb.pas"/>
+        <UnitName Value="rxdbcomb"/>
+      </Item23>
+      <Item24>
+        <Filename Value="rxdb\rxdbctrls.pas"/>
+        <UnitName Value="RxDBCtrls"/>
+      </Item24>
+      <Item25>
+        <Filename Value="rxdb\rxdbcurredit.pas"/>
+        <UnitName Value="rxdbcurredit"/>
+      </Item25>
+      <Item26>
+        <Filename Value="rxdb\rxdbdateedit.pas"/>
+        <UnitName Value="rxdbdateedit"/>
+      </Item26>
+      <Item27>
+        <Filename Value="rxdb\rxdbgrid.pas"/>
+        <UnitName Value="rxdbgrid"/>
+      </Item27>
+      <Item28>
+        <Filename Value="rxdb\rxdbgrid.res"/>
+        <Type Value="Binary"/>
+      </Item28>
+      <Item29>
+        <Filename Value="rxdb\rxdbgrid_columsunit.lfm"/>
+        <Type Value="LFM"/>
+      </Item29>
+      <Item30>
+        <Filename Value="rxdb\rxdbgrid_columsunit.lrt"/>
+        <Type Value="Text"/>
+      </Item30>
+      <Item31>
+        <Filename Value="rxdb\rxdbgrid_columsunit.pas"/>
+        <UnitName Value="rxdbgrid_columsunit"/>
+      </Item31>
+      <Item32>
+        <Filename Value="rxdb\rxdbgrid_findunit.lfm"/>
+        <Type Value="LFM"/>
+      </Item32>
+      <Item33>
+        <Filename Value="rxdb\rxdbgrid_findunit.pas"/>
+        <UnitName Value="rxdbgrid_findunit"/>
+      </Item33>
+      <Item34>
+        <Filename Value="rxdb\exsortmds.pas"/>
+        <UnitName Value="exsortmds"/>
+      </Item34>
+      <Item35>
+        <Filename Value="rxdb\rxdbgridexportpdf.pas"/>
+        <UnitName Value="RxDBGridExportPdf"/>
+      </Item35>
+      <Item36>
+        <Filename Value="rxdb\rxdbgridexportpdfsetupunit.pas"/>
+        <UnitName Value="RxDBGridExportPdfSetupUnit"/>
+      </Item36>
+      <Item37>
+        <Filename Value="rxdb\rxdbgridfootertools.pas"/>
+        <UnitName Value="RxDBGridFooterTools"/>
+      </Item37>
+      <Item38>
+        <Filename Value="rxdb\rxdbgridfootertools_setup.pas"/>
+        <UnitName Value="rxdbgridfootertools_setup"/>
+      </Item38>
+      <Item39>
+        <Filename Value="rxdb\rxdbspinedit.pas"/>
+        <UnitName Value="RxDBSpinEdit"/>
+      </Item39>
+      <Item40>
+        <Filename Value="rxdb\rxdbtimeedit.pas"/>
+        <UnitName Value="RxDBTimeEdit"/>
+      </Item40>
+      <Item41>
+        <Filename Value="rxdb\rxdbutils.pas"/>
+        <UnitName Value="rxdbutils"/>
+      </Item41>
+      <Item42>
+        <Filename Value="rxdb\rxfilterby.pas"/>
+        <UnitName Value="rxfilterby"/>
+      </Item42>
+      <Item43>
+        <Filename Value="rxdb\rxlookup.pas"/>
+        <UnitName Value="rxlookup"/>
+      </Item43>
+      <Item44>
+        <Filename Value="rxdb\rxmemds.pas"/>
+        <UnitName Value="rxmemds"/>
+      </Item44>
+      <Item45>
+        <Filename Value="rxdb\rxpopupunit.pas"/>
+        <UnitName Value="rxpopupunit"/>
+      </Item45>
+      <Item46>
+        <Filename Value="rxdb\rxseldsfrm.pas"/>
+        <UnitName Value="rxseldsfrm"/>
+      </Item46>
+      <Item47>
+        <Filename Value="rxdb\rxsortby.pas"/>
+        <UnitName Value="rxsortby"/>
+      </Item47>
+      <Item48>
+        <Filename Value="rxdb\rxsortmemds.pas"/>
+        <UnitName Value="rxsortmemds"/>
+      </Item48>
+      <Item49>
+        <Filename Value="rxcontrols\rxdice.inc"/>
+        <Type Value="Include"/>
+      </Item49>
+      <Item50>
+        <Filename Value="rxcontrols\rxdice.pas"/>
+        <UnitName Value="rxdice"/>
+      </Item50>
+      <Item51>
+        <Filename Value="rxcontrols\rxduallist.pas"/>
+        <UnitName Value="rxduallist"/>
+      </Item51>
+      <Item52>
+        <Filename Value="rxcontrols\rxfduallst.pas"/>
+        <UnitName Value="rxfduallst"/>
+      </Item52>
+      <Item53>
+        <Filename Value="rxcontrols\rxfolderlister.pas"/>
+        <UnitName Value="rxfolderlister"/>
+      </Item53>
+      <Item54>
+        <Filename Value="rxcontrols\rxhistory.pas"/>
+        <UnitName Value="RXHistory"/>
+      </Item54>
+      <Item55>
+        <Filename Value="rxcontrols\rxinipropstorage.pas"/>
+        <UnitName Value="RxIniPropStorage"/>
+      </Item55>
+      <Item56>
+        <Filename Value="rxcontrols\rxlclconst.pas"/>
+        <UnitName Value="rxlclconst"/>
+      </Item56>
+      <Item57>
+        <Filename Value="rxcontrols\rxlogin.pas"/>
+        <UnitName Value="rxlogin"/>
+      </Item57>
+      <Item58>
+        <Filename Value="rxcontrols\rxmdi.pas"/>
+        <UnitName Value="RxMDI"/>
+      </Item58>
+      <Item59>
+        <Filename Value="rxcontrols\rxpagemngr.pas"/>
+        <UnitName Value="rxpagemngr"/>
+      </Item59>
+      <Item60>
+        <Filename Value="rxcontrols\rxpickdate.pas"/>
+        <UnitName Value="rxpickdate"/>
+      </Item60>
+      <Item61>
+        <Filename Value="rxcontrols\rxshortcutunit.pas"/>
+        <UnitName Value="rxShortCutUnit"/>
+      </Item61>
+      <Item62>
+        <Filename Value="rxcontrols\rxspin.pas"/>
+        <UnitName Value="rxspin"/>
       </Item62>
+      <Item63>
+        <Filename Value="rxcontrols\rxswitch.inc"/>
+        <Type Value="Include"/>
+      </Item63>
+      <Item64>
+        <Filename Value="rxcontrols\rxswitch.pas"/>
+        <UnitName Value="rxswitch"/>
+      </Item64>
+      <Item65>
+        <Filename Value="rxcontrols\rxsystemservices.pas"/>
+        <UnitName Value="RxSystemServices"/>
+      </Item65>
+      <Item66>
+        <Filename Value="rxcontrols\rxtbrsetup.pas"/>
+        <UnitName Value="rxtbrsetup"/>
+      </Item66>
+      <Item67>
+        <Filename Value="rxcontrols\rxtimeedit.pas"/>
+        <UnitName Value="RxTimeEdit"/>
+      </Item67>
+      <Item68>
+        <Filename Value="rxcontrols\rxtoolbar.pas"/>
+        <UnitName Value="rxtoolbar"/>
+      </Item68>
+      <Item69>
+        <Filename Value="rxcontrols\rxtooledit.pas"/>
+        <UnitName Value="rxtooledit"/>
+      </Item69>
     </Files>
     <LazDoc Paths="docs;\usr\local\share\lazarus\components\rxnew\docs"/>
     <i18n>

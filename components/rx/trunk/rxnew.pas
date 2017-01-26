@@ -8,19 +8,19 @@ unit rxnew;
 interface
 
 uses
-  RxAutoPanel, rxboxprocs, rxcurredit, rxdbcurredit, rxdbdateedit, rxdbutils, 
-  rxduallist, rxfduallst, rxfolderlister, rxpagemngr, rxpickdate, registerrx, 
-  RegisterRxDB, RegisterRxTools, RxAboutDialog, rxAboutFormUnit, rxapputils, 
-  rxclock, rxctrls, RxDBColorBox, rxdbcomb, RxDBCtrls, rxdbgrid, 
-  rxdbgrid_columsunit, rxdbgrid_findunit, RxDBSpinEdit, RxDBTimeEdit, rxdice, 
-  rxfilterby, rxlogin, rxlookup, rxmemds, rxpopupunit, rxsortmemds, rxspin, 
-  rxswitch, RxSystemServices, rxtbrsetup, RxTimeEdit, rxtoolbar, RxVersInfo, 
-  RxViewsPanel, rxseldsfrm, rxtooledit, rxvclutils, RxCloseFormValidator, 
-  ex_rx_bin_datapacket, ex_rx_datapacket, ex_rx_xml_datapacket, rxsortby, 
-  RxMDI, RxIniPropStorage, rxDateRangeEditUnit, RxDBGridFooterTools, 
-  rxdbgridfootertools_setup, rxShortCutUnit, RxDBGridExportPdf, 
-  RxDBGridExportPdfSetupUnit, rxlclconst, RxHistoryNavigator, 
-  LazarusPackageIntf;
+  registerrx, RegisterRxDB, RegisterRxTools, RxHistoryNavigator, 
+  RxAboutDialog, rxAboutFormUnit, rxclock, RxCloseFormValidator, rxapputils, 
+  RxAutoPanel, rxboxprocs, rxctrls, rxcurredit, rxDateRangeEditUnit, 
+  rxvclutils, RxVersInfo, RxViewsPanel, ex_rx_bin_datapacket, 
+  ex_rx_datapacket, ex_rx_xml_datapacket, RxDBColorBox, rxdbcomb, RxDBCtrls, 
+  rxdbcurredit, rxdbdateedit, rxdbgrid, rxdbgrid_columsunit, 
+  rxdbgrid_findunit, exsortmds, RxDBGridExportPdf, RxDBGridExportPdfSetupUnit, 
+  RxDBGridFooterTools, rxdbgridfootertools_setup, RxDBSpinEdit, RxDBTimeEdit, 
+  rxdbutils, rxfilterby, rxlookup, rxmemds, rxpopupunit, rxseldsfrm, rxsortby, 
+  rxsortmemds, rxdice, rxduallist, rxfduallst, rxfolderlister, RXHistory, 
+  RxIniPropStorage, rxlclconst, rxlogin, RxMDI, rxpagemngr, rxpickdate, 
+  rxShortCutUnit, rxspin, rxswitch, RxSystemServices, rxtbrsetup, RxTimeEdit, 
+  rxtoolbar, rxtooledit, LazarusPackageIntf;
 
 implementation
 

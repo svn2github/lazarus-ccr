@@ -8,7 +8,7 @@ unit rx_sort_sqldb;
 interface
 
 uses
-  RxSortSqlDB, LazarusPackageIntf;
+  RxSortSqlDB, exsortsql, LazarusPackageIntf;
 
 implementation
 

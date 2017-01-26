@@ -7,25 +7,22 @@
     <CompilerOptions>
       <Version Value="11"/>
       <SearchPaths>
+        <OtherUnitFiles Value="rxdbgrid_export_spreadsheet"/>
         <UnitOutputDirectory Value="lib/rxdbgrid_export_spreadsheet/$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
     <License Value="LGPL"/>
     <Version Major="1" Release="1" Build="6"/>
-    <Files Count="3">
+    <Files Count="2">
       <Item1>
-        <Filename Value="rxdbgridexportspreadsheet.pas"/>
+        <Filename Value="rxdbgrid_export_spreadsheet/rxdbgridexportspreadsheet.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="RxDBGridExportSpreadSheet"/>
       </Item1>
       <Item2>
-        <Filename Value="rxdbgridexportspreadsheet_paramsunit.lfm"/>
-        <Type Value="LFM"/>
-      </Item2>
-      <Item3>
-        <Filename Value="rxdbgridexportspreadsheet_paramsunit.pas"/>
+        <Filename Value="rxdbgrid_export_spreadsheet/rxdbgridexportspreadsheet_paramsunit.pas"/>
         <UnitName Value="RxDBGridExportSpreadSheet_ParamsUnit"/>
-      </Item3>
+      </Item2>
     </Files>
     <LazDoc Paths="docs"/>
     <RequiredPkgs Count="3">

@@ -8,7 +8,7 @@ unit rx_sort_fbdataset;
 interface
 
 uses
-  RxSortFBDataSet, exsortfb, LazarusPackageIntf;
+  exsortfb, RxSortFBDataSet, LazarusPackageIntf;
 
 implementation
 

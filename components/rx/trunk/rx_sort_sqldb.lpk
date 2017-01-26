@@ -6,16 +6,21 @@
     <CompilerOptions>
       <Version Value="11"/>
       <SearchPaths>
+        <OtherUnitFiles Value="rx_sort_sqldb"/>
         <UnitOutputDirectory Value="lib/rx_sort_sqldb/$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
     <Version Major="1" Minor="1" Release="1" Build="2"/>
-    <Files Count="1">
+    <Files Count="2">
       <Item1>
-        <Filename Value="rxsortsqldb.pas"/>
+        <Filename Value="rx_sort_sqldb/rxsortsqldb.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="RxSortSqlDB"/>
       </Item1>
+      <Item2>
+        <Filename Value="rx_sort_sqldb/exsortsql.pas"/>
+        <UnitName Value="exsortsql"/>
+      </Item2>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

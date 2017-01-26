@@ -8,7 +8,7 @@ unit rx_sort_zeos;
 interface
 
 uses
-  RxSortZeos, exsortzeos, LazarusPackageIntf;
+  exsortzeos, RxSortZeos, LazarusPackageIntf;
 
 implementation
 

@@ -7,18 +7,19 @@
     <CompilerOptions>
       <Version Value="11"/>
       <SearchPaths>
+        <OtherUnitFiles Value="rxdbgrid_print"/>
         <UnitOutputDirectory Value="lib/rxdbgrid_print/$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
     <Version Major="1" Minor="1" Release="1" Build="1"/>
     <Files Count="2">
       <Item1>
-        <Filename Value="rxdbgridprintgrid.pas"/>
+        <Filename Value="rxdbgrid_print/rxdbgridprintgrid.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="RxDBGridPrintGrid"/>
       </Item1>
       <Item2>
-        <Filename Value="rxdbgridprintgrid_setupunit.pas"/>
+        <Filename Value="rxdbgrid_print/rxdbgridprintgrid_setupunit.pas"/>
         <UnitName Value="RxDBGridPrintGrid_SetupUnit"/>
       </Item2>
     </Files>
