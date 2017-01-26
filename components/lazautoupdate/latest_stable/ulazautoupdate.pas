@@ -137,9 +137,10 @@ const
  V0.2.8: Changed constants C_UPDATEHMNAME and C_LAUUPDATENAME
  V0.2.9: Added CreateLocalLauImportFile in UpdateToNewVersion
  V0.3.1: Added SetExecutePermission (LINUX only)
- V0.3.2: ??
+ V0.3.2: Bugfix for DoSilentUpdate
+ V0.3.3: ??
 }
-  C_TLazAutoUpdateComponentVersion = '0.3.0';
+  C_TLazAutoUpdateComponentVersion = '0.3.2';
   C_TThreadedDownloadComponentVersion = '0.0.3';
 {
  V0.0.1: Initial alpha
@@ -1689,13 +1690,13 @@ begin
         Format('App data directory is %s', [szLAUTrayAppPath]));
     // AppDataDirectory/LazAutoUpdater/
     szLAUTrayAppPath := UTF8StringReplace(szLAUTrayAppPath, Application.Title,
-      'updatehm', [rfIgnoreCase, rfReplaceAll]);
+      'updatehm' + C_PFX, [rfIgnoreCase, rfReplaceAll]);
     szLAUTrayAppPath := LowerCase(szLAUTrayAppPath);
 
     if fFireDebugEvent then
       fOndebugEvent(Self, 'DoSilentUpdate',
         Format('App data directory changed to %s', [szLAUTrayAppPath]));
-    // Now AppDataDirectory/updatehm/
+    // Now AppDataDirectory/updatehm(+C_PFX)/
     try
       if ForceDirectory(szLAUTrayAppPath) then
         if fFireDebugEvent then
