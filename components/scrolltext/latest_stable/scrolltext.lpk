@@ -11,6 +11,10 @@
       <SearchPaths>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
+      <Other>
+        <CustomOptions Value="$(IDEBuildOptions)
+-FcUTF8"/>
+      </Other>
     </CompilerOptions>
     <Description Value="Graphic surface that scrolls (when Active=True) that can be loaded with a Stringlist"/>
     <License Value="  Copyright (C)2014 minesadorada@charcodelvalle.com

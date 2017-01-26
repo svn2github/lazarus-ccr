@@ -34,8 +34,9 @@ unit uPoweredby;
 interface
 
 uses
-  Classes, Controls, Dialogs, Forms, Graphics, LResources, SysUtils,
-  ExtCtrls, InterfaceBase, LCLType,LCLVersion,AboutPoweredbyunit;
+  {$IFDEF WINDOWS}Windows, JwaWindows,{$ENDIF}Classes, Controls, Dialogs,
+  Forms, Graphics, LResources, SysUtils,
+  ExtCtrls, InterfaceBase, LCLType, LCLVersion, AboutPoweredbyunit;
 
 const
   C_VERSIONSTRING = '1.0.4.0';
@@ -59,16 +60,19 @@ type
     fVersionString: string;
     fDelayMilliseconds: integer;
     fFadeInMilliseconds: integer;
-    fShowOnlyOnce,fAlreadyShown:Boolean;
+    fShowOnlyOnce, fAlreadyShown: boolean;
     // Used by Timer to close the PoweredBy form
     procedure ClosePoweredByForm(Sender: TObject);
     // Windows only!
     procedure FadeInPoweredBy(Sender: TObject);
     procedure SetDelayMilliSeconds(AValue: integer);
     function GetWidgetSetString: string;
-    Function GetFPCTargetInfoString: String;
-    Function GetInfoLCLVersion:String;
-    Function GetInfoFPCVersion:String;
+    function GetFPCTargetInfoString: string;
+    function GetInfoLCLVersion: string;
+    function GetInfoFPCVersion: string;
+    {$IFDEF WINDOWS}
+    procedure MakeTransparentWindow(var AForm: TForm; var AImage: TImage);
+    {$ENDIF}
   protected
     { Protected declarations }
   public
@@ -80,25 +84,27 @@ type
   published
     { Published declarations }
     // Minimum delay=1000msec; Maximum delay=10000msec.  Fade-in time is automatically adjusted
-    property DelayMilliSecs: integer read fDelayMilliSeconds write SetDelayMilliSeconds default 1000;
+    property DelayMilliSecs: integer read fDelayMilliSeconds
+      write SetDelayMilliSeconds default 1000;
     // Call the method 'ShowPoweredByForm' to show the shaped window
     property Version: string read fVersionString;
     // Reports the current WidgetSet
     property InfoWidgetSet: string read GetWidgetSetString;
     // Reports your current Environment
-    property InfoFPCTarget:String read GetFPCTargetInfoString;
+    property InfoFPCTarget: string read GetFPCTargetInfoString;
     // Reports your current Environment
-    property InfoFPCVersion:String read GetInfoFPCVersion;
+    property InfoFPCVersion: string read GetInfoFPCVersion;
     // Reports your current Environment
-    property InfoLCLVersion:String read GetInfoLCLVersion;
+    property InfoLCLVersion: string read GetInfoLCLVersion;
     // Useful if you have ShowPoweredByForm in your TForm.Activate() method
-    property ShowOnlyOnce:boolean read fShowOnlyOnce write fShowOnlyOnce default false;
+    property ShowOnlyOnce: boolean read fShowOnlyOnce write fShowOnlyOnce default False;
   end;
 
 procedure Register;
 
 implementation
-Uses {$IF (lcl_major > 0) and (lcl_minor > 6)}LCLPlatformDef {$ENDIF};
+
+uses {$IF (lcl_major > 0) and (lcl_minor > 6)}LCLPlatformDef {$ENDIF};
 
 procedure Register;
 begin
@@ -113,35 +119,38 @@ begin
   fVersionString := C_VERSIONSTRING;
   fDelayMilliseconds := 1000;
   fFadeInMilliseconds := 20;
-  fAlreadyShown:=False;
-  fShowOnlyOnce:=False;
+  fAlreadyShown := False;
+  fShowOnlyOnce := False;
   // About dialog
-  AboutBoxComponentName:='PoweredBy component';
-  AboutBoxWidth:=400;
-//  AboutBoxHeight (integer)
-  AboutBoxDescription:='Component that shows a Powered By graphic.' + LineEnding +
-  'Use method ShowPoweredByForm in your form.create()' + LineEnding +
-  'to use the component';
-  AboutBoxBackgroundColor:=clWindow;
-  AboutBoxFontName:='Arial';
-  AboutBoxFontSize:=10;
-  AboutBoxVersion:=C_VERSIONSTRING;
-  AboutBoxAuthorname:='Gordon Bamber';
-  AboutBoxOrganisation:='Public Domain';
-  AboutBoxAuthorEmail:='minesadorada@charcodelvalle.com';
-  AboutBoxLicenseType:='MODIFIEDGPL';
+  AboutBoxComponentName := 'PoweredBy component';
+  AboutBoxWidth := 400;
+  //  AboutBoxHeight (integer)
+  AboutBoxDescription := 'Component that shows a Powered By graphic.' +
+    LineEnding + 'Use method ShowPoweredByForm in your form.create()' +
+    LineEnding + 'to use the component';
+  AboutBoxBackgroundColor := clWindow;
+  AboutBoxFontName := 'Arial';
+  AboutBoxFontSize := 10;
+  AboutBoxVersion := C_VERSIONSTRING;
+  AboutBoxAuthorname := 'Gordon Bamber';
+  AboutBoxOrganisation := 'Public Domain';
+  AboutBoxAuthorEmail := 'minesadorada@charcodelvalle.com';
+  AboutBoxLicenseType := 'MODIFIEDGPL';
 end;
-Function TPoweredby.GetInfoLCLVersion:String;
+
+function TPoweredby.GetInfoLCLVersion: string;
 begin
-  result:=lcl_version;
+  Result := lcl_version;
 end;
-Function TPoweredby.GetInfoFPCVersion:String;
+
+function TPoweredby.GetInfoFPCVersion: string;
 begin
-  Result:={$I %FPCVERSION%};
+    Result:={$I %FPCVERSION%};
 end;
-Function TPoweredby.GetFPCTargetInfoString: String;
+
+function TPoweredby.GetFPCTargetInfoString: string;
 begin
-  Result := {$I %FPCTARGETCPU%}+' - '+{$I %FPCTARGETOS%};
+    Result := {$I %FPCTARGETCPU%}+' - '+{$I %FPCTARGETOS%};
 end;
 
 function priv_GetWidgetSetString: string;
@@ -212,35 +221,62 @@ Choices are:
   lpCustomDrawn
   }
 begin
-Result:=FALSE;
-{
+  Result := False;
   case WidgetSet.LCLPlatform of
     lpWin32, lpQT: Result := True;
     else
       Result := False;
   end;
-}
+
 end;
+
+{$IFDEF WINDOWS}
+procedure TPoweredby.MakeTransparentWindow(var AForm: TForm; var AImage: TImage);
+var
+  BlendFunction: TBlendFunction;
+  Size: TSize;
+  P: TPoint;
+  ExStyle: DWORD;
+begin
+  with AForm do
+  begin
+    ExStyle := GetWindowLongA(Handle, GWL_EXSTYLE);
+    if (ExStyle and WS_EX_LAYERED = 0) then
+      SetWindowLong(Handle, GWL_EXSTYLE, ExStyle or WS_EX_LAYERED);
+    ClientWidth := AImage.picture.Bitmap.Width;
+    ClientHeight := AImage.picture.Bitmap.Height;
+    P.x := 0;
+    P.y := 0;
+    Size.cx := AImage.picture.Bitmap.Width;
+    Size.cy := AImage.picture.Bitmap.Height;
+    BlendFunction.BlendOp := AC_SRC_OVER;
+    BlendFunction.BlendFlags := 0;
+    BlendFunction.SourceConstantAlpha := 255;
+    BlendFunction.AlphaFormat := AC_SRC_ALPHA;
+    UpdateLayeredWindow(Handle, 0, nil, @Size, AImage.picture.Bitmap.Canvas.Handle,
+      @P, 0, @BlendFunction, ULW_ALPHA);
+  end;
+end;
+
+{$ENDIF}
 
 procedure TPoweredby.ShowPoweredByForm;
 
-// Graphics are in masks.lrs
+// Graphics are in graphics.lrs
 // 1 ) Constructs a new TForm with an image control
-// 2 ) Uses the 'SetShape' method of the form canvas to create a transparent mask
-// 3 ) Paints the Timage over it with a color image
-// 4 ) Sets a timer to fade it in using the Alphablend property
-// 5 ) Sets another timer to close the form
+// 2 ) Sets a timer to fade it in using the Alphablend property
+// 3 ) Sets another timer to close the form
 
 // Note: Windows can fade in a shaped transparent screen
 // But some widgetsets (GTK,Carbon) cannot
 var
   img_Background: TImage;
-  MyBitmap: TBitMap;
   DelayTimer: TTimer;
   FadeInTimer: TTImer;
 begin
   // Respect the ShowOnlyOnce property setting
-  If ((fShowOnlyOnce=TRUE) AND (fAlreadyShown=TRUE)) then Exit;
+  if ((fShowOnlyOnce = True) and (fAlreadyShown = True)) then
+    Exit;
 
   // Try..Finally so we can be sure resources are Freed
   try
@@ -250,12 +286,6 @@ begin
       fPoweredByForm.AlphaBlend := True;
       fPoweredByForm.AlphaBlendValue := 0;
       img_background := TImage.Create(fPoweredByForm);
-      // Bitmap mask - Load from resource
-      MyBitmap := TBitMap.Create;
-      MyBitmap.Monochrome := True;
-      MyBitmap.LoadFromLazarusResource('powered_by_mask');
-      MyBitMap.Transparent := True;
-      MyBitMap.TransparentColor := clBlack;
       // Delay Timer
       Delaytimer := TTimer.Create(fPoweredByForm);
       delaytimer.Interval := fDelayMilliseconds;
@@ -272,9 +302,9 @@ begin
         Stretch := True;
         Parent := fPoweredByForm;
         if CanShowRoundedGraphic then
-          Picture.LoadFromLazarusResource('win_powered_by')
+           Picture.LoadFromLazarusResource('powered_by_graphic')
         else
-          Picture.LoadFromLazarusResource('powered_by');
+          Picture.LoadFromLazarusResource('linux_powered_by_graphic');
         OnClick := @ClosePoweredByForm;
         SendToBack;
       end;
@@ -283,31 +313,27 @@ begin
       begin
         position := poScreenCenter;
         borderstyle := bsnone;
+        bordericons:=[];
         formstyle := fsSystemStayOnTop;
         OnClick := @ClosePoweredByForm;
-        color := clBlack;
-        Height := MyBitmap.Height;
-        Width := MyBitMap.Width;
+        color := clNone;
+        Scaled:=True;
         if CanShowRoundedGraphic then
         begin
-          MyBitMap.Transparent := True;
-          MyBitMap.TransparentColor := clBlack;
-          Canvas.Draw(0, 0, MyBitMap);
-          // raises Floating Point Error in linux GTK (!??)
-          SetShape(MyBitMap);
+          MakeTransparentWindow(fPoweredByForm,img_background);
         end
         else
         begin
           // If square graphic, then adjust form size
-             height:=img_background.Picture.Height;
-             width:=img_background.picture.width;
+          Height := img_background.Picture.Height;
+          Width := img_background.picture.Width;
         end;
         // Now show the completed form
         delaytimer.Enabled := True;
         FadeInTimer.Enabled := True;
         Application.ProcessMessages;
         ShowModal; // Closed via the Timer event or a user click
-        fAlreadyShown:=TRUE;
+        fAlreadyShown := True;
       end;
     except
       On E: Exception do
@@ -315,7 +341,6 @@ begin
     end;
   finally
     FreeAndNil(img_background);
-    FreeAndNil(MyBitMap);
     FreeAndNil(delayTimer);
     FreeAndNil(FadeInTimer);
     FreeAndNil(fPoweredByForm);

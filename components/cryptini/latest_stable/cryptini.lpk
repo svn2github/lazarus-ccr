@@ -30,7 +30,8 @@
         </Debugging>
       </Linking>
       <Other>
-        <CustomOptions Value="-FcUTF8"/>
+        <CustomOptions Value="$(IDEBuildOptions)
+-FcUTF8"/>
       </Other>
     </CompilerOptions>
     <Description Value="This is a TiniFile implementation that is resistant to tampering.

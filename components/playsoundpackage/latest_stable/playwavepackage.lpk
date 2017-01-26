@@ -14,6 +14,10 @@
           <GenerateDebugInfo Value="False"/>
         </Debugging>
       </Linking>
+      <Other>
+        <CustomOptions Value="$(IDEBuildOptions)
+-FcUTF8"/>
+      </Other>
     </CompilerOptions>
     <Description Value="Simple component to play wave files under Windows or Linux"/>
     <License Value="  Copyright (C)2014 minesadorada@charcodelvalle.com

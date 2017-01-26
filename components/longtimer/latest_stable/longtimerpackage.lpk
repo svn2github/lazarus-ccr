@@ -11,6 +11,9 @@
       <SearchPaths>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
+      <Other>
+        <CustomOptions Value="$(IDEBuildOptions)"/>
+      </Other>
     </CompilerOptions>
     <Description Value="TLongTimer is a descendant of TIdleTimer that samples every 30minutes when idle.
 It is intended for TTrayIcon applications.  DailyHour is a 24-hour clock (16 = 4pm) and MonthlyDate  is best &lt; 29 "/>

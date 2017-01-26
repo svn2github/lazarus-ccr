@@ -27,6 +27,10 @@
           <GenerateDebugInfo Value="False"/>
         </Debugging>
       </Linking>
+      <Other>
+        <CustomOptions Value="$(IDEBuildOptions)
+-FcUTF8"/>
+      </Other>
     </CompilerOptions>
     <Description Value="Laz AutoUpdater
 A component for SourceForge and GitHub Project Developers and end-users to update their apps easily.

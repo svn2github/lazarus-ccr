@@ -49,7 +49,7 @@ Copyright (C)2014 minesadorada@charcodelvalle.com
   along with this library; if not, write to the Free Software Foundation,
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 "/>
-    <Version Major="1" Release="4"/>
+    <Version Major="1" Minor="1"/>
     <Files Count="2">
       <Item1>
         <Filename Value="upoweredby.pas"/>
