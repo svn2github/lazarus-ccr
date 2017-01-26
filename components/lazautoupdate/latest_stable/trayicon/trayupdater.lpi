@@ -22,8 +22,7 @@
     </i18n>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
-      <MinorVersionNr Value="1"/>
-      <RevisionNr Value="14"/>
+      <MinorVersionNr Value="2"/>
       <StringTable CompanyName="minesadorada" FileDescription="Tray app that works with LazAutoUpdate apps" InternalName="lazautoupdater" LegalCopyright="LGPLv2" LegalTrademarks="(c)2014 Gordon Bamber" OriginalFilename="trayupdater" ProductName="Lazarus 1.x FPC 2.6.x" ProductVersion="0.1.11.2"/>
     </VersionInfo>
     <BuildModes Count="5">

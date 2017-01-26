@@ -138,9 +138,10 @@ const
  V0.2.9: Added CreateLocalLauImportFile in UpdateToNewVersion
  V0.3.1: Added SetExecutePermission (LINUX only)
  V0.3.2: Bugfix for DoSilentUpdate
- V0.3.3: ??
+ V0.3.3: Added event OnUpdate
+ V0.3.4: ??
 }
-  C_TLazAutoUpdateComponentVersion = '0.3.2';
+  C_TLazAutoUpdateComponentVersion = '0.3.3';
   C_TThreadedDownloadComponentVersion = '0.0.3';
 {
  V0.0.1: Initial alpha
@@ -253,9 +254,9 @@ type
     OnlineVersion: string) of object;
   TOnDownloaded = procedure(Sender: TObject; ResultCode, BytesDownloaded: integer) of
     object;
-  // ToDo: TOnUpdated??
   TOnDebugEvent = procedure(Sender: TObject; lauMethodName, lauMessage: string) of
     object;
+  TOnUpdated = Procedure(Sender:TObject;NewVersion,LauMessage:String) of Object;
 
   TLazAutoUpdate = class(TAboutLazAutoUpdate)
   private
@@ -293,6 +294,7 @@ type
     FOnNewVersionAvailable: TOnNewVersionAvailable;
     FOnDownloaded: TOnDownloaded;
     fOnDebugEvent: TOnDebugEvent;
+    fOnUpdated:TOnUpdated;
     fLastError: string;
     fVersionCountLimit, fDownloadCountLimit: cardinal;
     fZipfileName: string;
@@ -317,6 +319,8 @@ type
     function GetThreadDownloadReturnCode: integer;
     function IsOnlineVersionNewer(const sznewINIPath: string): boolean;
     function DoSilentUpdate: boolean;
+    function GetUpdateSilentExe:String;
+    function GetUpdateExe:String;
   protected
 
   public
@@ -394,6 +398,7 @@ type
       read FOnNewVersionAvailable write FOnNewVersionAvailable;
     property OnDownloaded: TOnDownloaded read fOnDownloaded write fOnDownloaded;
     property OnDebugEvent: TOnDebugEvent read fOnDebugEvent write fOnDebugEvent;
+    property OnUpdated:TOnUpdated read fOnUpdated write fOnUpdated;
 
     // Embedded class
     property ThreadDownload: TThreadedDownload
@@ -432,9 +437,9 @@ type
     // Default is application filename.zip
     property ZipfileName: string read fZipfileName write fZipfileName;
     // Name of Console app
-    property UpdateExe: string read fUpdateExe;
+    property UpdateExe: string read GetUpdateExe;
     // Name of Console app
-    property UpdateExeSilent: string read fUpdateSilentExe;
+    property UpdateExeSilent: string read GetUpdateSilentExe;
     // Main project name/UserName
     property GitHubProjectname: string read fGitHubProjectName write fGitHubProjectName;
     // Name of your GitHub repository within the project/username
@@ -726,9 +731,8 @@ begin
   fZipfileName := ''; // assign later
 
   // BE SURE TO CHANGE THE CONSTANTS IF YOU CHANGE THE UPDATE EXE NAME
-  fUpdateExe := C_UPDATEHMNAME;
-  fUpdateSilentExe := C_LAUUPDATENAME;
-
+  GetUpdateSilentExe;
+  GetUpdateExe;
 
   // Assorted versioninfo properties
   fLCLVersion := GetLCLVersion;
@@ -770,6 +774,23 @@ destructor TLazAutoUpdate.Destroy;
 begin
   FreeAndNil(fThreadDownload);
   inherited Destroy;
+end;
+function TLazAutoUpdate.GetUpdateSilentExe:String;
+begin
+  fUpdateSilentExe := C_LAUUPDATENAME;
+  If csDesigning in ComponentState then
+    Result:='lauupdate'
+  else
+    Result:=fUpdateSilentExe;
+end;
+
+function TLazAutoUpdate.GetUpdateExe:String;
+begin
+  fUpdateExe := C_UPDATEHMNAME;
+  If csDesigning in ComponentState then
+    Result:='updatehm'
+  else
+    Result:=fUpdateExe;
 end;
 
 function TLazAutoUpdate.AppIsActive(const ExeName: string): boolean;
@@ -844,6 +865,7 @@ begin
         C_WhatsNewFilename);
     Exit;
   end;
+
   // Create the form, memo and close button
   if fParentForm <> nil then
     WhatsNewForm := TForm.CreateNew(fParentForm)
@@ -2116,14 +2138,32 @@ begin
       begin
         fParentApplication.ProcessMessages;
         Inc(CCount);
-        if cCount > 10000000 then
+        if cCount > 100000 then
+        begin
+             // Fire the OnUpdated event
+          If Assigned(fOnUpdated) then
+          begin
+             fOnUpdated(Self,fGUIOnlineVersion,'Unsuccessful update');
+             Application.Processmessages;
+             Sleep(100);
+          end;
           Break; // Get out of jail in case updatehm.exe fails to copy file
+        end;
       end;
     finally
       FUpdateHMProcess.Free;
     end;
 {$ENDIF}
     CreateLocalLauImportFile; // Creates a new import file in GetAppConfigDirUTF8
+
+   // Fire the OnUpdated event
+    If Assigned(fOnUpdated) then
+    begin
+       fOnUpdated(Self,fGUIOnlineVersion,'Successful update');
+       Application.Processmessages;
+       Sleep(100);
+    end;
+
     if fFireDebugEvent then
       fOndebugEvent(Self, 'UpdateToNewVersion',
         'Success');

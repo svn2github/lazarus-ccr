@@ -32,7 +32,7 @@
 A component for SourceForge and GitHub Project Developers and end-users to update their apps easily.
 Drop onto a form, set a few properties and call the Method 'AutoUpdate' - as easy as pie!
 Fully configurable.
-Included in the source tree is Update Pack - an app that makes update maintenance simple and efficient.  Also TrayUpdater - a systray app that scedules updates automatically.
+Included in the source tree is Update Pack - an app that makes update maintenance simple and efficient.  Also TrayUpdater - a systray app that schedules updates automatically.
 Compiles and runs in Windows and Linux. 
 More information in the Wiki Home Page http://wiki.freepascal.org/LazAutoUpdater"/>
     <License Value="  Modified GPL
@@ -62,7 +62,7 @@ More information in the Wiki Home Page http://wiki.freepascal.org/LazAutoUpdater
   along with this library; if not, write to the Free Software Foundation,
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 "/>
-    <Version Minor="3" Release="2"/>
+    <Version Minor="3" Release="3"/>
     <Files Count="6">
       <Item1>
         <Filename Value="ulazautoupdate.pas"/>

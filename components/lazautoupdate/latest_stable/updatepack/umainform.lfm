@@ -1,7 +1,7 @@
 object mainform: Tmainform
-  Left = 1335
+  Left = 375
   Height = 481
-  Top = 384
+  Top = 127
   Width = 587
   AllowDropFiles = True
   BorderIcons = [biSystemMenu, biMinimize]
@@ -706,7 +706,10 @@ object mainform: Tmainform
     About.AuthorEmail = 'minesadorada@gmail.com'
     About.ComponentName = 'Laz Auto-update v0.1.1'
     About.LicenseType = abLGPL
+    OnNewVersionAvailable = LazAutoUpdate1NewVersionAvailable
+    OnDownloaded = LazAutoUpdate1Downloaded
     OnDebugEvent = LazAutoUpdate1DebugEvent
+    OnUpdated = LazAutoUpdate1Updated
     SFProjectName = 'lazautoupdate'
     UpdatesFolder = 'updates'
     VersionsININame = 'updatepack.ini'

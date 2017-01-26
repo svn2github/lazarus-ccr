@@ -182,6 +182,12 @@ type
     procedure FormShow(Sender: TObject);
     procedure grp_dragfilesDblClick(Sender: TObject);
     procedure LazAutoUpdate1DebugEvent(Sender: TObject; WhereAt, Message: string);
+    procedure LazAutoUpdate1Downloaded(Sender: TObject; ResultCode,
+      BytesDownloaded: integer);
+    procedure LazAutoUpdate1NewVersionAvailable(Sender: TObject;
+      Newer: boolean; OnlineVersion: string);
+    procedure LazAutoUpdate1Updated(Sender: TObject; NewVersion,
+      LauMessage: String);
     procedure lst_dragfilesDblClick(Sender: TObject);
     procedure mnuoptionsDisplayFileMangerClick(Sender: TObject);
     procedure mnuoptionsShowCodeInfoClick(Sender: TObject);
@@ -419,27 +425,30 @@ begin
   cmb_profile.Clear;
   cmb_profile.Items := ProfileNameList;
   cmb_profile.ItemIndex := cmb_profile.Items.IndexOf(szCurrentProfileName);
+  {
   if LazAutoUpdate1.CreateLocalLauImportFile then
     LazAutoUpdate1.RelocateLauImportFile;
+  }
   if bIsVirgin then
     PageControl1.ActivePage := tab_intro
   else
     PageControl1.ActivePage := tab_configure;
+
   if DebugMode then
+  BEGIN
     EventLog1.FileName := ChangeFileExt(ParamStr(0), '.log');
-  if DebugMode then
     if FileExistsUTF8(EventLog1.FileName) then
       SysUtils.DeleteFile(EventLog1.FileName);
-  if DebugMode then
     EventLog1.AppendContent := True;
-  if DebugMode then
     EventLog1.Active := True;
-  LazAutoUpdate1.DebugMode := DebugMode;
+    LazAutoUpdate1.DebugMode := DebugMode;
+  end;
 end;
 
 procedure Tmainform.FormDestroy(Sender: TObject);
 begin
   // No memory leaks!
+  If Assigned(EventLog1) then FreeAndNil(EventLog1);
   FreeAndNil(ProfileConfig);
   FreeAndNil(AppConfig);
   FreeAndNil(ProfilenameList);
@@ -492,6 +501,29 @@ procedure Tmainform.LazAutoUpdate1DebugEvent(Sender: TObject; WhereAt, Message: 
 begin
   if DebugMode and (EventLog1.Active = True) then
     EventLog1.Log(Format('LazAutoUpdate: Source=%s, Message=%s', [WhereAt, Message]));
+end;
+
+procedure Tmainform.LazAutoUpdate1Downloaded(Sender: TObject; ResultCode,
+  BytesDownloaded: integer);
+begin
+   if DebugMode and (EventLog1.Active = True) then
+    EventLog1.Log(Format('LazAutoUpdate: OnDownloaded ResultCode=%d BytesDownloaded=%d',
+    [ResultCode, BytesDownloaded]));
+end;
+
+procedure Tmainform.LazAutoUpdate1NewVersionAvailable(Sender: TObject;
+  Newer: boolean; OnlineVersion: string);
+begin
+ if DebugMode and (EventLog1.Active = True) then
+    EventLog1.Log(Format('LazAutoUpdate: NewVersionAvailable OnlineVersion=%s',
+    [OnlineVersion]));
+end;
+
+procedure Tmainform.LazAutoUpdate1Updated(Sender: TObject; NewVersion,
+  LauMessage: String);
+begin
+ if DebugMode and (EventLog1.Active = True) then
+    EventLog1.Log(Format('LazAutoUpdate: New Version=%s, Message=%s', [NewVersion, LauMessage]));
 end;
 
 procedure Tmainform.lst_dragfilesDblClick(Sender: TObject);
