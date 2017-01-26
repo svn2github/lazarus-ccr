@@ -60,7 +60,7 @@ interface
 uses
   Forms, Classes, SysUtils, lazautoupdate_httpclient, strutils,
   LazUTF8, FileUtil, LazFileUtils, Dialogs, StdCtrls,
-  Buttons, DateUtils, asyncprocess, zipper, LResources,
+  Buttons, DateUtils,{$IFDEF LINUX}process, asyncprocess,{$ENDIF}zipper, LResources,
   VersionSupport, inifiles, aboutlazautoupdateunit, uappisrunning, LCLProc,
   fileinfo, open_ssl, winpeimagereader {need this for reading exe info}
   , elfreader {needed for reading ELF executables}
@@ -136,7 +136,8 @@ const
  V0.2.7: Updates Tray Updater routines
  V0.2.8: Changed constants C_UPDATEHMNAME and C_LAUUPDATENAME
  V0.2.9: Added CreateLocalLauImportFile in UpdateToNewVersion
- V0.3.0: ??
+ V0.3.1: Added SetExecutePermission (LINUX only)
+ V0.3.2: ??
 }
   C_TLazAutoUpdateComponentVersion = '0.3.0';
   C_TThreadedDownloadComponentVersion = '0.0.3';
@@ -169,11 +170,11 @@ const
   {$ENDIF}
   C_PFX = C_OS + C_BITNESS; // Used in file naming
   {$IFDEF WINDOWS}
-     C_UPDATEHMNAME = 'updatehm' + C_PFX + '.exe';
-     C_LAUUPDATENAME = 'lauupdate' + C_PFX + '.exe';
+  C_UPDATEHMNAME = 'updatehm' + C_PFX + '.exe';
+  C_LAUUPDATENAME = 'lauupdate' + C_PFX + '.exe';
   {$ELSE}
-     C_UPDATEHMNAME = 'updatehm' + C_PFX;
-     C_LAUUPDATENAME = 'lauupdate' + C_PFX;
+  C_UPDATEHMNAME = 'updatehm' + C_PFX;
+  C_LAUUPDATENAME = 'lauupdate' + C_PFX;
   {$ENDIF}
   // Windows Constants (unused)
   C_RUNONCEKEY = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce';
@@ -382,6 +383,10 @@ type
     property LastCompiled: string read fLastCompiled;
     property TargetOS: string read fTargetOS;
     property WindowsAdminCheck: boolean read fWindowsAdminCheck write fWindowsAdminCheck;
+    {$IFDEF LINUX}
+    // Used in UpdateToNewVersion
+    function SetExecutePermission(const AFileName: string; var AErrMsg: string): boolean;
+    {$ENDIF}
   published
     // Events
     property OnNewVersionAvailable: TOnNewVersionAvailable
@@ -1560,8 +1565,8 @@ begin
     begin
       if fFireDebugEvent then
         fOndebugEvent(Self, 'RelocateLauImportFile',
-          Format('Relocated %s from %s to %s', [C_LAUTRayINI,
-          szSourceLAUTrayPath, szDestLAUTrayPath]));
+          Format('Relocated %s from %s to %s',
+          [C_LAUTRayINI, szSourceLAUTrayPath, szDestLAUTrayPath]));
       SysUtils.DeleteFile(szSourceLAUTrayPath);
     end
     else
@@ -1902,7 +1907,46 @@ begin
   end;
 end;
 
+{$IFDEF LINUX}
+function TLazAutoUpdate.SetExecutePermission(const AFileName: string;
+  var AErrMsg: string): boolean;
+var
+  SL: TStringList;
+  Process: TProcess;
+begin
+  Result := False;
+  Process := TProcess.Create(nil);
+  try
+    Process.Executable := '/bin/chmod';
+    Process.Parameters.Add('+X');
+    Process.Parameters.Add(AFileName);
+    Process.Options := Process.Options + [poWaitOnExit, poUsePipes];
+    Process.Execute;
+    SL := TStringList.Create;
+    try
+      SL.LoadFromStream(Process.Stderr);
+      AErrMsg := Trim(SL.Text);
+      Result := Trim(AErrMsg) = '';
+    finally
+      SL.Free;
+    end;
+  finally
+    Process.Free;
+  end;
+end;
 
+{$ENDIF}
+{
+procedure CheckPermissions;
+var
+  ErrMsg: String;
+begin
+  if SetExecutePermission('/minesadorada/developer/updates/consoleupdater', ErrMsg) then
+    MessageDlg('Permission successfully set.', mtInformation, [mbOk], 0)
+  else
+    MessageDlg('Cannot set permission. Error message: ' + ErrMsg, mtError, [mbOk], 0);
+end;
+}
 function TLazAutoUpdate.UpdateToNewVersion: boolean;
   // Shells to updater console
   // Requires admin user in Win 10
@@ -1927,6 +1971,9 @@ var
   cCount: cardinal;
   szAppDir: string;
   szParams: string;
+  {$IFDEF LINUX}
+  ErrMsg: string;
+{$ENDIF}
 begin
   Result := False;
   {$IFDEF WINDOWS}
@@ -1955,6 +2002,7 @@ begin
   end
   else
   begin
+    // Start Regular update
     cCount := 0;
     if not FileExistsUTF8(szAppDir + C_UPDATEHMNAME) then
     begin
@@ -1965,6 +2013,20 @@ begin
           Format(C_UpdaterMissing, [szAppDir + C_UPDATEHMNAME]));
       Exit;
     end;
+    {$IFDEF LINUX}
+    if not SetExecutePermission(szAppDir + C_UPDATEHMNAME, ErrMsg) then
+    begin
+      if fFireDebugEvent then
+        fOndebugEvent(Self, 'UpdateToNewVersion',
+          Format('Unable to set permissions for %s because of %s',
+          [szAppDir + fUpdatesFolder, ErrMsg]));
+      if fShowDialogs then
+        ShowMessageFmt('Unable to set permissions for %s because of %s',
+          [szAppDir + fUpdatesFolder, ErrMsg]);
+      Result := False;
+      Exit;
+    end;
+    {$ENDIF}
 
     if not DirectoryExistsUTF8(szAppDir + fUpdatesFolder) then
     begin
