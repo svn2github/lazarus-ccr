@@ -94,15 +94,19 @@ function CreateDesktopShortCut(Target, TargetArguments, ShortcutName,
 
 function DeleteDesktopShortcut(ShortcutName: string): boolean;
 
-Function GetShortCutErrorString:String;
+function GetShortCutErrorString: string;
+
 implementation
 
-Var sErrorString:String;
+var
+  sErrorString: string;
 
-Function GetShortCutErrorString:String;
-Begin
-  If (sErrorString='') then Result:='OK'
-  else Result:=sErrorString;
+function GetShortCutErrorString: string;
+begin
+  if (sErrorString = '') then
+    Result := 'OK'
+  else
+    Result := sErrorString;
 end;
 
 {$IFDEF UNIX}
@@ -145,7 +149,7 @@ var
   LinkName: WideString;
 begin
   Result := True;
-  sErrorString:='OK';
+  sErrorString := 'OK';
   // Simple failure check
   if not FileExistsUTF8(Target) then
     Result := False;
@@ -186,7 +190,7 @@ IN:
    Target: Filename with full path
    TargetArguments: String of arguments
    ShortCutName: Simple string
-   IconFileName: Filename with full path
+   IconFileName: Filename with full path.  If not specifies Executable will be used
    Category: Simple string (see header of this unit)
 OUT:
    True = Success
@@ -197,48 +201,55 @@ var
   XdgDesktopContent: TStringList;
   XdgDesktopFile: string;
   Aprocess: TProcess;
+  sPathToShare: string;
 begin
   // Suceed by default:
   Result := True;
-  sErrorString:='OK';
+  sErrorString := 'OK';
   // Simple failure checks
   if not FileExistsUTF8(Target) then
   begin
-    sErrorString:='File "' + Target + '" cannot be located.';
+    sErrorString := 'File "' + Target + '" cannot be located.';
     Result := False;
     Exit;
   end;
   if not FileExistsUTF8(IconFileName) then
   begin
-    sErrorString:='File "' + IconFileName + '" cannot be located.';
-    Result := False;
-    Exit;
+    sErrorString := 'File "' + IconFileName + '" cannot be located.';
+    IconFileName := Target;
   end;
   if ShortCutName = '' then
   begin
-    sErrorString:='ShortcutName is blank.';
+    sErrorString := 'ShortcutName is blank.';
     Result := False;
     Exit;
   end;
 
   if Category = '' then
-   begin
-      sErrorString:='Category is blank. Using "Utility"';
-      Category := 'Utility';
-   end;
-
+  begin
+    sErrorString := 'Category is blank. Using "Utility"';
+    Category := 'Utility';
+  end;
+  sPathToShare := IncludeTrailingPathDelimiter(ExpandFileNameUTF8('~')) +
+    'usr/share/applications' + DirectorySeparator + 'test.desktop';
+{
   XdgDesktopFile := IncludeTrailingPathDelimiter(GetTempDir(False)) +
     shortcutname + '.desktop';
+}
+// ExtractFileNameOnly(GetTempDir(False));
+XdgDesktopFile := IncludeTrailingPathDelimiter(GetTempDir(False)) +
+    'test.desktop';
   XdgDesktopContent := TStringList.Create;
   try
     XdgDesktopContent.Add('[Desktop Entry]');
     XdgDesktopContent.Add('Encoding=UTF-8');
     XdgDesktopContent.Add('Type=Application');
+    //XdgDesktopContent.Add('Nodisplay=True');
     XdgDesktopContent.Add('Icon=' + IconFileName);
-    If TargetArguments <> '' then
-       XdgDesktopContent.Add('Exec=' + Target + ' ' + TargetArguments)
+    if TargetArguments <> '' then
+      XdgDesktopContent.Add('Exec=' + Target + ' ' + TargetArguments)
     else
-       XdgDesktopContent.Add('Exec=' + Target);
+      XdgDesktopContent.Add('Exec=' + Target);
     XdgDesktopContent.Add('Name=' + ShortcutName);
     XdgDesktopContent.Add('Category=' + Category);
     // We're going to try and call xdg-desktop-icon
@@ -246,17 +257,29 @@ begin
     AProcess := TProcess.Create(nil);
     try
       try
+        if FileExistsUTF8(XdgDesktopFile) then DeleteFile(XdgDesktopFile);
         XdgDesktopContent.SaveToFile(XdgDesktopFile);
-        Sleep(100);
-        Aprocess.Executable := 'xdg-desktop-icon install';
-        AProcess.CurrentDirectory := ProgramDirectory;
-        AProcess.Parameters.Clear;
-        AProcess.Parameters.Add(XdgDesktopFile);
-        Aprocess.Execute;
-        Sleep(100);
+        if FileExistsUTF8(XdgDesktopFile) then
+        begin
+          Sleep(100);
+          Aprocess.Executable := 'xdg-desktop-icon install';
+          AProcess.CurrentDirectory := ProgramDirectory;
+          AProcess.Parameters.Clear;
+          AProcess.Parameters.Add(XdgDesktopFile);
+          Aprocess.Execute;
+          Sleep(100);
+        end
+        else
+          if FileExistsUTF8(sPathToShare) then DeleteFile(sPathToShare);
+          XdgDesktopContent.SaveToFile(sPathToShare);
+          If Not FileExistsUTF8(sPathToShare) then
+          begin
+           Result:=FALSE;
+           sErrorString := 'SaveToFile(' + sPathToShare + ') failed';
+          end;
       except
         Result := False;
-        sErrorString:='Exception running "xdg-desktop-icon install"';
+        sErrorString := 'Exception running "xdg-desktop-icon install"';
       end;
     finally
       AProcess.Free;
@@ -264,8 +287,16 @@ begin
     if Result = False then
       // Temp file is no longer needed....
       try
-        If Not DeleteFile(XdgDesktopFile) then
-          sErrorString:='Unable to delete temporary ' + XdgDesktopFile;
+        If FileExistsUTF8(XdgDesktopFile) then
+        BEGIN
+        if CopyFile(XdgDesktopFile, sPathToShare) then
+          Result := True
+        else
+          sErrorString := Format('Unable to copy %s file to %s', [XdgDesktopFile, sPathToShare]);
+        if not DeleteFile(XdgDesktopFile) then
+          sErrorString := 'Unable to delete temporary ' + XdgDesktopFile;
+        end
+        else sErrorString := 'Unable to locate temporary ' + XdgDesktopFile;
       finally
         // Swallow, let filesystem maintenance clear it up
       end;
@@ -283,7 +314,7 @@ var
   LinkName: WideString;
 begin
   Result := False;
-  sErrorString:='OK';
+  sErrorString := 'OK';
   try
     { Get the desktop location }
     SHGetSpecialFolderLocation(0, CSIDL_DESKTOPDIRECTORY, PIDL);
@@ -292,7 +323,7 @@ begin
     if SysUtils.DeleteFile(LinkName) then
       Result := True;
   except
-     sErrorString:='Exception deleting ' + LinkName;
+    sErrorString := 'Exception deleting ' + LinkName;
     // Eat the exception
   end;
 end;
@@ -300,7 +331,7 @@ end;
 {$ELSE}
 function DeleteDesktopShortcut(ShortcutName: string): boolean;
 begin
-  sErrorString:='OK';
+  sErrorString := 'OK';
   Result := False;
 end;
 
