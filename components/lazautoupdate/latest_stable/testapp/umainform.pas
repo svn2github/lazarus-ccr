@@ -45,6 +45,7 @@ type
   { Tmainform }
 
   Tmainform = class(TForm)
+    cmd_MakeDesktopShortcut: TButton;
     cmd_SilentUpdate: TButton;
     cmd_AutoUpdate: TButton;
     cmd_updateToNewVersion: TButton;
@@ -56,6 +57,7 @@ type
     StatusBar1: TStatusBar;
     procedure cmd_AutoUpdateClick(Sender: TObject);
     procedure cmd_DownloadNewVersionClick(Sender: TObject);
+    procedure cmd_MakeDesktopShortcutClick(Sender: TObject);
     procedure cmd_NewVersionAvailableClick(Sender: TObject);
     procedure cmd_SilentUpdateClick(Sender: TObject);
     procedure cmd_updateToNewVersionClick(Sender: TObject);
@@ -161,6 +163,17 @@ end;
 procedure Tmainform.cmd_DownloadNewVersionClick(Sender: TObject);
 begin
     LazAutoUpdate1.DownloadNewVersion;
+end;
+
+procedure Tmainform.cmd_MakeDesktopShortcutClick(Sender: TObject);
+begin
+  LazAutoUpdate1.ShortCut.ShortCutName:='Test Application';
+  LazAutoUpdate1.ShortCut.Target:=Application.EXEName;
+  LazAutoUpdate1.ShortCut.IconFilename:=ChangeFileExt(Application.EXEName,'.ico');
+  If LazAutoUpdate1.MakeShortCut then
+   ShowMessage('Success! New shortcut is now on your desktop')
+  else
+   ShowMessage('MakeShortCut failed');
 end;
 
 procedure Tmainform.cmd_AutoUpdateClick(Sender: TObject);

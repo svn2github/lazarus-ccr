@@ -83,6 +83,8 @@ uses
 function CreateDesktopShortCut(Target, TargetArguments, ShortcutName,
   IconFileName, Category: string): boolean;
 
+function DeleteDesktopShortcut(ShortcutName: string):Boolean;
+
 implementation
 
 {$IFDEF UNIX}
@@ -208,18 +210,24 @@ end;
 
 {$ENDIF UNIX}
 {$IFDEF MSWINDOWS}
-procedure DeleteDesktopShortcut(ShortcutName: string);
+Function DeleteDesktopShortcut(ShortcutName: string):Boolean;
 var
   PIDL: PItemIDList;
   InFolder: array[0..MAX_PATH] of char;
   LinkName: WideString;
 begin
+  Result:=FALSE;
   { Get the desktop location }
   SHGetSpecialFolderLocation(0, CSIDL_DESKTOPDIRECTORY, PIDL);
   SHGetPathFromIDList(PIDL, InFolder);
   LinkName := IncludeTrailingPathDelimiter(InFolder) + ShortcutName + '.lnk';
-  SysUtils.DeleteFile(LinkName);
+  If SysUtils.DeleteFile(LinkName) then Result:=TRUE;
 end;
-
+{$ELSE}
+Function DeleteDesktopShortcut(ShortcutName: string):Boolean;
+begin
+  Result:=FALSE;
+end;
 {$ENDIF MSWINDOWS}
+
 end.

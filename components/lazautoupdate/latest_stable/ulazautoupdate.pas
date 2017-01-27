@@ -356,6 +356,7 @@ type
     procedure RelocateLauImportFile;
     // Uses properties in TShortCutClass
     function MakeShortCut: boolean;
+    function DeleteShortCut: boolean; // (use fShortCutClass.ShortCutName)
 
     // Download lists (now superceded by CopyTree)
     // TODO: Use Indexed properties to handle list access
@@ -966,7 +967,7 @@ begin
     end;
   end;
 end;
-
+// A couple of public functions for installer apps
 function TLazAutoUpdate.MakeShortCut: boolean;
 begin
   Result := False; // assume failure, look for success
@@ -995,6 +996,22 @@ begin
   Result := CreateDesktopShortCut(fShortCutClass.Target,
     fShortCutClass.TargetArguments, fShortCutClass.ShortcutName,
     fShortCutClass.IconFileName, fShortCutClass.CategoryString);
+end;
+function TLazAutoUpdate.DeleteShortCut: boolean;
+begin
+  Result := False; // assume failure, look for success
+  if Assigned(fOndebugEvent) then
+    fFireDebugEvent := True;
+
+  if fFireDebugEvent then
+    fOndebugEvent(Self, 'DeleteShortCut', 'DeleteShortCut called');
+  If fShortCutClass.ShortcutName='' then
+  begin
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'DeleteShortCut', 'ShortCut.ShortCutName was empty!');
+    Exit;
+  end;
+  Result:=DeleteDesktopShortcut(fShortCutClass.ShortCutName);
 end;
 
 procedure TLazAutoUpdate.ShowWhatsNewIfAvailable;

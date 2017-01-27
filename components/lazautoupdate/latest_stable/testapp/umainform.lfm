@@ -1,7 +1,7 @@
 object mainform: Tmainform
-  Left = 509
+  Left = 518
   Height = 209
-  Top = 326
+  Top = 285
   Width = 335
   BorderIcons = [biSystemMenu]
   Caption = 'mainform'
@@ -93,6 +93,15 @@ object mainform: Tmainform
     TabOrder = 6
     Visible = False
   end
+  object cmd_MakeDesktopShortcut: TButton
+    Left = 184
+    Height = 25
+    Top = 112
+    Width = 139
+    Caption = 'Make Desktop Shortcut'
+    OnClick = cmd_MakeDesktopShortcutClick
+    TabOrder = 7
+  end
   object LazAutoUpdate1: TLazAutoUpdate
     About.Description.Strings = (
       'A component for updating your application'#13#10'Designed for projects hosted by SourceForge'#13#10#13#10'Main methods:'#13#10'Procedure AutoUpdate'#13#10'Function NewVersionAvailable: Boolean'#13#10'Function DownloadNewVersion: Boolean'#13#10'Function UpdateToNewVersion: Boolean'#13#10'Procedure ShowWhatsNewIfAvailable'#13#10'For troubleshooting, set DebugMode=TRUE'
@@ -126,7 +135,7 @@ object mainform: Tmainform
     GitHubRepositoryName = 'TestApp'
     GitHubBranchOrTag = 'updates'
     ShortCut.ShortcutName = 'AnotherName'
-    ShortCut.Category = scUtility
+    ShortCut.Category = scAudioVideo
     Left = 200
     Top = 24
   end
