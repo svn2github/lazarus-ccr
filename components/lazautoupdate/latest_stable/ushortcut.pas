@@ -87,7 +87,16 @@ function CreateDesktopShortCut(Target, TargetArguments, ShortcutName,
 
 function DeleteDesktopShortcut(ShortcutName: string): boolean;
 
+Function GetShortCutErrorString:String;
 implementation
+
+Var sErrorString:String;
+
+Function GetShortCutErrorString:String;
+Begin
+  If (sErrorString='') then Result:='OK'
+  else Result:=sErrorString;
+end;
 
 {$IFDEF UNIX}
 //Adapted from sysutils; Unix/Linux only
@@ -117,6 +126,7 @@ var
   LinkName: WideString;
 begin
   Result := True;
+  sErrorString:='OK';
   // Simple failure check
   if not FileExistsUTF8(Target) then
     Result := False;
@@ -159,42 +169,63 @@ var
 begin
   // Suceed by default:
   Result := True;
+  sErrorString:='OK';
   // Simple failure checks
   if not FileExistsUTF8(Target) then
+  begin
+    sErrorString:='File "' + Target + '" cannot be located.';
     Result := False;
-  if not FileExistsUTF8(ExtractFilePath(Target) + IconFileName) then
-    Result := False;
-  if ShortCutName = '' then
-    Result := False;
-  if Result = False then
     Exit;
+  end;
+  if not FileExistsUTF8(ExtractFilePath(Target) + IconFileName) then
+  begin
+    sErrorString:='File "' + ExtractFilePath(Target) + IconFileName + '" cannot be located.';
+    Result := False;
+    Exit;
+  end;
+  if ShortCutName = '' then
+  begin
+    sErrorString:='ShortcutName is blank.';
+    Result := False;
+    Exit;
+  end;
+
   if Category = '' then
-    Category := 'Utility';
+   begin
+      sErrorString:='Category is blank. Using "Utility"';
+      Category := 'Utility';
+   end;
 
   XdgDesktopFile := IncludeTrailingPathDelimiter(GetTempDir(False)) +
-    'fpcup-' + shortcutname + '.desktop';
+    shortcutname + '.desktop';
   XdgDesktopContent := TStringList.Create;
   try
     XdgDesktopContent.Add('[Desktop Entry]');
     XdgDesktopContent.Add('Encoding=UTF-8');
     XdgDesktopContent.Add('Type=Application');
     XdgDesktopContent.Add('Icon=' + ExtractFilePath(Target) + IconFileName);
-    XdgDesktopContent.Add('Exec=' + Target + ' ' + TargetArguments);
+    If TargetArguments <> '' then
+       XdgDesktopContent.Add('Exec=' + Target + ' ' + TargetArguments)
+    else
+       XdgDesktopContent.Add('Exec=' + Target);
     XdgDesktopContent.Add('Name=' + ShortcutName);
-    XdgDesktopContent.Add('Category=' + Category + ';');
+    XdgDesktopContent.Add('Category=' + Category);
     // We're going to try and call xdg-desktop-icon
     // this may fail if shortcut exists already
     AProcess := TProcess.Create(nil);
     try
       try
         XdgDesktopContent.SaveToFile(XdgDesktopFile);
-        AProcess.Parameters.Add(XdgDesktopFile);
+        Sleep(100);
         Aprocess.Executable := 'xdg-desktop-icon install';
-        Aprocess.WaitOnExit(2000);
+        AProcess.CurrentDirectory := ProgramDirectory;
+        AProcess.Parameters.Clear;
+        AProcess.Parameters.Add(XdgDesktopFile);
         Aprocess.Execute;
-        //OperationSucceeded:=(ExecuteCommand('xdg-desktop-icon install ' + XdgDesktopFile,false)=0);
+        Sleep(100);
       except
         Result := False;
+        sErrorString:='Exception running "xdg-desktop-icon install"';
       end;
     finally
       AProcess.Free;
@@ -202,7 +233,8 @@ begin
     if Result = False then
       // Temp file is no longer needed....
       try
-        DeleteFile(XdgDesktopFile);
+        If Not DeleteFile(XdgDesktopFile) then
+          sErrorString:='Unable to delete temporary ' + XdgDesktopFile;
       finally
         // Swallow, let filesystem maintenance clear it up
       end;
@@ -220,6 +252,7 @@ var
   LinkName: WideString;
 begin
   Result := False;
+  sErrorString:='OK';
   try
     { Get the desktop location }
     SHGetSpecialFolderLocation(0, CSIDL_DESKTOPDIRECTORY, PIDL);
@@ -228,6 +261,7 @@ begin
     if SysUtils.DeleteFile(LinkName) then
       Result := True;
   except
+     sErrorString:='Exception deleting ' + LinkName;
     // Eat the exception
   end;
 end;
@@ -235,6 +269,7 @@ end;
 {$ELSE}
 function DeleteDesktopShortcut(ShortcutName: string): boolean;
 begin
+  sErrorString:='OK';
   Result := False;
 end;
 

@@ -45,9 +45,11 @@ type
   { Tmainform }
 
   Tmainform = class(TForm)
+    chk_DebugMode: TCheckBox;
+    chk_ShowDialogs: TCheckBox;
+    chk_ShowProgress: TCheckBox;
     cmd_DeleteDesktopShortcut: TButton;
     cmd_MakeDesktopShortcut: TButton;
-    cmd_SilentUpdate: TButton;
     cmd_AutoUpdate: TButton;
     cmd_updateToNewVersion: TButton;
     cmd_DownloadNewVersion: TButton;
@@ -56,6 +58,9 @@ type
     lbl_Version: TLabel;
     LazAutoUpdate1: TLazAutoUpdate;
     StatusBar1: TStatusBar;
+    procedure chk_DebugModeChange(Sender: TObject);
+    procedure chk_ShowDialogsChange(Sender: TObject);
+    procedure chk_ShowProgressChange(Sender: TObject);
     procedure cmd_AutoUpdateClick(Sender: TObject);
     procedure cmd_DeleteDesktopShortcutClick(Sender: TObject);
     procedure cmd_DownloadNewVersionClick(Sender: TObject);
@@ -92,7 +97,7 @@ procedure Tmainform.CloseLog;
 begin
   If Assigned(Logger) then
    begin
-    Logger.Info('End of Log');
+    If Logger.Active then Logger.Info('End of Log');
     Logger.Active:=False;
    end;
 end;
@@ -120,12 +125,15 @@ begin
   Logger.LogType := ltFile;
   Logger.FileName := C_LogFileName;
   Logger.Active := True;
-  Logger.Info('Start of Log');
+  Logger.Info('Testing Logging functionality');
   Except
     Raise Exception.Create('Trouble with the logger. Click OK to quit');
     If Assigned(Logger) then FreeAndNil(Logger);
     Application.Terminate;
   end;
+  Logger.Active := False;
+  if FileExistsUTF8(C_LogFileName) then
+    DeleteFile(C_LogFileName);
   // FORCE AN UPDATE EVERY TIME HERE?
   // LazAutoUpdate1.AppVersion:='0.0.0.0';
   lbl_Version.Caption:='Version: ' + LazAutoUpdate1.AppVersion;
@@ -144,7 +152,6 @@ end;
 
 procedure Tmainform.cmd_SilentUpdateClick(Sender: TObject);
 begin
-   LazAutoUpdate1.SilentUpdate;
 end;
 
 procedure Tmainform.cmd_updateToNewVersionClick(Sender: TObject);
@@ -186,6 +193,32 @@ begin
   CloseLog;
   LazAutoUpdate1.AutoUpdate;
   {$ENDIF}
+end;
+
+procedure Tmainform.chk_DebugModeChange(Sender: TObject);
+begin
+  If chk_DebugMode.Checked then
+   begin
+    Logger.Active := True;
+    Logger.Info('Logging started');
+    LazAutoUpdate1.DebugMode:=True;
+   end
+  else
+  begin
+    LazAutoUpdate1.DebugMode:=False;
+    Logger.Info('Logging ended');
+    Logger.Active := False;
+  end;
+end;
+
+procedure Tmainform.chk_ShowDialogsChange(Sender: TObject);
+begin
+   LazAutoUpdate1.ShowDialogs:=chk_ShowDialogs.Checked;
+end;
+
+procedure Tmainform.chk_ShowProgressChange(Sender: TObject);
+begin
+    LazAutoUpdate1.ShowUpdateInCaption:=chk_ShowProgress.Checked;
 end;
 
 procedure Tmainform.cmd_DeleteDesktopShortcutClick(Sender: TObject);

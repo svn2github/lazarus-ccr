@@ -999,9 +999,9 @@ begin
 
   if fFireDebugEvent then
     if Result = True then
-      fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut succeded')
+      fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut succeded.')
     else
-      fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut failed');
+      fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut failed.  Error: ' + GetShortCutErrorString);
 end;
 
 function TLazAutoUpdate.DeleteShortCut: boolean;
@@ -1023,9 +1023,9 @@ begin
 
   if fFireDebugEvent then
     if Result = True then
-      fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut succeded')
+      fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut succeded.')
     else
-      fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut failed');
+      fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut failed.  Error: ' + GetShortCutErrorString);
 
 end;
 
