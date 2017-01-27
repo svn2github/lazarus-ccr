@@ -58,11 +58,11 @@ interface
 
 
 uses
-  Forms, Classes, SysUtils, lazautoupdate_httpclient, strutils,
+  Forms, Classes, SysUtils, lazautoupdate_httpclient, strutils,PropEdits,
   LazUTF8, FileUtil, LazFileUtils, Dialogs, StdCtrls,
   Buttons, DateUtils,{$IFDEF LINUX}process, asyncprocess,{$ENDIF}zipper, LResources,
   VersionSupport, inifiles, aboutlazautoupdateunit, uappisrunning, LCLProc,
-  fileinfo, open_ssl, winpeimagereader {need this for reading exe info}
+  fileinfo, open_ssl, ushortcut,winpeimagereader {need this for reading exe info}
   , elfreader {needed for reading ELF executables}
   , machoreader {needed for reading MACH-O executables}
   {$IFDEF WINDOWS}, Windows, ShellAPI{$ENDIF}; // Thanks to Windows 10 and 704 error
@@ -139,10 +139,10 @@ const
  V0.3.1: Added SetExecutePermission (LINUX only)
  V0.3.2: Bugfix for DoSilentUpdate
  V0.3.3: Added event OnUpdate
- V0.3.4: ??
+ V0.3.4: Added unit ushortcut (CreateDesktopShortCut) for installers
 }
-  C_TLazAutoUpdateComponentVersion = '0.3.3';
-  C_TThreadedDownloadComponentVersion = '0.0.3';
+  C_TLazAutoUpdateComponentVersion = '0.3.4.0';
+  C_TThreadedDownloadComponentVersion = '0.0.3.0';
 {
  V0.0.1: Initial alpha
  V0.0.2: Added fDebugmode to all classes and functions
@@ -228,6 +228,7 @@ resourcestring
     'sClick OK to continue';
   rsApplicationU = 'Application update';
 
+
 type
   // Dummy thread to initialise the threading system
   tc = class(tthread)
@@ -247,7 +248,7 @@ type
   end;
 
   TThreadedDownload = class; // Forward declaration
-
+  TShortCutClass = class; // Forward declaration
   {TLAZAUTOUPDATE}
   // Event declarations
   TOnNewVersionAvailable = procedure(Sender: TObject; Newer: boolean;
@@ -256,7 +257,7 @@ type
     object;
   TOnDebugEvent = procedure(Sender: TObject; lauMethodName, lauMessage: string) of
     object;
-  TOnUpdated = Procedure(Sender:TObject;NewVersion,LauMessage:String) of Object;
+  TOnUpdated = procedure(Sender: TObject; NewVersion, LauMessage: string) of object;
 
   TLazAutoUpdate = class(TAboutLazAutoUpdate)
   private
@@ -283,6 +284,7 @@ type
     fShowDialogs: boolean;
     fDownloadInprogress: boolean;
     fWindowsAdminCheck: boolean;
+    fShortCutClass:TShortCutClass;
     {$IFDEF UNIX}
     FUpdateHMProcess: TAsyncProcess;
     {$ENDIF}
@@ -294,7 +296,7 @@ type
     FOnNewVersionAvailable: TOnNewVersionAvailable;
     FOnDownloaded: TOnDownloaded;
     fOnDebugEvent: TOnDebugEvent;
-    fOnUpdated:TOnUpdated;
+    fOnUpdated: TOnUpdated;
     fLastError: string;
     fVersionCountLimit, fDownloadCountLimit: cardinal;
     fZipfileName: string;
@@ -319,8 +321,8 @@ type
     function GetThreadDownloadReturnCode: integer;
     function IsOnlineVersionNewer(const sznewINIPath: string): boolean;
     function DoSilentUpdate: boolean;
-    function GetUpdateSilentExe:String;
-    function GetUpdateExe:String;
+    function GetUpdateSilentExe: string;
+    function GetUpdateExe: string;
   protected
 
   public
@@ -398,7 +400,7 @@ type
       read FOnNewVersionAvailable write FOnNewVersionAvailable;
     property OnDownloaded: TOnDownloaded read fOnDownloaded write fOnDownloaded;
     property OnDebugEvent: TOnDebugEvent read fOnDebugEvent write fOnDebugEvent;
-    property OnUpdated:TOnUpdated read fOnUpdated write fOnUpdated;
+    property OnUpdated: TOnUpdated read fOnUpdated write fOnUpdated;
 
     // Embedded class
     property ThreadDownload: TThreadedDownload
@@ -447,6 +449,37 @@ type
       write fGitHubRepositoryName;
     // Default=master but any branchname or tagname is OK
     property GitHubBranchOrTag: string read fGitHubBranchOrTag write fGitHubBranchOrTag;
+
+    property ShortCut:TShortCutClass read fShortCutClass write fShortCutClass;
+  end;
+
+Type
+  TShortCutCategory = (scAudioVideo,scAudio,scDevelopment,
+  scEducation,scGame,scGraphics,scNetwork,scOffice,scScience,scSettings,
+  scSystem,scUtility);
+  // TShortCutCategoryFlags = Set of TShortCutCategory;
+
+Type
+  TShortCutClass = Class(TPersistent)
+  private
+    // ShortCut stuff for CreateDesktopShortCut in ushortcut.pas
+    fShortCutTarget:String;
+    fShortCutTargetArguments:String;
+    fShortCutShortcutName:String;
+    fShortCutIconFileName:String;
+    fShortCutCategoryString:String;
+
+    fShortCutCategory:TShortCutCategory; // For easier property access
+    procedure SetShortCutCategoryString(ACategory:TShortCutCategory);
+  Public
+    constructor Create; // Constructor must be public
+    destructor Destroy; override; // Destructor must be public
+  published
+    property Target:String read fShortCutTarget write fShortCutTarget;
+    property TargetArguments:String read fShortCutTargetArguments write fShortCutTargetArguments;
+    property ShortcutName:String read fShortCutShortcutName write fShortCutShortcutName;
+    property IconFileName:String read fShortCutIconFileName write fShortCutIconFileName;
+    property Category:TShortCutCategory read fShortCutCategory write SetShortCutCategoryString;
   end;
 
   {TThreadedDownload }
@@ -512,10 +545,18 @@ type
     procedure ShowProgress;
     }
   end;
+Type
+  // For the TShortCutClass filename properties (needs propedits unit)
+  TMyFileNamePropertyEditor = class(TFileNamePropertyEditor)
+    public
+      // Override the Edit method for total control
+      function GetFilter: string; override;
+      function GetDialogOptions: TOpenOptions; override;
+      function GetDialogTitle: string; override;
+    end;
 
 
-
-// Non-threaded version
+// Non-threaded function
 function DownloadHTTP(URL, TargetFile: string; var ReturnCode, DownloadSize: integer;
   bIsSourceForge, fDebugMode: boolean): boolean;
 
@@ -527,7 +568,38 @@ procedure Register;
 begin
   {$I lazautoupdate_icon.lrs}
   RegisterComponents('System', [TLazAutoUpdate]);
+  // Register the custom property editors for the TShortCutClass filename properties
+  RegisterPropertyEditor(TypeInfo(String),
+      TShortCutClass, 'Target', TMyFileNamePropertyEditor);
+  RegisterPropertyEditor(TypeInfo(String),
+    TShortCutClass, 'IconFileName', TMyFileNamePropertyEditor);
 end;
+
+// Start Property editors for File type properties in TShortCutClass
+function TMyFileNamePropertyEditor.GetFilter: string;
+begin
+  {$IFDEF WINDOWS}
+     Result := 'Windows executable|*.exe|All Files|*.*';
+  {$ELSE}
+    {$IFDEF LINUX}
+       Result := 'Linux executable|*.|All Files|*.*';
+    {$ELSE}
+       Result := 'All Files|*.*';
+    {$ENDIF}
+  {$ENDIF}
+end;
+
+function TMyFileNamePropertyEditor.GetDialogOptions: TOpenOptions;
+begin
+  // To see the full list, drop an OpenDialog onto a form and see the Options property
+  Result := [ofFileMustExist, ofPathMustExist];
+end;
+
+function TMyFileNamePropertyEditor.GetDialogTitle: string;
+begin
+  Result := 'Choose Shortcut Target Filename';
+end;
+// End Property editors for File type properties in TShortCutClass
 
 // Dummy thread to initialise the threading process
 procedure tc.Execute;
@@ -542,6 +614,32 @@ var
 begin
   ThisSecond := MilliSecondOfTheDay(Now);
   while MilliSecondOfTheDay(Now) < (ThisSecond + MillisecondDelay) do ;
+end;
+
+procedure TShortCutClass.SetShortCutCategoryString(ACategory:TShortCutCategory);
+{
+TShortCutCategory = (scAudioVideo,scAudio,scDevelopment,
+scEducation,scGame,scGraphics,scNetwork,scOffice,scScience,scSettings,
+scSystem,scUtility);
+}
+begin
+  If ACategory=fShortCutCategory then exit;
+
+  fShortCutCategoryString:='Unknown';
+  Case ACategory of
+     scAudioVideo:fShortCutCategoryString:='AudioVideo';
+     scAudio:fShortCutCategoryString:='Audio';
+     scDevelopment:fShortCutCategoryString:='Development';
+     scEducation:fShortCutCategoryString:='Education';
+     scGame:fShortCutCategoryString:='Game';
+     scGraphics:fShortCutCategoryString:='Graphics';
+     scNetwork:fShortCutCategoryString:='Network';
+     scOffice:fShortCutCategoryString:='Office';
+     scScience:fShortCutCategoryString:='Science';
+     scSettings:fShortCutCategoryString:='Settings';
+     scSystem:fShortCutCategoryString:='System';
+     scUtility:fShortCutCategoryString:='Utility';
+  end;
 end;
 
 procedure TLazAutoUpdate.DebugTest;
@@ -650,6 +748,15 @@ end;
 
 {$ENDIF}
 // === END WINDOWS PROCS =======================================================
+constructor TShortCutClass.Create;
+begin
+  inherited Create; // TComponent method;
+end;
+
+destructor TShortCutClass.Destroy;
+begin
+  inherited Destroy;
+end;
 
 constructor TLazAutoUpdate.Create(AOwner: TComponent);
 var
@@ -667,6 +774,10 @@ begin
   // Freed in Destroy
   fThreadDownload := TThreadedDownload.Create();
 
+  fShortCutClass:=TShortCutClass.Create();
+  fShortCutClass.ShortcutName:='MyShortcutName';
+  fShortCutClass.TargetArguments:='';
+  fShortCutClass.Category:=scDevelopment;
   // Leave URL and Filename to be set via properties
   fComponentVersion := C_TLazAutoUpdateComponentVersion;
   // Unused
@@ -773,24 +884,26 @@ end;
 destructor TLazAutoUpdate.Destroy;
 begin
   FreeAndNil(fThreadDownload);
+  FreeAndNil(fShortCutClass);
   inherited Destroy;
 end;
-function TLazAutoUpdate.GetUpdateSilentExe:String;
+
+function TLazAutoUpdate.GetUpdateSilentExe: string;
 begin
   fUpdateSilentExe := C_LAUUPDATENAME;
-  If csDesigning in ComponentState then
-    Result:='lauupdate'
+  if csDesigning in ComponentState then
+    Result := 'lauupdate'
   else
-    Result:=fUpdateSilentExe;
+    Result := fUpdateSilentExe;
 end;
 
-function TLazAutoUpdate.GetUpdateExe:String;
+function TLazAutoUpdate.GetUpdateExe: string;
 begin
   fUpdateExe := C_UPDATEHMNAME;
-  If csDesigning in ComponentState then
-    Result:='updatehm'
+  if csDesigning in ComponentState then
+    Result := 'updatehm'
   else
-    Result:=fUpdateExe;
+    Result := fUpdateExe;
 end;
 
 function TLazAutoUpdate.AppIsActive(const ExeName: string): boolean;
@@ -2140,12 +2253,12 @@ begin
         Inc(CCount);
         if cCount > 100000 then
         begin
-             // Fire the OnUpdated event
-          If Assigned(fOnUpdated) then
+          // Fire the OnUpdated event
+          if Assigned(fOnUpdated) then
           begin
-             fOnUpdated(Self,fGUIOnlineVersion,'Unsuccessful update');
-             Application.Processmessages;
-             Sleep(100);
+            fOnUpdated(Self, fGUIOnlineVersion, 'Unsuccessful update');
+            Application.ProcessMessages;
+            Sleep(100);
           end;
           Break; // Get out of jail in case updatehm.exe fails to copy file
         end;
@@ -2156,12 +2269,12 @@ begin
 {$ENDIF}
     CreateLocalLauImportFile; // Creates a new import file in GetAppConfigDirUTF8
 
-   // Fire the OnUpdated event
-    If Assigned(fOnUpdated) then
+    // Fire the OnUpdated event
+    if Assigned(fOnUpdated) then
     begin
-       fOnUpdated(Self,fGUIOnlineVersion,'Successful update');
-       Application.Processmessages;
-       Sleep(100);
+      fOnUpdated(Self, fGUIOnlineVersion, 'Successful update');
+      Application.ProcessMessages;
+      Sleep(100);
     end;
 
     if fFireDebugEvent then

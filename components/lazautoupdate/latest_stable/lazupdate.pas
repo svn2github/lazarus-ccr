@@ -9,7 +9,7 @@ interface
 
 uses
   ulazautoupdate, aboutlazautoupdateunit, VersionSupport, uappisrunning, 
-  lazautoupdate_httpclient, open_ssl, LazarusPackageIntf;
+  lazautoupdate_httpclient, open_ssl, ushortcut, LazarusPackageIntf;
 
 implementation
 

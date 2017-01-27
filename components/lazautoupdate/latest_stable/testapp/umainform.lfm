@@ -125,6 +125,8 @@ object mainform: Tmainform
     GitHubProjectname = 'lazarusccr'
     GitHubRepositoryName = 'TestApp'
     GitHubBranchOrTag = 'updates'
+    ShortCut.ShortcutName = 'AnotherName'
+    ShortCut.Category = scUtility
     Left = 200
     Top = 24
   end

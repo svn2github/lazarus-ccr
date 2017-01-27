@@ -35,8 +35,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, umainform, open_ssl
-  { you can add units after this };
+  Forms, umainform, open_ssl;
 
 {$R *.res}
 
