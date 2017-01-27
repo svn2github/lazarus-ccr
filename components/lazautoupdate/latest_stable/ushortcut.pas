@@ -1,4 +1,5 @@
 unit ushortcut;
+
 {
 License
 =======
@@ -74,6 +75,7 @@ Icon=fooview-new
 {$mode objfpc}{$H+}
 
 interface
+
 uses
   Classes, SysUtils, LazUTF8, FileUtil, LazFileUtils
   {$IFDEF LINUX}, process{$ENDIF}
@@ -83,7 +85,7 @@ uses
 function CreateDesktopShortCut(Target, TargetArguments, ShortcutName,
   IconFileName, Category: string): boolean;
 
-function DeleteDesktopShortcut(ShortcutName: string):Boolean;
+function DeleteDesktopShortcut(ShortcutName: string): boolean;
 
 implementation
 
@@ -166,7 +168,8 @@ begin
     Result := False;
   if Result = False then
     Exit;
-  if Category = '' then Category := 'Utility';
+  if Category = '' then
+    Category := 'Utility';
 
   XdgDesktopFile := IncludeTrailingPathDelimiter(GetTempDir(False)) +
     'fpcup-' + shortcutname + '.desktop';
@@ -210,24 +213,31 @@ end;
 
 {$ENDIF UNIX}
 {$IFDEF MSWINDOWS}
-Function DeleteDesktopShortcut(ShortcutName: string):Boolean;
+function DeleteDesktopShortcut(ShortcutName: string): boolean;
 var
   PIDL: PItemIDList;
   InFolder: array[0..MAX_PATH] of char;
   LinkName: WideString;
 begin
-  Result:=FALSE;
-  { Get the desktop location }
-  SHGetSpecialFolderLocation(0, CSIDL_DESKTOPDIRECTORY, PIDL);
-  SHGetPathFromIDList(PIDL, InFolder);
-  LinkName := IncludeTrailingPathDelimiter(InFolder) + ShortcutName + '.lnk';
-  If SysUtils.DeleteFile(LinkName) then Result:=TRUE;
+  Result := False;
+  try
+    { Get the desktop location }
+    SHGetSpecialFolderLocation(0, CSIDL_DESKTOPDIRECTORY, PIDL);
+    SHGetPathFromIDList(PIDL, InFolder);
+    LinkName := IncludeTrailingPathDelimiter(InFolder) + ShortcutName + '.lnk';
+    if SysUtils.DeleteFile(LinkName) then
+      Result := True;
+  except
+    // Eat the exception
+  end;
 end;
+
 {$ELSE}
-Function DeleteDesktopShortcut(ShortcutName: string):Boolean;
+function DeleteDesktopShortcut(ShortcutName: string): boolean;
 begin
-  Result:=FALSE;
+  Result := False;
 end;
+
 {$ENDIF MSWINDOWS}
 
 end.

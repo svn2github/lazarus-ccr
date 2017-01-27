@@ -996,7 +996,14 @@ begin
   Result := CreateDesktopShortCut(fShortCutClass.Target,
     fShortCutClass.TargetArguments, fShortCutClass.ShortcutName,
     fShortCutClass.IconFileName, fShortCutClass.CategoryString);
+
+  if fFireDebugEvent then
+    if Result = True then
+      fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut succeded')
+    else
+      fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut failed');
 end;
+
 function TLazAutoUpdate.DeleteShortCut: boolean;
 begin
   Result := False; // assume failure, look for success
@@ -1004,14 +1011,22 @@ begin
     fFireDebugEvent := True;
 
   if fFireDebugEvent then
-    fOndebugEvent(Self, 'DeleteShortCut', 'DeleteShortCut called');
-  If fShortCutClass.ShortcutName='' then
+    fOndebugEvent(Self, 'DeleteShortCut',
+      Format('DeleteShortCut called. Shortcut name=%s', [fShortCutClass.ShortcutName]));
+  if fShortCutClass.ShortcutName = '' then
   begin
     if fFireDebugEvent then
       fOndebugEvent(Self, 'DeleteShortCut', 'ShortCut.ShortCutName was empty!');
     Exit;
   end;
-  Result:=DeleteDesktopShortcut(fShortCutClass.ShortCutName);
+  Result := DeleteDesktopShortcut(fShortCutClass.ShortCutName);
+
+  if fFireDebugEvent then
+    if Result = True then
+      fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut succeded')
+    else
+      fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut failed');
+
 end;
 
 procedure TLazAutoUpdate.ShowWhatsNewIfAvailable;
