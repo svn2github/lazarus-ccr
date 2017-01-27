@@ -30,6 +30,13 @@ You should have received a copy of the GNU Library General Public License
 along with this library; if not, write to the Free Software Foundation,
 Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+Credits
+=======
+Code adapted from fpcup (@BigChimp and @DonAlfredo at freepascal forum)
+
+Use
+===
+Use public function 'GetShortCutErrorString' to show an error when debugging
 
 Linux Shortcut Info
 ===================
@@ -117,6 +124,18 @@ end;
 {$IFDEF MSWINDOWS}
 function CreateDesktopShortCut(Target, TargetArguments, ShortcutName,
   IconFileName, Category: string): boolean;
+{
+IN:
+   Target: Filename with full path
+   TargetArguments: String of arguments
+   ShortCutName: Simple string
+   IconFileName: Filename with full path
+   Category: Simple string (see header of this unit)
+OUT:
+   True = Success
+   False = Fail
+   Use function GetShortCutErrorString to get most recent error as a string
+}
 var
   IObject: IUnknown;
   ISLink: IShellLink;
@@ -162,6 +181,18 @@ end;
 {$IFDEF UNIX}
 function CreateDesktopShortCut(Target, TargetArguments, ShortcutName,
   IconFileName, Category: string): boolean;
+{
+IN:
+   Target: Filename with full path
+   TargetArguments: String of arguments
+   ShortCutName: Simple string
+   IconFileName: Filename with full path
+   Category: Simple string (see header of this unit)
+OUT:
+   True = Success
+   False = Fail
+   Use function GetShortCutErrorString to get most recent error as a string
+}
 var
   XdgDesktopContent: TStringList;
   XdgDesktopFile: string;
@@ -177,9 +208,9 @@ begin
     Result := False;
     Exit;
   end;
-  if not FileExistsUTF8(ExtractFilePath(Target) + IconFileName) then
+  if not FileExistsUTF8(IconFileName) then
   begin
-    sErrorString:='File "' + ExtractFilePath(Target) + IconFileName + '" cannot be located.';
+    sErrorString:='File "' + IconFileName + '" cannot be located.';
     Result := False;
     Exit;
   end;
@@ -203,7 +234,7 @@ begin
     XdgDesktopContent.Add('[Desktop Entry]');
     XdgDesktopContent.Add('Encoding=UTF-8');
     XdgDesktopContent.Add('Type=Application');
-    XdgDesktopContent.Add('Icon=' + ExtractFilePath(Target) + IconFileName);
+    XdgDesktopContent.Add('Icon=' + IconFileName);
     If TargetArguments <> '' then
        XdgDesktopContent.Add('Exec=' + Target + ' ' + TargetArguments)
     else

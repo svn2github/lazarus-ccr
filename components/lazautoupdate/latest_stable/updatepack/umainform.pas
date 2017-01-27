@@ -487,7 +487,11 @@ end;
 
 procedure Tmainform.FormShow(Sender: TObject);
 begin
+  Try
   LazAutoUpdate1.ShowWhatsNewIfAvailable;
+  Except
+    raise Exception.Create('Problem in FormShow');
+  end;
   bCurrentProfileSaved := True;
 end;
 

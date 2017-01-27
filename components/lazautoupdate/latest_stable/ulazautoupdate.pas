@@ -1047,6 +1047,20 @@ begin
         C_WhatsNewFilename);
     Exit;
   end;
+  // Linux fix
+  If DirectoryExistsUTF8(C_WhatsNewFilename) then
+  begin
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'ShowWhatsNewIfAvailable', 'Found directory '+
+      C_WhatsNewFilename);
+     If RemoveDirUTF8(C_WhatsNewFilename) then
+     begin
+        if fFireDebugEvent then
+          fOndebugEvent(Self, 'ShowWhatsNewIfAvailable', 'Deleted directory '+
+          C_WhatsNewFilename);
+     end;
+     Exit;
+  end;
 
   // Create the form, memo and close button
   if fParentForm <> nil then
@@ -1077,7 +1091,12 @@ begin
       ScrollBars := ssAutoBoth;
       WordWrap := True;
       Parent := WhatsNewForm;
-      Lines.LoadFromFile(ProgramDirectory + C_WhatsNewFilename);
+      TRY
+       Lines.LoadFromFile(ProgramDirectory + C_WhatsNewFilename);
+      except
+       Clear;
+       Lines.Add('Unable to show whats new');
+      end;
     end;
     with cmdClose do
     begin

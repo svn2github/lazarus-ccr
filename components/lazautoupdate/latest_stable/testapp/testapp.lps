@@ -42,15 +42,15 @@
       </Unit3>
       <Unit4>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="992"/>
-        <CursorPos X="68" Y="1025"/>
+        <IsVisibleTab Value="True"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="1707"/>
+        <CursorPos X="44" Y="1747"/>
         <ExtraEditorCount Value="2"/>
         <ExtraEditor1>
-          <IsVisibleTab Value="True"/>
-          <WindowIndex Value="1"/>
-          <TopLine Value="1707"/>
-          <CursorPos X="44" Y="1747"/>
+          <EditorIndex Value="1"/>
+          <TopLine Value="992"/>
+          <CursorPos X="68" Y="1025"/>
         </ExtraEditor1>
         <ExtraEditor2>
           <EditorIndex Value="-1"/>
@@ -187,8 +187,8 @@
         <Filename Value="..\ushortcut.pas"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="222"/>
-        <CursorPos X="72" Y="237"/>
+        <TopLine Value="7"/>
+        <CursorPos X="56" Y="39"/>
         <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit22>
