@@ -58,11 +58,11 @@ interface
 
 
 uses
-  Forms, Classes, SysUtils, lazautoupdate_httpclient, strutils,PropEdits,
+  Forms, Classes, SysUtils, lazautoupdate_httpclient, strutils, PropEdits,
   LazUTF8, FileUtil, LazFileUtils, Dialogs, StdCtrls,
   Buttons, DateUtils,{$IFDEF LINUX}process, asyncprocess,{$ENDIF}zipper, LResources,
   VersionSupport, inifiles, aboutlazautoupdateunit, uappisrunning, LCLProc,
-  fileinfo, open_ssl, ushortcut,winpeimagereader {need this for reading exe info}
+  fileinfo, open_ssl, ushortcut, winpeimagereader {need this for reading exe info}
   , elfreader {needed for reading ELF executables}
   , machoreader {needed for reading MACH-O executables}
   {$IFDEF WINDOWS}, Windows, ShellAPI{$ENDIF}; // Thanks to Windows 10 and 704 error
@@ -284,7 +284,7 @@ type
     fShowDialogs: boolean;
     fDownloadInprogress: boolean;
     fWindowsAdminCheck: boolean;
-    fShortCutClass:TShortCutClass;
+    fShortCutClass: TShortCutClass;
     {$IFDEF UNIX}
     FUpdateHMProcess: TAsyncProcess;
     {$ENDIF}
@@ -354,6 +354,9 @@ type
     function CreateLocalLauImportFile: boolean;
     // If lauimport.ini is found in the app folder, move it to the AppData folder
     procedure RelocateLauImportFile;
+    // Uses properties in TShortCutClass
+    function MakeShortCut: boolean;
+
     // Download lists (now superceded by CopyTree)
     // TODO: Use Indexed properties to handle list access
     function AddToUpdateList(APrettyName, APath, AVersionString: string;
@@ -450,36 +453,38 @@ type
     // Default=master but any branchname or tagname is OK
     property GitHubBranchOrTag: string read fGitHubBranchOrTag write fGitHubBranchOrTag;
 
-    property ShortCut:TShortCutClass read fShortCutClass write fShortCutClass;
+    property ShortCut: TShortCutClass read fShortCutClass write fShortCutClass;
   end;
 
-Type
-  TShortCutCategory = (scAudioVideo,scAudio,scDevelopment,
-  scEducation,scGame,scGraphics,scNetwork,scOffice,scScience,scSettings,
-  scSystem,scUtility);
-  // TShortCutCategoryFlags = Set of TShortCutCategory;
+type
+  TShortCutCategory = (scAudioVideo, scAudio, scDevelopment,
+    scEducation, scGame, scGraphics, scNetwork, scOffice, scScience, scSettings,
+    scSystem, scUtility);
+// TShortCutCategoryFlags = Set of TShortCutCategory;
 
-Type
-  TShortCutClass = Class(TPersistent)
+type
+  TShortCutClass = class(TPersistent)
   private
     // ShortCut stuff for CreateDesktopShortCut in ushortcut.pas
-    fShortCutTarget:String;
-    fShortCutTargetArguments:String;
-    fShortCutShortcutName:String;
-    fShortCutIconFileName:String;
-    fShortCutCategoryString:String;
-
-    fShortCutCategory:TShortCutCategory; // For easier property access
-    procedure SetShortCutCategoryString(ACategory:TShortCutCategory);
-  Public
+    fShortCutTarget: string;
+    fShortCutTargetArguments: string;
+    fShortCutShortcutName: string;
+    fShortCutIconFileName: string;
+    fShortCutCategory: TShortCutCategory; // For easier property access
+    procedure SetShortCutCategoryString(ACategory: TShortCutCategory);
+  public
+    fShortCutCategoryString: string;
     constructor Create; // Constructor must be public
     destructor Destroy; override; // Destructor must be public
+    property CategoryString: string read fShortCutCategoryString;
   published
-    property Target:String read fShortCutTarget write fShortCutTarget;
-    property TargetArguments:String read fShortCutTargetArguments write fShortCutTargetArguments;
-    property ShortcutName:String read fShortCutShortcutName write fShortCutShortcutName;
-    property IconFileName:String read fShortCutIconFileName write fShortCutIconFileName;
-    property Category:TShortCutCategory read fShortCutCategory write SetShortCutCategoryString;
+    property Target: string read fShortCutTarget write fShortCutTarget;
+    property TargetArguments: string read fShortCutTargetArguments
+      write fShortCutTargetArguments;
+    property ShortcutName: string read fShortCutShortcutName write fShortCutShortcutName;
+    property IconFileName: string read fShortCutIconFileName write fShortCutIconFileName;
+    property Category: TShortCutCategory read fShortCutCategory
+      write SetShortCutCategoryString;
   end;
 
   {TThreadedDownload }
@@ -545,15 +550,16 @@ Type
     procedure ShowProgress;
     }
   end;
-Type
+
+type
   // For the TShortCutClass filename properties (needs propedits unit)
   TMyFileNamePropertyEditor = class(TFileNamePropertyEditor)
-    public
-      // Override the Edit method for total control
-      function GetFilter: string; override;
-      function GetDialogOptions: TOpenOptions; override;
-      function GetDialogTitle: string; override;
-    end;
+  public
+    // Override the Edit method for total control
+    function GetFilter: string; override;
+    function GetDialogOptions: TOpenOptions; override;
+    function GetDialogTitle: string; override;
+  end;
 
 
 // Non-threaded function
@@ -569,9 +575,9 @@ begin
   {$I lazautoupdate_icon.lrs}
   RegisterComponents('System', [TLazAutoUpdate]);
   // Register the custom property editors for the TShortCutClass filename properties
-  RegisterPropertyEditor(TypeInfo(String),
-      TShortCutClass, 'Target', TMyFileNamePropertyEditor);
-  RegisterPropertyEditor(TypeInfo(String),
+  RegisterPropertyEditor(TypeInfo(string),
+    TShortCutClass, 'Target', TMyFileNamePropertyEditor);
+  RegisterPropertyEditor(TypeInfo(string),
     TShortCutClass, 'IconFileName', TMyFileNamePropertyEditor);
 end;
 
@@ -579,12 +585,12 @@ end;
 function TMyFileNamePropertyEditor.GetFilter: string;
 begin
   {$IFDEF WINDOWS}
-     Result := 'Windows executable|*.exe|All Files|*.*';
+  Result := 'Windows executable|*.exe|All Files|*.*';
   {$ELSE}
     {$IFDEF LINUX}
-       Result := 'Linux executable|*.|All Files|*.*';
+  Result := 'Linux executable|*.|All Files|*.*';
     {$ELSE}
-       Result := 'All Files|*.*';
+  Result := 'All Files|*.*';
     {$ENDIF}
   {$ENDIF}
 end;
@@ -616,29 +622,30 @@ begin
   while MilliSecondOfTheDay(Now) < (ThisSecond + MillisecondDelay) do ;
 end;
 
-procedure TShortCutClass.SetShortCutCategoryString(ACategory:TShortCutCategory);
+procedure TShortCutClass.SetShortCutCategoryString(ACategory: TShortCutCategory);
 {
 TShortCutCategory = (scAudioVideo,scAudio,scDevelopment,
 scEducation,scGame,scGraphics,scNetwork,scOffice,scScience,scSettings,
 scSystem,scUtility);
 }
 begin
-  If ACategory=fShortCutCategory then exit;
+  if ACategory = fShortCutCategory then
+    exit;
 
-  fShortCutCategoryString:='Unknown';
-  Case ACategory of
-     scAudioVideo:fShortCutCategoryString:='AudioVideo';
-     scAudio:fShortCutCategoryString:='Audio';
-     scDevelopment:fShortCutCategoryString:='Development';
-     scEducation:fShortCutCategoryString:='Education';
-     scGame:fShortCutCategoryString:='Game';
-     scGraphics:fShortCutCategoryString:='Graphics';
-     scNetwork:fShortCutCategoryString:='Network';
-     scOffice:fShortCutCategoryString:='Office';
-     scScience:fShortCutCategoryString:='Science';
-     scSettings:fShortCutCategoryString:='Settings';
-     scSystem:fShortCutCategoryString:='System';
-     scUtility:fShortCutCategoryString:='Utility';
+  fShortCutCategoryString := 'Unknown';
+  case ACategory of
+    scAudioVideo: fShortCutCategoryString := 'AudioVideo';
+    scAudio: fShortCutCategoryString := 'Audio';
+    scDevelopment: fShortCutCategoryString := 'Development';
+    scEducation: fShortCutCategoryString := 'Education';
+    scGame: fShortCutCategoryString := 'Game';
+    scGraphics: fShortCutCategoryString := 'Graphics';
+    scNetwork: fShortCutCategoryString := 'Network';
+    scOffice: fShortCutCategoryString := 'Office';
+    scScience: fShortCutCategoryString := 'Science';
+    scSettings: fShortCutCategoryString := 'Settings';
+    scSystem: fShortCutCategoryString := 'System';
+    scUtility: fShortCutCategoryString := 'Utility';
   end;
 end;
 
@@ -774,10 +781,11 @@ begin
   // Freed in Destroy
   fThreadDownload := TThreadedDownload.Create();
 
-  fShortCutClass:=TShortCutClass.Create();
-  fShortCutClass.ShortcutName:='MyShortcutName';
-  fShortCutClass.TargetArguments:='';
-  fShortCutClass.Category:=scDevelopment;
+  fShortCutClass := TShortCutClass.Create();
+  fShortCutClass.ShortcutName := 'MyShortcutName';
+  fShortCutClass.TargetArguments := '';
+  fShortCutClass.Category := scDevelopment;
+  fShortCutClass.fShortCutCategoryString := 'Development';
   // Leave URL and Filename to be set via properties
   fComponentVersion := C_TLazAutoUpdateComponentVersion;
   // Unused
@@ -959,6 +967,35 @@ begin
   end;
 end;
 
+function TLazAutoUpdate.MakeShortCut: boolean;
+begin
+  Result := False; // assume failure, look for success
+  if Assigned(fOndebugEvent) then
+    fFireDebugEvent := True;
+
+  if fFireDebugEvent then
+    fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut called');
+
+  if fShortCutClass.Target = '' then
+    fShortCutClass.Target := fAppFilename;
+
+  if fFireDebugEvent then
+    fOndebugEvent(Self, 'MakeShortCut', Format('Target=%s, TargetArguments=%s',
+      [fShortCutClass.Target, fShortCutClass.TargetArguments]));
+
+  if fFireDebugEvent then
+    fOndebugEvent(Self, 'MakeShortCut',
+      Format('Shortcut Name=%s, IconFileName=%s',
+      [fShortCutClass.ShortcutName, fShortCutClass.IconFileName]));
+  {$IFDEF LINUX}
+  if fFireDebugEvent then
+    fOndebugEvent(Self, 'MakeShortCut', Format('Category=%s',
+      [fShortCutClass.CategoryString]));
+  {$ENDIF}
+  Result := CreateDesktopShortCut(fShortCutClass.Target,
+    fShortCutClass.TargetArguments, fShortCutClass.ShortcutName,
+    fShortCutClass.IconFileName, fShortCutClass.CategoryString);
+end;
 
 procedure TLazAutoUpdate.ShowWhatsNewIfAvailable;
 begin
