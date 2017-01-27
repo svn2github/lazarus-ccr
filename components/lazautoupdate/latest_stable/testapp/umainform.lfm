@@ -1,12 +1,13 @@
 object mainform: Tmainform
-  Left = 518
-  Height = 209
-  Top = 285
-  Width = 335
+  Left = 572
+  Height = 237
+  Top = 157
+  Width = 345
   BorderIcons = [biSystemMenu]
   Caption = 'mainform'
-  ClientHeight = 209
-  ClientWidth = 335
+  ClientHeight = 237
+  ClientWidth = 345
+  Font.Height = -12
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -16,8 +17,8 @@ object mainform: Tmainform
   object StatusBar1: TStatusBar
     Left = 0
     Height = 23
-    Top = 186
-    Width = 335
+    Top = 214
+    Width = 345
     Panels = <>
   end
   object cmd_close: TBitBtn
@@ -73,7 +74,7 @@ object mainform: Tmainform
   object lbl_Version: TLabel
     Left = 24
     Height = 15
-    Top = 152
+    Top = 184
     Width = 298
     Alignment = taCenter
     AutoSize = False
@@ -94,13 +95,22 @@ object mainform: Tmainform
     Visible = False
   end
   object cmd_MakeDesktopShortcut: TButton
-    Left = 184
+    Left = 24
     Height = 25
-    Top = 112
-    Width = 139
+    Top = 144
+    Width = 147
     Caption = 'Make Desktop Shortcut'
     OnClick = cmd_MakeDesktopShortcutClick
     TabOrder = 7
+  end
+  object cmd_DeleteDesktopShortcut: TButton
+    Left = 184
+    Height = 25
+    Top = 144
+    Width = 139
+    Caption = 'Delete Desktop Shortcut'
+    OnClick = cmd_DeleteDesktopShortcutClick
+    TabOrder = 8
   end
   object LazAutoUpdate1: TLazAutoUpdate
     About.Description.Strings = (

@@ -45,6 +45,7 @@ type
   { Tmainform }
 
   Tmainform = class(TForm)
+    cmd_DeleteDesktopShortcut: TButton;
     cmd_MakeDesktopShortcut: TButton;
     cmd_SilentUpdate: TButton;
     cmd_AutoUpdate: TButton;
@@ -56,6 +57,7 @@ type
     LazAutoUpdate1: TLazAutoUpdate;
     StatusBar1: TStatusBar;
     procedure cmd_AutoUpdateClick(Sender: TObject);
+    procedure cmd_DeleteDesktopShortcutClick(Sender: TObject);
     procedure cmd_DownloadNewVersionClick(Sender: TObject);
     procedure cmd_MakeDesktopShortcutClick(Sender: TObject);
     procedure cmd_NewVersionAvailableClick(Sender: TObject);
@@ -184,6 +186,16 @@ begin
   CloseLog;
   LazAutoUpdate1.AutoUpdate;
   {$ENDIF}
+end;
+
+procedure Tmainform.cmd_DeleteDesktopShortcutClick(Sender: TObject);
+begin
+  LazAutoUpdate1.ShortCut.ShortCutName:='Test Application';
+  If LazAutoUpdate1.DeleteShortCut then
+   ShowMessage('Success! New shortcut is toast')
+  else
+   ShowMessage('DeleteShortCut failed');
+
 end;
 
 procedure Tmainform.LazAutoUpdate1DebugEvent(Sender: TObject; lauMethodName,
