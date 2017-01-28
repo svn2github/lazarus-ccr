@@ -36,7 +36,7 @@ Code adapted from fpcup (@BigChimp and @DonAlfredo at freepascal forum)
 
 Use
 ===
-Use public function 'GetShortCutErrorString' to show an error when debugging
+Use public function 'GetShortCutErrorString' to show errors/info when debugging
 
 Linux Shortcut Info
 ===================
@@ -85,28 +85,34 @@ interface
 
 uses
   Classes, SysUtils, LazUTF8, FileUtil, LazFileUtils
-  {$IFDEF LINUX}, process{$ENDIF}
+  {$IFDEF LINUX},process,strutils{$ENDIF}
   {$IFDEF WINDOWS}, Windows, shlobj {for special folders}, ActiveX,
   ComObj, ShellAPI{$ENDIF}  ;
 
 function CreateDesktopShortCut(Target, TargetArguments, ShortcutName,
   IconFileName, Category: string): boolean;
-
 function DeleteDesktopShortcut(ShortcutName: string): boolean;
-
-function GetShortCutErrorString: string;
+function GetShortCutDebugString: string;
 
 implementation
 
 var
-  sErrorString: string;
-
-function GetShortCutErrorString: string;
+  sDebugString: string;
+// Functions and procs to aid Debugging
+function GetShortCutDebugString: string;
 begin
-  if (sErrorString = '') then
+  if (sDebugString = '') then
     Result := 'OK'
   else
-    Result := sErrorString;
+    Result := sDebugString;
+end;
+// Builds up a string with linebreaks
+procedure AddToDebugString(Astring:String);
+begin
+  if (sDebugString = '') then
+    sDebugString:=LineEnding + '* ' + Astring
+  else
+    sDebugString:=sDebugString + LineEnding + '* ' + Astring;
 end;
 
 {$IFDEF UNIX}
@@ -138,7 +144,7 @@ IN:
 OUT:
    True = Success
    False = Fail
-   Use function GetShortCutErrorString to get most recent error as a string
+   Use function GetShortCutDebugString to get most recent error as a string
 }
 var
   IObject: IUnknown;
@@ -149,19 +155,21 @@ var
   LinkName: WideString;
 begin
   Result := True;
-  sErrorString := 'OK';
+  sDebugString := '';
   // Simple failure check
   if not FileExistsUTF8(Target) then
-    Result := False;
-  if Result = False then
-    Exit;
+    begin
+      AddToDebugString('Filename ' + Target + ' does not exist');
+      Result := False;
+      Exit;
+    end;
 
   try
     { Creates an instance of IShellLink }
     IObject := CreateComObject(CLSID_ShellLink);
     ISLink := IObject as IShellLink;
     IPFile := IObject as IPersistFile;
-
+    TRY
     ISLink.SetPath(PChar(Target));
     ISLink.SetArguments(PChar(TargetArguments));
     ISLink.SetWorkingDirectory(PChar(ExtractFilePath(Target)));
@@ -172,10 +180,13 @@ begin
     LinkName := IncludeTrailingPathDelimiter(InFolder) + ShortcutName + '.lnk';
 
     { Get rid of any existing shortcut first }
-    SysUtils.DeleteFile(LinkName);
-
+    If Not SysUtils.DeleteFile(LinkName) then
+       AddToDebugString('Could not delete existing link ' + LinkName);
     { Create the link }
     IPFile.Save(PWChar(LinkName), False);
+    finally
+    FreeAndNil(IPFile);
+    end;
   except
     Result := False;
   end;
@@ -195,113 +206,133 @@ IN:
 OUT:
    True = Success
    False = Fail
-   Use function GetShortCutErrorString to get most recent error as a string
+   Use function GetShortCutDebugString to get errors as a string
 }
 var
-  XdgDesktopContent: TStringList;
+  XdgDesktopStringList: TStrings;
   XdgDesktopFile: string;
   Aprocess: TProcess;
   sPathToShare: string;
+  sDesktopFilename:String;
 begin
   // Suceed by default:
   Result := True;
-  sErrorString := 'OK';
+  sDebugString := '';
   // Simple failure checks
   if not FileExistsUTF8(Target) then
   begin
-    sErrorString := 'File "' + Target + '" cannot be located.';
+    AddToDebugString('File "' + Target + '" cannot be located. Quitting.');
     Result := False;
     Exit;
   end;
   if not FileExistsUTF8(IconFileName) then
   begin
-    sErrorString := 'File "' + IconFileName + '" cannot be located.';
+    AddToDebugString('File "' + IconFileName + '" cannot be located. Using Target.');
     IconFileName := Target;
   end;
   if ShortCutName = '' then
   begin
-    sErrorString := 'ShortcutName is blank.';
+    AddToDebugString('ShortcutName is blank. Quitting.');
     Result := False;
     Exit;
   end;
 
   if Category = '' then
   begin
-    sErrorString := 'Category is blank. Using "Utility"';
+    AddToDebugString('Category is blank. Using "Utility"');
     Category := 'Utility';
   end;
+  // Make up a compliant filename
+  sDesktopFilename:=Copy2Space(shortcutname);
+  sDesktopFilename:=LeftStr(sDesktopFilename,8);
+  AddToDebugString('Desktop filename = ' + sDesktopFilename);
+  // Standard path to DeskTop files
   sPathToShare := IncludeTrailingPathDelimiter(ExpandFileNameUTF8('~')) +
-    'usr/share/applications' + DirectorySeparator + 'test.desktop';
-{
+    'usr/share/applications' + DirectorySeparator  +
+    sDesktopFilename + '.desktop';
+  // Temp directory path
   XdgDesktopFile := IncludeTrailingPathDelimiter(GetTempDir(False)) +
-    shortcutname + '.desktop';
-}
-// ExtractFileNameOnly(GetTempDir(False));
-XdgDesktopFile := IncludeTrailingPathDelimiter(GetTempDir(False)) +
-    'test.desktop';
-  XdgDesktopContent := TStringList.Create;
+    sDesktopFilename + '.desktop';
+
+  AddToDebugString('XdgDesktopFile = ' + XdgDesktopFile);
+  AddToDebugString('sPathToShare = ' + sPathToShare);
+
+  // Make up the desktop file
+  XdgDesktopStringList := TStringList.Create;
   try
-    XdgDesktopContent.Add('[Desktop Entry]');
-    XdgDesktopContent.Add('Encoding=UTF-8');
-    XdgDesktopContent.Add('Type=Application');
-    //XdgDesktopContent.Add('Nodisplay=True');
-    XdgDesktopContent.Add('Icon=' + IconFileName);
+    XdgDesktopStringList.Add('[Desktop Entry]');
+    XdgDesktopStringList.Add('Encoding=UTF-8');
+    XdgDesktopStringList.Add('Type=Application');
+    //XdgDesktopStringList.Add('NoDisplay=True');
+    XdgDesktopStringList.Add('Icon=' + IconFileName);
     if TargetArguments <> '' then
-      XdgDesktopContent.Add('Exec=' + Target + ' ' + TargetArguments)
+      XdgDesktopStringList.Add('Exec=' + Target + ' ' + TargetArguments)
     else
-      XdgDesktopContent.Add('Exec=' + Target);
-    XdgDesktopContent.Add('Name=' + ShortcutName);
-    XdgDesktopContent.Add('Category=' + Category);
+      XdgDesktopStringList.Add('Exec=' + Target);
+    XdgDesktopStringList.Add('Name=' + ShortcutName);
+    XdgDesktopStringList.Add('Category=' + Category);
     // We're going to try and call xdg-desktop-icon
     // this may fail if shortcut exists already
     AProcess := TProcess.Create(nil);
     try
       try
         if FileExistsUTF8(XdgDesktopFile) then DeleteFile(XdgDesktopFile);
-        XdgDesktopContent.SaveToFile(XdgDesktopFile);
+        Sleep(100);
+        XdgDesktopStringList.SaveToFile(XdgDesktopFile);
+        if Not FileExistsUTF8(XdgDesktopFile) then
+            AddToDebugString('XdgDesktopFile wasn''t saved');
         if FileExistsUTF8(XdgDesktopFile) then
         begin
-          Sleep(100);
           Aprocess.Executable := 'xdg-desktop-icon install';
           AProcess.CurrentDirectory := ProgramDirectory;
           AProcess.Parameters.Clear;
           AProcess.Parameters.Add(XdgDesktopFile);
           Aprocess.Execute;
           Sleep(100);
-        end
-        else
-          if FileExistsUTF8(sPathToShare) then DeleteFile(sPathToShare);
-          XdgDesktopContent.SaveToFile(sPathToShare);
-          If Not FileExistsUTF8(sPathToShare) then
-          begin
-           Result:=FALSE;
-           sErrorString := 'SaveToFile(' + sPathToShare + ') failed';
-          end;
+        end;
       except
+        // xdg-desktop-icon install failed.
         Result := False;
-        sErrorString := 'Exception running "xdg-desktop-icon install"';
+        AddToDebugString('Exception running "xdg-desktop-icon install"');
+
+        // OK. Try usr/share/applications
+        if FileExistsUTF8(sPathToShare) then
+        begin
+          If SysUtils.DeleteFile(sPathToShare) then
+             AddToDebugString('Successfully deleted existing ' + sPathToShare)
+          else
+            AddToDebugString('Unable to delete existing ' + sPathToShare);
+        end;
+        // Save the stringlist directly to usr/share/applications
+        XdgDesktopStringList.SaveToFile(sPathToShare);
+        If Not FileExistsUTF8(sPathToShare) then
+        begin
+         Result:=FALSE;
+         AddToDebugString('SaveToFile(' + sPathToShare + ') failed');
+        end;
       end;
     finally
       AProcess.Free;
     end;
     if Result = False then
-      // Temp file is no longer needed....
       try
-        If FileExistsUTF8(XdgDesktopFile) then
+        If (FileExistsUTF8(XdgDesktopFile)) AND (NOT FileExistsUTF8(sPathToShare)) then
         BEGIN
+        // Last try to copy file to usr/share/applications
         if CopyFile(XdgDesktopFile, sPathToShare) then
           Result := True
         else
-          sErrorString := Format('Unable to copy %s file to %s', [XdgDesktopFile, sPathToShare]);
-        if not DeleteFile(XdgDesktopFile) then
-          sErrorString := 'Unable to delete temporary ' + XdgDesktopFile;
+          AddToDebugString(Format('Unable to copy %s file to %s', [XdgDesktopFile, sPathToShare]));
+        // Temp file is no longer needed....
+        if not SysUtils.DeleteFile(XdgDesktopFile) then
+          AddToDebugString('Unable to delete temporary ' + XdgDesktopFile);
         end
-        else sErrorString := 'Unable to locate temporary ' + XdgDesktopFile;
+        else AddToDebugString('Unable to locate temporary ' + XdgDesktopFile);
       finally
         // Swallow, let filesystem maintenance clear it up
       end;
   finally
-    XdgDesktopContent.Free;
+    XdgDesktopStringList.Free;
   end;
 end;
 
@@ -314,7 +345,7 @@ var
   LinkName: WideString;
 begin
   Result := False;
-  sErrorString := 'OK';
+  sDebugString := '';
   try
     { Get the desktop location }
     SHGetSpecialFolderLocation(0, CSIDL_DESKTOPDIRECTORY, PIDL);
@@ -323,7 +354,7 @@ begin
     if SysUtils.DeleteFile(LinkName) then
       Result := True;
   except
-    sErrorString := 'Exception deleting ' + LinkName;
+    AddToDebugString('Exception deleting ' + LinkName);
     // Eat the exception
   end;
 end;
@@ -331,7 +362,7 @@ end;
 {$ELSE}
 function DeleteDesktopShortcut(ShortcutName: string): boolean;
 begin
-  sErrorString := 'OK';
+  sDebugString := 'DeleteDesktopShortcut not implemented in Linux';
   Result := False;
 end;
 

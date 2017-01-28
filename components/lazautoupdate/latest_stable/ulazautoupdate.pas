@@ -993,15 +993,15 @@ begin
     fOndebugEvent(Self, 'MakeShortCut', Format('Category=%s',
       [fShortCutClass.CategoryString]));
   {$ENDIF}
-  Result := CreateDesktopShortCut(fShortCutClass.Target,
+    Result := CreateDesktopShortCut(fShortCutClass.Target,
     fShortCutClass.TargetArguments, fShortCutClass.ShortcutName,
     fShortCutClass.IconFileName, fShortCutClass.CategoryString);
-
+   fLastError:=GetShortCutDebugString;
   if fFireDebugEvent then
     if Result = True then
       fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut succeded.')
     else
-      fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut failed.  Error: ' + GetShortCutErrorString);
+      fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut failed.  Error(s): ' + GetShortCutDebugString);
 end;
 
 function TLazAutoUpdate.DeleteShortCut: boolean;
@@ -1025,7 +1025,7 @@ begin
     if Result = True then
       fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut succeded.')
     else
-      fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut failed.  Error: ' + GetShortCutErrorString);
+      fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut failed.  Error: ' + GetShortCutDebugString);
 
 end;
 
