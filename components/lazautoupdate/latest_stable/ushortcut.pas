@@ -85,7 +85,7 @@ interface
 
 uses
   Classes, SysUtils, LazUTF8, FileUtil, LazFileUtils
-  {$IFDEF LINUX},process,strutils{$ENDIF}
+  {$IFDEF LINUX}, process, strutils, LazUTF8Classes{$ENDIF}
   {$IFDEF WINDOWS}, Windows, shlobj {for special folders}, ActiveX,
   ComObj, ShellAPI{$ENDIF}  ;
 
@@ -107,12 +107,12 @@ begin
     Result := sDebugString;
 end;
 // Builds up a string with linebreaks
-procedure AddToDebugString(Astring:String);
+procedure AddToDebugString(Astring: string);
 begin
   if (sDebugString = '') then
-    sDebugString:=LineEnding + '* ' + Astring
+    sDebugString := LineEnding + '* ' + Astring
   else
-    sDebugString:=sDebugString + LineEnding + '* ' + Astring;
+    sDebugString := sDebugString + LineEnding + '* ' + Astring;
 end;
 
 {$IFDEF UNIX}
@@ -158,34 +158,34 @@ begin
   sDebugString := '';
   // Simple failure check
   if not FileExistsUTF8(Target) then
-    begin
-      AddToDebugString('Filename ' + Target + ' does not exist');
-      Result := False;
-      Exit;
-    end;
+  begin
+    AddToDebugString('Filename ' + Target + ' does not exist');
+    Result := False;
+    Exit;
+  end;
 
   try
     { Creates an instance of IShellLink }
     IObject := CreateComObject(CLSID_ShellLink);
     ISLink := IObject as IShellLink;
     IPFile := IObject as IPersistFile;
-    TRY
-    ISLink.SetPath(PChar(Target));
-    ISLink.SetArguments(PChar(TargetArguments));
-    ISLink.SetWorkingDirectory(PChar(ExtractFilePath(Target)));
-    // ISLink.SetIconLocation(Pchar(ExtractFilePath(Target) + IconFileName));
-    { Get the desktop location }
-    SHGetSpecialFolderLocation(0, CSIDL_DESKTOPDIRECTORY, PIDL);
-    SHGetPathFromIDList(PIDL, InFolder);
-    LinkName := IncludeTrailingPathDelimiter(InFolder) + ShortcutName + '.lnk';
+    try
+      ISLink.SetPath(PChar(Target));
+      ISLink.SetArguments(PChar(TargetArguments));
+      ISLink.SetWorkingDirectory(PChar(ExtractFilePath(Target)));
+      // ISLink.SetIconLocation(Pchar(ExtractFilePath(Target) + IconFileName));
+      { Get the desktop location }
+      SHGetSpecialFolderLocation(0, CSIDL_DESKTOPDIRECTORY, PIDL);
+      SHGetPathFromIDList(PIDL, InFolder);
+      LinkName := IncludeTrailingPathDelimiter(InFolder) + ShortcutName + '.lnk';
 
-    { Get rid of any existing shortcut first }
-    If Not SysUtils.DeleteFile(LinkName) then
-       AddToDebugString('Could not delete existing link ' + LinkName);
-    { Create the link }
-    IPFile.Save(PWChar(LinkName), False);
+      { Get rid of any existing shortcut first }
+      if not SysUtils.DeleteFile(LinkName) then
+        AddToDebugString('Could not delete existing link ' + LinkName);
+      { Create the link }
+      IPFile.Save(PWChar(LinkName), False);
     finally
-    FreeAndNil(IPFile);
+      FreeAndNil(IPFile);
     end;
   except
     Result := False;
@@ -197,6 +197,9 @@ end;
 function CreateDesktopShortCut(Target, TargetArguments, ShortcutName,
   IconFileName, Category: string): boolean;
 {
+* Comprehensive debugging messages in this routine.
+* So many flavours of Linux.. - if no desktop icon is created then
+* call GetShortCutDebugString and log the result to a file.
 IN:
    Target: Filename with full path
    TargetArguments: String of arguments
@@ -209,13 +212,13 @@ OUT:
    Use function GetShortCutDebugString to get errors as a string
 }
 var
-  XdgDesktopStringList: TStrings;
+  XdgDesktopStringList: TStringListUTF8;
   XdgDesktopFile: string;
   Aprocess: TProcess;
   sPathToShare: string;
-  sDesktopFilename:String;
+  sDesktopFilename: string;
 begin
-  // Suceed by default:
+  // Succeed by default:
   Result := True;
   sDebugString := '';
   // Simple failure checks
@@ -242,23 +245,38 @@ begin
     AddToDebugString('Category is blank. Using "Utility"');
     Category := 'Utility';
   end;
-  // Make up a compliant filename
-  sDesktopFilename:=Copy2Space(shortcutname);
-  sDesktopFilename:=LeftStr(sDesktopFilename,8);
+  // Make up an 8-character filename
+  sDesktopFilename := DelSpace(shortcutname);
+  sDesktopFilename := LeftStr(sDesktopFilename, 8);
+  sDesktopFilename := LowerCase(sDesktopFilename);
   AddToDebugString('Desktop filename = ' + sDesktopFilename);
   // Standard path to DeskTop files
-  sPathToShare := IncludeTrailingPathDelimiter(ExpandFileNameUTF8('~')) +
-    'usr/share/applications' + DirectorySeparator  +
+  // IncludeTrailingPathDelimiter(ExpandFileNameUTF8('~')) resolves to '/root/'
+  sPathToShare := '/usr/share/applications' + DirectorySeparator +
     sDesktopFilename + '.desktop';
+  // Directory check
+  if not DirectoryExistsUTF8('/usr/share/applications') then
+  begin
+    AddToDebugString('Failure: Invalid directory - ' + '/usr/share/applications');
+    Result := False;
+    Exit;
+  end;
+
   // Temp directory path
   XdgDesktopFile := IncludeTrailingPathDelimiter(GetTempDir(False)) +
     sDesktopFilename + '.desktop';
-
-  AddToDebugString('XdgDesktopFile = ' + XdgDesktopFile);
-  AddToDebugString('sPathToShare = ' + sPathToShare);
+  // Directory check
+  if not DirectoryExistsUTF8(GetTempDir(False)) then
+  begin
+    AddToDebugString('Failure: Invalid directory - ' + GetTempDir(False));
+    Result := False;
+    Exit;
+  end;
+  AddToDebugString('Success: XdgDesktopFile = ' + XdgDesktopFile);
+  AddToDebugString('Success: sPathToShare = ' + sPathToShare);
 
   // Make up the desktop file
-  XdgDesktopStringList := TStringList.Create;
+  XdgDesktopStringList := TStringListUTF8.Create;
   try
     XdgDesktopStringList.Add('[Desktop Entry]');
     XdgDesktopStringList.Add('Encoding=UTF-8');
@@ -276,11 +294,15 @@ begin
     AProcess := TProcess.Create(nil);
     try
       try
-        if FileExistsUTF8(XdgDesktopFile) then DeleteFile(XdgDesktopFile);
+        if FileExistsUTF8(XdgDesktopFile) then
+          DeleteFile(XdgDesktopFile);
         Sleep(100);
-        XdgDesktopStringList.SaveToFile(XdgDesktopFile);
-        if Not FileExistsUTF8(XdgDesktopFile) then
-            AddToDebugString('XdgDesktopFile wasn''t saved');
+        try
+          XdgDesktopStringList.SaveToFile(XdgDesktopFile);
+        except
+          if not FileExistsUTF8(XdgDesktopFile) then
+            AddToDebugString('Failure: XdgDesktopFile wasn''t saved');
+        end;
         if FileExistsUTF8(XdgDesktopFile) then
         begin
           Aprocess.Executable := 'xdg-desktop-icon install';
@@ -289,26 +311,30 @@ begin
           AProcess.Parameters.Add(XdgDesktopFile);
           Aprocess.Execute;
           Sleep(100);
+          AddToDebugString('xdg-desktop-icon install succeeded');
         end;
       except
         // xdg-desktop-icon install failed.
         Result := False;
-        AddToDebugString('Exception running "xdg-desktop-icon install"');
+        AddToDebugString('Failure: Exception running "xdg-desktop-icon install"');
 
         // OK. Try usr/share/applications
         if FileExistsUTF8(sPathToShare) then
         begin
-          If SysUtils.DeleteFile(sPathToShare) then
-             AddToDebugString('Successfully deleted existing ' + sPathToShare)
+          if SysUtils.DeleteFile(sPathToShare) then
+            AddToDebugString('Successfully deleted existing ' + sPathToShare)
           else
-            AddToDebugString('Unable to delete existing ' + sPathToShare);
+            AddToDebugString('Failure: Unable to delete existing ' + sPathToShare);
         end;
         // Save the stringlist directly to usr/share/applications
-        XdgDesktopStringList.SaveToFile(sPathToShare);
-        If Not FileExistsUTF8(sPathToShare) then
-        begin
-         Result:=FALSE;
-         AddToDebugString('SaveToFile(' + sPathToShare + ') failed');
+        try
+          XdgDesktopStringList.SaveToFile(sPathToShare);
+        except
+          if not FileExistsUTF8(sPathToShare) then
+          begin
+            Result := False;
+            AddToDebugString('Failure: SaveToFile(' + sPathToShare + ') failed');
+          end;
         end;
       end;
     finally
@@ -316,18 +342,31 @@ begin
     end;
     if Result = False then
       try
-        If (FileExistsUTF8(XdgDesktopFile)) AND (NOT FileExistsUTF8(sPathToShare)) then
-        BEGIN
-        // Last try to copy file to usr/share/applications
-        if CopyFile(XdgDesktopFile, sPathToShare) then
-          Result := True
-        else
-          AddToDebugString(Format('Unable to copy %s file to %s', [XdgDesktopFile, sPathToShare]));
-        // Temp file is no longer needed....
-        if not SysUtils.DeleteFile(XdgDesktopFile) then
-          AddToDebugString('Unable to delete temporary ' + XdgDesktopFile);
-        end
-        else AddToDebugString('Unable to locate temporary ' + XdgDesktopFile);
+        if Not (FileExistsUTF8(XdgDesktopFile)) then
+          AddToDebugString('Unable to locate temporary ' + XdgDesktopFile);
+        if (FileExistsUTF8(XdgDesktopFile)) and (not FileExistsUTF8(sPathToShare)) then
+        begin
+          // Last try to copy file to usr/share/applications
+          if CopyFile(XdgDesktopFile, sPathToShare) then
+          begin
+            AddToDebugString(Format('Successfully copied %s file to %s',
+              [XdgDesktopFile, sPathToShare]));
+            Result := True;
+          end
+          else
+            AddToDebugString(Format('Unable to copy %s file to %s',
+              [XdgDesktopFile, sPathToShare]));
+          // Temp file is no longer needed....
+          if not SysUtils.DeleteFile(XdgDesktopFile) then
+            begin
+              AddToDebugString('Failure: Unable to delete temporary ' + XdgDesktopFile);
+            end;
+        end;
+        if (FileExistsUTF8(sPathToShare)) then
+          begin
+            Result:=true;
+            AddToDebugString('Success: Desktop file - ' + sPathToShare);
+          end;
       finally
         // Swallow, let filesystem maintenance clear it up
       end;

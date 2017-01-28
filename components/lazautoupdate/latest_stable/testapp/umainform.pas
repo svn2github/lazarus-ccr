@@ -176,9 +176,10 @@ end;
 
 procedure Tmainform.cmd_MakeDesktopShortcutClick(Sender: TObject);
 begin
-  LazAutoUpdate1.ShortCut.ShortCutName:='Test Application';
+  LazAutoUpdate1.ShortCut.ShortCutName:=Application.Title;
   LazAutoUpdate1.ShortCut.Target:=Application.EXEName;
   LazAutoUpdate1.ShortCut.IconFilename:=ChangeFileExt(Application.EXEName,'.ico');
+  LazAutoUpdate1.ShortCut.Category:=scUtility;
   If LazAutoUpdate1.MakeShortCut then
    ShowMessage('Success! New shortcut is now on your desktop')
   else

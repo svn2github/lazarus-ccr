@@ -4,11 +4,11 @@
     <PathDelim Value="\"/>
     <Version Value="10"/>
     <BuildModes Active="Linux64"/>
-    <Units Count="31">
+    <Units Count="34">
       <Unit0>
         <Filename Value="testapp.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="11"/>
         <CursorPos X="25" Y="28"/>
         <UsageCount Value="94"/>
         <Loaded Value="True"/>
@@ -19,8 +19,8 @@
         <ComponentName Value="mainform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="208"/>
-        <CursorPos X="66" Y="220"/>
+        <TopLine Value="177"/>
+        <CursorPos X="36" Y="181"/>
         <UsageCount Value="94"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -42,15 +42,15 @@
       </Unit3>
       <Unit4>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="44"/>
-        <CursorPos X="63" Y="61"/>
+        <IsVisibleTab Value="True"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="1707"/>
+        <CursorPos X="44" Y="1747"/>
         <ExtraEditorCount Value="2"/>
         <ExtraEditor1>
-          <IsVisibleTab Value="True"/>
-          <WindowIndex Value="1"/>
-          <TopLine Value="1707"/>
-          <CursorPos X="44" Y="1747"/>
+          <EditorIndex Value="1"/>
+          <TopLine Value="44"/>
+          <CursorPos X="63" Y="61"/>
         </ExtraEditor1>
         <ExtraEditor2>
           <EditorIndex Value="-1"/>
@@ -186,9 +186,9 @@
       <Unit22>
         <Filename Value="..\ushortcut.pas"/>
         <IsVisibleTab Value="True"/>
-        <EditorIndex Value="4"/>
-        <TopLine Value="219"/>
-        <CursorPos X="87" Y="240"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="179"/>
+        <CursorPos X="9" Y="221"/>
         <UsageCount Value="36"/>
         <Loaded Value="True"/>
       </Unit22>
@@ -201,7 +201,7 @@
       </Unit23>
       <Unit24>
         <Filename Value="C:\laztrunk\fpc\packages\winunits-base\src\shlobj.pp"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="10"/>
         <TopLine Value="2203"/>
         <CursorPos X="56" Y="2335"/>
         <UsageCount Value="25"/>
@@ -210,8 +210,8 @@
       <Unit25>
         <Filename Value="C:\laztrunk\fpc\rtl\objpas\classes\classesh.inc"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="399"/>
-        <CursorPos X="30" Y="426"/>
+        <TopLine Value="662"/>
+        <CursorPos X="25" Y="697"/>
         <UsageCount Value="24"/>
         <Loaded Value="True"/>
       </Unit25>
@@ -239,144 +239,168 @@
       </Unit28>
       <Unit29>
         <Filename Value="C:\laztrunk\fpc\rtl\objpas\sysutils\finah.inc"/>
-        <EditorIndex Value="6"/>
-        <CursorPos X="10" Y="33"/>
+        <EditorIndex Value="9"/>
+        <CursorPos X="38" Y="36"/>
         <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit29>
       <Unit30>
         <Filename Value="C:\laztrunk\lazarus\components\lazutils\lazfileutils.pas"/>
         <UnitName Value="LazFileUtils"/>
-        <EditorIndex Value="5"/>
-        <TopLine Value="273"/>
-        <CursorPos X="3" Y="278"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="58"/>
+        <CursorPos X="29" Y="87"/>
         <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit30>
+      <Unit31>
+        <Filename Value="C:\laztrunk\fpc\packages\rtl-objpas\src\inc\strutils.pp"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="1809"/>
+        <CursorPos X="3" Y="1812"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="C:\laztrunk\fpc\rtl\objpas\classes\stringl.inc"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="1110"/>
+        <CursorPos X="10" Y="1116"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="C:\laztrunk\fpc\rtl\objpas\sysutils\sysencodingh.inc"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="10"/>
+        <CursorPos X="24" Y="104"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit33>
     </Units>
     <OtherDefines Count="1">
       <Define0 Value="DEBUGMODE"/>
     </OtherDefines>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="176" Column="4" TopLine="157"/>
+        <Filename Value="..\ushortcut.pas"/>
+        <Caret Line="268" Column="79" TopLine="239"/>
       </Position1>
       <Position2>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="170" Column="45" TopLine="159"/>
+        <Filename Value="..\ushortcut.pas"/>
+        <Caret Line="235" Column="60" TopLine="216"/>
       </Position2>
       <Position3>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="194" TopLine="170"/>
+        <Filename Value="..\ushortcut.pas"/>
+        <Caret Line="272" Column="25" TopLine="245"/>
       </Position3>
       <Position4>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="147" TopLine="145"/>
+        <Filename Value="..\ushortcut.pas"/>
+        <Caret Line="233" Column="47" TopLine="214"/>
       </Position4>
       <Position5>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="146" TopLine="144"/>
+        <Filename Value="..\ushortcut.pas"/>
+        <Caret Line="239" Column="20" TopLine="229"/>
       </Position5>
       <Position6>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="148" TopLine="146"/>
+        <Filename Value="..\ushortcut.pas"/>
+        <Caret Line="295" Column="31" TopLine="259"/>
       </Position6>
       <Position7>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="125" TopLine="108"/>
+        <Filename Value="..\ushortcut.pas"/>
+        <Caret Line="289" Column="22" TopLine="268"/>
       </Position7>
       <Position8>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="118" Column="30" TopLine="93"/>
+        <Filename Value="..\ushortcut.pas"/>
+        <Caret Line="278" Column="71" TopLine="268"/>
       </Position8>
       <Position9>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="124" Column="45" TopLine="103"/>
+        <Filename Value="..\ushortcut.pas"/>
+        <Caret Line="306" Column="78" TopLine="269"/>
       </Position9>
       <Position10>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="125" Column="45" TopLine="104"/>
+        <Filename Value="..\ushortcut.pas"/>
+        <Caret Line="289" Column="57" TopLine="261"/>
       </Position10>
       <Position11>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="198" Column="3" TopLine="196"/>
+        <Filename Value="..\ushortcut.pas"/>
+        <Caret Line="255" Column="57" TopLine="229"/>
       </Position11>
       <Position12>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="214" Column="56" TopLine="201"/>
+        <Filename Value="..\ushortcut.pas"/>
+        <Caret Line="308" Column="21" TopLine="277"/>
       </Position12>
       <Position13>
-        <Filename Value="umainform.pas"/>
-        <Caret Line="216" Column="56" TopLine="203"/>
+        <Filename Value="..\ushortcut.pas"/>
+        <Caret Line="149" Column="39" TopLine="121"/>
       </Position13>
       <Position14>
         <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="1004" Column="101" TopLine="970"/>
+        <Caret Line="999" Column="4" TopLine="970"/>
       </Position14>
       <Position15>
         <Filename Value="..\ushortcut.pas"/>
-        <Caret Line="268" Column="79" TopLine="239"/>
+        <Caret Line="186" Column="24" TopLine="160"/>
       </Position15>
       <Position16>
         <Filename Value="..\ushortcut.pas"/>
-        <Caret Line="235" Column="60" TopLine="216"/>
+        <Caret Line="245" Column="26" TopLine="218"/>
       </Position16>
       <Position17>
         <Filename Value="..\ushortcut.pas"/>
-        <Caret Line="272" Column="25" TopLine="245"/>
+        <Caret Line="246" Column="31" TopLine="222"/>
       </Position17>
       <Position18>
         <Filename Value="..\ushortcut.pas"/>
-        <Caret Line="233" Column="47" TopLine="214"/>
+        <Caret Line="248" Column="53" TopLine="222"/>
       </Position18>
       <Position19>
         <Filename Value="..\ushortcut.pas"/>
-        <Caret Line="239" Column="20" TopLine="229"/>
+        <Caret Line="212" Column="33" TopLine="184"/>
       </Position19>
       <Position20>
-        <Filename Value="..\ushortcut.pas"/>
-        <Caret Line="295" Column="31" TopLine="259"/>
+        <Filename Value="C:\laztrunk\fpc\rtl\objpas\classes\stringl.inc"/>
+        <Caret Line="1116" Column="75" TopLine="1116"/>
       </Position20>
       <Position21>
         <Filename Value="..\ushortcut.pas"/>
-        <Caret Line="289" Column="22" TopLine="268"/>
+        <Caret Line="287" TopLine="269"/>
       </Position21>
       <Position22>
-        <Filename Value="..\ushortcut.pas"/>
-        <Caret Line="278" Column="71" TopLine="268"/>
+        <Filename Value="C:\laztrunk\fpc\rtl\objpas\sysutils\sysencodingh.inc"/>
+        <Caret Line="104" Column="24" TopLine="66"/>
       </Position22>
       <Position23>
         <Filename Value="..\ushortcut.pas"/>
-        <Caret Line="306" Column="78" TopLine="269"/>
+        <Caret Line="283" Column="56" TopLine="256"/>
       </Position23>
       <Position24>
         <Filename Value="..\ushortcut.pas"/>
-        <Caret Line="289" Column="57" TopLine="261"/>
+        <Caret Line="312" Column="56" TopLine="285"/>
       </Position24>
       <Position25>
-        <Filename Value="..\ushortcut.pas"/>
-        <Caret Line="255" Column="57" TopLine="229"/>
+        <Filename Value="C:\laztrunk\fpc\rtl\objpas\classes\stringl.inc"/>
+        <Caret Line="1116" Column="10" TopLine="1110"/>
       </Position25>
       <Position26>
         <Filename Value="..\ushortcut.pas"/>
-        <Caret Line="308" Column="21" TopLine="277"/>
+        <Caret Line="283" Column="55" TopLine="256"/>
       </Position26>
       <Position27>
         <Filename Value="..\ushortcut.pas"/>
-        <Caret Line="149" Column="39" TopLine="121"/>
+        <Caret Line="212" Column="40" TopLine="185"/>
       </Position27>
       <Position28>
-        <Filename Value="..\ulazautoupdate.pas"/>
-        <Caret Line="999" Column="4" TopLine="970"/>
+        <Filename Value="..\ushortcut.pas"/>
+        <Caret Line="255" Column="75" TopLine="235"/>
       </Position28>
       <Position29>
-        <Filename Value="..\ushortcut.pas"/>
-        <Caret Line="186" Column="24" TopLine="160"/>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="218" Column="29" TopLine="208"/>
       </Position29>
       <Position30>
         <Filename Value="..\ushortcut.pas"/>
-        <Caret Line="245" Column="26" TopLine="218"/>
+        <Caret Line="264" Column="13" TopLine="238"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>
