@@ -140,8 +140,10 @@ const
  V0.3.2: Bugfix for DoSilentUpdate
  V0.3.3: Added event OnUpdate
  V0.3.4: Added unit ushortcut (CreateDesktopShortCut) for installers
+ V0.3.5: Rule #3:There is to be NO v0.3.5.0
+ V0.3.6: Bugfixed CreateShortCut code
 }
-  C_TLazAutoUpdateComponentVersion = '0.3.4.0';
+  C_TLazAutoUpdateComponentVersion = '0.3.6.0';
   C_TThreadedDownloadComponentVersion = '0.0.3.0';
 {
  V0.0.1: Initial alpha
@@ -227,6 +229,11 @@ resourcestring
     'restriction is for the safety and security of your Windows system.%' +
     'sClick OK to continue';
   rsApplicationU = 'Application update';
+  rsSImportantMe = '%sImportant message from LazAutoUpdate component:%sThere '
+    +'is no version information in your project!%sClick [Continue], and/or ['
+    +'Abort] to quit, and use%sIDE menu item Project/Project Options/Version '
+    +'Info%sto add Version Info by clicking the checkbox.';
+  rsNoBuildInfor = 'No build information available';
 
 
 type
@@ -625,6 +632,7 @@ end;
 
 procedure TShortCutClass.SetShortCutCategoryString(ACategory: TShortCutCategory);
 {
+FreeDesktop Valid Categories:
 TShortCutCategory = (scAudioVideo,scAudio,scDevelopment,
 scEducation,scGame,scGraphics,scNetwork,scOffice,scScience,scSettings,
 scSystem,scUtility);
@@ -737,7 +745,7 @@ begin
   end;
 end;
 
-function IsWindowsAdminWinXP: boolean;
+function IsWindowsAdminWinXP: boolean; // Currently unused
 const
   GENERIC_READ = $80000000;
   GENERIC_WRITE = $40000000;
@@ -797,7 +805,7 @@ begin
   fParentApplication := Tapplication(AOwner.Owner);
   fParentForm := TForm(AOwner);
   // Set default
-  fApplicationVersionString := 'No build information available';
+  fApplicationVersionString := rsNoBuildInfor;
   // Get Versioninfo
   objFileVerInfo := TFileVersionInfo.Create(fParentApplication);
   try
@@ -808,16 +816,18 @@ begin
       fileinfo.GetProgramVersion(fApplicationVersionQuad);
       fileinfo.GetProgramVersion(fProgVersion);
     except
+      // EResNotFound raised if no versioninfo in project
+      sz:=rsSImportantMe;
+      raise Exception.Createfmt(sz,[LineEnding,LineEnding,LineEnding,LineEnding,LineEnding]);
+      FreeAndNil(fThreadDownload);
+      FreeAndNil(fShortCutClass);
+      Application.Terminate;
       // Eat other Exceptions?
-      On E: EResNotFound do
-        ShowMessage('There is no version information in your project!');
-      On E: Exception do
-        Application.Terminate;
     end;
   finally
     objFileVerInfo.Free;
   end;
-  if (fApplicationVersionString = 'No build information available') then
+  if (fApplicationVersionString = rsNoBuildInfor) then
     fApplicationVersionString := '0.0.0.0';
 
   fCopyTree := True; // User can change

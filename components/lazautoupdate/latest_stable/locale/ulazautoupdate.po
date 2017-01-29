@@ -139,8 +139,16 @@ msgstr ""
 msgid "Download failed. (HTTP Errorcode %d) Try again later"
 msgstr ""
 
+#: ulazautoupdate.rsnobuildinfor
+msgid "No build information available"
+msgstr ""
+
 #: ulazautoupdate.rsonlywindowsu
 msgid "Only Windows users whith Administrator status can update this application.%sPlease log off, then log on as an administrator (or switch users to an administrator account),%sthen try again.  This restriction is for the safety and security of your Windows system.%sClick OK to continue"
+msgstr ""
+
+#: ulazautoupdate.rssimportantme
+msgid "%sImportant message from LazAutoUpdate component:%sThere is no version information in your project!%sClick [Continue], and/or [Abort] to quit, and use%sIDE menu item Project/Project Options/Version Info%sto add Version Info by clicking the checkbox."
 msgstr ""
 
 #: ulazautoupdate.rsthisapplicat
