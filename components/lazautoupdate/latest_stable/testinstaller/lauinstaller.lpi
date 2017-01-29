@@ -25,7 +25,7 @@
       <StringTable Comments="Installet/Updater using LazAutoUpdate" ProductVersion="0.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="5">
-      <Item1 Name="Debug" Default="True"/>
+      <Item1 Name="Win32debug" Default="True"/>
       <Item2 Name="Win32">
         <CompilerOptions>
           <Version Value="11"/>
@@ -221,6 +221,8 @@
         <StackChecks Value="True"/>
       </Checks>
       <VerifyObjMethodCallValidity Value="True"/>
+      <TargetCPU Value="i386"/>
+      <TargetOS Value="win32"/>
     </CodeGeneration>
     <Linking>
       <Debugging>

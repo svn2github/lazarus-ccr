@@ -194,9 +194,27 @@ begin
         ForceDirectoriesUTF8(sDirectoryToInstallTo);
       LazAutoUpdate1.Appversion := '0.0.0.0';
     end;
-    1: // Tray Updater
-      ;
-    2: // Test Application
+    1: // Test Application (GitHub)
+    begin
+      LazAutoUpdate1.ProjectType := auGitHubReleaseZip;
+      LazAutoUpdate1.GitHubProjectname := 'lazarusccr';
+      LazAutoUpdate1.GitHubRepositoryName := 'TestApp';
+      LazAutoUpdate1.GitHubBranchOrTag:= 'updates';
+      LazAutoUpdate1.UpdatesFolder := 'updates';
+      LazAutoUpdate1.VersionsININame := 'testapp' + C_PFX + '.ini';
+      LazAutoUpdate1.ZipfileName := 'testapp' + C_PFX + '.zip';
+      {$IFDEF WINDOWS}
+      LazAutoUpdate1.AppFileWithPath := sDirectoryToInstallTo +
+        DirectorySeparator + 'testapp' + C_PFX + '.exe';
+      {$ELSE}
+      LazAutoUpdate1.AppFileWithPath := sDirectoryToInstallTo +
+        DirectorySeparator + 'testapp' + C_PFX;
+      {$ENDIF}
+      if not DirectoryExistsUTF8(sDirectoryToInstallTo) then
+        ForceDirectoriesUTF8(sDirectoryToInstallTo);
+      LazAutoUpdate1.Appversion := '0.0.0.0';
+    end;
+    2: // Test Application (SourceForge)
     begin
       LazAutoUpdate1.ProjectType := auSourceForge;
       LazAutoUpdate1.SFProjectname := 'lazautoupdate';

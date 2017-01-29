@@ -47,8 +47,8 @@ object mainform: Tmainform
     ItemIndex = 2
     Items.Strings = (
       'LazAutoUpdate Update Pack'
-      'LazAutoUpdate Tray Updater'
-      'LazAutoUpdate Test Application'
+      'LazAutoUpdate Test Application (GitHub)'
+      'LazAutoUpdate Test Application (SourceForge)'
       'Retro Ski Run'
     )
     OnSelectionChanged = grp_ApplicationSelectionChanged
@@ -100,7 +100,7 @@ object mainform: Tmainform
     About.ComponentName = 'Laz Auto-update v0.3.4.0'
     About.LicenseType = abModifiedGPL
     OnDebugEvent = LazAutoUpdate1DebugEvent
-    auOtherSourceURL = '<not applicable>'
+    auOtherSourceURL = '<not applicable>/'
     auOtherSourceFilename = '<not applicable>'
     UpdatesFolder = 'updates'
     VersionsININame = 'versions.ini'
@@ -114,11 +114,11 @@ object mainform: Tmainform
     WorkingMode = lauUpdate
     ShortCut.ShortcutName = 'MyShortcutName'
     ShortCut.Category = scAudioVideo
-    Left = 80
-    Top = 16
+    Left = 232
+    Top = 80
   end
   object MainMenu1: TMainMenu
-    Left = 104
+    Left = 256
     Top = 16
     object mnu_file: TMenuItem
       Caption = '&File'

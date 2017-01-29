@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Version Value="10"/>
     <BuildModes Active="Linux64"/>
-    <Units Count="35">
+    <Units Count="36">
       <Unit0>
         <Filename Value="testapp.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -140,7 +140,7 @@
       </Unit15>
       <Unit16>
         <Filename Value="..\updatehmsource\updatehm.lpr"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="3"/>
         <WindowIndex Value="1"/>
         <TopLine Value="132"/>
         <CursorPos X="6" Y="338"/>
@@ -186,7 +186,7 @@
         <Filename Value="..\ushortcut.pas"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="6"/>
-        <TopLine Value="351"/>
+        <TopLine Value="350"/>
         <CursorPos X="16" Y="338"/>
         <UsageCount Value="37"/>
         <Loaded Value="True"/>
@@ -278,7 +278,6 @@
       </Unit33>
       <Unit34>
         <Filename Value="C:\laztrunk\fpc\rtl\inc\objpas.inc"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="1"/>
         <TopLine Value="308"/>
@@ -286,10 +285,23 @@
         <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit34>
+      <Unit35>
+        <Filename Value="..\testinstaller\umainform.pas"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="182"/>
+        <CursorPos X="30" Y="202"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit35>
     </Units>
     <OtherDefines Count="1">
       <Define0 Value="DEBUGMODE"/>
     </OtherDefines>
+    <General>
+      <ActiveWindowIndexAtStart Value="1"/>
+    </General>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="..\ushortcut.pas"/>

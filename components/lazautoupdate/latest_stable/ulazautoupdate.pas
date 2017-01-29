@@ -144,9 +144,10 @@ const
  V0.3.6: Bugfixed CreateShortCut code
  V0.3.7: Added public property Mode=(lauUpdate|lauInstall)
  V0.3.7.1: Added (DoSilentUpdate) copy C_UPDATEHMNAME to installed folder
+ V0.3.7.2: Unix: SetExecutePermissions on installed app
  V0.3.8: ??
 }
-  C_TLazAutoUpdateComponentVersion = '0.3.7.1';
+  C_TLazAutoUpdateComponentVersion = '0.3.7.2';
   C_TThreadedDownloadComponentVersion = '0.0.3.0';
 {
  V0.0.1: Initial alpha
@@ -232,10 +233,10 @@ resourcestring
     'restriction is for the safety and security of your Windows system.%' +
     'sClick OK to continue';
   rsApplicationU = 'Application update';
-  rsSImportantMe = '%sImportant message from LazAutoUpdate component:%sThere '
-    +'is no version information in your project!%sClick [Continue], and/or ['
-    +'Abort] to quit, and use%sIDE menu item Project/Project Options/Version '
-    +'Info%sto add Version Info by clicking the checkbox.';
+  rsSImportantMe = '%sImportant message from LazAutoUpdate component:%sThere ' +
+    'is no version information in your project!%sClick [Continue], and/or [' +
+    'Abort] to quit, and use%sIDE menu item Project/Project Options/Version ' +
+    'Info%sto add Version Info by clicking the checkbox.';
   rsNoBuildInfor = 'No build information available';
 
 
@@ -255,7 +256,7 @@ type
     VersionNumber: cardinal;
   end;
 
-  TWorkingMode = (lauUpdate,lauInstall);
+  TWorkingMode = (lauUpdate, lauInstall);
 
   TThreadedDownload = class; // Forward declaration
   TShortCutClass = class; // Forward declaration
@@ -295,7 +296,7 @@ type
     fDownloadInprogress: boolean;
     fWindowsAdminCheck: boolean;
     fShortCutClass: TShortCutClass;
-    fWorkingMode:TWorkingMode;
+    fWorkingMode: TWorkingMode;
     {$IFDEF UNIX}
     FUpdateHMProcess: TAsyncProcess;
     {$ENDIF}
@@ -465,7 +466,7 @@ type
     // Default=master but any branchname or tagname is OK
     property GitHubBranchOrTag: string read fGitHubBranchOrTag write fGitHubBranchOrTag;
     // Install or Update (default=Update)
-    property WorkingMode:TworkingMode read fWorkingMode write fWorkingMode;
+    property WorkingMode: TworkingMode read fWorkingMode write fWorkingMode;
     // Subproperties available
     property ShortCut: TShortCutClass read fShortCutClass write fShortCutClass;
   end;
@@ -473,7 +474,7 @@ type
   TShortCutCategory = (scAudioVideo, scAudio, scDevelopment,
     scEducation, scGame, scGraphics, scNetwork, scOffice, scScience, scSettings,
     scSystem, scUtility);
-// TShortCutCategoryFlags = Set of TShortCutCategory;
+  // TShortCutCategoryFlags = Set of TShortCutCategory;
 
   TShortCutClass = class(TPersistent)
   private
@@ -820,8 +821,9 @@ begin
       fileinfo.GetProgramVersion(fProgVersion);
     except
       // EResNotFound raised if no versioninfo in project
-      sz:=rsSImportantMe;
-      raise Exception.Createfmt(sz,[LineEnding,LineEnding,LineEnding,LineEnding,LineEnding]);
+      sz := rsSImportantMe;
+      raise Exception.Createfmt(sz, [LineEnding, LineEnding,
+        LineEnding, LineEnding, LineEnding]);
       FreeAndNil(fThreadDownload);
       FreeAndNil(fShortCutClass);
       Application.Terminate;
@@ -836,7 +838,7 @@ begin
   fCopyTree := True; // User can change
   // UpdateList: Redundant?
   AddToUpdateList('', LazUTF8.ParamStrUTF8(0), GetFileVersion, 0);
-  fWorkingMode:=lauUpdate; // Default
+  fWorkingMode := lauUpdate; // Default
   fProjectType := auSourceForge; // User can change
   fUpdatesFolder := C_UpdatesFolder; // User can change
   fVersionsININame := C_OnlineVersionsININame; // User can change
@@ -883,7 +885,8 @@ begin
   AboutBoxWidth := 400;
   AboutBoxHeight := 450;
   sz := 'A component for updating your application' + LineEnding;
-  sz += 'Designed for projects hosted by SourceForge and GitHub' + LineEnding + LineEnding;
+  sz += 'Designed for projects hosted by SourceForge and GitHub' +
+    LineEnding + LineEnding;
   sz += 'Main methods:' + LineEnding;
   sz += 'Procedure AutoUpdate' + LineEnding;
   sz += 'Function NewVersionAvailable: Boolean' + LineEnding;
@@ -1005,15 +1008,17 @@ begin
     fOndebugEvent(Self, 'MakeShortCut', Format('Category=%s',
       [fShortCutClass.CategoryString]));
   {$ENDIF}
-    Result := CreateDesktopShortCut(fShortCutClass.Target,
+  Result := CreateDesktopShortCut(fShortCutClass.Target,
     fShortCutClass.TargetArguments, fShortCutClass.ShortcutName,
     fShortCutClass.IconFileName, fShortCutClass.CategoryString);
-   fLastError:=GetShortCutDebugString;
+  fLastError := GetShortCutDebugString;
   if fFireDebugEvent then
     if Result = True then
-      fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut succeded.' + GetShortCutDebugString)
+      fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut succeded.' +
+        GetShortCutDebugString)
     else
-      fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut failed.  Error(s): ' + GetShortCutDebugString);
+      fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut failed.  Error(s): ' +
+        GetShortCutDebugString);
 end;
 
 function TLazAutoUpdate.DeleteShortCut: boolean;
@@ -1035,9 +1040,11 @@ begin
 
   if fFireDebugEvent then
     if Result = True then
-      fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut succeded.' + GetShortCutDebugString)
+      fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut succeded.' +
+        GetShortCutDebugString)
     else
-      fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut failed.  Error: ' + GetShortCutDebugString);
+      fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut failed.  Error: ' +
+        GetShortCutDebugString);
 
 end;
 
@@ -1060,18 +1067,18 @@ begin
     Exit;
   end;
   // Linux fix
-  If DirectoryExistsUTF8(C_WhatsNewFilename) then
+  if DirectoryExistsUTF8(C_WhatsNewFilename) then
   begin
     if fFireDebugEvent then
-      fOndebugEvent(Self, 'ShowWhatsNewIfAvailable', 'Found directory '+
-      C_WhatsNewFilename);
-     If RemoveDirUTF8(C_WhatsNewFilename) then
-     begin
-        if fFireDebugEvent then
-          fOndebugEvent(Self, 'ShowWhatsNewIfAvailable', 'Deleted directory '+
+      fOndebugEvent(Self, 'ShowWhatsNewIfAvailable', 'Found directory ' +
+        C_WhatsNewFilename);
+    if RemoveDirUTF8(C_WhatsNewFilename) then
+    begin
+      if fFireDebugEvent then
+        fOndebugEvent(Self, 'ShowWhatsNewIfAvailable', 'Deleted directory ' +
           C_WhatsNewFilename);
-     end;
-     Exit;
+    end;
+    Exit;
   end;
 
   // Create the form, memo and close button
@@ -1103,11 +1110,11 @@ begin
       ScrollBars := ssAutoBoth;
       WordWrap := True;
       Parent := WhatsNewForm;
-      TRY
-       Lines.LoadFromFile(ProgramDirectory + C_WhatsNewFilename);
+      try
+        Lines.LoadFromFile(ProgramDirectory + C_WhatsNewFilename);
       except
-       Clear;
-       Lines.Add('Unable to show whats new');
+        Clear;
+        Lines.Add('Unable to show whats new');
       end;
     end;
     with cmdClose do
@@ -1823,8 +1830,9 @@ var
   INI: TINIFile;
   SectionStringList: TStrings;
   szTempUpdatesFolder: string;
+  ErrMsg:String;
 begin
-// fWorkingMode=lauInstall or lauUpdate
+  // fWorkingMode=lauInstall or lauUpdate
   Result := False;
   // read the VMT once
   if Assigned(fOndebugEvent) then
@@ -1833,12 +1841,12 @@ begin
     fOndebugEvent(Self, 'DoSilentUpdate', 'Starting DoSilentUpdate');
 
   if fFireDebugEvent then
-    If fWorkingMode=lauUpdate then
-      fOndebugEvent(Self, 'DoSilentUpdate','Update mode')
+    if fWorkingMode = lauUpdate then
+      fOndebugEvent(Self, 'DoSilentUpdate', 'Update mode')
     else
-      fOndebugEvent(Self, 'DoSilentUpdate','Install mode');
+      fOndebugEvent(Self, 'DoSilentUpdate', 'Install mode');
 
-  If fWorkingMode=lauUpdate then
+  if fWorkingMode = lauUpdate then
   begin
     if not FileExistsUTF8(fAppFilename) then
     begin
@@ -1895,6 +1903,20 @@ begin
         fOndebugEvent(Self, 'DoSilentUpdate',
           Format('Copied app from %s to %s', [szTempUpdatesFolder +
           ExtractFileName(fAppFilename), szAppFolder + ExtractFileName(fAppFilename)]));
+
+      {$IFDEF LINUX}
+      if not SetExecutePermission(szAppFolder + ExtractFileName(fAppFilename),
+        ErrMsg) then
+      begin
+        if fFireDebugEvent then
+          fOndebugEvent(Self, 'DoSilentUpdate',
+            Format('Unable to set permissions for %s because of %s',
+            [szAppFolder + ExtractFileName(fAppFilename), ErrMsg]));
+        if fShowDialogs then
+          ShowMessageFmt('Unable to set permissions for %s because of %s',
+            [szAppFolder + ExtractFileName(fAppFilename), ErrMsg]);
+      end;
+      {$ENDIF}
     end
     else
     if fFireDebugEvent then
@@ -1920,23 +1942,39 @@ begin
 
   end;
 
-  If (fWorkingMode=lauInstall) then
-    If FileExistsUTF8(C_UPDATEHMNAME) then
+  if (fWorkingMode = lauInstall) then
+    if FileExistsUTF8(C_UPDATEHMNAME) then
     begin
-      If FileUtil.CopyFile(C_UPDATEHMNAME,szAppFolder + C_UPDATEHMNAME) then
+      if FileUtil.CopyFile(C_UPDATEHMNAME, szAppFolder + C_UPDATEHMNAME) then
+      begin
         if fFireDebugEvent then
           fOndebugEvent(Self, 'DoSilentUpdate',
             Format('Sucessfully copied %s to %s',
-            [C_UPDATEHMNAME, szAppFolder]))
-      else
-          if fFireDebugEvent then
-          fOndebugEvent(Self, 'DoSilentUpdate',
-            Format('Unabled to copy %s to %s',
             [C_UPDATEHMNAME, szAppFolder]));
+        {$IFDEF LINUX}
+        if not SetExecutePermission(szAppFolder + C_UPDATEHMNAME, ErrMsg) then
+        begin
+          if fFireDebugEvent then
+            fOndebugEvent(Self, 'DoSilentUpdate',
+              Format('Unable to set permissions for %s because of %s',
+              [szAppFolder + C_UPDATEHMNAME, ErrMsg]));
+          if fShowDialogs then
+            ShowMessageFmt('Unable to set permissions for %s because of %s',
+              [szAppFolder + C_UPDATEHMNAME, ErrMsg]);
+        end;
+        {$ENDIF}
+      end
+      else
+      if fFireDebugEvent then
+        fOndebugEvent(Self, 'DoSilentUpdate',
+          Format('Unabled to copy %s to %s', [C_UPDATEHMNAME, szAppFolder]));
+
     end
     else
-      if fFireDebugEvent then
-        fOndebugEvent(Self, 'DoSilentUpdate','Unable to locate ' + C_UPDATEHMNAME);
+    if fFireDebugEvent then
+      fOndebugEvent(Self, 'DoSilentUpdate', 'Unable to locate ' + C_UPDATEHMNAME);
+
+
 
   // Deal with C_LAUTRayINI
   // Copied to the global application data folder
