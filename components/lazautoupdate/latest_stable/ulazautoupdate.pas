@@ -142,8 +142,11 @@ const
  V0.3.4: Added unit ushortcut (CreateDesktopShortCut) for installers
  V0.3.5: Rule #3:There is to be NO v0.3.5.0
  V0.3.6: Bugfixed CreateShortCut code
+ V0.3.7: Added public property Mode=(lauUpdate|lauInstall)
+ V0.3.7.1: Added (DoSilentUpdate) copy C_UPDATEHMNAME to installed folder
+ V0.3.8: ??
 }
-  C_TLazAutoUpdateComponentVersion = '0.3.6.0';
+  C_TLazAutoUpdateComponentVersion = '0.3.7.1';
   C_TThreadedDownloadComponentVersion = '0.0.3.0';
 {
  V0.0.1: Initial alpha
@@ -242,8 +245,6 @@ type
     procedure Execute; override;
   end;
 
-
-type
   // This type is currently unused
   TProjectType = (auSourceForge, auGitHubReleaseZip, auOther);
   // Array of these records used for multiple updates
@@ -253,6 +254,8 @@ type
     VersionString: string;
     VersionNumber: cardinal;
   end;
+
+  TWorkingMode = (lauUpdate,lauInstall);
 
   TThreadedDownload = class; // Forward declaration
   TShortCutClass = class; // Forward declaration
@@ -292,6 +295,7 @@ type
     fDownloadInprogress: boolean;
     fWindowsAdminCheck: boolean;
     fShortCutClass: TShortCutClass;
+    fWorkingMode:TWorkingMode;
     {$IFDEF UNIX}
     FUpdateHMProcess: TAsyncProcess;
     {$ENDIF}
@@ -460,17 +464,17 @@ type
       write fGitHubRepositoryName;
     // Default=master but any branchname or tagname is OK
     property GitHubBranchOrTag: string read fGitHubBranchOrTag write fGitHubBranchOrTag;
-
+    // Install or Update (default=Update)
+    property WorkingMode:TworkingMode read fWorkingMode write fWorkingMode;
+    // Subproperties available
     property ShortCut: TShortCutClass read fShortCutClass write fShortCutClass;
   end;
 
-type
   TShortCutCategory = (scAudioVideo, scAudio, scDevelopment,
     scEducation, scGame, scGraphics, scNetwork, scOffice, scScience, scSettings,
     scSystem, scUtility);
 // TShortCutCategoryFlags = Set of TShortCutCategory;
 
-type
   TShortCutClass = class(TPersistent)
   private
     // ShortCut stuff for CreateDesktopShortCut in ushortcut.pas
@@ -559,7 +563,6 @@ type
     }
   end;
 
-type
   // For the TShortCutClass filename properties (needs propedits unit)
   TMyFileNamePropertyEditor = class(TFileNamePropertyEditor)
   public
@@ -833,7 +836,7 @@ begin
   fCopyTree := True; // User can change
   // UpdateList: Redundant?
   AddToUpdateList('', LazUTF8.ParamStrUTF8(0), GetFileVersion, 0);
-
+  fWorkingMode:=lauUpdate; // Default
   fProjectType := auSourceForge; // User can change
   fUpdatesFolder := C_UpdatesFolder; // User can change
   fVersionsININame := C_OnlineVersionsININame; // User can change
@@ -876,11 +879,11 @@ begin
   // AboutBox properties
   AboutBoxComponentName := Format('Laz Auto-update v%s',
     [C_TLazAutoUpdateComponentVersion]);
-  ;
+  AboutBoxVersion := C_TLazAutoUpdateComponentVersion;
   AboutBoxWidth := 400;
   AboutBoxHeight := 450;
   sz := 'A component for updating your application' + LineEnding;
-  sz += 'Designed for projects hosted by SourceForge' + LineEnding + LineEnding;
+  sz += 'Designed for projects hosted by SourceForge and GitHub' + LineEnding + LineEnding;
   sz += 'Main methods:' + LineEnding;
   sz += 'Procedure AutoUpdate' + LineEnding;
   sz += 'Function NewVersionAvailable: Boolean' + LineEnding;
@@ -893,7 +896,6 @@ begin
   // AboutBoxBackgroundColor:=clWindow;
   //AboutBoxFontName (string)
   //AboutBoxFontSize (integer)
-  AboutBoxVersion := C_TLazAutoUpdateComponentVersion;
   AboutBoxAuthorname := 'Gordon Bamber';
   //AboutBoxOrganisation (string)
   AboutBoxAuthorEmail := 'minesadorada@charcodelvalle.com';
@@ -1822,6 +1824,7 @@ var
   SectionStringList: TStrings;
   szTempUpdatesFolder: string;
 begin
+// fWorkingMode=lauInstall or lauUpdate
   Result := False;
   // read the VMT once
   if Assigned(fOndebugEvent) then
@@ -1829,15 +1832,23 @@ begin
   if fFireDebugEvent then
     fOndebugEvent(Self, 'DoSilentUpdate', 'Starting DoSilentUpdate');
 
+  if fFireDebugEvent then
+    If fWorkingMode=lauUpdate then
+      fOndebugEvent(Self, 'DoSilentUpdate','Update mode')
+    else
+      fOndebugEvent(Self, 'DoSilentUpdate','Install mode');
 
-  if not FileExistsUTF8(fAppFilename) then
+  If fWorkingMode=lauUpdate then
   begin
-    if fFireDebugEvent then
-      fOndebugEvent(Self, 'DoSilentUpdate',
-        Format('AppFilename %s is missing.  Exiting routine', [fAppFilename]));
-    Exit;
-
+    if not FileExistsUTF8(fAppFilename) then
+    begin
+      if fFireDebugEvent then
+        fOndebugEvent(Self, 'DoSilentUpdate',
+          Format('AppFilename %s is missing.  Exiting routine', [fAppFilename]));
+      Exit;
+    end;
   end;
+
   // uses fUpdatesFolder
   szTempUpdatesFolder := AppendPathDelim(ExtractFilePath(fAppFilename) + fUpdatesFolder);
 
@@ -1908,6 +1919,25 @@ begin
         [szTempUpdatesFolder + 'whatsnew.txt', szAppFolder + 'whatsnew.txt']));
 
   end;
+
+  If (fWorkingMode=lauInstall) then
+    If FileExistsUTF8(C_UPDATEHMNAME) then
+    begin
+      If FileUtil.CopyFile(C_UPDATEHMNAME,szAppFolder + C_UPDATEHMNAME) then
+        if fFireDebugEvent then
+          fOndebugEvent(Self, 'DoSilentUpdate',
+            Format('Sucessfully copied %s to %s',
+            [C_UPDATEHMNAME, szAppFolder]))
+      else
+          if fFireDebugEvent then
+          fOndebugEvent(Self, 'DoSilentUpdate',
+            Format('Unabled to copy %s to %s',
+            [C_UPDATEHMNAME, szAppFolder]));
+    end
+    else
+      if fFireDebugEvent then
+        fOndebugEvent(Self, 'DoSilentUpdate','Unable to locate ' + C_UPDATEHMNAME);
+
   // Deal with C_LAUTRayINI
   // Copied to the global application data folder
   // Add entry 'Location'
@@ -1929,6 +1959,7 @@ begin
     if fFireDebugEvent then
       fOndebugEvent(Self, 'DoSilentUpdate',
         Format('App data directory changed to %s', [szLAUTrayAppPath]));
+
     // Now AppDataDirectory/updatehm(+C_PFX)/
     try
       if ForceDirectory(szLAUTrayAppPath) then
@@ -2023,6 +2054,7 @@ begin
       Exit;
     end;
   {$ENDIF}
+  // fWorkingMode=lauInstall or lauUpdate
   szAppDir := AppendPathDelim(ExtractFilePath(fAppFilename));
 
   // read the VMT once

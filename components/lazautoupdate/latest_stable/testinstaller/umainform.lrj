@@ -1,0 +1,9 @@
+{"version":1,"strings":[
+{"hash":134533565,"name":"tmainform.caption","sourcebytes":[109,97,105,110,102,111,114,109],"value":"mainform"},
+{"hash":265345406,"name":"tmainform.grp_application.caption","sourcebytes":[65,112,112,108,105,99,97,116,105,111,110],"value":"Application"},
+{"hash":75149406,"name":"tmainform.grp_action.caption","sourcebytes":[65,99,116,105,111,110],"value":"Action"},
+{"hash":5941372,"name":"tmainform.cmd_install.caption","sourcebytes":[73,110,115,116,97,108,108],"value":"Install"},
+{"hash":22974,"name":"tmainform.cmd_run.caption","sourcebytes":[82,117,110],"value":"Run"},
+{"hash":2805797,"name":"tmainform.mnu_file.caption","sourcebytes":[38,70,105,108,101],"value":"&File"},
+{"hash":4710148,"name":"tmainform.mnu_fileexit.caption","sourcebytes":[69,38,120,105,116],"value":"E&xit"}
+]}
