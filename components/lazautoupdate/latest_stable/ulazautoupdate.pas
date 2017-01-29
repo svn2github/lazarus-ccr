@@ -145,9 +145,9 @@ const
  V0.3.7: Added public property Mode=(lauUpdate|lauInstall)
  V0.3.7.1: Added (DoSilentUpdate) copy C_UPDATEHMNAME to installed folder
  V0.3.7.2: Unix: SetExecutePermissions on installed app
- V0.3.8: ??
+ V0.3.8: Shortcut Menu items now created/deleted
 }
-  C_TLazAutoUpdateComponentVersion = '0.3.7.2';
+  C_TLazAutoUpdateComponentVersion = '0.3.8';
   C_TThreadedDownloadComponentVersion = '0.0.3.0';
 {
  V0.0.1: Initial alpha
@@ -352,7 +352,7 @@ type
     // Put in form.activate. Shows <whatsnew.txt> only if in ProgramDirectory then deletes it. Exits otherwise
     procedure ShowWhatsNewIfAvailable;
     // Checks for new version then shows dialogs to update
-    procedure AutoUpdate;
+    Function AutoUpdate:Boolean;
     // No dialogs - what it says on the tin.
     function SilentUpdate: boolean;
     // Used in SilentUpdate. Shells to local lauupdate(.exe)
@@ -1184,12 +1184,12 @@ begin
   end;
 end;
 
-procedure TLazAutoUpdate.AutoUpdate;
+Function TLazAutoUpdate.AutoUpdate:Boolean;
 // Do-all proc that user can drop into a menu
 begin
   if Assigned(fOndebugEvent) then
     fFireDebugEvent := True;
-
+  Result:=False;
   if fFireDebugEvent then
     fOndebugEvent(Self, 'AutoUpdate', 'Calling NewVersionAvailable');
   if NewVersionAvailable then
@@ -1231,9 +1231,12 @@ begin
         mtInformation, [mbOK], 0);
   end
   else
+    begin
     MessageDlg(fParentApplication.Title,
       rsThisApplicat,
       mtInformation, [mbOK], 0);
+    Result:=TRUE;
+    end;
 end;
 
 function TLazAutoUpdate.IsOnlineVersionNewer(const sznewINIPath: string): boolean;

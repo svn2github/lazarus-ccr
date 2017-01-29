@@ -176,21 +176,35 @@ begin
       ISLink.SetPath(PChar(Target));
       ISLink.SetArguments(PChar(TargetArguments));
       ISLink.SetWorkingDirectory(PChar(ExtractFilePath(Target)));
-      {
-      Not needed
-      ISLink.SetIconLocation(Pchar(ExtractFilePath(Target) + IconFileName),0);
-      }
       { Get the desktop location }
       SHGetSpecialFolderLocation(0, CSIDL_DESKTOPDIRECTORY, PIDL);
       SHGetPathFromIDList(PIDL, InFolder);
+
       LinkName := IncludeTrailingPathDelimiter(InFolder) + ShortcutName + '.lnk';
-
       { Get rid of any existing shortcut first }
-
       if not SysUtils.DeleteFile(LinkName) then
         AddToDebugString('Could not delete existing link ' + LinkName);
-      { Create the link }
+     {Create the link }
       IPFile.Save(PWChar(LinkName), False);
+      {Notify the shell}
+      SHChangeNotify(SHCNE_CREATE, SHCNF_PATH, PChar(LinkName), nil);
+      SHChangeNotify(SHCNE_UPDATEDIR, SHCNF_PATH or SHCNF_FLUSH,
+      PChar(ExtractFileDir(LinkName)), nil);
+
+     {Menu Entry}
+     SHGetSpecialFolderLocation(0, CSIDL_PROGRAMS, PIDL);
+     SHGetPathFromIDList(PIDL, InFolder);
+     If Not DirectoryExistsUTF8(IncludeTrailingPathDelimiter(InFolder) + ShortcutName) then
+       ForceDirectoriesUTF8(IncludeTrailingPathDelimiter(InFolder) + ShortcutName);
+     LinkName := IncludeTrailingPathDelimiter(InFolder) + ShortcutName + DirectorySeparator + ShortcutName + '.lnk';
+     { Get rid of any existing shortcut first }
+     if not SysUtils.DeleteFile(LinkName) then
+       AddToDebugString('Could not delete existing link ' + LinkName);
+     {Create the menu entry link }
+     IPFile.Save(PWChar(LinkName), False);
+     {Notify the shell}
+     SHChangeNotify(SHCNE_MKDIR, SHCNF_PATH, PChar(LinkName), nil)
+
     finally
       // Not needed: FreeAndNil(IPFile);
     end;
@@ -408,6 +422,23 @@ begin
     end
     else
       AddToDebugString('DeleteDesktopShortcut Failure: Unable to delete ' + LinkName);
+    { Get the menu location}
+    SHGetSpecialFolderLocation(0, CSIDL_PROGRAMS, PIDL);
+    SHGetPathFromIDList(PIDL, InFolder);
+    LinkName := IncludeTrailingPathDelimiter(InFolder) + ShortcutName + DirectorySeparator + ShortcutName + '.lnk';
+    { Get rid of any existing shortcut first }
+    if SysUtils.DeleteFile(LinkName) then
+    begin
+      AddToDebugString('DeleteDesktopShortcut Success: Deleted ' + LinkName);
+       Result := True;
+    end
+    else
+      AddToDebugString('DeleteDesktopShortcut Failure: Unable to delete ' + LinkName);
+    If DirectoryExistsUTF8(IncludeTrailingPathDelimiter(InFolder) + ShortcutName) then
+      If RemoveDirUTF8(IncludeTrailingPathDelimiter(InFolder) + ShortcutName) then
+         AddToDebugString('DeleteDesktopShortcut Success: Deleted menu entry')
+       else
+         AddToDebugString('DeleteDesktopShortcut Failure: Unable to delete menu entry');
   except
     AddToDebugString('Exception deleting ' + LinkName);
     // Eat the exception

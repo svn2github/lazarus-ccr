@@ -1,4 +1,5 @@
 unit umainform;
+
 {
 License (MIT)
 =============
@@ -40,24 +41,33 @@ type
   { Tmainform }
 
   Tmainform = class(TForm)
+    cmd_DeleteShortcutIcon: TButton;
+    cmd_MakeShortcutIcon: TButton;
     cmd_Run: TButton;
     cmd_Install: TButton;
     cmd_close: TBitBtn;
     grp_Action: TGroupBox;
     LazAutoUpdate1: TLazAutoUpdate;
     MainMenu1: TMainMenu;
+    mnu_helpCheckForUpdates: TMenuItem;
+    mnu_help: TMenuItem;
     mnu_fileExit: TMenuItem;
     mnu_file: TMenuItem;
     grp_Application: TRadioGroup;
+    procedure cmd_DeleteShortcutIconClick(Sender: TObject);
     procedure cmd_InstallClick(Sender: TObject);
+    procedure cmd_MakeShortcutIconClick(Sender: TObject);
     procedure cmd_RunClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure grp_ApplicationSelectionChanged(Sender: TObject);
     procedure LazAutoUpdate1DebugEvent(Sender: TObject;
       lauMethodName, lauMessage: string);
     procedure mnu_fileExitClick(Sender: TObject);
+    procedure mnu_helpCheckForUpdatesClick(Sender: TObject);
   private
     Logger: TEventLog;
     procedure ConfigureLazAutoUpdate(const AItemIndex: integer);
@@ -72,8 +82,8 @@ var
 implementation
 
 {$R *.lfm}
-Var
-  sDirectoryToInstallTo:String;
+var
+  sDirectoryToInstallTo: string;
 
 { Tmainform }
 
@@ -81,14 +91,19 @@ procedure Tmainform.FormCreate(Sender: TObject);
 begin
   Caption := Application.Title;
   Icon := Application.Icon;
-  sDirectoryToInstallTo:=ProgramDirectory + 'installed';
-  LazAutoUpdate1.DebugMode:=TRUE;
-  LazAutoUpdate1.ShowUpdateInCaption:=True;
+  sDirectoryToInstallTo := ProgramDirectory + 'installed';
+  LazAutoUpdate1.DebugMode := True;
+  LazAutoUpdate1.ShowUpdateInCaption := True;
   ConfigureLazAutoUpdate(2); // Default is TestApp
   Logger := TEventLog.Create(nil);
   Logger.LogType := ltFile;
   Logger.FileName := Application.Title + '.log';
   Logger.Active := True; // Logging uses OnDebugEvent of LazAutoUpdate
+end;
+
+procedure Tmainform.FormShow(Sender: TObject);
+begin
+
 end;
 
 procedure Tmainform.cmd_InstallClick(Sender: TObject);
@@ -111,9 +126,38 @@ begin
   LazAutoUpdate1.WorkingMode := lauUpdate;
 end;
 
+procedure Tmainform.cmd_DeleteShortcutIconClick(Sender: TObject);
+begin
+  if not FileExistsUTF8(LazAutoUpdate1.AppFileWithPath) then
+  begin
+    ShowMessageFmt('%s does not exist! Install it first.',
+      [LazAutoUpdate1.AppFileWithPath]);
+    Exit;
+  end;
+  if LazAutoUpdate1.DeleteShortCut then
+    ShowMessage('Desktop shortcut and menu item are toast');
+end;
+
+procedure Tmainform.cmd_MakeShortcutIconClick(Sender: TObject);
+begin
+  if not FileExistsUTF8(LazAutoUpdate1.AppFileWithPath) then
+  begin
+    ShowMessageFmt('%s does not exist! Install it first.',
+      [LazAutoUpdate1.AppFileWithPath]);
+    Exit;
+  end;
+  if LazAutoUpdate1.MakeShortCut then
+    ShowMessage('Desktop shortcut and menu item created');
+end;
+
 procedure Tmainform.cmd_RunClick(Sender: TObject);
 begin
   RunInstalledApp;
+end;
+
+procedure Tmainform.FormActivate(Sender: TObject);
+begin
+  LazAutoUpdate1.ShowWhatsNewIfAvailable;
 end;
 
 procedure Tmainform.RunInstalledApp;
@@ -146,11 +190,11 @@ end;
 
 procedure Tmainform.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
-  If LazAutoUpdate1.DownloadInProgress Then
-  Begin
-  CanClose := False;
-  ShowMessage('Please wait. Download is still in progress.');
-  End;
+  if LazAutoUpdate1.DownloadInProgress then
+  begin
+    CanClose := False;
+    ShowMessage('Please wait. Download is still in progress.');
+  end;
 end;
 
 procedure Tmainform.grp_ApplicationSelectionChanged(Sender: TObject);
@@ -169,6 +213,22 @@ begin
   Close;
 end;
 
+procedure Tmainform.mnu_helpCheckForUpdatesClick(Sender: TObject);
+var
+  OldItemIndex: integer;
+begin
+  OldItemIndex := grp_Application.ItemIndex;
+  LazAutoUpdate1.ProjectType := auSourceForge; // can be auGitHubReleaseZip or auOther
+  LazAutoUpdate1.SFProjectname := 'lazautoupdate';  // Or GitHub properties
+  LazAutoUpdate1.UpdatesFolder := 'updates'; // Subfolder in repository
+  LazAutoUpdate1.VersionsININame := 'lauinstaller' + C_PFX + '.ini'; // as specified
+  LazAutoUpdate1.ZipfileName := 'lauinstaller' + C_PFX + '.zip'; // as specified
+  LazAutoUpdate1.AppFileWithPath := Application.Exename;
+  If NOT LazAutoUpdate1.AutoUpdate then
+     ConfigureLazAutoUpdate(OldItemIndex); // Restore properties
+
+end;
+
 procedure Tmainform.ConfigureLazAutoUpdate(const AItemIndex: integer);
 begin
   // Note: This routine relies on a consistent naming convention for your
@@ -176,7 +236,8 @@ begin
   case AItemIndex of
     0: //Update Pack
     begin
-      LazAutoUpdate1.ProjectType := auSourceForge; // can be auGitHubReleaseZip or auOther
+      LazAutoUpdate1.ProjectType := auSourceForge;
+      // can be auGitHubReleaseZip or auOther
       LazAutoUpdate1.SFProjectname := 'lazautoupdate';  // Or GitHub properties
       LazAutoUpdate1.UpdatesFolder := 'updates'; // Subfolder in repository
       LazAutoUpdate1.VersionsININame := 'updatepack' + C_PFX + '.ini'; // as specified
@@ -186,33 +247,39 @@ begin
       LazAutoUpdate1.AppFileWithPath := sDirectoryToInstallTo +
         DirectorySeparator + 'updatepack.exe';
       {$ELSE}
-      LazAutoUpdate1.AppFileWithPath := sDirectoryToInstallTo +
-        DirectorySeparator + 'updatepack';
+      LazAutoUpdate1.AppFileWithPath :=
+        sDirectoryToInstallTo + DirectorySeparator + 'updatepack';
       {$ENDIF}
       // Our responsibility to make the folder
       if not DirectoryExistsUTF8(sDirectoryToInstallTo) then
         ForceDirectoriesUTF8(sDirectoryToInstallTo);
       LazAutoUpdate1.Appversion := '0.0.0.0';
+      LazAutoUpdate1.ShortCut.Category := scUtility;
+      LazAutoUpdate1.ShortCut.Target := LazAutoUpdate1.AppFileWithPath;
+      LazAutoUpdate1.ShortCut.ShortcutName := 'LazAutoUpdate Update Pack';
     end;
     1: // Test Application (GitHub)
     begin
       LazAutoUpdate1.ProjectType := auGitHubReleaseZip;
       LazAutoUpdate1.GitHubProjectname := 'lazarusccr';
       LazAutoUpdate1.GitHubRepositoryName := 'TestApp';
-      LazAutoUpdate1.GitHubBranchOrTag:= 'updates';
+      LazAutoUpdate1.GitHubBranchOrTag := 'updates';
       LazAutoUpdate1.UpdatesFolder := 'updates';
       LazAutoUpdate1.VersionsININame := 'testapp' + C_PFX + '.ini';
       LazAutoUpdate1.ZipfileName := 'testapp' + C_PFX + '.zip';
       {$IFDEF WINDOWS}
-      LazAutoUpdate1.AppFileWithPath := sDirectoryToInstallTo +
-        DirectorySeparator + 'testapp' + C_PFX + '.exe';
+      LazAutoUpdate1.AppFileWithPath :=
+        sDirectoryToInstallTo + DirectorySeparator + 'testapp' + C_PFX + '.exe';
       {$ELSE}
-      LazAutoUpdate1.AppFileWithPath := sDirectoryToInstallTo +
-        DirectorySeparator + 'testapp' + C_PFX;
+      LazAutoUpdate1.AppFileWithPath :=
+        sDirectoryToInstallTo + DirectorySeparator + 'testapp' + C_PFX;
       {$ENDIF}
       if not DirectoryExistsUTF8(sDirectoryToInstallTo) then
         ForceDirectoriesUTF8(sDirectoryToInstallTo);
       LazAutoUpdate1.Appversion := '0.0.0.0';
+      LazAutoUpdate1.ShortCut.Category := scUtility;
+      LazAutoUpdate1.ShortCut.Target := LazAutoUpdate1.AppFileWithPath;
+      LazAutoUpdate1.ShortCut.ShortcutName := 'LazAutoUpdate Test App';
     end;
     2: // Test Application (SourceForge)
     begin
@@ -222,15 +289,18 @@ begin
       LazAutoUpdate1.VersionsININame := 'testapp' + C_PFX + '.ini';
       LazAutoUpdate1.ZipfileName := 'testapp' + C_PFX + '.zip';
       {$IFDEF WINDOWS}
-      LazAutoUpdate1.AppFileWithPath := sDirectoryToInstallTo +
-        DirectorySeparator + 'testapp' + C_PFX + '.exe';
+      LazAutoUpdate1.AppFileWithPath :=
+        sDirectoryToInstallTo + DirectorySeparator + 'testapp' + C_PFX + '.exe';
       {$ELSE}
-      LazAutoUpdate1.AppFileWithPath := sDirectoryToInstallTo +
-        DirectorySeparator + 'testapp' + C_PFX;
+      LazAutoUpdate1.AppFileWithPath :=
+        sDirectoryToInstallTo + DirectorySeparator + 'testapp' + C_PFX;
       {$ENDIF}
       if not DirectoryExistsUTF8(sDirectoryToInstallTo) then
         ForceDirectoriesUTF8(sDirectoryToInstallTo);
       LazAutoUpdate1.Appversion := '0.0.0.0';
+      LazAutoUpdate1.ShortCut.Category := scUtility;
+      LazAutoUpdate1.ShortCut.Target := LazAutoUpdate1.AppFileWithPath;
+      LazAutoUpdate1.ShortCut.ShortcutName := 'LazAutoUpdate Test App';
     end;
     3: // Retro Ski Run
     begin
@@ -240,15 +310,18 @@ begin
       LazAutoUpdate1.VersionsININame := 'ski' + C_PFX + '.ini';
       LazAutoUpdate1.ZipfileName := 'ski' + C_PFX + '.zip';
       {$IFDEF WINDOWS}
-      LazAutoUpdate1.AppFileWithPath := sDirectoryToInstallTo +
-        DirectorySeparator + 'ski' + C_PFX + '.exe';
+      LazAutoUpdate1.AppFileWithPath :=
+        sDirectoryToInstallTo + DirectorySeparator + 'ski' + C_PFX + '.exe';
       {$ELSE}
-      LazAutoUpdate1.AppFileWithPath := sDirectoryToInstallTo +
-        DirectorySeparator + 'ski' + C_PFX;
+      LazAutoUpdate1.AppFileWithPath :=
+        sDirectoryToInstallTo + DirectorySeparator + 'ski' + C_PFX;
       {$ENDIF}
       if not DirectoryExistsUTF8(sDirectoryToInstallTo) then
         ForceDirectoriesUTF8(sDirectoryToInstallTo);
       LazAutoUpdate1.Appversion := '0.0.0.0';
+      LazAutoUpdate1.ShortCut.Category := scGame;
+      LazAutoUpdate1.ShortCut.Target := LazAutoUpdate1.AppFileWithPath;
+      LazAutoUpdate1.ShortCut.ShortcutName := 'Retro Ski Run';
     end;
   end;
 end;

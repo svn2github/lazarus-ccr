@@ -1,24 +1,26 @@
 object mainform: Tmainform
-  Left = 737
+  Left = 728
   Height = 241
-  Top = 222
-  Width = 320
+  Top = 209
+  Width = 408
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'mainform'
   ClientHeight = 221
-  ClientWidth = 320
+  ClientWidth = 408
   Menu = MainMenu1
+  OnActivate = FormActivate
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnShow = FormShow
   Position = poWorkAreaCenter
   LCLVersion = '1.7'
   Scaled = True
   object cmd_close: TBitBtn
-    Left = 125
+    Left = 167
     Height = 30
-    Top = 179
+    Top = 176
     Width = 75
     Anchors = [akRight, akBottom]
     DefaultCaption = True
@@ -31,7 +33,7 @@ object mainform: Tmainform
     Left = 0
     Height = 113
     Top = 0
-    Width = 320
+    Width = 408
     Align = alTop
     AutoFill = True
     Caption = 'Application'
@@ -43,7 +45,7 @@ object mainform: Tmainform
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
     ClientHeight = 93
-    ClientWidth = 316
+    ClientWidth = 404
     ItemIndex = 2
     Items.Strings = (
       'LazAutoUpdate Update Pack'
@@ -58,11 +60,11 @@ object mainform: Tmainform
     Left = 0
     Height = 57
     Top = 113
-    Width = 320
+    Width = 408
     Align = alTop
     Caption = 'Action'
     ClientHeight = 37
-    ClientWidth = 316
+    ClientWidth = 404
     TabOrder = 2
     object cmd_Install: TButton
       Left = 8
@@ -81,6 +83,26 @@ object mainform: Tmainform
       Caption = 'Run'
       OnClick = cmd_RunClick
       TabOrder = 1
+    end
+    object cmd_MakeShortcutIcon: TButton
+      Left = 176
+      Height = 25
+      Top = 0
+      Width = 103
+      AutoSize = True
+      Caption = 'Make Shortcut'
+      OnClick = cmd_MakeShortcutIconClick
+      TabOrder = 2
+    end
+    object cmd_DeleteShortcutIcon: TButton
+      Left = 288
+      Height = 25
+      Top = 0
+      Width = 107
+      AutoSize = True
+      Caption = 'Delete Shortcut'
+      OnClick = cmd_DeleteShortcutIconClick
+      TabOrder = 3
     end
   end
   object LazAutoUpdate1: TLazAutoUpdate
@@ -125,6 +147,13 @@ object mainform: Tmainform
       object mnu_fileExit: TMenuItem
         Caption = 'E&xit'
         OnClick = mnu_fileExitClick
+      end
+    end
+    object mnu_help: TMenuItem
+      Caption = '&Help'
+      object mnu_helpCheckForUpdates: TMenuItem
+        Caption = 'Check for updates...'
+        OnClick = mnu_helpCheckForUpdatesClick
       end
     end
   end
