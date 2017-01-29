@@ -109,7 +109,6 @@ end;
 
 procedure Tmainform.FormCreate(Sender: TObject);
 begin
-  LazAutoUpdate1.DebugMode:=TRUE;
   LazAutoUpdate1.VersionsININame:=C_VERSIONSINNAME;
   LazAutoUpdate1.ZipfileName:=C_ZIPFILENAME;
   LazAutoUpdate1.GitHubProjectname:='lazarusccr';
@@ -224,7 +223,7 @@ end;
 
 procedure Tmainform.cmd_DeleteDesktopShortcutClick(Sender: TObject);
 begin
-  LazAutoUpdate1.ShortCut.ShortCutName:='Test Application';
+  LazAutoUpdate1.ShortCut.ShortCutName:=Application.Title;
   If LazAutoUpdate1.DeleteShortCut then
    ShowMessage('Success! New shortcut is toast')
   else

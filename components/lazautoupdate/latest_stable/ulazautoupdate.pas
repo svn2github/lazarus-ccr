@@ -999,7 +999,7 @@ begin
    fLastError:=GetShortCutDebugString;
   if fFireDebugEvent then
     if Result = True then
-      fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut succeded.')
+      fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut succeded.' + GetShortCutDebugString)
     else
       fOndebugEvent(Self, 'MakeShortCut', 'MakeShortCut failed.  Error(s): ' + GetShortCutDebugString);
 end;
@@ -1023,7 +1023,7 @@ begin
 
   if fFireDebugEvent then
     if Result = True then
-      fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut succeded.')
+      fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut succeded.' + GetShortCutDebugString)
     else
       fOndebugEvent(Self, 'MakeShortCut', 'DeleteShortCut failed.  Error: ' + GetShortCutDebugString);
 

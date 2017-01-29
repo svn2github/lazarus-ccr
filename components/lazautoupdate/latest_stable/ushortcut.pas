@@ -98,7 +98,9 @@ implementation
 
 var
   sDebugString: string;
+// *****************************************************************************
 // Functions and procs to aid Debugging
+// *****************************************************************************
 function GetShortCutDebugString: string;
 begin
   if (sDebugString = '') then
@@ -114,6 +116,7 @@ begin
   else
     sDebugString := sDebugString + LineEnding + '* ' + Astring;
 end;
+// *****************************************************************************
 
 {$IFDEF UNIX}
 //Adapted from sysutils; Unix/Linux only
@@ -143,7 +146,7 @@ IN:
    Category: Simple string (see header of this unit)
 OUT:
    True = Success
-   False = Fail
+   False = Failure
    Use function GetShortCutDebugString to get most recent error as a string
 }
 var
@@ -173,19 +176,23 @@ begin
       ISLink.SetPath(PChar(Target));
       ISLink.SetArguments(PChar(TargetArguments));
       ISLink.SetWorkingDirectory(PChar(ExtractFilePath(Target)));
-      // ISLink.SetIconLocation(Pchar(ExtractFilePath(Target) + IconFileName));
+      {
+      Not needed
+      ISLink.SetIconLocation(Pchar(ExtractFilePath(Target) + IconFileName),0);
+      }
       { Get the desktop location }
       SHGetSpecialFolderLocation(0, CSIDL_DESKTOPDIRECTORY, PIDL);
       SHGetPathFromIDList(PIDL, InFolder);
       LinkName := IncludeTrailingPathDelimiter(InFolder) + ShortcutName + '.lnk';
 
       { Get rid of any existing shortcut first }
+
       if not SysUtils.DeleteFile(LinkName) then
         AddToDebugString('Could not delete existing link ' + LinkName);
       { Create the link }
       IPFile.Save(PWChar(LinkName), False);
     finally
-      FreeAndNil(IPFile);
+      // Not needed: FreeAndNil(IPFile);
     end;
   except
     Result := False;
@@ -197,7 +204,7 @@ end;
 function CreateDesktopShortCut(Target, TargetArguments, ShortcutName,
   IconFileName, Category: string): boolean;
 {
-* Comprehensive debugging messages in this routine.
+* Comprehensive debugging messages in this routine!
 * So many flavours of Linux.. - if no desktop icon is created then
 * call GetShortCutDebugString and log the result to a file.
 IN:
@@ -208,7 +215,7 @@ IN:
    Category: Simple string (see header of this unit)
 OUT:
    True = Success
-   False = Fail
+   False = Failure
    Use function GetShortCutDebugString to get errors as a string
 }
 var
@@ -222,25 +229,24 @@ begin
   Result := True;
   sDebugString := '';
   // Simple failure checks
-  if not FileExistsUTF8(Target) then
+  if not FileExistsUTF8(Target) then // lethal
   begin
     AddToDebugString('File "' + Target + '" cannot be located. Quitting.');
     Result := False;
     Exit;
   end;
-  if not FileExistsUTF8(IconFileName) then
+  if not FileExistsUTF8(IconFileName) then // non-lethal
   begin
     AddToDebugString('File "' + IconFileName + '" cannot be located. Using Target.');
     IconFileName := Target;
   end;
-  if ShortCutName = '' then
+  if ShortCutName = '' then // lethal
   begin
     AddToDebugString('ShortcutName is blank. Quitting.');
     Result := False;
     Exit;
   end;
-
-  if Category = '' then
+  if Category = '' then // non-lethal
   begin
     AddToDebugString('Category is blank. Using "Utility"');
     Category := 'Utility';
@@ -250,23 +256,20 @@ begin
   sDesktopFilename := LeftStr(sDesktopFilename, 8);
   sDesktopFilename := LowerCase(sDesktopFilename);
   AddToDebugString('Desktop filename = ' + sDesktopFilename);
+  // Note:  IncludeTrailingPathDelimiter(ExpandFileNameUTF8('~')) resolves to '/root/'
+
   // Standard path to DeskTop files
-  // IncludeTrailingPathDelimiter(ExpandFileNameUTF8('~')) resolves to '/root/'
   sPathToShare := '/usr/share/applications' + DirectorySeparator +
     sDesktopFilename + '.desktop';
   // Directory check
-  if not DirectoryExistsUTF8('/usr/share/applications') then
-  begin
-    AddToDebugString('Failure: Invalid directory - ' + '/usr/share/applications');
-    Result := False;
-    Exit;
-  end;
+  if not DirectoryExistsUTF8('/usr/share/applications') then // non-lethal
+    AddToDebugString('Cannot find directory - ' + '/usr/share/applications');
 
   // Temp directory path
   XdgDesktopFile := IncludeTrailingPathDelimiter(GetTempDir(False)) +
     sDesktopFilename + '.desktop';
   // Directory check
-  if not DirectoryExistsUTF8(GetTempDir(False)) then
+  if not DirectoryExistsUTF8(GetTempDir(False)) then // lethal
   begin
     AddToDebugString('Failure: Invalid directory - ' + GetTempDir(False));
     Result := False;
@@ -326,6 +329,14 @@ begin
           else
             AddToDebugString('Failure: Unable to delete existing ' + sPathToShare);
         end;
+        // Final Directory check
+        if not DirectoryExistsUTF8('/usr/share/applications') then // lethal
+        begin
+          AddToDebugString(
+            'Failure: Directory "/usr/share/applications" does not exist on this system');
+          Result := False;
+          Exit;
+        end;
         // Save the stringlist directly to usr/share/applications
         try
           XdgDesktopStringList.SaveToFile(sPathToShare);
@@ -342,7 +353,7 @@ begin
     end;
     if Result = False then
       try
-        if Not (FileExistsUTF8(XdgDesktopFile)) then
+        if not (FileExistsUTF8(XdgDesktopFile)) then
           AddToDebugString('Unable to locate temporary ' + XdgDesktopFile);
         if (FileExistsUTF8(XdgDesktopFile)) and (not FileExistsUTF8(sPathToShare)) then
         begin
@@ -358,15 +369,15 @@ begin
               [XdgDesktopFile, sPathToShare]));
           // Temp file is no longer needed....
           if not SysUtils.DeleteFile(XdgDesktopFile) then
-            begin
-              AddToDebugString('Failure: Unable to delete temporary ' + XdgDesktopFile);
-            end;
+          begin
+            AddToDebugString('Failure: Unable to delete temporary ' + XdgDesktopFile);
+          end;
         end;
         if (FileExistsUTF8(sPathToShare)) then
-          begin
-            Result:=true;
-            AddToDebugString('Success: Desktop file - ' + sPathToShare);
-          end;
+        begin
+          Result := True;
+          AddToDebugString('Success: Desktop file - ' + sPathToShare);
+        end;
       finally
         // Swallow, let filesystem maintenance clear it up
       end;
@@ -383,7 +394,7 @@ var
   InFolder: array[0..MAX_PATH] of char;
   LinkName: WideString;
 begin
-  Result := False;
+  Result := False; // Assume failure; look for success
   sDebugString := '';
   try
     { Get the desktop location }
@@ -391,7 +402,12 @@ begin
     SHGetPathFromIDList(PIDL, InFolder);
     LinkName := IncludeTrailingPathDelimiter(InFolder) + ShortcutName + '.lnk';
     if SysUtils.DeleteFile(LinkName) then
+    begin
       Result := True;
+      AddToDebugString('DeleteDesktopShortcut Success: Deleted ' + LinkName);
+    end
+    else
+      AddToDebugString('DeleteDesktopShortcut Failure: Unable to delete ' + LinkName);
   except
     AddToDebugString('Exception deleting ' + LinkName);
     // Eat the exception

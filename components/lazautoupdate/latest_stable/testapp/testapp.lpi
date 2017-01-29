@@ -19,13 +19,14 @@
     </General>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
+      <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="1"/>
-      <RevisionNr Value="3"/>
+      <RevisionNr Value="5"/>
       <BuildNr Value="1"/>
       <StringTable ProductVersion="0.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="5">
-      <Item1 Name="Win32Debug" Default="True"/>
+      <Item1 Name="Debug" Default="True"/>
       <Item2 Name="Win32">
         <CompilerOptions>
           <Version Value="11"/>
@@ -127,6 +128,11 @@
               </Win32>
             </Options>
           </Linking>
+          <Other>
+            <OtherDefines Count="1">
+              <Define0 Value="DEBUGMODE"/>
+            </OtherDefines>
+          </Other>
         </CompilerOptions>
       </Item4>
       <Item5 Name="Linux64">
