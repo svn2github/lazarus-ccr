@@ -717,6 +717,7 @@ object mainform: Tmainform
     VersionCountLimit = 1000000
     DownloadCountLimit = 10000000
     ZipfileName = 'updatepack.zip'
+    WorkingMode = lauUpdate
     ShortCut.ShortcutName = 'MyShortcutName'
     ShortCut.Category = scAudioVideo
     Left = 424

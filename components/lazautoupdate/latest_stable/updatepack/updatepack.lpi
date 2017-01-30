@@ -14,6 +14,9 @@
         <DpiAware Value="True"/>
       </XPManifest>
       <Icon Value="0"/>
+      <Resources Count="1">
+        <Resource_0 FileName="readme.txt" Type="RCDATA" ResourceName="README"/>
+      </Resources>
     </General>
     <i18n>
       <EnableI18N Value="True"/>
@@ -23,7 +26,7 @@
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="2"/>
-      <RevisionNr Value="6"/>
+      <RevisionNr Value="7"/>
       <StringTable Comments="Updated Jan 2017" FileDescription="Companion to LazAutoUpdate component" InternalName="updatepack" LegalCopyright="(c)2015 minesadorada@charcodelvalle.com" OriginalFilename="updatepack" ProductName="Lazarus/FPC" ProductVersion="2.6.4"/>
     </VersionInfo>
     <BuildModes Count="5">

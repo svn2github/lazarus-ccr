@@ -38,7 +38,8 @@ interface
 uses
   Classes, SysUtils, LazUTF8, LazFileUtils, FileUtil, Forms, Controls, Dialogs,
   Buttons, Menus, StdCtrls, EditBtn, Spin, ComCtrls, ulazautoupdate, inifiles,
-  eventlog, umemoform, Zipper, strutils, asyncprocess, lclintf, types;
+  eventlog, umemoform, Zipper, strutils, asyncprocess, lclintf, types,LResources,
+  LCLVersion;
 
 type
   // Use FillVersionString and FillVersionInteger
@@ -238,6 +239,10 @@ type
 
 var
   mainform: Tmainform;
+  sReadMePath:String;
+  aLRes: TLResource;
+  S: TResourceStream;
+  F: TFileStream;
 
 implementation
 
@@ -382,6 +387,7 @@ begin
   ProfileConfig := TINIFile.Create(GetAppConfigDir(False) + C_PROFILECONFIGNAME);
   ProfilenameList := TStringList.Create;
   ProfileRec.DragFileStringList := TStringList.Create;
+
   if FileExistsUTF8('readme.txt') then
   begin
     memo_intro.Lines.LoadFromFile('readme.txt');
@@ -672,8 +678,8 @@ end;
 procedure Tmainform.edt_WhatsNewTextFileChange(Sender: TObject);
 begin
   edt_WhatsNewTextFile.InitialDir := ExtractFileDir(ProfileRec.WhatsNewPath);
+  // ForceDirectoriesUTF8(ProfileRec.WhatsNewPath);
   ProfileRec.WhatsNewPath := edt_WhatsNewTextFile.Filename;
-  ForceDirectoriesUTF8(ProfileRec.WhatsNewPath);
   bCurrentProfileSaved := False;
 end;
 
@@ -1033,7 +1039,7 @@ begin
     cmb_profile.Clear;
     cmb_profile.Items := ProfileNameList;
     // Set last item in list as current
-    cmb_profile.ItemIndex := cmb_profile.Items.Count - 1;
+    // cmb_profile.ItemIndex := cmb_profile.Items.Count - 1;
     bCurrentProfileSaved := False;
   end
   else
@@ -1419,5 +1425,26 @@ begin
     LAUTRayINI.Free;
   end;
 end;
-
+initialization
+// Unpack readme.txt
+if (lcl_major > 0) and (lcl_minor > 6) then
+ begin
+    sReadMePath:=ProgramDirectory + 'readme.txt';
+      // This uses a resource file added via Project/Options (Laz 1.7+)
+    if not FileExistsUTF8(sReadMePath) then
+    begin
+      // create a resource stream which points to the po file
+      S := TResourceStream.Create(HInstance, 'README', MakeIntResource(10));
+      try
+        F := TFileStream.Create(sReadMePath, fmCreate);
+        try
+          F.CopyFrom(S, S.Size); // copy data from the resource stream to file stream
+        finally
+          F.Free; // destroy the file stream
+        end;
+      finally
+        S.Free; // destroy the resource stream
+      end;
+    end;
+  end;
 end.
