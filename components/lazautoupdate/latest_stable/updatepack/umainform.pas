@@ -1433,7 +1433,7 @@ if (lcl_major > 0) and (lcl_minor > 6) then
       // This uses a resource file added via Project/Options (Laz 1.7+)
     if not FileExistsUTF8(sReadMePath) then
     begin
-      // create a resource stream which points to the po file
+      // create a resource stream which points to the file
       S := TResourceStream.Create(HInstance, 'README', MakeIntResource(10));
       try
         F := TFileStream.Create(sReadMePath, fmCreate);
