@@ -36,7 +36,7 @@ unit RxVersInfo;
 interface
 
 uses
-  Classes, SysUtils, versionresource;
+  Classes, SysUtils, versionresource, lclversion;
 
 type
   TLongVersion = string;
@@ -112,15 +112,15 @@ type
 
 implementation
 uses FileUtil, resource, resreader, InterfaceBase, rxconst, LazFileUtils,
-  LazUTF8, LCLPlatformDef
+  LazUTF8
 {$IFDEF WINDOWS}
   , winpeimagereader
 {$ENDIF}
 {$IFDEF LINUX}
   , elfreader
 {$ENDIF}
+{$IF (lcl_major > 0) and (lcl_minor > 6)}, LCLPlatformDef {$ENDIF};
 
-  ;
 
 { TRxVersionInfo }
 
