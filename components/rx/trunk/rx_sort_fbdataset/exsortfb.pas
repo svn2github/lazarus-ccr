@@ -1,6 +1,6 @@
 { RxDBGrid sort engine module for FBDataSet
 
-  Copyright (C) 2009 Lagunov Aleksey alexs75@hotbox.ru
+  Copyright (C) 2005-2017 Lagunov Aleksey alexs@yandex.ru
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by

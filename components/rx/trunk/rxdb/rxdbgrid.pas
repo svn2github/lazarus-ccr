@@ -288,6 +288,7 @@ type
   { TRxColumnFooterItem }
   TRxColumnFooterItem = class(TCollectionItem)
   private
+    FColor: TColor;
     FIsDefaultFont: boolean;
     FLayout: TTextLayout;
     FOwner: TRxColumn;
@@ -304,6 +305,7 @@ type
     function GetFont: TFont;
     function IsFontStored: Boolean;
     procedure SetAlignment(AValue: TAlignment);
+    procedure SetColor(AValue: TColor);
     procedure SetDisplayFormat(AValue: string);
     procedure SetFieldName(AValue: string);
     procedure SetFont(AValue: TFont);
@@ -341,6 +343,7 @@ type
     property Value: string read FValue write SetValue;
     property ValueType: TFooterValueType read FValueType write SetValueType default fvtNon;
     property Font: TFont read GetFont write SetFont stored IsFontStored;
+    property Color : TColor read FColor write SetColor stored IsFontStored default clNone;
   end;
 
   { TRxColumnFooterItems }
@@ -1141,6 +1144,13 @@ begin
   FOwner.ColumnChanged;
 end;
 
+procedure TRxColumnFooterItem.SetColor(AValue: TColor);
+begin
+  if FColor=AValue then Exit;
+  FColor:=AValue;
+  FOwner.ColumnChanged;
+end;
+
 procedure TRxColumnFooterItem.SetDisplayFormat(AValue: string);
 begin
   if FDisplayFormat=AValue then Exit;
@@ -1494,6 +1504,7 @@ begin
 
   FTestValue := 0;
   FLayout := tlCenter;
+  FColor:=clNone;
 
   FFont := TFont.Create;
   FillDefaultFont;
@@ -3999,9 +4010,6 @@ begin
   Canvas.Brush.Color := Color;
   Canvas.FillRect(FooterRect);
 
-//  WriteLn(Format('FooterRect.Left=%d, FooterRect.Top=%d, FooterRect.Right=%d, FooterRect.Bottom=%d', [FooterRect.Left, FooterRect.Top, FooterRect.Right, FooterRect.Bottom]));
-
-
   R.Top := TotalYOffs;
   R.Bottom := TotalYOffs + DefaultRowHeight * FFooterOptions.RowCount;
 
@@ -4030,8 +4038,8 @@ begin
       for i := GCache.VisibleGrid.Left to GCache.VisibleGrid.Right do
       begin
         ColRowToOffset(True, True, i, R.Left, R.Right);
-        Canvas.FillRect(R);
-        DrawCellGrid(i, 0, R, []);
+//        Canvas.FillRect(R);
+//        DrawCellGrid(i, 0, R, []);
 
         if FFooterOptions.FDrawFullLine then
         begin
@@ -4064,12 +4072,21 @@ begin
             else
               Canvas.Font:=Font;
 
-            if not Assigned(OnRxColumnFooterDraw) then begin
-             DrawCellText(i, 0, R, [], FItem.DisplayText);
+            if FItem.Color <> clNone then
+              Canvas.Brush.Color:=FItem.Color
+            else
+              Canvas.Brush.Color:=FFooterOptions.FColor;
+
+            if not Assigned(OnRxColumnFooterDraw) then
+            begin
+              Canvas.FillRect(R);
+              DrawCellGrid(i, 0, R, []);
+              DrawCellText(i, 0, R, [], FItem.DisplayText);
             end
             else
             begin
-              if not Assigned(ABrush)then ABrush := TBrush.Create;
+              if not Assigned(ABrush)then
+                ABrush := TBrush.Create;
               ABrush.Assign(Canvas.Brush);//Backup Brush info
               AText := FItem.DisplayText;
               OnRxColumnFooterDraw(Self, Canvas.Brush, Canvas.Font, R, C, AText);
@@ -4078,7 +4095,17 @@ begin
               DrawCellText(i, 0, R, [], AText);
               Canvas.Brush.Assign(ABrush);//Restore Brush info
             end;
+          end
+          else
+          begin
+            Canvas.FillRect(R);
+            DrawCellGrid(i, 0, R, []);
           end;
+        end
+        else
+        begin
+          Canvas.FillRect(R);
+          DrawCellGrid(i, 0, R, []);
         end;//Assigned(C)
       end;
 

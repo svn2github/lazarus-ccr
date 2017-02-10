@@ -1,12 +1,12 @@
 object RxDBGridMainForm: TRxDBGridMainForm
-  Left = 287
+  Left = 279
   Height = 732
   Top = 137
-  Width = 1151
+  Width = 1159
   ActiveControl = Panel1
   Caption = 'RxDBGrid Demo'
   ClientHeight = 704
-  ClientWidth = 1151
+  ClientWidth = 1159
   Menu = MainMenu1
   OnCreate = FormCreate
   SessionProperties = 'RxDBGridExportSpreadSheet1.FileName;RxDBGridExportSpreadSheet1.OpenAfterExport;RxDBGridExportSpreadSheet1.Options;RxDBGridExportSpreadSheet1.PageName;RxDBGridPrint1.Options;RxDBGridPrint1.Orientation;RxDBGridPrint1.PageMargin;RxDBGridPrint1.ReportTitle;RxDBGridPrint1.ShowColumnHeaderOnAllPage'
@@ -16,7 +16,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
     Left = 0
     Height = 627
     Top = 77
-    Width = 1151
+    Width = 1159
     ColumnDefValues.BlobText = '(примечание)'
     TitleButtons = True
     AutoSort = True
@@ -98,6 +98,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Footer.Font.Height = -15
         Footer.Font.Name = 'Liberation Mono'
         Footer.Font.Style = [fsBold, fsItalic]
+        Footer.Color = clBlue
         Footers = <>
         Options = [coCustomizeVisible, coCustomizeWidth, coDisableDialogFind]
       end    
@@ -433,6 +434,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
     FooterOptions.Color = clYellow
     FooterOptions.RowCount = 2
     FooterOptions.DrawFullLine = True
+    SearchOptions.QuickSearchOptions = [loCaseInsensitive, loPartialKey]
+    SearchOptions.FromStart = False
     Version = 1
     OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgHighlightFocusCol, rdgHighlightFocusRow, rdgDblClickOptimizeColWidth, rdgFooterRows, rdgXORColSizing, rdgMultiTitleLines, rdgAllowQuickSearch, rdgAllowQuickFilter, rdgAllowFilterForm, rdgAllowSortForm, rdgAllowToolMenu]
     FooterColor = clYellow
@@ -457,17 +460,17 @@ object RxDBGridMainForm: TRxDBGridMainForm
     Left = 0
     Height = 77
     Top = 0
-    Width = 1151
+    Width = 1159
     Align = alTop
     AutoSize = True
     ClientHeight = 77
-    ClientWidth = 1151
+    ClientWidth = 1159
     TabOrder = 1
     object Label1: TLabel
       AnchorSideLeft.Control = Button2
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 274
+      Left = 272
       Height = 20
       Top = 7
       Width = 36
@@ -481,7 +484,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       Left = 7
       Height = 36
       Top = 7
-      Width = 89
+      Width = 88
       Action = actCalcTotal
       AutoSize = True
       BorderSpacing.Around = 6
@@ -491,10 +494,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = Button1
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 102
+      Left = 101
       Height = 36
       Top = 7
-      Width = 166
+      Width = 165
       Action = actOptimizeColumnsWidthAll
       AutoSize = True
       BorderSpacing.Around = 6
@@ -505,7 +508,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = CheckBox2
       AnchorSideTop.Side = asrBottom
-      Left = 503
+      Left = 501
       Height = 24
       Hint = 'Use filter line'
       Top = 37
@@ -519,7 +522,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = Label1
       AnchorSideTop.Control = Label1
       AnchorSideTop.Side = asrBottom
-      Left = 280
+      Left = 278
       Height = 32
       Top = 33
       Width = 217
@@ -539,7 +542,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = ComboBox1
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 503
+      Left = 501
       Height = 24
       Hint = 'Auto fill column width'
       Top = 7
@@ -553,10 +556,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = CheckBox2
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 643
+      Left = 641
       Height = 24
       Top = 7
-      Width = 121
+      Width = 120
       BorderSpacing.Around = 6
       Caption = 'Show indicator'
       Checked = True
@@ -569,10 +572,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = CheckBox3
       AnchorSideTop.Side = asrBottom
-      Left = 643
+      Left = 641
       Height = 24
       Top = 37
-      Width = 118
+      Width = 117
       BorderSpacing.Around = 6
       Caption = 'Show headers'
       Checked = True
@@ -584,10 +587,10 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = CheckBox3
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 770
+      Left = 767
       Height = 24
       Top = 7
-      Width = 97
+      Width = 96
       BorderSpacing.Around = 6
       Caption = 'Word wrap'
       OnChange = CheckBox5Change
@@ -597,7 +600,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = CheckBox5
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Panel1
-      Left = 873
+      Left = 869
       Height = 20
       Top = 7
       Width = 32
@@ -609,12 +612,13 @@ object RxDBGridMainForm: TRxDBGridMainForm
       AnchorSideLeft.Control = Label2
       AnchorSideTop.Control = Label2
       AnchorSideTop.Side = asrBottom
-      Left = 879
+      Left = 875
       Height = 37
       Top = 33
       Width = 129
       BorderSpacing.Around = 6
       ButtonWidth = 23
+      DialogTitle = 'Select a Date'
       MaxLength = 10
       NumGlyphs = 2
       PasswordChar = #0
@@ -670,8 +674,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Size = 15
       end>
     PacketRecords = 0
-    left = 152
-    top = 264
+    Left = 152
+    Top = 264
     object RxMemoryData1ID1: TLongintField
       DisplayWidth = 10
       FieldKind = fkData
@@ -756,12 +760,12 @@ object RxDBGridMainForm: TRxDBGridMainForm
   end
   object Datasource1: TDataSource
     DataSet = RxMemoryData1
-    left = 120
-    top = 264
+    Left = 120
+    Top = 264
   end
   object PopupMenu1: TPopupMenu
-    left = 152
-    top = 197
+    Left = 152
+    Top = 197
     object MenuItem1: TMenuItem
       Action = actOptimizeWidthCol1
     end
@@ -785,8 +789,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
     end
   end
   object ActionList1: TActionList
-    left = 312
-    top = 185
+    Left = 312
+    Top = 185
     object actCalcTotal: TAction
       Caption = 'Calc total...'
       OnExecute = actCalcTotalExecute
@@ -820,8 +824,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
   end
   object Datasource2: TDataSource
     DataSet = RxMemoryData2
-    left = 288
-    top = 368
+    Left = 288
+    Top = 368
   end
   object RxMemoryData2: TRxMemoryData
     AutoCalcFields = False
@@ -836,8 +840,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Size = 130
       end>
     PacketRecords = 0
-    left = 329
-    top = 368
+    Left = 329
+    Top = 368
     object RxMemoryData2DEVELOPER_ID1: TLongintField
       DisplayWidth = 10
       FieldKind = fkData
@@ -861,8 +865,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
     end
   end
   object ImageList1: TImageList
-    left = 152
-    top = 348
+    Left = 152
+    Top = 348
     Bitmap = {
       4C6903000000100000001000000000FF0000000000FF000000FF00FF000000FF
       0000000000FF000000FF00FF000000FF0000000000FF000000FF00FF000000FF
@@ -964,8 +968,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
     }
   end
   object MainMenu1: TMainMenu
-    left = 271
-    top = 185
+    Left = 271
+    Top = 185
     object MenuItem8: TMenuItem
       Caption = 'System'
       object MenuItem11: TMenuItem
@@ -1512,14 +1516,14 @@ object RxDBGridMainForm: TRxDBGridMainForm
       050505050505050505050505050505050505C3C3BFF84F17C91A5A01F4000000
       0049454E44AE426082
     }
-    left = 856
-    top = 48
+    Left = 856
+    Top = 48
   end
   object RxIniPropStorage1: TRxIniPropStorage
     StoredValues = <>
     SeparateFiles = False
-    left = 464
-    top = 192
+    Left = 464
+    Top = 192
   end
   object RxDBGridExportSpreadSheet1: TRxDBGridExportSpreadSheet
     RxDBGrid = RxDBGrid1
@@ -1528,8 +1532,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
     FileName = 'RxDBGridDemo.ods'
     PageName = 'RxDBGrid demo'
     Options = [ressExportTitle, ressExportColors, ressExportFooter, ressOverwriteExisting]
-    left = 504
-    top = 270
+    Left = 504
+    Top = 270
   end
   object RxDBGridPrint1: TRxDBGridPrint
     RxDBGrid = RxDBGrid1
@@ -1539,14 +1543,14 @@ object RxDBGridMainForm: TRxDBGridMainForm
     ShowProgress = True
     ReportTitle = 'RxDBGrid demo'
     ModifyPrepared = True
-    left = 548
-    top = 269
+    Left = 548
+    Top = 269
   end
   object RxDBGridFooterTools1: TRxDBGridFooterTools
     RxDBGrid = RxDBGrid1
     Caption = 'Totals row'
-    left = 591
-    top = 270
+    Left = 591
+    Top = 270
   end
   object RxDBGridExportPDF1: TRxDBGridExportPDF
     RxDBGrid = RxDBGrid1
@@ -1559,7 +1563,12 @@ object RxDBGridMainForm: TRxDBGridMainForm
     OpenAfterExport = True
     AuthorPdf = 'Lagunov A.A.'
     ProducerPdf = 'RxDBGrid demo program'
-    left = 640
-    top = 270
+    Left = 640
+    Top = 270
+  end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+    Left = 897
+    Top = 164
   end
 end

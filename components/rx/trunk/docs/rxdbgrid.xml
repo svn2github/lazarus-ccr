@@ -173,6 +173,11 @@
       </element><element name="TRxDBGrid.SelectAllRows"><short>Метод выделяет помечает все строки грида</short>
       </element><element name="TRxDBGrid.DeSelectAllRows"><short>Метод снимает пометку со всех строк грида</short>
       </element>
+    <element name="TRxColumnFooterItem.Color"><short>Цвет ячейки итоговой строки</short><descr>Цвет ячейки итоговой строки
+Если значение равно clNone, то используется цвет итоговой строки из настроек RxDBGrid.FooterOptions.Color</descr>
+      </element><element name="TRxDBGridFooterOptions.DrawFullLine"><short>Рисовать линии сетки RxDBGrid полностью</short><descr>Рисовать линии сетки RxDBGrid полностью
+В противнгом случае в область между данными и итогом не будут отображаться линии колонок</descr>
+      </element>
     </module>
   </package>
 </fpdoc-descriptions>

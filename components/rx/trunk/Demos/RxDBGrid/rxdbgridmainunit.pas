@@ -70,6 +70,7 @@ type
     RxMemoryData2: TRxMemoryData;
     RxMemoryData2DEVELOPER_ID1: TLongintField;
     RxMemoryData2DEVELOPER_NAME1: TStringField;
+    Timer1: TTimer;
     procedure actCalcTotalExecute(Sender: TObject);
     procedure actOptimizeColumnsWidthAllExecute(Sender: TObject);
     procedure actOptimizeWidthCol1Execute(Sender: TObject);
@@ -90,6 +91,7 @@ type
     procedure showColumnsDialogExecute(Sender: TObject);
     procedure showFindDialogExecute(Sender: TObject);
     procedure sysExitExecute(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
     procedure TRxColumnEditButtons0Click(Sender: TObject);
     procedure TRxColumnEditButtons1Click(Sender: TObject);
     procedure TRxColumnEditButtons2Click(Sender: TObject);
@@ -199,6 +201,17 @@ end;
 procedure TRxDBGridMainForm.sysExitExecute(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TRxDBGridMainForm.Timer1Timer(Sender: TObject);
+var
+  R: TRxColumn;
+begin
+  R:=RxDBGrid1.ColumnByFieldName('Developer');
+  if R.Footer.Color = clBlue then
+    R.Footer.Color:=clNone
+  else
+    R.Footer.Color:=clBlue;
 end;
 
 procedure TRxDBGridMainForm.TRxColumnEditButtons0Click(Sender: TObject);
