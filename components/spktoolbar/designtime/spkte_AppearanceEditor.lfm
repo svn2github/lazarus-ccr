@@ -174,33 +174,33 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
             Visible = True
             Enabled = True
             Caption = 'Default'
-            ShowCaption = True
-            TableBehaviour = tbBeginsRow
             GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 1
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
             ButtonKind = bkButton
           end
           object SpkSmallButton2: TSpkSmallButton
             Visible = True
             Enabled = True
             Caption = 'Button and dropdown'
-            ShowCaption = True
-            TableBehaviour = tbBeginsRow
             GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 1
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
             ButtonKind = bkButtonDropdown
           end
           object SpkSmallButton3: TSpkSmallButton
             Visible = True
             Enabled = True
             Caption = 'Dropdown'
-            ShowCaption = True
-            TableBehaviour = tbBeginsRow
             GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = True
             ImageIndex = 1
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
             ButtonKind = bkDropdown
           end
         end
@@ -218,55 +218,55 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
             Visible = True
             Enabled = True
             Caption = 'Button'
-            ShowCaption = False
-            TableBehaviour = tbContinuesRow
             GroupBehaviour = gbBeginsGroup
             HideFrameWhenIdle = False
             ImageIndex = 1
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
             ButtonKind = bkButton
           end
           object SpkSmallButton5: TSpkSmallButton
             Visible = True
             Enabled = True
             Caption = 'Button'
-            ShowCaption = False
-            TableBehaviour = tbContinuesRow
             GroupBehaviour = gbContinuesGroup
             HideFrameWhenIdle = False
             ImageIndex = 1
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
             ButtonKind = bkButton
           end
           object SpkSmallButton6: TSpkSmallButton
             Visible = True
             Enabled = True
             Caption = 'Button'
-            ShowCaption = False
-            TableBehaviour = tbContinuesRow
             GroupBehaviour = gbEndsGroup
             HideFrameWhenIdle = False
             ImageIndex = 1
+            ShowCaption = False
+            TableBehaviour = tbContinuesRow
             ButtonKind = bkButton
           end
           object SpkSmallButton7: TSpkSmallButton
             Visible = True
             Enabled = True
             Caption = 'Btn1'
-            ShowCaption = True
-            TableBehaviour = tbBeginsRow
             GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = False
             ImageIndex = 1
+            ShowCaption = True
+            TableBehaviour = tbBeginsRow
             ButtonKind = bkButton
           end
           object SpkSmallButton8: TSpkSmallButton
             Visible = True
             Enabled = True
             Caption = 'Btn2'
-            ShowCaption = True
-            TableBehaviour = tbContinuesRow
             GroupBehaviour = gbSingleItem
             HideFrameWhenIdle = False
             ImageIndex = 1
+            ShowCaption = True
+            TableBehaviour = tbContinuesRow
             ButtonKind = bkButton
           end
         end
@@ -327,14 +327,14 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     Height = 395
     Top = 132
     Width = 558
-    ActivePage = TabSheet5
+    ActivePage = TabSheet1
     Align = alClient
-    TabIndex = 4
+    TabIndex = 0
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Tab'
-      ClientHeight = 360
-      ClientWidth = 579
+      ClientHeight = 367
+      ClientWidth = 550
       object sTabRectangle: TShape
         AnchorSideLeft.Control = LblInactiveTabHeaderFontColor
         AnchorSideLeft.Side = asrBottom

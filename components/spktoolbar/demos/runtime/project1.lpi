@@ -9,10 +9,6 @@
       <Title Value="project1"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
-      <XPManifest>
-        <TextName Value="CompanyName.ProductName.AppName"/>
-        <TextDesc Value="Your application description."/>
-      </XPManifest>
     </General>
     <i18n>
       <EnableI18N LFM="False"/>
@@ -70,7 +66,6 @@
     <Linking>
       <Debugging>
         <DebugInfoType Value="dsDwarf2"/>
-        <StripSymbols Value="True"/>
         <UseExternalDbgSyms Value="True"/>
       </Debugging>
       <LinkSmart Value="True"/>
