@@ -430,7 +430,6 @@ end;
 function TCustomColorPalette.GetColorIndex(X,Y: Integer): Integer;
 var
   W, H: Integer;
-  ix, iy: Integer;
 begin
   Result := -1;
   if FFlipped then
@@ -528,8 +527,7 @@ var
   procedure ParseColor(S: String; out AColor: TColor; out Steps: Integer;
     out ColorName: String);
   var
-    I, counter: Integer;
-    L: TStringList;
+    counter: Integer;
     tmp: String;
     P: PChar;
     R,G,B: Integer;
@@ -1075,7 +1073,7 @@ begin
 
   if FPaletteKind = pkGradientPalette then
   begin
-    if FGradientSteps < 0 then n := 0 else n := FGradientSteps;
+    n := FGradientSteps;
     for i:= Low(STEPS) to High(STEPS)-1 do BlendWBColor((RGBToColor(255, STEPS[i], 0)), n);
     for i:= High(STEPS) downto Low(STEPS)+1 do BlendWBColor((RGBToColor(STEPS[i], 255, 0)), n);
     for i:= Low(STEPS) to High(STEPS)-1 do BlendWBColor((RGBToColor(0, 255, STEPS[i])), n);
