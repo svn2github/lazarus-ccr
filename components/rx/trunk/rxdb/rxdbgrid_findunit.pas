@@ -158,11 +158,11 @@ begin
     end;
   end;
 end;
-
+{
 type
   THckGrid = class(TCustomDBGrid)
   end;
-
+}
 procedure TrxDBGridFindForm.SetGrid(AGrid: TRxDBGrid);
 var
   i:integer;
@@ -182,8 +182,10 @@ begin
   end;
 
   FDataSet:=nil;
-  if Assigned(FGrid) and Assigned(THckGrid(FGrid).DataSource) then
-    FDataSet:=THckGrid(FGrid).DataSource.DataSet;
+  if Assigned(FGrid) and Assigned(FGrid.DataSource) then
+    FDataSet:=FGrid.DataSource.DataSet;
+{  if Assigned(FGrid) and Assigned(THckGrid(FGrid).DataSource) then
+    FDataSet:=THckGrid(FGrid).DataSource.DataSet;}
   BtnFind.Enabled:=Assigned(FDataSet) and FDataSet.Active
 end;
 
