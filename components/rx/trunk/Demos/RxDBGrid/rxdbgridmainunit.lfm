@@ -2,11 +2,11 @@ object RxDBGridMainForm: TRxDBGridMainForm
   Left = 279
   Height = 732
   Top = 137
-  Width = 1159
+  Width = 1182
   ActiveControl = Panel1
   Caption = 'RxDBGrid Demo'
   ClientHeight = 704
-  ClientWidth = 1159
+  ClientWidth = 1182
   Menu = MainMenu1
   OnCreate = FormCreate
   SessionProperties = 'RxDBGridExportSpreadSheet1.FileName;RxDBGridExportSpreadSheet1.OpenAfterExport;RxDBGridExportSpreadSheet1.Options;RxDBGridExportSpreadSheet1.PageName;RxDBGridPrint1.Options;RxDBGridPrint1.Orientation;RxDBGridPrint1.PageMargin;RxDBGridPrint1.ReportTitle;RxDBGridPrint1.ShowColumnHeaderOnAllPage'
@@ -16,7 +16,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
     Left = 0
     Height = 627
     Top = 77
-    Width = 1159
+    Width = 1182
     ColumnDefValues.BlobText = '(примечание)'
     TitleButtons = True
     AutoSort = True
@@ -460,11 +460,11 @@ object RxDBGridMainForm: TRxDBGridMainForm
     Left = 0
     Height = 77
     Top = 0
-    Width = 1159
+    Width = 1182
     Align = alTop
     AutoSize = True
     ClientHeight = 77
-    ClientWidth = 1159
+    ClientWidth = 1182
     TabOrder = 1
     object Label1: TLabel
       AnchorSideLeft.Control = Button2

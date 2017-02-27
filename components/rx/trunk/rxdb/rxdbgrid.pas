@@ -622,7 +622,7 @@ type
 
     FFilterListEditor: TFilterListCellEditor;
 
-    FOldPosition: Integer;
+//    FOldPosition: Integer;
     FVersion: integer;
     FPropertyStorageLink: TPropertyStorageLink;
 
@@ -1027,7 +1027,7 @@ begin
 end;
 
 type
-  THackDataLink = class(TDataLink);
+//  THackDataLink = class(TDataLink);
   THackDataSet = class(TDataSet);
 
 
@@ -2501,7 +2501,8 @@ end;
 
 function TRxDBGrid.GetColumns: TRxDbGridColumns;
 begin
-  Result := TRxDbGridColumns(TCustomDrawGrid(Self).Columns);
+  //Result := TRxDbGridColumns(TCustomDrawGrid(Self).Columns);
+  Result := TRxDbGridColumns(inherited Columns);
 end;
 
 function TRxDBGrid.GetFooterColor: TColor;
@@ -2586,7 +2587,8 @@ end;
 
 procedure TRxDBGrid.SetColumns(const AValue: TRxDbGridColumns);
 begin
-  TRxDbGridColumns(TCustomDrawGrid(Self).Columns).Assign(Avalue);
+  //TRxDbGridColumns(TCustomDrawGrid(Self).Columns).Assign(Avalue);
+  inherited Columns := TDBGridColumns(AValue);
 end;
 
 procedure TRxDBGrid.SetFooterColor(const AValue: TColor);
@@ -4926,7 +4928,7 @@ var
   i, cnt: integer;
   APresent: boolean;
 
-  DHL:THackDataLink;
+//  DHL:THackDataLink;
   DHS:THackDataSet;
 
   SaveState:TDataSetState;
@@ -4940,6 +4942,7 @@ var
 
   FCList:TFPList;
   j: Integer;
+//  DHL: TComponentDataLink;
 begin
   if (not (FFooterOptions.Active and DatalinkActive)) or (Columns.Count = 0) or (gsAddingAutoColumns in GridStatus)  then
     Exit;
@@ -4997,7 +5000,8 @@ begin
     exit;
   end;
 
-  DHL:=THackDataLink(Datalink);
+  //DHL:=THackDataLink(Datalink);
+  //DHL:=Datalink;
   DHS:=THackDataSet(DataSource.DataSet);
 
   {$IFDEF NoAutomatedBookmark}
@@ -5013,8 +5017,10 @@ begin
   DHS.AfterScroll:=nil;
   DHS.BeforeScroll:=nil;
 
-  SaveActiveRecord:=DHL.ActiveRecord;
-  DHL.ActiveRecord:=0;
+//  SaveActiveRecord:=DHL.ActiveRecord;
+//  DHL.ActiveRecord:=0;
+  SaveActiveRecord:=Datalink.ActiveRecord;
+  Datalink.ActiveRecord:=0;
   SavePos:=DHS.RecNo;
 
   FCList:=TFPList.Create;
@@ -5077,9 +5083,12 @@ begin
         RCol.FFooters[j].FTestValue:=RCol.FFooter.FTestValue / Cnt;
     end;
   end;
-
+{
   if Min(DHL.RecordCount + SavePos - 1, DHS.RecNo) > 0 then
     DHS.RecNo := Min(DHL.RecordCount + SavePos - 1, DHS.RecNo);
+}
+  if Min(Datalink.RecordCount + SavePos - 1, DHS.RecNo) > 0 then
+    DHS.RecNo := Min(Datalink.RecordCount + SavePos - 1, DHS.RecNo);
   //K:=DHS.RecNo;
 
   while not DHS.BOF do
@@ -5092,7 +5101,8 @@ begin
   for i:=0 to Columns.Count-1 do
     TRxColumn(Columns[i]).Footer.FField:=nil;
 
-  DHL.ActiveRecord:=SaveActiveRecord;
+  //DHL.ActiveRecord:=SaveActiveRecord;
+  Datalink.ActiveRecord:=SaveActiveRecord;
   DHS.RestoreState(SaveState);
 
   DHS.AfterScroll  := SaveAfterScroll;
