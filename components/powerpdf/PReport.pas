@@ -2380,7 +2380,14 @@ begin
     end;
 
     if self.GradientColor<>clNone then
-      ACanvas.PdfCanvas.ClosepathFillStroke
+    begin
+      if (LineColor = clNone) or (LineStyle = psClear) then
+      begin
+        ACanvas.PdfCanvas.Closepath;
+        ACanvas.PdfCanvas.Fill;
+      end else
+        ACanvas.PdfCanvas.ClosepathFillStroke
+    end
     else
       StdFillOrStroke(ACanvas.PDFCanvas);
   end;
