@@ -91,6 +91,7 @@ type
     procedure ShowNote;
     procedure ShowNumberCell;
     procedure ShowObj;
+    procedure ShowObjProtect;
     procedure ShowPageSetup;
     procedure ShowPalette;
     procedure ShowPane;
@@ -493,6 +494,8 @@ begin
       ShowObj;
     $005F:
       ShowRecalc;
+    $0063:
+      ShowObjProtect;
     $007D:
       ShowColInfo;
     $0081:
@@ -4290,11 +4293,11 @@ begin
     if Row = FCurrRow then begin
       FDetails.Add('Cell protection and XF index:'#13);
       FDetails.Add(Format('x Bits 5-0 = %d: XF Index', [b and $3F]));
-      case b and $40 of
+      case (b and $40) shr 6 of
         0: FDetails.Add('  Bit 6 = 0: Cell is NOT locked.');
         1: FDetails.Add('x Bit 6 = 1: Cell is locked.');
       end;
-      case b and $80 of
+      case (b and $80) shr 7 of
         0: FDetails.Add('  Bit 7 = 0: Formula is NOT hidden.');
         1: FDetails.Add('x Bit 7 = 1: Formula is hidden.');
       end;
@@ -4527,6 +4530,26 @@ begin
   if FFormat = sfExcel5 then begin
       // to do
   end;
+end;
+
+
+procedure TBIFFGrid.ShowObjProtect;
+var
+  numBytes: Integer;
+  w: Word;
+begin
+  RowCount := FixedRows + 1;
+  numBytes := 2;
+  Move(FBuffer[FBufferIndex], w, numBytes);
+  w := WordLEToN(w);
+  if Row = FCurrRow then begin
+    FDetails.Add('Protection state of objects (drawings etc) in the workbook:'#13);
+    if w = 0
+      then FDetails.Add('  0 = Objects are NOT protected.')
+      else FDetails.Add('x 1 = Objects are protected.');
+  end;
+  ShowInRow(FCurrRow, FBufferIndex, numBytes, Format('$%.4x', [w]),
+    'Protection state of objects in the workbook');
 end;
 
 
