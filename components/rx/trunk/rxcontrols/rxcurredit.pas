@@ -45,6 +45,7 @@ type
 
   TCustomNumEdit = class(TCustomMaskEdit)
   private
+    FEditFormat: string;
     FFocusedDisplay: boolean;
     FBeepOnError: Boolean;
     FCheckOnExit: Boolean;
@@ -65,6 +66,7 @@ type
     procedure SetBeepOnError(const AValue: Boolean);
     procedure SetDecimalPlaces(const AValue: Cardinal);
     procedure SetDisplayFormat(const AValue: string);
+    procedure SetEditFormat(AValue: string);
 //    procedure SetFormatOnEditing(const AValue: Boolean);
     procedure SetMaxValue(const AValue: Extended);
     procedure SetMinValue(const AValue: Extended);
@@ -108,6 +110,7 @@ type
     property DecimalPlaces: Cardinal read FDecimalPlaces write SetDecimalPlaces
       default 2;
     property DisplayFormat: string read FDisplayFormat write SetDisplayFormat;
+    property EditFormat: string read FEditFormat write SetEditFormat;
     property MaxValue: Extended read FMaxValue write SetMaxValue;
     property MinValue: Extended read FMinValue write SetMinValue;
 //    property FormatOnEditing: Boolean read FFormatOnEditing write SetFormatOnEditing default False;
@@ -141,11 +144,11 @@ type
     property Color;
     property DecimalPlaces;
     property DisplayFormat;
+    property EditFormat;
     property DragCursor;
     property DragMode;
     property Enabled;
     property Font;
-//    property FormatOnEditing;
     property HideSelection;
     property Anchors;
     property BiDiMode;
@@ -294,7 +297,12 @@ begin
   if (FValue = 0) and FZeroEmpty then
     Result:=''
   else
-    Result := FloatToStr(FValue);
+  begin
+    if FEditFormat <> '' then
+      Result := FormatFloat(FEditFormat, FValue)
+    else
+      Result := FloatToStr(FValue);
+  end;
 end;
 
 function TCustomNumEdit.GetValue: Extended;
@@ -333,6 +341,13 @@ procedure TCustomNumEdit.SetDisplayFormat(const AValue: string);
 begin
   if FDisplayFormat=AValue then exit;
   FDisplayFormat:=AValue;
+  DataChanged;
+end;
+
+procedure TCustomNumEdit.SetEditFormat(AValue: string);
+begin
+  if FEditFormat=AValue then Exit;
+  FEditFormat:=AValue;
   DataChanged;
 end;
 
