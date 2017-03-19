@@ -6,9 +6,12 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, mrumanager, Forms, Controls, Graphics, Dialogs,
-  ExtCtrls, ComCtrls, ActnList, Menus, StdActns, Buttons, fpstypes,
-  fpspreadsheet, fpspreadsheetctrls, fpspreadsheetgrid, fpsActions,
-  fpsSYLK, xlsxml, Grids, Types;
+  ExtCtrls, ComCtrls, ActnList, Menus, StdActns, Buttons, Grids, types,
+  fpstypes, fpspreadsheet, fpspreadsheetctrls, fpspreadsheetgrid, fpsActions,
+  fpsAllFormats, fpsSYLK, xlsxml, xlsxooxml_crypto;
+  // NOTE:
+  // In order to use the decrypting xlsx reader put xlsxooxlm_cryto after
+  // xlsxooxml or fpsAllforamts.
 
 type
 
@@ -34,6 +37,7 @@ type
     AcSortColAsc: TAction;
     AcRowHeight: TAction;
     AcColWidth: TAction;
+    AcWorksheetProtection: TAction;
     AcWorksheetRTL: TAction;
     AcViewInspector: TAction;
     ActionList: TActionList;
@@ -45,6 +49,9 @@ type
     MenuItem1: TMenuItem;
     MenuItem102: TMenuItem;
     MenuItem103: TMenuItem;
+    MenuItem104: TMenuItem;
+    MenuItem105: TMenuItem;
+    MenuItem106: TMenuItem;
     MenuItem160: TMenuItem;
     MenuItem161: TMenuItem;
     MenuItem162: TMenuItem;
@@ -244,6 +251,7 @@ type
     AcNumFormatCurrency: TsNumberFormatAction;
     AcNumFormatCurrencyRed: TsNumberFormatAction;
     Panel2: TPanel;
+    PuCellProtection: TPopupMenu;
     PuRecentFiles: TPopupMenu;
     PuPaste: TPopupMenu;
     PuBorders: TPopupMenu;
@@ -308,6 +316,8 @@ type
     AcCellBorderDiagUp: TsCellBorderAction;
     AcCellBorderDiagDown: TsCellBorderAction;
     AcNumFormatText: TsNumberFormatAction;
+    AcCellProtection_Cell: TsCellProtectionAction;
+    AcCellProtection_HideFormulas: TsCellProtectionAction;
     Splitter2: TSplitter;
     Splitter3: TSplitter;
     AcZoom100: TsWorksheetZoomAction;
@@ -345,7 +355,6 @@ type
     ToolButton20: TToolButton;
     ToolButton21: TToolButton;
     ToolButton22: TToolButton;
-    ToolButton23: TToolButton;
     ToolButton24: TToolButton;
     ToolButton25: TToolButton;
     ToolButton26: TToolButton;
@@ -385,6 +394,8 @@ type
     ToolButton53: TToolButton;
     ToolButton54: TToolButton;
     ToolButton55: TToolButton;
+    ToolButton56: TToolButton;
+    ToolButton58: TToolButton;
     ToolButton6: TToolButton;
     ToolButton7: TToolButton;
     ToolButton8: TToolButton;
@@ -414,6 +425,8 @@ type
     procedure AcSortColAscExecute(Sender: TObject);
     procedure AcSortExecute(Sender: TObject);
     procedure ActionListUpdate(AAction: TBasicAction; var Handled: Boolean);
+    procedure AcWorksheetProtectionExecute(Sender: TObject);
+    procedure AcWorksheetProtectionUpdate(Sender: TObject);
     procedure AcWorksheetRTLExecute(Sender: TObject);
     procedure AcWorksheetRTLUpdate(Sender: TObject);
     procedure AcSearchExecute(Sender: TObject);
@@ -473,7 +486,7 @@ uses
   fpsUtils, fpsCSV, fpsReaderWriter,
   sCSVParamsForm, sCurrencyForm, sFormatSettingsForm, sSortParamsForm,
   sHyperlinkForm, sNumFormatForm, sSearchForm, sColWidthForm, sRowHeightForm,
-  sAbout;
+  sWorksheetProtection, sAbout;
 
 var
   SEARCH_DLG_POS: TPoint = (X: -1; Y: -1);
@@ -866,6 +879,34 @@ begin
   UpdateInspectorColumns;
 end;
 
+procedure TMainForm.AcWorksheetProtectionExecute(Sender: TObject);
+var
+  F: TWorksheetProtectionForm;
+begin
+  if WorkbookSource.Worksheet.IsProtected then
+    WorkbookSource.Worksheet.Protect(false)
+  else
+  begin
+    F := TWorksheetProtectionForm.Create(nil);
+    try
+      F.IsProtected := WorkbookSource.Worksheet.IsProtected;
+      F.Protection := WorkbookSource.Worksheet.Protection;
+      if F.ShowModal = mrOK then
+      begin
+        WorkbookSource.Worksheet.Protection := F.Protection;
+        WorkbookSource.Worksheet.Protect(F.IsProtected);
+      end;
+    finally
+      F.Free;
+    end;
+  end;
+end;
+
+procedure TMainForm.AcWorksheetProtectionUpdate(Sender: TObject);
+begin
+  AcWorksheetProtection.Checked := WorkbookSource.Worksheet.IsProtected;
+end;
+
 procedure TMainForm.BeforeRun;
 begin
   ReadFromIni;
@@ -945,6 +986,7 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   priorityFormats: Array[0..8] of TsSpreadFormatID;
+  i: Integer;
 begin
   FMRUMenuManager := TMRUMenuManager.Create(self);
   with FMRUMenuManager do begin
@@ -970,6 +1012,9 @@ begin
 
   AcFileOpen.Dialog.Filter := GetFileFormatFilter('|', ';', faRead, priorityFormats, true, true);
   FOpenFormats := GetSpreadFormats(faRead, priorityFormats);
+  // Use decrypting XLSX format instead of normal XLSX format
+  for i:=0 to High(FOpenFormats) do
+    if FOpenFormats[i] = ord(sfOOXML) then FOpenFormats[i] := sfidOOXML_Crypto;
 
   AcFileSaveAs.Dialog.Filter := GetFileFormatFilter('|', ';', faWrite, priorityFormats);
   FSaveFormats := GetSpreadFormats(faWrite, priorityFormats);

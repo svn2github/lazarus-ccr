@@ -57,15 +57,18 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="2">
+    <RequiredPackages Count="3">
       <Item1>
-        <PackageName Value="laz_fpspreadsheet_visual"/>
+        <PackageName Value="laz_fpspreadsheet_crypto"/>
       </Item1>
       <Item2>
-        <PackageName Value="LCL"/>
+        <PackageName Value="laz_fpspreadsheet_visual"/>
       </Item2>
+      <Item3>
+        <PackageName Value="LCL"/>
+      </Item3>
     </RequiredPackages>
-    <Units Count="14">
+    <Units Count="15">
       <Unit0>
         <Filename Value="spready.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -89,7 +92,9 @@
       <Unit4>
         <Filename Value="scurrencyform.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="CurrencyForm"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit4>
       <Unit5>
         <Filename Value="sformatsettingsform.pas"/>
@@ -154,6 +159,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="sRowHeightForm"/>
       </Unit13>
+      <Unit14>
+        <Filename Value="sworksheetprotection.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="WorksheetProtectionForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="sWorksheetProtection"/>
+      </Unit14>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

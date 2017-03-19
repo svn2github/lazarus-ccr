@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 267
+  Left = 265
   Height = 709
-  Top = 152
+  Top = 139
   Width = 1120
   Caption = 'spready'
   ClientHeight = 689
@@ -37,7 +37,6 @@ object MainForm: TMainForm
       WorkbookSource = WorkbookSource
       Align = alClient
       AutoAdvance = aaDown
-      ColCount = 27
       DefaultColWidth = 64
       DefaultRowHeight = 22
       Font.Color = clBlack
@@ -46,7 +45,6 @@ object MainForm: TMainForm
       MouseWheelOption = mwGrid
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSizing, goColSizing, goEditing, goThumbTracking, goDblClickAutoSize, goCellHints]
       ParentFont = False
-      RowCount = 101
       TabOrder = 1
       TitleFont.Color = clBlack
       TitleFont.Height = -13
@@ -83,7 +81,7 @@ object MainForm: TMainForm
       Align = alClient
       DefaultColWidth = 100
       MouseWheelOption = mwGrid
-      RowCount = 33
+      RowCount = 39
       TabOrder = 1
       TitleStyle = tsNative
       OnEnter = InspectorEnter
@@ -101,8 +99,8 @@ object MainForm: TMainForm
         '  ListSeparator=;'
         '  DateSeparator=.'
         '  TimeSeparator=:'
-        '  ShortDateFormat=dd.MM.yy'
-        '  LongDateFormat=dd.MMM.yyyy'
+        '  ShortDateFormat=dd.MM.yyyy'
+        '  LongDateFormat=dddd, d. MMMM yyyy'
         '  ShortTimeFormat=hh:nn'
         '  LongTimeFormat=hh:nn:ss'
         '  TimeAMString='
@@ -123,6 +121,12 @@ object MainForm: TMainForm
         '  Font3=Arial; size 10; black; italic'
         '(-) Cell formats='
         '  CellFormat0=nfGeneral'
+        'Protection=(default)'
+        '(-) CryptoInfo='
+        '  PasswordHash='
+        '  Algorithm='
+        '  SaltValue='
+        '  SpinCount=0'
       )
       TitleCaptions.Strings = (
         'Properties'
@@ -177,7 +181,6 @@ object MainForm: TMainForm
       Left = 376
       Height = 26
       Top = 0
-      Width = 5
       Caption = 'ToolButton10'
       Style = tbsDivider
     end
@@ -205,7 +208,6 @@ object MainForm: TMainForm
       Left = 453
       Height = 26
       Top = 0
-      Width = 5
       Caption = 'ToolButton15'
       Style = tbsDivider
     end
@@ -228,7 +230,6 @@ object MainForm: TMainForm
       Left = 530
       Height = 26
       Top = 0
-      Width = 5
       Caption = 'ToolButton19'
       Style = tbsDivider
     end
@@ -253,14 +254,6 @@ object MainForm: TMainForm
       Left = 600
       Top = 0
       Action = AcNumFormatPercentage
-    end
-    object ToolButton23: TToolButton
-      Left = 896
-      Height = 26
-      Top = 0
-      Width = 5
-      Caption = 'ToolButton23'
-      Style = tbsDivider
     end
     object ToolButton24: TToolButton
       Left = 660
@@ -304,7 +297,6 @@ object MainForm: TMainForm
       Left = 855
       Height = 26
       Top = 0
-      Width = 5
       Caption = 'ToolButton31'
       Style = tbsDivider
     end
@@ -321,12 +313,11 @@ object MainForm: TMainForm
       Left = 780
       Height = 26
       Top = 0
-      Width = 5
       Caption = 'ToolButton3'
       Style = tbsDivider
     end
     object ToolButton5: TToolButton
-      Left = 901
+      Left = 896
       Top = 0
       Action = AcMergeCells
     end
@@ -344,7 +335,6 @@ object MainForm: TMainForm
       Left = 25
       Height = 26
       Top = 0
-      Width = 5
       Caption = 'ToolButton38'
       Style = tbsDivider
     end
@@ -408,9 +398,23 @@ object MainForm: TMainForm
       Left = 559
       Height = 26
       Top = 0
-      Width = 5
       Caption = 'ToolButton45'
       Style = tbsDivider
+    end
+    object ToolButton56: TToolButton
+      Left = 920
+      Height = 26
+      Top = 0
+      Caption = 'ToolButton56'
+      Style = tbsDivider
+    end
+    object ToolButton58: TToolButton
+      Left = 925
+      Top = 0
+      Caption = 'ToolButton58'
+      DropdownMenu = PuCellProtection
+      ImageIndex = 73
+      Style = tbsButtonDrop
     end
   end
   object ToolBar2: TToolBar
@@ -444,7 +448,6 @@ object MainForm: TMainForm
       Left = 357
       Height = 24
       Top = 0
-      Width = 5
       Caption = 'ToolButton1'
       Style = tbsDivider
     end
@@ -464,7 +467,6 @@ object MainForm: TMainForm
       Left = 251
       Height = 24
       Top = 0
-      Width = 5
       Caption = 'ToolButton28'
       Style = tbsDivider
     end
@@ -497,7 +499,6 @@ object MainForm: TMainForm
       Left = 174
       Height = 24
       Top = 0
-      Width = 5
       Caption = 'ToolButton43'
       Style = tbsDivider
     end
@@ -505,7 +506,6 @@ object MainForm: TMainForm
       Left = 304
       Height = 24
       Top = 0
-      Width = 5
       Caption = 'ToolButton44'
       Style = tbsDivider
     end
@@ -530,7 +530,6 @@ object MainForm: TMainForm
       Left = 85
       Height = 24
       Top = 0
-      Width = 5
       Caption = 'ToolButton49'
       Style = tbsDivider
     end
@@ -553,7 +552,6 @@ object MainForm: TMainForm
       Left = 434
       Height = 24
       Top = 0
-      Width = 5
       Caption = 'ToolButton52'
       Style = tbsDivider
     end
@@ -576,7 +574,6 @@ object MainForm: TMainForm
       Left = 511
       Height = 24
       Top = 0
-      Width = 5
       Caption = 'ToolButton54'
       Style = tbsDivider
     end
@@ -589,7 +586,6 @@ object MainForm: TMainForm
       Left = 540
       Height = 24
       Top = 0
-      Width = 5
       Caption = 'ToolButton55'
       Style = tbsDivider
     end
@@ -624,10 +620,10 @@ object MainForm: TMainForm
         Height = 23
         Top = 0
         Width = 138
+        WorkbookSource = WorkbookSource
         Align = alTop
         TabOrder = 0
         Text = 'A1'
-        WorkbookSource = WorkbookSource
       end
     end
     object CellEdit: TsCellEdit
@@ -1892,12 +1888,30 @@ object MainForm: TMainForm
       Hint = 'Set width of current column'
       OnExecute = AcColWidthExecute
     end
+    object AcCellProtection_Cell: TsCellProtectionAction
+      Category = 'FPSpreadsheet'
+      WorkbookSource = WorkbookSource
+      Caption = 'Protect cell'
+    end
+    object AcCellProtection_HideFormulas: TsCellProtectionAction
+      Category = 'FPSpreadsheet'
+      WorkbookSource = WorkbookSource
+      Caption = 'Hide formulas'
+      Protection = cpHideFormulas
+    end
+    object AcWorksheetProtection: TAction
+      Category = 'Worksheet'
+      Caption = 'Protect worksheet...'
+      ImageIndex = 73
+      OnExecute = AcWorksheetProtectionExecute
+      OnUpdate = AcWorksheetProtectionUpdate
+    end
   end
   object ImageList: TImageList
     left = 176
     top = 312
     Bitmap = {
-      4C69490000001000000010000000003F9300003F9300003F9300003F9424003F
+      4C694A0000001000000010000000003F9300003F9300003F9300003F9424003F
       948A003E93CC004095CC004095CC004095CC004095CC004095CC004095CC0040
       95CC004095CC00409599003F9400003F9300003F9324003F938A0E4B9CD33F76
       C0EC5D90D4FF3365A9FFA0A0A0FFA9A9A9FFA9A9A9FFAAAAAAFFACACACFFAEAE
@@ -4233,6 +4247,38 @@ object MainForm: TMainForm
       001A7205006B720500A5720500C3720500C3720500A57205006B7506001A800E
       010090170200951A0200FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000278B3000278B300037A
+      B6000380BE330380BF720380BF890380BF890380BF720380BE33037AB6000278
+      B3000278B300FFFFFF00FFFFFF00FFFFFF00FFFFFF000278B3000278B3000379
+      B5351D8CC29B7ECDEBE16AB5D1EA6AB5D1EA7ECDEBE11D8CC29B0379B5350278
+      B3000278B300FFFFFF00FFFFFF00FFFFFF00FFFFFF000272AA000272AA000272
+      AA7A7CC8E7E6388AB2D5015B8891015B8891388AB2D57CC8E7E60272AA7A0272
+      AA000272AA00FFFFFF00FFFFFF00FFFFFF00FFFFFF000376B00002699D000269
+      9D9784C9E6FD066594B9015F8E00015F8E00066594B984C9E6FD02699D970269
+      9D000375AE00FFFFFF00FFFFFF00FFFFFF00FFFFFF000381BF000377B1000160
+      90A376BADBFF016494B201689A00015A8700016494B278BCDDFF016090A30272
+      AA00037EBB00FFFFFF00FFFFFF00FFFFFF00FFFFFF000381BF69037DBA8F0059
+      86A865AACCFF016698AD01699CA9005783CA016698AD4B91B5FF005986A80276
+      B09B037EBB6DFFFFFF00FFFFFF00FFFFFF00FFFFFF000381BF8BA5E9FFFF9CDF
+      FAFF94D7F4FF8CCEEEFF83C7E8FF5EB4D7FF5EBADEFF5EC2E8FF5ECAF2FF62D6
+      FBFF037EBB90FFFFFF00FFFFFF00FFFFFF00FFFFFF000381BF8B66AACAFF68AC
+      CEFF6CB0D2FF6EB1D3FF6AAED0FF559DBFFF55A0C2FF55A5CAFF55ABD3FF5AB8
+      DEFF037EBB90FFFFFF00FFFFFF00FFFFFF00FFFFFF000381BF8BA5E9FFFF9CDF
+      FAFF94D7F4FF8CCEEEFF83C7E8FF5EB4D7FF5EBADEFF5EC2E8FF5ECAF2FF62D6
+      FBFF037EBB90FFFFFF00FFFFFF00FFFFFF00FFFFFF00037DBA8A66AACAFF68AC
+      CEFF6CB0D2FF6EB1D3FF6AAED0FF559DBFFF55A0C2FF55A5CAFF55ABD3FF5AB8
+      DEFF037AB68FFFFFFF00FFFFFF00FFFFFF00FFFFFF0002669F87A5E9FFFF9CDF
+      FAFF94D7F4FF8CCEEEFF83C7E8FF5EB4D7FF5EBADEFF5EC2E8FF5ECAF2FF62D6
+      FBFF02659C8AFFFFFF00FFFFFF00FFFFFF00FFFFFF00014B7C8D66AACAFF68AC
+      CEFF6CB0D2FF6EB1D3FF6AAED0FF559DBFFF55A0C2FF55A5CAFF55ABD3FF5AB8
+      DEFF014A7B8FFFFFFF00FFFFFF00FFFFFF00FFFFFF00013763A0A9EDFFFFA4E7
+      FCFF9CDFF8FF94D6F4FF8BCFF0FF66BCDEFF66C2E4FF66CAECFF66D2F4FF66DA
+      FCFF013763A0FFFFFF00FFFFFF00FFFFFF00FFFFFF00002C5695002F5AB30037
+      649E0146769301578895016294A2002D57BD002D57BC002D57BC002D58BC002D
+      58BC002E598BFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00
     }
   end
@@ -4313,6 +4359,9 @@ object MainForm: TMainForm
       end
       object MenuItem160: TMenuItem
         Action = acRenameWorksheet
+      end
+      object MenuItem106: TMenuItem
+        Action = AcWorksheetProtection
       end
       object MenuItem165: TMenuItem
         Caption = '-'
@@ -4865,5 +4914,17 @@ object MainForm: TMainForm
   object PuRecentFiles: TPopupMenu
     left = 504
     top = 536
+  end
+  object PuCellProtection: TPopupMenu
+    left = 504
+    top = 600
+    object MenuItem104: TMenuItem
+      Action = AcCellProtection_Cell
+      AutoCheck = True
+    end
+    object MenuItem105: TMenuItem
+      Action = AcCellProtection_HideFormulas
+      AutoCheck = True
+    end
   end
 end

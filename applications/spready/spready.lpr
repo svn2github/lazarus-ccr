@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces,  // this includes the LCL widgetset
-  Forms, smain, sColWidthForm;
+  Forms, smain, sColWidthForm, sWorksheetProtection;
 
 {$R *.res}
 

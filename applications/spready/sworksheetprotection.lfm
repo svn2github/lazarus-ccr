@@ -1,0 +1,103 @@
+object WorksheetProtectionForm: TWorksheetProtectionForm
+  Left = 280
+  Height = 153
+  Top = 130
+  Width = 316
+  BorderStyle = bsDialog
+  Caption = 'Worksheet protection'
+  ClientHeight = 153
+  ClientWidth = 316
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '1.7'
+  object ButtonPanel: TButtonPanel
+    Left = 6
+    Height = 34
+    Top = 113
+    Width = 304
+    BorderSpacing.Top = 8
+    OKButton.Name = 'OKButton'
+    OKButton.DefaultCaption = True
+    HelpButton.Name = 'HelpButton'
+    HelpButton.DefaultCaption = True
+    CloseButton.Name = 'CloseButton'
+    CloseButton.DefaultCaption = True
+    CancelButton.Name = 'CancelButton'
+    CancelButton.DefaultCaption = True
+    TabOrder = 0
+    ShowButtons = [pbOK, pbCancel]
+  end
+  object CbProtect: TCheckBox
+    Left = 8
+    Height = 19
+    Top = 8
+    Width = 308
+    Align = alTop
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 8
+    Caption = 'Protect worksheet and locked cells'
+    OnChange = CbProtectChange
+    TabOrder = 1
+  end
+  object LblProtectionItems: TLabel
+    Left = 8
+    Height = 15
+    Top = 46
+    Width = 300
+    Align = alTop
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 4
+    Caption = 'All users of this worksheet are allowed to'
+    ParentColor = False
+  end
+  object TopBevel: TBevel
+    Left = 8
+    Height = 3
+    Top = 35
+    Width = 300
+    Align = alTop
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    Shape = bsTopLine
+  end
+  object ItemsPanel: TPanel
+    Left = 0
+    Height = 38
+    Top = 65
+    Width = 316
+    Align = alTop
+    BevelOuter = bvNone
+    ClientHeight = 38
+    ClientWidth = 316
+    TabOrder = 2
+    object CbSelectLockedCells: TCheckBox
+      Left = 8
+      Height = 19
+      Top = 0
+      Width = 300
+      Align = alTop
+      BorderSpacing.Left = 8
+      BorderSpacing.Right = 8
+      Caption = 'select locked cells'
+      Checked = True
+      State = cbChecked
+      TabOrder = 0
+    end
+    object CbSelectUnlockedCells: TCheckBox
+      Left = 8
+      Height = 19
+      Top = 19
+      Width = 300
+      Align = alTop
+      BorderSpacing.Left = 8
+      BorderSpacing.Right = 8
+      Caption = 'select unlocked cells'
+      Checked = True
+      State = cbChecked
+      TabOrder = 1
+    end
+  end
+end

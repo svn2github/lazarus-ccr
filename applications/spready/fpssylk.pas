@@ -31,7 +31,8 @@ type
     procedure ProcessRecord(ARecordType: String; const AFields: TsSYLKFields);
   public
     constructor Create(AWorkbook: TsWorkbook); override;
-    procedure ReadFromFile(AFileName: String; AParams: TsStreamParams = []); override;
+    procedure ReadFromFile(AFileName: String; APassword: String = '';
+      AParams: TsStreamParams = []); override;
     procedure ReadFromStrings(AStrings: TStrings; AParams: TsStreamParams = []); override;
   end;
 
@@ -335,10 +336,10 @@ begin
 end;
 
 procedure TsSYLKReader.ReadFromFile(AFileName: String;
-  AParams: TsStreamParams = []);
+  APassword: String = ''; AParams: TsStreamParams = []);
 begin
   FWorksheetName := ChangeFileExt(ExtractFileName(AFileName), '');
-  inherited ReadFromFile(AFilename, AParams);
+  inherited ReadFromFile(AFilename, APassword, AParams);
 end;
 
 procedure TsSYLKReader.ReadFromStrings(AStrings: TStrings;
