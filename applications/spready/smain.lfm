@@ -1901,7 +1901,7 @@ object MainForm: TMainForm
     end
     object AcWorksheetProtection: TAction
       Category = 'Worksheet'
-      Caption = 'Protect worksheet...'
+      Caption = 'Worksheet protection...'
       ImageIndex = 73
       OnExecute = AcWorksheetProtectionExecute
       OnUpdate = AcWorksheetProtectionUpdate

@@ -883,22 +883,17 @@ procedure TMainForm.AcWorksheetProtectionExecute(Sender: TObject);
 var
   F: TWorksheetProtectionForm;
 begin
-  if WorkbookSource.Worksheet.IsProtected then
-    WorkbookSource.Worksheet.Protect(false)
-  else
-  begin
-    F := TWorksheetProtectionForm.Create(nil);
-    try
-      F.IsProtected := WorkbookSource.Worksheet.IsProtected;
-      F.Protection := WorkbookSource.Worksheet.Protection;
-      if F.ShowModal = mrOK then
-      begin
-        WorkbookSource.Worksheet.Protection := F.Protection;
-        WorkbookSource.Worksheet.Protect(F.IsProtected);
-      end;
-    finally
-      F.Free;
+  F := TWorksheetProtectionForm.Create(nil);
+  try
+    F.IsProtected := not WorkbookSource.Worksheet.IsProtected;
+    F.Protection := WorkbookSource.Worksheet.Protection;
+    if F.ShowModal = mrOK then
+    begin
+      WorkbookSource.Worksheet.Protection := F.Protection;
+      WorkbookSource.Worksheet.Protect(F.IsProtected);
     end;
+  finally
+    F.Free;
   end;
 end;
 

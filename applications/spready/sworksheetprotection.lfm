@@ -37,7 +37,6 @@ object WorksheetProtectionForm: TWorksheetProtectionForm
     BorderSpacing.Top = 8
     BorderSpacing.Bottom = 8
     Caption = 'Protect worksheet and locked cells'
-    OnChange = CbProtectChange
     TabOrder = 1
   end
   object LblProtectionItems: TLabel
