@@ -1290,7 +1290,7 @@ begin
   FCountRec:=0;
 
   if (ValueType in [fvtMin, fvtMax]) and (TRxDBGrid(
-    FOwner.Grid).DataSource.DataSet.RecordCount <> 0) then
+    FOwner.Grid).DataSource.DataSet.RecordCount <> 0) and (FFieldName<>'') then
   begin
     F := TRxDBGrid(FOwner.Grid).DataSource.DataSet.FieldByName(FFieldName);
     if (Assigned(F)) and not (F.IsNull) then
@@ -1305,7 +1305,7 @@ procedure TRxColumnFooterItem.UpdateTestValue;
 var
   F: TField;
 begin
-  if ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin] then
+  if (ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin]) and (FFieldName<>'') then
   begin
     F := TRxDBGrid(FOwner.Grid).DataSource.DataSet.FindField(FFieldName);
     if Assigned(F) then
@@ -1335,7 +1335,7 @@ var
   F: TField;
 begin
   Result := True;
-  if ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin] then
+  if (ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin]) and (FFieldName<>'') then
   begin
     F := TRxDBGrid(FOwner.Grid).DataSource.DataSet.FieldByName(FFieldName);
     if (Assigned(F)) and not (F.IsNull) then
@@ -1354,7 +1354,7 @@ var
   F: TField;
 begin
   Result := True;
-  if ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin] then
+  if (ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin]) and (FFieldName<>'') then
   begin
     F := TRxDBGrid(FOwner.Grid).DataSource.DataSet.FieldByName(FFieldName);
     if Assigned(F) then
@@ -1417,7 +1417,7 @@ var
   F: TField;
 begin
   Result := True;
-  if ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin] then
+  if (ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin]) and (FFieldName<>'') then
   begin
     F := TRxDBGrid(FOwner.Grid).DataSource.DataSet.FieldByName(FFieldName);
     if Assigned(F) then
