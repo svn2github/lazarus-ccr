@@ -150,13 +150,17 @@ end;
 function GetFileOwnerUser(const SearchDomain, FileName: String): String;
 var
   S:string;
+  FStat: stat;
 begin
   {$IF DEFINED(WINDOWS) AND NOT DEFINED(WINCE)}
 (*  GetFileNameOwner(UTF8ToSys(SearchDomain), UTF8ToSys(FileName), Result, S);
   Result:=UTF8Encode(Result);*)
   GetFileNameOwner(SearchDomain, FileName, Result, S);
   {$ELSE}
-  Result:='';
+  if FpStat(FileName, FStat) = 0 then
+    Result:=users.GetUserName(FStat.uid)
+  else
+    Result:='';
   {$ENDIF}
 end;
 
