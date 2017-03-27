@@ -1,0 +1,63 @@
+object AboutForm: TAboutForm
+  Left = 419
+  Height = 185
+  Top = 225
+  Width = 320
+  Caption = 'About...'
+  ClientHeight = 185
+  ClientWidth = 320
+  Position = poMainFormCenter
+  LCLVersion = '1.7'
+  object Label1: TLabel
+    Left = 0
+    Height = 30
+    Top = 24
+    Width = 320
+    Align = alTop
+    Alignment = taCenter
+    BorderSpacing.Top = 24
+    Caption = 'SpkToolbar Demo'
+    Font.Height = -21
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 0
+    Height = 15
+    Top = 70
+    Width = 320
+    Align = alTop
+    Alignment = taCenter
+    BorderSpacing.Top = 16
+    Caption = 'Icons kindly provided by'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    Left = 0
+    Height = 15
+    Top = 89
+    Width = 320
+    Align = alTop
+    Alignment = taCenter
+    BorderSpacing.Top = 4
+    Caption = 'http://www.fatcow.com/free-icons'
+    Font.Color = clBlue
+    ParentColor = False
+    ParentFont = False
+    OnClick = Label3Click
+    OnMouseEnter = Label3MouseEnter
+    OnMouseLeave = Label3MouseLeave
+  end
+  object BtnClose: TButton
+    Left = 128
+    Height = 25
+    Top = 136
+    Width = 75
+    Cancel = True
+    Caption = 'Close'
+    Default = True
+    ModalResult = 11
+    TabOrder = 0
+  end
+end
