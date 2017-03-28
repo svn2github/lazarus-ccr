@@ -899,7 +899,7 @@ begin
       if IsStrEmpty(s) then begin
         namespaceShortName := 'ns' + IntToStr(NextNameSpaceCounter());
         AddScopeAttribute('xmlns:'+namespaceShortName, namespaceLongName);
-        strNodeName := s + ':' + strNodeName;
+        strNodeName := namespaceShortName + ':' + strNodeName;
       end else begin
         s := ExtractNameSpaceShortName(s);
         if not IsStrEmpty(s) then
