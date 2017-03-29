@@ -1,8 +1,9 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
     <Name Value="SpkToolbarPackage"/>
+    <Type Value="RunAndDesignTime"/>
     <Author Value="Spook. Ported to Lazarus/LCL by Luiz Américo"/>
     <CompilerOptions>
       <Version Value="11"/>
@@ -12,16 +13,10 @@
         <OtherUnitFiles Value="SpkToolbar;SpkMath;SpkGUITools;SpkGraphTools;SpkXML;designtime"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
-      <Other>
-        <CompilerMessages>
-          <UseMsgFile Value="True"/>
-        </CompilerMessages>
-        <CompilerPath Value="$(CompPath)"/>
-      </Other>
     </CompilerOptions>
-    <Description Value="Ribbon like toolbar"/>
+    <Description Value="Ribbon-like toolbar"/>
     <License Value="Modified LGPL"/>
-    <Version Minor="1"/>
+    <Version Minor="1" Release="1"/>
     <Files Count="26">
       <Item1>
         <Filename Value="SpkToolbar\spkt_Appearance.pas"/>
@@ -129,7 +124,6 @@
         <Type Value="LRS"/>
       </Item26>
     </Files>
-    <Type Value="RunAndDesignTime"/>
     <RequiredPkgs Count="2">
       <Item1>
         <PackageName Value="IDEIntf"/>
