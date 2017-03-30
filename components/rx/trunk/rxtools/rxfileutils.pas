@@ -150,7 +150,9 @@ end;
 function GetFileOwnerUser(const SearchDomain, FileName: String): String;
 var
   S:string;
+  {$IFNDEF WINDOWS}
   FStat: stat;
+  {$ENDIF}
 begin
   {$IF DEFINED(WINDOWS) AND NOT DEFINED(WINCE)}
 (*  GetFileNameOwner(UTF8ToSys(SearchDomain), UTF8ToSys(FileName), Result, S);
