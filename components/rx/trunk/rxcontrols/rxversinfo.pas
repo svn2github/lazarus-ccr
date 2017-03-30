@@ -306,7 +306,11 @@ end;
 
 function TRxVersionInfo.GetWidgetName: string;
 begin
+  {$IF (lcl_fullversion < 010700)}
+  Result:=sWidget + LCLPlatformDirNames[WidgetSet.LCLPlatform];
+  {$ELSE}
   Result:=sWidget + LCLPlatformDisplayNames[WidgetSet.LCLPlatform];
+  {$ENDIF}
 end;
 
 end.
