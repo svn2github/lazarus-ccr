@@ -48,13 +48,14 @@ type
   protected
     function GetIniFileName: string; override;
   public
+    procedure StorageNeeded(ReadOnly: Boolean); override;
     { Public declarations }
   published
     property SeparateFiles:boolean read FSeparateFiles write FSeparateFiles;
   end;
 
 implementation
-uses rxapputils, LazUTF8, FileUtil, LazFileUtils;
+uses rxapputils, LazUTF8, FileUtil, LazFileUtils, IniFiles;
 
 { TRxIniPropStorage }
 
@@ -78,6 +79,17 @@ begin
     end;
   end;
   Result:=UTF8ToSys(Result);
+end;
+
+procedure TRxIniPropStorage.StorageNeeded(ReadOnly: Boolean);
+var
+  F: Boolean;
+begin
+  F:=Assigned(IniFile);
+  inherited StorageNeeded(ReadOnly);
+  if Assigned(IniFile) and (not F) then
+    if IniFile is TIniFile then
+      TIniFile(IniFile).CacheUpdates:=true;
 end;
 
 end.
