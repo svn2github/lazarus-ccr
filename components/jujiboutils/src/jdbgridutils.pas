@@ -762,6 +762,8 @@ begin
 end;
 
 procedure TJDbGridDateCtrl.myEditOnEditingDone(Sender: TObject);
+var
+  aDate: TDateTime;
 begin
   if not Assigned(Field) or not Assigned(Field.Dataset) or not Field.DataSet.Active then
     exit;
@@ -782,11 +784,11 @@ begin
   else
   begin
     CellEditor.Caption := NormalizeDate(CellEditor.Caption, theValue);
-    if IsValidDateString(CellEditor.Caption) then
+    if ValidateDateString(CellEditor.Caption, aDate) then
     begin
       if (not updated) then
       begin
-        theValue := StrToDate(CellEditor.Caption);
+        theValue := aDate;
         if FormatDateTime(DisplayFormat, theValue) <>
           FormatDateTime(DisplayFormat, Field.AsDateTime) then
         begin
@@ -880,9 +882,8 @@ begin
       if Length(CellEditor.Caption) = 0 then
         theValue := 0
       else
-      if IsValidDateString(CellEditor.Caption) then
+      if ValidateDateString(CellEditor.Caption, theValue) then
       begin
-        theValue := StrToDate(CellEditor.Caption);
         Field.DataSet.Edit;
         Field.AsDateTime := theValue;
         CellEditor.SelectAll;

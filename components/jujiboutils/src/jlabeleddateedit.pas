@@ -209,9 +209,7 @@ begin
   if Length(Text) = 0 then
     theValue := 0
   else
-  if IsValidDateString(Text) then
-    theValue := StrToDate(Text)
-  else
+  if not ValidateDateString(Text, theValue) then
   begin
     ShowMessage(Format(SInvalidDate, [Text]));
     SetFocus;
@@ -312,6 +310,7 @@ procedure TJLabeledDateEdit.CalendarPopupReturnDate(Sender: TObject;
   const ADate: TDateTime);
 begin
   Value := ADate;
+  EditingDone;
 end;
 
 constructor TJLabeledDateEdit.Create(TheOwner: TComponent);

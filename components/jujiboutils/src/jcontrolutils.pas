@@ -33,7 +33,8 @@ function NormalizeTime(const Value: string; theValue: TTime;
 function NormalizeDateTime(const Value: string; theValue: TDateTime;
   const theFormat: string = ''): string;
 function NormalizeDateSeparator(const s: string): string;
-function IsValidDateString(const Value: string): boolean;
+function IsValidDateString(Value: string): boolean;
+function ValidateDateString(Value:string; out aDate:TDateTime): boolean;
 function IsValidTimeString(const Value: string): boolean;
 function IsValidDateTimeString(const Value: string): boolean;
 
@@ -131,9 +132,8 @@ begin
       'y', 'Y': BigEndianForm;
     end;
 
-    if IsValidDateString(texto) then
+    if ValidateDateString(texto, aDate) then
     begin
-      aDate := StrToDate(texto);
       Result := FormatDateTime(aDateFormat, aDate);
     end;
   end;
@@ -242,11 +242,40 @@ begin
       Result[i] := DefaultFormatSettings.DateSeparator;
 end;
 
-function IsValidDateString(const Value: string): boolean;
+procedure HackAbbreviatedDates(var Value: string);
+var
+  i: Integer;
+begin
+  with DefaultFormatSettings do
+    if pos('mmm', Lowercase(ShortDateFormat))>0 then begin
+      // Value is probably formatted using month names (mmmm) or
+      // abbreviated month names (mmm), and that is not supported
+      // by free pascal. Lets hack it ...
+      for i:=1 to 12 do begin
+        if pos(LongMonthNames[i], value)>0 then begin
+          Value := StringReplace(Value, LongMonthNames[i], format('%.2d',[i]), [rfIgnoreCase]);
+          break;
+        end else
+        if pos(ShortMonthNames[i], value)>0 then begin
+          Value := StringReplace(Value, ShortMonthNames[i], format('%.2d',[i]), [rfIgnoreCase]);
+          break;
+        end;
+      end;
+    end;
+end;
+
+function IsValidDateString(Value: string): boolean;
 var
   bTime: TDateTime;
 begin
+  HackAbbreviatedDates(Value);
   Result := TryStrToDate(Value, bTime);
+end;
+
+function ValidateDateString(Value: string; out aDate: TDateTime): boolean;
+begin
+  HackAbbreviatedDates(Value);
+  Result := TryStrToDate(Value, aDate);
 end;
 
 function IsValidTimeString(const Value: string): boolean;
