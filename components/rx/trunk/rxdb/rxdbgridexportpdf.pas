@@ -409,7 +409,7 @@ var
 begin
 
   fX := ConvetUnits(X);
-  fY := ConvetUnits(Y);
+  fY := ConvetUnits(Y+2);
   fW := ConvetUnits(W);
   fH := ConvetUnits(H);
 
@@ -424,26 +424,27 @@ begin
   case ATextAlign of
     taLeftJustify:
       begin
-        Y1:=fY - FTH2;
+//        Y1:=fY - FTH2;
         X1:=fX + ConvetUnits(constCellPadding);
       end;
     taRightJustify:
       begin
-        Y1:=fY - FTH2;
+//        Y1:=fY - FTH2;
         X1:=fX + fW - FTW - ConvetUnits(constCellPadding);
         if X1 < fX then
           X1:=fX;
       end;
     taCenter:
       begin
-        Y1:=fY - FTH2;
+//        Y1:=fY - FTH2;
         X1:=fX + fW / 2 - FTW / 2 - ConvetUnits(constCellPadding);
         if X1 < fX then
           X1:=fX;
       end;
   end;
 
-  FCurPage.WriteText(X1, Y1 + fH, AText);
+  Y1:=fY + FTH2;
+  FCurPage.WriteText(X1, Y1 {- fH}, AText);
 end;
 
 procedure TRxDBGridExportPDF.DrawRect(X, Y, W, H: integer; ABorderColor,
@@ -509,7 +510,7 @@ begin
     end;
 
     Y1:=Y1 + fW1;
-    FCurPage.DrawImage(X1, Y1, fW1, fH1, IDX);  // left-bottom coordinate of image
+    FCurPage.DrawImage(X1, Y1, fW1, fH1, IDX);
 
   finally
     S.Free;
@@ -791,7 +792,7 @@ begin
   FPDFDocument.Infos.ApplicationName := ApplicationName;
   FPDFDocument.Infos.CreationDate := Now;
 
-  FPDFDocument.Options:=FPdfOptions.FOptions;
+  FPDFDocument.Options:=FPdfOptions.FOptions + [poPageOriginAtTop];
   FPDFDocument.DefaultOrientation:=FPdfOptions.PaperOrientation;
 
   //calc need count pages for all columns
@@ -853,9 +854,9 @@ begin
   FFontItems:=TExportFonts.Create(Self);
   FWorkPages:=TFPList.Create;
   try
+    FPDFDocument.StartDocument;
     DoSetupFonts;
     DoSetupDocHeader;
-    FPDFDocument.StartDocument;
     FCurSection := FPDFDocument.Sections.AddSection; // we always need at least one section
     FDataSet.First;
     repeat
@@ -869,9 +870,6 @@ begin
 
       DoExportFooter;
     end;
-
-    //DoTest; //!!!!
-
     DoSaveDocument;
     Result:=true;
   finally
@@ -895,6 +893,7 @@ end;
 function TRxDBGridExportPDF.DoSetupTools: boolean;
 begin
   RxDBGridExportPdfSetupForm:=TRxDBGridExportPdfSetupForm.Create(Application);
+
   RxDBGridExportPdfSetupForm.FileNameEdit1.FileName:=FileName;
   RxDBGridExportPdfSetupForm.cbOpenAfterExport.Checked:=FOpenAfterExport;
   RxDBGridExportPdfSetupForm.cbExportColumnHeader.Checked:=repExportTitle in FOptions;

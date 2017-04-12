@@ -8,25 +8,25 @@ object Form1: TForm1
   ClientWidth = 1043
   OnClose = FormClose
   OnCreate = FormCreate
-  LCLVersion = '1.7'
+  LCLVersion = '1.9.0.0'
   object Panel1: TPanel
     Left = 0
-    Height = 50
-    Top = 347
+    Height = 37
+    Top = 360
     Width = 1043
     Align = alBottom
     AutoSize = True
-    ClientHeight = 50
+    ClientHeight = 37
     ClientWidth = 1043
     TabOrder = 0
     object Button1: TButton
       AnchorSideLeft.Control = Panel1
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = Panel1
-      Left = 476
-      Height = 36
+      Left = 481
+      Height = 23
       Top = 7
-      Width = 90
+      Width = 81
       AutoSize = True
       BorderSpacing.Around = 6
       Caption = 'Create PDF'
@@ -36,7 +36,7 @@ object Form1: TForm1
   end
   object PageControl1: TPageControl
     Left = 0
-    Height = 347
+    Height = 360
     Top = 0
     Width = 1043
     ActivePage = TabSheet1
@@ -45,13 +45,13 @@ object Form1: TForm1
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Test data'
-      ClientHeight = 313
-      ClientWidth = 1033
+      ClientHeight = 334
+      ClientWidth = 1035
       object RxDBGrid1: TRxDBGrid
         Left = 0
-        Height = 313
+        Height = 334
         Top = 0
-        Width = 1033
+        Width = 1035
         ColumnDefValues.BlobText = '(данные)'
         TitleButtons = True
         AutoSort = True
@@ -63,8 +63,11 @@ object Form1: TForm1
             Width = 50
             FieldName = 'ID'
             EditButtons = <>
+            Filter.IsNull = False
+            Filter.IsAll = True
             Filter.DropDownRows = 0
             Filter.EmptyValue = '(Нет)'
+            Filter.AllValue = '(All values)'
             Filter.EmptyFont.Style = [fsItalic]
             Filter.ItemIndex = -1
             Footers = <>
@@ -77,8 +80,11 @@ object Form1: TForm1
             Width = 120
             FieldName = 'PDATE'
             EditButtons = <>
+            Filter.IsNull = False
+            Filter.IsAll = True
             Filter.DropDownRows = 0
             Filter.EmptyValue = '(Нет)'
+            Filter.AllValue = '(All values)'
             Filter.EmptyFont.Style = [fsItalic]
             Filter.ItemIndex = -1
             Footers = <>
@@ -92,8 +98,11 @@ object Form1: TForm1
             Width = 364
             FieldName = 'NAME'
             EditButtons = <>
+            Filter.IsNull = False
+            Filter.IsAll = True
             Filter.DropDownRows = 0
             Filter.EmptyValue = '(Нет)'
+            Filter.AllValue = '(All values)'
             Filter.EmptyFont.Style = [fsItalic]
             Filter.ItemIndex = -1
             Footer.Alignment = taRightJustify
@@ -124,8 +133,11 @@ object Form1: TForm1
             Width = 100
             FieldName = 'SUM'
             EditButtons = <>
+            Filter.IsNull = False
+            Filter.IsAll = True
             Filter.DropDownRows = 0
             Filter.EmptyValue = '(Нет)'
+            Filter.AllValue = '(All values)'
             Filter.EmptyFont.Style = [fsItalic]
             Filter.ItemIndex = -1
             Footer.Alignment = taRightJustify
@@ -160,8 +172,11 @@ object Form1: TForm1
             Width = 60
             FieldName = 'FLAG'
             EditButtons = <>
+            Filter.IsNull = False
+            Filter.IsAll = True
             Filter.DropDownRows = 0
             Filter.EmptyValue = '(Нет)'
+            Filter.AllValue = '(All values)'
             Filter.EmptyFont.Style = [fsItalic]
             Filter.ItemIndex = -1
             Footers = <>
@@ -181,8 +196,11 @@ object Form1: TForm1
             Width = 200
             FieldName = 'Country'
             EditButtons = <>
+            Filter.IsNull = False
+            Filter.IsAll = True
             Filter.DropDownRows = 0
             Filter.EmptyValue = '(Нет)'
+            Filter.AllValue = '(All values)'
             Filter.EmptyFont.Style = [fsItalic]
             Filter.ItemIndex = -1
             Footers = <>
@@ -194,8 +212,11 @@ object Form1: TForm1
             Width = 200
             FieldName = 'Sity'
             EditButtons = <>
+            Filter.IsNull = False
+            Filter.IsAll = True
             Filter.DropDownRows = 0
             Filter.EmptyValue = '(Нет)'
+            Filter.AllValue = '(All values)'
             Filter.EmptyFont.Style = [fsItalic]
             Filter.ItemIndex = -1
             Footers = <>
@@ -260,6 +281,8 @@ object Form1: TForm1
         FooterOptions.Color = clYellow
         FooterOptions.RowCount = 3
         FooterOptions.DrawFullLine = True
+        SearchOptions.QuickSearchOptions = [loCaseInsensitive, loPartialKey]
+        SearchOptions.FromStart = False
         OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgFooterRows, rdgAllowQuickFilter, rdgAllowToolMenu, rdgWordWrap]
         FooterColor = clYellow
         FooterRowCount = 3
@@ -334,8 +357,8 @@ object Form1: TForm1
         DataType = ftInteger
       end>
     PacketRecords = 0
-    left = 136
-    top = 88
+    Left = 136
+    Top = 88
     object RxMemoryData1ID: TAutoIncField
       FieldKind = fkData
       FieldName = 'ID'
@@ -409,8 +432,8 @@ object Form1: TForm1
   end
   object DataSource1: TDataSource
     DataSet = RxMemoryData1
-    left = 104
-    top = 88
+    Left = 104
+    Top = 88
   end
   object RxDBGridExportPDF1: TRxDBGridExportPDF
     RxDBGrid = RxDBGrid1
@@ -426,12 +449,12 @@ object Form1: TForm1
     PageMargin.Top = 40
     PageMargin.Right = 40
     PageMargin.Bottom = 40
-    left = 112
-    top = 160
+    Left = 112
+    Top = 160
   end
   object ImageList1: TImageList
-    left = 112
-    top = 224
+    Left = 112
+    Top = 224
     Bitmap = {
       4C6903000000100000001000000000000000000000FF000000FF000000000000
       0000000000FF000000FF0000000000000000000000FF000000FF000000000000

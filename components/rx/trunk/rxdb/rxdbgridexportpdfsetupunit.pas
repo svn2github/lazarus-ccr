@@ -60,15 +60,14 @@ type
     ColorBox1: TColorBox;
     ComboBox1: TComboBox;
     FileNameEdit1: TFileNameEdit;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
-    PageControl1: TPageControl;
     RadioGroup1: TRadioGroup;
-    TabSheet1: TTabSheet;
-    TabSheet2: TTabSheet;
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
@@ -97,7 +96,7 @@ const
   {$ENDIF}
 implementation
 {$IF (FPC_FULLVERSION >= 30101)}
-uses rxdconst;
+uses rxdconst, LCLIntf;
 
 {$R *.lfm}
 
@@ -107,11 +106,9 @@ procedure TRxDBGridExportPdfSetupForm.FormCreate(Sender: TObject);
 var
   c: TPDFPaperType;
 begin
-  PageControl1.ActivePageIndex:=0;
-
   Caption:=sExportParams;
-  TabSheet1.Caption:=sGlobal;
-  TabSheet2.Caption:=sPDFOptions;
+  GroupBox1.Caption:=sGlobal;
+  GroupBox2.Caption:=sPDFOptions;
   Label1.Caption:=sExportFileName;
   cbOpenAfterExport.Caption:=sOpenAfterExport;
   cbExportColumnHeader.Caption:=sExportColumnHeader;

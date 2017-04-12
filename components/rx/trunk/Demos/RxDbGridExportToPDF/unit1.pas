@@ -122,7 +122,7 @@ var
   i: Integer;
 begin
   Memo1.Lines.Clear;
-  gTTFontCache.BuildFontFacheIgnoresErrors:=true;
+  gTTFontCache.BuildFontCacheIgnoresErrors:=true;
   gTTFontCache.SearchPath.Assign(FontDirList);
   gTTFontCache.BuildFontCache;
 
