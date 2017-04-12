@@ -192,7 +192,8 @@ type
 implementation
 
 {$IF (FPC_FULLVERSION >= 30101)}
-uses Grids, rxdconst, FileUtil, Forms, Controls, LCLIntf, LazFileUtils, FPReadBMP, RxDBGridExportPdfSetupUnit;
+uses Grids, rxdconst, FileUtil, Forms, Controls, LCLIntf, LazFileUtils, FPReadBMP,
+  RxDBGridExportPdfSetupUnit, LazUTF8;
 
 const
   cInchToMM = 25.4;
@@ -426,6 +427,12 @@ begin
       begin
 //        Y1:=fY - FTH2;
         X1:=fX + ConvetUnits(constCellPadding);
+
+        while (FTW > fW) and (UTF8Length(AText) > 0) do
+        begin
+          AText:=UTF8Copy(AText, 1, UTF8Length(AText)-1);
+          FTW:=ConvetUnits(AExportFont.FTTFFontInfo.TextWidth(AText, AExportFont.FontSize));
+        end
       end;
     taRightJustify:
       begin
