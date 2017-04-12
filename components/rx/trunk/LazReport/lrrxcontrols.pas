@@ -146,7 +146,7 @@ begin
   if not assigned(cmpBMP) then
   begin
     cmpBMP := TBitmap.Create;
-    cmpBMP.LoadFromResourceName(0, lrClass.ClassName);
+    cmpBMP.LoadFromResourceName(HInstance, lrClass.ClassName);
     frRegisterObject(lrClass, cmpBMP, lrClass.ClassName, nil, otlUIControl, nil);
   end;
 end;

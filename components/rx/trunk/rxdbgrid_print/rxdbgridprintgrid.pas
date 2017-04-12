@@ -111,7 +111,7 @@ type
 procedure Register;
 implementation
 
-uses math, RxDBGridPrintGrid_SetupUnit, Forms, Controls, rxdconst;
+uses math, RxDBGridPrintGrid_SetupUnit, Forms, Controls, rxdconst, LCLIntf;
 
 {$R rxdbgridprintgrid.res}
 
