@@ -56,14 +56,15 @@ const
 implementation
 
 uses
+  strutils
 {$IFDEF WINDOWS}
-   Windows
-{$ELSE}
-  BaseUnix, users, strutils
-{$ENDIF};
-(*
- FileUtil, LazFileUtils, LazUTF8;
-*)
+   , Windows
+{$ENDIF}
+{$IFDEF LINUX}
+  , BaseUnix, users
+{$ENDIF}
+  ;
+
 {$IF DEFINED(WINDOWS) AND NOT DEFINED(WINCE)}
 function LStrError(const Ernum: Longint; const UseUTF8: Boolean = False): string;
 const
@@ -150,36 +151,40 @@ end;
 function GetFileOwnerUser(const SearchDomain, FileName: String): String;
 var
   S:string;
-  {$IFNDEF WINDOWS}
+  {$IFDEF LINUX}
   FStat: stat;
   {$ENDIF}
 begin
+  Result:='';
   {$IF DEFINED(WINDOWS) AND NOT DEFINED(WINCE)}
 (*  GetFileNameOwner(UTF8ToSys(SearchDomain), UTF8ToSys(FileName), Result, S);
   Result:=UTF8Encode(Result);*)
   GetFileNameOwner(SearchDomain, FileName, Result, S);
-  {$ELSE}
+  {$ENDIF}
+  {$IFDEF LINUX}
   if FpStat(FileName, FStat) = 0 then
-    Result:=users.GetUserName(FStat.uid)
-  else
-    Result:='';
+    Result:=users.GetUserName(FStat.uid);
   {$ENDIF}
 end;
 
 procedure GetFileOwnerData(const SearchDomain, FileName: String; out UserName,
   DomainName: string);
 {$IF DEFINED(WINDOWS) AND NOT DEFINED(WINCE)}
-{$ELSE}
+{$ENDIF}
+{$IFDEF LINUX}
 var
   SR: stat;
-  {$ENDIF}
+{$ENDIF}
 begin
+  UserName:='';
+  DomainName:='';
   {$IF DEFINED(WINDOWS) AND NOT DEFINED(WINCE)}
 {  GetFileNameOwner(UTF8ToSys(SearchDomain), UTF8ToSys(FileName), UserName, DomainName);
   UserName:=UTF8Encode(UserName);
   DomainName:=UTF8Encode(DomainName);}
   GetFileNameOwner(SearchDomain, FileName, UserName, DomainName);
-  {$ELSE}
+  {$ENDIF}
+  {$IFDEF LINUX}
   FpStat(FileName, SR);
   UserName:=users.GetUserName(SR.uid);
   if Pos('\', UserName) > 0 then
