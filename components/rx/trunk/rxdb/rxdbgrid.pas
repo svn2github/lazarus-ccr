@@ -53,6 +53,7 @@ type
   TRxDBGrid = class;
   TRxColumn = class;
   TRxDBGridAbstractTools = class;
+  TRxDbGridColumnsEnumerator = class;
 
 
   TRxQuickSearchNotifyEvent = procedure(Sender: TObject; Field: TField;
@@ -552,7 +553,21 @@ type
     procedure Notify(Item: TCollectionItem;Action: TCollectionNotification); override;
   public
     function Add: TRxColumn;
+    function GetEnumerator: TRxDbGridColumnsEnumerator;
     property Items[Index: Integer]: TRxColumn read GetColumn write SetColumn; default;
+  end;
+
+  { TRxDbGridColumnsEnumerator }
+
+  TRxDbGridColumnsEnumerator = class
+  private
+    FList: TRxDbGridColumns;
+    FPosition: Integer;
+  public
+    constructor Create(AList: TRxDbGridColumns);
+    function GetCurrent: TRxColumn;
+    function MoveNext: Boolean;
+    property Current: TRxColumn read GetCurrent;
   end;
 
   { TRxDbGridColumnsSortList }
@@ -1096,6 +1111,25 @@ type
     //procedure SetBounds(aLeft, aTop, aWidth, aHeight: integer); override;
     procedure EditingDone; override;
   end;
+
+{ TRxDbGridColumnsEnumerator }
+
+constructor TRxDbGridColumnsEnumerator.Create(AList: TRxDbGridColumns);
+begin
+  FList := AList;
+  FPosition := -1;
+end;
+
+function TRxDbGridColumnsEnumerator.GetCurrent: TRxColumn;
+begin
+  Result := FList[FPosition];
+end;
+
+function TRxDbGridColumnsEnumerator.MoveNext: Boolean;
+begin
+  Inc(FPosition);
+  Result := FPosition < FList.Count;
+end;
 
 { TFilterColDlgButton }
 
@@ -6043,6 +6077,11 @@ end;
 function TRxDbGridColumns.Add: TRxColumn;
 begin
   Result := TRxColumn(inherited Add);
+end;
+
+function TRxDbGridColumns.GetEnumerator: TRxDbGridColumnsEnumerator;
+begin
+  Result:=TRxDbGridColumnsEnumerator.Create(Self);
 end;
 
 { TRxColumn }
