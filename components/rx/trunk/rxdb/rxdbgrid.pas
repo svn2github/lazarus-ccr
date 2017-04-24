@@ -359,7 +359,7 @@ type
   public
     property Items[Index: integer]: TRxColumnFooterItem read GetItem write SetItem; default;
   end;
-
+(*
   { TRxFilterItem }
 
   TRxFilterItem = class
@@ -374,17 +374,24 @@ type
   TRxFilterItems = class(TFPList)
     function AcceptRecord:boolean;
   end;
-
+*)
   { TRxColumnFilter }
+
+  TRxFilterState = (rxfsAll, rxfsEmpty, rxfsNonEmpty, rxfsFilter{, rxfsTopXXXX});
+  TRxFilterStyle = (rxfstSimple, rxfstDialog);
 
   TRxColumnFilter = class(TPersistent)
   private
     FAllValue: string;
+    FCurrentValues: TStringList;
     FEnabled: boolean;
-    FIsAll: boolean;
-    FIsNull: boolean;
+{    FIsAll: boolean;
+    FIsNull: boolean;}
     FOwner: TRxColumn;
-    FValue: string;
+    FState: TRxFilterState;
+    FStyle: TRxFilterStyle;
+//    FTopRecord: Integer;
+//    FValue: string;
     FValueList: TStringList;
     FEmptyValue: string;
     FEmptyFont: TFont;
@@ -399,21 +406,24 @@ type
   public
     constructor Create(Owner: TRxColumn); virtual;
     destructor Destroy; override;
+    property State:TRxFilterState read FState write FState;
+    property CurrentValues : TStringList read FCurrentValues;
   published
-    property Value: string read FValue write FValue;
-    property IsNull:boolean read FIsNull write FIsNull;
-    property IsAll:boolean read FIsAll write FIsAll;
+//    property Value: string read FValue write FValue;
+{    property IsNull:boolean read FIsNull write FIsNull;
+    property IsAll:boolean read FIsAll write FIsAll;}
     property Font: TFont read FFont write SetFont;
     property Alignment: TAlignment read FAlignment write FAlignment default
       taLeftJustify;
     property DropDownRows: integer read FDropDownRows write FDropDownRows;
     property Color: TColor read FColor write SetColor default clWhite;
-    property ValueList: TStringList read FValueList write FValueList;
+    property ValueList: TStringList read FValueList {write FValueList};
     property EmptyValue: string read FEmptyValue write FEmptyValue;
     property AllValue: string read FAllValue write FAllValue;
     property EmptyFont: TFont read FEmptyFont write FEmptyFont;
     property ItemIndex: integer read GetItemIndex write SetItemIndex;
     property Enabled:boolean read FEnabled write FEnabled default true;
+    property Style : TRxFilterStyle read FStyle write FStyle default rxfstSimple;
   end;
 
   { TRxColumnEditButton }
@@ -571,6 +581,16 @@ type
     property MouseFlag: boolean read FMouseFlag write FMouseFlag;
   end;
 
+  { TFilterColDlgButton }
+
+  TFilterColDlgButton = class(TSpeedButton)
+  private
+    FGrid: TRxDBGrid;
+    FCol: integer;
+  public
+    procedure Show(AGrid: TRxDBGrid; Col: integer);
+    property Col: integer read FCol;
+  end;
 
 
   { TRxDBGrid }
@@ -621,6 +641,7 @@ type
     FColumnResizing: boolean;
 
     FFilterListEditor: TFilterListCellEditor;
+    FFilterColDlgButton: TFilterColDlgButton;
 
 //    FOldPosition: Integer;
     FVersion: integer;
@@ -675,7 +696,6 @@ type
     procedure UpdateJMenuStates;
     procedure UpdateJMenuKeys;
     function SortEngineOptions: TRxSortEngineOptions;
-//    procedure WMVScroll(var Message : TLMVScroll); message LM_VScroll;
     procedure GetScrollbarParams(out aRange, aPage, aPos: Integer);
     procedure RestoreEditor;
     //storage
@@ -740,6 +760,8 @@ type
     procedure CMHintShow(var Message: TLMessage); message CM_HINTSHOW;
     procedure FFilterListEditorOnChange(Sender: TObject);
     procedure FFilterListEditorOnCloseUp(Sender: TObject);
+    procedure FFilterColDlgButtonOnClick(Sender: TObject);
+
     procedure InternalOptimizeColumnsWidth(AColList: TList);
     function IsDefaultRowHeightStored: boolean;
     procedure VisualChange; override;
@@ -972,6 +994,7 @@ procedure RegisterRxDBGridSortEngine(RxDBGridSortEngineClass: TRxDBGridSortEngin
 implementation
 
 uses Math, rxdconst, rxstrutils, strutils, rxdbgrid_findunit, rxdbgrid_columsunit,
+  RxDBGrid_PopUpFilterUnit,
   rxlookup, rxtooledit, LCLProc, Clipbrd, rxfilterby, rxsortby, variants, LazUTF8;
 
 {$R rxdbgrid.res}
@@ -1073,6 +1096,16 @@ type
     //procedure SetBounds(aLeft, aTop, aWidth, aHeight: integer); override;
     procedure EditingDone; override;
   end;
+
+{ TFilterColDlgButton }
+
+procedure TFilterColDlgButton.Show(AGrid: TRxDBGrid; Col: integer);
+begin
+  FGrid := AGrid;
+  FCol := Col;
+  Visible := True;
+  //SetFocus;
+end;
 
 { TRxDBGridSearchOptions }
 
@@ -1665,7 +1698,7 @@ begin
   inherited Create;
   FOwner:=AOwner;
 end;
-
+(*
 { TRxFilterItems }
 
 function TRxFilterItems.AcceptRecord: boolean;
@@ -1701,7 +1734,7 @@ begin
     Result:=false;
   end;
 end;
-
+*)
 { TRxDbGridColumnsSortList }
 
 function TRxDbGridColumnsSortList.GetCollumn(Index: Integer): TRxColumn;
@@ -2615,17 +2648,7 @@ begin
 
   UpdateJMenuKeys;
 end;
-{
-procedure TRxDBGrid.SetMarkerDown(AValue: TBitmap);
-begin
-  FMarkerDown.Assign(AValue);
-end;
 
-procedure TRxDBGrid.SetMarkerUp(AValue: TBitmap);
-begin
-  FMarkerUp.Assign(AValue);
-end;
-}
 procedure TRxDBGrid.SetOptionsRx(const AValue: TOptionsRx);
 var
   OldOpt: TOptionsRx;
@@ -2639,18 +2662,13 @@ begin
   if (rdgFilter in AValue) and not (rdgFilter in OldOpt) then
   begin
     LayoutChanged;
-{    BeginUpdate;
-    CalcTitle;
-    EndUpdate;}
   end
   else
   if rdgFilter in OldOpt then
   begin
     FFilterListEditor.Hide;
+    FFilterColDlgButton.Hide;
     LayoutChanged;
-{    BeginUpdate;
-    CalcTitle;
-    EndUpdate;}
   end;
 
   FFooterOptions.FActive:=rdgFooterRows in FOptionsRx;
@@ -2658,7 +2676,6 @@ begin
   if (rdgWordWrap in OldOpt) and not (rdgWordWrap in FOptionsRx) then
     ResetRowHeght;
 
-//  VisualChange;
   EndUpdate;
 end;
 
@@ -3693,6 +3710,7 @@ var
   ft: TFont;
   MyCol: integer;
   TxS: TTextStyle;
+  S: String;
 
 begin
 {  if (dgIndicator in Options) and (aCol = 0) then
@@ -3748,30 +3766,46 @@ begin
         Canvas.FillRect(aRect);
       end;
 
-      if Value <> '' then
+      //if Value <> '' then
+      if CurrentValues.Count > 0 then
       begin
+        S:=CurrentValues[0];
+        if CurrentValues.Count > 1 then
+          S:=S + '(...)';
         Canvas.Font := Font;
-        if (aRect.Right - aRect.Left) >= Canvas.TextWidth(Value) then
+        if (aRect.Right - aRect.Left) >= Canvas.TextWidth(S) then
           TxS.Alignment := Alignment
         else
           TxS.Alignment := taLeftJustify;
         Canvas.TextStyle := TxS;
-        DrawCellText(aCol, aRow, aRect, aState, Value);
+        DrawCellText(aCol, aRow, aRect, aState, S);
       end
       else
       begin
+        if State = rxfsEmpty then
+          S:=TRxColumn(Columns[MyCol]).Filter.EmptyValue
+        else
+        if State = rxfsAll then
+          S:=TRxColumn(Columns[MyCol]).Filter.AllValue
+        else
+          S:='';
+
         Canvas.Font := TRxColumn(Columns[MyCol]).Filter.EmptyFont;
-        if (aRect.Right - aRect.Left) >= Canvas.TextWidth(Value) then
+        //if (aRect.Right - aRect.Left) >= Canvas.TextWidth(Value) then
+        if (aRect.Right - aRect.Left) >= Canvas.TextWidth(S) then
           TxS.Alignment := Alignment
         else
           TxS.Alignment := taLeftJustify;
 
         Canvas.TextStyle := TxS;
+{
         if IsNull then
           DrawCellText(aCol, aRow, aRect, aState, TRxColumn(Columns[MyCol]).Filter.EmptyValue)
         else
         if IsAll then
           DrawCellText(aCol, aRow, aRect, aState, TRxColumn(Columns[MyCol]).Filter.AllValue)
+}
+        DrawCellText(aCol, aRow, aRect, aState, S)
       end;
     end;
 
@@ -4241,6 +4275,10 @@ begin
   QuickUTF8Search := '';
 
   Cell := MouseCoord(X, Y);
+
+  if FFilterColDlgButton.Visible then
+    FFilterColDlgButton.Hide;
+
   if (DatalinkActive) and (DataSource.DataSet.State = dsBrowse) and
     (Button = mbLeft) and (Cell.X = 0) and (Cell.Y = 0) and
     (dgIndicator in Options) and (rdgAllowToolMenu in FOptionsRx) then
@@ -4260,19 +4298,37 @@ begin
         C:=TRxColumn (Columns[Columns.RealIndex(Cell.x - 1)]);
         if (C.Filter.Enabled) and (C.Filter.ValueList.Count > 0)  then
         begin
-          FFilterListEditor.Style := csDropDownList;
-          if C.Filter.DropDownRows>0 then
-            FFilterListEditor.DropDownCount := C.Filter.DropDownRows;
+          if C.Filter.Style = rxfstSimple then
+          begin
+            FFilterListEditor.Style := csDropDownList;
+            if C.Filter.DropDownRows>0 then
+              FFilterListEditor.DropDownCount := C.Filter.DropDownRows;
 
-          FFilterListEditor.Parent := Self;
-          FFilterListEditor.Width := Rect.Right - Rect.Left;
-          FFilterListEditor.Height := Rect.Bottom - Rect.Top;
-          FFilterListEditor.BoundsRect := Rect;
+            FFilterListEditor.Parent := Self;
+            FFilterListEditor.Width := Rect.Right - Rect.Left;
+            FFilterListEditor.Height := Rect.Bottom - Rect.Top;
+            FFilterListEditor.BoundsRect := Rect;
 
-          FFilterListEditor.Items.Assign(C.Filter.ValueList);
+            FFilterListEditor.Items.Assign(C.Filter.ValueList);
 
-          FFilterListEditor.Text := C.Filter.Value;
-          FFilterListEditor.Show(Self, Cell.x - 1);
+            if C.Filter.CurrentValues.Count>0 then
+              FFilterListEditor.Text := C.Filter.CurrentValues[0]
+            else
+              FFilterListEditor.Text := '';
+            FFilterListEditor.Show(Self, Cell.x - 1);
+          end
+          else
+          begin
+            if FFilterListEditor.Visible then
+              FFilterListEditor.Hide;
+
+            FFilterColDlgButton.Parent:=Self;
+            FFilterColDlgButton.Width := 32;
+            FFilterColDlgButton.Height := Rect.Bottom - Rect.Top;
+            FFilterColDlgButton.Top := Rect.Top;
+            FFilterColDlgButton.Left := Rect.Right - FFilterColDlgButton.Width;
+            FFilterColDlgButton.Show(Self, Cell.x - 1);
+          end
         end;
         exit;
       end;
@@ -4761,22 +4817,29 @@ begin
   begin
     if (FFilterListEditor.Text = EmptyValue) then
     begin
-      Value := '';
-      IsNull:=true;
-      IsAll:=false;
+      CurrentValues.Clear;
+{      Value := '';
+     IsNull:=true;
+      IsAll:=false;}
+      State:=rxfsEmpty;
     end
     else
     if (FFilterListEditor.Text = AllValue) then
     begin
-      Value := '';
+      CurrentValues.Clear;
+{      Value := '';
       IsNull:=false;
-      IsAll:=true;
+      IsAll:=true;}
+      State:=rxfsAll;
     end
     else
     begin
-      Value := FFilterListEditor.Text;
+      CurrentValues.Clear;
+      CurrentValues.Add(FFilterListEditor.Text);
+{      Value := FFilterListEditor.Text;
       IsNull:=false;
-      IsAll:=false;
+      IsAll:=false;}
+      State:=rxfsFilter;
     end;
   end;
 
@@ -4797,6 +4860,21 @@ begin
   FFilterListEditor.Hide;
   FFilterListEditor.Changed;
   SetFocus;
+end;
+
+procedure TRxDBGrid.FFilterColDlgButtonOnClick(Sender: TObject);
+var
+  RxDBGrid_PopUpFilterForm: TRxDBGrid_PopUpFilterForm;
+  R: TPoint;
+  FRxCol: TRxColumn;
+begin
+  FRxCol:=TRxColumn(Columns[Columns.RealIndex(FFilterColDlgButton.Col)]);
+  RxDBGrid_PopUpFilterForm:=TRxDBGrid_PopUpFilterForm.CreatePopUpFilterForm(FRxCol);
+  R:=ClientToScreen(Point(FFilterColDlgButton.Left, FFilterColDlgButton.Top + FFilterColDlgButton.Width));
+  RxDBGrid_PopUpFilterForm.Left:=R.X;
+  RxDBGrid_PopUpFilterForm.Top:=R.Y;
+  RxDBGrid_PopUpFilterForm.ShowModal;
+  RxDBGrid_PopUpFilterForm.Free;
 end;
 
 procedure TRxDBGrid.InternalOptimizeColumnsWidth(AColList: TList);
@@ -4881,6 +4959,12 @@ begin
     R:=CellRect(FFilterListEditor.Col+1,0);
     FFilterListEditor.Width:=Columns[FFilterListEditor.Col].Width;
     FFilterListEditor.Left:=R.Left;
+  end
+  else
+  if FFilterColDlgButton.Visible then
+  begin
+    R:=CellRect(FFilterListEditor.Col+1,0);
+    FFilterColDlgButton.Left := R.Right - FFilterColDlgButton.Width;
   end;
 end;
 
@@ -5185,16 +5269,44 @@ begin
   begin
     with TRxColumn(Columns[i]) do
     begin
-      if Filter.IsAll then
+      //if Filter.IsAll then
+      if Filter.State = rxfsAll then
         Accept:=true
       else
-      if Filter.IsNull then
+      //if Filter.IsNull then
+      if Filter.State = rxfsEmpty then
       begin
         Accept:=Field.IsNull;
         if not Accept then
           Break;
       end
       else
+      if Filter.State = rxfsNonEmpty then
+      begin
+        Accept:=not Field.IsNull;
+        if not Accept then
+          Break;
+      end
+      else
+{      if Filter.State = rxfsTopXXXX then
+      begin
+        if DataSet.State = dsFilter then
+          Accept:=true
+        else
+          Accept:=DataSet.RecNo <  Filter.TopRecord;
+        if not Accept then
+          Break;
+      end
+      else}
+      if Filter.CurrentValues.Count > 0 then
+      begin
+        if Filter.CurrentValues.IndexOf(Field.DisplayText) < 0 then
+        begin
+          Accept := False;
+          break;
+        end;
+      end
+{      else
       if (Filter.Value <> '') then
       begin
         if (Filter.Value <> Field.DisplayText) then
@@ -5202,7 +5314,7 @@ begin
           Accept := False;
           break;
         end;
-      end;
+      end;}
 
     end;
   end;
@@ -5332,7 +5444,8 @@ begin
   begin
     C := TRxColumn(Columns[i]);
     C.Filter.ValueList.Clear;
-    C.Filter.Value := '';
+//    C.Filter.Value := '';
+    C.Filter.CurrentValues.Clear;
     C.Filter.ItemIndex := -1;
     C.Filter.ValueList.Add(C.Filter.EmptyValue);
     C.Filter.ValueList.Add(C.Filter.AllValue);
@@ -5792,6 +5905,13 @@ begin
     OnChange := @FFilterListEditorOnChange;
     OnCloseUp := @FFilterListEditorOnCloseUp;
   end;
+
+  FFilterColDlgButton:=TFilterColDlgButton.Create(nil);
+  FFilterColDlgButton.Name := 'FilterColDlgButton';
+  FFilterColDlgButton.Visible := False;
+  FFilterColDlgButton.OnClick := @FFilterColDlgButtonOnClick;
+  FFilterColDlgButton.Glyph.Assign(FEllipsisRxBMP);
+
   FColumnResizing := False;
 
   FRxDbGridLookupComboEditor := TRxDBGridLookupComboEditor.Create(nil);
@@ -5814,6 +5934,7 @@ begin
   FreeAndNil(FRxDbGridDateEditor);
   FreeAndNil(FPropertyStorageLink);
   FreeAndNil(FFilterListEditor);
+  FreeAndNil(FFilterColDlgButton);
   FreeAndNil(F_PopupMenu);
   FreeAndNil(F_MenuBMP);
   FreeAndNil(F_LastFilter);
@@ -5841,6 +5962,9 @@ begin
   inherited SetFocus;
   if FFilterListEditor.Visible then
     FFilterListEditor.Hide;
+
+  if FFilterColDlgButton.Visible then
+    FFilterColDlgButton.Hide;
 end;
 
 procedure TRxDBGrid.ShowFindDialog;
@@ -6207,7 +6331,11 @@ end;
 
 function TRxColumnFilter.GetItemIndex: integer;
 begin
-  Result := FValueList.IndexOf(FValue);
+  if CurrentValues.Count > 0 then
+    Result := FValueList.IndexOf(CurrentValues[0])
+  else
+    Result := -1;
+//  Result := FValueList.IndexOf(FValue);
 end;
 
 procedure TRxColumnFilter.SetColor(const AValue: TColor);
@@ -6228,10 +6356,14 @@ procedure TRxColumnFilter.SetItemIndex(const AValue: integer);
 begin
   if (AValue >= -1) and (AValue < FValueList.Count) then
   begin
-    if AValue = -1 then
+{    if AValue = -1 then
       FValue := ''
     else
-      FValue := FValueList[AValue];
+      FValue := FValueList[AValue];}
+    CurrentValues.Clear;
+    if AValue > -1 then
+      CurrentValues.Add(FValueList[AValue]);
+
     FOwner.ColumnChanged;
   end;
 end;
@@ -6244,9 +6376,15 @@ begin
   FEmptyFont := TFont.Create;
   FValueList := TStringList.Create;
   FValueList.Sorted := True;
+  FCurrentValues:=TStringList.Create;
+  FCurrentValues.Sorted:=true;
+
   FColor := clWhite;
-  FIsNull:=false;
-  FIsAll:=true;
+{  FIsNull:=false;
+  FIsAll:=true;}
+  State:=rxfsAll;
+  Style:=rxfstSimple;
+//  FTopRecord:=10;
 
   FEmptyFont.Style := [fsItalic];
   FEmptyValue := sRxDBGridEmptiFilter;
@@ -6259,6 +6397,7 @@ begin
   FreeAndNil(FFont);
   FreeAndNil(FEmptyFont);
   FreeAndNil(FValueList);
+  FreeAndNil(FCurrentValues);
   inherited Destroy;
 end;
 
@@ -6416,6 +6555,12 @@ end;
 
 initialization
   RegisterPropertyToSkip( TRxDBGrid, 'AllowedOperations', 'This property duplicated standart DBGrid.Options', '');
+  RegisterPropertyToSkip( TRxColumnFilter, 'IsNull', 'depricated property', '');
+  RegisterPropertyToSkip( TRxColumnFilter, 'IsAll', 'depricated property', '');
+  RegisterPropertyToSkip( TRxColumnFilter, 'Value', 'depricated property', '');
+
+  {  FRxColumn.Filter.IsNull:=true;
+    FRxColumn.Filter.IsAll:=false;}
 
   //{$I rxdbgrid.lrs}
   //  {$I rx_markerdown.lrs}

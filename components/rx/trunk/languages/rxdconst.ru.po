@@ -9,11 +9,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.12\n"
+
+#: rxdconst.sallvalues
+msgid "All values"
+msgstr "Все значения"
 
 #: rxdconst.sapptitlelabel
 msgid "Application \"%s\""
 msgstr "Программа \"%s\""
+
+#: rxdconst.sascending
+msgid "Ascending"
+msgstr "По возрастанию"
 
 #: rxdconst.sblobtext
 msgid "(blob)"
@@ -42,6 +50,10 @@ msgstr "Изменить пароль"
 #: rxdconst.scirculardatalink
 msgid "Circular data link"
 msgstr "Перекрёстная ссылка данных"
+
+#: rxdconst.sclearfilter
+msgid "Clear filter"
+msgstr "Очистить фильтр"
 
 #: rxdconst.scollumnname
 msgid "Column name"
@@ -87,9 +99,17 @@ msgstr "Удалить все выделенные записи"
 msgid "Delete record?"
 msgstr "Удалить запись"
 
+#: rxdconst.sdescending
+msgid "Descending"
+msgstr "По убыванию"
+
 #: rxdconst.seditdata
 msgid "editing"
 msgstr "редактирование"
+
+#: rxdconst.semptyvalues
+msgid "Empty values"
+msgstr "По убыванию"
 
 #: rxdconst.serrormsglabel
 msgid "Error message"
@@ -235,9 +255,17 @@ msgstr "Общее"
 msgid "Hide zero values"
 msgstr "Не отображать нулевые значения"
 
+#: rxdconst.shinthideonlycurrentitem
+msgid "Hide only current item"
+msgstr "Скрыть только текущий элемент"
+
 #: rxdconst.shintlabel
 msgid "Enter your user name and password"
 msgstr "Введите ваше имя и пароль"
+
+#: rxdconst.shintshowonlycurrentitem
+msgid "Show only current item"
+msgstr "Показать только текущий элемент"
 
 #: rxdconst.sinactivedata
 msgid "inactive"
@@ -298,6 +326,10 @@ msgstr "Элементы управления должны быть захвач
 #: rxdconst.snotediting
 msgid "Dataset not in edit or insert mode"
 msgstr "Набор данных не в режиме редактирования или вставки"
+
+#: rxdconst.snotempty
+msgid "Not empty"
+msgstr "Не пусто"
 
 #: rxdconst.soldpasswordlabel
 msgid "&Old password:"
@@ -370,6 +402,10 @@ msgstr "Печать списка"
 #: rxdconst.sprintoptions
 msgid "Print options"
 msgstr "Параметры печати"
+
+#: rxdconst.squickfilter
+msgid "Quick filter"
+msgstr "Быстрый фильтр"
 
 #: rxdconst.sregistration
 msgid "Register"
@@ -512,6 +548,7 @@ msgid "Totals row"
 msgstr "Всего строк"
 
 #: rxdconst.srxdescending
+msgctxt "rxdconst.srxdescending"
 msgid "Descending"
 msgstr "По убыванию"
 
@@ -657,6 +694,14 @@ msgstr "Отображать заголовок отчёта"
 msgid "Show column title"
 msgstr "Отображать заголовки столбцов"
 
+#: rxdconst.ssorting
+msgid "Sorting"
+msgstr "Сортировка"
+
+#: rxdconst.sstandartfilter
+msgid "Standart filter"
+msgstr "Стандартный фильтр"
+
 #: rxdconst.stitlecolor
 msgid "Title color"
 msgstr "Цвет заголовков"
@@ -696,4 +741,3 @@ msgstr "Использовать сырой JPEG"
 #: rxdconst.susernamelabel
 msgid "&User name:"
 msgstr "&Имя пользователя"
-

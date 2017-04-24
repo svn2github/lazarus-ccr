@@ -14,7 +14,7 @@
     <Description Value="
 "/>
     <License Value="LGPL"/>
-    <Version Minor="2" Build="4"/>
+    <Version Minor="3" Build="6"/>
     <Files Count="8">
       <Item1>
         <Filename Value="rxtools/rxcrc.pas"/>
@@ -49,6 +49,11 @@
       </Item8>
     </Files>
     <LazDoc Paths="docs;/usr/local/share/lazarus/components/rxnew/docs"/>
+    <i18n>
+      <EnableI18N Value="True"/>
+      <OutDir Value="languages"/>
+      <EnableI18NForLFM Value="True"/>
+    </i18n>
     <RequiredPkgs Count="1">
       <Item1>
         <PackageName Value="FCL"/>

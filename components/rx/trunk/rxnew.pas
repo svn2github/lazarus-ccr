@@ -20,7 +20,7 @@ uses
   rxsortmemds, rxdice, rxduallist, rxfduallst, rxfolderlister, RXHistory, 
   RxIniPropStorage, rxlclconst, rxlogin, RxMDI, rxpagemngr, rxpickdate, 
   rxShortCutUnit, rxspin, rxswitch, RxSystemServices, rxtbrsetup, RxTimeEdit, 
-  rxtoolbar, rxtooledit, LazarusPackageIntf;
+  rxtoolbar, rxtooledit, RxDBGrid_PopUpFilterUnit, LazarusPackageIntf;
 
 implementation
 

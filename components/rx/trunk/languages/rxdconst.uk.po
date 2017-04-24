@@ -10,9 +10,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
+#: rxdconst.sallvalues
+msgid "All values"
+msgstr ""
+
 #: rxdconst.sapptitlelabel
 msgid "Application \"%s\""
 msgstr "Програма \"%s\""
+
+#: rxdconst.sascending
+msgid "Ascending"
+msgstr ""
 
 #: rxdconst.sblobtext
 msgid "(blob)"
@@ -41,6 +49,12 @@ msgstr "Змінити пароль"
 #: rxdconst.scirculardatalink
 msgid "Circular data link"
 msgstr "Перехресне посилання даних"
+
+#: rxdconst.sclearfilter
+#, fuzzy
+msgctxt "rxdconst.sclearfilter"
+msgid "Clear filter"
+msgstr "Очистити фільтр"
 
 #: rxdconst.scollumnname
 msgid "Column name"
@@ -86,9 +100,19 @@ msgstr "Видалити всі виділені записи"
 msgid "Delete record?"
 msgstr "Видалити запис"
 
+#: rxdconst.sdescending
+#, fuzzy
+msgctxt "rxdconst.sdescending"
+msgid "Descending"
+msgstr "За зменшенням"
+
 #: rxdconst.seditdata
 msgid "editing"
 msgstr "Редагування"
+
+#: rxdconst.semptyvalues
+msgid "Empty values"
+msgstr ""
 
 #: rxdconst.serrormsglabel
 msgid "Error message"
@@ -235,9 +259,17 @@ msgstr "Загальний"
 msgid "Hide zero values"
 msgstr "Ховати нульові значення"
 
+#: rxdconst.shinthideonlycurrentitem
+msgid "Hide only current item"
+msgstr ""
+
 #: rxdconst.shintlabel
 msgid "Enter your user name and password"
 msgstr "Введіть ваші ім'я користувача та пароль"
+
+#: rxdconst.shintshowonlycurrentitem
+msgid "Show only current item"
+msgstr ""
 
 #: rxdconst.sinactivedata
 msgid "inactive"
@@ -298,6 +330,10 @@ msgstr "Елементи управління повинні бути захоп
 #: rxdconst.snotediting
 msgid "Dataset not in edit or insert mode"
 msgstr "Набір даних не в режимі редагування або вставки"
+
+#: rxdconst.snotempty
+msgid "Not empty"
+msgstr ""
 
 #: rxdconst.soldpasswordlabel
 msgid "&Old password:"
@@ -370,6 +406,10 @@ msgstr "Друк таблиці"
 #: rxdconst.sprintoptions
 msgid "Print options"
 msgstr "Налаштування друку"
+
+#: rxdconst.squickfilter
+msgid "Quick filter"
+msgstr ""
 
 #: rxdconst.sregistration
 msgid "Register"
@@ -513,6 +553,7 @@ msgid "Totals row"
 msgstr "Підсумковий рядок"
 
 #: rxdconst.srxdescending
+msgctxt "rxdconst.srxdescending"
 msgid "Descending"
 msgstr "За зменшенням"
 
@@ -657,6 +698,14 @@ msgstr "Показати заголовок звіту"
 #: rxdconst.sshowtitle
 msgid "Show column title"
 msgstr "Показати заголовок стовпця"
+
+#: rxdconst.ssorting
+msgid "Sorting"
+msgstr ""
+
+#: rxdconst.sstandartfilter
+msgid "Standart filter"
+msgstr ""
 
 #: rxdconst.stitlecolor
 msgid "Title color"

@@ -1,9 +1,17 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
+#: rxdconst.sallvalues
+msgid "All values"
+msgstr ""
+
 #: rxdconst.sapptitlelabel
 msgid "Application \"%s\""
 msgstr "Aplicación \"%s\""
+
+#: rxdconst.sascending
+msgid "Ascending"
+msgstr ""
 
 #: rxdconst.sblobtext
 msgid "(blob)"
@@ -34,6 +42,12 @@ msgstr "Cambiar clave"
 #| msgid "SCircularDataLink"
 msgid "Circular data link"
 msgstr "SCircularEnlaceDato"
+
+#: rxdconst.sclearfilter
+#, fuzzy
+msgctxt "rxdconst.sclearfilter"
+msgid "Clear filter"
+msgstr "Limpiar Todo"
 
 #: rxdconst.scollumnname
 msgid "Column name"
@@ -81,9 +95,19 @@ msgstr "Eliminar todos los registros seleccionados"
 msgid "Delete record?"
 msgstr "Eliminar registro"
 
+#: rxdconst.sdescending
+#, fuzzy
+msgctxt "rxdconst.sdescending"
+msgid "Descending"
+msgstr "Descendente"
+
 #: rxdconst.seditdata
 msgid "editing"
 msgstr "editando"
+
+#: rxdconst.semptyvalues
+msgid "Empty values"
+msgstr ""
 
 #: rxdconst.serrormsglabel
 msgid "Error message"
@@ -233,11 +257,19 @@ msgstr ""
 msgid "Hide zero values"
 msgstr ""
 
+#: rxdconst.shinthideonlycurrentitem
+msgid "Hide only current item"
+msgstr ""
+
 #: rxdconst.shintlabel
 #, fuzzy
 #| msgid "Enter you user name and password"
 msgid "Enter your user name and password"
 msgstr "Entre su nombre de usuario y clave"
+
+#: rxdconst.shintshowonlycurrentitem
+msgid "Show only current item"
+msgstr ""
 
 #: rxdconst.sinactivedata
 msgid "inactive"
@@ -302,6 +334,10 @@ msgstr "Control necesita bloquearlo por filtro"
 #: rxdconst.snotediting
 msgid "Dataset not in edit or insert mode"
 msgstr "Conjunto de Datos no esta en modo de edición o inserción"
+
+#: rxdconst.snotempty
+msgid "Not empty"
+msgstr ""
 
 #: rxdconst.soldpasswordlabel
 msgid "&Old password:"
@@ -373,6 +409,10 @@ msgstr ""
 
 #: rxdconst.sprintoptions
 msgid "Print options"
+msgstr ""
+
+#: rxdconst.squickfilter
+msgid "Quick filter"
 msgstr ""
 
 #: rxdconst.sregistration
@@ -521,6 +561,7 @@ msgid "Totals row"
 msgstr ""
 
 #: rxdconst.srxdescending
+msgctxt "rxdconst.srxdescending"
 msgid "Descending"
 msgstr "Descendente"
 
@@ -667,6 +708,14 @@ msgstr ""
 
 #: rxdconst.sshowtitle
 msgid "Show column title"
+msgstr ""
+
+#: rxdconst.ssorting
+msgid "Sorting"
+msgstr ""
+
+#: rxdconst.sstandartfilter
+msgid "Standart filter"
 msgstr ""
 
 #: rxdconst.stitlecolor

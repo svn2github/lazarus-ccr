@@ -1,8 +1,16 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
+#: rxdconst.sallvalues
+msgid "All values"
+msgstr ""
+
 #: rxdconst.sapptitlelabel
 msgid "Application \"%s\""
+msgstr ""
+
+#: rxdconst.sascending
+msgid "Ascending"
 msgstr ""
 
 #: rxdconst.sblobtext
@@ -31,6 +39,11 @@ msgstr ""
 
 #: rxdconst.scirculardatalink
 msgid "Circular data link"
+msgstr ""
+
+#: rxdconst.sclearfilter
+msgctxt "rxdconst.sclearfilter"
+msgid "Clear filter"
 msgstr ""
 
 #: rxdconst.scollumnname
@@ -77,8 +90,17 @@ msgstr ""
 msgid "Delete record?"
 msgstr ""
 
+#: rxdconst.sdescending
+msgctxt "rxdconst.sdescending"
+msgid "Descending"
+msgstr ""
+
 #: rxdconst.seditdata
 msgid "editing"
+msgstr ""
+
+#: rxdconst.semptyvalues
+msgid "Empty values"
 msgstr ""
 
 #: rxdconst.serrormsglabel
@@ -225,8 +247,16 @@ msgstr ""
 msgid "Hide zero values"
 msgstr ""
 
+#: rxdconst.shinthideonlycurrentitem
+msgid "Hide only current item"
+msgstr ""
+
 #: rxdconst.shintlabel
 msgid "Enter your user name and password"
+msgstr ""
+
+#: rxdconst.shintshowonlycurrentitem
+msgid "Show only current item"
 msgstr ""
 
 #: rxdconst.sinactivedata
@@ -287,6 +317,10 @@ msgstr ""
 
 #: rxdconst.snotediting
 msgid "Dataset not in edit or insert mode"
+msgstr ""
+
+#: rxdconst.snotempty
+msgid "Not empty"
 msgstr ""
 
 #: rxdconst.soldpasswordlabel
@@ -359,6 +393,10 @@ msgstr ""
 
 #: rxdconst.sprintoptions
 msgid "Print options"
+msgstr ""
+
+#: rxdconst.squickfilter
+msgid "Quick filter"
 msgstr ""
 
 #: rxdconst.sregistration
@@ -502,6 +540,7 @@ msgid "Totals row"
 msgstr ""
 
 #: rxdconst.srxdescending
+msgctxt "rxdconst.srxdescending"
 msgid "Descending"
 msgstr ""
 
@@ -645,6 +684,14 @@ msgstr ""
 
 #: rxdconst.sshowtitle
 msgid "Show column title"
+msgstr ""
+
+#: rxdconst.ssorting
+msgid "Sorting"
+msgstr ""
+
+#: rxdconst.sstandartfilter
+msgid "Standart filter"
 msgstr ""
 
 #: rxdconst.stitlecolor

@@ -23,11 +23,10 @@
     </CompilerOptions>
     <Description Value="Delphi VCL Extensions (RX) 
 Copyright (c) 1998 Master-Bank
-translate to Lazarus by alexs in 2005 - 2016
-"/>
+translate to Lazarus by alexs in 2005 - 2017"/>
     <License Value="LGPL"/>
-    <Version Major="2" Minor="9" Release="5" Build="201"/>
-    <Files Count="69">
+    <Version Major="2" Minor="9" Release="6" Build="203"/>
+    <Files Count="70">
       <Item1>
         <Filename Value="registerrx.pas"/>
         <HasRegisterProc Value="True"/>
@@ -307,6 +306,10 @@ translate to Lazarus by alexs in 2005 - 2016
         <Filename Value="rxcontrols\rxtooledit.pas"/>
         <UnitName Value="rxtooledit"/>
       </Item69>
+      <Item70>
+        <Filename Value="rxdb\rxdbgrid_popupfilterunit.pas"/>
+        <UnitName Value="RxDBGrid_PopUpFilterUnit"/>
+      </Item70>
     </Files>
     <LazDoc Paths="docs;\usr\local\share\lazarus\components\rxnew\docs"/>
     <i18n>

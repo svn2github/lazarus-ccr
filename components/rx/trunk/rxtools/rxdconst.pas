@@ -233,6 +233,19 @@ resourcestring
   sOtherOptions              = 'Other options';
   sFooterRowColor            = 'Footer row color';
 
+  //TRxDBGrid_PopUpFilterForm
+  sHintShowOnlyCurrentItem    = 'Show only current item';
+  sHintHideOnlyCurrentItem    = 'Hide only current item';
+
+  sSorting                    = 'Sorting';
+  sAscending                  = 'Ascending';
+  sDescending                = 'Descending';
+  sQuickFilter               = 'Quick filter';
+  sClearFilter               = 'Clear filter';
+  sEmptyValues               = 'Empty values';
+  sNotEmpty                  = 'Not empty';
+  sStandartFilter            = 'Standart filter';
+  sAllValues                 = 'All values';
 
 
 const
