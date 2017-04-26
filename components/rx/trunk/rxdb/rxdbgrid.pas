@@ -2395,24 +2395,11 @@ begin
 end;
 
 { TRxDBGrid }
-(*
-const
-  ALIGN_FLAGS: array[TAlignment] of integer =
-    (DT_LEFT or DT_SINGLELINE {or DT_EXPANDTABS} or DT_NOPREFIX,
-    DT_RIGHT or DT_SINGLELINE {or DT_EXPANDTABS} or DT_NOPREFIX,
-    DT_CENTER or DT_SINGLELINE {or DT_EXPANDTABS} or DT_NOPREFIX);
-*)
 const
   ALIGN_FLAGS_HEADER: array[TAlignment] of integer =
     (DT_LEFT or {DT_EXPANDTABS or} DT_NOPREFIX,
     DT_RIGHT or {DT_EXPANDTABS or }DT_NOPREFIX,
     DT_CENTER or {DT_EXPANDTABS or }DT_NOPREFIX);
-
-{  TITLE_SUBHEADER = 2;
-  TITLE_DEFAULT = 1;
-
-const
-  EdgeFlag: array[Boolean] of UINT = (BDR_RAISEDINNER, BDR_SUNKENINNER);}
 
 procedure WriteTextHeader(ACanvas: TCanvas; ARect: TRect; const Text: string;
   Alignment: TAlignment);
@@ -2555,8 +2542,6 @@ begin
       FSortEngine := RxDBGridSortEngineList.Objects[Pos] as TRxDBGridSortEngine
     else
       FSortEngine := nil;
-{    FSortField := nil;
-    FSortOrder := smNone;}
     FSortColumns.Clear;
   end;
 end;
@@ -2568,7 +2553,6 @@ end;
 
 function TRxDBGrid.GetColumns: TRxDbGridColumns;
 begin
-  //Result := TRxDbGridColumns(TCustomDrawGrid(Self).Columns);
   Result := TRxDbGridColumns(inherited Columns);
 end;
 
@@ -2654,7 +2638,6 @@ end;
 
 procedure TRxDBGrid.SetColumns(const AValue: TRxDbGridColumns);
 begin
-  //TRxDbGridColumns(TCustomDrawGrid(Self).Columns).Assign(Avalue);
   inherited Columns := TDBGridColumns(AValue);
 end;
 
@@ -3534,20 +3517,6 @@ begin
     FToolsList.Remove(ATools);
 end;
 
-{
-procedure TRxDBGrid.UpdateHorzScrollBar(const aVisible: boolean; const aRange,
-  aPage, aPos: Integer);
-begin
-  inherited UpdateHorzScrollBar(aVisible, aRange, aPage, aPos);
-end;
-
-procedure TRxDBGrid.UpdateVertScrollbar(const aVisible: boolean; const aRange,
-  aPage, aPos: Integer);
-begin
-  inherited UpdateVertScrollbar(aVisible, aRange, aPage, aPos);
-end;
-}
-
 procedure TRxDBGrid.DefaultDrawCellA(aCol, aRow: integer; aRect: TRect;
   aState: TGridDrawState);
 begin
@@ -3792,15 +3761,12 @@ begin
     MyCol := Columns.RealIndex(aCol - 1);
     with TRxColumn(Columns[MyCol]).Filter do
     begin
-//      Canvas.Brush.Color := Color;
-//      Canvas.FillRect(aRect);
       if (TitleStyle <> tsNative) then
       begin
         Canvas.Brush.Color := Color;
         Canvas.FillRect(aRect);
       end;
 
-      //if Value <> '' then
       if CurrentValues.Count > 0 then
       begin
         S:=CurrentValues[0];
@@ -3825,20 +3791,12 @@ begin
           S:='';
 
         Canvas.Font := TRxColumn(Columns[MyCol]).Filter.EmptyFont;
-        //if (aRect.Right - aRect.Left) >= Canvas.TextWidth(Value) then
         if (aRect.Right - aRect.Left) >= Canvas.TextWidth(S) then
           TxS.Alignment := Alignment
         else
           TxS.Alignment := taLeftJustify;
 
         Canvas.TextStyle := TxS;
-{
-        if IsNull then
-          DrawCellText(aCol, aRow, aRect, aState, TRxColumn(Columns[MyCol]).Filter.EmptyValue)
-        else
-        if IsAll then
-          DrawCellText(aCol, aRow, aRect, aState, TRxColumn(Columns[MyCol]).Filter.AllValue)
-}
         DrawCellText(aCol, aRow, aRect, aState, S)
       end;
     end;
@@ -5303,11 +5261,9 @@ begin
   begin
     with TRxColumn(Columns[i]) do
     begin
-      //if Filter.IsAll then
       if Filter.State = rxfsAll then
         Accept:=true
       else
-      //if Filter.IsNull then
       if Filter.State = rxfsEmpty then
       begin
         Accept:=Field.IsNull;
@@ -5340,16 +5296,6 @@ begin
           break;
         end;
       end
-{      else
-      if (Filter.Value <> '') then
-      begin
-        if (Filter.Value <> Field.DisplayText) then
-        begin
-          Accept := False;
-          break;
-        end;
-      end;}
-
     end;
   end;
   if Assigned(F_EventOnFilterRec) then

@@ -248,6 +248,8 @@ var
 begin
   if ModalResult = mrOk then
   begin
+    FRxDBGrid.DataSource.DataSet.DisableControls;
+    FRxDBGrid.DataSource.DataSet.Filtered := false;
     if CheckBox1.Checked then
     begin
       FRxColumn.Filter.State:=rxfsAll;
@@ -274,6 +276,7 @@ begin
     end;
     FRxDBGrid.DataSource.DataSet.Filtered := True;
     FRxDBGrid.DataSource.DataSet.First;
+    FRxDBGrid.DataSource.DataSet.EnableControls;
   end;
 end;
 
