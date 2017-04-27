@@ -612,7 +612,7 @@ type
   TRxDBGrid = class(TCustomDBGrid)
   private
     FColumnDefValues: TRxDBGridColumnDefValues;
-    //FrxDSState:TRxDSState;
+
     FFooterOptions: TRxDBGridFooterOptions;
     FSearchOptions: TRxDBGridSearchOptions;
     FSortColumns: TRxDbGridColumnsSortList;
@@ -622,7 +622,6 @@ type
     FKeyStrokes: TRxDBGridKeyStrokes;
     FOnGetCellProps: TGetCellPropsEvent;
     FOptionsRx: TOptionsRx;
-    //    FTitleLines: Integer;
 
     FOnGetBtnParams: TGetBtnParamsEvent;
     FOnFiltred: TNotifyEvent;
@@ -4810,36 +4809,25 @@ begin
     if (FFilterListEditor.Text = EmptyValue) then
     begin
       CurrentValues.Clear;
-{      Value := '';
-     IsNull:=true;
-      IsAll:=false;}
       State:=rxfsEmpty;
     end
     else
     if (FFilterListEditor.Text = AllValue) then
     begin
       CurrentValues.Clear;
-{      Value := '';
-      IsNull:=false;
-      IsAll:=true;}
       State:=rxfsAll;
     end
     else
     begin
       CurrentValues.Clear;
       CurrentValues.Add(FFilterListEditor.Text);
-{      Value := FFilterListEditor.Text;
-      IsNull:=false;
-      IsAll:=false;}
       State:=rxfsFilter;
     end;
   end;
 
-//  DataSource.DataSet.Refresh;
   DataSource.DataSet.DisableControls;
   DataSource.DataSet.Filtered:=false;
   DataSource.DataSet.Filtered:=true;
-//  DataSource.DataSet.First;
   CalcStatTotals;
   DataSource.DataSet.EnableControls;
 
@@ -4857,12 +4845,27 @@ end;
 procedure TRxDBGrid.FFilterColDlgButtonOnClick(Sender: TObject);
 var
   RxDBGrid_PopUpFilterForm: TRxDBGrid_PopUpFilterForm;
-  R: TPoint;
+  R, P: TPoint;
   FRxCol: TRxColumn;
+  FRect: TRect;
 begin
   FRxCol:=TRxColumn(Columns[Columns.RealIndex(FFilterColDlgButton.Col)]);
+
   RxDBGrid_PopUpFilterForm:=TRxDBGrid_PopUpFilterForm.CreatePopUpFilterForm(FRxCol);
-  R:=ClientToScreen(Point(FFilterColDlgButton.Left, FFilterColDlgButton.Top + FFilterColDlgButton.Width));
+
+
+  P:=Point(FFilterColDlgButton.Left, FFilterColDlgButton.Top + FFilterColDlgButton.Width);
+
+
+  if RxDBGrid_PopUpFilterForm.Width < FRxCol.Width then
+    P.X:=FFilterColDlgButton.Left + FFilterColDlgButton.Width - RxDBGrid_PopUpFilterForm.Width
+  else
+    P.X:=FFilterColDlgButton.Left + FFilterColDlgButton.Width - FRxCol.Width;
+
+  R:=ClientToScreen(P);
+  if R.X + RxDBGrid_PopUpFilterForm.Width > Screen.Width then
+    R.X:=Screen.Width - RxDBGrid_PopUpFilterForm.Width;
+
   RxDBGrid_PopUpFilterForm.Left:=R.X;
   RxDBGrid_PopUpFilterForm.Top:=R.Y;
   RxDBGrid_PopUpFilterForm.ShowModal;
