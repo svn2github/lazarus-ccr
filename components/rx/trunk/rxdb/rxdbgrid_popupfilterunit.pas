@@ -174,7 +174,7 @@ procedure TRxDBGrid_PopUpFilterForm.Localize;
 begin
   DividerBevel1.Caption:=sSorting;
   SpeedButton1.Caption:=sAscending;
-  SpeedButton2.Caption:=sAscending;
+  SpeedButton2.Caption:=sDescending;
   DividerBevel2.Caption:=sQuickFilter;
   SpeedButton3.Caption:=sClearFilter;
   SpeedButton4.Caption:=sEmptyValues;

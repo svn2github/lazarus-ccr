@@ -52,6 +52,7 @@ msgid "Circular data link"
 msgstr "Перекрёстная ссылка данных"
 
 #: rxdconst.sclearfilter
+msgctxt "rxdconst.sclearfilter"
 msgid "Clear filter"
 msgstr "Очистить фильтр"
 
@@ -100,6 +101,7 @@ msgid "Delete record?"
 msgstr "Удалить запись"
 
 #: rxdconst.sdescending
+msgctxt "rxdconst.sdescending"
 msgid "Descending"
 msgstr "По убыванию"
 
@@ -741,3 +743,4 @@ msgstr "Использовать сырой JPEG"
 #: rxdconst.susernamelabel
 msgid "&User name:"
 msgstr "&Имя пользователя"
+

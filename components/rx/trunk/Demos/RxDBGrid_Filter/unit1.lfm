@@ -73,6 +73,7 @@ object Form1: TForm1
         Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
+        Filter.Style = rxfstDialog
         Footers = <>
       end    
       item
@@ -86,6 +87,7 @@ object Form1: TForm1
         Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
+        Filter.Style = rxfstDialog
         Footers = <>
       end>
     KeyStrokes = <    
