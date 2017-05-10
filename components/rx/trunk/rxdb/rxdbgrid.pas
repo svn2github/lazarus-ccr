@@ -777,7 +777,7 @@ type
     procedure FFilterColDlgButtonOnClick(Sender: TObject);
 
     procedure InternalOptimizeColumnsWidth(AColList: TList);
-    function IsDefaultRowHeightStored: boolean;
+    //function IsDefaultRowHeightStored: boolean;
     procedure VisualChange; override;
     procedure EditorWidthChanged(aCol,aWidth: Integer); override;
 
@@ -2856,7 +2856,7 @@ begin
       begin
         if rxTit.Orientation in [toVertical270, toVertical90] then
           H1 := Max((tmpCanvas.TextWidth(Columns[i].Title.Caption) +
-            tmpCanvas.TextWidth('W')) div DefaultRowHeight, H)
+            tmpCanvas.TextWidth('W')) div GetDefaultRowHeight, H)
         else
         begin
           if rxTit.CaptionLinesCount = 0 then
@@ -2906,9 +2906,9 @@ begin
     end;
 
     if not (rdgDisableWordWrapTitles in OptionsRx) then
-      RowHeights[0] := DefaultRowHeight * H
+      RowHeights[0] := GetDefaultRowHeight * H
     else
-      RowHeights[0] := DefaultRowHeight;
+      RowHeights[0] := GetDefaultRowHeight;
 
     if rdgFilter in OptionsRx then
     begin
@@ -2918,7 +2918,7 @@ begin
       end
       else
       begin
-        RowHeights[0] := RowHeights[0] + DefaultRowHeight;
+        RowHeights[0] := RowHeights[0] + GetDefaultRowHeight;
       end;
     end;
 
@@ -2958,7 +2958,7 @@ begin
   if Assigned(FFilterListEditor) then
     Result.Top := bRect.Bottom - FFilterListEditor.Height
   else
-    Result.Top := bRect.Bottom - DefaultRowHeight;
+    Result.Top := bRect.Bottom - GetDefaultRowHeight;
 end;
 
 function TRxDBGrid.getTitleRect(bRect: TRect): TRect;
@@ -2967,7 +2967,7 @@ begin
   if Assigned(FFilterListEditor) then
     Result.Bottom := bRect.Bottom - FFilterListEditor.Height
   else
-    Result.Bottom := bRect.Bottom - DefaultRowHeight;
+    Result.Bottom := bRect.Bottom - GetDefaultRowHeight;
 end;
 
 procedure TRxDBGrid.OutCaptionCellText(aCol, aRow: integer; const aRect: TRect;
@@ -3369,7 +3369,7 @@ begin
 
     if i<RowCount then
     begin
-      RowHeights[i] := DefaultRowHeight * H;
+      RowHeights[i] := GetDefaultRowHeight * H;
       H2:=H2 + RowHeights[i];
       if H2<=ClientHeight  then
         Inc(Result);
@@ -3383,7 +3383,7 @@ var
   i:integer;
 begin
   for i:=1 to RowCount-1 do
-    RowHeights[i] := DefaultRowHeight;
+    RowHeights[i] := GetDefaultRowHeight;
 end;
 
 procedure TRxDBGrid.DoClearInvalidTitle;
@@ -3638,7 +3638,7 @@ begin
           end
           else
           begin
-            aRect2.Bottom := aRect2.Top + MLI.Height * DefaultRowHeight;
+            aRect2.Bottom := aRect2.Top + MLI.Height * GetDefaultRowHeight;
             aState := aState - [gdPushed];
           end;
 
@@ -4029,16 +4029,16 @@ var
   ABrush: TBrush;
 begin
   TotalWidth := GCache.ClientWidth;
-  TotalYOffs := GCache.ClientHeight - (DefaultRowHeight * FFooterOptions.RowCount);
+  TotalYOffs := GCache.ClientHeight - (GetDefaultRowHeight * FFooterOptions.RowCount);
 
-  FooterRect := Rect(0, TotalYOffs, TotalWidth, TotalYOffs + DefaultRowHeight * FFooterOptions.RowCount);
+  FooterRect := Rect(0, TotalYOffs, TotalWidth, TotalYOffs + GetDefaultRowHeight * FFooterOptions.RowCount);
 
   Background := Canvas.Brush.Color;
   Canvas.Brush.Color := Color;
   Canvas.FillRect(FooterRect);
 
   R.Top := TotalYOffs;
-  R.Bottom := TotalYOffs + DefaultRowHeight * FFooterOptions.RowCount;
+  R.Bottom := TotalYOffs + GetDefaultRowHeight * FFooterOptions.RowCount;
 
   Canvas.Brush.Color := FFooterOptions.FColor;
   if (Columns.Count > 0) then
@@ -4056,7 +4056,7 @@ begin
     ABrush := nil;//initialize, no need create everytime.
 
     R.Top := TotalYOffs;
-    R.Bottom := TotalYOffs + DefaultRowHeight;
+    R.Bottom := TotalYOffs + GetDefaultRowHeight;
 //    R.Bottom := TotalYOffs + DefaultRowHeight * FFooterOptions.RowCount;
 
     for j:=0 to FFooterOptions.RowCount-1 do
@@ -4137,7 +4137,7 @@ begin
       end;
 
       R.Top := R.Bottom;
-      R.Bottom := R.Bottom + DefaultRowHeight;
+      R.Bottom := R.Bottom + GetDefaultRowHeight;
     end;
 
     if assigned(ABrush)then FreeAndNil(ABrush);
@@ -4460,7 +4460,7 @@ begin
     Rct := CellRect(0, 0);
     MPT.X := Rct.Left;
     if rdgFilter in FOptionsRx then
-      MPT.Y := Rct.Bottom - DefaultRowHeight
+      MPT.Y := Rct.Bottom - GetDefaultRowHeight
     else
       MPT.Y := Rct.Bottom;
     MPT := ClientToScreen(MPT);
@@ -4714,7 +4714,7 @@ begin
   begin
     P:=GCache.MaxClientXY;
     with GCache do
-      MaxClientXY.Y:=MaxClientXY.Y - (DefaultRowHeight * FFooterOptions.RowCount + 2);
+      MaxClientXY.Y:=MaxClientXY.Y - (GetDefaultRowHeight * FFooterOptions.RowCount + 2);
   end;
 
   DoClearInvalidTitle;
@@ -4744,12 +4744,12 @@ function TRxDBGrid.GetBufferCount: integer;
 var
   H:integer;
 begin
-  if DefaultRowHeight > 0 then
+  if GetDefaultRowHeight > 0 then
   begin
     H:=ClientHeight - GCache.FixedHeight;
     if FFooterOptions.Active then
-      H:=H - DefaultRowHeight * FFooterOptions.RowCount;
-    Result := H div DefaultRowHeight;
+      H:=H - GetDefaultRowHeight * FFooterOptions.RowCount;
+    Result := H div GetDefaultRowHeight;
   end
   else
     Result := 1;
@@ -4932,12 +4932,12 @@ begin
 
   FreeMem(WA, SizeOf(integer) * AColList.Count);
 end;
-
+(*
 function TRxDBGrid.IsDefaultRowHeightStored: boolean;
 begin
-  Result := DefaultRowHeight = Canvas.TextHeight('Wg');
+  Result := GetDefaultRowHeight = Canvas.TextHeight('Wg');
 end;
-
+*)
 procedure TRxDBGrid.VisualChange;
 begin
   CalcTitle;
