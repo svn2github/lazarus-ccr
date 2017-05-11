@@ -396,7 +396,8 @@ end;
 procedure TPopUpForm.CreateWnd;
 begin
   inherited CreateWnd;
-  Height:=FGrid.DefaultRowHeight * FRowCount;
+  //Height:=FGrid.DefaultRowHeight * FRowCount;
+  Height:=FGrid.GetDefaultRowHeight * FRowCount;
 end;
 
 procedure TPopUpForm.DoSetFieldsFromString(FL: string);
@@ -420,6 +421,7 @@ begin
     end;
     GK:=FGrid.Columns.Add as TRxColumn;
     GK.Field:=FGrid.DataSource.DataSet.FieldByName(FieldName);
+    GK.Width:=-1;
   end;
 end;
 

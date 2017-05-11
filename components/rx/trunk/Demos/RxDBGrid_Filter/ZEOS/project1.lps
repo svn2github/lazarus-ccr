@@ -28,20 +28,25 @@
       </Unit1>
       <Unit2>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="995"/>
+        <TopLine Value="4301"/>
+        <CursorPos X="3" Y="4266"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
         <Filename Value="../../../rxdb/rxdbgrid_popupfilterunit.pas"/>
+        <ComponentName Value="RxDBGrid_PopUpFilterForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
         <UnitName Value="RxDBGrid_PopUpFilterUnit"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <TopLine Value="166"/>
         <CursorPos X="36" Y="177"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit3>
       <Unit4>
         <Filename Value="../../../rxdb/rxlookup.pas"/>
@@ -49,7 +54,7 @@
         <UsageCount Value="10"/>
       </Unit4>
     </Units>
-    <JumpHistory Count="9" HistoryIndex="8">
+    <JumpHistory Count="11" HistoryIndex="10">
       <Position1>
         <Filename Value="unit1.pas"/>
       </Position1>
@@ -83,8 +88,16 @@
       </Position8>
       <Position9>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret TopLine="995"/>
+        <Caret Line="758" Column="9" TopLine="743"/>
       </Position9>
+      <Position10>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="4170" Column="3" TopLine="4209"/>
+      </Position10>
+      <Position11>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="760" Column="15" TopLine="745"/>
+      </Position11>
     </JumpHistory>
   </ProjectSession>
 </CONFIG>
