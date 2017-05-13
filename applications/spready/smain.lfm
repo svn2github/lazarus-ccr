@@ -11,7 +11,7 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   OnShow = FormShow
   ShowHint = True
-  LCLVersion = '1.7'
+  LCLVersion = '1.9.0.0'
   object WorkbookTabControl: TsWorkbookTabControl
     Left = 0
     Height = 606
@@ -30,6 +30,7 @@ object MainForm: TMainForm
       Top = 23
       Width = 788
       AutoCalc = True
+      EditorLineMode = elmMultiLine
       FrozenCols = 0
       FrozenRows = 0
       ReadFormulas = True
@@ -43,7 +44,7 @@ object MainForm: TMainForm
       Font.Height = -13
       Font.Name = 'Arial'
       MouseWheelOption = mwGrid
-      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSizing, goColSizing, goEditing, goThumbTracking, goDblClickAutoSize, goCellHints]
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSizing, goColSizing, goEditing, goThumbTracking, goDblClickAutoSize, goSmoothScroll, goCellHints]
       ParentFont = False
       TabOrder = 1
       TitleFont.Color = clBlack
