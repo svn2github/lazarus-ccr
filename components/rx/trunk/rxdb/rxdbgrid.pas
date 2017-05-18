@@ -54,6 +54,7 @@ type
   TRxColumn = class;
   TRxDBGridAbstractTools = class;
   TRxDbGridColumnsEnumerator = class;
+  TRxColumnFooterItemsEnumerator = class;
 
 
   TRxQuickSearchNotifyEvent = procedure(Sender: TObject; Field: TField;
@@ -358,9 +359,24 @@ type
     procedure Update(Item: TCollectionItem); override;
   public
     constructor Create(AOwner: TPersistent);
+    function GetEnumerator: TRxColumnFooterItemsEnumerator;
   public
     property Items[Index: integer]: TRxColumnFooterItem read GetItem write SetItem; default;
   end;
+
+  { TRxColumnFooterItemsEnumerator }
+
+  TRxColumnFooterItemsEnumerator = class
+  private
+    FList: TRxColumnFooterItems;
+    FPosition: Integer;
+  public
+    constructor Create(AList: TRxColumnFooterItems);
+    function GetCurrent: TRxColumnFooterItem;
+    function MoveNext: Boolean;
+    property Current: TRxColumnFooterItem read GetCurrent;
+  end;
+
 
   { TRxColumnFilter }
 
@@ -463,6 +479,64 @@ type
     property Items[Index: integer]: TRxColumnEditButton read GetItem write SetItem; default;
   end;
 
+  TColumnGroupItemValue = class
+    FieldName:string;
+    GroupValue:Double;
+  end;
+
+  { TColumnGroupItem }
+
+  TColumnGroupItem = class
+    RecordNo:integer;
+    FieldValue:string;
+    RecordCount:integer;
+    constructor Create;
+    destructor Destroy; override;
+  end;
+
+  { TColumnGroupItems }
+
+  TColumnGroupItems = class
+  private
+    FActive: boolean;
+    procedure SetActive(AValue: boolean);
+  public
+    constructor Create;
+    destructor Destroy; override;
+    function FindGroup(ARecordNo:integer):TColumnGroupItem;
+    procedure Clear;
+    procedure UpdateValues;
+  published
+    property Active:boolean read FActive write SetActive;
+  end;
+
+
+
+  { TRxColumnGroupParam }
+
+  TRxColumnGroupParam = class(TCollectionItem)
+  private
+    FFileName: string;
+    FValueType: TFooterValueType;
+  published
+    property FileName:string read FFileName write FFileName;
+    property ValueType:TFooterValueType read FValueType write FValueType;
+  end;
+
+  { TRxColumnGroupParams }
+
+  TRxColumnGroupParams = class(TOwnedCollection)
+  private
+    function GetItem(Index: integer): TRxColumnGroupParam;
+    procedure SetItem(Index: integer; AValue: TRxColumnGroupParam);
+  protected
+  public
+    function Add: TRxColumnGroupParam;
+  public
+    property Items[Index: integer]: TRxColumnGroupParam read GetItem write SetItem; default;
+  end;
+
+
   { TRxColumn }
 
   TRxColumn = class(TColumn)
@@ -482,6 +556,8 @@ type
     FSortPosition: integer;
     FWordWrap: boolean;
     FFooters: TRxColumnFooterItems;
+    //Group support
+    FGroupItems:TColumnGroupItems;
     function GetConstraints: TRxDBGridCollumnConstraints;
     function GetFooter: TRxColumnFooterItem;
     function GetFooters: TRxColumnFooterItems;
@@ -1093,6 +1169,89 @@ type
     procedure EditingDone; override;
   end;
 
+{ TRxColumnGroupParams }
+
+function TRxColumnGroupParams.GetItem(Index: integer): TRxColumnGroupParam;
+begin
+  Result:= TRxColumnGroupParam(inherited Items[Index]);
+end;
+
+procedure TRxColumnGroupParams.SetItem(Index: integer;
+  AValue: TRxColumnGroupParam);
+begin
+  inherited SetItem(Index, AValue);
+end;
+
+function TRxColumnGroupParams.Add: TRxColumnGroupParam;
+begin
+  Result:=TRxColumnGroupParam.Create(Self);
+end;
+
+{ TRxColumnFooterItemsEnumerator }
+
+constructor TRxColumnFooterItemsEnumerator.Create(AList: TRxColumnFooterItems);
+begin
+  FList := AList;
+  FPosition := -1;
+end;
+
+function TRxColumnFooterItemsEnumerator.GetCurrent: TRxColumnFooterItem;
+begin
+  Result := FList[FPosition];
+end;
+
+function TRxColumnFooterItemsEnumerator.MoveNext: Boolean;
+begin
+  Inc(FPosition);
+  Result := FPosition < FList.Count;
+end;
+
+{ TColumnGroupItems }
+
+procedure TColumnGroupItems.SetActive(AValue: boolean);
+begin
+  if FActive=AValue then Exit;
+  FActive:=AValue;
+end;
+
+constructor TColumnGroupItems.Create;
+begin
+  inherited Create;
+  FActive:=false;
+end;
+
+destructor TColumnGroupItems.Destroy;
+begin
+  inherited Destroy;
+end;
+
+function TColumnGroupItems.FindGroup(ARecordNo: integer): TColumnGroupItem;
+begin
+  Result:=nil;
+end;
+
+procedure TColumnGroupItems.Clear;
+begin
+
+end;
+
+procedure TColumnGroupItems.UpdateValues;
+begin
+
+end;
+
+{ TColumnGroupItem }
+
+constructor TColumnGroupItem.Create;
+begin
+
+end;
+
+destructor TColumnGroupItem.Destroy;
+begin
+  inherited Destroy;
+end;
+
 { TRxDbGridColumnsEnumerator }
 
 constructor TRxDbGridColumnsEnumerator.Create(AList: TRxDbGridColumns);
@@ -1613,6 +1772,11 @@ end;
 constructor TRxColumnFooterItems.Create(AOwner: TPersistent);
 begin
   inherited Create(AOwner, TRxColumnFooterItem);
+end;
+
+function TRxColumnFooterItems.GetEnumerator: TRxColumnFooterItemsEnumerator;
+begin
+  Result:=TRxColumnFooterItemsEnumerator.Create(Self);
 end;
 
 { TRxDBGridAbstractTools }
@@ -4824,60 +4988,54 @@ var
 
   SaveAfterScroll:TDataSetNotifyEvent;
   SaveBeforeScroll:TDataSetNotifyEvent;
-  RCol:TRxColumn;
+  C:TRxColumn;
   AValue:Variant;
 
-  FCList:TFPList;
+  FCList, FCList2:TFPList;
   j: Integer;
+  F: TRxColumnFooterItem;
 begin
   if (not (FFooterOptions.Active and DatalinkActive)) or (Columns.Count = 0) or (gsAddingAutoColumns in GridStatus)  then
     Exit;
-  //Дополнительно проверим - а стоит ли делать пробег по данным - есть ли агрегатные функции
+
   if Assigned(OnRxCalcFooterValues)then
   begin
     Inc(FInProcessCalc);
-    for i := 0 to Columns.Count - 1 do
+    for C in Columns do
     begin
-      RCol := TRxColumn(Columns[i]);
-      RCol.Footer.ResetTestValue;
+      C.Footer.ResetTestValue;
       AValue:=Null;
-      OnRxCalcFooterValues(Self, RCol, AValue);
-      if AValue<>null then RCol.Footer.FTestValue := AValue;
+      OnRxCalcFooterValues(Self, C, AValue);
+      if AValue<>null then C.Footer.FTestValue := AValue;
     end;
     Dec(FInProcessCalc);
     Exit;
   end;
 
   APresent := False;
-  for i := 0 to Columns.Count - 1 do
+  for C in Columns do
   begin
-    APresent := TRxColumn(Columns[i]).Footer.FValueType in
-      [fvtSum, fvtAvg, fvtMax, fvtMin, fvtCount];
-
+    APresent := (C.Footer.FValueType in [fvtSum, fvtAvg, fvtMax, fvtMin, fvtCount]) or (C.FGroupItems.Active);
     if not APresent then
-      for j:=0 to TRxColumn(Columns[i]).Footers.Count-1 do
+      for F in C.Footers do
       begin
-        APresent:=TRxColumn(Columns[i]).Footers[j].FValueType in [fvtSum, fvtAvg, fvtMax, fvtMin, fvtCount];
+        APresent:=F.FValueType in [fvtSum, fvtAvg, fvtMax, fvtMin, fvtCount];
         if APresent then
           break;
       end;
-
-    if APresent then
-      break;
   end;
 
-  if not APresent then
-    exit;
+  if not APresent then Exit;
 
 
   Inc(FInProcessCalc);
 
   cnt:=0;
-  for i := 0 to Columns.Count - 1 do
+  for C in Columns do
   begin
-    TRxColumn(Columns[i]).Footer.ResetTestValue;
-    for j:=0 to TRxColumn(Columns[i]).Footers.Count - 1 do
-      TRxColumn(Columns[i]).Footers[j].ResetTestValue;
+    C.Footer.ResetTestValue;
+    for F in C.Footers do F.ResetTestValue;
+    C.FGroupItems.Clear;
   end;
 
   if (DataSource.DataSet.RecordCount<=0) then
@@ -4906,24 +5064,27 @@ begin
   SavePos:=DHS.RecNo;
 
   FCList:=TFPList.Create;
-  for i:=0 to Columns.Count-1 do
+  FCList2:=TFPList.Create;
+
+  for C in Columns do
   begin
-    RCol:=TRxColumn(Columns[i]);
-    if (RCol.Footer.ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin]) and RCol.Visible then
+    if (C.Footer.ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin]) and C.Visible then
     begin
-      FCList.Add(RCol);
-      RCol.Footer.FField:=DHS.FieldByName(RCol.Footer.FieldName);
+      FCList.Add(C);
+      C.Footer.FField:=DHS.FieldByName(C.Footer.FieldName);
     end;
 
-    for j:=0 to RCol.Footers.Count - 1 do
+    for F in C.Footers do
     begin
-      if (RCol.Footers[j].ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin]) and RCol.Visible then
+      if (F.ValueType in [fvtSum, fvtAvg, fvtMax, fvtMin]) and C.Visible then
       begin
-        if FCList.IndexOf(RCol) < 0 then
-          FCList.Add(RCol);
-        RCol.Footers[j].FField:=DHS.FieldByName(RCol.Footers[j].FieldName);
+        if FCList.IndexOf(C) < 0 then
+          FCList.Add(C);
+        F.FField:=DHS.FieldByName(F.FieldName);
       end;
     end;
+
+    if C.FGroupItems.Active then FCList2.Add(C);
   end;
 
   DHS.First;
@@ -4931,38 +5092,42 @@ begin
   begin
     for i:=0 to FCList.Count-1 do
     begin
-      RCol:=TRxColumn(FCList[i]);
-      if (RCol.FFooter.FValueType in [fvtSum, fvtAvg, fvtMax, fvtMin]) and Assigned(RCol.FFooter.FField) then
-        RCol.FFooter.UpdateTestValueFromVar( RCol.FFooter.FField.AsVariant);
+      C:=TRxColumn(FCList[i]);
+      if (C.FFooter.FValueType in [fvtSum, fvtAvg, fvtMax, fvtMin]) and Assigned(C.FFooter.FField) then
+        C.FFooter.UpdateTestValueFromVar(C.FFooter.FField.AsVariant);
 
-      for j:=0 to RCol.FFooters.Count-1 do
+      for F in C.FFooters do
       begin
-        if (RCol.FFooters[j].FValueType in [fvtSum, fvtAvg, fvtMax, fvtMin]) and Assigned(RCol.FFooters[j].FField) then
-          RCol.FFooters[j].UpdateTestValueFromVar( RCol.FFooters[j].FField.AsVariant)
+        if (F.FValueType in [fvtSum, fvtAvg, fvtMax, fvtMin]) and Assigned(F.FField) then
+          F.UpdateTestValueFromVar( F.FField.AsVariant)
       end;
     end;
+
+    for i:=0 to FCList2.Count-1 do
+      TRxColumn(FCList[i]).FGroupItems.UpdateValues;
+
     inc(cnt);
     DHS.Next;
   end;
 
+  FCList2.Free;
   FCList.Free;
 
-  for i:=0 to Columns.Count-1 do
+  for C in Columns do
   begin
-    RCol:=TRxColumn(Columns[i]);
-    if RCol.Footer.ValueType = fvtCount then
-        RCol.FFooter.FCountRec:=Cnt
+    if C.Footer.ValueType = fvtCount then
+        C.FFooter.FCountRec:=Cnt
     else
-    if RCol.Footer.ValueType = fvtAvg then
-      RCol.FFooter.FTestValue:=RCol.FFooter.FTestValue / Cnt;
+    if C.Footer.ValueType = fvtAvg then
+      C.FFooter.FTestValue:=C.FFooter.FTestValue / Cnt;
 
-    for j:=0 to RCol.Footers.Count-1 do
+    for F in C.Footers do
     begin
-      if RCol.Footers[j].ValueType = fvtCount then
-          RCol.FFooters[j].FCountRec:=Cnt
+      if F.ValueType = fvtCount then
+          F.FCountRec:=Cnt
       else
-      if RCol.Footers[j].ValueType = fvtAvg then
-        RCol.FFooters[j].FTestValue:=RCol.FFooter.FTestValue / Cnt;
+      if F.ValueType = fvtAvg then
+        F.FTestValue:=F.FTestValue / Cnt;
     end;
   end;
 
@@ -5953,10 +6118,12 @@ begin
   FEditButtons:=TRxColumnEditButtons.Create(Self);
   FOptions:=[coCustomizeVisible, coCustomizeWidth];
   FFooters:=TRxColumnFooterItems.Create(Self);
+  FGroupItems:=TColumnGroupItems.Create;
 end;
 
 destructor TRxColumn.Destroy;
 begin
+  FreeAndNil(FGroupItems);
   FreeAndNil(FFooters);
   FreeAndNil(FEditButtons);
   if FKeyList <> nil then
