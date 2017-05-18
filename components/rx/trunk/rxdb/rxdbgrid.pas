@@ -112,7 +112,6 @@ type
 
   TCreateLookup = TNotifyEvent;
   TDisplayLookup = TNotifyEvent;
-  //  TDataSetClass = class of TDataSet;
 
   TRxDBGridCommand = (rxgcNone, rxgcShowFindDlg, rxgcShowColumnsDlg,
     rxgcShowFilterDlg, rxgcShowSortDlg, rxgcShowQuickFilter,
@@ -362,22 +361,7 @@ type
   public
     property Items[Index: integer]: TRxColumnFooterItem read GetItem write SetItem; default;
   end;
-(*
-  { TRxFilterItem }
 
-  TRxFilterItem = class
-    FVAlue:string;
-    FCol:TRxColumn;
-    OpCode:TRxFilterOpCode;
-    function TestValue:Boolean;
-  end;
-
-  { TRxFilterItems }
-
-  TRxFilterItems = class(TFPList)
-    function AcceptRecord:boolean;
-  end;
-*)
   { TRxColumnFilter }
 
   TRxFilterState = (rxfsAll, rxfsEmpty, rxfsNonEmpty, rxfsFilter{, rxfsTopXXXX});
@@ -388,13 +372,9 @@ type
     FAllValue: string;
     FCurrentValues: TStringList;
     FEnabled: boolean;
-{    FIsAll: boolean;
-    FIsNull: boolean;}
     FOwner: TRxColumn;
     FState: TRxFilterState;
     FStyle: TRxFilterStyle;
-//    FTopRecord: Integer;
-//    FValue: string;
     FValueList: TStringList;
     FEmptyValue: string;
     FEmptyFont: TFont;
@@ -412,15 +392,12 @@ type
     property State:TRxFilterState read FState write FState;
     property CurrentValues : TStringList read FCurrentValues;
   published
-//    property Value: string read FValue write FValue;
-{    property IsNull:boolean read FIsNull write FIsNull;
-    property IsAll:boolean read FIsAll write FIsAll;}
     property Font: TFont read FFont write SetFont;
     property Alignment: TAlignment read FAlignment write FAlignment default
       taLeftJustify;
     property DropDownRows: integer read FDropDownRows write FDropDownRows;
     property Color: TColor read FColor write SetColor default clWhite;
-    property ValueList: TStringList read FValueList {write FValueList};
+    property ValueList: TStringList read FValueList;
     property EmptyValue: string read FEmptyValue write FEmptyValue;
     property AllValue: string read FAllValue write FAllValue;
     property EmptyFont: TFont read FEmptyFont write FEmptyFont;
@@ -461,7 +438,6 @@ type
     constructor Create(ACollection: TCollection); override;
     destructor Destroy; override;
   published
-    //property DropdownMenu: TPopupMenu read FDropdownMenu write FDropdownMenu; :TODO:
     property Enabled: Boolean read FEnabled write FEnabled default true;
     property Glyph: TBitmap read GetGlyph write SetGlyph;
     property Hint: String read GetHint write SetHint;
@@ -471,7 +447,6 @@ type
     property Visible: Boolean read FVisible write SetVisible default true;
     property Width: Integer read GetWidth write SetWidth default 15;
     property OnClick: TNotifyEvent read GetOnButtonClick write SetOnButtonClick;
-    //property OnDown: TNotifyEvent read FOnButtonDown write FOnButtonDown;
   end;
 
   TRxColumnEditButtons = class(TCollection)
@@ -1073,7 +1048,6 @@ begin
 end;
 
 type
-//  THackDataLink = class(TDataLink);
   THackDataSet = class(TDataSet);
 
 
@@ -1116,7 +1090,6 @@ type
 
   public
     constructor Create(Aowner : TComponent); override;
-    //procedure SetBounds(aLeft, aTop, aWidth, aHeight: integer); override;
     procedure EditingDone; override;
   end;
 
@@ -1146,7 +1119,6 @@ begin
   FGrid := AGrid;
   FCol := Col;
   Visible := True;
-  //SetFocus;
 end;
 
 { TRxDBGridSearchOptions }
@@ -1280,10 +1252,9 @@ begin
   if TRxDBGrid(FOwner.Grid).DatalinkActive then
   begin
     if DisplayFormat <> '' then
-      Result := Format(DisplayFormat,
-        [{TRxDBGrid(FOwner.Grid).DataSource.DataSet.RecordCount} FCountRec])
+      Result := Format(DisplayFormat, [FCountRec])
     else
-      Result := IntToStr(FCountRec); //TRxDBGrid(FOwner.Grid).DataSource.DataSet.RecordCount);
+      Result := IntToStr(FCountRec);
   end
   else
     Result := '';
@@ -1740,43 +1711,7 @@ begin
   inherited Create;
   FOwner:=AOwner;
 end;
-(*
-{ TRxFilterItems }
 
-function TRxFilterItems.AcceptRecord: boolean;
-var
-  i:integer;
-begin
-  Result:=true;
-  for i:=0 to Count-1 do
-  begin
-    if not TRxFilterItem(Items[i]).TestValue then
-    begin
-      Result:=false;
-      exit;
-    end;
-  end;
-end;
-
-{ TRxFilterItem }
-
-function TRxFilterItem.TestValue: Boolean;
-var
-  ATestValue: string;
-begin
-  ATestValue:=FCol.Field.DisplayText;
-  case OpCode of
-    fopEQ:Result:=ATestValue = FVAlue;
-    fopNotEQ:Result:=ATestValue <> FVAlue;
-    fopStartFrom:Result:=UTF8Copy(ATestValue, 1, UTF8Length(FVAlue)) = FVAlue;
-    fopEndTo:Result:=Copy(ATestValue, UTF8Length(ATestValue) - UTF8Length(FVAlue), UTF8Length(FVAlue)) = FVAlue;
-    fopLike:Result:=UTF8Pos(FVAlue, ATestValue) > 0;
-    fopNotLike:Result:=UTF8Pos(FVAlue, ATestValue) = 0;
-  else
-    Result:=false;
-  end;
-end;
-*)
 { TRxDbGridColumnsSortList }
 
 function TRxDbGridColumnsSortList.GetCollumn(Index: Integer): TRxColumn;
@@ -2265,7 +2200,6 @@ procedure TRxDBGridLookupComboEditor.KeyDown(var Key: word; Shift: TShiftState);
   procedure doGridKeyDown;
   begin
     if Assigned(FGrid) then
-//      FGrid.EditorkeyDown(Self, key, shift);
       FGrid.KeyDown(Key, shift);
   end;
 
@@ -2313,8 +2247,6 @@ begin
     end;
   end;
   inherited KeyDown(Key, Shift);
-{  if FGrid<>nil then
-    FGrid.EditingDone;}
 end;
 
 procedure TRxDBGridLookupComboEditor.msg_SetGrid(var Msg: TGridMessage);
@@ -2333,7 +2265,6 @@ begin
   DataSource := FGrid.DataSource;
   if Assigned(F) then
   begin
-    //    DataField:=F.FieldName;
     DataField := F.KeyFields;
     LookupDisplay := F.LookupResultField;
     LookupField := F.LookupKeyFields;
@@ -2380,7 +2311,6 @@ begin
     F:=FLDS.DataSet.FieldByName(LookupDisplay);
     if Assigned(F) then
     begin
-      //FGrid.SelectedField.Assign(F);
       if (FGrid<>nil) and Visible then begin
         FGrid.SetEditText(FCol, FRow, F.DisplayText);
       end;
@@ -2473,67 +2403,7 @@ begin
     EditorMode := True;
   end;
 end;
-{
-procedure TRxDBGrid.WMVScroll(var Message: TLMVScroll);
-var
-  IsSeq: boolean;
-  aPos, aRange, aPage: Integer;
-  //DeltaRec: integer;
 
-  function MaxPos: Integer;
-  begin
-    if IsSeq then
-      result := DataSource.DataSet.RecordCount - 1
-    else
-      result := 4;
-  end;
-
-  procedure DsMoveBy(Delta: Integer);
-  begin
-    DataSource.DataSet.MoveBy(Delta);
-    GetScrollbarParams(aRange, aPage, aPos);
-  end;
-
-  procedure DsGoto(BOF: boolean);
-  begin
-    if BOF then DataSource.DataSet.First
-    else        DataSource.DataSet.Last;
-    GetScrollbarParams(aRange, aPage, aPos);
-  end;
-
-begin
-  if not DatalinkActive then exit;
-  IsSeq := DataSource.DataSet.IsSequenced;
-  case Message.ScrollCode of
-    SB_TOP:
-      DsGoto(True);
-    SB_BOTTOM:
-      DsGoto(False);
-    SB_PAGEUP:
-      DsMoveBy(-VisibleRowCount);
-    SB_LINEUP:
-      DsMoveBy(-1);
-    SB_LINEDOWN:
-      DsMoveBy(1);
-    SB_PAGEDOWN:
-      DsMoveBy(VisibleRowCount);
-    SB_THUMBPOSITION:
-      DsMoveBy(Message.Pos - FOldPosition)
-    else
-      Exit;
-  end;
-
-  ScrollBarPosition(SB_VERT, aPos);
-  FOldPosition:=aPos;
-
-  if EditorMode then
-    RestoreEditor;
-  inherited;
-  {$ifdef dbgDBGrid}
-  DebugLn('---- Diff=',dbgs(DeltaRec), ' FinalPos=',dbgs(aPos));
-  {$endif}
-end;
-}
 procedure TRxDBGrid.SetAutoSort(const AValue: boolean);
 var
   S: string;
@@ -2736,7 +2606,7 @@ var
   I, Offset: integer;
 begin
   Cell := MouseCoord(X, Y);
-  Offset := RowCount;//[0];
+  Offset := RowCount;
   NewPressed := PtInRect(Rect(0, 0, ClientWidth, ClientHeight), Point(X, Y)) and
     (FPressedCol = TColumn(ColumnFromGridColumn(Cell.X))) and (Cell.Y < Offset);
   if FPressed <> NewPressed then
@@ -3091,7 +2961,6 @@ begin
     MLINext := MLINext.Next;
   end;
 
-  //   OutCaptionCellText(aCol, aRow, aRect, aState, MLI.Caption);
   Rgn := CreateRectRgn(aRect.Left, aRect.Top, aRect.Right, aRect.Bottom);
   SelectClipRgn(Canvas.Handle, Rgn);
   OutCaptionCellText(aCol, aRow, aRect, aState, MLI.Caption);
@@ -3413,7 +3282,7 @@ end;
 
 procedure TRxDBGrid.DoDrawInvalidTitle;
 var
-  {C, }i, j{, CB, CE}:integer;
+  i, j:integer;
   MLI:TMLCaptionItem;
   FTitle:TRxColumnTitle;
 begin
@@ -3425,7 +3294,6 @@ begin
       MLI:=FTitle.CaptionLine(j);
       if MLI.FInvalidDraw<0 then
       begin
-        //InvalidateRow(0);
         exit;
       end;
     end;
@@ -3478,13 +3346,7 @@ begin
         SB.Top:=Editor.Top;
         SB.Height:=Editor.Height;
         SB.Visible:=true;
-{
-        R.EditButtons[i].FButton.Parent:=Self;
-        R.EditButtons[i].FButton.Left:=W;
-        R.EditButtons[i].FButton.Top:=Editor.Top;
-        R.EditButtons[i].FButton.Height:=Editor.Height;
-        R.EditButtons[i].Visible:=true;
-}
+
         W:=W+R.EditButtons[i].Width;
       end;
     end;
@@ -3534,10 +3396,7 @@ begin
     FSaveOnDataSetScrolled(aDataSet, Distance);
 
   if rdgWordWrap in FOptionsRx then
-  begin
     UpdateRowsHeight;
-//    VisualChange;
-  end;
 end;
 
 procedure TRxDBGrid.DefaultDrawCellA(aCol, aRow: integer; aRect: TRect;
@@ -3577,7 +3436,7 @@ var
   FTitle: TRxColumnTitle;
   GrdCol: TRxColumn;
 
-  MLI{, MLINext, MLI1}: TMLCaptionItem;
+  MLI : TMLCaptionItem;
 
 begin
   if (dgIndicator in Options) and (aCol = 0) then
@@ -3739,14 +3598,6 @@ var
   S: String;
 
 begin
-{  if (dgIndicator in Options) and (aCol = 0) then
-  begin
-    Canvas.FillRect(aRect);
-    DrawCellGrid(aCol, aRow, aRect, aState);
-    exit;
-  end;
-
-  DrawCellGrid(aCol, aRow, aRect, aState);}
   if (dgIndicator in Options) and (aCol = 0) then
   begin
     if (TitleStyle = tsNative) then
@@ -3852,7 +3703,7 @@ begin
   if Assigned(OnDrawColumnCell) and not (CsDesigning in ComponentState) then
   begin
     DataCol := ColumnIndexFromGridColumn(aCol);
-    OnDrawColumnCell(Self, aRect, {aCol}DataCol, TColumn(ColumnFromGridColumn(aCol)), aState)
+    OnDrawColumnCell(Self, aRect, DataCol, TColumn(ColumnFromGridColumn(aCol)), aState)
   end
   else
   begin
@@ -3869,9 +3720,6 @@ begin
           begin
             if F.dataType <> ftBlob then
             begin
-  {          if Assigned(F.LookupDataSet) and (F.LookupResultField<>'') then
-              S := F.LookupDataSet.FieldByName(F.LookupResultField).DisplayText
-            else}
               S := F.DisplayText;
               if Assigned(C) and (C.KeyList.Count > 0) and (C.PickList.Count > 0) then
               begin
@@ -3932,7 +3780,6 @@ begin
     end
     else
       DefaultDrawCellData(aCol, aRow, aRect, aState);
-    //      inherited DrawCell(aCol, aRow, aRect, aState);
   end
   else
     inherited DrawCell(aCol, aRow, aRect, aState);
@@ -3954,14 +3801,6 @@ begin
 
   inherited LinkActive(Value);
   if not Value then
-{  begin
-    S := DataSource.DataSet.ClassName;
-    if RxDBGridSortEngineList.Find(S, Pos) then
-      FSortEngine := RxDBGridSortEngineList.Objects[Pos] as TRxDBGridSortEngine
-    else
-      FSortEngine := nil;
-  end
-  else}
   begin
     FSortEngine := nil;
     if SelectedRows.Count > 0 then
@@ -3970,14 +3809,7 @@ begin
 
   if not FSortingNow then
     CollumnSortListClear;
-{  begin
-    FSortField := nil;
-    FSortOrder := smNone;
-  end;
-
-  F_SortListField.Clear;
-}
-  if {not (csDestroying in ComponentState) and} not (csDesigning in ComponentState) then
+  if not (csDesigning in ComponentState) then
     SetDBHandlers(Value);
 end;
 
@@ -4081,7 +3913,6 @@ begin
 
     R.Top := TotalYOffs;
     R.Bottom := TotalYOffs + GetDefaultRowHeight;
-//    R.Bottom := TotalYOffs + DefaultRowHeight * FFooterOptions.RowCount;
 
     for j:=0 to FFooterOptions.RowCount-1 do
     begin
@@ -4089,8 +3920,6 @@ begin
       for i := GCache.VisibleGrid.Left to GCache.VisibleGrid.Right do
       begin
         ColRowToOffset(True, True, i, R.Left, R.Right);
-//        Canvas.FillRect(R);
-//        DrawCellGrid(i, 0, R, []);
 
         if FFooterOptions.FDrawFullLine then
         begin
@@ -4191,7 +4020,7 @@ end;
 procedure TRxDBGrid.DoTitleClick(ACol: longint; ACollumn: TRxColumn;
   Shift: TShiftState);
 begin
-  if FAutoSort {and (FSortEngine <> nil)} and (ACollumn.Field <> nil) then
+  if FAutoSort and (ACollumn.Field <> nil) then
   begin
     if ssCtrl in Shift then
     begin
@@ -4361,9 +4190,6 @@ begin
       begin
         if (dgColumnResize in Options) and (Button = mbRight) then
         begin
-//          Button := mbLeft;
-//          FSwapButtons := True;
-//          MouseCapture := True;
           Shift := Shift + [ssLeft];
           inherited MouseDown(Button, Shift, X, Y);
         end
@@ -4582,7 +4408,6 @@ procedure TRxDBGrid.KeyDown(var Key: word; Shift: TShiftState);
   end;
 
 begin
-  //DebugLn('RxDBGrid.KeyDown ',Name,' INIT Key= ',IntToStr(Key));
   if (Key in CCancelQuickSearchKeys) then
     if Length(QuickUTF8Search) > 0 then
       QuickUTF8Search := '';
@@ -4669,17 +4494,6 @@ begin
   inherited SetEditText(ACol, ARow, S);
 end;
 
-{
-try to fix set scrollbar style
-procedure TRxDBGrid.CheckNewCachedSizes(var AGCache: TGridDataCache);
-begin
-  if FFooterOptions.Active and (FooterOptions.RowCount > 0) then
-  begin
-      Dec(AGCache.ClientHeight, DefaultRowHeight * FooterOptions.RowCount);
-      Dec(AGCache.ScrollHeight, DefaultRowHeight * FooterOptions.RowCount);
-  end;
-end;
-}
 
 procedure TRxDBGrid.ColRowMoved(IsColumn: boolean; FromIndex, ToIndex: integer);
 begin
@@ -4693,14 +4507,6 @@ var
   P:TPoint;
 begin
   Inc(FInProcessCalc);
-{
-  if FFooterOptions.Active and (FFooterOptions.RowCount > 0) then
-  begin
-    P:=GCache.MaxClientXY;
-    with GCache do
-      MaxClientXY.Y:=MaxClientXY.Y - (GetDefaultRowHeight * FFooterOptions.RowCount + 2);
-  end;
-}
   DoClearInvalidTitle;
 
   inherited Paint;
@@ -4708,11 +4514,7 @@ begin
   DoDrawInvalidTitle;
 
   if FFooterOptions.Active and (FFooterOptions.RowCount > 0) then
-  begin
-{    with GCache do
-      MaxClientXY:=P;}
     DrawFooterRows;
-  end;
 
   Dec(FInProcessCalc);
 end;
@@ -5014,7 +4816,6 @@ var
   i, cnt: integer;
   APresent: boolean;
 
-//  DHL:THackDataLink;
   DHS:THackDataSet;
 
   SaveState:TDataSetState;
@@ -5028,7 +4829,6 @@ var
 
   FCList:TFPList;
   j: Integer;
-//  DHL: TComponentDataLink;
 begin
   if (not (FFooterOptions.Active and DatalinkActive)) or (Columns.Count = 0) or (gsAddingAutoColumns in GridStatus)  then
     Exit;
@@ -5086,8 +4886,6 @@ begin
     exit;
   end;
 
-  //DHL:=THackDataLink(Datalink);
-  //DHL:=Datalink;
   DHS:=THackDataSet(DataSource.DataSet);
 
   {$IFDEF NoAutomatedBookmark}
@@ -5103,8 +4901,6 @@ begin
   DHS.AfterScroll:=nil;
   DHS.BeforeScroll:=nil;
 
-//  SaveActiveRecord:=DHL.ActiveRecord;
-//  DHL.ActiveRecord:=0;
   SaveActiveRecord:=Datalink.ActiveRecord;
   Datalink.ActiveRecord:=0;
   SavePos:=DHS.RecNo;
@@ -5169,13 +4965,9 @@ begin
         RCol.FFooters[j].FTestValue:=RCol.FFooter.FTestValue / Cnt;
     end;
   end;
-{
-  if Min(DHL.RecordCount + SavePos - 1, DHS.RecNo) > 0 then
-    DHS.RecNo := Min(DHL.RecordCount + SavePos - 1, DHS.RecNo);
-}
+
   if Min(Datalink.RecordCount + SavePos - 1, DHS.RecNo) > 0 then
     DHS.RecNo := Min(Datalink.RecordCount + SavePos - 1, DHS.RecNo);
-  //K:=DHS.RecNo;
 
   while not DHS.BOF do
   begin
@@ -5187,7 +4979,6 @@ begin
   for i:=0 to Columns.Count-1 do
     TRxColumn(Columns[i]).Footer.FField:=nil;
 
-  //DHL.ActiveRecord:=SaveActiveRecord;
   Datalink.ActiveRecord:=SaveActiveRecord;
   DHS.RestoreState(SaveState);
 
@@ -5434,7 +5225,6 @@ begin
   begin
     C := TRxColumn(Columns[i]);
     C.Filter.ValueList.Clear;
-//    C.Filter.Value := '';
     C.Filter.CurrentValues.Clear;
     C.Filter.ItemIndex := -1;
     C.Filter.ValueList.Add(C.Filter.EmptyValue);
@@ -5702,14 +5492,7 @@ begin
   inherited DoEditorShow;
   DoSetColEdtBtn;
 end;
-{
-procedure TRxDBGrid.UpdateActive;
-begin
-  inherited UpdateActive;
-  if rdgWordWrap in FOptionsRx then
-    UpdateRowsHeight;
-end;
-}
+
 procedure TRxDBGrid.GetOnCreateLookup;
 begin
   if Assigned(F_CreateLookup) then
@@ -5856,7 +5639,7 @@ begin
   end;
 end;
 
-//!!!
+
 constructor TRxDBGrid.Create(AOwner: TComponent);
 begin
   FFooterOptions:=TRxDBGridFooterOptions.Create(Self);
@@ -6081,7 +5864,6 @@ begin
   FFilter.Assign(AValue);
 end;
 
-(* function TRxColumn.GetFooter: TRxColumnFooter; *)
 function TRxColumn.GetFooter: TRxColumnFooterItem;
 begin
   Result := FFooter;
@@ -6097,7 +5879,6 @@ begin
   Result:=FConstraints;
 end;
 
-(* procedure TRxColumn.SetFooter(const AValue: TRxColumnFooter); *)
 procedure TRxColumn.SetFooter(const AValue: TRxColumnFooterItem);
 begin
   FFooter.Assign(AValue);
@@ -6163,7 +5944,6 @@ begin
   inherited Create(ACollection);
   FNotInKeyListIndex := -1;
   FConstraints:=TRxDBGridCollumnConstraints.Create(Self);
-(*  FFooter := TRxColumnFooter.Create(Self); *)
   FFooter := TRxColumnFooterItem.Create(nil);
   FFooter.FOwner:=Self;
   FFooter.FillDefaultFont;
@@ -6325,9 +6105,7 @@ begin
   FGrid := Grid;
   FCol := Col;
   Visible := True;
-  //  Text:=TRxColumn(TRxDBGrid(Grid).SelectedColumn).Filter.Value;
   SetFocus;
-  //  DroppedDown := true;
 end;
 
 
@@ -6339,7 +6117,6 @@ begin
     Result := FValueList.IndexOf(CurrentValues[0])
   else
     Result := -1;
-//  Result := FValueList.IndexOf(FValue);
 end;
 
 procedure TRxColumnFilter.SetColor(const AValue: TColor);
@@ -6360,10 +6137,6 @@ procedure TRxColumnFilter.SetItemIndex(const AValue: integer);
 begin
   if (AValue >= -1) and (AValue < FValueList.Count) then
   begin
-{    if AValue = -1 then
-      FValue := ''
-    else
-      FValue := FValueList[AValue];}
     CurrentValues.Clear;
     if AValue > -1 then
       CurrentValues.Add(FValueList[AValue]);
@@ -6384,11 +6157,8 @@ begin
   FCurrentValues.Sorted:=true;
 
   FColor := clWhite;
-{  FIsNull:=false;
-  FIsAll:=true;}
   State:=rxfsAll;
   Style:=rxfstSimple;
-//  FTopRecord:=10;
 
   FEmptyFont.Style := [fsItalic];
   FEmptyValue := sRxDBGridEmptiFilter;
@@ -6562,12 +6332,6 @@ initialization
   RegisterPropertyToSkip( TRxColumnFilter, 'IsNull', 'depricated property', '');
   RegisterPropertyToSkip( TRxColumnFilter, 'IsAll', 'depricated property', '');
   RegisterPropertyToSkip( TRxColumnFilter, 'Value', 'depricated property', '');
-
-  {  FRxColumn.Filter.IsNull:=true;
-    FRxColumn.Filter.IsAll:=false;}
-
-  //{$I rxdbgrid.lrs}
-  //  {$I rx_markerdown.lrs}
 
   RxDBGridSortEngineList := TStringList.Create;
   RxDBGridSortEngineList.Sorted := True;
