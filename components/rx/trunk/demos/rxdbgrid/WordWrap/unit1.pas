@@ -5,7 +5,7 @@ unit Unit1;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, fbcustomdataset, uib, rxdbgrid, rxmemds, Forms,
+  Classes, SysUtils, FileUtil, rxdbgrid, rxmemds, Forms,
   Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, db;
 
 type
@@ -24,10 +24,10 @@ type
     RxMemoryData1NAME: TStringField;
     procedure CheckBox1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure RxDBGrid1CalcRowHeight(Sender: TRxDBGrid; var ARowHegth: integer);
   private
     procedure FillTestDatabase;
   public
-
   end;
 
 var
@@ -52,6 +52,13 @@ begin
 
   RxMemoryData1.Open;
   FillTestDatabase;
+end;
+
+procedure TForm1.RxDBGrid1CalcRowHeight(Sender: TRxDBGrid;
+  var ARowHegth: integer);
+begin
+  if RxMemoryData1ID.AsInteger mod 10 = 0 then
+    ARowHegth:=ARowHegth + 1;
 end;
 
 procedure TForm1.FillTestDatabase;

@@ -72,6 +72,8 @@ type
       Cell: TGridCoord; Column: TRxColumn; var HintStr: string;
       var Processed: boolean) of object;
 
+  TRxDBGridCalcRowHeight = procedure(Sender: TRxDBGrid;  var ARowHegth:integer) of object;
+
   //Freeman35 added
   TOnRxCalcFooterValues = procedure(Sender: TObject; Column: TRxColumn; var AValue : Variant) of object;
   TOnRxColumnFooterDraw = procedure(Sender: TObject; ABrush: TBrush; AFont : TFont;
@@ -614,6 +616,7 @@ type
     FColumnDefValues: TRxDBGridColumnDefValues;
 
     FFooterOptions: TRxDBGridFooterOptions;
+    FOnCalcRowHeight: TRxDBGridCalcRowHeight;
     FSearchOptions: TRxDBGridSearchOptions;
     FSortColumns: TRxDbGridColumnsSortList;
     FSortingNow:Boolean;
@@ -805,7 +808,6 @@ type
     procedure DoEditorShow; override;
 
     property Editor;
-    //procedure UpdateActive; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -861,6 +863,7 @@ type
     property KeyStrokes: TRxDBGridKeyStrokes read FKeyStrokes write SetKeyStrokes;
     property FooterOptions:TRxDBGridFooterOptions read FFooterOptions write SetFooterOptions;
     property SearchOptions:TRxDBGridSearchOptions read FSearchOptions write SetSearchOptions;
+    property OnCalcRowHeight:TRxDBGridCalcRowHeight read FOnCalcRowHeight write FOnCalcRowHeight;
 
     //storage
     property PropertyStorage: TCustomPropertyStorage read GetPropertyStorage write SetPropertyStorage;
@@ -3336,7 +3339,7 @@ end;
 
 function TRxDBGrid.UpdateRowsHeight: integer;
 var
-  i, J, H, H1, H2{, YT, YB}:integer;
+  i, J, H, H1, H2:integer;
   F:TField;
   S:string;
   CurActiveRecord: Integer;
@@ -3349,7 +3352,7 @@ begin
 
   CurActiveRecord:=DataLink.ActiveRecord;
   H2:=0;
-//  YB:=-1;
+
   for i:=GCache.VisibleGrid.Top to GCache.VisibleGrid.Bottom do
   begin
     DataLink.ActiveRecord:=i - FixedRows;
@@ -3376,22 +3379,14 @@ begin
 
     if i<RowCount then
     begin
+      if Assigned(FOnCalcRowHeight) then
+        FOnCalcRowHeight(Self, H);
       RowHeights[i] := GetDefaultRowHeight * H;
       H2:=H2 + RowHeights[i];
       if H2<=ClientHeight  then
         Inc(Result);
     end;
-
-{    if DataLink.ActiveRecord = CurActiveRecord then
-      ColRowToOffSet(False,True, I, YT, YB);}
   end;
-(*
-  if (YB > -1) and (YB > GCache.VisibleGrid.BottomRight.Y) then
-  begin
-{    Datalink.mo;
-    GCache.VisibleGrid.Top:=GCache.VisibleGrid.Top + 1;}
-  end;
-*)
   DataLink.ActiveRecord:=CurActiveRecord;
 end;
 
