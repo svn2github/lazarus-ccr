@@ -670,6 +670,8 @@ type
     FOnSortChanged: TNotifyEvent;
     FOnDataHintShow:TRxDBGridDataHintShowEvent;
 
+    FSaveOnDataSetScrolled: TDataSetScrolledEvent;
+
     procedure DoCreateJMenu;
     function GetColumns: TRxDbGridColumns;
     function GetFooterColor: TColor;
@@ -727,6 +729,8 @@ type
     procedure DoSetColEdtBtn;
     procedure AddTools(ATools:TRxDBGridAbstractTools);
     procedure RemoveTools(ATools:TRxDBGridAbstractTools);
+
+    procedure OnDataSetScrolled(aDataSet:TDataSet; Distance: Integer);
   protected
     FRxDbGridLookupComboEditor: TCustomControl;
     FRxDbGridDateEditor: TWinControl;
@@ -777,7 +781,6 @@ type
     procedure FFilterColDlgButtonOnClick(Sender: TObject);
 
     procedure InternalOptimizeColumnsWidth(AColList: TList);
-    //function IsDefaultRowHeightStored: boolean;
     procedure VisualChange; override;
     procedure EditorWidthChanged(aCol,aWidth: Integer); override;
 
@@ -802,6 +805,7 @@ type
     procedure DoEditorShow; override;
 
     property Editor;
+    //procedure UpdateActive; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -893,7 +897,7 @@ type
     property Constraints;
     property DataSource;
     property DefaultDrawing;
-    property DefaultRowHeight; // stored IsDefaultRowHeightStored;
+    property DefaultRowHeight;
 
     property DefaultColWidth;
 
@@ -912,7 +916,7 @@ type
     property Options;
     property OptionsExtra;
     property ParentBiDiMode;
-    property ParentColor;
+    property ParentColor default false;
     //property ParentCtl3D;
     property ParentFont;
     property ParentShowHint;
@@ -934,6 +938,7 @@ type
     property OnColExit;
     property OnColumnMoved;
     property OnColumnSized;
+    property OnContextPopup;
     property OnDragDrop;
     property OnDragOver;
     property OnDrawColumnCell;
@@ -945,6 +950,7 @@ type
     property OnEnter;
     property OnExit;
     property OnFieldEditMask;
+    property OnGetCellHint;
     property OnKeyDown;
     property OnKeyPress;
     property OnKeyUp;
@@ -3330,12 +3336,12 @@ end;
 
 function TRxDBGrid.UpdateRowsHeight: integer;
 var
-  i, J, H, H1, H2:integer;
-  //B:boolean;
+  i, J, H, H1, H2{, YT, YB}:integer;
   F:TField;
   S:string;
   CurActiveRecord: Integer;
   R:TRxColumn;
+
 begin
   Result:=0;
   if not (Assigned(DataLink) and DataLink.Active) then
@@ -3343,6 +3349,7 @@ begin
 
   CurActiveRecord:=DataLink.ActiveRecord;
   H2:=0;
+//  YB:=-1;
   for i:=GCache.VisibleGrid.Top to GCache.VisibleGrid.Bottom do
   begin
     DataLink.ActiveRecord:=i - FixedRows;
@@ -3374,7 +3381,17 @@ begin
       if H2<=ClientHeight  then
         Inc(Result);
     end;
+
+{    if DataLink.ActiveRecord = CurActiveRecord then
+      ColRowToOffSet(False,True, I, YT, YB);}
   end;
+(*
+  if (YB > -1) and (YB > GCache.VisibleGrid.BottomRight.Y) then
+  begin
+{    Datalink.mo;
+    GCache.VisibleGrid.Top:=GCache.VisibleGrid.Top + 1;}
+  end;
+*)
   DataLink.ActiveRecord:=CurActiveRecord;
 end;
 
@@ -3514,6 +3531,18 @@ begin
 
   if Assigned(FToolsList) then
     FToolsList.Remove(ATools);
+end;
+
+procedure TRxDBGrid.OnDataSetScrolled(aDataSet: TDataSet; Distance: Integer);
+begin
+  if Assigned(FSaveOnDataSetScrolled) then
+    FSaveOnDataSetScrolled(aDataSet, Distance);
+
+  if rdgWordWrap in FOptionsRx then
+  begin
+    UpdateRowsHeight;
+//    VisualChange;
+  end;
 end;
 
 procedure TRxDBGrid.DefaultDrawCellA(aCol, aRow: integer; aRect: TRect;
@@ -4562,45 +4591,7 @@ begin
   if (Key in CCancelQuickSearchKeys) then
     if Length(QuickUTF8Search) > 0 then
       QuickUTF8Search := '';
-(*  case Key of
-{    VK_DELETE: if not (aoDelete in FAllowedOperations) then
-        exit;
-    VK_INSERT: if not (aoInsert in FAllowedOperations) then
-        exit;
-    VK_RETURN: if (aoAppend in FAllowedOperations) and (EditorMode) and
-        (Col = ColCount - 1) and (Row = RowCount - 1) then
-        if DataSource.DataSet.State = dsInsert then
-        begin
-          DataSource.DataSet.Post;
-          Col := 0;
-          Key := VK_DOWN;
-          inherited KeyDown(Key, Shift);
-          exit;
-        end
-        else
-        begin
-          Col := 0;
-          Key := VK_DOWN;
-          inherited KeyDown(Key, Shift);
-          exit;
-        end;
 
-    VK_DOWN:
-      if not (aoAppend in FAllowedOperations) then
-      begin
-        FTmpReadOnly := ReadOnly;
-        ReadOnly := True;
-        try
-          inherited KeyDown(Key, Shift);
-        finally
-          ReadOnly := FTmpReadOnly;
-        end;
-        exit;
-      end }
-{      else
-        UpdateRowsHeight;
-    VK_UP:UpdateRowsHeight}
-  end; *)
   inherited KeyDown(Key, Shift);
   if Key <> 0 then
   begin
@@ -4707,16 +4698,14 @@ var
   P:TPoint;
 begin
   Inc(FInProcessCalc);
-  if rdgWordWrap in FOptionsRx then
-    UpdateRowsHeight;
-
+{
   if FFooterOptions.Active and (FFooterOptions.RowCount > 0) then
   begin
     P:=GCache.MaxClientXY;
     with GCache do
       MaxClientXY.Y:=MaxClientXY.Y - (GetDefaultRowHeight * FFooterOptions.RowCount + 2);
   end;
-
+}
   DoClearInvalidTitle;
 
   inherited Paint;
@@ -4725,10 +4714,11 @@ begin
 
   if FFooterOptions.Active and (FFooterOptions.RowCount > 0) then
   begin
-    with GCache do
-      MaxClientXY:=P;
+{    with GCache do
+      MaxClientXY:=P;}
     DrawFooterRows;
   end;
+
   Dec(FInProcessCalc);
 end;
 
@@ -4737,19 +4727,33 @@ begin
   inherited MoveSelection;
   if Assigned(FFooterOptions) and FFooterOptions.Active and (FFooterOptions.RowCount > 0) then
     DrawFooterRows;
-//  UpdateRowsHeight;
 end;
 
 function TRxDBGrid.GetBufferCount: integer;
 var
-  H:integer;
+  H, H1:integer;
+  i: LongInt;
 begin
   if GetDefaultRowHeight > 0 then
   begin
     H:=ClientHeight - GCache.FixedHeight;
     if FFooterOptions.Active then
       H:=H - GetDefaultRowHeight * FFooterOptions.RowCount;
-    Result := H div GetDefaultRowHeight;
+
+    if rdgWordWrap in FOptionsRx then
+    begin
+      H1:=0;
+      Result:=1;
+      for i:=GCache.VisibleGrid.Top to GCache.VisibleGrid.Bottom do
+      begin
+        H1:=H1 + RowHeights[i];
+        if H1>H then Break;
+        Inc(Result);
+      end;
+      if Result = 0 then Result:=1;
+    end
+    else
+      Result := H div GetDefaultRowHeight;
   end
   else
     Result := 1;
@@ -4932,15 +4936,23 @@ begin
 
   FreeMem(WA, SizeOf(integer) * AColList.Count);
 end;
-(*
-function TRxDBGrid.IsDefaultRowHeightStored: boolean;
-begin
-  Result := GetDefaultRowHeight = Canvas.TextHeight('Wg');
-end;
-*)
+
 procedure TRxDBGrid.VisualChange;
+var
+  P: TPoint;
 begin
   CalcTitle;
+
+  if FFooterOptions.Active and (FFooterOptions.RowCount > 0) then
+  begin
+    P:=GCache.MaxClientXY;
+    with GCache do
+      MaxClientXY.Y:=MaxClientXY.Y - (GetDefaultRowHeight * FFooterOptions.RowCount + 2);
+  end;
+
+  if rdgWordWrap in FOptionsRx then
+    UpdateRowsHeight;
+
   inherited VisualChange;
 end;
 
@@ -5683,7 +5695,6 @@ begin
   if Assigned(Editor) and Assigned(R) then
   for i:=0 to R.EditButtons.Count-1 do
   begin
-//    R.EditButtons[i].Visible:=false;
     if R.EditButtons[i].Style = ebsUpDownRx then
       R.EditButtons[i].FSpinBtn.Visible:=false
     else
@@ -5696,7 +5707,14 @@ begin
   inherited DoEditorShow;
   DoSetColEdtBtn;
 end;
-
+{
+procedure TRxDBGrid.UpdateActive;
+begin
+  inherited UpdateActive;
+  if rdgWordWrap in FOptionsRx then
+    UpdateRowsHeight;
+end;
+}
 procedure TRxDBGrid.GetOnCreateLookup;
 begin
   if Assigned(F_CreateLookup) then
@@ -5851,6 +5869,9 @@ begin
 {$IFDEF RXDBGRID_OPTIONS_WO_CANCEL_ON_EXIT}
   Options := Options - [dgCancelOnExit];
 {$ENDIF}
+  FSaveOnDataSetScrolled:=Datalink.OnDataSetScrolled;
+  Datalink.OnDataSetScrolled:=@OnDataSetScrolled;
+
   FToolsList:=TFPList.Create;
   FColumnDefValues:=TRxDBGridColumnDefValues.Create(Self);
   FSearchOptions:=TRxDBGridSearchOptions.Create(Self);
