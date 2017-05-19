@@ -70,7 +70,6 @@ type
     lbElements: TListBox;
     lbFormats: TListBox;
     OpenDialog1: TOpenDialog;
-    PrintPreviewPanel: TPanel;
     ButtonPanel: TPanel;
     PrintPreview: TVpPrintPreview;
     SaveDialog1: TSaveDialog;
@@ -178,7 +177,7 @@ procedure TfrmPrnFormat.FormShow(Sender: TObject);
 begin
   PositionControls;
 
-  PrintPreview.Parent := PrintPreviewPanel;
+  PrintPreview.Parent := Self; //PrintPreviewPanel;
 
   if ControlLink.Printer.PrintFormats.Count > 0 then begin
     UpdateFormats;
@@ -674,141 +673,37 @@ end;
 procedure TfrmPrnFormat.PositionControls;
 var
   w: Integer;
-  HDist: Integer = 8;
-  VDist: Integer = 8;
-  hBtn: Integer;
 begin
-  HDist := ScaleX(HDist, DesignTimeDPI);
-  VDist := ScaleY(VDist, DesignTimeDPI);
-  hBtn := ScaleY(btnOK.Height, DesignTimeDPI);
+  btnNewFormat.AutoSize := true;
+  btnEditFormat.AutoSize := true;
+  btnDeleteFormat.AutoSize := true;
+  btnNewElement.AutoSize := true;
+  btnEditElement.AutoSize := true;
+  btnDeleteElement.AutoSize := true;
 
-  btnNewFormat.Height := hBtn;
-  btnEditFormat.Height := hBtn;
-  btnDeleteFormat.Height := hBtn;
-  btnNewElement.Height := hBtn;
-  btnEditElement.Height := hbtn;
-  btnDeleteElement.Height := hBtn;
-  btnMoveElementUp.Height := hBtn;   btnMoveElementUp.Width := hBtn;
-  btnMoveElementDn.Height := hBtn;   btnMoveElementDn.Width := hBtn;
-  btnNewFile.Height := hBtn;
-  btnLoadFile.Height := hBtn;
-  btnSaveFile.Height := hBtn;
-  btnOK.Height := hBtn;
+  w := MaxValue([
+    btnNewFormat.Width, btnEditFormat.Width, btnDeleteFormat.Width,
+    btnNewElement.Width, btnEditElement.Width, btnDeleteElement.Width,
+    LblPrintOrder.Width
+  ]);
 
-  LblFormats.Top := VDist div 2;
-  lbFormats.Top := BottomOf(LblFormats) + VDist div 2;
-  lbFormats.Height := 5*hBtn + lblPrintOrder.Height + 3*VDist; //ScaleY(lbFormats.Height, DesignTimeDPI);
-  LblElements.Top := BottomOf(lbFormats) + VDist;
-  lbElements.Top := Bottomof(LblElements) + VDist div 2;
-  lbElements.Height := lbFormats.Height;
+  btnNewFormat.AutoSize := false;
+  btnEditFormat.AutoSize := false;
+  btnDeleteFormat.AutoSize := false;
+  btnNewElement.AutoSize := false;
+  btnEditElement.AutoSize := false;
+  btnDeleteElement.AutoSize := false;
 
-  btnNewFormat.Top := lbFormats.Top;
-  btnEditFormat.Top := BottomOf(btnNewFormat) + VDist div 2;
-  btnDeleteFormat.Top := BottomOf(btnEditFormat) + VDist div 2;
-
-  btnNewElement.Top := lbElements.Top;
-  btnEditElement.Top := BottomOf(btnNewElement) + VDist div 2;
-  btnDeleteElement.Top := BottomOf(btnEditElement) + VDist div 2;
-
-  w := MaxValue([GetButtonWidth(btnNewFile), GetButtonWidth(btnLoadFile), GetButtonWidth(btnSaveFile)]);
-  btnNewFile.Width := w;
-  btnLoadFile.Width := w;
-  btnSaveFile.Width := w;
-  btnLoadFile.Left := RightOf(btnNewFile) + HDist;
-  btnSaveFile.Left := RightOf(btnLoadFile) + HDist;
-
-  w := MaxValue([GetButtonWidth(btnNewFormat), GetButtonWidth(btnEditFormat), GetButtonWidth(btnDeleteFormat)]);
   btnNewFormat.Width := w;
   btnEditFormat.Width := w;
   btnDeleteFormat.Width := w;
   btnNewElement.Width := w;
   btnEditElement.Width := w;
   btnDeleteElement.Width := w;
-  w := Max(w, GetLabelWidth(LblPrintOrder));
-  btnNewFormat.Left := RightOf(lbFormats) + HDist + (w - btnNewFormat.Width) div 2;
-  btnEditFormat.Left := btnNewFormat.Left;
-  btnDeleteFormat.Left := btnNewFormat.Left;
-  btnNewElement.Left := btnNewFormat.Left;
-  btnEditElement.Left := btnNewFormat.Left;
-  btnDeleteElement.Left := btnNewFormat.Left;
 
-  LblPrintOrder.Left := BtnNewFormat.Left + (BtnNewFormat.Width - GetLabelWidth(LblPrintOrder)) div 2;
-  btnMoveElementUp.Left := BtnNewFormat.Left + (BtnNewFormat.Width - btnMoveElementUp.Width) div 2;
-  btnMoveElementDn.Left := btnMoveElementUp.Left;
-  LblPrintOrder.Top := BottomOf(BtnDeleteElement) + VDist;
-  btnMoveElementUp.Top := BottomOf(LblPrintOrder) + VDist div 2;
-  btnMoveElementDn.Top := BottomOf(BtnMoveElementUp) + VDist div 2;
-
-  btnOK.Top := VDist;
-  btnNewFile.Top := VDist;
-  btnSaveFile.Top := VDist;
-  btnLoadFile.Top := VDist;
-
-  ButtonPanel.ClientHeight := VDist + hBtn + VDist;
-  ClientHeight := BottomOf(lbElements) + ButtonPanel.Height;
-
-  Bevel1.Width := lbFormats.Left;
-
-  PrintPreview.Top := lbFormats.Top;
-  LblPrintPreview.Top := LblFormats.Top;
-  PrintPreview.Height := PrintPreviewPanel.ClientHeight - PrintPreview.Top;
-  PrintPreviewPanel.Width := Round(PrintPreview.Height * 210 / 297);  // size ratio of A4 paper
-  PrintPreview.Width := PrintPreviewPanel.ClientWidth;
-  ClientWidth := Max(RightOf(btnNewFormat), RightOf(LblPrintOrder) + HDist) + PrintPreviewPanel.Width + Bevel1.Width;
-  PrintPreviewPanel.Left := 0;  // make sure that spacer is at right
-
-  Position := poDefault;
-  Position := poScreenCenter;
+  if LblPrintOrder.Top < BottomOf(btnDeleteElement) + 16 then
+    Height := Height + BottomOf(btnDeleteElement) + 16 - LblPrintOrder.Top;
 end;
-{
-
-
-
-  w := 0;
-  cnv := TControlCanvas.Create;
-  try
-    cnv.Control := btnNewFile;
-    cnv.Font.Assign(btnNewFile.Font);
-    w := Max(w, cnv.TextWidth(RSNewFileBtn));
-    w := Max(w, cnv.TextWidth(RSLoadFileBtn));
-    w := Max(w, cnv.TextWidth(RSSaveFileBtn));
-    btnNewFile.Width := w + 16;
-    btnLoadFile.Left := btnNewFile.Left + btnNewFile.Width + 8;
-    btnLoadFile.Width := btnNewFile.Width;
-    btnSaveFile.Left := btnLoadFile.Left + btnLoadFile.Width + 8;
-    btnSaveFile.Width := btnNewFile.Width;
-
-    w := 0;
-    w := Max(w, cnv.TextWidth(RSNewBtn) + 8);
-    w := Max(w, cnv.TextWidth(RSEditBtn) + 8);
-    w := Max(w, cnv.TextWidth(RSDeleteBtn) + 8);
-    w := Max(w, GetLabelWidth(LblPrintOrder));
-
-    BtnNewFormat.Left := lbFormats.Left + lbFormats.Width + 16;
-    BtnEditFormat.Left := BtnNewFormat.Left;
-    BtnDeleteFormat.Left := BtnNewFormat.Left;
-    BtnNewElement.Left := BtnNewFormat.Left;
-    BtnEditElement.Left := BtnNewFormat.Left;
-    BtnDeleteElement.Left := BtnNewFormat.Left;
-    BtnNewFormat.Width := w;
-    BtnEditFormat.Width := w;
-    BtnDeleteFormat.Width := w;
-    BtnNewElement.Width := w;
-    BtnEditElement.Width := w;
-    BtnDeleteElement.Width := w;
-
-    LblPrintOrder.Left := BtnNewFormat.Left + (BtnNewFormat.Width - GetLabelWidth(LblPrintOrder)) div 2;
-    btnMoveElementUp.Left := BtnNewFormat.Left + (BtnNewFormat.Width - btnMoveElementUp.Width) div 2;
-    btnMoveElementDn.Left := btnMoveElementUp.Left;
-
-    PrintPreviewPanel.Left := BtnNewFormat.Left + BtnNewFormat.Width + 16;
-
-    ClientWidth := PrintPreviewPanel.Left + PrintPreviewPanel.Width + 8;
-  finally
-    cnv.Free;
-  end;
-end;
-      }
 
 procedure TfrmPrnFormat.SetDrawingStyle(const v: TVpDrawingStyle);
 begin
