@@ -36,7 +36,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  LCLProc, LCLType, LCLIntf, LResources,
+  LCLProc, LCLType, LCLIntf, LResources, LCLVersion,
   {$ELSE}
   Windows, Messages,
   {$ENDIF}
@@ -131,6 +131,11 @@ begin
   Panel4.Align := alLeft;
   ShellTreeView.Align := alClient;
   Label4.Align := alClient;
+{$IFDEF LCL}
+  {$IF lcl_fullversion >= 1080000}
+  ShellTreeView.Mask := '*.wav';
+  {$ENDIF}
+{$ENDIF}
 end;
 
 procedure TFrmSoundDialog.FormShow(Sender: TObject);

@@ -140,7 +140,6 @@ object frmPrnFormat: TfrmPrnFormat
     Columns = 1
     ItemHeight = 0
     OnClick = lbFormatsClick
-    Options = [lboDrawFocusRect]
     Sorted = True
     TabOrder = 0
   end
@@ -162,7 +161,6 @@ object frmPrnFormat: TfrmPrnFormat
     OnDragDrop = lbElementsDragDrop
     OnDragOver = lbElementsDragOver
     OnMouseDown = lbElementsMouseDown
-    Options = [lboDrawFocusRect]
     TabOrder = 4
   end
   object btnEditFormat: TButton
