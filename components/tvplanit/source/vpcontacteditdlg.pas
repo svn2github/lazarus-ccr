@@ -40,7 +40,8 @@ uses
   {$ENDIF}
   SysUtils,
   {$IFDEF VERSION6} Variants, {$ENDIF}
-  Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls, StdCtrls, ComCtrls, EditBtn,
+  Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls, StdCtrls, ComCtrls,
+  EditBtn,
   VpData, VpException, VpMisc, VpBase, VpSR, VpDlg, VpBaseDS;
 
 type
@@ -502,8 +503,6 @@ begin
 end;
 
 procedure TContactEditForm.ResizeControls;
-const
-  ComboArrowWidth  = 32;
 type
   TLabelArray = array of TLabel;
   TComboboxArray = array of TCombobox;
@@ -515,12 +514,12 @@ var
   largestLabelWidth: Integer;
   i: Integer;
   OldFont: TFont;
-  FieldTop: Integer;
-  delta: Integer;
   hdist: Integer = 4;    // Horizontal distance between label and edit/combo
   vDist: Integer = 4;    // Vertical distance between edits
   hBorder: Integer = 8;  // Horizontal distance between container border and label
   vBorder: Integer = 8;  // Vertical distance between container border and 1st control
+  w,h: Integer;
+  comboArrowWidth: Integer;
 begin
   {----------------------------------------------------------------------------}
   { Preparations                                                               }
@@ -530,55 +529,47 @@ begin
   hBorder := ScaleX(hBorder, DesignTimeDPI);
   vBorder := ScaleY(vBorder, DesignTimeDPI);
   edBirthdate.ButtonWidth := FEditHeight;
+  comboArrowWidth := GetSystemMetrics(SM_CXVSCROLL);
+
+  for i := 0 to ComponentCount-1 do
+    if Components[i] is TControl then
+      with TControl(Components[i]) do begin
+        if BorderSpacing.Left <> 0 then BorderSpacing.Left := hdist;
+        if BorderSpacing.Right <> 0 then BorderSpacing.Right := hdist;
+        if BorderSpacing.Top <> 0 then BorderSpacing.Top := vdist;
+        if BorderSpacing.Bottom <> 0 then BorderSpacing.Bottom := vdist;
+      end;
+
+  {----------------------------------------------------------------------------}
+  { Button panel                                                               }
+  {----------------------------------------------------------------------------}
+  // The cancel button is autosized
+  OKBtn.Width := CancelBtn.Width;
+ {$IFDEF MSWINDOWS}   // button order: OK - Cancel
+  CancelBtn.AnchorSideRight.Control := pnlBottom;
+  CancelBtn.AnchorSideRight.Side := asrRight;
+  OKBtn.AnchorSideRight.Control := CancelBtn;
+  OKBtn.AnchorSideRight.Side := asrLeft;
+  OKBtn.TabOrder := 0;
+  CancelBtn.TabOrder := 1;
+ {$ELSE}              // button order: Cancel - OK
+  OKBtn.AnchorSideRight.Control := pnlBottom;
+  OKBtn.AnchorSideRight.Side := asrRight;
+  CancelBtn.AnchorSideRight.Control := OKBtn;
+  CancelBtn.AnchorSideRight.Side := asrLeft;
+  CancelBtn.TabOrder := 0;
+  OKBtn.TabOrder := 1;
+ {$ENDIF}
 
   {----------------------------------------------------------------------------}
   { Page "Base data"                                                           }
   {----------------------------------------------------------------------------}
-  SetLength(Labels, 5);
-  Labels[0] := lblLastName;
-  Labels[1] := lblFirstName;
-  Labels[2] := lblTitle;
-  Labels[3] := lblCategory;
-  Labels[4] := lblBirthdate;
-
-  largestLabelWidth := 0;
-  for i := Low(Labels) to High(Labels) do
-    largestLabelWidth := Max(largestLabelWidth, GetLabelWidth(Labels[i]));
-
-  // Determine width of label based upon dpi of screen
-  for i := Low(Labels) to High(Labels) do begin
-    Labels[i].FocusControl.Left := HBorder + largestLabelWidth + hDist;
-    Labels[i].Left := Labels[i].FocusControl.Left - hDist - GetLabelWidth(Labels[i]);
-  end;
-
-  // Set edit and combo widths
-  edLastName.Width := edLastName.Parent.ClientWidth - hBorder - edLastName.Left;
-  edFirstname.Width := edLastName.Width;
   edBirthdate.Width := edTitle.Width;
   cbCategory.Width := edTitle.Width;
-
-  // Vertically arrange the fields. }
-  delta := (Labels[0].FocusControl.Height - labels[0].Height) div 2;
-  FieldTop := vBorder;
-  for i := Low(Labels) to High(Labels) do
-    if Labels[i].Visible then begin
-      Labels[i].FocusControl.Top := FieldTop;
-      Labels[i].Top := FieldTop + delta;
-      inc(FieldTop, FEditHeight + VDist);
-    end;
 
   {----------------------------------------------------------------------------}
   { Page "Contact"                                                             }
   {----------------------------------------------------------------------------}
-  gbPhone.Left := hBorder;
-  gbPhone.Width := gbPhone.Parent.ClientWidth - 2*hBorder;
-
-  gbEMail.Left := hBorder;
-  gbEMail.Width := gbPhone.Width;
-
-  gbWebsites.Left := hBorder;
-  gbWebsites.Width := gbPhone.Width;
-
   SetLength(Comboboxes, 10);
   Comboboxes[0] := cbPhone1;
   Comboboxes[1] := cbPhone2;
@@ -590,19 +581,6 @@ begin
   Comboboxes[7] := cbEMail3;
   Comboboxes[8] := cbWebsite1;
   Comboboxes[9] := cbWebsite1;
-
-  SetLength(Edits, 10);
-  Edits[0] := edPhone1;
-  Edits[1] := edPhone2;
-  Edits[2] := edPhone3;
-  Edits[3] := edPhone4;
-  Edits[4] := edPhone5;
-  Edits[5] := edEMail1;
-  Edits[6] := edEMail2;
-  Edits[7] := edEMail3;
-  Edits[8] := edWebsite1;
-  Edits[9] := edWebsite2;
-
   largestLabelWidth := 0;
   OldFont := TFont.Create;
   try
@@ -626,53 +604,6 @@ begin
     Comboboxes[i].Width := largestLabelWidth;
   end;
 
-  for i:= Low(Edits) to High(Edits) do begin
-    Edits[i].Left := cbPhone1.Left + cbPhone1.Width + hDist;
-    Edits[i].Width := Edits[i].Parent.ClientWidth - Edits[i].Left - HBorder;
-  end;
-
-  gbPhone.AutoSize := true;
-  gbEMail.AutoSize := true;
-  gbWebsites.AutoSize := true;
-
-
-  {----------------------------------------------------------------------------}
-  { Page "Addresses"                                                             }
-  {----------------------------------------------------------------------------}
-  { Note: The resizing algorithm is dependent upon the labels having their
-    FocusControl property set to the corresponding edit field or combobox. }
-
-  SetLength(Labels, 17);
-  Labels[0] := lblCompany;
-  Labels[1] := lblDepartment;
-  Labels[2] := lblPosition;
-  Labels[3] := lblAddressW;
-  Labels[4] := lblCityW;
-  Labels[5] := lblStateW;
-  Labels[6] := lblStateComboW;
-  Labels[7] := lblZipCodeW;
-  Labels[8] := lblCountryW;
-  Labels[9] := lblCountryComboW;
-  Labels[10] := lblAddressH;
-  Labels[11] := lblCityH;
-  Labels[12] := lblStateH;
-  Labels[13] := lblStateComboH;
-  Labels[14] := lblZipCodeH;
-  Labels[15] := lblCountryH;
-  Labels[16] := lblCountryComboH;
-
-  largestLabelWidth := 0;
-  for i := Low(Labels) to High(Labels) do begin
-    largestLabelWidth := Max(largestLabelWidth, GetLabelWidth(Labels[i]));
-    Labels[i].FocusControl.Height := FEditHeight;
-  end;
-
-  edCompany.Left := HBorder + largestLabelWidth + hDist;
-  edCompany.Width := edCompany.Parent.ClientWidth - hBorder - edCompany.Left;
-
-  edAddressH.Left := edCompany.Left;
-  edAddressH.Width := edCompany.Width;
-
   {----------------------------------------------------------------------------}
   { Page "User-defined"                                                        }
   {----------------------------------------------------------------------------}
@@ -686,45 +617,12 @@ begin
   for i := Low(Labels) to High(Labels) do
     largestLabelWidth := Max(largestLabelWidth, GetLabelWidth(Labels[i]));
 
-  FieldTop := vBorder;
   edCustom1.Left := hBorder + largestLabelWidth + hDist;
-  edCustom1.Width := edCustom1.Parent.ClientWidth - hBorder - edCustom1.Left;
-  for i := Low(Labels) to High(Labels) do begin
-    Labels[i].FocusControl.Top := FieldTop;
-    Labels[i].FocusControl.Left := edCustom1.Left;
-    Labels[i].FocusControl.Width := edCustom1.Width;
-    Labels[i].FocusControl.Height := FEditHeight;
-    labels[i].Top := FieldTop + delta;
-    Labels[i].Width := LargestLabelWidth;
-    Labels[i].Left := Labels[i].FocusControl.Left - GetLabelWidth(Labels[i]) - hDist;
-    inc(FieldTop, FEditHeight + vDist);
-  end;
 
   {----------------------------------------------------------------------------}
-  { Buttons                                                                    }
+  { Form size                                                                  }
   {----------------------------------------------------------------------------}
-  OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
-  CancelBtn.Width := OKBtn.Width;
- {$IFDEF MSWINDOWS}   // button order: OK - Cancel
-  CancelBtn.Left := pnlBottom.ClientWidth - HBorder - CancelBtn.Width;
-  OKBtn.Left := CancelBtn.Left - hDist - OKBtn.Width;
- {$ELSE}              // button order: Cancel - OK
-  OKBtn.Left := pnlBottom.ClientWidth - HBorder - OKBtn.Width;
-  CancelBtn.Left := OKBtn.Left - hDist - CancelBtn.Width;
-  OKBtn.TabOrder := 1;
- {$ENDIF}
-  OKBtn.Height := FBtnHeight;
-  CancelBtn.Height := FBtnHeight;
-  OKBtn.Top := vDist;
-  CancelBtn.Top := vDist;
-  pnlBottom.ClientHeight := OKBtn.Height + vDist*2; // Centering is done by anchors
-
-  {----------------------------------------------------------------------------}
-  { Set form size                                                              }
-  {----------------------------------------------------------------------------}
-//  ClientHeight := h1 + h2 + pnlBottom.Height + vDist + 16 + PageControl.Height - tabAddresses.ClientHeight;
-  AutoSize := true;
-//  AdjustSize;
+  Autosize := true;
 end;
 
 procedure TContactEditForm.DisplayCurrentCountry(AddressType: TVpAddressType);
