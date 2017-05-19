@@ -1,34 +1,33 @@
 object frmFieldMapper: TfrmFieldMapper
-  Left = 332
-  Height = 769
-  Top = 0
+  Left = 314
+  Height = 762
+  Top = 117
   Width = 655
   HorzScrollBar.Page = 408
   VertScrollBar.Page = 536
   BorderStyle = bsToolWindow
   Caption = 'FlexDataStore Field Mapping Designer'
-  ClientHeight = 769
+  ClientHeight = 762
   ClientWidth = 655
-  DesignTimePPI = 144
   OnClose = FormClose
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '1.6.4.0'
   object ButtonPanel: TPanel
     Left = 0
-    Height = 45
-    Top = 724
+    Height = 35
+    Top = 727
     Width = 655
     Align = alBottom
     AutoSize = True
-    ClientHeight = 45
+    ClientHeight = 35
     ClientWidth = 655
     TabOrder = 1
     object BtnOK: TButton
       AnchorSideTop.Control = ButtonPanel
       AnchorSideRight.Control = BtnCancel
       Left = 384
-      Height = 35
+      Height = 25
       Top = 5
       Width = 115
       Anchors = [akTop]
@@ -43,10 +42,10 @@ object frmFieldMapper: TfrmFieldMapper
       AnchorSideTop.Control = ButtonPanel
       AnchorSideRight.Control = ButtonPanel
       AnchorSideRight.Side = asrBottom
-      Left = 573
-      Height = 35
+      Left = 580
+      Height = 25
       Top = 5
-      Width = 77
+      Width = 62
       Anchors = [akTop]
       AutoSize = True
       BorderSpacing.Top = 4
@@ -59,7 +58,7 @@ object frmFieldMapper: TfrmFieldMapper
   end
   object PageControl1: TPageControl
     Left = 0
-    Height = 724
+    Height = 727
     Top = 0
     Width = 655
     ActivePage = TabSheet1
@@ -68,16 +67,16 @@ object frmFieldMapper: TfrmFieldMapper
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Field Mapping Designer'
-      ClientHeight = 686
+      ClientHeight = 699
       ClientWidth = 647
       object lblFieldMappings: TLabel
         AnchorSideLeft.Control = lblDataset
         AnchorSideTop.Control = DatasetFieldLB
         AnchorSideTop.Side = asrBottom
         Left = 8
-        Height = 25
-        Top = 424
-        Width = 126
+        Height = 15
+        Top = 437
+        Width = 84
         BorderSpacing.Top = 8
         Caption = 'Field Mappings:'
         ParentColor = False
@@ -90,8 +89,8 @@ object frmFieldMapper: TfrmFieldMapper
         AnchorSideBottom.Control = TabSheet1
         AnchorSideBottom.Side = asrBottom
         Left = 8
-        Height = 225
-        Top = 453
+        Height = 235
+        Top = 456
         Width = 459
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Top = 4
@@ -100,7 +99,6 @@ object frmFieldMapper: TfrmFieldMapper
         ItemHeight = 0
         OnClick = FieldMappingsLBClick
         OnKeyPress = FieldMappingsLBKeyPress
-        Options = [lboDrawFocusRect]
         TabOrder = 0
       end
       object btnDeleteMapping: TButton
@@ -109,7 +107,7 @@ object frmFieldMapper: TfrmFieldMapper
         AnchorSideRight.Side = asrBottom
         Left = 475
         Height = 38
-        Top = 453
+        Top = 456
         Width = 164
         Anchors = [akTop, akRight]
         Caption = 'Delete Mapping'
@@ -125,7 +123,7 @@ object frmFieldMapper: TfrmFieldMapper
         AnchorSideRight.Side = asrBottom
         Left = 475
         Height = 38
-        Top = 495
+        Top = 498
         Width = 164
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 4
@@ -140,15 +138,15 @@ object frmFieldMapper: TfrmFieldMapper
         AnchorSideTop.Control = TabSheet1
         AnchorSideRight.Control = TabSheet1
         AnchorSideRight.Side = asrBottom
-        Left = 80
-        Height = 33
+        Left = 58
+        Height = 23
         Top = 8
-        Width = 559
+        Width = 581
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Left = 8
         BorderSpacing.Top = 8
         BorderSpacing.Right = 8
-        ItemHeight = 25
+        ItemHeight = 15
         OnChange = DatasetComboChange
         TabOrder = 3
         Text = 'DatasetCombo'
@@ -158,9 +156,9 @@ object frmFieldMapper: TfrmFieldMapper
         AnchorSideTop.Control = DatasetCombo
         AnchorSideTop.Side = asrCenter
         Left = 8
-        Height = 25
+        Height = 15
         Top = 12
-        Width = 64
+        Width = 42
         BorderSpacing.Left = 8
         Caption = 'Dataset:'
         ParentColor = False
@@ -170,9 +168,9 @@ object frmFieldMapper: TfrmFieldMapper
         AnchorSideTop.Control = DatasetCombo
         AnchorSideTop.Side = asrBottom
         Left = 8
-        Height = 25
-        Top = 49
-        Width = 190
+        Height = 15
+        Top = 39
+        Width = 126
         BorderSpacing.Top = 8
         Caption = 'Available Dataset Fields:'
         ParentColor = False
@@ -184,8 +182,8 @@ object frmFieldMapper: TfrmFieldMapper
         AnchorSideRight.Control = btnAddMapping
         AnchorSideBottom.Side = asrBottom
         Left = 8
-        Height = 338
-        Top = 78
+        Height = 371
+        Top = 58
         Width = 259
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Top = 4
@@ -193,16 +191,15 @@ object frmFieldMapper: TfrmFieldMapper
         ItemHeight = 0
         OnClick = DBFieldSelected
         OnKeyPress = DatasetFieldLBKeyPress
-        Options = [lboDrawFocusRect]
         TabOrder = 4
       end
       object lblVPFieldsAvail: TLabel
         AnchorSideLeft.Control = VPFieldLB
         AnchorSideTop.Control = lblDBFieldsAvail
         Left = 379
-        Height = 25
-        Top = 49
-        Width = 225
+        Height = 15
+        Top = 39
+        Width = 151
         Caption = 'Available Visual PlanIt Fields:'
         ParentColor = False
       end
@@ -212,7 +209,7 @@ object frmFieldMapper: TfrmFieldMapper
         AnchorSideBottom.Control = Bevel2
         Left = 271
         Height = 72
-        Top = 165
+        Top = 161
         Width = 104
         Anchors = [akLeft, akBottom]
         Caption = 'Add'
@@ -227,7 +224,7 @@ object frmFieldMapper: TfrmFieldMapper
         AnchorSideTop.Side = asrCenter
         Left = 321
         Height = 20
-        Top = 237
+        Top = 233
         Width = 5
         Shape = bsSpacer
       end
@@ -240,8 +237,8 @@ object frmFieldMapper: TfrmFieldMapper
         AnchorSideBottom.Control = DatasetFieldLB
         AnchorSideBottom.Side = asrBottom
         Left = 379
-        Height = 338
-        Top = 78
+        Height = 371
+        Top = 58
         Width = 260
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Left = 4
@@ -249,7 +246,6 @@ object frmFieldMapper: TfrmFieldMapper
         ItemHeight = 0
         OnClick = VpFieldSelected
         OnKeyPress = VPFieldLBKeyPress
-        Options = [lboDrawFocusRect]
         TabOrder = 6
       end
       object btnAddAll: TButton
@@ -259,7 +255,7 @@ object frmFieldMapper: TfrmFieldMapper
         AnchorSideTop.Side = asrBottom
         Left = 271
         Height = 72
-        Top = 257
+        Top = 253
         Width = 104
         Caption = 'Add all'
         Enabled = False

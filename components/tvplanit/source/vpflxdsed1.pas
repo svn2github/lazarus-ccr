@@ -355,12 +355,25 @@ begin
   h := btnAddMapping.Height;
 
   btnAddMapping.AutoSize := false;
-  btnAddMapping.Height := h;
+  btnAddMapping.Height := w * 2 div 3; //h;
   btnAddMapping.Width := w;
 
   btnAddAll.AutoSize := false;
-  btnAddAll.Height := h;
+  btnAddAll.Height := w * 2 div 3; //h;
   btnAddAll.Width := w;
+
+  btnDeleteMapping.AutoSize := true;
+  btnClearMappings.AutoSize := true;
+  w := max(btnDeleteMapping.Width, btnClearMappings.Width);
+  h := btnDeleteMapping.Height;
+
+  btnDeleteMapping.AutoSize := false;
+  btnDeleteMapping.Height := h;
+  btnDeleteMapping.Width := w;
+
+  btnClearMappings.AutoSize := false;
+  btnClearMappings.Height := h;
+  btnClearMappings.Width := w;
 
   AlignOKCancel(BtnOK, BtnCancel, ButtonPanel);
 end;
