@@ -1,84 +1,127 @@
 object AlarmNotifyForm: TAlarmNotifyForm
   Left = 490
-  Height = 215
+  Height = 220
   Top = 253
-  Width = 410
+  Width = 351
   HorzScrollBar.Page = 399
   VertScrollBar.Page = 196
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Reminder'
-  ClientHeight = 215
-  ClientWidth = 410
+  ClientHeight = 220
+  ClientWidth = 351
   Color = clWindow
+  DesignTimePPI = 144
   KeyPreview = True
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   Position = poDefault
-  LCLVersion = '1.7'
+  LCLVersion = '1.9.0.0'
   object SnoozeCaption: TLabel
-    Left = 16
-    Height = 57
-    Top = 136
-    Width = 152
-    AutoSize = False
+    AnchorSideLeft.Control = lTime
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = SnoozeCombo
+    Left = 8
+    Height = 25
+    Top = 110
+    Width = 215
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
     Caption = 'SnoozeCaption'
+    Constraints.MinWidth = 200
     ParentColor = False
-    WordWrap = True
   end
   object lSubject: TLabel
-    Left = 16
-    Height = 15
-    Top = 32
-    Width = 45
+    AnchorSideLeft.Control = lTime
+    AnchorSideTop.Control = lTime
+    AnchorSideTop.Side = asrBottom
+    Left = 8
+    Height = 25
+    Top = 37
+    Width = 68
+    BorderSpacing.Top = 4
     Caption = 'lSubject'
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
   end
   object lTime: TLabel
-    Left = 16
-    Height = 15
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 25
     Top = 8
-    Width = 30
+    Width = 42
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
     Caption = 'lTime'
     ParentColor = False
   end
   object DismissBtn: TButton
-    Left = 176
+    AnchorSideTop.Control = SnoozeCombo
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = SnoozeBtn
+    Left = 124
     Height = 32
-    Top = 170
+    Top = 147
     Width = 112
+    Anchors = [akTop, akRight]
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
     Caption = 'DismissBtn'
     OnClick = DismissBtnClick
-    TabOrder = 0
+    TabOrder = 3
   end
   object SnoozeBtn: TButton
-    Left = 296
+    AnchorSideTop.Control = DismissBtn
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 244
     Height = 32
-    Top = 136
+    Top = 147
     Width = 99
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
     Caption = 'SnoozeBtn'
     OnClick = SnoozeBtnClick
     TabOrder = 1
   end
   object OpenItemBtn: TButton
-    Left = 296
+    AnchorSideTop.Control = DismissBtn
+    AnchorSideRight.Control = DismissBtn
+    Left = 17
     Height = 32
-    Top = 170
+    Top = 147
     Width = 99
+    Anchors = [akTop, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
     Caption = 'OpenItemBtn'
     Default = True
     OnClick = OpenItemBtnClick
     TabOrder = 2
   end
   object SnoozeCombo: TComboBox
-    Left = 176
-    Height = 23
-    Top = 136
+    AnchorSideTop.Control = Bevel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 231
+    Height = 33
+    Top = 106
     Width = 112
-    ItemHeight = 15
+    Anchors = [akTop, akRight]
+    BorderSpacing.Top = 4
+    BorderSpacing.Right = 8
+    DropDownCount = 24
+    ItemHeight = 25
     Items.Strings = (
       '5 Minutes'
       '10 Minutes'
@@ -104,32 +147,41 @@ object AlarmNotifyForm: TAlarmNotifyForm
     OnChange = SnoozeComboChange
     ParentColor = True
     Style = csDropDownList
-    TabOrder = 3
+    TabOrder = 0
   end
-  object Panel1: TPanel
-    Left = 16
-    Height = 72
-    Top = 56
-    Width = 379
-    BevelInner = bvRaised
-    BevelOuter = bvLowered
-    ClientHeight = 72
-    ClientWidth = 379
-    TabOrder = 4
-    object lNotes: TLabel
-      Left = 2
-      Height = 68
-      Top = 2
-      Width = 375
-      Align = alClient
-      AutoSize = False
-      Caption = 'lNotes'
-      ParentColor = False
-      WordWrap = True
-    end
+  object lNotes: TLabel
+    AnchorSideLeft.Control = lTime
+    AnchorSideTop.Control = lSubject
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 25
+    Top = 70
+    Width = 335
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'lNotes'
+    ParentColor = False
+    WordWrap = True
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = lNotes
+    AnchorSideTop.Control = lNotes
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = lNotes
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 3
+    Top = 99
+    Width = 335
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
+    Shape = bsTopLine
   end
   object EventDialog: TVpEventEditDialog
-    Version = 'v1.04'
+    Version = 'v1.05'
     TimeFormat = tf24Hour
     Options = []
     Placement.Position = mpCenterTop
@@ -137,7 +189,7 @@ object AlarmNotifyForm: TAlarmNotifyForm
     Placement.Left = 10
     Placement.Height = 412
     Placement.Width = 705
-    left = 360
-    top = 8
+    left = 224
+    top = 16
   end
 end

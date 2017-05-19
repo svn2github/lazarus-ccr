@@ -49,13 +49,13 @@ type
   { TAlarmNotifyForm }
 
   TAlarmNotifyForm = class(TForm)
+    Bevel1: TBevel;
     DismissBtn: TButton;
     EventDialog: TVpEventEditDialog;
     lTime: TLabel;
     lSubject: TLabel;
     lNotes: TLabel;
     OpenItemBtn: TButton;
-    Panel1: TPanel;
     SnoozeBtn: TButton;
     SnoozeCaption: TLabel;
     SnoozeCombo: TComboBox;
@@ -102,7 +102,7 @@ implementation
 {$ENDIF}
 
 uses
-  StrUtils,
+  StrUtils, Math,
   VpMisc, VpSR;
 
 { TVpNotificationDialog }
@@ -204,13 +204,13 @@ end;
 procedure TAlarmNotifyForm.SnoozeComboChange(Sender: TObject);
 begin
   case SnoozeCombo.ItemIndex of
-    0 : SnoozeDelay :=  1  / MinutesInDay; { 1 minute  }
-    1 : SnoozeDelay :=  5  / MinutesInDay; { 5 minutes }
-    2 : SnoozeDelay := 10  / MinutesInDay; {10 Minutes }
-    3 : SnoozeDelay := 15  / MinutesInDay; {15 Minutes }
-    4 : SnoozeDelay := 30  / MinutesInDay; {30 Minutes }
-    5 : SnoozeDelay := 45  / MinutesInDay; {45 Minutes }
-    6 : SnoozeDelay := 60  / MinutesInDay; {1 Hour     }
+    0 : SnoozeDelay :=   1 / MinutesInDay; { 1 minute  }
+    1 : SnoozeDelay :=   5 / MinutesInDay; { 5 minutes }
+    2 : SnoozeDelay :=  10 / MinutesInDay; {10 Minutes }
+    3 : SnoozeDelay :=  15 / MinutesInDay; {15 Minutes }
+    4 : SnoozeDelay :=  30 / MinutesInDay; {30 Minutes }
+    5 : SnoozeDelay :=  45 / MinutesInDay; {45 Minutes }
+    6 : SnoozeDelay :=  60 / MinutesInDay; {1 Hour     }
     7 : SnoozeDelay := 120 / MinutesInDay; {2 Hours    }
     8 : SnoozeDelay := 180 / MinutesInDay; {3 Hours    }
     9 : SnoozeDelay := 240 / MinutesInDay; {4 Hours    }
@@ -267,7 +267,7 @@ end;
 
 procedure TAlarmNotifyForm.FormCreate(Sender: TObject);
 begin
-  SnoozeCombo.Top := SnoozeBtn.Top + (SnoozeBtn.Height - SnoozeCombo.Height) div 2;
+//  SnoozeCombo.Top := SnoozeBtn.Top + (SnoozeBtn.Height - SnoozeCombo.Height) div 2;
 end;
 
 {=====}
@@ -299,9 +299,49 @@ end;
 {=====}
 
 procedure TAlarmNotifyForm.FormShow(Sender: TObject);
+var
+  w, h: Integer;
+  b: TButton;
+  i: Integer;
+  cnv: TControlCanvas;
 begin
-  Self.Width := 410;
-  Self.Height := 210;
+  cnv := TControlCanvas.Create;
+  try
+    cnv.Control := SnoozeCombo;
+    cnv.Font.Assign(SnoozeCombo.Font);
+    w := 0;
+    for i:=0 to SnoozeCombo.Items.Count-1 do
+      w := Max(w, cnv.TextWidth(SnoozeCombo.Items[i]));
+    w := w + GetSystemMetrics(SM_CXVSCROLL);
+  finally
+    cnv.Free;
+  end;
+
+  b := SnoozeBtn;
+  if GetButtonWidth(b) > w then
+    w := GetButtonWidth(b);
+  if GetButtonWidth(OpenItemBtn) > w then begin
+    b := OpenItemBtn;
+    w := GetButtonWidth(b);
+  end;
+  if GetButtonWidth(DismissBtn) > w then begin
+    b := DismissBtn;
+    w := GetButtonWidth(b);
+  end;
+  b.AutoSize := true;
+  w := Max(w, b.Width);
+  h := b.Height;
+  b.AutoSize := false;
+  SnoozeBtn.Width := w;
+  SnoozeBtn.Height := h;
+  DismissBtn.Width := w;
+  DismissBtn.Height := h;
+  OpenItemBtn.Width := w;
+  OpenItemBtn.Height := h;
+  SnoozeCombo.Width := w;
+
+  AutoSize := true;
+
   OpenItemBtn.SetFocus;
 end;
 
