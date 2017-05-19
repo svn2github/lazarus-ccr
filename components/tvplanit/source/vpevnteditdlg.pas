@@ -72,13 +72,12 @@ type
   TDlgEventEdit = class(TForm)
     AlarmAdvance: TEdit;
     Bevel4: TBevel;
+    StartTimePlaceholder: TEdit;
+    EndTimePlaceholder: TEdit;
     LocationEdit: TEdit;
     LocationLbl: TLabel;
     NotesMemo: TMemo;
     Panel1: TPanel;
-    PanelAlarm: TPanel;
-    PanelTimes: TPanel;
-    PanelDescription: TPanel;
     StartDate: TDateEdit;
     EndDate: TDateEdit;
     RepeatUntil: TDateEdit;
@@ -110,23 +109,23 @@ type
     AlarmAdvanceType: TComboBox;
     AdvanceUpDown: TUpDown;
     CBAllDay: TCheckBox;
-    edtUnusedPlaceholder: TEdit;
+    CustomInterval: TEdit;
     imgClock: TImage;
     RecurrenceEndsLbl: TLabel;
+    procedure AdvanceUpDownClick(Sender: TObject; Button: TUDBtnType);
+    procedure AlarmAdvanceChange(Sender: TObject);
+    procedure AlarmSetClick(Sender: TObject);
+    procedure CancelBtnClick(Sender: TObject);
     procedure CategoryDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
-    procedure OKBtnClick(Sender: TObject);
-    procedure CancelBtnClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
-    procedure AlarmAdvanceChange(Sender: TObject);
-    procedure AdvanceUpDownClick(Sender: TObject; Button: TUDBtnType);
+    procedure CBAllDayClick(Sender: TObject);
     procedure CustomIntervalChange(Sender: TObject);
+    procedure OKBtnClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure IntervalUpDownClick(Sender: TObject; Button: TUDBtnType);
     procedure RecurringTypeChange(Sender: TObject);
-    procedure AlarmSetClick(Sender: TObject);
-    procedure CBAllDayClick(Sender: TObject);
     procedure SoundFinderBtnClick(Sender: TObject);
-    procedure FormShow(Sender: TObject);
 
   private { Private declarations }
    {$IFDEF NEW_TIME_EDIT}
@@ -139,7 +138,6 @@ type
     FDatastore: TVpCustomDatastore;
     AAVerifying: Boolean;
     CIVerifying: Boolean;
-    FCustomInterval : TVpRightAlignedEdit;
     procedure PopLists;
     procedure PositionControls;
     procedure LoadCaptions;
@@ -170,7 +168,7 @@ type
   public
     constructor Create(AOwner : TComponent); override;
     function Execute(Event: TVpEvent): Boolean; reintroduce;
-    function AddNewEvent(StartTime, EndTime: TDateTime): Boolean;
+    function AddNewEvent(PlaceholderStartTime, EndTimePlaceholder: TDateTime): Boolean;
   published
     {properties}
     property TimeFormat: TVpTimeFormat read FTimeFormat write FTimeFormat default tf12Hour;
@@ -222,11 +220,16 @@ begin
   StartTime := TCombobox.Create(self);
   StartTime.ItemIndex := -1;
  {$ENDIF}
-  StartTime.Width := 83;
-  StartTime.Parent := PanelTimes;
+  StartTime.Parent := AppointmentGroupbox;
+  StartTime.Width := StartDate.Width;
   StartTime.Left := AlarmAdvanceType.Left;
   StartTime.Top := StartDate.Top;
-  StartTime.TabOrder:= StartDate.TabOrder+ 1;
+  StartTime.AnchorSideLeft.Control := AlarmAdvanceType;
+  StartTime.AnchorSideTop.Control := StartDate;
+  StartTime.Anchors := [akLeft, akTop];
+  StartTime.TabOrder := StartDate.TabOrder + 1;
+  Bevel3.AnchorsideLeft.Control := Starttime;
+  StartTimePlaceHolder.Free;
 
  {$IFDEF NEW_TIME_EDIT}
   EndTime := TTimeEdit.Create(self);
@@ -234,13 +237,16 @@ begin
   EndTime := TCombobox.Create(self);
   EndTime.ItemIndex := -1;
  {$ENDIF}
-  EndTime.Width := 83;
-  EndTime.Parent := PanelTimes;
+  EndTime.Parent := AppointmentGroupbox;
+  EndTime.Width := EndDate.Width;
   EndTime.Left := AlarmAdvanceType.Left;
   EndTime.Top := EndDate.Top;
+  EndTime.AnchorSideLeft.Control := AlarmAdvanceType;
+  EndTime.AnchorSideTop.Control := EndDate;
+  EndTime.Anchors := [akLeft, akTop];
   EndTime.TabOrder := EndDate.TabOrder + 1;
+  EndTimePlaceHolder.Free;
 
-  SoundFinderBtn.Top := AlarmAdvanceType.Top;
   SoundFinderBtn.Height := AlarmAdvanceType.Height;
   SoundFinderBtn.Width := SoundFinderBtn.Height;
 
@@ -248,19 +254,7 @@ begin
   PopLists;
   LoadCaptions;
   EndDate.Enabled := False;
-
-  FCustomInterval := TVpRightAlignedEdit.Create(Self);
-  with FCustomInterval do begin
-    Parent := PanelTimes;
-    Top := IntervalUpDown.Top + 1;
-    Left := IntervalUpDown.Left - 65;
-    Height := IntervalUpDown.Height - 1;
-    Width := 65;
-    MaxLength := 5;
-    OnChange := CustomIntervalChange;
-    TabOrder := edtUnusedPlaceholder.TabOrder;
-  end;
-  IntervalUpDown.Associate := FCustomInterval;
+  EndTime.Enabled := false;
 end;
 {=====}
 
@@ -285,7 +279,7 @@ begin
       EndDate.Date := trunc(tStart);
      {$IFDEF NEW_TIME_EDIT}
       StartTime.Time := TimeOf(tEnd);
-      EndTime.Time := timeOf(tStart);
+      EndTime.Time := TimeOf(tStart);
      {$ELSE}
       StartTime.Text := FormatDateTime('hh:nn', TimeOf(tEnd));
       EndTime.Text := FormatDateTime('hh:nn', TimeOf(tStart));
@@ -360,8 +354,8 @@ begin
 
   StartDate.Enabled := not CBAllDay.Checked;
   EndDate.Enabled := not CBAllDay.Checked;
-  EndTime.Enabled := not CBAllDay.Checked;
   StartTime.Enabled := not CBAllDay.Checked;
+  EndTime.Enabled := not CBAllDay.Checked;
 
   DescriptionEdit.Text := Event.Description;
   LocationEdit.Text := Event.Location;
@@ -375,7 +369,7 @@ begin
   AlarmAdvanceType.ItemIndex := Ord(Event.AlarmAdvanceType);
   RecurringType.ItemIndex := Ord(Event.RepeatCode);
   RecurringTypeChange(Self);
-  FCustomInterval.Text := IntToStr(Event.CustomInterval);
+  CustomInterval.Text := IntToStr(Event.CustomInterval);
 
   Category.Items.Clear;
 
@@ -407,7 +401,7 @@ begin
   Event.AlarmAdvance := StrToIntDef(AlarmAdvance.Text, 0);
   Event.AlarmAdvanceType := TVpAlarmAdvType(AlarmAdvanceType.ItemIndex);
   Event.RepeatCode := TVpRepeatType(RecurringType.ItemIndex);
-  Event.CustomInterval := StrToIntDef(FCustomInterval.Text, 0);
+  Event.CustomInterval := StrToIntDef(CustomInterval.Text, 0);
   Event.AllDayEvent := CBAllDay.Checked;
   Event.DingPath := AlarmWavPath;
 end;
@@ -443,11 +437,11 @@ begin
         StringList.Add(IntToStr(Hour) + ':' + MinStr + AMPMStr);
       end;
     end;
-    StartTime.Items.Assign(StringList);
-    StartTime.ItemIndex := 0;
+    PlaceholderStartTime.Items.Assign(StringList);
+    PlaceholderStartTime.ItemIndex := 0;
 
-    EndTime.Items.Assign(StringList);
-    EndTime.ItemIndex := 0;
+    EndTimePlaceholder.Items.Assign(StringList);
+    EndTimePlaceholder.ItemIndex := 0;
   finally
     StringList.Free;
   end;
@@ -531,13 +525,13 @@ begin
   { Don't allow non numeric values. }
   if CIVerifying then Exit;
   CIVerifying := true;
-  Str := FCustomInterval.Text;
+  Str := CustomInterval.Text;
   for I := 1 to Length(Str) do
     if (Str[I] in ['0'..'9']) then
       Continue
     else
       Delete(Str, I, 1);
-  FCustomInterval.Text := Str;
+  CustomInterval.Text := Str;
   if Str <> '' then
     IntervalUpDown.Position := StrToInt(Str);
   CIVerifying := false;
@@ -547,7 +541,7 @@ end;
 procedure TDlgEventEdit.IntervalUpDownClick(Sender: TObject; Button: TUDBtnType);
 begin
   Unused(Button);
-  FCustomInterval.Text := IntToStr(IntervalUpDown.Position);
+  CustomInterval.Text := IntToStr(IntervalUpDown.Position);
 end;
 {=====}
 
@@ -559,13 +553,13 @@ begin
   RecurrenceEndsLbl.Enabled := (RecurringType.ItemIndex > 0);
   RepeatUntil.Enabled := RecurrenceEndsLbl.Enabled;
 
-  FCustomInterval.Enabled := RecurringType.ItemIndex = 7;
-  IntervalLbl.Enabled := FCustomInterval.Enabled;
-  IntervalUpDown.Enabled := FCustomInterval.Enabled;
-  if FCustomInterval.Enabled then begin
-    FCustomInterval.Text := IntToStr(IntervalUpDown.Position);
+  CustomInterval.Enabled := RecurringType.ItemIndex = 7;
+  IntervalLbl.Enabled := CustomInterval.Enabled;
+  IntervalUpDown.Enabled := CustomInterval.Enabled;
+  if CustomInterval.Enabled then begin
+    CustomInterval.Text := IntToStr(IntervalUpDown.Position);
     if Visible then
-      FCustomInterval.SetFocus;
+      CustomInterval.SetFocus;
   end;
 end;
 {=====}
@@ -583,9 +577,9 @@ end;
 procedure TDlgEventEdit.CBAllDayClick(Sender: TObject);
 begin
   StartDate.Enabled := not CBAllDay.Checked;
+  StartTime.Enabled := not CBAllDay.Checked;
   EndDate.Enabled := not CBAllDay.Checked;
   EndTime.Enabled := not CBAllDay.Checked;
-  StartTime.Enabled := not CBAllDay.Checked;
 end;
 {=====}
 
@@ -640,173 +634,33 @@ var
   cnv: TControlCanvas;
   editHeight: Integer;
 begin
-  editHeight := startDate.Height; //ScaleY(startDate.Height, DesigntimeDPI);
+  editHeight := startDate.Height;
+
   startDate.ButtonWidth := editHeight;
   endDate.ButtonWidth := editHeight;
  {$IFDEF NEW_TIME_EDIT}
-  startTime.ButtonWidth := editHeight;
-  endTime.ButtonWidth := editHeight;
+  StartTime.ButtonWidth := editHeight;
+  EndTime.ButtonWidth := editHeight;
  {$ENDIF}
-
-  // This is needed as workaround for the combobox height at higher dpi.
-  // We design it with Style csDropdown where the height is correct, and then
-  // use the corresponding, correct ItemHeight after switching to csOwnerDrawFixed
-  // (which is needed to draw the color boxes).
-  h := Category.ItemHeight;
-  Category.Style := csOwnerDrawFixed;
-  Category.ItemHeight := h+1;
-
-  // *** Horizontal positions ***
-
-  // Position controls according to label widths
-  w := MaxValue([GetLabelWidth(DescriptionLbl), GetLabelWidth(LocationLbl), GetLabelWidth(StartTimeLbl), GetLabelWidth(EndTimeLbl)]);
-  if w < GetlabelWidth(StartTimeLbl) + imgClock.Picture.Width + DELTA then
-    w := GetLabelWidth(StartTimeLbl) + imgClock.Picture.Width + DELTA;
-  DescriptionEdit.Left := w + 2*DELTA;
-  DescriptionEdit.Width := PanelDescription.ClientWidth - DescriptionEdit.Left - DELTA;
-  DescriptionLbl.Left := DescriptionEdit.Left - GetLabelWidth(DescriptionLbl) - DELTA;
-
-  LocationEdit.Left := DescriptionEdit.Left;
-  LocationLbl.Left := LocationEdit.Left - GetLabelWidth(LocationLbl) - DELTA;
+  RepeatUntil.ButtonWidth := editHeight;
 
   cnv := TControlCanvas.Create;
   try
-    cnv.Control := startDate;
-    cnv.Font.Assign(startDate.Font);
-    w := cnv.TextWidth('99.99.9999') + startDate.ButtonWidth + 10;
+    cnv.Control := StartDate;
+    w := cnv.TextWidth(FormatDateTime(' dd. mm. yyyy ', EncodeDate(2000,12,30)));
+    Startdate.Width := w + StartDate.ButtonWidth;
+    EndDate.Width := StartDate.Width;
+    StartTime.Width := StartDate.Width;
+    EndTime.Width := StartDate.Width;
   finally
     cnv.Free;
-  end;;
-  StartDate.Width := w;
-  EndDate.Width := w;
-  StartTime.Width := w;
-  EndTime.Width := w;
-
-  StartDate.Left := DescriptionEdit.Left;
-  StartTimeLbl.Left := StartDate.Left - GetLabelWidth(StartTimeLbl) - DELTA;
-
-  EndDate.Left := StartDate.Left;
-  EndTimeLbl.Left := EndDate.Left - GetLabelWidth(EndTimeLbl) - DELTA;
-
-  StartTime.Left := StartDate.Left + StartDate.Width + DELTA;
-  EndTime.Left := StartTime.Left;
-
-  CbAllDay.Left := StartDate.Left; //ImgClock.Left + ImgClock.Picture.Width + DELTA;
-  AlarmSet.Left := ImgAlarm.Left + ImgAlarm.Picture.Width + DELTA;
-
-  Bevel3.Left := StartTime.Left + StartTime.Width + 2*DELTA;
-
-  ImgRecurring.Left := Bevel3.Left + Bevel3.Width + 2*DELTA;
-  RecurringType.Left := RightOf(ImgRecurring) + DELTA;
-
-  RecurringLbl.Left := ImgRecurring.Left + ImgRecurring.Picture.Width + DELTA;
-  w := Max(
-    GetLabelWidth(RecurringLbl) + ImgRecurring.Picture.Width + DELTA,
-    GetLabelWidth(RecurrenceEndsLbl) + DELTA + RepeatUntil.Width
-  );
-  if w > RecurringType.Width then RecurringType.Width := w;
-
-  RepeatUntil.Left := RightOf(RecurringType) - RepeatUntil.Width;
-  RecurrenceEndsLbl.Left := RepeatUntil.Left - DELTA - GetLabelWIdth(RecurrenceEndsLbl);
-
-  w := GetLabelWidth(IntervalLbl);
-  if w > FCustomInterval.Width + IntervalUpdown.Width then
-    FCustomInterval.Width := w - IntervalUpdown.Width;
-  FCustomInterval.Left := RecurringType.Left + RecurringType.Width + 2*DELTA;
-  IntervalUpdown.Left := FCustomInterval.Left + FCustomInterval.Width;
-  IntervalLbl.Left := FCustomInterval.Left;
-
-  LocationEdit.Width := Bevel3.Left - LocationEdit.Left - DELTA;
-
-  if AlarmSet.Left + AlarmSet.Width + DELTA < StartDate.Left + StartDate.Width - AdvanceUpdown.Width - AlarmAdvance.Width then
-  begin
-    AdvanceUpdown.Left := StartDate.Left + StartDate.Width - AdvanceUpdown.Width;
-    AlarmAdvance.Left := AdvanceUpdown.Left - AlarmAdvance.Width;
-  end else begin
-    AlarmAdvance.Left := AlarmSet.Left + AlarmSet.Width + DELTA;
-    AdvanceUpdown.Left := AlarmAdvance.Left + AlarmAdvance.Width;
-    AlarmAdvancetype.Left := AdvanceUpdown.Left + AdvanceUpdown.Width + 2*DELTA;
   end;
-  SoundFinderBtn.Left := AlarmAdvanceType.Left + AlarmAdvanceType.Width + 2;
+  RepeatUntil.Width := StartDate.Width;
+//  CustomInterval.Left := RepeatUntil.Left;
+  AlarmAdvance.Width := AdvanceUpDown.Left - 2 - AlarmAdvance.Left;
+  AlarmAdvanceType.Width := StartTime.Width;
 
-  Width := RightOf(IntervalUpdown) + DELTA + Width - AppointmentGroupbox.ClientWidth;
-
-  CategoryLbl.Left := Bevel3.Left + Bevel3.Width + DELTA;
-  Category.Left := CategoryLbl.Left + GetLabelWidth(CategoryLbl) + DELTA;
-  Category.Width := RightOf(DescriptionEdit) - Category.Left;
-  {
-  Category.Left := DescriptionEdit.Left + DescriptionEdit.Width - category.Width;
-  CategoryLbl.Left := Category.Left - DELTA - GetLabelWidth(CategoryLbl);
-   }
-  // *** Vertical positions ***
-  DescriptionEdit.Top := VDELTA;
-  DescriptionLbl.Top := DescriptionEdit.Top + (DescriptionEdit.Height - DescriptionLbl.Height) div 2;
-  LocationEdit.Top := BottomOf(DescriptionEdit) + VDIST;
-  LocationLbl.Top := LocationEdit.Top + (LocationEdit.Height - LocationLbl.Height) div 2;
-  CategoryLbl.Top := LocationLbl.Top;
-  Category.Top := LocationEdit.Top;
-  PanelDescription.ClientHeight := BottomOf(LocationEdit) + VDIST;
-
-  imgClock.Top := VDELTA;
-  CbAllDay.Top := imgClock.Top;
-  imgRecurring.Top := imgClock.Top;
-
-  StartDate.Top := BottomOf(CbAllDay) + VDIST;
-  StartTime.Top := StartDate.Top;
-  StartTimeLbl.Top := StartDate.Top + (StartDate.Height - StartTimeLbl.Height) div 2;
-  EndDate.Top := BottomOf(StartDate) + VDIST;
-  EndTime.Top := EndDate.Top;
-  EndTimeLbl.Top := EndDate.Top + (EndDate.Height - EndTimeLbl.Height) div 2;
-  RecurringType.Top := StartDate.Top;
-  edtUnusedPlaceHolder.Top := RecurringType.Top;
-  FCustomInterval.Top := RecurringType.Top;
-  IntervalUpDown.Top := FCustomInterval.Top;
-  RecurringLbl.Top := RecurringType.Top - 4 - RecurringLbl.Height;
-  IntervalLbl.Top := RecurringLbl.Top;
-  RepeatUntil.Top := EndDate.Top;
-  RecurrenceEndsLbl.Top := RepeatUntil.Top + (RepeatUntil.Height - RecurrenceEndsLbl.Height) div 2;
-  PanelTimes.ClientHeight := BottomOf(EndDate) + VDELTA;
-  Bevel3.Top := VDELTA;
-  Bevel3.Height := PanelTimes.ClientHeight - 2*VDELTA;
-
-  imgAlarm.Top := VDELTA;
-  AlarmAdvance.Top := imgAlarm.Top;
-  AdvanceUpdown.Top := AlarmAdvance.Top;
-  AlarmSet.Top := AlarmAdvance.Top + (AlarmAdvance.Height - AlarmSet.Height) div 2;
-  AlarmAdvanceType.Top := AlarmAdvance.Top;
-  SoundFinderBtn.Height := AlarmAdvanceType.Height;
-  SoundFinderBtn.Width := SoundFinderBtn.Height;
-  SoundFinderBtn.Top := AlarmAdvanceType.Top;
-  PanelAlarm.ClientHeight := Max(BottomOf(ImgAlarm), BottomOf(AlarmAdvance)) + VDIST;
-
-  OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
-  CancelBtn.Width := OKBtn.Width;
- {$IFDEF MSWINDOWS}
-  CancelBtn.Left := ButtonPanel.ClientWidth - ResourcenameLbl.Left - CancelBtn.Width;
-  OKBtn.Left := CancelBtn.Left - DELTA - OKBtn.Width;
-  OKBtn.TabOrder := 0;
-  CancelBtn.TabOrder := 1;
- {$ELSE}
-  OKBtn.Left := ButtonPanel.ClientWidth - ResourcenameLbl.Left - OKBtn.Width;
-  CancelBtn.Left := OKBtn.Left - DELTA - CancelBtn.Width;
-  CancelBtn.TabOrder := 0;
-  OKBtn.TabOrder := 1;
- {$ENDIF}
-  ResourceNameLbl.Font.Size := ScaleY(ResourceNameLbl.Font.Size, DesignTimeDPI);
-  ResourceNameLbl.Top := (ButtonPanel.ClientHeight - Panel1.BorderWidth - ResourceNameLbl.Height) div 2;
-  OKBtn.Top := (ButtonPanel.ClientHeight - Panel1.BorderWidth - OKBtn.Height) div 2;
-  CancelBtn.Top := OKBtn.Top;
-
-  OKBtn.Height := ScaleY(OKBtn.Height, DesigntimeDPI);
-  CancelBtn.Height := OKBtn.Height;
-  ButtonPanel.ClientHeight := OKBtn.Height + Bevel4.Height;
-  ResourceNameLbl.Top := OKBtn.Top + (OKBtn.Height - ResourceNameLbl.Height) div 2;
-
-  NotesMemo.Top := BottomOf(AppointmentGroupbox) + Bevel4.Height;
-  NotesMemo.Width := AppointmentGroupbox.Width;
-  NotesMemo.Left := AppointmentGroupbox.Left;
-
-  ClientHeight := AppointmentGroupbox.Height + Bevel4.Height + ScaleY(NotesMemo.Height, DesignTimeDPI) + ButtonPanel.Height;
+  AlignOKCancel(OKBtn, CancelBtn, ButtonPanel);
 end;
 
 
@@ -848,13 +702,13 @@ begin
 end;
 {=====}
 
-function TVpEventEditDialog.AddNewEvent(StartTime, EndTime: TDateTime): Boolean;
+function TVpEventEditDialog.AddNewEvent(PlaceholderStartTime, EndTimePlaceholder: TDateTime): Boolean;
 begin
   Result := false;
   if DataStore <> nil then begin
     ceEvent := DataStore.Resource.Schedule.AddEvent(
       DataStore.GetNextID(EventsTableName),
-      StartTime, EndTime
+      PlaceholderStartTime, EndTimePlaceholder
     );
     if ceEvent <> nil then begin
       Result := Execute(ceEvent);
