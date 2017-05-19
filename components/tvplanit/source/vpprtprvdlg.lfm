@@ -14,7 +14,7 @@ object frmPrintPreview: TfrmPrintPreview
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  LCLVersion = '1.7'
+  LCLVersion = '1.9.0.0'
   object Panel1: TPanel
     Left = 0
     Height = 58
@@ -45,53 +45,57 @@ object frmPrintPreview: TfrmPrintPreview
         Left = 1
         Top = 0
         Action = actPrint
+        AutoSize = True
       end
       object ToolButton3: TToolButton
         Left = 52
         Height = 25
         Top = 0
-        Width = 8
         Caption = 'ToolButton3'
         ImageIndex = 2
         Style = tbsDivider
       end
       object btnFirstPage: TToolButton
-        Left = 60
+        Left = 57
         Top = 0
         Action = actFirstPage
+        AutoSize = True
         ShowCaption = False
       end
       object btnPrevPage: TToolButton
-        Left = 85
+        Left = 82
         Top = 0
         Action = actPrevPage
+        AutoSize = True
         ShowCaption = False
       end
       object btnNextPage: TToolButton
-        Left = 110
+        Left = 107
         Top = 0
         Action = actNextPage
+        AutoSize = True
         ShowCaption = False
       end
       object btnLastPage: TToolButton
-        Left = 135
+        Left = 132
         Top = 0
         Action = actLastPage
+        AutoSize = True
         ShowCaption = False
       end
       object ToolButton8: TToolButton
-        Left = 160
+        Left = 157
         Height = 25
         Top = 0
-        Width = 8
         Caption = 'ToolButton8'
         ImageIndex = 6
         Style = tbsDivider
       end
       object btnCancel: TToolButton
-        Left = 168
+        Left = 162
         Top = 0
         Action = actCancel
+        AutoSize = True
       end
     end
     object Panel2: TPanel
