@@ -133,7 +133,7 @@ begin
   Label4.Align := alClient;
 {$IFDEF LCL}
   {$IF lcl_fullversion >= 1080000}
-  ShellTreeView.Mask := '*.wav';
+  ShellListView.Mask := '*.wav';
   {$ENDIF}
 {$ENDIF}
 end;
