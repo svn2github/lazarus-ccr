@@ -1392,22 +1392,25 @@ object ContactEditForm: TContactEditForm
     ClientWidth = 506
     TabOrder = 1
     object OKBtn: TButton
-      AnchorSideTop.Control = CancelBtn
+      AnchorSideTop.Control = pnlBottom
+      AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = CancelBtn
-      AnchorSideBottom.Control = CancelBtn
       AnchorSideBottom.Side = asrBottom
       Left = 354
       Height = 25
       Top = 4
       Width = 74
-      Anchors = [akTop, akRight, akBottom]
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 4
       BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 4
       Caption = 'OK'
       Default = True
       OnClick = OKBtnClick
       TabOrder = 0
     end
     object CancelBtn: TButton
+      AnchorSideTop.Control = pnlBottom
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = pnlBottom
       AnchorSideRight.Side = asrBottom

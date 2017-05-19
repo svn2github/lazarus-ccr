@@ -2,33 +2,40 @@ object ResEditForm: TResEditForm
   Left = 280
   Height = 302
   Top = 234
-  Width = 455
+  Width = 466
   HorzScrollBar.Page = 399
   VertScrollBar.Page = 249
   Caption = 'Resource Edit'
   ClientHeight = 302
-  ClientWidth = 455
+  ClientWidth = 466
   Constraints.MinHeight = 250
   Constraints.MinWidth = 400
   OnCreate = FormCreate
   OnShow = FormShow
-  LCLVersion = '1.7'
+  LCLVersion = '1.9.0.0'
   object pnlBottom: TPanel
     Left = 0
-    Height = 41
-    Top = 261
-    Width = 455
+    Height = 33
+    Top = 269
+    Width = 466
     Align = alBottom
+    AutoSize = True
     BevelOuter = bvNone
-    ClientHeight = 41
-    ClientWidth = 455
+    ClientHeight = 33
+    ClientWidth = 466
     TabOrder = 1
     object OKBtn: TButton
-      Left = 291
+      AnchorSideTop.Control = pnlBottom
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = CancelBtn
+      Left = 313
       Height = 25
-      Top = 7
-      Width = 75
-      Anchors = [akRight, akBottom]
+      Top = 4
+      Width = 66
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 4
+      BorderSpacing.Right = 4
+      BorderSpacing.Bottom = 4
       Caption = 'OK'
       Default = True
       OnClick = OKBtnClick
@@ -36,11 +43,18 @@ object ResEditForm: TResEditForm
       TabStop = False
     end
     object CancelBtn: TButton
-      Left = 370
+      AnchorSideTop.Control = pnlBottom
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = pnlBottom
+      AnchorSideRight.Side = asrBottom
+      Left = 383
       Height = 25
-      Top = 7
+      Top = 4
       Width = 75
-      Anchors = [akRight, akBottom]
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 4
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 4
       Cancel = True
       Caption = 'Cancel'
       OnClick = CancelBtnClick
@@ -50,9 +64,9 @@ object ResEditForm: TResEditForm
   end
   object pgResource: TPageControl
     Left = 0
-    Height = 261
+    Height = 269
     Top = 0
-    Width = 455
+    Width = 466
     TabStop = False
     ActivePage = tabResource
     Align = alClient
@@ -60,31 +74,44 @@ object ResEditForm: TResEditForm
     TabOrder = 0
     object tabResource: TTabSheet
       Caption = 'Resource'
-      ClientHeight = 233
-      ClientWidth = 447
+      ClientHeight = 241
+      ClientWidth = 458
       object lblDescription: TLabel
+        AnchorSideLeft.Control = tabResource
+        AnchorSideTop.Control = DescriptionEdit
+        AnchorSideTop.Side = asrCenter
         Left = 8
         Height = 15
-        Top = 24
+        Top = 20
         Width = 63
+        BorderSpacing.Left = 8
         Caption = 'Description:'
         ParentColor = False
       end
       object lblNotes: TLabel
+        AnchorSideLeft.Control = lblDescription
+        AnchorSideTop.Control = DescriptionEdit
+        AnchorSideTop.Side = asrBottom
         Left = 8
         Height = 15
         Top = 47
         Width = 34
+        BorderSpacing.Top = 8
         Caption = 'Notes:'
         ParentColor = False
       end
       object imgResources: TImage
-        Left = 405
+        AnchorSideTop.Control = DescriptionEdit
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = tabResource
+        AnchorSideRight.Side = asrBottom
+        Left = 416
         Height = 32
-        Top = 15
+        Top = 11
         Width = 32
-        Anchors = [akTop]
+        Anchors = [akTop, akRight]
         AutoSize = True
+        BorderSpacing.Right = 10
         Picture.Data = {
           07544269746D617076020000424D760200000000000076000000280000002000
           0000200000000100040000000000000200000000000000000000100000001000
@@ -111,21 +138,37 @@ object ResEditForm: TResEditForm
         Transparent = True
       end
       object DescriptionEdit: TEdit
-        Left = 80
+        AnchorSideLeft.Control = lblDescription
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = tabResource
+        Left = 83
         Height = 23
-        Top = 20
-        Width = 318
+        Top = 16
+        Width = 326
         Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 12
+        BorderSpacing.Top = 16
         MaxLength = 255
         OnChange = Change
         TabOrder = 0
       end
       object NotesMemo: TMemo
+        AnchorSideLeft.Control = tabResource
+        AnchorSideTop.Control = lblNotes
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = tabResource
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = tabResource
+        AnchorSideBottom.Side = asrBottom
         Left = 8
-        Height = 154
-        Top = 67
-        Width = 429
+        Height = 167
+        Top = 66
+        Width = 442
         Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Left = 8
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 8
+        BorderSpacing.Bottom = 8
         MaxLength = 1024
         OnChange = Change
         ScrollBars = ssVertical

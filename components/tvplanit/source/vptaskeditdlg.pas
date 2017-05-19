@@ -180,8 +180,6 @@ begin
   LblCreatedOn.Caption := RSCreatedOn + ' ' + FormatDateTime('ddddd', Task.CreatedOn);
   CbPriority.ItemIndex := Task.Priority + 1;
   CbCategory.ItemIndex := Task.Category;
-
-  PositionControls;
 end;
 
 procedure TTaskEditForm.PositionControls;
@@ -281,6 +279,7 @@ end;
 
 procedure TTaskEditForm.FormShow(Sender: TObject);
 begin
+  PositionControls;
   DescriptionEdit.SetFocus;
 end;
 {=====}

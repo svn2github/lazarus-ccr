@@ -150,7 +150,7 @@ type
     FBtnHeight: Integer;
     FEditHeight: Integer;
     procedure DisplayCurrentCountry(AddressType: TVpAddressType);
-    procedure ResizeControls;
+    procedure PositionControls;
     procedure SetCaptions;
   public
     Resource: TVpResource;
@@ -468,7 +468,6 @@ begin
 
   DisplayCurrentCountry(atWork);
   DisplayCurrentCountry(atHome);
-  ResizeControls;
 end;
 
 procedure TContactEditForm.ItemChanged(Sender: TObject);
@@ -502,7 +501,7 @@ begin
   PageControl.ActivePage := tabBaseData;
 end;
 
-procedure TContactEditForm.ResizeControls;
+procedure TContactEditForm.PositionControls;
 type
   TLabelArray = array of TLabel;
   TComboboxArray = array of TCombobox;
@@ -510,7 +509,6 @@ type
 var
   Labels: TLabelArray;
   Comboboxes: TComboboxArray;
-  Edits: TEditArray;
   largestLabelWidth: Integer;
   i: Integer;
   OldFont: TFont;
@@ -518,7 +516,6 @@ var
   vDist: Integer = 4;    // Vertical distance between edits
   hBorder: Integer = 8;  // Horizontal distance between container border and label
   vBorder: Integer = 8;  // Vertical distance between container border and 1st control
-  w,h: Integer;
   comboArrowWidth: Integer;
 begin
   {----------------------------------------------------------------------------}
@@ -734,8 +731,6 @@ begin
     stateComboLabel.Hide;
     stateCombo.Items.Clear;
   end;
-
-//  ResizeControls;
 end;
 
 procedure TContactEditForm.cbCountryChange(Sender: TObject);
@@ -749,7 +744,7 @@ begin
     cbStateH.Text := '';
     DisplayCurrentCountry(atHome);
   end;
-  ResizeControls;
+  PositionControls;
 end;
 
 procedure TContactEditForm.FormKeyDown(Sender: TObject; var Key: Word;
@@ -782,6 +777,7 @@ begin
   PageControl.ActivePage := tabBaseData;
   if PageControl.ActivePage = tabBaseData then
     edLastName.SetFocus;
+  PositionControls;
 end;
 
 

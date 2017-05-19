@@ -28,35 +28,37 @@ object TaskEditForm: TTaskEditForm
       AnchorSideTop.Control = ButtonPanel
       AnchorSideTop.Side = asrCenter
       Left = 4
-      Height = 17
-      Top = 8
-      Width = 108
+      Height = 15
+      Top = 9
+      Width = 88
       BorderSpacing.Left = 4
       Caption = 'Resource Name'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clMaroon
-      Font.Height = -14
-      Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentColor = False
       ParentFont = False
     end
     object OKBtn: TButton
-      AnchorSideTop.Control = CancelBtn
-      AnchorSideBottom.Control = CancelBtn
+      AnchorSideTop.Control = ButtonPanel
+      AnchorSideTop.Side = asrCenter
       AnchorSideBottom.Side = asrBottom
       Left = 376
       Height = 25
       Top = 4
       Width = 86
-      Anchors = [akTop, akRight, akBottom]
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 4
       BorderSpacing.Right = 4
+      BorderSpacing.Bottom = 4
       Caption = 'OK'
       Default = True
       OnClick = OKBtnClick
       TabOrder = 0
     end
     object CancelBtn: TButton
+      AnchorSideTop.Control = ButtonPanel
+      AnchorSideTop.Side = asrCenter
       AnchorSideRight.Side = asrBottom
       Left = 479
       Height = 25

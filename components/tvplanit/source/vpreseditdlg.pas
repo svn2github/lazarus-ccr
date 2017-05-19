@@ -58,11 +58,11 @@ type
     lblNotes: TLabel;
     NotesMemo: TMemo;
     imgResources: TImage;
-    procedure OKBtnClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure CancelBtnClick(Sender: TObject);
     procedure Change(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure OKBtnClick(Sender: TObject);
   private
     procedure PositionControls;
     procedure SetControls;
@@ -209,48 +209,12 @@ begin
   lblNotes.Caption := RSNotes;
   OKBtn.Caption := RSOKBtn;
   CancelBtn.Caption := RSCancelBtn;
-
-  PositionControls;
 end;
 {=====}
 
 procedure TResEditForm.PositionControls;
-var
-  HDelta: Integer = 8;
-  VDelta: Integer = 8;
 begin
-  HDelta := ScaleX(HDelta, DesignTimeDPI);
-  VDelta := ScaleY(VDelta, DesignTimeDPI);
-
-  DescriptionEdit.Left := lblDescription.Left + GetLabelWidth(lblDescription) + HDelta;
-  DescriptionEdit.Width := imgResources.Left - 2*HDelta - DescriptionEdit.Left;
-  DescriptionEdit.Top := imgResources.Top; // + (imgResources.Height - DescriptionEdit.Height) div 2;
-  lblDescription.Top := DescriptionEdit.Top + (DescriptionEdit.Height - lblDescription.Height) div 2;
-
-  lblNotes.Top := BottomOf(DescriptionEdit) + VDelta;
-  NotesMemo.Top := BottomOf(lblNotes) + VDelta;
-  ClientHeight := ClientHeight + ScaleY(NotesMemo.Height, DesignTimeDPI) - NotesMemo.Height;
-  NotesMemo.Height := tabResource.ClientHeight - NotesMemo.Top - VDelta;
-
-  OKBtn.Height := ScaleY(OKBtn.Height, DesignTimeDPI);
-  CancelBtn.Height := OKBtn.Height;
-  pnlBottom.Height := VDelta + OKBtn.Height + VDelta;
-  OKBtn.Top := VDelta;
-  CancelBtn.Top := VDelta;
-
-  OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
-  CancelBtn.Width := OKBtn.Width;
- {$IFDEF MSWINDOWS}
-  CancelBtn.Left := pnlBottom.ClientWidth - lblDescription.Left - CancelBtn.Width;
-  OKBtn.Left := CancelBtn.Left - OKBtn.Width - HDelta; // - (ClientWidth - tabResource.ClientWidth);
-  OKBtn.TabOrder := 0;
-  CancelBtn.TabOrder := 1;
- {$ELSE}
-  OKBtn.Left := pnlBottom.ClientWidth - lblDescription.Left - OKBtn.Width;
-  CancelBtn.Left := OKBtn.Left - CancelBtn.Width - HDelta; // - (ClientWidth - tabResource.ClientWidth);
-  CancelBtn.TabOrder := 0;
-  OKBtn.TabOrder := 1;
- {$ENDIF}
+  AlignOKCancel(OKBtn, CancelBtn, pnlBottom);
 end;
 
 procedure TResEditForm.OKBtnClick(Sender: TObject);
@@ -287,6 +251,7 @@ procedure TResEditForm.FormShow(Sender: TObject);
 begin
   DescriptionEdit.SetFocus;
   SetControls;
+  PositionControls;
 end;
 {=====}
 
