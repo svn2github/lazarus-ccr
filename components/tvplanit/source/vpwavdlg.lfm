@@ -10,8 +10,9 @@ object FrmSoundDialog: TFrmSoundDialog
   ClientWidth = 736
   KeyPreview = True
   OnCreate = FormCreate
+  OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.7'
+  LCLVersion = '1.9.0.0'
   object PageControl1: TPageControl
     Left = 0
     Height = 474
@@ -30,24 +31,26 @@ object FrmSoundDialog: TFrmSoundDialog
         Left = 209
         Height = 446
         Top = 0
-        Width = 519
+        Width = 515
         Align = alClient
+        BorderSpacing.Right = 4
         BevelOuter = bvNone
         ClientHeight = 446
-        ClientWidth = 519
+        ClientWidth = 515
         TabOrder = 2
         object Panel1: TPanel
           Left = 0
           Height = 27
           Top = 0
-          Width = 519
+          Width = 515
           Align = alTop
           AutoSize = True
           BevelOuter = bvNone
           ClientHeight = 27
-          ClientWidth = 519
+          ClientWidth = 515
           TabOrder = 0
           object CBDefault: TCheckBox
+            AnchorSideTop.Control = Panel1
             Left = 4
             Height = 19
             Top = 4
@@ -60,18 +63,21 @@ object FrmSoundDialog: TFrmSoundDialog
         end
         object ButtonPanel: TPanel
           Left = 0
-          Height = 38
-          Top = 408
-          Width = 519
+          Height = 33
+          Top = 413
+          Width = 515
           Align = alBottom
+          AutoSize = True
           BevelOuter = bvNone
-          ClientHeight = 38
-          ClientWidth = 519
+          ClientHeight = 33
+          ClientWidth = 515
           TabOrder = 2
           object PlayButton: TSpeedButton
-            Left = 4
+            AnchorSideTop.Control = ButtonPanel
+            AnchorSideTop.Side = asrCenter
+            Left = 0
             Height = 25
-            Top = 8
+            Top = 4
             Width = 29
             Glyph.Data = {
               DE010000424DDE01000000000000760000002800000024000000120000000100
@@ -95,11 +101,17 @@ object FrmSoundDialog: TFrmSoundDialog
             OnClick = PlayButtonClick
           end
           object OkBtn: TButton
-            Left = 356
+            AnchorSideTop.Control = ButtonPanel
+            AnchorSideTop.Side = asrCenter
+            AnchorSideRight.Control = CancelBtn
+            Left = 361
             Height = 25
-            Top = 8
+            Top = 4
             Width = 75
             Anchors = [akTop, akRight]
+            BorderSpacing.Left = 4
+            BorderSpacing.Top = 4
+            BorderSpacing.Bottom = 4
             Caption = 'OkBtn'
             Default = True
             ModalResult = 1
@@ -107,11 +119,17 @@ object FrmSoundDialog: TFrmSoundDialog
             TabOrder = 0
           end
           object CancelBtn: TButton
-            Left = 436
+            AnchorSideTop.Control = ButtonPanel
+            AnchorSideRight.Control = ButtonPanel
+            AnchorSideRight.Side = asrBottom
+            Left = 440
             Height = 25
-            Top = 8
+            Top = 4
             Width = 75
             Anchors = [akTop, akRight]
+            BorderSpacing.Left = 4
+            BorderSpacing.Top = 4
+            BorderSpacing.Bottom = 4
             Cancel = True
             Caption = 'CancelBtn'
             ModalResult = 2
@@ -121,11 +139,11 @@ object FrmSoundDialog: TFrmSoundDialog
         end
         object ShellListView: TShellListView
           Left = 0
-          Height = 381
+          Height = 386
           Top = 27
           Width = 515
           Align = alClient
-          BorderSpacing.Right = 4
+          Anchors = [akTop, akLeft, akBottom]
           Color = clDefault
           HideSelection = False
           Mask = '*.wav'

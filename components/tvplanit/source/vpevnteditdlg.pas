@@ -247,9 +247,6 @@ begin
   EndTime.TabOrder := EndDate.TabOrder + 1;
   EndTimePlaceHolder.Free;
 
-  SoundFinderBtn.Height := AlarmAdvanceType.Height;
-  SoundFinderBtn.Width := SoundFinderBtn.Height;
-
   ReturnCode := rtAbandon;
   PopLists;
   LoadCaptions;
@@ -656,9 +653,10 @@ begin
     cnv.Free;
   end;
   RepeatUntil.Width := StartDate.Width;
-//  CustomInterval.Left := RepeatUntil.Left;
   AlarmAdvance.Width := AdvanceUpDown.Left - 2 - AlarmAdvance.Left;
   AlarmAdvanceType.Width := StartTime.Width;
+
+  SoundFinderBtn.Width := SoundFinderBtn.Height;
 
   AlignOKCancel(OKBtn, CancelBtn, ButtonPanel);
 end;

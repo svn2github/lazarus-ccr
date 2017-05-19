@@ -827,11 +827,13 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideLeft.Control = AlarmAdvanceType
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = AlarmAdvanceType
-        AnchorSideTop.Side = asrCenter
+        AnchorSideBottom.Control = AlarmAdvanceType
+        AnchorSideBottom.Side = asrBottom
         Left = 356
-        Height = 24
-        Top = 177
+        Height = 23
+        Top = 178
         Width = 24
+        Anchors = [akTop, akLeft, akBottom]
         BorderSpacing.Left = 16
         Glyph.Data = {
           F6000000424DF600000000000000760000002800000010000000100000000100

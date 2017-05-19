@@ -68,6 +68,7 @@ type
     procedure CancelBtnClick(Sender: TObject);
     procedure CBDefaultClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure OkBtnClick(Sender: TObject);
     procedure PlayButtonClick(Sender: TObject);
   private
@@ -131,7 +132,11 @@ begin
   ShellTreeView.Align := alClient;
   Label4.Align := alClient;
 end;
-{=====}
+
+procedure TFrmSoundDialog.FormShow(Sender: TObject);
+begin
+  AlignOKCancel(OkBtn, CancelBtn, ButtonPanel);
+end;
 
 function TFrmSoundDialog.GetSelectedFileName: String;
 begin
@@ -151,7 +156,6 @@ begin
   DingPath := GetSelectedFileName;
   PlaySound;
 end;
-{=====}
 
 procedure TFrmSoundDialog.PlaySound;
 begin
@@ -160,10 +164,6 @@ begin
 end;
 
 procedure TFrmSoundDialog.Populate;
-var
-  DIST: Integer = 8;
-  VDIST: Integer = 8;
-  HBORDER: Integer = 8;
 begin
   TabSheet1.Caption := RSSelectASound;
   Self.Caption := RSSoundFinder;
@@ -173,6 +173,7 @@ begin
   Label3.Caption := RSNothingToSelectFrom;
   Label4.Caption := RSNothingToSelectFrom;
 
+  (*
   DIST := ScaleX(DIST, DesignTimeDPI);
   VDist := ScaleY(VDist, DesignTimeDPI);
   HBORDER := ScaleX(HBORDER, DesignTimeDPI);
@@ -197,6 +198,7 @@ begin
   CancelBtn.TabOrder := 0;
   OKBtn.TabOrder := 1;
  {$ENDIF}
+ *)
   if DingPath = '' then begin
     CBDefault.Checked := true;
     if (MediaFolder <> '') and DirectoryExists(MediaFolder) then
