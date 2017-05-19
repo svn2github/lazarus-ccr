@@ -71,16 +71,17 @@ type
     Bevel1: TBevel;
     imgCalendar: TImage;
     imgCompleted: TImage;
+    procedure CancelBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure OnChange(Sender: TObject);
     procedure OKBtnClick(Sender: TObject);
-    procedure CancelBtnClick(Sender: TObject);
-    procedure FormShow(Sender: TObject);
   private
     FReturnCode: TVpEditorReturnCode;
     FTask: TVpTask;
     FResource: TVpResource;
-    FBtnHeight: Integer;
+//    FBtnHeight: Integer;
+//    FBtnWidth: Integer;
     FEditHeight: Integer;
     procedure PositionControls;
     procedure SetCaptions;
@@ -126,7 +127,7 @@ uses
 procedure TTaskEditForm.FormCreate(Sender: TObject);
 begin
   FReturnCode := rtAbandon;
-  FBtnHeight := ScaleY(OKBtn.Height, DesignTimeDPI);
+//  FBtnHeight := ScaleY(OKBtn.Height, DesignTimeDPI);
   FEditHeight := ScaleY(DueDateEdit.Height, DesignTimeDPI);
 end;
 
@@ -174,10 +175,7 @@ begin
   DetailsMemo.Text := Task.Details;
   CbComplete.Checked := Task.Complete;
   if Task.CompletedOn <> 0 then
-    LblCompletedOn.Caption := RSCompletedOn + ' ' + FormatDateTime('ddddd', Task.CompletedOn)
-    // 'ddddd' = DefaultFormatSettings.ShortDateFormat
-  else
-    LblCompletedOn.Visible := False;
+    LblCompletedOn.Caption := RSCompletedOn + ' ' + FormatDateTime('ddddd', Task.CompletedOn);
   LblCompletedOn.Visible := CbComplete.Checked;
   LblCreatedOn.Caption := RSCreatedOn + ' ' + FormatDateTime('ddddd', Task.CreatedOn);
   CbPriority.ItemIndex := Task.Priority + 1;
@@ -193,10 +191,20 @@ var
   HDist: Integer = 8;       // Horizontal distance between controls:
   w: Integer;
   cnv: TControlCanvas;
+  i: Integer;
 begin
   VBevelDist := ScaleY(VBevelDist, DesignTimeDPI);
   VDist := ScaleY(VDist, DesignTimeDPI);
   HDist := ScaleX(HDist, DesignTimeDPI);
+
+  for i := 0 to ComponentCount-1 do
+    if Components[i] is TControl then
+      with TControl(Components[i]) do begin
+        if BorderSpacing.Left <> 0 then BorderSpacing.Left := HDist;
+        if BorderSpacing.Right <> 0 then BorderSpacing.Right := HDist;
+        if BorderSpacing.Top <> 0 then BorderSpacing.Top := VDist;
+        if BorderSpacing.Bottom <> 0 then BorderSpacing.Bottom := VDist;
+      end;
 
   DescriptionEdit.Height := FEditHeight;
   DueDateEdit.Height := FEditHeight;
@@ -204,13 +212,8 @@ begin
   CbCategory.Height := FEditHeight;
   CbPriority.Height := FEditHeight;
 
-  OKBtn.Height := FBtnHeight;
-  OKBtn.Top := VDist;
-  CancelBtn.Height := OKBtn.Height;
-  CancelBtn.Top := OKBtn.Top;
-  ButtonPanel.Height := OKBtn.Height + VDIST*2;
+  OKBtn.Width := CancelBtn.Width;
   ResourceNameLbl.Font.Size := ScaleY(ResourceNameLbl.Font.Size, DesignTimeDPI);
-  ResourceNameLbl.Top := OKBtn.Top + (OKBtn.Height - ScaleY(ResourceNameLbl.Height, DesignTimeDPI)) div 2;
 
   DueDateEdit.Left := DueDateLbl.Left + GetLabelWidth(DueDateLbl) + HDist;
   cnv := TControlCanvas.Create;
@@ -237,7 +240,9 @@ begin
       cnv.Free;
     end;
     w := Max(GetlabelWidth(LblCompletedOn), w);
-    ClientWidth := ClientWidth - tabTask.ClientWidth + CbComplete.Left + w + HDist*2;
+    ClientWidth := ClientWidth - tabTask.ClientWidth +
+      Max(CbComplete.Left + w, RightOf(CbPriority)) +
+      HDist*2;
   end;
 
   CbCategory.Left := DueDateEdit.Left;
@@ -249,38 +254,22 @@ begin
     CbPriority.Left := CbComplete.Left;
   LblPriority.Left := CbPriority.Left - HDist - GetLabelWidth(LblPriority);
 
-  OKBtn.Width := Max(GetButtonWidth(OKBtn), GetButtonWidth(CancelBtn));
-  CancelBtn.Width := OKBtn.Width;
  {$IFDEF MSWINDOWS}
-  CancelBtn.Left := ButtonPanel.ClientWidth - ResourcenameLbl.Left - CancelBtn.Width;
-  OKBtn.Left := CancelBtn.Left - HDist - OKBtn.Width;
+  CancelBtn.AnchorSideRight.Control := ButtonPanel;
+  CancelBtn.AnchorSideRight.Side := asrRight;
+  OKBtn.AnchorSideRight.Control := CancelBtn;
+  OKBtn.AnchorSideRight.Side := asrLeft;
   OKBtn.TabOrder := 0;
   CancelBtn.TabOrder := 1;
  {$ELSE}
-  OKBtn.Left := ButtonPanel.ClientWidth - ResourcenameLbl.Left - OKBtn.Width;
-  CancelBtn.Left := OKBtn.Left - HDist - CancelBtn.Width;
+  OKBtn.AnchorSideRight.Control := ButtonPanel;
+  OKBtn.AnchorSideRight.Side := asrRight;
+  CancelBtn.AnchorSideRight.Control := OKBtn;
+  CancelBtn.AnchorSideRight.Side := asrLeft;
   CancelBtn.TabOrder := 0;
   OKBtn.TabOrder := 1;
  {$ENDIF}
-
-  CbCategory.Top := BottomOf(DescriptionEdit) + VDist;
-  LblCategory.Top := CbCategory.Top + (CbCategory.Height - LblCategory.Height) div 2;
-  CbPriority.Top := CbCategory.Top;
-  LblPriority.Top := LblCategory.Top;
-
-  //Bevel1.Top := DescriptionEdit.Top + editHeight + VBevelDist; //BottomOf(DescriptionEdit) + VBevelDist;
-
-  ImgCalendar.Top := Bevel1.Top + 2 + VBevelDist;
-  ImgCompleted.Top := ImgCalendar.Top;
-  DueDateEdit.Top := ImgCalendar.Top; // + (ImgCalendar.Height - DueDateEdit.Height) div 2;
-  DueDateLbl.Top := DueDateEdit.Top + (DueDateEdit.Height - DueDateLbl.Height) div 2;
-  CbComplete.Top := ImgCompleted.Top; // + (ImgCompleted.Height - CbComplete.Height) div 2;
-
-  LblCreatedOn.Top := DueDateEdit.Top + FEditHeight + VDist; //BottomOf(DueDateEdit) + VDist;
-  LblCompletedOn.Top := LblCreatedOn.Top;
-
-  DetailsMemo.Top := BottomOf(LblCreatedOn) + VBevelDist;
-  DetailsMemo.Height :=  tabTask.ClientHeight - DetailsMemo.Top - DescriptionEdit.Top;
+  AutoSize := true;
 end;
 {=====}
 
