@@ -1,17 +1,16 @@
 object AlarmNotifyForm: TAlarmNotifyForm
   Left = 490
-  Height = 220
+  Height = 149
   Top = 253
-  Width = 351
+  Width = 350
   HorzScrollBar.Page = 399
   VertScrollBar.Page = 196
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Reminder'
-  ClientHeight = 220
-  ClientWidth = 351
+  ClientHeight = 149
+  ClientWidth = 350
   Color = clWindow
-  DesignTimePPI = 144
   KeyPreview = True
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
@@ -24,9 +23,9 @@ object AlarmNotifyForm: TAlarmNotifyForm
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = SnoozeCombo
     Left = 8
-    Height = 25
-    Top = 110
-    Width = 215
+    Height = 15
+    Top = 80
+    Width = 214
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 8
     BorderSpacing.Right = 8
@@ -40,9 +39,9 @@ object AlarmNotifyForm: TAlarmNotifyForm
     AnchorSideTop.Control = lTime
     AnchorSideTop.Side = asrBottom
     Left = 8
-    Height = 25
-    Top = 37
-    Width = 68
+    Height = 15
+    Top = 27
+    Width = 45
     BorderSpacing.Top = 4
     Caption = 'lSubject'
     Font.Style = [fsBold]
@@ -53,9 +52,9 @@ object AlarmNotifyForm: TAlarmNotifyForm
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
     Left = 8
-    Height = 25
+    Height = 15
     Top = 8
-    Width = 42
+    Width = 30
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     Caption = 'lTime'
@@ -65,9 +64,9 @@ object AlarmNotifyForm: TAlarmNotifyForm
     AnchorSideTop.Control = SnoozeCombo
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = SnoozeBtn
-    Left = 124
+    Left = 123
     Height = 32
-    Top = 147
+    Top = 107
     Width = 112
     Anchors = [akTop, akRight]
     BorderSpacing.Top = 8
@@ -81,9 +80,9 @@ object AlarmNotifyForm: TAlarmNotifyForm
     AnchorSideTop.Control = DismissBtn
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 244
+    Left = 243
     Height = 32
-    Top = 147
+    Top = 107
     Width = 99
     Anchors = [akTop, akRight]
     BorderSpacing.Right = 8
@@ -95,9 +94,9 @@ object AlarmNotifyForm: TAlarmNotifyForm
   object OpenItemBtn: TButton
     AnchorSideTop.Control = DismissBtn
     AnchorSideRight.Control = DismissBtn
-    Left = 17
+    Left = 16
     Height = 32
-    Top = 147
+    Top = 107
     Width = 99
     Anchors = [akTop, akRight]
     BorderSpacing.Left = 8
@@ -113,15 +112,15 @@ object AlarmNotifyForm: TAlarmNotifyForm
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 231
-    Height = 33
-    Top = 106
+    Left = 230
+    Height = 23
+    Top = 76
     Width = 112
     Anchors = [akTop, akRight]
     BorderSpacing.Top = 4
     BorderSpacing.Right = 8
     DropDownCount = 24
-    ItemHeight = 25
+    ItemHeight = 15
     Items.Strings = (
       '5 Minutes'
       '10 Minutes'
@@ -156,9 +155,9 @@ object AlarmNotifyForm: TAlarmNotifyForm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 8
-    Height = 25
-    Top = 70
-    Width = 335
+    Height = 15
+    Top = 50
+    Width = 334
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 8
     BorderSpacing.Right = 8
@@ -174,8 +173,8 @@ object AlarmNotifyForm: TAlarmNotifyForm
     AnchorSideRight.Side = asrBottom
     Left = 8
     Height = 3
-    Top = 99
-    Width = 335
+    Top = 69
+    Width = 334
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 4
     Shape = bsTopLine
