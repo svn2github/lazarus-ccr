@@ -208,11 +208,10 @@ begin
 
   DescriptionEdit.Height := FEditHeight;
   DueDateEdit.Height := FEditHeight;
-  DueDateEdit.ButtonWidth := FEditHeight;
+  DueDateEdit.ButtonWidth := DueDateEdit.Height;
   CbCategory.Height := FEditHeight;
   CbPriority.Height := FEditHeight;
 
-  OKBtn.Width := CancelBtn.Width;
   ResourceNameLbl.Font.Size := ScaleY(ResourceNameLbl.Font.Size, DesignTimeDPI);
 
   DueDateEdit.Left := DueDateLbl.Left + GetLabelWidth(DueDateLbl) + HDist;
@@ -254,21 +253,8 @@ begin
     CbPriority.Left := CbComplete.Left;
   LblPriority.Left := CbPriority.Left - HDist - GetLabelWidth(LblPriority);
 
- {$IFDEF MSWINDOWS}
-  CancelBtn.AnchorSideRight.Control := ButtonPanel;
-  CancelBtn.AnchorSideRight.Side := asrRight;
-  OKBtn.AnchorSideRight.Control := CancelBtn;
-  OKBtn.AnchorSideRight.Side := asrLeft;
-  OKBtn.TabOrder := 0;
-  CancelBtn.TabOrder := 1;
- {$ELSE}
-  OKBtn.AnchorSideRight.Control := ButtonPanel;
-  OKBtn.AnchorSideRight.Side := asrRight;
-  CancelBtn.AnchorSideRight.Control := OKBtn;
-  CancelBtn.AnchorSideRight.Side := asrLeft;
-  CancelBtn.TabOrder := 0;
-  OKBtn.TabOrder := 1;
- {$ENDIF}
+  AlignOKCancel(OKBtn, CancelBtn, ButtonPanel);
+
   AutoSize := true;
 end;
 {=====}

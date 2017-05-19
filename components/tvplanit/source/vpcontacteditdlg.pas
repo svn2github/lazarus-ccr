@@ -543,23 +543,7 @@ begin
   {----------------------------------------------------------------------------}
   { Button panel                                                               }
   {----------------------------------------------------------------------------}
-  // The cancel button is autosized
-  OKBtn.Width := CancelBtn.Width;
- {$IFDEF MSWINDOWS}   // button order: OK - Cancel
-  CancelBtn.AnchorSideRight.Control := pnlBottom;
-  CancelBtn.AnchorSideRight.Side := asrRight;
-  OKBtn.AnchorSideRight.Control := CancelBtn;
-  OKBtn.AnchorSideRight.Side := asrLeft;
-  OKBtn.TabOrder := 0;
-  CancelBtn.TabOrder := 1;
- {$ELSE}              // button order: Cancel - OK
-  OKBtn.AnchorSideRight.Control := pnlBottom;
-  OKBtn.AnchorSideRight.Side := asrRight;
-  CancelBtn.AnchorSideRight.Control := OKBtn;
-  CancelBtn.AnchorSideRight.Side := asrLeft;
-  CancelBtn.TabOrder := 0;
-  OKBtn.TabOrder := 1;
- {$ENDIF}
+  AlignOKCancel(OKBtn, CancelBtn, pnlBottom);
 
   {----------------------------------------------------------------------------}
   { Page "Base data"                                                           }

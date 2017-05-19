@@ -55,13 +55,13 @@ type
   { TfrmFieldMapper }
 
   TfrmFieldMapper = class(TForm)
+    Bevel2: TBevel;
     BtnCancel: TButton;
     btnAddAll: TButton;
-    Panel1: TPanel;
+    ButtonPanel: TPanel;
     BtnOK: TButton;
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
-    Bevel1: TBevel;
     lblDBFieldsAvail: TLabel;
     lblFieldMappings: TLabel;
     lblVPFieldsAvail: TLabel;
@@ -123,6 +123,7 @@ implementation
 {$ENDIF}
 
 uses
+  math,
   vpConst, VpMisc;
   (*
 {$IFDEF RUNTIMETEST}
@@ -346,37 +347,22 @@ end;
 
 procedure TfrmFieldMapper.PositionControls;
 var
-  DELTA: Integer = 8;
-  w: Integer;
+  w, h: Integer;
 begin
-  DELTA := ScaleX(DELTA, DesignTimeDPI);
+  btnAddMapping.AutoSize := true;
+  btnAddAll.AutoSize := true;
+  w := Max(btnAddMapping.Width, btnAddAll.Width);
+  h := btnAddMapping.Height;
 
-  DataSetCombo.Left := lblDataset.Left + GetLabelWidth(lblDataset) + DELTA;
+  btnAddMapping.AutoSize := false;
+  btnAddMapping.Height := h;
+  btnAddMapping.Width := w;
 
-  btnDeleteMapping.Width := GetButtonWidth(btnDeleteMapping);
-  w := FieldMappingsLB.Width + DELTA + btnDeleteMapping.Width;
-  if w > ClientWidth then begin
-    ClientWidth := w;
-    DatasetFieldLB.Width := (ClientWidth - DatasetFieldLB.Left *2 - btnAddMapping.Width - 2*DELTA) div 2;
-    VPFieldLB.Width := DatasetFieldLB.Width;
-    DatasetFieldLB.Left := (w - DatasetFieldLB.Width - 2*DELTA - btnAddMapping.Width - VPFieldLB.Width) div 2;
-    FieldMappingsLB.Left := DatasetFieldLB.Left;
-    lblFieldMappings.Left := FieldMappingsLB.Left;
-    btnDeleteMapping.Left := ClientWidth - DatasetFieldLB.Left - btnDeleteMapping.Width;
-    btnClearMappings.Left := btnDeleteMapping.Left;
-   {$IFDEF MSWINDOWS}
-    BtnCancel.Left := w - DatasetFieldLB.Width - BtnCancel.Width;
-    BtnOK.Left := BtnCancel.Left - DELTA - BtnOK.Width;
-    BtnOK.TabOrder := 0;
-    BtnCancel.TabOrder := 1;
-   {$ELSE}
-    BtnOK.Left := w - DatasetFieldLB.Width - BtnOK.Width;
-    BtnCancel.Left := BtnOK.Left - DELTA - BtnCancel.Width;
-    BtnCancel.TabOrder := 0;
-    BtnOK.TabOrder := 1;
-   {$ENDIF}
-  end;
-  lblVPFieldsAvail.Left := RightOf(VPFieldLB) - GetLabelWidth(lblVPFieldsAvail);
+  btnAddAll.AutoSize := false;
+  btnAddAll.Height := h;
+  btnAddAll.Width := w;
+
+  AlignOKCancel(BtnOK, BtnCancel, ButtonPanel);
 end;
 
 procedure TfrmFieldMapper.DatasetComboChange(Sender: TObject);

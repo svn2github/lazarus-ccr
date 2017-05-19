@@ -113,6 +113,10 @@ procedure DrawBevelRect(const Canvas: TCanvas; R: TRect;
   Shadow, Highlight: TColor);
   { Draws a bevel in the specified TRect, using the specified colors }
 
+procedure AlignOKCancel(OKButton, CancelButton: TButton; APanel: TPanel);
+  { Aligns the OK and Cancel buttons to the right of the panel. In Windows the
+    order is OK-Cancel, in Linux etc it is Cancel-OK }
+
 function PointInRect(Point: TPoint; Rect: TRect): Boolean;
   { Determines if the specified point resides inside the specified TRect }
 
@@ -182,6 +186,7 @@ procedure Unused(const A1, A2, A3); overload;
 implementation
 
 uses
+  Math,
  {$IFDEF LCL}
   DateUtils, StrUtils,
  {$ENDIF}
@@ -430,6 +435,40 @@ begin
   end;
 end;
 {=====}
+
+procedure AlignOKCancel(OKButton, CancelButton: TButton; APanel: TPanel);
+var
+  w, h: Integer;
+begin
+  OKButton.AutoSize := true;
+  CancelButton.AutoSize := true;
+  w := Max(OKButton.Width, CancelButton.Width);
+  h := OKButton.Height;
+
+  OKButton.AutoSize := false;
+  OKButton.Width := w;
+  OKButton.Height := h;
+
+  CancelButton.AutoSize := false;
+  CancelButton.Width := w;
+  CancelButton.Height := h;
+
+  {$IFDEF MSWINDOWS}   // button order: OK - Cancel
+  CancelButton.AnchorSideRight.Control := APanel;
+  CancelButton.Anchors := [akTop, akRight];
+  OKButton.AnchorSideRight.Control := CancelButton;
+  OKButton.Anchors := [akTop, akRight];
+  OKButton.TabOrder := 0;
+  CancelButton.TabOrder := 1;
+  {$ELSE}              // button order: Cancel - OK
+  OKButton.AnchorSideRight.Control := APanel;
+  OKButton.Anchors := [akTop, akRight];
+  CancelButton.AnchorSideRight.Control := OKButton;
+  CancelButton.Anchors := [akTop, akRight];
+  CancelButton.TabOrder := 0;
+  OKButton.TabOrder := 1;
+  {$ENDIF}
+end;
 
 function PointInRect(Point: TPoint; Rect: TRect): Boolean;
 begin

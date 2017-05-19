@@ -1,45 +1,66 @@
 object Form1: TForm1
-  Left = 225
+  Left = 269
   Height = 686
-  Top = 155
+  Top = 216
   Width = 980
   Caption = 'Form1'
   ClientHeight = 686
   ClientWidth = 980
   OnCreate = FormCreate
-  LCLVersion = '1.7'
+  LCLVersion = '1.9.0.0'
   object Panel1: TPanel
     Left = 0
     Height = 34
     Top = 0
     Width = 980
     Align = alTop
+    AutoSize = True
     BevelOuter = bvNone
     ClientHeight = 34
     ClientWidth = 980
     TabOrder = 0
     object VpResourceCombo1: TVpResourceCombo
-      Left = 8
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 4
       Height = 23
-      Top = 5
+      Top = 6
       Width = 208
       DataStore = VpBufDSDataStore1
       Style = csDropDownList
+      Borderspacing.Left = 4
+      Borderspacing.Top = 4
+      Borderspacing.Bottom = 4
     end
     object BtnNewRes: TButton
-      Left = 222
+      AnchorSideLeft.Control = VpResourceCombo1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 216
       Height = 25
-      Top = 4
+      Top = 5
       Width = 99
+      BorderSpacing.Left = 4
+      BorderSpacing.Top = 4
+      BorderSpacing.Bottom = 4
       Caption = 'New resource'
       OnClick = BtnNewResClick
       TabOrder = 1
     end
     object BtnEditRes: TButton
-      Left = 328
+      AnchorSideLeft.Control = BtnNewRes
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 319
       Height = 25
-      Top = 4
+      Top = 5
       Width = 96
+      BorderSpacing.Left = 4
+      BorderSpacing.Top = 4
+      BorderSpacing.Bottom = 4
       Caption = 'Edit resource'
       OnClick = BtnEditResClick
       TabOrder = 2
@@ -81,7 +102,6 @@ object Form1: TForm1
         TimeSlotColors.Active = clWhite
         TimeSlotColors.Inactive = 8454143
         TimeSlotColors.Holiday = 16744703
-        TimeSlotColors.Weekday = clWhite
         TimeSlotColors.Weekend = 16777088
         TimeSlotColors.ActiveRange.RangeBegin = h_00
         TimeSlotColors.ActiveRange.RangeEnd = h_00
@@ -156,24 +176,23 @@ object Form1: TForm1
           TabOrder = 1
           KBNavigation = True
           DateLabelFormat = 'mmmm yyyy'
-          DayHeadAttributes.Color = clBtnFace
           DayHeadAttributes.Font.Height = -13
           DayHeadAttributes.Font.Name = 'Tahoma'
+          DayHeadAttributes.Color = clBtnFace
           DayNameStyle = dsShort
           DayNumberFont.Height = -12
           DrawingStyle = dsFlat
           EventDayStyle = []
           EventFont.Height = -12
           HeadAttributes.Color = clBtnFace
-          LineColor = clGray
-          TimeFormat = tf12Hour
-          TodayAttributes.Color = clSilver
-          TodayAttributes.BorderPen.Color = clRed
-          TodayAttributes.BorderPen.Width = 3
           OffDayColor = clSilver
           SelectedDayColor = clRed
           ShowEvents = True
           ShowEventTime = False
+          TimeFormat = tf12Hour
+          TodayAttributes.Color = clSilver
+          TodayAttributes.BorderPen.Color = clRed
+          TodayAttributes.BorderPen.Width = 3
           WeekStartsOn = dtSunday
         end
         object Splitter2: TSplitter
@@ -279,7 +298,7 @@ object Form1: TForm1
     top = 264
   end
   object VpResourceEditDialog1: TVpResourceEditDialog
-    Version = 'v1.04'
+    Version = 'v1.05'
     DataStore = VpBufDSDataStore1
     Options = []
     Placement.Position = mpCenter
