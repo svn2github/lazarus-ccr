@@ -738,7 +738,7 @@ begin
     GetLabelWidth(LblDrawingStyle)
   ]);
   CbLanguages.Left := 24 + w + 8;
-
+  (*
   // Resources page
   w := MaxValue([BtnNewRes.Width, BtnEditRes.Width, BtnDeleteRes.Width]);
   BtnNewRes.AutoSize := false;
@@ -747,6 +747,7 @@ begin
   BtnNewRes.Width := w;
   BtnEditRes.Width := w;
   BtnDeleteRes.Width := w;
+  *)
 end;
 
 procedure TMainForm.RbAllTasksChange(Sender: TObject);

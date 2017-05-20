@@ -16,6 +16,7 @@ object MainForm: TMainForm
     Top = 0
     Width = 834
     Align = alClient
+    AutoSize = True
     BevelOuter = bvNone
     ClientHeight = 576
     ClientWidth = 834
@@ -440,19 +441,27 @@ object MainForm: TMainForm
       end
       object Resources: TPage
         object BtnDeleteRes: TButton
-          Left = 176
+          AnchorSideLeft.Control = BtnEditRes
+          AnchorSideLeft.Side = asrBottom
+          Left = 128
           Height = 25
           Top = 64
-          Width = 75
+          Width = 59
+          AutoSize = True
+          BorderSpacing.Left = 8
           Caption = 'Delete'
           OnClick = BtnDeleteResClick
           TabOrder = 0
         end
         object BtnEditRes: TButton
-          Left = 96
+          AnchorSideLeft.Control = BtnNewRes
+          AnchorSideLeft.Side = asrBottom
+          Left = 74
           Height = 25
           Top = 64
           Width = 46
+          AutoSize = True
+          BorderSpacing.Left = 8
           Caption = 'Edit'
           OnClick = BtnEditResClick
           TabOrder = 1
@@ -462,6 +471,7 @@ object MainForm: TMainForm
           Height = 25
           Top = 64
           Width = 50
+          AutoSize = True
           Caption = 'New'
           OnClick = BtnNewResClick
           TabOrder = 2
