@@ -138,7 +138,8 @@ begin
 
   try
     // Connection
-    ODBCConnection1.Driver := 'Microsoft Access Driver (*.mdb, *.accdb)';
+    ODBCConnection1.Driver := 'Microsoft Access Driver (*.mdb)';
+    ODBCConnection1.Params.Clear;
     ODBCConnection1.Params.Add('DBQ=.\data.mdb');
     ODBCConnection1.Connected := true;
     ODBCConnection1.KeepConnection := true;

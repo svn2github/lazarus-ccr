@@ -395,6 +395,9 @@ type
 
   TVpNavBar = class(TVpCustomNavBar)
   published
+    {$IFDEF LCL}
+    property BorderSpacing;
+    {$ENDIF}
     property ActiveFolder;
     property AllowInplaceEdit;
     property AllowRearrange;

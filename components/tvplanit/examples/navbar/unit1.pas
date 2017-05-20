@@ -21,8 +21,8 @@ type
     CbPlaySounds: TCheckBox;
     EdBkImage: TFileNameEdit;
     EdSoundFile: TFileNameEdit;
-    GroupBox1: TGroupBox;
-    GroupBox2: TGroupBox;
+    GbBackgroud: TGroupBox;
+    GbSounds: TGroupBox;
     IconsLbl: TLabel;
     IconsLink: TLabel;
     Panel2: TPanel;
@@ -203,6 +203,9 @@ begin
   EdSoundFile.InitialDir := ExtractFileDir(VpNavBar1.SoundAlias);
   EdSoundFile.FileName := VpNavBar1.SoundAlias;
   CbPlaySounds.Checked := VpNavBar1.PlaySounds;
+
+  EdBkImage.ButtonWidth := EdBkImage.Height;
+  EdSoundFile.ButtonWidth := EdSoundFile.Height;
 end;
 
 procedure TForm1.IconsLinkClick(Sender: TObject);

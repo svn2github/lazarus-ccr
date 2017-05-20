@@ -57,9 +57,9 @@ begin
 
   Combo := TVpResourceCombo.Create(Self);
   Combo.Parent := Panel1;
-  Combo.Left := 8;
-  Combo.Top := 8;
-  Combo.Width := 200;
+  Combo.Width := 300;
+  Combo.BorderSpacing.Around := 4;
+  Panel1.AutoSize := true;
 
   ControlLink := TVpControlLink.Create(self);
   ControlLink.Datastore := Datastore;

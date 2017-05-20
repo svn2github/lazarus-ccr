@@ -7,39 +7,56 @@ object Form1: TForm1
   ClientHeight = 686
   ClientWidth = 980
   OnCreate = FormCreate
-  LCLVersion = '1.7'
+  LCLVersion = '1.6.4.0'
   object Panel1: TPanel
     Left = 0
-    Height = 34
+    Height = 33
     Top = 0
     Width = 980
     Align = alTop
+    AutoSize = True
     BevelOuter = bvNone
-    ClientHeight = 34
+    ClientHeight = 33
     ClientWidth = 980
     TabOrder = 0
     object VpResourceCombo1: TVpResourceCombo
-      Left = 8
+      AnchorSideLeft.Control = Panel1
+      Left = 4
       Height = 23
       Top = 5
       Width = 208
       DataStore = VpSqlite3Datastore1
       Style = csDropDownList
+      Borderspacing.Left = 4
+      Borderspacing.Top = 4
+      Borderspacing.Bottom = 4
     end
     object BtnNewRes: TButton
-      Left = 222
+      AnchorSideLeft.Control = VpResourceCombo1
+      AnchorSideLeft.Side = asrBottom
+      Left = 216
       Height = 25
       Top = 4
-      Width = 99
+      Width = 98
+      AutoSize = True
+      BorderSpacing.Left = 4
+      BorderSpacing.Top = 4
+      BorderSpacing.Bottom = 4
       Caption = 'New resource'
       OnClick = BtnNewResClick
       TabOrder = 1
     end
     object BtnEditRes: TButton
-      Left = 328
+      AnchorSideLeft.Control = BtnNewRes
+      AnchorSideLeft.Side = asrBottom
+      Left = 318
       Height = 25
       Top = 4
-      Width = 96
+      Width = 94
+      AutoSize = True
+      BorderSpacing.Left = 4
+      BorderSpacing.Top = 4
+      BorderSpacing.Bottom = 4
       Caption = 'Edit resource'
       OnClick = BtnEditResClick
       TabOrder = 2
@@ -47,8 +64,8 @@ object Form1: TForm1
   end
   object PageControl1: TPageControl
     Left = 0
-    Height = 652
-    Top = 34
+    Height = 653
+    Top = 33
     Width = 980
     ActivePage = TabSheet3
     Align = alClient
@@ -79,7 +96,6 @@ object Form1: TForm1
         TimeSlotColors.Active = clWhite
         TimeSlotColors.Inactive = 8454143
         TimeSlotColors.Holiday = 16744703
-        TimeSlotColors.Weekday = clWhite
         TimeSlotColors.Weekend = 16777088
         TimeSlotColors.ActiveRange.RangeBegin = h_00
         TimeSlotColors.ActiveRange.RangeEnd = h_00
@@ -147,22 +163,21 @@ object Form1: TForm1
           TabOrder = 1
           KBNavigation = True
           DateLabelFormat = 'mmmm yyyy'
-          DayHeadAttributes.Color = clBtnFace
           DayHeadAttributes.Font.Height = -13
           DayHeadAttributes.Font.Name = 'Tahoma'
+          DayHeadAttributes.Color = clBtnFace
           DayNameStyle = dsShort
           DrawingStyle = dsFlat
           EventDayStyle = []
           HeadAttributes.Color = clBtnFace
-          LineColor = clGray
-          TimeFormat = tf12Hour
-          TodayAttributes.Color = clSilver
-          TodayAttributes.BorderPen.Color = clRed
-          TodayAttributes.BorderPen.Width = 3
           OffDayColor = clSilver
           SelectedDayColor = clRed
           ShowEvents = True
           ShowEventTime = False
+          TimeFormat = tf12Hour
+          TodayAttributes.Color = clSilver
+          TodayAttributes.BorderPen.Color = clRed
+          TodayAttributes.BorderPen.Width = 3
           WeekStartsOn = dtSunday
         end
         object Splitter2: TSplitter
@@ -251,14 +266,18 @@ object Form1: TForm1
     end
     object TabSheet3: TTabSheet
       Caption = 'Grids'
-      ClientHeight = 624
+      ClientHeight = 625
       ClientWidth = 972
       object DBNavigator: TDBNavigator
+        AnchorSideLeft.Control = TabSheet3
+        AnchorSideTop.Control = TabSheet3
         Left = 8
         Height = 25
         Top = 8
         Width = 241
         BevelOuter = bvNone
+        BorderSpacing.Left = 8
+        BorderSpacing.Top = 8
         ChildSizing.EnlargeHorizontal = crsScaleChilds
         ChildSizing.EnlargeVertical = crsScaleChilds
         ChildSizing.ShrinkHorizontal = crsScaleChilds
@@ -271,19 +290,32 @@ object Form1: TForm1
         TabOrder = 0
       end
       object BtnApplyToPlanner: TButton
-        Left = 264
+        AnchorSideLeft.Control = DBNavigator
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = DBNavigator
+        AnchorSideTop.Side = asrCenter
+        Left = 257
         Height = 25
         Top = 8
-        Width = 120
+        Width = 114
+        AutoSize = True
+        BorderSpacing.Left = 8
         Caption = 'Apply to planner'
         OnClick = BtnApplyToPlannerClick
         TabOrder = 1
       end
       object TabControl1: TTabControl
+        AnchorSideLeft.Control = TabSheet3
+        AnchorSideTop.Control = DBNavigator
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TabSheet3
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = TabSheet3
+        AnchorSideBottom.Side = asrBottom
         Left = 8
-        Height = 577
-        Top = 39
-        Width = 960
+        Height = 576
+        Top = 41
+        Width = 956
         OnChange = TabControl1Change
         TabIndex = 0
         Tabs.Strings = (
@@ -297,9 +329,9 @@ object Form1: TForm1
         TabOrder = 2
         object Grid: TDBGrid
           Left = 2
-          Height = 552
+          Height = 551
           Top = 23
-          Width = 956
+          Width = 952
           Align = alClient
           Color = clWindow
           Columns = <>

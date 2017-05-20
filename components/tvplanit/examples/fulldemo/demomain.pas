@@ -69,7 +69,7 @@ type
     LeftPanel: TPanel;
     DaySelectorPanel: TPanel;
     HeaderPanel: TPanel;
-    Panel6: TPanel;
+    TaskControlPanel: TPanel;
     RbAllTasks: TRadioButton;
     RbHideCompletedTasks: TRadioButton;
     Splitter2: TSplitter;
@@ -729,53 +729,24 @@ procedure TMainForm.PositionControls;
 var
   w: Integer;
 begin
-  // DayView page
-  DaySelectorPanel.Height := 2*CbGranularity.Top + CbGranularity.Height;
-
-  // Tasks page
-  Panel6.ClientHeight := 2*RbAllTasks.Top + ScaleY(RbAllTasks.Height, DesignTimeDPI);
-
-  // Resources page
-  w := MaxValue([
-    GetButtonWidth(BtnNewRes),
-    GetButtonWidth(BtnEditRes),
-    GetButtonWidth(BtnDeleteRes)
-  ]);
-  BtnNewRes.Width := w;
-  BtnEditRes.Width := w;
-  BtnDeleteRes.Width := w;
-  BtnEditRes.Left := RightOf(BtnNewRes) + 8;
-  BtnDeleteRes.Left := RightOf(BtnEditRes) + 8;
-  VpResourceCombo1.Width := RightOf(BtnDeleteRes) - BtnNewRes.Left;
-
   // Settings page
   w := MaxValue([
     GetLabelWidth(LblLanguage),
     GetLabelWidth(LblTimeFormat),
     GetLabelWidth(LblFirstDayOfWeek),
-    GetLabelWidth(LblAddressBuilder)
+    GetLabelWidth(LblAddressBuilder),
+    GetLabelWidth(LblDrawingStyle)
   ]);
   CbLanguages.Left := 24 + w + 8;
-  CbTimeFormat.Left := CbLanguages.Left;
-  CbFirstDayOfWeek.Left := CbLanguages.Left;
-  CbAddressBuilder.Left := CbLanguages.Left;
-  CbDrawingStyle.Left := CbLanguages.Left;;
-  LblLanguage.Left :=  CbLanguages.Left - 8 - GetLabelWidth(LblLanguage);
-  LblTimeFormat.Left := CbTimeFormat.Left - 8 - GetLabelWidth(LblTimeFormat);
-  LblFirstDayOfWeek.Left := CbFirstDayOfWeek.Left - 8 - GetLabelWidth(LblFirstDayOfWeek);
-  LblAddressBuilder.Left := CbAddressBuilder.Left - 8 - GetLabelWidth(LblAddressBuilder);
-  LblDrawingStyle.Left := CbDrawingStyle.Left - 8 - GetlabelWidth(LblDrawingStyle);
 
-  CbAllowInplaceEditing.Left := CbLanguages.Left + CbLanguages.Width + 32;
-  CbAllowDragAndDrop.Left := CbAllowInplaceEditing.Left;
-  CbDragDropTransparent.Left := CbAllowInplaceEditing.Left;
-  CbShowEventHints.Left := CbAllowInplaceEditing.Left;
-
-  // Planner pages
-  DaysTrackbar.Left := GetLabelWidth(LblVisibleDays) + LblVisibleDays.Left + 8;
-  LblGranularity.Left := DaysTrackbar.Left + DaysTrackbar.Width + 32;
-  CbGranularity.Left := LblGranularity.Left + GetLabelWidth(LblGranularity) + 8;
-  RbHideCompletedTasks.Left := RbAllTasks.Left + RbAllTasks.Width + 48;
+  // Resources page
+  w := MaxValue([BtnNewRes.Width, BtnEditRes.Width, BtnDeleteRes.Width]);
+  BtnNewRes.AutoSize := false;
+  BtnEditRes.AutoSize := false;
+  BtnDeleteRes.AutoSize := false;
+  BtnNewRes.Width := w;
+  BtnEditRes.Width := w;
+  BtnDeleteRes.Width := w;
 end;
 
 procedure TMainForm.RbAllTasksChange(Sender: TObject);

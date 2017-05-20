@@ -277,6 +277,10 @@ type
     property Anchors;
     property Constraints;
     {$ENDIF}
+    {$IFDEF LCL}
+    property BorderSpacing;
+    property ChildSizing;
+    {$ENDIF}
     property Active;
     property Align;
     property Color;

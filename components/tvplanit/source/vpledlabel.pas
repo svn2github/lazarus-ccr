@@ -108,7 +108,11 @@ type
 
   TVpLEDLabel = class(TVpCustomLEDLabel)
   published
+    {$IFDEF LCL}
+    property BorderSpacing;
+    {$ENDIF}
     property Version;
+    property Align;
     property Caption;
     property Columns;
     property Rows;

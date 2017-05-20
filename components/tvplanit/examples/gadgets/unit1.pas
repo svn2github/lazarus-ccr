@@ -19,6 +19,7 @@ type
     EdCountDownTime: TEdit;
     LblCountDownTime: TLabel;
     LblElapsedTime: TLabel;
+    Panel1: TPanel;
     RgDisplayMode: TRadioGroup;
     RgClockMode: TRadioGroup;
     VpClock1: TVpClock;
@@ -29,7 +30,7 @@ type
     procedure BtnStartStopClick(Sender: TObject);
     procedure CbNewClockFaceChange(Sender: TObject);
     procedure EdCountDownTimeChange(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure RgClockModeClick(Sender: TObject);
     procedure RgDisplayModeClick(Sender: TObject);
     procedure VpClock1CountdownDone(Sender: TObject);
@@ -45,6 +46,9 @@ var
 implementation
 
 {$R *.lfm}
+
+uses
+  Math;
 
 { TForm1 }
 
@@ -117,9 +121,17 @@ begin
       VpClock1.Time := t;
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TForm1.FormShow(Sender: TObject);
+var
+  w: Integer;
 begin
-  CbMilitaryTime.Top := CbNewClockFace.Top;
+  RgDisplayMode.AutoSize := false;
+  RgClockMode.AutoSize := false;
+  w := Max(RgDisplayMode.Width, RgClockMode.Width);
+  RgDisplayMode.Width := w;
+  RgClockMode.Width := w;
+
+  AutoSize := true;
 end;
 
 procedure TForm1.RgClockModeClick(Sender: TObject);

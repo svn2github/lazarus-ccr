@@ -137,6 +137,9 @@ type
     property Align;
     property Anchors;
     property BiDiMode;
+    {$IFDEF LCL}
+    property BorderSpacing;
+    {$ENDIF}
     property Color;
     property Constraints;
     property Cursor;

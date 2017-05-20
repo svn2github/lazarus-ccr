@@ -8,39 +8,56 @@ object Form1: TForm1
   ClientWidth = 910
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  LCLVersion = '1.7'
+  LCLVersion = '1.6.4.0'
   object Panel1: TPanel
     Left = 0
-    Height = 34
+    Height = 33
     Top = 0
     Width = 910
     Align = alTop
+    AutoSize = True
     BevelOuter = bvNone
-    ClientHeight = 34
+    ClientHeight = 33
     ClientWidth = 910
     TabOrder = 0
     object VpResourceCombo1: TVpResourceCombo
-      Left = 8
+      AnchorSideLeft.Control = Panel1
+      Left = 4
       Height = 23
       Top = 5
       Width = 208
       DataStore = VpFlexDataStore1
       Style = csDropDownList
+      Borderspacing.Left = 4
+      Borderspacing.Top = 4
+      Borderspacing.Bottom = 4
     end
     object BtnNewRes: TButton
-      Left = 222
+      AnchorSideLeft.Control = VpResourceCombo1
+      AnchorSideLeft.Side = asrBottom
+      Left = 216
       Height = 25
       Top = 4
-      Width = 99
+      Width = 98
+      AutoSize = True
+      BorderSpacing.Left = 4
+      BorderSpacing.Top = 4
+      BorderSpacing.Bottom = 4
       Caption = 'New resource'
       OnClick = BtnNewResClick
       TabOrder = 1
     end
     object BtnEditRes: TButton
-      Left = 328
+      AnchorSideLeft.Control = BtnNewRes
+      AnchorSideLeft.Side = asrBottom
+      Left = 318
       Height = 25
       Top = 4
-      Width = 96
+      Width = 94
+      AutoSize = True
+      BorderSpacing.Left = 4
+      BorderSpacing.Top = 4
+      BorderSpacing.Bottom = 4
       Caption = 'Edit resource'
       OnClick = BtnEditResClick
       TabOrder = 2
@@ -48,8 +65,8 @@ object Form1: TForm1
   end
   object PageControl1: TPageControl
     Left = 0
-    Height = 652
-    Top = 34
+    Height = 653
+    Top = 33
     Width = 910
     ActivePage = TabSheet1
     Align = alClient
@@ -57,11 +74,11 @@ object Form1: TForm1
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Events and tasks'
-      ClientHeight = 624
+      ClientHeight = 625
       ClientWidth = 902
       object VpDayView1: TVpDayView
         Left = 0
-        Height = 624
+        Height = 625
         Top = 0
         Width = 283
         DataStore = VpFlexDataStore1
@@ -97,18 +114,18 @@ object Form1: TForm1
       end
       object Panel2: TPanel
         Left = 288
-        Height = 624
+        Height = 625
         Top = 0
         Width = 363
         Align = alLeft
         BevelOuter = bvNone
         Caption = 'Panel2'
-        ClientHeight = 624
+        ClientHeight = 625
         ClientWidth = 363
         TabOrder = 1
         object VpWeekView1: TVpWeekView
           Left = 0
-          Height = 378
+          Height = 379
           Top = 0
           Width = 363
           DataStore = VpFlexDataStore1
@@ -136,7 +153,7 @@ object Form1: TForm1
         object VpMonthView1: TVpMonthView
           Left = 0
           Height = 241
-          Top = 383
+          Top = 384
           Width = 363
           DataStore = VpFlexDataStore1
           ControlLink = VpControlLink1
@@ -167,7 +184,7 @@ object Form1: TForm1
           Cursor = crVSplit
           Left = 0
           Height = 5
-          Top = 378
+          Top = 379
           Width = 363
           Align = alBottom
           ResizeAnchor = akBottom
@@ -175,7 +192,7 @@ object Form1: TForm1
       end
       object VpTaskList1: TVpTaskList
         Left = 656
-        Height = 624
+        Height = 625
         Top = 0
         Width = 246
         DataStore = VpFlexDataStore1
@@ -203,13 +220,13 @@ object Form1: TForm1
       end
       object Splitter1: TSplitter
         Left = 651
-        Height = 624
+        Height = 625
         Top = 0
         Width = 5
       end
       object Splitter3: TSplitter
         Left = 283
-        Height = 624
+        Height = 625
         Top = 0
         Width = 5
       end

@@ -21,19 +21,22 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="4">
+    <RequiredPackages Count="5">
       <Item1>
-        <PackageName Value="laz_visualplanit_zeos"/>
+        <PackageName Value="laz_visualplanit_zeos_design"/>
       </Item1>
       <Item2>
-        <PackageName Value="laz_visualplanit"/>
+        <PackageName Value="laz_visualplanit_zeos"/>
       </Item2>
       <Item3>
-        <PackageName Value="zcomponent"/>
+        <PackageName Value="laz_visualplanit"/>
       </Item3>
       <Item4>
-        <PackageName Value="LCL"/>
+        <PackageName Value="zcomponent"/>
       </Item4>
+      <Item5>
+        <PackageName Value="LCL"/>
+      </Item5>
     </RequiredPackages>
     <Units Count="2">
       <Unit0>

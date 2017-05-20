@@ -21,10 +21,12 @@ type
     Label1: TLabel;
     ODBCConnection1: TODBCConnection;
     Panel1: TPanel;
+    Panel2: TPanel;
     SQLTransaction1: TSQLTransaction;
     StatusBar1: TStatusBar;
     procedure BtnCreateDBClick(Sender: TObject);
     procedure BtnCloseClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     function CreateAccessDatabase(DatabaseFile: string): boolean;
     procedure CreateContactsTable;
@@ -312,6 +314,11 @@ begin
     'CREATE INDEX siTCompletedOn ON Tasks(CompletedOn)'
   );
   StatusMsg('Table "Tasks" created.');
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  FilenameEdit.ButtonWidth := FilenameEdit.Height;
 end;
 
 procedure TForm1.StatusMsg(const AText: String);
