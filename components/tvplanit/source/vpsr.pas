@@ -35,7 +35,7 @@ unit VpSR;
 
 interface
 
-{$I vpsr.inc}
+{$I include/vpsr.inc}
 
 type
   // For acquiring the labels that go with each telephone field, i.e. Home, work, fax etc...                                 }

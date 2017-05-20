@@ -85,7 +85,7 @@
       <Filename Value="demo"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir);..\mORMotSourceHere;..\..\..\source"/>
+      <IncludeFiles Value="$(ProjOutDir);..\mORMotSourceHere;..\..\..\source\include"/>
       <OtherUnitFiles Value="..;..\mORMotSourceHere;..\mORMotSourceHere\SQLite3;..\..\fulldemo"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
