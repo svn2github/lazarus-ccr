@@ -1597,7 +1597,7 @@ var
   DC: HDC;
 begin                                                                    
   DC := GetDC(0);
-  SavedFontHandle := SelectObject(DC, ACanvas.Font.Handle);
+  SavedFontHandle := SelectObject(DC, ACanvas.Font.Reference.Handle);
   try                                                                    
     GetTextMetrics(DC, Metrics{%H-});
     Result := Metrics.tmAveCharWidth;                                    

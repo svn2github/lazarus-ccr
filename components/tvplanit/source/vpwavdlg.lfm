@@ -12,7 +12,7 @@ object FrmSoundDialog: TFrmSoundDialog
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '1.6.4.0'
   object PageControl1: TPageControl
     Left = 0
     Height = 474

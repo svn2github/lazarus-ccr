@@ -54,6 +54,8 @@ type
     LblIncrement: TLabel;
     LblDescription: TLabel;
     LblName: TLabel;
+    Panel1: TPanel;
+    ButtonPanel: TPanel;
     rgDayIncrement: TRadioGroup;
     udIncrement: TUpDown;
     edIncrement: TEdit;
@@ -82,7 +84,6 @@ implementation
 {$ENDIF}
 
 uses
-  Math,
   VpMisc, VpSR;
 
 { TfrmEditLayout }
@@ -92,12 +93,12 @@ begin
   PositionControls;
   edName.SetFocus;
 end;
-{=====}
+
 procedure TfrmEditFormat.btnCancelClick(Sender: TObject);
 begin
   ModalResult := mrCancel;
 end;
-{=====}
+
 procedure TfrmEditFormat.btnOkClick(Sender: TObject);
 begin
   if Validate then
@@ -108,7 +109,7 @@ begin
     Exit;
   end;
 end;
-{=====}
+
 function TfrmEditFormat.Execute(AFormat: TVpPrintFormatItem) : Boolean;
 begin
   SetData(AFormat);
@@ -122,7 +123,6 @@ begin
   SetCaptions;
 end;
 
-{=====}
 procedure TfrmEditFormat.SaveData(AFormat: TVpPrintFormatItem);
 var
   EnumVal : Integer;
@@ -154,84 +154,9 @@ begin
 end;
 
 procedure TfrmEditFormat.PositionControls;
-var
-  DELTA: integer = 8;
-  margin: Integer = 8;
-  vdist: Integer = 4;
-var
-  w, h: Integer;
-  dummyRB: TRadioButton;
-  editHeight: Integer;
-  btnHeight: Integer;
 begin
-  // Fix edit and button heights at higher dpi
-  with TEdit.Create(self) do
-  try
-    Parent := self;
-    editHeight := Height;
-  finally
-    Free;
-  end;
-
-  btnHeight := ScaleY(btnOK.Height, DesignTimeDPI);
-
-  DELTA := ScaleX(DELTA, DesignTimeDPI);
-  MARGIN := ScaleX(MARGIN, DesignTimeDPI);
-  VDIST := ScaleY(VDIST, DesignTimeDPI);
-
-  w := MaxValue([GetLabelWidth(LblName), GetLabelWidth(LblDescription), GetLabelWidth(LblIncrement)]);
-  edName.Left := margin + w + DELTA;
-  edDescription.Left := edName.Left;
-  edDescription.Width := edName.Width;
-  edIncrement.Left := edName.Left;
-  udIncrement.Left := edIncrement.Left + edIncrement.Width;
-  LblName.Left := edName.Left - GetLabelWidth(LblName) - DELTA;
-  LblDescription.Left := edDescription.Left - GetLabelWidth(lblDescription) - DELTA;
-  lblIncrement.Left := edIncrement.Left - GetLabelWidth(lblIncrement) - DELTA;
-
-  ClientWidth := MARGIN + w + DELTA + edName.Width + MARGIN;
-  rgDayIncrement.Left := MARGIN;
-  rgDayIncrement.Width := ClientWidth - 2*MARGIN;
-
-  w := Max(GetButtonWidth(btnOK), GetButtonWidth(btnCancel));
-  btnOK.Width := w;
-  btnCancel.Width := w;
- {$IFDEF MSWINDOWS}
-  btnCancel.Left := RightOf(rgDayIncrement) - btnCancel.Width;
-  btnOK.Left := btnCancel.Left - DELTA - btnOK.Width;
-  btnOK.TabOrder := rgDayIncrement.TabOrder + 1;
-  btnCancel.TabOrder := btnOK.TabOrder + 1;
- {$ELSE}
-  btnOK.Left := RightOf(rgDayIncrement) - btnOK.Width;
-  btnCancel.Left := btnOK.Left - DELTA - btnCancel.Width;
-  btnCancel.TabOrder := rgDayIncrement.TabOrder + 1;
-  btnOK.TabOrder := btnCancel.TabOrder + 1;
- {$ENDIF}
-
-  edName.Height := editHeight;
-  edDescription.Height := editHeight;
-  edIncrement.Height := editHeight;
-  udIncrement.Height := editHeight;
-
-  edDescription.Top := BottomOf(edName) + VDIST;
-  lblDescription.Top := edDescription.Top + (edDescription.Height - lblDescription.Height) div 2;
-  edIncrement.Top := BottomOf(edDescription) + VDIST;
-  udIncrement.Top := edIncrement.Top;
-  lblIncrement.top := edIncrement.Top + (edIncrement.Height - lblIncrement.Height) div 2;
-  rgDayIncrement.Top := BottomOf(edIncrement) + VDISt + VDIST;
-
-  DummyRB := TRadioButton.Create(self);
-  DummyRB.Parent := self;
-  h := DummyRB.Height;
-  DummyRB.Free;
-
-  rgdayIncrement.Height := h + 2*LblName.Height;
-  btnOK.Height := btnHeight;
-  btnCancel.Height := btnHeight;
-  btnOK.Top := Bottomof(rgDayIncrement) + MARGIN;
-  btnCancel.Top := btnOK.Top;
-
-  ClientHeight := Bottomof(btnOK) + VDIST*2;
+  AlignOKCancel(btnOK, btnCancel, ButtonPanel);
+  udIncrement.Width := udIncrement.Height div 2 + 1;
 end;
 
 procedure TfrmEditFormat.SetData(AFormat: TVpPrintFormatItem);
@@ -249,14 +174,11 @@ begin
   else
     rgDayIncrement.ItemIndex := 0;
 end;
-{=====}
+
 function TfrmEditFormat.Validate : Boolean;
 begin
   Result := edName.Text <> '';
 end;
-{=====}
-
-
 
 end.
   

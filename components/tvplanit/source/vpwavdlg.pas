@@ -88,7 +88,6 @@ type
 implementation
 
 uses
-  Math,
   VpSR, VpMisc;
 
 {$IFDEF LCL}

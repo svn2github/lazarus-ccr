@@ -100,7 +100,6 @@ implementation
 {$ENDIF}
 
 uses
-  Math,
   vpSR, vpMisc;
 
 function ExecuteResourceDlg(Resource: TVpResource): Boolean;

@@ -505,7 +505,6 @@ procedure TContactEditForm.PositionControls;
 type
   TLabelArray = array of TLabel;
   TComboboxArray = array of TCombobox;
-  TEditArray = array of TEdit;
 var
   Labels: TLabelArray;
   Comboboxes: TComboboxArray;

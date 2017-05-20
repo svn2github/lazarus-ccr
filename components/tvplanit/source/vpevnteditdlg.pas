@@ -180,7 +180,7 @@ type
 implementation
 
 uses
-  Math, DateUtils,
+  DateUtils,
   VpSR, VpMisc, VpWavDlg;
 
 {$IFDEF LCL}
@@ -622,12 +622,8 @@ end;
 {=====}
 
 procedure TDlgEventEdit.PositionControls;
-const
-  DELTA = 8;
-  VDELTA = 8;
-  VDIST = 5;
 var
-  w, h: Integer;
+  w: Integer;
   cnv: TControlCanvas;
   editHeight: Integer;
 begin
