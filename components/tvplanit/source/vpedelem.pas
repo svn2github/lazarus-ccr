@@ -47,6 +47,8 @@ type
   { TfrmEditElement }
 
   TfrmEditElement = class(TForm)
+    BevelHeightWidth: TBevel;
+    BevelTopLeft: TBevel;
     btnCancel: TButton;
     btnOk: TButton;
     btnShape: TButton;
@@ -57,7 +59,8 @@ type
     Panel2: TPanel;
     ButtonPanel: TPanel;
     ItemTypePanel: TPanel;
-    Panel3: TPanel;
+    HeightWidthPanel: TPanel;
+    TopLeftPanel: TPanel;
     rgDayOffsetUnit: TRadioGroup;
     rgItemType: TRadioGroup;
     gbVisual: TGroupBox;
@@ -134,6 +137,8 @@ begin
 end;
 {=====}
 procedure TfrmEditElement.FormCreate(Sender: TObject);
+var
+  i: Integer;
 begin
   btnShape.Enabled := False;
 
@@ -141,6 +146,14 @@ begin
   edCaptionText.Enabled := False;
   lblCaptionText.Enabled := False;
   btnCaptionFont.Enabled := False;
+
+  for i:=0 to rgDayOffsetUnit.ComponentCount-1 do
+    TRadioButton(rgDayOffsetUnit.Components[i]).ParentFont := false;
+  rgDayOffsetUnit.Font.Style := [fsBold];
+
+  for i:=0 to rgItemType.ComponentCount-1 do
+    TRadioButton(rgItemType.Components[i]).ParentFont := false;
+  rgItemType.Font.Style := [fsBold];
 
   SetCaptions;
 end;
@@ -296,94 +309,17 @@ begin
 end;
 
 procedure TfrmEditElement.PositionControls;
-var
-  w, hEd, hBtn: Integer;
-  DELTA: Integer = 8;
 begin
-  DELTA := ScaleX(DELTA, DesignTimeDPI);
-  AutoSize := false;
+  AlignOKCancel(btnOK, btnCancel, ButtonPanel);
 
-  // Fix edit heights at higher dpi
-  with TEdit.Create(self) do
-  try
-    Parent := self;
-    hEd := Height;
-  finally
-    free;
-  end;
-  edName.Height := hEd;
-  edOffset.Height := hEd;
-  udOffset.Height := hEd;
-  edTop.Height := hEd;
-  edLeft.Height := hEd;
-  edHeight.Height := hEd;
-  edWidth.Height := hEd;
-  udTop.Height := hEd;
-  udLeft.Height := hEd;
-  udHeight.Height := hEd;
-  udWidth.Height := hEd;
-  edCaptionText.Height := hEd;
+  udOffset.Width := udOffset.Height div 2 + 1;
+  udTop.Width := udTop.Height div 2 + 1;
+  udLeft.Width := udLeft.Height div 2 + 1;
+  udHeight.Width := udHeight.Height div 2 + 1;
+  udWidth.Width := udWidth.Height div 2 + 1;
 
-  // Fix button heights a higher dpi
-  hBtn := ScaleY(btnOK.Height, DesignTimeDPI);
-  btnOK.Height := hBtn;
-  btnCancel.Height := hBtn;
-  btnShape.Height := hBtn;
-  btnCaptionFont.Height := hBtn;
-  ButtonPanel.Height := btnOK.Top + btnOK.Height + btnOK.Top;
-
-  gbDayOffset.Height := rgDayOffsetUnit.Height;
-  rgRotation.Height := rgMeasurement.Height;
-  rgRotation.Width := rgMeasurement.Width;
-
-  // Position Left/Top etc controls
-  w := Max(GetLabelWidth(lblLeft), GetLabelWidth(lblTop));
-  edTop.Left := 2*DELTA + w + DELTA;
-  udTop.Left := RightOf(edTop);
-  lblTop.Left := edTop.Left - DELTA - GetLabelWidth(lblTop);
-  edLeft.Left := edTop.Left;
-  udLeft.Left := RightOf(edLeft);
-  lblLeft.Left := edLeft.Left - DELTA - GetLabelWidth(lblLeft);
-
-  w := Max(GetLabelWidth(lblWidth), GetLabelWidth(lblHeight));
-  edHeight.Left := RightOf(edTop) + 3*DELTA + w + DELTA;
-  edWidth.Left := edHeight.Left;
-  udHeight.Left := RightOf(edHeight);
-  udWidth.Left := RightOf(edWidth);
-  lblHeight.Left := edHeight.Left - DELTA - GetLabelWidth(lblHeight);
-  lblWidth.Left := edWidth.Left - DELTA - GetLabelWidth(lblWidth);
-  chkVisible.Left := edTop.Left;
-  Panel3.Width := RightOf(udHeight) + 2*DELTA;
-
-  // Caption
-  btnCaptionFont.Width := GetButtonWidth(btnCaptionFont);
-
-  // Buttons at the bottom
-  w := Max(GetButtonWidth(btnOK), GetButtonWidth(btnCancel));
-  btnOK.Width := w;
-  btnCancel.Width := w;
-  btnShape.Width := GetButtonWidth(btnShape);
-
-  // Form size
-  rgItemType.Align := alNone;
-  ClientWidth := rgItemType.Width + ItemTypePanel.BorderSpacing.Left + ItemTypePanel.BorderSpacing.Right;
-  rgItemType.Align := alClient;
-  if RightOf(udHeight) > gbVisual.ClientWidth then
-    ClientWidth := RightOf(udHeight) + gbVisual.BorderSpacing.Left + gbVisual.BorderSpacing.Right;
-
-  AutoSize := true;
-
-  {$IFDEF MSWINDOWS}
-   btnCancel.Left := ButtonPanel.ClientWidth - btnCancel.Width;
-   btnOK.Left := btnCancel.Left - btnOK.Width - DELTA;
-   btnOK.TabOrder := 1;
-   btnCancel.TabOrder := 2;
-  {$ELSE}
-   btnOK.Left := ButtonPanel.ClientWidth - btnOK.Width;
-   btnCancel.Left := btnOK.Left - btnCancel.Width - DELTA;
-   btnCancel.TabOrder := 1;
-   btnOK.TabOrder := 2;
-  {$ENDIF}
+  BevelTopLeft.Shape := bsSpacer;
+  BevelHeightWidth.Shape := bsSpacer;
 end;
 
 procedure TfrmEditElement.SetData(AnElement : TVpPrintFormatElementItem);
