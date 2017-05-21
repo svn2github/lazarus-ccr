@@ -16,7 +16,7 @@ object frmEditFormat: TfrmEditFormat
   LCLVersion = '1.6.4.0'
   object Panel1: TPanel
     Left = 8
-    Height = 157
+    Height = 158
     Top = 8
     Width = 331
     Align = alClient
@@ -25,7 +25,7 @@ object frmEditFormat: TfrmEditFormat
     BorderSpacing.Top = 8
     BorderSpacing.Right = 8
     BevelOuter = bvNone
-    ClientHeight = 157
+    ClientHeight = 158
     ClientWidth = 331
     TabOrder = 0
     object LblName: TLabel
@@ -167,24 +167,21 @@ object frmEditFormat: TfrmEditFormat
   end
   object ButtonPanel: TPanel
     Left = 0
-    Height = 34
-    Top = 165
+    Height = 33
+    Top = 166
     Width = 347
     Align = alBottom
     AutoSize = True
     BevelOuter = bvNone
-    ClientHeight = 34
+    ClientHeight = 33
     ClientWidth = 347
     TabOrder = 1
     object btnOk: TButton
-      AnchorSideTop.Control = ButtonPanel
-      AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = btnCancel
       Left = 231
       Height = 25
-      Top = 5
+      Top = 4
       Width = 42
-      Anchors = [akTop, akRight]
+      Align = alRight
       AutoSize = True
       BorderSpacing.Top = 4
       BorderSpacing.Right = 4
@@ -195,15 +192,11 @@ object frmEditFormat: TfrmEditFormat
       TabOrder = 0
     end
     object btnCancel: TButton
-      AnchorSideTop.Control = ButtonPanel
-      AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = ButtonPanel
-      AnchorSideRight.Side = asrBottom
       Left = 277
       Height = 25
-      Top = 5
+      Top = 4
       Width = 62
-      Anchors = [akTop, akRight]
+      Align = alRight
       AutoSize = True
       BorderSpacing.Top = 4
       BorderSpacing.Right = 8

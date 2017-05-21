@@ -1,69 +1,36 @@
 object frmEditShape: TfrmEditShape
   Left = 663
-  Height = 270
+  Height = 267
   Top = 242
-  Width = 444
+  Width = 446
   HorzScrollBar.Page = 362
   VertScrollBar.Page = 313
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Edit Shape'
-  ClientHeight = 270
-  ClientWidth = 444
+  ClientHeight = 267
+  ClientWidth = 446
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
   Position = poScreenCenter
   ShowHint = True
-  LCLVersion = '1.6.0.4'
-  object btnOk: TButton
-    AnchorSideRight.Control = btnCancel
-    AnchorSideBottom.Control = gbPen
-    AnchorSideBottom.Side = asrBottom
-    Left = 301
-    Height = 35
-    Top = 222
-    Width = 50
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 8
-    Caption = 'OK'
-    Default = True
-    OnClick = btnOkClick
-    TabOrder = 3
-  end
-  object btnCancel: TButton
-    AnchorSideRight.Control = gbBrush
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = gbPen
-    AnchorSideBottom.Side = asrBottom
-    Left = 359
-    Height = 35
-    Top = 222
-    Width = 77
-    Anchors = [akRight, akBottom]
-    AutoSize = True
-    BorderSpacing.Left = 8
-    Cancel = True
-    Caption = 'Cancel'
-    OnClick = btnCancelClick
-    TabOrder = 4
-  end
+  LCLVersion = '1.6.4.0'
   object gbBrush: TGroupBox
     AnchorSideLeft.Control = gbPen
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = gbPen
     AnchorSideRight.Side = asrBottom
-    Left = 233
-    Height = 97
+    Left = 216
+    Height = 82
     Top = 80
-    Width = 203
+    Width = 188
     AutoSize = True
     BorderSpacing.Left = 12
     BorderSpacing.Right = 12
     Caption = ' Brush '
-    ClientHeight = 67
-    ClientWidth = 199
+    ClientHeight = 62
+    ClientWidth = 184
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 2
@@ -71,10 +38,10 @@ object frmEditShape: TfrmEditShape
       AnchorSideTop.Control = cbBrushStyle
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = cbBrushStyle
-      Left = 13
-      Height = 25
+      Left = 12
+      Height = 15
       Top = 32
-      Width = 42
+      Width = 28
       Anchors = [akTop, akRight]
       BorderSpacing.Left = 8
       BorderSpacing.Right = 8
@@ -89,9 +56,9 @@ object frmEditShape: TfrmEditShape
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = cbBrushColor
       AnchorSideRight.Side = asrBottom
-      Left = 63
+      Left = 48
       Height = 21
-      Top = 34
+      Top = 29
       Width = 128
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 8
@@ -108,9 +75,9 @@ object frmEditShape: TfrmEditShape
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = cbBrushColor
       Left = 8
-      Height = 25
-      Top = 1
-      Width = 47
+      Height = 15
+      Top = 6
+      Width = 32
       Anchors = [akTop, akRight]
       BorderSpacing.Left = 8
       BorderSpacing.Right = 8
@@ -123,7 +90,7 @@ object frmEditShape: TfrmEditShape
       AnchorSideTop.Control = gbBrush
       AnchorSideRight.Control = gbBrush
       AnchorSideRight.Side = asrBottom
-      Left = 63
+      Left = 48
       Height = 22
       Top = 2
       Width = 128
@@ -142,16 +109,16 @@ object frmEditShape: TfrmEditShape
     AnchorSideTop.Control = gbShapes
     AnchorSideTop.Side = asrBottom
     Left = 12
-    Height = 177
+    Height = 147
     Top = 80
-    Width = 209
+    Width = 192
     AutoSize = True
     BorderSpacing.Left = 12
     BorderSpacing.Top = 8
     BorderSpacing.Bottom = 12
     Caption = ' Pen '
-    ClientHeight = 147
-    ClientWidth = 205
+    ClientHeight = 127
+    ClientWidth = 188
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 1
@@ -159,10 +126,10 @@ object frmEditShape: TfrmEditShape
       AnchorSideTop.Control = cbPenStyle
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = cbPenStyle
-      Left = 18
-      Height = 25
-      Top = 30
-      Width = 42
+      Left = 15
+      Height = 15
+      Top = 35
+      Width = 28
       Anchors = [akTop, akRight]
       BorderSpacing.Left = 8
       BorderSpacing.Right = 8
@@ -177,9 +144,9 @@ object frmEditShape: TfrmEditShape
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = edPenWidth
       Left = 8
-      Height = 25
+      Height = 15
       Top = 65
-      Width = 52
+      Width = 35
       Anchors = [akTop, akRight]
       BorderSpacing.Left = 8
       BorderSpacing.Right = 8
@@ -193,9 +160,9 @@ object frmEditShape: TfrmEditShape
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = cbPenMode
       Left = 9
-      Height = 25
-      Top = 106
-      Width = 51
+      Height = 15
+      Top = 96
+      Width = 34
       Anchors = [akTop, akRight]
       BorderSpacing.Left = 8
       BorderSpacing.Right = 8
@@ -210,7 +177,7 @@ object frmEditShape: TfrmEditShape
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = cbPenColor
       AnchorSideRight.Side = asrBottom
-      Left = 68
+      Left = 51
       Height = 21
       Top = 32
       Width = 129
@@ -230,14 +197,14 @@ object frmEditShape: TfrmEditShape
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = cbPenColor
       AnchorSideRight.Side = asrBottom
-      Left = 68
-      Height = 33
-      Top = 102
+      Left = 51
+      Height = 23
+      Top = 92
       Width = 129
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 8
       BorderSpacing.Bottom = 12
-      ItemHeight = 25
+      ItemHeight = 15
       ParentFont = False
       TabOrder = 4
     end
@@ -246,8 +213,8 @@ object frmEditShape: TfrmEditShape
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = edPenWidth
       AnchorSideTop.Side = asrCenter
-      Left = 121
-      Height = 33
+      Left = 104
+      Height = 23
       Top = 61
       Width = 12
       Associate = edPenWidth
@@ -260,8 +227,8 @@ object frmEditShape: TfrmEditShape
       AnchorSideLeft.Control = cbPenStyle
       AnchorSideTop.Control = cbPenStyle
       AnchorSideTop.Side = asrBottom
-      Left = 68
-      Height = 33
+      Left = 51
+      Height = 23
       Top = 61
       Width = 53
       Alignment = taRightJustify
@@ -275,7 +242,7 @@ object frmEditShape: TfrmEditShape
       AnchorSideTop.Control = gbPen
       AnchorSideRight.Control = gbPen
       AnchorSideRight.Side = asrBottom
-      Left = 68
+      Left = 51
       Height = 22
       Top = 2
       Width = 129
@@ -292,10 +259,10 @@ object frmEditShape: TfrmEditShape
       AnchorSideTop.Control = cbPenColor
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = cbPenColor
-      Left = 17
-      Height = 25
-      Top = 1
-      Width = 43
+      Left = 14
+      Height = 15
+      Top = 6
+      Width = 29
       Anchors = [akTop, akRight]
       BorderSpacing.Left = 8
       BorderSpacing.Right = 8
@@ -313,7 +280,7 @@ object frmEditShape: TfrmEditShape
     Left = 12
     Height = 64
     Top = 8
-    Width = 424
+    Width = 392
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Left = 12
     BorderSpacing.Top = 8
@@ -324,71 +291,113 @@ object frmEditShape: TfrmEditShape
     ChildSizing.ShrinkHorizontal = crsHomogenousChildResize
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 8
-    ClientHeight = 34
-    ClientWidth = 420
+    ClientHeight = 44
+    ClientWidth = 388
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 0
     object SpeedButton1: TSpeedButton
       Left = 8
-      Height = 26
+      Height = 36
       Top = 0
-      Width = 44
+      Width = 40
       BorderSpacing.Left = 8
       BorderSpacing.Bottom = 8
       Down = True
       GroupIndex = 1
     end
     object SpeedButton2: TSpeedButton
-      Left = 60
-      Height = 26
+      Left = 56
+      Height = 36
       Top = 0
-      Width = 44
+      Width = 40
       GroupIndex = 1
     end
     object SpeedButton3: TSpeedButton
-      Left = 112
-      Height = 26
+      Left = 104
+      Height = 36
       Top = 0
-      Width = 44
+      Width = 40
       GroupIndex = 1
     end
     object SpeedButton4: TSpeedButton
-      Left = 164
-      Height = 26
+      Left = 152
+      Height = 36
       Top = 0
-      Width = 44
+      Width = 40
       GroupIndex = 1
     end
     object SpeedButton5: TSpeedButton
-      Left = 216
-      Height = 26
+      Left = 200
+      Height = 36
       Top = 0
-      Width = 44
+      Width = 40
       GroupIndex = 1
     end
     object SpeedButton6: TSpeedButton
-      Left = 268
-      Height = 26
+      Left = 248
+      Height = 36
       Top = 0
-      Width = 44
+      Width = 40
       GroupIndex = 1
     end
     object SpeedButton7: TSpeedButton
-      Left = 320
-      Height = 26
+      Left = 296
+      Height = 36
       Top = 0
-      Width = 44
+      Width = 40
       GroupIndex = 1
     end
     object SpeedButton8: TSpeedButton
-      Left = 372
-      Height = 26
+      Left = 344
+      Height = 36
       Top = 0
-      Width = 40
+      Width = 36
       BorderSpacing.Right = 8
       BorderSpacing.Bottom = 8
       GroupIndex = 1
+    end
+  end
+  object ButtonPanel: TPanel
+    AnchorSideRight.Control = gbBrush
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = gbPen
+    AnchorSideBottom.Side = asrBottom
+    Left = 232
+    Height = 25
+    Top = 202
+    Width = 172
+    Anchors = [akLeft, akRight, akBottom]
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 25
+    ClientWidth = 172
+    TabOrder = 3
+    object btnOk: TButton
+      Left = 60
+      Height = 25
+      Top = 0
+      Width = 42
+      Align = alRight
+      AutoSize = True
+      BorderSpacing.Left = 8
+      Caption = 'OK'
+      Default = True
+      OnClick = btnOkClick
+      TabOrder = 0
+    end
+    object btnCancel: TButton
+      Left = 110
+      Height = 25
+      Top = 0
+      Width = 62
+      Align = alRight
+      AutoSize = True
+      BorderSpacing.Left = 8
+      Cancel = True
+      Caption = 'Cancel'
+      OnClick = btnCancelClick
+      TabOrder = 1
     end
   end
 end

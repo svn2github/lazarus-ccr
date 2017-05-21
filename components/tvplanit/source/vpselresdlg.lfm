@@ -9,7 +9,7 @@ object frmSelectResource: TfrmSelectResource
   ClientHeight = 162
   ClientWidth = 274
   Position = poDesktopCenter
-  LCLVersion = '1.7'
+  LCLVersion = '1.6.4.0'
   object Bevel1: TBevel
     Left = 8
     Height = 105
@@ -26,7 +26,7 @@ object frmSelectResource: TfrmSelectResource
   end
   object VpResourceCombo1: TVpResourceCombo
     Left = 16
-    Height = 21
+    Height = 23
     Top = 40
     Width = 232
     Style = csDropDownList
@@ -70,7 +70,7 @@ object frmSelectResource: TfrmSelectResource
     TabOrder = 2
   end
   object VpResourceEditDialog1: TVpResourceEditDialog
-    Version = 'v1.03'
+    Version = 'v1.05'
     Options = []
     Placement.Position = mpCenter
     Placement.Top = 10

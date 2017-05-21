@@ -1,148 +1,171 @@
 object frmReportSetup: TfrmReportSetup
   Left = 380
-  Height = 138
+  Height = 159
   Top = 138
-  Width = 299
+  Width = 308
   BorderStyle = bsDialog
   Caption = 'Report Setup'
-  ClientHeight = 138
-  ClientWidth = 299
+  ClientHeight = 159
+  ClientWidth = 308
   Color = clBtnFace
   Font.Color = clWindowText
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '1.6.4.0'
-  object lblStartDate: TLabel
-    AnchorSideTop.Control = edStartDate
-    AnchorSideTop.Side = asrCenter
-    AnchorSideRight.Control = edStartDate
-    Left = 42
-    Height = 15
-    Top = 12
-    Width = 54
-    Anchors = [akTop, akRight]
-    BorderSpacing.Left = 8
-    BorderSpacing.Right = 8
-    Caption = 'Start Date:'
-    FocusControl = edStartDate
-    ParentColor = False
-  end
-  object lblEndDate: TLabel
-    AnchorSideTop.Control = edEndDate
-    AnchorSideTop.Side = asrCenter
-    AnchorSideRight.Control = edEndDate
-    Left = 46
-    Height = 15
-    Top = 43
-    Width = 50
-    Anchors = [akTop, akRight]
-    BorderSpacing.Left = 8
-    BorderSpacing.Right = 8
-    Caption = 'End Date:'
-    FocusControl = edEndDate
-    ParentColor = False
-  end
-  object lblFormat: TLabel
-    AnchorSideTop.Control = PrintFormatCombo
-    AnchorSideTop.Side = asrCenter
-    AnchorSideRight.Control = PrintFormatCombo
-    Left = 55
-    Height = 15
-    Top = 74
-    Width = 41
-    Anchors = [akTop, akRight]
-    BorderSpacing.Left = 8
-    BorderSpacing.Right = 8
-    Caption = 'Format:'
-    FocusControl = PrintFormatCombo
-    ParentColor = False
-  end
-  object btnOK: TButton
-    AnchorSideTop.Control = PrintFormatCombo
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = btnCancel
-    Left = 125
-    Height = 25
-    Top = 105
-    Width = 75
-    Anchors = [akTop, akRight]
-    BorderSpacing.Right = 8
-    BorderSpacing.Bottom = 8
-    Caption = 'OK'
-    Default = True
-    ModalResult = 1
-    TabOrder = 3
-  end
-  object btnCancel: TButton
-    AnchorSideTop.Control = PrintFormatCombo
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    Left = 208
-    Height = 25
-    Top = 105
-    Width = 83
-    Anchors = [akTop, akRight]
-    BorderSpacing.Right = 8
-    BorderSpacing.Bottom = 8
-    Cancel = True
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 4
-  end
-  object PrintFormatCombo: TVpPrintFormatComboBox
-    AnchorSideLeft.Control = edStartDate
-    AnchorSideTop.Control = edEndDate
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = edStartDate
-    AnchorSideRight.Side = asrBottom
-    Left = 104
-    Height = 23
-    Top = 70
-    Width = 187
-    Anchors = [akTop, akLeft, akRight]
-    Borderspacing.Top = 8
-    Borderspacing.Bottom = 12
-    ItemHeight = 15
-    Sorted = True
-    TabOrder = 2
-  end
-  object edStartDate: TDateEdit
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    Left = 104
-    Height = 23
-    Top = 8
-    Width = 187
-    CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
-    DateOrder = doNone
-    ButtonWidth = 23
-    Anchors = [akTop, akRight]
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 8
-    NumGlyphs = 1
-    MaxLength = 0
+    Left = 0
+    Height = 105
+    Top = 0
+    Width = 265
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 105
+    ClientWidth = 265
     TabOrder = 0
+    object lblStartDate: TLabel
+      AnchorSideTop.Control = edStartDate
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = edStartDate
+      Left = 8
+      Height = 15
+      Top = 12
+      Width = 54
+      Anchors = [akTop, akRight]
+      BorderSpacing.Left = 8
+      BorderSpacing.Right = 8
+      Caption = 'Start Date:'
+      FocusControl = edStartDate
+      ParentColor = False
+    end
+    object lblEndDate: TLabel
+      AnchorSideTop.Control = edEndDate
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = edEndDate
+      Left = 12
+      Height = 15
+      Top = 43
+      Width = 50
+      Anchors = [akTop, akRight]
+      BorderSpacing.Left = 8
+      BorderSpacing.Right = 8
+      Caption = 'End Date:'
+      FocusControl = edEndDate
+      ParentColor = False
+    end
+    object lblFormat: TLabel
+      AnchorSideTop.Control = PrintFormatCombo
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = PrintFormatCombo
+      Left = 21
+      Height = 15
+      Top = 74
+      Width = 41
+      Anchors = [akTop, akRight]
+      BorderSpacing.Left = 8
+      BorderSpacing.Right = 8
+      Caption = 'Format:'
+      FocusControl = PrintFormatCombo
+      ParentColor = False
+    end
+    object PrintFormatCombo: TVpPrintFormatComboBox
+      AnchorSideLeft.Control = edStartDate
+      AnchorSideTop.Control = edEndDate
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = edStartDate
+      AnchorSideRight.Side = asrBottom
+      Left = 70
+      Height = 23
+      Top = 70
+      Width = 187
+      Anchors = [akTop, akLeft, akRight]
+      Borderspacing.Top = 8
+      Borderspacing.Bottom = 12
+      ItemHeight = 15
+      Sorted = True
+      TabOrder = 0
+    end
+    object edStartDate: TDateEdit
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 70
+      Height = 23
+      Top = 8
+      Width = 187
+      CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
+      DateOrder = doNone
+      ButtonWidth = 23
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      NumGlyphs = 1
+      MaxLength = 0
+      TabOrder = 1
+    end
+    object edEndDate: TDateEdit
+      AnchorSideLeft.Control = edStartDate
+      AnchorSideTop.Control = edStartDate
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = edStartDate
+      AnchorSideRight.Side = asrBottom
+      Left = 70
+      Height = 23
+      Top = 39
+      Width = 187
+      CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
+      DateOrder = doNone
+      ButtonWidth = 23
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 8
+      NumGlyphs = 1
+      MaxLength = 0
+      TabOrder = 2
+    end
   end
-  object edEndDate: TDateEdit
-    AnchorSideLeft.Control = edStartDate
-    AnchorSideTop.Control = edStartDate
+  object ButtonPanel: TPanel
+    AnchorSideLeft.Control = Panel1
+    AnchorSideTop.Control = Panel1
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = edStartDate
+    AnchorSideRight.Control = Panel1
     AnchorSideRight.Side = asrBottom
-    Left = 104
-    Height = 23
-    Top = 39
-    Width = 187
-    CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
-    DateOrder = doNone
-    ButtonWidth = 23
+    Left = 0
+    Height = 33
+    Top = 105
+    Width = 265
     Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 8
-    NumGlyphs = 1
-    MaxLength = 0
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 33
+    ClientWidth = 265
     TabOrder = 1
+    object btnOK: TButton
+      Left = 91
+      Height = 25
+      Top = 0
+      Width = 75
+      Align = alRight
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 8
+      Caption = 'OK'
+      Default = True
+      ModalResult = 1
+      TabOrder = 0
+    end
+    object btnCancel: TButton
+      Left = 174
+      Height = 25
+      Top = 0
+      Width = 83
+      Align = alRight
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 8
+      Cancel = True
+      Caption = 'Cancel'
+      ModalResult = 2
+      TabOrder = 1
+    end
   end
 end

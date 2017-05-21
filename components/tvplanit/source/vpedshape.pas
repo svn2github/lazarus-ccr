@@ -63,6 +63,7 @@ type
     lblPenColor: TLabel;
     lblPenWidth: TLabel;
     lblPenMode: TLabel;
+    ButtonPanel: TPanel;
     SpeedButton1: TSpeedButton;
     SpeedButton2: TSpeedButton;
     SpeedButton3: TSpeedButton;
@@ -405,6 +406,10 @@ begin
   udPenWidth.Width := udPenWidth.Height div 2 + 1;
 
   // Autosize OK and Cancel buttons and put them in the right order
+  AlignOKCancel(btnOK, btnCancel, ButtonPanel);
+  (*
+
+  // Autosize OK and Cancel buttons and put them in the right order
   btnOK.AutoSize := true;
   btnCancel.AutoSize := true;
   w := Max(btnOK.Width, btnCancel.Width);
@@ -429,12 +434,12 @@ begin
   {$ELSE}              // button order: Cancel - OK
   btnOK.AnchorSideRight.Control := gbBrush;
   btnOK.Anchors := [akTop, akRight];
-  btnCancel.AnchorSideRight.Control := OKbtn;
+  btnCancel.AnchorSideRight.Control := btnOK;
   btnCancel.Anchors := [akBottom, akRight];
   btnCancel.TabOrder := cbBrushStyle.TabOrder + 1;
   btnOK.TabOrder := btnOK.TabOrder + 1;
   wbtn := btnCancel.Width + btnOK.Width + btnOK.BorderSpacing.Left;
-  {$ENDIF}
+  {$ENDIF}     *)
 
   // A workaround for the combobox height issue at higher dpi values:
   // Create a combobox at runtime, it has the correct height, and apply its
@@ -472,6 +477,7 @@ begin
     CbBrushStyle.Width := w;
     gbPen.AutoSize := true;
     gbBrush.AutoSize := true;
+    wbtn := btnOK.Width + btnCancel.Width + btnOK.BorderSpacing.Left;;
     if gbBrush.Width < wbtn then begin
       gbBrush.AutoSize := false;
       gbBrush.Width := wbtn;

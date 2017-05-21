@@ -1,47 +1,61 @@
 object frmAbout: TfrmAbout
-  Left = 282
-  Height = 313
-  Top = 205
-  Width = 582
+  Left = 368
+  Height = 339
+  Top = 312
+  Width = 634
   HorzScrollBar.Page = 470
   VertScrollBar.Page = 311
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'About Visual PlanIt'
-  ClientHeight = 313
-  ClientWidth = 582
+  ClientHeight = 339
+  ClientWidth = 634
   OnActivate = FormActivate
   Position = poScreenCenter
-  LCLVersion = '1.7'
+  LCLVersion = '1.6.4.0'
   object ButtonPanel: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
     Left = 0
-    Height = 50
-    Top = 265
-    Width = 582
-    Align = alTop
+    Height = 55
+    Top = 272
+    Width = 634
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
     BorderSpacing.Top = 8
     BevelOuter = bvNone
-    ClientHeight = 50
-    ClientWidth = 582
+    ClientHeight = 55
+    ClientWidth = 634
     TabOrder = 0
     object Bevel3: TBevel
       Left = 4
       Height = 8
       Top = 0
-      Width = 574
+      Width = 626
       Align = alTop
       BorderSpacing.Left = 4
       BorderSpacing.Right = 4
-      Shape = bsTopLine
+      BorderSpacing.Bottom = 7
+      Shape = bsBottomLine
     end
     object OKButton: TButton
-      AnchorSideTop.Control = ButtonPanel
+      AnchorSideTop.Control = CopyrightLabel
       AnchorSideTop.Side = asrCenter
-      Left = 496
-      Height = 25
-      Top = 13
-      Width = 75
+      AnchorSideRight.Control = ButtonPanel
+      AnchorSideRight.Side = asrBottom
+      Left = 576
+      Height = 33
+      Top = 14
+      Width = 50
       Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 8
+      BorderSpacing.InnerBorder = 4
       Cancel = True
       Caption = 'OK'
       Default = True
@@ -49,13 +63,17 @@ object frmAbout: TfrmAbout
       TabOrder = 0
     end
     object CopyrightLabel: TLabel
-      AnchorSideTop.Control = ButtonPanel
-      AnchorSideTop.Side = asrCenter
-      Left = 8
+      AnchorSideLeft.Control = ButtonPanel
+      AnchorSideTop.Control = Bevel3
+      AnchorSideTop.Side = asrBottom
+      Left = 4
       Height = 30
-      Top = 10
-      Width = 483
+      Top = 15
+      Width = 539
       Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 4
+      BorderSpacing.Top = 4
+      BorderSpacing.Bottom = 8
       Caption = '(C) Copyright 2001, TurboPower Software Company.'#13#10'All rights reserved.'
       ParentColor = False
       WordWrap = True
@@ -63,29 +81,30 @@ object frmAbout: TfrmAbout
   end
   object Panel1: TPanel
     Left = 0
-    Height = 257
+    Height = 264
     Top = 0
-    Width = 582
+    Width = 634
     Align = alTop
     AutoSize = True
     BevelOuter = bvNone
-    ClientHeight = 257
-    ClientWidth = 582
+    ClientHeight = 264
+    ClientWidth = 634
     TabOrder = 1
     object ImagePanel: TPanel
       Left = 4
-      Height = 249
-      Top = 4
+      Height = 252
+      Top = 8
       Width = 139
       Align = alLeft
+      BorderSpacing.Top = 4
       BorderSpacing.Around = 4
       BevelOuter = bvNone
-      ClientHeight = 249
+      ClientHeight = 252
       ClientWidth = 139
       TabOrder = 0
       object Image1: TImage
         Left = 0
-        Height = 249
+        Height = 252
         Top = 0
         Width = 139
         Align = alClient
@@ -1215,26 +1234,31 @@ object frmAbout: TfrmAbout
           E117E117E117E117E117E117E117E117E117E117E117E117E117E117E117E117
           E117E117E117E117E117E1FF9139
         }
+        Proportional = True
+        Stretch = True
       end
     end
     object TextPanel: TPanel
       Left = 151
-      Height = 249
+      Height = 256
       Top = 8
-      Width = 431
+      Width = 483
       Align = alClient
+      AutoSize = True
       BorderSpacing.Left = 8
       BorderSpacing.Top = 8
       BevelOuter = bvNone
-      ClientHeight = 249
-      ClientWidth = 431
+      ClientHeight = 256
+      ClientWidth = 483
       TabOrder = 1
       object ProgramName: TLabel
+        AnchorSideLeft.Control = TextPanel
+        AnchorSideTop.Control = TextPanel
         Left = 0
         Height = 16
         Top = 0
-        Width = 431
-        Align = alTop
+        Width = 80
+        BorderSpacing.Right = 8
         Caption = 'Visual PlanIt'
         Font.Height = -13
         Font.Name = 'Default'
@@ -1243,23 +1267,32 @@ object frmAbout: TfrmAbout
         ParentFont = False
       end
       object Label1: TLabel
+        AnchorSideLeft.Control = TextPanel
+        AnchorSideTop.Control = ProgramName
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = lblLazPortLink
+        AnchorSideRight.Side = asrBottom
         Left = 0
         Height = 30
-        Top = 24
-        Width = 431
-        Align = alTop
-        BorderSpacing.Top = 8
+        Top = 28
+        Width = 410
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 12
         Caption = 'Visual PlanIt was released under the Mozilla 1.1 license in January, 2003. The project is hosted on SourceForge at'
         ParentColor = False
         WordWrap = True
       end
       object lblTurboLink: TLabel
+        AnchorSideLeft.Control = TextPanel
+        AnchorSideTop.Control = Label1
+        AnchorSideTop.Side = asrBottom
         Cursor = crHandPoint
-        Left = 0
+        Left = 12
         Height = 15
-        Top = 54
-        Width = 431
-        Align = alTop
+        Top = 58
+        Width = 222
+        BorderSpacing.Left = 12
+        BorderSpacing.Right = 8
         Caption = 'http://sourceforge.net/projects/tpvplanit/'
         Font.Color = clBlue
         ParentColor = False
@@ -1269,24 +1302,30 @@ object frmAbout: TfrmAbout
         OnMouseLeave = lblLinkMouseLeave
       end
       object Label4: TLabel
+        AnchorSideLeft.Control = TextPanel
+        AnchorSideTop.Control = lblTurboLink
+        AnchorSideTop.Side = asrBottom
         Left = 0
         Height = 15
-        Top = 77
-        Width = 431
-        Align = alTop
-        BorderSpacing.Top = 8
+        Top = 85
+        Width = 150
+        BorderSpacing.Top = 12
+        BorderSpacing.Right = 8
         Caption = 'The Lazarus port is hosted at'
         ParentColor = False
         WordWrap = True
       end
       object lblLazPortLink: TLabel
+        AnchorSideLeft.Control = TextPanel
+        AnchorSideTop.Control = Label4
+        AnchorSideTop.Side = asrBottom
         Cursor = crHandPoint
-        Left = 0
+        Left = 12
         Height = 15
-        Top = 92
-        Width = 414
-        Align = alTop
-        BorderSpacing.Right = 17
+        Top = 100
+        Width = 398
+        BorderSpacing.Left = 12
+        BorderSpacing.Right = 8
         Caption = 'http://sourceforge.net/p/lazarus-ccr/svn/HEAD/tree/components/tvplanit/'
         Font.Color = clBlue
         ParentColor = False
@@ -1296,24 +1335,28 @@ object frmAbout: TfrmAbout
         OnMouseLeave = lblLinkMouseLeave
       end
       object SupportPanel: TPanel
+        AnchorSideLeft.Control = TextPanel
+        AnchorSideTop.Control = lblLazPortLink
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = lblLazPortLink
+        AnchorSideRight.Side = asrBottom
         Left = 0
         Height = 133
-        Top = 115
-        Width = 421
-        Align = alTop
+        Top = 123
+        Width = 410
+        Anchors = [akTop, akLeft, akRight]
         AutoSize = True
         BorderSpacing.Top = 8
-        BorderSpacing.Right = 10
         BevelInner = bvRaised
         BevelOuter = bvLowered
         ClientHeight = 133
-        ClientWidth = 421
+        ClientWidth = 410
         TabOrder = 0
         object GeneralNewsgroupsLabel: TLabel
           Left = 6
           Height = 15
           Top = 6
-          Width = 409
+          Width = 398
           Align = alTop
           BorderSpacing.Left = 4
           BorderSpacing.Top = 4
@@ -1326,7 +1369,7 @@ object frmAbout: TfrmAbout
           Left = 18
           Height = 15
           Top = 25
-          Width = 397
+          Width = 386
           Align = alTop
           BorderSpacing.Left = 16
           BorderSpacing.Top = 4
@@ -1339,7 +1382,7 @@ object frmAbout: TfrmAbout
           Left = 18
           Height = 15
           Top = 40
-          Width = 397
+          Width = 386
           Align = alTop
           BorderSpacing.Left = 16
           BorderSpacing.Right = 4
@@ -1355,7 +1398,7 @@ object frmAbout: TfrmAbout
           Left = 18
           Height = 15
           Top = 59
-          Width = 397
+          Width = 386
           Align = alTop
           BorderSpacing.Left = 16
           BorderSpacing.Top = 4
@@ -1368,7 +1411,7 @@ object frmAbout: TfrmAbout
           Left = 18
           Height = 15
           Top = 74
-          Width = 397
+          Width = 386
           Align = alTop
           BorderSpacing.Left = 16
           BorderSpacing.Right = 4
@@ -1384,7 +1427,7 @@ object frmAbout: TfrmAbout
           Left = 18
           Height = 15
           Top = 93
-          Width = 397
+          Width = 386
           Align = alTop
           BorderSpacing.Left = 16
           BorderSpacing.Top = 4
@@ -1397,7 +1440,7 @@ object frmAbout: TfrmAbout
           Left = 18
           Height = 15
           Top = 108
-          Width = 401
+          Width = 390
           Align = alTop
           BorderSpacing.Left = 16
           BorderSpacing.Bottom = 8

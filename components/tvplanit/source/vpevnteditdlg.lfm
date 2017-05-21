@@ -40,13 +40,11 @@ object DlgEventEdit: TDlgEventEdit
       ParentFont = False
     end
     object OKBtn: TButton
-      AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = CancelBtn
-      Left = 571
+      Left = 577
       Height = 25
       Top = 6
       Width = 66
-      Anchors = [akTop, akRight]
+      Align = alRight
       BorderSpacing.Top = 6
       BorderSpacing.Right = 6
       BorderSpacing.Bottom = 6
@@ -56,15 +54,13 @@ object DlgEventEdit: TDlgEventEdit
       TabOrder = 0
     end
     object CancelBtn: TButton
-      AnchorSideRight.Control = ButtonPanel
-      AnchorSideRight.Side = asrBottom
-      Left = 643
+      Left = 649
       Height = 25
       Top = 6
       Width = 71
-      Anchors = [akTop, akRight]
+      Align = alRight
       BorderSpacing.Top = 6
-      BorderSpacing.Right = 12
+      BorderSpacing.Right = 6
       BorderSpacing.Bottom = 6
       Cancel = True
       Caption = '&Cancel'

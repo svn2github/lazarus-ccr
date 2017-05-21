@@ -40,14 +40,12 @@ object TaskEditForm: TTaskEditForm
       ParentFont = False
     end
     object OKBtn: TButton
-      AnchorSideTop.Control = ButtonPanel
-      AnchorSideTop.Side = asrCenter
-      AnchorSideBottom.Side = asrBottom
-      Left = 376
+      Left = 435
       Height = 25
       Top = 4
-      Width = 86
-      Anchors = [akTop, akRight]
+      Width = 42
+      Align = alRight
+      AutoSize = True
       BorderSpacing.Top = 4
       BorderSpacing.Right = 4
       BorderSpacing.Bottom = 4
@@ -57,14 +55,11 @@ object TaskEditForm: TTaskEditForm
       TabOrder = 0
     end
     object CancelBtn: TButton
-      AnchorSideTop.Control = ButtonPanel
-      AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Side = asrBottom
-      Left = 479
+      Left = 481
       Height = 25
       Top = 4
       Width = 62
-      Anchors = [akTop, akRight]
+      Align = alRight
       AutoSize = True
       BorderSpacing.Top = 4
       BorderSpacing.Right = 4

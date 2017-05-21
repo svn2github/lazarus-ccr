@@ -24,13 +24,12 @@ object frmFieldMapper: TfrmFieldMapper
     ClientWidth = 655
     TabOrder = 1
     object BtnOK: TButton
-      AnchorSideTop.Control = ButtonPanel
-      AnchorSideRight.Control = BtnCancel
-      Left = 384
+      Left = 542
       Height = 25
       Top = 5
-      Width = 115
-      Anchors = [akTop]
+      Width = 42
+      Align = alRight
+      AutoSize = True
       BorderSpacing.Top = 4
       BorderSpacing.Right = 4
       BorderSpacing.Bottom = 4
@@ -39,14 +38,11 @@ object frmFieldMapper: TfrmFieldMapper
       TabOrder = 0
     end
     object BtnCancel: TButton
-      AnchorSideTop.Control = ButtonPanel
-      AnchorSideRight.Control = ButtonPanel
-      AnchorSideRight.Side = asrBottom
-      Left = 580
+      Left = 588
       Height = 25
       Top = 5
       Width = 62
-      Anchors = [akTop]
+      Align = alRight
       AutoSize = True
       BorderSpacing.Top = 4
       BorderSpacing.Right = 4

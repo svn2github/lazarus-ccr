@@ -25,14 +25,11 @@ object ResEditForm: TResEditForm
     ClientWidth = 466
     TabOrder = 1
     object OKBtn: TButton
-      AnchorSideTop.Control = pnlBottom
-      AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = CancelBtn
       Left = 313
       Height = 25
       Top = 4
       Width = 66
-      Anchors = [akTop, akRight]
+      Align = alRight
       BorderSpacing.Top = 4
       BorderSpacing.Right = 4
       BorderSpacing.Bottom = 4
@@ -43,15 +40,11 @@ object ResEditForm: TResEditForm
       TabStop = False
     end
     object CancelBtn: TButton
-      AnchorSideTop.Control = pnlBottom
-      AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = pnlBottom
-      AnchorSideRight.Side = asrBottom
       Left = 383
       Height = 25
       Top = 4
       Width = 75
-      Anchors = [akTop, akRight]
+      Align = alRight
       BorderSpacing.Top = 4
       BorderSpacing.Right = 8
       BorderSpacing.Bottom = 4

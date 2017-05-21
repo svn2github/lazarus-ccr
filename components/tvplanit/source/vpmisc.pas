@@ -436,6 +436,8 @@ procedure AlignOKCancel(OKButton, CancelButton: TButton; APanel: TPanel);
 var
   w, h: Integer;
 begin
+  APanel.AutoSize := true;
+
   OKButton.AutoSize := true;
   CancelButton.AutoSize := true;
   w := Max(OKButton.Width, CancelButton.Width);
@@ -444,23 +446,33 @@ begin
   OKButton.AutoSize := false;
   OKButton.Width := w;
   OKButton.Height := h;
+  OKButton.Align := alRight;
 
   CancelButton.AutoSize := false;
   CancelButton.Width := w;
   CancelButton.Height := h;
+  CancelButton.Align := alRight;
 
   {$IFDEF MSWINDOWS}   // button order: OK - Cancel
+  CancelButton.Left := APanel.Width;
+  OKButton.Left := 0;
+{
   CancelButton.AnchorSideRight.Control := APanel;
   CancelButton.Anchors := [akTop, akRight];
   OKButton.AnchorSideRight.Control := CancelButton;
   OKButton.Anchors := [akTop, akRight];
+  }
   OKButton.TabOrder := 0;
   CancelButton.TabOrder := 1;
   {$ELSE}              // button order: Cancel - OK
+  OKButton.Left := APanel.Width;
+  CancelButton.Left := 0;
+{
   OKButton.AnchorSideRight.Control := APanel;
   OKButton.Anchors := [akTop, akRight];
   CancelButton.AnchorSideRight.Control := OKButton;
   CancelButton.Anchors := [akTop, akRight];
+  }
   CancelButton.TabOrder := 0;
   OKButton.TabOrder := 1;
   {$ENDIF}

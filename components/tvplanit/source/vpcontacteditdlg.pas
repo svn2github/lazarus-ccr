@@ -147,8 +147,6 @@ type
     procedure OKBtnClick(Sender: TObject);
     procedure PageControlChange(Sender: TObject);
   private
-    FBtnHeight: Integer;
-    FEditHeight: Integer;
     procedure DisplayCurrentCountry(AddressType: TVpAddressType);
     procedure PositionControls;
     procedure SetCaptions;
@@ -206,8 +204,6 @@ procedure TContactEditForm.FormCreate(Sender: TObject);
 begin
   ReturnCode := rtAbandon;
   SetCaptions;
-  FBtnHeight := ScaleY(OKBtn.Height, DesignTimeDPI);
-  FEditHeight := ScaleY(edCompany.Height, DesigntimeDPI);
 end;
 
 procedure TContactEditForm.SetCaptions;
@@ -524,7 +520,7 @@ begin
   vdist := ScaleY(vdist, DesignTimeDPI);
   hBorder := ScaleX(hBorder, DesignTimeDPI);
   vBorder := ScaleY(vBorder, DesignTimeDPI);
-  edBirthdate.ButtonWidth := FEditHeight;
+  edBirthdate.ButtonWidth := edBirthdate.Height;
   comboArrowWidth := GetSystemMetrics(SM_CXVSCROLL);
 
   for i := 0 to ComponentCount-1 do

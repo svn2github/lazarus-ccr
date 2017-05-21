@@ -1,15 +1,15 @@
 object frmEditElement: TfrmEditElement
   Left = 288
-  Height = 516
+  Height = 465
   Top = 321
-  Width = 661
+  Width = 608
   HorzScrollBar.Page = 378
   VertScrollBar.Page = 444
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'Edit Element'
-  ClientHeight = 516
-  ClientWidth = 661
+  ClientHeight = 465
+  ClientWidth = 608
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
@@ -18,7 +18,7 @@ object frmEditElement: TfrmEditElement
     Left = 12
     Height = 144
     Top = 196
-    Width = 637
+    Width = 584
     Align = alTop
     AutoSize = True
     BorderSpacing.Left = 12
@@ -26,7 +26,7 @@ object frmEditElement: TfrmEditElement
     BorderSpacing.Right = 12
     Caption = ' Visual '
     ClientHeight = 124
-    ClientWidth = 633
+    ClientWidth = 580
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
@@ -361,7 +361,7 @@ object frmEditElement: TfrmEditElement
     Left = 12
     Height = 54
     Top = 352
-    Width = 637
+    Width = 584
     Align = alTop
     AutoSize = True
     BorderSpacing.Left = 12
@@ -370,7 +370,7 @@ object frmEditElement: TfrmEditElement
     BorderSpacing.Bottom = 6
     Caption = ' Caption '
     ClientHeight = 34
-    ClientWidth = 633
+    ClientWidth = 580
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 4
@@ -393,7 +393,7 @@ object frmEditElement: TfrmEditElement
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = gbCaption
       AnchorSideRight.Side = asrBottom
-      Left = 566
+      Left = 513
       Height = 25
       Top = 1
       Width = 59
@@ -413,7 +413,7 @@ object frmEditElement: TfrmEditElement
       Left = 43
       Height = 23
       Top = 2
-      Width = 519
+      Width = 466
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 8
       BorderSpacing.Top = 2
@@ -428,7 +428,7 @@ object frmEditElement: TfrmEditElement
     Left = 12
     Height = 23
     Top = 8
-    Width = 637
+    Width = 584
     Align = alTop
     AutoSize = True
     BorderSpacing.Left = 12
@@ -437,7 +437,7 @@ object frmEditElement: TfrmEditElement
     BorderSpacing.Bottom = 8
     BevelOuter = bvNone
     ClientHeight = 23
-    ClientWidth = 637
+    ClientWidth = 584
     TabOrder = 0
     object lblName: TLabel
       AnchorSideTop.Control = edName
@@ -455,7 +455,7 @@ object frmEditElement: TfrmEditElement
       Left = 42
       Height = 23
       Top = 0
-      Width = 595
+      Width = 542
       Align = alRight
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Left = 4
@@ -466,7 +466,7 @@ object frmEditElement: TfrmEditElement
     Left = 12
     Height = 51
     Top = 133
-    Width = 639
+    Width = 586
     Align = alTop
     AutoSize = True
     BorderSpacing.Left = 12
@@ -474,7 +474,7 @@ object frmEditElement: TfrmEditElement
     BorderSpacing.Right = 10
     BevelOuter = bvNone
     ClientHeight = 51
-    ClientWidth = 639
+    ClientWidth = 586
     TabOrder = 2
     object gbDayOffset: TGroupBox
       AnchorSideTop.Control = Panel2
@@ -533,7 +533,7 @@ object frmEditElement: TfrmEditElement
       Left = 108
       Height = 51
       Top = 0
-      Width = 531
+      Width = 478
       Anchors = [akTop, akLeft, akRight]
       AutoFill = True
       AutoSize = True
@@ -548,7 +548,7 @@ object frmEditElement: TfrmEditElement
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 4
       ClientHeight = 31
-      ClientWidth = 527
+      ClientWidth = 474
       Columns = 4
       ItemIndex = 0
       Items.Strings = (
@@ -565,7 +565,7 @@ object frmEditElement: TfrmEditElement
     Left = 0
     Height = 25
     Top = 414
-    Width = 649
+    Width = 596
     Align = alTop
     AutoSize = True
     BorderSpacing.Top = 8
@@ -573,7 +573,7 @@ object frmEditElement: TfrmEditElement
     BorderSpacing.Bottom = 8
     BevelOuter = bvNone
     ClientHeight = 25
-    ClientWidth = 649
+    ClientWidth = 596
     TabOrder = 5
     object btnShape: TButton
       AnchorSideLeft.Control = ButtonPanel
@@ -589,12 +589,11 @@ object frmEditElement: TfrmEditElement
       TabOrder = 0
     end
     object btnOk: TButton
-      AnchorSideRight.Control = btnCancel
-      Left = 512
+      Left = 459
       Height = 25
       Top = 0
       Width = 71
-      Anchors = [akTop, akRight]
+      Align = alRight
       BorderSpacing.Right = 4
       Caption = 'OK'
       Default = True
@@ -602,13 +601,11 @@ object frmEditElement: TfrmEditElement
       TabOrder = 1
     end
     object btnCancel: TButton
-      AnchorSideRight.Control = ButtonPanel
-      AnchorSideRight.Side = asrBottom
-      Left = 587
+      Left = 534
       Height = 25
       Top = 0
       Width = 62
-      Anchors = [akTop, akRight]
+      Align = alRight
       AutoSize = True
       Cancel = True
       Caption = 'Cancel'
@@ -620,7 +617,7 @@ object frmEditElement: TfrmEditElement
     Left = 12
     Height = 78
     Top = 43
-    Width = 639
+    Width = 586
     Align = alTop
     AutoSize = True
     BorderSpacing.Left = 12
@@ -628,13 +625,13 @@ object frmEditElement: TfrmEditElement
     BorderSpacing.Right = 10
     BevelOuter = bvNone
     ClientHeight = 78
-    ClientWidth = 639
+    ClientWidth = 586
     TabOrder = 1
     object rgItemType: TRadioGroup
       Left = 0
       Height = 78
       Top = 0
-      Width = 639
+      Width = 586
       Align = alClient
       AutoFill = True
       BorderSpacing.InnerBorder = 4
@@ -648,7 +645,7 @@ object frmEditElement: TfrmEditElement
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 4
       ClientHeight = 58
-      ClientWidth = 635
+      ClientWidth = 582
       Columns = 4
       ItemIndex = 0
       Items.Strings = (
@@ -671,7 +668,7 @@ object frmEditElement: TfrmEditElement
     Font.Name = 'MS Sans Serif'
     MinFontSize = 0
     MaxFontSize = 0
-    left = 272
-    top = 424
+    left = 536
+    top = 304
   end
 end

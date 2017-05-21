@@ -28,7 +28,7 @@ interface
 
 uses
   SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ComCtrls, EditBtn,
+  StdCtrls, ComCtrls, EditBtn, ExtCtrls,
 
   VpBaseDS, VpPrtFmtCBox;
 
@@ -48,6 +48,8 @@ type
     lblFormat: TLabel;
     edStartDate: TDateEdit;
     edEndDate: TDateEdit;
+    Panel1: TPanel;
+    ButtonPanel: TPanel;
     PrintFormatCombo: TVpPrintFormatComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -127,6 +129,8 @@ var
 begin
   AutoSize := false;
 
+  AlignOKCancel(btnOK, btnCancel, ButtonPanel);
+  (*
   btnOK.AutoSize := true;
   btnCancel.AutoSize := true;
   w := Max(btnOK.Width, btnCancel.Width);
@@ -155,6 +159,7 @@ begin
   btnCancel.TabOrder := PrintFormatCombo.TabOrder;
   btnOK.TabOrder := PrintFormatCombo.TabOrder + 1;
   {$ENDIF}
+  *)
 
   cnv := TControlCanvas.Create;
   try
