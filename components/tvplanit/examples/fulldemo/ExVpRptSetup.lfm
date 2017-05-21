@@ -2,93 +2,145 @@ object frmReportSetup: TfrmReportSetup
   Left = 380
   Height = 138
   Top = 138
-  Width = 291
+  Width = 299
   BorderStyle = bsDialog
   Caption = 'Report Setup'
   ClientHeight = 138
-  ClientWidth = 291
+  ClientWidth = 299
   Color = clBtnFace
   Font.Color = clWindowText
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
-  LCLVersion = '1.7'
+  LCLVersion = '1.6.4.0'
   object lblStartDate: TLabel
-    Left = 16
+    AnchorSideTop.Control = edStartDate
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = edStartDate
+    Left = 42
     Height = 15
-    Top = 16
+    Top = 12
     Width = 54
+    Anchors = [akTop, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
     Caption = 'Start Date:'
     FocusControl = edStartDate
     ParentColor = False
   end
   object lblEndDate: TLabel
-    Left = 20
+    AnchorSideTop.Control = edEndDate
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = edEndDate
+    Left = 46
     Height = 15
-    Top = 40
+    Top = 43
     Width = 50
+    Anchors = [akTop, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
     Caption = 'End Date:'
     FocusControl = edEndDate
     ParentColor = False
   end
   object lblFormat: TLabel
-    Left = 29
+    AnchorSideTop.Control = PrintFormatCombo
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = PrintFormatCombo
+    Left = 55
     Height = 15
-    Top = 75
+    Top = 74
     Width = 41
+    Anchors = [akTop, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
     Caption = 'Format:'
-    FocusControl = VpPrintFormatComboBox1
+    FocusControl = PrintFormatCombo
     ParentColor = False
   end
   object btnOK: TButton
-    Left = 128
+    AnchorSideTop.Control = PrintFormatCombo
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = btnCancel
+    Left = 125
     Height = 25
-    Top = 104
+    Top = 105
     Width = 75
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
     Caption = 'OK'
     Default = True
     ModalResult = 1
     TabOrder = 3
   end
   object btnCancel: TButton
+    AnchorSideTop.Control = PrintFormatCombo
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
     Left = 208
     Height = 25
-    Top = 104
-    Width = 75
+    Top = 105
+    Width = 83
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
     Cancel = True
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 4
   end
-  object VpPrintFormatComboBox1: TVpPrintFormatComboBox
-    Left = 76
+  object PrintFormatCombo: TVpPrintFormatComboBox
+    AnchorSideLeft.Control = edStartDate
+    AnchorSideTop.Control = edEndDate
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = edStartDate
+    AnchorSideRight.Side = asrBottom
+    Left = 104
     Height = 23
-    Top = 72
-    Width = 207
+    Top = 70
+    Width = 187
+    Anchors = [akTop, akLeft, akRight]
+    Borderspacing.Top = 8
+    Borderspacing.Bottom = 12
     ItemHeight = 15
     Sorted = True
     TabOrder = 2
   end
   object edStartDate: TDateEdit
-    Left = 76
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 104
     Height = 23
-    Top = 12
-    Width = 207
+    Top = 8
+    Width = 187
     CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
     DateOrder = doNone
     ButtonWidth = 23
+    Anchors = [akTop, akRight]
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
     NumGlyphs = 1
     MaxLength = 0
     TabOrder = 0
   end
   object edEndDate: TDateEdit
-    Left = 76
+    AnchorSideLeft.Control = edStartDate
+    AnchorSideTop.Control = edStartDate
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = edStartDate
+    AnchorSideRight.Side = asrBottom
+    Left = 104
     Height = 23
-    Top = 36
-    Width = 207
+    Top = 39
+    Width = 187
     CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
     DateOrder = doNone
     ButtonWidth = 23
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 8
     NumGlyphs = 1
     MaxLength = 0
     TabOrder = 1

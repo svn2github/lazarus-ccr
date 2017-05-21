@@ -82,7 +82,7 @@ type
     FResource: TVpResource;
 //    FBtnHeight: Integer;
 //    FBtnWidth: Integer;
-    FEditHeight: Integer;
+//    FEditHeight: Integer;
     procedure PositionControls;
     procedure SetCaptions;
   public
@@ -128,7 +128,7 @@ procedure TTaskEditForm.FormCreate(Sender: TObject);
 begin
   FReturnCode := rtAbandon;
 //  FBtnHeight := ScaleY(OKBtn.Height, DesignTimeDPI);
-  FEditHeight := ScaleY(DueDateEdit.Height, DesignTimeDPI);
+//  FEditHeight := ScaleY(DueDateEdit.Height, DesignTimeDPI);
 end;
 
 procedure TTaskEditForm.DePopulateSelf;
@@ -184,72 +184,48 @@ end;
 
 procedure TTaskEditForm.PositionControls;
 var
-  VBevelDist: Integer = 8;  // Distance bevel-to-control
-  VDist: Integer = 8;       // Vertical distance between controls
-  HDist: Integer = 8;       // Horizontal distance between controls:
-  w: Integer;
+  i, w: Integer;
   cnv: TControlCanvas;
-  i: Integer;
 begin
-  VBevelDist := ScaleY(VBevelDist, DesignTimeDPI);
-  VDist := ScaleY(VDist, DesignTimeDPI);
-  HDist := ScaleX(HDist, DesignTimeDPI);
-
-  for i := 0 to ComponentCount-1 do
-    if Components[i] is TControl then
-      with TControl(Components[i]) do begin
-        if BorderSpacing.Left <> 0 then BorderSpacing.Left := HDist;
-        if BorderSpacing.Right <> 0 then BorderSpacing.Right := HDist;
-        if BorderSpacing.Top <> 0 then BorderSpacing.Top := VDist;
-        if BorderSpacing.Bottom <> 0 then BorderSpacing.Bottom := VDist;
-      end;
-
-  DescriptionEdit.Height := FEditHeight;
-  DueDateEdit.Height := FEditHeight;
+  AutoSize := false;
   DueDateEdit.ButtonWidth := DueDateEdit.Height;
-  CbCategory.Height := FEditHeight;
-  CbPriority.Height := FEditHeight;
 
-  ResourceNameLbl.Font.Size := ScaleY(ResourceNameLbl.Font.Size, DesignTimeDPI);
-
-  DueDateEdit.Left := DueDateLbl.Left + GetLabelWidth(DueDateLbl) + HDist;
   cnv := TControlCanvas.Create;
   try
     cnv.Control := DueDateEdit;
     cnv.Font.Assign(DueDateEdit.Font);
     w := cnv.TextWidth(' 99-99-9999 ') + DueDateEdit.ButtonWidth + 10;
+    DueDateEdit.Width := w;
   finally
     cnv.Free;
   end;
-  DueDateEdit.Width := w;
 
-  if RightOf(DueDateEdit) + 3*HDist > ImgCompleted.Left then begin
-    ImgCompleted.Left := RightOf(DueDateEdit) + 3*HDist;
-    CbComplete.Left := RightOf(ImgCompleted) + HDist;
-    LblCompletedOn.Left := CbComplete.Left;
-
-    cnv := TControlCanvas.Create;
-    try
-      cnv.Control := CbComplete;
-      cnv.Font.Assign(CbComplete.Font);
-      w := cnv.TextWidth(CbComplete.Caption) + GetSystemMetrics(SM_CXMENUCHECK);
-    finally
-      cnv.Free;
-    end;
-    w := Max(GetlabelWidth(LblCompletedOn), w);
-    ClientWidth := ClientWidth - tabTask.ClientWidth +
-      Max(CbComplete.Left + w, RightOf(CbPriority)) +
-      HDist*2;
+  cnv := TControlCanvas.Create;
+  try
+    cnv.Control := CbCategory;
+    cnv.Font.Assign(CbCategory.Font);
+    w := 0;
+    for i :=0 to CbCategory.Items.Count - 1 do
+      w := max(w, cnv.TextWidth(CbCategory.Items[i]));
+    inc(w, GetSystemMetrics(SM_CXVSCROLL)*2);
+    w := Max(w, DueDateEdit.Width);
+    CbCategory.Width := w;
+  finally
+    cnv.Free;
   end;
 
-  CbCategory.Left := DueDateEdit.Left;
-  LblCategory.Left := CbCategory.Left - HDist - GetLabelWidth(LblCategory);
-
-  if RightOf(CbCategory) + 3*HDist + GetLabelWidth(LblPriority) + HDist > CbComplete.Left then
-    CbPriority.Left := CbPriority.Parent.ClientWidth - HDist - CbPriority.Width
-  else
-    CbPriority.Left := CbComplete.Left;
-  LblPriority.Left := CbPriority.Left - HDist - GetLabelWidth(LblPriority);
+  cnv := TControlCanvas.Create;
+  try
+    cnv.Control := CbPriority;
+    cnv.Font.Assign(CbPriority.Font);
+    w := 0;
+    for i :=0 to CbPriority.Items.Count - 1 do
+      w := max(w, cnv.TextWidth(CbPriority.Items[i]));
+    inc(w, GetSystemMetrics(SM_CXVSCROLL)*2);
+    CbPriority.Width := w;
+  finally
+    cnv.Free;
+  end;
 
   AlignOKCancel(OKBtn, CancelBtn, ButtonPanel);
 

@@ -48,7 +48,7 @@ type
     lblFormat: TLabel;
     edStartDate: TDateEdit;
     edEndDate: TDateEdit;
-    VpPrintFormatComboBox1: TVpPrintFormatComboBox;
+    PrintFormatCombo: TVpPrintFormatComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
@@ -79,7 +79,8 @@ implementation
 {$R *.lfm}
 
 uses
-  Math, VpSR, VpMisc;
+  Math, LCLIntf, LCLType,
+  VpSR, VpMisc;
 
 { TfrmReportSetup }
 
@@ -87,7 +88,7 @@ function TfrmReportSetup.Execute(var ReportData: TReportDataRec) : Boolean;
 begin
   StartDate := ReportData.StartDate;
   EndDate := ReportData.EndDate;
-  VpPrintFormatCombobox1.ItemIndex := ControlLink.Printer.Find(ReportData.Format);
+  PrintFormatCombo.ItemIndex := ControlLink.Printer.Find(ReportData.Format);
 
   Result := ShowModal = mrOk;
 
@@ -107,7 +108,7 @@ end;
 
 function TfrmReportSetup.GetControlLink: TVpControlLink;
 begin
-  Result := VpPrintFormatComboBox1.ControlLink;
+  Result := PrintFormatCombo.ControlLink;
 end;
 
 function TfrmReportSetup.GetDate(Index: Integer) : TDateTime;
@@ -121,59 +122,56 @@ end;
 
 procedure TfrmReportSetup.PositionControls;
 var
-  w: Integer;
-  delta: Integer = 8;
-  vdist: Integer = 4;
-  editHeight: Integer;
-  buttonHeight: Integer;
+  i, w, h: Integer;
+  cnv: TControlCanvas;
 begin
-  delta := ScaleX(8, DesignTimeDPI);
-  vdist := ScaleY(4, DesignTimeDPI);
-  buttonHeight := ScaleY(btnOK.Height, DesignTimeDPI);
+  AutoSize := false;
 
-  with TEdit.Create(nil) do
-    try
-      Parent := self;
-      editHeight := Height;
-    finally
-      Free;
-    end;
+  btnOK.AutoSize := true;
+  btnCancel.AutoSize := true;
+  w := Max(btnOK.Width, btnCancel.Width);
+  h := btnOK.Height;
 
-  // horizontal
-  w := Maxvalue([GetLabelWidth(lblStartDate), GetLabelWidth(lblEndDate), GetLabelWidth(lblFormat)]);
-  edStartDate.Left := delta + w + delta;
-  lblStartDate.Left := edStartDate.Left - delta - GetLabelWidth(lblStartDate);
-  edEndDate.Left := edStartDate.Left;
-  lblEndDate.Left := edEndDate.Left - delta - GetLabelWidth(lblEndDate);
-  VpPrintFormatCombobox1.Left := edStartDate.Left;
-  lblFormat.Left := VpPrintFormatCombobox1.Left - delta - GetLabelWidth(lblFormat);
-
-  ClientWidth := RightOf(edStartDate) + delta;
-  w := Max(GetButtonWidth(btnOK), GetButtonWidth(btnCancel));
+  btnOK.AutoSize := false;
   btnOK.Width := w;
+  btnOK.Height := h;
+
+  btnCancel.AutoSize := false;
   btnCancel.Width := w;
-  btnCancel.Left := ClientWidth - delta - w;
-  btnOK.Left := btnCancel.Left - delta - w;
+  btnCancel.Height := h;
 
-  // vertical
-  edStartdate.Height := editHeight;
-  edEndDate.Height := editHeight;
-  edStartDate.ButtonWidth := editHeight;
-  edEndDate.ButtonWidth := editHeight;
+  {$IFDEF MSWINDOWS}   // button order: OK - Cancel
+  btnCancel.AnchorSideRight.Control := self;
+  btnCancel.Anchors := [akTop, akRight];
+  btnOK.AnchorSideRight.Control := btnCancel;
+  btnOK.Anchors := [akTop, akRight];
+  btnOK.TabOrder := PrintFormatCombo.TabOrder;
+  btnCancel.TabOrder := PrintFormatCombo.TabOrder + 1;
+  {$ELSE}              // button order: Cancel - OK
+  btnOK.AnchorSideRight.Control := self;
+  btnOK.Anchors := [akTop, akRight];
+  btnCancel.AnchorSideRight.Control := btnOK;
+  btnCancel.Anchors := [akTop, akRight];
+  btnCancel.TabOrder := PrintFormatCombo.TabOrder;
+  btnOK.TabOrder := PrintFormatCombo.TabOrder + 1;
+  {$ENDIF}
 
-  edEndDate.Top := BottomOf(edStartDate) + vdist;
-  lblStartDate.Top := edStartDate.Top + (edStartDate.Height - lblStartDate.Height) div 2;
-  lblEndDate.Top := edEndDate.Top + (edEndDate.Height - lblEndDate.Height) div 2;
+  cnv := TControlCanvas.Create;
+  try
+    cnv.Control := PrintFormatCombo;
+    w := 0;
+    for i:=0 to PrintFormatCombo.Items.Count-1 do
+      w := Max(w, cnv.TextWidth(PrintFormatCombo.Items[i]));
+    inc(w, GetSystemMetrics(SM_CXVSCROLL));
+    edStartDate.Width := w;
+    // The width of the PrintFormatCombo is anchored to the edStartDate!
+  finally
+    cnv.Free;
+  end;
 
-  VpPrintFormatCombobox1.Top := Bottomof(edEndDate) + 2*vdist;
-  lblFormat.Top := VpPrintFormatCombobox1.Top + (VpPrintFormatCombobox1.Height - lblFormat.Height) div 2;
-
-  btnOK.Top := BottomOf(VpPrintFormatCombobox1) + 2*vdist;
-  btnCancel.Top := btnOK.Top;
-  btnOK.Height := buttonHeight;
-  btnCancel.Height := buttonHeight;
-
-  ClientHeight := BottomOf(btnOK) + delta;
+  edStartDate.ButtonWidth := edStartDate.Height;
+  edEndDate.ButtonWidth := edEndDate.Height;
+  AutoSize := true;
 end;
 
 procedure TfrmReportSetup.SaveData(out ReportData: TReportDataRec);
@@ -194,7 +192,7 @@ begin
     ReportData.StartDate := edStartDate.Date;
     ReportData.EndDate := edEndDate.Date;
   end;
-  ReportData.Format := VpPrintFormatComboBox1.Text;
+  ReportData.Format := PrintFormatCombo.Text;
 end;
 
 procedure TfrmReportSetup.SetCaptions;
@@ -209,7 +207,7 @@ end;
 
 procedure TfrmReportSetup.SetControlLink(const Value: TVpControlLink);
 begin
-  VpPrintFormatComboBox1.ControlLink := Value;
+  PrintFormatCombo.ControlLink := Value;
 end;
 
 procedure TfrmReportSetup.SetDate(Index: Integer;

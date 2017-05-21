@@ -59,6 +59,9 @@ const
 
   GranularityMinutes: Array[TVpGranularity] of Integer = (5, 6, 10, 15, 20, 30, 60);
 
+  DesignTimeDPI = 96;
+
+
 function DefaultEpoch : Integer;
   {-return the current century}
 
@@ -158,8 +161,8 @@ function GranularityToStr(Gran: TVpGranularity): string;
 
 function TaskPriorityToStr(APriority: TVpTaskPriority): String;
 
-function AutoHeight(ARadioGroup: TRadioGroup): Integer;
-function GetButtonWidth(AButton: TButton): Integer;
+//function AutoHeight(ARadioGroup: TRadioGroup): Integer;
+//function GetButtonWidth(AButton: TButton): Integer;
 function GetLabelWidth(ALabel: TLabel): Integer;
 function GetRealFontHeight(AFont: TFont): Integer;
 
@@ -171,17 +174,10 @@ procedure AddResourceGroupMenu(AMenu: TMenuItem; AResource: TVpResource;
   AEventHandler: TNotifyEvent);
 function OverlayPatternToBrushStyle(APattern: TVpOverlayPattern): TBrushStyle;
 
-{$IFDEF LCL}
-procedure HighDPI(FromDPI: integer);
-procedure ScaleDPI(Control: TControl; FromDPI: integer);
-
-const
-  DesignTimeDPI = 96;
-{$ENDIF}
-
 procedure Unused(const A1); overload;
 procedure Unused(const A1, A2); overload;
 procedure Unused(const A1, A2, A3); overload;
+
 
 implementation
 
@@ -785,6 +781,7 @@ begin
   end;
 end;
 
+(*
 function AutoHeight(ARadioGroup: TRadioGroup): Integer;
 var
   w: Integer;
@@ -795,6 +792,7 @@ begin
   ARadioGroup.AutoSize := false;
   ARadioGroup.Width := w;
 end;
+*)
 
 function GetLabelWidth(ALabel: TLabel): Integer;
 var
@@ -807,6 +805,7 @@ begin
   canvas.Free;
 end;
 
+(*
 function GetButtonWidth(AButton: TButton): Integer;
 const
   MARGIN = 24;
@@ -819,7 +818,7 @@ begin
   Result := canvas.TextWidth(AButton.Caption) + MARGIN * Screen.PixelsPerInch div DesignTimeDPI;
   canvas.Free;
 end;
-
+  *)
 function GetRealFontHeight(AFont: TFont): Integer;
 begin
   if AFont.Size = 0 then
@@ -931,45 +930,6 @@ function OverlayPatternToBrushStyle(APattern: TVpOverlayPattern): TBrushStyle;
 begin
   Result := TBrushStyle(APattern);
 end;
-
-{$IFDEF LCL}
-procedure HighDPI(FromDPI: integer);
-var
-  i: integer;
-begin
-  if Screen.PixelsPerInch = FromDPI then
-    exit;
-
-  for i := 0 to Screen.FormCount - 1 do
-    ScaleDPI(Screen.Forms[i], FromDPI);
-end;
-
-procedure ScaleDPI(Control: TControl; FromDPI: integer);
-var
-  i: integer;
-  WinControl: TWinControl;
-begin
-  if Screen.PixelsPerInch = FromDPI then
-    exit;
-
-  with Control do
-  begin
-    Left := ScaleX(Left, FromDPI);
-    Top := ScaleY(Top, FromDPI);
-    Width := ScaleX(Width, FromDPI);
-    Height := ScaleY(Height, FromDPI);
-  end;
-
-  if Control is TWinControl then
-  begin
-    WinControl := TWinControl(Control);
-    if WinControl.ControlCount = 0 then
-      exit;
-    for i := 0 to WinControl.ControlCount - 1 do
-      ScaleDPI(WinControl.Controls[i], FromDPI);
-  end;
-end;
-{$ENDIF}
 
 {$PUSH}{$HINTS OFF}
 procedure Unused(const A1);

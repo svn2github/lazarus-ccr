@@ -69,8 +69,9 @@ type
   private
     SnoozeDelay: TDateTime;
     ShowTime   : TDateTime;
-
     procedure CalcSnooze;
+  protected
+    procedure PositionControls;
   public
     Event: TVpEvent;
     DataStore: TVpCustomDataStore;
@@ -299,6 +300,11 @@ end;
 {=====}
 
 procedure TAlarmNotifyForm.FormShow(Sender: TObject);
+begin
+  PositionControls;
+end;
+
+procedure TAlarmNotifyForm.PositionControls;
 var
   w, h: Integer;
   b: TButton;
@@ -317,21 +323,22 @@ begin
     cnv.Free;
   end;
 
-  b := SnoozeBtn;
-  if GetButtonWidth(b) > w then
-    w := GetButtonWidth(b);
-  if GetButtonWidth(OpenItemBtn) > w then begin
-    b := OpenItemBtn;
-    w := GetButtonWidth(b);
-  end;
-  if GetButtonWidth(DismissBtn) > w then begin
-    b := DismissBtn;
-    w := GetButtonWidth(b);
-  end;
-  b.AutoSize := true;
-  w := Max(w, b.Width);
-  h := b.Height;
-  b.AutoSize := false;
+  SnoozeBtn.AutoSize := true;
+  h := SnoozeBtn.Height;
+  if SnoozeBtn.Width > w then
+    w := SnoozeBtn.Width;
+  SnoozeBtn.AutoSize := false;
+
+  OpenItemBtn.AutoSize := true;
+  if OpenItemBtn.Width > w then
+    w := OpenItemBtn.Width;
+  OpenItemBtn.AutoSize := false;
+
+  DismissBtn.AutoSize := true;
+  if DismissBtn.Width > w then
+    w := DismissBtn.Width;
+  DismissBtn.AutoSize := false;
+
   SnoozeBtn.Width := w;
   SnoozeBtn.Height := h;
   DismissBtn.Width := w;
