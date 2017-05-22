@@ -54,7 +54,7 @@ implementation
 
 uses
   LCLProc, LazUtf8,
-  VpCanvasUtils;
+  VpConst, VpCanvasUtils;
 
 type
   TVpCalendarOpener = class(TVpCustomCalendar);
@@ -380,7 +380,9 @@ begin
     SetMeasurements;
 
     RenderCanvas.Font.Assign(FCalendar.Font);
+    {$IF VP_LCL_SCALING = 0}
     RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+    {$ENDIF}
 
     with TVpCalendarOpener(FCalendar) do
       if (RealRight - RealLeft <> FLastRenderX) or

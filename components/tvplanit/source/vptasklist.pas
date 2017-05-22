@@ -39,7 +39,7 @@ uses
   Windows, Messages,
   {$ENDIF}
   Classes, Graphics, Controls, ExtCtrls, StdCtrls, Menus,
-  VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils;
+  VpConst, VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpCanvasUtils;
 
 type
   TVpTaskRec = packed record
@@ -186,25 +186,26 @@ type
     function tlTaskIndexToVisibleTask(const ATaskIndex: Integer) : Integer;
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
+    procedure EditTask;
+    procedure EndEdit(Sender: TObject);
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    {$IF VP_LCL_SCALING = 1}
+    procedure ScaleFontsPPI(const AProportion: Double); override;
+    {$ENDIF}
+
+    { message handlers }
     {$IFNDEF LCL}
     procedure WMLButtonDown(var Msg: TWMLButtonDown); message WM_LBUTTONDOWN;
     procedure WMLButtonDblClk(var Msg: TWMLButtonDblClk); message WM_LBUTTONDBLCLK;
     procedure WMRButtonDown (var Msg: TWMRButtonDown); message WM_RBUTTONDOWN;
-    {$ELSE}
-    procedure WMLButtonDown(var Msg: TLMLButtonDown); message LM_LBUTTONDOWN;
-    procedure WMLButtonDblClk(var Msg: TLMLButtonDblClk); message LM_LBUTTONDBLCLK;
-    procedure WMRButtonDown (var Msg: TLMRButtonDown); message LM_RBUTTONDOWN;
-    {$ENDIF}
-    procedure EditTask;
-    procedure EndEdit(Sender: TObject);
-    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-    { message handlers }
-    {$IFNDEF LCL}
     procedure WMSize(var Msg: TWMSize); message WM_SIZE;
     procedure WMVScroll(var Msg: TWMVScroll); message WM_VSCROLL;
     procedure CMWantSpecialKey(var Msg: TCMWantSpecialKey);
       message CM_WANTSPECIALKEY;
     {$ELSE}
+    procedure WMLButtonDown(var Msg: TLMLButtonDown); message LM_LBUTTONDOWN;
+    procedure WMLButtonDblClk(var Msg: TLMLButtonDblClk); message LM_LBUTTONDBLCLK;
+    procedure WMRButtonDown (var Msg: TLMRButtonDown); message LM_RBUTTONDOWN;
     procedure WMSize(var Msg: TLMSize); message LM_SIZE;
     procedure WMVScroll(var Msg: TLMVScroll); message LM_VSCROLL;
     {$ENDIF}
@@ -232,6 +233,9 @@ type
     property TabStop;
     property TabOrder;
     property ReadOnly;
+    {$IFDEF LCL}
+    property BorderSpacing;
+    {$ENDIF}
 
     property AllowInplaceEditing: Boolean
       read FAllowInplaceEdit write FAllowInplaceEdit default true;
@@ -254,9 +258,7 @@ implementation
 uses
   SysUtils, Forms, Dialogs, VpTaskEditDlg, VpDlg, VpTasklistPainter;
 
-
 (*****************************************************************************)
-
 
 { TVpTaskDisplayOptions }
 constructor TVpTaskDisplayOptions.Create(Owner: TVpTaskList);
@@ -1246,7 +1248,13 @@ begin
     end;
 end;
 
-{=====}
+{$IF VP_LCL_SCALING}
+procedure TVpTaskList.ScaleFontsPPI(const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(TaskHeadAttributes.Font, AProportion);
+end;
+{$ENDIF}
 
 end.
 

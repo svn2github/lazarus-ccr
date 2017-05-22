@@ -39,7 +39,7 @@ uses
   Windows, Messages,
   {$ENDIF}
   Classes, Graphics, Controls, ExtCtrls, StdCtrls, Forms, Menus,
-  VpBase, VpBaseDS, VpMisc, VpData, VpConst, VpSR, VpCanvasUtils;
+  VpConst, VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpCanvasUtils;
 
 const
   MaxColumns = 100;  { An arbitrary number representing the maximum number of }
@@ -195,6 +195,9 @@ type
     procedure EditContact;
     procedure EndEdit(Sender: TObject);
     procedure InitializeDefaultPopup;
+    {$IF VP_LCL_SCALING = 1}
+    procedure ScaleFontsPPI(const AProportion: Double); override;
+    {$ENDIF}
 
     { message handlers }
     {$IFNDEF LCL}
@@ -1765,6 +1768,13 @@ begin
   end;
   Invalidate;
 end;
-{=====}
+
+{$IF VP_LCL_SCALING}
+procedure TVpContactGrid.ScaleFontsPPI(const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(ContactHeadAttributes.Font, AProportion);
+end;
+{$ENDIF}
 
 end.

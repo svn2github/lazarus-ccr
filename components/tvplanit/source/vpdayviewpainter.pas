@@ -328,7 +328,9 @@ begin
     if NumADEvents > 0 then begin
       // Measure the AllDayEvent text height
       RenderCanvas.Font.Assign(FDayView.AllDayEventAttributes.Font);
+      {$IF VP_LCL_SCALING = 0}
       RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+      {$ENDIF}
       ADTextHeight := RenderCanvas.TextHeight(VpProductName) + TextMargin;
 
       // Distance between text and border
@@ -469,7 +471,9 @@ begin
   SavedFont.Assign(RenderCanvas.Font);
   try
     RenderCanvas.Font.Assign(FDayView.Font);
+    {$IF VP_LCL_SCALING = 0}
     RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+    {$ENDIF}
     RenderCanvas.Brush.Color := RealColor;
     TPSFillRect(RenderCanvas, Angle, RenderIn, R);
 
@@ -550,72 +554,13 @@ begin
       end;
 
       TPSFillRect (RenderCanvas, Angle, RenderIn, LineRect);
-        (*
-
-
-      if not DisplayOnly then begin   // this means: during screen output
-        if FDayView.Focused and (FDayView.ActiveCol = col) and
-           (FDayView.ActiveRow = StartLine + I)
-        then begin
-          { Paint background hilight color }
-          RenderCanvas.Brush.Color := HighlightBkg;
-          RenderCanvas.Font.Color := HighlightText;
-          TPSFillRect(RenderCanvas, Angle, RenderIn, LineRect);
-        end else
-        begin
-          { paint the active, inactive, weekend, and holiday colors }
-
-          { HOLIDAY COLORS ARE NOT IMPLEMENTED YET }
-
-          { if ColDate is a weekend, then paint all rows the weekend }
-          { color. }
-          if (DayOfWeek(ColDate) = 1) or (DayOfWeek(ColDate) = 7) then begin
-            { this is a weekend }
-            RenderCanvas.Brush.Color := FDayView.TimeSlotColors.Weekend;
-            TPSFillRect(RenderCanvas, Angle, RenderIn, LineRect);
-          end
-          else begin
-            { ColDate is a weekday, so check to see if the active     }
-            { range is set. If it isn't then paint all rows the color }
-            { corresponding to Weekday. If it is, then paint inactive }
-            { rows the color corresponding to inactive and the active }
-            { rows the color corresponding to Active Rows.            }
-            if FDayView.TimeSlotColors.ActiveRange.RangeBegin = FDayView.TimeSlotColors.ActiveRange.RangeEnd then
-            begin
-              { there is no active range, so all time slots are to be }
-              { painted the color of Weekday }
-              RenderCanvas.Brush.Color := FDayView.TimeSlotColors.Weekday;
-              TPSFillRect(RenderCanvas, Angle, RenderIn, LineRect);
-            end
-            else begin
-              { there is an active range defined, so we need to see if }
-              { the current line falls in the active range or not, and }
-              { paint it accordingly }
-              LineStartTime := TVpDayViewOpener(FDayView).dvLineMatrix[Col, StartLine + I].Time;
-              if TimeInRange(LineStartTime,
-                FDayView.TimeSlotColors.ActiveRange.StartTime,
-                FDayView.TimeSlotColors.ActiveRange.EndTime - (1/MinutesInDay), true)
-              then begin
-                RenderCanvas.Brush.Color := FDayView.TimeSlotColors.Active;
-                TPSFillRect (RenderCanvas, Angle, RenderIn, LineRect);
-              end else begin
-                RenderCanvas.Brush.Color := FDayView.TimeSlotColors.Inactive;
-                TPSFillRect (RenderCanvas, Angle, RenderIn, LineRect);
-              end;
-            end;
-          end;
-        end;
-      end;
-      *)
 
       { Draw the lines }
-//      if I + StartLine <= FDayView.LineCount then begin
-        RenderCanvas.Pen.Color := FDayView.LineColor;
-        TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Left, LineRect.Top);
-        TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right - 1, LineRect.Top);
-        TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Left, LineRect.Bottom);
-        TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right - 1, LineRect.Bottom);
-  //    end;
+      RenderCanvas.Pen.Color := FDayView.LineColor;
+      TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Left, LineRect.Top);
+      TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right - 1, LineRect.Top);
+      TPSMoveTo(RenderCanvas, Angle, RenderIn, LineRect.Left, LineRect.Bottom);
+      TPSLineTo(RenderCanvas, Angle, RenderIn, LineRect.Right - 1, LineRect.Bottom);
 
       inc(I);
     end;  // while true ...
@@ -650,7 +595,9 @@ begin
 
     { Draw Column Header }
     RenderCanvas.Font.Assign(FDayView.HeadAttributes.Font);
+    {$IF VP_LCL_SCALING = 0}
     RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+    {$ENDIF}
     RenderCanvas.Brush.Color := RealHeadAttrColor;
     RenderCanvas.Pen.Style := psClear;
     tmpRect := R;
@@ -1084,14 +1031,6 @@ var
         bmp.Free;
       end;
 
-//      RenderCanvas.StretchDraw(R, ABitmap);
-      {
-      RenderCanvas.CopyRect(  // wp: was FDayview.Canvas -- does not look correct...
-        Rect(AIconRect.Left + 1, AIconRect.Top + 1, AIconRect.Left + w + 1, AIconRect.Top + h + 1),
-        bmp.Canvas,
-        Rect(0, 0, bmp.Width, bmp.Height)
-      );
-      }
       if IncDrawPos then
         inc(DrawPos, w + FScaledIconMargin);
     end;
@@ -1302,7 +1241,9 @@ begin
 
       { Calculate the column rect for this day }
       RenderCanvas.Font.Assign(FDayView.Font);
+      {$IF VP_LCL_SCALING = 0}
       RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+      {$ENDIF}
       CellsRect := Rect(RPos, ADEventsRect.Bottom + 1, RPos + DayWidth, RealBottom - 2);
       if (i = RealNumDays - 1) and (ExtraSpace > 0) then
         CellsRect.Right := CellsRect.Right + ExtraSpace;
@@ -1435,7 +1376,9 @@ begin
       begin
         // In case of 60-min granularity paint time as simple string
         RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
+        {$IF VP_LCL_SCALING = 0}
         RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+        {$ENDIF}
         timeStr := Format('%s:%s', [hourStr, minuteStr]);
         x := lineRect.Right - RenderCanvas.TextWidth(timeStr) - MINUTES_BORDER;
         TPSTextOut(RenderCanvas, Angle, RenderIn, x, y + TextMargin, timeStr);
@@ -1444,13 +1387,17 @@ begin
         // In all other cases, paint large hour and small minutes (or am/pm)
         // Draw minutes
         RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
+        {$IF VP_LCL_SCALING = 0}
         RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+        {$ENDIF}
         x := lineRect.Right - RenderCanvas.TextWidth(MinuteStr) - MINUTES_BORDER;
         TPSTextOut(RenderCanvas, Angle, RenderIn, x, y + TextMargin, minuteStr);
 
         // Draw hours
         RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.HourFont);
+        {$IF VP_LCL_SCALING = 0}
         RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+        {$ENDIF}
         dec(x, RenderCanvas.TextWidth(HourStr) + MINUTES_HOUR_DISTANCE);
         TPSTextOut(RenderCanvas, Angle, RenderIn, x, y + TextMargin{ - 2}, hourStr);
       end;
@@ -1482,7 +1429,9 @@ begin
 
   // Calculate length of minutes ticks
   RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
+  {$IF VP_LCL_SCALING = 0}
   RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+  {$ENDIF}
   minutesLen := RenderCanvas.TextWidth('00') + MINUTES_BORDER + MINUTES_HOUR_DISTANCE div 2;
 
   // Prepare pen
@@ -1551,10 +1500,14 @@ function TVpDayViewPainter.CalcRowHeadWidth: integer;
 begin
   Result := 2 * MINUTES_BORDER + MINUTES_HOUR_DISTANCE;
   RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.MinuteFont);
+  {$IF VP_LCL_SCALING = 0}
   RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+  {$ENDIF}
   inc(Result, RenderCanvas.TextWidth('00'));
   RenderCanvas.Font.Assign(FDayView.RowHeadAttributes.HourFont);
+  {$IF VP_LCL_SCALING = 0}
   RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+  {$ENDIF}
   inc(Result, RenderCanvas.TextWidth('33'));
 end;
 

@@ -5,9 +5,9 @@ unit VpTasklistPainter;
 interface
 
 uses
-  SysUtils, LCLType, LCLIntf,
+  SysUtils, LCLType, LCLIntf, LCLVersion,
   Classes, Graphics, Types,
-  VPBase, VpTaskList, VpBasePainter;
+  VpConst, VpBase, VpTaskList, VpBasePainter;
 
 type
   TVpTaskListPainter = class(TVpBasePainter)
@@ -55,7 +55,7 @@ type
 implementation
 
 uses
-  VpConst, VpData, VpMisc, VpCanvasUtils, VpSR;
+  VpData, VpMisc, VpCanvasUtils, VpSR;
 
 type
   TVpTaskListOpener = class(TVpTaskList);
@@ -206,38 +206,6 @@ begin
         DrawBevelRect(RenderCanvas, R, BevelDarkShadow, BevelFace);
       end;
   end;
-  (*
-  if FDrawingStyle = dsFlat then begin
-    { draw an outer and inner bevel }
-    DrawBevelRect(
-      RenderCanvas,
-      Rect(RenderIn.Left, RenderIn.Top, RenderIn.Right - 1, RenderIn.Bottom - 1),
-      BevelShadow,
-      BevelHighlight
-    );
-    DrawBevelRect (RenderCanvas,
-                   Rect (RenderIn.Left + 1,
-                         RenderIn.Top + 1,
-                         RenderIn.Right - 2,
-                         RenderIn.Bottom - 2),
-                   BevelHighlight,
-                   BevelShadow);
-  end else if FDrawingStyle = ds3d then begin
-  { draw a 3d bevel }
-    DrawBevelRect (RenderCanvas,
-                   Rect (RenderIn.Left, RenderIn.Top,
-                         RenderIn.Right - 1, RenderIn.Bottom - 1),
-                   BevelShadow,
-                   BevelHighlight);
-    DrawBevelRect (RenderCanvas,
-                   Rect (RenderIn.Left + 1,
-                         RenderIn.Top + 1,
-                         RenderIn.Right - 2,
-                         RenderIn.Bottom - 2),
-                   BevelDarkShadow,
-                   BevelFace);
-  end;
-  *)
 end;
 
 procedure TVpTaskListPainter.DrawHeader;
@@ -249,7 +217,9 @@ var
 begin
   RenderCanvas.Brush.Color := TaskHeadAttrColor;
   RenderCanvas.Font.Assign(FTaskList.TaskHeadAttributes.Font);
+  {$IF VP_LCL_SCALING = 0}
   RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+  {$ENDIF}
 
   if FTaskList.DrawingStyle = dsFlat then delta := 1 else delta := 2;
   HeadRect.Left := RealLeft + delta;
@@ -319,7 +289,9 @@ begin
     else
       HeadStr := RSTaskTitleNoResource;
     RenderCanvas.Font.Assign(TaskHeadAttributes.Font);
+    {$IF VP_LCL_SCALING = 0}
     RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+    {$ENDIF}
     TPSTextOut(
       RenderCanvas,
       Angle,
@@ -395,7 +367,9 @@ begin
     end;
 
     RenderCanvas.Font.Assign(Font);
+    {$IF VP_LCL_SCALING = 0}
     RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+    {$ENDIF}
     for I := StartLine to pred(tlAllTaskList.Count) do begin
       Task := tlAllTaskList[I];
       if (LineRect.Top + Trunc(RowHeight * 0.5) <= RealBottom) then begin
@@ -531,7 +505,9 @@ end;
 procedure TVpTaskListPainter.MeasureRowHeight;
 begin
   RenderCanvas.Font.Assign(FTaskList.Font);
+  {$IF VP_LCL_SCALING = 0}
   RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
+  {$ENDIF}
   RowHeight := RenderCanvas.TextHeight(VpProductName) + TextMargin * 2;
 end;
 

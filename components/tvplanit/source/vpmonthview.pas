@@ -39,7 +39,7 @@ uses
   Windows, Messages,
   {$ENDIF}
   Classes, Graphics, Controls, ComCtrls, ExtCtrls, Forms, Menus,
-  VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils;
+  VpConst, VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpCanvasUtils;
 
 type
   TVpMonthdayRec = packed record
@@ -221,6 +221,9 @@ type
     procedure MouseEnter; override;
     procedure MouseLeave; override;
     procedure Paint; override;
+    {$IF VP_LCL_SCALING = 1}
+    procedure ScaleFontsPPI(const AProportion: Double); override;
+    {$ENDIF}
 
     { message handlers }
     {$IFNDEF LCL}
@@ -281,7 +284,6 @@ type
     property Color: TColor read FColor write SetColor;
     property DateLabelFormat: string read FDateLabelFormat write SetDateLabelFormat;
     property DayHeadAttributes: TVpMonthviewAttr read FDayHeadAttr write FDayHeadAttr;
-//    property DayHeadAttributes: TVpDayHeadAttr read FDayHeadAttr write FDayHeadAttr;
     property DayNameStyle: TVpMVDayNameStyle read FDayNameStyle write SetDayNameStyle;
     property DayNumberFont: TVpFont read FDayNumberFont write SetDayNumberFont;
     property DrawingStyle: TVpDrawingStyle read FDrawingStyle write SetDrawingStyle stored True;
@@ -1262,6 +1264,18 @@ begin
     Invalidate;
   end;
 end;
-{=====}
+
+{$IF VP_LCL_SCALING = 1}
+procedure TVpMonthView.ScaleFontsPPI(const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(DayHeadAttributes.Font, AProportion);
+  DoScaleFontPPI(EventFont, Aproportion);
+  DoScaleFontPPI(HeadAttributes.Font, AProportion);
+  DoScaleFontPPI(HolidayAttributes.Font, AProportion);
+  DoScaleFontPPI(TodayAttributes.Font, AProportion);
+  DoScaleFontPPI(WeekendAttributes.Font, AProportion);
+end;
+{$ENDIF}
 
 end.

@@ -64,7 +64,7 @@ uses
   Windows, Messages,
   {$ENDIF}
   Classes, Graphics, Controls, ExtCtrls, StdCtrls, Buttons, Forms, Menus,
-  VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils;
+  VpConst, VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpCanvasUtils;
 
 type
   TVpLineRec = packed record
@@ -387,6 +387,9 @@ type
     procedure EndEdit(Sender: TObject);
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure SetTimeIntervals(UseGran: TVpGranularity);
+    {$IF VP_LCL_SCALING = 1}
+    procedure ScaleFontsPPI(const AProportion: Double); override;
+    {$ENDIF}
 
     { message handlers }
     procedure VpDayViewInit(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message Vp_DayViewInit;
@@ -2549,7 +2552,6 @@ begin
   end;
 end;
 
-{.$IFNDEF LCL}
 procedure TVpDayView.VpDayViewInit(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF});
 begin
   Unused(Msg);
@@ -2564,7 +2566,17 @@ begin
   dvCalcVisibleLines(Height, dvColHeadHeight, dvRowHeight, 1, TopLine, -1);
   SetVScrollPos;
 end;
-{.$ENDIF}
+
+{$IF VP_LCL_SCALING = 1}
+procedure TVpDayView.ScaleFontsPPI(const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(AllDayEventAttributes.Font, AProportion);
+  DoScaleFontPPI(HeadAttributes.Font, AProportion);
+  DoScaleFontPPI(RowHeadAttributes.HourFont, AProportion);
+  DoScaleFontPPI(RowHeadAttributes.MinuteFont, AProportion);
+end;
+{$ENDIF}
 
 (*****************************************************************************)
 { TVpCHAttributes }
@@ -2648,6 +2660,5 @@ begin
     FOwner.Invalidate;
   end;
 end;
-{=====}
 
 end.

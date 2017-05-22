@@ -53,7 +53,7 @@ uses
   Windows, Messages,
   {$ENDIF}
   Classes, Graphics, Controls, ComCtrls, ExtCtrls, StdCtrls, Forms, Menus,
-  VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpConst, VpCanvasUtils, VpDayView;
+  VpConst, VpBase, VpBaseDS, VpMisc, VpData, VpSR, VpCanvasUtils, VpDayView;
 
 type
   TVpWeekdayRec = packed record
@@ -219,6 +219,9 @@ type
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
+    {$IF VP_LCL_SCALING = 1}
+    procedure ScaleFontsPPI(const AProportion: Double); override;
+    {$ENDIF}
 
     { drag and drop }
     procedure DoEndDrag(Target: TObject; X, Y: Integer); override;
@@ -1736,6 +1739,18 @@ begin
     wvDragging := false;
   end;
 end;
+
+{$IF VP_LCL_SCALING = 1}
+procedure TVpWeekView.ScaleFontsPPI(const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(AllDayEventAttributes.Font, AProportion);
+  DoScaleFontPPI(DayHeadAttributes.Font, AProportion);
+  DoScaleFontPPI(EventFont, AProportion);
+  DoScaleFontPPI(HeadAttributes.Font, AProportion);
+end;
+{$ENDIF}
+
 
 { TVpWvHeadAttributes }
 

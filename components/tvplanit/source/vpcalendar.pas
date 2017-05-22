@@ -40,7 +40,7 @@ uses
   Windows, Messages,
   {$ENDIF}
   SysUtils, Buttons, Classes, Controls, Forms, Graphics, Menus,
-  VpBase, VpSR, VpConst, VpMisc, VpBaseDS, VpCanvasUtils, VpException;
+  VpConst, VpBase, VpSR, VpMisc, VpBaseDS, VpCanvasUtils, VpException;
 
 type
   TVpCalDisplayOption = (cdoShortNames, cdoShowYear, cdoShowInactive,

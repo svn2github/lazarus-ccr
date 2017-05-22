@@ -40,7 +40,7 @@ interface
 
 uses
   {$IFDEF LCL}
-  Controls, LCLType, LCLProc,
+  Controls, LCLType, LCLProc, LCLVersion,
   {$ELSE}
   Windows,
   {$ENDIF}
@@ -268,6 +268,16 @@ const
 
   { Hint support }
   MAX_HINT_WIDTH = 400;
+
+{$IFDEF LCL}
+ {$IF LCL_FULLVERSION >= 1080000}
+  VP_LCL_SCALING = 1;
+ {$ELSE}
+  VP_LCL_SCALING = 0;
+ {$ENDIF}
+{$ELSE}
+  VL_LCL_SCALING := 0;
+{$ENDIF}
 
 
 implementation
