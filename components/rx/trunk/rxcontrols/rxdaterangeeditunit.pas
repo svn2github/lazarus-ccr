@@ -360,11 +360,36 @@ end;
 
 procedure TRxCustomDateRangeEdit.SetPeriod(AValue: TDateTime);
 var
-  Y, M, D: word;
+  Y, M, D, Q: word;
+  I: Integer;
 begin
   DecodeDate(AValue, Y, M, D);
-  FEditMonth.ItemIndex:=M-1;
   FEditYear.Value:=Y;
+
+  if reoMonth in FOptions then
+    FEditMonth.ItemIndex:=M-1
+  else
+  if reoQuarter in FOptions then
+  begin
+    Q:=M div 4;
+    for I:=0 to FEditMonth.Items.Count - 1 do
+      if FEditMonth.Items.Objects[i] = TObject(Pointer(Q + 13)) then
+      begin
+        FEditMonth.ItemIndex:=i;
+        break;
+      end;
+  end
+  else
+  if reoHalfYear in FOptions then
+  begin
+    Q:=M div 6;
+    for I:=0 to FEditMonth.Items.Count - 1 do
+      if FEditMonth.Items.Objects[i] = TObject(Pointer(Q + 17)) then
+      begin
+        FEditMonth.ItemIndex:=i;
+        break;
+      end;
+  end;
 end;
 
 procedure TRxCustomDateRangeEdit.SetQuarter(AValue: word);
