@@ -371,6 +371,7 @@ type
 implementation
 
 {$R vpbase.res}
+{$R vpbasepng.res}
 
 uses
 {$IFNDEF LCL}

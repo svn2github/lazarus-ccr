@@ -254,6 +254,16 @@ msgstr "Файл"
 msgid "Help"
 msgstr "Справка"
 
+#: tmainform.menuitem3.caption
+msgctxt "tmainform.menuitem3.caption"
+msgid "-"
+msgstr ""
+
+#: tmainform.menuitem4.caption
+msgctxt "tmainform.menuitem4.caption"
+msgid "-"
+msgstr ""
+
 #: tmainform.mnuabout.caption
 msgid "About Visual PlanIt"
 msgstr "О Visual PlanIt"

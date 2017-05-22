@@ -5,7 +5,7 @@ unit VpTasklistPainter;
 interface
 
 uses
-  SysUtils, LCLType, LCLIntf, LCLVersion,
+  SysUtils, LCLType, LCLIntf,
   Classes, Graphics, Types,
   VpConst, VpBase, VpTaskList, VpBasePainter;
 
@@ -16,7 +16,6 @@ type
 
     // local parameters of the old TVpTaskList method
     HeadRect: TRect;
-    Bmp: Graphics.TBitmap;
     RowHeight: Integer;
     RealColor: TColor;
     BackgroundSelHighlight: TColor;
@@ -55,6 +54,7 @@ type
 implementation
 
 uses
+  Forms,
   VpData, VpMisc, VpCanvasUtils, VpSR;
 
 type
@@ -90,16 +90,23 @@ var
   dx, dy: Integer;
   tm: Integer;   // Scaled text margin;
   d2: Integer;   // 2*Scale
+  d1px, d2px, d3px: Integer;
 begin
-  tm := Round(Textmargin * Scale);
+  if Scale > 1 then
+    tm := Round(TextMargin * Scale) else
+    tm := ScaleY(Textmargin, DesigntimeDPI);
+  d1px := ScaleY(1, DesigntimeDPI);
+  d2px := ScaleY(2, DesigntimeDPI);
+  d3px := ScaleY(3, DesigntimeDPI);
 
   X := Rec.Left + tm;
   Y := Rec.Top + tm;
-  W := RowHeight - tm * 2;    // correct: The checkbox is square, its width is determined by the row height
+  W := RowHeight - tm * 2;
+    // correct: The checkbox is square, its width is determined by the row height
 
   { draw check box }
   case FTaskList.DrawingStyle of
-    dsFlat:
+    dsFlat, dsNoBorder:
       begin
         RenderCanvas.Brush.Color := RealCheckBgColor;
         RenderCanvas.Pen.Color := RealCheckBoxColor;
@@ -136,11 +143,11 @@ begin
   end;
 
   { build check rect }
-  d2 := Round(2*Scale);
-  if Scale > 1 then
+  if Scale > 1 then begin
+    d2 := Round(2*Scale);
     CR := Rect(X + d2, Y + d2, X + W - d2, Y + W - d2)
-  else
-    CR := Rect(X + 3, Y + 3, X + W - 3, Y + W - 3);
+  end else
+    CR := Rect(X + d3px, Y + d3px, X + W - d3px, Y + W - d3px);
   if Checked then begin
     RenderCanvas.Pen.Color := RealCheckColor;
     // Instead of using Pen.Width = 3 we paint 3x - looks better
@@ -171,13 +178,23 @@ begin
             TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Left+dx, CR.Bottom);
             TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right, CR.Top-1);
 
-            TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left+1, CR.Bottom-dy);
-            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Left+ dx, CR.Bottom-1);
+            TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left+1,  CR.Bottom-dy);
+            TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Left+dx, CR.Bottom-1);
             TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right-1, CR.Top-1);
 
             TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left, CR.Bottom-dy+1);
             TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Left+dx, CR.Bottom+1);
             TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right, CR.Top);
+
+            if Screen.PixelsPerInch > 120 then begin
+              TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left+2,  CR.Bottom-dy);
+              TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Left+dx, CR.Bottom-2);
+              TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right-2, CR.Top-1);
+
+              TPSMoveTo(RenderCanvas, Angle, RenderIn, CR.Left, CR.Bottom-dy+2);
+              TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Left+dx, CR.Bottom+2);
+              TPSLineTo(RenderCanvas, Angle, RenderIn, CR.Right, CR.Top);
+            end;
           end;
         end;
     end;
@@ -213,7 +230,9 @@ var
   GlyphRect: TRect;
   HeadStr: string;
   delta: Integer;
-  w, h: Integer;
+  w, h, h0: Integer;
+  bmp: TBitmap;
+  png: TPortableNetworkGraphic;
 begin
   RenderCanvas.Brush.Color := TaskHeadAttrColor;
   RenderCanvas.Font.Assign(FTaskList.TaskHeadAttributes.Font);
@@ -246,39 +265,45 @@ begin
       end;
   end;
 
+  { Draw the glyph }
   if FTaskList.ShowIcon then begin
-    { Draw the glyph }
-    Bmp := Graphics.TBitmap.Create;
+    h0 := HeightOf(HeadRect) - 2;
+    if h0 >= 32 then
+      png := CreatePngFromResourceName('VPCHECKPAD32')
+    else if h0 >= 24 then
+      png := CreatePngFromResourceName('VPCHECKPAD24')
+    else
+      png := CreatePngFromResourceName('VPCHECKPAD16');
     try
-      Bmp.LoadFromResourceName(HINSTANCE, 'VPCHECKPAD'); //soner changed: Bmp.Handle := LoadBaseBitmap('VPCHECKPAD');
-      if Bmp.Height > 0 then begin
-        w := Round(Bmp.Width * Scale);
-        h := Round(Bmp.Height * Scale);
+      if png.Height > 0 then begin
+        bmp := TBitmap.Create;
+        try
+          bmp.PixelFormat := pf32Bit;
+          bmp.Width := png.Width;
+          bmp.Height := png.Height;
+          bmp.Canvas.Brush.color := clWhite;
+          bmp.Canvas.FillRect(Rect(0, 0, bmp.Width, bmp.Height));
+          bmp.Canvas.Draw(0, 0, png);
 
-        GlyphRect.TopLeft := Point(HeadRect.Left + TextMargin, HeadRect.Top + TextMargin);
-        GlyphRect.BottomRight := Point(GlyphRect.Left + w, GlyphRect.Top + h);
+          w := Round(bmp.Width * Scale);
+          h := Round(bmp.Height * Scale);
 
-        {$IFDEF FPC}
-        RotateBitmap(Bmp, Angle);
-        {$ENDIF}
+          GlyphRect.TopLeft := Point(HeadRect.Left + TextMargin, (Headrect.Top + HeadRect.Bottom - h) div 2);
+          GlyphRect.BottomRight := Point(GlyphRect.Left + w, GlyphRect.Top + h);
 
-        TPSStretchDraw(RenderCanvas, Angle, RenderIn, GlyphRect, Bmp);
-        {
-        RenderCanvas.BrushCopy(
-          TPSRotateRectangle(Angle, RenderIn, GlyphRect),
-          Bmp,
-          Rect(0, 0, Bmp.Width, Bmp.Height),
-          Bmp.Canvas.Pixels[0, Bmp.Height-1]
-        );
-         }
-//TODO:          RenderCanvas.BrushCopy (TPSRotateRectangle (Angle, RenderIn, GlyphRect),
-//                                  Bmp, Rect(0, 0, Bmp.Width, Bmp.Height),
-//            Bmp.Canvas.Pixels[0, Bmp.Height - 1]);
-       // RenderCanvas.Draw(GlyphRect.TopLeft.x, GlyphRect.TopLeft.y, Bmp); //soner added
-        HeadRect.Left := HeadRect.Left + w + TextMargin;
+          {$IFDEF FPC}
+          RotateBitmap(Bmp, Angle);
+          {$ENDIF}
+
+          TPSStretchDraw(RenderCanvas, Angle, RenderIn, GlyphRect, Bmp);
+
+          HeadRect.Left := HeadRect.Left + w + TextMargin;
+        finally
+          bmp.Free;
+        end;
       end;
     finally
-      Bmp.Free;
+      png.Free;
     end;
   end;
 

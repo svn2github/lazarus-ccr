@@ -766,6 +766,7 @@ var
   lang: String;
   L,T, W,H: Integer;
   R: TRect;
+  n: Integer;
 begin
   ini := TMemIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
   try
@@ -822,8 +823,9 @@ begin
       CbAddressBuilder.ItemIndex := 0 else
       CbAddressBuilder.ItemIndex := CbAddressBuilder.Items.Indexof(VpControlLink1.CityStateZipFormat);
 
-    CbDrawingStyle.ItemIndex := ini.ReadInteger('Settings', 'DrawingStyle',
-      ord(dsFlat));
+    n := ini.ReadInteger('Settings', 'DrawingStyle', ord(dsFlat));
+    if (n <= 0) or (n >= ord(High(TVpDrawingStyle))) then n := 0;
+    CbDrawingStyle.ItemIndex := n;
     CbDrawingStyleChange(nil);
 
     CbAllowInplaceEditing.Checked := ini.ReadBool('Settings', 'AllowInplaceEditing',

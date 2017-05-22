@@ -161,8 +161,6 @@ function GranularityToStr(Gran: TVpGranularity): string;
 
 function TaskPriorityToStr(APriority: TVpTaskPriority): String;
 
-//function AutoHeight(ARadioGroup: TRadioGroup): Integer;
-//function GetButtonWidth(AButton: TButton): Integer;
 function GetLabelWidth(ALabel: TLabel): Integer;
 function GetRealFontHeight(AFont: TFont): Integer;
 
@@ -173,6 +171,9 @@ function StripLastLineEnding(const AText: String): String;
 procedure AddResourceGroupMenu(AMenu: TMenuItem; AResource: TVpResource;
   AEventHandler: TNotifyEvent);
 function OverlayPatternToBrushStyle(APattern: TVpOverlayPattern): TBrushStyle;
+
+function CreatePngFromResourceName(AResName: String): TPortableNetworkGraphic;
+  { Load a png picture from a resource (Note: OS resource, not vp resource! }
 
 procedure Unused(const A1); overload;
 procedure Unused(const A1, A2); overload;
@@ -793,19 +794,6 @@ begin
   end;
 end;
 
-(*
-function AutoHeight(ARadioGroup: TRadioGroup): Integer;
-var
-  w: Integer;
-begin
-  w := ARadioGroup.Width;
-  ARadioGroup.AutoSize := true;
-  Result := ARadioGroup.Height;
-  ARadioGroup.AutoSize := false;
-  ARadioGroup.Width := w;
-end;
-*)
-
 function GetLabelWidth(ALabel: TLabel): Integer;
 var
   canvas: TControlCanvas;
@@ -817,20 +805,6 @@ begin
   canvas.Free;
 end;
 
-(*
-function GetButtonWidth(AButton: TButton): Integer;
-const
-  MARGIN = 24;
-var
-  canvas: TControlCanvas;
-begin
-  canvas := TControlCanvas.Create;
-  canvas.Control := AButton;
-  canvas.Font.Assign(AButton.Font);
-  Result := canvas.TextWidth(AButton.Caption) + MARGIN * Screen.PixelsPerInch div DesignTimeDPI;
-  canvas.Free;
-end;
-  *)
 function GetRealFontHeight(AFont: TFont): Integer;
 begin
   if AFont.Size = 0 then
@@ -941,6 +915,23 @@ end;
 function OverlayPatternToBrushStyle(APattern: TVpOverlayPattern): TBrushStyle;
 begin
   Result := TBrushStyle(APattern);
+end;
+
+function CreatePngFromResourceName(AResName: String): TPortableNetworkGraphic;
+var
+  stream: TResourceStream;
+begin
+  Result := TPortableNetworkGraphic.Create;
+  try
+    stream := TResourceStream.Create(HINSTANCE, AResName, RT_RCDATA);
+    try
+      Result.LoadFromStream(stream);
+    finally
+      stream.Free;
+    end;
+  except
+    FreeAndNil(Result);
+  end;
 end;
 
 {$PUSH}{$HINTS OFF}

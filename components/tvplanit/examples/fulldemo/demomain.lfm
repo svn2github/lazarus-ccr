@@ -9,7 +9,7 @@ object MainForm: TMainForm
   Menu = MainMenu1
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '1.6.4.0'
   object Panel1: TPanel
     Left = 125
     Height = 576
@@ -400,7 +400,7 @@ object MainForm: TMainForm
           MaxVisibleTasks = 250
           TaskHeadAttributes.Color = clSilver
           TaskHeadAttributes.Font.Style = [fsItalic]
-          DrawingStyle = ds3d
+          DrawingStyle = dsFlat
           ShowResourceName = True
         end
       end

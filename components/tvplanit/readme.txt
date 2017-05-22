@@ -132,7 +132,7 @@ steps:
   
   
 4.4 Current development version (1.07)
-  - ...
+  - Improved integration of the LCL scaling of Lazarus 1.8
   
   
 ==============================================
