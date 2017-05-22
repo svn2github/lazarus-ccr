@@ -276,13 +276,40 @@ begin
 end;
 
 function TRxCustomDateRangeEdit.GetPeriod: TDateTime;
+var
+  i: PtrInt;
+  M: Word;
 begin
-  Result:=EncodeDate(Year, Month, 1);
+  i:=PtrInt(FEditMonth.Items.Objects[FEditMonth.ItemIndex]);
+
+  if I < 13 then
+    M:=Month
+  else
+  if i in [13..16] then
+    M:= (I - 13) * 3 + 1
+  else
+  if i in [17..18] then
+    M:= (I - 17) * 6 + 1;
+
+  Result:=EncodeDate(Year, M, 1);
 end;
 
 function TRxCustomDateRangeEdit.GetPeriodEnd: TDateTime;
+var
+  i: PtrInt;
+  M: Integer;
 begin
-  Result:=EncodeDate(Year, Month, DaysPerMonth(Year, Month));
+  i:=PtrInt(FEditMonth.Items.Objects[FEditMonth.ItemIndex]);
+  if I < 13 then
+    M:=Month
+  else
+  if i in [13..16] then
+    M:= (I - 12) * 3
+  else
+  if i in [17..18] then
+    M:= (I - 16) * 6;
+
+  Result:=EncodeDate(Year, M, DaysPerMonth(Year, M))
 end;
 
 function TRxCustomDateRangeEdit.GetQuarter: word;
@@ -392,37 +419,28 @@ end;
 
 procedure TRxCustomDateRangeEdit.FillMonthNames;
 var
-  i, k: Integer;
+  i: Integer;
 begin
   FEditMonth.Items.BeginUpdate;
   FEditMonth.Items.Clear;
   if (reoMonth in FOptions) or (FOptions = []) then
   begin
     for i:=1 to 12 do
-    begin
-      k:=FEditMonth.Items.Add(DefaultFormatSettings.LongMonthNames[i]);
-      FEditMonth.Items.Objects[K]:=TObject(Pointer(i));
-    end;
+      FEditMonth.Items.AddObject(DefaultFormatSettings.LongMonthNames[i], TObject(Pointer(i)));
   end;
 
   if (reoQuarter in FOptions) or (FOptions = []) then
   begin
-    k:=FEditMonth.Items.Add(sFirstQuarter);
-    FEditMonth.Items.Objects[K]:=TObject(Pointer(13));
-    k:=FEditMonth.Items.Add(sSecondQuarter);
-    FEditMonth.Items.Objects[K]:=TObject(Pointer(14));
-    k:=FEditMonth.Items.Add(sThirdQuarter);
-    FEditMonth.Items.Objects[K]:=TObject(Pointer(15));
-    k:=FEditMonth.Items.Add(sFourthQuarter);
-    FEditMonth.Items.Objects[K]:=TObject(Pointer(16));
+    FEditMonth.Items.AddObject(sFirstQuarter, TObject(Pointer(13)));
+    FEditMonth.Items.AddObject(sSecondQuarter, TObject(Pointer(14)));
+    FEditMonth.Items.AddObject(sThirdQuarter, TObject(Pointer(15)));
+    FEditMonth.Items.AddObject(sFourthQuarter, TObject(Pointer(16)));
   end;
 
   if (reoHalfYear in FOptions) or (FOptions = []) then
   begin
-    k:=FEditMonth.Items.Add(sFirstHalfOfYear);
-    FEditMonth.Items.Objects[K]:=TObject(Pointer(17));
-    k:=FEditMonth.Items.Add(sSecondHalfOfYear);
-    FEditMonth.Items.Objects[K]:=TObject(Pointer(18));
+    FEditMonth.Items.AddObject(sFirstHalfOfYear, TObject(Pointer(17)));
+    FEditMonth.Items.AddObject(sSecondHalfOfYear, TObject(Pointer(18)));
   end;
   FEditMonth.ItemIndex:=0;
   FEditMonth.Items.EndUpdate;
