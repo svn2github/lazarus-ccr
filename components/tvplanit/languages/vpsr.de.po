@@ -711,6 +711,10 @@ msgstr "TCanvas wurde nicht zugewiesen."
 msgid "Component must be linked to a TVpControlLink"
 msgstr "Komponente muss mit einem TVpControlLink verbunden sein."
 
+#: vpsr.rsnodayincrement
+msgid "Day increment unit not specified."
+msgstr ""
+
 #: vpsr.rsnolocalizationfile
 msgid "Localization file not found."
 msgstr "Sprachdatei nicht gefunden."
@@ -726,6 +730,10 @@ msgstr "(Nichts)"
 #: vpsr.rsnooverlayedevents
 msgid "none"
 msgstr "keine"
+
+#: vpsr.rsnoprintformatname
+msgid "Please supply a format name"
+msgstr ""
 
 #: vpsr.rsnoprintformats
 msgid "No print formats have been defined"
@@ -1055,6 +1063,14 @@ msgstr "Samstag"
 #: vpsr.rssavefilebtn
 msgid "Save file..."
 msgstr "Datei speichern..."
+
+#: vpsr.rssaveformatchangestofile
+msgid "Save format to file?"
+msgstr ""
+
+#: vpsr.rssaveformatchangestofilename
+msgid "Save format to \"%s\"?"
+msgstr ""
 
 #: vpsr.rsselectasound
 msgid "Select A Sound"
@@ -1613,3 +1629,4 @@ msgstr "Unbekannte Achsen-Spezifikation: %s"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "Die XML-Deklaration muss vor dem ersten Element erscheinen."
+

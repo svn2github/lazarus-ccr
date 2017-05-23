@@ -717,6 +717,10 @@ msgstr "TCanvas non spécifié"
 msgid "Component must be linked to a TVpControlLink"
 msgstr "Le composant doit être lié à un TVpControlLink"
 
+#: vpsr.rsnodayincrement
+msgid "Day increment unit not specified."
+msgstr ""
+
 #: vpsr.rsnolocalizationfile
 msgid "Localization file not found."
 msgstr "Fichier de localization non-trouvé"
@@ -731,6 +735,10 @@ msgstr "(Aucun)"
 
 #: vpsr.rsnooverlayedevents
 msgid "none"
+msgstr ""
+
+#: vpsr.rsnoprintformatname
+msgid "Please supply a format name"
 msgstr ""
 
 #: vpsr.rsnoprintformats
@@ -1060,6 +1068,14 @@ msgstr "Samedi"
 
 #: vpsr.rssavefilebtn
 msgid "Save file..."
+msgstr ""
+
+#: vpsr.rssaveformatchangestofile
+msgid "Save format to file?"
+msgstr ""
+
+#: vpsr.rssaveformatchangestofilename
+msgid "Save format to \"%s\"?"
 msgstr ""
 
 #: vpsr.rsselectasound

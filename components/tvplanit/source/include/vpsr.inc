@@ -319,6 +319,10 @@ resourcestring
   { Misc strings }
   RSCategoryDesc            = 'Category %d';
 
+  { Print format list }
+  RSSaveFormatChangesToFile     = 'Save format to file?';
+  RSSaveFormatChangesToFilename = 'Save format to "%s"?';
+
   { Print Format Editor }
   RSEditPrintFormat         = 'Edit Print Formats...';
   RSPrintFormatDesigner     = 'Print format designer';
@@ -332,6 +336,8 @@ resourcestring
   RSNewFileBtn              = 'New file';
   RSLoadFileBtn             = 'Load file...';
   RSSaveFileBtn             = 'Save file...';
+  RSNoPrintFormatName       = 'Please supply a format name';
+  RSNoDayIncrement          = 'Day increment unit not specified.';
 
   RSReportSetup             = 'Report setup';
 

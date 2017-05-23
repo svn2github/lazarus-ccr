@@ -188,6 +188,7 @@ object frmEditFormat: TfrmEditFormat
       BorderSpacing.Bottom = 4
       Caption = 'OK'
       Default = True
+      ModalResult = 1
       OnClick = btnOkClick
       TabOrder = 0
     end
@@ -203,6 +204,7 @@ object frmEditFormat: TfrmEditFormat
       BorderSpacing.Bottom = 4
       Cancel = True
       Caption = 'Cancel'
+      ModalResult = 2
       OnClick = btnCancelClick
       TabOrder = 1
     end

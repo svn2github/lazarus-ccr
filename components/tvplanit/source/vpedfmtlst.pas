@@ -246,9 +246,9 @@ begin
   if IsDirty then begin
     Rslt := DirtyPrompt;
     case Rslt of
-      ID_YES    : DoSave;
-      ID_NO     : ; // nothing
-      ID_CANCEL : Exit;
+      mrYes    : DoSave;
+      mrNo     : ; // nothing
+      mrCancel : Exit;
     end;
   end;
 
@@ -340,12 +340,15 @@ begin
 end;
 {=====}
 function TfrmPrnFormat.DirtyPrompt: Integer;
+var
+  msg: String;
+  fn: String;
 begin
-  Result := Application.MessageBox(
-    PChar('Save changes to ' + FormatFileName + '?'),
-    PChar('Inquiry'),
-    MB_YESNOCANCEL or MB_ICONQUESTION
-  );
+  if FormatFileName = '' then
+    msg := RSSaveFormatChangesToFile
+  else
+    msg := Format(RSSaveFormatChangesToFilename, [FormatFileName]);
+  Result := MessageDlg(msg, mtConfirmation, [mbYes, mbNo, mbCancel], 0);
 end;
 {=====}
 procedure TfrmPrnFormat.DoEditElement;
