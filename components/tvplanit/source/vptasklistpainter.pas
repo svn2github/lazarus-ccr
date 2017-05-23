@@ -267,13 +267,14 @@ begin
 
   { Draw the glyph }
   if FTaskList.ShowIcon then begin
+  {$IFDEF NEW_ICONS}
     h0 := HeightOf(HeadRect) - 2;
     if h0 >= 32 then
-      png := CreatePngFromResourceName('VPCHECKPAD32')
+      png := CreatePngFromRCDATA('VPTASKS32')
     else if h0 >= 24 then
-      png := CreatePngFromResourceName('VPCHECKPAD24')
+      png := CreatePngFromRCDATA('VPTASKS24')
     else
-      png := CreatePngFromResourceName('VPCHECKPAD16');
+      png := CreatePngFromRCDATA('VPTASKS16');
     try
       if png.Height > 0 then begin
         bmp := TBitmap.Create;
@@ -305,6 +306,25 @@ begin
     finally
       png.Free;
     end;
+  {$ELSE}
+    Bmp := Graphics.TBitmap.Create;
+    try
+      Bmp.LoadFromResourceName(HINSTANCE, 'VPCHECKPAD'); //soner changed: Bmp.Handle := LoadBaseBitmap('VPCHECKPAD');
+      if Bmp.Height > 0 then begin
+        w := Round(Bmp.Width * Scale);
+        h := Round(Bmp.Height * Scale);
+        GlyphRect.TopLeft := Point(HeadRect.Left + TextMargin, HeadRect.Top + TextMargin);
+        GlyphRect.BottomRight := Point(GlyphRect.Left + w, GlyphRect.Top + h);
+        {$IFDEF FPC}
+        RotateBitmap(Bmp, Angle);
+        {$ENDIF}
+        TPSStretchDraw(RenderCanvas, Angle, RenderIn, GlyphRect, Bmp);
+        HeadRect.Left := HeadRect.Left + w + TextMargin;
+      end;
+    finally
+      Bmp.Free;
+    end;
+  {$ENDIF}
   end;
 
   { draw the text }

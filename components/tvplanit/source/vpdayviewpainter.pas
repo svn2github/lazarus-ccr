@@ -1509,6 +1509,9 @@ begin
   RenderCanvas.Font.Size := ScaleY(RenderCanvas.Font.Size, DesignTimeDPI);
   {$ENDIF}
   inc(Result, RenderCanvas.TextWidth('33'));
+  with TVpDayViewOpener(FDayView) do
+    Result := Max(Result, dvDayUpBtn.Glyph.Width + dvDayDownBtn.Glyph.Width +
+      dvWeekUpBtn.Glyph.Width + dvWeekDownBtn.Glyph.Width);
 end;
 
 procedure TVpDayViewPainter.FixFontHeights;

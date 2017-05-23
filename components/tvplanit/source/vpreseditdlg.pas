@@ -214,6 +214,9 @@ end;
 procedure TResEditForm.PositionControls;
 begin
   AlignOKCancel(OKBtn, CancelBtn, pnlBottom);
+  {$IFDEF NEW_ICONS}
+  LoadImageFromRCDATA(imgResources, 'VpPersons', 32, 48, 64);
+  {$ENDIF}
 end;
 
 procedure TResEditForm.OKBtnClick(Sender: TObject);

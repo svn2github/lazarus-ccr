@@ -808,28 +808,44 @@ begin
   {create navigation buttons}
   clBtnLeft := TSpeedButton.Create(Self);
   clBtnLeft.Parent := Self;
+  {$IFDEF NEW_ICONS}
+  LoadGlyphFromRCDATA(clBtnLeft.Glyph, 'VpLArrow', 16, 24, 32);
+  {$ELSE}
   clBtnLeft.Glyph.LoadFromResourceName(HINSTANCE,'VPLEFTARROW'); //soner geändert: clBtnLeft.Glyph.Handle := LoadBaseBitmap('VPLEFTARROW');
+  {$ENDIF}
   clBtnLeft.OnClick := calBtnClick;
   clBtnLeft.Hint := RSPrevMonth;
   clBtnLeft.ShowHint := True;
 
   clBtnRight := TSpeedButton.Create(Self);
   clBtnRight.Parent := Self;
+  {$IFDEF NEW_ICONS}
+  LoadGlyphFromRCDATA(clBtnRight.Glyph, 'VpRArrow', 16, 24, 32);
+  {$ELSE}
   clBtnRight.Glyph.LoadFromResourceName(HINSTANCE,'VPRIGHTARROW'); //soner geändert: clBtnRight.Glyph.Handle := LoadBaseBitmap('VPRIGHTARROW');
+  {$ENDIF}
   clBtnRight.OnClick := calBtnClick;
   clBtnRight.Hint := RSNextMonth;
   clBtnRight.ShowHint := True;
 
   clBtnNextYear := TSpeedButton.Create(Self);
   clBtnNextYear.Parent := Self;
+  {$IFDEF NEW_ICONS}
+  LoadGlyphFromRCDATA(clBtnNextYear.Glyph, 'VpRArrows', 16, 24, 32);
+  {$ELSE}
   clBtnNextYear.Glyph.LoadFromResourceName(HINSTANCE,'VPRIGHTARROWS'); //soner geöndert: clBtnNextYear.Glyph.Handle := LoadBaseBitmap('VPRIGHTARROWS');
+  {$ENDIF}
   clBtnNextYear.OnClick := calBtnClick;
   clBtnNextYear.Hint := RSNextYear;
   clBtnNextYear.ShowHint := True;
 
   clBtnPrevYear := TSpeedButton.Create(Self);
   clBtnPrevYear.Parent := Self;
+  {$IFDEF NEW_ICONS}
+  LoadGlyphFromRCData(clBtnNextYear.Glyph, 'VpLArrows', 16, 24, 32);
+  {$ELSE}
   clBtnPrevYear.Glyph.LoadFromResourceName(HINSTANCE,'VPLEFTARROWS'); //soner geöndert: clBtnPrevYear.Glyph.Handle := LoadBaseBitmap('VPLEFTARROWS');
+  {$ENDIF}
   clBtnPrevYear.OnClick := calBtnClick;
   clBtnPrevYear.Hint := RSPrevYear;
   clBtnPrevYear.ShowHint := True;
@@ -837,7 +853,11 @@ begin
   {create "revert" button}
   clBtnRevert := TSpeedButton.Create(Self);
   clBtnRevert.Parent := Self;
+  {$IFDEF NEW_ICONS}
+  LoadGlyphFromRCData(clBtnRevert.Glyph, 'VpRevert', 16, 24, 32);
+  {$ELSE}
   clBtnRevert.Glyph.LoadFromResourceName(HINSTANCE,'VPREVERT'); //soner geändert: clBtnRevert.Glyph.Handle := LoadBaseBitmap('VPREVERT');
+  {$ENDIF}
   clBtnRevert.OnClick := calBtnClick;
   clBtnRevert.Hint := RSCalendarRevert;
   clBtnRevert.ShowHint := True;
@@ -845,7 +865,11 @@ begin
   {create "today" button}
   clBtnToday := TSpeedButton.Create(Self);
   clBtnToday.Parent := Self;
+  {$IFDEF NEW_ICONS}
+  LoadGlyphFromRCData(clBtnToday.Glyph, 'VpToday', 16, 24, 32);
+  {$ELSE}
   clBtnToday.Glyph.LoadFromResourceName(HINSTANCE,'VPTODAY'); //soner geändert: clBtnToday.Glyph.Handle := LoadBaseBitmap('VPTODAY');
+  {$ENDIF}
   clBtnToday.OnClick := calBtnClick;
   clBtnToday.Hint := RSToday;
   clBtnToday.ShowHint := True;

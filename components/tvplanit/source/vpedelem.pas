@@ -122,7 +122,6 @@ type
 implementation
 
 uses
-  Math,
   VpMisc, VpEdShape;
 
 {$IFDEF LCL}

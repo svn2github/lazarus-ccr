@@ -1,6 +1,6 @@
 object frmAbout: TfrmAbout
   Left = 368
-  Height = 339
+  Height = 387
   Top = 312
   Width = 634
   HorzScrollBar.Page = 470
@@ -8,7 +8,7 @@ object frmAbout: TfrmAbout
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'About Visual PlanIt'
-  ClientHeight = 339
+  ClientHeight = 387
   ClientWidth = 634
   OnActivate = FormActivate
   Position = poScreenCenter
@@ -21,7 +21,7 @@ object frmAbout: TfrmAbout
     AnchorSideRight.Side = asrBottom
     Left = 0
     Height = 55
-    Top = 272
+    Top = 310
     Width = 634
     Anchors = [akTop, akLeft, akRight]
     AutoSize = True
@@ -81,32 +81,32 @@ object frmAbout: TfrmAbout
   end
   object Panel1: TPanel
     Left = 0
-    Height = 264
+    Height = 302
     Top = 0
     Width = 634
     Align = alTop
     AutoSize = True
     BevelOuter = bvNone
-    ClientHeight = 264
+    ClientHeight = 302
     ClientWidth = 634
     TabOrder = 1
     object ImagePanel: TPanel
       Left = 4
-      Height = 252
+      Height = 290
       Top = 8
-      Width = 139
+      Width = 164
       Align = alLeft
       BorderSpacing.Top = 4
       BorderSpacing.Around = 4
       BevelOuter = bvNone
-      ClientHeight = 252
-      ClientWidth = 139
+      ClientHeight = 290
+      ClientWidth = 164
       TabOrder = 0
       object Image1: TImage
         Left = 0
-        Height = 252
+        Height = 290
         Top = 0
-        Width = 139
+        Width = 164
         Align = alClient
         Picture.Data = {
           07544269746D6170628C0000424D628C00000000000036040000280000008900
@@ -1239,17 +1239,17 @@ object frmAbout: TfrmAbout
       end
     end
     object TextPanel: TPanel
-      Left = 151
-      Height = 256
+      Left = 176
+      Height = 294
       Top = 8
-      Width = 483
+      Width = 458
       Align = alClient
       AutoSize = True
       BorderSpacing.Left = 8
       BorderSpacing.Top = 8
       BevelOuter = bvNone
-      ClientHeight = 256
-      ClientWidth = 483
+      ClientHeight = 294
+      ClientWidth = 458
       TabOrder = 1
       object ProgramName: TLabel
         AnchorSideLeft.Control = TextPanel
@@ -1452,6 +1452,36 @@ object frmAbout: TfrmAbout
           OnMouseEnter = lblLinkMouseEnter
           OnMouseLeave = lblLinkMouseLeave
         end
+      end
+      object Label6: TLabel
+        AnchorSideTop.Control = SupportPanel
+        AnchorSideTop.Side = asrBottom
+        Left = 0
+        Height = 15
+        Top = 264
+        Width = 193
+        BorderSpacing.Top = 8
+        Caption = 'Internally used icons are provided by'
+        ParentColor = False
+      end
+      object lblLazPortLink1: TLabel
+        AnchorSideLeft.Control = TextPanel
+        AnchorSideTop.Control = Label6
+        AnchorSideTop.Side = asrBottom
+        Cursor = crHandPoint
+        Left = 12
+        Height = 15
+        Top = 279
+        Width = 96
+        BorderSpacing.Left = 12
+        BorderSpacing.Right = 8
+        Caption = 'http://icons8.com'
+        Font.Color = clBlue
+        ParentColor = False
+        ParentFont = False
+        OnClick = lblLinkClick
+        OnMouseEnter = lblLinkMouseEnter
+        OnMouseLeave = lblLinkMouseLeave
       end
     end
   end

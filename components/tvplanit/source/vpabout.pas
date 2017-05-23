@@ -59,10 +59,12 @@ type
     Bevel3: TBevel;
     Label4: TLabel;
     Label5: TLabel;
+    Label6: TLabel;
     lblLazForumLink: TLabel;
     lblLazPortLink: TLabel;
     ImagePanel: TPanel;
     Image1: TImage;
+    lblLazPortLink1: TLabel;
     Panel1: TPanel;
     TextPanel: TPanel;
     SupportPanel: TPanel;

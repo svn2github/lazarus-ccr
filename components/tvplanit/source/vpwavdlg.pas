@@ -140,6 +140,10 @@ end;
 procedure TFrmSoundDialog.FormShow(Sender: TObject);
 begin
   AlignOKCancel(OkBtn, CancelBtn, ButtonPanel);
+  PlayButton.Width := MulDiv(PlayButton.Height, 3, 2) ;
+  {$IFDEF NEW_ICONS}
+  LoadGlyphFromRCDATA(PlayButton.Glyph, 'VpSpeaker', 16, 24, 32);
+  {$ENDIF}
 end;
 
 function TFrmSoundDialog.GetSelectedFileName: String;

@@ -1,27 +1,27 @@
 object DlgEventEdit: TDlgEventEdit
   Left = 255
-  Height = 535
+  Height = 532
   Top = 202
-  Width = 726
+  Width = 765
   AutoSize = True
   BorderStyle = bsToolWindow
   Caption = 'Add / Edit Events'
-  ClientHeight = 535
-  ClientWidth = 726
+  ClientHeight = 532
+  ClientWidth = 765
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.6.4.0'
+  LCLVersion = '1.9.0.0'
   object ButtonPanel: TPanel
     Left = 0
     Height = 37
-    Top = 498
-    Width = 726
+    Top = 495
+    Width = 765
     Align = alBottom
     AutoSize = True
     BevelOuter = bvNone
     ClientHeight = 37
-    ClientWidth = 726
+    ClientWidth = 765
     TabOrder = 1
     object ResourceNameLbl: TLabel
       AnchorSideLeft.Control = ButtonPanel
@@ -40,7 +40,7 @@ object DlgEventEdit: TDlgEventEdit
       ParentFont = False
     end
     object OKBtn: TButton
-      Left = 577
+      Left = 616
       Height = 25
       Top = 6
       Width = 66
@@ -54,7 +54,7 @@ object DlgEventEdit: TDlgEventEdit
       TabOrder = 0
     end
     object CancelBtn: TButton
-      Left = 649
+      Left = 688
       Height = 25
       Top = 6
       Width = 71
@@ -70,27 +70,27 @@ object DlgEventEdit: TDlgEventEdit
   end
   object Panel1: TPanel
     Left = 12
-    Height = 486
+    Height = 483
     Top = 12
-    Width = 702
+    Width = 741
     Align = alClient
     BorderSpacing.Left = 12
     BorderSpacing.Top = 12
     BorderSpacing.Right = 12
     BevelOuter = bvNone
-    ClientHeight = 486
-    ClientWidth = 702
+    ClientHeight = 483
+    ClientWidth = 741
     TabOrder = 0
     object AppointmentGroupBox: TGroupBox
       Left = 0
-      Height = 231
+      Height = 239
       Top = 0
-      Width = 702
+      Width = 741
       Align = alTop
       AutoSize = True
       Caption = 'Appointment'
-      ClientHeight = 211
-      ClientWidth = 698
+      ClientHeight = 219
+      ClientWidth = 737
       TabOrder = 0
       object Bevel1: TBevel
         AnchorSideLeft.Control = AppointmentGroupBox
@@ -101,7 +101,7 @@ object DlgEventEdit: TDlgEventEdit
         Left = 12
         Height = 3
         Top = 64
-        Width = 672
+        Width = 681
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Left = 12
         BorderSpacing.Top = 12
@@ -116,7 +116,7 @@ object DlgEventEdit: TDlgEventEdit
         Left = 12
         Height = 3
         Top = 167
-        Width = 672
+        Width = 681
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Left = 12
         BorderSpacing.Top = 12
@@ -144,7 +144,7 @@ object DlgEventEdit: TDlgEventEdit
         Left = 142
         Height = 23
         Top = 0
-        Width = 542
+        Width = 551
         Anchors = [akTop, akLeft, akRight]
         TabOrder = 0
         Text = 'DescriptionEdit'
@@ -172,7 +172,7 @@ object DlgEventEdit: TDlgEventEdit
         Left = 142
         Height = 23
         Top = 29
-        Width = 205
+        Width = 214
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
         BorderSpacing.Right = 12
@@ -183,7 +183,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideTop.Control = Category
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = Category
-        Left = 368
+        Left = 377
         Height = 15
         Top = 33
         Width = 51
@@ -199,7 +199,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = DescriptionEdit
         AnchorSideRight.Side = asrBottom
-        Left = 431
+        Left = 440
         Height = 23
         Top = 29
         Width = 253
@@ -356,7 +356,7 @@ object DlgEventEdit: TDlgEventEdit
         Left = 142
         Height = 23
         Top = 101
-        Width = 93
+        Width = 102
         CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
         DateOrder = doNone
         ButtonWidth = 23
@@ -411,7 +411,7 @@ object DlgEventEdit: TDlgEventEdit
         Left = 142
         Height = 23
         Top = 132
-        Width = 93
+        Width = 102
         CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
         DateOrder = doNone
         ButtonWidth = 23
@@ -463,7 +463,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideTop.Control = CBAllDay
         AnchorSideBottom.Control = EndDate
         AnchorSideBottom.Side = asrBottom
-        Left = 356
+        Left = 365
         Height = 79
         Top = 76
         Width = 3
@@ -475,7 +475,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideLeft.Control = Bevel3
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = imgClock
-        Left = 375
+        Left = 384
         Height = 32
         Top = 76
         Width = 32
@@ -541,7 +541,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = CBAllDay
         AnchorSideTop.Side = asrCenter
-        Left = 419
+        Left = 428
         Height = 15
         Top = 78
         Width = 136
@@ -554,7 +554,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideTop.Control = StartDate
         AnchorSideRight.Control = RecurringLbl
         AnchorSideRight.Side = asrBottom
-        Left = 419
+        Left = 428
         Height = 23
         Top = 101
         Width = 136
@@ -568,7 +568,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideTop.Control = EndDate
         AnchorSideRight.Control = IntervalUpDown
         AnchorSideRight.Side = asrBottom
-        Left = 522
+        Left = 531
         Height = 23
         Top = 132
         Width = 162
@@ -620,7 +620,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideTop.Control = RepeatUntil
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = RepeatUntil
-        Left = 482
+        Left = 491
         Height = 15
         Top = 136
         Width = 28
@@ -635,7 +635,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideTop.Control = RecurringLbl
         AnchorSideRight.Control = IntervalUpDown
         AnchorSideRight.Side = asrBottom
-        Left = 607
+        Left = 616
         Height = 15
         Top = 78
         Width = 77
@@ -648,7 +648,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideLeft.Control = RecurringType
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = StartDate
-        Left = 563
+        Left = 572
         Height = 23
         Top = 101
         Width = 106
@@ -663,7 +663,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideLeft.Control = CustomInterval
         AnchorSideLeft.Side = asrBottom
         AnchorSideRight.Side = asrBottom
-        Left = 672
+        Left = 681
         Height = 23
         Top = 101
         Width = 12
@@ -685,6 +685,7 @@ object DlgEventEdit: TDlgEventEdit
         Width = 32
         BorderSpacing.Left = 16
         BorderSpacing.Top = 12
+        BorderSpacing.Bottom = 8
         Picture.Data = {
           1754506F727461626C654E6574776F726B477261706869633E08000089504E47
           0D0A1A0A0000000D4948445200000020000000200806000000737A7AF4000000
@@ -792,7 +793,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = StartDate
         AnchorSideRight.Side = asrBottom
-        Left = 223
+        Left = 232
         Height = 23
         Top = 178
         Width = 12
@@ -810,7 +811,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = AlarmAdvance
         AnchorSideTop.Side = asrCenter
-        Left = 247
+        Left = 256
         Height = 23
         Top = 178
         Width = 93
@@ -825,7 +826,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideTop.Control = AlarmAdvanceType
         AnchorSideBottom.Control = AlarmAdvanceType
         AnchorSideBottom.Side = asrBottom
-        Left = 356
+        Left = 365
         Height = 23
         Top = 178
         Width = 24
@@ -849,7 +850,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideTop.Control = EndDate
         AnchorSideRight.Control = AlarmAdvanceType
         AnchorSideRight.Side = asrBottom
-        Left = 247
+        Left = 256
         Height = 23
         Top = 132
         Width = 93
@@ -864,7 +865,7 @@ object DlgEventEdit: TDlgEventEdit
         AnchorSideTop.Control = StartDate
         AnchorSideRight.Control = AlarmAdvanceType
         AnchorSideRight.Side = asrBottom
-        Left = 247
+        Left = 256
         Height = 23
         Top = 101
         Width = 93
@@ -876,9 +877,9 @@ object DlgEventEdit: TDlgEventEdit
     end
     object NotesMemo: TMemo
       Left = 0
-      Height = 243
-      Top = 243
-      Width = 702
+      Height = 232
+      Top = 251
+      Width = 741
       Align = alClient
       Constraints.MinHeight = 200
       ScrollBars = ssVertical
@@ -887,8 +888,8 @@ object DlgEventEdit: TDlgEventEdit
     object Bevel4: TBevel
       Left = 0
       Height = 12
-      Top = 231
-      Width = 702
+      Top = 239
+      Width = 741
       Align = alTop
       Shape = bsSpacer
     end

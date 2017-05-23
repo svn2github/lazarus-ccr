@@ -721,11 +721,19 @@ begin
   dvDayUpBtn.Transparent := true;
   dvWeekUpBtn.Transparent := true;
   { load their images }
+  {$IFDEF NEW_ICONS}
+  LoadGlyphFromRCDATA(dvDayUpBtn.Glyph, 'VpRArrow', 16, 24, 32);
+  LoadGlyphFromRCDATA(dvDayDownBtn.Glyph, 'VpLArrow', 16, 24, 32);
+  LoadGlyphFromRCDATA(dvTodayBtn.Glyph, 'VpToday', 16, 24, 32);
+  LoadGlyphFromRCDATA(dvWeekUpBtn.Glyph, 'VpRArrows', 16, 24, 32);
+  LoadGlyphFromRCDATA(dvWeekDownBtn.Glyph, 'VpLArrows', 16, 24, 32);
+  {$ELSE}
   dvDayUpBtn.Glyph.LoadFromResourceName(HINSTANCE, 'VPRIGHTARROW');
   dvDayDownBtn.Glyph.LoadFromResourceName(HINSTANCE, 'VPLEFTARROW');
   dvTodayBtn.Glyph.LoadFromResourceName(HINSTANCE, 'VPTODAY');
   dvWeekUpBtn.Glyph.LoadFromResourceName(HINSTANCE, 'VPRIGHTARROWS');
   dvWeekDownBtn.Glyph.LoadFromResourceName(HINSTANCE, 'VPLEFTARROWS');
+  {$ENDIF}
   { set their OnClick handler }
   dvDayUpBtn.OnClick := dvNavButtonsClick;
   dvDayDownBtn.OnClick := dvNavButtonsClick;

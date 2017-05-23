@@ -521,7 +521,7 @@ begin
   hBorder := ScaleX(hBorder, DesignTimeDPI);
   vBorder := ScaleY(vBorder, DesignTimeDPI);
   edBirthdate.ButtonWidth := edBirthdate.Height;
-  comboArrowWidth := GetSystemMetrics(SM_CXVSCROLL);
+  comboArrowWidth := GetSystemMetrics(SM_CXVSCROLL) * 2;
 
   for i := 0 to ComponentCount-1 do
     if Components[i] is TControl then
@@ -542,6 +542,9 @@ begin
   {----------------------------------------------------------------------------}
   edBirthdate.Width := edTitle.Width;
   cbCategory.Width := edTitle.Width;
+  {$IFDEF NEW_ICONS}
+  LoadGlyphFromRCDATA(edBirthDate.Button.Glyph, 'VpDateEdit', 16, 24, 32);
+  {$ENDIF}
 
   {----------------------------------------------------------------------------}
   { Page "Contact"                                                             }

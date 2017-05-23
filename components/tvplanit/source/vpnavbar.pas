@@ -1030,7 +1030,7 @@ begin
     Visible := False;
     Parent := Self;
     OnClick := nabScrollUpBtnClick;
-    Glyph.LoadFromResourceName(HINSTANCE, 'VPUPARROW');
+//    Glyph.LoadFromResourceName(HINSTANCE, 'VPUPARROW');
     NumGlyphs := 1;
     Left := -20;
     Height := 15;
@@ -1042,7 +1042,7 @@ begin
     Visible := False;
     Parent := Self;
     OnClick := nabScrollDownBtnClick;
-    Glyph.LoadFromResourceName(HINSTANCE, 'VPDOWNARROW');
+//    Glyph.LoadFromResourceName(HINSTANCE, 'VPDOWNARROW');
     NumGlyphs := 1;
     Left := -20;
     Height := 15;

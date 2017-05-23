@@ -167,6 +167,7 @@ implementation
   {$ENDIF}
 {$ENDIF}
 
+{$DEFINE NEW_ICONS}   // The same as in vp.inc
 
 uses
  {$IFDEF WINDOWS}
@@ -511,8 +512,13 @@ begin
     CategoryColorMap.Category0.BackgroundColor := clSkyBlue;
     CategoryColorMap.Category0.Color := clNavy;
     CategoryColorMap.Category0.Description := 'Appointment';
-//    CategoryColorMap.Category0.Bitmap.Transparent := true;  // <-- not working
-    CategoryColorMap.Category0.Bitmap.LoadFromResourceName(HINSTANCE, 'VPUPARROW');
+    //CategoryColorMap.Category0.Bitmap.Transparent := true;  // <-- not working
+    LoadGlyphFromRCDATA(CategoryColorMap.Category0.Bitmap, 'SORTASC');
+    {
+    bmp := CreateBitmapFromRCDATA('SORTASC');
+    CategoryColorMap.Category0.Bitmap.Assign(bmp);
+    bmp.Free;
+    }
     CategoryColorMap.Category1.BackgroundColor := 13290239;
     CategoryColorMap.Category1.Color := clRed;
     CategoryColorMap.Category1.Description := 'Urgent';

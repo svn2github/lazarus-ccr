@@ -172,8 +172,15 @@ procedure AddResourceGroupMenu(AMenu: TMenuItem; AResource: TVpResource;
   AEventHandler: TNotifyEvent);
 function OverlayPatternToBrushStyle(APattern: TVpOverlayPattern): TBrushStyle;
 
-function CreatePngFromResourceName(AResName: String): TPortableNetworkGraphic;
+function CreateBitmapFromRCDATA(AResName: String): TBitmap;
+function CreatePngFromRCDATA(AResName: String): TPortableNetworkGraphic;
   { Load a png picture from a resource (Note: OS resource, not vp resource! }
+
+procedure LoadGlyphFromRCDATA(AGlyph: TBitmap; AResName: String); overload;
+procedure LoadGlyphFromRCDATA(AGlyph: TBitmap; ABaseResName: String;
+  ALowRes, AMedRes, AHighRes: Integer); overload;
+procedure LoadImageFromRCDATA(AImage: TImage; ABaseResName: String;
+  ALowRes, AMedRes, AHighRes: Integer; AdjustSize: Boolean = true);
 
 procedure Unused(const A1); overload;
 procedure Unused(const A1, A2); overload;
@@ -917,7 +924,26 @@ begin
   Result := TBrushStyle(APattern);
 end;
 
-function CreatePngFromResourceName(AResName: String): TPortableNetworkGraphic;
+function CreateBitmapFromRCDATA(AResName: String): TBitmap;
+var
+  stream: TResourceStream;
+  pic: TPicture;
+begin
+  stream := TResourceStream.Create(HINSTANCE, AResName, RT_RCDATA);
+  try
+    pic := TPicture.Create;
+    try
+      pic.LoadFromStream(stream);
+      Result := pic.Bitmap;
+    except
+      FreeAndNil(pic);
+    end;
+  finally
+    stream.Free;
+  end;
+end;
+
+function CreatePngFromRCDATA(AResName: String): TPortableNetworkGraphic;
 var
   stream: TResourceStream;
 begin
@@ -931,6 +957,87 @@ begin
     end;
   except
     FreeAndNil(Result);
+  end;
+end;
+
+procedure LoadGlyphFromRCDATA(AGlyph: TBitmap; AResName: String);
+var
+  stream: TResourceStream;
+  pic: TPicture;
+  bmp: TBitmap;
+begin
+  stream := TResourceStream.Create(HINSTANCE, AResName, RT_RCDATA);
+  try
+    pic := TPicture.Create;
+    try
+      pic.LoadFromStream(stream);
+      AGlyph.Assign(pic.Bitmap);
+    finally
+      pic.Free;
+    end;
+  finally
+    stream.Free;
+  end;
+end;
+
+procedure LoadGlyphFromRCDATA(AGlyph: TBitmap; ABaseResName: String;
+  ALowRes, AMedRes, AHighRes: Integer);
+var
+  stream: TResourceStream;
+  pic: TPicture;
+  ppiFactor: Integer;
+  resName: String;
+begin
+  ppiFactor := MulDiv(Screen.PixelsPerInch, 100, 96);
+  if ppiFactor >= 145 then
+    resName := ABaseResName + IntToStr(AHighRes)
+  else if ppiFactor >= 115 then
+    resName := ABaseResName + IntToStr(AMedRes)
+  else
+    resName := ABaseResName + IntToStr(ALowRes);
+
+  LoadGlyphFromRCDATA(AGlyph, resName);
+  {
+  stream := TResourceStream.Create(HINSTANCE, resName, RT_RCDATA);
+  try
+    pic := TPicture.Create;
+    try
+      pic.LoadFromStream(stream);
+      AGlyph.Canvas.Draw(0, 0, pic.Bitmap);
+//      AGlyph.Assign(pic.Bitmap);
+    finally
+      pic.Free;
+    end;
+  finally
+    stream.Free;
+  end;
+  }
+end;
+
+procedure LoadImageFromRCDATA(AImage: TImage; ABaseResName: String;
+  ALowRes, AMedRes, AHighRes: Integer; AdjustSize: Boolean = true);
+var
+  stream: TResourceStream;
+  ppiFactor: Integer;
+  resName: string;
+begin
+  ppiFactor := MulDiv(Screen.PixelsPerInch, 100, 96);
+  if ppiFactor >= 145 then
+    resName := ABaseResName + IntToStr(AHighRes)
+  else if ppiFactor >= 115 then
+    resName := ABaseResName + IntToStr(AMedRes)
+  else
+    resName := ABaseResName + IntToStr(ALowRes);
+
+  stream := TResourceStream.Create(HINSTANCE, resName, RT_RCDATA);
+  try
+    AImage.Picture.LoadFromStream(stream);
+    if AdjustSize then begin
+      AImage.Width := AImage.Picture.Width;
+      AImage.Height := AImage.Picture.Height;
+    end;
+  finally
+    stream.Free;
   end;
 end;
 

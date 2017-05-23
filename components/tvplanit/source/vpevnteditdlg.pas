@@ -640,7 +640,8 @@ begin
   cnv := TControlCanvas.Create;
   try
     cnv.Control := StartDate;
-    w := cnv.TextWidth(FormatDateTime(' dd. mm. yyyy ', EncodeDate(2000,12,30)));
+    cnv.Font.Assign(startDate.Font);
+    w := cnv.TextWidth(FormatDateTime('  dd. mm. yyyy  ', EncodeDate(2000,12,30)));
     Startdate.Width := w + StartDate.ButtonWidth;
     EndDate.Width := StartDate.Width;
     StartTime.Width := StartDate.Width;
@@ -652,9 +653,25 @@ begin
   AlarmAdvance.Width := AdvanceUpDown.Left - 2 - AlarmAdvance.Left;
   AlarmAdvanceType.Width := StartTime.Width;
 
-  SoundFinderBtn.Width := SoundFinderBtn.Height;
+  SoundFinderBtn.Width := MulDiv(SoundFinderBtn.Height, 3, 2);
 
   AlignOKCancel(OKBtn, CancelBtn, ButtonPanel);
+
+  {$IFDEF NEW_ICONS}
+  LoadGlyphFromRCDATA(SoundFinderBtn.Glyph, 'VpSpeaker', 16, 24, 32);
+
+  LoadGlyphFromRCDATA(StartDate.Button.Glyph, 'VpDateEdit', 16, 24, 32);
+  LoadGlyphFromRCDATA(EndDate.Button.Glyph, 'VpDateEdit', 16, 24, 32);
+  LoadGlyphFromRCDATA(RepeatUntil.Button.Glyph, 'VpDateEdit', 16, 24, 32);
+ {$IFDEF NEW_TIME_EDIT}
+  LoadGlyphFromRCDATA(StartTime.Button.Glyph, 'VpTimeEdit', 16, 24, 32);
+  LoadGlyphFromRCDATA(EndTime.Button.Glyph, 'VpTimeEdit', 16, 24, 32);
+ {$ENDIF}
+
+  LoadImageFromRCDATA(imgClock, 'VpDateTime', 32, 48, 64);
+  LoadImageFromRCDATA(imgRecurring, 'VPRecurringEvent', 32, 48, 64);
+  LoadImageFromRCDATA(imgAlarm, 'VpReminder', 32, 48, 64);
+  {$ENDIF}
 end;
 
 

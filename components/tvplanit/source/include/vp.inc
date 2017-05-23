@@ -31,7 +31,8 @@
 {$ENDIF}
 
 {Conditional defines that affect compilation}
-
+{ But we don't want to override Lazarus Build modes here... }
+{$IFDEF DELPHI}
 {$Q-} {Overflow Checking}
 {$R-} {Range-Checking}
 {$S-} {Stack-Overflow Checking}
@@ -44,6 +45,7 @@
 {$H+} {Huge strings}
 {$A+} {Word Align Data}
 {$I+} {Input/Output-Checking}
+{$ENDIF}
 
 {-Invalid Platform Defines----------------------------------------------}
 { Visual PlanIt only supports D3 - D6 and BCB3 - BCB6 }
@@ -117,3 +119,6 @@
   {$ENDIF}
  {$ENDIF}
 {$ENDIF}
+
+{ This defines whether the new icons will be linked into the package. }
+{$DEFINE NEW_ICONS}

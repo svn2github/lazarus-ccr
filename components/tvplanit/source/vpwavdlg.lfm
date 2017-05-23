@@ -12,7 +12,7 @@ object FrmSoundDialog: TFrmSoundDialog
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.6.4.0'
+  LCLVersion = '1.9.0.0'
   object PageControl1: TPageControl
     Left = 0
     Height = 474
@@ -73,14 +73,14 @@ object FrmSoundDialog: TFrmSoundDialog
           ClientWidth = 515
           TabOrder = 2
           object PlayButton: TSpeedButton
-            AnchorSideTop.Control = ButtonPanel
-            AnchorSideTop.Side = asrCenter
+            AnchorSideTop.Control = OkBtn
+            AnchorSideBottom.Control = OkBtn
+            AnchorSideBottom.Side = asrBottom
             Left = 0
             Height = 25
             Top = 4
-            Width = 29
-            BorderSpacing.Top = 4
-            BorderSpacing.Bottom = 4
+            Width = 48
+            Anchors = [akTop, akLeft, akBottom]
             Glyph.Data = {
               DE010000424DDE01000000000000760000002800000024000000120000000100
               0400000000006801000000000000000000001000000010000000000000000000
@@ -99,6 +99,7 @@ object FrmSoundDialog: TFrmSoundDialog
               6666666666666688666666660000666666666666666666666666666666666666
               0000
             }
+            Layout = blGlyphRight
             NumGlyphs = 2
             OnClick = PlayButtonClick
           end

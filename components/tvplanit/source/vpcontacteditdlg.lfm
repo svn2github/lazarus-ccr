@@ -20,14 +20,14 @@ object ContactEditForm: TContactEditForm
     Height = 577
     Top = 0
     Width = 506
-    ActivePage = tabAddresses
+    ActivePage = tabBaseData
     Align = alClient
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 0
     OnChange = PageControlChange
     object tabBaseData: TTabSheet
       Caption = 'tabBaseData'
-      ClientHeight = 545
+      ClientHeight = 549
       ClientWidth = 498
       ImageIndex = 0
       object lblLastName: TLabel
@@ -54,7 +54,7 @@ object ContactEditForm: TContactEditForm
         Height = 23
         Top = 8
         Width = 384
-        Anchors = [akTop, akLeft, akRight]
+        Anchors = [akTop, akRight]
         BorderSpacing.Top = 8
         BorderSpacing.Right = 8
         MaxLength = 100

@@ -370,8 +370,11 @@ type
 
 implementation
 
-{$R vpbase.res}
-{$R vpbasepng.res}
+{$IFDEF NEW_ICONS}
+  {$R vpbasepng.res}
+{$ELSE}
+  {$R vpbase.res}
+{$ENDIF}
 
 uses
 {$IFNDEF LCL}

@@ -363,18 +363,18 @@ object frmEditShape: TfrmEditShape
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = gbPen
     AnchorSideBottom.Side = asrBottom
-    Left = 232
+    Left = 284
     Height = 25
     Top = 202
-    Width = 172
-    Anchors = [akLeft, akRight, akBottom]
+    Width = 120
+    Anchors = [akRight, akBottom]
     AutoSize = True
     BevelOuter = bvNone
     ClientHeight = 25
-    ClientWidth = 172
+    ClientWidth = 120
     TabOrder = 3
     object btnOk: TButton
-      Left = 60
+      Left = 8
       Height = 25
       Top = 0
       Width = 42
@@ -387,7 +387,7 @@ object frmEditShape: TfrmEditShape
       TabOrder = 0
     end
     object btnCancel: TButton
-      Left = 110
+      Left = 58
       Height = 25
       Top = 0
       Width = 62

@@ -229,6 +229,12 @@ begin
 
   AlignOKCancel(OKBtn, CancelBtn, ButtonPanel);
 
+  {$IFDEF NEW_ICONS}
+  LoadImageFromRCDATA(imgCalendar, 'VpDateDue', 32, 48, 64);
+  LoadImageFromRCDATA(imgCompleted, 'VpToDoList', 32, 48, 64);
+  LoadGlyphFromRCDATA(DueDateEdit.Button.Glyph, 'VpDateEdit', 16, 24, 32);
+  {$ENDIF}
+
   AutoSize := true;
 end;
 {=====}
