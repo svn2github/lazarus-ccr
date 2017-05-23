@@ -5017,12 +5017,16 @@ begin
   begin
     APresent := (C.Footer.FValueType in [fvtSum, fvtAvg, fvtMax, fvtMin, fvtCount]) or (C.FGroupItems.Active);
     if not APresent then
+    begin
       for F in C.Footers do
       begin
         APresent:=F.FValueType in [fvtSum, fvtAvg, fvtMax, fvtMin, fvtCount];
         if APresent then
           break;
       end;
+    end
+    else
+      break;
   end;
 
   if not APresent then Exit;
