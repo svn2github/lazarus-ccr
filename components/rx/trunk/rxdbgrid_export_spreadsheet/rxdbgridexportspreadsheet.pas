@@ -44,7 +44,8 @@ type
     ressExportFooter,
     ressExportFormula,
     ressOverwriteExisting,
-    ressExportSelectedRows
+    ressExportSelectedRows,
+    ressHideZeroValues
     );
 
   TRxDBGridExportSpreadSheetOptions = set of TRxDBGridExportSpreadSheetOption;
@@ -153,13 +154,22 @@ begin
           FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S)
         else
         if C.Field.DataType in [ftCurrency] then
-          FWorksheet.WriteCurrency(FCurRow, FCurCol, C.Field.AsCurrency, nfCurrency, '')
+        begin
+          if (C.Field.AsCurrency <> 0) or (not (ressHideZeroValues in FOptions)) then
+            FWorksheet.WriteCurrency(FCurRow, FCurCol, C.Field.AsCurrency, nfCurrency, '')
+        end
         else
         if C.Field.DataType in IntegerDataTypes then
-          FWorksheet.WriteNumber(FCurRow, FCurCol, C.Field.AsInteger, nfFixed, 0)
+        begin
+          if (C.Field.AsInteger <> 0) or (not (ressHideZeroValues in FOptions)) then
+            FWorksheet.WriteNumber(FCurRow, FCurCol, C.Field.AsInteger, nfFixed, 0)
+        end
         else
         if C.Field.DataType in NumericDataTypes then
-          FWorksheet.WriteNumber(FCurRow, FCurCol, C.Field.AsFloat, nfFixed, 2)
+        begin
+          if (C.Field.AsFloat <> 0) or (not (ressHideZeroValues in FOptions)) then
+            FWorksheet.WriteNumber(FCurRow, FCurCol, C.Field.AsFloat, nfFixed, 2)
+        end
         else
           FWorksheet.WriteUTF8Text(FCurRow, FCurCol, S);
       end;
@@ -532,6 +542,8 @@ begin
   F.cbExportFormula.Checked:=ressExportFormula in FOptions;
   F.cbExportSelectedRows.Checked:=ressExportSelectedRows in FOptions;
   F.cbExportSelectedRows.Enabled:=(dgMultiselect in RxDBGrid.Options) and (RxDBGrid.SelectedRows.Count > 0);
+  F.cbHideZeroValues.Checked:=ressHideZeroValues in FOptions;
+
 
   F.edtPageName.Text:=FPageName;
 
@@ -555,6 +567,8 @@ begin
       FOptions :=FOptions + [ressExportFormula];
     if F.cbExportSelectedRows.Enabled and F.cbExportSelectedRows.Checked then
       FOptions :=FOptions + [ressExportSelectedRows];
+    if F.cbHideZeroValues.Checked then
+      FOptions:=FOptions + [ressHideZeroValues];
   end;
   F.Free;
 end;

@@ -52,6 +52,7 @@ type
     cbExportColumnHeader: TCheckBox;
     cbExportCellColors: TCheckBox;
     cbOverwriteExisting: TCheckBox;
+    cbHideZeroValues: TCheckBox;
     edtPageName: TEdit;
     FileNameEdit1: TFileNameEdit;
     Label1: TLabel;
@@ -83,6 +84,7 @@ begin
   cbOverwriteExisting.Caption:=sOverwriteExisting;
   cbExportFormula.Caption:=sExportFormula;
   cbExportSelectedRows.Caption:=sExportSelectedRows;
+  cbHideZeroValues.Caption:=sExportHideZeroValues;
 end;
 
 end.

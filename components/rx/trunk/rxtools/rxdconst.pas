@@ -186,6 +186,7 @@ resourcestring
   sExportFormula             = 'Export footer formula';
   sExportImages              = 'Export images';
   sExportSelectedRows        = 'Export only selected rows';
+  sExportHideZeroValues      = 'Hide zero values';
   sOverwriteExisting         = 'Overwrite existing';
   sShowColumnHeaderOnAllPage = 'Show column header on all pages';
   sPageMargins               = 'Page margins';

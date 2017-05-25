@@ -127,6 +127,11 @@ msgstr ""
 msgid "Export footer formula"
 msgstr ""
 
+#: rxdconst.sexporthidezerovalues
+msgctxt "rxdconst.sexporthidezerovalues"
+msgid "Hide zero values"
+msgstr ""
+
 #: rxdconst.sexportimages
 msgid "Export images"
 msgstr ""
@@ -244,6 +249,7 @@ msgid "Global"
 msgstr ""
 
 #: rxdconst.shidezerovalues
+msgctxt "rxdconst.shidezerovalues"
 msgid "Hide zero values"
 msgstr ""
 

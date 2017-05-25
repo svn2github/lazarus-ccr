@@ -138,6 +138,12 @@ msgstr "Експортувати назву файлу"
 msgid "Export footer formula"
 msgstr "Експортувати підсумкову формулу"
 
+#: rxdconst.sexporthidezerovalues
+#, fuzzy
+msgctxt "rxdconst.sexporthidezerovalues"
+msgid "Hide zero values"
+msgstr "Ховати нульові значення"
+
 #: rxdconst.sexportimages
 msgid "Export images"
 msgstr "Експортувати зображення"
@@ -256,6 +262,7 @@ msgid "Global"
 msgstr "Загальний"
 
 #: rxdconst.shidezerovalues
+msgctxt "rxdconst.shidezerovalues"
 msgid "Hide zero values"
 msgstr "Ховати нульові значення"
 
