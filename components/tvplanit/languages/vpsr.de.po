@@ -713,7 +713,7 @@ msgstr "Komponente muss mit einem TVpControlLink verbunden sein."
 
 #: vpsr.rsnodayincrement
 msgid "Day increment unit not specified."
-msgstr ""
+msgstr "Intervall nicht angegeben."
 
 #: vpsr.rsnolocalizationfile
 msgid "Localization file not found."
@@ -733,7 +733,7 @@ msgstr "keine"
 
 #: vpsr.rsnoprintformatname
 msgid "Please supply a format name"
-msgstr ""
+msgstr "Bitte geben Sie eine Format-Bezeichnung an."
 
 #: vpsr.rsnoprintformats
 msgid "No print formats have been defined"
@@ -1066,11 +1066,11 @@ msgstr "Datei speichern..."
 
 #: vpsr.rssaveformatchangestofile
 msgid "Save format to file?"
-msgstr ""
+msgstr "Format in Datei speichern?"
 
 #: vpsr.rssaveformatchangestofilename
 msgid "Save format to \"%s\"?"
-msgstr ""
+msgstr "Format speichern als \"%s\"?"
 
 #: vpsr.rsselectasound
 msgid "Select A Sound"
@@ -1245,7 +1245,7 @@ msgstr "ZUHAUSE"
 
 #: vpsr.rsuppercasenotes
 msgid "NOTES"
-msgstr ""
+msgstr "BEMERKUNGEN"
 
 #: vpsr.rsuppercasework
 msgid "WORK"
@@ -1629,4 +1629,3 @@ msgstr "Unbekannte Achsen-Spezifikation: %s"
 #: vpsr.sxmldecnotatbeg
 msgid "The XML declaration must appear before the first element"
 msgstr "Die XML-Deklaration muss vor dem ersten Element erscheinen."
-
