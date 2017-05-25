@@ -668,9 +668,9 @@ begin
   LoadGlyphFromRCDATA(EndTime.Button.Glyph, 'VpTimeEdit', 16, 24, 32);
  {$ENDIF}
 
-  LoadImageFromRCDATA(imgClock, 'VpDateTime', 32, 48, 64);
-  LoadImageFromRCDATA(imgRecurring, 'VPRecurringEvent', 32, 48, 64);
-  LoadImageFromRCDATA(imgAlarm, 'VpReminder', 32, 48, 64);
+  LoadImageFromRCDATA(imgClock, 'VpDateTime', 24, 32, 48);
+  LoadImageFromRCDATA(imgRecurring, 'VpRecurringEvent', 24, 32, 48);
+  LoadImageFromRCDATA(imgAlarm, 'VpReminder', 24, 32, 48);
   {$ENDIF}
 end;
 

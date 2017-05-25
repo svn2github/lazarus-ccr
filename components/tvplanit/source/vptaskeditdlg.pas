@@ -230,8 +230,8 @@ begin
   AlignOKCancel(OKBtn, CancelBtn, ButtonPanel);
 
   {$IFDEF NEW_ICONS}
-  LoadImageFromRCDATA(imgCalendar, 'VpAlarmClock', 32, 48, 64);
-  LoadImageFromRCDATA(imgCompleted, 'VpFinished', 32, 48, 64);
+  LoadImageFromRCDATA(imgCalendar, 'VpAlarmClock', 24, 32, 48);
+  LoadImageFromRCDATA(imgCompleted, 'VpFinished', 24, 32, 48);
   LoadGlyphFromRCDATA(DueDateEdit.Button.Glyph, 'VpDateEdit', 16, 24, 32);
   {$ENDIF}
 
