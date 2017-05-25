@@ -119,9 +119,9 @@ type
 
   TVpWeekView = class(TVpLinkableControl)
   private
+    FComponentHint: TTranslateString;
     FHintMode: TVpHintMode;
     FMouseEvent: TVpEvent;
-    FHintWindow: THintWindow;
     FLayout: TVpWeekviewLayout;
     FOnHoliday: TVpHolidayEvent;
     procedure SetActiveEvent(AValue: TVpEvent);
@@ -232,6 +232,7 @@ type
     { hints }
     procedure ShowHintWindow(APoint: TPoint; AEvent: TVpEvent);
     procedure HideHintWindow;
+    procedure SetHint(const AValue: TTranslateString); override;
 
     { message handlers }
     {$IFNDEF LCL}
@@ -435,6 +436,7 @@ constructor TVpWeekView.Create(AOwner: TComponent);
 begin
   inherited;
   ControlStyle := [csCaptureMouse, csOpaque, csDoubleClicks];
+  HintWindowClass := TVpHintWindow;
 
   { Create internal classes and stuff }
   FDayHeadAttributes := TVpDayHeadAttr.Create(self);
@@ -508,7 +510,6 @@ end;
 
 destructor TVpWeekView.Destroy;
 begin
-  FreeAndNil(FHintWindow);
   FreeAndNil(wvInplaceEditor);
   FDayHeadAttributes.Free;
   FAllDayEventAttr.Free;
@@ -1043,49 +1044,36 @@ var
   txt: String;
   R, eventR: TRect;
 begin
-  if FHintMode = hmPlannerHint then
+  HideHintWindow;
+  case FHintMode of
+    hmPlannerHint:
+      begin
+        if (AEvent = nil) or (Datastore = nil) or (Datastore.Resource = nil) then
+          exit;
+        txt := BuildEventString(AEvent, AEvent.StartTime, AEvent.EndTime, true);
+      end;
+    hmComponentHint:
+      txt := FComponentHint;
+  end;
+  if (txt <> '') and not ((wvInplaceEditor <> nil) and wvInplaceEditor.Visible)
+     and not (csDesigning in ComponentState) then
   begin
-    if (AEvent = nil) or
-       ((Datastore = nil) or (Datastore.Resource = nil)) then
-    begin
-      HideHintWindow;
-      exit;
-    end;
-
-    txt := BuildEventString(AEvent, AEvent.StartTime, AEvent.EndTime, true);
-
-    if (txt <> '') and
-       not ((wvInPlaceEditor <> nil) and wvInplaceEditor.Visible) and
-       not (csDesigning in ComponentState) then
-    begin
-      if FHintWindow = nil then
-        FHintWindow := THintWindow.Create(nil);
-      eventR := GetEventRect(AEvent);
-      eventR.TopLeft := ClientToScreen(eventR.TopLeft);
-      eventR.BottomRight := ClientToScreen(eventR.BottomRight);
-      APoint := ClientToScreen(APoint);
-      R := FHintWindow.CalcHintRect(MAX_HINT_WIDTH, txt, nil);
-      OffsetRect(R, APoint.X - WidthOf(R), eventR.Bottom);
-      FHintWindow.ActivateHint(R, txt);
-    end else
-      HideHintWindow;
-  end
-  else
-  if FHintMode = hmComponentHint then
-  begin
-    Application.Hint := Hint;
+    Hint := txt;
+    Application.Hint := txt;
     Application.ActivateHint(ClientToScreen(APoint), true);
   end;
 end;
 
 procedure TVpWeekView.HideHintWindow;
 begin
-  case FHintMode of
-    hmPlannerHint:
-      FreeAndNil(FHintWindow);
-    hmComponentHint:
-      Application.CancelHint;
-  end;
+  Application.CancelHint;
+end;
+
+procedure TVpWeekView.SetHint(const AValue: TTranslateString);
+begin
+  inherited;
+  if FHintMode = hmComponentHint then
+    FComponentHint := AValue;
 end;
 
 
@@ -1721,8 +1709,10 @@ begin
   if ShowHint then
   begin
     event := GetEventAtCoord(Point(X, Y));
-    if FMouseEvent <> event then begin
-      Application.CancelHint;
+    if event = nil then
+      HideHintWindow
+    else if FMouseEvent <> event then begin
+      HideHintWindow;
       ShowHintWindow(Point(X, Y), event);
       FMouseEvent := event;
     end;

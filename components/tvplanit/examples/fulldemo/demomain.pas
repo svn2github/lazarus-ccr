@@ -514,11 +514,6 @@ begin
     CategoryColorMap.Category0.Description := 'Appointment';
     //CategoryColorMap.Category0.Bitmap.Transparent := true;  // <-- not working
     LoadGlyphFromRCDATA(CategoryColorMap.Category0.Bitmap, 'SORTASC');
-    {
-    bmp := CreateBitmapFromRCDATA('SORTASC');
-    CategoryColorMap.Category0.Bitmap.Assign(bmp);
-    bmp.Free;
-    }
     CategoryColorMap.Category1.BackgroundColor := 13290239;
     CategoryColorMap.Category1.Color := clRed;
     CategoryColorMap.Category1.Description := 'Urgent';

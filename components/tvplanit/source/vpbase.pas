@@ -368,6 +368,13 @@ type
     property ActiveRange: TVpTimeRange read FActiveRange write FActiveRange;
   end;
 
+  TVpHintWindow = class(THintWindow)
+  public
+    function CalcHintRect(MaxWidth: Integer; const AHint: String;
+      AData: pointer): TRect; override;
+  end;
+
+
 implementation
 
 {$IFDEF NEW_ICONS}
@@ -1019,7 +1026,15 @@ begin
     Changed;
   end;
 end;
-{=====}
+
+
+{ TVpHintWindow }
+
+function TVpHintWindow.CalcHintRect(MaxWidth: Integer; const AHint: String;
+  AData: pointer): TRect;
+begin
+  Result := inherited CalcHintRect(MAX_HINT_WIDTH, AHint, AData);
+end;
 
 end.
 

@@ -113,6 +113,7 @@ const
   VK_2 = Ord('2');  VK_3 = Ord('3');  VK_4 = Ord('4');  VK_5 = Ord('5');
   VK_6 = Ord('6');  VK_7 = Ord('7');  VK_8 = Ord('8');  VK_9 = Ord('9');
 
+
 {------------------- Windows messages -----------------------}
   {Not a message code. Value of the first of the message codes used}
   Vp_FIRST = $7F00; {***}

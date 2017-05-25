@@ -222,8 +222,8 @@ type
 
   TVpDayView = class(TVpLinkableControl)
   private
+    FComponentHint: TTranslateString;
     FHintMode: TVpHintMode;
-    FHintWindow: THintWindow;
     FMouseEvent: TVpEvent;
     FOnHoliday: TVpHolidayEvent;
 
@@ -339,6 +339,8 @@ type
     { Hints }
     procedure ShowHintWindow(APoint: TPoint; AEvent: TVpEvent);
     procedure HideHintWindow;
+    procedure SetHint(const AValue: TTranslateString); override;
+    procedure SetHintMode(const AValue: TVpHintMode);
 
     { internal methods }
     function dvCalcRowHeight(Scale: Extended; UseGran: TVpGranularity): Integer;
@@ -478,7 +480,7 @@ type
     property IncludeWeekends: Boolean read FIncludeWeekends write SetIncludeWeekends default True;
     property NumDays: Integer read FNumDays write SetNumDays default 1;
     property WrapStyle: TVpDVWrapStyle read FWrapStyle Write SetWrapStyle default wsIconFlow;
-    property HintMode: TVpHintMode read FHintMode write FHintMode default hmPlannerHint;
+    property HintMode: TVpHintMode read FHintMode write SetHintMode default hmPlannerHint;
     {events}
     property AfterEdit: TVpAfterEditEvent read FAfterEdit write FAfterEdit;
     property BeforeEdit: TVpBeforeEditEvent read FBeforeEdit write FBeforeEdit;
@@ -688,6 +690,7 @@ constructor TVpDayView.Create(AOwner: TComponent);
 begin
   inherited;
   ControlStyle := [csCaptureMouse, csOpaque, csDoubleClicks];
+  HintWindowClass := TVpHintWindow;
 
   { Create internal classes and stuff }
   FTimeSlotColors := TVpTimeSlotColor.Create(self);
@@ -822,7 +825,6 @@ end;
 destructor TVpDayView.Destroy;
 begin
   FreeAndNil(dvInplaceEditor);
-  FreeAndNil(FHintWindow);
 
   FTimeSlotColors.Free;
   FHeadAttr.Free;
@@ -1021,38 +1023,22 @@ end;
 procedure TVpDayView.ShowHintWindow(APoint: TPoint; AEvent: TVpEvent);
 var
   txt: String;
-  R, eventR: TRect;
 begin
-  if FHintMode = hmPlannerHint then
+  HideHintWindow;
+  case FHintMode of
+    hmPlannerHint:
+      begin
+        if (AEvent = nil) or (Datastore = nil) or (Datastore.Resource = nil) then
+          exit;
+        txt := BuildEventString(AEvent, true);
+      end;
+    hmComponentHint:
+      txt := FComponentHint;
+  end;
+  if (txt <> '') and not (csDesigning in ComponentState) and
+     not ((dvInplaceEditor <> nil) and dvInplaceEditor.Visible) then
   begin
-    if (AEvent = nil) or
-       ((Datastore = nil) or (Datastore.Resource = nil)) then
-    begin
-      HideHintWindow;
-      exit;
-    end;
-
-    txt := BuildEventString(AEvent, true);
-
-    if (txt <> '') and
-       not ((dvInPlaceEditor <> nil) and dvInplaceEditor.Visible) and
-       not (csDesigning in ComponentState) then
-    begin
-      if FHintWindow = nil then
-        FHintWindow := THintWindow.Create(nil);
-      eventR := GetEventRect(AEvent);
-      eventR.TopLeft := ClientToScreen(eventR.TopLeft);
-      eventR.BottomRight := ClientToScreen(eventR.BottomRight);
-      APoint := ClientToScreen(APoint);
-      R := FHintWindow.CalcHintRect(MAX_HINT_WIDTH, txt, nil);
-      OffsetRect(R, APoint.X - WidthOf(R), eventR.Bottom);
-      FHintWindow.ActivateHint(R, txt);
-    end else
-      HideHintWindow;
-  end
-  else
-  if FHintMode = hmComponentHint then
-  begin
+    Hint := txt;
     Application.Hint := Hint;
     Application.ActivateHint(ClientToScreen(APoint), true);
   end;
@@ -1060,12 +1046,7 @@ end;
 
 procedure TVpDayView.HideHintWindow;
 begin
-  case FHintMode of
-    hmPlannerHint:
-      FreeAndNil(FHintWindow);
-    hmComponentHint:
-      Application.CancelHint;
-  end;
+  Application.CancelHint;
 end;
 
 
@@ -1878,8 +1859,11 @@ begin
   if ShowHint then
   begin
     event := GetEventAtCoord(Point(X, Y));
+    if event = nil then
+      HideHintWindow
+    else
     if FMouseEvent <> event then begin
-      Application.CancelHint;
+//      HideHintWindow;
       ShowHintWindow(Point(X, Y), event);
       FMouseEvent := event;
     end;
@@ -2469,6 +2453,23 @@ begin
     Invalidate;
   end;
 end;
+
+procedure TVpDayView.SetHint(const AValue: TTranslateString);
+begin
+  inherited;
+  if FHintMode = hmComponentHint then
+    FComponentHint := AValue;
+end;
+
+procedure TVpDayView.SetHintMode(const AValue: TVpHintMode);
+begin
+  if AValue = FHintMode then
+    exit;
+  FHintMode := AValue;
+  if FHintMode = hmPlannerHint then
+    FComponentHint := Hint;
+end;
+
 {=====}
 
 procedure TVpDayView.dvSetActiveRowByCoord(Pnt: TPoint; Sloppy: Boolean);

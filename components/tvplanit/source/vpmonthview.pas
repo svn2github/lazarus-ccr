@@ -137,6 +137,7 @@ type
 
   TVpMonthView = class(TVpLinkableControl)
   private
+    FComponentHint: TTranslateString;
     FHintMode: TVpHintMode;
     FOnHoliday: TVpHolidayEvent;
   protected{ private }
@@ -168,7 +169,6 @@ type
     FDate: TDateTime;
     FDefaultPopup: TPopupMenu;
     FRightClickChangeDate: Boolean;
-    FHintWindow: THintWindow;
     FMouseDate: TDateTime;
 
     { event variables }
@@ -245,6 +245,7 @@ type
     { Hints }
     procedure ShowHintWindow(APoint: TPoint; ADate: TDateTime);
     procedure HideHintWindow;
+    procedure SetHint(const AValue: TTranslateString); override;
 
     { Popup menu }
     procedure InitializeDefaultPopup;
@@ -407,6 +408,7 @@ constructor TVpMonthView.Create(AOwner: TComponent);
 begin
   inherited;
   ControlStyle := [csCaptureMouse, csOpaque, csDoubleClicks];
+  HintWindowClass := TVpHintWindow;
 
   { Create internal classes and stuff }
   FHeadAttr := TVpMonthViewAttr.Create(self);
@@ -486,7 +488,6 @@ end;
 
 destructor TVpMonthView.Destroy;
 begin
-  FreeAndNil(FHintWindow);
   FHeadAttr.Free;
   FHolidayAttr.Free;
   FTodayAttr.Free;
@@ -940,77 +941,74 @@ var
   holiday: String = '';
   todayDate: TDate;
 begin
-  if FHintMode = hmPlannerHint then
-  begin
-    if (ADate = 0) or ((Datastore = nil) or (Datastore.Resource = nil)) then
-    begin
-      HideHintWindow;
-      exit;
-    end;
+  HideHintWindow;
 
-    // If the date is a holiday we put the holidayname at the top
-    IsHoliday(ADate, holiday);
+  if (csDesigning in ComponentState) then
+    exit;
 
-    // Collect all events of this day and add them separated by line feeds to
-    // the hint string (txt).
-    list := TList.Create;
-    txt := '';
-    try
-      Datastore.Resource.Schedule.EventsByDate(ADate, List);
-      for i:=0 to list.Count-1 do begin
-        event := TVpEvent(list[i]);
-        s := BuildEventString(event, true, false);
-        txt := IfThen(txt = '', s, txt + LineEnding  + s);
+  case FHintMode of
+    hmPlannerHint:
+      begin
+        if (ADate = 0) or (Datastore = nil) or (Datastore.Resource = nil) then
+          exit;
+        txt := '';
+        // If the date is a holiday we put the holidayname at the top
+        IsHoliday(ADate, holiday);
+        // Collect all events of this day and add them separated by line feeds to
+        // the hint string (txt).
+        list := TList.Create;
+        try
+          Datastore.Resource.Schedule.EventsByDate(ADate, List);
+          for i:=0 to list.Count-1 do begin
+            event := TVpEvent(list[i]);
+            s := BuildEventString(event, true, false);
+            txt := IfThen(txt = '', s, txt + LineEnding  + s);
+          end;
+        finally
+          list.Free;
+        end;
+        // If we have any events then we put the current date at the top.
+        todayDate := SysUtils.Date();
+        if (txt = '') and (holiday = '') and (ADate = todayDate) then
+          txt := RSToday + LineEnding + FormatDateTime('ddddd', ADate)
+        else
+        if (txt <> '') or (holiday <> '') then begin
+          if (txt = '') and (holiday <> '') then
+            txt := FormatDateTime('ddddd', ADate) + LineEnding + holiday
+          else begin
+            txt := LineEnding + txt;
+            if holiday <> '' then
+              txt := holiday + LineEnding + txt;
+            txt := FormatDateTime('ddddd', ADate) + LineEnding + txt;
+            if ADate = todayDate then
+              txt := RSToday + LineEnding + txt;
+          end;
+        end;
       end;
-    finally
-      list.Free;
-    end;
-
-    // If we have any events then we put the current date at the top.
-    todayDate := SysUtils.Date();
-    if (txt = '') and (holiday = '') and (ADate = todayDate) then
-      txt := RSToday + LineEnding + FormatDateTime('ddddd', ADate)
-    else
-    if (txt <> '') or (holiday <> '') then begin
-      if (txt = '') and (holiday <> '') then
-        txt := FormatDateTime('ddddd', ADate) + LineEnding + holiday
-      else begin
-        txt := LineEnding + txt;
-        if holiday <> '' then
-          txt := holiday + LineEnding + txt;
-        txt := FormatDateTime('ddddd', ADate) + LineEnding + txt;
-        if ADate = todayDate then
-          txt := RSToday + LineEnding + txt;
-      end;
-    end;
-
-    if (txt <> '') and not (csDesigning in ComponentState) then
-    begin
-      // Build and show the hint window
-      if FHintWindow = nil then
-        FHintWindow := THintWindow.Create(nil);
-      APoint := ClientToScreen(APoint);
-      R := FHintWindow.CalcHintRect(MaxWidth, txt, nil);
-      OffsetRect(R, APoint.X - WidthOf(R), APoint.Y);
-      FHintWindow.ActivateHint(R, txt);
-    end else
-      // Hide the hint window
-      HideHintWindow;
-  end
-  else
-  if FHintMode = hmComponentHint then
-  begin
-    Application.Hint := Hint;
-    Application.ActivateHint(ClientToScreen(APoint), true);
+    hmComponentHint:
+      txt :=  FComponentHint;
+  end;
+  if (txt <> '') then begin
+    Hint := txt;
+    Application.Hint := txt;
+    Application.ActivateHint(ScreenToClient(APoint), true);
+  end else
+  if FHintMode = hmPlannerHint then begin
+    Hint := '';
+    Application.Hint := '';
   end;
 end;
 
 procedure TVpMonthView.HideHintWindow;
 begin
-  case FHintMode of
-    hmPlannerHint: FreeAndNil(FHintWindow);
-    hmComponentHint: Application.CancelHint;
-  end;
+  Application.CancelHint;
+end;
+
+procedure TVpMonthView.SetHint(const AValue: TTranslateString);
+begin
+  inherited;
+  if FHintMode = hmComponentHint then
+    FComponentHint := AValue;
 end;
 
 procedure TVpMonthView.InitializeDefaultPopup;
@@ -1244,9 +1242,11 @@ begin
   if ShowHint then
   begin
     day := GetDateAtCoord(Point(X, Y));
-    if FMouseDate <> day then begin
-      ShowHintWindow(Point(X, Y), day);
+    if day = 0 then
+      HideHintWindow
+    else if FMouseDate <> day then begin
       FMouseDate := day;
+      ShowHintWindow(Point(X, Y), day);
     end;
   end;
 end;
@@ -1256,7 +1256,7 @@ begin
   if v <> FRightClickChangeDate then                                     
     FRightClickChangeDate := v;                                          
 end;                                                                     
-{=====}
+
 procedure TVpMonthView.SetWeekStartsOn(Value: TVpDayType);
 begin
   if Value <> FWeekStartsOn then begin

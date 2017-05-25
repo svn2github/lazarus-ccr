@@ -110,6 +110,7 @@ type
   { Contact Grid }
   TVpContactGrid = class(TVpLinkableControl)
   private
+    FComponentHint: TTranslateString;
     FHintMode: TVpHintMode;
   protected{ private }
     FColumnWidth       : Integer;
@@ -155,7 +156,6 @@ type
     cgColCount         : Integer;
     cgVScrollDelta     : Integer;
     FOldCursor : TCursor;
-    FHintWindow: THintWindow;
     FMouseContactIndex: Integer;
 
     { property methods }
@@ -223,6 +223,7 @@ type
     function BuildHintString(AContact: TVpContact): String;
     procedure ShowHintWindow(APoint: TPoint; AContactIndex: Integer);
     procedure HideHintWindow;
+    procedure SetHint(const AValue: TTranslateString); override;
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -428,11 +429,14 @@ var
   I: Integer;
 begin
   inherited;
-  ControlStyle          := [csCaptureMouse, csOpaque, csDoubleClicks];
-  cgGridState           := gsNormal;
+  HintWindowClass := TVpHintWindow;
+
+  ControlStyle := [csCaptureMouse, csOpaque, csDoubleClicks];
+  cgGridState := gsNormal;
+
   { Create internal classes and stuff }
-  cgClickTimer          := TTimer.Create(self);
-  FContactHeadAttr      := TVpContactHeadAttr.Create(Self);
+  cgClickTimer := TTimer.Create(self);
+  FContactHeadAttr  := TVpContactHeadAttr.Create(Self);
 
   { Set styles and initialize internal variables }
   {$IFDEF VERSION4}
@@ -922,63 +926,41 @@ begin
 end;
 
 procedure TVpContactGrid.ShowHintWindow(APoint: TPoint; AContactIndex: Integer);
-const
-  MaxWidth = 400;
 var
   txt: String;
   contact: TVpContact;
-  R, RHint,RCont, RScr: TRect;
 begin
-  if FHintMode = hmPlannerHint then
-  begin
-    if (AContactIndex = -1) or ((Datastore = nil) or (Datastore.Resource = nil)) then
-    begin
-      HideHintWindow;
-      exit;
-    end;
-
-    contact := TVpContact(cgContactArray[AContactIndex].Contact);
-    txt := BuildHintString(contact);
-
-    if (txt <> '') and not (csDesigning in ComponentState) then
-    begin
-      // Build and show the hint window
-      if FHintWindow = nil then
-        FHintWindow := THintWindow.Create(nil);
-      RScr := Screen.WorkAreaRect;
-      RCont.TopLeft := ClientToScreen(cgContactArray[AContactIndex].WholeRect.TopLeft);
-      RCont.BottomRight := ClientToScreen(cgContactArray[AContactIndex].WholeRect.BottomRight);
-      RHint := FHintWindow.CalcHintRect(MaxWidth, txt, nil);
-      R := RHint;
-      OffsetRect(R, RCont.Left - WidthOf(R), RCont.Top);
-      if R.Left < RScr.Left then begin
-        R := RHint;
-        OffsetRect(R, RCont.Right, RCont.Top);
+  HideHintWindow;
+  case FHintMode of
+    hmPlannerHint:
+      begin
+        if (AContactIndex = -1) or (Datastore = nil) or (Datastore.Resource = nil) then
+          exit;
+        contact := TVpContact(cgContactArray[AContactIndex].Contact);
+        txt := BuildHintString(contact);
       end;
-      RHint := R;
-      if (R.Bottom > RScr.Bottom) then begin
-        R := RHint;
-        OffsetRect(R, 0, R.Bottom - RScr.Bottom);
-      end;
-      FHintWindow.ActivateHint(R, txt);
-    end else
-      // Hide the hint window
-      HideHintWindow;
-  end
-  else
-  if FHintMode = hmComponentHint then
-  begin
-    Application.Hint := Hint;
+    hmComponentHint:
+      txt := FComponentHint;
+  end;
+  if (txt <> '') and not (csDesigning in ComponentState) and
+     not ((cgInplaceEditor <> nil) and cgInplaceEditor.Visible)
+  then begin
+    Hint := txt;
+    Application.Hint := txt;
     Application.ActivateHint(ClientToScreen(APoint), true);
   end;
 end;
 
 procedure TVpContactGrid.HideHintWindow;
 begin
-  case FHintMode of
-    hmPlannerHint   : FreeAndNil(FHintWindow);
-    hmComponentHint : Application.CancelHint;
-  end;
+  Application.CancelHint;
+end;
+
+procedure TVpContactGrid.SetHint(const AValue: TTranslateString);
+begin
+  inherited;
+  if FHintMode = hmComponentHint then
+    FComponentHint := AValue;
 end;
 
 procedure TVpContactGrid.MouseEnter;
@@ -1058,21 +1040,19 @@ var
 begin
   if cgGridState = gsNormal then begin
     inherited MouseMove(Shift, X, Y);
-
-    if ShowHint then
-      if (cgInPlaceEditor <> nil) and cgInPlaceEditor.Visible then
+    if ShowHint then begin
+      idx := GetContactIndexByCoord(Point(X, Y));
+      if idx = -1 then
         HideHintWindow
-      else begin
-        idx := GetContactIndexByCoord(Point(X, Y));
-        if FMouseContactIndex <> idx then begin
-          ShowHintWindow(Point(X, Y), idx);
-          FMouseContactIndex := idx;
-        end;
+      else
+      if FMouseContactIndex <> idx then begin
+        ShowHintWindow(Point(X, Y), idx);
+        FMouseContactIndex := idx;
       end;
-
-  end else
+    end;
+  end
+  else
   begin
-
     { Column sizing happens here...}
     { if the in-place editor is active then kill it. }
     if Assigned(cgInplaceEditor) and cgInPlaceEditor.Visible then
