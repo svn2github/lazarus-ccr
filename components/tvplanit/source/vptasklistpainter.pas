@@ -230,9 +230,8 @@ var
   GlyphRect: TRect;
   HeadStr: string;
   delta: Integer;
-  w, h, h0: Integer;
+  w, h: Integer;
   bmp: TBitmap;
-  png: TPortableNetworkGraphic;
 begin
   RenderCanvas.Brush.Color := TaskHeadAttrColor;
   RenderCanvas.Font.Assign(FTaskList.TaskHeadAttributes.Font);
@@ -267,53 +266,18 @@ begin
 
   { Draw the glyph }
   if FTaskList.ShowIcon then begin
-  {$IFDEF NEW_ICONS}
-    h0 := HeightOf(HeadRect) - 2;
-    if h0 >= 32 then
-      png := CreatePngFromRCDATA('VPTASKS32')
-    else if h0 >= 24 then
-      png := CreatePngFromRCDATA('VPTASKS24')
-    else
-      png := CreatePngFromRCDATA('VPTASKS16');
+    bmp := TBitmap.Create;
     try
-      if png.Height > 0 then begin
-        bmp := TBitmap.Create;
-        try
-          bmp.PixelFormat := pf32Bit;
-          bmp.Width := png.Width;
-          bmp.Height := png.Height;
-          bmp.Canvas.Brush.color := clWhite;
-          bmp.Canvas.FillRect(Rect(0, 0, bmp.Width, bmp.Height));
-          bmp.Canvas.Draw(0, 0, png);
-
-          w := Round(bmp.Width * Scale);
-          h := Round(bmp.Height * Scale);
-
-          GlyphRect.TopLeft := Point(HeadRect.Left + TextMargin, (Headrect.Top + HeadRect.Bottom - h) div 2);
-          GlyphRect.BottomRight := Point(GlyphRect.Left + w, GlyphRect.Top + h);
-
-          {$IFDEF FPC}
-          RotateBitmap(Bmp, Angle);
-          {$ENDIF}
-
-          TPSStretchDraw(RenderCanvas, Angle, RenderIn, GlyphRect, Bmp);
-
-          HeadRect.Left := HeadRect.Left + w + TextMargin;
-        finally
-          bmp.Free;
-        end;
-      end;
-    finally
-      png.Free;
-    end;
-  {$ELSE}
-    Bmp := Graphics.TBitmap.Create;
-    try
+      {$IFDEF NEW_ICONS}
+      LoadGlyphFromRCDATA(bmp, 'VPTASKS', 16, 24, 32);
+      {$ELSE}
       Bmp.LoadFromResourceName(HINSTANCE, 'VPCHECKPAD'); //soner changed: Bmp.Handle := LoadBaseBitmap('VPCHECKPAD');
-      if Bmp.Height > 0 then begin
-        w := Round(Bmp.Width * Scale);
-        h := Round(Bmp.Height * Scale);
-        GlyphRect.TopLeft := Point(HeadRect.Left + TextMargin, HeadRect.Top + TextMargin);
+      {$ENDIF}
+      if bmp.Height > 0 then
+      begin
+        w := Round(bmp.Width * Scale);
+        h := Round(bmp.Height * Scale);
+        GlyphRect.TopLeft := Point(HeadRect.Left + TextMargin, (Headrect.Top + HeadRect.Bottom - h) div 2);
         GlyphRect.BottomRight := Point(GlyphRect.Left + w, GlyphRect.Top + h);
         {$IFDEF FPC}
         RotateBitmap(Bmp, Angle);
@@ -322,9 +286,8 @@ begin
         HeadRect.Left := HeadRect.Left + w + TextMargin;
       end;
     finally
-      Bmp.Free;
+      bmp.Free;
     end;
-  {$ENDIF}
   end;
 
   { draw the text }
