@@ -36,7 +36,7 @@ unit RxDBGridFooterTools;
 interface
 
 uses
-  Classes, SysUtils, rxdbgrid, Graphics, Grids, Controls;
+  Classes, SysUtils, rxdbgrid, Graphics, Grids, Controls, Menus;
 
 type
 

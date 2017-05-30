@@ -937,7 +937,8 @@ type
     procedure DeSelectAllRows;
     procedure InvertSelection;
     procedure CopyCellValue;
-    procedure CreateToolMenuItem(ShortCut: char; const ACaption: string; MenuAction: TNotifyEvent);
+    function CreateToolMenuItem(ShortCut: char; const ACaption: string; MenuAction: TNotifyEvent):TMenuItem;
+    procedure RemoveToolMenuItem(MenuAction: TNotifyEvent);
 
     procedure SetSort(AFields: array of String; ASortMarkers: array of TSortMarker; PreformSort: Boolean = False);
 
@@ -3036,17 +3037,32 @@ begin
   FFooterOptions.DrawFullLine := Value;
 end;
 
-procedure TRxDBGrid.CreateToolMenuItem(ShortCut: char; const ACaption: string;
-  MenuAction: TNotifyEvent);
+function TRxDBGrid.CreateToolMenuItem(ShortCut: char; const ACaption: string;
+  MenuAction: TNotifyEvent): TMenuItem;
+begin
+  Result := TMenuItem.Create(F_PopupMenu);
+  F_PopupMenu.Items.Add(Result);
+  Result.Caption := ACaption;
+  if ShortCut <> #0 then
+    Result.ShortCut := KeyToShortCut(Ord(ShortCut), [ssCtrl]);
+  Result.OnClick := MenuAction;
+end;
+
+procedure TRxDBGrid.RemoveToolMenuItem(MenuAction: TNotifyEvent);
 var
   R: TMenuItem;
+  I: Integer;
 begin
-  R := TMenuItem.Create(F_PopupMenu);
-  F_PopupMenu.Items.Add(R);
-  R.Caption := ACaption;
-  if ShortCut <> #0 then
-    R.ShortCut := KeyToShortCut(Ord(ShortCut), [ssCtrl]);
-  R.OnClick := MenuAction;
+  if not Assigned(MenuAction) then Exit;
+  for I:=F_PopupMenu.Items.Count-1 downto 0 do
+  begin
+    R:=F_PopupMenu.Items[I];
+    if R.OnClick = MenuAction then
+    begin
+      F_PopupMenu.Items.Delete(i);
+      R.Free;
+    end;
+  end;
 end;
 
 procedure TRxDBGrid.DoCreateJMenu;
@@ -5167,8 +5183,8 @@ end;
 procedure TRxDBGrid.MoveSelection;
 begin
   inherited MoveSelection;
-{  if Assigned(FFooterOptions) and FFooterOptions.Active and (FFooterOptions.RowCount > 0) then
-    DrawFooterRows;}
+(*  if Assigned(FFooterOptions) and FFooterOptions.Active and (FFooterOptions.RowCount > 0) then
+    DrawFooterRows; *)
 end;
 
 function TRxDBGrid.GetBufferCount: integer;
