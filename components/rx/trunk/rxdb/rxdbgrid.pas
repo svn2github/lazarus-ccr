@@ -1104,6 +1104,7 @@ type
     function DoExecTools:boolean; virtual;
     function DoSetupTools:boolean; virtual;
     function MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: integer):boolean; virtual;
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -2214,6 +2215,14 @@ function TRxDBGridAbstractTools.MouseDown(Button: TMouseButton;
   Shift: TShiftState; X, Y: integer): boolean;
 begin
   Result:=false;
+end;
+
+procedure TRxDBGridAbstractTools.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited Notification(AComponent, Operation);
+  if (AComponent = FRxDBGrid) and (Operation = opRemove) then
+    FRxDBGrid := nil;
 end;
 
 procedure TRxDBGridAbstractTools.ExecTools(Sender: TObject);
@@ -4482,7 +4491,7 @@ var
   P: TBookMark;
 begin
   FGroupItemDrawCur:=nil;
-  if FGroupItems.Active and DatalinkActive then
+{  if FGroupItems.Active and DatalinkActive then
   begin
 
     if (ARow>=FixedRows) then
@@ -4491,7 +4500,7 @@ begin
       P:=DataSource.DataSet.Bookmark;
       FGroupItemDrawCur:=FGroupItems.FindGroupItem(P);
     end;
-  end;
+  end;}
   inherited DrawRow(ARow);
 end;
 
@@ -4520,7 +4529,8 @@ var
   ABrush: TBrush;
 begin
   TotalWidth := GCache.ClientWidth;
-  TotalYOffs := GCache.ClientHeight {- (GetDefaultRowHeight * FFooterOptions.RowCount)};
+  //TotalYOffs := GCache.ClientHeight {- (GetDefaultRowHeight * FFooterOptions.RowCount)};
+  TotalYOffs := GCache.ClientRect.Bottom {- (GetDefaultRowHeight * FFooterOptions.RowCount)};
 
   FooterRect := Rect(0, TotalYOffs, TotalWidth, TotalYOffs + GetDefaultRowHeight * FFooterOptions.RowCount);
 
@@ -5157,8 +5167,8 @@ end;
 procedure TRxDBGrid.MoveSelection;
 begin
   inherited MoveSelection;
-  if Assigned(FFooterOptions) and FFooterOptions.Active and (FFooterOptions.RowCount > 0) then
-    DrawFooterRows;
+{  if Assigned(FFooterOptions) and FFooterOptions.Active and (FFooterOptions.RowCount > 0) then
+    DrawFooterRows;}
 end;
 
 function TRxDBGrid.GetBufferCount: integer;
@@ -6170,12 +6180,14 @@ end;
 procedure TRxDBGrid.CheckNewCachedSizes(var AGCache: TGridDataCache);
 begin
   inherited CheckNewCachedSizes(AGCache);
+
   if FFooterOptions.Active then
   begin
-    AGCache.ClientHeight:=AGCache.ClientHeight - DefaultRowHeight * FFooterOptions.RowCount;
+//    AGCache.ClientHeight:=AGCache.ClientHeight - DefaultRowHeight * FFooterOptions.RowCount;
     AGCache.ScrollHeight:=AGCache.ScrollHeight - DefaultRowHeight * FFooterOptions.RowCount;
     AGCache.ClientRect.Bottom:=AGCache.ClientRect.Bottom - DefaultRowHeight * FFooterOptions.RowCount;
   end;
+
 end;
 
 procedure TRxDBGrid.GetOnCreateLookup;
