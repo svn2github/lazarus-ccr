@@ -40,7 +40,13 @@ To get better results at higher resolution, some images were replaced.
   (http://www.fatcow.com/free-icons).
   
 - the white question mark on round blue background of the THtmlHelpDatabase is 
-  the icon "question.png" of the Fugue icon set (http://p.yusukekamiyamane.com/= 
+  the icon "question.png" of the Fugue icon set (http://p.yusukekamiyamane.com/)
+  
+- TXMLConfig contains the image "setting_tools.png" from the FatCow icon set
+  (http://www.fatcow.com/free-icons)
+  
+- TLHelpConnector contains the image "link.png" from the FatCow icon set.
+  (http://www.fatcow.com/free-icons)
   
   
 --------------------------------------------------------------------------------
