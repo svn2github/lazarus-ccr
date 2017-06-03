@@ -48,6 +48,34 @@ To get better results at higher resolution, some images were replaced.
 - TLHelpConnector contains the image "link.png" from the FatCow icon set.
   (http://www.fatcow.com/free-icons)
   
+- The window template of all dialog components is the image "application.png"
+  of the FatCow icon set.
+  
+- The calculator overlay of TCalculatorDialog is image "calculator.png" from the
+  FatCow icon set (http://www.fatcow.com/free-icons).
+  
+- The calendar overlay of TCalendarDialog is image "date.png" from the
+  FatCow icon set (http://www.fatcow.com/free-icons).
+  
+- The printer overlay in the TPrintDialog, TPrinterSetupDialog and TPageSetupDialog
+  is the image "printer.png" from the FatCow icon set.
+  
+- The gearwheel overlay in the TPrinterSetupDialog is the image "cog.png" from
+  the Fatcow icon set.
+  
+- The overlayed page in the TPageSetupDialog is the image "document_empty.png"
+  from the FatCow icon set.
+  
+- The overlayed color swatch in the TColorDialog is the image "color_swatch.png"
+  from the FatCow icon set.
+  
+- The overlaayed folder and picture in the TOpenPictureDialog is the image
+  "folder_picture.png" of the Fat Cow icon set.
+  
+- The overlayer image in the TSavePictureDialog is the picture part cut off
+  from image "folder_picture.png" used already for the TOpenPictureDialog.
+  
+  
   
 --------------------------------------------------------------------------------
 Licenses of used external icon collections
