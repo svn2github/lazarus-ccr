@@ -68,7 +68,7 @@ type
     procedure FormShow(Sender: TObject);
   private
     SnoozeDelay: TDateTime;
-    ShowTime   : TDateTime;
+    ShowTime: TDateTime;
     procedure CalcSnooze;
   protected
     procedure PositionControls;

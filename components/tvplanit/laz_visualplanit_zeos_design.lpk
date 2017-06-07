@@ -19,6 +19,7 @@
       <Item1>
         <Filename Value="source\addons\zeos\vpregzeos.pas"/>
         <HasRegisterProc Value="True"/>
+        <AddToUsesPkgSection Value="False"/>
         <UnitName Value="VpRegZEOS"/>
       </Item1>
     </Files>

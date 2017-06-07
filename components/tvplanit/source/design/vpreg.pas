@@ -648,10 +648,28 @@ begin
   {               register Visual PlanIt components with the IDE               }
   {----------------------------------------------------------------------------}
   RegisterComponents('Visual PlanIt', [
+    TVpControlLink,
+    TVpDayView,
+    TVpWeekView,
+    TVpMonthView,
+    TVpTaskList,
+    TVpContactGrid,
+    TVpContactButtonBar,
+    TVpResourceCombo,
+    TVpPrintFormatComboBox,
+    TVpResourceEditDialog,
+    TVpEventEditDialog,
+    TVpContactEditDialog,
+    TVpTaskEditDialog,
+    TVpPrintFormatEditDialog,
+    TVpPrintPreviewDialog,
+    TVpPrintPreview,
+    TVpNotificationDialog,
     TVpLEDLabel,
     TVpClock,
     TVpCalendar,
     TVpNavBar,
+
     TVpFlexDataStore,
    {$IFDEF DELPHI}
     TVpBDEDataStore,    // BDE is not available in Lazarus
@@ -662,27 +680,10 @@ begin
     TVpXmlDatastore,
     TVpBufDSDatastore,
     TVpSqlite3Datastore,
-    TVpFirebirdDatastore,
+    TVpFirebirdDatastore
     //TVpSdfDatastore,       // to do (maybe)...
     //TVpDbfDatastore,       // to do...
    {$ENDIF}
-    TVpControlLink,
-    TVpPrintPreview,
-    TVpPrintFormatComboBox,
-    TVpResourceCombo,
-    TVpDayView,
-    TVpWeekView,
-    TVpMonthView,
-    TVpContactGrid,
-    TVpContactButtonBar,
-    TVpTaskList,
-    TVpNotificationDialog,
-    TVpResourceEditDialog,
-    TVpEventEditDialog,
-    TVpContactEditDialog,
-    TVpTaskEditDialog,
-    TVpPrintFormatEditDialog,
-    TVpPrintPreviewDialog
    ]);
 end;
 
