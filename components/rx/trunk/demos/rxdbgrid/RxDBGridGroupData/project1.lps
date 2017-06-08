@@ -20,21 +20,21 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="42"/>
-        <CursorPos X="128" Y="44"/>
+        <CursorPos X="6" Y="56"/>
         <UsageCount Value="31"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
-        <Filename Value="/usr/local/share/lazarus/components/rxnew/rxdb/rxdbgrid.pas"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="6168"/>
-        <CursorPos X="57" Y="6177"/>
+        <TopLine Value="1503"/>
+        <CursorPos X="5" Y="1512"/>
         <UsageCount Value="15"/>
         <Bookmarks Count="5">
-          <Item0 X="3" Y="4356" ID="5"/>
+          <Item0 X="3" Y="4357" ID="5"/>
           <Item1 X="3" Y="5572" ID="3"/>
           <Item2 X="5" Y="6159" ID="4"/>
           <Item3 X="63" Y="4523" ID="1"/>
@@ -78,46 +78,46 @@
         <UsageCount Value="9"/>
       </Unit7>
       <Unit8>
-        <Filename Value="/usr/local/share/lazarus/components/rxnew/rxdb/rxmemds.pas"/>
+        <Filename Value="../../../rxdb/rxmemds.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1108"/>
         <CursorPos Y="1127"/>
         <UsageCount Value="9"/>
       </Unit8>
       <Unit9>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
         <UnitName Value="Grids"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="4845"/>
-        <CursorPos X="24" Y="4847"/>
+        <TopLine Value="4273"/>
+        <CursorPos Y="4298"/>
         <UsageCount Value="13"/>
         <Loaded Value="True"/>
       </Unit9>
       <Unit10>
-        <Filename Value="/usr/local/share/lazarus/lcl/dbgrids.pas"/>
+        <Filename Value="../../../../../lcl/dbgrids.pas"/>
         <UnitName Value="DBGrids"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="965"/>
-        <CursorPos Y="978"/>
+        <TopLine Value="3080"/>
+        <CursorPos Y="3105"/>
         <UsageCount Value="15"/>
         <Loaded Value="True"/>
       </Unit10>
       <Unit11>
-        <Filename Value="/usr/local/share/lazarus/lcl/include/control.inc"/>
+        <Filename Value="../../../../../lcl/include/control.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1009"/>
         <CursorPos Y="1029"/>
         <UsageCount Value="11"/>
       </Unit11>
       <Unit12>
-        <Filename Value="/usr/local/share/lazarus/lcl/include/wincontrol.inc"/>
+        <Filename Value="../../../../../lcl/include/wincontrol.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="8038"/>
         <CursorPos Y="8066"/>
         <UsageCount Value="11"/>
       </Unit12>
       <Unit13>
-        <Filename Value="/usr/local/share/lazarus/lcl/include/scrollingwincontrol.inc"/>
+        <Filename Value="../../../../../lcl/include/scrollingwincontrol.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="76"/>
         <CursorPos Y="95"/>
@@ -159,21 +159,21 @@
         <UsageCount Value="9"/>
       </Unit18>
       <Unit19>
-        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Filename Value="../../../../../lcl/include/canvas.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1579"/>
         <CursorPos Y="1600"/>
         <UsageCount Value="10"/>
       </Unit19>
       <Unit20>
-        <Filename Value="/usr/local/share/lazarus/lcl/include/winapi.inc"/>
+        <Filename Value="../../../../../lcl/include/winapi.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="597"/>
         <CursorPos Y="617"/>
         <UsageCount Value="10"/>
       </Unit20>
       <Unit21>
-        <Filename Value="/usr/local/share/lazarus/lcl/widgetset/wsgrids.pp"/>
+        <Filename Value="../../../../../lcl/widgetset/wsgrids.pp"/>
         <UnitName Value="WSGrids"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="35"/>
@@ -181,7 +181,7 @@
         <UsageCount Value="11"/>
       </Unit21>
       <Unit22>
-        <Filename Value="/usr/local/share/lazarus/lcl/interfaces/gtk2/gtk2wsgrids.pp"/>
+        <Filename Value="../../../../../lcl/interfaces/gtk2/gtk2wsgrids.pp"/>
         <UnitName Value="Gtk2WSGrids"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="31"/>
@@ -189,7 +189,7 @@
         <UsageCount Value="11"/>
       </Unit22>
       <Unit23>
-        <Filename Value="/usr/local/share/lazarus/lcl/controls.pp"/>
+        <Filename Value="../../../../../lcl/controls.pp"/>
         <UnitName Value="Controls"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2277"/>
@@ -211,141 +211,137 @@
         <UsageCount Value="10"/>
       </Unit25>
       <Unit26>
-        <Filename Value="/usr/local/share/lazarus/lcl/include/customcheckbox.inc"/>
+        <Filename Value="../../../../../lcl/include/customcheckbox.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="114"/>
         <CursorPos Y="134"/>
         <UsageCount Value="10"/>
       </Unit26>
       <Unit27>
-        <Filename Value="/usr/local/share/lazarus/lcl/interfaces/gtk2/gtk2widgetset.inc"/>
+        <Filename Value="../../../../../lcl/interfaces/gtk2/gtk2widgetset.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="16"/>
         <CursorPos Y="44"/>
         <UsageCount Value="10"/>
       </Unit27>
     </Units>
-    <JumpHistory Count="30" HistoryIndex="29">
+    <JumpHistory Count="29" HistoryIndex="28">
       <Position1>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="3466" TopLine="3443"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="4421" TopLine="4403"/>
       </Position1>
       <Position2>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="3473" TopLine="3443"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4242" TopLine="4236"/>
       </Position2>
       <Position3>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="3474" TopLine="3443"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4244" TopLine="4236"/>
       </Position3>
       <Position4>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="3475" TopLine="3444"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4260" TopLine="4235"/>
       </Position4>
       <Position5>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="3476" TopLine="3445"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4261" TopLine="4235"/>
       </Position5>
       <Position6>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="3475" TopLine="3445"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4262" TopLine="4235"/>
       </Position6>
       <Position7>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="3478" TopLine="3450"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4264" TopLine="4235"/>
       </Position7>
       <Position8>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="3399" TopLine="3380"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4265" TopLine="4235"/>
       </Position8>
       <Position9>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="3400" TopLine="3380"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4260" TopLine="4235"/>
       </Position9>
       <Position10>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="5921" TopLine="5911"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4261" TopLine="4235"/>
       </Position10>
       <Position11>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="5922" TopLine="5911"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4262" TopLine="4235"/>
       </Position11>
       <Position12>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="5923" TopLine="5911"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4264" TopLine="4235"/>
       </Position12>
       <Position13>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="5929" TopLine="5911"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4265" TopLine="4235"/>
       </Position13>
       <Position14>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="5931" TopLine="5911"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4260" TopLine="4235"/>
       </Position14>
       <Position15>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="5932" TopLine="5911"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4268" TopLine="4238"/>
       </Position15>
       <Position16>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="2094" TopLine="2075"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4270" TopLine="4240"/>
       </Position16>
       <Position17>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="2095" TopLine="2075"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4291" TopLine="4273"/>
       </Position17>
       <Position18>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="2098" TopLine="2075"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4292" TopLine="4273"/>
       </Position18>
       <Position19>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="2099" TopLine="2075"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4293" TopLine="4273"/>
       </Position19>
       <Position20>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="5934" TopLine="5915"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4295" TopLine="4273"/>
       </Position20>
       <Position21>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="678" Column="18" TopLine="659"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4296" TopLine="4273"/>
       </Position21>
       <Position22>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="2482" Column="61" TopLine="2451"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4291" TopLine="4273"/>
       </Position22>
       <Position23>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="2483" Column="52" TopLine="2452"/>
+        <Filename Value="../../../../../lcl/grids.pas"/>
+        <Caret Line="4298" TopLine="4273"/>
       </Position23>
       <Position24>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="2874" Column="28" TopLine="2843"/>
+        <Filename Value="../../../../../lcl/dbgrids.pas"/>
+        <Caret Line="3105" TopLine="3080"/>
       </Position24>
       <Position25>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="2887" Column="24" TopLine="2857"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="4512" TopLine="4502"/>
       </Position25>
       <Position26>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="4846" Column="24" TopLine="4813"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="1511" TopLine="1492"/>
       </Position26>
       <Position27>
-        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
-        <Caret Line="4847" Column="24" TopLine="4813"/>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="56" Column="6" TopLine="42"/>
       </Position27>
       <Position28>
-        <Filename Value="/usr/local/share/lazarus/components/rxnew/rxdb/rxdbgrid.pas"/>
-        <Caret Line="5166" Column="10" TopLine="5141"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="533" Column="14" TopLine="515"/>
       </Position28>
       <Position29>
-        <Filename Value="/usr/local/share/lazarus/components/rxnew/rxdb/rxdbgrid.pas"/>
-        <Caret Line="912" Column="15" TopLine="884"/>
+        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
+        <Caret Line="519" Column="15" TopLine="516"/>
       </Position29>
-      <Position30>
-        <Filename Value="/usr/local/share/lazarus/components/rxnew/rxdb/rxdbgrid.pas"/>
-        <Caret Line="6177" Column="57" TopLine="6168"/>
-      </Position30>
     </JumpHistory>
   </ProjectSession>
   <Debugging>

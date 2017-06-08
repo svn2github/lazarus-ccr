@@ -1509,8 +1509,9 @@ begin
   if FActive then
   begin
     FRxDBGrid.CalcStatTotals;
-  end;
-  //FRxDBGrid.UpdateRowsHeight;
+  end
+  else
+    FRxDBGrid.UpdateRowsHeight;
   FRxDBGrid.VisualChange;
 end;
 
@@ -4507,16 +4508,15 @@ var
   P: TBookMark;
 begin
   FGroupItemDrawCur:=nil;
-{  if FGroupItems.Active and DatalinkActive then
+  if FGroupItems.Active and DatalinkActive then
   begin
-
     if (ARow>=FixedRows) then
     begin
       DataLink.ActiveRecord:=ARow-FixedRows;
       P:=DataSource.DataSet.Bookmark;
       FGroupItemDrawCur:=FGroupItems.FindGroupItem(P);
     end;
-  end;}
+  end;
   inherited DrawRow(ARow);
 end;
 
