@@ -1,63 +1,63 @@
-office/VpAlarmClock24.png
-office/VpAlarmClock32.png
-office/VpAlarmClock48.png
+components/VpAlarmClock24.png
+components/VpAlarmClock32.png
+components/VpAlarmClock48.png
 
-office/VpDateTime24.png
-office/VpDateTime32.png
-office/VpDateTime48.png
+components/VpDateTime24.png
+components/VpDateTime32.png
+components/VpDateTime48.png
 
-office/VpFinished24.png
-office/VpFinished32.png
-office/VpFinished48.png
+components/VpFinished24.png
+components/VpFinished32.png
+components/VpFinished48.png
 
-office/VpPersons32.png
-office/VpPersons48.png
-office/VpPersons64.png
+components/VpPersons32.png
+components/VpPersons48.png
+components/VpPersons64.png
 
-office/VpRecurringEvent24.png
-office/VpRecurringEvent32.png
-office/VpRecurringEvent48.png
+components/VpRecurringEvent24.png
+components/VpRecurringEvent32.png
+components/VpRecurringEvent48.png
 
-office/VpReminder24.png
-office/VpReminder32.png
-office/VpReminder48.png
+components/VpReminder24.png
+components/VpReminder32.png
+components/VpReminder48.png
 
-office/VpDateEdit16.png
-office/VpDateEdit24.png
-office/VpDateEdit32.png
+components/VpDateEdit16.png
+components/VpDateEdit24.png
+components/VpDateEdit32.png
 
-office/VpSpeaker16.png
-office/VpSpeaker24.png
-office/VpSpeaker32.png
+components/VpSpeaker16.png
+components/VpSpeaker24.png
+components/VpSpeaker32.png
 
-office/VpTasks16.png
-office/VpTasks24.png
-office/VpTasks32.png
+components/VpTasks16.png
+components/VpTasks24.png
+components/VpTasks32.png
 
-office/VpTimeEdit16.png
-office/VpTimeEdit24.png
-office/VpTimeEdit32.png
+components/VpTimeEdit16.png
+components/VpTimeEdit24.png
+components/VpTimeEdit32.png
 
-office/VpLArrows16.png
-office/VpLArrows24.png
-office/VpLArrows32.png
+components/VpLArrows16.png
+components/VpLArrows24.png
+components/VpLArrows32.png
 
-office/VpLArrow16.png
-office/VpLArrow24.png
-office/VpLArrow32.png
+components/VpLArrow16.png
+components/VpLArrow24.png
+components/VpLArrow32.png
 
-office/VpRArrow16.png
-office/VpRArrow24.png
-office/VpRArrow32.png
+components/VpRArrow16.png
+components/VpRArrow24.png
+components/VpRArrow32.png
 
-office/VpRArrows16.png
-office/VpRArrows24.png
-office/VpRArrows32.png
+components/VpRArrows16.png
+components/VpRArrows24.png
+components/VpRArrows32.png
 
-office/VpRevert16.png
-office/VpRevert24.png
-office/VpRevert32.png
+components/VpRevert16.png
+components/VpRevert24.png
+components/VpRevert32.png
 
-office/VpToday16.png
-office/VpToday24.png
-office/VpToday32.png
+components/VpToday16.png
+components/VpToday24.png
+components/VpToday32.png
