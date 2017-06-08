@@ -75,6 +75,8 @@ type
     FBtnScrollLeft:TSpeedButton;
     FBtnScrollRigth:TSpeedButton;
     FMainPanel: TRxMDIPanel;
+    function GetFlatButton: boolean;
+    procedure SetFlatButton(AValue: boolean);
     procedure UpdateScrollBtnStatus;
     procedure ScrollLeftExecute(Sender: TObject);
     procedure ScrollRigthExecute(Sender: TObject);
@@ -95,6 +97,7 @@ type
     property Align;
     property ShowHint;
     property ParentShowHint;
+    property FlatButton:boolean read GetFlatButton write SetFlatButton;
   end;
 
   { TRxMDICloseButton }
@@ -452,6 +455,23 @@ begin
   FBtnScrollRigth.Enabled:=W > Width;
 end;
 
+function TRxMDITasks.GetFlatButton: boolean;
+begin
+  Result:=FBtnScrollLeft.Flat;
+end;
+
+procedure TRxMDITasks.SetFlatButton(AValue: boolean);
+var
+  B: TComponent;
+begin
+  FBtnScrollLeft.Flat:=AValue;
+  FBtnScrollRigth.Flat:=AValue;
+
+  for B in Self do
+    if (B is TRxMDIButton) then
+      TRxMDIButton(B).Flat:=AValue;
+end;
+
 procedure TRxMDITasks.ScrollLeftExecute(Sender: TObject);
 var
   i:Integer;
@@ -510,7 +530,6 @@ begin
   if (FMainPanel.ControlCount>1) and (not Application.Terminated) then
   begin
     CC:=FMainPanel.Controls[FMainPanel.ControlCount-2];
-
     if Assigned(CC) then
       ShowWindow(CC as TForm)
   end
@@ -619,6 +638,7 @@ begin
   Btn.Down:=true;
   Btn.BorderSpacing.Left:=3;
   Btn.BorderSpacing.Right:=3;
+  Btn.Flat:=FlatButton;
 
   FBtnScrollRigth.BringToFront;
   FBtnScrollLeft.BringToFront;
