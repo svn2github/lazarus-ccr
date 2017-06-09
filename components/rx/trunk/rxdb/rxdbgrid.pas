@@ -920,6 +920,11 @@ type
     procedure CalcCellExtent(ACol, ARow: Integer; var ARect: TRect);
     function IsMerged(ACol{, ARow}: Integer): Boolean; overload;
     function IsMerged(ACol{, ARow}: Integer; out ALeft, {ATop, }ARight{, ABottom}: Integer): Boolean; overload;
+
+    function  GetEditMask(aCol, aRow: Longint): string; override;
+    function  GetEditText(aCol, aRow: Longint): string; override;
+    function  GetDefaultEditor(Column: Integer): TWinControl; override;
+
     procedure PrepareCanvas(aCol, aRow: Integer; AState: TGridDrawState); override;
 
     property Editor;
@@ -5172,9 +5177,13 @@ end;
 procedure TRxDBGrid.SetEditText(ACol, ARow: longint; const Value: string);
 var
   C: TRxColumn;
-  j: integer;
+  j, L, R: integer;
   S: string;
 begin
+  if (rdgColSpanning in OptionsRx) then
+    if IsMerged(aCol, L, R) then
+      aCol:=L;
+
   C := ColumnFromGridColumn(aCol) as TRxColumn;
   S := Value;
   if Assigned(C) and (C.KeyList.Count > 0) and (C.PickList.Count > 0) then
@@ -6288,6 +6297,36 @@ begin
 
   Result := (ALeft <> ARight) {or (ATop <> ABottom)};
   dec(FMergeLock);
+end;
+
+function TRxDBGrid.GetEditMask(aCol, aRow: Longint): string;
+var
+  L, R: Integer;
+begin
+  if (rdgColSpanning in OptionsRx) then
+    if IsMerged(aCol, L, R) then
+      aCol:=L;
+  Result:=inherited GetEditMask(aCol, aRow);
+end;
+
+function TRxDBGrid.GetEditText(aCol, aRow: Longint): string;
+var
+  R, L: Integer;
+begin
+  if (rdgColSpanning in OptionsRx) then
+    if IsMerged(aCol, L, R) then
+      aCol:=L;
+  Result:=inherited GetEditText(aCol, aRow);
+end;
+
+function TRxDBGrid.GetDefaultEditor(Column: Integer): TWinControl;
+var
+  L, R: Integer;
+begin
+  if (rdgColSpanning in OptionsRx) then
+    if IsMerged(Column, L, R) then
+      Column:=L;
+  Result:=inherited GetDefaultEditor(Column);
 end;
 
 procedure TRxDBGrid.PrepareCanvas(aCol, aRow: Integer; AState: TGridDrawState);

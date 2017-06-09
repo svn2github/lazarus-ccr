@@ -50,9 +50,11 @@ var
   i: Integer;
 begin
   rxData.Open;
+  rxData.DisableControls;
   for i:=1 to 30 do
     rxData.AppendRecord([i, Date - i, 'Line '+IntToStr(i)]);
   rxData.First;
+  rxData.EnableControls;
 
   RxDBGrid1.OnMergeCells:=@RxDBGridMergeCellsEvent;
 end;
