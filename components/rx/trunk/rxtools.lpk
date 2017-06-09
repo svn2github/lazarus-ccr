@@ -15,7 +15,7 @@
 "/>
     <License Value="LGPL"/>
     <Version Minor="3" Build="6"/>
-    <Files Count="8">
+    <Files Count="9">
       <Item1>
         <Filename Value="rxtools/rxcrc.pas"/>
         <UnitName Value="rxCRC"/>
@@ -47,6 +47,10 @@
         <Filename Value="rxtools/rxstrutils.pas"/>
         <UnitName Value="rxstrutils"/>
       </Item8>
+      <Item9>
+        <Filename Value="rxtools/rxutils.pas"/>
+        <UnitName Value="rxutils"/>
+      </Item9>
     </Files>
     <LazDoc Paths="docs;/usr/local/share/lazarus/components/rxnew/docs"/>
     <i18n>

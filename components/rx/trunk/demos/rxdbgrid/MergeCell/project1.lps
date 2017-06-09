@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <Version Value="10"/>
+    <BuildModes Active="Default"/>
+    <Units Count="17">
+      <Unit0>
+        <Filename Value="project1.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit1"/>
+        <TopLine Value="43"/>
+        <CursorPos X="138" Y="62"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="/usr/local/share/lazarus/components/rxnew/rxdb/rxdbgrid.pas"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="4317"/>
+        <CursorPos Y="4335"/>
+        <UsageCount Value="10"/>
+        <Bookmarks Count="1">
+          <Item0 X="7" Y="4331" ID="1"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="/usr/local/share/lazarus/lcl/grids.pas"/>
+        <UnitName Value="Grids"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="4437"/>
+        <CursorPos Y="4468"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="/usr/local/share/lazarus/lcl/dbgrids.pas"/>
+        <UnitName Value="DBGrids"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="1920"/>
+        <CursorPos Y="1939"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="../../../../install/source/fpcsrc/tests/bench/shootout/src/fannkuch.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="16"/>
+        <CursorPos X="11" Y="25"/>
+        <UsageCount Value="10"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="../../../../install/source/fpcsrc/rtl/inc/systemh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="834"/>
+        <CursorPos Y="848"/>
+        <UsageCount Value="10"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="/usr/local/share/lazarus/components/rxnew/rxtools/rxutils.pas"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="64"/>
+        <CursorPos X="2" Y="91"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="/usr/local/share/lazarus/components/rxnew/rxtools/rxstrutils.pas"/>
+        <EditorIndex Value="6"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="../../../../install/source/fpcsrc/rtl/objpas/objpas.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="49"/>
+        <CursorPos X="8" Y="35"/>
+        <UsageCount Value="10"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="../../../../install/source/fpcsrc/packages/fcl-db/src/base/db.pas"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="1783"/>
+        <CursorPos X="15" Y="1801"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="../../../../install/source/fpcsrc/packages/fcl-db/src/base/datasource.inc"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="146"/>
+        <CursorPos X="48" Y="149"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/wincontrol.inc"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="8050"/>
+        <CursorPos Y="8080"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="/usr/local/share/lazarus/lcl/lclproc.pas"/>
+        <UnitName Value="LCLProc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="899"/>
+        <CursorPos Y="918"/>
+        <UsageCount Value="10"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/control.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3877"/>
+        <CursorPos Y="3897"/>
+        <UsageCount Value="10"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <EditorIndex Value="10"/>
+        <TopLine Value="1273"/>
+        <CursorPos Y="1303"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="/usr/local/share/lazarus/lcl/graphics.pp"/>
+        <UnitName Value="Graphics"/>
+        <EditorIndex Value="9"/>
+        <TopLine Value="1193"/>
+        <CursorPos X="15" Y="1210"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit16>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1246" TopLine="1226"/>
+      </Position1>
+      <Position2>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1239" Column="119" TopLine="1226"/>
+      </Position2>
+      <Position3>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1248" TopLine="1226"/>
+      </Position3>
+      <Position4>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1251" TopLine="1226"/>
+      </Position4>
+      <Position5>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1252" TopLine="1226"/>
+      </Position5>
+      <Position6>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1255" TopLine="1226"/>
+      </Position6>
+      <Position7>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1257" TopLine="1227"/>
+      </Position7>
+      <Position8>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1263" TopLine="1233"/>
+      </Position8>
+      <Position9>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1264" TopLine="1243"/>
+      </Position9>
+      <Position10>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1266" TopLine="1243"/>
+      </Position10>
+      <Position11>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1267" TopLine="1243"/>
+      </Position11>
+      <Position12>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1269" TopLine="1243"/>
+      </Position12>
+      <Position13>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1272" TopLine="1243"/>
+      </Position13>
+      <Position14>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1273" TopLine="1243"/>
+      </Position14>
+      <Position15>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1275" TopLine="1245"/>
+      </Position15>
+      <Position16>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1278" TopLine="1248"/>
+      </Position16>
+      <Position17>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1279" TopLine="1249"/>
+      </Position17>
+      <Position18>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1280" TopLine="1250"/>
+      </Position18>
+      <Position19>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1281" TopLine="1251"/>
+      </Position19>
+      <Position20>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1283" TopLine="1253"/>
+      </Position20>
+      <Position21>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1285" TopLine="1255"/>
+      </Position21>
+      <Position22>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1286" TopLine="1256"/>
+      </Position22>
+      <Position23>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1287" TopLine="1257"/>
+      </Position23>
+      <Position24>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1289" TopLine="1259"/>
+      </Position24>
+      <Position25>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1293" TopLine="1263"/>
+      </Position25>
+      <Position26>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1294" TopLine="1264"/>
+      </Position26>
+      <Position27>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1296" TopLine="1266"/>
+      </Position27>
+      <Position28>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1299" TopLine="1269"/>
+      </Position28>
+      <Position29>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1302" TopLine="1272"/>
+      </Position29>
+      <Position30>
+        <Filename Value="/usr/local/share/lazarus/lcl/include/canvas.inc"/>
+        <Caret Line="1303" TopLine="1273"/>
+      </Position30>
+    </JumpHistory>
+  </ProjectSession>
+</CONFIG>

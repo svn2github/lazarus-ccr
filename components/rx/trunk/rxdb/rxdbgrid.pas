@@ -74,6 +74,8 @@ type
       var Processed: boolean) of object;
 
   TRxDBGridCalcRowHeight = procedure(Sender: TRxDBGrid;  var ARowHegth:integer) of object;
+  TRxDBGridMergeCellsEvent = procedure (Sender: TObject; ACol{, ARow}: Integer; Column: TRxColumn;
+    var ALeft, {ATop,} ARight{, ABottom}: Integer) of object;
 
   //Freeman35 added
   TOnRxCalcFooterValues = procedure(Sender: TObject; Column: TRxColumn; var AValue : Variant) of object;
@@ -106,7 +108,8 @@ type
     rdgAllowToolMenu,
     rdgCaseInsensitiveSort,
     rdgWordWrap,
-    rdgDisableWordWrapTitles
+    rdgDisableWordWrapTitles,
+    rdgColSpanning
     );
 
   TOptionsRx = set of TOptionRx;
@@ -719,6 +722,9 @@ type
     FSortColumns: TRxDbGridColumnsSortList;
     FSortingNow:Boolean;
     FInProcessCalc: integer;
+
+    FOnMergeCells: TRxDBGridMergeCellsEvent;
+    FMergeLock: Integer;
     //
     FKeyStrokes: TRxDBGridKeyStrokes;
     FOnGetCellProps: TGetCellPropsEvent;
@@ -911,6 +917,11 @@ type
     procedure DoEditorShow; override;
     procedure CheckNewCachedSizes(var AGCache:TGridDataCache); override;
 
+    procedure CalcCellExtent(ACol, ARow: Integer; var ARect: TRect);
+    function IsMerged(ACol{, ARow}: Integer): Boolean; overload;
+    function IsMerged(ACol{, ARow}: Integer; out ALeft, {ATop, }ARight{, ABottom}: Integer): Boolean; overload;
+    procedure PrepareCanvas(aCol, aRow: Integer; AState: TGridDrawState); override;
+
     property Editor;
   public
     constructor Create(AOwner: TComponent); override;
@@ -1085,6 +1096,7 @@ type
 
     property OnCreateLookup: TCreateLookup read F_CreateLookup write F_CreateLookup;
     property OnDisplayLookup: TDisplayLookup read F_DisplayLookup write F_DisplayLookup;
+    property OnMergeCells:TRxDBGridMergeCellsEvent read FOnMergeCells write FOnMergeCells;
   end;
 
   { TRxDBGridAbstractTools }
@@ -1123,9 +1135,9 @@ procedure RegisterRxDBGridSortEngine(RxDBGridSortEngineClass: TRxDBGridSortEngin
 
 implementation
 
-uses Math, rxdconst, rxstrutils, strutils, rxdbgrid_findunit, rxdbgrid_columsunit,
-  RxDBGrid_PopUpFilterUnit,
-  rxlookup, rxtooledit, LCLProc, Clipbrd, rxfilterby, rxsortby, variants, LazUTF8;
+uses Math, rxdconst, rxstrutils, rxutils, strutils, rxdbgrid_findunit,
+  rxdbgrid_columsunit, RxDBGrid_PopUpFilterUnit, rxlookup, rxtooledit, LCLProc,
+  Clipbrd, rxfilterby, rxsortby, variants, LazUTF8;
 
 {$R rxdbgrid.res}
 
@@ -3191,7 +3203,7 @@ end;
 
 procedure TRxDBGrid.AdjustEditorBounds(NewCol, NewRow: Integer);
 begin
-  inherited AdjustEditorBounds(NewCol, NewRow);
+//  inherited AdjustEditorBounds(NewCol, NewRow);
   if EditorMode then
   begin
     DoSetColEdtBtn;
@@ -4304,7 +4316,8 @@ var
   S: string;
   F: TField;
   C: TRxColumn;
-  j, DataCol: integer;
+  j, DataCol, L, R: integer;
+  TS, TS1: TTextStyle;
 begin
   if Assigned(OnDrawColumnCell) and not (CsDesigning in ComponentState) then
   begin
@@ -4313,6 +4326,16 @@ begin
   end
   else
   begin
+    TS:=Canvas.TextStyle;
+    if rdgColSpanning in OptionsRx then
+      if IsMerged(aCol, L, R) then
+      begin
+        aCol:=L;
+        TS1:=Canvas.TextStyle;
+        TS1.Clipping:=false;
+        Canvas.TextStyle:=TS1;
+      end;
+
     F := GetFieldFromGridColumn(aCol);
     C := ColumnFromGridColumn(aCol) as TRxColumn;
     if Assigned(C) and Assigned(C.FOnDrawColumnCell) then
@@ -4339,12 +4362,16 @@ begin
           end
           else
             S := '';
+
+          S:='11';
+
           if (rdgWordWrap in FOptionsRx) and Assigned(C) and (C.WordWrap) then
             WriteTextHeader(Canvas, aRect, S, C.Alignment)
           else
             DrawCellText(aCol, aRow, aRect, aState, S);
       end;
     end;
+    Canvas.TextStyle:=TS;
   end;
 end;
 
@@ -4363,6 +4390,10 @@ begin
   if not ((gdFixed in aState) or ((aCol = 0) and (dgIndicator in Options)) or
     ((aRow = 0) and (dgTitles in Options))) then
   begin
+
+    if rdgColSpanning in OptionsRx then
+      CalcCellExtent(acol, arow, aRect);
+
     PrepareCanvas(aCol, aRow, aState);
 
     if FGroupItems.Active and  Assigned(FGroupItemDrawCur) then
@@ -6190,6 +6221,16 @@ begin
       end;
     end;
   end;    }
+
+  if rdgColSpanning in OptionsRx then
+  begin
+    if IsMerged(Col) then
+    begin
+      CalcCellExtent(Col, Row, R);
+      Editor.SetBounds(R.Left, R.Top, R.Right-R.Left-1, R.Bottom-R.Top-1);
+    end;
+  end;
+
   DoSetColEdtBtn;
 end;
 
@@ -6204,6 +6245,59 @@ begin
     AGCache.ClientRect.Bottom:=AGCache.ClientRect.Bottom - DefaultRowHeight * FFooterOptions.RowCount;
   end;
 
+end;
+
+procedure TRxDBGrid.CalcCellExtent(ACol, ARow: Integer; var ARect: TRect);
+var
+  L, T, R, B: Integer;
+begin
+  if IsMerged(ACol, {ARow, }L{, T}, R{, B}) then
+  begin
+    ARect.TopLeft := CellRect(L, ARow).TopLeft;
+    ARect.BottomRight := CellRect(R, ARow).BottomRight;
+{    ARect.Left := CellRect(L, ARow).Left;
+    ARect.Right := CellRect(R, ARow).Right;}
+  end;
+end;
+
+function TRxDBGrid.IsMerged(ACol{, ARow}: Integer): Boolean;
+var
+  L, T, R, B: Integer;
+begin
+  Result := IsMerged(ACol, {ARow,} L, {T,} R{, B});
+end;
+
+function TRxDBGrid.IsMerged(ACol{, ARow}: Integer; out ALeft{, ATop}, ARight{,
+  ABottom}: Integer): Boolean;
+var
+  FColumn: TRxColumn;
+begin
+  Result := false;
+  if not (rdgColSpanning in OptionsRx) then exit;
+  if not Assigned(FOnMergeCells) then exit;
+  inc(FMergeLock);
+
+  ALeft := ACol;
+  ARight := ACol;
+
+  FColumn:=TRxColumn(ColumnFromGridColumn(ACol));
+
+  FOnMergeCells(Self, ACol, {ARow,} FColumn, ALeft, {ATop, }ARight{, ABottom});
+  if ALeft > ARight then
+    SwapValues(ALeft, ARight);
+
+  Result := (ALeft <> ARight) {or (ATop <> ABottom)};
+  dec(FMergeLock);
+end;
+
+procedure TRxDBGrid.PrepareCanvas(aCol, aRow: Integer; AState: TGridDrawState);
+var
+  L, R, RR: Integer;
+begin
+  if (rdgColSpanning in OptionsRx) then
+    if ((Row - FixedRows) = Datalink.ActiveRecord) and IsMerged(ACol, L, R) and (aCol >= L) and (aCol <= R) then
+      AState := AState + [gdSelected, gdFocused];
+  inherited PrepareCanvas(aCol, aRow, AState);
 end;
 
 procedure TRxDBGrid.GetOnCreateLookup;
