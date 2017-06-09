@@ -4363,7 +4363,7 @@ begin
           else
             S := '';
 
-          S:='11';
+//          S:='11';
 
           if (rdgWordWrap in FOptionsRx) and Assigned(C) and (C.WordWrap) then
             WriteTextHeader(Canvas, aRect, S, C.Alignment)
