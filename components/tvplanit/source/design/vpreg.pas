@@ -181,6 +181,7 @@ uses
  {$IFDEF LCL}
   VpIniDS,                    { IniFile datastore                            }
   VpXmlDS,                    { XML file datastore                           }
+  VpJSONDS,                   { JSON file datastore                          }
   VpBufDS,                    { Datastore for TBufDataset                    }
   VpFBDS,                     { Datastore for Firebird database              }
   VpSqlite3DS,                { Datastore for sqlite3                        }
@@ -678,6 +679,7 @@ begin
    {$IFDEF LCL}
     TVpIniDatastore,
     TVpXmlDatastore,
+    TVpJSONDatastore,
     TVpBufDSDatastore,
     TVpSqlite3Datastore,
     TVpFirebirdDatastore

@@ -10,6 +10,9 @@ palette/tvpflexdatastore_200.png
 palette/tvpinidatastore.png
 palette/tvpinidatastore_150.png
 palette/tvpinidatastore_200.png
+palette/tvpjsondatastore.png
+palette/tvpjsondatastore_150.png
+palette/tvpjsondatastore_200.png
 palette/tvpsqlite3datastore.png
 palette/tvpsqlite3datastore_150.png
 palette/tvpsqlite3datastore_200.png

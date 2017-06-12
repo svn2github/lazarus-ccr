@@ -122,3 +122,4 @@
 
 { This defines whether the new icons will be linked into the package. }
 {$DEFINE NEW_ICONS}
+

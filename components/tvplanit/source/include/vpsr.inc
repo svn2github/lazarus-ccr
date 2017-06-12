@@ -63,6 +63,7 @@ resourcestring
   RSInvalidTableSpecified   = 'Error: Invalid table specified.';
   RSUnableToOpen            = 'Error: Unable to open ';
   RSSQLUpdateError          = 'Error: Unable to update ';                {!!.01}
+  RSNoFilenameSpecified     = 'Error: No datastore filename specified.';
 
   RSPhoneTypeLabel1         = 'Assistant';
   RSPhoneTypeLabel2         = 'Callback';

@@ -715,6 +715,10 @@ msgstr ""
 msgid "Day increment unit not specified."
 msgstr ""
 
+#: vpsr.rsnofilenamespecified
+msgid "Error: No datastore filename specified."
+msgstr ""
+
 #: vpsr.rsnolocalizationfile
 msgid "Localization file not found."
 msgstr ""

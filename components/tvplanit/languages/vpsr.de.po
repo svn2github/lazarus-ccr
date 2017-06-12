@@ -715,6 +715,10 @@ msgstr "Komponente muss mit einem TVpControlLink verbunden sein."
 msgid "Day increment unit not specified."
 msgstr "Intervall nicht angegeben."
 
+#: vpsr.rsnofilenamespecified
+msgid "Error: No datastore filename specified."
+msgstr "Fehler: Datastore-Dateiname nicht angegeben."
+
 #: vpsr.rsnolocalizationfile
 msgid "Localization file not found."
 msgstr "Sprachdatei nicht gefunden."
