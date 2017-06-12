@@ -842,7 +842,7 @@ begin
   clBtnPrevYear := TSpeedButton.Create(Self);
   clBtnPrevYear.Parent := Self;
   {$IFDEF NEW_ICONS}
-  LoadGlyphFromRCData(clBtnNextYear.Glyph, 'VpLArrows', 16, 24, 32);
+  LoadGlyphFromRCData(clBtnPrevYear.Glyph, 'VpLArrows', 16, 24, 32);
   {$ELSE}
   clBtnPrevYear.Glyph.LoadFromResourceName(HINSTANCE,'VPLEFTARROWS'); //soner geöndert: clBtnPrevYear.Glyph.Handle := LoadBaseBitmap('VPLEFTARROWS');
   {$ENDIF}

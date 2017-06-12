@@ -997,21 +997,6 @@ begin
     resName := ABaseResName + IntToStr(ALowRes);
 
   LoadGlyphFromRCDATA(AGlyph, resName);
-  {
-  stream := TResourceStream.Create(HINSTANCE, resName, RT_RCDATA);
-  try
-    pic := TPicture.Create;
-    try
-      pic.LoadFromStream(stream);
-      AGlyph.Canvas.Draw(0, 0, pic.Bitmap);
-//      AGlyph.Assign(pic.Bitmap);
-    finally
-      pic.Free;
-    end;
-  finally
-    stream.Free;
-  end;
-  }
 end;
 
 procedure LoadImageFromRCDATA(AImage: TImage; ABaseResName: String;
