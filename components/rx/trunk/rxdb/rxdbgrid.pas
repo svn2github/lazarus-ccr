@@ -5214,6 +5214,7 @@ var
   j, L, R: integer;
   S: string;
 begin
+  C:=nil;
   if (rdgColSpanning in OptionsRx) then
     if IsMerged(aCol, L, R, C) then
       aCol:=L;
