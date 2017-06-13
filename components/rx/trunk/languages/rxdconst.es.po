@@ -179,7 +179,9 @@ msgid "Error symbol in expression: '%s'"
 msgstr "Error simbolo en expresión: '%s'"
 
 #: rxdconst.sexprnameerror
-msgid "Error in filed name"  
+#, fuzzy
+#| msgid "Error in filed name\" "
+msgid "Error in filed name"
 msgstr "Error en nombre del fichero"
 
 #: rxdconst.sexprnorparen

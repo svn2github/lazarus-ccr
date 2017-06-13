@@ -18,6 +18,7 @@ object Form1: TForm1
     AutoSort = True
     Columns = <    
       item
+        Alignment = taCenter
         Title.Alignment = taCenter
         Title.Orientation = toHorizontal
         Title.Caption = 'CODE'
@@ -30,6 +31,8 @@ object Form1: TForm1
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Footers = <>
+        WordWrap = True
+        OnDrawColumnCell = RxDBGrid1Columns0DrawColumnCell
       end    
       item
         Title.Alignment = taCenter
@@ -128,6 +131,7 @@ object Form1: TForm1
     DataSource = dsData
     Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
     TabOrder = 0
+    OnMergeCells = RxDBGrid1MergeCells
   end
   object Panel1: TPanel
     Left = 0
@@ -135,7 +139,6 @@ object Form1: TForm1
     Top = 0
     Width = 770
     Align = alTop
-    Caption = 'Panel1'
     ClientHeight = 50
     ClientWidth = 770
     TabOrder = 1
@@ -150,20 +153,6 @@ object Form1: TForm1
       Caption = 'Col spanning'
       OnChange = CheckBox1Change
       TabOrder = 0
-    end
-    object Label1: TLabel
-      AnchorSideTop.Control = Panel1
-      AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = Panel1
-      AnchorSideRight.Side = asrBottom
-      Left = 721
-      Height = 20
-      Top = 15
-      Width = 42
-      Anchors = [akTop, akRight]
-      BorderSpacing.Right = 6
-      Caption = 'Label1'
-      ParentColor = False
     end
   end
   object rxData: TRxMemoryData
@@ -181,7 +170,6 @@ object Form1: TForm1
         DataType = ftString
         Size = 150
       end>
-    AfterScroll = rxDataAfterScroll
     PacketRecords = 0
     Left = 293
     Top = 165

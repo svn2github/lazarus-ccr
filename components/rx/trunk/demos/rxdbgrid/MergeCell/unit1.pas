@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, rxdbgrid, rxmemds, Forms, Controls, Graphics,
-  Dialogs, ExtCtrls, StdCtrls, db;
+  Dialogs, ExtCtrls, StdCtrls, db, Grids, DBGrids;
 
 type
 
@@ -15,7 +15,6 @@ type
   TForm1 = class(TForm)
     CheckBox1: TCheckBox;
     dsData: TDataSource;
-    Label1: TLabel;
     Panel1: TPanel;
     rxDataCODE: TLongintField;
     rxDataDATE: TDateTimeField;
@@ -24,10 +23,13 @@ type
     rxData: TRxMemoryData;
     procedure CheckBox1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure rxDataAfterScroll(DataSet: TDataSet);
+    procedure RxDBGrid1Columns0DrawColumnCell(Sender: TObject;
+      const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
+    procedure RxDBGrid1MergeCells(Sender: TObject; ACol: Integer; var ALeft,
+      ARight: Integer; var ADisplayColumn: TRxColumn);
   private
-    procedure RxDBGridMergeCellsEvent(Sender: TObject; ACol: Integer; Column: TRxColumn;
-      var ALeft, ARight: Integer);
+
   public
 
   end;
@@ -36,14 +38,10 @@ var
   Form1: TForm1;
 
 implementation
-uses Grids;
 
 {$R *.lfm}
 
 { TForm1 }
-
-type
-  THackDataGrid = class(TRxDBGrid);
 
 procedure TForm1.FormCreate(Sender: TObject);
 var
@@ -55,13 +53,32 @@ begin
     rxData.AppendRecord([i, Date - i, 'Line '+IntToStr(i)]);
   rxData.First;
   rxData.EnableControls;
-
-  RxDBGrid1.OnMergeCells:=@RxDBGridMergeCellsEvent;
 end;
 
-procedure TForm1.rxDataAfterScroll(DataSet: TDataSet);
+procedure TForm1.RxDBGrid1Columns0DrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
+var
+  S: String;
+  FAl: TAlignment;
 begin
-  Label1.Caption:=Format('Datalink.ActiveRecord=%d, Row = %d', [THackDataGrid(RxDBGrid1).Datalink.ActiveRecord, TDrawGrid(RxDBGrid1).Row]);
+  S:=rxDataCODE.DisplayText;
+  if CheckBox1.Checked and (rxDataCODE.AsInteger mod 10 = 1) then
+    FAl:=taCenter
+  else
+    FAl:=taRightJustify;
+  WriteTextHeader(RxDBGrid1.Canvas, Rect, S, FAl)
+end;
+
+procedure TForm1.RxDBGrid1MergeCells(Sender: TObject; ACol: Integer; var ALeft,
+  ARight: Integer; var ADisplayColumn: TRxColumn);
+begin
+  if rxDataCODE.AsInteger mod 10 = 1 then
+  begin
+    ALeft:=1;
+    ARight:=3;
+{     if rxDataCODE.AsInteger > 10 then
+      AColumn:=RxDBGrid1.ColumnByFieldName('DATE');}
+  end;
 end;
 
 procedure TForm1.CheckBox1Change(Sender: TObject);
@@ -70,16 +87,6 @@ begin
     RxDBGrid1.OptionsRx:=RxDBGrid1.OptionsRx + [rdgColSpanning]
   else
     RxDBGrid1.OptionsRx:=RxDBGrid1.OptionsRx - [rdgColSpanning];
-end;
-
-procedure TForm1.RxDBGridMergeCellsEvent(Sender: TObject; ACol: Integer;
-  Column: TRxColumn; var ALeft, ARight: Integer);
-begin
-   if rxDataCODE.AsInteger mod 10 = 1 then
-   begin
-     ALeft:=1;
-     ARight:=3;
-   end;
 end;
 
 end.

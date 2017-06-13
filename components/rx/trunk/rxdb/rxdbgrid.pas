@@ -74,8 +74,8 @@ type
       var Processed: boolean) of object;
 
   TRxDBGridCalcRowHeight = procedure(Sender: TRxDBGrid;  var ARowHegth:integer) of object;
-  TRxDBGridMergeCellsEvent = procedure (Sender: TObject; ACol{, ARow}: Integer; Column: TRxColumn;
-    var ALeft, {ATop,} ARight{, ABottom}: Integer) of object;
+  TRxDBGridMergeCellsEvent = procedure (Sender: TObject; ACol : Integer;
+    var ALeft, ARight : Integer; var ADisplayColumn: TRxColumn) of object;
 
   //Freeman35 added
   TOnRxCalcFooterValues = procedure(Sender: TObject; Column: TRxColumn; var AValue : Variant) of object;
@@ -918,8 +918,8 @@ type
     procedure CheckNewCachedSizes(var AGCache:TGridDataCache); override;
 
     procedure CalcCellExtent(ACol, ARow: Integer; var ARect: TRect);
-    function IsMerged(ACol{, ARow}: Integer): Boolean; overload;
-    function IsMerged(ACol{, ARow}: Integer; out ALeft, {ATop, }ARight{, ABottom}: Integer): Boolean; overload;
+    function IsMerged(ACol : Integer): Boolean; overload;
+    function IsMerged(ACol : Integer; out ALeft, ARight: Integer; out AColumn: TRxColumn): Boolean; overload;
 
     function  GetEditMask(aCol, aRow: Longint): string; override;
     function  GetEditText(aCol, aRow: Longint): string; override;
@@ -1137,6 +1137,8 @@ type
 
 procedure RegisterRxDBGridSortEngine(RxDBGridSortEngineClass: TRxDBGridSortEngineClass;
   DataSetClassName: string);
+
+procedure WriteTextHeader(ACanvas: TCanvas; ARect: TRect; const Text: string; Alignment: TAlignment);
 
 implementation
 
@@ -2940,13 +2942,36 @@ const
     DT_RIGHT or {DT_EXPANDTABS or }DT_NOPREFIX,
     DT_CENTER or {DT_EXPANDTABS or }DT_NOPREFIX);
 
-procedure WriteTextHeader(ACanvas: TCanvas; ARect: TRect; const Text: string;
-  Alignment: TAlignment);
+procedure WriteTextHeader(ACanvas: TCanvas; ARect: TRect; const Text: string; Alignment: TAlignment);
 var
   DrawRect: TRect;
   W, CnvW: integer;
 begin
-  DrawRect := Rect(ARect.Left + 1, ARect.Top + 1, ARect.Right, ARect.Bottom);
+(*
+dec(ARect.Right, constCellPadding);
+case Canvas.TextStyle.Alignment of
+  Classes.taLeftJustify: Inc(ARect.Left, constCellPadding);
+  Classes.taRightJustify: Dec(ARect.Right, 1);
+end;
+case Canvas.TextStyle.Layout of
+  tlTop: Inc(ARect.Top, constCellPadding);
+  tlBottom: Dec(ARect.Bottom, constCellPadding);
+end;
+
+if ARect.Right<ARect.Left then
+  ARect.Right:=ARect.Left;
+if ARect.Left>ARect.Right then
+  ARect.Left:=ARect.Right;
+if ARect.Bottom<ARect.Top then
+  ARect.Bottom:=ARect.Top;
+if ARect.Top>ARect.Bottom then
+  ARect.Top:=ARect.Bottom;
+
+if (ARect.Left<>ARect.Right) and (ARect.Top<>ARect.Bottom) then
+*)
+
+
+  DrawRect := Rect(ARect.Left + constCellPadding, ARect.Top + constCellPadding, ARect.Right - constCellPadding, ARect.Bottom - constCellPadding);
 
   CnvW := Max(DrawRect.Right - DrawRect.Left, 1);
   W := (ACanvas.TextWidth(Text) div CnvW) + 1;
@@ -4322,27 +4347,36 @@ var
   F: TField;
   C: TRxColumn;
   j, DataCol, L, R: integer;
-  TS, TS1: TTextStyle;
+  FIsMerged: Boolean;
 begin
+  FIsMerged:=false;
+
+  C:=nil;
+  F:=nil;
+
+  if rdgColSpanning in OptionsRx then
+    if IsMerged(aCol, L, R, C) then
+    begin
+      aCol:=L;
+      FIsMerged:=true;
+    end;
+
   if Assigned(OnDrawColumnCell) and not (CsDesigning in ComponentState) then
   begin
     DataCol := ColumnIndexFromGridColumn(aCol);
-    OnDrawColumnCell(Self, aRect, DataCol, TColumn(ColumnFromGridColumn(aCol)), aState)
+    if not Assigned(C) then
+      C:=TRxColumn(ColumnFromGridColumn(aCol));
+    OnDrawColumnCell(Self, aRect, DataCol, C, aState)
   end
   else
   begin
-    TS:=Canvas.TextStyle;
-    if rdgColSpanning in OptionsRx then
-      if IsMerged(aCol, L, R) then
-      begin
-        aCol:=L;
-        TS1:=Canvas.TextStyle;
-        TS1.Clipping:=false;
-        Canvas.TextStyle:=TS1;
-      end;
 
-    F := GetFieldFromGridColumn(aCol);
-    C := ColumnFromGridColumn(aCol) as TRxColumn;
+
+    if not Assigned(C) then
+      C := ColumnFromGridColumn(aCol) as TRxColumn;
+    if Assigned(C) then
+      F:=C.Field;
+
     if Assigned(C) and Assigned(C.FOnDrawColumnCell) then
       C.OnDrawColumnCell(Self, aRect, aCol, TColumn(ColumnFromGridColumn(aCol)), aState)
     else
@@ -4368,15 +4402,12 @@ begin
           else
             S := '';
 
-//          S:='11';
-
-          if (rdgWordWrap in FOptionsRx) and Assigned(C) and (C.WordWrap) then
+          if ((rdgWordWrap in FOptionsRx) and Assigned(C) and (C.WordWrap)) or (FIsMerged) then
             WriteTextHeader(Canvas, aRect, S, C.Alignment)
           else
             DrawCellText(aCol, aRow, aRect, aState, S);
       end;
     end;
-    Canvas.TextStyle:=TS;
   end;
 end;
 
@@ -4558,6 +4589,9 @@ end;
 
 procedure TRxDBGrid.DrawFocusRect(aCol, aRow: Integer; ARect: TRect);
 begin
+    CalcCellExtent(acol, arow, aRect);
+    CalcCellExtent(ACol, ARow, ARect);
+
   if FGroupItems.Active and Assigned(FGroupItemDrawCur) then
     ARect.Bottom:=ARect.Bottom - DefaultRowHeight;
   inherited DrawFocusRect(aCol, aRow, ARect);
@@ -5181,10 +5215,12 @@ var
   S: string;
 begin
   if (rdgColSpanning in OptionsRx) then
-    if IsMerged(aCol, L, R) then
+    if IsMerged(aCol, L, R, C) then
       aCol:=L;
 
-  C := ColumnFromGridColumn(aCol) as TRxColumn;
+  if not Assigned(C) then
+    C := ColumnFromGridColumn(aCol) as TRxColumn;
+
   S := Value;
   if Assigned(C) and (C.KeyList.Count > 0) and (C.PickList.Count > 0) then
   begin
@@ -6259,83 +6295,100 @@ end;
 procedure TRxDBGrid.CalcCellExtent(ACol, ARow: Integer; var ARect: TRect);
 var
   L, T, R, B: Integer;
+  C: TRxColumn;
 begin
-  if IsMerged(ACol, {ARow, }L{, T}, R{, B}) then
+  if IsMerged(ACol, L, R, C) then
   begin
     ARect.TopLeft := CellRect(L, ARow).TopLeft;
     ARect.BottomRight := CellRect(R, ARow).BottomRight;
-{    ARect.Left := CellRect(L, ARow).Left;
-    ARect.Right := CellRect(R, ARow).Right;}
   end;
 end;
 
-function TRxDBGrid.IsMerged(ACol{, ARow}: Integer): Boolean;
+function TRxDBGrid.IsMerged(ACol: Integer): Boolean;
 var
-  L, T, R, B: Integer;
+  L, R: Integer;
+  C: TRxColumn;
 begin
-  Result := IsMerged(ACol, {ARow,} L, {T,} R{, B});
+  Result := IsMerged(ACol, L, R, C);
 end;
 
-function TRxDBGrid.IsMerged(ACol{, ARow}: Integer; out ALeft{, ATop}, ARight{,
-  ABottom}: Integer): Boolean;
-var
-  FColumn: TRxColumn;
+function TRxDBGrid.IsMerged(ACol: Integer; out ALeft, ARight: Integer; out
+  AColumn: TRxColumn): Boolean;
 begin
   Result := false;
-  if not (rdgColSpanning in OptionsRx) then exit;
-  if not Assigned(FOnMergeCells) then exit;
-  inc(FMergeLock);
-
+  AColumn:=nil;
   ALeft := ACol;
   ARight := ACol;
 
-  FColumn:=TRxColumn(ColumnFromGridColumn(ACol));
-
-  FOnMergeCells(Self, ACol, {ARow,} FColumn, ALeft, {ATop, }ARight{, ABottom});
-  if ALeft > ARight then
-    SwapValues(ALeft, ARight);
-
-  Result := (ALeft <> ARight) {or (ATop <> ABottom)};
-  dec(FMergeLock);
+  if (rdgColSpanning in OptionsRx) and Assigned(FOnMergeCells) then
+  begin
+    inc(FMergeLock);
+    FOnMergeCells(Self, ACol, ALeft, ARight, AColumn);
+    if ALeft > ARight then
+      SwapValues(ALeft, ARight);
+    Result := (ALeft <> ARight);
+    dec(FMergeLock);
+  end;
 end;
 
 function TRxDBGrid.GetEditMask(aCol, aRow: Longint): string;
 var
   L, R: Integer;
+  C: TRxColumn;
 begin
   if (rdgColSpanning in OptionsRx) then
-    if IsMerged(aCol, L, R) then
-      aCol:=L;
+    if IsMerged(aCol, L, R, C) then
+    begin
+      if Assigned(C) then
+        aCol:=C.Index
+      else
+        aCol:=L;
+    end;
   Result:=inherited GetEditMask(aCol, aRow);
 end;
 
 function TRxDBGrid.GetEditText(aCol, aRow: Longint): string;
 var
   R, L: Integer;
+  C: TRxColumn;
 begin
   if (rdgColSpanning in OptionsRx) then
-    if IsMerged(aCol, L, R) then
-      aCol:=L;
+    if IsMerged(aCol, L, R, C) then
+    begin
+      if Assigned(C) then
+        aCol:=C.Index
+      else
+        aCol:=L;
+    end;
   Result:=inherited GetEditText(aCol, aRow);
 end;
 
 function TRxDBGrid.GetDefaultEditor(Column: Integer): TWinControl;
 var
   L, R: Integer;
+  C: TRxColumn;
 begin
   if (rdgColSpanning in OptionsRx) then
-    if IsMerged(Column, L, R) then
-      Column:=L;
+    if IsMerged(Column, L, R, C) then
+    begin
+      if Assigned(C) then
+        Column:=C.Index
+      else
+        Column:=L;
+    end;
   Result:=inherited GetDefaultEditor(Column);
 end;
 
 procedure TRxDBGrid.PrepareCanvas(aCol, aRow: Integer; AState: TGridDrawState);
 var
   L, R, RR: Integer;
+  C: TRxColumn;
 begin
   if (rdgColSpanning in OptionsRx) then
-    if ((Row - FixedRows) = Datalink.ActiveRecord) and IsMerged(ACol, L, R) and (aCol >= L) and (aCol <= R) then
-      AState := AState + [gdSelected, gdFocused];
+    if not ((gdFixed in aState) and (aRow = 0)) then
+      if ((Row - FixedRows) = Datalink.ActiveRecord) and IsMerged(ACol, L, R, C) then
+        if (aCol >= L) and (aCol <= R) then
+          AState := AState + [gdSelected, gdFocused];
   inherited PrepareCanvas(aCol, aRow, AState);
 end;
 
