@@ -314,6 +314,10 @@ msgstr "Неможливо провести цю операцію з локал�
 msgid "No data found"
 msgstr "Даних не знайдено"
 
+#: rxdconst.smergecells
+msgid "Merge cell's"
+msgstr ""
+
 #: rxdconst.smore1
 msgid "&More >>"
 msgstr "&Більше >>"

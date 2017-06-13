@@ -187,6 +187,7 @@ resourcestring
   sExportImages              = 'Export images';
   sExportSelectedRows        = 'Export only selected rows';
   sExportHideZeroValues      = 'Hide zero values';
+  sMergeCells                = 'Merge cell''s';
   sOverwriteExisting         = 'Overwrite existing';
   sShowColumnHeaderOnAllPage = 'Show column header on all pages';
   sPageMargins               = 'Page margins';

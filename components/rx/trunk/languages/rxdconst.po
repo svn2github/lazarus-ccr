@@ -301,6 +301,10 @@ msgstr ""
 msgid "No data found"
 msgstr ""
 
+#: rxdconst.smergecells
+msgid "Merge cell's"
+msgstr ""
+
 #: rxdconst.smore1
 msgid "&More >>"
 msgstr ""

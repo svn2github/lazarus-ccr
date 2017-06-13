@@ -917,10 +917,6 @@ type
     procedure DoEditorShow; override;
     procedure CheckNewCachedSizes(var AGCache:TGridDataCache); override;
 
-    procedure CalcCellExtent(ACol, ARow: Integer; var ARect: TRect);
-    function IsMerged(ACol : Integer): Boolean; overload;
-    function IsMerged(ACol : Integer; out ALeft, ARight: Integer; out AColumn: TRxColumn): Boolean; overload;
-
     function  GetEditMask(aCol, aRow: Longint): string; override;
     function  GetEditText(aCol, aRow: Longint): string; override;
     function  GetDefaultEditor(Column: Integer): TWinControl; override;
@@ -955,6 +951,10 @@ type
     procedure CopyCellValue;
     function CreateToolMenuItem(ShortCut: char; const ACaption: string; MenuAction: TNotifyEvent):TMenuItem;
     procedure RemoveToolMenuItem(MenuAction: TNotifyEvent);
+
+    procedure CalcCellExtent(ACol, ARow: Integer; var ARect: TRect);
+    function IsMerged(ACol : Integer): Boolean; overload;
+    function IsMerged(ACol : Integer; out ALeft, ARight: Integer; out AColumn: TRxColumn): Boolean; overload;
 
     procedure SetSort(AFields: array of String; ASortMarkers: array of TSortMarker; PreformSort: Boolean = False);
 

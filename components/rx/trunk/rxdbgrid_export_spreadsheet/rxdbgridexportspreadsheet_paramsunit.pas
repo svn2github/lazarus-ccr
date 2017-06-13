@@ -48,6 +48,7 @@ type
     cbExportSelectedRows: TCheckBox;
     cbExportFormula: TCheckBox;
     cbExportColumnFooter: TCheckBox;
+    cbMergeCells: TCheckBox;
     cbOpenAfterExport: TCheckBox;
     cbExportColumnHeader: TCheckBox;
     cbExportCellColors: TCheckBox;
@@ -85,6 +86,7 @@ begin
   cbExportFormula.Caption:=sExportFormula;
   cbExportSelectedRows.Caption:=sExportSelectedRows;
   cbHideZeroValues.Caption:=sExportHideZeroValues;
+  cbMergeCells.Caption:=sMergeCells;
 end;
 
 end.

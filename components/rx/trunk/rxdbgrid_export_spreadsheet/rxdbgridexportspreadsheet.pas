@@ -45,7 +45,8 @@ type
     ressExportFormula,
     ressOverwriteExisting,
     ressExportSelectedRows,
-    ressHideZeroValues
+    ressHideZeroValues,
+    ressColSpanning
     );
 
   TRxDBGridExportSpreadSheetOptions = set of TRxDBGridExportSpreadSheetOption;
@@ -126,16 +127,27 @@ end;
 
 procedure TRxDBGridExportSpreadSheet.ExpCurRow(AFont:TFont);
 var
-  i, J: Integer;
+  i, J, L, R: Integer;
   C: TRxColumn;
   CT: TRxColumnTitle;
   S: String;
   CC: TColor;
 begin
   FCurCol:=0;
-  for i:=0 to FRxDBGrid.Columns.Count - 1 do
+
+  i:=0;
+
+  while i<FRxDBGrid.Columns.Count do
   begin
-    C:=FRxDBGrid.Columns[i] as TRxColumn;
+    C:=nil;
+    R:=-1;
+    if (rdgColSpanning in FRxDBGrid.OptionsRx) and (ressColSpanning in Options) then
+      if FRxDBGrid.IsMerged(I + 1, L, R, C) then
+        FWorksheet.MergeCells(FCurRow, FCurCol, FCurRow, R-1);
+
+    if not Assigned(C) then
+      C:=FRxDBGrid.Columns[i] as TRxColumn;
+
     CT:=C.Title as TRxColumnTitle;
     if C.Visible then
     begin
@@ -199,6 +211,14 @@ begin
       FWorksheet.WriteHorAlignment(FCurRow, FCurCol, ssAligns[C.Alignment]);
       inc(FCurCol);
     end;
+
+    if R > -1 then
+    begin
+      i:=R-1;
+      FCurCol:=R;
+    end;
+
+    Inc(i);
   end;
 end;
 
@@ -543,6 +563,7 @@ begin
   F.cbExportSelectedRows.Checked:=ressExportSelectedRows in FOptions;
   F.cbExportSelectedRows.Enabled:=(dgMultiselect in RxDBGrid.Options) and (RxDBGrid.SelectedRows.Count > 0);
   F.cbHideZeroValues.Checked:=ressHideZeroValues in FOptions;
+  F.cbMergeCells.Checked:=ressColSpanning in FOptions;
 
 
   F.edtPageName.Text:=FPageName;
@@ -569,6 +590,9 @@ begin
       FOptions :=FOptions + [ressExportSelectedRows];
     if F.cbHideZeroValues.Checked then
       FOptions:=FOptions + [ressHideZeroValues];
+
+    if F.cbMergeCells.Checked then
+      FOptions:=FOptions + [ressColSpanning];
   end;
   F.Free;
 end;

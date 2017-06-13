@@ -5,14 +5,15 @@ unit Unit1;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, rxdbgrid, rxmemds, Forms, Controls, Graphics,
-  Dialogs, ExtCtrls, StdCtrls, db, Grids, DBGrids;
+  Classes, SysUtils, FileUtil, rxdbgrid, rxmemds, RxDBGridExportSpreadSheet,
+  Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, db, Grids, DBGrids;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
+    Button1: TButton;
     CheckBox1: TCheckBox;
     dsData: TDataSource;
     Panel1: TPanel;
@@ -21,6 +22,8 @@ type
     rxDataNAME: TStringField;
     RxDBGrid1: TRxDBGrid;
     rxData: TRxMemoryData;
+    RxDBGridExportSpreadSheet1: TRxDBGridExportSpreadSheet;
+    procedure Button1Click(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure RxDBGrid1Columns0DrawColumnCell(Sender: TObject;
@@ -87,6 +90,11 @@ begin
     RxDBGrid1.OptionsRx:=RxDBGrid1.OptionsRx + [rdgColSpanning]
   else
     RxDBGrid1.OptionsRx:=RxDBGrid1.OptionsRx - [rdgColSpanning];
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  RxDBGridExportSpreadSheet1.Execute;
 end;
 
 end.

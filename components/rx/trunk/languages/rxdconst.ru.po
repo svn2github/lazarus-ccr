@@ -312,6 +312,10 @@ msgstr "Невозможно произвести эту операцию с л�
 msgid "No data found"
 msgstr "Данных не найдено"
 
+#: rxdconst.smergecells
+msgid "Merge cell's"
+msgstr "Объединять ячейки"
+
 #: rxdconst.smore1
 msgid "&More >>"
 msgstr "&Больше >>"

@@ -317,6 +317,10 @@ msgstr "No se puede completar esta operación en el conjunto de datos local"
 msgid "No data found"
 msgstr "No hay datos"
 
+#: rxdconst.smergecells
+msgid "Merge cell's"
+msgstr ""
+
 #: rxdconst.smore1
 msgid "&More >>"
 msgstr "&Mas >>"
