@@ -10,8 +10,8 @@ object Form1: TForm1
   LCLVersion = '1.9.0.0'
   object RxDBGrid1: TRxDBGrid
     Left = 0
-    Height = 566
-    Top = 54
+    Height = 570
+    Top = 50
     Width = 770
     ColumnDefValues.BlobText = '(данные)'
     TitleButtons = False
@@ -121,7 +121,7 @@ object Form1: TForm1
     FooterOptions.DrawFullLine = False
     SearchOptions.QuickSearchOptions = [loCaseInsensitive, loPartialKey]
     SearchOptions.FromStart = False
-    OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgAllowQuickFilter]
+    OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgAllowQuickFilter, rdgAllowToolMenu]
     Align = alClient
     Color = clWindow
     DrawFullLine = False
@@ -135,12 +135,12 @@ object Form1: TForm1
   end
   object Panel1: TPanel
     Left = 0
-    Height = 54
+    Height = 50
     Top = 0
     Width = 770
     Align = alTop
     AutoSize = True
-    ClientHeight = 54
+    ClientHeight = 50
     ClientWidth = 770
     TabOrder = 1
     object CheckBox1: TCheckBox
@@ -159,7 +159,7 @@ object Form1: TForm1
       AnchorSideTop.Control = Panel1
       AnchorSideRight.Control = Panel1
       AnchorSideRight.Side = asrBottom
-      Left = 690
+      Left = 694
       Height = 36
       Top = 7
       Width = 69
@@ -169,6 +169,20 @@ object Form1: TForm1
       Caption = 'Export...'
       OnClick = Button1Click
       TabOrder = 1
+    end
+    object Button2: TButton
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = Button1
+      Left = 643
+      Height = 36
+      Top = 7
+      Width = 45
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Caption = 'Print'
+      OnClick = Button2Click
+      TabOrder = 2
     end
   end
   object rxData: TRxMemoryData
@@ -234,5 +248,16 @@ object Form1: TForm1
     OpenAfterExport = True
     Left = 336
     Top = 165
+  end
+  object RxDBGridPrint1: TRxDBGridPrint
+    RxDBGrid = RxDBGrid1
+    Caption = 'Печать списка'
+    ShowSetupForm = True
+    Options = [rxpoShowTitle, rxpoShowFooter, rxpoShowGridColor, rxpoShowFooterColor, rxpoShowReportTitle, rxpoHideZeroValues]
+    ShowProgress = True
+    ReportTitle = 'A'
+    ShowColumnHeaderOnAllPage = True
+    Left = 336
+    Top = 208
   end
 end

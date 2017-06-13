@@ -84,6 +84,7 @@ begin
   CheckGroup1.Items[3]:=sShowGridColor;
   CheckGroup1.Items[4]:=sShowReportTitle;
   CheckGroup1.Items[5]:=sHideZeroValues;
+  CheckGroup1.Items[6]:=sMergeCells;
 
 
   GroupBox1.Caption:=sPageMargins;

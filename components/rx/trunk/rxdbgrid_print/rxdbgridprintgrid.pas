@@ -45,7 +45,8 @@ type
      rxpoShowGridColor,
      rxpoShowFooterColor,
      rxpoShowReportTitle,
-     rxpoHideZeroValues
+     rxpoHideZeroValues,
+     rxpoColSpanning
      );
   TRxDBGridPrintOptions = set of TRxDBGridPrintOption;
 
@@ -301,15 +302,25 @@ procedure TRxDBGridPrint.OnEnterRect(Memo: TStringList; View: TfrView);
 var
   i, k: Integer;
   F:TRxColInfo;
+  FDataField:TField;
+  FDataCollumn:TRxColumn;
   S: String;
   C:TColor;
-  J: Integer;
+  J, L, R: Integer;
 begin
   i := FColumnDataset.RecNo;
+  View.Visible:=true;
+  FDataField:=nil;
+  FDataCollumn:=nil;
 
   if (i >= 0) and (i < FRxColInfoList.Count) then
   begin
     F:=TRxColInfo(FRxColInfoList[i]);
+    if Assigned(F) then
+      FDataCollumn:=F.Col;
+    if Assigned(FDataCollumn) then
+      FDataField:=FDataCollumn.Field;
+
     View.dx := F.ColWidth;
 
     if Assigned(F.Col) and (Memo.Count>0) then
@@ -317,30 +328,72 @@ begin
       S:=Memo[0];
       if (S='[Cell]') and Assigned(F.Col.Field) then
       begin
+
+        if (rdgColSpanning in RxDBGrid.OptionsRx) and (rxpoColSpanning in Options) then
+        begin
+          if RxDBGrid.IsMerged(I + 1, L, R, FDataCollumn) then
+          begin
+            if I + 1 = L then
+            begin
+              if Assigned(FDataCollumn) then
+                FDataField:=FDataCollumn.Field
+              else
+              begin
+                if Assigned(F) then
+                  FDataCollumn:=F.Col;
+                if Assigned(FDataCollumn) then
+                  FDataField:=FDataCollumn.Field;
+              end;
+
+              for j:=L + 1 to R do
+                if FRxColInfoList.Count > j - 1 then
+                  View.dx := View.dx + TRxColInfo(FRxColInfoList[j - 1]).ColWidth;
+            end
+            else
+            begin
+              View.Visible:=false;
+              Memo[0] := '';
+              exit;
+            end;
+          end
+          else
+          begin
+            if Assigned(F) then
+              FDataCollumn:=F.Col;
+            if Assigned(FDataCollumn) then
+              FDataField:=FDataCollumn.Field;
+          end
+        end;
+
+        if not Assigned(FDataCollumn) then
+        begin
+          C:=0;
+        end;
+
         if rxpoShowGridColor in FOptions then
         begin
-          C:=F.Col.Color;
+          C:=FDataCollumn.Color;
           if Assigned(RxDBGrid.OnGetCellProps) then
-            RxDBGrid.OnGetCellProps(RxDBGrid, F.Col.Field, TfrMemoView(View).Font, C);
+            RxDBGrid.OnGetCellProps(RxDBGrid, FDataField, TfrMemoView(View).Font, C);
           if C = clWindow then
             C := clNone;
           TfrMemoView(View).FillColor:=C;
         end;
 
-        S:=F.Col.Field.DisplayText;
-        if Assigned(F.Col) and (F.Col.KeyList.Count > 0) and (F.Col.PickList.Count > 0) then
+        S:= FDataField.DisplayText; //F.Col.Field.DisplayText;
+        if Assigned(FDataCollumn) and (FDataCollumn.KeyList.Count > 0) and (FDataCollumn.PickList.Count > 0) then
         begin
-          J := F.Col.KeyList.IndexOf(S);
-          if (J >= 0) and (J < F.Col.PickList.Count) then
-            S := F.Col.PickList[j];
+          J := FDataCollumn.KeyList.IndexOf(S);
+          if (J >= 0) and (J < FDataCollumn.PickList.Count) then
+            S := FDataCollumn.PickList[j];
         end
         else
-        if (rxpoHideZeroValues in FOptions) and Assigned(F.Col.Field) and (F.Col.Field.DataType in [ftSmallint, ftInteger, ftWord,
-               ftFloat, ftCurrency, ftLargeint]) and (F.Col.Field.AsFloat = 0) then
+        if (rxpoHideZeroValues in FOptions) and Assigned(FDataField) and (FDataField.DataType in [ftSmallint, ftInteger, ftWord,
+               ftFloat, ftCurrency, ftLargeint]) and (FDataField.AsFloat = 0) then
           S:='';
 
         Memo[0] := S;
-        TfrMemoView(View).Alignment:=F.Col.Alignment;
+        TfrMemoView(View).Alignment:=FDataCollumn.Alignment;
       end                                            else
       if Copy(S, 1, 7) = 'Header_' then
       begin
@@ -446,6 +499,7 @@ begin
   RxDBGridPrintGrid_SetupForm.CheckGroup1.Checked[3]:=rxpoShowGridColor in FOptions;
   RxDBGridPrintGrid_SetupForm.CheckGroup1.Checked[4]:=rxpoShowReportTitle in FOptions;
   RxDBGridPrintGrid_SetupForm.CheckGroup1.Checked[5]:=rxpoHideZeroValues in FOptions;
+  RxDBGridPrintGrid_SetupForm.CheckGroup1.Checked[6]:=rxpoColSpanning in FOptions;
 
   Result:=RxDBGridPrintGrid_SetupForm.ShowModal = mrOk;
   if Result then
@@ -476,6 +530,9 @@ begin
 
     if RxDBGridPrintGrid_SetupForm.CheckGroup1.Checked[5] then
       FOptions:=FOptions + [rxpoHideZeroValues];
+
+    if RxDBGridPrintGrid_SetupForm.CheckGroup1.Checked[6] then
+      FOptions:=FOptions + [rxpoColSpanning];
 
     FShowColumnHeaderOnAllPage:=RxDBGridPrintGrid_SetupForm.CheckBox1.Checked;
   end;

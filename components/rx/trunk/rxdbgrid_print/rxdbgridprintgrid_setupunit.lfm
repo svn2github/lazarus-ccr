@@ -1,39 +1,38 @@
 object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
   Left = 720
-  Height = 344
+  Height = 347
   Top = 303
-  Width = 468
+  Width = 489
   Caption = 'Print grid setup'
-  ClientHeight = 344
-  ClientWidth = 468
+  ClientHeight = 347
+  ClientWidth = 489
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '1.3'
+  LCLVersion = '1.9.0.0'
   object GroupBox1: TGroupBox
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = CheckGroup1
-    AnchorSideBottom.Control = CheckGroup1
-    AnchorSideBottom.Side = asrBottom
+    AnchorSideBottom.Control = CheckBox1
     Left = 6
-    Height = 173
+    Height = 165
     Top = 6
-    Width = 294
+    Width = 316
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 6
     BorderSpacing.Top = 6
     BorderSpacing.Right = 6
     Caption = 'Page margins'
-    ClientHeight = 150
-    ClientWidth = 290
+    ClientHeight = 144
+    ClientWidth = 314
     TabOrder = 0
     object Label1: TLabel
       AnchorSideLeft.Control = GroupBox1
       AnchorSideBottom.Control = SpinEdit1
       AnchorSideBottom.Side = asrBottom
       Left = 6
-      Height = 21
-      Top = 16
+      Height = 20
+      Top = 23
       Width = 24
       Anchors = [akLeft, akBottom]
       BorderSpacing.Left = 6
@@ -43,8 +42,8 @@ object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
     object SpinEdit1: TSpinEdit
       AnchorSideTop.Control = GroupBox1
       AnchorSideRight.Control = Label5
-      Left = 79
-      Height = 31
+      Left = 91
+      Height = 37
       Top = 6
       Width = 60
       Anchors = [akTop, akRight]
@@ -57,9 +56,9 @@ object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
       AnchorSideBottom.Control = SpinEdit2
       AnchorSideBottom.Side = asrBottom
       Left = 6
-      Height = 21
-      Top = 53
-      Width = 26
+      Height = 20
+      Top = 66
+      Width = 25
       Anchors = [akLeft, akBottom]
       BorderSpacing.Left = 6
       Caption = 'Left'
@@ -70,9 +69,9 @@ object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
       AnchorSideTop.Control = SpinEdit1
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = Label5
-      Left = 79
-      Height = 31
-      Top = 43
+      Left = 91
+      Height = 37
+      Top = 49
       Width = 60
       Anchors = [akTop, akRight]
       BorderSpacing.Around = 6
@@ -84,8 +83,8 @@ object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
       AnchorSideTop.Control = GroupBox1
       AnchorSideRight.Control = GroupBox1
       AnchorSideRight.Side = asrBottom
-      Left = 224
-      Height = 31
+      Left = 248
+      Height = 37
       Top = 6
       Width = 60
       Anchors = [akTop, akRight]
@@ -98,10 +97,10 @@ object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideBottom.Control = SpinEdit3
       AnchorSideBottom.Side = asrBottom
-      Left = 146
-      Height = 21
-      Top = 16
-      Width = 34
+      Left = 158
+      Height = 20
+      Top = 23
+      Width = 33
       Anchors = [akLeft, akBottom]
       Caption = 'Right'
       ParentColor = False
@@ -111,10 +110,10 @@ object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideBottom.Control = SpinEdit4
       AnchorSideBottom.Side = asrBottom
-      Left = 146
-      Height = 21
-      Top = 53
-      Width = 49
+      Left = 158
+      Height = 20
+      Top = 66
+      Width = 47
       Anchors = [akLeft, akBottom]
       Caption = 'Bottom'
       ParentColor = False
@@ -124,9 +123,9 @@ object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = GroupBox1
       AnchorSideRight.Side = asrBottom
-      Left = 224
-      Height = 31
-      Top = 43
+      Left = 248
+      Height = 37
+      Top = 49
       Width = 60
       Anchors = [akTop, akRight]
       BorderSpacing.Around = 6
@@ -137,7 +136,7 @@ object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
       AnchorSideLeft.Control = GroupBox1
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = GroupBox1
-      Left = 145
+      Left = 157
       Height = 1
       Top = 0
       Width = 1
@@ -146,9 +145,9 @@ object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
   end
   object ButtonPanel1: TButtonPanel
     Left = 6
-    Height = 41
-    Top = 297
-    Width = 456
+    Height = 46
+    Top = 295
+    Width = 477
     OKButton.Name = 'OKButton'
     OKButton.DefaultCaption = True
     HelpButton.Name = 'HelpButton'
@@ -164,10 +163,10 @@ object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 306
-    Height = 173
+    Left = 328
+    Height = 201
     Top = 6
-    Width = 156
+    Width = 155
     Anchors = [akTop, akRight]
     AutoFill = True
     AutoSize = True
@@ -181,8 +180,8 @@ object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
-    ClientHeight = 150
-    ClientWidth = 152
+    ClientHeight = 180
+    ClientWidth = 153
     Items.Strings = (
       'Show title'
       'Show footer'
@@ -190,20 +189,21 @@ object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
       'Show grid color'
       'Show report title'
       'Hide zero values'
+      'Merge cell''s'
     )
     TabOrder = 2
     Data = {
-      06000000020202020202
+      0700000002020202020202
     }
   end
   object RadioGroup1: TRadioGroup
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = GroupBox1
+    AnchorSideTop.Control = CheckBox1
     AnchorSideTop.Side = asrBottom
     Left = 6
     Height = 69
-    Top = 185
-    Width = 106
+    Top = 207
+    Width = 107
     AutoFill = True
     AutoSize = True
     BorderSpacing.Around = 6
@@ -215,8 +215,8 @@ object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
-    ClientHeight = 46
-    ClientWidth = 102
+    ClientHeight = 48
+    ClientWidth = 105
     Items.Strings = (
       'Portrait'
       'Landscape'
@@ -226,12 +226,12 @@ object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
   object Label6: TLabel
     AnchorSideLeft.Control = RadioGroup1
     AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = GroupBox1
+    AnchorSideTop.Control = CheckBox1
     AnchorSideTop.Side = asrBottom
-    Left = 118
-    Height = 21
-    Top = 185
-    Width = 75
+    Left = 119
+    Height = 20
+    Top = 207
+    Width = 72
     BorderSpacing.Around = 6
     Caption = 'Report title'
     ParentColor = False
@@ -242,22 +242,25 @@ object RxDBGridPrintGrid_SetupForm: TRxDBGridPrintGrid_SetupForm
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 124
-    Height = 31
-    Top = 212
-    Width = 338
+    Left = 125
+    Height = 37
+    Top = 233
+    Width = 358
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Around = 6
     TabOrder = 4
   end
   object CheckBox1: TCheckBox
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = RadioGroup1
     AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = CheckGroup1
+    AnchorSideBottom.Control = CheckGroup1
+    AnchorSideBottom.Side = asrBottom
     Left = 6
-    Height = 23
-    Top = 260
-    Width = 233
+    Height = 24
+    Top = 177
+    Width = 235
+    Anchors = [akLeft, akBottom]
     BorderSpacing.Around = 6
     Caption = 'Show column header on all page'
     TabOrder = 5

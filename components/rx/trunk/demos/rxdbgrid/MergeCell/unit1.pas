@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, rxdbgrid, rxmemds, RxDBGridExportSpreadSheet,
-  Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, db, Grids, DBGrids;
+  RxDBGridPrintGrid, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, db,
+  Grids, DBGrids;
 
 type
 
@@ -14,6 +15,7 @@ type
 
   TForm1 = class(TForm)
     Button1: TButton;
+    Button2: TButton;
     CheckBox1: TCheckBox;
     dsData: TDataSource;
     Panel1: TPanel;
@@ -23,7 +25,9 @@ type
     RxDBGrid1: TRxDBGrid;
     rxData: TRxMemoryData;
     RxDBGridExportSpreadSheet1: TRxDBGridExportSpreadSheet;
+    RxDBGridPrint1: TRxDBGridPrint;
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure RxDBGrid1Columns0DrawColumnCell(Sender: TObject;
@@ -79,8 +83,8 @@ begin
   begin
     ALeft:=1;
     ARight:=3;
-{     if rxDataCODE.AsInteger > 10 then
-      AColumn:=RxDBGrid1.ColumnByFieldName('DATE');}
+{    if rxDataCODE.AsInteger > 10 then
+      ADisplayColumn:=RxDBGrid1.ColumnByFieldName('DATE');}
   end;
 end;
 
@@ -95,6 +99,11 @@ end;
 procedure TForm1.Button1Click(Sender: TObject);
 begin
   RxDBGridExportSpreadSheet1.Execute;
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+  RxDBGridPrint1.Execute;
 end;
 
 end.
