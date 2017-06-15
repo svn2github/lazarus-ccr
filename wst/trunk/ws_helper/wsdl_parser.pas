@@ -18,7 +18,7 @@ uses
   Classes, SysUtils,
   {$IFNDEF FPC}xmldom, wst_delphi_xml{$ELSE}DOM{$ENDIF},
   cursor_intf, rtti_filters,
-  pastree, pascal_parser_intf, logger_intf, xsd_parser;
+  pastree, PScanner, pascal_parser_intf, logger_intf, xsd_parser;
 
 const
   s_TRANSPORT  = 'TRANSPORT';
@@ -852,7 +852,11 @@ function TWsdlParser.ParseOperation(
               locProcType := tmpMthd.ProcType;
               locFunc := TPasFunction(SymbolTable.CreateElement(TPasFunction,tmpMthd.Name,AOwner,visDefault,'',0));
               SymbolTable.RegisterExternalAlias(locFunc,SymbolTable.GetExternalName(tmpMthd));
+            {$IFDEF WST_TPASSOURCEPOS}
+              locFuncType := SymbolTable.CreateFunctionType('','Result',locFunc,False,Default(TPasSourcePos));
+            {$ELSE WST_TPASSOURCEPOS}
               locFuncType := SymbolTable.CreateFunctionType('','Result',locFunc,False,'',0);
+            {$ENDIF WST_TPASSOURCEPOS}
               locFunc.ProcType := locFuncType;
               resArgIndex := FindIndexOfResultArg(locProcType.Args);
               for j := 0 to ( locProcType.Args.Count - 1 ) do begin

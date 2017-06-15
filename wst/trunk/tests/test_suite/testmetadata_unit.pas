@@ -24,7 +24,7 @@ uses
   TestFrameWork, xmldom, wst_delphi_xml,
 {$ENDIF}
   test_suite_utils, metadata_generator, binary_streamer, metadata_repository,
-  pastree, pascal_parser_intf, metadata_wsdl;
+  pastree, PScanner, pascal_parser_intf, metadata_wsdl;
 
 type
 
@@ -60,9 +60,13 @@ function TTestMetadata.CreateSymbolTable(): TwstPasTreeContainer;
           AClass : TPasClassType;
           AContainer : TwstPasTreeContainer
   ) : TPasFunction ;
-  begin
+  begin            
     Result := TPasFunction(AContainer.CreateElement(TPasFunction,AName,AContainer.CurrentModule.InterfaceSection,visDefault,'',0));
+  {$IFDEF WST_TPASSOURCEPOS}                                               
+    Result.ProcType := AContainer.CreateFunctionType('','result',Result,True,Default(TPasSourcePos));
+  {$ELSE WST_TPASSOURCEPOS}                                                   
     Result.ProcType := AContainer.CreateFunctionType('','result',Result,True,'',0);
+  {$ENDIF WST_TPASSOURCEPOS}
     AClass.Members.Add(Result);
     TPasFunctionType(Result.ProcType).ResultEl.ResultType := AContainer.FindElement(AResultTypeName) as TPasType;
     TPasFunctionType(Result.ProcType).ResultEl.ResultType.AddRef();

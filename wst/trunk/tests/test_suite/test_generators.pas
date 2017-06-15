@@ -20,7 +20,7 @@ uses
 {$ELSE}
   TestFrameWork, xmldom, wst_delphi_xml,
 {$ENDIF}
-  pastree, pascal_parser_intf, xsd_generator, wsdl_generator;
+  pastree, PScanner, pascal_parser_intf, xsd_generator, wsdl_generator;
 
 type
 
@@ -1383,8 +1383,12 @@ var
     prmDef : TPasArgument;
     prmTypeDef : TPasType;
   begin
-    p := TPasFunction(tr.CreateElement(TPasFunction,'EchoWideString',cltyp,visDefault,'',0));
+    p := TPasFunction(tr.CreateElement(TPasFunction,'EchoWideString',cltyp,visDefault,'',0));   
+  {$IFDEF WST_TPASSOURCEPOS}
+    pt := tr.CreateFunctionType('','result',p,False,Default(TPasSourcePos));
+  {$ELSE WST_TPASSOURCEPOS}
     pt := tr.CreateFunctionType('','result',p,False,'',0);
+  {$ENDIF WST_TPASSOURCEPOS}
       pt.ResultEl.ResultType := tr.FindElementNS('WideString',s_xs) as TPasType;
       pt.ResultEl.ResultType.AddRef();
     p.ProcType := pt;
