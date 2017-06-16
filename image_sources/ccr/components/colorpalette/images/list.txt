@@ -1,0 +1,3 @@
+tcolorpalette.png
+tcolorpalette_150.png
+tcolorpalette_200.png

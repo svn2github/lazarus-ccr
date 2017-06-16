@@ -1,0 +1,1 @@
+..\..\..\..\lazres ..\..\..\..\..\components\colorpalette\colorpalette.res @list.txt
