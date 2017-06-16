@@ -48,7 +48,7 @@ unit ColorPalette;
 interface
 
 uses
-  Classes, SysUtils, LResources, Controls, Forms, Graphics, Math,
+  Classes, SysUtils, LResources, LCLVersion, Controls, Forms, Graphics, Math,
   LCLType;
   
 type
@@ -138,6 +138,10 @@ type
     procedure ColorPick(AIndex: Integer; Shift: TShiftState); virtual;
     procedure ColorMouseMove(AColor: TColor; Shift: TShiftState); virtual;
     procedure DoAddColor(AColor: TColor; AColorName: String = ''); virtual;
+   {$IF LCL_FULLVERSION >= 1080000}
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+   {$ENDIF}
     procedure DoColorPick(AColor: TColor; AShift: TShiftState); virtual;
     procedure DoDeleteColor(AIndex: Integer); virtual;
     procedure DoInsertColor(AIndex: Integer; AColor: TColor; AColorName: String = ''); virtual;
@@ -251,8 +255,10 @@ type
 
 implementation
 
+{$R colorpalette.res}
+
 uses
-  LCLIntf, StrUtils;
+  LCLIntf;
 
 const
   SELKIND_NAMES: Array[TPaletteSelectionKind] of String = (
@@ -362,6 +368,23 @@ procedure TCustomColorPalette.DoAddColor(AColor: TColor; AColorName: String = ''
 begin
   FColors.AddObject(AColorName, TObject(PtrInt(AColor)));
 end;
+
+{$IF LCL_FULLVERSION >= 1080000}
+procedure TCustomColorPalette.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy; const AXProportion, AYProportion: Double);
+begin
+  inherited DoAutoAdjustLayout(AMode, AXProportion, AYProportion);
+
+  if AMode = lapAutoAdjustForDPI then
+  begin
+    FButtonWidth := Round(FButtonWidth * AXProportion);
+    FButtonHeight := Round(FButtonHeight * AYProportion);
+    FButtonDistance := Round(FButtonDistance * AXProportion);
+    UpdateSize;
+    Invalidate;
+  end;
+end;
+{$ENDIF}
 
 procedure TCustomColorPalette.DoColorPick(AColor: TColor; AShift: TShiftState);
 begin
@@ -1317,9 +1340,6 @@ begin
   end;
 end;
 
-
-initialization
-{$I colorpalette.lrs}
 
 end.
 

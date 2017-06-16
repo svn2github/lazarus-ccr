@@ -8,7 +8,7 @@ object MainForm: TMainForm
   ClientWidth = 633
   OnCreate = FormCreate
   ShowHint = True
-  LCLVersion = '1.5'
+  LCLVersion = '1.9.0.0'
   object MainPanel: TPanel
     Left = 0
     Height = 432
@@ -110,10 +110,11 @@ object MainForm: TMainForm
       AnchorSideLeft.Control = CoolBar
       AnchorSideTop.Control = CoolBar
       Left = 13
-      Height = 49
+      Height = 45
       Top = 5
-      Width = 50
+      Width = 46
       Align = alNone
+      AutoSize = True
       BorderSpacing.Left = 11
       BorderSpacing.Top = 3
       ButtonHeight = 45
@@ -141,7 +142,7 @@ object MainForm: TMainForm
       AnchorSideLeft.Control = CoolBar
       AnchorSideTop.Control = CoolBar
       Left = 78
-      Height = 45
+      Height = 44
       Top = 7
       Width = 385
       ButtonHeight = 15

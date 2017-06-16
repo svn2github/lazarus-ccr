@@ -7,8 +7,9 @@ object MainForm: TMainForm
   ClientHeight = 586
   ClientWidth = 625
   OnCreate = FormCreate
+  Position = poScreenCenter
   ShowHint = True
-  LCLVersion = '1.5'
+  LCLVersion = '1.9.0.0'
   object LeftPanel: TPanel
     Left = 0
     Height = 586
@@ -439,11 +440,11 @@ object MainForm: TMainForm
     Top = 8
     Width = 287
     HorzScrollBar.Increment = 15
-    HorzScrollBar.Page = 155
+    HorzScrollBar.Page = 154
     HorzScrollBar.Smooth = True
     HorzScrollBar.Tracking = True
     VertScrollBar.Increment = 4
-    VertScrollBar.Page = 42
+    VertScrollBar.Page = 41
     VertScrollBar.Smooth = True
     VertScrollBar.Tracking = True
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -453,10 +454,10 @@ object MainForm: TMainForm
     TabOrder = 2
     object ColorPalette: TColorPalette
       Left = 0
-      Height = 41
+      Height = 40
       Hint = 'Click to select a color'
       Top = 1
-      Width = 155
+      Width = 154
       ButtonHeight = 20
       ButtonWidth = 20
       ColumnCount = 8

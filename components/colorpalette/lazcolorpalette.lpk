@@ -20,16 +20,16 @@
     </CompilerOptions>
     <Description Value="This package contains a color palette component."/>
     <License Value="Modified LGPL"/>
-    <Version Minor="2" Release="2"/>
+    <Version Minor="2" Release="3"/>
     <Files Count="2">
       <Item1>
-        <Filename Value="colorpalette.lrs"/>
-        <Type Value="LRS"/>
-      </Item1>
-      <Item2>
         <Filename Value="colorpalette.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="ColorPalette"/>
+      </Item1>
+      <Item2>
+        <Filename Value="colorpalette.res"/>
+        <Type Value="Binary"/>
       </Item2>
     </Files>
     <RequiredPkgs Count="2">
@@ -48,5 +48,8 @@
       <Version Value="2"/>
       <IgnoreBinaries Value="False"/>
     </PublishOptions>
+    <CustomOptions Items="ExternHelp" Version="2">
+      <_ExternHelp Items="Count"/>
+    </CustomOptions>
   </Package>
 </CONFIG>
