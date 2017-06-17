@@ -397,11 +397,14 @@ procedure Register;
 
 implementation
 
+{$R calendarlite_icon.res}
+
 uses
   LCLType, LazUTF8, dateutils, math;
 
 const
    DBLCLICK_INTERVAL = 300;   // Interval (ms) for detection of a double-click
+   DESIGNTIME_PPI = 96;
 
 
 { Holiday helpers }
@@ -1284,8 +1287,8 @@ begin
   FStartingDayOfWeek:= dowSunday;
   with GetControlClassDefaultSize do
     SetInitialBounds(0, 0, cx, cy);
-  Constraints.MinHeight := DefMinHeight;
-  Constraints.MinWidth := DefMinWidth;
+  Constraints.MinHeight := ScaleX(DefMinHeight, DESIGNTIME_PPI);
+  Constraints.MinWidth := ScaleY(DefMinWidth, DESIGNTIME_PPI);
   Canvas.Brush.Style := bsSolid;
   TabStop := true;
   FDayNames := TStringList.Create;
@@ -1421,8 +1424,8 @@ end;
 
 class function TCalendarLite.GetControlClassDefaultSize: TSize;
 begin
-  Result.cx := DefCalWidth;
-  Result.cy := DefCalHeight;
+  Result.cx := ScaleX(DefCalWidth, DESIGNTIME_PPI);
+  Result.cy := ScaleY(DefCalHeight, DESIGNTIME_PPI);
 end;
 
 function TCalendarLite.GetDayName(ADayOfWeek: TDayOfWeek): String;
@@ -1913,7 +1916,6 @@ end;
 
 procedure Register;
 begin
-  {$I calendarlite_icon.lrs}
   RegisterComponents('Misc', [TCalendarLite]);
 end;
 
