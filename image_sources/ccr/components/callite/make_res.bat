@@ -1,0 +1,1 @@
+..\..\..\lazres ..\..\..\..\components\callite\calendarlite_icon.res @list.txt
