@@ -39,11 +39,14 @@ object MainForm: TMainForm
       WordWrap = True
     end
     object BtnEditColor: TButton
+      AnchorSideTop.Control = ColorSample
+      AnchorSideTop.Side = asrCenter
       Left = 83
-      Height = 19
+      Height = 25
       Hint = 'Edit current color'
-      Top = 13
-      Width = 64
+      Top = 15
+      Width = 46
+      AutoSize = True
       Caption = 'Edit'
       OnClick = BtnEditColorClick
       TabOrder = 0
