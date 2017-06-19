@@ -9,17 +9,16 @@
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-}
+}       
+{$INCLUDE wst_global.inc}
 unit uprocedit;
-
-{$mode objfpc}{$H+}
 
 interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ComCtrls,
   ExtCtrls, StdCtrls, ActnList, Menus,
-  pastree, pascal_parser_intf,
+  pastree, PScanner, pascal_parser_intf,
   edit_helper, Buttons;
 
 type
@@ -272,7 +271,11 @@ procedure TfProcEdit.SaveToObject();
     try
       newObj := TPasFunction(FSymbolTable.CreateElement(TPasFunction,FObject.Name,prt,visPublic,'',0));
       prt.Members.Add(newObj);
+  {$IFDEF WST_TPASSOURCEPOS}
+      newObjType := FSymbolTable.CreateFunctionType('','result',newObj,False,Default(TPasSourcePos));
+  {$ELSE WST_TPASSOURCEPOS}
       newObjType := FSymbolTable.CreateFunctionType('','result',newObj,False,'',0);
+  {$ENDIF WST_TPASSOURCEPOS}
       newObj.ProcType := newObjType;
       CopyArgs(FObject.ProcType,newObjType);
       newObjType.ResultEl.ResultType := edtResultType.Items.Objects[edtResultType.ItemIndex] as TPasType;

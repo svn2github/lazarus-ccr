@@ -9,16 +9,15 @@
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-}
+}  
+{$INCLUDE wst_global.inc}
 unit edit_helper;
-
-{$mode objfpc}{$H+}
 
 interface
 
 uses
   Classes, SysUtils,
-  pastree, pascal_parser_intf;
+  pastree, pscanner, pascal_parser_intf;
 
 type
 
@@ -464,7 +463,11 @@ begin
         end;
       end;
     end;
+  {$IFDEF WST_TCLASS_MEMBERS}
+    locList := TPasClassType(AType).Members;
+  {$ELSE WST_TCLASS_MEMBERS}
     locList := TPasClassType(AType).ClassVars;
+  {$ENDIF WST_TCLASS_MEMBERS}
     for i := 0 to locList.Count-1 do begin
       locElement := TPasElement(locList[i]);
       if locElement.InheritsFrom(TPasVariable) then begin
