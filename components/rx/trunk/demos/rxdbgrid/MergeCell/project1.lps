@@ -11,7 +11,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="30"/>
+        <UsageCount Value="31"/>
       </Unit0>
       <Unit1>
         <Filename Value="unit1.pas"/>
@@ -22,13 +22,13 @@
         <UnitName Value="Unit1"/>
         <TopLine Value="70"/>
         <CursorPos X="60" Y="87"/>
-        <UsageCount Value="30"/>
+        <UsageCount Value="31"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="6312"/>
         <CursorPos Y="6333"/>
         <UsageCount Value="14"/>
@@ -40,7 +40,7 @@
       <Unit3>
         <Filename Value="../../../../../lcl/grids.pas"/>
         <UnitName Value="Grids"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="9"/>
         <TopLine Value="11692"/>
         <CursorPos Y="11717"/>
         <UsageCount Value="14"/>
@@ -49,7 +49,7 @@
       <Unit4>
         <Filename Value="../../../../../lcl/dbgrids.pas"/>
         <UnitName Value="DBGrids"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="8"/>
         <TopLine Value="475"/>
         <CursorPos X="14" Y="491"/>
         <UsageCount Value="14"/>
@@ -71,7 +71,7 @@
       </Unit6>
       <Unit7>
         <Filename Value="../../../rxtools/rxutils.pas"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="6"/>
         <TopLine Value="64"/>
         <CursorPos X="2" Y="91"/>
         <UsageCount Value="14"/>
@@ -79,7 +79,7 @@
       </Unit7>
       <Unit8>
         <Filename Value="../../../rxtools/rxstrutils.pas"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="7"/>
         <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit8>
@@ -165,7 +165,8 @@
       <Unit20>
         <Filename Value="../../../rxdbgrid_export_spreadsheet/rxdbgridexportspreadsheet.pas"/>
         <UnitName Value="RxDBGridExportSpreadSheet"/>
-        <EditorIndex Value="4"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="3"/>
         <TopLine Value="564"/>
         <CursorPos X="44" Y="595"/>
         <UsageCount Value="13"/>
@@ -184,7 +185,7 @@
       </Unit21>
       <Unit22>
         <Filename Value="../../../rxtools/rxdconst.pas"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="4"/>
         <TopLine Value="172"/>
         <CursorPos X="14" Y="190"/>
         <UsageCount Value="13"/>
@@ -194,19 +195,18 @@
         <Filename Value="../../../rxdbgrid_print/rxdbgridprintgrid.pas"/>
         <UnitName Value="RxDBGridPrintGrid"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="314"/>
-        <CursorPos X="82" Y="332"/>
+        <TopLine Value="298"/>
+        <CursorPos X="25" Y="301"/>
         <UsageCount Value="12"/>
         <Loaded Value="True"/>
       </Unit23>
       <Unit24>
         <Filename Value="../../../../lazreport/source/lr_class.pas"/>
         <UnitName Value="LR_Class"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="11808"/>
         <CursorPos Y="11826"/>
         <UsageCount Value="12"/>
-        <Loaded Value="True"/>
       </Unit24>
       <Unit25>
         <Filename Value="../../../rxdbgrid_print/rxdbgridprintgrid_setupunit.pas"/>
@@ -214,9 +214,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="RxDBGridPrintGrid_SetupUnit"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="69"/>
+        <TopLine Value="67"/>
         <CursorPos X="36" Y="87"/>
         <UsageCount Value="12"/>
         <Loaded Value="True"/>

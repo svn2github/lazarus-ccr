@@ -127,6 +127,10 @@ msgstr ""
 msgid "Export footer formula"
 msgstr ""
 
+#: rxdconst.sexportgroupdata
+msgid "Export group data"
+msgstr ""
+
 #: rxdconst.sexporthidezerovalues
 msgctxt "rxdconst.sexporthidezerovalues"
 msgid "Hide zero values"

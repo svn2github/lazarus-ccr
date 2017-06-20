@@ -1,10 +1,10 @@
 object RxDBGridExportSpreadSheet_ParamsForm: TRxDBGridExportSpreadSheet_ParamsForm
   Left = 483
-  Height = 317
+  Height = 328
   Top = 235
   Width = 548
   Caption = 'Export params'
-  ClientHeight = 317
+  ClientHeight = 328
   ClientWidth = 548
   OnCreate = FormCreate
   Position = poScreenCenter
@@ -44,11 +44,11 @@ object RxDBGridExportSpreadSheet_ParamsForm: TRxDBGridExportSpreadSheet_ParamsFo
   end
   object Label3: TLabel
     AnchorSideLeft.Control = Label4
-    AnchorSideTop.Control = cbHideZeroValues
+    AnchorSideTop.Control = cbExportGrpData
     AnchorSideTop.Side = asrBottom
     Left = 280
     Height = 20
-    Top = 165
+    Top = 195
     Width = 70
     BorderSpacing.Around = 6
     Caption = 'Page name'
@@ -63,7 +63,7 @@ object RxDBGridExportSpreadSheet_ParamsForm: TRxDBGridExportSpreadSheet_ParamsFo
     AnchorSideRight.Side = asrBottom
     Left = 286
     Height = 37
-    Top = 191
+    Top = 221
     Width = 256
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Around = 6
@@ -96,7 +96,7 @@ object RxDBGridExportSpreadSheet_ParamsForm: TRxDBGridExportSpreadSheet_ParamsFo
   object ButtonPanel1: TButtonPanel
     Left = 6
     Height = 46
-    Top = 265
+    Top = 276
     Width = 536
     OKButton.Name = 'OKButton'
     OKButton.DefaultCaption = True
@@ -202,5 +202,17 @@ object RxDBGridExportSpreadSheet_ParamsForm: TRxDBGridExportSpreadSheet_ParamsFo
     BorderSpacing.Around = 6
     Caption = 'Merge cell''s'
     TabOrder = 11
+  end
+  object cbExportGrpData: TCheckBox
+    AnchorSideLeft.Control = Label4
+    AnchorSideTop.Control = cbHideZeroValues
+    AnchorSideTop.Side = asrBottom
+    Left = 280
+    Height = 24
+    Top = 165
+    Width = 139
+    BorderSpacing.Around = 6
+    Caption = 'Export group data'
+    TabOrder = 12
   end
 end

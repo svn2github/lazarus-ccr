@@ -137,9 +137,11 @@ msgstr "Имя файла экспорта"
 msgid "Export footer formula"
 msgstr "Экспортирововать формулы итоговой строки"
 
+#: rxdconst.sexportgroupdata
+msgid "Export group data"
+msgstr "Экспорт данных группировки"
+
 #: rxdconst.sexporthidezerovalues
-#, fuzzy
-msgctxt "rxdconst.sexporthidezerovalues"
 msgid "Hide zero values"
 msgstr "Не отображать нулевые значения"
 

@@ -138,6 +138,10 @@ msgstr "Експортувати назву файлу"
 msgid "Export footer formula"
 msgstr "Експортувати підсумкову формулу"
 
+#: rxdconst.sexportgroupdata
+msgid "Export group data"
+msgstr ""
+
 #: rxdconst.sexporthidezerovalues
 #, fuzzy
 msgctxt "rxdconst.sexporthidezerovalues"

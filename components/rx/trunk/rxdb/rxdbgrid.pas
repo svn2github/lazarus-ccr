@@ -522,7 +522,6 @@ type
     procedure SetActive(AValue: boolean);
     procedure SetColor(AValue: TColor);
   protected
-    function FindGroupItem(ARecBookMark: TBookMark): TColumnGroupItem;
     function AddGroupItem:TColumnGroupItem;
     procedure InitGroup;
     procedure DoneGroup;
@@ -531,6 +530,7 @@ type
     destructor Destroy; override;
     procedure Clear;
     procedure UpdateValues;
+    function FindGroupItem(ARecBookMark: TBookMark): TColumnGroupItem;
     property GroupFieldName:string read FGroupFieldName write FGroupFieldName;
   published
     property Active:boolean read FActive write SetActive;
@@ -780,7 +780,6 @@ type
     FSaveOnDataSetScrolled: TDataSetScrolledEvent;
     //Group data suppert
     FGroupItems:TColumnGroupItems;
-    FGroupItemDrawCur:TColumnGroupItem;
 
     procedure DoCreateJMenu;
     function GetColumns: TRxDbGridColumns;
@@ -844,6 +843,7 @@ type
   protected
     FRxDbGridLookupComboEditor: TCustomControl;
     FRxDbGridDateEditor: TWinControl;
+    FGroupItemDrawCur:TColumnGroupItem;
 
     procedure CollumnSortListUpdate;
     procedure CollumnSortListClear;

@@ -5,14 +5,15 @@ unit Unit1;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, rxdbgrid, rxmemds, Forms, Controls, Graphics,
-  Dialogs, StdCtrls, db;
+  Classes, SysUtils, FileUtil, rxdbgrid, rxmemds, RxDBGridExportSpreadSheet,
+  Forms, Controls, Graphics, Dialogs, StdCtrls, db;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
+    Button1: TButton;
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
@@ -24,6 +25,8 @@ type
     rxDataTEXT: TStringField;
     RxDBGrid1: TRxDBGrid;
     rxData: TRxMemoryData;
+    RxDBGridExportSpreadSheet1: TRxDBGridExportSpreadSheet;
+    procedure Button1Click(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -73,6 +76,13 @@ begin
   RxDBGrid1.GroupItems.Active:=CheckBox1.Checked;
   RxDBGrid1.FooterOptions.Active:=CheckBox2.Checked;
   RxDBGrid1.ReadOnly:=CheckBox3.Checked;
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  RxDBGridExportSpreadSheet1.Options:=RxDBGridExportSpreadSheet1.Options + [ressExportGroupData];
+  RxDBGridExportSpreadSheet1.Execute;
+
 end;
 
 end.

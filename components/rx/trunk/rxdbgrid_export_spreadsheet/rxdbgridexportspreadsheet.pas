@@ -46,7 +46,8 @@ type
     ressOverwriteExisting,
     ressExportSelectedRows,
     ressHideZeroValues,
-    ressColSpanning
+    ressColSpanning,
+    ressExportGroupData
     );
 
   TRxDBGridExportSpreadSheetOptions = set of TRxDBGridExportSpreadSheetOption;
@@ -65,6 +66,7 @@ type
     procedure ExpCurRow(AFont: TFont);
     procedure ExpAllRow;
     procedure ExpSelectedRow;
+    procedure ExpGrpLine(G: TColumnGroupItem);
   protected
     FDataSet:TDataSet;
     FWorkbook: TsWorkbook;
@@ -106,6 +108,9 @@ end;
 const
   ssAligns : array [TAlignment] of TsHorAlignment = (haLeft, haRight, haCenter);
 
+type
+  THackRxDBGrid = class(TRxDBGrid);
+
 { TRxDBGridExportSpeadSheet }
 
 function TRxDBGridExportSpreadSheet.ColIndex(ACol: TRxColumn): integer;
@@ -132,6 +137,7 @@ var
   CT: TRxColumnTitle;
   S: String;
   CC: TColor;
+  G: TColumnGroupItem;
 begin
   FCurCol:=0;
 
@@ -220,6 +226,14 @@ begin
 
     Inc(i);
   end;
+
+  if RxDBGrid.GroupItems.Active and (ressExportGroupData in Options) then
+  begin
+
+    THackRxDBGrid(RxDBGrid).FGroupItemDrawCur:=RxDBGrid.GroupItems.FindGroupItem(RxDBGrid.DataSource.DataSet.Bookmark);
+    if Assigned(THackRxDBGrid(RxDBGrid).FGroupItemDrawCur) then
+      ExpGrpLine(THackRxDBGrid(RxDBGrid).FGroupItemDrawCur);
+  end;
 end;
 
 procedure TRxDBGridExportSpreadSheet.ExpAllRow;
@@ -251,6 +265,98 @@ begin
     inc(FCurRow);
   end;
   F.Free;
+end;
+
+procedure TRxDBGridExportSpreadSheet.ExpGrpLine(G: TColumnGroupItem);
+var
+  C: TRxColumn;
+
+procedure OutGroupCellProps;
+{$IFDEF OLD_fpSPREADSHEET}
+var
+  scColor : TsColor;
+{$ENDIF}
+var
+  FColor: TColor;
+begin
+
+  if C.GroupParam.Color <> clNone then
+    FColor := C.GroupParam.Color
+  else
+  if RxDBGrid.GroupItems.Color <> clNone then
+    FColor := RxDBGrid.GroupItems.Color
+  else
+    FColor := clNone;
+
+  if (FColor <> clNone) and (ressExportColors in FOptions) then
+  begin
+    {$IFDEF OLD_fpSPREADSHEET}
+    if (C.GroupParam.Color and SYS_COLOR_BASE) = 0  then
+    begin
+      scColor:=FWorkbook.AddColorToPalette(C.GroupParam.Color);
+      FWorksheet.WriteBackgroundColor(FCurRow,FCurCol, scColor);}
+    end;
+    {$ELSE}
+    FWorksheet.WriteBackgroundColor(FCurRow, FCurCol, FColor);
+    {$ENDIF}
+  end;
+  FWorksheet.WriteBorders(FCurRow, FCurCol, [cbNorth, cbWest, cbEast, cbSouth]);
+  FWorksheet.WriteBorderColor(FCurRow, FCurCol, cbNorth, scColorBlack);
+  FWorksheet.WriteBorderColor(FCurRow, FCurCol, cbWest, scColorBlack);
+  FWorksheet.WriteBorderColor(FCurRow, FCurCol, cbEast, scColorBlack);
+  FWorksheet.WriteBorderColor(FCurRow, FCurCol, cbSouth, scColorBlack);
+end;
+
+procedure OutGroupCell(G: TColumnGroupItem);
+var
+  D: Integer;
+  SF: String;
+begin
+  if (C.GroupParam.ValueType <> fvtNon) then
+  begin
+(*    if (ressExportFormula in FOptions) and (Footer.ValueType in [fvtSum, fvtMax, fvtMin]) and (FFirstDataRow <= FLastDataRow) {and (Footer.DisplayFormat = '')} then
+    begin
+      D:=ColIndex(RxDBGrid.ColumnByFieldName(Footer.FieldName));
+
+      if D>=0 then
+      begin
+        case Footer.ValueType of
+          fvtSum:SF:='SUM';
+          fvtMax:SF:='MIN';
+          fvtMin:SF:='MAX';
+        else
+          SF:='Error!(';
+        end;
+
+        FWorksheet.WriteFormula(FCurRow, FCurCol,
+          Format('=%s(%s%d:%s%d)', [SF, GetColString(D), FFirstDataRow+1, GetColString(D), FLastDataRow+1]));
+      end
+      else
+      begin
+        FWorksheet.WriteNumber(FCurRow, FCurCol, Footer.NumericValue, nfFixed, 2);
+      end;
+    end
+    else *)
+      FWorksheet.WriteUTF8Text(FCurRow, FCurCol, C.GroupParam.DisplayText);
+    FWorksheet.WriteHorAlignment(FCurRow, FCurCol, ssAligns[C.GroupParam.Alignment]);
+  end;
+end;
+
+var
+  i: Integer;
+begin
+  inc(FCurRow);
+  FCurCol:=0;
+  for i:=0 to FRxDBGrid.Columns.Count - 1 do
+  begin
+    C:=FRxDBGrid.Columns[i] as TRxColumn;
+    if C.Visible then
+    begin
+      OutGroupCellProps;
+      OutGroupCell(G);
+      inc(FCurCol);
+    end;
+  end;
 end;
 
 procedure TRxDBGridExportSpreadSheet.DoExportTitle;
@@ -556,14 +662,23 @@ begin
   F.FileNameEdit1.FileName:=FFileName;
   F.cbOpenAfterExport.Checked:=FOpenAfterExport;
   F.cbExportColumnFooter.Checked:=ressExportFooter in FOptions;
+  F.cbExportColumnFooter.Enabled:=RxDBGrid.FooterOptions.Active;
+
   F.cbExportColumnHeader.Checked:=ressExportTitle in FOptions;
   F.cbExportCellColors.Checked:=ressExportColors in FOptions;
   F.cbOverwriteExisting.Checked:=ressOverwriteExisting in FOptions;
+
   F.cbExportFormula.Checked:=ressExportFormula in FOptions;
+  F.cbExportFormula.Enabled:=RxDBGrid.FooterOptions.Active;
+
   F.cbExportSelectedRows.Checked:=ressExportSelectedRows in FOptions;
   F.cbExportSelectedRows.Enabled:=(dgMultiselect in RxDBGrid.Options) and (RxDBGrid.SelectedRows.Count > 0);
   F.cbHideZeroValues.Checked:=ressHideZeroValues in FOptions;
+
   F.cbMergeCells.Checked:=ressColSpanning in FOptions;
+
+  F.cbExportGrpData.Checked:=ressExportGroupData in FOptions;
+  F.cbExportGrpData.Enabled:=RxDBGrid.GroupItems.Active;
 
 
   F.edtPageName.Text:=FPageName;
@@ -593,6 +708,10 @@ begin
 
     if F.cbMergeCells.Checked then
       FOptions:=FOptions + [ressColSpanning];
+
+    if F.cbExportGrpData.Checked then
+      FOptions:=FOptions + [ressExportGroupData];
+
   end;
   F.Free;
 end;

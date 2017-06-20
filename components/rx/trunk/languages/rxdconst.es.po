@@ -133,6 +133,10 @@ msgstr "Exportar nombre de archivo"
 msgid "Export footer formula"
 msgstr "Exportar fórmula de pie"
 
+#: rxdconst.sexportgroupdata
+msgid "Export group data"
+msgstr ""
+
 #: rxdconst.sexporthidezerovalues
 msgctxt "rxdconst.sexporthidezerovalues"
 msgid "Hide zero values"
