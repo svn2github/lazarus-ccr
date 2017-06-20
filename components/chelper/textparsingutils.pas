@@ -83,7 +83,7 @@ type
   public
     buffer: String;
     constructor Create(const Abuffer: String=''; const aname: string = ''; aobj: TObject = nil);
-    procedure InsertSubBuffer(pos: Integer; const ABuffer: string; const AName: string = ''; ATag: TObject = '');
+    procedure InsertSubBuffer(pos: Integer; const ABuffer: string; const AName: string = ''; ATag: TObject = nil);
     property SubBuffer[i: Integer]: TSubBuffer read GetSubBuffer;
     property Count: Integer read GetCount;
   end;

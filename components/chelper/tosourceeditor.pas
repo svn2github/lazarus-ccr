@@ -216,7 +216,7 @@ var
   p       : TPoint;
   st      : TPoint;
   err     : TErrorInfo;
-  line    : TIDEMessageLine;
+  //line    : TIDEMessageLine;
   parts   : TStringList;
   lcnt    : Integer;
 begin
@@ -303,7 +303,7 @@ begin
 end;
 
 
-type
+(*type
 
   { TChelperJumper }
 
@@ -338,7 +338,7 @@ begin
     LazarusIDE.DoOpenFileAndJumpToPos(fn, Point(cl, ln), -1, -1, -1, [ofOnlyIfExists,ofRegularFile,ofVirtualFile]);
   end;
 end;
-
+*)
 procedure Register;
 var
   pth : AnsiString;
@@ -349,7 +349,7 @@ begin
   LoadFromFile(ConvFile, ConvSettings);
   ReadIDESettings(ConvFile);
   if DefineFile='' then DefineFile:=pth+'cconvdefines.h';
-  RegisterIDEMsgQuickFix(TChelperJumper.Create);
+  //RegisterIDEMsgQuickFix(TChelperJumper.Create);
 end;
 
 initialization
