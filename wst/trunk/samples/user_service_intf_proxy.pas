@@ -2,7 +2,7 @@
 This unit has been produced by ws_helper.
   Input unit name : "user_service_intf".
   This unit name  : "user_service_intf_proxy".
-  Date            : "22/07/2011 11:31:59".
+  Date            : "22/06/2017 15:02:26".
 }
 
 Unit user_service_intf_proxy;
@@ -14,7 +14,7 @@ Uses SysUtils, Classes, TypInfo, base_service_intf, service_intf, user_service_i
 Type
 
 
-  TUserService_Proxy=class(TBaseProxy,UserService)
+  TUserService_Proxy=class(TBaseProxy,user_service_intf.UserService)
   Protected
     class function GetServiceType() : PTypeInfo;override;
     function GetList():TUserArray;
@@ -25,10 +25,10 @@ Type
       const  AUser : TUser
     );
     function Find(
-      const  AName : string
+      const  AName : UnicodeString
     ):TUser;
     function Delete(
-      const  AName : string
+      const  AName : UnicodeString
     ):boolean;
   End;
 
@@ -52,7 +52,7 @@ End;
 
 class function TUserService_Proxy.GetServiceType() : PTypeInfo;
 begin
-  result := TypeInfo(UserService);
+  result := TypeInfo(user_service_intf.UserService);
 end;
 
 function TUserService_Proxy.GetList():TUserArray;
@@ -70,7 +70,7 @@ Begin
     MakeCall();
 
     locSerializer.BeginCallRead(locCallContext);
-      TObject(Result) := Nil;
+      Result := Nil;
       locStrPrmName := 'result';
       locSerializer.Get(TypeInfo(TUserArray), locStrPrmName, Result);
 
@@ -128,7 +128,7 @@ Begin
 End;
 
 function TUserService_Proxy.Find(
-  const  AName : string
+  const  AName : UnicodeString
 ):TUser;
 Var
   locSerializer : IFormatterClient;
@@ -139,13 +139,13 @@ Begin
   locSerializer := GetSerializer();
   Try
     locSerializer.BeginCall('Find', GetTarget(),locCallContext);
-      locSerializer.Put('AName', TypeInfo(string), AName);
+      locSerializer.Put('AName', TypeInfo(UnicodeString), AName);
     locSerializer.EndCall();
 
     MakeCall();
 
     locSerializer.BeginCallRead(locCallContext);
-      TObject(Result) := Nil;
+      Result := Nil;
       locStrPrmName := 'result';
       locSerializer.Get(TypeInfo(TUser), locStrPrmName, Result);
 
@@ -155,7 +155,7 @@ Begin
 End;
 
 function TUserService_Proxy.Delete(
-  const  AName : string
+  const  AName : UnicodeString
 ):boolean;
 Var
   locSerializer : IFormatterClient;
@@ -166,7 +166,7 @@ Begin
   locSerializer := GetSerializer();
   Try
     locSerializer.BeginCall('Delete', GetTarget(),locCallContext);
-      locSerializer.Put('AName', TypeInfo(string), AName);
+      locSerializer.Put('AName', TypeInfo(UnicodeString), AName);
     locSerializer.EndCall();
 
     MakeCall();

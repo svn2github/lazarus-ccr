@@ -2,15 +2,13 @@
 This unit has been produced by ws_helper.
   Input unit name : "user_service_intf".
   This unit name  : "user_service_intf".
-  Date            : "22/07/2011 11:31:59".
+  Date            : "22/06/2017 15:02:26".
 }
 unit user_service_intf;
 {$IFDEF FPC}
   {$mode objfpc} {$H+}
 {$ENDIF}
-{$IFNDEF FPC}
-  {$DEFINE WST_RECORD_RTTI}
-{$ENDIF}
+{$DEFINE WST_RECORD_RTTI}
 interface
 
 uses SysUtils, Classes, TypInfo, base_service_intf, service_intf;
@@ -33,30 +31,30 @@ type
   TUser = class(TBaseComplexRemotable)
   private
     FCategory : TUserCategory;
-    FUserName : string;
-    FeMail : string;
-    FPreferences : string;
+    FUserName : UnicodeString;
+    FeMail : UnicodeString;
+    FPreferences : UnicodeString;
     FNote : TNote;
   public
     constructor Create();override;
     procedure FreeObjectProperties();override;
   published
     property Category : TUserCategory read FCategory write FCategory;
-    property UserName : string read FUserName write FUserName;
-    property eMail : string read FeMail write FeMail;
-    property Preferences : string read FPreferences write FPreferences;
+    property UserName : UnicodeString read FUserName write FUserName;
+    property eMail : UnicodeString read FeMail write FeMail;
+    property Preferences : UnicodeString read FPreferences write FPreferences;
     property Note : TNote read FNote write FNote;
   end;
 
   TNote = class(TBaseComplexRemotable)
   private
-    FHeader : string;
-    FAuthor : string;
-    FDate : string;
+    FHeader : UnicodeString;
+    FAuthor : UnicodeString;
+    FDate : UnicodeString;
   published
-    property Header : string read FHeader write FHeader;
-    property Author : string read FAuthor write FAuthor;
-    property Date : string read FDate write FDate;
+    property Header : UnicodeString read FHeader write FHeader;
+    property Author : UnicodeString read FAuthor write FAuthor;
+    property Date : UnicodeString read FDate write FDate;
   end;
 
   TUserArray = class(TBaseObjectArrayRemotable)
@@ -68,7 +66,7 @@ type
   end;
 
   UserService = interface(IInvokable)
-    ['{1A6AE445-B888-41D1-BDC2-C3BE9C8F60D3}']
+    ['{D039952C-BE65-4C35-85FD-092038A8B25D}']
     function GetList():TUserArray;
     procedure Add(
       const  AUser : TUser
@@ -77,10 +75,10 @@ type
       const  AUser : TUser
     );
     function Find(
-      const  AName : string
+      const  AName : UnicodeString
     ):TUser;
     function Delete(
-      const  AName : string
+      const  AName : UnicodeString
     ):boolean;
   end;
 

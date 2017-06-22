@@ -2,7 +2,7 @@
 This unit has been produced by ws_helper.
   Input unit name : "user_service_intf".
   This unit name  : "user_service_intf_binder".
-  Date            : "22/07/2011 11:31:16".
+  Date            : "22/06/2017 15:01:59".
 }
 unit user_service_intf_binder;
 {$IFDEF FPC} {$mode objfpc}{$H+} {$ENDIF}
@@ -52,7 +52,7 @@ var
   returnVal : TUserArray;
 begin
   callCtx := AContext;
-  Fillchar(returnVal,SizeOf(TUserArray),#0);
+  returnVal := nil;
   
   
   tmpObj := Self.GetFactory().CreateInstance() as UserService;
@@ -63,8 +63,8 @@ begin
     objCntrl.Activate();
   try
     returnVal := tmpObj.GetList();
-    if Assigned(TObject(returnVal)) then
-      callCtx.AddObjectToFree(TObject(returnVal));
+    if (returnVal <> nil) then
+      callCtx.AddObjectToFree(returnVal);
     
     procName := AFormatter.GetCallProcedureName();
     trgName := AFormatter.GetCallTarget();
@@ -93,11 +93,11 @@ var
   AUser : TUser;
 begin
   callCtx := AContext;
-  Fillchar(AUser,SizeOf(TUser),#0);
+  AUser := nil;
   
   locStrPrmName := 'AUser';  AFormatter.Get(TypeInfo(TUser),locStrPrmName,AUser);
-  if Assigned(Pointer(AUser)) then
-    callCtx.AddObjectToFree(TObject(AUser));
+  if (AUser <> nil) then
+    callCtx.AddObjectToFree(AUser);
   
   tmpObj := Self.GetFactory().CreateInstance() as UserService;
   if Supports(tmpObj,ICallControl,cllCntrl) then
@@ -134,11 +134,11 @@ var
   AUser : TUser;
 begin
   callCtx := AContext;
-  Fillchar(AUser,SizeOf(TUser),#0);
+  AUser := nil;
   
   locStrPrmName := 'AUser';  AFormatter.Get(TypeInfo(TUser),locStrPrmName,AUser);
-  if Assigned(Pointer(AUser)) then
-    callCtx.AddObjectToFree(TObject(AUser));
+  if (AUser <> nil) then
+    callCtx.AddObjectToFree(AUser);
   
   tmpObj := Self.GetFactory().CreateInstance() as UserService;
   if Supports(tmpObj,ICallControl,cllCntrl) then
@@ -172,13 +172,13 @@ var
   callCtx : ICallContext;
   locStrPrmName : string;
   procName,trgName : string;
-  AName : string;
+  AName : UnicodeString;
   returnVal : TUser;
 begin
   callCtx := AContext;
-  Fillchar(returnVal,SizeOf(TUser),#0);
+  returnVal := nil;
   
-  locStrPrmName := 'AName';  AFormatter.Get(TypeInfo(string),locStrPrmName,AName);
+  locStrPrmName := 'AName';  AFormatter.Get(TypeInfo(UnicodeString),locStrPrmName,AName);
   
   tmpObj := Self.GetFactory().CreateInstance() as UserService;
   if Supports(tmpObj,ICallControl,cllCntrl) then
@@ -188,8 +188,8 @@ begin
     objCntrl.Activate();
   try
     returnVal := tmpObj.Find(AName);
-    if Assigned(TObject(returnVal)) then
-      callCtx.AddObjectToFree(TObject(returnVal));
+    if (returnVal <> nil) then
+      callCtx.AddObjectToFree(returnVal);
     
     procName := AFormatter.GetCallProcedureName();
     trgName := AFormatter.GetCallTarget();
@@ -215,12 +215,12 @@ var
   callCtx : ICallContext;
   locStrPrmName : string;
   procName,trgName : string;
-  AName : string;
+  AName : UnicodeString;
   returnVal : boolean;
 begin
   callCtx := AContext;
   
-  locStrPrmName := 'AName';  AFormatter.Get(TypeInfo(string),locStrPrmName,AName);
+  locStrPrmName := 'AName';  AFormatter.Get(TypeInfo(UnicodeString),locStrPrmName,AName);
   
   tmpObj := Self.GetFactory().CreateInstance() as UserService;
   if Supports(tmpObj,ICallControl,cllCntrl) then
