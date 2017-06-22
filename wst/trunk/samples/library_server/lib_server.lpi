@@ -1,19 +1,21 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
+    <Version Value="10"/>
     <PathDelim Value="\"/>
-    <Version Value="7"/>
     <General>
       <Flags>
         <LRSInOutputDirectory Value="False"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
-      <TargetFileExt Value=".exe"/>
     </General>
     <VersionInfo>
-      <ProjectVersion Value=""/>
+      <StringTable ProductVersion=""/>
     </VersionInfo>
+    <BuildModes Count="1">
+      <Item1 Name="default" Default="True"/>
+    </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
       <DestinationDirectory Value="$(TestDir)\publishedproject\"/>
@@ -31,23 +33,28 @@
       <Unit0>
         <Filename Value="lib_server.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="lib_server"/>
       </Unit0>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
-    <Version Value="8"/>
+    <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="lib_server.dll"/>
+      <Filename Value="lib_server"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="..\..\"/>
-      <OtherUnitFiles Value="..\;..\..\;..\..\wst_rtti_filter\"/>
+      <IncludeFiles Value="..\.."/>
+      <OtherUnitFiles Value="..;..\..;..\..\wst_rtti_filter"/>
       <UnitOutputDirectory Value="obj"/>
     </SearchPaths>
+    <Parsing>
+      <SyntaxOptions>
+        <UseAnsiStrings Value="False"/>
+      </SyntaxOptions>
+    </Parsing>
     <Linking>
       <Debugging>
+        <GenerateDebugInfo Value="False"/>
         <UseLineInfoUnit Value="False"/>
       </Debugging>
       <LinkSmart Value="True"/>
@@ -55,8 +62,5 @@
         <ExecutableType Value="Library"/>
       </Options>
     </Linking>
-    <Other>
-      <CompilerPath Value="$(CompPath)"/>
-    </Other>
   </CompilerOptions>
 </CONFIG>
