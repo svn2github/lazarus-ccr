@@ -1,6 +1,6 @@
 {
     This file is part of the Web Service Toolkit
-    Copyright (c) 2006-2014 by Inoussa OUEDRAOGO
+    Copyright (c) 2006-2017 by Inoussa OUEDRAOGO
 
     This file is provide under modified LGPL licence
     ( the files COPYING.modifiedLGPL and COPYING.LGPL).
@@ -37,7 +37,7 @@ resourcestring
            '        I  : the paser is not case sensitive' + sNEW_LINE +
            '  -j  Generate Java Language interface files for' + sNEW_LINE +
            '  -f  Specify unit(s) renaming option : oldName= NewName(;oldName= NewName)* ';
-  sCOPYRIGHT = 'ws_helper, Web Service Toolkit 0.6 Copyright (c) 2006-2014 by Inoussa OUEDRAOGO';
+  sCOPYRIGHT = 'ws_helper, Web Service Toolkit 0.7 Copyright (c) 2006-2017 by Inoussa OUEDRAOGO';
 
 
 type
