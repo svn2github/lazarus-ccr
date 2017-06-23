@@ -1,30 +1,30 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="3">
+  <Package Version="4">
     <PathDelim Value="\"/>
     <Name Value="wst_ics"/>
+    <Type Value="RunAndDesignTime"/>
+    <AddToProjectUsesSection Value="True"/>
     <Author Value="Inoussa Ouedraogo"/>
     <CompilerOptions>
-      <Version Value="8"/>
+      <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <OtherUnitFiles Value="..\..\;$(LazarusDir)\others_package\OverbyteIcsV5\Delphi\Vc32\"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+        <OtherUnitFiles Value="..\..;$(LazarusDir)\others_package\OverbyteIcsV5\Delphi\Vc32"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
       <Parsing>
         <SyntaxOptions>
           <CStyleOperator Value="False"/>
+          <UseAnsiStrings Value="False"/>
         </SyntaxOptions>
       </Parsing>
-      <Other>
-        <CompilerPath Value="$(CompPath)"/>
-      </Other>
     </CompilerOptions>
     <Description Value="WebServices Toolkit  OverByteICS transport layer
 "/>
     <License Value="Modified LGPL
 "/>
-    <Version Minor="6"/>
+    <Version Minor="7"/>
     <Files Count="2">
       <Item1>
         <Filename Value="..\..\ics_http_protocol.pas"/>
@@ -35,7 +35,6 @@
         <UnitName Value="ics_tcp_protocol"/>
       </Item2>
     </Files>
-    <Type Value="RunAndDesignTime"/>
     <RequiredPkgs Count="3">
       <Item1>
         <PackageName Value="LCL"/>
@@ -49,7 +48,7 @@
       </Item3>
     </RequiredPkgs>
     <UsageOptions>
-      <UnitPath Value="$(PkgOutDir)\"/>
+      <UnitPath Value="$(PkgOutDir)"/>
     </UsageOptions>
     <PublishOptions>
       <Version Value="2"/>

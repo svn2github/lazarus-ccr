@@ -1,11 +1,12 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="3">
+  <Package Version="4">
     <PathDelim Value="\"/>
     <Name Value="wst_core"/>
+    <AddToProjectUsesSection Value="True"/>
     <Author Value="Inoussa Ouedraogo"/>
     <CompilerOptions>
-      <Version Value="9"/>
+      <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
         <OtherUnitFiles Value="..\.."/>
@@ -17,16 +18,13 @@
           <UseAnsiStrings Value="False"/>
         </SyntaxOptions>
       </Parsing>
-      <Other>
-        <CompilerPath Value="$(CompPath)"/>
-      </Other>
     </CompilerOptions>
     <Description Value="Runtime package for core WST functionalities. 
 Protocols are not included.
 "/>
     <License Value="Modified LGPL
 "/>
-    <Version Minor="6"/>
+    <Version Minor="7"/>
     <Files Count="42">
       <Item1>
         <Filename Value="..\..\xmlrpc_formatter.pas"/>
@@ -204,7 +202,7 @@ Protocols are not included.
       </Item1>
     </RequiredPkgs>
     <UsageOptions>
-      <UnitPath Value="$(PkgOutDir)\"/>
+      <UnitPath Value="$(PkgOutDir)"/>
     </UsageOptions>
     <PublishOptions>
       <Version Value="2"/>

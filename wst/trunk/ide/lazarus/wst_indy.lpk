@@ -27,7 +27,7 @@
 "/>
     <License Value="Modified LGPL
 "/>
-    <Version Minor="6"/>
+    <Version Minor="7"/>
     <Files Count="4">
       <Item1>
         <Filename Value="..\..\indy_http_protocol.pas"/>
