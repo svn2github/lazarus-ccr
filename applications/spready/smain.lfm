@@ -345,7 +345,6 @@ object MainForm: TMainForm
       Hint = 'Cell font name'
       Top = 0
       Width = 130
-      CellFormatItem = cfiFontName
       WorkbookSource = WorkbookSource
       DropDownCount = 24
       ItemIndex = 44
@@ -415,7 +414,7 @@ object MainForm: TMainForm
       Caption = 'ToolButton58'
       DropdownMenu = PuCellProtection
       ImageIndex = 73
-      Style = tbsButtonDrop
+      Style = tbsDropDown
     end
   end
   object ToolBar2: TToolBar
@@ -636,7 +635,6 @@ object MainForm: TMainForm
       BorderSpacing.Right = 2
       BorderSpacing.Bottom = 3
       TabOrder = 1
-      WantReturns = False
       WorkbookSource = WorkbookSource
     end
     object Splitter2: TSplitter
