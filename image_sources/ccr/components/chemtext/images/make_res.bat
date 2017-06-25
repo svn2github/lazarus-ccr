@@ -1,0 +1,1 @@
+..\..\..\..\lazres ..\..\..\..\..\components\chemtext\source\chemtext.res @list.txt
