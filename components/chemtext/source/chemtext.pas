@@ -95,14 +95,12 @@ type
 { The following rotuines can be used in an event handler, for example in
   OnDrawDataCell of DBGrid:
 
-    procedure TForm1.DBGrid1DrawDataCell(Sender: TObject;
-              const Rect: TRect; Field: TField; State:
-              TGridDrawState);
-    begin
-      if Assigned(Field) then
-         ChemTextOut((Sender as TDBGrid).Canvas, Rect, Rect.Left,
-                     Rect.Top, Field.DisplayText);
-    end;
+  procedure TForm1.DBGrid1DrawDataCell(Sender: TObject; const Rect: TRect;
+    Field: TField; State: TGridDrawState);
+  begin
+    if Assigned(Field) then
+      ChemTextOut((Sender as TDBGrid).Canvas, Rect.Left, Rect.Top, Field.DisplayText);
+  end;
 }
 
 function ChemTextOut(ACanvas: TCanvas; X, Y: integer;
