@@ -11,6 +11,7 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    Label4: TLabel;
     Spacer: TBevel;
     ChemLabel1: TChemLabel;
     ChemLabel2: TChemLabel;

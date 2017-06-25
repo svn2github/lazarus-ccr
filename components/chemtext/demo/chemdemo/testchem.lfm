@@ -117,7 +117,7 @@ object Form1: TForm1
   object Edit1: TEdit
     Left = 32
     Height = 26
-    Top = 168
+    Top = 184
     Width = 329
     OnChange = Edit1Change
     TabOrder = 0
@@ -126,7 +126,7 @@ object Form1: TForm1
   object ChemLabel4: TChemLabel
     Left = 32
     Height = 36
-    Top = 208
+    Top = 224
     Width = 131
     Arrow = caUTF8Single
     Caption = '(CH3)3COH'
@@ -135,5 +135,13 @@ object Form1: TForm1
     Font.Name = 'Times New Roman'
     ParentColor = False
     ParentFont = False
+  end
+  object Label4: TLabel
+    Left = 32
+    Height = 18
+    Top = 162
+    Width = 140
+    Caption = 'Type a formula here:'
+    ParentColor = False
   end
 end
