@@ -160,7 +160,6 @@ object Form1: TForm1
     Height = 23
     Top = 381
     Width = 50
-    Alignment = taRightJustify
     OnChange = SpinEdit1Change
     TabOrder = 7
     Value = 20

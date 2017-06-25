@@ -6,7 +6,7 @@ uses
   Interfaces, // this includes the LCL widgetset
   Forms, testchem;
 
-{$R *.RES}
+{$R *.res}
 
 begin
   RequireDerivedFormResource := True;
