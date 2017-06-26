@@ -11,17 +11,17 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    Label1: TChemLabel;
+    Label2: TChemLabel;
+    Label3: TChemLabel;
     Label4: TLabel;
     Spacer: TBevel;
     ChemLabel1: TChemLabel;
     ChemLabel2: TChemLabel;
     ChemLabel3: TChemLabel;
+    ChemLabel4: TChemLabel;
     ChemLabel5: TChemLabel;
     Edit1: TEdit;
-    ChemLabel4: TChemLabel;
-    Label1: TLabel;
-    Label2: TLabel;
-    Label3: TLabel;
     Panel1: TPanel;
     procedure Edit1Change(Sender: TObject);
   private

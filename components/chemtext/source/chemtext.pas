@@ -133,6 +133,7 @@ const
   SUBFONT_OFFSET_MULTIPLIER = 50;
   SUBFONT_DIVISOR = 100;
   ARROW_LINE: array[boolean] of char = ('-', '=');
+  ESCAPE_CHAR = '\';
 
 function ChemTextHeight(ACanvas: TCanvas; const AText: String;
   Arrow: TChemArrow = caAsciiSingle): Integer;
@@ -236,6 +237,7 @@ var
   i, j: integer;
   s: string;
   subNos: boolean;        // "subscript numbers"
+  escaping: Boolean;
 begin
   Result := Size(0, 0);
   if AText = '' then
@@ -249,73 +251,86 @@ begin
 
     x0 := X;
     subNos := false;
+    escaping := false;
     i := 1;
     while i <= Length(AText) do begin
-      case AText[i] of
-        '0'..'9':
-          begin
-            s := AText[i];
-            j := i+1;
-            while (j <= Length(AText)) and (AText[j] in ['0'..'9']) do
-              inc(j);
-            s := Copy(AText, i, j-i);
-            if subNos then
-              DrawSub(X, Y, s)
-            else
-              DrawNormal(X, Y, s);
-            i := j-1;
-            subNos := false;
-          end;
-
-        '<':
-          begin
-            j := i+1;
-            while (j <= Length(AText)) and (AText[j] in ['-', '=']) do
-              inc(j);
-            if (AText[j] = '>') then
-              DrawArrow(X, Y, adBoth, j-i-1)
-            else begin
-              DrawArrow(X, Y, adLeft, j-i-1);
-              dec(j);
-            end;
-            i := j;
-            subNos := false;
-          end;
-
-        '+':
-          begin
-            if (i > 1) and (AText[i-1] in ['A'..'Z','a'..'z','0'..'9','+',')']) then
-              DrawSup(X, Y, '+')
-            else
-              DrawNormal(X, Y, '+');
-            subNos := false;
-          end;
-
-        '-':
-          begin
-            j := i+1;
-            while (j <= Length(AText)) and (AText[j] = '-') do inc(j);
-            if (j <= Length(AText)) and (AText[j] = '>') then  // Arrow
+      if escaping then
+      begin
+        DrawNormal(X, Y, AText[i]);
+        escaping := false;
+      end else
+        case AText[i] of
+          '0'..'9':
             begin
-              DrawArrow(X, y, adRight, j-i);
-              i := j;
-            end else                  // superscript -
-              DrawSup(X, Y, '-');
-            subNos := false;
-          end;
+              s := AText[i];
+              j := i+1;
+              while (j <= Length(AText)) and (AText[j] in ['0'..'9']) do
+                inc(j);
+              s := Copy(AText, i, j-i);
+              if subNos then
+                DrawSub(X, Y, s)
+              else
+                DrawNormal(X, Y, s);
+              i := j-1;
+              subNos := false;
+            end;
 
-        else
-          begin
-            j := i+1;
-            while (j <= Length(AText)) and not (AText[j] in ['0'..'9', '+', '-', '<']) do
-              inc(j);
-            s := Copy(AText, i, j-i);
-            DrawNormal(X, Y, s);
-            i := j-1;
-            subNos := AText[i] in ['A'..'Z', 'a'..'z', ')'];
-              // In these cases a subsequent number will be subscripted.
-          end;
-      end;
+          '<':
+            begin
+              j := i+1;
+              while (j <= Length(AText)) and (AText[j] in ['-', '=']) do
+                inc(j);
+              if (AText[j] = '>') then
+                DrawArrow(X, Y, adBoth, j-i-1)
+              else begin
+                DrawArrow(X, Y, adLeft, j-i-1);
+                dec(j);
+              end;
+              i := j;
+              subNos := false;
+            end;
+
+          '+':
+            begin
+              if (i > 1) and (AText[i-1] in ['A'..'Z','a'..'z','0'..'9','+',')']) then
+                DrawSup(X, Y, '+')
+              else
+                DrawNormal(X, Y, '+');
+              subNos := false;
+            end;
+
+          '-':
+            begin
+              begin
+                j := i+1;
+                while (j <= Length(AText)) and (AText[j] = '-') do inc(j);
+                if (j <= Length(AText)) and (AText[j] = '>') then  // Arrow
+                begin
+                  DrawArrow(X, y, adRight, j-i);
+                  i := j;
+                end else                  // superscript -
+                  DrawSup(X, Y, '-');
+              end;
+              subNos := false;
+            end;
+
+          ESCAPE_CHAR:
+            escaping := true;
+
+          else
+            begin
+              j := i+1;
+              while (j <= Length(AText)) and
+                    not (AText[j] in ['0'..'9', '+', '-', '<', ESCAPE_CHAR])
+              do
+                inc(j);
+              s := Copy(AText, i, j-i);
+              DrawNormal(X, Y, s);
+              i := j-1;
+              subNos := AText[i] in ['A'..'Z', 'a'..'z', ')'];
+                // In these cases a subsequent number will be subscripted.
+            end;
+        end;
       inc(i);
     end;
   end;

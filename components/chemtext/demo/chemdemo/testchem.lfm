@@ -83,17 +83,17 @@ object Form1: TForm1
       Width = 17
       Shape = bsSpacer
     end
-    object Label1: TLabel
+    object Label3: TChemLabel
       AnchorSideRight.Control = Spacer
-      Left = 103
+      Left = 16
       Height = 18
-      Top = 40
-      Width = 67
+      Top = 96
+      Width = 154
       Anchors = [akTop, akRight]
-      Caption = 'Propanol:'
+      Caption = 'Ion\-molecule reaction:'
       ParentColor = False
     end
-    object Label2: TLabel
+    object Label2: TChemLabel
       AnchorSideRight.Control = Spacer
       Left = 40
       Height = 18
@@ -103,14 +103,14 @@ object Form1: TForm1
       Caption = 'Chemical reaction:'
       ParentColor = False
     end
-    object Label3: TLabel
+    object Label1: TChemLabel
       AnchorSideRight.Control = Spacer
-      Left = 19
+      Left = 103
       Height = 18
-      Top = 96
-      Width = 151
+      Top = 40
+      Width = 67
       Anchors = [akTop, akRight]
-      Caption = 'Ion-molecule reaction:'
+      Caption = 'Propanol:'
       ParentColor = False
     end
   end
