@@ -4612,6 +4612,33 @@ object MainForm: TMainForm
           AutoCheck = True
         end
       end
+      object MenuItem131: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem136: TMenuItem
+        Caption = 'Comments'
+        object MenuItem137: TMenuItem
+          Action = AcCommentNew
+        end
+        object MenuItem138: TMenuItem
+          Action = AcCommentEdit
+        end
+        object MenuItem139: TMenuItem
+          Action = AcCommentDelete
+        end
+      end
+      object MenuItem140: TMenuItem
+        Caption = 'Hyperlinks'
+        object MenuItem158: TMenuItem
+          Action = AcHyperlinkNew
+        end
+        object MenuItem159: TMenuItem
+          Action = AcHyperlinkEdit
+        end
+        object MenuItem178: TMenuItem
+          Action = AcHyperlinkDelete
+        end
+      end
     end
     object MnuView: TMenuItem
       Caption = 'View'

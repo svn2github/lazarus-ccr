@@ -52,6 +52,14 @@ type
     MenuItem104: TMenuItem;
     MenuItem105: TMenuItem;
     MenuItem106: TMenuItem;
+    MenuItem131: TMenuItem;
+    MenuItem136: TMenuItem;
+    MenuItem137: TMenuItem;
+    MenuItem138: TMenuItem;
+    MenuItem139: TMenuItem;
+    MenuItem140: TMenuItem;
+    MenuItem158: TMenuItem;
+    MenuItem159: TMenuItem;
     MenuItem160: TMenuItem;
     MenuItem161: TMenuItem;
     MenuItem162: TMenuItem;
@@ -70,6 +78,7 @@ type
     MenuItem175: TMenuItem;
     MenuItem176: TMenuItem;
     MenuItem177: TMenuItem;
+    MenuItem178: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
