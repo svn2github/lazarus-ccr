@@ -477,8 +477,11 @@ var
   res: TVpResource;
   i, j: Integer;
 begin
-  if FFileName = '' then
+  if (FFileName = '') then
     raise Exception.Create(RSNoFilenameSpecified);
+
+  if not FileExists(FFileName) then
+    exit;
 
   stream := TFileStream.Create(FFilename, fmOpenRead + fmShareDenyWrite);
   try
