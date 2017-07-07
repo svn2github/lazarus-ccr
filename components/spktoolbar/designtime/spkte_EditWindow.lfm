@@ -8,22 +8,21 @@ object frmEditWindow: TfrmEditWindow
   ClientWidth = 341
   Color = clBtnFace
   Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
   OnActivate = FormActivate
   OnDestroy = FormDestroy
   OnShow = FormShow
-  LCLVersion = '1.7'
+  LCLVersion = '1.9.0.0'
   object tvStructure: TTreeView
     Left = 0
-    Height = 346
-    Top = 22
+    Height = 344
+    Top = 24
     Width = 341
     Align = alClient
-    DefaultItemHeight = 16
+    Font.Color = clWindowText
     HideSelection = False
     Images = ilTreeImages
     Indent = 19
+    ParentFont = False
     PopupMenu = pmStructure
     RightClickSelect = True
     TabOrder = 0
@@ -35,9 +34,12 @@ object frmEditWindow: TfrmEditWindow
   end
   object tbToolBar: TToolBar
     Left = 0
-    Height = 22
+    Height = 24
     Top = 0
     Width = 341
+    AutoSize = True
+    ButtonHeight = 24
+    ButtonWidth = 24
     Caption = 'tbToolBar'
     EdgeBorders = []
     Images = ilActionImages
@@ -47,71 +49,68 @@ object frmEditWindow: TfrmEditWindow
     TabOrder = 1
     object tbAddTab: TToolButton
       Left = 4
-      Top = 2
+      Top = 0
       Action = aAddTab
     end
     object tbRemoveTab: TToolButton
-      Left = 27
-      Top = 2
+      Left = 28
+      Top = 0
       Action = aRemoveTab
     end
     object ToolButton3: TToolButton
-      Left = 50
-      Height = 22
-      Top = 2
-      Width = 10
+      Left = 52
+      Height = 24
+      Top = 0
       Caption = 'ToolButton3'
       ImageIndex = 2
       Style = tbsSeparator
     end
     object tbAddPane: TToolButton
       Left = 60
-      Top = 2
+      Top = 0
       Action = aAddPane
     end
     object tbRemovePane: TToolButton
-      Left = 83
-      Top = 2
+      Left = 84
+      Top = 0
       Action = aRemovePane
     end
     object ToolButton6: TToolButton
-      Left = 106
-      Height = 22
-      Top = 2
-      Width = 10
+      Left = 108
+      Height = 24
+      Top = 0
       Caption = 'ToolButton6'
       ImageIndex = 4
       Style = tbsSeparator
     end
     object tbAddItem: TToolButton
       Left = 116
-      Top = 2
+      Top = 0
       Action = aAddLargeButton
       DropdownMenu = pmAddItem
       Style = tbsDropDown
     end
     object tbRemoveItem: TToolButton
-      Left = 151
-      Top = 2
+      Left = 152
+      Top = 0
       Action = aRemoveItem
     end
     object ToolButton9: TToolButton
-      Left = 174
-      Height = 22
-      Top = 2
-      Width = 10
+      Left = 176
+      Height = 24
+      Top = 0
       Caption = 'ToolButton9'
       ImageIndex = 6
       Style = tbsSeparator
     end
     object tbMoveUp: TToolButton
       Left = 184
-      Top = 2
+      Top = 0
       Action = aMoveUp
     end
     object tbMoveDown: TToolButton
-      Left = 207
-      Top = 2
+      Left = 208
+      Top = 0
       Action = aMoveDown
     end
   end

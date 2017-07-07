@@ -13,6 +13,9 @@ uses
 type TCreateItemFunc = function(Pane : TSpkPane) : TSpkBaseItem;
 
 type
+
+  { TfrmEditWindow }
+
   TfrmEditWindow = class(TForm)
     aAddCheckbox: TAction;
     aAddRadioButton: TAction;
