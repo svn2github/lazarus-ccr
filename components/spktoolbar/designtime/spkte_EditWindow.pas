@@ -69,7 +69,6 @@ type
     N3: TMenuItem;
     Moveup1: TMenuItem;
     Movedown1: TMenuItem;
-    procedure FormCreate(Sender: TObject);
     procedure tvStructureChange(Sender: TObject; Node: TTreeNode);
     procedure aAddTabExecute(Sender: TObject);
     procedure aRemoveTabExecute(Sender: TObject);
@@ -109,6 +108,8 @@ type
     function CheckValidTabNode(Node: TTreeNode): boolean;
     function CheckValidPaneNode(Node: TTreeNode): boolean;
     function CheckValidItemNode(Node: TTreeNode): boolean;
+
+    procedure UpdatePPI;
   public
     { Public declarations }
     function ValidateTreeData: boolean;
@@ -656,28 +657,9 @@ procedure TfrmEditWindow.FormActivate(Sender: TObject);
 begin
   if (FToolbar = nil) or (FDesigner = nil) then
     exit;
+  UpdatePPI;
   if not ValidateTreeData then
     BuildTreeData;
-end;
-
-procedure TfrmEditWindow.FormCreate(Sender: TObject);
-begin
-  if Monitor.PixelsPerInch >= 180 then begin
-    ActionList.Images := ilActionImages_200;
-    tbToolbar.Images := ilActionImages_200;
-    tvStructure.Images := ilTreeImages_150;
-  end else
-  if Monitor.PixelsPerInch >= 135 then begin
-    ActionList.Images := ilActionImages_150;
-    tbToolbar.Images := ilActionImages_150;
-    tvStructure.Images := ilTreeImages_150;
-  end else begin
-    ActionList.Images := ilActionImages;
-    tbToolbar.Images := ilActionImages;
-    tvStructure.Images := ilTreeImages;
-  end;
-  tbToolbar.ButtonHeight := tbToolbar.Images.Height + 8;
-  tbToolbar.ButtonWidth := tbToolbar.Images.Width + 8;
 end;
 
 procedure TfrmEditWindow.FormDestroy(Sender: TObject);
@@ -1080,7 +1062,7 @@ begin
       else if TObject(tvStructure.Selected.Data) is TSpkBaseItem then
         DoRemoveItem
       else
-        raise Exception.Create('TfrmEditWindow.tvStructureKeyDown: Uszkodzona struktura drzewa!');
+        raise Exception.Create('TfrmEditWindow.tvStructureKeyDown: Damaged tree structure!');
     end;
    end;
 end;
@@ -1137,8 +1119,7 @@ begin
             end;
           end;
 
-          // Wa¿ne! Trzeba sprawdziæ, czy w drzewie nie ma dodatkowych
-          // elementów!
+          // Important! You need to make sure that there are no extra items in the tree!
           ItemsValid := ItemsValid and (ItemNode = nil);
           PanesValid := PanesValid and ItemsValid;
         end;
@@ -1150,8 +1131,7 @@ begin
         end;
       end;
 
-      // Wa¿ne! Trzeba sprawdziæ, czy w drzewie nie ma dodatkowych
-      // elementów!
+      // Important! You need to make sure that there are no extra items in the tree!
       PanesValid := PanesValid and (PaneNode = nil);
       TabsValid := TabsValid and PanesValid;
     end;
@@ -1163,10 +1143,29 @@ begin
     end;
   end;
 
-  // Wa¿ne! Trzeba sprawdziæ, czy w drzewie nie ma dodatkowych
-  // elementów!
+  // Important! You need to make sure that there are no extra items in the tree!
   TabsValid := TabsValid and (TabNode = nil);
   Result := TabsValid;
+end;
+
+procedure TfrmEditWindow.UpdatePPI;
+begin
+  if Monitor.PixelsPerInch >= 180 then begin
+    ActionList.Images := ilActionImages_200;
+    tbToolbar.Images := ilActionImages_200;
+    tvStructure.Images := ilTreeImages_200;
+  end else
+  if Monitor.PixelsPerInch >= 135 then begin
+    ActionList.Images := ilActionImages_150;
+    tbToolbar.Images := ilActionImages_150;
+    tvStructure.Images := ilTreeImages_150;
+  end else begin
+    ActionList.Images := ilActionImages;
+    tbToolbar.Images := ilActionImages;
+    tvStructure.Images := ilTreeImages;
+  end;
+  tbToolbar.ButtonHeight := tbToolbar.Images.Height + 8;
+  tbToolbar.ButtonWidth := tbToolbar.Images.Width + 8;
 end;
 
 end.

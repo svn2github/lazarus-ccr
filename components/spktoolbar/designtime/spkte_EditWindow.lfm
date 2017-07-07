@@ -9,7 +9,6 @@ object frmEditWindow: TfrmEditWindow
   Color = clBtnFace
   Font.Color = clWindowText
   OnActivate = FormActivate
-  OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
   LCLVersion = '1.9.0.0'
