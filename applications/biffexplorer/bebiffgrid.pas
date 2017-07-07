@@ -4689,6 +4689,7 @@ var
   dw: DWord;
   npal: Integer;
   i: Integer;
+  palidx: Integer;
   s: String;
 begin
   numBytes := 2;
@@ -4704,9 +4705,10 @@ begin
     numbytes := 4;
     Move(FBuffer[FBufferIndex], dw, numBytes);
     dw := DWordLEToN(dw);
-    s := Format('Palette color, index #%d ($%.2x)',[i, i]);
-    case i of
-      $00..$07: ;
+    palIdx := i + 8;  // 8 built-in colors are not contained in palette record
+    s := Format('Palette color, index #%d ($%.2x)',[palIdx, palIdx]);
+    case palIdx of
+//      $00..$07: s := s + ', built-in palette';
       $08..$3F: s := s + ', user-defined palette';
       $40     : s := s + ', system window text color for border lines';
       $41     : s := s + ', system window background color for pattern background';
