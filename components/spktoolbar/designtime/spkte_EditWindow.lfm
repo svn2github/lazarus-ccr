@@ -18,11 +18,9 @@ object frmEditWindow: TfrmEditWindow
     Top = 24
     Width = 341
     Align = alClient
-    Font.Color = clWindowText
     HideSelection = False
     Images = ilTreeImages
     Indent = 19
-    ParentFont = False
     PopupMenu = pmStructure
     RightClickSelect = True
     TabOrder = 0
@@ -63,53 +61,53 @@ object frmEditWindow: TfrmEditWindow
       Top = 0
       Caption = 'ToolButton3'
       ImageIndex = 2
-      Style = tbsSeparator
+      Style = tbsDivider
     end
     object tbAddPane: TToolButton
-      Left = 60
+      Left = 57
       Top = 0
       Action = aAddPane
     end
     object tbRemovePane: TToolButton
-      Left = 84
+      Left = 81
       Top = 0
       Action = aRemovePane
     end
     object ToolButton6: TToolButton
-      Left = 108
+      Left = 105
       Height = 24
       Top = 0
       Caption = 'ToolButton6'
       ImageIndex = 4
-      Style = tbsSeparator
+      Style = tbsDivider
     end
     object tbAddItem: TToolButton
-      Left = 116
+      Left = 110
       Top = 0
       Action = aAddLargeButton
       DropdownMenu = pmAddItem
       Style = tbsDropDown
     end
     object tbRemoveItem: TToolButton
-      Left = 152
+      Left = 146
       Top = 0
       Action = aRemoveItem
     end
     object ToolButton9: TToolButton
-      Left = 176
+      Left = 170
       Height = 24
       Top = 0
       Caption = 'ToolButton9'
       ImageIndex = 6
-      Style = tbsSeparator
+      Style = tbsDivider
     end
     object tbMoveUp: TToolButton
-      Left = 184
+      Left = 175
       Top = 0
       Action = aMoveUp
     end
     object tbMoveDown: TToolButton
-      Left = 208
+      Left = 199
       Top = 0
       Action = aMoveDown
     end

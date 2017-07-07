@@ -15,6 +15,9 @@ type
   { TfrmAppearanceEditWindow }
 
   TfrmAppearanceEditWindow = class(TForm)
+    SmallImages: TImageList;
+    LargeImages: TImageList;
+    Images_150: TImageList;
     Label15: TLabel;
     Label16: TLabel;
     Label19: TLabel;
@@ -63,8 +66,8 @@ type
     Label27: TLabel;
     LblCaptionBackground1: TLabel;
     LblRGB: TLabel;
-    SmallImages: TImageList;
-    LargeImages: TImageList;
+    Images_100: TImageList;
+    Images_200: TImageList;
     Label18: TLabel;
     LblInactiveTabHeaderFontColor: TLabel;
     pInactiveTabHeaderFont: TPanel;
@@ -222,9 +225,9 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure LbAppearanceStyleClick(Sender: TObject);
+
     procedure pActiveTabHeaderFontClick(Sender: TObject);
     procedure pInactiveTabHeaderFontClick(Sender: TObject);
-
     procedure pTabFrameClick(Sender: TObject);
     procedure pTabGradientFromClick(Sender: TObject);
     procedure pTabGradientToClick(Sender: TObject);
@@ -292,6 +295,10 @@ type
     procedure ScreenshotMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
 
+  private
+    procedure PositionControls;
+    procedure UpdateImages;
+
   public
     property Appearance : TSpkToolbarAppearance read GetAppearance write SetAppearance;
   end;
@@ -304,7 +311,7 @@ implementation
 {$R *.lfm}
 
 uses
-  clipbrd, Spkt_Const;
+  Types, clipbrd, Spkt_Const;
 
 var
   CurrPageIndex: Integer = 0;
@@ -817,45 +824,9 @@ begin
 end;
 
 procedure TfrmAppearanceEditWindow.FormActivate(Sender: TObject);
-var
-  w, h: Integer;
 begin
-  ColorView.Width := ColorView.Height;
-
-  w := SpkScaleX(pTabFrame.Width, 96);
-  h := SpkScaleY(pTabFrame.Height, 96);
-
-  pTabFrame.Width := w;
-  pTabFrame.Height := h;
-  pTabGradientFrom.Height := h;
-  pTabGradientTo.Height := h;
-  pActiveTabHeaderFont.Height := h;
-  pInactiveTabHeaderFont.Height := h;
-  pTabHeaderFont.Height := h;
-
-  pPaneBorderDark.Width := w;
-  pPaneBorderDark.Height := h;
-  pPaneBorderLight.Height := h;
-  pPaneGradientFrom.Height := h;
-  pPaneGradientTo.Height := h;
-  pPaneCaptionBackground.Height := h;
-  pPaneCaptionFontColor.Height := h;
-  pPaneCaptionFont.Height := h;
-
-  pItemIdleFrame.Width := w;
-  pItemHotTrackFrame.Width := w;
-  pItemActiveFrame.Width := w;
-  pItemIdleFrame.Height := h;
-  pItemIdleGradientFrom.Height := h;
-  pItemIdleGradientTo.Height := h;
-  pItemIdleCaptionColor.Height := h;
-  pItemIdleInnerDark.Height := h;
-  pItemIdleInnerLight.Height := h;
-  pItemFont.Height := h;
-
-  Width := SpkScaleX(Width, 96);
-  Height := SpkScaleY(Height, 96);
-  Position := poScreenCenter;
+  UpdateImages;
+  PositionControls;
 end;
 
 procedure TfrmAppearanceEditWindow.FormCloseQuery(Sender: TObject;
@@ -866,46 +837,6 @@ end;
 
 procedure TfrmAppearanceEditWindow.FormCreate(Sender: TObject);
 begin
-  bOK.AutoSize := false;
-  bOK.Width := bCancel.Width;
-
-  LargeImages.AddIcon(Application.Icon);
-  SmallImages.AddIcon(Application.Icon);
-
-  SmallImages.GetBitmap(0, bTabFrameColor.Glyph);
-  SmallImages.GetBitmap(0, bTabGradientFromColor.Glyph);
-  SmallImages.GetBitmap(0, bTabGradientToColor.Glyph);
-  SmallImages.GetBitmap(0, bActiveTabHeaderFontColor.Glyph);
-  SmallImages.GetBitmap(0, bInactiveTabHeaderFontColor.Glyph);
-
-  SmallImages.GetBitmap(0, bPaneBorderDarkColor.Glyph);
-  SmallImages.GetBitmap(0, bPaneBorderLightColor.Glyph);
-  SmallImages.GetBitmap(0, bPaneGradientFromColor.Glyph);
-  SmallImages.GetBitmap(0, bPaneGradientToColor.Glyph);
-  SmallImages.GetBitmap(0, bPaneCaptionBackgroundColor.Glyph);
-  SmallImages.GetBitmap(0, bPaneCaptionFontColor.Glyph);
-
-  SmallImages.GetBitmap(0, bItemIdleCaptionColor.Glyph);
-  SmallImages.GetBitmap(0, bItemIdleFrameColor.Glyph);
-  SmallImages.GetBitmap(0, bItemIdleGradientFromColor.Glyph);
-  SmallImages.GetBitmap(0, bItemIdleGradientToColor.Glyph);
-  SmallImages.GetBitmap(0, bItemIdleInnerDarkColor.Glyph);
-  SmallImages.GetBitmap(0, bItemIdleInnerLightColor.Glyph);
-
-  SmallImages.GetBitmap(0, bItemHotTrackCaptionColor.Glyph);
-  SmallImages.GetBitmap(0, bItemHotTrackFrameColor.Glyph);
-  SmallImages.GetBitmap(0, bItemHotTrackGradientFromColor.Glyph);
-  SmallImages.GetBitmap(0, bItemHotTrackGradientToColor.Glyph);
-  SmallImages.GetBitmap(0, bItemHotTrackInnerDarkColor.Glyph);
-  SmallImages.GetBitmap(0, bItemHotTrackInnerLightColor.Glyph);
-
-  SmallImages.GetBitmap(0, bItemActiveCaptionColor.Glyph);
-  SmallImages.GetBitmap(0, bItemActiveFrameColor.Glyph);
-  SmallImages.GetBitmap(0, bItemActiveGradientFromColor.Glyph);
-  SmallImages.GetBitmap(0, bItemActiveGradientToColor.Glyph);
-  SmallImages.GetBitmap(0, bItemActiveInnerDarkColor.Glyph);
-  SmallImages.GetBitmap(0, bItemActiveInnerLightColor.Glyph);
-
   PageControl1.PageIndex := CurrPageIndex;
 end;
 
@@ -1382,6 +1313,132 @@ procedure TfrmAppearanceEditWindow.ScreenshotMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 begin
   FScreenshotForm.ModalResult := mrOK;
+end;
+
+procedure TfrmAppearanceEditWindow.PositionControls;
+var
+  w, h, dist: Integer;
+begin
+  // Update layout of controls
+  bOK.AutoSize := false;
+  bOK.Width := bCancel.Width;
+
+  ColorView.Width := ColorView.Height;
+
+  h := CbTabGradientKind.Height;
+  w := SpkScaleX(pTabFrame.Width, 96);
+//  h := SpkScaleY(pTabFrame.Height, 96);
+
+  pTabFrame.Width := w;
+  pTabFrame.Height := h;
+  pTabGradientFrom.Height := h;
+  pTabGradientTo.Height := h;
+  pActiveTabHeaderFont.Height := h;
+  pInactiveTabHeaderFont.Height := h;
+  pTabHeaderFont.Height := h;
+
+  pPaneBorderDark.Width := w;
+  pPaneBorderDark.Height := h;
+  pPaneBorderLight.Height := h;
+  pPaneGradientFrom.Height := h;
+  pPaneGradientTo.Height := h;
+  pPaneCaptionBackground.Height := h;
+  pPaneCaptionFontColor.Height := h;
+  pPaneCaptionFont.Height := h;
+
+  pItemIdleFrame.Width := w;
+  pItemHotTrackFrame.Width := w;
+  pItemActiveFrame.Width := w;
+  pItemIdleFrame.Height := h;
+  pItemIdleGradientFrom.Height := h;
+  pItemIdleGradientTo.Height := h;
+  pItemIdleCaptionColor.Height := h;
+  pItemIdleInnerDark.Height := h;
+  pItemIdleInnerLight.Height := h;
+  pItemFont.Height := h;
+
+  // Adjust width and height
+  Width := SpkScaleX(Width, 96);
+  h := Height - TabSheet1.ClientHeight;
+  dist := pTabHeaderFont.Top - (pInactiveTabHeaderFont.Top + pInactiveTabHeaderFont.Height);
+  Height := cbPaneStyle.Top + cbPanestyle.Height + dist + h;
+  Position := poScreenCenter;
+end;
+
+procedure TfrmAppearanceEditWindow.UpdateImages;
+var
+  imglist: TImageList;
+  m: double;
+  ico: TIcon;
+  w, h: Integer;
+begin
+  // Use correct size of color picker icon
+  if Monitor.PixelsPerInch >= 180 then begin
+    imglist := Images_200;
+    m := 2.0;
+  end
+  else if Monitor.PixelsPerInch >= 135 then begin
+    imglist := Images_150;
+    m := 1.5;
+  end
+  else begin
+    imglist := Images_100;
+    m := 1.0;
+  end;
+
+  ico := TIcon.Create;
+  try
+    ico.Assign(Application.Icon);
+    w := round(LargeImages.Width * m);
+    h := round(LargeImages.Height * m);
+    ico.Current := ico.GetBestIndexForSize(Size(w, h));
+    LargeImages.Width := ico.Width;
+    LargeImages.Height := ico.Height;
+    LargeImages.AddIcon(ico);
+
+    w := round(SmallImages.Width * m);
+    h := round(SmallImages.Height * m);
+    ico.Current := ico.GetBestIndexForSize(Size(w, h));
+    SmallImages.Width := ico.Width;
+    SmallImages.Height := ico.Height;
+    SmallImages.AddIcon(ico);
+  finally
+    ico.Free;
+  end;
+
+  imglist.GetBitmap(0, bTabFrameColor.Glyph);
+  imglist.GetBitmap(0, bTabGradientFromColor.Glyph);
+  imglist.GetBitmap(0, bTabGradientToColor.Glyph);
+  imglist.GetBitmap(0, bActiveTabHeaderFontColor.Glyph);
+  imglist.GetBitmap(0, bInactiveTabHeaderFontColor.Glyph);
+
+  imglist.GetBitmap(0, bPaneBorderDarkColor.Glyph);
+  imglist.GetBitmap(0, bPaneBorderLightColor.Glyph);
+  imglist.GetBitmap(0, bPaneGradientFromColor.Glyph);
+  imglist.GetBitmap(0, bPaneGradientToColor.Glyph);
+  imglist.GetBitmap(0, bPaneCaptionBackgroundColor.Glyph);
+  imglist.GetBitmap(0, bPaneCaptionFontColor.Glyph);
+
+  imglist.GetBitmap(0, bItemIdleCaptionColor.Glyph);
+  imglist.GetBitmap(0, bItemIdleFrameColor.Glyph);
+  imglist.GetBitmap(0, bItemIdleGradientFromColor.Glyph);
+  imglist.GetBitmap(0, bItemIdleGradientToColor.Glyph);
+  imglist.GetBitmap(0, bItemIdleInnerDarkColor.Glyph);
+  imglist.GetBitmap(0, bItemIdleInnerLightColor.Glyph);
+
+  imglist.GetBitmap(0, bItemHotTrackCaptionColor.Glyph);
+  imglist.GetBitmap(0, bItemHotTrackFrameColor.Glyph);
+  imglist.GetBitmap(0, bItemHotTrackGradientFromColor.Glyph);
+  imglist.GetBitmap(0, bItemHotTrackGradientToColor.Glyph);
+  imglist.GetBitmap(0, bItemHotTrackInnerDarkColor.Glyph);
+  imglist.GetBitmap(0, bItemHotTrackInnerLightColor.Glyph);
+
+  imglist.GetBitmap(0, bItemActiveCaptionColor.Glyph);
+  imglist.GetBitmap(0, bItemActiveFrameColor.Glyph);
+  imglist.GetBitmap(0, bItemActiveGradientFromColor.Glyph);
+  imglist.GetBitmap(0, bItemActiveGradientToColor.Glyph);
+  imglist.GetBitmap(0, bItemActiveInnerDarkColor.Glyph);
+  imglist.GetBitmap(0, bItemActiveInnerLightColor.Glyph);
 end;
 
 end.
