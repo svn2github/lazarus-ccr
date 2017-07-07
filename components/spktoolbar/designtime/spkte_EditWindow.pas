@@ -127,6 +127,15 @@ implementation
 
 {$R *.lfm}
 
+resourcestring
+  RSCannotMoveAboveFirstElement = 'You can not move above the top of the first element!';
+  RSCannotMoveBeyondLastElement = 'You can not move beyond the last element!';
+  RSDamagedTreeStructure = 'Damaged tree structure!';
+  RSIncorrectFieldData = 'Incorrect data in the field!';
+  RSIncorrectObjectInTree = 'Incorrect object attached to the tree!';
+  RSNoObjectSelected = 'No object selected!';
+  RSNoObjectSelectedToMove = 'No object selected to move!';
+
 { TfrmEditWindow }
 
 procedure TfrmEditWindow.aAddPaneExecute(Sender: TObject);
@@ -144,9 +153,9 @@ begin
 
   Node := tvStructure.Selected;
   if Node = nil then
-    raise Exception.Create('TfrmEditWindow.aAddPaneExecute: Brak zaznaczonego obiektu!');
+    raise Exception.Create('TfrmEditWindow.aAddPaneExecute: ' + RSNoObjectSelected);
   if Node.Data = nil then
-    raise Exception.Create('TfrmEditWindow.aAddPaneExecute: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.aAddPaneExecute: ' + RSDamagedTreeStructure);
 
   Obj := TObject(Node.Data);
   if Obj is TSpkTab then
@@ -166,7 +175,7 @@ begin
   if Obj is TSpkPane then
   begin
     if not(CheckValidPaneNode(Node)) then
-      raise Exception.Create('TfrmEditWindow.aAddPaneExecute: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.aAddPaneExecute: ' + RSDamagedTreeStructure);
     Tab := TSpkTab(Node.Parent.Data);
     Pane := TSpkPane.Create(FToolbar.Owner);
     Pane.Parent := FToolbar;
@@ -182,7 +191,7 @@ begin
   if Obj is TSpkBaseItem then
   begin
     if not(CheckValidItemNode(Node)) then
-      raise Exception.Create('TfrmEditWindow.aAddPaneExecute: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.aAddPaneExecute: ' + RSDamagedTreeStructure);
     Tab := TSpkTab(Node.Parent.Parent.Data);
     Pane := TSpkPane.Create(FToolbar.Owner);
     Pane.Parent := FToolbar;
@@ -195,7 +204,7 @@ begin
     NewNode.Selected := true;
     CheckActionsAvailability;
   end else
-    raise Exception.Create('TfrmEditWindow.aAddPaneExecute: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
+    raise Exception.Create('TfrmEditWindow.aAddPaneExecute: ' + RSIncorrectObjectInTree);
 
   FDesigner.PropertyEditorHook.PersistentAdded(Pane,True);
   FDesigner.Modified;
@@ -262,9 +271,9 @@ begin
 
   Node := tvStructure.Selected;
   if Node = nil then
-    raise Exception.Create('TfrmEditWindow.AddItem: Brak zaznaczonego obiektu!');
+    raise Exception.Create('TfrmEditWindow.AddItem: ' + RSNoObjectSelected);
   if Node.Data = nil then
-    raise Exception.Create('TfrmEditWindow.AddItem: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.AddItem: ' + RSDamagedTreeStructure);
 
   Obj := TObject(Node.Data);
   if Obj is TSpkPane then
@@ -285,7 +294,7 @@ begin
   if Obj is TSpkBaseItem then
   begin
     if not CheckValidItemNode(Node) then
-      raise Exception.Create('TfrmEditWindow.AddItem: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.AddItem: ' + RSDamagedTreeStructure);
     Pane := TSpkPane(Node.Parent.Data);
     Item := ItemClass.Create(FToolbar.Owner);
     Item.Parent := FToolbar;
@@ -299,7 +308,7 @@ begin
     NewNode.Selected := true;
     CheckActionsAvailability;
   end else
-    raise Exception.Create('TfrmEditWindow.AddItem: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
+    raise Exception.Create('TfrmEditWindow.AddItem: ' + RSIncorrectObjectInTree);
   FDesigner.PropertyEditorHook.PersistentAdded(Item,True);
   FDesigner.Modified;
 end;
@@ -318,22 +327,22 @@ begin
 
   Node := tvStructure.Selected;
   if Node = nil then
-    raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Nie zaznaczono obiektu do przesuniêcia!');
+    raise Exception.Create('TfrmEditWindow.aMoveDownExecute: ' + RSNoObjectSelectedToMove);
   if Node.Data = nil then
-    raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.aMoveDownExecute: ' + RSDamagedTreeStructure);
 
   Obj := TObject(Node.Data);
   if Obj is TSpkTab then
   begin
     if not CheckValidTabNode(Node) then
-      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: ' + RSDamagedTreeStructure);
 
     Tab := TSpkTab(Node.Data);
     index := FToolbar.Tabs.IndexOf(Tab);
     if (index = -1) then
-      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: ' + RSDamagedTreeStructure);
     if (index = FToolbar.Tabs.Count - 1) then
-      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Nie mo¿na przesun¹æ w dó³ ostatniego elementu!');
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: ' + RSCannotMoveBeyondLastElement);
 
     FToolbar.Tabs.Exchange(index, index+1);
     FToolbar.TabIndex := index+1;
@@ -346,16 +355,16 @@ begin
   if Obj is TSpkPane then
   begin
     if not CheckValidPaneNode(Node) then
-      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: ' + RSDamagedTreeStructure);
 
     Pane := TSpkPane(Node.Data);
     Tab := TSpkTab(Node.Parent.Data);
 
     index := Tab.Panes.IndexOf(Pane);
     if (index = -1) then
-      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: ' + RSDamagedTreeStructure);
     if (index = Tab.Panes.Count - 1) then
-      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Nie mo¿na przesun¹æ w dó³ ostatniego elementu!');
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: ' + RSCannotMoveBeyondLastElement);
 
     Tab.Panes.Exchange(index, index+1);
 
@@ -367,16 +376,16 @@ begin
   if Obj is TSpkBaseItem then
   begin
     if not CheckValidItemNode(Node) then
-      raise Exception.Create('TfrmEditWindow.aMoveDown.Execute: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.aMoveDown.Execute: ' + RSDamagedTreeStructure);
 
     Item := TSpkBaseItem(Node.Data);
     Pane := TSpkPane(Node.Parent.Data);
 
     index := Pane.Items.IndexOf(Item);
     if (index = -1) then
-      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: ' + RSDamagedTreeStructure);
     if (index = Pane.Items.Count - 1) then
-      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Nie mo¿na przesun¹æ w dó³ ostatniego elementu!');
+      raise Exception.Create('TfrmEditWindow.aMoveDownExecute: ' + RSCannotMoveBeyondLastElement);
 
     Pane.Items.Exchange(index, index+1);
 
@@ -385,7 +394,7 @@ begin
     CheckActionsAvailability;
   end
   else
-    raise Exception.Create('TfrmEditWindow.aMoveDownExecute: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
+    raise Exception.Create('TfrmEditWindow.aMoveDownExecute: ' + RSIncorrectObjectInTree);
 end;
 
 procedure TfrmEditWindow.aMoveUpExecute(Sender: TObject);
@@ -402,22 +411,22 @@ begin
 
   Node := tvStructure.Selected;
   if Node = nil then
-    raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Nie zaznaczono obiektu do przesuniêcia!');
+    raise Exception.Create('TfrmEditWindow.aMoveUpExecute: '+ RSNoObjectSelectedToMove);
   if Node.Data = nil then
-    raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.aMoveUpExecute: ' + RSDamagedTreeStructure);
 
   Obj := TObject(Node.Data);
   if Obj is TSpkTab then
   begin
     if not CheckValidTabNode(Node) then
-      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: ' + RSDamagedTreeStructure);
 
     Tab := TSpkTab(Node.Data);
     index := FToolbar.Tabs.IndexOf(Tab);
     if (index = -1) then
-      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: ' + RSDamagedTreeStructure);
     if (index = 0) then
-      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Nie mo¿na przesun¹æ do góry pierwszego elementu!');
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: ' + RSCannotMoveAboveFirstElement);
 
     FToolbar.Tabs.Exchange(index, index-1);
     FToolbar.TabIndex := index-1;
@@ -430,15 +439,15 @@ begin
   if Obj is TSpkPane then
   begin
     if not CheckValidPaneNode(Node) then
-      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: ' + RSDamagedTreeStructure);
 
     Pane := TSpkPane(Node.Data);
     Tab := TSpkTab(Node.Parent.Data);
     index := Tab.Panes.IndexOf(Pane);
     if (index = -1) then
-      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: ' + RSDamagedTreeStructure);
     if (index = 0) then
-      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Nie mo¿na przesun¹æ do góry pierwszego elementu!');
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: ' + RSCannotMoveAboveFirstElement);
 
     Tab.Panes.Exchange(index, index-1);
 
@@ -450,15 +459,15 @@ begin
   if Obj is TSpkBaseItem then
   begin
     if not CheckValidItemNode(Node) then
-      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: ' + RSDamagedTreeStructure);
 
     Item := TSpkBaseItem(Node.Data);
     Pane := TSpkPane(Node.Parent.Data);
     index := Pane.Items.IndexOf(Item);
     if (index = -1) then
-      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: ' + RSDamagedTreeStructure);
     if (index = 0) then
-      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Nie mo¿na przesun¹æ do góry pierwszego elementu!');
+      raise Exception.Create('TfrmEditWindow.aMoveUpExecute: ' + RSCannotMoveAboveFirstElement);
 
     Pane.Items.Exchange(index, index-1);
 
@@ -466,7 +475,7 @@ begin
     Node.Selected := true;
     CheckActionsAvailability;
   end else
-    raise Exception.Create('TfrmEditWindow.aMoveUpExecute: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
+    raise Exception.Create('TfrmEditWindow.aMoveUpExecute: ' + RSIncorrectObjectInTree);
 end;
 
 procedure TfrmEditWindow.aRemoveItemExecute(Sender: TObject);
@@ -537,14 +546,14 @@ begin
     begin
       Obj := TObject(Node.Data);
       if Obj = nil then
-        raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Nieprawid³owe dane w ga³êzi!');
+        raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: ' + RSIncorrectFieldData);
 
       if Obj is TSpkTab then
       begin
         Tab := Obj as TSpkTab;
 
         if not CheckValidTabNode(Node) then
-          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
+          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: ' + RSDamagedTreeStructure);
 
         aAddTab.Enabled := true;
         aRemoveTab.Enabled := true;
@@ -558,7 +567,7 @@ begin
 
         index := FToolbar.Tabs.IndexOf(Tab);
         if index = -1 then
-          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
+          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: ' + RSDamagedTreeStructure);
 
         aMoveUp.Enabled := (index > 0);
         aMoveDown.enabled := (index < FToolbar.Tabs.Count-1);
@@ -567,7 +576,7 @@ begin
       begin
         Pane := TSpkPane(Obj);
         if not(CheckValidPaneNode(Node)) then
-          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
+          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: ' + RSDamagedTreeStructure);
 
         Tab := TSpkTab(Node.Parent.Data);
 
@@ -583,7 +592,7 @@ begin
 
         index := Tab.Panes.IndexOf(Pane);
         if index = -1 then
-          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
+          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: ' + RSDamagedTreeStructure);
 
         aMoveUp.Enabled := (index > 0);
         aMoveDown.Enabled := (index < Tab.Panes.Count-1);
@@ -592,7 +601,7 @@ begin
       begin
         Item := TSpkBaseItem(Obj);
         if not CheckValidItemNode(Node) then
-          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
+          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: ' + RSDamagedTreeStructure);
 
         Pane := TSpkPane(Node.Parent.Data);
 
@@ -608,12 +617,12 @@ begin
 
         index := Pane.Items.IndexOf(Item);
         if index = -1 then
-          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Uszkodzona struktura drzewa!');
+          raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: ' + RSDamagedTreeStructure);
 
         aMoveUp.Enabled := (index > 0);
         aMoveDown.Enabled := (index < Pane.Items.Count - 1);
       end else
-        raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
+        raise Exception.Create('TfrmEditWindow.CheckActionsAvailability: ' + RSIncorrectObjectInTree);
     end;
   end;
 end;
@@ -692,10 +701,9 @@ begin
 
   if (AComponent = FToolbar) and (Operation = opRemove) then
   begin
-    // W³aœnie zwalniany jest toolbar, którego zawartoœæ wyœwietla okno
-    // edytora. Trzeba posprz¹taæ zawartoœæ - w przeciwnym wypadku okno
-    // bêdzie mia³o referencje do ju¿ usuniêtych elementów toolbara, co
-    // skoñczy siê AVami...
+    // The toolbar is currently released, whose content is displayed in the
+    // editor window. Need to clean up the content - otherwise the window will
+    // have references to the already removed toolbars, which will end in AVs ...
     SetData(nil, nil);
   end;
 end;
@@ -736,12 +744,12 @@ begin
 
   Node := tvStructure.Selected;
   if not (CheckValidItemNode(Node)) then
-    raise Exception.Create('TfrmEditWindow.aRemoveItemExecute: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.aRemoveItemExecute: ' + RSDamagedTreeStructure);
   Item := TSpkBaseItem(Node.Data);
   Pane := TSpkPane(Node.Parent.Data);
   index := Pane.Items.IndexOf(Item);
   if index = -1 then
-    raise Exception.Create('TfrmEditWindow.aRemoveItemExecute: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.aRemoveItemExecute: ' + RSDamagedTreeStructure);
   if Node.getPrevSibling <> nil then
     NextNode := Node.getPrevSibling
   else if Node.GetNextSibling <> nil then
@@ -767,12 +775,12 @@ begin
 
   Node := tvStructure.Selected;
   if not (CheckValidPaneNode(Node)) then
-    raise Exception.Create('TfrmEditWindow.aRemovePaneExecute: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.aRemovePaneExecute: ' + RSDamagedTreeStructure);
   Pane := TSpkPane(Node.Data);
   Tab := TSpkTab(Node.Parent.Data);
   index := Tab.Panes.IndexOf(Pane);
   if index = -1 then
-    raise Exception.Create('TfrmEditWindow.aRemovePaneExecute: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.aRemovePaneExecute: ' + RSDamagedTreeStructure);
   if Node.GetPrevSibling <> nil then
     NextNode := Node.GetPrevSibling
   else if Node.GetNextSibling <> nil then
@@ -797,11 +805,11 @@ begin
 
   Node := tvStructure.Selected;
   if not (CheckValidTabNode(Node)) then
-    raise Exception.Create('TfrmEditWindow.aRemoveTabExecute: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.aRemoveTabExecute: ' + RSDamagedTreeStructure);
   Tab := TSpkTab(Node.Data);
   index := FToolbar.Tabs.IndexOf(Tab);
   if index = -1 then
-    raise Exception.Create('TfrmEditWindow.aRemoveTabExecute: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.aRemoveTabExecute: ' + RSDamagedTreeStructure);
   if Node.GetPrevSibling <> nil then
     NextNode := Node.GetPrevSibling
   else if Node.GetNextSibling <> nil then
@@ -812,17 +820,17 @@ begin
   tvStructure.Items.Delete(Node);
   if Assigned(NextNode) then
   begin
-    // Zdarzenie OnChange wyzwoli aktualizacjê zaznaczonego obiektu w
-    // Object Inspectorze
+    // The OnChange event will trigger an update of the selected object in
+    // the Object Inspector
     NextNode.Selected := true;
     CheckActionsAvailability;
   end
   else
   begin
-    // Nie ma ju¿ ¿adnych obiektów na liœcie, ale coœ musi zostaæ wyœwietlone w
-    // Object Inspectorze - wyœwietlamy wiêc samego toolbara (w przeciwnym
-    // wypadku IDE bêdzie próbowa³o wyœwietliæ w Object Inspectorze w³aœciwoœci
-    // w³aœnie zwolnionego obiektu, co skoñczy siê, powiedzmy, niezbyt mi³o)
+    // There are no more objects in the list, but something has to be displayed
+    // in the Object Inspector - so we will display the toolbars itself
+    // (otherwise the IDE will attempt to display the object's properties in
+    // the Object Inspector, which will end, say, not very nice)
     //DesignObj := PersistentToDesignObject(FToolbar);
     FDesigner.SelectOnlyThisComponent(FToolbar);
     CheckActionsAvailability;
@@ -904,7 +912,7 @@ begin
   while tabnode<>nil do
   begin
     if not CheckValidTabNode(tabnode) then
-      raise Exception.Create('TfrmEditWindow.RefreshNames: Uszkodzona struktura drzewa!');
+      raise Exception.Create('TfrmEditWindow.RefreshNames: ' + RSDamagedTreeStructure);
 
     tabnode.Text := TSpkTab(tabnode.Data).Caption;
 
@@ -912,7 +920,7 @@ begin
     while panenode <> nil do
     begin
       if not CheckValidPaneNode(panenode) then
-        raise Exception.Create('TfrmEditWindow.RefreshNames: Uszkodzona struktura drzewa!');
+        raise Exception.Create('TfrmEditWindow.RefreshNames: ' + RSDamagedTreeStructure);
 
       panenode.Text := TSpkPane(panenode.Data).Caption;
 
@@ -920,7 +928,7 @@ begin
       while itemnode <> nil do
       begin
         if not CheckValidItemNode(itemnode) then
-          raise Exception.Create('TfrmEditWindow.RefreshNames: Uszkodzona struktura drzewa!');
+          raise Exception.Create('TfrmEditWindow.RefreshNames: ' + RSDamagedTreeStructure);
 
         Obj := TSpkBaseItem(itemnode.Data);
         s := GetItemCaption(Obj);
@@ -950,14 +958,14 @@ begin
   begin
     Obj := TObject(Node.Data);
     if Obj = nil then
-      raise Exception.Create('TfrmEditWindow.tvStructureChange: Nieprawid³owe dane w ga³êzi!');
+      raise Exception.Create('TfrmEditWindow.tvStructureChange: ' + RSIncorrectFieldData);
     if Obj is TSpkTab then
     begin
       Tab := TSpkTab(Obj);
       FDesigner.SelectOnlyThisComponent(Tab);
       index := FToolbar.Tabs.IndexOf(Tab);
       if index=-1 then
-        raise Exception.Create('TfrmEditWindow.tvStructureChange: Uszkodzona struktura drzewa!');
+        raise Exception.Create('TfrmEditWindow.tvStructureChange: ' + RSDamagedTreeStructure);
       FToolbar.TabIndex := index;
     end else
     if Obj is TSpkPane then
@@ -965,11 +973,11 @@ begin
       Pane := TSpkPane(Obj);
       FDesigner.SelectOnlyThisComponent(Pane);
       if not(CheckValidPaneNode(Node)) then
-        raise Exception.Create('TfrmEditWindow.tvStructureChange: Uszkodzona struktura drzewa!');
+        raise Exception.Create('TfrmEditWindow.tvStructureChange: ' + RSDamagedTreeStructure);
       Tab := TSpkTab(Node.Parent.Data);
       index := FToolbar.Tabs.IndexOf(Tab);
       if index = -1 then
-        raise Exception.Create('TfrmEditWindow.tvStructureChange: Uszkodzona struktura drzewa!');
+        raise Exception.Create('TfrmEditWindow.tvStructureChange: ' + RSDamagedTreeStructure);
       FToolbar.TabIndex := index;
     end else
     if Obj is TSpkBaseItem then
@@ -977,14 +985,14 @@ begin
       Item := TSpkBaseItem(Obj);
       FDesigner.SelectOnlyThisComponent(Item);
       if not CheckValidItemNode(Node) then
-        raise Exception.Create('TfrmEditWindow.tvStructureChange: Uszkodzona struktura drzewa!');
+        raise Exception.Create('TfrmEditWindow.tvStructureChange: ' + RSDamagedTreeStructure);
       Tab := TSpkTab(Node.Parent.Parent.Data);
       index := FToolbar.Tabs.IndexOf(Tab);
       if index = -1 then
-        raise Exception.Create('TfrmEditWindow.tvStructureChange: Uszkodzona struktura drzewa!');
+        raise Exception.Create('TfrmEditWindow.tvStructureChange: ' + RSDamagedTreeStructure);
       FToolbar.TabIndex := index;
     end else
-      raise Exception.Create('TfrmEditWindow.tvStructureChange: Nieprawid³owy obiekt podwieszony pod ga³êzi¹!');
+      raise Exception.Create('TfrmEditWindow.tvStructureChange: ' + RSIncorrectObjectInTree);
    end else
      FDesigner.SelectOnlyThisComponent(FToolbar);
 
@@ -1020,7 +1028,7 @@ begin
     exit;
 
   if Node.Data = nil then
-    raise Exception.Create('TfrmEditWindow.tvStructureEdited: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.tvStructureEdited: ' + RSDamagedTreeStructure);
 
   if TObject(Node.Data) is TSpkTab then
   begin
@@ -1040,7 +1048,7 @@ begin
     SetItemCaption(Item, S);
     FDesigner.Modified;
   end else
-    raise Exception.Create('TfrmEditWindow.tvStructureEdited: Uszkodzona struktura drzewa!');
+    raise Exception.Create('TfrmEditWindow.tvStructureEdited: ' + RSDamagedTreeStructure);
 end;
 
 procedure TfrmEditWindow.tvStructureKeyDown(Sender: TObject; var Key: Word;
@@ -1053,8 +1061,7 @@ begin
   begin
     if tvStructure.Selected <> nil then
     begin
-      // Sprawdzamy, jakiego rodzaju obiekt jest zaznaczony - wystarczy
-      // przetestowaæ typ podwieszonego obiektu.
+      // We check what kind of object is selected - just test the type of the object
       if TObject(tvStructure.Selected.Data) is TSpkTab then
         DoRemoveTab
       else if TObject(tvStructure.Selected.Data) is TSpkPane then
@@ -1062,7 +1069,7 @@ begin
       else if TObject(tvStructure.Selected.Data) is TSpkBaseItem then
         DoRemoveItem
       else
-        raise Exception.Create('TfrmEditWindow.tvStructureKeyDown: Damaged tree structure!');
+        raise Exception.Create('TfrmEditWindow.tvStructureKeyDown: ' + RSDamagedTreeStructure);
     end;
    end;
 end;
