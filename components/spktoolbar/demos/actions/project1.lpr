@@ -7,12 +7,15 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, Unit1, Unit2
+  LCLVersion, Forms, Unit1, Unit2
   { you can add units after this };
 
 {$R *.res}
 
 begin
+  {$IF lcl_fullversion >= 1080000}
+  Application.Scaled := True;
+  {$ENDIF}
   RequireDerivedFormResource := True;
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);

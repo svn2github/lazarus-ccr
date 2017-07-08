@@ -9,7 +9,7 @@ object Form1: TForm1
   Menu = MainMenu
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  LCLVersion = '1.6.4.0'
+  LCLVersion = '1.9.0.0'
   object ToolBar1: TToolBar
     Left = 0
     Height = 26
@@ -33,73 +33,70 @@ object Form1: TForm1
       Left = 47
       Height = 22
       Top = 0
-      Width = 10
       Caption = 'ToolButton3'
       Style = tbsDivider
     end
     object ToolButton4: TToolButton
-      Left = 57
+      Left = 52
       Top = 0
       Action = AcEditCut
     end
     object ToolButton5: TToolButton
-      Left = 80
+      Left = 75
       Top = 0
       Action = AcEditCopy
     end
     object ToolButton6: TToolButton
-      Left = 103
+      Left = 98
       Top = 0
       Action = AcEditPaste
     end
     object ToolButton7: TToolButton
-      Left = 126
+      Left = 121
       Height = 22
       Top = 0
-      Width = 10
       Caption = 'ToolButton7'
       Style = tbsDivider
     end
     object ToolButton8: TToolButton
-      Left = 282
+      Left = 269
       Top = 0
       Action = AcQuit
     end
     object ToolButton9: TToolButton
-      Left = 136
+      Left = 126
       Top = 0
       Action = AcBold
     end
     object ToolButton10: TToolButton
-      Left = 159
+      Left = 149
       Top = 0
       Action = AcItalic
     end
     object ToolButton11: TToolButton
-      Left = 205
+      Left = 195
       Top = 0
       Action = AcLeftJustify
     end
     object ToolButton12: TToolButton
-      Left = 182
+      Left = 172
       Top = 0
       Action = AcUnderline
     end
     object ToolButton13: TToolButton
-      Left = 228
+      Left = 218
       Top = 0
       Action = AcCenter
     end
     object ToolButton14: TToolButton
-      Left = 251
+      Left = 241
       Top = 0
       Action = AcRightJustify
     end
     object ToolButton15: TToolButton
-      Left = 274
+      Left = 264
       Height = 22
       Top = 0
-      Width = 8
       Caption = 'ToolButton15'
       Style = tbsDivider
     end
@@ -164,7 +161,7 @@ object Form1: TForm1
     Appearance.Element.ActiveInnerDarkColor = 961020
     Appearance.Element.ActiveCaptionColor = 8405614
     Appearance.Element.Style = esRounded
-    TabIndex = 0
+    TabIndex = 4
     Images = ImageList
     LargeImages = LargeImageList
     Tabs = (
@@ -681,7 +678,7 @@ object Form1: TForm1
         'SpkPane4'
       )
       object SpkPane4: TSpkPane
-        Caption = 'Pane'
+        Caption = 'Info'
         Visible = True
         Items = (
           'SpkLargeButton4'

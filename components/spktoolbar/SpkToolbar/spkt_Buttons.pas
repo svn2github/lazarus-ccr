@@ -1234,12 +1234,12 @@ begin
   // Text
   if FButtonKind in [bkButton, bkToggle] then
   begin
-    // £amiemy etykietê
+    // Label
     FindBreakPlace(FCaption,BreakPos,RowWidth);
     TextWidth := 2 * LargeButtonCaptionHMargin + RowWidth;
   end else
   begin
-    // Nie ³amiemy etykiety
+    // do not break the label
     Bitmap.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
     SpkScaleFont(Bitmap.Canvas.Font);
     TextWidth := 2 * LargeButtonCaptionHMargin + Bitmap.Canvas.TextWidth(FCaption);
