@@ -9,7 +9,7 @@ object Form1: TForm1
   Menu = MainMenu
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  LCLVersion = '1.7'
+  LCLVersion = '1.6.4.0'
   object ToolBar1: TToolBar
     Left = 0
     Height = 26
@@ -128,8 +128,6 @@ object Form1: TForm1
     Top = 26
     Width = 585
     Appearance.Tab.TabHeaderFont.Color = 9126421
-    Appearance.Tab.TabHeaderFont.Height = -13
-    Appearance.Tab.TabHeaderFont.Name = 'Calibri'
     Appearance.Tab.BorderColor = 14922381
     Appearance.Tab.GradientFromColor = 16115934
     Appearance.Tab.GradientToColor = 15587527
@@ -139,14 +137,10 @@ object Form1: TForm1
     Appearance.Pane.BorderLightColor = 16315117
     Appearance.Pane.CaptionBgColor = 15849922
     Appearance.Pane.CaptionFont.Color = 11168318
-    Appearance.Pane.CaptionFont.Height = -12
-    Appearance.Pane.CaptionFont.Name = 'Calibri'
     Appearance.Pane.GradientFromColor = 16115934
     Appearance.Pane.GradientToColor = 15587527
     Appearance.Pane.GradientType = bkConcave
     Appearance.Element.CaptionFont.Color = 9126421
-    Appearance.Element.CaptionFont.Height = -12
-    Appearance.Element.CaptionFont.Name = 'Calibri'
     Appearance.Element.IdleFrameColor = 14727067
     Appearance.Element.IdleGradientFromColor = 15653832
     Appearance.Element.IdleGradientToColor = 15323324

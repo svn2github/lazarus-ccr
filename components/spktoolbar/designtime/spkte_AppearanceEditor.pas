@@ -1373,11 +1373,11 @@ var
   w, h: Integer;
 begin
   // Use correct size of color picker icon
-  if Monitor.PixelsPerInch >= 180 then begin
+  if ScreenInfo.PixelsPerInchY >= 180 then begin
     imglist := Images_200;
     m := 2.0;
   end
-  else if Monitor.PixelsPerInch >= 135 then begin
+  else if ScreenInfo.PixelsPerInchY >= 135 then begin
     imglist := Images_150;
     m := 1.5;
   end

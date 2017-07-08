@@ -1158,12 +1158,12 @@ end;
 procedure TfrmEditWindow.UpdatePPI;
 begin
   tbToolbar.Images := nil;
-  if Monitor.PixelsPerInch >= 180 then begin
+  if ScreenInfo.PixelsPerInchY >= 180 then begin
     ActionList.Images := ilActionImages_200;
     tbToolbar.Images := ilActionImages_200;
     tvStructure.Images := ilTreeImages_200;
   end else
-  if Monitor.PixelsPerInch >= 135 then begin
+  if ScreenInfo.PixelsPerInchY >= 135 then begin
     ActionList.Images := ilActionImages_150;
     tbToolbar.Images := ilActionImages_150;
     tvStructure.Images := ilTreeImages_150;
@@ -1172,7 +1172,7 @@ begin
     tbToolbar.Images := ilActionImages;
     tvStructure.Images := ilTreeImages;
   end;
-//  tbToolbar.ButtonHeight := tbToolbar.Images.Height + 8;
+  tbToolbar.ButtonHeight := tbToolbar.Images.Height + 8;
 //  tbToolbar.ButtonWidth := tbToolbar.Images.Width + 8;
 end;
 
