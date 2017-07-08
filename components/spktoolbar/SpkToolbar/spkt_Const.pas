@@ -14,9 +14,13 @@ unit spkt_Const;
 
 interface
 
+uses
+  Graphics;
+
 procedure SpkInitLayoutConsts(FromDPI: Integer; ToDPI: Integer = 0);
 function SpkScaleX(Size: Integer; FromDPI: Integer; ToDPI: Integer = 0): integer;
 function SpkScaleY(Size: Integer; FromDPI: Integer; ToDPI: Integer = 0): integer;
+procedure SpkScaleFont(AFont: TFont; ToDPI: Integer = 0);
 
 const
   // ****************
@@ -262,7 +266,7 @@ const
 implementation
 
 uses
-  Graphics, LCLType;
+  LCLType;
 
 procedure SpkInitLayoutConsts(FromDPI: Integer; ToDPI: Integer = 0);
 begin
@@ -381,6 +385,25 @@ begin
         Result := MulDiv(Size, ToDPI, FromDPI);
     end;
 
+end;
+
+procedure SpkScaleFont(AFont: TFont; ToDPI: Integer = 0);
+var
+  FromDPI: Integer;
+begin
+  if ToDPI = 0 then
+    ToDPI := ScreenInfo.PixelsPerInchY;
+
+  FromDPI := AFont.PixelsPerInch;
+
+  if (not DPI_AWARE) or (ToDPI = FromDPI) then
+    exit;
+
+  if AFont.Size = 0 then
+    AFont.Height := MulDiv(GetFontData(AFont.Reference.Handle).Height, FromDPI, ToDPI)
+  else
+    AFont.Height := MulDiv(AFont.Height, FromDPI, ToDPI);
+  AFont.PixelsPerInch := ToDPI;
 end;
 
 

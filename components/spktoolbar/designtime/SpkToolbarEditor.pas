@@ -261,43 +261,40 @@ implementation
 { TSpkToolbarEditor }
 
 procedure TSpkToolbarEditor.DoOpenContentsEditor;
-
 var
-  Component : TComponent;
-
+  Component: TComponent;
 begin
-Component:=self.GetComponent;
+  Component:=self.GetComponent;
+  if not(Component is TSpkToolbar) then
+    exit;
 
-if not(Component is TSpkToolbar) then
-   exit;
-
-EditWindow.SetData(TSpkToolbar(Component),Self.GetDesigner);
-EditWindow.Show;
+  EditWindow.SetData(TSpkToolbar(Component),Self.GetDesigner);
+  EditWindow.Show;
 end;
 
 procedure TSpkToolbarEditor.Edit;
 
 begin
-DoOpenContentsEditor;
+  DoOpenContentsEditor;
 end;
 
 procedure TSpkToolbarEditor.ExecuteVerb(Index: Integer);
 begin
-case Index of
-     0 : DoOpenContentsEditor;
-end;
+  case Index of
+    0 : DoOpenContentsEditor;
+  end;
 end;
 
 function TSpkToolbarEditor.GetVerb(Index: Integer): string;
 begin
-case Index of
-     0 : result:='Contents editor...';
-end;
+  case Index of
+    0 : result:='Contents editor...';
+  end;
 end;
 
 function TSpkToolbarEditor.GetVerbCount: Integer;
 begin
-result:=1;
+  Result := 1;
 end;
 
 { TSpkToolbarCaptionEditor }
@@ -325,48 +322,47 @@ end;
 { TSpkToolbarAppearanceEditor }
 
 procedure TSpkToolbarAppearanceEditor.Edit;
-
-var Obj : TObject;
-    Toolbar : TSpkToolbar;
-    Tab : TSpkTab;
-    AppearanceEditor : tfrmAppearanceEditWindow;
-
+var
+  Obj: TObject;
+  Toolbar: TSpkToolbar;
+  Tab: TSpkTab;
+  AppearanceEditor: tfrmAppearanceEditWindow;
 begin
-Obj:=GetComponent(0);
-if Obj is TSpkToolbar then
-   begin
-   Toolbar:=TSpkToolbar(Obj);
+  Obj:=GetComponent(0);
+  if Obj is TSpkToolbar then
+  begin
+    Toolbar := TSpkToolbar(Obj);
 
-   AppearanceEditor:=TfrmAppearanceEditWindow.Create(nil);
-   try
-     AppearanceEditor.Appearance.Assign(Toolbar.Appearance);
-     if AppearanceEditor.ShowModal = mrOK then
-        begin
+    AppearanceEditor:=TfrmAppearanceEditWindow.Create(nil);
+    try
+      AppearanceEditor.Appearance.Assign(Toolbar.Appearance);
+      if AppearanceEditor.ShowModal = mrOK then
+      begin
         Toolbar.Appearance.Assign(AppearanceEditor.Appearance);
         Modified;
-        end;
-   finally
-     AppearanceEditor.Free;
-   end;
+      end;
+    finally
+      AppearanceEditor.Free;
+    end;
 
-   end else
-if Obj is TSpkTab then
-   begin
-   Tab:=TSpkTab(Obj);
+  end else
+    if Obj is TSpkTab then
+    begin
+      Tab:=TSpkTab(Obj);
 
-   AppearanceEditor:=TfrmAppearanceEditWindow.Create(nil);
-   try
-     AppearanceEditor.Appearance.Assign(Tab.CustomAppearance);
-     if AppearanceEditor.ShowModal = mrOK then
+      AppearanceEditor:=TfrmAppearanceEditWindow.Create(nil);
+      try
+        AppearanceEditor.Appearance.Assign(Tab.CustomAppearance);
+        if AppearanceEditor.ShowModal = mrOK then
         begin
-        Tab.CustomAppearance.Assign(AppearanceEditor.Appearance);
-        Modified;
+          Tab.CustomAppearance.Assign(AppearanceEditor.Appearance);
+          Modified;
         end;
-   finally
-     AppearanceEditor.Free;
-   end;
+      finally
+        AppearanceEditor.Free;
+      end;
 
-   end;
+    end;
 end;
 
 function TSpkToolbarAppearanceEditor.GetAttributes: TPropertyAttributes;

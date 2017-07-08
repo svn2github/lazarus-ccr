@@ -53,6 +53,8 @@ type
     procedure SetGradientType(const Value: TBackgroundKind);
     procedure SetInactiveHeaderFontColor(const Value: TColor);
 
+    procedure TabHeaderFontChange(Sender: TObject);
+
   public
     // *** Konstruktor, destruktor, assign ***
     // <remarks>Appearance musi mieæ assign, bo wystêpuje jako w³asnoœæ
@@ -99,6 +101,8 @@ type
     procedure SetGradientType(const Value: TBackgroundKind);
     procedure SetHotTrackBrightnessChange(const Value: Integer);
     procedure SetStyle(const Value: TSpkPaneStyle);
+
+    procedure CaptionFontChange(Sender: TObject);
 
   public
     constructor Create(ADispatch: TSpkBaseAppearanceDispatch);
@@ -176,6 +180,7 @@ type
     procedure SetIdleInnerLightColor(const Value: TColor);
     procedure SetStyle(const Value: TSpkElementStyle);
 
+    procedure CaptionFontChange(Sender: TObject);
   public
     constructor Create(ADispatch: TSpkBaseAppearanceDispatch);
     destructor Destroy; override;
@@ -297,6 +302,7 @@ begin
   inherited Create;
   FDispatch := ADispatch;
   FTabHeaderFont := TFont.Create;
+  FTabHeaderFont.OnChange := TabHeaderFontChange;
   Reset;
 end;
 
@@ -491,6 +497,12 @@ begin
     FDispatch.NotifyAppearanceChanged;
 end;
 
+procedure TSpkTabAppearance.TabHeaderFontChange(Sender: TObject);
+begin
+  if FDispatch <> nil then
+    FDispatch.NotifyAppearanceChanged;
+end;
+
 
 { TSpkPaneAppearance }
 
@@ -499,6 +511,7 @@ begin
   inherited Create;
   FDispatch := ADispatch;
   FCaptionFont := TFont.Create;
+  FCaptionFont.OnChange := CaptionFontChange;
   FHotTrackBrightnessChange := 20;
   FStyle := psRectangleEtched;
   Reset;
@@ -532,6 +545,12 @@ begin
       FDispatch.NotifyAppearanceChanged;
   end else
     raise AssignException.create('TSpkPaneAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkPaneAppearance!');
+end;
+
+procedure TSpkPaneAppearance.CaptionFontChange(Sender: TObject);
+begin
+  if FDispatch <> nil then
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkPaneAppearance.LoadFromXML(Node: TSpkXMLNode);
@@ -765,6 +784,7 @@ begin
   inherited Create;
   FDispatch := ADispatch;
   FCaptionFont := TFont.Create;
+  FCaptionFont.OnChange := CaptionFontChange;
   FHotTrackBrightnessChange := 40;
   Reset;
 end;
@@ -812,6 +832,12 @@ begin
       FDispatch.NotifyAppearanceChanged;
   end else
     raise AssignException.create('TSpkElementAppearance.Assign: Nie mogê przypisaæ obiektu '+Source.ClassName+' do TSpkElementAppearance!');
+end;
+
+procedure TSpkElementAppearance.CaptionFontChange(Sender: TObject);
+begin
+  if FDispatch <> nil then
+    FDispatch.NotifyAppearanceChanged;
 end;
 
 procedure TSpkElementAppearance.GetActiveColors(IsChecked: Boolean;

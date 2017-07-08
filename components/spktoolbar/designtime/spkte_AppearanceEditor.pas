@@ -207,6 +207,7 @@ type
     procedure bTabGradientToColorClick(Sender: TObject);
     procedure bActiveTabHeaderFontColorClick(Sender: TObject);
     procedure bCopyToClipboardClick(Sender: TObject);
+
     procedure cbItemActiveGradientKindChange(Sender: TObject);
     procedure cbItemHottrackGradientKindChange(Sender: TObject);
     procedure cbItemIdleGradientKindChange(Sender: TObject);

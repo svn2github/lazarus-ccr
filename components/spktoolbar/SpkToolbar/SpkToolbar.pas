@@ -1389,6 +1389,8 @@ procedure TSpkToolbar.ValidateBuffer;
       TabRect := FTabRects[index];
 
       FBuffer.canvas.font.Assign(AFont);
+      SpkScaleFont(FBuffer.Canvas.Font);
+
       if AOverrideTextColor <> clNone then
         clr := AOverrideTextColor else
         clr := AFont.Color;
@@ -1730,6 +1732,7 @@ begin
         else
           TabAppearance := FAppearance;
         FBuffer.Canvas.font.Assign(TabAppearance.Tab.TabHeaderFont);
+        SpkScaleFont(FBuffer.Canvas.Font);
 
         TabWidth := 2 +  // Frame
           2 * TabCornerRadius +
