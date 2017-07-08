@@ -6,7 +6,7 @@ interface
 
 uses
   LCLIntf, LCLType, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls, ComCtrls, Buttons, Spin,
+  Dialogs, ExtCtrls, StdCtrls, ComCtrls, Buttons, Spin, LCLVersion,
   SpkGUITools, SpkXMLParser, SpkToolbar,
   spkt_Buttons, spkt_Pane, spkt_Tab, spkt_Appearance;
 
@@ -218,12 +218,15 @@ type
     procedure cbLinkItemClick(Sender: TObject);
     procedure cbLinkPaneClick(Sender: TObject);
     procedure cbLinkTabClick(Sender: TObject);
+
     procedure edItemHotTrackBrightnessChangeChange(Sender: TObject);
     procedure edPaneHotTrackBrightnessChangeChange(Sender: TObject);
+
     procedure FormActivate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
+
     procedure LbAppearanceStyleClick(Sender: TObject);
 
     procedure pActiveTabHeaderFontClick(Sender: TObject);
@@ -296,8 +299,14 @@ type
       Shift: TShiftState; X, Y: integer);
 
   private
-    procedure PositionControls;
     procedure UpdateImages;
+    procedure UpdateSizes;
+
+  protected
+    {$IF lcl_fullversion >= 1080000}
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+    {$ENDIF}
 
   public
     property Appearance : TSpkToolbarAppearance read GetAppearance write SetAppearance;
@@ -317,6 +326,14 @@ var
   CurrPageIndex: Integer = 0;
 
 { TForm3 }
+
+{$IF lcl_fullversion >= 1080000}
+procedure TfrmAppearanceEditWindow.DoAutoAdjustLayout(
+  const AMode: TLayoutAdjustmentPolicy; const AXProportion, AYProportion: Double);
+begin
+  inherited;
+end;
+{$ENDIF}
 
 procedure TfrmAppearanceEditWindow.SetAppearance(const Value: TSpkToolbarAppearance);
 begin
@@ -826,7 +843,7 @@ end;
 procedure TfrmAppearanceEditWindow.FormActivate(Sender: TObject);
 begin
   UpdateImages;
-  PositionControls;
+  UpdateSizes;
 end;
 
 procedure TfrmAppearanceEditWindow.FormCloseQuery(Sender: TObject;
@@ -1315,56 +1332,6 @@ begin
   FScreenshotForm.ModalResult := mrOK;
 end;
 
-procedure TfrmAppearanceEditWindow.PositionControls;
-var
-  w, h, dist: Integer;
-begin
-  // Update layout of controls
-  bOK.AutoSize := false;
-  bOK.Width := bCancel.Width;
-
-  ColorView.Width := ColorView.Height;
-
-  h := CbTabGradientKind.Height;
-  w := SpkScaleX(pTabFrame.Width, 96);
-//  h := SpkScaleY(pTabFrame.Height, 96);
-
-  pTabFrame.Width := w;
-  pTabFrame.Height := h;
-  pTabGradientFrom.Height := h;
-  pTabGradientTo.Height := h;
-  pActiveTabHeaderFont.Height := h;
-  pInactiveTabHeaderFont.Height := h;
-  pTabHeaderFont.Height := h;
-
-  pPaneBorderDark.Width := w;
-  pPaneBorderDark.Height := h;
-  pPaneBorderLight.Height := h;
-  pPaneGradientFrom.Height := h;
-  pPaneGradientTo.Height := h;
-  pPaneCaptionBackground.Height := h;
-  pPaneCaptionFontColor.Height := h;
-  pPaneCaptionFont.Height := h;
-
-  pItemIdleFrame.Width := w;
-  pItemHotTrackFrame.Width := w;
-  pItemActiveFrame.Width := w;
-  pItemIdleFrame.Height := h;
-  pItemIdleGradientFrom.Height := h;
-  pItemIdleGradientTo.Height := h;
-  pItemIdleCaptionColor.Height := h;
-  pItemIdleInnerDark.Height := h;
-  pItemIdleInnerLight.Height := h;
-  pItemFont.Height := h;
-
-  // Adjust width and height
-  Width := SpkScaleX(Width, 96);
-  h := Height - TabSheet1.ClientHeight;
-  dist := pTabHeaderFont.Top - (pInactiveTabHeaderFont.Top + pInactiveTabHeaderFont.Height);
-  Height := cbPaneStyle.Top + cbPanestyle.Height + dist + h;
-  Position := poScreenCenter;
-end;
-
 procedure TfrmAppearanceEditWindow.UpdateImages;
 var
   imglist: TImageList;
@@ -1440,6 +1407,89 @@ begin
   imglist.GetBitmap(0, bItemActiveInnerDarkColor.Glyph);
   imglist.GetBitmap(0, bItemActiveInnerLightColor.Glyph);
 end;
+
+procedure TfrmAppearanceEditWindow.UpdateSizes;
+var
+  w, h, dist: Integer;
+
+  procedure AddToHeight(var AHeight: Integer; AControl: TControl);
+  begin
+    inc(AHeight, AControl.Height);
+    with AControl.BorderSpacing do
+      inc(AHeight, Top + Bottom + Around);
+  end;
+
+begin
+  // Update layout of controls
+  bOK.AutoSize := false;
+  bOK.Width := bCancel.Width;
+
+  ColorView.Width := ColorView.Height;
+
+  h := CbTabGradientKind.Height;
+  {$IF lcl_fullversion < 1080000}
+  w := SpkScaleX(pTabFrame.Width, 96);
+  {$ELSE}
+  w := pTabFrame.Width;
+  {$ENDIF}
+//  h := SpkScaleY(pTabFrame.Height, 96);
+
+  pTabFrame.Width := w;
+  pTabFrame.Height := h;
+  pTabGradientFrom.Height := h;
+  pTabGradientTo.Height := h;
+  pActiveTabHeaderFont.Height := h;
+  pInactiveTabHeaderFont.Height := h;
+  pTabHeaderFont.Height := h;
+
+  pPaneBorderDark.Width := w;
+  pPaneBorderDark.Height := h;
+  pPaneBorderLight.Height := h;
+  pPaneGradientFrom.Height := h;
+  pPaneGradientTo.Height := h;
+  pPaneCaptionBackground.Height := h;
+  pPaneCaptionFontColor.Height := h;
+  pPaneCaptionFont.Height := h;
+
+  pItemIdleFrame.Width := w;
+  pItemHotTrackFrame.Width := w;
+  pItemActiveFrame.Width := w;
+  pItemIdleFrame.Height := h;
+  pItemIdleGradientFrom.Height := h;
+  pItemIdleGradientTo.Height := h;
+  pItemIdleCaptionColor.Height := h;
+  pItemIdleInnerDark.Height := h;
+  pItemIdleInnerLight.Height := h;
+  pItemFont.Height := h;
+
+  // TabSheet2 requires the largest height
+  h := Height - TabSheet2.ClientHeight; // This is the height outside the tabsheet
+  // Add the heights of all controls
+  AddToHeight(h, cbLinkPane);
+  AddToHeight(h, pPaneBorderDark);
+  AddToHeight(h, pPaneBorderLight);
+  AddToHeight(h, pPaneGradientFrom);
+  AddToHeight(h, pPaneGradientTo);
+  AddToHeight(h, cbPaneGradientKind);
+  AddToHeight(h, pPaneCaptionBackground);
+  AddToHeight(h, edPaneHotTrackBrightnessChange);
+  AddToHeight(h, pPaneCaptionFontColor);
+  AddToHeight(h, pPaneCaptionFont);
+  AddToHeight(h, cbPaneStyle);
+
+  // Adjust width and height
+  {$IF lcl_fullversion < 1080000}
+  Width := SpkScaleX(Width, 96);
+  Height := SpkScaleY(Height, 96);
+//  Height := h;
+  {$ENDIF}
+(*
+  Constraints.MinHeight := h;
+  Height := 0;     *)
+
+  Position := poScreenCenter;
+end;
+
 
 end.
 

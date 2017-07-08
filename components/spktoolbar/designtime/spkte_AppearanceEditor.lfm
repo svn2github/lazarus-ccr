@@ -1,11 +1,11 @@
 object frmAppearanceEditWindow: TfrmAppearanceEditWindow
-  Left = 554
-  Height = 568
-  Top = 248
-  Width = 558
+  Left = 664
+  Height = 555
+  Top = 224
+  Width = 552
   Caption = 'Toolbar appearance editor'
-  ClientHeight = 568
-  ClientWidth = 558
+  ClientHeight = 555
+  ClientWidth = 552
   Color = clBtnFace
   Font.Color = clWindowText
   OnActivate = FormActivate
@@ -18,17 +18,17 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     Left = 0
     Height = 132
     Top = 0
-    Width = 558
+    Width = 552
     Align = alTop
     AutoSize = True
     Caption = ' Preview '
     ClientHeight = 112
-    ClientWidth = 554
+    ClientWidth = 548
     TabOrder = 0
     object tbPreview: TSpkToolbar
       Left = 0
       Top = 0
-      Width = 554
+      Width = 548
       Color = clBtnFace
       Appearance.Tab.TabHeaderFont.Color = 9126421
       Appearance.Tab.TabHeaderFont.Height = -13
@@ -324,17 +324,17 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
   end
   object PageControl1: TPageControl
     Left = 0
-    Height = 387
+    Height = 382
     Top = 132
-    Width = 558
-    ActivePage = TabSheet1
+    Width = 552
+    ActivePage = TabSheet2
     Align = alClient
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Tab'
-      ClientHeight = 359
-      ClientWidth = 550
+      ClientHeight = 360
+      ClientWidth = 544
       object sTabRectangle: TShape
         AnchorSideLeft.Control = LblInactiveTabHeaderFontColor
         AnchorSideLeft.Side = asrBottom
@@ -700,8 +700,8 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     end
     object TabSheet2: TTabSheet
       Caption = 'Pane'
-      ClientHeight = 359
-      ClientWidth = 550
+      ClientHeight = 354
+      ClientWidth = 544
       ImageIndex = 1
       object Label8: TLabel
         AnchorSideTop.Control = pPaneBorderDark
@@ -985,6 +985,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         Width = 127
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
+        BorderSpacing.Bottom = 6
         ItemHeight = 15
         ItemIndex = 1
         Items.Strings = (
@@ -1187,8 +1188,8 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     end
     object TabSheet3: TTabSheet
       Caption = 'Item'
-      ClientHeight = 359
-      ClientWidth = 550
+      ClientHeight = 355
+      ClientWidth = 544
       ImageIndex = 2
       object sItemRectangle: TShape
         AnchorSideLeft.Control = LblLinkInnerLightColor
@@ -2219,8 +2220,8 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     end
     object TabSheet4: TTabSheet
       Caption = 'Import / export'
-      ClientHeight = 359
-      ClientWidth = 550
+      ClientHeight = 355
+      ClientWidth = 544
       ImageIndex = 3
       object bImport: TButton
         AnchorSideLeft.Control = bExportToXML
@@ -2261,9 +2262,9 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideBottom.Control = TabSheet4
         AnchorSideBottom.Side = asrBottom
         Left = 4
-        Height = 322
+        Height = 318
         Top = 33
-        Width = 542
+        Width = 536
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Left = 4
         BorderSpacing.Top = 4
@@ -2294,7 +2295,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
         AnchorSideTop.Control = TabSheet4
         AnchorSideRight.Control = TabSheet4
         AnchorSideRight.Side = asrBottom
-        Left = 492
+        Left = 486
         Height = 25
         Top = 4
         Width = 54
@@ -2309,8 +2310,8 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     end
     object TabSheet5: TTabSheet
       Caption = 'Tools'
-      ClientHeight = 359
-      ClientWidth = 550
+      ClientHeight = 357
+      ClientWidth = 544
       ImageIndex = 4
       object Label17: TLabel
         AnchorSideLeft.Control = TabSheet5
@@ -2348,21 +2349,24 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
   object ButtonPanel: TPanel
     Left = 8
     Height = 33
-    Top = 527
-    Width = 542
+    Top = 518
+    Width = 535
     Align = alBottom
     AutoSize = True
-    BorderSpacing.Around = 8
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 4
+    BorderSpacing.Right = 9
+    BorderSpacing.Bottom = 4
     BevelOuter = bvNone
     ClientHeight = 33
-    ClientWidth = 542
+    ClientWidth = 535
     TabOrder = 2
     object bOK: TButton
       AnchorSideTop.Control = bCancel
       AnchorSideRight.Control = bCancel
       AnchorSideBottom.Control = bCancel
       AnchorSideBottom.Side = asrBottom
-      Left = 432
+      Left = 425
       Height = 25
       Top = 4
       Width = 42
@@ -2378,7 +2382,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = ButtonPanel
       AnchorSideRight.Side = asrBottom
-      Left = 480
+      Left = 473
       Height = 25
       Top = 4
       Width = 62
@@ -2457,8 +2461,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
   object Images_200: TImageList
     Height = 32
     Width = 32
-    left = 56
-    top = 464
+    left = 344
     Bitmap = {
       4C69010000002000000020000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -2592,8 +2595,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
     }
   end
   object Images_100: TImageList
-    left = 200
-    top = 464
+    left = 488
     Bitmap = {
       4C69010000001000000010000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000032537266325372FF3253
@@ -2633,8 +2635,7 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
   object Images_150: TImageList
     Height = 24
     Width = 24
-    left = 128
-    top = 464
+    left = 416
     Bitmap = {
       4C69010000001800000018000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -2714,11 +2715,9 @@ object frmAppearanceEditWindow: TfrmAppearanceEditWindow
   object LargeImages: TImageList
     Height = 32
     Width = 32
-    left = 56
-    top = 408
+    left = 192
   end
   object SmallImages: TImageList
-    left = 128
-    top = 408
+    left = 272
   end
 end
