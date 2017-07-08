@@ -15,7 +15,7 @@ unit spkt_Const;
 interface
 
 uses
-  Graphics;
+  Graphics, LCLVersion;
 
 procedure SpkInitLayoutConsts(FromDPI: Integer; ToDPI: Integer = 0);
 function SpkScaleX(Size: Integer; FromDPI: Integer; ToDPI: Integer = 0): integer;
@@ -260,7 +260,11 @@ var
 
 
 const
+  {$IF lcl_fullversion < 1080000}
   DPI_AWARE = true;
+  {$ELSE}
+  DPI_AWARE = false;   // use lcl scaling instead
+  {$ENDIF}
 
 
 implementation

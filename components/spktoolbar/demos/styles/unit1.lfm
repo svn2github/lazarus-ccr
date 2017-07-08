@@ -7,15 +7,13 @@ object Form1: TForm1
   ClientHeight = 660
   ClientWidth = 506
   Color = clMedGray
-  LCLVersion = '1.7'
+  LCLVersion = '1.9.0.0'
   object SpkToolbar1: TSpkToolbar
     Left = 0
     Top = 0
     Width = 506
     Color = clMedGray
     Appearance.Tab.TabHeaderFont.Color = 9126421
-    Appearance.Tab.TabHeaderFont.Height = -12
-    Appearance.Tab.TabHeaderFont.Name = 'Segoe UI'
     Appearance.Tab.BorderColor = 14922381
     Appearance.Tab.GradientFromColor = 16115934
     Appearance.Tab.GradientToColor = 15587527
@@ -25,14 +23,10 @@ object Form1: TForm1
     Appearance.Pane.BorderLightColor = 16315117
     Appearance.Pane.CaptionBgColor = 15849922
     Appearance.Pane.CaptionFont.Color = 9126421
-    Appearance.Pane.CaptionFont.Height = -12
-    Appearance.Pane.CaptionFont.Name = 'Segoe UI'
     Appearance.Pane.GradientFromColor = 16115934
     Appearance.Pane.GradientToColor = 15587527
     Appearance.Pane.GradientType = bkConcave
     Appearance.Element.CaptionFont.Color = clMenuText
-    Appearance.Element.CaptionFont.Height = -12
-    Appearance.Element.CaptionFont.Name = 'Segoe UI'
     Appearance.Element.IdleFrameColor = 14727067
     Appearance.Element.IdleGradientFromColor = 15653832
     Appearance.Element.IdleGradientToColor = 15323324
@@ -64,8 +58,6 @@ object Form1: TForm1
     )
     object SpkTab1: TSpkTab
       CustomAppearance.Tab.TabHeaderFont.Color = 9126421
-      CustomAppearance.Tab.TabHeaderFont.Height = -12
-      CustomAppearance.Tab.TabHeaderFont.Name = 'Segoe UI'
       CustomAppearance.Tab.BorderColor = 14922381
       CustomAppearance.Tab.GradientFromColor = 16115934
       CustomAppearance.Tab.GradientToColor = 15587527
@@ -75,14 +67,10 @@ object Form1: TForm1
       CustomAppearance.Pane.BorderLightColor = 16315117
       CustomAppearance.Pane.CaptionBgColor = 15849922
       CustomAppearance.Pane.CaptionFont.Color = 9126421
-      CustomAppearance.Pane.CaptionFont.Height = -12
-      CustomAppearance.Pane.CaptionFont.Name = 'Segoe UI'
       CustomAppearance.Pane.GradientFromColor = 16115934
       CustomAppearance.Pane.GradientToColor = 15587527
       CustomAppearance.Pane.GradientType = bkConcave
       CustomAppearance.Element.CaptionFont.Color = clMenuText
-      CustomAppearance.Element.CaptionFont.Height = -12
-      CustomAppearance.Element.CaptionFont.Name = 'Segoe UI'
       CustomAppearance.Element.IdleFrameColor = 14727067
       CustomAppearance.Element.IdleGradientFromColor = 15653832
       CustomAppearance.Element.IdleGradientToColor = 15323324
@@ -141,22 +129,22 @@ object Form1: TForm1
           Visible = True
           Enabled = True
           Caption = 'Save'
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 0
+          ShowCaption = True
+          TableBehaviour = tbContinuesRow
           ButtonKind = bkButtonDropdown
         end
         object SpkSmallButton30: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Save as...'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 1
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
         object SpkLargeButton15: TSpkLargeButton
@@ -181,53 +169,53 @@ object Form1: TForm1
           Visible = True
           Enabled = True
           Caption = 'Cut'
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 2
+          ShowCaption = True
+          TableBehaviour = tbContinuesRow
           ButtonKind = bkButton
         end
         object SpkSmallButton32: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Copy'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 3
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
         object SpkSmallButton33: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Paste'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 4
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
         object SpkSmallButton34: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Select all'
-          ShowCaption = True
-          TableBehaviour = tbBeginsColumn
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = False
+          ShowCaption = True
+          TableBehaviour = tbBeginsColumn
           ButtonKind = bkButton
         end
         object SpkSmallButton35: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Unselect'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = False
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
       end
@@ -240,8 +228,6 @@ object Form1: TForm1
     Color = clMedGray
     Style = spkOffice2007Silver
     Appearance.Tab.TabHeaderFont.Color = 8016716
-    Appearance.Tab.TabHeaderFont.Height = -12
-    Appearance.Tab.TabHeaderFont.Name = 'Segoe UI'
     Appearance.Tab.BorderColor = 12500670
     Appearance.Tab.GradientFromColor = 16052978
     Appearance.Tab.GradientToColor = 15722209
@@ -251,14 +237,10 @@ object Form1: TForm1
     Appearance.Pane.BorderLightColor = clWhite
     Appearance.Pane.CaptionBgColor = 15000804
     Appearance.Pane.CaptionFont.Color = 3552822
-    Appearance.Pane.CaptionFont.Height = -12
-    Appearance.Pane.CaptionFont.Name = 'Segoe UI'
     Appearance.Pane.GradientFromColor = 16316664
     Appearance.Pane.GradientToColor = 15329769
     Appearance.Pane.GradientType = bkConcave
     Appearance.Element.CaptionFont.Color = 9126421
-    Appearance.Element.CaptionFont.Height = -12
-    Appearance.Element.CaptionFont.Name = 'Segoe UI'
     Appearance.Element.IdleFrameColor = 12104105
     Appearance.Element.IdleGradientFromColor = 16053490
     Appearance.Element.IdleGradientToColor = 15132131
@@ -290,8 +272,6 @@ object Form1: TForm1
     )
     object SpkTab2: TSpkTab
       CustomAppearance.Tab.TabHeaderFont.Color = 9126421
-      CustomAppearance.Tab.TabHeaderFont.Height = -12
-      CustomAppearance.Tab.TabHeaderFont.Name = 'Segoe UI'
       CustomAppearance.Tab.BorderColor = 14922381
       CustomAppearance.Tab.GradientFromColor = 16115934
       CustomAppearance.Tab.GradientToColor = 15587527
@@ -301,14 +281,10 @@ object Form1: TForm1
       CustomAppearance.Pane.BorderLightColor = 16315117
       CustomAppearance.Pane.CaptionBgColor = 15849922
       CustomAppearance.Pane.CaptionFont.Color = 9126421
-      CustomAppearance.Pane.CaptionFont.Height = -12
-      CustomAppearance.Pane.CaptionFont.Name = 'Segoe UI'
       CustomAppearance.Pane.GradientFromColor = 16115934
       CustomAppearance.Pane.GradientToColor = 15587527
       CustomAppearance.Pane.GradientType = bkConcave
       CustomAppearance.Element.CaptionFont.Color = clMenuText
-      CustomAppearance.Element.CaptionFont.Height = -12
-      CustomAppearance.Element.CaptionFont.Name = 'Segoe UI'
       CustomAppearance.Element.IdleFrameColor = 14727067
       CustomAppearance.Element.IdleGradientFromColor = 15653832
       CustomAppearance.Element.IdleGradientToColor = 15323324
@@ -367,22 +343,22 @@ object Form1: TForm1
           Visible = True
           Enabled = True
           Caption = 'Save'
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 0
+          ShowCaption = True
+          TableBehaviour = tbContinuesRow
           ButtonKind = bkButtonDropdown
         end
         object SpkSmallButton23: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Save as...'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 1
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
         object SpkLargeButton13: TSpkLargeButton
@@ -407,53 +383,53 @@ object Form1: TForm1
           Visible = True
           Enabled = True
           Caption = 'Cut'
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 2
+          ShowCaption = True
+          TableBehaviour = tbContinuesRow
           ButtonKind = bkButton
         end
         object SpkSmallButton25: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Copy'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 3
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
         object SpkSmallButton26: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Paste'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 4
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
         object SpkSmallButton27: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Select all'
-          ShowCaption = True
-          TableBehaviour = tbBeginsColumn
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = False
+          ShowCaption = True
+          TableBehaviour = tbBeginsColumn
           ButtonKind = bkButton
         end
         object SpkSmallButton28: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Unselect'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = False
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
       end
@@ -466,8 +442,6 @@ object Form1: TForm1
     Color = clMedGray
     Style = spkOffice2007SilverTurquoise
     Appearance.Tab.TabHeaderFont.Color = 8016716
-    Appearance.Tab.TabHeaderFont.Height = -12
-    Appearance.Tab.TabHeaderFont.Name = 'Segoe UI'
     Appearance.Tab.BorderColor = 12500670
     Appearance.Tab.GradientFromColor = 16052978
     Appearance.Tab.GradientToColor = 15722209
@@ -477,14 +451,10 @@ object Form1: TForm1
     Appearance.Pane.BorderLightColor = clWhite
     Appearance.Pane.CaptionBgColor = 15000804
     Appearance.Pane.CaptionFont.Color = 3552822
-    Appearance.Pane.CaptionFont.Height = -12
-    Appearance.Pane.CaptionFont.Name = 'Segoe UI'
     Appearance.Pane.GradientFromColor = 16316664
     Appearance.Pane.GradientToColor = 15329769
     Appearance.Pane.GradientType = bkConcave
     Appearance.Element.CaptionFont.Color = 9126421
-    Appearance.Element.CaptionFont.Height = -12
-    Appearance.Element.CaptionFont.Name = 'Segoe UI'
     Appearance.Element.IdleFrameColor = 12104105
     Appearance.Element.IdleGradientFromColor = 16053490
     Appearance.Element.IdleGradientToColor = 15132131
@@ -516,8 +486,6 @@ object Form1: TForm1
     )
     object SpkTab4: TSpkTab
       CustomAppearance.Tab.TabHeaderFont.Color = 9126421
-      CustomAppearance.Tab.TabHeaderFont.Height = -12
-      CustomAppearance.Tab.TabHeaderFont.Name = 'Segoe UI'
       CustomAppearance.Tab.BorderColor = 14922381
       CustomAppearance.Tab.GradientFromColor = 16115934
       CustomAppearance.Tab.GradientToColor = 15587527
@@ -527,14 +495,10 @@ object Form1: TForm1
       CustomAppearance.Pane.BorderLightColor = 16315117
       CustomAppearance.Pane.CaptionBgColor = 15849922
       CustomAppearance.Pane.CaptionFont.Color = 9126421
-      CustomAppearance.Pane.CaptionFont.Height = -12
-      CustomAppearance.Pane.CaptionFont.Name = 'Segoe UI'
       CustomAppearance.Pane.GradientFromColor = 16115934
       CustomAppearance.Pane.GradientToColor = 15587527
       CustomAppearance.Pane.GradientType = bkConcave
       CustomAppearance.Element.CaptionFont.Color = clMenuText
-      CustomAppearance.Element.CaptionFont.Height = -12
-      CustomAppearance.Element.CaptionFont.Name = 'Segoe UI'
       CustomAppearance.Element.IdleFrameColor = 14727067
       CustomAppearance.Element.IdleGradientFromColor = 15653832
       CustomAppearance.Element.IdleGradientToColor = 15323324
@@ -593,22 +557,22 @@ object Form1: TForm1
           Visible = True
           Enabled = True
           Caption = 'Save'
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 0
+          ShowCaption = True
+          TableBehaviour = tbContinuesRow
           ButtonKind = bkButtonDropdown
         end
         object SpkSmallButton16: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Save as...'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 1
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
         object SpkLargeButton11: TSpkLargeButton
@@ -633,53 +597,53 @@ object Form1: TForm1
           Visible = True
           Enabled = True
           Caption = 'Cut'
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 2
+          ShowCaption = True
+          TableBehaviour = tbContinuesRow
           ButtonKind = bkButton
         end
         object SpkSmallButton18: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Copy'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 3
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
         object SpkSmallButton19: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Paste'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 4
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
         object SpkSmallButton20: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Select all'
-          ShowCaption = True
-          TableBehaviour = tbBeginsColumn
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = False
+          ShowCaption = True
+          TableBehaviour = tbBeginsColumn
           ButtonKind = bkButton
         end
         object SpkSmallButton21: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Unselect'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = False
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
       end
@@ -692,8 +656,6 @@ object Form1: TForm1
     Color = clMedGray
     Style = spkMetroLight
     Appearance.Tab.TabHeaderFont.Color = 9787178
-    Appearance.Tab.TabHeaderFont.Height = -12
-    Appearance.Tab.TabHeaderFont.Name = 'Segoe UI'
     Appearance.Tab.BorderColor = 13816015
     Appearance.Tab.GradientFromColor = 15856113
     Appearance.Tab.GradientToColor = 15856113
@@ -703,16 +665,12 @@ object Form1: TForm1
     Appearance.Pane.BorderLightColor = 16315117
     Appearance.Pane.CaptionBgColor = 15856113
     Appearance.Pane.CaptionFont.Color = 6908265
-    Appearance.Pane.CaptionFont.Height = -12
-    Appearance.Pane.CaptionFont.Name = 'Segoe UI'
     Appearance.Pane.GradientFromColor = 15856113
     Appearance.Pane.GradientToColor = 15856113
     Appearance.Pane.GradientType = bkSolid
     Appearance.Pane.HotTrackBrightnessChange = 0
     Appearance.Pane.Style = psDividerFlat
     Appearance.Element.CaptionFont.Color = 4144959
-    Appearance.Element.CaptionFont.Height = -12
-    Appearance.Element.CaptionFont.Name = 'Segoe UI'
     Appearance.Element.IdleFrameColor = 13487565
     Appearance.Element.IdleGradientFromColor = 14671839
     Appearance.Element.IdleGradientToColor = 14671839
@@ -743,8 +701,6 @@ object Form1: TForm1
     )
     object SpkTab5: TSpkTab
       CustomAppearance.Tab.TabHeaderFont.Color = 9126421
-      CustomAppearance.Tab.TabHeaderFont.Height = -12
-      CustomAppearance.Tab.TabHeaderFont.Name = 'Segoe UI'
       CustomAppearance.Tab.BorderColor = 14922381
       CustomAppearance.Tab.GradientFromColor = 16115934
       CustomAppearance.Tab.GradientToColor = 15587527
@@ -754,14 +710,10 @@ object Form1: TForm1
       CustomAppearance.Pane.BorderLightColor = 16315117
       CustomAppearance.Pane.CaptionBgColor = 15849922
       CustomAppearance.Pane.CaptionFont.Color = 9126421
-      CustomAppearance.Pane.CaptionFont.Height = -12
-      CustomAppearance.Pane.CaptionFont.Name = 'Segoe UI'
       CustomAppearance.Pane.GradientFromColor = 16115934
       CustomAppearance.Pane.GradientToColor = 15587527
       CustomAppearance.Pane.GradientType = bkConcave
       CustomAppearance.Element.CaptionFont.Color = clMenuText
-      CustomAppearance.Element.CaptionFont.Height = -12
-      CustomAppearance.Element.CaptionFont.Name = 'Segoe UI'
       CustomAppearance.Element.IdleFrameColor = 14727067
       CustomAppearance.Element.IdleGradientFromColor = 15653832
       CustomAppearance.Element.IdleGradientToColor = 15323324
@@ -820,22 +772,22 @@ object Form1: TForm1
           Visible = True
           Enabled = True
           Caption = 'Save'
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 0
+          ShowCaption = True
+          TableBehaviour = tbContinuesRow
           ButtonKind = bkButtonDropdown
         end
         object SpkSmallButton9: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Save as...'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 1
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
         object SpkLargeButton9: TSpkLargeButton
@@ -860,53 +812,53 @@ object Form1: TForm1
           Visible = True
           Enabled = True
           Caption = 'Cut'
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 2
+          ShowCaption = True
+          TableBehaviour = tbContinuesRow
           ButtonKind = bkButton
         end
         object SpkSmallButton11: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Copy'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 3
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
         object SpkSmallButton12: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Paste'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 4
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
         object SpkSmallButton13: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Select all'
-          ShowCaption = True
-          TableBehaviour = tbBeginsColumn
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = False
+          ShowCaption = True
+          TableBehaviour = tbBeginsColumn
           ButtonKind = bkButton
         end
         object SpkSmallButton14: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Unselect'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = False
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
       end
@@ -919,8 +871,6 @@ object Form1: TForm1
     Color = clMedGray
     Style = spkMetroDark
     Appearance.Tab.TabHeaderFont.Color = clWhite
-    Appearance.Tab.TabHeaderFont.Height = -12
-    Appearance.Tab.TabHeaderFont.Name = 'Segoe UI'
     Appearance.Tab.BorderColor = clBlack
     Appearance.Tab.GradientFromColor = 4605510
     Appearance.Tab.GradientToColor = 4605510
@@ -930,16 +880,12 @@ object Form1: TForm1
     Appearance.Pane.BorderLightColor = 10657179
     Appearance.Pane.CaptionBgColor = 4605510
     Appearance.Pane.CaptionFont.Color = clWhite
-    Appearance.Pane.CaptionFont.Height = -12
-    Appearance.Pane.CaptionFont.Name = 'Segoe UI'
     Appearance.Pane.GradientFromColor = 4605510
     Appearance.Pane.GradientToColor = 15856113
     Appearance.Pane.GradientType = bkSolid
     Appearance.Pane.HotTrackBrightnessChange = 0
     Appearance.Pane.Style = psDividerFlat
     Appearance.Element.CaptionFont.Color = 4144959
-    Appearance.Element.CaptionFont.Height = -12
-    Appearance.Element.CaptionFont.Name = 'Segoe UI'
     Appearance.Element.IdleFrameColor = 9208962
     Appearance.Element.IdleGradientFromColor = 4473924
     Appearance.Element.IdleGradientToColor = 4473924
@@ -971,8 +917,6 @@ object Form1: TForm1
     )
     object SpkTab6: TSpkTab
       CustomAppearance.Tab.TabHeaderFont.Color = 9126421
-      CustomAppearance.Tab.TabHeaderFont.Height = -12
-      CustomAppearance.Tab.TabHeaderFont.Name = 'Segoe UI'
       CustomAppearance.Tab.BorderColor = 14922381
       CustomAppearance.Tab.GradientFromColor = 16115934
       CustomAppearance.Tab.GradientToColor = 15587527
@@ -982,14 +926,10 @@ object Form1: TForm1
       CustomAppearance.Pane.BorderLightColor = 16315117
       CustomAppearance.Pane.CaptionBgColor = 15849922
       CustomAppearance.Pane.CaptionFont.Color = 9126421
-      CustomAppearance.Pane.CaptionFont.Height = -12
-      CustomAppearance.Pane.CaptionFont.Name = 'Segoe UI'
       CustomAppearance.Pane.GradientFromColor = 16115934
       CustomAppearance.Pane.GradientToColor = 15587527
       CustomAppearance.Pane.GradientType = bkConcave
       CustomAppearance.Element.CaptionFont.Color = clMenuText
-      CustomAppearance.Element.CaptionFont.Height = -12
-      CustomAppearance.Element.CaptionFont.Name = 'Segoe UI'
       CustomAppearance.Element.IdleFrameColor = 14727067
       CustomAppearance.Element.IdleGradientFromColor = 15653832
       CustomAppearance.Element.IdleGradientToColor = 15323324
@@ -1048,22 +988,22 @@ object Form1: TForm1
           Visible = True
           Enabled = True
           Caption = 'Save'
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 0
+          ShowCaption = True
+          TableBehaviour = tbContinuesRow
           ButtonKind = bkButtonDropdown
         end
         object SpkSmallButton1: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Save as...'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 1
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
         object SpkLargeButton6: TSpkLargeButton
@@ -1088,53 +1028,53 @@ object Form1: TForm1
           Visible = True
           Enabled = True
           Caption = 'Cut'
-          ShowCaption = True
-          TableBehaviour = tbContinuesRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 2
+          ShowCaption = True
+          TableBehaviour = tbContinuesRow
           ButtonKind = bkButton
         end
         object SpkSmallButton4: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Copy'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 3
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
         object SpkSmallButton5: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Paste'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = True
           ImageIndex = 4
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
         object SpkSmallButton6: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Select all'
-          ShowCaption = True
-          TableBehaviour = tbBeginsColumn
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = False
+          ShowCaption = True
+          TableBehaviour = tbBeginsColumn
           ButtonKind = bkButton
         end
         object SpkSmallButton7: TSpkSmallButton
           Visible = True
           Enabled = True
           Caption = 'Unselect'
-          ShowCaption = True
-          TableBehaviour = tbBeginsRow
           GroupBehaviour = gbSingleItem
           HideFrameWhenIdle = False
+          ShowCaption = True
+          TableBehaviour = tbBeginsRow
           ButtonKind = bkButton
         end
       end

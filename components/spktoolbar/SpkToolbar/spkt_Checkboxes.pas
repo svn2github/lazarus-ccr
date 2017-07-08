@@ -200,6 +200,7 @@ begin
     exit;
 
   Bitmap.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
+  SpkScaleFont(Bitmap.Canvas.Font);
   TextWidth := Bitmap.Canvas.TextWidth(FCaption);
 
   BtnWidth := SmallButtonPadding + SmallButtonGlyphWidth +
@@ -333,6 +334,7 @@ begin
 
   // Text
   ABuffer.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
+  SpkScaleFont(ABuffer.Canvas.Font);
 
   case FButtonState of
     bsIdle             : fontColor := FAppearance.Element.IdleCaptionColor;

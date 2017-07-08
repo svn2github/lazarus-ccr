@@ -23,10 +23,10 @@ unit SpkToolbar;
 interface
 
 uses
-  LCLType, LMessages, Graphics, SysUtils, Controls, Classes, Math, Dialogs,
-  Forms, Types, SpkGraphTools, SpkGUITools, SpkMath, ExtCtrls,
-  spkt_Appearance, spkt_BaseItem, spkt_Const, spkt_Dispatch, spkt_Tab,
-  spkt_Pane, spkt_Types;
+  LCLType, LMessages, LCLVersion, Graphics, SysUtils, Controls, Classes, Math,
+  Dialogs, Forms, Types, ExtCtrls,
+  SpkGraphTools, SpkGUITools, SpkMath, spkt_Appearance, spkt_BaseItem,
+  spkt_Const, spkt_Dispatch, spkt_Tab, spkt_Pane, spkt_Types;
 
 type
   { Type describes regions of the toolbar which are used during handling
@@ -314,6 +314,11 @@ type
 
     { Setter for toolbar style, i.e. quick selection of new appearance theme }
     procedure SetStyle(const Value: TSpkStyle);
+
+    {$IF lcl_fullversion >= 1080000}
+    procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+      const AXProportion, AYProportion: Double); override;
+    {$ENDIF}
 
   public
 
@@ -1782,5 +1787,88 @@ begin
 
   FMetricsValid := True;
 end;
+
+{$IF lcl_fullversion >= 1080000}
+procedure TSpkToolbar.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
+  const AXProportion, AYProportion: Double);
+begin
+  inherited;
+
+  LargeButtonDropdownFieldSize := round(LARGEBUTTON_DROPDOWN_FIELD_SIZE * AXProportion);
+  LargeButtonGlyphMargin := round(LARGEBUTTON_GLYPH_MARGIN * AXProportion);
+  LargeButtonCaptionHMargin := round(LARGEBUTTON_CAPTION_HMARGIN * AXProportion);
+  LargeButtonMinWidth := round(LARGEBUTTON_MIN_WIDTH * AXProportion);
+  LargeButtonRadius := LARGEBUTTON_RADIUS;
+  LargeButtonBorderSize := round(LARGEBUTTON_BORDER_SIZE * AXProportion);
+  LargeButtonChevronHMargin := round(LARGEBUTTON_CHEVRON_HMARGIN * AXProportion);
+  LargeButtonCaptionTopRail := round(LARGEBUTTON_CAPTION_TOP_RAIL * AYProportion);
+  LargeButtonCaptionButtomRail := round(LARGEBUTTON_CAPTION_BOTTOM_RAIL * AYProportion);
+
+  SmallButtonGlyphWidth := round(SMALLBUTTON_GLYPH_WIDTH * AXProportion);
+  SmallButtonBorderWidth := round(SMALLBUTTON_BORDER_WIDTH * AXProportion);
+  SmallButtonHalfBorderWidth := round(SMALLBUTTON_HALF_BORDER_WIDTH * AXProportion);
+  SmallButtonPadding := round(SMALLBUTTON_PADDING * AXProportion);
+  SmallButtonDropdownWidth := round(SMALLBUTTON_DROPDOWN_WIDTH * AXProportion);
+  SmallButtonRadius := SMALLBUTTON_RADIUS;
+  SmallButtonMinWidth := 2 * SmallButtonPadding + SmallButtonGlyphWidth;
+
+  MaxElementHeight := round(MAX_ELEMENT_HEIGHT * AYProportion);
+  PaneRowHeight := round(PANE_ROW_HEIGHT * AYProportion);
+  PaneFullRowHeight := 3 * PaneRowHeight;
+  PaneOneRowTopPadding := round(PANE_ONE_ROW_TOPPADDING * AYProportion);
+  PaneOneRowBottomPadding := round(PANE_ONE_ROW_BOTTOMPADDING * AYProportion);
+  PaneTwoRowsVSpacer := round(PANE_TWO_ROWS_VSPACER * AYProportion);
+  PaneTwoRowsTopPadding := round(PANE_TWO_ROWS_TOPPADDING * AYProportion);
+  PaneTwoRowsBottomPadding := round(PANE_TWO_ROWS_BOTTOMPADDING * AYProportion);
+  PaneThreeRowsVSpacer := round(PANE_THREE_ROWS_VSPACER * AYProportion);
+  PaneThreeRowsTopPadding := round(PANE_THREE_ROWS_TOPPADDING * AYProportion);
+  PaneThreeRowsBottomPadding := round(PANE_THREE_ROWS_BOTTOMPADDING * AYProportion);
+  PaneFullRowTopPadding := PaneThreeRowsTopPadding;
+  PaneFullRowBottomPadding := PaneThreeRowsBottomPadding;
+  PaneLeftPadding := round(PANE_LEFT_PADDING * AXProportion);
+  PaneRightPadding := round(PANE_RIGHT_PADDING * AXProportion);
+  PaneColumnSpacer := round(PANE_COLUMN_SPACER * AXProportion);
+  PaneGroupSpacer := round(PANE_GROUP_SPACER * AXProportion);
+
+  PaneCaptionHeight := round(PANE_CAPTION_HEIGHT * AYProportion);
+  PaneCornerRadius := PANE_CORNER_RADIUS;
+  PaneBorderSize := round(PANE_BORDER_SIZE * AXProportion);
+  PaneBorderHalfSize := round(PANE_BORDER_HALF_SIZE * AXProportion);
+  PaneHeight := MaxElementHeight + PaneCaptionHeight + 2 * PaneBorderSize;
+  PaneCaptionHMargin := round(PANE_CAPTION_HMARGIN * AXProportion);
+
+  TabCornerRadius := TAB_CORNER_RADIUS;
+  TabPaneLeftPadding := round(TAB_PANE_LEFTPADDING * AXProportion);
+  TabPaneRightPadding := round(TAB_PANE_RIGHTPADDING * AXProportion);
+  TabPaneTopPadding := round(TAB_PANE_TOPPADDING * AYProportion);
+  TabPaneBottomPadding := round(TAB_PANE_BOTTOMPADDING * AYProportion);
+  TabPaneHSpacing := round(TAB_PANE_HSPACING * AXProportion);
+  TabBorderSize := round(TAB_BORDER_SIZE * AXProportion);
+  TabHeight := PaneHeight + TabPaneTopPadding + TabPaneBottomPadding + TabBorderSize;
+
+  ToolbarBorderWidth := round(TOOLBAR_BORDER_WIDTH * AXProportion);
+  ToolbarCornerRadius := TOOLBAR_CORNER_RADIUS;
+  ToolbarTabCaptionsHeight := round(TOOLBAR_TAB_CAPTIONS_HEIGHT * AYProportion);
+  ToolbarTabCaptionsTextHPadding := round(TOOLBAR_TAB_CAPTIONS_TEXT_HPADDING * AXProportion);
+  ToolbarMinTabCaptionWidth := round(TOOLBAR_MIN_TAB_CAPTION_WIDTH * AXProportion);
+  ToolbarHeight := ToolbarTabCaptionsHeight + TabHeight;
+
+  // scaling radius if not square
+  if LargeButtonRadius > 1 then
+    LargeButtonRadius := round(LargeButtonRadius * AXProportion);
+
+  if SmallButtonRadius > 1 then
+    SmallButtonRadius := round(SmallButtonRadius * AXProportion);
+
+  if PaneCornerRadius > 1 then
+    PaneCornerRadius := round(PaneCornerRadius * AXProportion);
+
+  if TabCornerRadius > 1 then
+    TabCornerRadius := round(TabCornerRadius * AXProportion);
+
+  if ToolbarCornerRadius > 1 then
+    ToolbarCornerRadius := round(ToolbarCornerRadius * AXProportion);
+end;
+{$ENDIF}
 
 end.

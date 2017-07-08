@@ -1605,7 +1605,7 @@ end;
 
 procedure SetDefaultFont(AFont: TFont);
 begin
-  AFont.Assign(Screen.MenuFont);
+//  AFont.Assign(Screen.MenuFont);
 end;
 
 end.

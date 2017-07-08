@@ -314,8 +314,9 @@ begin
     true
   );
 
-  // Etykieta tafli
+  // Pane label
   ABuffer.Canvas.Font.Assign(FAppearance.Pane.CaptionFont);
+  SpkScaleFont(ABuffer.Canvas.Font);
   x := FRect.Left + (FRect.Width - ABuffer.Canvas.TextWidth(FCaption)) div 2;
   y := FRect.Bottom - PaneBorderSize - PaneCaptionHeight + 1 +
         (PaneCaptionHeight - ABuffer.Canvas.TextHeight('Wy')) div 2;
@@ -701,6 +702,7 @@ begin
   if tmpBitmap = nil then
     exit;
   tmpBitmap.Canvas.Font.Assign(FAppearance.Pane.CaptionFont);
+  SpkScaleFont(tmpBitmap.Canvas.Font);
 
   // *** Minimalna szerokoœæ tafli (tekstu) ***
   TextW := tmpBitmap.Canvas.TextWidth(FCaption);
