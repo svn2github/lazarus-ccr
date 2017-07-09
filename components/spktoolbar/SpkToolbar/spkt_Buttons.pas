@@ -1082,7 +1082,6 @@ begin
   // Text
   ABuffer.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
   ABuffer.Canvas.Font.Color := fontColor;
-  SpkScaleFont(ABuffer.Canvas.Font);
 
   if FButtonKind in [bkButton, bkToggle] then
     FindBreakPlace(FCaption, breakPos, breakWidth)
@@ -1148,7 +1147,6 @@ begin
     exit;
 
   Bitmap.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
-  SpkScaleFont(Bitmap.Canvas.Font);
 
   Width := Bitmap.Canvas.TextWidth(FCaption);
 
@@ -1241,7 +1239,6 @@ begin
   begin
     // do not break the label
     Bitmap.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
-    SpkScaleFont(Bitmap.Canvas.Font);
     TextWidth := 2 * LargeButtonCaptionHMargin + Bitmap.Canvas.TextWidth(FCaption);
   end;
 
@@ -1322,7 +1319,6 @@ begin
   if FShowCaption then
   begin
     Bitmap.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
-    SpkScaleFont(Bitmap.Canvas.Font);
     TextWidth := Bitmap.Canvas.TextWidth(FCaption);
 
     BtnWidth := BtnWidth + SmallButtonPadding + TextWidth;
@@ -1542,7 +1538,6 @@ begin
   begin
     ABuffer.Canvas.Font.Assign(FAppearance.Element.CaptionFont);
     ABuffer.Canvas.Font.Color := fontColor;
-    SpkScaleFont(ABuffer.Canvas.Font);
 
     if (FGroupBehaviour in [gbContinuesGroup, gbEndsGroup]) then
       x := FButtonRect.Left + SmallButtonHalfBorderWidth

@@ -315,9 +315,14 @@ type
     { Setter for toolbar style, i.e. quick selection of new appearance theme }
     procedure SetStyle(const Value: TSpkStyle);
 
+    { LCL Scaling }
     {$IF lcl_fullversion >= 1080000}
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
+
+    procedure FixDesignFontsPPI(const ADesignTimePPI: Integer); override;
+
+    procedure ScaleFontsPPI(const AProportion: Double); override;
     {$ENDIF}
 
   public
@@ -1394,7 +1399,6 @@ procedure TSpkToolbar.ValidateBuffer;
       TabRect := FTabRects[index];
 
       FBuffer.canvas.font.Assign(AFont);
-      SpkScaleFont(FBuffer.Canvas.Font);
 
       if AOverrideTextColor <> clNone then
         clr := AOverrideTextColor else
@@ -1737,7 +1741,6 @@ begin
         else
           TabAppearance := FAppearance;
         FBuffer.Canvas.font.Assign(TabAppearance.Tab.TabHeaderFont);
-        SpkScaleFont(FBuffer.Canvas.Font);
 
         TabWidth := 2 +  // Frame
           2 * TabCornerRadius +
@@ -1793,6 +1796,9 @@ procedure TSpkToolbar.DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
   const AXProportion, AYProportion: Double);
 begin
   inherited;
+
+  if not (AMode in [lapAutoAdjustWithoutHorizontalScrolling, lapAutoAdjustForDPI]) then
+    exit;
 
   LargeButtonDropdownFieldSize := round(LARGEBUTTON_DROPDOWN_FIELD_SIZE * AXProportion);
   LargeButtonGlyphMargin := round(LARGEBUTTON_GLYPH_MARGIN * AXProportion);
@@ -1869,6 +1875,23 @@ begin
   if ToolbarCornerRadius > 1 then
     ToolbarCornerRadius := round(ToolbarCornerRadius * AXProportion);
 end;
+
+procedure TSpkToolbar.FixDesignFontsPPI(const ADesignTimePPI: Integer);
+begin
+  inherited;
+  DoFixDesignFontPPI(FAppearance.Tab.TabHeaderFont, ADesignTimePPI);
+  DoFixDesignFontPPI(FAppearance.Pane.CaptionFont, ADesignTimePPI);
+  DoFixDesignFontPPI(FAppearance.Element.CaptionFont, ADesignTimePPI);
+end;
+
+procedure TSpkToolbar.ScaleFontsPPI(const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(FAppearance.Tab.TabHeaderFont, AProportion);
+  DoScaleFontPPI(FAppearance.Pane.CaptionFont, AProportion);
+  DoScaleFontPPI(FAppearance.Element.CaptionFont, AProportion);
+end;
+
 {$ENDIF}
 
 end.
