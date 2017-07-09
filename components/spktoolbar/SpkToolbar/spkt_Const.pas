@@ -17,6 +17,13 @@ interface
 uses
   Graphics, LCLVersion;
 
+const
+  {$IF lcl_fullversion < 1080000}
+  DPI_AWARE = true;
+  {$ELSE}
+  DPI_AWARE = false;   // use lcl scaling instead
+  {$ENDIF}
+
 procedure SpkInitLayoutConsts(FromDPI: Integer; ToDPI: Integer = 0);
 function SpkScaleX(Size: Integer; FromDPI: Integer; ToDPI: Integer = 0): integer;
 function SpkScaleY(Size: Integer; FromDPI: Integer; ToDPI: Integer = 0): integer;
@@ -256,14 +263,6 @@ var
   ToolbarMinTabCaptionWidth: Integer;
   /// <summary>Toolbar total height</summary>
   ToolbarHeight: Integer;
-
-
-const
-  {$IF lcl_fullversion < 1080000}
-  DPI_AWARE = true;
-  {$ELSE}
-  DPI_AWARE = false;   // use lcl scaling instead
-  {$ENDIF}
 
 
 implementation

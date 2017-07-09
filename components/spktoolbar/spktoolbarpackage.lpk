@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Name Value="SpkToolbarPackage"/>
     <Type Value="RunAndDesignTime"/>
-    <Author Value="Spook. Ported to Lazarus/LCL by Luiz Américo"/>
+    <Author Value="Spook. Ported to Lazarus/LCL by Luiz Américo and Werner Pamler"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -15,8 +15,8 @@
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Ribbon-like toolbar"/>
-    <License Value="Modified LGPL"/>
-    <Version Minor="1" Release="1"/>
+    <License Value="Modified LGPL (like Lazarus)"/>
+    <Version Minor="1" Release="2"/>
     <Files Count="26">
       <Item1>
         <Filename Value="SpkToolbar\spkt_Appearance.pas"/>
