@@ -150,7 +150,7 @@ object Form1: TForm1
     FooterOptions.Active = True
     FooterOptions.Color = clYellow
     FooterOptions.RowCount = 1
-    FooterOptions.DrawFullLine = True
+    FooterOptions.DrawFullLine = False
     SearchOptions.QuickSearchOptions = [loCaseInsensitive, loPartialKey]
     SearchOptions.FromStart = False
     OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgFooterRows, rdgAllowQuickFilter]
@@ -159,7 +159,7 @@ object Form1: TForm1
     Align = alBottom
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clWindow
-    DrawFullLine = True
+    DrawFullLine = False
     FocusColor = clRed
     SelectedColor = clHighlight
     GridLineStyle = psSolid
@@ -226,6 +226,14 @@ object Form1: TForm1
     OnClick = Button1Click
     TabOrder = 4
   end
+  object Label1: TLabel
+    Left = 552
+    Height = 20
+    Top = 24
+    Width = 42
+    Caption = 'Label1'
+    ParentColor = False
+  end
   object rxData: TRxMemoryData
     FieldDefs = <    
       item
@@ -250,6 +258,7 @@ object Form1: TForm1
         DataType = ftString
         Size = 50
       end>
+    AfterScroll = rxDataAfterScroll
     PacketRecords = 0
     Left = 432
     Top = 16

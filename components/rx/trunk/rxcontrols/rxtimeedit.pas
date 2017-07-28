@@ -57,6 +57,7 @@ type
     procedure DoChangeValue(AValue:integer);
     procedure WMSetFocus(var Message: TLMSetFocus); message LM_SETFOCUS;
     procedure WMKillFocus(var Message: TLMKillFocus); message LM_KILLFOCUS;
+    procedure SetEnabled(Value: Boolean); override;
   protected
     procedure SetParent(AParent: TWinControl); override;
     procedure DoPositionButton; virtual;
@@ -242,6 +243,12 @@ begin
   if FButtonNeedsFocus then
     FButton.Visible:=False;
   inherited;
+end;
+
+procedure TCustomRxTimeEdit.SetEnabled(Value: Boolean);
+begin
+  inherited SetEnabled(Value);
+  FButton.Enabled:=Value;
 end;
 
 procedure TCustomRxTimeEdit.SetParent(AParent: TWinControl);

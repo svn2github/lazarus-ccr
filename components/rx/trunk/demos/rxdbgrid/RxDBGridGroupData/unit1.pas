@@ -18,6 +18,7 @@ type
     CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
     dsData: TDataSource;
+    Label1: TLabel;
     rxDataAAA: TStringField;
     rxDataGROUP_ID: TLongintField;
     rxDataID: TLongintField;
@@ -29,6 +30,7 @@ type
     procedure Button1Click(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure rxDataAfterScroll(DataSet: TDataSet);
   private
 
   public
@@ -69,6 +71,14 @@ begin
   rxData.First;
 
   CheckBox1Change(nil);
+end;
+
+type
+  THackRxDBGrid = class(TRxDBGrid);
+
+procedure TForm1.rxDataAfterScroll(DataSet: TDataSet);
+begin
+  Label1.Caption:=Format('ActiveRecord %d', [THackRxDBGrid(RxDBGrid1).DataLink.ActiveRecord]);
 end;
 
 procedure TForm1.CheckBox1Change(Sender: TObject);

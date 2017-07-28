@@ -142,6 +142,7 @@ msgid "Export group data"
 msgstr "Экспорт данных группировки"
 
 #: rxdconst.sexporthidezerovalues
+msgctxt "rxdconst.sexporthidezerovalues"
 msgid "Hide zero values"
 msgstr "Не отображать нулевые значения"
 
