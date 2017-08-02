@@ -140,6 +140,8 @@ type
     FComponentHint: TTranslateString;
     FHintMode: TVpHintMode;
     FOnHoliday: TVpHolidayEvent;
+    FAllowDragAndDrop: Boolean;
+    FDragDropTransparent: Boolean;
   protected{ private }
     FKBNavigate: Boolean;
     FColumnWidth: Integer;
@@ -186,6 +188,10 @@ type
     mvMonthDayArray: TVpMonthdayArray;
     mvActiveEvent: TVpEvent;
     mvActiveEventRec: TRect;
+    mvDragging: Boolean;
+    mvMouseDown: Boolean;
+    mvMouseDownPoint: TPoint;
+//    wvHotPoint: TPoint;
 
     { property methods }
     procedure SetDrawingStyle(Value: TVpDrawingStyle);
@@ -216,17 +222,25 @@ type
     procedure mvPenChanged(Sender: TObject);
     function SelectEventAtCoord(Point: TPoint): Boolean;
 
+    { inherited methods }
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
     procedure Loaded; override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-    procedure MouseMove(Shift: TShiftState; X,Y: Integer); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
+    procedure MouseMove(Shift: TShiftState; X,Y: Integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure Paint; override;
     {$IF VP_LCL_SCALING = 1}
     procedure ScaleFontsPPI(const AProportion: Double); override;
     {$ENDIF}
+    { drag and drop }
+    procedure DoEndDrag(Target: TObject; X, Y: Integer); override;
+    procedure DoStartDrag(var DragObject: TDragObject); override;
+    procedure DragOver(Source: TObject; X, Y: Integer; State: TDragState;
+      var Accept: Boolean); override;
 
     { message handlers }
     {$IFNDEF LCL}
@@ -263,6 +277,7 @@ type
     destructor Destroy; override;
     function BuildEventString(AEvent: TVpEvent;
       AShowEventTime, AStartTimeOnly: Boolean): String;
+    procedure DragDrop(Source: TObject; X, Y: Integer); override;
     procedure LoadLanguage;
     procedure Invalidate; override;
     function IsHoliday(ADate: TDate; out AHolidayName: String): Boolean;
@@ -284,12 +299,13 @@ type
     property Anchors;
     property TabStop;
     property TabOrder;
-    property KBNavigation: Boolean read FKBNavigate write FKBNavigate;
+    property AllowDragAndDrop: Boolean read FAllowDragAndDrop write FAllowDragAndDrop default false;
     property Color: TColor read FColor write SetColor;
     property DateLabelFormat: string read FDateLabelFormat write SetDateLabelFormat;
     property DayHeadAttributes: TVpMonthviewAttr read FDayHeadAttr write FDayHeadAttr;
     property DayNameStyle: TVpMVDayNameStyle read FDayNameStyle write SetDayNameStyle;
     property DayNumberFont: TVpFont read FDayNumberFont write SetDayNumberFont;
+    property DragDropTransparent: Boolean read FDragDropTransparent write FDragDropTransparent default false;
     property DrawingStyle: TVpDrawingStyle read FDrawingStyle write SetDrawingStyle stored True;
     property EventDayStyle: TFontStyles read FEventDayStyle write SetEventDayStyle;
     property EventFont: TVpFont read FEventFont write SetEventFont;
@@ -297,6 +313,7 @@ type
     property HeadAttributes: TVpMonthViewAttr read FHeadAttr write FHeadAttr;
     property HolidayAttributes: TVpMvHolidayAttr read FHolidayAttr write FHolidayAttr;
     property HintMode: TVpHintMode read FHintMode write FHintMode default hmPlannerHint;
+    property KBNavigation: Boolean read FKBNavigate write FKBNavigate;
     property LineColor: TColor read FLineColor write SetLineColor default clGray;
     property OffDayColor: TColor read FOffDayColor write SetOffDayColor default OFF_COLOR;
     property OffDayFontColor: TColor read FOffDayFontColor write SetOffDayFontColor default clGray;
@@ -422,6 +439,7 @@ begin
   FWeekendAttr := TVpMvWeekendAttr.Create(self);
   FTodayAttr := TVpMvTodayAttr.Create(Self);
   mvSpinButtons := TUpDown.Create(self);
+
   {
   FHeadAttr := TVpMvHeadAttr.Create(self);
   FDayHeadAttr := TVpDayHeadAttr.Create(self);
@@ -429,7 +447,8 @@ begin
   FHolidayAttr := TvpMvHolidayAttr.Create(self);
   mvSpinButtons := TUpDown.Create(self);
    }
-  { Set styles and initialize internal variables }
+
+   { Set styles and initialize internal variables }
   {$IFDEF VERSION4}
   DoubleBuffered := true;
   {$ENDIF}
@@ -438,12 +457,17 @@ begin
   FShowEventTime := false;
   FDayNameStyle :=dsShort;
   FKBNavigate := true;
-//  mvInLinkHandler := false;
   mvSpinButtons.OnClick := mvSpinButtonClick;
   mvSpinButtons.Orientation := udHorizontal;
   mvSpinButtons.Min := -32768;
   mvSpinButtons.Max := 32767;
-//  mvCreatingEditor := false;
+
+  mvDragging := false;
+  mvMouseDownPoint := Point(0, 0);
+  mvMouseDown := false;
+  DragMode := dmManual;
+
+  //  mvCreatingEditor := false;
   FSelectedDayColor := clRed;
   FDrawingStyle := ds3d;
 //  mvPainting := false;
@@ -895,6 +919,93 @@ begin
 end;
 {=====}
 
+procedure TVpMonthView.DoEndDrag(Target: TObject; X, Y: Integer);
+begin
+  Unused(Target, X, Y);
+
+  if ReadOnly or (not FAllowDragAndDrop) then
+    Exit;
+ {$IFNDEF LCL}
+  TVpEventDragObject(Target).Free;
+ {$ENDIF}
+ // not needed for LCL: we use DragObjectEx !!
+end;
+
+procedure TVpMonthView.DoStartDrag(var DragObject: TDragObject);
+{$IFDEF LCL}
+var
+  P, HotSpot: TPoint;
+  EventName: string;
+{$ENDIF}
+begin
+  if ReadOnly or not FAllowDragAndDrop then
+    Exit;
+
+  if mvActiveEvent <> nil then begin
+    {$IFDEF LCL}
+    GetCursorPos(P{%H-});
+    P := TVpMonthView(Self).ScreenToClient(P);
+    EventName := mvActiveEvent.Description;
+    HotSpot := Point(P.X - Self.mvActiveEventRec.Left, P.Y - Self.mvActiveEventRec.Top);
+    DragObject := TVpEventDragObject.CreateWithDragImages(Self as TControl,
+      HotSpot, Self.mvActiveEventRec, EventName, FDragDropTransparent);
+   {$ELSE}
+    DragObject := DragObject := TVpEventDragObject.Create(Self);
+   {$ENDIF}
+    TVpEventDragObject(DragObject).Event := mvActiveEvent;
+  end
+  else
+   {$IFDEF LCL}
+    CancelDrag;
+   {$ELSE}
+    DragObject.Free;
+   {$ENDIF}
+end;
+
+procedure TVpMonthView.DragDrop(Source: TObject; X, Y: Integer);
+var
+  Event: TVpEvent;
+  i: Integer;
+  P: TPoint;
+  newDate, dateDiff: TDate;
+begin
+  if ReadOnly or (not FAllowDragAndDrop) then
+    Exit;
+
+  P := Point(X, Y);
+  newDate := -1;
+  for i := 0 to pred(Length(mvMonthdayArray)) do
+    if PointInRect(P, mvMonthdayArray[i].Rec) then begin
+      newDate := mvMonthdayArray[i].Date;
+      break;
+    end;
+  if newDate = -1 then
+    exit;
+
+  Event := TVpEventDragObject(Source).Event;
+  if Event <> nil then begin
+    dateDiff := trunc(newDate) - trunc(Event.StartTime);
+    Event.StartTime := newDate + frac(Event.StartTime);
+    Event.EndTime := Event.EndTime + dateDiff;
+    DataStore.PostEvents;
+    Repaint;
+  end;
+end;
+
+procedure TVpMonthView.DragOver(Source: TObject; X, Y: Integer;
+  State: TDragState; var Accept: Boolean);
+begin
+  Unused(Source, X, State);
+
+  Accept := false;
+  if ReadOnly or (not FAllowDragAndDrop) then
+    Exit;
+
+  if (Y > mvDayHeadHeight) then
+    Accept := true;
+end;
+
+
 {$IFNDEF LCL}
 procedure TVpMonthView.WMLButtonDown(var Msg: TWMLButtonDown);
 {$ELSE}
@@ -926,6 +1037,11 @@ var
   startTime, endTime: TDateTime;
 begin
   inherited;
+
+  mvMouseDownPoint := Point(0, 0);
+  mvMouseDown := false;
+  mvDragging := false;
+
   // if the mouse was pressed down in the client area, then select the cell.
   if not focused then SetFocus;
 
@@ -1289,6 +1405,67 @@ begin
     end;
 end;
 
+procedure TVpMonthView.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X,Y: Integer);
+var
+  oldDate: TDate;
+  i: Integer;
+begin
+  inherited;
+
+  if not Focused then SetFocus;
+
+  { Left button }
+  if Button = mbLeft then
+  begin
+    mvMouseDown := true;
+    mvMouseDownPoint := Point(X, Y);
+
+    if (Y > mvDayHeadHeight) then
+    begin
+      { The mouse click landed inside the client area }
+//      oldDate := FDate;
+      mvSetDateByCoord(mvMouseDownPoint);
+  (*
+      { We must repaint the control here, before evaluation of the click on the
+        events, because if the day has changed by wvSetDateByCoord then events
+        will have different indexes in the event array; and index positions are
+        evaluated during painting. }
+      if oldDate <> FDate then
+        Paint;
+
+      { If an active event was clicked, then enable the click timer.  If the
+        item is double clicked before the click timer fires, then the edit
+        dialog will appear, otherwise the in-place editor will appear. }
+      if EventAtCoord(wvMouseDownPoint) then
+        wvClickTimer.Enabled := true;
+        *)
+    end;
+  end;
+                 (*
+  { Right button }
+  if Button = mbRight then
+  begin
+    if not Assigned(PopupMenu) then
+      exit;
+
+    { The mouse click landed inside the client area }
+    wvSetDateByCoord(Point(X, Y));
+    EventAtCoord(Point(X, Y));
+    wvClickTimer.Enabled := false;
+
+    if not Assigned(ActiveEvent) then begin
+      for i := 0 to FDefaultPopup.Items.Count - 1 do
+        if (FDefaultPopup.Items[i].Tag = 1) or (ReadOnly) then
+          FDefaultPopup.Items[i].Enabled := False;
+    end else begin
+      for i := 0 to FDefaultPopup.Items.Count - 1 do
+        FDefaultPopup.Items[i].Enabled := True;
+    end;
+  end;
+  *)
+end;
+
 procedure TVpMonthView.MouseEnter;
 begin
   FMouseDate := 0;
@@ -1304,6 +1481,18 @@ var
   day: TDateTime;
 begin
   inherited MouseMove(Shift, X, Y);
+
+  if (mvActiveEvent <> nil) and (not ReadOnly) then begin
+    if (not mvDragging) and mvMouseDown and
+       ((mvMouseDownPoint.x <> x) or (mvMouseDownPoint.y <> y)) and
+       mvActiveEvent.CanEdit
+    then begin
+      mvDragging := true;
+      //mvClickTimer.Enabled := false;
+      BeginDrag(true);
+    end;
+  end;
+
   if ShowHint then
   begin
     day := GetDateAtCoord(Point(X, Y));
@@ -1313,6 +1502,17 @@ begin
       FMouseDate := day;
       ShowHintWindow(Point(X, Y), day);
     end;
+  end;
+end;
+
+procedure TVpMonthView.MouseUp(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  inherited MouseUp(Button, Shift, X, Y);
+  if Button = mbLeft then begin
+    mvMouseDownPoint := Point(0, 0);
+    mvMouseDown := false;
+    mvDragging := false;
   end;
 end;
 

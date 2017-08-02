@@ -200,25 +200,29 @@ type
     procedure PopupPickResourceGroupEvent(Sender: TObject);
     procedure PopupDropdownEvent(Sender: TObject);
     procedure InitializeDefaultPopup;
-    procedure Paint; override;
-    procedure Loaded; override;
-    procedure wvSpawnEventEditDialog(NewEvent: Boolean);
     procedure wvPopulate;
     procedure wvSpinButtonClick(Sender: TObject; Button: TUDBtnType);
-    procedure CreateParams(var Params: TCreateParams); override;
-    procedure CreateWnd; override;
+
+    { event related methods }
+    procedure EditEvent;
+    procedure EndEdit(Sender: TObject);
     function EventAtCoord(Pt: TPoint): Boolean;
     function GetEventAtCoord(Pt: TPoint): TVpEvent;
     function GetEventRect(AEvent: TVpEvent): TRect;
     procedure wvSetDateByCoord(Point: TPoint);
-    procedure EditEvent;
-    procedure EndEdit(Sender: TObject);
+    procedure wvSpawnEventEditDialog(NewEvent: Boolean);
+
+    { inherited standard methods }
+    procedure CreateParams(var Params: TCreateParams); override;
+    procedure CreateWnd; override;
+    procedure Loaded; override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
+    procedure Paint; override;
     {$IF VP_LCL_SCALING = 1}
     procedure ScaleFontsPPI(const AProportion: Double); override;
     {$ENDIF}
