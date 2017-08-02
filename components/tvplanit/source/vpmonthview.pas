@@ -172,7 +172,9 @@ type
     FMouseDate: TDateTime;
 
     { event variables }
+    FOnAddEvent: TVpOnAddNewEvent;
     FOwnerDrawCells: TVpOwnerDrawDayEvent;
+    FOwnerEditEvent: TVpEditEvent;
     FOnEventClick: TVpOnEventClick;
     FOnEventDblClick: TVpOnEventClick;
 
@@ -207,6 +209,7 @@ type
     { internal methods }
     function GetDateAtCoord(APoint: TPoint): TDateTime;
     procedure mvPopulate;
+    procedure mvSpawnEventEditDialog(NewEvent: Boolean);
     procedure mvSpinButtonClick(Sender: TObject; Button: TUDBtnType);
     procedure mvSetDateByCoord(APoint: TPoint);
     procedure mvHookUp;
@@ -308,9 +311,11 @@ type
     property WeekendAttributes: TVpMvWeekendAttr read FWeekendAttr write FWeekendAttr;
     property WeekStartsOn: TVpDayType read FWeekStartsOn write SetWeekStartsOn;
     {events}
+    property OnAddEvent: TVpOnAddNewEvent read FOnAddEvent write FOnAddEvent;
     property OnEventClick: TVpOnEventClick read FOnEventClick write FOnEventClick;
     property OnEventDblClick: TVpOnEventClick read FOnEventDblClick write FOnEventDblClick;
     property OnHoliday: TVpHolidayEvent read FOnHoliday write FOnHoliday;
+    property OnOwnerEditEvent: TVpEditEvent read FOwnerEditEvent write FOwnerEditEvent;
   end;
 
 
@@ -321,7 +326,7 @@ uses
   DateUtils,
  {$ENDIF}
   SysUtils, LazUTF8, Dialogs, StrUtils,
-  VpMonthViewPainter;
+  VpMonthViewPainter, VpEvntEditDlg;
 
 (*****************************************************************************)
 { TVpMonthViewAttr                                                            }
@@ -448,8 +453,8 @@ begin
   FTimeFormat := tf12Hour;
   FDateLabelFormat := 'mmmm yyyy';
   FColumnWidth := 200;
-  FRightClickChangeDate := vpDefWVRClickChangeDate;                      
-//  mvVisibleEvents := 0;                                                  
+  FRightClickChangeDate := vpDefWVRClickChangeDate;
+//  mvVisibleEvents := 0;
 
   { set up fonts and colors }
 //  FDayHeadAttributes.Font.Name := 'Tahoma';   wp: better use defaults
@@ -652,6 +657,48 @@ begin
     DataStore.Date := FDate;
 end;
 {=====}
+
+procedure TVpMonthView.mvSpawnEventEditDialog(NewEvent: Boolean);
+var
+  AllowIt: Boolean;
+  EventDlg : TVpEventEditDialog;
+begin
+  if DataStore = nil then Exit;
+
+  if (not NewEvent) and (not mvActiveEvent.CanEdit) then begin
+    MessageDlg(RSCannotEditOverlayedEvent, mtInformation, [mbOk], 0);
+    exit;
+  end;
+
+  AllowIt := false;
+  if Assigned(FOwnerEditEvent) then
+    FOwnerEditEvent(self, mvActiveEvent, DataStore.Resource, AllowIt)
+  else begin
+    EventDlg := TVpEventEditDialog.Create(nil);
+    try
+      EventDlg.DataStore := DataStore;
+      EventDlg.TimeFormat := FTimeFormat;
+      AllowIt := EventDlg.Execute(mvActiveEvent);
+    finally
+      EventDlg.Free;
+    end;
+  end;
+
+  if AllowIt then begin
+    mvActiveEvent.Changed := true;
+    DataStore.PostEvents;
+    if Assigned(FOnAddEvent) then
+      FOnAddEvent(self, mvActiveEvent);
+    Invalidate;
+  end else begin
+    if NewEvent then begin
+      DataStore.Resource.Schedule.DeleteEvent(mvActiveEvent);
+      mvActiveEvent := nil;
+    end;
+    DataStore.PostEvents;
+    Invalidate;
+  end;
+end;
 
 procedure TVpMonthView.mvSpinButtonClick(Sender: TObject; Button: TUDBtnType);
 var
@@ -863,9 +910,9 @@ begin
     { The mouse click landed inside the client area }
     MvSetDateByCoord(Point(Msg.XPos, Msg.YPos));
     { Did the mouse click land on an event? }
-    if SelectEventAtCoord(Point(Msg.XPos, Msg.YPos))                     
-    and (Assigned(FOnEventClick)) then                                   
-        FOnEventClick(self, mvActiveEvent);                              
+    if SelectEventAtCoord(Point(Msg.XPos, Msg.YPos))
+    and (Assigned(FOnEventClick)) then
+        FOnEventClick(self, mvActiveEvent);
   end;
 end;
 {=====}
@@ -875,23 +922,41 @@ procedure TVpMonthView.WMLButtonDblClick(var Msg: TWMLButtonDblClk);
 {$ELSE}
 procedure TVpMonthView.WMLButtonDblClick(var Msg: TLMLButtonDblClk);
 {$ENDIF}
-begin                                                                    
-  inherited;                                                             
-  // if the mouse was pressed down in the client area, then select the   
-  // cell.                                                               
-  if not focused then SetFocus;                                          
-                                                                         
-  if (Msg.YPos > mvDayHeadHeight) then                                   
-  begin                                                                  
-    { The mouse click landed inside the client area }                    
-    MvSetDateByCoord(Point(Msg.XPos, Msg.YPos));                         
-    { Did the mouse click land on an event? }                            
-    if SelectEventAtCoord(Point(Msg.XPos, Msg.YPos))                     
-    and (Assigned(FOnEventDblClick)) then                                
-      FOnEventDblClick(self, mvActiveEvent);                             
-  end;                                                                   
-end;                                                                     
-{=====}                                                                  
+var
+  startTime, endTime: TDateTime;
+begin
+  inherited;
+  // if the mouse was pressed down in the client area, then select the cell.
+  if not focused then SetFocus;
+
+  if (Msg.YPos > mvDayHeadHeight) then
+  begin
+    { The mouse click landed inside the client area }
+    MvSetDateByCoord(Point(Msg.XPos, Msg.YPos));
+
+    { Did the mouse click land on an event? }
+    if Assigned(FOnEventDblClick) then begin
+      if SelectEventAtCoord(Point(Msg.XPos, Msg.YPos)) then
+        FOnEventDblClick(self, mvActiveEvent);
+    end else
+    if mvActiveEvent <> nil then
+      mvSpawnEventEditDialog(SelectEventAtCoord(Point(Msg.XPos, Msg.YPos)))
+    else
+    if (DataStore.Resource <> nil) then begin
+      { otherwise, we must want to create a new event }
+      startTime := trunc(Date) + 0.5; { default to 12:00 noon }
+      endTime := startTime + 30 / MinutesInDay; { StartTime + 30 minutes }
+      mvActiveEvent := DataStore.Resource.Schedule.AddEvent(
+        DataStore.GetNextID('Events'),
+        startTime,
+        endTime
+      );
+      { edit this new event }
+      mvSpawnEventEditDialog(True);  // true = new event
+    end;
+  end;
+end;
+{=====}
 
 {$IFNDEF LCL}
 procedure TVpMonthView.WMSetFocus(var Msg: TWMSetFocus);
@@ -923,8 +988,8 @@ begin
   if not Assigned (PopupMenu) then begin
     if not focused then
       SetFocus;
-    if FRightClickChangeDate then                                        
-      mvSetDateByCoord (Point (Msg.XPos, Msg.YPos));                     
+    if FRightClickChangeDate then
+      mvSetDateByCoord (Point (Msg.XPos, Msg.YPos));
   end;
 end;
 {=====}
@@ -1097,7 +1162,7 @@ end;
 {=====}
 
 { - renamed from EditEventAtCoord and re-written}
-function TVpMonthView.SelectEventAtCoord(Point: TPoint): Boolean;        
+function TVpMonthView.SelectEventAtCoord(Point: TPoint): Boolean;
 var
   I: Integer;
 begin
@@ -1252,10 +1317,10 @@ begin
 end;
 
 procedure TVpMonthView.SetRightClickChangeDate(const v: Boolean);
-begin                                                                    
-  if v <> FRightClickChangeDate then                                     
-    FRightClickChangeDate := v;                                          
-end;                                                                     
+begin
+  if v <> FRightClickChangeDate then
+    FRightClickChangeDate := v;
+end;
 
 procedure TVpMonthView.SetWeekStartsOn(Value: TVpDayType);
 begin

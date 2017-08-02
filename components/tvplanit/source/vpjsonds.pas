@@ -646,7 +646,7 @@ var
   cont: TVpContact;
   task: TvpTask;
   i, j: Integer;
-//  s: String;
+  s: String;
   stream: TStream;
 begin
   if FFilename = '' then
@@ -710,9 +710,12 @@ begin
 
     stream := TFileStream.Create(FFilename, fmCreate);
     try
+      {$IF FPC_FULLVERSION < 030000}
+      s := json.FormatJSON;
+      stream.Write(s[1], Length(s));
+      {$ELSE}
       json.DumpJSON(stream);
-//      s := json.FormatJSON;
-//      stream.Write(s[1], Length(s));
+      {$ENDIF}
     finally
       stream.Free;
     end;

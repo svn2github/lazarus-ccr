@@ -1749,7 +1749,7 @@ begin
   Invalidate;
 end;
 
-{$IF VP_LCL_SCALING}
+{$IF VP_LCL_SCALING=1}
 procedure TVpContactGrid.ScaleFontsPPI(const AProportion: Double);
 begin
   inherited;

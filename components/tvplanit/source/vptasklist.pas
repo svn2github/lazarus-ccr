@@ -1248,7 +1248,7 @@ begin
     end;
 end;
 
-{$IF VP_LCL_SCALING}
+{$IF VP_LCL_SCALING=1}
 procedure TVpTaskList.ScaleFontsPPI(const AProportion: Double);
 begin
   inherited;
