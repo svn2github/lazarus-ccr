@@ -722,6 +722,7 @@ begin
     DataStore.PostEvents;
     Invalidate;
   end;
+  mvActiveEvent := nil;
 end;
 
 procedure TVpMonthView.mvSpinButtonClick(Sender: TObject; Button: TUDBtnType);
@@ -1035,6 +1036,7 @@ procedure TVpMonthView.WMLButtonDblClick(var Msg: TLMLButtonDblClk);
 {$ENDIF}
 var
   startTime, endTime: TDateTime;
+  newevent: Boolean;
 begin
   inherited;
 
@@ -1055,9 +1057,10 @@ begin
       if SelectEventAtCoord(Point(Msg.XPos, Msg.YPos)) then
         FOnEventDblClick(self, mvActiveEvent);
     end else
-    if mvActiveEvent <> nil then
-      mvSpawnEventEditDialog(SelectEventAtCoord(Point(Msg.XPos, Msg.YPos)))
-    else
+    if mvActiveEvent <> nil then begin
+      newevent := not SelectEventAtCoord(Point(Msg.XPos, Msg.YPos));
+      mvSpawnEventEditDialog(newevent);
+    end else
     if (DataStore.Resource <> nil) then begin
       { otherwise, we must want to create a new event }
       startTime := trunc(Date) + 0.5; { default to 12:00 noon }
