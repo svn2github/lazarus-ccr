@@ -15,43 +15,22 @@ unit semaphore;
 
 interface
 
-uses
-  Classes, SysUtils, SyncObjs, wst_types
-{$IFDEF WST_DELPHI}
-  ,Windows
-{$ENDIF}
-{$IFDEF FPC}
+uses                 
   {$IFDEF WINDOWS}
-    ,Windows
+     Windows,
   {$ENDIF}
-{$ENDIF};
+  SysUtils,
+  SyncObjs;
 
 type
 
   ESemaphoreException = class(Exception);
 
-{$UNDEF FPC_TM}
-{$IFDEF WST_DELPHI}
-  TSemaphoreHandle = THandle;
-{$ENDIF}
-{$IFDEF FPC}
-  {$IFDEF WINDOWS}
-    TSemaphoreHandle = THandle;
-  {$ELSE}
-    {$DEFINE FPC_TM}
-    TSemaphoreHandle = Pointer;
-  {$ENDIF}
-{$ENDIF}
-
-  { TSemaphoreObject }
-
-  TSemaphoreObject = class
+{$IFDEF WINDOWS}
+  TWindowsSemaphoreObject = class
   private
-    FHandle : TSemaphoreHandle;
+    FHandle : THandle;
     FLimit: Integer;
-  {$IFDEF FPC_TM}
-    FTM : TThreadManager;
-  {$ENDIF}
   public
     constructor Create(const ALimit : Integer);
     destructor Destroy(); override;
@@ -59,48 +38,97 @@ type
     procedure Release();
     property Limit : Integer read FLimit;
   end;
+{$ENDIF WINDOWS}
+
+  { TCsSemaphoreObject }
+
+  TCsSemaphoreObject = class
+  private
+    FCriticalSection : SyncObjs.TCriticalSection;
+    FLimit : Integer;
+    FCount : Integer;
+  public
+    constructor Create(const ALimit : Integer);
+    destructor Destroy(); override;
+    function WaitFor(ATimeout : Cardinal) : TWaitResult;
+    procedure Release();
+    property Limit : Integer read FLimit;
+  end;
+                
+{$IFDEF WINDOWS}
+  TSemaphoreObject = TWindowsSemaphoreObject;
+{$ELSE}                                      
+  TSemaphoreObject = TCsSemaphoreObject;
+{$ENDIF}
+
+resourcestring
+  SERR_InvalidSemaphoreCount = 'Invalid semaphore maximum count : %d.';
 
 implementation
 
-{ TSemaphoreObject }
+{ TCsSemaphoreObject }
 
-constructor TSemaphoreObject.Create(const ALimit: Integer);
-{$IFDEF FPC_TM}
-var
-  i : Integer;
-{$ENDIF}  
+constructor TCsSemaphoreObject.Create(const ALimit : Integer);
 begin
-  if ( ALimit < 1 ) then
-    raise ESemaphoreException.CreateFmt('Invalid semaphore maximum count : %d.',[ALimit]);
+  if (ALimit < 1) then
+    raise ESemaphoreException.CreateFmt(SERR_InvalidSemaphoreCount,[ALimit]);
   FLimit := ALimit;
-{$IFNDEF FPC_TM}
-  FHandle := CreateSemaphore(nil,ALimit,ALimit,'');
-  if ( FHandle = THandle(0) ) then
-    RaiseLastOSError();
-{$ELSE}
-  if not GetThreadManager(FTM) then
-    raise ESemaphoreException.Create('Unable to get the thread manager.');
-  FHandle := FTM.SemaphoreInit();
-  for i := 1 to FLimit do
-    FTM.SemaphorePost(FHandle);
-{$ENDIF}
+  FCriticalSection := SyncObjs.TCriticalSection.Create();
 end;
 
-destructor TSemaphoreObject.Destroy();
+destructor TCsSemaphoreObject.Destroy;
 begin
-{$IFNDEF FPC_TM}
+  FCriticalSection.Free();
+  inherited Destroy;
+end;
+
+function TCsSemaphoreObject.WaitFor(ATimeout : Cardinal) : TWaitResult;
+begin
+  FCriticalSection.Acquire();
+  try
+    if (FCount < FLimit) then begin
+      FCount := FCount+1;
+      Result := wrSignaled;
+    end else begin
+      Result := wrAbandoned;
+    end;
+  finally
+    FCriticalSection.Release();
+  end;
+end;
+
+procedure TCsSemaphoreObject.Release;
+begin
+  FCriticalSection.Acquire();
+  try
+    if (FCount > 0) then
+      FCount := FCount-1;
+  finally
+    FCriticalSection.Release();
+  end;
+end;
+
+{$IFDEF WINDOWS}
+{ TWindowsSemaphoreObject }
+
+constructor TWindowsSemaphoreObject.Create(const ALimit : Integer);
+begin
+  if (ALimit < 1) then
+    raise ESemaphoreException.CreateFmt(SERR_InvalidSemaphoreCount,[ALimit]);
+  FLimit := ALimit;
+  FHandle := CreateSemaphore(nil,ALimit,ALimit,'');
+  if (FHandle = THandle(0)) then
+    RaiseLastOSError();
+end;
+
+destructor TWindowsSemaphoreObject.Destroy;
+begin
   if ( FHandle <> THandle(0) ) then
     CloseHandle(FHandle);
-{$ELSE}
-  if ( FHandle <> nil ) then
-    FTM.SemaphoreDestroy(FHandle);
-  FHandle := nil;
-{$ENDIF}
-  inherited Destroy();
+  inherited Destroy;
 end;
 
-function TSemaphoreObject.WaitFor(ATimeout: Cardinal): TWaitResult;
-{$IFNDEF FPC_TM}
+function TWindowsSemaphoreObject.WaitFor(ATimeout : Cardinal) : TWaitResult;
 var
   intRes : DWORD;
 begin
@@ -113,21 +141,12 @@ begin
                      Result := wrTimeout;
   end;
 end;
-{$ELSE}
-begin
-  FTM.SemaphoreWait(FHandle);
-  Result := wrSignaled;
-end;
-{$ENDIF}
 
-procedure TSemaphoreObject.Release();
+procedure TWindowsSemaphoreObject.Release;
 begin
-{$IFNDEF FPC_TM}
   ReleaseSemaphore(FHandle,1,nil);
-{$ELSE}
-  FTM.SemaphorePost(FHandle);
-{$ENDIF}
 end;
+{$ENDIF WINDOWS}
 
 end.
 
