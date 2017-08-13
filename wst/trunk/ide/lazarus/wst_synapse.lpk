@@ -24,7 +24,7 @@
 "/>
     <License Value="Modified LGPL
 "/>
-    <Version Minor="7"/>
+    <Version Minor="8"/>
     <Files Count="3">
       <Item1>
         <Filename Value="..\..\synapse_tcp_server.pas"/>

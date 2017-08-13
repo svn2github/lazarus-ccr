@@ -26,7 +26,7 @@
     </CompilerOptions>
     <Description Value="Web Services Toolkit Lazarus IDE design time package
 "/>
-    <Version Minor="7"/>
+    <Version Minor="8"/>
     <Files Count="7">
       <Item1>
         <Filename Value="wstimportdlg.lfm"/>

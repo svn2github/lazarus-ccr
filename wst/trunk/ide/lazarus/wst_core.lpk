@@ -24,7 +24,7 @@ Protocols are not included.
 "/>
     <License Value="Modified LGPL
 "/>
-    <Version Minor="7"/>
+    <Version Minor="8"/>
     <Files Count="42">
       <Item1>
         <Filename Value="..\..\xmlrpc_formatter.pas"/>
