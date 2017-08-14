@@ -1,7 +1,7 @@
 object mainform: Tmainform
-  Left = 455
+  Left = 2064
   Height = 504
-  Top = 180
+  Top = 101
   Width = 784
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle

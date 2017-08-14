@@ -3,12 +3,12 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="10"/>
-    <BuildModes Active="Linux64"/>
+    <BuildModes Active="Win32"/>
     <Units Count="25">
       <Unit0>
         <Filename Value="foobot.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="6"/>
         <TopLine Value="6"/>
         <CursorPos Y="44"/>
         <UsageCount Value="95"/>
@@ -38,7 +38,7 @@
       <Unit3>
         <Filename Value="foobot_httpclient.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="4"/>
         <TopLine Value="348"/>
         <CursorPos X="26" Y="356"/>
         <UsageCount Value="57"/>
@@ -51,7 +51,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="19"/>
         <CursorPos X="20" Y="29"/>
         <UsageCount Value="49"/>
@@ -82,11 +82,10 @@
       </Unit6>
       <Unit7>
         <Filename Value="..\..\components\cryptini\latest_stable\ucryptini.pas"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="262"/>
         <CursorPos X="47" Y="232"/>
         <UsageCount Value="23"/>
-        <Loaded Value="True"/>
       </Unit7>
       <Unit8>
         <Filename Value="C:\trunklatest\fpc\rtl\objpas\sysutils\sysutilh.inc"/>
