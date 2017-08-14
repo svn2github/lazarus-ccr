@@ -46,7 +46,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, usplash, tachartlazaruspkg, umainform, uconfigform, foobot_sensors,
+  Forms, usplash, tachartlazaruspkg, umainform, uconfigform,
   utriggersform
   { you can add units after this };
 

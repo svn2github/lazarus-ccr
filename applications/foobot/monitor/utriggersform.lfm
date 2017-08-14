@@ -1,7 +1,7 @@
 object triggersform: Ttriggersform
-  Left = 2007
+  Left = 1248
   Height = 565
-  Top = 405
+  Top = 568
   Width = 794
   ActiveControl = edt_newrec_pm
   BorderIcons = [biSystemMenu]
@@ -18,7 +18,6 @@ object triggersform: Ttriggersform
   Position = poWorkAreaCenter
   ShowInTaskBar = stNever
   LCLVersion = '1.7'
-  Scaled = True
   object grp_main: TGroupBox
     Left = 0
     Height = 506

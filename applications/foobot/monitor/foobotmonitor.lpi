@@ -12,6 +12,7 @@
       <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True"/>
+        <UIAccess Value="True"/>
         <TextName Value="Minesadorada.Lazarus.FoobotMonitor"/>
         <TextDesc Value="Monitor app for the Foobot IoT Gadget"/>
       </XPManifest>
@@ -25,8 +26,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="2"/>
-      <RevisionNr Value="4"/>
-      <BuildNr Value="2"/>
+      <RevisionNr Value="7"/>
       <StringTable Comments="Uses Foobot public API to query Foobots" FileDescription="Monitor for Foobot" InternalName="foobotmonitor" LegalCopyright="(c)2016 minesadorada@charcodelvalle.com" LegalTrademarks="Foobot" ProductName="Foobot" ProductVersion="0.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="6">
@@ -45,6 +45,11 @@
           </SearchPaths>
           <CodeGeneration>
             <SmartLinkUnit Value="True"/>
+            <Checks>
+              <IOChecks Value="True"/>
+              <RangeChecks Value="True"/>
+              <OverflowChecks Value="True"/>
+            </Checks>
             <TargetCPU Value="i386"/>
             <TargetOS Value="win32"/>
             <Optimizations>
@@ -62,11 +67,6 @@
               </Win32>
             </Options>
           </Linking>
-          <Other>
-            <OtherDefines Count="1">
-              <Define0 Value="DEBUGMODE"/>
-            </OtherDefines>
-          </Other>
         </CompilerOptions>
       </Item2>
       <Item3 Name="win64">
@@ -221,16 +221,22 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="3">
+    <RequiredPackages Count="5">
       <Item1>
-        <PackageName Value="TAChartLazarusPkg"/>
+        <PackageName Value="lazupdate"/>
       </Item1>
       <Item2>
-        <PackageName Value="cryptini"/>
+        <PackageName Value="industrial"/>
       </Item2>
       <Item3>
-        <PackageName Value="LCL"/>
+        <PackageName Value="TAChartLazarusPkg"/>
       </Item3>
+      <Item4>
+        <PackageName Value="cryptini"/>
+      </Item4>
+      <Item5>
+        <PackageName Value="LCL"/>
+      </Item5>
     </RequiredPackages>
     <Units Count="10">
       <Unit0>
@@ -268,22 +274,22 @@
         <IsPartOfProject Value="True"/>
       </Unit6>
       <Unit7>
-        <Filename Value="foobot_sensors.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit7>
-      <Unit8>
         <Filename Value="usplash.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="splashform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit8>
-      <Unit9>
+      </Unit7>
+      <Unit8>
         <Filename Value="utriggersform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="triggersform"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="foobot_sensors.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit9>
     </Units>
   </ProjectOptions>

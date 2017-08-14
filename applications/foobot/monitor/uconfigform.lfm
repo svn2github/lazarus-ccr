@@ -1,7 +1,7 @@
 object configform: Tconfigform
-  Left = 654
+  Left = 1461
   Height = 197
-  Top = 285
+  Top = 603
   Width = 592
   BorderIcons = []
   BorderStyle = bsToolWindow

@@ -54,8 +54,8 @@ interface
 uses // If Lazarus auto-inserts 'sensors' in the clause then delete it
   SysUtils, LazFileUtils, TAGraph, TAIntervalSources, TASeries, foobot_sensors,
   Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Menus, lclIntf,
-  ComCtrls, foobot_utility, uCryptIni, dateutils, uconfigform, utriggersform,
-  Classes;
+  ComCtrls, foobot_utility, uCryptIni, ulazautoupdate, dateutils,
+  uconfigform, utriggersform, Classes;
 
 const
   // Timer milliseconds
@@ -104,6 +104,7 @@ type
     Chart1: TChart;
     DateTimeIntervalChartSource1: TDateTimeIntervalChartSource;
     grp_health: TGroupBox;
+    LazAutoUpdate1: TLazAutoUpdate;
     lbl_greenlighttmp: TLabel;
     lbl_greenlighthum: TLabel;
     lbl_greenlightco2: TLabel;
@@ -150,6 +151,7 @@ type
     lbl_voclow: TLabel;
     lbl_allpollulow: TLabel;
     MainMenu1: TMainMenu;
+    mnu_helpCheckForUpdates: TMenuItem;
     mnu_helpHelpHTML: TMenuItem;
     mnu_helpFoobotAPIPage: TMenuItem;
     mnu_options_triggersActivateTriggers: TMenuItem;
@@ -198,12 +200,15 @@ type
     TrayIcon1: TTrayIcon;
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
     procedure mnupopup_fileRestoreClick(Sender: TObject);
     procedure mnu_fileExitClick(Sender: TObject);
     procedure mnu_helpAboutClick(Sender: TObject);
+    procedure mnu_helpCheckForUpdatesClick(Sender: TObject);
     procedure mnu_helpFoobotAPIPageClick(Sender: TObject);
     procedure mnu_helpHelpHTMLClick(Sender: TObject);
     procedure mnu_optionsDisplayGuagesOnlyClick(Sender: TObject);
@@ -336,6 +341,7 @@ procedure Tmainform.FormCreate(Sender: TObject);
 begin
   Caption := Application.Title;
   Icon := Application.Icon;
+  // Crypted INI used
   INI := TCryptINIfile.Create(GetAppConfigFile(False));
   if INI.IsVirgin then
   begin
@@ -350,23 +356,26 @@ begin
     Application.Terminate;
   end;
   INI.SectionHashing := False;
-  ResetHighLows;
+  ResetHighLows; // Read from ini file later
   iFudgeFactor := 20; // only needed if height set in form.create
   bDisplayGuagesOnly := False;
-  INI.PlainTextMode := True;
+  INI.PlainTextMode := True; // Use CryptINI in legacy mode
+  // Set defaults
   HighTriggerColor := clYellow;
   LowTriggerColor := clAqua;
+  // Read config from INI file
   bDisplayYellowLines := INI.ReadBool('Config', 'DisplayYellowLines', False);
   mnu_optionsDisplayYellowLines.Checked := bDisplayYellowLines;
   bDisplayRedLines := INI.ReadBool('Config', 'DisplayRedLines', False);
   mnu_optionsDisplayRedLines.Checked := bDisplayRedLines;
-  INI.PlainTextMode := False;
+  INI.PlainTextMode := False; // Use CryptINI in Encrypted mode
   SetYellowRecommendedLevels;
   SetRedSessionMax;
+  // Set up System Tray
   TrayIcon1.Icon := Application.Icon;
   TrayIcon1.Hint := Application.Title;
   DateTimeIntervalChartSource1.DateTimeFormat := 'hh:nn';
-  LoadConfig;
+  LoadConfig; // Load from INI file
   {$IFDEF DEBUGMODE}
   UseTriggers := False;
   {$ENDIF}
@@ -440,6 +449,7 @@ begin
         Update;
         Application.ProcessMessages;
         splashform.hide;
+        FreeAndNil(SplashForm); // Free memory used by SplashForm
         Application.ProcessMessages;
       end
       else
@@ -458,6 +468,7 @@ begin
     // No valid cfg.  Show config form
     Hide;
     splashform.Hide;
+    FreeAndNil(SplashForm); // Free memory used by SplashForm
     Application.ProcessMessages;
     configform.ShowModal;
     // If user quit without data, then bail out
@@ -609,10 +620,20 @@ begin
   CloseAction := caFree;
 end;
 
+procedure Tmainform.FormCloseQuery(Sender: TObject; var CanClose: boolean);
+begin
+    If LazAutoUpdate1.DownloadInprogress then CanClose:=False;
+end;
+
 procedure Tmainform.FormDestroy(Sender: TObject);
 begin
-  FreeAndNil(splashform);
+  If Assigned (splashform) then FreeAndNil(splashform);
   FreeAndNil(INI);
+end;
+
+procedure Tmainform.FormShow(Sender: TObject);
+begin
+  LazAutoUpdate1.ShowWhatsNewIfAvailable;
 end;
 
 procedure Tmainform.SaveConfig;
@@ -728,6 +749,7 @@ begin
 end;
 
 procedure Tmainform.FormWindowStateChange(Sender: TObject);
+// Systray routine
 begin
   if mainform.WindowState = wsMinimized then
   begin
@@ -767,6 +789,11 @@ begin
   s += ' for ' + INI.ReadUnencryptedString('ProgramInfo', IDENT_TARGET, '');
   MessageDlg('About ' + Application.Title, s,
     mtInformation, [mbOK], 0);
+end;
+
+procedure Tmainform.mnu_helpCheckForUpdatesClick(Sender: TObject);
+begin
+  LazAutoUpdate1.AutoUpdate;
 end;
 
 procedure Tmainform.mnu_helpFoobotAPIPageClick(Sender: TObject);
@@ -1349,7 +1376,7 @@ sHelpFilePath:=AppendPathDelim(GetAppConfigDir(false)) + 'foobotmonitorhelp.htm'
 // This uses a resource file added via Project/Options (Laz 1.7+)
 if not FileExistsUTF8(sHelpFilePath) then
 begin
-  // create a resource stream which points to the po file
+  // create a resource stream which points to the help file
   S := TResourceStream.Create(HInstance, 'FOOBOTMONITORHELP', MakeIntResource(10));
   TRY
     try

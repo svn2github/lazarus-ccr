@@ -1,7 +1,7 @@
 object mainform: Tmainform
-  Left = 673
+  Left = 455
   Height = 504
-  Top = 270
+  Top = 180
   Width = 784
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -13,14 +13,15 @@ object mainform: Tmainform
   Menu = MainMenu1
   OnActivate = FormActivate
   OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
   Position = poWorkAreaCenter
   ShowHint = True
   ShowInTaskBar = stNever
-  LCLVersion = '1.7'
-  Scaled = True
+  LCLVersion = '1.9.0.0'
   object grp_sensorDisplay: TGroupBox
     Left = 0
     Height = 120
@@ -864,6 +865,10 @@ object mainform: Tmainform
         Caption = 'Help...'
         OnClick = mnu_helpHelpHTMLClick
       end
+      object mnu_helpCheckForUpdates: TMenuItem
+        Caption = 'Check for Updates'
+        OnClick = mnu_helpCheckForUpdatesClick
+      end
       object mnu_optionsHomePage: TMenuItem
         Caption = 'Home Page'
         OnClick = mnu_optionsHomePageClick
@@ -901,5 +906,33 @@ object mainform: Tmainform
     Steps = [dtsYear, dtsWeek, dtsDay, dtsHour]
     Left = 174
     Top = 325
+  end
+  object LazAutoUpdate1: TLazAutoUpdate
+    About.Description.Strings = (
+      'A component for updating your application'#13#10'Designed for projects hosted by SourceForge and GitHub'#13#10#13#10'Main methods:'#13#10'Procedure AutoUpdate'#13#10'Function NewVersionAvailable: Boolean'#13#10'Function DownloadNewVersion: Boolean'#13#10'Function UpdateToNewVersion: Boolean'#13#10'Procedure ShowWhatsNewIfAvailable'#13#10'For troubleshooting, set DebugMode=TRUE'
+    )
+    About.Title = 'About LazAutoUpdate'
+    About.Height = 450
+    About.Width = 400
+    About.Font.Color = clNavy
+    About.Font.Height = -13
+    About.BackGroundColor = clWindow
+    About.Version = '0.3.9.0'
+    About.Authorname = 'Gordon Bamber'
+    About.Organisation = 'Public Domain'
+    About.AuthorEmail = 'minesadorada@charcodelvalle.com'
+    About.ComponentName = 'Laz Auto-update v0.3.9.0'
+    About.LicenseType = abModifiedGPL
+    SFProjectName = 'lazautoupdate'
+    UpdatesFolder = 'updates'
+    VersionsININame = 'foobotmonitor.ini'
+    VersionCountLimit = 1000000
+    DownloadCountLimit = 10000000
+    ZipfileName = 'foobotmonitor.zip'
+    WorkingMode = lauUpdate
+    ShortCut.ShortcutName = 'MyShortcutName'
+    ShortCut.Category = scAudioVideo
+    Left = 232
+    Top = 8
   end
 end
