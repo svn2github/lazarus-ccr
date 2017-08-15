@@ -315,7 +315,7 @@ const
           ('double', '', ''),
           ('boolean', '', ''),
           ('String', '', 'string'),
-          ('wst.DateTime', '', 'dateTime') , //('java.util.OffsetDateTime', '', 'dateTime') ,
+          ('String', '', 'dateTime') , //('java.util.OffsetDateTime', '', 'dateTime') ,
           //('java.time.OffsetTime', '', 'time') ,
           //('java.time.Duration', '', 'duration') ,
           ('java.math.BigDecimal', '', 'decimal')
