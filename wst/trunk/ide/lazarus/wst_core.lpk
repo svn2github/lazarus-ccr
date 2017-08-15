@@ -9,6 +9,7 @@
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
+        <IncludeFiles Value="..\.."/>
         <OtherUnitFiles Value="..\.."/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
@@ -25,7 +26,7 @@ The &quot;Web Service Toolkit”  (WST) is a web-services consumption and author
     <License Value="Modified LGPL
 "/>
     <Version Minor="8"/>
-    <Files Count="42">
+    <Files Count="43">
       <Item1>
         <Filename Value="..\..\xmlrpc_formatter.pas"/>
         <UnitName Value="xmlrpc_formatter"/>
@@ -194,6 +195,10 @@ The &quot;Web Service Toolkit”  (WST) is a web-services consumption and author
         <Filename Value="..\..\server_filter_extension.pas"/>
         <UnitName Value="server_filter_extension"/>
       </Item42>
+      <Item43>
+        <Filename Value="..\..\wst_delphi.inc"/>
+        <Type Value="Include"/>
+      </Item43>
     </Files>
     <RequiredPkgs Count="1">
       <Item1>
