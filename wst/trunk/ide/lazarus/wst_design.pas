@@ -11,7 +11,11 @@ uses
   wstimportdlg, wst_register, uwsttypelibraryedit, uabout, udm, ubindingedit, 
   ueditoptions, ufarrayedit, ufclassedit, ufEnumedit, ufpropedit, 
   ufrecordedit, ufrmsaveoption, uftypealiasedit, uinterfaceedit, umoduleedit, 
-  uprocedit, view_helper, uargedit, LazarusPackageIntf;
+  uprocedit, view_helper, uargedit, command_line_parser, generator, 
+  generatorbase, generatorj, locators, logger_intf, metadata_generator, 
+  parserdefs, parserutils, pascal_parser_intf, source_utils, ws_parser_imp, 
+  wsdl_generator, wsdl_parser, wst_resources_utils, xsd_consts, xsd_generator, 
+  xsd_parser, LazarusPackageIntf;
 
 implementation
 

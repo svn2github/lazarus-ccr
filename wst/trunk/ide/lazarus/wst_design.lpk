@@ -29,7 +29,7 @@
 The &quot;Web Service Toolkit”  (WST) is a web-services consumption and authoring toolkit for FPC/Lazarus and Delphi developers. WST has support for SOAP,XMLRPC, JSON-RPC, a custom binary serialization formats and WSDL for services description. The supported transport protocols include HTTP, TCP and a library-base (for an in-process communication) tranport."/>
     <License Value="Modified LGPL"/>
     <Version Minor="8"/>
-    <Files Count="36">
+    <Files Count="54">
       <Item1>
         <Filename Value="wstimportdlg.lfm"/>
         <Type Value="LFM"/>
@@ -175,17 +175,86 @@ The &quot;Web Service Toolkit”  (WST) is a web-services consumption and author
         <Filename Value="..\..\type_lib_edtr\uargedit.pas"/>
         <UnitName Value="uargedit"/>
       </Item36>
+      <Item37>
+        <Filename Value="..\..\ws_helper\command_line_parser.pas"/>
+        <UnitName Value="command_line_parser"/>
+      </Item37>
+      <Item38>
+        <Filename Value="..\..\ws_helper\generator.pas"/>
+        <UnitName Value="generator"/>
+      </Item38>
+      <Item39>
+        <Filename Value="..\..\ws_helper\generatorbase.pas"/>
+        <UnitName Value="generatorbase"/>
+      </Item39>
+      <Item40>
+        <Filename Value="..\..\ws_helper\generatorj.pas"/>
+        <UnitName Value="generatorj"/>
+      </Item40>
+      <Item41>
+        <Filename Value="..\..\ws_helper\locators.pas"/>
+        <UnitName Value="locators"/>
+      </Item41>
+      <Item42>
+        <Filename Value="..\..\ws_helper\logger_intf.pas"/>
+        <UnitName Value="logger_intf"/>
+      </Item42>
+      <Item43>
+        <Filename Value="..\..\ws_helper\metadata_generator.pas"/>
+        <UnitName Value="metadata_generator"/>
+      </Item43>
+      <Item44>
+        <Filename Value="..\..\ws_helper\parserdefs.pas"/>
+        <UnitName Value="parserdefs"/>
+      </Item44>
+      <Item45>
+        <Filename Value="..\..\ws_helper\parserutils.pas"/>
+        <UnitName Value="parserutils"/>
+      </Item45>
+      <Item46>
+        <Filename Value="..\..\ws_helper\pascal_parser_intf.pas"/>
+        <UnitName Value="pascal_parser_intf"/>
+      </Item46>
+      <Item47>
+        <Filename Value="..\..\ws_helper\source_utils.pas"/>
+        <UnitName Value="source_utils"/>
+      </Item47>
+      <Item48>
+        <Filename Value="..\..\ws_helper\ws_parser_imp.pas"/>
+        <UnitName Value="ws_parser_imp"/>
+      </Item48>
+      <Item49>
+        <Filename Value="..\..\ws_helper\wsdl_generator.pas"/>
+        <UnitName Value="wsdl_generator"/>
+      </Item49>
+      <Item50>
+        <Filename Value="..\..\ws_helper\wsdl_parser.pas"/>
+        <UnitName Value="wsdl_parser"/>
+      </Item50>
+      <Item51>
+        <Filename Value="..\..\ws_helper\wst_resources_utils.pas"/>
+        <UnitName Value="wst_resources_utils"/>
+      </Item51>
+      <Item52>
+        <Filename Value="..\..\ws_helper\xsd_consts.pas"/>
+        <UnitName Value="xsd_consts"/>
+      </Item52>
+      <Item53>
+        <Filename Value="..\..\ws_helper\xsd_generator.pas"/>
+        <UnitName Value="xsd_generator"/>
+      </Item53>
+      <Item54>
+        <Filename Value="..\..\ws_helper\xsd_parser.pas"/>
+        <UnitName Value="xsd_parser"/>
+      </Item54>
     </Files>
-    <RequiredPkgs Count="3">
+    <RequiredPkgs Count="2">
       <Item1>
-        <PackageName Value="wst_core"/>
+        <PackageName Value="SynEdit"/>
       </Item1>
       <Item2>
-        <PackageName Value="SynEdit"/>
-      </Item2>
-      <Item3>
         <PackageName Value="IDEIntf"/>
-      </Item3>
+      </Item2>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>
