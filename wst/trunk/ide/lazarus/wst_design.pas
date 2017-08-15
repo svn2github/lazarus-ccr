@@ -1,21 +1,25 @@
-{ Ce fichier a été automatiquement créé par Lazarus. Ne pas l'éditer !
-Cette source est seulement employée pour compiler et installer le paquet.
+{ This file was automatically created by Lazarus. Do not edit!
+  This source is only used to compile and install the package.
  }
 
-unit wst_design; 
+unit wst_design;
 
+{$warn 5023 off : no warning about unused units}
 interface
 
 uses
-  wstimportdlg, wst_register, uwsttypelibraryedit, uabout, LazarusPackageIntf; 
+  wstimportdlg, wst_register, uwsttypelibraryedit, uabout, udm, ubindingedit, 
+  ueditoptions, ufarrayedit, ufclassedit, ufEnumedit, ufpropedit, 
+  ufrecordedit, ufrmsaveoption, uftypealiasedit, uinterfaceedit, umoduleedit, 
+  uprocedit, view_helper, uargedit, LazarusPackageIntf;
 
 implementation
 
-procedure Register; 
+procedure Register;
 begin
-  RegisterUnit ('wst_register', @wst_register.Register ); 
-end; 
+  RegisterUnit('wst_register', @wst_register.Register);
+end;
 
 initialization
-  RegisterPackage ('wst_design', @Register ); 
+  RegisterPackage('wst_design', @Register);
 end.

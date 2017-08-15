@@ -5,7 +5,7 @@
     <Name Value="wst_indy"/>
     <Type Value="RunAndDesignTime"/>
     <AddToProjectUsesSection Value="True"/>
-    <Author Value="Inoussa Ouedraogo"/>
+    <Author Value="Inoussa OUEDRAOGO"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -23,8 +23,9 @@
         <CustomOptions Value="-dINDY_10"/>
       </Other>
     </CompilerOptions>
-    <Description Value="WebServices Toolkit  Indy transport layer
-"/>
+    <Description Value="Web Services Toolkit  Indy transport layer.
+
+The &quot;Web Service Toolkit”  (WST) is a web-services consumption and authoring toolkit for FPC/Lazarus and Delphi developers. WST has support for SOAP,XMLRPC, JSON-RPC, a custom binary serialization formats and WSDL for services description. The supported transport protocols include HTTP, TCP and a library-base (for an in-process communication) tranport."/>
     <License Value="Modified LGPL
 "/>
     <Version Minor="8"/>
