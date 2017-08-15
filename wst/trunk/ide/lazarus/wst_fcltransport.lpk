@@ -10,7 +10,7 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <OtherUnitFiles Value="..\.."/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Web Services Toolkit transport layer making use of the FPC built-in transport protocols for client and server.
@@ -42,6 +42,7 @@ The &quot;Web Service Toolkit”  (WST) is a web-services consumption and author
       </Item1>
       <Item2>
         <PackageName Value="FCL"/>
+        <MinVersion Major="3" Valid="True"/>
       </Item2>
     </RequiredPkgs>
     <UsageOptions>
