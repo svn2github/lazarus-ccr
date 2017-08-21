@@ -535,7 +535,11 @@ begin
   //inherited AlignWithMargins:=true;
 
   if AOwner is TForm then
+   {$IF LCL_FullVersion >= 1090000}
+    DesignDPI := TForm(AOwner).DesignTimePPI
+   {$ELSE}
     DesignDPI := TForm(AOwner).DesignTimeDPI
+   {$ENDIF}
   else
     DesignDPI := ScreenInfo.PixelsPerInchX;
 
