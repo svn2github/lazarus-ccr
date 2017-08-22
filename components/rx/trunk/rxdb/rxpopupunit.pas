@@ -37,7 +37,7 @@ interface
 
 uses
   Classes, SysUtils, DB, Forms, DBGrids, rxdbgrid, LCLType, Controls, ComCtrls,
-  Buttons, Grids, Graphics, rxvclutils;
+  Buttons, Grids, Graphics, rxlclutils;
 
 type
   TPopUpCloseEvent = procedure(AResult:boolean) of object;

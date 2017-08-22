@@ -42,7 +42,7 @@ procedure Register;
 implementation
 uses DB, DBPropEdits, rxdbgrid, RxDBSpinEdit, RxDBTimeEdit, RxDBCtrls, rxmemds,
   ComponentEditors, rxseldsfrm, PropEdits, RxDBColorBox, rxdbdateedit, rxdbcomb,
-  rxlookup, rxdbcurredit, RxDBGridFooterTools
+  rxlookup, rxdbcurredit, RxDBGridFooterTools, rxdbverticalgrid
   {$IF (FPC_FULLVERSION >= 30101)}
   , RxDBGridExportPdf
   {$ENDIF}
@@ -55,6 +55,30 @@ type
   public
     procedure FillValues(const Values: TStringList); override;
   end;
+
+  { TRxDBVerticalGridFieldProperty }
+
+  TRxDBVerticalGridFieldProperty = class(TFieldProperty)
+  public
+    procedure FillValues(const Values: TStringList); override;
+  end;
+
+{ TRxDBVerticalGridFieldProperty }
+
+procedure TRxDBVerticalGridFieldProperty.FillValues(const Values: TStringList);
+var
+  FRow: TRxDBVerticalGridRow;
+  Grid: TRxDBVerticalGrid;
+  DataSource: TDataSource;
+begin
+  FRow:=TRxDBVerticalGridRow(GetComponent(0));
+  if not (FRow is TRxDBVerticalGridRow) then exit;
+  Grid:=TRxDBVerticalGrid(FRow.Grid);
+  if not (Grid is TRxDBVerticalGrid) then exit;
+  DataSource := Grid.DataSource;
+  if Assigned(DataSource) and Assigned(DataSource.DataSet) then
+    DataSource.DataSet.GetFieldNames(Values);
+end;
 
 { TRxDBGridFieldProperty }
 
@@ -159,6 +183,12 @@ begin
   RegisterComponents('RX DBAware',[TRxDBComboBox]);
 end;
 
+
+procedure RegisterRxDBVerticalGrid;
+begin
+  RegisterComponents('RX DBAware',[TRxDBVerticalGrid]);
+end;
+
 procedure Register;
 begin
   //RX DBAware
@@ -173,6 +203,8 @@ begin
   RegisterUnit('rxmemds', @RegisterRxMemDS);
   RegisterUnit('RxDBColorBox', @RegisterRxDBColorBox);
   RegisterUnit('RxDBGridFooterTools', @RegisterRxDbGridFooterTools);
+  RegisterUnit('rxdbverticalgrid', @RegisterRxDBVerticalGrid);
+
   {$IF (FPC_FULLVERSION >= 30101)}
   RegisterUnit('RxDBGridExportPdf', @RegisterRxDBGridExportPDF);
   {$ENDIF}
@@ -182,6 +214,8 @@ begin
 
   //
   RegisterPropertyEditor(TypeInfo(string), TRxColumn, 'FieldName', TRxDBGridFieldProperty);
+  RegisterPropertyEditor(TypeInfo(string), TRxDBVerticalGridRow, 'FieldName', TRxDBVerticalGridFieldProperty);
+
 (*  RegisterPropertyEditor(TypeInfo(string), TRxColumnFooter, 'FieldName', TRxDBGridFooterFieldProperty); *)
   RegisterPropertyEditor(TypeInfo(string), TRxColumnFooterItem, 'FieldName', TRxDBGridFooterFieldProperty);
 end;

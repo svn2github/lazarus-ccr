@@ -242,7 +242,7 @@ type
 implementation
 
 uses
-  rxvclutils, LResources;
+  rxlclutils, LResources;
 
 const
   sSpinUpBtn = 'RXSPINUP';

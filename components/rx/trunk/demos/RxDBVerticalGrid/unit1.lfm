@@ -1,0 +1,477 @@
+object Form1: TForm1
+  Left = 517
+  Height = 673
+  Top = 222
+  Width = 1206
+  Caption = 'Form1'
+  ClientHeight = 673
+  ClientWidth = 1206
+  OnCreate = FormCreate
+  LCLVersion = '1.9.0.0'
+  object RxDBVerticalGrid1: TRxDBVerticalGrid
+    Left = 440
+    Height = 304
+    Top = 360
+    Width = 728
+    Color = clWindow
+    DataCoumn.Title.Alignment = taCenter
+    DataCoumn.Title.Caption = 'Данные'
+    DataCoumn.Width = 250
+    DataSource = dsData
+    FocusColor = clRed
+    LabelCoumn.Alignment = taCenter
+    LabelCoumn.ReadOnly = True
+    LabelCoumn.Title.Alignment = taCenter
+    LabelCoumn.Title.Caption = 'Заголовок'
+    LabelCoumn.Width = 120
+    Options = [rxvgColumnTitle]
+    Rows = <    
+      item
+        FieldName = 'tb_client_inn'
+        RowTitle.Caption = 'ИНН'
+        WordWrap = False
+        RowHeight = 27
+        ReadOnly = False
+        PopupMenu = PopupMenu1
+      end    
+      item
+        FieldName = 'tb_client_name'
+        RowTitle.Caption = 'Наименование'
+        WordWrap = False
+        RowHeight = 27
+        ReadOnly = False
+      end    
+      item
+        Alignment = taRightJustify
+        FieldName = 'tb_client_id'
+        RowTitle.Caption = 'ID'
+        WordWrap = False
+        RowHeight = 27
+        ReadOnly = False
+        PopupMenu = PopupMenu2
+      end    
+      item
+        FieldName = 'create_user_date'
+        RowTitle.Caption = 'Дата создания'
+        Color = clWhite
+        WordWrap = False
+        RowHeight = 27
+        ReadOnly = False
+      end    
+      item
+        Alignment = taCenter
+        FieldName = 'tb_client_ogrn'
+        RowTitle.Caption = 'ОГРН'
+        WordWrap = False
+        RowHeight = 27
+        ReadOnly = False
+        PopupMenu = PopupMenu3
+      end    
+      item
+        FieldName = 'create_user_name'
+        RowTitle.Caption = 'Описание'
+        WordWrap = False
+        RowHeight = 50
+        ReadOnly = False
+      end    
+      item
+        RowTitle.Caption = 'Описание'
+        StaticText = 'Это просто текст'
+        Style = rxvrStaticText
+        WordWrap = False
+        RowHeight = 27
+        ReadOnly = False
+      end>
+    RowHeights = (
+      27
+      27
+      27
+      27
+      27
+      27
+      50
+      27
+    )
+  end
+  object RxDBGrid1: TRxDBGrid
+    Left = 40
+    Height = 222
+    Top = 72
+    Width = 1080
+    ColumnDefValues.BlobText = '(данные)'
+    TitleButtons = False
+    AutoSort = True
+    Columns = <    
+      item
+        Title.Alignment = taCenter
+        Title.Orientation = toHorizontal
+        Title.Caption = 'TB_CLIENT_ID'
+        FieldName = 'TB_CLIENT_ID'
+        EditButtons = <>
+        Filter.DropDownRows = 0
+        Filter.EmptyValue = '(Пусто)'
+        Filter.AllValue = '(Все значения)'
+        Filter.EmptyFont.Style = [fsItalic]
+        Filter.ItemIndex = -1
+        Footers = <>
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Orientation = toHorizontal
+        Title.Caption = 'TB_CLEINT_CODE'
+        FieldName = 'TB_CLEINT_CODE'
+        EditButtons = <>
+        Filter.DropDownRows = 0
+        Filter.EmptyValue = '(Пусто)'
+        Filter.AllValue = '(Все значения)'
+        Filter.EmptyFont.Style = [fsItalic]
+        Filter.ItemIndex = -1
+        Footers = <>
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Orientation = toHorizontal
+        Title.Caption = 'TB_CLIENT_INN'
+        FieldName = 'TB_CLIENT_INN'
+        EditButtons = <>
+        Filter.DropDownRows = 0
+        Filter.EmptyValue = '(Пусто)'
+        Filter.AllValue = '(Все значения)'
+        Filter.EmptyFont.Style = [fsItalic]
+        Filter.ItemIndex = -1
+        Footers = <>
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Orientation = toHorizontal
+        Title.Caption = 'TB_CLEINT_NAME'
+        FieldName = 'TB_CLIENT_NAME'
+        EditButtons = <>
+        Filter.DropDownRows = 0
+        Filter.EmptyValue = '(Пусто)'
+        Filter.AllValue = '(Все значения)'
+        Filter.EmptyFont.Style = [fsItalic]
+        Filter.ItemIndex = -1
+        Footers = <>
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Orientation = toHorizontal
+        Title.Caption = 'TB_CLIENT_EMAIL'
+        FieldName = 'TB_CLIENT_EMAIL'
+        EditButtons = <>
+        Filter.DropDownRows = 0
+        Filter.EmptyValue = '(Пусто)'
+        Filter.AllValue = '(Все значения)'
+        Filter.EmptyFont.Style = [fsItalic]
+        Filter.ItemIndex = -1
+        Footers = <>
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Orientation = toHorizontal
+        Title.Caption = 'TB_CLIENT_PHONE'
+        FieldName = 'TB_CLIENT_PHONE'
+        EditButtons = <>
+        Filter.DropDownRows = 0
+        Filter.EmptyValue = '(Пусто)'
+        Filter.AllValue = '(Все значения)'
+        Filter.EmptyFont.Style = [fsItalic]
+        Filter.ItemIndex = -1
+        Footers = <>
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Orientation = toHorizontal
+        Title.Caption = 'CREATE_USER_NAME'
+        FieldName = 'CREATE_USER_NAME'
+        EditButtons = <>
+        Filter.DropDownRows = 0
+        Filter.EmptyValue = '(Пусто)'
+        Filter.AllValue = '(Все значения)'
+        Filter.EmptyFont.Style = [fsItalic]
+        Filter.ItemIndex = -1
+        Footers = <>
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Orientation = toHorizontal
+        Title.Caption = 'CREATE_USER_DATE'
+        FieldName = 'CREATE_USER_DATE'
+        EditButtons = <>
+        Filter.DropDownRows = 0
+        Filter.EmptyValue = '(Пусто)'
+        Filter.AllValue = '(Все значения)'
+        Filter.EmptyFont.Style = [fsItalic]
+        Filter.ItemIndex = -1
+        Footers = <>
+      end>
+    KeyStrokes = <    
+      item
+        Command = rxgcShowFindDlg
+        ShortCut = 16454
+        Enabled = True
+      end    
+      item
+        Command = rxgcShowColumnsDlg
+        ShortCut = 16471
+        Enabled = True
+      end    
+      item
+        Command = rxgcShowFilterDlg
+        ShortCut = 16468
+        Enabled = True
+      end    
+      item
+        Command = rxgcShowSortDlg
+        ShortCut = 16467
+        Enabled = True
+      end    
+      item
+        Command = rxgcShowQuickFilter
+        ShortCut = 16465
+        Enabled = True
+      end    
+      item
+        Command = rxgcHideQuickFilter
+        ShortCut = 16456
+        Enabled = True
+      end    
+      item
+        Command = rxgcSelectAll
+        ShortCut = 16449
+        Enabled = True
+      end    
+      item
+        Command = rxgcDeSelectAll
+        ShortCut = 16429
+        Enabled = True
+      end    
+      item
+        Command = rxgcInvertSelection
+        ShortCut = 16426
+        Enabled = True
+      end    
+      item
+        Command = rxgcOptimizeColumnsWidth
+        ShortCut = 16427
+        Enabled = True
+      end    
+      item
+        Command = rxgcCopyCellValue
+        ShortCut = 16451
+        Enabled = True
+      end>
+    FooterOptions.DrawFullLine = False
+    SearchOptions.QuickSearchOptions = [loCaseInsensitive, loPartialKey]
+    SearchOptions.FromStart = False
+    OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgAllowQuickFilter]
+    Color = clWindow
+    DrawFullLine = False
+    FocusColor = clRed
+    SelectedColor = clHighlight
+    GridLineStyle = psSolid
+    DataSource = dsData
+    Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
+    TabOrder = 1
+    TitleStyle = tsNative
+  end
+  object Button1: TButton
+    Left = 208
+    Height = 25
+    Top = 430
+    Width = 75
+    Caption = 'Button1'
+    OnClick = Button1Click
+    TabOrder = 2
+  end
+  object Button2: TButton
+    Left = 208
+    Height = 25
+    Top = 472
+    Width = 75
+    Caption = 'Button2'
+    OnClick = Button2Click
+    TabOrder = 3
+  end
+  object dsData: TDataSource
+    DataSet = rxData
+    Left = 120
+    Top = 94
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 822
+    Top = 341
+    object MenuItem1: TMenuItem
+      Caption = 'A'
+    end
+    object MenuItem2: TMenuItem
+      Caption = 'A2'
+    end
+    object MenuItem4: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem3: TMenuItem
+      Caption = 'A3'
+    end
+  end
+  object PopupMenu2: TPopupMenu
+    Left = 834
+    Top = 403
+    object MenuItem5: TMenuItem
+      Caption = 'B1'
+    end
+    object MenuItem6: TMenuItem
+      Caption = 'B2'
+    end
+    object MenuItem8: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem7: TMenuItem
+      Caption = 'B3'
+    end
+  end
+  object PopupMenu3: TPopupMenu
+    Left = 838
+    Top = 458
+    object MenuItem9: TMenuItem
+      Caption = 'C1'
+    end
+    object MenuItem10: TMenuItem
+      Caption = 'C2'
+    end
+    object MenuItem12: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem11: TMenuItem
+      Caption = 'C3'
+    end
+  end
+  object rxData: TRxMemoryData
+    FieldDefs = <    
+      item
+        Name = 'TB_CLIENT_ID'
+        DataType = ftInteger
+        Precision = -1
+      end    
+      item
+        Name = 'TB_CLEINT_CODE'
+        DataType = ftInteger
+        Precision = -1
+      end    
+      item
+        Name = 'TB_CLIENT_INN'
+        DataType = ftString
+        Precision = -1
+        Size = 20
+      end    
+      item
+        Name = 'TB_CLIENT_NAME'
+        DataType = ftString
+        Precision = -1
+        Size = 200
+      end    
+      item
+        Name = 'TB_CLIENT_EMAIL'
+        DataType = ftString
+        Precision = -1
+        Size = 50
+      end    
+      item
+        Name = 'TB_CLIENT_PHONE'
+        DataType = ftString
+        Precision = -1
+        Size = 50
+      end    
+      item
+        Name = 'CREATE_USER_NAME'
+        DataType = ftString
+        Precision = -1
+        Size = 50
+      end    
+      item
+        Name = 'CREATE_USER_DATE'
+        DataType = ftDateTime
+        Precision = -1
+      end>
+    PacketRecords = 0
+    Left = 176
+    Top = 94
+    object rxDataTB_CLIENT_ID: TLongintField
+      FieldKind = fkData
+      FieldName = 'TB_CLIENT_ID'
+      Index = 0
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object rxDataTB_CLEINT_CODE: TLongintField
+      FieldKind = fkData
+      FieldName = 'TB_CLEINT_CODE'
+      Index = 1
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object rxDataTB_CLIENT_INN: TStringField
+      FieldKind = fkData
+      FieldName = 'TB_CLIENT_INN'
+      Index = 2
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object rxDataTB_CLIENT_NAME: TStringField
+      FieldKind = fkData
+      FieldName = 'TB_CLIENT_NAME'
+      Index = 3
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 200
+    end
+    object rxDataTB_CLIENT_EMAIL: TStringField
+      FieldKind = fkData
+      FieldName = 'TB_CLIENT_EMAIL'
+      Index = 4
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 50
+    end
+    object rxDataTB_CLIENT_PHONE: TStringField
+      FieldKind = fkData
+      FieldName = 'TB_CLIENT_PHONE'
+      Index = 5
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 50
+    end
+    object rxDataCREATE_USER_NAME: TStringField
+      FieldKind = fkData
+      FieldName = 'CREATE_USER_NAME'
+      Index = 6
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 50
+    end
+    object rxDataCREATE_USER_DATE: TDateTimeField
+      FieldKind = fkData
+      FieldName = 'CREATE_USER_DATE'
+      Index = 7
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+  end
+end

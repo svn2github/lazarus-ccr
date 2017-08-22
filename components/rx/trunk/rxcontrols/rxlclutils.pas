@@ -1,4 +1,4 @@
-{ vclutils unit
+{ lclutils unit
 
   Copyright (C) 2005-2017 Lagunov Aleksey alexs75@yandex.ru and Lazarus team
   original conception from rx library for Delphi (c)
@@ -29,7 +29,7 @@
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 }
 
-unit rxvclutils;
+unit rxlclutils;
 
 {$I rx.inc}
 
@@ -97,6 +97,8 @@ procedure FreeMemo(var fpBlock: Pointer);
 
 procedure RaiseIndexOutOfBounds(Control: TControl; Items:TStrings; Index: integer);
 
+procedure WriteTextHeader(ACanvas: TCanvas; ARect: TRect; const Text: string; Alignment: TAlignment);
+
 {$IFDEF WIN32}
 type
   PCursorOrIcon = ^TCursorOrIcon;
@@ -123,7 +125,7 @@ procedure OutOfResources;
 {$ENDIF}
 
 implementation
-uses LCLProc, LCLIntf, LCLType, LCLStrConsts;
+uses LCLProc, LCLIntf, LCLType, LCLStrConsts, Grids, math;
 
 {$IFNDEF RX_USE_LAZARUS_RESOURCE}
 {$R rx_lcl.res}
@@ -730,6 +732,57 @@ procedure RaiseIndexOutOfBounds(Control: TControl; Items:TStrings; Index: intege
 begin
   raise Exception.CreateFmt(rsIndexOutOfBounds,
                             [Control.Name, Index, Items.Count - 1]);
+end;
+
+const
+  ALIGN_FLAGS_HEADER: array[TAlignment] of integer =
+    (DT_LEFT or {DT_EXPANDTABS or} DT_NOPREFIX,
+    DT_RIGHT or {DT_EXPANDTABS or }DT_NOPREFIX,
+    DT_CENTER or {DT_EXPANDTABS or }DT_NOPREFIX);
+
+procedure WriteTextHeader(ACanvas: TCanvas; ARect: TRect; const Text: string; Alignment: TAlignment);
+var
+  DrawRect: TRect;
+  W, CnvW: integer;
+begin
+(*
+dec(ARect.Right, constCellPadding);
+case Canvas.TextStyle.Alignment of
+  Classes.taLeftJustify: Inc(ARect.Left, constCellPadding);
+  Classes.taRightJustify: Dec(ARect.Right, 1);
+end;
+case Canvas.TextStyle.Layout of
+  tlTop: Inc(ARect.Top, constCellPadding);
+  tlBottom: Dec(ARect.Bottom, constCellPadding);
+end;
+
+if ARect.Right<ARect.Left then
+  ARect.Right:=ARect.Left;
+if ARect.Left>ARect.Right then
+  ARect.Left:=ARect.Right;
+if ARect.Bottom<ARect.Top then
+  ARect.Bottom:=ARect.Top;
+if ARect.Top>ARect.Bottom then
+  ARect.Top:=ARect.Bottom;
+
+if (ARect.Left<>ARect.Right) and (ARect.Top<>ARect.Bottom) then
+*)
+
+
+  DrawRect := Rect(ARect.Left + constCellPadding, ARect.Top + constCellPadding, ARect.Right - constCellPadding, ARect.Bottom - constCellPadding);
+
+  CnvW := Max(DrawRect.Right - DrawRect.Left, 1);
+  W := (ACanvas.TextWidth(Text) div CnvW) + 1;
+
+  DrawRect.Top := ((ARect.Top + ARect.Bottom) div 2) - W * ACanvas.TextHeight('Wg') div 2;
+  if DrawRect.Top < ARect.Top + 1 then
+    DrawRect.Top := ARect.Top + 1;
+
+  SetBkMode(ACanvas.Handle, TRANSPARENT);
+  DrawText(ACanvas.Handle, PChar(Text), Length(Text), DrawRect,
+    //    DT_VCENTER or  DT_WORDBREAK or DT_CENTER
+    ALIGN_FLAGS_HEADER[Alignment] {or DT_VCENTER or  DT_END_ELLIPSIS } or DT_WORDBREAK
+    );
 end;
 
 initialization

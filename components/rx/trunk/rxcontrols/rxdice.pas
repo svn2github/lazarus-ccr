@@ -35,7 +35,7 @@ interface
 {$I rx.inc}
 
 uses SysUtils, LCLType, LCLProc, LCLIntf, LMessages, Classes, Graphics,
-  Controls, Forms, StdCtrls, ExtCtrls, Menus, rxVCLUtils;
+  Controls, Forms, StdCtrls, ExtCtrls, Menus, rxlclutils;
 
 type
   TRxDiceValue = 1..6;

@@ -81,7 +81,7 @@ end;
 
 implementation
 
-uses rxvclutils, rxboxprocs;
+uses rxlclutils, rxboxprocs;
 
 {$R *.lfm}
 

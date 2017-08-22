@@ -212,7 +212,7 @@ type
   end;
 
 implementation
-uses rxdbutils, LCLVersion, rxvclutils, StdCtrls;
+uses rxdbutils, LCLVersion, rxlclutils, StdCtrls;
 
 { TRxDBRadioGroup }
 

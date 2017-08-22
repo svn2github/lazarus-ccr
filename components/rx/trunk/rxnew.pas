@@ -11,16 +11,17 @@ uses
   registerrx, RegisterRxDB, RegisterRxTools, RxHistoryNavigator, 
   RxAboutDialog, rxAboutFormUnit, rxclock, RxCloseFormValidator, rxapputils, 
   RxAutoPanel, rxboxprocs, rxctrls, rxcurredit, rxDateRangeEditUnit, 
-  rxvclutils, RxVersInfo, RxViewsPanel, ex_rx_bin_datapacket, 
-  ex_rx_datapacket, ex_rx_xml_datapacket, RxDBColorBox, rxdbcomb, RxDBCtrls, 
-  rxdbcurredit, rxdbdateedit, rxdbgrid, rxdbgrid_columsunit, 
-  rxdbgrid_findunit, exsortmds, RxDBGridExportPdf, RxDBGridExportPdfSetupUnit, 
-  RxDBGridFooterTools, rxdbgridfootertools_setup, RxDBSpinEdit, RxDBTimeEdit, 
-  rxdbutils, rxfilterby, rxlookup, rxmemds, rxpopupunit, rxseldsfrm, rxsortby, 
+  RxVersInfo, RxViewsPanel, ex_rx_bin_datapacket, ex_rx_datapacket, 
+  ex_rx_xml_datapacket, RxDBColorBox, rxdbcomb, RxDBCtrls, rxdbcurredit, 
+  rxdbdateedit, rxdbgrid, rxdbgrid_columsunit, rxdbgrid_findunit, exsortmds, 
+  RxDBGridExportPdf, RxDBGridExportPdfSetupUnit, RxDBGridFooterTools, 
+  rxdbgridfootertools_setup, RxDBSpinEdit, RxDBTimeEdit, rxdbutils, 
+  rxfilterby, rxlookup, rxmemds, rxpopupunit, rxseldsfrm, rxsortby, 
   rxsortmemds, rxdice, rxduallist, rxfduallst, rxfolderlister, RXHistory, 
   RxIniPropStorage, rxlclconst, rxlogin, RxMDI, rxpagemngr, rxpickdate, 
   rxShortCutUnit, rxspin, rxswitch, RxSystemServices, rxtbrsetup, RxTimeEdit, 
-  rxtoolbar, rxtooledit, RxDBGrid_PopUpFilterUnit, LazarusPackageIntf;
+  rxtoolbar, rxtooledit, RxDBGrid_PopUpFilterUnit, rxdbverticalgrid, 
+  rxlclutils, LazarusPackageIntf;
 
 implementation
 

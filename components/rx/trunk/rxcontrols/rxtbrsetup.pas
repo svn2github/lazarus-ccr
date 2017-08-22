@@ -90,7 +90,7 @@ var
   ToolPanelSetupForm: TToolPanelSetupForm;
 
 implementation
-uses rxvclutils, ActnList, rxboxprocs, rxconst, LCLProc, rxShortCutUnit;
+uses rxlclutils, ActnList, rxboxprocs, rxconst, LCLProc, rxShortCutUnit;
 
 {$R *.lfm}
 

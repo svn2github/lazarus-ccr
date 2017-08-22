@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <Version Value="10"/>
+    <BuildModes Active="Default"/>
+    <Units Count="54">
+      <Unit0>
+        <Filename Value="project1.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="26"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit1"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="49"/>
+        <CursorPos X="12" Y="70"/>
+        <UsageCount Value="26"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="rxdbverticalgrid.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="575"/>
+        <CursorPos Y="585"/>
+        <UsageCount Value="20"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="../../rxdb/rxdbgrid.pas"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="6568"/>
+        <CursorPos Y="6593"/>
+        <UsageCount Value="13"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="../../../../lcl/grids.pas"/>
+        <UnitName Value="Grids"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="3746"/>
+        <CursorPos X="12" Y="3762"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="../../../../lcl/dbgrids.pas"/>
+        <UnitName Value="DBGrids"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="3867"/>
+        <CursorPos Y="3886"/>
+        <UsageCount Value="13"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="../../../../lcl/controls.pp"/>
+        <UnitName Value="Controls"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="1668"/>
+        <CursorPos X="14" Y="1686"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="../../../../lcl/graphics.pp"/>
+        <UnitName Value="Graphics"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="14" Y="17"/>
+        <UsageCount Value="10"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="../../../../install/source/fpcsrc/packages/fcl-db/src/base/db.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1793"/>
+        <CursorPos Y="1816"/>
+        <UsageCount Value="10"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="../../rxdb/rxdbtimeedit.pas"/>
+        <UnitName Value="RxDBTimeEdit"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="25"/>
+        <CursorPos X="24" Y="48"/>
+        <UsageCount Value="10"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="../../../../lcl/dbctrls.pp"/>
+        <UnitName Value="DbCtrls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="91"/>
+        <CursorPos X="3" Y="41"/>
+        <UsageCount Value="10"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="../../rxdb/rxlookup.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="373"/>
+        <CursorPos X="16" Y="392"/>
+        <UsageCount Value="10"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="../../../../install/source/fpcsrc/rtl/objpas/classes/classesh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="72"/>
+        <CursorPos X="30" Y="91"/>
+        <UsageCount Value="10"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="../../../../install/source/fpcsrc/packages/fcl-db/src/base/datasource.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="136"/>
+        <CursorPos Y="156"/>
+        <UsageCount Value="10"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="../../../../install/source/fpcsrc/rtl/objpas/classes/collect.inc"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos Y="25"/>
+        <UsageCount Value="10"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="../../../../install/source/fpcsrc/rtl/inc/objpas.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="30"/>
+        <CursorPos Y="52"/>
+        <UsageCount Value="10"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="../../../../install/source/fpcsrc/rtl/inc/except.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="169"/>
+        <CursorPos Y="200"/>
+        <UsageCount Value="10"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="../../../../install/source/fpcsrc/rtl/x86_64/setjump.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="29"/>
+        <CursorPos Y="60"/>
+        <UsageCount Value="10"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="../../../../install/source/fpcsrc/rtl/objpas/classes/persist.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="46"/>
+        <CursorPos X="3" Y="49"/>
+        <UsageCount Value="10"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="../../../../install/source/fpcsrc/rtl/inc/astrings.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="161"/>
+        <CursorPos Y="180"/>
+        <UsageCount Value="10"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="../../../../install/source/fpcsrc/rtl/inc/objpash.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="187"/>
+        <CursorPos X="23" Y="206"/>
+        <UsageCount Value="10"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="../../registerrxdb.pas"/>
+        <UnitName Value="RegisterRxDB"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="65"/>
+        <CursorPos X="48" Y="77"/>
+        <UsageCount Value="10"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="1065"/>
+        <CursorPos X="3" Y="1088"/>
+        <UsageCount Value="13"/>
+        <Bookmarks Count="1">
+          <Item0 X="38" Y="810" ID="1"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="../../rx.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="23"/>
+        <UsageCount Value="10"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="../../registerrx.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="62" Y="9"/>
+        <UsageCount Value="10"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="../../registerrxtools.pas"/>
+        <UnitName Value="RegisterRxTools"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="37"/>
+        <UsageCount Value="10"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="../../rxcontrols/rxvclutils.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="77"/>
+        <CursorPos Y="93"/>
+        <UsageCount Value="10"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="../../rxcontrols/rxfduallst.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="65"/>
+        <CursorPos X="9" Y="84"/>
+        <UsageCount Value="10"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="../../rxcontrols/rxtbrsetup.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="74"/>
+        <CursorPos X="9" Y="93"/>
+        <UsageCount Value="10"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="../../rxcontrols/rxtoolbar.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="262"/>
+        <CursorPos X="36" Y="281"/>
+        <UsageCount Value="10"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="../../rxcontrols/rxctrls.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="805"/>
+        <CursorPos X="35" Y="824"/>
+        <UsageCount Value="10"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="../../rxcontrols/rxpickdate.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="248"/>
+        <CursorPos X="49" Y="267"/>
+        <UsageCount Value="10"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="../../rxcontrols/rxswitch.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="138"/>
+        <CursorPos X="9" Y="157"/>
+        <UsageCount Value="10"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="../../rxcontrols/rxdice.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="19"/>
+        <CursorPos X="57" Y="38"/>
+        <UsageCount Value="10"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="../../rxcontrols/rxclock.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="162"/>
+        <CursorPos X="9" Y="181"/>
+        <UsageCount Value="10"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="../../rxcontrols/rxspin.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="226"/>
+        <CursorPos X="6" Y="245"/>
+        <UsageCount Value="10"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="../../rxcontrols/rxmdi.pas"/>
+        <UnitName Value="RxMDI"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="146"/>
+        <CursorPos X="13" Y="169"/>
+        <UsageCount Value="10"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="../../rxdb/rxdbutils.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="147"/>
+        <CursorPos X="45" Y="166"/>
+        <UsageCount Value="10"/>
+      </Unit37>
+      <Unit38>
+        <Filename Value="../../rxdb/rxpopupunit.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="21"/>
+        <CursorPos X="32" Y="40"/>
+        <UsageCount Value="10"/>
+      </Unit38>
+      <Unit39>
+        <Filename Value="../../rxdb/rxdbctrls.pas"/>
+        <UnitName Value="RxDBCtrls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="196"/>
+        <CursorPos X="32" Y="215"/>
+        <UsageCount Value="10"/>
+      </Unit39>
+      <Unit40>
+        <Filename Value="../../rxcontrols/rxlclutils.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="81"/>
+        <CursorPos X="11" Y="100"/>
+        <UsageCount Value="10"/>
+      </Unit40>
+      <Unit41>
+        <Filename Value="../../rxdb/rxdbgridexportpdf.pas"/>
+        <UnitName Value="RxDBGridExportPdf"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="21"/>
+        <CursorPos X="39" Y="40"/>
+        <UsageCount Value="10"/>
+      </Unit41>
+      <Unit42>
+        <Filename Value="../../rxcontrols/rxlogin.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="190"/>
+        <CursorPos X="55" Y="209"/>
+        <UsageCount Value="10"/>
+      </Unit42>
+      <Unit43>
+        <Filename Value="../../rxdbgrid_print/rxdbgridprintgrid.pas"/>
+        <UnitName Value="RxDBGridPrintGrid"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="20"/>
+        <CursorPos X="53" Y="37"/>
+        <UsageCount Value="10"/>
+      </Unit43>
+      <Unit44>
+        <Filename Value="../../../../install/source/fpcsrc/rtl/objpas/objpas.pp"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="8" Y="36"/>
+        <UsageCount Value="10"/>
+      </Unit44>
+      <Unit45>
+        <Filename Value="../../../../lcl/menus.pp"/>
+        <UnitName Value="Menus"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="11" Y="30"/>
+        <UsageCount Value="10"/>
+      </Unit45>
+      <Unit46>
+        <Filename Value="../../../../lcl/include/control.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1902"/>
+        <CursorPos X="3" Y="1907"/>
+        <UsageCount Value="10"/>
+      </Unit46>
+      <Unit47>
+        <Filename Value="../../../../install/source/fpcsrc/rtl/objpas/classes/reader.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1703"/>
+        <CursorPos Y="1738"/>
+        <UsageCount Value="10"/>
+      </Unit47>
+      <Unit48>
+        <Filename Value="../../../../install/source/fpcsrc/rtl/objpas/typinfo.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1494"/>
+        <CursorPos Y="1512"/>
+        <UsageCount Value="10"/>
+      </Unit48>
+      <Unit49>
+        <Filename Value="../../../../lcl/include/popupmenu.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="56"/>
+        <CursorPos Y="82"/>
+        <UsageCount Value="10"/>
+      </Unit49>
+      <Unit50>
+        <Filename Value="/home/install/source/fpcsrc/packages/fcl-db/src/base/db.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1774"/>
+        <CursorPos X="15" Y="1794"/>
+        <UsageCount Value="11"/>
+      </Unit50>
+      <Unit51>
+        <Filename Value="/home/install/source/fpcsrc/packages/fcl-db/src/base/datasource.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="136"/>
+        <CursorPos Y="156"/>
+        <UsageCount Value="10"/>
+      </Unit51>
+      <Unit52>
+        <Filename Value="/home/install/source/fpcsrc/rtl/objpas/classes/lists.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="784"/>
+        <CursorPos Y="803"/>
+        <UsageCount Value="10"/>
+      </Unit52>
+      <Unit53>
+        <Filename Value="/home/install/source/fpcsrc/rtl/objpas/sysutils/dati.inc"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="504"/>
+        <CursorPos X="18" Y="516"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit53>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="355" TopLine="333"/>
+      </Position1>
+      <Position2>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="333" TopLine="314"/>
+      </Position2>
+      <Position3>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="334" TopLine="314"/>
+      </Position3>
+      <Position4>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="825" TopLine="806"/>
+      </Position4>
+      <Position5>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="826" TopLine="806"/>
+      </Position5>
+      <Position6>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="832" TopLine="806"/>
+      </Position6>
+      <Position7>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="221" Column="15" TopLine="202"/>
+      </Position7>
+      <Position8>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="60" Column="28" TopLine="39"/>
+      </Position8>
+      <Position9>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="380" Column="3" TopLine="378"/>
+      </Position9>
+      <Position10>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="264" Column="15" TopLine="246"/>
+      </Position10>
+      <Position11>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="1141" Column="14" TopLine="1135"/>
+      </Position11>
+      <Position12>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="387" TopLine="368"/>
+      </Position12>
+      <Position13>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="384" Column="20" TopLine="368"/>
+      </Position13>
+      <Position14>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="260" Column="15" TopLine="245"/>
+      </Position14>
+      <Position15>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="1054" Column="3" TopLine="1050"/>
+      </Position15>
+      <Position16>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="259" Column="15" TopLine="241"/>
+      </Position16>
+      <Position17>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="1042" Column="18" TopLine="1018"/>
+      </Position17>
+      <Position18>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="261" Column="15" TopLine="240"/>
+      </Position18>
+      <Position19>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="1070" Column="3" TopLine="1065"/>
+      </Position19>
+      <Position20>
+        <Filename Value="../../../../lcl/grids.pas"/>
+        <Caret Line="1098" Column="15" TopLine="1079"/>
+      </Position20>
+      <Position21>
+        <Filename Value="../../../../lcl/grids.pas"/>
+        <Caret Line="3809" TopLine="3784"/>
+      </Position21>
+      <Position22>
+        <Filename Value="../../../../lcl/grids.pas"/>
+        <Caret Line="3782" Column="19" TopLine="3764"/>
+      </Position22>
+      <Position23>
+        <Filename Value="../../../../lcl/grids.pas"/>
+        <Caret Line="3810" Column="21" TopLine="3777"/>
+      </Position23>
+      <Position24>
+        <Filename Value="../../../../lcl/grids.pas"/>
+        <Caret Line="3816" Column="21" TopLine="3781"/>
+      </Position24>
+      <Position25>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="1078" Column="7" TopLine="1065"/>
+      </Position25>
+      <Position26>
+        <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
+        <Caret Line="1081" Column="80" TopLine="1065"/>
+      </Position26>
+      <Position27>
+        <Filename Value="../../../../lcl/grids.pas"/>
+        <Caret Line="3821" TopLine="3781"/>
+      </Position27>
+      <Position28>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="70" Column="12" TopLine="49"/>
+      </Position28>
+      <Position29>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="69" Column="12" TopLine="48"/>
+      </Position29>
+      <Position30>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="70" Column="12" TopLine="49"/>
+      </Position30>
+    </JumpHistory>
+  </ProjectSession>
+  <Debugging>
+    <Watches Count="1">
+      <Item1>
+        <Expression Value="Owner"/>
+      </Item1>
+    </Watches>
+  </Debugging>
+</CONFIG>

@@ -389,7 +389,7 @@ type
   end;
   
 implementation
-uses rxVCLUtils, Math, rxdconst;
+uses rxlclutils, Math, rxdconst;
 
 type
   TDbGridAccess = class(TDbGrid)

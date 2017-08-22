@@ -206,7 +206,7 @@ function CreateLoginDialog(UnlockMode, ASelectDatabase: Boolean;
 implementation
 
 uses
-  Registry, IniFiles, RxAppUtils, RxDConst, rxVclUtils, RxConst;
+  Registry, IniFiles, RxAppUtils, RxDConst, rxlclutils, RxConst;
 
 const
   keyLoginSection                = 'Login Dialog';

@@ -178,7 +178,7 @@ type
 
 implementation
 
-uses rxvclutils, RTLConsts, LCLIntf;
+uses rxlclutils, RTLConsts, LCLIntf;
 
 const
   Registered: Boolean = False;

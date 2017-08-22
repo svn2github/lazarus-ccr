@@ -162,7 +162,7 @@ type
   end;
 
 implementation
-uses LResources, rxvclutils, rxconst;
+uses LResources, rxlclutils, rxconst;
 
 
 { TRxMDICloseButton }

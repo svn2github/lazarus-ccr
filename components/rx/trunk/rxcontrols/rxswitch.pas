@@ -154,7 +154,7 @@ type
 
 implementation
 
-uses rxvclutils;
+uses rxlclutils;
 
 const
   BorderStyles: array[TBorderStyle] of Longint = (0, WS_BORDER);

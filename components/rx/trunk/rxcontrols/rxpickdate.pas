@@ -264,7 +264,7 @@ const
 
 implementation
 
-uses Messages, RXCtrls, rxconst, rxtooledit, rxvclutils, math, LCLStrConsts, LResources;
+uses Messages, RXCtrls, rxconst, rxtooledit, rxlclutils, math, LCLStrConsts, LResources;
 
 {$R pickdate.res}
 
