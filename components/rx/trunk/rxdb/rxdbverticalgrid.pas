@@ -36,7 +36,7 @@ unit rxdbverticalgrid;
 interface
 
 uses
-  Classes, SysUtils, Grids, Graphics, Controls, DB, Menus;
+  Classes, SysUtils, Types, Grids, Graphics, Controls, DB, Menus;
 
 type
   TRxDBVerticalGridOption = (rxvgColumnTitle);
@@ -62,6 +62,21 @@ type
     procedure FocusControl(Field: TFieldRef); override;
     procedure RecordChanged(Field: TField); override;
     procedure UpdateData; override;
+  end;
+
+  { TRxDBVerticalGridDefValues }
+
+  TRxDBVerticalGridDefValues = class(TPersistent)
+  private
+    FBlobText: string;
+    FOwner: TRxCustomDBVerticalGrid;
+  protected
+    procedure AssignTo(Dest: TPersistent); override;
+  public
+    constructor Create(AOwner: TRxCustomDBVerticalGrid);
+    destructor Destroy; override;
+  published
+    property BlobText:string read FBlobText write FBlobText;
   end;
 
   { TRxDBVerticalGridRowTitle }
@@ -118,6 +133,8 @@ type
     FAlignment: ^TAlignment;
     FPopupMenu: TPopupMenu;
     FRowHeight: PInteger;
+    FValueChecked: PChar;
+    FValueUnchecked: PChar;
 
     FFieldName: String;
     FDisplayFormat : String;
@@ -145,10 +162,14 @@ type
     function GetKeyList: TStrings;
     function GetPickList: TStrings;
     function GetRowHeight: Integer;
+    function GetValueChecked: string;
+    function GetValueUnchecked: string;
     function IsAlignmentStored: Boolean;
     function IsColorStored: Boolean;
     function IsDisplayFormatStored: Boolean;
     function IsFontStored: Boolean;
+    function IsValueCheckedStored: Boolean;
+    function IsValueUncheckedStored: Boolean;
     procedure SetAlignment(AValue: TAlignment);
     procedure SetButtonStyle(AValue: TColumnButtonStyle);
     procedure SetColor(AValue: TColor);
@@ -170,8 +191,12 @@ type
     procedure KeyListChanged(Sender: TObject);
     procedure SetStaticText(AValue: string);
     procedure SetStyle(AValue: TRxDBVerticalGridRowStyle);
+    procedure SetValueChecked(AValue: string);
+    procedure SetValueUnchecked(AValue: string);
     procedure SetWordWrap(AValue: Boolean);
   protected
+    function  GetDefaultValueChecked: string; virtual;
+    function  GetDefaultValueUnchecked: string; virtual;
     function  GetDisplayName: string; override;
     function  GetDefaultAlignment : TAlignment; virtual;
     function  GetDefaultRowHeight : integer;
@@ -179,6 +204,7 @@ type
     function  GetDefaultDisplayFormat: string;
     property  IsDefaultFont: boolean read FIsDefaultFont;
     function  GetDefaultColor: TColor; virtual;
+    function EditorStyle:TColumnButtonStyle;
     //property GroupName:string read FGroupName write SetGroupName;
   public
     constructor Create(ACollection: TCollection); override;
@@ -206,6 +232,8 @@ type
     property RowHeight : Integer read GetRowHeight write SetRowHeight;
     property ReadOnly : Boolean read FReadOnly write SetReadOnly;
     property PopupMenu : TPopupMenu read FPopupMenu write SetPopupMenu;
+    property ValueChecked: string read GetValueChecked write SetValueChecked stored IsValueCheckedStored;
+    property ValueUnchecked: string read GetValueUnchecked write SetValueUnchecked stored IsValueUncheckedStored;
   end;
 
   { TRxDBVerticalGridRows }
@@ -241,6 +269,7 @@ type
   TRxCustomDBVerticalGrid = class(TCustomGrid)
   private
     FDataLink: TRxDBVerticalGridDataLink;
+    FGridDefValues: TRxDBVerticalGridDefValues;
     FOptions: TRxDBVerticalGridOptions;
     FReadOnly: Boolean;
     FRows: TRxDBVerticalGridRows;
@@ -250,6 +279,7 @@ type
     function GetLabelCoumn: TGridColumn;
     procedure SetDataCoumn(AValue: TGridColumn);
     procedure SetDataSource(AValue: TDataSource);
+    procedure SetGridDefValues(AValue: TRxDBVerticalGridDefValues);
     procedure SetLabelCoumn(AValue: TGridColumn);
     procedure SetOptions(AValue: TRxDBVerticalGridOptions);
     procedure SetRows(AValue: TRxDBVerticalGridRows);
@@ -258,6 +288,8 @@ type
   protected
     procedure DrawCell(aCol,aRow:Integer; aRect:TRect; aState:TGridDrawState); override;
     procedure DrawDataCell(aCol, aRow:Integer; aRect:TRect; aState:TGridDrawState; AGridRow: TRxDBVerticalGridRow);
+    procedure DrawCheckboxBitmaps(aRect: TRect; AGridRow: TRxDBVerticalGridRow);
+
     procedure PrepareCanvas(aCol, aRow: Integer; aState:TGridDrawState); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: integer); override;
@@ -271,6 +303,7 @@ type
     property ReadOnly: Boolean read FReadOnly write FReadOnly default false;
     property LabelCoumn:TGridColumn read GetLabelCoumn write SetLabelCoumn;
     property DataCoumn:TGridColumn read GetDataCoumn write SetDataCoumn;
+    property GridDefValues:TRxDBVerticalGridDefValues read FGridDefValues write SetGridDefValues;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -289,6 +322,7 @@ type
     property BorderStyle;
     property CellHintPriority;
     property Color;
+    property GridDefValues;
     property DataCoumn;
     property DataSource;
     property DefaultRowHeight;
@@ -304,7 +338,31 @@ type
   end;
 
 implementation
-uses rxlclutils;
+uses Forms, rxdconst, LCLType, rxlclutils, StdCtrls, Themes;
+
+{ TRxDBVerticalGridDefValues }
+
+procedure TRxDBVerticalGridDefValues.AssignTo(Dest: TPersistent);
+begin
+  if Dest is TRxDBVerticalGridDefValues then
+  begin
+    TRxDBVerticalGridDefValues(Dest).FBlobText:=FBlobText;
+  end
+  else
+    inherited AssignTo(Dest);
+end;
+
+constructor TRxDBVerticalGridDefValues.Create(AOwner: TRxCustomDBVerticalGrid);
+begin
+  inherited Create;
+  FOwner:=AOwner;
+  FBlobText:=sBlobText;
+end;
+
+destructor TRxDBVerticalGridDefValues.Destroy;
+begin
+  inherited Destroy;
+end;
 
 { TRxDBVerticalGridRowsEnumerator }
 
@@ -633,6 +691,22 @@ begin
     result := FRowHeight^;
 end;
 
+function TRxDBVerticalGridRow.GetValueChecked: string;
+begin
+  if FValueChecked = nil then
+    Result := GetDefaultValueChecked
+  else
+    Result := FValueChecked;
+end;
+
+function TRxDBVerticalGridRow.GetValueUnchecked: string;
+begin
+  if FValueUnChecked = nil then
+    Result := GetDefaultValueUnChecked
+  else
+    Result := FValueUnChecked;
+end;
+
 function TRxDBVerticalGridRow.IsAlignmentStored: Boolean;
 begin
   result := FAlignment <> nil;
@@ -676,6 +750,16 @@ end;
 function TRxDBVerticalGridRow.IsFontStored: Boolean;
 begin
   result := not FisDefaultFont;
+end;
+
+function TRxDBVerticalGridRow.IsValueCheckedStored: Boolean;
+begin
+  result := FValueChecked <> nil;
+end;
+
+function TRxDBVerticalGridRow.IsValueUncheckedStored: Boolean;
+begin
+  Result := FValueUnchecked <> nil;
 end;
 
 procedure TRxDBVerticalGridRow.SetAlignment(AValue: TAlignment);
@@ -869,10 +953,48 @@ begin
   RowChanged;
 end;
 
+procedure TRxDBVerticalGridRow.SetValueChecked(AValue: string);
+begin
+  if (FValueChecked=nil) or (CompareText(AValue, FValueChecked)<>0) then
+  begin
+    if FValueChecked<>nil then
+      StrDispose(FValueChecked)
+    else
+    if CompareText(AValue, GetDefaultValueChecked)=0 then
+      exit;
+    FValueChecked := StrNew(PChar(AValue));
+    Changed(False);
+  end;
+end;
+
+procedure TRxDBVerticalGridRow.SetValueUnchecked(AValue: string);
+begin
+  if (FValueUnchecked=nil) or (CompareText(AValue, FValueUnchecked)<>0) then
+  begin
+    if FValueUnchecked<>nil then
+      StrDispose(FValueUnchecked)
+    else
+      if CompareText(AValue, GetDefaultValueUnchecked)=0 then
+        exit;
+    FValueUnchecked := StrNew(PChar(AValue));
+    Changed(False);
+  end;
+end;
+
 procedure TRxDBVerticalGridRow.SetWordWrap(AValue: Boolean);
 begin
   if FWordWrap=AValue then Exit;
   FWordWrap:=AValue;
+end;
+
+function TRxDBVerticalGridRow.GetDefaultValueChecked: string;
+begin
+  result := '1';
+end;
+
+function TRxDBVerticalGridRow.GetDefaultValueUnchecked: string;
+begin
+  result := '0';
 end;
 
 function TRxDBVerticalGridRow.GetDisplayName: string;
@@ -926,6 +1048,15 @@ begin
     result := clWindow
 end;
 
+function TRxDBVerticalGridRow.EditorStyle: TColumnButtonStyle;
+begin
+  Result:=FButtonStyle;
+  if (Result = cbsAuto) then
+    if Assigned(Field) then
+      if Field.DataType = ftBoolean then
+        Result:=cbsCheckboxColumn;
+end;
+
 constructor TRxDBVerticalGridRow.Create(ACollection: TCollection);
 begin
   inherited Create(ACollection);
@@ -952,6 +1083,8 @@ begin
   if Assigned(FColor) then Dispose(FColor);
   if Assigned(FAlignment) then Dispose(FAlignment);
   if Assigned(FRowHeight) then Dispose(FRowHeight);
+  if Assigned(FValueChecked) then StrDispose(FValueChecked);
+  if Assigned(FValueUnchecked) then StrDispose(FValueUnchecked);
 
   inherited Destroy;
 end;
@@ -979,6 +1112,7 @@ begin
     FButtonStyle:=TRxDBVerticalGridRow(Source).ButtonStyle;
     Alignment:=TRxDBVerticalGridRow(Source).Alignment;
     RowTitle:=TRxDBVerticalGridRow(Source).RowTitle;
+    Color:=TRxDBVerticalGridRow(Source).Color;
 
     FImageList:=TRxDBVerticalGridRow(Source).FImageList;
     KeyList:=TRxDBVerticalGridRow(Source).KeyList;
@@ -986,8 +1120,10 @@ begin
     FWordWrap:=TRxDBVerticalGridRow(Source).WordWrap;
     RowHeight:=TRxDBVerticalGridRow(Source).RowHeight;
     ReadOnly:=TRxDBVerticalGridRow(Source).ReadOnly;
-//    PopupMenu:=TRxDBVerticalGridRow(Source).PopupMenu;
+    PopupMenu:=TRxDBVerticalGridRow(Source).PopupMenu;
     Style:=TRxDBVerticalGridRow(Source).Style;
+    Font:=TRxDBVerticalGridRow(Source).Font;
+    FStaticText:=TRxDBVerticalGridRow(Source).StaticText;
   end;
 end;
 
@@ -1050,16 +1186,108 @@ end;
 
 procedure TRxCustomDBVerticalGrid.DrawDataCell(aCol, aRow: Integer;
   aRect: TRect; aState: TGridDrawState; AGridRow: TRxDBVerticalGridRow);
+var
+  S: String;
+  J: Integer;
 begin
   if AGridRow.Style = rxvrData then
   begin
+    if AGridRow.EditorStyle = cbsCheckboxColumn then
+      DrawCheckboxBitmaps(aRect, AGridRow)
+    else
     if Assigned(AGridRow.Field) then
-      WriteTextHeader(Canvas, aRect, AGridRow.Field.DisplayText, AGridRow.Alignment);
+    begin
+      if AGridRow.Field.dataType <> ftBlob then
+      begin
+          S := AGridRow.Field.DisplayText;
+          if (AGridRow.KeyList.Count > 0) and (AGridRow.PickList.Count > 0) then
+          begin
+            J := AGridRow.KeyList.IndexOf(S);
+            if (J >= 0) and (J < AGridRow.PickList.Count) then
+              S := AGridRow.PickList[j];
+          end;
+      end
+      else
+        S := GridDefValues.FBlobText;
+
+      WriteTextHeader(Canvas, aRect, S, AGridRow.Alignment);
+    end;
   end
   else
   if AGridRow.Style = rxvrStaticText then
     if AGridRow.StaticText <> '' then
       WriteTextHeader(Canvas, aRect, AGridRow.StaticText, AGridRow.Alignment);
+end;
+
+procedure TRxCustomDBVerticalGrid.DrawCheckboxBitmaps(aRect: TRect;
+  AGridRow: TRxDBVerticalGridRow);
+const
+  arrtb:array[TCheckboxState] of TThemedButton =
+    (tbCheckBoxUncheckedNormal, tbCheckBoxCheckedNormal, tbCheckBoxMixedNormal);
+var
+  AState: TCheckboxState;
+  aCol: Integer;
+  ChkBitmap: TBitmap;
+  XPos, YPos: Int64;
+  Details: TThemedElementDetails;
+  CSize: TSize;
+  PaintRect: TRect;
+begin
+  if Assigned(AGridRow.Field) then
+  begin
+    if AGridRow.Field.DataType=ftBoolean then
+    begin
+      if AGridRow.Field.IsNull then AState := cbGrayed
+      else
+      if AGridRow.Field.AsBoolean then AState := cbChecked
+      else AState := cbUnChecked
+    end
+    else
+    if AGridRow.Field.AsString=AGridRow.ValueChecked then
+        AState := cbChecked
+    else
+    if AGridRow.Field.AsString=AGridRow.ValueUnChecked then
+      AState := cbUnChecked
+    else
+      AState := cbGrayed
+  end
+  else
+    AState := cbGrayed;
+{
+  if assigned(OnUserCheckboxState) then
+    OnUserCheckboxState(Self, TColumn(ColumnFromGridColumn(aCol)), AState);
+}
+//  DrawGridCheckboxBitmaps(1, 1{dummy}, ARect, AState);
+
+  if (TitleStyle=tsNative) {and not assigned(OnUserCheckboxBitmap)} then
+  begin
+    Details := ThemeServices.GetElementDetails(arrtb[AState]);
+    CSize := ThemeServices.GetDetailSize(Details);
+    CSize.cx := MulDiv(CSize.cx, Font.PixelsPerInch, Screen.PixelsPerInch);
+    CSize.cy := MulDiv(CSize.cy, Font.PixelsPerInch, Screen.PixelsPerInch);
+    case AGridRow.Alignment of
+      taCenter: PaintRect.Left := Trunc((aRect.Left + aRect.Right - CSize.cx)/2);
+      taLeftJustify: PaintRect.Left := ARect.Left + varCellPadding;
+      taRightJustify: PaintRect.Left := ARect.Right - CSize.Cx - varCellPadding - 1;
+    end;
+    PaintRect.Top  := Trunc((aRect.Top + aRect.Bottom - CSize.cy)/2);
+    PaintRect := Bounds(PaintRect.Left, PaintRect.Top, CSize.cx, CSize.cy);
+    ThemeServices.DrawElement(Canvas.Handle, Details, PaintRect, nil);
+  end
+  else
+  begin
+    ChkBitmap := GetImageForCheckBox(aCol, Row, AState);
+    if ChkBitmap<>nil then
+    begin
+      case AGridRow.Alignment of
+        taCenter: XPos := Trunc((aRect.Left+aRect.Right-ChkBitmap.Width)/2);
+        taLeftJustify: XPos := ARect.Left + varCellPadding;
+        taRightJustify: XPos := ARect.Right - ChkBitmap.Width - varCellPadding - 1;
+      end;
+      YPos := Trunc((aRect.Top+aRect.Bottom-ChkBitmap.Height)/2);
+      Canvas.Draw(XPos, YPos, ChkBitmap);
+    end;
+  end;
 end;
 
 procedure TRxCustomDBVerticalGrid.PrepareCanvas(aCol, aRow: Integer;
@@ -1210,6 +1438,13 @@ begin
 //  UpdateActive;
 end;
 
+procedure TRxCustomDBVerticalGrid.SetGridDefValues(
+  AValue: TRxDBVerticalGridDefValues);
+begin
+  if FGridDefValues=AValue then Exit;
+  FGridDefValues:=AValue;
+end;
+
 procedure TRxCustomDBVerticalGrid.SetLabelCoumn(AValue: TGridColumn);
 begin
   Columns[0].Assign(AValue);
@@ -1220,6 +1455,7 @@ begin
   inherited Create(AOwner);
   FDataLink:=TRxDBVerticalGridDataLink.Create(Self);
   FRows:=TRxDBVerticalGridRows.Create(Self, TRxDBVerticalGridRow);
+  FGridDefValues:=TRxDBVerticalGridDefValues.Create(Self);
 
   //ColCount:=2;
   FixedCols:=0;
@@ -1239,6 +1475,7 @@ destructor TRxCustomDBVerticalGrid.Destroy;
 begin
   FreeAndNil(FRows);
   FreeAndNil(FDataLink);
+  FreeAndNil(FGridDefValues);
   inherited Destroy;
 end;
 

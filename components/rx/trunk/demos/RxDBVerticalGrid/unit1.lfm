@@ -10,8 +10,8 @@ object Form1: TForm1
   LCLVersion = '1.9.0.0'
   object RxDBVerticalGrid1: TRxDBVerticalGrid
     Left = 440
-    Height = 304
-    Top = 360
+    Height = 336
+    Top = 328
     Width = 728
     Color = clWindow
     DataCoumn.Title.Alignment = taCenter
@@ -26,6 +26,14 @@ object Form1: TForm1
     LabelCoumn.Width = 120
     Options = [rxvgColumnTitle]
     Rows = <    
+      item
+        Alignment = taCenter
+        FieldName = 'VIP'
+        RowTitle.Caption = 'VIP-клиент'
+        WordWrap = False
+        RowHeight = 27
+        ReadOnly = False
+      end    
       item
         FieldName = 'tb_client_inn'
         RowTitle.Caption = 'ИНН'
@@ -51,16 +59,8 @@ object Form1: TForm1
         PopupMenu = PopupMenu2
       end    
       item
-        FieldName = 'create_user_date'
-        RowTitle.Caption = 'Дата создания'
-        Color = clWhite
-        WordWrap = False
-        RowHeight = 27
-        ReadOnly = False
-      end    
-      item
         Alignment = taCenter
-        FieldName = 'tb_client_ogrn'
+        FieldName = 'TB_CLIENT_EMAIL'
         RowTitle.Caption = 'ОГРН'
         WordWrap = False
         RowHeight = 27
@@ -68,10 +68,10 @@ object Form1: TForm1
         PopupMenu = PopupMenu3
       end    
       item
-        FieldName = 'create_user_name'
-        RowTitle.Caption = 'Описание'
+        FieldName = 'TB_CLIENT_EMAIL'
+        RowTitle.Caption = 'E-Mail'
         WordWrap = False
-        RowHeight = 50
+        RowHeight = 27
         ReadOnly = False
       end    
       item
@@ -81,22 +81,48 @@ object Form1: TForm1
         WordWrap = False
         RowHeight = 27
         ReadOnly = False
+      end    
+      item
+        FieldName = 'CREATE_USER_NAME'
+        RowTitle.Caption = 'Автор'
+        WordWrap = False
+        RowHeight = 27
+        ReadOnly = False
+      end    
+      item
+        FieldName = 'create_user_date'
+        RowTitle.Caption = 'Дата создания'
+        Color = clWhite
+        WordWrap = False
+        RowHeight = 27
+        ReadOnly = False
+      end    
+      item
+        FieldName = 'TB_CLEINT_TYPE'
+        RowTitle.Caption = 'Тип клиента'
+        KeyList.Strings = (
+          '1'
+          '2'
+          '3'
+          '4'
+          '5'
+        )
+        PickList.Strings = (
+          'Группа "А"'
+          'Группа "Б"'
+          'Группа "В"'
+          'Группа "Г"'
+        )
+        WordWrap = False
+        RowHeight = 27
+        ReadOnly = False
       end>
-    RowHeights = (
-      27
-      27
-      27
-      27
-      27
-      27
-      50
-      27
-    )
+    TitleStyle = tsNative
   end
   object RxDBGrid1: TRxDBGrid
     Left = 40
-    Height = 222
-    Top = 72
+    Height = 312
+    Top = 8
     Width = 1080
     ColumnDefValues.BlobText = '(данные)'
     TitleButtons = False
@@ -120,6 +146,19 @@ object Form1: TForm1
         Title.Orientation = toHorizontal
         Title.Caption = 'TB_CLEINT_CODE'
         FieldName = 'TB_CLEINT_CODE'
+        EditButtons = <>
+        Filter.DropDownRows = 0
+        Filter.EmptyValue = '(Пусто)'
+        Filter.AllValue = '(Все значения)'
+        Filter.EmptyFont.Style = [fsItalic]
+        Filter.ItemIndex = -1
+        Footers = <>
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Orientation = toHorizontal
+        Title.Caption = 'VIP'
+        FieldName = 'VIP'
         EditButtons = <>
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Пусто)'
@@ -384,6 +423,10 @@ object Form1: TForm1
         Size = 50
       end    
       item
+        Name = 'VIP'
+        DataType = ftBoolean
+      end    
+      item
         Name = 'CREATE_USER_NAME'
         DataType = ftString
         Precision = -1
@@ -393,6 +436,10 @@ object Form1: TForm1
         Name = 'CREATE_USER_DATE'
         DataType = ftDateTime
         Precision = -1
+      end    
+      item
+        Name = 'TB_CLEINT_TYPE'
+        DataType = ftInteger
       end>
     PacketRecords = 0
     Left = 176
@@ -454,10 +501,20 @@ object Form1: TForm1
       Required = False
       Size = 50
     end
+    object rxDataVIP: TBooleanField
+      FieldKind = fkData
+      FieldName = 'VIP'
+      Index = 6
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      DisplayValues = 'True;False'
+    end
     object rxDataCREATE_USER_NAME: TStringField
       FieldKind = fkData
       FieldName = 'CREATE_USER_NAME'
-      Index = 6
+      Index = 7
       LookupCache = False
       ProviderFlags = [pfInUpdate, pfInWhere]
       ReadOnly = False
@@ -467,7 +524,16 @@ object Form1: TForm1
     object rxDataCREATE_USER_DATE: TDateTimeField
       FieldKind = fkData
       FieldName = 'CREATE_USER_DATE'
-      Index = 7
+      Index = 8
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object rxDataTB_CLEINT_TYPE: TLongintField
+      FieldKind = fkData
+      FieldName = 'TB_CLEINT_TYPE'
+      Index = 9
       LookupCache = False
       ProviderFlags = [pfInUpdate, pfInWhere]
       ReadOnly = False
