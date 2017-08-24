@@ -131,8 +131,10 @@ type
     FButtonStyle: TColumnButtonStyle;
     FColor: ^TColor;
     FAlignment: ^TAlignment;
+    FNotInKeyListIndex: integer;
     FPopupMenu: TPopupMenu;
     FRowHeight: PInteger;
+    FShowBlobImagesAndMemo: boolean;
     FValueChecked: PChar;
     FValueUnchecked: PChar;
 
@@ -180,6 +182,7 @@ type
     procedure SetGroupName(AValue: string);
     procedure SetImageList(AValue: TImageList);
     procedure SetKeyList(AValue: TStrings);
+    procedure SetNotInKeyListIndex(AValue: integer);
     procedure SetPickList(AValue: TStrings);
     procedure SetPopupMenu(AValue: TPopupMenu);
     procedure SetReadOnly(AValue: Boolean);
@@ -189,6 +192,7 @@ type
     procedure ApplyDisplayFormat;
     procedure FontChanged(Sender: TObject);
     procedure KeyListChanged(Sender: TObject);
+    procedure SetShowBlobImagesAndMemo(AValue: boolean);
     procedure SetStaticText(AValue: string);
     procedure SetStyle(AValue: TRxDBVerticalGridRowStyle);
     procedure SetValueChecked(AValue: string);
@@ -225,6 +229,7 @@ type
     property StaticText:string read FStaticText write SetStaticText;
 
     property ImageList: TImageList read FImageList write SetImageList;
+    property NotInKeyListIndex: integer read FNotInKeyListIndex write SetNotInKeyListIndex default -1;
     property KeyList: TStrings read GetKeyList write SetKeyList;
     property PickList: TStrings read GetPickList write SetPickList;
     property Style : TRxDBVerticalGridRowStyle read FStyle write SetStyle default rxvrData;
@@ -234,6 +239,7 @@ type
     property PopupMenu : TPopupMenu read FPopupMenu write SetPopupMenu;
     property ValueChecked: string read GetValueChecked write SetValueChecked stored IsValueCheckedStored;
     property ValueUnchecked: string read GetValueUnchecked write SetValueUnchecked stored IsValueUncheckedStored;
+    property ShowBlobImagesAndMemo:boolean read FShowBlobImagesAndMemo write SetShowBlobImagesAndMemo default false;
   end;
 
   { TRxDBVerticalGridRows }
@@ -274,6 +280,7 @@ type
     FReadOnly: Boolean;
     FRows: TRxDBVerticalGridRows;
     FLinkActive:integer;
+    FTmpPicture:TPicture;
     function GetDataCoumn: TGridColumn;
     function GetDataSource: TDataSource;
     function GetLabelCoumn: TGridColumn;
@@ -286,9 +293,14 @@ type
     procedure RecordChanged;
     procedure RowsChanged(aRow: TRxDBVerticalGridRow);
   protected
+    procedure OutCaptionCellText(aCol, aRow: integer; const aRect: TRect;
+      aState: TGridDrawState; const ACaption: string);
+
     procedure DrawCell(aCol,aRow:Integer; aRect:TRect; aState:TGridDrawState); override;
     procedure DrawDataCell(aCol, aRow:Integer; aRect:TRect; aState:TGridDrawState; AGridRow: TRxDBVerticalGridRow);
     procedure DrawCheckboxBitmaps(aRect: TRect; AGridRow: TRxDBVerticalGridRow);
+    procedure DrawCellBitmap(AGridRow: TRxDBVerticalGridRow; aRect: TRect; aState: TGridDrawState; AImageIndex: integer);
+    procedure DrawDataCellPicture(AGridRow: TRxDBVerticalGridRow; aRect: TRect; aState: TGridDrawState);
 
     procedure PrepareCanvas(aCol, aRow: Integer; aState:TGridDrawState); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -338,7 +350,7 @@ type
   end;
 
 implementation
-uses Forms, rxdconst, LCLType, rxlclutils, StdCtrls, Themes;
+uses LCLType, Math, Forms, rxdconst, rxlclutils, StdCtrls, Themes, LazUTF8;
 
 { TRxDBVerticalGridDefValues }
 
@@ -857,6 +869,13 @@ begin
   RowChanged;
 end;
 
+procedure TRxDBVerticalGridRow.SetNotInKeyListIndex(AValue: integer);
+begin
+  if FNotInKeyListIndex=AValue then Exit;
+  FNotInKeyListIndex:=AValue;
+  RowChanged;
+end;
+
 procedure TRxDBVerticalGridRow.SetPickList(AValue: TStrings);
 begin
   FPickList.Assign(AValue);
@@ -936,6 +955,13 @@ end;
 
 procedure TRxDBVerticalGridRow.KeyListChanged(Sender: TObject);
 begin
+  RowChanged;
+end;
+
+procedure TRxDBVerticalGridRow.SetShowBlobImagesAndMemo(AValue: boolean);
+begin
+  if FShowBlobImagesAndMemo=AValue then Exit;
+  FShowBlobImagesAndMemo:=AValue;
   RowChanged;
 end;
 
@@ -1060,6 +1086,7 @@ end;
 constructor TRxDBVerticalGridRow.Create(ACollection: TCollection);
 begin
   inherited Create(ACollection);
+  FNotInKeyListIndex:=-1;
   FRowTitle:=TRxDBVerticalGridRowTitle.Create(Self);
   FKeyList:=TStringList.Create;
   FKeyList.OnChange:=@KeyListChanged;
@@ -1072,6 +1099,7 @@ begin
   FFont.OnChange := @FontChanged;
   FButtonStyle:=cbsAuto;
   FStyle:=rxvrData;
+  FShowBlobImagesAndMemo:=false;
 end;
 
 destructor TRxDBVerticalGridRow.Destroy;
@@ -1124,6 +1152,7 @@ begin
     Style:=TRxDBVerticalGridRow(Source).Style;
     Font:=TRxDBVerticalGridRow(Source).Font;
     FStaticText:=TRxDBVerticalGridRow(Source).StaticText;
+    FShowBlobImagesAndMemo:=TRxDBVerticalGridRow(Source).ShowBlobImagesAndMemo;
   end;
 end;
 
@@ -1144,10 +1173,31 @@ begin
   if FLinkActive > 0 then Exit;
 
   if Assigned(aRow) then
+    Invalidate
   else
   begin
     if FRows.Count <> RowCount - FixedRows then
       RowCount:=FRows.Count + FixedRows;
+  end;
+end;
+
+procedure TRxCustomDBVerticalGrid.OutCaptionCellText(aCol, aRow: integer;
+  const aRect: TRect; aState: TGridDrawState; const ACaption: string);
+begin
+  if (TitleStyle = tsNative) then
+    DrawThemedCell(aCol, aRow, aRect, aState)
+  else
+  begin
+    Canvas.FillRect(aRect);
+    DrawCellGrid(aCol, aRow, aRect, aState);
+  end;
+
+  if ACaption <> '' then
+  begin
+{    if not (rdgDisableWordWrapTitles in OptionsRx) then
+      WriteTextHeader(Canvas, aRect, ACaption, GetColumnAlignment(aCol, True))
+    else}
+      DrawCellText(aCol, aRow, aRect, aState, ACaption);
   end;
 end;
 
@@ -1161,9 +1211,10 @@ begin
   if (rxvgColumnTitle in FOptions) and (aRow = 0) then
   begin
     if aCol = 0 then
-      DrawCellText(aCol, aRow, aRect, aState, LabelCoumn.Title.Caption)
+      //DrawCellText(aCol, aRow, aRect, aState, LabelCoumn.Title.Caption)
+      OutCaptionCellText(aCol, aRow, aRect, aState, LabelCoumn.Title.Caption)
     else
-      DrawCellText(aCol, aRow, aRect, aState, DataCoumn.Title.Caption)
+      OutCaptionCellText(aCol, aRow, aRect, aState, DataCoumn.Title.Caption)
   end
   else
   begin
@@ -1189,6 +1240,7 @@ procedure TRxCustomDBVerticalGrid.DrawDataCell(aCol, aRow: Integer;
 var
   S: String;
   J: Integer;
+  AImageIndex: LongInt;
 begin
   if AGridRow.Style = rxvrData then
   begin
@@ -1197,6 +1249,13 @@ begin
     else
     if Assigned(AGridRow.Field) then
     begin
+      if Assigned(AGridRow.ImageList) then
+      begin
+        AImageIndex := StrToIntDef(AGridRow.KeyList.Values[AGridRow.Field.AsString], AGridRow.NotInKeyListIndex);
+        if (AImageIndex > -1) and (AImageIndex < AGridRow.ImageList.Count) then
+          DrawCellBitmap(AGridRow, aRect, aState, AImageIndex);
+      end
+      else
       if AGridRow.Field.dataType <> ftBlob then
       begin
           S := AGridRow.Field.DisplayText;
@@ -1208,7 +1267,20 @@ begin
           end;
       end
       else
-        S := GridDefValues.FBlobText;
+      begin
+        if AGridRow.ShowBlobImagesAndMemo then
+        begin
+          DrawDataCellPicture(AGridRow, aRect, aState);
+          exit;
+        end
+        else
+        begin
+          if AGridRow.Field.IsNull then
+            S := GridDefValues.FBlobText
+          else
+            S := UTF8UpperCase(GridDefValues.FBlobText);
+        end;
+      end;
 
       WriteTextHeader(Canvas, aRect, S, AGridRow.Alignment);
     end;
@@ -1287,6 +1359,122 @@ begin
       YPos := Trunc((aRect.Top+aRect.Bottom-ChkBitmap.Height)/2);
       Canvas.Draw(XPos, YPos, ChkBitmap);
     end;
+  end;
+end;
+
+procedure TRxCustomDBVerticalGrid.DrawCellBitmap(
+  AGridRow: TRxDBVerticalGridRow; aRect: TRect; aState: TGridDrawState;
+  AImageIndex: integer);
+var
+  H, W: Integer;
+  ClientSize: TSize;
+begin
+  InflateRect(aRect, -1, -1);
+
+  H := AGridRow.ImageList.Height;
+  W := AGridRow.ImageList.Width;
+
+  ClientSize.cx := Min(aRect.Right - aRect.Left, W);
+  ClientSize.cy := Min(aRect.Bottom - aRect.Top, H);
+
+  if ClientSize.cx = W then
+  begin
+    aRect.Left := (aRect.Left + aRect.Right - W) div 2;
+    aRect.Right := aRect.Left + W;
+  end;
+
+  if ClientSize.cy = H then
+  begin
+    aRect.Top := (aRect.Top + aRect.Bottom - H) div 2;
+    aRect.Bottom := aRect.Top + H;
+  end;
+
+  AGridRow.ImageList.StretchDraw(Canvas, AImageIndex, aRect);
+end;
+
+procedure TRxCustomDBVerticalGrid.DrawDataCellPicture(
+  AGridRow: TRxDBVerticalGridRow; aRect: TRect; aState: TGridDrawState);
+
+function PicDrawRect:TRect;
+var
+  PicWidth, PicHeight: LongInt;
+  ImgWidth, ImgHeight, w, h, ChangeX, ChangeY: Integer;
+  PicInside, PicOutside, PicOutsidePartial: Boolean;
+begin
+  PicWidth := FTmpPicture.Width;
+  PicHeight := FTmpPicture.Height;
+  ImgWidth := aRect.Width;
+  ImgHeight := aRect.Height;
+  if (PicWidth=0) or (PicHeight=0) then Exit(Rect(0, 0, 0, 0));
+
+  PicInside := (PicWidth<ImgWidth) and (PicHeight<ImgHeight);
+  PicOutside := (PicWidth>ImgWidth) and (PicHeight>ImgHeight);
+  PicOutsidePartial := (PicWidth>ImgWidth) or (PicHeight>ImgHeight);
+
+{  if Stretch or (Proportional and PicOutsidePartial) then
+    if (FStretchOutEnabled or PicOutside) and
+       (FStretchInEnabled or PicInside) then
+      if Proportional then }
+      begin
+        w:=ImgWidth;
+        h:=(PicHeight*w) div PicWidth;
+        if h>ImgHeight then
+        begin
+          h:=ImgHeight;
+          w:=(PicWidth*h) div PicHeight;
+        end;
+        PicWidth:=w;
+        PicHeight:=h;
+      end
+{      else begin
+        PicWidth := ImgWidth;
+        PicHeight := ImgHeight;
+      end};
+
+  Result := Rect(0, 0, PicWidth, PicHeight);
+
+
+  case AGridRow.Alignment of
+    //taLeftJustify,
+    taRightJustify :
+      begin
+        ChangeX := ImgWidth-PicWidth;
+        ChangeY := ImgHeight-PicHeight;
+        {if FKeepOriginXWhenClipped and (ChangeX<0) then ChangeX := 0;
+        if FKeepOriginYWhenClipped and (ChangeY<0) then ChangeY := 0;}
+        OffsetRect(Result, ChangeX, ChangeY);
+      end;
+    taCenter :
+      begin
+        ChangeX := (ImgWidth-PicWidth) div 2;
+        ChangeY := (ImgHeight-PicHeight) div 2;
+        {if FKeepOriginXWhenClipped and (ChangeX<0) then ChangeX := 0;
+        if FKeepOriginYWhenClipped and (ChangeY<0) then ChangeY := 0;}
+        OffsetRect(Result, ChangeX, ChangeY);
+      end;
+  end;
+  OffsetRect(Result, aRect.Left, aRect.Top);
+  InflateRect(Result, -constCellPadding, -constCellPadding);
+end;
+
+var
+  St: TStream;
+begin
+  St:=AGridRow.Field.DataSet.CreateBlobStream(AGridRow.Field, bmRead);
+  if not Assigned(St) then Exit;
+  try
+    if St.Size > 0 then
+    begin
+      if not Assigned(FTmpPicture) then
+        FTmpPicture:=TPicture.Create;
+
+      FTmpPicture.LoadFromStream(st);
+
+      if Assigned(FTmpPicture.Graphic) then
+        Canvas.StretchDraw(PicDrawRect, FTmpPicture.Graphic);
+    end;
+  finally
+    St.Free;
   end;
 end;
 
@@ -1476,6 +1664,8 @@ begin
   FreeAndNil(FRows);
   FreeAndNil(FDataLink);
   FreeAndNil(FGridDefValues);
+  if Assigned(FTmpPicture) then
+    FreeAndNil(FTmpPicture);
   inherited Destroy;
 end;
 
