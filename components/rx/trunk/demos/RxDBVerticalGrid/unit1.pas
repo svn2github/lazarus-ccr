@@ -32,6 +32,7 @@ type
     MenuItem7: TMenuItem;
     MenuItem8: TMenuItem;
     MenuItem9: TMenuItem;
+    Panel1: TPanel;
     PopupMenu1: TPopupMenu;
     PopupMenu2: TPopupMenu;
     PopupMenu3: TPopupMenu;
@@ -51,6 +52,7 @@ type
     RxDBGrid1: TRxDBGrid;
     RxDBVerticalGrid1: TRxDBVerticalGrid;
     rxData: TRxMemoryData;
+    Splitter1: TSplitter;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);

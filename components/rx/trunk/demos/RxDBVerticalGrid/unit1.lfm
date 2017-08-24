@@ -7,12 +7,14 @@ object Form1: TForm1
   ClientHeight = 749
   ClientWidth = 1206
   OnCreate = FormCreate
+  Position = poScreenCenter
   LCLVersion = '1.9.0.0'
   object RxDBVerticalGrid1: TRxDBVerticalGrid
-    Left = 440
-    Height = 416
-    Top = 328
-    Width = 728
+    Left = 899
+    Height = 642
+    Top = 107
+    Width = 307
+    Align = alClient
     Color = clWindow
     GridDefValues.BlobText = '(данные)'
     DataCoumn.Title.Alignment = taCenter
@@ -168,10 +170,10 @@ object Form1: TForm1
     )
   end
   object RxDBGrid1: TRxDBGrid
-    Left = 40
-    Height = 312
-    Top = 8
-    Width = 1080
+    Left = 0
+    Height = 642
+    Top = 107
+    Width = 894
     ColumnDefValues.BlobText = '(данные)'
     TitleButtons = False
     AutoSort = True
@@ -353,6 +355,7 @@ object Form1: TForm1
     SearchOptions.QuickSearchOptions = [loCaseInsensitive, loPartialKey]
     SearchOptions.FromStart = False
     OptionsRx = [rdgAllowColumnsForm, rdgAllowDialogFind, rdgAllowQuickFilter]
+    Align = alLeft
     Color = clWindow
     DrawFullLine = False
     FocusColor = clRed
@@ -363,69 +366,106 @@ object Form1: TForm1
     TabOrder = 1
     TitleStyle = tsNative
   end
-  object Button1: TButton
-    Left = 208
-    Height = 36
-    Top = 430
-    Width = 80
+  object Panel1: TPanel
+    Left = 0
+    Height = 107
+    Top = 0
+    Width = 1206
+    Align = alTop
     AutoSize = True
-    Caption = 'Diconnect'
-    OnClick = Button1Click
+    ClientHeight = 107
+    ClientWidth = 1206
     TabOrder = 2
+    object Button1: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 7
+      Height = 36
+      Top = 7
+      Width = 80
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Caption = 'Diconnect'
+      OnClick = Button1Click
+      TabOrder = 0
+    end
+    object Button2: TButton
+      AnchorSideLeft.Control = Button1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      Left = 93
+      Height = 36
+      Top = 7
+      Width = 69
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Caption = 'Connect'
+      OnClick = Button2Click
+      TabOrder = 1
+    end
+    object RadioGroup1: TRadioGroup
+      AnchorSideLeft.Control = Button2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      Left = 168
+      Height = 93
+      Top = 7
+      Width = 83
+      AutoFill = True
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Caption = 'Image align'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 72
+      ClientWidth = 81
+      ItemIndex = 0
+      Items.Strings = (
+        'Left'
+        'Rigth'
+        'Center'
+      )
+      OnClick = CheckBox1Change
+      TabOrder = 2
+    end
+    object CheckBox2: TCheckBox
+      AnchorSideLeft.Control = RadioGroup1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = CheckBox1
+      AnchorSideTop.Side = asrBottom
+      Left = 257
+      Height = 24
+      Top = 37
+      Width = 111
+      BorderSpacing.Around = 6
+      Caption = 'Show images'
+      OnChange = CheckBox1Change
+      TabOrder = 3
+    end
+    object CheckBox1: TCheckBox
+      AnchorSideLeft.Control = RadioGroup1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      Left = 257
+      Height = 24
+      Top = 7
+      Width = 110
+      BorderSpacing.Around = 6
+      Caption = 'Show header'
+      OnChange = CheckBox1Change
+      TabOrder = 4
+    end
   end
-  object Button2: TButton
-    Left = 208
-    Height = 36
-    Top = 472
-    Width = 69
-    AutoSize = True
-    Caption = 'Connect'
-    OnClick = Button2Click
-    TabOrder = 3
-  end
-  object CheckBox1: TCheckBox
-    Left = 28
-    Height = 24
-    Top = 341
-    Width = 110
-    Caption = 'Show header'
-    OnChange = CheckBox1Change
-    TabOrder = 4
-  end
-  object RadioGroup1: TRadioGroup
-    Left = 24
-    Height = 93
-    Top = 400
-    Width = 83
-    AutoFill = True
-    AutoSize = True
-    Caption = 'Image align'
-    ChildSizing.LeftRightSpacing = 6
-    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-    ChildSizing.EnlargeVertical = crsHomogenousChildResize
-    ChildSizing.ShrinkHorizontal = crsScaleChilds
-    ChildSizing.ShrinkVertical = crsScaleChilds
-    ChildSizing.Layout = cclLeftToRightThenTopToBottom
-    ChildSizing.ControlsPerLine = 1
-    ClientHeight = 72
-    ClientWidth = 81
-    ItemIndex = 0
-    Items.Strings = (
-      'Left'
-      'Rigth'
-      'Center'
-    )
-    OnClick = CheckBox1Change
-    TabOrder = 5
-  end
-  object CheckBox2: TCheckBox
-    Left = 28
-    Height = 24
-    Top = 368
-    Width = 111
-    Caption = 'Show images'
-    OnChange = CheckBox1Change
-    TabOrder = 6
+  object Splitter1: TSplitter
+    Left = 894
+    Height = 642
+    Top = 107
+    Width = 5
   end
   object dsData: TDataSource
     DataSet = rxData

@@ -292,6 +292,7 @@ type
     procedure SetRows(AValue: TRxDBVerticalGridRows);
     procedure RecordChanged;
     procedure RowsChanged(aRow: TRxDBVerticalGridRow);
+    procedure UpdateRowsHight;
   protected
     procedure OutCaptionCellText(aCol, aRow: integer; const aRect: TRect;
       aState: TGridDrawState; const ACaption: string);
@@ -1181,6 +1182,19 @@ begin
   end;
 end;
 
+procedure TRxCustomDBVerticalGrid.UpdateRowsHight;
+var
+  R: TRxDBVerticalGridRow;
+  i: Integer;
+begin
+  for R in Rows do
+    RowHeights[R.Index + FixedRows]:=R.RowHeight;
+
+  if FixedRows > 0 then
+    for i:=0 to FixedRows-1 do
+      RowHeights[i]:=DefaultRowHeight;
+end;
+
 procedure TRxCustomDBVerticalGrid.OutCaptionCellText(aCol, aRow: integer;
   const aRect: TRect; aState: TGridDrawState; const ACaption: string);
 begin
@@ -1596,6 +1610,8 @@ begin
     RowCount:=RowCount - 1;
     FixedRows:=0;
   end;
+
+  UpdateRowsHight;
 end;
 
 function TRxCustomDBVerticalGrid.GetDataSource: TDataSource;
