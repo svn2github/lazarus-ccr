@@ -3225,6 +3225,7 @@ var
   MLRec1, P: TMLCaptionItem;
   MLRec2: TMLCaptionItem;
   tmpCanvas: TCanvas;
+  FWC: SizeInt;
 begin
  FDefRowH:=GetDefaultRowHeight;
 
