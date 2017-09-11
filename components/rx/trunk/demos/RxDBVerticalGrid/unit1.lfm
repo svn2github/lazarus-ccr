@@ -148,7 +148,7 @@ object Form1: TForm1
         FieldName = 'TB_CLEINT_MEMO'
         RowTitle.Caption = 'Описание'
         WordWrap = False
-        RowHeight = 27
+        RowHeight = 90
         ReadOnly = False
       end>
     TitleStyle = tsNative
@@ -166,7 +166,7 @@ object Form1: TForm1
       20
       20
       90
-      27
+      90
     )
   end
   object RxDBGrid1: TRxDBGrid

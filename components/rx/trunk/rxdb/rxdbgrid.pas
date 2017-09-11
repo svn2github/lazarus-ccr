@@ -3219,14 +3219,15 @@ end;
 procedure TRxDBGrid.CalcTitle;
 var
   i, j: integer;
-  H, H1, W, {H2,} W1: integer;
+  H, H1, W, W1, FDefRowH: integer;
   rxCol, rxColNext: TRxColumn;
   rxTit, rxTitleNext: TRxColumnTitle;
   MLRec1, P: TMLCaptionItem;
   MLRec2: TMLCaptionItem;
   tmpCanvas: TCanvas;
-  //S: string;
 begin
+ FDefRowH:=GetDefaultRowHeight;
+
   { TODO -oalexs : need rewrite code - split to 2 step:
 1. make links between column
 2. calc title width for all linked column series }
@@ -3324,14 +3325,14 @@ begin
       begin
         if rxTit.Orientation in [toVertical270, toVertical90] then
           H1 := Max((tmpCanvas.TextWidth(Columns[i].Title.Caption) +
-            tmpCanvas.TextWidth('W')) div GetDefaultRowHeight, H)
+            tmpCanvas.TextWidth('W')) div FDefRowH, H)
         else
         begin
           if rxTit.CaptionLinesCount = 0 then
           begin
             H1 := Max((tmpCanvas.TextWidth(rxTit.Caption) + 2) div W + 1, H);
-            if H1 > WordCount(rxTit.Caption, [' ']) then
-              H1 := WordCount(rxTit.Caption, [' ']);
+            FWC:=WordCount(rxTit.Caption, [' ']);
+            if H1 > FWC then H1 := FWC;
           end
           else
           begin
@@ -3374,9 +3375,9 @@ begin
     end;
 
     if not (rdgDisableWordWrapTitles in OptionsRx) then
-      RowHeights[0] := GetDefaultRowHeight * H
+      RowHeights[0] := FDefRowH * H
     else
-      RowHeights[0] := GetDefaultRowHeight;
+      RowHeights[0] := FDefRowH;
 
     if rdgFilter in OptionsRx then
     begin
@@ -3386,7 +3387,7 @@ begin
       end
       else
       begin
-        RowHeights[0] := RowHeights[0] + GetDefaultRowHeight;
+        RowHeights[0] := RowHeights[0] + FDefRowH;
       end;
     end;
 

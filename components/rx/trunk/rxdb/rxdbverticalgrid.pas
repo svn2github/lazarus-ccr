@@ -1270,17 +1270,7 @@ begin
           DrawCellBitmap(AGridRow, aRect, aState, AImageIndex);
       end
       else
-      if AGridRow.Field.dataType <> ftBlob then
-      begin
-          S := AGridRow.Field.DisplayText;
-          if (AGridRow.KeyList.Count > 0) and (AGridRow.PickList.Count > 0) then
-          begin
-            J := AGridRow.KeyList.IndexOf(S);
-            if (J >= 0) and (J < AGridRow.PickList.Count) then
-              S := AGridRow.PickList[j];
-          end;
-      end
-      else
+      if AGridRow.Field.dataType = ftBlob then
       begin
         if AGridRow.ShowBlobImagesAndMemo then
         begin
@@ -1294,6 +1284,29 @@ begin
           else
             S := UTF8UpperCase(GridDefValues.FBlobText);
         end;
+      end
+      else
+      if AGridRow.Field.dataType = ftMemo then
+      begin
+        if AGridRow.ShowBlobImagesAndMemo then
+          S := AGridRow.Field.AsString
+        else
+        begin
+          if AGridRow.Field.IsNull then
+            S := GridDefValues.FBlobText
+          else
+            S := UTF8UpperCase(GridDefValues.FBlobText);
+        end;
+      end
+      else
+      begin
+          S := AGridRow.Field.DisplayText;
+          if (AGridRow.KeyList.Count > 0) and (AGridRow.PickList.Count > 0) then
+          begin
+            J := AGridRow.KeyList.IndexOf(S);
+            if (J >= 0) and (J < AGridRow.PickList.Count) then
+              S := AGridRow.PickList[j];
+          end;
       end;
 
       WriteTextHeader(Canvas, aRect, S, AGridRow.Alignment);

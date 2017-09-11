@@ -106,6 +106,7 @@ begin
     2:RxDBVerticalGrid1.Rows[11].Alignment:=taCenter;
   end;
   RxDBVerticalGrid1.Rows[11].ShowBlobImagesAndMemo:=CheckBox2.Checked;
+  RxDBVerticalGrid1.Rows[12].ShowBlobImagesAndMemo:=CheckBox2.Checked;
 
 end;
 
@@ -142,7 +143,7 @@ end;
 
 begin
   rxData.Open;
-  AppendRecord(1, 1, '01000100101', 'JSC "BOOT"', 'Описание', 'test1@email.com', '5(555)-557-88-77', 'alexs', true, 'splash_logo.png');
+  AppendRecord(1, 1, '01000100101', 'JSC "BOOT"', 'Описание'#13'Строка 2'#13'Строка 3', 'test1@email.com', '5(555)-557-88-77', 'alexs', true, 'splash_logo.png');
   AppendRecord(2, 2, '02000100101', 'Wikimedia Foundation, Inc.', 'Описание', 'test2@email.com', '5(555)-557-88-77', 'boss', false, 'splash_logo.xpm');
   AppendRecord(3, 3, '03000100101', 'LLC Pilot ', 'Описание', 'test3@email.com', '5(555)-557-88-77', 'master', false, 'powered_by.png');
   AppendRecord(4, 4, '04000100101', 'Pilot, OOO', 'Описание', 'test4@email.com', '5(555)-557-88-77', 'onegin', false, 'folder.png');
