@@ -56,7 +56,7 @@ uses
   RxAppIcon,
   {$ENDIF}
   Dialogs, ComponentEditors, DBPropEdits, rxctrls, RxAutoPanel, rxpickdate, rxtooledit, rxclock,
-  rxspin, RxTimeEdit, rxDateRangeEditUnit, RxAboutDialog, RxViewsPanel, RxMDI;
+  rxspin, RxTimeEdit, rxDateRangeEditUnit, RxAboutDialog, RxViewsPanel, RxMDI, RxRangeSel;
 
 {$R rx.res}
 
@@ -170,6 +170,11 @@ begin
   RegisterComponents(RxCtrllPageName,[TRxDateRangeEdit]);
 end;
 
+procedure RegisterRxRangeSelUnit;
+begin
+  RegisterComponents(RxCtrllPageName,[TRxRangeSelector]);
+end;
+
 procedure Register;
 begin
   //RX
@@ -198,6 +203,7 @@ begin
   RegisterUnit('RxHistoryNavigator', @RegisterRxHistoryNavigator);
   RegisterUnit('RxMDI', @RegisterRxMDI);
   RegisterUnit('rxDateRangeEditUnit', @RegisterrxDateRangeEditUnit);
+  RegisterUnit('RxRangeSel', @RegisterRxRangeSelUnit);
 
 end;
 

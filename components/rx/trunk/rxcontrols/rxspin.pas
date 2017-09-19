@@ -758,8 +758,6 @@ begin
 end;
 
 procedure TRxSpinEdit.LMSize(var Message: TLMSize);
-var
-  MinHeight: Integer;
 begin
   inherited;
   ResizeButton;

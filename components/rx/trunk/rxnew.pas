@@ -21,7 +21,7 @@ uses
   RxIniPropStorage, rxlclconst, rxlogin, RxMDI, rxpagemngr, rxpickdate, 
   rxShortCutUnit, rxspin, rxswitch, RxSystemServices, rxtbrsetup, RxTimeEdit, 
   rxtoolbar, rxtooledit, RxDBGrid_PopUpFilterUnit, rxdbverticalgrid, 
-  rxlclutils, LazarusPackageIntf;
+  rxlclutils, RxRangeSel, LazarusPackageIntf;
 
 implementation
 

@@ -3,7 +3,7 @@
   <ProjectSession>
     <Version Value="10"/>
     <BuildModes Active="Default"/>
-    <Units Count="73">
+    <Units Count="74">
       <Unit0>
         <Filename Value="project1.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -43,7 +43,7 @@
       <Unit4>
         <Filename Value="../../../../lcl/grids.pas"/>
         <UnitName Value="Grids"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="985"/>
         <CursorPos X="15" Y="1001"/>
         <UsageCount Value="22"/>
@@ -176,7 +176,7 @@
       </Unit21>
       <Unit22>
         <Filename Value="../../rxdb/rxdbverticalgrid.pas"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="4"/>
         <TopLine Value="1289"/>
         <CursorPos X="26" Y="1290"/>
         <UsageCount Value="25"/>
@@ -542,6 +542,17 @@
         <CursorPos X="10" Y="331"/>
         <UsageCount Value="9"/>
       </Unit72>
+      <Unit73>
+        <Filename Value="unit1.lfm"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="24" Y="23"/>
+        <ExtraEditorCount Value="1"/>
+        <ExtraEditor1>
+          <EditorIndex Value="-1"/>
+        </ExtraEditor1>
+        <UsageCount Value="10"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit73>
     </Units>
     <JumpHistory Count="28" HistoryIndex="27">
       <Position1>

@@ -922,7 +922,9 @@ type
     function  GetDefaultEditor(Column: Integer): TWinControl; override;
 
     procedure PrepareCanvas(aCol, aRow: Integer; AState: TGridDrawState); override;
-
+{$IFDEF DEVELOPER_RX}
+    procedure InternalAdjustRowCount(var RecCount:integer); override;
+{$ENDIF}
     property Editor;
   public
     constructor Create(AOwner: TComponent); override;
@@ -5060,33 +5062,31 @@ begin
 end;
 
 procedure TRxDBGrid.KeyDown(var Key: word; Shift: TShiftState);
-//var
-//  FTmpReadOnly: boolean;
 
-  procedure DoShowFindDlg;
-  begin
-    if not (rdgAllowDialogFind in OptionsRx) then
-      exit;
-    if Length(QuickUTF8Search) > 0 then
-      QuickUTF8Search := '';
-    ShowFindDialog;
-  end;
+procedure DoShowFindDlg;
+begin
+  if not (rdgAllowDialogFind in OptionsRx) then
+    exit;
+  if Length(QuickUTF8Search) > 0 then
+    QuickUTF8Search := '';
+  ShowFindDialog;
+end;
 
-  procedure DoShowColumnsDlg;
-  begin
-    if not (rdgAllowColumnsForm in OptionsRx) then
-      exit;
-    if Length(QuickUTF8Search) > 0 then
-      QuickUTF8Search := '';
-    ShowColumnsDialog;
-  end;
+procedure DoShowColumnsDlg;
+begin
+  if not (rdgAllowColumnsForm in OptionsRx) then
+    exit;
+  if Length(QuickUTF8Search) > 0 then
+    QuickUTF8Search := '';
+  ShowColumnsDialog;
+end;
 
-  procedure DoShowQuickFilter;
-  begin
-    if not (rdgAllowQuickFilter in FOptionsRx) then
-      exit;
-    OnFilter(Self);
-  end;
+procedure DoShowQuickFilter;
+begin
+  if not (rdgAllowQuickFilter in FOptionsRx) then
+    exit;
+  OnFilter(Self);
+end;
 
 begin
   if (Key in CCancelQuickSearchKeys) then
@@ -5230,6 +5230,10 @@ begin
       H:=H - GetDefaultRowHeight * FFooterOptions.RowCount;
 
     Result := H div GetDefaultRowHeight;
+
+    if rdgFilter in OptionsRx then
+      Dec(Result, 1);
+
     if dgTitles in Options then
       Dec(Result, 1);
   end
@@ -6342,6 +6346,109 @@ begin
           AState := AState + [gdSelected, gdFocused];
   inherited PrepareCanvas(aCol, aRow, AState);
 end;
+
+{$IFDEF DEVELOPER_RX}
+type
+  THackDataLink = class(TDataLink)
+
+  end;
+
+procedure TRxDBGrid.InternalAdjustRowCount(var RecCount: integer);
+var
+  CurActiveRecord, j, H1, FRec, H, H2: Integer;
+  i: LongInt;
+  R: TRxColumn;
+  F: TField;
+  S: String;
+begin
+  inherited InternalAdjustRowCount(RecCount);
+
+  if (not (Assigned(DataLink) and DataLink.Active)) or ((GCache.VisibleGrid.Top=0) and (GCache.VisibleGrid.Bottom=0)) then
+    exit;
+
+  CurActiveRecord:=DataLink.ActiveRecord;
+
+  if dgTitles in Options then
+  begin
+    FRec:=1;
+    H2:=1;
+  end
+  else
+  begin
+    FRec:=0;
+    H2:=0;
+  end;
+
+  for i:=GCache.VisibleGrid.Top to GCache.VisibleGrid.Bottom do
+  begin
+    DataLink.ActiveRecord:=i - FixedRows;
+//    P:=PtrInt(DataSource.DataSet.ActiveBuffer);
+    H:=1;
+    for j:=0 to Columns.Count-1 do
+    begin
+      R:=Columns[j] as TRxColumn;
+      if R.WordWrap then
+      begin
+        F:=R.Field;
+        if Assigned(F) then
+          S:=F.DisplayText
+        else
+          S:='';
+
+        H1 := Max((Canvas.TextWidth(S) + 2) div R.Width + 1, H);
+        if H1 > WordCount(S, [' ']) then
+          H1 := WordCount(S, [' ']);
+      end
+      else
+        H1:=1;
+      H:=Max(H, H1);
+    end;
+
+
+{
+
+    if FGroupItems.Active and DatalinkActive then
+      if Assigned(FGroupItems.FindGroupItem(DataSource.DataSet.Bookmark)) then
+        Inc(H);
+
+
+    if i<RowCount then
+    begin
+      if Assigned(FOnCalcRowHeight) then
+        FOnCalcRowHeight(Self, H);
+      RowHeights[i] := GetDefaultRowHeight * H;
+      H2:=H2 + RowHeights[i];
+      if H2<=ClientHeight  then
+        Inc(Result);
+    end;}
+
+    if H2 + H > RecCount then
+    begin
+//      RecCount:=FRec;
+      if (FRec < FixedRows + CurActiveRecord) {and (CurActiveRecord = DataLink.ActiveRecord)} then
+      begin
+        TopRow:=1;
+//        THackDataLink(DataLink).FirstRecord:=THackDataLink(DataLink).FirstRecord + 1;
+{        H:=CurActiveRecord - DataLink.ActiveRecord;
+        THackDataLink(DataLink).FirstRecord:=THackDataLink(DataLink).FirstRecord + 1;
+        THackDataSet(DataLink.DataSet).RecalcBufListSize;}
+//        THackDataLink(DataLink).BufferCount:=FRec;
+        H:=0;
+      end;
+//      DataLink.BufferCount:=FRec;
+//      break;
+    end
+    else
+    begin
+      FRec:=FRec + 1;
+      H2:=H2 + H;
+    end;
+  end;
+
+  DataLink.ActiveRecord:=CurActiveRecord;
+
+end;
+{$ENDIF}
 
 procedure TRxDBGrid.GetOnCreateLookup;
 begin
