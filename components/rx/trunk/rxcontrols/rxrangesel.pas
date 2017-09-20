@@ -324,7 +324,10 @@ begin
   {$IFDEF WINDOWS}
   if (FStyle = rxrsNative) and ThemeServices.ThemesEnabled then
   begin
-    TD:=ThemeServices.GetElementDetails(ttbThumbBottomPressed);
+    if FOrientation = trHorizontal then
+      TD:=ThemeServices.GetElementDetails(ttbThumbBottomPressed)
+    else
+      TD:=ThemeServices.GetElementDetails(ttbThumbRightPressed);
     FThumbSize:=ThemeServices.GetDetailSize(TD);
   end
   else
@@ -400,9 +403,12 @@ function TRxCustomRangeSelector.LogicalToScreen(const LogicalPos: double
   ): double;
 begin
   if FOrientation = trHorizontal then
-    Result := FThumbSize.CX + BarWidth * (LogicalPos - FMin) / (FMax - FMin)
+    Result := FThumbSize.CX
   else
-    Result := FThumbSize.CY + BarWidth * (LogicalPos - FMin) / (FMax - FMin)
+    Result := FThumbSize.CY;
+
+  if (FMax - FMin) > 0 then
+    Result := Result + BarWidth * (LogicalPos - FMin) / (FMax - FMin)
 end;
 
 function TRxCustomRangeSelector.BarWidth: integer;
@@ -488,16 +494,29 @@ begin
   {$IFDEF WINDOWS}
   if (FStyle = rxrsNative) and ThemeServices.ThemesEnabled then
   begin
-    DE:=ThemeServices.GetElementDetails(ttbThumbBottomPressed);
+    if FOrientation = trHorizontal then
+      DE:=ThemeServices.GetElementDetails(ttbThumbBottomPressed)
+    else
+      DE:=ThemeServices.GetElementDetails(ttbThumbRightPressed);
+
     ThemeServices.DrawElement( Canvas.Handle, DE, FThumbPosTop);
 
-    DE:=ThemeServices.GetElementDetails(ttbThumbTopPressed);
+    if FOrientation = trHorizontal then
+      DE:=ThemeServices.GetElementDetails(ttbThumbTopPressed)
+    else
+      DE:=ThemeServices.GetElementDetails(ttbThumbLeftPressed);
     ThemeServices.DrawElement( Canvas.Handle, DE, FThumbPosBottom);
 
-    DE:=ThemeServices.GetElementDetails(ttbTrack);
+    if FOrientation = trHorizontal then
+      DE:=ThemeServices.GetElementDetails(ttbTrack)
+    else
+      DE:=ThemeServices.GetElementDetails(ttbTrackVert);
     ThemeServices.DrawElement( Canvas.Handle, DE, FTracerPos);
 
-    DE:=ThemeServices.GetElementDetails(ttbThumbNormal);
+    if FOrientation = trHorizontal then
+      DE:=ThemeServices.GetElementDetails(ttbThumbNormal)
+    else
+      DE:=ThemeServices.GetElementDetails(ttbThumbVertNormal);
     ThemeServices.DrawElement( Canvas.Handle, DE, FSelectedPos);
   end
   else

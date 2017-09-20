@@ -15,8 +15,10 @@ type
   TForm1 = class(TForm)
     Label1: TLabel;
     RadioGroup1: TRadioGroup;
+    RadioGroup2: TRadioGroup;
     RxRangeSelector1: TRxRangeSelector;
     procedure RadioGroup1Click(Sender: TObject);
+    procedure RadioGroup2Click(Sender: TObject);
     procedure RxRangeSelector1Change(Sender: TObject);
   private
   public
@@ -35,6 +37,16 @@ uses Themes;
 procedure TForm1.RadioGroup1Click(Sender: TObject);
 begin
   RxRangeSelector1.Style:=TRxRangeSelectorStyle(RadioGroup1.ItemIndex);
+end;
+
+procedure TForm1.RadioGroup2Click(Sender: TObject);
+var
+  W: Integer;
+begin
+  RxRangeSelector1.Orientation:=TTrackBarOrientation(RadioGroup2.ItemIndex);
+  W:=RxRangeSelector1.Width;
+  RxRangeSelector1.Width:=RxRangeSelector1.Height;
+  RxRangeSelector1.Height:=W;
 end;
 
 procedure TForm1.RxRangeSelector1Change(Sender: TObject);
