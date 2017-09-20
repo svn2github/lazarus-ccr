@@ -36,7 +36,7 @@ unit RxRangeSel;
 interface
 
 uses
-  Classes, SysUtils, Types, Controls, LMessages, Graphics;
+  Classes, SysUtils, Types, Controls, LMessages, Graphics, ComCtrls;
 
 type
   TRxRangeSelectorState =
@@ -55,6 +55,7 @@ type
     FMax: Double;
     FMin: Double;
     FOnChange: TNotifyEvent;
+    FOrientation: TTrackBarOrientation;
     FSelectedEnd: Double;
     FSelectedGlyph: TBitmap;
     FSelectedStart: Double;
@@ -82,6 +83,7 @@ type
     procedure SetBackgroudGlyph(AValue: TBitmap);
     procedure SetMax(AValue: Double);
     procedure SetMin(AValue: Double);
+    procedure SetOrientation(AValue: TTrackBarOrientation);
     procedure SetSelectedEnd(AValue: Double);
     procedure SetSelectedGlyph(AValue: TBitmap);
     procedure SetSelectedStart(AValue: Double);
@@ -94,6 +96,7 @@ type
     function BarWidth: integer;
     procedure SetState(AValue: TRxRangeSelectorState);
     function DeduceState(const AX, AY: integer; const ADown: boolean): TRxRangeSelectorState;
+    procedure InitImages(AOrient:TTrackBarOrientation);
   protected
     procedure Paint; override;
     class function GetControlClassDefaultSize: TSize; override;
@@ -118,9 +121,10 @@ type
     property SelectedLength : Double read GetSelectedLength;
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
     property Style:TRxRangeSelectorStyle read FStyle write SetStyle;
-    property ThumbTopGlyph: TBitmap read GetThumbTopGlyph write SetThumbTopGlyph {stored IsThumbTopGlyphStored};
-    property ThumbBottomGlyph: TBitmap read GetThumbBottomGlyph write SetThumbBottomGlyph {stored IsThumbBottomGlyphStored};
+    property ThumbTopGlyph: TBitmap read GetThumbTopGlyph write SetThumbTopGlyph stored IsThumbTopGlyphStored;
+    property ThumbBottomGlyph: TBitmap read GetThumbBottomGlyph write SetThumbBottomGlyph stored IsThumbBottomGlyphStored;
     property State:TRxRangeSelectorState read FState;
+    property Orientation:TTrackBarOrientation read FOrientation write SetOrientation default trHorizontal;
   end;
 
   { TRxRangeSelector }
@@ -141,10 +145,22 @@ type
     property ThumbTopGlyph;
     property ThumbBottomGlyph;
     property SelectedGlyph;
+    property Orientation;
   end;
 
 implementation
 uses rxlclutils, LCLType, LCLIntf, Themes;
+
+const
+  sRX_RANGE_H_BACK = 'RX_RANGE_H_BACK';
+  sRX_RANGE_H_SEL = 'RX_RANGE_H_SEL';
+  sRX_SLADER_BOTTOM = 'RX_SLADER_BOTTOM';
+  sRX_SLADER_TOP = 'RX_SLADER_TOP';
+
+  sRX_RANGE_V_BACK = 'RX_RANGE_V_BACK';
+  sRX_RANGE_V_SEL = 'RX_RANGE_V_SEL';
+  sRX_SLADER_LEFT = 'RX_SLADER_LEFT';
+  sRX_SLADER_RIGHT = 'RX_SLADER_RIGHT';
 
 function IsIntInInterval(x, xmin, xmax: integer): boolean; inline;
 begin
@@ -225,6 +241,17 @@ begin
   UpdateData;
   Invalidate;
   DoChange;
+end;
+
+procedure TRxCustomRangeSelector.SetOrientation(AValue: TTrackBarOrientation);
+begin
+  if FOrientation=AValue then Exit;
+  FOrientation:=AValue;
+
+  InitImages(FOrientation);
+
+  UpdateData;
+  Invalidate;
 end;
 
 procedure TRxCustomRangeSelector.SetSelectedEnd(AValue: Double);
@@ -322,37 +349,68 @@ end;
 
 procedure TRxCustomRangeSelector.UpdateData;
 begin
-  FTracerPos.Left := FThumbSize.CX div 2;
-  FTracerPos.Right :=Width - FThumbSize.CX div 2;
-  FTracerPos.Top:=FThumbTopGlyph.Height + 1;
-  FTracerPos.Bottom:=FThumbPosBottom.Top - 1;
+  if FOrientation = trHorizontal then
+  begin
+    FTracerPos.Left := FThumbSize.CX div 2;
+    FTracerPos.Right :=Width - FThumbSize.CX div 2;
+    FTracerPos.Top:=FThumbSize.CY + 1;
+    FTracerPos.Bottom:=FThumbPosBottom.Top - 1;
 
-  FSelectedPos.Left := round(LogicalToScreen(FSelectedStart)) - FThumbSize.CX div 2;
-  FSelectedPos.Top := FTracerPos.Top;
-  FSelectedPos.Right := round(LogicalToScreen(FSelectedEnd)) + FThumbSize.CX div 2;
-  FSelectedPos.Bottom := FTracerPos.Bottom;
+    FSelectedPos.Left := round(LogicalToScreen(FSelectedStart)) - FThumbSize.CX div 2;
+    FSelectedPos.Top := FTracerPos.Top;
+    FSelectedPos.Right := round(LogicalToScreen(FSelectedEnd)) + FThumbSize.CX div 2;
+    FSelectedPos.Bottom := FTracerPos.Bottom;
 
 
-  FThumbPosTop.Top:=0;
-  FThumbPosTop.Left:=FSelectedPos.Left - FThumbSize.CX div 2;
-  FThumbPosTop.Bottom:=FThumbTopGlyph.Height;
-  FThumbPosTop.Right:=FThumbPosTop.Left + FThumbSize.CX;
+    FThumbPosTop.Top:=0;
+    FThumbPosTop.Left:=FSelectedPos.Left - FThumbSize.CX div 2;
+    FThumbPosTop.Bottom:=FThumbTopGlyph.Height;
+    FThumbPosTop.Right:=FThumbPosTop.Left + FThumbSize.CX;
 
-  FThumbPosBottom.Bottom:=Height;
-  FThumbPosBottom.Right:=FSelectedPos.Right + FThumbSize.CX div 2;
-  FThumbPosBottom.Top:=Height - FThumbBottomGlyph.Height;
-  FThumbPosBottom.Left:=FThumbPosBottom.Right - FThumbSize.CX;
+    FThumbPosBottom.Bottom:=Height;
+    FThumbPosBottom.Right:=FSelectedPos.Right + FThumbSize.CX div 2;
+    FThumbPosBottom.Top:=Height - FThumbBottomGlyph.Height;
+    FThumbPosBottom.Left:=FThumbPosBottom.Right - FThumbSize.CX;
+  end
+  else
+  begin
+    FTracerPos.Top:= FThumbSize.CY div 2;
+    FTracerPos.Bottom:=Height - FThumbSize.CY div 2;
+    FTracerPos.Left := FThumbSize.CX + 1;
+    FTracerPos.Right :=Width - FThumbSize.CX - 1;
+
+    FSelectedPos.Left := FTracerPos.Left;
+    FSelectedPos.Top := round(LogicalToScreen(FSelectedStart)) - FThumbSize.CY div 2;
+    FSelectedPos.Right := FTracerPos.Right;
+    FSelectedPos.Bottom := round(LogicalToScreen(FSelectedEnd)) + FThumbSize.CY div 2;
+
+    FThumbPosTop.Left:=0;
+    FThumbPosTop.Right:=FThumbTopGlyph.Width;
+    FThumbPosTop.Top:=FSelectedPos.Top - FThumbSize.CY div 2;
+    FThumbPosTop.Bottom:=FThumbPosTop.Top + FThumbSize.CY;
+
+    FThumbPosBottom.Right:=Width;
+    FThumbPosBottom.Left:=Width - FThumbSize.CX - 1;
+    FThumbPosBottom.Top:=FSelectedPos.Bottom - FThumbSize.CY div 2;
+    FThumbPosBottom.Bottom:=FThumbPosBottom.Top + FThumbSize.CY;
+  end;
 end;
 
 function TRxCustomRangeSelector.LogicalToScreen(const LogicalPos: double
   ): double;
 begin
-  result := FThumbSize.CX + BarWidth * (LogicalPos - FMin) / (FMax - FMin)
+  if FOrientation = trHorizontal then
+    Result := FThumbSize.CX + BarWidth * (LogicalPos - FMin) / (FMax - FMin)
+  else
+    Result := FThumbSize.CY + BarWidth * (LogicalPos - FMin) / (FMax - FMin)
 end;
 
 function TRxCustomRangeSelector.BarWidth: integer;
 begin
-  result := Width - 2 * FThumbSize.CX;
+  if FOrientation = trHorizontal then
+    result := Width - 2 * FThumbSize.CX
+  else
+    result := Height - 2 * FThumbSize.CY;
 end;
 
 procedure TRxCustomRangeSelector.SetState(AValue: TRxRangeSelectorState);
@@ -396,6 +454,26 @@ begin
       else
         Result := rssBlockHover;
     end;
+  end;
+end;
+
+procedure TRxCustomRangeSelector.InitImages(AOrient: TTrackBarOrientation);
+begin
+  if AOrient = trHorizontal then
+  begin
+    FSelectedGlyph := CreateResBitmap(sRX_RANGE_H_SEL);
+    FBackgroudGlyph := CreateResBitmap(sRX_RANGE_H_BACK);
+
+    FThumbTopGlyph:=CreateResBitmap(sRX_SLADER_TOP);
+    FThumbBottomGlyph:=CreateResBitmap(sRX_SLADER_BOTTOM);
+  end
+  else
+  begin
+    FSelectedGlyph := CreateResBitmap(sRX_RANGE_V_SEL);
+    FBackgroudGlyph := CreateResBitmap(sRX_RANGE_V_BACK);
+
+    FThumbTopGlyph:=CreateResBitmap(sRX_SLADER_LEFT);
+    FThumbBottomGlyph:=CreateResBitmap(sRX_SLADER_RIGHT);
   end;
 end;
 
@@ -520,19 +598,41 @@ begin
   inherited MouseMove(Shift, X, Y);
 
   if FState = rssThumbTopDown then
-    SetSelectedStart(FSelectedStart + (X - FPrevX) * (FMax - FMin) / BarWidth)
+  begin
+    if FOrientation = trHorizontal then
+      SetSelectedStart(FSelectedStart + (X - FPrevX) * (FMax - FMin) / BarWidth)
+    else
+      SetSelectedStart(FSelectedStart + (Y - FPrevY) * (FMax - FMin) / BarWidth)
+  end
   else
   if FState = rssThumbBottomDown then
-    SetSelectedEnd(FSelectedEnd + (X - FPrevX) * (FMax - FMin) / BarWidth)
+  begin
+    if FOrientation = trHorizontal then
+      SetSelectedEnd(FSelectedEnd + (X - FPrevX) * (FMax - FMin) / BarWidth)
+    else
+      SetSelectedEnd(FSelectedEnd + (Y - FPrevY) * (FMax - FMin) / BarWidth)
+  end
   else
   if FState = rssBlockDown then
   begin
-    if IsRealInInterval(FSelectedStart + (X - FPrevX) * (FMax - FMin) / BarWidth, FMin, FMax) and
-       IsRealInInterval(FSelectedEnd + (X - FPrevX) * (FMax - FMin) / BarWidth, FMin, FMax) then
+    if FOrientation = trHorizontal then
     begin
-      SetSelectedStart(FSelectedStart + (X - FPrevX) * (FMax - FMin) / BarWidth);
-      SetSelectedEnd(FSelectedEnd + (X - FPrevX) * (FMax - FMin) / BarWidth);
-    end;
+      if IsRealInInterval(FSelectedStart + (X - FPrevX) * (FMax - FMin) / BarWidth, FMin, FMax) and
+         IsRealInInterval(FSelectedEnd + (X - FPrevX) * (FMax - FMin) / BarWidth, FMin, FMax) then
+      begin
+        SetSelectedStart(FSelectedStart + (X - FPrevX) * (FMax - FMin) / BarWidth);
+        SetSelectedEnd(FSelectedEnd + (X - FPrevX) * (FMax - FMin) / BarWidth);
+      end;
+    end
+    else
+    begin
+      if IsRealInInterval(FSelectedStart + (Y - FPrevY) * (FMax - FMin) / BarWidth, FMin, FMax) and
+         IsRealInInterval(FSelectedEnd + (Y - FPrevY) * (FMax - FMin) / BarWidth, FMin, FMax) then
+      begin
+        SetSelectedStart(FSelectedStart + (Y - FPrevY) * (FMax - FMin) / BarWidth);
+        SetSelectedEnd(FSelectedEnd + (Y - FPrevY) * (FMax - FMin) / BarWidth);
+      end;
+    end
   end
   else
     SetState(DeduceState(X, Y, FDown));
@@ -567,12 +667,6 @@ begin
   Invalidate;
 end;
 
-const
-  sRxRange_h_back = 'RX_RANGE_H_BACK';
-  sRxRange_h_sel = 'RX_RANGE_H_SEL';
-  sRX_SLADER_BOTTOM = 'RX_SLADER_BOTTOM';
-  sRX_SLADER_TOP = 'RX_SLADER_TOP';
-
 constructor TRxCustomRangeSelector.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -582,17 +676,14 @@ begin
 
 //  FSelectedGlyph:=TBitmap.Create;
 //  FBackgroudGlyph:=TBitmap.Create;
-  FSelectedGlyph := CreateResBitmap(sRxRange_h_sel);
-  FBackgroudGlyph := CreateResBitmap(sRxRange_h_back);
-
-  FThumbTopGlyph:=CreateResBitmap(sRX_SLADER_TOP);
-  FThumbBottomGlyph:=CreateResBitmap(sRX_SLADER_BOTTOM);
+  InitImages(trHorizontal);
 
   with GetControlClassDefaultSize do
     SetInitialBounds(0, 0, CX, CY);
 
   FSelectedEnd:=50;
   FMax:=100;
+  FOrientation:=trHorizontal;
 end;
 
 destructor TRxCustomRangeSelector.Destroy;
