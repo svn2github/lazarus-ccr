@@ -283,22 +283,28 @@ begin
 end ;
 
 procedure TTDIPage.RestoreLastFocusedControl ;
+var
+  FocusRestored: Boolean;
 begin
+  FocusRestored := False;
+
   if Assigned( fsLastActiveControl ) then
   begin
     if fsLastActiveControl <> Screen.ActiveControl then
     begin
-      if fsLastActiveControl.Visible and fsLastActiveControl.Enabled then
+      if fsLastActiveControl.CanSetFocus then
       begin
         try
-           fsLastActiveControl.SetFocus ;
+           fsLastActiveControl.SetFocus;
+           FocusRestored := True;
            //FormInPage.ActiveControl := fsLastActiveControl;
         except
         end ;
       end ;
     end
-  end
-  else
+  end;
+
+  if not FocusRestored then
   begin
     { No LastActiveControle ? Ok, if current Screen control isn't in TabSheet,
       go to first Control on TabSheet... }
@@ -709,9 +715,10 @@ procedure TTDINoteBook.ShowFormInPage(AForm : TForm ; ImageIndex : Integer) ;
 Var
   NewPage : TTDIPage ;
   AlreadyExistingPage : Integer ;
+  DoCheckInterface: Boolean;
 begin
   if not Assigned( AForm ) then
-     raise ETDIError.Create( sFormNotAssigned ) ;
+    raise ETDIError.Create( sFormNotAssigned ) ;
 
   // Looking for a Page with same AForm Object //
   AlreadyExistingPage := FindFormInPages( AForm );
@@ -720,6 +727,8 @@ begin
     PageIndex := AlreadyExistingPage;
     exit ;
   end ;
+
+  DoCheckInterface := (PageCount = 1);
 
   // Create a new Page
   NewPage := TTDIPage.Create(Self);
@@ -745,7 +754,7 @@ begin
     AForm.Align := alClient;                   // Try to expand the Form
   NewPage.CheckFormAlign ;
 
-  if PageCount = 1 then
+  if DoCheckInterface then
     CheckInterface;
 end ;
 
@@ -1114,9 +1123,12 @@ end ;
 
 procedure TTDINoteBook.RemovePage(Index : Integer) ;
 Var
-  CanRemovePage : Boolean ;
-  APage         : TTabSheet;
+  CanRemovePage: Boolean ;
+  APage: TTabSheet;
 begin
+  if (Index >= PageCount) or (Index < 0) then
+    Exit;
+
   CanRemovePage    := True;
   FIsRemovingAPage := True;
   APage            := Pages[Index] ;
@@ -1144,7 +1156,7 @@ begin
         APage.Free;
       {$endif}
 
-      if PageCount < 1 then  // On this case, DoChange is not fired //
+      if (PageCount <= 1) then  // In this situation... DoChange is not fired //
         CheckInterface;
     end ;
   finally

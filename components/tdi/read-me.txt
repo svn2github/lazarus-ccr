@@ -171,3 +171,10 @@ to explain the component
 [-] Better detection for Form Constraint handling on Linux
     (by: DSA and Galló Gábor)
 
+27/09/2017
+[-] Fix for Method "RestoreLastFocusedControl". Wrong last focused component
+    detection
+[-] Fix for Closed Buttom Enabled/Disabled detection when Creating and Closing Pages
+    Lazarus 1.8
+    (by: DSA)
+
