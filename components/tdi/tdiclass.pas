@@ -196,7 +196,8 @@ type
     procedure ScrollPage( ToForward: Boolean );
     procedure CheckInterface;
 
-    procedure UpdateTabsMenuItem ;
+    procedure UpdateTabsMenuItem;
+    procedure CloseAllTabs;
 
   published
     property BackgroundImage : TImage read FBackgroundImage
@@ -728,7 +729,7 @@ begin
     exit ;
   end ;
 
-  DoCheckInterface := (PageCount = 1);
+  DoCheckInterface := (PageCount <= 1);
 
   // Create a new Page
   NewPage := TTDIPage.Create(Self);
@@ -995,6 +996,11 @@ begin
       ImageIndex := TDIActions.PreviousTab.ImageIndex;
     end ;
 end ;
+
+procedure TTDINoteBook.CloseAllTabs;
+begin
+  CloseAllTabsClicked(Nil);
+end;
 
 procedure TTDINoteBook.NextPageClicked(Sender : TObject) ;
 begin

@@ -178,3 +178,9 @@ to explain the component
     Lazarus 1.8
     (by: DSA)
 
+03/10/2017
+[-] Fix for Closed Buttom Enabled/Disabled detection when Creating and Closing Pages
+    Lazarus 1.6. (side effect for commit in 27/09/17)
+[+] Added Public method: procedure CloseAllTabs;
+    (by: DSA)
+
