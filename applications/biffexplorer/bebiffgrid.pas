@@ -2739,6 +2739,33 @@ begin
              ExtractString(FBufferIndex, 1, (FFormat = sfExcel8), s, numBytes);
              ShowInRow(FCurrRow, FBufferIndex, numBytes, s, 'String value');
            end;
+      $19: begin
+             ShowInRow(FCurrRow, FBufferIndex, numBytes, Format('$%.2x', [token]),
+               'Token tAttr (special attribute)');
+             token := FBuffer[FBufferIndex];
+             case token of
+               $01: s := 'tAttrVolatile (volatile function)';
+               $02: s := 'tAttrIf (IF function control)';
+               $04: s := 'tAttrChoose (CHOOSE function control)';
+               $08: s := 'tAttrSkip (skip part of token array)';
+               $10: s := 'tAttrSum (SUM function with one parameter)';
+               $20: s := 'tAttrAssign (assignment-style formula in a macro sheet)';
+               $40: s := 'tAttrSpace (spaces and carriage returns)';
+               $41: s := 'tAttrSpaceVolatile';
+             end;
+             ShowInRow(FCurrRow, FBufferIndex, numbytes, Format('$%.2x', [token]), s);
+             if token in [$01, $10, $20] then begin
+               if FFormat = sfExcel2 then begin
+                 numbytes := 1;
+                 b := FBuffer[FBufferIndex];
+                 ShowInRow(FCurrRow, FBufferIndex, numbytes, IntToStr(b), 'not used');
+               end else begin
+                 numbytes := 2;
+                 Move(FBuffer[FBufferIndex], w, numbytes);
+                 ShowInRow(FCurrRow, FBufferIndex, numbytes, IntToStr(WordLEToN(w)), 'not used');
+               end;
+             end;
+           end;
       $1C: begin
              ShowInRow(FCurrRow, FBufferIndex, numBytes, Format('$%.2x', [token]),
                'Token tERR (Error)');
