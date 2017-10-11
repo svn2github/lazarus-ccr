@@ -67,7 +67,6 @@ type
     procedure SetReadOnly(AValue: Boolean);override;
     property DataField: string read GetDataField write SetDataField;
     property DataSource: TDataSource read GetDataSource write SetDataSource;
-    //property ReadOnly: Boolean read GetReadOnly write SetReadOnly default False;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure Change; override;
 
@@ -192,10 +191,13 @@ begin
 end;
 
 procedure TCustomRxDBTimeEdit.UpdateData(Sender: TObject);
+var
+  D: Int64;
 begin
   if Assigned(FDataLink.Field) and (FDataLink.Field.DataType in DataTimeTypes) then
   begin
-    FDataLink.Field.AsDateTime := Self.Time;
+    D:=trunc(FDataLink.Field.AsDateTime);
+    FDataLink.Field.AsDateTime := D + Self.Time;
   end;
 end;
 
