@@ -1918,6 +1918,17 @@ if UseOrgClipRgn then
 
 SelectClipRgn(ACanvas.Handle, ClipRgn);
 
+{ wp: Next part fixes issue https://sourceforge.net/p/lazarus-ccr/bugs/35/ }
+ImageBitmap := TBitmap.Create;
+ImageList.GetBitmap(ImageIndex, ImageBitmap);
+ACanvas.Draw(Point.x, Point.y, ImageBitmap);
+ImageBitmap.Free;
+
+{ wp: The following lines were removed and replaced by the "ImageBitmap" lines
+  above in order to fix the "handle leak" of
+  https://sourceforge.net/p/lazarus-ccr/bugs/35/
+  Not daring to touch the ImageList.Draw which would have worked as well. }
+{
 // avoid exclusive draw. draw with local canvas itself.
 //ImageList.Draw(ACanvas, Point.x, Point.y, ImageIndex);
 {$IfDef LCLWin32}
@@ -1931,7 +1942,7 @@ ImageList.GetBitmap(ImageIndex, ImageBitmap);
 ACanvas.Draw(Point.x, Point.y, ImageBitmap);
 ImageBitmap.Free;
 {$EndIf}
-
+}
 RestoreClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
 DeleteObject(ClipRgn);
 end;
