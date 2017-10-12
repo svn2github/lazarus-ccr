@@ -329,6 +329,8 @@ type
   operator - (Left: T3DVector; Right: T3DVector): T3DVector;
   {$endif}
 
+  procedure EnsureOrder(var a, b: Integer);
+
 implementation
 
 {$ifndef EnhancedRecordSupport}
@@ -1695,5 +1697,16 @@ begin
 end;
 
 {$endif}
+
+procedure EnsureOrder(var a, b: Integer);
+var
+  tmp: Integer;
+begin
+  if a <= b then
+     exit;
+  tmp := a;
+  a := b;
+  b := tmp;
+end;
 
 end.

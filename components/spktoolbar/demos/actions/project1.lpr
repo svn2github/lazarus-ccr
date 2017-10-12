@@ -13,9 +13,8 @@ uses
 {$R *.res}
 
 begin
-  Application.Scaled := True;
-  {$IF lcl_fullversion >= 1080000}
-  Application.Scaled := True;
+  {$IF LCL_FullVersion >= 1080000}
+  Application.Scaled:=True;
   {$ENDIF}
   RequireDerivedFormResource := True;
   Application.Initialize;
