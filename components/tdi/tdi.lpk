@@ -1,21 +1,19 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
     <Name Value="TDI"/>
+    <Type Value="RunAndDesignTime"/>
+    <Author Value="Daniel Simões de Almeida"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
-      <Other>
-        <CompilerMessages>
-          <MsgFileName Value=""/>
-        </CompilerMessages>
-        <CompilerPath Value="$(CompPath)"/>
-      </Other>
     </CompilerOptions>
+    <Description Value=" TDINotebook provides a Tabbed Document Interface (TDI). "/>
+    <License Value="LGPL"/>
     <Version Minor="2"/>
     <Files Count="3">
       <Item1>
@@ -32,7 +30,6 @@
         <UnitName Value="TDIReg"/>
       </Item3>
     </Files>
-    <Type Value="RunAndDesignTime"/>
     <RequiredPkgs Count="3">
       <Item1>
         <PackageName Value="LazControls"/>
