@@ -5229,13 +5229,15 @@ begin
     if FFooterOptions.Active then
       H:=H - GetDefaultRowHeight * FFooterOptions.RowCount;
 
+
     Result := H div GetDefaultRowHeight;
 
     if rdgFilter in OptionsRx then
       Dec(Result, 1);
 
     if dgTitles in Options then
-      Dec(Result, 1);
+      //Dec(Result, 1);
+      Result:=Result - RowHeights[0] div GetDefaultRowHeight;
   end
   else
     Result := 1;
