@@ -3183,7 +3183,7 @@ end;
 
 procedure TRxDBGrid.AdjustEditorBounds(NewCol, NewRow: Integer);
 begin
-//  inherited AdjustEditorBounds(NewCol, NewRow);
+  inherited AdjustEditorBounds(NewCol, NewRow);
   if EditorMode then
   begin
     DoSetColEdtBtn;
