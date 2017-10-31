@@ -150,6 +150,7 @@ object MainForm: TMainForm
           Top = 0
           Width = 657
           Align = alTop
+          AutoSize = True
           BevelOuter = bvNone
           ClientHeight = 31
           ClientWidth = 657
@@ -179,6 +180,7 @@ object MainForm: TMainForm
             Width = 121
             BorderSpacing.Left = 16
             BorderSpacing.Top = 4
+            BorderSpacing.Bottom = 4
             ItemHeight = 15
             ItemIndex = 0
             Items.Strings = (
@@ -200,6 +202,7 @@ object MainForm: TMainForm
             Top = 6
             Width = 83
             BorderSpacing.Left = 16
+            BorderSpacing.Right = 2
             Caption = 'Single bytes'
             Checked = True
             OnChange = CbHexSingleBytesChange
