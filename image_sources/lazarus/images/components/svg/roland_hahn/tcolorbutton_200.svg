@@ -7,6 +7,7 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="48"
@@ -15,12 +16,35 @@
    id="svg4225"
    version="1.1"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="tarrow_200.svg"
-   inkscape:export-filename="tarrow_200.png"
+   sodipodi:docname="tcolorbutton_200.svg"
+   inkscape:export-filename="tcolorbutton_200.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
-     id="defs4227" />
+     id="defs4227">
+    <linearGradient
+       gradientTransform="matrix(2,0,0,2,-68,-1072.3622)"
+       inkscape:collect="always"
+       xlink:href="#linearGradient4539"
+       id="linearGradient4541"
+       x1="11"
+       y1="1036.3622"
+       x2="11"
+       y2="1046.3622"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient4539">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1"
+         offset="0"
+         id="stop4535" />
+      <stop
+         style="stop-color:#ececec;stop-opacity:1"
+         offset="1"
+         id="stop4537" />
+    </linearGradient>
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -28,9 +52,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="15.839192"
-     inkscape:cx="11.378921"
-     inkscape:cy="23.271182"
+     inkscape:zoom="7.919596"
+     inkscape:cx="21.419516"
+     inkscape:cy="-5.3483652"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -74,33 +98,33 @@
      id="layer1"
      transform="translate(0,-1004.3622)">
     <g
-       transform="matrix(2,0,0,2,0,-1052.3622)"
-       id="layer1-5"
-       inkscape:label="Ebene 1">
-      <path
-         sodipodi:nodetypes="cccc"
-         inkscape:connector-curvature="0"
-         id="path842-0"
-         d="m 12,1030.8622 3,5 H 9 Z"
-         style="fill:#0055d4;fill-rule:evenodd;stroke:#0044aa;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-      <path
-         style="fill:#0055d4;fill-rule:evenodd;stroke:#0044aa;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 12,1049.8622 3,-5 H 9 Z"
-         id="path823"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="cccc" />
-      <path
-         style="fill:#0055d4;fill-rule:evenodd;stroke:#0044aa;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 2.5,1040.3622 5,-3 v 6 z"
-         id="path825"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="cccc" />
-      <path
-         sodipodi:nodetypes="cccc"
-         inkscape:connector-curvature="0"
-         id="path827"
-         d="m 21.5,1040.3622 -5,-3 v 6 z"
-         style="fill:#0055d4;fill-rule:evenodd;stroke:#0044aa;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       id="g838"
+       transform="translate(68,20.000017)">
+      <rect
+         ry="3"
+         rx="3"
+         y="994.36218"
+         x="-68"
+         height="28"
+         width="48"
+         id="rect820-9"
+         style="opacity:1;fill:#3771c8;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
+      <rect
+         ry="2"
+         rx="2"
+         y="996.36218"
+         x="-66"
+         height="24"
+         width="44"
+         id="rect818-3"
+         style="opacity:1;fill:url(#linearGradient4541);fill-opacity:1;stroke:#ff6600;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
+      <rect
+         y="1000.3622"
+         x="-62"
+         height="15.999966"
+         width="36"
+         id="rect4517"
+         style="opacity:1;fill:#ffaa73;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
     </g>
   </g>
 </svg>
