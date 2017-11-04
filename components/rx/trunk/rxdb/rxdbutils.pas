@@ -164,7 +164,7 @@ procedure _DBError(const Msg: string);
 implementation
 
 uses Forms, Controls, Dialogs, RXDConst, rxlclutils, FileUtil,
-  AppUtils, RxAppUtils, RxStrUtils, Math, rxdateutil, LazUTF8;
+  RxAppUtils, RxStrUtils, Math, rxdateutil, LazUTF8;
 
 { Utility routines }
 

@@ -324,7 +324,7 @@ translate to Lazarus by alexs in 2005 - 2017"/>
       <EnableI18N Value="True"/>
       <OutDir Value="languages"/>
     </i18n>
-    <RequiredPkgs Count="5">
+    <RequiredPkgs Count="4">
       <Item1>
         <PackageName Value="rxtools"/>
       </Item1>
@@ -338,9 +338,6 @@ translate to Lazarus by alexs in 2005 - 2017"/>
       <Item4>
         <PackageName Value="LCL"/>
       </Item4>
-      <Item5>
-        <PackageName Value="rx"/>
-      </Item5>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>
