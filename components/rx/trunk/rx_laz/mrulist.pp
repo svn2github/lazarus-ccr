@@ -143,7 +143,7 @@ const
 Procedure Register;
 
 begin
- RegisterComponents('Misc',[TMRUManager]);
+ RegisterComponents('RX Controls',[TMRUManager]);
 end;
 
 

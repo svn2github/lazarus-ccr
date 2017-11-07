@@ -151,7 +151,7 @@ uses
 
 Procedure Register;
 begin
-  RegisterComponents('Misc',[TStrHolder])
+  RegisterComponents('RX Tools',[TStrHolder])
 end;
 
 function XorEncode(const Key, Source: string): string;
