@@ -27,7 +27,7 @@
        x2="7.2631593"
        y1="1047.6495"
        x1="16.736845"
-       gradientTransform="matrix(1.2666666,0,0,1.1083343,2.2999963,-114.70656)"
+       gradientTransform="matrix(1.2666666,0,0,1.1611121,2.2999963,-169.11456)"
        gradientUnits="userSpaceOnUse"
        id="linearGradient841"
        xlink:href="#linearGradient968"
@@ -59,9 +59,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="56.485353"
-     inkscape:cx="15.079625"
-     inkscape:cy="13.197879"
+     inkscape:zoom="39.941176"
+     inkscape:cx="11.026531"
+     inkscape:cy="7.7690943"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -121,7 +121,7 @@
     <rect
        y="1027.8622"
        x="5.5"
-       height="21.000017"
+       height="22.000017"
        width="23.999996"
        id="rect839"
        style="opacity:1;fill:url(#linearGradient841);fill-opacity:1;stroke:#3771c8;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
@@ -147,22 +147,22 @@
        sodipodi:nodetypes="ccccccc" />
     <path
        id="path844"
-       d="m 11.519996,1033.8822 h 7.846369 l 3.113639,2.99 v 8.97 H 11.519996 Z"
+       d="m 11.519996,1033.8822 h 7.846369 l 3.113639,3.24 v 9.72 H 11.519996 Z"
        style="fill:#eafaff;fill-opacity:1;fill-rule:evenodd;stroke:#5989cd;stroke-width:1.03999221px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:connector-curvature="0" />
     <path
        id="path846"
-       d="m 14,1035.8073 h 5 v 1.5549 h -5 z"
+       d="m 14,1036.8073 h 5 v 1.5549 h -5 z"
        style="fill:#6f8a91;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1"
        inkscape:connector-curvature="0" />
     <path
        id="path848"
-       d="m 14,1038.8074 h 6 v 1.5548 h -6 z"
+       d="m 14,1039.8074 h 6 v 1.5548 h -6 z"
        style="fill:#6f8a91;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.99999994"
        inkscape:connector-curvature="0" />
     <path
        id="path850"
-       d="m 14,1041.8075 h 6 v 1.5547 h -6 z"
+       d="m 14,1042.8075 h 6 v 1.5547 h -6 z"
        style="fill:#6f8a91;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.99999994"
        inkscape:connector-curvature="0" />
   </g>

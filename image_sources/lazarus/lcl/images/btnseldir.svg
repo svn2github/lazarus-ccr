@@ -86,7 +86,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="58.750001"
-     inkscape:cx="8"
+     inkscape:cx="4.2808511"
      inkscape:cy="8"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -153,7 +153,7 @@
        height="15"
        width="15"
        id="rect839"
-       style="opacity:1;fill:url(#linearGradient841);fill-opacity:1;stroke:#3771c8;stroke-width:0.99999976;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
+       style="opacity:1;fill:url(#linearGradient841);fill-opacity:1;stroke:#3771c8;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
     <rect
        y="0.99999988"
        x="1.0000005"
