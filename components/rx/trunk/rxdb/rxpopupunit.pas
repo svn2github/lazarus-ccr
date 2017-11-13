@@ -62,7 +62,7 @@ type
   end;
   
   TPopUpGridOption = (pfgIndicator, pfgColLines, pfgRowLines, pfgColumnResize,
-    pfgColumnMove);
+    pfgColumnMove, pfgRowSelect);
 
   TPopUpGridOptions = set of TPopUpGridOption;
 
@@ -547,6 +547,13 @@ begin
     FGrid.Options:=FGrid.Options + [dgTitles]
   else
     FGrid.Options:=FGrid.Options - [dgTitles];
+
+  if (pfgRowSelect in FPopUpFormOptions.FOptions) then
+    FGrid.Options:=FGrid.Options + [dgRowSelect]
+  else
+    FGrid.Options:=FGrid.Options - [dgRowSelect]
+    ;
+
 
   FGrid.AutoSort:=FPopUpFormOptions.AutoSort;
   FGrid.TitleButtons:=FPopUpFormOptions.TitleButtons;
