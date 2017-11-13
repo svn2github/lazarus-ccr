@@ -351,8 +351,11 @@ type
   end;
 
 implementation
-uses LCLType, Math, Forms, rxdconst, rxlclutils, StdCtrls, Themes, LazUTF8;
+uses LCLType, Math, Forms, rxdconst, rxlclutils, StdCtrls, Themes, LazUTF8, LCLVersion;
 
+{$IFDEF lcl_version<'1.9.0.0'}
+  varCellPadding = 2;
+{$ENDIF}
 { TRxDBVerticalGridDefValues }
 
 procedure TRxDBVerticalGridDefValues.AssignTo(Dest: TPersistent);
