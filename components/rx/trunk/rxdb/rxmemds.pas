@@ -171,6 +171,9 @@ type
       Mode: TLoadMode): Integer;
     function SaveToDataSet(Dest: TDataSet; ARecordCount: Integer): Integer;
     procedure AppendRecord(const Values: array of const);
+    procedure MoveUp;
+    procedure MoveDown;
+    procedure ExchangeRec(ARecNo1, ARecNo2: Integer);
 
     procedure SetDatasetPacket(AReader : TRxDataPacketReader);
     procedure GetDatasetPacket(AWriter : TRxDataPacketReader);
@@ -1670,6 +1673,30 @@ begin
     Append;
   for I := 0 to High(Values) do Fields[I].AssignValue(Values[I]);
   Post;
+end;
+
+procedure TRxMemoryData.MoveUp;
+begin
+  if (FRecords.Count > 1) and (FRecordPos > 0) then
+    ExchangeRec(FRecordPos, FRecordPos + 1);
+end;
+
+procedure TRxMemoryData.MoveDown;
+begin
+  if (FRecords.Count > 1) and (FRecordPos < FRecords.Count - 1) then
+    ExchangeRec(FRecordPos + 1, FRecordPos + 2);
+end;
+
+procedure TRxMemoryData.ExchangeRec(ARecNo1, ARecNo2: Integer);
+begin
+  CheckActive;
+  CheckBrowseMode;
+  if (ARecNo1 <> ARecNo2) and (ARecNo1 > 0) and (ARecNo2 > 0)
+     and (ARecNo1 <= FRecords.Count) and (ARecNo2 <= FRecords.Count) then
+  begin
+    FRecords.Exchange(ARecNo1 - 1, ARecNo2 - 1);
+    Resync([]);
+  end;
 end;
 
 { Index Related }
