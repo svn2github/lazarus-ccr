@@ -115,6 +115,7 @@ type
     procedure ButtonClick; override;
     function GetDefaultGlyphName: String; override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    procedure EditKeyDown(var Key: word; Shift: TShiftState); override;
     procedure InternalClosePopup(AResult:boolean);virtual;
     //
     procedure LookupDataSetChanged(Sender: TObject);  virtual;
@@ -578,6 +579,17 @@ begin
     Text:=FLookupDataLink.DataSet.FieldByName(FFieldList[FLookupDisplayIndex]).AsString;
     Key:=0;
   end;
+end;
+
+procedure TRxCustomDBLookupEdit.EditKeyDown(var Key: word; Shift: TShiftState);
+begin
+  if (Key = VK_DOWN) and ((ssAlt in Shift) or (ssCtrl in Shift)) then
+  begin
+    ShowList;
+    Key := 0;
+  end
+  else
+  inherited EditKeyDown(Key, Shift);
 end;
 
 procedure TRxCustomDBLookupEdit.InternalClosePopup(AResult: boolean);
