@@ -590,6 +590,15 @@ begin
   end
   else
   inherited EditKeyDown(Key, Shift);
+  if not (PopupVisible or ReadOnly) and (Key in [VK_UP, VK_DOWN]) and (Shift = []) then
+  begin
+    case Key of
+      VK_UP: if not FLookupDataLink.DataSet.BOF then FLookupDataLink.DataSet.Prior;
+      VK_DOWN: if not FLookupDataLink.DataSet.EOF then FLookupDataLink.DataSet.Next;
+    end;
+    Text:=FLookupDataLink.DataSet.FieldByName(FFieldList[FLookupDisplayIndex]).AsString;
+    Key:=0;
+  end;
 end;
 
 procedure TRxCustomDBLookupEdit.InternalClosePopup(AResult: boolean);
