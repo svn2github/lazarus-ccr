@@ -840,6 +840,7 @@ type
     procedure RemoveTools(ATools:TRxDBGridAbstractTools);
 
     procedure OnDataSetScrolled(aDataSet:TDataSet; Distance: Integer);
+    function GetFieldDisplayText(AField:TField; ACollumn:TRxColumn):string;
   protected
     FRxDbGridLookupComboEditor: TCustomControl;
     FRxDbGridDateEditor: TWinControl;
@@ -3999,6 +4000,32 @@ begin
     UpdateRowsHeight;
 end;
 
+function TRxDBGrid.GetFieldDisplayText(AField: TField; ACollumn: TRxColumn
+  ): string;
+var
+  J: Integer;
+begin
+  Result:='';
+  if Assigned(AField) then
+  begin
+    if AField.dataType <> ftBlob then
+    begin
+      if CheckDisplayMemo(AField) then
+        Result := AField.AsString
+      else
+        Result := AField.DisplayText;
+      if Assigned(ACollumn) and (ACollumn.KeyList.Count > 0) and (ACollumn.PickList.Count > 0) then
+      begin
+        J := ACollumn.KeyList.IndexOf(Result);
+        if (J >= 0) and (J < ACollumn.PickList.Count) then
+          Result := ACollumn.PickList[j];
+      end;
+    end
+    else
+      Result := FColumnDefValues.FBlobText;
+  end
+end;
+
 procedure TRxDBGrid.DefaultDrawCellA(aCol, aRow: integer; aRect: TRect;
   aState: TGridDrawState);
 begin
@@ -4336,11 +4363,14 @@ begin
       case ColumnEditorStyle(aCol, F) of
         cbsCheckBoxColumn: DrawCheckBoxBitmaps(aCol, aRect, F);
         else
-          if F <> nil then
+(*          if F <> nil then
           begin
             if F.dataType <> ftBlob then
             begin
-              S := F.DisplayText;
+              if CheckDisplayMemo(F) then
+                S := F.AsString
+              else
+                S := F.DisplayText;
               if Assigned(C) and (C.KeyList.Count > 0) and (C.PickList.Count > 0) then
               begin
                 J := C.KeyList.IndexOf(S);
@@ -4352,8 +4382,9 @@ begin
               S := FColumnDefValues.FBlobText;
           end
           else
-            S := '';
+            S := ''; *)
 
+          S:=GetFieldDisplayText(F, C);
           if ((rdgWordWrap in FOptionsRx) and Assigned(C) and (C.WordWrap)) or (FIsMerged) then
             WriteTextHeader(Canvas, aRect, S, C.Alignment)
           else
@@ -5390,6 +5421,7 @@ begin
       begin
         for I := 0 to AColList.Count - 1 do
         begin
+(*
           if Assigned(TRxColumn(AColList[i]).Field) then
             S := TRxColumn(AColList[i]).Field.DisplayText
           else
@@ -5400,7 +5432,8 @@ begin
               n := KeyList.IndexOf(S);
               if (n <> -1) and (n < PickList.Count) then
                 S := PickList.Strings[n];
-            end;
+            end; *)
+          S:=GetFieldDisplayText(TRxColumn(AColList[i]).Field, TRxColumn(AColList[i]));
           W := Canvas.TextWidth(S) + 6;
           if WA^[i] < W then
             WA^[i] := W;
