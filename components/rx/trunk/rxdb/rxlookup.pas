@@ -393,8 +393,9 @@ implementation
 uses rxlclutils, Math, rxdconst;
 
 type
-  TDbGridAccess = class(TDbGrid)
-  end;
+{  TDbGridAccess = class(TDbGrid)
+  end;}
+
   TPopUpFormAccess = class(TPopUpForm)
   end;
 
@@ -481,14 +482,9 @@ begin
 end;
 
 procedure TRxCustomDBLookupEdit.ShowList;
-{var
-  i,W:integer;
-  GC:TColumn;}
 begin
   if FLookupDataLink.Active and not PopupVisible then
-  begin
     ShowPopUp;
-  end;
 end;
 
 procedure TRxCustomDBLookupEdit.HideList;
@@ -499,33 +495,19 @@ end;
 procedure TRxCustomDBLookupEdit.ShowPopUp;
 var
   R:TPoint;
-  FValue:string;
-  {$IFDEF LINUX}
-  TempF:TPopUpForm;
-  {$ENDIF}
+  AValue:string;
+  ALookupField:string;
 begin
-
   if FLookupDataLink.Active then
     if not PopupVisible then
     begin
+      ALookupField := FFieldList[FLookupDisplayIndex];
+      AValue := Text;
 
-      FValue := Text;
-
-      FLocateObject.Locate(FLookupField, FValue, true, false);
-
-(*     FRxPopUpForm:=ShowRxDBPopUpForm(Self, FLookupDataLink.DataSet, @OnClosePopup,
-        FPopUpFormOptions, FLookupDisplay, LookupDisplayIndex, 0 {ButtonWidth}, Font);*)
+      FLocateObject.Locate(ALookupField, AValue, true, false);
 
       FRxPopUpForm:=ShowRxDBPopUpForm(Self, FLookupDataLink.DataSet, @InternalClosePopup,
-        FPopUpFormOptions, FLookupDisplay, LookupDisplayIndex, 0 {ButtonWidth}, Font);
-  {$IFDEF LINUX}
-      TempF:=FRxPopUpForm;
-      if FRxPopUpForm.ShowModal = mrOk then
-        InternalClosePopup(true);
-      TempF.Free;
-      FRxPopUpForm:=nil
-  {$ENDIF}
-
+        FPopUpFormOptions, FLookupDisplay, LookupDisplayIndex, 0, Font);
     end
 end;
 
@@ -606,15 +588,16 @@ begin
   if Assigned(FOnClosePopup) then
     FOnClosePopup(Self, AResult);
 
-{$IFDEF WINDOWS}
   FRxPopUpForm:=nil;
-{$ENDIF}
 end;
 
 procedure TRxCustomDBLookupEdit.LookupDataSetChanged(Sender: TObject);
 begin
-  UpdateKeyValue;
-  Invalidate;
+  if PopupVisible then
+  begin
+    UpdateKeyValue;
+    Invalidate;
+  end;
 end;
 
 procedure TRxCustomDBLookupEdit.ListLinkActiveChanged(Sender: TObject);
@@ -1074,10 +1057,6 @@ begin
 end;
 
 procedure TRxCustomDBLookupCombo.ShowList;
-{$IFDEF LINUX}
-var
-  TempF:TPopUpForm;
-{$ENDIF}
 begin
   if Assigned(FLookupDataLink.DataSet) and (FLookupDataLink.DataSet.Active) then
     if not PopupVisible then
@@ -1105,13 +1084,6 @@ begin
 
       FRxPopUpForm:=ShowRxDBPopUpForm(Self, FLookupDataLink.DataSet, @OnInternalClosePopup,
         FPopUpFormOptions, FLookupDisplay, LookupDisplayIndex, 0 {ButtonWidth}, Font);
-{$IFDEF LINUX}
-      TempF:=FRxPopUpForm;
-      if FRxPopUpForm.ShowModal = mrOk then
-        {OnInternalClosePopup(true)};
-      TempF.Free;
-      FRxPopUpForm:=nil
-{$ENDIF}
     end
 end;
 

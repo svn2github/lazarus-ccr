@@ -206,7 +206,7 @@ type
   { TPopUpForm }
   TPopUpForm = class(TForm)
   private
-    CloseBtn: TBitBtn;
+    FClosed: boolean;
     FFindResult:boolean;
     FGrid:TPopUpGrid;
     FDataSource:TDataSource;
@@ -217,8 +217,10 @@ type
     function GetDataSet: TDataSet;
     function GetLookupDisplayIndex: integer;
     procedure SetDataSet(const AValue: TDataSet);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure SetLookupDisplayIndex(const AValue: integer);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDeactivate(Sender: TObject);
   protected
     FFieldList:string;
     procedure Deactivate; override;
@@ -265,16 +267,8 @@ begin
     Result.FGrid.Font.Assign(Font);
   end;
 
-{$IFDEF LINUX}
-{  if Result.ShowModal = mrOk then
-    if Assigned(AOnPopUpCloseEvent) then
-      AOnPopUpCloseEvent(true);
-  Result.Free;
-  Result:=nil;}
-{$ELSE  LINUX}
   Result.Show;
   Result.FGrid.UpdateActive;
-{$ENDIF LINUX}
 end;
 
 procedure FillPopupWidth(APopUpFormOptions: TPopUpFormOptions;
@@ -302,9 +296,17 @@ end;
 
 procedure TPopUpForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
+  FClosed := true;
+  Application.RemoveOnDeactivateHandler(@FormDeactivate);
   CloseAction:=caFree;
   if (ModalResult <> mrOk) and Assigned(FOnPopUpCloseEvent) then
     FOnPopUpCloseEvent(FFindResult);
+end;
+
+procedure TPopUpForm.FormCreate(Sender: TObject);
+begin
+  FClosed := false;
+  Application.AddOnDeactivateHandler(@FormDeactivate);
 end;
 
 procedure TPopUpForm.SetLookupDisplayIndex(const AValue: integer);
@@ -325,9 +327,14 @@ end;
 procedure TPopUpForm.Deactivate;
 begin
   inherited Deactivate;
-  if (ModalResult = mrOk) and Assigned(FOnPopUpCloseEvent) then
-    FOnPopUpCloseEvent(FFindResult);
-  Close;
+  FormDeactivate(Self);
+end;
+
+procedure TPopUpForm.FormDeactivate(Sender: TObject);
+begin
+  Hide;
+  if (not FClosed) then
+    Close;
 end;
 
 procedure TPopUpForm.KeyDown(var Key: Word; Shift: TShiftState);
@@ -367,11 +374,7 @@ end;
 procedure TPopUpForm.CloseOk;
 begin
   FFindResult:=true;
-{$IFDEF LINUX}
-  ModalResult:=mrOk;
-{$ELSE LINUX}
   Deactivate;
-{$ENDIF LINUX}
 end;
 
 procedure TPopUpForm.Paint;
@@ -466,12 +469,15 @@ begin
   inherited CreateNew(nil);
 //  inherited Create(AOwner);
   BorderStyle := bsNone;
+  PopupMode := pmAuto;
+  ShowInTaskBar := stNever;
   Caption:='RxPopUp';
   KeyPreview:=true;
   Visible := false;
   FDataSource:=TDataSource.Create(Self);
   FPopUpFormOptions:=APopUpFormOptions;
   FFieldList:=AFieldList;
+  OnCreate := @FormCreate;
   OnClose := @FormClose;
 
 {$IFDEF LINUX}
@@ -487,12 +493,6 @@ begin
   else
     Width:=FPopUpFormOptions.DropDownWidth;
 
-{$IFDEF LINUX}
-  CloseBtn:=TBitBtn.Create(Self);
-  CloseBtn.Parent:=Self;
-  CloseBtn.Align:=alBottom;
-  CloseBtn.Kind:=bkCancel;
-{$ENDIF}
   FGrid:=TPopUpGrid.Create(Self);
   FGrid.Parent:=Self;
   FGrid.ReadOnly:=true;
@@ -505,11 +505,7 @@ begin
     FGrid.Top:=2;
     FGrid.Left:=2;
     FGrid.Width:=Width - 4;
-{$IFDEF LINUX}
-    FGrid.Height:=Height - CloseBtn.Height - 2;
-{$ELSE}
     FGrid.Height:=Height - 4;
-{$ENDIF}
     FGrid.Anchors:=[akLeft, akRight, akTop, akBottom];
   end
   else
@@ -517,11 +513,7 @@ begin
     FGrid.Top:=1;
     FGrid.Left:=1;
     FGrid.Width:=Width - 3;
-{$IFDEF LINUX}
-    FGrid.Height:=Height - CloseBtn.Height - 2;
-{$ELSE}
     FGrid.Height:=Height - 3;
-{$ENDIF}
     FGrid.Anchors:=[akLeft, akRight, akTop, akBottom];
   end;
   //Set options
