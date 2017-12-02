@@ -29,12 +29,16 @@ begin
         WriteLn(tag.AsString);
 
       // (2) shutter speed used when taking the photo
-      Write('Shutter speed: ':20);
       tag := imgInfo.ExifData.TagByName['ShutterSpeed'];
-      if tag = nil then
-        WriteLn('--- not available in this file ---')
+      if tag <> nil then
+        WriteLn('Shutter speed: ':20, tag.AsString)
       else
-        WriteLn(tag.AsString);
+      begin
+        // (3) Sometimes alternative tags are availabe
+        tag := imgInfo.ExifData.TagByName['ExposureTime'];
+        if tag <> nil then
+          WriteLn('Exposure time: ':20, tag.AsString);
+      end;
 
       // Add user comment
       imgInfo.ExifData.TagByName['UserComment'].AsString := 'This is my favorite photo.';
@@ -62,6 +66,7 @@ begin
     imgInfo.Free;
   end;
 
+  WriteLn;
   WriteLn('Press ENTER to quit...');
   ReadLn;
 

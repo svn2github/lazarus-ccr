@@ -78,6 +78,7 @@ type
     destructor Destroy; override;
     procedure LoadFromFile(const AFileName: String);
     procedure LoadFromStream(AStream: TStream);
+    procedure Save;
     procedure SaveToFile(const AFileName: String; AImgFile: String = '');
 
     function CreateExifData(ABigEndian: Boolean = false): TExifData;
@@ -560,6 +561,11 @@ begin
   finally
     reader.Free;
   end;
+end;
+
+procedure TImgInfo.Save;
+begin
+  SaveToFile(FFileName);
 end;
 
 procedure TImgInfo.SaveToFile(const AFileName: String; AImgFile: String = '');
