@@ -580,6 +580,7 @@ procedure TIptcDateTag.SetAsString(const AValue: String);
 var
   d: TDateTime;
   fmt: String;
+  fs: TFormatSettings;
 begin
   fmt := GetFormat;
   if fmt = IPTC_DATE_FORMAT then
@@ -641,6 +642,7 @@ procedure TIptcTimeTag.SetAsString(const AValue: String);
 var
   t: TDateTime;
   fmt: String;
+  fs: TFormatSettings;
 begin
   fmt := GetFormat;
   if fmt = IPTC_TIME_FORMAT then

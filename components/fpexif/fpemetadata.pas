@@ -440,6 +440,9 @@ var
   buf: TBytes;
   reader: TBasicMetadataReader;
   bigEndian: Boolean;
+ {$IFNDEF FPC}
+  sa: ansistring;
+ {$ENDIF}
 begin
   p := AStream.Position;
   streamsize := AStream.Size;
@@ -630,6 +633,7 @@ const
 var
   jfifSegment: TJpegJFIFSegment;
   writer: TBasicMetadataWriter;
+  sa: ansistring;
 begin
   // Write Start-of-image segment (SOI)
   AStream.WriteBuffer(SOI_MARKER, SizeOf(SOI_MARKER));

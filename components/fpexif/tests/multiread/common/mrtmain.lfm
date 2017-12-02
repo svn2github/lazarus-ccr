@@ -165,6 +165,20 @@ object MainForm: TMainForm
         Layout = tlCenter
         ParentColor = False
       end
+      object BtnInfo: TButton
+        AnchorSideTop.Control = BtnRunTest
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = BtnRunTest
+        Left = 460
+        Height = 25
+        Top = 0
+        Width = 75
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 4
+        Caption = 'Info'
+        OnClick = BtnInfoClick
+        TabOrder = 1
+      end
     end
     object Memo: TMemo
       Left = 4

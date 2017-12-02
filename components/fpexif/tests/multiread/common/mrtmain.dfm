@@ -1,6 +1,6 @@
 object MainForm: TMainForm
-  Left = 326
-  Top = 138
+  Left = 299
+  Top = 192
   Width = 1040
   Height = 599
   ActiveControl = BtnRunTest
@@ -133,7 +133,7 @@ object MainForm: TMainForm
     TabOrder = 2
     object Bevel2: TBevel
       Left = 4
-      Top = 494
+      Top = 492
       Width = 608
       Height = 4
       Align = alBottom
@@ -141,18 +141,21 @@ object MainForm: TMainForm
     end
     object Panel5: TPanel
       Left = 4
-      Top = 498
+      Top = 496
       Width = 608
-      Height = 25
+      Height = 27
       Align = alBottom
       AutoSize = True
       BevelOuter = bvNone
       TabOrder = 0
+      DesignSize = (
+        608
+        27)
       object MismatchInfo: TLabel
         Left = 0
         Top = 0
         Width = 361
-        Height = 25
+        Height = 27
         Align = alLeft
         AutoSize = False
         Caption = 'MismatchInfo'
@@ -165,16 +168,27 @@ object MainForm: TMainForm
         Top = 0
         Width = 69
         Height = 25
+        Anchors = [akTop, akRight]
         Caption = 'Run test'
         TabOrder = 0
         OnClick = BtnRunTestClick
+      end
+      object BtnInfo: TButton
+        Left = 456
+        Top = 0
+        Width = 75
+        Height = 25
+        Anchors = [akTop, akRight]
+        Caption = 'Info'
+        TabOrder = 1
+        OnClick = BtnInfoClick
       end
     end
     object Memo: TMemo
       Left = 4
       Top = 4
       Width = 608
-      Height = 490
+      Height = 488
       Align = alClient
       ScrollBars = ssBoth
       TabOrder = 1

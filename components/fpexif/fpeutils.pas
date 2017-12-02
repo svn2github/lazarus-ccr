@@ -113,9 +113,9 @@ function IPTCDateStrToDate(AValue: String): TDateTime;
 function IPTCTimeStrToTime(AValue: String): TDateTime;
 
 { For silencing the compiler... }
-procedure Unused(const A1);
-procedure Unused(const A1, A2);
-procedure Unused(const A1, A2, A3);
+procedure Unused(const A1); overload;
+procedure Unused(const A1, A2); overload;
+procedure Unused(const A1, A2, A3); overload;
 
 
 implementation
@@ -1433,7 +1433,9 @@ end;
 //              Silence compiler warnings due to unused parameters
 //                         (code adapted from TAChart)
 //==============================================================================
+{$IFDEF FPC}
 {$PUSH}{$HINTS OFF}
+{$ENDIF}
 procedure Unused(const A1);
 begin
 end;
@@ -1445,7 +1447,9 @@ end;
 procedure Unused(const A1, A2, A3);
 begin
 end;
+{$IFDEF FPC}
 {$POP}
+{$ENDIF}
 
 end.
 

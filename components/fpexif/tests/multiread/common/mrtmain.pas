@@ -40,10 +40,13 @@ type
     Panel5: TPanel;
     Splitter1: TSplitter;
     ImageList1: TImageList;
+    BtnInfo: TButton;
+    procedure BtnInfoClick(Sender: TObject);
     procedure BtnReadFilesClick(Sender: TObject);
     procedure BtnRunTestClick(Sender: TObject);
     procedure BtnCreateTxtFilesClick(Sender: TObject);
     procedure BtnUncheckAllClick(Sender: TObject);
+    procedure InfoClick(Sender: TObject);
     procedure FileTreeViewClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -177,6 +180,11 @@ begin
   end;
 end;
 
+procedure TMainForm.InfoClick(Sender: TObject);
+begin
+  Memo.Lines.LoadfromFile('readme.txt');
+end;
+
 procedure TMainForm.BtnCreateTxtFilesClick(Sender: TObject);
 var
   imgDir: String;
@@ -211,6 +219,11 @@ begin
     node.SelectedIndex := node.ImageIndex;
     node := node.GetNextSibling;
   end;
+end;
+
+procedure TMainForm.BtnInfoClick(Sender: TObject);
+begin
+  Memo.Lines.LoadFromFile('readme.txt');
 end;
 
 function TMainForm.CreateRefTags(ANode: TTreeNode; AFileName: String): Boolean;
@@ -437,7 +450,7 @@ begin
 
       lTag := imgInfo.ExifData.FindTagByID(tagID);
       if lTag = nil then begin
-        Log(Format('Tag "%s% (ID $%.04x) not found.', [tagName, TTagIDRec(tagID).Tag]));
+        Log(Format('Tag "%s (ID $%.04x) not found.', [tagName, TTagIDRec(tagID).Tag]));
         node := node.GetNextSibling;
         continue;
       end;

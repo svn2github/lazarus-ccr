@@ -118,6 +118,7 @@ var
   tagID: TTagID;
   s: String;
   w: Word;
+  sa: ansistring;
 begin
   Result := nil;
 

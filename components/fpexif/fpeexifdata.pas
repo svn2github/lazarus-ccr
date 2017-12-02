@@ -1355,6 +1355,8 @@ procedure TGPSPositionTag.SetAsString(const AValue: String);
 var
   deg: Double;
 begin
+  if AValue = '' then
+    exit;
   if TryStrToGps(AValue, deg) then
     SetAsFloat(deg)
   else

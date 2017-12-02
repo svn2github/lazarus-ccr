@@ -90,11 +90,11 @@ MaxStackSize=1048576
 ImageBase=1109393408
 ExeDescription=TeeChart 2014 Components
 [Directories]
-OutputDir=D:\Prog_Lazarus\wp-laz\fpexif\tests\multiread
-UnitOutputDir=D:\Prog_Lazarus\wp-laz\fpexif\tests\multiread\output\dcu\Delphi7
+OutputDir=
+UnitOutputDir=output\dcu\Delphi7
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=
+SearchPath=..\..;common
 Packages=Tee97;TeeUI97;TeeDB97;TeePro97;TeeGL97;TeeImage97;TeeLanguage97;TeeWorld97
 Conditionals=
 DebugSourceDirs=
@@ -134,17 +134,19 @@ OriginalFilename=
 ProductName=
 ProductVersion=9.0.0.0
 [Excluded Packages]
-D:\Prog_Delphi\common\Components\3rdParty\TeeChart\Sources\Compiled\Delphi7\Bin\DclTeeMaker17.bpl=TeeMaker
+D:\Prog_Delphi\common\Components\3rdParty\TeeChart\Sources\Compiled\Delphi7\Bin\DclTeeMaker17.bpl=TeeMaker 
 D:\Programme\Borland\Delphi7\Lib\HelpCtxD7.bpl=HelpScribble HelpContext Property Editor for Delphi 7
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=1
-Item0=D:\Prog_Lazarus\git\dexif-afriess-master
+Count=2
+Item0=..\..;common
+Item1=D:\Prog_Lazarus\git\dexif-afriess-master
 [HistoryLists\hlUnitOutputDirectory]
-Count=1
-Item0=D:\Prog_Lazarus\wp-laz\fpexif\tests\multiread\output\dcu\Delphi7
+Count=2
+Item0=output\dcu\Delphi7
+Item1=D:\Prog_Lazarus\wp-laz\fpexif\tests\multiread\output\dcu\Delphi7
 [HistoryLists\hlOutputDirectorry]
 Count=2
 Item0=D:\Prog_Lazarus\wp-laz\fpexif\tests\multiread

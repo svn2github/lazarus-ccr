@@ -91,10 +91,10 @@ ImageBase=1109393408
 ExeDescription=TeeChart 2014 Components
 [Directories]
 OutputDir=
-UnitOutputDir=D:\Prog_Lazarus\wp-laz\fpexif\tests\readwrite\output\dcu\Delphi7
+UnitOutputDir=output\dcu\Delphi7
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=
+SearchPath=common
 Packages=Tee97;TeeUI97;TeeDB97;TeePro97;TeeGL97;TeeImage97;TeeLanguage97;TeeWorld97
 Conditionals=
 DebugSourceDirs=
@@ -135,17 +135,19 @@ ProductName=ReadWriteTest
 ProductVersion=1.0.0.0
 ProgramID=com.embarcadero.ReadWriteTest
 [Excluded Packages]
-D:\Prog_Delphi\common\Components\3rdParty\TeeChart\Sources\Compiled\Delphi7\Bin\DclTeeMaker17.bpl=TeeMaker
+D:\Prog_Delphi\common\Components\3rdParty\TeeChart\Sources\Compiled\Delphi7\Bin\DclTeeMaker17.bpl=TeeMaker 
 D:\Programme\Borland\Delphi7\Lib\HelpCtxD7.bpl=HelpScribble HelpContext Property Editor for Delphi 7
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=1
-Item0=D:\Prog_Lazarus\git\dexif-afriess-master
+Count=2
+Item0=common
+Item1=D:\Prog_Lazarus\git\dexif-afriess-master
 [HistoryLists\hlUnitOutputDirectory]
-Count=4
-Item0=D:\Prog_Lazarus\wp-laz\fpexif\tests\readwrite\output\dcu\Delphi7
-Item1=D:\Prog_Lazarus\wp-laz\fpexif\tests\readwrite\output\tpu\Delphi7
-Item2=D:\Prog_Lazarus\wp-laz\fpexif\output\tpu\D7
-Item3=D:\Prog_Lazarus\wp-laz\fpexif\output\ppu\D7
+Count=5
+Item0=output\dcu\Delphi7
+Item1=D:\Prog_Lazarus\wp-laz\fpexif\tests\readwrite\output\dcu\Delphi7
+Item2=D:\Prog_Lazarus\wp-laz\fpexif\tests\readwrite\output\tpu\Delphi7
+Item3=D:\Prog_Lazarus\wp-laz\fpexif\output\tpu\D7
+Item4=D:\Prog_Lazarus\wp-laz\fpexif\output\ppu\D7

@@ -91,10 +91,10 @@ ImageBase=1109393408
 ExeDescription=TeeChart 2014 Components
 [Directories]
 OutputDir=
-UnitOutputDir=
+UnitOutputDir=output\dcu\Delphi7
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=D:\Prog_Lazarus\wp-laz\fpexif;D:\Prog_Lazarus\wp-laz\fpexif\tests\unittest\common;D:\Prog_Lazarus\wp-laz\fpexif\tests\unittest\dunit
+SearchPath=dunit;..\..;common
 Packages=Tee97;TeeUI97;TeeDB97;TeePro97;TeeGL97;TeeImage97;TeeLanguage97;TeeWorld97
 Conditionals=
 DebugSourceDirs=
@@ -134,12 +134,18 @@ OriginalFilename=
 ProductName=
 ProductVersion=
 [Excluded Packages]
-D:\Prog_Delphi\common\Components\3rdParty\TeeChart\Sources\Compiled\Delphi7\Bin\DclTeeMaker17.bpl=TeeMaker
+D:\Prog_Delphi\common\Components\3rdParty\TeeChart\Sources\Compiled\Delphi7\Bin\DclTeeMaker17.bpl=TeeMaker 
 D:\Programme\Borland\Delphi7\Lib\HelpCtxD7.bpl=HelpScribble HelpContext Property Editor for Delphi 7
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=2
-Item0=D:\Prog_Lazarus\wp-laz\fpexif;D:\Prog_Lazarus\wp-laz\fpexif\tests\unittest\common;D:\Prog_Lazarus\wp-laz\fpexif\tests\unittest\dunit
-Item1=D:\Prog_Lazarus\wp-laz\fpexif;D:\Prog_Lazarus\wp-laz\fpexif\tests\unittest\common
+Count=5
+Item0=dunit;..\..;common
+Item1=dunit;..\..
+Item2=dunit
+Item3=D:\Prog_Lazarus\wp-laz\fpexif;D:\Prog_Lazarus\wp-laz\fpexif\tests\unittest\common;D:\Prog_Lazarus\wp-laz\fpexif\tests\unittest\dunit
+Item4=D:\Prog_Lazarus\wp-laz\fpexif;D:\Prog_Lazarus\wp-laz\fpexif\tests\unittest\common
+[HistoryLists\hlUnitOutputDirectory]
+Count=1
+Item0=output\dcu\Delphi7

@@ -41,7 +41,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DCC_UnitSearchPath>D:\Prog_Lazarus\git\dexif-afriess-master;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\..;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_F>false</DCC_F>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_E>false</DCC_E>
@@ -58,7 +58,7 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
         <DCC_Description>TeeChart 2014 Components</DCC_Description>
-        <DCC_DcuOutput>D:\Prog_Lazarus\wp-laz\fpexif\tests\readwrite\output\dcu\Delphi\</DCC_DcuOutput>
+        <DCC_DcuOutput>output\dcu\Delphi</DCC_DcuOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>

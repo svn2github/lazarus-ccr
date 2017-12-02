@@ -50,8 +50,7 @@
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
         <DCC_DebugInformation>1</DCC_DebugInformation>
         <DCC_Description>TeeChart 2014 Components</DCC_Description>
-        <DCC_ExeOutput>D:\Prog_Lazarus\wp-laz\fpexif\tests\multiread</DCC_ExeOutput>
-        <DCC_DcuOutput>D:\Prog_Lazarus\wp-laz\fpexif\tests\multiread\output\dcu\Delphi</DCC_DcuOutput>
+        <DCC_DcuOutput>output\dcu\Delphi</DCC_DcuOutput>
         <DCC_UsePackage>Tee97;TeeUI97;TeeDB97;TeePro97;TeeGL97;TeeImage97;TeeLanguage97;TeeWorld97;$(DCC_UsePackage)</DCC_UsePackage>
         <SanitizedProjectName>MultiRead_Delphi</SanitizedProjectName>
         <DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;$(DCC_Namespace)</DCC_Namespace>
@@ -60,6 +59,7 @@
         <VerInfo_Release>11</VerInfo_Release>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=Steema Software;FileDescription=;FileVersion=9.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=9.0.0.0</VerInfo_Keys>
+        <DCC_UnitSearchPath>common;..\..;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
