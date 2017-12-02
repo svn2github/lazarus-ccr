@@ -1,0 +1,1682 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: fpestrconsts.rsacceleration
+msgid "Acceleration"
+msgstr ""
+
+#: fpestrconsts.rsactionadvised
+msgid "Action advised"
+msgstr ""
+
+#: fpestrconsts.rsaperturevalue
+msgid "Aperture value"
+msgstr ""
+
+#: fpestrconsts.rsartist
+msgid "Artist"
+msgstr ""
+
+#: fpestrconsts.rsautomanual
+msgid "0:Auto,1:Manual"
+msgstr ""
+
+#: fpestrconsts.rsbitspersample
+msgid "Bits per sample"
+msgstr ""
+
+#: fpestrconsts.rsbrightnessvalue
+msgid "Brightness value"
+msgstr ""
+
+#: fpestrconsts.rsbyline
+msgid "ByLine"
+msgstr ""
+
+#: fpestrconsts.rsbylinetitle
+msgid "ByLine title"
+msgstr ""
+
+#: fpestrconsts.rscameraelevationangle
+msgid "Camera elevation angle"
+msgstr ""
+
+#: fpestrconsts.rscannotsavetounknownfileformat
+msgid "The metadata structure cannot be saved because the file format of the receiving file is not known or not supported."
+msgstr ""
+
+#: fpestrconsts.rscanonaelkup
+msgid "0:Normal AE,1:Exposure compensation,2:AE lock,3:AE lock + Exposure compensation,4:No AE"
+msgstr ""
+
+#: fpestrconsts.rscanonaflkup
+msgid "$2005:Manual AF point selection,$3000:None (MF),$3001:Auto AF point selection,$3002:Right,$3003:Center,$3004:Left,$4001:Auto AF point selection,$4006:Face Detect"
+msgstr ""
+
+#: fpestrconsts.rscanonautorotlkup
+msgid "0:None,1:Rotate 90 CW,2:Rotate 180,3:Rotate 270 CW"
+msgstr ""
+
+#: fpestrconsts.rscanonbiaslkup
+msgid "65472:-2 EV,65484:-1.67 EV,65488:-1.50 EV,65492:-1.33 EV,65504:-1 EV,65516:-0.67 EV,65520:-0.50 EV,65524:-0.33 EV,0:0 EV,12:0.33 EV,16:0.50 EV,20:0.67 EV,32:1 EV,44:1.33 EV,48:1.50 EV,52:1.67 EV,64:2 EV"
+msgstr ""
+
+#: fpestrconsts.rscanoncamtypelkup
+msgid "248:EOS High-end,250:Compact,252:EOS Mid-range,255:DV Camera"
+msgstr ""
+
+#: fpestrconsts.rscanoneasylkup
+msgid "0:Full Auto,1:Manual,2:Landscape,3:Fast Shutter,4:Slow Shutter,5:Night,6:Gray scale,7:Sepia,8:Portrait,9:Sports,10:Macro,11:Black & White,12:Pan Focus,13:Vivid,14:Neutral,15:Flash off,16:Long shutter,17:Super macro,18:Foliage,19:Indoor,20:Fireworks,21:Beach,22:Underwater,23:Snow,24:Kids & Pets,25:Night snapshot,26:Digital macro,27:My colors,28:Movie snap,29:Super macro 2,30:Color accent,31:Color swap,32:Aquarium,33:ISO3200,34:ISO6400,35:Creative light effect,36:Easy,37:Quick shot,38:Creative auto,39:Zoom blur,40:Low light,41:Nostalgic,42:Super vivid,43:Poster effect,44:Face self-timer,45:Smile,46:Wink self-timer,47:Fisheye effect,48:Miniature effect,49:High-speed burst,50:Best image selection,51:High dynamic range,52:Handheld night scene,53:Movie digest,54:Live view control,55:Discreet,56:Blur reduction,57:Monochrome,58:Toy camera effect,59:Scene intelligent auto,60:High-speed burst HQ,61:Smooth skin,62:Soft focus,257:Spotlight,258:Night 2,259:Night+,260:Super night,261:Sunset,263:Night scene,264:Surface,265:Low light 2"
+msgstr ""
+
+#: fpestrconsts.rscanonexposelkup
+msgid "0:Easy shooting,1:Program AE,2:Shutter speed priority AE,3:Aperture priority AE,4:Manual,5:Depth-of-field AE,6:M-Dep,7:Bulb"
+msgstr ""
+
+#: fpestrconsts.rscanonflashactlkup
+msgid "0:Did not fire,1:Fired"
+msgstr ""
+
+#: fpestrconsts.rscanonflashlkup
+msgid "0:Not fired,1:Auto,2:On,3:Red-eye,4:Slow sync,5:Auto+red-eye,6:On+red eye,16:External flash"
+msgstr ""
+
+#: fpestrconsts.rscanonfocaltypelkup
+msgid "1:Fixed,2:Zoom"
+msgstr ""
+
+#: fpestrconsts.rscanonfoctypelkup
+msgid "0:Manual,1:Auto,3:Close-up (macro),8:Locked (pan mode)"
+msgstr ""
+
+#: fpestrconsts.rscanonfocuslkup
+msgid "0:One-Shot AF,1:AI Servo AF,2:AI Focus AF,3:Manual focus,4:Single,5:Continuous,6:Manual focus,16:Pan focus,256:AF+MF,512:Movie snap focus,519:Movie servo AF"
+msgstr ""
+
+#: fpestrconsts.rscanongenlkup
+msgid "65535:Low,0:Normal,1:High"
+msgstr ""
+
+#: fpestrconsts.rscanonimgstablkup
+msgid "0:Off,1:On,2:Shoot only,3:Panning,4:Dynamic,256:Off,257:On,258:Shoot only,259:Panning,260:Dynamic"
+msgstr ""
+
+#: fpestrconsts.rscanonisolkup
+msgid "0:Not used,15:auto,16:50,17:100,18:200,19:400"
+msgstr ""
+
+#: fpestrconsts.rscanonmacrolkup
+msgid "1:Macro,2:Normal"
+msgstr ""
+
+#: fpestrconsts.rscanonmeterlkup
+msgid "0:Default,1:Spot,2:Average,3:Evaluative,4:Partial,5:Center-weighted average"
+msgstr ""
+
+#: fpestrconsts.rscanonpandirlkup
+msgid "0:Left to right,1:Right to left,2:Bottom to top,3:Top to bottom,4:2x2 Matrix (clockwise)"
+msgstr ""
+
+#: fpestrconsts.rscanonqualitylkup
+msgid "65535:n/a,1:Economy,2:Normal,3:Fine,4:RAW,5:Superfine,130:Normal Movie,131:Movie (2)"
+msgstr ""
+
+#: fpestrconsts.rscanonreclkup
+msgid "1:JPEG,2:CRW+THM,3:AVI+THM,4:TIF,5:TIF+JPEG,6:CR2,7:CR2+JPEG,9:MOV,10:MP4"
+msgstr ""
+
+#: fpestrconsts.rscanonsizelkup
+msgid "65535:n/a,0:Large,1:Medium,2:Small,4:5 MPixel,5:2 MPixel,6:1.5 MPixel,8:Postcard,9:Widescreen,10:Medium widescreen,14:Small 1,15:Small 2,16:Small 3,128:640x480 movie,129:Medium movie,130:Small movie,137:128x720 movie,142:1920x1080 movie"
+msgstr ""
+
+#: fpestrconsts.rscanonsloshuttlkup
+msgid "65535:n/a,0:Off,1:Night scene,2:On,3:None"
+msgstr ""
+
+#: fpestrconsts.rscanonwhiteballkup
+msgid "0:Auto,1:Daylight,2:Cloudy,3:Tungsten,4:Flourescent,5:Flash,6:Custom,7:Black & white,8:Shade,9:Manual temperature (Kelvin),14:Daylight fluorescent,17:Under water"
+msgstr ""
+
+#: fpestrconsts.rscanonzoomlkup
+msgid "0:None,1:2x,2:4x,3:Other"
+msgstr ""
+
+#: fpestrconsts.rscasioafmode2lkup
+msgid "0:Off,1:Spot,2:Multi,3:Face detection,4:Tracking,5:Intelligent"
+msgstr ""
+
+#: fpestrconsts.rscasioartmode2lkup
+msgid "0:Normal,8:Silent movie,39:HDR,45:Premium auto,47:Painting,49:Crayon drawing,51:Panorama,52:Art HDR,62:High Speed night shot,64:Monochrome,67:Toy camera,68:Pop art,69:Light tone"
+msgstr ""
+
+#: fpestrconsts.rscasioautoiso2lkup
+msgid "1:On,2:Off,7:On (high sensitivity),8:On (anti-shake),10:High Speed"
+msgstr ""
+
+#: fpestrconsts.rscasioccdsensitivitylkup
+msgid "64:Normal,125:+1.0,250:+2.0,244:+3.0,80:Normal,100:High"
+msgstr ""
+
+#: fpestrconsts.rscasiocolorfilter2lkup
+msgid "0:Off,1:Blue,3:Green,4:Yellow,5:Red,6:Purple,7:Pink"
+msgstr ""
+
+#: fpestrconsts.rscasiocolormode2lkup
+msgid "0:Off,2:Black & White,3:Sepia"
+msgstr ""
+
+#: fpestrconsts.rscasiodigitalzoomlkup
+msgid "$10000:Off,$10001:2x Digital zoom,$20000:2x digital zoom,$40000:4x digital zoom"
+msgstr ""
+
+#: fpestrconsts.rscasiodrivemode2lkup
+msgid "0:Single shot,1:Continuous shooting,2:Continuous (2 fps),3:Continuous (3 fps),4:Continuous (4 fps),5:Continuous (5 fps),6:Continuous (6 fps),7:Continuous (7 fps),10:Continuous (10 fps),12:Continuous (12 fps),15:Continuous (15 fps),20:Continuous (20 fps),30:Continuous (30 fps),40:Continuous (40 fps),60:Continuous (60 fps),240:Auto-N"
+msgstr ""
+
+#: fpestrconsts.rscasioenhancement2lkup
+msgid "0:Off,1:Scenery,3:Green,5:Underwater,9:Flesh tones"
+msgstr ""
+
+#: fpestrconsts.rscasioflashintensitylkup
+msgid "11:Weak,13:Normal,15:Strong"
+msgstr ""
+
+#: fpestrconsts.rscasioflashmodelkup
+msgid "1:Auto,2:On,3:Off,4:Red-eye reduction"
+msgstr ""
+
+#: fpestrconsts.rscasiofocusingmodelkup
+msgid "2:Macro,3:Auto focus,4:Manual focus,5:Infinity"
+msgstr ""
+
+#: fpestrconsts.rscasiofocusmode22lkup
+msgid "0:Manual,1:Focus lock,2:Macro,3:Single-area auto focus,5:Infinity,6:Multi-area auto focus,8:Super macro"
+msgstr ""
+
+#: fpestrconsts.rscasiofocusmode2lkup
+msgid "0:Normal,1:Macro"
+msgstr ""
+
+#: fpestrconsts.rscasioimagesize2lkup
+msgid "0:640 x 480,4:1600 x 1200,5:2048 x 1536,20:2288 x 1712,21:2592 x 1944,22:2304 x 1728,36:3008 x 2008"
+msgstr ""
+
+#: fpestrconsts.rscasioimagestabilization2lkup
+msgid "0:Off,1:On,2:Best shot,3:Movie anti-shake"
+msgstr ""
+
+#: fpestrconsts.rscasioisospeed2lkup
+msgid "3 = 50,4:64,6:100,9:200"
+msgstr ""
+
+#: fpestrconsts.rscasiolightingmode2lkup
+msgid "0:Off,1:High dynamic range,5:Shadow enhance low,6:Shadow enhance high"
+msgstr ""
+
+#: fpestrconsts.rscasioportraitrefiner2lkup
+msgid "0:Off,1:+1,2:+2"
+msgstr ""
+
+#: fpestrconsts.rscasiorecordingmodelkup
+msgid "1:Single shutter,2:Panorama,3:Night scene,4:Portrait,5:Landscape"
+msgstr ""
+
+#: fpestrconsts.rscasiorecordmode2lkup
+msgid "2:Program AE,3:Shutter priority,4:Aperture priority,5:Manual,6:Best shot,17:Movie,19:Movie (19),20:YouTube Movie"
+msgstr ""
+
+#: fpestrconsts.rscasioreleasemode2lkup
+msgid "1:Normal,3:AE Bracketing,11:WB Bracketing,13 = Contrast Bracketing,19:High Speed Burst"
+msgstr ""
+
+#: fpestrconsts.rscasiosharpness2lkup
+msgid "0:Soft,1:Normal,2:Hard"
+msgstr ""
+
+#: fpestrconsts.rscasiospecialeffectsetting2lkup
+msgid "0:Off,1:Makeup,2:Mist removal,3:Vivid landscape,16:Art shot"
+msgstr ""
+
+#: fpestrconsts.rscasiovideoquality2lkup
+msgid "1:Standard,3:HD (720p),4:Full HD (1080p),5:Low"
+msgstr ""
+
+#: fpestrconsts.rscasiowhitebalance22lkup
+msgid "0:Manual,1:Daylight,2:Cloudy,3:Shade,4:Flash?,6:Fluorescent,9:Tungsten?,10:Tungsten,12:Flash"
+msgstr ""
+
+#: fpestrconsts.rscasiowhitebalance2lkup
+msgid "0:Auto,1:Daylight,2:Shade,3:Tungsten,4:Fluorescent,5:Manual"
+msgstr ""
+
+#: fpestrconsts.rscasiowhitebalancelkup
+msgid "1:Auto,2:Tungsten,3:Daylight,4:Fluorescent,5:Shade,129:Manual"
+msgstr ""
+
+#: fpestrconsts.rscategory
+msgid "Category"
+msgstr ""
+
+#: fpestrconsts.rscellheight
+msgid "Cell height"
+msgstr ""
+
+#: fpestrconsts.rscellwidth
+msgid "Cell width"
+msgstr ""
+
+#: fpestrconsts.rscfapattern
+msgid "CFA pattern"
+msgstr ""
+
+#: fpestrconsts.rscity
+msgid "City"
+msgstr ""
+
+#: fpestrconsts.rscodedcharset
+msgid "Coded character set"
+msgstr ""
+
+#: fpestrconsts.rscolorspace
+msgid "Color space"
+msgstr ""
+
+#: fpestrconsts.rscolorspacelkup
+msgid "0:sBW,1:sRGB,2:Adobe RGB,65533:Wide Gamut RGB,65534:ICC Profile,65535:Uncalibrated"
+msgstr ""
+
+#: fpestrconsts.rscomponentsconfig
+msgid "Components configuration"
+msgstr ""
+
+#: fpestrconsts.rscompressedbitsperpixel
+msgid "Compressed bits per pixel"
+msgstr ""
+
+#: fpestrconsts.rscompression
+msgid "Compression"
+msgstr ""
+
+#: fpestrconsts.rscompressionlkup
+msgid "1:Uncompressed,2:CCITT 1D,3:T4/Group 3 Fax,4:T6/Group 4 Fax,5:LZW,6:JPEG (old-style),7:JPEG,8:Adobe Deflate,9:JBIG B&W,10:JBIG Color,99:JPEG,262:Kodak 262,32766:Next,32767:Sony ARW Compressed,32769:Packed RAW,32770:Samsung SRW Compressed,32771:CCIRLEW,32772:Samsung SRW Compressed 2,32773:PackBits,32809:Thunderscan,32867:Kodak KDC Compressed,32895:IT8CTPAD,32896:IT8LW,32897:IT8MP,32898:IT8BL,32908:PixarFilm,32909:PixarLog,32946:Deflate,32947:DCS,34661:JBIG,34676:SGILog,34677:SGILog24,34712:JPEG 2000,34713:Nikon NEF Compressed,34715:JBIG2 TIFF FX,34718:Microsoft Document Imaging (MDI) Binary Level Codec,34719:Microsoft Document Imaging (MDI) Progressive Transform Codec,34720:Microsoft Document Imaging (MDI) Vector,34892:Lossy JPEG,65000:Kodak DCR Compressed,65535:Pentax PEF Compressed"
+msgstr ""
+
+#: fpestrconsts.rscontact
+msgid "Contact"
+msgstr ""
+
+#: fpestrconsts.rscontentloccode
+msgid "Content location code"
+msgstr ""
+
+#: fpestrconsts.rscontentlocname
+msgid "Content location name"
+msgstr ""
+
+#: fpestrconsts.rscontrast
+msgid "Contrast"
+msgstr ""
+
+#: fpestrconsts.rscopyright
+msgid "Copyright"
+msgstr ""
+
+#: fpestrconsts.rscustomrendered
+msgid "Custom rendered"
+msgstr ""
+
+#: fpestrconsts.rscustomrenderedlkup
+msgid "0:Normal,1:Custom"
+msgstr ""
+
+#: fpestrconsts.rsdatecreated
+msgid "Date created"
+msgstr ""
+
+#: fpestrconsts.rsdatetime
+msgid "Date/time"
+msgstr ""
+
+#: fpestrconsts.rsdatetimedigitized
+msgid "Date/time digitized"
+msgstr ""
+
+#: fpestrconsts.rsdatetimeoriginal
+msgid "Date/time original"
+msgstr ""
+
+#: fpestrconsts.rsdevicesettingdescription
+msgid "Device setting description"
+msgstr ""
+
+#: fpestrconsts.rsdigitalzoom
+msgid "Digital zoom"
+msgstr ""
+
+#: fpestrconsts.rsdigitalzoomratio
+msgid "Digital zoom ratio"
+msgstr ""
+
+#: fpestrconsts.rsdigitizedate
+msgid "Digital creation date"
+msgstr ""
+
+#: fpestrconsts.rsdigitizetime
+msgid "Digital creation time"
+msgstr ""
+
+#: fpestrconsts.rsdocumentname
+msgid "Document name"
+msgstr ""
+
+#: fpestrconsts.rseconomynormalfine
+msgctxt "fpestrconsts.rseconomynormalfine"
+msgid "0:Economy,1:Normal,2:Fine"
+msgstr ""
+
+#: fpestrconsts.rseconomynormalfine1
+msgctxt "fpestrconsts.rseconomynormalfine1"
+msgid "1:Economy,2:Normal,3:Fine"
+msgstr ""
+
+#: fpestrconsts.rseditorialupdate
+msgid "Editorial update"
+msgstr ""
+
+#: fpestrconsts.rseditstatus
+msgid "Edit status"
+msgstr ""
+
+#: fpestrconsts.rsexifimageheight
+msgid "EXIF image height"
+msgstr ""
+
+#: fpestrconsts.rsexifimagewidth
+msgid "EXIF image width"
+msgstr ""
+
+#: fpestrconsts.rsexifoffset
+msgid "EXIF offset"
+msgstr ""
+
+#: fpestrconsts.rsexifversion
+msgid "EXIF version"
+msgstr ""
+
+#: fpestrconsts.rsexpiredate
+msgid "Expiration date"
+msgstr ""
+
+#: fpestrconsts.rsexpiretime
+msgid "Expiration time"
+msgstr ""
+
+#: fpestrconsts.rsexposurebiasvalue
+msgid "Exposure bias value"
+msgstr ""
+
+#: fpestrconsts.rsexposureindex
+msgid "Exposure index"
+msgstr ""
+
+#: fpestrconsts.rsexposuremode
+msgid "Exposure mode"
+msgstr ""
+
+#: fpestrconsts.rsexposuremodelkup
+msgid "0:Auto,1:Manual,2:Auto bracket"
+msgstr ""
+
+#: fpestrconsts.rsexposureprogram
+msgid "Exposure program"
+msgstr ""
+
+#: fpestrconsts.rsexposureprogramlkup
+msgid "0:Not defined,1:Manual,2:Program AE,3:Aperture-priority AE,4:Shutter speed priority AE,5:Creative (slow speed),6:Action (high speed),7:Portrait,8:Landscape;9:Bulb"
+msgstr ""
+
+#: fpestrconsts.rsexposuretime
+msgid "Exposure time"
+msgstr ""
+
+#: fpestrconsts.rsextensiblemetadataplatform
+msgid "Extensible metadata platform"
+msgstr ""
+
+#: fpestrconsts.rsfilenotfounderror
+msgid "File \"%s\" not found."
+msgstr ""
+
+#: fpestrconsts.rsfilesource
+msgid "File source"
+msgstr ""
+
+#: fpestrconsts.rsfilesourcelkup
+msgid "0:Unknown,1:Film scanner,2:Reflection print scanner,3:Digital camera"
+msgstr ""
+
+#: fpestrconsts.rsfillorder
+msgid "Fill order"
+msgstr ""
+
+#: fpestrconsts.rsfillorderlkup
+msgid "1:Normal,2:Reversed"
+msgstr ""
+
+#: fpestrconsts.rsfixtureid
+msgid "Fixture ID"
+msgstr ""
+
+#: fpestrconsts.rsflash
+msgid "Flash"
+msgstr ""
+
+#: fpestrconsts.rsflashenergy
+msgid "Flash energy"
+msgstr ""
+
+#: fpestrconsts.rsflashlkup
+msgid "0:No flash,1:Fired,5:Fired; return not detected,7:Fired; return detected,8:On; did not fire,9:On; fired,13:On; return not detected,15:On; return detected,16:Off; did not fire,20:Off; did not fire, return not detected,24:Auto; did not fire,25:Auto; fired;29:Auto; fired; return not detected,31:Auto; fired; return detected,32:No flash function,48:Off, no flash function,65:Fired; red-eye reduction,69:Fired; red-eye reduction; return not detected,71:Fired; red-eye reduction; return detected,73:On; red-eye reduction,77:On; red-eye reduction, return not detected,79:On, red-eye reduction, return detected,80:Off; red-eye reduction,88:Auto; did not fire; red-eye reduction,89:Auto; fired; red-eye reduction,93:Auto; fired; red-eye reduction; return not detected,95:Auto; fired; red-eye reduction, return detected"
+msgstr ""
+
+#: fpestrconsts.rsflashpixversion
+msgid "FlashPix version"
+msgstr ""
+
+#: fpestrconsts.rsfnumber
+msgid "F number"
+msgstr ""
+
+#: fpestrconsts.rsfocallength
+msgid "Focal length"
+msgstr ""
+
+#: fpestrconsts.rsfocallengthin35mm
+msgid "Focal length in 35 mm film"
+msgstr ""
+
+#: fpestrconsts.rsfocalplaneresunit
+msgid "Focal plane resolution unit"
+msgstr ""
+
+#: fpestrconsts.rsfocalplaneresunitlkup
+msgid "1:None,2:inches,3:cm,4:mm,5:um"
+msgstr ""
+
+#: fpestrconsts.rsfocalplanexres
+msgid "Focal plane x resolution"
+msgstr ""
+
+#: fpestrconsts.rsfocalplaneyres
+msgid "Focal plane y resolution"
+msgstr ""
+
+#: fpestrconsts.rsfujiadvancedfilterlkup
+msgid "65536:Pop Color,131072:Hi Key,196608:Toy Camera,262144:Miniature, 327680:Dynamic Tone,327681:Partial Color Red,327682:Partial Color Yellow,327683:Partial Color Green,327684:Partial Color Blue,327685:Partial Color Orange,327686:Partial Color Purple,458752:Soft Focus,589824:Low Key"
+msgstr ""
+
+#: fpestrconsts.rsfujiautobracketinglkup
+msgid "0:Off,1:On,2:No flash & flash"
+msgstr ""
+
+#: fpestrconsts.rsfujiblurwarninglkup
+msgid "0:None,1:Blur Warning"
+msgstr ""
+
+#: fpestrconsts.rsfujicolormodelkup
+msgid "0:Standard,16:Chrome,48:B & W"
+msgstr ""
+
+#: fpestrconsts.rsfujicontrastlkup
+msgid "0:Normal,128:Medium High,256:High,384:Medium Low,512:Low,32768:Film Simulation"
+msgstr ""
+
+#: fpestrconsts.rsfujicontrastlkup1
+msgid "0:Normal,256:High,768:Low"
+msgstr ""
+
+#: fpestrconsts.rsfujidynamicrangelkup
+msgid "1:Standard,3:Wide"
+msgstr ""
+
+#: fpestrconsts.rsfujiexposurewarninglkup
+msgid "0:Good,1:Bad exposure"
+msgstr ""
+
+#: fpestrconsts.rsfujiexrmodelkup
+msgid "128:HR (High Resolution),512:SN (Signal to Noise priority),768:DR (Dynamic Range priority)"
+msgstr ""
+
+#: fpestrconsts.rsfujiflashmodelkup
+msgid "0:Auto,1:On,2:Off,3:Red-eye reduction,4:External,16:Commander,32768:Not Attached,33056:TTL,38976:Manual,39040:Multi-flash,43296:1st Curtain (front),51488:2nd Curtain (rear),59680:High Speed Sync (HSS)"
+msgstr ""
+
+#: fpestrconsts.rsfujifocuswarninglkup
+msgid "0:Good,1:Out of focus"
+msgstr ""
+
+#: fpestrconsts.rsfujihighisonoisereductionlkup
+msgid "0:0 (normal),256:+2 (strong),384:+1 (medium strong),448:+3 (very strong),480:+4 (strongest)512:-2 (weak),640:-1 (medium weak),704:-3 (very weak),736:-4 (weakest)"
+msgstr ""
+
+#: fpestrconsts.rsfujinoisereductionlkup
+msgid "64:Low,128:Normal,256:n/a"
+msgstr ""
+
+#: fpestrconsts.rsfujipanoramadirlkup
+msgid "1:Right,2:Up,3:Left,4:Down"
+msgstr ""
+
+#: fpestrconsts.rsfujipicturemodelkup
+msgid "0:Auto,1:Portrait,2:Landscape,3:Macro,4:Sports,5:Night Scene,6:Program AE,7:Natural Light,8:Anti-blur,9:Beach & Snow,10:Sunset,11:Museum,12:Party,13:Flower,14:Text,15:Natural Light & Flash,16:Beach,17:Snow,18:Fireworks,19:Underwater,20:Portrait with Skin Correction,22:Panorama,23:Night (tripod),24:Pro Low-light,25:Pro Focus,26:Portrait 2,27:Dog Face Detection,28:Cat Face Detection,64:Advanced Filter,256:Aperture-priority AE,512:Shutter speed priority AE,768:Manual"
+msgstr ""
+
+#: fpestrconsts.rsfujisaturationlkup
+msgid "0:0 (normal),128:+1 (medium high),192:+3 (very high),224:+4 (highest),256:+2 (high),384:-1 (medium low),512:Low,768:None (B&W),769:B&W Red Filter,770:B&W Yellow Filter,771:B&W Green Filter,784:B&W Sepia,1024:-2 (low),1216:-3 (very low),1248:-4 (lowest),1280:Acros,1281:Acros Red Filter,1282:Acros Yellow Filter,1283:Acros Green Filter,32768:Film Simulation"
+msgstr ""
+
+#: fpestrconsts.rsfujiscenerecognlkup
+msgid "0:Unrecognized,256:Portrait Image,512:Landscape Image,768:Night Scene,1024:Macro"
+msgstr ""
+
+#: fpestrconsts.rsfujishadowhighlightlkup
+msgid "-64:+4 (hardest),-48:+3 (very hard),-32:+2 (hard),-16:+1 (medium hard)"
+msgstr ""
+
+#: fpestrconsts.rsfujisharpnesslkup
+msgid "0:-4 (softest),1:-3 (very soft),2:-2 (soft),3:0 (normal),4:+2 (hard),5:+3 (very hard),6:+4 (hardest),130:-1 (medium soft),132:+1 (medium hard),32768:Film Simulation,65535:n/a"
+msgstr ""
+
+#: fpestrconsts.rsfujishuttertypelkup
+msgid "0:Mechanical,1:Electronic"
+msgstr ""
+
+#: fpestrconsts.rsfujiwhiteballkup
+msgid "0:Auto,256:Daylight,512:Cloudy,768:Daylight Fluorescent,769:Day White Fluorescent,770:White Fluorescent,771:Warm White Fluorescent,772:Living Room Warm White Fluorescent,1024:Incandescent,1280:Flash,1536:Underwater,3840:Custom,3841:Custom2,3842:Custom3,3843:Custom4,3844:Custom5,4080:Kelvin"
+msgstr ""
+
+#: fpestrconsts.rsgaincontrol
+msgid "Gain control"
+msgstr ""
+
+#: fpestrconsts.rsgaincontrollkup
+msgid "0:None,1:Low gain up,2:High gain up,3:Low gain down,4:High gain down"
+msgstr ""
+
+#: fpestrconsts.rsgamma
+msgid "Gamma"
+msgstr ""
+
+#: fpestrconsts.rsgpsaltitude
+msgid "GPS altitude"
+msgstr ""
+
+#: fpestrconsts.rsgpsaltituderef
+msgid "GPS altitude reference"
+msgstr ""
+
+#: fpestrconsts.rsgpsaltitudereflkup
+msgid "0: Above sea level,1:Below sea level"
+msgstr ""
+
+#: fpestrconsts.rsgpsareainformation
+msgid "Area information"
+msgstr ""
+
+#: fpestrconsts.rsgpsdatedifferential
+msgid "GPS date differential"
+msgstr ""
+
+#: fpestrconsts.rsgpsdatedifferentiallkup
+msgid "0:No correction,1:Differential corrected"
+msgstr ""
+
+#: fpestrconsts.rsgpsdatestamp
+msgid "GPS date stamp"
+msgstr ""
+
+#: fpestrconsts.rsgpsdestbearing
+msgid "GPS destination bearing"
+msgstr ""
+
+#: fpestrconsts.rsgpsdestbearingref
+msgid "GPS destination bearing reference"
+msgstr ""
+
+#: fpestrconsts.rsgpsdestdistance
+msgid "GPS destination distance"
+msgstr ""
+
+#: fpestrconsts.rsgpsdestdistanceref
+msgid "GPS destination distance reference"
+msgstr ""
+
+#: fpestrconsts.rsgpsdestlatitude
+msgid "GPS destination latitude"
+msgstr ""
+
+#: fpestrconsts.rsgpsdestlatituderef
+msgid "GPS destination latitude reference"
+msgstr ""
+
+#: fpestrconsts.rsgpsdestlongitude
+msgid "GPS destination longitude"
+msgstr ""
+
+#: fpestrconsts.rsgpsdestlongituderef
+msgid "GPS destination longitude reference"
+msgstr ""
+
+#: fpestrconsts.rsgpsdistancereflkup
+msgid "K:Kilometers,M:Miles,N:Nautical miles"
+msgstr ""
+
+#: fpestrconsts.rsgpsdop
+msgid "GPS DOP"
+msgstr ""
+
+#: fpestrconsts.rsgpshpositioningerror
+msgid "GPS H positioning error"
+msgstr ""
+
+#: fpestrconsts.rsgpsimagedirection
+msgid "GPS image direction"
+msgstr ""
+
+#: fpestrconsts.rsgpsimagedirectionref
+msgid "GPS image direction reference"
+msgstr ""
+
+#: fpestrconsts.rsgpsinfo
+msgid "GPS info"
+msgstr ""
+
+#: fpestrconsts.rsgpslatitude
+msgid "GPS latitude"
+msgstr ""
+
+#: fpestrconsts.rsgpslatituderef
+msgid "GPS latitude reference"
+msgstr ""
+
+#: fpestrconsts.rsgpslatitudereflkup
+msgid "N:North,S:South"
+msgstr ""
+
+#: fpestrconsts.rsgpslongitude
+msgid "GPS longitude"
+msgstr ""
+
+#: fpestrconsts.rsgpslongituderef
+msgid "GPS longitude reference"
+msgstr ""
+
+#: fpestrconsts.rsgpslongitudereflkup
+msgid "E:East,W:West"
+msgstr ""
+
+#: fpestrconsts.rsgpsmapdatum
+msgid "GPS map datum"
+msgstr ""
+
+#: fpestrconsts.rsgpsmeasuremode
+msgid "GPS measurement mode"
+msgstr ""
+
+#: fpestrconsts.rsgpsmeasuremodelkup
+msgid "2:2-Dimensional Measurement,3:3-Dimensional Measurement"
+msgstr ""
+
+#: fpestrconsts.rsgpsprocessingmode
+msgid "GPS processing mode"
+msgstr ""
+
+#: fpestrconsts.rsgpssatellites
+msgid "GPS satellites"
+msgstr ""
+
+#: fpestrconsts.rsgpsspeed
+msgid "GPS speed"
+msgstr ""
+
+#: fpestrconsts.rsgpsspeedref
+msgid "GPS speed reference"
+msgstr ""
+
+#: fpestrconsts.rsgpsspeedreflkup
+msgid "K:km/h,M:mph,N:knots"
+msgstr ""
+
+#: fpestrconsts.rsgpsstatus
+msgid "GPS status"
+msgstr ""
+
+#: fpestrconsts.rsgpstimestamp
+msgid "GPS time stamp"
+msgstr ""
+
+#: fpestrconsts.rsgpstrack
+msgid "GPS track"
+msgstr ""
+
+#: fpestrconsts.rsgpstrackref
+msgid "GPS track reference"
+msgstr ""
+
+#: fpestrconsts.rsgpstrackreflkup
+msgid "M:Magnetic north,T:True north"
+msgstr ""
+
+#: fpestrconsts.rsgpsversionid
+msgid "GPS version ID"
+msgstr ""
+
+#: fpestrconsts.rshalftonehints
+msgid "Half-tone hints"
+msgstr ""
+
+#: fpestrconsts.rshostcomputer
+msgid "Host computer"
+msgstr ""
+
+#: fpestrconsts.rshumidity
+msgid "Humidity"
+msgstr ""
+
+#: fpestrconsts.rsimagedatafilenotexisting
+msgid "File \"%s\" providing the image data does not exist."
+msgstr ""
+
+#: fpestrconsts.rsimagedatafilenotspecified
+msgid "The metadata structure is not linked to an image. Specify the name of the file providing the image data."
+msgstr ""
+
+#: fpestrconsts.rsimagedescr
+msgid "Image description"
+msgstr ""
+
+#: fpestrconsts.rsimageformatnotsupported
+msgid "Image format not supported."
+msgstr ""
+
+#: fpestrconsts.rsimageheight
+msgid "Image height"
+msgstr ""
+
+#: fpestrconsts.rsimagehistory
+msgid "Image history"
+msgstr ""
+
+#: fpestrconsts.rsimagenumber
+msgid "Image number"
+msgstr ""
+
+#: fpestrconsts.rsimageresourcenametoolong
+msgid "Image resource name \"%s\" too long."
+msgstr ""
+
+#: fpestrconsts.rsimageuniqueid
+msgid "Unique image ID"
+msgstr ""
+
+#: fpestrconsts.rsimagewidth
+msgid "Image width"
+msgstr ""
+
+#: fpestrconsts.rsimgcaption
+msgid "Image caption"
+msgstr ""
+
+#: fpestrconsts.rsimgcaptionwriter
+msgid "Image caption writer"
+msgstr ""
+
+#: fpestrconsts.rsimgcredit
+msgid "Image credit"
+msgstr ""
+
+#: fpestrconsts.rsimgheadline
+msgid "Image headline"
+msgstr ""
+
+#: fpestrconsts.rsimgtype
+msgid "Image type"
+msgstr ""
+
+#: fpestrconsts.rsincompletejpegsegmentheader
+msgid "Defective JPEG structure: Incomplete segment header"
+msgstr ""
+
+#: fpestrconsts.rsincorrectfilestructure
+msgid "Incorrect file structure"
+msgstr ""
+
+#: fpestrconsts.rsincorrecttagtype
+msgid "Incorrect tag type %d: Index=%d, TagID=$%.04x, File:\"%s\""
+msgstr ""
+
+#: fpestrconsts.rsinkset
+msgid "Ink set"
+msgstr ""
+
+#: fpestrconsts.rsinksetlkup
+msgid "1:CMYK,2:Not CMYK"
+msgstr ""
+
+#: fpestrconsts.rsinteropindex
+msgid "Interoperabiliy index"
+msgstr ""
+
+#: fpestrconsts.rsinteropoffset
+msgid "Interoperability offset"
+msgstr ""
+
+#: fpestrconsts.rsinteropversion
+msgid "Interoperability version"
+msgstr ""
+
+#: fpestrconsts.rsiptcdataexpected
+msgid "IPTC data expected, but not found."
+msgstr ""
+
+#: fpestrconsts.rsiptcextendeddatasizenotsupported
+msgid "Data size %d not supported for an IPTC extended dataset."
+msgstr ""
+
+#: fpestrconsts.rsiptcnaa
+msgid "IPTC/NAA"
+msgstr ""
+
+#: fpestrconsts.rsiptcorientationlkup
+msgid "P:Portrait,L:Landscape,S:Square"
+msgstr ""
+
+#: fpestrconsts.rsiso
+msgid "ISO"
+msgstr ""
+
+#: fpestrconsts.rsisospeed
+msgid "ISO speed"
+msgstr ""
+
+#: fpestrconsts.rsisospeedlatitudeyyy
+msgid "ISO latitude yyy"
+msgstr ""
+
+#: fpestrconsts.rsisospeedlatitudezzz
+msgid "ISO speed latitude zzz"
+msgstr ""
+
+#: fpestrconsts.rsjpegcompresseddatawriting
+msgid "Writing error of compressed data."
+msgstr ""
+
+#: fpestrconsts.rsjpegreadwriteerrorinsegment
+msgid "Read/write error in segment $FF%.2x"
+msgstr ""
+
+#: fpestrconsts.rsjpegsegmentmarkerexpected
+msgid "Defective JPEG structure: Segment marker ($FF) expected."
+msgstr ""
+
+#: fpestrconsts.rskeywords
+msgid "Keywords"
+msgstr ""
+
+#: fpestrconsts.rslangid
+msgid "Language ID"
+msgstr ""
+
+#: fpestrconsts.rslensinfo
+msgid "Lens info"
+msgstr ""
+
+#: fpestrconsts.rslensmake
+msgid "Lens make"
+msgstr ""
+
+#: fpestrconsts.rslensmodel
+msgid "Lens model"
+msgstr ""
+
+#: fpestrconsts.rslensserialnumber
+msgid "Lens serial number"
+msgstr ""
+
+#: fpestrconsts.rslightsource
+msgid "Light source"
+msgstr ""
+
+#: fpestrconsts.rslightsourcelkup
+msgid "0:Unknown,1:Daylight,2:Fluorescent,3:Tungsten (incandescent),4:Flash,9:Fine weather,10:Cloudy,11:Shade,12:Daylight fluorescent,13:Day white fluorescent,14:Cool white fluorescent,15:White fluorescent,16:Warm white fluorescent,17:Standard light A, 18:Standard light B,19:Standard light C,20:D55,21:D65,22:D74,23:D50,24:ISO Studio tungsten,255:Other"
+msgstr ""
+
+#: fpestrconsts.rslocationcode
+msgid "Country/primary location code"
+msgstr ""
+
+#: fpestrconsts.rslocationname
+msgid "Country/primary location name"
+msgstr ""
+
+#: fpestrconsts.rslownormalhigh
+msgid "0:Low,1:Normal,2:High"
+msgstr ""
+
+#: fpestrconsts.rsmacro
+msgid "Macro"
+msgstr ""
+
+#: fpestrconsts.rsmake
+msgid "Make"
+msgstr ""
+
+#: fpestrconsts.rsmakernote
+msgid "Maker note"
+msgstr ""
+
+#: fpestrconsts.rsmaxaperturevalue
+msgid "Max aperture value"
+msgstr ""
+
+#: fpestrconsts.rsmaxsamplevalue
+msgid "Max sample value"
+msgstr ""
+
+#: fpestrconsts.rsmeteringmode
+msgid "Metering mode"
+msgstr ""
+
+#: fpestrconsts.rsmeteringmodelkup
+msgid "0:Unknown,1:Average,2:Center-weighted average,3:Spot,4:Multi-spot,5:Multi-segment,6:Partial,255:Other"
+msgstr ""
+
+#: fpestrconsts.rsminoltabracketsteplkup
+msgid "0:1/3 EV,1:2/3 EV,2:1 EV"
+msgstr ""
+
+#: fpestrconsts.rsminoltacolormodelkup
+msgid "0:Natural color,1:Black & White,2:Vivid color,3:Solarization,4:Adobe RGB,5:Sepia,9:Natural,12:Portrait,13:Natural sRGB,14:Natural+ sRGB,15:Landscape,16:Evening,17:Night Scene,18:Night Portrait,132:Embed Adobe RGB"
+msgstr ""
+
+#: fpestrconsts.rsminoltacolorprofilelkup
+msgid "0:Not embedded,1:Embedded"
+msgstr ""
+
+#: fpestrconsts.rsminoltadataimprintlkup
+msgid "0;None,1:YYYY/MM/DD,2:MM/DD/HH:MM,3:Text,4:Text + ID#"
+msgstr ""
+
+#: fpestrconsts.rsminoltadecpositionlkup
+msgid "0:Exposure,1:Contrast,2:Saturation,3:Filter"
+msgstr ""
+
+#: fpestrconsts.rsminoltadigitalzoomlkup
+msgid "0:Off,1:Electronic magnification,2:2x"
+msgstr ""
+
+#: fpestrconsts.rsminoltadrivemodelkup
+msgid "0:Single,1:Continuous,2:Self-timer,4:Bracketing,5:Interval,6:UHS continuous,7:HS continuous"
+msgstr ""
+
+#: fpestrconsts.rsminoltaexposuremodelkup
+msgid "0:Program,1:Aperture priority,2:Shutter priority,3:Manual"
+msgstr ""
+
+#: fpestrconsts.rsminoltaflashmeteringlkup
+msgid "0:ADI (Advanced Distance Integration),1:Pre-flash TTL,2:Manual flash control"
+msgstr ""
+
+#: fpestrconsts.rsminoltaflashmodelkup
+msgid "0:Fill flash,1:Red-eye reduction,2:Rear flash sync,3:Wireless,4:Off?"
+msgstr ""
+
+#: fpestrconsts.rsminoltafocusarealkup
+msgid "0:Wide Focus (normal),1:Spot Focus"
+msgstr ""
+
+#: fpestrconsts.rsminoltafocusmodelkup
+msgid "0:AF,1:MF"
+msgstr ""
+
+#: fpestrconsts.rsminoltafoldernamelkup
+msgid "0:Standard Form,1:Data Form"
+msgstr ""
+
+#: fpestrconsts.rsminoltaimagesizelkup
+msgid "1:1600x1200,2:1280x960,3:640x480,5:2560x1920,6:2272x1704,7:2048x1536"
+msgstr ""
+
+#: fpestrconsts.rsminoltaimagesizelkup1
+msgid "0:Full,1:1600x1200,2:1280x960,3:640x480,6:2080x1560,7:2560x1920,8;3264x2176"
+msgstr ""
+
+#: fpestrconsts.rsminoltaimagestablkup
+msgid "1:Off,5:On"
+msgstr ""
+
+#: fpestrconsts.rsminoltainternalflashlkup
+msgid "0:No,1:Fired"
+msgstr ""
+
+#: fpestrconsts.rsminoltaintervalmodelkup
+msgid "0:Still image,1:Time-lapse movie"
+msgstr ""
+
+#: fpestrconsts.rsminoltaisosettinglkup
+msgid "0:100,1:200,2:400,3:800,4:Auto,5:64"
+msgstr ""
+
+#: fpestrconsts.rsminoltameteringmodelkup
+msgid "0:Multi-segment,1:Center-weighted average,2:Spot"
+msgstr ""
+
+#: fpestrconsts.rsminoltamodelidlkup
+msgid "0:DiMAGE 7/X1/X21 or X31,1:DiMAGE 5,2:DiMAGE S304,3:DiMAGE S404,4:DiMAGE 7i,5:DiMAGE 7Hi,6:DiMAGE A1,7:DiMAGE A2 or S414"
+msgstr ""
+
+#: fpestrconsts.rsminoltaqualitylkup
+msgid "0:Raw,1:Super Fine,2:Fine,3:Standard,4:Economy,5:Extra fine"
+msgstr ""
+
+#: fpestrconsts.rsminoltascenemodelkup
+msgid "0:Standard,1:Portrait,2:Text,3:Night Scene,4:Sunset,5:Sports,6:Landscape,7:Night Portrait,8:Macro,9:Super Macro,16:Auto,17:Night View/Portrait,18:Sweep Panorama,19:Handheld Night Shot,20:Anti Motion Blur,21:Cont. Priority AE,22:Auto+,23:3D Sweep Panorama,24:Superior Auto,25:High Sensitivity,26:Fireworks,27:Food,28:Pet,33:HDR,65535:n/a"
+msgstr ""
+
+#: fpestrconsts.rsminoltasharpnesslkup
+msgid "0:Hard,1:Normal,2:Soft"
+msgstr ""
+
+#: fpestrconsts.rsminoltasubjectprogramlkup
+msgid "0:None,1:Portrait,2:Text,3:Night portrait,4:Sunset,5:Sports action"
+msgstr ""
+
+#: fpestrconsts.rsminoltateleconverterlkup
+msgid "$0:None,$4:Minolta/Sony AF 1.4x APO (D) (0x04),$5:Minolta/Sony AF 2x APO (D) (0x05),$48 = Minolta/Sony AF 2x APO (D),$50:Minolta AF 2x APO II,$60:Minolta AF 2x APO,$88:Minolta/Sony AF 1.4x APO (D),$90 = Minolta AF 1.4x APO II,$A0 = Minolta AF 1.4x APO"
+msgstr ""
+
+#: fpestrconsts.rsminoltawhitebalancelkup
+msgid "$00:Auto,$01:Color Temperature/Color Filter,$10:Daylight,$20:Cloudy,$30:Shade,$40:Tungsten,$50:Flash,$60:Fluorescent,$70:Custom"
+msgstr ""
+
+#: fpestrconsts.rsminoltawidefocuszonelkup
+msgid "0:No zone,1:Center zone (horizontal orientation),2:Center zone (vertical orientation),3:Left zone,4:Right zone"
+msgstr ""
+
+#: fpestrconsts.rsminoltazonematchinglkup
+msgid "0:ISO Setting Used,1:High Key,2:Low Key"
+msgstr ""
+
+#: fpestrconsts.rsminsamplevalue
+msgid "Min sample value"
+msgstr ""
+
+#: fpestrconsts.rsmodel
+msgid "Model"
+msgstr ""
+
+#: fpestrconsts.rsmorethumbnailtagsthanexpected
+msgid "More thumbnail tags than expected."
+msgstr ""
+
+#: fpestrconsts.rsnikoncolormodelkup
+msgid "1:Color,2:Monochrome"
+msgstr ""
+
+#: fpestrconsts.rsnikonconverterlkup
+msgid "0:Not used,1:Used"
+msgstr ""
+
+#: fpestrconsts.rsnikonimgadjlkup
+msgid "0:Normal,1:Bright+,2:Bright-,3:Contrast+,4:Contrast-"
+msgstr ""
+
+#: fpestrconsts.rsnikonisolkup
+msgid "0:ISO80,2:ISO160,4:ISO320,5:ISO100"
+msgstr ""
+
+#: fpestrconsts.rsnikonqualitylkup
+msgid "1:Vga Basic,2:Vga Normal,3:Vga Fine,4:SXGA Basic,5:SXGA Normal,6:SXGA Fine,10:2 Mpixel Basic,11:2 Mpixel Normal,12:2 Mpixel Fine"
+msgstr ""
+
+#: fpestrconsts.rsnikonwhitebalancelkup
+msgid "0:Auto,1:Preset,2:Daylight,3:Incandescense,4:Fluorescence,5:Cloudy,6:SpeedLight"
+msgstr ""
+
+#: fpestrconsts.rsnormallowhigh
+msgctxt "fpestrconsts.rsnormallowhigh"
+msgid "0:Normal,1:Low,2:High"
+msgstr ""
+
+#: fpestrconsts.rsnormalsofthard
+msgctxt "fpestrconsts.rsnormalsofthard"
+msgid "0:Normal,1:Soft,2:Hard"
+msgstr ""
+
+#: fpestrconsts.rsnovalidiptcfile
+msgid "No valid IPTC file"
+msgstr ""
+
+#: fpestrconsts.rsnovalidiptcsignature
+msgid "No valid IPTC signature"
+msgstr ""
+
+#: fpestrconsts.rsnoyes
+msgctxt "fpestrconsts.rsnoyes"
+msgid "0:No,1:Yes"
+msgstr ""
+
+#: fpestrconsts.rsobjectattr
+msgid "Object attribute reference"
+msgstr ""
+
+#: fpestrconsts.rsobjectcycle
+msgid "Object cycle"
+msgstr ""
+
+#: fpestrconsts.rsobjectcyclelkup
+msgid "a:morning,p:evening,b:both"
+msgstr ""
+
+#: fpestrconsts.rsobjectname
+msgid "Object name"
+msgstr ""
+
+#: fpestrconsts.rsobjecttype
+msgid "Object type reference"
+msgstr ""
+
+#: fpestrconsts.rsoffon
+msgctxt "fpestrconsts.rsoffon"
+msgid "0:Off,1:On"
+msgstr ""
+
+#: fpestrconsts.rsoffsettime
+msgid "Time zone for date/time"
+msgstr ""
+
+#: fpestrconsts.rsoffsettimedigitized
+msgid "Time zone for date/time digitized"
+msgstr ""
+
+#: fpestrconsts.rsoffsettimeoriginal
+msgid "Time zone for date/time original"
+msgstr ""
+
+#: fpestrconsts.rsolympusccdscanmodelkup
+msgid "0:Interlaced,1:Progressive"
+msgstr ""
+
+#: fpestrconsts.rsolympuscontrastlkup
+msgid "0:High,1:Normal,2:Low"
+msgstr ""
+
+#: fpestrconsts.rsolympusflashdevlkup
+msgid "0:None,1:Internal,4:External,5:Internal + External"
+msgstr ""
+
+#: fpestrconsts.rsolympusflashmodelkup
+msgid "2:On,3;Off"
+msgstr ""
+
+#: fpestrconsts.rsolympusflashmodellkup
+msgid "0:None,1:FL-20,2:FL-50,3:RF-11,4:TF-22,5:FL-36,6:FL-50R,7:FL-36R,9:FL-14,11:FL-600R"
+msgstr ""
+
+#: fpestrconsts.rsolympusflashtypelkup
+msgid "0:None,2:Simple E-System,3:E-System"
+msgstr ""
+
+#: fpestrconsts.rsolympusjpegquallkup
+msgid "1:SQ,2:HQ,3:SHQ,4:Raw"
+msgstr ""
+
+#: fpestrconsts.rsolympusmacrolkup
+msgid "0:Off,1:On,2:Super Macro"
+msgstr ""
+
+#: fpestrconsts.rsolympuspreviewimglength
+msgid "Preview image length"
+msgstr ""
+
+#: fpestrconsts.rsolympuspreviewimgstart
+msgid "Preview image start"
+msgstr ""
+
+#: fpestrconsts.rsolympuspreviewimgvalid
+msgid "Preview image valid"
+msgstr ""
+
+#: fpestrconsts.rsolympusscenemodelkup
+msgid "0:Normal,1:Standard,2:Auto,3:Intelligent Auto,4:Portrait,5:Landscape+Portrait,6:Landscape,7:Night Scene,8:Night+Portrait9:Sport,10:Self Portrait,11:Indoor,12:Beach & Snow,13:Beach,14:Snow,15:Self Portrait+Self Timer,16:Sunset,17:Cuisine,18:Documents,19:Candle,20:Fireworks,21:Available Light,22:Vivid,23:Underwater Wide1,24:Underwater Macro,25:Museum,26:Behind Glass,27:Auction,28:Shoot & Select1,29:Shoot & Select2,30:Underwater Wide2,31:Digital Image Stabilization,32:Face Portrait,33:Pet,34:Smile Shot,35:Quick Shutter,43:Hand-held Starlight,100:Panorama,101:Magic Filter,103:HDR"
+msgstr ""
+
+#: fpestrconsts.rsolympussharpnesslkup
+msgid "0:Normal,1:Hard,2:Soft"
+msgstr ""
+
+#: fpestrconsts.rsorientation
+msgid "Orientation"
+msgstr ""
+
+#: fpestrconsts.rsorientationlkup
+msgid "1:Horizontal (normal),2:Mirror horizontal,3:Rotate 180,4:Mirror vertical,5:Mirror horizontal and rotate 270 CW,6:Rotate 90 CW,7:Mirror horizontal and rotate 90 CW,8:Rotate 270 CW"
+msgstr ""
+
+#: fpestrconsts.rsoriginatingprog
+msgid "Originating program"
+msgstr ""
+
+#: fpestrconsts.rsownername
+msgid "Owner name"
+msgstr ""
+
+#: fpestrconsts.rspagename
+msgid "Page name"
+msgstr ""
+
+#: fpestrconsts.rspagenumber
+msgid "Page number"
+msgstr ""
+
+#: fpestrconsts.rsphotometricint
+msgid "Photometric interpretation"
+msgstr ""
+
+#: fpestrconsts.rsphotometricintlkup
+msgid "0:White is zero,1:Black is zero,2:RGB,3:RGB palette,4:Transparency mask,5:CMYK,6:YCbCr,8:CIELab,9:ICCLab,10:ITULab,32803:Color filter array,32844:Pixar LogL,32845:Pixar LogLuv,34892:Linear Raw"
+msgstr ""
+
+#: fpestrconsts.rsplanarconfiguration
+msgid "Planar configuration"
+msgstr ""
+
+#: fpestrconsts.rsplanarconfigurationlkup
+msgid "1:Chunky,2:Planar"
+msgstr ""
+
+#: fpestrconsts.rspredictor
+msgid "Predictor"
+msgstr ""
+
+#: fpestrconsts.rspredictorlkup
+msgid "1:None,2:Horizontal differencing"
+msgstr ""
+
+#: fpestrconsts.rspressure
+msgid "Pressure"
+msgstr ""
+
+#: fpestrconsts.rsprimarychromaticities
+msgid "Primary chromaticities"
+msgstr ""
+
+#: fpestrconsts.rsprogversion
+msgid "Program version"
+msgstr ""
+
+#: fpestrconsts.rsquality
+msgid "Quality"
+msgstr ""
+
+#: fpestrconsts.rsrangecheckerror
+msgid "Range check error."
+msgstr ""
+
+#: fpestrconsts.rsreadincompleteifdrecord
+msgid "Read incomplete IFD record at stream position %d."
+msgstr ""
+
+#: fpestrconsts.rsrecexpindex
+msgid "Recommended exposure index"
+msgstr ""
+
+#: fpestrconsts.rsrecordversion
+msgid "Record version"
+msgstr ""
+
+#: fpestrconsts.rsrefblackwhite
+msgid "Reference black & white"
+msgstr ""
+
+#: fpestrconsts.rsrefdate
+msgid "Reference date"
+msgstr ""
+
+#: fpestrconsts.rsrefnumber
+msgid "Reference number"
+msgstr ""
+
+#: fpestrconsts.rsrefservice
+msgid "Reference service"
+msgstr ""
+
+#: fpestrconsts.rsrelatedimagefileformat
+msgid "Related image file format"
+msgstr ""
+
+#: fpestrconsts.rsrelatedimageheight
+msgid "Related image height"
+msgstr ""
+
+#: fpestrconsts.rsrelatedimagewidth
+msgid "Related image width"
+msgstr ""
+
+#: fpestrconsts.rsrelatedsoundfile
+msgid "Related sound file"
+msgstr ""
+
+#: fpestrconsts.rsreleasedate
+msgid "Release date"
+msgstr ""
+
+#: fpestrconsts.rsreleasetime
+msgid "Release time"
+msgstr ""
+
+#: fpestrconsts.rsresolutionunit
+msgid "Resolution unit"
+msgstr ""
+
+#: fpestrconsts.rsresolutionunitlkup
+msgid "1:None,2:inches,3:cm"
+msgstr ""
+
+#: fpestrconsts.rsrowsperstrip
+msgid "Rows per strip"
+msgstr ""
+
+#: fpestrconsts.rssamplesperpixel
+msgid "Samples per pixel"
+msgstr ""
+
+#: fpestrconsts.rssanyomacrolkup
+msgid "0:Normal,1:Macro,2:View,3:Manual"
+msgstr ""
+
+#: fpestrconsts.rssanyoqualitylkup
+msgid "0:Normal/Very Low,1:Normal/Low,2:Normal/Medium Low,3:Normal/Medium,4:Normal/Medium High,5:Normal/High,6:Normal/Very High7:Normal/Super High,256:Fine/Very Low,257:Fine/Low,258:Fine/Medium Low259:Fine/Medium,260:Fine/Medium High,261:Fine/High,262:Fine/Very High263:Fine/Super High,512:Super Fine/Very Low,513:Super Fine/Low,514:Super Fine/Medium Low,515:Super Fine/Medium,516:Super Fine/Medium High,517:Super Fine/High,518:Super Fine/Very High,519:Super Fine/Super High"
+msgstr ""
+
+#: fpestrconsts.rssanyospecialmode
+msgid "Special mode"
+msgstr ""
+
+#: fpestrconsts.rssaturation
+msgid "Saturation"
+msgstr ""
+
+#: fpestrconsts.rsscenecapturetype
+msgid "Scene capture type"
+msgstr ""
+
+#: fpestrconsts.rsscenecapturetypelkup
+msgid "0:Standard,1:Landscape,2:Portrait,3:Night"
+msgstr ""
+
+#: fpestrconsts.rsscenetype
+msgid "Scene type"
+msgstr ""
+
+#: fpestrconsts.rsscenetypelkup
+msgid "0:Unknown,1:Directly photographed"
+msgstr ""
+
+#: fpestrconsts.rssecurityclassification
+msgid "Security classification"
+msgstr ""
+
+#: fpestrconsts.rsselftimermode
+msgid "Self-timer mode"
+msgstr ""
+
+#: fpestrconsts.rsseminfo
+msgid "SEM info"
+msgstr ""
+
+#: fpestrconsts.rssensingmethod
+msgid "Sensing method"
+msgstr ""
+
+#: fpestrconsts.rssensingmethodlkup
+msgid "1:Not defined,2:One-chip color area,3:Two-chip color area,4:Three-chip color area,5:Color sequential area,7:Trilinear,8:Color sequential linear"
+msgstr ""
+
+#: fpestrconsts.rssensitivitytype
+msgid "Sensitivity type"
+msgstr ""
+
+#: fpestrconsts.rssensitivitytypelkup
+msgid "0:Unknown,1:Standard Output Sensitivity2:Recommended exposure index,3:ISO speed,4:Standard output sensitivity and recommended exposure index,5:Standard output sensitivity and ISO Speed,6:Recommended exposure index and ISO speed,7:Standard output sensitivity, recommended exposure index and ISO speed"
+msgstr ""
+
+#: fpestrconsts.rsserialnumber
+msgid "Serial number"
+msgstr ""
+
+#: fpestrconsts.rssharpness
+msgid "Sharpness"
+msgstr ""
+
+#: fpestrconsts.rsshutterspeedvalue
+msgid "Shutter speed value"
+msgstr ""
+
+#: fpestrconsts.rssinglecontinuous
+msgctxt "fpestrconsts.rssinglecontinuous"
+msgid "0:Single,1:Continuous"
+msgstr ""
+
+#: fpestrconsts.rssoftware
+msgid "Software"
+msgstr ""
+
+#: fpestrconsts.rssource
+msgid "Source"
+msgstr ""
+
+#: fpestrconsts.rsspatialfrequresponse
+msgid "Spatial frequency response"
+msgstr ""
+
+#: fpestrconsts.rsspecialinstruct
+msgid "Special instructions"
+msgstr ""
+
+#: fpestrconsts.rsspectralsensitivity
+msgid "Spectral sensitivity"
+msgstr ""
+
+#: fpestrconsts.rsstate
+msgid "Province/State"
+msgstr ""
+
+#: fpestrconsts.rsstdoutputsens
+msgid "Standard output sensitivity"
+msgstr ""
+
+#: fpestrconsts.rsstripbytecounts
+msgid "Strip byte counts"
+msgstr ""
+
+#: fpestrconsts.rsstripoffsets
+msgid "Strip offsets"
+msgstr ""
+
+#: fpestrconsts.rssubfile
+msgid "Subfile"
+msgstr ""
+
+#: fpestrconsts.rssubfiletypelkup
+msgid "0:Full-resolution image,1:Reduced-resolution image,2:Single page of multi-page image,3:Single page of multi-page reduced-resolution image,4:Transparency mask,5:Transparency mask of reduced-resolution image,6:Transparency mask of multi-page image,7:Transparency mask of reduced-resolution multi-page image"
+msgstr ""
+
+#: fpestrconsts.rssubjectarea
+msgid "Subject area"
+msgstr ""
+
+#: fpestrconsts.rssubjectdistance
+msgid "Subject distance"
+msgstr ""
+
+#: fpestrconsts.rssubjectdistancerange
+msgid "Subject distance range"
+msgstr ""
+
+#: fpestrconsts.rssubjectdistancerangelkup
+msgid "0:Unknown,1:Macro,2:Close,3:Distant"
+msgstr ""
+
+#: fpestrconsts.rssubjectlocation
+msgid "Subject location"
+msgstr ""
+
+#: fpestrconsts.rssubjectref
+msgid "Subject reference"
+msgstr ""
+
+#: fpestrconsts.rssublocation
+msgid "Sublocation"
+msgstr ""
+
+#: fpestrconsts.rssubsectime
+msgid "Fractional seconds of date/time"
+msgstr ""
+
+#: fpestrconsts.rssubsectimedigitized
+msgid "Fractional seconds of date/time digitized"
+msgstr ""
+
+#: fpestrconsts.rssubsectimeoriginal
+msgid "Fractional seconds of date/time original"
+msgstr ""
+
+#: fpestrconsts.rssuppcategory
+msgid "Supplemental category"
+msgstr ""
+
+#: fpestrconsts.rstagtypenotsupported
+msgid "Tag \"%s\" has an unsupported type."
+msgstr ""
+
+#: fpestrconsts.rstargetprinter
+msgid "Target printer"
+msgstr ""
+
+#: fpestrconsts.rstemperature
+msgid "Temperature"
+msgstr ""
+
+#: fpestrconsts.rsthresholding
+msgid "Thresholding"
+msgstr ""
+
+#: fpestrconsts.rsthresholdinglkup
+msgid "1:No dithering or halftoning,2:Ordered dither or halftone,3:Randomized dither"
+msgstr ""
+
+#: fpestrconsts.rsthumbnailheight
+msgid "Thumbnail height"
+msgstr ""
+
+#: fpestrconsts.rsthumbnailoffset
+msgid "Thumbnail offset"
+msgstr ""
+
+#: fpestrconsts.rsthumbnailsize
+msgid "Thumbnail size"
+msgstr ""
+
+#: fpestrconsts.rsthumbnailwidth
+msgid "Thumbnail width"
+msgstr ""
+
+#: fpestrconsts.rstilelength
+msgid "Tile length"
+msgstr ""
+
+#: fpestrconsts.rstilewidth
+msgid "Tile width"
+msgstr ""
+
+#: fpestrconsts.rstimecreated
+msgid "Time created"
+msgstr ""
+
+#: fpestrconsts.rstimezoneoffset
+msgid "Time zone offset"
+msgstr ""
+
+#: fpestrconsts.rstransferfunction
+msgid "Transfer function"
+msgstr ""
+
+#: fpestrconsts.rstransmissionref
+msgid "Original transmission reference"
+msgstr ""
+
+#: fpestrconsts.rsunknownimageformat
+msgid "Unknown image format."
+msgstr ""
+
+#: fpestrconsts.rsurgency
+msgid "Urgency"
+msgstr ""
+
+#: fpestrconsts.rsurgencylkup
+msgid "0:reserved,1:most urgent,5:normal,8:least urgent,9:reserved"
+msgstr ""
+
+#: fpestrconsts.rsusercomment
+msgid "User comment"
+msgstr ""
+
+#: fpestrconsts.rswaterdepth
+msgid "Water depth"
+msgstr ""
+
+#: fpestrconsts.rswhitebalance
+msgid "White balance"
+msgstr ""
+
+#: fpestrconsts.rswhitepoint
+msgid "White point"
+msgstr ""
+
+#: fpestrconsts.rswritingnotimplemented
+msgid "Writing of %s files not yet implemented."
+msgstr ""
+
+#: fpestrconsts.rsxposition
+msgid "X position"
+msgstr ""
+
+#: fpestrconsts.rsxresolution
+msgid "X resolution"
+msgstr ""
+
+#: fpestrconsts.rsycbcrcoefficients
+msgid "YCbCr coefficients"
+msgstr ""
+
+#: fpestrconsts.rsycbcrpositioning
+msgid "YCbCr positioning"
+msgstr ""
+
+#: fpestrconsts.rsycbcrposlkup
+msgid "1:Centered,2:Co-sited"
+msgstr ""
+
+#: fpestrconsts.rsycbcrsubsampling
+msgid "YCbCr subsampling"
+msgstr ""
+
+#: fpestrconsts.rsyposition
+msgid "Y position"
+msgstr ""
+
+#: fpestrconsts.rsyresolution
+msgid "Y resolution"
+msgstr ""
+
