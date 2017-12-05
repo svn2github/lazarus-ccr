@@ -4957,11 +4957,11 @@ begin
             FFilterSimpleEdit.Width := Rect.Right - Rect.Left;
             FFilterSimpleEdit.Height := Rect.Bottom - Rect.Top;
             FFilterSimpleEdit.BoundsRect := Rect;
+            FFilterSimpleEdit.Show(Self, Cell.x - 1);
             if C.Filter.CurrentValues.Count>0 then
               FFilterSimpleEdit.Text := C.Filter.CurrentValues[0]
             else
               FFilterSimpleEdit.Text := '';
-            FFilterSimpleEdit.Show(Self, Cell.x - 1);
           end
           else
           begin
