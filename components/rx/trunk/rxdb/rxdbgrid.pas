@@ -5486,8 +5486,16 @@ procedure TRxDBGrid.FFilterSimpleEditOnChange(Sender: TObject);
 begin
   with TRxColumn(Columns[Columns.RealIndex(FFilterSimpleEdit.Col)]).Filter do
   begin
-    CurrentValues.Text:=FFilterSimpleEdit.Text;
-    State:=rxfsFilter;
+    if FFilterSimpleEdit.Text = '' then
+    begin
+      CurrentValues.Clear;
+      State:=rxfsAll;
+    end
+    else
+    begin
+      CurrentValues.Text:=FFilterSimpleEdit.Text;
+      State:=rxfsFilter;
+    end;
   end;
 
   DataSource.DataSet.DisableControls;
