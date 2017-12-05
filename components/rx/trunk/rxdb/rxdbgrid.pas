@@ -384,7 +384,7 @@ type
   { TRxColumnFilter }
 
   TRxFilterState = (rxfsAll, rxfsEmpty, rxfsNonEmpty, rxfsFilter{, rxfsTopXXXX});
-  TRxFilterStyle = (rxfstSimple, rxfstDialog);
+  TRxFilterStyle = (rxfstSimple, rxfstDialog, rxfstManualEdit);
 
   TRxColumnFilter = class(TPersistent)
   private
@@ -710,6 +710,23 @@ type
     property Col: integer read FCol;
   end;
 
+  { TFilterSimpleEdit }
+
+  TFilterSimpleEdit = class(TEdit)
+  private
+    FGrid: TCustomGrid;
+    FCol: integer;
+    FMouseFlag: boolean;
+  protected
+    procedure WndProc(var TheMessage: TLMessage); override;
+    procedure KeyDown(var Key: word; Shift: TShiftState); override;
+  public
+    procedure Show(Grid: TCustomGrid; Col: integer);
+    property Grid: TCustomGrid read FGrid;
+    property Col: integer read FCol;
+    property MouseFlag: boolean read FMouseFlag write FMouseFlag;
+  end;
+
 
   { TRxDBGrid }
   TRxDBGrid = class(TCustomDBGrid)
@@ -763,6 +780,7 @@ type
 
     FFilterListEditor: TFilterListCellEditor;
     FFilterColDlgButton: TFilterColDlgButton;
+    FFilterSimpleEdit:TFilterSimpleEdit;
 
 //    FOldPosition: Integer;
     FVersion: integer;
@@ -892,6 +910,7 @@ type
     procedure FFilterListEditorOnChange(Sender: TObject);
     procedure FFilterListEditorOnCloseUp(Sender: TObject);
     procedure FFilterColDlgButtonOnClick(Sender: TObject);
+    procedure FFilterSimpleEditOnChange(Sender: TObject);
 
     procedure InternalOptimizeColumnsWidth(AColList: TList);
     procedure VisualChange; override;
@@ -1244,6 +1263,45 @@ type
     constructor Create(Aowner : TComponent); override;
     procedure EditingDone; override;
   end;
+
+{ TFilterSimpleEdit }
+
+procedure TFilterSimpleEdit.WndProc(var TheMessage: TLMessage);
+begin
+  if TheMessage.msg = LM_KILLFOCUS then
+  begin
+    Change;
+    Hide;
+    if HWND(TheMessage.WParam) = HWND(Handle) then
+    begin
+      // lost the focus but it returns to ourselves
+      // eat the message.
+      TheMessage.Result := 0;
+      exit;
+    end;
+  end;
+  inherited WndProc(TheMessage);
+end;
+
+procedure TFilterSimpleEdit.KeyDown(var Key: word; Shift: TShiftState);
+begin
+  inherited KeyDown(Key, Shift);
+  case Key of
+    VK_RETURN:
+    begin
+      Change;
+      Hide;
+    end;
+  end;
+end;
+
+procedure TFilterSimpleEdit.Show(Grid: TCustomGrid; Col: integer);
+begin
+  FGrid := Grid;
+  FCol := Col;
+  Visible := True;
+  SetFocus;
+end;
 
 { TRxColumnGroupParam }
 
@@ -3155,6 +3213,7 @@ begin
   begin
     FFilterListEditor.Hide;
     FFilterColDlgButton.Hide;
+    FFilterSimpleEdit.Hide;
     LayoutChanged;
   end;
 
@@ -3388,6 +3447,11 @@ begin
       if Assigned(FFilterListEditor) then
       begin
         RowHeights[0] := RowHeights[0] + FFilterListEditor.Height
+      end
+      else
+      if Assigned(FFilterSimpleEdit) then
+      begin
+        RowHeights[0] := RowHeights[0] + FFilterSimpleEdit.Height
       end
       else
       begin
@@ -4858,6 +4922,11 @@ begin
         begin
           if C.Filter.Style = rxfstSimple then
           begin
+            if FFilterSimpleEdit.Visible then
+              FFilterSimpleEdit.Hide;
+            if FFilterColDlgButton.Visible then
+              FFilterColDlgButton.Hide;
+
             FFilterListEditor.Style := csDropDownList;
             if C.Filter.DropDownRows>0 then
               FFilterListEditor.DropDownCount := C.Filter.DropDownRows;
@@ -4876,9 +4945,31 @@ begin
             FFilterListEditor.Show(Self, Cell.x - 1);
           end
           else
+          if C.Filter.Style = rxfstManualEdit then
           begin
             if FFilterListEditor.Visible then
               FFilterListEditor.Hide;
+
+            if FFilterColDlgButton.Visible then
+              FFilterColDlgButton.Hide;
+
+            FFilterSimpleEdit.Parent := Self;
+            FFilterSimpleEdit.Width := Rect.Right - Rect.Left;
+            FFilterSimpleEdit.Height := Rect.Bottom - Rect.Top;
+            FFilterSimpleEdit.BoundsRect := Rect;
+            if C.Filter.CurrentValues.Count>0 then
+              FFilterSimpleEdit.Text := C.Filter.CurrentValues[0]
+            else
+              FFilterSimpleEdit.Text := '';
+            FFilterSimpleEdit.Show(Self, Cell.x - 1);
+          end
+          else
+          begin
+            if FFilterListEditor.Visible then
+              FFilterListEditor.Hide;
+
+            if FFilterSimpleEdit.Visible then
+              FFilterSimpleEdit.Hide;
 
             FFilterColDlgButton.Parent:=Self;
             FFilterColDlgButton.Width := 32;
@@ -5391,6 +5482,24 @@ begin
   RxDBGrid_PopUpFilterForm.Free;
 end;
 
+procedure TRxDBGrid.FFilterSimpleEditOnChange(Sender: TObject);
+begin
+  with TRxColumn(Columns[Columns.RealIndex(FFilterSimpleEdit.Col)]).Filter do
+  begin
+    CurrentValues.Text:=FFilterSimpleEdit.Text;
+    State:=rxfsFilter;
+  end;
+
+  DataSource.DataSet.DisableControls;
+  DataSource.DataSet.Filtered:=false;
+  DataSource.DataSet.Filtered:=true;
+  CalcStatTotals;
+  DataSource.DataSet.EnableControls;
+
+  if Assigned(FOnFiltred) then
+    FOnFiltred(Self);
+end;
+
 procedure TRxDBGrid.InternalOptimizeColumnsWidth(AColList: TList);
 var
   P: TBookmark;
@@ -5485,9 +5594,16 @@ begin
     FFilterListEditor.Left:=R.Left;
   end
   else
+  if FFilterSimpleEdit.Visible then
+  begin
+    R:=CellRect(FFilterSimpleEdit.Col+1,0);
+    FFilterSimpleEdit.Width:=Columns[FFilterSimpleEdit.Col].Width;
+    FFilterSimpleEdit.Left:=R.Left;
+  end
+  else
   if FFilterColDlgButton.Visible then
   begin
-    R:=CellRect(FFilterListEditor.Col+1,0);
+    R:=CellRect(FFilterColDlgButton.Col+1,0);
     FFilterColDlgButton.Left := R.Right - FFilterColDlgButton.Width;
   end;
 end;
@@ -5834,6 +5950,15 @@ begin
       else}
       if Filter.CurrentValues.Count > 0 then
       begin
+        if Filter.Style = rxfstManualEdit then
+        begin
+          if UTF8Pos(UTF8UpperCase(Filter.CurrentValues[0]), UTF8UpperCase(Field.DisplayText)) < 1 then
+          begin
+            Accept := False;
+            break;
+          end;
+        end
+        else
         if Filter.CurrentValues.IndexOf(Field.DisplayText) < 0 then
         begin
           Accept := False;
@@ -6690,6 +6815,12 @@ begin
   FFilterColDlgButton.OnClick := @FFilterColDlgButtonOnClick;
   FFilterColDlgButton.Glyph.Assign(FEllipsisRxBMP);
 
+
+  FFilterSimpleEdit:=TFilterSimpleEdit.Create(nil);
+  FFilterSimpleEdit.Name := 'FFilterSimpleEdit';
+  FFilterSimpleEdit.Visible := False;
+  FFilterSimpleEdit.OnChange := @FFilterSimpleEditOnChange;
+
   FColumnResizing := False;
 
   FRxDbGridLookupComboEditor := TRxDBGridLookupComboEditor.Create(nil);
@@ -7070,7 +7201,6 @@ end;
 
 procedure TFilterListCellEditor.WndProc(var TheMessage: TLMessage);
 begin
-
   if TheMessage.msg = LM_KILLFOCUS then
   begin
     Change;

@@ -1082,7 +1082,7 @@ begin
   Result := FActive and (TBookmarkData(ABookmark^) > Low(Integer)) and
     (TBookmarkData(ABookmark^) <= FLastID);
   {$ELSE}
-  Result := FActive and (TBookmarkData(pointer(ABookmark)^) > Low(Integer)) and
+  Result := FActive and Assigned(ABookmark) and (TBookmarkData(pointer(ABookmark)^) > Low(Integer)) and
     (TBookmarkData(pointer(ABookmark)^) <= FLastID);
   {$ENDIF}
 end;

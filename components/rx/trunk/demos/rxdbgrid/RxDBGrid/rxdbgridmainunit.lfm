@@ -11,7 +11,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
   OnCreate = FormCreate
   SessionProperties = 'RxDBGridExportSpreadSheet1.FileName;RxDBGridExportSpreadSheet1.OpenAfterExport;RxDBGridExportSpreadSheet1.Options;RxDBGridExportSpreadSheet1.PageName;RxDBGridPrint1.Options;RxDBGridPrint1.Orientation;RxDBGridPrint1.PageMargin;RxDBGridPrint1.ReportTitle;RxDBGridPrint1.ShowColumnHeaderOnAllPage'
   ShowHint = True
-  LCLVersion = '1.7'
+  LCLVersion = '1.9.0.0'
   object RxDBGrid1: TRxDBGrid
     Left = 0
     Height = 627
@@ -33,8 +33,6 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Constraints.MinWidth = 50
         Constraints.MaxWidth = 150
         EditButtons = <>
-        Filter.IsNull = False
-        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Нет)'
@@ -59,8 +57,6 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Width = 100
         FieldName = 'ID'
         EditButtons = <>
-        Filter.IsNull = False
-        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.Color = clLime
@@ -83,8 +79,6 @@ object RxDBGridMainForm: TRxDBGridMainForm
         FieldName = 'Developer'
         Constraints.MinWidth = 10
         EditButtons = <>
-        Filter.IsNull = False
-        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.Color = clLime
@@ -92,6 +86,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
+        Filter.Style = rxfstDialog
         Footer.Value = 'This is test'
         Footer.ValueType = fvtStaticText
         Footer.Font.Color = clRed
@@ -111,8 +106,6 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Width = 110
         FieldName = 'NAME'
         EditButtons = <>
-        Filter.IsNull = False
-        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.Color = clLime
@@ -120,6 +113,7 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Filter.AllValue = '(All values)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
+        Filter.Style = rxfstManualEdit
         Footers = <>
         WordWrap = True
       end    
@@ -146,8 +140,6 @@ object RxDBGridMainForm: TRxDBGridMainForm
             Hint = 'Clear value'
             OnClick = TRxColumnEditButtons2Click
           end>
-        Filter.IsNull = False
-        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.Color = clLime
@@ -182,8 +174,6 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Width = 136
         FieldName = 'Date_Present'
         EditButtons = <>
-        Filter.IsNull = False
-        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Нет)'
@@ -201,8 +191,6 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Width = 141
         FieldName = 'DEVELOPER_ID'
         EditButtons = <>
-        Filter.IsNull = False
-        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Нет)'
@@ -364,8 +352,6 @@ object RxDBGridMainForm: TRxDBGridMainForm
             Hint = 'Style "UpDownRx"'
             Style = ebsUpDownRx
           end>
-        Filter.IsNull = False
-        Filter.IsAll = True
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.EmptyValue = '(Нет)'
@@ -450,7 +436,6 @@ object RxDBGridMainForm: TRxDBGridMainForm
     GridLineStyle = psSolid
     DataSource = Datasource1
     Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgMultiselect, dgHeaderPushedLook]
-    ParentColor = False
     PopupMenu = PopupMenu1
     TabOrder = 0
     TitleStyle = tsNative

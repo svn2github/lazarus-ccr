@@ -131,7 +131,7 @@ begin
   RxMemoryData2.AppendRecord([3, 'Microsoft']);
 
   RxMemoryData1.Open;
-  RxMemoryData1.AppendRecord([1, 'Lazarus 0.9.23', 0, 'Open source', EncodeDate(2006, 1, 1), 1]);
+  RxMemoryData1.AppendRecord([1, 'Lazarus', 0, 'Open source', EncodeDate(2006, 1, 1), 1]);
   RxMemoryData1.AppendRecord([2, 'Delphi 7.0 Prof', 990, 'Borland', EncodeDate(2002, 1, 1), 2]);
   RxMemoryData1.AppendRecord([3, 'Open Office 2.2.0', 0, 'Open source', EncodeDate(2006, 10, 1), 1]);
   RxMemoryData1.AppendRecord([4, 'Microsoft Office', 150, 'Microsoft', EncodeDate(1997, 8, 12), 3]);
@@ -147,6 +147,8 @@ begin
   RxMemoryData1.AppendRecord([14, 'Бух. комплекс "45-я Параллель"', 180, 'ООО "Boot"', EncodeDate(2007, 2, 1), 3]);
   RxMemoryData1.AppendRecord([15, 'Консультант+', 380, 'Консультант+', EncodeDate(2007, 2, 1), 3]);
   RxMemoryData1.AppendRecord([16, 'Гарант', 480, 'Гарант', EncodeDate(2007, 2, 1), 3]);
+  RxMemoryData1.AppendRecord([17, 'Fedora Linux', 0, 'Open source', EncodeDate(2007, 2, 1), 3]);
+  RxMemoryData1.AppendRecord([17, 'Ubuntu Linux', 0, 'Open source', EncodeDate(2007, 2, 1), 3]);
 
   RxMemoryData1.First;
 
@@ -234,22 +236,20 @@ end;
 
 procedure TRxDBGridMainForm.DoFillFilters;
 var
-  C:TRxColumn;
-  i:integer;
+  C: TRxColumn;
 begin
-  for i:=0 to RxDBGrid1.Columns.Count-1 do
+  for C in RxDBGrid1.Columns do
   begin
-    C:=TRxColumn(RxDBGrid1.Columns[i]);
     C.Filter.EmptyValue:='None...';
     C.Filter.ValueList.Add(C.Filter.EmptyValue);
+//    C.Filter.Style:=;
   end;
 
   RxMemoryData1.First;
   while not RxMemoryData1.EOF do
   begin
-    for i:=0 to RxDBGrid1.Columns.Count-1 do
+    for C in RxDBGrid1.Columns do
     begin
-      C:=TRxColumn(RxDBGrid1.Columns[i]);
       if C.Filter.ValueList.IndexOf(C.Field.AsString)<0 then
         C.Filter.ValueList.Add(C.Field.AsString);
     end;
