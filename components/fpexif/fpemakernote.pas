@@ -81,6 +81,9 @@ begin
 
   // Put binary data into a word array and fix endianness
   n := Length(AData) div TagElementSize[ord(tagDef.TagType)];
+  if n = 0 then
+    exit;
+
   if FBigEndian then
     for i:=0 to n-1 do AData[i] := BEtoN(AData[i])
   else
@@ -94,58 +97,101 @@ begin
     1:   // Exposure Info 1
       with FImgInfo.ExifData do begin
         AddMakerNoteTag(1, 1, 'Macro mode',          w[1],  rsCanonMacroLkup);
+        if n = 2 then exit;
         AddMakerNoteTag(1, 2, 'Self-timer',          w[2]/10, '%2:.1f s');
+        if n = 3 then exit;
         AddMakerNoteTag(1, 3, 'Quality',             w[3],  rsCanonQualityLkup);
+        if n = 4 then exit;
         AddMakerNoteTag(1, 4, 'Flash mode',          w[4],  rsCanonFlashLkup);
+        if n = 5 then exit;
         AddMakerNoteTag(1, 5, 'Drive mode',          w[5],  rsSingleContinuous);
+        if n = 7 then exit;
         AddMakerNoteTag(1, 7, 'Focus mode',          w[7],  rsCanonFocusLkup);
+        if n = 9 then exit;
         AddMakerNoteTag(1, 9, 'Record mode',         w[9],  rsCanonRecLkup);
+        if n = 10 then exit;
         AddMakerNoteTag(1,10, 'Image size',          w[10], rsCanonSizeLkup);
+        if n = 11 then exit;
         AddMakerNoteTag(1,11, 'Easy shoot',          w[11], rsCanonEasyLkup);
+        if n = 12 then exit;
         AddMakerNoteTag(1,12, 'Digital zoom',        w[12], rsCanonZoomLkup);
+        if n = 13 then exit;
         AddMakerNoteTag(1,13, 'Contrast',            w[13], rsCanonGenLkup);
+        if n = 14 then exit;
         AddMakerNoteTag(1,14, 'Saturation',          w[14], rsCanonGenLkup);
+        if n = 15 then exit;
         AddMakerNoteTag(1,15, 'Sharpness',           w[15], rsCanonGenLkup);
+        if n = 16 then exit;
         AddMakerNoteTag(1,16, 'CCD ISO',             w[16], rsCanonISOLkup);
+        if n = 17 then exit;
         AddMakerNoteTag(1,17, 'Metering mode',       w[17], rsCanonMeterLkup);
+        if n = 18 then exit;
         AddMakerNoteTag(1,18, 'Focus type',          w[18], rsCanonFocTypeLkup);
-        AddMakerNoteTag(1,19, 'AFPoint',            w[19], rsCanonAFLkup);
+        if n = 19 then exit;
+        AddMakerNoteTag(1,19, 'AFPoint',             w[19], rsCanonAFLkup);
+        if n = 20 then exit;
         AddMakerNoteTag(1,20, 'Exposure mode',       w[20], rsCanonExposeLkup);
+        if n = 24 then exit;
         AddMakerNoteTag(1,24, 'Long focal',          w[24]);
+        if n = 25 then exit;
         AddMakerNoteTag(1,25, 'Short focal',         w[25]);
+        if n = 26 then exit;
         AddMakerNoteTag(1,26, 'Focal units',         w[26]);
+        if n = 28 then exit;
         AddMakerNoteTag(1,28, 'Flash activity',      w[28], rsCanonFlashActLkup);
+        if n = 29 then exit;
         AddMakerNoteTag(1,29, 'Flash details',       w[29]);
+        if n = 32 then exit;
         AddMakerNoteTag(1,32, 'Focus mode',          w[32], rsSingleContinuous);
-        AddMakerNoteTag(1,33, 'AESetting',          w[33], rsCanonAELkup);
+        if n = 33 then exit;
+        AddMakerNoteTag(1,33, 'AESetting',           w[33], rsCanonAELkup);
+        if n = 34 then exit;
         AddMakerNoteTag(1,34, 'Image stabilization', w[34], rsSingleContinuous);
       end;
     2:  // Focal length
       with FImgInfo.ExifData do begin
         AddMakerNoteTag(2, 0, 'FocalType',           w[0],  rsCanonFocalTypeLkup);
+        if n = 1 then exit;
         AddMakerNoteTag(2, 1, 'FocalLength',         w[1]);
       end;
     4:  // ExposureInfo2
       with FImgInfo.ExifData do begin
+        if n = 7 then exit;
         AddMakerNoteTag(4, 7, 'WhiteBalance',        w[7], rsCanonWhiteBalLkup);
+        if n = 8 then exit;
         AddMakerNoteTag(4, 8, 'Slow shutter',        w[8], rsCanonSloShuttLkup);
+        if n = 9 then exit;
         AddMakerNoteTag(4, 9, 'SequenceNumber',      w[9]);
+        if n = 11 then exit;
         AddMakerNoteTag(4,11, 'OpticalZoomStep',     w[11]);
+        if n = 12 then exit;
         AddMakerNoteTag(4,12, 'Camera temperature',  w[12]);
-        AddMakerNoteTag(4,14, 'AFPoint',            w[14]);
+        if n = 14 then exit;
+        AddMakerNoteTag(4,14, 'AFPoint',             w[14]);
+        if n = 15 then exit;
         AddMakerNoteTag(4,15, 'FlashBias',           w[15], rsCanonBiasLkup);
+        if n = 19 then exit;
         AddMakerNoteTag(4,19, 'Distance',            w[19]);
+        if n = 21 then exit;
         AddMakerNoteTag(4,21, 'FNumber',             w[21]);
+        if n = 22 then exit;
         AddMakerNoteTag(4,22, 'Exposure time',       w[22]);
+        if n = 23 then exit;
         AddMakerNoteTag(4,23, 'Measured EV2',        w[23]);
+        if n = 24 then exit;
         AddMakerNoteTag(4,24, 'Bulb duration',       w[24]);
+        if n = 26 then exit;
         AddMakerNoteTag(4,26, 'Camera type',         w[26], rsCanonCamTypeLkup);
+        if n = 27 then exit;
         AddMakerNoteTag(4,27, 'Auto rotation',       w[27], rsCanonAutoRotLkup);
+        if n = 28 then exit;
         AddMakerNoteTag(4,28, 'NDFilter',           w[28], rsCanonGenLkup);
       end;
     5:  // Panorma
       with FImgInfo.ExifData do begin
+        if n = 2 then exit;
         AddMakerNoteTag(5, 2, 'Panorama frame number', w[2]);
+        if n = 5 then exit;
         AddMakerNoteTag(5, 5, 'Panorama direction',    w[5], rsCanonPanDirLkup);
       end;
   end;

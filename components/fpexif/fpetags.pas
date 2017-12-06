@@ -818,9 +818,10 @@ var
   len: Integer;
 begin
   len := Length(AValue);
-  FCount := len div TagElementSize[ord(FType)];
   SetLength(FRawData, len);
-  Move(AValue[0], FRawData[0], len);
+  if len > 0 then
+    Move(AValue[0], FRawData[0], len);
+  FCount := len div TagElementSize[ord(FType)];
 end;
 
 procedure TTag.SetTruncBinary(const AValue: Boolean);
@@ -1225,11 +1226,13 @@ var
   r: TExifRational;
 begin
   Result := GetRational(AIndex, r);
-  if Result then begin
+  if Result and (r.Denominator <> 0) then
+  begin
     AValue := r.Numerator / r.Denominator;
     if IsInt(AValue) then
       AValue := Round(AValue);
-  end;
+  end else
+    Result := false;
 end;
 
 function TFloatTag.GetRational(AIndex: Integer; out AValue: TExifRational): Boolean;
@@ -1457,6 +1460,9 @@ begin
   // Not sure what Delphi does when a unicodestring is put into FValue.
 
   Result := '';
+  if Length(FRawData) = 0 then
+    exit;
+
   SetLength(sa, Length(FRawData));
   Move(FRawData[0], sa[1], Length(FRawData));
   while (sa <> '') and (sa[Length(sa)] = #0) do
@@ -1472,9 +1478,10 @@ procedure TStringTag.SetAsString(const AValue: String);
 var
   sa: Ansistring;
 begin
-  if AValue = '' then
-    SetLength(FRawData, 0)
-  else
+  if AValue = '' then begin
+    SetLength(FRawData, 0);
+    FCount := 0;
+  end else
   begin
     sa := ansistring(AValue);
     FCount := Length(sa);

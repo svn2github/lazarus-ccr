@@ -330,7 +330,8 @@ begin
   AIdentifier := block.Identifier;
   AName := block.Name;
   SetLength(AData, Length(block.Data));
-  Move(block.Data[0], AData[0], Length(AData));
+  if Length(block.Data) > 0 then
+    Move(block.Data[0], AData[0], Length(AData));
 end;
 
 function TIptcData.GetImageResourceBlockCount: Integer;
@@ -580,7 +581,9 @@ procedure TIptcDateTag.SetAsString(const AValue: String);
 var
   d: TDateTime;
   fmt: String;
+ {$IFNDEF FPC}
   fs: TFormatSettings;
+ {$ENDIF}
 begin
   fmt := GetFormat;
   if fmt = IPTC_DATE_FORMAT then
@@ -642,7 +645,9 @@ procedure TIptcTimeTag.SetAsString(const AValue: String);
 var
   t: TDateTime;
   fmt: String;
+ {$IFNDEF FPC}
   fs: TFormatSettings;
+ {$ENDIF}
 begin
   fmt := GetFormat;
   if fmt = IPTC_TIME_FORMAT then

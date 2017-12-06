@@ -336,20 +336,22 @@ begin
     ifdRec.DataCount := FixEndian32(ifdRec.DataCount);
     // ifRec.DataValue will be converted later.
     byteCount := Integer(ifdRec.DataCount) * TagElementSize[ifdRec.DataType];
-    SetLength(data, bytecount);
-    if byteCount <= 4 then
-      Move(ifdRec.DataValue, data[0], byteCount)
-    else begin
-      AStream.Position := FStartPosition + FixEndian32(ifdRec.DataValue);
-      AStream.Read(data[0], byteCount);
-    end;
-    AddTag(AStream, ifdRec, data, AParent);
+    if byteCount > 0 then begin
+      SetLength(data, bytecount);
+      if byteCount <= 4 then
+        Move(ifdRec.DataValue, data[0], byteCount)
+      else begin
+        AStream.Position := FStartPosition + FixEndian32(ifdRec.DataValue);
+        AStream.Read(data[0], byteCount);
+      end;
+      AddTag(AStream, ifdRec, data, AParent);
 
-    if ifdRec.DataType = ord(ttIFD) then begin
-      newPos := FStartPosition + FixEndian32(ifdRec.DataValue);
-      if newPos < AStream.Size then begin
-        AStream.Position := newPos;
-        ReadIFD(AStream, ifdRec.TagID shl 16);
+      if ifdRec.DataType = ord(ttIFD) then begin
+        newPos := FStartPosition + FixEndian32(ifdRec.DataValue);
+        if newPos < AStream.Size then begin
+          AStream.Position := newPos;
+          ReadIFD(AStream, ifdRec.TagID shl 16);
+        end;
       end;
     end;
 

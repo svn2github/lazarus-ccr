@@ -28,6 +28,7 @@ Some examples in which fpexif can be applied:
   in foreign countries)
 - adding GPS information to scanned photographs
 - remember exposure settings of difficult photos
+- extract thumbnails for a super-fast thumbnail viewer
 
 
 --------------------------------------------------------------------------------

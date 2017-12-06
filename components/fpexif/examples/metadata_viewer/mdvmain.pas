@@ -14,12 +14,20 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    CheckBox1: TCheckBox;
     FilenameInfo: TLabel;
+    Image: TImage;
+    Messages: TMemo;
+    PageControl1: TPageControl;
+    Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
     PreviewImage: TImage;
     ImageList: TImageList;
+    Splitter3: TSplitter;
     StatusBar1: TStatusBar;
+    PgMetadata: TTabSheet;
+    PgImage: TTabSheet;
     TagListView: TListView;
     ShellPanel: TPanel;
     ShellListView: TShellListView;
@@ -28,6 +36,7 @@ type
     Splitter2: TSplitter;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure PageControl1Change(Sender: TObject);
     procedure ShellListViewSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
     procedure ShellTreeViewGetImageIndex(Sender: TObject; Node: TTreeNode);
@@ -38,6 +47,7 @@ type
       Selected: Boolean);
   private
     FImgInfo: TImgInfo;
+    FImageLoaded: Boolean;
     procedure LoadFile(const AFileName: String);
     procedure LoadFromIni;
     procedure SaveToIni;
@@ -94,6 +104,9 @@ var
   i: Integer;
   ms: TMemoryStream;
 begin
+  FImageLoaded := false;
+  Image.Picture.Clear;
+
   TagListView.Items.BeginUpdate;
   try
     TagListView.Clear;
@@ -102,9 +115,12 @@ begin
     try
       try
         FImgInfo.LoadFromFile(AFileName);
+        Messages.Hide;
       except
-        on E:EFpExif do
-          MessageDlg(E.Message, mtError, [mbOK], 0);
+        on E:EFpExif do begin
+          Messages.Lines.Text := E.Message;
+          Messages.Show;
+        end;
       end;
       if FImgInfo.HasExif then begin
         FImgInfo.ExifData.ExportOptions := FImgInfo.ExifData.ExportOptions + [eoTruncateBinary];
@@ -136,12 +152,24 @@ begin
         finally
           ms.Free;
         end;
+      end else
+        PreviewImage.Picture.Clear;
+
+      if FImgInfo.HasWarnings then begin
+        Messages.Lines.Text := FImgInfo.Warnings;
+        Messages.Show;
       end;
-      if FImgInfo.HasWarnings then
-        MessageDlg(FImgInfo.Warnings, mtWarning, [mbOK], 0);
+
+      if PageControl1.ActivePage = PgImage then begin
+        Image.Picture.LoadfromFile(AFileName);
+        FImageLoaded := true;
+      end;
     except
-      FreeAndNil(FImgInfo);
-      raise;
+      on E:Exception do begin
+        FreeAndNil(FImgInfo);
+        Messages.Lines.Text := E.Message;
+        Messages.Show;
+      end;
     end;
     UpdateCaption;
   finally
@@ -188,6 +216,17 @@ begin
     end;
   finally
     ini.Free;
+  end;
+end;
+
+procedure TMainForm.PageControl1Change(Sender: TObject);
+begin
+  if FImgInfo = nil then
+    exit;
+
+  if not FImageLoaded then begin
+    Image.Picture.LoadfromFile(FImgInfo.FileName);
+    FImageLoaded := true;
   end;
 end;
 

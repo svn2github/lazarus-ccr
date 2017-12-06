@@ -118,7 +118,9 @@ var
   tagID: TTagID;
   s: String;
   w: Word;
+ {$IFNDEF FPC}
   sa: ansistring;
+ {$ENDIF}
 begin
   Result := nil;
 
@@ -253,6 +255,9 @@ begin
     AName := s;
   end;
   lSize := BEToN(ReadDWord(AStream));
+  if lSize = 0 then
+    exit;
+
   SetLength(AData, lSize);
   AStream.Read(AData[0], lSize);
 end;

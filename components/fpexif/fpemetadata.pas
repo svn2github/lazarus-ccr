@@ -639,7 +639,9 @@ const
 var
   jfifSegment: TJpegJFIFSegment;
   writer: TBasicMetadataWriter;
+  {$IFNDEF FPC}
   sa: ansistring;
+  {$ENDIF}
 begin
   // Write Start-of-image segment (SOI)
   AStream.WriteBuffer(SOI_MARKER, SizeOf(SOI_MARKER));

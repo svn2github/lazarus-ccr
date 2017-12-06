@@ -89,37 +89,6 @@ object MainForm: TMainForm
     ClientHeight = 691
     ClientWidth = 647
     TabOrder = 2
-    object TagListView: TListView
-      Left = 0
-      Height = 668
-      Top = 23
-      Width = 647
-      Align = alClient
-      AutoSort = False
-      Columns = <      
-        item
-          Caption = 'Group'
-          Width = 120
-        end      
-        item
-          Caption = 'Property'
-          Width = 220
-        end      
-        item
-          AutoSize = True
-          Caption = 'Value'
-          Width = 44
-        end>
-      HideSelection = False
-      ReadOnly = True
-      RowSelect = True
-      SortColumn = 0
-      SortType = stText
-      TabOrder = 0
-      ViewStyle = vsReport
-      OnCompare = TagListViewCompare
-      OnSelectItem = TagListViewSelectItem
-    end
     object Panel3: TPanel
       Left = 0
       Height = 23
@@ -131,7 +100,7 @@ object MainForm: TMainForm
       BorderWidth = 4
       ClientHeight = 23
       ClientWidth = 647
-      TabOrder = 1
+      TabOrder = 0
       object FilenameInfo: TLabel
         Left = 4
         Height = 15
@@ -140,6 +109,112 @@ object MainForm: TMainForm
         Caption = 'File: '
         ParentColor = False
       end
+    end
+    object PageControl1: TPageControl
+      Left = 0
+      Height = 573
+      Top = 23
+      Width = 647
+      ActivePage = PgImage
+      Align = alClient
+      TabIndex = 1
+      TabOrder = 1
+      OnChange = PageControl1Change
+      object PgMetadata: TTabSheet
+        Caption = 'Meta data'
+        ClientHeight = 640
+        ClientWidth = 639
+        object TagListView: TListView
+          Left = 0
+          Height = 640
+          Top = 0
+          Width = 639
+          Align = alClient
+          AutoSort = False
+          Columns = <          
+            item
+              Caption = 'Group'
+              Width = 120
+            end          
+            item
+              Caption = 'Property'
+              Width = 220
+            end          
+            item
+              AutoSize = True
+              Caption = 'Value'
+              Width = 44
+            end>
+          HideSelection = False
+          ReadOnly = True
+          RowSelect = True
+          SortColumn = 0
+          SortType = stText
+          TabOrder = 0
+          ViewStyle = vsReport
+          OnCompare = TagListViewCompare
+          OnSelectItem = TagListViewSelectItem
+        end
+      end
+      object PgImage: TTabSheet
+        Caption = 'Image'
+        ClientHeight = 545
+        ClientWidth = 639
+        object Image: TImage
+          Left = 0
+          Height = 517
+          Top = 0
+          Width = 639
+          Align = alClient
+          Center = True
+          Proportional = True
+          Stretch = True
+          StretchOutEnabled = False
+        end
+        object Panel1: TPanel
+          Left = 0
+          Height = 28
+          Top = 517
+          Width = 639
+          Align = alBottom
+          AutoSize = True
+          BevelOuter = bvNone
+          ClientHeight = 28
+          ClientWidth = 639
+          TabOrder = 0
+          Visible = False
+          object CheckBox1: TCheckBox
+            AnchorSideLeft.Control = Panel1
+            AnchorSideTop.Control = Panel1
+            AnchorSideTop.Side = asrCenter
+            Left = 0
+            Height = 19
+            Top = 5
+            Width = 127
+            BorderSpacing.Top = 4
+            BorderSpacing.Bottom = 4
+            Caption = 'Decode MakerNotes'
+            TabOrder = 0
+          end
+        end
+      end
+    end
+    object Messages: TMemo
+      Left = 0
+      Height = 90
+      Top = 596
+      Width = 647
+      Align = alBottom
+      TabOrder = 2
+    end
+    object Splitter3: TSplitter
+      Cursor = crVSplit
+      Left = 0
+      Height = 5
+      Top = 686
+      Width = 647
+      Align = alBottom
+      ResizeAnchor = akBottom
     end
   end
   object StatusBar1: TStatusBar
