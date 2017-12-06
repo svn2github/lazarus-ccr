@@ -111,7 +111,7 @@ msgstr "редактирование"
 
 #: rxdconst.semptyvalues
 msgid "Empty values"
-msgstr "По убыванию"
+msgstr "Пустые значения"
 
 #: rxdconst.serrormsglabel
 msgid "Error message"
@@ -463,7 +463,7 @@ msgstr "(Все значения)"
 msgid "Copy cell value"
 msgstr "Копировать значение ячейки"
 
-#: rxdconst.srxdbgridemptifilter
+#: rxdconst.srxdbgridemptyfilter
 msgid "(Empty)"
 msgstr "(Пусто)"
 
@@ -521,6 +521,10 @@ msgstr "Вперёд"
 #: rxdconst.srxdbgridfindtext
 msgid "Text to find"
 msgstr "Текст для поиска"
+
+#: rxdconst.srxdbgridnotemptyfilter
+msgid "(Not empty)"
+msgstr "(Не пусто)"
 
 #: rxdconst.srxdbgridoptimizecolwidth
 msgid "Optimize column width"

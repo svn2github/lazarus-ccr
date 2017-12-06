@@ -391,6 +391,7 @@ type
     FAllValue: string;
     FCurrentValues: TStringList;
     FEnabled: boolean;
+    FNotEmptyValue: string;
     FOwner: TRxColumn;
     FState: TRxFilterState;
     FStyle: TRxFilterStyle;
@@ -418,6 +419,7 @@ type
     property Color: TColor read FColor write SetColor default clWhite;
     property ValueList: TStringList read FValueList;
     property EmptyValue: string read FEmptyValue write FEmptyValue;
+    property NotEmptyValue: string read FNotEmptyValue write FNotEmptyValue;
     property AllValue: string read FAllValue write FAllValue;
     property EmptyFont: TFont read FEmptyFont write FEmptyFont;
     property ItemIndex: integer read GetItemIndex write SetItemIndex;
@@ -4350,6 +4352,9 @@ begin
         if State = rxfsEmpty then
           S:=TRxColumn(Columns[MyCol]).Filter.EmptyValue
         else
+        if State = rxfsNonEmpty then
+          S:=TRxColumn(Columns[MyCol]).Filter.NotEmptyValue
+        else
         if State = rxfsAll then
           S:=TRxColumn(Columns[MyCol]).Filter.AllValue
         else
@@ -7298,8 +7303,9 @@ begin
   Style:=rxfstSimple;
 
   FEmptyFont.Style := [fsItalic];
-  FEmptyValue := sRxDBGridEmptiFilter;
+  FEmptyValue := sRxDBGridEmptyFilter;
   FAllValue := sRxDBGridAllFilter;
+  FNotEmptyValue:=sRxDBGridNotEmptyFilter;
   FEnabled:=true;
 end;
 

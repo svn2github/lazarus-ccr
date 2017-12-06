@@ -108,17 +108,18 @@ resourcestring
   SFieldReadOnly           = 'SFieldReadOnly %s';
 
   //RXDBgrid
-  sRxDBGridFind               = 'Find data';
-  sRxDBGridFilter             = 'Filter data';
-  sRxDBGridFilterSimple       = 'Filter in table';
-  sRxDBGridFilterClear        = 'Clear filter';
-  sRxDBGridSortByColumns      = 'Sort data for columns';
-  sRxDBGridSelectColumns      = 'Select visible columns';
-  sRxDBGridEmptiFilter        = '(Empty)';
-  sRxDBGridAllFilter          = '(All values)';
-  sRxDBGridSelectAllRows      = 'Select all rows';
-  sRxDBGridCopyCellValue      = 'Copy cell value';
-  sRxDBGridOptimizeColWidth   = 'Optimize column width';
+  sRxDBGridFind                      = 'Find data';
+  sRxDBGridFilter                    = 'Filter data';
+  sRxDBGridFilterSimple              = 'Filter in table';
+  sRxDBGridFilterClear               = 'Clear filter';
+  sRxDBGridSortByColumns             = 'Sort data for columns';
+  sRxDBGridSelectColumns             = 'Select visible columns';
+  sRxDBGridEmptyFilter               = '(Empty)';
+  sRxDBGridAllFilter                 = '(All values)';
+  sRxDBGridNotEmptyFilter            = '(Not empty)';
+  sRxDBGridSelectAllRows             = 'Select all rows';
+  sRxDBGridCopyCellValue             = 'Copy cell value';
+  sRxDBGridOptimizeColWidth          = 'Optimize column width';
 
   //RxDBGrid filter form
   sRxFilterFormSelectExp   = 'Enter filter expression for data in table:';

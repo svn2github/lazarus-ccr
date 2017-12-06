@@ -466,7 +466,9 @@ msgstr "(Усі значення)"
 msgid "Copy cell value"
 msgstr "Копіювати значення комірки"
 
-#: rxdconst.srxdbgridemptifilter
+#: rxdconst.srxdbgridemptyfilter
+#, fuzzy
+msgctxt "rxdconst.srxdbgridemptyfilter"
 msgid "(Empty)"
 msgstr "(Немає)"
 
@@ -524,6 +526,10 @@ msgstr "Вперед"
 #: rxdconst.srxdbgridfindtext
 msgid "Text to find"
 msgstr "Текст для пошуку"
+
+#: rxdconst.srxdbgridnotemptyfilter
+msgid "(Not empty)"
+msgstr ""
 
 #: rxdconst.srxdbgridoptimizecolwidth
 msgid "Optimize column width"

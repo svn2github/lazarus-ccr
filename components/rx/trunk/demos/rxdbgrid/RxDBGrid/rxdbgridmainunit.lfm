@@ -82,8 +82,8 @@ object RxDBGridMainForm: TRxDBGridMainForm
         Filter.Font.Style = [fsItalic]
         Filter.DropDownRows = 0
         Filter.Color = clLime
-        Filter.EmptyValue = '(Нет)'
-        Filter.AllValue = '(All values)'
+        Filter.EmptyValue = '(Пустые значения)'
+        Filter.AllValue = '(Все значения)'
         Filter.EmptyFont.Style = [fsItalic]
         Filter.ItemIndex = -1
         Filter.Style = rxfstDialog

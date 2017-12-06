@@ -471,7 +471,9 @@ msgstr "(Todos los valores)"
 msgid "Copy cell value"
 msgstr "Copiar valor de la celda"
 
-#: rxdconst.srxdbgridemptifilter
+#: rxdconst.srxdbgridemptyfilter
+#, fuzzy
+msgctxt "rxdconst.srxdbgridemptyfilter"
 msgid "(Empty)"
 msgstr "(Vacíos)"
 
@@ -529,6 +531,10 @@ msgstr "Hacia Delante"
 #: rxdconst.srxdbgridfindtext
 msgid "Text to find"
 msgstr "Texto a Buscar"
+
+#: rxdconst.srxdbgridnotemptyfilter
+msgid "(Not empty)"
+msgstr ""
 
 #: rxdconst.srxdbgridoptimizecolwidth
 msgid "Optimize column width"

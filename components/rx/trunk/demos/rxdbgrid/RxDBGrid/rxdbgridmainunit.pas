@@ -113,8 +113,8 @@ var
   Lang, FallbackLang: String;
 begin
   GetLanguageIDs(Lang{%H-},FallbackLang{%H-}); // in unit gettext
-  TranslateUnitResourceStrings('rxconst',NormalizeDirectoryName('../../languages/rxconst.%s.po'), Lang, FallbackLang);
-  TranslateUnitResourceStrings('rxdconst',NormalizeDirectoryName('../../languages/rxdconst.%s.po'), Lang, FallbackLang);
+  TranslateUnitResourceStrings('rxconst',NormalizeDirectoryName('../../../languages/rxconst.%s.po'), Lang, FallbackLang);
+  TranslateUnitResourceStrings('rxdconst',NormalizeDirectoryName('../../../languages/rxdconst.%s.po'), Lang, FallbackLang);
 end;
 
 {$R *.lfm}
@@ -149,6 +149,7 @@ begin
   RxMemoryData1.AppendRecord([16, 'Гарант', 480, 'Гарант', EncodeDate(2007, 2, 1), 3]);
   RxMemoryData1.AppendRecord([17, 'Fedora Linux', 0, 'Open source', EncodeDate(2007, 2, 1), 3]);
   RxMemoryData1.AppendRecord([17, 'Ubuntu Linux', 0, 'Open source', EncodeDate(2007, 2, 1), 3]);
+  RxMemoryData1.AppendRecord([17, 'Linux', 0, null, EncodeDate(2007, 2, 1), 3]);
 
   RxMemoryData1.First;
 

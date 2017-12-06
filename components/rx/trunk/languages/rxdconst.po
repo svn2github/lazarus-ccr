@@ -93,7 +93,7 @@ msgstr ""
 #: rxdconst.sdescending
 msgctxt "rxdconst.sdescending"
 msgid "Descending"
-msgstr ""
+msgstr "По убыванию"
 
 #: rxdconst.seditdata
 msgid "editing"
@@ -453,7 +453,8 @@ msgstr ""
 msgid "Copy cell value"
 msgstr ""
 
-#: rxdconst.srxdbgridemptifilter
+#: rxdconst.srxdbgridemptyfilter
+msgctxt "rxdconst.srxdbgridemptyfilter"
 msgid "(Empty)"
 msgstr ""
 
@@ -512,6 +513,10 @@ msgstr ""
 msgid "Text to find"
 msgstr ""
 
+#: rxdconst.srxdbgridnotemptyfilter
+msgid "(Not empty)"
+msgstr ""
+
 #: rxdconst.srxdbgridoptimizecolwidth
 msgid "Optimize column width"
 msgstr ""
@@ -554,9 +559,10 @@ msgid "Totals row"
 msgstr ""
 
 #: rxdconst.srxdescending
+#, fuzzy
 msgctxt "rxdconst.srxdescending"
 msgid "Descending"
-msgstr ""
+msgstr "По убыванию"
 
 #: rxdconst.srxfieldslookupdisplay
 msgid "Fields as LookupDisplay"
