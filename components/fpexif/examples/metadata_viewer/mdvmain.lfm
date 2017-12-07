@@ -115,18 +115,18 @@ object MainForm: TMainForm
       Height = 573
       Top = 23
       Width = 647
-      ActivePage = PgImage
+      ActivePage = PgMetadata
       Align = alClient
-      TabIndex = 1
+      TabIndex = 0
       TabOrder = 1
       OnChange = PageControl1Change
       object PgMetadata: TTabSheet
         Caption = 'Meta data'
-        ClientHeight = 640
+        ClientHeight = 545
         ClientWidth = 639
         object TagListView: TListView
           Left = 0
-          Height = 640
+          Height = 525
           Top = 0
           Width = 639
           Align = alClient
@@ -155,6 +155,31 @@ object MainForm: TMainForm
           OnCompare = TagListViewCompare
           OnSelectItem = TagListViewSelectItem
         end
+        object Panel1: TPanel
+          Left = 0
+          Height = 20
+          Top = 525
+          Width = 639
+          Align = alBottom
+          AutoSize = True
+          BevelOuter = bvNone
+          ClientHeight = 20
+          ClientWidth = 639
+          TabOrder = 1
+          object CbDecodeMakerNotes: TCheckBox
+            AnchorSideLeft.Control = Panel1
+            AnchorSideTop.Control = Panel1
+            AnchorSideTop.Side = asrCenter
+            Left = 0
+            Height = 19
+            Top = 1
+            Width = 127
+            Caption = 'Decode MakerNotes'
+            Checked = True
+            State = cbChecked
+            TabOrder = 0
+          end
+        end
       end
       object PgImage: TTabSheet
         Caption = 'Image'
@@ -162,7 +187,7 @@ object MainForm: TMainForm
         ClientWidth = 639
         object Image: TImage
           Left = 0
-          Height = 517
+          Height = 545
           Top = 0
           Width = 639
           Align = alClient
@@ -171,40 +196,16 @@ object MainForm: TMainForm
           Stretch = True
           StretchOutEnabled = False
         end
-        object Panel1: TPanel
-          Left = 0
-          Height = 28
-          Top = 517
-          Width = 639
-          Align = alBottom
-          AutoSize = True
-          BevelOuter = bvNone
-          ClientHeight = 28
-          ClientWidth = 639
-          TabOrder = 0
-          Visible = False
-          object CheckBox1: TCheckBox
-            AnchorSideLeft.Control = Panel1
-            AnchorSideTop.Control = Panel1
-            AnchorSideTop.Side = asrCenter
-            Left = 0
-            Height = 19
-            Top = 5
-            Width = 127
-            BorderSpacing.Top = 4
-            BorderSpacing.Bottom = 4
-            Caption = 'Decode MakerNotes'
-            TabOrder = 0
-          end
-        end
       end
     end
     object Messages: TMemo
-      Left = 0
+      Left = 4
       Height = 90
       Top = 596
-      Width = 647
+      Width = 639
       Align = alBottom
+      BorderSpacing.Left = 4
+      BorderSpacing.Right = 4
       TabOrder = 2
     end
     object Splitter3: TSplitter

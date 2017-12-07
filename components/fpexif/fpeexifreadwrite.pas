@@ -411,6 +411,7 @@ begin
         Move(AData[0], FExifVersion[1], Length(FExifVersion));
       end;
     FULLTAG_MAKERNOTE:
+      if FImgInfo.MetadataKinds * [mdkExif, mdkExifNoMakerNotes] = [mdkExif] then
       begin
         // The stream is at the end of the makernote data area --> rewind it to start
         AStream.Position := AStream.Position - Length(AData);

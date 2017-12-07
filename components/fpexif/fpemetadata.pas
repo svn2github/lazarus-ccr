@@ -459,7 +459,7 @@ begin
     p := AStream.Position;
     case marker of
       M_EXIF:
-        if (mdkEXIF in FMetadataKinds) then begin
+        if FMetaDataKinds * [mdkExif, mdkExifNoMakerNotes] <> [] then begin
           reader := TExifReader.Create(self);
           try
             if not TExifReader(reader).ReadExifHeader(AStream) then
@@ -647,7 +647,7 @@ begin
   AStream.WriteBuffer(SOI_MARKER, SizeOf(SOI_MARKER));
 
   // No Exif --> write an APP0 segment
-  if not HasExif or not (mdkExif in FMetadataKinds) then begin
+  if not HasExif or (FMetadataKinds * [mdkExif, mdkExifNoMakerNotes] = []) then begin
     if Length(FHeaderSegment) = 0 then begin
       Move(JFIF[1], {%H-}JFIFSegment.Identifier[0], Length(JFIF));
       JFIFSegment.JFIFVersion[0] := 1;

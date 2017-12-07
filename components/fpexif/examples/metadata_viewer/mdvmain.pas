@@ -14,7 +14,7 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
-    CheckBox1: TCheckBox;
+    CbDecodeMakerNotes: TCheckBox;
     FilenameInfo: TLabel;
     Image: TImage;
     Messages: TMemo;
@@ -114,6 +114,10 @@ begin
     FImgInfo := TImgInfo.Create;
     try
       try
+        if CbDecodeMakerNotes.Checked then
+          FImgInfo.MetadataKinds := FImgInfo.MetadataKinds + [mdkExif] - [mdkExifNoMakerNotes]
+        else
+          FImgInfo.MetadataKinds := FImgInfo.MetadataKinds - [mdkExif] + [mdkExifNoMakerNotes];
         FImgInfo.LoadFromFile(AFileName);
         Messages.Hide;
       except

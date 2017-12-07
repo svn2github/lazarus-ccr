@@ -12,7 +12,12 @@ uses
   Classes, SysUtils;
 
 type
-  TMetaDataKind = (mdkExif, mdkIPTC, mdkComment);
+  TMetaDataKind = (
+    mdkExif,                   // Complete Exif (incl MakerNotes)
+    mdkExifNoMakerNotes,       // Exif without MakerNotes (instead of mdkExif)
+    mdkIPTC,                   // IPTC
+    mdkComment                 // Comment segment
+  );
   TMetaDataKinds = set of TMetaDataKind;
 
 const
