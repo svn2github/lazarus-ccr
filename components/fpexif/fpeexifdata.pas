@@ -291,7 +291,7 @@ begin
     AddULongTag    (P+$0116, 'RowsPerStrip',              1, rsRowsPerStrip);
     AddULongTag    (P+$0117, 'StripByteCounts',           1, rsStripByteCounts);
     AddUShortTag   (P+$0118, 'MinSampleValue',            1, rsMinSampleValue);
-    AddUShortTag  (P+$0119,  'MaxSampleValue',            1, rsMaxSampleValue);
+    AddUShortTag   (P+$0119,  'MaxSampleValue',           1, rsMaxSampleValue);
     AddURationalTag(P+$011A, 'XResolution',               1, rsXResolution);
     AddURationalTag(T+$011A, 'ThumbnailXResolution',      1, rsXResolution);
     AddURationalTag(P+$011B, 'YResolution',               1, rsYResolution);

@@ -452,6 +452,11 @@ begin
     exit;
 
   while p < streamsize do begin
+    // The basic structure of the jpeg segments is
+    //   $FF ..... identifier (sometimes repeated)
+    //   marker .. segment identifier (1 byte)
+    //   size .... size of the segment in bytes (2 bytes), including size field
+    //   data .... data of the segment, (size)-2 bytes.
     repeat
       marker := ReadByte(AStream);
     until marker <> $FF;
