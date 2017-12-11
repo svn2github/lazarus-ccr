@@ -38,7 +38,7 @@ interface
 uses
   Classes, SysUtils, LResources, LCLType, LCLIntf, Forms, Controls, Buttons,
   Graphics, Dialogs, Grids, rxdbutils, DBGrids, DB, PropertyStorage, rxlclutils,
-  LMessages, types, StdCtrls, Menus, rxspin;
+  LMessages, types, StdCtrls, Menus, rxspin, LCLVersion;
 
 const
   CBadQuickSearchSymbols = [VK_UNKNOWN..VK_HELP] + [VK_LWIN..VK_SLEEP] +
@@ -4076,9 +4076,11 @@ begin
   begin
     if AField.dataType <> ftBlob then
     begin
+      {$IF lcl_fullversion >= 1090000}
       if CheckDisplayMemo(AField) then
         Result := AField.AsString
       else
+      {$ENDIF}
         Result := AField.DisplayText;
       if Assigned(ACollumn) and (ACollumn.KeyList.Count > 0) and (ACollumn.PickList.Count > 0) then
       begin
