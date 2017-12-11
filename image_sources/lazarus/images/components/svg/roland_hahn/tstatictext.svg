@@ -29,8 +29,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="28.291667"
-     inkscape:cx="11.337377"
-     inkscape:cy="10.994491"
+     inkscape:cx="13.240472"
+     inkscape:cy="10.855784"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -75,30 +75,27 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-1028.3622)">
-    <rect
+    <path
        style="opacity:1;fill:#7f9db9;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
-       id="rect820"
-       width="24"
-       height="14"
-       x="0"
-       y="1033.3622" />
-    <rect
-       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
-       id="rect818"
-       width="22"
-       height="12"
-       x="1"
-       y="1034.3622" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:12px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="2.6726563"
-       y="1044.3215"
-       id="text859"><tspan
-         sodipodi:role="line"
-         id="tspan857"
-         x="2.6726563"
-         y="1044.3215"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI'">abc</tspan></text>
+       d="M 0 5 L 0 19 L 24 19 L 24 5 L 0 5 z M 1 6 L 23 6 L 23 18 L 1 18 L 1 6 z "
+       transform="translate(0,1028.3622)"
+       id="rect820" />
+    <g
+       aria-label="abc"
+       style="font-style:normal;font-weight:normal;font-size:12px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#376bbe;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="text859">
+      <path
+         d="M 7.9402344,1044.3215 H 6.9792969 v -0.9375 h -0.023437 q -0.6269531,1.0782 -1.8457031,1.0782 -0.8964844,0 -1.40625,-0.4747 Q 3.2,1043.5129 3.2,1042.7278 q 0,-1.6817 1.9804688,-1.957 l 1.7988281,-0.252 q 0,-1.5293 -1.2363281,-1.5293 -1.0839844,0 -1.9570313,0.7383 v -0.9844 q 0.8847657,-0.5625 2.0390625,-0.5625 2.1152344,0 2.1152344,2.2383 z m -0.9609375,-3.0351 -1.4472656,0.1992 q -0.6679688,0.094 -1.0078125,0.334 -0.3398438,0.2344 -0.3398438,0.8379 0,0.4394 0.3105469,0.7207 0.3164063,0.2754 0.8378906,0.2754 0.7148438,0 1.1777344,-0.4981 0.46875,-0.5039 0.46875,-1.2715 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI';fill:#376bbe;fill-opacity:1"
+         id="path817" />
+      <path
+         d="m 10.746875,1043.4543 h -0.02344 v 0.8672 H 9.7625 v -8.8828 h 0.960938 v 3.9375 h 0.02344 q 0.708984,-1.1953 2.074219,-1.1953 1.154297,0 1.804687,0.8086 0.65625,0.8027 0.65625,2.1563 0,1.5058 -0.732422,2.414 -0.732421,0.9024 -2.003906,0.9024 -1.189453,0 -1.798828,-1.0079 z m -0.02344,-2.4199 v 0.8379 q 0,0.7442 0.480468,1.2656 0.486328,0.5157 1.230469,0.5157 0.873047,0 1.365234,-0.668 0.498047,-0.668 0.498047,-1.8574 0,-1.002 -0.46289,-1.5703 -0.462891,-0.5684 -1.253907,-0.5684 -0.83789,0 -1.347656,0.5859 -0.509765,0.5801 -0.509765,1.459 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI';fill:#376bbe;fill-opacity:1"
+         id="path819" />
+      <path
+         d="m 20.907031,1044.0461 q -0.691406,0.4161 -1.640625,0.4161 -1.283203,0 -2.074218,-0.8321 -0.785157,-0.8379 -0.785157,-2.1679 0,-1.4825 0.84961,-2.3789 0.849609,-0.9024 2.267578,-0.9024 0.791015,0 1.394531,0.293 v 0.9844 q -0.667969,-0.4688 -1.429687,-0.4688 -0.919922,0 -1.511719,0.6621 -0.585938,0.6563 -0.585938,1.7285 0,1.0547 0.550782,1.6641 0.55664,0.6094 1.488281,0.6094 0.785156,0 1.476562,-0.5215 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI';fill:#376bbe;fill-opacity:1"
+         id="path821" />
+    </g>
   </g>
 </svg>

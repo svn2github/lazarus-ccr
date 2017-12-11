@@ -28,9 +28,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.2"
-     inkscape:cx="20.541238"
-     inkscape:cy="20.703241"
+     inkscape:zoom="14.145833"
+     inkscape:cx="22.780988"
+     inkscape:cy="22.90522"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -73,34 +73,26 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-1004.3622)">
-    <rect
-       style="opacity:1;fill:#3771c8;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
-       id="rect820"
-       width="48"
-       height="28"
-       x="0"
-       y="1014.3622"
-       rx="3"
-       ry="3" />
-    <rect
-       style="opacity:1;fill:#ececec;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
-       id="rect818"
-       width="44"
-       height="24"
-       x="2"
-       y="1016.3622"
-       rx="2"
-       ry="2" />
-    <text
-       xml:space="preserve"
+    <path
+       style="opacity:1;fill:#005499;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       d="m 3,1014.3622 h 42 c 1.662,0 3,1.338 3,3 v 22 c 0,1.662 -1.338,3 -3,3 H 3 c -1.662,0 -3,-1.338 -3,-3 v -22 c 0,-1.662 1.338,-3 3,-3 z"
+       id="rect820" />
+    <path
+       style="opacity:1;fill:#cce4f7;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       d="m 4,1016.3622 h 40 c 1.108,0 2,0.892 2,2 v 20 c 0,1.108 -0.892,2 -2,2 H 4 c -1.108,0 -2,-0.892 -2,-2 v -20 c 0,-1.108 0.892,-2 2,-2 z"
+       id="rect818" />
+    <g
+       aria-label="on"
        style="font-style:normal;font-weight:normal;font-size:16px;line-height:50px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="12.943"
-       y="1033.5265"
-       id="text859"><tspan
-         sodipodi:role="line"
-         id="tspan857"
-         x="12.943"
-         y="1033.5265"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.66666603px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI';stroke-width:1px">on</tspan></text>
+       id="text859">
+      <path
+         d="m 18.357062,1033.7452 q -2.06901,0 -3.308593,-1.3033 -1.230469,-1.3125 -1.230469,-3.4727 0,-2.3516 1.285156,-3.6732 1.285156,-1.3216 3.472656,-1.3216 2.08724,0 3.253906,1.2852 1.175781,1.2851 1.175781,3.5638 0,2.233 -1.266927,3.582 -1.257812,1.3398 -3.38151,1.3398 z m 0.109375,-8.513 q -1.440104,0 -2.278646,0.9844 -0.838541,0.9753 -0.838541,2.6979 0,1.6589 0.847656,2.6159 0.847656,0.957 2.269531,0.957 1.449219,0 2.223958,-0.9388 0.783855,-0.9388 0.783855,-2.6705 0,-1.75 -0.783855,-2.698 -0.774739,-0.9479 -2.223958,-0.9479 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.66666603px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI';stroke-width:1px"
+         id="path817" />
+      <path
+         d="m 33.140916,1033.5265 h -1.494791 v -5.3229 q 0,-2.9714 -2.169271,-2.9714 -1.121094,0 -1.859375,0.8477 -0.729167,0.8385 -0.729167,2.1237 v 5.3229 h -1.494791 v -9.3333 h 1.494791 v 1.5494 h 0.03646 q 1.057291,-1.7682 3.062499,-1.7682 1.53125,0 2.342448,0.9935 0.811198,0.9844 0.811198,2.8529 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.66666603px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI';stroke-width:1px"
+         id="path819" />
+    </g>
   </g>
 </svg>
