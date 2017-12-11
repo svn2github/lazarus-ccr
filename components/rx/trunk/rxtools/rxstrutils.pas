@@ -1117,7 +1117,7 @@ begin
     begin
       if S[i] = Delims then
       begin
-        if i>j+1 then
+        if i>j then
         begin
           List.Add(Copy(S, j, i-j));
         end;
