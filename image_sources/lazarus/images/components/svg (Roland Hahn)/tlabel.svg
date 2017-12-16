@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   id="svg4225"
+   version="1.1"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   sodipodi:docname="tlabel.svg"
+   inkscape:export-filename="tlabel.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <defs
+     id="defs4227" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="33.174748"
+     inkscape:cx="12.211935"
+     inkscape:cy="10.205045"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:object-paths="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:object-nodes="true"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:snap-midpoints="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-center="true"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1137"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4241" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata4230">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-1028.3622)">
+    <g
+       aria-label="Abc"
+       style="font-style:normal;font-weight:normal;font-size:12px;line-height:25px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#376bbe;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="text859">
+      <path
+         d="M 10.209563,1044.3215 H 9.1197188 l -0.890625,-2.3554 h -3.5625 l -0.8378906,2.3554 H 2.733 l 3.2226563,-8.4023 h 1.0195312 z m -2.3027348,-3.2402 -1.3183594,-3.5801 q -0.064453,-0.1758 -0.1289063,-0.5625 H 6.436125 q -0.058594,0.3574 -0.1347656,0.5625 l -1.3066406,3.5801 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#376bbe;fill-opacity:1"
+         id="path819" />
+      <path
+         d="m 12.2955,1043.4543 h -0.02344 v 0.8672 h -0.960938 v -8.8828 h 0.960938 v 3.9375 h 0.02344 q 0.708984,-1.1953 2.074219,-1.1953 1.154297,0 1.804687,0.8086 0.65625,0.8027 0.65625,2.1563 0,1.5058 -0.732422,2.414 -0.732421,0.9024 -2.003906,0.9024 -1.189453,0 -1.798828,-1.0079 z m -0.02344,-2.4199 v 0.8379 q 0,0.7442 0.480468,1.2656 0.486328,0.5157 1.230469,0.5157 0.873047,0 1.365234,-0.668 0.498047,-0.668 0.498047,-1.8574 0,-1.002 -0.46289,-1.5703 -0.462891,-0.5684 -1.253907,-0.5684 -0.83789,0 -1.347656,0.5859 -0.509765,0.5801 -0.509765,1.459 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#376bbe;fill-opacity:1"
+         id="path821" />
+      <path
+         d="m 22.455656,1044.0461 q -0.691406,0.4161 -1.640625,0.4161 -1.283203,0 -2.074218,-0.8321 -0.785157,-0.8379 -0.785157,-2.1679 0,-1.4825 0.84961,-2.3789 0.849609,-0.9024 2.267578,-0.9024 0.791015,0 1.394531,0.293 v 0.9844 q -0.667969,-0.4688 -1.429687,-0.4688 -0.919922,0 -1.511719,0.6621 -0.585938,0.6563 -0.585938,1.7285 0,1.0547 0.550782,1.6641 0.55664,0.6094 1.488281,0.6094 0.785156,0 1.476562,-0.5215 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#376bbe;fill-opacity:1"
+         id="path823" />
+    </g>
+    <path
+       style="opacity:1;fill:#376bbe;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       d="M 2.0000007,1045.3622 H 11 v 1 H 2.0000007 Z"
+       id="rect842" />
+  </g>
+</svg>
