@@ -153,12 +153,17 @@ end;
 
 procedure TRxDBGrid_PopUpFilterForm.UpdateChList;
 var
-  i: Integer;
+  i, Cnt: Integer;
   S: String;
 begin
   CheckListBox1.Items.BeginUpdate;
   CheckListBox1.Items.Clear;
-  for i:=0 to FRxColumn.Filter.ValueList.Count - 1 do
+  Cnt:=FRxColumn.Filter.ValueList.Count - 1;
+
+  if FRxColumn.Filter.Style = rxfstBoth then
+    Dec(Cnt);
+
+  for i:=0 to Cnt do
   begin
     S:=FRxColumn.Filter.ValueList[i];
     if (S <> FRxColumn.Filter.AllValue) and (S <> FRxColumn.Filter.EmptyValue) then

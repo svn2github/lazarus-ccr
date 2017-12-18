@@ -384,13 +384,14 @@ type
   { TRxColumnFilter }
 
   TRxFilterState = (rxfsAll, rxfsEmpty, rxfsNonEmpty, rxfsFilter{, rxfsTopXXXX});
-  TRxFilterStyle = (rxfstSimple, rxfstDialog, rxfstManualEdit);
+  TRxFilterStyle = (rxfstSimple, rxfstDialog, rxfstManualEdit, rxfstBoth);
 
   TRxColumnFilter = class(TPersistent)
   private
     FAllValue: string;
     FCurrentValues: TStringList;
     FEnabled: boolean;
+    FManulEditValue: string;
     FNotEmptyValue: string;
     FOwner: TRxColumn;
     FState: TRxFilterState;
@@ -402,6 +403,7 @@ type
     FAlignment: TAlignment;
     FDropDownRows: integer;
     FColor: TColor;
+    function GetDisplayFilterValue: string;
     function GetItemIndex: integer;
     procedure SetColor(const AValue: TColor);
     procedure SetFont(const AValue: TFont);
@@ -409,8 +411,12 @@ type
   public
     constructor Create(Owner: TRxColumn); virtual;
     destructor Destroy; override;
+    procedure ClearFilter;
+
     property State:TRxFilterState read FState write FState;
     property CurrentValues : TStringList read FCurrentValues;
+    property ManulEditValue : string read FManulEditValue write FManulEditValue;
+    property DisplayFilterValue:string read GetDisplayFilterValue;
   published
     property Font: TFont read FFont write SetFont;
     property Alignment: TAlignment read FAlignment write FAlignment default
@@ -3446,19 +3452,14 @@ begin
 
     if rdgFilter in OptionsRx then
     begin
-      if Assigned(FFilterListEditor) then
-      begin
-        RowHeights[0] := RowHeights[0] + FFilterListEditor.Height
-      end
-      else
+      H:=FDefRowH;
+      if  Assigned(FFilterListEditor) then
+        H:=Max(H, FFilterListEditor.Height);
+
       if Assigned(FFilterSimpleEdit) then
-      begin
-        RowHeights[0] := RowHeights[0] + FFilterSimpleEdit.Height
-      end
-      else
-      begin
-        RowHeights[0] := RowHeights[0] + FDefRowH;
-      end;
+        H:=Max(H, FFilterSimpleEdit.Height);
+
+      RowHeights[0] := RowHeights[0] + H;
     end;
 
   finally
@@ -4336,6 +4337,18 @@ begin
         Canvas.FillRect(aRect);
       end;
 
+      S:=DisplayFilterValue;
+      if (aRect.Right - aRect.Left) >= Canvas.TextWidth(S) then
+        TxS.Alignment := Alignment
+      else
+        TxS.Alignment := taLeftJustify;
+      Canvas.TextStyle := TxS;
+
+      if State in [rxfsEmpty, rxfsNonEmpty] then
+        Canvas.Font := TRxColumn(Columns[MyCol]).Filter.EmptyFont;
+
+      DrawCellText(aCol, aRow, aRect, aState, S);
+(*
       if CurrentValues.Count > 0 then
       begin
         S:=CurrentValues[0];
@@ -4351,14 +4364,17 @@ begin
       end
       else
       begin
+        if (Style in (rxfstManualEdit, rxfstBoth)) and (ManulEditValue<>'') then
+          S:=ManulEditValue
+        else
         if State = rxfsEmpty then
-          S:=TRxColumn(Columns[MyCol]).Filter.EmptyValue
+          S:=Filter.EmptyValue
         else
         if State = rxfsNonEmpty then
-          S:=TRxColumn(Columns[MyCol]).Filter.NotEmptyValue
+          S:=Filter.NotEmptyValue
         else
         if State = rxfsAll then
-          S:=TRxColumn(Columns[MyCol]).Filter.AllValue
+          S:=Filter.AllValue
         else
           S:='';
 
@@ -4370,7 +4386,7 @@ begin
 
         Canvas.TextStyle := TxS;
         DrawCellText(aCol, aRow, aRect, aState, S)
-      end;
+      end; *)
     end;
 
 //    Canvas.Font := ft;
@@ -4965,12 +4981,13 @@ begin
             FFilterSimpleEdit.Height := Rect.Bottom - Rect.Top;
             FFilterSimpleEdit.BoundsRect := Rect;
             FFilterSimpleEdit.Show(Self, Cell.x - 1);
-            if C.Filter.CurrentValues.Count>0 then
-              FFilterSimpleEdit.Text := C.Filter.CurrentValues[0]
-            else
-              FFilterSimpleEdit.Text := '';
+{            if C.Filter.CurrentValues.Count>0 then
+              FFilterSimpleEdit.Text := C.Filter.CurrentValues[C.Filter.CurrentValues.Count - 1]
+            else}
+            FFilterSimpleEdit.Text := C.Filter.ManulEditValue;
           end
           else
+          if C.Filter.Style = rxfstDialog then
           begin
             if FFilterListEditor.Visible then
               FFilterListEditor.Hide;
@@ -4984,6 +5001,30 @@ begin
             FFilterColDlgButton.Top := Rect.Top;
             FFilterColDlgButton.Left := Rect.Right - FFilterColDlgButton.Width;
             FFilterColDlgButton.Show(Self, Cell.x - 1);
+          end
+          else
+          if C.Filter.Style = rxfstBoth then
+          begin
+            if FFilterListEditor.Visible then
+              FFilterListEditor.Hide;
+
+            FFilterColDlgButton.Parent:=Self;
+            FFilterColDlgButton.Width := 32;
+            FFilterColDlgButton.Height := Rect.Bottom - Rect.Top;
+            FFilterColDlgButton.Top := Rect.Top;
+            FFilterColDlgButton.Left := Rect.Right - FFilterColDlgButton.Width;
+            FFilterColDlgButton.Show(Self, Cell.x - 1);
+
+            FFilterSimpleEdit.Parent := Self;
+            FFilterSimpleEdit.Width := Rect.Right - Rect.Left - FFilterColDlgButton.Width;
+            FFilterSimpleEdit.Height := Rect.Bottom - Rect.Top;
+            Rect.Width:=Rect.Width - FFilterColDlgButton.Width;
+            FFilterSimpleEdit.BoundsRect := Rect;
+            FFilterSimpleEdit.Show(Self, Cell.x - 1);
+{            if C.Filter.CurrentValues.Count>0 then
+              FFilterSimpleEdit.Text := C.Filter.CurrentValues[0]
+            else}
+            FFilterSimpleEdit.Text := C.Filter.ManulEditValue;
           end
         end;
         exit;
@@ -5425,18 +5466,19 @@ begin
   begin
     if (FFilterListEditor.Text = EmptyValue) then
     begin
-      CurrentValues.Clear;
-      State:=rxfsEmpty;
+      ClearFilter;
+{      CurrentValues.Clear;
+      State:=rxfsEmpty;}
     end
     else
     if (FFilterListEditor.Text = AllValue) then
     begin
-      CurrentValues.Clear;
+      ClearFilter;
       State:=rxfsAll;
     end
     else
     begin
-      CurrentValues.Clear;
+      ClearFilter;
       CurrentValues.Add(FFilterListEditor.Text);
       State:=rxfsFilter;
     end;
@@ -5493,16 +5535,14 @@ procedure TRxDBGrid.FFilterSimpleEditOnChange(Sender: TObject);
 begin
   with TRxColumn(Columns[Columns.RealIndex(FFilterSimpleEdit.Col)]).Filter do
   begin
-    if FFilterSimpleEdit.Text = '' then
+    if (FFilterSimpleEdit.Text = '') and (Style = rxfstManualEdit) then
     begin
       CurrentValues.Clear;
       State:=rxfsAll;
     end
     else
-    begin
-      CurrentValues.Text:=FFilterSimpleEdit.Text;
       State:=rxfsFilter;
-    end;
+    ManulEditValue:=FFilterSimpleEdit.Text;
   end;
 
   DataSource.DataSet.DisableControls;
@@ -5930,29 +5970,23 @@ end;
 procedure TRxDBGrid.FilterRec(DataSet: TDataSet; var Accept: boolean);
 var
   i: integer;
+  Filter: TRxColumnFilter;
+  F: TField;
 begin
   Accept := True;
   for i := 0 to Columns.Count - 1 do
   begin
-    with TRxColumn(Columns[i]) do
-    begin
-      if Filter.State = rxfsAll then
-        Accept:=true
-      else
-      if Filter.State = rxfsEmpty then
-      begin
-        Accept:=Field.IsNull;
-        if not Accept then
-          Break;
-      end
-      else
-      if Filter.State = rxfsNonEmpty then
-      begin
-        Accept:=not Field.IsNull;
-        if not Accept then
-          Break;
-      end
-      else
+    Filter:=TRxColumn(Columns[i]).Filter;
+    F:=TRxColumn(Columns[i]).Field;
+    if Filter.State = rxfsAll then
+      Accept:=true
+    else
+    if Filter.State = rxfsEmpty then
+      Accept:=F.IsNull
+    else
+    if Filter.State = rxfsNonEmpty then
+      Accept:=not F.IsNull
+    else
 {      if Filter.State = rxfsTopXXXX then
       begin
         if DataSet.State = dsFilter then
@@ -5963,23 +5997,15 @@ begin
           Break;
       end
       else}
+    begin
       if Filter.CurrentValues.Count > 0 then
-      begin
-        if Filter.Style = rxfstManualEdit then
-        begin
-          if UTF8Pos(UTF8UpperCase(Filter.CurrentValues[0]), UTF8UpperCase(Field.DisplayText)) < 1 then
-          begin
-            Accept := False;
-            break;
-          end;
-        end
-        else
-        if Filter.CurrentValues.IndexOf(Field.DisplayText) < 0 then
-        begin
-          Accept := False;
-          break;
-        end;
-      end
+        Accept := Filter.CurrentValues.IndexOf(F.DisplayText) >= 0;
+
+      if Accept and (Filter.Style in [rxfstBoth, rxfstManualEdit]) and (Filter.ManulEditValue<>'') then
+        Accept := UTF8Pos(UTF8UpperCase(Filter.ManulEditValue), UTF8UpperCase(F.DisplayText)) > 0;
+
+      if not Accept then
+        Break;
     end;
   end;
   if Assigned(F_EventOnFilterRec) then
@@ -6109,6 +6135,7 @@ begin
     C := TRxColumn(Columns[i]);
     C.Filter.ValueList.Clear;
     C.Filter.CurrentValues.Clear;
+    C.Filter.ManulEditValue:='';
     C.Filter.ItemIndex := -1;
     C.Filter.ValueList.Add(C.Filter.EmptyValue);
     C.Filter.ValueList.Add(C.Filter.AllValue);
@@ -7263,6 +7290,29 @@ begin
     Result := -1;
 end;
 
+function TRxColumnFilter.GetDisplayFilterValue: string;
+begin
+  Result:='';
+  if CurrentValues.Count > 0 then
+  begin
+    Result:=CurrentValues[0];
+    if CurrentValues.Count > 1 then
+      Result:=Result + '(...)';
+  end
+  else
+  if (Style in [rxfstManualEdit, rxfstBoth]) and (ManulEditValue<>'') then
+    Result:=ManulEditValue
+  else
+  if State = rxfsEmpty then
+    Result:=EmptyValue
+  else
+  if State = rxfsNonEmpty then
+    Result:=NotEmptyValue
+  else
+  if State = rxfsAll then
+    Result:=AllValue;
+end;
+
 procedure TRxColumnFilter.SetColor(const AValue: TColor);
 begin
   if FColor = AValue then
@@ -7318,6 +7368,13 @@ begin
   FreeAndNil(FValueList);
   FreeAndNil(FCurrentValues);
   inherited Destroy;
+end;
+
+procedure TRxColumnFilter.ClearFilter;
+begin
+  CurrentValues.Clear;
+  FManulEditValue:='';
+  FState:=rxfsEmpty;
 end;
 
 { TExDBGridSortEngine }
