@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, db, FileUtil, LResources, Forms, Controls, Graphics,
-  Dialogs, StdCtrls, DBGrids, rxlookup, rxmemds;
+  Dialogs, StdCtrls, DBGrids, ExtCtrls, rxlookup, rxmemds;
 
 type
 
@@ -15,12 +15,15 @@ type
   TForm1 = class(TForm)
     Button1: TButton;
     Button2: TButton;
+    CheckBox1: TCheckBox;
     DBGrid1: TDBGrid;
     dsData1: TDatasource;
     dsLookUpData: TDatasource;
     Edit1: TEdit;
+    GroupBox1: TGroupBox;
     Label1: TLabel;
     Label2: TLabel;
+    RadioGroup1: TRadioGroup;
     rxData1ID: TLongintField;
     RxDBLookupCombo1: TRxDBLookupCombo;
     rxData1: TRxMemoryData;
@@ -30,6 +33,7 @@ type
     rxLookUpDataPrice: TCurrencyField;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure CheckBox1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
@@ -54,6 +58,16 @@ end;
 procedure TForm1.Button2Click(Sender: TObject);
 begin
   RxDBLookupCombo1.Text:=Edit1.Text;
+end;
+
+procedure TForm1.CheckBox1Change(Sender: TObject);
+begin
+  RxDBLookupCombo1.Flat:=CheckBox1.Checked;
+
+  case RadioGroup1.ItemIndex of
+    0:RxDBLookupCombo1.BorderStyle:=bsNone;
+    1:RxDBLookupCombo1.BorderStyle:=bsSingle;
+  end;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);

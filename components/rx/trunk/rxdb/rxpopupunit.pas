@@ -163,6 +163,7 @@ type
     FDropDownWidth: integer;
     FOnGetCellProps: TGetCellPropsEvent;
     FOptions: TPopUpGridOptions;
+    FSearchFromStart: boolean;
     FShowTitles: boolean;
     FTitleButtons: boolean;
     FTitleStyle: TTitleStyle;
@@ -175,6 +176,7 @@ type
     procedure SetDropDownCount(const AValue: integer);
     procedure SetDropDownWidth(const AValue: integer);
     procedure SetOptions(const AValue: TPopUpGridOptions);
+    procedure SetSearchFromStart(AValue: boolean);
     procedure SetShowTitles(const AValue: boolean);
     procedure SetTitleButtons(const AValue: boolean);
     procedure SetTitleStyle(const AValue: TTitleStyle);
@@ -189,6 +191,7 @@ type
     property AlternateColor: TColor read FAlternateColor write FAlternateColor stored IsAltColorStored;
     property Color: TColor read FColor write FColor default {$ifdef UseCLDefault}clDefault{$else}clWindow{$endif};
 
+    property SearchFromStart:boolean read FSearchFromStart write SetSearchFromStart default false;
     property AutoFillColumns:boolean read FAutoFillColumns write SetAutoFillColumns default false;
     property AutoSort:boolean read FAutoSort write SetAutoSort default false;
     property BorderStyle: TBorderStyle read FBorderStyle write FBorderStyle default bsNone;
@@ -547,6 +550,8 @@ begin
     ;
 
 
+  FGrid.SearchOptions.FromStart:=FPopUpFormOptions.SearchFromStart;
+  FGrid.SearchOptions.QuickSearchOptions:= [loCaseInsensitive, loPartialKey];
   FGrid.AutoSort:=FPopUpFormOptions.AutoSort;
   FGrid.TitleButtons:=FPopUpFormOptions.TitleButtons;
   FGrid.TitleStyle:=FPopUpFormOptions.TitleStyle;
@@ -615,6 +620,12 @@ begin
   FOptions:=AValue;
 end;
 
+procedure TPopUpFormOptions.SetSearchFromStart(AValue: boolean);
+begin
+  if FSearchFromStart=AValue then Exit;
+  FSearchFromStart:=AValue;
+end;
+
 procedure TPopUpFormOptions.SetShowTitles(const AValue: boolean);
 begin
   if FShowTitles=AValue then exit;
@@ -642,6 +653,7 @@ constructor TPopUpFormOptions.Create(AOwner: TPersistent);
 begin
   FOwner:=AOwner;
   inherited Create;
+  FSearchFromStart:=false;
   FAutoSort:=false;
   FDropDownCount:=8;
   FDropDownWidth:=0;
@@ -666,6 +678,7 @@ procedure TPopUpFormOptions.Assign(Source: TPersistent);
 begin
   if Source is TPopUpFormOptions then
   begin
+    FSearchFromStart:=TPopUpFormOptions(Source).FSearchFromStart;
     FAutoSort:=TPopUpFormOptions(Source).FAutoSort;
     FDropDownCount:=TPopUpFormOptions(Source).FDropDownCount;
     FDropDownWidth:=TPopUpFormOptions(Source).FDropDownWidth;
@@ -893,7 +906,7 @@ begin
     end;
     if V then
     begin
-      if DataSetLocateThrough(DataSource.DataSet, FLookupDisplayField, FFindLine + UTF8Key, [loCaseInsensitive, loPartialKey]) then
+      if DataSetLocateThrough(DataSource.DataSet, FLookupDisplayField, FFindLine + UTF8Key, SearchOptions.QuickSearchOptions, rsdAll, SearchOptions.FromStart) then
       begin
 //        TPopUpForm(Owner).WControl.Caption:=FFindLine;
 //        TPopUpForm(Owner).WControl.Repaint;
@@ -916,7 +929,7 @@ begin
   UTF8Delete(FFindLine, UTF8Length(FFindLine), 1);
   if (FFindLine<>'') then
   begin
-    if DataSetLocateThrough(DataSource.DataSet, FLookupDisplayField, FFindLine, [loCaseInsensitive, loPartialKey]) then
+    if DataSetLocateThrough(DataSource.DataSet, FLookupDisplayField, FFindLine, SearchOptions.QuickSearchOptions, rsdAll, SearchOptions.FromStart) then
     begin
 //     TPopUpForm(Owner).WControl.Caption:=FFindLine;
 //     TPopUpForm(Owner).WControl.Repaint;

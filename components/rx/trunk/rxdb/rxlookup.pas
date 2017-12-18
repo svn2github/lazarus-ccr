@@ -259,6 +259,7 @@ type
     procedure DoPositionButton; virtual;
     procedure DoChange; virtual;
     procedure DoChangeData; virtual;
+    procedure DoSelect; virtual;
     procedure DoButtonClick(Sender: TObject); virtual;
     Procedure Loaded; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -310,6 +311,10 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+
+    procedure Clear;
+    function IsEmpty : Boolean;
+
     property PopupVisible:boolean read GetPopupVisible;
   end;
   
@@ -325,6 +330,7 @@ type
     property AutoSize;
     property Align;
     property Anchors;
+    property BorderStyle default bsNone;
     property BorderSpacing;
     property ButtonOnlyWhenFocused;
     Property ButtonWidth;
@@ -494,7 +500,6 @@ end;
 
 procedure TRxCustomDBLookupEdit.ShowPopUp;
 var
-  R:TPoint;
   AValue:string;
   ALookupField:string;
 begin
@@ -617,8 +622,6 @@ begin
 end;
 
 constructor TRxCustomDBLookupEdit.Create(AOwner: TComponent);
-var
-  P:TBitmap;
 begin
   inherited Create(AOwner);
   Spacing:=0;
@@ -1215,8 +1218,8 @@ begin
   end;
 
   SetFocus;
-  if (AResult) and (Assigned(FOnSelect)) then
-    FOnSelect(Self);
+  if AResult then
+    DoSelect;
 end;
 
 procedure TRxCustomDBLookupCombo.SetEnabled(Value: Boolean);
@@ -1242,19 +1245,13 @@ begin
     else
     if (Key = VK_ESCAPE) and not (Assigned(FDataField)) then
     begin
-      SetValueKey(FEmptyValue);
-      if Assigned(FOnSelect) then
-        FOnSelect(Self);
+      Clear;
       Key:=0;
     end
     else
     if (Key = VK_ESCAPE) and (not FDataField.IsNull) and (FDataLink.Edit) then
     begin
-      FDataField.Clear;
-      UpdateKeyValue;
-      if Assigned(FOnSelect) then
-        FOnSelect(Self);
-      DoChangeData;
+      Clear;
       Key:=0;
     end;
   end;
@@ -1277,8 +1274,7 @@ begin
       end;
       //FDataLink.UpdateRecord; -- no need more...
       Self.NeedUpdateData;
-      if Assigned(FOnSelect) then
-        FOnSelect(Self);
+      DoSelect;
       KeyValueChanged;
       Key:=0;
     end
@@ -1295,8 +1291,7 @@ begin
                    FLookupDataLink.DataSet.Next;
       end;
       SetValueKey(FKeyField.AsString);
-      if Assigned(FOnSelect) then
-        FOnSelect(Self);
+      DoSelect;
       Key:=0;
     end
   end;
@@ -1351,6 +1346,12 @@ procedure TRxCustomDBLookupCombo.DoChangeData;
 begin
   if Assigned(FOnChangeData) then
     FOnChangeData(Self)
+end;
+
+procedure TRxCustomDBLookupCombo.DoSelect;
+begin
+  if Assigned(FOnSelect) then
+    FOnSelect(Self);
 end;
 
 procedure TRxCustomDBLookupCombo.DoButtonClick(Sender: TObject);
@@ -1432,10 +1433,13 @@ begin
 end;
 
 procedure TRxCustomDBLookupCombo.Paint;
+const
+  padding : Integer = 1;
 var
   Selected:boolean;
   R, R1: TRect;
   AText: string;
+  border : Integer;
 begin
   Canvas.Font := Font;
   Canvas.Brush.Color := Color;
@@ -1451,25 +1455,33 @@ begin
     Canvas.Font.Color := clInactiveCaption;
   end;
 
-  SetRect(R, 0, 0, ClientWidth, ClientHeight);
-  if Flat then
+  R := Rect(0, 0, ClientWidth, ClientHeight);
+  if BorderStyle = bsNone then
   begin
-    Canvas.Frame3d(R, 3, bvLowered);
+    border := 3;
+    if Flat then
+    begin
+      Canvas.Frame3d(R, border, bvLowered);
+    end
+    else
+    begin
+      RxFrame3D(Canvas, R, clWindowFrame, clBtnHighlight, 1);
+      RxFrame3D(Canvas, R, clBtnShadow, clBtnFace, 1);
+    end;
   end
   else
   begin
-    RxFrame3D(Canvas, R, clWindowFrame, clBtnHighlight, 1);
-    RxFrame3D(Canvas, R, clBtnShadow, clBtnFace, 1);
+    border := 1;
   end;
 
-  if ClientWidth > 6 then
+  if ClientWidth > 2*border then
   begin
-    SetRect(R1, 3, 3, ClientWidth - 3, ClientHeight - 3);
+    R1 := Rect(border, border, ClientWidth - border, ClientHeight - border);
     Canvas.FillRect(R1);
-    R.Right:=R.Right - GetButtonWidth;
+    R.Right := R.Right - GetButtonWidth;
     if PopupVisible and (Caption<>'') then
     begin
-      AText:=Caption;
+      AText := Caption;
       Canvas.TextRect(R, TextMargin, Max(0, (HeightOf(R) - Canvas.TextHeight('Wg')) div 2), AText);
     end
     else
@@ -1479,13 +1491,13 @@ begin
     begin
       if Assigned(FDataField) and FDataField.IsNull then
       begin
-        SetRect(R1, 6, 6, ClientWidth - 6 - GetButtonWidth, ClientHeight - 6);
+        R1 := Rect(border + padding, border + padding, ClientWidth - (border + padding) - GetButtonWidth, ClientHeight - (border + padding));
         Canvas.Brush.Color:=FEmptyItemColor;
         Canvas.FillRect(R1);
         AText:=FEmptyValue
       end
       else
-      if FValuesList.Count>0 then
+      if FValuesList.Count > 0 then
         AText:=FValuesList[FLookupDisplayIndex]
       else
         AText:='';
@@ -1540,8 +1552,7 @@ begin
     end
     else
       SetValueKey(Value);
-    if Assigned(FOnSelect) then
-      FOnSelect(Self);
+    DoSelect;
   end;
 end;
 
@@ -1607,6 +1618,7 @@ begin
 
   ButtonWidth:=15;
   TabStop:=true;
+  BorderStyle := bsNone;
 end;
 
 destructor TRxCustomDBLookupCombo.Destroy;
@@ -1620,6 +1632,27 @@ begin
   FreeAndNil(FValuesList);
   FreeAndNil(FPopUpFormOptions);
   inherited Destroy;
+end;
+
+procedure TRxCustomDBLookupCombo.Clear;
+begin
+  if not (Assigned(FDataField)) then
+  begin
+    SetValueKey(FEmptyValue);
+    DoSelect;
+  end
+  else if (not FDataField.IsNull) and (FDataLink.Edit) then
+  begin
+    FDataField.Clear;
+    UpdateKeyValue;
+    DoSelect;
+    DoChangeData;
+  end;
+end;
+
+function TRxCustomDBLookupCombo.IsEmpty: Boolean;
+begin
+  Result := (Value = EmptyValue);
 end;
 
 
