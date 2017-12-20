@@ -242,7 +242,7 @@
         <Filename Value="..\..\design\JvRuntimeDesign\JvRuntimeDesignReg.pas"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
-        <CursorPos X="17" Y="14"/>
+        <CursorPos X="39" Y="7"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit27>
@@ -314,7 +314,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="jvDesignerDemo"/>
+      <Filename Value="..\..\bin\jvDesignerDemo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
