@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectGroup FileVersion="1">
-    <Targets Count="14">
+    <Targets Count="16">
       <Target0 FileName="JvCoreLazR.lpk"/>
       <Target1 FileName="JvCoreLazD.lpk"/>
       <Target2 FileName="JvCtrlsLazR.lpk"/>
@@ -16,6 +16,8 @@
       <Target11 FileName="JvValidatorsLazD.lpk"/>
       <Target12 FileName="JvXPCtrlsLazR.lpk"/>
       <Target13 FileName="JvXPCtrlsLazD.lpk"/>
+      <Target14 FileName="jvruntimedesignlazr.lpk"/>
+      <Target15 FileName="jvruntimedesignlazd.lpk"/>
     </Targets>
   </ProjectGroup>
 </CONFIG>
