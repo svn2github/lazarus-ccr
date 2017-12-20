@@ -1,0 +1,1 @@
+..\..\lazres ..\..\..\resource\JvRuntimeDesign.res TJVDESIGNPANEL.BMP TJVDESIGNSCROLLBOX.BMP TJVDESIGNSURFACE.BMP

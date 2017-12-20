@@ -2,38 +2,36 @@
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
-    <Name Value="JvCoreLazD"/>
+    <Name Value="JvRunTimeDesignD"/>
     <Type Value="RunAndDesignTime"/>
-    <Author Value="Initial Lazarus port by Sergio Samayoa"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <IncludeFiles Value="..\resource"/>
-        <OtherUnitFiles Value="..\design\JvCore"/>
-        <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\design\JvCore"/>
+        <OtherUnitFiles Value="..\design\JvRuntimeDesign"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="JVCL Core Components (Designtime). Must be installed before any of the other JvXXX packages can be installed."/>
+    <Description Value="Runtime form designer"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="2"/>
-    <Files Count="2">
+    <Files Count="1">
       <Item1>
-        <Filename Value="..\design\JvCore\JvCoreReg.pas"/>
-        <UnitName Value="JvCoreReg"/>
+        <Filename Value="..\design\JvRuntimeDesign\JvRuntimeDesignReg.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="JvRuntimeDesignReg"/>
       </Item1>
-      <Item2>
-        <Filename Value="..\design\JvCore\JvDsgnConsts.pas"/>
-        <UnitName Value="JvDsgnConsts"/>
-      </Item2>
     </Files>
-    <RequiredPkgs Count="2">
+    <RequiredPkgs Count="3">
       <Item1>
-        <PackageName Value="JvCoreLazR"/>
+        <PackageName Value="JvCoreLazD"/>
       </Item1>
       <Item2>
-        <PackageName Value="FCL"/>
+        <PackageName Value="JvRuntimeDesignR"/>
       </Item2>
+      <Item3>
+        <PackageName Value="FCL"/>
+      </Item3>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

@@ -147,10 +147,12 @@ type
   TJvRegKey = (hkClassesRoot, hkCurrentUser, hkLocalMachine, hkUsers,
     hkPerformanceData, hkCurrentConfig, hkDynData);
   TJvRegKeys = set of TJvRegKey;
+  *********************)
 
   // base JVCL Exception class to derive from
   EJVCLException = class(Exception);
 
+  (***************************
   TJvLinkClickEvent = procedure(Sender: TObject; Link: string) of object;
   //  TOnRegistryChangeKey = procedure(Sender: TObject; RootKey: HKEY; Path: string) of object;
   //  TAngle = 0..360;
