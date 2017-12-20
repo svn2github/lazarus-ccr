@@ -2,44 +2,37 @@
 <CONFIG>
   <Package Version="4">
     <PathDelim Value="\"/>
-    <Name Value="JvRuntimeDesignR"/>
+    <Name Value="JvRunTimeDesignLazD"/>
     <Type Value="RunAndDesignTime"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <OtherUnitFiles Value="..\run\JvRuntimeDesign"/>
+        <OtherUnitFiles Value="..\design\JvRuntimeDesign"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Runtime form designer"/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
     <Version Major="1" Release="2"/>
-    <Files Count="4">
+    <Files Count="1">
       <Item1>
-        <Filename Value="..\run\JvRuntimeDesign\jvdesignclip.pas"/>
-        <UnitName Value="JvDesignClip"/>
+        <Filename Value="..\design\JvRuntimeDesign\JvRuntimeDesignReg.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="JvRuntimeDesignReg"/>
+      </Item1>
+    </Files>
+    <RequiredPkgs Count="3">
+      <Item1>
+        <PackageName Value="JvCoreLazD"/>
       </Item1>
       <Item2>
-        <Filename Value="..\run\JvRuntimeDesign\jvdesignimp.pas"/>
-        <UnitName Value="JvDesignImp"/>
+        <PackageName Value="JvRuntimeDesignLazR"/>
+        <MaxVersion Major="1" Release="2"/>
       </Item2>
       <Item3>
-        <Filename Value="..\run\JvRuntimeDesign\jvdesignsurface.pas"/>
-        <UnitName Value="JvDesignSurface"/>
-      </Item3>
-      <Item4>
-        <Filename Value="..\run\JvRuntimeDesign\jvdesignutils.pas"/>
-        <UnitName Value="JvDesignUtils"/>
-      </Item4>
-    </Files>
-    <RequiredPkgs Count="2">
-      <Item1>
-        <PackageName Value="JvCoreLazR"/>
-      </Item1>
-      <Item2>
         <PackageName Value="FCL"/>
-      </Item2>
+      </Item3>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>
@@ -47,8 +40,5 @@
     <PublishOptions>
       <Version Value="2"/>
     </PublishOptions>
-    <CustomOptions Items="ExternHelp" Version="2">
-      <_ExternHelp Items="Count"/>
-    </CustomOptions>
   </Package>
 </CONFIG>
