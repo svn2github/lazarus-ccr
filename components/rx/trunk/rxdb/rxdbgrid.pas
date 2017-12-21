@@ -6268,7 +6268,13 @@ begin
             begin
               if K<>0 then
                 S:=S+#9;
-              S:=S+Columns[i].Field.DisplayText;
+
+              {$IF lcl_fullversion >= 1090000}
+              if CheckDisplayMemo(Columns[i].Field) then
+                S :=S + Columns[i].Field.AsString
+              else
+              {$ENDIF}
+                S:=S+Columns[i].Field.DisplayText;
               inc(K);
             end;
           end;
@@ -6293,7 +6299,7 @@ begin
         end;
       end;
     end
-    else
+(*    else
     if (dgMultiselect in Options) and (SelectedRows.Count>1) then
     begin
       S:='';
@@ -6341,12 +6347,18 @@ begin
           Clipboard.Close;
         end;
       end;
-    end
+    end   *)
     else
     if Assigned(SelectedField) then
     try
       Clipboard.Open;
-      Clipboard.AsText:=SelectedField.DisplayText;
+
+      {$IF lcl_fullversion >= 1090000}
+      if CheckDisplayMemo(SelectedField) then
+        Clipboard.AsText:=SelectedField.AsString
+      else
+      {$ENDIF}
+        Clipboard.AsText:=SelectedField.DisplayText;
     finally
       Clipboard.Close;
     end;
