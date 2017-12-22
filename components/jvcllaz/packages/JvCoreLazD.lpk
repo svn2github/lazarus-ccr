@@ -16,7 +16,7 @@
     </CompilerOptions>
     <Description Value="JVCL Core Components (Designtime). Must be installed before any of the other JvXXX packages can be installed."/>
     <License Value="The JVCL is released in accordance with the MPL 1.1 license. To get your own copy or read it, go to http://www.mozilla.org/MPL/MPL-1.1.html. "/>
-    <Version Major="1" Release="2"/>
+    <Version Major="1" Release="3"/>
     <Files Count="2">
       <Item1>
         <Filename Value="..\design\JvCore\JvCoreReg.pas"/>
