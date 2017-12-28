@@ -867,6 +867,7 @@ type
 
     procedure OnDataSetScrolled(aDataSet:TDataSet; Distance: Integer);
     function GetFieldDisplayText(AField:TField; ACollumn:TRxColumn):string;
+    procedure FillFilterData;
   protected
     FRxDbGridLookupComboEditor: TCustomControl;
     FRxDbGridDateEditor: TWinControl;
@@ -3214,6 +3215,7 @@ begin
   UseXORFeatures := rdgXORColSizing in AValue;
   if (rdgFilter in AValue) and not (rdgFilter in OldOpt) then
   begin
+    FillFilterData;
     LayoutChanged;
   end
   else
@@ -4095,6 +4097,49 @@ begin
   end
 end;
 
+procedure TRxDBGrid.FillFilterData;
+var
+  i: Integer;
+  C: TRxColumn;
+  FBS, FAS: TDataSetNotifyEvent;
+begin
+  for i := 0 to Columns.Count - 1 do
+  begin
+    C := TRxColumn(Columns[i]);
+    C.Filter.ValueList.Clear;
+    C.Filter.CurrentValues.Clear;
+    C.Filter.ManulEditValue:='';
+    C.Filter.ItemIndex := -1;
+    C.Filter.ValueList.Add(C.Filter.EmptyValue);
+    C.Filter.ValueList.Add(C.Filter.AllValue);
+  end;
+
+  if DatalinkActive then
+  begin
+    DataSource.DataSet.DisableControls;
+    DataSource.DataSet.Filtered := True;
+    FBS:=DataSource.DataSet.BeforeScroll;
+    FAS:=DataSource.DataSet.AfterScroll;
+    DataSource.DataSet.BeforeScroll:=nil;
+    DataSource.DataSet.AfterScroll:=nil;
+    DataSource.DataSet.First;
+    while not DataSource.DataSet.EOF do
+    begin
+      for i := 0 to Columns.Count - 1 do
+      begin
+        C := TRxColumn(Columns[i]);
+        if C.Filter.Enabled and (C.Field <> nil) and (C.Filter.ValueList.IndexOf(C.Field.DisplayText) < 0) then
+          C.Filter.ValueList.Add(C.Field.DisplayText);
+      end;
+      DataSource.DataSet.Next;
+    end;
+    DataSource.DataSet.First;
+    DataSource.DataSet.BeforeScroll:=FBS;
+    DataSource.DataSet.AfterScroll:=FAS;
+    DataSource.DataSet.EnableControls;
+  end;
+end;
+
 procedure TRxDBGrid.DefaultDrawCellA(aCol, aRow: integer; aRect: TRect;
   aState: TGridDrawState);
 begin
@@ -4617,7 +4662,10 @@ begin
     end;
     CalcStatTotals;
     if rdgFilter in OptionsRx then
-       OnFilter(nil);
+    begin
+      FillFilterData;
+      //OnFilter(nil);
+    end;
   end
   else
   begin
@@ -4634,7 +4682,10 @@ begin
       DataSource.DataSet.OnPostError := F_EventOnPostError;
       F_EventOnPostError := nil;
       if rdgFilter in OptionsRx then
-         OnFilter(nil);
+      begin
+        FillFilterData;
+        //OnFilter(nil);
+      end;
     end;
     F_LastFilter.Clear;
   end;
@@ -6129,7 +6180,7 @@ var
 begin
   BeginUpdate;
   OptionsRx := OptionsRx + [rdgFilter];
-
+{
   for i := 0 to Columns.Count - 1 do
   begin
     C := TRxColumn(Columns[i]);
@@ -6165,7 +6216,7 @@ begin
     DataSource.DataSet.AfterScroll:=FAS;
     DataSource.DataSet.EnableControls;
   end;
-
+}
   EndUpdate;
 end;
 
