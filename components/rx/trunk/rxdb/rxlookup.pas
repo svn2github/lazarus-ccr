@@ -269,6 +269,7 @@ type
     function RealGetText: TCaption; override;
     procedure RealSetText(const Value: TCaption); override;
 
+    procedure SetBorderStyle(NewStyle: TBorderStyle); override;
     procedure Paint; override;
 
     procedure LookupDataSetChanged(Sender: TObject);  virtual;
@@ -1429,6 +1430,20 @@ begin
         KeyValueChanged;
       end;
     end;
+  end;
+end;
+
+procedure TRxCustomDBLookupCombo.SetBorderStyle(NewStyle: TBorderStyle);
+begin
+  inherited SetBorderStyle(NewStyle);
+
+  if BorderStyle = bsNone then
+  begin
+    FButton.BorderSpacing.Around := 2;
+  end
+  else
+  begin
+    FButton.BorderSpacing.Around := 0;
   end;
 end;
 
