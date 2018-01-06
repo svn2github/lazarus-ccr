@@ -27,3 +27,6 @@ The code does not work under Delphi any more.
 
 License:
 LGPL with linking exception (the same license used by Lazarus).
+
+The palette icon was painted by Roland Hahn and is not subject to any 
+restrictions.
