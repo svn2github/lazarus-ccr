@@ -1,0 +1,1 @@
+lazres ..\source\calendarlite_icon.res tcalendarlite.png tcalendarlite_150.png tcalendarlite_200.png

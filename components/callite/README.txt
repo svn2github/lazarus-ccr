@@ -5,7 +5,5 @@ and resize as needed.
 
 License: modified LGPL (with linking exception) (the license same as Lazarus)
 
-The palette icon is taken from icons8.com 
-Download link: https://icons8.com/icon/12776/Calendar
-The icons of icon8 have a "Creative Commons Attribution-NoDerivs 3.0 Unported"
-license.
+The palette icon was painted by Roland Hahn. It is freeware and not subject to
+any restrictions.
