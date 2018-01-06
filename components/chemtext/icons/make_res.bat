@@ -1,0 +1,1 @@
+lazres ..\source\chemtext.res tchemlabel.png tchemlabel_150.png tchemlabel_200.png
