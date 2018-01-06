@@ -8,7 +8,6 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="48"
@@ -24,18 +23,6 @@
   <defs
      id="defs4227">
     <linearGradient
-       inkscape:collect="always"
-       id="linearGradient830">
-      <stop
-         style="stop-color:#5586a4;stop-opacity:1;"
-         offset="0"
-         id="stop826" />
-      <stop
-         style="stop-color:#37abc8;stop-opacity:1"
-         offset="1"
-         id="stop828" />
-    </linearGradient>
-    <linearGradient
        id="linearGradient826"
        osb:paint="solid">
       <stop
@@ -43,15 +30,6 @@
          offset="0"
          id="stop824" />
     </linearGradient>
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient830"
-       id="linearGradient832"
-       x1="25"
-       y1="1052.3622"
-       x2="25"
-       y2="1004.3622"
-       gradientUnits="userSpaceOnUse" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -60,9 +38,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="13.847498"
-     inkscape:cx="23.534669"
-     inkscape:cy="23.619269"
+     inkscape:zoom="19.583319"
+     inkscape:cx="32.602604"
+     inkscape:cy="21.20487"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -110,36 +88,28 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-1004.3622)">
-    <rect
-       y="1004.3622"
-       x="4.1894532e-006"
-       height="48.000034"
-       width="48"
-       id="rect935"
-       style="opacity:1;fill:url(#linearGradient832);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:16px;line-height:50px;font-family:'Trebuchet MS';-inkscape-font-specification:'Trebuchet MS Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="3.3989911"
-       y="1025.4811"
-       id="text929"><tspan
-         style="stroke-width:1px"
-         sodipodi:role="line"
-         id="tspan927"
-         x="3.3989911"
-         y="1025.4811"
-         dx="0 0.80000001 0.62 0.38"
-         dy="0 0 0 0">Open</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.33333397px;line-height:50px;font-family:'Trebuchet MS';-inkscape-font-specification:'Trebuchet MS Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="12.000645"
-       y="1047.9637"
-       id="text933"><tspan
-         style="stroke-width:1px"
-         sodipodi:role="line"
-         id="tspan931"
-         x="12.000645"
-         y="1047.9637">GL</tspan></text>
+    <g
+       transform="matrix(2,0,0,2,4.0301225e-7,-1052.3622)"
+       id="layer1-1"
+       inkscape:label="Ebene 1"
+       style="stroke-width:0.5">
+      <path
+         id="ellipse840"
+         d="m 12.706365,1033.3622 a 11.706365,7.0000412 0 0 0 -11.7063644,6.9998 11.706365,7.0000412 0 0 0 11.7063644,7.0002 11.706365,7.0000412 0 0 0 10.293634,-3.6694 10.130508,5.4091224 0 0 1 -7.967369,2.0784 10.130508,5.4091224 0 0 1 -10.1305078,-5.4092 10.130508,5.4091224 0 0 1 10.1305078,-5.409 10.130508,5.4091224 0 0 1 7.915046,2.0343 11.706365,7.0000412 0 0 0 -10.241311,-3.6251 z"
+         style="opacity:1;fill:#5586a4;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.99999994;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+         inkscape:connector-curvature="0" />
+      <text
+         transform="scale(1.0043237,0.99569493)"
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9.50362015px;line-height:22.27412415px;font-family:'Trebuchet MS';-inkscape-font-specification:'Trebuchet MS Bold';letter-spacing:0px;word-spacing:0px;fill:#5586a4;fill-opacity:1;stroke:none;stroke-width:0.49999937px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="9.7898312"
+         y="1047.7875"
+         id="text852"><tspan
+           style="stroke-width:0.49999937px"
+           sodipodi:role="line"
+           id="tspan850"
+           x="9.7898312"
+           y="1047.7875">GL</tspan></text>
+    </g>
   </g>
 </svg>
