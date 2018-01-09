@@ -412,6 +412,10 @@ type
 
 implementation
 
+{$IFDEF LCL}
+uses
+  LazUTF8;
+{$ENDIF}
 
 const
   calMargin = 4; {left, right, and top margin}

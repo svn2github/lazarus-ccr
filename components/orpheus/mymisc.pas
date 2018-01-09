@@ -353,6 +353,11 @@ function GetBrowserPath : string;
 
 implementation
 
+{$IFDEF LCL}
+uses
+  LCLPlatformDef ;
+{$ENDIF}
+
  {These functions belong in LclIntf unit}
 
 function IsCharAlpha(c : Char) : Boolean;
