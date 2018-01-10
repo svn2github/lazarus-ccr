@@ -59,13 +59,13 @@
         <MinVersion Major="1" Release="18" Build="56" Valid="True"/>
       </Item5>
     </RequiredPackages>
-    <Units Count="67">
+    <Units Count="75">
       <Unit0>
         <Filename Value="RxDBGridDemo.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="17"/>
-        <UsageCount Value="129"/>
+        <UsageCount Value="130"/>
       </Unit0>
       <Unit1>
         <Filename Value="rxdbgridmainunit.pas"/>
@@ -76,7 +76,7 @@
         <UnitName Value="RxDBGridMainUnit"/>
         <TopLine Value="152"/>
         <CursorPos X="138" Y="188"/>
-        <UsageCount Value="129"/>
+        <UsageCount Value="130"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -479,11 +479,11 @@
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="6079"/>
-        <CursorPos Y="6098"/>
+        <TopLine Value="5043"/>
+        <CursorPos Y="5059"/>
         <UsageCount Value="12"/>
         <Bookmarks Count="2">
-          <Item0 X="3" Y="7318" ID="1"/>
+          <Item0 X="3" Y="7319" ID="1"/>
           <Item1 X="17" Y="4357" ID="2"/>
         </Bookmarks>
         <Loaded Value="True"/>
@@ -515,7 +515,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="RxDBGrid_PopUpFilterUnit"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="11"/>
         <TopLine Value="142"/>
         <CursorPos X="3" Y="161"/>
         <UsageCount Value="11"/>
@@ -539,18 +539,18 @@
       </Unit63>
       <Unit64>
         <Filename Value="../../../rxtools/rxdconst.pas"/>
-        <EditorIndex Value="-1"/>
+        <EditorIndex Value="8"/>
         <TopLine Value="98"/>
-        <CursorPos X="26" Y="119"/>
+        <CursorPos X="3" Y="117"/>
         <UsageCount Value="10"/>
+        <Loaded Value="True"/>
       </Unit64>
       <Unit65>
         <Filename Value="/home/install/source/fpcsrc/rtl/inc/typshrdh.inc"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="126"/>
         <CursorPos X="17" Y="154"/>
         <UsageCount Value="11"/>
-        <Loaded Value="True"/>
       </Unit65>
       <Unit66>
         <Filename Value="/home/install/source/fpcsrc/rtl/objpas/classes/classesh.inc"/>
@@ -559,127 +559,194 @@
         <CursorPos X="14" Y="723"/>
         <UsageCount Value="10"/>
       </Unit66>
+      <Unit67>
+        <Filename Value="../../../../../lcl/lclproc.pas"/>
+        <UnitName Value="LCLProc"/>
+        <EditorIndex Value="9"/>
+        <TopLine Value="843"/>
+        <CursorPos Y="862"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit67>
+      <Unit68>
+        <Filename Value="../../../../lazutils/laz_avl_tree.pp"/>
+        <UnitName Value="Laz_AVL_Tree"/>
+        <EditorIndex Value="10"/>
+        <TopLine Value="1387"/>
+        <CursorPos Y="1406"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit68>
+      <Unit69>
+        <Filename Value="../../../../../lcl/include/customcombobox.inc"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="200"/>
+        <CursorPos Y="218"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit69>
+      <Unit70>
+        <Filename Value="../../../../../lcl/lclmessageglue.pas"/>
+        <UnitName Value="LCLMessageGlue"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="103"/>
+        <CursorPos Y="123"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit70>
+      <Unit71>
+        <Filename Value="../../../../../lcl/interfaces/win32/win32callback.inc"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="2676"/>
+        <CursorPos Y="2695"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit71>
+      <Unit72>
+        <Filename Value="../../../../../lcl/interfaces/win32/win32wsstdctrls.pp"/>
+        <UnitName Value="Win32WSStdCtrls"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="412"/>
+        <CursorPos Y="428"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit72>
+      <Unit73>
+        <Filename Value="../../../../../lcl/interfaces/win32/win32memostrings.inc"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="167"/>
+        <CursorPos X="42" Y="192"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit73>
+      <Unit74>
+        <Filename Value="../../../../../lcl/include/control.inc"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="4514"/>
+        <CursorPos Y="4540"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit74>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5979" TopLine="5967"/>
+        <Caret Line="5519" TopLine="5508"/>
       </Position1>
       <Position2>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5980" TopLine="5967"/>
+        <Caret Line="5526" TopLine="5508"/>
       </Position2>
       <Position3>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5975" TopLine="5967"/>
+        <Caret Line="5059" TopLine="5041"/>
       </Position3>
       <Position4>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5977" TopLine="5967"/>
+        <Caret Line="5519" TopLine="5501"/>
       </Position4>
       <Position5>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5979" TopLine="5967"/>
+        <Caret Line="5059" TopLine="5043"/>
       </Position5>
       <Position6>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5980" TopLine="5967"/>
+        <Caret Line="5060" TopLine="5043"/>
       </Position6>
       <Position7>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5975" TopLine="5967"/>
+        <Caret Line="5519" TopLine="5501"/>
       </Position7>
       <Position8>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5977" TopLine="5967"/>
+        <Caret Line="5522" Column="19" TopLine="5501"/>
       </Position8>
       <Position9>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5979" TopLine="5967"/>
+        <Caret Line="5519" TopLine="5501"/>
       </Position9>
       <Position10>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5982" TopLine="5967"/>
+        <Caret Line="5059" TopLine="5043"/>
       </Position10>
       <Position11>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5989" TopLine="5967"/>
+        <Caret Line="5060" TopLine="5043"/>
       </Position11>
       <Position12>
-        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="6007" TopLine="5989"/>
+        <Filename Value="../../../../../lcl/include/control.inc"/>
+        <Caret Line="4602" TopLine="4585"/>
       </Position12>
       <Position13>
-        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="6025" TopLine="5992"/>
+        <Filename Value="../../../../../lcl/include/control.inc"/>
+        <Caret Line="4531" TopLine="4514"/>
       </Position13>
       <Position14>
-        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="6018" TopLine="5992"/>
+        <Filename Value="../../../../../lcl/include/control.inc"/>
+        <Caret Line="4534" TopLine="4514"/>
       </Position14>
       <Position15>
-        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="6013" Column="57" TopLine="5992"/>
+        <Filename Value="../../../../../lcl/include/control.inc"/>
+        <Caret Line="4535" TopLine="4514"/>
       </Position15>
       <Position16>
-        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="6010" Column="15" TopLine="5995"/>
+        <Filename Value="../../../../../lcl/include/control.inc"/>
+        <Caret Line="4536" TopLine="4514"/>
       </Position16>
       <Position17>
-        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="6018" Column="16" TopLine="5995"/>
+        <Filename Value="../../../../../lcl/include/control.inc"/>
+        <Caret Line="4537" TopLine="4514"/>
       </Position17>
       <Position18>
-        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="6012" Column="11" TopLine="5994"/>
+        <Filename Value="../../../../../lcl/include/control.inc"/>
+        <Caret Line="4538" TopLine="4514"/>
       </Position18>
       <Position19>
-        <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="6028" Column="80" TopLine="5991"/>
+        <Filename Value="../../../../../lcl/include/control.inc"/>
+        <Caret Line="4540" TopLine="4514"/>
       </Position19>
       <Position20>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="6019" TopLine="5992"/>
+        <Caret Line="5519" TopLine="5501"/>
       </Position20>
       <Position21>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5977" TopLine="5974"/>
+        <Caret Line="789" Column="5" TopLine="774"/>
       </Position21>
       <Position22>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5979" TopLine="5972"/>
+        <Caret Line="701" Column="16" TopLine="677"/>
       </Position22>
       <Position23>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5980" TopLine="5972"/>
+        <Caret Line="7311" Column="16" TopLine="7308"/>
       </Position23>
       <Position24>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5981" TopLine="5972"/>
+        <Caret Line="7319" Column="3" TopLine="7308"/>
       </Position24>
       <Position25>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="6010" TopLine="5977"/>
+        <Caret Line="4357" Column="17" TopLine="4341"/>
       </Position25>
       <Position26>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5988" Column="27" TopLine="5967"/>
+        <Caret Line="7319" Column="3" TopLine="7301"/>
       </Position26>
       <Position27>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="5989" TopLine="5972"/>
       </Position27>
       <Position28>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="6004" Column="98" TopLine="5975"/>
+        <Caret Line="5526" Column="76" TopLine="5508"/>
       </Position28>
       <Position29>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="4132" Column="5" TopLine="4095"/>
+        <Caret Line="5024" TopLine="5008"/>
       </Position29>
       <Position30>
         <Filename Value="../../../rxdb/rxdbgrid.pas"/>
-        <Caret Line="4122" Column="5" TopLine="4108"/>
+        <Caret Line="5519" TopLine="5491"/>
       </Position30>
     </JumpHistory>
   </ProjectOptions>

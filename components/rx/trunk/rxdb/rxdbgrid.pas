@@ -5513,6 +5513,7 @@ end;
 procedure TRxDBGrid.FFilterListEditorOnChange(Sender: TObject);
 begin
   FFilterListEditor.Hide;
+//  if FFilterListEditor.mod
   with TRxColumn(Columns[Columns.RealIndex(FFilterListEditor.Col)]).Filter do
   begin
     if (FFilterListEditor.Text = EmptyValue) then
@@ -5522,7 +5523,7 @@ begin
       State:=rxfsEmpty;}
     end
     else
-    if (FFilterListEditor.Text = AllValue) then
+    if (FFilterListEditor.Text = AllValue) or (FFilterListEditor.Text = '') then
     begin
       ClearFilter;
       State:=rxfsAll;
