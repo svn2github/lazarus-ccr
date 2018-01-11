@@ -272,7 +272,7 @@ uses
 
 procedure SpkInitLayoutConsts(FromDPI: Integer; ToDPI: Integer = 0);
 begin
-  if not(DPI_AWARE) then
+  if not DPI_AWARE then
     ToDPI := FromDPI;
 
   {$IfDef Darwin}

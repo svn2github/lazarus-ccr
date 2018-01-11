@@ -16,7 +16,7 @@
     </CompilerOptions>
     <Description Value="Ribbon-like toolbar"/>
     <License Value="Modified LGPL (like Lazarus)"/>
-    <Version Minor="1" Release="2"/>
+    <Version Minor="1" Release="4"/>
     <Files Count="26">
       <Item1>
         <Filename Value="SpkToolbar\spkt_Appearance.pas"/>

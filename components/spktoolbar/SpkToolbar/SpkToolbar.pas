@@ -319,10 +319,12 @@ type
     {$IF lcl_fullversion >= 1080000}
     procedure DoAutoAdjustLayout(const AMode: TLayoutAdjustmentPolicy;
       const AXProportion, AYProportion: Double); override;
-
-    procedure FixDesignFontsPPI(const ADesignTimePPI: Integer); override;
-
+    {$IF lcl_fullversion < 1080100}
+    procedure FixDesignFontsPPI(const ADesignTimePPI: Integer);
     procedure ScaleFontsPPI(const AProportion: Double); override;
+    {$ELSE}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
+    {$ENDIF}
     {$ENDIF}
 
   public
@@ -1880,6 +1882,7 @@ begin
     ToolbarCornerRadius := round(ToolbarCornerRadius * AXProportion);
 end;
 
+{$IF lcl_fullversion < 1080100}
 procedure TSpkToolbar.FixDesignFontsPPI(const ADesignTimePPI: Integer);
 begin
   inherited;
@@ -1895,7 +1898,16 @@ begin
   DoScaleFontPPI(FAppearance.Pane.CaptionFont, AProportion);
   DoScaleFontPPI(FAppearance.Element.CaptionFont, AProportion);
 end;
-
+{$ELSE}
+procedure TSpkToolbar.ScaleFontsPPI(const AToPPI: Integer;
+  const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(FAppearance.Tab.TabHeaderFont, AToPPI, AProportion);
+  DoScaleFontPPI(FAppearance.Pane.CaptionFont, AToPPI, AProportion);
+  DoScaleFontPPI(FAppearance.Element.CaptionFont, AToPPI, AProportion);
+end;
+{$ENDIF}
 {$ENDIF}
 
 end.

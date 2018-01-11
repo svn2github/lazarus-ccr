@@ -1,0 +1,1 @@
+lazres ..\SpkToolbar.lrs tspktoolbar.png tspktoolbar_150.png tspktoolbar_200.png
