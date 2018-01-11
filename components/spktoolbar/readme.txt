@@ -20,5 +20,8 @@ Images and icons used
   (http://www.fatcow.com/free-icons, license Creative Commons Attribution 3.0).
   Some images are combinations of individual images.
   
+  The component palette icon is drawn by Roland Hahn (free, no restrictions
+  in usage).
+  
   
          
