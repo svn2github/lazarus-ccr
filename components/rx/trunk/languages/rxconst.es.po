@@ -79,6 +79,10 @@ msgstr "Destino"
 msgid "Source"
 msgstr "Fuente"
 
+#: rxconst.serrorlinkedtaskpanel
+msgid "Not assigned task panel"
+msgstr ""
+
 #: rxconst.sexptcontrolnotfound
 msgid "Control not found in validate %s."
 msgstr ""

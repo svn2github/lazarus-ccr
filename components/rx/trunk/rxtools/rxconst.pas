@@ -106,9 +106,10 @@ resourcestring
   sExptControlNotFound  = 'Control not found in validate %s.';
 
   { RxMDI }
-  sCloseWindows         = 'Close window';
-  sCloseAllExceptThis   = 'Close all except this';
-  sCloseAllWindows      = 'Close all windows';
+  sCloseWindows          = 'Close window';
+  sCloseAllExceptThis    = 'Close all except this';
+  sCloseAllWindows       = 'Close all windows';
+  sErrorLinkedTaskPanel  = 'Not assigned task panel';//Нет связанной панели задач';
 
   { TRxDateRangeEdit }
   sFirstQuarter         = 'First quarter';

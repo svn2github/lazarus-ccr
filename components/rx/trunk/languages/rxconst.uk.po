@@ -90,6 +90,10 @@ msgstr "Призначення"
 msgid "Source"
 msgstr "Джерело"
 
+#: rxconst.serrorlinkedtaskpanel
+msgid "Not assigned task panel"
+msgstr ""
+
 #: rxconst.sexptcontrolnotfound
 msgid "Control not found in validate %s."
 msgstr "Елемент управління не знайдений в валідаторі %s"

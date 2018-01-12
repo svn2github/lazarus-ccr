@@ -16,6 +16,12 @@ type
     Action1: TAction;
     Action2: TAction;
     Action3: TAction;
+    MenuItem11: TMenuItem;
+    optHideCloseButton: TAction;
+    MenuItem10: TMenuItem;
+    optMidleMouseClickClose: TAction;
+    MenuItem9: TMenuItem;
+    optShowInfoLabel: TAction;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
@@ -23,6 +29,7 @@ type
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
+    MenuItem8: TMenuItem;
     sysClose: TAction;
     ActionList1: TActionList;
     MainMenu1: TMainMenu;
@@ -35,10 +42,15 @@ type
     procedure Action1Execute(Sender: TObject);
     procedure Action2Execute(Sender: TObject);
     procedure Action3Execute(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure optHideCloseButtonExecute(Sender: TObject);
+    procedure optMidleMouseClickCloseExecute(Sender: TObject);
+    procedure optShowInfoLabelExecute(Sender: TObject);
+    procedure RxMDIPanel1ChangeCurrentChild(Sender: TRxMDIPanel; AForm: TForm);
     procedure sysCloseExecute(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
   private
-    { private declarations }
+    procedure UpdateOptions;
   public
     { public declarations }
   end;
@@ -62,10 +74,21 @@ end;
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
   if Assigned(ActiveControl) then
-    StatusBar1.SimpleText:=ActiveControl.Caption
+    StatusBar1.Panels[0].Text:=ActiveControl.Caption
   else
-    StatusBar1.SimpleText:='<NONE>'
+    StatusBar1.Panels[0].Text:='<NONE>'
     ;
+end;
+
+procedure TForm1.UpdateOptions;
+begin
+  RxMDICloseButton1.ShowInfoLabel:=optShowInfoLabel.Checked;
+  if optMidleMouseClickClose.Checked then
+    RxMDITasks1.Options:=RxMDITasks1.Options + [rxtoMidleClickClose]
+  else
+    RxMDITasks1.Options:=RxMDITasks1.Options - [rxtoMidleClickClose];
+
+  RxMDIPanel1.HideCloseButton:=optHideCloseButton.Checked;
 end;
 
 procedure TForm1.Action1Execute(Sender: TObject);
@@ -84,6 +107,39 @@ var
 begin
   Form4:=TForm4.Create(Application);
   RxMDIPanel1.ChildWindowsAdd(Form4);
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  UpdateOptions;
+end;
+
+procedure TForm1.optHideCloseButtonExecute(Sender: TObject);
+begin
+  optHideCloseButton.Checked:=not optHideCloseButton.Checked;
+  UpdateOptions;
+end;
+
+procedure TForm1.optMidleMouseClickCloseExecute(Sender: TObject);
+begin
+  optMidleMouseClickClose.Checked:=not optMidleMouseClickClose.Checked;
+  UpdateOptions;
+end;
+
+procedure TForm1.optShowInfoLabelExecute(Sender: TObject);
+begin
+  optShowInfoLabel.Checked:=not optShowInfoLabel.Checked;
+  UpdateOptions;
+end;
+
+procedure TForm1.RxMDIPanel1ChangeCurrentChild(Sender: TRxMDIPanel; AForm: TForm
+  );
+begin
+  if Assigned(AForm) then
+    StatusBar1.Panels[1].Text:=AForm.Caption
+  else
+    StatusBar1.Panels[1].Text:='<NONE>'
+    ;
 end;
 
 end.

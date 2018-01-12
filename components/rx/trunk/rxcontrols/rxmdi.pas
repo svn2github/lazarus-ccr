@@ -38,8 +38,13 @@ uses
   Classes, SysUtils, Forms, Buttons, Menus, ExtCtrls, Graphics, Controls;
 
 type
+  TRxMDITaskOption = (rxtoMidleClickClose);
+  TRxMDITaskOptions = set of TRxMDITaskOption;
+
   TRxMDIPanel = class;
   TRxMDITasks = class;
+
+  TRxMDIPanelChangeCurrentChild = procedure (Sender:TRxMDIPanel; AForm:TForm) of object;
 
   { TRxMDIButton }
 
@@ -60,6 +65,7 @@ type
     FMenu:TPopupMenu;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
   protected
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     constructor CreateButton(AOwner:TRxMDITasks; AForm:TForm);
@@ -75,6 +81,7 @@ type
     FBtnScrollLeft:TSpeedButton;
     FBtnScrollRigth:TSpeedButton;
     FMainPanel: TRxMDIPanel;
+    FOptions: TRxMDITaskOptions;
     function GetFlatButton: boolean;
     procedure SetFlatButton(AValue: boolean);
     procedure UpdateScrollBtnStatus;
@@ -98,6 +105,7 @@ type
     property ShowHint;
     property ParentShowHint;
     property FlatButton:boolean read GetFlatButton write SetFlatButton;
+    property Options:TRxMDITaskOptions read FOptions write FOptions;
   end;
 
   { TRxMDICloseButton }
@@ -107,6 +115,8 @@ type
     FInfoLabel:TBoundLabel;
     FLabelSpacing:integer;
     FMDIPanel:TRxMDIPanel;
+    FShowInfoLabel: boolean;
+    procedure SetShowInfoLabel(AValue: boolean);
   protected
     procedure SetParent(AParent: TWinControl); override;
     procedure Loaded; override;
@@ -120,6 +130,7 @@ type
     property Anchors;
     property Glyph;
     property Flat;
+    property ShowInfoLabel:boolean read FShowInfoLabel write SetShowInfoLabel default true;
   end;
 
   { TRxMDIPanel }
@@ -128,14 +139,18 @@ type
   private
     FCurrentChildWindow: TForm;
     FCloseButton: TRxMDICloseButton;
+    FHideCloseButton: boolean;
+    FOnChangeCurrentChild: TRxMDIPanelChangeCurrentChild;
     FTaskPanel: TRxMDITasks;
     procedure SetCurrentChildWindow(AValue: TForm);
     procedure navCloseButtonClick(Sender: TObject);
+    procedure SetHideCloseButton(AValue: boolean);
     procedure SetRxMDICloseButton(AValue: TRxMDICloseButton);
     procedure SetTaskPanel(AValue: TRxMDITasks);
     function MDIButtonByForm(AForm:TForm):TRxMDIButton;
     procedure HideCurrentWindow;
     procedure ScreenEventRemoveForm(Sender: TObject; Form: TCustomForm);
+    procedure DoOnChangeCurrentChild(AForm:TForm);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure Loaded; override;
@@ -159,6 +174,8 @@ type
     property BevelOuter;
     property ShowHint;
     property ParentShowHint;
+    property HideCloseButton:boolean read FHideCloseButton write SetHideCloseButton;
+    property OnChangeCurrentChild:TRxMDIPanelChangeCurrentChild read FOnChangeCurrentChild write FOnChangeCurrentChild;
   end;
 
 implementation
@@ -166,6 +183,14 @@ uses LResources, rxlclutils, rxconst;
 
 
 { TRxMDICloseButton }
+
+procedure TRxMDICloseButton.SetShowInfoLabel(AValue: boolean);
+begin
+  if FShowInfoLabel=AValue then Exit;
+  FShowInfoLabel:=AValue;
+  if Assigned(FInfoLabel) then
+    FInfoLabel.Visible:=FShowInfoLabel;
+end;
 
 procedure TRxMDICloseButton.SetParent(AParent: TWinControl);
 begin
@@ -232,6 +257,7 @@ begin
   if FInfoLabel<>nil then exit;
   FInfoLabel := TBoundLabel.Create(Self);
   FInfoLabel.ControlStyle := FInfoLabel.ControlStyle + [csNoDesignSelectable];
+  FInfoLabel.Visible:=FShowInfoLabel;
 end;
 
 constructor TRxMDICloseButton.Create(AOwner: TComponent);
@@ -239,6 +265,7 @@ begin
   inherited Create(AOwner);
 //  FLabelPosition := lpAbove;
   FLabelSpacing := 6;
+  FShowInfoLabel:=true;
   CreateInternalLabel;
   Glyph:=LoadLazResBitmapImage('RxMDICloseIcon');
 end;
@@ -251,6 +278,9 @@ begin
   if Assigned(FCloseButton) then
   begin
     FCloseButton.Enabled:=Assigned(FCurrentChildWindow);
+    if FHideCloseButton then
+      FCloseButton.Visible:=FCloseButton.Enabled;
+
     if FCloseButton.Enabled then
       FCloseButton.FInfoLabel.Caption:=FCurrentChildWindow.Caption
     else
@@ -268,6 +298,19 @@ begin
     if not (csDestroying in FCurrentChildWindow.ComponentState) then
       FCurrentChildWindow.Close
   end;
+end;
+
+procedure TRxMDIPanel.SetHideCloseButton(AValue: boolean);
+begin
+  if FHideCloseButton=AValue then Exit;
+  FHideCloseButton:=AValue;
+
+  if Assigned(FCloseButton) then
+    if FHideCloseButton then
+      FCloseButton.Visible:=FCloseButton.Enabled
+    else
+      FCloseButton.Visible:=true;
+
 end;
 
 procedure TRxMDIPanel.SetRxMDICloseButton(AValue: TRxMDICloseButton);
@@ -340,6 +383,12 @@ begin
   end;
 end;
 
+procedure TRxMDIPanel.DoOnChangeCurrentChild(AForm: TForm);
+begin
+  if Assigned(FOnChangeCurrentChild) then
+    FOnChangeCurrentChild(Self, AForm);
+end;
+
 procedure TRxMDIPanel.Notification(AComponent: TComponent; Operation: TOperation
   );
 begin
@@ -382,7 +431,7 @@ procedure TRxMDIPanel.ChildWindowsAdd(F: TForm);
 var
   B:TRxMDIButton;
 begin
-  Assert(Assigned(TaskPanel), 'Нет связанной панели задач');
+  Assert(Assigned(TaskPanel), sErrorLinkedTaskPanel);
   HideCurrentWindow;
   F.BorderStyle:=bsNone;
   F.Align:=alClient;
@@ -392,7 +441,7 @@ begin
   Application.MainForm.ActiveControl:=F;
 
   B:=TRxMDIButton.CreateButton(TaskPanel, F);
-
+  DoOnChangeCurrentChild(F);
 end;
 
 procedure TRxMDIPanel.ChildWindowsCreate(var AForm; FC: TFormClass);
@@ -406,7 +455,11 @@ begin
     ChildWindowsAdd(FForm);
   end
   else
-    ShowWindow(FForm)
+  begin
+    ShowWindow(FForm);
+    DoOnChangeCurrentChild(FForm);
+  end;
+
 end;
 
 procedure TRxMDIPanel.ChildWindowsUpdateCaption(F: TForm);
@@ -587,8 +640,14 @@ procedure TRxMDITasks.Notification(AComponent: TComponent; Operation: TOperation
   );
 begin
   inherited Notification(AComponent, Operation);
-  if (AComponent = FMainPanel) and (Operation = opRemove) then
-    FMainPanel := nil
+  if (Operation = opRemove) then
+  begin
+    if (AComponent = FMainPanel) then
+      FMainPanel := nil
+    else
+    if (AComponent is TRxMDIButton) then
+      Invalidate;
+  end;
 end;
 
 constructor TRxMDITasks.Create(TheOwner: TComponent);
@@ -721,7 +780,6 @@ procedure TRxMDIButton.DoCloseMenu(Sender: TObject);
 begin
   if Assigned(FNavForm) then
     FNavForm.Close;
-//  Application.ProcessMessages;
 end;
 
 procedure TRxMDIButton.DoCloseAllMenu(Sender: TObject);
@@ -777,6 +835,20 @@ begin
   Application.ReleaseComponent(Self);
 end;
 
+procedure TRxMDIButton.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  inherited MouseDown(Button, Shift, X, Y);
+  if Button = mbMiddle then
+  begin
+    if Assigned(Owner) then
+    begin
+      if rxtoMidleClickClose in (Owner as TRxMDITasks).Options then
+        DoCloseMenu(Self);
+    end;
+  end;
+end;
+
 procedure TRxMDIButton.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
@@ -813,6 +885,9 @@ begin
     FNavPanel.FMainPanel.CurrentChildWindow:=NavForm;
     if Assigned(FActiveControl) and FActiveControl.HandleObjectShouldBeVisible then
       FActiveControl.SetFocus;
+
+    if Assigned(FNavPanel.FMainPanel) then
+      FNavPanel.FMainPanel.DoOnChangeCurrentChild(FNavForm);
   end;
   Down:=true;
 end;
