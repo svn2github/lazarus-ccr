@@ -964,7 +964,6 @@ procedure LoadGlyphFromRCDATA(AGlyph: TBitmap; AResName: String);
 var
   stream: TResourceStream;
   pic: TPicture;
-  bmp: TBitmap;
 begin
   stream := TResourceStream.Create(HINSTANCE, AResName, RT_RCDATA);
   try
@@ -983,8 +982,6 @@ end;
 procedure LoadGlyphFromRCDATA(AGlyph: TBitmap; ABaseResName: String;
   ALowRes, AMedRes, AHighRes: Integer);
 var
-  stream: TResourceStream;
-  pic: TPicture;
   ppiFactor: Integer;
   resName: String;
 begin

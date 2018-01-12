@@ -189,11 +189,6 @@ type
     procedure EditTask;
     procedure EndEdit(Sender: TObject);
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-    {$IF VP_LCL_SCALING = 2}
-    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
-    {$ELSEIF VP_LCL_SCALING = 1}
-    procedure ScaleFontsPPI(const AProportion: Double); override;
-    {$ENDIF}
 
     { message handlers }
     {$IFNDEF LCL}
@@ -223,6 +218,12 @@ type
     procedure RenderToCanvas(RenderCanvas: TCanvas; RenderIn: TRect;
       Angle: TVpRotationAngle; Scale: Extended; RenderDate: TDateTime;
       StartLine, StopLine: Integer; UseGran: TVpGranularity; DisplayOnly: Boolean); override;
+
+    {$IF VP_LCL_SCALING = 2}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
+    {$ELSEIF VP_LCL_SCALING = 1}
+    procedure ScaleFontsPPI(const AProportion: Double); override;
+    {$ENDIF}
 
     property ActiveTask: TVpTask read FActiveTask;
     property TaskIndex: Integer read GetTaskIndex write SetTaskIndex;

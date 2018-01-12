@@ -195,11 +195,6 @@ type
     procedure EditContact;
     procedure EndEdit(Sender: TObject);
     procedure InitializeDefaultPopup;
-    {$IF VP_LCL_SCALING = 2}
-    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
-    {$ELSEIF VP_LCL_SCALING = 1}
-    procedure ScaleFontsPPI(const AProportion: Double); override;
-    {$ENDIF}
 
     { message handlers }
     {$IFNDEF LCL}
@@ -244,6 +239,12 @@ type
 
     { - Added to support the buttonbar component.                         }
     function SelectContactByName(const Name: String): Boolean;           
+
+    {$IF VP_LCL_SCALING = 2}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
+    {$ELSEIF VP_LCL_SCALING = 1}
+    procedure ScaleFontsPPI(const AProportion: Double); override;
+    {$ENDIF}
 
     property ActiveContact: TVpContact read FActiveContact;
     property ContactIndex: Integer read FContactIndex write SetContactIndex;

@@ -223,11 +223,6 @@ type
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure Paint; override;
-    {$IF VP_LCL_SCALING = 2}
-    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
-    {$ELSEIF VP_LCL_SCALING = 1}
-    procedure ScaleFontsPPI(const AProportion: Double); override;
-    {$ENDIF}
 
     { drag and drop }
     procedure DoEndDrag(Target: TObject; X, Y: Integer); override;
@@ -272,6 +267,12 @@ type
       Angle: TVpRotationAngle; Scale: Extended; RenderDate: TDateTime;
       StartLine: Integer; StopLine: Integer; UseGran: TVpGranularity;
       DisplayOnly: Boolean); override;
+
+    {$IF VP_LCL_SCALING = 2}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
+    {$ELSEIF VP_LCL_SCALING = 1}
+    procedure ScaleFontsPPI(const AProportion: Double); override;
+    {$ENDIF}
 
     property ActiveEvent: TVpEvent read FActiveEvent write SetActiveEvent;
     property Date: TDateTime read FActiveDate write SetActiveDate;
@@ -1048,7 +1049,6 @@ end;
 procedure TVpWeekView.ShowHintWindow(APoint: TPoint; AEvent: TVpEvent);
 var
   txt: String;
-  R, eventR: TRect;
 begin
   HideHintWindow;
   case FHintMode of

@@ -370,7 +370,7 @@ type
 
   TVpHintWindow = class(THintWindow)
   public
-    function CalcHintRect(MaxWidth: Integer; const AHint: String;
+    function CalcHintRect({%H-}MaxWidth: Integer; const AHint: String;
       AData: pointer): TRect; override;
   end;
 

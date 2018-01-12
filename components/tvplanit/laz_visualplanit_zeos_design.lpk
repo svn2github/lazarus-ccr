@@ -14,7 +14,7 @@
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\zeos_design"/>
       </SearchPaths>
     </CompilerOptions>
-    <Version Major="1" Release="8"/>
+    <Version Major="1" Release="9"/>
     <Files Count="1">
       <Item1>
         <Filename Value="source\addons\zeos\vpregzeos.pas"/>

@@ -7,7 +7,7 @@ unit VpJSONDs;
 interface
 
 uses
-  SysUtils, Classes, db, fpjson,
+  SysUtils, Classes, fpjson,
   VpData, VpBaseDS;
 
 type
@@ -67,7 +67,7 @@ implementation
 uses
   LazFileUtils,
   jsonparser,
-  VpConst, VpSR, VpMisc;
+  VpSR, VpMisc;
 
 constructor TVpJSONDatastore.Create(AOwner: TComponent);
 begin
@@ -646,7 +646,6 @@ var
   cont: TVpContact;
   task: TvpTask;
   i, j: Integer;
-  s: String;
   stream: TStream;
 begin
   if FFilename = '' then

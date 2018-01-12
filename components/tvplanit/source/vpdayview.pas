@@ -389,13 +389,6 @@ type
     procedure EndEdit(Sender: TObject);
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure SetTimeIntervals(UseGran: TVpGranularity);
-    {$IF VP_LCL_SCALING = 2}
-    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
-    {$ELSE}
-    {$IF VP_LCL_SCALING = 1}
-    procedure ScaleFontsPPI(const AProportion: Double); override;
-    {$ENDIF}
-    {$ENDIF}
 
     { message handlers }
     procedure VpDayViewInit(var Msg: {$IFDEF DELPHI}TMessage{$ELSE}TLMessage{$ENDIF}); message Vp_DayViewInit;
@@ -440,6 +433,14 @@ type
     procedure RenderToCanvas(RenderCanvas: TCanvas; RenderIn: TRect;
       Angle: TVpRotationAngle; Scale: Extended; RenderDate: TDateTime;
       StartLine, StopLine: Integer; UseGran: TVpGranularity; DisplayOnly: Boolean); override;
+
+    {$IF VP_LCL_SCALING = 2}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
+    {$ELSE}
+    {$IF VP_LCL_SCALING = 1}
+    procedure ScaleFontsPPI(const AProportion: Double); override;
+    {$ENDIF}
+    {$ENDIF}
 
     property ActiveEvent: TVpEvent read FActiveEvent write FActiveEvent;
     property TopHour: TVpHours read FTopHour write SetTopHour;

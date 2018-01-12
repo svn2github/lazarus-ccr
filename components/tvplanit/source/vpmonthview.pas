@@ -233,11 +233,6 @@ type
     procedure MouseMove(Shift: TShiftState; X,Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure Paint; override;
-    {$IF VP_LCL_SCALING = 2}
-    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
-    {$ELSEIF VP_LCL_SCALING = 1}
-    procedure ScaleFontsPPI(const AProportion: Double); override;
-    {$ENDIF}
 
     { drag and drop }
     procedure DoEndDrag(Target: TObject; X, Y: Integer); override;
@@ -293,6 +288,12 @@ type
       Angle: TVpRotationAngle; Scale: Extended; RenderDate: TDateTime;
       StartLine, StopLine: Integer; UseGran: TVpGranularity;
       DisplayOnly: Boolean); override;
+
+    {$IF VP_LCL_SCALING = 2}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
+    {$ELSEIF VP_LCL_SCALING = 1}
+    procedure ScaleFontsPPI(const AProportion: Double); override;
+    {$ENDIF}
 
     property Date: TDateTime read FDate write SetDate;
 
@@ -1117,14 +1118,11 @@ end;
 {=====}
 
 procedure TVpMonthView.ShowHintWindow(APoint: TPoint; ADate: TDateTime);
-const
-  MaxWidth = 400;
 var
   txt, s: String;
   i: Integer;
   event: TVpEvent;
   list: TList;
-  R: TRect;
   holiday: String = '';
   todayDate: TDate;
 begin
@@ -1413,9 +1411,6 @@ end;
 
 procedure TVpMonthView.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X,Y: Integer);
-var
-  oldDate: TDate;
-  i: Integer;
 begin
   inherited;
 

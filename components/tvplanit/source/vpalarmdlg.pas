@@ -307,7 +307,6 @@ end;
 procedure TAlarmNotifyForm.PositionControls;
 var
   w, h: Integer;
-  b: TButton;
   i: Integer;
   cnv: TControlCanvas;
 begin

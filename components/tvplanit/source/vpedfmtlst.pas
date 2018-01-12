@@ -342,7 +342,6 @@ end;
 function TfrmPrnFormat.DirtyPrompt: Integer;
 var
   msg: String;
-  fn: String;
 begin
   if FormatFileName = '' then
     msg := RSSaveFormatChangesToFile

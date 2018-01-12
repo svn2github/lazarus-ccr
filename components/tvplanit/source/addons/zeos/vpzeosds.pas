@@ -40,7 +40,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     procedure CreateTables;
-    function GetNextID(TableName: string): integer; override;
+    function GetNextID({%H-}TableName: string): integer; override;
 
     property ResourceTable;
     property EventsTable;

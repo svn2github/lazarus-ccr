@@ -90,7 +90,7 @@ var
   dx, dy: Integer;
   tm: Integer;   // Scaled text margin;
   d2: Integer;   // 2*Scale
-  d1px, d2px, d3px: Integer;
+  {%H-}d1px, {%H-}d2px, d3px: Integer;
 begin
   if Scale > 1 then
     tm := Round(TextMargin * Scale) else
