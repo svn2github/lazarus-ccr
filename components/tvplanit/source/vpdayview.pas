@@ -389,8 +389,12 @@ type
     procedure EndEdit(Sender: TObject);
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure SetTimeIntervals(UseGran: TVpGranularity);
+    {$IF VP_LCL_SCALING = 2}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
+    {$ELSE}
     {$IF VP_LCL_SCALING = 1}
     procedure ScaleFontsPPI(const AProportion: Double); override;
+    {$ENDIF}
     {$ENDIF}
 
     { message handlers }
@@ -2576,7 +2580,17 @@ begin
   SetVScrollPos;
 end;
 
-{$IF VP_LCL_SCALING = 1}
+{$IF VP_LCL_SCALING = 2}
+procedure TVpDayView.ScaleFontsPPI(const AToPPI: Integer;
+  const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(AllDayEventAttributes.Font, AToPPI, AProportion);
+  DoScaleFontPPI(HeadAttributes.Font, AToPPI, AProportion);
+  DoScaleFontPPI(RowHeadAttributes.HourFont, AToPPI, AProportion);
+  DoScaleFontPPI(RowHeadAttributes.MinuteFont, AToPPI, AProportion);
+end;
+{$ELSEIF VP_LCL_SCALING = 1}
 procedure TVpDayView.ScaleFontsPPI(const AProportion: Double);
 begin
   inherited;

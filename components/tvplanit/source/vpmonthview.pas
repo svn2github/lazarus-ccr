@@ -233,9 +233,12 @@ type
     procedure MouseMove(Shift: TShiftState; X,Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure Paint; override;
-    {$IF VP_LCL_SCALING = 1}
+    {$IF VP_LCL_SCALING = 2}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
+    {$ELSEIF VP_LCL_SCALING = 1}
     procedure ScaleFontsPPI(const AProportion: Double); override;
     {$ENDIF}
+
     { drag and drop }
     procedure DoEndDrag(Target: TObject; X, Y: Integer); override;
     procedure DoStartDrag(var DragObject: TDragObject); override;
@@ -1533,7 +1536,20 @@ begin
   end;
 end;
 
-{$IF VP_LCL_SCALING = 1}
+
+{$IF VP_LCL_SCALING = 2}
+procedure TVpMonthView.ScaleFontsPPI(const AToPPI: Integer;
+  const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(DayHeadAttributes.Font, AToPPI, AProportion);
+  DoScaleFontPPI(EventFont, AToPPI, AProportion);
+  DoScaleFontPPI(HeadAttributes.Font, AToPPI, AProportion);
+  DoScaleFontPPI(HolidayAttributes.Font, AToPPI, AProportion);
+  DoScaleFontPPI(TodayAttributes.Font, AToPPI, AProportion);
+  DoScaleFontPPI(WeekendAttributes.Font, AToPPI, AProportion);
+end;
+{$ELSEIF VP_LCL_SCALING = 1}
 procedure TVpMonthView.ScaleFontsPPI(const AProportion: Double);
 begin
   inherited;

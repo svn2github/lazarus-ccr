@@ -223,7 +223,9 @@ type
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure Paint; override;
-    {$IF VP_LCL_SCALING = 1}
+    {$IF VP_LCL_SCALING = 2}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
+    {$ELSEIF VP_LCL_SCALING = 1}
     procedure ScaleFontsPPI(const AProportion: Double); override;
     {$ENDIF}
 
@@ -1734,7 +1736,17 @@ begin
   end;
 end;
 
-{$IF VP_LCL_SCALING = 1}
+{$IF VP_LCL_SCALING = 2}
+procedure TVpWeekView.ScaleFontsPPI(const AToPPI: Integer;
+  const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(AllDayEventAttributes.Font, AToPPI, AProportion);
+  DoScaleFontPPI(DayHeadAttributes.Font, AToPPI, AProportion);
+  DoScaleFontPPI(EventFont, AToPPI, AProportion);
+  DoScaleFontPPI(HeadAttributes.Font, AToPPI, AProportion);
+end;
+{$ELSEIF VP_LCL_SCALING = 1}
 procedure TVpWeekView.ScaleFontsPPI(const AProportion: Double);
 begin
   inherited;

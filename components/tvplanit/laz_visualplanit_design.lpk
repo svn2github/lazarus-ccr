@@ -27,7 +27,7 @@ The Initial Developer of the Original Code is TurboPower Software.
 Portions created by TurboPower Software Inc. are Copyright (C) 2002 TurboPower Software Inc. All Rights Reserved. 
 
 Contributor(s): "/>
-    <Version Major="1" Release="7"/>
+    <Version Major="1" Release="8"/>
     <Files Count="6">
       <Item1>
         <Filename Value="source\design\vpreg.pas"/>

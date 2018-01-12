@@ -189,7 +189,9 @@ type
     procedure EditTask;
     procedure EndEdit(Sender: TObject);
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-    {$IF VP_LCL_SCALING = 1}
+    {$IF VP_LCL_SCALING = 2}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
+    {$ELSEIF VP_LCL_SCALING = 1}
     procedure ScaleFontsPPI(const AProportion: Double); override;
     {$ENDIF}
 
@@ -1248,7 +1250,14 @@ begin
     end;
 end;
 
-{$IF VP_LCL_SCALING=1}
+{$IF VP_LCL_SCALING = 2}
+procedure TVpTaskList.ScaleFontsPPI(const AToPPI: Integer;
+  const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(TaskHeadAttributes.Font, AToPPI, AProportion);
+end;
+{$ELSEIF VP_LCL_SCALING = 1}
 procedure TVpTaskList.ScaleFontsPPI(const AProportion: Double);
 begin
   inherited;

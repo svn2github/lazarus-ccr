@@ -195,7 +195,9 @@ type
     procedure EditContact;
     procedure EndEdit(Sender: TObject);
     procedure InitializeDefaultPopup;
-    {$IF VP_LCL_SCALING = 1}
+    {$IF VP_LCL_SCALING = 2}
+    procedure ScaleFontsPPI(const AToPPI: Integer; const AProportion: Double); override;
+    {$ELSEIF VP_LCL_SCALING = 1}
     procedure ScaleFontsPPI(const AProportion: Double); override;
     {$ENDIF}
 
@@ -1749,7 +1751,14 @@ begin
   Invalidate;
 end;
 
-{$IF VP_LCL_SCALING=1}
+{$IF VP_LCL_SCALING = 2}
+procedure TVpContactGrid.ScaleFontsPPI(const AToPPI: Integer;
+  const AProportion: Double);
+begin
+  inherited;
+  DoScaleFontPPI(ContactHeadAttributes.Font, AToPPI, AProportion);
+end;
+{$ELSEIF VP_LCL_SCALING = 1}
 procedure TVpContactGrid.ScaleFontsPPI(const AProportion: Double);
 begin
   inherited;
