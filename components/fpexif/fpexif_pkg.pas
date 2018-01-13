@@ -4,12 +4,11 @@
 
 unit fpexif_pkg;
 
-{$warn 5023 off : no warning about unused units}
 interface
 
 uses
   fpeGlobal, fpeTags, fpeUtils, fpeMetadata, fpeExifReadWrite, 
-  fpeIptcReadWrite, fpeExifData, fpeIptcData, fpeStrConsts, fpemakernote;
+  fpeIptcReadWrite, fpeExifData, fpeIptcData, fpeStrConsts, fpeMakerNote;
 
 implementation
 

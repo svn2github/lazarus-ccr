@@ -20,6 +20,11 @@ uses
 
 type
  {$IFDEF FPC}
+
+  {$IF FPC_FULLVERSION < 3000200}
+  TStringArray = array of string;
+  {$ENDIF}
+
   TInt64List = specialize TFPGList<int64>;
  {$ELSE}
   TInt64List = class(TList)
