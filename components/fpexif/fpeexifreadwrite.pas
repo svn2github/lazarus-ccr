@@ -520,8 +520,8 @@ begin
 
   // In case of the thumbnail directory we read the thumbnail if available.
   if (AParent = TAGPARENT_THUMBNAIL) and
-     (FThumbPosition > -1) and (FThumbSize > 0) and
-     (FThumbPosition < FThumbSize) then
+     (FThumbPosition > -1) and (FThumbSize > 0) //and
+     then //(FThumbPosition < FThumbSize) then
   begin
     // Move stream to beginning of thumbnail...
     AStream.Position := FThumbPosition;
