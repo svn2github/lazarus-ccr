@@ -111,7 +111,7 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  UpdateOptions;
+  //UpdateOptions;
 end;
 
 procedure TForm1.optHideCloseButtonExecute(Sender: TObject);

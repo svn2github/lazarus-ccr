@@ -212,7 +212,7 @@ begin
     Parent.DisableAlign;
   //DebugLn(['TCustomLabeledEdit.DoPositionLabel ']);
   FInfoLabel.Parent := Parent;
-  FInfoLabel.Visible := Visible;
+  FInfoLabel.Visible := Visible and FShowInfoLabel;
 {  case FLabelPosition of
     lpAbove:
       begin
