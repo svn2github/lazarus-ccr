@@ -18,8 +18,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="108"/>
-        <CursorPos X="10" Y="126"/>
+        <CursorPos X="3" Y="114"/>
         <UsageCount Value="25"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -69,10 +70,9 @@
       <Unit6>
         <Filename Value="../../rxcontrols/rxmdi.pas"/>
         <UnitName Value="RxMDI"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <TopLine Value="191"/>
-        <CursorPos X="52" Y="215"/>
+        <CursorPos X="6" Y="208"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit6>
