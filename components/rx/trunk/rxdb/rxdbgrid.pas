@@ -1171,7 +1171,7 @@ procedure RegisterRxDBGridSortEngine(RxDBGridSortEngineClass: TRxDBGridSortEngin
 
 implementation
 
-uses Math, rxdconst, rxstrutils, rxutils, strutils, rxdbgrid_findunit,
+uses Math, rxdconst, rxstrutils, rxutils, strutils, rxdbgrid_findunit, Themes,
   rxdbgrid_columsunit, RxDBGrid_PopUpFilterUnit, rxlookup, rxtooledit, LCLProc,
   Clipbrd, rxfilterby, rxsortby, variants, LazUTF8;
 
@@ -4459,6 +4459,32 @@ var
   C: TRxColumn;
   j, DataCol, L, R: integer;
   FIsMerged: Boolean;
+
+function CheckBoxHeight(const aState: TCheckboxState):integer;
+const
+  arrtb:array[TCheckboxState] of TThemedButton = (tbCheckBoxUncheckedNormal, tbCheckBoxCheckedNormal, tbCheckBoxMixedNormal);
+var
+  Details: TThemedElementDetails;
+  CSize: TSize;
+  ChkBitmap: TBitmap;
+begin
+  if (TitleStyle=tsNative) and not assigned(OnUserCheckboxBitmap) then
+  begin
+    Details := ThemeServices.GetElementDetails(arrtb[AState]);
+    CSize := ThemeServices.GetDetailSize(Details);
+    //CSize.cx := MulDiv(CSize.cx, Font.PixelsPerInch, Screen.PixelsPerInch);
+    Result := MulDiv(CSize.cy, Font.PixelsPerInch, Screen.PixelsPerInch);
+  end
+  else
+  begin
+    ChkBitmap := GetImageForCheckBox(aCol, aRow, AState);
+    if ChkBitmap<>nil then
+      Result:=ChkBitmap.Height
+    else
+      Result:=DefaultRowHeight;
+  end;
+end;
+
 begin
   FIsMerged:=false;
 
@@ -4493,34 +4519,20 @@ begin
     else
     begin
       case ColumnEditorStyle(aCol, F) of
-        cbsCheckBoxColumn: DrawCheckBoxBitmaps(aCol, aRect, F);
+        cbsCheckBoxColumn:begin
+          if C.Layout = tlTop then
+            aRect.Bottom:=aRect.Top + CheckBoxHeight(cbChecked) + varCellPadding + 1
+          else
+          if C.Layout = tlBottom then
+            aRect.Top:=aRect.Bottom - CheckBoxHeight(cbChecked) - varCellPadding - 1;
+          DrawCheckBoxBitmaps(aCol, aRect, F);
+        end
+      else
+        S:=GetFieldDisplayText(F, C);
+        if ((rdgWordWrap in FOptionsRx) and Assigned(C) and (C.WordWrap)) or (FIsMerged) then
+          WriteTextHeader(Canvas, aRect, S, C.Alignment)
         else
-(*          if F <> nil then
-          begin
-            if F.dataType <> ftBlob then
-            begin
-              if CheckDisplayMemo(F) then
-                S := F.AsString
-              else
-                S := F.DisplayText;
-              if Assigned(C) and (C.KeyList.Count > 0) and (C.PickList.Count > 0) then
-              begin
-                J := C.KeyList.IndexOf(S);
-                if (J >= 0) and (J < C.PickList.Count) then
-                  S := C.PickList[j];
-              end;
-            end
-            else
-              S := FColumnDefValues.FBlobText;
-          end
-          else
-            S := ''; *)
-
-          S:=GetFieldDisplayText(F, C);
-          if ((rdgWordWrap in FOptionsRx) and Assigned(C) and (C.WordWrap)) or (FIsMerged) then
-            WriteTextHeader(Canvas, aRect, S, C.Alignment)
-          else
-            DrawCellText(aCol, aRow, aRect, aState, S);
+          DrawCellText(aCol, aRow, aRect, aState, S);
       end;
     end;
   end;
