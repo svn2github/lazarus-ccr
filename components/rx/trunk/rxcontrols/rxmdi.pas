@@ -103,6 +103,7 @@ type
   published
     property Align;
     property ShowHint;
+    property Color;
     property ParentShowHint;
     property FlatButton:boolean read GetFlatButton write SetFlatButton;
     property Options:TRxMDITaskOptions read FOptions write FOptions;
@@ -587,7 +588,13 @@ begin
       ShowWindow(CC as TForm)
   end
   else
+  begin
     FMainPanel.CurrentChildWindow:=nil;
+    if not Application.Terminated then
+      if Assigned(FMainPanel) then
+        FMainPanel.DoOnChangeCurrentChild(nil);
+
+  end;
 //  Invalidate;
 end;
 
