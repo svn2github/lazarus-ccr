@@ -48,6 +48,26 @@ published
   property ForegroundColor: TColor read GetForegroundColor write SetForegroundColor default clBlack;
   property Width default 88;
   property Height default 88;
+
+  property OnPaint;
+  property OnResize;
+  property OnShowHint;
+  property OnClick;
+  property OnDblClick;
+  property OnMouseDown;
+  property OnMouseMove;
+  property OnMouseUp;
+  property OnMouseEnter;
+  property OnMouseLeave;
+  property OnMouseWheel;
+  property OnMouseWheelDown;
+  property OnMouseWheelUp;
+  property OnDragDrop;
+  property OnDragOver;
+  property OnEndDock;
+  property OnEndDrag;
+  property OnStartDock;
+  property OnStartDrag;
 end;
 
 { TLazBarcodeCustomText }
@@ -287,8 +307,7 @@ begin
   FBackgroundColor:=clWhite;
   FForegroundColor:=clBlack;
   FStrictSize:=true;
-  Width := 88;
-  Height := 88;
+  SetInitialBounds(0,0,88,88);
 end;
 
 destructor TLazBarcodeCustomBase.Destroy;
