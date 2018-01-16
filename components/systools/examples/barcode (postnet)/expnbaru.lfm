@@ -1,0 +1,96 @@
+object frmPostNet: TfrmPostNet
+  Left = 291
+  Height = 191
+  Top = 145
+  Width = 231
+  BorderStyle = bsDialog
+  Caption = 'PostNet Barcode Example'
+  ClientHeight = 191
+  ClientWidth = 231
+  Color = clBtnFace
+  Font.Color = clWindowText
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  object Label1: TLabel
+    Left = 14
+    Height = 15
+    Top = 80
+    Width = 51
+    Caption = 'From Left'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 128
+    Height = 15
+    Top = 80
+    Width = 51
+    Caption = 'From Top'
+    ParentColor = False
+  end
+  object BarCode1: TStPNBarCode
+    Left = 16
+    Height = 16
+    Top = 15
+    Width = 199
+    PostalCode = '12345'
+  end
+  object Label3: TLabel
+    Left = 76
+    Height = 15
+    Top = 44
+    Width = 17
+    Caption = 'ZIP'
+    ParentColor = False
+  end
+  object btnPrint: TButton
+    Left = 80
+    Height = 25
+    Top = 144
+    Width = 75
+    Caption = 'Print'
+    OnClick = btnPrintClick
+    TabOrder = 1
+  end
+  object meZIP: TMaskEdit
+    Left = 103
+    Height = 22
+    Top = 40
+    Width = 52
+    CharCase = ecNormal
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Courier New'
+    MaxLength = 5
+    ParentFont = False
+    TabOrder = 0
+    OnChange = meZIPChange
+    EditMask = '00000;1;_'
+    Text = '12345'
+    SpaceChar = '_'
+  end
+  object edLeft: TFloatSpinEdit
+    Left = 15
+    Height = 23
+    Top = 98
+    Width = 74
+    Alignment = taRightJustify
+    Increment = 0.1
+    MaxValue = 10
+    MinValue = 0
+    TabOrder = 2
+    Value = 2.5
+  end
+  object edTop: TFloatSpinEdit
+    Left = 128
+    Height = 23
+    Top = 98
+    Width = 74
+    Alignment = taRightJustify
+    Increment = 0.1
+    MaxValue = 10
+    MinValue = 0
+    TabOrder = 3
+    Value = 2.5
+  end
+end

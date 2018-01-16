@@ -1,0 +1,516 @@
+object FinCalForm: TFinCalForm
+  Left = 197
+  Height = 674
+  Top = 59
+  Width = 754
+  VertScrollBar.Range = 1000
+  VertScrollBar.Visible = False
+  Caption = 'Financial Calculator'
+  ClientHeight = 674
+  ClientWidth = 754
+  Color = clBtnFace
+  Font.Color = clNavy
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  Visible = True
+  object Functions: TRadioGroup
+    Left = 8
+    Height = 265
+    Top = 8
+    Width = 553
+    AutoFill = True
+    Caption = 'Functions'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 3
+    ClientHeight = 245
+    ClientWidth = 549
+    Columns = 3
+    Items.Strings = (
+      'AccruedInterestMaturity'
+      'AccruedInterestPeriodic'
+      'BondDuration'
+      'BondPrice'
+      'CumulativeInterest'
+      'CumulativePrincipal'
+      'DecliningBalance'
+      'DiscountRate'
+      'DollarToDecimal'
+      'DollarToDecimalText'
+      'DollarToFraction'
+      'DollarToFractionStr'
+      'EffectiveInterestRate'
+      'FutureValue'
+      'FutureValueSchedule'
+      'InterestRate'
+      'InternalRateOfReturn'
+      'IsCardValid'
+      'ModifiedDuration'
+      'ModifiedIRR'
+      'NetPresentValue'
+      'NominalInterestRate'
+      'NonPeriodicIRR'
+      'NonPeriodicNPV'
+      'Payment'
+      'PresentValue'
+      'ReceivedAtMaturity'
+      'RoundToDecimal'
+      'TBillEquivYield'
+      'TBillPrice'
+      'TBillYield'
+      'VariableDecliningBalance'
+      'YieldPeriodic'
+      'YieldDiscounted'
+      'YieldMaturity'
+    )
+    OnClick = FunctionsClick
+    TabOrder = 0
+    TabStop = True
+  end
+  object GroupBox1: TGroupBox
+    Left = 8
+    Height = 272
+    Top = 280
+    Width = 553
+    Caption = 'Arguments'
+    ClientHeight = 252
+    ClientWidth = 549
+    TabOrder = 1
+    object Label2: TLabel
+      Left = 29
+      Height = 15
+      Top = 48
+      Width = 6
+      Caption = '1'
+      ParentColor = False
+    end
+    object Label4: TLabel
+      Left = 29
+      Height = 15
+      Top = 80
+      Width = 6
+      Caption = '2'
+      ParentColor = False
+    end
+    object Label5: TLabel
+      Left = 29
+      Height = 15
+      Top = 112
+      Width = 6
+      Caption = '3'
+      ParentColor = False
+    end
+    object Label6: TLabel
+      Left = 29
+      Height = 15
+      Top = 144
+      Width = 6
+      Caption = '4'
+      ParentColor = False
+    end
+    object Label7: TLabel
+      Left = 21
+      Height = 15
+      Top = 216
+      Width = 31
+      Caption = 'String'
+      ParentColor = False
+    end
+    object Label3: TLabel
+      Left = 342
+      Height = 15
+      Top = 24
+      Width = 24
+      Caption = 'Date'
+      ParentColor = False
+    end
+    object Label1: TLabel
+      Left = 237
+      Height = 15
+      Top = 24
+      Width = 37
+      Caption = 'Integer'
+      ParentColor = False
+    end
+    object Label20: TLabel
+      Left = 109
+      Height = 15
+      Top = 24
+      Width = 48
+      Caption = 'Extended'
+      ParentColor = False
+    end
+    object Label10: TLabel
+      Left = 438
+      Height = 15
+      Top = 24
+      Width = 75
+      Caption = 'Miscellaneous'
+      ParentColor = False
+    end
+    object Label13: TLabel
+      Left = 29
+      Height = 15
+      Top = 176
+      Width = 6
+      Caption = '5'
+      ParentColor = False
+    end
+    object StrEdit: TEdit
+      Left = 69
+      Height = 23
+      Top = 216
+      Width = 468
+      Enabled = False
+      MaxLength = 80
+      OnExit = StrEditExit
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 19
+    end
+    object E1Edit: TEdit
+      Tag = 1
+      Left = 69
+      Height = 23
+      Top = 48
+      Width = 130
+      Enabled = False
+      OnExit = ExtEditExit
+      TabOrder = 0
+    end
+    object E2Edit: TEdit
+      Tag = 2
+      Left = 69
+      Height = 23
+      Top = 80
+      Width = 130
+      Enabled = False
+      OnExit = ExtEditExit
+      TabOrder = 1
+    end
+    object E3Edit: TEdit
+      Tag = 3
+      Left = 69
+      Height = 23
+      Top = 112
+      Width = 130
+      Enabled = False
+      OnExit = ExtEditExit
+      TabOrder = 2
+    end
+    object E4Edit: TEdit
+      Tag = 4
+      Left = 69
+      Height = 23
+      Top = 144
+      Width = 130
+      Color = clWhite
+      Enabled = False
+      OnExit = ExtEditExit
+      TabOrder = 3
+    end
+    object I1Edit: TEdit
+      Tag = 1
+      Left = 221
+      Height = 23
+      Top = 48
+      Width = 73
+      Enabled = False
+      OnExit = IntEditExit
+      TabOrder = 5
+    end
+    object I2Edit: TEdit
+      Tag = 2
+      Left = 221
+      Height = 23
+      Top = 80
+      Width = 73
+      Enabled = False
+      OnExit = IntEditExit
+      TabOrder = 6
+    end
+    object I3Edit: TEdit
+      Tag = 3
+      Left = 221
+      Height = 23
+      Top = 112
+      Width = 73
+      Enabled = False
+      OnExit = IntEditExit
+      TabOrder = 7
+    end
+    object I4Edit: TEdit
+      Tag = 4
+      Left = 221
+      Height = 23
+      Top = 144
+      Width = 73
+      Enabled = False
+      OnExit = IntEditExit
+      TabOrder = 8
+    end
+    object D1Edit: TEdit
+      Tag = 1
+      Left = 317
+      Height = 23
+      Top = 48
+      Width = 73
+      Color = clWhite
+      Enabled = False
+      OnExit = DateEditExit
+      TabOrder = 10
+    end
+    object D2Edit: TEdit
+      Tag = 2
+      Left = 317
+      Height = 23
+      Top = 80
+      Width = 73
+      Color = clWhite
+      Enabled = False
+      OnExit = DateEditExit
+      TabOrder = 11
+    end
+    object D3Edit: TEdit
+      Tag = 3
+      Left = 317
+      Height = 23
+      Top = 112
+      Width = 73
+      Color = clWhite
+      Enabled = False
+      OnExit = DateEditExit
+      TabOrder = 12
+    end
+    object D4Edit: TEdit
+      Tag = 4
+      Left = 317
+      Height = 23
+      Top = 144
+      Width = 73
+      Color = clWhite
+      Enabled = False
+      OnExit = DateEditExit
+      TabOrder = 13
+    end
+    object FreqEdit: TComboBox
+      Left = 416
+      Height = 23
+      Top = 48
+      Width = 121
+      DropDownCount = 4
+      ItemHeight = 15
+      Items.Strings = (
+        'Annual'
+        'SemiAnnual'
+        'Quarterly'
+        'Monthly'
+      )
+      OnExit = FreqEditExit
+      Style = csDropDownList
+      TabOrder = 15
+    end
+    object BasEdit: TComboBox
+      Left = 416
+      Height = 23
+      Top = 80
+      Width = 121
+      DropDownCount = 6
+      ItemHeight = 15
+      Items.Strings = (
+        '30/360 NASD'
+        'ACT/ACT'
+        'ACT/360'
+        'ACT/365'
+        '30/360 EUR'
+        '30/360 PSA'
+      )
+      OnExit = BasEditExit
+      Style = csDropDownList
+      TabOrder = 16
+    end
+    object TimEdit: TComboBox
+      Left = 416
+      Height = 23
+      Top = 112
+      Width = 121
+      DropDownCount = 2
+      ItemHeight = 15
+      Items.Strings = (
+        'End of Period'
+        'Start of Period'
+      )
+      OnExit = TimEditExit
+      Style = csDropDownList
+      TabOrder = 17
+    end
+    object E5Edit: TEdit
+      Tag = 5
+      Left = 69
+      Height = 23
+      Top = 176
+      Width = 130
+      Color = clWhite
+      Enabled = False
+      OnExit = ExtEditExit
+      TabOrder = 4
+    end
+    object I5Edit: TEdit
+      Tag = 5
+      Left = 221
+      Height = 23
+      Top = 176
+      Width = 73
+      Enabled = False
+      OnExit = IntEditExit
+      TabOrder = 9
+    end
+    object D5Edit: TEdit
+      Tag = 5
+      Left = 317
+      Height = 23
+      Top = 176
+      Width = 73
+      Color = clWhite
+      Enabled = False
+      OnExit = DateEditExit
+      TabOrder = 14
+    end
+    object BoolEdit: TCheckBox
+      Left = 424
+      Height = 19
+      Top = 152
+      Width = 75
+      Caption = 'True/False'
+      OnExit = BoolEditExit
+      TabOrder = 18
+    end
+  end
+  object Arrays: TGroupBox
+    Left = 568
+    Height = 536
+    Top = 8
+    Width = 177
+    Caption = 'Arrays'
+    ClientHeight = 516
+    ClientWidth = 173
+    TabOrder = 2
+    object Label8: TLabel
+      Left = 68
+      Height = 15
+      Top = 264
+      Width = 33
+      Caption = 'Values'
+      ParentColor = False
+    end
+    object Label9: TLabel
+      Left = 68
+      Height = 15
+      Top = 24
+      Width = 29
+      Caption = 'Dates'
+      ParentColor = False
+    end
+    object VAEdit: TStringGrid
+      Tag = 50
+      Left = 32
+      Height = 215
+      Top = 288
+      Width = 121
+      Color = clWhite
+      ColCount = 1
+      DefaultColWidth = 118
+      DefaultRowHeight = 20
+      FixedCols = 0
+      FixedRows = 0
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goEditing, goAlwaysShowEditor]
+      RowCount = 30
+      ScrollBars = ssVertical
+      TabOrder = 1
+      TitleFont.Color = clNavy
+      TitleFont.Height = -13
+      TitleFont.Name = 'Arial'
+      OnEnter = VAEditEnter
+      OnExit = VAEditExit
+    end
+    object DAEdit: TStringGrid
+      Left = 32
+      Height = 182
+      Top = 48
+      Width = 121
+      Color = clWhite
+      ColCount = 1
+      DefaultColWidth = 118
+      DefaultRowHeight = 20
+      FixedCols = 0
+      FixedRows = 0
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goEditing, goAlwaysShowEditor]
+      RowCount = 30
+      ScrollBars = ssVertical
+      TabOrder = 0
+      TitleFont.Color = clNavy
+      TitleFont.Height = -13
+      TitleFont.Name = 'Arial'
+      OnEnter = DAEditEnter
+      OnExit = DAEditExit
+    end
+  end
+  object Panel1: TPanel
+    Left = 8
+    Height = 105
+    Top = 560
+    Width = 737
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ClientHeight = 105
+    ClientWidth = 737
+    TabOrder = 3
+    object GoBtn: TButton
+      Left = 248
+      Height = 33
+      Top = 60
+      Width = 241
+      Caption = 'Evaluate'
+      Default = True
+      OnClick = GoBtnClick
+      TabOrder = 2
+    end
+    object SResult: TEdit
+      Left = 184
+      Height = 23
+      Top = 25
+      Width = 529
+      Color = clAqua
+      ReadOnly = True
+      TabStop = False
+      TabOrder = 1
+    end
+    object BitBtn1: TBitBtn
+      Left = 632
+      Height = 33
+      Top = 60
+      Width = 81
+      Cancel = True
+      Caption = 'Close'
+      NumGlyphs = 2
+      OnClick = BitBtn1Click
+      TabOrder = 3
+      TabStop = False
+    end
+    object FResult: TEdit
+      Left = 24
+      Height = 23
+      Top = 24
+      Width = 137
+      Color = clAqua
+      ReadOnly = True
+      TabStop = False
+      TabOrder = 0
+    end
+  end
+end

@@ -1,0 +1,840 @@
+object BarCodeForm: TBarCodeForm
+  Left = 214
+  Height = 580
+  Top = 137
+  Width = 612
+  Caption = 'Bar Code Component Example'
+  ClientHeight = 580
+  ClientWidth = 612
+  Color = clBtnFace
+  Font.Color = clWindowText
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  Scaled = False
+  object StDbBarCode1: TStDbBarCode
+    Left = 3
+    Height = 65
+    Top = 320
+    Width = 606
+    Anchors = [akTop, akLeft, akRight]
+    Color = clWhite
+    ParentColor = False
+    AddCheckChar = True
+    BarCodeType = bcCode93
+    BarColor = clBlack
+    BarToSpaceRatio = 1
+    BarWidth = 12
+    BearerBars = False
+    Code128Subset = csCodeA
+    ShowCode = True
+    ShowGuardChars = False
+    TallGuardBars = False
+    DataField = 'Company'
+    DataSource = DataSource1
+  end
+  object Label4: TLabel
+    Left = 3
+    Height = 15
+    Top = 301
+    Width = 240
+    Caption = 'Code 93 bar code attached to a database field'
+    ParentColor = False
+  end
+  object NB: TPageControl
+    Left = 3
+    Height = 273
+    Top = 3
+    Width = 606
+    ActivePage = TabSheet1
+    Align = alTop
+    BorderSpacing.Around = 3
+    TabIndex = 0
+    TabOrder = 4
+    OnChange = NBChange
+    object TabSheet1: TTabSheet
+      Caption = 'UPC/EAN'
+      ClientHeight = 245
+      ClientWidth = 598
+      object BarCode1: TStBarCode
+        Left = 8
+        Height = 80
+        Top = 56
+        Width = 321
+        Color = clWhite
+        ParentColor = False
+        AddCheckChar = True
+        BarCodeType = bcUPC_A
+        BarColor = clBlack
+        BarToSpaceRatio = 1
+        BarWidth = 12
+        BearerBars = False
+        Code = '12345678902'
+        Code128Subset = csCodeA
+        ShowCode = True
+        ShowGuardChars = False
+        TallGuardBars = True
+      end
+      object Label1: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 127
+        Caption = 'Code: 11 or 12 Numeric '
+        ParentColor = False
+      end
+      object edCode1: TEdit
+        Left = 8
+        Height = 23
+        Top = 26
+        Width = 137
+        MaxLength = 12
+        OnExit = btnUpdate1Click
+        TabOrder = 0
+        Text = '012345678820'
+      end
+      object edSupp: TEdit
+        Left = 160
+        Height = 23
+        Top = 26
+        Width = 49
+        Enabled = False
+        MaxLength = 5
+        OnExit = btnUpdate1Click
+        TabOrder = 2
+        Text = '12345'
+      end
+      object rgType: TRadioGroup
+        Left = 336
+        Height = 105
+        Top = 25
+        Width = 81
+        AutoFill = True
+        Caption = 'Type'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 85
+        ClientWidth = 77
+        ItemIndex = 0
+        Items.Strings = (
+          'UPC_A'
+          'UPC_E'
+          'EAN_13'
+          'EAN_8'
+        )
+        OnClick = btnUpdate1Click
+        TabOrder = 4
+      end
+      object cbSupp: TCheckBox
+        Left = 160
+        Height = 19
+        Top = 7
+        Width = 244
+        Caption = 'Encode supplemental data: 2 or 5 Numeric'
+        OnClick = btnUpdate1Click
+        TabOrder = 1
+      end
+      object cbTallGuardBars: TCheckBox
+        Left = 8
+        Height = 19
+        Top = 168
+        Width = 98
+        Caption = 'Tall guard bars'
+        Checked = True
+        OnClick = btnUpdate1Click
+        State = cbChecked
+        TabOrder = 6
+      end
+      object cbShowCode: TCheckBox
+        Left = 8
+        Height = 19
+        Top = 144
+        Width = 78
+        Caption = 'Show code'
+        Checked = True
+        OnClick = btnUpdate1Click
+        State = cbChecked
+        TabOrder = 5
+      end
+      object btnUpdate1: TButton
+        Left = 224
+        Height = 25
+        Top = 25
+        Width = 105
+        Caption = 'Update Symbol'
+        OnClick = btnUpdate1Click
+        TabOrder = 3
+      end
+    end
+    object TabSheet2: TTabSheet
+      Caption = 'Interleaved 2 of 5'
+      ClientHeight = 245
+      ClientWidth = 575
+      object BarCode2: TStBarCode
+        Left = 8
+        Height = 80
+        Top = 56
+        Width = 321
+        Color = clWhite
+        ParentColor = False
+        AddCheckChar = True
+        BarCodeType = bcInterleaved2of5
+        BarColor = clBlack
+        BarToSpaceRatio = 1
+        BarWidth = 12
+        BearerBars = True
+        Code = '0123456789'
+        Code128Subset = csCodeA
+        ShowCode = True
+        ShowGuardChars = False
+        TallGuardBars = False
+      end
+      object Label2: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 83
+        Caption = 'Code: Numeric '
+        ParentColor = False
+      end
+      object cbBearerBars: TCheckBox
+        Left = 8
+        Height = 19
+        Top = 168
+        Width = 78
+        Caption = 'Bearer Bars'
+        Checked = True
+        OnClick = btnUpdate2Click
+        State = cbChecked
+        TabOrder = 3
+      end
+      object cbShowCode2: TCheckBox
+        Left = 8
+        Height = 19
+        Top = 144
+        Width = 78
+        Caption = 'Show code'
+        Checked = True
+        OnClick = btnUpdate2Click
+        State = cbChecked
+        TabOrder = 2
+      end
+      object edCode2: TEdit
+        Left = 8
+        Height = 23
+        Top = 26
+        Width = 137
+        OnExit = btnUpdate2Click
+        TabOrder = 0
+        Text = '0123456789'
+      end
+      object btnUpdate2: TButton
+        Left = 224
+        Height = 25
+        Top = 24
+        Width = 105
+        Caption = 'Update Symbol'
+        OnClick = btnUpdate2Click
+        TabOrder = 1
+      end
+    end
+    object TabSheet3: TTabSheet
+      Caption = 'Codabar'
+      ClientHeight = 245
+      ClientWidth = 575
+      object Label3: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 136
+        Caption = 'Code: Numeric and -$:/.+'
+        ParentColor = False
+      end
+      object BarCode3: TStBarCode
+        Left = 8
+        Height = 80
+        Top = 56
+        Width = 321
+        Color = clWhite
+        ParentColor = False
+        AddCheckChar = True
+        BarCodeType = bcCodabar
+        BarColor = clBlack
+        BarToSpaceRatio = 1
+        BarWidth = 12
+        BearerBars = True
+        Code = 'c123456d'
+        Code128Subset = csCodeA
+        ShowCode = True
+        ShowGuardChars = False
+        TallGuardBars = False
+      end
+      object edCode3: TEdit
+        Left = 8
+        Height = 23
+        Top = 26
+        Width = 137
+        OnExit = btnUpdate3Click
+        TabOrder = 0
+        Text = 'c123456d'
+      end
+      object Button2: TButton
+        Left = 224
+        Height = 25
+        Top = 25
+        Width = 105
+        Caption = 'Update Symbol'
+        OnClick = btnUpdate3Click
+        TabOrder = 1
+      end
+      object cbShowCode3: TCheckBox
+        Left = 8
+        Height = 19
+        Top = 144
+        Width = 78
+        Caption = 'Show code'
+        Checked = True
+        OnClick = btnUpdate3Click
+        State = cbChecked
+        TabOrder = 2
+      end
+      object cbShowGuardChars3: TCheckBox
+        Left = 8
+        Height = 19
+        Top = 168
+        Width = 140
+        Caption = 'Show guard characters'
+        OnClick = btnUpdate3Click
+        TabOrder = 3
+      end
+    end
+    object TabSheet4: TTabSheet
+      Caption = 'Code 11'
+      ClientHeight = 245
+      ClientWidth = 575
+      object BarCode4: TStBarCode
+        Left = 8
+        Height = 80
+        Top = 56
+        Width = 321
+        Color = clWhite
+        ParentColor = False
+        AddCheckChar = True
+        BarCodeType = bcCode11
+        BarColor = clBlack
+        BarToSpaceRatio = 1
+        BarWidth = 12
+        BearerBars = True
+        Code = '1234567890'
+        Code128Subset = csCodeA
+        ShowCode = True
+        ShowGuardChars = False
+        TallGuardBars = False
+      end
+      object Label5: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 111
+        Caption = 'Code: Numeric and -'
+        ParentColor = False
+      end
+      object cbShowCode4: TCheckBox
+        Left = 8
+        Height = 19
+        Top = 144
+        Width = 78
+        Caption = 'Show code'
+        Checked = True
+        OnClick = btnUpdate4Click
+        OnExit = btnUpdate4Click
+        State = cbChecked
+        TabOrder = 2
+      end
+      object Button1: TButton
+        Left = 224
+        Height = 25
+        Top = 25
+        Width = 105
+        Caption = 'Update Symbol'
+        OnClick = btnUpdate4Click
+        TabOrder = 1
+      end
+      object edCode4: TEdit
+        Left = 8
+        Height = 23
+        Top = 26
+        Width = 137
+        OnExit = btnUpdate4Click
+        TabOrder = 0
+        Text = '1234567890'
+      end
+    end
+    object TabSheet5: TTabSheet
+      Caption = 'Code 39'
+      ClientHeight = 245
+      ClientWidth = 575
+      object BarCode5: TStBarCode
+        Left = 8
+        Height = 80
+        Top = 56
+        Width = 321
+        Color = clWhite
+        ParentColor = False
+        AddCheckChar = True
+        BarCodeType = bcCode39
+        BarColor = clBlack
+        BarToSpaceRatio = 1
+        BarWidth = 12
+        BearerBars = False
+        Code = '123456789'
+        Code128Subset = csCodeA
+        ShowCode = True
+        ShowGuardChars = False
+        TallGuardBars = False
+      end
+      object Label6: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 187
+        Caption = 'Code: Alpha-Numeric and -. $/+%*'
+        ParentColor = False
+      end
+      object edCode5: TEdit
+        Left = 8
+        Height = 23
+        Top = 26
+        Width = 137
+        OnExit = btnUpdate5Click
+        TabOrder = 0
+        Text = '123456789'
+      end
+      object btnUpdate5: TButton
+        Left = 224
+        Height = 25
+        Top = 25
+        Width = 105
+        Caption = 'Update Symbol'
+        OnClick = btnUpdate5Click
+        TabOrder = 1
+      end
+      object cbShowCode5: TCheckBox
+        Left = 8
+        Height = 19
+        Top = 144
+        Width = 78
+        Caption = 'Show code'
+        Checked = True
+        OnClick = btnUpdate5Click
+        State = cbChecked
+        TabOrder = 2
+      end
+    end
+    object TabSheet6: TTabSheet
+      Caption = 'Code 93'
+      ClientHeight = 245
+      ClientWidth = 575
+      object BarCode6: TStBarCode
+        Left = 8
+        Height = 80
+        Top = 56
+        Width = 321
+        Color = clWhite
+        ParentColor = False
+        AddCheckChar = True
+        BarCodeType = bcCode93
+        BarColor = clBlack
+        BarToSpaceRatio = 1
+        BarWidth = 12
+        BearerBars = False
+        Code = 'CODE 93'
+        Code128Subset = csCodeA
+        ShowCode = True
+        ShowGuardChars = False
+        TallGuardBars = False
+      end
+      object Label7: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 187
+        Caption = 'Code: Alpha-Numeric and -. $/+%*'
+        ParentColor = False
+      end
+      object edCode6: TEdit
+        Left = 8
+        Height = 23
+        Top = 26
+        Width = 137
+        OnExit = btnUpdate6Click
+        TabOrder = 0
+        Text = 'CODE 93'
+      end
+      object btnUpdate6: TButton
+        Left = 224
+        Height = 25
+        Top = 25
+        Width = 105
+        Caption = 'Update Symbol'
+        OnClick = btnUpdate6Click
+        TabOrder = 1
+      end
+      object cbShowCode6: TCheckBox
+        Left = 8
+        Height = 19
+        Top = 144
+        Width = 78
+        Caption = 'Show code'
+        Checked = True
+        OnClick = btnUpdate6Click
+        State = cbChecked
+        TabOrder = 2
+      end
+    end
+    object TabSheet7: TTabSheet
+      Caption = 'Code 128'
+      ClientHeight = 245
+      ClientWidth = 575
+      object BarCode7: TStBarCode
+        Left = 8
+        Height = 80
+        Top = 56
+        Width = 321
+        Color = clWhite
+        ParentColor = False
+        AddCheckChar = True
+        BarCodeType = bcCode128
+        BarColor = clBlack
+        BarToSpaceRatio = 1
+        BarWidth = 12
+        BearerBars = False
+        Code = '123456789ABCD'
+        Code128Subset = csCodeB
+        ShowCode = True
+        ShowGuardChars = False
+        TallGuardBars = False
+      end
+      object Label8: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 134
+        Caption = 'Code: Fill Alpha-Numeric'
+        ParentColor = False
+      end
+      object edCode7: TEdit
+        Left = 8
+        Height = 23
+        Top = 26
+        Width = 137
+        OnExit = btnUpdate7Click
+        TabOrder = 0
+        Text = '123456789ABCD'
+      end
+      object btnUpdate7: TButton
+        Left = 224
+        Height = 25
+        Top = 25
+        Width = 105
+        Caption = 'Update Symbol'
+        OnClick = btnUpdate7Click
+        TabOrder = 1
+      end
+      object cbShowCode7: TCheckBox
+        Left = 8
+        Height = 19
+        Top = 144
+        Width = 78
+        Caption = 'Show code'
+        Checked = True
+        OnClick = btnUpdate7Click
+        State = cbChecked
+        TabOrder = 2
+      end
+    end
+    object TabSheet8: TTabSheet
+      Caption = 'PDF417'
+      ClientHeight = 245
+      ClientWidth = 575
+      object Label9: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 134
+        Caption = 'Code: Fill Alpha-Numeric'
+        ParentColor = False
+      end
+      object StPDF417Barcode1: TStPDF417Barcode
+        Left = 8
+        Height = 121
+        Top = 56
+        Width = 457
+        ParentColor = False
+        Alignment = taLeftJustify
+        BarWidth = 1
+        Code = '123456789'
+        Caption = '123456789'
+      end
+      object edCodePDF417: TEdit
+        Left = 8
+        Height = 23
+        Top = 26
+        Width = 137
+        OnExit = btnUpdatePDF417Click
+        TabOrder = 0
+        Text = '123456789'
+      end
+      object btnUpdatePDF417: TButton
+        Left = 224
+        Height = 25
+        Top = 25
+        Width = 105
+        Caption = 'Update Symbol'
+        OnClick = btnUpdatePDF417Click
+        TabOrder = 1
+      end
+      object cbShowCodePDF417: TCheckBox
+        Left = 8
+        Height = 19
+        Top = 184
+        Width = 78
+        Caption = 'Show code'
+        Checked = True
+        OnClick = btnUpdatePDF417Click
+        State = cbChecked
+        TabOrder = 2
+      end
+      object cbPDF417Truncated: TCheckBox
+        Left = 128
+        Height = 19
+        Top = 184
+        Width = 74
+        Caption = 'Truncated'
+        OnClick = btnUpdatePDF417Click
+        TabOrder = 3
+      end
+    end
+    object TabSheet9: TTabSheet
+      Caption = 'MaxiCode'
+      ClientHeight = 245
+      ClientWidth = 598
+      object Label10: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 134
+        Caption = 'Code: Fill Alpha-Numeric'
+        ParentColor = False
+      end
+      object Label11: TLabel
+        Left = 224
+        Height = 15
+        Top = 56
+        Width = 87
+        Caption = 'MaxiCode Mode'
+        ParentColor = False
+      end
+      object Label12: TLabel
+        Left = 224
+        Height = 15
+        Top = 152
+        Width = 63
+        Caption = 'Postal Code'
+        ParentColor = False
+      end
+      object Label13: TLabel
+        Left = 224
+        Height = 15
+        Top = 128
+        Width = 74
+        Caption = 'Country Code'
+        ParentColor = False
+      end
+      object Label14: TLabel
+        Left = 224
+        Height = 15
+        Top = 176
+        Width = 67
+        Caption = 'Service Class'
+        ParentColor = False
+      end
+      object StMaxiCodeBarcode1: TStMaxiCodeBarcode
+        Left = 8
+        Top = 50
+        ParentColor = False
+        CarrierPostalCode = '000000000'
+        HorPixelsPerMM = 4
+        VerPixelsPerMM = 4
+        Code = '123456789'
+        Caption = '123456789'
+      end
+      object edCodeMaxiCode: TEdit
+        Left = 8
+        Height = 23
+        Top = 26
+        Width = 137
+        OnExit = btnUpdateMaxiCodeClick
+        TabOrder = 0
+        Text = '123456789'
+      end
+      object btnUpdateMaxiCode: TButton
+        Left = 224
+        Height = 25
+        Top = 25
+        Width = 105
+        Caption = 'Update Symbol'
+        OnClick = btnUpdateMaxiCodeClick
+        TabOrder = 1
+      end
+      object cbShowCodeMaxiCode: TCheckBox
+        Left = 8
+        Height = 19
+        Top = 184
+        Width = 78
+        Caption = 'Show code'
+        Checked = True
+        OnClick = btnUpdateMaxiCodeClick
+        State = cbChecked
+        TabOrder = 8
+      end
+      object radMCMode23: TRadioButton
+        Left = 232
+        Height = 19
+        Top = 72
+        Width = 121
+        Caption = 'Carrier Information'
+        OnClick = radMCMode23Click
+        TabOrder = 2
+      end
+      object radMCMode4: TRadioButton
+        Left = 232
+        Height = 19
+        Top = 88
+        Width = 110
+        Caption = 'Standard Symbol'
+        Checked = True
+        OnClick = radMCMode4Click
+        TabOrder = 3
+        TabStop = True
+      end
+      object radMCMode5: TRadioButton
+        Left = 232
+        Height = 19
+        Top = 104
+        Width = 62
+        Caption = 'Full EEC'
+        OnClick = radMCMode5Click
+        TabOrder = 4
+      end
+      object edMCCountryCode: TEdit
+        Left = 309
+        Height = 23
+        Top = 125
+        Width = 33
+        Enabled = False
+        TabOrder = 5
+        Text = '000'
+      end
+      object edMCPostalCode: TEdit
+        Left = 309
+        Height = 23
+        Top = 149
+        Width = 73
+        Enabled = False
+        TabOrder = 6
+        Text = '000000000'
+      end
+      object edMCServiceClass: TEdit
+        Left = 309
+        Height = 23
+        Top = 173
+        Width = 33
+        Enabled = False
+        TabOrder = 7
+        Text = '000'
+      end
+    end
+  end
+  object btnCopy: TButton
+    Left = 264
+    Height = 25
+    Top = 240
+    Width = 75
+    Caption = 'Copy'
+    OnClick = btnCopyClick
+    TabOrder = 3
+  end
+  object btnPrint: TButton
+    Left = 16
+    Height = 25
+    Top = 240
+    Width = 75
+    Caption = 'Print Test'
+    OnClick = btnPrintClick
+    TabOrder = 0
+  end
+  object btnClose: TButton
+    Left = 504
+    Height = 25
+    Top = 280
+    Width = 99
+    Anchors = [akTop, akLeft, akRight]
+    Cancel = True
+    Caption = 'Close'
+    ModalResult = 2
+    OnClick = btnCloseClick
+    TabOrder = 5
+  end
+  object DBGrid1: TDBGrid
+    Left = 3
+    Height = 186
+    Top = 392
+    Width = 606
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    Color = clWindow
+    Columns = <>
+    DataSource = DataSource1
+    TabOrder = 6
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'MS Sans Serif'
+  end
+  object btnSave: TButton
+    Left = 181
+    Height = 25
+    Top = 240
+    Width = 75
+    Caption = 'Save'
+    OnClick = btnSaveClick
+    TabOrder = 2
+  end
+  object btnValidate: TButton
+    Left = 98
+    Height = 25
+    Top = 240
+    Width = 75
+    Caption = 'Validate'
+    OnClick = btnValidateClick
+    TabOrder = 1
+  end
+  object PrintDialog1: TPrintDialog
+    left = 448
+    top = 208
+  end
+  object BufDataset1: TBufDataset
+    FieldDefs = <>
+    left = 192
+    top = 432
+  end
+  object DataSource1: TDataSource
+    DataSet = BufDataset1
+    left = 320
+    top = 432
+  end
+end

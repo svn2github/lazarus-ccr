@@ -1,0 +1,184 @@
+object Form1: TForm1
+  Left = 384
+  Height = 184
+  Top = 318
+  Width = 221
+  BorderStyle = bsDialog
+  Caption = 'EXTOHTML'
+  ClientHeight = 184
+  ClientWidth = 221
+  Color = clBtnFace
+  Font.Color = clBlack
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  object Label1: TLabel
+    Left = 10
+    Height = 15
+    Top = 12
+    Width = 49
+    Caption = 'Input File'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 10
+    Height = 15
+    Top = 59
+    Width = 59
+    Caption = 'Output File'
+    ParentColor = False
+  end
+  object SpeedButton1: TSpeedButton
+    Left = 184
+    Height = 25
+    Top = 28
+    Width = 25
+    OnClick = GetFileClick
+  end
+  object SpeedButton2: TSpeedButton
+    Left = 183
+    Height = 25
+    Top = 75
+    Width = 25
+    OnClick = GetFileClick
+  end
+  object Label3: TLabel
+    Left = 10
+    Height = 15
+    Top = 115
+    Width = 41
+    Caption = 'Waiting'
+    ParentColor = False
+  end
+  object Button1: TButton
+    Left = 66
+    Height = 25
+    Top = 147
+    Width = 75
+    Caption = 'Convert'
+    OnClick = Button1Click
+    TabOrder = 2
+  end
+  object Edit1: TEdit
+    Left = 10
+    Height = 23
+    Top = 29
+    Width = 169
+    TabOrder = 0
+    Text = '..\..\source\run/sttohtml.pas'
+  end
+  object Edit2: TEdit
+    Left = 10
+    Height = 23
+    Top = 76
+    Width = 168
+    TabOrder = 1
+    Text = 'out.htm'
+  end
+  object StFileToHTML1: TStFileToHTML
+    CommentMarkers.Strings = (
+      '//=;<font color=#FF0000><i>;</i></font>'
+      '(*=*);<font color=#FF0000><i>;</i></font>'
+      '/*=*/;<font color=#FF0000><i>;</i></font>'
+      '{=};<font color=#FF0000><i>;</i></font>'
+    )
+    EmbeddedHTML.Strings = (
+      '"=&quot;'
+      '&=&amp;'
+      '<=&lt;'
+      '>=&gt;'
+      '¡=&iexcl;'
+      '¢=&cent;'
+      '£=&pound;'
+      '©=&copy;'
+      '®=&reg;'
+      '±=&plusmn;'
+      '¼=&frac14;'
+      '½=&frac12;'
+      '¾=&frac34;'
+      '÷=&divide;'
+    )
+    Keywords.Strings = (
+      'and=<B>;</B>'
+      'array=<B>;</B>'
+      'as=<B>;</B>'
+      'asm=<B>;</B>'
+      'begin=<B>;</B>'
+      'case=<B>;</B>'
+      'class=<B>;</B>'
+      'const=<B>;</B>'
+      'constructor=<B>;</B>'
+      'destructor=<B>;</B>'
+      'dispinterface=<B>;</B>'
+      'div=<B>;</B>'
+      'do=<B>;</B>'
+      'downto=<B>;</B>'
+      'else=<B>;</B>'
+      'end=<B>;</B>'
+      'except=<B>;</B>'
+      'exports=<B>;</B>'
+      'file=<B>;</B>'
+      'finalization=<B>;</B>'
+      'finally=<B>;</B>'
+      'for=<B>;</B>'
+      'function=<B>;</B>'
+      'goto=<B>;</B>'
+      'if=<B>;</B>'
+      'implementation=<B>;</B>'
+      'in=<B>;</B>'
+      'inherited=<B>;</B>'
+      'initialization=<B>;</B>'
+      'inline=<B>;</B>'
+      'interface=<B>;</B>'
+      'is=<B>;</B>'
+      'label=<B>;</B>'
+      'library=<B>;</B>'
+      'mod=<B>;</B>'
+      'nil=<B>;</B>'
+      'not=<B>;</B>'
+      'object=<B>;</B>'
+      'of=<B>;</B>'
+      'or=<B>;</B>'
+      'out=<B>;</B>'
+      'packed=<B>;</B>'
+      'procedure=<B>;</B>'
+      'program=<B>;</B>'
+      'property=<B>;</B>'
+      'protected=<B>;</B>'
+      'public=<B>;</B>'
+      'raise=<B>;</B>'
+      'record=<B>;</B>'
+      'repeat=<B>;</B>'
+      'resourcestring=<B>;</B>'
+      'set=<B>;</B>'
+      'shl=<B>;</B>'
+      'shr=<B>;</B>'
+      'string=<B>;</B>'
+      'then=<B>;</B>'
+      'thread=<B>;</B>'
+      'var=<B>;</B>'
+      'to=<B>;</B>'
+      'try=<B>;</B>'
+      'type=<B>;</B>'
+      'unit=<B>;</B>'
+      'until=<B>;</B>'
+      'uses=<B>;</B>'
+      'var=<B>;</B>'
+      'while=<B>;</B>'
+      'with=<B>;</B>'
+    )
+    OnProgress = StFileToHTML1Progress
+    StringMarkers.Strings = (
+      '"=";<font color=#0000FF>;</font>'
+      '''='';<font color=#0000FF>;</font>'
+    )
+    WordDelimiters = ',; .()'
+    left = 133
+    top = 1
+  end
+  object OpenDialog1: TOpenDialog
+    Filter = 'Pascal files (*.pas)|*.pas|C++ files (*.cpp)|*.cpp|All files (*.*)|*.*'
+    Options = [ofOverwritePrompt, ofPathMustExist]
+    left = 97
+    top = 65535
+  end
+end

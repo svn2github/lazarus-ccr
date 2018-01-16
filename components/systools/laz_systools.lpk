@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <PathDelim Value="\"/>
+    <Name Value="laz_systools"/>
+    <Author Value="Original author: TurboPower Software"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <IncludeFiles Value="source\include;source\run"/>
+        <OtherUnitFiles Value="source\run"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\run"/>
+      </SearchPaths>
+    </CompilerOptions>
+    <Description Value="Lazarus port of TurboPower SysTools (Delphi version at https://sourceforge.net/projects/tpsystools/) - runtime package"/>
+    <License Value="MPL 1.1"/>
+    <Version Major="4" Release="4"/>
+    <Files Count="21">
+      <Item1>
+        <Filename Value="source\run\stbarc.pas"/>
+        <UnitName Value="StBarC"/>
+      </Item1>
+      <Item2>
+        <Filename Value="source\run\stbase.pas"/>
+        <UnitName Value="StBase"/>
+      </Item2>
+      <Item3>
+        <Filename Value="source\run\stconst.pas"/>
+        <UnitName Value="StConst"/>
+      </Item3>
+      <Item4>
+        <Filename Value="source\run\stbarpn.pas"/>
+        <UnitName Value="StBarPN"/>
+      </Item4>
+      <Item5>
+        <Filename Value="source\run\ststrl.pas"/>
+        <UnitName Value="StStrL"/>
+      </Item5>
+      <Item6>
+        <Filename Value="source\include\stdefine.inc"/>
+        <Type Value="Include"/>
+      </Item6>
+      <Item7>
+        <Filename Value="source\run\st2dbarc.pas"/>
+        <UnitName Value="St2DBarC"/>
+      </Item7>
+      <Item8>
+        <Filename Value="source\run\stdate.pas"/>
+        <UnitName Value="StDate"/>
+      </Item8>
+      <Item9>
+        <Filename Value="source\run\stutils.pas"/>
+        <UnitName Value="StUtils"/>
+      </Item9>
+      <Item10>
+        <Filename Value="source\run\stcrc.pas"/>
+        <UnitName Value="StCRC"/>
+      </Item10>
+      <Item11>
+        <Filename Value="source\run\sthash.pas"/>
+        <UnitName Value="StHASH"/>
+      </Item11>
+      <Item12>
+        <Filename Value="source\run\sttohtml.pas"/>
+        <UnitName Value="StToHTML"/>
+      </Item12>
+      <Item13>
+        <Filename Value="source\run\ststrms.pas"/>
+        <UnitName Value="StStrms"/>
+      </Item13>
+      <Item14>
+        <Filename Value="source\run\stdict.pas"/>
+        <UnitName Value="StDict"/>
+      </Item14>
+      <Item15>
+        <Filename Value="source\run\stinistm.pas"/>
+        <UnitName Value="StIniStm"/>
+      </Item15>
+      <Item16>
+        <Filename Value="source\run\stdecmth.pas"/>
+        <UnitName Value="StDecMth"/>
+      </Item16>
+      <Item17>
+        <Filename Value="source\run\stexpr.pas"/>
+        <UnitName Value="StExpr"/>
+      </Item17>
+      <Item18>
+        <Filename Value="source\run\stmath.pas"/>
+        <UnitName Value="StMath"/>
+      </Item18>
+      <Item19>
+        <Filename Value="source\run\stfin.pas"/>
+        <UnitName Value="StFIN"/>
+      </Item19>
+      <Item20>
+        <Filename Value="source\run\stdatest.pas"/>
+        <UnitName Value="StDateSt"/>
+      </Item20>
+      <Item21>
+        <Filename Value="source\run\stmoney.pas"/>
+        <UnitName Value="StMoney"/>
+      </Item21>
+    </Files>
+    <RequiredPkgs Count="2">
+      <Item1>
+        <PackageName Value="LCL"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="FCL"/>
+      </Item2>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+    <CustomOptions Items="ExternHelp" Version="2">
+      <_ExternHelp Items="Count"/>
+    </CustomOptions>
+  </Package>
+</CONFIG>
