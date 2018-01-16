@@ -214,7 +214,10 @@ begin
   end;
   if large_bar_count = 0 then
   begin
-    required_aspect := width / height;
+    if height = 0 then
+      required_aspect := 1.0
+    else
+      required_aspect := width / height;
     symbol_aspect := (total_symbol_width_x + (2 * xoffset)) / (preset_height + (2 * yoffset) + text_offset + text_height);
     symbol^.height := trunc(preset_height);
     if required_aspect > symbol_aspect then
