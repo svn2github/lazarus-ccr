@@ -1,0 +1,99 @@
+object Form1: TForm1
+  Left = 375
+  Height = 210
+  Top = 189
+  Width = 170
+  Caption = '3-D Example'
+  ClientHeight = 210
+  ClientWidth = 170
+  Color = clBtnFace
+  Font.Color = clBlack
+  OnClose = FormClose
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  object Label4: TLabel
+    Left = 23
+    Height = 15
+    Top = 139
+    Width = 28
+    Caption = 'Value'
+    ParentColor = False
+  end
+  object Button1: TButton
+    Left = 48
+    Height = 33
+    Top = 167
+    Width = 89
+    Caption = 'Get Value'
+    Default = True
+    OnClick = Button1Click
+    TabOrder = 0
+  end
+  object Edit4: TEdit
+    Left = 63
+    Height = 23
+    Top = 136
+    Width = 75
+    ReadOnly = True
+    TabOrder = 1
+  end
+  object GroupBox1: TGroupBox
+    Left = 7
+    Height = 116
+    Top = 4
+    Width = 153
+    Caption = ' Array Position (All 0..49)'
+    ClientHeight = 96
+    ClientWidth = 149
+    TabOrder = 2
+    object Label1: TLabel
+      Left = 28
+      Height = 15
+      Top = 11
+      Width = 53
+      Caption = 'X Position'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      Left = 27
+      Height = 15
+      Top = 38
+      Width = 53
+      Caption = 'Y Position'
+      ParentColor = False
+    end
+    object Label3: TLabel
+      Left = 28
+      Height = 15
+      Top = 63
+      Width = 53
+      Caption = 'Z Position'
+      ParentColor = False
+    end
+    object Edit1: TEdit
+      Left = 88
+      Height = 23
+      Top = 8
+      Width = 40
+      TabOrder = 0
+      Text = '0'
+    end
+    object Edit2: TEdit
+      Left = 88
+      Height = 23
+      Top = 34
+      Width = 40
+      TabOrder = 1
+      Text = '0'
+    end
+    object Edit3: TEdit
+      Left = 88
+      Height = 23
+      Top = 60
+      Width = 40
+      TabOrder = 2
+      Text = '0'
+    end
+  end
+end
