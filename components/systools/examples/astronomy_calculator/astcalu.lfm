@@ -1,0 +1,1068 @@
+object Form1: TForm1
+  Left = 239
+  Height = 526
+  Top = 160
+  Width = 597
+  Caption = 'SysTools Astronomical Calendar'
+  ClientHeight = 526
+  ClientWidth = 597
+  Color = clBtnFace
+  Font.Color = clBlack
+  OnCreate = FormCreate
+  ShowHint = True
+  LCLVersion = '1.9.0.0'
+  object Panel1: TPanel
+    Left = 450
+    Height = 217
+    Top = 10
+    Width = 137
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ClientHeight = 217
+    ClientWidth = 137
+    TabOrder = 0
+    object Label1: TLabel
+      Left = 46
+      Height = 15
+      Top = 6
+      Width = 24
+      Caption = 'Date'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      Left = 16
+      Height = 15
+      Top = 86
+      Width = 30
+      Caption = 'Long.'
+      ParentColor = False
+    end
+    object Label3: TLabel
+      Left = 18
+      Height = 15
+      Top = 122
+      Width = 19
+      Caption = 'Lat.'
+      ParentColor = False
+    end
+    object Label4: TLabel
+      Left = 20
+      Height = 15
+      Top = 56
+      Width = 11
+      Caption = 'M'
+      ParentColor = False
+    end
+    object Label5: TLabel
+      Left = 54
+      Height = 15
+      Top = 56
+      Width = 8
+      Caption = 'D'
+      ParentColor = False
+    end
+    object Label6: TLabel
+      Left = 94
+      Height = 15
+      Top = 56
+      Width = 7
+      Caption = 'Y'
+      ParentColor = False
+    end
+    object Button1: TButton
+      Left = 28
+      Height = 33
+      Hint = 'Generate Data'
+      Top = 159
+      Width = 89
+      Caption = '&Compute'
+      Default = True
+      OnClick = Button1Click
+      TabOrder = 5
+    end
+    object MonthEF: TEdit
+      Left = 12
+      Height = 22
+      Hint = '1 to 12'
+      Top = 28
+      Width = 27
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      TabOrder = 0
+    end
+    object DateEF: TEdit
+      Left = 44
+      Height = 22
+      Hint = '1 to 31'
+      Top = 28
+      Width = 27
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      TabOrder = 1
+    end
+    object YearEF: TEdit
+      Left = 78
+      Height = 22
+      Hint = '1800 to 2200'
+      Top = 28
+      Width = 45
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      TabOrder = 2
+    end
+    object LongEF: TEdit
+      Left = 60
+      Height = 22
+      Hint = '-180 to 180 (DDD.dd)'
+      Top = 82
+      Width = 57
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      TabOrder = 3
+    end
+    object LatEF: TEdit
+      Left = 60
+      Height = 22
+      Hint = '-90 to 90 (DD.dd)'
+      Top = 118
+      Width = 57
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      TabOrder = 4
+    end
+  end
+  object GB1: TGroupBox
+    Left = 6
+    Height = 90
+    Top = 6
+    Width = 161
+    Caption = ' Time '
+    ClientHeight = 70
+    ClientWidth = 157
+    TabOrder = 1
+    object Label7: TLabel
+      Left = 24
+      Height = 15
+      Top = 11
+      Width = 28
+      Caption = 'Local'
+      ParentColor = False
+    end
+    object Label8: TLabel
+      Left = 16
+      Height = 15
+      Top = 39
+      Width = 41
+      Caption = 'Sidereal'
+      ParentColor = False
+    end
+    object LocalTimeEF: TEdit
+      Left = 66
+      Height = 22
+      Top = 9
+      Width = 61
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 0
+    end
+    object SiderealTimeEF: TEdit
+      Left = 66
+      Height = 22
+      Top = 35
+      Width = 61
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 1
+    end
+  end
+  object GB2: TGroupBox
+    Left = 6
+    Height = 123
+    Top = 104
+    Width = 161
+    Caption = ' Rise/Set/Twilight '
+    ClientHeight = 103
+    ClientWidth = 157
+    TabOrder = 2
+    object Label9: TLabel
+      Left = 48
+      Height = 15
+      Top = 1
+      Width = 50
+      Caption = 'Rise/Start'
+      ParentColor = False
+    end
+    object Label10: TLabel
+      Left = 108
+      Height = 15
+      Top = 1
+      Width = 41
+      Caption = 'Set/End'
+      ParentColor = False
+    end
+    object Label11: TLabel
+      Left = 6
+      Height = 15
+      Top = 23
+      Width = 20
+      Caption = 'Sun'
+      ParentColor = False
+    end
+    object Label12: TLabel
+      Left = 6
+      Height = 15
+      Top = 50
+      Width = 32
+      Caption = 'Moon'
+      ParentColor = False
+    end
+    object Label13: TLabel
+      Left = 6
+      Height = 15
+      Top = 77
+      Width = 42
+      Caption = 'Twilight'
+      ParentColor = False
+    end
+    object SunRiseEF: TEdit
+      Left = 52
+      Height = 22
+      Top = 21
+      Width = 45
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 0
+    end
+    object MoonRiseEF: TEdit
+      Left = 52
+      Height = 22
+      Top = 47
+      Width = 45
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 2
+    end
+    object SunSetEF: TEdit
+      Left = 110
+      Height = 22
+      Top = 21
+      Width = 43
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 1
+    end
+    object MoonSetEF: TEdit
+      Left = 110
+      Height = 22
+      Top = 47
+      Width = 43
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 3
+    end
+    object TwiStartEF: TEdit
+      Left = 52
+      Height = 22
+      Top = 73
+      Width = 45
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 4
+    end
+    object TwiEndEF: TEdit
+      Left = 110
+      Height = 22
+      Top = 73
+      Width = 43
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 5
+    end
+  end
+  object GB3: TGroupBox
+    Left = 172
+    Height = 221
+    Top = 6
+    Width = 271
+    Caption = ' Positions '
+    ClientHeight = 201
+    ClientWidth = 267
+    TabOrder = 3
+    object PositionsLB: TListBox
+      Left = 10
+      Height = 153
+      Top = 40
+      Width = 251
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ItemHeight = 0
+      ParentFont = False
+      TabOrder = 0
+    end
+    object Header1: THeaderControl
+      Left = 10
+      Height = 21
+      Top = 9
+      Width = 251
+      DragReorder = False
+      Sections = <      
+        item
+          Alignment = taLeftJustify
+          Text = 'Object'
+          Width = 84
+          Visible = True
+        end      
+        item
+          Alignment = taLeftJustify
+          Text = 'RA'
+          Width = 84
+          Visible = True
+        end      
+        item
+          Alignment = taLeftJustify
+          Text = 'Dec'
+          Width = 84
+          Visible = True
+        end>
+    end
+  end
+  object GB4: TGroupBox
+    Left = 8
+    Height = 168
+    Top = 240
+    Width = 579
+    Caption = ' Phases '
+    ClientHeight = 148
+    ClientWidth = 575
+    TabOrder = 4
+    object Label14: TLabel
+      Left = 8
+      Height = 15
+      Top = 36
+      Width = 59
+      Caption = 'New Moon'
+      ParentColor = False
+    end
+    object Label15: TLabel
+      Left = 8
+      Height = 15
+      Top = 65
+      Width = 65
+      Caption = 'First Quarter'
+      ParentColor = False
+    end
+    object Label16: TLabel
+      Left = 8
+      Height = 15
+      Top = 95
+      Width = 54
+      Caption = 'Full Moon'
+      ParentColor = False
+    end
+    object Label17: TLabel
+      Left = 8
+      Height = 15
+      Top = 124
+      Width = 64
+      Caption = 'Last Quarter'
+      ParentColor = False
+    end
+    object PhaseLabel: TLabel
+      Left = 8
+      Height = 15
+      Top = 6
+      Width = 31
+      Caption = 'Phase'
+      ParentColor = False
+    end
+    object NMFirstDate: TEdit
+      Left = 78
+      Height = 22
+      Top = 32
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 0
+    end
+    object FQFirstDate: TEdit
+      Left = 78
+      Height = 22
+      Top = 61
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 8
+    end
+    object NMFirstTime: TEdit
+      Left = 136
+      Height = 22
+      Top = 32
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 1
+    end
+    object FQFirstTime: TEdit
+      Left = 136
+      Height = 22
+      Top = 61
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 9
+    end
+    object FMFirstDate: TEdit
+      Left = 78
+      Height = 22
+      Top = 91
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 16
+    end
+    object LQFirstDate: TEdit
+      Left = 78
+      Height = 22
+      Top = 120
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 24
+    end
+    object LQFirstTime: TEdit
+      Left = 136
+      Height = 22
+      Top = 120
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 25
+    end
+    object FMFirstTime: TEdit
+      Left = 136
+      Height = 22
+      Top = 91
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 17
+    end
+    object NMSecondDate: TEdit
+      Left = 208
+      Height = 22
+      Top = 32
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 2
+    end
+    object NMSecondTime: TEdit
+      Left = 266
+      Height = 22
+      Top = 32
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 3
+    end
+    object FQSecondDate: TEdit
+      Left = 208
+      Height = 22
+      Top = 61
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 10
+    end
+    object FQSecondTime: TEdit
+      Left = 266
+      Height = 22
+      Top = 61
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 11
+    end
+    object FMSecondDate: TEdit
+      Left = 208
+      Height = 22
+      Top = 91
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 18
+    end
+    object FMSecondTime: TEdit
+      Left = 266
+      Height = 22
+      Top = 91
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 19
+    end
+    object LQSecondTime: TEdit
+      Left = 266
+      Height = 22
+      Top = 120
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 27
+    end
+    object LQSecondDate: TEdit
+      Left = 208
+      Height = 22
+      Top = 120
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 26
+    end
+    object NMPrevDate: TEdit
+      Left = 336
+      Height = 22
+      Top = 32
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 4
+    end
+    object FQPrevDate: TEdit
+      Left = 336
+      Height = 22
+      Top = 61
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 12
+    end
+    object FMPrevDate: TEdit
+      Left = 336
+      Height = 22
+      Top = 91
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 20
+    end
+    object LQPrevDate: TEdit
+      Left = 336
+      Height = 22
+      Top = 120
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 28
+    end
+    object LQPrevTime: TEdit
+      Left = 394
+      Height = 22
+      Top = 120
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 29
+    end
+    object FMPrevTime: TEdit
+      Left = 394
+      Height = 22
+      Top = 91
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 21
+    end
+    object FQPrevTime: TEdit
+      Left = 394
+      Height = 22
+      Top = 61
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 13
+    end
+    object NMPrevTime: TEdit
+      Left = 394
+      Height = 22
+      Top = 32
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 5
+    end
+    object NMNextDate: TEdit
+      Left = 464
+      Height = 22
+      Top = 32
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 6
+    end
+    object FQNextDate: TEdit
+      Left = 464
+      Height = 22
+      Top = 61
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 14
+    end
+    object FMNextDate: TEdit
+      Left = 464
+      Height = 22
+      Top = 91
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 22
+    end
+    object LQNextDate: TEdit
+      Left = 464
+      Height = 22
+      Top = 120
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 30
+    end
+    object LQNextTime: TEdit
+      Left = 522
+      Height = 22
+      Top = 120
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 31
+    end
+    object FMNextTime: TEdit
+      Left = 522
+      Height = 22
+      Top = 91
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 23
+    end
+    object FQNextTime: TEdit
+      Left = 522
+      Height = 22
+      Top = 61
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 15
+    end
+    object NMNextTime: TEdit
+      Left = 522
+      Height = 22
+      Top = 32
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 7
+    end
+    object Header2: THeaderControl
+      Left = 78
+      Height = 21
+      Top = 0
+      Width = 495
+      DragReorder = False
+      Sections = <      
+        item
+          Alignment = taLeftJustify
+          Text = 'First'
+          Width = 128
+          Visible = True
+        end      
+        item
+          Alignment = taLeftJustify
+          Text = 'Second'
+          Width = 128
+          Visible = True
+        end      
+        item
+          Alignment = taLeftJustify
+          Text = 'Previous'
+          Width = 129
+          Visible = True
+        end      
+        item
+          Alignment = taLeftJustify
+          Text = 'Next'
+          Width = 120
+          Visible = True
+        end>
+    end
+  end
+  object GB5: TGroupBox
+    Left = 6
+    Height = 96
+    Top = 416
+    Width = 581
+    Caption = ' Other Events '
+    ClientHeight = 76
+    ClientWidth = 577
+    TabOrder = 5
+    object Label18: TLabel
+      Left = 24
+      Height = 15
+      Top = 44
+      Width = 31
+      Caption = 'Easter'
+      ParentColor = False
+    end
+    object Label19: TLabel
+      Left = 170
+      Height = 15
+      Top = 12
+      Width = 34
+      Caption = 'Spring'
+      ParentColor = False
+    end
+    object Label20: TLabel
+      Left = 170
+      Height = 15
+      Top = 44
+      Width = 45
+      Caption = 'Summer'
+      ParentColor = False
+    end
+    object Label21: TLabel
+      Left = 376
+      Height = 15
+      Top = 12
+      Width = 18
+      Caption = 'Fall'
+      ParentColor = False
+    end
+    object Label22: TLabel
+      Left = 376
+      Height = 15
+      Top = 44
+      Width = 35
+      Caption = 'Winter'
+      ParentColor = False
+    end
+    object Label23: TLabel
+      Left = 24
+      Height = 15
+      Top = 15
+      Width = 44
+      Caption = 'Sunlight'
+      ParentColor = False
+    end
+    object SpringTime: TEdit
+      Left = 282
+      Height = 22
+      Top = 8
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 3
+    end
+    object SummerTime: TEdit
+      Left = 282
+      Height = 22
+      Top = 40
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 5
+    end
+    object SummerDate: TEdit
+      Left = 222
+      Height = 22
+      Top = 40
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 4
+    end
+    object SpringDate: TEdit
+      Left = 222
+      Height = 22
+      Top = 8
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 2
+    end
+    object FallTime: TEdit
+      Left = 486
+      Height = 22
+      Top = 8
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 7
+    end
+    object WinterTime: TEdit
+      Left = 486
+      Height = 22
+      Top = 40
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 9
+    end
+    object WinterDate: TEdit
+      Left = 428
+      Height = 22
+      Top = 40
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 8
+    end
+    object FallDate: TEdit
+      Left = 428
+      Height = 22
+      Top = 8
+      Width = 51
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 6
+    end
+    object EasterEF: TEdit
+      Left = 72
+      Height = 22
+      Top = 42
+      Width = 49
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 1
+    end
+    object SunlightEF: TEdit
+      Left = 74
+      Height = 22
+      Top = 12
+      Width = 47
+      Alignment = taCenter
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 0
+    end
+  end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+    left = 538
+    top = 388
+  end
+end

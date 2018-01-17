@@ -16,7 +16,7 @@
     <Description Value="Lazarus port of TurboPower SysTools (Delphi version at https://sourceforge.net/projects/tpsystools/) - runtime package"/>
     <License Value="MPL 1.1"/>
     <Version Major="4" Release="4"/>
-    <Files Count="27">
+    <Files Count="40">
       <Item1>
         <Filename Value="source\run\stbarc.pas"/>
         <UnitName Value="StBarC"/>
@@ -125,6 +125,58 @@
         <Filename Value="source\run\ststrs.pas"/>
         <UnitName Value="StStrS"/>
       </Item27>
+      <Item28>
+        <Filename Value="source\run\stastro.pas"/>
+        <UnitName Value="StAstro"/>
+      </Item28>
+      <Item29>
+        <Filename Value="source\run\steclpse.pas"/>
+        <UnitName Value="StEclpse"/>
+      </Item29>
+      <Item30>
+        <Filename Value="source\run\stlist.pas"/>
+        <UnitName Value="StList"/>
+      </Item30>
+      <Item31>
+        <Filename Value="source\run\stmerc.pas"/>
+        <UnitName Value="StMerc"/>
+      </Item31>
+      <Item32>
+        <Filename Value="source\run\stastrop.pas"/>
+        <UnitName Value="StAstroP"/>
+      </Item32>
+      <Item33>
+        <Filename Value="source\run\stvenus.pas"/>
+        <UnitName Value="StVenus"/>
+      </Item33>
+      <Item34>
+        <Filename Value="source\run\stmars.pas"/>
+        <UnitName Value="StMars"/>
+      </Item34>
+      <Item35>
+        <Filename Value="source\run\stjup.pas"/>
+        <UnitName Value="StJup"/>
+      </Item35>
+      <Item36>
+        <Filename Value="source\run\stsaturn.pas"/>
+        <UnitName Value="StSaturn"/>
+      </Item36>
+      <Item37>
+        <Filename Value="source\run\sturanus.pas"/>
+        <UnitName Value="StUranus"/>
+      </Item37>
+      <Item38>
+        <Filename Value="source\run\stneptun.pas"/>
+        <UnitName Value="StNeptun"/>
+      </Item38>
+      <Item39>
+        <Filename Value="source\run\stpluto.pas"/>
+        <UnitName Value="StPluto"/>
+      </Item39>
+      <Item40>
+        <Filename Value="source\run\stjupsat.pas"/>
+        <UnitName Value="StJupsat"/>
+      </Item40>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

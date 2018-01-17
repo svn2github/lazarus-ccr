@@ -85,12 +85,12 @@ uses
   (*
   StVInfo,
   StWMDCpy,
+  *)
 
   {forces these units to be compiled when components are installed}
   {vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv}
   StAstro,
   StAstroP,
-  *)
   StBCD,
   (*
   StBits,
@@ -103,36 +103,38 @@ uses
   (*
   StDict,
   StDQue,
-  StEclpse,
   *)
+  StEclpse,
   StExpr,
   StFIN,
   (*
   StFirst,
   *)
   StHASH,
-  (*
   StJup,
   StJupsat,
-  *)
   StLArr,
-  (*
   StList,
   StMars,
-  *)
   StMath,
-  (*
   StMerc,
+  (*
   StMime,
+  *)
   StNeptun,
+  (*
   StNet,
   StNetApi,
   StNVCont,
   StOStr,
+  *)
   StPluto,
+  (*
   StPQueue,
   StRegIni,
+  *)
   StSaturn,
+  (*
   StSort,
   *)
   StStat,
@@ -144,14 +146,14 @@ uses
   StStrZ,
   StText,
   StTree,
-  StUranus,
   *)
+  StUranus,
   StUtils,
   (*
   StVArr,
+  *)
   StVenus,
   { new units in ver 4: }
-  *)
   StIniStm,
   (*
   StMerge,

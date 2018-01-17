@@ -1,0 +1,82 @@
+object Form1: TForm1
+  Left = 247
+  Height = 320
+  Top = 125
+  Width = 296
+  Caption = 'Jupiter''s "Gallilean" Moon Data'
+  ClientHeight = 320
+  ClientWidth = 296
+  Color = clBtnFace
+  Font.Color = clBlack
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  object Label1: TLabel
+    Left = 42
+    Height = 13
+    Top = 258
+    Width = 23
+    Caption = 'Date'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 171
+    Height = 13
+    Top = 258
+    Width = 15
+    Caption = 'UT'
+    ParentColor = False
+  end
+  object Button1: TButton
+    Left = 108
+    Height = 30
+    Top = 285
+    Width = 89
+    Caption = 'Compute'
+    Default = True
+    OnClick = Button1Click
+    TabOrder = 3
+  end
+  object Memo1: TMemo
+    Left = 5
+    Height = 240
+    Top = 7
+    Width = 290
+    Font.Color = clBlack
+    Font.Height = -13
+    Font.Name = 'Courier New'
+    Lines.Strings = (
+      ''
+    )
+    ParentFont = False
+    ScrollBars = ssVertical
+    TabOrder = 0
+    WordWrap = False
+  end
+  object edDate: TEdit
+    Cursor = crIBeam
+    Left = 71
+    Height = 21
+    Hint = 'mm/dd/yyyy'
+    Top = 255
+    Width = 66
+    MaxLength = 10
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 1
+  end
+  object edTime: TEdit
+    Cursor = crIBeam
+    Left = 191
+    Height = 21
+    Hint = 'hh:mm:ss'
+    Top = 255
+    Width = 53
+    MaxLength = 8
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 2
+  end
+end

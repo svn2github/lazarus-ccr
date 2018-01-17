@@ -1,0 +1,68 @@
+object Form1: TForm1
+  Left = 325
+  Height = 283
+  Top = 192
+  Width = 430
+  ActiveControl = Button1
+  Caption = 'Eclipse Example'
+  ClientHeight = 283
+  ClientWidth = 430
+  Color = clBtnFace
+  Font.Color = clBlack
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  object Memo1: TMemo
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = YearEF
+    Left = 4
+    Height = 219
+    Top = 4
+    Width = 422
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 4
+    BorderSpacing.Top = 4
+    BorderSpacing.Right = 4
+    BorderSpacing.Bottom = 4
+    Font.Color = clBlack
+    Font.Height = -11
+    Font.Name = 'Courier New'
+    ParentFont = False
+    ScrollBars = ssVertical
+    TabOrder = 1
+  end
+  object Button1: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 112
+    Height = 25
+    Top = 254
+    Width = 206
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 4
+    Caption = 'Generate Eclipse Information'
+    OnClick = Button1Click
+    TabOrder = 0
+  end
+  object YearEF: TSpinEdit
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideBottom.Control = Button1
+    Left = 179
+    Height = 23
+    Top = 227
+    Width = 72
+    Alignment = taCenter
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 4
+    MaxValue = 32000
+    MinValue = -32000
+    TabOrder = 2
+    Value = 2017
+  end
+end
