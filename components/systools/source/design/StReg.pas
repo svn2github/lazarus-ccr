@@ -126,10 +126,12 @@ uses
   StRegIni,
   StSaturn,
   StSort,
+  *)
   StStat,
   StStrL,
   StStrms,
   StStrS,
+  (*
   StStrW,
   StStrZ,
   StText,
@@ -141,15 +143,17 @@ uses
   StVArr,
   StVenus,
   { new units in ver 4: }
+  *)
   StIniStm,
+  (*
   StMerge,
   StSystem,
   StTxtDat,
   StDecMth,
   *)
-  StMoney
+  StMoney,
+  StRandom
   (*
-  StRandom,
   StNTLog,
   { !!! StExpEng unit designed to handle problem with initialization }
   { section in C++Builder; should NOT be included in Registration unit }

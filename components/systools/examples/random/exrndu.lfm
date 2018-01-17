@@ -1,0 +1,146 @@
+object Form1: TForm1
+  Left = 192
+  Height = 498
+  Top = 114
+  Width = 462
+  Caption = 'Random Distributions '
+  ClientHeight = 498
+  ClientWidth = 462
+  Color = clBtnFace
+  Font.Color = clWindowText
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  LCLVersion = '1.9.0.0'
+  object imgGraph: TImage
+    Left = 32
+    Height = 250
+    Top = 200
+    Width = 400
+  end
+  object lblPrompt: TLabel
+    Left = 32
+    Height = 15
+    Top = 24
+    Width = 159
+    Caption = 'Select the distribution to view:'
+    ParentColor = False
+  end
+  object lblGraphTitle: TLabel
+    Left = 32
+    Height = 1
+    Top = 184
+    Width = 1
+    ParentColor = False
+  end
+  object lblParms: TLabel
+    Left = 32
+    Height = 15
+    Top = 56
+    Width = 62
+    Caption = 'Parameters:'
+    ParentColor = False
+  end
+  object lblParm1: TLabel
+    Left = 48
+    Height = 1
+    Top = 80
+    Width = 1
+    ParentColor = False
+  end
+  object lblParm2: TLabel
+    Left = 48
+    Height = 1
+    Top = 104
+    Width = 1
+    ParentColor = False
+  end
+  object lblLeft: TLabel
+    Left = 32
+    Height = 1
+    Top = 456
+    Width = 1
+    ParentColor = False
+  end
+  object lblRight: TLabel
+    Left = 429
+    Height = 1
+    Top = 456
+    Width = 1
+    Alignment = taRightJustify
+    ParentColor = False
+  end
+  object lblMaxY: TLabel
+    Left = 8
+    Height = 1
+    Top = 184
+    Width = 1
+    ParentColor = False
+  end
+  object cboDist: TComboBox
+    Left = 200
+    Height = 23
+    Top = 21
+    Width = 145
+    ItemHeight = 15
+    OnChange = cboDistChange
+    Sorted = True
+    Style = csDropDownList
+    TabOrder = 0
+  end
+  object btnGenerate: TButton
+    Left = 32
+    Height = 25
+    Top = 144
+    Width = 145
+    Caption = 'Generate graph'
+    Default = True
+    OnClick = btnGenerateClick
+    TabOrder = 3
+  end
+  object prgGenProgress: TProgressBar
+    Left = 32
+    Height = 16
+    Top = 472
+    Width = 400
+    TabOrder = 6
+  end
+  object edtParm1: TEdit
+    Left = 200
+    Height = 23
+    Top = 74
+    Width = 121
+    MaxLength = 10
+    TabOrder = 1
+  end
+  object edtParm2: TEdit
+    Left = 200
+    Height = 23
+    Top = 98
+    Width = 121
+    MaxLength = 10
+    TabOrder = 2
+  end
+  object updRight: TUpDown
+    Left = 440
+    Height = 24
+    Top = 448
+    Width = 16
+    Min = 1
+    OnClick = updRightClick
+    Position = 1
+    TabOrder = 5
+    Wrap = False
+  end
+  object updLeft: TUpDown
+    Left = 8
+    Height = 24
+    Top = 448
+    Width = 16
+    Max = 0
+    Min = -100
+    OnClick = updLeftClick
+    Position = 0
+    TabOrder = 4
+    Wrap = False
+  end
+end
