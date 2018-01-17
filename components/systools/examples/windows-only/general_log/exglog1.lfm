@@ -1,0 +1,97 @@
+object Form1: TForm1
+  Left = 280
+  Height = 254
+  Top = 305
+  Width = 514
+  Caption = 'General Log Example'
+  ClientHeight = 254
+  ClientWidth = 514
+  Color = clBtnFace
+  Font.Color = clWindowText
+  OnCreate = FormCreate
+  LCLVersion = '1.9.0.0'
+  object Label1: TLabel
+    Left = 192
+    Height = 15
+    Top = 107
+    Width = 71
+    Caption = 'String to add:'
+    ParentColor = False
+  end
+  object RadioGroup1: TRadioGroup
+    Left = 193
+    Height = 57
+    Top = 22
+    Width = 289
+    AutoFill = True
+    Caption = 'Event Type'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 4
+    ClientHeight = 37
+    ClientWidth = 285
+    Columns = 4
+    Items.Strings = (
+      'Apple'
+      'Orange'
+      'Lemon'
+      'Grape'
+    )
+    TabOrder = 0
+  end
+  object Button1: TButton
+    Left = 33
+    Height = 33
+    Top = 38
+    Width = 121
+    Caption = 'Add event to log'
+    OnClick = Button1Click
+    TabOrder = 1
+  end
+  object Button2: TButton
+    Left = 32
+    Height = 33
+    Top = 110
+    Width = 121
+    Caption = 'Add string to log'
+    OnClick = Button2Click
+    TabOrder = 2
+  end
+  object Edit1: TEdit
+    Left = 192
+    Height = 23
+    Top = 126
+    Width = 289
+    TabOrder = 3
+  end
+  object Button3: TButton
+    Left = 32
+    Height = 33
+    Top = 182
+    Width = 121
+    Caption = 'Dump log'
+    OnClick = Button3Click
+    TabOrder = 4
+  end
+  object CheckBox1: TCheckBox
+    Left = 192
+    Height = 19
+    Top = 192
+    Width = 82
+    Caption = 'Append log'
+    OnClick = CheckBox1Click
+    TabOrder = 5
+  end
+  object StGeneralLog1: TStGeneralLog
+    FileName = 'debug.log'
+    LogFileHeader = 'SysTools General Log'#10#13'============================================================================='#10#13#10#13
+    WriteMode = wmOverwrite
+    OnGetLogString = StGeneralLog1GetLogString
+    left = 400
+    top = 168
+  end
+end

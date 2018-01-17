@@ -1,0 +1,103 @@
+object Form1: TForm1
+  Left = 383
+  Height = 188
+  Top = 219
+  Width = 212
+  BorderStyle = bsDialog
+  Caption = 'EXSPAWN'
+  ClientHeight = 188
+  ClientWidth = 212
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  object btnSpawn: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 69
+    Height = 25
+    Top = 148
+    Width = 75
+    Caption = 'Spawn'
+    OnClick = btnSpawnClick
+    TabOrder = 0
+  end
+  object RG1: TRadioGroup
+    Left = 20
+    Height = 54
+    Top = 5
+    Width = 172
+    AutoFill = True
+    Caption = ' Spawn Action '
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 2
+    ClientHeight = 34
+    ClientWidth = 168
+    Columns = 2
+    ItemIndex = 0
+    Items.Strings = (
+      'Open'
+      'Print'
+    )
+    TabOrder = 1
+  end
+  object cbNotify: TCheckBox
+    Left = 22
+    Height = 19
+    Top = 120
+    Width = 53
+    Caption = 'Notify'
+    TabOrder = 2
+  end
+  object cbTimeout: TCheckBox
+    Left = 96
+    Height = 19
+    Top = 120
+    Width = 93
+    Caption = 'Timeout (15s)'
+    TabOrder = 3
+  end
+  object RG2: TRadioGroup
+    Left = 18
+    Height = 44
+    Top = 64
+    Width = 174
+    AutoFill = True
+    Caption = ' Window State '
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 2
+    ClientHeight = 24
+    ClientWidth = 170
+    Columns = 2
+    ItemIndex = 0
+    Items.Strings = (
+      'Minimized'
+      'Normal'
+    )
+    TabOrder = 4
+  end
+  object StSpawnApplication1: TStSpawnApplication
+    OnCompleted = StSpawnApplication1Completed
+    OnSpawnError = StSpawnApplication1SpawnError
+    OnTimeOut = StSpawnApplication1TimeOut
+    TimeOut = 15
+    left = 32
+    top = 136
+  end
+  object OpenDialog1: TOpenDialog
+    DefaultExt = '.TXT'
+    Filter = 'Text files (*.txt)|*.txt|All files (*.*)|*.*'
+    left = 152
+    top = 136
+  end
+end

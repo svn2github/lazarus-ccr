@@ -1,0 +1,199 @@
+object STDlg: TSTDlg
+  Left = 354
+  Height = 274
+  Top = 324
+  Width = 329
+  ActiveControl = InFile
+  BorderStyle = bsDialog
+  Caption = 'TextSort'
+  ClientHeight = 274
+  ClientWidth = 329
+  Color = clBtnFace
+  Font.Color = clBlack
+  OnActivate = FormActivate
+  OnClose = FormClose
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  object GroupBox1: TGroupBox
+    Left = 6
+    Height = 87
+    Top = 12
+    Width = 231
+    Caption = 'File Names'
+    ClientHeight = 67
+    ClientWidth = 227
+    TabOrder = 0
+    object Label1: TLabel
+      Left = 8
+      Height = 15
+      Top = 11
+      Width = 28
+      Caption = 'Input'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      Left = 8
+      Height = 15
+      Top = 39
+      Width = 38
+      Caption = 'Output'
+      ParentColor = False
+    end
+    object InputBtn: TSpeedButton
+      Left = 200
+      Height = 21
+      Top = 9
+      Width = 25
+      Caption = '...'
+      OnClick = InputBtnClick
+    end
+    object OutputBtn: TSpeedButton
+      Left = 200
+      Height = 21
+      Top = 37
+      Width = 25
+      Caption = '...'
+      OnClick = OutputBtnClick
+    end
+    object InFile: TEdit
+      Left = 60
+      Height = 23
+      Top = 8
+      Width = 135
+      TabOrder = 0
+    end
+    object OutFile: TEdit
+      Left = 60
+      Height = 23
+      Top = 36
+      Width = 135
+      TabOrder = 1
+    end
+  end
+  object GroupBox2: TGroupBox
+    Left = 6
+    Height = 82
+    Top = 110
+    Width = 107
+    Caption = 'Sort Options'
+    ClientHeight = 62
+    ClientWidth = 103
+    TabOrder = 1
+    object RevOrder: TCheckBox
+      Left = 12
+      Height = 19
+      Top = 4
+      Width = 93
+      Caption = 'Reverse Order'
+      TabOrder = 0
+    end
+    object IgnoreCase: TCheckBox
+      Left = 12
+      Height = 19
+      Top = 30
+      Width = 82
+      Caption = 'Ignore Case'
+      TabOrder = 1
+    end
+  end
+  object GroupBox3: TGroupBox
+    Left = 120
+    Height = 82
+    Top = 110
+    Width = 119
+    Caption = 'Sort Key'
+    ClientHeight = 62
+    ClientWidth = 115
+    TabOrder = 2
+    object Label3: TLabel
+      Left = 8
+      Height = 15
+      Top = 7
+      Width = 24
+      Caption = 'Start'
+      ParentColor = False
+    end
+    object Label4: TLabel
+      Left = 8
+      Height = 15
+      Top = 33
+      Width = 37
+      Caption = 'Length'
+      ParentColor = False
+    end
+    object StartPos: TEdit
+      Left = 64
+      Height = 23
+      Top = 4
+      Width = 41
+      TabOrder = 0
+    end
+    object KeyLen: TEdit
+      Left = 64
+      Height = 23
+      Top = 30
+      Width = 41
+      TabOrder = 1
+    end
+  end
+  object OkBtn: TBitBtn
+    Left = 252
+    Height = 33
+    Top = 18
+    Width = 67
+    Caption = '&OK'
+    NumGlyphs = 2
+    OnClick = OkBtnClick
+    TabOrder = 4
+  end
+  object CloseBtn: TBitBtn
+    Left = 252
+    Height = 33
+    Top = 231
+    Width = 67
+    Caption = '&Close'
+    NumGlyphs = 2
+    OnClick = CloseBtnClick
+    TabOrder = 6
+  end
+  object GroupBox4: TGroupBox
+    Left = 6
+    Height = 56
+    Top = 208
+    Width = 233
+    Caption = 'Sort Status'
+    ClientHeight = 36
+    ClientWidth = 229
+    TabOrder = 3
+    object Status: TLabel
+      Left = 16
+      Height = 15
+      Top = 8
+      Width = 19
+      Caption = 'Idle'
+      ParentColor = False
+    end
+  end
+  object AbortBtn: TBitBtn
+    Left = 252
+    Height = 33
+    Top = 66
+    Width = 67
+    Caption = '&Abort'
+    NumGlyphs = 2
+    OnClick = AbortBtnClick
+    TabOrder = 5
+  end
+  object OpenDialog1: TOpenDialog
+    DefaultExt = '.TXT'
+    Filter = 'Text files (*.txt)|*.txt|All files (*.*)|*.*'
+    left = 264
+    top = 120
+  end
+  object SaveDialog1: TSaveDialog
+    DefaultExt = '.TXT'
+    Filter = 'Text files (*.txt)|*.txt|All files (*.txt)|*.*'
+    left = 264
+    top = 176
+  end
+end

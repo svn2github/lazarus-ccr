@@ -10,7 +10,7 @@
       <SearchPaths>
         <IncludeFiles Value="source\include;source\db"/>
         <OtherUnitFiles Value="source\db"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\run-db"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\run\db"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Lazarus port of Turbo Power SysTools database components - runtime package"/>

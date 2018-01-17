@@ -1,0 +1,41 @@
+object Form1: TForm1
+  Left = 197
+  Height = 262
+  Top = 108
+  Width = 494
+  Caption = 'Version Info Example'
+  ClientHeight = 262
+  ClientWidth = 494
+  Color = clBtnFace
+  Font.Color = clWindowText
+  OnCreate = FormCreate
+  LCLVersion = '1.9.0.0'
+  object Button1: TButton
+    Left = 16
+    Height = 25
+    Top = 24
+    Width = 75
+    Caption = 'Open...'
+    OnClick = Button1Click
+    TabOrder = 0
+  end
+  object Memo1: TMemo
+    Left = 120
+    Height = 233
+    Top = 24
+    Width = 369
+    Lines.Strings = (
+      'Use the "open" button to select a file that contains version '
+      'information.'
+    )
+    TabOrder = 1
+  end
+  object OpenDialog1: TOpenDialog
+    left = 32
+    top = 64
+  end
+  object VerInfo: TStVersionInfo
+    left = 32
+    top = 136
+  end
+end
