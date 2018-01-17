@@ -1,0 +1,227 @@
+object STDlg: TSTDlg
+  Left = 277
+  Height = 260
+  Top = 169
+  Width = 478
+  BorderStyle = bsDialog
+  Caption = 'StBits Example'
+  ClientHeight = 260
+  ClientWidth = 478
+  Color = clBtnFace
+  Font.Color = clBlack
+  OnActivate = FormActivate
+  OnClose = FormClose
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  ShowHint = True
+  LCLVersion = '1.9.0.0'
+  object Label2: TLabel
+    Left = 12
+    Height = 15
+    Top = 54
+    Width = 106
+    Caption = 'Elements in BitSet: 0'
+    ParentColor = False
+  end
+  object Label1: TLabel
+    Left = 152
+    Height = 15
+    Top = 21
+    Width = 244
+    Caption = 'In entry fields below, enter a number from: '
+    Font.Color = clBlack
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object CreateBtn: TButton
+    Left = 13
+    Height = 30
+    Hint = 'Create MyBits'
+    Top = 17
+    Width = 66
+    Caption = 'Create'
+    OnClick = CreateBtnClick
+    TabOrder = 0
+  end
+  object NumElemsValue: TEdit
+    Left = 85
+    Height = 23
+    Hint = 'Number of bits'
+    Top = 22
+    Width = 35
+    TabOrder = 1
+    Text = '100'
+  end
+  object ClearAllBtn: TButton
+    Left = 29
+    Height = 30
+    Hint = 'Clear all bits'
+    Top = 157
+    Width = 66
+    Caption = 'Clear All'
+    OnClick = ClearAllBtnClick
+    TabOrder = 4
+  end
+  object SetAllBtn: TButton
+    Left = 29
+    Height = 30
+    Hint = 'Set all bits'
+    Top = 83
+    Width = 66
+    Caption = 'Set All'
+    OnClick = SetAllBtnClick
+    TabOrder = 2
+  end
+  object InvertAllBtn: TButton
+    Left = 29
+    Height = 30
+    Hint = 'Invert all bits'
+    Top = 120
+    Width = 66
+    Caption = 'Invert All'
+    OnClick = InvertAllBtnClick
+    TabOrder = 3
+  end
+  object SetBitBtn: TButton
+    Left = 154
+    Height = 30
+    Hint = 'Set a bit to 1'
+    Top = 156
+    Width = 66
+    Caption = 'Set Bit'
+    OnClick = SetBitBtnClick
+    TabOrder = 9
+  end
+  object SetBitValue: TEdit
+    Left = 228
+    Height = 23
+    Hint = 'Element?'
+    Top = 162
+    Width = 41
+    TabOrder = 10
+  end
+  object ClearBitBtn: TButton
+    Left = 293
+    Height = 30
+    Hint = 'Clear a bit'
+    Top = 103
+    Width = 66
+    Caption = 'Clear Bit'
+    OnClick = ClearBitBtnClick
+    TabOrder = 14
+  end
+  object ClearBitValue: TEdit
+    Left = 370
+    Height = 23
+    Hint = 'Element?'
+    Top = 106
+    Width = 41
+    TabOrder = 15
+  end
+  object IsBitSetBtn: TButton
+    Left = 154
+    Height = 30
+    Hint = 'Check bit state'
+    Top = 53
+    Width = 66
+    Caption = 'Bit Set?'
+    OnClick = IsBitSetBtnClick
+    TabOrder = 5
+  end
+  object IsBitSetValue: TEdit
+    Left = 228
+    Height = 23
+    Hint = 'Element?'
+    Top = 58
+    Width = 39
+    TabOrder = 6
+  end
+  object ControlBitBtn: TButton
+    Left = 293
+    Height = 30
+    Hint = 'Set a bit''s value'
+    Top = 52
+    Width = 66
+    Caption = 'Control Bit'
+    OnClick = ControlBitBtnClick
+    TabOrder = 11
+  end
+  object ControlBitValue: TEdit
+    Left = 366
+    Height = 23
+    Hint = 'Element?'
+    Top = 58
+    Width = 41
+    TabOrder = 12
+  end
+  object BitOnCB: TCheckBox
+    Left = 414
+    Height = 19
+    Hint = 'Bit state'
+    Top = 59
+    Width = 53
+    Caption = 'Bit On'
+    TabOrder = 13
+  end
+  object ToggleBitBtn: TButton
+    Left = 154
+    Height = 30
+    Hint = 'Invert bit value'
+    Top = 105
+    Width = 66
+    Caption = 'Toggle Bit'
+    OnClick = ToggleBitBtnClick
+    TabOrder = 7
+  end
+  object ToggleBitValue: TEdit
+    Left = 228
+    Height = 23
+    Hint = 'Element?'
+    Top = 109
+    Width = 39
+    TabOrder = 8
+  end
+  object Msg1: TMemo
+    Left = 294
+    Height = 59
+    Hint = 'Messages'
+    Top = 142
+    Width = 167
+    Lines.Strings = (
+      ''
+    )
+    TabOrder = 16
+  end
+  object LoadBtn: TButton
+    Left = 30
+    Height = 33
+    Top = 212
+    Width = 89
+    Caption = 'Load'
+    OnClick = LoadBtnClick
+    TabOrder = 17
+  end
+  object SaveBtn: TButton
+    Left = 154
+    Height = 33
+    Top = 212
+    Width = 89
+    Caption = 'Save'
+    OnClick = SaveBtnClick
+    TabOrder = 18
+  end
+  object OD1: TOpenDialog
+    DefaultExt = '.bsf'
+    Filter = '*.bsf (BitSet files)|*.bsf|*.* (All files)|*.*'
+    left = 252
+    top = 212
+  end
+  object SD1: TSaveDialog
+    DefaultExt = '.bsf'
+    Filter = '*.bsf (BitSet files)|*.bsf|*.* (All files)|*.*'
+    Options = [ofOverwritePrompt]
+    left = 292
+    top = 212
+  end
+end

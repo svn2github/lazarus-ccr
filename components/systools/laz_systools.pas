@@ -12,7 +12,9 @@ uses
   StHASH, StToHTML, StStrms, StDict, StIniStm, StDecMth, StExpr, StMath, 
   StFIN, StDateSt, StMoney, StRandom, StStat, StLArr, StBCD, StRegEx, StStrS, 
   StAstro, StEclpse, StList, StMerc, StAstroP, StVenus, StMars, StJup, 
-  StSaturn, StUranus, StNeptun, StPluto, StJupsat;
+  StSaturn, StUranus, StNeptun, StPluto, StJupsat, StBits, StColl, StDQue, 
+  StVArr, StPQueue, StTree, StNVCont, StNVTree, StNVBits, StNVColl, StNVDict, 
+  StNVDQ, StNVLAry, StNVList, StNVLMat, StNVSCol;
 
 implementation
 

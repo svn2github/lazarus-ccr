@@ -67,6 +67,7 @@ uses
   StNetCon,
   StNetMsg,
   StNetPfm,
+  *)
   StNVBits,
   StNVColl,
   StNVDict,
@@ -76,7 +77,6 @@ uses
   StNVLMat,
   StNVSCol,
   StNVTree,
-  *)
   StRegEx,
   (*
   StSpawn,
@@ -92,18 +92,14 @@ uses
   StAstro,
   StAstroP,
   StBCD,
-  (*
   StBits,
   StColl,
-  *)
   StConst,
   StCrc,
   StDate,
   StDateSt,
-  (*
   StDict,
   StDQue,
-  *)
   StEclpse,
   StExpr,
   StFIN,
@@ -129,8 +125,8 @@ uses
   StOStr,
   *)
   StPluto,
-  (*
   StPQueue,
+  (*
   StRegIni,
   *)
   StSaturn,
@@ -145,13 +141,11 @@ uses
   StStrW,
   StStrZ,
   StText,
-  StTree,
   *)
+  StTree,
   StUranus,
   StUtils,
-  (*
   StVArr,
-  *)
   StVenus,
   { new units in ver 4: }
   StIniStm,
@@ -235,9 +229,8 @@ begin
      }
      ]);
 
-      (*
   {non-visual container class components}
-  RegisterComponents('SysTools (CC)',
+  RegisterComponents('SysTools',
     [TStNVBits,
      TStNVCollection,
      TStNVDictionary,
@@ -247,7 +240,6 @@ begin
      TStNVLMatrix,
      TStNVSortedCollection,
      TStNVTree]);
-     *)
 end;
 
 end.

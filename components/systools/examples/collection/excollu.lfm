@@ -1,0 +1,239 @@
+object STDlg: TSTDlg
+  Left = 243
+  Height = 276
+  Top = 216
+  Width = 407
+  BorderStyle = bsDialog
+  Caption = 'StCollection Example'
+  ClientHeight = 276
+  ClientWidth = 407
+  Color = clBtnFace
+  Font.Color = clBlack
+  OnClose = FormClose
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  ShowHint = True
+  LCLVersion = '1.9.0.0'
+  object Label8: TLabel
+    Left = 196
+    Height = 15
+    Top = 142
+    Width = 43
+    Caption = 'Element'
+    ParentColor = False
+  end
+  object Label1: TLabel
+    Left = 196
+    Height = 15
+    Top = 174
+    Width = 22
+    Caption = 'First'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 196
+    Height = 15
+    Top = 200
+    Width = 21
+    Caption = 'Last'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    Left = 334
+    Height = 15
+    Top = 200
+    Width = 21
+    Caption = 'Age'
+    ParentColor = False
+  end
+  object CreateBtn: TButton
+    Left = 12
+    Height = 29
+    Hint = 'Create MyCollection'
+    Top = 11
+    Width = 55
+    Caption = 'Create'
+    OnClick = CreateBtnClick
+    TabOrder = 0
+  end
+  object LB1: TListBox
+    Left = 12
+    Height = 207
+    Hint = 'DblClk to remove selected item'
+    Top = 51
+    Width = 177
+    ItemHeight = 0
+    OnClick = LB1Click
+    OnDblClick = LB1DblClick
+    TabOrder = 15
+  end
+  object ClearBtn: TButton
+    Left = 73
+    Height = 29
+    Hint = 'Clear collection'
+    Top = 11
+    Width = 55
+    Caption = 'Clear'
+    OnClick = ClearBtnClick
+    TabOrder = 1
+  end
+  object PackBtn: TButton
+    Left = 134
+    Height = 29
+    Hint = 'Pack collection'
+    Top = 11
+    Width = 55
+    Caption = 'Pack'
+    OnClick = PackBtnClick
+    TabOrder = 2
+  end
+  object EffBtn: TButton
+    Left = 228
+    Height = 29
+    Hint = 'Get efficiency'
+    Top = 92
+    Width = 70
+    Caption = 'Efficiency'
+    OnClick = EffBtnClick
+    TabOrder = 9
+  end
+  object Edit1: TEdit
+    Left = 308
+    Height = 23
+    Hint = '0-100%'
+    Top = 95
+    Width = 49
+    ReadOnly = True
+    TabStop = False
+    TabOrder = 10
+  end
+  object Edit3: TEdit
+    Left = 232
+    Height = 23
+    Hint = 'Enter 1..10 characters'
+    Top = 170
+    Width = 67
+    MaxLength = 10
+    TabOrder = 12
+  end
+  object Edit2: TEdit
+    Left = 254
+    Height = 23
+    Hint = 'Element?'
+    Top = 138
+    Width = 29
+    TabOrder = 11
+    Text = '0'
+  end
+  object AtBtn: TButton
+    Left = 196
+    Height = 29
+    Hint = 'Get value'
+    Top = 12
+    Width = 61
+    Caption = 'At'
+    OnClick = AtBtnClick
+    TabOrder = 3
+  end
+  object AtInsBtn: TButton
+    Left = 264
+    Height = 29
+    Hint = 'Insert value'
+    Top = 12
+    Width = 61
+    Caption = 'At Insert'
+    OnClick = AtInsBtnClick
+    TabOrder = 4
+  end
+  object AtPutBtn: TButton
+    Left = 332
+    Height = 29
+    Hint = 'Change value'
+    Top = 12
+    Width = 61
+    Caption = 'At Put'
+    OnClick = AtPutBtnClick
+    TabOrder = 5
+  end
+  object DelBtn: TButton
+    Left = 196
+    Height = 29
+    Hint = 'Delete first match'
+    Top = 49
+    Width = 61
+    Caption = 'Delete'
+    OnClick = DelBtnClick
+    TabOrder = 6
+  end
+  object AtDelBtn: TButton
+    Left = 264
+    Height = 29
+    Hint = 'Delete item'
+    Top = 49
+    Width = 61
+    Caption = 'At Delete'
+    OnClick = AtDelBtnClick
+    TabOrder = 7
+  end
+  object InsBtn: TButton
+    Left = 332
+    Height = 29
+    Hint = 'Insert at end'
+    Top = 49
+    Width = 61
+    Caption = 'Insert'
+    OnClick = InsBtnClick
+    TabOrder = 8
+  end
+  object Edit4: TEdit
+    Left = 232
+    Height = 23
+    Hint = 'Enter 1..15 characters'
+    Top = 196
+    Width = 95
+    MaxLength = 15
+    TabOrder = 13
+  end
+  object Edit5: TEdit
+    Left = 360
+    Height = 23
+    Hint = 'Enter number'
+    Top = 196
+    Width = 35
+    MaxLength = 3
+    TabOrder = 14
+  end
+  object LoadBtn: TButton
+    Left = 222
+    Height = 29
+    Hint = 'Load from file'
+    Top = 229
+    Width = 61
+    Caption = 'Load'
+    OnClick = LoadBtnClick
+    TabOrder = 16
+  end
+  object SaveBtn: TButton
+    Left = 298
+    Height = 29
+    Hint = 'Save to file'
+    Top = 229
+    Width = 61
+    Caption = 'Save'
+    OnClick = SaveBtnClick
+    TabOrder = 17
+  end
+  object OD1: TOpenDialog
+    DefaultExt = '.col'
+    Filter = '*.col (Collection files)|*.col|*.* (All files)|*.*'
+    left = 318
+    top = 134
+  end
+  object SD1: TSaveDialog
+    DefaultExt = '.col'
+    Filter = '*.col (Collection files)|*.col|*.* (All files)|*.*'
+    Options = [ofOverwritePrompt]
+    left = 354
+    top = 134
+  end
+end

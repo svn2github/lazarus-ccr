@@ -1,0 +1,162 @@
+object STDlg: TSTDlg
+  Left = 296
+  Height = 287
+  Top = 163
+  Width = 376
+  BorderStyle = bsDialog
+  Caption = 'Virtual Matrix (StVMatrix) Example'
+  ClientHeight = 287
+  ClientWidth = 376
+  Color = clBtnFace
+  Font.Color = clBlack
+  OnClose = FormClose
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  ShowHint = True
+  LCLVersion = '1.9.0.0'
+  object Label6: TLabel
+    Left = 6
+    Height = 15
+    Top = 54
+    Width = 46
+    Caption = 'Row/Col'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    Left = 6
+    Height = 15
+    Top = 109
+    Width = 37
+    Caption = 'Value 1'
+    ParentColor = False
+  end
+  object Label4: TLabel
+    Left = 6
+    Height = 15
+    Top = 149
+    Width = 37
+    Caption = 'Value 2'
+    ParentColor = False
+  end
+  object ArrayLB: TListBox
+    Left = 228
+    Height = 267
+    Top = 10
+    Width = 135
+    ItemHeight = 0
+    TabOrder = 12
+  end
+  object CreateBtn: TButton
+    Left = 54
+    Height = 30
+    Hint = 'Create 2d array'
+    Top = 9
+    Width = 67
+    Caption = 'Create VM'
+    OnClick = CreateBtnClick
+    TabOrder = 0
+  end
+  object VMRow: TEdit
+    Left = 62
+    Height = 23
+    Hint = 'Row?'
+    Top = 50
+    Width = 37
+    TabOrder = 1
+    Text = '0'
+  end
+  object VMCol: TEdit
+    Left = 106
+    Height = 23
+    Hint = 'Column?'
+    Top = 50
+    Width = 37
+    TabOrder = 2
+    Text = '0'
+  end
+  object ClearBtn: TButton
+    Left = 158
+    Height = 30
+    Hint = 'Clear array'
+    Top = 12
+    Width = 61
+    Caption = 'Clear'
+    OnClick = ClearBtnClick
+    TabOrder = 9
+  end
+  object FillBtn: TButton
+    Left = 158
+    Height = 30
+    Hint = 'Fill array with Value'
+    Top = 80
+    Width = 61
+    Caption = 'Fill'
+    OnClick = FillBtnClick
+    TabOrder = 10
+  end
+  object PutBtn: TButton
+    Left = 4
+    Height = 30
+    Hint = 'Edit Value'
+    Top = 209
+    Width = 61
+    Caption = 'Put'
+    OnClick = PutBtnClick
+    TabOrder = 5
+  end
+  object PutRowBtn: TButton
+    Left = 79
+    Height = 30
+    Hint = 'Set values in row to Value'
+    Top = 209
+    Width = 61
+    Caption = 'Put Row'
+    OnClick = PutRowBtnClick
+    TabOrder = 6
+  end
+  object GetBtn: TButton
+    Left = 4
+    Height = 30
+    Hint = 'Get Value'
+    Top = 243
+    Width = 61
+    Caption = 'Get'
+    OnClick = GetBtnClick
+    TabOrder = 7
+  end
+  object GetRowBtn: TButton
+    Left = 78
+    Height = 30
+    Hint = 'Get values in row'
+    Top = 243
+    Width = 61
+    Caption = 'Get Row'
+    OnClick = GetRowBtnClick
+    TabOrder = 8
+  end
+  object SortBtn: TButton
+    Left = 158
+    Height = 30
+    Hint = 'Sort array'
+    Top = 143
+    Width = 61
+    Caption = 'Sort'
+    OnClick = SortBtnClick
+    TabOrder = 11
+  end
+  object Edit1: TEdit
+    Left = 50
+    Height = 23
+    Top = 105
+    Width = 87
+    MaxLength = 6
+    TabOrder = 3
+  end
+  object Edit2: TEdit
+    Left = 50
+    Height = 23
+    Top = 144
+    Width = 87
+    TabOrder = 4
+  end
+end

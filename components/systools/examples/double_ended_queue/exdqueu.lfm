@@ -1,0 +1,168 @@
+object STDlg: TSTDlg
+  Left = 273
+  Top = 156
+  ActiveControl = CreateBtn
+  BorderStyle = bsDialog
+  Caption = 'StDQue Example'
+  ClientHeight = 274
+  ClientWidth = 305
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clBlack
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = True
+  Position = poScreenCenter
+  ShowHint = True
+  OnClose = FormClose
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object CreateBtn: TButton
+    Left = 41
+    Top = 16
+    Width = 70
+    Height = 25
+    Hint = 'Create MyDQue'
+    Caption = 'Create'
+    TabOrder = 0
+    OnClick = CreateBtnClick
+  end
+  object Edit1: TEdit
+    Left = 23
+    Top = 76
+    Width = 108
+    Height = 21
+    Hint = 'Value?'
+    MaxLength = 10
+    TabOrder = 2
+  end
+  object PushHeadBtn: TButton
+    Left = 4
+    Top = 105
+    Width = 70
+    Height = 32
+    Hint = 'Add to Top'
+    Caption = 'Push Head'
+    Enabled = False
+    TabOrder = 4
+    OnClick = PushHeadBtnClick
+  end
+  object PopHeadBtn: TButton
+    Left = 82
+    Top = 104
+    Width = 70
+    Height = 32
+    Hint = 'Remove from Top'
+    Caption = 'Pop Head'
+    Enabled = False
+    ModalResult = 1
+    TabOrder = 5
+    OnClick = PopHeadBtnClick
+  end
+  object HeadBtn: TButton
+    Left = 4
+    Top = 190
+    Width = 70
+    Height = 32
+    Hint = 'Peek Top Item'
+    Caption = 'Peek Head'
+    Enabled = False
+    TabOrder = 8
+    OnClick = HeadBtnClick
+  end
+  object TailBtn: TButton
+    Left = 82
+    Top = 190
+    Width = 70
+    Height = 32
+    Hint = 'Peek Last Item'
+    Caption = 'Peek Tail'
+    Enabled = False
+    TabOrder = 9
+    OnClick = TailBtnClick
+  end
+  object LB1: TListBox
+    Left = 166
+    Top = 16
+    Width = 129
+    Height = 207
+    TabStop = False
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -12
+    Font.Name = 'Courier New'
+    Font.Style = []
+    ItemHeight = 15
+    ParentFont = False
+    TabOrder = 3
+  end
+  object LoadBtn: TButton
+    Left = 168
+    Top = 233
+    Width = 58
+    Height = 30
+    Hint = 'Load DQue'
+    Caption = 'Load'
+    TabOrder = 10
+    OnClick = LoadBtnClick
+  end
+  object SaveBtn: TButton
+    Left = 236
+    Top = 233
+    Width = 58
+    Height = 30
+    Hint = 'Save DQue'
+    Caption = 'Save'
+    Enabled = False
+    TabOrder = 11
+    OnClick = SaveBtnClick
+  end
+  object ClearBtn: TButton
+    Left = 41
+    Top = 44
+    Width = 70
+    Height = 25
+    Hint = 'Create MyDQue'
+    Caption = 'Clear'
+    Enabled = False
+    TabOrder = 1
+    OnClick = ClearBtnClick
+  end
+  object PushTailBtn: TButton
+    Left = 4
+    Top = 148
+    Width = 70
+    Height = 32
+    Hint = 'Add to Bottom'
+    Caption = 'Push Tail'
+    Enabled = False
+    ModalResult = 1
+    TabOrder = 6
+    OnClick = PushTailBtnClick
+  end
+  object PopTailBtn: TButton
+    Left = 82
+    Top = 147
+    Width = 70
+    Height = 32
+    Hint = 'Remove from Bottom'
+    Caption = 'Pop Tail'
+    Enabled = False
+    TabOrder = 7
+    OnClick = PopTailBtnClick
+  end
+  object OD1: TOpenDialog
+    DefaultExt = 'dqd'
+    Filter = '*.dqd (DQue data)|*.dqd|*.* (All files)|*.*'
+    Left = 162
+    Top = 194
+  end
+  object SD1: TSaveDialog
+    DefaultExt = 'dqd'
+    Filter = '*.dqd (DQue files)|*.dqd|*.* (All files)|*.*'
+    Left = 238
+    Top = 194
+  end
+end

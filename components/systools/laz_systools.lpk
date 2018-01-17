@@ -16,7 +16,7 @@
     <Description Value="Lazarus port of TurboPower SysTools (Delphi version at https://sourceforge.net/projects/tpsystools/) - runtime package"/>
     <License Value="MPL 1.1"/>
     <Version Major="4" Release="4"/>
-    <Files Count="40">
+    <Files Count="56">
       <Item1>
         <Filename Value="source\run\stbarc.pas"/>
         <UnitName Value="StBarC"/>
@@ -177,6 +177,70 @@
         <Filename Value="source\run\stjupsat.pas"/>
         <UnitName Value="StJupsat"/>
       </Item40>
+      <Item41>
+        <Filename Value="source\run\stbits.pas"/>
+        <UnitName Value="StBits"/>
+      </Item41>
+      <Item42>
+        <Filename Value="source\run\stcoll.pas"/>
+        <UnitName Value="StColl"/>
+      </Item42>
+      <Item43>
+        <Filename Value="source\run\stdque.pas"/>
+        <UnitName Value="StDQue"/>
+      </Item43>
+      <Item44>
+        <Filename Value="source\run\stvarr.pas"/>
+        <UnitName Value="StVArr"/>
+      </Item44>
+      <Item45>
+        <Filename Value="source\run\stpqueue.pas"/>
+        <UnitName Value="StPQueue"/>
+      </Item45>
+      <Item46>
+        <Filename Value="source\run\sttree.pas"/>
+        <UnitName Value="StTree"/>
+      </Item46>
+      <Item47>
+        <Filename Value="source\run\stnvcont.pas"/>
+        <UnitName Value="StNVCont"/>
+      </Item47>
+      <Item48>
+        <Filename Value="source\run\stnvtree.pas"/>
+        <UnitName Value="StNVTree"/>
+      </Item48>
+      <Item49>
+        <Filename Value="source\run\stnvbits.pas"/>
+        <UnitName Value="StNVBits"/>
+      </Item49>
+      <Item50>
+        <Filename Value="source\run\stnvcoll.pas"/>
+        <UnitName Value="StNVColl"/>
+      </Item50>
+      <Item51>
+        <Filename Value="source\run\stnvdict.pas"/>
+        <UnitName Value="StNVDict"/>
+      </Item51>
+      <Item52>
+        <Filename Value="source\run\stnvdq.pas"/>
+        <UnitName Value="StNVDQ"/>
+      </Item52>
+      <Item53>
+        <Filename Value="source\run\stnvlary.pas"/>
+        <UnitName Value="StNVLAry"/>
+      </Item53>
+      <Item54>
+        <Filename Value="source\run\stnvlist.pas"/>
+        <UnitName Value="StNVList"/>
+      </Item54>
+      <Item55>
+        <Filename Value="source\run\stnvlmat.pas"/>
+        <UnitName Value="StNVLMat"/>
+      </Item55>
+      <Item56>
+        <Filename Value="source\run\stnvscol.pas"/>
+        <UnitName Value="StNVSCol"/>
+      </Item56>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

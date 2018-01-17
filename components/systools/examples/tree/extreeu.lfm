@@ -1,0 +1,173 @@
+object STDlg: TSTDlg
+  Left = 229
+  Height = 258
+  Top = 159
+  Width = 418
+  ActiveControl = CreateBtn
+  Caption = 'StTree Example'
+  ClientHeight = 258
+  ClientWidth = 418
+  Color = clBtnFace
+  Font.Color = clBlack
+  OnActivate = FormActivate
+  OnClose = FormClose
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  ShowHint = True
+  LCLVersion = '1.9.0.0'
+  object Label1: TLabel
+    Left = 14
+    Height = 15
+    Top = 184
+    Width = 22
+    Caption = 'First'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 14
+    Height = 15
+    Top = 209
+    Width = 21
+    Caption = 'Last'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    Left = 14
+    Height = 15
+    Top = 233
+    Width = 21
+    Caption = 'Age'
+    ParentColor = False
+  end
+  object CreateBtn: TButton
+    Left = 12
+    Height = 33
+    Hint = 'Create a Tree'
+    Top = 12
+    Width = 75
+    Caption = 'Create'
+    OnClick = CreateBtnClick
+    TabOrder = 0
+  end
+  object ClearBtn: TButton
+    Left = 106
+    Height = 33
+    Hint = 'Clear Tree'
+    Top = 12
+    Width = 75
+    Caption = 'Clear'
+    OnClick = ClearBtnClick
+    TabOrder = 1
+  end
+  object LB1: TListBox
+    Left = 218
+    Height = 237
+    Hint = 'DblClk to delete selected item'
+    Top = 14
+    Width = 193
+    ItemHeight = 0
+    OnDblClick = LB1DblClick
+    TabOrder = 11
+    TabStop = False
+  end
+  object Edit1: TEdit
+    Left = 58
+    Height = 23
+    Hint = '1 to 10 characters'
+    Top = 182
+    Width = 89
+    MaxLength = 10
+    TabOrder = 8
+  end
+  object Edit2: TEdit
+    Left = 58
+    Height = 23
+    Hint = '1 to 15 characters'
+    Top = 206
+    Width = 89
+    MaxLength = 15
+    TabOrder = 9
+  end
+  object Edit3: TEdit
+    Left = 58
+    Height = 23
+    Hint = '1 to 32627'
+    Top = 230
+    Width = 29
+    MaxLength = 5
+    TabOrder = 10
+  end
+  object InsertBtn: TButton
+    Left = 12
+    Height = 33
+    Hint = 'Insert new record'
+    Top = 52
+    Width = 75
+    Caption = 'Insert'
+    OnClick = InsertBtnClick
+    TabOrder = 2
+  end
+  object DeleteBtn: TButton
+    Left = 106
+    Height = 33
+    Hint = 'Delete a record'
+    Top = 52
+    Width = 75
+    Caption = 'Delete'
+    OnClick = DeleteBtnClick
+    TabOrder = 3
+  end
+  object FindBtn: TButton
+    Left = 12
+    Height = 33
+    Hint = 'Find a record'
+    Top = 94
+    Width = 75
+    Caption = 'Find'
+    OnClick = FindBtnClick
+    TabOrder = 4
+  end
+  object SearchBtn: TButton
+    Left = 106
+    Height = 33
+    Hint = 'Search by last name'
+    Top = 94
+    Width = 75
+    Caption = 'Search'
+    OnClick = SearchBtnClick
+    TabOrder = 5
+  end
+  object LoadBtn: TButton
+    Left = 12
+    Height = 33
+    Hint = 'Load from disk'
+    Top = 134
+    Width = 75
+    Caption = 'Load'
+    OnClick = LoadBtnClick
+    TabOrder = 6
+  end
+  object SaveBtn: TButton
+    Left = 106
+    Height = 33
+    Hint = 'Save to disk'
+    Top = 134
+    Width = 75
+    Caption = 'Save'
+    OnClick = SaveBtnClick
+    TabOrder = 7
+  end
+  object OD1: TOpenDialog
+    DefaultExt = '.TDF'
+    Filter = '*.tdf (Tree files)|*.tdf|*.* (All files)|*.*'
+    left = 288
+    top = 40
+  end
+  object SD1: TSaveDialog
+    DefaultExt = '.TDF'
+    Filter = '*.tdf (Tree files)|*.tdf|*.* (All files)|*.*'
+    Options = [ofOverwritePrompt]
+    left = 288
+    top = 120
+  end
+end

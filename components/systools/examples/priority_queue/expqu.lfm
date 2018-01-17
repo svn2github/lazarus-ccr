@@ -1,0 +1,161 @@
+object StDlg: TStDlg
+  Left = 451
+  Height = 335
+  Top = 128
+  Width = 376
+  ActiveControl = CreateBtn
+  BorderStyle = bsDialog
+  Caption = 'Priority Queue (StPQueue) Example'
+  ClientHeight = 335
+  ClientWidth = 376
+  Color = clBtnFace
+  Font.Color = clWindowText
+  OnClose = FormClose
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  ShowHint = True
+  LCLVersion = '1.9.0.0'
+  object ActionLabel: TLabel
+    Left = 208
+    Height = 15
+    Top = 87
+    Width = 105
+    Caption = 'Most recent action'
+    Font.Color = clWindowText
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object QueueLabel: TLabel
+    Left = 32
+    Height = 15
+    Top = 55
+    Width = 75
+    Caption = 'Jobs in queue'
+    Font.Color = clWindowText
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object JobLabel: TLabel
+    Left = 136
+    Height = 15
+    Top = 8
+    Width = 54
+    Caption = 'Initial jobs'
+    ParentColor = False
+  end
+  object CreateBtn: TButton
+    Left = 32
+    Height = 33
+    Hint = 'Create new priority queue with specified initial # of jobs'
+    Top = 12
+    Width = 81
+    Caption = 'Create'
+    OnClick = CreateBtnClick
+    TabOrder = 0
+  end
+  object ClearBtn: TButton
+    Left = 244
+    Height = 33
+    Hint = 'Clear the queue'
+    Top = 288
+    Width = 81
+    Caption = 'Clear'
+    OnClick = ClearBtnClick
+    TabOrder = 6
+  end
+  object LoadBtn: TButton
+    Left = 32
+    Height = 33
+    Hint = 'Load previously saved stream file'
+    Top = 288
+    Width = 81
+    Caption = 'Load'
+    OnClick = LoadBtnClick
+    TabOrder = 9
+  end
+  object SaveBtn: TButton
+    Left = 128
+    Height = 33
+    Hint = 'Save current queue to stream file'
+    Top = 288
+    Width = 81
+    Caption = 'Save'
+    OnClick = SaveBtnClick
+    TabOrder = 7
+  end
+  object InsertBtn: TButton
+    Left = 244
+    Height = 33
+    Hint = 'Add another job to the queue'
+    Top = 144
+    Width = 81
+    Caption = 'Insert'
+    OnClick = InsertBtnClick
+    TabOrder = 3
+  end
+  object DeleteMinBtn: TButton
+    Left = 244
+    Height = 33
+    Hint = 'Remove the job with minimum priority from the queue'
+    Top = 192
+    Width = 81
+    Caption = 'DeleteMin'
+    OnClick = DeleteMinBtnClick
+    TabOrder = 4
+  end
+  object DeleteMaxBtn: TButton
+    Left = 244
+    Height = 33
+    Hint = 'Remove the job with highest priority from the queue'
+    Top = 240
+    Width = 81
+    Caption = 'DeleteMax'
+    OnClick = DeleteMaxBtnClick
+    TabOrder = 5
+  end
+  object LB1: TListBox
+    Left = 32
+    Height = 201
+    Hint = 'Shows the queued jobs in internal order. The first job is the lowest priority and the second is the highest.'
+    Top = 72
+    Width = 153
+    ItemHeight = 0
+    TabOrder = 8
+  end
+  object ActionEdit: TEdit
+    Left = 208
+    Height = 23
+    Hint = 'Shows the action you performed last'
+    Top = 104
+    Width = 153
+    ReadOnly = True
+    TabStop = False
+    TabOrder = 2
+  end
+  object JobEdit: TEdit
+    Left = 136
+    Height = 23
+    Hint = 'Specify the number of jobs Create adds to the queue'
+    Top = 24
+    Width = 65
+    TabOrder = 1
+  end
+  object OD1: TOpenDialog
+    DefaultExt = '.stm'
+    FileName = 'texpq.stm'
+    Filter = '*.stm (stream files)|*.stm|*.* (all files)|*.*'
+    Options = [ofFileMustExist]
+    left = 340
+    top = 50
+  end
+  object SD1: TSaveDialog
+    DefaultExt = '.stm'
+    FileName = 'texpq.stm'
+    Filter = '*.stm (stream files)|*.stm|*.* (all files)|*.*'
+    Options = [ofOverwritePrompt]
+    left = 340
+    top = 18
+  end
+end
