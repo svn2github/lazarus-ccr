@@ -1,0 +1,221 @@
+object STDlg: TSTDlg
+  Left = 261
+  Height = 353
+  Top = 128
+  Width = 297
+  BorderStyle = bsDialog
+  Caption = 'STLARR Example'
+  ClientHeight = 353
+  ClientWidth = 297
+  Color = clBtnFace
+  Font.Color = clBlack
+  OnClose = FormClose
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  ShowHint = True
+  LCLVersion = '1.9.0.0'
+  object Label4: TLabel
+    Left = 8
+    Height = 15
+    Top = 64
+    Width = 46
+    Caption = 'Element:'
+    ParentColor = False
+  end
+  object Label1: TLabel
+    Left = 8
+    Height = 15
+    Top = 294
+    Width = 38
+    Caption = 'Name1'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 8
+    Height = 15
+    Top = 326
+    Width = 38
+    Caption = 'Name2'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    Left = 168
+    Height = 15
+    Top = 276
+    Width = 7
+    Caption = 'X'
+    ParentColor = False
+  end
+  object Label5: TLabel
+    Left = 168
+    Height = 15
+    Top = 302
+    Width = 7
+    Caption = 'Y'
+    ParentColor = False
+  end
+  object Label6: TLabel
+    Left = 168
+    Height = 15
+    Top = 326
+    Width = 24
+    Caption = 'Mag'
+    ParentColor = False
+  end
+  object CreateBtn: TButton
+    Left = 42
+    Height = 30
+    Hint = 'Create 1D array'
+    Top = 17
+    Width = 67
+    Caption = 'Create'
+    OnClick = CreateBtnClick
+    TabOrder = 0
+  end
+  object ElemNum: TEdit
+    Left = 60
+    Height = 23
+    Hint = 'Element #?'
+    Top = 60
+    Width = 37
+    TabOrder = 1
+    Text = '0'
+  end
+  object ClearBtn: TButton
+    Left = 6
+    Height = 30
+    Hint = 'Clear array'
+    Top = 88
+    Width = 67
+    Caption = 'Clear'
+    OnClick = ClearBtnClick
+    TabOrder = 2
+  end
+  object FillBtn: TButton
+    Left = 80
+    Height = 30
+    Hint = 'Fill with Value'
+    Top = 88
+    Width = 67
+    Caption = 'Fill'
+    OnClick = FillBtnClick
+    TabOrder = 3
+  end
+  object PutBtn: TButton
+    Left = 80
+    Height = 30
+    Hint = 'Edit Value'
+    Top = 127
+    Width = 67
+    Caption = 'Put'
+    OnClick = PutBtnClick
+    TabOrder = 5
+  end
+  object GetBtn: TButton
+    Left = 6
+    Height = 30
+    Hint = 'Get Value'
+    Top = 127
+    Width = 67
+    Caption = 'Get'
+    OnClick = GetBtnClick
+    TabOrder = 4
+  end
+  object SortBtn: TButton
+    Left = 42
+    Height = 30
+    Hint = 'Sort array'
+    Top = 169
+    Width = 67
+    Caption = 'Sort'
+    OnClick = SortBtnClick
+    TabOrder = 6
+  end
+  object LB1: TListBox
+    Left = 162
+    Height = 245
+    Hint = 'DblClk displays data of selected item'
+    Top = 18
+    Width = 127
+    ItemHeight = 0
+    OnDblClick = LB1DblClick
+    TabOrder = 9
+  end
+  object Edit1: TEdit
+    Left = 56
+    Height = 23
+    Hint = 'Enter Up to 10 chars'
+    Top = 290
+    Width = 83
+    MaxLength = 10
+    TabOrder = 10
+  end
+  object Edit2: TEdit
+    Left = 56
+    Height = 23
+    Hint = 'Enter Up to 10 chars'
+    Top = 322
+    Width = 83
+    MaxLength = 10
+    TabOrder = 11
+  end
+  object Edit3: TEdit
+    Left = 198
+    Height = 23
+    Hint = 'Enter LongInt value'
+    Top = 274
+    Width = 57
+    TabOrder = 12
+  end
+  object Edit4: TEdit
+    Left = 198
+    Height = 23
+    Hint = 'Enter LongInt value'
+    Top = 298
+    Width = 57
+    TabOrder = 13
+  end
+  object Edit5: TEdit
+    Left = 198
+    Height = 23
+    Hint = 'Enter Real value'
+    Top = 322
+    Width = 57
+    TabOrder = 14
+  end
+  object LoadBtn: TButton
+    Left = 6
+    Height = 30
+    Hint = 'Load from file'
+    Top = 219
+    Width = 67
+    Caption = 'Load'
+    OnClick = LoadBtnClick
+    TabOrder = 7
+  end
+  object SaveBtn: TButton
+    Left = 80
+    Height = 30
+    Hint = 'Save to file'
+    Top = 219
+    Width = 67
+    Caption = 'Save'
+    OnClick = SaveBtnClick
+    TabOrder = 8
+  end
+  object OD1: TOpenDialog
+    Title = 'Load Array Data'
+    DefaultExt = '.1da'
+    Filter = '*.1da (Array Files)|*.1da|*.* (All Files)|*.*'
+    left = 200
+    top = 64
+  end
+  object SD1: TSaveDialog
+    Title = 'Save Array Data'
+    DefaultExt = '.1da'
+    Filter = '*.1da (Array Files)|*.1da|*.* (All Files)|*.*'
+    Options = [ofOverwritePrompt]
+    left = 200
+    top = 144
+  end
+end

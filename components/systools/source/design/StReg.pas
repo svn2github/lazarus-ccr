@@ -88,7 +88,9 @@ uses
   {vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv}
   StAstro,
   StAstroP,
+  *)
   StBCD,
+  (*
   StBits,
   StColl,
   *)

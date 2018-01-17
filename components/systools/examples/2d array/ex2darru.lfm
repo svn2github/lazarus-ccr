@@ -1,0 +1,182 @@
+object STDlg: TSTDlg
+  Left = 269
+  Height = 309
+  Top = 152
+  Width = 347
+  BorderStyle = bsDialog
+  Caption = 'STLMatrix Example'
+  ClientHeight = 309
+  ClientWidth = 347
+  Color = clBtnFace
+  Font.Color = clBlack
+  OnClose = FormClose
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  ShowHint = True
+  LCLVersion = '1.9.0.0'
+  object Label5: TLabel
+    Left = 20
+    Height = 15
+    Top = 54
+    Width = 31
+    Caption = 'Value:'
+    ParentColor = False
+  end
+  object Label6: TLabel
+    Left = 6
+    Height = 15
+    Top = 80
+    Width = 46
+    Caption = 'Element:'
+    ParentColor = False
+  end
+  object ArrayLB: TListBox
+    Left = 196
+    Height = 277
+    Top = 10
+    Width = 127
+    ItemHeight = 0
+    OnDblClick = ArrayLBDblClick
+    TabOrder = 0
+  end
+  object CreateBtn: TButton
+    Left = 54
+    Height = 30
+    Hint = 'Create 2d array'
+    Top = 9
+    Width = 67
+    Caption = 'Create 2D'
+    OnClick = CreateBtnClick
+    TabOrder = 1
+  end
+  object LMValue: TEdit
+    Left = 56
+    Height = 23
+    Hint = 'Value?'
+    Top = 50
+    Width = 37
+    TabOrder = 2
+    Text = '100'
+  end
+  object LMRow: TEdit
+    Left = 56
+    Height = 23
+    Hint = 'Row?'
+    Top = 76
+    Width = 37
+    TabOrder = 3
+    Text = '0'
+  end
+  object LMCol: TEdit
+    Left = 104
+    Height = 23
+    Hint = 'Column?'
+    Top = 76
+    Width = 37
+    TabOrder = 4
+    Text = '0'
+  end
+  object ClearBtn: TButton
+    Left = 24
+    Height = 28
+    Hint = 'Clear array'
+    Top = 106
+    Width = 67
+    Caption = 'Clear'
+    OnClick = ClearBtnClick
+    TabOrder = 5
+  end
+  object FillBtn: TButton
+    Left = 110
+    Height = 28
+    Hint = 'Fill array with Value'
+    Top = 106
+    Width = 67
+    Caption = 'Fill'
+    OnClick = FillBtnClick
+    TabOrder = 6
+  end
+  object PutBtn: TButton
+    Left = 24
+    Height = 28
+    Hint = 'Edit Value'
+    Top = 145
+    Width = 67
+    Caption = 'Put'
+    OnClick = PutBtnClick
+    TabOrder = 7
+  end
+  object PutRowBtn: TButton
+    Left = 110
+    Height = 28
+    Hint = 'Set values in row to Value'
+    Top = 145
+    Width = 67
+    Caption = 'Put Row'
+    OnClick = PutRowBtnClick
+    TabOrder = 8
+  end
+  object GetBtn: TButton
+    Left = 24
+    Height = 28
+    Hint = 'Get Value'
+    Top = 179
+    Width = 67
+    Caption = 'Get'
+    OnClick = GetBtnClick
+    TabOrder = 9
+  end
+  object GetRowBtn: TButton
+    Left = 110
+    Height = 28
+    Hint = 'Get values in row'
+    Top = 179
+    Width = 67
+    Caption = 'Get Row'
+    OnClick = GetRowBtnClick
+    TabOrder = 10
+  end
+  object SortBtn: TButton
+    Left = 68
+    Height = 28
+    Hint = 'Sort array'
+    Top = 217
+    Width = 67
+    Caption = 'Sort'
+    OnClick = SortBtnClick
+    TabOrder = 11
+  end
+  object LoadBtn: TButton
+    Left = 24
+    Height = 28
+    Hint = 'Load from file'
+    Top = 259
+    Width = 67
+    Caption = 'Load'
+    OnClick = LoadBtnClick
+    TabOrder = 12
+  end
+  object SaveBtn: TButton
+    Left = 110
+    Height = 28
+    Hint = 'Save to file'
+    Top = 259
+    Width = 67
+    Caption = 'Save'
+    OnClick = SaveBtnClick
+    TabOrder = 13
+  end
+  object OD1: TOpenDialog
+    DefaultExt = '.2da'
+    Filter = '*.2da (Array Data)|*.2da|*.* (All files)|*.*'
+    left = 26
+    top = 228
+  end
+  object SD1: TSaveDialog
+    DefaultExt = '.2da'
+    Filter = '*.2da (Array data)|*.2da|*.* (All files)|*.*'
+    Options = [ofOverwritePrompt]
+    left = 148
+    top = 226
+  end
+end

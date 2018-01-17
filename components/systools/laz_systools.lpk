@@ -16,7 +16,7 @@
     <Description Value="Lazarus port of TurboPower SysTools (Delphi version at https://sourceforge.net/projects/tpsystools/) - runtime package"/>
     <License Value="MPL 1.1"/>
     <Version Major="4" Release="4"/>
-    <Files Count="23">
+    <Files Count="25">
       <Item1>
         <Filename Value="source\run\stbarc.pas"/>
         <UnitName Value="StBarC"/>
@@ -109,6 +109,14 @@
         <Filename Value="source\run\ststat.pas"/>
         <UnitName Value="StStat"/>
       </Item23>
+      <Item24>
+        <Filename Value="source\run\stlarr.pas"/>
+        <UnitName Value="StLArr"/>
+      </Item24>
+      <Item25>
+        <Filename Value="source\run\stbcd.pas"/>
+        <UnitName Value="StBCD"/>
+      </Item25>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

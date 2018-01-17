@@ -10,7 +10,7 @@ interface
 uses
   StBarC, StBase, StConst, StBarPN, StStrL, St2DBarC, StDate, StUtils, StCRC, 
   StHASH, StToHTML, StStrms, StDict, StIniStm, StDecMth, StExpr, StMath, 
-  StFIN, StDateSt, StMoney, StRandom, StStat;
+  StFIN, StDateSt, StMoney, StRandom, StStat, StLArr, StBCD;
 
 implementation
 
