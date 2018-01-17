@@ -76,7 +76,9 @@ uses
   StNVLMat,
   StNVSCol,
   StNVTree,
+  *)
   StRegEx,
+  (*
   StSpawn,
   *)
   StToHTML,
@@ -97,8 +99,8 @@ uses
   StConst,
   StCrc,
   StDate,
-  (*
   StDateSt,
+  (*
   StDict,
   StDQue,
   StEclpse,
@@ -107,10 +109,14 @@ uses
   StFIN,
   (*
   StFirst,
+  *)
   StHASH,
+  (*
   StJup,
   StJupsat,
+  *)
   StLArr,
+  (*
   StList,
   StMars,
   *)
@@ -207,8 +213,8 @@ begin
      TStExpressionEdit,
      TStBarCode,
      TStPNBarCode,
-     {
      TStRegEx,
+     {
      TStWMDataCopy,
      }
      TStFileToHTML,

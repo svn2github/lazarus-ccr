@@ -1,0 +1,218 @@
+object Form1: TForm1
+  Left = 311
+  Height = 412
+  Top = 188
+  Width = 377
+  BorderStyle = bsDialog
+  Caption = 'Regular Expression (StRegEx) Example'
+  ClientHeight = 412
+  ClientWidth = 377
+  Color = clBtnFace
+  Font.Color = clBlack
+  Position = poScreenCenter
+  LCLVersion = '1.9.0.0'
+  object Label1: TLabel
+    Left = 144
+    Height = 15
+    Top = 12
+    Width = 57
+    Caption = 'Source File'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 144
+    Height = 15
+    Top = 57
+    Width = 81
+    Caption = 'Destination File'
+    ParentColor = False
+  end
+  object lblSelAvoid: TLabel
+    Left = 15
+    Height = 15
+    Top = 338
+    Width = 51
+    Caption = 'Sel/Avoid'
+    ParentColor = False
+  end
+  object lblMatch: TLabel
+    Left = 110
+    Height = 15
+    Top = 339
+    Width = 34
+    Caption = 'Match'
+    ParentColor = False
+  end
+  object lblReplace: TLabel
+    Left = 200
+    Height = 15
+    Top = 339
+    Width = 41
+    Caption = 'Replace'
+    ParentColor = False
+  end
+  object lblLPS: TLabel
+    Left = 15
+    Height = 15
+    Top = 361
+    Width = 50
+    Caption = 'Lines/Sec'
+    ParentColor = False
+  end
+  object sbSource: TSpeedButton
+    Left = 342
+    Height = 22
+    Top = 29
+    Width = 23
+    Caption = '...'
+    OnClick = SelectFile
+  end
+  object sbDest: TSpeedButton
+    Left = 342
+    Height = 22
+    Top = 72
+    Width = 23
+    Caption = '...'
+    OnClick = SelectFile
+  end
+  object Progressbar1: TProgressBar
+    Left = 16
+    Height = 22
+    Top = 379
+    Width = 232
+    ParentColor = False
+    TabOrder = 8
+  end
+  object gbOptions: TGroupBox
+    Left = 8
+    Height = 127
+    Top = 10
+    Width = 122
+    Caption = ' Options '
+    ClientHeight = 107
+    ClientWidth = 118
+    TabOrder = 0
+    object cbSelect: TCheckBox
+      Left = 15
+      Height = 19
+      Top = 0
+      Width = 51
+      Caption = 'Select'
+      Checked = True
+      State = cbChecked
+      TabOrder = 0
+    end
+    object cbIgnoreCase: TCheckBox
+      Left = 15
+      Height = 19
+      Top = 21
+      Width = 82
+      Caption = 'Ignore Case'
+      Checked = True
+      State = cbChecked
+      TabOrder = 1
+    end
+    object cbLineNumbers: TCheckBox
+      Left = 15
+      Height = 19
+      Top = 43
+      Width = 94
+      Caption = 'Line Numbers'
+      TabOrder = 2
+    end
+    object cbxModOnly: TCheckBox
+      Left = 15
+      Height = 19
+      Top = 64
+      Width = 96
+      Caption = 'Modified Only'
+      TabOrder = 3
+    end
+    object cbxCountOnly: TCheckBox
+      Left = 15
+      Height = 19
+      Top = 85
+      Width = 86
+      Caption = 'Counts Only'
+      TabOrder = 4
+    end
+  end
+  object edtSourceFile: TEdit
+    Left = 144
+    Height = 23
+    Top = 29
+    Width = 195
+    TabOrder = 1
+  end
+  object edtDestFile: TEdit
+    Left = 144
+    Height = 23
+    Top = 72
+    Width = 195
+    TabOrder = 2
+  end
+  object bntSelAvoid: TButton
+    Left = 143
+    Height = 25
+    Top = 112
+    Width = 70
+    Caption = 'Sel/Avoid'
+    OnClick = bntSelAvoidClick
+    TabOrder = 3
+  end
+  object btnMatch: TButton
+    Left = 219
+    Height = 25
+    Top = 112
+    Width = 70
+    Caption = 'Match'
+    OnClick = btnMatchClick
+    TabOrder = 4
+  end
+  object btnReplace: TButton
+    Left = 295
+    Height = 25
+    Top = 112
+    Width = 70
+    Caption = 'Replace'
+    OnClick = btnReplaceClick
+    TabOrder = 5
+  end
+  object Memo1: TMemo
+    Left = 9
+    Height = 171
+    Top = 152
+    Width = 357
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Courier New'
+    Lines.Strings = (
+      ''
+    )
+    ParentFont = False
+    ReadOnly = True
+    ScrollBars = ssBoth
+    TabOrder = 6
+    TabStop = False
+    WordWrap = False
+  end
+  object Button1: TButton
+    Left = 280
+    Height = 25
+    Top = 378
+    Width = 75
+    Caption = 'Execute'
+    OnClick = Button1Click
+    TabOrder = 7
+  end
+  object OpenDialog1: TOpenDialog
+    left = 88
+    top = 208
+  end
+  object StRegEx1: TStRegEx
+    OnProgress = StRegEx1Progress
+    OutputOptions = []
+    left = 224
+    top = 208
+  end
+end

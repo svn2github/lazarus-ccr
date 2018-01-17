@@ -1,0 +1,57 @@
+object Form2: TForm2
+  Left = 415
+  Top = 348
+  BorderStyle = bsDialog
+  Caption = 'Regular Expression Strings'
+  ClientHeight = 279
+  ClientWidth = 286
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = True
+  Position = poScreenCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Memo1: TMemo
+    Left = 13
+    Top = 10
+    Width = 260
+    Height = 226
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Courier New'
+    Font.Style = []
+    Lines.Strings = (
+      '')
+    ParentFont = False
+    ScrollBars = ssBoth
+    TabOrder = 0
+    WordWrap = False
+  end
+  object BitBtn1: TBitBtn
+    Left = 116
+    Top = 247
+    Width = 75
+    Height = 25
+    Caption = 'OK'
+    Default = True
+    ModalResult = 1
+    NumGlyphs = 2
+    TabOrder = 1
+  end
+  object BitBtn2: TBitBtn
+    Left = 200
+    Top = 247
+    Width = 75
+    Height = 25
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    NumGlyphs = 2
+    TabOrder = 2
+  end
+end
