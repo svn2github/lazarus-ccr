@@ -1,0 +1,92 @@
+object RootForm: TRootForm
+  Left = 241
+  Height = 173
+  Top = 127
+  Width = 304
+  BorderStyle = bsDialog
+  Caption = 'Pick Your Example'
+  ClientHeight = 173
+  ClientWidth = 304
+  Color = clBtnFace
+  Font.Color = clWindowText
+  LCLVersion = '1.9.0.0'
+  Scaled = False
+  object ObserverBtn: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 116
+    Height = 25
+    Top = 16
+    Width = 73
+    AutoSize = True
+    Caption = 'Observer'
+    OnClick = ObserverBtnClick
+    TabOrder = 0
+  end
+  object MediatorBtn: TButton
+    AnchorSideLeft.Control = ObserverBtn
+    AnchorSideTop.Control = ChainBtn
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ObserverBtn
+    AnchorSideRight.Side = asrBottom
+    Left = 116
+    Height = 25
+    Top = 70
+    Width = 73
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 2
+    Caption = 'Mediator'
+    OnClick = MediatorBtnClick
+    TabOrder = 1
+  end
+  object ChainBtn: TButton
+    AnchorSideLeft.Control = ObserverBtn
+    AnchorSideTop.Control = ObserverBtn
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ObserverBtn
+    AnchorSideRight.Side = asrBottom
+    Left = 116
+    Height = 25
+    Top = 43
+    Width = 73
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 2
+    Caption = 'Chain'
+    OnClick = ChainBtnClick
+    TabOrder = 2
+  end
+  object SingletonBtn: TButton
+    AnchorSideLeft.Control = ObserverBtn
+    AnchorSideTop.Control = MediatorBtn
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = ObserverBtn
+    AnchorSideRight.Side = asrBottom
+    Left = 116
+    Height = 25
+    Top = 97
+    Width = 73
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 2
+    Caption = 'Singleton'
+    OnClick = SingletonBtnClick
+    TabOrder = 3
+  end
+  object ExitBtn: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = SingletonBtn
+    AnchorSideTop.Side = asrBottom
+    Left = 130
+    Height = 25
+    Top = 138
+    Width = 44
+    AutoSize = True
+    BorderSpacing.Top = 16
+    Caption = '&Exit'
+    OnClick = ExitBtnClick
+    TabOrder = 4
+  end
+end

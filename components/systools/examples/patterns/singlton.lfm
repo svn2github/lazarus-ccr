@@ -1,0 +1,213 @@
+object SingletonForm: TSingletonForm
+  Left = 608
+  Height = 139
+  Top = 122
+  Width = 440
+  AutoSize = True
+  BorderStyle = bsDialog
+  Caption = 'The Singleton Test Form'
+  ClientHeight = 139
+  ClientWidth = 440
+  Color = clBtnFace
+  Font.Color = clWindowText
+  OnCreate = FormCreate
+  LCLVersion = '1.9.0.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 128
+    Top = 8
+    Width = 440
+    BevelOuter = bvNone
+    ClientHeight = 128
+    ClientWidth = 440
+    TabOrder = 0
+    object Label1: TLabel
+      Left = 88
+      Height = 15
+      Top = 8
+      Width = 89
+      Caption = 'Singleton Count:'
+      ParentColor = False
+    end
+    object Display1: TEdit
+      Left = 288
+      Height = 23
+      Top = 40
+      Width = 45
+      TabOrder = 0
+      Text = '(empty)'
+    end
+    object CnR1: TButton
+      Left = 220
+      Height = 25
+      Top = 40
+      Width = 52
+      AutoSize = True
+      Caption = 'Read'
+      OnClick = CnR1Click
+      TabOrder = 1
+    end
+    object Set1: TButton
+      Left = 344
+      Height = 25
+      Top = 40
+      Width = 74
+      AutoSize = True
+      Caption = 'Set Value'
+      OnClick = Set1Click
+      TabOrder = 2
+    end
+    object CnR2: TButton
+      Left = 220
+      Height = 25
+      Top = 64
+      Width = 52
+      AutoSize = True
+      Caption = 'Read'
+      OnClick = CnR2Click
+      TabOrder = 3
+    end
+    object Display2: TEdit
+      Left = 288
+      Height = 23
+      Top = 64
+      Width = 45
+      TabOrder = 4
+      Text = '(empty)'
+    end
+    object Set2: TButton
+      Left = 344
+      Height = 25
+      Top = 64
+      Width = 74
+      AutoSize = True
+      Caption = 'Set Value'
+      OnClick = Set2Click
+      TabOrder = 5
+    end
+    object CnR3: TButton
+      Left = 220
+      Height = 25
+      Top = 88
+      Width = 52
+      AutoSize = True
+      Caption = 'Read'
+      OnClick = CnR3Click
+      TabOrder = 6
+    end
+    object Display3: TEdit
+      Left = 288
+      Height = 23
+      Top = 88
+      Width = 45
+      TabOrder = 7
+      Text = '(empty)'
+    end
+    object Set3: TButton
+      Left = 344
+      Height = 25
+      Top = 88
+      Width = 74
+      AutoSize = True
+      Caption = 'Set Value'
+      OnClick = Set3Click
+      TabOrder = 8
+    end
+    object Create1: TButton
+      Left = 20
+      Height = 25
+      Top = 40
+      Width = 60
+      AutoSize = True
+      Caption = 'Create'
+      OnClick = Create1Click
+      TabOrder = 9
+    end
+    object Create2: TButton
+      Left = 20
+      Height = 25
+      Top = 64
+      Width = 60
+      AutoSize = True
+      Caption = 'Create'
+      OnClick = Create2Click
+      TabOrder = 10
+    end
+    object Create3: TButton
+      Left = 20
+      Height = 25
+      Top = 88
+      Width = 60
+      AutoSize = True
+      Caption = 'Create'
+      OnClick = Create3Click
+      TabOrder = 11
+    end
+    object Free1: TButton
+      Left = 160
+      Height = 25
+      Top = 40
+      Width = 48
+      AutoSize = True
+      Caption = 'Free'
+      OnClick = Free1Click
+      TabOrder = 12
+    end
+    object Free2: TButton
+      Left = 160
+      Height = 25
+      Top = 64
+      Width = 48
+      AutoSize = True
+      Caption = 'Free'
+      OnClick = Free2Click
+      TabOrder = 13
+    end
+    object Free3: TButton
+      Left = 160
+      Height = 25
+      Top = 88
+      Width = 48
+      AutoSize = True
+      Caption = 'Free'
+      OnClick = Free3Click
+      TabOrder = 14
+    end
+    object Counter: TEdit
+      Left = 184
+      Height = 23
+      Top = 4
+      Width = 33
+      Enabled = False
+      TabOrder = 15
+      Text = '0'
+    end
+    object Ref1: TEdit
+      Left = 94
+      Height = 23
+      Top = 40
+      Width = 50
+      Enabled = False
+      TabOrder = 16
+      Text = 'ref is nil'
+    end
+    object Ref2: TEdit
+      Left = 94
+      Height = 23
+      Top = 64
+      Width = 50
+      Enabled = False
+      TabOrder = 17
+      Text = 'ref is nil'
+    end
+    object Ref3: TEdit
+      Left = 94
+      Height = 23
+      Top = 88
+      Width = 50
+      Enabled = False
+      TabOrder = 18
+      Text = 'ref is nil'
+    end
+  end
+end

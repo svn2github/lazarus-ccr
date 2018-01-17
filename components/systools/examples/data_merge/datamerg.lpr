@@ -23,45 +23,24 @@
  *
  * ***** END LICENSE BLOCK ***** *)
 
-{*********************************************************}
-{* SysTools: StRegDb.pas 4.04                            *}
-{*********************************************************}
-{* SysTools: Data-Aware Component Registration Unit      *}
-{*********************************************************}
-
 {$IFDEF FPC}
-  {$mode DELPHI}
+ {$mode DELPHI}
 {$ENDIF}
-//{$I StDefine.inc}
 
-{$R StRegDb.r32}
-
-unit StRegDb;
-
-interface
+program DataMerg;
 
 uses
-  Classes;
+  Interfaces,
+  Forms, lclversion,
+  datamrg0 in 'datamrg0.pas' {Form1};
 
-procedure Register;
+{$R *.res}
 
-implementation
-
-uses
-  StBase,
-  StDbBarC,
-  StDbPNBC,
-  StDb2DBC;
-//, StExport;
-
-procedure Register;
 begin
-  RegisterComponents('SysTools', [
-    TStDbBarCode,
-    TStDbPNBarCode,
-    TStDbPDF417Barcode,
-    TStDbMaxiCodeBarcode
-  ]);
-end;
-
+  {$IFDEF LCL_FULLVERSION >= 1080000}
+  Application.Scaled := True;
+  {$ENDIF}
+  Application.Initialize;
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
 end.

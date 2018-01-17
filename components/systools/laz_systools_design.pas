@@ -8,7 +8,7 @@ unit laz_systools_design;
 interface
 
 uses
-  StReg, LazarusPackageIntf;
+  StPropEd, StReg, LazarusPackageIntf;
 
 implementation
 

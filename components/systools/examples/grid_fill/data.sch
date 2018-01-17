@@ -1,0 +1,9 @@
+[DATES]
+Field3=Data,DATA,10,00,22
+Separator=,
+CharSet=ascii
+Field2=Rating,CHAR,2,00,20
+Filetype=VARYING
+Field4=Weight,Float,7,2,32
+Field1=Name,CHAR,20,00,00
+Delimiter="

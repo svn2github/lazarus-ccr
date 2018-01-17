@@ -1,0 +1,190 @@
+object ChainForm: TChainForm
+  Left = 731
+  Height = 199
+  Top = 301
+  Width = 385
+  BorderStyle = bsDialog
+  Caption = 'The Chain Test Form'
+  ClientHeight = 199
+  ClientWidth = 385
+  Color = clBtnFace
+  Font.Color = clWindowText
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  LCLVersion = '1.9.0.0'
+  object Panel2: TPanel
+    Left = 0
+    Height = 137
+    Top = 56
+    Width = 385
+    BevelOuter = bvNone
+    ClientHeight = 137
+    ClientWidth = 385
+    TabOrder = 0
+    object Ch1Lbl: TLabel
+      Left = 16
+      Height = 15
+      Top = 8
+      Width = 64
+      Caption = 'Handle < 10'
+      ParentColor = False
+    end
+    object Ch2Lbl: TLabel
+      Left = 16
+      Height = 15
+      Top = 32
+      Width = 53
+      Caption = 'Handle 10'
+      ParentColor = False
+    end
+    object Ch3Lbl: TLabel
+      Left = 16
+      Height = 15
+      Top = 56
+      Width = 64
+      Caption = 'Handle Odd'
+      ParentColor = False
+    end
+    object Ch4Lbl: TLabel
+      Left = 16
+      Height = 15
+      Top = 80
+      Width = 67
+      Caption = 'Handle >100'
+      ParentColor = False
+    end
+    object Ch5Lbl: TLabel
+      Left = 16
+      Height = 15
+      Top = 104
+      Width = 83
+      Caption = 'Default Handler'
+      ParentColor = False
+    end
+    object Ch1Value: TEdit
+      Left = 120
+      Height = 23
+      Top = 8
+      Width = 50
+      Enabled = False
+      TabOrder = 0
+    end
+    object Ch2Value: TEdit
+      Left = 120
+      Height = 23
+      Top = 32
+      Width = 50
+      Enabled = False
+      TabOrder = 1
+    end
+    object Ch3Value: TEdit
+      Left = 120
+      Height = 23
+      Top = 56
+      Width = 50
+      Enabled = False
+      TabOrder = 2
+    end
+    object Ch4Value: TEdit
+      Left = 120
+      Height = 23
+      Top = 80
+      Width = 50
+      Enabled = False
+      TabOrder = 3
+    end
+    object Ch5Value: TEdit
+      Left = 120
+      Height = 23
+      Top = 104
+      Width = 50
+      Enabled = False
+      TabOrder = 4
+    end
+    object Ch1Msg: TEdit
+      Left = 170
+      Height = 23
+      Top = 8
+      Width = 200
+      Enabled = False
+      TabOrder = 5
+    end
+    object Ch2Msg: TEdit
+      Left = 170
+      Height = 23
+      Top = 32
+      Width = 200
+      Enabled = False
+      TabOrder = 6
+    end
+    object Ch3Msg: TEdit
+      Left = 170
+      Height = 23
+      Top = 56
+      Width = 200
+      Enabled = False
+      TabOrder = 7
+    end
+    object Ch4Msg: TEdit
+      Left = 170
+      Height = 23
+      Top = 80
+      Width = 200
+      Enabled = False
+      TabOrder = 8
+    end
+    object Ch5Msg: TEdit
+      Left = 170
+      Height = 23
+      Top = 104
+      Width = 200
+      Enabled = False
+      TabOrder = 9
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 49
+    Top = 0
+    Width = 385
+    ClientHeight = 49
+    ClientWidth = 385
+    TabOrder = 1
+    object RadioButton1: TRadioButton
+      Left = 8
+      Height = 19
+      Top = 14
+      Width = 78
+      Caption = 'Hot Potato'
+      Checked = True
+      OnClick = RadioButton1Click
+      TabOrder = 0
+      TabStop = True
+    end
+    object RadioButton2: TRadioButton
+      Left = 104
+      Height = 19
+      Top = 14
+      Width = 64
+      Caption = 'Additive'
+      OnClick = RadioButton2Click
+      TabOrder = 1
+    end
+    object InputValue: TEdit
+      Left = 200
+      Height = 23
+      Top = 12
+      Width = 73
+      TabOrder = 2
+    end
+    object Start: TButton
+      Left = 288
+      Height = 25
+      Top = 11
+      Width = 82
+      Caption = 'Start'
+      OnClick = StartClick
+      TabOrder = 3
+    end
+  end
+end

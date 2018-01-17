@@ -1,0 +1,86 @@
+object ObserverForm: TObserverForm
+  Left = 484
+  Height = 179
+  Top = 295
+  Width = 207
+  BorderStyle = bsDialog
+  Caption = 'The Observer Test Form'
+  ClientHeight = 179
+  ClientWidth = 207
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  LCLVersion = '1.9.0.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 179
+    Top = 0
+    Width = 207
+    Align = alClient
+    ClientHeight = 179
+    ClientWidth = 207
+    Font.Color = clWindowText
+    ParentFont = False
+    TabOrder = 0
+    object Label1: TLabel
+      Left = 19
+      Height = 15
+      Top = 16
+      Width = 45
+      Caption = 'Caption:'
+      ParentColor = False
+    end
+    object Button1: TButton
+      Left = 48
+      Height = 25
+      Top = 40
+      Width = 130
+      AutoSize = True
+      Caption = 'Caption for Buttons'
+      OnClick = Button1Click
+      TabOrder = 0
+    end
+    object Edit1: TEdit
+      Left = 72
+      Height = 23
+      Top = 12
+      Width = 105
+      OnChange = Edit1Change
+      TabOrder = 1
+      Text = 'Caption for Buttons'
+    end
+    object Button2: TButton
+      Left = 47
+      Height = 25
+      Top = 72
+      Width = 130
+      AutoSize = True
+      Caption = 'Caption for Buttons'
+      OnClick = Button2Click
+      TabOrder = 2
+    end
+    object Button3: TButton
+      Left = 48
+      Height = 25
+      Top = 104
+      Width = 130
+      AutoSize = True
+      Caption = 'Caption for Buttons'
+      OnClick = Button3Click
+      TabOrder = 3
+    end
+    object Button4: TButton
+      Left = 47
+      Height = 25
+      Top = 136
+      Width = 130
+      AutoSize = True
+      Caption = 'Caption for Buttons'
+      OnClick = Button4Click
+      TabOrder = 4
+    end
+  end
+end

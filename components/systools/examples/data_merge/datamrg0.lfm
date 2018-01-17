@@ -1,0 +1,331 @@
+object Form1: TForm1
+  Left = 241
+  Height = 601
+  Top = 131
+  Width = 854
+  Caption = 'Data Merge Example'
+  ClientHeight = 601
+  ClientWidth = 854
+  Color = clBtnFace
+  Font.Color = clWindowText
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  LCLVersion = '1.9.0.0'
+  object Splitter1: TSplitter
+    Cursor = crVSplit
+    Left = 0
+    Height = 3
+    Top = 408
+    Width = 854
+    Align = alBottom
+    ResizeAnchor = akBottom
+  end
+  object Splitter2: TSplitter
+    Left = 185
+    Height = 408
+    Top = 0
+    Width = 5
+  end
+  object Panel1: TPanel
+    AnchorSideTop.Side = asrCenter
+    Left = 0
+    Height = 38
+    Top = 563
+    Width = 854
+    Align = alBottom
+    ClientHeight = 38
+    ClientWidth = 854
+    TabOrder = 0
+    object Button1: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 5
+      Height = 25
+      Top = 7
+      Width = 108
+      AutoSize = True
+      BorderSpacing.Left = 4
+      Caption = 'Open Template'
+      OnClick = Button1Click
+      TabOrder = 0
+    end
+    object Button2: TButton
+      AnchorSideLeft.Control = Button5
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 224
+      Height = 25
+      Top = 7
+      Width = 98
+      AutoSize = True
+      BorderSpacing.Left = 4
+      Caption = 'Load Data Set'
+      OnClick = Button2Click
+      TabOrder = 2
+    end
+    object Button3: TButton
+      AnchorSideLeft.Control = Button6
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 431
+      Height = 25
+      Top = 7
+      Width = 60
+      AutoSize = True
+      BorderSpacing.Left = 4
+      Caption = 'Merge'
+      OnClick = Button3Click
+      TabOrder = 4
+    end
+    object Panel5: TPanel
+      Left = 696
+      Height = 36
+      Top = 1
+      Width = 157
+      Align = alRight
+      ClientHeight = 36
+      ClientWidth = 157
+      TabOrder = 6
+      object SpeedButton1: TSpeedButton
+        AnchorSideTop.Control = Panel5
+        AnchorSideTop.Side = asrCenter
+        Left = 13
+        Height = 22
+        Top = 7
+        Width = 23
+        Glyph.Data = {
+          76010000424D7601000000000000760000002800000020000000100000000100
+          0400000000000001000000000000000000001000000010000000000000000000
+          800000800000008080008000000080008000808000007F7F7F00BFBFBF000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+          33333333333333333333EEEEEEEEEEEEEEE333FFFFFFFFFFFFF3E00000000000
+          00E337777777777777F3E0F77777777770E337F33333333337F3E0F333333333
+          70E337F33333333337F3E0F33333333370E337F3333F3FF337F3E0F333030033
+          70E337F3337F77F337F3E0F33003003370E337F3377F77F337F3E0F300030033
+          70E337F3777F77F337F3E0F33003003370E337F3377F77F337F3E0F333030033
+          70E337F33373773337F3E0F33333333370E337F33333333337F3E0F333333333
+          70E337F33333333337F3E0FFFFFFFFFFF0E337FFFFFFFFFFF7F3E00000000000
+          00E33777777777777733EEEEEEEEEEEEEEE33333333333333333
+        }
+        NumGlyphs = 2
+        OnClick = NavClick
+      end
+      object SpeedButton2: TSpeedButton
+        AnchorSideTop.Control = Panel5
+        AnchorSideTop.Side = asrCenter
+        Left = 49
+        Height = 22
+        Top = 7
+        Width = 23
+        Glyph.Data = {
+          76010000424D7601000000000000760000002800000020000000100000000100
+          0400000000000001000000000000000000001000000010000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+          33333333333333333333EEEEEEEEEEEEEEE333FFFFFFFFFFFFF3E00000000000
+          00E337777777777777F3E0F77777777770E337F33333333337F3E0F333333333
+          70E337F33333F33337F3E0F33333033370E337F3333FF73337F3E0F333300333
+          70E337F333FF773337F3E0F33300033370E337F33FF7773337F3E0F330000333
+          70E337F33377773337F3E0F33300033370E337F33337773337F3E0F333300333
+          70E337F33333773337F3E0F33333033370E337F33333373337F3E0F333333333
+          70E337F33333333337F3E0FFFFFFFFFFF0E337FFFFFFFFFFF7F3E00000000000
+          00E33777777777777733EEEEEEEEEEEEEEE33333333333333333
+        }
+        NumGlyphs = 2
+        OnClick = NavClick
+      end
+      object SpeedButton3: TSpeedButton
+        AnchorSideTop.Control = Panel5
+        AnchorSideTop.Side = asrCenter
+        Left = 85
+        Height = 22
+        Top = 7
+        Width = 23
+        Glyph.Data = {
+          76010000424D7601000000000000760000002800000020000000100000000100
+          0400000000000001000000000000000000001000000010000000000000000000
+          800000800000008080008000000080008000808000007F7F7F00BFBFBF000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+          33333333333333333333EEEEEEEEEEEEEEE333FFFFFFFFFFFFF3E00000000000
+          00E337777777777777F3E0F77777777770E337F33333333337F3E0F333333333
+          70E337F3333F333337F3E0F33303333370E337F3337FF33337F3E0F333003333
+          70E337F33377FF3337F3E0F33300033370E337F333777FF337F3E0F333000033
+          70E337F33377773337F3E0F33300033370E337F33377733337F3E0F333003333
+          70E337F33377333337F3E0F33303333370E337F33373333337F3E0F333333333
+          70E337F33333333337F3E0FFFFFFFFFFF0E337FFFFFFFFFFF7F3E00000000000
+          00E33777777777777733EEEEEEEEEEEEEEE33333333333333333
+        }
+        NumGlyphs = 2
+        OnClick = NavClick
+      end
+      object SpeedButton4: TSpeedButton
+        AnchorSideTop.Control = Panel5
+        AnchorSideTop.Side = asrCenter
+        Left = 121
+        Height = 22
+        Top = 7
+        Width = 23
+        Glyph.Data = {
+          76010000424D7601000000000000760000002800000020000000100000000100
+          0400000000000001000000000000000000001000000010000000000000000000
+          800000800000008080008000000080008000808000007F7F7F00BFBFBF000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+          33333333333333333333EEEEEEEEEEEEEEE333FFFFFFFFFFFFF3E00000000000
+          00E337777777777777F3E0F77777777770E337F33333333337F3E0F333333333
+          70E337F33333333337F3E0F33333333370E337F333FF3F3337F3E0F330030333
+          70E337F3377F7FF337F3E0F33003003370E337F3377F77FF37F3E0F330030003
+          70E337F3377F777337F3E0F33003003370E337F3377F773337F3E0F330030333
+          70E337F33773733337F3E0F33333333370E337F33333333337F3E0F333333333
+          70E337F33333333337F3E0FFFFFFFFFFF0E337FFFFFFFFFFF7F3E00000000000
+          00E33777777777777733EEEEEEEEEEEEEEE33333333333333333
+        }
+        NumGlyphs = 2
+        OnClick = NavClick
+      end
+    end
+    object Button4: TButton
+      AnchorSideLeft.Control = Button3
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 495
+      Height = 25
+      Top = 7
+      Width = 87
+      AutoSize = True
+      BorderSpacing.Left = 4
+      Caption = 'Save Merge'
+      OnClick = Button4Click
+      TabOrder = 5
+    end
+    object Button5: TButton
+      AnchorSideLeft.Control = Button1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 117
+      Height = 25
+      Top = 7
+      Width = 103
+      AutoSize = True
+      BorderSpacing.Left = 4
+      Caption = 'Save Template'
+      OnClick = Button5Click
+      TabOrder = 1
+    end
+    object Button6: TButton
+      AnchorSideLeft.Control = Button2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      Left = 326
+      Height = 25
+      Top = 7
+      Width = 101
+      AutoSize = True
+      BorderSpacing.Left = 4
+      Caption = 'Close Data Set'
+      OnClick = Button6Click
+      TabOrder = 3
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Height = 152
+    Top = 411
+    Width = 854
+    Align = alBottom
+    ClientHeight = 152
+    ClientWidth = 854
+    TabOrder = 3
+    object Memo1: TMemo
+      Left = 1
+      Height = 150
+      Top = 1
+      Width = 852
+      Align = alClient
+      OnDblClick = ClearMemo
+      ScrollBars = ssBoth
+      TabOrder = 0
+      WordWrap = False
+    end
+  end
+  object Panel3: TPanel
+    Left = 0
+    Height = 408
+    Top = 0
+    Width = 185
+    Align = alLeft
+    ClientHeight = 408
+    ClientWidth = 185
+    TabOrder = 1
+    object Memo2: TMemo
+      Left = 1
+      Height = 406
+      Top = 1
+      Width = 183
+      Align = alClient
+      OnDblClick = ClearMemo
+      ScrollBars = ssBoth
+      TabOrder = 0
+      WordWrap = False
+    end
+  end
+  object Panel4: TPanel
+    Left = 190
+    Height = 408
+    Top = 0
+    Width = 664
+    Align = alClient
+    ClientHeight = 408
+    ClientWidth = 664
+    TabOrder = 2
+    object Memo3: TMemo
+      Left = 1
+      Height = 406
+      Top = 1
+      Width = 662
+      Align = alClient
+      OnDblClick = ClearMemo
+      ScrollBars = ssBoth
+      TabOrder = 0
+      WordWrap = False
+    end
+  end
+  object OpenDialog1: TOpenDialog
+    DefaultExt = '.txt'
+    FileName = '*.txt'
+    Filter = 'Text Files (*.txt)|*.txt|dlg'
+    left = 504
+    top = 64
+  end
+  object OpenDialog2: TOpenDialog
+    Title = 'Open Schema File'
+    DefaultExt = '.sch'
+    FileName = '*.sch'
+    Filter = 'Schema Files (*.sch)|*.sch|All Files (*.*)|*.*'
+    InitialDir = 'c:\cache\Data'
+    left = 504
+    top = 120
+  end
+  object OpenDialog3: TOpenDialog
+    Title = 'Open CSV File'
+    DefaultExt = '.csv'
+    FileName = '*.csv'
+    Filter = 'CSV Files (*.csv)|*.csv|All Files (*.*)|*.*'
+    InitialDir = 'c:\cache\data'
+    left = 504
+    top = 176
+  end
+  object SaveDialog1: TSaveDialog
+    left = 504
+    top = 232
+  end
+  object SaveDialog2: TSaveDialog
+    left = 504
+    top = 288
+  end
+end

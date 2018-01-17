@@ -31,16 +31,16 @@
 
 //{$I StDefine.inc}
 
-{$R StReg.r32}
+{$R streg.r32}
 
 unit StReg;
 
 interface
 
 uses
-  Classes
+  Classes,
 {$IFDEF FPC}
-  ;//PropEdits //, LazarusPackageIntf //, FieldsEditor,  ComponentEditors
+  PropEdits //, LazarusPackageIntf //, FieldsEditor,  ComponentEditors
 {$ELSE}
  {$IFDEF VERSION6}
   DesignIntf,
@@ -49,6 +49,7 @@ uses
   DsgnIntfM
  {$ENDIF}
 {$ENDIF}
+  ;
 
 procedure Register;
 
@@ -149,14 +150,14 @@ uses
   StVenus,
   { new units in ver 4: }
   StIniStm,
-  (*
   StMerge,
+  (*
   StSystem,
+  *)
   StTxtDat,
   StDecMth,
-  *)
   StMoney,
-  StRandom
+  StRandom,
   (*
   StNTLog,
   { !!! StExpEng unit designed to handle problem with initialization }
@@ -165,12 +166,10 @@ uses
   {StExpEng,}
   StExpLog,
   StGenLog,
+  *)
   StPtrns,
-
-
   {^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^}
-  StPropEd
-  *);
+  StPropEd;
 
 procedure Register;
 begin
@@ -183,6 +182,7 @@ begin
                          TStVersionProperty);
   RegisterPropertyEditor(TypeInfo(string), TStPNBarCode, 'Version',
                          TStVersionProperty);
+                         *)
   RegisterPropertyEditor(TypeInfo(string), TStRegEx, 'InputFile',
                          TStGenericFileNameProperty);
   RegisterPropertyEditor(TypeInfo(string), TStRegEx, 'OutputFile',
@@ -191,6 +191,7 @@ begin
                          TStGenericFileNameProperty);
   RegisterPropertyEditor(TypeInfo(string), TStFileToHTML, 'OutFileName',
                          TStGenericFileNameProperty);
+  (*
   RegisterPropertyEditor(TypeInfo(string), TStVersionInfo, 'FileName',
                          TStFileNameProperty);
   RegisterPropertyEditor(TypeInfo(string), TStSpawnApplication, 'FileName',

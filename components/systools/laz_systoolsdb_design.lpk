@@ -11,7 +11,7 @@
       <SearchPaths>
         <IncludeFiles Value="source\design"/>
         <OtherUnitFiles Value="source\design"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Lazarus port of TurboPower SysTools database components - designtime package"/>
@@ -19,9 +19,9 @@
     <Version Major="4" Release="4"/>
     <Files Count="1">
       <Item1>
-        <Filename Value="source\design\StRegDb.pas"/>
+        <Filename Value="source\design\stregdb.pas"/>
         <HasRegisterProc Value="True"/>
-        <AddToUsesPkgSection Value="False"/>
+        <UnitName Value="StRegDb"/>
       </Item1>
     </Files>
     <RequiredPkgs Count="3">
