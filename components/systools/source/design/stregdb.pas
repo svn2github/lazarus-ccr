@@ -34,7 +34,8 @@
 {$ENDIF}
 //{$I StDefine.inc}
 
-{$R stregdb.r32}
+//{$R stregdb.r32}
+{$R stregdb.res}
 
 unit StRegDb;
 

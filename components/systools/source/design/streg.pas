@@ -31,7 +31,8 @@
 
 //{$I StDefine.inc}
 
-{$R streg.r32}
+//{$R streg.r32}
+{$R streg.res}
 
 unit StReg;
 

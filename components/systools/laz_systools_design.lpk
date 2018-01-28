@@ -16,7 +16,7 @@
     </CompilerOptions>
     <Description Value="Lazarus port of TurboPower SysTools (Delphi version at https://sourceforge.net/projects/tpsystools/) - designtime package.
 
-SysTools is a library of utility routines and classes which  includes 1-D and 2-D bar codes, sorting, money routines, logging, high-precision math, a run-time math expression analyzer, data containers, and much more."/>
+SysTools is a library of utility routines and classes which  includes 1-D and 2-D bar codes, sorting, money routines, high-precision math, astronomical procedures, a run-time math expression analyzer, data containers, and much more."/>
     <License Value="MPL-1.1"/>
     <Version Major="4" Release="4"/>
     <Files Count="2">

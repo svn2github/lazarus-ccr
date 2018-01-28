@@ -1,78 +1,79 @@
+================================================================================
 TurboPower SysTools
-
+================================================================================
 
 Table of contents
+-----------------
 
 1.  Introduction
 2.  Package names
 3.  Installation
-4.  Version history
-4.1   Release 4.03
 
-==============================================
 
+================================================================================
 
 1. Introduction
+---------------
+
+SysTools is a library of utility routines and classes initially for Borland
+Delphi and C++Builder. It was extended to support also Lazarus and FPC.
+It includes 1-D and 2-D bar codes, sorting, money routines, logging, 
+high-precision math, run-time math expression analyzer, and much more.
+
+This is a source-only release of TurboPower SysTools for Lazarus only. 
 
 
-SysTools is a library of utility routines & classes for Borland
-Delphi, C++Builder, & environments that support COM. It includes 1-D &
-2-D bar codes, sorting, money routines, logging, high-precision math,
-a run-time math expression analyzer, & much more.
-
-This is a source-only release of TurboPower SysTools. It includes
-designtime and runtime packages for Delphi 3 through 7 and C++Builder
-3 through 6.
-
-==============================================
+================================================================================
 
 2. Package names
+----------------
 
+laz_systools.lpk is the runtime package with all standard routines and 
+classes which work in a platform independent way.
 
-TurboPower SysTools package names have the following form:
+laz_systools_design.lpk is the corresponding designtime package.
 
-  SNNN_KVV.*
-   |   ||
-   |   |+------ VV  VCL version (30=Delphi 3, 40=Delphi 4, 70=Delphi 7)
-   |   +------- K   Kind of package (R=runtime, D=designtime)
-   |
-   +----------- NNN Product version number (e.g., 403=version 4.03)
+laz_systoolsdb.lpk is the runtime package with the data-aware barcode 
+components.
+laz_systoolsdb_design.lpk is the related designtime package.
 
+laz_systoolswin.lpk is the runtime package with all routines and classes which
+could not be converted to become cross-platform and therefore work only 
+under Windows.
+laz_systoolswin_design.lpk is the related designtime package.
 
-For example, the SysTools designtime package files for Delphi 7 have
-the filename S403_D70.*.
 
 ==============================================
 
 3. Installation
-
+---------------
 
 To install TurboPower SysTools into your IDE, take the following
 steps:
 
   1. Unzip the release files into a directory (e.g., d:\systools).
 
-  2. Start Delphi or C++Builder.
+  2. Start Lazarus.
 
-  3. Add the source subdirectory (e.g., d:\systools\source) to the
-     IDE's library path.
-
-  4. Open & install the designtime package specific to the IDE being
-     used. The IDE should notify you the components have been
-     installed.
-
-  5. Make sure the PATH environmental variable contains the directory
-     in which the compiled packages (i.e., BPL or DPL files) were
-     placed.
-
-==============================================
-
-4. Version history
-
-
-4.1 Release 4.03
-
-    Bug fixes
-    -------------------------------------------------------------
-    - Range error in TimeToTimeStringPrim Routine
-    - Added empty string case handling to TrimLeadS
+  3. Select the menu command "Package" > "Open package file (*.lpk)"
+  
+  4. Navigate to the folder into which the release files were unzipped
+     and open laz_systools.lpk. Compile it.
+     
+  5. Open laz_systools_design.lpk. Compile it. Then click "Use" > "Install".
+     Do not rebuild the IDE here.
+     
+  6. Repeat steps 4 and 5 with the packages laz_systoolsdb.lpk and
+     laz_systoolsdb_design.lpk.
+     
+  7. Repeat steps 4 and 5 with the packages laz_systoolswin.lpk and
+     laz_systoolswin_design.lpk.
+     
+  8. In each case, always COMPILE the runtime package and "USE" > "INSTALL"
+     the designtime package (the one with "_design" appended).
+     
+  9. After the last designtime package, confirm to rebuild the IDE.
+  
+ 10. After some time, Lazarus restarts. You find the new components in the 
+     palette "systools".
+     
