@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectGroup FileVersion="1">
+    <Targets Count="6">
+      <Target0 FileName="laz_systools.lpk"/>
+      <Target1 FileName="laz_systools_design.lpk"/>
+      <Target2 FileName="laz_systoolsdb.lpk"/>
+      <Target3 FileName="laz_systoolsdb_design.lpk"/>
+      <Target4 FileName="laz_systoolswin.lpk"/>
+      <Target5 FileName="laz_systoolswin_design.lpk"/>
+    </Targets>
+  </ProjectGroup>
+</CONFIG>

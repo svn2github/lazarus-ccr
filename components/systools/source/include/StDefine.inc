@@ -47,7 +47,7 @@
 {$J+} {Writeable Typed Constants}
 {$ENDIF LINUX}
 
-{$DEFINE ThreadSafe}
+{.$DEFINE ThreadSafe}
 { This define determines whether SysTools operations are safe in a 32-bit   }
 { multi-threaded application. Leaving it undefined will improved performance}
 { slightly in a single-threaded 32-bit application.                         }

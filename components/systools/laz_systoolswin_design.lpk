@@ -14,7 +14,8 @@
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\design\win"/>
       </SearchPaths>
     </CompilerOptions>
-    <Description Value="Lazarus port of TurboPower SysTools: Windows-only units, designtime-package"/>
+    <Description Value="Lazarus port of TurboPower SysTools: Windows-only units, designtime-package
+The systoolswin package contains windows-only routines and classes. "/>
     <License Value="MPL 1.1"/>
     <Version Major="4" Release="4"/>
     <Files Count="1">

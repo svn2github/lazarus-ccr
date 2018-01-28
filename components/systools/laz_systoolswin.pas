@@ -8,8 +8,7 @@ unit laz_systoolswin;
 interface
 
 uses
-  StSystem, StText, StVInfo, StSort, StSpawn, StRegIni, StWmDCpy, StGenLog, 
-  StNTLog;
+  StSystem, StVInfo, StSort, StSpawn, StRegIni, StWmDCpy, StGenLog, StNTLog;
 
 implementation
 

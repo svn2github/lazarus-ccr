@@ -35,6 +35,8 @@
  {$mode DELPHI}
 {$ENDIF}
 
+{$I stdefine.inc}
+
 unit StBase;
 
 interface
