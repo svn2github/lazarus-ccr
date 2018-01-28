@@ -14,7 +14,8 @@ uses
   StAstro, StEclpse, StList, StMerc, StAstroP, StVenus, StMars, StJup, 
   StSaturn, StUranus, StNeptun, StPluto, StJupsat, StBits, StColl, StDQue, 
   StVArr, StPQueue, StTree, StNVCont, StNVTree, StNVBits, StNVColl, StNVDict, 
-  StNVDQ, StNVLAry, StNVList, StNVLMat, StNVSCol, StPtrns, StMerge, StTxtDat;
+  StNVDQ, StNVLAry, StNVList, StNVLMat, StNVSCol, StPtrns, StMerge, StTxtDat, 
+  StText;
 
 implementation
 

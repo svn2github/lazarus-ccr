@@ -1,0 +1,127 @@
+object STDlg: TSTDlg
+  Left = 254
+  Height = 274
+  Top = 164
+  Width = 428
+  ActiveControl = LoadBtn
+  Caption = 'StText Example'
+  ClientHeight = 274
+  ClientWidth = 428
+  Color = clBtnFace
+  Font.Color = clBlack
+  OnClose = FormClose
+  OnCreate = FormCreate
+  LCLVersion = '1.9.0.0'
+  object Label1: TLabel
+    Left = 6
+    Height = 15
+    Top = 16
+    Width = 32
+    Caption = 'Name'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 208
+    Height = 15
+    Top = 16
+    Width = 23
+    Caption = 'Size:'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    Left = 320
+    Height = 15
+    Top = 16
+    Width = 44
+    Caption = 'Cur. Pos'
+    ParentColor = False
+  end
+  object Memo1: TMemo
+    Left = 90
+    Height = 217
+    Top = 48
+    Width = 329
+    HideSelection = False
+    OnKeyUp = Memo1KeyUp
+    OnMouseUp = Memo1MouseUp
+    ReadOnly = True
+    ScrollBars = ssVertical
+    TabOrder = 8
+    TabStop = False
+  end
+  object LoadBtn: TButton
+    Left = 8
+    Height = 33
+    Top = 48
+    Width = 75
+    Caption = 'Load'
+    Default = True
+    OnClick = LoadBtnClick
+    TabOrder = 0
+  end
+  object SeekBtn: TButton
+    Left = 8
+    Height = 33
+    Top = 170
+    Width = 75
+    Caption = 'Seek'
+    OnClick = SeekBtnClick
+    TabOrder = 3
+  end
+  object FlushBtn: TButton
+    Left = 8
+    Height = 33
+    Top = 232
+    Width = 75
+    Caption = 'Flush'
+    OnClick = FlushBtnClick
+    TabOrder = 4
+  end
+  object Edit1: TEdit
+    Left = 40
+    Height = 23
+    Top = 12
+    Width = 159
+    ReadOnly = True
+    TabOrder = 5
+  end
+  object Edit2: TEdit
+    Left = 236
+    Height = 23
+    Top = 12
+    Width = 53
+    ReadOnly = True
+    TabOrder = 6
+  end
+  object Edit3: TEdit
+    Left = 366
+    Height = 23
+    Top = 12
+    Width = 53
+    ReadOnly = True
+    TabOrder = 7
+  end
+  object Edit4: TEdit
+    Left = 14
+    Height = 23
+    Top = 136
+    Width = 65
+    TabOrder = 2
+  end
+  object CloseFBtn: TButton
+    Left = 8
+    Height = 33
+    Top = 90
+    Width = 75
+    Caption = 'Close File'
+    OnClick = CloseFBtnClick
+    TabOrder = 1
+  end
+  object OD1: TOpenDialog
+    DefaultExt = '.TXT'
+    Filter = '*.txt (Text files)|*.txt|*.* (All files)|*.*'
+    Options = [ofOverwritePrompt]
+    left = 152
+    top = 86
+  end
+end
