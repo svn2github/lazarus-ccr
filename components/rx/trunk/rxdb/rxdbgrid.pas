@@ -6955,6 +6955,7 @@ end;
 destructor TRxDBGrid.Destroy;
 begin
   CleanDSEvent;
+  FreeAndNil(FFilterSimpleEdit);
   FreeAndNil(FFooterOptions);
   FreeAndNil(FRxDbGridLookupComboEditor);
   FreeAndNil(FRxDbGridDateEditor);
