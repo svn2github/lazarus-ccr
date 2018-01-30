@@ -14,7 +14,7 @@
     </CompilerOptions>
     <Description Value="Provides barcode 1D and 2D generation based in the 'C' zint library."/>
     <License Value="GNU General Public License version 3.0 (GPLv3)"/>
-    <Version Major="1"/>
+    <Version Major="1" Release="1"/>
     <Files Count="9">
       <Item1>
         <Filename Value="..\src\zint.pp"/>

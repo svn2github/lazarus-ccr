@@ -2054,11 +2054,7 @@ begin
     begin
       Brush.Color := clWhite;
       FillRect(Rect(0, 0, Images.Width, Images.Height));
-     {$IFDEF MSWINDOWS}
-      ImageList_Draw(Images.Handle, Index, Handle, 0, 0, ILD_MASK);
-     {$ELSE}
-      Images.GetBitmap(Index, Bmp, gdeDisabled);    // to do: test this
-     {$ENDIF}
+      Images.GetBitmap(Index, Bmp, gdeDisabled);
     end;
     Bmp.Monochrome := True;
     if DrawHighlight then
