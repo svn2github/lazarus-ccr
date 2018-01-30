@@ -222,13 +222,13 @@ begin
 // new in SysTools 4
      TStPDF417Barcode,
      TStMaxiCodeBarcode
-     {
+(*
      TStGeneralLog,
-{.$IFNDEF BCB} {!!! problem with initialization section in BCB }
+  {.$IFNDEF BCB}     // !!! problem with initialization section in BCB
      TStExceptionLog,
-{.$ENDIF}
+  {.$ENDIF}
      TStNTEventLog
-     }
+*)
      ]);
 
   {non-visual container class components}

@@ -8,9 +8,9 @@
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <IncludeFiles Value="source\include;source\run"/>
-        <OtherUnitFiles Value="source\run"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\run"/>
+        <IncludeFiles Value="source\include;source\general\run"/>
+        <OtherUnitFiles Value="source\general\run"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\general\run"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Lazarus port of TurboPower SysTools (Delphi version at https://sourceforge.net/projects/tpsystools/) - runtime package
@@ -20,23 +20,23 @@ SysTools is a library of utility routines and classes which  includes 1-D and 2-
     <Version Major="4" Release="4"/>
     <Files Count="60">
       <Item1>
-        <Filename Value="source\run\stbarc.pas"/>
+        <Filename Value="source\general\run\stbarc.pas"/>
         <UnitName Value="StBarC"/>
       </Item1>
       <Item2>
-        <Filename Value="source\run\stbase.pas"/>
+        <Filename Value="source\general\run\stbase.pas"/>
         <UnitName Value="StBase"/>
       </Item2>
       <Item3>
-        <Filename Value="source\run\stconst.pas"/>
+        <Filename Value="source\general\run\stconst.pas"/>
         <UnitName Value="StConst"/>
       </Item3>
       <Item4>
-        <Filename Value="source\run\stbarpn.pas"/>
+        <Filename Value="source\general\run\stbarpn.pas"/>
         <UnitName Value="StBarPN"/>
       </Item4>
       <Item5>
-        <Filename Value="source\run\ststrl.pas"/>
+        <Filename Value="source\general\run\ststrl.pas"/>
         <UnitName Value="StStrL"/>
       </Item5>
       <Item6>
@@ -44,219 +44,219 @@ SysTools is a library of utility routines and classes which  includes 1-D and 2-
         <Type Value="Include"/>
       </Item6>
       <Item7>
-        <Filename Value="source\run\st2dbarc.pas"/>
+        <Filename Value="source\general\run\st2dbarc.pas"/>
         <UnitName Value="St2DBarC"/>
       </Item7>
       <Item8>
-        <Filename Value="source\run\stdate.pas"/>
+        <Filename Value="source\general\run\stdate.pas"/>
         <UnitName Value="StDate"/>
       </Item8>
       <Item9>
-        <Filename Value="source\run\stutils.pas"/>
+        <Filename Value="source\general\run\stutils.pas"/>
         <UnitName Value="StUtils"/>
       </Item9>
       <Item10>
-        <Filename Value="source\run\stcrc.pas"/>
+        <Filename Value="source\general\run\stcrc.pas"/>
         <UnitName Value="StCRC"/>
       </Item10>
       <Item11>
-        <Filename Value="source\run\sthash.pas"/>
+        <Filename Value="source\general\run\sthash.pas"/>
         <UnitName Value="StHASH"/>
       </Item11>
       <Item12>
-        <Filename Value="source\run\sttohtml.pas"/>
+        <Filename Value="source\general\run\sttohtml.pas"/>
         <UnitName Value="StToHTML"/>
       </Item12>
       <Item13>
-        <Filename Value="source\run\ststrms.pas"/>
+        <Filename Value="source\general\run\ststrms.pas"/>
         <UnitName Value="StStrms"/>
       </Item13>
       <Item14>
-        <Filename Value="source\run\stdict.pas"/>
+        <Filename Value="source\general\run\stdict.pas"/>
         <UnitName Value="StDict"/>
       </Item14>
       <Item15>
-        <Filename Value="source\run\stinistm.pas"/>
+        <Filename Value="source\general\run\stinistm.pas"/>
         <UnitName Value="StIniStm"/>
       </Item15>
       <Item16>
-        <Filename Value="source\run\stdecmth.pas"/>
+        <Filename Value="source\general\run\stdecmth.pas"/>
         <UnitName Value="StDecMth"/>
       </Item16>
       <Item17>
-        <Filename Value="source\run\stexpr.pas"/>
+        <Filename Value="source\general\run\stexpr.pas"/>
         <UnitName Value="StExpr"/>
       </Item17>
       <Item18>
-        <Filename Value="source\run\stmath.pas"/>
+        <Filename Value="source\general\run\stmath.pas"/>
         <UnitName Value="StMath"/>
       </Item18>
       <Item19>
-        <Filename Value="source\run\stfin.pas"/>
+        <Filename Value="source\general\run\stfin.pas"/>
         <UnitName Value="StFIN"/>
       </Item19>
       <Item20>
-        <Filename Value="source\run\stdatest.pas"/>
+        <Filename Value="source\general\run\stdatest.pas"/>
         <UnitName Value="StDateSt"/>
       </Item20>
       <Item21>
-        <Filename Value="source\run\stmoney.pas"/>
+        <Filename Value="source\general\run\stmoney.pas"/>
         <UnitName Value="StMoney"/>
       </Item21>
       <Item22>
-        <Filename Value="source\run\strandom.pas"/>
+        <Filename Value="source\general\run\strandom.pas"/>
         <UnitName Value="StRandom"/>
       </Item22>
       <Item23>
-        <Filename Value="source\run\ststat.pas"/>
+        <Filename Value="source\general\run\ststat.pas"/>
         <UnitName Value="StStat"/>
       </Item23>
       <Item24>
-        <Filename Value="source\run\stlarr.pas"/>
+        <Filename Value="source\general\run\stlarr.pas"/>
         <UnitName Value="StLArr"/>
       </Item24>
       <Item25>
-        <Filename Value="source\run\stbcd.pas"/>
+        <Filename Value="source\general\run\stbcd.pas"/>
         <UnitName Value="StBCD"/>
       </Item25>
       <Item26>
-        <Filename Value="source\run\stregex.pas"/>
+        <Filename Value="source\general\run\stregex.pas"/>
         <UnitName Value="StRegEx"/>
       </Item26>
       <Item27>
-        <Filename Value="source\run\ststrs.pas"/>
+        <Filename Value="source\general\run\ststrs.pas"/>
         <UnitName Value="StStrS"/>
       </Item27>
       <Item28>
-        <Filename Value="source\run\stastro.pas"/>
+        <Filename Value="source\general\run\stastro.pas"/>
         <UnitName Value="StAstro"/>
       </Item28>
       <Item29>
-        <Filename Value="source\run\steclpse.pas"/>
+        <Filename Value="source\general\run\steclpse.pas"/>
         <UnitName Value="StEclpse"/>
       </Item29>
       <Item30>
-        <Filename Value="source\run\stlist.pas"/>
+        <Filename Value="source\general\run\stlist.pas"/>
         <UnitName Value="StList"/>
       </Item30>
       <Item31>
-        <Filename Value="source\run\stmerc.pas"/>
+        <Filename Value="source\general\run\stmerc.pas"/>
         <UnitName Value="StMerc"/>
       </Item31>
       <Item32>
-        <Filename Value="source\run\stastrop.pas"/>
+        <Filename Value="source\general\run\stastrop.pas"/>
         <UnitName Value="StAstroP"/>
       </Item32>
       <Item33>
-        <Filename Value="source\run\stvenus.pas"/>
+        <Filename Value="source\general\run\stvenus.pas"/>
         <UnitName Value="StVenus"/>
       </Item33>
       <Item34>
-        <Filename Value="source\run\stmars.pas"/>
+        <Filename Value="source\general\run\stmars.pas"/>
         <UnitName Value="StMars"/>
       </Item34>
       <Item35>
-        <Filename Value="source\run\stjup.pas"/>
+        <Filename Value="source\general\run\stjup.pas"/>
         <UnitName Value="StJup"/>
       </Item35>
       <Item36>
-        <Filename Value="source\run\stsaturn.pas"/>
+        <Filename Value="source\general\run\stsaturn.pas"/>
         <UnitName Value="StSaturn"/>
       </Item36>
       <Item37>
-        <Filename Value="source\run\sturanus.pas"/>
+        <Filename Value="source\general\run\sturanus.pas"/>
         <UnitName Value="StUranus"/>
       </Item37>
       <Item38>
-        <Filename Value="source\run\stneptun.pas"/>
+        <Filename Value="source\general\run\stneptun.pas"/>
         <UnitName Value="StNeptun"/>
       </Item38>
       <Item39>
-        <Filename Value="source\run\stpluto.pas"/>
+        <Filename Value="source\general\run\stpluto.pas"/>
         <UnitName Value="StPluto"/>
       </Item39>
       <Item40>
-        <Filename Value="source\run\stjupsat.pas"/>
+        <Filename Value="source\general\run\stjupsat.pas"/>
         <UnitName Value="StJupsat"/>
       </Item40>
       <Item41>
-        <Filename Value="source\run\stbits.pas"/>
+        <Filename Value="source\general\run\stbits.pas"/>
         <UnitName Value="StBits"/>
       </Item41>
       <Item42>
-        <Filename Value="source\run\stcoll.pas"/>
+        <Filename Value="source\general\run\stcoll.pas"/>
         <UnitName Value="StColl"/>
       </Item42>
       <Item43>
-        <Filename Value="source\run\stdque.pas"/>
+        <Filename Value="source\general\run\stdque.pas"/>
         <UnitName Value="StDQue"/>
       </Item43>
       <Item44>
-        <Filename Value="source\run\stvarr.pas"/>
+        <Filename Value="source\general\run\stvarr.pas"/>
         <UnitName Value="StVArr"/>
       </Item44>
       <Item45>
-        <Filename Value="source\run\stpqueue.pas"/>
+        <Filename Value="source\general\run\stpqueue.pas"/>
         <UnitName Value="StPQueue"/>
       </Item45>
       <Item46>
-        <Filename Value="source\run\sttree.pas"/>
+        <Filename Value="source\general\run\sttree.pas"/>
         <UnitName Value="StTree"/>
       </Item46>
       <Item47>
-        <Filename Value="source\run\stnvcont.pas"/>
+        <Filename Value="source\general\run\stnvcont.pas"/>
         <UnitName Value="StNVCont"/>
       </Item47>
       <Item48>
-        <Filename Value="source\run\stnvtree.pas"/>
+        <Filename Value="source\general\run\stnvtree.pas"/>
         <UnitName Value="StNVTree"/>
       </Item48>
       <Item49>
-        <Filename Value="source\run\stnvbits.pas"/>
+        <Filename Value="source\general\run\stnvbits.pas"/>
         <UnitName Value="StNVBits"/>
       </Item49>
       <Item50>
-        <Filename Value="source\run\stnvcoll.pas"/>
+        <Filename Value="source\general\run\stnvcoll.pas"/>
         <UnitName Value="StNVColl"/>
       </Item50>
       <Item51>
-        <Filename Value="source\run\stnvdict.pas"/>
+        <Filename Value="source\general\run\stnvdict.pas"/>
         <UnitName Value="StNVDict"/>
       </Item51>
       <Item52>
-        <Filename Value="source\run\stnvdq.pas"/>
+        <Filename Value="source\general\run\stnvdq.pas"/>
         <UnitName Value="StNVDQ"/>
       </Item52>
       <Item53>
-        <Filename Value="source\run\stnvlary.pas"/>
+        <Filename Value="source\general\run\stnvlary.pas"/>
         <UnitName Value="StNVLAry"/>
       </Item53>
       <Item54>
-        <Filename Value="source\run\stnvlist.pas"/>
+        <Filename Value="source\general\run\stnvlist.pas"/>
         <UnitName Value="StNVList"/>
       </Item54>
       <Item55>
-        <Filename Value="source\run\stnvlmat.pas"/>
+        <Filename Value="source\general\run\stnvlmat.pas"/>
         <UnitName Value="StNVLMat"/>
       </Item55>
       <Item56>
-        <Filename Value="source\run\stnvscol.pas"/>
+        <Filename Value="source\general\run\stnvscol.pas"/>
         <UnitName Value="StNVSCol"/>
       </Item56>
       <Item57>
-        <Filename Value="source\run\stptrns.pas"/>
+        <Filename Value="source\general\run\stptrns.pas"/>
         <UnitName Value="StPtrns"/>
       </Item57>
       <Item58>
-        <Filename Value="source\run\stmerge.pas"/>
+        <Filename Value="source\general\run\stmerge.pas"/>
         <UnitName Value="StMerge"/>
       </Item58>
       <Item59>
-        <Filename Value="source\run\sttxtdat.pas"/>
+        <Filename Value="source\general\run\sttxtdat.pas"/>
         <UnitName Value="StTxtDat"/>
       </Item59>
       <Item60>
-        <Filename Value="source\run\sttext.pas"/>
+        <Filename Value="source\general\run\sttext.pas"/>
         <UnitName Value="StText"/>
       </Item60>
     </Files>

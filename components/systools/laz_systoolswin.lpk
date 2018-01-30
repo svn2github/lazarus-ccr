@@ -10,7 +10,7 @@
       <SearchPaths>
         <IncludeFiles Value="source\include"/>
         <OtherUnitFiles Value="source\windows_only\run"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\run\win"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\win\run"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Lazarus port of TurboPower SysTools, Windows-only units - runtime package

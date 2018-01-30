@@ -31,7 +31,7 @@
 
 //{$I StDefine.inc}
 
-//{$R streg.r32}
+{$R stregwin.res}
 
 unit StRegWin;
 
@@ -40,7 +40,7 @@ interface
 uses
   Classes,
 {$IFDEF FPC}
-  PropEdits //, LazarusPackageIntf //, FieldsEditor,  ComponentEditors
+  PropEdits
 {$ELSE}
  {$IFDEF VERSION6}
   DesignIntf,

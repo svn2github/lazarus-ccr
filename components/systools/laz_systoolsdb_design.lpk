@@ -10,8 +10,8 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <IncludeFiles Value="source\include"/>
-        <OtherUnitFiles Value="source\design"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\design\db"/>
+        <OtherUnitFiles Value="source\db\design"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\db\design"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Lazarus port of TurboPower SysTools database components - designtime package
@@ -20,7 +20,7 @@ The package systoolsdb contains data-aware barcode components."/>
     <Version Major="4" Release="4"/>
     <Files Count="1">
       <Item1>
-        <Filename Value="source\design\stregdb.pas"/>
+        <Filename Value="source\db\design\stregdb.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="StRegDb"/>
       </Item1>
@@ -31,6 +31,7 @@ The package systoolsdb contains data-aware barcode components."/>
       </Item1>
       <Item2>
         <PackageName Value="laz_systoolsdb"/>
+        <MaxVersion Major="4" Release="4"/>
       </Item2>
       <Item3>
         <PackageName Value="FCL"/>

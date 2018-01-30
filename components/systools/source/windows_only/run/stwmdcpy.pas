@@ -117,9 +117,9 @@ begin
       Exit;
     if Value then begin
       PrevWndProc:= Pointer(
-        SetWindowLong(TForm(Owner).Handle, GWL_WNDPROC, LongInt(NewWndProc)))
+        SetWindowLong(TForm(Owner).Handle, GWL_WNDPROC, PtrInt(NewWndProc)))
     end else if Assigned(PrevWndProc) then begin
-      SetWindowLong(TForm(Owner).Handle, GWL_WNDPROC, LongInt(PrevWndProc));
+      SetWindowLong(TForm(Owner).Handle, GWL_WNDPROC, PtrInt(PrevWndProc));
       PrevWndProc := nil;
     end;
   end;
@@ -131,7 +131,7 @@ var
 begin
   with Msg do begin
     if (Msg = WM_COPYDATA) then begin
-      CDS := PCopyDataStruct(Pointer(lParam))^;
+      CDS := PCopyDataStruct(Pointer(PtrInt(lParam)))^;
       if (CDS.dwData = WMCOPYID) then begin
         if (Assigned(FOnDataReceived)) then
           FOnDataReceived(Self, CDS);

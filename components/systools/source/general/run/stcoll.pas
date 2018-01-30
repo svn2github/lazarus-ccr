@@ -254,14 +254,14 @@ function AssignData(Container : TStContainer;
 constructor TPageDescriptor.Create(AData : Pointer);
 begin
   inherited Create(AData);
-  GetMem(pdPage, LongInt(Data)*SizeOf(Pointer));
-  FillChar(pdPage^, LongInt(Data)*SizeOf(Pointer), 0);
+  GetMem(pdPage, PtrInt(Data)*SizeOf(Pointer));
+  FillChar(pdPage^, PtrInt(Data)*SizeOf(Pointer), 0);
 end;
 
 destructor TPageDescriptor.Destroy;
 begin
   if Assigned(pdPage) then
-    FreeMem(pdPage, LongInt(Data)*SizeOf(Pointer));
+    FreeMem(pdPage, PtrInt(Data)*SizeOf(Pointer));
   inherited Destroy;
 end;
 
@@ -438,7 +438,7 @@ begin
           Inc(N.pdCount, NC);
         end else begin
           {insert on a new page before this one}
-          N := TPageDescriptor(colPageList.PlaceBefore(Pointer(colPageElements), N));
+          N := TPageDescriptor(colPageList.PlaceBefore(Pointer(PtrInt(colPageElements)), N));
           N.pdCount := 1;
         end;
         N.pdStart := Index;
@@ -455,7 +455,7 @@ begin
     end;
 
     {should be inserted after all existing pages}
-    N := TPageDescriptor(colPageList.Append(Pointer(colPageElements)));
+    N := TPageDescriptor(colPageList.Append(Pointer(PtrInt(colPageElements))));
     N.pdStart := Index;
     N.pdCount := 1;
     N.pdPage^[0] := Data;
@@ -484,7 +484,7 @@ begin
       if T.pdCount >= colPageElements then begin
         {last page is full, add another}
         Start := T.pdStart+colPageElements;
-        T := TPageDescriptor(colPageList.Append(Pointer(colPageElements)));
+        T := TPageDescriptor(colPageList.Append(Pointer(PtrInt(colPageElements))));
         T.pdStart := Start;
         {T.pdCount := 0;}
       end;
@@ -500,7 +500,7 @@ begin
         Start := N.pdStart;
         if Index < Start then begin
           {element has not been set before}
-          N := TPageDescriptor(colPageList.PlaceBefore(Pointer(colPageElements), N));
+          N := TPageDescriptor(colPageList.PlaceBefore(Pointer(PtrInt(colPageElements)), N));
           N.pdStart := Index;
           N.pdCount := 1;
           N.pdPage^[0] := Data;
@@ -528,7 +528,7 @@ begin
         Start := N.pdStart;
         if (Index >= Start+N.pdCount) then begin
           {element has not been set before}
-          N := TPageDescriptor(colPageList.PlaceBefore(Pointer(colPageElements), N));
+          N := TPageDescriptor(colPageList.PlaceBefore(Pointer(PtrInt(colPageElements)), N));
           N.pdStart := Index;
           N.pdCount := 1;
           N.pdPage^[0] := Data;
@@ -545,7 +545,7 @@ begin
     end;
 
     {an element after all existing ones}
-    N := TPageDescriptor(colPageList.Append(Pointer(colPageElements)));
+    N := TPageDescriptor(colPageList.Append(Pointer(PtrInt(colPageElements))));
     colCachePage := N;
     N.pdStart := Index;
     N.pdCount := 1;
@@ -628,7 +628,7 @@ begin
   with N do
     if pdCount >= colPageElements then begin
       {page is full, add another}
-      P := TPageDescriptor(colPageList.Place(Pointer(colPageElements), N));
+      P := TPageDescriptor(colPageList.Place(Pointer(PtrInt(colPageElements)), N));
       {new page starts with element after the new one}
       P.pdStart := pdStart+PageIndex+1;
       PC := colPageElements-PageIndex;
@@ -737,7 +737,7 @@ begin
   colPageElements := PageElements;
 
   {start with one empty page}
-  colPageList.Append(Pointer(colPageElements));
+  colPageList.Append(Pointer(PtrInt(colPageElements)));
   colCachePage := TPageDescriptor(colPageList.Head);
 end;
 
@@ -807,7 +807,7 @@ begin
     if N.pdCount >= colPageElements then begin
       {last page is full, add another}
       Start := N.pdStart+colPageElements;
-      N := TPageDescriptor(colPageList.Append(Pointer(colPageElements)));
+      N := TPageDescriptor(colPageList.Append(Pointer(PtrInt(colPageElements))));
       N.pdStart := Start;
       {N.pdCount := 0;}
     end;
@@ -931,7 +931,7 @@ begin
           begin
             colPageList.Clear;
             colPageElements := PageElements;
-            colPageList.Append(Pointer(colPageElements));
+            colPageList.Append(Pointer(PtrInt(colPageElements)));
             colCachePage := TPageDescriptor(colPageList.Head);
           end;
         ReadListBegin;
@@ -1162,7 +1162,7 @@ begin
           begin
             colPageList.Clear;
             colPageElements := PageElements;
-            colPageList.Append(Pointer(colPageElements));
+            colPageList.Append(Pointer(PtrInt(colPageElements)));
             colCachePage := TPageDescriptor(colPageList.Head);
           end;
       FDuplicates := ReadBoolean;

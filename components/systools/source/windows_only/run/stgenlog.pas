@@ -254,7 +254,7 @@ begin
   FLogFileHeader := StLogFileHeader;
   HighLevel := StDefHighLevel;
   glHighLevelTriggered := False;
-  glTimeBase := GetTickCount;
+  glTimeBase := GetTickCount64;
 end;
 
 destructor TStGeneralLog.Destroy;
@@ -309,7 +309,7 @@ begin
     { Bail if we're not logging }
     if not Enabled then Exit;
 
-    TimeMrk := GetTickCount;
+    TimeMrk := GetTickCount64;
 
     { Determine size needed }
     SizeReq := SizeOf(TStLogRec);
@@ -495,7 +495,7 @@ begin
 
         { Copy second half }
         Move(glBuffer[0], glTempBuffer[ChunkSize], (LogRec.lrData4 - ChunkSize));
-        LogRec.lrData3 := DWORD(@glTempBuffer[0]);
+        LogRec.lrData3 := DWORD(PtrInt((@glTempBuffer[0])));
         glBufferHead := LogRec.lrData4 - ChunkSize;
       end;
     end

@@ -1,0 +1,5 @@
+tstgenerallog.png
+tstnteventlog.png
+tstspawnapplication.png
+tstversioninfo.png
+tstwmdatacopy.png

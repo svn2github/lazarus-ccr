@@ -11,7 +11,7 @@
       <SearchPaths>
         <IncludeFiles Value="source\include"/>
         <OtherUnitFiles Value="source\windows_only\design"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\design\win"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\win\design"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Lazarus port of TurboPower SysTools: Windows-only units, designtime-package

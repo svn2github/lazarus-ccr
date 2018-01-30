@@ -5,12 +5,10 @@ tstexceptionlog.png
 tstexpression.png
 tstexpressionedit.png
 tstfiletohtml.png
-tstgenerallog.png
 tstmaxicodebarcode.png
 tstnetconnection.png
 tstnetmessage.png
 tstnetperformance.png
-tstnteventlog.png
 tstnvbits.png
 tstnvcollection.png
 tstnvdictionary.png
@@ -23,6 +21,3 @@ tstnvtree.png
 tstpdf417barcode.png
 tstpnbarcode.png
 tstregex.png
-tstspawnapplication.png
-tstversioninfo.png
-tstwmdatacopy.png
